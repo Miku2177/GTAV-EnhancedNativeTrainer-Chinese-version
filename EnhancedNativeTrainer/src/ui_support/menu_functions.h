@@ -304,7 +304,7 @@ inline void draw_menu_header_line(std::string caption, float lineWidth, float li
 {
 	// default values
 	int text_col[4] = { 255, 255, 255, 255.0f },
-		rect_col[4] = { 0, 0, 0, 200.0f };
+		rect_col[4] = { 0, 0, 0, 200.0f }; //Header lines colour
 
 	float text_scale = rescaleText ? 0.60 : 0.35;
 
@@ -397,7 +397,7 @@ void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, f
 {
 	// default values
 	int text_col[4] = { 255, 255, 255, 255.0f },
-		rect_col[4] = { 255, 255, 255, 80.f };
+		rect_col[4] = { 255, 255, 255, 80.f }; //white dividing lines
 	float text_scale = 0.35;
 	int font = 0;
 	bool outline = false;
@@ -410,6 +410,7 @@ void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, f
 		text_col[1] = 0;
 		text_col[2] = 0;
 
+		//Scroller colour (Orange)
 		rect_col[0] = 255;
 		rect_col[1] = 180;
 		rect_col[2] = 0;

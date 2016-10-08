@@ -63,30 +63,64 @@ static Hash SUPPORTS_TRIM[] = { VEHICLE_SCHAFTER3, VEHICLE_SCHAFTER4, VEHICLE_SC
 
 std::string getModCategoryName(int i)
 {
+	//To sort out the bike customisation options - else it displays car related headings
+	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()); 
+	
+
 	switch (i)
 	{
 	case 0:
-		return "Spoiler";
+		if (is_this_a_motorcycle(veh))
+			return "Drive Chain Cover";
+		else
+			return "Spoiler";
 	case 1:
-		return "Front Bumper";
+		if (is_this_a_motorcycle(veh))
+			return "Front Mudguard";
+		else
+			return "Front Bumper";
 	case 2:
-		return "Rear Bumper";
+		if (is_this_a_motorcycle(veh))
+			return "Rear Mudguard";
+		else
+			return "Rear Bumper";
 	case 3:
-		return "Side Skirts";
+		if (is_this_a_motorcycle(veh))
+			return "Air Intake";
+		else
+			return "Side Skirts";
 	case 4:
-		return "Exhaust";
+			return "Exhaust";
 	case 5:
-		return "Rollcage";
+		if (is_this_a_motorcycle(veh))
+			return "Engine Colour";
+		else
+			return "Rollcage";
 	case 6:
-		return "Grille";
+		if (is_this_a_motorcycle(veh))
+			return "Oil Tank";
+		else
+			return "Grille";
 	case 7:
-		return "Bonnet";
+		if (is_this_a_motorcycle(veh))
+			return "Seat";
+		else
+			return "Bonnet";
 	case 8:
-		return "Fenders/Arches";
+		if (is_this_a_motorcycle(veh))
+			return "Frame / Gear Stick";
+		else
+			return "Fenders / Arches";
 	case 9:
-		return "Skirts";
+		if (is_this_a_motorcycle(veh))
+			return "Sissy Bar";
+		else
+			return "Skirts";
 	case 10:
-		return "Roof";
+		if (is_this_a_motorcycle(veh))
+			return "Fuel Tank";
+		else
+			return "Roof";
 	case 11:
 		return "Engine";
 	case 12:
@@ -154,7 +188,8 @@ std::string getModCategoryName(int i)
 	case SPECIAL_ID_FOR_WHEEL_SELECTION:
 		return "Wheel Choice";
 	case SPECIAL_ID_FOR_WINDOW_TINT:
-		return "Window Tint";
+		if (!is_this_a_motorcycle(veh))
+			return "Window Tint";
 	case SPECIAL_ID_FOR_LICENSE_PLATES:
 		return "License Plates";
 	//case 50:
