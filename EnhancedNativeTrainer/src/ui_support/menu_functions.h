@@ -507,19 +507,20 @@ void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, f
 		UI::_SET_TEXT_ENTRY("STRING");
 		//UI::_ADD_TEXT_COMPONENT_STRING(toggleItem->get_toggle_value() ? "ON" : "OFF");
 				
-		if (!GRAPHICS::HAS_STREAMED_TEXTURE_DICT_LOADED("mpleaderboard"))
+		if (!GRAPHICS::HAS_STREAMED_TEXTURE_DICT_LOADED("cellphone_badger"))//mpleaderboard
 		{
-			GRAPHICS::REQUEST_STREAMED_TEXTURE_DICT("mpleaderboard", true);
+			GRAPHICS::REQUEST_STREAMED_TEXTURE_DICT("cellphone_badger", true);
 		}
 		
 		if (toggleItem->get_toggle_value() == true)
-		{
+		{	
+			//leaderboard_votetick_icon
 			//(char* textureDict, char* textureName, float screenX, float screenY, float scaleX, float scaleY, float heading, int colorR, int colorG, int colorB, int colorA) 
-			GRAPHICS::DRAW_SPRITE("mpleaderboard", "leaderboard_votetick_icon", lineLeftScaled + lineWidthScaled - rightMarginScaled, textY + 0.01f, 0.032, 0.040, 0, 255, 255, 255, 255);
+			GRAPHICS::DRAW_SPRITE("cellphone_badger", "t", lineLeftScaled + lineWidthScaled - rightMarginScaled, textY + 0.01f, 0.026, 0.034, 0, 255, 255, 255, 255);
 		}
 		else
 		{
-			GRAPHICS::DRAW_SPRITE("mpleaderboard", "leaderboard_voteblank_icon", lineLeftScaled + lineWidthScaled - rightMarginScaled, textY + 0.01f, 0.032, 0.040, 0, 0, 0, 0, 255);
+			GRAPHICS::DRAW_SPRITE("cellphone_badger", "u", lineLeftScaled + lineWidthScaled - rightMarginScaled, textY + 0.01f, 0.026, 0.034, 0, 0, 0, 0, 255);
 		}
 				
 		UI::_DRAW_TEXT(lineLeftScaled + lineWidthScaled - rightMarginScaled, textY);
