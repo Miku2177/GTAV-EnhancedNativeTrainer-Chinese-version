@@ -558,8 +558,105 @@ bool onconfirm_weapon_menu(MenuItem<int> choice)
 
 		set_status_text("All weapons added");
 		break;
-	// switchable features
 	case 1:
+		for(int a = 0; a < WEAPONTYPES_MOD.size(); a++){
+			for(int b = 0; b < VOV_WEAPONMOD_VALUES[a].size(); b++){
+				char *weaponName = (char *) WEAPONTYPES_MOD.at(a).c_str(), *compName = (char *) VOV_WEAPONMOD_VALUES[a].at(b).c_str();
+				Hash weaponHash = GAMEPLAY::GET_HASH_KEY(weaponName), compHash = GAMEPLAY::GET_HASH_KEY(compName);
+				if(!WEAPON::HAS_PED_GOT_WEAPON(playerPed, weaponHash, 0)){
+					break;
+				}
+
+				if(strcmp(weaponName, "WEAPON_HEAVYSNIPER") == 0 && b == 0){
+					continue;
+				}
+				if(strcmp(weaponName, "WEAPON_REVOLVER") == 0){
+					compHash = GAMEPLAY::GET_HASH_KEY((char *) VALUES_ATTACH_REVOLVER.at(0).c_str());
+					if(!WEAPON::HAS_PED_GOT_WEAPON_COMPONENT(playerPed, weaponHash, compHash)){
+						WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, weaponHash, compHash);
+					}
+					break;
+				}
+				if(strcmp(weaponName, "WEAPON_SWITCHBLADE") == 0){
+					compHash = GAMEPLAY::GET_HASH_KEY((char *) VALUES_ATTACH_SWITCHBLADE.at(0).c_str());
+					if(!WEAPON::HAS_PED_GOT_WEAPON_COMPONENT(playerPed, weaponHash, compHash)){
+						WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, weaponHash, compHash);
+					}
+					break;
+				}
+				if(strcmp(weaponName, "WEAPON_COMPACTRIFLE") == 0 && b == 0){
+					continue;
+				}
+				if(strcmp(weaponName, "WEAPON_MINISMG") == 0 && b == 0){
+					continue;
+				}
+
+				if(WEAPON::HAS_PED_GOT_WEAPON_COMPONENT(playerPed, weaponHash, compHash)){
+					continue;
+				}
+
+				WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, weaponHash, compHash);
+			}
+		}
+
+		set_status_text("All weapon attachments added to existing weapons");
+		break;
+	case 2:
+		WEAPON::REMOVE_ALL_PED_WEAPONS(playerPed, false);
+
+		// parachute
+		WEAPON::REMOVE_WEAPON_FROM_PED(playerPed, PARACHUTE_ID);
+
+		set_status_text("All weapons removed");
+		break;
+	case 3:
+		for(int a = 0; a < sizeof(VOV_WEAPON_VALUES) / sizeof(VOV_WEAPON_VALUES[0]); a++){
+			for(int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++){
+				char *weaponName = (char *) VOV_WEAPON_VALUES[a].at(b).c_str();
+				WEAPON::SET_PED_AMMO(playerPed, GAMEPLAY::GET_HASH_KEY(weaponName), 0);
+			}
+		}
+
+		set_status_text("All ammo removed");
+		break;
+	case 4:
+		for(int a = 0; a < WEAPONTYPES_MOD.size(); a++){
+			for(int b = 0; b < VOV_WEAPONMOD_VALUES[a].size(); b++){
+				char *weaponName = (char *) WEAPONTYPES_MOD.at(a).c_str(), *compName = (char *) VOV_WEAPONMOD_VALUES[a].at(b).c_str();
+				Hash weaponHash = GAMEPLAY::GET_HASH_KEY(weaponName), compHash = GAMEPLAY::GET_HASH_KEY(compName);
+				if(!WEAPON::HAS_PED_GOT_WEAPON(playerPed, weaponHash, 0)){
+					break;
+				}
+
+				if(strcmp(weaponName, "WEAPON_COMPACTRIFLE") == 0 && b == 0){
+					continue;
+				}
+				if(strcmp(weaponName, "WEAPON_MINISMG") == 0 && b == 0){
+					continue;
+				}
+
+				if(!WEAPON::HAS_PED_GOT_WEAPON_COMPONENT(playerPed, weaponHash, compHash)){
+					continue;
+				}
+
+				WEAPON::REMOVE_WEAPON_COMPONENT_FROM_PED(playerPed, GAMEPLAY::GET_HASH_KEY(weaponName), GAMEPLAY::GET_HASH_KEY(compName));
+			}
+		}
+
+		for(int a = 0; a < WEAPONTYPES_TINT.size(); a++){
+			char *weaponName = (char *) WEAPONTYPES_TINT.at(a).c_str();
+			Hash weaponHash = GAMEPLAY::GET_HASH_KEY(weaponName);
+			if(!WEAPON::HAS_PED_GOT_WEAPON(playerPed, weaponHash, 0)){
+				continue;
+			}
+
+			WEAPON::SET_PED_WEAPON_TINT_INDEX(playerPed, weaponHash, VALUES_TINT.at(0));
+		}
+
+		set_status_text("All weapon attachments and tints removed from existing weapons");
+		break;
+	// switchable features
+	case 5:
 		process_weaponlist_menu();
 		break;
 	default:
@@ -580,7 +677,31 @@ bool process_weapon_menu()
 	item->value = i++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
-	
+
+	item = new MenuItem<int>();
+	item->caption = "Add All Weapon Attachments";
+	item->value = i++;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "Remove All Weapons";
+	item->value = i++;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "Remove All Ammo";
+	item->value = i++;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "Remove All Weapon Attachments and Tints";
+	item->value = i++;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
 	item = new MenuItem<int>();
 	item->caption = "Individual Weapons";
 	item->value = i++;
