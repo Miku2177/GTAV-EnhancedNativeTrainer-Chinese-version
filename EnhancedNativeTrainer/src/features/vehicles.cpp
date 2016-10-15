@@ -1386,7 +1386,7 @@ bool process_savedveh_menu()
 			case 1:
 				std::stable_sort(menuItems.begin(), menuItems.end(),
 								 [](const MenuItem<int> *a, const MenuItem<int> *b) -> bool{
-					return a->caption < b->caption;
+					return a->sortval == b->sortval ? a->caption < b->caption : (a->sortval < b->sortval);
 				});
 				break;
 			case 2:
