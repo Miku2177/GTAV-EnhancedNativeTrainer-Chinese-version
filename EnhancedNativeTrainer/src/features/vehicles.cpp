@@ -80,6 +80,9 @@ struct struct_door_options {
 
 int doorOptionsMenuIndex = 0;
 
+int savedVehicleListSortMethod = 0;
+bool vehSaveSortMenuInterrupt = false;
+
 //Top Level
 
 const std::vector<std::string> MENU_VEHICLE_CATEGORIES{ "Cars", "Industrial", "Emergency and Military", "Motorcycles", "Planes", "Helicopters", "Boats", "Bicycles", "Enter Name Manually" };
@@ -1171,6 +1174,12 @@ bool onconfirm_savedveh_slot_menu(MenuItem<int> choice)
 			vehSaveMenuInterrupt = true;
 		}
 		break;
+	/*case 5: // testing
+		ENTDatabase *database = get_database();
+		auto tmp = database->get_saved_vehicles(activeSavedVehicleIndex);
+		set_status_text(std::to_string(VEHICLE::GET_VEHICLE_CLASS_FROM_NAME(tmp.at(0)->model)));
+
+		break;*/
 	}
 	return false;
 }
@@ -1208,9 +1217,47 @@ bool process_savedveh_slot_menu(int slot)
 		item->caption = "Delete";
 		menuItems.push_back(item);
 
+		/*item = new MenuItem<int>();
+		item->caption = "Display Type";
+		item->value = 5;
+		item->isLeaf = true;
+		menuItems.push_back(item);*/
+
 		draw_generic_menu<int>(menuItems, 0, activeSavedVehicleSlotName, onconfirm_savedveh_slot_menu, NULL, NULL, vehicle_save_slot_menu_interrupt);
 	} while (requireRefreshOfVehSlotMenu);
 	return false;
+}
+
+bool onconfirm_savedveh_sort_menu(MenuItem<int> choice){
+	savedVehicleListSortMethod = choice.value;
+	requireRefreshOfVehSaveSlots = vehSaveMenuInterrupt = vehSaveSortMenuInterrupt = true;
+
+	return false;
+}
+
+bool process_savedveh_sort_menu(){
+	std::vector<MenuItem<int> *> menuItems;
+	int method = 0;
+
+	MenuItem<int> *item = new MenuItem<int>();
+	item->caption = "By Save Order (Default)";
+	item->value = method++;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "By Saved Name";
+	item->value = method++;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "By Class, then Saved Name";
+	item->value = method++;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	return draw_generic_menu<int>(menuItems, nullptr, "Sort Saved Vehicles List", onconfirm_savedveh_sort_menu, nullptr, nullptr, vehicle_save_sort_menu_interrupt);
 }
 
 void save_current_vehicle(int slot)
@@ -1268,6 +1315,10 @@ bool onconfirm_savedveh_menu(MenuItem<int> choice)
 		return false;
 	}
 
+	if(choice.value == -2){
+		return process_savedveh_sort_menu();
+	}
+
 	activeSavedVehicleIndex = choice.value;
 	activeSavedVehicleSlotName = choice.caption;
 	return process_savedveh_slot_menu(choice.value);
@@ -1292,6 +1343,14 @@ bool process_savedveh_menu()
 		item->isLeaf = false;
 		item->value = -1;
 		item->caption = "Create New Vehicle Save";
+		item->sortval = -2;
+		menuItems.push_back(item);
+
+		item = new MenuItem<int>();
+		item->caption = "Sort Saved Vehicles";
+		item->value = -2;
+		item->isLeaf = false;
+		item->sortval = -1;
 		menuItems.push_back(item);
 
 		for each (SavedVehicleDBRow *sv in savedVehs)
@@ -1300,7 +1359,44 @@ bool process_savedveh_menu()
 			item->isLeaf = false;
 			item->value = sv->rowID;
 			item->caption = sv->saveName;
+			switch(savedVehicleListSortMethod){
+				case 0:
+					item->sortval = sv->rowID;
+					break;
+				case 1:
+					item->sortval = NULL;
+					break;
+				case 2:
+					item->sortval = VEHICLE::GET_VEHICLE_CLASS_FROM_NAME(sv->model);
+					break;
+				default:
+					item->sortval = NULL;
+					break;
+			}
 			menuItems.push_back(item);
+		}
+
+		switch(savedVehicleListSortMethod){
+			case 0:
+				std::stable_sort(menuItems.begin(), menuItems.end(), 
+								 [](const MenuItem<int> *a, const MenuItem<int> *b) -> bool {
+					return a->sortval < b->sortval;
+				});
+				break;
+			case 1:
+				std::stable_sort(menuItems.begin(), menuItems.end(),
+								 [](const MenuItem<int> *a, const MenuItem<int> *b) -> bool{
+					return a->caption < b->caption;
+				});
+				break;
+			case 2:
+				std::stable_sort(menuItems.begin(), menuItems.end(),
+								 [](const MenuItem<int> *a, const MenuItem<int> *b) -> bool{
+					return a->sortval == b->sortval ? a->caption < b->caption : (a->sortval < b->sortval);
+				});
+				break;
+			default:
+				break;
 		}
 
 		draw_generic_menu<int>(menuItems, 0, "Saved Vehicles", onconfirm_savedveh_menu, NULL, NULL, vehicle_save_menu_interrupt);
@@ -1324,6 +1420,10 @@ bool vehicle_save_menu_interrupt()
 		return true;
 	}
 	return false;
+}
+
+bool vehicle_save_sort_menu_interrupt(){
+	return vehSaveSortMenuInterrupt ? vehSaveSortMenuInterrupt = false, true : false;
 }
 
 bool vehicle_save_slot_menu_interrupt()
