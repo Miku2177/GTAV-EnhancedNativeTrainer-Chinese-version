@@ -44,6 +44,8 @@ void process_veh_menu();
 
 bool process_savedveh_menu();
 
+bool process_savedveh_sort_menu();
+
 bool process_savedveh_slot_menu(int slot);
 
 bool process_vehmod_menu();
