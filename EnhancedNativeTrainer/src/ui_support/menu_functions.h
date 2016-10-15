@@ -16,7 +16,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 #include "..\..\inc\main.h"
 
-//#include "script.h"
+// #include "script.h"
 #include "..\debug\debuglog.h"
 #include "..\io\io.h"
 #include "..\features\airbrake.h"
@@ -50,6 +50,7 @@ public:
 	int currentMenuIndex = 0;
 	bool isLeaf = true;
 	void (*onConfirmFunction)(const MenuItem<T> choice) = NULL;
+	int sortval;
 
 	/**
 	Handle the on-item confirmation press.
