@@ -122,6 +122,8 @@ bool vehicle_menu_interrupt();
 
 bool vehicle_save_menu_interrupt();
 
+bool vehicle_save_sort_menu_interrupt();
+
 bool vehicle_save_slot_menu_interrupt();
 
 void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results);
