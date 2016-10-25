@@ -819,7 +819,6 @@ enum eFont
 {
 	FontChaletLondon = 0,
 	FontHouseScript = 1,
-	FontMonospace = 2,
 	FontChaletComprimeCologne = 4,
 	FontPricedown = 7
 };
