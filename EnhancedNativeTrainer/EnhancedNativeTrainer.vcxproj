@@ -33,6 +33,7 @@
     <ClCompile Include="src\io\io.cpp" />
     <ClCompile Include="src\io\keyboard.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\ui_support\entcolor.cpp" />
     <ClCompile Include="src\ui_support\menu_functions.cpp" />
     <ClCompile Include="src\features\paintmenu.cpp" />
     <ClCompile Include="src\features\script.cpp" />
@@ -73,6 +74,7 @@
     <ClInclude Include="inc\types.h" />
     <ClInclude Include="src\io\io.h" />
     <ClInclude Include="src\io\keyboard.h" />
+    <ClInclude Include="src\ui_support\entcolor.h" />
     <ClInclude Include="src\ui_support\menu_functions.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="src\features\script.h" />
@@ -338,6 +340,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalOptions>lib\ScriptHookV.lib comdlg32.lib %(AdditionalOptions)</AdditionalOptions>
+      <ShowProgress>NotSet</ShowProgress>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
