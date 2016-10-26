@@ -413,9 +413,10 @@ void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, f
 	bool dropShadow = false;
 
 	// correcting values for active line
-	if (active && rescaleText){
-		text_scale = 0.40;
-		outline = false;
+	if (active){
+		if(rescaleText){
+			text_scale = 0.40;
+		}
 	}
 	else
 	{
