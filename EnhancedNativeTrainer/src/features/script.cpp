@@ -868,9 +868,14 @@ void ScriptMain()
 
 		write_text_to_log_file("ScriptMain called - handler set");
 
-		write_text_to_log_file("Reading config...");
+		write_text_to_log_file("Reading XML config...");
 		read_config_file();
-		write_text_to_log_file("Config read complete");
+		write_text_to_log_file("XML config read complete");
+
+		write_text_to_log_file("Reading INI config....");
+		read_config_ini_file();
+		write_text_to_log_file("INI config read complete");
+
 		main();
 
 		write_text_to_log_file("ScriptMain ended");

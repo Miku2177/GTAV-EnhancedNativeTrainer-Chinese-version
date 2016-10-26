@@ -104,7 +104,7 @@ bool onconfirm_trainermenucolors_menu(MenuItem<int> choice){
 		process_misc_trainermenucoloring_menu(choice.value);
 	}
 	else{
-		//write_config_ini_file();
+		write_config_ini_file();
 		set_status_text("Saved to INI file");
 		write_text_to_log_file("INI config file written or updated");
 	}
