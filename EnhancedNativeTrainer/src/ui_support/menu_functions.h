@@ -381,7 +381,7 @@ inline void draw_menu_header_line(std::string caption, float lineWidth, float li
 
 		UI::SET_TEXT_FONT(fontHeader);
 		UI::SET_TEXT_SCALE(0.0, text_scale);
-		UI::SET_TEXT_COLOUR(ENTColor::colsMenu[2].rgba[0], ENTColor::colsMenu[2].rgba[1], ENTColor::colsMenu[2].rgba[2], ENTColor::colsMenu[2].rgba[3]);
+		//UI::SET_TEXT_COLOUR(ENTColor::colsMenu[2].rgba[0], ENTColor::colsMenu[2].rgba[1], ENTColor::colsMenu[2].rgba[2], ENTColor::colsMenu[2].rgba[3]); just in case this is ever made to be customizable, I'll leave this here
 		UI::SET_TEXT_RIGHT_JUSTIFY(1);
 
 		if (outline)
@@ -542,7 +542,7 @@ void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, f
 		}
 
 		std::stringstream ss;
-		ss << "<C>~HUD_COLOUR_GREYLIGHT~&lt;&lt; ~HUD_COLOUR_PURE_WHITE~" << std::string("$") << commaCash << " ~HUD_COLOUR_GREYLIGHT~&gt;&gt;</C>";
+		ss << "<< $" << commaCash << " >>";
 		auto ssStr = ss.str();
 		UI::_ADD_TEXT_COMPONENT_STRING((char *)ssStr.c_str());
 		UI::_DRAW_TEXT(0, textY);
@@ -586,32 +586,18 @@ void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, f
 
 		if (selectFromListItem->wrap || selectFromListItem->value > 0)
 		{
-			ss << "&lt;&lt; ";
+			ss << "<<";
 		}
 		else
 		{
 			ss << "";
 		}
 
-		if (selectFromListItem->locked)
-		{
-			ss << "~HUD_COLOUR_PURE_WHITE~" << caption;
-		}
-		else
-		{
-			ss << "~HUD_COLOUR_GREYLIGHT~" << caption;
-		}
+		ss << caption;
 		
 		if (selectFromListItem->wrap || selectFromListItem->value < selectFromListItem->itemCaptions.size() - 1)
 		{
-			if (selectFromListItem->locked)
-			{
-				ss << " ~HUD_COLOUR_GREYLIGHT~&gt;&gt;";
-			}
-			else
-			{
-				ss << " ~HUD_COLOUR_GREY~&gt;&gt;";
-			}
+			ss << " >>";
 		}
 		else
 		{
@@ -683,7 +669,6 @@ void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, f
 	else if(ColorItem<T> *colorItem = dynamic_cast<ColorItem<T> *>(item)){
 		UI::SET_TEXT_FONT(fontItem);
 		UI::SET_TEXT_SCALE(0.0, text_scale);
-		//UI::SET_TEXT_COLOUR(255, 255, 255, 255);
 		UI::SET_TEXT_RIGHT_JUSTIFY(1);
 
 		UI::SET_TEXT_OUTLINE();
@@ -697,7 +682,7 @@ void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, f
 		UI::_SET_TEXT_ENTRY("STRING");
 
 		std::stringstream ss;
-		ss << "<C>~HUD_COLOUR_GREYLIGHT~&lt;&lt; ~HUD_COLOUR_PURE_WHITE~" << colorItem->colorval << " ~HUD_COLOUR_GREYLIGHT~&gt;&gt;</C>";
+		ss << "<< " << colorItem->colorval << " >>";
 		auto ssStr = ss.str();
 		UI::_ADD_TEXT_COMPONENT_STRING((char *) ssStr.c_str());
 		UI::_DRAW_TEXT(0, textY);
