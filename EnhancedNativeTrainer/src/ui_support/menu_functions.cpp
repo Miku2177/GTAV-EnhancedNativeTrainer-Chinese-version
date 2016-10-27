@@ -55,41 +55,20 @@ bool is_menu_showing()
 
 void draw_menu_line(std::string caption, float lineWidth, float lineHeight, float lineTop, float lineLeft, float textLeft, bool active, bool title, bool rescaleText)
 {
-	// default values
-	int text_col[4] = { 255, 255, 255, 255.0f },
-		rect_col[4] = { 255, 255, 255, 80.f };
 	float text_scale = 0.35;
-	int font = 0;
 	bool outline = false;
 	bool dropShadow = false;
 
 	// correcting values for active line
-	if (active)
-	{
-		text_col[0] = 0;
-		text_col[1] = 0;
-		text_col[2] = 0;
-
-		rect_col[0] = 255;
-		rect_col[1] = 180;
-		rect_col[2] = 0;
-		rect_col[3] = 200.0f;
-
-		if (rescaleText) text_scale = 0.40;
+	if (active){
+		if(rescaleText){
+			text_scale = 0.40;
+		}
 	}
-	else if (title)
-	{
-		text_col[0] = 255;
-		text_col[1] = 255;
-		text_col[2] = 255;
-
-		rect_col[0] = 0;
-		rect_col[1] = 0;
-		rect_col[2] = 0;
-		rect_col[3] = 200.0f;
-
-		if (rescaleText) text_scale = 0.60;
-		font = 2;
+	else if (title){
+		if(rescaleText){
+			text_scale = 0.60;
+		}
 	}
 	else
 	{
@@ -113,9 +92,22 @@ void draw_menu_line(std::string caption, float lineWidth, float lineHeight, floa
 	// this is how it's done in original scripts
 
 	// text upper part
-	UI::SET_TEXT_FONT(font);
+	if(title){
+		UI::SET_TEXT_FONT(fontHeader);
+	}
+	else{
+		UI::SET_TEXT_FONT(fontItem);
+	}
 	UI::SET_TEXT_SCALE(0.0, text_scale);
-	UI::SET_TEXT_COLOUR(text_col[0], text_col[1], text_col[2], text_col[3]);
+	if(active){
+		UI::SET_TEXT_COLOUR(ENTColor::colsMenu[4].rgba[0], ENTColor::colsMenu[4].rgba[1], ENTColor::colsMenu[4].rgba[2], ENTColor::colsMenu[4].rgba[3]);
+	}
+	else if(title){
+		UI::SET_TEXT_COLOUR(ENTColor::colsMenu[0].rgba[0], ENTColor::colsMenu[0].rgba[1], ENTColor::colsMenu[0].rgba[2], ENTColor::colsMenu[0].rgba[3]);
+	}
+	else{
+		UI::SET_TEXT_COLOUR(ENTColor::colsMenu[2].rgba[0], ENTColor::colsMenu[2].rgba[1], ENTColor::colsMenu[2].rgba[2], ENTColor::colsMenu[2].rgba[3]);
+	}
 	UI::SET_TEXT_CENTRE(0);
 
 	if (outline)
@@ -135,9 +127,18 @@ void draw_menu_line(std::string caption, float lineWidth, float lineHeight, floa
 	UI::_DRAW_TEXT(textLeftScaled, lineTopScaled + (0.5f * (lineHeightScaled - textHeightScaled)));
 
 	// rect
-	draw_rect(lineLeftScaled, lineTopScaled,
-		lineWidthScaled, lineHeightScaled,
-		rect_col[0], rect_col[1], rect_col[2], rect_col[3]);
+	if(active){
+		draw_rect(lineLeftScaled, lineTopScaled, lineWidthScaled, lineHeightScaled,
+				  ENTColor::colsMenu[5].rgba[0], ENTColor::colsMenu[5].rgba[1], ENTColor::colsMenu[5].rgba[2], ENTColor::colsMenu[5].rgba[3]);
+	}
+	else if(title){
+		draw_rect(lineLeftScaled, lineTopScaled, lineWidthScaled, lineHeightScaled,
+				  ENTColor::colsMenu[1].rgba[0], ENTColor::colsMenu[1].rgba[1], ENTColor::colsMenu[1].rgba[2], ENTColor::colsMenu[1].rgba[3]);
+	}
+	else{
+		draw_rect(lineLeftScaled, lineTopScaled, lineWidthScaled, lineHeightScaled,
+				  ENTColor::colsMenu[3].rgba[0], ENTColor::colsMenu[3].rgba[1], ENTColor::colsMenu[3].rgba[2], ENTColor::colsMenu[3].rgba[3]);
+	}
 }
 
 void draw_rect(float A_0, float A_1, float A_2, float A_3, int A_4, int A_5, int A_6, int A_7)
@@ -164,7 +165,7 @@ void update_centre_screen_status_text()
 {
 	if (GetTickCount() < centreScreenStatusTextDrawTicksMax)
 	{
-		UI::SET_TEXT_FONT(0);
+		UI::SET_TEXT_FONT(fontItem);
 		UI::SET_TEXT_SCALE(0.55, 0.55);
 		UI::SET_TEXT_COLOUR(255, 255, 255, 255);
 		UI::SET_TEXT_WRAP(0.0, 1.0);
@@ -290,7 +291,6 @@ std::string show_keyboard(char* title_id, char* prepopulated_text)
 
 	while (GAMEPLAY::UPDATE_ONSCREEN_KEYBOARD() == 0)
 	{
-		//update_status_text();
 		make_periodic_feature_call();
 		WAIT(0);
 	}
@@ -306,12 +306,9 @@ std::string show_keyboard(char* title_id, char* prepopulated_text)
 	}
 }
 
-
 template<class T>
 bool ToggleMenuItem<T>::onConfirm()
 {
-	//set_status_text("Base confirm");
-
 	//call super
 	MenuItem::onConfirm();
 
@@ -329,7 +326,6 @@ bool ToggleMenuItem<T>::onConfirm()
 	return true;
 }
 
-
 template<class T>
 bool CashItem<T>::onConfirm()
 {
@@ -340,9 +336,7 @@ bool CashItem<T>::onConfirm()
 		Hash hash = GAMEPLAY::GET_HASH_KEY(statNameFull);
 		int newAmount;
 		STATS::STAT_GET_INT(hash, &newAmount, -1);
-		newAmount += cash;
-		if (newAmount > INT_MAX) // Check for overflow, just in case
-			newAmount = INT_MAX;
+		newAmount = cash < INT_MAX - newAmount ? newAmount + cash : INT_MAX; // Check for overflow properly
 		STATS::STAT_SET_INT(hash, newAmount, 1);
 	}
 	set_status_text("Cash added");
@@ -352,19 +346,13 @@ bool CashItem<T>::onConfirm()
 template<class T>
 void CashItem<T>::handleLeftPress()
 {
-	cash -= increment;
-
-	if (cash < min)
-		cash = max;
+	cash = cash > min ? cash / multiplier : max;
 }
 
 template<class T>
 void CashItem<T>::handleRightPress()
 {
-	cash += increment;
-
-	if (cash > max)
-		cash = min;
+	cash = cash < max ? cash * multiplier : min;
 }
 
 int WantedSymbolItem::get_wanted_value()
@@ -485,7 +473,8 @@ void draw_ingame_sprite(MenuItemImage *image, float x, float y, int w, int h)
 	float sprXPos = x + (sprW * 0.5f);
 	float sprYPos = y + (sprH * 0.5f);
 
-	draw_rect(x - onePixelW, y - onePixelH, sprW + (2 * onePixelW), sprH + (2 * onePixelH), 0, 0, 0, 180);
+	draw_rect(x - onePixelW, y - onePixelH, sprW + (2 * onePixelW), sprH + (2 * onePixelH),
+			  ENTColor::colsMenu[11].rgba[0], ENTColor::colsMenu[11].rgba[1], ENTColor::colsMenu[11].rgba[2], ENTColor::colsMenu[11].rgba[3]);
 
 	if (image->is_local())
 	{

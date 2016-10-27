@@ -14,6 +14,8 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 #include <map>
 #include <vector>
+#include <fstream>
+
 #include "keyboard.h"
 
 class KeyConfig
@@ -170,6 +172,15 @@ extern TrainerConfig* config;
 /**Read the user config in from an XML file.*/
 void read_config_file();
 
+/**
+Read the user config in from an INI file.
+ */
+void read_config_ini_file();
+
+/**
+Write the user config out to an INI file.
+ */
+void write_config_ini_file();
+
 /**Get the current config object.*/
 inline TrainerConfig* get_config() { return config;  }
-

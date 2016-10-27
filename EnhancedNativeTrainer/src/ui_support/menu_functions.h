@@ -16,11 +16,12 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 #include "..\..\inc\main.h"
 
-// #include "script.h"
 #include "..\debug\debuglog.h"
 #include "..\io\io.h"
 #include "..\features\airbrake.h"
 #include "..\utils.h"
+
+#include "entcolor.h"
 
 #include <string>
 #include <sstream> 
@@ -29,8 +30,9 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include <vector>
 #include <algorithm>
 
-#pragma once
 #pragma warning(disable : 4244 4305 4267) // double <-> float conversions <-> size_t conversions
+
+const int fontHeader = 4, fontItem = 0, fontWanted = 7;
 
 extern void(*periodic_feature_call)(void);
 
@@ -175,9 +177,9 @@ class CashItem : public MenuItem <T>
 	virtual ~CashItem() {}
 
 	int cash = 10000;
-	int increment = 10000;
-	int min = 10000;
-	int max = 10000000;
+	int multiplier = 10;
+	int min = 1;
+	int max = 1000000000;
 
 	virtual bool onConfirm();
 	virtual bool isAbsorbingLeftAndRightEvents() { return true; };
@@ -186,6 +188,27 @@ class CashItem : public MenuItem <T>
 
 public:
 	int GetCash() { return cash; }
+};
+
+template<class T>
+class ColorItem: public MenuItem<T>{
+	public:
+	int colorval, part, component, increment = 15, min = 0, max = 255;
+
+	virtual ~ColorItem(){
+		// Supposed to be empty
+	}
+
+	virtual bool isAbsorbingLeftAndRightEvents(){
+		return true;
+	};
+
+	virtual void handleLeftPress(){
+		ENTColor::colsMenu[part].rgba[component] = colorval = colorval > min + increment ? colorval - increment : colorval > min ? min : max;
+	}
+	virtual void handleRightPress(){
+		ENTColor::colsMenu[part].rgba[component] = colorval = colorval < max - increment ? colorval + increment : colorval < max ? max : min;
+	}
 };
 
 enum MenuItemType { STANDARD, TOGGLE, CASH, WANTED };
@@ -303,13 +326,7 @@ inline std::string sanitise_menu_header_text(std::string input)
 
 inline void draw_menu_header_line(std::string caption, float lineWidth, float lineHeight, float lineTop, float lineLeft, float textLeft, bool active, bool rescaleText = true, int curPage=1, int pageCount=1)
 {
-	// default values
-	int text_col[4] = { 255, 255, 255, 255.0f },
-		rect_col[4] = { 0, 0, 0, 200.0f }; //Header lines colour
-
 	float text_scale = rescaleText ? 0.60 : 0.35;
-
-	int font = 2;
 	bool outline = false;
 	bool dropShadow = false;
 
@@ -328,9 +345,9 @@ inline void draw_menu_header_line(std::string caption, float lineWidth, float li
 	// this is how it's done in original scripts
 
 	// text upper part
-	UI::SET_TEXT_FONT(font);
+	UI::SET_TEXT_FONT(fontHeader);
 	UI::SET_TEXT_SCALE(0.0, text_scale);
-	UI::SET_TEXT_COLOUR(text_col[0], text_col[1], text_col[2], text_col[3]);
+	UI::SET_TEXT_COLOUR(ENTColor::colsMenu[0].rgba[0], ENTColor::colsMenu[0].rgba[1], ENTColor::colsMenu[0].rgba[2], ENTColor::colsMenu[0].rgba[3]);
 	UI::SET_TEXT_CENTRE(0);
 
 	if (outline)
@@ -353,9 +370,8 @@ inline void draw_menu_header_line(std::string caption, float lineWidth, float li
 	UI::_DRAW_TEXT(textLeftScaled, textY);
 
 	// rect
-	draw_rect(lineLeftScaled, lineTopScaled,
-		lineWidthScaled, lineHeightScaled,
-		rect_col[0], rect_col[1], rect_col[2], rect_col[3]);
+	draw_rect(lineLeftScaled, lineTopScaled, lineWidthScaled, lineHeightScaled,
+			  ENTColor::colsMenu[1].rgba[0], ENTColor::colsMenu[1].rgba[1], ENTColor::colsMenu[1].rgba[2], ENTColor::colsMenu[1].rgba[3]);
 
 	// draw page count in different colour
 	if (pageCount > 1)
@@ -363,13 +379,9 @@ inline void draw_menu_header_line(std::string caption, float lineWidth, float li
 		std::ostringstream ss;
 		ss << " ~HUD_COLOUR_MENU_YELLOW~" << curPage << "~HUD_COLOUR_GREYLIGHT~ of ~HUD_COLOUR_MENU_YELLOW~" << pageCount;
 
-		text_col[0] = 255;
-		text_col[1] = 180;
-		text_col[2] = 0;
-
-		UI::SET_TEXT_FONT(font);
+		UI::SET_TEXT_FONT(fontHeader);
 		UI::SET_TEXT_SCALE(0.0, text_scale);
-		UI::SET_TEXT_COLOUR(text_col[0], text_col[1], text_col[2], text_col[3]);
+		//UI::SET_TEXT_COLOUR(ENTColor::colsMenu[2].rgba[0], ENTColor::colsMenu[2].rgba[1], ENTColor::colsMenu[2].rgba[2], ENTColor::colsMenu[2].rgba[3]); just in case this is ever made to be customizable, I'll leave this here
 		UI::SET_TEXT_RIGHT_JUSTIFY(1);
 
 		if (outline)
@@ -396,30 +408,15 @@ inline void draw_menu_header_line(std::string caption, float lineWidth, float li
 template<typename T>
 void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, float lineTop, float lineLeft, float textLeft, bool active, bool rescaleText)
 {
-	// default values
-	int text_col[4] = { 255, 255, 255, 255.0f },
-		rect_col[4] = { 255, 255, 255, 80.f }; //white dividing lines
 	float text_scale = 0.35;
-	int font = 0;
 	bool outline = false;
 	bool dropShadow = false;
 
 	// correcting values for active line
-	if (active)
-	{
-		text_col[0] = 0;
-		text_col[1] = 0;
-		text_col[2] = 0;
-
-		//Scroller colour (Orange)
-		rect_col[0] = 255;
-		rect_col[1] = 180;
-		rect_col[2] = 0;
-		rect_col[3] = 200.0f;
-
-		//outline = true;
-
-		if (rescaleText) text_scale = 0.40;
+	if (active){
+		if(rescaleText){
+			text_scale = 0.40;
+		}
 	}
 	else
 	{
@@ -445,9 +442,14 @@ void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, f
 	// this is how it's done in original scripts
 
 	// text upper part
-	UI::SET_TEXT_FONT(font);
+	UI::SET_TEXT_FONT(fontItem);
 	UI::SET_TEXT_SCALE(0.0, text_scale);
-	UI::SET_TEXT_COLOUR(text_col[0], text_col[1], text_col[2], text_col[3]);
+	if(active){
+		UI::SET_TEXT_COLOUR(ENTColor::colsMenu[4].rgba[0], ENTColor::colsMenu[4].rgba[1], ENTColor::colsMenu[4].rgba[2], ENTColor::colsMenu[4].rgba[3]);
+	}
+	else{
+		UI::SET_TEXT_COLOUR(ENTColor::colsMenu[2].rgba[0], ENTColor::colsMenu[2].rgba[1], ENTColor::colsMenu[2].rgba[2], ENTColor::colsMenu[2].rgba[3]);
+	}
 	UI::SET_TEXT_CENTRE(0);
 
 	if (outline)
@@ -469,29 +471,19 @@ void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, f
 	UI::_DRAW_TEXT(textLeftScaled, textY);
 
 	// rect
-	draw_rect(lineLeftScaled, lineTopScaled,
-		lineWidthScaled, lineHeightScaled,
-		rect_col[0], rect_col[1], rect_col[2], rect_col[3]);
+	if(active){
+		draw_rect(lineLeftScaled, lineTopScaled, lineWidthScaled, lineHeightScaled,
+				  ENTColor::colsMenu[5].rgba[0], ENTColor::colsMenu[5].rgba[1], ENTColor::colsMenu[5].rgba[2], ENTColor::colsMenu[5].rgba[3]);
+	}
+	else{
+		draw_rect(lineLeftScaled, lineTopScaled, lineWidthScaled, lineHeightScaled,
+				  ENTColor::colsMenu[3].rgba[0], ENTColor::colsMenu[3].rgba[1], ENTColor::colsMenu[3].rgba[2], ENTColor::colsMenu[3].rgba[3]);
+	}
 
 	if (ToggleMenuItem<T>* toggleItem = dynamic_cast<ToggleMenuItem<T>*>(item))
 	{
-		//set_status_text("Found toggle");
-		if (toggleItem->get_toggle_value())
-		{
-			text_col[0] = 182;
-			text_col[1] = 255;
-			text_col[2] = 0;
-		}
-		else
-		{
-			text_col[0] = 255;
-			text_col[1] = 60;
-			text_col[2] = 60;
-		}
-
-		UI::SET_TEXT_FONT(font);
+		UI::SET_TEXT_FONT(fontItem);
 		UI::SET_TEXT_SCALE(0.0, text_scale);
-		UI::SET_TEXT_COLOUR(text_col[0], text_col[1], text_col[2], text_col[3]);
 		UI::SET_TEXT_CENTRE(0);
 
 		UI::SET_TEXT_OUTLINE();
@@ -501,14 +493,12 @@ void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, f
 			UI::SET_TEXT_DROPSHADOW(5, 0, 78, 255, 255);
 		}
 
-
 		UI::SET_TEXT_EDGE(0, 0, 0, 0, 0);
 		UI::SET_TEXT_CENTRE(1);
 		UI::SET_TEXT_WRAP(0, lineLeftScaled + lineWidthScaled - leftMarginScaled);
 		UI::_SET_TEXT_ENTRY("STRING");
-		//UI::_ADD_TEXT_COMPONENT_STRING(toggleItem->get_toggle_value() ? "ON" : "OFF");
-				
-		if (!GRAPHICS::HAS_STREAMED_TEXTURE_DICT_LOADED("cellphone_badger"))//mpleaderboard
+
+		if (!GRAPHICS::HAS_STREAMED_TEXTURE_DICT_LOADED("cellphone_badger"))// mpleaderboard
 		{
 			GRAPHICS::REQUEST_STREAMED_TEXTURE_DICT("cellphone_badger", true);
 		}
@@ -528,9 +518,8 @@ void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, f
 	}
 	else if (CashItem<T>* cashItem = dynamic_cast<CashItem<T>*>(item))
 	{
-		UI::SET_TEXT_FONT(font);
+		UI::SET_TEXT_FONT(fontItem);
 		UI::SET_TEXT_SCALE(0.0, text_scale);
-		UI::SET_TEXT_COLOUR(255, 255, 255, 255);
 		UI::SET_TEXT_RIGHT_JUSTIFY(1);
 
 		UI::SET_TEXT_OUTLINE();
@@ -553,14 +542,14 @@ void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, f
 		}
 
 		std::stringstream ss;
-		ss << "<C>~HUD_COLOUR_GREYLIGHT~&lt;&lt; ~HUD_COLOUR_PURE_WHITE~" << std::string("$") << commaCash << " ~HUD_COLOUR_GREYLIGHT~&gt;&gt;</C>";
+		ss << "<< $" << commaCash << " >>";
 		auto ssStr = ss.str();
 		UI::_ADD_TEXT_COMPONENT_STRING((char *)ssStr.c_str());
 		UI::_DRAW_TEXT(0, textY);
 	}
 	else if (SelectFromListMenuItem* selectFromListItem = dynamic_cast<SelectFromListMenuItem*>(item))
 	{
-		UI::SET_TEXT_FONT(font);
+		UI::SET_TEXT_FONT(fontItem);
 		UI::SET_TEXT_SCALE(0.0, text_scale);
 
 		//disable any items that aren't active
@@ -571,11 +560,11 @@ void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, f
 
 		if (selectFromListItem->locked)
 		{
-			UI::SET_TEXT_COLOUR(205, 205, 205, 255);
+			UI::SET_TEXT_COLOUR(ENTColor::colsMenu[6].rgba[0], ENTColor::colsMenu[6].rgba[1], ENTColor::colsMenu[6].rgba[2], ENTColor::colsMenu[6].rgba[3]);
 		}
 		else
 		{
-			UI::SET_TEXT_COLOUR(155, 155, 155, 255);
+			UI::SET_TEXT_COLOUR(ENTColor::colsMenu[7].rgba[0], ENTColor::colsMenu[7].rgba[1], ENTColor::colsMenu[7].rgba[2], ENTColor::colsMenu[7].rgba[3]);
 		}
 
 		UI::SET_TEXT_RIGHT_JUSTIFY(1);
@@ -597,32 +586,18 @@ void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, f
 
 		if (selectFromListItem->wrap || selectFromListItem->value > 0)
 		{
-			ss << "&lt;&lt; ";
+			ss << "<<";
 		}
 		else
 		{
 			ss << "";
 		}
 
-		if (selectFromListItem->locked)
-		{
-			ss << "~HUD_COLOUR_PURE_WHITE~" << caption;
-		}
-		else
-		{
-			ss << "~HUD_COLOUR_GREYLIGHT~" << caption;
-		}
+		ss << caption;
 		
 		if (selectFromListItem->wrap || selectFromListItem->value < selectFromListItem->itemCaptions.size() - 1)
 		{
-			if (selectFromListItem->locked)
-			{
-				ss << " ~HUD_COLOUR_GREYLIGHT~&gt;&gt;";
-			}
-			else
-			{
-				ss << " ~HUD_COLOUR_GREY~&gt;&gt;";
-			}
+			ss << " >>";
 		}
 		else
 		{
@@ -635,41 +610,15 @@ void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, f
 		UI::SET_TEXT_EDGE(1, 255, 215, 0, 255);
 
 		textY = lineTopScaled + (0.5f * (lineHeightScaled - (TEXT_HEIGHT_NONLEAF / (float)screen_h)));
-
-		/*
-		UI::SET_TEXT_FONT(font);
-		UI::SET_TEXT_SCALE(0.0, 0.4f);
-		UI::SET_TEXT_CENTRE(0);
-		UI::SET_TEXT_COLOUR(text_col[0], text_col[1], text_col[2], text_col[3]);
-		UI::SET_TEXT_RIGHT_JUSTIFY(0);
-		UI::_SET_TEXT_ENTRY("STRING");
-		UI::_ADD_TEXT_COMPONENT_STRING("<<");
-
-		UI::_DRAW_TEXT(lineLeftScaled + lineWidthScaled + 0.01f, textY);
-
-		UI::SET_TEXT_FONT(font);
-		UI::SET_TEXT_SCALE(0.0, 0.4f);
-		UI::SET_TEXT_CENTRE(0);
-		UI::SET_TEXT_COLOUR(text_col[0], text_col[1], text_col[2], text_col[3]);
-		UI::SET_TEXT_RIGHT_JUSTIFY(1);
-		UI::SET_TEXT_WRAP(0.0f, lineLeftScaled + lineWidthScaled - leftMarginScaled);
-		UI::_SET_TEXT_ENTRY("STRING");
-		UI::_ADD_TEXT_COMPONENT_STRING("");
-		UI::_DRAW_TEXT(0, textY);
-		*/
 	}
 	else if (WantedSymbolItem* wantedItem = dynamic_cast<WantedSymbolItem*>(item))
 	{
 		rightMarginScaled = 10.0f / (float)screen_w;
 		float starTextScale = 0.6f;
 
-		text_col[0] = 255;
-		text_col[1] = 255;
-		text_col[2] = 255;
-
-		UI::SET_TEXT_FONT(7);
+		UI::SET_TEXT_FONT(fontWanted);
 		UI::SET_TEXT_SCALE(0.0, starTextScale);
-		UI::SET_TEXT_COLOUR(text_col[0], text_col[1], text_col[2], text_col[3]);
+		UI::SET_TEXT_COLOUR(ENTColor::colsMenu[8].rgba[0], ENTColor::colsMenu[8].rgba[1], ENTColor::colsMenu[8].rgba[2], ENTColor::colsMenu[8].rgba[3]);
 		UI::SET_TEXT_RIGHT_JUSTIFY(1);
 
 		UI::SET_TEXT_OUTLINE();
@@ -694,13 +643,9 @@ void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, f
 		UI::_ADD_TEXT_COMPONENT_STRING((char *)wantedStarsStr.c_str());
 		UI::_DRAW_TEXT(0, textY);
 
-		text_col[0] = 100;
-		text_col[1] = 100;
-		text_col[2] = 100;
-
-		UI::SET_TEXT_FONT(7);
+		UI::SET_TEXT_FONT(fontWanted);
 		UI::SET_TEXT_SCALE(0.0, starTextScale);
-		UI::SET_TEXT_COLOUR(text_col[0], text_col[1], text_col[2], text_col[3]);
+		UI::SET_TEXT_COLOUR(ENTColor::colsMenu[9].rgba[0], ENTColor::colsMenu[9].rgba[1], ENTColor::colsMenu[9].rgba[2], ENTColor::colsMenu[9].rgba[3]);
 		UI::SET_TEXT_RIGHT_JUSTIFY(1);
 
 		UI::SET_TEXT_OUTLINE();
@@ -721,29 +666,36 @@ void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, f
 
 		UI::_DRAW_TEXT(0, textY);
 	}
-	else if (!item->isLeaf)
-	{
-		text_col[0] = 200;
-		text_col[1] = 200;
-		text_col[2] = 200;
+	else if(ColorItem<T> *colorItem = dynamic_cast<ColorItem<T> *>(item)){
+		UI::SET_TEXT_FONT(fontItem);
+		UI::SET_TEXT_SCALE(0.0, text_scale);
+		UI::SET_TEXT_RIGHT_JUSTIFY(1);
 
-		UI::SET_TEXT_FONT(font);
-		UI::SET_TEXT_SCALE(0.0, 0.4f);
-		UI::SET_TEXT_COLOUR(text_col[0], text_col[1], text_col[2], text_col[3]);
-		UI::SET_TEXT_CENTRE(0);
-
-		/*
 		UI::SET_TEXT_OUTLINE();
 
-		if (dropShadow)
-		{
+		if(dropShadow){
 			UI::SET_TEXT_DROPSHADOW(5, 0, 78, 255, 255);
 		}
-		*/
+
+		UI::SET_TEXT_EDGE(0, 0, 0, 0, 0);
+		UI::SET_TEXT_WRAP(0.0f, lineLeftScaled + lineWidthScaled - leftMarginScaled);
+		UI::_SET_TEXT_ENTRY("STRING");
+
+		std::stringstream ss;
+		ss << "<< " << colorItem->colorval << " >>";
+		auto ssStr = ss.str();
+		UI::_ADD_TEXT_COMPONENT_STRING((char *) ssStr.c_str());
+		UI::_DRAW_TEXT(0, textY);
+	}
+	else if (!item->isLeaf)
+	{
+		UI::SET_TEXT_FONT(fontItem);
+		UI::SET_TEXT_SCALE(0.0, 0.4f);
+		UI::SET_TEXT_COLOUR(ENTColor::colsMenu[10].rgba[0], ENTColor::colsMenu[10].rgba[1], ENTColor::colsMenu[10].rgba[2], ENTColor::colsMenu[10].rgba[3]);
+		UI::SET_TEXT_CENTRE(0);
 
 		UI::SET_TEXT_EDGE(1, 255, 215, 0, 255);
 
-		UI::SET_TEXT_COLOUR(text_col[0], text_col[1], text_col[2], text_col[3]);
 		UI::SET_TEXT_RIGHT_JUSTIFY(1);
 		UI::SET_TEXT_WRAP(0.0f, lineLeftScaled + lineWidthScaled - leftMarginScaled);
 		UI::_SET_TEXT_ENTRY("STRING");

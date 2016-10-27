@@ -81,11 +81,66 @@ bool process_misc_hotkey_menu()
 	return false;
 }
 
+void process_misc_trainermenucoloring_menu(int part){
+	std::vector<MenuItem<int> *> menuItems;
+	int index = 0;
+	ColorItem<int> *colorItem;
+
+	for(auto a : ENTColor::colsCompCaptions){
+		colorItem = new ColorItem<int>();
+		colorItem->caption = a;
+		colorItem->isLeaf = true;
+		colorItem->colorval = ENTColor::colsMenu[part].rgba[index];
+		colorItem->part = part;
+		colorItem->component = index++;
+		menuItems.push_back(colorItem);
+	}
+
+	draw_generic_menu<int>(menuItems, nullptr, ENTColor::colsCaptions[part], nullptr, nullptr, nullptr, nullptr);
+}
+
+bool onconfirm_trainermenucolors_menu(MenuItem<int> choice){
+	if(choice.value >= 0 && choice.value < ENTColor::colsVarsNum){
+		process_misc_trainermenucoloring_menu(choice.value);
+	}
+	else{
+		write_config_ini_file();
+		set_status_text("Saved to INI file");
+		write_text_to_log_file("INI config file written or updated");
+	}
+
+	return false;
+}
+
+void process_misc_trainermenucolors_menu(){
+	std::vector<MenuItem<int> *> menuItems;
+	int index = 0;
+	MenuItem<int> *item;
+
+	for(auto a : ENTColor::colsCaptions){
+		item = new MenuItem<int>();
+		item->caption = a;
+		item->value = index++;
+		item->isLeaf = false;
+		menuItems.push_back(item);
+	}
+	item = new MenuItem<int>();
+	item->caption = "Save Menu Color Config";
+	item->value = index++;
+	item->isLeaf = true;
+	menuItems.insert(menuItems.begin(), item);
+
+	draw_generic_menu<int>(menuItems, nullptr, "Trainer Menu Colors", onconfirm_trainermenucolors_menu, nullptr, nullptr, nullptr);
+}
+
 bool onconfirm_trainerconfig_menu(MenuItem<int> choice)
 {
 	if (choice.value == TRAINERCONFIG_HOTKEY_MENU)
 	{
 		process_misc_hotkey_menu();
+	}
+	else if(choice.value == 63){
+		process_misc_trainermenucolors_menu();
 	}
 	return false;
 }
@@ -121,6 +176,12 @@ void process_misc_trainerconfig_menu()
 	toggleItem->caption = "Include Nkjellman's Extra Scenery";
 	toggleItem->toggleValue = &featureMiscJellmanScenery;
 	menuItems.push_back(toggleItem);
+
+	stdItem = new MenuItem<int>();
+	stdItem->caption = "Menu Colors";
+	stdItem->value = 63;
+	stdItem->isLeaf = false;
+	menuItems.push_back(stdItem);
 
 	draw_generic_menu<int>(menuItems, &activeLineIndexTrainerConfig, caption, onconfirm_trainerconfig_menu, NULL, NULL);
 }
@@ -177,6 +238,8 @@ void reset_misc_globals()
 	featureRadioAlwaysOffUpdated =
 		featureMiscHideHudUpdated =
 		featurePlayerRadioUpdated = true;
+
+	ENTColor::reset_colors();
 }
 
 void update_misc_features(BOOL playerExists, Ped playerPed)
