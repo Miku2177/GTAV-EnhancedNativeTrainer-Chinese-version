@@ -296,7 +296,7 @@ bool process_individual_weapon_menu(int weaponIndex)
 	std::string caption = VOV_WEAPON_CAPTIONS[lastSelectedWeaponCategory].at(weaponIndex);
 	if (caption.compare("Pistol .50") == 0)
 	{
-		caption = "Pistol"; //menu title can't handle symbols
+		caption = "Pistol 50"; //menu title can't handle symbols
 	}
 
 	std::string value = VOV_WEAPON_VALUES[lastSelectedWeaponCategory].at(weaponIndex);
@@ -567,28 +567,38 @@ bool onconfirm_weapon_menu(MenuItem<int> choice)
 					break;
 				}
 
-				if(strcmp(weaponName, "WEAPON_HEAVYSNIPER") == 0 && b == 0){
+				if(strcmp(weaponName, "WEAPON_SMG") == 0 && b == 0){
 					continue;
 				}
-				if(strcmp(weaponName, "WEAPON_REVOLVER") == 0){
-					compHash = GAMEPLAY::GET_HASH_KEY((char *) VALUES_ATTACH_REVOLVER.at(0).c_str());
-					if(!WEAPON::HAS_PED_GOT_WEAPON_COMPONENT(playerPed, weaponHash, compHash)){
-						WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, weaponHash, compHash);
-					}
+				if(strcmp(weaponName, "WEAPON_ASSAULTRIFLE") == 0 && b == 0){
+					continue;
+				}
+				if(strcmp(weaponName, "WEAPON_CARBINERIFLE") == 0 && b == 0){
+					continue;
+				}
+				if(strcmp(weaponName, "WEAPON_HEAVYSNIPER") == 0){
 					break;
 				}
-				if(strcmp(weaponName, "WEAPON_SWITCHBLADE") == 0){
-					compHash = GAMEPLAY::GET_HASH_KEY((char *) VALUES_ATTACH_SWITCHBLADE.at(0).c_str());
-					if(!WEAPON::HAS_PED_GOT_WEAPON_COMPONENT(playerPed, weaponHash, compHash)){
-						WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, weaponHash, compHash);
-					}
-					break;
+				if(strcmp(weaponName, "WEAPON_COMBATPDW") == 0 && b == 0){
+					continue;
 				}
 				if(strcmp(weaponName, "WEAPON_COMPACTRIFLE") == 0 && b == 0){
 					continue;
 				}
-				if(strcmp(weaponName, "WEAPON_MINISMG") == 0 && b == 0){
+				if(strcmp(weaponName, "WEAPON_HEAVYSHOTGUN") == 0 && b == 0){
 					continue;
+				}
+				if(strcmp(weaponName, "WEAPON_MACHINEPISTOL") == 0 && b == 0){
+					continue;
+				}
+				if(strcmp(weaponName, "WEAPON_REVOLVER") == 0){
+					break;
+				}
+				if(strcmp(weaponName, "WEAPON_SPECIALCARBINE") == 0 && b == 0){
+					continue;
+				}
+				if(strcmp(weaponName, "WEAPON_SWITCHBLADE") == 0){
+					break;
 				}
 
 				if(WEAPON::HAS_PED_GOT_WEAPON_COMPONENT(playerPed, weaponHash, compHash)){
@@ -628,11 +638,11 @@ bool onconfirm_weapon_menu(MenuItem<int> choice)
 					break;
 				}
 
-				if(strcmp(weaponName, "WEAPON_COMPACTRIFLE") == 0 && b == 0){
-					continue;
+				if(strcmp(weaponName, "WEAPON_REVOLVER") == 0){
+					break;
 				}
-				if(strcmp(weaponName, "WEAPON_MINISMG") == 0 && b == 0){
-					continue;
+				if(strcmp(weaponName, "WEAPON_SWITCHBLADE") == 0){
+					break;
 				}
 
 				if(!WEAPON::HAS_PED_GOT_WEAPON_COMPONENT(playerPed, weaponHash, compHash)){

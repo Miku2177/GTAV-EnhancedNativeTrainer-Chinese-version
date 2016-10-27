@@ -28,9 +28,10 @@ int skinTypesBodyguardMenuPositionMemory[2] = { 0, 0 };
 //first index is which category, second is position in that category
 int skinTypesBodyguardMenuLastConfirmed[2] = { 0, 0 };
 
-Hash bodyGuardWeapon = NULL;
-
 std::vector<Ped> spawnedBodyguards;
+
+std::vector<bool *> bodyguardWeaponsToggle[8];
+bool bodyguardWeaponsToggleInitialized = false;
 
 bool process_bodyguard_skins_menu()
 {
@@ -155,11 +156,74 @@ bool process_npc_skins_menu()
 	return draw_generic_menu<std::string>(menuItems, &skinTypesBodyguardMenuPositionMemory[1], "NPC Skins", onconfirm_bodyguards_skins_npcs, NULL, NULL);
 }
 
-bool process_bodyguard_weapons_menu()
-{
-	// For now we'll just give every weapon to the bodyguards
-	// Maybe down the road we can allow a player to choose one or more weapons to give to a bodyguard
+bool process_bodyguard_weapons_category_menu(int category){
+	std::vector<MenuItem<int> *> menuItems;
+	ToggleMenuItem<int> *toggleItem;
+	int index = 0;
+
+	for(auto a: VOV_WEAPON_CAPTIONS[category]){
+		toggleItem = new ToggleMenuItem<int>();
+		toggleItem->caption = a;
+		toggleItem->value = index;
+		toggleItem->toggleValue = bodyguardWeaponsToggle[category].at(index++);
+		toggleItem->toggleValueUpdated = nullptr;
+		menuItems.push_back(toggleItem);
+	}
+
+	return draw_generic_menu<int>(menuItems, nullptr, MENU_WEAPON_CATEGORIES.at(category), nullptr, nullptr, nullptr, nullptr);
+}
+
+bool onconfirm_bodyguard_weapons_menu(MenuItem<int> choice){
+	int cs = MENU_WEAPON_CATEGORIES.size();
+	if(choice.value >= 0 && choice.value < cs){
+		process_bodyguard_weapons_category_menu(choice.value);
+	}
+	else if(choice.value == cs){
+		for(int a = 0; a < cs; a++){
+			for(int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++){
+				*(bodyguardWeaponsToggle[a].at(b)) = true;
+			}
+		}
+		set_status_text("All bodyguard weapons enabled");
+	}
+	else if(choice.value == cs + 1){
+		for(int a = 0; a < cs; a++){
+			for(int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++){
+				*(bodyguardWeaponsToggle[a].at(b)) = false;
+			}
+		}
+		set_status_text("All bodyguard weapons disabled");
+	}
+
 	return false;
+}
+
+bool process_bodyguard_weapons_menu(){
+	std::vector<MenuItem<int> *> menuItems;
+	MenuItem<int> *item;
+	int index = 0;
+
+	for(auto a: MENU_WEAPON_CATEGORIES){
+		item = new MenuItem<int>();
+		item->caption = a;
+		item->value = index++;
+		item->isLeaf = false;
+		menuItems.push_back(item);
+	}
+
+	item = new MenuItem<int>();
+	item->caption = "Toggle All Weapons Off";
+	item->value = index + 1;
+	item->isLeaf = true;
+	menuItems.insert(menuItems.begin(), item);
+
+	item = new MenuItem<int>();
+	item->caption = "Toggle All Weapons On";
+	item->value = index;
+	item->isLeaf = true;
+	menuItems.insert(menuItems.begin(), item);
+
+	return draw_generic_menu<int>(menuItems, nullptr, "Choose Bodyguard Weapons", onconfirm_bodyguard_weapons_menu, nullptr, nullptr, nullptr);
 }
 
 void dismiss_bodyguards() {
@@ -227,20 +291,14 @@ void do_spawn_bodyguard() {
 		PED::SET_PED_COMBAT_ABILITY(bodyGuard, 2);
 		PED::SET_PED_COMBAT_RANGE(bodyGuard, 2);
 
-
-		// throw every weapon at the bodyguards
-		static Hash weaponList[] = { WEAPON_ADVANCEDRIFLE, WEAPON_APPISTOL, WEAPON_ASSAULTRIFLE, WEAPON_ASSAULTSHOTGUN, WEAPON_ASSAULTSMG, WEAPON_BALL, WEAPON_BAT, WEAPON_BOTTLE, WEAPON_BULLPUPSHOTGUN, WEAPON_CARBINERIFLE, WEAPON_COMBATMG, WEAPON_COMBATPDW, WEAPON_COMBATPISTOL, WEAPON_CROWBAR, WEAPON_DAGGER, WEAPON_FIREEXTINGUISHER, WEAPON_FIREWORK, WEAPON_FLAREGUN, WEAPON_GOLFCLUB, WEAPON_GRENADE, WEAPON_GRENADELAUNCHER, WEAPON_GUSENBERG, WEAPON_HAMMER, WEAPON_HEAVYPISTOL, WEAPON_HEAVYSHOTGUN, WEAPON_HEAVYSNIPER, WEAPON_HOMINGLAUNCHER, WEAPON_KNIFE, WEAPON_KNUCKLE, WEAPON_MARKSMANPISTOL, WEAPON_MARKSMANRIFLE, WEAPON_MG, WEAPON_MICROSMG, WEAPON_MOLOTOV, WEAPON_MUSKET, WEAPON_NIGHTSTICK, WEAPON_PETROLCAN, WEAPON_PISTOL, WEAPON_PISTOL50, WEAPON_PROXMINE, WEAPON_PUMPSHOTGUN, WEAPON_RPG, WEAPON_SAWNOFFSHOTGUN, WEAPON_SMG, WEAPON_SMOKEGRENADE, WEAPON_SNIPERRIFLE, WEAPON_SNOWBALL, WEAPON_SNSPISTOL, WEAPON_SPECIALCARBINE, WEAPON_STICKYBOMB, WEAPON_STUNGUN, WEAPON_VINTAGEPISTOL, WEAPON_MINIGUN, WEAPON_RAILGUN };
-		
-		for (int i = 0; i < sizeof(weaponList) / sizeof(Hash); i++)
-		{
-			if (WEAPON::HAS_PED_GOT_WEAPON(bodyGuard, weaponList[i], FALSE) == FALSE)
-			{
-				WEAPON::GIVE_WEAPON_TO_PED(bodyGuard, weaponList[i], 9999, FALSE, TRUE);
-			}
-			if (WEAPON::GET_WEAPONTYPE_GROUP(weaponList[i]) == WEAPON_TYPE_GROUP_THROWABLE)
-			{
-				WEAPON::REMOVE_WEAPON_FROM_PED(bodyGuard, weaponList[i]);
-				WEAPON::GIVE_WEAPON_TO_PED(bodyGuard, weaponList[i], 9999, FALSE, TRUE);
+		for(int a = 0; a < MENU_WEAPON_CATEGORIES.size(); a++){
+			for(int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++){
+				if(*bodyguardWeaponsToggle[a].at(b)){
+					Hash tmp = GAMEPLAY::GET_HASH_KEY((char *) VOV_WEAPON_VALUES[a].at(b).c_str());
+					if(!WEAPON::HAS_PED_GOT_WEAPON(bodyGuard, tmp, false)){
+						WEAPON::GIVE_WEAPON_TO_PED(bodyGuard, tmp, 9999, false, true);
+					}
+				}
 			}
 		}
 
@@ -323,13 +381,13 @@ bool process_bodyguard_menu()
 		item->value = i++;
 		item->isLeaf = false;
 		menuItems.push_back(item);
-		/*
+
 		item = new MenuItem<int>();
-		item->caption = "Choose Weapon";
+		item->caption = "Choose Weapons";
 		item->value = i++;
 		item->isLeaf = false;
 		menuItems.push_back(item);
-		*/
+
 		toggleItem = new ToggleMenuItem<int>();
 		toggleItem->caption = "Invincible";
 		toggleItem->value = i++;
@@ -376,7 +434,14 @@ bool onconfirm_bodyguard_menu(MenuItem<int> choice)
 		process_bodyguard_skins_menu();
 		break;
 	case 3:
-		//process_bodyguard_weapons_menu();
+		if(!bodyguardWeaponsToggleInitialized){
+			for(int a = 0; a < MENU_WEAPON_CATEGORIES.size(); a++){
+				for(int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++){
+					bodyguardWeaponsToggle[a].push_back(new bool(true));
+				}
+			}
+		}
+		process_bodyguard_weapons_menu();
 		break;
 	default:
 		break;

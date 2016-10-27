@@ -7,8 +7,8 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "config_io.h"
 #include "keyboard.h"
 #include "xinput.h"
-//#include "script.h"
 #include "..\debug\debuglog.h"
+#include "..\ui_support\entcolor.h"
 #include <sstream>
 
 // A global Windows "basic string". Actual memory is allocated by the
@@ -209,6 +209,82 @@ void read_config_file()
 	CoUninitialize();
 	
 	config = result;
+}
+
+void read_config_ini_file(){
+	int tmpv[12][4];
+	const char *sectionMenuColor = "MenuColor", *file = "./ent_config.ini";
+	const std::string tmpk[] = {"r", "g", "b", "a"};
+	std::ifstream tmp(file);
+	bool notexist = !((bool) tmp);
+	tmp.close();
+
+	if(notexist){
+		write_text_to_log_file("INI file does not exist.\nUsing default settings.\nINI file will be created upon saving in-game.");
+		return;
+	}
+
+	for(int a = 0; a < ENTColor::colsVarsNum; a++){
+		for(int b = 0; b < 4; b++){
+			tmpv[a][b] = GetPrivateProfileInt(sectionMenuColor, (ENTColor::colsVarsReverse.at(a) + tmpk[b]).c_str(), -1, file);
+		}
+		if(!(tmpv[a][0] < 0 || tmpv[a][1] < 0 || tmpv[a][2] < 0 || tmpv[a][3] < 0) || !(tmpv[a][0] > 255 || tmpv[a][1] > 255 || tmpv[a][2] > 255 || tmpv[a][3] > 255)){
+			for(int b = 0; b < 4; b++){
+				ENTColor::colsMenu[a].rgba[b] = tmpv[a][b];
+			}
+		}
+	}
+}
+
+void write_config_ini_file(){
+	const char *sectionMenuColor = "MenuColor", *file = "./ent_config.ini";
+	const std::string tmpk[] = {"r", "g", "b", "a"};
+	std::ofstream ini;
+	std::ifstream tmp(file);
+	bool notexist = !((bool) tmp);
+	tmp.close();
+
+	for(int a = 0; a < ENTColor::colsVarsNum; a++){
+		for(int b = 0; b < 4; b++){
+			WritePrivateProfileString(sectionMenuColor, (ENTColor::colsVarsReverse.at(a) + tmpk[b]).c_str(), std::to_string(ENTColor::colsMenu[a].rgba[b]).c_str(), file);
+		}
+	}
+
+	if(notexist){
+		tmp.open(file);
+		if(tmp.is_open()){
+			std::vector<std::string> lines, result;
+			for(std::string line; std::getline(tmp, line); ){
+				lines.push_back(line);
+			}
+			tmp.close();
+
+			result.push_back(std::string(";;;; Enhanced Native Trainer: Configuration INI File (Begin) ;;;;\n\n;;; (Delete this file to revert to defaults) ;;;\n"));
+
+			result.push_back(std::string(";; Menu Colors (Begin) ;;\n;\tFollows the RGBA color system, 0 ~ 255 for each component of a color;"));
+			for(auto a: lines){
+				for(int b = 0; b < ENTColor::colsVarsNum; b++){
+					if(a.compare(0, ENTColor::colsVarsReverse.at(b).length() + 1, (ENTColor::colsVarsReverse.at(b) + tmpk[0])) == 0){
+						result.push_back(std::string("; ") + ENTColor::colsCaptions[b] + std::string(" ;"));
+						break;
+					}
+				}
+				result.push_back(a);
+			}
+			result.push_back(std::string(";; Menu Colors (End) ;;"));
+
+			result.push_back(std::string("\n;;;; Enhanced Native Trainer: Configuration INI File (End) ;;;;"));
+
+			ini.open(file, std::ofstream::out | std::ofstream::trunc);
+			if(ini.is_open()){
+				for(auto a: result){
+					ini << a << std::endl;
+				}
+
+				ini.close();
+			}
+		}
+	}
 }
 
 void KeyInputConfig::set_key(char* function, char* keyName, bool modCtrl, bool modAlt, bool modShift)

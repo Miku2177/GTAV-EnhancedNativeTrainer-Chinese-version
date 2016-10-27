@@ -104,6 +104,9 @@
     <ClCompile Include="src\utils.cpp">
       <Filter>src\io</Filter>
     </ClCompile>
+    <ClCompile Include="src\ui_support\entcolor.cpp">
+      <Filter>src\ui_support</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ent-enums.h" />
@@ -204,6 +207,9 @@
     </ClInclude>
     <ClInclude Include="src\common\vectorHelper.h">
       <Filter>inc\features</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui_support\entcolor.h">
+      <Filter>inc\ui_support</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
