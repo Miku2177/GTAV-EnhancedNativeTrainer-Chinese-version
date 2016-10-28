@@ -510,7 +510,7 @@ void process_player_menu()
 	StandardOrToggleMenuDef lines[lineCount] = {
 		{ "Player Appearance", NULL, NULL, false },
 		{ "Heal Player", NULL, NULL, true },
-		{ "Add Cash", NULL, NULL, true, CASH },
+		{ "Add or Remove Cash", NULL, NULL, true, CASH },
 		{ "Wanted Level", NULL, NULL, true, WANTED },
 		{ "Freeze Wanted Level", &featureWantedLevelFrozen, &featureWantedLevelFrozenUpdated, true },
 		{ "Invincible", &featurePlayerInvincible, &featurePlayerInvincibleUpdated, true },
@@ -520,7 +520,7 @@ void process_player_menu()
 		{ "Fast Swim", &featurePlayerFastSwim, &featurePlayerFastSwimUpdated, true },
 		{ "Fast Run", &featurePlayerFastRun, &featurePlayerFastRunUpdated, true },
 		{ "Super Jump", &featurePlayerSuperJump, NULL, true },
-		{ "No Ragdoll", &featureNoRagdoll, &featureNoRagdollUpdated, true }, //could this be the toggle value?
+		{ "No Ragdoll", &featureNoRagdoll, &featureNoRagdollUpdated, true },
 		{ "Invisibility", &featurePlayerInvisible, &featurePlayerInvisibleUpdated, true },
 		{ "Drunk", &featurePlayerDrunk, &featurePlayerDrunkUpdated, true },
 		{ "Night Vision", &featureNightVision, &featureNightVisionUpdated, true },
