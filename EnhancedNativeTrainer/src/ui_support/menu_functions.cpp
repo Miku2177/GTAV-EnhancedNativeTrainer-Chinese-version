@@ -336,23 +336,61 @@ bool CashItem<T>::onConfirm()
 		Hash hash = GAMEPLAY::GET_HASH_KEY(statNameFull);
 		int newAmount;
 		STATS::STAT_GET_INT(hash, &newAmount, -1);
-		newAmount = cash < INT_MAX - newAmount ? newAmount + cash : INT_MAX; // Check for overflow properly
+		if(cash > 0){
+			if(cash < INT_MAX - newAmount){
+				newAmount += cash;
+			}
+			else{
+				newAmount = INT_MAX;
+			}
+		}
+		else{
+			if(newAmount + cash > 0){
+				newAmount += cash;
+			}
+			else{
+				newAmount = 0;
+			}
+		}
 		STATS::STAT_SET_INT(hash, newAmount, 1);
 	}
-	set_status_text("Cash added");
+	cash > 0 ? set_status_text("Cash added") : set_status_text("Cash removed");
+
 	return true;
 }
 
 template<class T>
 void CashItem<T>::handleLeftPress()
 {
-	cash = cash > min ? cash / multiplier : max;
+	if(cash > 1){
+		cash /= multiplier;
+	}
+	else if(cash == 1){
+		cash = -1;
+	}
+	else if(cash > min){
+		cash *= multiplier;
+	}
+	else{
+		cash = max;
+	}
 }
 
 template<class T>
 void CashItem<T>::handleRightPress()
 {
-	cash = cash < max ? cash * multiplier : min;
+	if(cash < -1){
+		cash /= multiplier;
+	}
+	else if(cash == -1){
+		cash = 1;
+	}
+	else if(cash < max){
+		cash *= multiplier;
+	}
+	else{
+		cash = min;
+	}
 }
 
 int WantedSymbolItem::get_wanted_value()

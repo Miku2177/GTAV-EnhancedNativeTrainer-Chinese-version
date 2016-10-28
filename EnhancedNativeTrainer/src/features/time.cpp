@@ -45,6 +45,100 @@ float quadratic_time_transition(float start, float end, float progress)
 	return (start + (difference * t));
 }
 
+bool onconfirm_time_set_menu(MenuItem<int> choice){
+	switch(choice.value){
+		case 0:
+			// 0000
+			movetime_set(0, 0);
+			break;
+		case 1:
+			// 0500
+			movetime_set(5, 0);
+			break;
+		case 2:
+			// 0600
+			movetime_set(6, 0);
+			break;
+		case 3:
+			// 0800
+			movetime_set(8, 0);
+			break;
+		case 4:
+			// 1200
+			movetime_set(12, 0);
+			break;
+		case 5:
+			// 1600
+			movetime_set(16, 0);
+			break;
+		case 6:
+			// 1830
+			movetime_set(18, 30);
+			break;
+		case 7:
+			// 2100
+			movetime_set(21, 0);
+			break;
+	}
+
+	return false;
+}
+
+void process_time_set_menu(){
+	std::vector<MenuItem<int> *> menuItems;
+	int index = 0;
+
+	MenuItem<int> *item = new MenuItem<int>();
+	item->caption = "Midnight";
+	item->value = index++;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "Pre-Dawn";
+	item->value = index++;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "Dawn";
+	item->value = index++;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "Morning";
+	item->value = index++;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "Midday";
+	item->value = index++;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "Afternoon";
+	item->value = index++;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "Sunset";
+	item->value = index++;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "Dusk";
+	item->value = index++;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	draw_generic_menu<int>(menuItems, nullptr, "Set Time to ", onconfirm_time_set_menu, nullptr, nullptr, nullptr);
+}
+
 bool onconfirm_time_menu(MenuItem<int> choice)
 {
 	switch (activeLineIndexTime)
@@ -67,6 +161,9 @@ bool onconfirm_time_menu(MenuItem<int> choice)
 		break;
 	case 5:
 		movetime_day_backward();
+		break;
+	case 6:
+		process_time_set_menu();
 		break;
 	case -1:
 		if (featureTimePaused)
@@ -100,8 +197,6 @@ void onchange_aiming_speed_callback(int value, SelectFromListMenuItem* source)
 
 void process_time_menu()
 {
-	const int lineCount = 5;
-
 	std::string caption = "Time Options";
 
 	std::vector<MenuItem<int>*> menuItems;
@@ -143,6 +238,12 @@ void process_time_menu()
 	item->value = index++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "Set Time to Preset";
+	item->value = index++;
+	item->isLeaf = false;
+	menuItems.insert(menuItems.begin(), item);
 
 	ToggleMenuItem<int> *togItem = new ToggleMenuItem<int>();
 	togItem->caption = "Clock Paused";
@@ -411,6 +512,13 @@ void movetime_fivemin_backward()
 	TIME::SET_CLOCK_TIME(gameHour, gameMins, 00);
 	char text[32];
 	sprintf_s(text, "Time is now %02d:%02d", gameHour, gameMins);
+	set_status_text(text);
+}
+
+void movetime_set(int hour, int minute){
+	TIME::SET_CLOCK_TIME(hour, minute, 0);
+	char text[32];
+	sprintf_s(text, "Time is now %02d:%02d", TIME::GET_CLOCK_HOURS(), TIME::GET_CLOCK_MINUTES());
 	set_status_text(text);
 }
 

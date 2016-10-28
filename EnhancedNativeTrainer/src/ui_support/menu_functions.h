@@ -178,7 +178,7 @@ class CashItem : public MenuItem <T>
 
 	int cash = 10000;
 	int multiplier = 10;
-	int min = 1;
+	int min = -1000000000;
 	int max = 1000000000;
 
 	virtual bool onConfirm();
@@ -484,9 +484,17 @@ void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, f
 	{
 		UI::SET_TEXT_FONT(fontItem);
 		UI::SET_TEXT_SCALE(0.0, text_scale);
+		if(active){
+			UI::SET_TEXT_COLOUR(ENTColor::colsMenu[4].rgba[0], ENTColor::colsMenu[4].rgba[1], ENTColor::colsMenu[4].rgba[2], ENTColor::colsMenu[4].rgba[3]);
+		}
+		else{
+			UI::SET_TEXT_COLOUR(ENTColor::colsMenu[2].rgba[0], ENTColor::colsMenu[2].rgba[1], ENTColor::colsMenu[2].rgba[2], ENTColor::colsMenu[2].rgba[3]);
+		}
 		UI::SET_TEXT_CENTRE(0);
 
-		UI::SET_TEXT_OUTLINE();
+		if(outline){
+			UI::SET_TEXT_OUTLINE();
+		}
 
 		if (dropShadow)
 		{
@@ -520,9 +528,17 @@ void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, f
 	{
 		UI::SET_TEXT_FONT(fontItem);
 		UI::SET_TEXT_SCALE(0.0, text_scale);
+		if(active){
+			UI::SET_TEXT_COLOUR(ENTColor::colsMenu[4].rgba[0], ENTColor::colsMenu[4].rgba[1], ENTColor::colsMenu[4].rgba[2], ENTColor::colsMenu[4].rgba[3]);
+		}
+		else{
+			UI::SET_TEXT_COLOUR(ENTColor::colsMenu[2].rgba[0], ENTColor::colsMenu[2].rgba[1], ENTColor::colsMenu[2].rgba[2], ENTColor::colsMenu[2].rgba[3]);
+		}
 		UI::SET_TEXT_RIGHT_JUSTIFY(1);
 
-		UI::SET_TEXT_OUTLINE();
+		if(outline){
+			UI::SET_TEXT_OUTLINE();
+		}
 
 		if (dropShadow)
 		{
@@ -533,7 +549,7 @@ void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, f
 		UI::SET_TEXT_WRAP(0.0f, lineLeftScaled + lineWidthScaled - leftMarginScaled);
 		UI::_SET_TEXT_ENTRY("STRING");
 
-		std::string commaCash = std::to_string(cashItem->GetCash());
+		std::string commaCash = std::to_string(cashItem->GetCash() > 0 ? cashItem->GetCash() : -cashItem->GetCash());
 		int insertPosition = commaCash.length() - 3;
 		while (insertPosition > 0)
 		{
@@ -542,7 +558,11 @@ void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, f
 		}
 
 		std::stringstream ss;
-		ss << "<< $" << commaCash << " >>";
+		ss << "<< ";
+		if(cashItem->GetCash() < 0){
+			ss << "-";
+		}
+		ss << "$" << commaCash << " >>";
 		auto ssStr = ss.str();
 		UI::_ADD_TEXT_COMPONENT_STRING((char *)ssStr.c_str());
 		UI::_DRAW_TEXT(0, textY);
@@ -569,7 +589,9 @@ void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, f
 
 		UI::SET_TEXT_RIGHT_JUSTIFY(1);
 
-		UI::SET_TEXT_OUTLINE();
+		if(outline){
+			UI::SET_TEXT_OUTLINE();
+		}
 
 		if (dropShadow)
 		{
@@ -621,7 +643,9 @@ void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, f
 		UI::SET_TEXT_COLOUR(ENTColor::colsMenu[8].rgba[0], ENTColor::colsMenu[8].rgba[1], ENTColor::colsMenu[8].rgba[2], ENTColor::colsMenu[8].rgba[3]);
 		UI::SET_TEXT_RIGHT_JUSTIFY(1);
 
-		UI::SET_TEXT_OUTLINE();
+		if(outline){
+			UI::SET_TEXT_OUTLINE();
+		}
 
 		UI::SET_TEXT_EDGE(0, 0, 0, 0, 0);
 
@@ -648,7 +672,9 @@ void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, f
 		UI::SET_TEXT_COLOUR(ENTColor::colsMenu[9].rgba[0], ENTColor::colsMenu[9].rgba[1], ENTColor::colsMenu[9].rgba[2], ENTColor::colsMenu[9].rgba[3]);
 		UI::SET_TEXT_RIGHT_JUSTIFY(1);
 
-		UI::SET_TEXT_OUTLINE();
+		if(outline){
+			UI::SET_TEXT_OUTLINE();
+		}
 
 		UI::SET_TEXT_EDGE(0, 0, 0, 0, 0);
 
@@ -669,9 +695,17 @@ void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, f
 	else if(ColorItem<T> *colorItem = dynamic_cast<ColorItem<T> *>(item)){
 		UI::SET_TEXT_FONT(fontItem);
 		UI::SET_TEXT_SCALE(0.0, text_scale);
+		if(active){
+			UI::SET_TEXT_COLOUR(ENTColor::colsMenu[4].rgba[0], ENTColor::colsMenu[4].rgba[1], ENTColor::colsMenu[4].rgba[2], ENTColor::colsMenu[4].rgba[3]);
+		}
+		else{
+			UI::SET_TEXT_COLOUR(ENTColor::colsMenu[2].rgba[0], ENTColor::colsMenu[2].rgba[1], ENTColor::colsMenu[2].rgba[2], ENTColor::colsMenu[2].rgba[3]);
+		}
 		UI::SET_TEXT_RIGHT_JUSTIFY(1);
 
-		UI::SET_TEXT_OUTLINE();
+		if(outline){
+			UI::SET_TEXT_OUTLINE();
+		}
 
 		if(dropShadow){
 			UI::SET_TEXT_DROPSHADOW(5, 0, 78, 255, 255);

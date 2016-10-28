@@ -43,4 +43,6 @@ void movetime_fivemin_forward();
 
 void movetime_fivemin_backward();
 
+void movetime_set(int hour, int minute);
+
 std::string get_day_of_game_week();
