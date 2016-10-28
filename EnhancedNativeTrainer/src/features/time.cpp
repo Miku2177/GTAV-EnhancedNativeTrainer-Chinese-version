@@ -141,40 +141,41 @@ void process_time_set_menu(){
 
 bool onconfirm_time_menu(MenuItem<int> choice)
 {
-	switch (activeLineIndexTime)
+	switch (choice.value)
 	{
-		// hour forward/backward
-	case 0:
-		movetime_hour_forward();
-		break;
-	case 1:
-		movetime_hour_backward();
-		break;
-	case 2:
-		movetime_fivemin_forward();
-		break;
-	case 3:
-		movetime_fivemin_backward();
-		break;
-	case 4:
-		movetime_day_forward();
-		break;
-	case 5:
-		movetime_day_backward();
-		break;
-	case 6:
-		process_time_set_menu();
-		break;
-	case -1:
-		if (featureTimePaused)
-		{
-			set_status_text("Time now paused");
-		}
-	case -2:
-		if (featureTimeSynced)
-		{
-			set_status_text("Time synced with system");
-		}
+		case 0:
+			movetime_hour_forward();
+			break;
+		case 1:
+			movetime_hour_backward();
+			break;
+		case 2:
+			movetime_fivemin_forward();
+			break;
+		case 3:
+			movetime_fivemin_backward();
+			break;
+		case 4:
+			movetime_day_forward();
+			break;
+		case 5:
+			movetime_day_backward();
+			break;
+		case -4:
+			process_time_set_menu();
+			break;
+		case -1:
+			if(featureTimePaused)
+			{
+				set_status_text("Time now paused");
+			}
+			break;
+		case -2:
+			if(featureTimeSynced)
+			{
+				set_status_text("Time synced with system");
+			}
+			break;
 	}
 	return false;
 }
@@ -241,7 +242,7 @@ void process_time_menu()
 
 	item = new MenuItem<int>();
 	item->caption = "Set Time to Preset";
-	item->value = index++;
+	item->value = -4;
 	item->isLeaf = false;
 	menuItems.insert(menuItems.begin(), item);
 
@@ -278,7 +279,7 @@ void process_time_menu()
 	listItem->value = timeSpeedIndexWhileAiming;
 	menuItems.push_back(listItem);
 
-	draw_generic_menu<int>(menuItems, &activeLineIndexTime, caption, onconfirm_time_menu, NULL, NULL);
+	draw_generic_menu<int>(menuItems, nullptr, caption, onconfirm_time_menu, nullptr, nullptr, nullptr);
 }
 
 void reset_time_globals()
