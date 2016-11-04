@@ -151,8 +151,6 @@ std::string getModCategoryName(int i)
 		return "Door Cards";
 	case 32:
 		return "Seats";
-	//case 19:
-		//return "Headlights";
 	case 33:
 		return "Steering Wheels";
 	case 34:
@@ -192,8 +190,6 @@ std::string getModCategoryName(int i)
 			return "Window Tint";
 	case SPECIAL_ID_FOR_LICENSE_PLATES:
 		return "License Plates";
-	//case 50:
-		//return "case 50";
 	default:
 		return std::to_string(i);
 	}
