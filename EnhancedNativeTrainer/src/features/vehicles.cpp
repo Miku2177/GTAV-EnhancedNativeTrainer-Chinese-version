@@ -35,6 +35,7 @@ bool featureLockVehicleDoors = false;
 bool featureLockVehicleDoorsUpdated = false;
 bool featureWearHelmetOff = false;
 bool featureWearHelmetOffUpdated = false;
+bool featureVehLightsOn = false, featureVehLightsOnUpdated = false;
 
 bool featureDespawnScriptDisabled = false;
 bool featureDespawnScriptDisabledUpdated = false;
@@ -175,7 +176,7 @@ const std::vector<std::string> VOV_INDUS_VALUES[] = { VALUES_PICKUPS, VALUES_VAN
 
 const std::vector<std::string> CAPTIONS_EMERGENCY{ "Albany Police Roadcruiser (Snow)", "Ambulance", "Army Barracks Truck", "Army Truck Cab", "Bravado Buffalo (FIB)", "Brute Police Riot Van", "Canis Crusader (Army Mesa)", "Declasse Granger (FIB)", "Declasse Lifeguard", "Declasse Park Ranger", "Declasse Police Rancher (Snow)", "Declasse Police Transporter", "Declasse Sheriff SUV", "Firetruck", "Prison Bus", "Rhino Tank", "Vapid Police Buffalo", "Vapid Police Cruiser", "Vapid Police Interceptor", "Vapid Sheriff Cruiser", "Vapid Unmarked Police Cruiser", "Western Police Bike" };
 
-const std::vector<std::string> CAPTIONS_MOTORCYCLES{ "BF Raptor (Biker)", "Dinka Akuma", "Nagasaki BF400 (Race)", "Western Cliffhanger (Race)",  "Dinka Double-T", "Dinka Enduro", "Western Gargoyle (Race)", "Dinka Thrust", "Dinka Vindicator", "LCC Avarus (Biker)", "LCC Hexer", "LCC Innovation", "LCC Sanctus (Biker)", "Maibatsu Manchez (Biker)", "Maibatsu Sanchez", "Maibatsu Sanchez (Graphics)", "Nagasaki Carbon RS", "Nagasaki Chimera Trike (Biker)", "Nagasaki Street Blazer (Biker)", "Nagasaki Shotaro (Biker)", "Pegassi Bati", "Pegassi Bati (Race)", "Pegassi Esskey (Biker)", "Pegassi Faggio Mod (Biker)", "Pegassi Faggio Sport (Biker)", "Pegassi Ruffian", "Principe Faggio", "Principe Lectro", "Principe Nemesis", "Shitzu Defiler (Biker)", "Shitzu Hakuchou", "Shitzu Hakuchou Drag (Biker)", "Shitzu PCJ 600", "Shitzu Vader", "Western Bagger", "Western Daemon", "Western Nightblade (Biker)", "Western Rat Bike (Biker)", "Western Sovereign", "Western Wolfsbane (Biker)", "Western Bagger (Biker)", "Western Daemon (Biker)","Western Zombie Bobber (Biker)", "Western Zombie Chopper (Biker)" };
+const std::vector<std::string> CAPTIONS_MOTORCYCLES{ "BF Raptor (Biker)", "Dinka Akuma", "Nagasaki BF400 (Race)", "Western Cliffhanger (Race)",  "Dinka Double-T", "Dinka Enduro", "Western Gargoyle (Race)", "Dinka Thrust", "Dinka Vindicator", "LCC Avarus (Biker)", "LCC Hexer", "LCC Innovation", "LCC Sanctus (Biker)", "Maibatsu Manchez (Biker)", "Maibatsu Sanchez", "Maibatsu Sanchez (Graphics)", "Nagasaki Carbon RS", "Nagasaki Chimera Trike (Biker)", "Nagasaki Street Blazer (Biker)", "Nagasaki Shotaro (Biker)", "Pegassi Bati", "Pegassi Bati (Race)", "Pegassi Esskey (Biker)", "Pegassi Faggio Mod (Biker)", "Pegassi Faggio Sport (Biker)", "Pegassi Ruffian", "Pegassi Vortex (Biker)", "Principe Faggio", "Principe Lectro", "Principe Nemesis", "Shitzu Defiler (Biker)", "Shitzu Hakuchou", "Shitzu Hakuchou Drag (Biker)", "Shitzu PCJ 600", "Shitzu Vader", "Western Bagger", "Western Daemon", "Western Nightblade (Biker)", "Western Rat Bike (Biker)", "Western Sovereign", "Western Wolfsbane (Biker)", "Western Bagger (Biker)", "Western Daemon (Biker)","Western Zombie Bobber (Biker)", "Western Zombie Chopper (Biker)" };
 
 const std::vector<std::string> CAPTIONS_PLANES{ "Buckingham Cargo Plane (An-225)", "Buckingham Jet (B747)", "Buckingham Luxor", "Buckingham Luxor Deluxe", "Buckingham Miljet", "Buckingham Shamal", "Buckingham Vestra", "Jobuilt Mammatus", "Jobuilt P-996 Lazer", "Jobuilt Velum (4 Seater)", "Jobuilt Velum (5 Seater)", "Mammoth Dodo", "Mammoth Hydra", "Mammoth Titan", "Western Besra", "Western Cuban 800", "Western Duster", "Western Mallard Stunt Plane" };
 
@@ -187,7 +188,7 @@ const std::vector<std::string> CAPTIONS_BICYCLES{ "BMX", "Cruiser", "Endurex Rac
 
 const std::vector<std::string> VALUES_EMERGENCY{ "POLICEOLD2", "AMBULANCE", "BARRACKS", "BARRACKS2", "FBI", "RIOT", "CRUSADER", "FBI2", "LGUARD", "PRANGER", "POLICEOLD1", "POLICET", "SHERIFF2", "FIRETRUK", "PBUS", "RHINO", "POLICE2", "POLICE", "POLICE3", "SHERIFF", "POLICE4", "POLICEB" };
 
-const std::vector<std::string> VALUES_MOTORCYCLES{ "RAPTOR", "AKUMA", "BF400", "CLIFFHANGER", "DOUBLE", "ENDURO", "GARGOYLE", "THRUST", "VINDICATOR", "AVARUS","HEXER", "INNOVATION", "SANCTUS", "MANCHEZ", "SANCHEZ2", "SANCHEZ", "CARBONRS", "CHIMERA", "BLAZER4", "SHOTARO", "BATI", "BATI2", "ESSKEY", "FAGGIO3", "FAGGIO","RUFFIAN", "FAGGIO2", "LECTRO", "NEMESIS", "DEFILER", "HAKUCHOU", "HAKUCHOU2","PCJ", "VADER", "BAGGER", "DAEMON", "NIGHTBLADE", "RATBIKE" ,"SOVEREIGN", "WOLFSBANE", "BAGGER", "DAEMON2", "ZOMBIEA", "ZOMBIEB" };
+const std::vector<std::string> VALUES_MOTORCYCLES{ "RAPTOR", "AKUMA", "BF400", "CLIFFHANGER", "DOUBLE", "ENDURO", "GARGOYLE", "THRUST", "VINDICATOR", "AVARUS","HEXER", "INNOVATION", "SANCTUS", "MANCHEZ", "SANCHEZ2", "SANCHEZ", "CARBONRS", "CHIMERA", "BLAZER4", "SHOTARO", "BATI", "BATI2", "ESSKEY", "FAGGIO3", "FAGGIO","RUFFIAN", "VORTEX", "FAGGIO2", "LECTRO", "NEMESIS", "DEFILER", "HAKUCHOU", "HAKUCHOU2","PCJ", "VADER", "BAGGER", "DAEMON", "NIGHTBLADE", "RATBIKE" ,"SOVEREIGN", "WOLFSBANE", "BAGGER", "DAEMON2", "ZOMBIEA", "ZOMBIEB" };
 
 const std::vector<std::string> VALUES_PLANES{ "CARGOPLANE", "JET", "LUXOR", "LUXOR2", "MILJET", "SHAMAL", "VESTRA", "MAMMATUS", "LAZER", "VELUM", "VELUM2", "DODO", "HYDRA", "TITAN", "BESRA", "CUBAN800", "DUSTER", "STUNT" };
 
@@ -485,6 +486,13 @@ void process_veh_menu()
 	toggleItem->toggleValueUpdated = &featureLockVehicleDoorsUpdated;
 	menuItems.push_back(toggleItem);
 
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Force Vehicle Lights On";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureVehLightsOn;
+	toggleItem->toggleValueUpdated = &featureVehLightsOnUpdated;
+	menuItems.push_back(toggleItem);
+
 	draw_generic_menu<int>(menuItems, &activeLineIndexVeh, caption, onconfirm_veh_menu, NULL, NULL);
 }
 
@@ -636,8 +644,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed)
 			float speed = ENTITY::GET_ENTITY_SPEED(veh);
 			if (bUp)
 			{
-				speed += speed * 0.05f;
-				VEHICLE::SET_VEHICLE_FORWARD_SPEED(veh, speed);
+				VEHICLE::SET_VEHICLE_FORWARD_SPEED(veh, speed * 1.02f + 2.0f);
 			}
 			else
 				if (ENTITY::IS_ENTITY_IN_AIR(veh) || speed > 5.0)
@@ -696,6 +703,16 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed)
 	if (bPlayerExists && (did_player_just_enter_vehicle(playerPed) || massChanged)) { // check if player entered vehicle, only need to set mults once
 		VEHICLE::SET_VEHICLE_DENSITY_MULTIPLIER_THIS_FRAME(VEH_MASS_VALUES[VehMassMultIndex]);
 		massChanged = false;
+	}
+
+	if(bPlayerExists){
+		if(featureVehLightsOn && (featureVehLightsOnUpdated || did_player_just_enter_vehicle(playerPed))){
+			VEHICLE::SET_VEHICLE_LIGHTS(veh, 2); // 0 = normal, 1 = force off, 2 = forced on (visual_night), 3 = forced on (blink), 4 = forced off (blink), 5+ = normal
+		}
+		else if(!featureVehLightsOn && featureVehLightsOnUpdated){
+			VEHICLE::SET_VEHICLE_LIGHTS(veh, 0);
+			featureVehLightsOnUpdated = false;
+		}
 	}
 }
 
@@ -1001,6 +1018,7 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWearHelmetOff", &featureWearHelmetOff, &featureWearHelmetOffUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureVehInvulnIncludesCosmetic", &featureVehInvulnIncludesCosmetic, &featureVehInvincibleUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureDespawnScriptDisabled", &featureDespawnScriptDisabled, &featureDespawnScriptDisabledUpdated });
+	results->push_back(FeatureEnabledLocalDefinition{"featureVehLightsOn", &featureVehLightsOn, &featureVehLightsOnUpdated});
 }
 
 bool spawn_saved_car(int slot, std::string caption)
