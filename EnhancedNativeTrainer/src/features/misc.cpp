@@ -103,10 +103,14 @@ bool onconfirm_trainermenucolors_menu(MenuItem<int> choice){
 	if(choice.value >= 0 && choice.value < ENTColor::colsVarsNum){
 		process_misc_trainermenucoloring_menu(choice.value);
 	}
-	else{
+	else if(choice.value == ENTColor::colsVarsNum){
 		write_config_ini_file();
 		set_status_text("Saved to INI file");
 		write_text_to_log_file("INI config file written or updated");
+	}
+	else if(choice.value == ENTColor::colsVarsNum + 1){
+		ENTColor::reset_colors();
+		set_status_text("ENT menu colors reset");
 	}
 
 	return false;
@@ -124,8 +128,15 @@ void process_misc_trainermenucolors_menu(){
 		item->isLeaf = false;
 		menuItems.push_back(item);
 	}
+
 	item = new MenuItem<int>();
 	item->caption = "Save Menu Color Config";
+	item->value = index++;
+	item->isLeaf = true;
+	menuItems.insert(menuItems.begin(), item);
+
+	item = new MenuItem<int>();
+	item->caption = "Reset Menu Colors";
 	item->value = index++;
 	item->isLeaf = true;
 	menuItems.insert(menuItems.begin(), item);
