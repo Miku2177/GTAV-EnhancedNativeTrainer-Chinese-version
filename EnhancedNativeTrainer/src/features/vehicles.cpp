@@ -35,6 +35,7 @@ bool featureLockVehicleDoors = false;
 bool featureLockVehicleDoorsUpdated = false;
 bool featureWearHelmetOff = false;
 bool featureWearHelmetOffUpdated = false;
+bool featureVehLightsOn = false, featureVehLightsOnUpdated = false;
 
 bool featureDespawnScriptDisabled = false;
 bool featureDespawnScriptDisabledUpdated = false;
@@ -485,6 +486,13 @@ void process_veh_menu()
 	toggleItem->toggleValueUpdated = &featureLockVehicleDoorsUpdated;
 	menuItems.push_back(toggleItem);
 
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Force Vehicle Lights On";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureVehLightsOn;
+	toggleItem->toggleValueUpdated = &featureVehLightsOnUpdated;
+	menuItems.push_back(toggleItem);
+
 	draw_generic_menu<int>(menuItems, &activeLineIndexVeh, caption, onconfirm_veh_menu, NULL, NULL);
 }
 
@@ -636,8 +644,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed)
 			float speed = ENTITY::GET_ENTITY_SPEED(veh);
 			if (bUp)
 			{
-				speed += speed * 0.05f;
-				VEHICLE::SET_VEHICLE_FORWARD_SPEED(veh, speed);
+				VEHICLE::SET_VEHICLE_FORWARD_SPEED(veh, speed * 1.02f + 2.0f);
 			}
 			else
 				if (ENTITY::IS_ENTITY_IN_AIR(veh) || speed > 5.0)
@@ -696,6 +703,16 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed)
 	if (bPlayerExists && (did_player_just_enter_vehicle(playerPed) || massChanged)) { // check if player entered vehicle, only need to set mults once
 		VEHICLE::SET_VEHICLE_DENSITY_MULTIPLIER_THIS_FRAME(VEH_MASS_VALUES[VehMassMultIndex]);
 		massChanged = false;
+	}
+
+	if(bPlayerExists){
+		if(featureVehLightsOn && (featureVehLightsOnUpdated || did_player_just_enter_vehicle(playerPed))){
+			VEHICLE::SET_VEHICLE_LIGHTS(veh, 2); // 0 = normal, 1 = force off, 2 = forced on (visual_night), 3 = forced on (blink), 4 = forced off (blink), 5+ = normal
+		}
+		else if(!featureVehLightsOn && featureVehLightsOnUpdated){
+			VEHICLE::SET_VEHICLE_LIGHTS(veh, 0);
+			featureVehLightsOnUpdated = false;
+		}
 	}
 }
 
@@ -1001,6 +1018,7 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWearHelmetOff", &featureWearHelmetOff, &featureWearHelmetOffUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureVehInvulnIncludesCosmetic", &featureVehInvulnIncludesCosmetic, &featureVehInvincibleUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureDespawnScriptDisabled", &featureDespawnScriptDisabled, &featureDespawnScriptDisabledUpdated });
+	results->push_back(FeatureEnabledLocalDefinition{"featureVehLightsOn", &featureVehLightsOn, &featureVehLightsOnUpdated});
 }
 
 bool spawn_saved_car(int slot, std::string caption)
