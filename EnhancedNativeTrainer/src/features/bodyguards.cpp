@@ -409,6 +409,15 @@ bool process_bodyguard_menu()
 		toggleItem->toggleValueUpdated = NULL;
 		menuItems.push_back(toggleItem);
 
+		if(!bodyguardWeaponsToggleInitialized){
+			for(int a = 0; a < MENU_WEAPON_CATEGORIES.size(); a++){
+				for(int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++){
+					bodyguardWeaponsToggle[a].push_back(new bool(true));
+				}
+			}
+			bodyguardWeaponsToggleInitialized = true;
+		}
+
 		draw_generic_menu<int>(menuItems, &activeLineIndexBodyguards, caption, onconfirm_bodyguard_menu, NULL, NULL, bodyguards_main_menu_interrupt);
 	}
 	while (requireRefreshOfBodyguardMainMenu);
@@ -434,13 +443,6 @@ bool onconfirm_bodyguard_menu(MenuItem<int> choice)
 		process_bodyguard_skins_menu();
 		break;
 	case 3:
-		if(!bodyguardWeaponsToggleInitialized){
-			for(int a = 0; a < MENU_WEAPON_CATEGORIES.size(); a++){
-				for(int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++){
-					bodyguardWeaponsToggle[a].push_back(new bool(true));
-				}
-			}
-		}
 		process_bodyguard_weapons_menu();
 		break;
 	default:
