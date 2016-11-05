@@ -559,6 +559,24 @@ bool onconfirm_weapon_menu(MenuItem<int> choice)
 		set_status_text("All weapons added");
 		break;
 	case 1:
+		WEAPON::REMOVE_ALL_PED_WEAPONS(playerPed, false);
+
+		// parachute
+		WEAPON::REMOVE_WEAPON_FROM_PED(playerPed, PARACHUTE_ID);
+
+		set_status_text("All weapons removed");
+		break;
+	case 2:
+		for(int a = 0; a < sizeof(VOV_WEAPON_VALUES) / sizeof(VOV_WEAPON_VALUES[0]); a++){
+			for(int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++){
+				char *weaponName = (char *) VOV_WEAPON_VALUES[a].at(b).c_str();
+				WEAPON::SET_PED_AMMO(playerPed, GAMEPLAY::GET_HASH_KEY(weaponName), 0);
+			}
+		}
+
+		set_status_text("All ammo removed");
+		break;
+	case 3:
 		for(int a = 0; a < WEAPONTYPES_MOD.size(); a++){
 			for(int b = 0; b < VOV_WEAPONMOD_VALUES[a].size(); b++){
 				char *weaponName = (char *) WEAPONTYPES_MOD.at(a).c_str(), *compName = (char *) VOV_WEAPONMOD_VALUES[a].at(b).c_str();
@@ -610,24 +628,6 @@ bool onconfirm_weapon_menu(MenuItem<int> choice)
 		}
 
 		set_status_text("All weapon attachments added to existing weapons");
-		break;
-	case 2:
-		WEAPON::REMOVE_ALL_PED_WEAPONS(playerPed, false);
-
-		// parachute
-		WEAPON::REMOVE_WEAPON_FROM_PED(playerPed, PARACHUTE_ID);
-
-		set_status_text("All weapons removed");
-		break;
-	case 3:
-		for(int a = 0; a < sizeof(VOV_WEAPON_VALUES) / sizeof(VOV_WEAPON_VALUES[0]); a++){
-			for(int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++){
-				char *weaponName = (char *) VOV_WEAPON_VALUES[a].at(b).c_str();
-				WEAPON::SET_PED_AMMO(playerPed, GAMEPLAY::GET_HASH_KEY(weaponName), 0);
-			}
-		}
-
-		set_status_text("All ammo removed");
 		break;
 	case 4:
 		for(int a = 0; a < WEAPONTYPES_MOD.size(); a++){
@@ -689,12 +689,6 @@ bool process_weapon_menu()
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Add All Weapon Attachments";
-	item->value = i++;
-	item->isLeaf = true;
-	menuItems.push_back(item);
-
-	item = new MenuItem<int>();
 	item->caption = "Remove All Weapons";
 	item->value = i++;
 	item->isLeaf = true;
@@ -702,6 +696,12 @@ bool process_weapon_menu()
 
 	item = new MenuItem<int>();
 	item->caption = "Remove All Ammo";
+	item->value = i++;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "Add All Weapon Attachments";
 	item->value = i++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
