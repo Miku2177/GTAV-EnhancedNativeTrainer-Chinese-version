@@ -36,6 +36,7 @@ bool featureLockVehicleDoorsUpdated = false;
 bool featureWearHelmetOff = false;
 bool featureWearHelmetOffUpdated = false;
 bool featureVehLightsOn = false, featureVehLightsOnUpdated = false;
+int lights = -1, highbeams = -1;
 
 bool featureDespawnScriptDisabled = false;
 bool featureDespawnScriptDisabledUpdated = false;
@@ -706,12 +707,15 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed)
 	}
 
 	if(bPlayerExists){
-		if(featureVehLightsOn && (featureVehLightsOnUpdated || did_player_just_enter_vehicle(playerPed))){
-			VEHICLE::SET_VEHICLE_LIGHTS(veh, 2); // 0 = normal, 1 = force off, 2 = forced on (visual_night), 3 = forced on (blink), 4 = forced off (blink), 5+ = normal
-		}
-		else if(!featureVehLightsOn && featureVehLightsOnUpdated){
-			VEHICLE::SET_VEHICLE_LIGHTS(veh, 0);
-			featureVehLightsOnUpdated = false;
+		if(featureVehLightsOnUpdated || did_player_just_enter_vehicle(playerPed)){
+			if(featureVehLightsOn){
+				VEHICLE::SET_VEHICLE_LIGHTS(veh, 2); // 0 = normal, 1 = force off, 2 = forced on (visual_night), 3 = forced on (blink), 4 = forced off (blink), 5+ = normal
+				featureVehLightsOnUpdated = false;
+			}
+			else{
+				VEHICLE::SET_VEHICLE_LIGHTS(veh, 0);
+				featureVehLightsOnUpdated = false;
+			}
 		}
 	}
 }
@@ -734,18 +738,20 @@ void reset_vehicle_globals()
 	//veh_spawn_menu_index = 0;
 
 	featureVehInvincible =
-	featureVehSpeedBoost =
-	featureVehicleDoorInstant =
-	featureLockVehicleDoors = 
-	featureVehSpawnInto =
-	featureNoVehFallOff =
-	featureWearHelmetOff = false;
+		featureVehSpeedBoost =
+		featureVehicleDoorInstant =
+		featureLockVehicleDoors =
+		featureVehSpawnInto =
+		featureNoVehFallOff =
+		featureWearHelmetOff =
+		featureVehLightsOn = false;
 
-	featureLockVehicleDoorsUpdated = 
-	featureNoVehFallOffUpdated =
-	featureWearHelmetOffUpdated =
-	featureVehInvincibleUpdated =
-	featureWearHelmetOffUpdated = true;
+	featureLockVehicleDoorsUpdated =
+		featureNoVehFallOffUpdated =
+		featureWearHelmetOffUpdated =
+		featureVehInvincibleUpdated =
+		featureWearHelmetOffUpdated =
+		featureVehLightsOnUpdated = true;
 
 	featureDespawnScriptDisabled = false;
 	featureDespawnScriptDisabledUpdated = true;
