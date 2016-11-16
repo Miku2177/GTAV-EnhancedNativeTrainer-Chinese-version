@@ -144,6 +144,8 @@ int get_current_veh_invincibility_mode();
 
 void onchange_veh_invincibility_mode(int value, SelectFromListMenuItem* source);
 
+void onchange_veh_speed_boost_index(int value, SelectFromListMenuItem *source);
+
 int get_current_veh_eng_pow_index();
 
 void onchange_veh_eng_pow_index(int value, SelectFromListMenuItem* source);
@@ -161,10 +163,6 @@ void fix_vehicle();
 void clean_vehicle();
 
 void apply_paint(PaintColour whichpaint);
-
-int get_current_veh_friction_mode();
-
-void onchange_veh_friction_mode(int value, SelectFromListMenuItem* source);
 
 struct NeonLightsColor
 {
