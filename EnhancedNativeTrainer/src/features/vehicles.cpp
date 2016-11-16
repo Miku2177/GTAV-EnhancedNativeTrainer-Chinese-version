@@ -54,7 +54,9 @@ bool requireRefreshOfVehSlotMenu = false;
 const int PED_FLAG_THROUGH_WINDSCREEN = 32;
 
 const std::vector<std::string> VEH_INVINC_MODE_CAPTIONS{ "OFF", "Mech. Only", "Mech. + Visual", "Mech. + Vis. + Cosmetic" };
-const std::vector<int> VEH_INVINC_MODE_VALUES{ 0, 1, 2, 3 };
+
+const std::vector<std::string> VEH_SPEED_BOOST_CAPTIONS{"Only When Already Moving", "Nothing Can Stop Me", "Fastest in the World"};
+int speedBoostIndex = 0;
 
 // engine power stuff
 const std::vector<std::string> VEH_ENG_POW_CAPTIONS{ "1x", "5x", "10x", "25x", "50x", "75x", "100x", "125x", "150x", "175x", "200x", "225x", "250x", "275x", "300x", "325x", "350x", "375x", "400x" };
@@ -455,6 +457,12 @@ void process_veh_menu()
 	toggleItem->toggleValue = &featureVehSpeedBoost;
 	menuItems.push_back(toggleItem);
 
+	listItem = new SelectFromListMenuItem(VEH_SPEED_BOOST_CAPTIONS, onchange_veh_speed_boost_index);
+	listItem->wrap = false;
+	listItem->caption = "Speed Boost Mode";
+	listItem->value = speedBoostIndex;
+	menuItems.push_back(listItem);
+
 	listItem = new SelectFromListMenuItem(VEH_ENG_POW_CAPTIONS, onchange_veh_eng_pow_index);
 	listItem->wrap = false;
 	listItem->caption = "Engine Power Multiplier";
@@ -645,12 +653,23 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed)
 			float speed = ENTITY::GET_ENTITY_SPEED(veh);
 			if (bUp)
 			{
-				VEHICLE::SET_VEHICLE_FORWARD_SPEED(veh, speed * 1.02f + 2.0f);
+				switch(speedBoostIndex){
+					case 0:
+						VEHICLE::SET_VEHICLE_FORWARD_SPEED(veh, speed * 1.05f);
+						break;
+					case 1:
+						VEHICLE::SET_VEHICLE_FORWARD_SPEED(veh, speed * 1.02f + 4.0f);
+						break;
+					case 2:
+						VEHICLE::SET_VEHICLE_FORWARD_SPEED(veh, 200.0f);
+						break;
+					default:
+						break;
+				}
 			}
-			else
-				if (ENTITY::IS_ENTITY_IN_AIR(veh) || speed > 5.0)
+			else if (ENTITY::IS_ENTITY_IN_AIR(veh) || speed > 2.0f)
 				{
-					VEHICLE::SET_VEHICLE_FORWARD_SPEED(veh, 0.0);
+					VEHICLE::SET_VEHICLE_FORWARD_SPEED(veh, 0.0f);
 				}
 		}
 	}
@@ -1463,6 +1482,7 @@ bool vehicle_save_slot_menu_interrupt()
 void add_vehicle_generic_settings(std::vector<StringPairSettingDBRow>* results)
 {
 	results->push_back(StringPairSettingDBRow{ "lastCustomVehicleSpawn", lastCustomVehicleSpawn });
+	results->push_back(StringPairSettingDBRow{"speedBoostIndex", std::to_string(speedBoostIndex)});
 	results->push_back(StringPairSettingDBRow{ "engPowMultIndex", std::to_string(engPowMultIndex) });
 }
 
@@ -1474,7 +1494,11 @@ void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settin
 		if (setting.name.compare("lastCustomVehicleSpawn") == 0)
 		{
 			lastCustomVehicleSpawn = setting.value;
-		} else if (setting.name.compare("engPowMultIndex") == 0)
+		}
+		else if(setting.name.compare("speedBoostIndex") == 0){
+			speedBoostIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("engPowMultIndex") == 0)
 		{
 			engPowMultIndex = stoi(setting.value);
 		}
@@ -1505,6 +1529,10 @@ void onchange_veh_invincibility_mode(int value, SelectFromListMenuItem* source)
 	featureVehInvulnIncludesCosmetic = (value > 2);
 
 	featureVehInvincibleUpdated = true;
+}
+
+void onchange_veh_speed_boost_index(int value, SelectFromListMenuItem *source){
+	speedBoostIndex = value;
 }
 
 int get_current_veh_eng_pow_index(){
