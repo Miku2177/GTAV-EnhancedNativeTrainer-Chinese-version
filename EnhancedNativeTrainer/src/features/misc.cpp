@@ -22,6 +22,7 @@ bool featureBlockInputInMenu = false;
 
 bool featurePlayerRadio = false;
 bool featurePlayerRadioUpdated = false;
+bool featureRadioFreeze = false, featureRadioFreezeUpdated = false;
 bool featureRadioAlwaysOff = false;
 bool featureRadioAlwaysOffUpdated = false;
 
@@ -35,6 +36,7 @@ bool featureControllerIgnoreInTrainer = false;
 bool featureMiscJellmanScenery = false;
 
 const int TRAINERCONFIG_HOTKEY_MENU = 99;
+int radioStationIndex = -1;
 
 void onchange_hotkey_function(int value, SelectFromListMenuItem* source)
 {
@@ -197,6 +199,42 @@ void process_misc_trainerconfig_menu()
 	draw_generic_menu<int>(menuItems, &activeLineIndexTrainerConfig, caption, onconfirm_trainerconfig_menu, NULL, NULL);
 }
 
+bool onconfirm_misc_freezeradio_menu(MenuItem<int> choice){
+	if(choice.value == -1){
+		featureRadioFreeze = false;
+		set_status_text("Radio is no longer frozen to a station");
+	}
+	else{
+		featureRadioFreeze = true;
+		set_status_text(std::string("Radio is frozen to station ") + std::string(AUDIO::GET_RADIO_STATION_NAME(choice.value)));
+	}
+	featureRadioFreezeUpdated = true;
+	radioStationIndex = choice.value;
+
+	return false;
+}
+
+void process_misc_freezeradio_menu(){
+	std::vector<MenuItem<int> *> menuItems;
+	int const stations = AUDIO::_MAX_RADIO_STATION_INDEX();
+
+	MenuItem<int> *item = new MenuItem<int>();
+	item->caption = "None";
+	item->value = -1;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	for(int a = 0; a < stations; a++){
+		item = new MenuItem<int>();
+		item->caption = AUDIO::GET_RADIO_STATION_NAME(a);
+		item->value = a;
+		item->isLeaf = true;
+		menuItems.push_back(item);
+	}
+
+	draw_generic_menu<int>(menuItems, nullptr, "Freeze Radio to Station", onconfirm_misc_freezeradio_menu, nullptr, nullptr, nullptr);
+}
+
 int activeLineIndexMisc = 0;
 
 bool onconfirm_misc_menu(MenuItem<int> choice)
@@ -206,12 +244,15 @@ bool onconfirm_misc_menu(MenuItem<int> choice)
 	case 0:
 		process_misc_trainerconfig_menu();
 		break;
-		// next radio track
 	case 2:
+		// next radio track
 		AUDIO::SKIP_RADIO_FORWARD();
 		break;
-		// switchable features
+	case 3:
+		process_misc_freezeradio_menu();
+		break;
 	default:
+		// switchable features
 		break;
 	}
 	return false;
@@ -219,7 +260,7 @@ bool onconfirm_misc_menu(MenuItem<int> choice)
 
 void process_misc_menu()
 {
-	const int lineCount = 5;
+	const int lineCount = 6;
 
 	std::string caption = "Miscellaneous Options";
 
@@ -227,8 +268,9 @@ void process_misc_menu()
 		{ "Trainer Options", NULL, NULL, false },
 		{ "Portable Radio", &featurePlayerRadio, &featurePlayerRadioUpdated, true },
 		{ "Next Radio Track", NULL, NULL, true },
+		{"Freeze Radio to Station", nullptr, nullptr, false},
 		{ "Radio Always Off", &featureRadioAlwaysOff, &featureRadioAlwaysOffUpdated, true },
-		{ "Hide HUD", &featureMiscHideHud, &featureMiscHideHudUpdated },
+		{ "Hide HUD", &featureMiscHideHud, &featureMiscHideHudUpdated }
 	};
 
 	draw_menu_from_struct_def(lines, lineCount, &activeLineIndexMisc, caption, onconfirm_misc_menu);
@@ -240,13 +282,15 @@ void reset_misc_globals()
 		featurePlayerRadio =
 		featureMiscLockRadio =
 		featureMiscJellmanScenery =
+		featureRadioFreeze =
 		featureRadioAlwaysOff = false;
 
 	featureShowVehiclePreviews = true;
 	featureControllerIgnoreInTrainer = false;
 	featureBlockInputInMenu = false;
 
-	featureRadioAlwaysOffUpdated =
+	featureRadioFreezeUpdated =
+		featureRadioAlwaysOffUpdated =
 		featureMiscHideHudUpdated =
 		featurePlayerRadioUpdated = true;
 
@@ -288,6 +332,16 @@ void update_misc_features(BOOL playerExists, Ped playerPed)
 		}
 	}
 
+	// Freeze radio to station
+	if(featureRadioFreeze){
+		if(AUDIO::GET_PLAYER_RADIO_STATION_INDEX() != radioStationIndex){
+			AUDIO::SET_RADIO_TO_STATION_INDEX(radioStationIndex);
+		}
+	}
+	else if(featureRadioFreezeUpdated){
+		// Leave it empty for now.
+	}
+
 	// hide hud
 	if (featureMiscHideHud)
 	{
@@ -321,6 +375,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed)
 void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results)
 {
 	results->push_back(FeatureEnabledLocalDefinition{ "featurePlayerRadio", &featurePlayerRadio, &featurePlayerRadioUpdated });
+	results->push_back(FeatureEnabledLocalDefinition{"featureRadioFreeze", &featureRadioFreeze, &featureRadioFreezeUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{ "featureRadioAlwaysOff", &featureRadioAlwaysOff, &featureRadioAlwaysOffUpdated });
 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureMiscLockRadio", &featureMiscLockRadio });
@@ -335,12 +390,17 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 
 void add_misc_generic_settings(std::vector<StringPairSettingDBRow>* results)
 {
-
+	results->push_back(StringPairSettingDBRow{"radioStationIndex", std::to_string(radioStationIndex)});
 }
 
 void handle_generic_settings_misc(std::vector<StringPairSettingDBRow>* settings)
 {
-
+	for(int a = 0; a < settings->size(); a++){
+		StringPairSettingDBRow setting = settings->at(a);
+		if(setting.name.compare("radioStationIndex") == 0){
+			radioStationIndex = stoi(setting.value);
+		}
+	}
 }
 
 bool is_player_reset_on_death()

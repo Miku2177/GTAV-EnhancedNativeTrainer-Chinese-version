@@ -667,10 +667,11 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed)
 						break;
 				}
 			}
-			else if (ENTITY::IS_ENTITY_IN_AIR(veh) || speed > 2.0f)
-				{
-					VEHICLE::SET_VEHICLE_FORWARD_SPEED(veh, 0.0f);
-				}
+			else{
+				VEHICLE::SET_VEHICLE_FORWARD_SPEED(veh, 0.0f);
+				Vector3 rotation = ENTITY::GET_ENTITY_ROTATION(veh, 0);
+				ENTITY::SET_ENTITY_ROTATION(veh, rotation.x, rotation.y, rotation.z, 0, 0);
+			}
 		}
 	}
 	//Lock player vehicle doors
