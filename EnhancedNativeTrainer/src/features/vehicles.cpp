@@ -522,12 +522,12 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed)
 
 
 	eGameVersion version = getGameVersion();
-	if (version < 20)
+	if (version < 20) //version < VER_1_0_757_2_STEAM || version < VER_1_0_757_2_NOSTEAM
 	{
 		*getGlobalPtr(2558120) = 1;
 	}
 
-	if ((version < 22 && version > 19))
+	if ((version < 22 && version > 19)) //version > VER_1_0_678_1_STEAM || version > VER_1_0_678_1_NOSTEAM
 	{
 		*getGlobalPtr(2562051) = 1;
 	}
@@ -540,8 +540,9 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed)
 
 	if (version > 25)
 	{
-		*getGlobalPtr(2576573) = 1;
+		*getGlobalPtr(2593910) = 1; //2576573 old pointer // 2593910 = new pointer for game version: 1.0.944.2
 	}
+
 
 	if (featureDespawnScriptDisabledUpdated)
 	{
