@@ -8,4 +8,4 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 #include <string>
 
-const std::string VERSION_STRING = "31";
+const std::string VERSION_STRING = "32";
