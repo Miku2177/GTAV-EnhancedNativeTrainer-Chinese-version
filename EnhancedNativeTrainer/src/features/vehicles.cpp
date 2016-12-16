@@ -1864,7 +1864,7 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ "PHANTOM2", "candc_importexport", "phantom2" },
 	{ "TECHNICAL2", "candc_importexport", "technical2" },
 	{ "BOXVILLE5", "candc_importexport", "boxville5" },
-	{ "WASTLANDER", "candc_importexport", "wastlndr" }, //could be: "wastelander", but wastlndr image name
+	{ "WASTELANDER", "candc_importexport", "wastlndr" }, //could be: "wastelander", but wastlndr image name
 	{ "BLAZER5", "candc_importexport", "blazer5" },
 	{ "COMET3", "lsc_dlc_import_export", "comet3_a" },
 	{ "DIABLOUS", "lsc_dlc_import_export", "diablous2_a" },
@@ -1876,10 +1876,10 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ "ITALIGTB2", "lsc_dlc_import_export", "italigtb2_b" },
 	{ "NERO", "lsc_dlc_import_export", "nero2_a" },
 	{ "NERO2", "lsc_dlc_import_export", "nero2_b" },
-	{ "PENETRATOR", "candc_importexport", "" }, //no image -- need to change the texture Dict if one found
+	{ "PENETRATOR", "lgm_dlc_importexport", "penetrator" }, 
 	{ "SPECTER", "lsc_dlc_import_export", "specter2_a" },
 	{ "SPECTER2", "lsc_dlc_import_export", "specter2_b" },
-	{ "TEMPESTA", "candc_importexport", "" },  //no image -- need to change the texture Dict if one found
+	{ "TEMPESTA", "lgm_dlc_importexport", "tempesta" }, 
 };
 
 static std::vector<VehicleImage> ALL_VEH_IMAGES;
