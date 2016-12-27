@@ -135,7 +135,7 @@ void check_player_model()
 			playerSlot++;
 			}
 		}
-
+		/*
 	if (ENTITY::IS_ENTITY_DEAD(playerPed) && is_player_reset_on_death())
 	{
 		if (!found)
@@ -152,7 +152,7 @@ void check_player_model()
 			{
 				applyChosenSkin(mplayer_models[last_player_slot_seen - spPlayerCount]);
 			}
-		}
+		}*/
 
 		// wait until player is ressurected
 		while (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()))
@@ -160,7 +160,7 @@ void check_player_model()
 			WAIT(0);
 		}
 	}
-}
+
 
 // Updates all features that can be turned off by the game, being called each game frame
 void update_features()

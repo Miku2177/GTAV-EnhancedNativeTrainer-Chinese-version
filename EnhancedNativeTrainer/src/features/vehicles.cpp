@@ -243,7 +243,7 @@ bool onconfirm_vehdoor_menu(MenuItem<int> choice) {
 		if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0))
 		{
 			Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
-			VEHICLE::_OPEN_VEHICLE_BOMB_BAY(veh);
+			VEHICLE::OPEN_BOMB_BAY_DOORS(veh);
 		}
 	}
 	else if (choice.value == -3)//bomb bay close
@@ -251,7 +251,7 @@ bool onconfirm_vehdoor_menu(MenuItem<int> choice) {
 		if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0))
 		{
 			Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
-			VEHICLE::_0x3556041742A0DC74(veh);
+			VEHICLE::CLOSE_BOMB_BAY_DOORS(veh);
 		}
 	}
 	else if (choice.value == -4)//lock doors
@@ -457,6 +457,12 @@ void process_veh_menu()
 	toggleItem->toggleValue = &featureVehSpeedBoost;
 	menuItems.push_back(toggleItem);
 
+	item = new MenuItem<int>();
+	item->caption = "Door Control";
+	item->value = i++;
+	item->isLeaf = false;
+	menuItems.push_back(item);
+
 	listItem = new SelectFromListMenuItem(VEH_SPEED_BOOST_CAPTIONS, onchange_veh_speed_boost_index);
 	listItem->wrap = false;
 	listItem->caption = "Speed Boost Mode";
@@ -474,12 +480,6 @@ void process_veh_menu()
 	listItem->caption = "Vehicle Mass Multiplier";
 	listItem->value = VehMassMultIndex;
 	menuItems.push_back(listItem);*/
-
-	item = new MenuItem<int>();
-	item->caption = "Door Control";
-	item->value = i++;
-	item->isLeaf = false;
-	menuItems.push_back(item);
 
 	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Disable Despawn Of DLC Cars";
@@ -1125,7 +1125,7 @@ bool spawn_saved_car(int slot, std::string caption)
 			VEHICLE::SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, savedVeh->colourCustom2RGB[0], savedVeh->colourCustom2RGB[1], savedVeh->colourCustom2RGB[2]);
 		}
 
-		VEHICLE::_SET_VEHICLE_PAINT_FADE(veh, savedVeh->fadeLevel);
+		VEHICLE::SET_VEHICLE_ENVEFF_SCALE(veh, savedVeh->fadeLevel);
 
 		VEHICLE::SET_VEHICLE_DIRT_LEVEL(veh, savedVeh->dirtLevel);
 
@@ -2271,11 +2271,11 @@ void set_bombbay_open(bool applied, std::vector<int> extras)
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 	if (applied)
 	{
-		VEHICLE::_OPEN_VEHICLE_BOMB_BAY(veh);
+		VEHICLE::OPEN_BOMB_BAY_DOORS(veh);
 	}
 	else
 	{
-		VEHICLE::_0x3556041742A0DC74(veh);
+		VEHICLE::CLOSE_BOMB_BAY_DOORS(veh);
 	}
 }
 

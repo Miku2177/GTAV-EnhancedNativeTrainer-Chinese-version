@@ -1132,7 +1132,7 @@ bool ENTDatabase::save_vehicle(Vehicle veh, std::string saveName, sqlite3_int64 
 			neon3Enabled INTEGER DEFAULT 0 \*/
 
 		sqlite3_bind_double(stmt, index++, VEHICLE::GET_VEHICLE_DIRT_LEVEL(veh));
-		sqlite3_bind_double(stmt, index++, VEHICLE::_GET_VEHICLE_PAINT_FADE(veh));
+		sqlite3_bind_double(stmt, index++, VEHICLE::GET_VEHICLE_ENVEFF_SCALE(veh));
 
 		int neonR, neonG, neonB;
 		VEHICLE::_GET_VEHICLE_NEON_LIGHTS_COLOUR(veh, &neonR, &neonG, &neonB);

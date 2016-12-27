@@ -391,7 +391,7 @@ void onhighlight_paintfade(MenuItem<float> choice)
 	}
 
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
-	VEHICLE::_SET_VEHICLE_PAINT_FADE(veh, choice.value);
+	VEHICLE::SET_VEHICLE_ENVEFF_SCALE(veh, choice.value);
 }
 
 bool process_paint_menu_fades()
