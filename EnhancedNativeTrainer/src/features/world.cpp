@@ -54,6 +54,7 @@ bool featureWeatherWind = false;
 bool featureWeatherFreeze = false;
 
 bool featureSnow = false;
+bool featureSnowUpdated = false;
 
 
 std::string lastWeather;
@@ -253,6 +254,7 @@ void process_world_menu()
 	togItem->caption = "Heavy Snow";
 	togItem->value = 7;
 	togItem->toggleValue = &featureSnow;
+	togItem->toggleValueUpdated = &featureSnowUpdated;
 	menuItems.push_back(togItem);
 
 	draw_generic_menu<int>(menuItems, &activeLineIndexWorld, caption, onconfirm_world_menu, NULL, NULL);
@@ -287,7 +289,8 @@ void reset_world_globals()
 	featureWorldRandomBoatsUpdated =
 	featureWorldRandomCopsUpdated =
 	featureWorldRandomTrainsUpdated =
-	featureBlackoutUpdated = true;
+	featureBlackoutUpdated = 
+	featureSnowUpdated = true;
 }
 
 void update_world_features()
@@ -334,90 +337,90 @@ void update_world_features()
 	/*
 	if (featureBlackout)
 	{
-		if (STREAMING::IS_IPL_ACTIVE("DT1_22_bldg2"))
-		{
-			set_status_text("DT1_22_bldg2");
-			STREAMING::REMOVE_IPL("DT1_22_bldg2");
-		}
+	if (STREAMING::IS_IPL_ACTIVE("DT1_22_bldg2"))
+	{
+	set_status_text("DT1_22_bldg2");
+	STREAMING::REMOVE_IPL("DT1_22_bldg2");
+	}
 
-		GRAPHICS::_0x1600FD8CF72EBC12(0.001);
-		GRAPHICS::_0x1A8E2C8B9CF4549C("lab_none_dark", "lab_none_dark_OVR");
-		GRAPHICS::_0x1A8E2C8B9CF4549C("lab_none_exit", "lab_none_exit_OVR");
+	GRAPHICS::_0x1600FD8CF72EBC12(0.001);
+	GRAPHICS::_0x1A8E2C8B9CF4549C("lab_none_dark", "lab_none_dark_OVR");
+	GRAPHICS::_0x1A8E2C8B9CF4549C("lab_none_exit", "lab_none_exit_OVR");
 
-		for (int i = 0; i <= 35; i++)
-		{
-			std::ostringstream ss;
-			ss << "distlodlights_medium";
-			ss << std::setfill('0') << std::setw(3) << i;
-			auto scenery = ss.str().c_str();
-			if (STREAMING::IS_IPL_ACTIVE(scenery))
-			{
-				set_status_text(ss.str());
-				STREAMING::REMOVE_IPL(scenery);
-			}
-		}
-		for (int i = 0; i <= 61; i++)
-		{
-			std::ostringstream ss;
-			ss << "distlodlights_small";
-			ss << std::setfill('0') << std::setw(3) << i;
-			auto scenery = ss.str().c_str();
-			if (STREAMING::IS_IPL_ACTIVE(scenery))
-			{
-				set_status_text(ss.str());
-				STREAMING::REMOVE_IPL(scenery);
-			}
-		}
-		for (int i = 0; i <= 35; i++)
-		{
-			std::ostringstream ss;
-			ss << "lodlights_medium";
-			ss << std::setfill('0') << std::setw(3) << i;
-			auto scenery = ss.str().c_str();
-			if (STREAMING::IS_IPL_ACTIVE(scenery))
-			{
-				set_status_text(ss.str());
-				STREAMING::REMOVE_IPL(scenery);
-			}
-		}
-		for (int i = 0; i <= 61; i++)
-		{
-			std::ostringstream ss;
-			ss << "lodlights_small";
-			ss << std::setfill('0') << std::setw(3) << i;
-			auto scenery = ss.str().c_str();
-			if (STREAMING::IS_IPL_ACTIVE(scenery))
-			{
-				set_status_text(ss.str());
-				STREAMING::REMOVE_IPL(scenery);
-			}
-		}
+	for (int i = 0; i <= 35; i++)
+	{
+	std::ostringstream ss;
+	ss << "distlodlights_medium";
+	ss << std::setfill('0') << std::setw(3) << i;
+	auto scenery = ss.str().c_str();
+	if (STREAMING::IS_IPL_ACTIVE(scenery))
+	{
+	set_status_text(ss.str());
+	STREAMING::REMOVE_IPL(scenery);
+	}
+	}
+	for (int i = 0; i <= 61; i++)
+	{
+	std::ostringstream ss;
+	ss << "distlodlights_small";
+	ss << std::setfill('0') << std::setw(3) << i;
+	auto scenery = ss.str().c_str();
+	if (STREAMING::IS_IPL_ACTIVE(scenery))
+	{
+	set_status_text(ss.str());
+	STREAMING::REMOVE_IPL(scenery);
+	}
+	}
+	for (int i = 0; i <= 35; i++)
+	{
+	std::ostringstream ss;
+	ss << "lodlights_medium";
+	ss << std::setfill('0') << std::setw(3) << i;
+	auto scenery = ss.str().c_str();
+	if (STREAMING::IS_IPL_ACTIVE(scenery))
+	{
+	set_status_text(ss.str());
+	STREAMING::REMOVE_IPL(scenery);
+	}
+	}
+	for (int i = 0; i <= 61; i++)
+	{
+	std::ostringstream ss;
+	ss << "lodlights_small";
+	ss << std::setfill('0') << std::setw(3) << i;
+	auto scenery = ss.str().c_str();
+	if (STREAMING::IS_IPL_ACTIVE(scenery))
+	{
+	set_status_text(ss.str());
+	STREAMING::REMOVE_IPL(scenery);
+	}
+	}
 
-		for (int i = 0; i <= 0; i++)
-		{
-			std::ostringstream ss;
-			ss << "lodlights_large";
-			ss << std::setfill('0') << std::setw(3) << i;
-			auto scenery = ss.str().c_str();
-			if (STREAMING::IS_IPL_ACTIVE(scenery))
-			{
-				set_status_text(ss.str());
-				STREAMING::REMOVE_IPL(scenery);
-			}
-		}
+	for (int i = 0; i <= 0; i++)
+	{
+	std::ostringstream ss;
+	ss << "lodlights_large";
+	ss << std::setfill('0') << std::setw(3) << i;
+	auto scenery = ss.str().c_str();
+	if (STREAMING::IS_IPL_ACTIVE(scenery))
+	{
+	set_status_text(ss.str());
+	STREAMING::REMOVE_IPL(scenery);
+	}
+	}
 
-		for (int i = 0; i <= 0; i++)
-		{
-			std::ostringstream ss;
-			ss << "distlodlights_large";
-			ss << std::setfill('0') << std::setw(3) << i;
-			auto scenery = ss.str().c_str();
-			if (STREAMING::IS_IPL_ACTIVE(scenery))
-			{
-				set_status_text(ss.str());
-				STREAMING::REMOVE_IPL(scenery);
-			}
-		}
+	for (int i = 0; i <= 0; i++)
+	{
+	std::ostringstream ss;
+	ss << "distlodlights_large";
+	ss << std::setfill('0') << std::setw(3) << i;
+	auto scenery = ss.str().c_str();
+	if (STREAMING::IS_IPL_ACTIVE(scenery))
+	{
+	set_status_text(ss.str());
+	STREAMING::REMOVE_IPL(scenery);
+	}
+	}
 	}*/
 
 	if (featureWorldNoPedsUpdated)
@@ -444,7 +447,7 @@ void update_world_features()
 
 	if (featureWorldNoTrafficUpdated)
 	{
-		VEHICLE::_0xF796359A959DF65D(!featureWorldNoTraffic);
+		VEHICLE::_DISPLAY_DISTANT_VEHICLES(!featureWorldNoTraffic);
 		GRAPHICS::DISABLE_VEHICLE_DISTANTLIGHTS(featureWorldNoTraffic);
 
 		if (featureWorldNoTraffic)
@@ -497,11 +500,52 @@ void update_world_features()
 		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("re_prisonvanbreak");
 	}
 
-	if (featureSnow)
+	if (featureWorldNoTrafficUpdated)
+	{
+		VEHICLE::_DISPLAY_DISTANT_VEHICLES(!featureWorldNoTraffic);
+		GRAPHICS::DISABLE_VEHICLE_DISTANTLIGHTS(featureWorldNoTraffic);
+
+		if (featureWorldNoTraffic)
+		{
+			Vector3 v3 = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 1);
+			GAMEPLAY::CLEAR_AREA_OF_VEHICLES(v3.x, v3.y, v3.z, 1000.0, 0, 0, 0, 0, 0);
+
+			STREAMING::SET_VEHICLE_POPULATION_BUDGET(0);
+			VEHICLE::SET_ALL_VEHICLE_GENERATORS_ACTIVE_IN_AREA(-10000.0, -10000.0, -200.0, 10000.0, 10000.0, 1000.0, 0, 1);
+			PATHFIND::SET_ROADS_IN_AREA(-10000.0, -10000.0, -200.0, 10000.0, 10000.0, 1000.0, 0, 1);
+		}
+		else
+		{
+			STREAMING::SET_VEHICLE_POPULATION_BUDGET(3);
+			VEHICLE::SET_ALL_VEHICLE_GENERATORS_ACTIVE();
+			PATHFIND::SET_ROADS_BACK_TO_ORIGINAL(-10000.0, -10000.0, -200.0, 10000.0, 10000.0, 1000.0);
+		}
+
+		featureWorldNoTrafficUpdated = false;
+	}
+	/*if (featureSnowUpdated)
 	{
 		EnableSnow(featureSnow);
 		EnableTracks(true, true, true, true);
+		featureSnowUpdated = false;
+	}*/
+	
+	if (featureSnowUpdated)
+	{
+		if (featureSnow)
+		{
+			EnableSnow(featureSnow);
+			EnableTracks(true, true, true, true);
+		}
+		else
+		{
+			EnableSnow(featureSnow);
+			EnableTracks(false, false, false, false);
+		}
+		
+		featureSnowUpdated = false;
 	}
+
 }
 
 void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results)
@@ -521,7 +565,7 @@ void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* r
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoPeds", &featureWorldNoPeds, &featureWorldNoPedsUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoTraffic", &featureWorldNoTraffic, &featureWorldNoTrafficUpdated });
 
-	results->push_back(FeatureEnabledLocalDefinition{ "featureSnow", &featureSnow});
+	results->push_back(FeatureEnabledLocalDefinition{ "featureSnow", &featureSnow, &featureSnowUpdated});
 }
 
 void add_world_generic_settings(std::vector<StringPairSettingDBRow>* settings)
