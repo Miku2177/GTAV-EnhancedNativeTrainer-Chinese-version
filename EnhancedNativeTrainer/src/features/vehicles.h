@@ -23,8 +23,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 #include <string>
 
-struct PaintColour
-{
+struct PaintColour{
 	std::string name;
 	int mainValue;
 	int pearlAddition;
@@ -34,7 +33,7 @@ extern const std::vector<PaintColour> PAINTS_METALLIC;
 
 extern const std::vector<std::string> VALUES_SUPERCARS;
 
-extern char* TRIM_OR_DIAL_VEHS[26]; 
+extern char* TRIM_OR_DIAL_VEHS[26];
 
 /***
 * METHODS
@@ -164,20 +163,17 @@ void clean_vehicle();
 
 void apply_paint(PaintColour whichpaint);
 
-struct NeonLightsColor
-{
+struct NeonLightsColor{
 	std::string colorString;
 	int rVal, gVal, bVal;
 };
 
-struct TireSmokeColor
-{
+struct TireSmokeColor{
 	std::string colorString;
 	int rVal, gVal, bVal;
 };
 
-struct TrimColour
-{
+struct TrimColour{
 	std::string trimColName;
 	int trimColVal;
 };
@@ -230,21 +226,18 @@ bool process_interior_colour_menu();
 
 void drive_passenger();
 
-bool inline is_this_a_car(Vehicle veh)
-{
+bool inline is_this_a_car(Vehicle veh){
 	// Return true if the current vehicle is a car, e.g. as certain vehicles don't support neon lights
 	Entity et = ENTITY::GET_ENTITY_MODEL(veh);
 	return !(VEHICLE::IS_THIS_MODEL_A_BIKE(et) || VEHICLE::IS_THIS_MODEL_A_HELI(et) || VEHICLE::IS_THIS_MODEL_A_PLANE(et) || VEHICLE::IS_THIS_MODEL_A_TRAIN(et) || VEHICLE::IS_THIS_MODEL_A_BICYCLE(et) || VEHICLE::IS_THIS_MODEL_A_BOAT(et));
 }
 
-bool inline is_this_a_motorcycle(Vehicle veh)
-{
+bool inline is_this_a_motorcycle(Vehicle veh){
 	Entity et = ENTITY::GET_ENTITY_MODEL(veh);
-	return (BOOL)VEHICLE::IS_THIS_MODEL_A_BIKE(et);
+	return (BOOL) VEHICLE::IS_THIS_MODEL_A_BIKE(et);
 }
 
-bool inline is_this_a_heli_or_plane(Vehicle veh)
-{
+bool inline is_this_a_heli_or_plane(Vehicle veh){
 	Entity et = ENTITY::GET_ENTITY_MODEL(veh);
 	return VEHICLE::IS_THIS_MODEL_A_HELI(et) || VEHICLE::IS_THIS_MODEL_A_PLANE(et);
 }
