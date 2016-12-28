@@ -72,24 +72,23 @@ bool featureThermalVisionUpdated = false;
 bool featureWantedLevelFrozen = false;
 bool featureWantedLevelFrozenUpdated = false;
 
-bool featureNoRagdoll = false; 
+bool featureNoRagdoll = false;
 bool featureNoRagdollUpdated = false;
 
 int  frozenWantedLevel = 0;
 
 // player model control, switching on normal ped model when needed	
 
-char* player_models[] = { "player_zero", "player_one", "player_two" };
+char* player_models[] = {"player_zero", "player_one", "player_two"};
 
-char* mplayer_models[] = { "mp_f_freemode_01", "mp_m_freemode_01" };
+char* mplayer_models[] = {"mp_f_freemode_01", "mp_m_freemode_01"};
 
 const char* CLIPSET_DRUNK = "move_m@drunk@verydrunk";
 
-const std::vector<std::string> GRAVITY_CAPTIONS{ "Minimum", "0.1x", "0.5x", "0.75x", "1x (Normal)" };
-const std::vector<float> GRAVITY_VALUES{ 0.0f, 0.1f, 0.5f, 0.75f, 1.0f };
+const std::vector<std::string> GRAVITY_CAPTIONS{"Minimum", "0.1x", "0.5x", "0.75x", "1x (Normal)"};
+const std::vector<float> GRAVITY_VALUES{0.0f, 0.1f, 0.5f, 0.75f, 1.0f};
 
-void check_player_model()
-{
+void check_player_model(){
 	/*
 	std::stringstream ss;
 	ss << "PID: " << *gp;
@@ -100,88 +99,72 @@ void check_player_model()
 	Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
-	if (!ENTITY::DOES_ENTITY_EXIST(playerPed))
-	{
+	if(!ENTITY::DOES_ENTITY_EXIST(playerPed)){
 		return;
 	}
 
 	//find out whether we're a default player model
-
-		bool found = false;
-		Hash playerModel = ENTITY::GET_ENTITY_MODEL(playerPed);
+	bool found = false;
+	Hash playerModel = ENTITY::GET_ENTITY_MODEL(playerPed);
 	int playerSlot = 0;
 
-		for each (char* model  in player_models)
-		{
-			if (GAMEPLAY::GET_HASH_KEY(model) == playerModel)
-			{
+	for each (char* model  in player_models){
+		if(GAMEPLAY::GET_HASH_KEY(model) == playerModel){
 			last_player_slot_seen = playerSlot;
+			found = true;
+			break;
+		}
+		playerSlot++;
+	}
+
+	if(!found && NETWORK::NETWORK_IS_GAME_IN_PROGRESS()){
+		for each (char* model  in mplayer_models){
+			if(GAMEPLAY::GET_HASH_KEY(model) == playerModel){
+				last_player_slot_seen = playerSlot;
 				found = true;
 				break;
 			}
-		playerSlot++;
-		}
-
-		if (!found && NETWORK::NETWORK_IS_GAME_IN_PROGRESS())
-		{
-			for each (char* model  in mplayer_models)
-			{
-				if (GAMEPLAY::GET_HASH_KEY(model) == playerModel)
-				{
-				last_player_slot_seen = playerSlot;
-					found = true;
-					break;
-				}
 			playerSlot++;
-			}
 		}
-		/*
-	if (ENTITY::IS_ENTITY_DEAD(playerPed) && is_player_reset_on_death())
-	{
-		if (!found)
-		{
+	}
+
+	if(ENTITY::IS_ENTITY_DEAD(playerPed) && is_player_reset_on_death()){
+		if(!found){
 			set_status_text("Resetting death state because a custom skin was used");
 			GAMEPLAY::_RESET_LOCALPLAYER_STATE();
 
 			int spPlayerCount = sizeof(player_models) / sizeof(player_models[0]);
-			if (last_player_slot_seen < spPlayerCount)
-			{
+			if(last_player_slot_seen < spPlayerCount){
 				applyChosenSkin(player_models[last_player_slot_seen]);
 			}
-			else
-			{
+			else{
 				applyChosenSkin(mplayer_models[last_player_slot_seen - spPlayerCount]);
 			}
-		}*/
+		}
 
-		// wait until player is ressurected
-		while (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()))
-		{
+		// wait until player is resurrected
+		while(ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())){
 			WAIT(0);
 		}
 	}
-
+}
 
 // Updates all features that can be turned off by the game, being called each game frame
-void update_features()
-{
-	if (NETWORK::NETWORK_IS_GAME_IN_PROGRESS())
-	{
-		if (!onlineWarningShown)
-		{
+void update_features(){
+	if(NETWORK::NETWORK_IS_GAME_IN_PROGRESS()){
+		if(!onlineWarningShown){
 			set_status_text("~HUD_COLOUR_MENU_YELLOW~ENT ~HUD_COLOUR_WHITE~is not for use online");
 			onlineWarningShown = true;
 		}
 		WAIT(0);
 		return;
 	}
-	else
-	{
+	else{
 		onlineWarningShown = false;
 	}
 	/*
 	GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("shop_controller");
-	
+
 	std::ostringstream ss;
 	ss << "Scripts disabled";
 	set_status_text_centre_screen(ss.str());*/
@@ -207,13 +190,11 @@ void update_features()
 
 	everInitialised = true;
 	game_frame_num++;
-	if (game_frame_num >= 100000)
-	{
+	if(game_frame_num >= 100000){
 		game_frame_num = 0;
 	}
 
-	if (game_frame_num % 1000 == 0)
-	{
+	if(game_frame_num % 1000 == 0){
 		DWORD myThreadID;
 		HANDLE myHandle = CreateThread(0, 0, save_settings_thread, 0, 0, &myThreadID);
 		CloseHandle(myHandle);
@@ -223,28 +204,22 @@ void update_features()
 
 	check_for_hotkey_presses();
 
-	if (is_menu_showing() || is_in_airbrake_mode() || is_in_prop_placement_mode())
-	{
-		if (is_input_blocked_in_menu() || is_in_airbrake_mode() || is_in_prop_placement_mode())
-		{
+	if(is_menu_showing() || is_in_airbrake_mode() || is_in_prop_placement_mode()){
+		if(is_input_blocked_in_menu() || is_in_airbrake_mode() || is_in_prop_placement_mode()){
 			setGameInputToEnabled(false);
 		}
-		else
-		{
+		else{
 			setGameInputToEnabled(true);
 		}
 	}
-	else
-	{
+	else{
 		setGameInputToEnabled(true);
 	}
 
-	if (is_in_airbrake_mode() || is_in_prop_placement_mode())
-	{
+	if(is_in_airbrake_mode() || is_in_prop_placement_mode()){
 		setAirbrakeRelatedInputToBlocked(true);
 	}
-	else
-	{
+	else{
 		setAirbrakeRelatedInputToBlocked(false);
 	}
 
@@ -272,22 +247,18 @@ void update_features()
 	update_area_effects(playerPed);
 
 	// player invincible
-	if (featurePlayerInvincibleUpdated)
-	{
-		if (bPlayerExists && !featurePlayerInvincible)
+	if(featurePlayerInvincibleUpdated){
+		if(bPlayerExists && !featurePlayerInvincible)
 			PLAYER::SET_PLAYER_INVINCIBLE(player, FALSE);
 		featurePlayerInvincibleUpdated = false;
 	}
 
-	if (featurePlayerInvincible && bPlayerExists)
-	{
+	if(featurePlayerInvincible && bPlayerExists){
 		PLAYER::SET_PLAYER_INVINCIBLE(player, TRUE);
 	}
 
-	if (featureWantedLevelFrozen)
-	{
-		if (featureWantedLevelFrozenUpdated)
-		{
+	if(featureWantedLevelFrozen){
+		if(featureWantedLevelFrozenUpdated){
 			frozenWantedLevel = PLAYER::GET_PLAYER_WANTED_LEVEL(player);
 			featureWantedLevelFrozenUpdated = false;
 		}
@@ -296,87 +267,73 @@ void update_features()
 		PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(player, 0);
 	}
 
-	if (featureWantedLevelFrozenUpdated && !featureWantedLevelFrozen)
-	{
+	if(featureWantedLevelFrozenUpdated && !featureWantedLevelFrozen){
 		PLAYER::SET_MAX_WANTED_LEVEL(5);
 		featureWantedLevelFrozenUpdated = false;
 	}
 
 	// police ignore player
-	if (featurePlayerIgnoredByPolice)
-	{
-		if (bPlayerExists)
-		{
+	if(featurePlayerIgnoredByPolice){
+		if(bPlayerExists){
 			PLAYER::SET_POLICE_IGNORE_PLAYER(player, true);
 		}
 	}
-	else if (featurePlayerIgnoredByPoliceUpdated)
-	{
-		if (bPlayerExists)
-		{
+	else if(featurePlayerIgnoredByPoliceUpdated){
+		if(bPlayerExists){
 			PLAYER::SET_POLICE_IGNORE_PLAYER(player, false);
 		}
 		featurePlayerIgnoredByPoliceUpdated = false;
 	}
 
 	// player special ability
-	if (featurePlayerUnlimitedAbility)
-	{
-		if (bPlayerExists)
+	if(featurePlayerUnlimitedAbility){
+		if(bPlayerExists)
 			PLAYER::SPECIAL_ABILITY_FILL_METER(player, 1);
 	}
 
 	// player no noise
-	if (featurePlayerNoNoiseUpdated)
-	{
-		if (bPlayerExists && !featurePlayerNoNoise)
+	if(featurePlayerNoNoiseUpdated){
+		if(bPlayerExists && !featurePlayerNoNoise)
 			PLAYER::SET_PLAYER_NOISE_MULTIPLIER(player, 1.0);
 		featurePlayerNoNoiseUpdated = false;
 	}
-	if (featurePlayerNoNoise)
+	if(featurePlayerNoNoise)
 		PLAYER::SET_PLAYER_NOISE_MULTIPLIER(player, 0.0);
 
 	// player fast swim
-	if (featurePlayerFastSwimUpdated)
-	{
-		if (bPlayerExists && !featurePlayerFastSwim)
+	if(featurePlayerFastSwimUpdated){
+		if(bPlayerExists && !featurePlayerFastSwim)
 			PLAYER::SET_SWIM_MULTIPLIER_FOR_PLAYER(player, 1.0);
 		featurePlayerFastSwimUpdated = false;
 	}
-	if (featurePlayerFastSwim)
+	if(featurePlayerFastSwim)
 		PLAYER::SET_SWIM_MULTIPLIER_FOR_PLAYER(player, 1.49);
 
 	// player fast run
-	if (featurePlayerFastRunUpdated)
-	{
-		if (bPlayerExists && !featurePlayerFastRun)
+	if(featurePlayerFastRunUpdated){
+		if(bPlayerExists && !featurePlayerFastRun)
 			PLAYER::SET_RUN_SPRINT_MULTIPLIER_FOR_PLAYER(player, 1.0);
 		featurePlayerFastRunUpdated = false;
 	}
-	if (featurePlayerFastRun)
+	if(featurePlayerFastRun)
 		PLAYER::SET_RUN_SPRINT_MULTIPLIER_FOR_PLAYER(player, 1.49);
 
 	// player super jump
-	if (featurePlayerSuperJump)
-	{
-		if (bPlayerExists)
+	if(featurePlayerSuperJump){
+		if(bPlayerExists)
 			GAMEPLAY::SET_SUPER_JUMP_THIS_FRAME(player);
 	}
 
 	//No Radgoll
 
-	if (featureNoRagdoll)
-	{
-		if (bPlayerExists)
-		{
+	if(featureNoRagdoll){
+		if(bPlayerExists){
 			PED::SET_PED_CAN_RAGDOLL(playerPed, 0);
 			PED::SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(playerPed, 0);
 		}
 	}
-	else if (featureNoRagdollUpdated)
-	{
-		if (bPlayerExists)
-		{
+	else if(featureNoRagdollUpdated){
+		if(bPlayerExists){
 			PED::SET_PED_CAN_RAGDOLL(playerPed, 1);
 			PED::SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(playerPed, 1);
 		}
@@ -385,53 +342,47 @@ void update_features()
 
 
 	//Player Invisible
-	if (featurePlayerInvisibleUpdated)
-	{
+	if(featurePlayerInvisibleUpdated){
 		featurePlayerInvisibleUpdated = false;
 
-		if (bPlayerExists && featurePlayerInvisible)
+		if(bPlayerExists && featurePlayerInvisible)
 			ENTITY::SET_ENTITY_VISIBLE(playerPed, false);
-		else if (bPlayerExists){ ENTITY::SET_ENTITY_VISIBLE(playerPed, true); }
+		else if(bPlayerExists){
+			ENTITY::SET_ENTITY_VISIBLE(playerPed, true);
+		}
 	}
 
-	if (featurePlayerDrunkUpdated)
-	{
+	if(featurePlayerDrunkUpdated){
 		featurePlayerDrunkUpdated = false;
-		if (featurePlayerDrunk)
-		{
-			STREAMING::REQUEST_ANIM_SET((char*)CLIPSET_DRUNK);
-			while (!STREAMING::HAS_ANIM_SET_LOADED((char*)CLIPSET_DRUNK))
-			{
+		if(featurePlayerDrunk){
+			STREAMING::REQUEST_ANIM_SET((char*) CLIPSET_DRUNK);
+			while(!STREAMING::HAS_ANIM_SET_LOADED((char*) CLIPSET_DRUNK)){
 				make_periodic_feature_call();
 				WAIT(0);
 			}
-			PED::SET_PED_MOVEMENT_CLIPSET(playerPed, (char*)CLIPSET_DRUNK, 1.0f);
+			PED::SET_PED_MOVEMENT_CLIPSET(playerPed, (char*) CLIPSET_DRUNK, 1.0f);
 			CAM::SHAKE_GAMEPLAY_CAM("DRUNK_SHAKE", 1.0f);
 		}
-		else
-		{
+		else{
 			PED::RESET_PED_MOVEMENT_CLIPSET(playerPed, 1.0f);
 			CAM::STOP_GAMEPLAY_CAM_SHAKING(true);
 		}
 		AUDIO::SET_PED_IS_DRUNK(playerPed, featurePlayerDrunk);
 	}
 
-	if (featureNightVisionUpdated)
-	{
+	if(featureNightVisionUpdated){
 		GRAPHICS::SET_NIGHTVISION(featureNightVision);
 		featureNightVisionUpdated = false;
 	}
 
-	if (featureThermalVisionUpdated)
-	{
+	if(featureThermalVisionUpdated){
 		GRAPHICS::SET_SEETHROUGH(featureThermalVision);
 		featureThermalVisionUpdated = false;
 	}
 
 	update_weapon_features(bPlayerExists, player);
 
-	if (AIMBOT_INCLUDED)
-	{
+	if(AIMBOT_INCLUDED){
 		update_aimbot_esp_features();
 	}
 
@@ -444,21 +395,18 @@ void update_features()
 	update_bodyguard_features();
 
 	//Disable airbrake on death
-	if (ENTITY::IS_ENTITY_DEAD(playerPed))
-	{
+	if(ENTITY::IS_ENTITY_DEAD(playerPed)){
 		exit_airbrake_menu_if_showing();
 	}
 
 	//----Hotkeys----
-	
+
 	//Move through door (use '-key)
 	//Pushes player through solid door objects.
-	if (bPlayerExists)
-	{
+	if(bPlayerExists){
 		bool throughDoorPressed = IsKeyJustUp(KeyConfig::KEY_HOT_AIRBRAKE_THROUGH_DOOR) || IsControllerButtonJustUp(KeyConfig::KEY_HOT_AIRBRAKE_THROUGH_DOOR);
 		//bool disablePolicePressed = IsKeyJustUp(VK_OEM_6);
-		if (throughDoorPressed)
-		{
+		if(throughDoorPressed){
 			moveThroughDoor();
 		}
 	}
@@ -466,45 +414,43 @@ void update_features()
 
 int activeLineIndexWantedFreeze = 0;
 
-bool getFrozenWantedFeature(){ return featureWantedLevelFrozen; }
+bool getFrozenWantedFeature(){
+	return featureWantedLevelFrozen;
+}
 
-void updateFrozenWantedFeature(int level)
-{
-	frozenWantedLevel = level; 
+void updateFrozenWantedFeature(int level){
+	frozenWantedLevel = level;
 	featureWantedLevelFrozenUpdated = true;
 }
 
 int activeLineIndexPlayer = 0;
 
-bool onconfirm_player_menu(MenuItem<int> choice)
-{
+bool onconfirm_player_menu(MenuItem<int> choice){
 	// common variables
 	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
 	Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
-	switch (activeLineIndexPlayer)
-	{
+	switch(activeLineIndexPlayer){
 		// skin changer
-	case 0:
-		if (process_skinchanger_menu())	return true;
-		break;
-	case 1:
-		heal_player();
-		break;
-	case 17:
-		process_anims_menu_top();
-		break;
-	default:
-		break;
+		case 0:
+			if(process_skinchanger_menu())	return true;
+			break;
+		case 1:
+			heal_player();
+			break;
+		case 17:
+			process_anims_menu_top();
+			break;
+		default:
+			break;
 	}
 	return false;
 }
 
-void process_player_menu()
-{
+void process_player_menu(){
 	const int lineCount = 18;
-	
+
 	std::string caption = "Player Options";
 
 	StandardOrToggleMenuDef lines[lineCount] = {
@@ -538,49 +484,46 @@ void process_player_menu()
 
 int activeLineIndexMain = 0;
 
-bool onconfirm_main_menu(MenuItem<int> choice)
-{
-	switch (choice.value)
-	{
-	case 0:
-		process_player_menu();
-		break;
-	case 1:
-		process_teleport_menu(-1);
-		break;
-	case 2:
-		process_weapon_menu();
-		break;
-	case 3:
-		process_bodyguard_menu();
-		break;
-	case 4:
-		process_veh_menu();
-		break;
-	case 5:
-		process_world_menu();
-		break;
-	case 6:
-		process_time_menu();
-		break;
-	case 7:
-		process_props_menu();
-		break;
-	case 8:
-		process_misc_menu();
-		break;
-	case 9:
-		reset_globals();
-		break;
-	case 10:
-		process_aimbot_esp_menu();
-		break;
+bool onconfirm_main_menu(MenuItem<int> choice){
+	switch(choice.value){
+		case 0:
+			process_player_menu();
+			break;
+		case 1:
+			process_teleport_menu(-1);
+			break;
+		case 2:
+			process_weapon_menu();
+			break;
+		case 3:
+			process_bodyguard_menu();
+			break;
+		case 4:
+			process_veh_menu();
+			break;
+		case 5:
+			process_world_menu();
+			break;
+		case 6:
+			process_time_menu();
+			break;
+		case 7:
+			process_props_menu();
+			break;
+		case 8:
+			process_misc_menu();
+			break;
+		case 9:
+			reset_globals();
+			break;
+		case 10:
+			process_aimbot_esp_menu();
+			break;
 	}
 	return false;
 }
 
-void process_main_menu()
-{
+void process_main_menu(){
 	std::ostringstream captionSS;
 	captionSS << "~HUD_COLOUR_MENU_YELLOW~Enhanced ~HUD_COLOUR_WHITE~Native Trainer ~HUD_COLOUR_GREY~Update ";
 	captionSS << VERSION_STRING;
@@ -650,8 +593,7 @@ void process_main_menu()
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
-	if (AIMBOT_INCLUDED)
-	{
+	if(AIMBOT_INCLUDED){
 		item = new MenuItem<int>();
 		item->caption = "Aimbot ESP";
 		item->value = i++;
@@ -667,8 +609,7 @@ void process_main_menu()
 	draw_generic_menu<int>(params);
 }
 
-void reset_globals()
-{
+void reset_globals(){
 	reset_skin_globals();
 
 	reset_vehicle_globals();
@@ -677,8 +618,7 @@ void reset_globals()
 
 	reset_weapon_globals();
 
-	if (AIMBOT_INCLUDED)
-	{
+	if(AIMBOT_INCLUDED){
 		reset_aimbot_globals();
 	}
 
@@ -704,24 +644,24 @@ void reset_globals()
 		featurePlayerFastRun =
 		featurePlayerSuperJump =
 		featurePlayerInvisible =
-	featureNightVision =
-	featureThermalVision =
+		featureNightVision =
+		featureThermalVision =
 
-	featureNoRagdoll = 
+		featureNoRagdoll =
 
 		featureWantedLevelFrozen = false;
 
 	featurePlayerInvincibleUpdated =
-	featurePlayerIgnoredByPoliceUpdated =
-	featurePlayerNoNoiseUpdated =
-	featurePlayerFastSwimUpdated =
-	featurePlayerFastRunUpdated =
-	featurePlayerDrunkUpdated =
-	featureNightVisionUpdated =
-	featureThermalVisionUpdated =
+		featurePlayerIgnoredByPoliceUpdated =
+		featurePlayerNoNoiseUpdated =
+		featurePlayerFastSwimUpdated =
+		featurePlayerFastRunUpdated =
+		featurePlayerDrunkUpdated =
+		featureNightVisionUpdated =
+		featureThermalVisionUpdated =
 		featurePlayerInvisibleUpdated =
 
-		featureNoRagdollUpdated = 
+		featureNoRagdollUpdated =
 		featureWantedLevelFrozenUpdated = true;
 
 	set_status_text("All settings reset to defaults");
@@ -731,8 +671,7 @@ void reset_globals()
 	CloseHandle(myHandle);
 }
 
-void main()
-{	
+void main(){
 	//reset_globals();
 
 	setGameInputToEnabled(true, true);
@@ -758,20 +697,17 @@ void main()
 
 	// tell cout to use our new locale.
 	std::cout.imbue(comma_locale);
-	
+
 	set_status_text("~HUD_COLOUR_MENU_YELLOW~ENT~HUD_COLOUR_WHITE~ is ready!");
 
-	while (true)
-	{
-		if (trainer_switch_pressed())
-		{
+	while(true){
+		if(trainer_switch_pressed()){
 			menu_beep();
 			set_menu_showing(true);
 			process_main_menu();
 			set_menu_showing(false);
 		}
-		else if (airbrake_switch_pressed())
-		{
+		else if(airbrake_switch_pressed()){
 			menu_beep();
 			process_airbrake_menu();
 		}
@@ -782,19 +718,18 @@ void main()
 	}
 }
 
-void make_minidump(EXCEPTION_POINTERS* e)
-{
+void make_minidump(EXCEPTION_POINTERS* e){
 	write_text_to_log_file("Dump requested");
 
 	auto hDbgHelp = LoadLibraryA("dbghelp");
-	if (hDbgHelp == nullptr)
+	if(hDbgHelp == nullptr)
 		return;
-	auto pMiniDumpWriteDump = (decltype(&MiniDumpWriteDump))GetProcAddress(hDbgHelp, "MiniDumpWriteDump");
-	if (pMiniDumpWriteDump == nullptr)
+	auto pMiniDumpWriteDump = (decltype(&MiniDumpWriteDump)) GetProcAddress(hDbgHelp, "MiniDumpWriteDump");
+	if(pMiniDumpWriteDump == nullptr)
 		return;
 
 	auto hFile = CreateFileW(get_storage_dir_path("ENT-minidump.dmp"), GENERIC_WRITE, FILE_SHARE_READ, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
-	if (hFile == INVALID_HANDLE_VALUE)
+	if(hFile == INVALID_HANDLE_VALUE)
 		return;
 
 	MINIDUMP_EXCEPTION_INFORMATION exceptionInfo;
@@ -818,15 +753,13 @@ void make_minidump(EXCEPTION_POINTERS* e)
 	return;
 }
 
-LONG CALLBACK unhandled_handler(EXCEPTION_POINTERS* e)
-{
+LONG CALLBACK unhandled_handler(EXCEPTION_POINTERS* e){
 	write_text_to_log_file("Exception occured");
 	make_minidump(e);
 	return EXCEPTION_EXECUTE_HANDLER;
 }
 
-int filterException(int code, PEXCEPTION_POINTERS ex)
-{
+int filterException(int code, PEXCEPTION_POINTERS ex){
 	set_status_text("Whoops, ENT crashed!");
 
 	write_text_to_log_file("ScriptMain exception");
@@ -834,14 +767,12 @@ int filterException(int code, PEXCEPTION_POINTERS ex)
 	return EXCEPTION_EXECUTE_HANDLER;
 }
 
-void ScriptMain()
-{
+void ScriptMain(){
 	srand(time(NULL));
 
 	#ifdef _DEBUG
-	__try
-	{
-#endif
+	__try{
+		#endif
 
 		set_status_text("~HUD_COLOUR_MENU_YELLOW~ENT~HUD_COLOUR_WHITE~ is initializing...");
 
@@ -856,8 +787,7 @@ void ScriptMain()
 		write_text_to_log_file("Init XINPUT complete");
 
 		database = new ENTDatabase();
-		if (!database->open())
-		{
+		if(!database->open()){
 			write_text_to_log_file("Failed to open database");
 			set_status_text("ENT couldn't open the database - exiting");
 			database = NULL;
@@ -880,78 +810,71 @@ void ScriptMain()
 
 		write_text_to_log_file("ScriptMain ended");
 
-#ifdef _DEBUG
+		#ifdef _DEBUG
 	}
-	__except (filterException(GetExceptionCode(), GetExceptionInformation()))
-	{
+	__except(filterException(GetExceptionCode(), GetExceptionInformation())){
 
 	}
-#endif
+	#endif
 }
 
-void ScriptTidyUp()
-{
-#ifdef _DEBUG
-	__try
-	{
-#endif
+void ScriptTidyUp(){
+	#ifdef _DEBUG
+	__try{
+		#endif
 
-	write_text_to_log_file("ScriptTidyUp called");
+		write_text_to_log_file("ScriptTidyUp called");
 
-	setGameInputToEnabled(true, true);
-	setAirbrakeRelatedInputToBlocked(false, true);
+		setGameInputToEnabled(true, true);
+		setAirbrakeRelatedInputToBlocked(false, true);
 
-	cleanup_script();
-	write_text_to_log_file("Cleaned up script");
-	WAIT(0);
-	cleanup_props();
-	write_text_to_log_file("Cleaned up props");
-	WAIT(0);
-	cleanup_anims();
-	write_text_to_log_file("Cleaned up anims");
+		cleanup_script();
+		write_text_to_log_file("Cleaned up script");
+		WAIT(0);
+		cleanup_props();
+		write_text_to_log_file("Cleaned up props");
+		WAIT(0);
+		cleanup_anims();
+		write_text_to_log_file("Cleaned up anims");
 
-	save_settings();
-	write_text_to_log_file("Saved settings");
+		save_settings();
+		write_text_to_log_file("Saved settings");
 
-	end_xinput();
-	write_text_to_log_file("XInput terminated");
+		end_xinput();
+		write_text_to_log_file("XInput terminated");
 
-	if (database != NULL)
-	{
-		database->close();
-		delete database;
-		write_text_to_log_file("Database killed");
+		if(database != NULL){
+			database->close();
+			delete database;
+			write_text_to_log_file("Database killed");
+		}
+
+		write_text_to_log_file("ScriptTidyUp done");
+		#ifdef _DEBUG
 	}
-
-	write_text_to_log_file("ScriptTidyUp done");
-#ifdef _DEBUG
-	}
-	__except (filterException(GetExceptionCode(), GetExceptionInformation()))
-	{
+	__except(filterException(GetExceptionCode(), GetExceptionInformation())){
 
 	}
-#endif
+	#endif
 }
 
-void add_player_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results)
-{
-	results->push_back(FeatureEnabledLocalDefinition{ "featurePlayerInvincible", &featurePlayerInvincible, &featurePlayerInvincibleUpdated });
-	results->push_back(FeatureEnabledLocalDefinition{ "featureWantedLevelFrozen", &featureWantedLevelFrozen, &featureWantedLevelFrozenUpdated });
-	results->push_back(FeatureEnabledLocalDefinition{ "featurePlayerIgnoredByPolice", &featurePlayerIgnoredByPolice, &featurePlayerIgnoredByPoliceUpdated });
-	results->push_back(FeatureEnabledLocalDefinition{ "featurePlayerUnlimitedAbility", &featurePlayerUnlimitedAbility });
-	results->push_back(FeatureEnabledLocalDefinition{ "featurePlayerNoNoise", &featurePlayerNoNoise, &featurePlayerNoNoiseUpdated });
-	results->push_back(FeatureEnabledLocalDefinition{ "featurePlayerFastSwim", &featurePlayerFastSwim, &featurePlayerFastSwimUpdated });
-	results->push_back(FeatureEnabledLocalDefinition{ "featurePlayerFastRun", &featurePlayerFastRun, &featurePlayerFastRunUpdated });
-	results->push_back(FeatureEnabledLocalDefinition{ "featurePlayerSuperJump", &featurePlayerSuperJump });
-	results->push_back(FeatureEnabledLocalDefinition{ "featureNoRagdoll", &featureNoRagdoll, &featureNoRagdollUpdated });
-	results->push_back(FeatureEnabledLocalDefinition{ "featurePlayerInvisible", &featurePlayerInvisible, &featurePlayerInvisibleUpdated });
-	results->push_back(FeatureEnabledLocalDefinition{ "featurePlayerDrunk", &featurePlayerDrunk, &featurePlayerDrunkUpdated });
-	results->push_back(FeatureEnabledLocalDefinition{ "featureNightVision", &featureNightVision, &featureNightVisionUpdated });
-	results->push_back(FeatureEnabledLocalDefinition{ "featureThermalVision", &featureThermalVision, &featureThermalVisionUpdated });
+void add_player_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){
+	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerInvincible", &featurePlayerInvincible, &featurePlayerInvincibleUpdated});
+	results->push_back(FeatureEnabledLocalDefinition{"featureWantedLevelFrozen", &featureWantedLevelFrozen, &featureWantedLevelFrozenUpdated});
+	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerIgnoredByPolice", &featurePlayerIgnoredByPolice, &featurePlayerIgnoredByPoliceUpdated});
+	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerUnlimitedAbility", &featurePlayerUnlimitedAbility});
+	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerNoNoise", &featurePlayerNoNoise, &featurePlayerNoNoiseUpdated});
+	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerFastSwim", &featurePlayerFastSwim, &featurePlayerFastSwimUpdated});
+	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerFastRun", &featurePlayerFastRun, &featurePlayerFastRunUpdated});
+	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerSuperJump", &featurePlayerSuperJump});
+	results->push_back(FeatureEnabledLocalDefinition{"featureNoRagdoll", &featureNoRagdoll, &featureNoRagdollUpdated});
+	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerInvisible", &featurePlayerInvisible, &featurePlayerInvisibleUpdated});
+	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerDrunk", &featurePlayerDrunk, &featurePlayerDrunkUpdated});
+	results->push_back(FeatureEnabledLocalDefinition{"featureNightVision", &featureNightVision, &featureNightVisionUpdated});
+	results->push_back(FeatureEnabledLocalDefinition{"featureThermalVision", &featureThermalVision, &featureThermalVisionUpdated});
 }
 
-std::vector<FeatureEnabledLocalDefinition> get_feature_enablements()
-{
+std::vector<FeatureEnabledLocalDefinition> get_feature_enablements(){
 	std::vector<FeatureEnabledLocalDefinition> results;
 
 	add_player_feature_enablements(&results);
@@ -975,8 +898,7 @@ std::vector<FeatureEnabledLocalDefinition> get_feature_enablements()
 	return results;
 }
 
-std::vector<StringPairSettingDBRow> get_generic_settings()
-{
+std::vector<StringPairSettingDBRow> get_generic_settings(){
 	std::vector<StringPairSettingDBRow> settings;
 	add_time_generic_settings(&settings);
 	add_world_generic_settings(&settings);
@@ -986,27 +908,23 @@ std::vector<StringPairSettingDBRow> get_generic_settings()
 	add_props_generic_settings(&settings);
 	add_weapons_generic_settings(&settings);
 	add_areaeffect_generic_settings(&settings);
-	
-	if (AIMBOT_INCLUDED)
-	{
+
+	if(AIMBOT_INCLUDED){
 		add_aimbot_esp_generic_settings(&settings);
 	}
 
 	add_bodyguards_generic_settings(&settings);
 	add_skin_generic_settings(&settings);
 
-	settings.push_back(StringPairSettingDBRow{ "frozenWantedLevel", std::to_string(frozenWantedLevel) });
+	settings.push_back(StringPairSettingDBRow{"frozenWantedLevel", std::to_string(frozenWantedLevel)});
 
 	return settings;
 }
 
-void handle_generic_settings(std::vector<StringPairSettingDBRow> settings)
-{
-	for (int i = 0; i < settings.size(); i++)
-	{
+void handle_generic_settings(std::vector<StringPairSettingDBRow> settings){
+	for(int i = 0; i < settings.size(); i++){
 		StringPairSettingDBRow setting = settings.at(i);
-		if (setting.name.compare("frozenWantedLevel") == 0)
-		{
+		if(setting.name.compare("frozenWantedLevel") == 0){
 			frozenWantedLevel = stoi(setting.value);
 		}
 	}
@@ -1029,8 +947,7 @@ void handle_generic_settings(std::vector<StringPairSettingDBRow> settings)
 
 	handle_generic_settings_areaeffect(&settings);
 
-	if (AIMBOT_INCLUDED)
-	{
+	if(AIMBOT_INCLUDED){
 		handle_generic_settings_aimbot_esp(&settings);
 	}
 
@@ -1039,16 +956,13 @@ void handle_generic_settings(std::vector<StringPairSettingDBRow> settings)
 	handle_generic_settings_skin(&settings);
 }
 
-DWORD WINAPI save_settings_thread(LPVOID lpParameter)
-{
+DWORD WINAPI save_settings_thread(LPVOID lpParameter){
 	save_settings();
 	return 0;
 }
 
-void save_settings()
-{
-	if (!everInitialised)
-	{
+void save_settings(){
+	if(!everInitialised){
 		return;
 	}
 
@@ -1062,8 +976,7 @@ void save_settings()
 	}
 	*/
 
-	if (database != NULL)
-	{
+	if(database != NULL){
 		write_text_to_log_file("Actually saving");
 		database->store_setting_pairs(get_generic_settings());
 		database->store_feature_enabled_pairs(get_feature_enablements());
@@ -1071,8 +984,7 @@ void save_settings()
 	}
 }
 
-void load_settings()
-{
+void load_settings(){
 	handle_generic_settings(database->load_setting_pairs());
 
 	write_text_to_log_file("Got generic pairs");
@@ -1084,8 +996,7 @@ void load_settings()
 	//db_mutex.unlock();
 }
 
-void init_storage()
-{
+void init_storage(){
 	WCHAR* folder = get_storage_dir_path();
 	write_text_to_log_file("Trying to create storage folder");
 
@@ -1093,12 +1004,10 @@ void init_storage()
 	std::string folderSS1(ws1.begin(), ws1.end());
 
 	write_text_to_log_file(folderSS1);
-	if (CreateDirectoryW(folder, NULL) || ERROR_ALREADY_EXISTS == GetLastError())
-	{
+	if(CreateDirectoryW(folder, NULL) || ERROR_ALREADY_EXISTS == GetLastError()){
 		write_text_to_log_file("Storage dir created or exists");
 	}
-	else
-	{
+	else{
 		write_text_to_log_file("Couldn't create storage dir");
 	}
 	delete folder;
@@ -1109,22 +1018,19 @@ void init_storage()
 
 	write_text_to_log_file("Trying to create temp folder");
 	write_text_to_log_file(folderSS2);
-	if (CreateDirectoryW(folder2, NULL) || ERROR_ALREADY_EXISTS == GetLastError())
-	{
+	if(CreateDirectoryW(folder2, NULL) || ERROR_ALREADY_EXISTS == GetLastError()){
 		write_text_to_log_file("Temp dir created or exists");
 	}
-	else
-	{
+	else{
 		write_text_to_log_file("Couldn't create temp dir");
 	}
 	delete folder2;
 }
 
-WCHAR* get_temp_dir_path()
-{
+WCHAR* get_temp_dir_path(){
 	WCHAR s[MAX_PATH];
 	GetTempPathW(MAX_PATH, s);
-	
+
 	WCHAR combined[MAX_PATH];
 	PathCombineW(combined, s, L"GTAV Enhanced Native Trainer");
 
@@ -1138,8 +1044,7 @@ WCHAR* get_temp_dir_path()
 	return result;
 }
 
-WCHAR* get_temp_dir_path(char* file)
-{
+WCHAR* get_temp_dir_path(char* file){
 	WCHAR *output = new WCHAR[MAX_PATH];
 
 	WCHAR* folder = get_temp_dir_path();
@@ -1155,8 +1060,7 @@ WCHAR* get_temp_dir_path(char* file)
 	return output;
 }
 
-WCHAR* get_storage_dir_path()
-{
+WCHAR* get_storage_dir_path(){
 	PWSTR localAppData;
 	SHGetKnownFolderPath(FOLDERID_RoamingAppData, 0, NULL, &localAppData);
 
@@ -1172,8 +1076,7 @@ WCHAR* get_storage_dir_path()
 	return result;
 }
 
-WCHAR* get_storage_dir_path(char* file)
-{
+WCHAR* get_storage_dir_path(char* file){
 	WCHAR *output = new WCHAR[MAX_PATH];
 	WCHAR* folder = get_storage_dir_path();
 
@@ -1188,13 +1091,11 @@ WCHAR* get_storage_dir_path(char* file)
 	return output;
 }
 
-ENTDatabase* get_database()
-{
+ENTDatabase* get_database(){
 	return database;
 }
 
-struct GraphicsTest
-{
+struct GraphicsTest{
 	void(*function)(BOOL);
 	bool state;
 };
@@ -1243,15 +1144,13 @@ std::vector<GraphicsTest> graphicsTests = {
 	//{ GRAPHICS::_SET_BLACKOUT, false }
 };
 
-bool get_graphics_test(std::vector<int> extras)
-{
+bool get_graphics_test(std::vector<int> extras){
 	int choice = extras.at(0);
 	GraphicsTest* gt = &graphicsTests.at(choice);
 	return gt->state;
 }
 
-void set_graphics_test(bool applied, std::vector<int> extras)
-{
+void set_graphics_test(bool applied, std::vector<int> extras){
 	int choice = extras.at(0);
 
 	GraphicsTest* gt = &graphicsTests.at(choice);
@@ -1263,29 +1162,24 @@ void set_graphics_test(bool applied, std::vector<int> extras)
 	//set_status_text_centre_screen(ss.str());
 }
 
-void set_all_graphics_test(bool applied, std::vector<int> extras)
-{
+void set_all_graphics_test(bool applied, std::vector<int> extras){
 	allGraphicsOn = applied;
-	for (int i = 0; i < graphicsTests.size(); i++)
-	{
+	for(int i = 0; i < graphicsTests.size(); i++){
 		GraphicsTest* gt = &graphicsTests.at(i);
 		gt->state = applied;
 		gt->function(gt->state);
 	}
 }
 
-bool get_all_graphics_test(std::vector<int> extras)
-{
+bool get_all_graphics_test(std::vector<int> extras){
 	return allGraphicsOn;
 }
 
-bool onconfirm_testmenu(MenuItem<int> choice)
-{
+bool onconfirm_testmenu(MenuItem<int> choice){
 	Ped ped = PLAYER::PLAYER_PED_ID();
 	Hash hash = GAMEPLAY::GET_HASH_KEY("WEAPON_NIGHTSTICK");
 	DWORD start = GetTickCount();
-	for (int i = 0; i < 100000; i++)
-	{
+	for(int i = 0; i < 100000; i++){
 		Hash hash;
 		WEAPON::GET_CURRENT_PED_WEAPON(ped, &hash, true);
 	}
@@ -1296,8 +1190,7 @@ bool onconfirm_testmenu(MenuItem<int> choice)
 	return false;
 }
 
-void process_test_menu()
-{
+void process_test_menu(){
 	std::vector<MenuItem<int>*> menuItems;
 
 	MenuItem<int> *mitem = new MenuItem<int>();
@@ -1314,8 +1207,7 @@ void process_test_menu()
 	item->value = -1;
 	menuItems.push_back(item);
 
-	for (int i = 0; i < graphicsTests.size(); i++)
-	{
+	for(int i = 0; i < graphicsTests.size(); i++){
 		FunctionDrivenToggleMenuItem<int> *item = new FunctionDrivenToggleMenuItem<int>();
 		item->getter_call = get_graphics_test;
 		item->setter_call = set_graphics_test;
@@ -1334,8 +1226,7 @@ void process_test_menu()
 
 }
 
-void debug_native_investigation()
-{
+void debug_native_investigation(){
 	/*BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
@@ -1484,8 +1375,7 @@ void debug_native_investigation()
 	}*/
 }
 
-void heal_player()
-{
+void heal_player(){
 	// common variables
 	Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
@@ -1494,58 +1384,48 @@ void heal_player()
 	PED::ADD_ARMOUR_TO_PED(playerPed, PLAYER::GET_PLAYER_MAX_ARMOUR(player) - PED::GET_PED_ARMOUR(playerPed));
 	PED::SET_PED_WETNESS_HEIGHT(playerPed, -2.0);
 	PED::CLEAR_PED_BLOOD_DAMAGE(playerPed);
-	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0))
-	{
+	if(PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
 		Vehicle playerVeh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
-		if (ENTITY::DOES_ENTITY_EXIST(playerVeh) && !ENTITY::IS_ENTITY_DEAD(playerVeh))
+		if(ENTITY::DOES_ENTITY_EXIST(playerVeh) && !ENTITY::IS_ENTITY_DEAD(playerVeh))
 			VEHICLE::SET_VEHICLE_FIXED(playerVeh);
 	}
 	set_status_text("Player healed");
 }
 
-void toggle_invisibility()
-{
+void toggle_invisibility(){
 	featurePlayerInvisible = !featurePlayerInvisible;
-	if (featurePlayerInvisible)
-	{
+	if(featurePlayerInvisible){
 		set_status_text("Player invisible");
 	}
-	else
-	{
+	else{
 		set_status_text("Player no longer invisible");
 	}
 	featurePlayerInvisibleUpdated = true;
 }
 
-void reset_wanted_level()
-{
+void reset_wanted_level(){
 	PLAYER::CLEAR_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID());
 	set_status_text("Wanted level cleared");
 }
 
-int get_frame_number()
-{
+int get_frame_number(){
 	return game_frame_num;
 }
 
-void toggle_thermal_vision()
-{
+void toggle_thermal_vision(){
 	featureThermalVision = !featureThermalVision;
 	featureThermalVisionUpdated = true;
 }
 
-void toggle_night_vision()
-{
+void toggle_night_vision(){
 	featureNightVision = !featureNightVision;
 	featureNightVisionUpdated = true;
 }
 
-void cleanup_script()
-{
+void cleanup_script(){
 	cleanup_area_effects();
 }
 
-bool is_player_ignored_by_police()
-{
+bool is_player_ignored_by_police(){
 	return featurePlayerIgnoredByPolice;
 }
