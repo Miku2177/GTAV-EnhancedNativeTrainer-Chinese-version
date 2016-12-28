@@ -35,20 +35,19 @@ bool featureControllerIgnoreInTrainer = false;
 
 bool featureMiscJellmanScenery = false;
 
+bool featureResetPlayerModelOnDeath = true;
+
 const int TRAINERCONFIG_HOTKEY_MENU = 99;
 int radioStationIndex = -1;
 
-void onchange_hotkey_function(int value, SelectFromListMenuItem* source)
-{
+void onchange_hotkey_function(int value, SelectFromListMenuItem* source){
 	change_hotkey_function(source->extras.at(0), value);
 }
 
-bool process_misc_hotkey_menu()
-{
+bool process_misc_hotkey_menu(){
 	std::vector<MenuItem<int>*> menuItems;
 
-	for (int i = 1; i < 10; i++)
-	{
+	for(int i = 1; i < 10; i++){
 		std::ostringstream itemCaption;
 		std::vector<std::string> captions;
 		void(*callback)(int, SelectFromListMenuItem*);
@@ -56,15 +55,12 @@ bool process_misc_hotkey_menu()
 		itemCaption << "Hotkey " << i;
 
 		bool keyAssigned = get_config()->get_key_config()->is_hotkey_assigned(i);
-		if (!keyAssigned)
-		{
+		if(!keyAssigned){
 			captions.push_back("Key Not Bound");
 			callback = NULL;
 		}
-		else
-		{
-			for each (HOTKEY_DEF var in HOTKEY_AVAILABLE_FUNCS)
-			{
+		else{
+			for each (HOTKEY_DEF var in HOTKEY_AVAILABLE_FUNCS){
 				captions.push_back(var.caption);
 			}
 			callback = onchange_hotkey_function;
@@ -146,10 +142,8 @@ void process_misc_trainermenucolors_menu(){
 	draw_generic_menu<int>(menuItems, nullptr, "Trainer Menu Colors", onconfirm_trainermenucolors_menu, nullptr, nullptr, nullptr);
 }
 
-bool onconfirm_trainerconfig_menu(MenuItem<int> choice)
-{
-	if (choice.value == TRAINERCONFIG_HOTKEY_MENU)
-	{
+bool onconfirm_trainerconfig_menu(MenuItem<int> choice){
+	if(choice.value == TRAINERCONFIG_HOTKEY_MENU){
 		process_misc_hotkey_menu();
 	}
 	else if(choice.value == 63){
@@ -158,8 +152,7 @@ bool onconfirm_trainerconfig_menu(MenuItem<int> choice)
 	return false;
 }
 
-void process_misc_trainerconfig_menu()
-{
+void process_misc_trainerconfig_menu(){
 	std::string caption = "Trainer Options";
 
 	std::vector<MenuItem<int>*> menuItems;
@@ -237,47 +230,44 @@ void process_misc_freezeradio_menu(){
 
 int activeLineIndexMisc = 0;
 
-bool onconfirm_misc_menu(MenuItem<int> choice)
-{
-	switch (activeLineIndexMisc)
-	{
-	case 0:
-		process_misc_trainerconfig_menu();
-		break;
-	case 2:
-		// next radio track
-		AUDIO::SKIP_RADIO_FORWARD();
-		break;
-	case 3:
-		process_misc_freezeradio_menu();
-		break;
-	default:
-		// switchable features
-		break;
+bool onconfirm_misc_menu(MenuItem<int> choice){
+	switch(activeLineIndexMisc){
+		case 0:
+			process_misc_trainerconfig_menu();
+			break;
+		case 2:
+			// next radio track
+			AUDIO::SKIP_RADIO_FORWARD();
+			break;
+		case 3:
+			process_misc_freezeradio_menu();
+			break;
+		default:
+			// switchable features
+			break;
 	}
 	return false;
 }
 
-void process_misc_menu()
-{
-	const int lineCount = 6;
+void process_misc_menu(){
+	const int lineCount = 7;
 
 	std::string caption = "Miscellaneous Options";
 
 	StandardOrToggleMenuDef lines[lineCount] = {
-		{ "Trainer Options", NULL, NULL, false },
-		{ "Portable Radio", &featurePlayerRadio, &featurePlayerRadioUpdated, true },
-		{ "Next Radio Track", NULL, NULL, true },
+		{"Trainer Options", NULL, NULL, false},
+		{"Portable Radio", &featurePlayerRadio, &featurePlayerRadioUpdated, true},
+		{"Next Radio Track", NULL, NULL, true},
 		{"Freeze Radio to Station", nullptr, nullptr, false},
-		{ "Radio Always Off", &featureRadioAlwaysOff, &featureRadioAlwaysOffUpdated, true },
-		{ "Hide HUD", &featureMiscHideHud, &featureMiscHideHudUpdated }
+		{"Radio Always Off", &featureRadioAlwaysOff, &featureRadioAlwaysOffUpdated, true},
+		{"Hide HUD", &featureMiscHideHud, &featureMiscHideHudUpdated},
+		{"Reset Player Model on Death", &featureResetPlayerModelOnDeath, nullptr, true}
 	};
 
 	draw_menu_from_struct_def(lines, lineCount, &activeLineIndexMisc, caption, onconfirm_misc_menu);
 }
 
-void reset_misc_globals()
-{
+void reset_misc_globals(){
 	featureMiscHideHud =
 		featurePlayerRadio =
 		featureMiscLockRadio =
@@ -297,21 +287,16 @@ void reset_misc_globals()
 	ENTColor::reset_colors();
 }
 
-void update_misc_features(BOOL playerExists, Ped playerPed)
-{
-	if (featureRadioAlwaysOff || featurePlayerRadioUpdated)
-	{
-		if (featureRadioAlwaysOff)
-		{
-			if (featurePlayerRadio)
-			{
+void update_misc_features(BOOL playerExists, Ped playerPed){
+	if(featureRadioAlwaysOff || featurePlayerRadioUpdated){
+		if(featureRadioAlwaysOff){
+			if(featurePlayerRadio){
 				featurePlayerRadio = false;
 				featurePlayerRadioUpdated = true;
 			}
 		}
 
-		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0))
-		{
+		if(PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
 			Vehicle playerVeh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 			AUDIO::SET_VEHICLE_RADIO_ENABLED(playerVeh, !featureRadioAlwaysOff);
 		}
@@ -320,14 +305,11 @@ void update_misc_features(BOOL playerExists, Ped playerPed)
 	}
 
 	// Portable radio
-	if (featurePlayerRadio || featurePlayerRadioUpdated)
-	{
-		if (featurePlayerRadio)
-		{
+	if(featurePlayerRadio || featurePlayerRadioUpdated){
+		if(featurePlayerRadio){
 			AUDIO::SET_MOBILE_RADIO_ENABLED_DURING_GAMEPLAY(true);
 		}
-		else
-		{
+		else{
 			AUDIO::SET_MOBILE_RADIO_ENABLED_DURING_GAMEPLAY(false);
 		}
 	}
@@ -343,58 +325,53 @@ void update_misc_features(BOOL playerExists, Ped playerPed)
 	}
 
 	// hide hud
-	if (featureMiscHideHud)
-	{
-		for (int i = 0; i < 21; i++)
-		{
+	if(featureMiscHideHud){
+		for(int i = 0; i < 21; i++){
 			//at least in theory...
-			switch (i)
-			{
-			case 5: //mp message
-			case 10: //help text
-			case 11: //floating help 1
-			case 12: //floating help 2
-			case 14: //reticle
-			case 16: //radio wheel
-			case 19: //weapon wheel
-				continue;
+			switch(i){
+				case 5: //mp message
+				case 10: //help text
+				case 11: //floating help 1
+				case 12: //floating help 2
+				case 14: //reticle
+				case 16: //radio wheel
+				case 19: //weapon wheel
+					continue;
 			}
 			UI::HIDE_HUD_COMPONENT_THIS_FRAME(i);
 		}
-		
+
 		UI::DISPLAY_RADAR(false);
 		featureMiscHideHudUpdated = false;
 	}
-	else if (featureMiscHideHudUpdated)
-	{
+	else if(featureMiscHideHudUpdated){
 		UI::DISPLAY_RADAR(true);
 		featureMiscHideHudUpdated = false;
 	}
 }
 
-void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results)
-{
-	results->push_back(FeatureEnabledLocalDefinition{ "featurePlayerRadio", &featurePlayerRadio, &featurePlayerRadioUpdated });
+void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){
+	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerRadio", &featurePlayerRadio, &featurePlayerRadioUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRadioFreeze", &featureRadioFreeze, &featureRadioFreezeUpdated});
-	results->push_back(FeatureEnabledLocalDefinition{ "featureRadioAlwaysOff", &featureRadioAlwaysOff, &featureRadioAlwaysOffUpdated });
+	results->push_back(FeatureEnabledLocalDefinition{"featureRadioAlwaysOff", &featureRadioAlwaysOff, &featureRadioAlwaysOffUpdated});
 
-	results->push_back(FeatureEnabledLocalDefinition{ "featureMiscLockRadio", &featureMiscLockRadio });
-	results->push_back(FeatureEnabledLocalDefinition{ "featureMiscHideHud", &featureMiscHideHud, &featureMiscHideHudUpdated });
+	results->push_back(FeatureEnabledLocalDefinition{"featureMiscLockRadio", &featureMiscLockRadio});
+	results->push_back(FeatureEnabledLocalDefinition{"featureMiscHideHud", &featureMiscHideHud, &featureMiscHideHudUpdated});
 
-	results->push_back(FeatureEnabledLocalDefinition{ "featureControllerIgnoreInTrainer", &featureControllerIgnoreInTrainer });
-	results->push_back(FeatureEnabledLocalDefinition{ "featureBlockInputInMenu", &featureBlockInputInMenu });
-	results->push_back(FeatureEnabledLocalDefinition{ "featureShowVehiclePreviews", &featureShowVehiclePreviews });
+	results->push_back(FeatureEnabledLocalDefinition{"featureControllerIgnoreInTrainer", &featureControllerIgnoreInTrainer});
+	results->push_back(FeatureEnabledLocalDefinition{"featureBlockInputInMenu", &featureBlockInputInMenu});
+	results->push_back(FeatureEnabledLocalDefinition{"featureShowVehiclePreviews", &featureShowVehiclePreviews});
 
-	results->push_back(FeatureEnabledLocalDefinition{ "featureMiscJellmanScenery", &featureMiscJellmanScenery });
+	results->push_back(FeatureEnabledLocalDefinition{"featureMiscJellmanScenery", &featureMiscJellmanScenery});
+
+	results->push_back(FeatureEnabledLocalDefinition{"featureResetPlayerModelOnDeath", &featureResetPlayerModelOnDeath});
 }
 
-void add_misc_generic_settings(std::vector<StringPairSettingDBRow>* results)
-{
+void add_misc_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"radioStationIndex", std::to_string(radioStationIndex)});
 }
 
-void handle_generic_settings_misc(std::vector<StringPairSettingDBRow>* settings)
-{
+void handle_generic_settings_misc(std::vector<StringPairSettingDBRow>* settings){
 	for(int a = 0; a < settings->size(); a++){
 		StringPairSettingDBRow setting = settings->at(a);
 		if(setting.name.compare("radioStationIndex") == 0){
@@ -403,43 +380,36 @@ void handle_generic_settings_misc(std::vector<StringPairSettingDBRow>* settings)
 	}
 }
 
-bool is_player_reset_on_death()
-{
+bool is_player_reset_on_death(){
 	Hash dmHash = GAMEPLAY::GET_HASH_KEY("director_mode");
-	if (SCRIPT::_GET_NUM_OF_INSTANCES_OF_SCRIPT_WITH_NAME_HASH(dmHash) > 0)
-	{
+	if(!featureResetPlayerModelOnDeath || SCRIPT::_GET_NUM_OF_INSTANCES_OF_SCRIPT_WITH_NAME_HASH(dmHash) > 0){
 		return false;
 	}
+
 	return true;
 }
 
-bool is_vehicle_preview_enabled()
-{
+bool is_vehicle_preview_enabled(){
 	return featureShowVehiclePreviews;
 }
 
-bool is_input_blocked_in_menu()
-{
+bool is_input_blocked_in_menu(){
 	return featureBlockInputInMenu;
 }
 
-bool is_controller_ignored_in_trainer()
-{
+bool is_controller_ignored_in_trainer(){
 	return featureControllerIgnoreInTrainer;
 }
 
-bool is_hud_hidden()
-{
+bool is_hud_hidden(){
 	return featureMiscHideHud;
 }
 
-void set_hud_hidden(bool hidden)
-{
+void set_hud_hidden(bool hidden){
 	featureMiscHideHud = hidden;
 	featureMiscHideHudUpdated = true;
 }
 
-bool is_jellman_scenery_enabled()
-{
+bool is_jellman_scenery_enabled(){
 	return featureMiscJellmanScenery;
 }
