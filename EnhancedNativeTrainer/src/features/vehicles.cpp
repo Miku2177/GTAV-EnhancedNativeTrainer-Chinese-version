@@ -927,7 +927,7 @@ Vehicle do_spawn_vehicle(DWORD model, std::string modelTitle, bool cleanup){
 		}
 
 		if(featureVehSpawnTuned){
-			fully_tune_vehicle(veh, false, featureVehSpawnOptic);
+			fully_tune_vehicle(veh, featureVehSpawnOptic);
 		}
 
 		if(featureVehSpawnInto){
