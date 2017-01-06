@@ -487,23 +487,22 @@ bool onconfirm_weapon_menu(MenuItem<int> choice){
 
 	switch(activeLineIndexWeapon){
 		case 0:
-			for(int i = 0; i < sizeof(VOV_WEAPON_VALUES) / sizeof(VOV_WEAPON_VALUES[0]); i++){
-				for(int j = 0; j < VOV_WEAPON_VALUES[i].size(); j++){
-					char *weaponName = (char*) VOV_WEAPON_VALUES[i].at(j).c_str();
-					WEAPON::GIVE_DELAYED_WEAPON_TO_PED(playerPed, GAMEPLAY::GET_HASH_KEY(weaponName), 1000, 0);
+			for(int a = 0; a < sizeof(VOV_WEAPON_VALUES) / sizeof(VOV_WEAPON_VALUES[0]); a++){
+				for(int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++){
+					char *weaponName = (char*) VOV_WEAPON_VALUES[a].at(b).c_str();
+					Hash weaponHash = GAMEPLAY::GET_HASH_KEY(weaponName);
+					int clipMax = WEAPON::GET_MAX_AMMO_IN_CLIP(playerPed, weaponHash, true); clipMax = min(clipMax, 250);
+					WEAPON::GIVE_WEAPON_TO_PED(playerPed, weaponHash, clipMax * 2, false, false);
 				}
 			}
 
-			//parachute
-			WEAPON::GIVE_DELAYED_WEAPON_TO_PED(PLAYER::PLAYER_PED_ID(), PARACHUTE_ID, 1, 0);
+			// parachute
+			WEAPON::GIVE_WEAPON_TO_PED(playerPed, PARACHUTE_ID, 1, false, false);
 
 			set_status_text("All weapons added");
 			break;
 		case 1:
 			WEAPON::REMOVE_ALL_PED_WEAPONS(playerPed, false);
-
-			// parachute
-			WEAPON::REMOVE_WEAPON_FROM_PED(playerPed, PARACHUTE_ID);
 
 			set_status_text("All weapons removed");
 			break;
@@ -599,15 +598,40 @@ bool onconfirm_weapon_menu(MenuItem<int> choice){
 		case 4:
 			for(int a = 0; a < sizeof(VOV_WEAPON_VALUES) / sizeof(VOV_WEAPON_VALUES[0]); a++){
 				for(int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++){
+					char *weaponName = (char*) VOV_WEAPON_VALUES[a].at(b).c_str();
+					Hash weaponHash = GAMEPLAY::GET_HASH_KEY(weaponName);
+					if(WEAPON::HAS_PED_GOT_WEAPON(playerPed, weaponHash, FALSE)){
+						WEAPON::GIVE_WEAPON_TO_PED(playerPed, weaponHash, 10000, false, false);
+					}
+				}
+			}
+
+			set_status_text("All ammo filled");
+			break;
+		case 5:
+			for(int a = 0; a < sizeof(VOV_WEAPON_VALUES) / sizeof(VOV_WEAPON_VALUES[0]); a++){
+				for(int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++){
 					char *weaponName = (char *) VOV_WEAPON_VALUES[a].at(b).c_str();
 					WEAPON::SET_PED_AMMO(playerPed, GAMEPLAY::GET_HASH_KEY(weaponName), 0);
 				}
 			}
 
+			// parachute
+			WEAPON::REMOVE_WEAPON_FROM_PED(playerPed, PARACHUTE_ID);
+
 			set_status_text("All ammo removed");
 			break;
-		// switchable features
-		case 5:
+		case 6:
+			WEAPON::GIVE_WEAPON_TO_PED(playerPed, PARACHUTE_ID, 1, false, false);
+
+			set_status_text("Parachute added");
+			break;
+		case 7:
+			WEAPON::REMOVE_WEAPON_FROM_PED(playerPed, PARACHUTE_ID);
+
+			set_status_text("Parachute removed");
+			break;
+		case 8:
 			process_weaponlist_menu();
 			break;
 		default:
@@ -647,7 +671,25 @@ bool process_weapon_menu(){
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
+	item->caption = "Fill All Ammo";
+	item->value = i++;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
 	item->caption = "Remove All Ammo";
+	item->value = i++;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "Add Parachute";
+	item->value = i++;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "Remove Parachute";
 	item->value = i++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
@@ -787,7 +829,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		int pState = PED::GET_PED_PARACHUTE_STATE(playerPed);
 		//unarmed or falling - don't try and give p/chute to player already using one, crashes game
 		if(pState == -1 || pState == 3){
-			WEAPON::GIVE_DELAYED_WEAPON_TO_PED(playerPed, 0xFBAB5776, 1, 0);
+			WEAPON::GIVE_DELAYED_WEAPON_TO_PED(playerPed, PARACHUTE_ID, 1, 0);
 		}
 	}
 
@@ -915,6 +957,7 @@ void update_vehicle_guns(){
 	}
 }
 
+// TODO: This looks like it needs to be fixed a bit before use; check later.
 void save_player_weapons(){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
@@ -958,6 +1001,7 @@ void save_player_weapons(){
 	saved_armour = PED::GET_PED_ARMOUR(playerPed);
 }
 
+// TODO: This looks like it needs to be fixed a bit before use; check later.
 void restore_player_weapons(){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	int index = 0;
