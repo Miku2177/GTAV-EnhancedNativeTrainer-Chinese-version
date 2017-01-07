@@ -35,12 +35,14 @@ DWORD grav_partfx = 0;
 
 DWORD featureWeaponVehShootLastTime = 0;
 
-int saved_weapon_model[TOTAL_WEAPONS_SLOTS];
-int saved_ammo[TOTAL_WEAPONS_SLOTS];
-int saved_clip_ammo[TOTAL_WEAPONS_SLOTS];
-int saved_weapon_tints[TOTAL_WEAPONS_SLOTS];
-bool saved_weapon_mods[TOTAL_WEAPONS_SLOTS][MAX_MOD_SLOTS];
+int const SAVED_WEAPONS_COUNT = TOTAL_WEAPONS_COUNT;
+int saved_weapon_model[SAVED_WEAPONS_COUNT];
+int saved_ammo[SAVED_WEAPONS_COUNT];
+int saved_clip_ammo[SAVED_WEAPONS_COUNT];
+int saved_weapon_tints[SAVED_WEAPONS_COUNT];
+bool saved_weapon_mods[SAVED_WEAPONS_COUNT][MAX_MOD_SLOTS];
 bool saved_parachute = false;
+int saved_parachute_tint = 0;
 int saved_armour = 0;
 
 bool redrawWeaponMenuAfterEquipChange = false;
@@ -49,8 +51,8 @@ bool redrawWeaponMenuAfterEquipChange = false;
 
 // New approach to getting Grav gun entity coords -- from ScripthookV.Net
 Vector3 RotationToDirection(Vector3* rot){
-	float radiansZ = rot->z * 0.0174532924f;
-	float radiansX = rot->x * 0.0174532924f;
+	float radiansZ = rot->z * 0.0174532925f;
+	float radiansX = rot->x * 0.0174532925f;
 	float num = std::abs((float) std::cos((double) radiansX));
 	Vector3 dir;
 
@@ -957,92 +959,88 @@ void update_vehicle_guns(){
 	}
 }
 
-// TODO: This looks like it needs to be fixed a bit before use; check later.
 void save_player_weapons(){
+	Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	int index = 0;
-	for(int i = 0; i < sizeof(VOV_WEAPON_VALUES) / sizeof(VOV_WEAPON_VALUES[0]); i++){
-		for(int j = 0; j < VOV_WEAPON_VALUES[i].size(); j++){
-			std::string weaponNameStr = VOV_WEAPON_VALUES[i].at(j);
+	for(int a = 0; a < sizeof(VOV_WEAPON_VALUES) / sizeof(VOV_WEAPON_VALUES[0]); a++){
+		for(int b = 0; b < VOV_WEAPON_VALUES[a].size() && index < SAVED_WEAPONS_COUNT; b++, index++){
+			std::string weaponNameStr = VOV_WEAPON_VALUES[a].at(b);
 			char *weaponName = (char*) weaponNameStr.c_str();
-			if(WEAPON::HAS_PED_GOT_WEAPON(playerPed, GAMEPLAY::GET_HASH_KEY(weaponName), 0)){
-				Weapon w = GAMEPLAY::GET_HASH_KEY(weaponName);
-				saved_weapon_model[index] = w;
-				saved_ammo[index] = WEAPON::GET_AMMO_IN_PED_WEAPON(playerPed, w);
-				WEAPON::GET_AMMO_IN_CLIP(playerPed, w, &saved_clip_ammo[index]);
+			Hash weaponHash = GAMEPLAY::GET_HASH_KEY(weaponName);
+			saved_weapon_model[index] = weaponHash;
+			if(WEAPON::HAS_PED_GOT_WEAPON(playerPed, weaponHash, 0)){
+				saved_ammo[index] = WEAPON::GET_AMMO_IN_PED_WEAPON(playerPed, weaponHash);
+				WEAPON::GET_AMMO_IN_CLIP(playerPed, weaponHash, &saved_clip_ammo[index]);
 
-				for(int k = 0; k < WEAPONTYPES_TINT.size(); k++){
-					if(weaponNameStr.compare(WEAPONTYPES_TINT.at(k)) == 0){
-						saved_weapon_tints[index] = WEAPON::GET_PED_WEAPON_TINT_INDEX(playerPed, w);
+				for(int c = 0; c < WEAPONTYPES_TINT.size(); c++){
+					if(weaponNameStr.compare(WEAPONTYPES_TINT.at(c)) == 0){
+						saved_weapon_tints[index] = WEAPON::GET_PED_WEAPON_TINT_INDEX(playerPed, weaponHash);
 						break;
 					}
 				}
 
-				for(int k = 0; k < WEAPONTYPES_MOD.size(); k++){
-					if(weaponNameStr.compare(WEAPONTYPES_MOD.at(k)) == 0){
-						for(int m = 0; m < VOV_WEAPONMOD_VALUES[k].size(); m++){
-							std::string componentName = VOV_WEAPONMOD_VALUES[k].at(m);
-							DWORD componentHash = GAMEPLAY::GET_HASH_KEY((char *) componentName.c_str());
-
-							bool modEquipped = WEAPON::HAS_PED_GOT_WEAPON_COMPONENT(playerPed, w, componentHash) ? true : false;
-							saved_weapon_mods[index][m] = modEquipped;
+				for(int c = 0; c < WEAPONTYPES_MOD.size(); c++){
+					if(weaponNameStr.compare(WEAPONTYPES_MOD.at(c)) == 0){
+						for(int d = 0; d < VOV_WEAPONMOD_VALUES[c].size(); d++){
+							char *componentName = (char *) VOV_WEAPONMOD_VALUES[c].at(d).c_str();
+							Hash componentHash = GAMEPLAY::GET_HASH_KEY(componentName);
+							bool modEquipped = WEAPON::HAS_PED_GOT_WEAPON_COMPONENT(playerPed, weaponHash, componentHash) ? true : false;
+							saved_weapon_mods[index][d] = modEquipped;
 						}
 						break;
 					}
 				}
 			}
-
-			index++;
 		}
 	}
 
-	saved_parachute = (WEAPON::HAS_PED_GOT_WEAPON(playerPed, PARACHUTE_ID, 0)) ? true : false;
+	if((saved_parachute = WEAPON::HAS_PED_GOT_WEAPON(playerPed, PARACHUTE_ID, 0) ? true : false)){
+		PLAYER::GET_PLAYER_PARACHUTE_TINT_INDEX(player, &saved_parachute_tint);
+	}
 	saved_armour = PED::GET_PED_ARMOUR(playerPed);
 }
 
-// TODO: This looks like it needs to be fixed a bit before use; check later.
 void restore_player_weapons(){
+	Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	WEAPON::REMOVE_ALL_PED_WEAPONS(playerPed, false);
+
 	int index = 0;
-	for(int i = 0; i < sizeof(VOV_WEAPON_VALUES) / sizeof(VOV_WEAPON_VALUES[0]); i++){
-		for(int j = 0; j < VOV_WEAPON_VALUES[i].size(); j++){
-			char *weaponName = (char*) VOV_WEAPON_VALUES[i].at(j).c_str();
-			Weapon w = GAMEPLAY::GET_HASH_KEY(weaponName);
-			WEAPON::GIVE_WEAPON_TO_PED(playerPed, saved_weapon_model[index], 1000, 0, 0);
-			WEAPON::SET_PED_AMMO(playerPed, saved_weapon_model[i], saved_ammo[index]);
-			WEAPON::SET_AMMO_IN_CLIP(playerPed, saved_weapon_model[i], saved_clip_ammo[index]);
+	for(int a = 0; a < sizeof(VOV_WEAPON_VALUES) / sizeof(VOV_WEAPON_VALUES[0]); a++){
+		for(int b = 0; b < VOV_WEAPON_VALUES[a].size() && index < SAVED_WEAPONS_COUNT; b++, index++){
+			if(saved_ammo[index] > 0){
+				WEAPON::GIVE_WEAPON_TO_PED(playerPed, saved_weapon_model[index], 1, false, false);
+				WEAPON::SET_PED_AMMO(playerPed, saved_weapon_model[index], saved_ammo[index]);
+				WEAPON::SET_AMMO_IN_CLIP(playerPed, saved_weapon_model[index], saved_clip_ammo[index]);
 
-			for(int k = 0; k < WEAPONTYPES_TINT.size(); k++){
-				if(VOV_WEAPON_VALUES[i].at(j).compare(WEAPONTYPES_TINT.at(k)) == 0){
-					WEAPON::SET_PED_WEAPON_TINT_INDEX(playerPed, w, saved_weapon_tints[index]);
-					break;
-				}
-			}
-
-			for(int k = 0; k < WEAPONTYPES_MOD.size(); k++){
-				if(VOV_WEAPON_VALUES[i].at(j).compare(WEAPONTYPES_MOD.at(k)) == 0){
-					for(int m = 0; m < VOV_WEAPONMOD_VALUES[k].size(); m++){
-						std::string componentName = VOV_WEAPONMOD_VALUES[k].at(m);
-						DWORD componentHash = GAMEPLAY::GET_HASH_KEY((char *) componentName.c_str());
-
-						if(saved_weapon_mods[index][m]){
-							WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, w, componentHash);
-						}
-						else{
-							WEAPON::REMOVE_WEAPON_COMPONENT_FROM_PED(playerPed, w, componentHash);
-						}
+				for(int c = 0; c < WEAPONTYPES_TINT.size(); c++){
+					if(VOV_WEAPON_VALUES[a].at(b).compare(WEAPONTYPES_TINT.at(c)) == 0){
+						WEAPON::SET_PED_WEAPON_TINT_INDEX(playerPed, saved_weapon_model[index], saved_weapon_tints[index]);
+						break;
 					}
-					break;
+				}
+
+				for(int c = 0; c < WEAPONTYPES_MOD.size(); c++){
+					if(VOV_WEAPON_VALUES[a].at(b).compare(WEAPONTYPES_MOD.at(c)) == 0){
+						for(int d = 0; d < VOV_WEAPONMOD_VALUES[c].size(); d++){
+							char *componentName = (char *) VOV_WEAPONMOD_VALUES[c].at(d).c_str();
+							Hash componentHash = GAMEPLAY::GET_HASH_KEY(componentName);
+							if(saved_weapon_mods[index][d]){
+								WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, saved_weapon_model[index], componentHash);
+							}
+						}
+						break;
+					}
 				}
 			}
-
-			index++;
 		}
 	}
 
 	if(saved_parachute){
-		WEAPON::GIVE_DELAYED_WEAPON_TO_PED(playerPed, PARACHUTE_ID, 1, 0);
+		WEAPON::GIVE_WEAPON_TO_PED(playerPed, PARACHUTE_ID, 1, false, false);
+		PLAYER::SET_PLAYER_PARACHUTE_TINT_INDEX(player, saved_parachute_tint);
 	}
 
 	PED::SET_PED_ARMOUR(playerPed, saved_armour);

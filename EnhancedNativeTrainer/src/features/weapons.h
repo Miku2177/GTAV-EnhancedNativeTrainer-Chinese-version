@@ -19,26 +19,32 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 #include "..\storage\database.h"
 
-//I added the luxury tints to the weapons that got them, but they don't work?
-
 const std::vector<std::string> MENU_WEAPON_CATEGORIES{"Melee", "Handguns", "Submachine Guns", "Assault Rifles", "Shotguns", "Sniper Rifles", "Heavy Weapons", "Thrown Weapons"};
 
+// Count: 16
 const std::vector<std::string> CAPTIONS_MELEE{"Knife", "Nightstick", "Hammer", "Baseball Bat", "Golf Club", "Crowbar", "Bottle", "Antique Dagger", "Hatchet", "Knuckle Duster", "Machete", "Flashlight", "Switchblade", "Battleaxe", "Pipe Wrench", "Poolcue"};
-const std::vector<std::string> VALUES_MELEE{"WEAPON_KNIFE", "WEAPON_NIGHTSTICK", "WEAPON_HAMMER", "WEAPON_BAT", "WEAPON_GOLFCLUB", "WEAPON_CROWBAR", "WEAPON_BOTTLE", "WEAPON_DAGGER", "WEAPON_HATCHET", "WEAPON_KNUCKLE", "WEAPON_MACHETE", "WEAPON_FLASHLIGHT", "WEAPON_SWITCHBLADE", "WEAPON_BATTLEAXE", "WEAPON_WRENCH", "WEAPON_POOLCUE"}; //16
+const std::vector<std::string> VALUES_MELEE{"WEAPON_KNIFE", "WEAPON_NIGHTSTICK", "WEAPON_HAMMER", "WEAPON_BAT", "WEAPON_GOLFCLUB", "WEAPON_CROWBAR", "WEAPON_BOTTLE", "WEAPON_DAGGER", "WEAPON_HATCHET", "WEAPON_KNUCKLE", "WEAPON_MACHETE", "WEAPON_FLASHLIGHT", "WEAPON_SWITCHBLADE", "WEAPON_BATTLEAXE", "WEAPON_WRENCH", "WEAPON_POOLCUE"};
+// Count: 11
 const std::vector<std::string> CAPTIONS_HANDGUN{"Pistol", "Combat Pistol", "AP Pistol", "Pistol .50", "SNS Pistol", "Heavy Pistol", "Vintage Pistol", "Stun Gun", "Flare Gun", "Marksman Pistol", "Revolver"};
-const std::vector<std::string> VALUES_HANDGUN{"WEAPON_PISTOL", "WEAPON_COMBATPISTOL", "WEAPON_APPISTOL", "WEAPON_PISTOL50", "WEAPON_SNSPISTOL", "WEAPON_HEAVYPISTOL", "WEAPON_VINTAGEPISTOL", "WEAPON_STUNGUN", "WEAPON_FLAREGUN", "WEAPON_MARKSMANPISTOL", "WEAPON_REVOLVER"}; //11
+const std::vector<std::string> VALUES_HANDGUN{"WEAPON_PISTOL", "WEAPON_COMBATPISTOL", "WEAPON_APPISTOL", "WEAPON_PISTOL50", "WEAPON_SNSPISTOL", "WEAPON_HEAVYPISTOL", "WEAPON_VINTAGEPISTOL", "WEAPON_STUNGUN", "WEAPON_FLAREGUN", "WEAPON_MARKSMANPISTOL", "WEAPON_REVOLVER"};
+// Count: 9
 const std::vector<std::string> CAPTIONS_SUBMACHINE{"Micro SMG", "SMG", "Assault SMG", "MG", "Combat MG", "Gusenberg Sweeper", "Combat PDW", "Machine Pistol", "Mini SMG"};
-const std::vector<std::string> VALUES_SUBMACHINE{"WEAPON_MICROSMG", "WEAPON_SMG", "WEAPON_ASSAULTSMG", "WEAPON_MG", "WEAPON_COMBATMG", "WEAPON_GUSENBERG", "WEAPON_COMBATPDW", "WEAPON_MACHINEPISTOL", "WEAPON_MINISMG"}; //9
+const std::vector<std::string> VALUES_SUBMACHINE{"WEAPON_MICROSMG", "WEAPON_SMG", "WEAPON_ASSAULTSMG", "WEAPON_MG", "WEAPON_COMBATMG", "WEAPON_GUSENBERG", "WEAPON_COMBATPDW", "WEAPON_MACHINEPISTOL", "WEAPON_MINISMG"};
+// Count: 6
 const std::vector<std::string> CAPTIONS_ASSAULT{"Assault Rifle", "Carbine Rifle", "Advanced Rifle", "Special Carbine", "Bullpup Rifle", "Compact Rifle"};
-const std::vector<std::string> VALUES_ASSAULT{"WEAPON_ASSAULTRIFLE", "WEAPON_CARBINERIFLE", "WEAPON_ADVANCEDRIFLE", "WEAPON_SPECIALCARBINE", "WEAPON_BULLPUPRIFLE", "WEAPON_COMPACTRIFLE"}; //6
+const std::vector<std::string> VALUES_ASSAULT{"WEAPON_ASSAULTRIFLE", "WEAPON_CARBINERIFLE", "WEAPON_ADVANCEDRIFLE", "WEAPON_SPECIALCARBINE", "WEAPON_BULLPUPRIFLE", "WEAPON_COMPACTRIFLE"};
+// Count: 8
 const std::vector<std::string> CAPTIONS_SHOTGUN{"Pump Shotgun", "Sawed-Off Shotgun", "Bullpup Shotgun", "Assault Shotgun", "Musket", "Heavy Shotgun", "Double Barrel Shotgun", "Sweeper Shotgun"};
-const std::vector<std::string> VALUES_SHOTGUN{"WEAPON_PUMPSHOTGUN", "WEAPON_SAWNOFFSHOTGUN", "WEAPON_BULLPUPSHOTGUN", "WEAPON_ASSAULTSHOTGUN", "WEAPON_MUSKET", "WEAPON_HEAVYSHOTGUN", "WEAPON_DBSHOTGUN", "WEAPON_AUTOSHOTGUN"}; //8
+const std::vector<std::string> VALUES_SHOTGUN{"WEAPON_PUMPSHOTGUN", "WEAPON_SAWNOFFSHOTGUN", "WEAPON_BULLPUPSHOTGUN", "WEAPON_ASSAULTSHOTGUN", "WEAPON_MUSKET", "WEAPON_HEAVYSHOTGUN", "WEAPON_DBSHOTGUN", "WEAPON_AUTOSHOTGUN"};
+// Count: 3
 const std::vector<std::string> CAPTIONS_SNIPER{"Sniper Rifle", "Heavy Sniper", "Marksman Rifle"};
-const std::vector<std::string> VALUES_SNIPER{"WEAPON_SNIPERRIFLE", "WEAPON_HEAVYSNIPER", "WEAPON_MARKSMANRIFLE"}; //3
+const std::vector<std::string> VALUES_SNIPER{"WEAPON_SNIPERRIFLE", "WEAPON_HEAVYSNIPER", "WEAPON_MARKSMANRIFLE"};
+// Count: 7
 const std::vector<std::string> CAPTIONS_HEAVY{"Grenade Launcher", "RPG", "Minigun", "Fireworks Launcher", "Railgun", "Homing Launcher", "Compact Grenade Launcher"};
-const std::vector<std::string> VALUES_HEAVY{"WEAPON_GRENADELAUNCHER", "WEAPON_RPG", "WEAPON_MINIGUN", "WEAPON_FIREWORK", "WEAPON_RAILGUN", "WEAPON_HOMINGLAUNCHER", "WEAPON_COMPACTLAUNCHER"}; //7
+const std::vector<std::string> VALUES_HEAVY{"WEAPON_GRENADELAUNCHER", "WEAPON_RPG", "WEAPON_MINIGUN", "WEAPON_FIREWORK", "WEAPON_RAILGUN", "WEAPON_HOMINGLAUNCHER", "WEAPON_COMPACTLAUNCHER"};
+// Count: 10
 const std::vector<std::string> CAPTIONS_THROWN{"Grenade", "Sticky Bomb", "Proximity Mine", "Teargas", "Molotov", "Fire Extinguisher", "Jerry Can", "Snowball", "Flare", "Pipebomb"};
-const std::vector<std::string> VALUES_THROWN{"WEAPON_GRENADE", "WEAPON_STICKYBOMB", "WEAPON_PROXMINE", "WEAPON_SMOKEGRENADE", "WEAPON_MOLOTOV", "WEAPON_FIREEXTINGUISHER", "WEAPON_PETROLCAN", "WEAPON_SNOWBALL", "WEAPON_FLARE", "WEAPON_PIPEBOMB"}; //10
+const std::vector<std::string> VALUES_THROWN{"WEAPON_GRENADE", "WEAPON_STICKYBOMB", "WEAPON_PROXMINE", "WEAPON_SMOKEGRENADE", "WEAPON_MOLOTOV", "WEAPON_FIREEXTINGUISHER", "WEAPON_PETROLCAN", "WEAPON_SNOWBALL", "WEAPON_FLARE", "WEAPON_PIPEBOMB"};
 
 const std::vector<std::string> VOV_WEAPON_CAPTIONS[] = {CAPTIONS_MELEE, CAPTIONS_HANDGUN, CAPTIONS_SUBMACHINE, CAPTIONS_ASSAULT, CAPTIONS_SHOTGUN, CAPTIONS_SNIPER, CAPTIONS_HEAVY, CAPTIONS_THROWN};
 const std::vector<std::string> VOV_WEAPON_VALUES[] = {VALUES_MELEE, VALUES_HANDGUN, VALUES_SUBMACHINE, VALUES_ASSAULT, VALUES_SHOTGUN, VALUES_SNIPER, VALUES_HEAVY, VALUES_THROWN};
