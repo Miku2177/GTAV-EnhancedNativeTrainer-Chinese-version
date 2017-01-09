@@ -1,6 +1,6 @@
 /*
 	THIS FILE IS A PART OF GTA V SCRIPT HOOK SDK
-				http://dev-c.com			
+				http://dev-c.com
 		 (C) Alexander Blade 2015-2016
 */
 
@@ -41,15 +41,15 @@ IMPORT int createTexture(const char *texFileName);
 //	Can be called only in the same thread as natives
 
 IMPORT void drawTexture(int id, int index, int level, int time,
-	float sizeX, float sizeY, float centerX, float centerY,
-	float posX, float posY, float rotation, float screenHeightScaleFactor,
-	float r, float g, float b, float a);
+						float sizeX, float sizeY, float centerX, float centerY,
+						float posX, float posY, float rotation, float screenHeightScaleFactor,
+						float r, float g, float b, float a);
 
-// IDXGISwapChain::Present callback
-// Called right before the actual Present method call, render test calls don't trigger callbacks
-// When the game uses DX10 it actually uses DX11 with DX10 feature level
-// Remember that you can't call natives inside
-// void OnPresent(IDXGISwapChain *swapChain);
+					// IDXGISwapChain::Present callback
+					// Called right before the actual Present method call, render test calls don't trigger callbacks
+					// When the game uses DX10 it actually uses DX11 with DX10 feature level
+					// Remember that you can't call natives inside
+					// void OnPresent(IDXGISwapChain *swapChain);
 typedef void(*PresentCallback)(void *);
 
 // Register IDXGISwapChain::Present callback
@@ -85,8 +85,12 @@ IMPORT void nativeInit(UINT64 hash);
 IMPORT void nativePush64(UINT64 val);
 IMPORT PUINT64 nativeCall();
 
-static void WAIT(DWORD time) { scriptWait(time); }
-static void TERMINATE() { WAIT(MAXDWORD); }
+static void WAIT(DWORD time){
+	scriptWait(time);
+}
+static void TERMINATE(){
+	WAIT(MAXDWORD);
+}
 
 // Returns pointer to global variable
 // make sure that you check game version before accessing globals because
@@ -110,8 +114,7 @@ IMPORT int worldGetAllPickups(int *arr, int arrSize);
 // offsets may differ between patches
 IMPORT BYTE *getScriptHandleBaseAddress(int handle);
 
-enum eGameVersion : int
-{
+enum eGameVersion: int{
 	VER_1_0_335_2_STEAM,
 	VER_1_0_335_2_NOSTEAM,
 
@@ -141,15 +144,15 @@ enum eGameVersion : int
 
 	VER_1_0_678_1_STEAM,
 	VER_1_0_678_1_NOSTEAM,
-	
+
 	VER_1_0_757_2_STEAM,
 	VER_1_0_757_2_NOSTEAM,
-	
+
 	VER_1_0_757_4_STEAM,
 	VER_1_0_757_4_NOSTEAM,
 
 	VER_SIZE,
-	VER_UNK = -1
+	VER_UNK = 255
 };
 
 IMPORT eGameVersion getGameVersion();
