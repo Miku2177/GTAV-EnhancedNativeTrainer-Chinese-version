@@ -520,11 +520,15 @@ void handle_generic_settings_time(std::vector<StringPairSettingDBRow>* settings)
 		if(setting.name.compare("timeSpeedIndexWhileAiming") == 0){
 			timeSpeedIndexWhileAiming = stoi(setting.value);
 		}
+		else if(setting.name.compare("timeFlowRateIndex") == 0){
+			timeFlowRateIndex = stoi(setting.value);
+		}
 	}
 }
 
 void add_time_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"timeSpeedIndexWhileAiming", std::to_string(timeSpeedIndexWhileAiming)});
+	results->push_back(StringPairSettingDBRow{"timeFlowRateIndex", std::to_string(timeFlowRateIndex)});
 }
 
 void update_time_features(Player player){
