@@ -844,8 +844,11 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	}
 
 	// infinite parachutes
-	if(featureWeaponInfiniteParachutesUpdated && featureWeaponInfiniteParachutes){
-		featureWeaponNoParachutes = false;
+	if(featureWeaponInfiniteParachutesUpdated){
+		if(featureWeaponInfiniteParachutes){
+			featureWeaponNoParachutes = false;
+		}
+		featureWeaponInfiniteParachutesUpdated = false;
 	}
 
 	if(bPlayerExists && featureWeaponInfiniteParachutes){
@@ -857,8 +860,11 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	}
 
 	// no parachutes
-	if(featureWeaponNoParachutesUpdated && featureWeaponNoParachutes){
-		featureWeaponInfiniteParachutes = false;
+	if(featureWeaponNoParachutesUpdated){
+		if(featureWeaponNoParachutes){
+			featureWeaponInfiniteParachutes = false;
+		}
+		featureWeaponNoParachutesUpdated = false;
 	}
 
 	if(bPlayerExists && featureWeaponNoParachutes){
