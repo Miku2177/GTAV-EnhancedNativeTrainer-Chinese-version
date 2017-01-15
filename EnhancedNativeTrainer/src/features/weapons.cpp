@@ -19,7 +19,8 @@ int lastSelectedWeapon = 0;
 int weapDmgModIndex = 0;
 
 bool featureWeaponInfiniteAmmo = false;
-bool featureWeaponInfiniteParachutes = false;
+bool featureWeaponInfiniteParachutes = false, featureWeaponInfiniteParachutesUpdated = false;
+bool featureWeaponNoParachutes = false, featureWeaponNoParachutesUpdated = false;
 bool featureWeaponNoReload = false;
 bool featureWeaponFireAmmo = false;
 bool featureWeaponExplosiveAmmo = false;
@@ -500,6 +501,7 @@ bool onconfirm_weapon_menu(MenuItem<int> choice){
 
 			// parachute
 			WEAPON::GIVE_WEAPON_TO_PED(playerPed, PARACHUTE_ID, 1, false, false);
+			PLAYER::SET_PLAYER_HAS_RESERVE_PARACHUTE(player);
 
 			set_status_text("All weapons added");
 			break;
@@ -608,6 +610,10 @@ bool onconfirm_weapon_menu(MenuItem<int> choice){
 				}
 			}
 
+			if(WEAPON::HAS_PED_GOT_WEAPON(playerPed, PARACHUTE_ID, FALSE)){
+				PLAYER::SET_PLAYER_HAS_RESERVE_PARACHUTE(player);
+			}
+
 			set_status_text("All ammo filled");
 			break;
 		case 5:
@@ -625,6 +631,7 @@ bool onconfirm_weapon_menu(MenuItem<int> choice){
 			break;
 		case 6:
 			WEAPON::GIVE_WEAPON_TO_PED(playerPed, PARACHUTE_ID, 1, false, false);
+			PLAYER::SET_PLAYER_HAS_RESERVE_PARACHUTE(player);
 
 			set_status_text("Parachute added");
 			break;
@@ -716,17 +723,24 @@ bool process_weapon_menu(){
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Infinite Parachutes";
-	toggleItem->value = i++;
-	toggleItem->toggleValue = &featureWeaponInfiniteParachutes;
-	toggleItem->toggleValueUpdated = NULL;
-	menuItems.push_back(toggleItem);
-
-	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "No Reload";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureWeaponNoReload;
 	toggleItem->toggleValueUpdated = NULL;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Infinite Parachutes";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureWeaponInfiniteParachutes;
+	toggleItem->toggleValueUpdated = &featureWeaponInfiniteParachutesUpdated;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "No Parachutes";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureWeaponNoParachutes;
+	toggleItem->toggleValueUpdated = &featureWeaponNoParachutesUpdated;
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
@@ -774,6 +788,9 @@ void reset_weapon_globals(){
 
 	featureWeaponInfiniteAmmo =
 		featureWeaponInfiniteParachutes =
+		featureWeaponInfiniteParachutesUpdated =
+		featureWeaponNoParachutes =
+		featureWeaponNoParachutesUpdated =
 		featureWeaponNoReload =
 		featureWeaponFireAmmo =
 		featureWeaponExplosiveAmmo =
@@ -827,11 +844,27 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	}
 
 	// infinite parachutes
+	if(featureWeaponInfiniteParachutesUpdated && featureWeaponInfiniteParachutes){
+		featureWeaponNoParachutes = false;
+	}
+
 	if(bPlayerExists && featureWeaponInfiniteParachutes){
 		int pState = PED::GET_PED_PARACHUTE_STATE(playerPed);
 		//unarmed or falling - don't try and give p/chute to player already using one, crashes game
 		if(pState == -1 || pState == 3){
 			WEAPON::GIVE_DELAYED_WEAPON_TO_PED(playerPed, PARACHUTE_ID, 1, 0);
+		}
+	}
+
+	// no parachutes
+	if(featureWeaponNoParachutesUpdated && featureWeaponNoParachutes){
+		featureWeaponInfiniteParachutes = false;
+	}
+
+	if(bPlayerExists && featureWeaponNoParachutes){
+		int pState = PED::GET_PED_PARACHUTE_STATE(playerPed);
+		if((pState == -1 || pState == 3) && WEAPON::HAS_PED_GOT_WEAPON(playerPed, PARACHUTE_ID, FALSE)){
+			WEAPON::REMOVE_WEAPON_FROM_PED(playerPed, PARACHUTE_ID);
 		}
 	}
 
@@ -1186,7 +1219,8 @@ void add_weapon_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponExplosiveMelee", &featureWeaponExplosiveMelee});
 	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponFireAmmo", &featureWeaponFireAmmo});
 	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponInfiniteAmmo", &featureWeaponInfiniteAmmo});
-	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponInfiniteParachutes", &featureWeaponInfiniteParachutes});
+	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponInfiniteParachutes", &featureWeaponInfiniteParachutes, &featureWeaponInfiniteParachutesUpdated});
+	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponNoParachutes", &featureWeaponNoParachutes, &featureWeaponNoParachutesUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponNoReload", &featureWeaponNoReload});
 	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponVehRockets", &featureWeaponVehRockets});
 	results->push_back(FeatureEnabledLocalDefinition{"featureGravityGun", &featureGravityGun});
