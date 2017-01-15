@@ -727,8 +727,8 @@ void reset_vehicle_globals(){
 }
 
 bool onconfirm_carspawn_menu(MenuItem<int> choice){
-	if(choice.value == MENU_VEHICLE_CATEGORIES.size() - 1) //custom spawn
-	{
+	if(choice.value == MENU_VEHICLE_CATEGORIES.size() - 1){
+		// custom spawn
 		std::string result = show_keyboard(NULL, (char*) lastCustomVehicleSpawn.c_str());
 		if(!result.empty()){
 			result = trim(result);
@@ -1286,13 +1286,13 @@ bool process_savedveh_menu(){
 					item->sortval = sv->rowID;
 					break;
 				case 1:
-					item->sortval = NULL;
+					item->sortval = 0;
 					break;
 				case 2:
 					item->sortval = VEHICLE::GET_VEHICLE_CLASS_FROM_NAME(sv->model);
 					break;
 				default:
-					item->sortval = NULL;
+					item->sortval = 0;
 					break;
 			}
 			menuItems.push_back(item);
