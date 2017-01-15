@@ -194,7 +194,7 @@ void update_features(){
 		game_frame_num = 0;
 	}
 
-	if(game_frame_num % 1000 == 0){
+	if(game_frame_num % 3600 == 0){
 		DWORD myThreadID;
 		HANDLE myHandle = CreateThread(0, 0, save_settings_thread, 0, 0, &myThreadID);
 		CloseHandle(myHandle);
@@ -837,8 +837,12 @@ void ScriptTidyUp(){
 
 		write_text_to_log_file("ScriptTidyUp called");
 
+		save_settings();
+		write_text_to_log_file("Saved settings");
+
 		setGameInputToEnabled(true, true);
 		setAirbrakeRelatedInputToBlocked(false, true);
+		write_text_to_log_file("Reset input");
 
 		cleanup_script();
 		write_text_to_log_file("Cleaned up script");
@@ -848,9 +852,6 @@ void ScriptTidyUp(){
 		WAIT(0);
 		cleanup_anims();
 		write_text_to_log_file("Cleaned up anims");
-
-		save_settings();
-		write_text_to_log_file("Saved settings");
 
 		end_xinput();
 		write_text_to_log_file("XInput terminated");

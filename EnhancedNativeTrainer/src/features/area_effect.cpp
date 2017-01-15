@@ -69,30 +69,28 @@ std::set<Vehicle> releasedVehicles;
 bool featureShowDebugInfo = false;
 bool featureShowDebugInfoUpdated = false;
 
-void add_areaeffect_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results)
-{
-	results->push_back(FeatureEnabledLocalDefinition{ "featurePlayerIgnoredByAll", &featurePlayerIgnoredByAll, &featurePlayerIgnoredByAllUpdated });
-	results->push_back(FeatureEnabledLocalDefinition{ "featureAreaPedsInvincible", &featureAreaPedsInvincible, &featureAreaPedsInvincibleUpdated });
-	results->push_back(FeatureEnabledLocalDefinition{ "featureAreaPedsHeadExplode", &featureAreaPedsHeadExplode });
+void add_areaeffect_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){
+	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerIgnoredByAll", &featurePlayerIgnoredByAll, &featurePlayerIgnoredByAllUpdated});
+	results->push_back(FeatureEnabledLocalDefinition{"featureAreaPedsInvincible", &featureAreaPedsInvincible, &featureAreaPedsInvincibleUpdated});
+	results->push_back(FeatureEnabledLocalDefinition{"featureAreaPedsHeadExplode", &featureAreaPedsHeadExplode});
 
-	results->push_back(FeatureEnabledLocalDefinition{ "featureAreaVehiclesInvincible", &featureAreaVehiclesInvincible, &featureAreaVehiclesInvincibleUpdated });
-	results->push_back(FeatureEnabledLocalDefinition{ "featureAreaVehiclesBroken", &featureAreaVehiclesBroken, &featureAreaVehiclesBrokenUpdated });
-	results->push_back(FeatureEnabledLocalDefinition{ "featureAreaVehiclesExploded", &featureAreaVehiclesExploded });
+	results->push_back(FeatureEnabledLocalDefinition{"featureAreaVehiclesInvincible", &featureAreaVehiclesInvincible, &featureAreaVehiclesInvincibleUpdated});
+	results->push_back(FeatureEnabledLocalDefinition{"featureAreaVehiclesBroken", &featureAreaVehiclesBroken, &featureAreaVehiclesBrokenUpdated});
+	results->push_back(FeatureEnabledLocalDefinition{"featureAreaVehiclesExploded", &featureAreaVehiclesExploded});
 
-	results->push_back(FeatureEnabledLocalDefinition{ "featureAreaPedsRioting", &featureAreaPedsRioting, &featureAreaPedsRiotingUpdated });
+	results->push_back(FeatureEnabledLocalDefinition{"featureAreaPedsRioting", &featureAreaPedsRioting, &featureAreaPedsRiotingUpdated});
 
-	results->push_back(FeatureEnabledLocalDefinition{ "featureAngryPedsUseCover", &featureAngryPedsUseCover });
-	results->push_back(FeatureEnabledLocalDefinition{ "featureAngryPedsTargetYou", &featureAngryPedsTargetYou });
+	results->push_back(FeatureEnabledLocalDefinition{"featureAngryPedsUseCover", &featureAngryPedsUseCover});
+	results->push_back(FeatureEnabledLocalDefinition{"featureAngryPedsTargetYou", &featureAngryPedsTargetYou});
 
-	results->push_back(FeatureEnabledLocalDefinition{ "featurePedsIncludeDrivers", &featurePedsIncludeDrivers });
-	results->push_back(FeatureEnabledLocalDefinition{ "featurePedsIncludePilots", &featurePedsIncludePilots });
+	results->push_back(FeatureEnabledLocalDefinition{"featurePedsIncludeDrivers", &featurePedsIncludeDrivers});
+	results->push_back(FeatureEnabledLocalDefinition{"featurePedsIncludePilots", &featurePedsIncludePilots});
 
-	results->push_back(FeatureEnabledLocalDefinition{ "featureShowDebugInfo", &featureShowDebugInfo, &featureShowDebugInfoUpdated });
+	results->push_back(FeatureEnabledLocalDefinition{"featureShowDebugInfo", &featureShowDebugInfo, &featureShowDebugInfoUpdated});
 
 }
 
-void reset_areaeffect_globals()
-{
+void reset_areaeffect_globals(){
 	featurePlayerIgnoredByAll = false;
 	featurePlayerIgnoredByAllUpdated = true;
 
@@ -121,8 +119,7 @@ void reset_areaeffect_globals()
 	pedWeaponSetIndex = 0;
 }
 
-void process_areaeffect_peds_menu()
-{
+void process_areaeffect_peds_menu(){
 	std::vector<MenuItem<int>*> menuItems;
 
 	ToggleMenuItem<int> *togItem = new ToggleMenuItem<int>();
@@ -170,8 +167,7 @@ void process_areaeffect_peds_menu()
 	draw_generic_menu<int>(menuItems, &areaeffect_ped_level_menu_index, "Ped Effects", onconfirm_areaeffect_ped_menu, NULL, NULL);
 }
 
-void process_areaeffect_vehicle_menu()
-{
+void process_areaeffect_vehicle_menu(){
 	std::vector<MenuItem<int>*> menuItems;
 
 	ToggleMenuItem<int> *togItem = new ToggleMenuItem<int>();
@@ -198,8 +194,7 @@ void process_areaeffect_vehicle_menu()
 	draw_generic_menu<int>(menuItems, &areaeffect_veh_level_menu_index, "Vehicle Effects", NULL, NULL, NULL);
 }
 
-void process_areaeffect_advanced_ped_menu()
-{
+void process_areaeffect_advanced_ped_menu(){
 	std::vector<MenuItem<int>*> menuItems;
 
 	ToggleMenuItem<int> *togItem = new ToggleMenuItem<int>();
@@ -233,33 +228,29 @@ void process_areaeffect_advanced_ped_menu()
 	draw_generic_menu<int>(menuItems, &areaeffect_ped_advconfig_menu_index, "Advanced Ped Config", NULL, NULL, NULL);
 }
 
-bool onconfirm_areaeffect_ped_menu(MenuItem<int> choice)
-{
-	if (choice.value == 1) //advance options
+bool onconfirm_areaeffect_ped_menu(MenuItem<int> choice){
+	if(choice.value == 1) //advance options
 	{
 		process_areaeffect_advanced_ped_menu();
 	}
 	return false;
 }
 
-bool onconfirm_areaeffect_menu(MenuItem<int> choice)
-{
-	switch (choice.value)
-	{
-	case -1:
-		process_areaeffect_peds_menu();
-		break;
-	case -2:
-		process_areaeffect_vehicle_menu();
-		break;
+bool onconfirm_areaeffect_menu(MenuItem<int> choice){
+	switch(choice.value){
+		case -1:
+			process_areaeffect_peds_menu();
+			break;
+		case -2:
+			process_areaeffect_vehicle_menu();
+			break;
 	}
 	return false;
 }
 
-void process_areaeffect_menu()
-{
+void process_areaeffect_menu(){
 	std::vector<MenuItem<int>*> menuItems;
-	
+
 	MenuItem<int> *item = new MenuItem<int>();
 	item->caption = "Pedestrians";
 	item->value = -1;
@@ -284,42 +275,34 @@ void process_areaeffect_menu()
 	//		{ "Everyone Ignores You", &featurePlayerIgnoredByAll, &featurePlayerIgnoredByAllUpdated, true },
 }
 
-void do_maintenance_on_tracked_entities()
-{
-	for each (ENTTrackedPedestrian* tped in trackedPeds)
-	{
+void do_maintenance_on_tracked_entities(){
+	for each (ENTTrackedPedestrian* tped in trackedPeds){
 		//only apply this on average every 20 frames to save effort
 		int randNum = rand() % 20;
-		if (tped->angryApplied && randNum == 1)
-		{
+		if(tped->angryApplied && randNum == 1){
 			findRandomTargetForPed(tped);
 		}
 	}
 }
 
-void findRandomTargetForPed(ENTTrackedPedestrian* tped)
-{
+void findRandomTargetForPed(ENTTrackedPedestrian* tped){
 	Ped otherPed = 0;
-	if (tped->lastTarget == 0 || !ENTITY::DOES_ENTITY_EXIST(tped->lastTarget) || ENTITY::IS_ENTITY_DEAD(tped->lastTarget))
-	{
+	if(tped->lastTarget == 0 || !ENTITY::DOES_ENTITY_EXIST(tped->lastTarget) || ENTITY::IS_ENTITY_DEAD(tped->lastTarget)){
 		tped->lastTarget = 0;
-		while (tped->lastTarget == 0)
-		{
+		while(tped->lastTarget == 0){
 			int randIndex = rand() % (trackedPeds.size() + 1); //add one to the random range
 			randIndex--;
-			if (randIndex < 0 || featureAngryPedsTargetYou) //chance of fighting the player
+			if(randIndex < 0 || featureAngryPedsTargetYou) //chance of fighting the player
 			{
 				otherPed = PLAYER::PLAYER_PED_ID();
 				PED::SET_PED_AS_ENEMY(otherPed, true);
 			}
-			else
-			{
+			else{
 				otherPed = trackedPeds.at(randIndex)->ped;
 			}
 
 			//if we've found ourselves
-			if (otherPed == tped->ped)
-			{
+			if(otherPed == tped->ped){
 				continue;
 			}
 
@@ -330,8 +313,7 @@ void findRandomTargetForPed(ENTTrackedPedestrian* tped)
 	}
 }
 
-void update_area_effects(Ped playerPed)
-{
+void update_area_effects(Ped playerPed){
 	//callsPerFrame = 0;
 
 	allWorldVehiclesThisFrameFilled = false;
@@ -345,26 +327,21 @@ void update_area_effects(Ped playerPed)
 	clear_up_missionised_entitities();
 
 	do_maintenance_on_tracked_entities();
-	
+
 	// everyone ignores player
-	if (featurePlayerIgnoredByAll)
-	{
-		if (bPlayerExists)
-		{
+	if(featurePlayerIgnoredByAll){
+		if(bPlayerExists){
 			PLAYER::SET_POLICE_IGNORE_PLAYER(player, true);
 			PLAYER::SET_EVERYONE_IGNORE_PLAYER(player, true);
 			PLAYER::SET_PLAYER_CAN_BE_HASSLED_BY_GANGS(player, false);
 			PLAYER::SET_IGNORE_LOW_PRIORITY_SHOCKING_EVENTS(player, true);
-			if (get_frame_number() % 5 == 0)
-			{
+			if(get_frame_number() % 5 == 0){
 				set_all_nearby_peds_to_calm();
 			}
 		}
 	}
-	else if (featurePlayerIgnoredByAllUpdated)
-	{
-		if (bPlayerExists)
-		{
+	else if(featurePlayerIgnoredByAllUpdated){
+		if(bPlayerExists){
 			PLAYER::SET_POLICE_IGNORE_PLAYER(player, is_player_ignored_by_police());
 			PLAYER::SET_EVERYONE_IGNORE_PLAYER(player, false);
 			PLAYER::SET_PLAYER_CAN_BE_HASSLED_BY_GANGS(player, true);
@@ -373,73 +350,60 @@ void update_area_effects(Ped playerPed)
 		featurePlayerIgnoredByAllUpdated = false;
 	}
 
-	if (featureAreaPedsInvincible || featureAreaPedsInvincibleUpdated)
-	{
-		if (get_frame_number() % 5 == 0)
-		{
+	if(featureAreaPedsInvincible || featureAreaPedsInvincibleUpdated){
+		if(get_frame_number() % 5 == 0){
 			set_all_nearby_peds_to_invincible(featureAreaPedsInvincible);
 			featureAreaPedsInvincibleUpdated = false;
 		}
 	}
 
-	if (featureAreaPedsHeadExplode)
-	{
+	if(featureAreaPedsHeadExplode){
 		kill_all_nearby_peds_continuous();
 	}
 
-	if (featureAreaVehiclesInvincible || featureAreaVehiclesInvincibleUpdated)
-	{
+	if(featureAreaVehiclesInvincible || featureAreaVehiclesInvincibleUpdated){
 		set_all_nearby_vehs_to_invincible(featureAreaVehiclesInvincible, false);
 		featureAreaVehiclesInvincibleUpdated = false;
 	}
 
-	if (featureAreaVehiclesBroken || featureAreaVehiclesBrokenUpdated)
-	{
+	if(featureAreaVehiclesBroken || featureAreaVehiclesBrokenUpdated){
 		set_all_nearby_vehs_to_broken(featureAreaVehiclesBroken);
 		featureAreaVehiclesBrokenUpdated = false;
 	}
 
-	if (featureAreaVehiclesExploded)
-	{
+	if(featureAreaVehiclesExploded){
 		kill_all_nearby_vehicles_continuous();
 	}
 
-	if (featureAreaPedsRioting || featureAreaPedsRiotingUpdated)
-	{
+	if(featureAreaPedsRioting || featureAreaPedsRiotingUpdated){
 		set_all_nearby_peds_to_angry(featureAreaPedsRioting);
 		featureAreaPedsRiotingUpdated = false;
 	}
 
-	if (pedWeaponSetIndex != 0 || pedWeaponSetUpdated)
-	{
+	if(pedWeaponSetIndex != 0 || pedWeaponSetUpdated){
 		give_all_nearby_peds_a_weapon(pedWeaponSetIndex != 0);
 		pedWeaponSetUpdated = false;
 	}
 
-	if (featureShowDebugInfo || featureShowDebugInfoUpdated)
-	{
+	if(featureShowDebugInfo || featureShowDebugInfoUpdated){
 		show_debug_info_on_screen(featureShowDebugInfo);
 		featureShowDebugInfoUpdated = false;
 	}
-		
+
 }
 
-void show_debug_info_on_screen(bool enabled)
-{
+void show_debug_info_on_screen(bool enabled){
 	std::ostringstream ss;
 	ss << "Peds: " << trackedPeds.size() << "; Vehs: " << trackedVehicles.size() << "\nCalls Total: " << callsPerFrame << ", A: " << callsA << ", B: " << callsB << "\nWP: " << allWorldPedsThisFrame.size() << ", WV: " << allWorldVehiclesThisFrame.size();
 	callsPerFrame = 0;
 	set_status_text_centre_screen(ss.str());
 }
 
-void set_all_nearby_peds_to_calm()
-{
+void set_all_nearby_peds_to_calm(){
 	std::set<Ped> peds = get_nearby_peds(PLAYER::PLAYER_PED_ID());
-	for each (Ped xped in peds)
-	{
+	for each (Ped xped in peds){
 		// Only calm down peds if they're NOT in our group (keeps our bodyguards from chilling out and being lazy)
-		if (!PED::IS_PED_GROUP_MEMBER(xped, PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID())))
-		{
+		if(!PED::IS_PED_GROUP_MEMBER(xped, PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID()))){
 			PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(xped, true);
 			PED::SET_PED_FLEE_ATTRIBUTES(xped, 0, 0);
 			//PED::SET_PED_COMBAT_ATTRIBUTES(xped, 17, 1);
@@ -447,20 +411,16 @@ void set_all_nearby_peds_to_calm()
 	}
 }
 
-void set_all_nearby_peds_to_invincible(bool enabled)
-{
+void set_all_nearby_peds_to_invincible(bool enabled){
 	std::set<Ped> peds = get_nearby_peds(PLAYER::PLAYER_PED_ID());
-	for each (Ped xped in peds)
-	{
+	for each (Ped xped in peds){
 		// Only apply to non-bodyguards
-		if (!PED::IS_PED_GROUP_MEMBER(xped, PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID())))
-		{
+		if(!PED::IS_PED_GROUP_MEMBER(xped, PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID()))){
 			ENTTrackedPedestrian* trackedPed = findOrCreateTrackedPed(xped);
-			if ((enabled && !trackedPed->madeInvincible) || (!enabled && trackedPed->madeInvincible))
-			{
+			if((enabled && !trackedPed->madeInvincible) || (!enabled && trackedPed->madeInvincible)){
 				PED::SET_PED_DIES_WHEN_INJURED(xped, !enabled);
 
-				PED::SET_PED_MAX_HEALTH(xped, enabled ? 10000 : 100 );
+				PED::SET_PED_MAX_HEALTH(xped, enabled ? 10000 : 100);
 				ENTITY::SET_ENTITY_HEALTH(xped, enabled ? 10000 : 100);
 				PED::SET_PED_SUFFERS_CRITICAL_HITS(xped, !enabled);
 
@@ -473,19 +433,15 @@ void set_all_nearby_peds_to_invincible(bool enabled)
 	}
 }
 
-void set_all_nearby_peds_to_angry(bool enabled)
-{
+void set_all_nearby_peds_to_angry(bool enabled){
 	std::set<Ped> peds = get_nearby_peds(PLAYER::PLAYER_PED_ID());
 
-	for each (Ped xped in peds)
-	{
+	for each (Ped xped in peds){
 		// Only apply to non-bodyguards
-		if (!PED::IS_PED_GROUP_MEMBER(xped, PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID())))
-		{
+		if(!PED::IS_PED_GROUP_MEMBER(xped, PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID()))){
 			ENTTrackedPedestrian* trackedPed = findOrCreateTrackedPed(xped);
 
-			if (enabled && !trackedPed->angryApplied)
-			{
+			if(enabled && !trackedPed->angryApplied){
 				PED::SET_PED_COMBAT_ATTRIBUTES(xped, 0, featureAngryPedsUseCover ? 1 : 0); //use cover
 
 				PED::SET_PED_COMBAT_ATTRIBUTES(xped, 46, 1); //always fight
@@ -501,8 +457,7 @@ void set_all_nearby_peds_to_angry(bool enabled)
 				trackedPed->angryApplied = true;
 				trackedPed->missionise();
 			}
-			else if(!enabled && trackedPed->angryApplied)
-			{
+			else if(!enabled && trackedPed->angryApplied){
 				//stop them being angry
 				PED::SET_PED_COMBAT_ATTRIBUTES(xped, 0, 0); //use cover
 				PED::SET_PED_COMBAT_ATTRIBUTES(xped, 46, 0); //always fight
@@ -521,20 +476,16 @@ void set_all_nearby_peds_to_angry(bool enabled)
 	}
 }
 
-void set_all_nearby_vehs_to_invincible(bool enabled, bool force)
-{
+void set_all_nearby_vehs_to_invincible(bool enabled, bool force){
 	std::set<Vehicle> vehicles = get_nearby_vehicles(PLAYER::PLAYER_PED_ID());
 
-	for each (Vehicle veh in vehicles)
-	{
+	for each (Vehicle veh in vehicles){
 		int chanceOfSelection = rand() % 5;
-		if (chanceOfSelection != 1 || force)
-		{
+		if(chanceOfSelection != 1 || force){
 			continue;
 		}
 
-		if (PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()) == veh)
-		{
+		if(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()) == veh){
 			continue;
 		}
 
@@ -550,13 +501,11 @@ void set_all_nearby_vehs_to_invincible(bool enabled, bool force)
 		ENTITY::SET_ENTITY_CAN_BE_DAMAGED(veh, !enabled);
 		VEHICLE::SET_VEHICLE_CAN_BE_VISIBLY_DAMAGED(veh, !enabled);
 
-		for (int i = 0; i < 6; i++)
-		{
+		for(int i = 0; i < 6; i++){
 			VEHICLE::_SET_VEHICLE_DOOR_BREAKABLE(veh, i, !enabled); //(Vehicle, doorIndex, isBreakable)
 		}
 
-		if (enabled)
-		{
+		if(enabled){
 			ENTITY::SET_ENTITY_ONLY_DAMAGED_BY_PLAYER(veh, 1);
 
 			VEHICLE::SET_VEHICLE_BODY_HEALTH(veh, 10000.0f);
@@ -564,20 +513,16 @@ void set_all_nearby_vehs_to_invincible(bool enabled, bool force)
 	}
 }
 
-void set_all_nearby_vehs_to_broken(bool enabled)
-{
+void set_all_nearby_vehs_to_broken(bool enabled){
 	std::set<Vehicle> vehicles = get_nearby_vehicles(PLAYER::PLAYER_PED_ID());
 
-	for each (Vehicle veh in vehicles)
-	{
+	for each (Vehicle veh in vehicles){
 		int chanceOfSelection = rand() % 5;
-		if (chanceOfSelection != 1)
-		{
+		if(chanceOfSelection != 1){
 			continue;
 		}
 
-		if (PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()) == veh)
-		{
+		if(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()) == veh){
 			continue;
 		}
 
@@ -585,25 +530,20 @@ void set_all_nearby_vehs_to_broken(bool enabled)
 
 		BOOL isAircraft = VEHICLE::IS_THIS_MODEL_A_HELI(vehModel) || VEHICLE::IS_THIS_MODEL_A_PLANE(vehModel);
 		BOOL isWeird = VEHICLE::IS_THIS_MODEL_A_TRAIN(vehModel) || VEHICLE::IS_THIS_MODEL_A_BOAT(vehModel) || VEHICLE::_IS_THIS_MODEL_A_SUBMERSIBLE(vehModel);
-		if (isAircraft || isWeird)
-		{
+		if(isAircraft || isWeird){
 			continue;
 		}
 
-		if (enabled)
-		{
+		if(enabled){
 			VEHICLE::SET_VEHICLE_ENGINE_ON(veh, false, true);
 			VEHICLE::SET_VEHICLE_UNDRIVEABLE(veh, true);
 
 			Object taskHdl;
 
-			for (int i = -1; i < VEHICLE::GET_VEHICLE_MAX_NUMBER_OF_PASSENGERS(veh); i++)
-			{
+			for(int i = -1; i < VEHICLE::GET_VEHICLE_MAX_NUMBER_OF_PASSENGERS(veh); i++){
 				Ped passenger = VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh, i);
-				if (ENTITY::DOES_ENTITY_EXIST(passenger))
-				{
-					if (passenger != PLAYER::PLAYER_PED_ID())
-					{
+				if(ENTITY::DOES_ENTITY_EXIST(passenger)){
+					if(passenger != PLAYER::PLAYER_PED_ID()){
 						AI::CLEAR_PED_TASKS(passenger);
 
 						AI::OPEN_SEQUENCE_TASK(&taskHdl);
@@ -617,18 +557,15 @@ void set_all_nearby_vehs_to_broken(bool enabled)
 				}
 			}
 		}
-		else
-		{
+		else{
 			//VEHICLE::SET_VEHICLE_ENGINE_HEALTH(veh, 1000.0f);
 			VEHICLE::SET_VEHICLE_UNDRIVEABLE(veh, false);
 		}
 	}
 }
 
-std::set<Ped> get_nearby_peds(Ped playerPed)
-{
-	if (allWorldPedsThisFrameFilled)
-	{
+std::set<Ped> get_nearby_peds(Ped playerPed){
+	if(allWorldPedsThisFrameFilled){
 		return allWorldPedsThisFrame;
 	}
 
@@ -639,48 +576,39 @@ std::set<Ped> get_nearby_peds(Ped playerPed)
 	callsA = 0;
 	callsB = found;
 
-	for (int i = 0; i < found; i++)
-	{
+	for(int i = 0; i < found; i++){
 		Ped item = peds[i];
 
-		if (releasedPeds.find(item) != releasedPeds.end())
-		{
+		if(releasedPeds.find(item) != releasedPeds.end()){
 			continue;
 		}
 
-		if (ENTITY::IS_ENTITY_DEAD(item))
-		{
+		if(ENTITY::IS_ENTITY_DEAD(item)){
 			continue;
 		}
-		else if (playerPed == item)
-		{
+		else if(playerPed == item){
 			continue;
 		}
-		else if (!PED::IS_PED_HUMAN(item))
-		{
+		else if(!PED::IS_PED_HUMAN(item)){
 			continue;
 		}
-		else if (ENTITY::IS_ENTITY_A_MISSION_ENTITY(item) && !ENTITY::DOES_ENTITY_BELONG_TO_THIS_SCRIPT(item, true))
-		{
+		else if(ENTITY::IS_ENTITY_A_MISSION_ENTITY(item) && !ENTITY::DOES_ENTITY_BELONG_TO_THIS_SCRIPT(item, true)){
 			continue;
 		}
 
 		//filter out drivers/pilots if necessary
-		if ((!featurePedsIncludePilots || !featurePedsIncludeDrivers) && PED::IS_PED_IN_ANY_VEHICLE(item, false))
-		{
+		if((!featurePedsIncludePilots || !featurePedsIncludeDrivers) && PED::IS_PED_IN_ANY_VEHICLE(item, false)){
 			Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(item, false);
 
 			Hash vehModel = ENTITY::GET_ENTITY_MODEL(veh);
 
 			bool isAircraft = VEHICLE::IS_THIS_MODEL_A_HELI(vehModel) || VEHICLE::IS_THIS_MODEL_A_PLANE(vehModel);
-			if (!featurePedsIncludePilots && isAircraft)
-			{
+			if(!featurePedsIncludePilots && isAircraft){
 				continue;
 			}
 
 			bool isWeird = VEHICLE::IS_THIS_MODEL_A_TRAIN(vehModel) || VEHICLE::IS_THIS_MODEL_A_BOAT(vehModel) || VEHICLE::_IS_THIS_MODEL_A_SUBMERSIBLE(vehModel);
-			if (!featurePedsIncludeDrivers && !isAircraft && !isWeird)
-			{
+			if(!featurePedsIncludeDrivers && !isAircraft && !isWeird){
 				continue;
 			}
 		}
@@ -692,10 +620,8 @@ std::set<Ped> get_nearby_peds(Ped playerPed)
 	return allWorldPedsThisFrame;
 }
 
-std::set<Vehicle> get_nearby_vehicles(Ped playerPed)
-{
-	if (allWorldVehiclesThisFrameFilled)
-	{
+std::set<Vehicle> get_nearby_vehicles(Ped playerPed){
+	if(allWorldVehiclesThisFrameFilled){
 		return allWorldVehiclesThisFrame;
 	}
 
@@ -706,28 +632,23 @@ std::set<Vehicle> get_nearby_vehicles(Ped playerPed)
 	Vehicle vehs[ARR_SIZE];
 	int found = worldGetAllVehicles(vehs, ARR_SIZE);
 
-	for (int i = 0; i < found; i++)
-	{
+	for(int i = 0; i < found; i++){
 		Vehicle item = vehs[i];
 
-		if (releasedVehicles.find(item) != releasedVehicles.end())
-		{
+		if(releasedVehicles.find(item) != releasedVehicles.end()){
 			continue;
 		}
 
 		//don't return dead items
-		if (ENTITY::IS_ENTITY_DEAD(item))
-		{
+		if(ENTITY::IS_ENTITY_DEAD(item)){
 			continue;
 		}
 		//don't return the vehicle we're using
-		else if (playerInVehicle && playerVehicle == item)
-		{
+		else if(playerInVehicle && playerVehicle == item){
 			continue;
 		}
 		//don't do stuff to mission entities
-		else if (ENTITY::IS_ENTITY_A_MISSION_ENTITY(item) && !ENTITY::DOES_ENTITY_BELONG_TO_THIS_SCRIPT(item, true))
-		{
+		else if(ENTITY::IS_ENTITY_A_MISSION_ENTITY(item) && !ENTITY::DOES_ENTITY_BELONG_TO_THIS_SCRIPT(item, true)){
 			continue;
 		}
 
@@ -738,29 +659,23 @@ std::set<Vehicle> get_nearby_vehicles(Ped playerPed)
 	return allWorldVehiclesThisFrame;
 }
 
-void cleanup_area_effects()
-{
-	for each (ENTTrackedVehicle* veh in trackedVehicles)
-	{
+void cleanup_area_effects(){
+	for each (ENTTrackedVehicle* veh in trackedVehicles){
 		delete veh;
 	}
 	trackedVehicles.clear();
 
-	for each (ENTTrackedPedestrian* ped in trackedPeds)
-	{
+	for each (ENTTrackedPedestrian* ped in trackedPeds){
 		delete ped;
 	}
 	trackedPeds.clear();
 }
 
-void kill_all_nearby_peds_now()
-{
+void kill_all_nearby_peds_now(){
 	std::set<Ped> peds = get_nearby_peds(PLAYER::PLAYER_PED_ID());
 
-	for each (Ped xped in peds)
-	{
-		if (!PED::IS_PED_GROUP_MEMBER(xped, PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID())))
-		{
+	for each (Ped xped in peds){
+		if(!PED::IS_PED_GROUP_MEMBER(xped, PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID()))){
 			ENTITY::SET_ENTITY_AS_MISSION_ENTITY(xped, true, true);
 			ENTTrackedPedestrian* trackedPed = findOrCreateTrackedPed(xped);
 			trackedPed->missionise();
@@ -778,20 +693,16 @@ void kill_all_nearby_peds_now()
 	}
 }
 
-void kill_all_nearby_peds_continuous()
-{
+void kill_all_nearby_peds_continuous(){
 	std::set<Ped> peds = get_nearby_peds(PLAYER::PLAYER_PED_ID());
 
-	for each (Ped xped in peds)
-	{
+	for each (Ped xped in peds){
 		int chanceOfSelection = rand() % 5;
-		if (chanceOfSelection != 1)
-		{
+		if(chanceOfSelection != 1){
 			continue;
 		}
 
-		if (!PED::IS_PED_GROUP_MEMBER(xped, PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID())))
-		{
+		if(!PED::IS_PED_GROUP_MEMBER(xped, PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID()))){
 			ENTITY::SET_ENTITY_AS_MISSION_ENTITY(xped, true, true);
 			ENTTrackedPedestrian* trackedPed = findOrCreateTrackedPed(xped);
 			trackedPed->missionise();
@@ -809,14 +720,12 @@ void kill_all_nearby_peds_continuous()
 	}
 }
 
-void kill_all_nearby_vehicles_now()
-{
+void kill_all_nearby_vehicles_now(){
 	std::set<Vehicle> vehicles = get_nearby_vehicles(PLAYER::PLAYER_PED_ID());
 
 	set_all_nearby_vehs_to_invincible(false, true);
 
-	for each (Vehicle vehicle in vehicles)
-	{
+	for each (Vehicle vehicle in vehicles){
 		ENTITY::SET_ENTITY_AS_MISSION_ENTITY(vehicle, true, true);
 		ENTTrackedVehicle* trackedVeh = findOrCreateTrackedVehicle(vehicle);
 		trackedVeh->missionise();
@@ -825,15 +734,12 @@ void kill_all_nearby_vehicles_now()
 	}
 }
 
-void kill_all_nearby_vehicles_continuous()
-{
+void kill_all_nearby_vehicles_continuous(){
 	std::set<Vehicle> vehicles = get_nearby_vehicles(PLAYER::PLAYER_PED_ID());
 
-	for each (Vehicle vehicle in vehicles)
-	{
+	for each (Vehicle vehicle in vehicles){
 		int chanceOfBeingExploded = rand() % 5;
-		if (chanceOfBeingExploded != 1)
-		{
+		if(chanceOfBeingExploded != 1){
 			continue;
 		}
 
@@ -845,86 +751,71 @@ void kill_all_nearby_vehicles_continuous()
 	}
 }
 
-void clear_up_missionised_entitities()
-{
+void clear_up_missionised_entitities(){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(playerPed);
 
 	std::deque<ENTTrackedVehicle*>::iterator vit;
-	for (vit = trackedVehicles.begin(); vit != trackedVehicles.end();)
-	{
+	for(vit = trackedVehicles.begin(); vit != trackedVehicles.end();){
 		Vehicle actualVeh = (*vit)->vehicle;
-		if (!ENTITY::DOES_ENTITY_EXIST(actualVeh) || is_entity_to_be_disposed(playerPed, actualVeh))
-		{
+		if(!ENTITY::DOES_ENTITY_EXIST(actualVeh) || is_entity_to_be_disposed(playerPed, actualVeh)){
 			delete *vit;
 			releasedVehicles.insert(actualVeh);
 			vit = trackedVehicles.erase(vit);
 		}
-		else
-		{
+		else{
 			++vit;
 		}
 	}
 
 	std::deque<ENTTrackedPedestrian*>::iterator pit;
-	for (pit = trackedPeds.begin(); pit != trackedPeds.end();)
-	{
+	for(pit = trackedPeds.begin(); pit != trackedPeds.end();){
 		Ped actualPed = (*pit)->ped;
-		if (!ENTITY::DOES_ENTITY_EXIST(actualPed)|| is_entity_to_be_disposed(playerPed, actualPed))
-		{
+		if(!ENTITY::DOES_ENTITY_EXIST(actualPed) || is_entity_to_be_disposed(playerPed, actualPed)){
 			delete *pit;
 			releasedPeds.insert(actualPed);
 			pit = trackedPeds.erase(pit);
 		}
-		else
-		{
+		else{
 			++pit;
 		}
 	}
 
 	std::set<Ped>::iterator rpIt;
-	for (rpIt = releasedPeds.begin(); rpIt != releasedPeds.end();)
-	{
-		if (!ENTITY::DOES_ENTITY_EXIST(*rpIt))
+	for(rpIt = releasedPeds.begin(); rpIt != releasedPeds.end();){
+		if(!ENTITY::DOES_ENTITY_EXIST(*rpIt)){
+			rpIt = releasedPeds.erase(rpIt);
+		}
+		else if(!is_entity_to_be_disposed(playerPed, *rpIt)) //no longer for deletion after all
 		{
 			rpIt = releasedPeds.erase(rpIt);
 		}
-		else if (!is_entity_to_be_disposed(playerPed, *rpIt)) //no longer for deletion after all
-		{
-			rpIt = releasedPeds.erase(rpIt);
-		}
-		else
-		{
+		else{
 			rpIt++;
 		}
 	}
 
 	std::set<Vehicle>::iterator rvIt;
-	for (rvIt = releasedVehicles.begin(); rvIt != releasedVehicles.end();)
-	{
-		if (!ENTITY::DOES_ENTITY_EXIST(*rvIt))
+	for(rvIt = releasedVehicles.begin(); rvIt != releasedVehicles.end();){
+		if(!ENTITY::DOES_ENTITY_EXIST(*rvIt)){
+			rvIt = releasedVehicles.erase(rvIt);
+		}
+		else if(!is_entity_to_be_disposed(playerPed, *rvIt)) //no longer for deletion after all
 		{
 			rvIt = releasedVehicles.erase(rvIt);
 		}
-		else if (!is_entity_to_be_disposed(playerPed, *rvIt)) //no longer for deletion after all
-		{
-			rvIt = releasedVehicles.erase(rvIt);
-		}
-		else
-		{
+		else{
 			rvIt++;
 		}
 	}
 }
 
-void onchange_areaeffect_ped_weapons(int value, SelectFromListMenuItem* source)
-{
+void onchange_areaeffect_ped_weapons(int value, SelectFromListMenuItem* source){
 	pedWeaponSetIndex = value;
 	pedWeaponSetUpdated = true;
 }
 
-void give_all_nearby_peds_a_weapon(bool enabled)
-{
+void give_all_nearby_peds_a_weapon(bool enabled){
 	//callsPerFrame = 0;
 
 	std::set<Ped> peds = get_nearby_peds(PLAYER::PLAYER_PED_ID());
@@ -932,44 +823,36 @@ void give_all_nearby_peds_a_weapon(bool enabled)
 	//callsA = callsPerFrame;
 	//callsPerFrame = 0;
 
-	for each (Ped xped in peds)
-	{
+	for each (Ped xped in peds){
 		int chanceOfGettingWeapon = rand() % 5;
-		if (chanceOfGettingWeapon != 1)
-		{
+		if(chanceOfGettingWeapon != 1){
 			continue;
 		}
 
-		if (!PED::IS_PED_GROUP_MEMBER(xped, PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID())))
-		{
+		if(!PED::IS_PED_GROUP_MEMBER(xped, PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID()))){
 			ENTTrackedPedestrian* trackedPed = findOrCreateTrackedPed(xped);
 
-			if (enabled && !trackedPed->weaponSetApplied != pedWeaponSetIndex)
-			{
+			if(enabled && !trackedPed->weaponSetApplied != pedWeaponSetIndex){
 				std::vector<std::string> weaponSet = VOV_PED_WEAPONS[pedWeaponSetIndex];
 
 				int index = rand() % weaponSet.size();
 				std::string weapon = weaponSet.at(index);
-				Hash weapHash = GAMEPLAY::GET_HASH_KEY((char *)weapon.c_str());
+				Hash weapHash = GAMEPLAY::GET_HASH_KEY((char *) weapon.c_str());
 
 				bool foundWeapon = false;
-				for (std::string searchStr : weaponSet)
-				{
-					Hash searchHash = GAMEPLAY::GET_HASH_KEY((char *)searchStr.c_str());
-					if (trackedPed->lastWeaponApplied == searchHash)
-					{
+				for(std::string searchStr : weaponSet){
+					Hash searchHash = GAMEPLAY::GET_HASH_KEY((char *) searchStr.c_str());
+					if(trackedPed->lastWeaponApplied == searchHash){
 						foundWeapon = true;
 						break;
 					}
 				}
 
-				if (!foundWeapon)
-				{
+				if(!foundWeapon){
 					WEAPON::GIVE_WEAPON_TO_PED(xped, weapHash, 9999, FALSE, TRUE);
 					WEAPON::SET_PED_INFINITE_AMMO_CLIP(xped, true);
 					PED::SET_PED_CAN_SWITCH_WEAPON(xped, true);
-					if (WEAPON::HAS_PED_GOT_WEAPON(xped, weapHash, 0) && !PED::IS_PED_IN_ANY_VEHICLE(xped, false) && !PED::IS_PED_INJURED(xped))
-					{
+					if(WEAPON::HAS_PED_GOT_WEAPON(xped, weapHash, 0) && !PED::IS_PED_IN_ANY_VEHICLE(xped, false) && !PED::IS_PED_INJURED(xped)){
 						WEAPON::SET_CURRENT_PED_WEAPON(xped, weapHash, 0);
 					}
 					trackedPed->lastWeaponApplied = weapHash;
@@ -977,8 +860,7 @@ void give_all_nearby_peds_a_weapon(bool enabled)
 
 				trackedPed->weaponSetApplied = pedWeaponSetIndex;
 			}
-			else if (!enabled && trackedPed->weaponSetApplied != 0)
-			{
+			else if(!enabled && trackedPed->weaponSetApplied != 0){
 				//TODO: take all their weapons from that set away?
 
 				trackedPed->weaponSetApplied = 0;
@@ -987,33 +869,26 @@ void give_all_nearby_peds_a_weapon(bool enabled)
 	}
 }
 
-void add_areaeffect_generic_settings(std::vector<StringPairSettingDBRow>* results)
-{
-	results->push_back(StringPairSettingDBRow{ "pedWeaponSetIndex", std::to_string(pedWeaponSetIndex) });
+void add_areaeffect_generic_settings(std::vector<StringPairSettingDBRow>* results){
+	results->push_back(StringPairSettingDBRow{"pedWeaponSetIndex", std::to_string(pedWeaponSetIndex)});
 }
 
-void handle_generic_settings_areaeffect(std::vector<StringPairSettingDBRow>* settings)
-{
-	for (int i = 0; i < settings->size(); i++)
-	{
+void handle_generic_settings_areaeffect(std::vector<StringPairSettingDBRow>* settings){
+	for(int i = 0; i < settings->size(); i++){
 		StringPairSettingDBRow setting = settings->at(i);
-		if (setting.name.compare("pedWeaponSetIndex") == 0)
-		{
+		if(setting.name.compare("pedWeaponSetIndex") == 0){
 			pedWeaponSetIndex = stoi(setting.value);
 			pedWeaponSetUpdated = true;
 		}
 	}
 }
 
-ENTTrackedPedestrian* findOrCreateTrackedPed(Ped searchPed)
-{
+ENTTrackedPedestrian* findOrCreateTrackedPed(Ped searchPed){
 	std::deque<ENTTrackedPedestrian*>::iterator pit;
-	for (pit = trackedPeds.begin(); pit != trackedPeds.end();pit++)
-	{
+	for(pit = trackedPeds.begin(); pit != trackedPeds.end(); pit++){
 		Ped queuePed = (*pit)->ped;
 
-		if (searchPed == queuePed)
-		{
+		if(searchPed == queuePed){
 			return *pit;
 		}
 	}
@@ -1024,14 +899,11 @@ ENTTrackedPedestrian* findOrCreateTrackedPed(Ped searchPed)
 	return result;
 }
 
-ENTTrackedVehicle* findOrCreateTrackedVehicle(Vehicle searchVeh)
-{
+ENTTrackedVehicle* findOrCreateTrackedVehicle(Vehicle searchVeh){
 	std::deque<ENTTrackedVehicle*>::iterator vit;
-	for (vit = trackedVehicles.begin(); vit != trackedVehicles.end(); vit++)
-	{
+	for(vit = trackedVehicles.begin(); vit != trackedVehicles.end(); vit++){
 		Vehicle queueVeh = (*vit)->vehicle;
-		if (searchVeh == queueVeh)
-		{
+		if(searchVeh == queueVeh){
 			return *vit;
 		}
 	}
@@ -1042,7 +914,6 @@ ENTTrackedVehicle* findOrCreateTrackedVehicle(Vehicle searchVeh)
 }
 
 
-bool is_entity_to_be_disposed(Ped playerPed, Entity entity)
-{
+bool is_entity_to_be_disposed(Ped playerPed, Entity entity){
 	return (!ENTITY::IS_ENTITY_ON_SCREEN(entity) && !ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(playerPed, entity, 17));
 }

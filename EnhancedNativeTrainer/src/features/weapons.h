@@ -212,8 +212,6 @@ void fill_weapon_ammo(MenuItem<int> choice);
 
 void onconfirm_open_tint_menu(MenuItem<int> choice);
 
-bool process_weapon_mod_menu_tint();
-
 //Weapon mod menu
 
 bool process_weapon_mod_menu_tint();
