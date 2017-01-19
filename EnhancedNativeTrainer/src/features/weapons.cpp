@@ -8,6 +8,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 (C) Sondai Smith and fellow contributors 2015
 */
 
+#include "script.h"
 #include "..\ui_support\menu_functions.h"
 #include "weapons.h"
 #include "..\io\config_io.h"
@@ -35,6 +36,8 @@ Entity grav_entity = 0;
 DWORD grav_partfx = 0;
 
 DWORD featureWeaponVehShootLastTime = 0;
+
+std::string lastCustomWeapon;
 
 int const SAVED_WEAPONS_COUNT = TOTAL_WEAPONS_COUNT;
 int saved_weapon_model[SAVED_WEAPONS_COUNT];
@@ -484,9 +487,9 @@ bool do_give_weapon(std::string modelName){
 
 bool onconfirm_weapon_menu(MenuItem<int> choice){
 	// common variables
-	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
 	Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(playerPed);
 
 	switch(activeLineIndexWeapon){
 		case 0:
@@ -643,6 +646,25 @@ bool onconfirm_weapon_menu(MenuItem<int> choice){
 		case 8:
 			process_weaponlist_menu();
 			break;
+		case 9:
+		{
+			std::string result = show_keyboard(nullptr, (char *) lastCustomWeapon.c_str());
+			if(!result.empty()){
+				result = trim(result);
+				lastCustomWeapon = result;
+				Hash weaponHash = GAMEPLAY::GET_HASH_KEY((char *) result.c_str());
+				std::ostringstream ss;
+				if(WEAPON::IS_WEAPON_VALID(weaponHash)){
+					WEAPON::GIVE_WEAPON_TO_PED(playerPed, weaponHash, 250, false, false);
+					ss << result << " added";
+				}
+				else{
+					ss << "~r~Error: Couldn't find weapon \"" << result << "\"";
+				}
+				set_status_text(ss.str());
+			}
+			break;
+		}
 		default:
 			break;
 	}
@@ -707,6 +729,12 @@ bool process_weapon_menu(){
 	item->caption = "Individual Weapons";
 	item->value = i++;
 	item->isLeaf = false;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "Enter Name Manually";
+	item->value = i++;
+	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	SelectFromListMenuItem *listItem = new SelectFromListMenuItem(WEAP_DMG_CAPTIONS, onchange_weap_dmg_modifier);

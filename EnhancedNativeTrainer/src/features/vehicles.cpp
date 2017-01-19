@@ -736,7 +736,7 @@ bool onconfirm_carspawn_menu(MenuItem<int> choice){
 			Hash hash = GAMEPLAY::GET_HASH_KEY((char*) result.c_str());
 			if(!STREAMING::IS_MODEL_IN_CDIMAGE(hash) || !STREAMING::IS_MODEL_A_VEHICLE(hash)){
 				std::ostringstream ss;
-				ss << "~r~Error:~r~ Couldn't find model '" << result << "'";
+				ss << "~r~Error: Couldn't find model " << result;
 				set_status_text(ss.str());
 				return false;
 			}
@@ -770,14 +770,6 @@ bool process_carspawn_menu(){
 		item->isLeaf = (i == MENU_VEHICLE_CATEGORIES.size() - 1);
 		menuItems.push_back(item);
 	}
-
-	/*
-	MenuItem<int> *item = new MenuItem<int>();
-	item->caption = "Saved Vehicles";
-	item->value = -1;
-	item->isLeaf = false;
-	menuItems.push_back(item);
-	*/
 
 	return draw_generic_menu<int>(menuItems, 0, "Vehicle Categories", onconfirm_carspawn_menu, NULL, NULL);
 }
