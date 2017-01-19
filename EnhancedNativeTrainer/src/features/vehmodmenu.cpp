@@ -65,7 +65,6 @@ std::string getModCategoryName(int i){
 	//To sort out the bike customisation options - else it displays car related headings
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 
-
 	switch(i){
 		case 0:
 			if(is_this_a_motorcycle(veh))
@@ -808,7 +807,6 @@ bool onconfirm_vehmod_menu(MenuItem<int> choice){
 	return false;
 }
 
-
 bool process_vehmod_menu(){
 	if(!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)){
 		set_status_text("~r~Player isn't in a vehicle");
@@ -975,7 +973,6 @@ bool process_vehmod_menu(){
 		item->isLeaf = false;
 		menuItems.push_back(item);
 	}
-
 
 	FunctionDrivenToggleMenuItem<int> *toggleItem;
 
@@ -1183,20 +1180,14 @@ void set_chrome_wheels_enabled(Vehicle veh, bool enabled){
 	}
 }
 
-
 void fully_tune_vehicle(Vehicle veh, bool optics, bool repaint){
 	VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
 	VEHICLE::SET_VEHICLE_MOD(veh, MOD_ENGINE, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_ENGINE) - 1, 1); //Engine
 	VEHICLE::SET_VEHICLE_MOD(veh, MOD_BRAKES, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_BRAKES) - 1, 1); //Brakes
 	VEHICLE::SET_VEHICLE_MOD(veh, MOD_TRANSMISSION, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_TRANSMISSION) - 1, 1); //Transmission
-
-	/*Below test works!
-	VEHICLE::SET_VEHICLE_MOD(veh, MOD_BOBBLEHEAD, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_BOBBLEHEAD) - 1, 1); //Bobblehead test
-	VEHICLE::SET_VEHICLE_MOD(veh, MOD_LIVERY, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_LIVERY) - 1, 1); //Livery Test
-	end of test*/
+	VEHICLE::SET_VEHICLE_MOD(veh, MOD_ARMOR, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_ARMOR) - 1, 1); //Armor
 
 	VEHICLE::TOGGLE_VEHICLE_MOD(veh, MOD_TURBO, 1); //Turbo Tuning
-	VEHICLE::TOGGLE_VEHICLE_MOD(veh, MOD_XENONLIGHTS, 1); //Headlights
 
 	if(optics){
 		VEHICLE::SET_VEHICLE_MOD(veh, MOD_SPOILER, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_SPOILER) - 1, 1); //Spoilers
@@ -1210,13 +1201,12 @@ void fully_tune_vehicle(Vehicle veh, bool optics, bool repaint){
 		VEHICLE::SET_VEHICLE_MOD(veh, MOD_FENDER, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_FENDER) - 1, 1); //Fender
 		VEHICLE::SET_VEHICLE_MOD(veh, MOD_RIGHTFENDER, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_RIGHTFENDER) - 1, 1); //Right Fender
 		VEHICLE::SET_VEHICLE_MOD(veh, MOD_ROOF, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_ROOF) - 1, MOD_ROOF); //Roof
-		VEHICLE::SET_VEHICLE_MOD(veh, MOD_HORNS, HORN_MUSICAL5, 0);										  //Horns
+		VEHICLE::SET_VEHICLE_MOD(veh, MOD_HORNS, HORN_CLASSICALLOOP2, 0);										  //Horns
 		VEHICLE::SET_VEHICLE_MOD(veh, MOD_SUSPENSION, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_SUSPENSION) - 1, 1); //Suspension
-		VEHICLE::SET_VEHICLE_MOD(veh, MOD_ARMOR, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_ARMOR) - 1, 1); //Armor
 
+		VEHICLE::TOGGLE_VEHICLE_MOD(veh, MOD_XENONLIGHTS, 1); //Headlights
 
-
-		VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT_INDEX(veh, PLATE_YANKTON);
+		VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT_INDEX(veh, PLATE_YELLOWONBLACK);
 //		VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT(veh, "ENHANCED");
 	}
 
