@@ -507,18 +507,24 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}*/
 
 	eGameVersion version = getGameVersion();
-	if(version < 20) //version < VER_1_0_757_2_STEAM || version < VER_1_0_757_2_NOSTEAM
+	if (version <20) 
 	{
 		*getGlobalPtr(2558120) = 1;
 	}
-	else if(version < 22) //version > VER_1_0_678_1_STEAM || version > VER_1_0_678_1_NOSTEAM
+	else if (version <22) 
 	{
 		*getGlobalPtr(2562051) = 1;
 	}
-	else if(version < 26){
+	else if(version < 26) 
+	{
 		*getGlobalPtr(2566708) = 1;
 	}
-	else{
+	else if (version >= 28) //SC version == 29; steam version == 28 (?!)
+	{
+		*getGlobalPtr(2593910) = 1;
+	}
+	else //Fall back in case something goes wrong above. Will fix later on. 
+	{
 		*getGlobalPtr(2593910) = 1; //2576573 old pointer // 2593910 = new pointer for game version: 1.0.944.2
 	}
 
