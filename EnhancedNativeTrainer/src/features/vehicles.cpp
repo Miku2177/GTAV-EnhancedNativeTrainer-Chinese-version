@@ -507,15 +507,15 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}*/
 
 	eGameVersion version = getGameVersion();
-	if (version <20) 
+	if (version < 20) 
 	{
 		*getGlobalPtr(2558120) = 1;
 	}
-	else if (version <22) 
+	else if (version <= 22) 
 	{
 		*getGlobalPtr(2562051) = 1;
 	}
-	else if(version < 26) 
+	else if(version <= 26) 
 	{
 		*getGlobalPtr(2566708) = 1;
 	}
