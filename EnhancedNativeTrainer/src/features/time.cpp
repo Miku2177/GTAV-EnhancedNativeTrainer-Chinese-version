@@ -15,33 +15,27 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 #include "..\ui_support\menu_functions.h"
 
-const std::vector<std::string> TIME_SPEED_CAPTIONS{"Minimum", "0.1x", "0.5x", "0.75x", "1x (Normal)"};
-const std::vector<float> TIME_SPEED_VALUES{0.0f, 0.1f, 0.5f, 0.75f, 1.0f};
+const std::vector<std::string> TIME_SPEED_CAPTIONS{ "Minimum", "0.1x", "0.5x", "0.75x", "1x (Normal)" };
+const std::vector<float> TIME_SPEED_VALUES{ 0.0f, 0.1f, 0.5f, 0.75f, 1.0f };
 const int DEFAULT_TIME_SPEED = 4;
-
-const std::vector<std::string> TIME_FLOW_RATE_CAPTIONS{"Frozen Time (0s/s)", "Half a Second per Second", "Real Time (1s/s)", "2 Seconds per Second", "3 Seconds per Second", "5 Seconds per Second", "6 Seconds per Second", "10 Seconds per Second", "12 Seconds per Second", "15 Seconds per Second", "Normal Time (30s/s)", "1 Minute per Second", "2 Minutes per Second", "3 Minutes per Second", "5 Minutes per Second", "6 Minutes per Second", "10 Minutes per Second", "12 Minutes per Second", "15 Minutes per Second", "30 Minutes per Second", "1 Hour per Second", "3 Hours per Second", "6 Hours per Second", "12 Hours per Second", "1 Day per Second"}; // 25
-const std::vector<float> TIME_FLOW_RATE_VALUES{0.0f, 0.5f, 1.0f, 2.0f, 3.0f, 5.0f, 6.0f, 10.0f, 12.0f, 15.0f, 30.0f, 60.0f, 120.0f, 180.0f, 300.0f, 360.0f, 600.0f, 720.0f, 900.0f, 1800.0f, 3600.0f, 10800.0f, 21600.0f, 43200.0f, 86400.0f};
-const int DEFAULT_TIME_FLOW_RATE = 10;
 
 const int TIME_TO_SLOW_AIM = 2000;
 
 int timeSpeedIndexWhileAiming = DEFAULT_TIME_SPEED;
 int timeSpeedIndex = DEFAULT_TIME_SPEED;
 
-int timeFlowRateIndex = DEFAULT_TIME_FLOW_RATE;
-
+bool featureTimePaused = false;
+bool featureTimePausedUpdated = false;
 bool featureTimeSynced = false;
-bool timeFlowRateChanged = true, timeFlowRateLocked = true;
 
 int activeLineIndexTime = 0;
-
-float timeFactor = 1000.0f / TIME_FLOW_RATE_VALUES.at(timeFlowRateIndex);
 
 int timeSinceAimingBegan = 0;
 
 bool weHaveChangedTimeScale;
 
-float quadratic_time_transition(float start, float end, float progress){
+float quadratic_time_transition(float start, float end, float progress)
+{
 	//The quadratic stuff
 	float t = 1 - progress;
 	t = 1 - (t * t);
@@ -145,8 +139,10 @@ void process_time_set_menu(){
 	draw_generic_menu<int>(menuItems, nullptr, "Set Time to ", onconfirm_time_set_menu, nullptr, nullptr, nullptr);
 }
 
-bool onconfirm_time_menu(MenuItem<int> choice){
-	switch(activeLineIndexTime){
+bool onconfirm_time_menu(MenuItem<int> choice)
+{
+	switch (activeLineIndexTime)
+	{
 		case 0:
 			process_time_set_menu();
 			break;
@@ -169,7 +165,14 @@ bool onconfirm_time_menu(MenuItem<int> choice){
 			movetime_day_backward();
 			break;
 		case 7:
-			if(featureTimeSynced){
+			if(featureTimePaused)
+			{
+				set_status_text("Time now paused");
+			}
+			break;
+		case 8:
+			if(featureTimeSynced)
+			{
 				set_status_text("Time synced with system");
 			}
 			break;
@@ -177,33 +180,24 @@ bool onconfirm_time_menu(MenuItem<int> choice){
 	return false;
 }
 
-void onchange_game_speed_callback(int value, SelectFromListMenuItem* source){
+void onchange_game_speed_callback(int value, SelectFromListMenuItem* source)
+{
 	timeSpeedIndex = value;
-	std::ostringstream ss;
+	std::stringstream ss;
 	ss << "Game speed: " << TIME_SPEED_CAPTIONS.at(value);
 	set_status_text(ss.str());
 }
 
-void onchange_aiming_speed_callback(int value, SelectFromListMenuItem* source){
+void onchange_aiming_speed_callback(int value, SelectFromListMenuItem* source)
+{
 	timeSpeedIndexWhileAiming = value;
-	std::ostringstream ss;
+	std::stringstream ss;
 	ss << "Aiming speed: " << TIME_SPEED_CAPTIONS.at(value);
 	set_status_text(ss.str());
 }
 
-void onchange_time_flow_rate_callback(int value, SelectFromListMenuItem *source){
-	timeFlowRateIndex = value, timeFlowRateChanged = true, timeFlowRateLocked = false;
-}
-
-void onconfirm_time_flow_rate(MenuItem<int> choice){
-	if(timeFlowRateLocked = !timeFlowRateLocked){
-		std::ostringstream ss;
-		ss << "Time Flow Rate: " << TIME_FLOW_RATE_CAPTIONS.at(choice.value);
-		set_status_text(ss.str());
-	}
-}
-
-void process_time_menu(){
+void process_time_menu()
+{
 	std::string caption = "Time Options";
 
 	std::vector<MenuItem<int>*> menuItems;
@@ -246,7 +240,20 @@ void process_time_menu(){
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
+	item = new MenuItem<int>();
+	item->caption = "Set Time to Preset";
+	item->value = -4;
+	item->isLeaf = false;
+	menuItems.insert(menuItems.begin(), item);
+
 	ToggleMenuItem<int> *togItem = new ToggleMenuItem<int>();
+	togItem->caption = "Clock Paused";
+	togItem->value = -1;
+	togItem->toggleValue = &featureTimePaused;
+	togItem->toggleValueUpdated = &featureTimePausedUpdated;
+	menuItems.push_back(togItem);
+
+	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "Sync With System";
 	togItem->value = -2;
 	togItem->toggleValue = &featureTimeSynced;
@@ -256,10 +263,12 @@ void process_time_menu(){
 	SelectFromListMenuItem *listItem = new SelectFromListMenuItem(TIME_SPEED_CAPTIONS, onchange_game_speed_callback);
 	listItem->wrap = false;
 	listItem->caption = "Game Speed";
-	if(timeSpeedIndex == -1){
+	if (timeSpeedIndex == -1)
+	{
 		listItem->value = TIME_SPEED_VALUES.size() - 1;
 	}
-	else{
+	else
+	{
 		listItem->value = timeSpeedIndex;
 	}
 	menuItems.push_back(listItem);
@@ -270,36 +279,30 @@ void process_time_menu(){
 	listItem->value = timeSpeedIndexWhileAiming;
 	menuItems.push_back(listItem);
 
-	item = new MenuItem<int>();
-	item->caption = "Set Time to Preset";
-	item->value = -4;
-	item->isLeaf = false;
-	menuItems.insert(menuItems.begin(), item);
-
-	listItem = new SelectFromListMenuItem(TIME_FLOW_RATE_CAPTIONS, onchange_time_flow_rate_callback);
-	listItem->wrap = false;
-	listItem->caption = "Time Flow Rate";
-	listItem->value = timeFlowRateIndex;
-	listItem->onConfirmFunction = onconfirm_time_flow_rate;
-	menuItems.push_back(listItem);
-
 	draw_generic_menu<int>(menuItems, &activeLineIndexTime, caption, onconfirm_time_menu, nullptr, nullptr, nullptr);
 }
 
-void reset_time_globals(){
-	featureTimeSynced = false;
-	timeFlowRateChanged = true;
+void reset_time_globals()
+{
+	featureTimePaused =
+		featureTimeSynced = false;
+
+	featureTimePausedUpdated = true;
 
 	timeSpeedIndexWhileAiming = DEFAULT_TIME_SPEED;
 	timeSpeedIndex = DEFAULT_TIME_SPEED;
-	timeFlowRateIndex = DEFAULT_TIME_FLOW_RATE;
 }
 
-void add_time_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){
-	results->push_back(FeatureEnabledLocalDefinition{"featureTimeSynced", &featureTimeSynced});
+void add_time_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results)
+{
+	results->push_back(FeatureEnabledLocalDefinition{ "featureTimePaused", &featureTimePaused, &featureTimePausedUpdated });
+	results->push_back(FeatureEnabledLocalDefinition{ "featureTimeSynced", &featureTimeSynced });
 }
 
-void movetime_day_forward(){
+
+
+void movetime_day_forward()
+{
 	/*
 	bool timeWasPaused = featureTimePaused;
 	TIME::PAUSE_CLOCK(true);
@@ -313,7 +316,8 @@ void movetime_day_forward(){
 	int gameMins = TIME::GET_CLOCK_MINUTES();
 
 	bool leapYear = false;
-	if(calYear % 4 == 0){
+	if (calYear % 4 == 0)
+	{
 		leapYear = true;
 	}
 
@@ -328,20 +332,24 @@ void movetime_day_forward(){
 	set_status_text(ss2.str());
 	*/
 
-	if((calDay == 27 && calMon == 2 && !leapYear) ||
+	if ((calDay == 27 && calMon == 2 && !leapYear) ||
 		(calDay == 28 && calMon == 2 && leapYear) ||
-	   (calDay == 30 && (calMon == 4 || calMon == 6 || calMon == 9 || calMon == 11)) ||
-	   (calDay == 31)){
+		(calDay == 30 && (calMon == 4 || calMon == 6 || calMon == 9 || calMon == 11)) ||
+		(calDay == 31))
+	{
 		calDay = 1;
-		if(calMon == 12){
+		if (calMon == 12)
+		{
 			calMon = 1;
 			calYear++;
 		}
-		else{
+		else
+		{
 			calMon++;
 		}
 	}
-	else{
+	else
+	{
 		calDay++;
 	}
 
@@ -360,7 +368,8 @@ void movetime_day_forward(){
 	//TIME::PAUSE_CLOCK(timeWasPaused);
 }
 
-void movetime_day_backward(){
+void movetime_day_backward()
+{
 	int calDay = TIME::GET_CLOCK_DAY_OF_MONTH();
 	int calMon = TIME::GET_CLOCK_MONTH();
 	int calYear = TIME::GET_CLOCK_YEAR();
@@ -369,31 +378,40 @@ void movetime_day_backward(){
 	int gameMins = TIME::GET_CLOCK_MINUTES();
 
 	bool leapYear = false;
-	if(calYear % 4 == 0){
+	if (calYear % 4 == 0)
+	{
 		leapYear = true;
 	}
 
-	if(calDay != 1){
+	if (calDay != 1)
+	{
 		calDay--;
 	}
-	else if(calMon == 1){
+	else if (calMon == 1)
+	{
 		calDay = 31;
 		calMon = 12;
 		calYear--;
 	}
-	else{
-		if(calMon == 5 || calMon == 7 || calMon == 10 || calMon == 12){
+	else
+	{
+		if (calMon == 5 || calMon == 7 || calMon == 10 || calMon == 12)
+		{
 			calDay = 30;
 		}
-		if(calMon == 3){
-			if(leapYear){
+		if (calMon == 3)
+		{
+			if (leapYear)
+			{
 				calDay = 29;
 			}
-			else{
+			else
+			{
 				calDay = 28;
 			}
 		}
-		else{
+		else
+		{
 			calDay = 31;
 		}
 		calMon--;
@@ -412,11 +430,13 @@ void movetime_day_backward(){
 	set_status_text(ss.str());
 }
 
-void movetime_hour_forward(){
+void movetime_hour_forward()
+{
 	int gameHour = TIME::GET_CLOCK_HOURS();
 	int gameMins = TIME::GET_CLOCK_MINUTES();
 	gameHour++;
-	if(gameHour == 24){
+	if (gameHour == 24)
+	{
 		movetime_day_forward();
 		gameHour = 00;
 	}
@@ -426,11 +446,13 @@ void movetime_hour_forward(){
 	set_status_text(text);
 }
 
-void movetime_hour_backward(){
+void movetime_hour_backward()
+{
 	int gameHour = TIME::GET_CLOCK_HOURS();
 	int gameMins = TIME::GET_CLOCK_MINUTES();
 	gameHour--;
-	if(gameHour == -1){
+	if (gameHour == -1)
+	{
 		movetime_day_backward();
 		gameHour = 23;
 	}
@@ -440,20 +462,24 @@ void movetime_hour_backward(){
 	set_status_text(text);
 }
 
-void movetime_fivemin_forward(){
+void movetime_fivemin_forward()
+{
 	int gameHour = TIME::GET_CLOCK_HOURS();
 	int gameMins = TIME::GET_CLOCK_MINUTES();
 
-	if(gameHour == 23 && gameMins > 54){
+	if (gameHour == 23 && gameMins > 54)
+	{
 		movetime_day_forward();
 		gameHour = 0;
 		gameMins = (gameMins + (-55));
 	}
-	else if(gameMins > 54){
+	else if (gameMins > 54)
+	{
 		gameHour++;
 		gameMins = gameMins + (-55);
 	}
-	else{
+	else
+	{
 		gameMins = gameMins + 5;
 	}
 
@@ -463,20 +489,24 @@ void movetime_fivemin_forward(){
 	set_status_text(text);
 }
 
-void movetime_fivemin_backward(){
+void movetime_fivemin_backward()
+{
 	int gameHour = TIME::GET_CLOCK_HOURS();
 	int gameMins = TIME::GET_CLOCK_MINUTES();
 
-	if(gameHour == 0 && gameMins < 5){
+	if (gameHour == 0 && gameMins < 5)
+	{
 		movetime_day_backward();
 		gameHour = 23;
 		gameMins = gameMins + 55;
 	}
-	else if(gameMins < 5){
+	else if (gameMins < 5)
+	{
 		gameHour--;
 		gameMins = gameMins + 55;
 	}
-	else{
+	else
+	{
 		gameMins = gameMins - 5;
 	}
 
@@ -493,50 +523,62 @@ void movetime_set(int hour, int minute){
 	set_status_text(text);
 }
 
-std::string get_day_of_game_week(){
+std::string get_day_of_game_week()
+{
 	int day = TIME::GET_CLOCK_DAY_OF_WEEK();
-	switch(day){
-		case 0:
-			return "Sun";
-		case 1:
-			return "Mon";
-		case 2:
-			return "Tue";
-		case 3:
-			return "Wed";
-		case 4:
-			return "Thu";
-		case 5:
-			return "Fri";
-		case 6:
-			return "Sat";
+	switch (day)
+	{
+	case 0:
+		return "Sun";
+	case 1:
+		return "Mon";
+	case 2:
+		return "Tue";
+	case 3:
+		return "Wed";
+	case 4:
+		return "Thu";
+	case 5:
+		return "Fri";
+	case 6:
+		return "Sat";
 	}
 	return std::string();
 }
 
-void handle_generic_settings_time(std::vector<StringPairSettingDBRow>* settings){
-	for(int i = 0; i < settings->size(); i++){
+void handle_generic_settings_time(std::vector<StringPairSettingDBRow>* settings)
+{
+	for (int i = 0; i < settings->size(); i++)
+	{
 		StringPairSettingDBRow setting = settings->at(i);
-		if(setting.name.compare("timeSpeedIndexWhileAiming") == 0){
+		if (setting.name.compare("timeSpeedIndexWhileAiming") == 0)
+		{
 			timeSpeedIndexWhileAiming = stoi(setting.value);
-		}
-		else if(setting.name.compare("timeFlowRateIndex") == 0){
-			timeFlowRateIndex = stoi(setting.value);
 		}
 	}
 }
 
-void add_time_generic_settings(std::vector<StringPairSettingDBRow>* results){
-	results->push_back(StringPairSettingDBRow{"timeSpeedIndexWhileAiming", std::to_string(timeSpeedIndexWhileAiming)});
-	results->push_back(StringPairSettingDBRow{"timeFlowRateIndex", std::to_string(timeFlowRateIndex)});
+void add_time_generic_settings(std::vector<StringPairSettingDBRow>* results)
+{
+	results->push_back(StringPairSettingDBRow{ "timeSpeedIndexWhileAiming", std::to_string(timeSpeedIndexWhileAiming) });
 }
 
-void update_time_features(Player player){
-	// time sync
-	if(featureTimeSynced){
-		if(timeFlowRateIndex != DEFAULT_TIME_FLOW_RATE){
-			timeFlowRateIndex = DEFAULT_TIME_FLOW_RATE, timeFlowRateChanged = true;
+void update_time_features(Player player)
+{
+	// time pause
+	if (featureTimePaused || featureTimePausedUpdated)
+	{
+		TIME::PAUSE_CLOCK(featureTimePaused);
+		featureTimePausedUpdated = false;
+	}
 
+	// time sync
+	if (featureTimeSynced)
+	{
+		if (featureTimePaused)
+		{
+			featureTimePaused = false;
+			featureTimePausedUpdated = true;
 		}
 
 		time_t now = time(0);
@@ -545,75 +587,62 @@ void update_time_features(Player player){
 		TIME::SET_CLOCK_TIME(t.tm_hour, t.tm_min, t.tm_sec);
 	}
 
-	// time flow rate
-	if(timeFlowRateChanged){
-		timeFlowRateChanged = false;
-
-		if(timeFlowRateIndex == DEFAULT_TIME_FLOW_RATE){
-			TIME::PAUSE_CLOCK(false);
-		}
-		else{
-			TIME::PAUSE_CLOCK(true);
-		}
-		timeFactor = timeFlowRateIndex == 0 ? -1.0f : 1000.0f / TIME_FLOW_RATE_VALUES.at(timeFlowRateIndex);
-		SYSTEM::SETTIMERA(0);
-	}
-	if(timeFlowRateIndex != DEFAULT_TIME_FLOW_RATE){
-		TIME::PAUSE_CLOCK(true);
-		if(timeFlowRateIndex > 0){
-			int hours, minutes, seconds = static_cast<int>(static_cast<float>(SYSTEM::TIMERA()) / timeFactor);
-			hours = seconds / 3600, seconds %= 3600;
-			minutes = seconds / 60, seconds %= 60;
-			SYSTEM::SETTIMERA(SYSTEM::TIMERA() - static_cast<int>(static_cast<float>(hours * 3600 + minutes * 60 + seconds) * timeFactor));
-			TIME::ADD_TO_CLOCK_TIME(hours, minutes, seconds);
-		}
-	}
-
-	if((is_in_airbrake_mode() && is_airbrake_frozen_time()) || is_in_prop_placement_mode() && is_prop_placement_frozen_time()){
+	if ((is_in_airbrake_mode() && is_airbrake_frozen_time()) || is_in_prop_placement_mode() && is_prop_placement_frozen_time())
+	{
 		GAMEPLAY::SET_TIME_SCALE(0.0f);
 		weHaveChangedTimeScale = true;
 	}
-	else if(CONTROLS::IS_CONTROL_PRESSED(0, 19) || PLAYER::IS_PLAYER_DEAD(PLAYER::PLAYER_ID())){
+	else if (CONTROLS::IS_CONTROL_PRESSED(0, 19) || PLAYER::IS_PLAYER_DEAD(PLAYER::PLAYER_ID()))
+	{
 		//do nothing so the game chooses the speed for us
 	}
-	else if(is_hotkey_held_normal_speed()){
+	else if (is_hotkey_held_normal_speed())
+	{
 		GAMEPLAY::SET_TIME_SCALE(1.0f);
 		weHaveChangedTimeScale = true;
 	}
-	else if(is_hotkey_held_slow_mo()){
+	else if (is_hotkey_held_slow_mo())
+	{
 		GAMEPLAY::SET_TIME_SCALE(0.0f);
 		weHaveChangedTimeScale = true;
 	}
-	else if(PLAYER::IS_PLAYER_FREE_AIMING(player) && PLAYER::IS_PLAYER_CONTROL_ON(player)){
-		if(timeSinceAimingBegan == 0){
+	else if (PLAYER::IS_PLAYER_FREE_AIMING(player) && PLAYER::IS_PLAYER_CONTROL_ON(player))
+	{
+		if (timeSinceAimingBegan == 0)
+		{
 			timeSinceAimingBegan = GetTickCount();
 		}
 
-		if((GetTickCount() - timeSinceAimingBegan) < TIME_TO_SLOW_AIM){
+		if ((GetTickCount() - timeSinceAimingBegan) < TIME_TO_SLOW_AIM)
+		{
 			float fullSpeedTime = weHaveChangedTimeScale ? TIME_SPEED_VALUES.at(timeSpeedIndex) : 1.0f;
 			float targetTime = TIME_SPEED_VALUES.at(timeSpeedIndexWhileAiming);
-
-			float progress = ((float) (GetTickCount() - timeSinceAimingBegan) / TIME_TO_SLOW_AIM);
+			
+			float progress = ((float)(GetTickCount() - timeSinceAimingBegan) / TIME_TO_SLOW_AIM);
 
 			float rate = quadratic_time_transition(fullSpeedTime, targetTime, progress);
-
+			
 			GAMEPLAY::SET_TIME_SCALE(rate);
 		}
-		else{
+		else
+		{
 			GAMEPLAY::SET_TIME_SCALE(TIME_SPEED_VALUES.at(timeSpeedIndexWhileAiming));
 			weHaveChangedTimeScale = true;
 		}
 	}
-	else if(PLAYER::IS_PLAYER_CONTROL_ON(player)){
+	else if (PLAYER::IS_PLAYER_CONTROL_ON(player))
+	{
 		GAMEPLAY::SET_TIME_SCALE(TIME_SPEED_VALUES.at(timeSpeedIndex));
 		weHaveChangedTimeScale = true;
 	}
-	else if(weHaveChangedTimeScale){
+	else if (weHaveChangedTimeScale)
+	{
 		GAMEPLAY::SET_TIME_SCALE(1.0f);
 		weHaveChangedTimeScale = false;
 	}
 
-	if(timeSinceAimingBegan > 0 && !(PLAYER::IS_PLAYER_FREE_AIMING(player) && PLAYER::IS_PLAYER_CONTROL_ON(player))){
+	if (timeSinceAimingBegan > 0 && !(PLAYER::IS_PLAYER_FREE_AIMING(player) && PLAYER::IS_PLAYER_CONTROL_ON(player)))
+	{
 		timeSinceAimingBegan = 0;
 	}
 }
