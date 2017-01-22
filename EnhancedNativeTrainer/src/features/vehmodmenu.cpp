@@ -52,15 +52,6 @@ const static int SPECIAL_ID_FOR_TIRE_SMOKE = 99;
 
 const static int SPECIAL_ID_FOR_INTERIOR_COLOUR = 100;
 
-/*
-static Hash SUPPORTS_DIALSANDTRIM[] = { VEHICLE_BANSHEE2, VEHICLE_BUCCANEER2, VEHICLE_CHINO2, VEHICLE_FACTION2, VEHICLE_MOONBEAM2, VEHICLE_SULTANRS, VEHICLE_PRIMO2, VEHICLE_VOODOO };
-
-static Hash LOWRIDER_VEHS[] = { VEHICLE_BUCCANEER2, VEHICLE_CHINO2, VEHICLE_FACTION2, VEHICLE_MOONBEAM2, VEHICLE_PRIMO2, VEHICLE_VOODOO };
-
-static Hash SUPPORTS_TRIM[] = { VEHICLE_SCHAFTER3, VEHICLE_SCHAFTER4, VEHICLE_SCHAFTER5, VEHICLE_SCHAFTER6, VEHICLE_COG55, VEHICLE_COG552, VEHICLE_COGNOSCENTI, VEHICLE_COGNOSCENTI2, VEHICLE_BALLER3, VEHICLE_BALLER4, VEHICLE_BALLER5, VEHICLE_BALLER6 };
-
-*/
-
 std::string getModCategoryName(int i){
 	//To sort out the bike customisation options - else it displays car related headings
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
@@ -788,7 +779,6 @@ bool onconfirm_vehmod_menu(MenuItem<int> choice){
 			break;
 		case -5: // Vehicle interior colors
 			process_interior_colour_menu();
-			//process_dash_colour_menu();
 			break;
 		case  SPECIAL_ID_FOR_TOGGLE_VARIATIONS:
 			//these are toggles, do nothing
@@ -854,22 +844,11 @@ bool process_vehmod_menu(){
 		item4->isLeaf = true;
 		menuItems.push_back(item4);
 
-		Hash currVeh = ENTITY::GET_ENTITY_MODEL(veh);
-		bool supports_trim_cols = false;
-
-		for each (char* vehModel in TRIM_OR_DIAL_VEHS){
-			if(GAMEPLAY::GET_HASH_KEY(vehModel) == currVeh){
-				supports_trim_cols = true;
-			}
-		}
-
-		if(supports_trim_cols){
-			MenuItem<int> *item5 = new MenuItem<int>();
-			item5->caption = "Interior Colors";
-			item5->value = -5;
-			item5->isLeaf = false;
-			menuItems.push_back(item5);
-		}
+		MenuItem<int> *item5 = new MenuItem<int>();
+		item5->caption = "Interior Colors";
+		item5->value = -5;
+		item5->isLeaf = false;
+		menuItems.push_back(item5);
 
 		for(int i = 0; i < 49; i++) //was 30
 		{

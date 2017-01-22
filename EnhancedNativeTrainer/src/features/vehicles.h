@@ -33,8 +33,6 @@ extern const std::vector<PaintColour> PAINTS_METALLIC;
 
 extern const std::vector<std::string> VALUES_SUPERCARS;
 
-extern char* TRIM_OR_DIAL_VEHS[26];
-
 /***
 * METHODS
 */
