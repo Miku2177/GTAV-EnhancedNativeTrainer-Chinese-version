@@ -16,6 +16,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\ui_support\menu_functions.h"
 #include "..\io\config_io.h"
 #include "..\debug\debuglog.h"
+#include <fstream>
 
 bool featureVehInvincible = false;
 bool featureVehInvincibleUpdated = false;
@@ -644,9 +645,11 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		VEHICLE::SET_VEHICLE_DOORS_LOCKED(veh, 4);
 
 	//Prevents player from wearing a helmet
-	if(bPlayerExists && featureWearHelmetOffUpdated){
-		PED::SET_PED_HELMET(playerPed, !featureWearHelmetOff);
-		featureWearHelmetOffUpdated = false;
+	if(bPlayerExists){
+		if(featureWearHelmetOffUpdated || did_player_just_enter_vehicle(playerPed)){
+			PED::SET_PED_HELMET(playerPed, !featureWearHelmetOff);
+			featureWearHelmetOffUpdated = false;
+		}
 	}
 
 	if(bPlayerExists && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)){
@@ -689,6 +692,20 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				featureVehLightsOnUpdated = false;
 			}
 		}
+	}
+
+	// for finding out the colors
+	if(bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && IsKeyJustUp(KeyConfig::KEY_VEH_STOP)){
+		std::ofstream ofs("colors.txt", std::ios::app | std::ios::out);
+		Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+		int primary, secondary, pearlescent, wheel;
+
+		VEHICLE::GET_VEHICLE_COLOURS(veh, &primary, &secondary);
+		VEHICLE::GET_VEHICLE_EXTRA_COLOURS(veh, &pearlescent, &wheel);
+
+		ofs << primary << "\t" << secondary << "\t" << pearlescent << "\t" << wheel << "\r\n";
+
+		ofs.close();
 	}
 }
 
