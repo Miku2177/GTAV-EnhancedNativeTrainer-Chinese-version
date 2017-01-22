@@ -15,8 +15,6 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 int activeLineIndexBodyguards = 0;
 
-int const BODYGUARD_LIMIT = 16;
-
 bool featureBodyguardInvincible = false;
 bool featureBodyguardInvincibleUpdated = false;
 bool featureBodyguardHelmet = false;
@@ -25,17 +23,18 @@ bool featureBodyguardInfAmmo = false;
 bool requireRefreshOfBodyguardMainMenu = false;
 
 //first index is which category, second is position in that category
-int skinTypesBodyguardMenuPositionMemory[2] = {0, 0};
+int skinTypesBodyguardMenuPositionMemory[2] = { 0, 0 };
 
 //first index is which category, second is position in that category
-int skinTypesBodyguardMenuLastConfirmed[2] = {0, 0};
+int skinTypesBodyguardMenuLastConfirmed[2] = { 0, 0 };
 
 std::vector<Ped> spawnedBodyguards;
 
 std::vector<bool *> bodyguardWeaponsToggle[8];
 bool bodyguardWeaponsToggleInitialized = false;
 
-bool process_bodyguard_skins_menu(){
+bool process_bodyguard_skins_menu()
+{
 	std::vector<MenuItem<int>*> menuItems;
 	MenuItem<int> *item;
 
@@ -54,51 +53,58 @@ bool process_bodyguard_skins_menu(){
 	return draw_generic_menu<int>(menuItems, &skinTypesBodyguardMenuPositionMemory[0], "Bodyguard Skins", onconfirm_bodyguard_skins_menu, NULL, NULL);
 }
 
-bool onconfirm_bodyguard_skins_menu(MenuItem<int> choice){
-	switch(choice.value){
-		case 0:
-			return process_player_skins_menu();
-		case 1:
-			return process_npc_skins_menu();
-		default:
-			break;
+bool onconfirm_bodyguard_skins_menu(MenuItem<int> choice)
+{
+	switch (choice.value)
+	{
+	case 0:
+		return process_player_skins_menu();
+	case 1:
+		return process_npc_skins_menu();
+	default:
+		break;
 	}
 	return false;
 }
 
-std::string get_current_model_name(){
+std::string get_current_model_name()
+{
 	std::string value;
-	switch(skinTypesBodyguardMenuLastConfirmed[0]){
-		case 0:
-			value = SKINS_PLAYER_CAPTIONS[skinTypesBodyguardMenuLastConfirmed[1]];
-			break;
-		case 1:
-			value = SKINS_GENERAL_CAPTIONS[skinTypesBodyguardMenuLastConfirmed[1]];
-			break;
-		default:
-			value = SKINS_GENERAL_CAPTIONS[0];
-			break;
+	switch (skinTypesBodyguardMenuLastConfirmed[0])
+	{
+	case 0:
+		value = SKINS_PLAYER_CAPTIONS[skinTypesBodyguardMenuLastConfirmed[1]];
+		break;
+	case 1:
+		value = SKINS_GENERAL_CAPTIONS[skinTypesBodyguardMenuLastConfirmed[1]];
+		break;
+	default:
+		value = SKINS_GENERAL_CAPTIONS[0];
+		break;
 	}
 	return value;
 }
 
-Hash get_current_model_hash(){
+Hash get_current_model_hash()
+{
 	std::string value;
-	switch(skinTypesBodyguardMenuLastConfirmed[0]){
-		case 0:
-			value = SKINS_PLAYER_VALUES[skinTypesBodyguardMenuLastConfirmed[1]];
-			break;
-		case 1:
-			value = SKINS_GENERAL_VALUES[skinTypesBodyguardMenuLastConfirmed[1]];
-			break;
-		default:
-			value = SKINS_GENERAL_VALUES[0];
-			break;
+	switch (skinTypesBodyguardMenuLastConfirmed[0])
+	{
+	case 0:
+		value = SKINS_PLAYER_VALUES[skinTypesBodyguardMenuLastConfirmed[1]];
+		break;
+	case 1:
+		value = SKINS_GENERAL_VALUES[skinTypesBodyguardMenuLastConfirmed[1]];
+		break;
+	default:
+		value = SKINS_GENERAL_VALUES[0];
+		break;
 	}
-	return GAMEPLAY::GET_HASH_KEY((char*) value.c_str());
+	return GAMEPLAY::GET_HASH_KEY((char*)value.c_str());
 }
 
-bool onconfirm_bodyguards_skins_players(MenuItem<std::string> choice){
+bool onconfirm_bodyguards_skins_players(MenuItem<std::string> choice)
+{
 	skinTypesBodyguardMenuPositionMemory[0] = 0;
 	skinTypesBodyguardMenuPositionMemory[1] = choice.currentMenuIndex;
 	skinTypesBodyguardMenuLastConfirmed[0] = 0;
@@ -108,7 +114,8 @@ bool onconfirm_bodyguards_skins_players(MenuItem<std::string> choice){
 	return true;
 }
 
-bool onconfirm_bodyguards_skins_npcs(MenuItem<std::string> choice){
+bool onconfirm_bodyguards_skins_npcs(MenuItem<std::string> choice)
+{
 	skinTypesBodyguardMenuPositionMemory[0] = 1;
 	skinTypesBodyguardMenuPositionMemory[1] = choice.currentMenuIndex;
 	skinTypesBodyguardMenuLastConfirmed[0] = 1;
@@ -119,9 +126,11 @@ bool onconfirm_bodyguards_skins_npcs(MenuItem<std::string> choice){
 	return true;
 }
 
-bool process_player_skins_menu(){
+bool process_player_skins_menu()
+{
 	std::vector<MenuItem<std::string>*> menuItems;
-	for(int i = 0; i < SKINS_PLAYER_CAPTIONS.size(); i++){
+	for (int i = 0; i < SKINS_PLAYER_CAPTIONS.size(); i++)
+	{
 		MenuItem<std::string> *item = new MenuItem<std::string>();
 		item->caption = SKINS_PLAYER_CAPTIONS[i];
 		item->value = SKINS_PLAYER_VALUES[i];
@@ -132,9 +141,11 @@ bool process_player_skins_menu(){
 	return draw_generic_menu<std::string>(menuItems, &skinTypesBodyguardMenuPositionMemory[1], "Player Skins", onconfirm_bodyguards_skins_players, NULL, NULL);
 }
 
-bool process_npc_skins_menu(){
+bool process_npc_skins_menu()
+{
 	std::vector<MenuItem<std::string>*> menuItems;
-	for(int i = 0; i < SKINS_GENERAL_CAPTIONS.size(); i++){
+	for (int i = 0; i < SKINS_GENERAL_CAPTIONS.size(); i++)
+	{
 		MenuItem<std::string> *item = new MenuItem<std::string>();
 		item->caption = SKINS_GENERAL_CAPTIONS[i];
 		item->value = SKINS_GENERAL_VALUES[i];
@@ -145,35 +156,12 @@ bool process_npc_skins_menu(){
 	return draw_generic_menu<std::string>(menuItems, &skinTypesBodyguardMenuPositionMemory[1], "NPC Skins", onconfirm_bodyguards_skins_npcs, NULL, NULL);
 }
 
-bool onconfirm_bodyguard_weapons_category_menu(MenuItem<int> choice){
-	switch(choice.value){
-		case 0:
-			for(int a = 0; a < VOV_WEAPON_CAPTIONS[choice.sortval].size(); a++){
-				*bodyguardWeaponsToggle[choice.sortval].at(a) = !*bodyguardWeaponsToggle[choice.sortval].at(a);
-			}
-			set_status_text(std::string("All bodyguard ") + MENU_WEAPON_CATEGORIES.at(choice.sortval) + std::string(" weapons toggled"));
-			break;
-		default:
-			break;
-	}
-
-	return false;
-}
-
 bool process_bodyguard_weapons_category_menu(int category){
 	std::vector<MenuItem<int> *> menuItems;
-	MenuItem<int> *item;
 	ToggleMenuItem<int> *toggleItem;
 	int index = 0;
 
-	item = new MenuItem<int>();
-	item->caption = "Toggle All Weapons in Category";
-	item->value = index++;
-	item->isLeaf = true;
-	item->sortval = category;
-	menuItems.push_back(item);
-
-	for(auto a : VOV_WEAPON_CAPTIONS[category]){
+	for(auto a: VOV_WEAPON_CAPTIONS[category]){
 		toggleItem = new ToggleMenuItem<int>();
 		toggleItem->caption = a;
 		toggleItem->value = index;
@@ -193,7 +181,7 @@ bool onconfirm_bodyguard_weapons_menu(MenuItem<int> choice){
 	else if(choice.value == cs){
 		for(int a = 0; a < cs; a++){
 			for(int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++){
-				*bodyguardWeaponsToggle[a].at(b) = true;
+				*(bodyguardWeaponsToggle[a].at(b)) = true;
 			}
 		}
 		set_status_text("All bodyguard weapons enabled");
@@ -201,7 +189,7 @@ bool onconfirm_bodyguard_weapons_menu(MenuItem<int> choice){
 	else if(choice.value == cs + 1){
 		for(int a = 0; a < cs; a++){
 			for(int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++){
-				*bodyguardWeaponsToggle[a].at(b) = false;
+				*(bodyguardWeaponsToggle[a].at(b)) = false;
 			}
 		}
 		set_status_text("All bodyguard weapons disabled");
@@ -215,7 +203,7 @@ bool process_bodyguard_weapons_menu(){
 	MenuItem<int> *item;
 	int index = 0;
 
-	for(auto a : MENU_WEAPON_CATEGORIES){
+	for(auto a: MENU_WEAPON_CATEGORIES){
 		item = new MenuItem<int>();
 		item->caption = a;
 		item->value = index++;
@@ -238,14 +226,15 @@ bool process_bodyguard_weapons_menu(){
 	return draw_generic_menu<int>(menuItems, nullptr, "Choose Bodyguard Weapons", onconfirm_bodyguard_weapons_menu, nullptr, nullptr, nullptr);
 }
 
-void dismiss_bodyguards(){
+void dismiss_bodyguards() {
 
-	if(spawnedBodyguards.size() == 0){
+	if (spawnedBodyguards.size() == 0) {
 		set_status_text("You don't have any bodyguards");
 		return;
 	}
 
-	for(int i = 0; i < spawnedBodyguards.size(); i++){
+	for (int i = 0; i < spawnedBodyguards.size(); i++)
+	{
 		ENTITY::SET_ENTITY_INVINCIBLE(spawnedBodyguards[i], false);
 		PED::REMOVE_PED_FROM_GROUP(spawnedBodyguards[i]);
 		AI::CLEAR_PED_TASKS(spawnedBodyguards[i]);
@@ -257,20 +246,23 @@ void dismiss_bodyguards(){
 	set_status_text("Bodyguards dismissed");
 }
 
-void do_spawn_bodyguard(){
+void do_spawn_bodyguard() {
 
 	requireRefreshOfBodyguardMainMenu = true;
 
-	if(spawnedBodyguards.size() >= BODYGUARD_LIMIT){
+	if (spawnedBodyguards.size() >= 7)
+	{
 		set_status_text("Cannot spawn any more bodyguards");
 		return;
 	}
 
 	DWORD bodyGuardModel = get_current_model_hash();
 
-	if(STREAMING::IS_MODEL_IN_CDIMAGE(bodyGuardModel) && STREAMING::IS_MODEL_VALID(bodyGuardModel)){
+	if (STREAMING::IS_MODEL_IN_CDIMAGE(bodyGuardModel) && STREAMING::IS_MODEL_VALID(bodyGuardModel))
+	{
 		STREAMING::REQUEST_MODEL(bodyGuardModel);
-		while(!STREAMING::HAS_MODEL_LOADED(bodyGuardModel)){
+		while (!STREAMING::HAS_MODEL_LOADED(bodyGuardModel))
+		{
 			make_periodic_feature_call();
 			WAIT(0);
 		}
@@ -286,11 +278,13 @@ void do_spawn_bodyguard(){
 		PED::SET_PED_AS_GROUP_MEMBER(bodyGuard, myGroup);
 		PED::SET_PED_NEVER_LEAVES_GROUP(bodyGuard, true);
 
-		if(featureBodyguardInvincible){
+		if (featureBodyguardInvincible)
+		{
 			ENTITY::SET_ENTITY_INVINCIBLE(bodyGuard, true);
 		}
 
-		if(featureBodyguardHelmet){
+		if (featureBodyguardHelmet)
+		{
 			PED::GIVE_PED_HELMET(bodyGuard, 1, 4096, -1);
 		}
 
@@ -302,13 +296,14 @@ void do_spawn_bodyguard(){
 				if(*bodyguardWeaponsToggle[a].at(b)){
 					Hash tmp = GAMEPLAY::GET_HASH_KEY((char *) VOV_WEAPON_VALUES[a].at(b).c_str());
 					if(!WEAPON::HAS_PED_GOT_WEAPON(bodyGuard, tmp, false)){
-						WEAPON::GIVE_WEAPON_TO_PED(bodyGuard, tmp, 100, false, true);
+						WEAPON::GIVE_WEAPON_TO_PED(bodyGuard, tmp, 9999, false, true);
 					}
 				}
 			}
 		}
 
-		if(featureBodyguardInfAmmo){
+		if (featureBodyguardInfAmmo)
+		{
 			WEAPON::SET_PED_INFINITE_AMMO_CLIP(bodyGuard, true);
 		}
 
@@ -318,14 +313,13 @@ void do_spawn_bodyguard(){
 		PED::SET_PED_DEFAULT_COMPONENT_VARIATION(bodyGuard);
 		WAIT(0);
 
-		if(PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)){
+		if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) {
 			Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 
-			for(int i = 0; i < VEHICLE::GET_VEHICLE_MAX_NUMBER_OF_PASSENGERS(veh); i++){
-				if(VEHICLE::IS_VEHICLE_SEAT_FREE(veh, i)){
-					AI::TASK_WARP_PED_INTO_VEHICLE(bodyGuard, veh, i);
-					//PED::SET_PED_INTO_VEHICLE(bodyGuard, veh, i);
-					break;
+			for (int i = 0; i <= VEHICLE::GET_VEHICLE_MAX_NUMBER_OF_PASSENGERS(veh) - 1; i++) {
+				if (VEHICLE::IS_VEHICLE_SEAT_FREE(veh, i)) {
+					AI::TASK_WARP_PED_INTO_VEHICLE(bodyGuard, veh, i); break;
+					PED::SET_PED_INTO_VEHICLE(bodyGuard, veh, i);
 				}
 			}
 		}
@@ -336,23 +330,29 @@ void do_spawn_bodyguard(){
 	return;
 }
 
-void maintain_bodyguards(){
+void maintain_bodyguards()
+{
 	std::vector<Ped>::iterator iter = spawnedBodyguards.begin();
 
-	while(iter != spawnedBodyguards.end()){
-		if(PED::IS_PED_DEAD_OR_DYING(*iter, true)){
+	while (iter != spawnedBodyguards.end())
+	{
+		if (PED::IS_PED_DEAD_OR_DYING(*iter, true))
+		{
 			// clean up PED stuff, for now let's assume the game handles everything and we just worry about our vector
 			iter = spawnedBodyguards.erase(iter);
 			requireRefreshOfBodyguardMainMenu = true;
 		}
-		else{
+		else
+		{
 			++iter;
 		}
 	}
 }
 
-bool process_bodyguard_menu(){
-	do{
+bool process_bodyguard_menu()
+{
+	do
+	{
 		requireRefreshOfBodyguardMainMenu = false;
 		int i = 0;
 
@@ -420,76 +420,91 @@ bool process_bodyguard_menu(){
 
 		draw_generic_menu<int>(menuItems, &activeLineIndexBodyguards, caption, onconfirm_bodyguard_menu, NULL, NULL, bodyguards_main_menu_interrupt);
 	}
-	while(requireRefreshOfBodyguardMainMenu);
+	while (requireRefreshOfBodyguardMainMenu);
 	return false;
 }
 
-bool onconfirm_bodyguard_menu(MenuItem<int> choice){
+bool onconfirm_bodyguard_menu(MenuItem<int> choice)
+{
 	// common variables
 	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
 	Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
-	switch(choice.value){
-		case 0:
-			do_spawn_bodyguard();
-			break;
-		case 1:
-			dismiss_bodyguards();
-			break;
-		case 2:
-			process_bodyguard_skins_menu();
-			break;
-		case 3:
-			process_bodyguard_weapons_menu();
-			break;
-		default:
-			break;
+	switch (choice.value)
+	{
+	case 0:
+		do_spawn_bodyguard();
+		break;
+	case 1:
+		dismiss_bodyguards();
+		break;
+	case 2:
+		process_bodyguard_skins_menu();
+		break;
+	case 3:
+		process_bodyguard_weapons_menu();
+		break;
+	default:
+		break;
 	}
 	return false;
 }
 
-void update_bodyguard_features(){
-	if(featureBodyguardInvincibleUpdated){
-		for(int i = 0; i < spawnedBodyguards.size(); i++){
+void update_bodyguard_features()
+{
+	if (featureBodyguardInvincibleUpdated)
+	{
+		for (int i = 0; i < spawnedBodyguards.size(); i++)
+		{
 			ENTITY::SET_ENTITY_INVINCIBLE(spawnedBodyguards[i], featureBodyguardInvincible);
 		}
 	}
 }
 
-void add_bodyguards_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){
-	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardInvincible", &featureBodyguardInvincible});
-	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardHelmet", &featureBodyguardHelmet});
-	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardInfAmmo", &featureBodyguardInfAmmo});
+void add_bodyguards_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results)
+{
+	results->push_back(FeatureEnabledLocalDefinition{ "featureBodyguardInvincible", &featureBodyguardInvincible });
+	results->push_back(FeatureEnabledLocalDefinition{ "featureBodyguardHelmet", &featureBodyguardHelmet });
+	results->push_back(FeatureEnabledLocalDefinition{ "featureBodyguardInfAmmo", &featureBodyguardInfAmmo });
 }
 
-void add_bodyguards_generic_settings(std::vector<StringPairSettingDBRow>* results){
-	results->push_back(StringPairSettingDBRow{"skinTypesBodyguardMenuPositionMemory0", std::to_string(skinTypesBodyguardMenuPositionMemory[0])});
-	results->push_back(StringPairSettingDBRow{"skinTypesBodyguardMenuPositionMemory1", std::to_string(skinTypesBodyguardMenuPositionMemory[1])});
-	results->push_back(StringPairSettingDBRow{"skinTypesBodyguardMenuLastConfirmed0", std::to_string(skinTypesBodyguardMenuLastConfirmed[0])});
-	results->push_back(StringPairSettingDBRow{"skinTypesBodyguardMenuLastConfirmed1", std::to_string(skinTypesBodyguardMenuLastConfirmed[1])});
+void add_bodyguards_generic_settings(std::vector<StringPairSettingDBRow>* results)
+{
+	results->push_back(StringPairSettingDBRow{ "skinTypesBodyguardMenuPositionMemory0", std::to_string(skinTypesBodyguardMenuPositionMemory[0]) });
+	results->push_back(StringPairSettingDBRow{ "skinTypesBodyguardMenuPositionMemory1", std::to_string(skinTypesBodyguardMenuPositionMemory[1]) });
+	results->push_back(StringPairSettingDBRow{ "skinTypesBodyguardMenuLastConfirmed0", std::to_string(skinTypesBodyguardMenuLastConfirmed[0]) });
+	results->push_back(StringPairSettingDBRow{ "skinTypesBodyguardMenuLastConfirmed1", std::to_string(skinTypesBodyguardMenuLastConfirmed[1]) });
 }
 
-void handle_generic_settings_bodyguards(std::vector<StringPairSettingDBRow>* settings){
-	for(int i = 0; i < settings->size(); i++){
+void handle_generic_settings_bodyguards(std::vector<StringPairSettingDBRow>* settings)
+{
+	for (int i = 0; i < settings->size(); i++)
+	{
 		StringPairSettingDBRow setting = settings->at(i);
-		if(setting.name.compare("skinTypesBodyguardMenuPositionMemory0") == 0){
+		if (setting.name.compare("skinTypesBodyguardMenuPositionMemory0") == 0)
+		{
 			skinTypesBodyguardMenuPositionMemory[0] = stoi(setting.value);
 		}
-		else if(setting.name.compare("skinTypesBodyguardMenuPositionMemory1") == 0){
+		else if (setting.name.compare("skinTypesBodyguardMenuPositionMemory1") == 0)
+		{
 			skinTypesBodyguardMenuPositionMemory[1] = stoi(setting.value);
 		}
-		else if(setting.name.compare("skinTypesBodyguardMenuLastConfirmed0") == 0){
+		else if (setting.name.compare("skinTypesBodyguardMenuLastConfirmed0") == 0)
+		{
 			skinTypesBodyguardMenuLastConfirmed[0] = stoi(setting.value);
 		}
-		else if(setting.name.compare("skinTypesBodyguardMenuLastConfirmed1") == 0){
+		else if (setting.name.compare("skinTypesBodyguardMenuLastConfirmed1") == 0)
+		{
 			skinTypesBodyguardMenuLastConfirmed[1] = stoi(setting.value);
 		}
 	}
 }
 
-bool bodyguards_main_menu_interrupt(){
-	if(requireRefreshOfBodyguardMainMenu){
+bool bodyguards_main_menu_interrupt()
+{
+	if (requireRefreshOfBodyguardMainMenu)
+	{
 		return true;
 	}
 	return false;

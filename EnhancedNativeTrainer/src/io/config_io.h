@@ -18,8 +18,9 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 #include "keyboard.h"
 
-class KeyConfig{
-	public:
+class KeyConfig
+{
+public:
 
 	static const std::string KEY_TOGGLE_MAIN_MENU;
 	static const std::string KEY_TOGGLE_AIRBRAKE;
@@ -71,7 +72,8 @@ class KeyConfig{
 	static const std::string KEY_HOT_8;
 	static const std::string KEY_HOT_9;
 
-	inline KeyConfig(int code){
+	inline KeyConfig(int code)
+	{
 		this->keyCode = code;
 	};
 
@@ -81,14 +83,16 @@ class KeyConfig{
 	bool modShift = false;
 };
 
-struct ButtonsWithNames{
+struct ButtonsWithNames
+{
 	std::string name;
 	WORD buttonCode;
 	bool isAnalog;
 };
 
-class ControllerButtonConfig{
-	public:
+class ControllerButtonConfig
+{
+public:
 	static const std::string CONTROLLER_BTN_X;
 	static const std::string CONTROLLER_BTN_Y;
 	static const std::string CONTROLLER_BTN_A;
@@ -115,7 +119,8 @@ class ControllerButtonConfig{
 	static const std::string CONTROLLER_RSTICK_CLICK;
 	static const std::string CONTROLLER_NOT_BOUND;
 
-	inline ControllerButtonConfig(){
+	inline ControllerButtonConfig()
+	{
 	};
 
 	void add_button(char* name);
@@ -126,8 +131,9 @@ class ControllerButtonConfig{
 };
 
 /**A class to hold the current key bindings.*/
-class KeyInputConfig{
-	public:
+class KeyInputConfig
+{
+public:
 	KeyInputConfig();
 
 	virtual ~KeyInputConfig();
@@ -150,14 +156,13 @@ class KeyInputConfig{
 };
 
 /**A class to hold all the user settings.*/
-class TrainerConfig{
-	public:
+class TrainerConfig
+{
+public:
 	TrainerConfig();
-	KeyInputConfig* get_key_config(){
-		return keyConfig;
-	}
+	KeyInputConfig* get_key_config() { return keyConfig;  }
 
-	private:
+private:
 	KeyInputConfig* keyConfig;
 };
 
@@ -178,6 +183,4 @@ Write the user config out to an INI file.
 void write_config_ini_file();
 
 /**Get the current config object.*/
-inline TrainerConfig* get_config(){
-	return config;
-}
+inline TrainerConfig* get_config() { return config;  }

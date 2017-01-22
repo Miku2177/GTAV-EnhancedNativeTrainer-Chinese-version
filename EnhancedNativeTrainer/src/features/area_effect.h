@@ -22,8 +22,9 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include <set>
 #include <queue>
 
-class ENTTrackedPedestrian{
-	public:
+class ENTTrackedPedestrian
+{
+public:
 
 	Ped ped = 0;
 	bool angryApplied = false;
@@ -35,54 +36,67 @@ class ENTTrackedPedestrian{
 	bool missionised = true;
 	bool madeInvincible = false;
 
-	inline ENTTrackedPedestrian(Ped ped){
+	inline ENTTrackedPedestrian(Ped ped)
+	{
 		this->ped = ped;
 	}
 
-	inline void missionise(){
+	inline void missionise()
+	{
 		missionised = true;
-		if(ENTITY::DOES_ENTITY_EXIST(ped)){
+		if (ENTITY::DOES_ENTITY_EXIST(ped))
+		{
 			ENTITY::SET_ENTITY_AS_MISSION_ENTITY(ped, true, true);
 		}
 	}
 
-	inline void demissionise(){
-		if(missionised && ENTITY::DOES_ENTITY_EXIST(ped)){
+	inline void demissionise()
+	{
+		if (missionised && ENTITY::DOES_ENTITY_EXIST(ped))
+		{
 			ENTITY::SET_ENTITY_AS_MISSION_ENTITY(ped, false, true);
 			ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&ped);
 		}
 		missionised = false;
 	}
 
-	inline ~ENTTrackedPedestrian(){
-		if(this->missionised){
+	inline ~ENTTrackedPedestrian()
+	{
+		if (this->missionised)
+		{
 			demissionise();
 		}
 	}
 
-	protected:
+protected:
 
 };
 
-class ENTTrackedVehicle{
-	public:
+class ENTTrackedVehicle
+{
+public:
 
 	Vehicle vehicle;
 	bool missionised = false;
 
-	inline ENTTrackedVehicle(Vehicle vehicle){
+	inline ENTTrackedVehicle(Vehicle vehicle)
+	{
 		this->vehicle = vehicle;
 	}
 
-	inline void missionise(){
+	inline void missionise()
+	{
 		missionised = true;
-		if(ENTITY::DOES_ENTITY_EXIST(vehicle)){
+		if (ENTITY::DOES_ENTITY_EXIST(vehicle))
+		{
 			ENTITY::SET_ENTITY_AS_MISSION_ENTITY(vehicle, true, true);
 		}
 	}
 
-	inline void demissionise(){
-		if(missionised && ENTITY::DOES_ENTITY_EXIST(vehicle)){
+	inline void demissionise()
+	{
+		if (missionised && ENTITY::DOES_ENTITY_EXIST(vehicle))
+		{
 			ENTITY::SET_ENTITY_AS_MISSION_ENTITY(vehicle, false, true);
 			ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&vehicle);
 		}
@@ -90,13 +104,15 @@ class ENTTrackedVehicle{
 	}
 
 
-	inline ~ENTTrackedVehicle(){
-		if(this->missionised){
+	inline ~ENTTrackedVehicle()
+	{
+		if (this->missionised)
+		{
 			demissionise();
 		}
 	}
 
-	protected:
+protected:
 
 };
 
@@ -110,21 +126,21 @@ const std::vector<std::vector<std::string>> VOV_PED_SKINS{ {}, PED_SKINS_ARMY, P
 
 const std::vector<std::string> PED_SKIN_TITLES{ "Unchanged", "Army", "Strippers", "Zombies" };*/
 
-const std::vector<std::string> PED_WEAPONS_MELEE{"WEAPON_KNIFE", "WEAPON_NIGHTSTICK", "WEAPON_HAMMER", "WEAPON_BAT", "WEAPON_GOLFCLUB", "WEAPON_CROWBAR", "WEAPON_BOTTLE", "WEAPON_DAGGER", "WEAPON_HATCHET", "WEAPON_KNUCKLE", "WEAPON_MACHETE", "WEAPON_FLASHLIGHT", "WEAPON_SWITCHBLADE"};
+const std::vector<std::string> PED_WEAPONS_MELEE{ "WEAPON_KNIFE", "WEAPON_NIGHTSTICK", "WEAPON_HAMMER", "WEAPON_BAT", "WEAPON_GOLFCLUB", "WEAPON_CROWBAR", "WEAPON_BOTTLE", "WEAPON_DAGGER", "WEAPON_HATCHET", "WEAPON_KNUCKLE", "WEAPON_MACHETE", "WEAPON_FLASHLIGHT", "WEAPON_SWITCHBLADE" };
 
-const std::vector<std::string> PED_WEAPONS_SMALL{"WEAPON_PISTOL", "WEAPON_COMBATPISTOL", "WEAPON_APPISTOL", "WEAPON_PISTOL50", "WEAPON_SNSPISTOL", "WEAPON_HEAVYPISTOL", "WEAPON_VINTAGEPISTOL", "WEAPON_STUNGUN", "WEAPON_FLAREGUN", "WEAPON_MARKSMANPISTOL", "WEAPON_REVOLVER"};
+const std::vector<std::string> PED_WEAPONS_SMALL{ "WEAPON_PISTOL", "WEAPON_COMBATPISTOL", "WEAPON_APPISTOL", "WEAPON_PISTOL50", "WEAPON_SNSPISTOL", "WEAPON_HEAVYPISTOL", "WEAPON_VINTAGEPISTOL", "WEAPON_STUNGUN", "WEAPON_FLAREGUN", "WEAPON_MARKSMANPISTOL", "WEAPON_REVOLVER" };
 
-const std::vector<std::string> PED_WEAPONS_RIFLES{"WEAPON_ASSAULTRIFLE", "WEAPON_CARBINERIFLE", "WEAPON_ADVANCEDRIFLE", "WEAPON_SPECIALCARBINE", "WEAPON_COMPACTRIFLE"};
+const std::vector<std::string> PED_WEAPONS_RIFLES{ "WEAPON_ASSAULTRIFLE", "WEAPON_CARBINERIFLE", "WEAPON_ADVANCEDRIFLE", "WEAPON_SPECIALCARBINE", "WEAPON_COMPACTRIFLE" };
 
-const std::vector<std::string> PED_WEAPONS_HEAVY{"WEAPON_MINIGUN", "WEAPON_HEAVYSNIPER", "WEAPON_MG", "WEAPON_COMBATMG"};
+const std::vector<std::string> PED_WEAPONS_HEAVY{ "WEAPON_MINIGUN", "WEAPON_HEAVYSNIPER", "WEAPON_MG", "WEAPON_COMBATMG" };
 
-const std::vector<std::string> PED_WEAPONS_EXPLOSIVES{"WEAPON_GRENADELAUNCHER", "WEAPON_RPG", "WEAPON_RAILGUN", "WEAPON_HOMINGLAUNCHER", "WEAPON_GRENADE", "WEAPON_STICKYBOMB", "WEAPON_PROXMINE", "WEAPON_SMOKEGRENADE", "WEAPON_MOLOTOV"};
+const std::vector<std::string> PED_WEAPONS_EXPLOSIVES{ "WEAPON_GRENADELAUNCHER", "WEAPON_RPG", "WEAPON_RAILGUN", "WEAPON_HOMINGLAUNCHER", "WEAPON_GRENADE", "WEAPON_STICKYBOMB", "WEAPON_PROXMINE", "WEAPON_SMOKEGRENADE", "WEAPON_MOLOTOV" };
 
-const std::vector<std::string> PED_WEAPONS_RANDOM{"WEAPON_KNIFE", "WEAPON_NIGHTSTICK", "WEAPON_HAMMER", "WEAPON_BAT", "WEAPON_GOLFCLUB", "WEAPON_CROWBAR", "WEAPON_BOTTLE", "WEAPON_DAGGER", "WEAPON_HATCHET", "WEAPON_KNUCKLE", "WEAPON_MACHETE", "WEAPON_FLASHLIGHT", "WEAPON_SWITCHBLADE", "WEAPON_PISTOL", "WEAPON_COMBATPISTOL", "WEAPON_APPISTOL", "WEAPON_PISTOL50", "WEAPON_SNSPISTOL", "WEAPON_HEAVYPISTOL", "WEAPON_VINTAGEPISTOL", "WEAPON_STUNGUN", "WEAPON_FLAREGUN", "WEAPON_MARKSMANPISTOL", "WEAPON_REVOLVER", "WEAPON_ASSAULTRIFLE", "WEAPON_CARBINERIFLE", "WEAPON_ADVANCEDRIFLE", "WEAPON_SPECIALCARBINE", "WEAPON_BULLPUPRIFLE", "WEAPON_COMPACTRIFLE", "WEAPON_MINIGUN", "WEAPON_HEAVYSNIPER", "WEAPON_MG", "WEAPON_COMBATMG", "WEAPON_GRENADELAUNCHER", "WEAPON_RPG", "WEAPON_RAILGUN", "WEAPON_HOMINGLAUNCHER", "WEAPON_GRENADE", "WEAPON_STICKYBOMB", "WEAPON_PROXMINE", "WEAPON_SMOKEGRENADE", "WEAPON_MOLOTOV"};
+const std::vector<std::string> PED_WEAPONS_RANDOM{ "WEAPON_KNIFE", "WEAPON_NIGHTSTICK", "WEAPON_HAMMER", "WEAPON_BAT", "WEAPON_GOLFCLUB", "WEAPON_CROWBAR", "WEAPON_BOTTLE", "WEAPON_DAGGER", "WEAPON_HATCHET", "WEAPON_KNUCKLE", "WEAPON_MACHETE", "WEAPON_FLASHLIGHT", "WEAPON_SWITCHBLADE", "WEAPON_PISTOL", "WEAPON_COMBATPISTOL", "WEAPON_APPISTOL", "WEAPON_PISTOL50", "WEAPON_SNSPISTOL", "WEAPON_HEAVYPISTOL", "WEAPON_VINTAGEPISTOL", "WEAPON_STUNGUN", "WEAPON_FLAREGUN", "WEAPON_MARKSMANPISTOL", "WEAPON_REVOLVER", "WEAPON_ASSAULTRIFLE", "WEAPON_CARBINERIFLE", "WEAPON_ADVANCEDRIFLE", "WEAPON_SPECIALCARBINE", "WEAPON_BULLPUPRIFLE", "WEAPON_COMPACTRIFLE", "WEAPON_MINIGUN", "WEAPON_HEAVYSNIPER", "WEAPON_MG", "WEAPON_COMBATMG", "WEAPON_GRENADELAUNCHER", "WEAPON_RPG", "WEAPON_RAILGUN", "WEAPON_HOMINGLAUNCHER", "WEAPON_GRENADE", "WEAPON_STICKYBOMB", "WEAPON_PROXMINE", "WEAPON_SMOKEGRENADE", "WEAPON_MOLOTOV" };
 
-const std::vector<std::vector<std::string>> VOV_PED_WEAPONS{{}, PED_WEAPONS_MELEE, PED_WEAPONS_SMALL, PED_WEAPONS_RIFLES, PED_WEAPONS_HEAVY, PED_WEAPONS_EXPLOSIVES, PED_WEAPONS_RANDOM};
+const std::vector<std::vector<std::string>> VOV_PED_WEAPONS{ {}, PED_WEAPONS_MELEE, PED_WEAPONS_SMALL, PED_WEAPONS_RIFLES, PED_WEAPONS_HEAVY, PED_WEAPONS_EXPLOSIVES, PED_WEAPONS_RANDOM };
 
-const std::vector<std::string> PED_WEAPON_TITLES{"None (Normal)", "Melee", "Small Arms", "Rifles", "Heavy", "Explosives", "Random"};
+const std::vector<std::string> PED_WEAPON_TITLES{ "None (Normal)", "Melee", "Small Arms", "Rifles", "Heavy", "Explosives", "Random" };
 
 bool onconfirm_areaeffect_ped_menu(MenuItem<int> choice);
 

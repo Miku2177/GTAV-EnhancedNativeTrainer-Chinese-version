@@ -99,6 +99,8 @@ void update_features();
 
 void reset_globals();
 
+void update_nearby_peds(Ped playerPed, int count);
+
 void set_all_nearby_peds_to_calm();
 
 //DB persistent stuff

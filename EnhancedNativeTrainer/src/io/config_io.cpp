@@ -19,7 +19,8 @@ BSTR keyconf_bstr;
 TrainerConfig *config = NULL;
 
 /**Read the XML config file. Currently contains keyboard choices.*/
-void read_config_file(){
+void read_config_file()
+{
 	TrainerConfig *result = new TrainerConfig();
 
 	CoInitialize(NULL);
@@ -27,7 +28,8 @@ void read_config_file(){
 	//read XML
 	MSXML2::IXMLDOMDocumentPtr spXMLDoc;
 	spXMLDoc.CreateInstance(__uuidof(MSXML2::DOMDocument60));
-	if(!spXMLDoc->load("ent-config.xml")){
+	if (!spXMLDoc->load("ent-config.xml"))
+	{
 		write_text_to_log_file("No config found, using defaults");
 		config = result; //the default config
 	}
@@ -35,7 +37,8 @@ void read_config_file(){
 	IXMLDOMNodeListPtr nodes = spXMLDoc->selectNodes(L"//ent-config/keys/key");
 	long length;
 	nodes->get_length(&length);
-	for(int i = 0; i < length; i++){
+	for (int i = 0; i < length; i++)
+	{
 		IXMLDOMNode *node;
 		nodes->get_item(i, &node);
 		IXMLDOMNamedNodeMap *attribs;
@@ -50,46 +53,55 @@ void read_config_file(){
 		bool modAlt = false;
 		bool modShift = false;
 
-		for(long j = 0; j < length_attribs; j++){
+		for (long j = 0; j < length_attribs; j++)
+		{
 			IXMLDOMNode *attribNode;
 			attribs->get_item(j, &attribNode);
 			attribNode->get_nodeName(&keyconf_bstr);
-			if(wcscmp(keyconf_bstr, L"function") == 0){
+			if (wcscmp(keyconf_bstr, L"function") == 0)
+			{
 				VARIANT var;
 				VariantInit(&var);
 				attribNode->get_nodeValue(&var);
 				attrib_key_func = _com_util::ConvertBSTRToString(V_BSTR(&var));
 			}
-			else if(wcscmp(keyconf_bstr, L"value") == 0){
+			else if (wcscmp(keyconf_bstr, L"value") == 0)
+			{
 				VARIANT var;
 				VariantInit(&var);
 				attribNode->get_nodeValue(&var);
 				attrib_key_value = _com_util::ConvertBSTRToString(V_BSTR(&var));
 			}
-			else if(wcscmp(keyconf_bstr, L"modCtrl") == 0){
+			else if (wcscmp(keyconf_bstr, L"modCtrl") == 0)
+			{
 				VARIANT var;
 				VariantInit(&var);
 				attribNode->get_nodeValue(&var);
 				char* value = _com_util::ConvertBSTRToString(V_BSTR(&var));
-				if(value != 0 && strcmpi(value, "true") == 0){
+				if (value != 0 && strcmpi(value, "true") == 0)
+				{
 					modCtrl = true;
 				}
 			}
-			else if(wcscmp(keyconf_bstr, L"modAlt") == 0){
+			else if (wcscmp(keyconf_bstr, L"modAlt") == 0)
+			{
 				VARIANT var;
 				VariantInit(&var);
 				attribNode->get_nodeValue(&var);
-				char* value = _com_util::ConvertBSTRToString(V_BSTR(&var));
-				if(value != 0 && strcmpi(value, "true") == 0){
+				char* value =_com_util::ConvertBSTRToString(V_BSTR(&var));
+				if (value != 0 && strcmpi(value, "true") == 0)
+				{
 					modAlt = true;
 				}
 			}
-			else if(wcscmp(keyconf_bstr, L"modShift") == 0){
+			else if (wcscmp(keyconf_bstr, L"modShift") == 0)
+			{
 				VARIANT var;
 				VariantInit(&var);
 				attribNode->get_nodeValue(&var);
 				char* value = _com_util::ConvertBSTRToString(V_BSTR(&var));
-				if(value != 0 && strcmpi(value, "true") == 0){
+				if (value != 0 && strcmpi(value, "true") == 0)
+				{
 					modShift = true;
 				}
 			}
@@ -97,11 +109,12 @@ void read_config_file(){
 			SysFreeString(keyconf_bstr);
 			attribNode->Release();
 		}
-
-		if(attrib_key_func != NULL && attrib_key_value != NULL){
+		
+		if (attrib_key_func != NULL && attrib_key_value != NULL)
+		{
 			result->get_key_config()->set_key(attrib_key_func, attrib_key_value, modCtrl, modAlt, modShift);
 		}
-
+		
 		delete attrib_key_func;
 		delete attrib_key_value;
 
@@ -111,7 +124,8 @@ void read_config_file(){
 
 	nodes = spXMLDoc->selectNodes(L"//ent-config/keys/controller");
 	nodes->get_length(&length);
-	for(int i = 0; i < length; i++){
+	for (int i = 0; i < length; i++)
+	{
 		IXMLDOMNode *node;
 		nodes->get_item(i, &node);
 		IXMLDOMNamedNodeMap *attribs;
@@ -122,11 +136,13 @@ void read_config_file(){
 
 		char *attrib_control_func = NULL;
 
-		for(long j = 0; j < length_attribs; j++){
+		for (long j = 0; j < length_attribs; j++)
+		{
 			IXMLDOMNode *attribNode;
 			attribs->get_item(j, &attribNode);
 			attribNode->get_nodeName(&keyconf_bstr);
-			if(wcscmp(keyconf_bstr, L"function") == 0){
+			if (wcscmp(keyconf_bstr, L"function") == 0)
+			{
 				VARIANT var;
 				VariantInit(&var);
 				attribNode->get_nodeValue(&var);
@@ -140,11 +156,13 @@ void read_config_file(){
 
 		IXMLDOMNodeListPtr children;
 		HRESULT hr = node->get_childNodes(&children);
-		if(hr == S_OK){
+		if (hr == S_OK)
+		{
 			long childLength;
 			children->get_length(&childLength);
 
-			for(long j = 0; j < childLength; j++){
+			for (long j = 0; j < childLength; j++)
+			{
 				IXMLDOMNode *child;
 				children->get_item(j, &child);
 				IXMLDOMNamedNodeMap *childAttribs;
@@ -155,11 +173,13 @@ void read_config_file(){
 
 				char *attrib_control_button = NULL;
 
-				for(long k = 0; k < length_attribs; k++){
+				for (long k = 0; k < length_attribs; k++)
+				{
 					IXMLDOMNode *attribNode;
 					childAttribs->get_item(k, &attribNode);
 					attribNode->get_nodeName(&keyconf_bstr);
-					if(wcscmp(keyconf_bstr, L"value") == 0){
+					if (wcscmp(keyconf_bstr, L"value") == 0)
+					{
 						VARIANT var;
 						VariantInit(&var);
 						attribNode->get_nodeValue(&var);
@@ -173,7 +193,8 @@ void read_config_file(){
 			}
 		}
 
-		if(attrib_control_func != NULL){
+		if (attrib_control_func != NULL)
+		{
 			result->get_key_config()->set_control(attrib_control_func, buttonConfig);
 		}
 
@@ -186,7 +207,7 @@ void read_config_file(){
 	//nodes->Release(); //don't do this, it crashes on exit
 	spXMLDoc.Release();
 	CoUninitialize();
-
+	
 	config = result;
 }
 
@@ -199,9 +220,7 @@ void read_config_ini_file(){
 	tmp.close();
 
 	if(notexist){
-		write_text_to_log_file("INI file does not exist.");
-		write_text_to_log_file("Using default settings.");
-		write_text_to_log_file("INI file will be created upon saving in-game.");
+		write_text_to_log_file("INI file does not exist.\nUsing default settings.\nINI file will be created upon saving in-game.");
 		return;
 	}
 
@@ -243,7 +262,7 @@ void write_config_ini_file(){
 			result.push_back(std::string(";;;; Enhanced Native Trainer: Configuration INI File (Begin) ;;;;\n\n;;; (Delete this file to revert to defaults) ;;;\n"));
 
 			result.push_back(std::string(";; Menu Colors (Begin) ;;\n;\tFollows the RGBA color system, 0 ~ 255 for each component of a color;"));
-			for(auto a : lines){
+			for(auto a: lines){
 				for(int b = 0; b < ENTColor::colsVarsNum; b++){
 					if(a.compare(0, ENTColor::colsVarsReverse.at(b).length() + 1, (ENTColor::colsVarsReverse.at(b) + tmpk[0])) == 0){
 						result.push_back(std::string("; ") + ENTColor::colsCaptions[b] + std::string(" ;"));
@@ -258,7 +277,7 @@ void write_config_ini_file(){
 
 			ini.open(file, std::ofstream::out | std::ofstream::trunc);
 			if(ini.is_open()){
-				for(auto a : result){
+				for(auto a: result){
 					ini << a << std::endl;
 				}
 
@@ -268,13 +287,15 @@ void write_config_ini_file(){
 	}
 }
 
-void KeyInputConfig::set_key(char* function, char* keyName, bool modCtrl, bool modAlt, bool modShift){
+void KeyInputConfig::set_key(char* function, char* keyName, bool modCtrl, bool modAlt, bool modShift)
+{
 	std::ostringstream ss;
 	ss << "Key function " << function << " being given " << keyName;
 	write_text_to_log_file(ss.str());
 
 	int vkID = keyNameToVal(keyName);
-	if(vkID == -1){
+	if (vkID == -1)
+	{
 		ss.str(""); ss.clear();
 		ss << "Key function " << keyName << " didn't correspond to a value";
 		write_text_to_log_file(ss.str());
@@ -282,7 +303,8 @@ void KeyInputConfig::set_key(char* function, char* keyName, bool modCtrl, bool m
 	}
 
 	auto match = keyConfigs.find(function);
-	if(match != keyConfigs.end()){
+	if (match != keyConfigs.end())
+	{
 		KeyConfig* oldConfig = match->second;
 		match->second = new KeyConfig(vkID);
 		match->second->modCtrl = modCtrl;
@@ -290,40 +312,47 @@ void KeyInputConfig::set_key(char* function, char* keyName, bool modCtrl, bool m
 		match->second->modShift = modShift;
 		delete oldConfig;
 	}
-	else{
+	else
+	{
 		ss.str(""); ss.clear();
 		ss << "Key function " << function << " didn't correspond to a known function";
 		write_text_to_log_file(ss.str());
 	}
 };
 
-void KeyInputConfig::set_control(char* function, ControllerButtonConfig* config){
+void KeyInputConfig::set_control(char* function, ControllerButtonConfig* config)
+{
 	std::ostringstream ss;
 	ss << "Controller function " << function << " being set, has " << config->buttonCodes.size() << " buttons within";
 	write_text_to_log_file(ss.str());
 
-	for each (ButtonsWithNames btn in config->buttonCodes){
+	for each (ButtonsWithNames btn in config->buttonCodes)
+	{
 		std::ostringstream ss;
 		ss << "\tIncluded button " << btn.name << " and value " << btn.buttonCode;
 		write_text_to_log_file(ss.str());
 	}
 
 	auto match = controllerConfigs.find(function);
-	if(match != controllerConfigs.end()){
+	if (match != controllerConfigs.end())
+	{
 		ControllerButtonConfig* oldConfig = match->second;
 		match->second = config;
 		delete oldConfig;
 	}
-	else{
+	else
+	{
 		ss.str(""); ss.clear();
 		ss << "Controller function " << function << " didn't correspond to a known function";
 		write_text_to_log_file(ss.str());
 	}
 }
 
-bool KeyInputConfig::is_hotkey_assigned(int i){
+bool KeyInputConfig::is_hotkey_assigned(int i)
+{
 	std::string target;
-	switch(i){
+	switch (i)
+	{
 		case 1:
 			target = KeyConfig::KEY_HOT_1;
 			break;
@@ -356,17 +385,20 @@ bool KeyInputConfig::is_hotkey_assigned(int i){
 	}
 
 	KeyConfig* conf = this->keyConfigs[target];
-	if(conf == NULL || conf->keyCode == 0){
+	if (conf == NULL || conf->keyCode == 0)
+	{
 		return false;
 	}
 	return true;
 }
 
-TrainerConfig::TrainerConfig(){
+TrainerConfig::TrainerConfig()
+{
 	this->keyConfig = new KeyInputConfig();
 }
 
-KeyInputConfig::KeyInputConfig(){
+KeyInputConfig::KeyInputConfig()
+{
 	this->keyConfigs[KeyConfig::KEY_TOGGLE_MAIN_MENU] = new KeyConfig(VK_F4);
 
 	this->keyConfigs[KeyConfig::KEY_MENU_UP] = new KeyConfig(VK_NUMPAD8);
@@ -496,36 +528,44 @@ KeyInputConfig::KeyInputConfig(){
 	this->controllerConfigs[KeyConfig::KEY_OBJECTPLACER_FREEZE_POSITION]->add_button(ControllerButtonConfig::CONTROLLER_BTN_Y);
 }
 
-KeyInputConfig::~KeyInputConfig(){
-	for each (std::pair<std::string, KeyConfig*> conf in this->keyConfigs){
+KeyInputConfig::~KeyInputConfig()
+{
+	for each (std::pair<std::string, KeyConfig*> conf in this->keyConfigs)
+	{
 		delete conf.second;
 	}
 	keyConfigs.clear();
 }
 
-KeyConfig* KeyInputConfig::get_key(std::string function){
+KeyConfig* KeyInputConfig::get_key(std::string function)
+{
 	auto match = keyConfigs.find(function);
-	if(match != keyConfigs.end()){
+	if (match != keyConfigs.end())
+	{
 		return match->second;
 	}
 	return NULL;
 }
 
-ControllerButtonConfig* KeyInputConfig::get_controller_button(std::string function){
+ControllerButtonConfig* KeyInputConfig::get_controller_button(std::string function)
+{
 	auto match = controllerConfigs.find(function);
-	if(match != controllerConfigs.end()){
+	if (match != controllerConfigs.end())
+	{
 		return match->second;
 	}
 	return NULL;
 }
 
-void ControllerButtonConfig::add_button(char* name){
+void ControllerButtonConfig::add_button(char* name)
+{
 	ButtonsWithNames btn = buttonNameToVal(name);
 	this->buttonCodes.push_back(btn);
 }
 
-void ControllerButtonConfig::add_button(std::string name){
-	ButtonsWithNames btn = buttonNameToVal((char*) name.c_str());
+void ControllerButtonConfig::add_button(std::string name)
+{
+	ButtonsWithNames btn = buttonNameToVal((char*)name.c_str());
 	this->buttonCodes.push_back(btn);
 }
 

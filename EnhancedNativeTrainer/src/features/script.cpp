@@ -194,7 +194,7 @@ void update_features(){
 		game_frame_num = 0;
 	}
 
-	if(game_frame_num % 3600 == 0){
+	if(game_frame_num % 1000 == 0){
 		DWORD myThreadID;
 		HANDLE myHandle = CreateThread(0, 0, save_settings_thread, 0, 0, &myThreadID);
 		CloseHandle(myHandle);
@@ -248,9 +248,8 @@ void update_features(){
 
 	// player invincible
 	if(featurePlayerInvincibleUpdated){
-		if(bPlayerExists && !featurePlayerInvincible){
+		if(bPlayerExists && !featurePlayerInvincible)
 			PLAYER::SET_PLAYER_INVINCIBLE(player, FALSE);
-		}
 		featurePlayerInvincibleUpdated = false;
 	}
 
@@ -288,52 +287,45 @@ void update_features(){
 
 	// player special ability
 	if(featurePlayerUnlimitedAbility){
-		if(bPlayerExists){
+		if(bPlayerExists)
 			PLAYER::SPECIAL_ABILITY_FILL_METER(player, 1);
-		}
 	}
 
 	// player no noise
 	if(featurePlayerNoNoiseUpdated){
-		if(bPlayerExists && !featurePlayerNoNoise){
+		if(bPlayerExists && !featurePlayerNoNoise)
 			PLAYER::SET_PLAYER_NOISE_MULTIPLIER(player, 1.0);
-		}
 		featurePlayerNoNoiseUpdated = false;
 	}
-	if(featurePlayerNoNoise){
+	if(featurePlayerNoNoise)
 		PLAYER::SET_PLAYER_NOISE_MULTIPLIER(player, 0.0);
-	}
 
 	// player fast swim
 	if(featurePlayerFastSwimUpdated){
-		if(bPlayerExists && !featurePlayerFastSwim){
+		if(bPlayerExists && !featurePlayerFastSwim)
 			PLAYER::SET_SWIM_MULTIPLIER_FOR_PLAYER(player, 1.0);
-		}
 		featurePlayerFastSwimUpdated = false;
 	}
-	if(featurePlayerFastSwim){
+	if(featurePlayerFastSwim)
 		PLAYER::SET_SWIM_MULTIPLIER_FOR_PLAYER(player, 1.49);
-	}
 
 	// player fast run
 	if(featurePlayerFastRunUpdated){
-		if(bPlayerExists && !featurePlayerFastRun){
+		if(bPlayerExists && !featurePlayerFastRun)
 			PLAYER::SET_RUN_SPRINT_MULTIPLIER_FOR_PLAYER(player, 1.0);
-		}
 		featurePlayerFastRunUpdated = false;
 	}
-	if(featurePlayerFastRun){
+	if(featurePlayerFastRun)
 		PLAYER::SET_RUN_SPRINT_MULTIPLIER_FOR_PLAYER(player, 1.49);
-	}
 
 	// player super jump
 	if(featurePlayerSuperJump){
-		if(bPlayerExists){
+		if(bPlayerExists)
 			GAMEPLAY::SET_SUPER_JUMP_THIS_FRAME(player);
-		}
 	}
 
 	//No Radgoll
+
 	if(featureNoRagdoll){
 		if(bPlayerExists){
 			PED::SET_PED_CAN_RAGDOLL(playerPed, 0);
@@ -353,9 +345,8 @@ void update_features(){
 	if(featurePlayerInvisibleUpdated){
 		featurePlayerInvisibleUpdated = false;
 
-		if(bPlayerExists && featurePlayerInvisible){
+		if(bPlayerExists && featurePlayerInvisible)
 			ENTITY::SET_ENTITY_VISIBLE(playerPed, false);
-		}
 		else if(bPlayerExists){
 			ENTITY::SET_ENTITY_VISIBLE(playerPed, true);
 		}
@@ -731,18 +722,15 @@ void make_minidump(EXCEPTION_POINTERS* e){
 	write_text_to_log_file("Dump requested");
 
 	auto hDbgHelp = LoadLibraryA("dbghelp");
-	if(hDbgHelp == nullptr){
+	if(hDbgHelp == nullptr)
 		return;
-	}
 	auto pMiniDumpWriteDump = (decltype(&MiniDumpWriteDump)) GetProcAddress(hDbgHelp, "MiniDumpWriteDump");
-	if(pMiniDumpWriteDump == nullptr){
+	if(pMiniDumpWriteDump == nullptr)
 		return;
-	}
 
 	auto hFile = CreateFileW(get_storage_dir_path("ENT-minidump.dmp"), GENERIC_WRITE, FILE_SHARE_READ, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
-	if(hFile == INVALID_HANDLE_VALUE){
+	if(hFile == INVALID_HANDLE_VALUE)
 		return;
-	}
 
 	MINIDUMP_EXCEPTION_INFORMATION exceptionInfo;
 	exceptionInfo.ThreadId = GetCurrentThreadId();
@@ -837,12 +825,8 @@ void ScriptTidyUp(){
 
 		write_text_to_log_file("ScriptTidyUp called");
 
-		save_settings();
-		write_text_to_log_file("Saved settings");
-
 		setGameInputToEnabled(true, true);
 		setAirbrakeRelatedInputToBlocked(false, true);
-		write_text_to_log_file("Reset input");
 
 		cleanup_script();
 		write_text_to_log_file("Cleaned up script");
@@ -852,6 +836,9 @@ void ScriptTidyUp(){
 		WAIT(0);
 		cleanup_anims();
 		write_text_to_log_file("Cleaned up anims");
+
+		save_settings();
+		write_text_to_log_file("Saved settings");
 
 		end_xinput();
 		write_text_to_log_file("XInput terminated");
@@ -1399,9 +1386,8 @@ void heal_player(){
 	PED::CLEAR_PED_BLOOD_DAMAGE(playerPed);
 	if(PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
 		Vehicle playerVeh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
-		if(ENTITY::DOES_ENTITY_EXIST(playerVeh) && !ENTITY::IS_ENTITY_DEAD(playerVeh)){
+		if(ENTITY::DOES_ENTITY_EXIST(playerVeh) && !ENTITY::IS_ENTITY_DEAD(playerVeh))
 			VEHICLE::SET_VEHICLE_FIXED(playerVeh);
-		}
 	}
 	set_status_text("Player healed");
 }
