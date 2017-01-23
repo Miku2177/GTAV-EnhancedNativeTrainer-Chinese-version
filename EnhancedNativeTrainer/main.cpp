@@ -17,20 +17,17 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 #include <thread>
 
-BOOL APIENTRY DllMain(HMODULE hInstance, DWORD reason, LPVOID lpReserved)
-{
-	switch (reason)
-	{
-	case DLL_PROCESS_ATTACH:
-		scriptRegister(hInstance, ScriptMain);
-		keyboardHandlerRegister(OnKeyboardMessage);
-		break;
-	case DLL_PROCESS_DETACH:
-		scriptUnregister(ScriptMain);
-		keyboardHandlerUnregister(OnKeyboardMessage);
-		ScriptTidyUp();
-		break;
+BOOL APIENTRY DllMain(HMODULE hInstance, DWORD reason, LPVOID lpReserved){
+	switch(reason){
+		case DLL_PROCESS_ATTACH:
+			scriptRegister(hInstance, ScriptMain);
+			keyboardHandlerRegister(OnKeyboardMessage);
+			break;
+		case DLL_PROCESS_DETACH:
+			scriptUnregister(ScriptMain);
+			keyboardHandlerUnregister(OnKeyboardMessage);
+			ScriptTidyUp();
+			break;
 	}
 	return TRUE;
 }
-

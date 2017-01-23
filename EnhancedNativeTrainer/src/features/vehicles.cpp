@@ -16,6 +16,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\ui_support\menu_functions.h"
 #include "..\io\config_io.h"
 #include "..\debug\debuglog.h"
+
 #include <fstream>
 
 bool featureVehInvincible = false;
@@ -496,7 +497,7 @@ void process_veh_menu(){
 void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 
-	//version-specific hack to prevent despawn of lowrider2 and executive DLCs vehicles
+	// version-specific hack to prevent despawn of vehicles exclusive to GTA Online
 	eGameVersion version = getGameVersion();
 	if(version < 20){
 		*getGlobalPtr(2558120) = 1;
@@ -507,13 +508,14 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	else if(version < 26){
 		*getGlobalPtr(2566708) = 1;
 	}
-	else if(version < 30) //SC version == 29; steam version == 28 (?!)
-	{
+	else if(version < 28){
+		*getGlobalPtr(2576573) = 1;
+	}
+	else if(version < 30){
 		*getGlobalPtr(2593910) = 1;
 	}
-	else //Fall back in case something goes wrong above. Will fix later on. 
-	{
-		*getGlobalPtr(2593910) = 1; //2576573 old pointer // 2593910 = new pointer for game version: 1.0.944.2
+	else{
+		*getGlobalPtr(2593910) = 1;
 	}
 
 	if(featureDespawnScriptDisabledUpdated){
@@ -749,8 +751,8 @@ void reset_vehicle_globals(){
 }
 
 bool onconfirm_carspawn_menu(MenuItem<int> choice){
-	if(choice.value == MENU_VEHICLE_CATEGORIES.size() - 1) //custom spawn
-	{
+	if(choice.value == MENU_VEHICLE_CATEGORIES.size() - 1){
+		// custom spawn
 		std::string result = show_keyboard(NULL, (char*) lastCustomVehicleSpawn.c_str());
 		if(!result.empty()){
 			result = trim(result);
@@ -758,7 +760,7 @@ bool onconfirm_carspawn_menu(MenuItem<int> choice){
 			Hash hash = GAMEPLAY::GET_HASH_KEY((char*) result.c_str());
 			if(!STREAMING::IS_MODEL_IN_CDIMAGE(hash) || !STREAMING::IS_MODEL_A_VEHICLE(hash)){
 				std::ostringstream ss;
-				ss << "~r~Error:~r~ Couldn't find model '" << result << "'";
+				ss << "~r~Error: Couldn't find model " << result;
 				set_status_text(ss.str());
 				return false;
 			}
@@ -792,14 +794,6 @@ bool process_carspawn_menu(){
 		item->isLeaf = (i == MENU_VEHICLE_CATEGORIES.size() - 1);
 		menuItems.push_back(item);
 	}
-
-	/*
-	MenuItem<int> *item = new MenuItem<int>();
-	item->caption = "Saved Vehicles";
-	item->value = -1;
-	item->isLeaf = false;
-	menuItems.push_back(item);
-	*/
 
 	return draw_generic_menu<int>(menuItems, 0, "Vehicle Categories", onconfirm_carspawn_menu, NULL, NULL);
 }
@@ -937,7 +931,7 @@ Vehicle do_spawn_vehicle(DWORD model, std::string modelTitle, bool cleanup){
 		}
 
 		if(featureVehSpawnTuned){
-			fully_tune_vehicle(veh, false, featureVehSpawnOptic);
+			fully_tune_vehicle(veh, featureVehSpawnOptic);
 		}
 
 		if(featureVehSpawnInto){
@@ -1308,13 +1302,13 @@ bool process_savedveh_menu(){
 					item->sortval = sv->rowID;
 					break;
 				case 1:
-					item->sortval = NULL;
+					item->sortval = 0;
 					break;
 				case 2:
 					item->sortval = VEHICLE::GET_VEHICLE_CLASS_FROM_NAME(sv->model);
 					break;
 				default:
-					item->sortval = NULL;
+					item->sortval = 0;
 					break;
 			}
 			menuItems.push_back(item);
