@@ -52,7 +52,7 @@ class MenuItem{
 	int currentMenuIndex = 0;
 	bool isLeaf = true;
 	void(*onConfirmFunction)(const MenuItem<T> choice) = NULL;
-	int sortval;
+	int sortval = 0;
 
 	/**
 	Handle the on-item confirmation press.

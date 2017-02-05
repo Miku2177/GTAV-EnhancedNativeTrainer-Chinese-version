@@ -526,10 +526,8 @@ void set_all_nearby_vehs_to_broken(bool enabled){
 			continue;
 		}
 
-		Hash vehModel = ENTITY::GET_ENTITY_MODEL(veh);
-
-		BOOL isAircraft = VEHICLE::IS_THIS_MODEL_A_HELI(vehModel) || VEHICLE::IS_THIS_MODEL_A_PLANE(vehModel);
-		BOOL isWeird = VEHICLE::IS_THIS_MODEL_A_TRAIN(vehModel) || VEHICLE::IS_THIS_MODEL_A_BOAT(vehModel) || VEHICLE::_IS_THIS_MODEL_A_SUBMERSIBLE(vehModel);
+		BOOL isAircraft = is_this_a_heli_or_plane(veh);
+		BOOL isWeird = is_this_a_bicycle(veh) || is_this_a_boat_or_sub(veh) || is_this_a_train(veh);
 		if(isAircraft || isWeird){
 			continue;
 		}
@@ -600,14 +598,12 @@ std::set<Ped> get_nearby_peds(Ped playerPed){
 		if((!featurePedsIncludePilots || !featurePedsIncludeDrivers) && PED::IS_PED_IN_ANY_VEHICLE(item, false)){
 			Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(item, false);
 
-			Hash vehModel = ENTITY::GET_ENTITY_MODEL(veh);
-
-			bool isAircraft = VEHICLE::IS_THIS_MODEL_A_HELI(vehModel) || VEHICLE::IS_THIS_MODEL_A_PLANE(vehModel);
+			bool isAircraft = is_this_a_heli_or_plane(veh);
 			if(!featurePedsIncludePilots && isAircraft){
 				continue;
 			}
 
-			bool isWeird = VEHICLE::IS_THIS_MODEL_A_TRAIN(vehModel) || VEHICLE::IS_THIS_MODEL_A_BOAT(vehModel) || VEHICLE::_IS_THIS_MODEL_A_SUBMERSIBLE(vehModel);
+			bool isWeird = is_this_a_bicycle(veh) || is_this_a_boat_or_sub(veh) || is_this_a_train(veh);
 			if(!featurePedsIncludeDrivers && !isAircraft && !isWeird){
 				continue;
 			}

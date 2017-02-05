@@ -12,329 +12,202 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\ui_support\menu_functions.h"
 #include "..\io\config_io.h"
 
-extern int whichpart = 0;
-extern int whichtype = 0;
+int whichpart = 0;
+int whichtype = 0;
 
 //Parts
-const std::vector<std::string> MENU_PAINT_WHAT{"Primary Color", "Secondary Color", "Primary & Secondary", "Pearl Topcoat", "Wheels"};
+const std::vector<std::string> MENU_PAINT_WHAT{"Primary", "Secondary", "Primary & Secondary", "Pearlescent", "Wheels"};
 
 //Paint Names
-const std::vector<std::string> MENU_PAINT_TYPE{"Normal", "Metallic", "Matte", "Metal", "Chrome"};
+const std::vector<std::string> MENU_PAINT_TYPE{"Classic", "Metallic", "Matte", "Metals", "Util", "Worn", "Chrome"};
 
-const std::vector<PaintColour> PAINTS_NORMAL{
-	{ "Black", 0, 0 },
-	{ "Carbon Black", 147, 0 },
-	{ "Graphite Black", 1, 0 },
-	{ "Anthracite Black", 11, 0 },
-	{ "Black Steel", 2, 0 },
-	{ "Dark Steel", 3, 2 },
-	{ "Silver", 4, 4 },
-	{ "Bluish Silver", 5, 5 },
-	{ "Rolled Steel", 6, 0 },
-	{ "Shadow Silver", 7, 0 },
-	{ "Stone Silver", 8, 0 },
-	{ "Midnight Silver", 9, 0 },
-	{ "Cast Iron Silver", 10, 0 },
-	{ "Red", 27, 0 },
-	{ "Torino Red", 28, 0 },
-	{ "Formula Red", 29, 0 },
-	{ "Lava Red", 150, 0 },
-	{ "Blaze Red", 30, 0 },
-	{ "Grace Red", 31, 0 },
-	{ "Garnet Red", 32, 0 },
-	{ "Sunset Red", 33, 0 },
-	{ "Cabernet Red", 34, 0 },
-	{ "Wine Red", 143, 0 },
-	{ "Candy Red", 35, 0 },
-	{ "Hot Pink", 135, 0 },
-	{ "Pfister Pink", 137, 0 },
-	{ "Salmon Pink", 136, 0 },
-	{ "Sunrise Orange", 36, 0 },
-	{ "Orange", 38, 0 },
-	{ "Bright Orange", 138, 0 },
-	{ "Gold", 99, 99 },
-	{ "Bronze", 90, 102 },
-	{ "Yellow", 88, 0 },
-	{ "Race Yellow", 89, 0 },
-	{ "Dew Yellow", 91, 0 },
-	{ "Dark Green", 49, 0 },
-	{ "Racing Green", 50, 0 },
-	{ "Sea Green", 51, 0 },
-	{ "Olive Green", 52, 0 },
-	{ "Bright Green", 53, 0 },
-	{ "Gasoline Green", 54, 0 },
-	{ "Lime Green", 92, 0 },
-	{ "Midnight Blue", 141, 0 },
-	{ "Galaxy Blue", 61, 0 },
-	{ "Dark Blue", 62, 0 },
-	{ "Saxon Blue", 63, 0 },
-	{ "Blue", 64, 0 },
-	{ "Mariner Blue", 65, 0 },
-	{ "Harbor Blue", 66, 0 },
-	{ "Diamond Blue", 67, 0 },
-	{ "Surf Blue", 68, 0 },
-	{ "Nautical Blue", 69, 0 },
-	{ "Racing Blue", 73, 0 },
-	{ "Ultra Blue", 70, 0 },
-	{ "Light Blue", 74, 0 },
-	{ "Chocolate Brown", 96, 0 },
-	{ "Bison Brown", 101, 0 },
-	{ "Creek Brown", 95, 0 },
-	{ "Feltzer Brown", 94, 0 },
-	{ "Maple Brown", 97, 0 },
-	{ "Beechwood Brown", 103, 0 },
-	{ "Sienna Brown", 104, 0 },
-	{ "Saddle Brown", 98, 0 },
-	{ "Moss Brown", 100, 0 },
-	{ "Woodbeech Brown", 102, 0 },
-	{ "Straw Brown", 99, 0 },
-	{ "Sandy Brown", 105, 0 },
-	{ "Bleached Brown", 106, 0 },
-	{ "Schafter Purple", 71, 0 },
-	{ "Spinnaker Purple", 72, 0 },
-	{ "Midnight Purple", 142, 0 },
-	{ "Bright Purple", 145, 0 },
-	{ "Cream", 107, 0 },
-	{ "Ice White", 111, 0 },
-	{ "Frost White", 112, 0 }
+const std::vector<PaintColor> PAINTS_CLASSIC{
+	{"Black", 0},
+	{"Graphite", 1},
+	{"Black Steel", 2},
+	{"Dark Steel", 3},
+	{"Silver", 4},
+	{"Bluish Silver", 5},
+	{"Rolled Steel", 6},
+	{"Shadow Silver", 7},
+	{"Stone Silver", 8},
+	{"Midnight Silver", 9},
+	{"Cast Iron Silver", 10},
+	{"Anthracite Black", 11},
+	{"Red", 27},
+	{"Torino Red", 28},
+	{"Formula Red", 29},
+	{"Blaze Red", 30},
+	{"Grace Red", 31},
+	{"Garnet Red", 32},
+	{"Sunset Red", 33},
+	{"Cabernet Red", 34},
+	{"Candy Red", 35},
+	{"Sunrise Orange", 36},
+	{"Gold", 37},
+	{"Orange", 38},
+	{"Dark Green", 49},
+	{"Racing Green", 50},
+	{"Sea Green", 51},
+	{"Olive Green", 52},
+	{"Bright Green", 53},
+	{"Gasoline Green", 54},
+	{"Galaxy Blue", 61},
+	{"Dark Blue", 62},
+	{"Saxon Blue", 63},
+	{"Blue", 64},
+	{"Mariner Blue", 65},
+	{"Harbor Blue", 66},
+	{"Diamond Blue", 67},
+	{"Surf Blue", 68},
+	{"Nautical Blue", 69},
+	{"Ultra Blue", 70},
+	{"Schafter Purple", 71},
+	{"Spinnaker Purple", 72},
+	{"Racing Blue", 73},
+	{"Light Blue", 74},
+	{"Yellow", 88},
+	{"Race Yellow", 89},
+	{"Bronze", 90},
+	{"Dew Yellow", 91},
+	{"Lime Green", 92},
+	{"Champagne", 93},
+	{"Feltzer Brown", 94},
+	{"Creek Brown", 95},
+	{"Chocolate Brown", 96},
+	{"Maple Brown", 97},
+	{"Saddle Brown", 98},
+	{"Straw Brown", 99},
+	{"Moss Brown", 100},
+	{"Bison Brown", 101},
+	{"Woodbeech Brown", 102},
+	{"Beechwood Brown", 103},
+	{"Sienna Brown", 104},
+	{"Sandy Brown", 105},
+	{"Bleached Brown", 106},
+	{"Cream", 107},
+	{"Ice White", 111},
+	{"Frost White", 112},
+	{"Securicor Green", 125},
+	{"Police Car Blue", 127},
+	{"Pure White", 134},
+	{"Hot Pink", 135},
+	{"Salmon Pink", 136},
+	{"Pfister Pink", 137},
+	{"Bright Orange", 138},
+	{"Green", 139},
+	{"Fluorescent Blue", 140},
+	{"Midnight Blue", 141},
+	{"Black Purple", 142},
+	{"Wine Red", 143},
+	{"Hunter Green", 144},
+	{"Bright Purple", 145},
+	{"Midnight Purple", 146},
+	{"Carbon Black", 147},
+	{"Lava Red", 150},
+	{"Alloy", 156},
+	{"Epsilon Blue", 157}
 };
 
-const std::vector<PaintColour> PAINTS_METALLIC{
-	{ "Black", 0, 10 },
-	{ "Carbon Black", 147, 4 },
-	{ "Graphite Black", 1, 5 },
-	{ "Anthracite Black", 11, 2 },
-	{ "Black Steel", 2, 5 },
-	{ "Dark Steel", 3, 6 },
-	{ "Silver", 4, 111 },
-	{ "Bluish Silver", 5, 111 },
-	{ "Rolled Steel", 6, 4 },
-	{ "Shadow Silver", 7, 5 },
-	{ "Stone Silver", 8, 5 },
-	{ "Midnight Silver", 9, 7 },
-	{ "Cast Iron Silver", 10, 7 },
-	{ "Red", 27, 36 },
-	{ "Torino Red", 28, 28 },
-	{ "Formula Red", 29, 28 },
-	{ "Lava Red", 150, 42 },
-	{ "Blaze Red", 30, 36 },
-	{ "Grace Red", 31, 27 },
-	{ "Garnet Red", 32, 25 },
-	{ "Sunset Red", 33, 47 },
-	{ "Cabernet Red", 34, 47 },
-	{ "Wine Red", 143, 31 },
-	{ "Candy Red", 35, 25 },
-	{ "Hot Pink", 135, 135 },
-	{ "Pfister Pink", 137, 3 },
-	{ "Salmon Pink", 136, 5 },
-	{ "Sunrise Orange", 36, 26 },
-	{ "Orange", 38, 37 },
-	{ "Bright Orange", 138, 89 },
-	{ "Gold", 37, 106 },
-	{ "Bronze", 90, 102 },
-	{ "Yellow", 88, 88 },
-	{ "Race Yellow", 89, 88 },
-	{ "Dew Yellow", 91, 91 },
-	{ "Dark Green", 49, 52 },
-	{ "Racing Green", 50, 53 },
-	{ "Sea Green", 51, 66 },
-	{ "Olive Green", 52, 59 },
-	{ "Bright Green", 53, 59 },
-	{ "Gasoline Green", 54, 60 },
-	{ "Lime Green", 92, 92 },
-	{ "Midnight Blue", 141, 73 },
-	{ "Galaxy Blue", 61, 63 },
-	{ "Dark Blue", 62, 68 },
-	{ "Saxon Blue", 63, 87 },
-	{ "Blue", 64, 68 },
-	{ "Mariner Blue", 65, 87 },
-	{ "Harbor Blue", 66, 60 },
-	{ "Diamond Blue", 67, 67 },
-	{ "Surf Blue", 68, 68 },
-	{ "Nautical Blue", 69, 74 },
-	{ "Racing Blue", 73, 73 },
-	{ "Ultra Blue", 70, 70 },
-	{ "Light Blue", 74, 74 },
-	{ "Chocolate Brown", 96, 95 },
-	{ "Bison Brown", 101, 95 },
-	{ "Creek Brown", 95, 97 },
-	{ "Feltzer Brown", 94, 104 },
-	{ "Maple Brown", 97, 98 },
-	{ "Beechwood Brown", 103, 104 },
-	{ "Sienna Brown", 104, 104 },
-	{ "Saddle Brown", 98, 95 },
-	{ "Moss Brown", 100, 100 },
-	{ "Woodbeech Brown", 102, 105 },
-	{ "Straw Brown", 99, 106 },
-	{ "Sandy Brown", 105, 105 },
-	{ "Bleached Brown", 106, 106 },
-	{ "Schafter Purple", 71, 145 },
-	{ "Spinnaker Purple", 72, 64 },
-	{ "Midnight Purple", 146, 145 },
-	{ "Bright Purple", 145, 74 },
-	{ "Cream", 107, 107 },
-	{ "Ice White", 111, 0 },
-	{ "Frost White", 112, 0 }
+const std::vector<PaintColor> PAINTS_MATTE{
+	{"Matte Black", 12},
+	{"Matte Gray", 13},
+	{"Matte Light Gray", 14},
+	{"Matte Red", 39},
+	{"Matte Dark Red", 40},
+	{"Matte Orange", 41},
+	{"Matte Yellow", 42},
+	{"Matte Lime Green", 55},
+	{"Matte Dark Blue", 82},
+	{"Matte Blue", 83},
+	{"Matte Midnight Blue", 84},
+	{"Matte Green", 128},
+	{"Matte Brown", 129},
+	{"Matte Ice White", 131},
+	{"Matte Schafter Purple", 148},
+	{"Matte Midnight Purple", 149},
+	{"Matte Forest Green", 151},
+	{"Matte Olive Drab", 152},
+	{"Matte Dark Earth", 153},
+	{"Matte Desert Tan", 154},
+	{"Matte Foliage Green", 155}
 };
 
-const std::vector<PaintColour> PAINTS_MATTE{
-	{ "Black", 12, 0 },
-	{ "Gray", 13, 0 },
-	{ "Light Gray", 14, 0 },
-	{ "Ice White", 131, 0 },
-	{ "Blue", 83, 0 },
-	{ "Dark Blue", 82, 0 },
-	{ "Midnight Blue", 84, 0 },
-	{ "Midnight Purple", 149, 0 },
-	{ "Schafter Purple", 148, 0 },
-	{ "Red", 39, 0 },
-	{ "Dark Red", 40, 0 },
-	{ "Orange", 41, 0 },
-	{ "Yellow", 42, 0 },
-	{ "Lime Green", 55, 0 },
-	{ "Green", 128, 0 },
-	{ "Forest Green", 151, 0 },
-	{ "Foliage Green", 155, 0 },
-	{ "Olive Drab", 152, 0 },
-	{ "Dark Earth", 153, 0 },
-	{ "Desert Tan", 154, 0 }
+const std::vector<PaintColor> PAINTS_METALS{
+	{"Brushed Steel", 117},
+	{"Brushed Black Steel", 118},
+	{"Brushed Aluminium", 119},
+	{"Pure Gold", 158},
+	{"Brushed Gold", 159},
+	{"Polished Gold", 160}
 };
 
-const std::vector<PaintColour> PAINTS_METAL{
-	{ "Brushed Steel", 117, 18 },
-	{ "Brushed Black Steel", 118, 3 },
-	{ "Brushed Aluminum", 119, 5 },
-	{ "Pure Gold", 158, 160 },
-	{ "Brushed Gold", 159, 160 }
+const std::vector<PaintColor> PAINTS_UTIL{
+	{"Util Black", 15},
+	{"Util Black Poly", 16},
+	{"Util Dark Silver", 17},
+	{"Util Silver", 18},
+	{"Util Gun Metal", 19},
+	{"Util Shadow Silver", 20},
+	{"Util Red", 43},
+	{"Util Bright Red", 44},
+	{"Util Garnet Red", 45},
+	{"Util Dark Green", 56},
+	{"Util Green", 57},
+	{"Util Dark Blue", 75},
+	{"Util Midnight Blue", 76},
+	{"Util Blue", 77},
+	{"Util Sea Foam Blue", 78},
+	{"Util Lightning Blue", 79},
+	{"Util Maui Blue Poly", 80},
+	{"Util Bright Blue", 81},
+	{"Util Brown", 108},
+	{"Util Medium Brown", 109},
+	{"Util Light Brown", 110},
+	{"Util Off-White", 122}
 };
 
-const std::vector<PaintColour> PAINTS_PEARL{
-	{ "Black", -1, 0 },
-	{ "Carbon Black", -1, 147 },
-	{ "Graphite Black", -1, 1 },
-	{ "Anthracite Black", -1, 11 },
-	{ "Black Steel", -1, 2 },
-	{ "Dark Steel", -1, 3 },
-	{ "Silver", -1, 4 },
-	{ "Bluish Silver", -1, 5 },
-	{ "Rolled Steel", -1, 6 },
-	{ "Shadow Silver", -1, 7 },
-	{ "Stone Silver", -1, 8 },
-	{ "Midnight Silver", -1, 9 },
-	{ "Cast Iron Silver", -1, 10 },
-	{ "Red", -1, 27 },
-	{ "Torino Red", -1, 28 },
-	{ "Formula Red", -1, 29 },
-	{ "Lava Red", -1, 150 },
-	{ "Blaze Red", -1, 30 },
-	{ "Grace Red", -1, 31 },
-	{ "Garnet Red", -1, 32 },
-	{ "Sunset Red", -1, 33 },
-	{ "Cabernet Red", -1, 34 },
-	{ "Wine Red", -1, 143 },
-	{ "Candy Red", -1, 35 },
-	{ "Hot Pink", -1, 135 },
-	{ "Pfister Pink", -1, 137 },
-	{ "Salmon Pink", -1, 136 },
-	{ "Sunrise Orange", -1, 36 },
-	{ "Orange", -1, 38 },
-	{ "Bright Orange", -1, 138 },
-	{ "Gold", -1, 37 },
-	{ "Bronze", -1, 90 },
-	{ "Yellow", -1, 88 },
-	{ "Race Yellow", -1, 89 },
-	{ "Dew Yellow", -1, 91 },
-	{ "Dark Green", -1, 49 },
-	{ "Racing Green", -1, 50 },
-	{ "Sea Green", -1, 51 },
-	{ "Olive Green", -1, 52 },
-	{ "Bright Green", -1, 53 },
-	{ "Gasoline Green", -1, 54 },
-	{ "Lime Green", -1, 92 },
-	{ "Midnight Blue", -1, 141 },
-	{ "Galaxy Blue", -1, 61 },
-	{ "Dark Blue", -1, 62 },
-	{ "Saxon Blue", -1, 63 },
-	{ "Blue", -1, 64 },
-	{ "Mariner Blue", -1, 65 },
-	{ "Harbor Blue", -1, 66 },
-	{ "Diamond Blue", -1, 67 },
-	{ "Surf Blue", -1, 68 },
-	{ "Nautical Blue", -1, 69 },
-	{ "Racing Blue", -1, 73 },
-	{ "Ultra Blue", -1, 70 },
-	{ "Light Blue", -1, 74 },
-	{ "Chocolate Brown", -1, 96 },
-	{ "Bison Brown", -1, 101 },
-	{ "Creek Brown", -1, 95 },
-	{ "Feltzer Brown", -1, 94 },
-	{ "Maple Brown", -1, 97 },
-	{ "Beechwood Brown", -1, 103 },
-	{ "Sienna Brown", -1, 104 },
-	{ "Saddle Brown", -1, 98 },
-	{ "Moss Brown", -1, 100 },
-	{ "Woodbeech Brown", -1, 102 },
-	{ "Straw Brown", -1, 99 },
-	{ "Sandy Brown", -1, 105 },
-	{ "Bleached Brown", -1, 106 },
-	{ "Schafter Purple", -1, 71 },
-	{ "Spinnaker Purple", -1, 72 },
-	{ "Midnight Purple", -1, 146 },
-	{ "Bright Purple", -1, 145 },
-	{ "Cream", -1, 107 },
-	{ "Ice White", -1, 111 },
-	{ "Frost White", -1, 112 },
-	{ "Secret Gold", -1, 160 }
+const std::vector<PaintColor> PAINTS_WORN{
+	{"Worn Black", 21},
+	{"Worn Graphite", 22},
+	{"Worn Silver Gray", 23},
+	{"Worn Silver", 24},
+	{"Worn Blue Silver", 25},
+	{"Worn Shadow Silver", 26},
+	{"Worn Red", 46},
+	{"Worn Golden Red", 47},
+	{"Worn Dark Red", 48},
+	{"Worn Dark Green", 58},
+	{"Worn Green", 59},
+	{"Worn Sea Wash", 60},
+	{"Worn Dark Blue", 85},
+	{"Worn Blue", 86},
+	{"Worn Light Blue", 87},
+	{"Worn Honey Beige", 113},
+	{"Worn Brown", 114},
+	{"Worn Dark Brown", 115},
+	{"Worn Straw Beige", 116},
+	{"Worn Off-White", 121},
+	{"Worn Orange", 123},
+	{"Worn Light Orange", 124},
+	{"Worn Taxi Yellow", 126},
+	{"Worn Pale Orange", 130},
+	{"Worn White", 132},
+	{"Worn Olive Army Green", 133}
 };
 
-const std::vector<PaintColour> PAINTS_WHEELS
-{
-	{ "Default", 156, -1 },
-	{ "Black", 0, -1 },
-	{ "Carbon Black", 1, -1 },
-	{ "Anthracite Black", 11, -1 },
-	{ "Black Steel", 2, -1 },
-	{ "Stone Silver", 8, -1 },
-	{ "Frost White", 122, -1 },
-	{ "Red", 27, -1 },
-	{ "Blaze Red", 30, -1 },
-	{ "Garnet Red", 45, -1 },
-	{ "Candy Red", 35, -1 },
-	{ "Sunset Red", 33, -1 },
-	{ "Salmon Pink", 136, -1 },
-	{ "Hot Pink", 135, -1 },
-	{ "Sunrise Orange", 36, -1 },
-	{ "Orange", 41, -1 },
-	{ "Bright Orange", 138, -1 },
-	{ "Gold", 37, -1 },
-	{ "Straw Brown", 99, -1 },
-	{ "Dark Copper", 90, -1 },
-	{ "Dark Ivory", 95, -1 },
-	{ "Dark Brown", 115, -1 },
-	{ "Bronze", 109, -1 },
-	{ "Dark Earth", 153, -1 },
-	{ "Desert Tan", 154, -1 },
-	{ "Yellow", 88, -1 },
-	{ "Race Yellow", 89, -1 },
-	{ "Yellow Bird", 91, -1 },
-	{ "Lime Green", 55, -1 },
-	{ "Pea Green", 125, -1 },
-	{ "Green", 53, -1 },
-	{ "Dark Green", 56, -1 },
-	{ "Olive Green", 151, -1 },
-	{ "Midnight Blue", 82, -1 },
-	{ "Royal Blue", 64, -1 },
-	{ "Baby Blue", 87, -1 },
-	{ "Bright Blue", 70, -1 },
-	{ "Flourescent Blue", 140, -1 },
-	{ "Slate Blue", 81, -1 },
-	{ "Schafter Purple", 145, -1 },
-	{ "Midnight Purple", 142, -1 }
+const std::vector<PaintColor> PAINTS_CHROME{
+	{"Chrome", 120}
 };
 
-const PaintColour CHROME_COLOUR =
-{
-	"Chrome", 120, 0
+const std::vector<PaintColor> PAINTS_BY_TYPE[7]{
+	PAINTS_CLASSIC,
+	PAINTS_CLASSIC,
+	PAINTS_MATTE,
+	PAINTS_METALS,
+	PAINTS_UTIL,
+	PAINTS_WORN,
+	PAINTS_CHROME
 };
 
 bool onconfirm_paintdirt(MenuItem<float> choice){
@@ -518,8 +391,7 @@ bool process_paint_menu_liveries(){
 		std::string modItemNameStr;
 
 		char* modItemNameChr = VEHICLE::GET_LIVERY_NAME(veh, i);
-		if(modItemNameChr == NULL)  //?
-		{
+		if(modItemNameChr == NULL){
 			std::ostringstream ss;
 			ss << "Livery #" << (i + 1);
 			modItemNameStr = ss.str();
@@ -549,99 +421,21 @@ bool process_paint_menu_liveries(){
 }
 
 bool onconfirm_paint_menu(MenuItem<int> choice){
-	::whichpart = choice.value;
-	if(whichpart == 4) //Wheels
-	{
-		process_paint_menu_special();
+	whichpart = choice.value;
+	if(whichpart >= 0 && whichpart < 5){
+		process_paint_menu_type();
 	}
-	else if(whichpart == 3) //Pearl topcoat
-	{
-		process_paint_menu_special();
-	}
-	else if(whichpart == -1){
-		process_paint_menu_liveries();
-	}
-	else if(whichpart == -2){
-		process_paint_menu_fades();
-	}
-	else if(whichpart == -3){
+	else if(whichpart == 5){
 		process_paint_menu_dirt();
 	}
-	else{
-		process_paint_menu_type(); //Primary and Secondary Colors
+	else if(whichpart == 6){
+		process_paint_menu_fades();
 	}
+	else if(whichpart == 7){
+		process_paint_menu_liveries();
+	}
+
 	return false;
-}
-
-bool process_paint_menu_special(){
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
-	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
-	std::vector<MenuItem<int>*> menuItems;
-
-	int primary, secondary, pearl, wheel;
-	VEHICLE::GET_VEHICLE_COLOURS(veh, &primary, &secondary);
-	VEHICLE::GET_VEHICLE_EXTRA_COLOURS(veh, &pearl, &wheel);
-
-	int index = 0;
-
-	if(whichpart == 4){
-		int curWheel = VEHICLE::GET_VEHICLE_MOD(veh, 23);
-		if(curWheel == -1){
-			set_status_text("You can't repaint the car's default wheels");
-			return false;
-		}
-	}
-
-	/*
-	if (whichpart == 3 && (paint1 == 3 || paint1 == 4 || paint1 == 5))
-	{
-		set_status_text("Pearl cannot be applied over this paint type");
-		return false;
-	}
-	*/
-
-	std::vector<PaintColour> paints;
-	int matchIndex = 0;
-	switch(whichpart){
-		case 3:
-			whichtype = 4;
-			paints = PAINTS_PEARL;
-			for(int i = 0; i < paints.size(); i++){
-				if(pearl == paints[i].pearlAddition){
-					matchIndex = i;
-					break;
-				}
-			}
-			break;
-		case 4:
-			whichtype = 5;
-			paints = PAINTS_WHEELS;
-			for(int i = 0; i < paints.size(); i++){
-				if(wheel == paints[i].mainValue){
-					matchIndex = i;
-					break;
-				}
-			}
-			break;
-		default:
-			return false;
-	}
-
-	for(int i = 0; i < paints.size(); i++){
-		MenuItem<int> *item = new MenuItem<int>();
-		item->caption = paints[i].name;
-		item->value = i;
-		menuItems.push_back(item);
-	}
-
-	if(whichpart == 4){
-		MenuItem<int> *item = new MenuItem<int>();
-		item->caption = "Chrome";
-		item->value = -1;
-		menuItems.push_back(item);
-	}
-
-	return draw_generic_menu<int>(menuItems, &matchIndex, "Select Color", onconfirm_color_menu_selection, onhighlight_color_menu_selection, NULL);
 }
 
 bool process_paint_menu(){
@@ -662,112 +456,104 @@ bool process_paint_menu(){
 
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 	int livCount = VEHICLE::GET_VEHICLE_LIVERY_COUNT(veh);
-	//int livCount = VEHICLE::GET_NUM_VEHICLE_MODS(veh, 48);
 
-	std::vector<MenuItem<int>*> menuItems;
+	std::vector<MenuItem<int> *> menuItems;
+	MenuItem<int> *item;
+	int index;
 
-	for(int i = 0; i < MENU_PAINT_WHAT.size(); i++){
-		MenuItem<int> *item = new MenuItem<int>();
-		item->caption = MENU_PAINT_WHAT[i];
-		item->value = i;
+	for(index = 0; index < MENU_PAINT_WHAT.size(); index++){
+		item = new MenuItem<int>();
+		item->caption = MENU_PAINT_WHAT[index];
+		item->value = index;
 		item->isLeaf = false;
 		menuItems.push_back(item);
 	}
 
-	if(livCount > 1){
-		std::ostringstream ss;
-		ss << "Liveries (" << livCount << ")";
-		MenuItem<int> *item = new MenuItem<int>();
-		item->caption = ss.str();
-		item->value = -1;
-		item->isLeaf = false;
-		menuItems.push_back(item);
-	}
-
-	MenuItem<int> *item = new MenuItem<int>();
-	item->caption = "Paint Fade";
-	item->value = -2;
+	item = new MenuItem<int>();
+	item->caption = "Dirt Level";
+	item->value = index++;
 	item->isLeaf = false;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Dirt Level";
-	item->value = -3;
+	item->caption = "Paint Fade";
+	item->value = index++;
 	item->isLeaf = false;
 	menuItems.push_back(item);
+
+	if(livCount > 1){
+		std::ostringstream ss;
+		ss << "Liveries (" << livCount << ")";
+		item = new MenuItem<int>();
+		item->caption = ss.str();
+		item->value = index++;
+		item->isLeaf = false;
+		menuItems.push_back(item);
+	}
 
 	return draw_generic_menu<int>(menuItems, 0, "Choose which part to paint", onconfirm_paint_menu, NULL, NULL, vehicle_menu_interrupt);
 }
 
 bool onconfirm_paint_menu_type(MenuItem<int> choice){
-	if(choice.value == 4){
-		//deal with chrome immediately
-		apply_paint(CHROME_COLOUR);
-		return false;
-	}
-
 	std::string category = choice.caption;
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+
+	whichtype = choice.value;
+
+	if(whichpart == 4 && VEHICLE::GET_VEHICLE_MOD(veh, 23) == -1){
+		set_status_text("You can't repaint the default wheels");
+		return false;
+	}
+
+	std::vector<PaintColor> paints;
+	if(whichtype == 6){
+		apply_paint(PAINTS_BY_TYPE[whichtype].at(0));
+		return false;
+	}
+	else{
+		paints = PAINTS_BY_TYPE[whichtype];
+	}
+
+	std::vector<MenuItem<int> *> menuItems;
+	MenuItem<int> *item;
 
 	int primary, secondary, pearl, wheel;
 	VEHICLE::GET_VEHICLE_COLOURS(veh, &primary, &secondary);
 	VEHICLE::GET_VEHICLE_EXTRA_COLOURS(veh, &pearl, &wheel);
 
-	//const std::vector<std::string> MENU_PAINT_TYPE{ "Normal", "Metallic", "Matte", "Metal", "Chrome" };
+	int matchIndex = 0, ps = paints.size();
 
-	std::vector<PaintColour> paints;
-	switch(choice.value){
-		case 0:
-			paints = PAINTS_NORMAL;
-			break;
-		case 1:
-			paints = PAINTS_METALLIC;
-			break;
-		case 2:
-			paints = PAINTS_MATTE;
-			break;
-		case 3:
-			paints = PAINTS_METAL;
-			break;
-		case 4:
-			paints = PAINTS_PEARL;
-			break;
-		case 5:
-			paints = PAINTS_WHEELS;
-			break;
-		default:
-			return false;
-	}
-
-	std::vector<MenuItem<int>*> menuItems;
-	for(int i = 0; i < paints.size(); i++){
-		MenuItem<int> *item = new MenuItem<int>();
-		item->caption = paints[i].name;
-		item->value = i;
+	for(int a = 0; a < ps; a++){
+		item = new MenuItem<int>();
+		item->caption = paints.at(a).name;
+		item->value = a;
 		menuItems.push_back(item);
-	}
 
-	::whichtype = choice.value; //save paint type for later
-
-	int matchIndex = 0;
-
-	if(::whichpart == 0 || ::whichpart == 2) //index as primary color
-	{
-		for(int i = 0; i < paints.size(); i++){
-			if(primary == paints[i].mainValue){
-				matchIndex = i;
+		switch(whichpart){
+			case 0:
+			case 2:
+				if(paints.at(a).colorIndex == primary){
+					matchIndex = a;
+				}
 				break;
-			}
-		}
-	}
-	else if(::whichpart == 1) //index as secondary color
-	{
-		for(int i = 0; i < paints.size(); i++){
-			if(secondary == paints[i].mainValue){
-				matchIndex = i;
+			case 1:
+				if(paints.at(a).colorIndex == secondary){
+					matchIndex = a;
+				}
 				break;
-			}
+			case 3:
+				if(paints.at(a).colorIndex == pearl){
+					matchIndex = a;
+				}
+				break;
+			case 4:
+				if(paints.at(a).colorIndex == wheel){
+					matchIndex = a;
+				}
+				break;
+			default:
+				break;
 		}
 	}
 
@@ -778,155 +564,69 @@ bool onconfirm_paint_menu_type(MenuItem<int> choice){
 bool process_paint_menu_type(){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
-	int index = 0;
 
-	std::vector<MenuItem<int>*> menuItems;
-	for(int i = 0; i < MENU_PAINT_TYPE.size(); i++){
-		MenuItem<int> *item = new MenuItem<int>();
-		item->caption = MENU_PAINT_TYPE[i];
-		item->value = i;
+	std::vector<MenuItem<int> *> menuItems;
+	MenuItem<int> *item;
+	int index;
+
+	for(index = 0; index < MENU_PAINT_TYPE.size(); index++){
+		item = new MenuItem<int>();
+		item->caption = MENU_PAINT_TYPE[index];
+		item->value = index;
 		item->isLeaf = false;
 		menuItems.push_back(item);
 	}
 
-	if(::whichpart == 0) //index as primary color type
-	{
-		int paint1, paint2, paint3;
-		VEHICLE::GET_VEHICLE_MOD_COLOR_1(veh, &paint1, &paint2, &paint3);
-		index = paint1;
-		if(index == 3){
-			index = 0;
-		} //if paint type is pearlescent index to paint type metallic
-		else if(index > 3){
-			index = index - 1;
-		}
-	}
-	else if(::whichpart == 1) //index as secondary color type
-	{
-		int paint1, paint2;
-		VEHICLE::GET_VEHICLE_MOD_COLOR_2(veh, &paint1, &paint2);
-		index = paint1;
-		if(index > 1){
-			index = index - 1;
-		}
-	}
-
-	return draw_generic_menu<int>(menuItems, &index, "Choose Paint Type", onconfirm_paint_menu_type, NULL, NULL, vehicle_menu_interrupt);
+	return draw_generic_menu<int>(menuItems, NULL, "Choose Paint Type", onconfirm_paint_menu_type, NULL, NULL, vehicle_menu_interrupt);
 }
 
 void onhighlight_color_menu_selection(MenuItem<int> choice){
-	onconfirm_color_menu_selection(choice);
+	apply_paint(choice.value == -1 ? PAINTS_CHROME.at(0) : PAINTS_BY_TYPE[whichtype].at(choice.value));
 }
 
 bool onconfirm_color_menu_selection(MenuItem<int> choice){
-	std::vector<PaintColour> paints;
-	switch(whichtype){
-		case 0:
-			paints = PAINTS_NORMAL;
-			break;
-		case 1:
-			paints = PAINTS_METALLIC;
-			break;
-		case 2:
-			paints = PAINTS_MATTE;
-			break;
-		case 3:
-			paints = PAINTS_METAL;
-			break;
-		case 4:
-			paints = PAINTS_PEARL;
-			break;
-		case 5:
-			paints = PAINTS_WHEELS;
-			break;
-		default:
-			return false;
-	}
-
-	PaintColour whichpaint = (choice.value == -1) ? CHROME_COLOUR : paints[choice.value];
-	apply_paint(whichpaint);
 	return true;
 }
 
-void apply_paint(PaintColour whichpaint){
-	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
+void apply_paint(PaintColor whichpaint){
 	Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(playerPed);
 
 	if(bPlayerExists){
 		if(PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
 			Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
-			VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
 
-			int primary, secondary;
+			int primary, secondary, pearl, wheel, colorIndex = whichpaint.colorIndex;
 			VEHICLE::GET_VEHICLE_COLOURS(veh, &primary, &secondary);
+			VEHICLE::GET_VEHICLE_EXTRA_COLOURS(veh, &pearl, &wheel);
 
-			if(::whichpart == 0 || ::whichpart == 2) //Apply primary Color
-			{
-				/*
-				std::ostringstream ss;
-				ss << "Applying primary paint " << whichpaint << " of type " << ::whichtype;
-				set_status_text(ss.str());
-				*/
-
-				VEHICLE::SET_VEHICLE_MOD_COLOR_1(veh, 0, 0, 0);
-				VEHICLE::SET_VEHICLE_COLOURS(veh, whichpaint.mainValue, secondary);
-				if(whichpart == 2){
-					primary = whichpaint.mainValue;
-				}
+			switch(whichpart){
+				case 0:
+					VEHICLE::SET_VEHICLE_COLOURS(veh, colorIndex, secondary);
+					break;
+				case 1:
+					VEHICLE::SET_VEHICLE_COLOURS(veh, primary, colorIndex);
+					break;
+				case 2:
+					VEHICLE::SET_VEHICLE_COLOURS(veh, colorIndex, colorIndex);
+					break;
+				case 3:
+					VEHICLE::SET_VEHICLE_EXTRA_COLOURS(veh, colorIndex, wheel);
+					break;
+				case 4:
+					VEHICLE::SET_VEHICLE_EXTRA_COLOURS(veh, pearl, colorIndex);
+					break;
+				default:
+					break;
 			}
 
-			if(::whichpart == 1 || ::whichpart == 2) //apply secondary Color
-			{
-				/*
-				std::ostringstream ss;
-				ss << "Applying secondary paint " << whichpaint << " of type " << ::whichtype;
-				set_status_text(ss.str());
-				*/
-
-				VEHICLE::SET_VEHICLE_MOD_COLOR_2(veh, 0, 0);
-				VEHICLE::SET_VEHICLE_COLOURS(veh, primary, whichpaint.mainValue);
-
-				if(whichpart == 2){
-					secondary = whichpaint.mainValue;
-				}
-			}
-
-			if(::whichpart == 3) //Apply pearl Topcoat
-			{
-				int paint1, paint2, paint3;
-				VEHICLE::GET_VEHICLE_MOD_COLOR_1(veh, &paint1, &paint2, &paint3);
-
-				/*
-				std::ostringstream ss;
-				ss << "Applying pearl paint " << whichpaint << " with old value " << paint2;
-				set_status_text(ss.str());
-				*/
-
-				VEHICLE::SET_VEHICLE_MOD_COLOR_1(veh, 0, primary + 1, primary + 1);
-				VEHICLE::SET_VEHICLE_COLOURS(veh, primary, secondary);
-			}
-
-			if(whichpaint.pearlAddition != -1){
-				int useless, wheelCol;//pearl topcoat, wheel color
-				VEHICLE::GET_VEHICLE_EXTRA_COLOURS(veh, &useless, &wheelCol);
-				VEHICLE::SET_VEHICLE_EXTRA_COLOURS(veh, whichpaint.pearlAddition, wheelCol); //apply pearl color without changing wheels
-			}
-
-			if(::whichpart == 4) //Apply wheel color
-			{
-				bool isChrome = (whichpaint.mainValue == CHROME_COLOUR.mainValue);
-				set_chrome_wheels_enabled(veh, isChrome);
-				if(!isChrome){
-					int paint1, paint2;//pearl topcoat, wheel color
-					VEHICLE::GET_VEHICLE_EXTRA_COLOURS(veh, &paint1, &paint2);
-					VEHICLE::SET_VEHICLE_EXTRA_COLOURS(veh, paint1, whichpaint.mainValue); //apply wheel color without changing pearl topcoat
-				}
+			if(whichtype == 1 && whichpart >= 0 && whichpart <= 2){
+				VEHICLE::SET_VEHICLE_EXTRA_COLOURS(veh, colorIndex, wheel);
 			}
 		}
 		else{
 			set_status_text("Player isn't in a vehicle");
 		}
 	}
-	return;
 }

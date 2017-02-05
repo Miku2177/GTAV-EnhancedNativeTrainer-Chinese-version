@@ -18,13 +18,11 @@ int modChoiceMenuIndex = 0;
 
 const static int CUSTOM_TYRE_COUNT = 1;
 
-const static int WHEEL_CATEGORY_COUNT = 9; //was 7
+const static int WHEEL_CATEGORY_COUNT = 10; //was 7
 
-const static std::string WHEEL_CATEGORY_NAMES[] = {"Sports", "Muscle", "Lowrider", "SUV", "Offroad", "Tuner", "High End", "Benny's Originals", "Benny's Bespoke"};
+const static std::string WHEEL_CATEGORY_NAMES[] = {"Sports", "Muscle", "Lowrider", "SUV", "Offroad", "Tuner", "Bike Wheels", "High End", "Benny's Originals", "Benny's Bespoke"};
 
-const static int WHEEL_CATEGORY_COUNTS[] = {25, 18, 15, 19, 10, 24, 20, 31, 31}; /* SORTED */
-
-const static int WHEEL_CATEGORY_COUNT_BIKE = 13;
+const static int WHEEL_CATEGORY_COUNTS[] = {25, 18, 15, 19, 10, 24, 13, 20, 31, 31}; /* SORTED */
 
 const static std::string TINT_NAMES[] = {"No Tint", "Dark", "Medium", "Light", "Very Light", "Safety Value"};
 
@@ -420,8 +418,7 @@ bool onconfirm_vehmod_category_menu(MenuItem<int> choice){
 
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 
-	switch(lastSelectedModValue) //is this why Benny's mods aren't applying? It should go up to ~ 48
-	{
+	switch(lastSelectedModValue){
 		case 0:
 		case 1:
 		case 2:
@@ -466,7 +463,6 @@ bool onconfirm_vehmod_category_menu(MenuItem<int> choice){
 		case 45:
 		case 46:
 		case 48:
-
 		{
 			VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
 
@@ -557,12 +553,8 @@ bool process_vehmod_category_special_menu(int category){
 		break;
 		case SPECIAL_ID_FOR_WHEEL_CATEGORY:
 		{
-			for(int i = 0; i < WHEEL_CATEGORY_COUNT; i++){
-				int j = i;
-				if(j >= 6){
-					j = j + 1; //skip 6
-				}
-				values.push_back(j);
+			for(int a = 0; a < WHEEL_CATEGORY_COUNT; a++){
+				values.push_back(a);
 			}
 		}
 		break;
@@ -639,24 +631,7 @@ bool process_vehmod_category_menu(int category){
 
 	int count = 0;
 	if(category == SPECIAL_ID_FOR_WHEEL_SELECTION){
-		int wheelType = VEHICLE::GET_VEHICLE_WHEEL_TYPE(veh);
-		if(wheelType == 6){
-			count = WHEEL_CATEGORY_COUNT_BIKE;
-		}
-		else if(wheelType == 7){
-			count = WHEEL_CATEGORY_COUNTS[6];
-		}
-		else if(wheelType == 8) //Benny's Originals
-		{
-			count = WHEEL_CATEGORY_COUNTS[7];
-		}
-		else if(wheelType == 9) //Benny's Bespoke
-		{
-			count = WHEEL_CATEGORY_COUNTS[8];
-		}
-		else{
-			count = WHEEL_CATEGORY_COUNTS[wheelType];
-		}
+		count = WHEEL_CATEGORY_COUNTS[VEHICLE::GET_VEHICLE_WHEEL_TYPE(veh)];
 	}
 	else{
 		count = VEHICLE::GET_NUM_VEHICLE_MODS(veh, actualCategory);
@@ -678,8 +653,7 @@ bool process_vehmod_category_menu(int category){
 	}
 
 	for(int i = 0; i < count; i++){
-		if(!(category == 14 && i > 52)) //34
-		{
+		if(!(category == 14 && i > 52)){
 			std::string modItemNameStr = getNormalItemTitle(veh, actualCategory, i);
 			MenuItem<int> *item = new MenuItem<int>();
 			item->caption = modItemNameStr;
@@ -704,9 +678,6 @@ int find_menu_index_to_restore(int category, int actualCategory, Vehicle veh){
 
 	if(category == SPECIAL_ID_FOR_WHEEL_CATEGORY){
 		modChoiceMenuIndex = VEHICLE::GET_VEHICLE_WHEEL_TYPE(veh);
-		if(modChoiceMenuIndex > 6){
-			modChoiceMenuIndex--;
-		}
 	}
 	else if(category == SPECIAL_ID_FOR_LICENSE_PLATES){
 		modChoiceMenuIndex = VEHICLE::GET_VEHICLE_NUMBER_PLATE_TEXT_INDEX(veh);
@@ -807,11 +778,10 @@ bool process_vehmod_menu(){
 
 	VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
 
-	Entity et = ENTITY::GET_ENTITY_MODEL(veh);
-
-	BOOL isABike = VEHICLE::IS_THIS_MODEL_A_BIKE(et);
-	BOOL isAircraft = VEHICLE::IS_THIS_MODEL_A_HELI(et) || VEHICLE::IS_THIS_MODEL_A_PLANE(et);
-	BOOL isWeird = VEHICLE::IS_THIS_MODEL_A_TRAIN(et) || VEHICLE::IS_THIS_MODEL_A_BICYCLE(et) || VEHICLE::IS_THIS_MODEL_A_BOAT(et);
+	BOOL isCar = is_this_a_car(veh);
+	BOOL isBike = is_this_a_motorcycle(veh);
+	BOOL isAircraft = is_this_a_heli_or_plane(veh);
+	BOOL isWeird = is_this_a_bicycle(veh) || is_this_a_boat_or_sub(veh) || is_this_a_train(veh);
 
 	std::string caption = "Vehicle Mod Options";
 
@@ -850,8 +820,7 @@ bool process_vehmod_menu(){
 		item5->isLeaf = false;
 		menuItems.push_back(item5);
 
-		for(int i = 0; i < 49; i++) //was 30
-		{
+		for(int i = 0; i < 49; i++){
 			if(i == 23 || i == 24 || i == 21){
 				continue;
 			}
@@ -896,39 +865,17 @@ bool process_vehmod_menu(){
 
 		ss.str(""); ss.clear();
 
-		if(!VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(veh))){
-			item = new MenuItem<int>();
-			ss << getModCategoryName(SPECIAL_ID_FOR_WHEEL_CATEGORY) << " ~HUD_COLOUR_GREYLIGHT~(" << WHEEL_CATEGORY_COUNT << ")";
-			item->caption = ss.str();
-			item->value = SPECIAL_ID_FOR_WHEEL_CATEGORY;
-			item->isLeaf = false;
-			menuItems.push_back(item);
+		item = new MenuItem<int>();
+		ss << getModCategoryName(SPECIAL_ID_FOR_WHEEL_CATEGORY) << " ~HUD_COLOUR_GREYLIGHT~(" << WHEEL_CATEGORY_COUNT << ")";
+		item->caption = ss.str();
+		item->value = SPECIAL_ID_FOR_WHEEL_CATEGORY;
+		item->isLeaf = false;
+		menuItems.push_back(item);
 
-			ss.str(""); ss.clear();
-		}
-
-		int wheelCount = 0;
-		int wheelType = VEHICLE::GET_VEHICLE_WHEEL_TYPE(veh);
-		if(wheelType == 6){
-			wheelCount = WHEEL_CATEGORY_COUNT_BIKE;
-		}
-		else if(wheelType == 7){
-			wheelCount = WHEEL_CATEGORY_COUNTS[6];
-		}
-		else if(wheelType == 8) //Benny's Originals
-		{
-			wheelCount = WHEEL_CATEGORY_COUNTS[7];
-		}
-		else if(wheelType == 9) //Benny's Bespoke
-		{
-			wheelCount = WHEEL_CATEGORY_COUNTS[8];
-		}
-		else{
-			wheelCount = WHEEL_CATEGORY_COUNTS[wheelType];
-		}
+		ss.str(""); ss.clear();
 
 		item = new MenuItem<int>();
-		ss << getModCategoryName(SPECIAL_ID_FOR_WHEEL_SELECTION) << " ~HUD_COLOUR_GREYLIGHT~(" << wheelCount << ")";
+		ss << getModCategoryName(SPECIAL_ID_FOR_WHEEL_SELECTION) << " ~HUD_COLOUR_GREYLIGHT~(" << WHEEL_CATEGORY_COUNTS[VEHICLE::GET_VEHICLE_WHEEL_TYPE(veh)] << ")";
 		item->caption = ss.str();
 		item->value = SPECIAL_ID_FOR_WHEEL_SELECTION;
 		item->isLeaf = false;
@@ -937,16 +884,14 @@ bool process_vehmod_menu(){
 		ss.str(""); ss.clear();
 	}
 
-	if(is_this_a_car(veh)){
-		MenuItem<int>* item = new MenuItem<int>();
+	if(isCar || isBike){
+		MenuItem<int> * item = new MenuItem<int>();
 		item->caption = "Neon Lights Menu";
 		item->value = SPECIAL_ID_FOR_NEON_LIGHTS;
 		item->isLeaf = false;
 		menuItems.push_back(item);
-	}
 
-	if(is_this_a_car(veh) || is_this_a_motorcycle(veh)){
-		MenuItem<int>* item = new MenuItem<int>();
+		item = new MenuItem<int>();
 		item->caption = "Tire Smoke Menu";
 		item->value = SPECIAL_ID_FOR_TIRE_SMOKE;
 		item->isLeaf = false;
@@ -977,14 +922,19 @@ bool process_vehmod_menu(){
 		toggleItem->value = SPECIAL_ID_FOR_TOGGLE_VARIATIONS;
 		menuItems.push_back(toggleItem);
 
-		if(!isABike){
-			toggleItem = new FunctionDrivenToggleMenuItem<int>();
-			toggleItem->caption = "Toggle Custom Tires";
-			toggleItem->getter_call = is_custom_tyres;
-			toggleItem->setter_call = set_custom_tyres;
-			toggleItem->value = SPECIAL_ID_FOR_TOGGLE_VARIATIONS;
-			menuItems.push_back(toggleItem);
-		}
+		toggleItem = new FunctionDrivenToggleMenuItem<int>();
+		toggleItem->caption = "Toggle Chrome Wheels";
+		toggleItem->getter_call = is_chrome_wheels;
+		toggleItem->setter_call = set_chrome_wheels;
+		toggleItem->value = SPECIAL_ID_FOR_TOGGLE_VARIATIONS;
+		menuItems.push_back(toggleItem);
+
+		toggleItem = new FunctionDrivenToggleMenuItem<int>();
+		toggleItem->caption = "Toggle Custom Tires";
+		toggleItem->getter_call = is_custom_tyres;
+		toggleItem->setter_call = set_custom_tyres;
+		toggleItem->value = SPECIAL_ID_FOR_TOGGLE_VARIATIONS;
+		menuItems.push_back(toggleItem);
 	}
 
 	for(int i = 1; i < 12; i++){
@@ -1031,9 +981,7 @@ void set_plate_text(MenuItem<int> choice){
 }
 
 bool is_custom_tyres(std::vector<int> extras){
-	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
-	int tyreCount = VEHICLE::GET_VEHICLE_MOD_VARIATION(veh, 23);
-	return (tyreCount != 0);
+	return VEHICLE::GET_VEHICLE_MOD_VARIATION(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), 23) != 0;
 }
 
 void set_custom_tyres(bool applied, std::vector<int> extras){
@@ -1050,6 +998,31 @@ void set_custom_tyres(bool applied, std::vector<int> extras){
 	VEHICLE::SET_VEHICLE_MOD(veh, 23, currmod, applied); //Add Custom Tires
 	VEHICLE::SET_VEHICLE_MOD(veh, 24, currmod, applied); //Add Custom Tires (For bike rear wheels if they exist)
 	set_status_text("Changed tires");
+}
+
+bool is_chrome_wheels(std::vector<int> extras){
+	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
+
+	return VEHICLE::GET_VEHICLE_MOD(veh, 23) >= WHEEL_CATEGORY_COUNTS[VEHICLE::GET_VEHICLE_WHEEL_TYPE(veh)];
+}
+
+void set_chrome_wheels(bool applied, std::vector<int> extras){
+	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
+
+	int curWheel = VEHICLE::GET_VEHICLE_MOD(veh, 23);
+	if(curWheel < 0){
+		set_status_text("~r~Can't apply chrome rims to default wheels");
+		return;
+	}
+
+	int count = WHEEL_CATEGORY_COUNTS[VEHICLE::GET_VEHICLE_WHEEL_TYPE(veh)], newWheel = curWheel % count;
+	if(applied){
+		newWheel += count;
+	}
+
+	VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
+	VEHICLE::SET_VEHICLE_MOD(veh, 23, newWheel, VEHICLE::GET_VEHICLE_MOD_VARIATION(veh, 23));
+	VEHICLE::SET_VEHICLE_MOD(veh, 24, newWheel, VEHICLE::GET_VEHICLE_MOD_VARIATION(veh, 24));
 }
 
 bool is_turbocharged(std::vector<int> extras){
@@ -1116,50 +1089,7 @@ bool vehicle_menu_interrupt(){
 	return false;
 }
 
-void set_chrome_wheels_enabled(Vehicle veh, bool enabled){
-	int count;
-	int wheelType = VEHICLE::GET_VEHICLE_WHEEL_TYPE(veh);
-	if(wheelType == 6){
-		count = WHEEL_CATEGORY_COUNT_BIKE;
-	}
-	else if(wheelType == 7){
-		count = WHEEL_CATEGORY_COUNTS[6];
-	}
-	else if(wheelType == 8) //Benny's Originals
-	{
-		count = WHEEL_CATEGORY_COUNTS[7];
-	}
-	else if(wheelType == 9) //Benny's Bespoke
-	{
-		count = WHEEL_CATEGORY_COUNTS[8];
-	}
-	else{
-		count = WHEEL_CATEGORY_COUNTS[wheelType];
-	}
-
-	int curWheel = VEHICLE::GET_VEHICLE_MOD(veh, 23);
-	if(curWheel == -1){
-		return;
-	}
-
-	int newWheel;
-	if(curWheel > count && !enabled){
-		newWheel = curWheel - count;
-	}
-	else if(curWheel < count && enabled){
-		newWheel = curWheel + count;
-	}
-	else{
-		newWheel = curWheel;
-	}
-
-	if(newWheel != curWheel){
-		VEHICLE::SET_VEHICLE_MOD(veh, 23, newWheel, 0);
-		VEHICLE::SET_VEHICLE_MOD(veh, 24, newWheel, 0);
-	}
-}
-
-void fully_tune_vehicle(Vehicle veh, bool optics, bool repaint){
+void fully_tune_vehicle(Vehicle veh, bool optics){
 	VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
 	VEHICLE::SET_VEHICLE_MOD(veh, MOD_ENGINE, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_ENGINE) - 1, 1); //Engine
 	VEHICLE::SET_VEHICLE_MOD(veh, MOD_BRAKES, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_BRAKES) - 1, 1); //Brakes
@@ -1190,14 +1120,4 @@ void fully_tune_vehicle(Vehicle veh, bool optics, bool repaint){
 	}
 
 	VEHICLE::SET_VEHICLE_DIRT_LEVEL(veh, 0.0f);
-
-	if(repaint){
-		//random metallic paint
-		int useless, wheelCol;//pearl topcoat, wheel color
-		int paintIndex = rand() % PAINTS_METALLIC.size();
-		PaintColour paint = PAINTS_METALLIC.at(paintIndex);
-		VEHICLE::SET_VEHICLE_COLOURS(veh, paint.mainValue, paint.mainValue);
-		VEHICLE::GET_VEHICLE_EXTRA_COLOURS(veh, &useless, &wheelCol);
-		VEHICLE::SET_VEHICLE_EXTRA_COLOURS(veh, paint.pearlAddition, wheelCol);
-	}
 }

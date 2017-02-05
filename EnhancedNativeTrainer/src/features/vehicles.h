@@ -18,18 +18,19 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 #include "..\ui_support\menu_functions.h"
 #include "..\storage\database.h"
+#include "..\common\ENTUtil.h"
 
 #include "..\ent-enums.h"
+#include "..\utils.h"
 
 #include <string>
 
-struct PaintColour{
+struct PaintColor{
 	std::string name;
-	int mainValue;
-	int pearlAddition;
+	int colorIndex;
 };
 
-extern const std::vector<PaintColour> PAINTS_METALLIC;
+extern const std::vector<PaintColor> PAINTS_BY_TYPE[7];
 
 extern const std::vector<std::string> VALUES_SUPERCARS;
 
@@ -77,17 +78,21 @@ bool process_paint_menu_type();
 
 bool process_paint_menu_liveries();
 
-bool process_paint_menu_special();
-
 bool onconfirm_color_menu_selection(MenuItem<int> choice);
 
 void onhighlight_color_menu_selection(MenuItem<int> choice);
+
+void apply_paint(PaintColor whichpaint);
 
 //Vehicle mod getters and setters
 
 bool is_custom_tyres(std::vector<int> extras);
 
 void set_custom_tyres(bool applied, std::vector<int> extras);
+
+bool is_chrome_wheels(std::vector<int> extras);
+
+void set_chrome_wheels(bool applied, std::vector<int> extras);
 
 bool is_turbocharged(std::vector<int> extras);
 
@@ -131,8 +136,6 @@ void add_vehicle_generic_settings(std::vector<StringPairSettingDBRow>* results);
 
 void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settings);
 
-void set_chrome_wheels_enabled(Vehicle veh, bool enabled);
-
 bool onconfirm_paintfade(MenuItem<float> choice);
 
 void onhighlight_paintfade(MenuItem<float> choice);
@@ -159,8 +162,6 @@ void fix_vehicle();
 
 void clean_vehicle();
 
-void apply_paint(PaintColour whichpaint);
-
 struct NeonLightsColor{
 	std::string colorString;
 	int rVal, gVal, bVal;
@@ -169,11 +170,6 @@ struct NeonLightsColor{
 struct TireSmokeColor{
 	std::string colorString;
 	int rVal, gVal, bVal;
-};
-
-struct TrimColour{
-	std::string trimColName;
-	int trimColVal;
 };
 
 void apply_neon_colors(int colorIndex);
@@ -227,7 +223,7 @@ void drive_passenger();
 bool inline is_this_a_car(Vehicle veh){
 	// Return true if the current vehicle is a car, e.g. as certain vehicles don't support neon lights
 	Entity et = ENTITY::GET_ENTITY_MODEL(veh);
-	return VEHICLE::IS_THIS_MODEL_A_CAR(et);
+	return VEHICLE::IS_THIS_MODEL_A_CAR(et) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(et);
 }
 
 bool inline is_this_a_motorcycle(Vehicle veh){
@@ -240,6 +236,21 @@ bool inline is_this_a_heli_or_plane(Vehicle veh){
 	return VEHICLE::IS_THIS_MODEL_A_HELI(et) || VEHICLE::IS_THIS_MODEL_A_PLANE(et);
 }
 
+bool inline is_this_a_bicycle(Vehicle veh){
+	Entity et = ENTITY::GET_ENTITY_MODEL(veh);
+	return VEHICLE::IS_THIS_MODEL_A_BICYCLE(et);
+}
+
+bool inline is_this_a_boat_or_sub(Vehicle veh){
+	Entity et = ENTITY::GET_ENTITY_MODEL(veh);
+	return VEHICLE::IS_THIS_MODEL_A_BOAT(et) || VEHICLE::_IS_THIS_MODEL_A_SUBMERSIBLE(et);
+}
+
+bool inline is_this_a_train(Vehicle veh){
+	Entity et = ENTITY::GET_ENTITY_MODEL(veh);
+	return VEHICLE::IS_THIS_MODEL_A_TRAIN(et);
+}
+
 bool did_player_just_enter_vehicle(Ped playerPed);
 
-void fully_tune_vehicle(Vehicle veh, bool optics = true, bool repaint = false);
+void fully_tune_vehicle(Vehicle veh, bool optics = true);
