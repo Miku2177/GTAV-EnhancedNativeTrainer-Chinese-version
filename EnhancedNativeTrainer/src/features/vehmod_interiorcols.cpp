@@ -78,7 +78,7 @@ bool process_trim_colour_menu(){
 	MenuItem<int> *item;
 	int colIndex = 0, currTrimCol;
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
-	VEHICLE::_GET_VEHICLE_DASHBOARD_COLOUR(veh, &currTrimCol);
+	VEHICLE::_GET_VEHICLE_INTERIOR_COLOUR(veh, &currTrimCol);
 
 	for(int a = 0; a < PAINTS_ALL.size(); a++){
 		PaintColor b = PAINTS_ALL.at(a);
