@@ -18,10 +18,10 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 #include "..\ui_support\menu_functions.h"
 #include "..\storage\database.h"
-#include "..\common\ENTUtil.h"
 
 #include "..\ent-enums.h"
 #include "..\utils.h"
+#include "..\common\ENTUtil.h"
 
 #include <string>
 
