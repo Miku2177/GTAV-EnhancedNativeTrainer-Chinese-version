@@ -15,7 +15,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\debug\debuglog.h"
 #include "..\ent-enums.h"
 
-struct tele_location {
+struct tele_location{
 	std::string text;
 	float x;
 	float y;
@@ -29,7 +29,7 @@ int mainMenuIndex = 0;
 
 int lastChosenCategory = -1;
 
-int lastMenuChoiceInCategories[] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+int lastMenuChoiceInCategories[] = {0, 0, 0, 0, 0, 0, 0, 0};
 
 bool beingChauffeured = false;
 
@@ -37,7 +37,7 @@ Vehicle waitingToRetakeSeat = -1;
 
 float chauffTolerance = 25.0;
 
-Vector3 blipCoords = { 0, 0, 0 };
+Vector3 blipCoords = {0, 0, 0};
 
 std::vector<tele_location> LOCATIONS_SAFE = {
 	{ "Michael's Safehouse", -827.138f, 176.368f, 70.4999f },
@@ -401,44 +401,38 @@ std::vector<tele_location> LOCATIONS_JELLMAN = {
 
 std::string JELLMAN_CAPTION = "Heist Map Updates In SP";
 
-static std::vector<std::string> MENU_LOCATION_CATEGORIES{ "Safehouses", "Landmarks", "Roof/High Up", "Underwater", "Interiors", "Extra Exterior Scenery", JELLMAN_CAPTION };// "Test", "Toggles" };
+static std::vector<std::string> MENU_LOCATION_CATEGORIES{"Safehouses", "Landmarks", "Roof/High Up", "Underwater", "Interiors", "Extra Exterior Scenery", JELLMAN_CAPTION};// "Test", "Toggles" };
 
-static std::vector<tele_location> VOV_LOCATIONS[] = { LOCATIONS_SAFE, LOCATIONS_LANDMARKS, LOCATIONS_HIGH, LOCATIONS_UNDERWATER, LOCATIONS_INTERIORS, LOCATIONS_REQSCEN, LOCATIONS_JELLMAN };// , LOCATIONS_BROKEN };
+static std::vector<tele_location> VOV_LOCATIONS[] = {LOCATIONS_SAFE, LOCATIONS_LANDMARKS, LOCATIONS_HIGH, LOCATIONS_UNDERWATER, LOCATIONS_INTERIORS, LOCATIONS_REQSCEN, LOCATIONS_JELLMAN};// , LOCATIONS_BROKEN };
 
-void teleport_to_coords(Entity e, Vector3 coords)
-{
+void teleport_to_coords(Entity e, Vector3 coords){
 	ENTITY::SET_ENTITY_COORDS_NO_OFFSET(e, coords.x, coords.y, coords.z, 0, 0, 1);
 	WAIT(0);
 	set_status_text("Teleported");
 }
 
-void output_current_location(Entity e)
-{
+void output_current_location(Entity e){
 	Vector3 coords = ENTITY::GET_ENTITY_COORDS(e, 0);
 	std::ostringstream ss;
 	ss << "X: " << coords.x << "\nY: " << coords.y << "\nZ: " << coords.z;
 	set_status_text_centre_screen(ss.str(), 4000UL);
 }
 
-Vector3 get_blip_marker()
-{
+Vector3 get_blip_marker(){
 	static Vector3 zero;
 	Vector3 coords;
 
 	bool blipFound = false;
 	// search for marker blip
 	int blipIterator = UI::_GET_BLIP_INFO_ID_ITERATOR();
-	for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator))
-	{
-		if (UI::GET_BLIP_INFO_ID_TYPE(i) == 4)
-		{
+	for(Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)){
+		if(UI::GET_BLIP_INFO_ID_TYPE(i) == 4){
 			coords = UI::GET_BLIP_INFO_ID_COORD(i);
 			blipFound = true;
 			break;
 		}
 	}
-	if (blipFound)
-	{
+	if(blipFound){
 		return coords;
 	}
 
@@ -446,37 +440,32 @@ Vector3 get_blip_marker()
 	return zero;
 }
 
-void teleport_to_marker()
-{
+void teleport_to_marker(){
 	Vector3 coords = get_blip_marker();
-	
-	if (coords.x + coords.y == 0) return;
-	
+
+	if(coords.x + coords.y == 0) return;
+
 	// get entity to teleport
 	Entity e = PLAYER::PLAYER_PED_ID();
-	if (PED::IS_PED_IN_ANY_VEHICLE(e, 0))
-	{
+	if(PED::IS_PED_IN_ANY_VEHICLE(e, 0)){
 		e = PED::GET_VEHICLE_PED_IS_USING(e);
 	}
 
 	// load needed map region and check height levels for ground existence
 	bool groundFound = false;
-	static float groundCheckHeight[] = 
-	{ 100.0, 150.0, 50.0, 0.0, 200.0, 250.0, 300.0, 350.0, 400.0, 450.0, 500.0, 550.0, 600.0, 650.0, 700.0, 750.0, 800.0 };
-	for (int i = 0; i < sizeof(groundCheckHeight) / sizeof(float); i++)
-	{
+	static float groundCheckHeight[] =
+	{100.0, 150.0, 50.0, 0.0, 200.0, 250.0, 300.0, 350.0, 400.0, 450.0, 500.0, 550.0, 600.0, 650.0, 700.0, 750.0, 800.0};
+	for(int i = 0; i < sizeof(groundCheckHeight) / sizeof(float); i++){
 		ENTITY::SET_ENTITY_COORDS_NO_OFFSET(e, coords.x, coords.y, groundCheckHeight[i], 0, 0, 1);
 		WAIT(100);
-		if (GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(coords.x, coords.y, groundCheckHeight[i], &coords.z))
-		{
+		if(GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(coords.x, coords.y, groundCheckHeight[i], &coords.z)){
 			groundFound = true;
 			coords.z += 3.0;
 			break;
 		}
 	}
 	// if ground not found then set Z in air and give player a parachute
-	if (!groundFound)
-	{
+	if(!groundFound){
 		coords.z = 1000.0;
 		WEAPON::GIVE_DELAYED_WEAPON_TO_PED(PLAYER::PLAYER_PED_ID(), 0xFBAB5776, 1, 0);
 	}
@@ -484,25 +473,20 @@ void teleport_to_marker()
 	teleport_to_coords(e, coords);
 }
 
-void teleport_to_last_vehicle()
-{
+void teleport_to_last_vehicle(){
 	Vehicle veh = PLAYER::GET_PLAYERS_LAST_VEHICLE();
-	if (ENTITY::DOES_ENTITY_EXIST(veh))
-	{
+	if(ENTITY::DOES_ENTITY_EXIST(veh)){
 		PED::SET_PED_INTO_VEHICLE(PLAYER::PLAYER_PED_ID(), veh, -1);
-		if (VEHICLE::IS_THIS_MODEL_A_HELI(ENTITY::GET_ENTITY_MODEL(veh)) || VEHICLE::IS_THIS_MODEL_A_PLANE(ENTITY::GET_ENTITY_MODEL(veh)))
-		{
+		if(is_this_a_heli_or_plane(veh)){
 			VEHICLE::SET_HELI_BLADES_FULL_SPEED(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()));
 		}
 	}
-	else
-	{
+	else{
 		set_status_text("No vehicle found");
 	}
 }
 
-bool is_player_at_blip(Vector3 currentCords, Vector3 destCords, float tolerance)
-{
+bool is_player_at_blip(Vector3 currentCords, Vector3 destCords, float tolerance){
 	float eucDistance;
 
 	float xDiff = destCords.x - currentCords.x;
@@ -513,8 +497,7 @@ bool is_player_at_blip(Vector3 currentCords, Vector3 destCords, float tolerance)
 	return (eucDistance <= tolerance);
 }
 
-float get_euc_distance(Vector3 currentCords, Vector3 destCords)
-{
+float get_euc_distance(Vector3 currentCords, Vector3 destCords){
 	float xDiff = destCords.x - currentCords.x;
 	float yDiff = destCords.y - currentCords.y;
 	float zDiff = destCords.y - currentCords.y;
@@ -524,8 +507,7 @@ float get_euc_distance(Vector3 currentCords, Vector3 destCords)
 	return eucDistance;
 }
 
-void get_chauffeur_to_marker()
-{
+void get_chauffeur_to_marker(){
 	beingChauffeured = true;
 
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
@@ -533,14 +515,12 @@ void get_chauffeur_to_marker()
 	Vector3 playerCoords = ENTITY::GET_ENTITY_COORDS(playerPed, 0);
 	blipCoords = get_blip_marker();
 
-	if (blipCoords.x == 0 && blipCoords.y == 0)
-	{
+	if(blipCoords.x == 0 && blipCoords.y == 0){
 		// no blip marker set
 		return;
 	}
 
-	if (is_player_at_blip(playerCoords, blipCoords, chauffTolerance))
-	{
+	if(is_player_at_blip(playerCoords, blipCoords, chauffTolerance)){
 		set_status_text("You're already at your destination");
 		return;
 	}
@@ -548,47 +528,38 @@ void get_chauffeur_to_marker()
 	Vector3 spawn_coords = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(PLAYER::PLAYER_PED_ID(), 0.0, 5.0, 0.0);
 
 	Vehicle veh;
-	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0))
-	{
+	if(PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
 		veh = PED::GET_VEHICLE_PED_IS_IN(playerPed, 0);
 
-		if (is_this_a_heli_or_plane(veh))
-		{
+		if(is_this_a_heli_or_plane(veh)){
 			set_status_text("Aircraft chauffeuring not supported yet");
 			return;
 		}
 
-		if (!VEHICLE::IS_VEHICLE_SEAT_FREE(veh, -1))
-		{
+		if(!VEHICLE::IS_VEHICLE_SEAT_FREE(veh, -1)){
 			Ped oldDriver = VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh, -1);
-			if (VEHICLE::IS_VEHICLE_SEAT_FREE(veh, -2))
-			{
+			if(VEHICLE::IS_VEHICLE_SEAT_FREE(veh, -2)){
 				PED::SET_PED_INTO_VEHICLE(oldDriver, veh, -2);
 			}
-			else
-			{
-				if (oldDriver == playerPed)
-				{
+			else{
+				if(oldDriver == playerPed){
 					set_status_text("Couldn't make room for your chauffeur");
 					return;
 				}
-				else
-				{
+				else{
 					PED::DELETE_PED(&oldDriver);
 				}
 			}
 		}
 	}
-	else
-	{
+	else{
 		//random supercar
 		int carIndex = rand() % VALUES_SUPERCARS.size();
 		std::string carName = VALUES_SUPERCARS.at(carIndex);
-		Hash vehHash = GAMEPLAY::GET_HASH_KEY((char*)carName.c_str());
+		Hash vehHash = GAMEPLAY::GET_HASH_KEY((char*) carName.c_str());
 
 		STREAMING::REQUEST_MODEL(vehHash);
-		while (!STREAMING::HAS_MODEL_LOADED(vehHash))
-		{
+		while(!STREAMING::HAS_MODEL_LOADED(vehHash)){
 			make_periodic_feature_call();
 			WAIT(0);
 		}
@@ -601,43 +572,25 @@ void get_chauffeur_to_marker()
 	blipCoords.z += 3.0;
 
 	Hash driverPedHash;
-	if (is_this_a_heli_or_plane(veh))
-	{
+	if(is_this_a_heli_or_plane(veh)){
 		driverPedHash = GAMEPLAY::GET_HASH_KEY("s_m_y_pilot_01");
 	}
-	else
-	{
+	else{
 		driverPedHash = GAMEPLAY::GET_HASH_KEY("A_C_CHIMP");
 	}
 	STREAMING::REQUEST_MODEL(driverPedHash);
-	while (!STREAMING::HAS_MODEL_LOADED(driverPedHash))
-	{
+	while(!STREAMING::HAS_MODEL_LOADED(driverPedHash)){
 		make_periodic_feature_call();
 		WAIT(0);
 	}
 
 	Ped driver = PED::CREATE_PED(25, driverPedHash, spawn_coords.x, spawn_coords.y, spawn_coords.z, 0, false, false);
 
-	while (!NETWORK::NETWORK_HAS_CONTROL_OF_ENTITY(veh))
-	{
+	while(!NETWORK::NETWORK_HAS_CONTROL_OF_ENTITY(veh)){
 		make_periodic_feature_call();
 		NETWORK::NETWORK_REQUEST_CONTROL_OF_ENTITY(veh);
 		WAIT(0);
 	}
-
-	char* playerName = PLAYER::GET_PLAYER_NAME(PLAYER::PLAYER_ID());
-	if (playerName != NULL && strlen(playerName) != 0)
-	{
-		VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT(veh, playerName);
-	}
-
-	//random metallic paint
-	int useless, wheelCol;//pearl topcoat, wheel color
-	int paintIndex = rand() % PAINTS_METALLIC.size();
-	PaintColour paint = PAINTS_METALLIC.at(paintIndex);
-	VEHICLE::SET_VEHICLE_COLOURS(veh, paint.mainValue, paint.mainValue);
-	VEHICLE::GET_VEHICLE_EXTRA_COLOURS(veh, &useless, &wheelCol);
-	VEHICLE::SET_VEHICLE_EXTRA_COLOURS(veh, paint.pearlAddition, wheelCol);
 
 	PED::SET_PED_INTO_VEHICLE(driver, veh, -1);
 	set_old_vehicle_state(false); // set old vehicle state to false since we changed cars but didn't actually exit the last one
@@ -657,40 +610,32 @@ void get_chauffeur_to_marker()
 	*/
 	//AI::TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE(ped, veh, blipCoords.x, blipCoords.y, blipCoords.z, 100, 5, chauffTolerance);
 
-	if (is_this_a_heli_or_plane(veh))
-	{
+	if(is_this_a_heli_or_plane(veh)){
 		//TODO
 	}
-	else
-	{
-		if (get_euc_distance(playerCoords, blipCoords) >= 1000.0)
-		{
+	else{
+		if(get_euc_distance(playerCoords, blipCoords) >= 1000.0){
 			AI::TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE(driver, veh, blipCoords.x, blipCoords.y, blipCoords.z, 40.0, 4, chauffTolerance);
 		}
-		else
-		{
+		else{
 			AI::TASK_VEHICLE_DRIVE_TO_COORD(driver, veh, blipCoords.x, blipCoords.y, blipCoords.z, 40.0, 1, ENTITY::GET_ENTITY_MODEL(veh), 4, -1.0, -1.0);
 		}
 	}
 }
 
-void cancel_chauffeur(std::string message)
-{
+void cancel_chauffeur(std::string message){
 	Object taskHdl;
 
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
-	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0))
-	{
+	if(PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
 		Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 		Ped driver = VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh, -1);
 
 		VEHICLE::SET_VEHICLE_FORWARD_SPEED(veh, 0.0);
 		VEHICLE::SET_VEHICLE_ENGINE_ON(veh, FALSE, true);
-		if (ENTITY::DOES_ENTITY_EXIST(driver))
-		{
-			if (driver != PLAYER::PLAYER_PED_ID())
-			{
+		if(ENTITY::DOES_ENTITY_EXIST(driver)){
+			if(driver != PLAYER::PLAYER_PED_ID()){
 				AI::CLEAR_PED_TASKS(driver);
 
 				AI::OPEN_SEQUENCE_TASK(&taskHdl);
@@ -714,83 +659,67 @@ void cancel_chauffeur(std::string message)
 	beingChauffeured = false;
 }
 
-bool onconfirm_teleport_category(MenuItem<int> choice)
-{
+bool onconfirm_teleport_category(MenuItem<int> choice){
 	Entity e = PLAYER::PLAYER_PED_ID();
-	if (choice.value == -2)
-	{
+	if(choice.value == -2){
 		teleport_to_marker();
 		return false;
 	}
-	else if (choice.value == -3)
-	{
-		if (beingChauffeured)
-		{
+	else if(choice.value == -3){
+		if(beingChauffeured){
 			cancel_chauffeur("Chauffeur cancelled");
 		}
-		else
-		{
+		else{
 			get_chauffeur_to_marker();
 		}
 		return false;
 	}
-	else if (choice.value == -4)
-	{
+	else if(choice.value == -4){
 		teleport_to_last_vehicle();
 		return false;
 	}
-	else if (choice.value == -1)
-	{
+	else if(choice.value == -1){
 		output_current_location(e);
 		return false;
 	}
-	else if (choice.value == -5)
-	{
+	else if(choice.value == -5){
 		process_toggles_menu();
 		return false;
 	}
 
 	lastChosenCategory = choice.value;
 
-	if (process_teleport_menu(lastChosenCategory))
-	{
+	if(process_teleport_menu(lastChosenCategory)){
 		return true;
 	}
 	return false;
 }
 
-bool onconfirm_teleport_location(MenuItem<int> choice)
-{
+bool onconfirm_teleport_location(MenuItem<int> choice){
 	lastMenuChoiceInCategories[lastChosenCategory] = choice.value;
 
 	tele_location* value = &VOV_LOCATIONS[lastChosenCategory][choice.value];
 
 	// get entity to teleport
 	Entity e = PLAYER::PLAYER_PED_ID();
-	if (PED::IS_PED_IN_ANY_VEHICLE(e, 0))
-	{
+	if(PED::IS_PED_IN_ANY_VEHICLE(e, 0)){
 		e = PED::GET_VEHICLE_PED_IS_USING(e);
 	}
 
 	Vector3 coords;
 
-	if ((value->scenery_required.size() > 0 || value->scenery_toremove.size() > 0) && !value->isLoaded)
-	{
+	if((value->scenery_required.size() > 0 || value->scenery_toremove.size() > 0) && !value->isLoaded){
 		set_status_text("Loading new scenery...");
-		
-		if ( ENTITY::DOES_ENTITY_EXIST ( PLAYER::PLAYER_PED_ID () ) )// && STREAMING::IS_IPL_ACTIVE("plg_01") == 0)
+
+		if(ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()))// && STREAMING::IS_IPL_ACTIVE("plg_01") == 0)
 		{
-			for each (const char* scenery in value->scenery_toremove)
-			{
-				if (STREAMING::IS_IPL_ACTIVE(scenery))
-				{
+			for each (const char* scenery in value->scenery_toremove){
+				if(STREAMING::IS_IPL_ACTIVE(scenery)){
 					STREAMING::REMOVE_IPL(scenery);
 				}
 			}
-			for each ( const char* scenery in value->scenery_required )
-			{
-				if (!STREAMING::IS_IPL_ACTIVE(scenery))
-				{
+			for each (const char* scenery in value->scenery_required){
+				if(!STREAMING::IS_IPL_ACTIVE(scenery)){
 					STREAMING::REQUEST_IPL(scenery);
 				}
 			}
@@ -799,8 +728,7 @@ bool onconfirm_teleport_location(MenuItem<int> choice)
 		value->isLoaded = true;
 
 		DWORD time = GetTickCount() + 1000;
-		while (GetTickCount() < time)
-		{
+		while(GetTickCount() < time){
 			make_periodic_feature_call();
 			WAIT(0);
 		}
@@ -808,8 +736,7 @@ bool onconfirm_teleport_location(MenuItem<int> choice)
 		set_status_text("New scenery loaded");
 
 		time = GetTickCount() + 1000;
-		while (GetTickCount() < time)
-		{
+		while(GetTickCount() < time){
 			make_periodic_feature_call();
 			WAIT(0);
 		}
@@ -823,8 +750,7 @@ bool onconfirm_teleport_location(MenuItem<int> choice)
 	bool unloadedAnything = false;
 	DWORD time = GetTickCount() + 1000;
 
-	for (int x = 0; x < MENU_LOCATION_CATEGORIES.size(); x++)
-	{
+	for(int x = 0; x < MENU_LOCATION_CATEGORIES.size(); x++){
 		/*
 		//Added to avoid showing debug toggle menu.
 		if (x == MENU_LOCATION_CATEGORIES.size() - 1)
@@ -833,48 +759,38 @@ bool onconfirm_teleport_location(MenuItem<int> choice)
 		}
 		*/
 
-		for (int y = 0; y < VOV_LOCATIONS[x].size(); y++)
-		{
+		for(int y = 0; y < VOV_LOCATIONS[x].size(); y++){
 			//don't unload our newly loaded scenery
-			if (x == lastChosenCategory && y == choice.value)
-			{
+			if(x == lastChosenCategory && y == choice.value){
 				continue;
 			}
 
 			tele_location* loc = &VOV_LOCATIONS[x][y];
 
 			//don't unload something using same loader
-			if (loc->scenery_required == value->scenery_required && loc->scenery_toremove == value->scenery_toremove)
-			{
+			if(loc->scenery_required == value->scenery_required && loc->scenery_toremove == value->scenery_toremove){
 				continue;
 			}
 
-			if (loc->isLoaded && loc->scenery_required.size() > 0)
-			{
-				if (!unloadedAnything)
-				{
+			if(loc->isLoaded && loc->scenery_required.size() > 0){
+				if(!unloadedAnything){
 					set_status_text("Unloading old scenery...");
 					time = GetTickCount() + 1000;
-					while (GetTickCount() < time)
-					{
+					while(GetTickCount() < time){
 						make_periodic_feature_call();
 						WAIT(0);
 					}
 				}
 
-				if ( ENTITY::DOES_ENTITY_EXIST ( PLAYER::PLAYER_PED_ID () ) )// && STREAMING::IS_IPL_ACTIVE("plg_01") == 1)
+				if(ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()))// && STREAMING::IS_IPL_ACTIVE("plg_01") == 1)
 				{
-					for each ( const char* scenery in loc->scenery_required )
-					{
-						if (STREAMING::IS_IPL_ACTIVE(scenery))
-						{
+					for each (const char* scenery in loc->scenery_required){
+						if(STREAMING::IS_IPL_ACTIVE(scenery)){
 							STREAMING::REMOVE_IPL(scenery);
 						}
 					}
-					for each (const char* scenery in loc->scenery_toremove)
-					{
-						if (!STREAMING::IS_IPL_ACTIVE(scenery))
-						{
+					for each (const char* scenery in loc->scenery_toremove){
+						if(!STREAMING::IS_IPL_ACTIVE(scenery)){
 							STREAMING::REQUEST_IPL(scenery);
 						}
 					}
@@ -886,13 +802,11 @@ bool onconfirm_teleport_location(MenuItem<int> choice)
 		}
 	}
 
-	if (unloadedAnything)
-	{
+	if(unloadedAnything){
 		set_status_text("Old scenery unloaded");
 
 		time = GetTickCount() + 1000;
-		while (GetTickCount() < time)
-		{
+		while(GetTickCount() < time){
 			make_periodic_feature_call();
 			WAIT(0);
 		}
@@ -901,10 +815,8 @@ bool onconfirm_teleport_location(MenuItem<int> choice)
 	return false;
 }
 
-bool process_teleport_menu(int categoryIndex)
-{
-	if (categoryIndex == -1)
-	{
+bool process_teleport_menu(int categoryIndex){
+	if(categoryIndex == -1){
 		std::vector<MenuItem<int>*> menuItems;
 
 		MenuItem<int> *markerItem = new MenuItem<int>();
@@ -931,10 +843,8 @@ bool process_teleport_menu(int categoryIndex)
 		dialogItem->isLeaf = true;
 		menuItems.push_back(dialogItem);
 
-		for (int i = 0; i < MENU_LOCATION_CATEGORIES.size(); i++)
-		{
-			if (MENU_LOCATION_CATEGORIES[i].compare(JELLMAN_CAPTION) == 0 && !is_jellman_scenery_enabled())
-			{
+		for(int i = 0; i < MENU_LOCATION_CATEGORIES.size(); i++){
+			if(MENU_LOCATION_CATEGORIES[i].compare(JELLMAN_CAPTION) == 0 && !is_jellman_scenery_enabled()){
 				continue;
 			}
 
@@ -948,12 +858,10 @@ bool process_teleport_menu(int categoryIndex)
 		bool result = draw_generic_menu<int>(menuItems, &mainMenuIndex, "Teleport Locations", onconfirm_teleport_category, NULL, NULL);
 		return result;
 	}
-	else
-	{
+	else{
 		std::vector<MenuItem<int>*> menuItems;
 
-		for (int i = 0; i < VOV_LOCATIONS[categoryIndex].size(); i++)
-		{
+		for(int i = 0; i < VOV_LOCATIONS[categoryIndex].size(); i++){
 			MenuItem<int> *item = new MenuItem<int>();
 			item->caption = VOV_LOCATIONS[categoryIndex][i].text;
 			item->value = i;
@@ -964,10 +872,8 @@ bool process_teleport_menu(int categoryIndex)
 	}
 }
 
-void reset_teleporter_globals()
-{
-	for (int i = 0; i < MENU_LOCATION_CATEGORIES.size(); i++)
-	{
+void reset_teleporter_globals(){
+	for(int i = 0; i < MENU_LOCATION_CATEGORIES.size(); i++){
 		lastMenuChoiceInCategories[i] = 0;
 	}
 	lastChosenCategory = 0;
@@ -1007,25 +913,19 @@ const std::vector<std::string> TOGGLE_IPLS
 	"DT1_05_rubble" //rubble outside FBI HQ
 };
 
-bool is_ipl_active(std::vector<std::string> extras)
-{
+bool is_ipl_active(std::vector<std::string> extras){
 	return STREAMING::IS_IPL_ACTIVE(extras.at(0).c_str()) == 1;
 }
 
-void set_ipl_active(bool applied, std::vector<std::string> extras)
-{
+void set_ipl_active(bool applied, std::vector<std::string> extras){
 	char* scenery = (char*) extras.at(0).c_str();
-	if (applied)
-	{
-		if (!STREAMING::IS_IPL_ACTIVE(scenery))
-		{
+	if(applied){
+		if(!STREAMING::IS_IPL_ACTIVE(scenery)){
 			STREAMING::REQUEST_IPL(scenery);
 		}
 	}
-	else
-	{
-		if (STREAMING::IS_IPL_ACTIVE(scenery))
-		{
+	else{
+		if(STREAMING::IS_IPL_ACTIVE(scenery)){
 			STREAMING::REMOVE_IPL(scenery);
 		}
 	}
@@ -1033,11 +933,9 @@ void set_ipl_active(bool applied, std::vector<std::string> extras)
 
 int toggleIndex = 0;
 
-void process_toggles_menu()
-{
+void process_toggles_menu(){
 	std::vector<MenuItem<std::string>*> menuItems;
-	for (int i = 0; i < TOGGLE_IPLS.size(); i++)
-	{
+	for(int i = 0; i < TOGGLE_IPLS.size(); i++){
 		std::string item = TOGGLE_IPLS.at(i);
 		FunctionDrivenToggleMenuItem<std::string>* toggleItem = new FunctionDrivenToggleMenuItem<std::string>();
 		toggleItem->caption = item;
@@ -1051,34 +949,27 @@ void process_toggles_menu()
 	draw_generic_menu<std::string>(menuItems, &toggleIndex, "Test Toggles", NULL, NULL, NULL);
 }
 
-void update_teleport_features()
-{
+void update_teleport_features(){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
-	if (beingChauffeured)
-	{
+	if(beingChauffeured){
 		Vector3 playerCoords = ENTITY::GET_ENTITY_COORDS(playerPed, 0);
 		// Moved blipCoords to global scope... we don't want to call for new blip coords each time (we've already told mr. monkey where to go)
-		
-		if (is_player_at_blip(playerCoords, blipCoords, chauffTolerance))
-		{
+
+		if(is_player_at_blip(playerCoords, blipCoords, chauffTolerance)){
 			cancel_chauffeur("Arrived at destination");
 		}
 	}
-	else
-	{
+	else{
 		Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(playerPed, 0);
-		if (waitingToRetakeSeat != -1 && veh == waitingToRetakeSeat)
-		{
+		if(waitingToRetakeSeat != -1 && veh == waitingToRetakeSeat){
 			Ped driver = VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh, -1);
-			if (driver == NULL || !ENTITY::DOES_ENTITY_EXIST(driver))
-			{
+			if(driver == NULL || !ENTITY::DOES_ENTITY_EXIST(driver)){
 				AI::TASK_SHUFFLE_TO_NEXT_VEHICLE_SEAT(playerPed, veh);
 				waitingToRetakeSeat = -1;
 			}
 		}
-		else
-		{
+		else{
 			waitingToRetakeSeat = -1;
 		}
 	}

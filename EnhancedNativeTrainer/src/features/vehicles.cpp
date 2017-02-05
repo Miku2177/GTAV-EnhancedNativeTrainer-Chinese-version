@@ -9,7 +9,6 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 */
 
 #include "..\..\resource.h"
-#include "..\utils.h"
 #include "vehicles.h"
 #include "hotkeys.h"
 #include "script.h"
@@ -643,8 +642,9 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		}
 		featureLockVehicleDoorsUpdated = false;
 	}
-	if(featureLockVehicleDoors)
+	if(featureLockVehicleDoors){
 		VEHICLE::SET_VEHICLE_DOORS_LOCKED(veh, 4);
+	}
 
 	//Prevents player from wearing a helmet
 	if(bPlayerExists){
@@ -696,19 +696,45 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		}
 	}
 
-	// for finding out the colors
-	if(bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && IsKeyJustUp(KeyConfig::KEY_VEH_STOP)){
-		std::ofstream ofs("colors.txt", std::ios::app | std::ios::out);
-		Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
-		int primary, secondary, pearlescent, wheel;
+	// testing code; DO NOT DELETE
+	//if(bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && IsKeyJustUp(KeyConfig::KEY_VEH_STOP)){
+	//	std::ofstream ofs("_testing_colors.txt", std::ios::app | std::ios::out);
+	//	int primary, secondary, pearl, wheel, mod11, mod12, mod13, mod21, mod22;
 
-		VEHICLE::GET_VEHICLE_COLOURS(veh, &primary, &secondary);
-		VEHICLE::GET_VEHICLE_EXTRA_COLOURS(veh, &pearlescent, &wheel);
+	//	VEHICLE::GET_VEHICLE_COLOURS(veh, &primary, &secondary);
+	//	VEHICLE::GET_VEHICLE_EXTRA_COLOURS(veh, &pearl, &wheel);
+	//	VEHICLE::GET_VEHICLE_MOD_COLOR_1(veh, &mod11, &mod12, &mod13);
+	//	VEHICLE::GET_VEHICLE_MOD_COLOR_2(veh, &mod21, &mod22);
 
-		ofs << primary << "\t" << secondary << "\t" << pearlescent << "\t" << wheel << "\r\n";
+	//	ofs << primary << "\t" << secondary << "\t" << pearl << "\t" << wheel << "\t" << mod11 << "\t" << mod12 << "\t" << mod13 << "\t" << mod21 << "\t" << mod22 << "\t" << UI::_GET_LABEL_TEXT(VEHICLE::_GET_VEHICLE_MOD_COLOR_1_TEXT_LABEL(veh, false)) << "\t" << UI::_GET_LABEL_TEXT(VEHICLE::_GET_VEHICLE_MOD_COLOR_2_TEXT_LABEL(veh)) << "\n";
 
-		ofs.close();
-	}
+	//	ofs.close();
+
+	//	std::ofstream ofs("_testing_mods.txt", std::ios::app | std::ios::out);
+
+	//	for(int a = 0; a < 51; a++){
+	//		ofs << a << "\t" << VEHICLE::GET_MOD_SLOT_NAME(veh, a) << "\t" << UI::_GET_LABEL_TEXT(VEHICLE::GET_MOD_SLOT_NAME(veh, a)) << "\n";
+	//		for(int b = 0; b < VEHICLE::GET_NUM_VEHICLE_MODS(veh, a); b++){
+	//			ofs << "\t" << b << "\t" << VEHICLE::GET_MOD_TEXT_LABEL(veh, a, b) << "\t" << UI::_GET_LABEL_TEXT(VEHICLE::GET_MOD_TEXT_LABEL(veh, a, b)) << "\n";
+	//		}
+	//		ofs.flush();
+	//	}
+
+	//	ofs.close();
+
+	//	std::ofstream ofs("_testing_wheels.txt", std::ios::app | std::ios::out);
+
+	//	for(int a = 0; a < 10; a++){
+	//		VEHICLE::SET_VEHICLE_WHEEL_TYPE(veh, a);
+	//		ofs << a << "\n";
+	//		for(int b = 0; b < VEHICLE::GET_NUM_VEHICLE_MODS(veh, 23); b++){
+	//			ofs << "\t" << b << "\t" << VEHICLE::GET_MOD_TEXT_LABEL(veh, 23, b) << "\t" << UI::_GET_LABEL_TEXT(VEHICLE::GET_MOD_TEXT_LABEL(veh, 23, b)) << "\n";
+	//		}
+	//		ofs.flush();
+	//	}
+
+	//	ofs.close();
+	//}
 }
 
 bool did_player_just_enter_vehicle(Ped playerPed){
@@ -938,7 +964,7 @@ Vehicle do_spawn_vehicle(DWORD model, std::string modelTitle, bool cleanup){
 			PED::SET_PED_INTO_VEHICLE(PLAYER::PLAYER_PED_ID(), veh, -1);
 			oldVehicleState = false; // set old vehicle state to false since we changed cars but didn't actually exit the last one
 
-			if(VEHICLE::IS_THIS_MODEL_A_HELI(ENTITY::GET_ENTITY_MODEL(veh)) || VEHICLE::IS_THIS_MODEL_A_PLANE(ENTITY::GET_ENTITY_MODEL(veh))){
+			if(is_this_a_heli_or_plane(veh)){
 				VEHICLE::SET_HELI_BLADES_FULL_SPEED(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()));
 			}
 		}
@@ -1023,12 +1049,9 @@ bool spawn_saved_car(int slot, std::string caption){
 			VEHICLE::SET_VEHICLE_LIVERY(veh, savedVeh->livery);
 		}
 
-		VEHICLE::SET_VEHICLE_EXTRA_COLOURS(veh, savedVeh->colourExtraPearl, savedVeh->colourExtraWheel);
 		VEHICLE::SET_VEHICLE_MOD_COLOR_1(veh, savedVeh->colourMod1Type, savedVeh->colourMod1Colour, savedVeh->colourMod1P3);
 		VEHICLE::SET_VEHICLE_MOD_COLOR_2(veh, savedVeh->colourMod2Type, savedVeh->colourMod2Colour);
-
 		VEHICLE::SET_VEHICLE_COLOURS(veh, savedVeh->colourPrimary, savedVeh->colourSecondary);
-
 		VEHICLE::SET_VEHICLE_EXTRA_COLOURS(veh, savedVeh->colourExtraPearl, savedVeh->colourExtraWheel);
 
 		if(savedVeh->colourCustom1RGB[0] != -1 &&
@@ -1262,6 +1285,7 @@ bool onconfirm_savedveh_menu(MenuItem<int> choice){
 
 	activeSavedVehicleIndex = choice.value;
 	activeSavedVehicleSlotName = choice.caption;
+
 	return process_savedveh_slot_menu(choice.value);
 }
 
