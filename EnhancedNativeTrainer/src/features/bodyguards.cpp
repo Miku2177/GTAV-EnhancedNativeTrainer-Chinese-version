@@ -146,12 +146,14 @@ bool process_npc_skins_menu(){
 }
 
 bool onconfirm_bodyguard_weapons_category_menu(MenuItem<int> choice){
+	int category = choice.sortval;
+
 	switch(choice.value){
-		case 0:
-			for(int a = 0; a < VOV_WEAPON_CAPTIONS[choice.sortval].size(); a++){
-				*bodyguardWeaponsToggle[choice.sortval].at(a) = !*bodyguardWeaponsToggle[choice.sortval].at(a);
+		case -1:
+			for(int a = 0; a < bodyguardWeaponsToggle[category].size(); a++){
+				*bodyguardWeaponsToggle[category].at(a) = !*bodyguardWeaponsToggle[category].at(a);
 			}
-			set_status_text(std::string("All bodyguard ") + MENU_WEAPON_CATEGORIES.at(choice.sortval) + std::string(" weapons toggled"));
+			set_status_text(std::string("All bodyguard ") + MENU_WEAPON_CATEGORIES.at(category) + std::string(" weapons toggled"));
 			break;
 		default:
 			break;
@@ -164,7 +166,7 @@ bool process_bodyguard_weapons_category_menu(int category){
 	std::vector<MenuItem<int> *> menuItems;
 	MenuItem<int> *item;
 	ToggleMenuItem<int> *toggleItem;
-	int index = 0;
+	int index = -1;
 
 	item = new MenuItem<int>();
 	item->caption = "Toggle All Weapons in Category";
