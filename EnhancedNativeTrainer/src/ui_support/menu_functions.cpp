@@ -288,6 +288,47 @@ bool ToggleMenuItem<T>::onConfirm(){
 	return true;
 }
 
+int WantedSymbolItem::get_wanted_value(){
+	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
+	Player player = PLAYER::PLAYER_ID();
+	return PLAYER::GET_PLAYER_WANTED_LEVEL(player);
+}
+
+void WantedSymbolItem::handleLeftPress(){
+	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
+	Player player = PLAYER::PLAYER_ID();
+	int currentWantedLevel = PLAYER::GET_PLAYER_WANTED_LEVEL(player);
+	if(bPlayerExists && currentWantedLevel > 0){
+		PLAYER::SET_PLAYER_WANTED_LEVEL(player, --currentWantedLevel, 0);
+
+		if(currentWantedLevel == 0){
+			PLAYER::CLEAR_PLAYER_WANTED_LEVEL(player);
+		}
+		else{
+			PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(player, 0);
+		}
+	}
+
+	if(getFrozenWantedFeature()){
+		updateFrozenWantedFeature(currentWantedLevel);
+	}
+}
+
+void WantedSymbolItem::handleRightPress(){
+	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
+	Player player = PLAYER::PLAYER_ID();
+	int currentWantedLevel = PLAYER::GET_PLAYER_WANTED_LEVEL(player);
+	if(bPlayerExists && currentWantedLevel < 5){
+		PLAYER::SET_MAX_WANTED_LEVEL(++currentWantedLevel);
+		PLAYER::SET_PLAYER_WANTED_LEVEL(player, currentWantedLevel, 0);
+		PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(player, 0);
+	}
+
+	if(getFrozenWantedFeature()){
+		updateFrozenWantedFeature(currentWantedLevel);
+	}
+}
+
 template<class T>
 bool CashItem<T>::onConfirm(){
 	for(int i = 0; i < 3; i++){
@@ -314,7 +355,7 @@ bool CashItem<T>::onConfirm(){
 		}
 		STATS::STAT_SET_INT(hash, newAmount, 1);
 	}
-	cash > 0 ? set_status_text("Cash added") : set_status_text("Cash removed");
+	cash >= 0 ? set_status_text("Cash added") : set_status_text("Cash removed");
 
 	return true;
 }
@@ -348,46 +389,6 @@ void CashItem<T>::handleRightPress(){
 	}
 	else{
 		cash = min;
-	}
-}
-
-int WantedSymbolItem::get_wanted_value(){
-	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
-	Player player = PLAYER::PLAYER_ID();
-	return PLAYER::GET_PLAYER_WANTED_LEVEL(player);
-}
-
-void WantedSymbolItem::handleLeftPress(){
-	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
-	Player player = PLAYER::PLAYER_ID();
-	int currentWantedLevel = PLAYER::GET_PLAYER_WANTED_LEVEL(player);
-	if(bPlayerExists && currentWantedLevel > 0){
-		PLAYER::SET_PLAYER_WANTED_LEVEL(player, --currentWantedLevel, 0);
-
-		if(currentWantedLevel == 0){
-			PLAYER::CLEAR_PLAYER_WANTED_LEVEL(player);
-		}
-		else{
-			PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(player, 0);
-		}
-	}
-
-	if(getFrozenWantedFeature()){
-		updateFrozenWantedFeature(currentWantedLevel);
-	}
-}
-
-void WantedSymbolItem::handleRightPress(){
-	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
-	Player player = PLAYER::PLAYER_ID();
-	int currentWantedLevel = PLAYER::GET_PLAYER_WANTED_LEVEL(player);
-	if(bPlayerExists && currentWantedLevel < 5){
-		PLAYER::SET_PLAYER_WANTED_LEVEL(player, ++currentWantedLevel, 0);
-		PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(player, 0);
-	}
-
-	if(getFrozenWantedFeature()){
-		updateFrozenWantedFeature(currentWantedLevel);
 	}
 }
 

@@ -77,7 +77,7 @@ bool featureNoRagdollUpdated = false;
 
 int  frozenWantedLevel = 0;
 
-// player model control, switching on normal ped model when needed	
+// player model control, switching on normal ped model when needed
 
 char* player_models[] = {"player_zero", "player_one", "player_two"};
 
@@ -87,6 +87,11 @@ const char* CLIPSET_DRUNK = "move_m@drunk@verydrunk";
 
 const std::vector<std::string> GRAVITY_CAPTIONS{"Minimum", "0.1x", "0.5x", "0.75x", "1x (Normal)"};
 const std::vector<float> GRAVITY_VALUES{0.0f, 0.1f, 0.5f, 0.75f, 1.0f};
+
+const std::vector<std::string> REGEN_CAPTIONS{"Minimum", "0.1x", "0.25x", "0.5x", "1x (Normal)", "2x", "5x", "10x", "20x", "50x", "100x", "200x", "500x", "1000x"};
+const std::vector<float> REGEN_VALUES{0.0f, 0.1f, 0.25f, 0.5f, 1.0f, 2.0f, 5.0f, 10.0f, 20.0f, 50.0f, 100.0f, 200.0f, 500.0f, 1000.0f};
+const int REGEN_DEFAULT = 4;
+int regenIndex = REGEN_DEFAULT;
 
 void check_player_model(){
 	/*
@@ -190,7 +195,7 @@ void update_features(){
 
 	everInitialised = true;
 	game_frame_num++;
-	if(game_frame_num >= 100000){
+	if(game_frame_num >= 216000){
 		game_frame_num = 0;
 	}
 
@@ -348,7 +353,6 @@ void update_features(){
 		featureNoRagdollUpdated = false;
 	}
 
-
 	//Player Invisible
 	if(featurePlayerInvisibleUpdated){
 		featurePlayerInvisibleUpdated = false;
@@ -432,16 +436,68 @@ void updateFrozenWantedFeature(int level){
 	featureWantedLevelFrozenUpdated = true;
 }
 
+void onchange_regen_callback(int index, SelectFromListMenuItem *source){
+	if(ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID())){
+		PLAYER::SET_PLAYER_HEALTH_RECHARGE_MULTIPLIER(PLAYER::PLAYER_ID(), REGEN_VALUES.at(regenIndex = index));
+		std::ostringstream ss;
+		ss << "Health regeneration rate: " << REGEN_VALUES.at(regenIndex);
+		set_status_text(ss.str());
+	}
+}
+
+void process_player_life_menu(){
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+
+	if(!ENTITY::DOES_ENTITY_EXIST(playerPed)){
+		return;
+	}
+
+	std::vector<MenuItem<int> *> menuItems;
+
+	LifeItem<int> *item = new LifeItem<int>();
+	item->caption = "Current Health";
+	item->value = 0;
+	item->lifeType = HEALTH;
+	item->minimum = 99;
+	item->life = ENTITY::GET_ENTITY_HEALTH(playerPed);
+	menuItems.push_back(item);
+
+	item = new LifeItem<int>();
+	item->caption = "Maximum Health";
+	item->value = 1;
+	item->lifeType = MAXHEALTH;
+	item->minimum = 100;
+	item->life = PED::GET_PED_MAX_HEALTH(playerPed);
+	menuItems.push_back(item);
+
+	item = new LifeItem<int>();
+	item->caption = "Current Armor";
+	item->value = 2;
+	item->lifeType = ARMOR;
+	item->minimum = 0;
+	item->life = PED::GET_PED_ARMOUR(playerPed);
+	menuItems.push_back(item);
+
+	item = new LifeItem<int>();
+	item->caption = "Maximum Armor";
+	item->value = 3;
+	item->lifeType = MAXARMOR;
+	item->minimum = 0;
+	item->life = PLAYER::GET_PLAYER_MAX_ARMOUR(PLAYER::PLAYER_ID());
+	menuItems.push_back(item);
+
+	SelectFromListMenuItem *listItem = new SelectFromListMenuItem(REGEN_CAPTIONS, onchange_regen_callback);
+	listItem->caption = "Health Regeneration Rate";
+	listItem->value = regenIndex;
+	menuItems.push_back(listItem);
+
+	draw_generic_menu<int>(menuItems, nullptr, "Player Data", nullptr, nullptr, nullptr, nullptr);
+}
+
 int activeLineIndexPlayer = 0;
 
 bool onconfirm_player_menu(MenuItem<int> choice){
-	// common variables
-	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
-	Player player = PLAYER::PLAYER_ID();
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
-
 	switch(activeLineIndexPlayer){
-		// skin changer
 		case 0:
 			if(process_skinchanger_menu())	return true;
 			break;
@@ -451,41 +507,45 @@ bool onconfirm_player_menu(MenuItem<int> choice){
 		case 17:
 			process_anims_menu_top();
 			break;
+		case 18:
+			process_player_life_menu();
+			break;
 		default:
 			break;
 	}
+
 	return false;
 }
 
 void process_player_menu(){
-	const int lineCount = 18;
+	const int lineCount = 19;
 
 	std::string caption = "Player Options";
 
 	StandardOrToggleMenuDef lines[lineCount] = {
-		{ "Player Appearance", NULL, NULL, false },
-		{ "Heal Player", NULL, NULL, true },
-		{ "Add or Remove Cash", NULL, NULL, true, CASH },
-		{ "Wanted Level", NULL, NULL, true, WANTED },
-		{ "Freeze Wanted Level", &featureWantedLevelFrozen, &featureWantedLevelFrozenUpdated, true },
-		{ "Invincible", &featurePlayerInvincible, &featurePlayerInvincibleUpdated, true },
-		{ "Police Ignore You", &featurePlayerIgnoredByPolice, &featurePlayerIgnoredByPoliceUpdated, true },
-		{ "Unlimited Ability", &featurePlayerUnlimitedAbility, NULL, true },
-		{ "Noiseless", &featurePlayerNoNoise, &featurePlayerNoNoiseUpdated, true },
-		{ "Fast Swim", &featurePlayerFastSwim, &featurePlayerFastSwimUpdated, true },
-		{ "Fast Run", &featurePlayerFastRun, &featurePlayerFastRunUpdated, true },
-		{ "Super Jump", &featurePlayerSuperJump, NULL, true },
-		{ "No Ragdoll", &featureNoRagdoll, &featureNoRagdollUpdated, true },
-		{ "Invisibility", &featurePlayerInvisible, &featurePlayerInvisibleUpdated, true },
-		{ "Drunk", &featurePlayerDrunk, &featurePlayerDrunkUpdated, true },
-		{ "Night Vision", &featureNightVision, &featureNightVisionUpdated, true },
-		{ "Thermal Vision", &featureThermalVision, &featureThermalVisionUpdated, true },
-		{ "Animations", NULL, NULL, false },
+		{"Player Appearance", NULL, NULL, false},
+		{"Heal Player", NULL, NULL, true},
+		{"Add or Remove Cash", NULL, NULL, true, CASH},
+		{"Wanted Level", NULL, NULL, true, WANTED},
+		{"Freeze Wanted Level", &featureWantedLevelFrozen, &featureWantedLevelFrozenUpdated, true},
+		{"Invincible", &featurePlayerInvincible, &featurePlayerInvincibleUpdated, true},
+		{"Police Ignore You", &featurePlayerIgnoredByPolice, &featurePlayerIgnoredByPoliceUpdated, true},
+		{"Unlimited Ability", &featurePlayerUnlimitedAbility, NULL, true},
+		{"Noiseless", &featurePlayerNoNoise, &featurePlayerNoNoiseUpdated, true},
+		{"Fast Swim", &featurePlayerFastSwim, &featurePlayerFastSwimUpdated, true},
+		{"Fast Run", &featurePlayerFastRun, &featurePlayerFastRunUpdated, true},
+		{"Super Jump", &featurePlayerSuperJump, NULL, true},
+		{"No Ragdoll", &featureNoRagdoll, &featureNoRagdollUpdated, true},
+		{"Invisibility", &featurePlayerInvisible, &featurePlayerInvisibleUpdated, true},
+		{"Drunk", &featurePlayerDrunk, &featurePlayerDrunkUpdated, true},
+		{"Night Vision", &featureNightVision, &featureNightVisionUpdated, true},
+		{"Thermal Vision", &featureThermalVision, &featureThermalVisionUpdated, true},
+		{"Animations", NULL, NULL, false},
+		{"Player Data", NULL, NULL, false}
 	};
 
 	draw_menu_from_struct_def(lines, lineCount, &activeLineIndexPlayer, caption, onconfirm_player_menu);
 }
-
 
 //==================
 // MAIN MENU
@@ -1393,16 +1453,20 @@ void heal_player(){
 	Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
-	ENTITY::SET_ENTITY_HEALTH(playerPed, ENTITY::GET_ENTITY_MAX_HEALTH(playerPed));
-	PED::ADD_ARMOUR_TO_PED(playerPed, PLAYER::GET_PLAYER_MAX_ARMOUR(player) - PED::GET_PED_ARMOUR(playerPed));
+	ENTITY::SET_ENTITY_HEALTH(playerPed, PED::GET_PED_MAX_HEALTH(playerPed));
+	PED::SET_PED_ARMOUR(playerPed, PLAYER::GET_PLAYER_MAX_ARMOUR(player));
+	PLAYER::SPECIAL_ABILITY_FILL_METER(player, false);
+
 	PED::SET_PED_WETNESS_HEIGHT(playerPed, -2.0);
 	PED::CLEAR_PED_BLOOD_DAMAGE(playerPed);
+
 	if(PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
 		Vehicle playerVeh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 		if(ENTITY::DOES_ENTITY_EXIST(playerVeh) && !ENTITY::IS_ENTITY_DEAD(playerVeh)){
 			VEHICLE::SET_VEHICLE_FIXED(playerVeh);
 		}
 	}
+
 	set_status_text("Player healed");
 }
 
