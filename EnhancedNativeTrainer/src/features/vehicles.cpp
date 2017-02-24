@@ -698,42 +698,45 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 	// testing code; DO NOT DELETE
 	//if(bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && IsKeyJustUp(KeyConfig::KEY_VEH_STOP)){
-	//	std::ofstream ofs("_testing_colors.txt", std::ios::app | std::ios::out);
-	//	int primary, secondary, pearl, wheel, mod11, mod12, mod13, mod21, mod22;
+		//std::ofstream ofs("_colors.txt", std::ios::app | std::ios::out);
+		//int primary, secondary, pearl, wheel, mod11, mod12, mod13, mod21, mod22;
 
-	//	VEHICLE::GET_VEHICLE_COLOURS(veh, &primary, &secondary);
-	//	VEHICLE::GET_VEHICLE_EXTRA_COLOURS(veh, &pearl, &wheel);
-	//	VEHICLE::GET_VEHICLE_MOD_COLOR_1(veh, &mod11, &mod12, &mod13);
-	//	VEHICLE::GET_VEHICLE_MOD_COLOR_2(veh, &mod21, &mod22);
+		//VEHICLE::GET_VEHICLE_COLOURS(veh, &primary, &secondary);
+		//VEHICLE::GET_VEHICLE_EXTRA_COLOURS(veh, &pearl, &wheel);
+		//VEHICLE::GET_VEHICLE_MOD_COLOR_1(veh, &mod11, &mod12, &mod13);
+		//VEHICLE::GET_VEHICLE_MOD_COLOR_2(veh, &mod21, &mod22);
 
-	//	ofs << primary << "\t" << secondary << "\t" << pearl << "\t" << wheel << "\t" << mod11 << "\t" << mod12 << "\t" << mod13 << "\t" << mod21 << "\t" << mod22 << "\t" << UI::_GET_LABEL_TEXT(VEHICLE::_GET_VEHICLE_MOD_COLOR_1_TEXT_LABEL(veh, false)) << "\t" << UI::_GET_LABEL_TEXT(VEHICLE::_GET_VEHICLE_MOD_COLOR_2_TEXT_LABEL(veh)) << "\n";
+		//ofs << primary << "\t" << secondary << "\t" << pearl << "\t" << wheel << "\t" << mod11 << "\t" << mod12 << "\t" << mod13 << "\t" << mod21 << "\t" << mod22 << "\t" << UI::_GET_LABEL_TEXT(VEHICLE::_GET_VEHICLE_MOD_COLOR_1_TEXT_LABEL(veh, false)) << "\t" << UI::_GET_LABEL_TEXT(VEHICLE::_GET_VEHICLE_MOD_COLOR_2_TEXT_LABEL(veh)) << "\n";
 
-	//	ofs.close();
+		//ofs.close();
 
-	//	std::ofstream ofs("_testing_mods.txt", std::ios::app | std::ios::out);
+		//std::ofstream ofs("_mods.txt", std::ios::app | std::ios::out);
 
-	//	for(int a = 0; a < 51; a++){
-	//		ofs << a << "\t" << VEHICLE::GET_MOD_SLOT_NAME(veh, a) << "\t" << UI::_GET_LABEL_TEXT(VEHICLE::GET_MOD_SLOT_NAME(veh, a)) << "\n";
-	//		for(int b = 0; b < VEHICLE::GET_NUM_VEHICLE_MODS(veh, a); b++){
-	//			ofs << "\t" << b << "\t" << VEHICLE::GET_MOD_TEXT_LABEL(veh, a, b) << "\t" << UI::_GET_LABEL_TEXT(VEHICLE::GET_MOD_TEXT_LABEL(veh, a, b)) << "\n";
-	//		}
-	//		ofs.flush();
-	//	}
+		//VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
 
-	//	ofs.close();
+		//for(int a = 0; a < 60; a++){
+		//	ofs << a << "\t" << VEHICLE::GET_MOD_SLOT_NAME(veh, a) << "\t" << UI::_GET_LABEL_TEXT(VEHICLE::GET_MOD_SLOT_NAME(veh, a)) << "\n";
+		//	for(int b = 0; b < VEHICLE::GET_NUM_VEHICLE_MODS(veh, a); b++){
+		//		ofs << "\t" << b << "\t" << VEHICLE::GET_MOD_TEXT_LABEL(veh, a, b) << "\t" << UI::_GET_LABEL_TEXT(VEHICLE::GET_MOD_TEXT_LABEL(veh, a, b)) << "\n";
+		//	}
 
-	//	std::ofstream ofs("_testing_wheels.txt", std::ios::app | std::ios::out);
+		//	ofs.flush();
+		//}
 
-	//	for(int a = 0; a < 10; a++){
-	//		VEHICLE::SET_VEHICLE_WHEEL_TYPE(veh, a);
-	//		ofs << a << "\n";
-	//		for(int b = 0; b < VEHICLE::GET_NUM_VEHICLE_MODS(veh, 23); b++){
-	//			ofs << "\t" << b << "\t" << VEHICLE::GET_MOD_TEXT_LABEL(veh, 23, b) << "\t" << UI::_GET_LABEL_TEXT(VEHICLE::GET_MOD_TEXT_LABEL(veh, 23, b)) << "\n";
-	//		}
-	//		ofs.flush();
-	//	}
+		//ofs.close();
 
-	//	ofs.close();
+		//std::ofstream ofs("_wheels.txt", std::ios::app | std::ios::out);
+
+		//for(int a = 0; a < 10; a++){
+		//	VEHICLE::SET_VEHICLE_WHEEL_TYPE(veh, a);
+		//	ofs << a << "\n";
+		//	for(int b = 0; b < VEHICLE::GET_NUM_VEHICLE_MODS(veh, 23); b++){
+		//		ofs << "\t" << b << "\t" << VEHICLE::GET_MOD_TEXT_LABEL(veh, 23, b) << "\t" << UI::_GET_LABEL_TEXT(VEHICLE::GET_MOD_TEXT_LABEL(veh, 23, b)) << "\n";
+		//	}
+		//	ofs.flush();
+		//}
+
+		//ofs.close();
 	//}
 }
 

@@ -15,7 +15,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 int activeLineIndexBodyguards = 0;
 
-int const BODYGUARD_LIMIT = 16;
+int const BODYGUARD_LIMIT = 7;
 
 bool featureBodyguardInvincible = false;
 bool featureBodyguardInvincibleUpdated = false;
@@ -260,7 +260,6 @@ void dismiss_bodyguards(){
 }
 
 void do_spawn_bodyguard(){
-
 	requireRefreshOfBodyguardMainMenu = true;
 
 	if(spawnedBodyguards.size() >= BODYGUARD_LIMIT){
@@ -298,13 +297,17 @@ void do_spawn_bodyguard(){
 
 		PED::SET_PED_COMBAT_ABILITY(bodyGuard, 2);
 		PED::SET_PED_COMBAT_RANGE(bodyGuard, 2);
+		PED::SET_PED_CAN_SWITCH_WEAPON(bodyGuard, true);
+		PED::SET_GROUP_FORMATION(myGroup, 1);
+		PED::SET_CAN_ATTACK_FRIENDLY(bodyGuard, false, false);
+		PED::SET_PED_FIRING_PATTERN(bodyGuard, GAMEPLAY::GET_HASH_KEY("FIRING_PATTERN_FULL_AUTO")); // 0xC6EE6B4C
 
 		for(int a = 0; a < MENU_WEAPON_CATEGORIES.size(); a++){
 			for(int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++){
 				if(*bodyguardWeaponsToggle[a].at(b)){
 					Hash tmp = GAMEPLAY::GET_HASH_KEY((char *) VOV_WEAPON_VALUES[a].at(b).c_str());
 					if(!WEAPON::HAS_PED_GOT_WEAPON(bodyGuard, tmp, false)){
-						WEAPON::GIVE_WEAPON_TO_PED(bodyGuard, tmp, 100, false, true);
+						WEAPON::GIVE_WEAPON_TO_PED(bodyGuard, tmp, 1000, false, true);
 					}
 				}
 			}
@@ -313,9 +316,6 @@ void do_spawn_bodyguard(){
 		if(featureBodyguardInfAmmo){
 			WEAPON::SET_PED_INFINITE_AMMO_CLIP(bodyGuard, true);
 		}
-
-		PED::SET_PED_CAN_SWITCH_WEAPON(bodyGuard, true);
-		PED::SET_GROUP_FORMATION(myGroup, 1);
 
 		PED::SET_PED_DEFAULT_COMPONENT_VARIATION(bodyGuard);
 		WAIT(0);

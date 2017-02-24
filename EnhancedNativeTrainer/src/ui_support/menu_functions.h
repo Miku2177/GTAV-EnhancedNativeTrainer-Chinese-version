@@ -178,10 +178,7 @@ class CashItem: public MenuItem <T>{
 	virtual ~CashItem(){
 	}
 
-	int cash = 10000;
-	int multiplier = 10;
-	int min = -1000000000;
-	int max = 1000000000;
+	int cash = 100000, multiplier = 10, min = -1000000000, max = 1000000000;
 
 	virtual bool onConfirm();
 	virtual bool isAbsorbingLeftAndRightEvents(){
@@ -212,13 +209,76 @@ class ColorItem: public MenuItem<T>{
 	virtual void handleLeftPress(){
 		ENTColor::colsMenu[part].rgba[component] = colorval = colorval > min + increment ? colorval - increment : colorval > min ? min : max;
 	}
+
 	virtual void handleRightPress(){
 		ENTColor::colsMenu[part].rgba[component] = colorval = colorval < max - increment ? colorval + increment : colorval < max ? max : min;
 	}
 };
 
+enum LifeItemType{
+	HEALTH,
+	MAXHEALTH,
+	ARMOR,
+	MAXARMOR
+};
+
+template<class T>
+class LifeItem: public MenuItem<T>{
+	public:
+	int life, minimum = 0, maximum = 34464;
+	LifeItemType lifeType;
+
+	virtual ~LifeItem(){
+		// Supposed to be empty
+	}
+
+	virtual bool onConfirm(){
+		switch(lifeType){
+			case HEALTH:
+				ENTITY::SET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID(), life);
+				set_status_text("Current health modified");
+				break;
+			case MAXHEALTH:
+				PED::SET_PED_MAX_HEALTH(PLAYER::PLAYER_PED_ID(), life);
+				set_status_text("Maximum health modified");
+				break;
+			case ARMOR:
+				PED::SET_PED_ARMOUR(PLAYER::PLAYER_PED_ID(), life);
+				set_status_text("Current armor modified");
+				break;
+			case MAXARMOR:
+				PLAYER::SET_PLAYER_MAX_ARMOUR(PLAYER::PLAYER_ID(), life);
+				set_status_text("Maximum armor modified");
+				break;
+			default:
+				break;
+		}
+
+		return true;
+	}
+
+	virtual bool isAbsorbingLeftAndRightEvents(){
+		return true;
+	}
+
+	virtual void handleLeftPress(){
+		int tmp = static_cast<int>(std::pow(10, static_cast<int>(log10(life) - 0.00001)));
+		life = life > minimum ? tmp > 0 ? max((life - tmp) / tmp * tmp, minimum) : minimum : maximum;
+	}
+
+	virtual void handleRightPress(){
+		int tmp = static_cast<int>(std::pow(10, static_cast<int>(max(log10(life), 0))));
+		life = life < maximum ? min((life + tmp) / tmp * tmp, maximum) : minimum;
+	}
+};
+
 enum MenuItemType{
-	STANDARD, TOGGLE, CASH, WANTED, COLOR
+	STANDARD,
+	TOGGLE,
+	WANTED,
+	CASH,
+	COLOR,
+	LIFE
 };
 
 struct StandardOrToggleMenuDef{
@@ -509,7 +569,7 @@ void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, f
 
 		UI::_DRAW_TEXT(lineLeftScaled + lineWidthScaled - rightMarginScaled, textY);
 	}
-	else if(CashItem<T>* cashItem = dynamic_cast<CashItem<T>*>(item)){
+	else if(CashItem<T>* cashItem = dynamic_cast<CashItem<T> *>(item)){
 		UI::SET_TEXT_FONT(fontItem);
 		UI::SET_TEXT_SCALE(0.0, text_scale);
 		if(active){
@@ -687,6 +747,42 @@ void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, f
 
 		std::stringstream ss;
 		ss << "<< " << colorItem->colorval << " >>";
+		auto ssStr = ss.str();
+		UI::_ADD_TEXT_COMPONENT_STRING((char *) ssStr.c_str());
+		UI::_DRAW_TEXT(0, textY);
+	}
+	else if(LifeItem<T>* lifeItem = dynamic_cast<LifeItem<T> *>(item)){
+		UI::SET_TEXT_FONT(fontItem);
+		UI::SET_TEXT_SCALE(0.0, text_scale);
+		if(active){
+			UI::SET_TEXT_COLOUR(ENTColor::colsMenu[4].rgba[0], ENTColor::colsMenu[4].rgba[1], ENTColor::colsMenu[4].rgba[2], ENTColor::colsMenu[4].rgba[3]);
+		}
+		else{
+			UI::SET_TEXT_COLOUR(ENTColor::colsMenu[2].rgba[0], ENTColor::colsMenu[2].rgba[1], ENTColor::colsMenu[2].rgba[2], ENTColor::colsMenu[2].rgba[3]);
+		}
+		UI::SET_TEXT_RIGHT_JUSTIFY(1);
+
+		if(outline){
+			UI::SET_TEXT_OUTLINE();
+		}
+
+		if(dropShadow){
+			UI::SET_TEXT_DROPSHADOW(5, 0, 78, 255, 255);
+		}
+
+		UI::SET_TEXT_EDGE(0, 0, 0, 0, 0);
+		UI::SET_TEXT_WRAP(0.0f, lineLeftScaled + lineWidthScaled - leftMarginScaled);
+		UI::_SET_TEXT_ENTRY("STRING");
+
+		std::string commaLife = std::to_string(lifeItem->life);
+		int insertPosition = commaLife.length() - 3;
+		while(insertPosition > 0){
+			commaLife.insert(insertPosition, ",");
+			insertPosition -= 3;
+		}
+
+		std::stringstream ss;
+		ss << "<< " << commaLife << " >>";
 		auto ssStr = ss.str();
 		UI::_ADD_TEXT_COMPONENT_STRING((char *) ssStr.c_str());
 		UI::_DRAW_TEXT(0, textY);

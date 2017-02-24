@@ -10,19 +10,19 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 #include "vehicles.h"
 
+#include "..\debug\debuglog.h"
+
 int activeLineIndexVehMod = 0;
 
 int lastSelectedModValue = 0;
 
-int modChoiceMenuIndex = 0;
+int wheelpart = 0;
 
-const static int CUSTOM_TYRE_COUNT = 1;
-
-const static int WHEEL_CATEGORY_COUNT = 10; //was 7
+const static int WHEEL_CATEGORY_COUNT = 10;
 
 const static std::string WHEEL_CATEGORY_NAMES[] = {"Sports", "Muscle", "Lowrider", "SUV", "Offroad", "Tuner", "Bike Wheels", "High End", "Benny's Originals", "Benny's Bespoke"};
 
-const static int WHEEL_CATEGORY_COUNTS[] = {25, 18, 15, 19, 10, 24, 13, 20, 31, 31}; /* SORTED */
+const static int WHEEL_CATEGORY_COUNTS[] = {50, 36, 30, 38, 20, 48, 72, 40, 217, 217};
 
 const static std::string TINT_NAMES[] = {"No Tint", "Dark", "Medium", "Light", "Very Light", "Safety Value"};
 
@@ -49,6 +49,817 @@ const static int SPECIAL_ID_FOR_ORNAMENTS = 98; // we may or may not need this, 
 const static int SPECIAL_ID_FOR_TIRE_SMOKE = 99;
 
 const static int SPECIAL_ID_FOR_INTERIOR_COLOUR = 100;
+
+const std::vector<WheelSelection> WHEELS_SPORTS = {
+	{0, "Inferno"},
+	{25, "Inferno (Chrome)"},
+	{1, "Deep Five"},
+	{26, "Deep Five (Chrome)"},
+	{2, "Lozspeed Mk.V"},
+	{27, "Lozspeed Mk.V (Chrome)"},
+	{3, "Diamond Cut"},
+	{28, "Diamond Cut (Chrome)"},
+	{4, "Chrono"},
+	{29, "Chrono (Chrome)"},
+	{5, "Feroci RR"},
+	{30, "Feroci RR (Chrome)"},
+	{6, "FiftyNine"},
+	{31, "FiftyNine (Chrome)"},
+	{7, "Mercie"},
+	{32, "Mercie (Chrome)"},
+	{8, "Synthetic Z"},
+	{33, "Synthetic Z (Chrome)"},
+	{9, "Organic Type 0"},
+	{34, "Organic Type 0 (Chrome)"},
+	{10, "Endo v.1"},
+	{35, "Endo v.1 (Chrome)"},
+	{11, "GT One"},
+	{36, "GT One (Chrome)"},
+	{12, "Duper 7"},
+	{37, "Duper 7 (Chrome)"},
+	{13, "Uzer"},
+	{38, "Uzer (Chrome)"},
+	{14, "GroundRide"},
+	{39, "GroundRide (Chrome)"},
+	{15, "S Racer"},
+	{40, "S Racer (Chrome)"},
+	{16, "Venum"},
+	{41, "Venum (Chrome)"},
+	{17, "Cosmo"},
+	{42, "Cosmo (Chrome)"},
+	{18, "Dash VIP"},
+	{43, "Dash VIP (Chrome)"},
+	{19, "Ice Kid"},
+	{44, "Ice Kid (Chrome)"},
+	{20, "Ruff Weld"},
+	{45, "Ruff Weld (Chrome)"},
+	{21, "Wangan Master"},
+	{46, "Wangan Master (Chrome)"},
+	{22, "Super Five"},
+	{47, "Super Five (Chrome)"},
+	{23, "Endo v.2"},
+	{48, "Endo v.2 (Chrome)"},
+	{24, "Split Six"},
+	{49, "Split Six (Chrome)"}
+};
+
+const std::vector<WheelSelection> WHEELS_MUSCLE = {
+	{0, "Classic Five"},
+	{18, "Classic Five (Chrome)"},
+	{1, "Dukes"},
+	{19, "Dukes (Chrome)"},
+	{2, "Muscle Freak"},
+	{20, "Muscle Freak (Chrome)"},
+	{3, "Kracka"},
+	{21, "Kracka (Chrome)"},
+	{4, "Azreal"},
+	{22, "Azreal (Chrome)"},
+	{5, "Mecha"},
+	{23, "Mecha (Chrome)"},
+	{6, "Black Top"},
+	{24, "Black Top (Chrome)"},
+	{7, "Drag SPL"},
+	{25, "Drag SPL (Chrome)"},
+	{8, "Revolver"},
+	{26, "Revolver (Chrome)"},
+	{9, "Classic Rod"},
+	{27, "Classic Rod (Chrome)"},
+	{10, "Fairlie"},
+	{28, "Fairlie (Chrome)"},
+	{11, "Spooner"},
+	{29, "Spooner (Chrome)"},
+	{12, "Five Star"},
+	{30, "Five Star (Chrome)"},
+	{13, "Old School"},
+	{31, "Old School (Chrome)"},
+	{14, "El Jefe"},
+	{32, "El Jefe (Chrome)"},
+	{15, "Dodman"},
+	{33, "Dodman (Chrome)"},
+	{16, "Six Gun"},
+	{34, "Six Gun (Chrome)"},
+	{17, "Mercenary"},
+	{35, "Mercenary (Chrome)"}
+};
+
+const std::vector<WheelSelection> WHEELS_LOWRIDER = {
+	{0, "Flare"},
+	{15, "Flare (Chrome)"},
+	{1, "Wired"},
+	{16, "Wired (Chrome)"},
+	{2, "Triple Golds"},
+	{17, "Triple Golds (Chrome)"},
+	{3, "Big Worm"},
+	{18, "Big Worm (Chrome)"},
+	{4, "Seven Fives"},
+	{19, "Seven Fives (Chrome)"},
+	{5, "Split Six"},
+	{20, "Split Six (Chrome)"},
+	{6, "Fresh Mesh"},
+	{21, "Fresh Mesh (Chrome)"},
+	{7, "Lead Sled"},
+	{22, "Lead Sled (Chrome)"},
+	{8, "Turbine"},
+	{23, "Turbine (Chrome)"},
+	{9, "Super Fin"},
+	{24, "Super Fin (Chrome)"},
+	{10, "Classic Rod"},
+	{25, "Classic Rod (Chrome)"},
+	{11, "Dollar"},
+	{26, "Dollar (Chrome)"},
+	{12, "Dukes"},
+	{27, "Dukes (Chrome)"},
+	{13, "Low Five"},
+	{28, "Low Five (Chrome)"},
+	{14, "Gooch"},
+	{29, "Gooch (Chrome)"}
+};
+
+const std::vector<WheelSelection> WHEELS_SUV = {
+	{0, "VIP"},
+	{19, "VIP (Chrome)"},
+	{1, "Benefactor"},
+	{20, "Benefactor (Chrome)"},
+	{2, "Cosmo"},
+	{21, "Cosmo (Chrome)"},
+	{3, "Bippu"},
+	{22, "Bippu (Chrome)"},
+	{4, "Royal Six"},
+	{23, "Royal Six (Chrome)"},
+	{5, "Fagorme"},
+	{24, "Fagorme (Chrome)"},
+	{6, "Deluxe"},
+	{25, "Deluxe (Chrome)"},
+	{7, "Iced Out"},
+	{26, "Iced Out (Chrome)"},
+	{8, "Cognoscenti"},
+	{27, "Cognoscenti (Chrome)"},
+	{9, "LozSpeed Ten"},
+	{28, "LozSpeed Ten (Chrome)"},
+	{10, "Supernova"},
+	{29, "Supernova (Chrome)"},
+	{11, "Obey RS"},
+	{30, "Obey RS (Chrome)"},
+	{12, "LozSpeed Baller"},
+	{31, "LozSpeed Baller (Chrome)"},
+	{13, "Extravaganzo"},
+	{32, "Extravaganzo (Chrome)"},
+	{14, "Split Six"},
+	{33, "Split Six (Chrome)"},
+	{15, "Empowered"},
+	{34, "Empowered (Chrome)"},
+	{16, "Sunrise"},
+	{35, "Sunrise (Chrome)"},
+	{17, "Dash VIP"},
+	{36, "Dash VIP (Chrome)"},
+	{18, "Cutter"},
+	{37, "Cutter (Chrome)"}
+};
+
+const std::vector<WheelSelection> WHEELS_OFFROAD = {
+	{0, "Raider"},
+	{10, "Raider (Chrome)"},
+	{1, "Mudslinger"},
+	{11, "Mudslinger (Chrome)"},
+	{2, "Nevis"},
+	{12, "Nevis (Chrome)"},
+	{3, "Cairngorm"},
+	{13, "Cairngorm (Chrome)"},
+	{4, "Amazon"},
+	{14, "Amazon (Chrome)"},
+	{5, "Challenger"},
+	{15, "Challenger (Chrome)"},
+	{6, "Dune Basher"},
+	{16, "Dune Basher (Chrome)"},
+	{7, "Five Star"},
+	{17, "Five Star (Chrome)"},
+	{8, "Rock Crawler"},
+	{18, "Rock Crawler (Chrome)"},
+	{9, "Mil Spec Steelie"},
+	{19, "Mil Spec Steelie (Chrome)"}
+};
+
+const std::vector<WheelSelection> WHEELS_TUNER = {
+	{0, "Cosmo"},
+	{24, "Cosmo (Chrome)"},
+	{1, "Super Mesh"},
+	{25, "Super Mesh (Chrome)"},
+	{2, "Outsider"},
+	{26, "Outsider (Chrome)"},
+	{3, "Rollas"},
+	{27, "Rollas (Chrome)"},
+	{4, "Driftmeister"},
+	{28, "Driftmeister (Chrome)"},
+	{5, "Slicer"},
+	{29, "Slicer (Chrome)"},
+	{6, "El Quatro"},
+	{30, "El Quatro (Chrome)"},
+	{7, "Dubbed"},
+	{31, "Dubbed (Chrome)"},
+	{8, "Five Star"},
+	{32, "Five Star (Chrome)"},
+	{9, "Slideways"},
+	{33, "Slideways (Chrome)"},
+	{10, "Apex"},
+	{34, "Apex (Chrome)"},
+	{11, "Stanced EG"},
+	{35, "Stanced EG (Chrome)"},
+	{12, "Countersteer"},
+	{36, "Countersteer (Chrome)"},
+	{13, "Endo v.1"},
+	{37, "Endo v.1 (Chrome)"},
+	{14, "Endo v.2 Dish"},
+	{38, "Endo v.2 Dish (Chrome)"},
+	{15, "Gruppe Z"},
+	{39, "Gruppe Z (Chrome)"},
+	{16, "Choku-Dori"},
+	{40, "Choku-Dori (Chrome)"},
+	{17, "Chicane"},
+	{41, "Chicane (Chrome)"},
+	{18, "Saisoku"},
+	{42, "Saisoku (Chrome)"},
+	{19, "Dished Eight"},
+	{43, "Dished Eight (Chrome)"},
+	{20, "Fujiwara"},
+	{44, "Fujiwara (Chrome)"},
+	{21, "Zokusha"},
+	{45, "Zokusha (Chrome)"},
+	{22, "Battle VIII"},
+	{46, "Battle VIII (Chrome)"},
+	{23, "Rally Master"},
+	{47, "Rally Master (Chrome)"}
+};
+
+const std::vector<WheelSelection> WHEELS_BIKE = {
+	{0, "Speedway"},
+	{13, "Speedway (Chrome)"},
+	{1, "Street Special"},
+	{14, "Street Special (Chrome)"},
+	{2, "Racer"},
+	{15, "Racer (Chrome)"},
+	{3, "Track Star"},
+	{16, "Track Star (Chrome)"},
+	{4, "Overlord"},
+	{17, "Overlord (Chrome)"},
+	{5, "Trident"},
+	{18, "Trident (Chrome)"},
+	{6, "Triple Threat"},
+	{19, "Triple Threat (Chrome)"},
+	{7, "Stilleto"},
+	{20, "Stilleto (Chrome)"},
+	{8, "Wires"},
+	{21, "Wires (Chrome)"},
+	{9, "Bobber"},
+	{22, "Bobber (Chrome)"},
+	{10, "Solidus"},
+	{23, "Solidus (Chrome)"},
+	{11, "Ice Shield"},
+	{24, "Ice Shield (Chrome)"},
+	{12, "Loops"},
+	{25, "Loops (Chrome)"},
+	{26, "Romper Racing"},
+	{49, "Romper Racing (Chrome)"},
+	{27, "Warp Drive"},
+	{50, "Warp Drive (Chrome)"},
+	{28, "Snowflake"},
+	{51, "Snowflake (Chrome)"},
+	{29, "Holy Spoke"},
+	{52, "Holy Spoke (Chrome)"},
+	{30, "Old Skool Triple"},
+	{53, "Old Skool Triple (Chrome)"},
+	{31, "Futura"},
+	{54, "Futura (Chrome)"},
+	{32, "Quarter Mile King"},
+	{55, "Quarter Mile King (Chrome)"},
+	{33, "Cartwheel"},
+	{56, "Cartwheel (Chrome)"},
+	{34, "Double Five"},
+	{57, "Double Five (Chrome)"},
+	{35, "Shuriken"},
+	{58, "Shuriken (Chrome)"},
+	{36, "Simple Six"},
+	{59, "Simple Six (Chrome)"},
+	{37, "Celtic"},
+	{60, "Celtic (Chrome)"},
+	{38, "Razer"},
+	{61, "Razer (Chrome)"},
+	{39, "Twisted"},
+	{62, "Twisted (Chrome)"},
+	{40, "Morning Star"},
+	{63, "Morning Star (Chrome)"},
+	{41, "Jagged Spokes"},
+	{64, "Jagged Spokes (Chrome)"},
+	{42, "Eidolon"},
+	{65, "Eidolon (Chrome)"},
+	{43, "Enigma"},
+	{66, "Enigma (Chrome)"},
+	{44, "Big Spokes"},
+	{67, "Big Spokes (Chrome)"},
+	{45, "Webs"},
+	{68, "Webs (Chrome)"},
+	{46, "Hotplate"},
+	{69, "Hotplate (Chrome)"},
+	{47, "Bobsta"},
+	{70, "Bobsta (Chrome)"},
+	{48, "Grouch"},
+	{71, "Grouch (Chrome)"}
+};
+
+const std::vector<WheelSelection> WHEELS_HIGHEND = {
+	{0, "Shadow"},
+	{20, "Shadow (Chrome)"},
+	{1, "Hypher"},
+	{21, "Hypher (Chrome)"},
+	{2, "Blade"},
+	{22, "Blade (Chrome)"},
+	{3, "Diamond"},
+	{23, "Diamond (Chrome)"},
+	{4, "Supa Gee"},
+	{24, "Supa Gee (Chrome)"},
+	{5, "Chromatic Z"},
+	{25, "Chromatic Z (Chrome)"},
+	{6, "Mercie Ch.Lip"},
+	{26, "Mercie (Chrome)"},
+	{7, "Obey RS"},
+	{27, "Obey RS (Chrome)"},
+	{8, "GT Chrome"},
+	{28, "GT Chrome (Chrome)"},
+	{9, "Cheetah RR"},
+	{29, "Cheetah RR (Chrome)"},
+	{10, "Solar"},
+	{30, "Solar (Chrome)"},
+	{11, "Split Ten"},
+	{31, "Split Ten (Chrome)"},
+	{12, "Dash VIP"},
+	{32, "Dash VIP (Chrome)"},
+	{13, "LozSpeed Ten"},
+	{33, "LozSpeed Ten (Chrome)"},
+	{14, "Carbon Inferno"},
+	{34, "Carbon Inferno (Chrome)"},
+	{15, "Carbon Shadow"},
+	{35, "Carbon Shadow (Chrome)"},
+	{16, "Carbonic Z"},
+	{36, "Carbonic Z (Chrome)"},
+	{17, "Carbon Solar"},
+	{37, "Carbon Solar (Chrome)"},
+	{18, "Cheetah Carbon R"},
+	{38, "Cheetah Carbon R (Chrome)"},
+	{19, "Carbon S Racer"},
+	{39, "Carbon S Racer (Chrome)"}
+};
+
+const std::vector<WheelSelection> WHEELS_BENNYSORIGINALS = {
+	{0, "OG Hunnets"},
+	{31, "OG Hunnets [White Lines]"},
+	{62, "OG Hunnets [Classic White Wall]"},
+	{93, "OG Hunnets [Retro White Wall]"},
+	{124, "OG Hunnets [Red Lines]"},
+	{155, "OG Hunnets [Blue Lines]"},
+	{186, "OG Hunnets [Atomic]"},
+	{1, "OG Hunnets (Chrome Lip)"},
+	{32, "OG Hunnets (Chrome Lip) [White Lines]"},
+	{63, "OG Hunnets (Chrome Lip) [Classic White Wall]"},
+	{94, "OG Hunnets (Chrome Lip) [Retro White Wall]"},
+	{125, "OG Hunnets (Chrome Lip) [Red Lines]"},
+	{156, "OG Hunnets (Chrome Lip) [Blue Lines]"},
+	{187, "OG Hunnets (Chrome Lip) [Atomic]"},
+	{2, "Knock-Offs"},
+	{33, "Knock-Offs [White Lines]"},
+	{64, "Knock-Offs [Classic White Wall]"},
+	{95, "Knock-Offs [Retro White Wall]"},
+	{126, "Knock-Offs [Red Lines]"},
+	{157, "Knock-Offs [Blue Lines]"},
+	{188, "Knock-Offs [Atomic]"},
+	{3, "Knock-Offs (Chrome Lip)"},
+	{34, "Knock-Offs (Chrome Lip) [White Lines]"},
+	{65, "Knock-Offs (Chrome Lip) [Classic White Wall]"},
+	{96, "Knock-Offs (Chrome Lip) [Retro White Wall]"},
+	{127, "Knock-Offs (Chrome Lip) [Red Lines]"},
+	{158, "Knock-Offs (Chrome Lip) [Blue Lines]"},
+	{189, "Knock-Offs (Chrome Lip) [Atomic]"},
+	{4, "Spoked Out"},
+	{35, "Spoked Out [White Lines]"},
+	{66, "Spoked Out [Classic White Wall]"},
+	{97, "Spoked Out [Retro White Wall]"},
+	{128, "Spoked Out [Red Lines]"},
+	{159, "Spoked Out [Blue Lines]"},
+	{190, "Spoked Out [Atomic]"},
+	{5, "Spoked Out (Chrome Lip)"},
+	{36, "Spoked Out (Chrome Lip) [White Lines]"},
+	{67, "Spoked Out (Chrome Lip) [Classic White Wall]"},
+	{98, "Spoked Out (Chrome Lip) [Retro White Wall]"},
+	{129, "Spoked Out (Chrome Lip) [Red Lines]"},
+	{160, "Spoked Out (Chrome Lip) [Blue Lines]"},
+	{191, "Spoked Out (Chrome Lip) [Atomic]"},
+	{6, "Vintage Wire"},
+	{37, "Vintage Wire [White Lines]"},
+	{68, "Vintage Wire [Classic White Wall]"},
+	{99, "Vintage Wire [Retro White Wall]"},
+	{130, "Vintage Wire [Red Lines]"},
+	{161, "Vintage Wire [Blue Lines]"},
+	{192, "Vintage Wire [Atomic]"},
+	{7, "Vintage Wire (Chrome Lip)"},
+	{38, "Vintage Wire (Chrome Lip) [White Lines]"},
+	{69, "Vintage Wire (Chrome Lip) [Classic White Wall]"},
+	{100, "Vintage Wire (Chrome Lip) [Retro White Wall]"},
+	{131, "Vintage Wire (Chrome Lip) [Red Lines]"},
+	{162, "Vintage Wire (Chrome Lip) [Blue Lines]"},
+	{193, "Vintage Wire (Chrome Lip) [Atomic]"},
+	{8, "Smoothie"},
+	{39, "Smoothie [White Lines]"},
+	{70, "Smoothie [Classic White Wall]"},
+	{101, "Smoothie [Retro White Wall]"},
+	{132, "Smoothie [Red Lines]"},
+	{163, "Smoothie [Blue Lines]"},
+	{194, "Smoothie [Atomic]"},
+	{9, "Smoothie (Chrome Lip)"},
+	{40, "Smoothie (Chrome Lip) [White Lines]"},
+	{71, "Smoothie (Chrome Lip) [Classic White Wall]"},
+	{102, "Smoothie (Chrome Lip) [Retro White Wall]"},
+	{133, "Smoothie (Chrome Lip) [Red Lines]"},
+	{164, "Smoothie (Chrome Lip) [Blue Lines]"},
+	{195, "Smoothie (Chrome Lip) [Atomic]"},
+	{10, "Smoothie (Solid Color)"},
+	{41, "Smoothie (Solid Color) [White Lines]"},
+	{72, "Smoothie (Solid Color) [Classic White Wall]"},
+	{103, "Smoothie (Solid Color) [Retro White Wall]"},
+	{134, "Smoothie (Solid Color) [Red Lines]"},
+	{165, "Smoothie (Solid Color) [Blue Lines]"},
+	{196, "Smoothie (Solid Color) [Atomic]"},
+	{11, "Rod Me Up"},
+	{42, "Rod Me Up [White Lines]"},
+	{73, "Rod Me Up [Classic White Wall]"},
+	{104, "Rod Me Up [Retro White Wall]"},
+	{135, "Rod Me Up [Red Lines]"},
+	{166, "Rod Me Up [Blue Lines]"},
+	{197, "Rod Me Up [Atomic]"},
+	{12, "Rod Me Up (Chrome Lip)"},
+	{43, "Rod Me Up (Chrome Lip) [White Lines]"},
+	{74, "Rod Me Up (Chrome Lip) [Classic White Wall]"},
+	{105, "Rod Me Up (Chrome Lip) [Retro White Wall]"},
+	{136, "Rod Me Up (Chrome Lip) [Red Lines]"},
+	{167, "Rod Me Up (Chrome Lip) [Blue Lines]"},
+	{198, "Rod Me Up (Chrome Lip) [Atomic]"},
+	{13, "Rod Me Up (Solid Color)"},
+	{44, "Rod Me Up (Solid Color) [White Lines]"},
+	{75, "Rod Me Up (Solid Color) [Classic White Wall]"},
+	{106, "Rod Me Up (Solid Color) [Retro White Wall]"},
+	{137, "Rod Me Up (Solid Color) [Red Lines]"},
+	{168, "Rod Me Up (Solid Color) [Blue Lines]"},
+	{199, "Rod Me Up (Solid Color) [Atomic]"},
+	{14, "Clean"},
+	{45, "Clean [White Lines]"},
+	{76, "Clean [Classic White Wall]"},
+	{107, "Clean [Retro White Wall]"},
+	{138, "Clean [Red Lines]"},
+	{169, "Clean [Blue Lines]"},
+	{200, "Clean [Atomic]"},
+	{15, "Lotta Chrome"},
+	{46, "Lotta Chrome [White Lines]"},
+	{77, "Lotta Chrome [Classic White Wall]"},
+	{108, "Lotta Chrome [Retro White Wall]"},
+	{139, "Lotta Chrome [Red Lines]"},
+	{170, "Lotta Chrome [Blue Lines]"},
+	{201, "Lotta Chrome [Atomic]"},
+	{16, "Spindles"},
+	{47, "Spindles [White Lines]"},
+	{78, "Spindles [Classic White Wall]"},
+	{109, "Spindles [Retro White Wall]"},
+	{140, "Spindles [Red Lines]"},
+	{171, "Spindles [Blue Lines]"},
+	{202, "Spindles [Atomic]"},
+	{17, "Viking"},
+	{48, "Viking [White Lines]"},
+	{79, "Viking [Classic White Wall]"},
+	{110, "Viking [Retro White Wall]"},
+	{141, "Viking [Red Lines]"},
+	{172, "Viking [Blue Lines]"},
+	{203, "Viking [Atomic]"},
+	{18, "Triple Spoke"},
+	{49, "Triple Spoke [White Lines]"},
+	{80, "Triple Spoke [Classic White Wall]"},
+	{111, "Triple Spoke [Retro White Wall]"},
+	{142, "Triple Spoke [Red Lines]"},
+	{173, "Triple Spoke [Blue Lines]"},
+	{204, "Triple Spoke [Atomic]"},
+	{19, "Pharohe"},
+	{50, "Pharohe [White Lines]"},
+	{81, "Pharohe [Classic White Wall]"},
+	{112, "Pharohe [Retro White Wall]"},
+	{143, "Pharohe [Red Lines]"},
+	{174, "Pharohe [Blue Lines]"},
+	{205, "Pharohe [Atomic]"},
+	{20, "Tiger Style"},
+	{51, "Tiger Style [White Lines]"},
+	{82, "Tiger Style [Classic White Wall]"},
+	{113, "Tiger Style [Retro White Wall]"},
+	{144, "Tiger Style [Red Lines]"},
+	{175, "Tiger Style [Blue Lines]"},
+	{206, "Tiger Style [Atomic]"},
+	{21, "Three Wheelin"},
+	{52, "Three Wheelin [White Lines]"},
+	{83, "Three Wheelin [Classic White Wall]"},
+	{114, "Three Wheelin [Retro White Wall]"},
+	{145, "Three Wheelin [Red Lines]"},
+	{176, "Three Wheelin [Blue Lines]"},
+	{207, "Three Wheelin [Atomic]"},
+	{22, "Big Bar"},
+	{53, "Big Bar [White Lines]"},
+	{84, "Big Bar [Classic White Wall]"},
+	{115, "Big Bar [Retro White Wall]"},
+	{146, "Big Bar [Red Lines]"},
+	{177, "Big Bar [Blue Lines]"},
+	{208, "Big Bar [Atomic]"},
+	{23, "Biohazard"},
+	{54, "Biohazard [White Lines]"},
+	{85, "Biohazard [Classic White Wall]"},
+	{116, "Biohazard [Retro White Wall]"},
+	{147, "Biohazard [Red Lines]"},
+	{178, "Biohazard [Blue Lines]"},
+	{209, "Biohazard [Atomic]"},
+	{24, "Waves"},
+	{55, "Waves [White Lines]"},
+	{86, "Waves [Classic White Wall]"},
+	{117, "Waves [Retro White Wall]"},
+	{148, "Waves [Red Lines]"},
+	{179, "Waves [Blue Lines]"},
+	{210, "Waves [Atomic]"},
+	{25, "Lick Lick"},
+	{56, "Lick Lick [White Lines]"},
+	{87, "Lick Lick [Classic White Wall]"},
+	{118, "Lick Lick [Retro White Wall]"},
+	{149, "Lick Lick [Red Lines]"},
+	{180, "Lick Lick [Blue Lines]"},
+	{211, "Lick Lick [Atomic]"},
+	{26, "Spiralizer"},
+	{57, "Spiralizer [White Lines]"},
+	{88, "Spiralizer [Classic White Wall]"},
+	{119, "Spiralizer [Retro White Wall]"},
+	{150, "Spiralizer [Red Lines]"},
+	{181, "Spiralizer [Blue Lines]"},
+	{212, "Spiralizer [Atomic]"},
+	{27, "Hypnotics"},
+	{58, "Hypnotics [White Lines]"},
+	{89, "Hypnotics [Classic White Wall]"},
+	{120, "Hypnotics [Retro White Wall]"},
+	{151, "Hypnotics [Red Lines]"},
+	{182, "Hypnotics [Blue Lines]"},
+	{213, "Hypnotics [Atomic]"},
+	{28, "Psycho-Delic"},
+	{59, "Psycho-Delic [White Lines]"},
+	{90, "Psycho-Delic [Classic White Wall]"},
+	{121, "Psycho-Delic [Retro White Wall]"},
+	{152, "Psycho-Delic [Red Lines]"},
+	{183, "Psycho-Delic [Blue Lines]"},
+	{214, "Psycho-Delic [Atomic]"},
+	{29, "Half Cut"},
+	{60, "Half Cut [White Lines]"},
+	{91, "Half Cut [Classic White Wall]"},
+	{122, "Half Cut [Retro White Wall]"},
+	{153, "Half Cut [Red Lines]"},
+	{184, "Half Cut [Blue Lines]"},
+	{215, "Half Cut [Atomic]"},
+	{30, "Super Electric"},
+	{61, "Super Electric [White Lines]"},
+	{92, "Super Electric [Classic White Wall]"},
+	{123, "Super Electric [Retro White Wall]"},
+	{154, "Super Electric [Red Lines]"},
+	{185, "Super Electric [Blue Lines]"},
+	{216, "Super Electric [Atomic]"}
+};
+
+const std::vector<WheelSelection> WHEELS_BENNYSBESPOKE = {
+	{0, "Chrome OG Hunnets"},
+	{31, "Chrome OG Hunnets [White Lines]"},
+	{62, "Chrome OG Hunnets [Classic White Wall]"},
+	{93, "Chrome OG Hunnets [Retro White Wall]"},
+	{124, "Chrome OG Hunnets [Red Lines]"},
+	{155, "Chrome OG Hunnets [Blue Lines]"},
+	{186, "Chrome OG Hunnets [Atomic]"},
+	{1, "Gold OG Hunnets"},
+	{32, "Gold OG Hunnets [White Lines]"},
+	{63, "Gold OG Hunnets [Classic White Wall]"},
+	{94, "Gold OG Hunnets [Retro White Wall]"},
+	{125, "Gold OG Hunnets [Red Lines]"},
+	{156, "Gold OG Hunnets [Blue Lines]"},
+	{187, "Gold OG Hunnets [Atomic]"},
+	{2, "Chrome Wires"},
+	{33, "Chrome Wires [White Lines]"},
+	{64, "Chrome Wires [Classic White Wall]"},
+	{95, "Chrome Wires [Retro White Wall]"},
+	{126, "Chrome Wires [Red Lines]"},
+	{157, "Chrome Wires [Blue Lines]"},
+	{188, "Chrome Wires [Atomic]"},
+	{3, "Gold Wires"},
+	{34, "Gold Wires [White Lines]"},
+	{65, "Gold Wires [Classic White Wall]"},
+	{96, "Gold Wires [Retro White Wall]"},
+	{127, "Gold Wires [Red Lines]"},
+	{158, "Gold Wires [Blue Lines]"},
+	{189, "Gold Wires [Atomic]"},
+	{4, "Chrome Spoked Out"},
+	{35, "Chrome Spoked Out [White Lines]"},
+	{66, "Chrome Spoked Out [Classic White Wall]"},
+	{97, "Chrome Spoked Out [Retro White Wall]"},
+	{128, "Chrome Spoked Out [Red Lines]"},
+	{159, "Chrome Spoked Out [Blue Lines]"},
+	{190, "Chrome Spoked Out [Atomic]"},
+	{5, "Gold Spoked Out"},
+	{36, "Gold Spoked Out [White Lines]"},
+	{67, "Gold Spoked Out [Classic White Wall]"},
+	{98, "Gold Spoked Out [Retro White Wall]"},
+	{129, "Gold Spoked Out [Red Lines]"},
+	{160, "Gold Spoked Out [Blue Lines]"},
+	{191, "Gold Spoked Out [Atomic]"},
+	{6, "Chrome Knock-Offs"},
+	{37, "Chrome Knock-Offs [White Lines]"},
+	{68, "Chrome Knock-Offs [Classic White Wall]"},
+	{99, "Chrome Knock-Offs [Retro White Wall]"},
+	{130, "Chrome Knock-Offs [Red Lines]"},
+	{161, "Chrome Knock-Offs [Blue Lines]"},
+	{192, "Chrome Knock-Offs [Atomic]"},
+	{7, "Gold Knock-Offs"},
+	{38, "Gold Knock-Offs [White Lines]"},
+	{69, "Gold Knock-Offs [Classic White Wall]"},
+	{100, "Gold Knock-Offs [Retro White Wall]"},
+	{131, "Gold Knock-Offs [Red Lines]"},
+	{162, "Gold Knock-Offs [Blue Lines]"},
+	{193, "Gold Knock-Offs [Atomic]"},
+	{8, "Chrome Bigger Worm"},
+	{39, "Chrome Bigger Worm [White Lines]"},
+	{70, "Chrome Bigger Worm [Classic White Wall]"},
+	{101, "Chrome Bigger Worm [Retro White Wall]"},
+	{132, "Chrome Bigger Worm [Red Lines]"},
+	{163, "Chrome Bigger Worm [Blue Lines]"},
+	{194, "Chrome Bigger Worm [Atomic]"},
+	{9, "Gold Bigger Worm"},
+	{40, "Gold Bigger Worm [White Lines]"},
+	{71, "Gold Bigger Worm [Classic White Wall]"},
+	{102, "Gold Bigger Worm [Retro White Wall]"},
+	{133, "Gold Bigger Worm [Red Lines]"},
+	{164, "Gold Bigger Worm [Blue Lines]"},
+	{195, "Gold Bigger Worm [Atomic]"},
+	{10, "Chrome Vintage Wire"},
+	{41, "Chrome Vintage Wire [White Lines]"},
+	{72, "Chrome Vintage Wire [Classic White Wall]"},
+	{103, "Chrome Vintage Wire [Retro White Wall]"},
+	{134, "Chrome Vintage Wire [Red Lines]"},
+	{165, "Chrome Vintage Wire [Blue Lines]"},
+	{196, "Chrome Vintage Wire [Atomic]"},
+	{11, "Gold Vintage Wire"},
+	{42, "Gold Vintage Wire [White Lines]"},
+	{73, "Gold Vintage Wire [Classic White Wall]"},
+	{104, "Gold Vintage Wire [Retro White Wall]"},
+	{135, "Gold Vintage Wire [Red Lines]"},
+	{166, "Gold Vintage Wire [Blue Lines]"},
+	{197, "Gold Vintage Wire [Atomic]"},
+	{12, "Chrome Classic Wire"},
+	{43, "Chrome Classic Wire [White Lines]"},
+	{74, "Chrome Classic Wire [Classic White Wall]"},
+	{105, "Chrome Classic Wire [Retro White Wall]"},
+	{136, "Chrome Classic Wire [Red Lines]"},
+	{167, "Chrome Classic Wire [Blue Lines]"},
+	{198, "Chrome Classic Wire [Atomic]"},
+	{13, "Gold Classic Wire"},
+	{44, "Gold Classic Wire [White Lines]"},
+	{75, "Gold Classic Wire [Classic White Wall]"},
+	{106, "Gold Classic Wire [Retro White Wall]"},
+	{137, "Gold Classic Wire [Red Lines]"},
+	{168, "Gold Classic Wire [Blue Lines]"},
+	{199, "Gold Classic Wire [Atomic]"},
+	{14, "Chrome Smoothie"},
+	{45, "Chrome Smoothie [White Lines]"},
+	{76, "Chrome Smoothie [Classic White Wall]"},
+	{107, "Chrome Smoothie [Retro White Wall]"},
+	{138, "Chrome Smoothie [Red Lines]"},
+	{169, "Chrome Smoothie [Blue Lines]"},
+	{200, "Chrome Smoothie [Atomic]"},
+	{15, "Gold Smoothie"},
+	{46, "Gold Smoothie [White Lines]"},
+	{77, "Gold Smoothie [Classic White Wall]"},
+	{108, "Gold Smoothie [Retro White Wall]"},
+	{139, "Gold Smoothie [Red Lines]"},
+	{170, "Gold Smoothie [Blue Lines]"},
+	{201, "Gold Smoothie [Atomic]"},
+	{16, "Chrome Classic Rod"},
+	{47, "Chrome Classic Rod [White Lines]"},
+	{78, "Chrome Classic Rod [Classic White Wall]"},
+	{109, "Chrome Classic Rod [Retro White Wall]"},
+	{140, "Chrome Classic Rod [Red Lines]"},
+	{171, "Chrome Classic Rod [Blue Lines]"},
+	{202, "Chrome Classic Rod [Atomic]"},
+	{17, "Gold Classic Rod"},
+	{48, "Gold Classic Rod [White Lines]"},
+	{79, "Gold Classic Rod [Classic White Wall]"},
+	{110, "Gold Classic Rod [Retro White Wall]"},
+	{141, "Gold Classic Rod [Red Lines]"},
+	{172, "Gold Classic Rod [Blue Lines]"},
+	{203, "Gold Classic Rod [Atomic]"},
+	{18, "Chrome Dollar"},
+	{49, "Chrome Dollar [White Lines]"},
+	{80, "Chrome Dollar [Classic White Wall]"},
+	{111, "Chrome Dollar [Retro White Wall]"},
+	{142, "Chrome Dollar [Red Lines]"},
+	{173, "Chrome Dollar [Blue Lines]"},
+	{204, "Chrome Dollar [Atomic]"},
+	{19, "Gold Dollar"},
+	{50, "Gold Dollar [White Lines]"},
+	{81, "Gold Dollar [Classic White Wall]"},
+	{112, "Gold Dollar [Retro White Wall]"},
+	{143, "Gold Dollar [Red Lines]"},
+	{174, "Gold Dollar [Blue Lines]"},
+	{205, "Gold Dollar [Atomic]"},
+	{20, "Chrome Mighty Star"},
+	{51, "Chrome Mighty Star [White Lines]"},
+	{82, "Chrome Mighty Star [Classic White Wall]"},
+	{113, "Chrome Mighty Star [Retro White Wall]"},
+	{144, "Chrome Mighty Star [Red Lines]"},
+	{175, "Chrome Mighty Star [Blue Lines]"},
+	{206, "Chrome Mighty Star [Atomic]"},
+	{21, "Gold Mighty Star"},
+	{52, "Gold Mighty Star [White Lines]"},
+	{83, "Gold Mighty Star [Classic White Wall]"},
+	{114, "Gold Mighty Star [Retro White Wall]"},
+	{145, "Gold Mighty Star [Red Lines]"},
+	{176, "Gold Mighty Star [Blue Lines]"},
+	{207, "Gold Mighty Star [Atomic]"},
+	{22, "Chrome Decadent Dish"},
+	{53, "Chrome Decadent Dish [White Lines]"},
+	{84, "Chrome Decadent Dish [Classic White Wall]"},
+	{115, "Chrome Decadent Dish [Retro White Wall]"},
+	{146, "Chrome Decadent Dish [Red Lines]"},
+	{177, "Chrome Decadent Dish [Blue Lines]"},
+	{208, "Chrome Decadent Dish [Atomic]"},
+	{23, "Gold Decadent Dish"},
+	{54, "Gold Decadent Dish [White Lines]"},
+	{85, "Gold Decadent Dish [Classic White Wall]"},
+	{116, "Gold Decadent Dish [Retro White Wall]"},
+	{147, "Gold Decadent Dish [Red Lines]"},
+	{178, "Gold Decadent Dish [Blue Lines]"},
+	{209, "Gold Decadent Dish [Atomic]"},
+	{24, "Chrome Razor Style"},
+	{55, "Chrome Razor Style [White Lines]"},
+	{86, "Chrome Razor Style [Classic White Wall]"},
+	{117, "Chrome Razor Style [Retro White Wall]"},
+	{148, "Chrome Razor Style [Red Lines]"},
+	{179, "Chrome Razor Style [Blue Lines]"},
+	{210, "Chrome Razor Style [Atomic]"},
+	{25, "Gold Razor Style"},
+	{56, "Gold Razor Style [White Lines]"},
+	{87, "Gold Razor Style [Classic White Wall]"},
+	{118, "Gold Razor Style [Retro White Wall]"},
+	{149, "Gold Razor Style [Red Lines]"},
+	{180, "Gold Razor Style [Blue Lines]"},
+	{211, "Gold Razor Style [Atomic]"},
+	{26, "Chrome Celtic Knot"},
+	{57, "Chrome Celtic Knot [White Lines]"},
+	{88, "Chrome Celtic Knot [Classic White Wall]"},
+	{119, "Chrome Celtic Knot [Retro White Wall]"},
+	{150, "Chrome Celtic Knot [Red Lines]"},
+	{181, "Chrome Celtic Knot [Blue Lines]"},
+	{212, "Chrome Celtic Knot [Atomic]"},
+	{27, "Gold Celtic Knot"},
+	{58, "Gold Celtic Knot [White Lines]"},
+	{89, "Gold Celtic Knot [Classic White Wall]"},
+	{120, "Gold Celtic Knot [Retro White Wall]"},
+	{151, "Gold Celtic Knot [Red Lines]"},
+	{182, "Gold Celtic Knot [Blue Lines]"},
+	{213, "Gold Celtic Knot [Atomic]"},
+	{28, "Chrome Warrior Dish"},
+	{59, "Chrome Warrior Dish [White Lines]"},
+	{90, "Chrome Warrior Dish [Classic White Wall]"},
+	{121, "Chrome Warrior Dish [Retro White Wall]"},
+	{152, "Chrome Warrior Dish [Red Lines]"},
+	{183, "Chrome Warrior Dish [Blue Lines]"},
+	{214, "Chrome Warrior Dish [Atomic]"},
+	{29, "Gold Warrior Dish"},
+	{60, "Gold Warrior Dish [White Lines]"},
+	{91, "Gold Warrior Dish [Classic White Wall]"},
+	{122, "Gold Warrior Dish [Retro White Wall]"},
+	{153, "Gold Warrior Dish [Red Lines]"},
+	{184, "Gold Warrior Dish [Blue Lines]"},
+	{215, "Gold Warrior Dish [Atomic]"},
+	{30, "Gold Big Dog Spokes"},
+	{61, "Gold Big Dog Spokes [White Lines]"},
+	{92, "Gold Big Dog Spokes [Classic White Wall]"},
+	{123, "Gold Big Dog Spokes [Retro White Wall]"},
+	{154, "Gold Big Dog Spokes [Red Lines]"},
+	{185, "Gold Big Dog Spokes [Blue Lines]"},
+	{216, "Gold Big Dog Spokes [Atomic]"}
+};
+
+const std::vector<WheelSelection> WHEELS_BY_TYPE[WHEEL_CATEGORY_COUNT] = {
+	WHEELS_SPORTS,
+	WHEELS_MUSCLE,
+	WHEELS_LOWRIDER,
+	WHEELS_SUV,
+	WHEELS_OFFROAD,
+	WHEELS_TUNER,
+	WHEELS_BIKE,
+	WHEELS_HIGHEND,
+	WHEELS_BENNYSORIGINALS,
+	WHEELS_BENNYSBESPOKE
+};
 
 std::string getModCategoryName(int i){
 	//To sort out the bike customisation options - else it displays car related headings
@@ -172,8 +983,7 @@ std::string getModCategoryName(int i){
 		case SPECIAL_ID_FOR_WHEEL_SELECTION:
 			return "Wheel Choice";
 		case SPECIAL_ID_FOR_WINDOW_TINT:
-			if(!is_this_a_motorcycle(veh))
-				return "Window Tint";
+			return "Window Tint";
 		case SPECIAL_ID_FOR_LICENSE_PLATES:
 			return "License Plates";
 		default:
@@ -398,7 +1208,139 @@ void addClanLogoToVehicle(Vehicle vehicle, Ped ped){
 	}
 }
 
-//std::string HORN_NAMES[] = { "Stock Horn", "Star Spangled Banner 1", "Star Spangled Banner 1", "Star Spangled Banner 1", "Star Spangled Banner 1", "Jazz Horn 1", };
+bool onconfirm_vehmod_wheel_selection(MenuItem<int> choice){
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+
+	if(!ENTITY::DOES_ENTITY_EXIST(playerPed) || !PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)){
+		return false;
+	}
+
+	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+
+	VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
+	switch(wheelpart){
+		case 0:
+			VEHICLE::SET_VEHICLE_MOD(veh, 23, choice.value, VEHICLE::GET_VEHICLE_MOD_VARIATION(veh, 23));
+			VEHICLE::SET_VEHICLE_MOD(veh, 24, choice.value, VEHICLE::GET_VEHICLE_MOD_VARIATION(veh, 24));
+			set_status_text("Changed all wheels");
+			break;
+		case 1:
+			VEHICLE::SET_VEHICLE_MOD(veh, 23, choice.value, VEHICLE::GET_VEHICLE_MOD_VARIATION(veh, 23));
+			set_status_text("Changed front wheel");
+			break;
+		case 2:
+			VEHICLE::SET_VEHICLE_MOD(veh, 24, choice.value, VEHICLE::GET_VEHICLE_MOD_VARIATION(veh, 24));
+			set_status_text("Changed rear wheel");
+			break;
+	}
+
+	return false;
+}
+
+bool process_vehmod_wheel_selection(){
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+
+	if(!ENTITY::DOES_ENTITY_EXIST(playerPed) || !PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)){
+		return false;
+	}
+
+	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+
+	std::vector<MenuItem<int> *> menuItems;
+
+	MenuItem<int> *item = new MenuItem<int>();
+	item->caption = "Stock Wheel";
+	item->value = -1;
+	menuItems.push_back(item);
+
+	int wheelType = VEHICLE::GET_VEHICLE_WHEEL_TYPE(veh), wheel = VEHICLE::GET_VEHICLE_MOD(veh, wheelpart == 2 ? 24 : 23), modChoiceMenuIndex = 0;
+
+	for(int a = 0; a < WHEEL_CATEGORY_COUNTS[wheelType]; a++){
+		item = new MenuItem<int>();
+		item->caption = WHEELS_BY_TYPE[wheelType].at(a).name;
+		item->value = WHEELS_BY_TYPE[wheelType].at(a).wheelIndex;
+		menuItems.push_back(item);
+	}
+
+	for(int a = 0; a < WHEEL_CATEGORY_COUNTS[wheelType]; a++){
+		if(WHEELS_BY_TYPE[wheelType].at(a).wheelIndex == wheel){
+			modChoiceMenuIndex = a + 1;
+			break;
+		}
+	}
+
+	std::string caption = "All Wheels";
+	if(wheelpart == 1){
+		caption = "Front Wheels";
+	}
+	else if(wheelpart == 2){
+		caption = "Rear Wheels";
+	}
+
+	return draw_generic_menu<int>(menuItems, &modChoiceMenuIndex, caption, onconfirm_vehmod_wheel_selection, nullptr, nullptr, nullptr);
+}
+
+bool onconfirm_vehmod_wheel_selection_menu(MenuItem<int> choice){
+	wheelpart = choice.value;
+
+	return process_vehmod_wheel_selection();
+}
+
+bool process_vehmod_wheel_selection_menu(){
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+
+	if(!ENTITY::DOES_ENTITY_EXIST(playerPed) || !PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)){
+		return false;
+	}
+
+	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+
+	std::vector<MenuItem<int> *> menuItems;
+	MenuItem<int> *item;
+	int count = WHEEL_CATEGORY_COUNTS[VEHICLE::GET_VEHICLE_WHEEL_TYPE(veh)];
+	std::ostringstream ss;
+
+	if(is_this_a_motorcycle(veh)){
+		item = new MenuItem<int>();
+		ss << "All ~HUD_COLOUR_GREYLIGHT~(" << count << ")";
+		item->caption = ss.str();
+		item->value = 0;
+		item->isLeaf = false;
+		menuItems.push_back(item);
+
+		ss.str(""), ss.clear();
+
+		item = new MenuItem<int>();
+		ss << "Front ~HUD_COLOUR_GREYLIGHT~(" << count << ")";
+		item->caption = ss.str();
+		item->value = 1;
+		item->isLeaf = false;
+		menuItems.push_back(item);
+
+		ss.str(""), ss.clear();
+
+		item = new MenuItem<int>();
+		ss << "Rear ~HUD_COLOUR_GREYLIGHT~(" << count << ")";
+		item->caption = ss.str();
+		item->value = 2;
+		item->isLeaf = false;
+		menuItems.push_back(item);
+
+		ss.str(""), ss.clear();
+	}
+	else{
+		item = new MenuItem<int>();
+		ss << "All ~HUD_COLOUR_GREYLIGHT~(" << count << ")";
+		item->caption = ss.str();
+		item->value = 0;
+		item->isLeaf = false;
+		menuItems.push_back(item);
+
+		ss.str(""), ss.clear();
+	}
+
+	return draw_generic_menu<int>(menuItems, nullptr, getModCategoryName(SPECIAL_ID_FOR_WHEEL_SELECTION), onconfirm_vehmod_wheel_selection_menu, nullptr, nullptr, nullptr);
+}
 
 bool onconfirm_vehmod_category_menu(MenuItem<int> choice){
 	// common variables
@@ -418,120 +1360,52 @@ bool onconfirm_vehmod_category_menu(MenuItem<int> choice){
 
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 
-	switch(lastSelectedModValue){
-		case 0:
-		case 1:
-		case 2:
-		case 3:
-		case 4:
-		case 5:
-		case 6:
-		case 7:
-		case 8:
-		case 9:
-		case 10:
-		case 11:
-		case 12:
-		case 13:
-		case 14:
-		case 15:
-		case 16:
-		case 21:
-		case 22:
-		case 23:
-		case 24:
-		case 25:
-		case 26:
-		case 27:
-		case 28:
-		case 29:
-		case 30:
-		case 31:
-		case 32:
-		case 33:
-		case 34:
-		case 35:
-		case 36:
-		case 37:
-		case 38:
-		case 39:
-		case 40:
-		case 41:
-		case 42:
-		case 43:
-		case 44:
-		case 45:
-		case 46:
-		case 48:
+	if(lastSelectedModValue >= 0 && lastSelectedModValue <= 16 || lastSelectedModValue >= 25 && lastSelectedModValue <= 48){
+		VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
+
+		std::string modItemNameStr = getNormalItemTitle(veh, lastSelectedModValue, choice.value);
+
+		VEHICLE::SET_VEHICLE_MOD(veh, lastSelectedModValue, choice.value, 1);
+		std::ostringstream ss;
+		ss << modItemNameStr << " Applied";
+		set_status_text(ss.str());
+
+		/*
+		if (lastSelectedModValue == 14)
 		{
-			VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
+			STREAMING::STOP_PLAYER_REMAIN_ARCADE();
+			PED::SET_PED_RESET_FLAG(PLAYER::PLAYER_PED_ID(), 102, 1);
 
-			std::string modItemNameStr = getNormalItemTitle(veh, lastSelectedModValue, choice.value);
+			Hash hashOfHorn = VEHICLE::_0x4593CF82AA179706(veh, 14, VEHICLE::GET_VEHICLE_MOD(veh, 14));
+			//AI::TASK_VEHICLE_TEMP_ACTION(PLAYER::PLAYER_PED_ID(), veh, actionID++, 4000);
 
-			VEHICLE::SET_VEHICLE_MOD(veh, lastSelectedModValue, choice.value, 1);
-			std::ostringstream ss;
-			ss << modItemNameStr << " Applied";
-			set_status_text(ss.str());
+			AI::_0xCC665AAC360D31E7(PLAYER::PLAYER_PED_ID(), veh, true);
+			//AI::_0xCC665AAC360D31E7(PLAYER::PLAYER_PED_ID(), veh, true);
 
-			/*
-			if (lastSelectedModValue == 14)
-			{
-				STREAMING::STOP_PLAYER_REMAIN_ARCADE();
-				PED::SET_PED_RESET_FLAG(PLAYER::PLAYER_PED_ID(), 102, 1);
-
-				Hash hashOfHorn = VEHICLE::_0x4593CF82AA179706(veh, 14, VEHICLE::GET_VEHICLE_MOD(veh, 14));
-				//AI::TASK_VEHICLE_TEMP_ACTION(PLAYER::PLAYER_PED_ID(), veh, actionID++, 4000);
-
-				AI::_0xCC665AAC360D31E7(PLAYER::PLAYER_PED_ID(), veh, true);
-				//AI::_0xCC665AAC360D31E7(PLAYER::PLAYER_PED_ID(), veh, true);
-
-				//AUDIO::OVERRIDE_VEH_HORN(veh, 1, AUDIO::GET_VEHICLE_DEFAULT_HORN(veh));
-				//VEHICLE::START_VEHICLE_HORN(veh, getHornDuration(choice.value), GAMEPLAY::GET_HASH_KEY("HELDDOWN"), false);
-			}
-			*/
+			//AUDIO::OVERRIDE_VEH_HORN(veh, 1, AUDIO::GET_VEHICLE_DEFAULT_HORN(veh));
+			//VEHICLE::START_VEHICLE_HORN(veh, getHornDuration(choice.value), GAMEPLAY::GET_HASH_KEY("HELDDOWN"), false);
 		}
-		break;
-
-		case SPECIAL_ID_FOR_WINDOW_TINT: //Change Window Tint
-		{
-			VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
-			VEHICLE::SET_VEHICLE_WINDOW_TINT(veh, choice.value); //Start from beginning
-			set_status_text("Changed window tint");
-			/*
-			std::ostringstream ss;
-			ss << "Set tint value " << choice.value;
-			set_status_text(ss.str());
-			*/
-		}
-		break;
-
-		case SPECIAL_ID_FOR_LICENSE_PLATES: //Change license plate style
-		{
-			int plateCount = VEHICLE::GET_NUMBER_OF_VEHICLE_NUMBER_PLATES();
-			VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
-			VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT_INDEX(veh, choice.value); //Start from beginning
-			set_status_text("Changed license plate");
-		}
-		break;
-
-		case SPECIAL_ID_FOR_WHEEL_CATEGORY: //Change Wheel Category
-		{
-			VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
-			VEHICLE::SET_VEHICLE_WHEEL_TYPE(veh, choice.value); //Increment ModValue
-			VEHICLE::SET_VEHICLE_MOD(veh, 23, 0, 0);
-			set_status_text("Changed wheel category");
-		}
-		break;
-
-		case SPECIAL_ID_FOR_WHEEL_SELECTION: //Change Wheels 
-		{
-			VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
-			VEHICLE::SET_VEHICLE_MOD(veh, 23, choice.value, 0); //Remove mod and start from beginning
-			VEHICLE::SET_VEHICLE_MOD(veh, 24, choice.value, 0); //Remove mod and start from beginning (For bike rear wheels if they exist)
-			set_status_text("Changed wheels");
-		}
-		break;
+		*/
 	}
+	else if(lastSelectedModValue == SPECIAL_ID_FOR_WINDOW_TINT){
+		VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
+		VEHICLE::SET_VEHICLE_WINDOW_TINT(veh, choice.value);
+		set_status_text("Changed window tint");
+	}
+	else if(lastSelectedModValue == SPECIAL_ID_FOR_LICENSE_PLATES){
+		int plateCount = VEHICLE::GET_NUMBER_OF_VEHICLE_NUMBER_PLATES();
+		VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
+		VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT_INDEX(veh, choice.value);
+		set_status_text("Changed license plate");
+	}
+	else if(lastSelectedModValue == SPECIAL_ID_FOR_WHEEL_CATEGORY){
+		VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
+		VEHICLE::SET_VEHICLE_WHEEL_TYPE(veh, choice.value);
+		VEHICLE::SET_VEHICLE_MOD(veh, 23, -1, VEHICLE::GET_VEHICLE_MOD_VARIATION(veh, 23));
+		VEHICLE::SET_VEHICLE_MOD(veh, 24, -1, VEHICLE::GET_VEHICLE_MOD_VARIATION(veh, 24));
+		set_status_text("Changed wheel category");
+	}
+
 	return false;
 }
 
@@ -593,10 +1467,9 @@ bool process_vehmod_category_special_menu(int category){
 	//Find menu index to return to
 	int modChoiceMenuIndex = find_menu_index_to_restore(category, category, veh);
 
-	std::ostringstream ss;
-	ss << getModCategoryName(category);
+	std::string caption = getModCategoryName(category);
 
-	draw_generic_menu<int>(menuItems, &modChoiceMenuIndex, ss.str(), onconfirm_vehmod_category_menu, NULL, NULL, vehicle_menu_interrupt);
+	draw_generic_menu<int>(menuItems, &modChoiceMenuIndex, caption, onconfirm_vehmod_category_menu, NULL, NULL, vehicle_menu_interrupt);
 
 	return false;
 }
@@ -605,7 +1478,7 @@ bool process_vehmod_category_menu(int category){
 	int actualCategory = category;
 
 	if(category == SPECIAL_ID_FOR_WHEEL_SELECTION){
-		actualCategory = 23;
+		return process_vehmod_wheel_selection_menu();
 	}
 	else if(category > SPECIAL_ID_START){
 		return process_vehmod_category_special_menu(category);
@@ -629,36 +1502,19 @@ bool process_vehmod_category_menu(int category){
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 	std::vector<MenuItem<int>*> menuItems;
 
-	int count = 0;
-	if(category == SPECIAL_ID_FOR_WHEEL_SELECTION){
-		count = WHEEL_CATEGORY_COUNTS[VEHICLE::GET_VEHICLE_WHEEL_TYPE(veh)];
-	}
-	else{
-		count = VEHICLE::GET_NUM_VEHICLE_MODS(veh, actualCategory);
-	}
+	int count = VEHICLE::GET_NUM_VEHICLE_MODS(veh, actualCategory);
 
-	if(category == SPECIAL_ID_FOR_WHEEL_SELECTION){
-		MenuItem<int> *item = new MenuItem<int>();
-		item->caption = "Default Wheel For Vehicle";
-		item->value = -1;
-		item->isLeaf = true;
-		menuItems.push_back(item);
-	}
-	else{
-		MenuItem<int> *item = new MenuItem<int>();
-		item->caption = getNormalItemTitle(veh, category, -1);
-		item->value = -1;
-		item->isLeaf = true;
-		menuItems.push_back(item);
-	}
+	MenuItem<int> *item = new MenuItem<int>();
+	item->caption = getNormalItemTitle(veh, category, -1);
+	item->value = -1;
+	menuItems.push_back(item);
 
 	for(int i = 0; i < count; i++){
 		if(!(category == 14 && i > 52)){
 			std::string modItemNameStr = getNormalItemTitle(veh, actualCategory, i);
-			MenuItem<int> *item = new MenuItem<int>();
+			item = new MenuItem<int>();
 			item->caption = modItemNameStr;
 			item->value = i;
-			item->isLeaf = true;
 			menuItems.push_back(item);
 		}
 	}
@@ -666,11 +1522,9 @@ bool process_vehmod_category_menu(int category){
 	//Find menu index to return to
 	int modChoiceMenuIndex = find_menu_index_to_restore(category, actualCategory, veh);
 
-	std::ostringstream ss;
-	ss << getModCategoryName(lastSelectedModValue);
+	std::string caption = getModCategoryName(lastSelectedModValue);
 
-	draw_generic_menu<int>(menuItems, &modChoiceMenuIndex, ss.str(), onconfirm_vehmod_category_menu, NULL, NULL, vehicle_menu_interrupt);
-	return false;
+	return draw_generic_menu<int>(menuItems, &modChoiceMenuIndex, caption, onconfirm_vehmod_category_menu, NULL, NULL, vehicle_menu_interrupt);
 }
 
 int find_menu_index_to_restore(int category, int actualCategory, Vehicle veh){
@@ -691,9 +1545,9 @@ int find_menu_index_to_restore(int category, int actualCategory, Vehicle veh){
 		*/
 	}
 	else{
-		modChoiceMenuIndex = VEHICLE::GET_VEHICLE_MOD(veh, actualCategory);
-		modChoiceMenuIndex++; //to compensate for extra 'default' item
+		modChoiceMenuIndex = VEHICLE::GET_VEHICLE_MOD(veh, actualCategory) + 1; // + 1 for stock item
 	}
+
 	return modChoiceMenuIndex;
 }
 
@@ -719,11 +1573,7 @@ bool onconfirm_vehmod_menu(MenuItem<int> choice){
 
 	switch(choice.value){
 		case -1: //Upgrade Performance
-			VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
-			VEHICLE::SET_VEHICLE_MOD(veh, MOD_ENGINE, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_ENGINE) - 1, 1); //Engine
-			VEHICLE::SET_VEHICLE_MOD(veh, MOD_BRAKES, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_BRAKES) - 1, 1); //Brakes
-			VEHICLE::SET_VEHICLE_MOD(veh, MOD_TRANSMISSION, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_TRANSMISSION) - 1, 1); //Transmission
-			VEHICLE::TOGGLE_VEHICLE_MOD(veh, MOD_TURBO, 1); //Turbo Tuning
+			fully_tune_vehicle(veh, false);
 
 			set_status_text("Added all performance upgrades");
 			break;
@@ -740,11 +1590,7 @@ bool onconfirm_vehmod_menu(MenuItem<int> choice){
 			set_status_text("Added all available upgrades");
 			break;
 		case -4: //Remove All Mods
-			for(int i = 0; i < 25; i++){
-				VEHICLE::REMOVE_VEHICLE_MOD(veh, i);
-			}
-			VEHICLE::SET_VEHICLE_WINDOW_TINT(veh, 0);
-			VEHICLE::SET_VEHICLE_TYRES_CAN_BURST(veh, 1);
+			reset_vehicle(veh);
 
 			set_status_text("Removed all upgrades");
 			break;
@@ -853,7 +1699,7 @@ bool process_vehmod_menu(){
 		item->isLeaf = false;
 		menuItems.push_back(item);
 
-		ss.str(""); ss.clear();
+		ss.str(""), ss.clear();
 
 		int plateCount = VEHICLE::GET_NUMBER_OF_VEHICLE_NUMBER_PLATES();
 		item = new MenuItem<int>();
@@ -863,7 +1709,7 @@ bool process_vehmod_menu(){
 		item->isLeaf = false;
 		menuItems.push_back(item);
 
-		ss.str(""); ss.clear();
+		ss.str(""), ss.clear();
 
 		item = new MenuItem<int>();
 		ss << getModCategoryName(SPECIAL_ID_FOR_WHEEL_CATEGORY) << " ~HUD_COLOUR_GREYLIGHT~(" << WHEEL_CATEGORY_COUNT << ")";
@@ -872,16 +1718,13 @@ bool process_vehmod_menu(){
 		item->isLeaf = false;
 		menuItems.push_back(item);
 
-		ss.str(""); ss.clear();
+		ss.str(""), ss.clear();
 
 		item = new MenuItem<int>();
-		ss << getModCategoryName(SPECIAL_ID_FOR_WHEEL_SELECTION) << " ~HUD_COLOUR_GREYLIGHT~(" << WHEEL_CATEGORY_COUNTS[VEHICLE::GET_VEHICLE_WHEEL_TYPE(veh)] << ")";
-		item->caption = ss.str();
+		item->caption = getModCategoryName(SPECIAL_ID_FOR_WHEEL_SELECTION);
 		item->value = SPECIAL_ID_FOR_WHEEL_SELECTION;
 		item->isLeaf = false;
 		menuItems.push_back(item);
-
-		ss.str(""); ss.clear();
 	}
 
 	if(isCar || isBike){
@@ -923,13 +1766,6 @@ bool process_vehmod_menu(){
 		menuItems.push_back(toggleItem);
 
 		toggleItem = new FunctionDrivenToggleMenuItem<int>();
-		toggleItem->caption = "Toggle Chrome Wheels";
-		toggleItem->getter_call = is_chrome_wheels;
-		toggleItem->setter_call = set_chrome_wheels;
-		toggleItem->value = SPECIAL_ID_FOR_TOGGLE_VARIATIONS;
-		menuItems.push_back(toggleItem);
-
-		toggleItem = new FunctionDrivenToggleMenuItem<int>();
 		toggleItem->caption = "Toggle Custom Tires";
 		toggleItem->getter_call = is_custom_tyres;
 		toggleItem->setter_call = set_custom_tyres;
@@ -937,20 +1773,20 @@ bool process_vehmod_menu(){
 		menuItems.push_back(toggleItem);
 	}
 
-	for(int i = 1; i < 12; i++){
-		if(!VEHICLE::DOES_EXTRA_EXIST(veh, i)){
+	for(int a = 0; a < 16; a++){
+		if(!VEHICLE::DOES_EXTRA_EXIST(veh, a)){
 			continue;
 		}
 
-		ss << "Toggle Extra #" << i;
+		ss << "Toggle Extra #" << a;
 		toggleItem = new FunctionDrivenToggleMenuItem<int>();
 		toggleItem->caption = ss.str();
 		toggleItem->getter_call = is_extra_enabled;
 		toggleItem->setter_call = set_extra_enabled;
 		toggleItem->value = SPECIAL_ID_FOR_TOGGLE_VARIATIONS;
-		toggleItem->extra_arguments.push_back(i);
+		toggleItem->extra_arguments.push_back(a);
 		menuItems.push_back(toggleItem);
-		ss.str(""); ss.clear();
+		ss.str(""), ss.clear();
 	}
 
 	if(!isWeird && !isAircraft){
@@ -960,6 +1796,27 @@ bool process_vehmod_menu(){
 		item->onConfirmFunction = set_plate_text;
 		item->value = SPECIAL_ID_FOR_PLATE_TEXT;
 		menuItems.push_back(item);
+
+		//toggleItem = new FunctionDrivenToggleMenuItem<int>();
+		//toggleItem->caption = "Toggle Unknown 17";
+		//toggleItem->getter_call = is_toggle_17_enabled;
+		//toggleItem->setter_call = set_toggle_17_enabled;
+		//toggleItem->value = SPECIAL_ID_FOR_TOGGLE_VARIATIONS;
+		//menuItems.push_back(toggleItem);
+
+		//toggleItem = new FunctionDrivenToggleMenuItem<int>();
+		//toggleItem->caption = "Toggle Unknown 19";
+		//toggleItem->getter_call = is_toggle_19_enabled;
+		//toggleItem->setter_call = set_toggle_19_enabled;
+		//toggleItem->value = SPECIAL_ID_FOR_TOGGLE_VARIATIONS;
+		//menuItems.push_back(toggleItem);
+
+		//toggleItem = new FunctionDrivenToggleMenuItem<int>();
+		//toggleItem->caption = "Toggle Unknown 21";
+		//toggleItem->getter_call = is_toggle_21_enabled;
+		//toggleItem->setter_call = set_toggle_21_enabled;
+		//toggleItem->value = SPECIAL_ID_FOR_TOGGLE_VARIATIONS;
+		//menuItems.push_back(toggleItem);
 	}
 
 	if(menuItems.size() == 0){
@@ -971,6 +1828,30 @@ bool process_vehmod_menu(){
 	return false;
 }
 
+//bool is_toggle_17_enabled(std::vector<int> extras){
+//	return VEHICLE::IS_TOGGLE_MOD_ON(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), MOD_UNKNOWN_17);
+//}
+//
+//void set_toggle_17_enabled(bool applied, std::vector<int> extras){
+//	VEHICLE::TOGGLE_VEHICLE_MOD(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), MOD_UNKNOWN_17, applied);
+//}
+//
+//bool is_toggle_19_enabled(std::vector<int> extras){
+//	return VEHICLE::IS_TOGGLE_MOD_ON(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), MOD_UNKNOWN_19);
+//}
+//
+//void set_toggle_19_enabled(bool applied, std::vector<int> extras){
+//	VEHICLE::TOGGLE_VEHICLE_MOD(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), MOD_UNKNOWN_19, applied);
+//}
+//
+//bool is_toggle_21_enabled(std::vector<int> extras){
+//	return VEHICLE::IS_TOGGLE_MOD_ON(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), MOD_UNKNOWN_21);
+//}
+//
+//void set_toggle_21_enabled(bool applied, std::vector<int> extras){
+//	VEHICLE::TOGGLE_VEHICLE_MOD(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), MOD_UNKNOWN_21, applied);
+//}
+
 void set_plate_text(MenuItem<int> choice){
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 	char* existingText = VEHICLE::GET_VEHICLE_NUMBER_PLATE_TEXT(veh);
@@ -981,7 +1862,9 @@ void set_plate_text(MenuItem<int> choice){
 }
 
 bool is_custom_tyres(std::vector<int> extras){
-	return VEHICLE::GET_VEHICLE_MOD_VARIATION(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), 23) != 0;
+	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
+
+	return VEHICLE::GET_VEHICLE_MOD_VARIATION(veh, 23) != 0 || (VEHICLE::GET_VEHICLE_WHEEL_TYPE(veh) == 8 || VEHICLE::GET_VEHICLE_WHEEL_TYPE(veh) == 9) && VEHICLE::GET_VEHICLE_MOD(veh, 23) > 30;
 }
 
 void set_custom_tyres(bool applied, std::vector<int> extras){
@@ -998,31 +1881,6 @@ void set_custom_tyres(bool applied, std::vector<int> extras){
 	VEHICLE::SET_VEHICLE_MOD(veh, 23, currmod, applied); //Add Custom Tires
 	VEHICLE::SET_VEHICLE_MOD(veh, 24, currmod, applied); //Add Custom Tires (For bike rear wheels if they exist)
 	set_status_text("Changed tires");
-}
-
-bool is_chrome_wheels(std::vector<int> extras){
-	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
-
-	return VEHICLE::GET_VEHICLE_MOD(veh, 23) >= WHEEL_CATEGORY_COUNTS[VEHICLE::GET_VEHICLE_WHEEL_TYPE(veh)];
-}
-
-void set_chrome_wheels(bool applied, std::vector<int> extras){
-	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
-
-	int curWheel = VEHICLE::GET_VEHICLE_MOD(veh, 23);
-	if(curWheel < 0){
-		set_status_text("~r~Can't apply chrome rims to default wheels");
-		return;
-	}
-
-	int count = WHEEL_CATEGORY_COUNTS[VEHICLE::GET_VEHICLE_WHEEL_TYPE(veh)], newWheel = curWheel % count;
-	if(applied){
-		newWheel += count;
-	}
-
-	VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
-	VEHICLE::SET_VEHICLE_MOD(veh, 23, newWheel, VEHICLE::GET_VEHICLE_MOD_VARIATION(veh, 23));
-	VEHICLE::SET_VEHICLE_MOD(veh, 24, newWheel, VEHICLE::GET_VEHICLE_MOD_VARIATION(veh, 24));
 }
 
 bool is_turbocharged(std::vector<int> extras){
@@ -1059,7 +1917,7 @@ void set_extra_enabled(bool applied, std::vector<int> extras){
 	ss << "Asked for extra at " << extraIndex << " and state " << (applied? "true" : "false");
 	set_status_text(ss.str());*/
 
-	VEHICLE::SET_VEHICLE_EXTRA(veh, extraIndex, applied ? 0 : -1);
+	VEHICLE::SET_VEHICLE_EXTRA(veh, extraIndex, !applied);
 }
 
 bool is_xenon_headlights(std::vector<int> extras){
@@ -1091,33 +1949,132 @@ bool vehicle_menu_interrupt(){
 
 void fully_tune_vehicle(Vehicle veh, bool optics){
 	VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
-	VEHICLE::SET_VEHICLE_MOD(veh, MOD_ENGINE, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_ENGINE) - 1, 1); //Engine
-	VEHICLE::SET_VEHICLE_MOD(veh, MOD_BRAKES, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_BRAKES) - 1, 1); //Brakes
-	VEHICLE::SET_VEHICLE_MOD(veh, MOD_TRANSMISSION, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_TRANSMISSION) - 1, 1); //Transmission
-	VEHICLE::SET_VEHICLE_MOD(veh, MOD_ARMOR, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_ARMOR) - 1, 1); //Armor
-
-	VEHICLE::TOGGLE_VEHICLE_MOD(veh, MOD_TURBO, 1); //Turbo Tuning
 
 	if(optics){
-		VEHICLE::SET_VEHICLE_MOD(veh, MOD_SPOILER, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_SPOILER) - 1, 1); //Spoilers
-		VEHICLE::SET_VEHICLE_MOD(veh, MOD_FRONTBUMPER, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_FRONTBUMPER) - 1, 1); //Front Bumper
-		VEHICLE::SET_VEHICLE_MOD(veh, MOD_REARBUMPER, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_REARBUMPER) - 1, 1); //Rear Bumper
-		VEHICLE::SET_VEHICLE_MOD(veh, MOD_SIDESKIRT, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_SIDESKIRT) - 1, 1); //Side Skirt
-		VEHICLE::SET_VEHICLE_MOD(veh, MOD_EXHAUST, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_EXHAUST) - 1, 1); //Exhaust
-		VEHICLE::SET_VEHICLE_MOD(veh, MOD_CHASSIS, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_CHASSIS) - 1, 1); //Chassis or roll cage
-		VEHICLE::SET_VEHICLE_MOD(veh, MOD_GRILLE, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_GRILLE) - 1, 1); //Grille
-		VEHICLE::SET_VEHICLE_MOD(veh, MOD_HOOD, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_HOOD) - 1, 1); //Hood
-		VEHICLE::SET_VEHICLE_MOD(veh, MOD_FENDER, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_FENDER) - 1, 1); //Fender
-		VEHICLE::SET_VEHICLE_MOD(veh, MOD_RIGHTFENDER, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_RIGHTFENDER) - 1, 1); //Right Fender
-		VEHICLE::SET_VEHICLE_MOD(veh, MOD_ROOF, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_ROOF) - 1, MOD_ROOF); //Roof
-		VEHICLE::SET_VEHICLE_MOD(veh, MOD_HORNS, HORN_CLASSICALLOOP2, 0);										  //Horns
-		VEHICLE::SET_VEHICLE_MOD(veh, MOD_SUSPENSION, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_SUSPENSION) - 1, 1); //Suspension
+		for(int a = 0; a < MOD_MAX_COUNT; a++){
+			switch(a){
+				case MOD_UNKNOWN_17:
+				case MOD_UNKNOWN_19:
+				case MOD_UNKNOWN_21:
+				case MOD_FRONTWHEELS:
+				case MOD_REARWHEELS:
+					continue;
+				case MOD_HORNS:
+					VEHICLE::SET_VEHICLE_MOD(veh, a, HORN_CLASSICALLOOP2, false);
+					continue;
+				case MOD_TURBO:
+					VEHICLE::TOGGLE_VEHICLE_MOD(veh, a, true);
+					continue;
+				case MOD_TIRESMOKE:
+					apply_smoke_colors(10);
+					continue;
+				case MOD_XENONLIGHTS:
+					VEHICLE::TOGGLE_VEHICLE_MOD(veh, a, true);
+					continue;
+				case MOD_ORNAMENTS:
+					VEHICLE::GET_NUM_VEHICLE_MODS(veh, a) > 20 ? VEHICLE::SET_VEHICLE_MOD(veh, a, 20, true) : nullptr;
+					continue;
+				default:
+					VEHICLE::SET_VEHICLE_MOD(veh, a, VEHICLE::GET_NUM_VEHICLE_MODS(veh, a) - 1, true);
+					continue;
+			}
+		}
 
-		VEHICLE::TOGGLE_VEHICLE_MOD(veh, MOD_XENONLIGHTS, 1); //Headlights
+		VEHICLE::SET_VEHICLE_WINDOW_TINT(veh, 1);
+
+		VEHICLE::SET_VEHICLE_COLOURS(veh, 120, 120);
+		VEHICLE::SET_VEHICLE_EXTRA_COLOURS(veh, 120, 120);
+
+		for(int a = 0; a < 4; a++){
+			VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(veh, a, true);
+		}
+		VEHICLE::_SET_VEHICLE_NEON_LIGHTS_COLOUR(veh, 255, 255, 255);
+
+		apply_dash_colors(68);
+		apply_trim_colors(68);
+
+		for(int a = 0; a < 16; a++){
+			if(VEHICLE::DOES_EXTRA_EXIST(veh, a)){
+				VEHICLE::SET_VEHICLE_EXTRA(veh, a, false);
+			}
+		}
 
 		VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT_INDEX(veh, PLATE_YELLOWONBLACK);
-//		VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT(veh, "ENHANCED");
+		VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT(veh, "ENTIFIED");
+	}
+	else{
+		VEHICLE::SET_VEHICLE_MOD(veh, MOD_SPOILER, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_SPOILER) - 1, 1); //Spoilers
+		VEHICLE::SET_VEHICLE_MOD(veh, MOD_ENGINE, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_ENGINE) - 1, 1); //Engine
+		VEHICLE::SET_VEHICLE_MOD(veh, MOD_BRAKES, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_BRAKES) - 1, 1); //Brakes
+		VEHICLE::SET_VEHICLE_MOD(veh, MOD_TRANSMISSION, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_TRANSMISSION) - 1, 1); //Transmission
+		VEHICLE::SET_VEHICLE_MOD(veh, MOD_SUSPENSION, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_SUSPENSION) - 1, 1); //Suspension
+		VEHICLE::SET_VEHICLE_MOD(veh, MOD_ARMOR, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_ARMOR) - 1, 1); //Armor
+
+		VEHICLE::TOGGLE_VEHICLE_MOD(veh, MOD_TURBO, 1); //Turbo Tuning
 	}
 
-	VEHICLE::SET_VEHICLE_DIRT_LEVEL(veh, 0.0f);
+	VEHICLE::SET_VEHICLE_TYRES_CAN_BURST(veh, false);
+
+	fix_vehicle();
+	clean_vehicle();
+}
+
+void reset_vehicle(Vehicle veh){
+	VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
+
+	apply_smoke_colors(0);
+	//write_text_to_log_file("reset_vehicle(): smoke complete");
+
+	for(int a = 0; a < MOD_MAX_COUNT; a++){
+		if(a >= 17 && a <= 22){
+			VEHICLE::TOGGLE_VEHICLE_MOD(veh, a, false);
+		}
+		else{
+			VEHICLE::SET_VEHICLE_MOD(veh, a, -1, false);
+		}
+	}
+	//write_text_to_log_file("reset_vehicle(): general complete");
+
+	VEHICLE::SET_VEHICLE_WINDOW_TINT(veh, 0);
+	//write_text_to_log_file("reset_vehicle(): window tint complete");
+
+	VEHICLE::SET_VEHICLE_COLOURS(veh, 0, 0);
+	VEHICLE::SET_VEHICLE_EXTRA_COLOURS(veh, 0, 0);
+	//write_text_to_log_file("reset_vehicle(): vehicle colors complete");
+
+	for(int a = 0; a < 4; a++){
+		VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(veh, a, false);
+	}
+	apply_neon_colors(12);
+	//write_text_to_log_file("reset_vehicle(): neon colors complete");
+
+	apply_dash_colors(0);
+	apply_trim_colors(0);
+	//write_text_to_log_file("reset_vehicle(): interior colors complete");
+
+	for(int a = 0; a < 16; a++){
+		if(VEHICLE::DOES_EXTRA_EXIST(veh, a)){
+			VEHICLE::SET_VEHICLE_EXTRA(veh, a, true);
+		}
+	}
+	//write_text_to_log_file("reset_vehicle(): extras complete");
+
+	std::string charsetnum = "0123456789", charsetchar = "ABCDEFGHIJKLMNOPQRSTUVWXYZ", plateText;
+	auto rcn = [charsetnum](){
+		return std::string(1, charsetnum.at(std::uniform_int_distribution<int>(0, charsetnum.length() - 1)(std::mt19937(std::random_device()()))));
+	};
+	auto rcc = [charsetchar](){
+		return std::string(1, charsetchar.at(std::uniform_int_distribution<int>(0, charsetchar.length() - 1)(std::mt19937(std::random_device()()))));
+	};
+	plateText = rcn() + rcn() + rcc() + rcc() + rcc() + rcn() + rcn() + rcn();
+	VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT_INDEX(veh, PLATE_BLUEONWHITE1);
+	VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT(veh, const_cast<char *>(plateText.c_str()));
+	write_text_to_log_file("reset_vehicle(): number plate complete");
+
+	VEHICLE::SET_VEHICLE_TYRES_CAN_BURST(veh, true);
+	//write_text_to_log_file("reset_vehicle(): tires can burst complete");
+
+	fix_vehicle();
+	clean_vehicle();
+	//write_text_to_log_file("reset_vehicle(): complete");
 }

@@ -95,6 +95,8 @@ bool process_skinchanger_menu();
 
 bool process_skinchanger_detail_menu();
 
+void process_player_life_menu();
+
 void update_features();
 
 void reset_globals();

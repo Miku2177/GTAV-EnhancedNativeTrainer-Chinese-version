@@ -9,10 +9,10 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #pragma once
 
 #ifdef _DEBUG
-	const bool DEBUG_LOG_ENABLED = true;
+const bool DEBUG_LOG_ENABLED = true;
 #endif
 #ifndef _DEBUG
-	const bool DEBUG_LOG_ENABLED = false;
+const bool DEBUG_LOG_ENABLED = false;
 #endif
 
 /**Append a line of text to the log file. Does nothing unless the debug

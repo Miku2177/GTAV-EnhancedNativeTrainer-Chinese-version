@@ -198,7 +198,7 @@ void onchange_time_flow_rate_callback(int value, SelectFromListMenuItem *source)
 void onconfirm_time_flow_rate(MenuItem<int> choice){
 	if(timeFlowRateLocked = !timeFlowRateLocked){
 		std::ostringstream ss;
-		ss << "Time Flow Rate: " << TIME_FLOW_RATE_CAPTIONS.at(choice.value);
+		ss << "Time flow rate: " << TIME_FLOW_RATE_CAPTIONS.at(choice.value);
 		set_status_text(ss.str());
 	}
 }
@@ -277,9 +277,9 @@ void process_time_menu(){
 	menuItems.insert(menuItems.begin(), item);
 
 	listItem = new SelectFromListMenuItem(TIME_FLOW_RATE_CAPTIONS, onchange_time_flow_rate_callback);
-	listItem->wrap = false;
 	listItem->caption = "Time Flow Rate";
 	listItem->value = timeFlowRateIndex;
+	listItem->wrap = false;
 	listItem->onConfirmFunction = onconfirm_time_flow_rate;
 	menuItems.push_back(listItem);
 

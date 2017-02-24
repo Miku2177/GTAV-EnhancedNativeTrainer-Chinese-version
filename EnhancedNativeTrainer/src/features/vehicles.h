@@ -24,13 +24,29 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\common\ENTUtil.h"
 
 #include <string>
+#include <random>
 
 struct PaintColor{
-	std::string name;
 	int colorIndex;
+	std::string name;
 };
 
 extern const std::vector<PaintColor> PAINTS_BY_TYPE[7];
+
+struct NeonLightsColor{
+	std::string colorString;
+	int rVal, gVal, bVal;
+};
+
+struct TireSmokeColor{
+	std::string colorString;
+	int rVal, gVal, bVal;
+};
+
+struct WheelSelection{
+	int wheelIndex;
+	std::string name;
+};
 
 extern const std::vector<std::string> VALUES_SUPERCARS;
 
@@ -70,6 +86,10 @@ bool do_spawn_vehicle(std::string modelName, std::string modelTitle);
 
 Vehicle do_spawn_vehicle(DWORD modelHash, std::string modelTitle, bool cleanup);
 
+bool process_vehmod_wheel_selection_menu();
+
+bool process_vehmod_wheel_selection();
+
 //Paint menus
 
 bool process_paint_menu();
@@ -89,10 +109,6 @@ void apply_paint(PaintColor whichpaint);
 bool is_custom_tyres(std::vector<int> extras);
 
 void set_custom_tyres(bool applied, std::vector<int> extras);
-
-bool is_chrome_wheels(std::vector<int> extras);
-
-void set_chrome_wheels(bool applied, std::vector<int> extras);
 
 bool is_turbocharged(std::vector<int> extras);
 
@@ -119,6 +135,18 @@ void set_convertible_roofdown(bool applied, std::vector<int> extras);
 bool is_bombbay_open(std::vector<int> extras);
 
 void set_bombbay_open(bool applied, std::vector<int> extras);
+
+//bool is_toggle_17_enabled(std::vector<int> extras);
+//
+//void set_toggle_17_enabled(bool applied, std::vector<int> extras);
+//
+//bool is_toggle_19_enabled(std::vector<int> extras);
+//
+//void set_toggle_19_enabled(bool applied, std::vector<int> extras);
+//
+//bool is_toggle_21_enabled(std::vector<int> extras);
+//
+//void set_toggle_21_enabled(bool applied, std::vector<int> extras);
 
 int find_menu_index_to_restore(int category, int actualCategory, Vehicle veh);
 
@@ -161,16 +189,6 @@ void init_vehicle_feature();
 void fix_vehicle();
 
 void clean_vehicle();
-
-struct NeonLightsColor{
-	std::string colorString;
-	int rVal, gVal, bVal;
-};
-
-struct TireSmokeColor{
-	std::string colorString;
-	int rVal, gVal, bVal;
-};
 
 void apply_neon_colors(int colorIndex);
 
@@ -254,3 +272,5 @@ bool inline is_this_a_train(Vehicle veh){
 bool did_player_just_enter_vehicle(Ped playerPed);
 
 void fully_tune_vehicle(Vehicle veh, bool optics = true);
+
+void reset_vehicle(Vehicle veh);
