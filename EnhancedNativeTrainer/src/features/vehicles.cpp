@@ -96,7 +96,7 @@ const std::vector<std::string> MENU_VEHICLE_CATEGORIES{"Cars", "Industrial", "Em
 
 const std::vector<std::string> MENU_CAR_CATEGORIES{"Supercars", "Sports", "Sport Classics", "Coupes", "Muscle", "Offroad", "SUVs", "Sedans", "Compacts", "Lowriders", "Executive DLC"};
 
-const std::vector<std::string> CAPTIONS_SUPERCARS{"Annis RE-7B (Race)", "Coil Voltic", "Coil Rocket Voltic (Import-Export)", "Emperor ETR1 (Race)", "Grotti Cheetah", "Grotti Turismo R", "Overflod Entity XF","Ocelot Penetrator (Import-Export)", "Pegassi Infernus", "Pegassi Osiris","Pegassi Tempesta (Import-Export)", "Pegassi Vacca", "Pegassi Zentorno", "Progen Itali GTB (Import-Export)", "Progen Itali GTB Custom (Import - Export)", "Progen T20", "Progen Tyrus (Race)", "Truffade Adder", "Truffade Nero (Import-Export)", "Truffade Nero Custom (Import-Export)","Vapid Bullet"};
+const std::vector<std::string> CAPTIONS_SUPERCARS{"Annis RE-7B (Race)", "Coil Voltic", "Coil Rocket Voltic (Import-Export)", "Emperor ETR1 (Race)", "Grotti Cheetah", "Grotti Turismo R", "Grotti Turismo (Special Races)","Overflod Entity XF","Ocelot Penetrator (Import-Export)", "Pegassi Infernus", "Pegassi Infernus (Special Races)", "Pegassi Osiris","Pegassi Tempesta (Import-Export)", "Pegassi Vacca", "Pegassi Zentorno", "Progen Itali GTB (Import-Export)", "Progen Itali GTB Custom (Import - Export)", "Progen T20", "Progen Tyrus (Race)", "Truffade Adder", "Truffade Nero (Import-Export)", "Truffade Nero Custom (Import-Export)","Vapid Bullet"};
 
 const std::vector<std::string> CAPTIONS_SPORTS{"Albany Alpha", "Annis Elegy RH8", "Annis Elegy Retro Custom (Import-Export)", "Benefactor Feltzer", "Benefactor Schwartzer", "Benefactor Surano", "Bravado Banshee", "Bravado Banshee 900R", "Bravado Buffalo", "Bravado Buffalo S", "Bravado Buffalo S (Race)", "Bravado Verlierer", "Declasse Drift Tampa (Race)","Dewbauchee Massacro", "Dewbauchee Massacro (Race)", "Dewbauchee Rapid GT", "Dewbauchee Rapid GT Cabrio","Dewbauchee Spector (Import-Export)", "Dewbauchee Spector Custom (Import-Export)", "Dinka Blista Compact", "Dinka Blista Compact (Go Go Monkey Race)", "Dinka Jester", "Dinka Jester (Race)", "Grotti Carbonizzare", "Hijak Khamelion", "Invetero Coquette", "Karin Futo", "Karin Kuruma", "Karin Kuruma (Armoured)", "Karin Sultan", "Karin Sultan RS", "Lampadati Furore GT", "Lampadati Tropos Rallye (Race)","Maibatsu Penumbra", "Obey 9F", "Obey 9F Cabrio", "Ocelot Lynx (Race)", "Phister Comet","Phister Comet Retro Custom (Import-Export)", "Schyster Fusilade"};
 
@@ -118,7 +118,7 @@ const std::vector<std::string> CAPTIONS_LOWRIDERS{"Albany Buccaneer (Custom)", "
 
 const std::vector<std::string> CAPTIONS_EXECUTIVE{"Benefactor XLS", "Benefactor XLS (Armored)", "Bravado Rumpo Custom", "Buckingham Nimbus", "Buckingham Volatus", "Dewbauchee Seven-70", "Enus Windsor Drop", "Grotti Bestia GTS", "Grotti X80 Proto", "HVY Brickade", "Pegassi Reaper", "Pfister 811", "Tug", "Vapid FMJ"};
 
-const std::vector<std::string> VALUES_SUPERCARS{"LE7B", "VOLTIC","VOLTIC2","SHEAVA", "CHEETAH", "TURISMOR", "ENTITYXF","PENETRATOR", "INFERNUS", "OSIRIS", "TEMPESTA", "VACCA", "ZENTORNO","ITALIGTB","ITALIGTB2", "T20", "TYRUS", "ADDER","NERO","NERO2", "BULLET"};
+const std::vector<std::string> VALUES_SUPERCARS{"LE7B", "VOLTIC","VOLTIC2","SHEAVA", "CHEETAH", "TURISMOR", "TURISMO2", "ENTITYXF","PENETRATOR", "INFERNUS", "INFERNUS2", "OSIRIS", "TEMPESTA", "VACCA", "ZENTORNO","ITALIGTB","ITALIGTB2", "T20", "TYRUS", "ADDER","NERO","NERO2", "BULLET"};
 
 const std::vector<std::string> VALUES_SPORTS{"ALPHA", "ELEGY2","ELEGY", "FELTZER2", "SCHWARZER", "SURANO", "BANSHEE", "BANSHEE2", "BUFFALO", "BUFFALO2", "BUFFALO3", "VERLIERER2", "TAMPA2", "MASSACRO", "MASSACRO2", "RAPIDGT", "RAPIDGT2","SPECTER","SPECTER2", "BLISTA2", "BLISTA3", "JESTER", "JESTER2", "CARBONIZZARE", "KHAMELION", "COQUETTE", "FUTO", "KURUMA", "KURUMA2", "SULTAN", "SULTANRS", "FUROREGT", "TROPOS", "PENUMBRA", "NINEF", "NINEF2", "LYNX", "COMET2","COMET3", "FUSILADE"};
 
@@ -514,18 +514,18 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		*getGlobalPtr(2593910) = 1;
 	}
 	else{
-		*getGlobalPtr(2593910) = 1;
+		*getGlobalPtr(2593970) = 1; //2593910 -- old. Keep in case new one doesn't work.
 	}
 
 	if(featureDespawnScriptDisabledUpdated){
 		featureDespawnScriptDisabledUpdated = false;
 		if(featureDespawnScriptDisabled){
-			set_status_text("Note: in-game shops will not work until you turn off the 'disable despawn' option");
+			set_status_text("~r~Note:~r~ in-game shops will not work until you turn off the 'disable despawn' option");
 		}
 		else if(!featureDespawnScriptDisabled && featureDespawnScriptDisabledWasLastOn){
 			SCRIPT::REQUEST_SCRIPT("shop_controller");
 			SYSTEM::START_NEW_SCRIPT("shop_controller", 1424);
-			set_status_text("Note: the shops may still not work until you load a save or restart");
+			set_status_text("~r~Note:~r~ the shops may still not work until you load a save or restart");
 		}
 		featureDespawnScriptDisabledWasLastOn = featureDespawnScriptDisabled;
 	}
@@ -1783,6 +1783,11 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ "SPECTER", "lsc_dlc_import_export", "specter2_a" },
 	{ "SPECTER2", "lsc_dlc_import_export", "specter2_b" },
 	{ "TEMPESTA", "lgm_dlc_importexport", "tempesta" },
+	//Special Races
+	{ "GP1", "lgm_dlc_specialraces", "gp1" },
+	{ "INFERNUS2", "lgm_dlc_specialraces", "infernus2" },
+	{ "RUSTON", "lgm_dlc_specialraces", "ruston" },
+	{ "TURISMO2", "lgm_dlc_specialraces", "turismo2" },
 };
 
 static std::vector<VehicleImage> ALL_VEH_IMAGES;
