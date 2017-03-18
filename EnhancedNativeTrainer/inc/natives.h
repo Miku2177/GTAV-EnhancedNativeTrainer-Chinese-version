@@ -168,7 +168,7 @@ namespace PLAYER
 	static void SET_PLAYER_HEALTH_RECHARGE_MULTIPLIER(Player player, float regenRate) { invoke<Void>(0x5DB660B38DD98A31, player, regenRate); } // 0x5DB660B38DD98A31 0x45514731
 	static void SET_PLAYER_WEAPON_DAMAGE_MODIFIER(Player player, float damageAmount) { invoke<Void>(0xCE07B9F7817AADA3, player, damageAmount); } // 0xCE07B9F7817AADA3 0xB02C2F39
 	static void SET_PLAYER_WEAPON_DEFENSE_MODIFIER(Player player, float modifier) { invoke<Void>(0x2D83BC011CA14A3C, player, modifier); } // 0x2D83BC011CA14A3C 0xAE446344
-	static void SET_PLAYER_MELEE_WEAPON_DAMAGE_MODIFIER(Player player, float modifier) { invoke<Void>(0x4A3DC7ECCC321032, player, modifier); } // 0x4A3DC7ECCC321032 0x362E69AD
+	static void SET_PLAYER_MELEE_WEAPON_DAMAGE_MODIFIER(Player player, float modifier, bool toggle) { invoke<Void>(0x4A3DC7ECCC321032, player, modifier, toggle); } // 0x4A3DC7ECCC321032 0x362E69AD
 	static void SET_PLAYER_MELEE_WEAPON_DEFENSE_MODIFIER(Player player, float modifier) { invoke<Void>(0xAE540335B4ABC4E2, player, modifier); } // 0xAE540335B4ABC4E2 0x9F3D577F
 	static void SET_PLAYER_VEHICLE_DAMAGE_MODIFIER(Player player, float damageAmount) { invoke<Void>(0xA50E117CDDF82F0C, player, damageAmount); } // 0xA50E117CDDF82F0C 0x823ECA63
 	static void SET_PLAYER_VEHICLE_DEFENSE_MODIFIER(Player player, float modifier) { invoke<Void>(0x4C60E6EFDAFF2462, player, modifier); } // 0x4C60E6EFDAFF2462 0xA16626C7
