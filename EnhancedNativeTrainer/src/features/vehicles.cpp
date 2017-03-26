@@ -402,7 +402,7 @@ void process_veh_menu(){
 	menuItems.push_back(item);
 
 	/*
-	-Crashing Trainer
+	-Crashing Trainer... (SelectFromListMenuItem) function needs to be looked into
 
 	listItem = new SelectFromListMenuItem(VEH_INVINC_MODE_CAPTIONS, onchange_veh_invincibility_mode);
 	listItem->wrap = false;
