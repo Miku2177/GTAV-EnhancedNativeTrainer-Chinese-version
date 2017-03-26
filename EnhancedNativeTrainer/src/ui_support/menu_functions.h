@@ -346,6 +346,8 @@ static const float TEXT_HEIGHT_NONLEAF = 24.0f;
 
 static const float TEXT_HEIGHT_WSTARS = 24.0f;
 
+static const float SPRITE_HEIGHT = 0.0f;
+
 /**Set the method that is used to periodically update the entire UI and apply repeat settings. The script core does this once.*/
 void set_periodic_feature_call(void method(void));
 
@@ -459,7 +461,33 @@ inline void draw_menu_header_line(std::string caption, float lineWidth, float li
 }
 
 template<typename T>
-void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, float lineTop, float lineLeft, float textLeft, bool active, bool rescaleText){
+void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, float lineTop, float lineLeft, float textLeft, bool active, bool rescaleText)
+{	
+	// *Mainly setup for controller use
+	CAM::SET_CINEMATIC_BUTTON_ACTIVE(false);
+	UI::HIDE_HUD_COMPONENT_THIS_FRAME(HudComponentHelpText);
+	UI::HIDE_HUD_COMPONENT_THIS_FRAME(HudComponentVehicleName);
+	UI::HIDE_HUD_COMPONENT_THIS_FRAME(HudComponentAreaName);
+	UI::HIDE_HUD_COMPONENT_THIS_FRAME(HudComponentStreetName);
+	UI::HIDE_HUD_COMPONENT_THIS_FRAME(HudComponentVehicleClass);
+	CONTROLS::DISABLE_CONTROL_ACTION(2, INPUT_NEXT_CAMERA, true);
+	CONTROLS::DISABLE_CONTROL_ACTION(2, INPUT_PHONE, true);
+	CONTROLS::DISABLE_CONTROL_ACTION(2, INPUT_VEH_CIN_CAM, true);
+	CONTROLS::DISABLE_CONTROL_ACTION(2, INPUT_SELECT_CHARACTER_FRANKLIN, true);
+	CONTROLS::DISABLE_CONTROL_ACTION(2, INPUT_SELECT_CHARACTER_MICHAEL, true);
+	CONTROLS::DISABLE_CONTROL_ACTION(2, INPUT_SELECT_CHARACTER_TREVOR, true);
+	CONTROLS::DISABLE_CONTROL_ACTION(2, INPUT_SELECT_CHARACTER_MULTIPLAYER, true);
+	CONTROLS::DISABLE_CONTROL_ACTION(2, INPUT_CHARACTER_WHEEL, true);
+	CONTROLS::DISABLE_CONTROL_ACTION(2, INPUT_MELEE_ATTACK_LIGHT, true);
+	CONTROLS::DISABLE_CONTROL_ACTION(2, INPUT_MELEE_ATTACK_HEAVY, true);
+	CONTROLS::DISABLE_CONTROL_ACTION(2, INPUT_MELEE_ATTACK_ALTERNATE, true);
+	CONTROLS::DISABLE_CONTROL_ACTION(2, INPUT_MULTIPLAYER_INFO, true);
+	CONTROLS::DISABLE_CONTROL_ACTION(2, INPUT_INTERACTION_MENU, true);
+	CONTROLS::DISABLE_CONTROL_ACTION(2, INPUT_SPRINT, true);
+	CONTROLS::DISABLE_CONTROL_ACTION(2, INPUT_VEH_SELECT_NEXT_WEAPON, true);
+	CONTROLS::DISABLE_CONTROL_ACTION(2, INPUT_VEH_HEADLIGHT, true);
+	CONTROLS::DISABLE_CONTROL_ACTION(2, INPUT_VEH_RADIO_WHEEL, true);
+
 	float text_scale = 0.35;
 	bool outline = false;
 	bool dropShadow = false;
@@ -558,13 +586,15 @@ void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, f
 			GRAPHICS::REQUEST_STREAMED_TEXTURE_DICT("cellphone_badger", true);
 		}
 
+		float sprite = lineTopScaled + (0.5f * (lineHeightScaled - (SPRITE_HEIGHT / (float)screen_h)));
+		rightMarginScaled = 20.0f / (float)screen_w;
 		if(toggleItem->get_toggle_value() == true){
 			//leaderboard_votetick_icon
 			//(char* textureDict, char* textureName, float screenX, float screenY, float scaleX, float scaleY, float heading, int colorR, int colorG, int colorB, int colorA) 
-			GRAPHICS::DRAW_SPRITE("cellphone_badger", "t", lineLeftScaled + lineWidthScaled - rightMarginScaled, textY + 0.01f, 0.026, 0.034, 0, 255, 255, 255, 255);
+			GRAPHICS::DRAW_SPRITE("cellphone_badger", "t", lineLeftScaled + lineWidthScaled - rightMarginScaled, textY + 0.01f, 0.026, 0.038, 0, 255, 255, 255, 255);
 		}
 		else{
-			GRAPHICS::DRAW_SPRITE("cellphone_badger", "u", lineLeftScaled + lineWidthScaled - rightMarginScaled, textY + 0.01f, 0.026, 0.034, 0, 0, 0, 0, 255);
+			GRAPHICS::DRAW_SPRITE("cellphone_badger", "u", lineLeftScaled + lineWidthScaled - rightMarginScaled, textY + 0.01f, 0.026, 0.038, 0, 0, 0, 0, 255);
 		}
 
 		UI::_DRAW_TEXT(lineLeftScaled + lineWidthScaled - rightMarginScaled, textY);
@@ -788,6 +818,7 @@ void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, f
 		UI::_DRAW_TEXT(0, textY);
 	}
 	else if(!item->isLeaf){
+		/*
 		UI::SET_TEXT_FONT(fontItem);
 		UI::SET_TEXT_SCALE(0.0, 0.4f);
 		UI::SET_TEXT_COLOUR(ENTColor::colsMenu[10].rgba[0], ENTColor::colsMenu[10].rgba[1], ENTColor::colsMenu[10].rgba[2], ENTColor::colsMenu[10].rgba[3]);
@@ -801,6 +832,16 @@ void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, f
 		UI::_ADD_TEXT_COMPONENT_STRING(">>");
 		float textY = lineTopScaled + (0.5f * (lineHeightScaled - (TEXT_HEIGHT_NONLEAF / (float) screen_h)));
 		UI::_DRAW_TEXT(0, textY);
+		*/
+
+		if (!GRAPHICS::HAS_STREAMED_TEXTURE_DICT_LOADED("helicopterhud"))
+		{
+			GRAPHICS::REQUEST_STREAMED_TEXTURE_DICT("helicopterhud", true);
+		}
+
+		float right_arrow = lineTopScaled + (0.5f * (lineHeightScaled - (SPRITE_HEIGHT / (float)screen_h)));
+		rightMarginScaled = 20.0f / (float)screen_w;
+		GRAPHICS::DRAW_SPRITE("helicopterhud", "hud_corner", lineLeftScaled + lineWidthScaled - rightMarginScaled, right_arrow, 0.015, 0.025, 135, 0, 0, 0, 255);
 	}
 }
 
