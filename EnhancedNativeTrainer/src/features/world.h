@@ -18,6 +18,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include <vector>
 
 #include "..\storage\database.h"
+#include <cstdint>
 
 void process_world_menu();
 
@@ -36,9 +37,9 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 //Snow related 
 //void writeJmp(BYTE* pFrom, BYTE* pTo);
 
-//bool CompareMemory(const uint8_t* pData, const uint8_t* bMask, const char* sMask);
+bool CompareMemory(const uint8_t* pData, const uint8_t* bMask, const char* sMask);
 
-//intptr_t FindPattern(const char* bMask, const char* sMask);
+intptr_t FindPattern(const char* bMask, const char* sMask);
 
 void EnableTracks(bool tracksVehicle, bool tracksPeds, bool deepTracksVehicle, bool deepTracksPed);
 

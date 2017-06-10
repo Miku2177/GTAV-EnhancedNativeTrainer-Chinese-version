@@ -975,6 +975,12 @@ namespace VEHICLE
 	static BOOL _HAS_VEHICLE_PARACHUTE(Vehicle vehicle) { return invoke<BOOL>(0xBC9CFF381338CB4F, vehicle); }
 	static BOOL _CAN_VEHICLE_PARACHUTE_BE_ACTIVATED(Vehicle vehicle) { return invoke<BOOL>(0xA916396DF4154EE3, vehicle); }
 	static void _SET_VEHICLE_PARACHUTE_ACTIVE(Vehicle vehicle, BOOL active) { invoke<Void>(0x0BFFB028B3DD0A97, vehicle, active); }
+	static BOOL _IS_THIS_MODEL_AN_AMPHIBIOUS_CAR(Hash model) { return invoke<BOOL>(0x633F6F44A537EBB6, model); } // 0x633F6F44A537EBB6
+	static BOOL _DOES_VEHICLE_HAVE_DOOR(Vehicle vehicle, int doorIndex) { return invoke<BOOL>(0x645F4B6E8499F632, vehicle, doorIndex); } // 0x645F4B6E8499F632
+	static BOOL _GET_HAS_LOWERABLE_WHEELS(Vehicle vehicle) { return invoke<BOOL>(0xDCA174A42133F08C, vehicle); } // 0xDCA174A42133F08C
+	static void _RAISE_LOWERABLE_WHEELS(Vehicle vehicle) { invoke<Void>(0xF660602546D27BA8, vehicle); } // 0xF660602546
+	static int _GET_NUMBER_OF_VEHICLE_DOORS(Vehicle vehicle) { return invoke<int>(0x92922A607497B14D, vehicle); } // 0x92922A607497B14D
+	static Vector3 _GET_ENTRY_POSITION_OF_DOOR(Vehicle vehicle, int doorIndex) { return invoke<Vector3>(0xC0572928C0ABFDA3, vehicle, doorIndex); } // 0xC0572928C0ABFDA3
 	static Vehicle CREATE_VEHICLE(Hash modelHash, float x, float y, float z, float heading, BOOL networkHandle, BOOL p6) { return invoke<Vehicle>(0xAF35D0D2583051B0, modelHash, x, y, z, heading, networkHandle, p6); } // 0xAF35D0D2583051B0 0xDD75460A
 	static void DELETE_VEHICLE(Vehicle* vehicle) { invoke<Void>(0xEA386986E786A54F, vehicle); } // 0xEA386986E786A54F 0x9803AF60
 	static void _0x7D6F9A3EF26136A0(Vehicle vehicle, BOOL p1, BOOL p2) { invoke<Void>(0x7D6F9A3EF26136A0, vehicle, p1, p2); } // 0x7D6F9A3EF26136A0 0xBB54ECCA

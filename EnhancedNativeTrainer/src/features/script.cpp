@@ -31,6 +31,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include <set>
 #include <iostream>
 #include <vector>
+#include <psapi.h>
 
 #pragma warning(disable : 4244 4305) // double <-> float conversions
 
@@ -92,6 +93,16 @@ const std::vector<std::string> REGEN_CAPTIONS{"Minimum", "0.1x", "0.25x", "0.5x"
 const std::vector<float> REGEN_VALUES{0.0f, 0.1f, 0.25f, 0.5f, 1.0f, 2.0f, 5.0f, 10.0f, 20.0f, 50.0f, 100.0f, 200.0f, 500.0f, 1000.0f};
 const int REGEN_DEFAULT = 4;
 int regenIndex = REGEN_DEFAULT;
+
+/* Prop unblocker related code - will need to clean up later*/
+
+void UnlockAllObjects()
+{
+	static auto checkModelBeforeCreation = FindPattern("\x48\x85\xC0\x0F\x84\x00\x00\x00\x00\x8B\x48\x50", "xxxxx????xxx");
+	memset(reinterpret_cast<void*>(checkModelBeforeCreation), 0x90, 24);
+}
+
+/* End of prop unblocker code*/
 
 void check_player_model(){
 	/*
@@ -877,6 +888,8 @@ void ScriptMain(){
 		write_text_to_log_file("Reading INI config....");
 		read_config_ini_file();
 		write_text_to_log_file("INI config read complete");
+
+		UnlockAllObjects();
 
 		main();
 
