@@ -397,11 +397,15 @@ void process_veh_menu(){
 	item->isLeaf = false;
 	menuItems.push_back(item);
 
+	/*
+	-Crashing Trainer... (SelectFromListMenuItem) function needs to be looked into
+
 	listItem = new SelectFromListMenuItem(VEH_INVINC_MODE_CAPTIONS, onchange_veh_invincibility_mode);
 	listItem->wrap = false;
 	listItem->caption = "Vehicle Invincibility";
 	listItem->value = get_current_veh_invincibility_mode();
 	menuItems.push_back(listItem);
+	*/
 
 	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "No Falling Off/Out";
@@ -441,6 +445,9 @@ void process_veh_menu(){
 	toggleItem->toggleValue = &featureVehSpeedBoost;
 	menuItems.push_back(toggleItem);
 
+	/*
+	-Crashing Trainer
+
 	listItem = new SelectFromListMenuItem(VEH_SPEED_BOOST_CAPTIONS, onchange_veh_speed_boost_index);
 	listItem->wrap = false;
 	listItem->caption = "Speed Boost Mode";
@@ -453,11 +460,12 @@ void process_veh_menu(){
 	listItem->value = engPowMultIndex;
 	menuItems.push_back(listItem);
 
-	/*listItem = new SelectFromListMenuItem(VEH_MASS_CAPTIONS, onchange_veh_mass_index);
+	listItem = new SelectFromListMenuItem(VEH_MASS_CAPTIONS, onchange_veh_mass_index);
 	listItem->wrap = false;
 	listItem->caption = "Vehicle Mass Multiplier";
 	listItem->value = VehMassMultIndex;
-	menuItems.push_back(listItem);*/
+	menuItems.push_back(listItem);
+	*/
 
 	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Disable Despawn Of DLC Cars";
@@ -465,6 +473,9 @@ void process_veh_menu(){
 	toggleItem->toggleValue = &featureDespawnScriptDisabled;
 	toggleItem->toggleValueUpdated = &featureDespawnScriptDisabledUpdated;
 	menuItems.push_back(toggleItem);
+
+	/*
+	-Commented out as these mods will be upgraded
 
 	item = new MenuItem<int>();
 	item->caption = "Door Control";
@@ -478,6 +489,7 @@ void process_veh_menu(){
 	toggleItem->toggleValue = &featureLockVehicleDoors;
 	toggleItem->toggleValueUpdated = &featureLockVehicleDoorsUpdated;
 	menuItems.push_back(toggleItem);
+	*/
 
 	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Force Vehicle Lights On";
