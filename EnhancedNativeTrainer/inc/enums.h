@@ -1487,7 +1487,7 @@ enum eHudComponent
 	HudComponentReplayTimer
 };
 
-<<<<<<< HEAD
+
 enum eHudColours
 {
 	HUD_COLOUR_BLACK,
@@ -1671,7 +1671,8 @@ enum eVehicleWeaponHash
 	Radar = -764006018
 };
 
-enum eInputFrontend 
+/*
+enum eInputFrontend
 {
 	INPUT_FRONTEND_DOWN,
 	INPUT_FRONTEND_UP,
@@ -1729,7 +1730,9 @@ enum eInputFrontend
 	INPUT_SCRIPT_PAD_LEFT,
 	INPUT_SCRIPT_PAD_RIGHT,
 	INPUT_SCRIPT_SELECT
-=======
+};
+
+*/
 enum eButton
 {
 	INPUT_NEXT_CAMERA = 0,
@@ -2070,5 +2073,4 @@ enum eButton
 	INPUT_VEH_SLOWMO_UP_ONLY = 335,
 	INPUT_VEH_SLOWMO_DOWN_ONLY = 336,
 	INPUT_MAP_POI = 337
->>>>>>> origin/master
 };

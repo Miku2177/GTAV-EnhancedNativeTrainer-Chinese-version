@@ -261,6 +261,287 @@ int get_current_revolver_appearance(){
 	return 0;
 }
 
+void onchange_pistolMK2_appearance(int value, SelectFromListMenuItem* source){
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	int weapHash = GAMEPLAY::GET_HASH_KEY("WEAPON_PISTOL_MK2");
+
+	int i = 0;
+
+	Hash hashToApply = 0;
+	for each (std::string componentName in VALUES_ATTACH_PISTOLMK2){
+		DWORD componentHash = GAMEPLAY::GET_HASH_KEY((char *)componentName.c_str());
+
+		WEAPON::REMOVE_WEAPON_COMPONENT_FROM_PED(playerPed, weapHash, componentHash);
+
+		if (i == value){
+			hashToApply = componentHash;
+		}
+
+		i++;
+	}
+
+	if (hashToApply != 0){
+		WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, weapHash, hashToApply);
+	}
+}
+
+int get_current_pistolMK2_appearance(){
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	int weapHash = GAMEPLAY::GET_HASH_KEY("WEAPON_PISTOL_MK2");
+
+	int i = 0;
+	for each (std::string componentName in VALUES_ATTACH_PISTOLMK2){
+		if (i == 0){
+			continue;
+		}
+
+		DWORD componentHash = GAMEPLAY::GET_HASH_KEY((char *)componentName.c_str());
+
+		if (WEAPON::HAS_PED_GOT_WEAPON_COMPONENT(playerPed, weapHash, componentHash)){
+			return i;
+		}
+
+		i++;
+	}
+
+	return 0;
+}
+
+void onchange_smgMK2_appearance(int value, SelectFromListMenuItem* source){
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	int weapHash = GAMEPLAY::GET_HASH_KEY("WEAPON_SMG_MK2");
+
+	int i = 0;
+
+	Hash hashToApply = 0;
+	for each (std::string componentName in VALUES_ATTACH_SMGMK2){
+		DWORD componentHash = GAMEPLAY::GET_HASH_KEY((char *)componentName.c_str());
+
+		WEAPON::REMOVE_WEAPON_COMPONENT_FROM_PED(playerPed, weapHash, componentHash);
+
+		if (i == value){
+			hashToApply = componentHash;
+		}
+
+		i++;
+	}
+
+	if (hashToApply != 0){
+		WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, weapHash, hashToApply);
+	}
+}
+
+int get_current_smgMK2_appearance(){
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	int weapHash = GAMEPLAY::GET_HASH_KEY("WEAPON_SMG_MK2");
+
+	int i = 0;
+	for each (std::string componentName in VALUES_ATTACH_SMGMK2){
+		if (i == 0){
+			continue;
+		}
+
+		DWORD componentHash = GAMEPLAY::GET_HASH_KEY((char *)componentName.c_str());
+
+		if (WEAPON::HAS_PED_GOT_WEAPON_COMPONENT(playerPed, weapHash, componentHash)){
+			return i;
+		}
+
+		i++;
+	}
+
+	return 0;
+}
+
+
+void onchange_carbineMK2_appearance(int value, SelectFromListMenuItem* source){
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	int weapHash = GAMEPLAY::GET_HASH_KEY("WEAPON_CARBINERIFLE_MK2");
+
+	int i = 0;
+
+	Hash hashToApply = 0;
+	for each (std::string componentName in VALUES_ATTACH_CARBINERIFLEMK2){
+		DWORD componentHash = GAMEPLAY::GET_HASH_KEY((char *)componentName.c_str());
+
+		WEAPON::REMOVE_WEAPON_COMPONENT_FROM_PED(playerPed, weapHash, componentHash);
+
+		if (i == value){
+			hashToApply = componentHash;
+		}
+
+		i++;
+	}
+
+	if (hashToApply != 0){
+		WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, weapHash, hashToApply);
+	}
+}
+
+int get_current_carbineMK2_appearance(){
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	int weapHash = GAMEPLAY::GET_HASH_KEY("WEAPON_CARBINERIFLE_MK2");
+
+	int i = 0;
+	for each (std::string componentName in VALUES_ATTACH_CARBINERIFLEMK2){
+		if (i == 0){
+			continue;
+		}
+
+		DWORD componentHash = GAMEPLAY::GET_HASH_KEY((char *)componentName.c_str());
+
+		if (WEAPON::HAS_PED_GOT_WEAPON_COMPONENT(playerPed, weapHash, componentHash)){
+			return i;
+		}
+
+		i++;
+	}
+
+	return 0;
+}
+
+
+void onchange_combatmgMK2_appearance(int value, SelectFromListMenuItem* source){
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	int weapHash = GAMEPLAY::GET_HASH_KEY("WEAPON_COMBATMG_MK2");
+
+	int i = 0;
+
+	Hash hashToApply = 0;
+	for each (std::string componentName in VALUES_ATTACH_COMBATMGMK2){
+		DWORD componentHash = GAMEPLAY::GET_HASH_KEY((char *)componentName.c_str());
+
+		WEAPON::REMOVE_WEAPON_COMPONENT_FROM_PED(playerPed, weapHash, componentHash);
+
+		if (i == value){
+			hashToApply = componentHash;
+		}
+
+		i++;
+	}
+
+	if (hashToApply != 0){
+		WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, weapHash, hashToApply);
+	}
+}
+
+int get_current_combatmgMK2_appearance(){
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	int weapHash = GAMEPLAY::GET_HASH_KEY("WEAPON_COMBATMG_MK2");
+
+	int i = 0;
+	for each (std::string componentName in VALUES_ATTACH_COMBATMGMK2){
+		if (i == 0){
+			continue;
+		}
+
+		DWORD componentHash = GAMEPLAY::GET_HASH_KEY((char *)componentName.c_str());
+
+		if (WEAPON::HAS_PED_GOT_WEAPON_COMPONENT(playerPed, weapHash, componentHash)){
+			return i;
+		}
+
+		i++;
+	}
+
+	return 0;
+}
+
+
+void onchange_heavy_sniperMK2_appearance(int value, SelectFromListMenuItem* source){
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	int weapHash = GAMEPLAY::GET_HASH_KEY("WEAPON_HEAVYSNIPER_MK2");
+
+	int i = 0;
+
+	Hash hashToApply = 0;
+	for each (std::string componentName in VALUES_ATTACH_HEAVYSNIPERMK2){
+		DWORD componentHash = GAMEPLAY::GET_HASH_KEY((char *)componentName.c_str());
+
+		WEAPON::REMOVE_WEAPON_COMPONENT_FROM_PED(playerPed, weapHash, componentHash);
+
+		if (i == value){
+			hashToApply = componentHash;
+		}
+
+		i++;
+	}
+
+	if (hashToApply != 0){
+		WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, weapHash, hashToApply);
+	}
+}
+
+int get_current_heavy_sniperMK2_appearance(){
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	int weapHash = GAMEPLAY::GET_HASH_KEY("VALUES_ATTACH_ASSAULTRIFLEMK2");
+
+	int i = 0;
+	for each (std::string componentName in VALUES_ATTACH_HEAVYSNIPERMK2){
+		if (i == 0){
+			continue;
+		}
+
+		DWORD componentHash = GAMEPLAY::GET_HASH_KEY((char *)componentName.c_str());
+
+		if (WEAPON::HAS_PED_GOT_WEAPON_COMPONENT(playerPed, weapHash, componentHash)){
+			return i;
+		}
+
+		i++;
+	}
+
+	return 0;
+}
+
+
+void onchange_assaultMK2_appearance(int value, SelectFromListMenuItem* source){
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	int weapHash = GAMEPLAY::GET_HASH_KEY("WEAPON_ASSAULTRIFLE_MK2");
+
+	int i = 0;
+
+	Hash hashToApply = 0;
+	for each (std::string componentName in VALUES_ATTACH_ASSAULTRIFLEMK2){
+		DWORD componentHash = GAMEPLAY::GET_HASH_KEY((char *)componentName.c_str());
+
+		WEAPON::REMOVE_WEAPON_COMPONENT_FROM_PED(playerPed, weapHash, componentHash);
+
+		if (i == value){
+			hashToApply = componentHash;
+		}
+
+		i++;
+	}
+
+	if (hashToApply != 0){
+		WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, weapHash, hashToApply);
+	}
+}
+
+int get_current_assaultMK2_appearance(){
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	int weapHash = GAMEPLAY::GET_HASH_KEY("WEAPON_ASSAULTRIFLE_MK2");
+
+	int i = 0;
+	for each (std::string componentName in VALUES_ATTACH_ASSAULTRIFLEMK2){
+		if (i == 0){
+			continue;
+		}
+
+		DWORD componentHash = GAMEPLAY::GET_HASH_KEY((char *)componentName.c_str());
+
+		if (WEAPON::HAS_PED_GOT_WEAPON_COMPONENT(playerPed, weapHash, componentHash)){
+			return i;
+		}
+
+		i++;
+	}
+
+	return 0;
+}
+
+
 bool process_individual_weapon_menu(int weaponIndex){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
@@ -364,6 +645,57 @@ bool process_individual_weapon_menu(int weaponIndex){
 			listItem->value = get_current_revolver_appearance();
 			menuItems.push_back(listItem);
 		}
+
+		//Gun Running
+
+		if (strcmp(weaponChar, "WEAPON_PISTOL_MK2") == 0){
+			SelectFromListMenuItem *listItem = new SelectFromListMenuItem(CAPTIONS_ATTACH_REVOLVER, onchange_pistolMK2_appearance);
+			listItem->wrap = false;
+			listItem->caption = "Skin Choice";
+			listItem->value = get_current_pistolMK2_appearance();
+			menuItems.push_back(listItem);
+		}
+
+		if (strcmp(weaponChar, "WEAPON_SMG_MK2") == 0){
+			SelectFromListMenuItem *listItem = new SelectFromListMenuItem(CAPTIONS_ATTACH_REVOLVER, onchange_smgMK2_appearance);
+			listItem->wrap = false;
+			listItem->caption = "Skin Choice";
+			listItem->value = get_current_smgMK2_appearance();
+			menuItems.push_back(listItem);
+		}
+
+		if (strcmp(weaponChar, "WEAPON_ASSAULTRIFLE_MK2") == 0){
+			SelectFromListMenuItem *listItem = new SelectFromListMenuItem(CAPTIONS_ATTACH_REVOLVER, onchange_assaultMK2_appearance);
+			listItem->wrap = false;
+			listItem->caption = "Skin Choice";
+			listItem->value = get_current_assaultMK2_appearance();
+			menuItems.push_back(listItem);
+		}
+
+		if (strcmp(weaponChar, "WEAPON_CARBINERIFLE_MK2") == 0){
+			SelectFromListMenuItem *listItem = new SelectFromListMenuItem(CAPTIONS_ATTACH_REVOLVER, onchange_carbineMK2_appearance);
+			listItem->wrap = false;
+			listItem->caption = "Skin Choice";
+			listItem->value = get_current_carbineMK2_appearance();
+			menuItems.push_back(listItem);
+		}
+
+		if (strcmp(weaponChar, "WEAPON_COMBATMG_MK2") == 0){
+			SelectFromListMenuItem *listItem = new SelectFromListMenuItem(CAPTIONS_ATTACH_REVOLVER, onchange_combatmgMK2_appearance);
+			listItem->wrap = false;
+			listItem->caption = "Skin Choice";
+			listItem->value = get_current_combatmgMK2_appearance();
+			menuItems.push_back(listItem);
+		}
+
+		if (strcmp(weaponChar, "WEAPON_HEAVYSNIPER_MK2") == 0){
+			SelectFromListMenuItem *listItem = new SelectFromListMenuItem(CAPTIONS_ATTACH_REVOLVER, onchange_heavy_sniperMK2_appearance);
+			listItem->wrap = false;
+			listItem->caption = "Skin Choice";
+			listItem->value = get_current_heavy_sniperMK2_appearance();
+			menuItems.push_back(listItem);
+		}
+
 
 		int tintableIndex = -1;
 		for(int i = 0; i < WEAPONTYPES_TINT.size(); i++){

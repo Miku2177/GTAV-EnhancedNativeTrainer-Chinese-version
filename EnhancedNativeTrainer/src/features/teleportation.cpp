@@ -346,10 +346,43 @@ std::vector<const char*> IPLS_NORTH_YANKTON = {
 };
 
 
+//Gunrunning - may need to double check this 
+std::vector<const char*> IPLS_GUNRUNNING_YACHT = {
+	"gr_heist_yacht2_lounge",
+	"gr_heist_yacht2_enginrm",
+	"gr_heist_yacht2_bridge",
+	"gr_heist_yacht2_bedrm",
+	"gr_heist_yacht2_bar"
+};
+
+std::vector<const char*> IPLS_GUNRUNNING_YACHT_TEST = {
+	"gr_grdlc_yacht_lod",
+	"gr_grdlc_yacht_placement",
+	"gr_heist_yacht2",
+	"gr_heist_yacht2_lounge",
+	"gr_heist_yacht2_lounge_lod",
+	"gr_heist_yacht2_enginrm",
+	"gr_heist_yacht2_enginrm_lod",
+	"gr_heist_yacht2_bridge",
+	"gr_heist_yacht2_bridge_lod",
+	"gr_heist_yacht2_bedrm",
+	"gr_heist_yacht2_bedrm_lod",
+	"gr_heist_yacht2_bar",
+	"gr_heist_yacht2_bar_lod",
+	"gr_heist_yacht2_slod",
+};
+
+std::vector<const char*> IPLS_GUNRUNNING_INTERIOR = {
+	"gr_grdlc_interior_placement_interior_0_grdlc_int_01_milo_",
+	"gr_grdlc_interior_placement_interior_1_grdlc_int_02_milo_",
+	"gr_grdlc_interior_placement"
+};
+
+
 std::vector<tele_location> LOCATIONS_REQSCEN = {
-	//{ "Carrier", 3069.330f, -4632.4f, 15.043f, IPLS_CARRIER, {}, false },
+	{ "Carrier", 3069.330f, -4632.4f, 15.043f, IPLS_CARRIER, {}, false },
 	{ "Fort Zancudo UFO", -2052.000f, 3237.000f, 1456.973f, { "ufo", "ufo_lod", "ufo_eye" }, {}, false },
-	//{ "Heist Yacht", -2043.974f, -1031.582f, 11.981f, IPLS_HEISTYACHT, {}, false },
+	{ "Heist Yacht", -2043.974f, -1031.582f, 11.981f, IPLS_HEISTYACHT, {}, false },
 	{ "Max Renda Refit", -583.1606f, -282.3967f, 35.394f, {"refit_unload"}, {"bh1_16_doors_shut"}, false },
 	{ "North Yankton", 3360.19f, -4849.67f, 111.8f, IPLS_NORTH_YANKTON, {}, false },
 	{ "North Yankton Bank", 5309.519f, -5212.375f, 83.522f, IPLS_NORTH_YANKTON, {}, false },
@@ -358,6 +391,12 @@ std::vector<tele_location> LOCATIONS_REQSCEN = {
 	{ "SS Bulker (Sunk)", -162.8918f, -2365.769f, 0.0f, { "sunkcargoship" }, { "cargoship" }, false },
 	{ "Train Crash Bridge", -532.1309f, 4526.187f, 88.7955f, { "canyonriver01_traincrash", "railing_end" }, { "railing_start", "canyonriver01" }, false },
 	{ "Yacht", -2023.661f, -1038.038f, 5.577f, { "smboat", "smboat_lod" }, {}, false },
+	//Items below NEED testing
+	{ "Gun Running Int 1", 1103.56200000f, -3000.00000000f, -40.00000000f, { "gr_grdlc_interior_placement_interior_0_grdlc_int_01_milo_" }, {}, false },
+	{ "Gun Running Int 2", 938.30770000f, -3196.11200000f, -100.00000000f, { "gr_grdlc_interior_placement_interior_1_grdlc_int_02_milo_" }, {}, false },
+	{ "Gun Running Int test", 1103.56200000f, -3000.00000000f, -40.00000000f, IPLS_GUNRUNNING_INTERIOR, {}, false },
+	{ "Gun Running Yacht", -1396.73600000f, 6745.02600000f, 7.97040200f, IPLS_GUNRUNNING_YACHT, {}, false },
+	{ "Gun Running Yacht test", -1396.73600000f, 6745.02600000f, 7.97040200f, IPLS_GUNRUNNING_YACHT_TEST, {}, false },
 };
 
 /*
