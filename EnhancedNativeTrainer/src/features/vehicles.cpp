@@ -521,8 +521,11 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	else if(version < 30){
 		*getGlobalPtr(2593910) = 1;
 	}
+	else if(version <= 39){
+		*getGlobalPtr(2593970) = 1;
+ 	}
 	else{
-		*getGlobalPtr(2593970) = 1; //2593910 -- old. Keep in case new one doesn't work.
+		*getGlobalPtr(2599337) = 1; // newest = 0x27A9A9
 	}
 
 	if(featureDespawnScriptDisabledUpdated){
