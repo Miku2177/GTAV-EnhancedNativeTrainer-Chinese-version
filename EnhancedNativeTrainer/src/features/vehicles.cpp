@@ -94,7 +94,7 @@ const std::vector<std::string> MENU_VEHICLE_CATEGORIES{"Cars", "Industrial", "Em
 
 //Cars
 
-const std::vector<std::string> MENU_CAR_CATEGORIES{"Supercars", "Sports", "Sport Classics", "Coupes", "Muscle", "Offroad", "SUVs", "Sedans", "Compacts", "Lowriders", "Executive DLC"};
+const std::vector<std::string> MENU_CAR_CATEGORIES{"Supercars", "Sports", "Sport Classics", "Coupes", "Muscle", "Offroad", "SUVs", "Sedans", "Compacts", "Lowriders" };
 
 const std::vector<std::string> CAPTIONS_SUPERCARS{"Annis RE-7B (Race)", "Coil Voltic", "Coil Rocket Voltic (Import-Export)", "Dewbauchee Vagner (Gun Runner)", "Emperor ETR1 (Race)", "Grotti Cheetah", "Grotti Cheetah (Gun Runner)", "Grotti Turismo R", "Grotti Turismo (Special Races)", "Grotti X80 Proto (Executive)", "Overflod Entity XF", "Ocelot Penetrator (Import-Export)", "Pegassi Infernus", "Pegassi Infernus (Special Races)", "Pegassi Osiris", "Pegassi Reaper (Executive)", "Pegassi Tempesta (Import-Export)", "Pegassi Vacca", "Pegassi Zentorno", "Pfister 811 (Executive", "Progen Itali GTB (Import-Export)", "Progen Itali GTB Custom (Import - Export)", "Progen Ruston (Special Races)","Progen T20", "Progen Tyrus (Race)", "Truffade Adder", "Truffade Nero (Import-Export)", "Truffade Nero Custom (Import-Export)", "Vapid Bullet", "Vapid FMJ (Executive)"};
 
@@ -397,16 +397,15 @@ void process_veh_menu(){
 	item->isLeaf = false;
 	menuItems.push_back(item);
 
-	/*
-	-Crashing Trainer... (SelectFromListMenuItem) function needs to be looked into
+
+	//-Crashing Trainer... (SelectFromListMenuItem) function needs to be looked into
 
 	listItem = new SelectFromListMenuItem(VEH_INVINC_MODE_CAPTIONS, onchange_veh_invincibility_mode);
 	listItem->wrap = false;
 	listItem->caption = "Vehicle Invincibility";
 	listItem->value = get_current_veh_invincibility_mode();
 	menuItems.push_back(listItem);
-	*/
-
+	
 	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "No Falling Off/Out";
 	toggleItem->value = i++;
@@ -445,8 +444,7 @@ void process_veh_menu(){
 	toggleItem->toggleValue = &featureVehSpeedBoost;
 	menuItems.push_back(toggleItem);
 
-	/*
-	-Crashing Trainer
+//	-Crashing Trainer
 
 	listItem = new SelectFromListMenuItem(VEH_SPEED_BOOST_CAPTIONS, onchange_veh_speed_boost_index);
 	listItem->wrap = false;
@@ -460,13 +458,13 @@ void process_veh_menu(){
 	listItem->value = engPowMultIndex;
 	menuItems.push_back(listItem);
 
+	/*
 	listItem = new SelectFromListMenuItem(VEH_MASS_CAPTIONS, onchange_veh_mass_index);
 	listItem->wrap = false;
 	listItem->caption = "Vehicle Mass Multiplier";
 	listItem->value = VehMassMultIndex;
 	menuItems.push_back(listItem);
 	*/
-
 	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Disable Despawn Of DLC Cars";
 	toggleItem->value = i++;
@@ -505,6 +503,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 
 	// version-specific hack to prevent despawn of vehicles exclusive to GTA Online
+	/*
 	eGameVersion version = getGameVersion();
 	if(version < 20){
 		*getGlobalPtr(2558120) = 1;
@@ -521,11 +520,50 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	else if(version < 30){
 		*getGlobalPtr(2593910) = 1;
 	}
-	else if(version <= 39){
+	else if(version < 39){
 		*getGlobalPtr(2593970) = 1;
  	}
 	else{
 		*getGlobalPtr(2599337) = 1; // newest = 0x27A9A9
+	}*/
+
+	eGameVersion version = getGameVersion();
+	if (version < 20)
+	{
+		*getGlobalPtr(2558120) = 1;
+	}
+
+	if ((version < 22 && version > 19))
+	{
+		*getGlobalPtr(2562051) = 1;
+	}
+
+
+	if (version < 26 && version > 21)
+	{
+		*getGlobalPtr(2566708) = 1;
+	}
+
+	if ((version > 25) && (version < 28))
+	{
+		*getGlobalPtr(2576573) = 1;
+	}
+
+	if ((version > 27) && (version < 30))
+	{
+		*getGlobalPtr(2593910) = 1;
+	}
+
+
+	if ((version > 29) && (version < 34))
+	{
+		*getGlobalPtr(2593970) = 1;
+	}
+
+
+	if (version > 33)
+	{
+		*getGlobalPtr(2599337) = 1;
 	}
 
 	if(featureDespawnScriptDisabledUpdated){
@@ -1918,6 +1956,7 @@ void init_vehicle_feature(){
 	ALL_VEH_IMAGES.insert(ALL_VEH_IMAGES.end(), INGAME_VEH_IMAGES.begin(), INGAME_VEH_IMAGES.end());
 
 	// spawn name, defined name, image file name
+	
 	unpack_veh_preview("AIRTUG", VP_AIRTUG, "VP_AIRTUG");
 	unpack_veh_preview("AMBULANCE", VP_AMBULANCE, "VP_AMBULANCE");
 	unpack_veh_preview("ARMYTANKER", VP_ARMYTANKER, "VP_ARMYTANKER");
@@ -2101,7 +2140,7 @@ void init_vehicle_feature(){
 
 	unpack_veh_preview("VIRGO3", VP_VIRGO3, "VP_VIRGO3");
 	unpack_veh_preview("FACTION", VP_FACTION, "VP_FACTION");
-}
+} 
 
 void fix_vehicle(){
 	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());

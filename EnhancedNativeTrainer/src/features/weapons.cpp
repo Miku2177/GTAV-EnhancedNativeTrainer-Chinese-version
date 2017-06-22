@@ -474,7 +474,7 @@ void onchange_heavy_sniperMK2_appearance(int value, SelectFromListMenuItem* sour
 
 int get_current_heavy_sniperMK2_appearance(){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
-	int weapHash = GAMEPLAY::GET_HASH_KEY("VALUES_ATTACH_ASSAULTRIFLEMK2");
+	int weapHash = GAMEPLAY::GET_HASH_KEY("VALUES_ATTACH_HEAVYSNIPERMK2");
 
 	int i = 0;
 	for each (std::string componentName in VALUES_ATTACH_HEAVYSNIPERMK2){
@@ -646,10 +646,10 @@ bool process_individual_weapon_menu(int weaponIndex){
 			menuItems.push_back(listItem);
 		}
 
-		//Gun Running
-
+		//Gun Running -- new weapon tints but can't find in files
+		/*
 		if (strcmp(weaponChar, "WEAPON_PISTOL_MK2") == 0){
-			SelectFromListMenuItem *listItem = new SelectFromListMenuItem(CAPTIONS_ATTACH_REVOLVER, onchange_pistolMK2_appearance);
+			SelectFromListMenuItem *listItem = new SelectFromListMenuItem(CAPTIONS_ATTACH_PISTOLMK2, onchange_pistolMK2_appearance);
 			listItem->wrap = false;
 			listItem->caption = "Skin Choice";
 			listItem->value = get_current_pistolMK2_appearance();
@@ -657,7 +657,7 @@ bool process_individual_weapon_menu(int weaponIndex){
 		}
 
 		if (strcmp(weaponChar, "WEAPON_SMG_MK2") == 0){
-			SelectFromListMenuItem *listItem = new SelectFromListMenuItem(CAPTIONS_ATTACH_REVOLVER, onchange_smgMK2_appearance);
+			SelectFromListMenuItem *listItem = new SelectFromListMenuItem(CAPTIONS_ATTACH_SMGMK2, onchange_smgMK2_appearance);
 			listItem->wrap = false;
 			listItem->caption = "Skin Choice";
 			listItem->value = get_current_smgMK2_appearance();
@@ -665,7 +665,7 @@ bool process_individual_weapon_menu(int weaponIndex){
 		}
 
 		if (strcmp(weaponChar, "WEAPON_ASSAULTRIFLE_MK2") == 0){
-			SelectFromListMenuItem *listItem = new SelectFromListMenuItem(CAPTIONS_ATTACH_REVOLVER, onchange_assaultMK2_appearance);
+			SelectFromListMenuItem *listItem = new SelectFromListMenuItem(CAPTIONS_ATTACH_ASSAULTRIFLEMK2, onchange_assaultMK2_appearance);
 			listItem->wrap = false;
 			listItem->caption = "Skin Choice";
 			listItem->value = get_current_assaultMK2_appearance();
@@ -673,7 +673,7 @@ bool process_individual_weapon_menu(int weaponIndex){
 		}
 
 		if (strcmp(weaponChar, "WEAPON_CARBINERIFLE_MK2") == 0){
-			SelectFromListMenuItem *listItem = new SelectFromListMenuItem(CAPTIONS_ATTACH_REVOLVER, onchange_carbineMK2_appearance);
+			SelectFromListMenuItem *listItem = new SelectFromListMenuItem(CAPTIONS_ATTACH_CARBINERIFLEMK2, onchange_carbineMK2_appearance);
 			listItem->wrap = false;
 			listItem->caption = "Skin Choice";
 			listItem->value = get_current_carbineMK2_appearance();
@@ -681,7 +681,7 @@ bool process_individual_weapon_menu(int weaponIndex){
 		}
 
 		if (strcmp(weaponChar, "WEAPON_COMBATMG_MK2") == 0){
-			SelectFromListMenuItem *listItem = new SelectFromListMenuItem(CAPTIONS_ATTACH_REVOLVER, onchange_combatmgMK2_appearance);
+			SelectFromListMenuItem *listItem = new SelectFromListMenuItem(CAPTIONS_ATTACH_COMBATMGMK2, onchange_combatmgMK2_appearance);
 			listItem->wrap = false;
 			listItem->caption = "Skin Choice";
 			listItem->value = get_current_combatmgMK2_appearance();
@@ -689,14 +689,14 @@ bool process_individual_weapon_menu(int weaponIndex){
 		}
 
 		if (strcmp(weaponChar, "WEAPON_HEAVYSNIPER_MK2") == 0){
-			SelectFromListMenuItem *listItem = new SelectFromListMenuItem(CAPTIONS_ATTACH_REVOLVER, onchange_heavy_sniperMK2_appearance);
+			SelectFromListMenuItem *listItem = new SelectFromListMenuItem(CAPTIONS_ATTACH_HEAVYSNIPERMK2, onchange_heavy_sniperMK2_appearance);
 			listItem->wrap = false;
 			listItem->caption = "Skin Choice";
 			listItem->value = get_current_heavy_sniperMK2_appearance();
 			menuItems.push_back(listItem);
 		}
 
-
+	*/
 		int tintableIndex = -1;
 		for(int i = 0; i < WEAPONTYPES_TINT.size(); i++){
 			if(weaponValue.compare(WEAPONTYPES_TINT.at(i)) == 0){
@@ -1558,7 +1558,9 @@ void onconfirm_open_tint_menu(MenuItem<int> choice){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	std::vector<MenuItem<int>*> menuItems;
-	for(int i = 0; i < VALUES_TINT.size(); i++){
+
+	for (int i = 0; i < VALUES_TINT.size(); i++)
+	{
 		MenuItem<int> *item = new MenuItem<int>();
 		item->caption = CAPTIONS_TINT[i];
 		item->value = VALUES_TINT[i];
@@ -1571,7 +1573,7 @@ void onconfirm_open_tint_menu(MenuItem<int> choice){
 
 	int tintSelection = 0;
 	for(int i = 0; i < WEAPONTYPES_TINT.size(); i++){
-		if(WEAPON::GET_PED_WEAPON_TINT_INDEX(playerPed, weapHash) == VALUES_TINT[i]){
+		if (WEAPON::GET_PED_WEAPON_TINT_INDEX(playerPed, weapHash) == VALUES_TINT[i]){
 			tintSelection = i;
 			break;
 		}
