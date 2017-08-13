@@ -180,7 +180,7 @@ const std::vector<std::string> CAPTIONS_MOTORCYCLES{"BF Raptor (Biker)", "Dinka 
 
 const std::vector<std::string> CAPTIONS_PLANES{"Buckingham Cargo Plane (An-225)", "Buckingham Jet (B747)", "Buckingham Luxor", "Buckingham Luxor Deluxe", "Buckingham Miljet", "Buckingham Nimbus (Executive)", "Buckingham Shamal", "Buckingham Vestra", "Jobuilt Mammatus", "Jobuilt P-996 Lazer", "Jobuilt Velum (4 Seater)", "Jobuilt Velum (5 Seater)", "Mammoth Dodo", "Mammoth Hydra", "Mammoth Titan", "Western Besra", "Western Cuban 800", "Western Duster", "Western Mallard Stunt Plane"};
 
-const std::vector<std::string> CAPTIONS_HELOS{"Blimp (Atomic)", "Blimp (Xero Gas)", "Buckingham Savage", "Buckingham SuperVolito", "Buckingham SuperVolito Carbon", "Buckingham Swift", "Buckingham Swift Deluxe", "Buckingham Valkyrie", "Buckingham Volatus (Executive)", "HVY Skylift", "Maibatsu Frogger", "Maibatsu Frogger (TPE/FIB)", "Nagasaki Buzzard (Unarmed)", "Nagasaki Buzzard Attack Chopper", "Western Annihilator", "Western Cargobob (Desert Camo)", "Western Cargobob (Jetsam)", "Western Cargobob (TPE)", "Western Maverick", "Western Maverick (Police/Medical)", "Western Maverick (Sheriff)"};
+const std::vector<std::string> CAPTIONS_HELOS{"Blimp (Atomic)", "Blimp (Xero Gas)", "Buckingham Savage", "Buckingham SuperVolito", "Buckingham SuperVolito Carbon", "Buckingham Swift", "Buckingham Swift Deluxe", "Buckingham Valkyrie", "Buckingham Volatus (Executive)", "HVY Skylift", "Maibatsu Frogger", "Maibatsu Frogger (TPE/FIB)", "Nagasaki Buzzard (Unarmed)", "Nagasaki Buzzard Attack Chopper", "Western Annihilator", "Western Cargobob (Desert Camo)", "Western Cargobob (Jetsam)", "Western Cargobob (TPE)", "Western Maverick", "Western Maverick (Police/Medical)"};
 
 const std::vector<std::string> CAPTIONS_BOATS{"Buckingham Tug (Executive)", "Dinka Marquis", "Kraken Sub", "Lampadati Toro", "Nagasaki Dinghy (2 Seater)", "Nagasaki Dinghy (4 Seater, Black)", "Nagasaki Dinghy (4 Seater, Red)", "Pegassi Speeder", "Shitzu Jetmax", "Shitzu Predator (Police)", "Shitzu Squalo", "Shitzu Suntrap", "Shitzu Tropic", "Speedophile Seashark", "Speedophile Seashark (Lifeguard)", "Submersible"};
 
@@ -188,11 +188,11 @@ const std::vector<std::string> CAPTIONS_BICYCLES{"BMX", "Cruiser", "Endurex Race
 
 const std::vector<std::string> VALUES_EMERGENCY{"POLICEOLD2", "AMBULANCE", "BARRACKS", "BARRACKS2", "FBI", "RIOT", "CRUSADER", "FBI2", "LGUARD", "PRANGER", "POLICEOLD1", "POLICET", "SHERIFF2", "FIRETRUK", "PBUS", "RHINO", "POLICE2", "POLICE", "POLICE3", "SHERIFF", "POLICE4", "POLICEB"};
 
-const std::vector<std::string> VALUES_MOTORCYCLES{"RAPTOR", "AKUMA", "BF400", "CLIFFHANGER", "DOUBLE", "ENDURO","FCR", "FCR2", "GARGOYLE", "THRUST", "VINDICATOR", "AVARUS","HEXER", "INNOVATION", "SANCTUS", "MANCHEZ", "SANCHEZ2", "SANCHEZ", "CARBONRS", "CHIMERA", "BLAZER4", "SHOTARO", "BATI", "BATI2", "ESSKEY", "FAGGIO3", "FAGGIO","RUFFIAN", "OPPRESSOR" ,"VORTEX", "FAGGIO2", "LECTRO", "NEMESIS","DIABLOUS", "DIABLOUS2", "DEFILER", "HAKUCHOU", "HAKUCHOU2","PCJ", "VADER", "BAGGER", "DAEMON", "NIGHTBLADE", "RATBIKE" ,"SOVEREIGN", "WOLFSBANE", "BAGGER", "DAEMON2", "ZOMBIEA", "ZOMBIEB"};
+const std::vector<std::string> VALUES_MOTORCYCLES{"RAPTOR", "AKUMA", "BF400", "CLIFFHANGER", "DOUBLE", "ENDURO","FCR", "FCR2", "GARGOYLE", "THRUST", "VINDICATOR", "AVARUS","HEXER", "INNOVATION", "SANCTUS", "MANCHEZ", "SANCHEZ2", "SANCHEZ", "CARBONRS", "CHIMERA", "BLAZER4", "SHOTARO", "BATI", "BATI2", "ESSKEY", "FAGGIO3", "FAGGIO", "OPPRESSOR", "RUFFIAN", "VORTEX", "FAGGIO2", "LECTRO", "NEMESIS","DIABLOUS", "DIABLOUS2", "DEFILER", "HAKUCHOU", "HAKUCHOU2","PCJ", "VADER", "BAGGER", "DAEMON", "NIGHTBLADE", "RATBIKE" ,"SOVEREIGN", "WOLFSBANE", "BAGGER", "DAEMON2", "ZOMBIEA", "ZOMBIEB"};
 
 const std::vector<std::string> VALUES_PLANES{"CARGOPLANE", "JET", "LUXOR", "LUXOR2", "MILJET", "NIMBUS", "SHAMAL", "VESTRA", "MAMMATUS", "LAZER", "VELUM", "VELUM2", "DODO", "HYDRA", "TITAN", "BESRA", "CUBAN800", "DUSTER", "STUNT"};
 
-const std::vector<std::string> VALUES_HELOS{"BLIMP", "BLIMP2", "SAVAGE", "SUPERVOLITO", "SUPERVOLITO2", "SWIFT", "SWIFT2", "VALKYRIE", "VOLATUS", "SKYLIFT", "FROGGER", "FROGGER2", "BUZZARD2", "BUZZARD", "ANNIHILATOR", "CARGOBOB", "CARGOBOB2", "CARGOBOB3", "MAVERICK", "POLMAV", "SHERIFFMAV"};
+const std::vector<std::string> VALUES_HELOS{"BLIMP", "BLIMP2", "SAVAGE", "SUPERVOLITO", "SUPERVOLITO2", "SWIFT", "SWIFT2", "VALKYRIE", "VOLATUS", "SKYLIFT", "FROGGER", "FROGGER2", "BUZZARD2", "BUZZARD", "ANNIHILATOR", "CARGOBOB", "CARGOBOB2", "CARGOBOB3", "MAVERICK", "POLMAV"};
 
 const std::vector<std::string> VALUES_BOATS{"TUG", "MARQUIS", "SUBMERSIBLE2", "TORO", "DINGHY2", "DINGHY3", "DINGHY", "SPEEDER", "JETMAX", "PREDATOR", "SQUALO", "SUNTRAP", "TROPIC", "SEASHARK", "SEASHARK2", "SUBMERSIBLE"};
 
@@ -472,22 +472,22 @@ void process_veh_menu(){
 	toggleItem->toggleValueUpdated = &featureDespawnScriptDisabledUpdated;
 	menuItems.push_back(toggleItem);
 
-	/*
-	-Commented out as these mods will be upgraded
+	
+	//-Commented out as these mods will be upgraded
 
 	item = new MenuItem<int>();
 	item->caption = "Door Control";
 	item->value = i++;
 	item->isLeaf = false;
 	menuItems.push_back(item);
-
+	
 	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Lock Vehicle Doors";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureLockVehicleDoors;
 	toggleItem->toggleValueUpdated = &featureLockVehicleDoorsUpdated;
 	menuItems.push_back(toggleItem);
-	*/
+	
 
 	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Force Vehicle Lights On";

@@ -889,6 +889,8 @@ void ScriptMain(){
 		read_config_ini_file();
 		write_text_to_log_file("INI config read complete");
 
+
+		/*Prop unblocker*/
 		UnlockAllObjects();
 
 		main();
