@@ -866,9 +866,11 @@ std::string getModCategoryName(int i){
 	//It's horrible to read but works.
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 
-	switch(i){
+	if (!is_this_a_heli_or_plane(veh))
+	{
+		switch (i){
 		case 0:
-			if(is_this_a_motorcycle(veh))
+			if (is_this_a_motorcycle(veh))
 				return "Drive Chain Cover";
 			else
 				return "Spoiler";
@@ -877,15 +879,15 @@ std::string getModCategoryName(int i){
 				return "Front Mudguard";
 			else if (is_this_a_heli_or_plane(veh))
 				return "Countermeasures";
-			else 
-				return "Front Bumper"; 
+			else
+				return "Front Bumper";
 		case 2:
-			if(is_this_a_motorcycle(veh))
+			if (is_this_a_motorcycle(veh))
 				return "Rear Mudguard";
 			else
 				return "Rear Bumper";
 		case 3:
-			if(is_this_a_motorcycle(veh))
+			if (is_this_a_motorcycle(veh))
 				return "Air Intake";
 			else
 				return "Side Skirts";
@@ -902,17 +904,17 @@ std::string getModCategoryName(int i){
 			else
 				return "Rollcage";
 		case 6:
-			if(is_this_a_motorcycle(veh))
+			if (is_this_a_motorcycle(veh))
 				return "Oil Tank";
 			else
 				return "Grille";
 		case 7:
-			if(is_this_a_motorcycle(veh))
+			if (is_this_a_motorcycle(veh))
 				return "Seat";
 			else
 				return "Bonnet";
 		case 8:
-			if(is_this_a_motorcycle(veh))
+			if (is_this_a_motorcycle(veh))
 				return "Frame / Gear Stick";
 			else
 				return "Fenders / Arches";
@@ -921,8 +923,8 @@ std::string getModCategoryName(int i){
 				return "Sissy Bar";
 			else if (is_this_a_heli_or_plane(veh))
 				return "Bomb Type";
-			else 
-				return "Skirts"; 
+			else
+				return "Skirts";
 		case 10:
 			if (is_this_a_motorcycle(veh))
 				return "Fuel Tank";
@@ -1002,6 +1004,100 @@ std::string getModCategoryName(int i){
 			return "License Plates";
 		default:
 			return std::to_string(i);
+		}
+	}
+
+	/*Cases left untouched in case they are needed later on*/
+	if (is_this_a_heli_or_plane(veh))
+	{
+		switch (i){
+		case 0:
+			return "case 0";
+		case 1:
+			return "Countermeasures"; //Only returns Chaff + Flare and not the 5 types of smoke....
+		case 2:
+			return "case 2";
+		case 3:
+			return "case 3";
+		case 4:
+			return "Thrust";
+		case 5:
+			return "Primary Weapons";
+		case 6:
+			return "case 6";
+		case 7:
+			return "case 7";
+		case 8:
+			return "case 8";
+		case 9:
+			return "Bomb Type";
+		case 10:
+			return "Weapons";
+		case 11:
+			return "Engine";
+		case 12:
+			return "Brakes";
+		case 13:
+			return "Transmission";
+		case 14:
+			return "Horn";
+		case 15:
+			return "Suspension";
+		case 16:
+			return "Armor";
+		case 22:
+			return "Headlights";
+		case 25:
+			return "Plate Holder";
+		case 26:
+			return "Vanity Plates";
+		case 27:
+			return "Trim Design";
+		case 28:
+			return "Ornaments";
+		case 29:
+			return "Dashboard"; 
+		case 30:
+			return "Dials";
+		case 31:
+			return "Door Cards";
+		case 32:
+			return "Seats";
+		case 33:
+			return "Steering Wheels";
+		case 34:
+			return "Gear Sticks";
+		case 35:
+			return "Plaques";
+		case 36:
+			return "Shelf Speakers";
+		case 37:
+			return "Trunk Speakers";
+		case 38:
+			return "Hydraulics";
+		case 39:
+			return "Engine Block";
+		case 40:
+			return "Misc Engine";
+		case 41:
+			return "Strut Braces";
+		case 42:
+			return "Arch Covers";
+		case 43:
+			return "Foglamps";
+		case 44:
+			return "Exterior Extra";
+		case 45:
+			return "Fuel Tank";
+		case 46:
+			return "Doors Extra";
+		case 48:
+			return "Liveries";
+		case 51:
+			return "Handling";
+		default:
+			return std::to_string(i);
+		}
 	}
 }
 
