@@ -987,9 +987,6 @@ enum VehicleHashes{
 
 };
 
-/*
--been commented out to fix build
-
 inline bool GetVehicleInfoForClanLogo(Hash vehicleModel, Vector3& x, Vector3& y, Vector3& z, float& scale){
 	switch(vehicleModel){
 		case VEHICLE_DOMINATOR:
@@ -1989,11 +1986,11 @@ inline bool GetVehicleInfoForClanLogo(Hash vehicleModel, Vector3& x, Vector3& y,
 			z = {0.0f, -1.0f, 0.0f};
 			scale = 0.2f;
 			return true;
+
 		default:
 			return false;
 	}
 }
-*/
 
 //WEAPON VALUES
 enum WeaponHashes{

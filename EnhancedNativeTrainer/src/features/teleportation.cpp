@@ -15,8 +15,6 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\debug\debuglog.h"
 #include "..\ent-enums.h"
 
-bool featureEnableMpMaps = false;
-
 struct tele_location{
 	std::string text;
 	float x;
@@ -171,11 +169,11 @@ std::vector<tele_location> LOCATIONS_INTERIORS = {
 	//{ "Rogers Salvage & Scrap", -609.962f, -1612.49f, 27.0105f },
 	//{ "Sandy Shores Sheriff", 1853.18f, 3686.63f, 34.2671f },
 	//{ "Simeon's Dealership", -56.4951f, -1095.8f, 26.4224f },
-	{ "Split Sides West Comedy Club", -453.8519, 280.5149, 77.52148, { "apa_ss1_12_interior_v_comedy_milo_" }, {} },
-	{ "Rock Club", -558.0049, 285.664, 81.1764, { "apa_ss1_11_interior_v_rockclub_milo_" }, {} },
+	//{ "Split Sides West Comedy Club", -564.261f, 278.232f, 83.1364f },
 	{ "Stadium", -248.4916f, -2010.509f, 34.5743f, {"SP1_10_real_interior"}, {"SP1_10_fake_interior"}, false },
 	{ "Strip Club DJ Booth", 126.135f, -1278.583f, 29.270f },
 	{ "Torture Warehouse", 136.514f, -2203.15f, 7.30914f },
+
 };
 
 std::vector<const char*> IPLS_CARRIER = {
@@ -348,61 +346,10 @@ std::vector<const char*> IPLS_NORTH_YANKTON = {
 };
 
 
-//Gunrunning - may need to double check this 
-std::vector<const char*> IPLS_GUNRUNNING_YACHT = {
-	"gr_heist_yacht2_lounge",
-	"gr_heist_yacht2_enginrm",
-	"gr_heist_yacht2_bridge",
-	"gr_heist_yacht2_bedrm",
-	"gr_heist_yacht2_bar"
-};
-
-std::vector<const char*> IPLS_GUNRUNNING_YACHT_TEST = {
-	"gr_grdlc_yacht_lod",
-	"gr_grdlc_yacht_placement",
-	"gr_heist_yacht2",
-	"gr_heist_yacht2_lounge",
-	"gr_heist_yacht2_lounge_lod",
-	"gr_heist_yacht2_enginrm",
-	"gr_heist_yacht2_enginrm_lod",
-	"gr_heist_yacht2_bridge",
-	"gr_heist_yacht2_bridge_lod",
-	"gr_heist_yacht2_bedrm",
-	"gr_heist_yacht2_bedrm_lod",
-	"gr_heist_yacht2_bar",
-	"gr_heist_yacht2_bar_lod",
-	"gr_heist_yacht2_slod",
-};
-
-std::vector<const char*> IPLS_BIKER_TUNNEL = {
-	"bkr_id1_11_interior_id1_11_tunnel1_int",
-	"bkr_id1_11_interior_id1_11_tunnel2_in",
-	"bkr_id1_11_interior_id1_11_tunnel3_int",
-	"bkr_id1_11_interior_id1_11_tunnel4_int",
-	"bkr_id1_11_interior_id1_11_tunnel5_int",
-	"bkr_id1_11_interior_id1_11_tunnel6_int",
-	"bkr_id1_11_interior_id1_11_tunnel7_int",
-	"bkr_id1_11_interior_id1_11_tunnel8_int"
-};
-
-std::vector<const char*> IPLS_GUNRUNNING_INTERIOR = {
-	"gr_grdlc_interior_placement_interior_0_grdlc_int_01_milo_",
-	"gr_grdlc_interior_placement_interior_1_grdlc_int_02_milo_",
-	"gr_grdlc_interior_placement"
-};
-
-std::vector<const char*> IPLS_IMPORT_EXPORT_WAREHOUSES = {
-	"imp_impexp_interior_placement_interior_0_impexp_int_01_milo_",
-	"imp_impexp_interior_placement_interior_1_impexp_intwaremed_milo_",
-	"imp_impexp_interior_placement_interior_2_imptexp_mod_int_01_milo_",
-	"imp_impexp_interior_placement_interior_3_impexp_int_02_milo_"
-};
-
-
 std::vector<tele_location> LOCATIONS_REQSCEN = {
-	{ "Carrier", 3069.330f, -4632.4f, 15.043f, IPLS_CARRIER, {}, false },
+	//{ "Carrier", 3069.330f, -4632.4f, 15.043f, IPLS_CARRIER, {}, false },
 	{ "Fort Zancudo UFO", -2052.000f, 3237.000f, 1456.973f, { "ufo", "ufo_lod", "ufo_eye" }, {}, false },
-	{ "Heist Yacht", -2043.974f, -1031.582f, 11.981f, IPLS_HEISTYACHT, {}, false },
+	//{ "Heist Yacht", -2043.974f, -1031.582f, 11.981f, IPLS_HEISTYACHT, {}, false },
 	{ "Max Renda Refit", -583.1606f, -282.3967f, 35.394f, {"refit_unload"}, {"bh1_16_doors_shut"}, false },
 	{ "North Yankton", 3360.19f, -4849.67f, 111.8f, IPLS_NORTH_YANKTON, {}, false },
 	{ "North Yankton Bank", 5309.519f, -5212.375f, 83.522f, IPLS_NORTH_YANKTON, {}, false },
@@ -411,12 +358,7 @@ std::vector<tele_location> LOCATIONS_REQSCEN = {
 	{ "SS Bulker (Sunk)", -162.8918f, -2365.769f, 0.0f, { "sunkcargoship" }, { "cargoship" }, false },
 	{ "Train Crash Bridge", -532.1309f, 4526.187f, 88.7955f, { "canyonriver01_traincrash", "railing_end" }, { "railing_start", "canyonriver01" }, false },
 	{ "Yacht", -2023.661f, -1038.038f, 5.577f, { "smboat", "smboat_lod" }, {}, false },
-	//Items below NEED testing
-	
 };
-
-/*
--been commented out to fix build
 
 std::vector<tele_location> LOCATIONS_BROKEN = {
 	//{ "Carrier", 3069.330f, -4704.220f, 15.043f, IPLS_CARRIER, {}, false },
@@ -455,79 +397,13 @@ std::vector<tele_location> LOCATIONS_JELLMAN = {
 	{ "Tinsel Towers Apt 42", -614.86f, 40.6783f, 97.6f, {}, {}, false },
 	{ "Eclipse Towers Apt 3", -773.407, 341.766, 211.397, {}, {}, false }
 	//{ "High Life Garage", 228.135f, -995.350f, -99.000f, { "hei_hw1_blimp_interior_2_dlc_garage_high_new_milo_" }, { "hw1_blimp_interior_v_garagel_milo_" }, false },
-};*/
-
-std::vector<tele_location> LOCATIONS_ONLINE = {
-	{ "Aircraft Carrier", 3069.330f, -4704.220f, 15.043f, IPLS_CARRIER, {}, false },
-	{ "Heist Police Station", 445.488f, -983.779f, 30.6896f, { "" }, {}, false },
-	{ "Heist Yacht", -2043.974f, -1031.582f, 11.981f, IPLS_HEISTYACHT, {}, false },
-	{ "Integrity Way Apt 28", -14.7964, -581.709, 79.4307, {}, {}, false },
-	{ "Del Perro Heights Apt 28", -1468.14f, -541.815f, 73.4442f, {}, {}, false },
-	{ "Richard Majestic Apt 2", -915.811f, -379.432f, 113.675f, {}, {}, false },
-	{ "Tinsel Towers Apt 42", -614.86f, 40.6783f, 97.6f, {}, {}, false },
-	{ "Eclipse Towers Apt 3", -773.407, 341.766, 211.397, {}, {}, false },
-	{ "Benny's Garage", -209.759, -1319.617, 30.08367, { "lr_sc1_02_interior_0_supermod_int_milo_" }, {}, false },
-	{ "Ranch", 1400, 1148.322, 114.4184, { "apa_ch2_03c_interior_v_ranch_milo_" }, {}, false },
-	{ "Penthouse: Style 1", -787.7805, 334.9232, 215.8384, { "apa_v_mp_h_01_a", "apa_v_mp_h_01_b", "apa_v_mp_h_01_c" }, {}, false },
-	{ "Penthouse: Style 2", -787.7805, 334.9232, 215.8384, { "apa_v_mp_h_02_a", "apa_v_mp_h_02_b", "apa_v_mp_h_02_c" }, {}, false },
-	{ "Penthouse: Style 3", -787.7805, 334.9232, 215.8384, { "apa_v_mp_h_03_a", "apa_v_mp_h_03_b", "apa_v_mp_h_03_c" }, {}, false },
-	{ "Penthouse: Style 4", -787.7805, 334.9232, 215.8384, { "apa_v_mp_h_04_a", "apa_v_mp_h_04_b", "apa_v_mp_h_04_c" }, {}, false },
-	{ "Penthouse: Style 5", -787.7805, 334.9232, 215.8384, { "apa_v_mp_h_05_a", "apa_v_mp_h_05_b", "apa_v_mp_h_05_c" }, {}, false },
-	{ "Penthouse: Style 6", -787.7805, 334.9232, 215.8384, { "apa_v_mp_h_06_a", "apa_v_mp_h_06_b", "apa_v_mp_h_06_c" }, {}, false },
-	{ "Penthouse: Style 7", -787.7805, 334.9232, 215.8384, { "apa_v_mp_h_07_a", "apa_v_mp_h_07_b", "apa_v_mp_h_07_c" }, {}, false },
-	{ "Penthouse: Style 8", -787.7805, 334.9232, 215.8384, { "apa_v_mp_h_08_a", "apa_v_mp_h_08_b", "apa_v_mp_h_08_c" }, {}, false },
-	{ "Stilthouse 1", 328.5579, 425.9027, 147.9707, { "apa_ch2_04_interior_0_v_mp_stilts_b_milo_" }, {}, false },
-	{ "Stilthouse 2", 372.6725, 405.5155, 144.4997, { "apa_ch2_04_interior_1_v_mp_stilts_a_milo_" }, {}, false },
-	{ "Stilthouse 3", 122.5349, 542.5076, 182.8967, { "apa_ch2_05c_interior_1_v_mp_stilts_a_milo_" }, {}, false },
-	{ "Stilthouse 4", -166.4324, 481.537, 136.2436, { "apa_ch2_05e_interior_0_v_mp_stilts_b_milo_" }, {}, false },
-	{ "Stilthouse 5", -855.0377, 673.7045, 151.4361, { "apa_ch2_09b_interior_0_v_mp_stilts_a_milo_" }, {}, false },
-	{ "Stilthouse 6", -773.3615, 609.1497, 142.7305, { "apa_ch2_09b_interior_1_v_mp_stilts_b_milo_" }, {}, false },
-	{ "Stilthouse 7", -573.0324, 643.7613, 144.4316, { "apa_ch2_09c_interior_0_v_mp_stilts_a_milo_" }, {}, false },
-	{ "Stilthouse 8", -667.5856, 582.3726, 143.9697, { "apa_ch2_09c_interior_2_v_mp_stilts_b_milo_" }, {}, false },
-	{ "Stilthouse 9", -1286.362, 431.7878, 96.49426, { "apa_ch2_12b_interior_0_v_mp_stilts_a_milo_" }, {}, false },
-	{ "Executive Warehouse (Small)", 1095, -3100, -40, { "ex_exec_warehouse_placement_interior_1_int_warehouse_s_dlc_milo_" }, {}, false },
-	{ "Executive Warehouse (Medium)", 1060, -3100, -40, { "ex_exec_warehouse_placement_interior_0_int_warehouse_m_dlc_milo_" }, {}, false },
-	{ "Executive Warehouse (Large)", 1010, -3100, -40, { "ex_exec_warehouse_placement_interior_2_int_warehouse_l_dlc_milo_" }, {}, false },
-	//{ "Executive CEO Office: Style 1", -73.79922, -818.958, 242.3858, { "ex_dt1_02_office_01a" }, {}, false },
-	//{ "Executive CEO Office: Style 2", -73.79922, -818.958, 242.3858, { "ex_dt1_02_office_01b" }, {}, false },
-	//{ "Executive CEO Office: Style 3", -73.79922, -818.958, 242.3858, { "ex_dt1_02_office_01c" }, {}, false },
-	//{ "Executive CEO Office: Style 4", -73.79922, -818.958, 242.3858, { "ex_dt1_02_office_02a" }, {}, false },
-	//{ "Executive CEO Office: Style 5", -73.79922, -818.958, 242.3858, { "ex_dt1_02_office_02b" }, {}, false },
-	//{ "Executive CEO Office: Style 6", -73.79922, -818.958, 242.3858, { "ex_dt1_02_office_02c" }, {}, false },
-	//{ "Executive CEO Office: Style 7", -73.79922, -818.958, 242.3858, { "ex_dt1_02_office_03a" }, {}, false },
-	//{ "Executive CEO Office: Style 8", -73.79922, -818.958, 242.3858, { "ex_dt1_02_office_03b" }, {}, false },
-	//{ "Executive CEO Office: Style 9", -73.79922, -818.958, 242.3858, { "ex_dt1_02_office_03c" }, {}, false },
-	{ "Executive CEO Office: Style 1", -73.79922, -818.958, 242.3858, { "ex_dt1_11_office_01a" }, {}, false },
-	{ "Executive CEO Office: Style 2", -73.79922, -818.958, 242.3858, { "ex_dt1_11_office_01b" }, {}, false },
-	{ "Executive CEO Office: Style 3", -73.79922, -818.958, 242.3858, { "ex_dt1_11_office_01c" }, {}, false },
-	{ "Executive CEO Office: Style 4", -73.79922, -818.958, 242.3858, { "ex_dt1_11_office_02a" }, {}, false },
-	{ "Executive CEO Office: Style 5", -73.79922, -818.958, 242.3858, { "ex_dt1_11_office_02b" }, {}, false },
-	{ "Executive CEO Office: Style 6", -73.79922, -818.958, 242.3858, { "ex_dt1_11_office_02c" }, {}, false },
-	{ "Executive CEO Office: Style 7", -73.79922, -818.958, 242.3858, { "ex_dt1_11_office_03a" }, {}, false },
-	{ "Executive CEO Office: Style 8", -73.79922, -818.958, 242.3858, { "ex_dt1_11_office_03b" }, {}, false },
-	{ "Executive CEO Office: Style 9", -73.79922, -818.958, 242.3858, { "ex_dt1_11_office_03c" }, {}, false }, 
-	{ "Import-Export Garage", 975, -3000, -40, IPLS_IMPORT_EXPORT_WAREHOUSES, {}, false },
-	{ "Biker Train Tunnel", 975, -3000, -40, IPLS_BIKER_TUNNEL, {}, false },
-	{ "Biker Warehouse: Money Printer 1", 1009.545, -3196.597, -39.99353, { "bkr_biker_interior_placement_interior_2_biker_dlc_int_ware01_milo_" }, {}, false },
-	{ "Biker Club Garage 1", 1005.861, -3156.162, -39.90727, { "bkr_biker_interior_placement_interior_1_biker_dlc_int_02_milo_" }, {}, false },
-	{ "Biker Warehouse: Weed Farm", 1059.028, -3201.89, -39.99353, { "bkr_biker_interior_placement_interior_3_biker_dlc_int_ware02_milo_" }, {}, false },
-	{ "Biker Cocaine Factory", 1093.581, -3196.597, -39.99353, { "bkr_biker_interior_placement_interior_4_biker_dlc_int_ware03_milo_" }, {}, false },
-	{ "Biker Warehouse: Money Printer 2", 1124.734, -3196.597, -39.99353, { "bkr_biker_interior_placement_interior_5_biker_dlc_int_ware04_milo_" }, {}, false },
-	{ "Biker Warehouse: Forgery 2", 1165.001, -3196.597, -39.99353, { "bkr_biker_interior_placement_interior_6_biker_dlc_int_ware05_milo_" }, {}, false },
-	{ "Biker Club Garage 2", 1102.477, -3156.162, -37.77361, { "bkr_biker_interior_placement_interior_0_biker_dlc_int_01_milo_" }, {}, false },
-	{ "Foundry", 1087.145, -1986.683, 31.20892, { "bkr_id1_17_interior_v_foundry_milo_" }, {}, false },
-	//{ "Abbatoir", 982.233, -2160.381, 27.725, { "bkr_id1_10_interior_v_abattoir_milo_" }, {}, false },
-	{ "CEO Garage Modshop", 730, -2990, -40, { "imp_impexp_interior_placement_interior_2_imptexp_mod_int_01_milo_" }, {}, false },
-	{ "Gun Runnning Bunker", 938.3077f, -3196.112f, -100.0f, IPLS_GUNRUNNING_INTERIOR, {}, false },
-	{ "Gun Runnning MOC", 1103.562f, -3000.0f, -40.0f, { "gr_grdlc_interior_placement_interior_0_grdlc_int_01_milo_" }, {}, false },
-	//{ "Gun Runnning Yacht", 1396.736, 6745.025, 7.970402, IPLS_GUNRUNNING_YACHT_TEST, {}, false },
 };
 
 std::string JELLMAN_CAPTION = "Heist Map Updates In SP";
 
-static std::vector<std::string> MENU_LOCATION_CATEGORIES{ "Safehouses", "Landmarks", "Roof/High Up", "Underwater", "Interiors", "Extra Exterior Scenery" , "Online Maps" };// <-- not sure what went wrong here, but it don't look right.
+static std::vector<std::string> MENU_LOCATION_CATEGORIES{"Safehouses", "Landmarks", "Roof/High Up", "Underwater", "Interiors", "Extra Exterior Scenery", JELLMAN_CAPTION};// "Test", "Toggles" };
 
-static std::vector<tele_location> VOV_LOCATIONS[] = { LOCATIONS_SAFE, LOCATIONS_LANDMARKS, LOCATIONS_HIGH, LOCATIONS_UNDERWATER, LOCATIONS_INTERIORS, LOCATIONS_REQSCEN, LOCATIONS_ONLINE };// , LOCATIONS_BROKEN, LOCATIONS_JELLMAN };
+static std::vector<tele_location> VOV_LOCATIONS[] = {LOCATIONS_SAFE, LOCATIONS_LANDMARKS, LOCATIONS_HIGH, LOCATIONS_UNDERWATER, LOCATIONS_INTERIORS, LOCATIONS_REQSCEN, LOCATIONS_JELLMAN};// , LOCATIONS_BROKEN };
 
 void teleport_to_coords(Entity e, Vector3 coords){
 	ENTITY::SET_ENTITY_COORDS_NO_OFFSET(e, coords.x, coords.y, coords.z, 0, 0, 1);
@@ -783,24 +659,6 @@ void cancel_chauffeur(std::string message){
 	beingChauffeured = false;
 }
 
-void enableMpMapsinSP()
-{
-	featureEnableMpMaps = true;
-
-	if (featureEnableMpMaps)
-	{
-		DLC2::_LOAD_MP_DLC_MAPS();
-		set_status_text("MP Maps enabled"); 
-		featureEnableMpMaps = false;
-	}
-	else
-	{
-		DLC2::_LOAD_SP_DLC_MAPS();
-		set_status_text("MP Maps disabled");
-	}
-		
-}
-
 bool onconfirm_teleport_category(MenuItem<int> choice){
 	Entity e = PLAYER::PLAYER_PED_ID();
 	if(choice.value == -2){
@@ -824,7 +682,7 @@ bool onconfirm_teleport_category(MenuItem<int> choice){
 		output_current_location(e);
 		return false;
 	}
-	else if (choice.value == -5){
+	else if(choice.value == -5){
 		process_toggles_menu();
 		return false;
 	}
@@ -856,14 +714,12 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 		if(ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()))// && STREAMING::IS_IPL_ACTIVE("plg_01") == 0)
 		{
 			for each (const char* scenery in value->scenery_toremove){
-				if(STREAMING::IS_IPL_ACTIVE(scenery))
-				{
+				if(STREAMING::IS_IPL_ACTIVE(scenery)){
 					STREAMING::REMOVE_IPL(scenery);
 				}
 			}
 			for each (const char* scenery in value->scenery_required){
-				if(!STREAMING::IS_IPL_ACTIVE(scenery))
-				{	
+				if(!STREAMING::IS_IPL_ACTIVE(scenery)){
 					STREAMING::REQUEST_IPL(scenery);
 				}
 			}
@@ -929,14 +785,12 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 				if(ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()))// && STREAMING::IS_IPL_ACTIVE("plg_01") == 1)
 				{
 					for each (const char* scenery in loc->scenery_required){
-						if(STREAMING::IS_IPL_ACTIVE(scenery))
-						{
+						if(STREAMING::IS_IPL_ACTIVE(scenery)){
 							STREAMING::REMOVE_IPL(scenery);
 						}
 					}
 					for each (const char* scenery in loc->scenery_toremove){
-						if(!STREAMING::IS_IPL_ACTIVE(scenery))
-						{
+						if(!STREAMING::IS_IPL_ACTIVE(scenery)){
 							STREAMING::REQUEST_IPL(scenery);
 						}
 					}
@@ -964,14 +818,6 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 bool process_teleport_menu(int categoryIndex){
 	if(categoryIndex == -1){
 		std::vector<MenuItem<int>*> menuItems;
-
-		/* //Doesn't work
-		ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
-		toggleItem->caption = "Enable MP DLC Maps";
-		toggleItem->value = -6;
-		toggleItem->toggleValue = &featureEnableMpMaps;
-		toggleItem->toggleValueUpdated = NULL;
-		menuItems.push_back(toggleItem);*/
 
 		MenuItem<int> *markerItem = new MenuItem<int>();
 		markerItem->caption = "Go To Marker";
@@ -1026,13 +872,10 @@ bool process_teleport_menu(int categoryIndex){
 	}
 }
 
-void reset_teleporter_globals()
-{
+void reset_teleporter_globals(){
 	for(int i = 0; i < MENU_LOCATION_CATEGORIES.size(); i++){
 		lastMenuChoiceInCategories[i] = 0;
 	}
-	featureEnableMpMaps = false;
-
 	lastChosenCategory = 0;
 }
 
