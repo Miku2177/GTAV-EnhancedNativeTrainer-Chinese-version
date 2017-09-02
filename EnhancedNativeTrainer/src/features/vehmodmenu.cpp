@@ -862,7 +862,8 @@ const std::vector<WheelSelection> WHEELS_BY_TYPE[WHEEL_CATEGORY_COUNT] = {
 };
 
 std::string getModCategoryName(int i){
-	//To sort out the bike customisation options - else it displays car related headings
+	//To sort out the bike and now plane customisation options - else it displays car related headings
+	//It's horrible to read but works.
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 
 	switch(i){
@@ -872,10 +873,12 @@ std::string getModCategoryName(int i){
 			else
 				return "Spoiler";
 		case 1:
-			if(is_this_a_motorcycle(veh))
+			if (is_this_a_motorcycle(veh))
 				return "Front Mudguard";
-			else
-				return "Front Bumper";
+			else if (is_this_a_heli_or_plane(veh))
+				return "Countermeasures";
+			else 
+				return "Front Bumper"; 
 		case 2:
 			if(is_this_a_motorcycle(veh))
 				return "Rear Mudguard";
@@ -887,10 +890,15 @@ std::string getModCategoryName(int i){
 			else
 				return "Side Skirts";
 		case 4:
-			return "Exhaust";
+			if (is_this_a_heli_or_plane(veh))
+				return "Thrust";
+			else
+				return "Exhaust";
 		case 5:
-			if(is_this_a_motorcycle(veh))
+			if (is_this_a_motorcycle(veh))
 				return "Engine Colour";
+			else if (is_this_a_heli_or_plane(veh))
+				return "Primary Weapons";
 			else
 				return "Rollcage";
 		case 6:
@@ -909,13 +917,17 @@ std::string getModCategoryName(int i){
 			else
 				return "Fenders / Arches";
 		case 9:
-			if(is_this_a_motorcycle(veh))
+			if (is_this_a_motorcycle(veh))
 				return "Sissy Bar";
-			else
-				return "Skirts";
+			else if (is_this_a_heli_or_plane(veh))
+				return "Bomb Type";
+			else 
+				return "Skirts"; 
 		case 10:
-			if(is_this_a_motorcycle(veh))
+			if (is_this_a_motorcycle(veh))
 				return "Fuel Tank";
+			else if (is_this_a_heli_or_plane(veh))
+				return "Weapons";
 			else
 				return "Roof";
 		case 11:
@@ -978,6 +990,8 @@ std::string getModCategoryName(int i){
 			return "Doors Extra";
 		case 48:
 			return "Liveries";
+		case 51:
+			return "Handling";
 		case SPECIAL_ID_FOR_WHEEL_CATEGORY:
 			return "Wheel Category";
 		case SPECIAL_ID_FOR_WHEEL_SELECTION:
@@ -1147,12 +1161,16 @@ std::string getNormalItemTitle(Vehicle veh, int category, int index){
 		ss << "EMS Upgrade, Level " << (index + 1);
 		modItemNameStr = ss.str();
 	}
-	else if(category == 12 || category == 13) //brakes, trans
+	else if(category == 12 || category == 13 || category == 52) //brakes, trans or aircraft handling
 	{
 		std::ostringstream ss;
 		ss << BRAKES_AND_TRANS_PREFIXES[index];
 		if(category == 12){
 			ss << " Brakes";
+		}
+		else if(category == 52)
+		{
+			ss << " Handling";
 		}
 		else{
 			ss << " Transmission";
@@ -1196,9 +1214,6 @@ std::string getNormalItemTitle(Vehicle veh, int category, int index){
 	return modItemNameStr;
 }
 
-/*
--been commented out to fix build
-
 void addClanLogoToVehicle(Vehicle vehicle, Ped ped){
 	Vector3 x, y, z;
 	float scale;
@@ -1210,7 +1225,6 @@ void addClanLogoToVehicle(Vehicle vehicle, Ped ped){
 		GRAPHICS::_ADD_CLAN_DECAL_TO_VEHICLE(vehicle, ped, ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(vehicle, "chassis_dummy"), x.x, x.y, x.z, y.x, y.y, y.z, z.x, z.y, z.z, scale, 0, alpha);
 	}
 }
-*/
 
 bool onconfirm_vehmod_wheel_selection(MenuItem<int> choice){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
@@ -1639,7 +1653,7 @@ bool process_vehmod_menu(){
 
 	std::vector<MenuItem<int>*> menuItems;
 
-	if(!isWeird && !isAircraft){
+	if (!isWeird) { //!isWeird && !isAircraft
 		MenuItem<int> *item1 = new MenuItem<int>();
 		item1->caption = "Add All Performance Upgrades";
 		item1->value = -1;
@@ -1664,13 +1678,15 @@ bool process_vehmod_menu(){
 		item4->isLeaf = true;
 		menuItems.push_back(item4);
 
-		MenuItem<int> *item5 = new MenuItem<int>();
-		item5->caption = "Interior Colors";
-		item5->value = -5;
-		item5->isLeaf = false;
-		menuItems.push_back(item5);
-
-		for(int i = 0; i < 49; i++){
+		if (!!isWeird && !isAircraft){
+			MenuItem<int> *item5 = new MenuItem<int>();
+			item5->caption = "Interior Colors";
+			item5->value = -5;
+			item5->isLeaf = false;
+			menuItems.push_back(item5);
+		}
+		//Number of vehicle mods
+		for(int i = 0; i < 55; i++){ //(int i = 0; i < 49; i++)
 			if(i == 23 || i == 24 || i == 21){
 				continue;
 			}
@@ -1747,7 +1763,7 @@ bool process_vehmod_menu(){
 
 	FunctionDrivenToggleMenuItem<int> *toggleItem;
 
-	if(!isWeird && !isAircraft){
+	if(!isWeird){ //if(!isWeird && !isAircraft){
 		toggleItem = new FunctionDrivenToggleMenuItem<int>();
 		toggleItem->caption = "Toggle Turbo Tuning";
 		toggleItem->getter_call = is_turbocharged;
@@ -1755,26 +1771,28 @@ bool process_vehmod_menu(){
 		toggleItem->value = SPECIAL_ID_FOR_TOGGLE_VARIATIONS;
 		menuItems.push_back(toggleItem);
 
-		toggleItem = new FunctionDrivenToggleMenuItem<int>();
-		toggleItem->caption = "Toggle Xenon Lights";
-		toggleItem->getter_call = is_xenon_headlights;
-		toggleItem->setter_call = set_xenon_headlights;
-		toggleItem->value = SPECIAL_ID_FOR_TOGGLE_VARIATIONS;
-		menuItems.push_back(toggleItem);
+		if (!isWeird && !isAircraft) {
+			toggleItem = new FunctionDrivenToggleMenuItem<int>();
+			toggleItem->caption = "Toggle Xenon Lights";
+			toggleItem->getter_call = is_xenon_headlights;
+			toggleItem->setter_call = set_xenon_headlights;
+			toggleItem->value = SPECIAL_ID_FOR_TOGGLE_VARIATIONS;
+			menuItems.push_back(toggleItem);
 
-		toggleItem = new FunctionDrivenToggleMenuItem<int>();
-		toggleItem->caption = "Toggle Bulletproof Tires";
-		toggleItem->getter_call = is_bulletproof_tyres;
-		toggleItem->setter_call = set_bulletproof_tyres;
-		toggleItem->value = SPECIAL_ID_FOR_TOGGLE_VARIATIONS;
-		menuItems.push_back(toggleItem);
+			toggleItem = new FunctionDrivenToggleMenuItem<int>();
+			toggleItem->caption = "Toggle Bulletproof Tires";
+			toggleItem->getter_call = is_bulletproof_tyres;
+			toggleItem->setter_call = set_bulletproof_tyres;
+			toggleItem->value = SPECIAL_ID_FOR_TOGGLE_VARIATIONS;
+			menuItems.push_back(toggleItem);
 
-		toggleItem = new FunctionDrivenToggleMenuItem<int>();
-		toggleItem->caption = "Toggle Custom Tires";
-		toggleItem->getter_call = is_custom_tyres;
-		toggleItem->setter_call = set_custom_tyres;
-		toggleItem->value = SPECIAL_ID_FOR_TOGGLE_VARIATIONS;
-		menuItems.push_back(toggleItem);
+			toggleItem = new FunctionDrivenToggleMenuItem<int>();
+			toggleItem->caption = "Toggle Custom Tires";
+			toggleItem->getter_call = is_custom_tyres;
+			toggleItem->setter_call = set_custom_tyres;
+			toggleItem->value = SPECIAL_ID_FOR_TOGGLE_VARIATIONS;
+			menuItems.push_back(toggleItem);
+		}
 	}
 
 	for(int a = 0; a < 16; a++){
