@@ -771,6 +771,11 @@
     <Image Include="Documents\veh-previews\voodoo.png">
       <Filter>Documents\veh-previews</Filter>
     </Image>
+    <Image Include="Documents\veh-previews\cliffhanger.png" />
+    <Image Include="Documents\veh-previews\technical3.png" />
+    <Image Include="Documents\veh-previews\hauler2.png" />
+    <Image Include="Documents\veh-previews\phantom3.png" />
+    <Image Include="Documents\veh-previews\insurgent3.png" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Documents">

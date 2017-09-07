@@ -176,7 +176,7 @@ const std::vector<std::string> VOV_INDUS_VALUES[] = { VALUES_PICKUPS, VALUES_VAN
 
 const std::vector<std::string> CAPTIONS_EMERGENCY{ "Albany Police Roadcruiser (Snow)", "Ambulance", "Army Barracks Truck", "Army Truck Cab", "Bravado Buffalo (FIB)", "Brute Police Riot Van", "Canis Crusader (Army Mesa)", "Declasse Granger (FIB)", "Declasse Lifeguard", "Declasse Park Ranger", "Declasse Police Rancher (Snow)", "Declasse Police Transporter", "Declasse Sheriff SUV", "Firetruck", "Prison Bus", "Rhino Tank", "Vapid Police Buffalo", "Vapid Police Cruiser", "Vapid Police Interceptor", "Vapid Sheriff Cruiser", "Vapid Unmarked Police Cruiser", "Western Police Bike" };
 
-const std::vector<std::string> CAPTIONS_MOTORCYCLES{ "BF Raptor (Biker)", "Dinka Akuma", "Nagasaki BF400 (Race)", "Western Cliffhanger (Race)", "Dinka Double-T", "Dinka Enduro", "Dinka FCR 1000 (Import-Export)","Dinka FCR 1000 Custom (Import-Export)", "Western Gargoyle (Race)", "Dinka Thrust", "Dinka Vindicator", "LCC Avarus (Biker)", "LCC Hexer", "LCC Innovation", "LCC Sanctus (Biker)", "Maibatsu Manchez (Biker)", "Maibatsu Sanchez", "Maibatsu Sanchez (Graphics)", "Nagasaki Carbon RS", "Nagasaki Chimera Trike (Biker)", "Nagasaki Street Blazer (Biker)", "Nagasaki Shotaro (Biker)", "Pegassi Bati", "Pegassi Bati (Race)", "Pegassi Esskey (Biker)", "Pegassi Faggio Mod (Biker)", "Pegassi Faggio Sport (Biker)", "Pegassi Oppressor (Gun Runner)", "Pegassi Ruffian", "Pegassi Vortex (Biker)", "Principe Faggio", "Principe Lectro", "Principe Nemesis", "Pincipe Diabolus Custom (Import-Export)", "Pincipe Diabolus Custom 2 (Import - Export)", "Shitzu Defiler (Biker)", "Shitzu Hakuchou", "Shitzu Hakuchou Drag (Biker)", "Shitzu PCJ 600", "Shitzu Vader", "Western Bagger", "Western Daemon", "Western Nightblade (Biker)", "Western Rat Bike (Biker)", "Western Sovereign", "Western Wolfsbane (Biker)", "Western Bagger (Biker)", "Western Daemon (Biker)", "Western Zombie Bobber (Biker)", "Western Zombie Chopper (Biker)" };
+const std::vector<std::string> CAPTIONS_MOTORCYCLES{ "BF Raptor (Biker)", "Dinka Akuma", "Dinka Double-T", "Dinka Enduro", "Dinka FCR 1000 (Import-Export)", "Dinka FCR 1000 Custom (Import-Export)", "Dinka Thrust", "Dinka Vindicator", "LCC Avarus (Biker)", "LCC Hexer", "LCC Innovation", "LCC Sanctus (Biker)", "Maibatsu Manchez (Biker)", "Maibatsu Sanchez", "Maibatsu Sanchez (Graphics)", "Nagasaki BF400 (Race)", "Nagasaki Carbon RS", "Nagasaki Chimera Trike (Biker)", "Nagasaki Street Blazer (Biker)", "Nagasaki Shotaro (Biker)", "Pegassi Bati", "Pegassi Bati (Race)", "Pegassi Esskey (Biker)", "Pegassi Faggio Mod (Biker)", "Pegassi Faggio Sport (Biker)", "Pegassi Oppressor (Gun Runner)", "Pegassi Ruffian", "Pegassi Vortex (Biker)", "Principe Faggio", "Principe Lectro", "Principe Nemesis", "Pincipe Diabolus Custom (Import-Export)", "Pincipe Diabolus Custom 2 (Import - Export)", "Shitzu Defiler (Biker)", "Shitzu Hakuchou", "Shitzu Hakuchou Drag (Biker)", "Shitzu PCJ 600", "Shitzu Vader", "Western Bagger", "Western Cliffhanger (Race)", "Western Daemon", "Western Gargoyle (Race)", "Western Nightblade (Biker)", "Western Rat Bike (Biker)", "Western Sovereign", "Western Wolfsbane (Biker)", "Western Bagger (Biker)", "Western Daemon (Biker)", "Western Zombie Bobber (Biker)", "Western Zombie Chopper (Biker)" };
 
 const std::vector<std::string> CAPTIONS_PLANES{ "Buckingham Alpha-Z1 (Smugglers Run)", "Buckingham Cargo Plane (An-225)", "Buckingham Howard NX-25 (Smuggler's Run)", "Buckingham Jet (B747)", "Buckingham Luxor", "Buckingham Luxor Deluxe", "Buckingham Miljet", "Buckingham Nimbus (Executive)", "Buckingham Pyro (Smuggler's Run)", "Buckingham Shamal", "Buckingham Vestra", "Jobuilt Mammatus", "Jobuilt P-996 Lazer", "Jobuilt Velum (4 Seater)", "Jobuilt Velum (5 Seater)", "LF-22 Starling (Smuggler's Run)", "Mammoth Dodo", "Mammoth Hydra", "Mammoth Titan", "Mammoth Tula (Smuggler's Run)", "Mammoth Mogul (Smuggler's Run)", "P-45 Nokota (Smuggler's Run)", "RM-10 Bombushka (Smuggler's Run)", "V-65 Molotok (Smuggler's Run)", "Western Besra", "Western Cuban 800", "Western Duster", "Western Mallard Stunt Plane", "Western Company Rogue (Smuggler's Run)", "Western Company Seabreeze (Smuggler's run)" };
 
@@ -188,7 +188,7 @@ const std::vector<std::string> CAPTIONS_BICYCLES{ "BMX", "Cruiser", "Endurex Rac
 
 const std::vector<std::string> VALUES_EMERGENCY{ "POLICEOLD2", "AMBULANCE", "BARRACKS", "BARRACKS2", "FBI", "RIOT", "CRUSADER", "FBI2", "LGUARD", "PRANGER", "POLICEOLD1", "POLICET", "SHERIFF2", "FIRETRUK", "PBUS", "RHINO", "POLICE2", "POLICE", "POLICE3", "SHERIFF", "POLICE4", "POLICEB" };
 
-const std::vector<std::string> VALUES_MOTORCYCLES{ "RAPTOR", "AKUMA", "BF400", "CLIFFHANGER", "DOUBLE", "ENDURO","FCR", "FCR2", "GARGOYLE", "THRUST", "VINDICATOR", "AVARUS","HEXER", "INNOVATION", "SANCTUS", "MANCHEZ", "SANCHEZ2", "SANCHEZ", "CARBONRS", "CHIMERA", "BLAZER4", "SHOTARO", "BATI", "BATI2", "ESSKEY", "FAGGIO3", "FAGGIO", "OPPRESSOR", "RUFFIAN", "VORTEX", "FAGGIO2", "LECTRO", "NEMESIS","DIABLOUS", "DIABLOUS2", "DEFILER", "HAKUCHOU", "HAKUCHOU2","PCJ", "VADER", "BAGGER", "DAEMON", "NIGHTBLADE", "RATBIKE" ,"SOVEREIGN", "WOLFSBANE", "BAGGER", "DAEMON2", "ZOMBIEA", "ZOMBIEB" };
+const std::vector<std::string> VALUES_MOTORCYCLES{ "RAPTOR", "AKUMA", "DOUBLE", "ENDURO", "FCR", "FCR2", "THRUST", "VINDICATOR", "AVARUS", "HEXER", "INNOVATION", "SANCTUS", "MANCHEZ", "SANCHEZ2", "SANCHEZ", "BF400", "CARBONRS", "CHIMERA", "BLAZER4", "SHOTARO", "BATI", "BATI2", "ESSKEY", "FAGGIO3", "FAGGIO", "OPPRESSOR", "RUFFIAN", "VORTEX", "FAGGIO2", "LECTRO", "NEMESIS", "DIABLOUS", "DIABLOUS2", "DEFILER", "HAKUCHOU", "HAKUCHOU2", "PCJ", "VADER", "BAGGER", "CLIFFHANGER", "DAEMON", "GARGOYLE", "NIGHTBLADE", "RATBIKE", "SOVEREIGN", "WOLFSBANE", "BAGGER", "DAEMON2", "ZOMBIEA", "ZOMBIEB" };
 
 const std::vector<std::string> VALUES_PLANES{ "ALPHAZ1", "CARGOPLANE", "HOWARD", "JET", "LUXOR", "LUXOR2", "MILJET", "NIMBUS", "PYRO", "SHAMAL", "VESTRA", "MAMMATUS", "LAZER", "VELUM", "VELUM2", "STARLING", "DODO", "HYDRA", "TITAN", "TULA", "MOGUL", "NOKOTA", "BOMBUSHKA", "MOLOTOK", "BESRA", "CUBAN800", "DUSTER", "STUNT", "ROGUE", "SEABREEZE" };
 
@@ -309,6 +309,13 @@ bool process_veh_door_menu(){
 		bombBayItem2->value = -3;
 		menuItems.push_back(bombBayItem2);
 	}
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Lock Vehicle Doors";
+	toggleItem->value = -4;
+	toggleItem->toggleValue = &featureLockVehicleDoors;
+	toggleItem->toggleValueUpdated = &featureLockVehicleDoorsUpdated;
+	menuItems.push_back(toggleItem);
 
 	return draw_generic_menu<int>(menuItems, &doorOptionsMenuIndex, caption, onconfirm_vehdoor_menu, NULL, NULL);
 }
@@ -473,12 +480,14 @@ void process_veh_menu(){
 	item->isLeaf = false;
 	menuItems.push_back(item);
 
+	/*
 	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Lock Vehicle Doors";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureLockVehicleDoors;
 	toggleItem->toggleValueUpdated = &featureLockVehicleDoorsUpdated;
 	menuItems.push_back(toggleItem);
+	*/
 
 	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Force Vehicle Lights On";
@@ -2131,6 +2140,8 @@ void init_vehicle_feature(){
 	unpack_veh_preview("INSURGENT3", VP_INSURGENT3, "VP_INSURGENT3");
 	unpack_veh_preview("PHANTOM3", VP_PHANTOM3, "VP_PHANTOM3");
 	unpack_veh_preview("TECHNICAL3", VP_TECHNICAL3, "VP_TECHNICAL3");
+	unpack_veh_preview("CLIFFHANGER", VP_CLIFFHANGER, "VP_CLIFFHANGER");
+	
 }
 
 void fix_vehicle(){
