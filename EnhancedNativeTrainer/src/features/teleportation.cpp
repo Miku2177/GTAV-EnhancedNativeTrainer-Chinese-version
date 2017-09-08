@@ -117,8 +117,8 @@ std::vector<tele_location> LOCATIONS_HIGH = {
 	{ "Sandy Shores Building Site Crane", 1051.209f, 2280.452f, 89.727f },
 	{ "Satellite Dish Antenna", 2034.988f, 2953.105f, 74.602f },
 	{ "Stab City", 126.975f, 3714.419f, 46.827f },
-	{ "Very High Up", -129.964f, 8130.873f, 6705.307f },
-	{ "Very Very High Up", -119.879f, -977.357f, 10000.0f },
+	//{ "Very High Up", -129.964f, 8130.873f, 6705.307f }, - doesn't teleport you. Height out of bounds?
+	//{ "Very Very High Up", -119.879f, -977.357f, 10000.0f },
 	{ "Windmill Top", 2026.677f, 1842.684f, 133.313f }
 };
 
@@ -388,7 +388,8 @@ std::vector<const char*> IPLS_BIKER_TUNNEL = {
 std::vector<const char*> IPLS_GUNRUNNING_INTERIOR = {
 	"gr_grdlc_interior_placement_interior_0_grdlc_int_01_milo_",
 	"gr_grdlc_interior_placement_interior_1_grdlc_int_02_milo_",
-	"gr_grdlc_interior_placement"
+	"gr_grdlc_interior_placement",
+	"DLC_GR_Bunker_Interior"
 };
 
 std::vector<const char*> IPLS_IMPORT_EXPORT_WAREHOUSES = {
@@ -782,7 +783,7 @@ void cancel_chauffeur(std::string message){
 	set_status_text(ss.str());
 	beingChauffeured = false;
 }
-
+/*
 void enableMpMapsinSP()
 {
 	featureEnableMpMaps = true;
@@ -799,7 +800,7 @@ void enableMpMapsinSP()
 		set_status_text("MP Maps disabled");
 	}
 
-}
+}*/
 
 bool onconfirm_teleport_category(MenuItem<int> choice){
 	Entity e = PLAYER::PLAYER_PED_ID();
@@ -964,8 +965,7 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 bool process_teleport_menu(int categoryIndex){
 	if (categoryIndex == -1){
 		std::vector<MenuItem<int>*> menuItems;
-
-		/* //Doesn't work
+		/*
 		ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
 		toggleItem->caption = "Enable MP DLC Maps";
 		toggleItem->value = -6;
