@@ -56,6 +56,9 @@ bool featureWeatherFreeze = false;
 bool featureSnow = false;
 bool featureSnowUpdated = false;
 
+bool featureMPMap = false;
+bool featureMPMapUpdated = false;
+
 
 std::string lastWeather;
 std::string lastWeatherName;
@@ -257,6 +260,13 @@ void process_world_menu()
 	togItem->toggleValueUpdated = &featureSnowUpdated;
 	menuItems.push_back(togItem);
 
+	togItem = new ToggleMenuItem<int>();
+	togItem->caption = "Load Online Map";
+	togItem->value = 8;
+	togItem->toggleValue = &featureMPMap;
+	togItem->toggleValueUpdated = &featureMPMapUpdated;
+	menuItems.push_back(togItem);
+
 	draw_generic_menu<int>(menuItems, &activeLineIndexWorld, caption, onconfirm_world_menu, NULL, NULL);
 }
 
@@ -275,6 +285,7 @@ void reset_world_globals()
 	featureWorldNoTraffic = false;
 	featureBlackout = false;
 	featureSnow = false;
+	featureMPMap = false;
 
 	
 	featureWorldRandomCops =
@@ -290,7 +301,8 @@ void reset_world_globals()
 	featureWorldRandomCopsUpdated =
 	featureWorldRandomTrainsUpdated =
 	featureBlackoutUpdated = 
-	featureSnowUpdated = true;
+	featureSnowUpdated =
+	featureMPMapUpdated = true;
 }
 
 void update_world_features()
@@ -546,6 +558,22 @@ void update_world_features()
 		featureSnowUpdated = false;
 	}
 
+	if (featureMPMapUpdated)
+	{
+		if (featureMPMap)
+		{
+			DLC2::_LOAD_MP_DLC_MAPS();
+			set_status_text("MP Maps enabled");
+		}
+		else
+		{
+			DLC2::_LOAD_SP_DLC_MAPS();
+			set_status_text("MP Maps disabled");
+		}
+
+		featureMPMapUpdated = false;
+
+	}
 }
 
 void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results)
@@ -566,6 +594,8 @@ void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* r
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoTraffic", &featureWorldNoTraffic, &featureWorldNoTrafficUpdated });
 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureSnow", &featureSnow, &featureSnowUpdated});
+
+	results->push_back(FeatureEnabledLocalDefinition{ "featureMPMap", &featureMPMap, &featureMPMapUpdated });
 }
 
 void add_world_generic_settings(std::vector<StringPairSettingDBRow>* settings)
