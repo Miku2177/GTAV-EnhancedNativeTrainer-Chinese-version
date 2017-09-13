@@ -184,7 +184,7 @@ bool process_bodyguard_weapons_category_menu(int category){
 		menuItems.push_back(toggleItem);
 	}
 
-	return draw_generic_menu<int>(menuItems, nullptr, MENU_WEAPON_CATEGORIES.at(category), nullptr, nullptr, nullptr, nullptr);
+	return draw_generic_menu<int>(menuItems, nullptr, MENU_WEAPON_CATEGORIES.at(category), onconfirm_bodyguard_weapons_category_menu, nullptr, nullptr, nullptr);
 }
 
 bool onconfirm_bodyguard_weapons_menu(MenuItem<int> choice){
