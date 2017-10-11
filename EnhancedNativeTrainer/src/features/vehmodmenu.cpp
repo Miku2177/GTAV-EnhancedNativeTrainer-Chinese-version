@@ -1095,6 +1095,14 @@ std::string getModCategoryName(int i){
 			return "Liveries";
 		case 51:
 			return "Handling";
+		case SPECIAL_ID_FOR_WHEEL_CATEGORY:
+			return "Wheel Category";
+		case SPECIAL_ID_FOR_WHEEL_SELECTION:
+			return "Wheel Choice";
+		case SPECIAL_ID_FOR_WINDOW_TINT:
+			return "Window Tint";
+		case SPECIAL_ID_FOR_LICENSE_PLATES:
+			return "License Plates";
 		default:
 			return std::to_string(i);
 		}
@@ -1782,7 +1790,7 @@ bool process_vehmod_menu(){
 			menuItems.push_back(item5);
 		}
 		//Number of vehicle mods
-		for (int i = 0; i < 55; i++){ //(int i = 0; i < 49; i++)
+		for (int i = 0; i < 50; i++){ //(int i = 0; i < 49; i++)
 			if (i == 23 || i == 24 || i == 21){
 				continue;
 			}
