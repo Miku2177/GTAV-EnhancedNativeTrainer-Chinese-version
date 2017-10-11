@@ -24,6 +24,7 @@ struct tele_location{
 	float z;
 	std::vector<const char*> scenery_required;
 	std::vector<const char*> scenery_toremove;
+	std::vector<char*> scenery_props;
 	bool isLoaded;
 };
 
@@ -124,7 +125,7 @@ std::vector<tele_location> LOCATIONS_HIGH = {
 
 std::vector<tele_location> LOCATIONS_UNDERWATER = {
 	{ "Dead Sea Monster", -3373.726f, 504.714f, -24.656f },
-	{ "Humane Labs Tunnel", 3838.47f, 3673.06f, -19.7281f, {}, { "chemgrill_grp1" }, false },
+	{ "Humane Labs Tunnel", 3838.47f, 3673.06f, -19.7281f, {}, { "chemgrill_grp1" }, {}, false },
 	{ "Sunken Body", -3161.078f, 3001.998f, -37.974f },
 	{ "Sunken Cargo Ship", 3199.748f, -379.018f, -22.500f },
 	{ "Sunken Plane", -942.350f, 6608.752f, -20.912f },
@@ -140,7 +141,7 @@ std::vector<tele_location> LOCATIONS_INTERIORS = {
 	{ "Ammunation Office", 12.494f, -1110.130f, 29.797f },
 	//{ "Bahama Mamas West", -1387.08f, -588.4f, 30.3195f },
 	{ "Blaine County Savings Bank", -109.299f, 6464.035f, 31.627f },
-	{ "Clucking Bell Farms Warehouse", -70.0624f, 6263.53f, 31.0909f, { "CS1_02_cf_onmission1", "CS1_02_cf_onmission2", "CS1_02_cf_onmission3", "CS1_02_cf_onmission4" }, { "CS1_02_cf_offmission" }, false },
+	{ "Clucking Bell Farms Warehouse", -70.0624f, 6263.53f, 31.0909f, { "CS1_02_cf_onmission1", "CS1_02_cf_onmission2", "CS1_02_cf_onmission3", "CS1_02_cf_onmission4" }, { "CS1_02_cf_offmission" }, {}, false },
 	//{ "Control Office", 1080.97f, -1976.0f, 31.4721f },
 	//{ "Devin's Garage", 482.027f, -1317.96f, 29.2021f },
 	{ "Eclipse Apartment 5", -762.762f, 322.634f, 175.401f },
@@ -150,32 +151,32 @@ std::vector<tele_location> LOCATIONS_INTERIORS = {
 	{ "FIB Building Burnt", 159.553f, -738.851f, 246.152f },
 	{ "FIB Building Floor 47", 134.573f, -766.486f, 234.152f },
 	{ "FIB Building Floor 49", 134.635f, -765.831f, 242.152f },
-	{ "FIB Building Lobby", 110.4f, -744.2f, 45.7f, { "FIBlobby" }, { "FIBlobbyfake" } },
+	{ "FIB Building Lobby", 110.4f, -744.2f, 45.7f, { "FIBlobby" }, { "FIBlobbyfake" }, {}, false },
 	{ "FIB Building Top Floor", 135.733f, -749.216f, 258.152f },
 	//{ "Garment Factory", 717.397f, -965.572f, 30.3955f },
-	{ "Hospital (Destroyed)", 302.651f, -586.293f, 43.3129f, { "RC12B_Destroyed", "RC12B_HospitalInterior" }, { "RC12B_Default", "RC12B_Fixed" }, false },
+	{ "Hospital (Destroyed)", 302.651f, -586.293f, 43.3129f, { "RC12B_Destroyed", "RC12B_HospitalInterior" }, { "RC12B_Default", "RC12B_Fixed" }, {}, false },
 	{ "Humane Labs Lower Level", 3525.495f, 3705.301f, 20.992f },
 	{ "Humane Labs Upper Level", 3618.52f, 3755.76f, 28.6901f },
 	{ "IAA Office", 117.220f, -620.938f, 206.047f },
 	//{ "Ice Planet Jewelery", 243.516f, 364.099f, 105.738f },
 	{ "Janitor's Apartment", -110.721f, -8.22095f, 70.5197f },
-	{ "Jewel Store", -630.07f, -236.332f, 38.0571f, { "post_hiest_unload" }, { "jewel2fake", "bh1_16_refurb" }, false },
+	{ "Jewel Store", -630.07f, -236.332f, 38.0571f, { "post_hiest_unload" }, { "jewel2fake", "bh1_16_refurb" }, {}, false },
 	{ "Lester's House", 1273.898f, -1719.304f, 54.771f },
-	{ "Life Invader Office", -1049.13f, -231.779f, 39.0144f, { "facelobby" }, { "facelobbyfake" }, false },
+	{ "Life Invader Office", -1049.13f, -231.779f, 39.0144f, { "facelobby" }, { "facelobbyfake" }, {}, false },
 	//{ "Maze Bank Arena", -254.918f, -2019.75f, 30.1456f },
-	{ "Morgue", 275.446f, -1361.11f, 24.5378f, { "Coroner_Int_on" }, { "Coroner_Int_off" }, false },
-	{ "O'Neil Farm", 2454.78f, 4971.92f, 46.8103f, { "farm", "farm_props", "farmint" }, { "farm_burnt", "farm_burnt_props", "farmint_cap" }, false },
+	{ "Morgue", 275.446f, -1361.11f, 24.5378f, { "Coroner_Int_on" }, { "Coroner_Int_off" }, {}, false },
+	{ "O'Neil Farm", 2454.78f, 4971.92f, 46.8103f, { "farm", "farm_props", "farmint" }, { "farm_burnt", "farm_burnt_props", "farmint_cap" }, {}, false },
 	{ "Pacific Standard Bank Vault", 255.851f, 217.030f, 101.683f },
 	//{ "Paleto Bay Sheriff", -446.135f, 6012.91f, 31.7164f },
 	//{ "Raven Slaughterhouse", 967.357f, -2184.71f, 30.0613f },
 	//{ "Rogers Salvage & Scrap", -609.962f, -1612.49f, 27.0105f },
 	//{ "Sandy Shores Sheriff", 1853.18f, 3686.63f, 34.2671f },
 	//{ "Simeon's Dealership", -56.4951f, -1095.8f, 26.4224f },
-	{ "Split Sides West Comedy Club", -453.8519, 280.5149, 77.52148, { "apa_ss1_12_interior_v_comedy_milo_" }, {} },
-	{ "Rock Club", -558.0049, 285.664, 81.1764, { "apa_ss1_11_interior_v_rockclub_milo_" }, {} },
-	{ "Stadium", -248.4916f, -2010.509f, 34.5743f, { "SP1_10_real_interior" }, { "SP1_10_fake_interior" }, false },
+	{ "Split Sides West Comedy Club", -453.8519, 280.5149, 77.52148, { "apa_ss1_12_interior_v_comedy_milo_" }, {}, {}, false },
+	{ "Rock Club", -558.0049, 285.664, 81.1764, { "apa_ss1_11_interior_v_rockclub_milo_" }, {}, {}, false },
+	{ "Stadium", -248.4916f, -2010.509f, 34.5743f, { "SP1_10_real_interior" }, { "SP1_10_fake_interior" }, {}, false },
 	{ "Strip Club DJ Booth", 126.135f, -1278.583f, 29.270f },
-	{ "Torture Warehouse", 136.514f, -2203.15f, 7.30914f },
+	{ "Torture Warehouse", 136.514f, -2203.15f, 7.30914f }
 };
 
 std::vector<const char*> IPLS_CARRIER = {
@@ -347,7 +348,6 @@ std::vector<const char*> IPLS_NORTH_YANKTON = {
 	"prologuerd_lod"
 };
 
-
 //Gunrunning - may need to double check this 
 std::vector<const char*> IPLS_GUNRUNNING_YACHT = {
 	"gr_heist_yacht2_lounge",
@@ -399,21 +399,90 @@ std::vector<const char*> IPLS_IMPORT_EXPORT_WAREHOUSES = {
 	"imp_impexp_interior_placement_interior_3_impexp_int_02_milo_"
 };
 
+std::vector<char*> IPL_PROPS_CEO_OFFICE = {
+	"office_chairs",
+	"office_booze",
+	"cash_set_01",
+	"cash_set_02",
+	"cash_set_03",
+	"cash_set_04",
+	"cash_set_05",
+	"cash_set_06",
+	"cash_set_07",
+	"cash_set_08",
+	"cash_set_09",
+	"cash_set_10",
+	"cash_set_11",
+	"cash_set_12",
+	"cash_set_13",
+	"cash_set_14",
+	"cash_set_15",
+	"cash_set_16",
+	"cash_set_17",
+	"cash_set_18",
+	"cash_set_19",
+	"cash_set_20",
+	"cash_set_21",
+	"cash_set_22",
+	"cash_set_23",
+	"cash_set_24",
+	"swag_drugbags",
+	"swag_booze_cigs",
+	"swag_electronic",
+	"swag_drugstatue",
+	"swag_ivory",
+	"swag_pills",
+	"swag_jewelwatch"
+	"swag_furcoats",
+	"swag_silver",
+	"swag_art",
+	"swag_guns",
+	"swag_med",
+	"swag_gems",
+	"swag_drugbags2",
+	"swag_booze_cigs2",
+	"swag_electronic2",
+	"swag_drugstatue2",
+	"swag_ivory2",
+	"swag_pills2",
+	"swag_jewelwatch2",
+	"swag_furcoats2",
+	"swag_silver2",
+	"swag_art2",
+	"swag_guns2",
+	"swag_med2",
+	"swag_gems2",
+	"swag_counterfeit2",
+	"swag_counterfeit",
+	"swag_med3",
+	"swag_drugstatue3",
+	"swag_ivory3",
+	"swag_pills3",
+	"swag_electronic3",
+	"swag_furcoats3",
+	"swag_silver3",
+	"swag_art3",
+	"swag_booze_cigs3",
+	"swag_jewelwatch3",
+	"swag_drugbags3",
+	"swag_gems3",
+	"swag_counterfeit3",
+	"swag_guns3",
+};
 
+/* Name, coords, IPL name, scenary (props) required, scenary to remove, bool isloaded*/
 std::vector<tele_location> LOCATIONS_REQSCEN = {
-	{ "Carrier", 3069.330f, -4632.4f, 15.043f, IPLS_CARRIER, {}, false },
-	{ "Fort Zancudo UFO", -2052.000f, 3237.000f, 1456.973f, { "ufo", "ufo_lod", "ufo_eye" }, {}, false },
-	{ "Heist Yacht", -2043.974f, -1031.582f, 11.981f, IPLS_HEISTYACHT, {}, false },
-	{ "Max Renda Refit", -583.1606f, -282.3967f, 35.394f, { "refit_unload" }, { "bh1_16_doors_shut" }, false },
-	{ "North Yankton", 3360.19f, -4849.67f, 111.8f, IPLS_NORTH_YANKTON, {}, false },
-	{ "North Yankton Bank", 5309.519f, -5212.375f, 83.522f, IPLS_NORTH_YANKTON, {}, false },
-	{ "Simeon's Showroom", -59.7936f, -1098.784f, 27.2612f, { "shr_int" }, { "fakeint" }, false },
-	{ "SS Bulker (Intact)", -163.749f, -2377.94f, 9.3192f, { "cargoship" }, { "sunkcargoship" }, false },
-	{ "SS Bulker (Sunk)", -162.8918f, -2365.769f, 0.0f, { "sunkcargoship" }, { "cargoship" }, false },
-	{ "Train Crash Bridge", -532.1309f, 4526.187f, 88.7955f, { "canyonriver01_traincrash", "railing_end" }, { "railing_start", "canyonriver01" }, false },
-	{ "Yacht", -2023.661f, -1038.038f, 5.577f, { "smboat", "smboat_lod" }, {}, false },
-	//Items below NEED testing
-
+	{ "Carrier", 3069.330f, -4632.4f, 15.043f, IPLS_CARRIER, {}, {}, false },
+	{ "Fort Zancudo UFO", -2052.000f, 3237.000f, 1456.973f, { "ufo", "ufo_lod", "ufo_eye" }, {}, {}, false },
+	{ "Heist Yacht", -2043.974f, -1031.582f, 11.981f, IPLS_HEISTYACHT, {}, {}, false },
+	{ "Max Renda Refit", -583.1606f, -282.3967f, 35.394f, { "refit_unload" }, { "bh1_16_doors_shut" }, {}, false },
+	{ "North Yankton", 3360.19f, -4849.67f, 111.8f, IPLS_NORTH_YANKTON, {}, {}, false },
+	{ "North Yankton Bank", 5309.519f, -5212.375f, 83.522f, IPLS_NORTH_YANKTON, {}, {}, false },
+	{ "Simeon's Showroom", -59.7936f, -1098.784f, 27.2612f, { "shr_int" }, { "fakeint" }, {}, false },
+	{ "SS Bulker (Intact)", -163.749f, -2377.94f, 9.3192f, { "cargoship" }, { "sunkcargoship" }, {}, false },
+	{ "SS Bulker (Sunk)", -162.8918f, -2365.769f, 0.0f, { "sunkcargoship" }, { "cargoship" }, {}, false },
+	{ "Train Crash Bridge", -532.1309f, 4526.187f, 88.7955f, { "canyonriver01_traincrash", "railing_end" }, { "railing_start", "canyonriver01" }, {}, false },
+	{ "Yacht", -2023.661f, -1038.038f, 5.577f, { "smboat", "smboat_lod" }, {}, {}, false },
 };
 
 /*
@@ -458,69 +527,71 @@ std::vector<tele_location> LOCATIONS_JELLMAN = {
 //{ "High Life Garage", 228.135f, -995.350f, -99.000f, { "hei_hw1_blimp_interior_2_dlc_garage_high_new_milo_" }, { "hw1_blimp_interior_v_garagel_milo_" }, false },
 };*/
 
+/* Name, coords, IPL name, scenary (props) required, scenary to remove, bool isloaded*/
 std::vector<tele_location> LOCATIONS_ONLINE = {
-	{ "Aircraft Carrier", 3069.330f, -4704.220f, 15.043f, IPLS_CARRIER, {}, false },
-	{ "Heist Police Station", 445.488f, -983.779f, 30.6896f, { "" }, {}, false },
-	{ "Heist Yacht", -2043.974f, -1031.582f, 11.981f, IPLS_HEISTYACHT, {}, false },
-	{ "Integrity Way Apt 28", -14.7964, -581.709, 79.4307, {}, {}, false },
-	{ "Del Perro Heights Apt 28", -1468.14f, -541.815f, 73.4442f, {}, {}, false },
-	{ "Richard Majestic Apt 2", -915.811f, -379.432f, 113.675f, {}, {}, false },
-	{ "Tinsel Towers Apt 42", -614.86f, 40.6783f, 97.6f, {}, {}, false },
-	{ "Eclipse Towers Apt 3", -773.407, 341.766, 211.397, {}, {}, false },
-	{ "Benny's Garage", -209.759, -1319.617, 30.08367, { "lr_sc1_02_interior_0_supermod_int_milo_" }, {}, false },
-	{ "Ranch", 1400, 1148.322, 114.4184, { "apa_ch2_03c_interior_v_ranch_milo_" }, {}, false },
-	{ "Penthouse: Style 1", -787.7805, 334.9232, 215.8384, { "apa_v_mp_h_01_a", "apa_v_mp_h_01_b", "apa_v_mp_h_01_c" }, {}, false },
-	{ "Penthouse: Style 2", -787.7805, 334.9232, 215.8384, { "apa_v_mp_h_02_a", "apa_v_mp_h_02_b", "apa_v_mp_h_02_c" }, {}, false },
-	{ "Penthouse: Style 3", -787.7805, 334.9232, 215.8384, { "apa_v_mp_h_03_a", "apa_v_mp_h_03_b", "apa_v_mp_h_03_c" }, {}, false },
-	{ "Penthouse: Style 4", -787.7805, 334.9232, 215.8384, { "apa_v_mp_h_04_a", "apa_v_mp_h_04_b", "apa_v_mp_h_04_c" }, {}, false },
-	{ "Penthouse: Style 5", -787.7805, 334.9232, 215.8384, { "apa_v_mp_h_05_a", "apa_v_mp_h_05_b", "apa_v_mp_h_05_c" }, {}, false },
-	{ "Penthouse: Style 6", -787.7805, 334.9232, 215.8384, { "apa_v_mp_h_06_a", "apa_v_mp_h_06_b", "apa_v_mp_h_06_c" }, {}, false },
-	{ "Penthouse: Style 7", -787.7805, 334.9232, 215.8384, { "apa_v_mp_h_07_a", "apa_v_mp_h_07_b", "apa_v_mp_h_07_c" }, {}, false },
-	{ "Penthouse: Style 8", -787.7805, 334.9232, 215.8384, { "apa_v_mp_h_08_a", "apa_v_mp_h_08_b", "apa_v_mp_h_08_c" }, {}, false },
-	{ "Stilthouse 1", 328.5579, 425.9027, 147.9707, { "apa_ch2_04_interior_0_v_mp_stilts_b_milo_" }, {}, false },
-	{ "Stilthouse 2", 372.6725, 405.5155, 144.4997, { "apa_ch2_04_interior_1_v_mp_stilts_a_milo_" }, {}, false },
-	{ "Stilthouse 3", 122.5349, 542.5076, 182.8967, { "apa_ch2_05c_interior_1_v_mp_stilts_a_milo_" }, {}, false },
-	{ "Stilthouse 4", -166.4324, 481.537, 136.2436, { "apa_ch2_05e_interior_0_v_mp_stilts_b_milo_" }, {}, false },
-	{ "Stilthouse 5", -855.0377, 673.7045, 151.4361, { "apa_ch2_09b_interior_0_v_mp_stilts_a_milo_" }, {}, false },
-	{ "Stilthouse 6", -773.3615, 609.1497, 142.7305, { "apa_ch2_09b_interior_1_v_mp_stilts_b_milo_" }, {}, false },
-	{ "Stilthouse 7", -573.0324, 643.7613, 144.4316, { "apa_ch2_09c_interior_0_v_mp_stilts_a_milo_" }, {}, false },
-	{ "Stilthouse 8", -667.5856, 582.3726, 143.9697, { "apa_ch2_09c_interior_2_v_mp_stilts_b_milo_" }, {}, false },
-	{ "Stilthouse 9", -1286.362, 431.7878, 96.49426, { "apa_ch2_12b_interior_0_v_mp_stilts_a_milo_" }, {}, false },
-	{ "Executive Warehouse (Small)", 1095, -3100, -40, { "ex_exec_warehouse_placement_interior_1_int_warehouse_s_dlc_milo_" }, {}, false },
-	{ "Executive Warehouse (Medium)", 1060, -3100, -40, { "ex_exec_warehouse_placement_interior_0_int_warehouse_m_dlc_milo_" }, {}, false },
-	{ "Executive Warehouse (Large)", 1010, -3100, -40, { "ex_exec_warehouse_placement_interior_2_int_warehouse_l_dlc_milo_" }, {}, false },
-	//{ "Executive CEO Office: Style 1", -73.79922, -818.958, 242.3858, { "ex_dt1_02_office_01a" }, {}, false },
-	//{ "Executive CEO Office: Style 2", -73.79922, -818.958, 242.3858, { "ex_dt1_02_office_01b" }, {}, false },
-	//{ "Executive CEO Office: Style 3", -73.79922, -818.958, 242.3858, { "ex_dt1_02_office_01c" }, {}, false },
-	//{ "Executive CEO Office: Style 4", -73.79922, -818.958, 242.3858, { "ex_dt1_02_office_02a" }, {}, false },
-	//{ "Executive CEO Office: Style 5", -73.79922, -818.958, 242.3858, { "ex_dt1_02_office_02b" }, {}, false },
-	//{ "Executive CEO Office: Style 6", -73.79922, -818.958, 242.3858, { "ex_dt1_02_office_02c" }, {}, false },
-	//{ "Executive CEO Office: Style 7", -73.79922, -818.958, 242.3858, { "ex_dt1_02_office_03a" }, {}, false },
-	//{ "Executive CEO Office: Style 8", -73.79922, -818.958, 242.3858, { "ex_dt1_02_office_03b" }, {}, false },
-	//{ "Executive CEO Office: Style 9", -73.79922, -818.958, 242.3858, { "ex_dt1_02_office_03c" }, {}, false },
-	{ "Executive CEO Office: Style 1", -73.79922, -818.958, 242.3858, { "ex_dt1_11_office_01a" }, {}, false },
-	{ "Executive CEO Office: Style 2", -73.79922, -818.958, 242.3858, { "ex_dt1_11_office_01b" }, {}, false },
-	{ "Executive CEO Office: Style 3", -73.79922, -818.958, 242.3858, { "ex_dt1_11_office_01c" }, {}, false },
-	{ "Executive CEO Office: Style 4", -73.79922, -818.958, 242.3858, { "ex_dt1_11_office_02a" }, {}, false },
-	{ "Executive CEO Office: Style 5", -73.79922, -818.958, 242.3858, { "ex_dt1_11_office_02b" }, {}, false },
-	{ "Executive CEO Office: Style 6", -73.79922, -818.958, 242.3858, { "ex_dt1_11_office_02c" }, {}, false },
-	{ "Executive CEO Office: Style 7", -73.79922, -818.958, 242.3858, { "ex_dt1_11_office_03a" }, {}, false },
-	{ "Executive CEO Office: Style 8", -73.79922, -818.958, 242.3858, { "ex_dt1_11_office_03b" }, {}, false },
-	{ "Executive CEO Office: Style 9", -73.79922, -818.958, 242.3858, { "ex_dt1_11_office_03c" }, {}, false },
-	{ "Import-Export Garage", 975, -3000, -40, IPLS_IMPORT_EXPORT_WAREHOUSES, {}, false },
-	{ "Biker Train Tunnel", 975, -3000, -40, IPLS_BIKER_TUNNEL, {}, false },
-	{ "Biker Warehouse: Money Printer 1", 1009.545, -3196.597, -39.99353, { "bkr_biker_interior_placement_interior_2_biker_dlc_int_ware01_milo_" }, {}, false },
-	{ "Biker Club Garage 1", 1005.861, -3156.162, -39.90727, { "bkr_biker_interior_placement_interior_1_biker_dlc_int_02_milo_" }, {}, false },
-	{ "Biker Warehouse: Weed Farm", 1059.028, -3201.89, -39.99353, { "bkr_biker_interior_placement_interior_3_biker_dlc_int_ware02_milo_" }, {}, false },
-	{ "Biker Cocaine Factory", 1093.581, -3196.597, -39.99353, { "bkr_biker_interior_placement_interior_4_biker_dlc_int_ware03_milo_" }, {}, false },
-	{ "Biker Warehouse: Money Printer 2", 1124.734, -3196.597, -39.99353, { "bkr_biker_interior_placement_interior_5_biker_dlc_int_ware04_milo_" }, {}, false },
-	{ "Biker Warehouse: Forgery 2", 1165.001, -3196.597, -39.99353, { "bkr_biker_interior_placement_interior_6_biker_dlc_int_ware05_milo_" }, {}, false },
-	{ "Biker Club Garage 2", 1102.477, -3156.162, -37.77361, { "bkr_biker_interior_placement_interior_0_biker_dlc_int_01_milo_" }, {}, false },
-	{ "Foundry", 1087.145, -1986.683, 31.20892, { "bkr_id1_17_interior_v_foundry_milo_" }, {}, false },
+	{ "Aircraft Carrier", 3069.330f, -4704.220f, 15.043f, IPLS_CARRIER, {}, {}, false },
+	{ "Heist Police Station", 445.488f, -983.779f, 30.6896f, { "" }, {}, {}, false },
+	{ "Heist Yacht", -2043.974f, -1031.582f, 11.981f, IPLS_HEISTYACHT, {}, {}, false },
+	{ "Integrity Way Apt 28", -14.7964, -581.709, 79.4307, {}, {}, {}, false },
+	{ "Del Perro Heights Apt 28", -1468.14f, -541.815f, 73.4442f, {}, {}, {}, false },
+	{ "Richard Majestic Apt 2", -915.811f, -379.432f, 113.675f, {}, {}, {}, false },
+	{ "Tinsel Towers Apt 42", -614.86f, 40.6783f, 97.6f, {}, {}, {}, false },
+	{ "Eclipse Towers Apt 3", -773.407, 341.766, 211.397, {}, {}, {}, false },
+	{ "Benny's Garage", -209.759, -1319.617, 30.08367, { "lr_sc1_02_interior_0_supermod_int_milo_" }, {}, {}, false },
+	{ "Ranch", 1400, 1148.322, 114.4184, { "apa_ch2_03c_interior_v_ranch_milo_" }, {}, {}, false },
+	{ "Penthouse: Style 1", -787.7805, 334.9232, 215.8384, { "apa_v_mp_h_01_a", "apa_v_mp_h_01_b", "apa_v_mp_h_01_c" }, {}, {}, false },
+	{ "Penthouse: Style 2", -787.7805, 334.9232, 215.8384, { "apa_v_mp_h_02_a", "apa_v_mp_h_02_b", "apa_v_mp_h_02_c" }, {}, {}, false },
+	{ "Penthouse: Style 3", -787.7805, 334.9232, 215.8384, { "apa_v_mp_h_03_a", "apa_v_mp_h_03_b", "apa_v_mp_h_03_c" }, {}, {}, false },
+	{ "Penthouse: Style 4", -787.7805, 334.9232, 215.8384, { "apa_v_mp_h_04_a", "apa_v_mp_h_04_b", "apa_v_mp_h_04_c" }, {}, {}, false },
+	{ "Penthouse: Style 5", -787.7805, 334.9232, 215.8384, { "apa_v_mp_h_05_a", "apa_v_mp_h_05_b", "apa_v_mp_h_05_c" }, {}, {}, false },
+	{ "Penthouse: Style 6", -787.7805, 334.9232, 215.8384, { "apa_v_mp_h_06_a", "apa_v_mp_h_06_b", "apa_v_mp_h_06_c" }, {}, {}, false },
+	{ "Penthouse: Style 7", -787.7805, 334.9232, 215.8384, { "apa_v_mp_h_07_a", "apa_v_mp_h_07_b", "apa_v_mp_h_07_c" }, {}, {}, false },
+	{ "Penthouse: Style 8", -787.7805, 334.9232, 215.8384, { "apa_v_mp_h_08_a", "apa_v_mp_h_08_b", "apa_v_mp_h_08_c" }, {}, {}, false },
+	{ "Stilthouse 1", 328.5579, 425.9027, 147.9707, { "apa_ch2_04_interior_0_v_mp_stilts_b_milo_" }, {}, {}, false },
+	{ "Stilthouse 2", 372.6725, 405.5155, 144.4997, { "apa_ch2_04_interior_1_v_mp_stilts_a_milo_" }, {}, {}, false },
+	{ "Stilthouse 3", 122.5349, 542.5076, 182.8967, { "apa_ch2_05c_interior_1_v_mp_stilts_a_milo_" }, {}, {}, false },
+	{ "Stilthouse 4", -166.4324, 481.537, 136.2436, { "apa_ch2_05e_interior_0_v_mp_stilts_b_milo_" }, {}, {}, false },
+	{ "Stilthouse 5", -855.0377, 673.7045, 151.4361, { "apa_ch2_09b_interior_0_v_mp_stilts_a_milo_" }, {}, {}, false },
+	{ "Stilthouse 6", -773.3615, 609.1497, 142.7305, { "apa_ch2_09b_interior_1_v_mp_stilts_b_milo_" }, {}, {}, false },
+	{ "Stilthouse 7", -573.0324, 643.7613, 144.4316, { "apa_ch2_09c_interior_0_v_mp_stilts_a_milo_" }, {}, {}, false },
+	{ "Stilthouse 8", -667.5856, 582.3726, 143.9697, { "apa_ch2_09c_interior_2_v_mp_stilts_b_milo_" }, {}, {}, false },
+	{ "Stilthouse 9", -1286.362, 431.7878, 96.49426, { "apa_ch2_12b_interior_0_v_mp_stilts_a_milo_" }, {}, {}, false },
+	{ "Executive Warehouse (Small)", 1095, -3100, -40, { "ex_exec_warehouse_placement_interior_1_int_warehouse_s_dlc_milo_" }, {}, {}, false },
+	{ "Executive Warehouse (Medium)", 1060, -3100, -40, { "ex_exec_warehouse_placement_interior_0_int_warehouse_m_dlc_milo_" }, {}, {}, false },
+	{ "Executive Warehouse (Large)", 1010, -3100, -40, { "ex_exec_warehouse_placement_interior_2_int_warehouse_l_dlc_milo_" }, {}, {}, false },
+	{ "Executive CEO Office: Style 1", -73.79922, -818.958, 242.3858, { "ex_dt1_02_office_01a" }, {}, {""}, false },
+	{ "Executive CEO Office: Style 2", -73.79922, -818.958, 242.3858, { "ex_dt1_02_office_01b" }, {}, {""}, false },
+	{ "Executive CEO Office: Style 3", -73.79922, -818.958, 242.3858, { "ex_dt1_02_office_01c" }, {}, {""}, false },
+	{ "Executive CEO Office: Style 4", -73.79922, -818.958, 242.3858, { "ex_dt1_02_office_02a" }, {}, {""}, false },
+	{ "Executive CEO Office: Style 5", -73.79922, -818.958, 242.3858, { "ex_dt1_02_office_02b" }, {}, {""}, false },
+	{ "Executive CEO Office: Style 6", -73.79922, -818.958, 242.3858, { "ex_dt1_02_office_02c" }, {}, {""}, false },
+	{ "Executive CEO Office: Style 7", -73.79922, -818.958, 242.3858, { "ex_dt1_02_office_03a" }, {}, {""}, false },
+	{ "Executive CEO Office: Style 8", -73.79922, -818.958, 242.3858, { "ex_dt1_02_office_03b" }, {}, {""}, false },
+	{ "Executive CEO Office: Style 9", -73.79922, -818.958, 242.3858, { "ex_dt1_02_office_03c" }, {}, {""}, false },
+	{ "Executive CEO Office: Style 1 (Messy)", -73.79922, -818.958, 242.3858, { "ex_dt1_11_office_01a" }, {}, { IPL_PROPS_CEO_OFFICE }, false },
+	{ "Executive CEO Office: Style 2 (Messy)", -73.79922, -818.958, 242.3858, { "ex_dt1_11_office_01b" }, {}, { IPL_PROPS_CEO_OFFICE }, false },
+	{ "Executive CEO Office: Style 3 (Messy)", -73.79922, -818.958, 242.3858, { "ex_dt1_11_office_01c" }, {}, { IPL_PROPS_CEO_OFFICE }, false },
+	{ "Executive CEO Office: Style 4 (Messy)", -73.79922, -818.958, 242.3858, { "ex_dt1_11_office_02a" }, {}, { IPL_PROPS_CEO_OFFICE }, false },
+	{ "Executive CEO Office: Style 5 (Messy)", -73.79922, -818.958, 242.3858, { "ex_dt1_11_office_02b" }, {}, { IPL_PROPS_CEO_OFFICE }, false },
+	{ "Executive CEO Office: Style 6 (Messy)", -73.79922, -818.958, 242.3858, { "ex_dt1_11_office_02c" }, {}, { IPL_PROPS_CEO_OFFICE }, false },
+	{ "Executive CEO Office: Style 7 (Messy)", -73.79922, -818.958, 242.3858, { "ex_dt1_11_office_03a" }, {}, { IPL_PROPS_CEO_OFFICE }, false },
+	{ "Executive CEO Office: Style 8 (Messy)", -73.79922, -818.958, 242.3858, { "ex_dt1_11_office_03b" }, {}, { IPL_PROPS_CEO_OFFICE }, false },
+	{ "Executive CEO Office: Style 9 (Messy)", -73.79922, -818.958, 242.3858, { "ex_dt1_11_office_03c" }, {}, { IPL_PROPS_CEO_OFFICE }, false },
+	{ "Import-Export Garage", 975, -3000, -40, IPLS_IMPORT_EXPORT_WAREHOUSES, {}, {}, false },
+	{ "Biker Train Tunnel", 975, -3000, -40, IPLS_BIKER_TUNNEL, {}, {}, false },
+	{ "Biker Warehouse: Money Printer 1", 1009.545, -3196.597, -39.99353, { "bkr_biker_interior_placement_interior_2_biker_dlc_int_ware01_milo_" }, {}, {}, false },
+	{ "Biker Club Garage 1", 1005.861, -3156.162, -39.90727, { "bkr_biker_interior_placement_interior_1_biker_dlc_int_02_milo_" }, {}, {}, false },
+	{ "Biker Warehouse: Weed Farm", 1059.028, -3201.89, -39.99353, { "bkr_biker_interior_placement_interior_3_biker_dlc_int_ware02_milo_" }, {}, {}, false },
+	{ "Biker Cocaine Factory", 1093.581, -3196.597, -39.99353, { "bkr_biker_interior_placement_interior_4_biker_dlc_int_ware03_milo_" }, {}, {}, false },
+	{ "Biker Warehouse: Money Printer 2", 1124.734, -3196.597, -39.99353, { "bkr_biker_interior_placement_interior_5_biker_dlc_int_ware04_milo_" }, {}, {}, false },
+	{ "Biker Warehouse: Forgery 2", 1165.001, -3196.597, -39.99353, { "bkr_biker_interior_placement_interior_6_biker_dlc_int_ware05_milo_" }, {}, {}, false },
+	{ "Biker Club Garage 2", 1102.477, -3156.162, -37.77361, { "bkr_biker_interior_placement_interior_0_biker_dlc_int_01_milo_" }, {}, {}, false },
+	{ "Foundry", 1087.145, -1986.683, 31.20892, { "bkr_id1_17_interior_v_foundry_milo_" }, {}, {}, false },
 	//{ "Abbatoir", 982.233, -2160.381, 27.725, { "bkr_id1_10_interior_v_abattoir_milo_" }, {}, false },
-	{ "CEO Garage Modshop", 730, -2990, -40, { "imp_impexp_interior_placement_interior_2_imptexp_mod_int_01_milo_" }, {}, false },
-	{ "Gun Runnning Bunker", 938.3077f, -3196.112f, -100.0f, IPLS_GUNRUNNING_INTERIOR, {}, false },
-	{ "Gun Runnning MOC", 1103.562f, -3000.0f, -40.0f, { "gr_grdlc_interior_placement_interior_0_grdlc_int_01_milo_" }, {}, false },
+	{ "CEO Garage Modshop", 730, -2990, -40, { "imp_impexp_interior_placement_interior_2_imptexp_mod_int_01_milo_" }, {}, {}, false },
+	//{ "Gun Runnning Bunker", 938.3077f, -3196.112f, -100.0f, IPLS_GUNRUNNING_INTERIOR, {}, false },
+	{ "Gun Runnning Bunker", 938.3077f, -3196.112f, -100.0f, { "DLC_GR_Bunker_Interior" }, {}, { "Bunker_Style_C", "upgrade_bunker_set", "security_upgrade", "Office_Upgrade_set", "Gun_schematic_set" }, false },
+	{ "Gun Runnning MOC", 1103.562f, -3000.0f, -40.0f, { "gr_grdlc_interior_placement_interior_0_grdlc_int_01_milo_" }, {}, {}, false },
 	//{ "Gun Runnning Yacht", 1396.736, 6745.025, 7.970402, IPLS_GUNRUNNING_YACHT_TEST, {}, false },
 };
 
@@ -851,6 +922,10 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 
 	Vector3 coords;
 
+	coords.x = value->x;
+	coords.y = value->y;
+	coords.z = value->z;
+
 	if ((value->scenery_required.size() > 0 || value->scenery_toremove.size() > 0) && !value->isLoaded){
 		set_status_text("Loading new scenery...");
 
@@ -866,6 +941,18 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 				if (!STREAMING::IS_IPL_ACTIVE(scenery))
 				{
 					STREAMING::REQUEST_IPL(scenery);
+				}
+			}
+			for each (char* prop in value->scenery_props){
+				int interiorID = INTERIOR::GET_INTERIOR_AT_COORDS(coords.x, coords.y, coords.z);
+#
+				if (!INTERIOR::_IS_INTERIOR_PROP_ENABLED(interiorID, prop))
+				{
+					INTERIOR::_ENABLE_INTERIOR_PROP(interiorID, prop);
+				}
+				else //if (interiorID != INTERIOR::GET_INTERIOR_AT_COORDS(coords.x, coords.y, coords.z))
+				{
+					INTERIOR::_DISABLE_INTERIOR_PROP(interiorID, prop);
 				}
 			}
 		}
@@ -886,10 +973,10 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 			WAIT(0);
 		}
 	}
-
+	/*
 	coords.x = value->x;
 	coords.y = value->y;
-	coords.z = value->z;
+	coords.z = value->z;*/
 	teleport_to_coords(e, coords);
 
 	bool unloadedAnything = false;
