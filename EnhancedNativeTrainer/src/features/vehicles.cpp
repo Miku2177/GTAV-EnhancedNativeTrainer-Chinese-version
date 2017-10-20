@@ -1755,7 +1755,7 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	//Cunning Stunts
 	{ "BF400", "sssa_dlc_stunt", "bf400" },
 	{ "BRIOSO",	"sssa_dlc_stunt", "brioso" },
-	{ "CLIFFFHANGER", "sssa_dlc_stunt",	"cliffhanger" },
+	{ "CLIFFHANGER", "sssa_dlc_stunt",	"cliffhanger" },
 	{ "CONTENDER", "sssa_dlc_stunt", "contender" },
 	{ "GARGOYLE", "sssa_dlc_stunt", "gargoyle" },
 	{ "LE7B", "lgm_dlc_stunt", "le7b" },
