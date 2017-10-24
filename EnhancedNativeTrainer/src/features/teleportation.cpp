@@ -62,7 +62,6 @@ std::vector<tele_location> LOCATIONS_LANDMARKS = {
 	{ "Airport Entrance", -1034.6f, -2733.6f, 13.8f },
 	{ "Airport Entrance Tower", -912.523f, -2529.81f, 41.96f },
 	{ "Airport Field", -1336.0f, -3044.0f, 13.9f },
-	{ "Airport Tower Roof", -982.67f, -2638.2f, 89.522f },
 	{ "Altruist Cult Camp", -1170.841f, 4926.646f, 224.295f },
 	{ "Bolingbroke Penitentiary Entrance", 1879.45f, 2604.83f, 45.672f },
 	{ "Bolingbroke Penitentiary Inside", 1671.37f, 2502.7f, 45.5706f },
@@ -82,9 +81,11 @@ std::vector<tele_location> LOCATIONS_LANDMARKS = {
 	{ "God's Thumb", -1006.402f, 6272.383f, 1.503f },
 	{ "Golf Club", -1373.22f, 50.4852f, 53.7018f },
 	{ "Hippy Camp", 2476.712f, 3789.645f, 41.226f },
+	{ "Hobo Camp", 1476.47f, 6373.92f, 23.5239f },
 	{ "Jetsam", 760.4f, -2943.2f, 5.8f },
 	{ "Jolene Cranley-Evans Ghost", 3059.620f, 5564.246f, 197.091f },
 	{ "Kortz Center", -2243.810f, 264.048f, 174.615f },
+	{ "Lighthouse", 3428.79f, 5174.15f, 35.8053f },
 	{ "Main LS Customs", -365.425f, -131.809f, 37.873f },
 	{ "Marlowe Vineyards", -1868.971f, 2095.674f, 139.115f },
 	{ "McKenzie Airfield", 2121.7f, 4796.3f, 41.1f },
@@ -94,6 +95,7 @@ std::vector<tele_location> LOCATIONS_LANDMARKS = {
 	{ "Mt. Chiliad Summit", 450.718f, 5566.614f, 806.183f },
 	{ "NOOSE Headquarters", 2535.243f, -383.799f, 92.993f },
 	{ "Paleto Bay Pier", -275.522f, 6635.835f, 7.425f },
+	{ "Paleto Forest Sawmill", -578.305f, 5246.03f, 70.4694f },
 	{ "Playboy Mansion", -1475.234f, 167.088f, 55.841f },
 	{ "Police Station", 432.002f, -981.748f, 30.7107f },
 	{ "Quarry", 2954.196f, 2783.410f, 41.004f },
@@ -110,6 +112,7 @@ std::vector<tele_location> LOCATIONS_LANDMARKS = {
 
 std::vector<tele_location> LOCATIONS_HIGH = {
 	{ "Airplane Graveyard Airplane Tail ", 2395.096f, 3049.616f, 60.053f },
+	{ "Airport Tower Roof", -982.67f, -2638.2f, 89.522f },
 	{ "Bridge Pole", -279.242f, -2438.71f, 124.004f },
 	{ "Building Crane Top", -119.879f, -977.357f, 304.249f },
 	{ "Building Under Construction Roof", -168.221f, -974.687f, 275.222f },
@@ -117,6 +120,7 @@ std::vector<tele_location> LOCATIONS_HIGH = {
 	{ "Drawbridge Summit", 215.681f, -2345.98f, 77.4659f },
 	{ "Elysian Island High", 338.21f, -2758.38f, 43.6318f },
 	{ "FIB Building Roof", 150.126f, -754.591f, 262.865f },
+	{ "Fort Zancudo Tower Roof", -2358.13f, 3248.81f, 106.046f },
 	{ "Galileo Observatory Roof", -438.804f, 1076.097f, 352.411f },
 	{ "Galileo Park Summit", 758.461f, 1273.92f, 453.573f },
 	{ "IAA Building Roof", 134.085f, -637.859f, 262.851f },
@@ -124,7 +128,7 @@ std::vector<tele_location> LOCATIONS_HIGH = {
 	{ "Maze Bank Roof", -75.015f, -818.215f, 326.176f },
 	{ "Mount Gordo Summit", 2792.49f, 5995.88f, 373.499f },
 	{ "Palmer-Taylor Power Station Chimney", 2723.01f, 1540.68f, 89.4314f },
-	{ "Rebel Radio", 736.153f, 2583.143f, 79.634f },
+	{ "Rebel Radio Tower Top", 753.214f, 2581.43f, 158.363f },
 	{ "Red Bridge Top", 796.735f, -2626.74f, 87.9404f },
 	{ "Sandy Shores Building Site Crane", 1051.209f, 2280.452f, 89.727f },
 	{ "Satellite Dish Antenna", 2034.988f, 2953.105f, 74.602f },
@@ -138,14 +142,30 @@ std::vector<tele_location> LOCATIONS_HIGH = {
 
 std::vector<tele_location> LOCATIONS_UNDERWATER = {
 	{ "Dead Sea Monster", -3373.726f, 504.714f, -24.656f },
+	{ "Dead Jogger", 157.319f, 7430.14f, -10.8888f },
 	{ "Humane Labs Tunnel", 3832.00f, 3663.67f, -23.0722f },// {}, { "chemgrill_grp1" }, {}, false },
+	{ "Sunken Ancient Ship", 2627.76f, -1391.54f, -10.5533f },
+	{ "Sunken Armored Carrier", 4196.41f, 3564.53f, -57.6304f },
 	{ "Sunken Body", -3161.078f, 3001.998f, -37.974f },
-	{ "Sunken Cargo Ship", 3199.748f, -379.018f, -22.500f },
-	{ "Sunken Plane", -942.350f, 6608.752f, -20.912f },
+	{ "Sunken Cargo Ship", 3191.12f, -358.279f, -17.7928f },
+	{ "Sunken Missiles", 4175.29f, 3533.97f, -48.928f },
 	{ "Sunken Plane Alamo Sea", 288.041f, 3970.42f, -6.11622f },
+	{ "Sunken Plane North West", -942.350f, 6608.752f, -20.912f },
+	{ "Sunken Plane South East", 1775.49f, -2945.49f, -29.0648f },
+	{ "Sunken Plane West", -3281.48f, 3673.67f, -19.281f },
+	{ "Sunken Rostrum/Hull/Stern", -100.404f, -2877.95f, -7.82395f },
+	{ "Sunken Submarine", 2682.76f, 6664.44f, -16.8965f },
+	{ "Sunken Truck East", 4251.04f, 3585.63f, -47.944f },
+	{ "Sunken Truck East 2", 4165.98f, 3655.87f, -34.4074f }, 
+	{ "Sunken Truck East 3", 4143.26f, 3567.99f, -38.7121f },
+	{ "Sunken Tugboat West", -3190.19f, 3035.02f, -30.2882f },
+	{ "Sunken Tugboat East", 3902.57f, 3019.74f, -23.7107f },
+	{ "Sunken Tugboat East North", 3413.71f, 6336.9f, -52.5285f },
+	{ "Sunken UFO", 762.426f, 7380.371f, -111.377f },
+	{ "Sunken WW2 Plane", 3266.99f, 6421.82f, -47.2943f },
+	{ "Sunken WW2 Tank", 4201.633f, 3643.821f, -39.016f },
 	{ "Underwater Hatch", 4273.950f, 2975.714f, -170.746f },
-	{ "Underwater UFO", 762.426f, 7380.371f, -111.377f },
-	{ "Underwater WW2 Tank", 4201.633f, 3643.821f, -39.016f },
+	{ "Underwater Tank For Liquids", -2857.01f, -490.801f, -16.9937f },
 };
 
 std::vector<tele_location> LOCATIONS_INTERIORS = {
@@ -191,7 +211,7 @@ std::vector<tele_location> LOCATIONS_INTERIORS = {
 	//{ "Simeon's Dealership", -56.4951f, -1095.8f, 26.4224f },
 	{ "Solomon's Office", -1002.89f, -478.003f, 50.0271f },
 	{ "Split Sides West Comedy Club", -453.8519f, 280.5149f, 77.52148f, { "apa_ss1_12_interior_v_comedy_milo_" }, {}, {}, false },
-	//{ "Rock Club", -558.0049f, 285.664f, 81.1764f, { "apa_ss1_11_interior_v_rockclub_milo_" }, {}, {}, false },
+	//{ "Rock Club", -558.0049f, 285.664f, 81.1764f, { "apa_ss1_11_interior_v_rockclub_milo_" }, {}, {}, false }, It's the same as "Tequi-la-la" location
 	{ "Stadium", -248.4916f, -2010.509f, 34.5743f, { "SP1_10_real_interior" }, { "SP1_10_fake_interior" }, {}, false },
 	{ "Strip Club DJ Booth", 126.135f, -1278.583f, 29.270f },
 	{ "Tequi-la-la", -564.518f, 277.754f, 83.1363f },
@@ -504,50 +524,6 @@ std::vector<tele_location> LOCATIONS_REQSCEN = {
 	{ "Yacht", -2023.661f, -1038.038f, 5.577f, { "smboat", "smboat_lod" }, {}, {}, false },
 };
 
-/*
--been commented out to fix build
-
-std::vector<tele_location> LOCATIONS_BROKEN = {
-//{ "Carrier", 3069.330f, -4704.220f, 15.043f, IPLS_CARRIER, {}, false },
-{ "des_farmhouse", 2447.9f, 4973.4f, 47.7f, {}, {}, false },
-{ "canyon", -1600.6194f, 4443.4565f, 0.725f, {}, {}, false },
-
-{ "vb_30_crimetape", -1150.0391f, -1521.761f, 9.6331f, {}, {}, false },
-{ "sheriff_cap", 1856.0288f, 3682.9983f, 33.2675f, {}, {}, false },
-{ "CS1_16_sheriff_Cap", -440.5073f, 6018.766f, 30.49f, {}, {}, false },
-{ "chemgrill_grp1", 3832.9f, 3665.5f, -23.4f, {}, {}, false },
-{ "Hospitaldoorsfixed", {}, {}, false },
-{ "SP1_10_fake/real_interior", -248.4916f, -2010.509f, 34.5743f, {}, {}, false },
-{ "id2_14_pre_no_int etc", 716.84f, -962.05f, 31.59f, {}, {}, false },
-{ "burnt_switch_off", 716.84f, -962.05f, 31.59f, {}, {}, false },
-{ "des_farmhouse", 2447.9f, 4973.4f, 47.7f, {}, {}, false },
-{ "FINBANK (1)", 2.69689322f, -667.0166f, 16.1306286f, {}, {}, false },
-{ "FINBANK (2)", 6.194215f, -660.759338f, 33.4501877f, {}, {}, false },
-{ "DT1_03_Shutter", 23.9346f, -669.7552f, 30.8853f, {}, {}, false },
-{ "CS3_07_MPGates", -1601.424072265625f, 2808.212646484375f, 16.2598f, {}, {}, false },
-{ "PaperRCM", -1459.1273193359375f, 486.12811279296875f, 115.20159912109375f, {}, {}, false },
-{"KorizTempWalls", -2199.1376953125f, 223.4647979736328f, 181.11180114746094f, {}, {}, false },
-{"mic3_chopper_debris", -2242.78466796875f, 263.4779052734375f, 173.6154022216797f },
-{ "showroom", -59.79359817504883f, -1098.7840576171875f, 27.2612f },
-{"FBI_colPLUG, repair, rubble", 74.29f, -736.0499877929688f, 46.76f },
-{ "FBI heist", 136.00399780273438f, -749.2869873046875f, 153.302f }
-//{ "Director Mod Trailer", -20.004f, -10.889f, 500.602f },
-{ "Union Depository", },
-{ "Lester's Garment Factory", },
-};
-
-std::vector<tele_location> LOCATIONS_JELLMAN = {
-{ "Aircraft Carrier", 3069.330f, -4704.220f, 15.043f, IPLS_CARRIER, {}, false },
-{ "Heist Police Station", 445.488f, -983.779f, 30.6896f, { "" }, {}, false },
-{ "Heist Yacht", -2043.974f, -1031.582f, 11.981f, IPLS_HEISTYACHT, {}, false },
-{ "Integrity Way Apt 28", -14.7964f, -581.709f, 79.4307f, {}, {}, false },
-{ "Del Perro Heights Apt 28", -1468.14f, -541.815f, 73.4442f, {}, {}, false },
-{ "Richard Majestic Apt 2", -915.811f, -379.432f, 113.675f, {}, {}, false },
-{ "Tinsel Towers Apt 42", -614.86f, 40.6783f, 97.6f, {}, {}, false },
-{ "Eclipse Towers Apt 3", -773.407f, 341.766f, 211.397f, {}, {}, false }
-//{ "High Life Garage", 228.135f, -995.350f, -99.000f, { "hei_hw1_blimp_interior_2_dlc_garage_high_new_milo_" }, { "hw1_blimp_interior_v_garagel_milo_" }, false },
-};*/
-
 /* Name, coords, IPL name, scenary (props) required, scenary to remove, bool isloaded*/
 std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Aircraft Carrier", 3069.330f, -4704.220f, 15.043f, IPLS_CARRIER, {}, {}, false },
@@ -632,11 +608,55 @@ std::vector<tele_location> LOCATIONS_ACTORS = {
 	{ "Zombie", 183.262f, 182.957f, 105.538f },
 };
 
+
+//-been commented out to fix build
+
+/*
+std::vector<tele_location> LOCATIONS_BROKEN = {
+{ "Carrier", 3069.330f, -4704.220f, 15.043f, IPLS_CARRIER, {}, false },
+{ "des_farmhouse", 2447.9f, 4973.4f, 47.7f, {}, {}, false },
+{ "canyon", -1600.6194f, 4443.4565f, 0.725f, {}, {}, false },
+{ "vb_30_crimetape", -1150.0391f, -1521.761f, 9.6331f, {}, {}, false },
+{ "sheriff_cap", 1856.0288f, 3682.9983f, 33.2675f, {}, {}, false },
+{ "CS1_16_sheriff_Cap", -440.5073f, 6018.766f, 30.49f, {}, {}, false },
+{ "chemgrill_grp1", 3832.9f, 3665.5f, -23.4f, {}, {}, false },
+{ "Hospitaldoorsfixed", {}, {}, false },
+{ "SP1_10_fake/real_interior", -248.4916f, -2010.509f, 34.5743f, {}, {}, false },
+{ "id2_14_pre_no_int etc", 716.84f, -962.05f, 31.59f, {}, {}, false },
+{ "burnt_switch_off", 716.84f, -962.05f, 31.59f, {}, {}, false },
+{ "des_farmhouse", 2447.9f, 4973.4f, 47.7f, {}, {}, false },
+{ "FINBANK (1)", 2.69689322f, -667.0166f, 16.1306286f, {}, {}, false },
+{ "FINBANK (2)", 6.194215f, -660.759338f, 33.4501877f, {}, {}, false },
+{ "DT1_03_Shutter", 23.9346f, -669.7552f, 30.8853f, {}, {}, false },
+{ "CS3_07_MPGates", -1601.424072265625f, 2808.212646484375f, 16.2598f, {}, {}, false },
+{ "PaperRCM", -1459.1273193359375f, 486.12811279296875f, 115.20159912109375f, {}, {}, false },
+{ "KorizTempWalls", -2199.1376953125f, 223.4647979736328f, 181.11180114746094f, {}, {}, false },
+{ "mic3_chopper_debris", -2242.78466796875f, 263.4779052734375f, 173.6154022216797f },
+{ "showroom", -59.79359817504883f, -1098.7840576171875f, 27.2612f },
+{ "FBI_colPLUG, repair, rubble", 74.29f, -736.0499877929688f, 46.76f },
+{ "FBI heist", 136.00399780273438f, -749.2869873046875f, 153.302f },
+{ "Director Mod Trailer", -20.004f, -10.889f, 500.602f },
+//{ "Union Depository", },
+//{ "Lester's Garment Factory", },
+};*/
+
+/*std::vector<tele_location> LOCATIONS_JELLMAN = {
+{ "Aircraft Carrier", 3069.330f, -4704.220f, 15.043f, IPLS_CARRIER, {}, false },
+{ "Heist Police Station", 445.488f, -983.779f, 30.6896f, { "" }, {}, false },
+{ "Heist Yacht", -2043.974f, -1031.582f, 11.981f, IPLS_HEISTYACHT, {}, false },
+{ "Integrity Way Apt 28", -14.7964f, -581.709f, 79.4307f, {}, {}, false },
+{ "Del Perro Heights Apt 28", -1468.14f, -541.815f, 73.4442f, {}, {}, false },
+{ "Richard Majestic Apt 2", -915.811f, -379.432f, 113.675f, {}, {}, false },
+{ "Tinsel Towers Apt 42", -614.86f, 40.6783f, 97.6f, {}, {}, false },
+{ "Eclipse Towers Apt 3", -773.407f, 341.766f, 211.397f, {}, {}, false },
+//{ "High Life Garage", 228.135f, -995.350f, -99.000f, { "hei_hw1_blimp_interior_2_dlc_garage_high_new_milo_" }, { "hw1_blimp_interior_v_garagel_milo_" }, false },
+};*/
+
 std::string JELLMAN_CAPTION = "Heist Map Updates In SP";
 
 static std::vector<std::string> MENU_LOCATION_CATEGORIES { "Safehouses", "Landmarks", "Roof/High Up", "Underwater", "Interiors", "Extra Exterior Scenery", "Online Maps", "Special Actors/Freaks Locations" };// <-- not sure what went wrong here, but it don't look right.
 
-static std::vector<tele_location> VOV_LOCATIONS[] = { LOCATIONS_SAFE, LOCATIONS_LANDMARKS, LOCATIONS_HIGH, LOCATIONS_UNDERWATER, LOCATIONS_INTERIORS, LOCATIONS_REQSCEN, LOCATIONS_ONLINE, LOCATIONS_ACTORS };// , LOCATIONS_BROKEN, LOCATIONS_JELLMAN };
+static std::vector<tele_location> VOV_LOCATIONS[] = { LOCATIONS_SAFE, LOCATIONS_LANDMARKS, LOCATIONS_HIGH, LOCATIONS_UNDERWATER, LOCATIONS_INTERIORS, LOCATIONS_REQSCEN, LOCATIONS_ONLINE, LOCATIONS_ACTORS/*, LOCATIONS_BROKEN, LOCATIONS_JELLMAN*/};
 
 void teleport_to_coords(Entity e, Vector3 coords){
 	ENTITY::SET_ENTITY_COORDS_NO_OFFSET(e, coords.x, coords.y, coords.z, 0, 0, 1);
