@@ -78,8 +78,10 @@ std::vector<tele_location> LOCATIONS_LANDMARKS = {
 	{ "Fort Zancudo", -2047.4f, 3132.1f, 32.8f },
 	{ "Fort Zancudo ATC Entrance", -2344.373f, 3267.498f, 32.811f },
 	{ "Fort Zancudo ATC Top Floor", -2358.132f, 3249.754f, 101.451f },
+	{ "Garage In La Mesa", 970.27453f, -1826.56982f, 31.11477f, { "bkr_bi_id1_23_door" }, {}, {}, false },
 	{ "God's Thumb", -1006.402f, 6272.383f, 1.503f },
 	{ "Golf Club", -1373.22f, 50.4852f, 53.7018f },
+	{ "Hill Valley Church", -282.46380000f, 2835.84500000f, 55.91446000f, { "lr_cs6_08_grave_closed" }, {}, {}, false },
 	{ "Hippy Camp", 2476.712f, 3789.645f, 41.226f },
 	{ "Hobo Camp", 1476.47f, 6373.92f, 23.5239f },
 	{ "Jetsam", 760.4f, -2943.2f, 5.8f },
@@ -103,6 +105,8 @@ std::vector<tele_location> LOCATIONS_LANDMARKS = {
 	{ "Satellite Dishes", 2062.123f, 2942.055f, 47.431f },
 	{ "Sisyphus Theater Stage", 686.245f, 577.950f, 130.461f },
 	{ "Trevor's Meth Lab", 1395.32f, 3597.44f, 34.9675f },
+	{ "Underground Entrance", -66.5357f, -538.862f, 31.7796f },
+	{ "Underground Exit", 1032.85f, -276.936f, 50.1025f },
 	{ "Weed Farm", 2208.777f, 5578.235f, 53.735f },
 	{ "Wind Farm", 2354.0f, 1830.3f, 101.1f },
 	{ "Yellow Jack Inn", 1991.74f, 3058.86f, 47.0568f },
@@ -174,6 +178,7 @@ std::vector<tele_location> LOCATIONS_INTERIORS = {
 	{ "Ammunation Gun Range", 22.153f, -1072.854f, 29.797f },
 	{ "Ammunation Office", 12.494f, -1110.130f, 29.797f },
 	{ "Bahama Mamas West", -1387.08f, -588.4f, 30.3195f },
+	{ "Bikers 'Lost' Safehouse", 981.211f, -101.864f, 75.8451f, { "bkr_bi_hw1_13_int" }, {}, {}, false },
 	{ "Blaine County Savings Bank", -109.299f, 6464.035f, 31.627f },
 	{ "Cinema", -1435.8f, -256.866f, 18.7795f, { "hei_hw1_02_interior_v_cinema_milo_" }, {}, {}, false },
 	{ "Clucking Bell Farms Warehouse", -70.0624f, 6263.53f, 31.0909f, { "CS1_02_cf_onmission1", "CS1_02_cf_onmission2", "CS1_02_cf_onmission3", "CS1_02_cf_onmission4" }, { "CS1_02_cf_offmission" }, {}, false },
@@ -189,7 +194,7 @@ std::vector<tele_location> LOCATIONS_INTERIORS = {
 	{ "FIB Building Floor 49", 134.635f, -765.831f, 242.152f },
 	{ "FIB Building Lobby", 110.4f, -744.2f, 45.7f, { "FIBlobby" }, { "FIBlobbyfake" }, {}, false },
 	{ "FIB Building Top Floor", 135.733f, -749.216f, 258.152f },
-	//{ "Garment Factory", 717.397f, -965.572f, 30.3955f },
+	{ "Garment Factory", 718.162f, -974.51f, 25.9142f, { "id2_14_during1" }, {}, {}, false },
 	{ "Hospital (Destroyed)", 302.651f, -586.293f, 43.3129f, { "RC12B_Destroyed", "RC12B_HospitalInterior" }, { "RC12B_Default", "RC12B_Fixed" }, {}, false },
 	{ "Humane Labs Lower Level", 3525.495f, 3705.301f, 20.992f },
 	{ "Humane Labs Upper Level", 3542.94f, 3670.83f, 28.1211f },
@@ -208,7 +213,7 @@ std::vector<tele_location> LOCATIONS_INTERIORS = {
 	{ "Raven Slaughterhouse", 967.357f, -2184.71f, 30.0613f },
 	//{ "Rogers Salvage & Scrap", -609.962f, -1612.49f, 27.0105f },
 	{ "Sandy Shores Sheriff", 1853.18f, 3686.63f, 34.2671f },
-	//{ "Simeon's Dealership", -56.4951f, -1095.8f, 26.4224f },
+	//{ "Simeon's Dealership", -56.4951f, -1095.8f, 26.4224f }, It's the same as "Simeon's Showroom"
 	{ "Solomon's Office", -1002.89f, -478.003f, 50.0271f },
 	{ "Split Sides West Comedy Club", -453.8519f, 280.5149f, 77.52148f, { "apa_ss1_12_interior_v_comedy_milo_" }, {}, {}, false },
 	//{ "Rock Club", -558.0049f, 285.664f, 81.1764f, { "apa_ss1_11_interior_v_rockclub_milo_" }, {}, {}, false }, It's the same as "Tequi-la-la" location
@@ -216,6 +221,9 @@ std::vector<tele_location> LOCATIONS_INTERIORS = {
 	{ "Strip Club DJ Booth", 126.135f, -1278.583f, 29.270f },
 	{ "Tequi-la-la", -564.518f, 277.754f, 83.1363f },
 	{ "Torture Warehouse", 136.514f, -2203.15f, 7.30914f },
+	{ "Union Depository Corridor", -8.78971f, -656.287f, 35.4514f, { "Finbank" }, { "DT1_03_Shutter" }, {}, false },
+	{ "Union Depository Underground Parking", 23.9346f, -669.7552f, 31.8853f, { "Finbank" }, { "DT1_03_Shutter" }, {}, false },
+	{ "Union Depository Vault", 2.69689322f, -667.0166f, 16.1306286f, { "Finbank" }, {}, {}, false },
 };
 
 std::vector<const char*> IPLS_CARRIER = {
@@ -517,6 +525,7 @@ std::vector<tele_location> LOCATIONS_REQSCEN = {
 	{ "Max Renda Refit", -583.1606f, -282.3967f, 35.394f, { "refit_unload" }, { "bh1_16_doors_shut" }, {}, false },
 	{ "North Yankton", 3360.19f, -4849.67f, 111.8f, IPLS_NORTH_YANKTON, {}, {}, false },
 	{ "North Yankton Bank", 5309.519f, -5212.375f, 83.522f, IPLS_NORTH_YANKTON, {}, {}, false },
+	{ "Red Carpet", 293.314f, 180.388f, 104.297f, { "redCarpet" }, {}, {}, false },
 	{ "Simeon's Showroom", -59.7936f, -1098.784f, 27.2612f, { "shr_int" }, { "fakeint" }, {}, false },
 	{ "SS Bulker (Intact)", -163.749f, -2377.94f, 9.3192f, { "cargoship" }, { "sunkcargoship" }, {}, false },
 	{ "SS Bulker (Sunk)", -162.8918f, -2365.769f, 0.0f, { "sunkcargoship" }, { "cargoship" }, {}, false },
@@ -567,7 +576,7 @@ std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Heist Yacht", -2043.974f, -1031.582f, 11.981f, IPLS_HEISTYACHT, {}, {}, false },
 	{ "Import-Export Garage", 975.0f, -3000.0f, -40.0f, IPLS_IMPORT_EXPORT_WAREHOUSES, {}, {}, false },
 	{ "Integrity Way Apt 28", -14.7964f, -581.709f, 79.4307f, {}, {}, {}, false },
-	{ "Martin Madrazo's house", 1396.58f, 1141.79f, 114.334f }, // { "apa_ch2_03c_interior_v_ranch_milo_" }, {}, {}, false },
+	{ "Martin Madrazo's House", 1396.58f, 1141.79f, 114.334f }, // { "apa_ch2_03c_interior_v_ranch_milo_" }, {}, {}, false },
 	{ "Penthouse: Style 1", -787.7805f, 334.9232f, 215.8384f, { "apa_v_mp_h_01_a", "apa_v_mp_h_01_b", "apa_v_mp_h_01_c" }, {}, {}, false },
 	{ "Penthouse: Style 2", -787.7805f, 334.9232f, 215.8384f, { "apa_v_mp_h_02_a", "apa_v_mp_h_02_b", "apa_v_mp_h_02_c" }, {}, {}, false },
 	{ "Penthouse: Style 3", -787.7805f, 334.9232f, 215.8384f, { "apa_v_mp_h_03_a", "apa_v_mp_h_03_b", "apa_v_mp_h_03_c" }, {}, {}, false },
@@ -636,8 +645,6 @@ std::vector<tele_location> LOCATIONS_BROKEN = {
 { "FBI_colPLUG, repair, rubble", 74.29f, -736.0499877929688f, 46.76f },
 { "FBI heist", 136.00399780273438f, -749.2869873046875f, 153.302f },
 { "Director Mod Trailer", -20.004f, -10.889f, 500.602f },
-//{ "Union Depository", },
-//{ "Lester's Garment Factory", },
 };*/
 
 /*std::vector<tele_location> LOCATIONS_JELLMAN = {
