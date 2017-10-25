@@ -107,6 +107,7 @@ std::vector<tele_location> LOCATIONS_LANDMARKS = {
 	{ "Underground Entrance", -66.5357f, -538.862f, 31.7796f },
 	{ "Underground Exit", 1032.85f, -276.936f, 50.1025f },
 	{ "Ursula's House", 3352.57f, 5150.35f, 20.1294f },
+	{ "Ursula's Mother Grave", 3200.96f, 4730.4f, 193.284f },
 	{ "Weed Farm", 2208.777f, 5578.235f, 53.735f },
 	{ "Wind Farm", 2354.0f, 1830.3f, 101.1f },
 	{ "Yellow Jack Inn", 1991.74f, 3058.86f, 47.0568f },
