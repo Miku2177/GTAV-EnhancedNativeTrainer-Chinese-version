@@ -58,6 +58,7 @@ std::vector<tele_location> LOCATIONS_SAFE = {
 };
 
 std::vector<tele_location> LOCATIONS_LANDMARKS = {
+	{ "Abandoned Hotel", 1567.35f, 3566.76f, 35.4367f },
 	{ "Aerial Tramway", -740.235f, 5594.81f, 41.6546f },
 	{ "Airport Entrance", -1034.6f, -2733.6f, 13.8f },
 	{ "Airport Entrance Tower", -912.523f, -2529.81f, 41.96f },
@@ -100,6 +101,7 @@ std::vector<tele_location> LOCATIONS_LANDMARKS = {
 	{ "Mt. Chiliad Observation Desk", 501.724f, 5604.34f, 797.91f },
 	{ "Mt. Chiliad Platform", 425.4f, 5614.3f, 766.5f },
 	{ "NOOSE Headquarters", 2535.243f, -383.799f, 92.993f },
+	{ "Orange Ball Juice Stand", -455.847f, 1601.02f, 359.209f },
 	{ "Paleto Bay Pier", -275.522f, 6635.835f, 7.425f },
 	{ "Paleto Forest Sawmill", -578.305f, 5246.03f, 70.4694f },
 	{ "Palomino Highlands", 2023.69f, -1588.45f, 252.926f },
@@ -109,16 +111,21 @@ std::vector<tele_location> LOCATIONS_LANDMARKS = {
 	{ "Race", 1059.65f, 147.134f, 85.7408f },
 	{ "Sandy Shores Airfield", 1747.0f, 3273.7f, 41.1f },
 	{ "Satellite Dishes", 2062.123f, 2942.055f, 47.431f },
+	{ "Snack-Bar With Pink Dinosaur", 2569.48f, 2580.4f, 37.7605f },
 	{ "Sisyphus Theater Stage", 208.714f, 1167.75f, 227.005f },
 	{ "Trevor's Meth Lab", 1395.32f, 3597.44f, 34.9675f },
 	{ "Underground Entrance", -66.5357f, -538.862f, 31.7796f },
 	{ "Underground Exit", 1032.85f, -276.936f, 50.1025f },
+	{ "University Of San Andreas", -1644.09f, 218.244f, 60.6411f },
+	{ "Up-n-Atom Diner/Rocket", 1585.25f, 6447.69f, 25.125f },
 	{ "Ursula's House", 3352.57f, 5150.35f, 20.1294f },
 	{ "Ursula's Mother Grave", 3200.96f, 4730.4f, 193.284f },
 	{ "Vinewood Bowl Theatre Stage", 686.245f, 577.950f, 130.461f },
+	{ "Vinewood Cemetery", -1733.11f, -178.004f, 59.2933f },
 	{ "Weed Farm", 2208.777f, 5578.235f, 53.735f },
 	{ "Wind Farm", 2354.0f, 1830.3f, 101.1f },
 	{ "Yellow Jack Inn", 1991.74f, 3058.86f, 47.0568f },
+	{ "You Tool Hardware Store", 2757.12f, 3469.85f, 55.7208f },
 };
 
 // Extra locations coordinates source: "PulseR_HD" @ http://gtaforums.com/topic/789786-vrelwip-simple-trainer-enhancements-skin-detail-chooser-menu-architecture/?p=1067398379
