@@ -223,6 +223,7 @@ std::vector<tele_location> LOCATIONS_INTERIORS = {
 	{ "FIB Building Top Floor", 135.733f, -749.216f, 258.152f },
 	{ "Garment Factory", 718.162f, -974.51f, 25.9142f, { "id2_14_during1" }, {}, {}, false },
 	{ "Hospital (Destroyed)", 302.651f, -586.293f, 43.3129f, { "RC12B_Destroyed", "RC12B_HospitalInterior" }, { "RC12B_Default", "RC12B_Fixed" }, {}, false },
+	{ "Howitzer's The Motor Motel Room", 152.2943f, -1004.391f, -100.0f, { "hei_hw1_blimp_interior_v_motel_mp_milo_" }, {}, {}, false },
 	{ "Humane Labs Lower Level", 3525.495f, 3705.301f, 20.992f },
 	{ "Humane Labs Upper Level", 3542.94f, 3670.83f, 28.1211f },
 	{ "IAA Office", 116.389f, -632.25f, 206.047f },
@@ -234,6 +235,7 @@ std::vector<tele_location> LOCATIONS_INTERIORS = {
 	//{ "Maze Bank Arena", -254.918f, -2019.75f, 30.1456f },
 	{ "Morgue", 275.446f, -1361.11f, 24.5378f, { "Coroner_Int_on" }, { "Coroner_Int_off" }, {}, false },
 	{ "O'Neil Farm", 2454.78f, 4971.92f, 46.8103f, { "farm", "farm_props", "farmint" }, { "farm_burnt", "farm_burnt_props", "farmint_cap" }, {}, false },
+	{ "Online Character Creator Interior", 402.3881f, -997.4287f, -100.0f, { "hw1_int_placement_interior_v_mugshot_milo_ " }, {}, {}, false },
 	{ "Pacific Standard Bank", 235.046f, 216.434f, 106.287f },
 	{ "Pacific Standard Bank Vault", 255.851f, 217.030f, 101.683f },
 	{ "Paleto Bay Sheriff", -446.135f, 6012.91f, 31.7164f },
@@ -246,11 +248,14 @@ std::vector<tele_location> LOCATIONS_INTERIORS = {
 	//{ "Rock Club", -558.0049f, 285.664f, 81.1764f, { "apa_ss1_11_interior_v_rockclub_milo_" }, {}, {}, false }, It's the same as "Tequi-la-la" location
 	{ "Stadium", -248.4916f, -2010.509f, 34.5743f, { "SP1_10_real_interior" }, { "SP1_10_fake_interior" }, {}, false },
 	{ "Strip Club DJ Booth", 126.135f, -1278.583f, 29.270f },
+	{ "Studio Flat", 260.3297f, -997.4288f, -100.0f, { "hei_hw1_blimp_interior_v_studio_lo_milo_" }, {}, {}, false },
 	{ "Tequi-la-la", -564.518f, 277.754f, 83.1363f },
 	{ "Torture Warehouse", 136.514f, -2203.15f, 7.30914f },
 	{ "Union Depository Corridor", -8.78971f, -656.287f, 35.4514f, { "Finbank" }, { "DT1_03_Shutter" }, {}, false },
 	{ "Union Depository Underground Parking", 23.9346f, -669.7552f, 31.8853f, { "Finbank" }, { "DT1_03_Shutter" }, {}, false },
 	{ "Union Depository Vault", 2.69689322f, -667.0166f, 16.1306286f, { "Finbank" }, {}, {}, false },
+	//{ "midspaz", 342.8157f, -997.4288f, -100.0f, { "hei_hw1_blimp_interior_v_apart_midspaz_milo_ " }, {}, {}, false },
+	//{ "garagem", 199.9716f, -1018.954f, -100.0f, { "hei_hw1_blimp_interior_v_garagem_sp_milo_ " }, {}, {}, false },
 };
 
 std::vector<const char*> IPLS_CARRIER = {
