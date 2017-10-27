@@ -581,15 +581,15 @@ std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "CEO Garage Modshop", 730.0f, -2990.0f, -40.0f, { "imp_impexp_interior_placement_interior_2_imptexp_mod_int_01_milo_" }, {}, {}, false },//No ceiling, floor, walls textures.
 	{ "Del Perro Heights Apt 28", -1468.14f, -541.815f, 73.4442f, {}, {}, {}, false },
 	{ "Eclipse Towers Apt 3", -773.407f, 341.766f, 211.397f, {}, {}, {}, false },
-	{ "Executive CEO Office: Style 1", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_02_office_01a" }, {}, { "" }, false },
-	{ "Executive CEO Office: Style 2", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_02_office_01b" }, {}, { "" }, false },
-	{ "Executive CEO Office: Style 3", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_02_office_01c" }, {}, { "" }, false },
-	{ "Executive CEO Office: Style 4", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_02_office_02a" }, {}, { "" }, false },
-	{ "Executive CEO Office: Style 5", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_02_office_02b" }, {}, { "" }, false },
-	{ "Executive CEO Office: Style 6", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_02_office_02c" }, {}, { "" }, false },
-	{ "Executive CEO Office: Style 7", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_02_office_03a" }, {}, { "" }, false },
-	{ "Executive CEO Office: Style 8", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_02_office_03b" }, {}, { "" }, false },
-	{ "Executive CEO Office: Style 9", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_02_office_03c" }, {}, { "" }, false },
+	{ "Executive CEO Office: Style 1", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_01a" }, {}, {}, false }, //ex_dt1_11_office_01a[b, c....]
+	{ "Executive CEO Office: Style 2", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_01b" }, {}, {}, false },
+	{ "Executive CEO Office: Style 3", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_01c" }, {}, {}, false },
+	{ "Executive CEO Office: Style 4", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_02a" }, {}, {}, false },
+	{ "Executive CEO Office: Style 5", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_02_office_02b" }, {}, {}, false },
+	{ "Executive CEO Office: Style 6", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_02c" }, {}, {}, false },
+	{ "Executive CEO Office: Style 7", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_03a" }, {}, {}, false },
+	{ "Executive CEO Office: Style 8", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_03b" }, {}, {}, false },
+	{ "Executive CEO Office: Style 9", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_03c" }, {}, {}, false },
 	{ "Executive CEO Office: Style 1 (Messy)", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_01a" }, {}, { IPL_PROPS_CEO_OFFICE }, false },
 	{ "Executive CEO Office: Style 2 (Messy)", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_01b" }, {}, { IPL_PROPS_CEO_OFFICE }, false },
 	{ "Executive CEO Office: Style 3 (Messy)", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_01c" }, {}, { IPL_PROPS_CEO_OFFICE }, false },
@@ -1044,16 +1044,19 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 					STREAMING::REQUEST_IPL(scenery);
 				}
 			}
-			for each (char* prop in value->scenery_props){
-				int interiorID = INTERIOR::GET_INTERIOR_AT_COORDS(coords.x, coords.y, coords.z);
+			if (value->scenery_props.size() > 0)
+			{
+				for each (char* prop in value->scenery_props){
+					int interiorID = INTERIOR::GET_INTERIOR_AT_COORDS(coords.x, coords.y, coords.z);
 #
-				if (!INTERIOR::_IS_INTERIOR_PROP_ENABLED(interiorID, prop))
-				{
-					INTERIOR::_ENABLE_INTERIOR_PROP(interiorID, prop);
-				}
-				else //if (interiorID != INTERIOR::GET_INTERIOR_AT_COORDS(coords.x, coords.y, coords.z))
-				{
-					INTERIOR::_DISABLE_INTERIOR_PROP(interiorID, prop);
+					if (!INTERIOR::_IS_INTERIOR_PROP_ENABLED(interiorID, prop))
+					{
+						INTERIOR::_ENABLE_INTERIOR_PROP(interiorID, prop);
+					}
+					else //if (interiorID != INTERIOR::GET_INTERIOR_AT_COORDS(coords.x, coords.y, coords.z))
+					{
+						INTERIOR::_DISABLE_INTERIOR_PROP(interiorID, prop);
+					}
 				}
 			}
 		}

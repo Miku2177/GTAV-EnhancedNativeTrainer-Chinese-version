@@ -546,7 +546,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 	if ((version > 33) && (version < 36)) *getGlobalPtr(2599337) = 1;
 
-	if (version > 36) *getGlobalPtr(2606794) = 1;
+	if (version > 35) *getGlobalPtr(2606794) = 1;
 
 
 	if(featureDespawnScriptDisabledUpdated){
