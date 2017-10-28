@@ -66,77 +66,122 @@ std::vector<const char*> IPLS_HEISTYACHT = {
 };
 
 std::vector<const char*> IPLS_HEIST_APT_1 = {
-	"hw1_blimp_interior_v_apartment_high_milo_",
-	"hw1_blimp_interior_v_apartment_high_milo__1",
-	"hw1_blimp_interior_v_apartment_high_milo__2",
-	"hw1_blimp_interior_v_apartment_high_milo__3",
-	"hw1_blimp_interior_v_apartment_high_milo__4",
-	"hw1_blimp_interior_v_apartment_high_milo__5",
-	"hw1_blimp_interior_v_apartment_high_milo__6",
-	"hw1_blimp_interior_v_apartment_high_milo__7",
-	"hw1_blimp_interior_v_apartment_high_milo__8",
-	"hw1_blimp_interior_v_apartment_high_milo__9",
-	"hw1_blimp_interior_v_apartment_high_milo__10",
-	"hw1_blimp_interior_v_apartment_high_milo__11",
-	"hw1_blimp_interior_v_apartment_high_milo__12",
-	"hw1_blimp_interior_v_apartment_high_milo__13",
-	"hw1_blimp_interior_v_apartment_high_milo__14",
-	"hw1_blimp_interior_v_apartment_high_milo__15",
-	"hw1_blimp_interior_v_apartment_high_milo__16",
-	"hw1_blimp_interior_v_apartment_high_milo__17",
-	"hw1_blimp_interior_v_apartment_high_milo__18",
-	"hw1_blimp_interior_v_apartment_high_milo__19"
+	"hw1_blimp_interior_v_apartment_high_milo_",// 300.63300000f, -997.42880000f, -100.00000000f
+	"hw1_blimp_interior_v_apartment_high_milo__1",// -13.08014000f, -593.61680000f, 93.02542000f
+	"hw1_blimp_interior_v_apartment_high_milo__2",// -32.17249000f, -579.01830000f, 82.90740000f
+	"hw1_blimp_interior_v_apartment_high_milo__3",// -282.30380000f, -954.78150000f, 85.30347000
+	"hw1_blimp_interior_v_apartment_high_milo__4",// -260.88210000f, -953.55720000f, 70.02390000f
+	"hw1_blimp_interior_v_apartment_high_milo__5",// -475.04570000f, -706.68080000f, 46.19837000f
+	"hw1_blimp_interior_v_apartment_high_milo__6",// -460.61330000f, -691.55620000f, 69.87947000f
+	"hw1_blimp_interior_v_apartment_high_milo__7",// -892.29590000f, -434.41470000f, 88.25368000f
+	"hw1_blimp_interior_v_apartment_high_milo__8",// -904.56690000f, -377.00050000f, 78.27306000f
+	"hw1_blimp_interior_v_apartment_high_milo__9",// -909.10170000f, -438.19030000f, 114.39970000f
+	"hw1_blimp_interior_v_apartment_high_milo__10",// -925.54970000f, -374.22030000f, 102.23290000f
+	"hw1_blimp_interior_v_apartment_high_milo__11",// -889.30300000f, -451.77510000f, 119.32700000f
+	"hw1_blimp_interior_v_apartment_high_milo__12",// -791.29410000f, 338.07100000f, 200.41350000f
+	"hw1_blimp_interior_v_apartment_high_milo__13",// -764.81310000f, 319.18510000f, 216.05030000f
+	"hw1_blimp_interior_v_apartment_high_milo__14",// -791.76130000f, 338.46320000f, 152.79410000f
+	"hw1_blimp_interior_v_apartment_high_milo__15",// -764.72250000f, 319.18510000f, 169.59630000f
+	"hw1_blimp_interior_v_apartment_high_milo__16",// -613.54040000f, 63.04870000f, 100.81960000f
+	"hw1_blimp_interior_v_apartment_high_milo__17",// -587.82590000f, 44.26880000f, 86.41870000f
+	"hw1_blimp_interior_v_apartment_high_milo__18",// -1468.02100000f, -529.94380000f, 62.34918000f
+	"hw1_blimp_interior_v_apartment_high_milo__19"// -1468.02100000f, -529.94380000f, 49.72156000f
 };
 
 std::vector<const char*> IPLS_HEIST_APT_2 = {
-	"hei_hw1_blimp_interior_8_dlc_apart_high_new_milo_",
-	"hei_hw1_blimp_interior_9_dlc_apart_high_new_milo_",
-	"hei_hw1_blimp_interior_10_dlc_apart_high_new_milo_",
-	"hei_hw1_blimp_interior_11_dlc_apart_high_new_milo_",
-	"hei_hw1_blimp_interior_12_dlc_apart_high_new_milo_",
-	"hei_hw1_blimp_interior_13_dlc_apart_high_new_milo_",
-	"hei_hw1_blimp_interior_14_dlc_apart_high_new_milo_",
-	"hei_hw1_blimp_interior_15_dlc_apart_high_new_milo_",
-	"hei_hw1_blimp_interior_16_dlc_apart_high_new_milo_",
-	"hei_hw1_blimp_interior_17_dlc_apart_high_new_milo_",
-	"hei_hw1_blimp_interior_18_dlc_apart_high_new_milo_",
-	"hei_hw1_blimp_interior_19_dlc_apart_high_new_milo_",
-	"hei_hw1_blimp_interior_20_dlc_apart_high_new_milo_",
-	"hei_hw1_blimp_interior_21_dlc_apart_high_new_milo_",
-	"hei_hw1_blimp_interior_22_dlc_apart_high_new_milo_",
-	"hei_hw1_blimp_interior_23_dlc_apart_high_new_milo_",
-	"hei_hw1_blimp_interior_24_dlc_apart_high_new_milo_",
-	"hei_hw1_blimp_interior_25_dlc_apart_high_new_milo_",
-	"hei_hw1_blimp_interior_26_dlc_apart_high_new_milo_",
-	"hei_hw1_blimp_interior_27_dlc_apart_high_new_milo_"
+	"hei_hw1_blimp_interior_8_dlc_apart_high_new_milo_",// 300.63300000f, -997.42880000f, -100.00000000f
+	"hei_hw1_blimp_interior_9_dlc_apart_high_new_milo_",// -13.08014000f, -593.61680000f, 93.02542000f
+	"hei_hw1_blimp_interior_10_dlc_apart_high_new_milo_",// -32.17249000f, -579.01830000f, 82.90740000f
+	"hei_hw1_blimp_interior_11_dlc_apart_high_new_milo_",// -282.30390000f, -954.78150000f, 85.30347000f
+	"hei_hw1_blimp_interior_12_dlc_apart_high_new_milo_",// -260.88210000f, -953.55720000f, 70.02390000f
+	"hei_hw1_blimp_interior_13_dlc_apart_high_new_milo_",// -475.04560000f, -706.68080000f, 46.19837000f
+	"hei_hw1_blimp_interior_14_dlc_apart_high_new_milo_",// -460.61330000f, -691.55620000f, 69.87947000f
+	"hei_hw1_blimp_interior_15_dlc_apart_high_new_milo_",// -892.29590000f, -434.41470000f, 88.25368000f
+	"hei_hw1_blimp_interior_16_dlc_apart_high_new_milo_",// -904.56680000f, -377.00050000f, 78.27306000f
+	"hei_hw1_blimp_interior_17_dlc_apart_high_new_milo_",// -909.10180000f, -438.19030000f, 114.39970000f
+	"hei_hw1_blimp_interior_18_dlc_apart_high_new_milo_",// -925.54970000f, -374.22030000f, 102.23290000f
+	"hei_hw1_blimp_interior_19_dlc_apart_high_new_milo_",// -889.30290000f, -451.77500000f, 119.32700000f
+	"hei_hw1_blimp_interior_20_dlc_apart_high_new_milo_",// -791.29410000f, 338.07100000f, 200.41350000f
+	"hei_hw1_blimp_interior_21_dlc_apart_high_new_milo_",// -764.81310000f, 319.18510000f, 216.05020000f
+	"hei_hw1_blimp_interior_22_dlc_apart_high_new_milo_",// -791.76130000f, 338.46320000f, 152.79410000f
+	"hei_hw1_blimp_interior_23_dlc_apart_high_new_milo_",// -764.72260000f, 319.18510000f, 169.59630000f
+	"hei_hw1_blimp_interior_24_dlc_apart_high_new_milo_",// -613.54050000f, 63.04870000f, 100.81960000f
+	"hei_hw1_blimp_interior_25_dlc_apart_high_new_milo_",// -587.82590000f, 44.26880000f, 86.41870000f
+	"hei_hw1_blimp_interior_26_dlc_apart_high_new_milo_",// -1468.02100000f, -529.94370000f, 62.34918000f
+	"hei_hw1_blimp_interior_27_dlc_apart_high_new_milo_",// -1468.02100000f, -529.94370000f, 49.72156000f
 };
 
 std::vector<const char*> IPLS_HEIST_APT_3 = {
 	"mpbusiness_int_placement",
-	"mpbusiness_int_placement_interior_v_mp_apt_h_01_milo_",
-	"mpbusiness_int_placement_interior_v_mp_apt_h_01_milo__1",
-	"mpbusiness_int_placement_interior_v_mp_apt_h_01_milo__2",
-	"mpbusiness_int_placement_interior_v_mp_apt_h_01_milo__3",
-	"mpbusiness_int_placement_interior_v_mp_apt_h_01_milo__4",
-	"mpbusiness_int_placement_interior_v_mp_apt_h_01_milo__5"
+	"mpbusiness_int_placement_interior_v_mp_apt_h_01_milo_",// -1462.28100000f, -539.62760000f, 72.44434000f
+	"mpbusiness_int_placement_interior_v_mp_apt_h_01_milo__1",// -914.90260000f, -374.87310000f, 112.67480000f
+	"mpbusiness_int_placement_interior_v_mp_apt_h_01_milo__2",// -609.56690000f, 51.28212000f, 96.60023000f
+	"mpbusiness_int_placement_interior_v_mp_apt_h_01_milo__3",// -778.50610000f, 331.31600000f, 210.39720000f
+	"mpbusiness_int_placement_interior_v_mp_apt_h_01_milo__4",// -22.61353000f, -590.14320000f, 78.43091000f
+	"mpbusiness_int_placement_interior_v_mp_apt_h_01_milo__5"// -609.56690000f, 51.28212000f, -183.98080000f
 };
 
 std::vector<const char*> IPLS_HEIST_APT_4 = {
-	"hei_hw1_blimp_interior_28_dlc_apart_high2_new_milo",
-	"hei_hw1_blimp_interior_29_dlc_apart_high2_new_milo",
-	"hei_hw1_blimp_interior_30_dlc_apart_high2_new_milo",
-	"hei_hw1_blimp_interior_31_dlc_apart_high2_new_milo",
-	"hei_hw1_blimp_interior_32_dlc_apart_high2_new_milo",
-	"hei_hw1_blimp_interior_33_dlc_apart_high2_new_milo",
+	"hei_hw1_blimp_interior_28_dlc_apart_high_new_milo_",// -1462.28100000f, -539.62760000f, 72.44433000f
+	"hei_hw1_blimp_interior_29_dlc_apart_high_new_milo_",// -914.90250000f, -374.87310000f, 112.67480000f
+	"hei_hw1_blimp_interior_30_dlc_apart_high_new_milo_",// -609.56680000f, 51.28211000f, 96.60022000f
+	"hei_hw1_blimp_interior_31_dlc_apart_high_new_milo_",// -778.50600000f, 331.31600000f, 210.39720000f
+	"hei_hw1_blimp_interior_32_dlc_apart_high_new_milo_",// -22.61353000f, -590.14320000f, 78.43091000f
+	"hei_hw1_blimp_interior_33_dlc_apart_high_new_milo_",// -609.56680000f, 51.28211000f, -183.98080000f
 };
 
 std::vector<const char*> IPLS_HEIST_APT_5 = {
-	"hei_mpheist_int_placement_interior_20_dlc_apart_high2_new_milo_",
-	"hei_mpheist_int_placement_interior_21_dlc_apart_high2_new_milo_",
-	"hei_mpheist_int_placement_interior_22_dlc_apart_high2_new_milo_",
-	"hei_mpheist_int_placement_interior_23_dlc_apart_high2_new_milo_",
-	"hei_mpheist_int_placement_interior_24_dlc_apart_high2_new_milo_",
-	"hei_mpheist_int_placement_interior_25_dlc_apart_high2_new_milo_",
+	"hei_mpheist_int_placement_interior_0_dlc_apart_high2_new_milo_",// 300.63300000f, -997.42880000f, -100.00000000f
+	"hei_mpheist_int_placement_interior_1_dlc_apart_high2_new_milo_",// -13.08014000f, -593.61680000f, 93.02542000f
+	"hei_mpheist_int_placement_interior_2_dlc_apart_high2_new_milo_",// -32.17249000f, -579.01830000f, 82.90740000f
+	"hei_mpheist_int_placement_interior_3_dlc_apart_high2_new_milo_",// -282.30380000f, -954.78150000f, 85.30347000f
+	"hei_mpheist_int_placement_interior_4_dlc_apart_high2_new_milo_",// -260.88210000f, -953.55720000f, 70.02390000f
+	"hei_mpheist_int_placement_interior_5_dlc_apart_high2_new_milo_",// -475.04570000f, -706.68080000f, 46.19837000f
+	"hei_mpheist_int_placement_interior_6_dlc_apart_high2_new_milo_",// -460.61330000f, -691.55620000f, 69.87947000f
+	"hei_mpheist_int_placement_interior_7_dlc_apart_high2_new_milo_",// -892.29590000f, -434.41470000f, 88.25368000f
+	"hei_mpheist_int_placement_interior_8_dlc_apart_high2_new_milo_",// -904.56690000f, -377.00050000f, 78.27306000f
+	"hei_mpheist_int_placement_interior_9_dlc_apart_high2_new_milo_",// -909.10170000f, -438.19030000f, 114.39970000f
+	"hei_mpheist_int_placement_interior_10_dlc_apart_high2_new_milo_",// -925.54970000f, -374.22030000f, 102.23290000f
+	"hei_mpheist_int_placement_interior_11_dlc_apart_high2_new_milo_",// -889.30300000f, -451.77510000f, 119.32700000f
+	"hei_mpheist_int_placement_interior_12_dlc_apart_high2_new_milo_",// -791.29410000f, 338.07100000f, 200.41350000f
+	"hei_mpheist_int_placement_interior_13_dlc_apart_high2_new_milo_",// -764.81310000f, 319.18510000f, 216.05030000f
+	"hei_mpheist_int_placement_interior_14_dlc_apart_high2_new_milo_",// -791.76130000f, 338.46320000f, 152.79410000f
+	"hei_mpheist_int_placement_interior_15_dlc_apart_high2_new_milo_",// -764.72250000f, 319.18510000f, 169.59630000f
+	"hei_mpheist_int_placement_interior_16_dlc_apart_high2_new_milo_",// -613.54040000f, 63.04870000f, 100.81960000f
+	"hei_mpheist_int_placement_interior_17_dlc_apart_high2_new_milo_",// -587.82590000f, 44.26880000f, 86.41870000f
+	"hei_mpheist_int_placement_interior_18_dlc_apart_high2_new_milo_",// -1468.02100000f, -529.94380000f, 62.34918000f
+	"hei_mpheist_int_placement_interior_19_dlc_apart_high2_new_milo_",// -1468.02100000f, -529.94380000f, 49.72156000f
+	"hei_mpheist_int_placement_interior_20_dlc_apart_high2_new_milo_",// -1462.28100000f, -539.62760000f, 72.44434000f
+	"hei_mpheist_int_placement_interior_21_dlc_apart_high2_new_milo_",// -914.90260000f, -374.87310000f, 112.67480000f
+	"hei_mpheist_int_placement_interior_22_dlc_apart_high2_new_milo_",// -609.56690000f, 51.28212000f, 96.60023000f
+	"hei_mpheist_int_placement_interior_23_dlc_apart_high2_new_milo_",// -778.50610000f, 331.31600000f, 210.39720000f
+	"hei_mpheist_int_placement_interior_24_dlc_apart_high2_new_milo_",// -22.61353000f, -590.14320000f, 78.43091000f
+	"hei_mpheist_int_placement_interior_25_dlc_apart_high2_new_milo_",// -609.56690000f, 51.28212000f, -183.98080000f
+};
+
+std::vector<const char*> IPLS_BIKER_TUNNEL = {
+	"bkr_id1_11_interior_id1_11_tunnel1_int",// 826.98910000f, -1617.15200000f, 21.70428000f
+	"bkr_id1_11_interior_id1_11_tunnel2_int",// 829.75200000f, -1718.51200000f, 22.55545000f
+	"bkr_id1_11_interior_id1_11_tunnel3_int",// 815.85230000f, -1832.20300000f, 24.56372000f
+	"bkr_id1_11_interior_id1_11_tunnel4_int",// 788.93970000f, -1963.58000000f, 24.56372000f
+	"bkr_id1_11_interior_id1_11_tunnel5_int",// 769.88880000f, -2124.23800000f, 23.50781000f
+	"bkr_id1_11_interior_id1_11_tunnel6_int",// 758.95660000f, -2260.08300000f, 24.01923000f
+	"bkr_id1_11_interior_id1_11_tunnel7_int",// 749.49420000f, -2364.78900000f, 15.36389000f
+	"bkr_id1_11_interior_id1_11_tunnel8_int"// 732.46500000f, -2486.45200000f, 12.20399000f
+};
+
+std::vector<const char*> IPLS_GUNRUNNING_INTERIOR = {
+	"gr_grdlc_interior_placement_interior_0_grdlc_int_01_milo_",// 1103.56200000f, -3000.00000000f, -40.00000000f
+	"gr_grdlc_interior_placement_interior_1_grdlc_int_02_milo_",// 938.30770000f, -3196.11200000f, -100.00000000f
+	"gr_grdlc_interior_placement",
+	"DLC_GR_Bunker_Interior"
+};
+
+std::vector<const char*> IPLS_IMPORT_EXPORT_WAREHOUSES = {
+	"imp_impexp_interior_placement_interior_0_impexp_int_01_milo_",// 795.00000000f, -3000.00000000f, -40.00000000f
+	"imp_impexp_interior_placement_interior_1_impexp_intwaremed_milo_",// 975.00000000f, -3000.00000000f, -40.00000000f
+	"imp_impexp_interior_placement_interior_2_imptexp_mod_int_01_milo_",// 730.00000000f, -2990.00000000f, -40.00000000f
+	"imp_impexp_interior_placement_interior_3_impexp_int_02_milo_"// 969.53760000f, -3000.41100000f, -48.64689000f
 };
 
 std::vector<const char*> IPLS_NORTH_YANKTON = {
@@ -235,31 +280,6 @@ std::vector<const char*> IPLS_GUNRUNNING_YACHT_TEST = {
 	"gr_heist_yacht2_bar",
 	"gr_heist_yacht2_bar_lod",
 	"gr_heist_yacht2_slod",
-};
-
-std::vector<const char*> IPLS_BIKER_TUNNEL = {
-	"bkr_id1_11_interior_id1_11_tunnel1_int",
-	"bkr_id1_11_interior_id1_11_tunnel2_in",
-	"bkr_id1_11_interior_id1_11_tunnel3_int",
-	"bkr_id1_11_interior_id1_11_tunnel4_int",
-	"bkr_id1_11_interior_id1_11_tunnel5_int",
-	"bkr_id1_11_interior_id1_11_tunnel6_int",
-	"bkr_id1_11_interior_id1_11_tunnel7_int",
-	"bkr_id1_11_interior_id1_11_tunnel8_int"
-};
-
-std::vector<const char*> IPLS_GUNRUNNING_INTERIOR = {
-	"gr_grdlc_interior_placement_interior_0_grdlc_int_01_milo_",
-	"gr_grdlc_interior_placement_interior_1_grdlc_int_02_milo_",
-	"gr_grdlc_interior_placement",
-	"DLC_GR_Bunker_Interior"
-};
-
-std::vector<const char*> IPLS_IMPORT_EXPORT_WAREHOUSES = {
-	"imp_impexp_interior_placement_interior_0_impexp_int_01_milo_",
-	"imp_impexp_interior_placement_interior_1_impexp_intwaremed_milo_",
-	"imp_impexp_interior_placement_interior_2_imptexp_mod_int_01_milo_",
-	"imp_impexp_interior_placement_interior_3_impexp_int_02_milo_"
 };
 
 std::vector<char*> IPL_PROPS_CEO_OFFICE = {
@@ -508,10 +528,10 @@ std::vector<tele_location> LOCATIONS_INTERIORS = {
 	//{ "Control Office", 1080.97f, -1976.0f, 31.4721f }, It's the same as "Foundry" location
 	{ "Devin's Garage", 482.027f, -1317.96f, 29.2021f },
 	{ "Dr. Friedlander's Office", -1902.39f, -572.832f, 19.0972f },
-	{ "Eclipse Apartment 5", -762.762f, 322.634f, 175.401f },
-	{ "Eclipse Apartment 9", -790.673f, 334.468f, 158.599f },
-	{ "Eclipse Apartment 31", -762.762f, 322.634f, 221.855f },
-	{ "Eclipse Apartment 40", -790.673f, 334.468f, 206.218f },
+	//{ "Eclipse Apartment 5", -773.023f, 341.627f, 211.397f },
+	//{ "Eclipse Apartment 9", -773.023f, 341.627f, 211.397f },
+	//{ "Eclipse Apartment 31", -773.023f, 341.627f, 211.397 },
+	{ "Eclipse Apartment 40", -773.023f, 341.627f, 211.397f },
 	{ "FIB Building Burnt", 159.553f, -738.851f, 246.152f },
 	{ "FIB Building Floor 47", 134.573f, -766.486f, 234.152f },
 	{ "FIB Building Floor 49", 134.635f, -765.831f, 242.152f },
@@ -524,7 +544,7 @@ std::vector<tele_location> LOCATIONS_INTERIORS = {
 	{ "Humane Labs Upper Level", 3542.94f, 3670.83f, 28.1211f },
 	{ "IAA Office", 116.389f, -632.25f, 206.047f },
 	{ "Ice Planet Jewelery", 243.516f, 364.099f, 105.738f },
-	{ "Janitor's Apartment", -110.721f, -8.22095f, 70.5197f },
+	{ "Janitor's Apartment", -110.721f, -8.22095f, 70.5197f/*, { "ss1_05_interior_v_janitor_milo_" }, { "ss1_05_strm_1" }, {}, false*/ }, // No need to load a scenario anymore
 	{ "Jewel Store", -630.07f, -236.332f, 38.0571f, { "post_hiest_unload" }, { "jewel2fake", "bh1_16_refurb" }, {}, false },
 	{ "Lester's House", 1273.898f, -1719.304f, 54.771f },
 	{ "Life Invader Office", -1049.13f, -231.779f, 39.0144f, { "facelobby" }, { "facelobbyfake" }, {}, false },
@@ -579,13 +599,14 @@ std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Biker Warehouse: Money Printer 2", 1124.734f, -3196.597f, -39.99353f, { "bkr_biker_interior_placement_interior_5_biker_dlc_int_ware04_milo_" }, {}, {}, false },
 	{ "Biker Warehouse: Weed Farm", 1059.028f, -3201.89f, -39.99353f, { "bkr_biker_interior_placement_interior_3_biker_dlc_int_ware02_milo_" }, {}, {}, false },
 	{ "CEO Garage Modshop", 730.0f, -2990.0f, -40.0f, { "imp_impexp_interior_placement_interior_2_imptexp_mod_int_01_milo_" }, {}, {}, false },//No ceiling, floor, walls textures.
+	{ "Del Perro Heights Apt 27", -1468.02100000f, -529.94370000f, 49.72156000f, { "hei_hw1_blimp_interior_27_dlc_apart_high_new_milo_" }, {}, {}, false },
 	{ "Del Perro Heights Apt 28", -1468.14f, -541.815f, 73.4442f, {}, {}, {}, false },
-	{ "Eclipse Towers Apt 3", -773.407f, 341.766f, 211.397f, {}, {}, {}, false },
+	//{ "Eclipse Towers Apt 3", -773.407f, 341.766f, 211.397f, {}, {}, {}, false }, //it's te same as "Eclipse Apartment 40"
 	{ "Executive CEO Office: Style 1", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_01a" }, {}, {}, false }, //ex_dt1_11_office_01a[b, c....]
 	{ "Executive CEO Office: Style 2", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_01b" }, {}, {}, false },
 	{ "Executive CEO Office: Style 3", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_01c" }, {}, {}, false },
 	{ "Executive CEO Office: Style 4", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_02a" }, {}, {}, false },
-	{ "Executive CEO Office: Style 5", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_02_office_02b" }, {}, {}, false },
+	{ "Executive CEO Office: Style 5", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_02b" }, {}, {}, false },
 	{ "Executive CEO Office: Style 6", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_02c" }, {}, {}, false },
 	{ "Executive CEO Office: Style 7", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_03a" }, {}, {}, false },
 	{ "Executive CEO Office: Style 8", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_03b" }, {}, {}, false },
@@ -602,16 +623,18 @@ std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Executive Warehouse (Small)", 1095.0f, -3100.0f, -40.0f, { "ex_exec_warehouse_placement_interior_1_int_warehouse_s_dlc_milo_" }, {}, {}, false },
 	{ "Executive Warehouse (Medium)", 1060.0f, -3100.0f, -40.0f, { "ex_exec_warehouse_placement_interior_0_int_warehouse_m_dlc_milo_" }, {}, {}, false },
 	{ "Executive Warehouse (Large)", 1010.0f, -3100.0f, -40.0f, { "ex_exec_warehouse_placement_interior_2_int_warehouse_l_dlc_milo_" }, {}, {}, false },
-	{ "Foundry", 1082.32f, -1975.65f, 31.4724f }, //{ "bkr_id1_17_interior_v_foundry_milo_" }, {}, {}, false },
-	{ "Gun Runnning Bunker", 938.3077f, -3196.112f, -100.0f, { "DLC_GR_Bunker_Interior" }, {}, { "Bunker_Style_C", "upgrade_bunker_set", "security_upgrade", "Office_Upgrade_set", "Gun_schematic_set" }, false },
-	{ "Gun Runnning MOC", 1103.562f, -3000.0f, -40.0f, { "gr_grdlc_interior_placement_interior_0_grdlc_int_01_milo_" }, {}, {}, false },
+	{ "Foundry", 1082.32f, -1975.65f, 31.4724f }, //{ "bkr_id1_17_interior_v_foundry_milo_" }, {}, {}, false }, Not need. It's already in the game
+	//{ "Gun Runnning Bunker", 938.3077f, -3196.112f, -100.0f, { "DLC_GR_Bunker_Interior" }, {}, { "Bunker_Style_C", "upgrade_bunker_set", "security_upgrade", "Office_Upgrade_set", "Gun_schematic_set" }, false }, //No interior at all
+	//{ "Gun Runnning MOC", 1103.562f, -3000.0f, -40.0f, { "gr_grdlc_interior_placement_interior_0_grdlc_int_01_milo_" }, {}, {}, false }, //No interior at all
 	{ "Heist Police Station", 445.488f, -983.779f, 30.6896f, { "" }, {}, {}, false },
 	{ "Heist Yacht", -2043.974f, -1031.582f, 11.981f, IPLS_HEISTYACHT, {}, {}, false },
 	{ "Import-Export Garage", 975.0f, -3000.0f, -40.0f, IPLS_IMPORT_EXPORT_WAREHOUSES, {}, {}, false },
+	{ "Integrity Way Apt 10", -32.17249000f, -579.01830000f, 82.90740000f, { "hei_hw1_blimp_interior_10_dlc_apart_high_new_milo_" }, {}, {}, false },
 	{ "Integrity Way Apt 28", -14.7964f, -581.709f, 79.4307f, {}, {}, {}, false },
+	{ "Jetsam Interior", 795.00000000f, -3000.00000000f, -40.00000000f, { "imp_impexp_interior_placement_interior_0_impexp_int_01_milo_" }, {}, {}, false },
 	{ "Martin Madrazo's House", 1396.58f, 1141.79f, 114.334f }, // { "apa_ch2_03c_interior_v_ranch_milo_" }, {}, {}, false },
 	{ "Online Character Creator Interior", 415.275f, -999.037f, -99.4041f, { "hw1_int_placement_interior_v_mugshot_milo_ " }, {}, {}, false },
-	{ "Penthouse: Style 1", -787.7805f, 334.9232f, 215.8384f, { "apa_v_mp_h_01_a", "apa_v_mp_h_01_b", "apa_v_mp_h_01_c" }, {}, {}, false },
+	//{ "Penthouse: Style 1", -787.7805f, 334.9232f, 215.8384f, { "apa_v_mp_h_01_a", "apa_v_mp_h_01_b", "apa_v_mp_h_01_c" }, {}, {}, false }, //No interior at all
 	{ "Penthouse: Style 2", -787.7805f, 334.9232f, 215.8384f, { "apa_v_mp_h_02_a", "apa_v_mp_h_02_b", "apa_v_mp_h_02_c" }, {}, {}, false },
 	{ "Penthouse: Style 3", -787.7805f, 334.9232f, 215.8384f, { "apa_v_mp_h_03_a", "apa_v_mp_h_03_b", "apa_v_mp_h_03_c" }, {}, {}, false },
 	{ "Penthouse: Style 4", -787.7805f, 334.9232f, 215.8384f, { "apa_v_mp_h_04_a", "apa_v_mp_h_04_b", "apa_v_mp_h_04_c" }, {}, {}, false },
@@ -637,6 +660,7 @@ std::vector<tele_location> LOCATIONS_ONLINE = {
 	//{ "midspaz", 342.8157f, -997.4288f, -99.4041f, { "hei_hw1_blimp_interior_v_apart_midspaz_milo_" }, {}, {}, false },
 	//{ "garagem", 199.9716f, -1018.954f, -99.4041f, { "hei_hw1_blimp_interior_v_garagem_sp_milo_" }, {}, {}, false },
 	//{ "garagem2", 199.9716f, -1018.954f, -99.4041f, { "hei_po1_lod" }, {}, {}, false },
+	//
 };
 
 std::vector<tele_location> LOCATIONS_ACTORS = {
