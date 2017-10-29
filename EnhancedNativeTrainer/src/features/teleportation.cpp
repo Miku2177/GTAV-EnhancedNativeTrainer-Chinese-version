@@ -539,9 +539,7 @@ std::vector<tele_location> LOCATIONS_UNDERWATER = {
 };
 
 std::vector<tele_location> LOCATIONS_INTERIORS = {
-	{ "10 Car Garage Back Room", 223.193f, -967.322f, -99.000f },
-	{ "10 Car Garage Bay", 228.135f, -995.350f, -99.000f },
-	{ "Airport Facility Interior", -1589.96f, -3231.44f, 26.3127f/*, { "hei_ap1_01_d_interior_v_ap1_01_d_int" }, {}, {}, false */ },
+	{ "Airport Facility Interior", -1588.56f, -3228.38f, 26.3362f, { "hei_ap1_01_d_interior_v_ap1_01_d_int" }, {}, {}, false },
 	{ "Ammunation Gun Range", 22.153f, -1072.854f, 29.797f },
 	{ "Ammunation Office", 12.494f, -1110.130f, 29.797f },
 	{ "Bahama Mamas West", -1387.08f, -588.4f, 30.3195f },
@@ -605,7 +603,7 @@ std::vector<tele_location> LOCATIONS_REQSCEN = {
 	{ "North Yankton", 3360.19f, -4849.67f, 111.8f, IPLS_NORTH_YANKTON, {}, {}, false },
 	{ "North Yankton Bank", 5309.519f, -5212.375f, 83.522f, IPLS_NORTH_YANKTON, {}, {}, false },
 	{ "Red Carpet", 293.314f, 180.388f, 104.297f, { "redCarpet" }, {}, {}, false },
-	{ "Simeon's Showroom", -59.7936f, -1098.784f, 27.2612f, { "shr_int" }, { "fakeint" }, {}, false },
+	{ "Simeon's Showroom", -58.1993f, -1096.64f, 26.4224f, { "shr_int" }, { "fakeint" }, {}, false },
 	{ "SS Bulker (Intact)", -163.749f, -2377.94f, 9.3192f, { "cargoship" }, { "sunkcargoship" }, {}, false },
 	{ "SS Bulker (Sunk)", -162.8918f, -2365.769f, 0.0f, { "sunkcargoship" }, { "cargoship" }, {}, false },
 	{ "Train Crash Bridge", -532.1309f, 4526.187f, 88.7955f, { "canyonriver01_traincrash", "railing_end" }, { "railing_start", "canyonriver01" }, {}, false },
@@ -614,6 +612,10 @@ std::vector<tele_location> LOCATIONS_REQSCEN = {
 
 /* Name, coords, IPL name, scenary (props) required, scenary to remove, bool isloaded*/
 std::vector<tele_location> LOCATIONS_ONLINE = {
+	{ "2 Cars Garage", 173.1176f, -1003.279f, -99.000f, { "hw1_blimp_interior_v_garages_milo_" }, {}, {}, false },
+	{ "8 Cars Garage", 199.9716f, -999.6678f, -99.000f, { "hw1_blimp_interior_v_garagem_milo_" }, {}, {}, false },
+	{ "10 Car Garage Back Room", 223.193f, -967.322f, -99.000f, { "hw1_blimp_interior_v_garagel_milo_" }, {}, {}, false },
+	{ "10 Car Garage Bay", 228.135f, -995.350f, -99.000f, { "hw1_blimp_interior_v_garagel_milo_" }, {}, {}, false },
 	{ "Aircraft Carrier", 3069.330f, -4704.220f, 15.043f, IPLS_CARRIER, {}, {}, false },
 	{ "Benny's Garage", -209.759f, -1319.617f, 30.08367f }, // { "lr_sc1_02_interior_0_supermod_int_milo_" }, {}, {}, false },
 	{ "Biker Club Garage 1", 1005.861f, -3156.162f, -39.90727f, { "bkr_biker_interior_placement_interior_1_biker_dlc_int_02_milo_" }, {}, {}, false },
@@ -681,12 +683,12 @@ std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Stilthouse 9", -1286.362f, 431.7878f, 96.49426f, { "apa_ch2_12b_interior_0_v_mp_stilts_a_milo_" }, {}, {}, false },
 	{ "Studio Flat", 260.3297f, -997.4288f, -100.0f, { "hei_hw1_blimp_interior_v_studio_lo_milo_" }, {}, {}, false },
 	{ "Tinsel Towers Apt 42", -614.86f, 40.6783f, 97.6f, {}, {}, {}, false },
-	//{ "Abbatoir", 982.233f, -2160.381f, 27.725f, { "bkr_id1_10_interior_v_abattoir_milo_" }, {}, false },
+	//
 	//{ "Gun Runnning Bunker", 938.3077f, -3196.112f, -100.0f, IPLS_GUNRUNNING_INTERIOR, {}, false },
 	//{ "Gun Runnning Yacht", 1396.736f, 6745.025f, 7.970402f, IPLS_GUNRUNNING_YACHT_TEST, {}, false },
 	//{ "midspaz", 342.8157f, -997.4288f, -99.4041f, { "hei_hw1_blimp_interior_v_apart_midspaz_milo_" }, {}, {}, false },
 	//{ "garagem", 199.9716f, -1018.954f, -99.4041f, { "hei_hw1_blimp_interior_v_garagem_sp_milo_" }, {}, {}, false },
-	//{ "garagem2", 199.9716f, -1018.954f, -99.4041f, { "hei_po1_lod" }, {}, {}, false },
+	//{ "High Life Garage", 228.135f, -995.350f, -99.000f, { "hei_hw1_blimp_interior_2_dlc_garage_high_new_milo_" }, { "hw1_blimp_interior_v_garagel_milo_" }, {}, false },
 };
 
 std::vector<tele_location> LOCATIONS_ACTORS = {
@@ -743,7 +745,6 @@ std::vector<tele_location> LOCATIONS_BROKEN = {
 { "Richard Majestic Apt 2", -915.811f, -379.432f, 113.675f, {}, {}, false },
 { "Tinsel Towers Apt 42", -614.86f, 40.6783f, 97.6f, {}, {}, false },
 { "Eclipse Towers Apt 3", -773.407f, 341.766f, 211.397f, {}, {}, false },
-//{ "High Life Garage", 228.135f, -995.350f, -99.000f, { "hei_hw1_blimp_interior_2_dlc_garage_high_new_milo_" }, { "hw1_blimp_interior_v_garagel_milo_" }, false },
 };*/
 
 std::string JELLMAN_CAPTION = "Heist Map Updates In SP";
