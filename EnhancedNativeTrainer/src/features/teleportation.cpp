@@ -369,7 +369,7 @@ std::vector<tele_location> LOCATIONS_SAFE = {
 };
 
 std::vector<tele_location> LOCATIONS_LANDMARKS = {
-	{ "Abandoned Hotel", 1567.35f, 3566.76f, 35.4367f },
+	{ "Abandoned Motel", 1567.35f, 3566.76f, 35.4367f },
 	{ "Aerial Tramway", -740.235f, 5594.81f, 41.6546f },
 	{ "Airport Entrance", -1034.6f, -2733.6f, 13.8f },
 	{ "Airport Entrance Tower", -912.523f, -2529.81f, 41.96f },
@@ -429,6 +429,7 @@ std::vector<tele_location> LOCATIONS_LANDMARKS = {
 	{ "Palomino Highlands", 2023.69f, -1588.45f, 252.926f },
 	{ "Playboy Mansion", -1475.234f, 167.088f, 55.841f },
 	{ "Police Station", 432.002f, -981.748f, 30.7107f },
+	{ "Puerto Del Sol Yacht Club", -921.976f, -1336.04f, 5.00018f },
 	{ "Quarry", 2954.196f, 2783.410f, 41.004f },
 	{ "Race", 1059.65f, 147.134f, 85.7408f },
 	{ "Rockford Plaza Carpark", -179.31400000f, -180.21540000f, 46.31482000f/*, { "apa_bt1_04_interior_bt1_04_carpark" }, {}, {}, false */ },
@@ -449,6 +450,7 @@ std::vector<tele_location> LOCATIONS_LANDMARKS = {
 	{ "Vinewood Cemetery", -1733.11f, -178.004f, 59.2933f },
 	{ "Weed Farm", 2208.777f, 5578.235f, 53.735f },
 	{ "Wind Farm", 2354.0f, 1830.3f, 101.1f },
+	{ "Wind Farm Trailer Park", 2353.21f, 2549.4f, 55.7455f },
 	{ "Yellow Jack Inn", 1991.74f, 3058.86f, 47.0568f },
 	{ "You Tool Hardware Store", 2757.12f, 3469.85f, 55.7208f },
 };
