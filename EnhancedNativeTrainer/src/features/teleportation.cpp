@@ -372,7 +372,6 @@ std::vector<tele_location> LOCATIONS_LANDMARKS = {
 	{ "Abandoned Motel", 1567.35f, 3566.76f, 35.4367f },
 	{ "Aerial Tramway", -740.235f, 5594.81f, 41.6546f },
 	{ "Airport Entrance", -1034.6f, -2733.6f, 13.8f },
-	{ "Airport Entrance Tower", -912.523f, -2529.81f, 41.96f },
 	{ "Airport Field", -1336.0f, -3044.0f, 13.9f },
 	{ "Altruist Cult Camp", -1004.04f, 4856.94f, 278.681f },
 	{ "Arcadius Carpark", -164.38220000f, -619.08840000f, 33.33181000f/*, { "hei_dt1_02_interior_dt1_02_carpark" }, {}, {}, false */ },
@@ -464,6 +463,7 @@ std::vector<tele_location> LOCATIONS_LANDMARKS = {
 std::vector<tele_location> LOCATIONS_HIGH = {
 	{ "1 Interstate Sign Guide-Board", 1430.13f, 716.454f, 85.0183f },
 	{ "Airplane Graveyard Airplane Tail ", 2395.096f, 3049.616f, 60.053f },
+	{ "Airport Entrance Tower Roof", -912.523f, -2529.81f, 41.96f },
 	{ "Airport Tower Roof", -982.67f, -2638.2f, 89.522f },
 	{ "Bolingbroke Penitentiary Tower Summit", 1597.72f, 2599.34f, 93.0648f },
 	{ "Bridge Pole", -279.242f, -2438.71f, 124.004f },
