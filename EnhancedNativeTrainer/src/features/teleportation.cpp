@@ -461,7 +461,7 @@ std::vector<tele_location> LOCATIONS_LANDMARKS = {
 // Extra locations coordinates source: "PulseR_HD" @ http://gtaforums.com/topic/789786-vrelwip-simple-trainer-enhancements-skin-detail-chooser-menu-architecture/?p=1067398379
 
 std::vector<tele_location> LOCATIONS_HIGH = {
-	{ "1 Interstate Sign Guide-Board", 1430.13f, 716.454f, 85.0183f },
+	{ "1 Interstate Guide-Board", 1430.13f, 716.454f, 85.0183f },
 	{ "Airplane Graveyard Airplane Tail ", 2395.096f, 3049.616f, 60.053f },
 	{ "Airport Entrance Tower Roof", -912.523f, -2529.81f, 41.96f },
 	{ "Airport Tower Roof", -982.67f, -2638.2f, 89.522f },
