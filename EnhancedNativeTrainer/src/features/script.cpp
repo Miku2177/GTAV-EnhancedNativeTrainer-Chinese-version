@@ -96,6 +96,8 @@ int regenIndex = REGEN_DEFAULT;
 
 /* Prop unblocker related code - will need to clean up later*/
 
+/*THIS causes ENT not to load when Menyoo is present!*/
+
 void UnlockAllObjects()
 {
 	static auto checkModelBeforeCreation = FindPattern("\x48\x85\xC0\x0F\x84\x00\x00\x00\x00\x8B\x48\x50", "xxxxx????xxx");
@@ -889,9 +891,7 @@ void ScriptMain(){
 		read_config_ini_file();
 		write_text_to_log_file("INI config read complete");
 
-
-		/*Prop unblocker*/
-		UnlockAllObjects();
+		//UnlockAllObjects();
 
 		main();
 
