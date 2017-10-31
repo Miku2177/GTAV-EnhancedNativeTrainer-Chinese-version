@@ -139,6 +139,7 @@
     <Image Include="Documents\veh-previews\cargo.png" />
     <Image Include="Documents\veh-previews\cargobob2.png" />
     <Image Include="Documents\veh-previews\cargobob3.png" />
+    <Image Include="Documents\veh-previews\cliffhanger.png" />
     <Image Include="Documents\veh-previews\cog552.png" />
     <Image Include="Documents\veh-previews\cognoscenti2.png" />
     <Image Include="Documents\veh-previews\cutter.png" />
@@ -179,7 +180,9 @@
     <Image Include="Documents\veh-previews\guardian.png" />
     <Image Include="Documents\veh-previews\habanero.png" />
     <Image Include="Documents\veh-previews\hauler.png" />
+    <Image Include="Documents\veh-previews\hauler2.png" />
     <Image Include="Documents\veh-previews\hearse.png" />
+    <Image Include="Documents\veh-previews\insurgent3.png" />
     <Image Include="Documents\veh-previews\lazer.png" />
     <Image Include="Documents\veh-previews\lectro.png" />
     <Image Include="Documents\veh-previews\lguard.png" />
@@ -199,6 +202,7 @@
     <Image Include="Documents\veh-previews\patriot.png" />
     <Image Include="Documents\veh-previews\peyote.png" />
     <Image Include="Documents\veh-previews\phantom.png" />
+    <Image Include="Documents\veh-previews\phantom3.png" />
     <Image Include="Documents\veh-previews\phoenix.png" />
     <Image Include="Documents\veh-previews\police.png" />
     <Image Include="Documents\veh-previews\police2.png" />
@@ -252,6 +256,7 @@
     <Image Include="Documents\veh-previews\tanker2.png" />
     <Image Include="Documents\veh-previews\tankercar.png" />
     <Image Include="Documents\veh-previews\taxi.png" />
+    <Image Include="Documents\veh-previews\technical3.png" />
     <Image Include="Documents\veh-previews\tiptruck.png" />
     <Image Include="Documents\veh-previews\tiptruck2.png" />
     <Image Include="Documents\veh-previews\tornado.png" />
