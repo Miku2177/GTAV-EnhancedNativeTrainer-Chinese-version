@@ -282,6 +282,25 @@ std::vector<const char*> IPLS_GUNRUNNING_YACHT_TEST = {
 	"gr_heist_yacht2_slod",
 };
 
+std::vector<const char*> IPLS_SUBWAY = {
+	"v_tunnels",
+	"v_tunnels_interior_v_31_tun_01_milo_",
+	"v_tunnels_interior_v_31_tun_03_milo_",
+	"v_tunnels_interior_v_31_tun_04_milo_",
+	"v_tunnels_interior_v_31_tun_05_milo_",
+	"v_tunnels_interior_v_31_tun_06_milo_",
+	"v_tunnels_interior_v_31_tun_07_milo_",
+	"v_tunnels_interior_v_31_tun_08_milo_",
+	"v_tunnels_interior_v_31_tun_09_milo_",
+	"v_tunnels_interior_v_31_tun_10_milo_",
+	"v_tunnels_interior_v_31_newtun2_milo_",
+	"v_tunnels_interior_v_31_newtun3_milo_",
+	"v_tunnels_interior_v_31_newtun4b_milo_",
+	"v_tunnels_interior_v_31_newtun4_milo_",
+	"v_tunnels_interior_v_31_newtun5_milo_",
+	"v_tunnels_interior_v_31_newtunnel1_milo_",
+};
+
 std::vector<char*> IPL_PROPS_CEO_OFFICE = {
 	"office_chairs",
 	"office_booze",
@@ -390,6 +409,7 @@ std::vector<tele_location> LOCATIONS_LANDMARKS = {
 	{ "East Alamo View Observation Desk", -523.647f, 4194.51f, 193.731f },
 	{ "El Burro Heights", 1384.0f, -2057.1f, 52.0f },
 	{ "Elysian Island", 306.545f, -2757.75f, 5.98824f },
+	{ "Epsilon Building Entrance", -698.472f, 46.3927f, 44.0338f },
 	{ "Far North San Andreas", 24.775f, 7644.102f, 19.055f },
 	{ "Ferris Wheel", -1670.7f, -1125.0f, 13.0f },
 	{ "FIB Carpark", 141.20440000f, -717.21670000f, 34.76831000f/*, { "hei_dt1_05_interior_dt1_05_carpark" }, {}, {}, false */ },
@@ -442,6 +462,20 @@ std::vector<tele_location> LOCATIONS_LANDMARKS = {
 	{ "Sisyphus Theater Stage", 208.714f, 1167.75f, 227.005f },
 	{ "Snack-Bar With Pink Dinosaur", 2569.48f, 2580.4f, 37.7605f },
 	{ "Sonar Collections Dock", -1611.26f, 5261.74f, 3.9741f },
+	{ "Subway Burton", -297.004f, -358.18f, 10.0631f },//apa_bt1_04_interior_bt1_04_burton_subway
+	{ "Subway Davis", 98.6135f, -1711.78f, 30.1124f },
+	{ "Subway Del Perro", -1363.85f, -439.754f, 15.0453f },//hei_sm_15_interior_sm_15_delperro_subway
+	{ "Subway Little Seoul", -529.163f, -671.127f, 11.809f },//hei_kt1_09_interior_kt1_09_seoul_subway
+	{ "Subway LSIA Parking", -871.209f, -2291.86f, -11.7328f },//hei_ap1_03_interior_ap1_03_lisapark_subway
+	{ "Subway LSIA Terminal 4", -1103.9f, -2737.14f, -7.41013f },//hei_ap1_01_b_interior_ap1_01_b_lsiaterm_subway
+	//{ "Subway Pillbox North (Closed/Under Construction)", 165.872f, -583.893f, 18.758f },// { "v_tunnels_interior_v_31_tun_05_milo_" }, {}, {}, false },
+	//{ "Subway Pillbox North (Closed/Under Construction)4", -49.0384f, -556.731f, 29.9747f },
+	//{ "Subway Pillbox North (Closed/Under Construction)9", 1028.87900000f, -261.09210000f, 49.57593000f, { "v_tunnels_interior_v_31_newtun5_milo_" }, {}, {}, false },
+	//{ "Subway Pillbox North (Closed/Under Construction)10", 481.76460000f, -577.73980000f, 3.63916000f, { "v_tunnels_interior_v_31_newtunnel1_milo_" }, {}, {}, false },
+	{ "Subway Pillbox South", -205.724f, -1012.65f, 30.1379f },
+	{ "Subway Portola Drive", -791.0f, -125.857f, 19.9503f },//hei_bh1_rd_interior_bh1_rd2_portola_subway
+	{ "Subway Puerto Del Sol", -531.937f, -1263.36f, 26.9016f },
+	{ "Subway Strawberry", 305.736f, -1204.4f, 38.8926f },
 	{ "Tractor Parts", 925.238f, -1568.29f, 30.6312f },
 	{ "Trevor's Meth Lab", 1395.32f, 3597.44f, 34.9675f },
 	{ "Underground Entrance", -66.5357f, -538.862f, 31.7796f },
@@ -471,13 +505,12 @@ std::vector<tele_location> LOCATIONS_HIGH = {
 	{ "Bolingbroke Penitentiary Tower Summit", 1597.72f, 2599.34f, 93.0648f },
 	{ "Bridge Pole", -279.242f, -2438.71f, 124.004f },
 	{ "Building Crane Top", -119.879f, -977.357f, 304.249f },
-	{ "Building Under Construction Roof", -168.221f, -974.687f, 275.222f },
 	{ "Cargo Ship Roof", 1010.17f, -2880.95f, 49.713f },
 	{ "Clock Tower Building Roof", -1238.13f, -848.308f, 85.1617f },
 	{ "CNT Building Roof", 744.686f, 223.028f, 150.497f },
 	{ "Dam Roof", 1665.2f, -28.1639f, 196.936f },
 	{ "Drawbridge Summit", 215.681f, -2345.98f, 77.4659f },
-	{ "Eclipse Towers Roof", -782.235f, 331.659f, 242.673f },
+	{ "Eclipse Towers Roof", -782.235f, 331.659f, 244.673f },
 	{ "El Burro Heights Tank Roof", 1610.86f, -2242.01f, 132.794f },
 	{ "Elysian Island High", 338.21f, -2758.38f, 43.6318f },
 	{ "FIB Building Roof", 150.126f, -754.591f, 262.865f },
@@ -492,6 +525,7 @@ std::vector<tele_location> LOCATIONS_HIGH = {
 	{ "Maze Bank Arena Roof", -324.300f, -1968.545f, 67.002f },
 	{ "Maze Bank Roof", -75.015f, -818.215f, 326.176f },
 	{ "Merryweather Dock Roof", 526.604f, -3290.37f, 46.3142f },
+	{ "Mile High Club Roof", -168.221f, -974.687f, 275.222f },
 	{ "Mount Gordo Summit", 2792.49f, 5995.88f, 375.499f },
 	{ "Mt. Chiliad Summit", 450.718f, 5566.614f, 806.183f },
 	{ "North Yankton High-Voltage Tower Top", 3836.8f, -4875.12f, 154.079f, IPLS_NORTH_YANKTON, {}, {}, false },
