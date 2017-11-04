@@ -252,7 +252,6 @@ std::vector<const char*> IPLS_SUBWAY = {
 	"v_tunnels_interior_v_31_newtunnel1_milo_",
 };
 
-//Gunrunning - may need to double check this 
 std::vector<const char*> IPLS_CARRIER = {
 	"hei_carrier",
 	"hei_carrier_DistantLights",
@@ -265,7 +264,8 @@ std::vector<const char*> IPLS_CARRIER = {
 	"hei_carrier_LODLights"
 };
 
-std::vector<const char*> IPLS_GUNRUNNING_YACHT_TEST = {
+//Gunrunning - may need to double check this 
+std::vector<const char*> IPLS_GUNRUNNING_YACHT = {
 	"gr_grdlc_yacht_lod",
 	"gr_grdlc_yacht_placement",
 	"gr_heist_yacht2",
@@ -294,11 +294,11 @@ std::vector<const char*> IPLS_HEISTYACHT = {
 	"hei_yacht_heist_Lounge"
 };
 
-std::vector<const char*> IPLS_APAYACHT1_1 = {
+/*std::vector<const char*> IPLS_APAYACHT1_1 = {
 	"apa_yacht_grp01_1",
 	"apa_yacht_grp01_1_int",
 	"apa_yacht_grp01_1_lod",
-};
+};*/
 
 std::vector<const char*> IPLS_APAYACHT1_2 = {
 	"apa_yacht_grp01_2",
@@ -306,7 +306,7 @@ std::vector<const char*> IPLS_APAYACHT1_2 = {
 	"apa_yacht_grp01_2_lod",
 };
 
-std::vector<const char*> IPLS_APAYACHT1_3 = {
+/*std::vector<const char*> IPLS_APAYACHT1_3 = {
 	"apa_yacht_grp01_3",
 	"apa_yacht_grp01_3_int",
 	"apa_yacht_grp01_3_lod",
@@ -346,7 +346,7 @@ std::vector<const char*> IPLS_APAYACHT3_3 = {
 	"apa_yacht_grp03_3",
 	"apa_yacht_grp03_3_int",
 	"apa_yacht_grp03_3_lod",
-};
+};*/
 
 std::vector<const char*> IPLS_APAYACHT4_1 = {
 	"apa_yacht_grp04_1",
@@ -354,7 +354,7 @@ std::vector<const char*> IPLS_APAYACHT4_1 = {
 	"apa_yacht_grp04_1_lod",
 };
 
-std::vector<const char*> IPLS_APAYACHT4_2 = {
+/*std::vector<const char*> IPLS_APAYACHT4_2 = {
 	"apa_yacht_grp04_2",
 	"apa_yacht_grp04_2_int",
 	"apa_yacht_grp04_2_lod",
@@ -370,7 +370,7 @@ std::vector<const char*> IPLS_APAYACHT5_1 = {
 	"apa_yacht_grp05_1",
 	"apa_yacht_grp05_1_int",
 	"apa_yacht_grp05_1_lod",
-};
+};*/
 
 std::vector<const char*> IPLS_APAYACHT5_2 = {
 	"apa_yacht_grp05_2",
@@ -378,7 +378,7 @@ std::vector<const char*> IPLS_APAYACHT5_2 = {
 	"apa_yacht_grp05_2_lod",
 };
 
-std::vector<const char*> IPLS_APAYACHT5_3 = {
+/*std::vector<const char*> IPLS_APAYACHT5_3 = {
 	"apa_yacht_grp05_3",
 	"apa_yacht_grp05_3_int",
 	"apa_yacht_grp05_3_lod",
@@ -424,7 +424,7 @@ std::vector<const char*> IPLS_APAYACHT8_1 = {
 	"apa_yacht_grp08_1",
 	"apa_yacht_grp08_1_int",
 	"apa_yacht_grp08_1_lod",
-};
+};*/
 
 std::vector<const char*> IPLS_APAYACHT8_2 = {
 	"apa_yacht_grp08_2",
@@ -432,7 +432,7 @@ std::vector<const char*> IPLS_APAYACHT8_2 = {
 	"apa_yacht_grp08_2_lod",
 };
 
-std::vector<const char*> IPLS_APAYACHT8_3 = {
+/*std::vector<const char*> IPLS_APAYACHT8_3 = {
 	"apa_yacht_grp08_3",
 	"apa_yacht_grp08_3_int",
 	"apa_yacht_grp08_3_lod",
@@ -484,7 +484,7 @@ std::vector<const char*> IPLS_APAYACHT11_2 = {
 	"apa_yacht_grp11_2",
 	"apa_yacht_grp11_2_int",
 	"apa_yacht_grp11_2_lod",
-};
+};*/
 
 std::vector<const char*> IPLS_APAYACHT11_3 = {
 	"apa_yacht_grp11_3",
@@ -492,7 +492,7 @@ std::vector<const char*> IPLS_APAYACHT11_3 = {
 	"apa_yacht_grp11_3_lod",
 };
 
-std::vector<const char*> IPLS_APAYACHT12_1 = {
+/*std::vector<const char*> IPLS_APAYACHT12_1 = {
 	"apa_yacht_grp12_1",
 	"apa_yacht_grp12_1_int",
 	"apa_yacht_grp12_1_lod",
@@ -508,7 +508,7 @@ std::vector<const char*> IPLS_APAYACHT12_3 = {
 	"apa_yacht_grp12_3",
 	"apa_yacht_grp12_3_int",
 	"apa_yacht_grp12_3_lod",
-};
+};*/
 
 std::vector<char*> IPL_PROPS_CEO_OFFICE = {
 	"office_chairs",
@@ -687,6 +687,7 @@ std::vector<tele_location> LOCATIONS_LANDMARKS = {
 	{ "Subway Strawberry", 305.736f, -1204.4f, 38.8926f },
 	{ "Tractor Parts", 925.238f, -1568.29f, 30.6312f },
 	{ "Trevor's Meth Lab", 1395.32f, 3597.44f, 34.9675f },
+	{ "Two Hoots Fall", -1575.9f, 2104.26f, 67.4264f },
 	{ "Underground Entrance", -66.5357f, -538.862f, 31.7796f },
 	{ "Underground Exit", 1032.85f, -276.936f, 50.1025f },
 	{ "University Of San Andreas", -1644.09f, 218.244f, 60.6411f },
@@ -780,6 +781,8 @@ std::vector<tele_location> LOCATIONS_UNDERWATER = {
 	{ "Sunken UFO", 762.426f, 7380.371f, -111.377f },
 	{ "Sunken WW2 Plane", 3266.99f, 6421.82f, -47.2943f },
 	{ "Sunken WW2 Tank", 4201.633f, 3643.821f, -39.016f },
+	{ "Sunken WW2 Tank 2", 4141.22f, 3538.17f, -22.07f },
+	{ "Sunken WW2 Tank 3", 4159.44f, 3716.28f, -25.62f },
 	{ "Underwater Hatch", 4273.950f, 2975.714f, -170.746f },
 	{ "Underwater Tank For Liquids", -2857.01f, -490.801f, -16.9937f },
 };
@@ -844,45 +847,14 @@ std::vector<tele_location> LOCATIONS_REQSCEN = {
 	{ "SS Bulker (Sunk)", -162.8918f, -2365.769f, 0.0f, { "sunkcargoship" }, { "cargoship" }, {}, false },
 	{ "Train Crash Bridge", -532.1309f, 4526.187f, 88.7955f, { "canyonriver01_traincrash", "railing_end" }, { "railing_start", "canyonriver01" }, {}, false },
 	{ "Yacht", -2023.661f, -1038.038f, 5.577f, { "smboat", "smboat_lod" }, {}, {}, false },
+	//{ "Gun Runnning Yacht TEST", -1418.21000000f, 6749.81100000f, 10.98968000f, IPLS_GUNRUNNING_YACHT, {}, { IPL_PROPS_GUNRUNNING_YACHT }, false },
+	//{ "Gun Runnning Yacht YMAP", -1407.20900000f, 6750.85200000f, 12.25551000f, IPLS_GUNRUNNING_YACHT, {}, { IPL_PROPS_GUNRUNNING_YACHT }, false },
+	{ "Yacht Galaxy Super East", 3411.10000000f, 1193.44500000f, 5.42995500, IPLS_APAYACHT8_2, {}, {}, false },
+	{ "Yacht Galaxy Super North", 1396.63800000f, 6860.20300000f, 5.42995500, IPLS_APAYACHT11_3, {}, {}, false },
+	{ "Yacht Galaxy Super South", -351.06080000f, -3553.32300000f, 5.42995500, IPLS_APAYACHT5_2, {}, {}, false },
+	{ "Yacht Galaxy Super South West", -1995.72500000f, -1523.69400000f, 5.42997000, IPLS_APAYACHT4_1, {}, { IPL_PROPS_APAYACHT }, false },
+	{ "Yacht Galaxy Super West", -3148.37900000f, 2807.55500000f, 5.42995500f, IPLS_APAYACHT1_2, {}, {}, false },
 	{ "Yacht Heist", -2043.974f, -1031.582f, 11.981f, IPLS_HEISTYACHT, {}, {}, false },
-	//{ "Gun Runnning Yacht TEST", -1418.21000000f, 6749.81100000f, 10.98968000f, IPLS_GUNRUNNING_YACHT_TEST, {}, {}, false },
-	//{ "Gun Runnning Yacht YMAP", -1407.20900000f, 6750.85200000f, 12.25551000f, { "gr_heist_yacht2" }, { "gr_heist_yacht2_slod" }, {}, false },
-	{ "Yacht Galaxy Super 1", -3542.82200000f, 1488.25000000f, 5.42995500f, IPLS_APAYACHT1_1, {}, {}, false },
-	{ "Yacht Galaxy Super 2", -3148.37900000f, 2807.55500000f, 5.42995500f, IPLS_APAYACHT1_2, {}, {}, false },
-	{ "Yacht Galaxy Super 3", -3280.50100000f, 2140.50700000f, 5.42995500f, IPLS_APAYACHT1_3, {}, {}, false },
-	{ "Yacht Galaxy Super 4", -2814.48900000f, 4072.74000000f, 5.42995500f, IPLS_APAYACHT2_1, {}, {}, false },
-	{ "Yacht Galaxy Super 5", -3254.55200000f, 3685.67700000f, 5.42995500, IPLS_APAYACHT2_2, {}, {}, false },
-	{ "Yacht Galaxy Super 6 ", -2368.44100000f, 4697.87400000f, 5.42995500, IPLS_APAYACHT2_3, {}, {}, false },
-	{ "Yacht Galaxy Super 7", -3205.34400000f, -219.01040000f, 5.42995500, IPLS_APAYACHT3_1, {}, {}, false },
-	{ "Yacht Galaxy Super 8", -3448.25400000f, 311.50180000f, 5.42995500, IPLS_APAYACHT3_2, {}, {}, false },
-	{ "Yacht Galaxy Super 9", -2697.86200000f, -540.61230000f, 5.42995500, IPLS_APAYACHT3_3, {}, {}, false },
-	{ "Yacht Galaxy Super 10", -1995.72500000f, -1523.69400000f, 5.42997000, IPLS_APAYACHT4_1, {}, {}, false },
-	{ "Yacht Galaxy Super 11", -2117.58100000f, -2543.34600000f, 5.42995500, IPLS_APAYACHT4_2, {}, {}, false },
-	{ "Yacht Galaxy Super 12", -1605.07400000f, -1872.46800000f, 5.42995500, IPLS_APAYACHT4_3, {}, {}, false },
-	{ "Yacht Galaxy Super 13", -753.08170000f, -3919.06800000f, 5.42995500, IPLS_APAYACHT5_1, {}, {}, false },
-	{ "Yacht Galaxy Super 14", -351.06080000f, -3553.32300000f, 5.42995500, IPLS_APAYACHT5_2, {}, {}, false },
-	{ "Yacht Galaxy Super 15", -1460.53600000f, -3761.46700000f, 5.42995500, IPLS_APAYACHT5_3, {}, {}, false },
-	{ "Yacht Galaxy Super 16", 1546.89200000f, -3045.62700000f, 5.42995500, IPLS_APAYACHT6_1, {}, {}, false },
-	{ "Yacht Galaxy Super 17", 2490.88600000f, -2428.84800000f, 5.42995500, IPLS_APAYACHT6_2, {}, {}, false },
-	{ "Yacht Galaxy Super 18", 2049.79000000f, -2821.62400000f, 5.42995500, IPLS_APAYACHT6_3, {}, {}, false },
-	{ "Yacht Galaxy Super 19", 3029.01800000f, -1495.70200000f, 5.42995500, IPLS_APAYACHT7_1, {}, {}, false },
-	{ "Yacht Galaxy Super 20", 3021.25400000f, -723.39030000f, 5.42995500, IPLS_APAYACHT7_2, {}, {}, false },
-	{ "Yacht Galaxy Super 21", 2976.62200000f, -1994.76000000f, 5.42995500, IPLS_APAYACHT7_3, {}, {}, false },
-	{ "Yacht Galaxy Super 22", 3404.51000000f, 1977.04400000f, 5.42995500, IPLS_APAYACHT8_1, {}, {}, false },
-	{ "Yacht Galaxy Super 23", 3411.10000000f, 1193.44500000f, 5.42995500, IPLS_APAYACHT8_2, {}, {}, false },
-	{ "Yacht Galaxy Super 24", 3784.80200000f, 2548.54100000f, 5.42995500, IPLS_APAYACHT8_3, {}, {}, false },
-	{ "Yacht Galaxy Super 25", 4225.02800000f, 3988.00200000f, 5.42995500, IPLS_APAYACHT9_1, {}, {}, false },
-	{ "Yacht Galaxy Super 26", 4250.58100000f, 4576.56500000f, 5.42995500, IPLS_APAYACHT9_2, {}, {}, false },
-	{ "Yacht Galaxy Super 27", 4204.35600000f, 3373.70000000f, 5.42995500, IPLS_APAYACHT9_3, {}, {}, false },
-	{ "Yacht Galaxy Super 28", 3751.68100000f, 5753.50100000f, 5.42995500, IPLS_APAYACHT10_1, {}, {}, false },
-	{ "Yacht Galaxy Super 29", 3490.10500000f, 6305.78500000f, 5.42995500, IPLS_APAYACHT10_2, {}, {}, false },
-	{ "Yacht Galaxy Super 30", 3684.85300000f, 5212.23800000f, 5.42995500, IPLS_APAYACHT10_3, {}, {}, false },
-	{ "Yacht Galaxy Super 31", 581.59550000f, 7124.55800000f, 5.42995500, IPLS_APAYACHT11_1, {}, {}, false },
-	{ "Yacht Galaxy Super 32", 2004.46200000f, 6907.15700000f, 5.42997000, IPLS_APAYACHT11_2, {}, {}, false },
-	{ "Yacht Galaxy Super 33", 1396.63800000f, 6860.20300000f, 5.42995500, IPLS_APAYACHT11_3, {}, {}, false },
-	{ "Yacht Galaxy Super 34", -1170.69000000f, 5980.68100000f, 5.42995500, IPLS_APAYACHT12_1, {}, {}, false },
-	{ "Yacht Galaxy Super 35", -777.48650000f, 6566.90700000f, 5.42995500, IPLS_APAYACHT12_2, {}, {}, false },
-	{ "Yacht Galaxy Super 36", -381.77390000f, 6946.96000000f, 5.42995500, IPLS_APAYACHT12_3, {}, {}, false },
 };
 
 /* Name, coords, IPL name, scenary (props) required, scenary to remove, bool isloaded*/
