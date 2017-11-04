@@ -1123,7 +1123,7 @@ std::vector<tele_location> LOCATIONS_REQSCEN = {
 	{ "Yacht Galaxy Super East", 3411.10000000f, 1193.44500000f, 5.42995500, IPLS_APAYACHT8_2, {}, {}, false },
 	{ "Yacht Galaxy Super North", 1396.63800000f, 6860.20300000f, 5.42995500, IPLS_APAYACHT11_3, {}, {}, false },
 	{ "Yacht Galaxy Super South", -351.06080000f, -3553.32300000f, 5.42995500, IPLS_APAYACHT5_2, {}, {}, false },
-	{ "Yacht Galaxy Super South West", -1995.72500000f, -1523.69400000f, 5.42997000, IPLS_APAYACHT4_1, {}, { IPL_PROPS_APAYACHT }, false },
+	{ "Yacht Galaxy Super South West", -1995.72500000f, -1523.69400000f, 5.42997000, IPLS_APAYACHT4_1, {}, {/* IPL_PROPS_APAYACHT*/ }, false },
 	{ "Yacht Galaxy Super West", -3148.37900000f, 2807.55500000f, 5.42995500f, IPLS_APAYACHT1_2, {}, {}, false },
 	{ "Yacht Heist", -2043.974f, -1031.582f, 11.981f, IPLS_HEISTYACHT, {}, {}, false },
 };
