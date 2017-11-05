@@ -958,7 +958,7 @@ std::vector<tele_location> LOCATIONS_LANDMARKS = {
 	{ "Subway Strawberry", 305.736f, -1204.4f, 38.8926f },
 	{ "Tractor Parts", 925.238f, -1568.29f, 30.6312f },
 	{ "Trevor's Meth Lab", 1395.32f, 3597.44f, 34.9675f },
-	{ "Two Hoots Fall", -1575.9f, 2104.26f, 67.4264f },
+	{ "Two Hoots Falls", -1575.9f, 2104.26f, 67.4264f },
 	{ "Underground Entrance", -66.5357f, -538.862f, 31.7796f },
 	{ "Underground Exit", 1032.85f, -276.936f, 50.1025f },
 	{ "University Of San Andreas", -1644.09f, 218.244f, 60.6411f },
