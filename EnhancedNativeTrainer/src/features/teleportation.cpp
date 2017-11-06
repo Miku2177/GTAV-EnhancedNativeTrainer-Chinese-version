@@ -264,7 +264,6 @@ std::vector<const char*> IPLS_CARRIER = {
 	"hei_carrier_LODLights"
 };
 
-//Gunrunning - may need to double check this 
 std::vector<const char*> IPLS_GUNRUNNING_YACHT = {
 	"gr_grdlc_yacht_lod",
 	"gr_grdlc_yacht_placement",
@@ -280,7 +279,6 @@ std::vector<const char*> IPLS_GUNRUNNING_YACHT = {
 	"gr_heist_yacht2_bar",
 	"gr_heist_yacht2_bar_lod",
 	"gr_heist_yacht2_slod",
-	"gr_heist_yacht2_lod",
 };
 
 std::vector<const char*> IPLS_HEISTYACHT = {
@@ -1030,11 +1028,13 @@ std::vector<tele_location> LOCATIONS_HIGH = {
 
 std::vector<tele_location> LOCATIONS_UNDERWATER = {
 	{ "Dead Sea Monster", -3373.726f, 504.714f, -24.656f },
-	{ "Dead Jogger", 157.319f, 7430.14f, -10.8888f },
+	{ "Dead Sea Monster 2", -3515.15f, 3809.09f, -77.9381f },
+	{ "Dead Sea Monster 3", 3985.13f, 4858.07f, -32.9598f },
+	{ "Dead Sea Monster 4", 3629.43f, 5531.41f, -21.75f },
 	{ "Humane Labs Tunnel", 3832.00f, 3663.67f, -23.0722f },// {}, { "chemgrill_grp1" }, {}, false },
+	{ "Murder Mystery Body", -3161.078f, 3001.998f, -37.974f },
 	{ "Sunken Ancient Ship", 2627.76f, -1391.54f, -10.5533f },
 	{ "Sunken Armored Carrier", 4196.41f, 3564.53f, -57.6304f },
-	{ "Sunken Body", -3161.078f, 3001.998f, -37.974f },
 	{ "Sunken Cargo Ship", 3191.12f, -358.279f, -17.7928f },
 	{ "Sunken Missiles", 4175.29f, 3533.97f, -48.928f },
 	{ "Sunken Plane Alamo Sea", 288.041f, 3970.42f, -6.11622f },
@@ -1054,6 +1054,14 @@ std::vector<tele_location> LOCATIONS_UNDERWATER = {
 	{ "Sunken WW2 Tank", 4201.633f, 3643.821f, -39.016f },
 	{ "Sunken WW2 Tank 2", 4141.22f, 3538.17f, -22.07f },
 	{ "Sunken WW2 Tank 3", 4159.44f, 3716.28f, -25.62f },
+	{ "The Infinity Killer Body 1", 44.017f, 7587.06f, -4.941f },
+	{ "The Infinity Killer Body 2", -31.5311f, 7614.5f, -4.51803f },
+	{ "The Infinity Killer Body 3", -7.14624f, 7466.13f, -10.7427f },
+	{ "The Infinity Killer Body 4", -45.4198f, 7409.57f, -7.42431f },
+	{ "The Infinity Killer Body 5", 158.958f, 7429.1f, -9.59644f },
+	{ "The Infinity Killer Body 6", 202.88f, 7329.55f, -9.00767f },
+	{ "The Infinity Killer Body 7", -51.4827f, 7320.03f, -3.96834f },
+	{ "The Infinity Killer Body 8", -39.3948f, 7251.45f, -4.89134f },
 	{ "Underwater Hatch", 4273.950f, 2975.714f, -170.746f },
 	{ "Underwater Tank For Liquids", -2857.01f, -490.801f, -16.9937f },
 };
@@ -1118,13 +1126,12 @@ std::vector<tele_location> LOCATIONS_REQSCEN = {
 	{ "SS Bulker (Sunk)", -162.8918f, -2365.769f, 0.0f, { "sunkcargoship" }, { "cargoship" }, {}, false },
 	{ "Train Crash Bridge", -532.1309f, 4526.187f, 88.7955f, { "canyonriver01_traincrash", "railing_end" }, { "railing_start", "canyonriver01" }, {}, false },
 	{ "Yacht", -2023.661f, -1038.038f, 5.577f, { "smboat", "smboat_lod" }, {}, {}, false },
-	//{ "Gun Runnning Yacht TEST", -1418.21000000f, 6749.81100000f, 10.98968000f, IPLS_GUNRUNNING_YACHT, {}, {}, false },
-	//{ "Gun Runnning Yacht YMAP", -1407.20900000f, 6750.85200000f, 12.25551000f, IPLS_GUNRUNNING_YACHT, {}, {}, false },
 	{ "Yacht Galaxy Super East", 3411.10000000f, 1193.44500000f, 5.42995500, IPLS_APAYACHT8_2, {}, {}, false },
 	{ "Yacht Galaxy Super North", 1396.63800000f, 6860.20300000f, 5.42995500, IPLS_APAYACHT11_3, {}, {}, false },
 	{ "Yacht Galaxy Super South", -351.06080000f, -3553.32300000f, 5.42995500, IPLS_APAYACHT5_2, {}, {}, false },
 	{ "Yacht Galaxy Super South West", -1995.72500000f, -1523.69400000f, 5.42997000, IPLS_APAYACHT4_1, {}, {}, false },
 	{ "Yacht Galaxy Super West", -3148.37900000f, 2807.55500000f, 5.42995500f, IPLS_APAYACHT1_2, {}, {}, false },
+	{ "Yacht Gun Runnning", -1419.56f, 6752.45f, 11.909f, IPLS_GUNRUNNING_YACHT, {}, {}, false },//-1418.21000000f, 6749.81100000f, 10.98968000f
 	{ "Yacht Heist", -2043.974f, -1031.582f, 11.981f, IPLS_HEISTYACHT, {}, {}, false },
 };
 
