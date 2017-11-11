@@ -358,6 +358,8 @@ bool onconfirm_veh_menu(MenuItem<int> choice){
 		case 5: // mods
 			if(process_vehmod_menu()) return false;
 			break;
+		case 6: // Plane bombs
+			if (process_veh_weapons_menu()) return false;
 			break;
 		case 16: // door menu
 			if(process_veh_door_menu()) return false;
