@@ -297,6 +297,27 @@ enum eCameraShake
 	CameraShakeDeathFail
 };
 
+/* char shake types:
+ 
+DEATH_FAIL_IN_EFFECT_SHAKE
+DRUNK_SHAKE
+FAMILY5_DRUG_TRIP_SHAKE
+HAND_SHAKE
+JOLT_SHAKE
+LARGE_EXPLOSION_SHAKE
+MEDIUM_EXPLOSION_SHAKE
+SMALL_EXPLOSION_SHAKE
+ROAD_VIBRATION_SHAKE
+SKY_DIVING_SHAKE
+VIBRATE_SHAKE
+ */
+
+enum eCargobobHook
+{
+	Hook = 0,
+	Magnet = 1
+};
+
 enum eControl
 {
 	ControlNextCamera = 0,
