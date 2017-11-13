@@ -751,7 +751,7 @@ std::vector<char*> IPL_PROPS_BIKER_COKE_WAREHOUSE = {
 	"coke_cut_01",
 	"coke_cut_02",
 	"coke_cut_03",
-	"coke_cut_04v",
+	"coke_cut_04",
 	"coke_cut_05"
 };
 
