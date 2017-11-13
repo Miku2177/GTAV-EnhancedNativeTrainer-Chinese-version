@@ -33,7 +33,7 @@ static const int HKEY_TELEPORT_TO_MARKER = 107;
 static const int HKEY_MENU_VEHICLE_SPAWN = 108;
 static const int HKEY_MENU_VEHICLE_PAINT = 109;
 static const int HKEY_MENU_SKINS = 110;
-static const int HKEY_MENU_SKIN_CUST = 111;
+//static const int HKEY_MENU_SKIN_CUST = 111;
 static const int HKEY_TELEPORT_TO_VEHICLE = 112;
 static const int HKEY_MENU_NEXT_RADIO_TRACK = 113;
 static const int HKEY_TOGGLE_THERMAL_VIS = 114;
@@ -45,6 +45,7 @@ static const int HKEY_VEHICLE_POWER = 119;
 static const int HKEY_VEHICLE_BURNOUT = 120;
 static const int HKEY_KILL_NEARBY_PEDS = 121;
 static const int HKEY_EXPLODE_NEARBY_VEHS = 122;
+static const int HKEY_VEHICLE_FLIP = 123;
 
 const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "No Function", 0 },
@@ -59,7 +60,7 @@ const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "Veh. Spawn Menu", HKEY_MENU_VEHICLE_SPAWN },
 	{ "Veh. Paint Menu", HKEY_MENU_VEHICLE_PAINT },
 	{ "Skin Select Menu", HKEY_MENU_SKINS },
-	{ "Skin Customise Menu", HKEY_MENU_SKIN_CUST },
+	//{ "Skin Customise Menu", HKEY_MENU_SKIN_CUST },
 	{ "Next Radio Track", HKEY_MENU_NEXT_RADIO_TRACK },
 	{ "Toggle Night Vision", HKEY_TOGGLE_NIGHT_VIS },
 	{ "Toggle Thermal Vision", HKEY_TOGGLE_THERMAL_VIS },
@@ -69,6 +70,7 @@ const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "Vehicle Burnout (Hold Key)", HKEY_VEHICLE_BURNOUT },
 	{ "Kill All Nearby Peds", HKEY_KILL_NEARBY_PEDS },
 	{ "Explode All Vehicles", HKEY_EXPLODE_NEARBY_VEHS },
+	{ "Flip A Vehicle", HKEY_VEHICLE_FLIP },
 	//{ "Drive as Passenger", HKEY_PASSENGER }
 };
 
