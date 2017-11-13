@@ -139,17 +139,20 @@ void trigger_function_for_hotkey_onkeyup(int hotkey)
 		toggle_invisibility();
 		break;
 	case HKEY_MENU_VEHICLE_SPAWN:
-		set_status_text("Not implemented yet");
+		set_menu_showing(true);
+		process_veh_menu();
 		break;
 	case HKEY_MENU_VEHICLE_PAINT:
-		set_status_text("Not implemented yet");
+		set_menu_showing(true);
+		process_paint_menu();
 		break;
 	case HKEY_MENU_SKINS:
-		set_status_text("Not implemented yet");
+		set_menu_showing(true);
+		process_skinchanger_menu();
 		break;
-	case HKEY_MENU_SKIN_CUST:
-		set_status_text("Not implemented yet");
-		break;
+	//case HKEY_MENU_SKIN_CUST: -- I don't really see if this is needed
+	//	set_status_text("Not implemented yet");
+	//	break;
 	case HKEY_MENU_NEXT_RADIO_TRACK:
 		AUDIO::SKIP_RADIO_FORWARD();
 		break;
@@ -180,6 +183,10 @@ void trigger_function_for_hotkey_onkeyup(int hotkey)
 	case HKEY_EXPLODE_NEARBY_VEHS:
 		kill_all_nearby_vehicles_now();
 		break;
+	case HKEY_VEHICLE_FLIP:
+		vehicle_flip();
+		break;
+	
 	default:
 	{
 		std::ostringstream ss;

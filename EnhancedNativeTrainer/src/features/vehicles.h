@@ -74,6 +74,8 @@ bool process_spawn_menu_cars();
 
 bool process_spawn_menu_indus();
 
+void vehicle_flip();
+
 bool process_spawn_menu_generic(int topMenuSelection);
 
 bool spawn_saved_car(int slot, std::string caption);

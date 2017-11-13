@@ -728,6 +728,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		}
 	}
 
+
 	// testing code; DO NOT DELETE
 	//if(bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && IsKeyJustUp(KeyConfig::KEY_VEH_STOP)){
 		//std::ofstream ofs("_colors.txt", std::ios::app | std::ios::out);
@@ -782,6 +783,19 @@ bool did_player_just_enter_vehicle(Ped playerPed){
 
 void set_old_vehicle_state(bool updatedState){ // used by other functions, like teleporting into cars
 	oldVehicleState = updatedState;
+}
+
+void vehicle_flip()
+{
+	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	Vehicle playerVehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
+	Vector3 orig_rot = ENTITY::GET_ENTITY_ROTATION(playerVehicle, 0);
+
+	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0))
+	{
+		ENTITY::SET_ENTITY_ROTATION(playerVehicle, orig_rot.x, orig_rot.y - 180, orig_rot.z, 0, true);
+	}
 }
 
 void reset_vehicle_globals(){
