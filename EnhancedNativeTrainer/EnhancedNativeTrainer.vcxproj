@@ -47,6 +47,7 @@
     <ClCompile Include="src\utils.cpp" />
     <ClCompile Include="src\xml\filestream.hpp" />
     <ClCompile Include="src\xml\xml_import_export.cpp" />
+    <ClCompile Include="vehicle_weapons.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\xinput\CXBOXController.h" />
@@ -62,6 +63,7 @@
     <ClInclude Include="src\features\props.h" />
     <ClInclude Include="src\features\hotkeys.h" />
     <ClInclude Include="src\features\time.h" />
+    <ClInclude Include="src\features\vehicle_weapons.h" />
     <ClInclude Include="src\io\config_io.h" />
     <ClInclude Include="src\io\xinput.h" />
     <ClInclude Include="src\features\misc.h" />

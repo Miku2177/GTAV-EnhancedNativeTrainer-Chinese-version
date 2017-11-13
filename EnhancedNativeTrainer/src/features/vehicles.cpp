@@ -17,6 +17,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\debug\debuglog.h"
 
 #include <fstream>
+#include "vehicle_weapons.h"
 
 bool featureVehInvincible = false;
 bool featureVehInvincibleUpdated = false;
@@ -356,6 +357,9 @@ bool onconfirm_veh_menu(MenuItem<int> choice){
 			break;
 		case 5: // mods
 			if(process_vehmod_menu()) return false;
+			break;
+		case 6: // Plane bombs
+			if (process_veh_weapons_menu()) return false;
 			break;
 		case 16: // door menu
 			if(process_veh_door_menu()) return false;
