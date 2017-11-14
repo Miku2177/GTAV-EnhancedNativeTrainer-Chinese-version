@@ -107,7 +107,7 @@
     <ClCompile Include="src\ui_support\entcolor.cpp">
       <Filter>src\ui_support</Filter>
     </ClCompile>
-    <ClCompile Include="vehicle_weapons.cpp">
+    <ClCompile Include="src\features\vehicle_weapons.cpp">
       <Filter>src\features</Filter>
     </ClCompile>
   </ItemGroup>
