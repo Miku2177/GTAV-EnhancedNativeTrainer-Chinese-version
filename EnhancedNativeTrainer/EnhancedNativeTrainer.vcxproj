@@ -18,6 +18,7 @@
     <ClCompile Include="src\features\area_effect.cpp" />
     <ClCompile Include="src\features\bodyguards.cpp" />
     <ClCompile Include="src\features\hotkeys.cpp" />
+    <ClCompile Include="src\features\vehicle_weapons.cpp" />
     <ClCompile Include="src\features\vehmod_interiorcols.cpp" />
     <ClCompile Include="src\features\misc.cpp" />
     <ClCompile Include="src\features\neonlightsmenu.cpp" />
@@ -47,7 +48,6 @@
     <ClCompile Include="src\utils.cpp" />
     <ClCompile Include="src\xml\filestream.hpp" />
     <ClCompile Include="src\xml\xml_import_export.cpp" />
-    <ClCompile Include="vehicle_weapons.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\xinput\CXBOXController.h" />

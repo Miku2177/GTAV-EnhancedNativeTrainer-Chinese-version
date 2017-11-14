@@ -97,3 +97,4 @@ float radToDeg(float rads)
 {
 	return rads * ((float)180.0 / (float)3.141592653589793);
 }
+
