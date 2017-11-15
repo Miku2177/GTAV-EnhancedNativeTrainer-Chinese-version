@@ -1234,7 +1234,7 @@ std::vector<tele_location> LOCATIONS_ONLINE = {
 	//{ "Eclipse Apartment 31", -773.023f, 341.627f, 211.397 },
 	//{ "Gun Runnning Bunker", 938.3077f, -3196.112f, -100.0f, { "DLC_GR_Bunker_Interior" }, {}, { "Bunker_Style_C", "upgrade_bunker_set", "security_upgrade", "Office_Upgrade_set", "Gun_schematic_set" }, false }, //No interior at all
 	//{ "Gun Runnning MOC", 1103.562f, -3000.0f, -40.0f, { "gr_grdlc_interior_placement_interior_0_grdlc_int_01_milo_" }, {}, {}, false }, //No interior at all
-	//{ "Rogers Salvage & Scrap", -598.1064f, -1610.67f, 26.01035f, { "sp1_03_interior_v_recycle_milo_" }, {}, {}, false },
+	//{ "Rogers Salvage & Scrap", -624.512f, -1619.14f, 33.0105f, { "sp1_03_interior_v_recycle_milo_" }, {}, {}, false },
 	//
 	{ "2 Car Garage", 173.1176f, -1003.279f, -99.000f, { "hw1_blimp_interior_v_garages_milo_" }, {}, {}, false },
 	{ "3 Alta Street Apt 3", -282.30380000f, -954.78150000f, 85.30347000, { "hw1_blimp_interior_v_apartment_high_milo__3" }, {}, {}, false },

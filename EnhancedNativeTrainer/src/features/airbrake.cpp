@@ -27,7 +27,7 @@ Vector3 curLocation;
 Vector3 curRotation;
 float curHeading;
 
-std::string airbrakeStatusLines[15];
+std::string airbrakeStatusLines[19];
 
 DWORD airbrakeStatusTextDrawTicksMax;
 bool airbrakeStatusTextGxtEntry;
@@ -120,7 +120,7 @@ void update_airbrake_text()
 		int numActualLines = 0;
 		for (int i = 0; i < numLines; i++)
 		{
-			if (!help_showing && i != 14)
+			if (!help_showing && i != 18)
 			{
 				continue;
 			}
@@ -129,7 +129,7 @@ void update_airbrake_text()
 
 			UI::SET_TEXT_FONT(0);
 			UI::SET_TEXT_SCALE(0.3, 0.3);
-			if (i == 0 || i == 8 || i==14)
+			if (i == 0 || i == 9 || i == 15 || i == 16 || i == 18)
 			{
 				UI::SET_TEXT_OUTLINE();
 				UI::SET_TEXT_COLOUR(255, 180, 0, 255);
@@ -175,7 +175,7 @@ void create_airbrake_help_text()
 {
 	//Debug
 	std::stringstream ss;
-
+	
 	/*ss << "Heading: " << curHeading << " Rotation: " << curRotation.z
 	<< "\n xVect: " << xVect << "yVect: " << yVect;*/
 
@@ -194,12 +194,13 @@ void create_airbrake_help_text()
 	}
 
 	ss << "Current Travel Speed: ~HUD_COLOUR_WHITE~" << travelSpeedStr;
-
+	
 	int index = 0;
 	airbrakeStatusLines[index++] = "Default Airbrake Keys (change in XML):";
 	airbrakeStatusLines[index++] = "Q/Z - Move Up/Down";
 	airbrakeStatusLines[index++] = "A/D - Rotate Left/Right";
 	airbrakeStatusLines[index++] = "W/S - Move Forward/Back";
+	airbrakeStatusLines[index++] = "Space + A/D - Move Aside";
 	airbrakeStatusLines[index++] = "Shift - Toggle Move Speed";
 	airbrakeStatusLines[index++] = "T - Toggle Frozen Time";
 	airbrakeStatusLines[index++] = "H - Toggle This Help";
@@ -209,6 +210,9 @@ void create_airbrake_help_text()
 	airbrakeStatusLines[index++] = "Left Stick - Rotate, Move Forward/Back";
 	airbrakeStatusLines[index++] = "A - Toggle Move Speed";
 	airbrakeStatusLines[index++] = "B - Toggle Frozen Time";
+	airbrakeStatusLines[index++] = " ";
+	airbrakeStatusLines[index++] = "Use Your Camera To Move Around";
+	airbrakeStatusLines[index++] = "Hold Space To Enable 'Move By Camera' Mode";
 	airbrakeStatusLines[index++] = " ";
 	airbrakeStatusLines[index++] = ss.str();
 
@@ -247,19 +251,21 @@ void airbrake(bool inVehicle)
 
 	//float tmpHeading = curHeading += ;
 
-	float rotationSpeed = 2.5;
+	float rotationSpeed = 6.5;
 	float forwardPush;
 
 	switch (travelSpeed)
 	{
 	case 0:
-		rotationSpeed = 0.8f;
+		rotationSpeed = 4.5f;
 		forwardPush = 0.2f;
 		break;
 	case 1:
+		rotationSpeed = 5.5f;
 		forwardPush = 1.8f;
 		break;
 	case 2:
+		rotationSpeed = 6.5f;
 		forwardPush = 3.6f;
 		break;
 	}
@@ -275,6 +281,7 @@ void airbrake(bool inVehicle)
 	bool moveBackKey = IsKeyDown(KeyConfig::KEY_AIRBRAKE_BACK) || IsControllerButtonDown(KeyConfig::KEY_AIRBRAKE_BACK);
 	bool rotateLeftKey = IsKeyDown(KeyConfig::KEY_AIRBRAKE_ROTATE_LEFT) || IsControllerButtonDown(KeyConfig::KEY_AIRBRAKE_ROTATE_LEFT);
 	bool rotateRightKey = IsKeyDown(KeyConfig::KEY_AIRBRAKE_ROTATE_RIGHT) || IsControllerButtonDown(KeyConfig::KEY_AIRBRAKE_ROTATE_RIGHT);
+	bool SpaceKey = IsKeyDown(KeyConfig::KEY_AIRBRAKE_SPACE) || IsControllerButtonDown(KeyConfig::KEY_AIRBRAKE_SPACE);
 
 	//Airbrake controls vehicle if occupied
 	Entity target = playerPed;
@@ -337,14 +344,73 @@ void airbrake(bool inVehicle)
 		curLocation.y -= yVect;
 	}
 
-	if (rotateLeftKey)
+	if ((rotateLeftKey) && !(SpaceKey))
 	{
 		curHeading += rotationSpeed;
 	}
-	else if (rotateRightKey)
+	else if ((rotateRightKey) && !(SpaceKey))
 	{
 		curHeading -= rotationSpeed;
 	}
+	
+	if ((rotateLeftKey) && (SpaceKey))
+	{
+		curLocation.x += (forwardPush * sin(degToRad(curHeading + 90)) * -1.0f);
+		curLocation.y += (forwardPush * cos(degToRad(curHeading + 90)));
+	}
+
+	if ((rotateRightKey) && (SpaceKey))
+	{
+		curLocation.x += (forwardPush * sin(degToRad(curHeading - 90)) * -1.0f);
+		curLocation.y += (forwardPush * cos(degToRad(curHeading - 90)));
+	}
+
+	// Control By A Mouse
+	POINT coord;
+	int x_cur_coords;
+	int y_cur_coords;
+	int screen_width;
+	int screen_height;
+	
+	GetCursorPos(&coord);
+
+	x_cur_coords = coord.x;
+	y_cur_coords = coord.y;
+	
+	GRAPHICS::_GET_SCREEN_ACTIVE_RESOLUTION(&screen_width, &screen_height);
+
+	if (x_cur_coords >= (screen_width - 1))
+	{
+		curHeading -= rotationSpeed;
+		SetCursorPos(screen_width - 2, y_cur_coords);
+	}
+
+	if (x_cur_coords <= (screen_width / screen_width))
+	{
+		curHeading += rotationSpeed;
+		SetCursorPos((screen_width / screen_width) + 2, y_cur_coords);
+	}
+	
+	if ((moveForwardKey) && (y_cur_coords > ((screen_height / 2) + 200)) && !(SpaceKey))
+	{
+		curLocation.z -= forwardPush / 2;
+	}
+
+	if ((moveForwardKey) && (y_cur_coords < ((screen_height / 2) - 200)) && !(SpaceKey))
+	{
+		curLocation.z += forwardPush / 2;
+	}
+
+	if ((moveBackKey) && (y_cur_coords > ((screen_height / 2) + 200)) && !(SpaceKey))
+	{
+		curLocation.z += forwardPush / 2;
+	}
+
+	if ((moveBackKey) && (y_cur_coords < ((screen_height / 2) - 200)) && !(SpaceKey))
+	{
+		curLocation.z -= forwardPush / 2;
+	}
+	//
 
 	ENTITY::SET_ENTITY_COORDS_NO_OFFSET(target, curLocation.x, curLocation.y, curLocation.z, xBoolParam, yBoolParam, zBoolParam);
 	ENTITY::SET_ENTITY_HEADING(target, curHeading - rotationSpeed);
@@ -359,3 +425,4 @@ bool is_airbrake_frozen_time()
 {
 	return frozen_time;
 }
+
