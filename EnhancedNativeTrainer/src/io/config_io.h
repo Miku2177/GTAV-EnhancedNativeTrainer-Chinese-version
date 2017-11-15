@@ -44,6 +44,7 @@ class KeyConfig{
 	static const std::string KEY_AIRBRAKE_SPEED;
 	static const std::string KEY_AIRBRAKE_FREEZE_TIME;
 	static const std::string KEY_AIRBRAKE_HELP;
+	static const std::string KEY_AIRBRAKE_SPACE;
 
 	static const std::string KEY_OBJECTPLACER_UP;
 	static const std::string KEY_OBJECTPLACER_DOWN;
