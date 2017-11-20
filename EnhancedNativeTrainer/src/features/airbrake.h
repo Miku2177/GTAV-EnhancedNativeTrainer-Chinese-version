@@ -29,3 +29,5 @@ void update_airbrake_text();
 bool is_in_airbrake_mode();
 
 bool is_airbrake_frozen_time();
+
+bool mouse_view_con();

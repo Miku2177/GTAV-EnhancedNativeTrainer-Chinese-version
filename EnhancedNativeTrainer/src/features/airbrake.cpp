@@ -18,22 +18,34 @@ char* AIRBRAKE_ANIM_B = "base";
 
 int travelSpeed = 0;
 
+Camera AirCam = NULL;
+
 bool in_airbrake_mode = false;
 
 bool frozen_time = false;
 bool help_showing = true;
+bool mouse_view_control = true;
 
 Vector3 curLocation;
 Vector3 curRotation;
 float curHeading;
 
-std::string airbrakeStatusLines[19];
+float rotationSpeed;
+float forwardPush;
+
+std::string airbrakeStatusLines[20];
 
 DWORD airbrakeStatusTextDrawTicksMax;
 bool airbrakeStatusTextGxtEntry;
 
 void exit_airbrake_menu_if_showing()
 {
+	ENTITY::SET_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID(), true);
+	CAM::RENDER_SCRIPT_CAMS(false, false, 0, false, false);
+	CAM::DETACH_CAM(AirCam);
+	CAM::SET_CAM_ACTIVE(AirCam, false);
+	CAM::DESTROY_CAM(AirCam, true);
+	AirCam = NULL;
 	exitFlag = true;
 }
 
@@ -87,6 +99,12 @@ void process_airbrake_menu()
 		else if (airbrake_switch_pressed())
 		{
 			menu_beep();
+			ENTITY::SET_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID(), true);
+			CAM::RENDER_SCRIPT_CAMS(false, false, 0, false, false);
+			CAM::DETACH_CAM(AirCam);
+			CAM::SET_CAM_ACTIVE(AirCam, false);
+			CAM::DESTROY_CAM(AirCam, true);
+			AirCam = NULL;
 			break;
 		}
 
@@ -120,7 +138,7 @@ void update_airbrake_text()
 		int numActualLines = 0;
 		for (int i = 0; i < numLines; i++)
 		{
-			if (!help_showing && i != 18)
+			if (!help_showing && i != 19)
 			{
 				continue;
 			}
@@ -129,7 +147,7 @@ void update_airbrake_text()
 
 			UI::SET_TEXT_FONT(0);
 			UI::SET_TEXT_SCALE(0.3, 0.3);
-			if (i == 0 || i == 9 || i == 15 || i == 16 || i == 18)
+			if (i == 0 || i == 9 || i == 15 || i == 19)
 			{
 				UI::SET_TEXT_OUTLINE();
 				UI::SET_TEXT_COLOUR(255, 180, 0, 255);
@@ -175,7 +193,7 @@ void create_airbrake_help_text()
 {
 	//Debug
 	std::stringstream ss;
-	
+		
 	/*ss << "Heading: " << curHeading << " Rotation: " << curRotation.z
 	<< "\n xVect: " << xVect << "yVect: " << yVect;*/
 
@@ -200,7 +218,7 @@ void create_airbrake_help_text()
 	airbrakeStatusLines[index++] = "Q/Z - Move Up/Down";
 	airbrakeStatusLines[index++] = "A/D - Rotate Left/Right";
 	airbrakeStatusLines[index++] = "W/S - Move Forward/Back";
-	airbrakeStatusLines[index++] = "Space + A/D - Move Aside";
+	airbrakeStatusLines[index++] = "Space + A/D - Move Left/Right";
 	airbrakeStatusLines[index++] = "Shift - Toggle Move Speed";
 	airbrakeStatusLines[index++] = "T - Toggle Frozen Time";
 	airbrakeStatusLines[index++] = "H - Toggle This Help";
@@ -211,7 +229,8 @@ void create_airbrake_help_text()
 	airbrakeStatusLines[index++] = "A - Toggle Move Speed";
 	airbrakeStatusLines[index++] = "B - Toggle Frozen Time";
 	airbrakeStatusLines[index++] = " ";
-	airbrakeStatusLines[index++] = "Use Your Camera To Move Around";
+	airbrakeStatusLines[index++] = "Mouse / Camera Controls (change in XML):";
+	airbrakeStatusLines[index++] = "M - Toggle Mouse Control ON/OFF";
 	airbrakeStatusLines[index++] = "Hold Space To Enable 'Move By Camera' Mode";
 	airbrakeStatusLines[index++] = " ";
 	airbrakeStatusLines[index++] = ss.str();
@@ -243,6 +262,135 @@ void moveThroughDoor()
 
 bool lshiftWasDown = false;
 
+//////////////////////////////////////// CAMERA & MOUSE CODE ////////////////////////
+void camera_view()
+{
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	Entity target_player = playerPed;
+	
+	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0))
+	{
+		target_player = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+	}
+	
+	if (AirCam == NULL)
+	{
+	Vector3 playerPosition = ENTITY::GET_ENTITY_COORDS(target_player, true);
+	curRotation = ENTITY::GET_ENTITY_ROTATION(target_player, 0);
+
+	AirCam = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_FLY_CAMERA", playerPosition.x, playerPosition.y, playerPosition.z, curRotation.x, curRotation.y, curRotation.z, 50.0, true, 2);
+
+	if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0))
+	{
+		CAM::ATTACH_CAM_TO_ENTITY(AirCam, target_player, 0.0f, -0.01f, 0.0f, true);
+		CAM::POINT_CAM_AT_ENTITY(AirCam, target_player, 0.0f, 0.0f, 0.0f, true);
+		CAM::RENDER_SCRIPT_CAMS(true, false, 0, true, true);
+		CAM::SET_CAM_ACTIVE(AirCam, true);
+		ENTITY::SET_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID(), false);
+	}
+	else
+	{
+		CAM::DESTROY_CAM(AirCam, true);
+		AirCam = NULL;
+	}
+	}
+	else if (exitFlag == true)
+	{
+		ENTITY::SET_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID(), true);
+		CAM::RENDER_SCRIPT_CAMS(false, false, 0, false, false);
+		CAM::DETACH_CAM(AirCam);
+		CAM::SET_CAM_ACTIVE(AirCam, false);
+		CAM::DESTROY_CAM(AirCam, true);
+		AirCam = NULL;
+	}
+}
+
+void mouse_view() // Control By A Mouse
+{
+	// Mouse control variables
+	POINT coord;
+	int x_cur_coords;
+	int y_cur_coords;
+	int screen_width;
+	int screen_height;
+	int x_prev_coords;
+	
+	int body_rotation_up = -1;
+	int body_rotation_down = -1;
+	//		
+
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	Entity target = playerPed;
+
+	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0))
+	{
+		target = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+	}
+
+	bool moveForwardKey = IsKeyDown(KeyConfig::KEY_AIRBRAKE_FORWARD) || IsControllerButtonDown(KeyConfig::KEY_AIRBRAKE_FORWARD);
+	bool moveBackKey = IsKeyDown(KeyConfig::KEY_AIRBRAKE_BACK) || IsControllerButtonDown(KeyConfig::KEY_AIRBRAKE_BACK);
+	bool SpaceKey = IsKeyDown(KeyConfig::KEY_AIRBRAKE_SPACE) || IsControllerButtonDown(KeyConfig::KEY_AIRBRAKE_SPACE);
+
+	GetCursorPos(&coord);
+	GRAPHICS::_GET_SCREEN_ACTIVE_RESOLUTION(&screen_width, &screen_height);
+	x_cur_coords = coord.x;
+	y_cur_coords = coord.y;
+	x_prev_coords = screen_width / 2;
+
+	if (x_cur_coords > x_prev_coords)
+	{
+		curHeading -= rotationSpeed;
+		x_cur_coords = screen_width / 2;
+		SetCursorPos(screen_width / 2, y_cur_coords);
+	}
+
+	if (x_cur_coords < x_prev_coords)
+	{
+		curHeading += rotationSpeed;
+		x_cur_coords = screen_width / 2;
+		SetCursorPos(screen_width / 2, y_cur_coords);
+	}
+	
+	curRotation = ENTITY::GET_ENTITY_ROTATION(target, 0);
+	
+	body_rotation_up = (((screen_height - y_cur_coords) / 6) - 86);
+	body_rotation_down = (86 - ((screen_height - y_cur_coords) / 6));
+
+	if (body_rotation_up < 0) body_rotation_up = (body_rotation_up * -1);
+	if (body_rotation_down < 0) body_rotation_down = (body_rotation_down * -1);
+	
+	if (y_cur_coords < (screen_height / 2)) //Head is raised
+	{
+		ENTITY::SET_ENTITY_ROTATION(target, (curRotation.x + body_rotation_up), (curRotation.y + body_rotation_up), curRotation.z, 2, true);
+	}
+
+	if (y_cur_coords > (screen_height / 2)) //Head is lowered
+	{
+		ENTITY::SET_ENTITY_ROTATION(target, (curRotation.x - body_rotation_down), (curRotation.y - body_rotation_down), curRotation.z, 2, true);
+	}
+
+	if ((moveForwardKey) && (y_cur_coords > ((screen_height / 2) + (screen_height / 4)) && !(SpaceKey)))//Head is lowered
+	{
+		curLocation.z -= (forwardPush * 1.1);
+	}
+
+	if ((moveForwardKey) && (y_cur_coords < ((screen_height / 2) - (screen_height / 10))) && !(SpaceKey)) //Head is raised
+	{
+		curLocation.z += (forwardPush * 1.1);
+	}
+
+	if ((moveBackKey) && (y_cur_coords > ((screen_height / 2) + (screen_height / 4)) && !(SpaceKey)))//Head is lowered
+	{
+		curLocation.z += (forwardPush * 1.1);
+	}
+
+	if ((moveBackKey) && (y_cur_coords < ((screen_height / 2) - (screen_height / 10))) && !(SpaceKey)) //Head is raised
+	{
+		curLocation.z -= (forwardPush * 1.1);
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////
 void airbrake(bool inVehicle)
 {
 	// common variables
@@ -251,22 +399,19 @@ void airbrake(bool inVehicle)
 
 	//float tmpHeading = curHeading += ;
 
-	float rotationSpeed = 6.5;
-	float forwardPush;
-
 	switch (travelSpeed)
 	{
 	case 0:
-		rotationSpeed = 4.5f;
-		forwardPush = 0.2f;
+		rotationSpeed = 3.5f;
+		forwardPush = 0.3f;
 		break;
 	case 1:
-		rotationSpeed = 5.5f;
-		forwardPush = 1.8f;
+		rotationSpeed = 4.5f;
+		forwardPush = 1.7f;
 		break;
 	case 2:
-		rotationSpeed = 6.5f;
-		forwardPush = 3.6f;
+		rotationSpeed = 5.5f;
+		forwardPush = 3.5f;
 		break;
 	}
 
@@ -321,16 +466,37 @@ void airbrake(bool inVehicle)
 		help_showing = !help_showing;
 	}
 
+	if (IsKeyJustUp(KeyConfig::KEY_AIRBRAKE_MOUSE_CONTROL) || IsControllerButtonJustUp(KeyConfig::KEY_AIRBRAKE_MOUSE_CONTROL))
+	{
+		mouse_view_control = !mouse_view_control;
+	}
+
+	if (mouse_view_control) 
+	{
+		camera_view();
+		mouse_view();
+	}
+	else
+	{
+		ENTITY::SET_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID(), true);
+		CAM::RENDER_SCRIPT_CAMS(false, false, 0, false, false);
+		CAM::DETACH_CAM(AirCam);
+		CAM::SET_CAM_ACTIVE(AirCam, false);
+		CAM::DESTROY_CAM(AirCam, true);
+		AirCam = NULL;
+	}
+
+
 	create_airbrake_help_text();
 	update_airbrake_text();
 
 	if (moveUpKey)
 	{
-		curLocation.z += forwardPush / 2;
+		curLocation.z += (forwardPush / 1.1);
 	}
 	else if (moveDownKey)
 	{
-		curLocation.z -= forwardPush / 2;
+		curLocation.z -= (forwardPush / 1.1);
 	}
 
 	if (moveForwardKey)
@@ -365,53 +531,6 @@ void airbrake(bool inVehicle)
 		curLocation.y += (forwardPush * cos(degToRad(curHeading - 90)));
 	}
 
-	// Control By A Mouse
-	POINT coord;
-	int x_cur_coords;
-	int y_cur_coords;
-	int screen_width;
-	int screen_height;
-	
-	GetCursorPos(&coord);
-
-	x_cur_coords = coord.x;
-	y_cur_coords = coord.y;
-	
-	GRAPHICS::_GET_SCREEN_ACTIVE_RESOLUTION(&screen_width, &screen_height);
-
-	if (x_cur_coords >= (screen_width - 1))
-	{
-		curHeading -= rotationSpeed;
-		SetCursorPos(screen_width - 2, y_cur_coords);
-	}
-
-	if (x_cur_coords <= (screen_width / screen_width))
-	{
-		curHeading += rotationSpeed;
-		SetCursorPos((screen_width / screen_width) + 2, y_cur_coords);
-	}
-	
-	if ((moveForwardKey) && (y_cur_coords > ((screen_height / 2) + 200)) && !(SpaceKey))
-	{
-		curLocation.z -= forwardPush / 2;
-	}
-
-	if ((moveForwardKey) && (y_cur_coords < ((screen_height / 2) - 200)) && !(SpaceKey))
-	{
-		curLocation.z += forwardPush / 2;
-	}
-
-	if ((moveBackKey) && (y_cur_coords > ((screen_height / 2) + 200)) && !(SpaceKey))
-	{
-		curLocation.z += forwardPush / 2;
-	}
-
-	if ((moveBackKey) && (y_cur_coords < ((screen_height / 2) - 200)) && !(SpaceKey))
-	{
-		curLocation.z -= forwardPush / 2;
-	}
-	//
-
 	ENTITY::SET_ENTITY_COORDS_NO_OFFSET(target, curLocation.x, curLocation.y, curLocation.z, xBoolParam, yBoolParam, zBoolParam);
 	ENTITY::SET_ENTITY_HEADING(target, curHeading - rotationSpeed);
 }
@@ -424,5 +543,10 @@ bool is_in_airbrake_mode()
 bool is_airbrake_frozen_time()
 {
 	return frozen_time;
+}
+
+bool mouse_view_con()
+{
+	return mouse_view_control;
 }
 
