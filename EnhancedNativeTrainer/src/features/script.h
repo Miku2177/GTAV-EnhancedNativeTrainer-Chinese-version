@@ -101,6 +101,10 @@ void update_features();
 
 void reset_globals();
 
+void process_reset_menu();
+
+void process_main_menu();
+
 void set_all_nearby_peds_to_calm();
 
 //DB persistent stuff

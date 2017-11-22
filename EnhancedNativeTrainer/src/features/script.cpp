@@ -560,6 +560,42 @@ void process_player_menu(){
 	draw_menu_from_struct_def(lines, lineCount, &activeLineIndexPlayer, caption, onconfirm_player_menu);
 }
 
+// Reset all settings
+bool onconfirm_reset_menu(MenuItem<int> choice){
+	switch (activeLineIndexPlayer){
+	case 0:
+		menu_beep();
+		set_menu_showing(true);
+		WAIT(200);
+		process_main_menu();
+		set_menu_showing(false);
+		break;
+	case 1:
+		reset_globals();
+		process_main_menu();
+		set_menu_showing(false);
+		break;
+	default:
+		break;
+	}
+
+	return false;
+}
+
+void process_reset_menu(){
+	const int lineCount = 2;
+	
+	std::string caption = "Reset All Settings";
+	
+	StandardOrToggleMenuDef lines[lineCount] = {
+		{ "NO", NULL, NULL, true},
+		{ "YES", NULL, NULL, true},
+	};
+	
+	draw_menu_from_struct_def(lines, lineCount, &activeLineIndexPlayer, caption, onconfirm_reset_menu);
+
+}
+
 //==================
 // MAIN MENU
 //==================
@@ -596,7 +632,7 @@ bool onconfirm_main_menu(MenuItem<int> choice){
 			process_misc_menu();
 			break;
 		case 9:
-			reset_globals();
+			process_reset_menu();
 			break;
 		case 10:
 			process_aimbot_esp_menu();
