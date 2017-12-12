@@ -1878,6 +1878,37 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ "HOWARD", "elt_dlc_smuggler", "howard" },
 	{ "MICROLIGHT", "elt_dlc_smuggler", "microlight" },
 	{ "SEABREEZE", "elt_dlc_smuggler", "seabreeze" },
+	//Doomsday Heist
+	{ "AKULA", "candc_xmas2017", "akula" },
+	{ "BARRAGE", "candc_xmas2017", "barrage" },
+	{ "CHERNOBOG", "candc_xmas2017", "chernobog" },
+	{ "DELUXO", "candc_xmas2017", "deluxo" },
+	{ "KHANJALI", "candc_xmas2017", "khanjali" },
+	{ "RIOT2", "candc_xmas2017", "riot2" },
+	{ "STROMBERG", "candc_xmas2017", "stromberg" },
+	{ "THRUSTER", "candc_xmas2017", "thruster" },
+	{ "VOLATOL", "candc_xmas2017", "volatol" },
+	{ "HERMES", "sssa_dlc_xmas2017", "hermes" },
+	{ "KAMACHO", "sssa_dlc_xmas2017", "kamacho" },
+	{ "RIATA", "sssa_dlc_xmas2017", "riata" },
+	{ "SENTINEL3", "sssa_dlc_xmas2017", "sentinel3" },
+	{ "STREITER", "sssa_dlc_xmas2017", "streiter" }, //Also in lgm_dlc_xmas2017
+	{ "YOSEMITE", "sssa_dlc_xmas2017", "yosemite" },
+	{ "AUTARCH", "lgm_dlc_xmas2017", "autarch" },
+	//{ "AVENGER", "lgm_dlc_xmas2017", "akula" }, -- no image. It acts like the mobile base
+	{ "COMET4", "lgm_dlc_xmas2017", "comet4" },
+	{ "COMET5", "lgm_dlc_xmas2017", "comet5" },
+	{ "GT500", "lgm_dlc_xmas2017", "gt500" },
+	{ "HUSTLER", "lgm_dlc_xmas2017", "hustler" },
+	{ "NEON", "lgm_dlc_xmas2017", "neon" },
+	{ "PARIAH", "lgm_dlc_xmas2017", "pariah" },
+	{ "RAIDEN", "lgm_dlc_xmas2017", "raiden" },
+	{ "REVOLTER", "lgm_dlc_xmas2017", "revolter" },
+	{ "SAVESTRA", "lgm_dlc_xmas2017", "savestra" },
+	{ "SC1", "lgm_dlc_xmas2017", "sc1" },
+	{ "VISERIS", "lgm_dlc_xmas2017", "viseris" },
+	{ "Z190", "lgm_dlc_xmas2017", "z190" },
+
 };
 
 static std::vector<VehicleImage> ALL_VEH_IMAGES;
