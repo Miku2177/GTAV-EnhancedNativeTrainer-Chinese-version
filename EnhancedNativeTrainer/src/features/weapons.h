@@ -24,9 +24,9 @@ const std::vector<std::string> MENU_WEAPON_CATEGORIES{"Melee", "Handguns", "Subm
 // Count: 18
 const std::vector<std::string> CAPTIONS_MELEE{ "Knife", "Nightstick", "Hammer", "Baseball Bat", "Chop's Ball", "Digiscanner", "Golf Club", "Crowbar", "Bottle", "Antique Dagger", "Hatchet", "Knuckle Duster", "Machete", "Flashlight", "Switchblade", "Battleaxe", "Pipe Wrench", "Poolcue" };
 const std::vector<std::string> VALUES_MELEE{ "WEAPON_KNIFE", "WEAPON_NIGHTSTICK", "WEAPON_HAMMER", "WEAPON_BAT", "WEAPON_BALL", "WEAPON_DIGISCANNER", "WEAPON_GOLFCLUB", "WEAPON_CROWBAR", "WEAPON_BOTTLE", "WEAPON_DAGGER", "WEAPON_HATCHET", "WEAPON_KNUCKLE", "WEAPON_MACHETE", "WEAPON_FLASHLIGHT", "WEAPON_SWITCHBLADE", "WEAPON_BATTLEAXE", "WEAPON_WRENCH", "WEAPON_POOLCUE" };
-// Count: 14
-const std::vector<std::string> CAPTIONS_HANDGUN{ "Pistol", "Pistol MK2", "Combat Pistol", "AP Pistol", "Pistol .50", "SNS Pistol", "SNS Pistol MK2", "Heavy Pistol", "Vintage Pistol", "Stun Gun", "Flare Gun", "Marksman Pistol", "Revolver", "Revolver MK2", };
-const std::vector<std::string> VALUES_HANDGUN{ "WEAPON_PISTOL", "WEAPON_PISTOL_MK2", "WEAPON_COMBATPISTOL", "WEAPON_APPISTOL", "WEAPON_PISTOL50", "WEAPON_SNSPISTOL", "WEAPON_SNSPISTOL_MK2", "WEAPON_HEAVYPISTOL", "WEAPON_VINTAGEPISTOL", "WEAPON_STUNGUN", "WEAPON_FLAREGUN", "WEAPON_MARKSMANPISTOL", "WEAPON_REVOLVER", "WEAPON_REVOLVER_MK2" };
+// Count: 15
+const std::vector<std::string> CAPTIONS_HANDGUN{ "Pistol", "Pistol MK2", "Combat Pistol", "AP Pistol", "Pistol .50", "SNS Pistol", "SNS Pistol MK2", "Heavy Pistol", "Vintage Pistol", "Stun Gun", "Flare Gun", "Marksman Pistol", "Revolver", "Revolver MK2", "Double Action Revolver" };
+const std::vector<std::string> VALUES_HANDGUN{ "WEAPON_PISTOL", "WEAPON_PISTOL_MK2", "WEAPON_COMBATPISTOL", "WEAPON_APPISTOL", "WEAPON_PISTOL50", "WEAPON_SNSPISTOL", "WEAPON_SNSPISTOL_MK2", "WEAPON_HEAVYPISTOL", "WEAPON_VINTAGEPISTOL", "WEAPON_STUNGUN", "WEAPON_FLAREGUN", "WEAPON_MARKSMANPISTOL", "WEAPON_REVOLVER", "WEAPON_REVOLVER_MK2", "WEAPON_DOUBLEACTION" };
 // Count: 10
 const std::vector<std::string> CAPTIONS_SUBMACHINE{ "Micro SMG", "SMG", "SMG MK2", "Assault SMG", "MG", "Combat MG", "Combat MG MK2", "Gusenberg Sweeper", "Combat PDW", "Machine Pistol", "Mini SMG", };
 const std::vector<std::string> VALUES_SUBMACHINE{ "WEAPON_MICROSMG", "WEAPON_SMG", "WEAPON_SMG_MK2", "WEAPON_ASSAULTSMG", "WEAPON_MG", "WEAPON_COMBATMG", "WEAPON_COMBATMG_MK2", "WEAPON_GUSENBERG", "WEAPON_COMBATPDW", "WEAPON_MACHINEPISTOL", "WEAPON_MINISMG" };
@@ -225,8 +225,8 @@ const std::vector<float> WEAP_DMG_FLOAT{1.0, 1.5, 2.0, 3.0, 5.0, 10.0, 50.0, 100
 
 const int PARACHUTE_ID = 0xFBAB5776;
 
-const int TOTAL_WEAPONS_COUNT = 79;
-const int TOTAL_WEAPONS_SLOTS = 78;
+const int TOTAL_WEAPONS_COUNT = 80;
+const int TOTAL_WEAPONS_SLOTS = 79;
 const int MAX_MOD_SLOTS = 15; //This could be why the new tints don't work...
 
 bool process_weapon_menu();
