@@ -1339,7 +1339,7 @@ std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "CEO Garage Modshop", 730.0f, -2990.0f, -40.0f, { "imp_impexp_interior_placement_interior_2_imptexp_mod_int_01_milo_" }, {}, {}, false },//No ceiling, floor, walls textures.
 	{ "Del Perro Heights Apt 27", -1468.02100000f, -529.94370000f, 49.72156000f, { "hei_hw1_blimp_interior_27_dlc_apart_high_new_milo_" }, {}, {}, false },
 	{ "Del Perro Heights Apt 28", -1468.14f, -541.815f, 73.4442f, {}, {}, {}, false },
-	{ "Doomsday Heist Base", -1266.80200000f, -3014.83700000f, -50.00000000f, { "xm_x17dlc_int_placement_strm_0" }, {}, { IPL_PROPS_DOOMSDAY_BASE }, false },
+	//{ "Doomsday Heist Base", -1266.80200000f, -3014.83700000f, -50.00000000f, { "xm_x17dlc_int_placement_strm_0" }, {}, { IPL_PROPS_DOOMSDAY_BASE }, false }, - props don't load
 	{ "Executive CEO Office: Style 1", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_01a" }, {}, {}, false }, //ex_dt1_11_office_01a[b, c....]
 	{ "Executive CEO Office: Style 2", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_01b" }, {}, {}, false },
 	{ "Executive CEO Office: Style 3", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_01c" }, {}, {}, false },
