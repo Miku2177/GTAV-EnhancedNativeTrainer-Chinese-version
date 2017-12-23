@@ -35,6 +35,8 @@
     <key function="airbrake_back" value="VK_KEY_S"/>
     <key function="airbrake_rotate_left" value="VK_KEY_A"/>
     <key function="airbrake_rotate_right" value="VK_KEY_D"/>
+    <key function="airbrake_move_aside" value="VK_SPACE"/>
+    <key function="airbrake_mouse_control" value="VK_KEY_M"/>
     <key function="airbrake_speed" value="VK_SHIFT"/>
     <key function="airbrake_freeze_time" value="VK_KEY_T"/>
     <key function="airbrake_help" value="VK_KEY_H"/>
@@ -51,7 +53,7 @@
     <key function="objectplacer_freeze_position" value="VK_KEY_G"/>
     <key function="objectplacer_help" value="VK_KEY_H"/>
 
-    <!-- To enable your hotkeys, change VK_NOTHING to a real key, and optionally alter the other attributes. This does not work well with controllers.-->
+    <!-- To enable your hotkeys, change VK_NOTHING to a real key, and optionally alter the other attributes. This does not work well with controllers -->
     <key function="hotkey_1" value="VK_NOTHING" modCtrl="false" modAlt="false" modShift="false"/>
     <key function="hotkey_2" value="VK_NOTHING" modCtrl="false" modAlt="false" modShift="false"/>
     <key function="hotkey_3" value="VK_NOTHING" modCtrl="false" modAlt="false" modShift="false"/>

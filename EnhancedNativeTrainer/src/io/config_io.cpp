@@ -394,6 +394,8 @@ KeyInputConfig::KeyInputConfig(){
 	this->keyConfigs[KeyConfig::KEY_AIRBRAKE_SPEED] = new KeyConfig(VK_SHIFT);
 	this->keyConfigs[KeyConfig::KEY_AIRBRAKE_FREEZE_TIME] = new KeyConfig(VK_KEY_T);
 	this->keyConfigs[KeyConfig::KEY_AIRBRAKE_HELP] = new KeyConfig(VK_KEY_H);
+	this->keyConfigs[KeyConfig::KEY_AIRBRAKE_SPACE] = new KeyConfig(VK_SPACE);
+	this->keyConfigs[KeyConfig::KEY_AIRBRAKE_MOUSE_CONTROL] = new KeyConfig(VK_KEY_M);
 
 	this->keyConfigs[KeyConfig::KEY_OBJECTPLACER_UP] = new KeyConfig(VK_KEY_Q);
 	this->keyConfigs[KeyConfig::KEY_OBJECTPLACER_DOWN] = new KeyConfig(VK_KEY_Z);
@@ -494,6 +496,10 @@ KeyInputConfig::KeyInputConfig(){
 	this->controllerConfigs[KeyConfig::KEY_OBJECTPLACER_FREEZE_TIME]->add_button(ControllerButtonConfig::CONTROLLER_BTN_B);
 	this->controllerConfigs[KeyConfig::KEY_OBJECTPLACER_FREEZE_POSITION] = new ControllerButtonConfig();
 	this->controllerConfigs[KeyConfig::KEY_OBJECTPLACER_FREEZE_POSITION]->add_button(ControllerButtonConfig::CONTROLLER_BTN_Y);
+
+	this->controllerConfigs[KeyConfig::KEY_AIRBRAKE_SPACE] = new ControllerButtonConfig();
+	this->controllerConfigs[KeyConfig::KEY_AIRBRAKE_SPACE]->add_button(ControllerButtonConfig::CONTROLLER_BTN_A);
+	
 }
 
 KeyInputConfig::~KeyInputConfig(){
@@ -552,6 +558,8 @@ const std::string KeyConfig::KEY_AIRBRAKE_ROTATE_RIGHT = std::string("airbrake_r
 const std::string KeyConfig::KEY_AIRBRAKE_SPEED = std::string("airbrake_speed");
 const std::string KeyConfig::KEY_AIRBRAKE_FREEZE_TIME = std::string("airbrake_freeze_time");
 const std::string KeyConfig::KEY_AIRBRAKE_HELP = std::string("airbrake_help");
+const std::string KeyConfig::KEY_AIRBRAKE_SPACE = std::string("airbrake_move_aside");
+const std::string KeyConfig::KEY_AIRBRAKE_MOUSE_CONTROL = std::string("airbrake_mouse_control");
 
 const std::string KeyConfig::KEY_OBJECTPLACER_UP = std::string("objectplacer_up");
 const std::string KeyConfig::KEY_OBJECTPLACER_DOWN = std::string("objectplacer_down");
