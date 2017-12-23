@@ -1990,23 +1990,16 @@ void set_plate_text(MenuItem<int> choice){
 bool is_custom_tyres(std::vector<int> extras){
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 
-	return VEHICLE::GET_VEHICLE_MOD_VARIATION(veh, 23) != 0 || (VEHICLE::GET_VEHICLE_WHEEL_TYPE(veh) == 8 || VEHICLE::GET_VEHICLE_WHEEL_TYPE(veh) == 9) && VEHICLE::GET_VEHICLE_MOD(veh, 23) > 30;
+	return (VEHICLE::GET_VEHICLE_MOD_VARIATION(veh, 23) || VEHICLE::GET_VEHICLE_MOD_VARIATION(veh, 24));
 }
 
 void set_custom_tyres(bool applied, std::vector<int> extras){
-	if (applied){
-		set_status_text("CTs applied");
-	}
-	else{
-		set_status_text("CTs unapplied");
-	}
-
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
-	VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
 	int currmod = VEHICLE::GET_VEHICLE_MOD(veh, 23);
+
+	VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
 	VEHICLE::SET_VEHICLE_MOD(veh, 23, currmod, applied); //Add Custom Tires
 	VEHICLE::SET_VEHICLE_MOD(veh, 24, currmod, applied); //Add Custom Tires (For bike rear wheels if they exist)
-	set_status_text("Changed tires");
 }
 
 bool is_turbocharged(std::vector<int> extras){
