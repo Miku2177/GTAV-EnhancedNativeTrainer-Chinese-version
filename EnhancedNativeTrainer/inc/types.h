@@ -39,10 +39,10 @@ typedef int ScrHandle;
 typedef struct
 {
 	float x;
-	DWORD _paddingx;
+	float _paddingx;
 	float y;
-	DWORD _paddingy;
+	float _paddingy;
 	float z;
-	DWORD _paddingz;
+	float _paddingz;
 } Vector3;
 #pragma pack(pop)
