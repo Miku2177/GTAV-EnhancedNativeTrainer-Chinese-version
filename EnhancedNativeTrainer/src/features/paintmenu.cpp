@@ -14,12 +14,15 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 int whichpart = 0;
 int whichtype = 0;
+PaintIndexItem<int> *parentIndexItem = NULL;
 
 //Parts
 const std::vector<std::string> MENU_PAINT_WHAT{"Primary", "Secondary", "Primary & Secondary", "Pearlescent", "Wheels"};
 
 //Paint Names
 const std::vector<std::string> MENU_PAINT_TYPE{"Classic", "Metallic", "Matte", "Metals", "Util", "Worn", "Chrome"};
+const std::string MENU_PAINT_INDEX_TYPE("Index");
+const std::string MENU_CUSTOM_PAINT_TYPE("Custom");
 
 const std::vector<PaintColor> PAINTS_CLASSIC{
 	{0, "Black"},
@@ -501,21 +504,48 @@ bool onconfirm_paint_menu_type(MenuItem<int> choice){
 
 	whichtype = choice.value;
 
-	std::vector<PaintColor> paints;
-	if(whichtype == 6){
-		apply_paint(PAINTS_BY_TYPE[whichtype].at(0));
-		return false;
-	}
-	else{
-		paints = PAINTS_BY_TYPE[whichtype];
-	}
-
 	std::vector<MenuItem<int> *> menuItems;
 	MenuItem<int> *item;
 
 	int primary, secondary, pearl, wheel;
 	VEHICLE::GET_VEHICLE_COLOURS(veh, &primary, &secondary);
 	VEHICLE::GET_VEHICLE_EXTRA_COLOURS(veh, &pearl, &wheel);
+
+	std::vector<PaintColor> paints;
+	if(whichtype == 6){
+		apply_paint(PAINTS_BY_TYPE[whichtype].at(0));
+		return false;
+	}
+	else if (whichtype == 7){
+		int components[3] = { 0, 0, 0 };
+
+		switch (whichpart){
+		case 0:
+			VEHICLE::GET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, &components[0], &components[1], &components[2]);
+			break;
+		case 1:
+			VEHICLE::GET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, &components[0], &components[1], &components[2]);
+			break;
+		}
+
+		for (int a = 0; a < 3; a++){
+			PaintColorItem<int> *colorItem;
+
+			colorItem = new PaintColorItem<int>();
+			colorItem->caption = ENTColor::colsCompCaptions[a];
+			colorItem->isLeaf = true;
+			colorItem->colorval = components[a];
+			colorItem->part = whichpart;
+			colorItem->component = a;
+			menuItems.push_back(colorItem);
+		}
+
+		draw_generic_menu<int>(menuItems, NULL, category, NULL, NULL, NULL, vehicle_menu_interrupt);
+		return false;
+	}
+	else{
+		paints = PAINTS_BY_TYPE[whichtype];
+	}
 
 	int matchIndex = 0, ps = paints.size();
 
@@ -557,11 +587,13 @@ bool onconfirm_paint_menu_type(MenuItem<int> choice){
 }
 
 bool process_paint_menu_type(){
+	bool rval = false;
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 
 	std::vector<MenuItem<int> *> menuItems;
 	MenuItem<int> *item;
+	PaintIndexItem<int> *indexItem;
 	int index;
 
 	for(index = 0; index < MENU_PAINT_TYPE.size(); index++){
@@ -572,7 +604,44 @@ bool process_paint_menu_type(){
 		menuItems.push_back(item);
 	}
 
-	return draw_generic_menu<int>(menuItems, NULL, "Choose Paint Type", onconfirm_paint_menu_type, NULL, NULL, vehicle_menu_interrupt);
+	int primary, secondary, pearl, wheel;
+	VEHICLE::GET_VEHICLE_COLOURS(veh, &primary, &secondary);
+	VEHICLE::GET_VEHICLE_EXTRA_COLOURS(veh, &pearl, &wheel);
+
+	indexItem = new PaintIndexItem<int>();
+	indexItem->caption = MENU_PAINT_INDEX_TYPE;
+	indexItem->isLeaf = true;
+	switch (whichpart) {
+	case 0:
+	case 2:
+		indexItem->colorindex = primary;
+		break;
+	case 1:
+		indexItem->colorindex = secondary;
+		break;
+	case 3:
+		indexItem->colorindex = pearl;
+		break;
+	case 4:
+		indexItem->colorindex = wheel;
+		break;
+	}
+	indexItem->part = whichpart;
+	menuItems.push_back(indexItem);
+	parentIndexItem = indexItem;
+
+	if (whichpart >= 0 && whichpart < 2){
+		item = new MenuItem<int>();
+		item->caption = MENU_CUSTOM_PAINT_TYPE;
+		item->value = index++;
+		item->isLeaf = false;
+		menuItems.push_back(item);
+	}
+
+	rval = draw_generic_menu<int>(menuItems, NULL, "Choose Paint Type", onconfirm_paint_menu_type, NULL, NULL, vehicle_menu_interrupt);
+	parentIndexItem = NULL;
+
+	return rval;
 }
 
 void onhighlight_color_menu_selection(MenuItem<int> choice){
@@ -596,14 +665,35 @@ void apply_paint(PaintColor whichpaint){
 			VEHICLE::GET_VEHICLE_COLOURS(veh, &primary, &secondary);
 			VEHICLE::GET_VEHICLE_EXTRA_COLOURS(veh, &pearl, &wheel);
 
+			BOOL isCustom;
+			int red, green, blue;
+
 			switch(whichpart){
 				case 0:
+					isCustom = VEHICLE::GET_IS_VEHICLE_SECONDARY_COLOUR_CUSTOM(veh);
+					if (isCustom){
+						VEHICLE::GET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, &red, &green, &blue);
+					}
+					VEHICLE::CLEAR_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh);
 					VEHICLE::SET_VEHICLE_COLOURS(veh, colorIndex, secondary);
+					if (isCustom){
+						VEHICLE::SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, red, green, blue);
+					}
 					break;
 				case 1:
+					isCustom = VEHICLE::GET_IS_VEHICLE_PRIMARY_COLOUR_CUSTOM(veh);
+					if (isCustom){
+						VEHICLE::GET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, &red, &green, &blue);
+					}
+					VEHICLE::CLEAR_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh);
 					VEHICLE::SET_VEHICLE_COLOURS(veh, primary, colorIndex);
+					if (isCustom){
+						VEHICLE::SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, red, green, blue);
+					}
 					break;
 				case 2:
+					VEHICLE::CLEAR_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh);
+					VEHICLE::CLEAR_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh);
 					VEHICLE::SET_VEHICLE_COLOURS(veh, colorIndex, colorIndex);
 					break;
 				case 3:
@@ -618,6 +708,10 @@ void apply_paint(PaintColor whichpaint){
 
 			if(whichtype == 1 && whichpart >= 0 && whichpart <= 2){
 				VEHICLE::SET_VEHICLE_EXTRA_COLOURS(veh, colorIndex, wheel);
+			}
+
+			if (parentIndexItem){
+				parentIndexItem->SetIndex(colorIndex);
 			}
 		}
 		else{

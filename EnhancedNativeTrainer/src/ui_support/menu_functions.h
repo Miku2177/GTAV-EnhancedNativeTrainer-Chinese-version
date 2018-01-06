@@ -215,6 +215,148 @@ class ColorItem: public MenuItem<T>{
 	}
 };
 
+template<class T>
+class PaintColorItem : public MenuItem<T>{
+public:
+	int colorval, part, component, increment = 1, min = 0, max = 255;
+
+	virtual ~PaintColorItem(){
+		// Supposed to be empty
+	}
+
+	virtual bool isAbsorbingLeftAndRightEvents(){
+		return true;
+	}
+
+	virtual void handleLeftPress(){
+		colorval -= increment;
+		if (colorval < min)
+		{
+			colorval = max;
+		}
+
+		handlePressCommon();
+	}
+
+	virtual void handleRightPress(){
+		colorval += increment;
+		if (colorval > max)
+		{
+			colorval = min;
+		}
+
+		handlePressCommon();
+	}
+
+	int GetColor() { return colorval; }
+
+private:
+
+	void handlePressCommon(){
+		Ped playerPed = PLAYER::PLAYER_PED_ID();
+		Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+
+		int components[3];
+		switch (part) {
+		case 0:
+			VEHICLE::GET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, &components[0], &components[1], &components[2]);
+			components[component] = colorval;
+			VEHICLE::SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, components[0], components[1], components[2]);
+			break;
+		case 1:
+			VEHICLE::GET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, &components[0], &components[1], &components[2]);
+			components[component] = colorval;
+			VEHICLE::SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, components[0], components[1], components[2]);
+			break;
+		}
+	}
+};
+
+template<class T>
+class PaintIndexItem : public MenuItem<T>{
+public:
+	int colorindex, part, increment = 1, min = 0, max = 160;
+
+	virtual ~PaintIndexItem(){
+		// Supposed to be empty
+	}
+
+	virtual bool isAbsorbingLeftAndRightEvents(){
+		return true;
+	}
+
+	virtual void handleLeftPress(){
+		colorindex -= increment;
+		if (colorindex < min)
+		{
+			colorindex = max;
+		}
+
+		handlePressCommon();
+	}
+
+	virtual void handleRightPress(){
+		colorindex += increment;
+		if (colorindex > max)
+		{
+			colorindex = min;
+		}
+
+		handlePressCommon();
+	}
+
+	int GetIndex() { return colorindex; }
+	void SetIndex(int index) { colorindex = index; }
+
+private:
+
+	void handlePressCommon(){
+		Ped playerPed = PLAYER::PLAYER_PED_ID();
+		Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+
+		BOOL isCustom;
+		int red, green, blue;
+		int primary, secondary;
+		int pearl, wheel;
+
+		switch (part) {
+		case 0:
+			isCustom = VEHICLE::GET_IS_VEHICLE_SECONDARY_COLOUR_CUSTOM(veh);
+			if (isCustom){
+				VEHICLE::GET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, &red, &green, &blue);
+			}
+			VEHICLE::GET_VEHICLE_COLOURS(veh, &primary, &secondary);
+			VEHICLE::SET_VEHICLE_COLOURS(veh, colorindex, secondary);
+			if (isCustom){
+				VEHICLE::SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, red, green, blue);
+			}
+			break;
+		case 1:
+			isCustom = VEHICLE::GET_IS_VEHICLE_PRIMARY_COLOUR_CUSTOM(veh);
+			if (isCustom){
+				VEHICLE::GET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, &red, &green, &blue);
+			}
+			VEHICLE::GET_VEHICLE_COLOURS(veh, &primary, &secondary);
+			VEHICLE::SET_VEHICLE_COLOURS(veh, primary, colorindex);
+			if (isCustom){
+				VEHICLE::SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, red, green, blue);
+			}
+			break;
+		case 2:
+			VEHICLE::SET_VEHICLE_COLOURS(veh, colorindex, colorindex);
+			break;
+		case 3:
+			VEHICLE::GET_VEHICLE_EXTRA_COLOURS(veh, &pearl, &wheel);
+			VEHICLE::SET_VEHICLE_EXTRA_COLOURS(veh, colorindex, wheel);
+			break;
+		case 4:
+			VEHICLE::GET_VEHICLE_EXTRA_COLOURS(veh, &pearl, &wheel);
+			VEHICLE::SET_VEHICLE_EXTRA_COLOURS(veh, pearl, colorindex);
+			break;
+		}
+	}
+};
+
 enum LifeItemType{
 	HEALTH,
 	MAXHEALTH,
@@ -609,7 +751,65 @@ void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, f
 		UI::_ADD_TEXT_COMPONENT_STRING((char *) ssStr.c_str());
 		UI::_DRAW_TEXT(0, textY);
 	}
-	else if(SelectFromListMenuItem* selectFromListItem = dynamic_cast<SelectFromListMenuItem*>(item)){
+	else if (PaintColorItem<T>* colorItem = dynamic_cast<PaintColorItem<T> *>(item)){
+		UI::SET_TEXT_FONT(fontItem);
+		UI::SET_TEXT_SCALE(0.0, text_scale);
+		if (active){
+			UI::SET_TEXT_COLOUR(ENTColor::colsMenu[4].rgba[0], ENTColor::colsMenu[4].rgba[1], ENTColor::colsMenu[4].rgba[2], ENTColor::colsMenu[4].rgba[3]);
+		}
+		else{
+			UI::SET_TEXT_COLOUR(ENTColor::colsMenu[2].rgba[0], ENTColor::colsMenu[2].rgba[1], ENTColor::colsMenu[2].rgba[2], ENTColor::colsMenu[2].rgba[3]);
+		}
+		UI::SET_TEXT_RIGHT_JUSTIFY(1);
+
+		if (outline){
+			UI::SET_TEXT_OUTLINE();
+		}
+
+		if (dropShadow){
+			UI::SET_TEXT_DROPSHADOW(5, 0, 78, 255, 255);
+		}
+
+		UI::SET_TEXT_EDGE(0, 0, 0, 0, 0);
+		UI::SET_TEXT_WRAP(0.0f, lineLeftScaled + lineWidthScaled - leftMarginScaled);
+		UI::_SET_TEXT_ENTRY("STRING");
+
+		std::stringstream ss;
+		ss << "<< " << std::to_string(colorItem->GetColor()) << " >>";
+		auto ssStr = ss.str();
+		UI::_ADD_TEXT_COMPONENT_STRING((char *)ssStr.c_str());
+		UI::_DRAW_TEXT(0, textY);
+	}
+	else if (PaintIndexItem<T>* indexItem = dynamic_cast<PaintIndexItem<T> *>(item)){
+		UI::SET_TEXT_FONT(fontItem);
+		UI::SET_TEXT_SCALE(0.0, text_scale);
+		if (active){
+			UI::SET_TEXT_COLOUR(ENTColor::colsMenu[4].rgba[0], ENTColor::colsMenu[4].rgba[1], ENTColor::colsMenu[4].rgba[2], ENTColor::colsMenu[4].rgba[3]);
+		}
+		else{
+			UI::SET_TEXT_COLOUR(ENTColor::colsMenu[2].rgba[0], ENTColor::colsMenu[2].rgba[1], ENTColor::colsMenu[2].rgba[2], ENTColor::colsMenu[2].rgba[3]);
+		}
+		UI::SET_TEXT_RIGHT_JUSTIFY(1);
+
+		if (outline){
+			UI::SET_TEXT_OUTLINE();
+		}
+
+		if (dropShadow){
+			UI::SET_TEXT_DROPSHADOW(5, 0, 78, 255, 255);
+		}
+
+		UI::SET_TEXT_EDGE(0, 0, 0, 0, 0);
+		UI::SET_TEXT_WRAP(0.0f, lineLeftScaled + lineWidthScaled - leftMarginScaled);
+		UI::_SET_TEXT_ENTRY("STRING");
+
+		std::stringstream ss;
+		ss << "<< " << std::to_string(indexItem->GetIndex()) << " >>";
+		auto ssStr = ss.str();
+		UI::_ADD_TEXT_COMPONENT_STRING((char *)ssStr.c_str());
+		UI::_DRAW_TEXT(0, textY);
+	}
+	else if (SelectFromListMenuItem* selectFromListItem = dynamic_cast<SelectFromListMenuItem*>(item)){
 		UI::SET_TEXT_FONT(fontItem);
 		UI::SET_TEXT_SCALE(0.0, text_scale);
 
