@@ -259,9 +259,13 @@ private:
 		int components[3];
 		switch (part) {
 		case 0:
+		case 2:
 			VEHICLE::GET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, &components[0], &components[1], &components[2]);
 			components[component] = colorval;
 			VEHICLE::SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, components[0], components[1], components[2]);
+			if (part == 2){
+                VEHICLE::SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, components[0], components[1], components[2]);
+			}
 			break;
 		case 1:
 			VEHICLE::GET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, &components[0], &components[1], &components[2]);

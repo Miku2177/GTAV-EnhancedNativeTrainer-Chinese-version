@@ -521,6 +521,7 @@ bool onconfirm_paint_menu_type(MenuItem<int> choice){
 
 		switch (whichpart){
 		case 0:
+		case 2:
 			VEHICLE::GET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, &components[0], &components[1], &components[2]);
 			break;
 		case 1:
@@ -630,7 +631,7 @@ bool process_paint_menu_type(){
 	menuItems.push_back(indexItem);
 	parentIndexItem = indexItem;
 
-	if (whichpart >= 0 && whichpart < 2){
+	if (whichpart >= 0 && whichpart < 3){
 		item = new MenuItem<int>();
 		item->caption = MENU_CUSTOM_PAINT_TYPE;
 		item->value = index++;
