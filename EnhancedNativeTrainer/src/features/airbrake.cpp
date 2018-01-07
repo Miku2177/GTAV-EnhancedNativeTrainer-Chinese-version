@@ -24,7 +24,7 @@ bool in_airbrake_mode = false;
 
 bool frozen_time = false;
 bool help_showing = true;
-bool mouse_view_control = true;
+bool mouse_view_control = false;
 
 Vector3 curLocation;
 Vector3 curRotation;

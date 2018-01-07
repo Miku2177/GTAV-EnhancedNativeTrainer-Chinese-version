@@ -1068,7 +1068,8 @@ std::vector<tele_location> LOCATIONS_UNDERWATER = {
 };
 
 std::vector<tele_location> LOCATIONS_INTERIORS = {
-	{ "Airport Facility Interior", -1588.56f, -3228.38f, 26.3362f, { "hei_ap1_01_d_interior_v_ap1_01_d_int" }, {}, {}, false },
+	{ "Airport Facility Interior", -1588.56f, -3228.38f, 26.3362f, {/* "hei_ap1_01_d_interior_v_ap1_01_d_int"*/ }, {}, {}, false },
+	{ "Airport Facility Interior 2", -1144.38f, -2803.47f, 34.4773f, {}, {}, {}, false },
 	{ "Ammunation Gun Range", 22.153f, -1072.854f, 29.797f },
 	{ "Ammunation Office", 12.494f, -1110.130f, 29.797f },
 	{ "Bahama Mamas West", -1387.08f, -588.4f, 30.3195f },
