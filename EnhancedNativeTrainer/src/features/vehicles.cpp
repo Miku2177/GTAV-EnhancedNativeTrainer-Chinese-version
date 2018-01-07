@@ -709,9 +709,9 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		powChanged = true;
 	}
 	else if(bPlayerExists && (did_player_just_enter_vehicle(playerPed) || powChanged)){ // check if player entered vehicle, only need to set mults once
-		VEHICLE::_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(veh, 1.8f);
+		VEHICLE::_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(veh, 1.0f);
 		VEHICLE::_SET_VEHICLE_ENGINE_POWER_MULTIPLIER(veh, VEH_ENG_POW_VALUES[engPowMultIndex]);
-		powChanged = false;
+		powChanged = true;
 	}
 
 	if(bPlayerExists && (did_player_just_enter_vehicle(playerPed) || massChanged)){ // check if player entered vehicle, only need to set mults once
