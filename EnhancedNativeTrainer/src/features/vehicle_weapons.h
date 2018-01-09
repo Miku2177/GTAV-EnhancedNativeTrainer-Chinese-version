@@ -32,7 +32,7 @@ void cleanup_active_sounds();
 
 void update_bombs();
 
-void play_explosion();
+void play_explosion(Entity ent);
 
 bool process_veh_weapons_menu();
 
