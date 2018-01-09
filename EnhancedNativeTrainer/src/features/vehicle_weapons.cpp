@@ -169,7 +169,7 @@ void add_bomb()
 		Vector3 veh_coords = ENTITY::GET_ENTITY_COORDS(veh, true);
 
 		/* Create a bomb model */
-		create_bomb(ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(veh, veh_coords.x, veh_coords.y, veh_coords.z), rot);
+		oBomb = create_bomb(ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(veh, veh_coords.x, veh_coords.y, veh_coords.z), rot);
 
 		/* Store bomb in our vector so we can keep track of how many are there. Could also use it to "find" the previous bomb's coords/rotation to tweak other bombs but no idea how to do that at the moment */
 		vBomb.push_back(oBomb);
@@ -196,7 +196,7 @@ void add_bomb()
 		Vector3 veh_coords = ENTITY::GET_ENTITY_COORDS(veh, true);
 
 		/* Create a bomb model */
-		create_bomb(ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(veh, veh_coords.x, veh_coords.y, veh_coords.z), rot);
+		oBomb = create_bomb(ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(veh, veh_coords.x, veh_coords.y, veh_coords.z), rot);
 
 		/* Add new bomb into vector for later (may result in errors. If so, comment out and revert back to increment code below it) */
 		vBomb.push_back(oBomb);
@@ -232,13 +232,86 @@ void cleanup_active_sounds()
 
 void update_bombs()
 {
-	//https://github.com/CamxxCore/CarpetBomber/blob/master/GTAV_CarpetBomber/CarpetBomb.cs#L71
+	//https://github.com/CamxxCore/CarpetBomber/blob/master/GTAV_CarpetBomber/CarpetBomb.cs#L112
+	int timer = 0;
+	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
+	Vector3 veh_coords = ENTITY::GET_ENTITY_COORDS(veh, true);
+	Vector3 veh_world_offset = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(veh, veh_coords.x, veh_coords.y, veh_coords.z);
+	
+
+	if (bomb_drop_timer > 0 && timer < 1000) //No idea if this will work
+	{
+		if (bombs_dropped < 10)
+		{
+			add_bomb();
+			bombs_dropped++;
+		}
+
+		if (bombs_dropped == 10)
+		{
+			//vBomb[vBomb.size() - 1];
+			cleanup_active_bomb();
+		}
+		timer++;
+	}
+	else
+	{
+		timer = 0;
+		bombs_dropped = 0;
+	}
+	
+	for (int i = 0; i < vBomb.size(); i++)
+	{
+		Vector3 bomb_coords = ENTITY::GET_ENTITY_COORDS(vBomb[i], 1);
+
+		if (!ENTITY::HAS_COLLISION_LOADED_AROUND_ENTITY(vBomb[i]))
+		{
+			STREAMING::REQUEST_COLLISION_AT_COORD(bomb_coords.x, bomb_coords.y, bomb_coords.z);
+		}
+
+		if (ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(vBomb[i]))
+		{
+			cleanup_active_bomb();
+
+			if (bomb_coords.z > veh_world_offset.z)
+			{
+				play_explosion(vBomb[i]);
+			}
+
+			//Remove bomb from Vector
+			vBomb.erase(vBomb.begin() + i);
+			continue;
+		}
+
+	}
 }
 
 
-void play_explosion()
+void play_explosion(Entity ent)
 {
 	//https://github.com/CamxxCore/CarpetBomber/blob/master/GTAV_CarpetBomber/CarpetBomb.cs#L167
+	Vector3 ent_pos = ENTITY::GET_ENTITY_COORDS(ent, true);
+
+	if (!STREAMING::HAS_NAMED_PTFX_ASSET_LOADED("scr_oddjobtraffickingair"))
+		STREAMING::REQUEST_NAMED_PTFX_ASSET("scr_oddjobtraffickingair");
+
+	if (ENTITY::IS_ENTITY_IN_WATER(ent))
+	{
+		GRAPHICS::START_PARTICLE_FX_NON_LOOPED_AT_COORD("scr_ojdg4_water_exp", ent_pos.x, ent_pos.y, ent_pos.z, 0.0, 0.0, 0.0, 3.0, 0, 0, 0);
+	}
+	else
+	{
+		GRAPHICS::START_PARTICLE_FX_NON_LOOPED_AT_COORD("scr_drug_grd_train_exp", ent_pos.x, ent_pos.y, ent_pos.z, 0.0, 0.0, 0.0, 3.0, 0, 0, 0);
+	}
+
+	/* So it makes a "cloud" explosion (also hides the bomb being deleted since the AoE is so big*/
+	FIRE::ADD_EXPLOSION(ent_pos.x, ent_pos.y, ent_pos.z, ExplosionTypeTrain, 1.0, 1, 0, 0);
+	WAIT(20);
+	FIRE::ADD_EXPLOSION(ent_pos.x, ent_pos.y * 3, ent_pos.z, ExplosionTypeTruck, 30.0, 1, 0, 1.5);
+	WAIT(20);
+	FIRE::ADD_EXPLOSION(ent_pos.x, ent_pos.y, ent_pos.z * 3, ExplosionTypeTrain, 30.0, 1, 0, 1.5);
+	WAIT(20);
+	FIRE::ADD_EXPLOSION(ent_pos.x * 3, ent_pos.y, ent_pos.z, ExplosionTypeTruck, 30.0, 1, 0, 1.5);
 }
 
 bool onconfirm_veh_weapons_menu(MenuItem<int> choice){
