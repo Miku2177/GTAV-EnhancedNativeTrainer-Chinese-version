@@ -1,0 +1,983 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WeaponShopItemArray>
+    <weaponShopItems>
+        <Item>
+            <lockHash>CU_WEP_SNSPISTOL_MK2</lockHash>
+            <nameHash>WEAPON_SNSPISTOL_MK2</nameHash>
+            <cost value ="3750"/>
+            <ammoCost value="100"/>
+            <textLabel>WT_SNSPISTOL2</textLabel>
+            <weaponDesc>WTD_SNSPISTOL2</weaponDesc>
+            <weaponTT>WTT_SNSPISTOL2</weaponTT>
+            <weaponUppercase>WTU_SNSPISTOL2</weaponUppercase>
+            <id value = "32"/>
+            <weaponComponents>
+                <Item>
+                    <componentName>COMPONENT_SNSPISTOL_MK2_CLIP_01</componentName>
+                    <cost value = "120"/>
+                    <textLabel>WCT_CLIP1</textLabel>
+                    <componentDesc>WCD_CLIP1</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_SNSPISTOL_MK2_CLIP_02</componentName>
+                    <cost value = "9150"/>
+                    <textLabel>WCT_CLIP2</textLabel>
+                    <componentDesc>WCD_CLIP2</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_SNSPISTOL_MK2_CLIP_TRACER</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CLIP_TR</textLabel>
+                    <componentDesc>WCD_CLIP_TR_RV</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_SNSPISTOL_MK2_CLIP_INCENDIARY</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CLIP_INC</textLabel>
+                    <componentDesc>WCD_CLIP_INC_NS</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_SNSPISTOL_MK2_CLIP_HOLLOWPOINT</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CLIP_HP</textLabel>
+                    <componentDesc>WCD_CLIP_HP_RV</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_SNSPISTOL_MK2_CLIP_FMJ</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CLIP_FMJ</textLabel>
+                    <componentDesc>WCD_CLIP_FMJ_RV</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_PI_FLSH_03</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_FLASH</textLabel>
+                    <componentDesc>WCD_FLASH</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_PI_RAIL_02</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_SCOPE_PI</textLabel>
+                    <componentDesc>WCD_SCOPE_PI</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_PI_SUPP_02</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_SUPP</textLabel>
+                    <componentDesc>WCD_PI_SUPP</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_PI_COMP_02</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_COMP</textLabel>
+                    <componentDesc>WCD_COMP</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_SNSPISTOL_MK2_CAMO</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_1</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_SNSPISTOL_MK2_CAMO_02</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_2</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_SNSPISTOL_MK2_CAMO_03</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_3</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_SNSPISTOL_MK2_CAMO_04</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_4</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_SNSPISTOL_MK2_CAMO_05</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_5</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_SNSPISTOL_MK2_CAMO_06</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_6</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_SNSPISTOL_MK2_CAMO_07</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_7</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_SNSPISTOL_MK2_CAMO_08</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_8</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_SNSPISTOL_MK2_CAMO_09</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_9</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_SNSPISTOL_MK2_CAMO_10</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_10</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_SNSPISTOL_MK2_CAMO_IND_01</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_10</textLabel>
+                </Item>
+            </weaponComponents>
+        </Item>
+        <Item>
+            <lockHash>CU_WEP_REVOLVER_MK2</lockHash>
+            <nameHash>WEAPON_REVOLVER_MK2</nameHash>
+            <cost value ="3750"/>
+            <ammoCost value="100"/>
+            <textLabel>WT_REVOLVER2</textLabel>
+            <weaponDesc>WTD_REVOLVER2</weaponDesc>
+            <weaponTT>WTT_REVOLVER2</weaponTT>
+            <weaponUppercase>WTU_REVOLVER2</weaponUppercase>
+            <id value = "32"/>
+            <weaponComponents>
+                <Item>
+                    <componentName>COMPONENT_REVOLVER_MK2_CLIP_01</componentName>
+                    <cost value = "120"/>
+                    <textLabel>WCT_CLIP1_RV</textLabel>
+                    <componentDesc>WCD_CLIP1_RV</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_REVOLVER_MK2_CLIP_TRACER</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CLIP_TR</textLabel>
+                    <componentDesc>WCD_CLIP_TR_RV</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_REVOLVER_MK2_CLIP_INCENDIARY</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CLIP_INC</textLabel>
+                    <componentDesc>WCD_CLIP_INC_RV</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_REVOLVER_MK2_CLIP_HOLLOWPOINT</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CLIP_HP</textLabel>
+                    <componentDesc>WCD_CLIP_HP_RV</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_REVOLVER_MK2_CLIP_FMJ</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CLIP_FMJ</textLabel>
+                    <componentDesc>WCD_CLIP_FMJ_RV</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_SIGHTS</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_HOLO</textLabel>
+                    <componentDesc>WCD_HOLO</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_SCOPE_MACRO_MK2</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_SCOPE_MAC2</textLabel>
+                    <componentDesc>WCD_SCOPE_MAC</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_PI_FLSH</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_FLASH</textLabel>
+                    <componentDesc>WCD_FLASH</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_PI_COMP_03</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_COMP</textLabel>
+                    <componentDesc>WCD_COMP</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_REVOLVER_MK2_CAMO</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_1</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_REVOLVER_MK2_CAMO_02</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_2</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_REVOLVER_MK2_CAMO_03</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_3</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_REVOLVER_MK2_CAMO_04</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_4</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_REVOLVER_MK2_CAMO_05</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_5</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_REVOLVER_MK2_CAMO_06</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_6</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_REVOLVER_MK2_CAMO_07</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_7</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_REVOLVER_MK2_CAMO_08</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_8</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_REVOLVER_MK2_CAMO_09</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_9</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_REVOLVER_MK2_CAMO_10</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_10</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_REVOLVER_MK2_CAMO_IND_01</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_IND</textLabel>
+                </Item>
+            </weaponComponents>
+        </Item>
+        <Item>
+            <lockHash>CU_WEP_DOUBLEACTION</lockHash>
+            <nameHash>WEAPON_DOUBLEACTION</nameHash>
+            <cost value="3450" />
+            <ammoCost value="10" />
+            <textLabel>WT_REV_DA</textLabel>
+            <weaponDesc>WTD_REV_DA</weaponDesc>
+            <weaponTT>WTT_REV_DA</weaponTT>
+            <weaponUppercase>WTU_REV_DA</weaponUppercase>
+            <id value = "32" />
+            <weaponComponents />
+        </Item>
+        <Item>
+            <lockHash>CU_WEP_SPECIALCARBINE_MK2</lockHash>
+            <nameHash>WEAPON_SPECIALCARBINE_MK2</nameHash>
+            <cost value ="3750"/>
+            <ammoCost value="100"/>
+            <textLabel>WT_SPCARBINE2</textLabel>
+            <weaponDesc>WTD_SPCARBINE2</weaponDesc>
+            <weaponTT>WTT_SPCARBINE2</weaponTT>
+            <weaponUppercase>WTU_SPCARBINE2</weaponUppercase>
+            <id value = "32"/>
+            <weaponComponents>
+                <Item>
+                    <componentName>COMPONENT_SPECIALCARBINE_MK2_CLIP_01</componentName>
+                    <cost value = "120"/>
+                    <textLabel>WCT_CLIP1</textLabel>
+                    <componentDesc>WCD_CLIP1</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_SPECIALCARBINE_MK2_CLIP_02</componentName>
+                    <cost value = "129"/>
+                    <textLabel>WCT_CLIP2</textLabel>
+                    <componentDesc>WCD_CLIP2</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_SPECIALCARBINE_MK2_CLIP_TRACER</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CLIP_TR</textLabel>
+                    <componentDesc>WCD_CLIP_TR</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_SPECIALCARBINE_MK2_CLIP_INCENDIARY</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CLIP_INC</textLabel>
+                    <componentDesc>WCD_CLIP_INC</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_SPECIALCARBINE_MK2_CLIP_ARMORPIERCING</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CLIP_AP</textLabel>
+                    <componentDesc>WCD_CLIP_AP</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_SPECIALCARBINE_MK2_CLIP_FMJ</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CLIP_FMJ</textLabel>
+                    <componentDesc>WCD_CLIP_FMJ</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_AR_FLSH</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_FLASH</textLabel>
+                    <componentDesc>WCD_FLASH</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_SIGHTS</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_HOLO</textLabel>
+                    <componentDesc>WCD_HOLO</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_SCOPE_MACRO_MK2</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_SCOPE_MAC2</textLabel>
+                    <componentDesc>WCD_SCOPE_MAC</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_SCOPE_MEDIUM_MK2</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_SCOPE_MED2</textLabel>
+                    <componentDesc>WCD_SCOPE_MED</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_AR_SUPP_02</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_SUPP</textLabel>
+                    <componentDesc>WCD_AR_SUPP</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_MUZZLE_01</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_MUZZ1</textLabel>
+                    <componentDesc>WCD_MUZZ</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_MUZZLE_02</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_MUZZ2</textLabel>
+                    <componentDesc>WCD_MUZZ</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_MUZZLE_03</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_MUZZ3</textLabel>
+                    <componentDesc>WCD_MUZZ</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_MUZZLE_04</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_MUZZ4</textLabel>
+                    <componentDesc>WCD_MUZZ</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_MUZZLE_05</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_MUZZ5</textLabel>
+                    <componentDesc>WCD_MUZZ</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_MUZZLE_06</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_MUZZ6</textLabel>
+                    <componentDesc>WCD_MUZZ</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_MUZZLE_07</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_MUZZ7</textLabel>
+                    <componentDesc>WCD_MUZZ</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_AR_AFGRIP_02</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_GRIP</textLabel>
+                    <componentDesc>WCD_GRIP</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_SC_BARREL_01</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_BARR</textLabel>
+                    <componentDesc>WCD_BARR</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_SC_BARREL_02</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_BARR2</textLabel>
+                    <componentDesc>WCD_BARR2</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_SPECIALCARBINE_MK2_CAMO</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_1</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_SPECIALCARBINE_MK2_CAMO_02</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_2</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_SPECIALCARBINE_MK2_CAMO_03</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_3</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_SPECIALCARBINE_MK2_CAMO_04</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_4</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_SPECIALCARBINE_MK2_CAMO_05</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_5</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_SPECIALCARBINE_MK2_CAMO_06</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_6</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_SPECIALCARBINE_MK2_CAMO_07</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_7</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_SPECIALCARBINE_MK2_CAMO_08</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_8</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_SPECIALCARBINE_MK2_CAMO_09</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_9</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_SPECIALCARBINE_MK2_CAMO_10</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_10</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_SPECIALCARBINE_MK2_CAMO_IND_01</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_IND</textLabel>
+                </Item>
+            </weaponComponents>
+        </Item>
+        <Item>
+            <lockHash>CU_WEP_BULLPUPRIFLE_MK2</lockHash>
+            <nameHash>WEAPON_BULLPUPRIFLE_MK2</nameHash>
+            <cost value ="3750"/>
+            <ammoCost value="100"/>
+            <textLabel>WT_BULLRIFLE2</textLabel>
+            <weaponDesc>WTD_BULLRIFLE2</weaponDesc>
+            <weaponTT>WTT_BULLRIFLE2</weaponTT>
+            <weaponUppercase>WTU_BULLRIFLE2</weaponUppercase>
+            <id value = "32"/>
+            <weaponComponents>
+                <Item>
+                    <componentName>COMPONENT_BULLPUPRIFLE_MK2_CLIP_01</componentName>
+                    <cost value = "120"/>
+                    <textLabel>WCT_CLIP1</textLabel>
+                    <componentDesc>WCD_CLIP1</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_BULLPUPRIFLE_MK2_CLIP_02</componentName>
+                    <cost value = "129"/>
+                    <textLabel>WCT_CLIP2</textLabel>
+                    <componentDesc>WCD_CLIP2</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_BULLPUPRIFLE_MK2_CLIP_TRACER</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CLIP_TR</textLabel>
+                    <componentDesc>WCD_CLIP_TR</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_BULLPUPRIFLE_MK2_CLIP_INCENDIARY</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CLIP_INC</textLabel>
+                    <componentDesc>WCD_CLIP_INC</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_BULLPUPRIFLE_MK2_CLIP_ARMORPIERCING</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CLIP_AP</textLabel>
+                    <componentDesc>WCD_CLIP_AP</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_BULLPUPRIFLE_MK2_CLIP_FMJ</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CLIP_FMJ</textLabel>
+                    <componentDesc>WCD_CLIP_FMJ</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_AR_FLSH</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_FLASH</textLabel>
+                    <componentDesc>WCD_FLASH</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_SIGHTS</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_HOLO</textLabel>
+                    <componentDesc>WCD_HOLO</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_SCOPE_MACRO_02_MK2</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_SCOPE_MAC2</textLabel>
+                    <componentDesc>WCD_SCOPE_MAC</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_SCOPE_SMALL_MK2</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_SCOPE_SML2</textLabel>
+                    <componentDesc>WCD_SCOPE_SML</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_BP_BARREL_01</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_BARR</textLabel>
+                    <componentDesc>WCD_BARR</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_BP_BARREL_02</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_BARR2</textLabel>
+                    <componentDesc>WCD_BARR2</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_AR_SUPP</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_SUPP</textLabel>
+                    <componentDesc>WCD_AR_SUPP</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_MUZZLE_01</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_MUZZ1</textLabel>
+                    <componentDesc>WCD_MUZZ</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_MUZZLE_02</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_MUZZ2</textLabel>
+                    <componentDesc>WCD_MUZZ</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_MUZZLE_03</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_MUZZ3</textLabel>
+                    <componentDesc>WCD_MUZZ</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_MUZZLE_04</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_MUZZ4</textLabel>
+                    <componentDesc>WCD_MUZZ</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_MUZZLE_05</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_MUZZ5</textLabel>
+                    <componentDesc>WCD_MUZZ</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_MUZZLE_06</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_MUZZ6</textLabel>
+                    <componentDesc>WCD_MUZZ</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_MUZZLE_07</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_MUZZ7</textLabel>
+                    <componentDesc>WCD_MUZZ</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_AR_AFGRIP_02</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_GRIP</textLabel>
+                    <componentDesc>WCD_GRIP</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_BULLPUPRIFLE_MK2_CAMO</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_1</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_BULLPUPRIFLE_MK2_CAMO_02</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_2</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_BULLPUPRIFLE_MK2_CAMO_03</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_3</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_BULLPUPRIFLE_MK2_CAMO_04</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_4</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_BULLPUPRIFLE_MK2_CAMO_05</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_5</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_BULLPUPRIFLE_MK2_CAMO_06</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_6</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_BULLPUPRIFLE_MK2_CAMO_07</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_7</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_BULLPUPRIFLE_MK2_CAMO_08</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_8</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_BULLPUPRIFLE_MK2_CAMO_09</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_9</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_BULLPUPRIFLE_MK2_CAMO_10</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_10</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_BULLPUPRIFLE_MK2_CAMO_IND_01</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_IND</textLabel>
+                </Item>
+            </weaponComponents>
+        </Item>
+        <Item>
+            <lockHash>CU_WEP_PUMPSHOTGUN_MK2</lockHash>
+            <nameHash>WEAPON_PUMPSHOTGUN_MK2</nameHash>
+            <cost value ="3750"/>
+            <ammoCost value="100"/>
+            <textLabel>WT_SG_PMP2</textLabel>
+            <weaponDesc>WTD_SG_PMP2</weaponDesc>
+            <weaponTT>WTT_SG_PMP2</weaponTT>
+            <weaponUppercase>WTU_SG_PMP2</weaponUppercase>
+            <id value = "32"/>
+            <weaponComponents>
+                <Item>
+                    <componentName>COMPONENT_PUMPSHOTGUN_MK2_CLIP_01</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_SHELL</textLabel>
+                    <componentDesc>WCD_SHELL</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_PUMPSHOTGUN_MK2_CLIP_INCENDIARY</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_SHELL_INC</textLabel>
+                    <componentDesc>WCD_SHELL_INC</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_PUMPSHOTGUN_MK2_CLIP_ARMORPIERCING</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_SHELL_AP</textLabel>
+                    <componentDesc>WCD_SHELL_AP</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_PUMPSHOTGUN_MK2_CLIP_HOLLOWPOINT</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_SHELL_HP</textLabel>
+                    <componentDesc>WCD_SHELL_HP</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_PUMPSHOTGUN_MK2_CLIP_EXPLOSIVE</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_SHELL_EX</textLabel>
+                    <componentDesc>WCD_SHELL_EX</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_SIGHTS</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_HOLO</textLabel>
+                    <componentDesc>WCD_HOLO</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_SCOPE_MACRO_MK2</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_SCOPE_MAC2</textLabel>
+                    <componentDesc>WCD_SCOPE_MAC</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_SCOPE_SMALL_MK2</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_SCOPE_SML2</textLabel>
+                    <componentDesc>WCD_SCOPE_SML</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_AR_FLSH</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_FLASH</textLabel>
+                    <componentDesc>WCD_FLASH</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_SR_SUPP_03</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_SUPP</textLabel>
+                    <componentDesc>WCD_SUPP</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_MUZZLE_08</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_MUZZ</textLabel>
+                    <componentDesc>WCD_MUZZ_SR</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_PUMPSHOTGUN_MK2_CAMO</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_1</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_PUMPSHOTGUN_MK2_CAMO_02</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_2</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_PUMPSHOTGUN_MK2_CAMO_03</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_3</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_PUMPSHOTGUN_MK2_CAMO_04</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_4</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_PUMPSHOTGUN_MK2_CAMO_05</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_5</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_PUMPSHOTGUN_MK2_CAMO_06</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_6</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_PUMPSHOTGUN_MK2_CAMO_07</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_7</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_PUMPSHOTGUN_MK2_CAMO_08</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_8</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_PUMPSHOTGUN_MK2_CAMO_09</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_9</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_PUMPSHOTGUN_MK2_CAMO_10</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_10</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_PUMPSHOTGUN_MK2_CAMO_IND_01</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_IND</textLabel>
+                </Item>
+            </weaponComponents>
+        </Item>
+        <Item>
+            <lockHash>CU_WEP_MARKSMANRIFLE_MK2</lockHash>
+            <nameHash>WEAPON_MARKSMANRIFLE_MK2</nameHash>
+            <cost value ="3750"/>
+            <ammoCost value="100"/>
+            <textLabel>WT_MKRIFLE2</textLabel>
+            <weaponDesc>WTD_MKRIFLE2</weaponDesc>
+            <weaponTT>WTT_MKRIFLE2</weaponTT>
+            <weaponUppercase>WTU_MKRIFLE2</weaponUppercase>
+            <id value = "32"/>
+            <weaponComponents>
+                <Item>
+                    <componentName>COMPONENT_MARKSMANRIFLE_MK2_CLIP_01</componentName>
+                    <cost value = "120"/>
+                    <textLabel>WCT_CLIP1</textLabel>
+                    <componentDesc>WCD_CLIP1</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_MARKSMANRIFLE_MK2_CLIP_02</componentName>
+                    <cost value = "129"/>
+                    <textLabel>WCT_CLIP2</textLabel>
+                    <componentDesc>WCD_CLIP2</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_MARKSMANRIFLE_MK2_CLIP_TRACER</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CLIP_TR</textLabel>
+                    <componentDesc>WCD_CLIP_TR</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_MARKSMANRIFLE_MK2_CLIP_INCENDIARY</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CLIP_INC</textLabel>
+                    <componentDesc>WCD_CLIP_INC</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_MARKSMANRIFLE_MK2_CLIP_ARMORPIERCING</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CLIP_AP</textLabel>
+                    <componentDesc>WCD_CLIP_AP</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_MARKSMANRIFLE_MK2_CLIP_FMJ</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CLIP_FMJ</textLabel>
+                    <componentDesc>WCD_CLIP_FMJ</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_SIGHTS</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_HOLO</textLabel>
+                    <componentDesc>WCD_HOLO</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_SCOPE_MEDIUM_MK2</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_SCOPE_MED2</textLabel>
+                    <componentDesc>WCD_SCOPE_MED</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_SCOPE_LARGE_FIXED_ZOOM_MK2</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_SCOPE_LRG2</textLabel>
+                    <componentDesc>WCD_SCOPE_LRF</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_AR_FLSH</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_FLASH</textLabel>
+                    <componentDesc>WCD_FLASH</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_AR_SUPP</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_SUPP</textLabel>
+                    <componentDesc>WCD_AR_SUPP</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_MUZZLE_01</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_MUZZ1</textLabel>
+                    <componentDesc>WCD_MUZZ</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_MUZZLE_02</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_MUZZ2</textLabel>
+                    <componentDesc>WCD_MUZZ</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_MUZZLE_03</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_MUZZ3</textLabel>
+                    <componentDesc>WCD_MUZZ</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_MUZZLE_04</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_MUZZ4</textLabel>
+                    <componentDesc>WCD_MUZZ</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_MUZZLE_05</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_MUZZ5</textLabel>
+                    <componentDesc>WCD_MUZZ</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_MUZZLE_06</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_MUZZ6</textLabel>
+                    <componentDesc>WCD_MUZZ</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_MUZZLE_07</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_MUZZ7</textLabel>
+                    <componentDesc>WCD_MUZZ</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_MRFL_BARREL_01</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_BARR</textLabel>
+                    <componentDesc>WCD_BARR</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_MRFL_BARREL_02</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_BARR2</textLabel>
+                    <componentDesc>WCD_BARR2</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_AT_AR_AFGRIP_02</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_GRIP</textLabel>
+                    <componentDesc>WCD_GRIP</componentDesc>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_MARKSMANRIFLE_MK2_CAMO</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_1</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_MARKSMANRIFLE_MK2_CAMO_02</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_2</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_MARKSMANRIFLE_MK2_CAMO_03</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_3</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_MARKSMANRIFLE_MK2_CAMO_04</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_4</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_MARKSMANRIFLE_MK2_CAMO_05</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_5</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_MARKSMANRIFLE_MK2_CAMO_06</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_6</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_MARKSMANRIFLE_MK2_CAMO_07</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_7</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_MARKSMANRIFLE_MK2_CAMO_08</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_8</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_MARKSMANRIFLE_MK2_CAMO_09</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_9</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_MARKSMANRIFLE_MK2_CAMO_10</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_10</textLabel>
+                </Item>
+                <Item>
+                    <componentName>COMPONENT_MARKSMANRIFLE_MK2_CAMO_IND_01</componentName>
+                    <cost value = "500"/>
+                    <textLabel>WCT_CAMO_10</textLabel>
+                </Item>
+            </weaponComponents>
+        </Item>
+    </weaponShopItems>
+</WeaponShopItemArray>
