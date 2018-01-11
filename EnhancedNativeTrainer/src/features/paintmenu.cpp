@@ -512,11 +512,11 @@ bool onconfirm_paint_menu_type(MenuItem<int> choice){
 	VEHICLE::GET_VEHICLE_EXTRA_COLOURS(veh, &pearl, &wheel);
 
 	std::vector<PaintColor> paints;
-	if(whichtype == 6){
+	if(whichtype == 7){
 		apply_paint(PAINTS_BY_TYPE[whichtype].at(0));
 		return false;
 	}
-	else if (whichtype == 7){
+	else if (whichtype == 8){
 		int components[3] = { 0, 0, 0 };
 
 		switch (whichpart){
@@ -611,6 +611,7 @@ bool process_paint_menu_type(){
 
 	indexItem = new PaintIndexItem<int>();
 	indexItem->caption = MENU_PAINT_INDEX_TYPE;
+	indexItem->value = index++;
 	indexItem->isLeaf = true;
 	switch (whichpart) {
 	case 0:
