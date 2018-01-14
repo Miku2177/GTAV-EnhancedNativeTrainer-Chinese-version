@@ -369,7 +369,13 @@ private:
 			VEHICLE::GET_VEHICLE_EXTRA_COLOURS(veh, &pearl, &wheel);
 			VEHICLE::SET_VEHICLE_EXTRA_COLOURS(veh, pearl, colorindex);
 			break;
-		}
+        case 5:
+            VEHICLE::_SET_VEHICLE_INTERIOR_COLOUR(veh, colorindex);
+            break;
+        case 6:
+            VEHICLE::_SET_VEHICLE_DASHBOARD_COLOUR(veh, colorindex);
+            break;
+        }
 	}
 };
 
