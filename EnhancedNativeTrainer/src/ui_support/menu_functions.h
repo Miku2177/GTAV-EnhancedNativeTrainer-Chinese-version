@@ -224,6 +224,10 @@ public:
 		// Supposed to be empty
 	}
 
+	virtual bool onConfirm() {
+		return true;
+	}
+
 	virtual bool isAbsorbingLeftAndRightEvents(){
 		return true;
 	}
@@ -264,7 +268,7 @@ private:
 			components[component] = colorval;
 			VEHICLE::SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, components[0], components[1], components[2]);
 			if (part == 2){
-                VEHICLE::SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, components[0], components[1], components[2]);
+				VEHICLE::SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, components[0], components[1], components[2]);
 			}
 			break;
 		case 1:
@@ -283,6 +287,10 @@ public:
 
 	virtual ~PaintIndexItem(){
 		// Supposed to be empty
+	}
+
+	virtual bool onConfirm() {
+		return true;
 	}
 
 	virtual bool isAbsorbingLeftAndRightEvents(){
@@ -330,6 +338,7 @@ private:
 				VEHICLE::GET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, &red, &green, &blue);
 			}
 			VEHICLE::GET_VEHICLE_COLOURS(veh, &primary, &secondary);
+			VEHICLE::CLEAR_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh);
 			VEHICLE::SET_VEHICLE_COLOURS(veh, colorindex, secondary);
 			if (isCustom){
 				VEHICLE::SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, red, green, blue);
@@ -341,12 +350,15 @@ private:
 				VEHICLE::GET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, &red, &green, &blue);
 			}
 			VEHICLE::GET_VEHICLE_COLOURS(veh, &primary, &secondary);
+			VEHICLE::CLEAR_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh);
 			VEHICLE::SET_VEHICLE_COLOURS(veh, primary, colorindex);
 			if (isCustom){
 				VEHICLE::SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, red, green, blue);
 			}
 			break;
 		case 2:
+			VEHICLE::CLEAR_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh);
+			VEHICLE::CLEAR_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh);
 			VEHICLE::SET_VEHICLE_COLOURS(veh, colorindex, colorindex);
 			break;
 		case 3:
@@ -357,7 +369,13 @@ private:
 			VEHICLE::GET_VEHICLE_EXTRA_COLOURS(veh, &pearl, &wheel);
 			VEHICLE::SET_VEHICLE_EXTRA_COLOURS(veh, pearl, colorindex);
 			break;
-		}
+        case 5:
+            VEHICLE::_SET_VEHICLE_INTERIOR_COLOUR(veh, colorindex);
+            break;
+        case 6:
+            VEHICLE::_SET_VEHICLE_DASHBOARD_COLOUR(veh, colorindex);
+            break;
+        }
 	}
 };
 

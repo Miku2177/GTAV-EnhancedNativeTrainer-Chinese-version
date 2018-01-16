@@ -17,7 +17,7 @@ int whichtype = 0;
 PaintIndexItem<int> *parentIndexItem = NULL;
 
 //Parts
-const std::vector<std::string> MENU_PAINT_WHAT{"Primary", "Secondary", "Primary & Secondary", "Pearlescent", "Wheels"};
+const std::vector<std::string> MENU_PAINT_WHAT{"Primary", "Secondary", "Primary & Secondary", "Pearlescent", "Wheels", "Interior", "Dash"};
 
 //Paint Names
 const std::vector<std::string> MENU_PAINT_TYPE{"Classic", "Metallic", "Matte", "Metals", "Util", "Worn", "Chrome"};
@@ -425,16 +425,16 @@ bool process_paint_menu_liveries(){
 
 bool onconfirm_paint_menu(MenuItem<int> choice){
 	whichpart = choice.value;
-	if(whichpart >= 0 && whichpart < 5){
+	if(whichpart >= 0 && whichpart < 7){
 		process_paint_menu_type();
 	}
-	else if(whichpart == 5){
+	else if(whichpart == 7){
 		process_paint_menu_dirt();
 	}
-	else if(whichpart == 6){
+	else if(whichpart == 8){
 		process_paint_menu_fades();
 	}
-	else if(whichpart == 7){
+	else if(whichpart == 9){
 		process_paint_menu_liveries();
 	}
 
@@ -507,16 +507,16 @@ bool onconfirm_paint_menu_type(MenuItem<int> choice){
 	std::vector<MenuItem<int> *> menuItems;
 	MenuItem<int> *item;
 
-	int primary, secondary, pearl, wheel;
+	int primary, secondary, pearl, wheel, extra;
 	VEHICLE::GET_VEHICLE_COLOURS(veh, &primary, &secondary);
 	VEHICLE::GET_VEHICLE_EXTRA_COLOURS(veh, &pearl, &wheel);
 
 	std::vector<PaintColor> paints;
-	if(whichtype == 6){
+	if(whichtype == 7){
 		apply_paint(PAINTS_BY_TYPE[whichtype].at(0));
 		return false;
 	}
-	else if (whichtype == 7){
+	else if (whichtype == 8){
 		int components[3] = { 0, 0, 0 };
 
 		switch (whichpart){
@@ -550,6 +550,15 @@ bool onconfirm_paint_menu_type(MenuItem<int> choice){
 
 	int matchIndex = 0, ps = paints.size();
 
+    switch (whichpart){
+    case 5:
+        VEHICLE::_GET_VEHICLE_INTERIOR_COLOUR(veh, &extra);
+        break;
+    case 6:
+        VEHICLE::_GET_VEHICLE_DASHBOARD_COLOUR(veh, &extra);
+        break;
+    }
+
 	for(int a = 0; a < ps; a++){
 		item = new MenuItem<int>();
 		item->caption = paints.at(a).name;
@@ -578,7 +587,17 @@ bool onconfirm_paint_menu_type(MenuItem<int> choice){
 					matchIndex = a;
 				}
 				break;
-			default:
+            case 5:
+                if (paints.at(a).colorIndex == extra){
+                    matchIndex = a;
+                }
+                break;
+            case 6:
+                if (paints.at(a).colorIndex == extra){
+                    matchIndex = a;
+                }
+                break;
+            default:
 				break;
 		}
 	}
@@ -605,12 +624,13 @@ bool process_paint_menu_type(){
 		menuItems.push_back(item);
 	}
 
-	int primary, secondary, pearl, wheel;
+	int primary, secondary, pearl, wheel, extra;
 	VEHICLE::GET_VEHICLE_COLOURS(veh, &primary, &secondary);
 	VEHICLE::GET_VEHICLE_EXTRA_COLOURS(veh, &pearl, &wheel);
 
 	indexItem = new PaintIndexItem<int>();
 	indexItem->caption = MENU_PAINT_INDEX_TYPE;
+	indexItem->value = index++;
 	indexItem->isLeaf = true;
 	switch (whichpart) {
 	case 0:
@@ -626,7 +646,15 @@ bool process_paint_menu_type(){
 	case 4:
 		indexItem->colorindex = wheel;
 		break;
-	}
+    case 5:
+        VEHICLE::_GET_VEHICLE_INTERIOR_COLOUR(veh, &extra);
+        indexItem->colorindex = extra;
+        break;
+    case 6:
+        VEHICLE::_GET_VEHICLE_DASHBOARD_COLOUR(veh, &extra);
+        indexItem->colorindex = extra;
+        break;
+    }
 	indexItem->part = whichpart;
 	menuItems.push_back(indexItem);
 	parentIndexItem = indexItem;
@@ -703,7 +731,13 @@ void apply_paint(PaintColor whichpaint){
 				case 4:
 					VEHICLE::SET_VEHICLE_EXTRA_COLOURS(veh, pearl, colorIndex);
 					break;
-				default:
+                case 5:
+                    VEHICLE::_SET_VEHICLE_INTERIOR_COLOUR(veh, colorIndex);
+                    break;
+                case 6:
+                    VEHICLE::_SET_VEHICLE_DASHBOARD_COLOUR(veh, colorIndex);
+                    break;
+                default:
 					break;
 			}
 
