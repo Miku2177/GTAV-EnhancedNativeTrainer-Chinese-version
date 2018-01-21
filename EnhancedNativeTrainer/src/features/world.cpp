@@ -468,16 +468,12 @@ void update_world_features()
 			GAMEPLAY::CLEAR_AREA_OF_VEHICLES(v3.x, v3.y, v3.z, 1000.0, 0, 0, 0, 0, 0);
 
 			STREAMING::SET_VEHICLE_POPULATION_BUDGET(0);
-		//	VEHICLE::SET_ALL_VEHICLE_GENERATORS_ACTIVE_IN_AREA(-10000.0, -10000.0, -200.0, 10000.0, 10000.0, 1000.0, 0, 1);
-		//	PATHFIND::SET_ROADS_IN_AREA(-10000.0, -10000.0, -200.0, 10000.0, 10000.0, 1000.0, 0, 1);
 		}
 		else
 		{
 			STREAMING::SET_VEHICLE_POPULATION_BUDGET(3);
 			VEHICLE::SET_ALL_VEHICLE_GENERATORS_ACTIVE();
 			VEHICLE::SET_ALL_LOW_PRIORITY_VEHICLE_GENERATORS_ACTIVE(true);
-			//VEHICLE::SET_NUMBER_OF_PARKED_VEHICLES(-1);
-			//PATHFIND::SET_ROADS_BACK_TO_ORIGINAL(-10000.0, -10000.0, -200.0, 10000.0, 10000.0, 1000.0);						
 		}
 
 		featureWorldNoTrafficUpdated = false;
@@ -490,8 +486,6 @@ void update_world_features()
 			GAMEPLAY::CLEAR_AREA_OF_VEHICLES(v3.x, v3.y, v3.z, 1000.0, 0, 0, 0, 0, 0);
 		}
 		STREAMING::SET_VEHICLE_POPULATION_BUDGET(0);
-		//VEHICLE::SET_ALL_VEHICLE_GENERATORS_ACTIVE_IN_AREA(-10000.0, -10000.0, -200.0, 10000.0, 10000.0, 1000.0, 0, 1);
-		//PATHFIND::SET_ROADS_IN_AREA(-10000.0, -10000.0, -200.0, 10000.0, 10000.0, 1000.0, 0, 1);
 	}
 
 	if (!featureWorldRandomTrains)
@@ -514,36 +508,6 @@ void update_world_features()
 		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("re_prisonvanbreak");
 	}
 
-	/*if (featureWorldNoTrafficUpdated)
-	{
-		VEHICLE::_DISPLAY_DISTANT_VEHICLES(!featureWorldNoTraffic);
-		GRAPHICS::DISABLE_VEHICLE_DISTANTLIGHTS(featureWorldNoTraffic);
-
-		if (featureWorldNoTraffic)
-		{
-			Vector3 v3 = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 1);
-			GAMEPLAY::CLEAR_AREA_OF_VEHICLES(v3.x, v3.y, v3.z, 1000.0, 0, 0, 0, 0, 0);
-
-			STREAMING::SET_VEHICLE_POPULATION_BUDGET(0);
-			VEHICLE::SET_ALL_VEHICLE_GENERATORS_ACTIVE_IN_AREA(-10000.0, -10000.0, -200.0, 10000.0, 10000.0, 1000.0, 0, 1);
-			PATHFIND::SET_ROADS_IN_AREA(-10000.0, -10000.0, -200.0, 10000.0, 10000.0, 1000.0, 0, 1);
-		}
-		else
-		{
-			STREAMING::SET_VEHICLE_POPULATION_BUDGET(3);
-			VEHICLE::SET_ALL_VEHICLE_GENERATORS_ACTIVE();
-			PATHFIND::SET_ROADS_BACK_TO_ORIGINAL(-10000.0, -10000.0, -200.0, 10000.0, 10000.0, 1000.0);
-		}
-
-		featureWorldNoTrafficUpdated = false;
-	}*/
-	/*if (featureSnowUpdated)
-	{
-		EnableSnow(featureSnow);
-		EnableTracks(true, true, true, true);
-		featureSnowUpdated = false;
-	}*/
-	
 	if (featureSnowUpdated)
 	{
 		if (featureSnow)

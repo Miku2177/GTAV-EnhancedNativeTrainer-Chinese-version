@@ -690,6 +690,8 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	if(bPlayerExists){
 		if(featureWearHelmetOffUpdated || did_player_just_enter_vehicle(playerPed)){
 			PED::SET_PED_HELMET(playerPed, !featureWearHelmetOff);
+			//PED::REMOVE_PED_HELMET(playerPed, true);
+			//PED::SET_PED_HELMET(playerPed, false);
 			featureWearHelmetOffUpdated = false;
 		}
 	}
