@@ -585,7 +585,7 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 		}
 	}
 }
-	/* Snow related code - could be put into a class?*/
+	/* Snow related code -Will be moved into utils*/
 	/* Thanks to Sjaak for the help/code */
 
 	//Copyright (C) GTA:Multiplayer Team (https://wiki.gta-mp.net/index.php/Team)
