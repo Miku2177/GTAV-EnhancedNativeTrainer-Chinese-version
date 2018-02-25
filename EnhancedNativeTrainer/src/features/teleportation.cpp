@@ -1027,6 +1027,44 @@ std::vector<char*> IPL_PROPS_DOOMSDAY_BASE = {
 
 };
 
+std::vector<const char*> IPL_PROPS_DOOMSDAY_MAIN_BASE = {
+	"xm_x17dlc_int_placement_interior_33_x17dlc_int_02_milo_",
+	"xm_x17dlc_int_placement_interior_4_x17dlc_int_facility_milo_",
+	"xm_x17dlc_int_placement_interior_5_x17dlc_int_facility2_milo_",
+	"xm_x17dlc_int_placement_interior_8_x17dlc_int_sub_milo_",
+	"xm_x17dlc_int_placement_interior_0_x17dlc_int_base_ent_milo_",
+	"xm_x17dlc_int_placement_interior_1_x17dlc_int_base_loop_milo_",
+	"xm_x17dlc_int_placement_interior_2_x17dlc_int_bse_tun_milo_",
+	"xm_x17dlc_int_placement_interior_3_x17dlc_int_base_milo_",
+	"xm_x17dlc_int_placement_interior_6_x17dlc_int_silo_01_milo_",
+	"xm_x17dlc_int_placement_interior_7_x17dlc_int_silo_02_milo_",
+	"xm_x17dlc_int_placement_interior_10_x17dlc_int_tun_straight_milo_",
+	"xm_x17dlc_int_placement_interior_11_x17dlc_int_tun_slope_flat_milo_",
+	"xm_x17dlc_int_placement_interior_12_x17dlc_int_tun_flat_slope_milo_",
+	"xm_x17dlc_int_placement_interior_13_x17dlc_int_tun_30d_r_milo_",
+	"xm_x17dlc_int_placement_interior_14_x17dlc_int_tun_30d_l_milo_",
+	"xm_x17dlc_int_placement_interior_15_x17dlc_int_tun_straight_milo_",
+	"xm_x17dlc_int_placement_interior_16_x17dlc_int_tun_straight_milo_",
+	"xm_x17dlc_int_placement_interior_17_x17dlc_int_tun_slope_flat_milo_",
+	"xm_x17dlc_int_placement_interior_18_x17dlc_int_tun_slope_flat_milo_",
+	"xm_x17dlc_int_placement_interior_20_x17dlc_int_tun_flat_slope_milo_",
+	"xm_x17dlc_int_placement_interior_21_x17dlc_int_tun_30d_r_milo_",
+	"xm_x17dlc_int_placement_interior_22_x17dlc_int_tun_30d_r_milo_",
+	"xm_x17dlc_int_placement_interior_23_x17dlc_int_tun_30d_r_milo_",
+	"xm_x17dlc_int_placement_interior_24_x17dlc_int_tun_30d_r_milo_",
+	"xm_x17dlc_int_placement_interior_25_x17dlc_int_tun_30d_l_milo_",
+	"xm_x17dlc_int_placement_interior_26_x17dlc_int_tun_30d_l_milo_",
+	"xm_x17dlc_int_placement_interior_27_x17dlc_int_tun_30d_l_milo_",
+	"xm_x17dlc_int_placement_interior_28_x17dlc_int_tun_30d_l_milo_",
+	"xm_x17dlc_int_placement_interior_29_x17dlc_int_tun_30d_l_milo_",
+	"xm_x17dlc_int_placement_interior_34_x17dlc_int_lab_milo_",
+	"xm_x17dlc_int_placement_interior_35_x17dlc_int_tun_entry_milo_",
+	"xm_x17dlc_int_placement_strm_0",
+
+};
+
+
+
 std::vector<tele_location> LOCATIONS_SAFE = {
 	{ "Franklin's Safehouse", -18.0355f, -1456.94f, 30.4548f },
 	{ "Franklin's Safehouse Inside", -14.3803f, -1438.51f, 31.1073f },
@@ -1340,7 +1378,7 @@ std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "CEO Garage Modshop", 730.0f, -2990.0f, -40.0f, { "imp_impexp_interior_placement_interior_2_imptexp_mod_int_01_milo_" }, {}, {}, false },//No ceiling, floor, walls textures.
 	{ "Del Perro Heights Apt 27", -1468.02100000f, -529.94370000f, 49.72156000f, { "hei_hw1_blimp_interior_27_dlc_apart_high_new_milo_" }, {}, {}, false },
 	{ "Del Perro Heights Apt 28", -1468.14f, -541.815f, 73.4442f, {}, {}, {}, false },
-	//{ "Doomsday Heist Base", -1266.80200000f, -3014.83700000f, -50.00000000f, { "xm_x17dlc_int_placement_strm_0" }, {}, { IPL_PROPS_DOOMSDAY_BASE }, false }, - props don't load
+	//{ "Doomsday Heist Base", -1266.80200000f, -3014.83700000f, -50.00000000f, { "xm_x17dlc_int_placement_strm_0" }, {}, { IPL_PROPS_DOOMSDAY_BASE }, false }, //- props don't load
 	{ "Executive CEO Office: Style 1", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_01a" }, {}, {}, false }, //ex_dt1_11_office_01a[b, c....]
 	{ "Executive CEO Office: Style 2", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_01b" }, {}, {}, false },
 	{ "Executive CEO Office: Style 3", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_01c" }, {}, {}, false },
@@ -1448,6 +1486,28 @@ std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Weazel Plaza Apt 11", -889.30300000f, -451.77510000f, 119.32700000f, { "hw1_blimp_interior_v_apartment_high_milo__11" }, {}, {}, false },
 	{ "Weazel Plaza Apt 15", -892.29590000f, -434.41470000f, 88.25368000f, { "hei_hw1_blimp_interior_15_dlc_apart_high_new_milo_" }, {}, {}, false },
 	{ "Weazel Plaza Apt 17", -909.10180000f, -438.19030000f, 114.39970000f, { "hei_hw1_blimp_interior_17_dlc_apart_high_new_milo_" }, {}, {}, false },
+	//
+	//{ "x17DLC_2", 550.9484f, 5939.262f, -157.2159f, { "xm_x17dlc_int_placement_interior_3_x17dlc_int_base_milo_" }, {}, { IPL_PROPS_DOOMSDAY_MAIN_BASE }, false },
+	//{ "x17DLC_2", 550.9484f, 5939.262f, -157.2159f, IPL_PROPS_DOOMSDAY_MAIN_BASE, {}, {}, false },
+	//{ "GLITCHED_x17DLC_Beside_Submarine", 345.0f, 4842.0f, -60.0f, /*IPL_PROPS_COMPUTERS*/{}, {}, {}, false },
+	//{ "GLITCHED_x17DLC_Under Airport", -1266.80200000f, -3014.83700000f, -50.00000000f, { /*"xm_x17dlc_int_placement_strm_0"*/ }, {}, { /*IPL_PROPS_DOOMSDAY_UNDER_AIRPORT*/ }, false },
+	{ "Avenger Interior", 520.0f, 4750.0f, -70.0f, {}, {}, {}, false }, /*"xm_x17dlc_int_placement_interior_9_x17dlc_int_01_milo_"*/
+	{ "IAA Server Hub", 2168.08900000f, 2920.89000000f, -85.80049000f, {}, {}, {}, false },  /*"xm_x17dlc_int_placement_interior_5_x17dlc_int_facility2_milo_"*/ 
+	{ "IAA Underground Facility", 2047.0f, 2942.0f, -62.90245f, {}, {}, {}, false },  /*"xm_x17dlc_int_placement_interior_4_x17dlc_int_facility_milo_"*/ 
+	{ "Submarine", 514.266f, 4855.68f, -62.5621f, {}, {}, {}, false },  /*"xm_x17dlc_int_placement_interior_8_x17dlc_int_sub_milo_"*/
+	//{ "x17DLC_1", 550.9484f, 5939.262f, -157.2159f, { "xm_x17dlc_int_placement_interior_3_x17dlc_int_base_milo_" }, {}, { IPL_PROPS_DOOMSDAY_MAIN_BASE }, false },
+	//{ "x17DLC_2", 446.1718f, 5922.125f, -157.2159f, { "xm_x17dlc_int_placement_interior_2_x17dlc_int_bse_tun_milo_" }, {}, { IPL_PROPS_DOOMSDAY_MAIN_BASE }, false },
+	//{ "x17DLC_3", 252.0616f, 5972.125f, -159.102f, { "xm_x17dlc_int_placement_interior_1_x17dlc_int_base_loop_milo_" }, {}, { IPL_PROPS_DOOMSDAY_MAIN_BASE }, false },
+	//{ "x17DLC_4", 305.0158f, 6297.938f, -159.8097f, { "xm_x17dlc_int_placement_interior_7_x17dlc_int_silo_02_milo_" }, {}, { IPL_PROPS_DOOMSDAY_MAIN_BASE }, false },
+	//{ "x17DLC_5", 361.2802f, 6306.356f, -159.4669f, { "xm_x17dlc_int_placement_interior_6_x17dlc_int_silo_01_milo_" }, {}, { IPL_PROPS_DOOMSDAY_MAIN_BASE }, false },
+	//{ "x17DLC_5", 361.2802f, 6306.356f, -159.4669f, IPL_PROPS_DOOMSDAY_MAIN_BASE, {}, {}, false },
+	//{ "x17DLC_0", 1256.18f, 4789.082f, -37.9707f, IPL_PROPS_DOOMSDAY_MAIN_BASE, /*{ "xm_x17dlc_int_placement_interior_35_x17dlc_int_tun_entry_milo_"  },*/ {}, {}, false },
+	//{ "x17DLC_1", 1261.14f, 4808.669f, -36.32168f, IPL_PROPS_DOOMSDAY_MAIN_BASE, /*{ "xm_x17dlc_int_placement_interior_20_x17dlc_int_tun_flat_slope_milo_" },*/ {}, {}, false },
+	//{ "x17DLC_START", 345.00000000f, 4842.00000000f, -60.00000000f, /*IPL_PROPS_DOOMSDAY_MAIN_BASE*/{ "xm_x17dlc_int_placement_interior_33_x17dlc_int_02_milo_" }, {}, {}, false },
+	//{ "x17DLC_START_FULL", 462.09f, 4820.42f, -59.0f, IPL_PROPS_DOOMSDAY_MAIN_BASE, {}, {}, false },
+	//{ "FIB Interior (From Beta Version)", 161.78270000f, -745.89030000f, 69.65520000f, { "hidden_int_placement_interior_v_int_69_milo_" }, {}, {}, false },
+	//{ "High Life Update Hidden Garage", 228.60580000f, -92.05370000f, -100.00000000f, { "hidden_int_placement_interior_v_mp_gar_h_01_milo_" }, {}, {}, false },
+	
 };
 
 std::vector<tele_location> LOCATIONS_ACTORS = {
