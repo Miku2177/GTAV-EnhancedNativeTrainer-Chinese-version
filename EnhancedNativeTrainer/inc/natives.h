@@ -2498,6 +2498,7 @@ namespace CUTSCENE
 
 namespace INTERIOR
 {
+	static int _0x2CA429C029CCF247(int interiorID) { return invoke<int>(0x2CA429C029CCF247, interiorID); } //0x2CA429C029CCF247 
 	static int GET_INTERIOR_GROUP_ID(int interiorID) { return invoke<int>(0xE4A84ABF135EF91A, interiorID); } // 0xE4A84ABF135EF91A 0x09D6376F
 	static Vector3 GET_OFFSET_FROM_INTERIOR_IN_WORLD_COORDS(int interiorID, float x, float y, float z) { return invoke<Vector3>(0x9E3B3E6D66F6E22F, interiorID, x, y, z); } // 0x9E3B3E6D66F6E22F 0x7D8F26A1
 	static BOOL IS_INTERIOR_SCENE() { return invoke<BOOL>(0xBC72B5D7A1CBD54D); } // 0xBC72B5D7A1CBD54D 0x55226C13

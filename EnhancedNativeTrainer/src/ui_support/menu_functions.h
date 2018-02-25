@@ -866,7 +866,7 @@ void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, f
 		std::stringstream ss;
 
 		if(selectFromListItem->wrap || selectFromListItem->value > 0){
-			ss << "<<";
+			ss << "<< ";
 		}
 		else{
 			ss << "";
