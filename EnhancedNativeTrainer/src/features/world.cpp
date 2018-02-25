@@ -561,7 +561,7 @@ void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* r
 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureSnow", &featureSnow, &featureSnowUpdated});
 
-	results->push_back(FeatureEnabledLocalDefinition{ "featureMPMap", &featureMPMap, &featureMPMapUpdated });
+	//results->push_back(FeatureEnabledLocalDefinition{ "featureMPMap", &featureMPMap, &featureMPMapUpdated }); //Was causing issues as ENT was trying to load the MP map during the save load screen...
 }
 
 void add_world_generic_settings(std::vector<StringPairSettingDBRow>* settings)
@@ -585,7 +585,7 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 		}
 	}
 }
-	/* Snow related code - could be put into a class?*/
+	/* Snow related code -Will be moved into utils*/
 	/* Thanks to Sjaak for the help/code */
 
 	//Copyright (C) GTA:Multiplayer Team (https://wiki.gta-mp.net/index.php/Team)
