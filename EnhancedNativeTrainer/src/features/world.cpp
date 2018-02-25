@@ -561,7 +561,7 @@ void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* r
 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureSnow", &featureSnow, &featureSnowUpdated});
 
-	results->push_back(FeatureEnabledLocalDefinition{ "featureMPMap", &featureMPMap, &featureMPMapUpdated });
+	//results->push_back(FeatureEnabledLocalDefinition{ "featureMPMap", &featureMPMap, &featureMPMapUpdated }); //Was causing issues as ENT was trying to load the MP map during the save load screen...
 }
 
 void add_world_generic_settings(std::vector<StringPairSettingDBRow>* settings)
