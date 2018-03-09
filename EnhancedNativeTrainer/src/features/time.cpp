@@ -584,6 +584,10 @@ void update_time_features(Player player){
 		GAMEPLAY::SET_TIME_SCALE(0.0f);
 		weHaveChangedTimeScale = true;
 	}
+	else if (is_hotkey_held_half_normal_speed()){
+		GAMEPLAY::SET_TIME_SCALE(0.4f);
+		weHaveChangedTimeScale = true;
+	}
 	else if(PLAYER::IS_PLAYER_FREE_AIMING(player) && PLAYER::IS_PLAYER_CONTROL_ON(player)){
 		if(timeSinceAimingBegan == 0){
 			timeSinceAimingBegan = GetTickCount();

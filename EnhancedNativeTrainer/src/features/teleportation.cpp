@@ -1258,6 +1258,7 @@ std::vector<tele_location> LOCATIONS_HIGH = {
 	{ "1 Interstate Guide-Board", 1430.13f, 716.454f, 85.0183f },
 	{ "Airplane Graveyard Airplane Tail ", 2395.096f, 3049.616f, 60.053f },
 	{ "Airport Entrance Tower Roof", -912.523f, -2529.81f, 41.96f },
+	{ "Airport Radar Tower Roof", -1273.64f, -2456.1f, 77.3999f },
 	{ "Airport Tower Roof", -982.67f, -2638.2f, 89.522f },
 	{ "Bolingbroke Penitentiary Tower Summit", 1597.72f, 2599.34f, 93.0648f },
 	{ "Bridge Pole", -279.242f, -2438.71f, 124.004f },
@@ -1563,8 +1564,9 @@ std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "x17DLC_4", 305.0158f, 6297.938f, -159.8097f, IPL_PROPS_DOOMSDAY_MAIN_BASE, {}, { "xm_x17dlc_int_placement_interior_7_x17dlc_int_silo_02_milo_" }, false },
 	{ "x17DLC_5", 361.2802f, 6306.356f, -159.4669f, IPL_PROPS_DOOMSDAY_MAIN_BASE, {}, { "xm_x17dlc_int_placement_interior_6_x17dlc_int_silo_01_milo_" }, false },
 	{ "x17DLC_1", 1261.14f, 4808.669f, -36.32168f, IPL_PROPS_DOOMSDAY_MAIN_BASE, {}, { "xm_x17dlc_int_placement_interior_20_x17dlc_int_tun_flat_slope_milo_" }, false },*/
-	//{ "FIB Interior (From Beta Version)", 161.78270000f, -745.89030000f, 69.65520000f, { "hidden_int_placement_interior_v_int_69_milo_" }, {}, {}, false },
-	//{ "High Life Update Hidden Garage", 228.60580000f, -92.05370000f, -100.00000000f, { "hidden_int_placement_interior_v_mp_gar_h_01_milo_" }, {}, {}, false },	
+	{ "FIB Interior (From Beta Version)", 161.78270000f, -745.89030000f, 69.65520000f, { "hidden_int_placement_interior_v_int_69_milo_" }, {}, {}, false },
+	{ "High Life Update Hidden Garage", 228.60580000f, -92.05370000f, -100.00000000f, { "hidden_int_placement_interior_v_mp_gar_h_01_milo_" }, {}, {}, false },	
+		
 };
 
 std::vector<tele_location> LOCATIONS_ACTORS = {
