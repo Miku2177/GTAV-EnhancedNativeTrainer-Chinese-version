@@ -29,6 +29,7 @@ bool featureVehInvulnIncludesCosmetic = false;
 bool featureNoVehFallOff = false;
 bool featureNoVehFallOffUpdated = false;
 bool featureVehSpeedBoost = false;
+bool featureVehMassMult = false;
 bool featureVehSpawnInto = false;
 bool featureVehSpawnTuned = false;
 bool featureVehSpawnOptic = false;
@@ -69,8 +70,8 @@ bool powChanged = true;
 bool burnoutApplied = false;
 
 //vehicle mass stuff
-const std::vector<std::string> VEH_MASS_CAPTIONS{"1x", "5x", "10x", "25x", "50x", "75x", "100x", "125x", "150x", "175x", "200x", "225x", "250x", "275x", "300x", "325x", "350x", "375x", "400x"};
-const std::vector<int> VEH_MASS_VALUES{0, 5, 10, 25, 50, 75, 100, 125, 150, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400};
+const std::vector<std::string> VEH_MASS_CAPTIONS{"1x", "2x", "3x", "4x", "5x", "6x", "10x", "15x", "20x", "30x", "40x", "50x", "60x", "70x", "80x", "90x", "100x", "200x", "300x"};
+const std::vector<int> VEH_MASS_VALUES{0, 3, 5, 10, 20, 30, 50, 75, 100, 130, 150, 200, 250, 300, 350, 400, 450, 500, 1000};
 int VehMassMultIndex = 0;
 bool massChanged = true;
 
@@ -473,11 +474,17 @@ void process_veh_menu(){
 	listItem->value = engPowMultIndex;
 	menuItems.push_back(listItem);
 
-	/*listItem = new SelectFromListMenuItem(VEH_MASS_CAPTIONS, onchange_veh_mass_index);
+	/*toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Heavy Vehicle (ALPHA)";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureVehMassMult;
+	menuItems.push_back(toggleItem);*/
+
+	listItem = new SelectFromListMenuItem(VEH_MASS_CAPTIONS, onchange_veh_mass_index);
 	listItem->wrap = false;
-	listItem->caption = "Vehicle Mass Multiplier";
+	listItem->caption = "Vehicle Mass Multiplier (BETA)";
 	listItem->value = VehMassMultIndex;
-	menuItems.push_back(listItem);*/
+	menuItems.push_back(listItem);
 
 	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Disable Despawn Of DLC Cars";
@@ -719,11 +726,89 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		VEHICLE::_SET_VEHICLE_ENGINE_POWER_MULTIPLIER(veh, VEH_ENG_POW_VALUES[engPowMultIndex]);
 		powChanged = true;
 	}
+		
+	//////////////////////////////////////////////////// VEHICLE MASS ////////////////////////////////////////////////////////
+		//if (bPlayerExists && featureVehMassMult){
+	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && (VEH_MASS_VALUES[VehMassMultIndex] > 0)){// || massChanged)){ 
+		
+		const int numElements = 10;
+		const int arrSize = numElements * 2 + 2;
+		int nearbyPed[arrSize];
+		int veh_distance_x = 100;
+		int veh_distance_y = 100;
+		int veh_distance_z = 100;
+		Vector3 vehspeed = ENTITY::GET_ENTITY_VELOCITY(veh);
+		
+		nearbyPed[0] = numElements;
+		int count = PED::GET_PED_NEARBY_PEDS(PLAYER::PLAYER_PED_ID(), nearbyPed, -1);
 
-	if(bPlayerExists && (did_player_just_enter_vehicle(playerPed) || massChanged)){ // check if player entered vehicle, only need to set mults once
-		VEHICLE::SET_VEHICLE_DENSITY_MULTIPLIER_THIS_FRAME(VEH_MASS_VALUES[VehMassMultIndex]);
-		massChanged = false;
+		if (nearbyPed != NULL)
+		{
+			for (int i = 0; i < count; i++)
+			{
+				int offsettedID = i * 2 + 2;
+				Vehicle veh2 = PED::GET_VEHICLE_PED_IS_IN(nearbyPed[i], true);
+				Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(veh, true);
+				Vector3 coordsped = ENTITY::GET_ENTITY_COORDS(veh2, true);
+
+				veh_distance_x = (coordsme.x - coordsped.x);
+				veh_distance_y = (coordsme.y - coordsped.y);
+				veh_distance_z = (coordsme.z - coordsped.z);
+
+				if (ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(veh)){
+					//if (VEH_MASS_VALUES[VehMassMultIndex] > 0) {
+						Vector3 speed = ENTITY::GET_ENTITY_VELOCITY(veh);
+						if ((speed.x > 1) || (speed.y > 1) || (speed.z > 1)){
+						VEHICLE::SET_VEHICLE_ON_GROUND_PROPERLY(veh);
+					}
+					//}
+					
+					if (VEH_MASS_VALUES[VehMassMultIndex] > 3){
+						ENTITY::SET_ENTITY_VELOCITY(veh, vehspeed.x, vehspeed.y, vehspeed.z);
+					}
+
+					if (nearbyPed[offsettedID] != NULL && ENTITY::DOES_ENTITY_EXIST(nearbyPed[offsettedID]))
+					{
+						ENTITY::SET_ENTITY_LOAD_COLLISION_FLAG(veh, true);
+						ENTITY::HAS_COLLISION_LOADED_AROUND_ENTITY(veh);
+						ENTITY::APPLY_FORCE_TO_ENTITY(nearbyPed[i], 4, (ENTITY::GET_ENTITY_SPEED(veh) * VEH_MASS_VALUES[VehMassMultIndex]), 0, 0, 0, 0, 0, 1, true, true, true, true, true);
+						if (ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(veh2)){
+							ENTITY::APPLY_FORCE_TO_ENTITY(veh2, 4, (ENTITY::GET_ENTITY_SPEED(veh) * VEH_MASS_VALUES[VehMassMultIndex]), 0, 0, 0, 0, 0, 1, true, true, true, true, true);
+						}
+					}
+				}
+				
+				if ((VEH_MASS_VALUES[VehMassMultIndex] > 30) && (VEH_MASS_VALUES[VehMassMultIndex] < 200)){
+					if (nearbyPed[offsettedID] != NULL && ENTITY::DOES_ENTITY_EXIST(nearbyPed[offsettedID]))
+					{
+						if (veh_distance_x < 0) veh_distance_x = (veh_distance_x * -1);
+						if (veh_distance_y < 0) veh_distance_y = (veh_distance_y * -1);
+						if (veh_distance_z < 0) veh_distance_z = (veh_distance_z * -1);
+
+						if ((veh_distance_x + veh_distance_y + veh_distance_z) < 3){
+							ENTITY::APPLY_FORCE_TO_ENTITY(veh2, 4, (ENTITY::GET_ENTITY_SPEED(veh) * VEH_MASS_VALUES[VehMassMultIndex]), 0, 0, 0, 0, 0, 1, true, true, true, true, true);
+						}
+					}
+				}
+
+				if (VEH_MASS_VALUES[VehMassMultIndex] > 150){
+					if (nearbyPed[offsettedID] != NULL && ENTITY::DOES_ENTITY_EXIST(nearbyPed[offsettedID]))
+					{
+						if (veh_distance_x < 0) veh_distance_x = (veh_distance_x * -1);
+						if (veh_distance_y < 0) veh_distance_y = (veh_distance_y * -1);
+						if (veh_distance_z < 0) veh_distance_z = (veh_distance_z * -1);
+
+						if ((veh_distance_x + veh_distance_y + veh_distance_z) < (VEH_MASS_VALUES[VehMassMultIndex] / 40)){
+							ENTITY::APPLY_FORCE_TO_ENTITY(veh2, 4, (ENTITY::GET_ENTITY_SPEED(veh) * VEH_MASS_VALUES[VehMassMultIndex]), 0, 0, 0, 0, 0, 1, true, true, true, true, true);
+						}
+					}
+				}
+			}
+		}
+		if ((VEH_MASS_VALUES[VehMassMultIndex] < 1) || (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1))) delete[]nearbyPed;
+		massChanged = true;
 	}
+//////////////////////////////////////////////////
 
 	if(bPlayerExists){
 		if(featureVehLightsOnUpdated || did_player_just_enter_vehicle(playerPed)){
@@ -813,6 +898,7 @@ void reset_vehicle_globals(){
 
 	featureVehInvincible =
 		featureVehSpeedBoost =
+		featureVehMassMult =
 		featureVehicleDoorInstant =
 		featureLockVehicleDoors =
 		featureVehSpawnInto =
@@ -1053,6 +1139,7 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehNoDamage", &featureVehNoDamage, &featureVehInvincibleUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehSpawnInto", &featureVehSpawnInto});
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehSpeedBoost", &featureVehSpeedBoost});
+	results->push_back(FeatureEnabledLocalDefinition{ "featureVehMassMult", &featureVehMassMult});
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehSpawnTuned", &featureVehSpawnTuned});
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehSpawnOptic", &featureVehSpawnOptic});
 	results->push_back(FeatureEnabledLocalDefinition{"featureWearHelmetOff", &featureWearHelmetOff, &featureWearHelmetOffUpdated});
@@ -1456,6 +1543,7 @@ void add_vehicle_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"lastCustomVehicleSpawn", lastCustomVehicleSpawn});
 	results->push_back(StringPairSettingDBRow{"speedBoostIndex", std::to_string(speedBoostIndex)});
 	results->push_back(StringPairSettingDBRow{"engPowMultIndex", std::to_string(engPowMultIndex)});
+	results->push_back(StringPairSettingDBRow{ "VehMassMultIndex", std::to_string(VehMassMultIndex) });
 }
 
 void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settings){
@@ -1469,6 +1557,9 @@ void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settin
 		}
 		else if(setting.name.compare("engPowMultIndex") == 0){
 			engPowMultIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("VehMassMultIndex") == 0){
+			VehMassMultIndex = stoi(setting.value);
 		}
 	}
 }
@@ -1511,6 +1602,7 @@ void onchange_veh_mass_index(int value, SelectFromListMenuItem* source){
 	VehMassMultIndex = value;
 	massChanged = true;
 }
+
 struct VehicleImage{
 	char* modelName;
 	char* dict;

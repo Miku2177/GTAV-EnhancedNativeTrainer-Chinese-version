@@ -23,6 +23,8 @@ int functionIDs[MAX_HOTKEYS] = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 bool hotkey_held_slow_mo = false;
 
+bool hotkey_held_half_normal_speed = false;
+
 bool hotkey_held_normal_speed = false;
 
 bool hotkey_held_veh_burnout = false;
@@ -34,6 +36,10 @@ bool is_hotkey_held_slow_mo()
 	return hotkey_held_slow_mo;
 }
 
+bool is_hotkey_held_half_normal_speed()
+{
+	return hotkey_held_half_normal_speed;
+}
 bool is_hotkey_held_normal_speed()
 {
 	return hotkey_held_normal_speed;
@@ -174,6 +180,9 @@ void trigger_function_for_hotkey_onkeyup(int hotkey)
 	case HKEY_SLOW_MOTION:
 		hotkey_held_slow_mo = false;
 		break;
+	case HKEY_HALF_NORMAL_SPEED:
+		hotkey_held_half_normal_speed = false;
+		break;
 	case HKEY_NORMAL_SPEED:
 		hotkey_held_normal_speed = false;
 		break;
@@ -212,6 +221,9 @@ void trigger_function_for_hotkey_onkeydown(int hotkey)
 			break;
 		case HKEY_SLOW_MOTION:
 			hotkey_held_slow_mo = true;
+			break;
+		case HKEY_HALF_NORMAL_SPEED:
+			hotkey_held_half_normal_speed = true;
 			break;
 		case HKEY_NORMAL_SPEED:
 			hotkey_held_normal_speed = true;

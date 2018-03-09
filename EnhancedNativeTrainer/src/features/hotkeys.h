@@ -17,6 +17,8 @@ struct HOTKEY_DEF
 
 bool is_hotkey_held_slow_mo();
 
+bool is_hotkey_held_half_normal_speed();
+
 bool is_hotkey_held_normal_speed();
 
 bool is_hotkey_held_veh_burnout();
@@ -40,12 +42,13 @@ static const int HKEY_TOGGLE_THERMAL_VIS = 114;
 static const int HKEY_TOGGLE_NIGHT_VIS = 115;
 static const int HKEY_PASSENGER = 116;
 static const int HKEY_SLOW_MOTION = 117;
-static const int HKEY_NORMAL_SPEED = 118;
-static const int HKEY_VEHICLE_POWER = 119;
-static const int HKEY_VEHICLE_BURNOUT = 120;
-static const int HKEY_KILL_NEARBY_PEDS = 121;
-static const int HKEY_EXPLODE_NEARBY_VEHS = 122;
-static const int HKEY_VEHICLE_FLIP = 123;
+static const int HKEY_HALF_NORMAL_SPEED = 118;
+static const int HKEY_NORMAL_SPEED = 119;
+static const int HKEY_VEHICLE_POWER = 120;
+static const int HKEY_VEHICLE_BURNOUT = 121;
+static const int HKEY_KILL_NEARBY_PEDS = 122;
+static const int HKEY_EXPLODE_NEARBY_VEHS = 123;
+static const int HKEY_VEHICLE_FLIP = 124;
 
 const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "No Function", 0 },
@@ -65,6 +68,7 @@ const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "Toggle Night Vision", HKEY_TOGGLE_NIGHT_VIS },
 	{ "Toggle Thermal Vision", HKEY_TOGGLE_THERMAL_VIS },
 	{ "Slow Motion (Hold Key)", HKEY_SLOW_MOTION},
+	{ "Half Normal Motion (Hold Key)", HKEY_HALF_NORMAL_SPEED },
 	{ "Normal Motion (Hold Key)", HKEY_NORMAL_SPEED },
 	{ "Vehicle Extra Power (Hold Key)", HKEY_VEHICLE_POWER },
 	{ "Vehicle Burnout (Hold Key)", HKEY_VEHICLE_BURNOUT },
