@@ -26,6 +26,7 @@ bool IsSnow;
 
 int activeLineIndexWorld = 0;
 int activeLineIndexWeather = 0;
+int activeLineIndexClouds = 0;
 
 bool featureRestrictedZones = true;
 
@@ -52,6 +53,8 @@ bool featureBlackoutUpdated = false;
 
 bool featureWeatherWind = false;
 bool featureWeatherFreeze = false;
+bool featureCloudsFreeze = false;
+bool featureCloudsNo = false;
 
 bool featureSnow = false;
 bool featureSnowUpdated = false;
@@ -62,6 +65,9 @@ bool featureMPMapUpdated = false;
 
 std::string lastWeather;
 std::string lastWeatherName;
+
+std::string lastClouds;
+std::string lastCloudsName;
 
 
 bool onconfirm_weather_menu(MenuItem<std::string> choice)
@@ -153,6 +159,97 @@ void process_weather_menu()
 
 	draw_menu_from_struct_def(lines, lineCount, &activeLineIndexWeather, caption, onconfirm_weather_menu);
 }
+//////////////////////////////////// CLOUDS MENU /////////////////////////////
+
+bool onconfirm_clouds_menu(MenuItem<std::string> choice)
+{
+	std::stringstream ss; ss << "Clouds Frozen at: " << lastCloudsName;
+	switch (choice.currentMenuIndex)
+	{
+		// No Clouds
+	case 0:
+		if (featureCloudsNo)
+		{
+			//GAMEPLAY::_CLEAR_CLOUD_HAT();
+		}
+		break;
+		
+		// set weather
+	case 1:
+
+		//GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
+
+		if (featureCloudsFreeze && !lastClouds.empty())
+		{
+			std::stringstream ss; ss << "Clouds frozen at: " << lastCloudsName;
+			set_status_text(ss.str());
+		}
+		else if (!featureCloudsFreeze)
+		{
+			set_status_text("Clouds unfrozen");
+		}
+		else
+		{
+			set_status_text("Set a clouds value first");
+			featureCloudsFreeze = false;
+		}
+		break;
+	default:
+		lastClouds = choice.value.c_str();
+		lastCloudsName = choice.caption;
+
+		//GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
+		
+		GRAPHICS::_SET_CLOUD_HAT_TRANSITION((char *)lastClouds.c_str(), 1.0);
+		
+		//GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
+
+		std::ostringstream ss2;
+		ss2 << "Clouds: " << choice.caption;
+		set_status_text(ss2.str());
+	}
+
+	return false;
+}
+
+void process_clouds_menu()
+{
+	const int lineCount = 21;
+
+	std::string caption = "Clouds Options";
+
+	StringStandardOrToggleMenuDef lines[lineCount] = {
+		//{ "No Clouds", "NOCLOUDS", &featureCloudsNo, NULL },
+		{ "Freeze Clouds", "FREEZECLOUDS", &featureCloudsFreeze, NULL },
+		//
+		{ "Altostratus", "altostratus", NULL, NULL },
+		{ "Cirrocumulus", "cirrocumulus", NULL, NULL },
+		{ "Cirrus", "Cirrus", NULL, NULL },
+		{ "Clear 01", "Clear 01", NULL, NULL },
+		{ "Cloudy 01", "Cloudy 01", NULL, NULL },
+		{ "Contrails", "Contrails", NULL, NULL },
+		{ "Horizon", "Horizon", NULL, NULL },
+		{ "Horizonband 1", "horizonband1", NULL, NULL },
+		{ "Horizonband 2", "horizonband2", NULL, NULL },
+		{ "Horizonband 3", "horizonband3", NULL, NULL },
+		{ "Horsey", "horsey", NULL, NULL },
+		{ "Nimbus", "Nimbus", NULL, NULL },
+		{ "Puffs", "Puffs", NULL, NULL },
+		{ "Rain", "RAIN", NULL, NULL },
+		{ "Shower", "shower", NULL, NULL },
+		{ "Snowy 01", "Snowy 01", NULL, NULL },
+		{ "Stormy 01", "Stormy 01", NULL, NULL },
+		{ "Stratoscumulus", "stratoscumulus", NULL, NULL },
+		{ "Stripey", "Stripey", NULL, NULL },
+		{ "Wispy", "Wispy", NULL, NULL },
+		//
+		
+	};
+
+	draw_menu_from_struct_def(lines, lineCount, &activeLineIndexClouds, caption, onconfirm_clouds_menu);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 bool onconfirm_world_menu(MenuItem<int> choice)
 {
@@ -163,6 +260,9 @@ bool onconfirm_world_menu(MenuItem<int> choice)
 		break;
 	case -2:
 		process_weather_menu();
+		break;
+	case -3:
+		process_clouds_menu();
 		break;
 	case 2:
 		// featureWorldRandomCops being set in update_features
@@ -191,6 +291,12 @@ void process_world_menu()
 	weatherItem->value = -2;
 	menuItems.push_back(weatherItem);
 
+	MenuItem<int> *cloudsItem = new MenuItem<int>();
+	cloudsItem->isLeaf = false;
+	cloudsItem->caption = "Clouds";
+	cloudsItem->value = -3;
+	menuItems.push_back(cloudsItem);
+	
 	ToggleMenuItem<int> *togItem = new ToggleMenuItem<int>();
 	togItem->caption = "Moon Gravity";
 	togItem->value = 1;
@@ -274,11 +380,16 @@ void reset_world_globals()
 {
 	activeLineIndexWorld = 0;
 	activeLineIndexWeather = 0;
+	activeLineIndexClouds = 0;
 	lastWeather.clear();
 	lastWeatherName.clear();
+	lastClouds.clear();
+	lastCloudsName.clear();
 
 	featureWeatherWind =
 	featureWeatherFreeze =
+	featureCloudsNo =
+	featureCloudsFreeze =
 	featureWorldMoonGravity = false;
 
 	featureWorldNoPeds = false;
@@ -498,6 +609,11 @@ void update_world_features()
 		GAMEPLAY::SET_WEATHER_TYPE_NOW((char *)lastWeather.c_str());
 	}
 
+	if (featureCloudsFreeze && !lastClouds.empty())
+	{
+		GRAPHICS::_SET_CLOUD_HAT_TRANSITION((char *)lastClouds.c_str(), 1.0);
+	}
+
 	if (!featureRestrictedZones)
 	{
 		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("am_armybase");
@@ -552,6 +668,8 @@ void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* r
 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWeatherWind", &featureWeatherWind });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWeatherFreeze", &featureWeatherFreeze });
+	results->push_back(FeatureEnabledLocalDefinition{ "featureCloudsNo", &featureCloudsNo });
+	results->push_back(FeatureEnabledLocalDefinition{ "featureCloudsFreeze", &featureCloudsFreeze });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureBlackout", &featureBlackout, &featureBlackoutUpdated });
 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureRestrictedZones", &featureRestrictedZones });
@@ -568,6 +686,8 @@ void add_world_generic_settings(std::vector<StringPairSettingDBRow>* settings)
 {
 	settings->push_back(StringPairSettingDBRow{ "lastWeather", lastWeather });
 	settings->push_back(StringPairSettingDBRow{ "lastWeatherName", lastWeatherName });
+	settings->push_back(StringPairSettingDBRow{ "lastClouds", lastClouds });
+	settings->push_back(StringPairSettingDBRow{ "lastCloudsName", lastCloudsName });
 }
 
 void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings)
@@ -583,8 +703,17 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 		{
 			lastWeatherName = setting.value;
 		}
+		if (setting.name.compare("lastClouds") == 0)
+		{
+			lastClouds = setting.value;
+		}
+		else if (setting.name.compare("lastCloudsName") == 0)
+		{
+			lastCloudsName = setting.value;
+		}
 	}
 }
+
 	/* Snow related code -Will be moved into utils*/
 	/* Thanks to Sjaak for the help/code */
 

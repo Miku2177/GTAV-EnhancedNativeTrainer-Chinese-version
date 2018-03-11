@@ -482,7 +482,7 @@ void process_veh_menu(){
 
 	listItem = new SelectFromListMenuItem(VEH_MASS_CAPTIONS, onchange_veh_mass_index);
 	listItem->wrap = false;
-	listItem->caption = "Vehicle Mass Multiplier (BETA)";
+	listItem->caption = "Vehicle Mass Multiplier";
 	listItem->value = VehMassMultIndex;
 	menuItems.push_back(listItem);
 
@@ -805,8 +805,8 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				}
 			}
 		}
-		if ((VEH_MASS_VALUES[VehMassMultIndex] < 1) || (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1))) delete[]nearbyPed;
-		massChanged = true;
+		//if ((VEH_MASS_VALUES[VehMassMultIndex] < 1) || (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1))) delete[]nearbyPed;
+		//massChanged = true;
 	}
 //////////////////////////////////////////////////
 

@@ -24,6 +24,8 @@ void process_world_menu();
 
 void process_weather_menu();
 
+void process_clouds_menu();
+
 void reset_world_globals();
 
 void update_world_features();
