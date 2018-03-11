@@ -1292,6 +1292,7 @@ std::vector<tele_location> LOCATIONS_HIGH = {
 	{ "Palmer-Taylor Power Station Chimney", 2723.01f, 1540.68f, 89.4314f },
 	{ "Rebel Radio Tower Top", 753.214f, 2581.43f, 158.363f },
 	{ "Red Bridge Top", 796.735f, -2626.74f, 87.9404f },
+	{ "Richards Majestic Water Tower", -1159.98f, -604.803f, 69.0802f },
 	{ "Sandy Shores Building Site Crane", 1051.209f, 2280.452f, 89.727f },
 	{ "Satellite Dish Antenna", 2034.988f, 2953.105f, 74.602f },
 	{ "Stab City", 126.845f, 3714.25f, 48.9273f },

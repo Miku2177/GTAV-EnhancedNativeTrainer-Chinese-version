@@ -3507,6 +3507,8 @@ namespace GRAPHICS
 	static Any _0xE791DF1F73ED2C8B(Any p0) { return invoke<Any>(0xE791DF1F73ED2C8B, p0); } // 0xE791DF1F73ED2C8B 0x9D84554C
 	static Any _0xEC72C258667BE5EA(Any p0) { return invoke<Any>(0xEC72C258667BE5EA, p0); } // 0xEC72C258667BE5EA 0x9C106AD9
 	static int _RETURN_TWO(Any p0) { return invoke<int>(0x40AFB081F8ADD4EE, p0); } // 0x40AFB081F8ADD4EE 0x762E5C5F
+	static void _SET_CLOUD_HAT_TRANSITION(char* type, float transitionTime) { invoke<Void>(0xFC4842A34657BFCB, type, transitionTime); } // 0xFC4842A34657BFCB 0xED88FC61
+	static void _SET_CLOUD_HAT_OPACITY(float opacity) { invoke<Void>(0xF36199225D6D8C86, opacity); }// 0xF36199225D6D8C86
 	static void _DRAW_LIGHT_WITH_RANGE_AND_SHADOW(float x, float y, float z, int r, int g, int b, float range, float intensity, float shadow) { invoke<Void>(0xF49E9A9716A04595, x, y, z, r, g, b, range, intensity, shadow); } // 0xF49E9A9716A04595
 	static void DRAW_LIGHT_WITH_RANGE(float posX, float posY, float posZ, int colorR, int colorG, int colorB, float range, float intensity) { invoke<Void>(0xF2A1B2771A01DBD4, posX, posY, posZ, colorR, colorG, colorB, range, intensity); } // 0xF2A1B2771A01DBD4 0x6A396E9A
 	static void DRAW_SPOT_LIGHT(float posX, float posY, float posZ, float dirX, float dirY, float dirZ, int colorR, int colorG, int colorB, float distance, float brightness, float roundness, float radius, float falloff) { invoke<Void>(0xD0F64B265C8C8B33, posX, posY, posZ, dirX, dirY, dirZ, colorR, colorG, colorB, distance, brightness, roundness, radius, falloff); } // 0xD0F64B265C8C8B33 0xBDBC410C
