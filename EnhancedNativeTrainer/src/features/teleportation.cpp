@@ -14,6 +14,9 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\ui_support\menu_functions.h"
 #include "..\debug\debuglog.h"
 #include "..\ent-enums.h"
+#include "script.h"
+#include <iostream>   // std::cout
+#include <string>     // std::string, std::stof
 
 bool featureEnableMpMaps = false;
 
@@ -1904,6 +1907,49 @@ set_status_text("MP Maps disabled");
 
 }*/
 
+//////////////////////// JUMP TO COORDS ////////////////////////////////
+
+std::string lastJumpSpawn;
+
+void add_coords_generic_settings(std::vector<StringPairSettingDBRow>* results)
+{
+	results->push_back(StringPairSettingDBRow{ "lastJumpSpawn", lastJumpSpawn });
+}
+
+bool onconfirm_jump_category(MenuItem<int> choice)
+{
+	if (choice.value == -5)
+	{
+		std::string result = show_keyboard(NULL, (char*)lastJumpSpawn.c_str());
+		if (!result.empty())
+		{
+			result = trim(result);
+			lastJumpSpawn = result;
+			Hash hash = GAMEPLAY::GET_HASH_KEY((char*)result.c_str());
+			
+			Entity e = PLAYER::PLAYER_PED_ID();
+			std::string a = (char*)result.c_str();
+			std::string::size_type sz;
+			
+			float x = std::stof(a, &sz);
+			float y = std::stof(a.substr(sz), &sz);
+			float z = std::stof(a.substr(sz).substr(sz));
+
+			if (PED::IS_PED_IN_ANY_VEHICLE(e, 0)){
+				e = PED::GET_VEHICLE_PED_IS_USING(e);
+			}
+			ENTITY::SET_ENTITY_COORDS_NO_OFFSET(e, x, y, z, 0, 0, 1);
+			WAIT(0);
+			set_status_text("Teleported");
+		}
+		return false;
+	}
+	
+	return false;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+
 bool onconfirm_teleport_category(MenuItem<int> choice){
 	Entity e = PLAYER::PLAYER_PED_ID();
 	if (choice.value == -2){
@@ -1928,7 +1974,7 @@ bool onconfirm_teleport_category(MenuItem<int> choice){
 		return false;
 	}
 	else if (choice.value == -5){
-		process_toggles_menu();
+		onconfirm_jump_category(choice);
 		return false;
 	}
 
@@ -2113,12 +2159,18 @@ bool process_teleport_menu(int categoryIndex){
 		markerItem->isLeaf = true;
 		menuItems.push_back(markerItem);
 
+		markerItem = new MenuItem<int>();
+		markerItem->caption = "Jump To Coordinates";
+		markerItem->value = -5;
+		markerItem->isLeaf = true;
+		menuItems.push_back(markerItem);
+		
 		MenuItem<int> *dialogItem = new MenuItem<int>();
 		dialogItem->caption = "Show Coordinates";
 		dialogItem->value = -1;
 		dialogItem->isLeaf = true;
 		menuItems.push_back(dialogItem);
-
+		
 		for (int i = 0; i < MENU_LOCATION_CATEGORIES.size(); i++){
 			if (MENU_LOCATION_CATEGORIES[i].compare(JELLMAN_CAPTION) == 0 && !is_jellman_scenery_enabled()){
 				continue;

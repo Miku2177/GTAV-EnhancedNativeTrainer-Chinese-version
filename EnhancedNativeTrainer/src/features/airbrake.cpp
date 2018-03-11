@@ -41,6 +41,13 @@ bool airbrakeStatusTextGxtEntry;
 void exit_airbrake_menu_if_showing()
 {
 	ENTITY::SET_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID(), true);
+	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)){
+		ENTITY::SET_ENTITY_COLLISION(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), 1, 1);
+	}
+	else
+	{
+		ENTITY::SET_ENTITY_COLLISION(PLAYER::PLAYER_PED_ID(), 1, 1);
+	}
 	CAM::RENDER_SCRIPT_CAMS(false, false, 0, false, false);
 	CAM::DETACH_CAM(AirCam);
 	CAM::SET_CAM_ACTIVE(AirCam, false);
@@ -80,7 +87,7 @@ void process_airbrake_menu()
 	curLocation = ENTITY::GET_ENTITY_COORDS(playerPed, 0);
 	curRotation = ENTITY::GET_ENTITY_ROTATION(playerPed, 0);
 	curHeading = ENTITY::GET_ENTITY_HEADING(playerPed);
-
+	
 	while (true && !exitFlag)
 	{
 		in_airbrake_mode = true;
@@ -100,6 +107,13 @@ void process_airbrake_menu()
 		{
 			menu_beep();
 			ENTITY::SET_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID(), true);
+			if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)){
+				ENTITY::SET_ENTITY_COLLISION(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), 1, 1);
+			}
+			else
+			{
+				ENTITY::SET_ENTITY_COLLISION(PLAYER::PLAYER_PED_ID(), 1, 1);
+			}
 			CAM::RENDER_SCRIPT_CAMS(false, false, 0, false, false);
 			CAM::DETACH_CAM(AirCam);
 			CAM::SET_CAM_ACTIVE(AirCam, false);
@@ -257,7 +271,7 @@ void moveThroughDoor()
 	float xVect = forwardPush * sin(degToRad(curHeading)) * -1.0f;
 	float yVect = forwardPush * cos(degToRad(curHeading));
 
-	//ENTITY::SET_ENTITY_COLLISION(playerPed, 0, 0);
+	ENTITY::SET_ENTITY_COLLISION(playerPed, 0, 1);
 	ENTITY::SET_ENTITY_COORDS_NO_OFFSET(playerPed, curLocation.x + xVect, curLocation.y + yVect, curLocation.z, 1, 1, 1);
 }
 
@@ -298,6 +312,13 @@ void camera_view()
 	else if (exitFlag == true)
 	{
 		ENTITY::SET_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID(), true);
+		if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)){
+			ENTITY::SET_ENTITY_COLLISION(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), 1, 1);
+		}
+		else
+		{
+			ENTITY::SET_ENTITY_COLLISION(PLAYER::PLAYER_PED_ID(), 1, 1);
+		}
 		CAM::RENDER_SCRIPT_CAMS(false, false, 0, false, false);
 		CAM::DETACH_CAM(AirCam);
 		CAM::SET_CAM_ACTIVE(AirCam, false);
@@ -392,6 +413,7 @@ void mouse_view() // Control By A Mouse
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
+
 void airbrake(bool inVehicle)
 {
 	// common variables
@@ -480,6 +502,13 @@ void airbrake(bool inVehicle)
 	else
 	{
 		ENTITY::SET_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID(), true);
+		if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)){
+			ENTITY::SET_ENTITY_COLLISION(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), 1, 1);
+		}
+		else
+		{
+			ENTITY::SET_ENTITY_COLLISION(PLAYER::PLAYER_PED_ID(), 1, 1);
+		}
 		CAM::RENDER_SCRIPT_CAMS(false, false, 0, false, false);
 		CAM::DETACH_CAM(AirCam);
 		CAM::SET_CAM_ACTIVE(AirCam, false);
@@ -532,7 +561,7 @@ void airbrake(bool inVehicle)
 		curLocation.y += (forwardPush * cos(degToRad(curHeading - 90)));
 	}
 	
-	//ENTITY::SET_ENTITY_COLLISION(target, 0, 0);
+	ENTITY::SET_ENTITY_COLLISION(target, 0, 1);
 	ENTITY::SET_ENTITY_COORDS_NO_OFFSET(target, curLocation.x, curLocation.y, curLocation.z, xBoolParam, yBoolParam, zBoolParam);
 	ENTITY::SET_ENTITY_HEADING(target, curHeading - rotationSpeed);
 }
