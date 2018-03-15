@@ -32,10 +32,10 @@ static const int HKEY_RESET_WANTED = 104;
 static const int HKEY_REPLAY_ANIM = 105;
 static const int HKEY_TOGGLE_INVISIBILITY = 106;
 static const int HKEY_TELEPORT_TO_MARKER = 107;
-static const int HKEY_MENU_VEHICLE_SPAWN = 108;
-static const int HKEY_MENU_VEHICLE_PAINT = 109;
-static const int HKEY_MENU_SKINS = 110;
-//static const int HKEY_MENU_SKIN_CUST = 111;
+static const int HKEY_TELEPORT_TO_MISSION_MARKER = 108;
+static const int HKEY_MENU_VEHICLE_SPAWN = 109;
+static const int HKEY_MENU_VEHICLE_PAINT = 110;
+static const int HKEY_MENU_SKINS = 111;
 static const int HKEY_TELEPORT_TO_VEHICLE = 112;
 static const int HKEY_MENU_NEXT_RADIO_TRACK = 113;
 static const int HKEY_TOGGLE_THERMAL_VIS = 114;
@@ -58,6 +58,7 @@ const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "Reset Wanted", HKEY_RESET_WANTED },
 	{ "Replay Last Anim", HKEY_REPLAY_ANIM },
 	{ "Teleport To Marker", HKEY_TELEPORT_TO_MARKER },
+	{ "Teleport To Mission Marker", HKEY_TELEPORT_TO_MISSION_MARKER },
 	{ "Teleport To Last Veh", HKEY_TELEPORT_TO_VEHICLE },
 	{ "Toggle Invisibility", HKEY_TOGGLE_INVISIBILITY },
 	{ "Veh. Spawn Menu", HKEY_MENU_VEHICLE_SPAWN },
