@@ -26,6 +26,8 @@ void process_toggles_menu();
 
 void teleport_to_marker();
 
+void teleport_to_mission_marker();
+
 void teleport_to_last_vehicle();
 
 void get_chauffeur_to_marker();

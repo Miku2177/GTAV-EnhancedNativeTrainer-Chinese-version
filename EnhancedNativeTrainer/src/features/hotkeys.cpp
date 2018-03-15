@@ -138,6 +138,9 @@ void trigger_function_for_hotkey_onkeyup(int hotkey)
 	case HKEY_TELEPORT_TO_MARKER:
 		teleport_to_marker();
 		break;
+	case HKEY_TELEPORT_TO_MISSION_MARKER:
+		teleport_to_mission_marker();
+		break;
 	case HKEY_TELEPORT_TO_VEHICLE:
 		teleport_to_last_vehicle();
 		break;
