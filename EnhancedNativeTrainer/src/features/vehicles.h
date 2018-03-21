@@ -138,18 +138,6 @@ bool is_bombbay_open(std::vector<int> extras);
 
 void set_bombbay_open(bool applied, std::vector<int> extras);
 
-//bool is_toggle_17_enabled(std::vector<int> extras);
-//
-//void set_toggle_17_enabled(bool applied, std::vector<int> extras);
-//
-//bool is_toggle_19_enabled(std::vector<int> extras);
-//
-//void set_toggle_19_enabled(bool applied, std::vector<int> extras);
-//
-//bool is_toggle_21_enabled(std::vector<int> extras);
-//
-//void set_toggle_21_enabled(bool applied, std::vector<int> extras);
-
 int find_menu_index_to_restore(int category, int actualCategory, Vehicle veh);
 
 bool vehicle_menu_interrupt();
@@ -276,3 +264,7 @@ bool did_player_just_enter_vehicle(Ped playerPed);
 void fully_tune_vehicle(Vehicle veh, bool optics = true);
 
 void reset_vehicle(Vehicle veh);
+
+bool onconfirm_seat_menu(MenuItem<int> choice);
+
+bool process_veh_seat_menu();
