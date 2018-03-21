@@ -808,7 +808,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		//if ((VEH_MASS_VALUES[VehMassMultIndex] < 1) || (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1))) delete[]nearbyPed;
 		//massChanged = true;
 	}
-//////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	if(bPlayerExists){
 		if(featureVehLightsOnUpdated || did_player_just_enter_vehicle(playerPed)){
