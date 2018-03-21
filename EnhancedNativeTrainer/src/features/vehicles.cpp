@@ -358,13 +358,13 @@ bool process_veh_seat_menu() {
 	std::vector<std::string> SEAT_NAMES = {
 		"Driver",
 		"Front Passenger",
-		"Rear Passenger 1",
 		"Rear Passenger 2",
 		"Rear Passenger 3",
 		"Rear Passenger 4",
 		"Rear Passenger 5",
 		"Rear Passenger 6",
 		"Rear Passenger 7",
+		"Rear Passenger 8",
 	};
 
 	for (int i = -1; i < maxSeats; i++) {
@@ -377,7 +377,6 @@ bool process_veh_seat_menu() {
 
 	return draw_generic_menu<int>(menuItems, &vehSeatIndexMenuIndex, "Seat Options", onconfirm_seat_menu, NULL, NULL);
 }
-
 
 void on_toggle_invincibility(MenuItem<int> choice){
 	featureVehInvincibleUpdated = true;
@@ -413,6 +412,9 @@ bool onconfirm_veh_menu(MenuItem<int> choice){
 		//	break;
 		case 16: // door menu
 			if(process_veh_door_menu()) return false;
+			break;
+		case 17: // seat menu
+			if (process_veh_seat_menu()) return false;
 			break;
 		default:
 			break;
@@ -547,6 +549,12 @@ void process_veh_menu(){
 	item->value = i++;
 	item->isLeaf = false;
 	menuItems.push_back(item);
+	
+	item = new MenuItem<int>();
+	item->caption = "Vehicle Seats";
+	item->value = i++;
+	item->isLeaf = false;
+	menuItems.push_back(item);
 
 	/*
 	toggleItem = new ToggleMenuItem<int>();
@@ -570,27 +578,6 @@ void process_veh_menu(){
 void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 
-	/* version-specific hack to prevent despawn of vehicles exclusive to GTA Online
-	eGameVersion version = getGameVersion();
-	if(version < 20){
-		*getGlobalPtr(2558120) = 1;
-	}
-	else if(version < 22){
-		*getGlobalPtr(2562051) = 1;
-	}
-	else if(version < 26){
-		*getGlobalPtr(2566708) = 1;
-	}
-	else if(version < 28){
-		*getGlobalPtr(2576573) = 1;
-	}
-	else if(version < 30){
-		*getGlobalPtr(2593910) = 1;
-	}
-	else{
-		*getGlobalPtr(2593970) = 1; //2593910 -- old. Keep in case new one doesn't work.
-	}*/
-
 	eGameVersion version = getGameVersion();
 	if (version < 20) *getGlobalPtr(2558120) = 1;
 
@@ -609,6 +596,8 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	if ((version > 35) && (version < 38)) *getGlobalPtr(2606794) = 1;
 
 	if ((version > 37) && (version < 40)) *getGlobalPtr(4265719) = 1;
+
+	if ((version > 39) && (version < 43)) *getGlobalPtr(4265719) = 1; //Same pointer for 1.42?
 
 	//if (version > 38) *getGlobalPtr(2606794) = 1; //2606794
 
@@ -1179,7 +1168,6 @@ Vehicle do_spawn_vehicle(DWORD model, std::string modelTitle, bool cleanup){
 	}
 	return -1;
 }
-
 
 void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoVehFallOff", &featureNoVehFallOff, &featureNoVehFallOffUpdated});
@@ -2085,8 +2073,6 @@ MenuItemImage* vehicle_image_preview_finder(MenuItem<std::string> choice){
 	return NULL;
 }
 
-
-
 void unpack_veh_preview(char* model, int resRef, std::string bitmapName){
 	WAIT(0);
 	make_periodic_feature_call();
@@ -2397,7 +2383,6 @@ void clean_vehicle(){
 		}
 	}
 }
-
 
 bool is_convertible_roofdown(std::vector<int> extras){
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
