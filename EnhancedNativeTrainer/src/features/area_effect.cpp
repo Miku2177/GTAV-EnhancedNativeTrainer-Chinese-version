@@ -393,8 +393,10 @@ void update_area_effects(Ped playerPed){
 }
 
 void show_debug_info_on_screen(bool enabled){
+	Vector3 coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 0);
 	std::ostringstream ss;
 	ss << "Peds: " << trackedPeds.size() << "; Vehs: " << trackedVehicles.size() << "\nCalls Total: " << callsPerFrame << ", A: " << callsA << ", B: " << callsB << "\nWP: " << allWorldPedsThisFrame.size() << ", WV: " << allWorldVehiclesThisFrame.size();
+	ss << "\nX: " << coords.x << "\nY: " << coords.y << "\nZ: " << coords.z;
 	callsPerFrame = 0;
 	set_status_text_centre_screen(ss.str());
 }

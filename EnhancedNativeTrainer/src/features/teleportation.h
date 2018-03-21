@@ -28,6 +28,10 @@ void teleport_to_marker();
 
 void teleport_to_mission_marker();
 
+void teleport_to_vehicle_in_sight();
+
+void teleport_to_vehicle_as_passenger();
+
 void teleport_to_last_vehicle();
 
 void get_chauffeur_to_marker();

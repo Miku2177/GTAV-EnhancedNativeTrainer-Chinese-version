@@ -33,22 +33,24 @@ static const int HKEY_REPLAY_ANIM = 105;
 static const int HKEY_TOGGLE_INVISIBILITY = 106;
 static const int HKEY_TELEPORT_TO_MARKER = 107;
 static const int HKEY_TELEPORT_TO_MISSION_MARKER = 108;
-static const int HKEY_MENU_VEHICLE_SPAWN = 109;
-static const int HKEY_MENU_VEHICLE_PAINT = 110;
-static const int HKEY_MENU_SKINS = 111;
-static const int HKEY_TELEPORT_TO_VEHICLE = 112;
-static const int HKEY_MENU_NEXT_RADIO_TRACK = 113;
-static const int HKEY_TOGGLE_THERMAL_VIS = 114;
-static const int HKEY_TOGGLE_NIGHT_VIS = 115;
-static const int HKEY_PASSENGER = 116;
-static const int HKEY_SLOW_MOTION = 117;
-static const int HKEY_HALF_NORMAL_SPEED = 118;
-static const int HKEY_NORMAL_SPEED = 119;
-static const int HKEY_VEHICLE_POWER = 120;
-static const int HKEY_VEHICLE_BURNOUT = 121;
-static const int HKEY_KILL_NEARBY_PEDS = 122;
-static const int HKEY_EXPLODE_NEARBY_VEHS = 123;
-static const int HKEY_VEHICLE_FLIP = 124;
+static const int HKEY_TELEPORT_TO_VEHICLE_IN_SIGHT = 109;
+static const int HKEY_TELEPORT_TO_VEHICLE_AS_PASSENGER = 110;
+static const int HKEY_MENU_VEHICLE_SPAWN = 111;
+static const int HKEY_MENU_VEHICLE_PAINT = 112;
+static const int HKEY_MENU_SKINS = 113;
+static const int HKEY_TELEPORT_TO_VEHICLE = 114;
+static const int HKEY_MENU_NEXT_RADIO_TRACK = 115;
+static const int HKEY_TOGGLE_THERMAL_VIS = 116;
+static const int HKEY_TOGGLE_NIGHT_VIS = 117;
+static const int HKEY_PASSENGER = 118;
+static const int HKEY_SLOW_MOTION = 119;
+static const int HKEY_HALF_NORMAL_SPEED = 120;
+static const int HKEY_NORMAL_SPEED = 121;
+static const int HKEY_VEHICLE_POWER = 122;
+static const int HKEY_VEHICLE_BURNOUT = 123;
+static const int HKEY_KILL_NEARBY_PEDS = 124;
+static const int HKEY_EXPLODE_NEARBY_VEHS = 125;
+static const int HKEY_VEHICLE_FLIP = 126;
 
 const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "No Function", 0 },
@@ -59,6 +61,8 @@ const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "Replay Last Anim", HKEY_REPLAY_ANIM },
 	{ "Teleport To Marker", HKEY_TELEPORT_TO_MARKER },
 	{ "Teleport To Mission Marker", HKEY_TELEPORT_TO_MISSION_MARKER },
+	{ "Teleport To Vehicle In Sight", HKEY_TELEPORT_TO_VEHICLE_IN_SIGHT },
+	{ "Teleport To Vehicle As Passenger", HKEY_TELEPORT_TO_VEHICLE_AS_PASSENGER },
 	{ "Teleport To Last Veh", HKEY_TELEPORT_TO_VEHICLE },
 	{ "Toggle Invisibility", HKEY_TOGGLE_INVISIBILITY },
 	{ "Veh. Spawn Menu", HKEY_MENU_VEHICLE_SPAWN },
