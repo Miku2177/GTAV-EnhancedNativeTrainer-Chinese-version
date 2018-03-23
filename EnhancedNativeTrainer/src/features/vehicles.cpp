@@ -372,23 +372,17 @@ bool process_veh_seat_menu()
 
 		for (int i = -1; i < maxSeats; i++) {
 
-<<<<<<< HEAD
 		MenuItem<int> *item = new MenuItem<int>();
 		item->value = i;
 		//item->caption = SEAT_NAMES[i];
 		item->caption = i;
 		menuItems.push_back(item);
-=======
-			MenuItem<int> *item = new MenuItem<int>();
-			item->value = i;
-			item->caption = SEAT_NAMES[i];
-			menuItems.push_back(item);
 		}
 	}
 	else 
 	{
 		set_status_text("Player not in vehicle");
->>>>>>> 52c74d2c96bbef8ef551457400a264fd5ed326f1
+//>>>>>>> 52c74d2c96bbef8ef551457400a264fd5ed326f1
 	}
 
 	return draw_generic_menu<int>(menuItems, &vehSeatIndexMenuIndex, "Seat Options", onconfirm_seat_menu, NULL, NULL);
@@ -429,14 +423,11 @@ bool onconfirm_veh_menu(MenuItem<int> choice){
 		case 17: // door menu
 			if(process_veh_door_menu()) return false;
 			break;
-<<<<<<< HEAD
+		//case 18: // seat menu
+		//	if (process_veh_seat_menu()) return false;
 		case 18: // seat menu
-			if (process_veh_seat_menu()) return false;
-=======
-		case 17: // seat menu
 			if (PED::IS_PED_SITTING_IN_ANY_VEHICLE(playerPed))
 				if(process_veh_seat_menu()) return false;
->>>>>>> 52c74d2c96bbef8ef551457400a264fd5ed326f1
 			break;
 		default:
 			break;
