@@ -371,7 +371,8 @@ bool process_veh_seat_menu() {
 
 		MenuItem<int> *item = new MenuItem<int>();
 		item->value = i;
-		item->caption = SEAT_NAMES[i];
+		//item->caption = SEAT_NAMES[i];
+		item->caption = i;
 		menuItems.push_back(item);
 	}
 
@@ -410,10 +411,10 @@ bool onconfirm_veh_menu(MenuItem<int> choice){
 		//case 6: // Plane bombs -- incomplete so commenting out in mean time
 			//if (process_veh_weapons_menu()) return false;
 		//	break;
-		case 16: // door menu
+		case 17: // door menu
 			if(process_veh_door_menu()) return false;
 			break;
-		case 17: // seat menu
+		case 18: // seat menu
 			if (process_veh_seat_menu()) return false;
 			break;
 		default:
@@ -1176,7 +1177,7 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehNoDamage", &featureVehNoDamage, &featureVehInvincibleUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehSpawnInto", &featureVehSpawnInto});
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehSpeedBoost", &featureVehSpeedBoost});
-	results->push_back(FeatureEnabledLocalDefinition{ "featureVehMassMult", &featureVehMassMult});
+	results->push_back(FeatureEnabledLocalDefinition{"featureVehMassMult", &featureVehMassMult});
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehSpawnTuned", &featureVehSpawnTuned});
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehSpawnOptic", &featureVehSpawnOptic});
 	results->push_back(FeatureEnabledLocalDefinition{"featureWearHelmetOff", &featureWearHelmetOff, &featureWearHelmetOffUpdated});
