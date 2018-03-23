@@ -147,6 +147,8 @@ void heal_player();
 
 void toggle_invisibility();
 
+void fill_weapon_ammo_hotkey();
+
 void reset_wanted_level();
 
 void toggle_thermal_vision();

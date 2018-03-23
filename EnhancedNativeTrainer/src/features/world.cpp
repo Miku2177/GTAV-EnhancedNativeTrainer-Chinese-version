@@ -201,7 +201,7 @@ bool onconfirm_clouds_menu(MenuItem<std::string> choice)
 		//GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
 		
 		GRAPHICS::_SET_CLOUD_HAT_TRANSITION((char *)lastClouds.c_str(), 1.0);
-		
+				
 		//GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
 
 		std::ostringstream ss2;

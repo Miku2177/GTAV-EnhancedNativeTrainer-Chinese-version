@@ -153,6 +153,9 @@ void trigger_function_for_hotkey_onkeyup(int hotkey)
 	case HKEY_TOGGLE_INVISIBILITY:
 		toggle_invisibility();
 		break;
+	case HKEY_FILL_AMMO:
+		fill_weapon_ammo_hotkey();
+		break;
 	case HKEY_MENU_VEHICLE_SPAWN:
 		set_menu_showing(true);
 		process_veh_menu();
