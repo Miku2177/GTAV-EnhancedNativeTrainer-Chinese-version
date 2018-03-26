@@ -2018,8 +2018,8 @@ std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "x17DLC_4", 305.0158f, 6297.938f, -159.8097f, IPL_PROPS_DOOMSDAY_MAIN_BASE, {}, { "xm_x17dlc_int_placement_interior_7_x17dlc_int_silo_02_milo_" }, false },
 	{ "x17DLC_5", 361.2802f, 6306.356f, -159.4669f, IPL_PROPS_DOOMSDAY_MAIN_BASE, {}, { "xm_x17dlc_int_placement_interior_6_x17dlc_int_silo_01_milo_" }, false },
 	{ "x17DLC_1", 1261.14f, 4808.669f, -36.32168f, IPL_PROPS_DOOMSDAY_MAIN_BASE, {}, { "xm_x17dlc_int_placement_interior_20_x17dlc_int_tun_flat_slope_milo_" }, false },*/
-	{ "FIB Interior (From Beta Version)", 161.78270000f, -745.89030000f, 69.65520000f, { "hidden_int_placement_interior_v_int_69_milo_" }, {}, {}, false },
-	{ "High Life Update Hidden Garage", 228.60580000f, -92.05370000f, -100.00000000f, { "hidden_int_placement_interior_v_mp_gar_h_01_milo_" }, {}, {}, false },	
+	//{ "FIB Interior (From Beta Version)", 161.78270000f, -745.89030000f, 69.65520000f, { "hidden_int_placement_interior_v_int_69_milo_" }, {}, {}, false },
+	//{ "High Life Update Hidden Garage", 228.60580000f, -92.05370000f, -100.00000000f, { "hidden_int_placement_interior_v_mp_gar_h_01_milo_" }, {}, {}, false },	
 	//{ "Rogers Salvage & Scrap", -609.484f, -1611.63f, 27.0105f, IPL_PROPS_SCRAP, {}, { "sp1_03_interior_v_recycle_milo_" }, false },
 	{ "Rogers Salvage & Scrap", -609.484f, -1611.63f, 27.0105f, { "sp1_03_interior_v_recycle_milo_" }, {}, { IPL_PROPS_SCRAP }, false },
 }; 
@@ -2286,8 +2286,10 @@ void teleport_to_vehicle_in_sight(){
 							float rot = (ENTITY::GET_ENTITY_ROTATION(veh2, 0)).z;
 							Vector3 vehspeed = ENTITY::GET_ENTITY_VELOCITY(veh2);
 							VEHICLE::GET_VEHICLE_COLOURS(veh2, &primary, &secondary);
-							//AI::TASK_LEAVE_VEHICLE(playerPed, PED::GET_VEHICLE_PED_IS_USING(playerPed), 16);
+							AI::TASK_LEAVE_VEHICLE(playerPed, PED::GET_VEHICLE_PED_IS_USING(playerPed), 4160);
 
+							WAIT(100);
+							
 							ENTITY::SET_ENTITY_AS_MISSION_ENTITY(veh2, true, true);
 							VEHICLE::DELETE_VEHICLE(&veh2);
 

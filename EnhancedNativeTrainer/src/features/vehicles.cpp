@@ -372,15 +372,17 @@ bool process_veh_seat_menu()
 
 		for (int i = -1; i < maxSeats; i++) {
 
-			MenuItem<int> *item = new MenuItem<int>();
-			item->value = i;
-			item->caption = SEAT_NAMES[i];
-			menuItems.push_back(item);
+		MenuItem<int> *item = new MenuItem<int>();
+		item->value = i;
+		//item->caption = SEAT_NAMES[i];
+		item->caption = i;
+		menuItems.push_back(item);
 		}
 	}
 	else 
 	{
 		set_status_text("Player not in vehicle");
+//>>>>>>> 52c74d2c96bbef8ef551457400a264fd5ed326f1
 	}
 
 	return draw_generic_menu<int>(menuItems, &vehSeatIndexMenuIndex, "Seat Options", onconfirm_seat_menu, NULL, NULL);
@@ -418,10 +420,12 @@ bool onconfirm_veh_menu(MenuItem<int> choice){
 		//case 6: // Plane bombs -- incomplete so commenting out in mean time
 			//if (process_veh_weapons_menu()) return false;
 		//	break;
-		case 16: // door menu
+		case 17: // door menu
 			if(process_veh_door_menu()) return false;
 			break;
-		case 17: // seat menu
+		//case 18: // seat menu
+		//	if (process_veh_seat_menu()) return false;
+		case 18: // seat menu
 			if (PED::IS_PED_SITTING_IN_ANY_VEHICLE(playerPed))
 				if(process_veh_seat_menu()) return false;
 			break;
@@ -1185,7 +1189,7 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehNoDamage", &featureVehNoDamage, &featureVehInvincibleUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehSpawnInto", &featureVehSpawnInto});
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehSpeedBoost", &featureVehSpeedBoost});
-	results->push_back(FeatureEnabledLocalDefinition{ "featureVehMassMult", &featureVehMassMult});
+	results->push_back(FeatureEnabledLocalDefinition{"featureVehMassMult", &featureVehMassMult});
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehSpawnTuned", &featureVehSpawnTuned});
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehSpawnOptic", &featureVehSpawnOptic});
 	results->push_back(FeatureEnabledLocalDefinition{"featureWearHelmetOff", &featureWearHelmetOff, &featureWearHelmetOffUpdated});
