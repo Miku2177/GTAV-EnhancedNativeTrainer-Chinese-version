@@ -1208,6 +1208,23 @@ void fill_weapon_ammo(MenuItem<int> choice){
 	set_status_text("Ammo filled");
 }
 
+void fill_weapon_ammo_hotkey()
+{
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	Hash tempWep;
+	int maxAmmo = 0;
+
+	WEAPON::GET_CURRENT_PED_WEAPON(playerPed, &tempWep, 1);
+	WEAPON::GET_MAX_AMMO(playerPed, tempWep, &maxAmmo);
+
+	int maxClipAmmo = WEAPON::GET_MAX_AMMO_IN_CLIP(playerPed, tempWep, false);
+
+	WEAPON::SET_AMMO_IN_CLIP(playerPed, tempWep, maxClipAmmo);
+	WEAPON::SET_PED_AMMO(playerPed, tempWep, maxAmmo);
+
+	set_status_text("Ammo filled");
+}
+
 void onhighlight_weapon_mod_menu_tint(MenuItem<int> choice){
 	onconfirm_weapon_mod_menu_tint(choice);
 }
