@@ -243,7 +243,7 @@ void process_clouds_menu()
 		{ "Stripey", "Stripey", NULL, NULL },
 		{ "Wispy", "Wispy", NULL, NULL },
 		//
-		
+	
 	};
 
 	draw_menu_from_struct_def(lines, lineCount, &activeLineIndexClouds, caption, onconfirm_clouds_menu);

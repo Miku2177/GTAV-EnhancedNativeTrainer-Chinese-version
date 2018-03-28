@@ -263,6 +263,7 @@ void update_features(){
 	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(playerPed);
 
 	update_area_effects(playerPed);
+	update_vehicles(playerPed);
 
 	// player invincible
 	if(featurePlayerInvincibleUpdated){

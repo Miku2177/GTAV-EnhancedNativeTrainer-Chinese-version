@@ -56,6 +56,8 @@ extern const std::vector<std::string> VALUES_SUPERCARS;
 
 void process_veh_menu();
 
+void process_speed_menu();
+
 bool process_savedveh_menu();
 
 bool process_savedveh_sort_menu();
@@ -169,6 +171,24 @@ int get_current_veh_eng_pow_index();
 void onchange_veh_eng_pow_index(int value, SelectFromListMenuItem* source);
 
 void onchange_veh_mass_index(int value, SelectFromListMenuItem* source);
+
+void onchange_speed_size_index(int value, SelectFromListMenuItem* source);
+
+void onchange_speed_position_index(int value, SelectFromListMenuItem* source);
+
+void onchange_speed_colours_r_index(int value, SelectFromListMenuItem* source);
+
+void onchange_speed_colours_g_index(int value, SelectFromListMenuItem* source);
+
+void onchange_speed_colours_b_index(int value, SelectFromListMenuItem* source);
+
+void onchange_speed_colours2_r_index(int value, SelectFromListMenuItem* source);
+
+void onchange_speed_colours2_g_index(int value, SelectFromListMenuItem* source);
+
+void onchange_speed_colours2_b_index(int value, SelectFromListMenuItem* source);
+
+void onchange_veh_turn_signals_index(int value, SelectFromListMenuItem* source);
 
 void set_old_vehicle_state(bool updatedState);
 
