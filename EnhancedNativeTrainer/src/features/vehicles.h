@@ -78,6 +78,8 @@ bool process_spawn_menu_indus();
 
 void vehicle_flip();
 
+void speedlimiter_switching();
+
 bool process_spawn_menu_generic(int topMenuSelection);
 
 bool spawn_saved_car(int slot, std::string caption);
@@ -189,6 +191,8 @@ void onchange_speed_colours2_g_index(int value, SelectFromListMenuItem* source);
 void onchange_speed_colours2_b_index(int value, SelectFromListMenuItem* source);
 
 void onchange_veh_turn_signals_index(int value, SelectFromListMenuItem* source);
+
+void onchange_veh_speedlimiter_index(int value, SelectFromListMenuItem* source);
 
 void set_old_vehicle_state(bool updatedState);
 

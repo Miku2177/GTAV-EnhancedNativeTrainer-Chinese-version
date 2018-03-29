@@ -207,6 +207,9 @@ void trigger_function_for_hotkey_onkeyup(int hotkey)
 	case HKEY_VEHICLE_FLIP:
 		vehicle_flip();
 		break;
+	case HKEY_SPEEDLIMITER_SWITCHING:
+		speedlimiter_switching();
+		break;
 	
 	default:
 	{

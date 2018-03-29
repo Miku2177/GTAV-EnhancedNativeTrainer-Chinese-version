@@ -52,6 +52,7 @@ static const int HKEY_VEHICLE_BURNOUT = 124;
 static const int HKEY_KILL_NEARBY_PEDS = 125;
 static const int HKEY_EXPLODE_NEARBY_VEHS = 126;
 static const int HKEY_VEHICLE_FLIP = 127;
+static const int HKEY_SPEEDLIMITER_SWITCHING = 128;
 
 const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "No Function", 0 },
@@ -82,6 +83,7 @@ const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "Kill All Nearby Peds", HKEY_KILL_NEARBY_PEDS },
 	{ "Explode All Vehicles", HKEY_EXPLODE_NEARBY_VEHS },
 	{ "Flip A Vehicle", HKEY_VEHICLE_FLIP },
+	{ "Speed Limiter", HKEY_SPEEDLIMITER_SWITCHING },
 	//{ "Drive as Passenger", HKEY_PASSENGER }
 };
 
