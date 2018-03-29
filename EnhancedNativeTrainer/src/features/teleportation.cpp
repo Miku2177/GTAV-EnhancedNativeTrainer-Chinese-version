@@ -2825,13 +2825,13 @@ bool process_teleport_menu(int categoryIndex){
 		menuItems.push_back(markerItem);
 
 		markerItem = new MenuItem<int>();
-		markerItem->caption = "Go To Vehicle In Sight";
+		markerItem->caption = "Go To Ped Vehicle In Sight";
 		markerItem->value = -7;
 		markerItem->isLeaf = true;
 		menuItems.push_back(markerItem);
 
 		markerItem = new MenuItem<int>();
-		markerItem->caption = "Go To Vehicle As Passenger";
+		markerItem->caption = "Go To Nearest Vehicle As Passenger";
 		markerItem->value = -8;
 		markerItem->isLeaf = true;
 		menuItems.push_back(markerItem);
