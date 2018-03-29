@@ -436,12 +436,11 @@ bool process_veh_seat_menu()
 			"Rear Passenger 8",
 		};
 
-		for (int i = -1; i < maxSeats; i++) {
+		for (int i = 0; i < maxSeats; i++) {
 
 		MenuItem<int> *item = new MenuItem<int>();
-		item->value = i;
-		//item->caption = SEAT_NAMES[i];
-		item->caption = i;
+		item->value = i - 1;
+		item->caption = SEAT_NAMES[i];
 		menuItems.push_back(item);
 		}
 	}
@@ -876,8 +875,6 @@ bool onconfirm_veh_menu(MenuItem<int> choice){
 		case 17: // door menu
 			if(process_veh_door_menu()) return false;
 			break;
-		//case 18: // seat menu
-		//	if (process_veh_seat_menu()) return false;
 		case 18: // seat menu
 			if (PED::IS_PED_SITTING_IN_ANY_VEHICLE(playerPed))
 				if(process_veh_seat_menu()) return false;
@@ -1036,15 +1033,6 @@ void process_veh_menu(){
 	listItem->caption = "Auto Blinkers If Speed Less:";
 	listItem->value = turnSignalsIndex;
 	menuItems.push_back(listItem);
-
-	/*
-	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Lock Vehicle Doors";
-	toggleItem->value = i++;
-	toggleItem->toggleValue = &featureLockVehicleDoors;
-	toggleItem->toggleValueUpdated = &featureLockVehicleDoorsUpdated;
-	menuItems.push_back(toggleItem);
-	*/
 
 	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Force Vehicle Lights On";
