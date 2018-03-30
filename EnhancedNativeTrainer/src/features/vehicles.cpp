@@ -36,6 +36,7 @@ bool controllightsenabled_l = false;
 bool controllightsenabled_r = false;
 bool autocontrol = false;
 bool speedlimiter_switch = true;
+bool LightAlwaysOff = true;
 
 bool featureNoVehFallOff = false;
 bool featureNoVehFallOffUpdated = false;
@@ -150,6 +151,12 @@ const std::vector<std::string> VEH_SPEEDLIMITER_CAPTIONS{ "OFF", "10 (MPH)", "20
 const std::vector<int> VEH_SPEEDLIMITER_VALUES{ 0, 4, 9, 13, 18, 22, 27, 31, 36, 40, 44, 53, 67, 80, 89 };
 int speedLimiterIndex = 0;
 bool speedLimiterChanged = true;
+
+//Lights OFF
+const std::vector<std::string> VEH_LIGHTSOFF_CAPTIONS{ "OFF", "Daytime Only", "Always" };
+const std::vector<int> VEH_LIGHTSOFF_VALUES{ 0, 1, 2 };
+int lightsOffIndex = 0;
+bool lightsOffChanged = true;
 
 // player in vehicle state... assume true initially since our quicksave might have us in a vehicle already, in which case we can't check if we just got into one
 bool oldVehicleState = true;
@@ -1054,6 +1061,12 @@ void process_veh_menu(){
 	listItem->value = speedLimiterIndex;
 	menuItems.push_back(listItem);
 
+	listItem = new SelectFromListMenuItem(VEH_LIGHTSOFF_CAPTIONS, onchange_veh_lightsOff_index);
+	listItem->wrap = false;
+	listItem->caption = "Vehicle Lights Off By Default";
+	listItem->value = lightsOffIndex;
+	menuItems.push_back(listItem);
+
 	/*
 	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Lock Vehicle Doors";
@@ -1520,29 +1533,93 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 ///////////////////////////////////////////////// SPEED LIMIT ///////////////////////////////////////////////////////////////
 
-	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && (VEH_SPEEDLIMITER_VALUES[speedLimiterIndex] > 0)){
+	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && (VEH_SPEEDLIMITER_VALUES[speedLimiterIndex] > 0) && speedlimiter_switch){
 		Vehicle vehlimit = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		int vehcurrspeed = ENTITY::GET_ENTITY_SPEED(vehlimit);
 		
-		if (speedlimiter_switch){
-			if (vehcurrspeed > VEH_SPEEDLIMITER_VALUES[speedLimiterIndex]) {
-				ENTITY::SET_ENTITY_MAX_SPEED(vehlimit, VEH_SPEEDLIMITER_VALUES[speedLimiterIndex]);
-			}
-		
-			if (vehcurrspeed < VEH_SPEEDLIMITER_VALUES[speedLimiterIndex]) {
-				ENTITY::SET_ENTITY_MAX_SPEED(vehlimit, VEH_SPEEDLIMITER_VALUES[speedLimiterIndex]);
-			}
+		if (vehcurrspeed > VEH_SPEEDLIMITER_VALUES[speedLimiterIndex]) {
+			ENTITY::SET_ENTITY_MAX_SPEED(vehlimit, VEH_SPEEDLIMITER_VALUES[speedLimiterIndex]);
 		}
-		else
-		{
-			int vehmax = VEHICLE::_GET_VEHICLE_MODEL_MAX_SPEED(ENTITY::GET_ENTITY_MODEL(PED::GET_VEHICLE_PED_IS_IN(playerPed, false)));
-			ENTITY::SET_ENTITY_MAX_SPEED(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), vehmax);
+		
+		if (vehcurrspeed < VEH_SPEEDLIMITER_VALUES[speedLimiterIndex]) {
+			ENTITY::SET_ENTITY_MAX_SPEED(vehlimit, VEH_SPEEDLIMITER_VALUES[speedLimiterIndex]);
 		}
 	}
 	else
 	{
 		int vehmax = VEHICLE::_GET_VEHICLE_MODEL_MAX_SPEED(ENTITY::GET_ENTITY_MODEL(PED::GET_VEHICLE_PED_IS_IN(playerPed, false)));
 		ENTITY::SET_ENTITY_MAX_SPEED(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), vehmax);
+	}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////// LIGHTS OFF BY DEFAULT ///////////////////////////////////////////////////////////////
+	
+	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && (VEH_LIGHTSOFF_VALUES[lightsOffIndex] > 0)){
+		
+	Vehicle vehlights = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
+	int time = TIME::GET_CLOCK_HOURS();
+
+	if ((VEH_LIGHTSOFF_VALUES[lightsOffIndex] > 0 && VEH_LIGHTSOFF_VALUES[lightsOffIndex] < 2 && time > 6 && time < 21))
+	{
+		if (VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(vehlights))
+			{
+			if (LightAlwaysOff)
+				{
+					VEHICLE::SET_VEHICLE_LIGHTS(vehlights, 1);
+					LightAlwaysOff = false;
+				}
+		
+			if (CONTROLS::IS_CONTROL_JUST_PRESSED(2, 74))
+				{
+				WAIT(100);
+				if (LightAlwaysOff)
+					{
+						LightAlwaysOff = false;
+					}
+					else
+					{
+						VEHICLE::SET_VEHICLE_LIGHTS(vehlights, 0);
+						LightAlwaysOff = false;
+					}
+				}
+			}
+			else
+			{
+				LightAlwaysOff = true;
+			}	
+	}
+	
+	if ((VEH_LIGHTSOFF_VALUES[lightsOffIndex] > 1))
+	{
+		if (VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(vehlights))
+		{
+			if (LightAlwaysOff)
+			{
+				VEHICLE::SET_VEHICLE_LIGHTS(vehlights, 1);
+				LightAlwaysOff = false;
+			}
+
+			if (CONTROLS::IS_CONTROL_JUST_PRESSED(2, 74))
+				{
+				WAIT(100);
+				if (LightAlwaysOff)
+				{
+					LightAlwaysOff = false;
+				}
+				else
+				{
+					VEHICLE::SET_VEHICLE_LIGHTS(vehlights, 0);
+					LightAlwaysOff = false;
+				}
+			}
+		}
+		else
+		{
+			LightAlwaysOff = true;
+		}
+	}
+
 	}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1643,6 +1720,7 @@ void reset_vehicle_globals(){
 	SpeedColours2_B_Index = 0;
 	turnSignalsIndex = 0;
 	speedLimiterIndex = 0;
+	lightsOffIndex = 0;
 	speedBoostIndex = 0;
 	engPowMultIndex = 0;
 	VehMassMultIndex = 0;
@@ -2311,6 +2389,7 @@ void add_vehicle_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"VehMassMultIndex", std::to_string(VehMassMultIndex)});
 	results->push_back(StringPairSettingDBRow{"TurnSignalsIndex", std::to_string(turnSignalsIndex)});
 	results->push_back(StringPairSettingDBRow{"speedLimiterIndex", std::to_string(speedLimiterIndex)});
+	results->push_back(StringPairSettingDBRow{"lightsOffIndex", std::to_string(lightsOffIndex)});
 	results->push_back(StringPairSettingDBRow{"SpeedSizeIndex", std::to_string(SpeedSizeIndex)});
 	results->push_back(StringPairSettingDBRow{"SpeedPositionIndex", std::to_string(SpeedPositionIndex)});
 	results->push_back(StringPairSettingDBRow{"SpeedColours_R_Index", std::to_string(SpeedColours_R_Index)});
@@ -2341,6 +2420,9 @@ void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settin
 		}
 		else if (setting.name.compare("speedLimiterIndex") == 0){
 			speedLimiterIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("lightsOffIndex") == 0){
+			lightsOffIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("SpeedSizeIndex") == 0){
 			SpeedSizeIndex = stoi(setting.value);
@@ -2411,6 +2493,11 @@ void onchange_veh_mass_index(int value, SelectFromListMenuItem* source){
 void onchange_veh_turn_signals_index(int value, SelectFromListMenuItem* source){
 	turnSignalsIndex = value;
 	turnSignalsChanged = true;
+}
+
+void onchange_veh_lightsOff_index(int value, SelectFromListMenuItem* source){
+	lightsOffIndex = value;
+	lightsOffChanged = true;
 }
 
 void onchange_veh_speedlimiter_index(int value, SelectFromListMenuItem* source){

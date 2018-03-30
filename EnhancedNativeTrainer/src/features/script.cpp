@@ -167,6 +167,14 @@ void check_player_model(){
 	}
 }
 
+void invincibility_switching(){
+	featurePlayerInvincible = !featurePlayerInvincible;
+	featurePlayerInvincibleUpdated = true;
+	if (featurePlayerInvincible) set_status_text("Invincibility ON");
+	else set_status_text("Invincibility OFF");
+	WAIT(100);
+}
+
 // Updates all features that can be turned off by the game, being called each game frame
 void update_features(){
 	if(NETWORK::NETWORK_IS_GAME_IN_PROGRESS()){

@@ -210,7 +210,10 @@ void trigger_function_for_hotkey_onkeyup(int hotkey)
 	case HKEY_SPEEDLIMITER_SWITCHING:
 		speedlimiter_switching();
 		break;
-	
+	case HKEY_INVINCIBILITY_SWITCHING:
+		invincibility_switching();
+		break;
+
 	default:
 	{
 		std::ostringstream ss;
