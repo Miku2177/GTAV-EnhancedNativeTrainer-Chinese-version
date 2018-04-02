@@ -19,6 +19,15 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include <fstream>
 #include "vehicle_weapons.h"
 
+#include <string>
+#include <iterator>
+#include <iostream>
+#include <algorithm>
+#include <array>
+#include <vector>
+#include <cstdlib>
+using namespace std;
+
 bool featureVehInvincible = false;
 bool featureVehInvincibleUpdated = false;
 
@@ -42,6 +51,7 @@ bool featureNoVehFallOff = false;
 bool featureNoVehFallOffUpdated = false;
 bool featureVehSpeedBoost = false;
 bool featureEngineRunning = false;
+bool featureFuel = false;
 bool featureVehMassMult = false;
 bool featureVehSpawnInto = false;
 bool featureVehSpawnTuned = false;
@@ -56,6 +66,27 @@ int lights = -1, highbeams = -1;
 
 float textX, textY = -1;
 float rectXScaled, rectYScaled = -1;
+
+// Fuel Option Variables
+int GUI_time = 0;
+bool refillCar = false;
+bool lowFuel = false;
+bool drawHintA = false;
+bool drawHintB = false;
+bool hasfuel = false;
+
+std::vector<Vehicle> VEHICLES;
+std::vector<float> FUEL;
+std::vector<Blip> BLIPTABLE;
+
+const Hash PLAYER_ZERO = 0xD7114C9;
+const Hash PLAYER_ONE = 0x9B22DBAF;
+const Hash PLAYER_TWO = 0x9B810FA2;
+
+const Hash SP0_TOTAL_CASH = 0x324C31D;
+const Hash SP1_TOTAL_CASH = 0x44BD6982;
+const Hash SP2_TOTAL_CASH = 0x8D75047D;
+//
 
 bool featureDespawnScriptDisabled = false;
 bool featureDespawnScriptDisabledUpdated = false;
@@ -153,7 +184,7 @@ int speedLimiterIndex = 0;
 bool speedLimiterChanged = true;
 
 //Lights OFF
-const std::vector<std::string> VEH_LIGHTSOFF_CAPTIONS{ "OFF", "Daytime Only", "Always" };
+const std::vector<std::string> VEH_LIGHTSOFF_CAPTIONS{ "Never", "Daytime Only", "Always" };
 const std::vector<int> VEH_LIGHTSOFF_VALUES{ 0, 1, 2 };
 int lightsOffIndex = 0;
 bool lightsOffChanged = true;
@@ -1067,6 +1098,12 @@ void process_veh_menu(){
 	listItem->value = lightsOffIndex;
 	menuItems.push_back(listItem);
 
+	//toggleItem = new ToggleMenuItem<int>();
+	//toggleItem->caption = "Fuel";
+	//toggleItem->value = i++;
+	//toggleItem->toggleValue = &featureFuel;
+	//menuItems.push_back(toggleItem);
+
 	/*
 	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Lock Vehicle Doors";
@@ -1518,7 +1555,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	///////////////////////////////////// KEEP THE ENGINE RUNNING ///////////////////////////////////////////////////////////////
-	
+
 	if (bPlayerExists && featureEngineRunning && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
 		Vehicle playerVehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		if (CONTROLS::IS_CONTROL_PRESSED(2, 75)) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(playerVehicle, true);
@@ -1529,18 +1566,18 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		if (CONTROLS::IS_CONTROL_PRESSED(2, 75)) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(playerVehicle, false);
 	}
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-///////////////////////////////////////////////// SPEED LIMIT ///////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////// SPEED LIMIT ///////////////////////////////////////////////////////////////
 
 	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && (VEH_SPEEDLIMITER_VALUES[speedLimiterIndex] > 0) && speedlimiter_switch){
 		Vehicle vehlimit = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		int vehcurrspeed = ENTITY::GET_ENTITY_SPEED(vehlimit);
-		
+
 		if (vehcurrspeed > VEH_SPEEDLIMITER_VALUES[speedLimiterIndex]) {
 			ENTITY::SET_ENTITY_MAX_SPEED(vehlimit, VEH_SPEEDLIMITER_VALUES[speedLimiterIndex]);
 		}
-		
+
 		if (vehcurrspeed < VEH_SPEEDLIMITER_VALUES[speedLimiterIndex]) {
 			ENTITY::SET_ENTITY_MAX_SPEED(vehlimit, VEH_SPEEDLIMITER_VALUES[speedLimiterIndex]);
 		}
@@ -1551,29 +1588,29 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		ENTITY::SET_ENTITY_MAX_SPEED(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), vehmax);
 	}
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-///////////////////////////////////////////////// LIGHTS OFF BY DEFAULT ///////////////////////////////////////////////////////////////
-	
+	///////////////////////////////////////////////// LIGHTS OFF BY DEFAULT ///////////////////////////////////////////////////////////////
+
 	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && (VEH_LIGHTSOFF_VALUES[lightsOffIndex] > 0)){
-		
-	Vehicle vehlights = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
-	int time = TIME::GET_CLOCK_HOURS();
 
-	if ((VEH_LIGHTSOFF_VALUES[lightsOffIndex] > 0 && VEH_LIGHTSOFF_VALUES[lightsOffIndex] < 2 && time > 6 && time < 21))
-	{
-		if (VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(vehlights))
+		Vehicle vehlights = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
+		int time = TIME::GET_CLOCK_HOURS();
+
+		if ((VEH_LIGHTSOFF_VALUES[lightsOffIndex] > 0 && VEH_LIGHTSOFF_VALUES[lightsOffIndex] < 2 && time > 6 && time < 21))
+		{
+			if (VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(vehlights))
 			{
-			if (LightAlwaysOff)
+				if (LightAlwaysOff)
 				{
 					VEHICLE::SET_VEHICLE_LIGHTS(vehlights, 1);
 					LightAlwaysOff = false;
 				}
-		
-			if (CONTROLS::IS_CONTROL_JUST_PRESSED(2, 74))
+
+				if (CONTROLS::IS_CONTROL_JUST_PRESSED(2, 74))
 				{
-				WAIT(100);
-				if (LightAlwaysOff)
+					WAIT(100);
+					if (LightAlwaysOff)
 					{
 						LightAlwaysOff = false;
 					}
@@ -1587,41 +1624,68 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			else
 			{
 				LightAlwaysOff = true;
-			}	
-	}
-	
-	if ((VEH_LIGHTSOFF_VALUES[lightsOffIndex] > 1))
-	{
-		if (VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(vehlights))
-		{
-			if (LightAlwaysOff)
-			{
-				VEHICLE::SET_VEHICLE_LIGHTS(vehlights, 1);
-				LightAlwaysOff = false;
 			}
+		}
 
-			if (CONTROLS::IS_CONTROL_JUST_PRESSED(2, 74))
+		if ((VEH_LIGHTSOFF_VALUES[lightsOffIndex] > 0 && VEH_LIGHTSOFF_VALUES[lightsOffIndex] < 2 && (time < 6 || time > 21)))
+		{
+			if (VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(vehlights))
+			{
+				if (CONTROLS::IS_CONTROL_JUST_PRESSED(2, 74))
 				{
-				WAIT(100);
-				if (LightAlwaysOff)
-				{
-					LightAlwaysOff = false;
-				}
-				else
-				{
+					WAIT(100);
+					if (LightAlwaysOff)
+					{
+						LightAlwaysOff = false;
+					}
+					else
+					{
 					VEHICLE::SET_VEHICLE_LIGHTS(vehlights, 0);
 					LightAlwaysOff = false;
+					}
 				}
 			}
 		}
-		else
+
+		if ((VEH_LIGHTSOFF_VALUES[lightsOffIndex] > 1))
 		{
-			LightAlwaysOff = true;
+			if (VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(vehlights))
+			{
+				if (LightAlwaysOff)
+				{
+					VEHICLE::SET_VEHICLE_LIGHTS(vehlights, 1);
+					LightAlwaysOff = false;
+				}
+
+				if (CONTROLS::IS_CONTROL_JUST_PRESSED(2, 74))
+				{
+					WAIT(100);
+					if (LightAlwaysOff)
+					{
+						LightAlwaysOff = false;
+					}
+					else
+					{
+						VEHICLE::SET_VEHICLE_LIGHTS(vehlights, 0);
+						LightAlwaysOff = false;
+					}
+				}
+			}
+			else
+			{
+				LightAlwaysOff = true;
+			}
 		}
-	}
 
 	}
 
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	//////////////////////////////////////////////// FUEL OPTION /////////////////////////////////////////////////////////////////
+
+	
+
+	
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	if(bPlayerExists){
@@ -1736,6 +1800,7 @@ void reset_vehicle_globals(){
 	featureVehInvincible =
 		featureVehSpeedBoost =
 		featureEngineRunning =
+		featureFuel = 
 		featureVehMassMult =
 		featureVehicleDoorInstant =
 		featureLockVehicleDoors =
@@ -1977,6 +2042,7 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehSpawnInto", &featureVehSpawnInto});
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehSpeedBoost", &featureVehSpeedBoost});
 	results->push_back(FeatureEnabledLocalDefinition{"featureEngineRunning", &featureEngineRunning});
+	results->push_back(FeatureEnabledLocalDefinition{"featureFuel", &featureFuel});
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehMassMult", &featureVehMassMult});
 	results->push_back(FeatureEnabledLocalDefinition{"featureSpeedOnFoot", &featureSpeedOnFoot });
 	results->push_back(FeatureEnabledLocalDefinition{"featureKMH", &featureKMH });
