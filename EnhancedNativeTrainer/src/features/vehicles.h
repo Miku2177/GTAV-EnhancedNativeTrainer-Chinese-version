@@ -180,6 +180,28 @@ void onchange_speed_size_index(int value, SelectFromListMenuItem* source);
 
 void onchange_speed_position_index(int value, SelectFromListMenuItem* source);
 
+void onchange_car_consumption_index(int value, SelectFromListMenuItem* source);
+
+void onchange_bike_consumption_index(int value, SelectFromListMenuItem* source);
+
+void onchange_boat_consumption_index(int value, SelectFromListMenuItem* source);
+
+void onchange_plane_consumption_index(int value, SelectFromListMenuItem* source);
+
+void onchange_heli_consumption_index(int value, SelectFromListMenuItem* source);
+
+void onchange_refuelspeed_index(int value, SelectFromListMenuItem* source);
+
+void onchange_fuelprice_index(int value, SelectFromListMenuItem* source);
+
+void onchange_canprice_index(int value, SelectFromListMenuItem* source);
+
+void onchange_random1_index(int value, SelectFromListMenuItem* source);
+
+void onchange_random2_index(int value, SelectFromListMenuItem* source);
+
+void onchange_barposition_index(int value, SelectFromListMenuItem* source);
+
 void onchange_speed_colours_r_index(int value, SelectFromListMenuItem* source);
 
 void onchange_speed_colours_g_index(int value, SelectFromListMenuItem* source);
@@ -191,6 +213,12 @@ void onchange_speed_colours2_r_index(int value, SelectFromListMenuItem* source);
 void onchange_speed_colours2_g_index(int value, SelectFromListMenuItem* source);
 
 void onchange_speed_colours2_b_index(int value, SelectFromListMenuItem* source);
+
+void onchange_fuel_colours_r_index(int value, SelectFromListMenuItem* source);
+
+void onchange_fuel_colours_g_index(int value, SelectFromListMenuItem* source);
+
+void onchange_fuel_colours_b_index(int value, SelectFromListMenuItem* source);
 
 void onchange_veh_turn_signals_index(int value, SelectFromListMenuItem* source);
 
