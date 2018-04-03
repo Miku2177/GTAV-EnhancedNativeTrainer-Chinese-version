@@ -382,6 +382,8 @@ KeyInputConfig::KeyInputConfig(){
 	this->keyConfigs[KeyConfig::KEY_VEH_LEFTBLINK] = new KeyConfig(VK_LEFT);
 	this->keyConfigs[KeyConfig::KEY_VEH_RIGHTBLINK] = new KeyConfig(VK_RIGHT);
 	this->keyConfigs[KeyConfig::KEY_VEH_EMERGENCYBLINK] = new KeyConfig(VK_DECIMAL);
+	this->keyConfigs[KeyConfig::KEY_VEH_STARTREFUELING] = new KeyConfig(VK_KEY_E);
+	this->keyConfigs[KeyConfig::KEY_VEH_STOPREFUELING] = new KeyConfig(VK_KEY_S);
 
 	this->keyConfigs[KeyConfig::KEY_TOGGLE_AIRBRAKE] = new KeyConfig(VK_F6);
 
@@ -455,15 +457,19 @@ KeyInputConfig::KeyInputConfig(){
 	this->controllerConfigs[KeyConfig::KEY_VEH_ROCKETS]->add_button(ControllerButtonConfig::CONTROLLER_BTN_SHOULDER_R);
 
 	this->controllerConfigs[KeyConfig::KEY_VEH_LEFTBLINK] = new ControllerButtonConfig();
-	this->controllerConfigs[KeyConfig::KEY_VEH_LEFTBLINK]->add_button(ControllerButtonConfig::CONTROLLER_BTN_SHOULDER_L);
-	this->controllerConfigs[KeyConfig::KEY_VEH_LEFTBLINK]->add_button(ControllerButtonConfig::CONTROLLER_BTN_SHOULDER_R);
-
+	this->controllerConfigs[KeyConfig::KEY_VEH_LEFTBLINK]->add_button(ControllerButtonConfig::CONTROLLER_BTN_TRIGGER_L);
+	
 	this->controllerConfigs[KeyConfig::KEY_VEH_RIGHTBLINK] = new ControllerButtonConfig();
-	this->controllerConfigs[KeyConfig::KEY_VEH_RIGHTBLINK]->add_button(ControllerButtonConfig::CONTROLLER_BTN_SHOULDER_L);
-	this->controllerConfigs[KeyConfig::KEY_VEH_RIGHTBLINK]->add_button(ControllerButtonConfig::CONTROLLER_BTN_SHOULDER_R);
-
+	this->controllerConfigs[KeyConfig::KEY_VEH_RIGHTBLINK]->add_button(ControllerButtonConfig::CONTROLLER_BTN_TRIGGER_R);
+	
 	this->controllerConfigs[KeyConfig::KEY_VEH_EMERGENCYBLINK] = new ControllerButtonConfig();
 	this->controllerConfigs[KeyConfig::KEY_VEH_EMERGENCYBLINK]->add_button(ControllerButtonConfig::CONTROLLER_BTN_B);
+
+	this->controllerConfigs[KeyConfig::KEY_VEH_STARTREFUELING] = new ControllerButtonConfig();
+	this->controllerConfigs[KeyConfig::KEY_VEH_STARTREFUELING]->add_button(ControllerButtonConfig::CONTROLLER_BTN_A);
+
+	this->controllerConfigs[KeyConfig::KEY_VEH_STOPREFUELING] = new ControllerButtonConfig();
+	this->controllerConfigs[KeyConfig::KEY_VEH_STOPREFUELING]->add_button(ControllerButtonConfig::CONTROLLER_BTN_B);
 
 	this->controllerConfigs[KeyConfig::KEY_TOGGLE_AIRBRAKE] = new ControllerButtonConfig();
 	this->controllerConfigs[KeyConfig::KEY_TOGGLE_AIRBRAKE]->add_button(ControllerButtonConfig::CONTROLLER_BTN_A);
@@ -565,6 +571,8 @@ const std::string KeyConfig::KEY_VEH_ROCKETS = std::string("veh_rockets");
 const std::string KeyConfig::KEY_VEH_LEFTBLINK = std::string("veh_leftblink");
 const std::string KeyConfig::KEY_VEH_RIGHTBLINK = std::string("veh_rightblink");
 const std::string KeyConfig::KEY_VEH_EMERGENCYBLINK = std::string("veh_emergencyblink");
+const std::string KeyConfig::KEY_VEH_STARTREFUELING = std::string("veh_startrefueling");
+const std::string KeyConfig::KEY_VEH_STOPREFUELING = std::string("veh_stoprefueling");
 
 const std::string KeyConfig::KEY_AIRBRAKE_UP = std::string("airbrake_up");
 const std::string KeyConfig::KEY_AIRBRAKE_DOWN = std::string("airbrake_down");

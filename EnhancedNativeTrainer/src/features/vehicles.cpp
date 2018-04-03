@@ -52,6 +52,8 @@ bool featureNoVehFallOffUpdated = false;
 bool featureVehSpeedBoost = false;
 bool featureEngineRunning = false;
 bool featureFuel = false;
+bool featureBlips = false;
+bool featureBlipsPhone = false;
 bool featureVehMassMult = false;
 bool featureVehSpawnInto = false;
 bool featureVehSpawnTuned = false;
@@ -71,10 +73,11 @@ float rectXScaled, rectYScaled = -1;
 int GUI_time = 0;
 bool refillCar = false;
 bool lowFuel = false;
-bool drawHintA = false;
-bool drawHintB = false;
+bool drawMessageA = false;
+bool drawMessageB = false;
 bool hasfuel = false;
 
+Blip blip[32];
 std::vector<Vehicle> VEHICLES;
 std::vector<float> FUEL;
 std::vector<Blip> BLIPTABLE;
@@ -95,6 +98,7 @@ bool featureDespawnScriptDisabledWasLastOn = false; //do not persist this partic
 int activeLineIndexVeh = 0;
 int activeSavedVehicleIndex = -1;
 int activeLineIndexSpeed = 0;
+int activeLineIndexFuel = 0;
 std::string activeSavedVehicleSlotName;
 int lastKnownSavedVehicleCount = 0;
 bool vehSaveMenuInterrupt = false;
@@ -188,6 +192,90 @@ const std::vector<std::string> VEH_LIGHTSOFF_CAPTIONS{ "Never", "Daytime Only", 
 const std::vector<int> VEH_LIGHTSOFF_VALUES{ 0, 1, 2 };
 int lightsOffIndex = 0;
 bool lightsOffChanged = true;
+
+//Car Fuel
+const std::vector<std::string> VEH_CARFUEL_CAPTIONS{ "NO", "0.1", "0.5", "1.0", "1.4", "1.8", "2.2", "2.6", "2.8", "3.0", "3.3", "3.6", "5.0", "6.0", "8.0", "10.0", "13.0", "15.0", "18.0", "20.0", "23.0", "25.0" };
+const std::vector<int> VEH_CARFUEL_VALUES{ 0, 20000000, 10000000, 5000000, 3500000, 3000000, 2600000, 2200000, 1800000, 1700000, 1600000, 1400000, 1300000, 1000000, 400000, 100000, 50000, 10000, 5000, 1000, 500, 100 };
+int CarConsumptionIndex = 11;
+bool CarConsumptionChanged = true;
+
+//Bike Fuel
+const std::vector<std::string> VEH_BIKEFUEL_CAPTIONS{ "NO", "0.1", "0.5", "1.0", "1.4", "1.8", "2.2", "2.6", "2.8", "3.0", "3.3", "3.6", "5.0", "6.0", "8.0", "10.0", "13.0", "15.0", "18.0", "20.0", "23.0", "25.0" };
+const std::vector<int> VEH_BIKEFUEL_VALUES{ 0, 20000000, 10000000, 5000000, 3500000, 3000000, 2600000, 2200000, 1800000, 1700000, 1600000, 1400000, 1300000, 1000000, 400000, 100000, 50000, 10000, 5000, 1000, 500, 100 };
+int BikeConsumptionIndex = 12;
+bool BikeConsumptionChanged = true;
+
+//Plane Fuel
+const std::vector<std::string> VEH_PLANEFUEL_CAPTIONS{ "NO", "0.1", "0.5", "1.0", "1.4", "1.8", "2.2", "2.6", "2.8", "3.0", "3.3", "3.6", "5.0", "6.0", "8.0", "10.0", "13.0", "15.0", "18.0", "20.0", "23.0", "25.0" };
+const std::vector<int> VEH_PLANEFUEL_VALUES{ 0, 20000000, 10000000, 5000000, 3500000, 3000000, 2600000, 2200000, 1800000, 1700000, 1600000, 1400000, 1300000, 1000000, 400000, 100000, 50000, 10000, 5000, 1000, 500, 100 };
+int PlaneConsumptionIndex = 5;
+bool PlaneConsumptionChanged = true;
+
+//Boat Fuel
+const std::vector<std::string> VEH_BOATFUEL_CAPTIONS{ "NO", "0.1", "0.5", "1.0", "1.4", "1.8", "2.2", "2.6", "2.8", "3.0", "3.3", "3.6", "5.0", "6.0", "8.0", "10.0", "13.0", "15.0", "18.0", "20.0", "23.0", "25.0" };
+const std::vector<int> VEH_BOATFUEL_VALUES{ 0, 20000000, 10000000, 5000000, 3500000, 3000000, 2600000, 2200000, 1800000, 1700000, 1600000, 1400000, 1300000, 1000000, 400000, 100000, 50000, 10000, 5000, 1000, 500, 100 };
+int BoatConsumptionIndex = 10;
+bool BoatConsumptionChanged = true;
+
+//Helicopter Fuel
+const std::vector<std::string> VEH_HELIFUEL_CAPTIONS{ "NO", "0.1", "0.5", "1.0", "1.4", "1.8", "2.2", "2.6", "2.8", "3.0", "3.3", "3.6", "5.0", "6.0", "8.0", "10.0", "13.0", "15.0", "18.0", "20.0", "23.0", "25.0" };
+const std::vector<int> VEH_HELIFUEL_VALUES{ 0, 20000000, 10000000, 5000000, 3500000, 3000000, 2600000, 2200000, 1800000, 1700000, 1600000, 1400000, 1300000, 1000000, 400000, 100000, 50000, 10000, 5000, 1000, 500, 100 };
+int HeliConsumptionIndex = 9;
+bool HeliConsumptionChanged = true;
+
+//Refueling Speed
+const std::vector<std::string> VEH_REFUELSPEED_CAPTIONS{ "0.1", "0.5", "0.9", "1.0", "1.5", "1.9", "2.1", "2.2", "2.3", "2.5", "3.0", "5.0", "10.0" };
+const std::vector<double> VEH_REFUELSPEED_VALUES{ 0.000001, 0.000005, 0.000009, 0.00001, 0.00005, 0.00009, 0.0001, 0.0002, 0.0003, 0.0005, 0.001, 0.005, 0.01 };
+int RefuelingSpeedIndex = 6;
+bool RefuelingSpeedChanged = true;
+
+//Fuel Price
+const std::vector<std::string> VEH_FUELPRICE_CAPTIONS{ "NO", "0.1", "0.5", "1.0", "2.0", "3.0", "4.0", "5.0", "10.0", "20.0", "30.0", "50.0", "100.0", "200.0" };
+const std::vector<double> VEH_FUELPRICE_VALUES{ 0, 0.1, 0.5, 1, 2, 3, 4, 5, 10, 20, 30, 50, 100, 200 };
+int FuelPriceIndex = 7;
+bool FuelPriceChanged = true;
+
+//Jerry Can Price
+const std::vector<std::string> VEH_CANPRICE_CAPTIONS{ "NO", "0.1", "0.5", "1.0", "5.0", "10.0", "50.0", "100.0", "200.0", "300.0", "500.0", "1000.0", "5000.0", "10000.0" };
+const std::vector<double> VEH_CANPRICE_VALUES{ 0, 0.1, 0.5, 1, 5, 10, 50, 100, 200, 300, 500, 1000, 5000, 10000 };
+int JerrycanPriceIndex = 7;
+bool JerrycanChanged = true;
+
+//Min Fuel Random Number
+const std::vector<std::string> VEH_FUELRANDOM1_CAPTIONS{ "0.5", "1", "5", "10", "20", "30", "40", "50", "60", "70", "80", "90" };
+const std::vector<int> VEH_FUELRANDOM1_VALUES{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 };
+int Random1Index = 1;
+bool Random1Changed = true;
+
+//Min Fuel Random Number 2
+const std::vector<std::string> VEH_FUELRANDOM2_CAPTIONS{ "1", "5", "10", "30", "40", "50", "60", "60", "70", "90", "90", "100" };
+const std::vector<int> VEH_FUELRANDOM2_VALUES{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 };
+int Random2Index = 1;
+bool Random2Changed = true;
+
+//Fuel Bar Position
+const std::vector<std::string> VEH_FUELBARPOSITION_CAPTIONS{ "Below Radar", "Above Radar", "On The Left Of Radar" };
+const std::vector<int> VEH_FUELBARPOSITION_VALUES{ 1, 2, 3 };
+int BarPositionIndex = 0;
+bool BarPositionChanged = true;
+
+//Fuel colours_R
+const std::vector<std::string> FUEL_COLOURS_R_CAPTIONS{ "0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "210", "220", "230", "240", "250", "255" };
+const std::vector<int> FUEL_COLOURS_R_VALUES{ 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 255 };
+int FuelColours_R_Index = 25;
+bool FuelColours_R_Changed = true;
+
+//Fuel colours_G
+const std::vector<std::string> FUEL_COLOURS_G_CAPTIONS{ "0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "210", "220", "230", "240", "250", "255" };
+const std::vector<int> FUEL_COLOURS_G_VALUES{ 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 255 };
+int FuelColours_G_Index = 17;
+bool FuelColours_G_Changed = true;
+
+//Fuel colours_B
+const std::vector<std::string> FUEL_COLOURS_B_CAPTIONS{ "0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "210", "220", "230", "240", "250", "255" };
+const std::vector<int> FUEL_COLOURS_B_VALUES{ 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 255 };
+int FuelColours_B_Index = 11;
+bool FuelColours_B_Changed = true;
 
 // player in vehicle state... assume true initially since our quicksave might have us in a vehicle already, in which case we can't check if we just got into one
 bool oldVehicleState = true;
@@ -888,6 +976,161 @@ void process_speed_menu(){
 	draw_generic_menu<int>(menuItems, &activeLineIndexSpeed, caption, onconfirm_speed_menu, NULL, NULL);
 }
 
+bool onconfirm_fuel_colour_menu(MenuItem<int> choice)
+{
+	return false;
+}
+
+bool process_fuel_colour_menu(){
+	std::string caption = "RGB Settings";
+
+	std::vector<MenuItem<int>*> menuItems;
+
+	MenuItem<int> *item;
+	SelectFromListMenuItem *listItem;
+	ToggleMenuItem<int>* toggleItem;
+
+	int i = 0;
+
+	listItem = new SelectFromListMenuItem(FUEL_COLOURS_R_CAPTIONS, onchange_fuel_colours_r_index);
+	listItem->wrap = false;
+	listItem->caption = "R:";
+	listItem->value = FuelColours_R_Index;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(FUEL_COLOURS_G_CAPTIONS, onchange_fuel_colours_g_index);
+	listItem->wrap = false;
+	listItem->caption = "G:";
+	listItem->value = FuelColours_G_Index;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(FUEL_COLOURS_B_CAPTIONS, onchange_fuel_colours_b_index);
+	listItem->wrap = false;
+	listItem->caption = "B:";
+	listItem->value = FuelColours_B_Index;
+	menuItems.push_back(listItem);
+
+	return draw_generic_menu<int>(menuItems, 0, "Fuel Bar Colour", onconfirm_fuel_colour_menu, NULL, NULL);
+}
+
+bool onconfirm_fuel_menu(MenuItem<int> choice)
+{
+	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
+	Player player = PLAYER::PLAYER_ID();
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+
+	switch (activeLineIndexFuel){
+	case 14:
+		if (process_fuel_colour_menu()) return false;
+		break;
+	}
+	return false;
+}
+
+void process_fuel_menu(){
+	std::string caption = "Fuel Consumption Options";
+
+	std::vector<MenuItem<int>*> menuItems;
+
+	MenuItem<int> *item;
+	SelectFromListMenuItem *listItem;
+	ToggleMenuItem<int>* toggleItem;
+
+	int i = 0;
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Enabled";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureFuel;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Show Blips";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureBlips;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Blips If Phone In Hands Only";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureBlipsPhone;
+	menuItems.push_back(toggleItem);
+
+	listItem = new SelectFromListMenuItem(VEH_CARFUEL_CAPTIONS, onchange_car_consumption_index);
+	listItem->wrap = false;
+	listItem->caption = "Cars Consumption";
+	listItem->value = CarConsumptionIndex;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(VEH_BIKEFUEL_CAPTIONS, onchange_bike_consumption_index);
+	listItem->wrap = false;
+	listItem->caption = "Bikes Consumption";
+	listItem->value = BikeConsumptionIndex;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(VEH_BOATFUEL_CAPTIONS, onchange_boat_consumption_index);
+	listItem->wrap = false;
+	listItem->caption = "Boats Consumption";
+	listItem->value = BoatConsumptionIndex;
+	menuItems.push_back(listItem);
+	
+	listItem = new SelectFromListMenuItem(VEH_PLANEFUEL_CAPTIONS, onchange_plane_consumption_index);
+	listItem->wrap = false;
+	listItem->caption = "Planes Consumption";
+	listItem->value = PlaneConsumptionIndex;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(VEH_HELIFUEL_CAPTIONS, onchange_heli_consumption_index);
+	listItem->wrap = false;
+	listItem->caption = "Helicopters Consumption";
+	listItem->value = HeliConsumptionIndex;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(VEH_REFUELSPEED_CAPTIONS, onchange_refuelspeed_index);
+	listItem->wrap = false;
+	listItem->caption = "Refueling Speed";
+	listItem->value = RefuelingSpeedIndex;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(VEH_FUELPRICE_CAPTIONS, onchange_fuelprice_index);
+	listItem->wrap = false;
+	listItem->caption = "Gas Station Fuel Price";
+	listItem->value = FuelPriceIndex;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(VEH_CANPRICE_CAPTIONS, onchange_canprice_index);
+	listItem->wrap = false;
+	listItem->caption = "Jerry Can Fuel Price";
+	listItem->value = JerrycanPriceIndex;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(VEH_FUELRANDOM1_CAPTIONS, onchange_random1_index);
+	listItem->wrap = false;
+	listItem->caption = "Random Vehicle Fuel From (%)";
+	listItem->value = Random1Index;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(VEH_FUELRANDOM2_CAPTIONS, onchange_random2_index);
+	listItem->wrap = false;
+	listItem->caption = "Random Vehicle Fuel Up To (%)";
+	listItem->value = Random2Index;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(VEH_FUELBARPOSITION_CAPTIONS, onchange_barposition_index);
+	listItem->wrap = false;
+	listItem->caption = "Fuel Bar Position";
+	listItem->value = BarPositionIndex;
+	menuItems.push_back(listItem);
+
+	item = new MenuItem<int>();
+	item->caption = "Fuel Bar Colour";
+	item->value = i++;
+	item->isLeaf = false;
+	menuItems.push_back(item);
+
+	draw_generic_menu<int>(menuItems, &activeLineIndexFuel, caption, onconfirm_fuel_menu, NULL, NULL);
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 bool onconfirm_veh_menu(MenuItem<int> choice){
@@ -927,6 +1170,9 @@ bool onconfirm_veh_menu(MenuItem<int> choice){
 			break;
 		case 19: // speed menu
 			process_speed_menu();
+			break;
+		case 24: // speed menu
+			process_fuel_menu();
 			break;
 		default:
 			break;
@@ -1098,12 +1344,12 @@ void process_veh_menu(){
 	listItem->value = lightsOffIndex;
 	menuItems.push_back(listItem);
 
-	//toggleItem = new ToggleMenuItem<int>();
-	//toggleItem->caption = "Fuel";
-	//toggleItem->value = i++;
-	//toggleItem->toggleValue = &featureFuel;
-	//menuItems.push_back(toggleItem);
-
+	//item = new MenuItem<int>();
+	//item->caption = "Fuel Consumption";
+	//item->value = i++;
+	//item->isLeaf = false;
+	//menuItems.push_back(item);
+	
 	/*
 	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Lock Vehicle Doors";
@@ -1679,9 +1925,9 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 	}
 
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	//////////////////////////////////////////////// FUEL OPTION /////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////// FUEL OPTION /////////////////////////////////////////////////////////////////
 
 	
 
@@ -1775,13 +2021,17 @@ void reset_vehicle_globals(){
 	//veh_spawn_menu_index = 0;
 
 	activeLineIndexSpeed = 0;
-	
+	activeLineIndexFuel = 0;
+
 	SpeedColours_R_Index = 26;
 	SpeedColours_G_Index = 0;
 	SpeedColours_B_Index = 0;
 	SpeedColours2_R_Index = 26;
 	SpeedColours2_G_Index = 26;
 	SpeedColours2_B_Index = 0;
+	FuelColours_R_Index = 26;
+	FuelColours_G_Index = 18;
+	FuelColours_B_Index = 12;
 	turnSignalsIndex = 0;
 	speedLimiterIndex = 0;
 	lightsOffIndex = 0;
@@ -1790,6 +2040,18 @@ void reset_vehicle_globals(){
 	VehMassMultIndex = 0;
 	SpeedSizeIndex = 0;
 	SpeedPositionIndex = 0;
+
+	CarConsumptionIndex = 11;
+	BikeConsumptionIndex = 12;
+	BoatConsumptionIndex = 5;
+	PlaneConsumptionIndex = 10;
+	HeliConsumptionIndex = 9;
+	RefuelingSpeedIndex = 6;
+	FuelPriceIndex = 7;
+	JerrycanPriceIndex = 7;
+	Random1Index = 1;
+	Random2Index = 1;
+	BarPositionIndex = 0;
 
 	featureAltitude = true;
 	featureSpeedOnFoot =
@@ -1801,6 +2063,8 @@ void reset_vehicle_globals(){
 		featureVehSpeedBoost =
 		featureEngineRunning =
 		featureFuel = 
+		featureBlips =
+		featureBlipsPhone =
 		featureVehMassMult =
 		featureVehicleDoorInstant =
 		featureLockVehicleDoors =
@@ -2043,6 +2307,8 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehSpeedBoost", &featureVehSpeedBoost});
 	results->push_back(FeatureEnabledLocalDefinition{"featureEngineRunning", &featureEngineRunning});
 	results->push_back(FeatureEnabledLocalDefinition{"featureFuel", &featureFuel});
+	results->push_back(FeatureEnabledLocalDefinition{"featureBlips", &featureBlips});
+	results->push_back(FeatureEnabledLocalDefinition{"featureBlipsPhone", &featureBlipsPhone});
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehMassMult", &featureVehMassMult});
 	results->push_back(FeatureEnabledLocalDefinition{"featureSpeedOnFoot", &featureSpeedOnFoot });
 	results->push_back(FeatureEnabledLocalDefinition{"featureKMH", &featureKMH });
@@ -2458,12 +2724,26 @@ void add_vehicle_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"lightsOffIndex", std::to_string(lightsOffIndex)});
 	results->push_back(StringPairSettingDBRow{"SpeedSizeIndex", std::to_string(SpeedSizeIndex)});
 	results->push_back(StringPairSettingDBRow{"SpeedPositionIndex", std::to_string(SpeedPositionIndex)});
+	results->push_back(StringPairSettingDBRow{"CarConsumptionIndex", std::to_string(CarConsumptionIndex)});
+	results->push_back(StringPairSettingDBRow{"BikeConsumptionIndex", std::to_string(BikeConsumptionIndex)});
+	results->push_back(StringPairSettingDBRow{"BoatConsumptionIndex", std::to_string(BoatConsumptionIndex)});
+	results->push_back(StringPairSettingDBRow{"PlaneConsumptionIndex", std::to_string(PlaneConsumptionIndex)});
+	results->push_back(StringPairSettingDBRow{"HeliConsumptionIndex", std::to_string(HeliConsumptionIndex)});
+	results->push_back(StringPairSettingDBRow{"RefuelingSpeedIndex", std::to_string(RefuelingSpeedIndex)});
+	results->push_back(StringPairSettingDBRow{"FuelPriceIndex", std::to_string(FuelPriceIndex)});
+	results->push_back(StringPairSettingDBRow{"JerrycanPriceIndex", std::to_string(JerrycanPriceIndex)});
+	results->push_back(StringPairSettingDBRow{"Random1Index", std::to_string(Random1Index)});
+	results->push_back(StringPairSettingDBRow{"Random2Index", std::to_string(Random2Index)});
+	results->push_back(StringPairSettingDBRow{"BarPositionIndex", std::to_string(BarPositionIndex)});
 	results->push_back(StringPairSettingDBRow{"SpeedColours_R_Index", std::to_string(SpeedColours_R_Index)});
 	results->push_back(StringPairSettingDBRow{"SpeedColours_G_Index", std::to_string(SpeedColours_G_Index)});
 	results->push_back(StringPairSettingDBRow{"SpeedColours_B_Index", std::to_string(SpeedColours_B_Index)});
 	results->push_back(StringPairSettingDBRow{"SpeedColours2_R_Index", std::to_string(SpeedColours2_R_Index)});
 	results->push_back(StringPairSettingDBRow{"SpeedColours2_G_Index", std::to_string(SpeedColours2_G_Index)});
 	results->push_back(StringPairSettingDBRow{"SpeedColours2_B_Index", std::to_string(SpeedColours2_B_Index)});
+	results->push_back(StringPairSettingDBRow{"FuelColours_R_Index", std::to_string(FuelColours_R_Index)});
+	results->push_back(StringPairSettingDBRow{"FuelColours_G_Index", std::to_string(FuelColours_G_Index)});
+	results->push_back(StringPairSettingDBRow{"FuelColours_B_Index", std::to_string(FuelColours_B_Index)});
 }
 
 void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settings){
@@ -2496,6 +2776,39 @@ void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settin
 		else if (setting.name.compare("SpeedPositionIndex") == 0){
 			SpeedPositionIndex = stoi(setting.value);
 		}
+		else if (setting.name.compare("CarConsumptionIndex") == 0){
+			CarConsumptionIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("BikeConsumptionIndex") == 0){
+			BikeConsumptionIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("BoatConsumptionIndex") == 0){
+			BoatConsumptionIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("PlaneConsumptionIndex") == 0){
+			PlaneConsumptionIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("HeliConsumptionIndex") == 0){
+			HeliConsumptionIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("RefuelingSpeedIndex") == 0){
+			RefuelingSpeedIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("FuelPriceIndex") == 0){
+			FuelPriceIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("JerrycanPriceIndex") == 0){
+			JerrycanPriceIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("Random1Index") == 0){
+			Random1Index = stoi(setting.value);
+		}
+		else if (setting.name.compare("Random2Index") == 0){
+			Random2Index = stoi(setting.value);
+		}
+		else if (setting.name.compare("BarPositionIndex") == 0){
+			BarPositionIndex = stoi(setting.value);
+		}
 		else if (setting.name.compare("SpeedColours_R_Index") == 0){
 			SpeedColours_R_Index = stoi(setting.value);
 		}
@@ -2513,6 +2826,15 @@ void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settin
 		}
 		else if (setting.name.compare("SpeedColours2_B_Index") == 0){
 			SpeedColours2_B_Index = stoi(setting.value);
+		}
+		else if (setting.name.compare("FuelColours_R_Index") == 0){
+			FuelColours_R_Index = stoi(setting.value);
+		}
+		else if (setting.name.compare("FuelColours_G_Index") == 0){
+			FuelColours_G_Index = stoi(setting.value);
+		}
+		else if (setting.name.compare("FuelColours_B_Index") == 0){
+			FuelColours_B_Index = stoi(setting.value);
 		}
 	}
 }
@@ -2581,6 +2903,61 @@ void onchange_speed_position_index(int value, SelectFromListMenuItem* source){
 	PositionChanged = true;
 }
 
+void onchange_car_consumption_index(int value, SelectFromListMenuItem* source){
+	CarConsumptionIndex = value;
+	PositionChanged = true;
+}
+
+void onchange_bike_consumption_index(int value, SelectFromListMenuItem* source){
+	BikeConsumptionIndex = value;
+	PositionChanged = true;
+}
+
+void onchange_boat_consumption_index(int value, SelectFromListMenuItem* source){
+	BoatConsumptionIndex = value;
+	PositionChanged = true;
+}
+
+void onchange_plane_consumption_index(int value, SelectFromListMenuItem* source){
+	PlaneConsumptionIndex = value;
+	PositionChanged = true;
+}
+
+void onchange_heli_consumption_index(int value, SelectFromListMenuItem* source){
+	HeliConsumptionIndex = value;
+	PositionChanged = true;
+}
+
+void onchange_refuelspeed_index(int value, SelectFromListMenuItem* source){
+	RefuelingSpeedIndex = value;
+	PositionChanged = true;
+}
+
+void onchange_fuelprice_index(int value, SelectFromListMenuItem* source){
+	FuelPriceIndex = value;
+	PositionChanged = true;
+}
+
+void onchange_canprice_index(int value, SelectFromListMenuItem* source){
+	JerrycanPriceIndex = value;
+	PositionChanged = true;
+}
+
+void onchange_random1_index(int value, SelectFromListMenuItem* source){
+	Random1Index = value;
+	PositionChanged = true;
+}
+
+void onchange_random2_index(int value, SelectFromListMenuItem* source){
+	Random2Index = value;
+	PositionChanged = true;
+}
+
+void onchange_barposition_index(int value, SelectFromListMenuItem* source){
+	BarPositionIndex = value;
+	PositionChanged = true;
+}
+
 void onchange_speed_colours_r_index(int value, SelectFromListMenuItem* source){
 	SpeedColours_R_Index = value;
 	Colours_R_Changed = true;
@@ -2609,6 +2986,21 @@ void onchange_speed_colours2_g_index(int value, SelectFromListMenuItem* source){
 void onchange_speed_colours2_b_index(int value, SelectFromListMenuItem* source){
 	SpeedColours2_B_Index = value;
 	Colours2_B_Changed = true;
+}
+
+void onchange_fuel_colours_r_index(int value, SelectFromListMenuItem* source){
+	FuelColours_R_Index = value;
+	FuelColours_R_Changed = true;
+}
+
+void onchange_fuel_colours_g_index(int value, SelectFromListMenuItem* source){
+	FuelColours_G_Index = value;
+	FuelColours_G_Changed = true;
+}
+
+void onchange_fuel_colours_b_index(int value, SelectFromListMenuItem* source){
+	FuelColours_B_Index = value;
+	FuelColours_B_Changed = true;
 }
 
 struct VehicleImage{

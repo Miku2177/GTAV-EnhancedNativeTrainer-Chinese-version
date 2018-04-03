@@ -26,6 +26,8 @@
     <key function="veh_leftblink" value="VK_LEFT"/>
     <key function="veh_rightblink" value="VK_RIGHT"/>
     <key function="veh_emergencyblink" value="VK_DECIMAL"/>
+    <key function="veh_startrefueling" value="VK_KEY_E"/>
+    <key function="veh_stoprefueling" value="VK_KEY_S"/>
 
     <!--The following are for the feature that lets you move around beyond normal limits, e.g. noclip-->
     
@@ -138,16 +140,20 @@
       <button value="R_SHOULDER"/>
     </controller>
     <controller function="veh_leftblink">
-      <button value="L_SHOULDER"/>
-      <button value="R_SHOULDER"/>
+      <button value="L_TRIGGER"/>
     </controller>
     <controller function="veh_rightblink">
-      <button value="L_SHOULDER"/>
-      <button value="R_SHOULDER"/>
+      <button value="R_TRIGGER"/>
     </controller>
     <controller function="veh_emergencyblink">
       <button value="L_SHOULDER"/>
       <button value="R_SHOULDER"/>
+    </controller>
+    <controller function="veh_startrefueling">
+      <button value="BUTTON_A"/>
+    </controller>
+    <controller function="veh_stoprefueling">
+      <button value="BUTTON_B"/>
     </controller>
     
     <controller function="toggle_airbrake">
