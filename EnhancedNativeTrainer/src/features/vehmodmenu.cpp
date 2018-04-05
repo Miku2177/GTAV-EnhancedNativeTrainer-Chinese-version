@@ -2101,8 +2101,10 @@ void fully_tune_vehicle(Vehicle veh, bool optics){
 
 		VEHICLE::SET_VEHICLE_WINDOW_TINT(veh, 1);
 
-		VEHICLE::SET_VEHICLE_COLOURS(veh, 120, 120);
-		VEHICLE::SET_VEHICLE_EXTRA_COLOURS(veh, 120, 120);
+		//VEHICLE::SET_VEHICLE_COLOURS(veh, 120, 120);
+		//VEHICLE::SET_VEHICLE_EXTRA_COLOURS(veh, 120, 120);
+		VEHICLE::SET_VEHICLE_COLOURS(veh, (rand() % 160 + 1), (rand() % 160 + 1));
+		VEHICLE::SET_VEHICLE_EXTRA_COLOURS(veh, (rand() % 160 + 1), (rand() % 160 + 1));
 
 		for (int a = 0; a < 4; a++){
 			VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(veh, a, true);
