@@ -64,6 +64,8 @@ bool featurePlayerFastRunUpdated = false;
 bool featurePlayerSuperJump = false;
 bool featurePlayerInvisible = false;
 bool featurePlayerInvisibleUpdated = false;
+bool featurePlayerInvisibleInVehicle = false;
+bool featurePlayerInvisibleInVehicleUpdated = false;
 bool featurePlayerDrunk = false;
 bool featurePlayerDrunkUpdated = false;
 bool featureNightVision = false;
@@ -387,6 +389,19 @@ void update_features(){
 		}
 	}
 
+	//Player Invisible In Vehicle
+	if (featurePlayerInvisibleInVehicle) {
+		if (bPlayerExists && featurePlayerInvisibleInVehicle && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1))
+		ENTITY::SET_ENTITY_VISIBLE(playerPed, false);
+		else if (bPlayerExists)	ENTITY::SET_ENTITY_VISIBLE(playerPed, true);
+		featurePlayerInvisibleInVehicleUpdated = true;
+	}
+	
+	if (!featurePlayerInvisibleInVehicle && featurePlayerInvisibleInVehicleUpdated) {
+		if (bPlayerExists)	ENTITY::SET_ENTITY_VISIBLE(playerPed, true);
+		featurePlayerInvisibleInVehicleUpdated = false;
+	}
+
 	if(featurePlayerDrunkUpdated){
 		featurePlayerDrunkUpdated = false;
 		if(featurePlayerDrunk){
@@ -540,7 +555,7 @@ bool onconfirm_player_menu(MenuItem<int> choice){
 }
 
 void process_player_menu(){
-	const int lineCount = 19;
+	const int lineCount = 20;
 
 	std::string caption = "Player Options";
 
@@ -559,6 +574,7 @@ void process_player_menu(){
 		{"Super Jump", &featurePlayerSuperJump, NULL, true},
 		{"No Ragdoll", &featureNoRagdoll, &featureNoRagdollUpdated, true},
 		{"Invisibility", &featurePlayerInvisible, &featurePlayerInvisibleUpdated, true},
+		{"Invisibility In Vehicle", &featurePlayerInvisibleInVehicle, &featurePlayerInvisibleInVehicleUpdated, true },
 		{"Drunk", &featurePlayerDrunk, &featurePlayerDrunkUpdated, true},
 		{"Night Vision", &featureNightVision, &featureNightVisionUpdated, true},
 		{"Thermal Vision", &featureThermalVision, &featureThermalVisionUpdated, true},
@@ -771,6 +787,7 @@ void reset_globals(){
 		featurePlayerFastRun =
 		featurePlayerSuperJump =
 		featurePlayerInvisible =
+		featurePlayerInvisibleInVehicle =
 		featureNightVision =
 		featureThermalVision =
 
@@ -787,6 +804,7 @@ void reset_globals(){
 		featureNightVisionUpdated =
 		featureThermalVisionUpdated =
 		featurePlayerInvisibleUpdated =
+		featurePlayerInvisibleInVehicleUpdated =
 
 		featureNoRagdollUpdated =
 		featureWantedLevelFrozenUpdated = true;
@@ -1002,6 +1020,7 @@ void add_player_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerSuperJump", &featurePlayerSuperJump});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoRagdoll", &featureNoRagdoll, &featureNoRagdollUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerInvisible", &featurePlayerInvisible, &featurePlayerInvisibleUpdated});
+	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerInvisibleInVehicle", &featurePlayerInvisibleInVehicle, &featurePlayerInvisibleInVehicleUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerDrunk", &featurePlayerDrunk, &featurePlayerDrunkUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNightVision", &featureNightVision, &featureNightVisionUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureThermalVision", &featureThermalVision, &featureThermalVisionUpdated});

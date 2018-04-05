@@ -70,12 +70,13 @@ float textX, textY = -1;
 float rectXScaled, rectYScaled = -1;
 
 // Fuel Option Variables
-int GUI_time = 0;
 bool refillCar = false;
+int GUI_time = 0;
 bool lowFuel = false;
 bool drawMessageA = false;
 bool drawMessageB = false;
 bool hasfuel = false;
+bool show_blips = false;
 
 Blip blip[32];
 std::vector<Vehicle> VEHICLES;
@@ -230,32 +231,32 @@ int RefuelingSpeedIndex = 6;
 bool RefuelingSpeedChanged = true;
 
 //Fuel Price
-const std::vector<std::string> VEH_FUELPRICE_CAPTIONS{ "NO", "0.1", "0.5", "1.0", "2.0", "3.0", "4.0", "5.0", "10.0", "20.0", "30.0", "50.0", "100.0", "200.0" };
-const std::vector<double> VEH_FUELPRICE_VALUES{ 0, 0.1, 0.5, 1, 2, 3, 4, 5, 10, 20, 30, 50, 100, 200 };
+const std::vector<std::string> VEH_FUELPRICE_CAPTIONS{ "NO", "0.1", "0.5", "1.0", "2.0", "3.0", "4.0", "5.0", "10.0", "20.0", "30.0", "50.0", "100.0", "200.0", "300.0", "500.0", "1000.0", "5000.0", "10000.0" };
+const std::vector<double> VEH_FUELPRICE_VALUES{ 0, 0.1, 0.5, 1, 2, 3, 4, 5, 10, 20, 30, 50, 100, 200, 300, 500, 1000, 5000, 10000 };
 int FuelPriceIndex = 7;
 bool FuelPriceChanged = true;
 
 //Jerry Can Price
-const std::vector<std::string> VEH_CANPRICE_CAPTIONS{ "NO", "0.1", "0.5", "1.0", "5.0", "10.0", "50.0", "100.0", "200.0", "300.0", "500.0", "1000.0", "5000.0", "10000.0" };
-const std::vector<double> VEH_CANPRICE_VALUES{ 0, 0.1, 0.5, 1, 5, 10, 50, 100, 200, 300, 500, 1000, 5000, 10000 };
-int JerrycanPriceIndex = 7;
+const std::vector<std::string> VEH_CANPRICE_CAPTIONS{ "NO", "0.1", "0.5", "1.0", "2.0", "3.0", "4.0", "5.0", "10.0", "20.0", "30.0", "50.0", "100.0", "200.0", "300.0", "500.0", "1000.0", "5000.0", "10000.0" };
+const std::vector<double> VEH_CANPRICE_VALUES{ 0, 0.1, 0.5, 1, 2, 3, 4, 5, 10, 20, 30, 50, 100, 200, 300, 500, 1000, 5000, 10000 };
+int JerrycanPriceIndex = 12;
 bool JerrycanChanged = true;
 
 //Min Fuel Random Number
-const std::vector<std::string> VEH_FUELRANDOM1_CAPTIONS{ "0.5", "1", "5", "10", "20", "30", "40", "50", "60", "70", "80", "90" };
-const std::vector<int> VEH_FUELRANDOM1_VALUES{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 };
+const std::vector<std::string> VEH_FUELRANDOM1_CAPTIONS{ "10", "20", "30", "40", "50", "60", "70" };
+const std::vector<int> VEH_FUELRANDOM1_VALUES{ 1, 2, 3, 4, 5, 6, 7 };
 int Random1Index = 1;
 bool Random1Changed = true;
 
 //Min Fuel Random Number 2
-const std::vector<std::string> VEH_FUELRANDOM2_CAPTIONS{ "1", "5", "10", "30", "40", "50", "60", "60", "70", "90", "90", "100" };
-const std::vector<int> VEH_FUELRANDOM2_VALUES{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 };
+const std::vector<std::string> VEH_FUELRANDOM2_CAPTIONS{ "20", "30", "40", "50", "60", "70", "80" };
+const std::vector<int> VEH_FUELRANDOM2_VALUES{ 1, 2, 3, 4, 5, 6, 7 };
 int Random2Index = 1;
 bool Random2Changed = true;
 
 //Fuel Bar Position
-const std::vector<std::string> VEH_FUELBARPOSITION_CAPTIONS{ "Below Radar", "Above Radar", "On The Left Of Radar" };
-const std::vector<int> VEH_FUELBARPOSITION_VALUES{ 1, 2, 3 };
+const std::vector<std::string> VEH_FUELBARPOSITION_CAPTIONS{ "Below Radar", "Above Radar", "On The Left Of Radar", "On The Right Of Radar" };
+const std::vector<int> VEH_FUELBARPOSITION_VALUES{ 1, 2, 3, 4 };
 int BarPositionIndex = 0;
 bool BarPositionChanged = true;
 
@@ -274,8 +275,14 @@ bool FuelColours_G_Changed = true;
 //Fuel colours_B
 const std::vector<std::string> FUEL_COLOURS_B_CAPTIONS{ "0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "210", "220", "230", "240", "250", "255" };
 const std::vector<int> FUEL_COLOURS_B_VALUES{ 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 255 };
-int FuelColours_B_Index = 11;
+int FuelColours_B_Index = 0;
 bool FuelColours_B_Changed = true;
+
+//Show Blips
+const std::vector<std::string> VEH_FUELBLIPS_CAPTIONS{ "OFF", "Everywhere", "On Radar Only", "If Phone In Hand Only" };
+const std::vector<int> VEH_FUELBLIPS_VALUES{ 0, 1, 2, 3 };
+int FuelBlipsIndex = 0;
+bool FuelBlipsChanged = true;
 
 // player in vehicle state... assume true initially since our quicksave might have us in a vehicle already, in which case we can't check if we just got into one
 bool oldVehicleState = true;
@@ -403,7 +410,7 @@ const std::vector<std::string> VALUES_MOTORCYCLES{ "AKUMA", "DOUBLE", "ENDURO", 
 
 const std::vector<std::string> VALUES_PLANES{ "BLIMP", "ALPHAZ1", "CARGOPLANE", "HOWARD", "JET", "LUXOR", "LUXOR2", "MILJET", "NIMBUS", "PYRO", "SHAMAL", "VESTRA", "MAMMATUS", "LAZER", "VELUM", "VELUM2", "STARLING", "AVENGER", "DODO", "HYDRA", "MOGUL", "TITAN", "TULA", "NOKOTA", "BOMBUSHKA", "MOLOTOK", "VOLATOL", "BESRA", "ROGUE", "SEABREEZE", "CUBAN800", "DUSTER", "STUNT", "BLIMP2", };
 
-const std::vector<std::string> VALUES_HELOS{ "AKULA", "SAVAGE", "SUPERVOLITO", "SUPERVOLITO2", "SWIFT", "SWIFT2", "VALKYRIE", "VOLATUS", "HUNTER", "SKYLIFT", "FROGGER", "FROGGER2", "BUZZARD2", "BUZZARD", "HAVOK", "MICROLIGHT", "SPARROW", "ANNIHILATOR", "CARGOBOB", "CARGOBOB2", "CARGOBOB3", "MAVERICK", "POLMAV" };
+const std::vector<std::string> VALUES_HELOS{ "AKULA", "SAVAGE", "SUPERVOLITO", "SUPERVOLITO2", "SWIFT", "SWIFT2", "VALKYRIE", "VOLATUS", "HUNTER", "SKYLIFT", "FROGGER", "FROGGER2", "BUZZARD2", "BUZZARD", "HAVOK", "MICROLIGHT", "SEASPARROW", "ANNIHILATOR", "CARGOBOB", "CARGOBOB2", "CARGOBOB3", "MAVERICK", "POLMAV" };
 
 const std::vector<std::string> VALUES_BOATS{ "TUG", "MARQUIS", "SUBMERSIBLE2", "TORO", "DINGHY2", "DINGHY3", "DINGHY", "SPEEDER", "JETMAX", "PREDATOR", "SQUALO", "SUNTRAP", "TROPIC", "SEASHARK", "SEASHARK2", "SUBMERSIBLE" };
 
@@ -1020,7 +1027,7 @@ bool onconfirm_fuel_menu(MenuItem<int> choice)
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	switch (activeLineIndexFuel){
-	case 14:
+	case 13:
 		if (process_fuel_colour_menu()) return false;
 		break;
 	}
@@ -1044,17 +1051,11 @@ void process_fuel_menu(){
 	toggleItem->toggleValue = &featureFuel;
 	menuItems.push_back(toggleItem);
 
-	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Show Blips";
-	toggleItem->value = i++;
-	toggleItem->toggleValue = &featureBlips;
-	menuItems.push_back(toggleItem);
-
-	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Blips If Phone In Hands Only";
-	toggleItem->value = i++;
-	toggleItem->toggleValue = &featureBlipsPhone;
-	menuItems.push_back(toggleItem);
+	listItem = new SelectFromListMenuItem(VEH_FUELBLIPS_CAPTIONS, onchange_fuel_blips_index);
+	listItem->wrap = false;
+	listItem->caption = "Blips";
+	listItem->value = FuelBlipsIndex;
+	menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(VEH_CARFUEL_CAPTIONS, onchange_car_consumption_index);
 	listItem->wrap = false;
@@ -1786,10 +1787,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		//ss55 << "\n turn_check_left: " << turn_check_left;
 		//ss55 << "\n turn_check_right: " << turn_check_right;
 		//ss55 << "\n controllightsenabled_l: " << controllightsenabled_l;
-		//ss55 << "\n controllightsenabled_r: " << controllightsenabled_r;
-		//ss55 << "\n vehturnspeed: " << vehturnspeed;
-		//ss55 << "\n speed_limit: " << VEH_TURN_SIGNALS_VALUES[turnSignalsIndex];
-		//ss55 << "\n steer_turn: " << VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] + 10;
 		//callsPerFrame = 0;
 		//set_status_text_centre_screen(ss55.str());
 
@@ -1830,8 +1827,8 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 	else
 	{
-		int vehmax = VEHICLE::_GET_VEHICLE_MODEL_MAX_SPEED(ENTITY::GET_ENTITY_MODEL(PED::GET_VEHICLE_PED_IS_IN(playerPed, false)));
-		ENTITY::SET_ENTITY_MAX_SPEED(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), vehmax);
+		//int vehmax = VEHICLE::_GET_VEHICLE_MODEL_MAX_SPEED(ENTITY::GET_ENTITY_MODEL(PED::GET_VEHICLE_PED_IS_IN(playerPed, false)));
+		ENTITY::SET_ENTITY_MAX_SPEED(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 15000.0);
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2041,6 +2038,7 @@ void reset_vehicle_globals(){
 	SpeedSizeIndex = 0;
 	SpeedPositionIndex = 0;
 
+	FuelBlipsIndex = 0;
 	CarConsumptionIndex = 11;
 	BikeConsumptionIndex = 12;
 	BoatConsumptionIndex = 5;
@@ -2048,7 +2046,7 @@ void reset_vehicle_globals(){
 	HeliConsumptionIndex = 9;
 	RefuelingSpeedIndex = 6;
 	FuelPriceIndex = 7;
-	JerrycanPriceIndex = 7;
+	JerrycanPriceIndex = 12;
 	Random1Index = 1;
 	Random2Index = 1;
 	BarPositionIndex = 0;
@@ -2724,6 +2722,7 @@ void add_vehicle_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"lightsOffIndex", std::to_string(lightsOffIndex)});
 	results->push_back(StringPairSettingDBRow{"SpeedSizeIndex", std::to_string(SpeedSizeIndex)});
 	results->push_back(StringPairSettingDBRow{"SpeedPositionIndex", std::to_string(SpeedPositionIndex)});
+	results->push_back(StringPairSettingDBRow{"FuelBlipsIndex", std::to_string(FuelBlipsIndex)});
 	results->push_back(StringPairSettingDBRow{"CarConsumptionIndex", std::to_string(CarConsumptionIndex)});
 	results->push_back(StringPairSettingDBRow{"BikeConsumptionIndex", std::to_string(BikeConsumptionIndex)});
 	results->push_back(StringPairSettingDBRow{"BoatConsumptionIndex", std::to_string(BoatConsumptionIndex)});
@@ -2775,6 +2774,9 @@ void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settin
 		}
 		else if (setting.name.compare("SpeedPositionIndex") == 0){
 			SpeedPositionIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("FuelBlipsIndex") == 0){
+			FuelBlipsIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("CarConsumptionIndex") == 0){
 			CarConsumptionIndex = stoi(setting.value);
@@ -2900,6 +2902,11 @@ void onchange_speed_size_index(int value, SelectFromListMenuItem* source){
 
 void onchange_speed_position_index(int value, SelectFromListMenuItem* source){
 	SpeedPositionIndex = value;
+	PositionChanged = true;
+}
+
+void onchange_fuel_blips_index(int value, SelectFromListMenuItem* source){
+	FuelBlipsIndex = value;
 	PositionChanged = true;
 }
 

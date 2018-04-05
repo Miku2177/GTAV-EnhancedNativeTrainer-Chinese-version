@@ -180,6 +180,8 @@ void onchange_speed_size_index(int value, SelectFromListMenuItem* source);
 
 void onchange_speed_position_index(int value, SelectFromListMenuItem* source);
 
+void onchange_fuel_blips_index(int value, SelectFromListMenuItem* source);
+
 void onchange_car_consumption_index(int value, SelectFromListMenuItem* source);
 
 void onchange_bike_consumption_index(int value, SelectFromListMenuItem* source);
