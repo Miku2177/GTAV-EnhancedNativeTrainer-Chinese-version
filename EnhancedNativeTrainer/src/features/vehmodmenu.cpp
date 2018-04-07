@@ -865,249 +865,149 @@ std::string getModCategoryName(int i){
 	//To sort out the bike and now plane customisation options - else it displays car related headings
 	//It's horrible to read but works.
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
-
-	if (!is_this_a_heli_or_plane(veh))
-	{
-		switch (i){
-		case 0:
-			if (is_this_a_motorcycle(veh))
-				return "Drive Chain Cover";
-			else
-				return "Spoiler";
-		case 1:
-			if (is_this_a_motorcycle(veh))
-				return "Front Mudguard";
-			else if (is_this_a_heli_or_plane(veh))
-				return "Countermeasures";
-			else
-				return "Front Bumper";
-		case 2:
-			if (is_this_a_motorcycle(veh))
-				return "Rear Mudguard";
-			else
-				return "Rear Bumper";
-		case 3:
-			if (is_this_a_motorcycle(veh))
-				return "Air Intake";
-			else
-				return "Side Skirts";
-		case 4:
-			if (is_this_a_heli_or_plane(veh))
-				return "Thrust";
-			else
-				return "Exhaust";
-		case 5:
-			if (is_this_a_motorcycle(veh))
-				return "Engine Colour";
-			else if (is_this_a_heli_or_plane(veh))
-				return "Primary Weapons";
-			else
-				return "Rollcage";
-		case 6:
-			if (is_this_a_motorcycle(veh))
-				return "Oil Tank";
-			else
-				return "Grille";
-		case 7:
-			if (is_this_a_motorcycle(veh))
-				return "Seat";
-			else
-				return "Bonnet";
-		case 8:
-			if (is_this_a_motorcycle(veh))
-				return "Frame / Gear Stick";
-			else
-				return "Fenders / Arches";
-		case 9:
-			if (is_this_a_motorcycle(veh))
-				return "Sissy Bar";
-			else if (is_this_a_heli_or_plane(veh))
-				return "Bomb Type";
-			else
-				return "Skirts";
-		case 10:
-			if (is_this_a_motorcycle(veh))
-				return "Fuel Tank";
-			else if (is_this_a_heli_or_plane(veh))
-				return "Weapons";
-			else
-				return "Roof";
-		case 11:
-			return "Engine";
-		case 12:
-			return "Brakes";
-		case 13:
-			return "Transmission";
-		case 14:
-			return "Horn";
-		case 15:
-			return "Suspension";
-		case 16:
-			return "Armor";
-		case 22:
-			return "Headlights";
-		case 25:
-			return "Plate Holder";
-		case 26:
-			return "Vanity Plates";
-		case 27:
-			return "Trim Design";
-		case 28:
-			return "Ornaments";
-		case 29:
-			return "Dashboard"; //The Banshee has a different interior Index than the lowriders
-		case 30:
-			return "Dials";
-		case 31:
-			return "Door Cards";
-		case 32:
-			return "Seats";
-		case 33:
-			return "Steering Wheels";
-		case 34:
-			return "Gear Sticks";
-		case 35:
-			return "Plaques";
-		case 36:
-			return "Shelf Speakers";
-		case 37:
-			return "Trunk Speakers";
-		case 38:
-			return "Hydraulics";
-		case 39:
-			return "Engine Block";
-		case 40:
-			return "Misc Engine";
-		case 41:
-			return "Strut Braces";
-		case 42:
-			return "Arch Covers";
-		case 43:
-			return "Foglamps";
-		case 44:
-			return "Exterior Extra";
-		case 45:
+	
+	switch (i) {
+	case 0:
+		if (is_this_a_motorcycle(veh))
+			return "Drive Chain Cover";
+		else
+			return "Spoiler";
+	case 1:
+		if (is_this_a_motorcycle(veh))
+			return "Front Mudguard";
+		else if (is_this_a_heli_or_plane(veh))
+			return "Countermeasures";
+		else
+			return "Front Bumper";
+	case 2:
+		if (is_this_a_motorcycle(veh))
+			return "Rear Mudguard";
+		else
+			return "Rear Bumper";
+	case 3:
+		if (is_this_a_motorcycle(veh))
+			return "Air Intake";
+		else if (is_this_a_heli_or_plane(veh))
 			return "Fuel Tank";
-		case 46:
-			return "Doors Extra";
-		case 48:
-			return "Liveries";
-		case 51:
-			return "Handling";
-		case SPECIAL_ID_FOR_WHEEL_CATEGORY:
-			return "Wheel Category";
-		case SPECIAL_ID_FOR_WHEEL_SELECTION:
-			return "Wheel Choice";
-		case SPECIAL_ID_FOR_WINDOW_TINT:
-			return "Window Tint";
-		case SPECIAL_ID_FOR_LICENSE_PLATES:
-			return "License Plates";
-		default:
-			return std::to_string(i);
-		}
-	}
-
-	/*Cases left untouched in case they are needed later on*/
-	if (is_this_a_heli_or_plane(veh))
-	{
-		switch (i){
-		case 0:
-			return "case 0";
-		case 1:
-			return "Countermeasures"; //Only returns Chaff + Flare and not the 5 types of smoke....
-		case 2:
-			return "case 2";
-		case 3:
-			return "case 3";
-		case 4:
+		else
+			return "Side Skirts";
+	case 4:
+		if (is_this_a_heli_or_plane(veh))
 			return "Thrust";
-		case 5:
+		else
+			return "Exhaust";
+	case 5:
+		if (is_this_a_motorcycle(veh))
+			return "Engine Colour";
+		else if (is_this_a_heli_or_plane(veh))
 			return "Primary Weapons";
-		case 6:
-			return "case 6";
-		case 7:
-			return "case 7";
-		case 8:
-			return "case 8";
-		case 9:
+		else
+			return "Rollcage";
+	case 6:
+		if (is_this_a_motorcycle(veh))
+			return "Oil Tank";
+		else
+			return "Grille";
+	case 7:
+		if (is_this_a_motorcycle(veh))
+			return "Seat";
+		else
+			return "Bonnet";
+	case 8:
+		if (is_this_a_motorcycle(veh))
+			return "Frame / Gear Stick";
+		else
+			return "Fenders / Arches";
+	case 9:
+		if (is_this_a_motorcycle(veh))
+			return "Sissy Bar";
+		else if (is_this_a_heli_or_plane(veh))
 			return "Bomb Type";
-		case 10:
-			return "Weapons";
-		case 11:
-			return "Engine";
-		case 12:
-			return "Brakes";
-		case 13:
-			return "Transmission";
-		case 14:
-			return "Horn";
-		case 15:
-			return "Suspension";
-		case 16:
-			return "Armor";
-		case 22:
-			return "Headlights";
-		case 25:
-			return "Plate Holder";
-		case 26:
-			return "Vanity Plates";
-		case 27:
-			return "Trim Design";
-		case 28:
-			return "Ornaments";
-		case 29:
-			return "Dashboard";
-		case 30:
-			return "Dials";
-		case 31:
-			return "Door Cards";
-		case 32:
-			return "Seats";
-		case 33:
-			return "Steering Wheels";
-		case 34:
-			return "Gear Sticks";
-		case 35:
-			return "Plaques";
-		case 36:
-			return "Shelf Speakers";
-		case 37:
-			return "Trunk Speakers";
-		case 38:
-			return "Hydraulics";
-		case 39:
-			return "Engine Block";
-		case 40:
-			return "Misc Engine";
-		case 41:
-			return "Strut Braces";
-		case 42:
-			return "Arch Covers";
-		case 43:
-			return "Foglamps";
-		case 44:
-			return "Exterior Extra";
-		case 45:
+		else
+			return "Skirts";
+	case 10:
+		if (is_this_a_motorcycle(veh))
 			return "Fuel Tank";
-		case 46:
-			return "Doors Extra";
-		case 48:
-			return "Liveries";
-		case 51:
-			return "Handling";
-		case SPECIAL_ID_FOR_WHEEL_CATEGORY:
-			return "Wheel Category";
-		case SPECIAL_ID_FOR_WHEEL_SELECTION:
-			return "Wheel Choice";
-		case SPECIAL_ID_FOR_WINDOW_TINT:
-			return "Window Tint";
-		case SPECIAL_ID_FOR_LICENSE_PLATES:
-			return "License Plates";
-		default:
-			return std::to_string(i);
-		}
+		else if (is_this_a_heli_or_plane(veh))
+			return "Weapons";
+		else
+			return "Roof";
+	case 11:
+		return "Engine";
+	case 12:
+		return "Brakes";
+	case 13:
+		return "Transmission";
+	case 14:
+		return "Horn";
+	case 15:
+		return "Suspension";
+	case 16:
+		return "Armor";
+	case 22:
+		return "Headlights";
+	case 25:
+		return "Plate Holder";
+	case 26:
+		return "Vanity Plates";
+	case 27:
+		return "Trim Design";
+	case 28:
+		return "Ornaments";
+	case 29:
+		return "Dashboard"; //The Banshee has a different interior Index than the lowriders
+	case 30:
+		return "Dials";
+	case 31:
+		return "Door Cards";
+	case 32:
+		return "Seats";
+	case 33:
+		return "Steering Wheels";
+	case 34:
+		return "Gear Sticks";
+	case 35:
+		return "Plaques";
+	case 36:
+		return "Shelf Speakers";
+	case 37:
+		return "Trunk Speakers";
+	case 38:
+		return "Hydraulics";
+	case 39:
+		return "Engine Block";
+	case 40:
+		return "Misc Engine";
+	case 41:
+		return "Strut Braces";
+	case 42:
+		return "Arch Covers";
+	case 43:
+		return "Foglamps";
+	case 44:
+		return "Exterior Extra";
+	case 45:
+		return "Fuel Tank";
+	case 46:
+		return "Doors Extra";
+	case 48:
+		return "Liveries";
+	case 51:
+		return "Handling";
+	case SPECIAL_ID_FOR_WHEEL_CATEGORY:
+		return "Wheel Category";
+	case SPECIAL_ID_FOR_WHEEL_SELECTION:
+		return "Wheel Choice";
+	case SPECIAL_ID_FOR_WINDOW_TINT:
+		return "Window Tint";
+	case SPECIAL_ID_FOR_LICENSE_PLATES:
+		return "License Plates";
+	default:
+		return std::to_string(i);
 	}
 }
+
+
 
 std::string geSpecialItemTitle(int category, int index){
 	switch (category){
@@ -1297,7 +1197,7 @@ std::string getNormalItemTitle(Vehicle veh, int category, int index){
 		ss << ((index + 1) * 20) << "% Armor";
 		modItemNameStr = ss.str();
 	}
-	else{ //could this be the reason ornaments are 28? 
+	else{ 
 		char* modItemNameChr = VEHICLE::GET_MOD_TEXT_LABEL(veh, category, index);
 		bool foundName = false;
 		if (modItemNameChr != NULL && strlen(modItemNameChr) > 0){
