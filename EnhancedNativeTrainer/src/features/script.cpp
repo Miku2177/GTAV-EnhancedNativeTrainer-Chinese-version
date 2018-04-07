@@ -74,11 +74,17 @@ bool featureThermalVision = false;
 bool featureThermalVisionUpdated = false;
 bool featureWantedLevelFrozen = false;
 bool featureWantedLevelFrozenUpdated = false;
+bool engine_running = true;
+bool engine_switched = false;
+bool engine_killed = false;
 
 bool featureNoRagdoll = false;
 bool featureNoRagdollUpdated = false;
 
 int  frozenWantedLevel = 0;
+
+std::vector<Vehicle> VEHICLE_ENGINE;
+std::vector<Vehicle> VEHICLE_KILLED;
 
 // player model control, switching on normal ped model when needed
 
@@ -175,6 +181,30 @@ void invincibility_switching(){
 	if (featurePlayerInvincible) set_status_text("Invincibility ON");
 	else set_status_text("Invincibility OFF");
 	WAIT(100);
+}
+
+void engineonoff_switching() {
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) {
+		Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
+		if (!VEHICLE_ENGINE.empty() && VEHICLE_ENGINE[0] != veh) VEHICLE_ENGINE[0] = veh;
+		if (VEHICLE_ENGINE.empty()) VEHICLE_ENGINE.push_back(veh);
+		if (VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(veh)) engine_running = true;
+		engine_running = !engine_running;
+		engine_switched = true;
+	}
+	WAIT(100);
+}
+
+void engine_kill(){
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
+		Vehicle veh2 = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
+		if (VEHICLE_KILLED.empty()) VEHICLE_KILLED.push_back(veh2);
+		if (!VEHICLE_KILLED.empty()) VEHICLE_KILLED[0] = veh2;
+		engine_killed = true;//!engine_killed;
+		set_status_text("You have destroyed your vehicle's engine for some reason");
+	}
 }
 
 // Updates all features that can be turned off by the game, being called each game frame
@@ -280,11 +310,32 @@ void update_features(){
 		if(bPlayerExists && !featurePlayerInvincible){
 			PLAYER::SET_PLAYER_INVINCIBLE(player, FALSE);
 		}
+		WAIT(100);
 		featurePlayerInvincibleUpdated = false;
+		WAIT(100);
 	}
 
 	if(featurePlayerInvincible && bPlayerExists){
 		PLAYER::SET_PLAYER_INVINCIBLE(player, TRUE);
+	}
+	
+	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) && engine_switched) {
+		Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
+		if (VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(veh) && !VEHICLE_ENGINE.empty() && VEHICLE_ENGINE[0] != veh) engine_running = true;
+		VEHICLE::SET_VEHICLE_ENGINE_ON(veh, engine_running, false);
+		if (!VEHICLE_ENGINE.empty() && VEHICLE_ENGINE[0] != veh)
+		{
+			VEHICLE_ENGINE[0] = veh;
+			engine_running = false;
+			engine_switched = false;
+		}
+	}
+	
+	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) && engine_killed) {
+		Vehicle veh2 = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
+		if (!VEHICLE_KILLED.empty() && VEHICLE_KILLED[0] == veh2) {
+			VEHICLE::SET_VEHICLE_ENGINE_HEALTH(veh2, -4000);
+		}
 	}
 
 	if(featureWantedLevelFrozen){

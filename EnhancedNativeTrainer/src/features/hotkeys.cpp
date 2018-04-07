@@ -213,6 +213,12 @@ void trigger_function_for_hotkey_onkeyup(int hotkey)
 	case HKEY_INVINCIBILITY_SWITCHING:
 		invincibility_switching();
 		break;
+	case HKEY_ENGINEONOFF_SWITCHING:
+		engineonoff_switching();
+		break;
+	case HKEY_ENGINE_KILL:
+		engine_kill();
+		break;
 
 	default:
 	{
