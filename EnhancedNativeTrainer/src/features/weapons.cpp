@@ -23,6 +23,7 @@ bool featureWeaponInfiniteAmmo = false;
 bool featureWeaponInfiniteParachutes = false, featureWeaponInfiniteParachutesUpdated = false;
 bool featureWeaponNoParachutes = false, featureWeaponNoParachutesUpdated = false;
 bool featureWeaponNoReload = false;
+bool featureNoReticle = false;
 bool featureWeaponFireAmmo = false;
 bool featureWeaponExplosiveAmmo = false;
 bool featureWeaponExplosiveMelee = false;
@@ -758,6 +759,13 @@ bool process_weapon_menu(){
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "No Reticle";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureNoReticle;
+	toggleItem->toggleValueUpdated = NULL;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Infinite Parachutes";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureWeaponInfiniteParachutes;
@@ -820,6 +828,7 @@ void reset_weapon_globals(){
 		featureWeaponNoParachutes =
 		featureWeaponNoParachutesUpdated =
 		featureWeaponNoReload =
+		featureNoReticle =
 		featureWeaponFireAmmo =
 		featureWeaponExplosiveAmmo =
 		featureWeaponExplosiveMelee =
@@ -905,6 +914,17 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	// weapon no reload
 	if(bPlayerExists){
 		WEAPON::SET_PED_INFINITE_AMMO_CLIP(playerPed, featureWeaponNoReload);
+	}
+
+	// No reticle
+	if (featureNoReticle){
+		bool sniper_rifle = false;
+		if (WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_SNIPERRIFLE")) sniper_rifle = true;
+		if (WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_HEAVYSNIPER")) sniper_rifle = true;
+		if (WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_REMOTESNIPER")) sniper_rifle = true;
+		if (WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_HEAVYSNIPER_MK2")) sniper_rifle = true;
+		if (WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_MARKSMANRIFLE")) sniper_rifle = true;
+		if (!sniper_rifle) UI::HIDE_HUD_COMPONENT_THIS_FRAME(14);
 	}
 
 	//Gravity Gun
@@ -1273,6 +1293,7 @@ void add_weapon_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponInfiniteParachutes", &featureWeaponInfiniteParachutes, &featureWeaponInfiniteParachutesUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponNoParachutes", &featureWeaponNoParachutes, &featureWeaponNoParachutesUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponNoReload", &featureWeaponNoReload});
+	results->push_back(FeatureEnabledLocalDefinition{"featureNoReticle", &featureNoReticle});
 	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponVehRockets", &featureWeaponVehRockets});
 	results->push_back(FeatureEnabledLocalDefinition{"featureGravityGun", &featureGravityGun});
 }

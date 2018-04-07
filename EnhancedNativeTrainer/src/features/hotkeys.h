@@ -54,6 +54,8 @@ static const int HKEY_EXPLODE_NEARBY_VEHS = 126;
 static const int HKEY_VEHICLE_FLIP = 127;
 static const int HKEY_SPEEDLIMITER_SWITCHING = 128;
 static const int HKEY_INVINCIBILITY_SWITCHING = 129;
+static const int HKEY_ENGINEONOFF_SWITCHING = 130;
+static const int HKEY_ENGINE_KILL = 131;
 
 const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "No Function", 0 },
@@ -86,6 +88,8 @@ const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "Flip A Vehicle", HKEY_VEHICLE_FLIP },
 	{ "Speed Limiter", HKEY_SPEEDLIMITER_SWITCHING },
 	{ "Toggle Invincibility", HKEY_INVINCIBILITY_SWITCHING },
+	{ "Toggle Engine ON/OFF", HKEY_ENGINEONOFF_SWITCHING },
+	{ "Kill Engine", HKEY_ENGINE_KILL },
 	//{ "Drive as Passenger", HKEY_PASSENGER }
 };
 

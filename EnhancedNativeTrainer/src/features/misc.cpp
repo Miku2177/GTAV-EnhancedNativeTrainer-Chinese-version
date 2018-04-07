@@ -29,6 +29,12 @@ bool featureRadioAlwaysOffUpdated = false;
 bool featureMiscLockRadio = false;
 bool featureMiscHideHud = false;
 bool featureMiscHideHudUpdated = false;
+bool featurePhoneShowHud = false;
+bool featurePhoneShowHudUpdated = false;
+bool featureNoPoliceBlips = false;
+bool featureNoPoliceBlipsUpdated = false;
+bool police_blips_toogle = false;
+bool phone_toggle = false;
 
 bool featureShowVehiclePreviews = true;
 bool featureControllerIgnoreInTrainer = false;
@@ -250,7 +256,7 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 }
 
 void process_misc_menu(){
-	const int lineCount = 7;
+	const int lineCount = 9;
 
 	std::string caption = "Miscellaneous Options";
 
@@ -260,7 +266,9 @@ void process_misc_menu(){
 		{"Next Radio Track", NULL, NULL, true},
 		{"Freeze Radio to Station", nullptr, nullptr, false},
 		{"Radio Always Off", &featureRadioAlwaysOff, &featureRadioAlwaysOffUpdated, true},
+		{"No Police Blips", &featureNoPoliceBlips, &featureNoPoliceBlipsUpdated},
 		{"Hide HUD", &featureMiscHideHud, &featureMiscHideHudUpdated},
+		{"Show HUD If Phone In Hand Only", &featurePhoneShowHud, &featurePhoneShowHudUpdated},
 		{"Reset Player Model on Death", &featureResetPlayerModelOnDeath, nullptr, true}
 	};
 
@@ -269,6 +277,8 @@ void process_misc_menu(){
 
 void reset_misc_globals(){
 	featureMiscHideHud =
+		featurePhoneShowHud = 
+		featureNoPoliceBlips =
 		featurePlayerRadio =
 		featureMiscLockRadio =
 		featureMiscJellmanScenery =
@@ -282,21 +292,23 @@ void reset_misc_globals(){
 	featureRadioFreezeUpdated =
 		featureRadioAlwaysOffUpdated =
 		featureMiscHideHudUpdated =
+		featureNoPoliceBlipsUpdated = 
+		featurePhoneShowHudUpdated =
 		featurePlayerRadioUpdated = true;
 
 	ENTColor::reset_colors();
 }
 
 void update_misc_features(BOOL playerExists, Ped playerPed){
-	if(featureRadioAlwaysOff || featurePlayerRadioUpdated){
-		if(featureRadioAlwaysOff){
-			if(featurePlayerRadio){
+	if (featureRadioAlwaysOff || featurePlayerRadioUpdated){
+		if (featureRadioAlwaysOff){
+			if (featurePlayerRadio){
 				featurePlayerRadio = false;
 				featurePlayerRadioUpdated = true;
 			}
 		}
 
-		if(PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
+		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
 			Vehicle playerVeh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 			AUDIO::SET_VEHICLE_RADIO_ENABLED(playerVeh, !featureRadioAlwaysOff);
 		}
@@ -305,8 +317,8 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	}
 
 	// Portable radio
-	if(featurePlayerRadio || featurePlayerRadioUpdated){
-		if(featurePlayerRadio){
+	if (featurePlayerRadio || featurePlayerRadioUpdated){
+		if (featurePlayerRadio){
 			AUDIO::SET_MOBILE_RADIO_ENABLED_DURING_GAMEPLAY(true);
 		}
 		else{
@@ -315,28 +327,28 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	}
 
 	// Freeze radio to station
-	if(featureRadioFreeze){
-		if(AUDIO::GET_PLAYER_RADIO_STATION_INDEX() != radioStationIndex){
+	if (featureRadioFreeze){
+		if (AUDIO::GET_PLAYER_RADIO_STATION_INDEX() != radioStationIndex){
 			AUDIO::SET_RADIO_TO_STATION_INDEX(radioStationIndex);
 		}
 	}
-	else if(featureRadioFreezeUpdated){
+	else if (featureRadioFreezeUpdated){
 		// Leave it empty for now.
 	}
 
 	// hide hud
-	if(featureMiscHideHud){
-		for(int i = 0; i < 21; i++){
+	if (featureMiscHideHud){
+		for (int i = 0; i < 21; i++){
 			//at least in theory...
-			switch(i){
-				case 5: //mp message
-				case 10: //help text
-				case 11: //floating help 1
-				case 12: //floating help 2
-				case 14: //reticle
-				case 16: //radio wheel
-				case 19: //weapon wheel
-					continue;
+			switch (i){
+			case 5: //mp message
+			case 10: //help text
+			case 11: //floating help 1
+			case 12: //floating help 2
+			case 14: //reticle
+			case 16: //radio wheel
+			case 19: //weapon wheel
+				continue;
 			}
 			UI::HIDE_HUD_COMPONENT_THIS_FRAME(i);
 		}
@@ -344,10 +356,39 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		UI::DISPLAY_RADAR(false);
 		featureMiscHideHudUpdated = false;
 	}
-	else if(featureMiscHideHudUpdated){
+	else if (featureMiscHideHudUpdated){
 		UI::DISPLAY_RADAR(true);
 		featureMiscHideHudUpdated = false;
 	}
+	
+	// show hud if phone in hand
+	if (featurePhoneShowHud){
+		
+		if (!phone_toggle || CONTROLS::IS_CONTROL_PRESSED(2, 177)) {
+			UI::DISPLAY_RADAR(false);
+			phone_toggle = true;
+		}
+
+		if (CONTROLS::IS_CONTROL_PRESSED(2, 27)) {
+			UI::DISPLAY_RADAR(true);
+		}
+	}
+	else if (featurePhoneShowHudUpdated){
+		UI::DISPLAY_RADAR(true);
+		phone_toggle = false;
+	}
+
+	// No Police Blips
+	if (featureNoPoliceBlips && !police_blips_toogle){
+		PLAYER::SET_POLICE_RADAR_BLIPS(false);
+		police_blips_toogle = true;
+	}
+	
+	if (!featureNoPoliceBlips && police_blips_toogle) {
+		PLAYER::SET_POLICE_RADAR_BLIPS(true);
+		police_blips_toogle = false;
+	}
+
 }
 
 void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){
@@ -357,7 +398,9 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 
 	results->push_back(FeatureEnabledLocalDefinition{"featureMiscLockRadio", &featureMiscLockRadio});
 	results->push_back(FeatureEnabledLocalDefinition{"featureMiscHideHud", &featureMiscHideHud, &featureMiscHideHudUpdated});
-
+	results->push_back(FeatureEnabledLocalDefinition{"featurePhoneShowHud", &featurePhoneShowHud, &featurePhoneShowHudUpdated});
+	results->push_back(FeatureEnabledLocalDefinition{"featureNoPoliceBlips", &featureNoPoliceBlips, &featureNoPoliceBlipsUpdated});
+	
 	results->push_back(FeatureEnabledLocalDefinition{"featureControllerIgnoreInTrainer", &featureControllerIgnoreInTrainer});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBlockInputInMenu", &featureBlockInputInMenu});
 	results->push_back(FeatureEnabledLocalDefinition{"featureShowVehiclePreviews", &featureShowVehiclePreviews});
@@ -408,6 +451,16 @@ bool is_hud_hidden(){
 void set_hud_hidden(bool hidden){
 	featureMiscHideHud = hidden;
 	featureMiscHideHudUpdated = true;
+}
+
+void set_hud_shown(bool hidden){
+	featurePhoneShowHud = hidden;
+	featurePhoneShowHudUpdated = true;
+}
+
+void set_no_police_blips(bool hidden){
+	featureNoPoliceBlips = hidden;
+	featureNoPoliceBlipsUpdated = true;
 }
 
 bool is_jellman_scenery_enabled(){
