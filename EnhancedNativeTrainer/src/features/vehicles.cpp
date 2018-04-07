@@ -567,22 +567,17 @@ bool process_veh_seat_menu()
 
 		std::vector<std::string> SEAT_NAMES = {
 			"Driver",
-			"Front Passenger",
-			"Rear Passenger 2",
-			"Rear Passenger 3",
-			"Rear Passenger 4",
-			"Rear Passenger 5",
-			"Rear Passenger 6",
-			"Rear Passenger 7",
-			"Rear Passenger 8",
+			"Front Passenger"			
 		};
 
-		for (int i = 0; i < maxSeats; i++) {
+		for (int i = 0; i < maxSeats; i++) 
+		{
+			SEAT_NAMES.push_back("Rear Passenger " + std::to_string(i + 1));
 
-		MenuItem<int> *item = new MenuItem<int>();
-		item->value = i - 1;
-		item->caption = SEAT_NAMES[i];
-		menuItems.push_back(item);
+			MenuItem<int> *item = new MenuItem<int>();
+			item->value = i - 1;
+			item->caption = SEAT_NAMES[i];
+			menuItems.push_back(item);
 		}
 	}
 	else 
@@ -753,7 +748,7 @@ void update_speed_text(int speed, Vector3 player_coords)
 		float rectWidthScaled = (230 / (float)screen_w) / 2;
 		float rectHeightScaled = (0 + (1 * 18)) / (float)screen_h;
 		
-		int rect_col[4] = { 128, 128, 128, 75.0f };
+		int rect_col[4] = { 128, 128, 128, 75 };
 
 		GRAPHICS::DRAW_RECT(rectXScaled, rectYScaled, rectWidthScaled, rectHeightScaled, rect_col[0], rect_col[1], rect_col[2], rect_col[3]);
 
@@ -777,7 +772,7 @@ void update_speed_text(int speed, Vector3 player_coords)
 			float rectWidthScaled = (230 / (float)screen_w) / 2;
 			float rectHeightScaled = (0 + (1 * 18)) / (float)screen_h;
 
-			int rect_col[4] = { 128, 128, 128, 75.0f };
+			int rect_col[4] = { 128, 128, 128, 75 };
 
 			GRAPHICS::DRAW_RECT(rectXScaled, rectYScaled, rectWidthScaled, rectHeightScaled, rect_col[0], rect_col[1], rect_col[2], rect_col[3]);
 		}
@@ -839,9 +834,7 @@ bool process_message_colour_menu(){
 
 	std::vector<MenuItem<int>*> menuItems;
 
-	MenuItem<int> *item;
 	SelectFromListMenuItem *listItem;
-	ToggleMenuItem<int>* toggleItem;
 
 	int i = 0;
 	
@@ -870,10 +863,7 @@ bool process_value_colour_menu(){
 	std::string caption = "RGB Settings";
 
 	std::vector<MenuItem<int>*> menuItems;
-
-	MenuItem<int> *item;
 	SelectFromListMenuItem *listItem;
-	ToggleMenuItem<int>* toggleItem;
 
 	int i = 0;
 
@@ -992,10 +982,8 @@ bool process_fuel_colour_menu(){
 	std::string caption = "RGB Settings";
 
 	std::vector<MenuItem<int>*> menuItems;
-
-	MenuItem<int> *item;
 	SelectFromListMenuItem *listItem;
-	ToggleMenuItem<int>* toggleItem;
+
 
 	int i = 0;
 

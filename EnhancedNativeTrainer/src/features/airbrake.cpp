@@ -194,7 +194,7 @@ void update_airbrake_text()
 		float rectXScaled = 0 / (float)screen_h;
 		float rectYScaled = 65 / (float)screen_h;
 
-		int rect_col[4] = { 128, 128, 128, 75.0f };
+		int rect_col[4] = { 128, 128, 128, 75 };
 
 		// rect
 		draw_rect(rectXScaled, rectYScaled,
