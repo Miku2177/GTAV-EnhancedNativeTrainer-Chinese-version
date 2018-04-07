@@ -5,6 +5,10 @@
 #include "../features/vehicle_weapons.h"
 #include "../../inc/natives.h"
 
+//warning C4129 : 'D' : unrecognized character escape sequence - Attempting to properly "escape" the string breaks the sound library
+#pragma warning( disable : 4129 )
+
+
 Camera bombCam = NULL;
 
 bool bombDoorOpen;
