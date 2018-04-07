@@ -71,7 +71,7 @@ void read_config_file(){
 				VariantInit(&var);
 				attribNode->get_nodeValue(&var);
 				char* value = _com_util::ConvertBSTRToString(V_BSTR(&var));
-				if(value != 0 && strcmpi(value, "true") == 0){
+				if(value != 0 && _strcmpi(value, "true") == 0){
 					modCtrl = true;
 				}
 			}
@@ -80,7 +80,7 @@ void read_config_file(){
 				VariantInit(&var);
 				attribNode->get_nodeValue(&var);
 				char* value = _com_util::ConvertBSTRToString(V_BSTR(&var));
-				if(value != 0 && strcmpi(value, "true") == 0){
+				if(value != 0 && _strcmpi(value, "true") == 0){
 					modAlt = true;
 				}
 			}
@@ -89,7 +89,7 @@ void read_config_file(){
 				VariantInit(&var);
 				attribNode->get_nodeValue(&var);
 				char* value = _com_util::ConvertBSTRToString(V_BSTR(&var));
-				if(value != 0 && strcmpi(value, "true") == 0){
+				if(value != 0 && _strcmpi(value, "true") == 0){
 					modShift = true;
 				}
 			}
