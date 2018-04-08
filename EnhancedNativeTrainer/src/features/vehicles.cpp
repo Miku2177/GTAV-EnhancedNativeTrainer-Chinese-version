@@ -1878,7 +1878,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			}
 		}
 
-		if ((VEH_LIGHTSOFF_VALUES[lightsOffIndex] > 0 && VEH_LIGHTSOFF_VALUES[lightsOffIndex] < 2 && (time < 6 || time > 21)))
+		if ((VEH_LIGHTSOFF_VALUES[lightsOffIndex] > 0 && VEH_LIGHTSOFF_VALUES[lightsOffIndex] < 2 && (time < 7 || time > 20)))
 		{
 			if (VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(vehlights))
 			{

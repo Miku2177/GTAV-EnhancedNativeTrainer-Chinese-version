@@ -37,6 +37,12 @@ bool featureWorldNoPeds = false;
 bool featureWorldNoPedsUpdated = false;
 bool featureWorldNoTraffic = false;
 bool featureWorldNoTrafficUpdated = false;
+bool featureNoPoliceBlips = false;
+bool featureNoPoliceBlipsUpdated = false;
+bool featureFullMap = false;
+bool featureFullMapUpdated = false;
+bool police_blips_toogle = false;
+bool fullmap_toogle = false;
 
 bool featureWorldRandomCops = true;
 bool featureWorldRandomTrains = true;
@@ -61,7 +67,7 @@ bool featureSnowUpdated = false;
 
 bool featureMPMap = false;
 bool featureMPMapUpdated = false;
-
+bool radar_map_toogle_1, radar_map_toogle_2, radar_map_toogle_3 = false;
 
 std::string lastWeather;
 std::string lastWeatherName;
@@ -69,6 +75,11 @@ std::string lastWeatherName;
 std::string lastClouds;
 std::string lastCloudsName;
 
+// Radar Map Size
+const std::vector<std::string> WORLD_RADAR_MAP_CAPTIONS{ "Normal", "Big", "Full" };
+const std::vector<int> WORLD_RADAR_MAP_VALUES{ 1, 2, 3 };
+int RadarMapIndex = 0;
+bool RadarMapChanged = true;
 
 bool onconfirm_weather_menu(MenuItem<std::string> choice)
 {
@@ -251,6 +262,11 @@ void process_clouds_menu()
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+void onchange_world_radar_map_index(int value, SelectFromListMenuItem* source){
+	RadarMapIndex = value;
+	RadarMapChanged = true;
+}
+
 bool onconfirm_world_menu(MenuItem<int> choice)
 {
 	switch (choice.value)
@@ -278,6 +294,10 @@ void process_world_menu()
 	std::string caption = "World Options";
 
 	std::vector<MenuItem<int>*> menuItems;
+
+	MenuItem<int> *item;
+	SelectFromListMenuItem *listItem;
+	ToggleMenuItem<int>* toggleItem;
 
 	MenuItem<int> *areaItem = new MenuItem<int>();
 	areaItem->isLeaf = false;
@@ -316,6 +336,13 @@ void process_world_menu()
 	togItem->value = 1;
 	togItem->toggleValue = &featureWorldNoTraffic;
 	togItem->toggleValueUpdated = &featureWorldNoTrafficUpdated;
+	menuItems.push_back(togItem);
+
+	togItem = new ToggleMenuItem<int>();
+	togItem->caption = "No Police Blips";
+	togItem->value = 1;
+	togItem->toggleValue = &featureNoPoliceBlips;
+	togItem->toggleValueUpdated = &featureNoPoliceBlipsUpdated;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
@@ -367,6 +394,19 @@ void process_world_menu()
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
+	togItem->caption = "Show Full Map";
+	togItem->value = 1;
+	togItem->toggleValue = &featureFullMap;
+	togItem->toggleValueUpdated = &featureFullMapUpdated;
+	menuItems.push_back(togItem);
+
+	listItem = new SelectFromListMenuItem(WORLD_RADAR_MAP_CAPTIONS, onchange_world_radar_map_index);
+	listItem->wrap = false;
+	listItem->caption = "Radar Map Size";
+	listItem->value = RadarMapIndex;
+	menuItems.push_back(listItem);
+
+	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "Load Online Map";
 	togItem->value = 8;
 	togItem->toggleValue = &featureMPMap;
@@ -381,6 +421,7 @@ void reset_world_globals()
 	activeLineIndexWorld = 0;
 	activeLineIndexWeather = 0;
 	activeLineIndexClouds = 0;
+	RadarMapIndex = 0;
 	lastWeather.clear();
 	lastWeatherName.clear();
 	lastClouds.clear();
@@ -394,6 +435,8 @@ void reset_world_globals()
 
 	featureWorldNoPeds = false;
 	featureWorldNoTraffic = false;
+	featureNoPoliceBlips = false;
+	featureFullMap = false;
 	featureBlackout = false;
 	featureSnow = false;
 	featureMPMap = false;
@@ -407,6 +450,8 @@ void reset_world_globals()
 	featureWorldNoPedsUpdated = 
 	featureWorldMoonGravityUpdated = 
 	featureWorldNoTrafficUpdated = 
+	featureNoPoliceBlipsUpdated =
+	featureFullMapUpdated =
 	featureWorldGarbageTrucksUpdated =
 	featureWorldRandomBoatsUpdated =
 	featureWorldRandomCopsUpdated =
@@ -568,6 +613,49 @@ void update_world_features()
 		STREAMING::SET_PED_POPULATION_BUDGET(0);
 	}
 
+	// No Police Blips
+	if (featureNoPoliceBlips){// && !police_blips_toogle){
+			PLAYER::SET_POLICE_RADAR_BLIPS(false);
+			//police_blips_toogle = true;
+		}
+
+	if (!featureNoPoliceBlips){// && police_blips_toogle) {
+		PLAYER::SET_POLICE_RADAR_BLIPS(true);
+		//police_blips_toogle = false;
+	}
+
+	// Full Map Toggle
+	if (featureFullMap && !fullmap_toogle){
+		UI::_SET_MINIMAP_REVEALED(true);
+		fullmap_toogle = true;
+	}
+
+	if (!featureFullMap && fullmap_toogle) {
+		UI::_SET_MINIMAP_REVEALED(false);
+		fullmap_toogle = false;
+	}
+
+	if (WORLD_RADAR_MAP_VALUES[RadarMapIndex] == 1 && radar_map_toogle_1 == false){
+		UI::_SET_RADAR_BIGMAP_ENABLED(false, false);
+		radar_map_toogle_1 = true;
+		radar_map_toogle_2 = false;
+		radar_map_toogle_3 = false;
+	}
+
+	if (WORLD_RADAR_MAP_VALUES[RadarMapIndex] == 2 && radar_map_toogle_2 == false){
+		UI::_SET_RADAR_BIGMAP_ENABLED(true, false);
+		radar_map_toogle_1 = false;
+		radar_map_toogle_2 = true;
+		radar_map_toogle_3 = false;
+	}
+
+	if (WORLD_RADAR_MAP_VALUES[RadarMapIndex] == 3 && radar_map_toogle_3 == false){
+		UI::_SET_RADAR_BIGMAP_ENABLED(true, true);
+		radar_map_toogle_1 = false;
+		radar_map_toogle_2 = false;
+		radar_map_toogle_3 = true;
+	}
+
 	if (featureWorldNoTrafficUpdated)
 	{
 		VEHICLE::_DISPLAY_DISTANT_VEHICLES(!featureWorldNoTraffic);
@@ -676,6 +764,8 @@ void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* r
 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoPeds", &featureWorldNoPeds, &featureWorldNoPedsUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoTraffic", &featureWorldNoTraffic, &featureWorldNoTrafficUpdated });
+	results->push_back(FeatureEnabledLocalDefinition{ "featureNoPoliceBlips", &featureNoPoliceBlips, &featureNoPoliceBlipsUpdated });
+	results->push_back(FeatureEnabledLocalDefinition{ "featureFullMap", &featureFullMap, &featureFullMapUpdated });
 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureSnow", &featureSnow, &featureSnowUpdated});
 
@@ -688,6 +778,11 @@ void add_world_generic_settings(std::vector<StringPairSettingDBRow>* settings)
 	settings->push_back(StringPairSettingDBRow{ "lastWeatherName", lastWeatherName });
 	settings->push_back(StringPairSettingDBRow{ "lastClouds", lastClouds });
 	settings->push_back(StringPairSettingDBRow{ "lastCloudsName", lastCloudsName });
+}
+
+void add_world_feature_enablements2(std::vector<StringPairSettingDBRow>* results)
+{
+	results->push_back(StringPairSettingDBRow{ "RadarMapIndex", std::to_string(RadarMapIndex) });
 }
 
 void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings)
@@ -710,6 +805,9 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 		else if (setting.name.compare("lastCloudsName") == 0)
 		{
 			lastCloudsName = setting.value;
+		}
+		else if (setting.name.compare("RadarMapIndex") == 0){
+			RadarMapIndex = stoi(setting.value);
 		}
 	}
 }
