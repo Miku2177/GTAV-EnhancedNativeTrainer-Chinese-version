@@ -20,6 +20,16 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\storage\database.h"
 #include <cstdint>
 
+
+
+
+#include "..\..\inc\main.h"
+#include "..\ui_support\menu_functions.h"
+#include "..\ent-enums.h"
+#include "..\utils.h"
+#include "..\common\ENTUtil.h"
+#include <random>
+
 void process_world_menu();
 
 void process_weather_menu();
@@ -30,7 +40,11 @@ void reset_world_globals();
 
 void update_world_features();
 
+void onchange_world_radar_map_index(int value, SelectFromListMenuItem* source);
+
 void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results);
+
+void add_world_feature_enablements2(std::vector<StringPairSettingDBRow>* results);
 
 void add_world_generic_settings(std::vector<StringPairSettingDBRow>* results);
 
