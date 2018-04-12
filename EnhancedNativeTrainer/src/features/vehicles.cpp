@@ -51,6 +51,7 @@ bool LightAlwaysOff = true;
 bool featureNoVehFallOff = false;
 bool featureNoVehFallOffUpdated = false;
 bool featureVehSpeedBoost = false;
+bool featureVehSteerAngle = false;
 bool featureEngineRunning = false;
 bool featureRememberVehicles = false;
 bool featureBlipNumber = true;
@@ -67,10 +68,15 @@ bool featureLockVehicleDoorsUpdated = false;
 bool featureWearHelmetOff = false;
 bool featureWearHelmetOffUpdated = false;
 bool featureVehLightsOn = false, featureVehLightsOnUpdated = false;
+bool window_roll, interior_lights, veh_searching = false;
 int lights = -1, highbeams = -1;
 
 float textX, textY = -1;
 float rectXScaled, rectYScaled = -1;
+
+bool steered_left, steered_right = false;
+Vehicle veh_steering;
+std::vector<Vehicle> STEERING;
 
 // Fuel Option Variables
 bool Car_Refuel = false;
@@ -479,6 +485,36 @@ const std::vector<std::string> VOV_SHALLOW_VALUES[] = { VALUES_EMERGENCY, VALUES
 
 std::string lastCustomVehicleSpawn;
 
+
+void process_window_roll() {
+	Player PlayerPedRoll = PLAYER::PLAYER_PED_ID();
+	
+	if (PED::IS_PED_IN_ANY_VEHICLE(PlayerPedRoll, 1) && window_roll == false) {
+		VEHICLE::ROLL_DOWN_WINDOW(PED::GET_VEHICLE_PED_IS_IN(PlayerPedRoll, true), 0);
+	}
+
+	if (PED::IS_PED_IN_ANY_VEHICLE(PlayerPedRoll, 1) && window_roll == true) {
+		VEHICLE::ROLL_UP_WINDOW(PED::GET_VEHICLE_PED_IS_IN(PlayerPedRoll, true), 0);
+	}
+
+	window_roll = !window_roll;
+}
+
+void interior_light() {
+	Player PlayerPedInterior = PLAYER::PLAYER_PED_ID();
+	Vehicle veh_interior = PED::GET_VEHICLE_PED_IS_USING(PlayerPedInterior);
+	VEHICLE::SET_VEHICLE_INTERIORLIGHT(veh_interior, interior_lights);
+	interior_lights = !interior_lights;
+}
+
+void search_light() {
+	Player PlayerPedSearch = PLAYER::PLAYER_PED_ID();
+	Vehicle veh_interior = PED::GET_VEHICLE_PED_IS_USING(PlayerPedSearch);
+	Vehicle veh_search = PED::GET_VEHICLE_PED_IS_USING(PlayerPedSearch);
+	VEHICLE::SET_VEHICLE_SEARCHLIGHT(veh_search, veh_searching, veh_searching);
+	veh_searching = !veh_searching;
+}
+
 bool onconfirm_vehdoor_menu(MenuItem<int> choice){
 
 	if(choice.value == -1){
@@ -527,12 +563,36 @@ bool onconfirm_vehdoor_menu(MenuItem<int> choice){
 			VEHICLE::SET_VEHICLE_DOORS_LOCKED(veh, featureLockVehicleDoors);
 		}
 	}
-
+	else if (choice.value == -5)//driver window roll
+	{
+		process_window_roll();
+	}
+	else if (choice.value == -6)//all windows down
+	{
+		Vehicle veh_roll = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+		VEHICLE::ROLL_DOWN_WINDOWS(veh_roll);
+	}
+	else if (choice.value == -7)//interior light on/off
+	{
+		interior_light();
+	}
+	else if (choice.value == -8)//search light on/off
+	{
+		search_light();
+	}
+	else if (choice.value == -9)//engine on/off
+	{
+		engineonoff_switching();
+	}
+	else if (choice.value == -10)//kill the engine
+	{
+		engine_kill();
+	}
 	return false;
 }
 
 bool process_veh_door_menu(){
-	std::string caption = "Door Options";
+	std::string caption = "Vehicle Options";
 
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 
@@ -586,10 +646,53 @@ bool process_veh_door_menu(){
 
 	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Lock Vehicle Doors";
-	toggleItem->value = -4;
+	toggleItem->value = -5;
 	toggleItem->toggleValue = &featureLockVehicleDoors;
 	toggleItem->toggleValueUpdated = &featureLockVehicleDoorsUpdated;
 	menuItems.push_back(toggleItem);
+
+	std::vector<MenuItem<int>*> menuItemsRoll;
+
+	MenuItem<int> *item;
+	SelectFromListMenuItem *listItem;
+	
+	int i = 0;
+
+	item = new MenuItem<int>();
+	item->caption = "Driver Window Roll Up/Down";
+	item->value = -5;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "All Windows Down";
+	item->value = -6;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "Interior Light On/Off";
+	item->value = -7;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "Search Light On/Off";
+	item->value = -8;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "Engine Start / Stop";
+	item->value = -9;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "Kill The Engine";
+	item->value = -10;
+	item->isLeaf = true;
+	menuItems.push_back(item);
 
 	return draw_generic_menu<int>(menuItems, &doorOptionsMenuIndex, caption, onconfirm_vehdoor_menu, NULL, NULL);
 }
@@ -1334,13 +1437,10 @@ bool onconfirm_veh_menu(MenuItem<int> choice){
 		case 19: // speed menu
 			process_speed_menu();
 			break;
-		case 24: // speed menu
+		case 24: // fuel menu
 			process_fuel_menu();
 			break;
-		case 25: // speed menu
-			engineonoff_switching();
-			break;
-		case 26: // remember vehicles menu
+		case 25: // remember vehicles menu
 			process_remember_vehicles_menu();
 			break;
 		default:
@@ -1472,7 +1572,7 @@ void process_veh_menu(){
 	menuItems.push_back(toggleItem);
 
 	item = new MenuItem<int>();
-	item->caption = "Door Control";
+	item->caption = "Vehicle Control";
 	item->value = i++;
 	item->isLeaf = false;
 	menuItems.push_back(item);
@@ -1520,16 +1620,16 @@ void process_veh_menu(){
 	menuItems.push_back(item);
 	
 	item = new MenuItem<int>();
-	item->caption = "Engine Start/Stop";
-	item->value = i++;
-	item->isLeaf = true;
-	menuItems.push_back(item);
-
-	item = new MenuItem<int>();
 	item->caption = "Vehicle Tracking";
 	item->value = i++;
 	item->isLeaf = false;
 	menuItems.push_back(item);
+
+	//toggleItem = new ToggleMenuItem<int>();
+	//toggleItem->caption = "Vehicle Steering Angle";
+	//toggleItem->value = i++;
+	//toggleItem->toggleValue = &featureVehSteerAngle;
+	//menuItems.push_back(toggleItem);
 
 	/*
 	toggleItem = new ToggleMenuItem<int>();
@@ -1964,10 +2064,15 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			autocontrol = false;
 		}
 
+		
+		//Vector3 vel = ENTITY::GET_ENTITY_VELOCITY(vehturn);
+		//Vector3 pos = ENTITY::GET_ENTITY_COORDS(vehturn, 1);
+		//Vector3 motion = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(vehturn, pos.x + vel.x, pos.y + vel.y, pos.z + vel.z);
+
 		//std::stringstream ss55;
-		//ss55 << "\n turn_check_left: " << turn_check_left;
-		//ss55 << "\n turn_check_right: " << turn_check_right;
-		//ss55 << "\n controllightsenabled_l: " << controllightsenabled_l;
+		//ss55 << "\n vel: " << vel.y;
+		//ss55 << "\n pos: " << pos.y;
+		//ss55 << "\n motion_y: " << motion.y;
 		//callsPerFrame = 0;
 		//set_status_text_centre_screen(ss55.str());
 
@@ -2110,7 +2215,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	if (bPlayerExists && featureFuel){
 
 		bool refill_button = IsKeyDown(VK_LBUTTON); // REFUEL KEY FOR JERRY CAN
-		bool startrefillKey = IsKeyDown(KeyConfig::KEY_VEH_STARTREFUELING) || IsControllerButtonDown(KeyConfig::KEY_VEH_STARTREFUELING); // REFUEL KEY GAS STATION
+		bool startrefillKey = IsKeyDown(KeyConfig::KEY_VEH_STARTREFUELING) || IsControllerButtonDown(KeyConfig::KEY_VEH_STARTREFUELING); // REFUEL KEY GAS STATION 
 		bool stoprefillKey = IsKeyDown(KeyConfig::KEY_VEH_STOPREFUELING) || IsControllerButtonDown(KeyConfig::KEY_VEH_STOPREFUELING); // STOP REFUELING GAS STATION
 
 		int gasStations[32][3] = { { -71, -1762, 30 }, { -90, 6415, 30 }, { 180, 6603, 30 }, { 819, -1027, 30 }, { 1039, 2669, 39 },
@@ -2676,7 +2781,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
 	if(bPlayerExists){
 		if(featureVehLightsOnUpdated || did_player_just_enter_vehicle(playerPed)){
 			if(featureVehLightsOn){
@@ -2811,6 +2915,7 @@ void reset_vehicle_globals(){
 	
 	featureVehInvincible =
 		featureVehSpeedBoost =
+		featureVehSteerAngle = 
 		featureEngineRunning =
 		featureRememberVehicles =
 		featureFuel = 
@@ -3057,6 +3162,7 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehNoDamage", &featureVehNoDamage, &featureVehInvincibleUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehSpawnInto", &featureVehSpawnInto});
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehSpeedBoost", &featureVehSpeedBoost});
+	results->push_back(FeatureEnabledLocalDefinition{"featureVehSteerAngle", &featureVehSteerAngle});
 	results->push_back(FeatureEnabledLocalDefinition{"featureEngineRunning", &featureEngineRunning});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRememberVehicles", &featureRememberVehicles});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBlipNumber", &featureBlipNumber});

@@ -219,6 +219,15 @@ void trigger_function_for_hotkey_onkeyup(int hotkey)
 	case HKEY_ENGINE_KILL:
 		engine_kill();
 		break;
+	case HKEY_WINDOW_ROLL:
+		process_window_roll();
+		break;
+	case HKEY_INTERIOR_LIGHT:
+		interior_light();
+		break;
+	case HKEY_SEARCH_LIGHT:
+		search_light();
+		break;
 
 	default:
 	{

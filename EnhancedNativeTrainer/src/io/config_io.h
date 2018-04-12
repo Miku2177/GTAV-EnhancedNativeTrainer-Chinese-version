@@ -39,6 +39,8 @@ class KeyConfig{
 	static const std::string KEY_VEH_EMERGENCYBLINK;
 	static const std::string KEY_VEH_STARTREFUELING;
 	static const std::string KEY_VEH_STOPREFUELING;
+	//static const std::string KEY_VEH_WINDOWROLL;
+	//static const std::string KEY_VEH_INTERIORLIGHT;
 
 	static const std::string KEY_AIRBRAKE_UP;
 	static const std::string KEY_AIRBRAKE_DOWN;
