@@ -56,6 +56,9 @@ static const int HKEY_SPEEDLIMITER_SWITCHING = 128;
 static const int HKEY_INVINCIBILITY_SWITCHING = 129;
 static const int HKEY_ENGINEONOFF_SWITCHING = 130;
 static const int HKEY_ENGINE_KILL = 131;
+static const int HKEY_WINDOW_ROLL = 132;
+static const int HKEY_INTERIOR_LIGHT = 133;
+static const int HKEY_SEARCH_LIGHT = 134;
 
 const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "No Function", 0 },
@@ -90,6 +93,9 @@ const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "Toggle Invincibility", HKEY_INVINCIBILITY_SWITCHING },
 	{ "Toggle Engine ON/OFF", HKEY_ENGINEONOFF_SWITCHING },
 	{ "Kill Engine", HKEY_ENGINE_KILL },
+	{ "Driver Window Roll", HKEY_WINDOW_ROLL },
+	{ "Interior Light", HKEY_INTERIOR_LIGHT },
+	{ "Search Light", HKEY_SEARCH_LIGHT },
 	//{ "Drive as Passenger", HKEY_PASSENGER }
 };
 

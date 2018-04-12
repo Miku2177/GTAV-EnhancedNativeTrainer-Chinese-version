@@ -25,6 +25,10 @@ bool featurePlayerRadioUpdated = false;
 bool featureRadioFreeze = false, featureRadioFreezeUpdated = false;
 bool featureRadioAlwaysOff = false;
 bool featureRadioAlwaysOffUpdated = false;
+bool featureWantedMusic = false;
+bool featureWantedMusicUpdated = false;
+bool featureFlyingMusic = false;
+bool featureFlyingMusicUpdated = false;
 
 bool featureMiscLockRadio = false;
 bool featureMiscHideHud = false;
@@ -253,7 +257,7 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 }
 
 void process_misc_menu(){
-	const int lineCount = 8;
+	const int lineCount = 10;
 
 	std::string caption = "Miscellaneous Options";
 
@@ -263,6 +267,8 @@ void process_misc_menu(){
 		{"Next Radio Track", NULL, NULL, true},
 		{"Freeze Radio to Station", nullptr, nullptr, false},
 		{"Radio Always Off", &featureRadioAlwaysOff, &featureRadioAlwaysOffUpdated, true},
+		{"No Wanted Music", &featureWantedMusic, &featureWantedMusicUpdated, true},
+		{"No Flight Music", &featureFlyingMusic, &featureFlyingMusicUpdated, true},
 		{"Hide HUD", &featureMiscHideHud, &featureMiscHideHudUpdated},
 		{"Show HUD If Phone In Hand Only", &featurePhoneShowHud, &featurePhoneShowHudUpdated},
 		{"Reset Player Model on Death", &featureResetPlayerModelOnDeath, nullptr, true}
@@ -278,6 +284,8 @@ void reset_misc_globals(){
 		featureMiscLockRadio =
 		featureMiscJellmanScenery =
 		featureRadioFreeze =
+		featureWantedMusic = 
+		featureFlyingMusic = 
 		featureRadioAlwaysOff = false;
 
 	featureShowVehiclePreviews = true;
@@ -288,6 +296,8 @@ void reset_misc_globals(){
 		featureRadioAlwaysOffUpdated =
 		featureMiscHideHudUpdated =
 		featurePhoneShowHudUpdated =
+		featureWantedMusicUpdated = 
+		featureFlyingMusicUpdated =
 		featurePlayerRadioUpdated = true;
 
 	ENTColor::reset_colors();
@@ -317,6 +327,26 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		}
 		else{
 			AUDIO::SET_MOBILE_RADIO_ENABLED_DURING_GAMEPLAY(false);
+		}
+	}
+
+	// No Wanted Music
+	if (featureWantedMusic || featureWantedMusicUpdated){
+		if (featureWantedMusic){
+			AUDIO::SET_AUDIO_FLAG("WantedMusicDisabled", true);
+		}
+		else{
+			AUDIO::SET_AUDIO_FLAG("WantedMusicDisabled", false);
+		}
+	}
+
+	// No Flying Music
+	if (featureFlyingMusic || featureFlyingMusicUpdated){
+		if (featureFlyingMusic){
+			AUDIO::SET_AUDIO_FLAG("DisableFlightMusic", true);
+		}
+		else{
+			AUDIO::SET_AUDIO_FLAG("DisableFlightMusic", false);
 		}
 	}
 
@@ -380,6 +410,8 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerRadio", &featurePlayerRadio, &featurePlayerRadioUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRadioFreeze", &featureRadioFreeze, &featureRadioFreezeUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRadioAlwaysOff", &featureRadioAlwaysOff, &featureRadioAlwaysOffUpdated});
+	results->push_back(FeatureEnabledLocalDefinition{"featureWantedMUsic", &featureWantedMusic, &featureWantedMusicUpdated});
+	results->push_back(FeatureEnabledLocalDefinition{"featureFlyingMusic", &featureFlyingMusic, &featureFlyingMusicUpdated});
 
 	results->push_back(FeatureEnabledLocalDefinition{"featureMiscLockRadio", &featureMiscLockRadio});
 	results->push_back(FeatureEnabledLocalDefinition{"featureMiscHideHud", &featureMiscHideHud, &featureMiscHideHudUpdated});

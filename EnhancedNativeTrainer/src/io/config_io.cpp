@@ -384,6 +384,8 @@ KeyInputConfig::KeyInputConfig(){
 	this->keyConfigs[KeyConfig::KEY_VEH_EMERGENCYBLINK] = new KeyConfig(VK_DECIMAL);
 	this->keyConfigs[KeyConfig::KEY_VEH_STARTREFUELING] = new KeyConfig(VK_KEY_E);
 	this->keyConfigs[KeyConfig::KEY_VEH_STOPREFUELING] = new KeyConfig(VK_KEY_S);
+	//this->keyConfigs[KeyConfig::KEY_VEH_WINDOWROLL] = new KeyConfig(VK_KEY_Z);
+	//this->keyConfigs[KeyConfig::KEY_VEH_INTERIORLIGHT] = new KeyConfig(VK_KEY_I);
 
 	this->keyConfigs[KeyConfig::KEY_TOGGLE_AIRBRAKE] = new KeyConfig(VK_F6);
 
@@ -467,6 +469,12 @@ KeyInputConfig::KeyInputConfig(){
 
 	this->controllerConfigs[KeyConfig::KEY_VEH_STARTREFUELING] = new ControllerButtonConfig();
 	this->controllerConfigs[KeyConfig::KEY_VEH_STARTREFUELING]->add_button(ControllerButtonConfig::CONTROLLER_BTN_A);
+
+	//this->controllerConfigs[KeyConfig::KEY_VEH_WINDOWROLL] = new ControllerButtonConfig();
+	//this->controllerConfigs[KeyConfig::KEY_VEH_WINDOWROLL]->add_button(ControllerButtonConfig::CONTROLLER_BTN_A);
+
+	//this->controllerConfigs[KeyConfig::KEY_VEH_INTERIORLIGHT] = new ControllerButtonConfig();
+	//this->controllerConfigs[KeyConfig::KEY_VEH_INTERIORLIGHT]->add_button(ControllerButtonConfig::CONTROLLER_BTN_B);
 
 	this->controllerConfigs[KeyConfig::KEY_VEH_STOPREFUELING] = new ControllerButtonConfig();
 	this->controllerConfigs[KeyConfig::KEY_VEH_STOPREFUELING]->add_button(ControllerButtonConfig::CONTROLLER_BTN_B);
@@ -573,6 +581,8 @@ const std::string KeyConfig::KEY_VEH_RIGHTBLINK = std::string("veh_rightblink");
 const std::string KeyConfig::KEY_VEH_EMERGENCYBLINK = std::string("veh_emergencyblink");
 const std::string KeyConfig::KEY_VEH_STARTREFUELING = std::string("veh_startrefueling");
 const std::string KeyConfig::KEY_VEH_STOPREFUELING = std::string("veh_stoprefueling");
+//const std::string KeyConfig::KEY_VEH_WINDOWROLL = std::string("veh_windowroll");
+//const std::string KeyConfig::KEY_VEH_INTERIORLIGHT = std::string("veh_interiorlight");
 
 const std::string KeyConfig::KEY_AIRBRAKE_UP = std::string("airbrake_up");
 const std::string KeyConfig::KEY_AIRBRAKE_DOWN = std::string("airbrake_down");
