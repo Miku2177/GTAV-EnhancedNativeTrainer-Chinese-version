@@ -68,7 +68,7 @@ bool featureLockVehicleDoorsUpdated = false;
 bool featureWearHelmetOff = false;
 bool featureWearHelmetOffUpdated = false;
 bool featureVehLightsOn = false, featureVehLightsOnUpdated = false;
-bool window_roll, interior_lights, veh_searching = false;
+bool window_roll, interior_lights, veh_searching, veh_alarm, veh_brake_toggle = false;
 int lights = -1, highbeams = -1;
 
 float textX, textY = -1;
@@ -347,6 +347,12 @@ const std::vector<int> VEH_BLIPSYMBOL_VALUES{ 1, 6, 7, 8, 10, 11, 12, 13, 14, 15
 int VehBlipSymbolIndex = 0;
 bool VehBlipSymbol_Changed = true;
 
+//Blip Flashing
+const std::vector<std::string> VEH_BLIPFLASH_CAPTIONS{ "OFF", "Mode One", "Mode Two" };
+const std::vector<int> VEH_BLIPFLASH_VALUES{ 0, 1, 2 };
+int VehBlipFlashIndex = 0;
+bool VehBlipFlash_Changed = true;
+
 // player in vehicle state... assume true initially since our quicksave might have us in a vehicle already, in which case we can't check if we just got into one
 bool oldVehicleState = true;
 
@@ -503,16 +509,47 @@ void process_window_roll() {
 void interior_light() {
 	Player PlayerPedInterior = PLAYER::PLAYER_PED_ID();
 	Vehicle veh_interior = PED::GET_VEHICLE_PED_IS_USING(PlayerPedInterior);
-	VEHICLE::SET_VEHICLE_INTERIORLIGHT(veh_interior, interior_lights);
 	interior_lights = !interior_lights;
+	VEHICLE::SET_VEHICLE_INTERIORLIGHT(veh_interior, interior_lights);
 }
 
 void search_light() {
 	Player PlayerPedSearch = PLAYER::PLAYER_PED_ID();
-	Vehicle veh_interior = PED::GET_VEHICLE_PED_IS_USING(PlayerPedSearch);
 	Vehicle veh_search = PED::GET_VEHICLE_PED_IS_USING(PlayerPedSearch);
-	VEHICLE::SET_VEHICLE_SEARCHLIGHT(veh_search, veh_searching, veh_searching);
 	veh_searching = !veh_searching;
+	VEHICLE::SET_VEHICLE_SEARCHLIGHT(veh_search, veh_searching, veh_searching);
+}
+
+//void trailer_attachdetach() {
+//	Player PlayerPedTrailer = PLAYER::PLAYER_PED_ID();
+//	Vehicle veh_trailer = PED::GET_VEHICLE_PED_IS_USING(PlayerPedTrailer);
+//	Vector3 coords_veh_trailer;
+//	Vehicle trailer, trailer_to_attach;
+	//if (!VEHICLE::IS_VEHICLE_ATTACHED_TO_TRAILER(veh_trailer))
+//		coords_veh_trailer = ENTITY::GET_ENTITY_COORDS(veh_trailer, 1);
+//		trailer = VEHICLE::GET_CLOSEST_VEHICLE(coords_veh_trailer.x, coords_veh_trailer.y, coords_veh_trailer.z, 30, 0, 70);
+//		VEHICLE::GET_VEHICLE_TRAILER_VEHICLE(trailer, &trailer_to_attach);
+//		VEHICLE::ATTACH_VEHICLE_TO_TRAILER(veh_trailer, trailer, 30);
+//		worldGetAllVehicles;
+//		set_status_text("Attached");
+//}
+
+void vehicle_alarm() {
+	Player PlayerPedAlarm = PLAYER::PLAYER_PED_ID();
+	Vehicle veh_alarming = PED::GET_VEHICLE_PED_IS_USING(PlayerPedAlarm);
+	if (!VEHICLE::IS_VEHICLE_ALARM_ACTIVATED(veh_alarming)) veh_alarm = false;
+	veh_alarm = !veh_alarm;
+	VEHICLE::SET_VEHICLE_ALARM(veh_alarming, veh_alarm);
+	VEHICLE::START_VEHICLE_ALARM(veh_alarming);
+	WAIT(100);
+}
+
+void vehicle_brake() {
+	Player PlayerPedBrake = PLAYER::PLAYER_PED_ID();
+	Vehicle veh_brake = PED::GET_VEHICLE_PED_IS_USING(PlayerPedBrake);
+	veh_brake_toggle = !veh_brake_toggle;
+	VEHICLE::SET_VEHICLE_HANDBRAKE(veh_brake, veh_brake_toggle);
+	WAIT(100);
 }
 
 bool onconfirm_vehdoor_menu(MenuItem<int> choice){
@@ -588,6 +625,18 @@ bool onconfirm_vehdoor_menu(MenuItem<int> choice){
 	{
 		engine_kill();
 	}
+	else if (choice.value == -11)//vehicle alarm
+	{
+		vehicle_alarm();
+	}
+	else if (choice.value == -12)//vehicle alarm
+	{
+		vehicle_brake();
+	}
+	//else if (choice.value == -13)//attach a trailer
+	//{
+	//	trailer_attachdetach();
+	//}
 	return false;
 }
 
@@ -693,6 +742,24 @@ bool process_veh_door_menu(){
 	item->value = -10;
 	item->isLeaf = true;
 	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "Set Alarm On / Off";
+	item->value = -11;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "Handbrake On / Off";
+	item->value = -12;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	//item = new MenuItem<int>();
+	//item->caption = "Attach / Detach Trailer";
+	//item->value = -13;
+	//item->isLeaf = true;
+	//menuItems.push_back(item);
 
 	return draw_generic_menu<int>(menuItems, &doorOptionsMenuIndex, caption, onconfirm_vehdoor_menu, NULL, NULL);
 }
@@ -1332,7 +1399,7 @@ bool onconfirm_vehicle_remember_menu(MenuItem<int> choice)
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	switch (activeLineIndexRemember){
-	case 6:
+	case 7:
 		del_sel_blip();
 		break;
 	default:
@@ -1380,6 +1447,12 @@ void process_remember_vehicles_menu(){
 	listItem->wrap = false;
 	listItem->caption = "Blip Symbol";
 	listItem->value = VehBlipSymbolIndex;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(VEH_BLIPFLASH_CAPTIONS, onchange_veh_blipflash_index);
+	listItem->wrap = false;
+	listItem->caption = "Blip Flashing";
+	listItem->value = VehBlipFlashIndex;
 	menuItems.push_back(listItem);
 
 	toggleItem = new ToggleMenuItem<int>();
@@ -2710,6 +2783,8 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				UI::SET_BLIP_SPRITE(blip_veh[0], VEH_BLIPSYMBOL_VALUES[VehBlipSymbolIndex]);
 				UI::SET_BLIP_CATEGORY(blip_veh[0], 2);
 				if (featureBlipNumber) UI::SHOW_NUMBER_ON_BLIP(blip_veh[0], BLIPTABLE_VEH.size());
+				if (VEH_BLIPFLASH_VALUES[VehBlipFlashIndex] == 1) UI::SET_BLIP_FLASHES(blip_veh[0], true);
+				if (VEH_BLIPFLASH_VALUES[VehBlipFlashIndex] == 2) UI::SET_BLIP_FLASHES_ALTERNATE(blip_veh[0], true);
 				UI::SET_BLIP_SCALE(blip_veh[0], VEH_BLIPSIZE_VALUES[VehBlipSizeIndex]);
 				UI::SET_BLIP_COLOUR(blip_veh[0], VEH_BLIPCOLOUR_VALUES[VehBlipColourIndex]);
 				UI::SET_BLIP_AS_SHORT_RANGE(blip_veh[0], true);
@@ -2738,6 +2813,8 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				UI::SET_BLIP_SPRITE(blip_veh[0], VEH_BLIPSYMBOL_VALUES[VehBlipSymbolIndex]);
 				UI::SET_BLIP_CATEGORY(blip_veh[0], 2);
 				if (featureBlipNumber) UI::SHOW_NUMBER_ON_BLIP(blip_veh[0], BLIPTABLE_VEH.size());
+				if (VEH_BLIPFLASH_VALUES[VehBlipFlashIndex] == 1) UI::SET_BLIP_FLASHES(blip_veh[0], true);
+				if (VEH_BLIPFLASH_VALUES[VehBlipFlashIndex] == 2) UI::SET_BLIP_FLASHES_ALTERNATE(blip_veh[0], true);
 				UI::SET_BLIP_SCALE(blip_veh[0], VEH_BLIPSIZE_VALUES[VehBlipSizeIndex]);
 				UI::SET_BLIP_COLOUR(blip_veh[0], VEH_BLIPCOLOUR_VALUES[VehBlipColourIndex]);
 				UI::SET_BLIP_AS_SHORT_RANGE(blip_veh[0], true);
@@ -2895,6 +2972,7 @@ void reset_vehicle_globals(){
 	VehBlipSizeIndex = 2;
 	VehBlipColourIndex = 4;
 	VehBlipSymbolIndex = 0;
+	VehBlipFlashIndex = 0;
 	CarConsumptionIndex = 11;
 	BikeConsumptionIndex = 12;
 	BoatConsumptionIndex = 5;
@@ -3590,6 +3668,7 @@ void add_vehicle_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"VehBlipSizeIndex", std::to_string(VehBlipSizeIndex)});
 	results->push_back(StringPairSettingDBRow{"VehBlipColourIndex", std::to_string(VehBlipColourIndex)});
 	results->push_back(StringPairSettingDBRow{"VehBlipSymbolIndex", std::to_string(VehBlipSymbolIndex)});
+	results->push_back(StringPairSettingDBRow{"VehBlipFlashIndex", std::to_string(VehBlipFlashIndex)});
 	results->push_back(StringPairSettingDBRow{"CarConsumptionIndex", std::to_string(CarConsumptionIndex)});
 	results->push_back(StringPairSettingDBRow{"BikeConsumptionIndex", std::to_string(BikeConsumptionIndex)});
 	results->push_back(StringPairSettingDBRow{"BoatConsumptionIndex", std::to_string(BoatConsumptionIndex)});
@@ -3659,6 +3738,9 @@ void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settin
 		}
 		else if (setting.name.compare("VehBlipSymbolIndex") == 0){
 			VehBlipSymbolIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("VehBlipFlashIndex") == 0){
+			VehBlipFlashIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("CarConsumptionIndex") == 0){
 			CarConsumptionIndex = stoi(setting.value);
@@ -3805,6 +3887,10 @@ void onchange_veh_blipcolour_index(int value, SelectFromListMenuItem* source){
 }
 void onchange_veh_blipsymbol_index(int value, SelectFromListMenuItem* source){
 	VehBlipSymbolIndex = value;
+	PositionChanged = true;
+}
+void onchange_veh_blipflash_index(int value, SelectFromListMenuItem* source){
+	VehBlipFlashIndex = value;
 	PositionChanged = true;
 }
 void onchange_fuel_blips_index(int value, SelectFromListMenuItem* source){

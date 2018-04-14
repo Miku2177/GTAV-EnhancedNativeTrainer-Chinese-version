@@ -202,6 +202,8 @@ void onchange_veh_blipcolour_index(int value, SelectFromListMenuItem* source);
 
 void onchange_veh_blipsymbol_index(int value, SelectFromListMenuItem* source);
 
+void onchange_veh_blipflash_index(int value, SelectFromListMenuItem* source);
+
 void onchange_car_consumption_index(int value, SelectFromListMenuItem* source);
 
 void onchange_bike_consumption_index(int value, SelectFromListMenuItem* source);

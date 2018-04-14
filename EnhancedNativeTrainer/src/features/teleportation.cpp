@@ -2257,7 +2257,6 @@ void teleport_to_vehicle_in_sight(){
 				if (nearbyPed[offsettedID] != NULL && ENTITY::DOES_ENTITY_EXIST(nearbyPed[offsettedID]) && PED::IS_PED_IN_ANY_VEHICLE(nearbyPed[offsettedID], 1))
 				{
 					ENTITY::GET_ENTITY_HEADING(playerPed);
-					//Vector3 coords_me = ENTITY::GET_ENTITY_COORDS(nearbyPed[offsettedID], true);
 					Vector3 coords_me = ENTITY::GET_ENTITY_COORDS(playerPed, true);
 					Vehicle veh2 = PED::GET_VEHICLE_PED_IS_IN(nearbyPed[offsettedID], true);
 					
