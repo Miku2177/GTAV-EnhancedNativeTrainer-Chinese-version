@@ -25,10 +25,17 @@ bool featurePlayerRadioUpdated = false;
 bool featureRadioFreeze = false, featureRadioFreezeUpdated = false;
 bool featureRadioAlwaysOff = false;
 bool featureRadioAlwaysOffUpdated = false;
+bool featureBoostRadio = false;
+bool featureBoostRadioUpdated = false;
 bool featureWantedMusic = false;
 bool featureWantedMusicUpdated = false;
 bool featureFlyingMusic = false;
 bool featureFlyingMusicUpdated = false;
+bool featurePoliceScanner = false;
+bool featurePoliceScannerUpdated = false;
+bool featurePoliceRadio = false;
+bool featurePoliceRadioUpdated = false;
+bool police_radio_check = false;
 
 bool featureMiscLockRadio = false;
 bool featureMiscHideHud = false;
@@ -257,7 +264,7 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 }
 
 void process_misc_menu(){
-	const int lineCount = 10;
+	const int lineCount = 12;
 
 	std::string caption = "Miscellaneous Options";
 
@@ -267,8 +274,11 @@ void process_misc_menu(){
 		{"Next Radio Track", NULL, NULL, true},
 		{"Freeze Radio to Station", nullptr, nullptr, false},
 		{"Radio Always Off", &featureRadioAlwaysOff, &featureRadioAlwaysOffUpdated, true},
+		//{"Boost Radio Sound", &featureBoostRadio, &featureBoostRadioUpdated, true},
+		{"Radio In Police Vehicle", &featurePoliceRadio, &featurePoliceRadioUpdated, true},
 		{"No Wanted Music", &featureWantedMusic, &featureWantedMusicUpdated, true},
 		{"No Flight Music", &featureFlyingMusic, &featureFlyingMusicUpdated, true},
+		{"No Police Scanner", &featurePoliceScanner, &featurePoliceScannerUpdated, true },
 		{"Hide HUD", &featureMiscHideHud, &featureMiscHideHudUpdated},
 		{"Show HUD If Phone In Hand Only", &featurePhoneShowHud, &featurePhoneShowHudUpdated},
 		{"Reset Player Model on Death", &featureResetPlayerModelOnDeath, nullptr, true}
@@ -286,6 +296,9 @@ void reset_misc_globals(){
 		featureRadioFreeze =
 		featureWantedMusic = 
 		featureFlyingMusic = 
+		featurePoliceScanner = 
+		featureBoostRadio = 
+		featurePoliceRadio =
 		featureRadioAlwaysOff = false;
 
 	featureShowVehiclePreviews = true;
@@ -298,6 +311,9 @@ void reset_misc_globals(){
 		featurePhoneShowHudUpdated =
 		featureWantedMusicUpdated = 
 		featureFlyingMusicUpdated =
+		featurePoliceScannerUpdated = 
+		featureBoostRadioUpdated = 
+		featurePoliceRadioUpdated = 
 		featurePlayerRadioUpdated = true;
 
 	ENTColor::reset_colors();
@@ -350,6 +366,58 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		}
 	}
 
+	// No Police Scanner
+	if (featurePoliceScanner || featurePoliceScannerUpdated){
+		if (featurePoliceScanner){
+			AUDIO::SET_AUDIO_FLAG("PoliceScannerDisabled", true);
+		}
+		else{
+			AUDIO::SET_AUDIO_FLAG("PoliceScannerDisabled", false);
+		}
+	}
+
+	// Radio Boost
+	if (featureBoostRadio || featureBoostRadioUpdated){
+		if (featureBoostRadio){
+			if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
+				Vehicle playerVeh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+				AUDIO::SET_VEHICLE_RADIO_LOUD(playerVeh, true);
+				AUDIO::SET_VEHICLE_BOOST_ACTIVE(playerVeh, true);
+				set_status_text("Radio Boost On");
+			}
+		}
+	}
+	if (!featureBoostRadio) AUDIO::SET_VEHICLE_BOOST_ACTIVE(PED::GET_VEHICLE_PED_IS_USING(playerPed), 0);
+
+	// Radio In Police Vehicles
+	if (featurePoliceRadio || featurePoliceRadioUpdated){
+		if (featurePoliceRadio){
+			Vehicle playerVeh = PED::GET_VEHICLE_PED_IS_IN(playerPed, 1);
+			Vector3 coords_radio = ENTITY::GET_ENTITY_COORDS(playerVeh, 1);
+			Vector3 coords_radio_2 = ENTITY::GET_ENTITY_COORDS(playerPed, 1);
+			if (PED::IS_PED_IN_ANY_POLICE_VEHICLE(playerPed) && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(playerVeh)){
+				police_radio_check = true;
+				AUDIO::SET_VEHICLE_RADIO_ENABLED(playerVeh, true);
+				AUDIO::SET_MOBILE_PHONE_RADIO_STATE(true);
+				AUDIO::SET_MOBILE_RADIO_ENABLED_DURING_GAMEPLAY(true);
+				AUDIO::SET_RADIO_AUTO_UNFREEZE(true);
+				AUDIO::SET_USER_RADIO_CONTROL_ENABLED(true);
+			}
+			
+			if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1)) if (!PED::IS_PED_IN_ANY_POLICE_VEHICLE(playerPed)) police_radio_check = false;
+
+			if (GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(coords_radio.x, coords_radio.y, coords_radio.z, coords_radio_2.x, coords_radio_2.y, coords_radio_2.z, false) < 3 && 
+				VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(playerVeh) && police_radio_check)
+			{
+				AUDIO::SET_VEHICLE_RADIO_ENABLED(playerVeh, true);
+				AUDIO::SET_MOBILE_PHONE_RADIO_STATE(true);
+				AUDIO::SET_MOBILE_RADIO_ENABLED_DURING_GAMEPLAY(true);
+				AUDIO::SET_RADIO_AUTO_UNFREEZE(true);
+				AUDIO::SET_USER_RADIO_CONTROL_ENABLED(true);
+			}
+		}
+	}
+	
 	// Freeze radio to station
 	if (featureRadioFreeze){
 		if (AUDIO::GET_PLAYER_RADIO_STATION_INDEX() != radioStationIndex){
@@ -410,9 +478,12 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerRadio", &featurePlayerRadio, &featurePlayerRadioUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRadioFreeze", &featureRadioFreeze, &featureRadioFreezeUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRadioAlwaysOff", &featureRadioAlwaysOff, &featureRadioAlwaysOffUpdated});
+	results->push_back(FeatureEnabledLocalDefinition{"featureBoostRadio", &featureBoostRadio, &featureBoostRadioUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureWantedMUsic", &featureWantedMusic, &featureWantedMusicUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureFlyingMusic", &featureFlyingMusic, &featureFlyingMusicUpdated});
-
+	results->push_back(FeatureEnabledLocalDefinition{"featurePoliceScanner", &featurePoliceScanner, &featurePoliceScannerUpdated});
+	results->push_back(FeatureEnabledLocalDefinition{"featurePoliceRadio", &featurePoliceRadio, &featurePoliceRadioUpdated});
+	
 	results->push_back(FeatureEnabledLocalDefinition{"featureMiscLockRadio", &featureMiscLockRadio});
 	results->push_back(FeatureEnabledLocalDefinition{"featureMiscHideHud", &featureMiscHideHud, &featureMiscHideHudUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePhoneShowHud", &featurePhoneShowHud, &featurePhoneShowHudUpdated});
