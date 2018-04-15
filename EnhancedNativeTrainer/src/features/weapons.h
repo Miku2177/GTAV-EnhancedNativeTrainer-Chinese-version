@@ -243,6 +243,8 @@ void update_vehicle_guns();
 
 void save_player_weapons();
 
+void give_all_weapons_hotkey();
+
 void restore_player_weapons();
 
 bool is_weapon_equipped(std::vector<int> extras);

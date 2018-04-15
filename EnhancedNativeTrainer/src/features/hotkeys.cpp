@@ -228,6 +228,9 @@ void trigger_function_for_hotkey_onkeyup(int hotkey)
 	case HKEY_SEARCH_LIGHT:
 		search_light();
 		break;
+	case HKEY_GIVE_ALL_WEAPONS:
+		give_all_weapons_hotkey();
+		break;
 
 	default:
 	{

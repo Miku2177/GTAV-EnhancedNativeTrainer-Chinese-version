@@ -240,6 +240,25 @@ void onchange_revolver_appearance(int value, SelectFromListMenuItem* source){
 	}
 }
 
+void give_all_weapons_hotkey() {
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	for (int a = 0; a < sizeof(VOV_WEAPON_VALUES) / sizeof(VOV_WEAPON_VALUES[0]); a++){
+		for (int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++){
+			char *weaponName = (char*)VOV_WEAPON_VALUES[a].at(b).c_str();
+			Hash weaponHash = GAMEPLAY::GET_HASH_KEY(weaponName);
+			int clipMax = WEAPON::GET_MAX_AMMO_IN_CLIP(playerPed, weaponHash, true); clipMax = min(clipMax, 250);
+			WEAPON::GIVE_WEAPON_TO_PED(playerPed, weaponHash, clipMax * 2, false, false);
+		}
+	}
+
+	// parachute
+	WEAPON::GIVE_WEAPON_TO_PED(playerPed, PARACHUTE_ID, 1, false, false);
+	PLAYER::SET_PLAYER_HAS_RESERVE_PARACHUTE(playerPed);
+
+	set_status_text("All weapons added");
+
+}
+
 int get_current_revolver_appearance(){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	int weapHash = GAMEPLAY::GET_HASH_KEY("WEAPON_REVOLVER");
