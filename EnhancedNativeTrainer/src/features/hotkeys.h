@@ -59,6 +59,7 @@ static const int HKEY_ENGINE_KILL = 131;
 static const int HKEY_WINDOW_ROLL = 132;
 static const int HKEY_INTERIOR_LIGHT = 133;
 static const int HKEY_SEARCH_LIGHT = 134;
+static const int HKEY_GIVE_ALL_WEAPONS = 135;
 
 const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "No Function", 0 },
@@ -96,6 +97,7 @@ const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "Driver Window Roll", HKEY_WINDOW_ROLL },
 	{ "Interior Light", HKEY_INTERIOR_LIGHT },
 	{ "Search Light", HKEY_SEARCH_LIGHT },
+	{ "Give All Weapons", HKEY_GIVE_ALL_WEAPONS },
 	//{ "Drive as Passenger", HKEY_PASSENGER }
 };
 
