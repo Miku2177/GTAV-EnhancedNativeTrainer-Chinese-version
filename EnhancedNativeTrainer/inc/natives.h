@@ -2830,6 +2830,8 @@ namespace WEAPON
 	static int GET_PED_WEAPON_TINT_INDEX(Ped ped, Hash weaponHash) { return invoke<int>(0x2B9EEDC07BD06B9F, ped, weaponHash); } // 0x2B9EEDC07BD06B9F 0x3F9C90A7
 	static void SET_WEAPON_OBJECT_TINT_INDEX(Object weapon, int tintIndex) { invoke<Void>(0xF827589017D4E4A9, weapon, tintIndex); } // 0xF827589017D4E4A9 0x44ACC1DA
 	static int GET_WEAPON_OBJECT_TINT_INDEX(Object weapon) { return invoke<int>(0xCD183314F7CD2E57, weapon); } // 0xCD183314F7CD2E57 0xD91D9576
+	static void SET_WEAPON_LIVERY_COLOUR(Ped playerPed, Hash CurrWeaponHash, Hash componentHash, int colourIndex) { invoke<Void>(0x9FE5633880ECD8ED, playerPed, CurrWeaponHash, componentHash, colourIndex); } //0x9FE5633880ECD8ED
+	static int GET_WEAPON_LIVERY_COLOUR(Ped playerPed, Hash CurrWeaponHash, Hash componentHash) { return invoke<Any>(0xF0A60040BE558F2D, playerPed, CurrWeaponHash, componentHash); } //0xF0A60040BE558F2D
 	static int GET_WEAPON_TINT_COUNT(Hash weaponHash) { return invoke<int>(0x5DCF6C5CAB2E9BF7, weaponHash); } // 0x5DCF6C5CAB2E9BF7 0x99E4EAAB
 	static BOOL GET_WEAPON_HUD_STATS(Hash weaponHash, int* outData) { return invoke<BOOL>(0xD92C739EE34C9EBA, weaponHash, outData); } // 0xD92C739EE34C9EBA 0xA9AD3D98
 	static BOOL GET_WEAPON_COMPONENT_HUD_STATS(Hash componentHash, int* outData) { return invoke<BOOL>(0xB3CAF387AE12E9F8, componentHash, outData); } // 0xB3CAF387AE12E9F8 0xBB5498F4
