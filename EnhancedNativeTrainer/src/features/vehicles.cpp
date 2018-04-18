@@ -654,17 +654,17 @@ bool process_veh_door_menu(){
 	std::vector<int>menuIndexes;
 
 	std::vector<std::string> DOOR_NAMES = {
-		"Front Left",
-		"Front Right",
-		"Rear Left",
-		"Rear Right",
+		"Front Left Door",
+		"Front Right Door",
+		"Rear Left Door",
+		"Rear Right Door",
 		"Hood",
 		"Trunk ",
 		"Trunk 2"
 	};
 
 	ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Toggle Open Instantly";
+	toggleItem->caption = "Toggle Open Door Instantly";
 	toggleItem->toggleValue = &featureVehicleDoorInstant;
 	menuItems.push_back(toggleItem);
 
@@ -708,7 +708,6 @@ bool process_veh_door_menu(){
 	std::vector<MenuItem<int>*> menuItemsRoll;
 
 	MenuItem<int> *item;
-	SelectFromListMenuItem *listItem;
 	
 	int i = 0;
 
@@ -737,7 +736,7 @@ bool process_veh_door_menu(){
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Engine Start / Stop";
+	item->caption = "Engine Start/Stop";
 	item->value = -9;
 	item->isLeaf = true;
 	menuItems.push_back(item);
@@ -749,13 +748,13 @@ bool process_veh_door_menu(){
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Set Alarm On / Off";
+	item->caption = "Set Alarm On/Off";
 	item->value = -11;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Handbrake On / Off";
+	item->caption = "Handbrake On/Off";
 	item->value = -12;
 	item->isLeaf = true;
 	menuItems.push_back(item);
@@ -780,9 +779,9 @@ bool onconfirm_seat_menu(MenuItem<int> choice) {
 
 			PED::SET_PED_INTO_VEHICLE(playerPed, veh, value);
 		}
-		else {
+		/*else {
 			set_status_text("Player isn't in a vehicle");
-		}
+		}*/
 	return false;
 }
 

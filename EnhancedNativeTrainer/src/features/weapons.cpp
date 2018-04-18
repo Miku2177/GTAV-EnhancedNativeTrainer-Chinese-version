@@ -1334,30 +1334,44 @@ bool onconfirm_weapon_mod_menu_tint(MenuItem<int> choice){
 	return true;
 }
 
-void onconfirm_open_tint_menu(MenuItem<int> choice){
+void onconfirm_open_tint_menu(MenuItem<int> choice) {
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
-
-	std::vector<MenuItem<int>*> menuItems;
-	for(int i = 0; i < VALUES_TINT.size(); i++){
-		MenuItem<int> *item = new MenuItem<int>();
-		item->caption = CAPTIONS_TINT[i];
-		item->value = VALUES_TINT[i];
-		menuItems.push_back(item);
-	}
+	int tintSelection = 0;
+	std::vector<std::string> CAPTIONS_TINT_TEST{};
 
 	std::string weaponValue = VOV_WEAPON_VALUES[lastSelectedWeaponCategory].at(lastSelectedWeapon);
-	char *weaponChar = (char*) weaponValue.c_str();
+	char *weaponChar = (char*)weaponValue.c_str();
 	int weapHash = GAMEPLAY::GET_HASH_KEY(weaponChar);
+	std::vector<MenuItem<int>*> menuItems;
 
-	int tintSelection = 0;
-	for(int i = 0; i < WEAPONTYPES_TINT.size(); i++){
-		if(WEAPON::GET_PED_WEAPON_TINT_INDEX(playerPed, weapHash) == VALUES_TINT[i]){
-			tintSelection = i;
-			break;
+	if (WEAPON::GET_WEAPON_TINT_COUNT(weapHash) <= 8)
+	{
+		for (int i = 0; i < VALUES_TINT.size(); i++) {
+			MenuItem<int> *item = new MenuItem<int>();
+			item->caption = CAPTIONS_TINT[i];
+			item->value = VALUES_TINT[i];
+			menuItems.push_back(item);
 		}
 	}
+	else
+	{
+		for (int i = 0; i < VALUES_TINT_MK2.size(); i++) {
+			MenuItem<int> *item = new MenuItem<int>();
+			item->caption = CAPTIONS_TINT_MK2[i];
+			item->value = VALUES_TINT_MK2[i];
+			menuItems.push_back(item);
+		}
 
-	draw_generic_menu<int>(menuItems, &tintSelection, "Select Tint Color", onconfirm_weapon_mod_menu_tint, onhighlight_weapon_mod_menu_tint, NULL);
+		int tintSelection = 0;
+		for (int i = 0; i < WEAPONTYPES_TINT.size(); i++) {
+			if (WEAPON::GET_PED_WEAPON_TINT_INDEX(playerPed, weapHash) == VALUES_TINT_MK2[i]) {
+				tintSelection = i;
+				break;
+			}
+		}
+
+		draw_generic_menu<int>(menuItems, &tintSelection, "Select Tint Color", onconfirm_weapon_mod_menu_tint, onhighlight_weapon_mod_menu_tint, NULL);
+	}
 }
 
 void add_weapon_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){

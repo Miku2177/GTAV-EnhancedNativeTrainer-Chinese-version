@@ -297,9 +297,7 @@ void process_world_menu()
 
 	std::vector<MenuItem<int>*> menuItems;
 
-	MenuItem<int> *item;
 	SelectFromListMenuItem *listItem;
-	ToggleMenuItem<int>* toggleItem;
 
 	MenuItem<int> *areaItem = new MenuItem<int>();
 	areaItem->isLeaf = false;
