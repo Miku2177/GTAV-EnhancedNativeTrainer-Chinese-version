@@ -39,6 +39,8 @@ bool featureWorldNoTraffic = false;
 bool featureWorldNoTrafficUpdated = false;
 bool featureNoPoliceBlips = false;
 bool featureNoPoliceBlipsUpdated = false;
+bool featureWorldNoAnimals = false;
+bool featureWorldNoAnimalsUpdated = false;
 bool featureFullMap = false;
 bool featureFullMapUpdated = false;
 bool police_blips_toogle = false;
@@ -436,6 +438,7 @@ void reset_world_globals()
 	featureWorldNoPeds = false;
 	featureWorldNoTraffic = false;
 	featureNoPoliceBlips = false;
+	featureWorldNoAnimals = false;
 	featureFullMap = false;
 	featureBlackout = false;
 	featureSnow = false;
@@ -451,6 +454,7 @@ void reset_world_globals()
 	featureWorldMoonGravityUpdated = 
 	featureWorldNoTrafficUpdated = 
 	featureNoPoliceBlipsUpdated =
+	featureWorldNoAnimalsUpdated =
 	featureFullMapUpdated =
 	featureWorldGarbageTrucksUpdated =
 	featureWorldRandomBoatsUpdated =
@@ -765,6 +769,7 @@ void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* r
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoPeds", &featureWorldNoPeds, &featureWorldNoPedsUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoTraffic", &featureWorldNoTraffic, &featureWorldNoTrafficUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNoPoliceBlips", &featureNoPoliceBlips, &featureNoPoliceBlipsUpdated });
+	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoAnimals", &featureWorldNoAnimals, &featureWorldNoAnimalsUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureFullMap", &featureFullMap, &featureFullMapUpdated });
 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureSnow", &featureSnow, &featureSnowUpdated});

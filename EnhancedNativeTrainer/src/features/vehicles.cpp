@@ -53,8 +53,7 @@ bool featureNoVehFallOffUpdated = false;
 bool featureVehSpeedBoost = false;
 bool featureVehSteerAngle = false;
 bool featureEngineRunning = false;
-bool featureRememberVehicles = false;
-bool featureBlipNumber = true;
+bool featureNoVehFlip = false;
 bool featureFuel = false;
 bool featureBlips = false;
 bool featureBlipsPhone = false;
@@ -103,6 +102,12 @@ std::vector<Blip> BLIPTABLE_VEH;
 std::vector<Vehicle> VEHICLES_REMEMBER;
 bool been_already = false;
 Vehicle curr_veh_remember;
+Ped old_playerPed_Tracking = -1;
+bool featureRememberVehicles = false;
+bool featureDeleteTrackedVehicles = true;
+bool featureDeleteTrackedVehicles_Emptied = false;
+bool featureDeleteTrackedVehicles_CharacterChanged = false;
+bool featureBlipNumber = true;
 //
 
 bool featureDespawnScriptDisabled = false;
@@ -1399,7 +1404,7 @@ bool onconfirm_vehicle_remember_menu(MenuItem<int> choice)
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	switch (activeLineIndexRemember){
-	case 7:
+	case 9:
 		del_sel_blip();
 		break;
 	default:
@@ -1423,6 +1428,18 @@ void process_remember_vehicles_menu(){
 	toggleItem->caption = "Enabled";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureRememberVehicles;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Delete Tracked Vehicles On Disable";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureDeleteTrackedVehicles;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Del Tracked Vehicles On Character Change";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureDeleteTrackedVehicles_CharacterChanged; 
 	menuItems.push_back(toggleItem);
 
 	listItem = new SelectFromListMenuItem(VEH_VEHREMEMBER_CAPTIONS, onchange_veh_remember_index);
@@ -1704,14 +1721,11 @@ void process_veh_menu(){
 	//toggleItem->toggleValue = &featureVehSteerAngle;
 	//menuItems.push_back(toggleItem);
 
-	/*
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Lock Vehicle Doors";
+	toggleItem->caption = "Realistic Crashes";
 	toggleItem->value = i++;
-	toggleItem->toggleValue = &featureLockVehicleDoors;
-	toggleItem->toggleValueUpdated = &featureLockVehicleDoorsUpdated;
+	toggleItem->toggleValue = &featureNoVehFlip;
 	menuItems.push_back(toggleItem);
-	*/
 
 	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Force Vehicle Lights On";
@@ -2768,11 +2782,54 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 /////////////////////////////////////////////  REMEMBER VEHICLES /////////////////////////////////////////////////////////////
 	
+	Ped playerPed_Tracking = PLAYER::PLAYER_PED_ID();
+
 	if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && been_already == true)
 	{
 		been_already = false;
 	}
 	
+	if (!VEHICLES_REMEMBER.empty() && !featureDeleteTrackedVehicles && featureDeleteTrackedVehicles_Emptied == false)
+	{
+		for (int i = 0; i < VEHICLES_REMEMBER.size(); i++)
+		{
+			blip_veh[0] = UI::ADD_BLIP_FOR_ENTITY(VEHICLES_REMEMBER[i]);
+			UI::SET_BLIP_AS_FRIENDLY(blip_veh[0], true);
+			UI::SET_BLIP_SPRITE(blip_veh[0], VEH_BLIPSYMBOL_VALUES[VehBlipSymbolIndex]);
+			UI::SET_BLIP_CATEGORY(blip_veh[0], 2);
+			if (featureBlipNumber) UI::SHOW_NUMBER_ON_BLIP(blip_veh[0], BLIPTABLE_VEH.size());
+			if (VEH_BLIPFLASH_VALUES[VehBlipFlashIndex] == 1) UI::SET_BLIP_FLASHES(blip_veh[0], true);
+			if (VEH_BLIPFLASH_VALUES[VehBlipFlashIndex] == 2) UI::SET_BLIP_FLASHES_ALTERNATE(blip_veh[0], true);
+			UI::SET_BLIP_SCALE(blip_veh[0], VEH_BLIPSIZE_VALUES[VehBlipSizeIndex]);
+			UI::SET_BLIP_COLOUR(blip_veh[0], VEH_BLIPCOLOUR_VALUES[VehBlipColourIndex]);
+			UI::SET_BLIP_AS_SHORT_RANGE(blip_veh[0], true);
+			BLIPTABLE_VEH.push_back(blip_veh[0]);
+			featureDeleteTrackedVehicles_Emptied = true;
+		}
+	}
+
+	if (featureRememberVehicles && featureDeleteTrackedVehicles_CharacterChanged && playerPed_Tracking != old_playerPed_Tracking)
+	{
+		if (!BLIPTABLE_VEH.empty()) {
+			for (int i = 0; i < BLIPTABLE_VEH.size(); i++) {
+				if (UI::DOES_BLIP_EXIST(BLIPTABLE_VEH[i])) {
+					UI::REMOVE_BLIP(&BLIPTABLE_VEH[i]);
+				}
+			}
+			BLIPTABLE_VEH.clear();
+			BLIPTABLE_VEH.shrink_to_fit();
+			featureDeleteTrackedVehicles_Emptied = false;
+		}
+
+		if (!VEHICLES_REMEMBER.empty()) {
+			for (int i = 0; i < VEHICLES_REMEMBER.size(); i++) {
+				VEHICLE::DELETE_VEHICLE(&VEHICLES_REMEMBER[i]);
+			}
+			VEHICLES_REMEMBER.clear();
+			VEHICLES_REMEMBER.shrink_to_fit();
+		}
+	}
+
 	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && featureRememberVehicles){
 			Vehicle veh_rem = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 			
@@ -2792,15 +2849,17 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				VEHICLES_REMEMBER.push_back(veh_rem);
 				ENTITY::SET_ENTITY_AS_MISSION_ENTITY(veh_rem, true, true);
 				curr_veh_remember = veh_rem;
+				featureDeleteTrackedVehicles_Emptied = true;
+				old_playerPed_Tracking = playerPed_Tracking;
 			}
-
+			 
 			for (int i = 0; i < VEHICLES_REMEMBER.size(); i++) {
 				if (VEHICLES_REMEMBER[i] == veh_rem)
 				{
 					been_already = true;
 					curr_veh_remember = veh_rem;
 				}
-			}
+			} 
 
 			if (curr_veh_remember != veh_rem) {
 				been_already = false;
@@ -2845,17 +2904,27 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			}
 			BLIPTABLE_VEH.clear();
 			BLIPTABLE_VEH.shrink_to_fit();
+			featureDeleteTrackedVehicles_Emptied = false;
 			}
 			
-			if (!VEHICLES_REMEMBER.empty()) {
+			if (featureDeleteTrackedVehicles && !VEHICLES_REMEMBER.empty()) {
 				for (int i = 0; i < VEHICLES_REMEMBER.size(); i++) {
 					VEHICLE::DELETE_VEHICLE(&VEHICLES_REMEMBER[i]);
 				}
 				VEHICLES_REMEMBER.clear();
 				VEHICLES_REMEMBER.shrink_to_fit();
 			}
-		}
+		} 
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////// NO VEHICLE FLIP //////////////////////////////////////////////////////
+
+	if (featureNoVehFlip && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1)) {
+		if (ENTITY::GET_ENTITY_ROLL(PED::GET_VEHICLE_PED_IS_IN(playerPed, 1)) > 90 || ENTITY::GET_ENTITY_ROLL(PED::GET_VEHICLE_PED_IS_IN(playerPed, 1)) < -90)
+			VEHICLE::SET_VEHICLE_OUT_OF_CONTROL(PED::GET_VEHICLE_PED_IS_IN(playerPed, 1), false, false);
+	}
+	
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	if(bPlayerExists){
@@ -2984,7 +3053,7 @@ void reset_vehicle_globals(){
 	Random1Index = 1;
 	Random2Index = 1;
 	BarPositionIndex = 0;
-
+	
 	featureAltitude = true;
 	featureSpeedOnFoot =
 	featureKMH =
@@ -2995,6 +3064,7 @@ void reset_vehicle_globals(){
 		featureVehSpeedBoost =
 		featureVehSteerAngle = 
 		featureEngineRunning =
+		featureNoVehFlip =
 		featureRememberVehicles =
 		featureFuel = 
 		featureBlips =
@@ -3005,6 +3075,7 @@ void reset_vehicle_globals(){
 		featureVehSpawnInto =
 		featureNoVehFallOff =
 		featureWearHelmetOff =
+		featureDeleteTrackedVehicles_CharacterChanged = 
 		featureVehLightsOn = false;
 
 	featureLockVehicleDoorsUpdated =
@@ -3013,6 +3084,7 @@ void reset_vehicle_globals(){
 		featureWearHelmetOffUpdated =
 		featureVehInvincibleUpdated =
 		featureWearHelmetOffUpdated =
+		featureDeleteTrackedVehicles = 
 		featureVehLightsOnUpdated = true;
 
 	featureDespawnScriptDisabled = false;
@@ -3242,7 +3314,10 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehSpeedBoost", &featureVehSpeedBoost});
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehSteerAngle", &featureVehSteerAngle});
 	results->push_back(FeatureEnabledLocalDefinition{"featureEngineRunning", &featureEngineRunning});
+	results->push_back(FeatureEnabledLocalDefinition{"featureNoVehFlip", &featureNoVehFlip});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRememberVehicles", &featureRememberVehicles});
+	results->push_back(FeatureEnabledLocalDefinition{"featureDeleteTrackedVehicles", &featureDeleteTrackedVehicles});
+	results->push_back(FeatureEnabledLocalDefinition{"featureDeleteTrackedVehicles_CharacterChanged", &featureDeleteTrackedVehicles_CharacterChanged});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBlipNumber", &featureBlipNumber});
 	results->push_back(FeatureEnabledLocalDefinition{"featureFuel", &featureFuel});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBlips", &featureBlips});

@@ -78,8 +78,17 @@ bool engine_running = true;
 bool engine_switched = false;
 bool engine_killed = false;
 
+bool featurePlayerLife = false;
+bool featurePlayerLifeUpdated = true;
+bool featurePlayerLife_Died = false;
+bool featurePlayerLife_Changed = false;
+
 bool featureNoRagdoll = false;
 bool featureNoRagdollUpdated = false;
+
+Ped oldplayerPed = -1;
+int tick, playerDataMenuIndex = 0;
+int death_time2 = -1;
 
 int  frozenWantedLevel = 0;
 
@@ -102,6 +111,18 @@ const std::vector<float> REGEN_VALUES{0.0f, 0.1f, 0.25f, 0.5f, 1.0f, 2.0f, 5.0f,
 const int REGEN_DEFAULT = 4;
 int regenIndex = REGEN_DEFAULT;
 
+//Player Health
+const std::vector<std::string> PLAYER_HEALTH_CAPTIONS{ "1", "10", "20", "30", "40", "50", "100", "200", "300", "500", "1000", "5000", "10000", "20000", "30000" };
+const std::vector<double> PLAYER_HEALTH_VALUES{ 101, 110, 120, 130, 140, 150, 200, 300, 400, 600, 1100, 5100, 10100, 20100, 30100 };
+int current_player_health = 2;
+bool current_player_health_Changed = true;
+
+//Player Armor
+const std::vector<std::string> PLAYER_ARMOR_CAPTIONS{ "0", "15", "20", "30", "40", "50", "100" };
+const std::vector<double> PLAYER_ARMOR_VALUES{ 0, 15, 20, 30, 40, 50, 100 };
+int current_player_armor = 6;
+bool current_player_armor_Changed = true;
+
 /* Prop unblocker related code - will need to clean up later*/
 
 /*THIS causes ENT not to load when Menyoo is present!*/
@@ -113,6 +134,16 @@ void UnlockAllObjects()
 }
 
 /* End of prop unblocker code*/
+
+void onchange_player_health_mode(int value, SelectFromListMenuItem* source){
+	current_player_health = value;
+	current_player_health_Changed = true;
+}
+
+void onchange_player_armor_mode(int value, SelectFromListMenuItem* source){
+	current_player_armor = value;
+	current_player_armor_Changed = true;
+}
 
 void check_player_model(){
 	/*
@@ -353,6 +384,41 @@ void update_features(){
 		featureWantedLevelFrozenUpdated = false;
 	}
 
+	////////////////////////////////////// PLAYER DATA ////////////////////////////////////////////////
+	
+	Ped playerPed_Data = PLAYER::PLAYER_PED_ID();
+	
+	int playerHealth = ENTITY::GET_ENTITY_HEALTH(playerPed_Data);
+	playerHealth = (playerHealth - 100);
+	
+	if ((bPlayerExists && featurePlayerLife && featurePlayerLifeUpdated) || (bPlayerExists && featurePlayerLife_Died && featurePlayerLifeUpdated) ||
+		(bPlayerExists && featurePlayerLife_Changed && featurePlayerLifeUpdated)) {
+
+		tick = tick + 1;
+		if (tick > 200) {
+			PED::SET_PED_MAX_HEALTH(playerPed_Data, PLAYER_HEALTH_VALUES[current_player_health]);
+			ENTITY::SET_ENTITY_HEALTH(playerPed_Data, PLAYER_HEALTH_VALUES[current_player_health]);
+			PLAYER::SET_PLAYER_MAX_ARMOUR(playerPed_Data, PLAYER_ARMOR_VALUES[current_player_armor]);
+			PED::SET_PED_ARMOUR(playerPed_Data, PLAYER_ARMOR_VALUES[current_player_armor]);
+			oldplayerPed = playerPed_Data;
+			tick = 0;
+			featurePlayerLifeUpdated = false;
+		}
+	}
+	
+	if (featurePlayerLife_Died) death_time2 = PLAYER::GET_TIME_SINCE_LAST_DEATH();
+	if (death_time2 > -1 && death_time2 < 2000 && featurePlayerLife_Died)
+	{
+		featurePlayerLifeUpdated = true;
+	}
+	
+	if (playerPed_Data != oldplayerPed && featurePlayerLife_Changed) { // If You Switch Character Your Health & Armor Will Be Restored
+		featurePlayerLifeUpdated = true;
+	}
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 	// police ignore player
 	if(featurePlayerIgnoredByPolice){
 		if(bPlayerExists){
@@ -533,53 +599,100 @@ void onchange_regen_callback(int index, SelectFromListMenuItem *source){
 	}
 }
 
-void process_player_life_menu(){
+bool onconfirm_playerData_menu(MenuItem<int> choice){
+
+	if (choice.value == -1){
+		featurePlayerLifeUpdated = true; 
+		set_status_text("Settings Are Being Applied");
+	}
+	return false;
+}
+
+bool process_player_life_menu(){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
-	if(!ENTITY::DOES_ENTITY_EXIST(playerPed)){
-		return;
-	}
-
 	std::vector<MenuItem<int> *> menuItems;
+	std::string caption = "Player Data";
+	
+	MenuItem<int> *item;
+	SelectFromListMenuItem *listItem;
+	ToggleMenuItem<int>* toggleItem;
+	LifeItem<int> *item2;
 
-	LifeItem<int> *item = new LifeItem<int>();
-	item->caption = "Current Health";
-	item->value = 0;
-	item->lifeType = HEALTH;
-	item->minimum = 99;
-	item->life = ENTITY::GET_ENTITY_HEALTH(playerPed);
+	int i = 0;
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Apply On Game Load";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featurePlayerLife;
+	toggleItem->toggleValueUpdated = &featurePlayerLifeUpdated;
+	menuItems.push_back(toggleItem);
+	
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Re-apply On Respawn";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featurePlayerLife_Died;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Apply On Character Change";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featurePlayerLife_Changed;
+	menuItems.push_back(toggleItem);
+
+	item = new MenuItem<int>();
+	item->caption = "Apply Now";
+	item->value = -1;
+	item->isLeaf = true;
 	menuItems.push_back(item);
 
-	item = new LifeItem<int>();
-	item->caption = "Maximum Health";
-	item->value = 1;
-	item->lifeType = MAXHEALTH;
-	item->minimum = 100;
-	item->life = PED::GET_PED_MAX_HEALTH(playerPed);
-	menuItems.push_back(item);
+	listItem = new SelectFromListMenuItem(PLAYER_HEALTH_CAPTIONS, onchange_player_health_mode);
+	listItem->wrap = false;
+	listItem->caption = "Set Player Health";
+	listItem->value = current_player_health;
+	menuItems.push_back(listItem);
 
-	item = new LifeItem<int>();
-	item->caption = "Current Armor";
-	item->value = 2;
-	item->lifeType = ARMOR;
-	item->minimum = 0;
-	item->life = PED::GET_PED_ARMOUR(playerPed);
-	menuItems.push_back(item);
+	listItem = new SelectFromListMenuItem(PLAYER_ARMOR_CAPTIONS, onchange_player_armor_mode);
+	listItem->wrap = false;
+	listItem->caption = "Set Player Armor";
+	listItem->value = current_player_armor;
+	menuItems.push_back(listItem);
+	
+	item2 = new LifeItem<int>();
+	item2->caption = "Current Health";
+	item2->value = 0;
+	item2->life = ENTITY::GET_ENTITY_HEALTH(playerPed) - 100;
+	menuItems.push_back(item2);
 
-	item = new LifeItem<int>();
-	item->caption = "Maximum Armor";
-	item->value = 3;
-	item->lifeType = MAXARMOR;
-	item->minimum = 0;
-	item->life = PLAYER::GET_PLAYER_MAX_ARMOUR(PLAYER::PLAYER_ID());
-	menuItems.push_back(item);
+	//item = new LifeItem<int>();
+	//item->caption = "Maximum Health";
+	//item->value = 1;
+	//item->lifeType = MAXHEALTH;
+	//item->minimum = 100;
+	//item->life = PED::GET_PED_MAX_HEALTH(playerPed);
+	//menuItems.push_back(item);
 
-	SelectFromListMenuItem *listItem = new SelectFromListMenuItem(REGEN_CAPTIONS, onchange_regen_callback);
+	item2 = new LifeItem<int>();
+	item2->caption = "Current Armor";
+	item2->value = 1;
+	item2->life = PED::GET_PED_ARMOUR(playerPed);
+	menuItems.push_back(item2);
+
+	//item = new LifeItem<int>();
+	//item->caption = "Maximum Armor";
+	//item->value = 3;
+	//item->lifeType = MAXARMOR;
+	//item->minimum = 0;
+	//item->life = PLAYER::GET_PLAYER_MAX_ARMOUR(PLAYER::PLAYER_ID());
+	//menuItems.push_back(item);
+
+	listItem = new SelectFromListMenuItem(REGEN_CAPTIONS, onchange_regen_callback);
 	listItem->caption = "Health Regeneration Rate";
 	listItem->value = regenIndex;
 	menuItems.push_back(listItem);
 
-	draw_generic_menu<int>(menuItems, nullptr, "Player Data", nullptr, nullptr, nullptr, nullptr);
+	return draw_generic_menu<int>(menuItems, &playerDataMenuIndex, caption, onconfirm_playerData_menu, NULL, NULL);
+	//draw_generic_menu<int>(menuItems, nullptr, "Player Data", nullptr, nullptr, nullptr, nullptr);
 }
 
 int activeLineIndexPlayer = 0;
@@ -808,6 +921,8 @@ void reset_globals(){
 
 	reset_vehicle_globals();
 
+	reset_bodyguards_globals();
+
 	reset_teleporter_globals();
 
 	reset_weapon_globals();
@@ -828,6 +943,9 @@ void reset_globals(){
 		activeLineIndexPlayer =
 		activeLineIndexWantedFreeze =
 		frozenWantedLevel = 0;
+		
+	current_player_health = 2;
+	current_player_armor = 6;
 
 	featurePlayerDrunk =
 		featurePlayerInvincible =
@@ -842,6 +960,10 @@ void reset_globals(){
 		featureNightVision =
 		featureThermalVision =
 
+		featurePlayerLife =
+		featurePlayerLife_Died = 
+		featurePlayerLife_Changed =
+		
 		featureNoRagdoll =
 
 		featureWantedLevelFrozen = false;
@@ -856,6 +978,7 @@ void reset_globals(){
 		featureThermalVisionUpdated =
 		featurePlayerInvisibleUpdated =
 		featurePlayerInvisibleInVehicleUpdated =
+		featurePlayerLifeUpdated =
 
 		featureNoRagdollUpdated =
 		featureWantedLevelFrozenUpdated = true;
@@ -1075,6 +1198,15 @@ void add_player_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerDrunk", &featurePlayerDrunk, &featurePlayerDrunkUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNightVision", &featureNightVision, &featureNightVisionUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureThermalVision", &featureThermalVision, &featureThermalVisionUpdated});
+	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerLife", &featurePlayerLife, &featurePlayerLifeUpdated});
+	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerLife_Died", &featurePlayerLife_Died});
+	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerLife_Changed", &featurePlayerLife_Changed});
+}
+
+void add_world_feature_enablements3(std::vector<StringPairSettingDBRow>* results)
+{
+	results->push_back(StringPairSettingDBRow{"current_player_health", std::to_string(current_player_health)});
+	results->push_back(StringPairSettingDBRow{"current_player_armor", std::to_string(current_player_armor)});
 }
 
 std::vector<FeatureEnabledLocalDefinition> get_feature_enablements(){
@@ -1106,7 +1238,11 @@ std::vector<StringPairSettingDBRow> get_generic_settings(){
 	add_time_generic_settings(&settings);
 	add_world_generic_settings(&settings);
 	add_vehicle_generic_settings(&settings);
+	handle_generic_settings_teleportation(&settings);
 	add_world_feature_enablements2(&settings);
+	add_world_feature_enablements3(&settings);
+	add_bodyguards_feature_enablements2(&settings);
+	add_coords_generic_settings(&settings);
 	add_misc_generic_settings(&settings);
 	add_hotkey_generic_settings(&settings);
 	add_props_generic_settings(&settings);
@@ -1131,11 +1267,19 @@ void handle_generic_settings(std::vector<StringPairSettingDBRow> settings){
 		if(setting.name.compare("frozenWantedLevel") == 0){
 			frozenWantedLevel = stoi(setting.value);
 		}
+		else if (setting.name.compare("current_player_health") == 0){
+			current_player_health = stoi(setting.value);
+		}
+		else if (setting.name.compare("current_player_armor") == 0){
+			current_player_armor = stoi(setting.value);
+		}
 	}
 
 	//pass to anyone else, vehicles, weapons etc
 
 	handle_generic_settings_time(&settings);
+
+	handle_generic_settings_teleportation(&settings);
 
 	handle_generic_settings_misc(&settings);
 

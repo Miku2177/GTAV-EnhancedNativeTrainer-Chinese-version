@@ -24,6 +24,7 @@ bool featureWeaponInfiniteParachutes = false, featureWeaponInfiniteParachutesUpd
 bool featureWeaponNoParachutes = false, featureWeaponNoParachutesUpdated = false;
 bool featureWeaponNoReload = false;
 bool featureNoReticle = false;
+bool featureCopWeapon = false;
 bool featureWeaponFireAmmo = false;
 bool featureWeaponExplosiveAmmo = false;
 bool featureWeaponExplosiveMelee = false;
@@ -31,6 +32,8 @@ bool featureWeaponVehRockets = false;
 
 bool featureGravityGun = false;
 bool featureGravityGunUpdated = false;
+bool featureGiveAllWeapons = false;
+bool Give_All_Weapons_Check = false;
 
 bool grav_target_locked = false;
 Entity grav_entity = 0;
@@ -49,6 +52,8 @@ bool saved_weapon_mods[SAVED_WEAPONS_COUNT][MAX_MOD_SLOTS];
 bool saved_parachute = false;
 int saved_parachute_tint = 0;
 int saved_armour = 0;
+bool cops_took_weapons = false;
+bool cops_on = false;
 
 bool redrawWeaponMenuAfterEquipChange = false;
 
@@ -528,12 +533,12 @@ bool onconfirm_weapon_menu(MenuItem<int> choice){
 
 			set_status_text("All weapons added");
 			break;
-		case 1:
+		case 2:
 			WEAPON::REMOVE_ALL_PED_WEAPONS(playerPed, false);
 
 			set_status_text("All weapons removed");
 			break;
-		case 2:
+		case 3:
 			for(int a = 0; a < WEAPONTYPES_MOD.size(); a++){
 				for(int b = 0; b < VOV_WEAPONMOD_VALUES[a].size(); b++){
 					char *weaponName = (char *) WEAPONTYPES_MOD.at(a).c_str(), *compName = (char *) VOV_WEAPONMOD_VALUES[a].at(b).c_str();
@@ -586,7 +591,7 @@ bool onconfirm_weapon_menu(MenuItem<int> choice){
 
 			set_status_text("All weapon attachments added to existing weapons");
 			break;
-		case 3:
+		case 4:
 			for(int a = 0; a < WEAPONTYPES_MOD.size(); a++){
 				for(int b = 0; b < VOV_WEAPONMOD_VALUES[a].size(); b++){
 					char *weaponName = (char *) WEAPONTYPES_MOD.at(a).c_str(), *compName = (char *) VOV_WEAPONMOD_VALUES[a].at(b).c_str();
@@ -622,7 +627,7 @@ bool onconfirm_weapon_menu(MenuItem<int> choice){
 
 			set_status_text("All weapon attachments and tints removed from existing weapons");
 			break;
-		case 4:
+		case 5:
 			for(int a = 0; a < sizeof(VOV_WEAPON_VALUES) / sizeof(VOV_WEAPON_VALUES[0]); a++){
 				for(int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++){
 					char *weaponName = (char*) VOV_WEAPON_VALUES[a].at(b).c_str();
@@ -639,7 +644,7 @@ bool onconfirm_weapon_menu(MenuItem<int> choice){
 
 			set_status_text("All ammo filled");
 			break;
-		case 5:
+		case 6:
 			for(int a = 0; a < sizeof(VOV_WEAPON_VALUES) / sizeof(VOV_WEAPON_VALUES[0]); a++){
 				for(int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++){
 					char *weaponName = (char *) VOV_WEAPON_VALUES[a].at(b).c_str();
@@ -652,21 +657,21 @@ bool onconfirm_weapon_menu(MenuItem<int> choice){
 
 			set_status_text("All ammo removed");
 			break;
-		case 6:
+		case 7:
 			WEAPON::GIVE_WEAPON_TO_PED(playerPed, PARACHUTE_ID, 1, false, false);
 			PLAYER::SET_PLAYER_HAS_RESERVE_PARACHUTE(player);
 
 			set_status_text("Parachute added");
 			break;
-		case 7:
+		case 8:
 			WEAPON::REMOVE_WEAPON_FROM_PED(playerPed, PARACHUTE_ID);
 
 			set_status_text("Parachute removed");
 			break;
-		case 8:
+		case 9:
 			process_weaponlist_menu();
 			break;
-		case 9:
+		case 10:
 		{
 			std::string result = show_keyboard(nullptr, (char *) lastCustomWeapon.c_str());
 			if(!result.empty()){
@@ -702,6 +707,14 @@ bool process_weapon_menu(){
 	item->value = i++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
+
+	ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
+	//toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Give All Weapons On Startup";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureGiveAllWeapons;
+	toggleItem->toggleValueUpdated = NULL;
+	menuItems.push_back(toggleItem);
 
 	item = new MenuItem<int>();
 	item->caption = "Remove All Weapons";
@@ -763,7 +776,8 @@ bool process_weapon_menu(){
 	listItem->value = weapDmgModIndex;
 	menuItems.push_back(listItem);
 
-	ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
+	toggleItem = new ToggleMenuItem<int>();
+	//ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Infinite Ammo";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureWeaponInfiniteAmmo;
@@ -781,6 +795,13 @@ bool process_weapon_menu(){
 	toggleItem->caption = "No Reticle";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureNoReticle;
+	toggleItem->toggleValueUpdated = NULL;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Lose Weapons On Arrest";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureCopWeapon;
 	toggleItem->toggleValueUpdated = NULL;
 	menuItems.push_back(toggleItem);
 
@@ -848,10 +869,12 @@ void reset_weapon_globals(){
 		featureWeaponNoParachutesUpdated =
 		featureWeaponNoReload =
 		featureNoReticle =
+		featureCopWeapon =
 		featureWeaponFireAmmo =
 		featureWeaponExplosiveAmmo =
 		featureWeaponExplosiveMelee =
 		featureWeaponVehRockets =
+		featureGiveAllWeapons =
 		featureGravityGun = false;
 }
 
@@ -945,6 +968,39 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		if (WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_MARKSMANRIFLE")) sniper_rifle = true;
 		if (!sniper_rifle) UI::HIDE_HUD_COMPONENT_THIS_FRAME(14);
 	}
+
+	// Cops Take You Weapons If You Die / Arrested
+			
+	playerPed = PLAYER::PLAYER_PED_ID();
+	int pl_health = ENTITY::GET_ENTITY_HEALTH(playerPed);
+	Vector3 coords_me = ENTITY::GET_ENTITY_COORDS(playerPed, true);
+	int death_time = -1;
+
+	if (featureCopWeapon) death_time = PLAYER::GET_TIME_SINCE_LAST_DEATH();
+	if (death_time > -1 && death_time < 10000 && featureCopWeapon && !cops_took_weapons) cops_took_weapons = true;
+
+	if ((featureCopWeapon && VEHICLE::IS_COP_VEHICLE_IN_AREA_3D(coords_me.x - 200, coords_me.y - 200, coords_me.z - 200, coords_me.x + 200, coords_me.y + 200, coords_me.z + 200) && pl_health < 115 && 
+		PED::IS_ANY_PED_SHOOTING_IN_AREA(coords_me.x - 200, coords_me.y - 200, coords_me.z - 200, coords_me.x + 200, coords_me.y + 200, coords_me.z + 200, true, true)) || (featureCopWeapon &&
+		PED::IS_COP_PED_IN_AREA_3D(coords_me.x - 200, coords_me.y - 200, coords_me.z - 200, coords_me.x + 200, coords_me.y + 200, coords_me.z + 200) && pl_health < 115 &&
+		PED::IS_ANY_PED_SHOOTING_IN_AREA(coords_me.x - 200, coords_me.y - 200, coords_me.z - 200, coords_me.x + 200, coords_me.y + 200, coords_me.z + 200, true, true))) cops_on = true;
+		
+	if (featureCopWeapon && !VEHICLE::IS_COP_VEHICLE_IN_AREA_3D(coords_me.x - 200, coords_me.y - 200, coords_me.z - 200, coords_me.x + 200, coords_me.y + 200, coords_me.z + 200) && pl_health < 115 && 
+		!PED::IS_COP_PED_IN_AREA_3D(coords_me.x - 200, coords_me.y - 200, coords_me.z - 200, coords_me.x + 200, coords_me.y + 200, coords_me.z + 200) && pl_health < 115) cops_on = false;
+
+	if (cops_took_weapons && cops_on) 
+	{
+		WEAPON::REMOVE_ALL_PED_WEAPONS(playerPed, false);
+		cops_on = false;
+		cops_took_weapons = false;
+	}
+	
+	if (death_time > 10000) cops_took_weapons = false;
+
+	// Give All Weapons At Startup Option
+	if (featureGiveAllWeapons && !Give_All_Weapons_Check) {
+		give_all_weapons_hotkey();
+		Give_All_Weapons_Check = true;
+	};
 
 	//Gravity Gun
 	if(bPlayerExists && featureGravityGun){
@@ -1313,8 +1369,10 @@ void add_weapon_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponNoParachutes", &featureWeaponNoParachutes, &featureWeaponNoParachutesUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponNoReload", &featureWeaponNoReload});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoReticle", &featureNoReticle});
+	results->push_back(FeatureEnabledLocalDefinition{"featureCopWeapon", &featureCopWeapon});
 	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponVehRockets", &featureWeaponVehRockets});
 	results->push_back(FeatureEnabledLocalDefinition{"featureGravityGun", &featureGravityGun});
+	results->push_back(FeatureEnabledLocalDefinition{"featureGiveAllWeapons", &featureGiveAllWeapons});
 }
 
 void onchange_weap_dmg_modifier(int value, SelectFromListMenuItem* source){
