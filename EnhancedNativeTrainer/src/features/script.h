@@ -95,11 +95,15 @@ bool process_skinchanger_menu();
 
 bool process_skinchanger_detail_menu();
 
-void process_player_life_menu();
+bool process_player_life_menu();
 
 void update_features();
 
 void reset_globals();
+
+void onchange_player_health_mode(int value, SelectFromListMenuItem* source);
+
+void onchange_player_armor_mode(int value, SelectFromListMenuItem* source);
 
 void process_reset_menu();
 
@@ -114,6 +118,8 @@ std::vector<FeatureEnabledLocalDefinition> get_feature_enablements();
 std::vector<StringPairSettingDBRow> get_generic_settings();
 
 void handle_generic_settings(std::vector<StringPairSettingDBRow> settings);
+
+void add_world_feature_enablements3(std::vector<StringPairSettingDBRow>* results);
 
 bool getFrozenWantedFeature();
 

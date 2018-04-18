@@ -18,6 +18,15 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 #include <string>
 
+#include "..\ui_support\menu_functions.h"
+#include "..\storage\database.h"
+
+#include "..\ent-enums.h"
+#include "..\utils.h"
+#include "..\common\ENTUtil.h"
+
+#include <random>
+
 bool process_teleport_menu(int categoryIndex);
 
 void reset_teleporter_globals();
@@ -37,6 +46,12 @@ void teleport_to_last_vehicle();
 void get_chauffeur_to_marker();
 
 void cancel_chauffeur(std::string message);
+
+void handle_generic_settings_teleportation(std::vector<StringPairSettingDBRow>* settings);
+
+void add_coords_generic_settings(std::vector<StringPairSettingDBRow>* results);
+
+void onchange_tel_chauffeur_index(int value, SelectFromListMenuItem *source);
 
 float get_euc_distance(Vector3 playerCoords, Vector3 blipCoords);
 

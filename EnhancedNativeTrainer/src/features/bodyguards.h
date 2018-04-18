@@ -39,6 +39,8 @@ bool process_bodyguard_weapons_menu();
 
 void dismiss_bodyguards();
 
+void reset_bodyguards_globals();
+
 void do_spawn_bodyguard();
 
 void update_bodyguard_features();
@@ -47,8 +49,18 @@ void add_bodyguards_feature_enablements(std::vector<FeatureEnabledLocalDefinitio
 
 void add_bodyguards_generic_settings(std::vector<StringPairSettingDBRow>* results);
 
+void add_bodyguards_feature_enablements2(std::vector<StringPairSettingDBRow>* results);
+
 void handle_generic_settings_bodyguards(std::vector<StringPairSettingDBRow>* settings);
 
 bool bodyguards_main_menu_interrupt();
 
 void maintain_bodyguards();
+
+void onchange_body_blipsize_index(int value, SelectFromListMenuItem* source);
+
+void onchange_body_blipcolour_index(int value, SelectFromListMenuItem* source);
+
+void onchange_body_blipsymbol_index(int value, SelectFromListMenuItem* source);
+
+void onchange_body_blipflash_index(int value, SelectFromListMenuItem* source);

@@ -20,9 +20,17 @@ int const BODYGUARD_LIMIT = 7;
 bool featureBodyguardInvincible = false;
 bool featureBodyguardInvincibleUpdated = false;
 bool featureBodyguardHelmet = false;
+bool featureBodyguardOnMap = false;
 bool featureBodyguardInfAmmo = false;
 
 bool requireRefreshOfBodyguardMainMenu = false;
+int activeLineIndexBodyguardBlips = 0;
+bool featureBodyBlipNumber = false;
+
+// Bodyguards Blips Option Variables
+Blip blip_body[1];
+std::vector<Blip> BLIPTABLE_BODYGUARD;
+//
 
 //first index is which category, second is position in that category
 int skinTypesBodyguardMenuPositionMemory[2] = {0, 0};
@@ -34,6 +42,49 @@ std::vector<Ped> spawnedBodyguards;
 
 std::vector<bool *> bodyguardWeaponsToggle[8];
 bool bodyguardWeaponsToggleInitialized = false;
+
+//Blip Size
+const std::vector<std::string> BODY_BLIPSIZE_CAPTIONS{ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
+const std::vector<double> BODY_BLIPSIZE_VALUES{ 0.3, 0.5, 0.8, 1.0, 1.2, 1.5, 1.7, 2.0, 2.5, 3.0 };
+int BodyBlipSizeIndex = 2;
+bool BodyBlipSize_Changed = true;
+
+//Blip Colour
+const std::vector<std::string> BODY_BLIPCOLOUR_CAPTIONS{ "White", "Red", "Green", "Blue", "Orange", "Purple", "Grey", "Brown", "Pink", "Dark Green", "Dark Purple", "Dark Blue" };
+const std::vector<int> BODY_BLIPCOLOUR_VALUES{ 0, 1, 2, 3, 17, 19, 20, 21, 23, 25, 27, 29 };
+int BodyBlipColourIndex = 0;
+bool BodyBlipColour_Changed = true;
+
+//Blip Symbol
+const std::vector<std::string> BODY_BLIPSYMBOL_CAPTIONS{ "Standard", "Player", "North", "Waypoint", "BigCircleOutline", "ArrowUpOutlined", "ArrowDownOutlined", "ArrowUp", "ArrowDown", "PoliceHelicopterAnimated", "Jet",
+"Lift", "RaceFinish", "Safehouse", "PoliceHelicopter", "ChatBubble", "Garage2", "Drugs", "Store", "PoliceCar", "PolicePlayer", "PoliceStation", "Hospital", "Helicopter", "StrangersAndFreaks", "Truck", "TowTruck", "Barber",
+"LosSantosCustoms", "Clothes", "TattooParlor", "Simeon", "Lester", "Michael", "Trevor", "H", "Rampage", "VinewoodTours", "Franklin", "Chinese", "Airport", "Bar", "BaseJump", "CarWash", "ComedyClub", "Dart", "FIB",
+"DollarSign", "Golf", "AmmuNation", "Exile", "ShootingRange", "Solomon", "StripClub", "Tennis", "Triathlon", "OffRoadRaceFinish", "Chat", "Key", "MovieTheater", "Music", "Marijuana", "Hunting", "ArmsTraffickingGround", "Nigel",
+"Health", "SonicWave", "PointOfInterest", "GTAOPassive", "GTAOUsingMenu", "Link", "Armor", "Castle", "Castle", "Camera",
+"Handcuffs", "Yoga", "Cab", "Shrink", "Epsilon", "Dollar", "PersonalVehicleCar", "PersonalVehicleBike", "CarPistol", "Custody", "ArmsTraffickingAir", "Fairground", "PropertyManagement", "Altruist", "Enemy", "Chop", "Dead", "Hooker",
+"Friend", "BountyHit", "GTAOMission", "GTAOSurvival", "CrateDrop", "PlaneDrop", "Sub", "Race", "Deathmatch", "ArmWrestling", "AmmuNationShootingRange", "RaceAir", "RaceCar", "RaceSea", "GarbageTruck", "SafehouseForSale", "Package",
+"MartinMadrazo", "EnemyHelicopter", "Boost", "Devin", "Marina", "Garage", "GolfFlag", "Hangar", "Helipad", "JerryCan", "Masks", "HeistSetup", "Incapacitated", "PickupSpawn", "BoilerSuit", "Completed", "Rockets", "GarageForSale",
+"HelipadForSale", "MarinaForSale", "HangarForSale", "Business", "BusinessForSale", "RaceBike", "Parachute", "TeamDeathmatch", "RaceFoot", "VehicleDeathmatch", "Barry", "Dom", "MaryAnn", "Cletus", "Josh", "Minute", "Omega", "Tonya",
+"Paparazzo", "Crosshair", "Creator", "CreatorDirection", "Abigail", "Blimp", "Repair", "Testosterone", "Dinghy", "Fanatic", "Information", "CaptureBriefcase", "LastTeamStanding", "Boat", "CaptureHouse", "JerryCan2", "RP",
+"GTAOPlayerSafehouse", "GTAOPlayerSafehouseDead", "CaptureAmericanFlag", "CaptureFlag", "Tank", "HelicopterAnimated", "Plane", "PlayerNoColor", "GunCar", "Speedboat", "Stopwatch", "DollarSignCircled", "Crosshair2", "DollarSignSquared",
+"Competititon", "Fire", "Skulls", "Crown", "Bag", "CrossedArrows", "WolfHead", "LD", "Service", "Ship", "Question", "Sniper", "WiFi", "Bolide", "Shield", "Hourglass", "Bomb", "ArrowCircle", "Star", "Iron", "Rugby", "Garage", "Garage2",
+"Building", "Building2", "Van", "Crate", "Trailer", "Man", "HeliHook", "Speedometer", "Ghost", "Radio", "Perfume", "Shield2", "BurningWheel", "Heart", "BurningDollar", "People", "HouseGarage", "BikeArrows", "BikeCircle", "BikeFlags",
+"Blade", "Badge", "Tube", "Money", "Package", "ATV", "Bus", "Parcel", "Arrow", "Notebook" };
+const std::vector<int> BODY_BLIPSYMBOL_VALUES{ 1, 6, 7, 8, 10, 11, 12, 13, 14, 15, 16, 36, 38, 40, 43, 47, 50, 51, 52, 56, 58, 60, 61, 64, 66, 67, 68, 71, 72, 73, 75, 76, 77,
+78, 79, 80, 84, 85, 88, 89, 90, 93, 94, 100, 102, 103, 106, 108, 109, 110, 112, 119, 120, 121, 122, 126, 127, 133, 134, 135, 136, 140, 141, 147, 149, 153, 161, 162, 163, 164, 171,
+175, 176, 181, 184, 188, 197, 198, 205, 206, 207, 225, 226, 229, 237, 251, 266, 267, 269, 270, 273, 274, 279, 280, 303, 304, 305, 306, 307, 308, 309, 310, 311,
+313, 314, 315, 316, 318, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 367, 368, 369, 370, 371, 372, 374, 375, 376, 377, 378, 379, 380, 381, 382, 383, 384, 385, 386, 387, 388,
+389, 390, 398, 399, 400, 401, 402, 403, 404, 405, 407, 408, 409, 410, 411, 415, 416, 417, 418, 419, 420, 421, 422, 423, 425, 426, 427, 430, 431, 432, 434, 435, 436, 437, 439, 440,
+441, 442, 445, 446, 455, 456, 458, 459, 460, 461, 464, 466, 467, 468, 471, 472, 473, 474, 475, 476, 477, 478, 479, 480, 481, 483, 484, 485, 486, 487, 488, 489, 490,
+491, 492, 493, 494, 495, 497, 498, 499, 500, 501, 512, 513, 514, 515, 521 };
+int BodyBlipSymbolIndex = 0;
+bool BodyBlipSymbol_Changed = true;
+
+//Blip Flashing
+const std::vector<std::string> BODY_BLIPFLASH_CAPTIONS{ "OFF", "Mode One", "Mode Two" };
+const std::vector<int> BODY_BLIPFLASH_VALUES{ 0, 1, 2 };
+int BodyBlipFlashIndex = 0;
+bool BodyBlipFlash_Changed = true;
 
 bool process_bodyguard_skins_menu(){
 	std::vector<MenuItem<int>*> menuItems;
@@ -240,6 +291,78 @@ bool process_bodyguard_weapons_menu(){
 	return draw_generic_menu<int>(menuItems, nullptr, "Choose Bodyguard Weapons", onconfirm_bodyguard_weapons_menu, nullptr, nullptr, nullptr);
 }
 
+
+
+
+
+bool onconfirm_bodyguard_blips_menu(MenuItem<int> choice)
+{
+	return false;
+}
+
+void process_bodyguard_blips_menu(){
+	std::string caption = "Mark On Map Options";
+
+	std::vector<MenuItem<int>*> menuItems;
+
+	MenuItem<int> *item;
+	SelectFromListMenuItem *listItem;
+	ToggleMenuItem<int>* toggleItem;
+
+	int i = 0;
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Enabled";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureBodyguardOnMap;
+	menuItems.push_back(toggleItem);
+
+	//toggleItem = new ToggleMenuItem<int>();
+	//toggleItem->caption = "Delete Tracked Vehicles If Character Changed";
+	//toggleItem->value = i++;
+	//toggleItem->toggleValue = &featureDeleteTrackedVehicles_CharacterChanged;
+	//menuItems.push_back(toggleItem);
+
+	listItem = new SelectFromListMenuItem(BODY_BLIPSIZE_CAPTIONS, onchange_body_blipsize_index);
+	listItem->wrap = false;
+	listItem->caption = "Blip Size";
+	listItem->value = BodyBlipSizeIndex;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(BODY_BLIPCOLOUR_CAPTIONS, onchange_body_blipcolour_index);
+	listItem->wrap = false;
+	listItem->caption = "Blip Colour";
+	listItem->value = BodyBlipColourIndex;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(BODY_BLIPSYMBOL_CAPTIONS, onchange_body_blipsymbol_index);
+	listItem->wrap = false;
+	listItem->caption = "Blip Symbol";
+	listItem->value = BodyBlipSymbolIndex;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(BODY_BLIPFLASH_CAPTIONS, onchange_body_blipflash_index);
+	listItem->wrap = false;
+	listItem->caption = "Blip Flashing";
+	listItem->value = BodyBlipFlashIndex;
+	menuItems.push_back(listItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Show Blip Number";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureBodyBlipNumber;
+	menuItems.push_back(toggleItem);
+
+	draw_generic_menu<int>(menuItems, &activeLineIndexBodyguardBlips, caption, onconfirm_bodyguard_blips_menu, NULL, NULL);
+}
+
+
+
+
+
+
+
+
 void dismiss_bodyguards(){
 
 	if(spawnedBodyguards.size() == 0){
@@ -255,6 +378,16 @@ void dismiss_bodyguards(){
 
 	spawnedBodyguards.clear();
 	requireRefreshOfBodyguardMainMenu = true;
+
+	if (!BLIPTABLE_BODYGUARD.empty()) {
+		for (int i = 0; i < BLIPTABLE_BODYGUARD.size(); i++) {
+			if (UI::DOES_BLIP_EXIST(BLIPTABLE_BODYGUARD[i])) {
+				UI::REMOVE_BLIP(&BLIPTABLE_BODYGUARD[i]);
+			}
+		}
+		BLIPTABLE_BODYGUARD.clear();
+		BLIPTABLE_BODYGUARD.shrink_to_fit();
+	}
 
 	set_status_text("Bodyguards dismissed");
 }
@@ -294,6 +427,31 @@ void do_spawn_bodyguard(){
 		if(featureBodyguardHelmet){
 			PED::GIVE_PED_HELMET(bodyGuard, 1, 4096, -1);
 		}
+		
+		if (featureBodyguardOnMap) {
+			blip_body[0] = UI::ADD_BLIP_FOR_ENTITY(bodyGuard);
+			UI::SET_BLIP_AS_FRIENDLY(blip_body[0], true);
+			UI::SET_BLIP_SPRITE(blip_body[0], BODY_BLIPSYMBOL_VALUES[BodyBlipSymbolIndex]);
+			UI::SET_BLIP_CATEGORY(blip_body[0], 2);
+			if (featureBodyBlipNumber) UI::SHOW_NUMBER_ON_BLIP(blip_body[0], BLIPTABLE_BODYGUARD.size());
+			if (BODY_BLIPFLASH_VALUES[BodyBlipFlashIndex] == 1) UI::SET_BLIP_FLASHES(blip_body[0], true);
+			if (BODY_BLIPFLASH_VALUES[BodyBlipFlashIndex] == 2) UI::SET_BLIP_FLASHES_ALTERNATE(blip_body[0], true);
+			UI::SET_BLIP_SCALE(blip_body[0], BODY_BLIPSIZE_VALUES[BodyBlipSizeIndex]);
+			UI::SET_BLIP_COLOUR(blip_body[0], BODY_BLIPCOLOUR_VALUES[BodyBlipColourIndex]);
+			UI::SET_BLIP_AS_SHORT_RANGE(blip_body[0], true);
+			BLIPTABLE_BODYGUARD.push_back(blip_body[0]);
+		}
+		else
+			if (!BLIPTABLE_BODYGUARD.empty()) {
+				for (int i = 0; i < BLIPTABLE_BODYGUARD.size(); i++) {
+					if (UI::DOES_BLIP_EXIST(BLIPTABLE_BODYGUARD[i])) {
+						UI::REMOVE_BLIP(&BLIPTABLE_BODYGUARD[i]);
+					}
+				}
+				BLIPTABLE_BODYGUARD.clear();
+				BLIPTABLE_BODYGUARD.shrink_to_fit();
+			}
+		
 
 		PED::SET_PED_COMBAT_ABILITY(bodyGuard, 2);
 		PED::SET_PED_COMBAT_RANGE(bodyGuard, 2);
@@ -390,6 +548,12 @@ bool process_bodyguard_menu(){
 		item->isLeaf = false;
 		menuItems.push_back(item);
 
+		item = new MenuItem<int>();
+		item->caption = "Mark On Map";
+		item->value = i++;
+		item->isLeaf = false;
+		menuItems.push_back(item);
+
 		toggleItem = new ToggleMenuItem<int>();
 		toggleItem->caption = "Invincible";
 		toggleItem->value = i++;
@@ -445,6 +609,9 @@ bool onconfirm_bodyguard_menu(MenuItem<int> choice){
 		case 3:
 			process_bodyguard_weapons_menu();
 			break;
+		case 4:
+			process_bodyguard_blips_menu();
+			break;
 		default:
 			break;
 	}
@@ -462,7 +629,17 @@ void update_bodyguard_features(){
 void add_bodyguards_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardInvincible", &featureBodyguardInvincible});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardHelmet", &featureBodyguardHelmet});
+	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardOnMap", &featureBodyguardOnMap});
+	results->push_back(FeatureEnabledLocalDefinition{"featureBodyBlipNumber", &featureBodyBlipNumber});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardInfAmmo", &featureBodyguardInfAmmo});
+}
+
+void add_bodyguards_feature_enablements2(std::vector<StringPairSettingDBRow>* results)
+{
+	results->push_back(StringPairSettingDBRow{ "BodyBlipSizeIndex", std::to_string(BodyBlipSizeIndex) });
+	results->push_back(StringPairSettingDBRow{ "BodyBlipColourIndex", std::to_string(BodyBlipColourIndex) });
+	results->push_back(StringPairSettingDBRow{ "BodyBlipSymbolIndex", std::to_string(BodyBlipSymbolIndex) });
+	results->push_back(StringPairSettingDBRow{ "BodyBlipFlashIndex", std::to_string(BodyBlipFlashIndex) });
 }
 
 void add_bodyguards_generic_settings(std::vector<StringPairSettingDBRow>* results){
@@ -487,6 +664,18 @@ void handle_generic_settings_bodyguards(std::vector<StringPairSettingDBRow>* set
 		else if(setting.name.compare("skinTypesBodyguardMenuLastConfirmed1") == 0){
 			skinTypesBodyguardMenuLastConfirmed[1] = stoi(setting.value);
 		}
+		else if (setting.name.compare("BodyBlipSizeIndex") == 0){
+			BodyBlipSizeIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("BodyBlipColourIndex") == 0){
+			BodyBlipColourIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("BodyBlipSymbolIndex") == 0){
+			BodyBlipSymbolIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("BodyBlipFlashIndex") == 0){
+			BodyBlipFlashIndex = stoi(setting.value);
+		}
 	}
 }
 
@@ -495,4 +684,34 @@ bool bodyguards_main_menu_interrupt(){
 		return true;
 	}
 	return false;
+}
+
+void reset_bodyguards_globals(){
+	activeLineIndexBodyguardBlips = 0;
+	featureBodyBlipNumber = false;
+	featureBodyguardOnMap = false;
+	BodyBlipSizeIndex = 2;
+	BodyBlipColourIndex = 0;
+	BodyBlipSymbolIndex = 0;
+	BodyBlipFlashIndex = 0;
+}
+
+void onchange_body_blipsize_index(int value, SelectFromListMenuItem* source){
+	BodyBlipSizeIndex = value;
+	BodyBlipSize_Changed = true;
+}
+
+void onchange_body_blipcolour_index(int value, SelectFromListMenuItem* source){
+	BodyBlipColourIndex = value;
+	BodyBlipColour_Changed = true;
+}
+
+void onchange_body_blipsymbol_index(int value, SelectFromListMenuItem* source){
+	BodyBlipSymbolIndex = value;
+	BodyBlipSymbol_Changed = true;
+}
+
+void onchange_body_blipflash_index(int value, SelectFromListMenuItem* source){
+	BodyBlipFlashIndex = value;
+	BodyBlipFlash_Changed = true;
 }
