@@ -10,6 +10,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 #include "..\..\resource.h"
 #include "vehicles.h"
+#include "..\features\vehmodmenu.h"
 #include "hotkeys.h"
 #include "script.h"
 #include "..\ui_support\menu_functions.h"
@@ -482,7 +483,7 @@ const std::vector<std::string> VALUES_EMERGENCY{ "POLICEOLD2", "AMBULANCE", "BAR
 
 const std::vector<std::string> VALUES_MOTORCYCLES{ "AKUMA", "DOUBLE", "ENDURO", "THRUST", "VINDICATOR", "AVARUS", "HEXER", "INNOVATION", "SANCTUS", "MANCHEZ", "SANCHEZ2", "SANCHEZ", "BF400", "CARBONRS", "CHIMERA", "SHOTARO", "BATI", "BATI2", "ESSKEY", "FAGGIO2", "FAGGIO3", "FAGGIO", "FCR", "FCR2", "OPPRESSOR", "RUFFIAN", "VORTEX", "DIABLOUS", "DIABLOUS2", "LECTRO", "NEMESIS", "DEFILER", "HAKUCHOU", "HAKUCHOU2", "PCJ", "VADER", "BAGGER", /*"BAGGER2",*/ "CLIFFHANGER", "DAEMON", "DAEMON2", "GARGOYLE", "NIGHTBLADE", "RATBIKE", "SOVEREIGN", "WOLFSBANE", "ZOMBIEA", "ZOMBIEB" };
 
-const std::vector<std::string> VALUES_PLANES{ "BLIMP", "ALPHAZ1", "CARGOPLANE", "HOWARD", "JET", "LUXOR", "LUXOR2", "MILJET", "NIMBUS", "PYRO", "SHAMAL", "VESTRA", "MAMMATUS", "LAZER", "VELUM", "VELUM2", "STARLING", "AVENGER", "DODO", "HYDRA", "MOGUL", "TITAN", "TULA", "NOKOTA", "BOMBUSHKA", "MOLOTOK", "VOLATOL", "BESRA", "ROGUE", "SEABREEZE", "CUBAN800", "DUSTER", "STUNT", "BLIMP2", };
+const std::vector<std::string> VALUES_PLANES{ "BLIMP", "ALPHAZ1", "CARGOPLANE", "HOWARD", "JET", "LUXOR", "LUXOR2", "MILJET", "NIMBUS", "PYRO", "SHAMAL", "VESTRA", "MAMMATUS", "LAZER", "VELUM", "VELUM2", "STARLING", "AVENGER", "DODO", "HYDRA", "MOGUL", "TITAN", "TULA", "NOKOTA", "BOMBUSHKA", "MOLOTOK", "VOLATOL", "BESRA", "ROGUE", "SEABREEZE", "CUBAN800", "DUSTER", "STUNT", "BLIMP2" };
 
 const std::vector<std::string> VALUES_HELOS{ "AKULA", "SAVAGE", "SUPERVOLITO", "SUPERVOLITO2", "SWIFT", "SWIFT2", "VALKYRIE", "VOLATUS", "HUNTER", "SKYLIFT", "FROGGER", "FROGGER2", "BUZZARD2", "BUZZARD", "HAVOK", "MICROLIGHT", "SEASPARROW", "ANNIHILATOR", "CARGOBOB", "CARGOBOB2", "CARGOBOB3", "MAVERICK", "POLMAV" };
 
@@ -2920,8 +2921,18 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 ////////////////////////////////////////////////////// NO VEHICLE FLIP //////////////////////////////////////////////////////
 
 	if (featureNoVehFlip && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1)) {
-		if (ENTITY::GET_ENTITY_ROLL(PED::GET_VEHICLE_PED_IS_IN(playerPed, 1)) > 90 || ENTITY::GET_ENTITY_ROLL(PED::GET_VEHICLE_PED_IS_IN(playerPed, 1)) < -90)
-			VEHICLE::SET_VEHICLE_OUT_OF_CONTROL(PED::GET_VEHICLE_PED_IS_IN(playerPed, 1), false, false);
+		Vehicle vehnoflip = PED::GET_VEHICLE_PED_IS_IN(playerPed, 1);
+		Vector3 veh_flip = ENTITY::GET_ENTITY_COORDS(vehnoflip, true);
+		float veh_flips_speed = ENTITY::GET_ENTITY_SPEED(vehnoflip);
+		if (ENTITY::GET_ENTITY_ROLL(vehnoflip) > 90 || ENTITY::GET_ENTITY_ROLL(vehnoflip) < -90){
+			VEHICLE::SET_VEHICLE_CAN_BREAK(vehnoflip, true);
+			VEHICLE::SET_VEHICLE_OUT_OF_CONTROL(vehnoflip, false, false);
+		}
+		
+		if ((veh_flips_speed * 3.6) > 50 && (ENTITY::GET_ENTITY_ROLL(vehnoflip) > 50 || ENTITY::GET_ENTITY_ROLL(vehnoflip) < -50)) {
+			VEHICLE::SET_VEHICLE_CEILING_HEIGHT(vehnoflip, 0.0);
+			VEHICLE::SET_VEHICLE_DAMAGE(vehnoflip, veh_flip.x, veh_flip.y, veh_flip.z, 1000, 100, true);
+		}
 	}
 	
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3357,10 +3368,10 @@ bool spawn_saved_car(int slot, std::string caption){
 		VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT_INDEX(veh, savedVeh->plateType);
 		VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT(veh, (char*) savedVeh->plateText.c_str());
 
-		VEHICLE::SET_VEHICLE_WINDOW_TINT(veh, savedVeh->windowTint);
+		VEHICLE::SET_VEHICLE_WINDOW_TINT(veh, savedVeh->windowTint); 
 
 		VEHICLE::SET_VEHICLE_WHEEL_TYPE(veh, savedVeh->wheelType);
-
+		
 		for each (SavedVehicleExtraDBRow *extra in savedVeh->extras){
 			VEHICLE::SET_VEHICLE_EXTRA(veh, extra->extraID, (extra->extraState == 1) ? 0 : -1);
 		}
@@ -3431,6 +3442,15 @@ bool spawn_saved_car(int slot, std::string caption){
 		if(savedVeh->interiorColour != -1){
 			VEHICLE::_SET_VEHICLE_INTERIOR_COLOUR(veh, savedVeh->interiorColour);
 		}
+
+		//
+		if (savedVeh->engineSound > -1) {
+			char *currSound = new char[ENGINE_SOUND[savedVeh->engineSound].length() + 1];
+			strcpy(currSound, ENGINE_SOUND[savedVeh->engineSound].c_str());
+			VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
+			AUDIO::_SET_VEHICLE_AUDIO(veh, currSound); 
+		}
+		//
 
 		ENTITY::SET_VEHICLE_AS_NO_LONGER_NEEDED(&veh);
 	}

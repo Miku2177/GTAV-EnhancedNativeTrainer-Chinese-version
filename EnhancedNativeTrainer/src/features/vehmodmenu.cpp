@@ -9,6 +9,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 */
 
 #include "vehicles.h"
+#include "..\features\vehmodmenu.h"
 
 #include "..\debug\debuglog.h"
 
@@ -17,6 +18,8 @@ int activeLineIndexVehMod = 0;
 int lastSelectedModValue = 0;
 
 int wheelpart = 0;
+
+int current_picked_engine_sound = -1;
 
 const static int WHEEL_CATEGORY_COUNT = 10;
 
@@ -27,6 +30,8 @@ const static int WHEEL_CATEGORY_COUNTS[] = { 50, 36, 30, 38, 20, 48, 72, 40, 217
 const static std::string TINT_NAMES[] = { "No Tint", "Dark", "Medium", "Light", "Very Light", "Safety Value" };
 
 const static std::string PLATE_NAMES[] = { "Blue on White", "Yellow/Black", "Gold/Blue", "Blue/White SA Caps", "Blue/White SA Exempt", "Blue/White Yankton" };
+
+const static int ENGINE_SOUND_COUNT = 346;
 
 const static int SPECIAL_ID_START = 90;
 
@@ -49,6 +54,8 @@ const static int SPECIAL_ID_FOR_ORNAMENTS = 98; // we may or may not need this, 
 const static int SPECIAL_ID_FOR_TIRE_SMOKE = 99;
 
 const static int SPECIAL_ID_FOR_INTERIOR_COLOUR = 100;
+
+const static int SPECIAL_ID_FOR_ENGINE_SOUND = 101;
 
 const std::vector<WheelSelection> WHEELS_SPORTS = {
 	{ 0, "Inferno" },
@@ -1002,6 +1009,8 @@ std::string getModCategoryName(int i){
 		return "Window Tint";
 	case SPECIAL_ID_FOR_LICENSE_PLATES:
 		return "License Plates";
+	case SPECIAL_ID_FOR_ENGINE_SOUND:
+		return "Engine Sound";
 	default:
 		return std::to_string(i);
 	}
@@ -1013,6 +1022,9 @@ std::string geSpecialItemTitle(int category, int index){
 	switch (category){
 	case SPECIAL_ID_FOR_LICENSE_PLATES:
 		return PLATE_NAMES[index];
+
+	case SPECIAL_ID_FOR_ENGINE_SOUND:
+		return ENGINE_SOUND[index];
 
 	case SPECIAL_ID_FOR_WHEEL_CATEGORY:
 		return WHEEL_CATEGORY_NAMES[index];
@@ -1420,6 +1432,14 @@ bool onconfirm_vehmod_category_menu(MenuItem<int> choice){
 		VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT_INDEX(veh, choice.value);
 		set_status_text("Changed license plate");
 	}
+	else if (lastSelectedModValue == SPECIAL_ID_FOR_ENGINE_SOUND){ 
+		char *currSound = new char[ENGINE_SOUND[choice.value].length() + 1];
+		strcpy(currSound, ENGINE_SOUND[choice.value].c_str());
+		current_picked_engine_sound = choice.value;
+		VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
+		AUDIO::_SET_VEHICLE_AUDIO(veh, currSound);
+		set_status_text("Changed engine sound");
+	}
 	else if (lastSelectedModValue == SPECIAL_ID_FOR_WHEEL_CATEGORY){
 		VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
 		VEHICLE::SET_VEHICLE_WHEEL_TYPE(veh, choice.value);
@@ -1444,6 +1464,13 @@ bool process_vehmod_category_special_menu(int category){
 		int plateCount = VEHICLE::GET_NUMBER_OF_VEHICLE_NUMBER_PLATES();
 		for (int i = 0; i < plateCount; i++){
 			values.push_back(i);
+		}
+	}
+	break;
+	case SPECIAL_ID_FOR_ENGINE_SOUND:
+	{
+		for (int e = 0; e < ENGINE_SOUND_COUNT; e++){
+			values.push_back(e);
 		}
 	}
 	break;
@@ -1730,6 +1757,15 @@ bool process_vehmod_menu(){
 		ss << getModCategoryName(SPECIAL_ID_FOR_LICENSE_PLATES) << " ~HUD_COLOUR_GREYLIGHT~(" << plateCount << ")";
 		item->caption = ss.str();
 		item->value = SPECIAL_ID_FOR_LICENSE_PLATES;
+		item->isLeaf = false;
+		menuItems.push_back(item);
+
+		ss.str(""), ss.clear();
+
+		item = new MenuItem<int>();
+		ss << getModCategoryName(SPECIAL_ID_FOR_ENGINE_SOUND) << " ~HUD_COLOUR_GREYLIGHT~(" << ENGINE_SOUND_COUNT << ")";
+		item->caption = ss.str();
+		item->value = SPECIAL_ID_FOR_ENGINE_SOUND;
 		item->isLeaf = false;
 		menuItems.push_back(item);
 
