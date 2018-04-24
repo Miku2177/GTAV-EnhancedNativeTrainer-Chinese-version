@@ -135,6 +135,7 @@ public:
 	bool convertibleRoofUp = false;
 	int dashboardColour;
 	int interiorColour;
+	int engineSound;
 
 	std::vector<SavedVehicleExtraDBRow*> extras;
 	std::vector<SavedVehicleModDBRow*> mods;

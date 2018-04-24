@@ -5,6 +5,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 */
 
 #include "database.h"
+#include "..\features\vehmodmenu.h"
 #include "..\debug\debuglog.h"
 #include "..\features\script.h"
 
@@ -16,7 +17,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 /**This value should be increased whenever you change the schema and a release is made.
 However you must also put in code to upgrade from older versions, in ENTDatabase::handle_version,
 as they will be deployed in the wild already.*/
-const int DATABASE_VERSION = 9;
+const int DATABASE_VERSION = 10;
 
 static int singleIntResultCallback(void *data, int count, char **rows, char **azColName)
 {
@@ -144,7 +145,8 @@ void ENTDatabase::handle_version(int oldVersion)
 			tyreSmokeB INTEGER DEFAULT -1, \
 			convertibleRoofUp INTEGER DEFAULT 0, \
 			dashColour INTEGER DEFAULT -1, \
-			interiorColour INTEGER DEFAULT -1 \
+			interiorColour INTEGER DEFAULT -1, \
+			engineSound INTEGER DEFAULT -1 \
 			)";
 		int rcVeh1 = sqlite3_exec(db, CREATE_VEHICLE_TABLE_QUERY, NULL, 0, &zErrMsg);
 		if (rcVeh1 != SQLITE_OK)
@@ -396,6 +398,19 @@ void ENTDatabase::handle_version(int oldVersion)
 			}
 		}
 	}
+
+	if (oldVersion < 10)
+	{
+		char* ADD_ENGINESOUND_COL = "ALTER TABLE ENT_SAVED_VEHICLES ADD engineSound INTEGER DEFAULT -1";
+
+		int custTyresAddition = sqlite3_exec(db, ADD_ENGINESOUND_COL, NULL, 0, &zErrMsg);
+		if (custTyresAddition != SQLITE_OK)
+		{
+			write_text_to_log_file("Couldn't add engine sound column");
+			sqlite3_free(zErrMsg);
+		}
+	}
+
 }
 
 bool ENTDatabase::open()
@@ -803,7 +818,7 @@ void ENTDatabase::save_vehicle_mods(Vehicle veh, sqlite3_int64 rowID)
 
 	begin_transaction();
 
-	for (int i = 0; i < 49; i++) //49 mods total (that is including Bennys mods)
+	for (int i = 0; i < 49; i++) //49 mods total (that is including Bennys mods) 
 	{
 		std::stringstream ss;
 		ss << "INSERT OR REPLACE INTO ENT_VEHICLE_MODS VALUES (?, ?, ?, ?, ?)";
@@ -985,13 +1000,13 @@ bool ENTDatabase::save_skin(Ped ped, std::string saveName, sqlite3_int64 slot)
 	return result;
 }
 
-bool ENTDatabase::save_vehicle(Vehicle veh, std::string saveName, sqlite3_int64 slot)
+bool ENTDatabase::save_vehicle(Vehicle veh, std::string saveName, sqlite3_int64 slot) 
 {
 	mutex_lock();
 
 	std::stringstream ss;
 	ss << "INSERT OR REPLACE INTO ENT_SAVED_VEHICLES VALUES (";
-	for (int i = 0; i < 40; i++)
+	for (int i = 0; i < 41; i++)
 	{
 		if (i > 0)
 		{
@@ -1107,9 +1122,10 @@ bool ENTDatabase::save_vehicle(Vehicle veh, std::string saveName, sqlite3_int64 
 		wheelType INTEGER, \ 22
 		windowTint INTEGER, \ 23
 		burstableTyres INTEGER \ 24
+		engineSound INTEGER, \ 25
 		*/
 
-		sqlite3_bind_int(stmt, index++, VEHICLE::GET_VEHICLE_LIVERY(veh));
+		sqlite3_bind_int(stmt, index++, VEHICLE::GET_VEHICLE_LIVERY(veh)); 
 
 		char* plateText = VEHICLE::GET_VEHICLE_NUMBER_PLATE_TEXT(veh);
 		sqlite3_bind_text(stmt, index++, plateText, strlen(plateText), 0);
@@ -1119,7 +1135,8 @@ bool ENTDatabase::save_vehicle(Vehicle veh, std::string saveName, sqlite3_int64 
 		sqlite3_bind_int(stmt, index++, VEHICLE::GET_VEHICLE_WINDOW_TINT(veh));
 		sqlite3_bind_int(stmt, index++, VEHICLE::GET_VEHICLE_TYRES_CAN_BURST(veh) ? 1 : 0);
 		sqlite3_bind_int(stmt, index++, VEHICLE::GET_VEHICLE_MOD_VARIATION(veh,23) ? 1 : 0);
-
+		
+		//sqlite3_bind_text(stmt, index++, CURRSOUNDENGINE[0], strlen(plateText), 0);
 		/*
 		dirtLevel REAL DEFAULT 0, \ 25
 			fadeLevel REAL DEFAULT 0, \ 26
@@ -1160,6 +1177,8 @@ bool ENTDatabase::save_vehicle(Vehicle veh, std::string saveName, sqlite3_int64 
 		VEHICLE::_GET_VEHICLE_INTERIOR_COLOUR(veh, &interiorCol);
 		sqlite3_bind_int(stmt, index++, dashCol);
 		sqlite3_bind_int(stmt, index++, interiorCol);
+
+		sqlite3_bind_int(stmt, index++, current_picked_engine_sound);
 
 		// commit
 		sqlite3_step(stmt);
@@ -1323,6 +1342,8 @@ std::vector<SavedVehicleDBRow*> ENTDatabase::get_saved_vehicles(int index)
 			veh->dashboardColour = sqlite3_column_int(stmt, index++);
 			veh->interiorColour = sqlite3_column_int(stmt, index++);
 
+			veh->engineSound = sqlite3_column_int(stmt, index++);
+
 			results.push_back(veh);
 
 			r = sqlite3_step(stmt);
@@ -1412,7 +1433,7 @@ void ENTDatabase::populate_saved_skin(SavedSkinDBRow *entry)
 	return;
 }
 
-void ENTDatabase::populate_saved_vehicle(SavedVehicleDBRow *entry)
+void ENTDatabase::populate_saved_vehicle(SavedVehicleDBRow *entry) 
 {
 	mutex_lock();
 

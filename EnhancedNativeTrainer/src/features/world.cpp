@@ -179,19 +179,8 @@ bool onconfirm_clouds_menu(MenuItem<std::string> choice)
 	std::stringstream ss; ss << "Clouds Frozen at: " << lastCloudsName;
 	switch (choice.currentMenuIndex)
 	{
-		// No Clouds
 	case 0:
-		if (featureCloudsNo)
-		{
-			//GAMEPLAY::_CLEAR_CLOUD_HAT();
-		}
-		break;
-		
-		// set weather
-	case 1:
-
-		//GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
-
+		// Set Weather
 		if (featureCloudsFreeze && !lastClouds.empty())
 		{
 			std::stringstream ss; ss << "Clouds frozen at: " << lastCloudsName;
@@ -207,16 +196,16 @@ bool onconfirm_clouds_menu(MenuItem<std::string> choice)
 			featureCloudsFreeze = false;
 		}
 		break;
+	case 1:
+		// No Clouds
+		GRAPHICS::_CLEAR_CLOUD_HAT();
+		break;
 	default:
 		lastClouds = choice.value.c_str();
 		lastCloudsName = choice.caption;
 
-		//GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
-		
 		GRAPHICS::_SET_CLOUD_HAT_TRANSITION((char *)lastClouds.c_str(), 1.0);
 				
-		//GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
-
 		std::ostringstream ss2;
 		ss2 << "Clouds: " << choice.caption;
 		set_status_text(ss2.str());
@@ -227,13 +216,13 @@ bool onconfirm_clouds_menu(MenuItem<std::string> choice)
 
 void process_clouds_menu()
 {
-	const int lineCount = 21;
+	const int lineCount = 22;
 
 	std::string caption = "Clouds Options";
 
 	StringStandardOrToggleMenuDef lines[lineCount] = {
-		//{ "No Clouds", "NOCLOUDS", &featureCloudsNo, NULL },
 		{ "Freeze Clouds", "FREEZECLOUDS", &featureCloudsFreeze, NULL },
+		{ "No Clouds", "NOCLOUDS", NULL, NULL },
 		//
 		{ "Altostratus", "altostratus", NULL, NULL },
 		{ "Cirrocumulus", "cirrocumulus", NULL, NULL },

@@ -25,8 +25,8 @@ bool featurePlayerRadioUpdated = false;
 bool featureRadioFreeze = false, featureRadioFreezeUpdated = false;
 bool featureRadioAlwaysOff = false;
 bool featureRadioAlwaysOffUpdated = false;
-bool featureBoostRadio = false;
-bool featureBoostRadioUpdated = false;
+bool featureBoostRadio = true;
+bool featureBoostRadioUpdated = true;
 bool featureWantedMusic = false;
 bool featureWantedMusicUpdated = false;
 bool featureFlyingMusic = false;
@@ -264,7 +264,7 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 }
 
 void process_misc_menu(){
-	const int lineCount = 12;
+	const int lineCount = 13;
 
 	std::string caption = "Miscellaneous Options";
 
@@ -274,7 +274,7 @@ void process_misc_menu(){
 		{"Next Radio Track", NULL, NULL, true},
 		{"Freeze Radio to Station", nullptr, nullptr, false},
 		{"Radio Always Off", &featureRadioAlwaysOff, &featureRadioAlwaysOffUpdated, true},
-		//{"Boost Radio Sound", &featureBoostRadio, &featureBoostRadioUpdated, true},
+		{"Boost Radio Volume", &featureBoostRadio, &featureBoostRadioUpdated, true},
 		{"Radio In Police Vehicle", &featurePoliceRadio, &featurePoliceRadioUpdated, true},
 		{"No Wanted Music", &featureWantedMusic, &featureWantedMusicUpdated, true},
 		{"No Flight Music", &featureFlyingMusic, &featureFlyingMusicUpdated, true},
@@ -297,7 +297,6 @@ void reset_misc_globals(){
 		featureWantedMusic = 
 		featureFlyingMusic = 
 		featurePoliceScanner = 
-		featureBoostRadio = 
 		featurePoliceRadio =
 		featureRadioAlwaysOff = false;
 
@@ -312,6 +311,7 @@ void reset_misc_globals(){
 		featureWantedMusicUpdated = 
 		featureFlyingMusicUpdated =
 		featurePoliceScannerUpdated = 
+		featureBoostRadio =
 		featureBoostRadioUpdated = 
 		featurePoliceRadioUpdated = 
 		featurePlayerRadioUpdated = true;
@@ -378,16 +378,16 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 
 	// Radio Boost
 	if (featureBoostRadio || featureBoostRadioUpdated){
-		if (featureBoostRadio){
+		if (featureBoostRadio) {
 			if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
 				Vehicle playerVeh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
-				AUDIO::SET_VEHICLE_RADIO_LOUD(playerVeh, true);
-				AUDIO::SET_VEHICLE_BOOST_ACTIVE(playerVeh, true);
-				set_status_text("Radio Boost On");
+				AUDIO::SET_VEHICLE_RADIO_LOUD(playerVeh, 1);
+				AUDIO::RELEASE_AMBIENT_AUDIO_BANK();
+				//AUDIO::SET_VEHICLE_BOOST_ACTIVE(playerVeh, true); // hissing
 			}
 		}
 	}
-	if (!featureBoostRadio) AUDIO::SET_VEHICLE_BOOST_ACTIVE(PED::GET_VEHICLE_PED_IS_USING(playerPed), 0);
+	if (!featureBoostRadio) AUDIO::SET_VEHICLE_RADIO_LOUD(PED::GET_VEHICLE_PED_IS_USING(playerPed), 0);
 
 	// Radio In Police Vehicles
 	if (featurePoliceRadio || featurePoliceRadioUpdated){
@@ -455,7 +455,11 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	
 	// show hud if phone in hand
 	if (featurePhoneShowHud){
-		if (!phone_toggle) UI::DISPLAY_RADAR(false);
+		if (!phone_toggle) 
+		{
+			UI::DISPLAY_RADAR(false);
+			featureMiscHideHudUpdated = false;
+		}
 		
 		if (CONTROLS::IS_CONTROL_PRESSED(2, 27)) {
 			UI::DISPLAY_RADAR(true);
@@ -468,7 +472,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		}
 
 	}
-	else if (featurePhoneShowHudUpdated){
+	else if (featurePhoneShowHudUpdated && !featureMiscHideHud){
 		UI::DISPLAY_RADAR(true);
 		phone_toggle = false;
 	}
