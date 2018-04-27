@@ -110,7 +110,6 @@
     <ClCompile Include="src\features\vehicle_weapons.cpp">
       <Filter>src\features</Filter>
     </ClCompile>
-    <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ent-enums.h" />
@@ -218,8 +217,6 @@
     <ClInclude Include="src\features\vehicle_weapons.h">
       <Filter>inc\features</Filter>
     </ClInclude>
-    <ClInclude Include="Header.h" />
-    <ClInclude Include="Header1.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />

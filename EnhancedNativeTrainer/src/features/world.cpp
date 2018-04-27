@@ -88,8 +88,8 @@ bool onconfirm_weather_menu(MenuItem<std::string> choice)
 	std::stringstream ss; ss << "Weather Frozen at: " << lastWeatherName;
 	switch (choice.currentMenuIndex)
 	{
-		// wind
 	case 0:
+		// wind
 		if (featureWeatherWind)
 		{
 			GAMEPLAY::SET_WIND(1.0);
@@ -102,9 +102,9 @@ bool onconfirm_weather_menu(MenuItem<std::string> choice)
 			GAMEPLAY::SET_WIND_SPEED(0.0);
 		}
 		break;
-		// set weather
+		
 	case 1:
-
+		// set weather
 		GAMEPLAY::CLEAR_OVERRIDE_WEATHER();
 		GAMEPLAY::CLEAR_WEATHER_TYPE_PERSIST();
 		GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
@@ -123,6 +123,15 @@ bool onconfirm_weather_menu(MenuItem<std::string> choice)
 			set_status_text("Set a weather value first");
 			featureWeatherFreeze = false;
 		}
+		break;
+	case 2:
+		// reset weather
+		GAMEPLAY::CLEAR_OVERRIDE_WEATHER();
+		GAMEPLAY::CLEAR_WEATHER_TYPE_PERSIST();
+		GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
+		GAMEPLAY::SET_WEATHER_TYPE_NOW("EXTRASUNNY");
+		GRAPHICS::_CLEAR_CLOUD_HAT();
+		GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
 		break;
 	default:
 		lastWeather = choice.value.c_str();
@@ -146,13 +155,14 @@ bool onconfirm_weather_menu(MenuItem<std::string> choice)
 
 void process_weather_menu()
 {
-	const int lineCount = 17;
+	const int lineCount = 18;
 
 	std::string caption = "Weather Options";
 
 	StringStandardOrToggleMenuDef lines[lineCount] = {
 		{ "Wind", "WIND", &featureWeatherWind, NULL },
 		{ "Freeze Weather", "FREEZEWEATHER", &featureWeatherFreeze, NULL },
+		{ "Reset Weather", "RESETWEATHER", NULL, NULL },
 		{ "Extra Sunny", "EXTRASUNNY", NULL, NULL },
 		{ "Clear", "CLEAR", NULL, NULL },
 		{ "Cloudy", "CLOUDS", NULL, NULL },
