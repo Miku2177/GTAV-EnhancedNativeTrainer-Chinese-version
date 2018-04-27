@@ -18,6 +18,7 @@ int lastSelectedWeaponCategory = 0;
 int lastSelectedWeapon = 0;
 
 int weapDmgModIndex = 0;
+int activeLineIndexCopArmed = 0;
 
 bool featureWeaponInfiniteAmmo = false;
 bool featureWeaponInfiniteParachutes = false, featureWeaponInfiniteParachutesUpdated = false;
@@ -29,6 +30,10 @@ bool featureWeaponFireAmmo = false;
 bool featureWeaponExplosiveAmmo = false;
 bool featureWeaponExplosiveMelee = false;
 bool featureWeaponVehRockets = false;
+
+bool featureCopArmedWith = false;
+bool featurePlayerMelee = true;
+bool featureArmyMelee = false;
 
 bool featureGravityGun = false;
 bool featureGravityGunUpdated = false;
@@ -56,6 +61,22 @@ bool cops_took_weapons = false;
 bool cops_on = false;
 
 bool redrawWeaponMenuAfterEquipChange = false;
+
+// Cop Weapon
+const std::vector<std::string> WEAPONS_COPARMED_CAPTIONS{ "\"WEAPON_UNARMED\"", "\"WEAPON_NIGHTSTICK\"", "\"WEAPON_FLASHLIGHT\"", "\"WEAPON_KNIFE\"", "\"WEAPON_DAGGER\"", "\"WEAPON_HAMMER\"", "\"WEAPON_BAT\"", "\"WEAPON_GOLFCLUB\"", 
+"\"WEAPON_CROWBAR\"", "\"WEAPON_POOLCUE\"", "\"WEAPON_WRENCH\"", "\"WEAPON_MACHETE\"", "\"WEAPON_BOTTLE\"", "\"WEAPON_PISTOL\"", "\"WEAPON_APPISTOL\"", "\"WEAPON_REVOLVER\"", "\"WEAPON_STUNGUN\"", "\"WEAPON_FLAREGUN\"",
+"\"WEAPON_MACHINEPISTOL\"", "\"WEAPON_MARKSMANPISTOL\"", "\"WEAPON_MINISMG\"", "\"WEAPON_ASSAULTSMG\"", "\"WEAPON_ASSAULTRIFLE\"", "\"WEAPON_CARBINERIFLE\"", "\"WEAPON_ADVANCEDRIFLE\"", "\"WEAPON_COMPACTRIFLE\"", "\"WEAPON_HEAVYSHOTGUN\"", 
+"\"WEAPON_DBSHOTGUN\"", "\"WEAPON_AUTOSHOTGUN\"", "\"WEAPON_MUSKET\"", "\"WEAPON_SAWNOFFSHOTGUN\"", "\"WEAPON_COMBATMG\"", "\"WEAPON_MINIGUN\"", "\"WEAPON_GUSENBERG\"", "\"WEAPON_SNIPERRIFLE\"", "\"WEAPON_HEAVYSNIPER\"", 
+"\"WEAPON_GRENADELAUNCHER\"", "\"WEAPON_GRENADELAUNCHER_SMOKE\"", "\"WEAPON_RPG\"", "\"WEAPON_HOMINGLAUNCHER\"", "\"WEAPON_COMPACTLAUNCHER\"", "\"WEAPON_RAILGUN\"", "\"WEAPON_FIREWORK\"" };
+const std::vector<int> WEAPONS_COPARMED_VALUES{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44 };
+int CopCurrArmedIndex = 1;
+bool CopCurrArmedChanged = true;
+
+// Cop Wanted Level
+const std::vector<std::string> WEAPONS_COPALARM_CAPTIONS{ "One Star", "Two Stars Or Less", "Three Stars Or Less", "Four Stars Or Less", "Five Stars Or Less", "Always" };
+const std::vector<int> WEAPONS_COPALARM_VALUES{ 1, 2, 3, 4, 5, 6 };
+int CopAlarmIndex = 1;
+bool CopAlarmChanged = true;
 
 /* Begin Gravity Gun related code */
 
@@ -510,6 +531,65 @@ bool do_give_weapon(std::string modelName){
 	}
 }
 
+void onchange_cop_armed_index(int value, SelectFromListMenuItem* source){
+	CopCurrArmedIndex = value;
+	CopCurrArmedChanged = true;
+}
+
+void onchange_cop_alarm_index(int value, SelectFromListMenuItem* source){
+	CopAlarmIndex = value;
+	CopAlarmChanged = true;
+}
+
+bool onconfirm_coparmed_menu(MenuItem<int> choice)
+{
+	return false;
+}
+
+void process_copweapon_menu(){
+	std::string caption = "Cop Weapons Options";
+
+	std::vector<MenuItem<int>*> menuItems;
+
+	MenuItem<int> *item;
+	SelectFromListMenuItem *listItem;
+	ToggleMenuItem<int>* toggleItem;
+
+	int i = 0;
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Enabled";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureCopArmedWith;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "If Player Unarmed/Melee Only";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featurePlayerMelee;
+	menuItems.push_back(toggleItem);
+
+	listItem = new SelectFromListMenuItem(WEAPONS_COPARMED_CAPTIONS, onchange_cop_armed_index);
+	listItem->wrap = false;
+	listItem->caption = "Armed With";
+	listItem->value = CopCurrArmedIndex;
+	menuItems.push_back(listItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Including Army";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureArmyMelee;
+	menuItems.push_back(toggleItem);
+	
+	listItem = new SelectFromListMenuItem(WEAPONS_COPALARM_CAPTIONS, onchange_cop_alarm_index);
+	listItem->wrap = false;
+	listItem->caption = "When";
+	listItem->value = CopAlarmIndex;
+	menuItems.push_back(listItem);
+	
+	draw_generic_menu<int>(menuItems, &activeLineIndexCopArmed, caption, onconfirm_coparmed_menu, NULL, NULL);
+}
+
 bool onconfirm_weapon_menu(MenuItem<int> choice){
 	// common variables
 	Player player = PLAYER::PLAYER_ID();
@@ -690,8 +770,11 @@ bool onconfirm_weapon_menu(MenuItem<int> choice){
 			}
 			break;
 		}
-		default:
+		case 22:
+			process_copweapon_menu();
 			break;
+	default:
+		break;
 	}
 	return false;
 }
@@ -847,6 +930,12 @@ bool process_weapon_menu(){
 	toggleItem->toggleValueUpdated = NULL;
 	menuItems.push_back(toggleItem);
 
+	item = new MenuItem<int>();
+	item->caption = "Cop Weapons";
+	item->value = i++;
+	item->isLeaf = false;
+	menuItems.push_back(item);
+
 	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Gravity Gun";
 	toggleItem->value = i++;
@@ -862,6 +951,13 @@ void reset_weapon_globals(){
 
 	weapDmgModIndex = 0;
 
+	CopCurrArmedIndex = 1;
+	CopAlarmIndex = 1;
+
+	activeLineIndexCopArmed = 0;
+
+	featurePlayerMelee = true;
+	
 	featureWeaponInfiniteAmmo =
 		featureWeaponInfiniteParachutes =
 		featureWeaponInfiniteParachutesUpdated =
@@ -875,6 +971,8 @@ void reset_weapon_globals(){
 		featureWeaponExplosiveMelee =
 		featureWeaponVehRockets =
 		featureGiveAllWeapons =
+		featureCopArmedWith =
+		featureArmyMelee =
 		featureGravityGun = false;
 }
 
@@ -968,9 +1066,63 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		if (WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_MARKSMANRIFLE")) sniper_rifle = true;
 		if (!sniper_rifle) UI::HIDE_HUD_COMPONENT_THIS_FRAME(14);
 	}
+	
+	// Cops Weapon
+	if (featureCopArmedWith) {
+		const int arrSize2 = 1024;
+		Vehicle cops[arrSize2];
+		int count_cops = worldGetAllPeds(cops, arrSize2);
+
+		Hash curr_weapon = WEAPON::GET_SELECTED_PED_WEAPON(playerPed);
+		Hash Weapon_Type = WEAPON::GET_WEAPONTYPE_GROUP(curr_weapon);
+
+		char *currWeapon = new char[WEAPONS_COPARMED_CAPTIONS[CopCurrArmedIndex].length() + 1];
+		strcpy(currWeapon, WEAPONS_COPARMED_CAPTIONS[CopCurrArmedIndex].c_str());
+		Hash Cop_Weapon = GAMEPLAY::GET_HASH_KEY(currWeapon);
+		
+		if ((PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) <= WEAPONS_COPALARM_VALUES[CopAlarmIndex]) || (WEAPONS_COPALARM_VALUES[CopAlarmIndex] > 5)) {
+		
+			if (featurePlayerMelee && (Weapon_Type == 3566412244 || Weapon_Type == 2685387236)) {
+				for (int i = 0; i < count_cops; i++) {
+					if (PED::GET_PED_TYPE(cops[i]) == 6 || PED::GET_PED_TYPE(cops[i]) == 27)
+					{
+						if (WEAPON::GET_SELECTED_PED_WEAPON(cops[i]) != Cop_Weapon)
+						{
+							WEAPON::GIVE_WEAPON_TO_PED(cops[i], Cop_Weapon, 999, false, true);
+						}
+					}
+					if (featureArmyMelee && PED::GET_PED_TYPE(cops[i]) == 29)
+					{
+						if (WEAPON::GET_SELECTED_PED_WEAPON(cops[i]) != Cop_Weapon)
+						{
+							WEAPON::GIVE_WEAPON_TO_PED(cops[i], Cop_Weapon, 999, false, true);
+						}
+					}
+				}
+			}
+			
+			if (!featurePlayerMelee) {
+				for (int i = 0; i < count_cops; i++) {
+					if (PED::GET_PED_TYPE(cops[i]) == 6 || PED::GET_PED_TYPE(cops[i]) == 27)
+					{
+						if (WEAPON::GET_SELECTED_PED_WEAPON(cops[i]) != Cop_Weapon)
+						{
+							WEAPON::GIVE_WEAPON_TO_PED(cops[i], Cop_Weapon, 999, false, true);
+						}
+					}
+					if (featureArmyMelee && PED::GET_PED_TYPE(cops[i]) == 29)
+					{
+						if (WEAPON::GET_SELECTED_PED_WEAPON(cops[i]) != Cop_Weapon)
+						{
+							WEAPON::GIVE_WEAPON_TO_PED(cops[i], Cop_Weapon, 999, false, true);
+						}
+					}
+				}
+			}
+		}
+	}
 
 	// Cops Take You Weapons If You Die / Arrested
-			
 	playerPed = PLAYER::PLAYER_PED_ID();
 	int pl_health = ENTITY::GET_ENTITY_HEALTH(playerPed);
 	Vector3 coords_me = ENTITY::GET_ENTITY_COORDS(playerPed, true);
@@ -994,9 +1146,12 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		cops_took_weapons = false;
 	}
 	
+	//if (PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 1)) WEAPON::REMOVE_ALL_PED_WEAPONS(PLAYER::PLAYER_ID(), false);
+	if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) > 2) WEAPON::REMOVE_ALL_PED_WEAPONS(PLAYER::PLAYER_ID(), false);
+
 	if (death_time > 10000) cops_took_weapons = false;
 
-	// Give All Weapons At Startup Option
+	// Give All Weapons On Startup Option
 	if (featureGiveAllWeapons && !Give_All_Weapons_Check) {
 		give_all_weapons_hotkey();
 		Give_All_Weapons_Check = true;
@@ -1387,6 +1542,15 @@ void add_weapon_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponVehRockets", &featureWeaponVehRockets});
 	results->push_back(FeatureEnabledLocalDefinition{"featureGravityGun", &featureGravityGun});
 	results->push_back(FeatureEnabledLocalDefinition{"featureGiveAllWeapons", &featureGiveAllWeapons});
+	results->push_back(FeatureEnabledLocalDefinition{"featureCopArmedWith", &featureCopArmedWith});
+	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerMelee", &featurePlayerMelee});
+	results->push_back(FeatureEnabledLocalDefinition{"featureArmyMelee", &featureArmyMelee});
+}
+
+void add_weapon_feature_enablements2(std::vector<StringPairSettingDBRow>* results)
+{
+	results->push_back(StringPairSettingDBRow{ "CopCurrArmedIndex", std::to_string(CopCurrArmedIndex) });
+	results->push_back(StringPairSettingDBRow{ "CopAlarmIndex", std::to_string(CopAlarmIndex) });
 }
 
 void onchange_weap_dmg_modifier(int value, SelectFromListMenuItem* source){
@@ -1402,6 +1566,12 @@ void handle_generic_settings_weapons(std::vector<StringPairSettingDBRow>* settin
 		StringPairSettingDBRow setting = settings->at(i);
 		if(setting.name.compare("weapDmgModIndex") == 0){
 			weapDmgModIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("CopCurrArmedIndex") == 0){
+			CopCurrArmedIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("CopAlarmIndex") == 0){
+			CopAlarmIndex = stoi(setting.value);
 		}
 	}
 }

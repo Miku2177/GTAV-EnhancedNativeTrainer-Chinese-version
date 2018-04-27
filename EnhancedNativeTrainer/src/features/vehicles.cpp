@@ -906,7 +906,8 @@ void update_speed_text(int speed, Vector3 player_coords)
 	numLines = sizeof(speedometerStatusLines2) / sizeof(speedometerStatusLines2[0]);
 
 	if (featureKMH) {
-		ss2 << round((speed / 0.62137119) * 2.3);
+		//ss2 << round((speed / 0.62137119) * 2.3);
+		ss2 << round((speed * 1.609344) * 2.3);
 
 		if (featureAltitude) {
 			ss2 << "\n" << floor(player_coords.z * 1) / 1;

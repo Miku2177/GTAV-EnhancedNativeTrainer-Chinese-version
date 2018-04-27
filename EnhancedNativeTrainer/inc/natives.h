@@ -2050,6 +2050,7 @@ namespace GAMEPLAY
 	static void GET_MODEL_DIMENSIONS(Hash modelHash, Vector3* minimum, Vector3* maximum) { invoke<Void>(0x03E8D3D5F549087A, modelHash, minimum, maximum); } // 0x03E8D3D5F549087A 0x91ABB8E0
 	static void SET_FAKE_WANTED_LEVEL(int fakeWantedLevel) { invoke<Void>(0x1454F2448DE30163, fakeWantedLevel); } // 0x1454F2448DE30163 0x85B1C9FA
 	static int GET_FAKE_WANTED_LEVEL() { return invoke<int>(0x4C9296CBCD1B971E); } // 0x4C9296CBCD1B971E 0x0022A430
+	static int GET_PLAYER_WANTED_LEVEL(Player player) { return invoke<int>(0xE28E54788CE8F12D, player); } // 0xE28E54788CE8F12D 0xBDCDD163
 	static BOOL IS_BIT_SET(int address, int offset) { return invoke<BOOL>(0xA921AA820C25702F, address, offset); } // 0xA921AA820C25702F 0x902E26AC
 	static void USING_MISSION_CREATOR(BOOL toggle) { invoke<Void>(0xF14878FC50BEC6EE, toggle); } // 0xF14878FC50BEC6EE 0x20AB0B6B
 	static void _0xDEA36202FC3382DF(BOOL p0) { invoke<Void>(0xDEA36202FC3382DF, p0); } // 0xDEA36202FC3382DF 0x082BA6F2

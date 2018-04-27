@@ -1241,6 +1241,7 @@ std::vector<StringPairSettingDBRow> get_generic_settings(){
 	handle_generic_settings_teleportation(&settings);
 	add_world_feature_enablements2(&settings);
 	add_world_feature_enablements3(&settings);
+	add_weapon_feature_enablements2(&settings);
 	add_bodyguards_feature_enablements2(&settings);
 	add_coords_generic_settings(&settings);
 	add_misc_generic_settings(&settings);
