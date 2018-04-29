@@ -1617,6 +1617,7 @@ namespace OBJECT
 
 namespace AI
 {
+	static void _SET_PED_SCREAM(Ped ped) { invoke<Void>(0x40CF0D12D142A9E8, ped); } // 0x40CF0D12D142A9E8
 	static void TASK_PAUSE(Ped ped, int ms) { invoke<Void>(0xE73A266DB0CA9042, ped, ms); } // 0xE73A266DB0CA9042 0x17A64668
 	static void TASK_STAND_STILL(Ped ped, int time) { invoke<Void>(0x919BE13EED931959, ped, time); } // 0x919BE13EED931959 0x6F80965D
 	static void TASK_JUMP(Ped ped, BOOL unused) { invoke<Void>(0x0AE4086104E067B1, ped, unused); } // 0x0AE4086104E067B1 0x0356E3CE

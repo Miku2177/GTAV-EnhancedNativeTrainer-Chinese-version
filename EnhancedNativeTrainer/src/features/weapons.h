@@ -241,6 +241,10 @@ void update_weapon_features(BOOL bPlayerExists, Player player);
 
 void onchange_cop_armed_index(int value, SelectFromListMenuItem* source);
 
+void onchange_chance_police_calling_index(int value, SelectFromListMenuItem* source);
+
+void onchange_chance_attacking_you_index(int value, SelectFromListMenuItem* source);
+
 void onchange_cop_alarm_index(int value, SelectFromListMenuItem* source);
 
 void add_weapon_feature_enablements2(std::vector<StringPairSettingDBRow>* results);

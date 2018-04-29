@@ -12,13 +12,16 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\ui_support\menu_functions.h"
 #include "weapons.h"
 #include "..\io\config_io.h"
+#include <ctime>
 
 int activeLineIndexWeapon = 0;
 int lastSelectedWeaponCategory = 0;
 int lastSelectedWeapon = 0;
+int tick_pedagainstweapons = 0;
 
 int weapDmgModIndex = 0;
 int activeLineIndexCopArmed = 0;
+int activeLineIndexPedAgainstWeapons = 0;
 
 bool featureWeaponInfiniteAmmo = false;
 bool featureWeaponInfiniteParachutes = false, featureWeaponInfiniteParachutesUpdated = false;
@@ -34,6 +37,13 @@ bool featureWeaponVehRockets = false;
 bool featureCopArmedWith = false;
 bool featurePlayerMelee = true;
 bool featureArmyMelee = false;
+
+bool featurePedAgainstWeapons = false;
+bool featureAgainstMeleeWeapons = false;
+bool featurePedAgainst = true;
+bool featureDriverAgainst = true;
+bool featurePoliceAgainst = true;
+bool featureAimAtDriver = true;
 
 bool featureGravityGun = false;
 bool featureGravityGunUpdated = false;
@@ -77,6 +87,18 @@ const std::vector<std::string> WEAPONS_COPALARM_CAPTIONS{ "One Star", "Two Stars
 const std::vector<int> WEAPONS_COPALARM_VALUES{ 1, 2, 3, 4, 5, 6 };
 int CopAlarmIndex = 1;
 bool CopAlarmChanged = true;
+
+// Chance Of Police Calling
+const std::vector<std::string> WEAPONS_CHANCEPOLICECALLING_CAPTIONS{ "Zero", "Tiny", "Some", "50/50", "Good", "Great" };
+const std::vector<int> WEAPONS_CHANCEPOLICECALLING_VALUES{ 0, 2, 10, 30, 50, 70 };
+int ChancePoliceCallingIndex = 5;
+bool ChancePoliceCallingChanged = true;
+
+// Chance Of Attacking You
+const std::vector<std::string> WEAPONS_CHANCEATTACKINGYOU_CAPTIONS{ "Zero", "Tiny", "Some", "50/50", "Good", "Great" };
+const std::vector<int> WEAPONS_CHANCEATTACKINGYOU_VALUES{ 0, 2, 10, 30, 50, 70 };
+int ChanceAttackingYouIndex = 1;
+bool ChanceAttackingYouChanged = true;
 
 /* Begin Gravity Gun related code */
 
@@ -590,6 +612,83 @@ void process_copweapon_menu(){
 	draw_generic_menu<int>(menuItems, &activeLineIndexCopArmed, caption, onconfirm_coparmed_menu, NULL, NULL);
 }
 
+void onchange_chance_police_calling_index(int value, SelectFromListMenuItem* source){
+	ChancePoliceCallingIndex = value;
+	ChancePoliceCallingChanged = true;
+}
+
+void onchange_chance_attacking_you_index(int value, SelectFromListMenuItem* source){
+	ChanceAttackingYouIndex = value;
+	ChanceAttackingYouChanged = true;
+}
+
+bool onconfirm_pedagainstweapons_menu(MenuItem<int> choice)
+{
+	return false;
+}
+
+void process_pedagainstweapons_menu(){
+	std::string caption = "Peds Don't Like Weapons Options";
+
+	std::vector<MenuItem<int>*> menuItems;
+
+	MenuItem<int> *item;
+	SelectFromListMenuItem *listItem;
+	ToggleMenuItem<int>* toggleItem;
+
+	int i = 0;
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Enabled";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featurePedAgainstWeapons;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Including Melee Weapons";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureAgainstMeleeWeapons;
+	menuItems.push_back(toggleItem);
+	
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Peds Against";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featurePedAgainst;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Drivers Against";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureDriverAgainst;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Police Against";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featurePoliceAgainst;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Aim At Driver To Make Him Leave";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureAimAtDriver;
+	menuItems.push_back(toggleItem);
+
+	listItem = new SelectFromListMenuItem(WEAPONS_CHANCEPOLICECALLING_CAPTIONS, onchange_chance_police_calling_index);
+	listItem->wrap = false;
+	listItem->caption = "Chance Of Calling The Police";
+	listItem->value = ChancePoliceCallingIndex;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(WEAPONS_CHANCEATTACKINGYOU_CAPTIONS, onchange_chance_attacking_you_index);
+	listItem->wrap = false;
+	listItem->caption = "Chance Of Attacking You";
+	listItem->value = ChanceAttackingYouIndex;
+	menuItems.push_back(listItem);
+		
+	draw_generic_menu<int>(menuItems, &activeLineIndexPedAgainstWeapons, caption, onconfirm_pedagainstweapons_menu, NULL, NULL);
+}
+
 bool onconfirm_weapon_menu(MenuItem<int> choice){
 	// common variables
 	Player player = PLAYER::PLAYER_ID();
@@ -773,6 +872,9 @@ bool onconfirm_weapon_menu(MenuItem<int> choice){
 		case 22:
 			process_copweapon_menu();
 			break;
+		case 23:
+			process_pedagainstweapons_menu();
+			break;
 	default:
 		break;
 	}
@@ -936,6 +1038,12 @@ bool process_weapon_menu(){
 	item->isLeaf = false;
 	menuItems.push_back(item);
 
+	item = new MenuItem<int>();
+	item->caption = "Peds Don't Like Weapons";
+	item->value = i++;
+	item->isLeaf = false;
+	menuItems.push_back(item);
+
 	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Gravity Gun";
 	toggleItem->value = i++;
@@ -954,8 +1062,16 @@ void reset_weapon_globals(){
 	CopCurrArmedIndex = 1;
 	CopAlarmIndex = 1;
 
-	activeLineIndexCopArmed = 0;
+	ChancePoliceCallingIndex = 5;
+	ChanceAttackingYouIndex = 1;
 
+	activeLineIndexCopArmed = 0;
+	activeLineIndexPedAgainstWeapons = 0;
+	
+	featurePedAgainst = 
+	featureDriverAgainst =
+	featurePoliceAgainst =
+	featureAimAtDriver =
 	featurePlayerMelee = true;
 	
 	featureWeaponInfiniteAmmo =
@@ -973,6 +1089,8 @@ void reset_weapon_globals(){
 		featureGiveAllWeapons =
 		featureCopArmedWith =
 		featureArmyMelee =
+		featurePedAgainstWeapons = 
+		featureAgainstMeleeWeapons =
 		featureGravityGun = false;
 }
 
@@ -1119,6 +1237,234 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 					}
 				}
 			}
+		}
+	}
+
+	//Peds Against Weapons
+	float pedagainstweapons_height = ENTITY::GET_ENTITY_HEIGHT_ABOVE_GROUND(PLAYER::PLAYER_ID());
+
+	if (featurePedAgainstWeapons && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID()) && pedagainstweapons_height < 1) {
+		
+		const int numElements = 10;
+		const int arrSize = numElements * 2 + 2;
+		int nearbyPed[arrSize];
+		int veh_police_distance_x = 100;
+		int veh_police_distance_y = 100;
+		int veh_police_distance_z = 100;
+		int ped_distance_x = 100;
+		int ped_distance_y = 100;
+		int ped_distance_z = 100;
+		float callpolice_randomize = -1;
+		Vehicle veh_police;
+		Vector3 veh_police_speed;
+		Vector3 coords_weapon_me;
+		Vector3 coords_ped;
+		Vector3 coords_police;
+	
+		nearbyPed[0] = numElements;
+
+		int count = PED::GET_PED_NEARBY_PEDS(PLAYER::PLAYER_PED_ID(), nearbyPed, -1);
+
+		if (nearbyPed != NULL)
+		{
+			for (int i = 0; i < count; i++)
+			{
+				int offsettedID = i * 2 + 2;
+			
+				if (PED::GET_PED_TYPE(nearbyPed[i]) == 6 || PED::GET_PED_TYPE(nearbyPed[i]) == 27)
+				{
+					veh_police = PED::GET_VEHICLE_PED_IS_IN(nearbyPed[i], true);
+					veh_police_speed = ENTITY::GET_ENTITY_VELOCITY(veh_police);
+					coords_police = ENTITY::GET_ENTITY_COORDS(nearbyPed[i], true);
+					veh_police_distance_x = (coords_weapon_me.x - coords_police.x);
+					veh_police_distance_y = (coords_weapon_me.y - coords_police.y);
+					veh_police_distance_z = (coords_weapon_me.z - coords_police.z);
+				}
+
+				coords_weapon_me = ENTITY::GET_ENTITY_COORDS(playerPed, true);
+				coords_ped = ENTITY::GET_ENTITY_COORDS(nearbyPed[i], true);
+
+				ped_distance_x = (coords_weapon_me.x - coords_ped.x);
+				ped_distance_y = (coords_weapon_me.y - coords_ped.y);
+				ped_distance_z = (coords_weapon_me.z - coords_ped.z);
+
+				srand(time(0));
+				callpolice_randomize = (rand() % 100 + 1);
+								
+				if (nearbyPed[offsettedID] != NULL && ENTITY::DOES_ENTITY_EXIST(nearbyPed[offsettedID]))
+					{
+					
+						// Aiming
+						if (featureAimAtDriver && PED::GET_PED_TYPE(nearbyPed[i]) != 6 && PED::GET_PED_TYPE(nearbyPed[i]) != 27){
+							Vehicle aim_veh = PED::GET_VEHICLE_PED_IS_IN(nearbyPed[i], true);
+							if (PLAYER::IS_PLAYER_FREE_AIMING_AT_ENTITY(PLAYER::PLAYER_ID(), nearbyPed[i]) && PED::IS_PED_IN_ANY_VEHICLE(nearbyPed[i], false) && WEAPON::IS_PED_ARMED(playerPed, 6))
+							{
+								AI::TASK_LEAVE_VEHICLE(nearbyPed[i], aim_veh, 4160);
+								if (!featureAgainstMeleeWeapons && WEAPON::IS_PED_ARMED(playerPed, 7) && WEAPON::IS_PED_ARMED(playerPed, 6)) {
+									if (callpolice_randomize < WEAPONS_CHANCEATTACKINGYOU_VALUES[ChanceAttackingYouIndex]) {
+										PED::SET_PED_AS_ENEMY(nearbyPed[i], true);
+										PED::REGISTER_TARGET(nearbyPed[i], playerPed);
+										AI::TASK_COMBAT_PED(nearbyPed[i], playerPed, 0, 16);
+										if (!WEAPON::IS_PED_ARMED(nearbyPed[i], 7)) WEAPON::GIVE_WEAPON_TO_PED(nearbyPed[i], WEAPON::GET_SELECTED_PED_WEAPON(playerPed), 999, false, true);
+									}
+								}
+							}
+						}
+						
+						// Peds Against
+						if (featurePedAgainst && !PED::IS_PED_IN_ANY_VEHICLE(nearbyPed[i], false) && PED::GET_PED_TYPE(nearbyPed[i]) != 6 && PED::GET_PED_TYPE(nearbyPed[i]) != 27) {
+							if (ped_distance_x < 10 && ped_distance_y < 10 && ped_distance_z < 5 && PED::IS_PED_FACING_PED(nearbyPed[i], playerPed, 100) && !PLAYER::IS_PLAYER_FREE_AIMING_AT_ENTITY(playerPed, nearbyPed[i]))
+							{
+								
+								if (featureAgainstMeleeWeapons && WEAPON::IS_PED_ARMED(playerPed, 7) && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
+									if (callpolice_randomize < WEAPONS_CHANCEATTACKINGYOU_VALUES[ChanceAttackingYouIndex]) {
+										PED::SET_PED_AS_ENEMY(nearbyPed[i], true);
+										PED::REGISTER_TARGET(nearbyPed[i], playerPed);
+										AI::TASK_COMBAT_PED(nearbyPed[i], playerPed, 0, 16);
+										if (!WEAPON::IS_PED_ARMED(nearbyPed[i], 7)) WEAPON::GIVE_WEAPON_TO_PED(nearbyPed[i], WEAPON::GET_SELECTED_PED_WEAPON(playerPed), 999, false, true);
+									}
+									if (!PED::IS_PED_FLEEING(nearbyPed[i]) && !AI::IS_PED_RUNNING(nearbyPed[i]) && !PED::IS_PED_IN_COMBAT(nearbyPed[i], playerPed)
+										&& !WEAPON::IS_PED_ARMED(nearbyPed[i], 7)) 
+									{
+										AUDIO::_PLAY_AMBIENT_SPEECH1(nearbyPed[i], "GENERIC_FRIGHTENED_HIGH", "SPEECH_PARAMS_FORCE_SHOUTED");
+										AI::TASK_SMART_FLEE_PED(nearbyPed[i], playerPed, 1000, -1, true, true);
+									}
+									if (callpolice_randomize < WEAPONS_CHANCEPOLICECALLING_VALUES[ChancePoliceCallingIndex] && !PED::IS_PED_IN_COMBAT(nearbyPed[i], playerPed) && !WEAPON::IS_PED_ARMED(nearbyPed[i], 7)) {
+										AI::TASK_USE_MOBILE_PHONE_TIMED(nearbyPed[i], 10000);
+										tick_pedagainstweapons = tick_pedagainstweapons + 1;
+										if (tick_pedagainstweapons > 1000) {
+											if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 1) {
+												PLAYER::SET_MAX_WANTED_LEVEL(5);
+												PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 1, 0);
+												PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
+											}
+											tick_pedagainstweapons = 0;
+										}
+									}
+								}
+
+								if (!featureAgainstMeleeWeapons && WEAPON::IS_PED_ARMED(playerPed, 7) && WEAPON::IS_PED_ARMED(playerPed, 6) && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
+									if (callpolice_randomize < WEAPONS_CHANCEATTACKINGYOU_VALUES[ChanceAttackingYouIndex]) {
+										PED::SET_PED_AS_ENEMY(nearbyPed[i], true);
+										PED::REGISTER_TARGET(nearbyPed[i], playerPed);
+										AI::TASK_COMBAT_PED(nearbyPed[i], playerPed, 0, 16);
+										if (!WEAPON::IS_PED_ARMED(nearbyPed[i], 7)) WEAPON::GIVE_WEAPON_TO_PED(nearbyPed[i], WEAPON::GET_SELECTED_PED_WEAPON(playerPed), 999, false, true);
+									}
+									if (!PED::IS_PED_FLEEING(nearbyPed[i]) && !AI::IS_PED_RUNNING(nearbyPed[i]) && !PED::IS_PED_IN_COMBAT(nearbyPed[i], playerPed) 
+										&& !WEAPON::IS_PED_ARMED(nearbyPed[i], 7)) 
+									{
+										AUDIO::_PLAY_AMBIENT_SPEECH1(nearbyPed[i], "GENERIC_FRIGHTENED_HIGH", "SPEECH_PARAMS_FORCE_SHOUTED");
+										AI::TASK_SMART_FLEE_PED(nearbyPed[i], playerPed, 1000, -1, true, true);
+									}
+									if (callpolice_randomize < WEAPONS_CHANCEPOLICECALLING_VALUES[ChancePoliceCallingIndex] && !PED::IS_PED_IN_COMBAT(nearbyPed[i], playerPed) && !WEAPON::IS_PED_ARMED(nearbyPed[i], 7)) {
+										AI::TASK_USE_MOBILE_PHONE_TIMED(nearbyPed[i], 10000);
+										tick_pedagainstweapons = tick_pedagainstweapons + 1;
+										if (tick_pedagainstweapons > 1000) {
+											if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 1) {
+												PLAYER::SET_MAX_WANTED_LEVEL(5);
+												PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 1, 0);
+												PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
+											}
+											tick_pedagainstweapons = 0;
+										}
+									}
+								}
+
+							}
+						}
+					
+						// Drivers Against						
+						if (featureDriverAgainst && PED::IS_PED_IN_ANY_VEHICLE(nearbyPed[i], false) && PED::GET_PED_TYPE(nearbyPed[i]) != 6 && PED::GET_PED_TYPE(nearbyPed[i]) != 27) {
+							if (ped_distance_x < 10 && ped_distance_y < 10 && ped_distance_z < 5 && PED::IS_PED_FACING_PED(nearbyPed[i], playerPed, 100) && !PLAYER::IS_PLAYER_FREE_AIMING_AT_ENTITY(playerPed, nearbyPed[i]))
+							{
+
+								if (featureAgainstMeleeWeapons && WEAPON::IS_PED_ARMED(playerPed, 7) && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
+									if (callpolice_randomize < WEAPONS_CHANCEATTACKINGYOU_VALUES[ChanceAttackingYouIndex]) {
+										PED::SET_PED_AS_ENEMY(nearbyPed[i], true);
+										PED::REGISTER_TARGET(nearbyPed[i], playerPed);
+										AI::TASK_COMBAT_PED(nearbyPed[i], playerPed, 0, 16);
+										if (!WEAPON::IS_PED_ARMED(nearbyPed[i], 7)) WEAPON::GIVE_WEAPON_TO_PED(nearbyPed[i], WEAPON::GET_SELECTED_PED_WEAPON(playerPed), 999, false, true);
+									}
+									if (!PED::IS_PED_FLEEING(nearbyPed[i]) && !AI::IS_PED_RUNNING(nearbyPed[i]) && !PED::IS_PED_IN_COMBAT(nearbyPed[i], playerPed) 
+										&& !WEAPON::IS_PED_ARMED(nearbyPed[i], 7)) 
+									{
+										AUDIO::_PLAY_AMBIENT_SPEECH1(nearbyPed[i], "GENERIC_FRIGHTENED_HIGH", "SPEECH_PARAMS_FORCE_SHOUTED");
+										AI::TASK_SMART_FLEE_PED(nearbyPed[i], playerPed, 1000, -1, true, true);
+									}
+									if (callpolice_randomize < WEAPONS_CHANCEPOLICECALLING_VALUES[ChancePoliceCallingIndex] && !PED::IS_PED_IN_COMBAT(nearbyPed[i], playerPed) && !WEAPON::IS_PED_ARMED(nearbyPed[i], 7)) {
+										AI::TASK_USE_MOBILE_PHONE_TIMED(nearbyPed[i], 10000);
+										tick_pedagainstweapons = tick_pedagainstweapons + 1;
+										if (tick_pedagainstweapons > 1000) {
+											if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 1) {
+												PLAYER::SET_MAX_WANTED_LEVEL(5);
+												PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 1, 0);
+												PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
+											}
+											tick_pedagainstweapons = 0;
+										}
+									}
+								}
+
+								if (!featureAgainstMeleeWeapons && WEAPON::IS_PED_ARMED(playerPed, 7) && WEAPON::IS_PED_ARMED(playerPed, 6) && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
+									if (callpolice_randomize < WEAPONS_CHANCEATTACKINGYOU_VALUES[ChanceAttackingYouIndex]) {
+										PED::SET_PED_AS_ENEMY(nearbyPed[i], true);
+										PED::REGISTER_TARGET(nearbyPed[i], playerPed);
+										AI::TASK_COMBAT_PED(nearbyPed[i], playerPed, 0, 16);
+										if (!WEAPON::IS_PED_ARMED(nearbyPed[i], 7)) WEAPON::GIVE_WEAPON_TO_PED(nearbyPed[i], WEAPON::GET_SELECTED_PED_WEAPON(playerPed), 999, false, true);
+									}
+									if (!PED::IS_PED_FLEEING(nearbyPed[i]) && !AI::IS_PED_RUNNING(nearbyPed[i]) && !PED::IS_PED_IN_COMBAT(nearbyPed[i], playerPed) 
+										&& !WEAPON::IS_PED_ARMED(nearbyPed[i], 7)) 
+									{
+										AUDIO::_PLAY_AMBIENT_SPEECH1(nearbyPed[i], "GENERIC_FRIGHTENED_HIGH", "SPEECH_PARAMS_FORCE_SHOUTED");
+										AI::TASK_SMART_FLEE_PED(nearbyPed[i], playerPed, 1000, -1, true, true);
+									}
+									if (callpolice_randomize < WEAPONS_CHANCEPOLICECALLING_VALUES[ChancePoliceCallingIndex] && !PED::IS_PED_IN_COMBAT(nearbyPed[i], playerPed) && !WEAPON::IS_PED_ARMED(nearbyPed[i], 7)) {
+										AI::TASK_USE_MOBILE_PHONE_TIMED(nearbyPed[i], 10000);
+										tick_pedagainstweapons = tick_pedagainstweapons + 1;
+										if (tick_pedagainstweapons > 1000) {
+											if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 1) {
+												PLAYER::SET_MAX_WANTED_LEVEL(5);
+												PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 1, 0);
+												PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
+											}
+											tick_pedagainstweapons = 0;
+										}
+									}
+								}
+
+							}
+						}
+
+						// Polica Against
+						if (featurePoliceAgainst) {
+							if ((veh_police_distance_x < 30 && veh_police_distance_y < 30 && veh_police_distance_z < 5 && PED::IS_PED_FACING_PED(nearbyPed[i], playerPed, 100) 
+								&& veh_police_speed.x < 50 && veh_police_speed.y < 50) || (ped_distance_x < 10 && ped_distance_y < 10 && ped_distance_z < 5 
+								&& PED::IS_PED_FACING_PED(nearbyPed[i], playerPed, 100) && (PED::GET_PED_TYPE(nearbyPed[i]) == 6 || PED::GET_PED_TYPE(nearbyPed[i]) == 27)))
+							{
+								
+								if (featureAgainstMeleeWeapons && WEAPON::IS_PED_ARMED(playerPed, 7) && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
+									if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 1) {
+										PLAYER::SET_MAX_WANTED_LEVEL(5);
+										PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 1, 0);
+										PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
+									}
+								}
+								
+								if (!featureAgainstMeleeWeapons && WEAPON::IS_PED_ARMED(playerPed, 7) && WEAPON::IS_PED_ARMED(playerPed, 6) && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
+									if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 1) {
+										PLAYER::SET_MAX_WANTED_LEVEL(5);
+										PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 1, 0);
+										PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
+									}
+								}
+
+							}
+						}
+					
+					}
+			}
+
+			
 		}
 	}
 
@@ -1543,6 +1889,12 @@ void add_weapon_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featureGravityGun", &featureGravityGun});
 	results->push_back(FeatureEnabledLocalDefinition{"featureGiveAllWeapons", &featureGiveAllWeapons});
 	results->push_back(FeatureEnabledLocalDefinition{"featureCopArmedWith", &featureCopArmedWith});
+	results->push_back(FeatureEnabledLocalDefinition{"featurePedAgainstWeapons", &featurePedAgainstWeapons});
+	results->push_back(FeatureEnabledLocalDefinition{"featureAgainstMeleeWeapons", &featureAgainstMeleeWeapons});
+	results->push_back(FeatureEnabledLocalDefinition{"featurePedAgainst", &featurePedAgainst});
+	results->push_back(FeatureEnabledLocalDefinition{"featureDriverAgainst", &featureDriverAgainst});
+	results->push_back(FeatureEnabledLocalDefinition{"featurePoliceAgainst", &featurePoliceAgainst});
+	results->push_back(FeatureEnabledLocalDefinition{"featureAimAtDriver", &featureAimAtDriver});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerMelee", &featurePlayerMelee});
 	results->push_back(FeatureEnabledLocalDefinition{"featureArmyMelee", &featureArmyMelee});
 }
@@ -1551,6 +1903,8 @@ void add_weapon_feature_enablements2(std::vector<StringPairSettingDBRow>* result
 {
 	results->push_back(StringPairSettingDBRow{ "CopCurrArmedIndex", std::to_string(CopCurrArmedIndex) });
 	results->push_back(StringPairSettingDBRow{ "CopAlarmIndex", std::to_string(CopAlarmIndex) });
+	results->push_back(StringPairSettingDBRow{ "ChancePoliceCallingIndex", std::to_string(ChancePoliceCallingIndex) });
+	results->push_back(StringPairSettingDBRow{ "ChanceAttackingYouIndex", std::to_string(ChanceAttackingYouIndex) });
 }
 
 void onchange_weap_dmg_modifier(int value, SelectFromListMenuItem* source){
@@ -1572,6 +1926,12 @@ void handle_generic_settings_weapons(std::vector<StringPairSettingDBRow>* settin
 		}
 		else if (setting.name.compare("CopAlarmIndex") == 0){
 			CopAlarmIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("ChancePoliceCallingIndex") == 0){
+			ChancePoliceCallingIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("ChanceAttackingYouIndex") == 0){
+			ChanceAttackingYouIndex = stoi(setting.value);
 		}
 	}
 }
