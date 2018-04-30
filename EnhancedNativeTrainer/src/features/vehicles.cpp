@@ -129,6 +129,9 @@ bool requireRefreshOfVehSlotMenu = false;
 
 const int PED_FLAG_THROUGH_WINDSCREEN = 32;
 
+ScriptHeader* shopController;
+GlobalTable globalTable;
+
 const std::vector<std::string> VEH_INVINC_MODE_CAPTIONS{"OFF", "Mech. Only", "Mech. + Visual", "Mech. + Vis. + Cosmetic"};
 
 const std::vector<std::string> VEH_SPEED_BOOST_CAPTIONS{"Only When Already Moving", "Nothing Can Stop Me", "Fastest in the World"};
@@ -1759,6 +1762,7 @@ void speedlimiter_switching(){
 
 void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+	int globalindex = 0;
 
 	eGameVersion version = getGameVersion();
 	if (version < 20) *getGlobalPtr(2558120) = 1;
@@ -1783,8 +1787,58 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 	//if (version > 38) *getGlobalPtr(2606794) = 1; //2606794
 
+	/* Code thanks to Zorg93's MPCar Enabler. I just butchered it to fit... */
+	if (featureDespawnScriptDisabledUpdated) {
+		featureDespawnScriptDisabledUpdated = false;
+		if (featureDespawnScriptDisabled) {
+			for (int i = 0; i < shopController->CodePageCount(); i++)
+			{
+				__int64 sigAddress = FindPattern("\x28\x26\xCE\x6B\x86\x39\x03", "xxxxxxx", (const char*)shopController->GetCodePageAddress(i), shopController->GetCodePageSize(i));
+				if (!sigAddress)
+				{
+					continue;
+				}
+				write_text_to_log_file("Found Despawn Pattern");
+				int RealCodeOff = (int)(sigAddress - (__int64)shopController->GetCodePageAddress(i) + (i << 14));
+				for (int j = 0; j < 2000; j++)
+				{
+					if (*(int*)shopController->GetCodePositionAddress(RealCodeOff - j) == 0x0008012D)
+					{
+						int funcOff = *(int*)shopController->GetCodePositionAddress(RealCodeOff - j + 6) & 0xFFFFFF;
+						for (int k = 0x5; k < 0x40; k++)
+						{
+							if ((*(int*)shopController->GetCodePositionAddress(funcOff + k) & 0xFFFFFF) == 0x01002E)
+							{
+								for (k = k + 1; k < 30; k++)
+								{
+									if (*(unsigned char*)shopController->GetCodePositionAddress(funcOff + k) == 0x5F)
+									{
+										globalindex = *(int*)shopController->GetCodePositionAddress(funcOff + k + 1) & 0xFFFFFF;
+										write_text_to_log_file("Setting Global Variable to true: " + globalindex);
+										if (*globalTable.AddressOf(globalindex) != 1) { *globalTable.AddressOf(globalindex) = 1; };
+										set_status_text("MP Vehicles ~g~Enabled");
+										write_text_to_log_file("Despawn pointer found and enabled");
+										return;
+									}
+								}
+								break;
+							}
+						}
+						break;
+					}
+				}
+				break;
+			}
+		}
 
-	if (featureDespawnScriptDisabledUpdated){
+		else if (!featureDespawnScriptDisabled && featureDespawnScriptDisabledWasLastOn) {
+			*globalTable.AddressOf(globalindex) = 0;
+			set_status_text("Anti-MP Car despawn pointer ~disabled~");
+		}
+		featureDespawnScriptDisabledWasLastOn = featureDespawnScriptDisabled;
+	}
+	
+/*	if (featureDespawnScriptDisabledUpdated){
 		featureDespawnScriptDisabledUpdated = false;
 		if (featureDespawnScriptDisabled){
 			set_status_text("~r~Note:~r~ in-game shops will not work until you turn off the 'disable despawn' option");
@@ -1799,7 +1853,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 	if (featureDespawnScriptDisabled){
 		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("shop_controller");
-	}
+	}*/
 
 	// player's vehicle invincible
 	if (featureVehInvincibleUpdated){
