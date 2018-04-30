@@ -98,3 +98,45 @@ float radToDeg(float rads)
 	return rads * ((float)180.0 / (float)3.141592653589793);
 }
 
+uintptr_t FindPattern(const char *pattern, const char *mask, const char* startAddress, size_t size)
+{
+	const char* address_end = startAddress + size;
+	const auto mask_length = static_cast<size_t>(strlen(mask) - 1);
+
+	for (size_t i = 0; startAddress < address_end; startAddress++)
+	{
+		if (*startAddress == pattern[i] || mask[i] == '?')
+		{
+			if (mask[i + 1] == '\0')
+			{
+				return reinterpret_cast<uintptr_t>(startAddress) - mask_length;
+			}
+
+			i++;
+		}
+		else
+		{
+			i = 0;
+		}
+	}
+
+	return 0;
+}
+
+uintptr_t FindPattern(const char *pattern, const char *mask)
+{
+	MODULEINFO module = {};
+	GetModuleInformation(GetCurrentProcess(), GetModuleHandle(nullptr), &module, sizeof(MODULEINFO));
+
+	return FindPattern(pattern, mask, reinterpret_cast<const char *>(module.lpBaseOfDll), module.SizeOfImage);
+}
+
+bool CompareMemory(const uint8_t* pData, const uint8_t* bMask, const char* sMask)
+{
+	for (; *sMask; ++sMask, ++pData, ++bMask)
+		if (*sMask == 'x' && *pData != *bMask)
+			return false;
+
+	return *sMask == NULL;
+}
+

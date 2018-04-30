@@ -305,7 +305,6 @@ void process_bodyguard_blips_menu(){
 
 	std::vector<MenuItem<int>*> menuItems;
 
-	MenuItem<int> *item;
 	SelectFromListMenuItem *listItem;
 	ToggleMenuItem<int>* toggleItem;
 
