@@ -32,6 +32,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include <iostream>
 #include <vector>
 #include <psapi.h>
+#include <ctime>
 
 #pragma warning(disable : 4244 4305) // double <-> float conversions
 
@@ -82,13 +83,37 @@ bool featurePlayerLife = false;
 bool featurePlayerLifeUpdated = true;
 bool featurePlayerLife_Died = false;
 bool featurePlayerLife_Changed = false;
+bool featurePrison_Hardcore = false;
+bool featurePrison_Robe = true;
+bool featurePrison_Yard = true;
 
 bool featureNoRagdoll = false;
 bool featureNoRagdollUpdated = false;
 
 Ped oldplayerPed = -1;
-int tick, playerDataMenuIndex = 0;
+int tick, playerDataMenuIndex, playerPrisonMenuIndex = 0;
 int death_time2 = -1;
+
+// prison break variables
+bool detained, in_prison = false;
+int alert_level = 0;
+int time_before_get_to_prison = -1;
+int time_in_prison_tick = -1;
+bool out_of_prison = true;
+bool ExPrisonerDrunk = false;
+int ExPrisonerDrunk_tick = -1;
+int secs, mins, secs_difference = -1;
+int seconds_to_show = 60;
+char* seconds_to_show_char = "60";
+char* minutes_to_show_char = "60";
+char seconds_to_show_char_modifiable[2], minutes_to_show_char_modifiable[2];
+bool clear_wanted_level = false;
+int populate_tick = 0;
+Hash JailGuard_Weapon2 = -1;
+Ped prisonPed, temp_ped, temp_ped2 = -1;
+std::vector<Ped> ADDITIONAL_PRISONERS;
+int civilian_torso_drawable, civilian_torso_texture, civilian_legs_drawable, civilian_legs_texture = -1;
+//
 
 int  frozenWantedLevel = 0;
 
@@ -123,6 +148,24 @@ const std::vector<double> PLAYER_ARMOR_VALUES{ 0, 15, 20, 30, 40, 50, 100 };
 int current_player_armor = 6;
 bool current_player_armor_Changed = true;
 
+//Player Goes To Prison
+const std::vector<std::string> PLAYER_PRISON_CAPTIONS{ "OFF", "Died At 2 Stars Or More", "Died At 3 Stars Or More", "Died At 4 Stars Or More", "Died At 5 Stars" };
+const std::vector<double> PLAYER_PRISON_VALUES{ 0, 1, 2, 3, 4 };
+int current_player_prison = 0;
+bool current_player_prison_Changed = true;
+
+//Money For escape attempt
+const std::vector<std::string> PLAYER_ESCAPEMONEY_CAPTIONS{ "OFF", "10 000$", "30 000$", "50 000$", "100 000$", "500 000$", "1 000 000$", "5 000 000$", "10 000 000$", "50 000 000$", "100 000 000$" };
+const std::vector<double> PLAYER_ESCAPEMONEY_VALUES{ 0, 10000, 30000, 50000, 100000, 500000, 1000000, 5000000, 10000000, 50000000, 100000000 };
+int current_player_escapemoney = 4;
+bool current_player_escapemoney_Changed = true;
+
+//Time before discharge
+const std::vector<std::string> PLAYER_DISCHARGE_CAPTIONS{ "UNLIMITED", "10 MIN", "20 MIN", "30 MIN", "60 MIN", "90 MIN", "120 MIN" };
+const std::vector<double> PLAYER_DISCHARGE_VALUES{ 0, 600, 1200, 1800, 3600, 5400, 7200 };
+int current_player_discharge = 3;
+bool current_player_discharge_Changed = true;
+
 /* Prop unblocker related code - will need to clean up later*/
 
 /*THIS causes ENT not to load when Menyoo is present!*/
@@ -143,6 +186,21 @@ void onchange_player_health_mode(int value, SelectFromListMenuItem* source){
 void onchange_player_armor_mode(int value, SelectFromListMenuItem* source){
 	current_player_armor = value;
 	current_player_armor_Changed = true;
+}
+
+void onchange_player_prison_mode(int value, SelectFromListMenuItem* source){
+	current_player_prison = value;
+	current_player_prison_Changed = true;
+}
+
+void onchange_player_escapemoney_mode(int value, SelectFromListMenuItem* source){
+	current_player_escapemoney = value;
+	current_player_escapemoney_Changed = true;
+}
+
+void onchange_player_discharge_mode(int value, SelectFromListMenuItem* source){
+	current_player_discharge = value;
+	current_player_discharge_Changed = true;
 }
 
 void check_player_model(){
@@ -366,6 +424,7 @@ void update_features(){
 		Vehicle veh2 = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		if (!VEHICLE_KILLED.empty() && VEHICLE_KILLED[0] == veh2) {
 			VEHICLE::SET_VEHICLE_ENGINE_HEALTH(veh2, -4000);
+			//VEHICLE::_SET_VEHICLE_HALT(veh2, 1000.0, 1, 1);
 		}
 	}
 
@@ -418,6 +477,581 @@ void update_features(){
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 
+	////////////////////////////////////////// PRISON BREAK //////////////////////////////////////////
+	
+	if (PLAYER_PRISON_VALUES[current_player_prison] > 0) {
+		Ped playerPed_Prison = PLAYER::PLAYER_PED_ID();
+		Vector3 my_position_in_prison = ENTITY::GET_ENTITY_COORDS(playerPed_Prison, true);
+		time_before_get_to_prison = PLAYER::GET_TIME_SINCE_LAST_DEATH();
+
+		const int arrSize3 = 1024;
+		Ped guards[arrSize3];
+		int count_prison_guards = worldGetAllPeds(guards, arrSize3);
+
+		float distance_from_center_x, distance_from_center_y = -1;
+		float distance_from_guard_x, distance_from_guard_y = -1;
+
+		// Prison center coords
+		float prison_x = 1689.69;
+		float prison_y = 2589.49;
+		float prison_z = 46;
+		// Main characters
+		const Hash PLAYER_ZERO = 0xD7114C9;
+		const Hash PLAYER_ONE = 0x9B22DBAF;
+		const Hash PLAYER_TWO = 0x9B810FA2;
+		// Main characters cash
+		const Hash SP0_TOTAL_CASH = 0x324C31D;
+		const Hash SP1_TOTAL_CASH = 0x44BD6982;
+		const Hash SP2_TOTAL_CASH = 0x8D75047D;
+
+		// Got wanted level? You'd better not die
+		if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) > PLAYER_PRISON_VALUES[current_player_prison] && !in_prison) detained = true;
+		// You won't be detained if you escape the police
+		if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) > -1 && current_player_prison < 4 && PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < PLAYER_PRISON_VALUES[current_player_prison + 1] &&
+			time_before_get_to_prison > 6000) detained = false;
+
+		// TRANSFERING YOU TO PRISON
+		if ((detained && time_before_get_to_prison > 0 && time_before_get_to_prison < 6000 && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID())) ||
+			(alert_level > 0 && time_before_get_to_prison > 0 && time_before_get_to_prison < 6000 && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID())))
+		{
+			ENTITY::SET_ENTITY_COORDS_NO_OFFSET(playerPed_Prison, 1691.334, 2545.26, 46, 0, 0, 1);
+			PLAYER::SET_MAX_WANTED_LEVEL(5);
+			PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 0, 0);
+			PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
+			// Disarm you including armor
+			WEAPON::REMOVE_ALL_PED_WEAPONS(playerPed_Prison, false);
+			PED::SET_PED_ARMOUR(PLAYER::PLAYER_ID(), 0);
+			
+			if (out_of_prison == true)
+			{
+				if (PLAYER_DISCHARGE_VALUES[current_player_discharge] != 0) time_in_prison_tick = PLAYER_DISCHARGE_VALUES[current_player_discharge];
+				else time_in_prison_tick = 10000;
+				out_of_prison = false;
+			}
+
+			// Money for trasnfering you to prison / escape attempt
+			// How much money have you got?
+			int outValue_your_current_amount = -1;
+			int statHash_your_purse = -1;
+			// Michael
+			if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO)
+			{
+				STATS::STAT_GET_INT(SP0_TOTAL_CASH, &outValue_your_current_amount, -1);
+				statHash_your_purse = SP0_TOTAL_CASH;
+				if (PLAYER_ESCAPEMONEY_VALUES[current_player_escapemoney] > 0) STATS::STAT_SET_INT(statHash_your_purse, outValue_your_current_amount - PLAYER_ESCAPEMONEY_VALUES[current_player_escapemoney], true);
+			}
+			// Franklin
+			if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE)
+			{
+				STATS::STAT_GET_INT(SP1_TOTAL_CASH, &outValue_your_current_amount, -1);
+				statHash_your_purse = SP1_TOTAL_CASH;
+				if (PLAYER_ESCAPEMONEY_VALUES[current_player_escapemoney] > 0) STATS::STAT_SET_INT(statHash_your_purse, outValue_your_current_amount - PLAYER_ESCAPEMONEY_VALUES[current_player_escapemoney], true);
+			}
+			// Trevor
+			if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO)
+			{
+				STATS::STAT_GET_INT(SP2_TOTAL_CASH, &outValue_your_current_amount, -1);
+				statHash_your_purse = SP2_TOTAL_CASH;
+				if (PLAYER_ESCAPEMONEY_VALUES[current_player_escapemoney] > 0) STATS::STAT_SET_INT(statHash_your_purse, outValue_your_current_amount - PLAYER_ESCAPEMONEY_VALUES[current_player_escapemoney], true);
+			}
+
+			// Character Prison Clothes
+			// Michael
+			if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO)
+			{
+				PED::SET_PED_COMPONENT_VARIATION(playerPed_Prison, 4, 11, 4, 1);
+				PED::SET_PED_COMPONENT_VARIATION(playerPed_Prison, 3, 12, 4, 1);
+			}
+			// Franklin
+			if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE)
+			{
+				PED::SET_PED_COMPONENT_VARIATION(playerPed_Prison, 4, 1, 5, 1);
+				PED::SET_PED_COMPONENT_VARIATION(playerPed_Prison, 3, 1, 5, 1);
+			}
+			// Trevor
+			if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO)
+			{
+				PED::SET_PED_COMPONENT_VARIATION(playerPed_Prison, 4, 5, 2, 1);
+				PED::SET_PED_COMPONENT_VARIATION(playerPed_Prison, 3, 5, 2, 1);
+			}
+
+			if (!ADDITIONAL_PRISONERS.empty()) {
+				for (int i = 0; i < ADDITIONAL_PRISONERS.size(); i++) {
+					PED::DELETE_PED(&ADDITIONAL_PRISONERS[i]);
+				}
+				ADDITIONAL_PRISONERS.clear();
+				ADDITIONAL_PRISONERS.shrink_to_fit();
+			}
+
+			detained = false;
+			in_prison = true;
+			alert_level = 0;
+			populate_tick = 0;
+		}
+
+		// IMPRISONED
+		if (in_prison)
+		{
+			Hash JailGuard_Weapon1 = GAMEPLAY::GET_HASH_KEY("WEAPON_PISTOL");
+			if (!featurePrison_Hardcore) JailGuard_Weapon2 = GAMEPLAY::GET_HASH_KEY("WEAPON_ASSAULTRIFLE");
+			if (featurePrison_Hardcore) JailGuard_Weapon2 = GAMEPLAY::GET_HASH_KEY("WEAPON_SNIPERRIFLE");
+			Hash JailGuard_Weapon3 = GAMEPLAY::GET_HASH_KEY("WEAPON_STUNGUN");
+			Vector3 guard_position_in_prison = ENTITY::GET_ENTITY_COORDS(guards[0], true);
+			int randomize_jail = -1;
+
+			// Populate the prison
+			if (featurePrison_Yard)
+			{
+				if (populate_tick < 15) populate_tick = populate_tick + 1;
+				if (populate_tick > 5 && populate_tick < 15) {
+					int randomize_peds_in_jail_rot = (1 + rand() % 90);
+					int randomize_peds_in_jail_x1 = (1 + rand() % 40);
+					int randomize_peds_in_jail_y1 = (1 + rand() % 60);
+					if (randomize_peds_in_jail_rot < 30) prisonPed = GAMEPLAY::GET_HASH_KEY("S_M_Y_PrisMuscl_01");
+					if (randomize_peds_in_jail_rot > 30 && randomize_peds_in_jail_rot < 60) prisonPed = GAMEPLAY::GET_HASH_KEY("S_M_Y_Prisoner_01");
+					if (randomize_peds_in_jail_rot > 60) prisonPed = GAMEPLAY::GET_HASH_KEY("U_M_Y_Prisoner_01");
+					STREAMING::REQUEST_MODEL(prisonPed);
+					while (!STREAMING::HAS_MODEL_LOADED(prisonPed)){
+						make_periodic_feature_call();
+						WAIT(0);
+					}
+					temp_ped = PED::CREATE_PED(25, prisonPed, randomize_peds_in_jail_x1 + 1701, randomize_peds_in_jail_y1 + 2484, my_position_in_prison.z, randomize_peds_in_jail_rot, 0, 0);
+					temp_ped2 = PED::CREATE_PED(25, prisonPed, randomize_peds_in_jail_x1 + 1654, randomize_peds_in_jail_y1 + 2626, my_position_in_prison.z, randomize_peds_in_jail_rot, 0, 0);
+					if (ADDITIONAL_PRISONERS.empty()) ADDITIONAL_PRISONERS.push_back(temp_ped);
+					ADDITIONAL_PRISONERS.push_back(temp_ped);
+					ADDITIONAL_PRISONERS.push_back(temp_ped2);
+					ENTITY::SET_ENTITY_AS_MISSION_ENTITY(temp_ped, 1, 1);
+					AI::TASK_WANDER_STANDARD(temp_ped, 10.0f, 10);
+					ENTITY::SET_ENTITY_AS_MISSION_ENTITY(temp_ped2, 1, 1);
+					AI::TASK_WANDER_STANDARD(temp_ped2, 10.0f, 10);
+				}
+			}
+
+			// Either main gates are closed or you're a sissy!
+			if (featurePrison_Hardcore) {
+				Hash prisonDoor = GAMEPLAY::GET_HASH_KEY("prop_gate_prison_01");
+				OBJECT::_DOOR_CONTROL(prisonDoor, 1845.0, 2605.0, 45.0, 1, 0.0, 50.0, 0);
+			}
+			else
+			{
+				OBJECT::_DOOR_CONTROL(GAMEPLAY::GET_HASH_KEY("prop_gate_prison_01"), 1845.0, 2605.0, 45.0, 0, 0.0, 50.0, 0);
+			}
+
+			// No way you will call or switch your character
+			CONTROLS::DISABLE_CONTROL_ACTION(2, 19, true);
+			MOBILE::DESTROY_MOBILE_PHONE();
+
+			// You don't need a parachute in prison
+			if (WEAPON::HAS_PED_GOT_WEAPON(playerPed_Prison, PARACHUTE_ID, FALSE))	WEAPON::REMOVE_WEAPON_FROM_PED(playerPed, PARACHUTE_ID);
+
+			// How much time before discharge
+			if (PLAYER_DISCHARGE_VALUES[current_player_discharge] > 0)
+			{
+
+				secs_difference = clock() / CLOCKS_PER_SEC;
+				if (time_in_prison_tick > 0 && (((clock() / CLOCKS_PER_SEC) - secs) != 0))
+				{
+					time_in_prison_tick = time_in_prison_tick - 1;
+					mins = time_in_prison_tick / 60;
+					secs = secs_difference;
+					seconds_to_show = seconds_to_show - 1;
+					if (seconds_to_show == 0) seconds_to_show = 60;
+					sprintf(seconds_to_show_char_modifiable, "%d", seconds_to_show);
+					sprintf(minutes_to_show_char_modifiable, "%d", mins);
+					if (seconds_to_show == 60) seconds_to_show_char = "00";
+					if (seconds_to_show == 0) seconds_to_show_char = "00";
+					if (seconds_to_show == 1) seconds_to_show_char = "01";
+					if (seconds_to_show == 2) seconds_to_show_char = "02";
+					if (seconds_to_show == 3) seconds_to_show_char = "03";
+					if (seconds_to_show == 4) seconds_to_show_char = "04";
+					if (seconds_to_show == 5) seconds_to_show_char = "05";
+					if (seconds_to_show == 6) seconds_to_show_char = "06";
+					if (seconds_to_show == 7) seconds_to_show_char = "07";
+					if (seconds_to_show == 8) seconds_to_show_char = "08";
+					if (seconds_to_show == 9) seconds_to_show_char = "09";
+					if (mins == 0) minutes_to_show_char = "00";
+					if (mins == 1) minutes_to_show_char = "01";
+					if (mins == 2) minutes_to_show_char = "02";
+					if (mins == 3) minutes_to_show_char = "03";
+					if (mins == 4) minutes_to_show_char = "04";
+					if (mins == 5) minutes_to_show_char = "05";
+					if (mins == 6) minutes_to_show_char = "06";
+					if (mins == 7) minutes_to_show_char = "07";
+					if (mins == 8) minutes_to_show_char = "08";
+					if (mins == 9) minutes_to_show_char = "09";
+				}
+				std::string temp_text = std::to_string(mins);
+				UI::SET_TEXT_FONT(4);
+				UI::SET_TEXT_SCALE(0.0, 0.45);
+				UI::SET_TEXT_PROPORTIONAL(1);
+				UI::SET_TEXT_COLOUR(255, 255, 255, 255);
+				UI::SET_TEXT_EDGE(3, 0, 0, 0, 255);
+				UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 255);
+				UI::SET_TEXT_OUTLINE();
+				UI::_SET_TEXT_ENTRY("STRING");
+				if (mins > 9) UI::_ADD_TEXT_COMPONENT_SCALEFORM(minutes_to_show_char_modifiable);
+				else UI::_ADD_TEXT_COMPONENT_SCALEFORM(minutes_to_show_char);
+				UI::_DRAW_TEXT(0.008, 0.65);
+				GRAPHICS::DRAW_RECT(0.0, 0.665, 0.1, 0.05, 10, 10, 10, 25);
+
+				UI::SET_TEXT_FONT(4);
+				UI::SET_TEXT_SCALE(0.0, 0.45);
+				UI::SET_TEXT_PROPORTIONAL(1);
+				UI::SET_TEXT_COLOUR(255, 255, 255, 255);
+				UI::SET_TEXT_EDGE(3, 0, 0, 0, 255);
+				UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 255);
+				UI::SET_TEXT_OUTLINE();
+				UI::_SET_TEXT_ENTRY("STRING");
+				UI::_ADD_TEXT_COMPONENT_SCALEFORM(":");
+				UI::_DRAW_TEXT(0.020, 0.65);
+				GRAPHICS::DRAW_RECT(0.0, 0.665, 0.1, 0.05, 10, 10, 10, 25);
+
+				UI::SET_TEXT_FONT(4);
+				UI::SET_TEXT_SCALE(0.0, 0.45);
+				UI::SET_TEXT_PROPORTIONAL(1);
+				UI::SET_TEXT_COLOUR(255, 255, 255, 255);
+				UI::SET_TEXT_EDGE(3, 0, 0, 0, 255);
+				UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 255);
+				UI::SET_TEXT_OUTLINE();
+				UI::_SET_TEXT_ENTRY("STRING");
+				if (seconds_to_show > 9 && seconds_to_show < 60) UI::_ADD_TEXT_COMPONENT_SCALEFORM(seconds_to_show_char_modifiable);
+				else UI::_ADD_TEXT_COMPONENT_SCALEFORM(seconds_to_show_char);
+				UI::_DRAW_TEXT(0.025, 0.65);
+			}
+
+			// Let's change a level of alertness
+			distance_from_center_x = my_position_in_prison.x - prison_x;
+			distance_from_center_y = my_position_in_prison.y - prison_y;
+			if (distance_from_center_x < 0) distance_from_center_x = distance_from_center_x * -1;
+			if (distance_from_center_y < 0) distance_from_center_y = distance_from_center_y * -1;
+
+			for (int i = 0; i < count_prison_guards; i++) {
+				if ((ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(guards[i], playerPed_Prison, 1) || WEAPON::IS_PED_ARMED(playerPed_Prison, 7) || (my_position_in_prison.z - prison_z) > 8) && alert_level < 2 && time_in_prison_tick > 0) alert_level = 1;
+				if (playerPed_Prison == PED::GET_PED_SOURCE_OF_DEATH(guards[i]) ||
+					(ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(guards[i], playerPed_Prison, 1) && (PED::GET_PED_TYPE(guards[i]) == 27 || PED::GET_PED_TYPE(guards[i]) == 6))) alert_level = 2;
+				if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_PED(guards[i]) && !ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(guards[i], playerPed_Prison, 1) &&
+					alert_level < 3 && alert_level == 1 && PED::GET_PED_TYPE(guards[i]) != 0 && PED::GET_PED_TYPE(guards[i]) != 1 && PED::GET_PED_TYPE(guards[i]) != 2) alert_level = 2; // In case you spawned bodyguards 
+			}
+
+			if ((distance_from_center_x > 110 || distance_from_center_y > 130 || PED::IS_PED_SHOOTING(playerPed_Prison)) && alert_level < 3 && time_in_prison_tick > 0) alert_level = 2;
+
+			if ((my_position_in_prison.z - prison_z) > 55 || distance_from_center_x > 190 || distance_from_center_y > 200 || PED::IS_PED_IN_ANY_VEHICLE(playerPed_Prison, true)) alert_level = 3;
+
+			// Alertness levels
+			if (alert_level == 0) { // Behave yourself
+				for (int i = 0; i < count_prison_guards; i++)
+				{
+					randomize_jail = (1 + rand() % 10);
+					if (randomize_jail < 6) JailGuard_Weapon3 = GAMEPLAY::GET_HASH_KEY("WEAPON_STUNGUN");
+					else JailGuard_Weapon3 = GAMEPLAY::GET_HASH_KEY("WEAPON_NIGHTSTICK");
+					if (WEAPON::IS_PED_ARMED(guards[i], 7) && WEAPON::IS_PED_ARMED(guards[i], 6) && PED::GET_PED_TYPE(guards[i]) != 0 && PED::GET_PED_TYPE(guards[i]) != 1 && PED::GET_PED_TYPE(guards[i]) != 2 &&
+						PED::GET_PED_TYPE(guards[i]) != 6 && PED::GET_PED_TYPE(guards[i]) != 27)
+					{
+						if (!featurePrison_Hardcore) {
+							if (WEAPON::GET_SELECTED_PED_WEAPON(guards[i]) == GAMEPLAY::GET_HASH_KEY("WEAPON_SNIPERRIFLE") ||
+								(WEAPON::GET_SELECTED_PED_WEAPON(guards[i]) == GAMEPLAY::GET_HASH_KEY("WEAPON_HEAVYSNIPER"))) WEAPON::GIVE_WEAPON_TO_PED(guards[i], JailGuard_Weapon3, 999, false, true);
+						}
+						if (WEAPON::GET_SELECTED_PED_WEAPON(guards[i]) != JailGuard_Weapon3)
+						{
+							WEAPON::GIVE_WEAPON_TO_PED(guards[i], JailGuard_Weapon3, 999, false, true);
+							AI::TASK_WANDER_STANDARD(guards[i], 10.0f, 10);
+						}
+					}
+					guard_position_in_prison = ENTITY::GET_ENTITY_COORDS(guards[i], true);
+					distance_from_guard_x = my_position_in_prison.x - guard_position_in_prison.x;
+					distance_from_guard_y = my_position_in_prison.y - guard_position_in_prison.y;
+					if (distance_from_guard_x < 0) distance_from_guard_x = distance_from_guard_x * -1;
+					if (distance_from_guard_y < 0) distance_from_guard_y = distance_from_guard_y * -1;
+					if (distance_from_guard_x < 55 && distance_from_guard_y < 55 && !WEAPON::IS_PED_ARMED(guards[i], 7) && PED::GET_PED_TYPE(guards[i]) != 0 && PED::GET_PED_TYPE(guards[i]) != 1 && PED::GET_PED_TYPE(guards[i]) != 2)
+					{
+						std::set<Ped> peds = get_nearby_peds(PLAYER::PLAYER_PED_ID());
+						for each (Ped xped in peds){
+							if (!PED::IS_PED_GROUP_MEMBER(xped, PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID())) && !WEAPON::IS_PED_ARMED(guards[i], 7) && PED::GET_PED_TYPE(guards[i]) != 0 &&
+								PED::GET_PED_TYPE(guards[i]) != 1 && PED::GET_PED_TYPE(guards[i]) != 2){
+								PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(xped, true);
+								PED::SET_PED_FLEE_ATTRIBUTES(xped, 0, 0);
+							}
+						}
+					}
+				}
+				PLAYER::SET_MAX_WANTED_LEVEL(0);
+				PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 0, 0);
+				PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
+				PLAYER::SET_POLICE_IGNORE_PLAYER(PLAYER::PLAYER_ID(), true);
+				PLAYER::SET_EVERYONE_IGNORE_PLAYER(PLAYER::PLAYER_ID(), true);
+				AUDIO::STOP_ALARM("PRISON_ALARMS", true);
+			}
+
+			if (alert_level == 1) { // Hit someone in the face / Withdraw a weapon / Got lost?!
+				for (int i = 0; i < count_prison_guards; i++)
+				{
+					randomize_jail = (1 + rand() % 10);
+					if (randomize_jail < 6) JailGuard_Weapon3 = GAMEPLAY::GET_HASH_KEY("WEAPON_STUNGUN");
+					else JailGuard_Weapon3 = GAMEPLAY::GET_HASH_KEY("WEAPON_NIGHTSTICK");
+					guard_position_in_prison = ENTITY::GET_ENTITY_COORDS(guards[i], true);
+					distance_from_guard_x = my_position_in_prison.x - guard_position_in_prison.x;
+					distance_from_guard_y = my_position_in_prison.y - guard_position_in_prison.y;
+					if (distance_from_guard_x < 0) distance_from_guard_x = distance_from_guard_x * -1;
+					if (distance_from_guard_y < 0) distance_from_guard_y = distance_from_guard_y * -1;
+					if (distance_from_guard_x < 25 && distance_from_guard_y < 25 && PED::GET_PED_TYPE(guards[i]) != 0 && PED::GET_PED_TYPE(guards[i]) != 1 && PED::GET_PED_TYPE(guards[i]) != 2)
+					{
+						PED::SET_PED_AS_ENEMY(playerPed_Prison, true);
+						PED::REGISTER_TARGET(guards[i], playerPed_Prison);
+						PED::SET_PED_COMBAT_ATTRIBUTES(guards[i], 5, true);
+						PED::SET_PED_COMBAT_ATTRIBUTES(guards[i], 46, true);
+						AI::TASK_COMBAT_PED(guards[i], playerPed_Prison, 0, 16);
+						PED::SET_PED_KEEP_TASK(guards[i], true);
+					}
+					if (WEAPON::IS_PED_ARMED(guards[i], 7) && WEAPON::IS_PED_ARMED(guards[i], 6) && PED::GET_PED_TYPE(guards[i]) != 0 && PED::GET_PED_TYPE(guards[i]) != 1 && PED::GET_PED_TYPE(guards[i]) != 2 &&
+						PED::GET_PED_TYPE(guards[i]) != 6 && PED::GET_PED_TYPE(guards[i]) != 27)
+					{
+						if (!featurePrison_Hardcore) {
+							if (WEAPON::GET_SELECTED_PED_WEAPON(guards[i]) == GAMEPLAY::GET_HASH_KEY("WEAPON_SNIPERRIFLE") ||
+								(WEAPON::GET_SELECTED_PED_WEAPON(guards[i]) == GAMEPLAY::GET_HASH_KEY("WEAPON_HEAVYSNIPER"))) WEAPON::GIVE_WEAPON_TO_PED(guards[i], JailGuard_Weapon3, 999, false, true);
+						}
+						if (WEAPON::GET_SELECTED_PED_WEAPON(guards[i]) != JailGuard_Weapon3)
+						{
+							WEAPON::GIVE_WEAPON_TO_PED(guards[i], JailGuard_Weapon3, 999, false, true);
+						}
+					}
+					if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(playerPed_Prison, guards[i], 1) && WEAPON::GET_SELECTED_PED_WEAPON(guards[i]) == GAMEPLAY::GET_HASH_KEY("WEAPON_STUNGUN"))
+					{
+						float playerHealth_prison = ENTITY::GET_ENTITY_HEALTH(playerPed_Prison);
+						srand(time(0));
+						int randomize_stungun_damage = (rand() % 50 + 1);
+						if (randomize_stungun_damage < 50) playerHealth_prison = playerHealth_prison - 0.0009;
+						else playerHealth_prison = playerHealth_prison - 0.001;
+						ENTITY::SET_ENTITY_HEALTH(playerPed_Prison, playerHealth_prison);
+					}
+				}
+				PLAYER::SET_MAX_WANTED_LEVEL(1);
+				PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 1, 0);
+				PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
+				PLAYER::SET_POLICE_IGNORE_PLAYER(PLAYER::PLAYER_ID(), true);
+				PLAYER::SET_EVERYONE_IGNORE_PLAYER(PLAYER::PLAYER_ID(), false);
+				AUDIO::STOP_ALARM("PRISON_ALARMS", true);
+			}
+
+			if (alert_level == 2) { // Trying to leave the courtyard. Being uppish?
+				for (int i = 0; i < count_prison_guards; i++)
+				{
+					guard_position_in_prison = ENTITY::GET_ENTITY_COORDS(guards[i], true);
+					distance_from_guard_x = my_position_in_prison.x - guard_position_in_prison.x;
+					distance_from_guard_y = my_position_in_prison.y - guard_position_in_prison.y;
+					if (distance_from_guard_x < 0) distance_from_guard_x = distance_from_guard_x * -1;
+					if (distance_from_guard_y < 0) distance_from_guard_y = distance_from_guard_y * -1;
+					if (distance_from_guard_x < 95 && distance_from_guard_y < 95 && PED::GET_PED_TYPE(guards[i]) != 0 && PED::GET_PED_TYPE(guards[i]) != 1 && PED::GET_PED_TYPE(guards[i]) != 2)
+					{
+						PED::SET_PED_AS_ENEMY(playerPed_Prison, true);
+						PED::REGISTER_TARGET(guards[i], playerPed_Prison);
+						PED::SET_PED_COMBAT_ATTRIBUTES(guards[i], 5, true);
+						PED::SET_PED_COMBAT_ATTRIBUTES(guards[i], 46, true);
+						AI::TASK_COMBAT_PED(guards[i], playerPed_Prison, 0, 16);
+						PED::SET_PED_KEEP_TASK(guards[i], true);
+					}
+					if (WEAPON::IS_PED_ARMED(guards[i], 7) && PED::GET_PED_TYPE(guards[i]) != 0 && PED::GET_PED_TYPE(guards[i]) != 1 && PED::GET_PED_TYPE(guards[i]) != 2 &&
+						PED::GET_PED_TYPE(guards[i]) != 6 && PED::GET_PED_TYPE(guards[i]) != 27)
+					{
+						if (!featurePrison_Hardcore) {
+							if (WEAPON::GET_SELECTED_PED_WEAPON(guards[i]) == GAMEPLAY::GET_HASH_KEY("WEAPON_SNIPERRIFLE") ||
+								(WEAPON::GET_SELECTED_PED_WEAPON(guards[i]) == GAMEPLAY::GET_HASH_KEY("WEAPON_HEAVYSNIPER")))
+							{
+								WEAPON::REMOVE_ALL_PED_WEAPONS(guards[i], true);
+								WEAPON::GIVE_WEAPON_TO_PED(guards[i], JailGuard_Weapon1, 999, false, true);
+							}
+						}
+						if (WEAPON::GET_SELECTED_PED_WEAPON(guards[i]) != JailGuard_Weapon1)
+						{
+							WEAPON::GIVE_WEAPON_TO_PED(guards[i], JailGuard_Weapon1, 999, false, true);
+						}
+					}
+				}
+				PLAYER::SET_MAX_WANTED_LEVEL(2);
+				PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 2, 0);
+				PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
+				PLAYER::SET_POLICE_IGNORE_PLAYER(PLAYER::PLAYER_ID(), false);
+				PLAYER::SET_EVERYONE_IGNORE_PLAYER(PLAYER::PLAYER_ID(), false);
+				AUDIO::STOP_ALARM("PRISON_ALARMS", false);
+			}
+
+			if (alert_level == 3) { // Escaping the prison. A death wish?
+				for (int i = 0; i < count_prison_guards; i++)
+				{
+					guard_position_in_prison = ENTITY::GET_ENTITY_COORDS(guards[i], true);
+					distance_from_guard_x = my_position_in_prison.x - guard_position_in_prison.x;
+					distance_from_guard_y = my_position_in_prison.y - guard_position_in_prison.y;
+					if (distance_from_guard_x < 0) distance_from_guard_x = distance_from_guard_x * -1;
+					if (distance_from_guard_y < 0) distance_from_guard_y = distance_from_guard_y * -1;
+					if (distance_from_guard_x < 155 && distance_from_guard_y < 155 && PED::GET_PED_TYPE(guards[i]) != 0 && PED::GET_PED_TYPE(guards[i]) != 1 && PED::GET_PED_TYPE(guards[i]) != 2)
+					{
+						PED::SET_PED_AS_ENEMY(playerPed_Prison, true);
+						PED::REGISTER_TARGET(guards[i], playerPed_Prison);
+						PED::SET_PED_COMBAT_ATTRIBUTES(guards[i], 5, true);
+						PED::SET_PED_COMBAT_ATTRIBUTES(guards[i], 46, true);
+						AI::TASK_COMBAT_PED(guards[i], playerPed_Prison, 0, 16);
+						PED::SET_PED_KEEP_TASK(guards[i], true);
+					}
+					if (WEAPON::IS_PED_ARMED(guards[i], 7) && PED::GET_PED_TYPE(guards[i]) != 0 && PED::GET_PED_TYPE(guards[i]) != 1 && PED::GET_PED_TYPE(guards[i]) != 2 &&
+						PED::GET_PED_TYPE(guards[i]) != 6 && PED::GET_PED_TYPE(guards[i]) != 27)
+					{
+						if (!featurePrison_Hardcore) {
+							if (WEAPON::GET_SELECTED_PED_WEAPON(guards[i]) == GAMEPLAY::GET_HASH_KEY("WEAPON_SNIPERRIFLE") ||
+								(WEAPON::GET_SELECTED_PED_WEAPON(guards[i]) == GAMEPLAY::GET_HASH_KEY("WEAPON_HEAVYSNIPER")))
+							{
+								WEAPON::REMOVE_ALL_PED_WEAPONS(guards[i], true);
+								WEAPON::GIVE_WEAPON_TO_PED(guards[i], JailGuard_Weapon2, 999, false, true);
+							}
+						}
+						if (WEAPON::GET_SELECTED_PED_WEAPON(guards[i]) != JailGuard_Weapon2)
+						{
+							WEAPON::GIVE_WEAPON_TO_PED(guards[i], JailGuard_Weapon2, 999, false, true);
+						}
+					}
+				}
+				PLAYER::SET_MAX_WANTED_LEVEL(5);
+				PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 5, 0);
+				PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
+				PLAYER::SET_POLICE_IGNORE_PLAYER(PLAYER::PLAYER_ID(), false);
+				PLAYER::SET_EVERYONE_IGNORE_PLAYER(PLAYER::PLAYER_ID(), false);
+				AUDIO::STOP_ALARM("PRISON_ALARMS", false);
+				in_prison = false;
+				alert_level = 0;
+				CONTROLS::ENABLE_CONTROL_ACTION(2, 19, true);
+				if (!ADDITIONAL_PRISONERS.empty()) {
+					for (int i = 0; i < ADDITIONAL_PRISONERS.size(); i++) {
+						PED::DELETE_PED(&ADDITIONAL_PRISONERS[i]);
+					}
+					ADDITIONAL_PRISONERS.clear();
+					ADDITIONAL_PRISONERS.shrink_to_fit();
+				}
+			}
+
+			// You served your time. Get lost. Let's hope we won't see you again
+			if (time_in_prison_tick < 1)
+			{
+				ENTITY::SET_ENTITY_COORDS_NO_OFFSET(playerPed_Prison, 1990.48, 3047.6, 47.2151, 0, 0, 1);
+				PLAYER::SET_MAX_WANTED_LEVEL(5);
+				PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 0, 0);
+				PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
+				PLAYER::SET_POLICE_IGNORE_PLAYER(PLAYER::PLAYER_ID(), false);
+				PLAYER::SET_EVERYONE_IGNORE_PLAYER(PLAYER::PLAYER_ID(), false);
+				AUDIO::STOP_ALARM("PRISON_ALARMS", false);
+				PLAYER::CLEAR_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID());
+				alert_level = 0;
+				CONTROLS::ENABLE_CONTROL_ACTION(2, 19, true);
+				out_of_prison = true;
+				in_prison = false;
+				clear_wanted_level = true;
+				ExPrisonerDrunk = true;
+				ExPrisonerDrunk_tick = 0;
+				if (!ADDITIONAL_PRISONERS.empty()) {
+					for (int i = 0; i < ADDITIONAL_PRISONERS.size(); i++) {
+						PED::DELETE_PED(&ADDITIONAL_PRISONERS[i]);
+					}
+					ADDITIONAL_PRISONERS.clear();
+					ADDITIONAL_PRISONERS.shrink_to_fit();
+				}
+				// Let's give back civilian clothes. We'll see if you're lucky
+				PED::SET_PED_RANDOM_COMPONENT_VARIATION(playerPed_Prison, true);
+			}
+		} // END OF IMPRISONED
+
+		if (clear_wanted_level == true && (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) > 0))
+		{
+			PLAYER::CLEAR_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID());
+		}
+
+		// You're found drunk in a bar 
+		if (ExPrisonerDrunk && ExPrisonerDrunk_tick == 0){
+			STREAMING::REQUEST_ANIM_SET("move_m@drunk@verydrunk");
+			while (!STREAMING::HAS_ANIM_SET_LOADED("move_m@drunk@verydrunk")){
+				WAIT(1);
+			}
+			PED::SET_PED_MOVEMENT_CLIPSET(playerPed_Prison, "move_m@drunk@verydrunk", 1.0f);
+			CAM::SHAKE_GAMEPLAY_CAM("DRUNK_SHAKE", 1.0f);
+			AUDIO::SET_PED_IS_DRUNK(playerPed_Prison, true);
+			ExPrisonerDrunk_tick = ExPrisonerDrunk_tick + 1;
+		}
+		
+		if (ExPrisonerDrunk_tick > 0 && ExPrisonerDrunk_tick < 3000) ExPrisonerDrunk_tick = ExPrisonerDrunk_tick + 1;
+
+		if (ExPrisonerDrunk_tick == 3000){
+			PED::RESET_PED_MOVEMENT_CLIPSET(playerPed_Prison, 1.0f);
+			CAM::STOP_GAMEPLAY_CAM_SHAKING(true);
+			ExPrisonerDrunk = false;
+			ExPrisonerDrunk_tick = 0;
+			ExPrisonerDrunk_tick = ExPrisonerDrunk_tick + 5;
+			clear_wanted_level = false;
+		}
+
+		// YOU'D BETTER CHANGE AS SOON AS POSSIBLE. POLICE WILL NOTICE YOUR INTERESTING CLOTHES
+		if (featurePrison_Robe && in_prison == false && (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 5))
+		{
+			for (int i = 0; i < count_prison_guards; i++)
+			{
+				Vector3 police_position = ENTITY::GET_ENTITY_COORDS(guards[i], true);
+				int distance_from_police_x = my_position_in_prison.x - police_position.x;
+				int distance_from_police_y = my_position_in_prison.y - police_position.y;
+				int distance_from_police_z = my_position_in_prison.z - police_position.z;
+				if (distance_from_police_x < 0) distance_from_police_x = distance_from_police_x * -1;
+				if (distance_from_police_y < 0) distance_from_police_y = distance_from_police_y * -1;
+				if (distance_from_police_z < 0) distance_from_police_z = distance_from_police_z * -1;
+
+				// Your escape is not over yet so you still can't use mobile or switch character unless you change your clothes. And you don't need a parachute either
+				if (((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 12) ||
+					(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 1) ||
+					(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 5)))
+				{
+					CONTROLS::DISABLE_CONTROL_ACTION(2, 19, true);
+					MOBILE::DESTROY_MOBILE_PHONE();
+					if (WEAPON::HAS_PED_GOT_WEAPON(playerPed_Prison, PARACHUTE_ID, FALSE)) WEAPON::REMOVE_WEAPON_FROM_PED(playerPed, PARACHUTE_ID);
+				}
+
+				// Met a cop at a distance
+				if (distance_from_police_x < 100 && distance_from_police_y < 100 && distance_from_police_z < 10 && PED::IS_PED_FACING_PED(guards[i], playerPed_Prison, 100) &&
+					(PED::GET_PED_TYPE(guards[i]) == 6 || PED::GET_PED_TYPE(guards[i]) == 27))
+				{
+					if (((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 12) || 
+						(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 1) || 
+						(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 5)) &&
+						(!PED::IS_PED_IN_ANY_VEHICLE(playerPed_Prison, false) || PED::IS_PED_ON_ANY_BIKE(playerPed_Prison)))
+					{
+						if ((PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 2)) {
+							PLAYER::SET_MAX_WANTED_LEVEL(5);
+							PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 1, 0);
+							PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
+						}
+						// Met a cop right in front of you
+						if (distance_from_police_x < 10 && distance_from_police_y < 10 && distance_from_police_z < 1 && (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 4))
+						{
+							PLAYER::SET_MAX_WANTED_LEVEL(5);
+							PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 3, 0);
+							PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
+						}
+					}
+				}
+				
+				// Prisoner driver met a cop
+				if (PED::IS_PED_IN_ANY_VEHICLE(playerPed_Prison, false) && !PED::IS_PED_ON_ANY_BIKE(playerPed_Prison))
+				{
+					if (((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 12) ||
+						(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 1) ||
+						(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 5)))
+					{
+						if ((distance_from_police_x < 4 && distance_from_police_y < 4 && distance_from_police_z < 1) && (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 4) && PED::IS_PED_FACING_PED(guards[i], playerPed_Prison, 100) &&
+							(PED::GET_PED_TYPE(guards[i]) == 6 || PED::GET_PED_TYPE(guards[i]) == 27))
+						{
+							PLAYER::SET_MAX_WANTED_LEVEL(5);
+							PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 3, 0);
+							PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////////
 
 	// police ignore player
 	if(featurePlayerIgnoredByPolice){
@@ -608,6 +1242,11 @@ bool onconfirm_playerData_menu(MenuItem<int> choice){
 	return false;
 }
 
+bool onconfirm_playerPrison_menu(MenuItem<int> choice){
+
+	return false;
+}
+
 bool process_player_life_menu(){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
@@ -695,6 +1334,56 @@ bool process_player_life_menu(){
 	//draw_generic_menu<int>(menuItems, nullptr, "Player Data", nullptr, nullptr, nullptr, nullptr);
 }
 
+bool process_player_prison_menu(){
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+
+	std::vector<MenuItem<int> *> menuItems;
+	std::string caption = "Prison Break Options";
+
+	MenuItem<int> *item;
+	SelectFromListMenuItem *listItem;
+	ToggleMenuItem<int>* toggleItem;
+
+	int i = 0;
+	listItem = new SelectFromListMenuItem(PLAYER_PRISON_CAPTIONS, onchange_player_prison_mode);
+	listItem->wrap = false;
+	listItem->caption = "Player Imprisoned If";
+	listItem->value = current_player_prison;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(PLAYER_ESCAPEMONEY_CAPTIONS, onchange_player_escapemoney_mode);
+	listItem->wrap = false;
+	listItem->caption = "Escape Failure Payment";
+	listItem->value = current_player_escapemoney;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(PLAYER_DISCHARGE_CAPTIONS, onchange_player_discharge_mode);
+	listItem->wrap = false;
+	listItem->caption = "Time To Discharge";
+	listItem->value = current_player_discharge;
+	menuItems.push_back(listItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Hardcore Mode";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featurePrison_Hardcore;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Cops React To Prison Clothes";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featurePrison_Robe;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "More Prisoners At The Yard";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featurePrison_Yard;
+	menuItems.push_back(toggleItem);
+
+	return draw_generic_menu<int>(menuItems, &playerPrisonMenuIndex, caption, onconfirm_playerPrison_menu, NULL, NULL);
+}
+
 int activeLineIndexPlayer = 0;
 
 bool onconfirm_player_menu(MenuItem<int> choice){
@@ -711,6 +1400,9 @@ bool onconfirm_player_menu(MenuItem<int> choice){
 		case 19:
 			process_player_life_menu();
 			break;
+		case 20:
+			process_player_prison_menu();
+			break;
 		default:
 			break;
 	}
@@ -719,7 +1411,7 @@ bool onconfirm_player_menu(MenuItem<int> choice){
 }
 
 void process_player_menu(){
-	const int lineCount = 20;
+	const int lineCount = 21;
 
 	std::string caption = "Player Options";
 
@@ -743,7 +1435,8 @@ void process_player_menu(){
 		{"Night Vision", &featureNightVision, &featureNightVisionUpdated, true},
 		{"Thermal Vision", &featureThermalVision, &featureThermalVisionUpdated, true},
 		{"Animations", NULL, NULL, false},
-		{"Player Data", NULL, NULL, false}
+		{"Player Data", NULL, NULL, false},
+		{"Prison Break", NULL, NULL, false}
 	};
 
 	draw_menu_from_struct_def(lines, lineCount, &activeLineIndexPlayer, caption, onconfirm_player_menu);
@@ -946,6 +1639,9 @@ void reset_globals(){
 		
 	current_player_health = 2;
 	current_player_armor = 6;
+	current_player_prison = 0;
+	current_player_escapemoney = 4;
+	current_player_discharge = 3;
 
 	featurePlayerDrunk =
 		featurePlayerInvincible =
@@ -963,7 +1659,7 @@ void reset_globals(){
 		featurePlayerLife =
 		featurePlayerLife_Died = 
 		featurePlayerLife_Changed =
-		
+		featurePrison_Hardcore =
 		featureNoRagdoll =
 
 		featureWantedLevelFrozen = false;
@@ -979,6 +1675,8 @@ void reset_globals(){
 		featurePlayerInvisibleUpdated =
 		featurePlayerInvisibleInVehicleUpdated =
 		featurePlayerLifeUpdated =
+		featurePrison_Robe =
+		featurePrison_Yard = 
 
 		featureNoRagdollUpdated =
 		featureWantedLevelFrozenUpdated = true;
@@ -1201,12 +1899,18 @@ void add_player_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerLife", &featurePlayerLife, &featurePlayerLifeUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerLife_Died", &featurePlayerLife_Died});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerLife_Changed", &featurePlayerLife_Changed});
+	results->push_back(FeatureEnabledLocalDefinition{"featurePrison_Hardcore", &featurePrison_Hardcore});
+	results->push_back(FeatureEnabledLocalDefinition{"featurePrison_Robe", &featurePrison_Robe});
+	results->push_back(FeatureEnabledLocalDefinition{"featurePrison_Yard", &featurePrison_Yard});
 }
 
 void add_world_feature_enablements3(std::vector<StringPairSettingDBRow>* results)
 {
 	results->push_back(StringPairSettingDBRow{"current_player_health", std::to_string(current_player_health)});
 	results->push_back(StringPairSettingDBRow{"current_player_armor", std::to_string(current_player_armor)});
+	results->push_back(StringPairSettingDBRow{"current_player_prison", std::to_string(current_player_prison)});
+	results->push_back(StringPairSettingDBRow{"current_player_escapemoney", std::to_string(current_player_escapemoney)});
+	results->push_back(StringPairSettingDBRow{"current_player_discharge", std::to_string(current_player_discharge)});
 }
 
 std::vector<FeatureEnabledLocalDefinition> get_feature_enablements(){
@@ -1273,6 +1977,15 @@ void handle_generic_settings(std::vector<StringPairSettingDBRow> settings){
 		}
 		else if (setting.name.compare("current_player_armor") == 0){
 			current_player_armor = stoi(setting.value);
+		}
+		else if (setting.name.compare("current_player_prison") == 0){
+			current_player_prison = stoi(setting.value);
+		}
+		else if (setting.name.compare("current_player_escapemoney") == 0){
+			current_player_escapemoney = stoi(setting.value);
+		}
+		else if (setting.name.compare("current_player_discharge") == 0){
+			current_player_discharge = stoi(setting.value);
 		}
 	}
 

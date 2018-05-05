@@ -105,6 +105,12 @@ void onchange_player_health_mode(int value, SelectFromListMenuItem* source);
 
 void onchange_player_armor_mode(int value, SelectFromListMenuItem* source);
 
+void onchange_player_prison_mode(int value, SelectFromListMenuItem* source);
+
+void onchange_player_escapemoney_mode(int value, SelectFromListMenuItem* source);
+
+void onchange_player_discharge_mode(int value, SelectFromListMenuItem* source);
+
 void process_reset_menu();
 
 void process_main_menu();

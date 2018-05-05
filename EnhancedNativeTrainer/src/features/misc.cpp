@@ -461,12 +461,14 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			featureMiscHideHudUpdated = false;
 		}
 		
-		if (CONTROLS::IS_CONTROL_PRESSED(2, 27)) {
+		if (PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed)) {
+		//if (CONTROLS::IS_CONTROL_PRESSED(2, 27)) {
 			UI::DISPLAY_RADAR(true);
 			phone_toggle = true;
 		}
-		
-		if (CONTROLS::IS_CONTROL_PRESSED(2, 177)) {
+	
+		if (!PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed)) {
+		//if (CONTROLS::IS_CONTROL_PRESSED(2, 177)) {
 			UI::DISPLAY_RADAR(false);
 			phone_toggle = false;
 		}
