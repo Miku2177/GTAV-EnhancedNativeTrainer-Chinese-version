@@ -65,6 +65,15 @@ bool allWorldVehiclesThisFrameFilled = false;
 std::set<Ped> releasedPeds;
 std::set<Vehicle> releasedVehicles;
 
+const std::vector<std::string> PED_WEAPONS_SELECTIVE_CAPTIONS{ "\"WEAPON_UNARMED\"", "\"WEAPON_NIGHTSTICK\"", "\"WEAPON_FLASHLIGHT\"", "\"WEAPON_KNIFE\"", "\"WEAPON_DAGGER\"", "\"WEAPON_HAMMER\"", "\"WEAPON_BAT\"", "\"WEAPON_GOLFCLUB\"",
+"\"WEAPON_CROWBAR\"", "\"WEAPON_POOLCUE\"", "\"WEAPON_WRENCH\"", "\"WEAPON_MACHETE\"", "\"WEAPON_BOTTLE\"", "\"WEAPON_PISTOL\"", "\"WEAPON_APPISTOL\"", "\"WEAPON_REVOLVER\"", "\"WEAPON_STUNGUN\"", "\"WEAPON_FLAREGUN\"",
+"\"WEAPON_MACHINEPISTOL\"", "\"WEAPON_MARKSMANPISTOL\"", "\"WEAPON_MINISMG\"", "\"WEAPON_ASSAULTSMG\"", "\"WEAPON_ASSAULTRIFLE\"", "\"WEAPON_CARBINERIFLE\"", "\"WEAPON_ADVANCEDRIFLE\"", "\"WEAPON_COMPACTRIFLE\"", "\"WEAPON_HEAVYSHOTGUN\"",
+"\"WEAPON_DBSHOTGUN\"", "\"WEAPON_AUTOSHOTGUN\"", "\"WEAPON_MUSKET\"", "\"WEAPON_SAWNOFFSHOTGUN\"", "\"WEAPON_COMBATMG\"", "\"WEAPON_MINIGUN\"", "\"WEAPON_GUSENBERG\"", "\"WEAPON_SNIPERRIFLE\"", "\"WEAPON_HEAVYSNIPER\"",
+"\"WEAPON_GRENADELAUNCHER\"", "\"WEAPON_GRENADELAUNCHER_SMOKE\"", "\"WEAPON_RPG\"", "\"WEAPON_HOMINGLAUNCHER\"", "\"WEAPON_COMPACTLAUNCHER\"", "\"WEAPON_RAILGUN\"", "\"WEAPON_FIREWORK\"" };
+const std::vector<int> PED_WEAPONS_SELECTIVE_VALUES{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44 };
+int PedWeaponsSelectiveIndex = 0;
+bool PedWeaponsSelective1Changed = true;
+
 //For onscreen debug info
 bool featureShowDebugInfo = false;
 bool featureShowDebugInfoUpdated = false;
@@ -147,6 +156,12 @@ void process_areaeffect_peds_menu(){
 	listItem->wrap = false;
 	listItem->caption = "Peds Armed With...";
 	listItem->value = pedWeaponSetIndex;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(PED_WEAPONS_SELECTIVE_CAPTIONS, onchange_ped_weapons_selective_index);
+	listItem->wrap = false;
+	listItem->caption = "Selective Weapon";
+	listItem->value = PedWeaponsSelectiveIndex;
 	menuItems.push_back(listItem);
 
 	togItem = new ToggleMenuItem<int>();
@@ -385,6 +400,11 @@ void update_area_effects(Ped playerPed){
 		pedWeaponSetUpdated = false;
 	}
 
+	if (PedWeaponsSelectiveIndex != 0 || PedWeaponsSelective1Changed){
+		give_all_nearby_peds_a_weapon(PedWeaponsSelectiveIndex != 0);
+		PedWeaponsSelective1Changed = false;
+	}
+
 	if(featureShowDebugInfo || featureShowDebugInfoUpdated){
 		show_debug_info_on_screen(featureShowDebugInfo);
 		featureShowDebugInfoUpdated = false;
@@ -435,7 +455,7 @@ void set_all_nearby_peds_to_invincible(bool enabled){
 	}
 }
 
-void set_all_nearby_peds_to_angry(bool enabled){
+void set_all_nearby_peds_to_angry(bool enabled){ 
 	std::set<Ped> peds = get_nearby_peds(PLAYER::PLAYER_PED_ID());
 
 	for each (Ped xped in peds){
@@ -813,6 +833,11 @@ void onchange_areaeffect_ped_weapons(int value, SelectFromListMenuItem* source){
 	pedWeaponSetUpdated = true;
 }
 
+void onchange_ped_weapons_selective_index(int value, SelectFromListMenuItem* source){
+	PedWeaponsSelectiveIndex = value;
+	PedWeaponsSelective1Changed = true;
+}
+
 void give_all_nearby_peds_a_weapon(bool enabled){
 	//callsPerFrame = 0;
 
@@ -826,49 +851,59 @@ void give_all_nearby_peds_a_weapon(bool enabled){
 		if(chanceOfGettingWeapon != 1){
 			continue;
 		}
+		if (PED_WEAPON_TITLES[pedWeaponSetIndex] != "Selective Weapon")
+		{
+			if (!PED::IS_PED_GROUP_MEMBER(xped, PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID()))){
+				ENTTrackedPedestrian* trackedPed = findOrCreateTrackedPed(xped);
 
-		if(!PED::IS_PED_GROUP_MEMBER(xped, PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID()))){
-			ENTTrackedPedestrian* trackedPed = findOrCreateTrackedPed(xped);
+				if (enabled && !trackedPed->weaponSetApplied != pedWeaponSetIndex){
+					std::vector<std::string> weaponSet = VOV_PED_WEAPONS[pedWeaponSetIndex];
 
-			if(enabled && !trackedPed->weaponSetApplied != pedWeaponSetIndex){
-				std::vector<std::string> weaponSet = VOV_PED_WEAPONS[pedWeaponSetIndex];
+					int index = rand() % weaponSet.size();
+					std::string weapon = weaponSet.at(index);
+					Hash weapHash = GAMEPLAY::GET_HASH_KEY((char *)weapon.c_str());
 
-				int index = rand() % weaponSet.size();
-				std::string weapon = weaponSet.at(index);
-				Hash weapHash = GAMEPLAY::GET_HASH_KEY((char *) weapon.c_str());
-
-				bool foundWeapon = false;
-				for(std::string searchStr : weaponSet){
-					Hash searchHash = GAMEPLAY::GET_HASH_KEY((char *) searchStr.c_str());
-					if(trackedPed->lastWeaponApplied == searchHash){
-						foundWeapon = true;
-						break;
+					bool foundWeapon = false;
+					for (std::string searchStr : weaponSet){
+						Hash searchHash = GAMEPLAY::GET_HASH_KEY((char *)searchStr.c_str());
+						if (trackedPed->lastWeaponApplied == searchHash){
+							foundWeapon = true;
+							break;
+						}
 					}
-				}
 
-				if(!foundWeapon){
-					WEAPON::GIVE_WEAPON_TO_PED(xped, weapHash, 9999, FALSE, TRUE);
-					WEAPON::SET_PED_INFINITE_AMMO_CLIP(xped, true);
-					PED::SET_PED_CAN_SWITCH_WEAPON(xped, true);
-					if(WEAPON::HAS_PED_GOT_WEAPON(xped, weapHash, 0) && !PED::IS_PED_IN_ANY_VEHICLE(xped, false) && !PED::IS_PED_INJURED(xped)){
-						WEAPON::SET_CURRENT_PED_WEAPON(xped, weapHash, 0);
+					if (!foundWeapon){
+						WEAPON::GIVE_WEAPON_TO_PED(xped, weapHash, 9999, FALSE, TRUE);
+						WEAPON::SET_PED_INFINITE_AMMO_CLIP(xped, true);
+						PED::SET_PED_CAN_SWITCH_WEAPON(xped, true);
+						if (WEAPON::HAS_PED_GOT_WEAPON(xped, weapHash, 0) && !PED::IS_PED_IN_ANY_VEHICLE(xped, false) && !PED::IS_PED_INJURED(xped)){
+							WEAPON::SET_CURRENT_PED_WEAPON(xped, weapHash, 0);
+						}
+						trackedPed->lastWeaponApplied = weapHash;
 					}
-					trackedPed->lastWeaponApplied = weapHash;
+
+					trackedPed->weaponSetApplied = pedWeaponSetIndex;
 				}
+				else if (!enabled && trackedPed->weaponSetApplied != 0){
+					//TODO: take all their weapons from that set away?
 
-				trackedPed->weaponSetApplied = pedWeaponSetIndex;
+					trackedPed->weaponSetApplied = 0;
+				}
 			}
-			else if(!enabled && trackedPed->weaponSetApplied != 0){
-				//TODO: take all their weapons from that set away?
-
-				trackedPed->weaponSetApplied = 0;
-			}
+		}
+		else
+		{
+			char *currWeapon = new char[PED_WEAPONS_SELECTIVE_CAPTIONS[PedWeaponsSelectiveIndex].length() + 1];
+			strcpy(currWeapon, PED_WEAPONS_SELECTIVE_CAPTIONS[PedWeaponsSelectiveIndex].c_str());
+			Hash Ped_Selective_Weapon = GAMEPLAY::GET_HASH_KEY(currWeapon);
+			WEAPON::GIVE_WEAPON_TO_PED(xped, Ped_Selective_Weapon, 9999, FALSE, TRUE);
 		}
 	}
 }
 
 void add_areaeffect_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"pedWeaponSetIndex", std::to_string(pedWeaponSetIndex)});
+	results->push_back(StringPairSettingDBRow{"PedWeaponsSelectiveIndex", std::to_string(PedWeaponsSelectiveIndex)});
 }
 
 void handle_generic_settings_areaeffect(std::vector<StringPairSettingDBRow>* settings){
@@ -877,6 +912,10 @@ void handle_generic_settings_areaeffect(std::vector<StringPairSettingDBRow>* set
 		if(setting.name.compare("pedWeaponSetIndex") == 0){
 			pedWeaponSetIndex = stoi(setting.value);
 			pedWeaponSetUpdated = true;
+		}
+		else if (setting.name.compare("PedWeaponsSelectiveIndex") == 0){
+			PedWeaponsSelectiveIndex = stoi(setting.value);
+			PedWeaponsSelective1Changed = true;
 		}
 	}
 }

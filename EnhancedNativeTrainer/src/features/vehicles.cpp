@@ -2417,7 +2417,8 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		if (VEH_FUELBLIPS_VALUES[FuelBlipsIndex] > 2) {
 			// SHOW BLIPS
 			show_blips = true;
-			if (CONTROLS::IS_CONTROL_PRESSED(2, 27)) {
+			if (PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed)) {
+			//if (CONTROLS::IS_CONTROL_PRESSED(2, 27)) {
 				for (int i = 0; i < 32; i++)
 				{
 					blip[i] = UI::ADD_BLIP_FOR_COORD(gasStations[i][0], gasStations[i][1], gasStations[i][2]);
@@ -2429,7 +2430,8 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			}
 
 			// HIDE BLIPS
-			if (CONTROLS::IS_CONTROL_PRESSED(2, 177)) {
+			if (!PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed)) {
+			//if (CONTROLS::IS_CONTROL_PRESSED(2, 177)) {
 				for (int i = 0; i < BLIPTABLE.size(); i++) {
 					if (UI::DOES_BLIP_EXIST(BLIPTABLE[i])) {
 						UI::REMOVE_BLIP(&BLIPTABLE[i]);
