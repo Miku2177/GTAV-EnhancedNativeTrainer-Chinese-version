@@ -124,7 +124,7 @@ const std::vector<std::string> PED_WEAPONS_RANDOM{"WEAPON_KNIFE", "WEAPON_NIGHTS
 
 const std::vector<std::vector<std::string>> VOV_PED_WEAPONS{ {}, PED_WEAPONS_MELEE, PED_WEAPONS_SMALL, PED_WEAPONS_RIFLES, PED_WEAPONS_HEAVY, PED_WEAPONS_EXPLOSIVES, PED_WEAPONS_RANDOM };
 
-const std::vector<std::string> PED_WEAPON_TITLES{"Selective Weapon", "Melee", "Small Arms", "Rifles", "Heavy", "Explosives", "Random"};
+const std::vector<std::string> PED_WEAPON_TITLES{"Custom Weapon", "Melee", "Small Arms", "Rifles", "Heavy", "Explosives", "Random"};
 
 bool onconfirm_areaeffect_ped_menu(MenuItem<int> choice);
 

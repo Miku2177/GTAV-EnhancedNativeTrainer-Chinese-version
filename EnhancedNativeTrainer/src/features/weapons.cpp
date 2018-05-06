@@ -19,6 +19,8 @@ int lastSelectedWeaponCategory = 0;
 int lastSelectedWeapon = 0;
 int tick_pedagainstweapons = 0;
 
+int vision_toggle = 0;
+
 int weapDmgModIndex = 0;
 int activeLineIndexCopArmed = 0;
 int activeLineIndexPedAgainstWeapons = 0;
@@ -100,6 +102,12 @@ const std::vector<std::string> WEAPONS_CHANCEATTACKINGYOU_CAPTIONS{ "Zero", "Tin
 const std::vector<int> WEAPONS_CHANCEATTACKINGYOU_VALUES{ 0, 2, 10, 30, 50, 70 };
 int ChanceAttackingYouIndex = 1;
 bool ChanceAttackingYouChanged = true;
+
+// Toggle Vision For Sniper Rifles
+const std::vector<std::string> WEAPONS_SNIPERVISION_CAPTIONS{ "OFF", "Via Hotkey", "Night Vision", "Thermal Vision" };
+const std::vector<int> WEAPONS_SNIPERVISION_VALUES{ 0, 1, 2, 3 };
+int SniperVisionIndex = 0;
+bool SniperVisionChanged = true;
 
 /* Begin Gravity Gun related code */
 
@@ -623,6 +631,49 @@ void onchange_chance_attacking_you_index(int value, SelectFromListMenuItem* sour
 	ChanceAttackingYouChanged = true;
 }
 
+void onchange_sniper_vision_modifier(int value, SelectFromListMenuItem* source){
+	SniperVisionIndex = value;
+	SniperVisionChanged = true;
+}
+
+///////////////////////////////// TOGGLE VISION FOR SNIPER RIFLES /////////////////////////////////
+
+void sniper_vision_toggle()
+{
+	if (WEAPONS_SNIPERVISION_VALUES[SniperVisionIndex] == 1)
+	{
+		Player player = PLAYER::PLAYER_ID();
+		Ped playerPed = PLAYER::PLAYER_PED_ID();
+
+		if ((WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_SNIPERRIFLE") || WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_HEAVYSNIPER") ||
+			WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_REMOTESNIPER") || WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_HEAVYSNIPER_MK2") ||
+			WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_MARKSMANRIFLE") || WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_MARKSMANRIFLE_MK2")) &&
+			PED::GET_PED_CONFIG_FLAG(playerPed, 78, 1) && !PED::GET_PED_CONFIG_FLAG(playerPed, 58, 1)) 
+		{
+			vision_toggle = vision_toggle + 1;
+			if (vision_toggle == 3) vision_toggle = 0;
+
+			if (vision_toggle == 0)
+			{
+				GRAPHICS::SET_NIGHTVISION(false);
+				GRAPHICS::SET_SEETHROUGH(false);
+			}
+			if (vision_toggle == 1)
+			{
+				GRAPHICS::SET_NIGHTVISION(true);
+				GRAPHICS::SET_SEETHROUGH(false);
+			}
+			if (vision_toggle == 2)
+			{
+				GRAPHICS::SET_NIGHTVISION(false);
+				GRAPHICS::SET_SEETHROUGH(true);
+			}
+		}
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool onconfirm_pedagainstweapons_menu(MenuItem<int> choice)
 {
 	return false;
@@ -1052,6 +1103,12 @@ bool process_weapon_menu(){
 	toggleItem->toggleValueUpdated = NULL;
 	menuItems.push_back(toggleItem);
 
+	listItem = new SelectFromListMenuItem(WEAPONS_SNIPERVISION_CAPTIONS, onchange_sniper_vision_modifier);
+	listItem->wrap = false;
+	listItem->caption = "Toggle Vision For Sniper Rifles";
+	listItem->value = SniperVisionIndex;
+	menuItems.push_back(listItem);
+
 	return draw_generic_menu<int>(menuItems, &activeLineIndexWeapon, caption, onconfirm_weapon_menu, NULL, NULL);
 }
 
@@ -1065,6 +1122,7 @@ void reset_weapon_globals(){
 
 	ChancePoliceCallingIndex = 5;
 	ChanceAttackingYouIndex = 1;
+	SniperVisionIndex = 0;
 
 	activeLineIndexCopArmed = 0;
 	activeLineIndexPedAgainstWeapons = 0;
@@ -1183,6 +1241,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		if (WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_REMOTESNIPER")) sniper_rifle = true;
 		if (WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_HEAVYSNIPER_MK2")) sniper_rifle = true;
 		if (WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_MARKSMANRIFLE")) sniper_rifle = true;
+		if (WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_MARKSMANRIFLE_MK2")) sniper_rifle = true;
 		if (!sniper_rifle) UI::HIDE_HUD_COMPONENT_THIS_FRAME(14);
 	}
 	
@@ -1450,7 +1509,6 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////
 
-
 	// Cops Take You Weapons If You Die / Arrested
 	playerPed = PLAYER::PLAYER_PED_ID();
 	int pl_health = ENTITY::GET_ENTITY_HEALTH(playerPed);
@@ -1485,6 +1543,29 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		give_all_weapons_hotkey();
 		Give_All_Weapons_Check = true;
 	};
+
+	// Disables visions if not aiming
+	if (WEAPONS_SNIPERVISION_VALUES[SniperVisionIndex] != 0 && (WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_SNIPERRIFLE") || WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_HEAVYSNIPER") ||
+		WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_REMOTESNIPER") || WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_HEAVYSNIPER_MK2") ||
+		WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_MARKSMANRIFLE") || WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_MARKSMANRIFLE_MK2")))
+	{
+		if (!PED::GET_PED_CONFIG_FLAG(playerPed, 78, 1))
+		{
+			GRAPHICS::SET_NIGHTVISION(false);
+			GRAPHICS::SET_SEETHROUGH(false);
+			vision_toggle = 0;
+		}
+		if (WEAPONS_SNIPERVISION_VALUES[SniperVisionIndex] == 2 && !PED::GET_PED_CONFIG_FLAG(playerPed, 58, 1) && PED::GET_PED_CONFIG_FLAG(playerPed, 78, 1))
+		{
+			GRAPHICS::SET_NIGHTVISION(true);
+			GRAPHICS::SET_SEETHROUGH(false);
+		}
+		if (WEAPONS_SNIPERVISION_VALUES[SniperVisionIndex] == 3 && !PED::GET_PED_CONFIG_FLAG(playerPed, 58, 1) && PED::GET_PED_CONFIG_FLAG(playerPed, 78, 1))
+		{
+			GRAPHICS::SET_NIGHTVISION(false);
+			GRAPHICS::SET_SEETHROUGH(true);
+		}
+	}
 
 	//Gravity Gun
 	if(bPlayerExists && featureGravityGun){
@@ -1888,6 +1969,7 @@ void add_weapon_feature_enablements2(std::vector<StringPairSettingDBRow>* result
 	results->push_back(StringPairSettingDBRow{ "CopAlarmIndex", std::to_string(CopAlarmIndex) });
 	results->push_back(StringPairSettingDBRow{ "ChancePoliceCallingIndex", std::to_string(ChancePoliceCallingIndex) });
 	results->push_back(StringPairSettingDBRow{ "ChanceAttackingYouIndex", std::to_string(ChanceAttackingYouIndex) });
+	results->push_back(StringPairSettingDBRow{ "SniperVisionIndex", std::to_string(SniperVisionIndex) });
 }
 
 void onchange_weap_dmg_modifier(int value, SelectFromListMenuItem* source){
@@ -1915,6 +1997,9 @@ void handle_generic_settings_weapons(std::vector<StringPairSettingDBRow>* settin
 		}
 		else if (setting.name.compare("ChanceAttackingYouIndex") == 0){
 			ChanceAttackingYouIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("SniperVisionIndex") == 0){
+			SniperVisionIndex = stoi(setting.value);
 		}
 	}
 }

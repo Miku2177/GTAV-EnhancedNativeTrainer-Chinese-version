@@ -160,7 +160,7 @@ void process_areaeffect_peds_menu(){
 
 	listItem = new SelectFromListMenuItem(PED_WEAPONS_SELECTIVE_CAPTIONS, onchange_ped_weapons_selective_index);
 	listItem->wrap = false;
-	listItem->caption = "Selective Weapon";
+	listItem->caption = "Custom Weapon";
 	listItem->value = PedWeaponsSelectiveIndex;
 	menuItems.push_back(listItem);
 
@@ -851,7 +851,7 @@ void give_all_nearby_peds_a_weapon(bool enabled){
 		if(chanceOfGettingWeapon != 1){
 			continue;
 		}
-		if (PED_WEAPON_TITLES[pedWeaponSetIndex] != "Selective Weapon")
+		if (PED_WEAPON_TITLES[pedWeaponSetIndex] != "Custom Weapon")
 		{
 			if (!PED::IS_PED_GROUP_MEMBER(xped, PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID()))){
 				ENTTrackedPedestrian* trackedPed = findOrCreateTrackedPed(xped);
