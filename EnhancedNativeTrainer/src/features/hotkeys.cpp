@@ -231,6 +231,9 @@ void trigger_function_for_hotkey_onkeyup(int hotkey)
 	case HKEY_GIVE_ALL_WEAPONS:
 		give_all_weapons_hotkey();
 		break;
+	case HKEY_SNIPER_VISION_TOGGLE:
+		sniper_vision_toggle();
+		break;
 
 	default:
 	{

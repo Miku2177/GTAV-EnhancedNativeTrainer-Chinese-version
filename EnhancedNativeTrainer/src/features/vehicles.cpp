@@ -83,6 +83,7 @@ bool Car_Refuel = false;
 int Time_tick = 0;
 bool Fuel_Low = false;
 bool show_blips = false;
+bool phone_blips = false;
 
 Blip blip[32];
 std::vector<Vehicle> VEHICLES;
@@ -2417,7 +2418,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		if (VEH_FUELBLIPS_VALUES[FuelBlipsIndex] > 2) {
 			// SHOW BLIPS
 			show_blips = true;
-			if (PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed)) {
+			if (PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed) && phone_blips == false) {
 			//if (CONTROLS::IS_CONTROL_PRESSED(2, 27)) {
 				for (int i = 0; i < 32; i++)
 				{
@@ -2427,16 +2428,18 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 					UI::SET_BLIP_AS_SHORT_RANGE(blip[i], true);
 					BLIPTABLE.push_back(blip[i]);
 				}
+				phone_blips = true;
 			}
 
 			// HIDE BLIPS
-			if (!PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed)) {
+			if (!PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed) && phone_blips == true) {
 			//if (CONTROLS::IS_CONTROL_PRESSED(2, 177)) {
 				for (int i = 0; i < BLIPTABLE.size(); i++) {
 					if (UI::DOES_BLIP_EXIST(BLIPTABLE[i])) {
 						UI::REMOVE_BLIP(&BLIPTABLE[i]);
 					}
 				}
+				phone_blips = false;
 			}
 		}
 

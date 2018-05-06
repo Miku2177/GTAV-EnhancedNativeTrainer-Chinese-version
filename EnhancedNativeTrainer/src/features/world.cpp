@@ -403,7 +403,7 @@ void process_world_menu()
 	listItem->wrap = false;
 	listItem->caption = "Radar Map Size";
 	listItem->value = RadarMapIndex;
-	menuItems.push_back(listItem);
+	menuItems.push_back(listItem); 
 
 	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "Load Online Map";

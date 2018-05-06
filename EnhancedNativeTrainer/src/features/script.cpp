@@ -640,15 +640,16 @@ void update_features(){
 			// No way you will call or switch your character
 			CONTROLS::DISABLE_CONTROL_ACTION(2, 19, true);
 			MOBILE::DESTROY_MOBILE_PHONE();
+			CONTROLS::DISABLE_CONTROL_ACTION(2, 27, 1);
 
 			// You don't need a parachute in prison
-			if (WEAPON::HAS_PED_GOT_WEAPON(playerPed_Prison, PARACHUTE_ID, FALSE))	WEAPON::REMOVE_WEAPON_FROM_PED(playerPed, PARACHUTE_ID);
-
+			if (WEAPON::HAS_PED_GOT_WEAPON(playerPed_Prison, PARACHUTE_ID, FALSE))	WEAPON::REMOVE_WEAPON_FROM_PED(playerPed_Prison, PARACHUTE_ID);
+			
 			// How much time before discharge
 			if (PLAYER_DISCHARGE_VALUES[current_player_discharge] > 0)
 			{
 
-				secs_difference = clock() / CLOCKS_PER_SEC;
+				secs_difference = clock() / CLOCKS_PER_SEC; 
 				if (time_in_prison_tick > 0 && (((clock() / CLOCKS_PER_SEC) - secs) != 0))
 				{
 					time_in_prison_tick = time_in_prison_tick - 1;
@@ -939,6 +940,7 @@ void update_features(){
 				PLAYER::CLEAR_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID());
 				alert_level = 0;
 				CONTROLS::ENABLE_CONTROL_ACTION(2, 19, true);
+				CONTROLS::ENABLE_CONTROL_ACTION(2, 27, 1);
 				out_of_prison = true;
 				in_prison = false;
 				clear_wanted_level = true;
@@ -983,6 +985,20 @@ void update_features(){
 			ExPrisonerDrunk_tick = ExPrisonerDrunk_tick + 5;
 			clear_wanted_level = false;
 		}
+		
+		// You escaped but still can't use your phone, switch, etc. Cancel your wanted level.
+		if (((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 12) ||
+			(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 1) ||
+			(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 5)))
+		{
+			if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) > 0)
+			{
+				CONTROLS::DISABLE_CONTROL_ACTION(2, 19, true);
+				MOBILE::DESTROY_MOBILE_PHONE();
+				CONTROLS::DISABLE_CONTROL_ACTION(2, 27, 1);
+				if (WEAPON::HAS_PED_GOT_WEAPON(playerPed_Prison, PARACHUTE_ID, FALSE)) WEAPON::REMOVE_WEAPON_FROM_PED(playerPed_Prison, PARACHUTE_ID);
+			}
+		}
 
 		// YOU'D BETTER CHANGE AS SOON AS POSSIBLE. POLICE WILL NOTICE YOUR INTERESTING CLOTHES
 		if (featurePrison_Robe && in_prison == false && (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 5))
@@ -1004,7 +1020,8 @@ void update_features(){
 				{
 					CONTROLS::DISABLE_CONTROL_ACTION(2, 19, true);
 					MOBILE::DESTROY_MOBILE_PHONE();
-					if (WEAPON::HAS_PED_GOT_WEAPON(playerPed_Prison, PARACHUTE_ID, FALSE)) WEAPON::REMOVE_WEAPON_FROM_PED(playerPed, PARACHUTE_ID);
+					CONTROLS::DISABLE_CONTROL_ACTION(2, 27, 1);
+					if (WEAPON::HAS_PED_GOT_WEAPON(playerPed_Prison, PARACHUTE_ID, FALSE)) WEAPON::REMOVE_WEAPON_FROM_PED(playerPed_Prison, PARACHUTE_ID);
 				}
 
 				// Met a cop at a distance
