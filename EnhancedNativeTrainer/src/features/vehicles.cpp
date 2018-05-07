@@ -1950,7 +1950,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 	//////////////////////////////////////////////////// VEHICLE MASS ////////////////////////////////////////////////////////
 
-	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && (VEH_MASS_VALUES[VehMassMultIndex] > 0)){
+	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && (VEH_MASS_VALUES[VehMassMultIndex] > 0)){
 
 		const int numElements = 10;
 		const int arrSize = numElements * 2 + 2;
@@ -1964,16 +1964,16 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 		nearbyPed[0] = numElements;
 		
-		int count = PED::GET_PED_NEARBY_PEDS(PLAYER::PLAYER_PED_ID(), nearbyPed, -1);
+		int count = PED::GET_PED_NEARBY_VEHICLES(PLAYER::PLAYER_PED_ID(), nearbyPed);
 
 		if (nearbyPed != NULL)
 		{
 			for (int i = 0; i < count; i++)
 			{
 				int offsettedID = i * 2 + 2;
-				Vehicle veh2 = PED::GET_VEHICLE_PED_IS_IN(nearbyPed[i], true);
+				//Vehicle veh2 = PED::GET_VEHICLE_PED_IS_IN(nearbyPed[i], true);
 				Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(veh, true);
-				Vector3 coordsped = ENTITY::GET_ENTITY_COORDS(veh2, true);
+				Vector3 coordsped = ENTITY::GET_ENTITY_COORDS(nearbyPed[i], true);
 
 				veh_distance_x = (coordsme.x - coordsped.x);
 				veh_distance_y = (coordsme.y - coordsped.y);
@@ -1989,66 +1989,74 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 						ENTITY::SET_ENTITY_VELOCITY(veh, vehspeed.x, vehspeed.y, vehspeed.z);
 					}
 
-					if (nearbyPed[offsettedID] != NULL && ENTITY::DOES_ENTITY_EXIST(nearbyPed[offsettedID]))
-					{
-						ENTITY::SET_ENTITY_LOAD_COLLISION_FLAG(veh, true);
-						ENTITY::HAS_COLLISION_LOADED_AROUND_ENTITY(veh);
-						ENTITY::APPLY_FORCE_TO_ENTITY(nearbyPed[i], 4, (ENTITY::GET_ENTITY_SPEED(veh) * VEH_MASS_VALUES[VehMassMultIndex]), 0, 0, 0, 0, 0, 1, true, true, true, true, true);
-						if (ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(veh2)){
-
-							Rot = CAM::GET_GAMEPLAY_CAM_ROT(2);
-							direction = RotationToDirection2(&Rot);
-							direction.x = 1 * direction.x;
-							direction.y = 1 * direction.y;
-							direction.z = 1 * direction.z;
-							ENTITY::APPLY_FORCE_TO_ENTITY(veh2, 1, direction.x, direction.y, direction.z, Rot.x, Rot.y, Rot.z, false, false, true, true, false, true);
-							//ENTITY::APPLY_FORCE_TO_ENTITY(veh2, 4, (ENTITY::GET_ENTITY_SPEED(veh) * VEH_MASS_VALUES[VehMassMultIndex]), 0, 0, 0, 0, 0, 1, true, true, true, true, true);
-						}
-					}
-				}
-
-				if ((VEH_MASS_VALUES[VehMassMultIndex] > 30) && (VEH_MASS_VALUES[VehMassMultIndex] < 200)){
-					if (nearbyPed[offsettedID] != NULL && ENTITY::DOES_ENTITY_EXIST(nearbyPed[offsettedID]))
+					if (nearbyPed[offsettedID] != NULL && ENTITY::DOES_ENTITY_EXIST(nearbyPed[offsettedID]) && nearbyPed[i] != veh)
 					{
 						if (veh_distance_x < 0) veh_distance_x = (veh_distance_x * -1);
 						if (veh_distance_y < 0) veh_distance_y = (veh_distance_y * -1);
 						if (veh_distance_z < 0) veh_distance_z = (veh_distance_z * -1);
 
-						if ((veh_distance_x + veh_distance_y + veh_distance_z) < 3){
+						if ((veh_distance_x + veh_distance_y + veh_distance_z) < 7)
+						{
+
+							ENTITY::SET_ENTITY_LOAD_COLLISION_FLAG(veh, true);
+							ENTITY::HAS_COLLISION_LOADED_AROUND_ENTITY(veh);
+							ENTITY::APPLY_FORCE_TO_ENTITY(nearbyPed[i], 4, (ENTITY::GET_ENTITY_SPEED(veh) * VEH_MASS_VALUES[VehMassMultIndex]), 0, 0, 0, 0, 0, 1, true, true, true, true, true);
+							if (ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(nearbyPed[i])){
+
+								Rot = CAM::GET_GAMEPLAY_CAM_ROT(2);
+								direction = RotationToDirection2(&Rot);
+								direction.x = 1 * direction.x;
+								direction.y = 1 * direction.y;
+								direction.z = 1 * direction.z;
+								ENTITY::APPLY_FORCE_TO_ENTITY(nearbyPed[i], 1, direction.x, direction.y, direction.z, Rot.x, Rot.y, Rot.z, false, false, true, true, false, true);
+								//ENTITY::APPLY_FORCE_TO_ENTITY(veh2, 4, (ENTITY::GET_ENTITY_SPEED(veh) * VEH_MASS_VALUES[VehMassMultIndex]), 0, 0, 0, 0, 0, 1, true, true, true, true, true);
+							}
+						}
+					}
+				}
+
+				if ((VEH_MASS_VALUES[VehMassMultIndex] > 30) && (VEH_MASS_VALUES[VehMassMultIndex] < 200)){
+					if (nearbyPed[offsettedID] != NULL && ENTITY::DOES_ENTITY_EXIST(nearbyPed[offsettedID]) && nearbyPed[i] != veh)
+					{
+						if (veh_distance_x < 0) veh_distance_x = (veh_distance_x * -1);
+						if (veh_distance_y < 0) veh_distance_y = (veh_distance_y * -1);
+						if (veh_distance_z < 0) veh_distance_z = (veh_distance_z * -1);
+
+						if ((veh_distance_x + veh_distance_y + veh_distance_z) < 7){
 
 							Rot = CAM::GET_GAMEPLAY_CAM_ROT(2);
 							direction = RotationToDirection2(&Rot);
 							direction.x = 1 * direction.x;
 							direction.y = 1 * direction.y;
 							direction.z = 1 * direction.z;
-							ENTITY::APPLY_FORCE_TO_ENTITY(veh2, 1, direction.x, direction.y, direction.z, Rot.x, Rot.y, Rot.z, false, false, true, true, false, true);
+							ENTITY::APPLY_FORCE_TO_ENTITY(nearbyPed[i], 1, direction.x, direction.y, VEH_MASS_VALUES[VehMassMultIndex] / 100, Rot.x, Rot.y, Rot.z, false, false, true, true, false, true);
 							//ENTITY::APPLY_FORCE_TO_ENTITY(veh2, 4, (ENTITY::GET_ENTITY_SPEED(veh) * VEH_MASS_VALUES[VehMassMultIndex]), 0, 0, 0, 0, 0, 1, true, true, true, true, true);
 						}
 					}
 				}
 
 				if (VEH_MASS_VALUES[VehMassMultIndex] > 150){
-					if (nearbyPed[offsettedID] != NULL && ENTITY::DOES_ENTITY_EXIST(nearbyPed[offsettedID]))
+					if (nearbyPed[offsettedID] != NULL && ENTITY::DOES_ENTITY_EXIST(nearbyPed[offsettedID]) && nearbyPed[i] != veh)
 					{
 						if (veh_distance_x < 0) veh_distance_x = (veh_distance_x * -1);
 						if (veh_distance_y < 0) veh_distance_y = (veh_distance_y * -1);
 						if (veh_distance_z < 0) veh_distance_z = (veh_distance_z * -1);
 
-						if ((veh_distance_x + veh_distance_y + veh_distance_z) < (VEH_MASS_VALUES[VehMassMultIndex] / 40)){
+						if ((veh_distance_x + veh_distance_y + veh_distance_z) < (VEH_MASS_VALUES[VehMassMultIndex] / 1)){
 							Rot = CAM::GET_GAMEPLAY_CAM_ROT(2);
 							direction = RotationToDirection2(&Rot);
 							direction.x = 1 * direction.x;
 							direction.y = 1 * direction.y;
 							direction.z = 1 * direction.z;
-							ENTITY::APPLY_FORCE_TO_ENTITY(veh2, 1, direction.x, direction.y, direction.z, Rot.x, Rot.y, Rot.z, false, false, true, true, false, true);
+							if (VEH_MASS_VALUES[VehMassMultIndex] < 500) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyPed[i], 1, direction.x, direction.y, direction.z, Rot.x, Rot.y, Rot.z, false, false, true, true, false, true);
+							if (VEH_MASS_VALUES[VehMassMultIndex] == 500) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyPed[i], 1, direction.x, direction.y, VEH_MASS_VALUES[VehMassMultIndex] / 500, Rot.x, Rot.y, Rot.z, false, false, true, true, false, true);
+							if (VEH_MASS_VALUES[VehMassMultIndex] == 1000)ENTITY::APPLY_FORCE_TO_ENTITY(nearbyPed[i], 1, direction.x, direction.y, VEH_MASS_VALUES[VehMassMultIndex] / 100, Rot.x, Rot.y, Rot.z, false, false, true, true, false, true);
 							//ENTITY::APPLY_FORCE_TO_ENTITY(veh2, 4, (ENTITY::GET_ENTITY_SPEED(veh) * VEH_MASS_VALUES[VehMassMultIndex]), 0, 0, 0, 0, 0, 1, true, true, true, true, true);
 						}
 					}
 				}
 			}
 		}
-		//if ((VEH_MASS_VALUES[VehMassMultIndex] < 1) || (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1))) delete[]nearbyPed;
-		//massChanged = true;
 	}
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 
