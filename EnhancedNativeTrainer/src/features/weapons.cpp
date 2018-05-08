@@ -50,6 +50,7 @@ int peddontlikeweapons_tick = 0;
 
 bool featureGravityGun = false;
 bool featureGravityGunUpdated = false;
+bool featureFriendlyFire = false;
 bool featureGiveAllWeapons = false;
 bool Give_All_Weapons_Check = false;
 
@@ -1109,6 +1110,13 @@ bool process_weapon_menu(){
 	listItem->value = SniperVisionIndex;
 	menuItems.push_back(listItem);
 
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Friendly Fire";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureFriendlyFire;
+	//toggleItem->toggleValueUpdated = NULL;
+	menuItems.push_back(toggleItem);
+
 	return draw_generic_menu<int>(menuItems, &activeLineIndexWeapon, caption, onconfirm_weapon_menu, NULL, NULL);
 }
 
@@ -1150,6 +1158,7 @@ void reset_weapon_globals(){
 		featurePedAgainstWeapons = 
 		featureAgainstMeleeWeapons =
 		featureAimAtDriver =
+		featureFriendlyFire =
 		featureGravityGun = false;
 }
 
@@ -1567,6 +1576,18 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		}
 	}
 
+	// Friendly Fire
+	if (featureFriendlyFire)
+	{
+		NETWORK::NETWORK_SET_FRIENDLY_FIRE_OPTION(true);
+		PED::SET_CAN_ATTACK_FRIENDLY(playerPed, true, false);
+	}
+	else
+	{
+		NETWORK::NETWORK_SET_FRIENDLY_FIRE_OPTION(false);
+		PED::SET_CAN_ATTACK_FRIENDLY(playerPed, false, false);
+	}
+
 	//Gravity Gun
 	if(bPlayerExists && featureGravityGun){
 		Ped tempPed;
@@ -1951,6 +1972,7 @@ void add_weapon_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featureCopWeapon", &featureCopWeapon});
 	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponVehRockets", &featureWeaponVehRockets});
 	results->push_back(FeatureEnabledLocalDefinition{"featureGravityGun", &featureGravityGun});
+	results->push_back(FeatureEnabledLocalDefinition{"featureFriendlyFire", &featureFriendlyFire});
 	results->push_back(FeatureEnabledLocalDefinition{"featureGiveAllWeapons", &featureGiveAllWeapons});
 	results->push_back(FeatureEnabledLocalDefinition{"featureCopArmedWith", &featureCopArmedWith});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePedAgainstWeapons", &featurePedAgainstWeapons});

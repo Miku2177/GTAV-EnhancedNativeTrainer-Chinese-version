@@ -27,7 +27,15 @@ int secs_passed, secs_curr = -1;
 float temp_seconds, bill_seconds = 0;
 float bill_to_pay, mins = -1;
 //
-
+// Dynamic Health Bar variables
+bool featureDynamicHealthBar = false;
+bool featureDynamicHealthBarUpdated = false;
+bool been_damaged = false;
+float curr_damaged_health, curr_damaged_armor = -1;
+int healthbar_secs_passed, healthbar_secs_curr, healthbar_seconds = -1;
+float health_bar_x = 0.015;
+float health_bar_y = 0.966;
+//
 bool featurePlayerRadio = false;
 bool featurePlayerRadioUpdated = false;
 bool featureRadioFreeze = false, featureRadioFreezeUpdated = false;
@@ -321,7 +329,7 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 		case 3:
 			process_misc_freezeradio_menu();
 			break;
-		case 13:
+		case 14:
 			process_phone_bill_menu();
 			break;
 		default:
@@ -332,7 +340,7 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 }
 
 void process_misc_menu(){
-	const int lineCount = 14;
+	const int lineCount = 15;
 
 	std::string caption = "Miscellaneous Options";
 
@@ -349,6 +357,7 @@ void process_misc_menu(){
 		{"No Police Scanner", &featurePoliceScanner, &featurePoliceScannerUpdated, true },
 		{"Hide HUD", &featureMiscHideHud, &featureMiscHideHudUpdated},
 		{"Show HUD If Phone In Hand Only", &featurePhoneShowHud, &featurePhoneShowHudUpdated},
+		{"Dynamic Health Bar", &featureDynamicHealthBar, &featureDynamicHealthBarUpdated },
 		{"Reset Player Model on Death", &featureResetPlayerModelOnDeath, nullptr, true},
 		{"Phone Bill", NULL, NULL, false},
 	};
@@ -369,6 +378,7 @@ void onchange_misc_phone_freeseconds_index(int value, SelectFromListMenuItem* so
 void reset_misc_globals(){
 	featureMiscHideHud =
 		featurePhoneShowHud = 
+		featureDynamicHealthBar =
 		featurePlayerRadio =
 		featureMiscLockRadio =
 		featureMiscJellmanScenery =
@@ -392,6 +402,7 @@ void reset_misc_globals(){
 		featureRadioAlwaysOffUpdated =
 		featureMiscHideHudUpdated =
 		featurePhoneShowHudUpdated =
+		featureDynamicHealthBarUpdated =
 		featureWantedMusicUpdated = 
 		featureFlyingMusicUpdated =
 		featurePoliceScannerUpdated = 
@@ -563,6 +574,66 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		phone_toggle = false;
 	}
 
+	// DYNAMIC HEALTH BAR
+	if (featureDynamicHealthBar)
+	{
+		if (!featureMiscHideHud && !featurePhoneShowHud) UI::DISPLAY_RADAR(false); // There is no need to hide HUD if it's already hidden
+		
+		auto addr = getScriptHandleBaseAddress(playerPed);
+		float health = (*(float *)(addr + 0x280)) - 100;
+		float playerArmour = PED::GET_PED_ARMOUR(playerPed);
+
+		if (!ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_OBJECT(playerPed) && !ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_PED(playerPed) && !ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_VEHICLE(playerPed))
+		{
+			curr_damaged_health = (*(float *)(addr + 0x280)) - 100;
+			curr_damaged_armor = PED::GET_PED_ARMOUR(playerPed);
+		}
+		
+		if (curr_damaged_health != health || curr_damaged_armor != playerArmour)
+		{
+			healthbar_seconds = -1;
+			been_damaged = true;
+			curr_damaged_health = health;
+			curr_damaged_armor = playerArmour;
+		}
+		
+		if (been_damaged == true)
+		{
+			healthbar_secs_passed = clock() / CLOCKS_PER_SEC;
+			if (((clock() / CLOCKS_PER_SEC) - healthbar_secs_curr) != 0)
+			{
+				healthbar_seconds = healthbar_seconds + 1;
+				healthbar_secs_curr = healthbar_secs_passed;
+			}
+
+			if (healthbar_seconds == 15)
+			{
+				been_damaged = false;
+				healthbar_seconds = -1;
+			}
+
+			// Health
+			if (health < 20)
+			{
+				GRAPHICS::DRAW_RECT(health_bar_x + 0.035, health_bar_y + 0.01, 0.070, 0.017, 41, 86, 40, 110);
+				GRAPHICS::DRAW_RECT(health_bar_x + 0.035, health_bar_y + 0.01, 0.070, 0.009, 220, 20, 20, 55);
+				if ((health_bar_x + (health / 1399)) > 0.015) GRAPHICS::DRAW_RECT(health_bar_x + 0.00 + (health / 2799), health_bar_y + 0.01, (health / 1399), 0.009, 220, 20, 20, 255);
+			}
+			else
+			{
+				GRAPHICS::DRAW_RECT(health_bar_x + 0.035, health_bar_y + 0.01, 0.070, 0.017, 41, 86, 40, 110);
+				GRAPHICS::DRAW_RECT(health_bar_x + 0.035, health_bar_y + 0.01, 0.070, 0.009, 41, 56, 40, 75);
+				if ((health / 1399) < 0.070) GRAPHICS::DRAW_RECT(health_bar_x + 0.00 + (health / 2799), health_bar_y + 0.01, (health / 1399), 0.009, 78, 150, 77, 255);
+				else GRAPHICS::DRAW_RECT(health_bar_x + 0.035, health_bar_y + 0.01, 0.070, 0.009, 78, 150, 77, 255);
+			}
+			// Armor
+			GRAPHICS::DRAW_RECT(health_bar_x + 0.0880, health_bar_y + 0.01, 0.036, 0.017, 41, 86, 40, 110);
+			GRAPHICS::DRAW_RECT(health_bar_x + 0.0885, health_bar_y + 0.01, 0.034, 0.009, 41, 56, 40, 90);
+			if ((playerArmour / 2935) < 0.035) GRAPHICS::DRAW_RECT(health_bar_x + 0.0715 + (playerArmour / 5871), health_bar_y + 0.01, (playerArmour / 2935), 0.009, 62, 129, 164, 255);
+			else GRAPHICS::DRAW_RECT(health_bar_x + 0.0885, health_bar_y + 0.01, 0.034, 0.009, 62, 129, 164, 255);
+		}
+	}
+
 	// Phone Bill
 	if (featurePhoneBillEnabled)
 	{
@@ -656,6 +727,7 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 	results->push_back(FeatureEnabledLocalDefinition{"featureMiscLockRadio", &featureMiscLockRadio});
 	results->push_back(FeatureEnabledLocalDefinition{"featureMiscHideHud", &featureMiscHideHud, &featureMiscHideHudUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePhoneShowHud", &featurePhoneShowHud, &featurePhoneShowHudUpdated});
+	results->push_back(FeatureEnabledLocalDefinition{"featureDynamicHealthBar", &featureDynamicHealthBar, &featureDynamicHealthBarUpdated});
 		
 	results->push_back(FeatureEnabledLocalDefinition{"featureControllerIgnoreInTrainer", &featureControllerIgnoreInTrainer});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBlockInputInMenu", &featureBlockInputInMenu});
