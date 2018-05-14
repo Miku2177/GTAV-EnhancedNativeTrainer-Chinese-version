@@ -16,10 +16,26 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 //==================
 
 int activeLineIndexTrainerConfig = 0;
+int activeLineIndexPhoneBill = 0;
 int activeLineHotkeyConfig = 0;
 
+// Phone Bill variables
 bool featureBlockInputInMenu = false;
-
+bool featurePhoneBillEnabled = false;
+bool featureZeroBalance = false;
+int secs_passed, secs_curr = -1;
+float temp_seconds, bill_seconds = 0;
+float bill_to_pay, mins = -1;
+//
+// Dynamic Health Bar variables
+bool featureDynamicHealthBar = false;
+bool featureDynamicHealthBarUpdated = false;
+bool been_damaged = false;
+float curr_damaged_health, curr_damaged_armor = -1;
+int healthbar_secs_passed, healthbar_secs_curr, healthbar_seconds = -1;
+float health_bar_x = 0.015;
+float health_bar_y = 0.966;
+//
 bool featurePlayerRadio = false;
 bool featurePlayerRadioUpdated = false;
 bool featureRadioFreeze = false, featureRadioFreezeUpdated = false;
@@ -53,6 +69,27 @@ bool featureResetPlayerModelOnDeath = true;
 
 const int TRAINERCONFIG_HOTKEY_MENU = 99;
 int radioStationIndex = -1;
+
+// Main characters
+const Hash PLAYER_ZERO = 0xD7114C9;
+const Hash PLAYER_ONE = 0x9B22DBAF;
+const Hash PLAYER_TWO = 0x9B810FA2;
+// Main characters cash
+const Hash SP0_TOTAL_CASH = 0x324C31D;
+const Hash SP1_TOTAL_CASH = 0x44BD6982;
+const Hash SP2_TOTAL_CASH = 0x8D75047D;
+
+// Phone Bill Amount
+const std::vector<std::string> MISC_PHONE_BILL_CAPTIONS{ "10$", "50$", "100$", "500$", "1000$", "5000$", "10000$", "50000$", "100000$", "500000$", "1000000$" };
+const std::vector<float> MISC_PHONE_BILL_VALUES{ 10.0, 50.0, 100.0, 500.0, 1000.0, 5000.0, 10000.0, 50000.0, 100000.0, 500000.0, 1000000.0 };
+int PhoneBillIndex = 2;
+bool PhoneBillChanged = true;
+
+// Phone Bill Free Seconds
+const std::vector<std::string> MISC_PHONE_FREESECONDS_CAPTIONS{ "0", "3", "5", "10", "15" };
+const std::vector<int> MISC_PHONE_FREESECONDS_VALUES{ 0, 3, 5, 10, 15 };
+int PhoneFreeSecondsIndex = 0;
+bool PhoneFreeSecondsChanged = true;
 
 void onchange_hotkey_function(int value, SelectFromListMenuItem* source){
 	change_hotkey_function(source->extras.at(0), value);
@@ -242,6 +279,42 @@ void process_misc_freezeradio_menu(){
 	draw_generic_menu<int>(menuItems, nullptr, "Freeze Radio to Station", onconfirm_misc_freezeradio_menu, nullptr, nullptr, nullptr);
 }
 
+bool onconfirm_phonebill_menu(MenuItem<int> choice){
+	
+	return false;
+}
+
+void process_phone_bill_menu(){
+	std::string caption = "Phone Bill Options";
+
+	std::vector<MenuItem<int>*> menuItems;
+	SelectFromListMenuItem *listItem;
+
+	ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Enable";
+	toggleItem->toggleValue = &featurePhoneBillEnabled;
+	menuItems.push_back(toggleItem);
+
+	listItem = new SelectFromListMenuItem(MISC_PHONE_BILL_CAPTIONS, onchange_misc_phone_bill_index);
+	listItem->wrap = false;
+	listItem->caption = "Amount Per Minute";
+	listItem->value = PhoneBillIndex;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(MISC_PHONE_FREESECONDS_CAPTIONS, onchange_misc_phone_freeseconds_index);
+	listItem->wrap = false;
+	listItem->caption = "First Free Seconds";
+	listItem->value = PhoneFreeSecondsIndex;
+	menuItems.push_back(listItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Can't Use Phone If Zero Balance";
+	toggleItem->toggleValue = &featureZeroBalance;
+	menuItems.push_back(toggleItem);
+
+	draw_generic_menu<int>(menuItems, &activeLineIndexPhoneBill, caption, onconfirm_phonebill_menu, NULL, NULL);
+}
+
 int activeLineIndexMisc = 0;
 
 bool onconfirm_misc_menu(MenuItem<int> choice){
@@ -256,6 +329,9 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 		case 3:
 			process_misc_freezeradio_menu();
 			break;
+		case 14:
+			process_phone_bill_menu();
+			break;
 		default:
 			// switchable features
 			break;
@@ -264,7 +340,7 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 }
 
 void process_misc_menu(){
-	const int lineCount = 13;
+	const int lineCount = 15;
 
 	std::string caption = "Miscellaneous Options";
 
@@ -281,15 +357,28 @@ void process_misc_menu(){
 		{"No Police Scanner", &featurePoliceScanner, &featurePoliceScannerUpdated, true },
 		{"Hide HUD", &featureMiscHideHud, &featureMiscHideHudUpdated},
 		{"Show HUD If Phone In Hand Only", &featurePhoneShowHud, &featurePhoneShowHudUpdated},
-		{"Reset Player Model on Death", &featureResetPlayerModelOnDeath, nullptr, true}
+		{"Dynamic Health Bar", &featureDynamicHealthBar, &featureDynamicHealthBarUpdated },
+		{"Reset Player Model on Death", &featureResetPlayerModelOnDeath, nullptr, true},
+		{"Phone Bill", NULL, NULL, false},
 	};
 
 	draw_menu_from_struct_def(lines, lineCount, &activeLineIndexMisc, caption, onconfirm_misc_menu);
 }
 
+void onchange_misc_phone_bill_index(int value, SelectFromListMenuItem* source){
+	PhoneBillIndex = value;
+	PhoneBillChanged = true;
+}
+
+void onchange_misc_phone_freeseconds_index(int value, SelectFromListMenuItem* source){
+	PhoneFreeSecondsIndex = value;
+	PhoneFreeSecondsChanged = true;
+}
+
 void reset_misc_globals(){
 	featureMiscHideHud =
 		featurePhoneShowHud = 
+		featureDynamicHealthBar =
 		featurePlayerRadio =
 		featureMiscLockRadio =
 		featureMiscJellmanScenery =
@@ -300,14 +389,20 @@ void reset_misc_globals(){
 		featurePoliceRadio =
 		featureRadioAlwaysOff = false;
 
+	PhoneBillIndex = 2;
+	PhoneFreeSecondsIndex = 0;
+
 	featureShowVehiclePreviews = true;
 	featureControllerIgnoreInTrainer = false;
 	featureBlockInputInMenu = false;
+	featurePhoneBillEnabled = false;
+	featureZeroBalance = false;
 
 	featureRadioFreezeUpdated =
 		featureRadioAlwaysOffUpdated =
 		featureMiscHideHudUpdated =
 		featurePhoneShowHudUpdated =
+		featureDynamicHealthBarUpdated =
 		featureWantedMusicUpdated = 
 		featureFlyingMusicUpdated =
 		featurePoliceScannerUpdated = 
@@ -461,12 +556,14 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			featureMiscHideHudUpdated = false;
 		}
 		
-		if (CONTROLS::IS_CONTROL_PRESSED(2, 27)) {
+		if (PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed)) {
+		//if (CONTROLS::IS_CONTROL_PRESSED(2, 27)) {
 			UI::DISPLAY_RADAR(true);
 			phone_toggle = true;
 		}
-		
-		if (CONTROLS::IS_CONTROL_PRESSED(2, 177)) {
+	
+		if (!PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed)) {
+		//if (CONTROLS::IS_CONTROL_PRESSED(2, 177)) {
 			UI::DISPLAY_RADAR(false);
 			phone_toggle = false;
 		}
@@ -475,6 +572,145 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	else if (featurePhoneShowHudUpdated && !featureMiscHideHud){
 		UI::DISPLAY_RADAR(true);
 		phone_toggle = false;
+	}
+
+	// DYNAMIC HEALTH BAR
+	if (featureDynamicHealthBar)
+	{
+		if (!featureMiscHideHud && !featurePhoneShowHud) UI::DISPLAY_RADAR(false); // There is no need to hide HUD if it's already hidden
+		
+		auto addr = getScriptHandleBaseAddress(playerPed);
+		float health = (*(float *)(addr + 0x280)) - 100;
+		float playerArmour = PED::GET_PED_ARMOUR(playerPed);
+
+		if (!ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_OBJECT(playerPed) && !ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_PED(playerPed) && !ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_VEHICLE(playerPed))
+		{
+			curr_damaged_health = (*(float *)(addr + 0x280)) - 100;
+			curr_damaged_armor = PED::GET_PED_ARMOUR(playerPed);
+		}
+		
+		if (curr_damaged_health != health || curr_damaged_armor != playerArmour)
+		{
+			healthbar_seconds = -1;
+			been_damaged = true;
+			curr_damaged_health = health;
+			curr_damaged_armor = playerArmour;
+		}
+		
+		if (been_damaged == true)
+		{
+			healthbar_secs_passed = clock() / CLOCKS_PER_SEC;
+			if (((clock() / CLOCKS_PER_SEC) - healthbar_secs_curr) != 0)
+			{
+				healthbar_seconds = healthbar_seconds + 1;
+				healthbar_secs_curr = healthbar_secs_passed;
+			}
+
+			if (healthbar_seconds == 15)
+			{
+				been_damaged = false;
+				healthbar_seconds = -1;
+			}
+
+			// Health
+			if (health < 20)
+			{
+				GRAPHICS::DRAW_RECT(health_bar_x + 0.035, health_bar_y + 0.01, 0.070, 0.017, 41, 86, 40, 110);
+				GRAPHICS::DRAW_RECT(health_bar_x + 0.035, health_bar_y + 0.01, 0.070, 0.009, 220, 20, 20, 55);
+				if ((health_bar_x + (health / 1399)) > 0.015) GRAPHICS::DRAW_RECT(health_bar_x + 0.00 + (health / 2799), health_bar_y + 0.01, (health / 1399), 0.009, 220, 20, 20, 255);
+			}
+			else
+			{
+				GRAPHICS::DRAW_RECT(health_bar_x + 0.035, health_bar_y + 0.01, 0.070, 0.017, 41, 86, 40, 110);
+				GRAPHICS::DRAW_RECT(health_bar_x + 0.035, health_bar_y + 0.01, 0.070, 0.009, 41, 56, 40, 75);
+				if ((health / 1399) < 0.070) GRAPHICS::DRAW_RECT(health_bar_x + 0.00 + (health / 2799), health_bar_y + 0.01, (health / 1399), 0.009, 78, 150, 77, 255);
+				else GRAPHICS::DRAW_RECT(health_bar_x + 0.035, health_bar_y + 0.01, 0.070, 0.009, 78, 150, 77, 255);
+			}
+			// Armor
+			GRAPHICS::DRAW_RECT(health_bar_x + 0.0880, health_bar_y + 0.01, 0.036, 0.017, 41, 86, 40, 110);
+			GRAPHICS::DRAW_RECT(health_bar_x + 0.0885, health_bar_y + 0.01, 0.034, 0.009, 41, 56, 40, 90);
+			if ((playerArmour / 2935) < 0.035) GRAPHICS::DRAW_RECT(health_bar_x + 0.0715 + (playerArmour / 5871), health_bar_y + 0.01, (playerArmour / 2935), 0.009, 62, 129, 164, 255);
+			else GRAPHICS::DRAW_RECT(health_bar_x + 0.0885, health_bar_y + 0.01, 0.034, 0.009, 62, 129, 164, 255);
+		}
+	}
+
+	// Phone Bill
+	if (featurePhoneBillEnabled)
+	{
+		if (PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed) && AUDIO::IS_MOBILE_PHONE_CALL_ONGOING())
+		{
+			secs_passed = clock() / CLOCKS_PER_SEC;
+			if (((clock() / CLOCKS_PER_SEC) - secs_curr) != 0)
+			{
+				temp_seconds = temp_seconds + 1;
+				if (temp_seconds > MISC_PHONE_FREESECONDS_VALUES[PhoneFreeSecondsIndex]) bill_seconds = bill_seconds + 1;
+				secs_curr = secs_passed;
+			}
+		}
+		
+		if (!AUDIO::IS_MOBILE_PHONE_CALL_ONGOING() && temp_seconds != 0) temp_seconds = 0;
+		
+		if (!AUDIO::IS_MOBILE_PHONE_CALL_ONGOING() && bill_seconds > 0)
+		{ 
+			int outValue_your_phone_bill = -1;
+			int statHash_all_your_money = -1;
+			mins = bill_seconds / 60.0;
+			bill_to_pay = MISC_PHONE_BILL_VALUES[PhoneBillIndex] * mins;
+			
+			if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO)
+			{
+				STATS::STAT_GET_INT(SP0_TOTAL_CASH, &outValue_your_phone_bill, -1);
+				statHash_all_your_money = SP0_TOTAL_CASH;
+				STATS::STAT_SET_INT(statHash_all_your_money, outValue_your_phone_bill - bill_to_pay, true);
+			}
+			if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE)
+			{
+				STATS::STAT_GET_INT(SP1_TOTAL_CASH, &outValue_your_phone_bill, -1);
+				statHash_all_your_money = SP1_TOTAL_CASH;
+				STATS::STAT_SET_INT(statHash_all_your_money, outValue_your_phone_bill - bill_to_pay, true);
+			}
+			if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO)
+			{
+				STATS::STAT_GET_INT(SP2_TOTAL_CASH, &outValue_your_phone_bill, -1);
+				statHash_all_your_money = SP2_TOTAL_CASH;
+				STATS::STAT_SET_INT(statHash_all_your_money, outValue_your_phone_bill - bill_to_pay, true);
+			}
+			temp_seconds = 0;
+			bill_seconds = 0;
+		}
+		
+		if (featureZeroBalance)
+		{
+			int outValue_your_phone_bill = -1;
+			int statHash_all_your_money = -1;
+			if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO)
+			{
+				STATS::STAT_GET_INT(SP0_TOTAL_CASH, &outValue_your_phone_bill, -1);
+				statHash_all_your_money = SP0_TOTAL_CASH;
+				if (outValue_your_phone_bill < 1) {
+					MOBILE::DESTROY_MOBILE_PHONE();
+					CONTROLS::DISABLE_CONTROL_ACTION(2, 27, 1);
+				}
+			}
+			if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE)
+			{
+				STATS::STAT_GET_INT(SP1_TOTAL_CASH, &outValue_your_phone_bill, -1);
+				statHash_all_your_money = SP1_TOTAL_CASH;
+				if (outValue_your_phone_bill < 1) {
+					MOBILE::DESTROY_MOBILE_PHONE();
+					CONTROLS::DISABLE_CONTROL_ACTION(2, 27, 1);
+				}
+			}
+			if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO)
+			{
+				STATS::STAT_GET_INT(SP2_TOTAL_CASH, &outValue_your_phone_bill, -1);
+				statHash_all_your_money = SP2_TOTAL_CASH;
+				if (outValue_your_phone_bill < 1) {
+					MOBILE::DESTROY_MOBILE_PHONE();
+					CONTROLS::DISABLE_CONTROL_ACTION(2, 27, 1);
+				}
+			}
+		}
 	}
 }
 
@@ -491,9 +727,12 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 	results->push_back(FeatureEnabledLocalDefinition{"featureMiscLockRadio", &featureMiscLockRadio});
 	results->push_back(FeatureEnabledLocalDefinition{"featureMiscHideHud", &featureMiscHideHud, &featureMiscHideHudUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePhoneShowHud", &featurePhoneShowHud, &featurePhoneShowHudUpdated});
+	results->push_back(FeatureEnabledLocalDefinition{"featureDynamicHealthBar", &featureDynamicHealthBar, &featureDynamicHealthBarUpdated});
 		
 	results->push_back(FeatureEnabledLocalDefinition{"featureControllerIgnoreInTrainer", &featureControllerIgnoreInTrainer});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBlockInputInMenu", &featureBlockInputInMenu});
+	results->push_back(FeatureEnabledLocalDefinition{"featurePhoneBillEnabled", &featurePhoneBillEnabled});
+	results->push_back(FeatureEnabledLocalDefinition{"featureZeroBalance", &featureZeroBalance});
 	results->push_back(FeatureEnabledLocalDefinition{"featureShowVehiclePreviews", &featureShowVehiclePreviews});
 
 	results->push_back(FeatureEnabledLocalDefinition{"featureMiscJellmanScenery", &featureMiscJellmanScenery});
@@ -503,6 +742,8 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 
 void add_misc_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"radioStationIndex", std::to_string(radioStationIndex)});
+	results->push_back(StringPairSettingDBRow{"PhoneBillIndex", std::to_string(PhoneBillIndex)});
+	results->push_back(StringPairSettingDBRow{"PhoneFreeSecondsIndex", std::to_string(PhoneFreeSecondsIndex)});
 }
 
 void handle_generic_settings_misc(std::vector<StringPairSettingDBRow>* settings){
@@ -510,6 +751,12 @@ void handle_generic_settings_misc(std::vector<StringPairSettingDBRow>* settings)
 		StringPairSettingDBRow setting = settings->at(a);
 		if(setting.name.compare("radioStationIndex") == 0){
 			radioStationIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("PhoneBillIndex") == 0){
+			PhoneBillIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("PhoneFreeSecondsIndex") == 0){
+			PhoneFreeSecondsIndex = stoi(setting.value);
 		}
 	}
 }

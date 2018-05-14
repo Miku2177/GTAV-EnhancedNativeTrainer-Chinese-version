@@ -122,9 +122,9 @@ const std::vector<std::string> PED_WEAPONS_EXPLOSIVES{"WEAPON_GRENADELAUNCHER", 
 
 const std::vector<std::string> PED_WEAPONS_RANDOM{"WEAPON_KNIFE", "WEAPON_NIGHTSTICK", "WEAPON_HAMMER", "WEAPON_BAT", "WEAPON_GOLFCLUB", "WEAPON_CROWBAR", "WEAPON_BOTTLE", "WEAPON_DAGGER", "WEAPON_HATCHET", "WEAPON_KNUCKLE", "WEAPON_MACHETE", "WEAPON_FLASHLIGHT", "WEAPON_SWITCHBLADE", "WEAPON_PISTOL", "WEAPON_COMBATPISTOL", "WEAPON_APPISTOL", "WEAPON_PISTOL50", "WEAPON_SNSPISTOL", "WEAPON_HEAVYPISTOL", "WEAPON_VINTAGEPISTOL", "WEAPON_STUNGUN", "WEAPON_FLAREGUN", "WEAPON_MARKSMANPISTOL", "WEAPON_REVOLVER", "WEAPON_ASSAULTRIFLE", "WEAPON_CARBINERIFLE", "WEAPON_ADVANCEDRIFLE", "WEAPON_SPECIALCARBINE", "WEAPON_BULLPUPRIFLE", "WEAPON_COMPACTRIFLE", "WEAPON_MINIGUN", "WEAPON_HEAVYSNIPER", "WEAPON_MG", "WEAPON_COMBATMG", "WEAPON_GRENADELAUNCHER", "WEAPON_RPG", "WEAPON_RAILGUN", "WEAPON_HOMINGLAUNCHER", "WEAPON_GRENADE", "WEAPON_STICKYBOMB", "WEAPON_PROXMINE", "WEAPON_SMOKEGRENADE", "WEAPON_MOLOTOV"};
 
-const std::vector<std::vector<std::string>> VOV_PED_WEAPONS{{}, PED_WEAPONS_MELEE, PED_WEAPONS_SMALL, PED_WEAPONS_RIFLES, PED_WEAPONS_HEAVY, PED_WEAPONS_EXPLOSIVES, PED_WEAPONS_RANDOM};
+const std::vector<std::vector<std::string>> VOV_PED_WEAPONS{ {}, PED_WEAPONS_MELEE, PED_WEAPONS_SMALL, PED_WEAPONS_RIFLES, PED_WEAPONS_HEAVY, PED_WEAPONS_EXPLOSIVES, PED_WEAPONS_RANDOM };
 
-const std::vector<std::string> PED_WEAPON_TITLES{"None (Normal)", "Melee", "Small Arms", "Rifles", "Heavy", "Explosives", "Random"};
+const std::vector<std::string> PED_WEAPON_TITLES{"Custom Weapon", "Melee", "Small Arms", "Rifles", "Heavy", "Explosives", "Random"};
 
 bool onconfirm_areaeffect_ped_menu(MenuItem<int> choice);
 
@@ -172,6 +172,8 @@ void set_all_nearby_vehs_to_broken(bool enabled);
 void clear_up_missionised_entitities();
 
 void onchange_areaeffect_ped_weapons(int value, SelectFromListMenuItem* source);
+
+void onchange_ped_weapons_selective_index(int value, SelectFromListMenuItem* source);
 
 ENTTrackedPedestrian* findOrCreateTrackedPed(Ped ped);
 
