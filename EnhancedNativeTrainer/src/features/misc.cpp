@@ -10,6 +10,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 #include "misc.h"
 #include "hotkeys.h"
+#include <Psapi.h>
 
 //==================
 // MISC MENU
@@ -60,6 +61,9 @@ bool featurePhoneShowHud = false;
 bool featurePhoneShowHudUpdated = false;
 bool phone_toggle = false;
 
+bool featureFindDespawnPointer = false;
+bool featureFindDespawnPointerUpdated = false;
+
 bool featureShowVehiclePreviews = true;
 bool featureControllerIgnoreInTrainer = false;
 
@@ -69,6 +73,11 @@ bool featureResetPlayerModelOnDeath = true;
 
 const int TRAINERCONFIG_HOTKEY_MENU = 99;
 int radioStationIndex = -1;
+
+ScriptTable* scriptTable;
+GlobalTable globalTable;
+ScriptHeader* shopController;
+HINSTANCE _hinstDLL;
 
 // Main characters
 const Hash PLAYER_ZERO = 0xD7114C9;
@@ -340,7 +349,7 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 }
 
 void process_misc_menu(){
-	const int lineCount = 15;
+	const int lineCount = 16;
 
 	std::string caption = "Miscellaneous Options";
 
@@ -360,6 +369,7 @@ void process_misc_menu(){
 		{"Dynamic Health Bar", &featureDynamicHealthBar, &featureDynamicHealthBarUpdated },
 		{"Reset Player Model on Death", &featureResetPlayerModelOnDeath, nullptr, true},
 		{"Phone Bill", NULL, NULL, false},
+		{"Auto-Find vehicle despawn pointer", &featureFindDespawnPointer, &featureFindDespawnPointerUpdated, true },
 	};
 
 	draw_menu_from_struct_def(lines, lineCount, &activeLineIndexMisc, caption, onconfirm_misc_menu);
@@ -397,6 +407,7 @@ void reset_misc_globals(){
 	featureBlockInputInMenu = false;
 	featurePhoneBillEnabled = false;
 	featureZeroBalance = false;
+	featureFindDespawnPointer = false;
 
 	featureRadioFreezeUpdated =
 		featureRadioAlwaysOffUpdated =
@@ -409,7 +420,8 @@ void reset_misc_globals(){
 		featureBoostRadio =
 		featureBoostRadioUpdated = 
 		featurePoliceRadioUpdated = 
-		featurePlayerRadioUpdated = true;
+		featurePlayerRadioUpdated = 
+		featureFindDespawnPointerUpdated = true;
 
 	ENTColor::reset_colors();
 }
@@ -712,6 +724,18 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			}
 		}
 	}
+
+	if (featureFindDespawnPointer)
+	{
+		FindPatterns();
+		FindScriptAddresses();
+		EnableCarsGlobal();
+	}
+	else if (featureFindDespawnPointerUpdated)
+	{
+		set_status_text("~r~Restart your game to disable Despawn Pointer");
+		return;
+	}
 }
 
 void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){
@@ -734,6 +758,8 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 	results->push_back(FeatureEnabledLocalDefinition{"featurePhoneBillEnabled", &featurePhoneBillEnabled});
 	results->push_back(FeatureEnabledLocalDefinition{"featureZeroBalance", &featureZeroBalance});
 	results->push_back(FeatureEnabledLocalDefinition{"featureShowVehiclePreviews", &featureShowVehiclePreviews});
+
+	results->push_back(FeatureEnabledLocalDefinition{ "featureFindDespawnPointer", &featureFindDespawnPointer, &featureFindDespawnPointerUpdated });
 
 	results->push_back(FeatureEnabledLocalDefinition{"featureMiscJellmanScenery", &featureMiscJellmanScenery});
 
@@ -798,4 +824,151 @@ void set_hud_shown(bool hidden){
 
 bool is_jellman_scenery_enabled(){
 	return featureMiscJellmanScenery;
+}
+
+/* Code thanks to Zorg93's MPCar Enabler. I just butchered it to fit... */
+void FindScriptAddresses()
+{
+
+	while (*(__int64*)scriptTable == 0)
+	{
+		Sleep(100);
+	}
+	//write_text_to_log_file("Found script base pointer %llX", (__int64)scriptTable);
+	ScriptTableItem* Item = scriptTable->FindScript(0x39DA738B);
+	if (Item == NULL)
+	{
+		write_text_to_log_file("Exception: finding address 2 (0x39DA738B)");
+		write_text_to_log_file("Aborting...");
+		FreeLibraryAndExitThread(_hinstDLL, 0);
+	}
+	while (!Item->IsLoaded())
+	{
+		Sleep(100);
+	}
+	shopController = Item->Header;
+
+	Item = scriptTable->FindScript(0xAFD9916D);
+	if (Item == NULL)
+	{
+		write_text_to_log_file("Exception: finding address 3 (0xAFD9916D)");
+		write_text_to_log_file("Aborting...");
+		FreeLibraryAndExitThread(_hinstDLL, 0);
+	}
+	while (!Item->IsLoaded())
+	{
+		Sleep(100);
+	}
+	//cheatController = Item->Header;
+}
+
+void FindPatterns()
+{
+	__int64 patternAddr = FindPattern2("\x4C\x8D\x05\x00\x00\x00\x00\x4D\x8B\x08\x4D\x85\xC9\x74\x11", "xxx????xxxxxxxx");
+	if (!patternAddr)
+	{
+		write_text_to_log_file("ERROR: finding address 0");
+		write_text_to_log_file("Aborting...");
+		FreeLibraryAndExitThread(_hinstDLL, 0);
+	}
+	globalTable.GlobalBasePtr = (__int64**)(patternAddr + *(int*)(patternAddr + 3) + 7);
+
+
+	patternAddr = FindPattern2("\x48\x03\x15\x00\x00\x00\x00\x4C\x23\xC2\x49\x8B\x08", "xxx????xxxxxx");
+	if (!patternAddr)
+	{
+		write_text_to_log_file("ERROR: finding address 1");
+		write_text_to_log_file("Aborting...");
+		FreeLibraryAndExitThread(_hinstDLL, 0);
+	}
+	scriptTable = (ScriptTable*)(patternAddr + *(int*)(patternAddr + 3) + 7);
+
+
+	//patternAddr = FindPattern("\x80\xF9\x05\x75\x08\x48\x05\x00\x00\x00\x00", "xxxxxxx????");
+	//GetModelInfo = (__int64(*)(int, __int64))(*(int*)(patternAddr - 0x12) + patternAddr - 0x12 + 0x4);
+	//displayNameOffset = *(int*)(patternAddr + 0x7);
+	//__int64 getHashKeyPattern = FindPattern("\x48\x8B\x0B\x33\xD2\xE8\x00\x00\x00\x00\x89\x03", "xxxxxx????xx");
+	//GetHashKey = reinterpret_cast<int(*)(char*, unsigned int)>(*reinterpret_cast<int*>(getHashKeyPattern + 6) + getHashKeyPattern + 10);
+
+	while (!globalTable.IsInitialised())Sleep(100);//Wait for GlobalInitialisation before continuing
+	//write_text_to_log_file("Found global base pointer %llX", (__int64)globalTable.GlobalBasePtr);
+}
+
+uintptr_t FindPattern2(const char *pattern, const char *mask, const char* startAddress, size_t size)
+{
+	const char* address_end = startAddress + size;
+	const auto mask_length = static_cast<size_t>(strlen(mask) - 1);
+
+	for (size_t i = 0; startAddress < address_end; startAddress++)
+	{
+		if (*startAddress == pattern[i] || mask[i] == '?')
+		{
+			if (mask[i + 1] == '\0')
+			{
+				return reinterpret_cast<uintptr_t>(startAddress) - mask_length;
+			}
+
+			i++;
+		}
+		else
+		{
+			i = 0;
+		}
+	}
+
+	return 0;
+}
+
+uintptr_t FindPattern2(const char *pattern, const char *mask)
+{
+	MODULEINFO module = {};
+	GetModuleInformation(GetCurrentProcess(), GetModuleHandle(nullptr), &module, sizeof(MODULEINFO));
+
+	return FindPattern2(pattern, mask, reinterpret_cast<const char *>(module.lpBaseOfDll), module.SizeOfImage);
+}
+
+void EnableCarsGlobal()
+{
+	for (int i = 0; i < shopController->CodePageCount(); i++)
+	{
+		__int64 sigAddress = FindPattern2("\x28\x26\xCE\x6B\x86\x39\x03", "xxxxxxx", (const char*)shopController->GetCodePageAddress(i), shopController->GetCodePageSize(i));
+		if (!sigAddress)
+		{
+			continue;
+		}
+		//DEBUGMSG("Pattern Found in codepage %d at memory address %llX", i, sigAddress);
+		int RealCodeOff = (int)(sigAddress - (__int64)shopController->GetCodePageAddress(i) + (i << 14));
+		for (int j = 0; j < 2000; j++)
+		{
+			if (*(int*)shopController->GetCodePositionAddress(RealCodeOff - j) == 0x0008012D)
+			{
+				int funcOff = *(int*)shopController->GetCodePositionAddress(RealCodeOff - j + 6) & 0xFFFFFF;
+				//DEBUGMSG("found Function codepage address at %x", funcOff);
+				for (int k = 0x5; k < 0x40; k++)
+				{
+					if ((*(int*)shopController->GetCodePositionAddress(funcOff + k) & 0xFFFFFF) == 0x01002E)
+					{
+						for (k = k + 1; k < 30; k++)
+						{
+							if (*(unsigned char*)shopController->GetCodePositionAddress(funcOff + k) == 0x5F)
+							{
+								int globalindex = *(int*)shopController->GetCodePositionAddress(funcOff + k + 1) & 0xFFFFFF;
+								//DEBUGMSG("Found Global Variable %d, address = %llX", globalindex, (__int64)globalTable.AddressOf(globalindex));
+								write_text_to_log_file("Found global despawn pointer and setting anti-despawn pointer to true"); //("Setting Global Variable %d to true", globalindex)
+								*globalTable.AddressOf(globalindex) = 1;
+								//Log::Msg("MP Cars enabled");
+								//FindSwitch(RealCodeOff - j);
+								//atchCheatController();
+								return;
+							}
+						}
+						break;
+					}
+				}
+				break;
+			}
+		}
+		break;
+	}
+	write_text_to_log_file("Global Variable not found, check game version >= 1.0.678.1");
 }

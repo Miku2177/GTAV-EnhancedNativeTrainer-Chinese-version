@@ -859,11 +859,11 @@
     <Filter Include="inc\debug">
       <UniqueIdentifier>{fba3114d-a07f-4847-9fe1-a23de755754f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="inc\features">
-      <UniqueIdentifier>{0b445460-2dc6-4b62-9682-8c503860bc7b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="inc\xml">
       <UniqueIdentifier>{068ec0d5-19d5-4ded-a0b4-f6d318a33615}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="inc\features">
+      <UniqueIdentifier>{0b445460-2dc6-4b62-9682-8c503860bc7b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
