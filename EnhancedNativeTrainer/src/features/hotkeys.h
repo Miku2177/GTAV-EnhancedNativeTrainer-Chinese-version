@@ -60,6 +60,7 @@ static const int HKEY_WINDOW_ROLL = 132;
 static const int HKEY_INTERIOR_LIGHT = 133;
 static const int HKEY_SEARCH_LIGHT = 134;
 static const int HKEY_GIVE_ALL_WEAPONS = 135;
+static const int HKEY_SNIPER_VISION_TOGGLE = 136;
 
 const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "No Function", 0 },
@@ -98,6 +99,7 @@ const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "Interior Light", HKEY_INTERIOR_LIGHT },
 	{ "Search Light", HKEY_SEARCH_LIGHT },
 	{ "Give All Weapons", HKEY_GIVE_ALL_WEAPONS },
+	{ "Toggle Vision For Sniper Rifles", HKEY_SNIPER_VISION_TOGGLE },
 	//{ "Drive as Passenger", HKEY_PASSENGER }
 };
 

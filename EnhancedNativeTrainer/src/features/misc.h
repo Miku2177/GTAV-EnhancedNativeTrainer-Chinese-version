@@ -34,6 +34,10 @@ void add_misc_generic_settings(std::vector<StringPairSettingDBRow>* results);
 
 void handle_generic_settings_misc(std::vector<StringPairSettingDBRow>* settings);
 
+void onchange_misc_phone_bill_index(int value, SelectFromListMenuItem* source);
+
+void onchange_misc_phone_freeseconds_index(int value, SelectFromListMenuItem* source);
+
 bool is_player_reset_on_death();
 
 bool is_input_blocked_in_menu();
