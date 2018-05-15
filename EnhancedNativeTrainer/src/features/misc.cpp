@@ -78,6 +78,7 @@ ScriptTable* scriptTable;
 GlobalTable globalTable;
 ScriptHeader* shopController;
 HINSTANCE _hinstDLL;
+bool enabledDespawnPointer = false;
 
 // Main characters
 const Hash PLAYER_ZERO = 0xD7114C9;
@@ -725,15 +726,22 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		}
 	}
 
+	//Auto find anti-despawn pointer
 	if (featureFindDespawnPointer)
 	{
-		FindPatterns();
-		FindScriptAddresses();
-		EnableCarsGlobal();
+		if (!enabledDespawnPointer) 
+		{
+			set_status_text("Finding and applying despawn pointer");
+			FindPatterns();
+			FindScriptAddresses();
+			EnableCarsGlobal();
+			set_status_text("~g~Anti-despawn pointer applied");
+		}
 	}
 	else if (featureFindDespawnPointerUpdated)
 	{
 		set_status_text("~r~Restart your game to disable Despawn Pointer");
+		enabledDespawnPointer = false;
 		return;
 	}
 }
@@ -956,6 +964,7 @@ void EnableCarsGlobal()
 								//DEBUGMSG("Found Global Variable %d, address = %llX", globalindex, (__int64)globalTable.AddressOf(globalindex));
 								write_text_to_log_file("Found global despawn pointer and setting anti-despawn pointer to true"); //("Setting Global Variable %d to true", globalindex)
 								*globalTable.AddressOf(globalindex) = 1;
+								enabledDespawnPointer = true;
 								//Log::Msg("MP Cars enabled");
 								//FindSwitch(RealCodeOff - j);
 								//atchCheatController();
