@@ -1337,6 +1337,10 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 				ped_distance_x = (coords_weapon_me.x - coords_ped.x);
 				ped_distance_y = (coords_weapon_me.y - coords_ped.y);
 				ped_distance_z = (coords_weapon_me.z - coords_ped.z);
+				
+				if (ped_distance_x < 0) ped_distance_x = (ped_distance_x * -1);
+				if (ped_distance_y < 0) ped_distance_y = (ped_distance_y * -1);
+				if (ped_distance_z < 0) ped_distance_z = (ped_distance_z * -1);
 
 				srand(time(0));
 				callpolice_randomize = (rand() % 100 + 1);
