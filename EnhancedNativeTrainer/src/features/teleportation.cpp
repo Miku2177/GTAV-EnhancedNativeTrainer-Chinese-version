@@ -1754,7 +1754,7 @@ std::vector<tele_location> LOCATIONS_HIGH = {
 	{ "Sisyphus Theater Roof", 203.37f, 1166.73f, 245.835f },
 	{ "Tataviam Mountains Top", 1758.23f, 682.072f, 269.991f },
 	{ "Very High Up", -129.964f, 8130.873f, 2699.999f },
-	//{ "Very Very High Up", -119.879f, -977.357f, 10000.0f }, //- doesn't teleport you. Height out of bounds?
+	//{ "Very Very High Up", -119.879f, -977.357f, 9999.0f }, //- doesn't teleport you. Height out of bounds?
 	{ "Vinewood Bowl Theatre Roof", 683.157f, 568.621f, 156.285f },
 	{ "Vinewood Sign", 711.577f, 1197.91f, 348.527f },
 	{ "Weazel Plaza Apartments Roof", -894.349f, -454.021f, 174.811f },

@@ -4338,6 +4338,7 @@ namespace WATER
 
 namespace WORLDPROBE
 {
+	static void _EXPAND_WORLD_LIMITS(float x, float y, float z) { invoke<Void>(0x5006D96C995A5827, x, y, z); } // 0x5006D96C995A5827
 	static int START_SHAPE_TEST_LOS_PROBE(float x1, float y1, float z1, float x2, float y2, float z2, int flags, Entity entity, int p8) { return invoke<int>(0x7EE9F5D83DD4F90E, x1, y1, z1, x2, y2, z2, flags, entity, p8); } // 0x7EE9F5D83DD4F90E 0xEFAF4BA6
 	static int _START_SHAPE_TEST_RAY(float x1, float y1, float z1, float x2, float y2, float z2, int flags, Entity entity, int p8) { return invoke<int>(0x377906D8A31E5586, x1, y1, z1, x2, y2, z2, flags, entity, p8); } // 0x377906D8A31E5586 0x8251485D
 	static Any START_SHAPE_TEST_BOUNDING_BOX(Entity entity, int flags1, int flags2) { return invoke<Any>(0x052837721A854EC7, entity, flags1, flags2); } // 0x052837721A854EC7 0xCEEAD94B

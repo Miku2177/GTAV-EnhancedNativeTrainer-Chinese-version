@@ -45,6 +45,8 @@ bool featureFullMap = false;
 bool featureFullMapUpdated = false;
 bool police_blips_toogle = false;
 bool fullmap_toogle = false;
+bool windstrength_toggle = false;
+int windstrength_changed = -1;
 
 bool featureWorldRandomCops = true;
 bool featureWorldRandomTrains = true;
@@ -59,7 +61,7 @@ bool featureWorldGarbageTrucksUpdated = false;
 bool featureBlackout = false;
 bool featureBlackoutUpdated = false;
 
-bool featureWeatherWind = false;
+//bool featureWeatherWind = false;
 bool featureWeatherFreeze = false;
 bool featureCloudsFreeze = false;
 bool featureCloudsNo = false;
@@ -83,27 +85,34 @@ const std::vector<int> WORLD_RADAR_MAP_VALUES{ 1, 2, 3 };
 int RadarMapIndex = 0;
 bool RadarMapChanged = true;
 
+// Wind Strength
+const std::vector<std::string> WORLD_WIND_STRENGTH_CAPTIONS{ "Calm", "Gentle Breeze", "Strong Breeze" };
+const std::vector<int> WORLD_WIND_STRENGTH_VALUES{ 0, 3, 999 };
+int WindStrengthIndex = 0;
+bool WindStrengthChanged = true;
+
 bool onconfirm_weather_menu(MenuItem<std::string> choice)
 {
 	std::stringstream ss; ss << "Weather Frozen at: " << lastWeatherName;
 	switch (choice.currentMenuIndex)
 	{
-	case 0:
+	//case 0:
 		// wind
-		if (featureWeatherWind)
-		{
-			GAMEPLAY::SET_WIND(1.0);
-			GAMEPLAY::SET_WIND_SPEED(11.99);
-			GAMEPLAY::SET_WIND_DIRECTION(ENTITY::GET_ENTITY_HEADING(PLAYER::PLAYER_PED_ID()));
-		}
-		else
-		{
-			GAMEPLAY::SET_WIND(0.0);
-			GAMEPLAY::SET_WIND_SPEED(0.0);
-		}
-		break;
+		//if (featureWeatherWind)
+		//if (WORLD_WIND_STRENGTH_VALUES[WindStrengthIndex] > 0)
+		//{
+		//	GAMEPLAY::SET_WIND(1.0);
+			//GAMEPLAY::SET_WIND_SPEED(11.99);
+		//	GAMEPLAY::SET_WIND_DIRECTION(ENTITY::GET_ENTITY_HEADING(PLAYER::PLAYER_PED_ID()));
+		//}
+		//else
+		//{
+		//	GAMEPLAY::SET_WIND(0.0);
+			//GAMEPLAY::SET_WIND_SPEED(0.0);
+		//}
+		//break;
 		
-	case 1:
+	case 0:
 		// set weather
 		GAMEPLAY::CLEAR_OVERRIDE_WEATHER();
 		GAMEPLAY::CLEAR_WEATHER_TYPE_PERSIST();
@@ -124,7 +133,7 @@ bool onconfirm_weather_menu(MenuItem<std::string> choice)
 			featureWeatherFreeze = false;
 		}
 		break;
-	case 2:
+	case 1: 
 		// reset weather
 		GAMEPLAY::CLEAR_OVERRIDE_WEATHER();
 		GAMEPLAY::CLEAR_WEATHER_TYPE_PERSIST();
@@ -155,12 +164,12 @@ bool onconfirm_weather_menu(MenuItem<std::string> choice)
 
 void process_weather_menu()
 {
-	const int lineCount = 18;
+	const int lineCount = 17;
 
 	std::string caption = "Weather Options";
-
+	
 	StringStandardOrToggleMenuDef lines[lineCount] = {
-		{ "Wind", "WIND", &featureWeatherWind, NULL },
+		//{ "Wind", "WIND", &featureWeatherWind, NULL },
 		{ "Freeze Weather", "FREEZEWEATHER", &featureWeatherFreeze, NULL },
 		{ "Reset Weather", "RESETWEATHER", NULL, NULL },
 		{ "Extra Sunny", "EXTRASUNNY", NULL, NULL },
@@ -268,6 +277,11 @@ void onchange_world_radar_map_index(int value, SelectFromListMenuItem* source){
 	RadarMapChanged = true;
 }
 
+void onchange_world_wind_strength_index(int value, SelectFromListMenuItem* source){
+	WindStrengthIndex = value;
+	WindStrengthChanged = true;
+}
+
 bool onconfirm_world_menu(MenuItem<int> choice)
 {
 	switch (choice.value)
@@ -316,6 +330,12 @@ void process_world_menu()
 	cloudsItem->value = -3;
 	menuItems.push_back(cloudsItem);
 	
+	listItem = new SelectFromListMenuItem(WORLD_WIND_STRENGTH_CAPTIONS, onchange_world_wind_strength_index);
+	listItem->wrap = false;
+	listItem->caption = "Wind Strength";
+	listItem->value = WindStrengthIndex;
+	menuItems.push_back(listItem);
+
 	ToggleMenuItem<int> *togItem = new ToggleMenuItem<int>();
 	togItem->caption = "Moon Gravity";
 	togItem->value = 1;
@@ -421,12 +441,13 @@ void reset_world_globals()
 	activeLineIndexWeather = 0;
 	activeLineIndexClouds = 0;
 	RadarMapIndex = 0;
+	WindStrengthIndex = 0;
 	lastWeather.clear();
 	lastWeatherName.clear();
 	lastClouds.clear();
 	lastCloudsName.clear();
 
-	featureWeatherWind =
+	//featureWeatherWind =
 	featureWeatherFreeze =
 	featureCloudsNo =
 	featureCloudsFreeze =
@@ -657,6 +678,17 @@ void update_world_features()
 		radar_map_toogle_3 = true;
 	}
 
+	if (windstrength_toggle == false)
+		{
+			GAMEPLAY::SET_WIND(WORLD_WIND_STRENGTH_VALUES[WindStrengthIndex]);
+			if (WORLD_WIND_STRENGTH_VALUES[WindStrengthIndex] != 0) GAMEPLAY::SET_WIND_DIRECTION(ENTITY::GET_ENTITY_HEADING(PLAYER::PLAYER_PED_ID()));
+			if (WORLD_WIND_STRENGTH_VALUES[WindStrengthIndex] == 0) GAMEPLAY::SET_WIND_SPEED(0.0);
+			windstrength_changed = WORLD_WIND_STRENGTH_VALUES[WindStrengthIndex];
+			windstrength_toggle = true;
+		}
+
+	if (windstrength_changed != WORLD_WIND_STRENGTH_VALUES[WindStrengthIndex]) windstrength_toggle = false;
+
 	if (featureWorldNoTrafficUpdated)
 	{
 		VEHICLE::_DISPLAY_DISTANT_VEHICLES(!featureWorldNoTraffic);
@@ -755,7 +787,7 @@ void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* r
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldRandomBoats", &featureWorldRandomBoats, &featureWorldRandomBoatsUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldGarbageTrucks", &featureWorldGarbageTrucks, &featureWorldGarbageTrucksUpdated });
 
-	results->push_back(FeatureEnabledLocalDefinition{ "featureWeatherWind", &featureWeatherWind });
+	//results->push_back(FeatureEnabledLocalDefinition{ "featureWeatherWind", &featureWeatherWind });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWeatherFreeze", &featureWeatherFreeze });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureCloudsNo", &featureCloudsNo });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureCloudsFreeze", &featureCloudsFreeze });
@@ -785,6 +817,7 @@ void add_world_generic_settings(std::vector<StringPairSettingDBRow>* settings)
 void add_world_feature_enablements2(std::vector<StringPairSettingDBRow>* results)
 {
 	results->push_back(StringPairSettingDBRow{ "RadarMapIndex", std::to_string(RadarMapIndex) });
+	results->push_back(StringPairSettingDBRow{ "WindStrengthIndex", std::to_string(WindStrengthIndex) });
 }
 
 void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings)
@@ -810,6 +843,9 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 		}
 		else if (setting.name.compare("RadarMapIndex") == 0){
 			RadarMapIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("WindStrengthIndex") == 0){
+			WindStrengthIndex = stoi(setting.value);
 		}
 	}
 }

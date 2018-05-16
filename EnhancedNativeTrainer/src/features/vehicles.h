@@ -204,6 +204,18 @@ void onchange_veh_blipsymbol_index(int value, SelectFromListMenuItem* source);
 
 void onchange_veh_blipflash_index(int value, SelectFromListMenuItem* source);
 
+void onchange_speeding_city_index(int value, SelectFromListMenuItem* source);
+
+void onchange_detection_range_index(int value, SelectFromListMenuItem* source);
+
+void onchange_pirsuit_range_index(int value, SelectFromListMenuItem* source);
+
+void onchange_stars_punish_index(int value, SelectFromListMenuItem* source);
+
+void onchange_speeding_speedway_index(int value, SelectFromListMenuItem* source);
+
+void onchange_fine_size_index(int value, SelectFromListMenuItem* source);
+
 void onchange_car_consumption_index(int value, SelectFromListMenuItem* source);
 
 void onchange_bike_consumption_index(int value, SelectFromListMenuItem* source);
