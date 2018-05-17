@@ -3343,7 +3343,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			// Running Red Light
 			if (featureRunningRedLight)
 			{
-				Vehicle veh_stopped_red_light = VEHICLE::GET_CLOSEST_VEHICLE(vehroadlaws_ped_coords.x, vehroadlaws_ped_coords.y, vehroadlaws_ped_coords.z, 10, 0, 70);
+				Vehicle veh_stopped_red_light = VEHICLE::GET_CLOSEST_VEHICLE(vehroadlaws_coords.x, vehroadlaws_coords.y, vehroadlaws_coords.z, 10, 0, 70);
 				Vector3 veh_stopped_red_light_coords = ENTITY::GET_ENTITY_COORDS(veh_stopped_red_light, true);
 				float veh_stopped_red_light_heading = ENTITY::GET_ENTITY_HEADING(veh_stopped_red_light);
 				float my_vehicle_heading = ENTITY::GET_ENTITY_HEADING(vehroadlaws);
@@ -3505,7 +3505,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			if (tempfined_y < 0) tempfined_y = (tempfined_y * -1);
 						
 			// You're being fined
-			if (tempfined_x < 7 && tempfined_y < 7 && Stop_seconds > 4 && AI::IS_PED_STILL(cop_that_fines_you) && PED::IS_PED_IN_VEHICLE(playerPed, vehroadlaws, true))
+			if (tempfined_x < 7 && tempfined_y < 7 && Stop_seconds > 4 && AI::IS_PED_STILL(cop_that_fines_you) && PED::IS_PED_IN_VEHICLE(playerPed, vehroadlaws, true))  
 				{
 					Stop_seconds = 6;
 					SinceStop_secs_passed_final = clock() / CLOCKS_PER_SEC;

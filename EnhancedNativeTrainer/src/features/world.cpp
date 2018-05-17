@@ -43,6 +43,11 @@ bool featureWorldNoAnimals = false;
 bool featureWorldNoAnimalsUpdated = false;
 bool featureFullMap = false;
 bool featureFullMapUpdated = false;
+bool featurePenitentiaryMap = false;
+bool featurePenitentiaryMapUpdated = false;
+bool featureZancudoMap = false;
+bool featureZancudoMapUpdated = false;
+
 bool police_blips_toogle = false;
 bool fullmap_toogle = false;
 bool windstrength_toggle = false;
@@ -419,6 +424,20 @@ void process_world_menu()
 	togItem->toggleValueUpdated = &featureFullMapUpdated;
 	menuItems.push_back(togItem);
 
+	togItem = new ToggleMenuItem<int>();
+	togItem->caption = "Show Bolingbroke Penitentiary On Map";
+	togItem->value = 1;
+	togItem->toggleValue = &featurePenitentiaryMap;
+	togItem->toggleValueUpdated = &featurePenitentiaryMapUpdated;
+	menuItems.push_back(togItem);
+
+	togItem = new ToggleMenuItem<int>();
+	togItem->caption = "Show Fort Zancudo On Map";
+	togItem->value = 1;
+	togItem->toggleValue = &featureZancudoMap;
+	togItem->toggleValueUpdated = &featureZancudoMapUpdated;
+	menuItems.push_back(togItem);
+
 	listItem = new SelectFromListMenuItem(WORLD_RADAR_MAP_CAPTIONS, onchange_world_radar_map_index);
 	listItem->wrap = false;
 	listItem->caption = "Radar Map Size";
@@ -458,6 +477,8 @@ void reset_world_globals()
 	featureNoPoliceBlips = false;
 	featureWorldNoAnimals = false;
 	featureFullMap = false;
+	featurePenitentiaryMap = false;
+	featureZancudoMap = false;
 	featureBlackout = false;
 	featureSnow = false;
 	featureMPMap = false;
@@ -474,6 +495,8 @@ void reset_world_globals()
 	featureNoPoliceBlipsUpdated =
 	featureWorldNoAnimalsUpdated =
 	featureFullMapUpdated =
+	featurePenitentiaryMapUpdated =
+	featureZancudoMapUpdated =
 	featureWorldGarbageTrucksUpdated =
 	featureWorldRandomBoatsUpdated =
 	featureWorldRandomCopsUpdated =
@@ -652,11 +675,12 @@ void update_world_features()
 		fullmap_toogle = true;
 	}
 
-	if (!featureFullMap && fullmap_toogle) {
+	if (!featureFullMap && fullmap_toogle) { 
 		UI::_SET_MINIMAP_REVEALED(false);
 		fullmap_toogle = false;
 	}
-
+	
+	// Radar Map Size
 	if (WORLD_RADAR_MAP_VALUES[RadarMapIndex] == 1 && radar_map_toogle_1 == false){
 		UI::_SET_RADAR_BIGMAP_ENABLED(false, false);
 		radar_map_toogle_1 = true;
@@ -678,6 +702,30 @@ void update_world_features()
 		radar_map_toogle_3 = true;
 	}
 
+	// Full Map Toggle
+	if (featureFullMap && !fullmap_toogle){
+		UI::_SET_MINIMAP_REVEALED(true);
+		fullmap_toogle = true;
+	}
+	
+	// Show Bolingbroke Penitentiary On Map
+	if (featurePenitentiaryMap){
+		UI::SET_RADAR_AS_INTERIOR_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("V_FakePrison"), 1700, 2580, 0, 0);
+		UI::SET_RADAR_AS_EXTERIOR_THIS_FRAME();
+	}
+
+	// Show Fort Zancudo On Map
+	if (featureZancudoMap && featureZancudoMapUpdated == true){
+		UI::SET_MINIMAP_COMPONENT(15, true, -1);
+		featureZancudoMapUpdated = false;
+	}
+	if (!featureZancudoMap)
+	{
+		UI::SET_MINIMAP_COMPONENT(15, false, -1);
+		featureZancudoMapUpdated = true;
+	}
+	
+	// Wind Strength
 	if (windstrength_toggle == false)
 		{
 			GAMEPLAY::SET_WIND(WORLD_WIND_STRENGTH_VALUES[WindStrengthIndex]);
@@ -800,6 +848,8 @@ void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* r
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNoPoliceBlips", &featureNoPoliceBlips, &featureNoPoliceBlipsUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoAnimals", &featureWorldNoAnimals, &featureWorldNoAnimalsUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureFullMap", &featureFullMap, &featureFullMapUpdated });
+	results->push_back(FeatureEnabledLocalDefinition{ "featurePenitentiaryMap", &featurePenitentiaryMap, &featurePenitentiaryMapUpdated });
+	results->push_back(FeatureEnabledLocalDefinition{ "featureZancudoMap", &featureZancudoMap, &featureZancudoMapUpdated });
 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureSnow", &featureSnow, &featureSnowUpdated});
 
