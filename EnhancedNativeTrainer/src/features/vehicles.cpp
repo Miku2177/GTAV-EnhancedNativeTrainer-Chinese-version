@@ -135,7 +135,6 @@ Blip blip_laws;
 Vehicle veh_cop_in, hijacking_veh;
 Vector3 veh_cop_in_coords;
 int tempgotcha_x, tempgotcha_y = -1;
-int tempgotcha_ped_x, tempgotcha_ped_y = -1;
 Ped cop_that_fines_you;
 float vehcoplaws_speed = -1;
 bool cop_walking, wanted_level_on, alarm_check, found_stolen_in_vector, hijacked_vehicle = false;
@@ -425,7 +424,7 @@ bool PirsuitRange_Changed = true;
 //Stars If Try To Escape
 const std::vector<std::string> VEH_STARSPUNISH_CAPTIONS{ "2 Stars", "3 Stars", "4 Stars", "5 Stars" };
 const std::vector<double> VEH_STARSPUNISH_VALUES{ 2, 3, 4, 5 };
-int StarsPunishIndex = 1;
+int StarsPunishIndex = 0;
 bool StarsPunish_Changed = true;
 
 // player in vehicle state... assume true initially since our quicksave might have us in a vehicle already, in which case we can't check if we just got into one
@@ -3181,7 +3180,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 					SinceAgainstTraffic_secs_curr = SinceAgainstTraffic_secs_passed;
 				}
 
-				if (AgainstTraffic_seconds > 1) againsttraffic_check = true;
+				if (AgainstTraffic_seconds > 2) againsttraffic_check = true;
 			}
 			else if (been_seen_by_a_cop == false)
 			{
@@ -3408,9 +3407,11 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 							if (featurePoliceVehicleBlip) UI::SET_BLIP_SPRITE(blip_laws, 42);
 							ENTITY::SET_ENTITY_AS_MISSION_ENTITY(cop_that_fines_you, 1, 1);
 							ENTITY::SET_ENTITY_AS_MISSION_ENTITY(fine_cop_car, 1, 1);
+							AI::TASK_VEHICLE_ESCORT(cop_that_fines_you, fine_cop_car, vehroadlaws, -1, 1000, 4, 3, 1, 1);
 							AI::SET_DRIVE_TASK_DRIVING_STYLE(fine_cop_car, 262144);
-							AI::SET_DRIVE_TASK_CRUISE_SPEED(fine_cop_car, 200.0);
-							AI::TASK_VEHICLE_ESCORT(cop_that_fines_you, fine_cop_car, vehroadlaws, -1, 1000, 262144, 3, 1, 1);
+							AI::SET_DRIVE_TASK_DRIVING_STYLE(fine_cop_car, 4);
+							AI::SET_DRIVE_TASK_DRIVING_STYLE(fine_cop_car, 512);
+							AI::SET_DRIVE_TASK_CRUISE_SPEED(fine_cop_car, 300.0);
 							AUDIO::BLIP_SIREN(fine_cop_car);
 							blip_check = true;
 						}
@@ -3449,9 +3450,11 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 						if (featurePoliceVehicleBlip) UI::SET_BLIP_SPRITE(blip_laws, 42);
 						ENTITY::SET_ENTITY_AS_MISSION_ENTITY(cop_that_fines_you, 1, 1);
 						ENTITY::SET_ENTITY_AS_MISSION_ENTITY(fine_cop_car, 1, 1);
-						AI::SET_DRIVE_TASK_DRIVING_STYLE(fine_cop_car, 262144);
-						AI::SET_DRIVE_TASK_CRUISE_SPEED(fine_cop_car, 200.0);
 						AI::TASK_VEHICLE_ESCORT(cop_that_fines_you, fine_cop_car, vehroadlaws, -1, 1000, 262144, 2, 1, 1);
+						AI::SET_DRIVE_TASK_DRIVING_STYLE(fine_cop_car, 262144);
+						AI::SET_DRIVE_TASK_DRIVING_STYLE(fine_cop_car, 4);
+						AI::SET_DRIVE_TASK_DRIVING_STYLE(fine_cop_car, 512);
+						AI::SET_DRIVE_TASK_CRUISE_SPEED(fine_cop_car, 300.0);
 						AUDIO::BLIP_SIREN(fine_cop_car);
 						tempgotcha_x = tempradiocop.x;
 						tempgotcha_y = tempradiocop.y;
@@ -3470,18 +3473,10 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				tempgotcha_y = (vehroadlaws_coords.y - veh_cop_in_coords.y);
 				if (tempgotcha_x < 0) tempgotcha_x = (tempgotcha_x * -1);
 				if (tempgotcha_y < 0) tempgotcha_y = (tempgotcha_y * -1);
-
-				if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, false))
-				{
-					tempgotcha_ped_x = (vehroadlaws_ped_coords.x - veh_cop_in_coords.x);
-					tempgotcha_ped_y = (vehroadlaws_ped_coords.y - veh_cop_in_coords.y);
-					if (tempgotcha_ped_x < 0) tempgotcha_ped_x = (tempgotcha_ped_x * -1);
-					if (tempgotcha_ped_y < 0) tempgotcha_ped_y = (tempgotcha_ped_y * -1);
-				}
 			}
 
 			// You'll be fined if you don't move
-			if (vehroadlaws_speed < 1 && vehcoplaws_speed < 1 && tempgotcha_x < 10 && tempgotcha_y < 10 && been_seen_by_a_cop == true)
+			if ((vehroadlaws_speed < 1 && vehcoplaws_speed < 1 && tempgotcha_x < 20 && tempgotcha_y < 20 && been_seen_by_a_cop == true) || (been_seen_by_a_cop == true && !PED::IS_PED_IN_VEHICLE(cop_that_fines_you, fine_cop_car, true)))
 			{
 				VEHICLE::SET_VEHICLE_SIREN(fine_cop_car, false);
 				SinceStop_secs_passed = clock() / CLOCKS_PER_SEC;
@@ -3516,29 +3511,40 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 					SinceStop_secs_passed_final = clock() / CLOCKS_PER_SEC;
 					if (((clock() / CLOCKS_PER_SEC) - SinceStop_secs_curr_final) != 0)
 					{
-						if (Stop_seconds_final < 30 && been_seen_by_a_cop == true) Stop_seconds_final = Stop_seconds_final + 1;
+						if (Stop_seconds_final < 24 && been_seen_by_a_cop == true) Stop_seconds_final = Stop_seconds_final + 1;
 						SinceStop_secs_curr_final = SinceStop_secs_passed_final;
 					}
-					if (Stop_seconds_final == 9) AI::TASK_TURN_PED_TO_FACE_ENTITY(cop_that_fines_you, playerPed, -1);
+					if (Stop_seconds_final == 7) AI::TASK_TURN_PED_TO_FACE_ENTITY(cop_that_fines_you, playerPed, -1);
 					if (Stop_seconds_final < 17) AUDIO::_PLAY_AMBIENT_SPEECH1(cop_that_fines_you, "GENERIC_INSULT_HIGH", "SPEECH_PARAMS_FORCE_SHOUTED");
-					if (Stop_seconds_final == 17) AUDIO::STOP_CURRENT_PLAYING_AMBIENT_SPEECH(cop_that_fines_you);
+					if (Stop_seconds_final == 17)
+					{
+						AI::TASK_TURN_PED_TO_FACE_ENTITY(cop_that_fines_you, playerPed, -1);
+						AUDIO::STOP_CURRENT_PLAYING_AMBIENT_SPEECH(cop_that_fines_you);
+					}
 					if (Stop_seconds_final == 18)
 					{
 						AUDIO::_PLAY_AMBIENT_SPEECH1(cop_that_fines_you, "GENERIC_THANKS", "SPEECH_PARAMS_FORCE_SHOUTED");
-						STREAMING::REQUEST_ANIM_DICT("ah_2_ext_alt-7"); 
-						while (!STREAMING::HAS_ANIM_DICT_LOADED("ah_2_ext_alt-7")) WAIT(0);
-						AI::TASK_PLAY_ANIM(cop_that_fines_you, "ah_2_ext_alt-7", "player_one_dual-7", 8.0, 0.0, -1, 9, 0, 0, 0, 0); 
+						STREAMING::REQUEST_ANIM_DICT("amb@code_human_in_car_mp_actions@gang_sign_b@low@ds@base"); 
+						while (!STREAMING::HAS_ANIM_DICT_LOADED("amb@code_human_in_car_mp_actions@gang_sign_b@low@ds@base")) WAIT(0);
+						AI::TASK_PLAY_ANIM(cop_that_fines_you, "amb@code_human_in_car_mp_actions@gang_sign_b@low@ds@base", "enter", 8.0, 0.0, -1, 9, 0, 0, 0, 0); 
 					}
-					if (Stop_seconds_final == 22) AUDIO::STOP_CURRENT_PLAYING_AMBIENT_SPEECH(cop_that_fines_you);
-					if (Stop_seconds_final == 23) AUDIO::_PLAY_AMBIENT_SPEECH1(cop_that_fines_you, "GENERIC_BYE", "SPEECH_PARAMS_FORCE_SHOUTED");
-					if (Stop_seconds_final == 25) AUDIO::STOP_CURRENT_PLAYING_AMBIENT_SPEECH(cop_that_fines_you);
-					if (Stop_seconds_final == 26 && STREAMING::DOES_ANIM_DICT_EXIST("ah_2_ext_alt-7") && !ENTITY::HAS_ENTITY_ANIM_FINISHED(cop_that_fines_you, "ah_2_ext_alt-7", "player_one_dual-7", 3))
+					if (Stop_seconds_final == 19)
 					{
-						AI::STOP_ANIM_TASK(cop_that_fines_you, "ah_2_ext_alt-7", "player_one_dual-7", 1.0);
-						
-						STREAMING::REQUEST_ANIM_DICT("ah_3a_ext-17");
-						while (!STREAMING::HAS_ANIM_DICT_LOADED("ah_3a_ext-17")) WAIT(0);
-						AI::TASK_PLAY_ANIM(cop_that_fines_you, "ah_3a_ext-17", "player_zero_dual-17", 8.0, 0.0, -1, 9, 0, 0, 0, 0);
+						AI::TASK_TURN_PED_TO_FACE_ENTITY(cop_that_fines_you, playerPed, -1);
+						AUDIO::STOP_CURRENT_PLAYING_AMBIENT_SPEECH(cop_that_fines_you);
+						AI::STOP_ANIM_TASK(cop_that_fines_you, "amb@code_human_in_car_mp_actions@gang_sign_b@low@ds@base", "enter", 1.0);
+					}
+					if (Stop_seconds_final == 20 && STREAMING::DOES_ANIM_DICT_EXIST("amb@code_human_in_car_mp_actions@gang_sign_b@low@ds@base") && !ENTITY::HAS_ENTITY_ANIM_FINISHED(cop_that_fines_you, "amb@code_human_in_car_mp_actions@gang_sign_b@low@ds@base", "enter", 3))
+					{
+						AUDIO::_PLAY_AMBIENT_SPEECH1(cop_that_fines_you, "GENERIC_BYE", "SPEECH_PARAMS_FORCE_SHOUTED");
+						STREAMING::REQUEST_ANIM_DICT("anim@mp_player_intincarrocklow@ds@");
+						while (!STREAMING::HAS_ANIM_DICT_LOADED("anim@mp_player_intincarrocklow@ds@")) WAIT(0);
+						AI::TASK_PLAY_ANIM(cop_that_fines_you, "anim@mp_player_intincarrocklow@ds@", "enter_fp", 8.0, 0.0, -1, 9, 0, 0, 0, 0);
+					}
+					if (Stop_seconds_final == 22)
+					{
+						AUDIO::STOP_CURRENT_PLAYING_AMBIENT_SPEECH(cop_that_fines_you);
+						AI::STOP_ANIM_TASK(cop_that_fines_you, "anim@mp_player_intincarrocklow@ds@", "enter_fp", 1.0);
 					}
 				}
 			
@@ -3553,15 +3559,14 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			}
 			
 			// Been fined or escaped
-			if (Stop_seconds_final == 30 || tempgotcha_x > VEH_PIRSUITRANGE_VALUES[PirsuitRangeIndex] || tempgotcha_y > VEH_PIRSUITRANGE_VALUES[PirsuitRangeIndex] || 
-				tempgotcha_ped_x > VEH_PIRSUITRANGE_VALUES[PirsuitRangeIndex] || tempgotcha_ped_y > VEH_PIRSUITRANGE_VALUES[PirsuitRangeIndex] ||
+			if (Stop_seconds_final == 24 || tempgotcha_x > VEH_PIRSUITRANGE_VALUES[PirsuitRangeIndex] || tempgotcha_y > VEH_PIRSUITRANGE_VALUES[PirsuitRangeIndex] || 
 				(PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) > 1 && !featureCopsUseRadio) || (vehroadlaws_speed > 20 && Stop_seconds > -1 && wanted_level_on == true && !featureCopsUseRadio))
 			{
 				if (STREAMING::DOES_ANIM_DICT_EXIST("ah_3a_ext-17") && !ENTITY::HAS_ENTITY_ANIM_FINISHED(cop_that_fines_you, "ah_3a_ext-17", "player_zero_dual-17", 3)) 
 					AI::STOP_ANIM_TASK(cop_that_fines_you, "ah_3a_ext-17", "player_zero_dual-17", 1.0);
 				
 				// Thank you for your contribution, sir
-				if (Stop_seconds_final == 30)
+				if (Stop_seconds_final == 24)
 				{
 					int outValue_beingfined = -1;
 					int statHash_beingfined = -1;
@@ -3618,8 +3623,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				Stop_seconds_final = 5;
 				tempgotcha_x = 0;
 				tempgotcha_y = 0;
-				tempgotcha_ped_x = 0;
-				tempgotcha_ped_y = 0;
 				approached = false;
 				red_light_veh_detected = false;
 				Collision_seconds = -1;
@@ -3646,8 +3649,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			{
 				tempgotcha_x = 0;
 				tempgotcha_y = 0;
-				tempgotcha_ped_x = 0;
-				tempgotcha_ped_y = 0;
 			}
 
 		} // end of ped loop
@@ -3772,7 +3773,7 @@ void reset_vehicle_globals(){
 	SpeedingCityIndex = 3;
 	DetectionRangeIndex = 3;
 	PirsuitRangeIndex = 4;
-	StarsPunishIndex = 1;
+	StarsPunishIndex = 0;
 	SpeedingSpeedwayIndex = 5;
 	FineSizeIndex = 1;
 	VehBlipSymbolIndex = 0;
