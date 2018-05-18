@@ -124,7 +124,8 @@ bool featureUsingMobilePhone = true;
 bool featureVehicleHeavilyDamaged = true;
 bool featureNoHelmetOnBike = true;
 bool featureStolenVehicle = true;
-bool againsttraffic_check, pavementdriving_check, vehiclecollision_check, vehicledamaged_check, hohelmet_check, mobilephone_check, speedingincity_check, speedingonspeedway_check, runningredlight_check, stolenvehicle_check = false;
+bool featureNoLightsNightTime = true;
+bool againsttraffic_check, pavementdriving_check, vehiclecollision_check, vehicledamaged_check, hohelmet_check, mobilephone_check, speedingincity_check, speedingonspeedway_check, runningredlight_check, stolenvehicle_check, nolightsnighttime_check = false;
 int SinceCollision_secs_passed, SinceCollision_secs_curr, Collision_seconds = -1;
 int SinceAgainstTraffic_secs_passed, SinceAgainstTraffic_secs_curr, AgainstTraffic_seconds = -1;
 int SinceStop_secs_passed, SinceStop_secs_curr, Stop_seconds = -1;
@@ -141,7 +142,12 @@ bool cop_walking, wanted_level_on, alarm_check, found_stolen_in_vector, hijacked
 std::vector<Vehicle> VEHICLES_STOLEN;
 bool red_light_veh_detected = false;
 Vehicle red_light_vehicle;
+BOOL lightsOn = -1;
+BOOL highbeamsOn = -1;
 //
+
+Vehicle ped_temp_veh = -1;
+
 bool featureDespawnScriptDisabled = false;
 bool featureDespawnScriptDisabledUpdated = false;
 bool featureDespawnScriptDisabledWasLastOn = false; //do not persist this particular var in the DB - it is local only
@@ -410,8 +416,8 @@ int FineSizeIndex = 1;
 bool FineSize_Changed = true;
 
 //Detection Range
-const std::vector<std::string> VEH_DETECTIONRANGE_CAPTIONS{ "3m", "5m", "10m", "30m", "50m", "100m", "200m", "500m" };
-const std::vector<int> VEH_DETECTIONRANGE_VALUES{ 3, 5, 10, 30, 50, 100, 200, 500 };
+const std::vector<std::string> VEH_DETECTIONRANGE_CAPTIONS{ "3m", "5m", "10m", "20m", "30m", "50m", "100m", "200m", "500m" };
+const std::vector<int> VEH_DETECTIONRANGE_VALUES{ 3, 5, 10, 20, 30, 50, 100, 200, 500 };
 int DetectionRangeIndex = 3;
 bool DetectionRange_Changed = true;
 
@@ -1672,6 +1678,12 @@ void process_road_laws_menu(){
 	toggleItem->caption = "Stolen Vehicle";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureStolenVehicle;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Driving Without Headlights At Night";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureNoLightsNightTime;
 	menuItems.push_back(toggleItem);
 
 	draw_generic_menu<int>(menuItems, &activeLineIndexRoadLaws, caption, onconfirm_road_laws_menu, NULL, NULL);
@@ -3307,6 +3319,19 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		}
 		else stolenvehicle_check = false;
 		
+		// No Lights In The Night Time
+		if (featureNoLightsNightTime && PED::IS_PED_IN_ANY_VEHICLE(playerPed, true))
+		{
+			int time_road_laws = TIME::GET_CLOCK_HOURS();
+			bool headlights_state = VEHICLE::GET_VEHICLE_LIGHTS_STATE(vehroadlaws, &lightsOn, &highbeamsOn);
+			
+			if (vehroadlaws_speed > 1 && VEHICLE::GET_IS_LEFT_VEHICLE_HEADLIGHT_DAMAGED(vehroadlaws) && VEHICLE::GET_IS_RIGHT_VEHICLE_HEADLIGHT_DAMAGED(vehroadlaws) && (time_road_laws < 5 || time_road_laws > 20)) nolightsnighttime_check = true;
+			if (vehroadlaws_speed > 1 && !lightsOn && !highbeamsOn && (time_road_laws < 5 || time_road_laws > 20)) nolightsnighttime_check = true;
+			if (((lightsOn || highbeamsOn) && (!VEHICLE::GET_IS_LEFT_VEHICLE_HEADLIGHT_DAMAGED(vehroadlaws) || !VEHICLE::GET_IS_RIGHT_VEHICLE_HEADLIGHT_DAMAGED(vehroadlaws)) &&
+				been_seen_by_a_cop == false) || (time_road_laws > 4 && time_road_laws < 21 && been_seen_by_a_cop == false)) nolightsnighttime_check = false;
+		}
+		else if (been_seen_by_a_cop == false) nolightsnighttime_check = false;
+
 		// ALL THE PEDS AROUND
 		for (int i = 0; i < count_laws; i++)
 		{
@@ -3389,7 +3414,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				vehcoplaws_speed = ENTITY::GET_ENTITY_SPEED(veh_cop_in);
 				vehroadlaws_coords = ENTITY::GET_ENTITY_COORDS(vehroadlaws, true);
 				if (againsttraffic_check == true || pavementdriving_check == true || vehiclecollision_check == true || hohelmet_check == true || mobilephone_check == true ||
-					vehicledamaged_check == true || speedingincity_check == true || speedingonspeedway_check == true || runningredlight_check == true || stolenvehicle_check == true)
+					vehicledamaged_check == true || speedingincity_check == true || speedingonspeedway_check == true || runningredlight_check == true || stolenvehicle_check == true || nolightsnighttime_check == true)
 				{
 					tempgotcha_x = (vehroadlaws_coords.x - veh_cop_in_coords.x);
 					tempgotcha_y = (vehroadlaws_coords.y - veh_cop_in_coords.y);
@@ -3413,6 +3438,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 							AI::SET_DRIVE_TASK_DRIVING_STYLE(fine_cop_car, 512);
 							AI::SET_DRIVE_TASK_CRUISE_SPEED(fine_cop_car, 300.0);
 							AUDIO::BLIP_SIREN(fine_cop_car);
+							AUDIO::_PLAY_AMBIENT_SPEECH1(cop_that_fines_you, "PROVOKE_GENERIC", "SPEECH_PARAMS_FORCE_SHOUTED");
 							blip_check = true;
 						}
 						been_seen_by_a_cop = true;
@@ -3456,6 +3482,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 						AI::SET_DRIVE_TASK_DRIVING_STYLE(fine_cop_car, 512);
 						AI::SET_DRIVE_TASK_CRUISE_SPEED(fine_cop_car, 300.0);
 						AUDIO::BLIP_SIREN(fine_cop_car);
+						AUDIO::_PLAY_AMBIENT_SPEECH1(cop_that_fines_you, "PROVOKE_GENERIC", "SPEECH_PARAMS_FORCE_SHOUTED");
 						tempgotcha_x = tempradiocop.x;
 						tempgotcha_y = tempradiocop.y;
 					}
@@ -3598,6 +3625,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 					if (speedingonspeedway_check == true) set_status_text("YOU'RE FINED FOR SPEEDING ON A FREEWAY");
 					if (runningredlight_check == true) set_status_text("YOU'RE FINED FOR RUNNING A REDLIGHT");
 					if (stolenvehicle_check == true) set_status_text("YOU'RE FINED FOR USING A STOLEN VEHICLE");
+					if (nolightsnighttime_check == true) set_status_text("YOU'RE FINED FOR DRIVING WITHOUT HEADLIGHTS");
 				}
 				againsttraffic_check = false;
 				pavementdriving_check = false;
@@ -3608,6 +3636,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				speedingincity_check = false;
 				speedingonspeedway_check = false; 
 				runningredlight_check = false;
+				nolightsnighttime_check = false;
 
 				ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&cop_that_fines_you);
 				ENTITY::SET_VEHICLE_AS_NO_LONGER_NEEDED(&fine_cop_car);
@@ -3832,6 +3861,7 @@ void reset_vehicle_globals(){
 		featureVehicleHeavilyDamaged = true;
 		featureNoHelmetOnBike = true;
 		featureStolenVehicle = true;
+		featureNoLightsNightTime = true;
 		featureVehLightsOnUpdated = true;
 
 	featureDespawnScriptDisabled = false;
@@ -4074,6 +4104,7 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehicleHeavilyDamaged", &featureVehicleHeavilyDamaged});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoHelmetOnBike", &featureNoHelmetOnBike});
 	results->push_back(FeatureEnabledLocalDefinition{"featureStolenVehicle", &featureStolenVehicle});
+	results->push_back(FeatureEnabledLocalDefinition{"featureNoLightsNightTime", &featureNoLightsNightTime});
 	results->push_back(FeatureEnabledLocalDefinition{"featureDeleteTrackedVehicles", &featureDeleteTrackedVehicles});
 	results->push_back(FeatureEnabledLocalDefinition{"featureDeleteTrackedVehicles_CharacterChanged", &featureDeleteTrackedVehicles_CharacterChanged});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBlipNumber", &featureBlipNumber});
