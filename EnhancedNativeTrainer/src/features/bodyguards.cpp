@@ -291,10 +291,6 @@ bool process_bodyguard_weapons_menu(){
 	return draw_generic_menu<int>(menuItems, nullptr, "Choose Bodyguard Weapons", onconfirm_bodyguard_weapons_menu, nullptr, nullptr, nullptr);
 }
 
-
-
-
-
 bool onconfirm_bodyguard_blips_menu(MenuItem<int> choice)
 {
 	return false;
@@ -355,13 +351,6 @@ void process_bodyguard_blips_menu(){
 
 	draw_generic_menu<int>(menuItems, &activeLineIndexBodyguardBlips, caption, onconfirm_bodyguard_blips_menu, NULL, NULL);
 }
-
-
-
-
-
-
-
 
 void dismiss_bodyguards(){
 
