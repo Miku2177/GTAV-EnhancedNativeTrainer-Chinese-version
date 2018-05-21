@@ -1945,6 +1945,8 @@ std::vector<FeatureEnabledLocalDefinition> get_feature_enablements(){
 
 	add_vehicle_feature_enablements(&results);
 
+	add_teleporter_feature_enablements(&results);
+
 	add_weapon_feature_enablements(&results);
 
 	add_bodyguards_feature_enablements(&results);
