@@ -166,6 +166,8 @@ bool vehicle_save_slot_menu_interrupt();
 
 void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results);
 
+void add_teleporter_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results);
+
 void add_vehicle_generic_settings(std::vector<StringPairSettingDBRow>* results);
 
 void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settings);

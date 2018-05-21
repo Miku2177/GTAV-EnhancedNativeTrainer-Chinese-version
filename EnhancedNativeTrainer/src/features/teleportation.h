@@ -53,6 +53,22 @@ void add_coords_generic_settings(std::vector<StringPairSettingDBRow>* results);
 
 void onchange_tel_chauffeur_index(int value, SelectFromListMenuItem *source);
 
+void onchange_tel_3dmarker_index(int value, SelectFromListMenuItem *source);
+
+void onchange_tel_3dmarker_msize_index(int value, SelectFromListMenuItem *source);
+
+void onchange_tel_3dmarker_martype_index(int value, SelectFromListMenuItem *source);
+
+void onchange_tel_3dmarker_skypos_index(int value, SelectFromListMenuItem *source);
+
+void onchange_tel_3dmarker_colour_R_index(int value, SelectFromListMenuItem *source);
+
+void onchange_tel_3dmarker_colour_G_index(int value, SelectFromListMenuItem *source);
+
+void onchange_tel_3dmarker_colour_B_index(int value, SelectFromListMenuItem *source);
+
+void onchange_tel_3dmarker_alpha_index(int value, SelectFromListMenuItem *source);
+
 float get_euc_distance(Vector3 playerCoords, Vector3 blipCoords);
 
 Vector3 get_blip_marker();
