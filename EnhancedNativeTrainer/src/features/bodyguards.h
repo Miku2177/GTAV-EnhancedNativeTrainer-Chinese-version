@@ -35,6 +35,8 @@ bool process_player_skins_menu();
 
 bool process_npc_skins_menu();
 
+bool process_animal_skins_menu();
+
 bool process_bodyguard_weapons_menu();
 
 void dismiss_bodyguards();
