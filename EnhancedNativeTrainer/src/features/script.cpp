@@ -85,6 +85,7 @@ bool featurePlayerLife_Died = false;
 bool featurePlayerLife_Changed = false;
 bool featurePrison_Hardcore = false;
 bool featurePrison_Robe = true;
+bool featurePedPrison_Robe = true;
 bool featurePrison_Yard = true;
 
 bool featureNoRagdoll = false;
@@ -113,6 +114,7 @@ Hash JailGuard_Weapon2 = -1;
 Ped prisonPed, temp_ped, temp_ped2 = -1;
 std::vector<Ped> ADDITIONAL_PRISONERS;
 int civilian_torso_drawable, civilian_torso_texture, civilian_legs_drawable, civilian_legs_texture = -1;
+int tick_pedsagainstprisonrobe = 0;
 //
 
 int  frozenWantedLevel = 0;
@@ -1066,6 +1068,74 @@ void update_features(){
 				}
 			}
 		}
+
+		// YOU'D BETTER CHANGE AS SOON AS POSSIBLE. PEDS WILL NOTICE YOUR INTERESTING CLOTHES
+		if (featurePedPrison_Robe && in_prison == false && (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 5))
+		{
+			for (int i = 0; i < count_prison_guards; i++)
+			{
+				Vector3 ped_position = ENTITY::GET_ENTITY_COORDS(guards[i], true);
+				int distance_from_ped_x = my_position_in_prison.x - ped_position.x;
+				int distance_from_ped_y = my_position_in_prison.y - ped_position.y;
+				int distance_from_ped_z = my_position_in_prison.z - ped_position.z;
+				if (distance_from_ped_x < 0) distance_from_ped_x = distance_from_ped_x * -1;
+				if (distance_from_ped_y < 0) distance_from_ped_y = distance_from_ped_y * -1;
+				if (distance_from_ped_z < 0) distance_from_ped_z = distance_from_ped_z * -1;
+
+				// Your escape is not over yet so you still can't use mobile or switch character unless you change your clothes. And you don't need a parachute either
+				if (((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 12) ||
+					(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 1) ||
+					(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 5)))
+				{
+					CONTROLS::DISABLE_CONTROL_ACTION(2, 19, true);
+					MOBILE::DESTROY_MOBILE_PHONE();
+					CONTROLS::DISABLE_CONTROL_ACTION(2, 27, 1);
+					if (WEAPON::HAS_PED_GOT_WEAPON(playerPed_Prison, PARACHUTE_ID, FALSE)) WEAPON::REMOVE_WEAPON_FROM_PED(playerPed_Prison, PARACHUTE_ID);
+				}
+
+				// Met a ped at a distance
+				if (distance_from_ped_x < 30 && distance_from_ped_y < 30 && distance_from_ped_z < 10 && PED::IS_PED_FACING_PED(guards[i], playerPed_Prison, 100) &&
+					(PED::GET_PED_TYPE(guards[i]) == 4 || PED::GET_PED_TYPE(guards[i]) == 5) && PED::GET_PED_TYPE(guards[i]) != 6 && PED::GET_PED_TYPE(guards[i]) != 27)
+				{
+					if (((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 12) ||
+						(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 1) ||
+						(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 5)) &&
+						(!PED::IS_PED_IN_ANY_VEHICLE(playerPed_Prison, false) || PED::IS_PED_ON_ANY_BIKE(playerPed_Prison)))
+					{
+						if ((PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 2)) {
+							PLAYER::SET_MAX_WANTED_LEVEL(5);
+							PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 1, 0);
+							PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
+						}
+
+						// Met a ped right in front of you
+						if (distance_from_ped_x < 7 && distance_from_ped_y < 7 && distance_from_ped_z < 1 && (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 4))
+						{
+							PLAYER::SET_MAX_WANTED_LEVEL(5);
+							PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 3, 0);
+							PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
+						}
+					}
+				}
+
+				// Prisoner driver met a ped
+				if (PED::IS_PED_IN_ANY_VEHICLE(playerPed_Prison, false) && !PED::IS_PED_ON_ANY_BIKE(playerPed_Prison))
+				{
+					if (((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 12) ||
+						(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 1) ||
+						(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 5)))
+					{
+						if ((distance_from_ped_x < 4 && distance_from_ped_y < 4 && distance_from_ped_z < 1) && (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 4) && PED::IS_PED_FACING_PED(guards[i], playerPed_Prison, 100) &&
+							(PED::GET_PED_TYPE(guards[i]) == 4 || PED::GET_PED_TYPE(guards[i]) == 5) && PED::GET_PED_TYPE(guards[i]) != 6 && PED::GET_PED_TYPE(guards[i]) != 27)
+						{
+							PLAYER::SET_MAX_WANTED_LEVEL(5);
+							PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 3, 0);
+							PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
+						}
+					}
+				}
+			}
+		}
 	}
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1393,6 +1463,12 @@ bool process_player_prison_menu(){
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Peds React To Prison Clothes";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featurePedPrison_Robe;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "More Prisoners At The Yard";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featurePrison_Yard;
@@ -1693,6 +1769,7 @@ void reset_globals(){
 		featurePlayerInvisibleInVehicleUpdated =
 		featurePlayerLifeUpdated =
 		featurePrison_Robe =
+		featurePedPrison_Robe =
 		featurePrison_Yard = 
 
 		featureNoRagdollUpdated =
@@ -1918,6 +1995,7 @@ void add_player_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerLife_Changed", &featurePlayerLife_Changed});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePrison_Hardcore", &featurePrison_Hardcore});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePrison_Robe", &featurePrison_Robe});
+	results->push_back(FeatureEnabledLocalDefinition{"featurePedPrison_Robe", &featurePedPrison_Robe});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePrison_Yard", &featurePrison_Yard});
 }
 

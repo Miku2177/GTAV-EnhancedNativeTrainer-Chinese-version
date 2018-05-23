@@ -38,8 +38,6 @@ Blip my3DBlip = -1;
 bool blip_3d_found = false;
 bool blip_3d_exists_already = false;
 bool close_distance = false;
-int delete3dObj = -1;
-DWORD time_3d_marker = -1;
 int marker_3d_height = -1;
 int marker_3d_size = -1;
 //
@@ -2547,7 +2545,7 @@ const std::vector<int> TEL_3DMARKER_SKYPOS_VALUES{ 1000, 1500, 2000, 2500 };
 int Tel3dmarker_skypos_Index = 0;
 bool Tel3dmarker_skypos_Changed = true;
 
-//Marker tType
+//Marker Type
 const std::vector<std::string> TEL_3DMARKER_MARTYPE_CAPTIONS{ "Symbol", "Column" };
 const std::vector<int> TEL_3DMARKER_MARTYPE_VALUES{ 1, 2 };
 int Tel3dmarker_martype_Index = 0;
