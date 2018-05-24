@@ -17,7 +17,6 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 int activeLineIndexWeapon = 0;
 int lastSelectedWeaponCategory = 0;
 int lastSelectedWeapon = 0;
-int tick_pedagainstweapons = 0;
 
 int vision_toggle = 0;
 
@@ -39,7 +38,8 @@ bool featureWeaponVehRockets = false;
 bool featureCopArmedWith = false;
 bool featurePlayerMelee = true;
 bool featureArmyMelee = false;
-
+// Peds Don't Like Weapons variables
+int tick_pedagainstweapons = 0;
 bool featurePedAgainstWeapons = false;
 bool featureAgainstMeleeWeapons = false;
 bool featurePedAgainst = true;
@@ -47,7 +47,9 @@ bool featureDriverAgainst = true;
 bool featurePoliceAgainst = true;
 bool featureAimAtDriver = false;
 int peddontlikeweapons_tick = 0;
-
+bool call_the_police = false;
+Ped calling_ped = -1;
+//
 bool featureGravityGun = false;
 bool featureGravityGunUpdated = false;
 bool featureFriendlyFire = false;
@@ -1321,7 +1323,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		int ped_distance_y = 100;
 		int ped_distance_z = 100;
 		float callpolice_randomize = -1;
-		
+
 		const int arrSize4 = 1024;
 		Ped weaponhaters[arrSize4];
 		int count_weapon_haters = worldGetAllPeds(weaponhaters, arrSize4);
@@ -1365,6 +1367,27 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 					}
 				}
 						
+				if (call_the_police == true)
+				{
+					tick_pedagainstweapons = tick_pedagainstweapons + 1;
+					
+					if (PED::IS_PED_DEAD_OR_DYING(calling_ped, true))
+					{
+						tick_pedagainstweapons = 0;
+						call_the_police = false;
+					}
+						
+					if (tick_pedagainstweapons > 60000) {
+						if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 1) {
+							PLAYER::SET_MAX_WANTED_LEVEL(5);
+							PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 1, 0);
+							PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
+						}
+						tick_pedagainstweapons = 0;
+						call_the_police = false;
+					}
+				}
+
 				// Peds Against
 				if (featurePedAgainst && !PED::IS_PED_IN_ANY_VEHICLE(weaponhaters[i], false) && PED::GET_PED_TYPE(weaponhaters[i]) != 6 && PED::GET_PED_TYPE(weaponhaters[i]) != 27 && PED::GET_PED_TYPE(weaponhaters[i]) != 29) {
 					if (ped_distance_x < 9 && ped_distance_y < 9 && ped_distance_z < 3 && PED::IS_PED_FACING_PED(weaponhaters[i], playerPed, 100) && !PLAYER::IS_PLAYER_FREE_AIMING_AT_ENTITY(playerPed, weaponhaters[i]) &&
@@ -1386,15 +1409,8 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 							}
 							if (callpolice_randomize < WEAPONS_CHANCEPOLICECALLING_VALUES[ChancePoliceCallingIndex] && !PED::IS_PED_IN_COMBAT(weaponhaters[i], playerPed) && !WEAPON::IS_PED_ARMED(weaponhaters[i], 7)) {
 								AI::TASK_USE_MOBILE_PHONE_TIMED(weaponhaters[i], 10000);
-								tick_pedagainstweapons = tick_pedagainstweapons + 1;
-								if (tick_pedagainstweapons > 1000) {
-									if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 1) {
-										PLAYER::SET_MAX_WANTED_LEVEL(5);
-										PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 1, 0);
-										PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
-									}
-									tick_pedagainstweapons = 0;
-								}
+								call_the_police = true;
+								calling_ped = weaponhaters[i];
 							}
 						}
 
@@ -1413,15 +1429,8 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 							}
 							if (callpolice_randomize < WEAPONS_CHANCEPOLICECALLING_VALUES[ChancePoliceCallingIndex] && !PED::IS_PED_IN_COMBAT(weaponhaters[i], playerPed) && !WEAPON::IS_PED_ARMED(weaponhaters[i], 7)) {
 								AI::TASK_USE_MOBILE_PHONE_TIMED(weaponhaters[i], 10000);
-								tick_pedagainstweapons = tick_pedagainstweapons + 1;
-								if (tick_pedagainstweapons > 1000) {
-									if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 1) {
-										PLAYER::SET_MAX_WANTED_LEVEL(5);
-										PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 1, 0);
-										PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
-									}
-									tick_pedagainstweapons = 0;
-								}
+								call_the_police = true;
+								calling_ped = weaponhaters[i];
 							}
 						}
 					}
@@ -1448,15 +1457,8 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 							}
 							if (callpolice_randomize < WEAPONS_CHANCEPOLICECALLING_VALUES[ChancePoliceCallingIndex] && !PED::IS_PED_IN_COMBAT(weaponhaters[i], playerPed) && !WEAPON::IS_PED_ARMED(weaponhaters[i], 7)) {
 								AI::TASK_USE_MOBILE_PHONE_TIMED(weaponhaters[i], 10000);
-								tick_pedagainstweapons = tick_pedagainstweapons + 1;
-								if (tick_pedagainstweapons > 1000) {
-									if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 1) {
-										PLAYER::SET_MAX_WANTED_LEVEL(5);
-										PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 1, 0);
-										PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
-									}
-									tick_pedagainstweapons = 0;
-								}
+								call_the_police = true;
+								calling_ped = weaponhaters[i];
 							}
 						}
 
@@ -1475,15 +1477,8 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 							}
 							if (callpolice_randomize < WEAPONS_CHANCEPOLICECALLING_VALUES[ChancePoliceCallingIndex] && !PED::IS_PED_IN_COMBAT(weaponhaters[i], playerPed) && !WEAPON::IS_PED_ARMED(weaponhaters[i], 7)) {
 								AI::TASK_USE_MOBILE_PHONE_TIMED(weaponhaters[i], 10000);
-								tick_pedagainstweapons = tick_pedagainstweapons + 1;
-								if (tick_pedagainstweapons > 1000) {
-									if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 1) {
-										PLAYER::SET_MAX_WANTED_LEVEL(5);
-										PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 1, 0);
-										PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
-									}
-									tick_pedagainstweapons = 0;
-								}
+								call_the_police = true;
+								calling_ped = weaponhaters[i];
 							}
 						}
 					}
