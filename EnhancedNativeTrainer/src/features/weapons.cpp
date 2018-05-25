@@ -48,7 +48,6 @@ bool featurePoliceAgainst = true;
 bool featureAimAtDriver = false;
 int peddontlikeweapons_tick = 0;
 bool call_the_police = false;
-Ped calling_ped = -1;
 //
 bool featureGravityGun = false;
 bool featureGravityGunUpdated = false;
@@ -1370,13 +1369,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 				if (call_the_police == true)
 				{
 					tick_pedagainstweapons = tick_pedagainstweapons + 1;
-					
-					if (PED::IS_PED_DEAD_OR_DYING(calling_ped, true))
-					{
-						tick_pedagainstweapons = 0;
-						call_the_police = false;
-					}
-						
+	
 					if (tick_pedagainstweapons > 60000) {
 						if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 1) {
 							PLAYER::SET_MAX_WANTED_LEVEL(5);
@@ -1410,7 +1403,6 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 							if (callpolice_randomize < WEAPONS_CHANCEPOLICECALLING_VALUES[ChancePoliceCallingIndex] && !PED::IS_PED_IN_COMBAT(weaponhaters[i], playerPed) && !WEAPON::IS_PED_ARMED(weaponhaters[i], 7)) {
 								AI::TASK_USE_MOBILE_PHONE_TIMED(weaponhaters[i], 10000);
 								call_the_police = true;
-								calling_ped = weaponhaters[i];
 							}
 						}
 
@@ -1430,7 +1422,6 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 							if (callpolice_randomize < WEAPONS_CHANCEPOLICECALLING_VALUES[ChancePoliceCallingIndex] && !PED::IS_PED_IN_COMBAT(weaponhaters[i], playerPed) && !WEAPON::IS_PED_ARMED(weaponhaters[i], 7)) {
 								AI::TASK_USE_MOBILE_PHONE_TIMED(weaponhaters[i], 10000);
 								call_the_police = true;
-								calling_ped = weaponhaters[i];
 							}
 						}
 					}
@@ -1458,7 +1449,6 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 							if (callpolice_randomize < WEAPONS_CHANCEPOLICECALLING_VALUES[ChancePoliceCallingIndex] && !PED::IS_PED_IN_COMBAT(weaponhaters[i], playerPed) && !WEAPON::IS_PED_ARMED(weaponhaters[i], 7)) {
 								AI::TASK_USE_MOBILE_PHONE_TIMED(weaponhaters[i], 10000);
 								call_the_police = true;
-								calling_ped = weaponhaters[i];
 							}
 						}
 
@@ -1478,7 +1468,6 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 							if (callpolice_randomize < WEAPONS_CHANCEPOLICECALLING_VALUES[ChancePoliceCallingIndex] && !PED::IS_PED_IN_COMBAT(weaponhaters[i], playerPed) && !WEAPON::IS_PED_ARMED(weaponhaters[i], 7)) {
 								AI::TASK_USE_MOBILE_PHONE_TIMED(weaponhaters[i], 10000);
 								call_the_police = true;
-								calling_ped = weaponhaters[i];
 							}
 						}
 					}
