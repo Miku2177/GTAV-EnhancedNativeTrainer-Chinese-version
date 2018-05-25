@@ -648,7 +648,7 @@ void update_features(){
 
 			// You don't need a parachute in prison
 			if (WEAPON::HAS_PED_GOT_WEAPON(playerPed_Prison, PARACHUTE_ID, FALSE))	WEAPON::REMOVE_WEAPON_FROM_PED(playerPed_Prison, PARACHUTE_ID);
-			
+
 			// How much time before discharge
 			if (PLAYER_DISCHARGE_VALUES[current_player_discharge] > 0)
 			{
@@ -731,11 +731,11 @@ void update_features(){
 			if (distance_from_center_y < 0) distance_from_center_y = distance_from_center_y * -1;
 
 			for (int i = 0; i < count_prison_guards; i++) {
-				if ((ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(guards[i], playerPed_Prison, 1) || WEAPON::IS_PED_ARMED(playerPed_Prison, 7) || (my_position_in_prison.z - prison_z) > 8) && alert_level < 2 && time_in_prison_tick > 0) alert_level = 1;
-				if (playerPed_Prison == PED::GET_PED_SOURCE_OF_DEATH(guards[i]) ||
+				if ((ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(guards[i], playerPed_Prison, 1) || (my_position_in_prison.z - prison_z) > 8) && alert_level < 2 && time_in_prison_tick > 0) alert_level = 1;
+				if (playerPed_Prison == PED::GET_PED_SOURCE_OF_DEATH(guards[i]) || WEAPON::IS_PED_ARMED(playerPed_Prison, 7) ||
 					(ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(guards[i], playerPed_Prison, 1) && (PED::GET_PED_TYPE(guards[i]) == 27 || PED::GET_PED_TYPE(guards[i]) == 6))) alert_level = 2;
-				if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_PED(guards[i]) && !ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(guards[i], playerPed_Prison, 1) &&
-					alert_level < 3 && alert_level == 1 && PED::GET_PED_TYPE(guards[i]) != 0 && PED::GET_PED_TYPE(guards[i]) != 1 && PED::GET_PED_TYPE(guards[i]) != 2) alert_level = 2; // In case you spawned bodyguards 
+				//if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_PED(guards[i]) && !ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(guards[i], playerPed_Prison, 1) &&
+				//	alert_level < 3 && alert_level == 1 && PED::GET_PED_TYPE(guards[i]) != 0 && PED::GET_PED_TYPE(guards[i]) != 1 && PED::GET_PED_TYPE(guards[i]) != 2) alert_level = 2; // In case you spawned bodyguards 
 			} 
 
 			if ((distance_from_center_x > 110 || distance_from_center_y > 130 || PED::IS_PED_SHOOTING(playerPed_Prison)) && alert_level < 3 && time_in_prison_tick > 0) alert_level = 2;
@@ -1156,7 +1156,7 @@ void update_features(){
 						(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 1) ||
 						(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 5)))
 					{
-						if ((distance_from_ped_x < 4 && distance_from_ped_y < 4 && distance_from_ped_z < 1) && (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 4) && PED::IS_PED_FACING_PED(guards[i], playerPed_Prison, 100) &&
+						if ((distance_from_ped_x < 2 && distance_from_ped_y < 2 && distance_from_ped_z < 2) && (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 4) && PED::IS_PED_FACING_PED(guards[i], playerPed_Prison, 100) &&
 							(PED::GET_PED_TYPE(guards[i]) == 4 || PED::GET_PED_TYPE(guards[i]) == 5) && PED::GET_PED_TYPE(guards[i]) != 6 && PED::GET_PED_TYPE(guards[i]) != 27 && 
 							!PED::IS_PED_FLEEING(guards[i]) && !AI::IS_PED_RUNNING(guards[i]) && !PED::IS_PED_IN_COMBAT(guards[i], playerPed))
 						{

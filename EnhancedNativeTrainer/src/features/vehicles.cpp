@@ -181,8 +181,8 @@ bool powChanged = true;
 bool burnoutApplied = false;
 
 //vehicle mass stuff
-const std::vector<std::string> VEH_MASS_CAPTIONS{"1x", "2x", "3x", "4x", "5x", "6x", "10x", "15x", "20x", "30x", "40x", "50x", "60x", "70x", "80x", "90x", "100x", "200x", "300x"};
-const std::vector<int> VEH_MASS_VALUES{0, 3, 5, 10, 20, 30, 50, 75, 100, 130, 150, 200, 250, 300, 350, 400, 450, 500, 1000};
+const std::vector<std::string> VEH_MASS_CAPTIONS{"1x", "3x", "5x", "10x", "30x", "50x", "70x", "100x", "150x", "200x", "250x", "300x", "500x", "1000x", "MESS" };
+const std::vector<int> VEH_MASS_VALUES{0, 5, 10, 30, 50, 100, 150, 200, 300, 400, 500, 1000, 5000, 10000, 50000 };
 int VehMassMultIndex = 0;
 bool massChanged = true;
 
@@ -2166,7 +2166,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		int nearbyPed[arrSize];
 		int veh_distance_x = 100;
 		int veh_distance_y = 100;
-		int veh_distance_z = 100;
 		Vector3 vehspeed = ENTITY::GET_ENTITY_VELOCITY(veh);
 		Vector3 Rot = CAM::GET_GAMEPLAY_CAM_ROT(2);
 		Vector3 direction = RotationToDirection2(&Rot);
@@ -2180,13 +2179,11 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			for (int i = 0; i < count; i++)
 			{
 				int offsettedID = i * 2 + 2;
-				//Vehicle veh2 = PED::GET_VEHICLE_PED_IS_IN(nearbyPed[i], true);
 				Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(veh, true);
 				Vector3 coordsped = ENTITY::GET_ENTITY_COORDS(nearbyPed[i], true);
 
 				veh_distance_x = (coordsme.x - coordsped.x);
 				veh_distance_y = (coordsme.y - coordsped.y);
-				veh_distance_z = (coordsme.z - coordsped.z);
 
 				if (ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(veh)){
 					Vector3 speed = ENTITY::GET_ENTITY_VELOCITY(veh);
@@ -2202,9 +2199,8 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 					{
 						if (veh_distance_x < 0) veh_distance_x = (veh_distance_x * -1);
 						if (veh_distance_y < 0) veh_distance_y = (veh_distance_y * -1);
-						if (veh_distance_z < 0) veh_distance_z = (veh_distance_z * -1);
 
-						if ((veh_distance_x + veh_distance_y + veh_distance_z) < 7)
+						if ((veh_distance_x + veh_distance_y) < 7)
 						{
 
 							ENTITY::SET_ENTITY_LOAD_COLLISION_FLAG(veh, true);
@@ -2229,9 +2225,8 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 					{
 						if (veh_distance_x < 0) veh_distance_x = (veh_distance_x * -1);
 						if (veh_distance_y < 0) veh_distance_y = (veh_distance_y * -1);
-						if (veh_distance_z < 0) veh_distance_z = (veh_distance_z * -1);
 
-						if ((veh_distance_x + veh_distance_y + veh_distance_z) < 7){
+						if ((veh_distance_x + veh_distance_y) < 7){
 
 							Rot = CAM::GET_GAMEPLAY_CAM_ROT(2);
 							direction = RotationToDirection2(&Rot);
@@ -2242,16 +2237,15 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 							//ENTITY::APPLY_FORCE_TO_ENTITY(veh2, 4, (ENTITY::GET_ENTITY_SPEED(veh) * VEH_MASS_VALUES[VehMassMultIndex]), 0, 0, 0, 0, 0, 1, true, true, true, true, true);
 						}
 					}
-				}
+				} 
 
 				if (VEH_MASS_VALUES[VehMassMultIndex] > 150){
 					if (nearbyPed[offsettedID] != NULL && ENTITY::DOES_ENTITY_EXIST(nearbyPed[offsettedID]) && nearbyPed[i] != veh)
 					{
 						if (veh_distance_x < 0) veh_distance_x = (veh_distance_x * -1);
 						if (veh_distance_y < 0) veh_distance_y = (veh_distance_y * -1);
-						if (veh_distance_z < 0) veh_distance_z = (veh_distance_z * -1);
 
-						if ((veh_distance_x + veh_distance_y + veh_distance_z) < (VEH_MASS_VALUES[VehMassMultIndex] / 1)){
+						if ((veh_distance_x + veh_distance_y) < (VEH_MASS_VALUES[VehMassMultIndex] / 1)){
 							Rot = CAM::GET_GAMEPLAY_CAM_ROT(2);
 							direction = RotationToDirection2(&Rot);
 							direction.x = 1 * direction.x;
@@ -2259,8 +2253,11 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 							direction.z = 1 * direction.z;
 							if (VEH_MASS_VALUES[VehMassMultIndex] < 500) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyPed[i], 1, direction.x, direction.y, direction.z, Rot.x, Rot.y, Rot.z, false, false, true, true, false, true);
 							if (VEH_MASS_VALUES[VehMassMultIndex] == 500) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyPed[i], 1, direction.x, direction.y, VEH_MASS_VALUES[VehMassMultIndex] / 500, Rot.x, Rot.y, Rot.z, false, false, true, true, false, true);
-							if (VEH_MASS_VALUES[VehMassMultIndex] == 1000)ENTITY::APPLY_FORCE_TO_ENTITY(nearbyPed[i], 1, direction.x, direction.y, VEH_MASS_VALUES[VehMassMultIndex] / 100, Rot.x, Rot.y, Rot.z, false, false, true, true, false, true);
-							//ENTITY::APPLY_FORCE_TO_ENTITY(veh2, 4, (ENTITY::GET_ENTITY_SPEED(veh) * VEH_MASS_VALUES[VehMassMultIndex]), 0, 0, 0, 0, 0, 1, true, true, true, true, true);
+							if (VEH_MASS_VALUES[VehMassMultIndex] == 1000) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyPed[i], 1, direction.x, direction.y, VEH_MASS_VALUES[VehMassMultIndex] / 100, Rot.x, Rot.y, Rot.z, false, false, true, true, false, true);
+							if (VEH_MASS_VALUES[VehMassMultIndex] == 5000) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyPed[i], 1, direction.x, direction.y, VEH_MASS_VALUES[VehMassMultIndex] / 10, Rot.x, Rot.y, Rot.z, false, false, true, true, false, true);
+							if (VEH_MASS_VALUES[VehMassMultIndex] == 10000) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyPed[i], 1, direction.x, direction.y, VEH_MASS_VALUES[VehMassMultIndex] / 1, Rot.x, Rot.y, Rot.z, false, false, true, true, false, true);
+							//if (VEH_MASS_VALUES[VehMassMultIndex] == 50000) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyPed[i], 1, direction.x, direction.y, VEH_MASS_VALUES[VehMassMultIndex] / 10, Rot.x, Rot.y, Rot.z, false, false, true, true, false, true);
+							if (VEH_MASS_VALUES[VehMassMultIndex] == 50000) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyPed[i], 4, (ENTITY::GET_ENTITY_SPEED(veh) * VEH_MASS_VALUES[VehMassMultIndex]), 0, 0, 0, 0, 0, 1, true, true, true, true, true);
 						}
 					}
 				}

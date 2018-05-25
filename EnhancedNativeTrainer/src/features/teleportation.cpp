@@ -42,6 +42,8 @@ int marker_3d_height = -1;
 int marker_3d_size = -1;
 //
 
+Vector3 coords_marker_to_drive_to;
+
 int mainMenuIndex = 0;
 
 int lastChosenCategory = -1;
@@ -2902,7 +2904,7 @@ void get_chauffeur_to_marker(){
 		}
 
 		if (!VEHICLE::IS_VEHICLE_SEAT_FREE(veh, -1)){
-			Ped oldDriver = VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh, -1);
+			Ped oldDriver = VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh, -1); 
 			if (VEHICLE::IS_VEHICLE_SEAT_FREE(veh, -2)){
 				PED::SET_PED_INTO_VEHICLE(oldDriver, veh, -2);
 			}
@@ -3175,6 +3177,8 @@ bool onconfirm_jump_category(MenuItem<int> choice)
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
+
+
 bool onconfirm_3dmarker_menu(MenuItem<int> choice)
 {
 	return false;
@@ -3329,6 +3333,10 @@ bool onconfirm_teleport_category(MenuItem<int> choice){
 		set_3d_marker();
 		return false;
 	}
+	//else if (choice.value == -11){
+	//	drive_to_marker();
+	//	return false;
+	//}
 
 	lastChosenCategory = choice.value;
 
@@ -3511,6 +3519,12 @@ bool process_teleport_menu(int categoryIndex){
 		markerItem->value = -9;
 		markerItem->isLeaf = false;
 		menuItems.push_back(markerItem);
+
+		//markerItem = new MenuItem<int>();
+		//markerItem->caption = "Drive To Marker";
+		//markerItem->value = -11;
+		//markerItem->isLeaf = true;
+		//menuItems.push_back(markerItem);
 
 		markerItem = new MenuItem<int>();
 		markerItem->caption = "Go To Last Vehicle";
@@ -3792,4 +3806,5 @@ void update_teleport_features(){
 	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////
+
 }
