@@ -3429,7 +3429,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 							if (featurePoliceVehicleBlip) UI::SET_BLIP_SPRITE(blip_laws, 42);
 							ENTITY::SET_ENTITY_AS_MISSION_ENTITY(cop_that_fines_you, 1, 1);
 							ENTITY::SET_ENTITY_AS_MISSION_ENTITY(fine_cop_car, 1, 1);
-							AI::TASK_VEHICLE_ESCORT(cop_that_fines_you, fine_cop_car, vehroadlaws, -1, 1000, 4, 3, 1, 1);
+							AI::TASK_VEHICLE_ESCORT(cop_that_fines_you, fine_cop_car, vehroadlaws, -1, 140.0f, 786468, 3, 1, 1);
 							AI::SET_DRIVE_TASK_DRIVING_STYLE(fine_cop_car, 262144);
 							AI::SET_DRIVE_TASK_DRIVING_STYLE(fine_cop_car, 4);
 							AI::SET_DRIVE_TASK_DRIVING_STYLE(fine_cop_car, 512);
@@ -3473,7 +3473,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 						if (featurePoliceVehicleBlip) UI::SET_BLIP_SPRITE(blip_laws, 42);
 						ENTITY::SET_ENTITY_AS_MISSION_ENTITY(cop_that_fines_you, 1, 1);
 						ENTITY::SET_ENTITY_AS_MISSION_ENTITY(fine_cop_car, 1, 1);
-						AI::TASK_VEHICLE_ESCORT(cop_that_fines_you, fine_cop_car, vehroadlaws, -1, 1000, 262144, 2, 1, 1);
+						AI::TASK_VEHICLE_ESCORT(cop_that_fines_you, fine_cop_car, vehroadlaws, -1, 140.0f, 786468, 2, 1, 1);
 						AI::SET_DRIVE_TASK_DRIVING_STYLE(fine_cop_car, 262144);
 						AI::SET_DRIVE_TASK_DRIVING_STYLE(fine_cop_car, 4);
 						AI::SET_DRIVE_TASK_DRIVING_STYLE(fine_cop_car, 512);

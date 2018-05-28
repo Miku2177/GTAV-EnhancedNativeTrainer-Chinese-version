@@ -33,7 +33,7 @@ struct tele_location{
 };
 
 // 3D Marker
-Vector3 coords_3Dblip, coords_3Dblip_old, temp_coords_3Dblip;
+Vector3 coords_3Dblip, coords_3Dblip_old, temp_coords_3Dblip, driving_reverse;
 Blip my3DBlip = -1;
 bool blip_3d_found = false;
 bool blip_3d_exists_already = false;
@@ -41,16 +41,27 @@ bool close_distance = false;
 int marker_3d_height = -1;
 int marker_3d_size = -1;
 //
-
-Vector3 coords_marker_to_drive_to;
-
+// Drive to marker
+bool featureStickToGround = false;
+Vector3 coords_marker_to_drive_to, speed;
+Ped driver_to_marker_pilot;
+bool blipFound = false;
+bool marker_been_set, blipDriveFound = false;
+bool reverse = true;
+bool reverse_check = false;
+Vehicle curr_veh;
+Hash driverPed_tomarker;
+int driving_style = 4;
+int SinceDriverStop_secs_passed, SinceDriverStop_secs_curr, DriverStop_seconds = 0;
+int SinceDriver2Stop_secs_passed, SinceDriver2Stop_secs_curr, Driver2Stop_seconds = 0;
+//
 int mainMenuIndex = 0;
 
 int lastChosenCategory = -1;
 
 int lastMenuChoiceInCategories[] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
-bool beingChauffeured = false;
+//bool beingChauffeured = false;
 int activeLineIndexChauffeur = 0;
 int activeLineIndex3dmarker = 0;
 
@@ -2577,6 +2588,18 @@ const std::vector<int> MARKER3D_ALPHA_VALUES{ 10, 20, 30, 40, 50, 60, 70, 80, 90
 int Marker3d_Alpha_Index = 12;
 bool Marker3d_Alpha_Changed = true;
 
+//Chauffeur Speed
+const std::vector<std::string> TEL_CHAUFFEUR_SPEED_CAPTIONS{ "20", "30", "40", "50", "70", "100", "120", "150", "200" };
+const std::vector<int> TEL_CHAUFFEUR_SPEED_VALUES{ 20, 30, 40, 50, 70, 100, 120, 150, 200 };
+int TelChauffeur_speed_Index = 2;
+bool TelChauffeur_speed_Changed = true;
+
+//Driving Styles
+const std::vector<std::string> TEL_CHAUFFEUR_DRIVINGSTYLES_CAPTIONS{ "Careless Driver", "Careful Driver", "Prioritise Shortcuts", "Straight To Target" };
+const std::vector<int> TEL_CHAUFFEUR_DRIVINGSTYLES_VALUES{ 786468, 1074528293, 262144, 16777216 };
+int TelChauffeur_drivingstyles_Index = 0;
+bool TelChauffeur_drivingstyles_Changed = true;
+
 void teleport_to_coords(Entity e, Vector3 coords){
 	ENTITY::SET_ENTITY_COORDS_NO_OFFSET(e, coords.x, coords.y, coords.z, 0, 0, 1);
 	WAIT(0);
@@ -2594,7 +2617,7 @@ Vector3 get_blip_marker(){
 	static Vector3 zero;
 	Vector3 coords;
 
-	bool blipFound = false;
+	blipFound = false;
 	// search for marker blip
 	int blipIterator = UI::_GET_BLIP_INFO_ID_ITERATOR();
 	for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)){
@@ -2874,7 +2897,7 @@ float get_euc_distance(Vector3 currentCords, Vector3 destCords){
 	return eucDistance;
 }
 
-void get_chauffeur_to_marker(){
+/*void get_chauffeur_to_marker(){
 	beingChauffeured = true;
 
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
@@ -2964,7 +2987,7 @@ void get_chauffeur_to_marker(){
 
 	PED::SET_PED_INTO_VEHICLE(driver, veh, -1);
 	set_old_vehicle_state(false); // set old vehicle state to false since we changed cars but didn't actually exit the last one
-
+	*/
 	/* DRIVING MODES :
 	0 = Normal behaviour but doesn't recognize other cars on the road, should only be used without ped cars in world.
 	1 = Drives legit and does no overtakes.Drives carefully
@@ -2979,7 +3002,7 @@ void get_chauffeur_to_marker(){
 	10 = Normal behaviour but doesn't recognize other cars on the road, should only be used without ped cars in world.
 	*/
 	//AI::TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE(ped, veh, blipCoords.x, blipCoords.y, blipCoords.z, 100, 5, chauffTolerance);
-
+/*
 	if (is_this_a_heli_or_plane(veh)){
 		//TODO
 	}
@@ -2991,9 +3014,9 @@ void get_chauffeur_to_marker(){
 			AI::TASK_VEHICLE_DRIVE_TO_COORD(driver, veh, blipCoords.x, blipCoords.y, blipCoords.z, 40.0, 1, ENTITY::GET_ENTITY_MODEL(veh), 4, -1.0, -1.0);
 		}
 	}
-}
+}*/
 
-void cancel_chauffeur(std::string message){
+/*void cancel_chauffeur(std::string message){
 	Object taskHdl;
 
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
@@ -3027,7 +3050,7 @@ void cancel_chauffeur(std::string message){
 	ss << message;
 	set_status_text(ss.str());
 	beingChauffeured = false;
-}
+}*/
 /*
 void enableMpMapsinSP()
 {
@@ -3051,16 +3074,18 @@ std::string lastJumpSpawn;
 
 void add_coords_generic_settings(std::vector<StringPairSettingDBRow>* results)
 {
-	results->push_back(StringPairSettingDBRow{ "lastJumpSpawn", lastJumpSpawn });
-	results->push_back(StringPairSettingDBRow{ "TelChauffeurIndex", std::to_string(TelChauffeurIndex) });
-	results->push_back(StringPairSettingDBRow{ "Tel3dmarkerIndex", std::to_string(Tel3dmarkerIndex) });
-	results->push_back(StringPairSettingDBRow{ "Tel3dmarker_msize_Index", std::to_string(Tel3dmarker_msize_Index) });
-	results->push_back(StringPairSettingDBRow{ "Tel3dmarker_martype_Index", std::to_string(Tel3dmarker_martype_Index) });
-	results->push_back(StringPairSettingDBRow{ "Tel3dmarker_skypos_Index", std::to_string(Tel3dmarker_skypos_Index) });
-	results->push_back(StringPairSettingDBRow{ "Marker3d_R_Index", std::to_string(Marker3d_R_Index) });
-	results->push_back(StringPairSettingDBRow{ "Marker3d_G_Index", std::to_string(Marker3d_G_Index) });
-	results->push_back(StringPairSettingDBRow{ "Marker3d_B_Index", std::to_string(Marker3d_B_Index) });
-	results->push_back(StringPairSettingDBRow{ "Marker3d_Alpha_Index", std::to_string(Marker3d_Alpha_Index) });
+	results->push_back(StringPairSettingDBRow{"lastJumpSpawn", lastJumpSpawn});
+	results->push_back(StringPairSettingDBRow{"TelChauffeurIndex", std::to_string(TelChauffeurIndex)});
+	results->push_back(StringPairSettingDBRow{"Tel3dmarkerIndex", std::to_string(Tel3dmarkerIndex)});
+	results->push_back(StringPairSettingDBRow{"Tel3dmarker_msize_Index", std::to_string(Tel3dmarker_msize_Index)});
+	results->push_back(StringPairSettingDBRow{"Tel3dmarker_martype_Index", std::to_string(Tel3dmarker_martype_Index)});
+	results->push_back(StringPairSettingDBRow{"Tel3dmarker_skypos_Index", std::to_string(Tel3dmarker_skypos_Index)});
+	results->push_back(StringPairSettingDBRow{"Marker3d_R_Index", std::to_string(Marker3d_R_Index)});
+	results->push_back(StringPairSettingDBRow{"Marker3d_G_Index", std::to_string(Marker3d_G_Index)});
+	results->push_back(StringPairSettingDBRow{"Marker3d_B_Index", std::to_string(Marker3d_B_Index)});
+	results->push_back(StringPairSettingDBRow{"Marker3d_Alpha_Index", std::to_string(Marker3d_Alpha_Index)});
+	results->push_back(StringPairSettingDBRow{"TelChauffeur_speed_Index", std::to_string(TelChauffeur_speed_Index)});
+	results->push_back(StringPairSettingDBRow{"TelChauffeur_drivingstyles_Index", std::to_string(TelChauffeur_drivingstyles_Index)});
 }
 
 void onchange_tel_chauffeur_index(int value, SelectFromListMenuItem *source){
@@ -3108,6 +3133,16 @@ void onchange_tel_3dmarker_alpha_index(int value, SelectFromListMenuItem *source
 	Marker3d_Alpha_Changed = true;
 }
 
+void onchange_tel_chauffeur_speed_index(int value, SelectFromListMenuItem *source){
+	TelChauffeur_speed_Index = value;
+	TelChauffeur_speed_Changed = true;
+}
+
+void onchange_tel_chauffeur_drivingstyles_index(int value, SelectFromListMenuItem *source){
+	TelChauffeur_drivingstyles_Index = value;
+	TelChauffeur_drivingstyles_Changed = true;
+}
+
 void handle_generic_settings_teleportation(std::vector<StringPairSettingDBRow>* settings){
 	for (int i = 0; i < settings->size(); i++){
 		StringPairSettingDBRow setting = settings->at(i);
@@ -3137,6 +3172,12 @@ void handle_generic_settings_teleportation(std::vector<StringPairSettingDBRow>* 
 		}
 		else if (setting.name.compare("Marker3d_Alpha_Index") == 0){
 			Marker3d_Alpha_Index = stoi(setting.value);
+		}
+		else if (setting.name.compare("TelChauffeur_speed_Index") == 0){
+			TelChauffeur_speed_Index = stoi(setting.value);
+		}
+		else if (setting.name.compare("TelChauffeur_drivingstyles_Index") == 0){
+			TelChauffeur_drivingstyles_Index = stoi(setting.value);
 		}
 	}
 }
@@ -3177,7 +3218,130 @@ bool onconfirm_jump_category(MenuItem<int> choice)
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
+////////////////////////////////// DRIVE TO MARKER ////////////////////////////////////
 
+void drive_to_marker()
+{
+	Player drivetomarker_player = PLAYER::PLAYER_PED_ID();
+	speed = ENTITY::GET_ENTITY_VELOCITY(curr_veh);
+	driving_reverse = ENTITY::GET_ENTITY_SPEED_VECTOR(curr_veh, true);
+
+	if (speed.x < 0) speed.x = speed.x * -1;
+	if (speed.y < 0) speed.y = speed.y * -1;
+
+	curr_veh = PED::GET_VEHICLE_PED_IS_IN(drivetomarker_player, false);
+
+	if (PED::IS_PED_IN_ANY_VEHICLE(drivetomarker_player, false))
+	{
+		coords_marker_to_drive_to = get_blip_marker();
+		
+		if (blipFound == true)
+		{
+			Ped me_at_the_wheel = VEHICLE::GET_PED_IN_VEHICLE_SEAT(curr_veh, -1);
+			Ped Passenger_Driver = VEHICLE::GET_PED_IN_VEHICLE_SEAT(curr_veh, 0);
+			if (VEHICLE::IS_VEHICLE_SEAT_FREE(curr_veh, 0) || Passenger_Driver == drivetomarker_player)	PED::SET_PED_INTO_VEHICLE(me_at_the_wheel, curr_veh, 0);
+			else{
+				set_status_text("Couldn't make room for your chauffeur");
+				return;
+			}
+
+			Vector3 spawn_coords_for_pilot = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(PLAYER::PLAYER_PED_ID(), 0.0, 5.0, 0.0);
+
+			char *cstr = new char[TEL_CHAUFFEUR_CAPTIONS[TelChauffeurIndex].length() + 1];
+			strcpy(cstr, TEL_CHAUFFEUR_CAPTIONS[TelChauffeurIndex].c_str());
+			driverPed_tomarker = GAMEPLAY::GET_HASH_KEY(cstr);
+			delete[] cstr;
+
+			STREAMING::REQUEST_MODEL(driverPed_tomarker);
+			while (!STREAMING::HAS_MODEL_LOADED(driverPed_tomarker)){
+				make_periodic_feature_call();
+				WAIT(0);
+			}
+
+			if (VEHICLE::IS_VEHICLE_SEAT_FREE(curr_veh, -1)) driver_to_marker_pilot = PED::CREATE_PED(25, driverPed_tomarker, spawn_coords_for_pilot.x, spawn_coords_for_pilot.y, spawn_coords_for_pilot.z, 0, false, false);
+
+			AI::CLEAR_PED_TASKS(driver_to_marker_pilot);
+
+			while (!NETWORK::NETWORK_HAS_CONTROL_OF_ENTITY(curr_veh)){
+				make_periodic_feature_call();
+				NETWORK::NETWORK_REQUEST_CONTROL_OF_ENTITY(curr_veh);
+				WAIT(0);
+			}
+
+			PED::SET_PED_INTO_VEHICLE(driver_to_marker_pilot, curr_veh, -1);
+		}
+		
+		GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, &coords_marker_to_drive_to.z);
+		coords_marker_to_drive_to.z += 3.0;
+
+		if (featureStickToGround && ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(curr_veh))
+		{
+			VEHICLE::SET_VEHICLE_ON_GROUND_PROPERLY(curr_veh); //	if (speed.z > 1) 
+		}
+		
+		if (speed.x < 5 && speed.y < 5 && reverse == true)
+		{
+			reverse_check = false;
+			SinceDriverStop_secs_passed = clock() / CLOCKS_PER_SEC;
+			if (((clock() / CLOCKS_PER_SEC) - SinceDriverStop_secs_curr) != 0)
+			{
+				DriverStop_seconds = DriverStop_seconds + 1;
+				SinceDriverStop_secs_curr = SinceDriverStop_secs_passed;
+			}
+			if (DriverStop_seconds > -1 && DriverStop_seconds < 1) driving_style = 1024; // 2
+			if (DriverStop_seconds > 2 && DriverStop_seconds < 6) driving_style = TEL_CHAUFFEUR_DRIVINGSTYLES_VALUES[TelChauffeur_drivingstyles_Index];
+			if (DriverStop_seconds > 5) DriverStop_seconds = 0;
+		}
+
+		if ((driving_reverse.x < 5) && (driving_reverse.y < 5) && reverse == false)
+		{
+			SinceDriverStop_secs_passed = clock() / CLOCKS_PER_SEC;
+			if (((clock() / CLOCKS_PER_SEC) - SinceDriverStop_secs_curr) != 0)
+			{
+				DriverStop_seconds = DriverStop_seconds + 1;
+				SinceDriverStop_secs_curr = SinceDriverStop_secs_passed;
+			}
+			if (DriverStop_seconds > 5)
+			{
+				reverse = true;
+				DriverStop_seconds = 0;
+			}
+		}
+
+		if ((driving_reverse.x < 5) && (driving_reverse.y < 5))
+		{
+			SinceDriver2Stop_secs_passed = clock() / CLOCKS_PER_SEC;
+			if (((clock() / CLOCKS_PER_SEC) - SinceDriver2Stop_secs_curr) != 0)
+			{
+				Driver2Stop_seconds = Driver2Stop_seconds + 1;
+				SinceDriver2Stop_secs_curr = SinceDriver2Stop_secs_passed;
+			}
+			if (Driver2Stop_seconds > 8)
+			{
+				driving_style = TEL_CHAUFFEUR_DRIVINGSTYLES_VALUES[TelChauffeur_drivingstyles_Index];
+				Driver2Stop_seconds = 0;
+			}
+		}
+
+		if ((driving_reverse.x < -2) && (driving_reverse.y < -2) && reverse_check == false)
+		{
+			driving_style = TEL_CHAUFFEUR_DRIVINGSTYLES_VALUES[TelChauffeur_drivingstyles_Index];
+			DriverStop_seconds = 0;
+			reverse = false;
+		}
+
+		if ((speed.x > 10) || (speed.y > 10))
+		{
+			reverse = true;
+			reverse_check = true;
+		}
+
+		AI::TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE(driver_to_marker_pilot, curr_veh, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, TEL_CHAUFFEUR_SPEED_VALUES[TelChauffeur_speed_Index], driving_style, 5.0f); // 4 // 156 // 40.0f
+		marker_been_set = true; 
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
 
 bool onconfirm_3dmarker_menu(MenuItem<int> choice)
 {
@@ -3255,14 +3419,17 @@ void set_3d_marker(){
 bool onconfirm_chauffeur_menu(MenuItem<int> choice)
 {
 	switch (activeLineIndexChauffeur){
+	//case 0:
+	//	if (beingChauffeured){
+	//		cancel_chauffeur("Chauffeur cancelled");
+	//		}
+	//		else{
+	//			get_chauffeur_to_marker();
+	//			break;
+	//			}
 	case 0:
-		if (beingChauffeured){
-			cancel_chauffeur("Chauffeur cancelled");
-			}
-			else{
-				get_chauffeur_to_marker();
-				break;
-				}
+		drive_to_marker();
+		break;
 	default:
 		break;
 	}
@@ -3280,11 +3447,35 @@ void getTelChauffeurIndex(){
 
 	int i = 0;
  
+	//item = new MenuItem<int>();
+	//item->caption = "Chauffeur To Marker";
+	//item->value = i++;
+	//item->isLeaf = true;
+	//menuItems.push_back(item);
+
 	item = new MenuItem<int>();
-	item->caption = "Chauffeur To Marker";
+	item->caption = "Drive To Marker";
 	item->value = i++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Stick Vehicle To Ground";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureStickToGround;
+	menuItems.push_back(toggleItem);
+
+	listItem = new SelectFromListMenuItem(TEL_CHAUFFEUR_SPEED_CAPTIONS, onchange_tel_chauffeur_speed_index);
+	listItem->wrap = true;
+	listItem->caption = "Max Speed (MPH):";
+	listItem->value = TelChauffeur_speed_Index;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(TEL_CHAUFFEUR_DRIVINGSTYLES_CAPTIONS, onchange_tel_chauffeur_drivingstyles_index);
+	listItem->wrap = true;
+	listItem->caption = "Driving Style";
+	listItem->value = TelChauffeur_drivingstyles_Index;
+	menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(TEL_CHAUFFEUR_CAPTIONS, onchange_tel_chauffeur_index);
 	listItem->wrap = true;
@@ -3333,10 +3524,6 @@ bool onconfirm_teleport_category(MenuItem<int> choice){
 		set_3d_marker();
 		return false;
 	}
-	//else if (choice.value == -11){
-	//	drive_to_marker();
-	//	return false;
-	//}
 
 	lastChosenCategory = choice.value;
 
@@ -3520,12 +3707,6 @@ bool process_teleport_menu(int categoryIndex){
 		markerItem->isLeaf = false;
 		menuItems.push_back(markerItem);
 
-		//markerItem = new MenuItem<int>();
-		//markerItem->caption = "Drive To Marker";
-		//markerItem->value = -11;
-		//markerItem->isLeaf = true;
-		//menuItems.push_back(markerItem);
-
 		markerItem = new MenuItem<int>();
 		markerItem->caption = "Go To Last Vehicle";
 		markerItem->value = -4;
@@ -3599,6 +3780,7 @@ void reset_teleporter_globals()
 	}
 	featureEnableMpMaps = false;
 	feature3dmarker = false;
+	featureStickToGround = false;
 
 	lastChosenCategory = 0;
 	TelChauffeurIndex = 3;
@@ -3610,6 +3792,8 @@ void reset_teleporter_globals()
 	Marker3d_G_Index = 26;
 	Marker3d_B_Index = 13;
 	Marker3d_Alpha_Index = 12;
+	TelChauffeur_speed_Index = 2;
+	TelChauffeur_drivingstyles_Index = 0;
 
 	activeLineIndexChauffeur = 0;
 	activeLineIndex3dmarker = 0;
@@ -3618,6 +3802,7 @@ void reset_teleporter_globals()
 void add_teleporter_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){
 	
 	results->push_back(FeatureEnabledLocalDefinition{"feature3dmarker", &feature3dmarker});
+	results->push_back(FeatureEnabledLocalDefinition{"featureStickToGround", &featureStickToGround});
 }
 
 const std::vector<std::string> TOGGLE_IPLS
@@ -3693,7 +3878,7 @@ void process_toggles_menu(){
 void update_teleport_features(){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
-	if (beingChauffeured){
+	/*if (beingChauffeured){
 		Vector3 playerCoords = ENTITY::GET_ENTITY_COORDS(playerPed, 0);
 		// Moved blipCoords to global scope... we don't want to call for new blip coords each time (we've already told mr. monkey where to go)
 
@@ -3713,7 +3898,7 @@ void update_teleport_features(){
 		else{
 			waitingToRetakeSeat = -1;
 		}
-	}
+	}*/
 
 	/////////////////////////////////////// 3D MARKER /////////////////////////////////////////
 
@@ -3807,4 +3992,24 @@ void update_teleport_features(){
 	
 	///////////////////////////////////////////////////////////////////////////////////////
 
+	int blipMarkerIterator = UI::IS_WAYPOINT_ACTIVE() ? BlipSpriteWaypoint : BlipSpriteStandard;
+
+	if (blipMarkerIterator != BlipSpriteStandard)
+	{
+		my3DBlip = UI::GET_FIRST_BLIP_INFO_ID(blipMarkerIterator);
+		if (UI::DOES_BLIP_EXIST(my3DBlip) != 0 && UI::GET_BLIP_INFO_ID_TYPE(my3DBlip) == 4) blipDriveFound = true;
+	}
+
+	if (blipMarkerIterator == 1) blipDriveFound = false;
+
+	if (blipDriveFound == true && marker_been_set == true) drive_to_marker();
+
+	if ((blipDriveFound == false && marker_been_set == true) || (CONTROLS::IS_CONTROL_PRESSED(2, 75) && marker_been_set == true))
+	{
+		AI::CLEAR_PED_TASKS(driver_to_marker_pilot);
+		VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(curr_veh, false);
+		AI::TASK_LEAVE_VEHICLE(driver_to_marker_pilot, curr_veh, 4160);
+		marker_been_set = false;
+		blipDriveFound = false;
+	}
 }
