@@ -53,6 +53,10 @@ void add_coords_generic_settings(std::vector<StringPairSettingDBRow>* results);
 
 void onchange_tel_chauffeur_index(int value, SelectFromListMenuItem *source);
 
+void onchange_tel_chauffeur_speed_index(int value, SelectFromListMenuItem *source);
+
+void onchange_tel_chauffeur_drivingstyles_index(int value, SelectFromListMenuItem *source);
+
 void onchange_tel_3dmarker_index(int value, SelectFromListMenuItem *source);
 
 void onchange_tel_3dmarker_msize_index(int value, SelectFromListMenuItem *source);
