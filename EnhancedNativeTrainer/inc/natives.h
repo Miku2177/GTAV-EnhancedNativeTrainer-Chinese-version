@@ -1280,6 +1280,7 @@ namespace VEHICLE
 	static void _0x3441CAD2F2231923(Vehicle vehicle, BOOL p1) { invoke<Void>(0x3441CAD2F2231923, vehicle, p1); } // 0x3441CAD2F2231923 0xC306A9A3
 	static void _0x2B6747FAA9DB9D6B(Vehicle vehicle, BOOL p1) { invoke<Void>(0x2B6747FAA9DB9D6B, vehicle, p1); } // 0x2B6747FAA9DB9D6B 0x95A9ACCB
 	static void _SET_VEHICLE_LANDING_GEAR(Vehicle vehicle, int state) { invoke<Void>(0xCFC8BE9A5E1FE575, vehicle, state); } // 0xCFC8BE9A5E1FE575 0x24F873FB
+	static void CONTROL_LANDING_GEAR(Vehicle vehicle, int state) { invoke<Void>(0xCFC8BE9A5E1FE575, vehicle, state); } // 0xCFC8BE9A5E1FE575 0x24F873FB
 	static int GET_LANDING_GEAR_STATE(Vehicle vehicle) { return invoke<int>(0x9B0F3DCA3DB0F4CD, vehicle); } // 0x9B0F3DCA3DB0F4CD 0xA6F02670
 	static BOOL IS_ANY_VEHICLE_NEAR_POINT(float x, float y, float z, float radius) { return invoke<BOOL>(0x61E1DD6125A3EEE6, x, y, z, radius); } // 0x61E1DD6125A3EEE6 0x2867A834
 	static void REQUEST_VEHICLE_HIGH_DETAIL_MODEL(Vehicle vehicle) { invoke<Void>(0xA6E9FDCB2C76785E, vehicle); } // 0xA6E9FDCB2C76785E 0x9DA21956
