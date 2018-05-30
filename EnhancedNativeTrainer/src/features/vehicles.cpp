@@ -3574,13 +3574,13 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			
 			// An escape attempt after you stopped already? Why did you stop then?!
 			if ((been_seen_by_a_cop == true && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) || (been_seen_by_a_cop == true && vehroadlaws_speed > 10 &&
-				PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && cop_walking == true)) // are you trying to leave?!
+				PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && cop_walking == true && tempfined_x < 50 && tempfined_y < 50)) // are you trying to leave?!
 			{
 				PLAYER::SET_MAX_WANTED_LEVEL(5);
 				if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) <= VEH_STARSPUNISH_VALUES[StarsPunishIndex]) PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), VEH_STARSPUNISH_VALUES[StarsPunishIndex], 0);
 				PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
 				wanted_level_on = true;
-			}
+			} 
 			
 			// Been fined or escaped
 			if (Stop_seconds_final == 24 || tempgotcha_x > VEH_PIRSUITRANGE_VALUES[PirsuitRangeIndex] || tempgotcha_y > VEH_PIRSUITRANGE_VALUES[PirsuitRangeIndex] || 
