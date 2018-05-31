@@ -46,20 +46,20 @@ float planecurrspeed = 0;
 float curr_roll = -1;
 float curr_pitch = -1;
 float curr_yaw = -1;
-bool featureStickToGround, landing = false;
+bool featureStickToGround, landing, landing_gear_off = false;
 bool featureLandAtDestination = true;
 Vector3 coords_marker_to_drive_to, speed;
 Ped driver_to_marker_pilot;
-bool blipFound = false;
+bool blipFound, reverse_check, altitude_reached = false;
 bool marker_been_set, blipDriveFound = false;
 bool reverse = true;
-bool reverse_check = false;
 Vehicle curr_veh;
 Hash driverPed_tomarker;
 int driving_style = 4;
 int SinceDriverStop_secs_passed, SinceDriverStop_secs_curr, DriverStop_seconds = 0;
 int SinceDriver2Stop_secs_passed, SinceDriver2Stop_secs_curr, Driver2Stop_seconds = 0;
 Blip myChauffeurBlip = -1;
+int temp_dist = -1;
 //
 int mainMenuIndex = 0;
 
@@ -3370,23 +3370,46 @@ void drive_to_marker()
 		if (PED::IS_PED_IN_ANY_HELI(drivetomarker_player)) 
 			AI::TASK_HELI_MISSION(driver_to_marker_pilot, curr_veh, 0, 0, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, 4, TEL_CHAUFFEUR_SPEED_VALUES[TelChauffeur_speed_Index], -1.0, -1.0, 0, TEL_CHAUFFEUR_ALTITUDE_VALUES[TelChauffeur_altitude_Index], -1.0, 32);
 		
-		if (PED::IS_PED_IN_ANY_PLANE(drivetomarker_player) && dist_to_land_diff > 1999)// && tempdistance_x > 499 && tempdistance_y > 499)
+		if (PED::IS_PED_IN_ANY_PLANE(drivetomarker_player)) 
 		{
 			planecurrspeed = ENTITY::GET_ENTITY_SPEED(curr_veh);
 			curr_roll = ENTITY::GET_ENTITY_ROLL(curr_veh);
 			curr_pitch = ENTITY::GET_ENTITY_PITCH(curr_veh);
 			curr_yaw = ENTITY::GET_ENTITY_HEADING(curr_veh);
 
-			if (planecurrspeed > 20 && planecurrspeed < 35) ENTITY::SET_ENTITY_ROTATION(curr_veh, curr_pitch, curr_roll + 0.1, curr_yaw, 1, true);
+			if (TEL_CHAUFFEUR_ALTITUDE_VALUES[TelChauffeur_altitude_Index] < 1000) temp_dist = 1500;
+			if (TEL_CHAUFFEUR_ALTITUDE_VALUES[TelChauffeur_altitude_Index] > 999) temp_dist = TEL_CHAUFFEUR_ALTITUDE_VALUES[TelChauffeur_altitude_Index] + 1000;
 
-			if (planecurrspeed < 20 && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(curr_veh))
+			if (planecurrspeed > 15 && my_coords.z < TEL_CHAUFFEUR_ALTITUDE_VALUES[TelChauffeur_altitude_Index] && altitude_reached == false) //  && dist_to_land_diff > temp_dist - 1 
+			{
+				if (curr_pitch < 20) ENTITY::SET_ENTITY_ROTATION(curr_veh, curr_pitch + 0.2, curr_roll, curr_yaw, 1, true);
+			}
+			
+			if (my_coords.z > TEL_CHAUFFEUR_ALTITUDE_VALUES[TelChauffeur_altitude_Index]) altitude_reached = true;
+
+			if (my_coords.z > 102 && landing_gear_off == false)
+			{
+				VEHICLE::CONTROL_LANDING_GEAR(curr_veh, 1);
+				landing_gear_off = true;
+			}
+
+			if (my_coords.z < 99 && landing_gear_off == true)
+			{
+				VEHICLE::CONTROL_LANDING_GEAR(curr_veh, 2);
+				landing_gear_off = false;
+			}
+
+			if (planecurrspeed < 25 && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(curr_veh))
 			{
 				planecurrspeed = planecurrspeed + 0.4;
 				VEHICLE::SET_VEHICLE_FORWARD_SPEED(curr_veh, planecurrspeed);
 			}
 			
-			if (planecurrspeed > 19)
+			if (altitude_reached == true && dist_to_land_diff > temp_dist - 1 && featureLandAtDestination) 
 				AI::TASK_PLANE_MISSION(driver_to_marker_pilot, curr_veh, 0, 0, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, 4, TEL_CHAUFFEUR_SPEED_VALUES[TelChauffeur_speed_Index], 0, 90, 2600, 300);
+
+			if (altitude_reached == true && !featureLandAtDestination) 
+				AI::TASK_PLANE_MISSION(driver_to_marker_pilot, curr_veh, 0, 0, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, 4, TEL_CHAUFFEUR_SPEED_VALUES[TelChauffeur_speed_Index], 0, 90, 0, TEL_CHAUFFEUR_ALTITUDE_VALUES[TelChauffeur_altitude_Index]);
 		}
 
 		if (featureLandAtDestination)
@@ -3405,9 +3428,17 @@ void drive_to_marker()
 				}
 			}
 
-			if (PED::IS_PED_IN_ANY_PLANE(drivetomarker_player) && dist_to_land_diff < 1000) // && tempdistance_x < 500 && tempdistance_y < 500)
+			if (PED::IS_PED_IN_ANY_PLANE(drivetomarker_player) && dist_to_land_diff < temp_dist && altitude_reached == true)
 			{
-				AI::TASK_PLANE_MISSION(driver_to_marker_pilot, curr_veh, 0, 0, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, 4, 20, 0, 90, 10, -5000);
+				if (dist_to_land_diff > 399 && dist_to_land_diff < temp_dist)
+				{
+					AI::TASK_PLANE_MISSION(driver_to_marker_pilot, curr_veh, 0, 0, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, 4, 30, 0, 90, 0, 200);
+					if (my_coords.z > 200) AI::TASK_PLANE_MISSION(driver_to_marker_pilot, curr_veh, 0, 0, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, 4, 30, 0, 90, 0, -500);
+				}
+				
+				if (dist_to_land_diff < 400)
+					AI::TASK_PLANE_MISSION(driver_to_marker_pilot, curr_veh, 0, 0, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, 4, 20, 0, 90, 0, -500);
+				
 				if (landing == false)
 				{
 					AI::TASK_PLANE_LAND(driver_to_marker_pilot, curr_veh, my_coords.x, my_coords.y, my_coords.z, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z);
@@ -3422,6 +3453,8 @@ void drive_to_marker()
 					marker_been_set = false;
 					blipDriveFound = false;
 					landing = false;
+					planecurrspeed = 0;
+					altitude_reached = false;
 				}
 			}
 		}
@@ -4104,7 +4137,19 @@ void update_teleport_features(){
 		if (UI::DOES_BLIP_EXIST(myChauffeurBlip) != 0 && UI::GET_BLIP_INFO_ID_TYPE(myChauffeurBlip) == 4) blipDriveFound = true;
 	}
 
-	if (blipMarkerIterator == 1) blipDriveFound = false;
+	if (blipMarkerIterator == 1)
+	{
+		blipDriveFound = false;
+		planecurrspeed = 0;
+		landing = false;
+		altitude_reached = false;
+	}
+	
+	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) || planecurrspeed < 2)
+	{
+		landing = false;
+		altitude_reached = false;
+	}
 
 	if (blipDriveFound == true && marker_been_set == true) drive_to_marker();
 
@@ -4116,6 +4161,8 @@ void update_teleport_features(){
 		marker_been_set = false;
 		blipDriveFound = false;
 		landing = false;
+		altitude_reached = false;
+		planecurrspeed = 0;
 		AI::TASK_SMART_FLEE_PED(driver_to_marker_pilot, PLAYER::PLAYER_PED_ID(), 1000, -1, true, true);
 	}
 }
