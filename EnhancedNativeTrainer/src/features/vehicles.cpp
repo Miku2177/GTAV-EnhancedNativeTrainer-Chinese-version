@@ -65,6 +65,7 @@ bool featureVehSpawnOptic = false;
 bool featureVehicleDoorInstant = false;
 bool featureLockVehicleDoors = false;
 bool featureLockVehicleDoorsUpdated = false;
+bool featureAntiTheftSystem = false;
 bool featureWearHelmetOff = false;
 bool featureWearHelmetOffUpdated = false;
 bool featureVehLightsOn = false, featureVehLightsOnUpdated = false;
@@ -144,6 +145,10 @@ bool red_light_veh_detected = false;
 Vehicle red_light_vehicle;
 BOOL lightsOn = -1;
 BOOL highbeamsOn = -1;
+//
+// Anti-Theft System variables
+std::vector<Vehicle> VEHICLES_STEERLOCKED;
+bool check_if_stolen, lock_stolen_veh = false;
 //
 
 Vehicle ped_temp_veh = -1;
@@ -624,6 +629,14 @@ void vehicle_alarm() {
 	WAIT(100);
 }
 
+void doorslocked_switching(){
+	featureLockVehicleDoors = !featureLockVehicleDoors;
+	featureLockVehicleDoorsUpdated = true;
+	if (featureLockVehicleDoors) set_status_text("Doors Locked");
+	else set_status_text("Doors Unlocked");
+	WAIT(100);
+}
+
 void vehicle_brake() {
 	Player PlayerPedBrake = PLAYER::PLAYER_PED_ID();
 	Vehicle veh_brake = PED::GET_VEHICLE_PED_IS_USING(PlayerPedBrake);
@@ -775,7 +788,7 @@ bool process_veh_door_menu(){
 
 	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Lock Vehicle Doors";
-	toggleItem->value = -5;
+	toggleItem->value = -4;
 	toggleItem->toggleValue = &featureLockVehicleDoors;
 	toggleItem->toggleValueUpdated = &featureLockVehicleDoorsUpdated;
 	menuItems.push_back(toggleItem);
@@ -1944,6 +1957,12 @@ void process_veh_menu(){
 	toggleItem->toggleValue = &featureVehLightsOn;
 	toggleItem->toggleValueUpdated = &featureVehLightsOnUpdated;
 	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Anti-Theft System";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureAntiTheftSystem;
+	menuItems.push_back(toggleItem);
 	
 	draw_generic_menu<int>(menuItems, &activeLineIndexVeh, caption, onconfirm_veh_menu, NULL, NULL);
 }
@@ -2009,6 +2028,34 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 	if (featureDespawnScriptDisabled){
 		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("shop_controller");
+	}
+
+	// Anti-Theft System
+	if (featureAntiTheftSystem) 
+	{
+		Vehicle temp_veh = PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed);
+		if (VEHICLE::IS_VEHICLE_ALARM_ACTIVATED(temp_veh))
+		{
+			if (!VEHICLES_STEERLOCKED.empty()) VEHICLES_STEERLOCKED.push_back(temp_veh);
+			if (VEHICLES_STEERLOCKED.empty()) VEHICLES_STEERLOCKED.push_back(temp_veh);
+		}
+
+		if (!VEHICLES_STEERLOCKED.empty() && PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && check_if_stolen == false)
+		{
+			for (int i = 0; i < VEHICLES_STEERLOCKED.size(); i++)
+			{
+				if (VEHICLES_STEERLOCKED[i] == PED::GET_VEHICLE_PED_IS_IN(playerPed, false)) lock_stolen_veh = true;
+			}
+			check_if_stolen = true;
+		}
+
+		if (lock_stolen_veh == true) VEHICLE::SET_VEHICLE_STEER_BIAS(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 1.0);
+
+		if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, false))
+		{
+			lock_stolen_veh = false;
+			check_if_stolen = false;
+		}
 	}
 
 	// player's vehicle invincible
@@ -2116,11 +2163,14 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		if (bPlayerExists && !featureLockVehicleDoors){
 			Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 			VEHICLE::SET_VEHICLE_DOORS_LOCKED(veh, 0);
+			PED::SET_PED_CAN_BE_DRAGGED_OUT(playerPed, true);
 		}
 		featureLockVehicleDoorsUpdated = false;
 	}
 	if (featureLockVehicleDoors){
+		Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 		VEHICLE::SET_VEHICLE_DOORS_LOCKED(veh, 4);
+		PED::SET_PED_CAN_BE_DRAGGED_OUT(playerPed, false);
 	}
 
 	//Prevents player from wearing a helmet
@@ -3294,7 +3344,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				if (PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed) != hijacking_veh) hijacked_vehicle = false;
 			}
 
-			if (VEHICLE::IS_VEHICLE_ALARM_ACTIVATED(vehroadlaws) && alarm_check == false)
+			if (VEHICLE::IS_VEHICLE_ALARM_ACTIVATED(vehroadlaws) && alarm_check == false) 
 			{
 				if (!VEHICLES_STOLEN.empty()) VEHICLES_STOLEN.push_back(vehroadlaws);
 				if (VEHICLES_STOLEN.empty()) VEHICLES_STOLEN.push_back(vehroadlaws);
@@ -3835,6 +3885,7 @@ void reset_vehicle_globals(){
 		featureVehMassMult =
 		featureVehicleDoorInstant =
 		featureLockVehicleDoors =
+		featureAntiTheftSystem =
 		featureVehSpawnInto =
 		featureNoVehFallOff =
 		featureWearHelmetOff =
@@ -4120,6 +4171,7 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehInvulnIncludesCosmetic", &featureVehInvulnIncludesCosmetic, &featureVehInvincibleUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureDespawnScriptDisabled", &featureDespawnScriptDisabled, &featureDespawnScriptDisabledUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehLightsOn", &featureVehLightsOn, &featureVehLightsOnUpdated});
+	results->push_back(FeatureEnabledLocalDefinition{"featureAntiTheftSystem", &featureAntiTheftSystem});
 }
 
 bool spawn_saved_car(int slot, std::string caption){
