@@ -82,6 +82,8 @@ void speedlimiter_switching();
 
 void invincibility_switching();
 
+void doorslocked_switching();
+
 void engineonoff_switching();
 
 void engine_kill();

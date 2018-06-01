@@ -234,6 +234,9 @@ void trigger_function_for_hotkey_onkeyup(int hotkey)
 	case HKEY_SNIPER_VISION_TOGGLE:
 		sniper_vision_toggle();
 		break;
+	case HKEY_DOORS_LOCKED_TOGGLE:
+		doorslocked_switching();
+		break;
 
 	default:
 	{
