@@ -1939,12 +1939,6 @@ void process_veh_menu(){
 	item->isLeaf = false;
 	menuItems.push_back(item);
 
-	//toggleItem = new ToggleMenuItem<int>();
-	//toggleItem->caption = "Vehicle Steering Angle";
-	//toggleItem->value = i++;
-	//toggleItem->toggleValue = &featureVehSteerAngle;
-	//menuItems.push_back(toggleItem);
-
 	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Realistic Crashes";
 	toggleItem->value = i++;
@@ -1963,6 +1957,12 @@ void process_veh_menu(){
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureAntiTheftSystem;
 	menuItems.push_back(toggleItem);
+
+	//toggleItem = new ToggleMenuItem<int>();
+	//toggleItem->caption = "Remember Steering Angle";
+	//toggleItem->value = i++;
+	//toggleItem->toggleValue = &featureVehSteerAngle;
+	//menuItems.push_back(toggleItem);
 	
 	draw_generic_menu<int>(menuItems, &activeLineIndexVeh, caption, onconfirm_veh_menu, NULL, NULL);
 }
@@ -3454,7 +3454,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 			// CHECK IF COPS AROUND
 			if ((PED::GET_PED_TYPE(vehicles_laws[i]) == 6 || PED::GET_PED_TYPE(vehicles_laws[i]) == 27) && PED::IS_PED_IN_ANY_POLICE_VEHICLE(vehicles_laws[i]) && !PED::IS_PED_IN_ANY_HELI(vehicles_laws[i]) &&
-				PED::IS_PED_FACING_PED(vehicles_laws[i], playerPed, 100) && been_seen_by_a_cop == false)
+				PED::IS_PED_FACING_PED(vehicles_laws[i], playerPed, 100) && ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(vehicles_laws[i], playerPed, 17) && been_seen_by_a_cop == false)
 			{
 				veh_cop_in = PED::GET_VEHICLE_PED_IS_IN(vehicles_laws[i], false);
 				veh_cop_in_coords = ENTITY::GET_ENTITY_COORDS(veh_cop_in, true);
@@ -3484,6 +3484,11 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 							AI::SET_DRIVE_TASK_DRIVING_STYLE(fine_cop_car, 4);
 							AI::SET_DRIVE_TASK_DRIVING_STYLE(fine_cop_car, 512);
 							AI::SET_DRIVE_TASK_CRUISE_SPEED(fine_cop_car, 300.0);
+							//AI::TASK_VEHICLE_CHASE(fine_cop_car, vehroadlaws);
+							AI::SET_TASK_VEHICLE_CHASE_IDEAL_PURSUIT_DISTANCE(fine_cop_car, 40); 
+							AI::SET_TASK_VEHICLE_CHASE_BEHAVIOR_FLAG(fine_cop_car, 32, true);
+							PED::SET_DRIVER_ABILITY(cop_that_fines_you, 0.9);
+							ENTITY::SET_ENTITY_INVINCIBLE(fine_cop_car, true);
 							AUDIO::BLIP_SIREN(fine_cop_car);
 							AUDIO::_PLAY_AMBIENT_SPEECH1(cop_that_fines_you, "PROVOKE_GENERIC", "SPEECH_PARAMS_FORCE_SHOUTED");
 							blip_check = true;
@@ -3492,10 +3497,10 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 					}
 				}
 			}
-			
+
 			// If cops use radio and another cop sees you - he is your pursuer now
 			if (featureCopsUseRadio && been_seen_by_a_cop == true && blip_check == true && (PED::GET_PED_TYPE(vehicles_laws[i]) == 6 || PED::GET_PED_TYPE(vehicles_laws[i]) == 27) && PED::IS_PED_IN_ANY_POLICE_VEHICLE(vehicles_laws[i]) &&
-				!PED::IS_PED_IN_ANY_HELI(vehicles_laws[i]) && PED::IS_PED_FACING_PED(vehicles_laws[i], playerPed, 100))
+				!PED::IS_PED_IN_ANY_HELI(vehicles_laws[i]) && PED::IS_PED_FACING_PED(vehicles_laws[i], playerPed, 100) && ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(vehicles_laws[i], playerPed, 17))
 			{
 				Vector3 tempradiocop = ENTITY::GET_ENTITY_COORDS(PED::GET_VEHICLE_PED_IS_IN(vehicles_laws[i], false), true);
 				Vector3 temp_fine_cop_car_coords = ENTITY::GET_ENTITY_COORDS(fine_cop_car, true);
@@ -3528,6 +3533,11 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 						AI::SET_DRIVE_TASK_DRIVING_STYLE(fine_cop_car, 4);
 						AI::SET_DRIVE_TASK_DRIVING_STYLE(fine_cop_car, 512);
 						AI::SET_DRIVE_TASK_CRUISE_SPEED(fine_cop_car, 300.0);
+						//AI::TASK_VEHICLE_CHASE(fine_cop_car, vehroadlaws);
+						AI::SET_TASK_VEHICLE_CHASE_IDEAL_PURSUIT_DISTANCE(fine_cop_car, 40);
+						AI::SET_TASK_VEHICLE_CHASE_BEHAVIOR_FLAG(fine_cop_car, 32, true);
+						PED::SET_DRIVER_ABILITY(cop_that_fines_you, 0.9);
+						ENTITY::SET_ENTITY_INVINCIBLE(fine_cop_car, true);
 						AUDIO::BLIP_SIREN(fine_cop_car);
 						AUDIO::_PLAY_AMBIENT_SPEECH1(cop_that_fines_you, "PROVOKE_GENERIC", "SPEECH_PARAMS_FORCE_SHOUTED");
 						tempgotcha_x = tempradiocop.x;
@@ -3566,7 +3576,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 					if (PED::IS_PED_IN_VEHICLE(playerPed, vehroadlaws, true))
 					{
 						AI::TASK_LEAVE_VEHICLE(cop_that_fines_you, fine_cop_car, 0);
-						AI::TASK_GOTO_ENTITY_AIMING(cop_that_fines_you, vehroadlaws, 5.0, 25.0);
+						AI::TASK_GOTO_ENTITY_AIMING(cop_that_fines_you, playerPed, 2.0, 30.0);
 						cop_walking = true;
 					}
 				}
@@ -3731,6 +3741,26 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////// REMEMBER STEERING ANGLE ////////////////////////////
+	
+	if (featureVehSteerAngle && PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) && CONTROLS::IS_CONTROL_PRESSED(2, 75) && !PED::IS_PED_ON_ANY_BIKE(playerPed))
+	{
+		Vehicle myVehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
+		Vector3 myvehicle_coords = ENTITY::GET_ENTITY_COORDS(myVehicle, true);
+		float myvehicle_heading = ENTITY::GET_ENTITY_HEADING(myVehicle);
+
+		Vehicle temp_vehicle = VEHICLE::CREATE_VEHICLE(GAMEPLAY::GET_HASH_KEY("BMX"), myvehicle_coords.x, myvehicle_coords.y, myvehicle_coords.z, myvehicle_heading, 20, 1);
+		ENTITY::ATTACH_ENTITY_TO_ENTITY_PHYSICALLY(myVehicle, temp_vehicle, 0, 0.0, 50.0, 50.0, -0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, true, false, false, 1, true);
+		ENTITY::SET_ENTITY_ALPHA(temp_vehicle, 0, true);
+		WAIT(1000);
+		ENTITY::DETACH_ENTITY(myVehicle, true, true);
+
+		VEHICLE::DELETE_VEHICLE(&temp_vehicle);
+	}
+
+/////////////////////////////////////////////////////////////////////////
+
 
 	if(bPlayerExists){
 		if(featureVehLightsOnUpdated || did_player_just_enter_vehicle(playerPed)){
