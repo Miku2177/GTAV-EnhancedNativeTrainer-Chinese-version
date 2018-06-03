@@ -3749,17 +3749,18 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		Vehicle myVehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		Vector3 myvehicle_coords = ENTITY::GET_ENTITY_COORDS(myVehicle, true);
 		float myvehicle_heading = ENTITY::GET_ENTITY_HEADING(myVehicle);
-
-		Vehicle temp_vehicle = VEHICLE::CREATE_VEHICLE(GAMEPLAY::GET_HASH_KEY("BMX"), myvehicle_coords.x, myvehicle_coords.y, myvehicle_coords.z, myvehicle_heading, 20, 1);
-		ENTITY::ATTACH_ENTITY_TO_ENTITY_PHYSICALLY(myVehicle, temp_vehicle, 0, 0.0, 50.0, 50.0, -0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, true, false, false, 1, true);
-		ENTITY::SET_ENTITY_ALPHA(temp_vehicle, 0, true);
+		
+		Vehicle temp_object = VEHICLE::CREATE_VEHICLE(GAMEPLAY::GET_HASH_KEY("SCORCHER"), myvehicle_coords.x, myvehicle_coords.y, myvehicle_coords.z, myvehicle_heading, 1, 1); // 20
+		ENTITY::ATTACH_ENTITY_TO_ENTITY_PHYSICALLY(/*ENTITY_1*/myVehicle, /*ENTITY_2*/temp_object, /*BONE_INDEX_1*/0.0, /*BONE_INDEX_2*/0.0, /*XPOS_1*/50.0, /*YPOS_1*/50.0, /*ZPOS_1*/-0.5,
+			/*XPOS_2*/0.0, /*YPOS_2*/0.0, /*ZPOS_2*/0.0, /*XROT*/0.0, /*YROT*/0.0, /*ZROT*/0.0, /*BREAKFORCE*/100.0, /*FIXEDROT*/1, /*P15*/0, /*COLLISION*/false, /*P17*/1, /*P18*/1);
+		ENTITY::SET_ENTITY_ALPHA(temp_object, 0, 0);
 		WAIT(1000);
 		ENTITY::DETACH_ENTITY(myVehicle, true, true);
 
-		VEHICLE::DELETE_VEHICLE(&temp_vehicle);
-	}
+		VEHICLE::DELETE_VEHICLE(&temp_object);
+	} 
 
-/////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
 
 
 	if(bPlayerExists){
