@@ -85,6 +85,7 @@ int Time_tick = 0;
 bool Fuel_Low = false;
 bool show_blips = false;
 bool phone_blips = false;
+bool is_it_bicycle = false;
 
 Blip blip[32];
 std::vector<Vehicle> VEHICLES;
@@ -2807,172 +2808,185 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				}
 			}
 
-			// TYPES OF VEHICLES USING FUEL
-			if (VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(veh)) || VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(veh)) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(veh)) ||
-				VEHICLE::IS_THIS_MODEL_A_PLANE(ENTITY::GET_ENTITY_MODEL(veh)) || VEHICLE::IS_THIS_MODEL_A_BOAT(ENTITY::GET_ENTITY_MODEL(veh)) || VEHICLE::IS_THIS_MODEL_A_HELI(ENTITY::GET_ENTITY_MODEL(veh))) {
+			// Is it bicycle? 
+			is_it_bicycle = false;
 
-				// FUEL CONSUMPTION
-				// CAR
-				if (VEH_CARFUEL_VALUES[CarConsumptionIndex] > 0) {
-					if ((GAMEPLAY::GET_GAME_TIMER() - Time_tick) > 200 && VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(veh))) {
-						if (FUEL[0] > 0 && VEHICLES[0] == veh) {
-							FUEL[0] = (FUEL[0] - (vehspeed / VEH_CARFUEL_VALUES[CarConsumptionIndex]));
-							Time_tick = GAMEPLAY::GET_GAME_TIMER();
-						}
-						else
-						{
-							FUEL[0] = 0;
-						}
-					}
-				}
-
-				// BIKE & ATV
-				if (VEH_BIKEFUEL_VALUES[BikeConsumptionIndex] > 0) {
-					if ((GAMEPLAY::GET_GAME_TIMER() - Time_tick) > 200 && ((VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(veh)) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(veh))))) {
-						if (FUEL[0] > 0 && VEHICLES[0] == veh) {
-							FUEL[0] = FUEL[0] - (vehspeed / VEH_BIKEFUEL_VALUES[BikeConsumptionIndex]);
-							Time_tick = GAMEPLAY::GET_GAME_TIMER();
-						}
-						else
-						{
-							FUEL[0] = 0;
-						}
-					}
-				}
-
-				// PLANE
-				if (VEH_PLANEFUEL_VALUES[PlaneConsumptionIndex] > 0) {
-					if ((GAMEPLAY::GET_GAME_TIMER() - Time_tick) > 200 && VEHICLE::IS_THIS_MODEL_A_PLANE(ENTITY::GET_ENTITY_MODEL(veh))) {
-						if (FUEL[0] > 0 && VEHICLES[0] == veh) {
-							FUEL[0] = FUEL[0] - (vehspeed / VEH_PLANEFUEL_VALUES[PlaneConsumptionIndex]);
-							Time_tick = GAMEPLAY::GET_GAME_TIMER();
-						}
-						else
-						{
-							FUEL[0] = 0;
-						}
-					}
-				}
-
-				// BOAT
-				if (VEH_BOATFUEL_VALUES[BoatConsumptionIndex] > 0) {
-					if ((GAMEPLAY::GET_GAME_TIMER() - Time_tick) > 200 && VEHICLE::IS_THIS_MODEL_A_BOAT(ENTITY::GET_ENTITY_MODEL(veh))) {
-						if (FUEL[0] > 0 && VEHICLES[0] == veh) {
-							FUEL[0] = FUEL[0] - (vehspeed / VEH_BOATFUEL_VALUES[BoatConsumptionIndex]);
-							Time_tick = GAMEPLAY::GET_GAME_TIMER();
-						}
-						else
-						{
-							FUEL[0] = 0;
-						}
-					}
-				}
-
-				// HELICOPTER
-				if (VEH_HELIFUEL_VALUES[HeliConsumptionIndex] > 0) {
-					if ((GAMEPLAY::GET_GAME_TIMER() - Time_tick) > 200 && VEHICLE::IS_THIS_MODEL_A_HELI(ENTITY::GET_ENTITY_MODEL(veh))) {
-						if (FUEL[0] > 0 && VEHICLES[0] == veh) {
-							FUEL[0] = FUEL[0] - (vehspeed / VEH_HELIFUEL_VALUES[HeliConsumptionIndex]);
-							Time_tick = GAMEPLAY::GET_GAME_TIMER();
-						}
-						else
-						{
-							FUEL[0] = 0;
-						}
-					}
-				}
-			}
-
-			// BARS
-			if (VEH_FUELBARPOSITION_VALUES[BarPositionIndex] < 3) {
-				GRAPHICS::DRAW_RECT(fuel_bar_x + 0.07, fuel_bar_y, fuel_amount, fuel_bar_h + 0.01, 0, 0, 0, fuelbar_edge_opacity);
-				GRAPHICS::DRAW_RECT(fuel_bar_x + 0.07, fuel_bar_y, fuel_amount, fuel_bar_h, underbar_r, underbar_g, underbar_b, FUEL_BACKGROUND_OPACITY_VALUES[FuelBackground_Opacity_Index]);
-
-				if (FUEL[0] < 0.010) {
-					GRAPHICS::DRAW_RECT(fuel_bar_x + (FUEL[0] / 2), fuel_bar_y, FUEL[0], fuel_bar_h, 220, 20, 20, 255);
-					Fuel_Low = true;
-				}
-				else
-				{
-					GRAPHICS::DRAW_RECT(fuel_bar_x + (FUEL[0] / 2), fuel_bar_y, FUEL[0], fuel_bar_h, bar_colour_r, bar_colour_g, bar_colour_b, 255);
-					Fuel_Low = false;
-				}
-			}
-			else
+			for (int i = 0; i < VALUES_BICYCLES.size(); i++) 
 			{
-				GRAPHICS::DRAW_RECT(fuel_bar_x, fuel_bar_y + 0.07, 0.009, fuel_amount, 0, 0, 0, fuelbar_edge_opacity);
-				GRAPHICS::DRAW_RECT(fuel_bar_x, fuel_bar_y + 0.07, 0.0055, fuel_amount, underbar_r, underbar_g, underbar_b, FUEL_BACKGROUND_OPACITY_VALUES[FuelBackground_Opacity_Index]);
-
-				if (FUEL[0] < 0.010) {
-					GRAPHICS::DRAW_RECT(fuel_bar_x, (fuel_bar_y + fuel_amount - 0.01) - (FUEL[0] / 2), fuel_bar_h, FUEL[0], 220, 20, 20, 255);
-					Fuel_Low = true;
-				}
-				else
-				{
-					GRAPHICS::DRAW_RECT(fuel_bar_x, (fuel_bar_y + fuel_amount - 0.01) - (FUEL[0] / 2), fuel_bar_h, FUEL[0], bar_colour_r, bar_colour_g, bar_colour_b, 255);
-					Fuel_Low = false;
-				}
+				char *currVeh = new char[VALUES_BICYCLES[i].length() + 1];
+				strcpy(currVeh, VALUES_BICYCLES[i].c_str());
+				if (ENTITY::GET_ENTITY_MODEL(veh) == GAMEPLAY::GET_HASH_KEY(currVeh)) is_it_bicycle = true;
 			}
 
-			// GAS STATION REFUELING
-			if (Car_Refuel == true) {
-				if (FUEL[0] < fuel_amount && outValue_station > 0) {
-					FUEL[0] = FUEL[0] + VEH_REFUELSPEED_VALUES[RefuelingSpeedIndex];
+			if (is_it_bicycle == false)
+			{
+				// TYPES OF VEHICLES USING FUEL
+				if (VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(veh)) || VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(veh)) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(veh)) ||
+					VEHICLE::IS_THIS_MODEL_A_PLANE(ENTITY::GET_ENTITY_MODEL(veh)) || VEHICLE::IS_THIS_MODEL_A_BOAT(ENTITY::GET_ENTITY_MODEL(veh)) || VEHICLE::IS_THIS_MODEL_A_HELI(ENTITY::GET_ENTITY_MODEL(veh))) {
 
-					VEHICLE::SET_VEHICLE_ENGINE_ON(veh, false, false);
-					UI::DISPLAY_CASH(true);
-					STATS::STAT_SET_INT(statHash_station, outValue_station - VEH_FUELPRICE_VALUES[FuelPriceIndex], true);
-					if (stoprefillKey) {
-						VEHICLE::SET_VEHICLE_ENGINE_ON(veh, true, false);
-						Car_Refuel = false;
+					// FUEL CONSUMPTION
+					// CAR
+					if (VEH_CARFUEL_VALUES[CarConsumptionIndex] > 0) {
+						if ((GAMEPLAY::GET_GAME_TIMER() - Time_tick) > 200 && VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(veh))) {
+							if (FUEL[0] > 0 && VEHICLES[0] == veh) {
+								FUEL[0] = (FUEL[0] - (vehspeed / VEH_CARFUEL_VALUES[CarConsumptionIndex]));
+								Time_tick = GAMEPLAY::GET_GAME_TIMER();
+							}
+							else
+							{
+								FUEL[0] = 0;
+							}
+						}
+					}
+
+					// BIKE & ATV
+					if (VEH_BIKEFUEL_VALUES[BikeConsumptionIndex] > 0) {
+						if ((GAMEPLAY::GET_GAME_TIMER() - Time_tick) > 200 && ((VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(veh)) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(veh))))) {
+							if (FUEL[0] > 0 && VEHICLES[0] == veh) {
+								FUEL[0] = FUEL[0] - (vehspeed / VEH_BIKEFUEL_VALUES[BikeConsumptionIndex]);
+								Time_tick = GAMEPLAY::GET_GAME_TIMER();
+							}
+							else
+							{
+								FUEL[0] = 0;
+							}
+						}
+					}
+
+					// PLANE
+					if (VEH_PLANEFUEL_VALUES[PlaneConsumptionIndex] > 0) {
+						if ((GAMEPLAY::GET_GAME_TIMER() - Time_tick) > 200 && VEHICLE::IS_THIS_MODEL_A_PLANE(ENTITY::GET_ENTITY_MODEL(veh))) {
+							if (FUEL[0] > 0 && VEHICLES[0] == veh) {
+								FUEL[0] = FUEL[0] - (vehspeed / VEH_PLANEFUEL_VALUES[PlaneConsumptionIndex]);
+								Time_tick = GAMEPLAY::GET_GAME_TIMER();
+							}
+							else
+							{
+								FUEL[0] = 0;
+							}
+						}
+					}
+
+					// BOAT
+					if (VEH_BOATFUEL_VALUES[BoatConsumptionIndex] > 0) {
+						if ((GAMEPLAY::GET_GAME_TIMER() - Time_tick) > 200 && VEHICLE::IS_THIS_MODEL_A_BOAT(ENTITY::GET_ENTITY_MODEL(veh))) {
+							if (FUEL[0] > 0 && VEHICLES[0] == veh) {
+								FUEL[0] = FUEL[0] - (vehspeed / VEH_BOATFUEL_VALUES[BoatConsumptionIndex]);
+								Time_tick = GAMEPLAY::GET_GAME_TIMER();
+							}
+							else
+							{
+								FUEL[0] = 0;
+							}
+						}
+					}
+
+					// HELICOPTER
+					if (VEH_HELIFUEL_VALUES[HeliConsumptionIndex] > 0) {
+						if ((GAMEPLAY::GET_GAME_TIMER() - Time_tick) > 200 && VEHICLE::IS_THIS_MODEL_A_HELI(ENTITY::GET_ENTITY_MODEL(veh))) {
+							if (FUEL[0] > 0 && VEHICLES[0] == veh) {
+								FUEL[0] = FUEL[0] - (vehspeed / VEH_HELIFUEL_VALUES[HeliConsumptionIndex]);
+								Time_tick = GAMEPLAY::GET_GAME_TIMER();
+							}
+							else
+							{
+								FUEL[0] = 0;
+							}
+						}
+					}
+				}
+
+				// BARS
+				if (VEH_FUELBARPOSITION_VALUES[BarPositionIndex] < 3) {
+					GRAPHICS::DRAW_RECT(fuel_bar_x + 0.07, fuel_bar_y, fuel_amount, fuel_bar_h + 0.01, 0, 0, 0, fuelbar_edge_opacity);
+					GRAPHICS::DRAW_RECT(fuel_bar_x + 0.07, fuel_bar_y, fuel_amount, fuel_bar_h, underbar_r, underbar_g, underbar_b, FUEL_BACKGROUND_OPACITY_VALUES[FuelBackground_Opacity_Index]);
+
+					if (FUEL[0] < 0.010) {
+						GRAPHICS::DRAW_RECT(fuel_bar_x + (FUEL[0] / 2), fuel_bar_y, FUEL[0], fuel_bar_h, 220, 20, 20, 255);
+						Fuel_Low = true;
 					}
 					else
 					{
-						if (outValue_station > 0 && FUEL[0] > (fuel_amount - 0.001)) {
-							FUEL[0] = fuel_amount;
+						GRAPHICS::DRAW_RECT(fuel_bar_x + (FUEL[0] / 2), fuel_bar_y, FUEL[0], fuel_bar_h, bar_colour_r, bar_colour_g, bar_colour_b, 255);
+						Fuel_Low = false;
+					}
+				}
+				else
+				{
+					GRAPHICS::DRAW_RECT(fuel_bar_x, fuel_bar_y + 0.07, 0.009, fuel_amount, 0, 0, 0, fuelbar_edge_opacity);
+					GRAPHICS::DRAW_RECT(fuel_bar_x, fuel_bar_y + 0.07, 0.0055, fuel_amount, underbar_r, underbar_g, underbar_b, FUEL_BACKGROUND_OPACITY_VALUES[FuelBackground_Opacity_Index]);
+
+					if (FUEL[0] < 0.010) {
+						GRAPHICS::DRAW_RECT(fuel_bar_x, (fuel_bar_y + fuel_amount - 0.01) - (FUEL[0] / 2), fuel_bar_h, FUEL[0], 220, 20, 20, 255);
+						Fuel_Low = true;
+					}
+					else
+					{
+						GRAPHICS::DRAW_RECT(fuel_bar_x, (fuel_bar_y + fuel_amount - 0.01) - (FUEL[0] / 2), fuel_bar_h, FUEL[0], bar_colour_r, bar_colour_g, bar_colour_b, 255);
+						Fuel_Low = false;
+					}
+				}
+
+				// GAS STATION REFUELING
+				if (Car_Refuel == true) {
+					if (FUEL[0] < fuel_amount && outValue_station > 0) {
+						FUEL[0] = FUEL[0] + VEH_REFUELSPEED_VALUES[RefuelingSpeedIndex];
+
+						VEHICLE::SET_VEHICLE_ENGINE_ON(veh, false, false);
+						UI::DISPLAY_CASH(true);
+						STATS::STAT_SET_INT(statHash_station, outValue_station - VEH_FUELPRICE_VALUES[FuelPriceIndex], true);
+						if (stoprefillKey) {
 							VEHICLE::SET_VEHICLE_ENGINE_ON(veh, true, false);
 							Car_Refuel = false;
 						}
+						else
+						{
+							if (outValue_station > 0 && FUEL[0] > (fuel_amount - 0.001)) {
+								FUEL[0] = fuel_amount;
+								VEHICLE::SET_VEHICLE_ENGINE_ON(veh, true, false);
+								Car_Refuel = false;
+							}
+						}
 					}
 				}
-			}
 
-			// OUT OF GAS
-			if (FUEL[0] == 0) {
-				VEHICLE::SET_VEHICLE_ENGINE_ON(veh, false, true);
-			}
+				// OUT OF GAS
+				if (FUEL[0] == 0) {
+					VEHICLE::SET_VEHICLE_ENGINE_ON(veh, false, true);
+				}
 
-			// GAS STATION MESSAGE
-			if (vehspeed < 1 && Car_Refuel == false) {
-				Vector3 coords = ENTITY::GET_ENTITY_COORDS(playerPed, 1);
-				for (int i = 0; i < 32; i++) {
-					if (GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(coords.x, coords.y, coords.z, gasStations[i][0], gasStations[i][1], coords.z, false) < 12) {
-						
-						UI::SET_TEXT_FONT(4);
-						UI::SET_TEXT_SCALE(0.0, 0.45);
-						UI::SET_TEXT_PROPORTIONAL(1);
-						UI::SET_TEXT_COLOUR(246, 255, 102, 255);
-						UI::SET_TEXT_EDGE(3, 0, 0, 0, 255);
-						UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 255);
-						UI::SET_TEXT_OUTLINE();
-						UI::_SET_TEXT_ENTRY("STRING");
-						UI::_ADD_TEXT_COMPONENT_SCALEFORM("PRESS 'E' TO REFUEL");
-						UI::_DRAW_TEXT(0.015, 0.015);
-						
-						UI::SET_TEXT_FONT(4);
-						UI::SET_TEXT_SCALE(0.0, 0.45);
-						UI::SET_TEXT_PROPORTIONAL(1);
-						UI::SET_TEXT_COLOUR(246, 255, 102, 255);
-						UI::SET_TEXT_EDGE(3, 0, 0, 0, 255);
-						UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 255);
-						UI::SET_TEXT_OUTLINE();
-						UI::_SET_TEXT_ENTRY("STRING");
-						UI::_ADD_TEXT_COMPONENT_SCALEFORM("PRESS 'S' TO STOP REFUELING");
-						UI::_DRAW_TEXT(0.015, 0.040);
+				// GAS STATION MESSAGE
+				if (vehspeed < 1 && Car_Refuel == false) {
+					Vector3 coords = ENTITY::GET_ENTITY_COORDS(playerPed, 1);
+					for (int i = 0; i < 32; i++) {
+						if (GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(coords.x, coords.y, coords.z, gasStations[i][0], gasStations[i][1], coords.z, false) < 12) {
 
-						if (FUEL[0] < fuel_amount){
-							Car_Refuel = startrefillKey;
-							break;
+							UI::SET_TEXT_FONT(4);
+							UI::SET_TEXT_SCALE(0.0, 0.45);
+							UI::SET_TEXT_PROPORTIONAL(1);
+							UI::SET_TEXT_COLOUR(246, 255, 102, 255);
+							UI::SET_TEXT_EDGE(3, 0, 0, 0, 255);
+							UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 255);
+							UI::SET_TEXT_OUTLINE();
+							UI::_SET_TEXT_ENTRY("STRING");
+							UI::_ADD_TEXT_COMPONENT_SCALEFORM("PRESS 'E' TO REFUEL");
+							UI::_DRAW_TEXT(0.015, 0.015);
+
+							UI::SET_TEXT_FONT(4);
+							UI::SET_TEXT_SCALE(0.0, 0.45);
+							UI::SET_TEXT_PROPORTIONAL(1);
+							UI::SET_TEXT_COLOUR(246, 255, 102, 255);
+							UI::SET_TEXT_EDGE(3, 0, 0, 0, 255);
+							UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 255);
+							UI::SET_TEXT_OUTLINE();
+							UI::_SET_TEXT_ENTRY("STRING");
+							UI::_ADD_TEXT_COMPONENT_SCALEFORM("PRESS 'S' TO STOP REFUELING");
+							UI::_DRAW_TEXT(0.015, 0.040);
+
+							if (FUEL[0] < fuel_amount){
+								Car_Refuel = startrefillKey;
+								break;
+							}
 						}
 					}
 				}
@@ -2985,7 +2999,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		}
 
 		// REFUEL USING JERRY CAN
-		if (!VEHICLES.empty() && WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_PETROLCAN")) { 
+		if (!VEHICLES.empty() && WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_PETROLCAN") && is_it_bicycle == false) {
 			for (int i = 0; i < VEHICLES.size(); i++) {
 				if (ENTITY::DOES_ENTITY_EXIST(VEHICLES[i]) && FUEL[i] < fuel_amount) {
 					Vector3 coords = ENTITY::GET_ENTITY_COORDS(VEHICLES[i], 1);
@@ -3748,7 +3762,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	{
 		Vehicle myVehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		Vector3 myvehicle_coords = ENTITY::GET_ENTITY_COORDS(myVehicle, true);
-		float myvehicle_heading = ENTITY::GET_ENTITY_HEADING(myVehicle);
+		float myvehicle_heading = ENTITY::GET_ENTITY_HEADING(myVehicle); 
 		
 		Vehicle temp_object = VEHICLE::CREATE_VEHICLE(GAMEPLAY::GET_HASH_KEY("SCORCHER"), myvehicle_coords.x, myvehicle_coords.y, myvehicle_coords.z, myvehicle_heading, 1, 1); // 20
 		ENTITY::ATTACH_ENTITY_TO_ENTITY_PHYSICALLY(/*ENTITY_1*/myVehicle, /*ENTITY_2*/temp_object, /*BONE_INDEX_1*/0.0, /*BONE_INDEX_2*/0.0, /*XPOS_1*/50.0, /*YPOS_1*/50.0, /*ZPOS_1*/-0.5,
