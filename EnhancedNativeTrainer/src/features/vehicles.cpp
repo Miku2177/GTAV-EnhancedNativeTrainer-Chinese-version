@@ -79,6 +79,8 @@ bool steered_left, steered_right = false;
 Vehicle veh_steering;
 std::vector<Vehicle> STEERING;
 
+int EngineRunning_secs_passed, EngineRunning_secs_curr, EngineRunning_seconds = -1;
+
 // Fuel Option Variables
 bool Car_Refuel = false;
 int Time_tick = 0;
@@ -606,20 +608,6 @@ void search_light() {
 	VEHICLE::SET_VEHICLE_SEARCHLIGHT(veh_search, veh_searching, veh_searching);
 }
 
-//void trailer_attachdetach() {
-//	Player PlayerPedTrailer = PLAYER::PLAYER_PED_ID();
-//	Vehicle veh_trailer = PED::GET_VEHICLE_PED_IS_USING(PlayerPedTrailer);
-//	Vector3 coords_veh_trailer;
-//	Vehicle trailer, trailer_to_attach;
-	//if (!VEHICLE::IS_VEHICLE_ATTACHED_TO_TRAILER(veh_trailer))
-//		coords_veh_trailer = ENTITY::GET_ENTITY_COORDS(veh_trailer, 1);
-//		trailer = VEHICLE::GET_CLOSEST_VEHICLE(coords_veh_trailer.x, coords_veh_trailer.y, coords_veh_trailer.z, 30, 0, 70);
-//		VEHICLE::GET_VEHICLE_TRAILER_VEHICLE(trailer, &trailer_to_attach);
-//		VEHICLE::ATTACH_VEHICLE_TO_TRAILER(veh_trailer, trailer, 30);
-//		worldGetAllVehicles;
-//		set_status_text("Attached");
-//}
-
 void vehicle_alarm() {
 	Player PlayerPedAlarm = PLAYER::PLAYER_PED_ID();
 	Vehicle veh_alarming = PED::GET_VEHICLE_PED_IS_USING(PlayerPedAlarm);
@@ -727,10 +715,6 @@ bool onconfirm_vehdoor_menu(MenuItem<int> choice){
 	{
 		vehicle_brake();
 	}
-	//else if (choice.value == -13)//attach a trailer
-	//{
-	//	trailer_attachdetach();
-	//}
 	return false;
 }
 
@@ -847,12 +831,6 @@ bool process_veh_door_menu(){
 	item->value = -12;
 	item->isLeaf = true;
 	menuItems.push_back(item);
-
-	//item = new MenuItem<int>();
-	//item->caption = "Attach / Detach Trailer";
-	//item->value = -13;
-	//item->isLeaf = true;
-	//menuItems.push_back(item);
 
 	return draw_generic_menu<int>(menuItems, &doorOptionsMenuIndex, caption, onconfirm_vehdoor_menu, NULL, NULL);
 }
@@ -1861,12 +1839,6 @@ void process_veh_menu(){
 	listItem->value = engPowMultIndex;
 	menuItems.push_back(listItem);
 
-	/*toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Heavy Vehicle (ALPHA)";
-	toggleItem->value = i++;
-	toggleItem->toggleValue = &featureVehMassMult;
-	menuItems.push_back(toggleItem);*/
-
 	listItem = new SelectFromListMenuItem(VEH_MASS_CAPTIONS, onchange_veh_mass_index);
 	listItem->wrap = false;
 	listItem->caption = "Vehicle Force Shield Power";
@@ -2418,17 +2390,9 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			autocontrol = false;
 		}
 
-		
 		//Vector3 vel = ENTITY::GET_ENTITY_VELOCITY(vehturn);
 		//Vector3 pos = ENTITY::GET_ENTITY_COORDS(vehturn, 1);
 		//Vector3 motion = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(vehturn, pos.x + vel.x, pos.y + vel.y, pos.z + vel.z);
-
-		//std::stringstream ss55;
-		//ss55 << "\n vel: " << vel.y;
-		//ss55 << "\n pos: " << pos.y;
-		//ss55 << "\n motion_y: " << motion.y;
-		//callsPerFrame = 0;
-		//set_status_text_centre_screen(ss55.str());
 
 		VEHICLE::SET_VEHICLE_INDICATOR_LIGHTS(vehturn, 1, turn_check_left);  //Left Signal
 		VEHICLE::SET_VEHICLE_INDICATOR_LIGHTS(vehturn, 0, turn_check_right); // Right Signal	
@@ -2441,8 +2405,22 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 	if (bPlayerExists && featureEngineRunning && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
 		Vehicle playerVehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
-		if (CONTROLS::IS_CONTROL_PRESSED(2, 75)) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(playerVehicle, true);
+		if (CONTROLS::IS_CONTROL_PRESSED(2, 75) && !PED::IS_PED_ON_ANY_BIKE(playerPed)) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(playerVehicle, false);
+		if (CONTROLS::IS_CONTROL_PRESSED(2, 75) && PED::IS_PED_ON_ANY_BIKE(playerPed) && EngineRunning_seconds > 1) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(playerVehicle, false);
 	}
+
+	if (bPlayerExists && featureEngineRunning && CONTROLS::IS_CONTROL_PRESSED(2, 75))
+	{
+		EngineRunning_secs_passed = clock() / CLOCKS_PER_SEC;
+		if (((clock() / CLOCKS_PER_SEC) - EngineRunning_secs_curr) != 0)
+		{
+			EngineRunning_seconds = EngineRunning_seconds + 1;
+			EngineRunning_secs_curr = EngineRunning_secs_passed;
+			if (EngineRunning_seconds > 0) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), true);
+		}
+	}
+
+	if (bPlayerExists && featureEngineRunning && CONTROLS::IS_CONTROL_RELEASED(2, 75)) EngineRunning_seconds = 0;
 
 	if (bPlayerExists && !featureEngineRunning && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
 		Vehicle playerVehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
@@ -3764,11 +3742,11 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		Vector3 myvehicle_coords = ENTITY::GET_ENTITY_COORDS(myVehicle, true);
 		float myvehicle_heading = ENTITY::GET_ENTITY_HEADING(myVehicle); 
 		
-		Vehicle temp_object = VEHICLE::CREATE_VEHICLE(GAMEPLAY::GET_HASH_KEY("SCORCHER"), myvehicle_coords.x, myvehicle_coords.y, myvehicle_coords.z, myvehicle_heading, 1, 1); // 20
+		Vehicle temp_object = VEHICLE::CREATE_VEHICLE(GAMEPLAY::GET_HASH_KEY("BMX"), myvehicle_coords.x, myvehicle_coords.y, myvehicle_coords.z, myvehicle_heading, 20, 1); 
 		ENTITY::ATTACH_ENTITY_TO_ENTITY_PHYSICALLY(/*ENTITY_1*/myVehicle, /*ENTITY_2*/temp_object, /*BONE_INDEX_1*/0.0, /*BONE_INDEX_2*/0.0, /*XPOS_1*/50.0, /*YPOS_1*/50.0, /*ZPOS_1*/-0.5,
 			/*XPOS_2*/0.0, /*YPOS_2*/0.0, /*ZPOS_2*/0.0, /*XROT*/0.0, /*YROT*/0.0, /*ZROT*/0.0, /*BREAKFORCE*/100.0, /*FIXEDROT*/1, /*P15*/0, /*COLLISION*/false, /*P17*/1, /*P18*/1);
 		ENTITY::SET_ENTITY_ALPHA(temp_object, 0, 0);
-		WAIT(1000);
+		WAIT(100);
 		ENTITY::DETACH_ENTITY(myVehicle, true, true);
 
 		VEHICLE::DELETE_VEHICLE(&temp_object);
