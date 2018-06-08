@@ -1931,11 +1931,11 @@ void process_veh_menu(){
 	toggleItem->toggleValue = &featureAntiTheftSystem;
 	menuItems.push_back(toggleItem);
 
-	//toggleItem = new ToggleMenuItem<int>();
-	//toggleItem->caption = "Remember Steering Angle";
-	//toggleItem->value = i++;
-	//toggleItem->toggleValue = &featureVehSteerAngle;
-	//menuItems.push_back(toggleItem);
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Remember Wheel Angle";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureVehSteerAngle;
+	menuItems.push_back(toggleItem);
 	
 	draw_generic_menu<int>(menuItems, &activeLineIndexVeh, caption, onconfirm_veh_menu, NULL, NULL);
 }
@@ -3734,7 +3734,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-///////////////////////////// REMEMBER STEERING ANGLE ////////////////////////////
+///////////////////////////// REMEMBER STEERING ANGLE //////////////////////////// CODED BY MRGTAMODSGERMAN 
 	
 	if (featureVehSteerAngle && PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) && CONTROLS::IS_CONTROL_PRESSED(2, 75) && !PED::IS_PED_ON_ANY_BIKE(playerPed))
 	{
