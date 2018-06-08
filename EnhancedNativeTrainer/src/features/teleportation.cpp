@@ -3565,6 +3565,7 @@ void getTelChauffeurIndex(){
 
 	MenuItem<int> *item;
 	SelectFromListMenuItem *listItem;
+	ToggleMenuItem<int>* toggleItem;
 
 	int i = 0;
  
