@@ -2115,7 +2115,7 @@ std::vector<tele_location> LOCATIONS_COLLECTIBLES = {
 	{ "Hidden Package 10", 4244.86f, 3603.38f, -39.163f },
 	{ "Hidden Package 11", 3265.06f, 6409.15f, -45.8654f },
 	{ "Hidden Package 12", -1145.29f, 4911.02f, 220.969f },
-	{ "Hidden Package 13", -1078.18f, 4898.86f, 214.271 },
+	{ "Hidden Package 13", -1078.18f, 4898.86f, 214.271f },
 	{ "Letter Scrap 1", 1023.12f, -3026.09f, 14.3275f },
 	{ "Letter Scrap 2", -1045.23f, -2733.19f, 13.7866f },
 	{ "Letter Scrap 3", -79.2363f, -2726.82f, 8.7402f },
@@ -2131,7 +2131,7 @@ std::vector<tele_location> LOCATIONS_COLLECTIBLES = {
 	{ "Letter Scrap 13", 642.553f, -1032.1f, 36.7014f },
 	{ "Letter Scrap 14", -120.7f, -977.896f, 304.351f },
 	{ "Letter Scrap 15", -1241.1f, -509.363f, 38.6019f },
-	{ "Letter Scrap 16", 84.9697f, -436.906f, 36.0005 },
+	{ "Letter Scrap 16", 84.9697f, -436.906f, 36.0005f },
 	{ "Letter Scrap 17", 1099.15f, -209.824f, 55.9482f },
 	{ "Letter Scrap 18", -1726.98f, -198.253f, 57.8639f },
 	{ "Letter Scrap 19", 267.828f, -197.379f, 61.7877f },
@@ -2381,7 +2381,7 @@ std::vector<tele_location> LOCATIONS_STUNTS = {
 	{ "Stunt Jump 23", -979.286f, -2490.78f, 14.1498f },
 	{ "Stunt Jump 24", -861.13f, -2570.35f, 14.0053f },
 	{ "Stunt Jump 25", -958.348f, -2766.36f, 13.9446f },
-	{ "Stunt Jump 26", 112.505f, -2835.72f, 5.99999 },
+	{ "Stunt Jump 26", 112.505f, -2835.72f, 5.99999f },
 	{ "Stunt Jump 27", 121.199f, -2934.66f, 6.00002f },
 	{ "Stunt Jump 28", 108.41f, -3198.23f, 5.99996f },
 	{ "Stunt Jump 29", 167.324f, -2975.76f, 5.89613f },
@@ -2391,11 +2391,11 @@ std::vector<tele_location> LOCATIONS_STUNTS = {
 	{ "Stunt Jump 33", 797.103f, -2909.68f, 5.90086f },
 	{ "Stunt Jump 34", 351.55f, -2636.11f, 6.22156f },
 	{ "Stunt Jump 35", 357.897f, -2527.08f, 5.92292f },
-	{ "Stunt Jump 36", 96.4723f, -2190.96f, 6.000154 },
+	{ "Stunt Jump 36", 96.4723f, -2190.96f, 6.000154f },
 	{ "Stunt Jump 37", 1.19046f, -1039.322f, 38.152f },
 	{ "Stunt Jump 38", 392.563f, -1664.45f, 48.3087f },
 	{ "Stunt Jump 39", 1488.1f, -2210.3f, 77.6151f, },
-	{ "Stunt Jump 40", 442.29f, -1369.53f, 43.5537 },
+	{ "Stunt Jump 40", 442.29f, -1369.53f, 43.5537f },
 	{ "Stunt Jump 41", 381.501f, -1155.12f, 29.2918f },
 	{ "Stunt Jump 42", 42.701f, -778.82f, 44.1609f },
 	{ "Stunt Jump 43", 303.19f, -618.374f, 43.4504f },
@@ -2423,7 +2423,7 @@ std::vector<tele_location> LOCATIONS_STUNTS = {
 	{ "Under The Bridge 15", -3080.13f, 766.578f, 31.3605f },
 	{ "Under The Bridge 16", -718.772f, -1539.21f, 0.947559f },
 	{ "Under The Bridge 17", -657.192f, -1512.15f, 1.21292f },
-	{ "Under The Bridge 18", -612.299f, -1485.65f, 6.60787 },
+	{ "Under The Bridge 18", -612.299f, -1485.65f, 6.60787f },
 	{ "Under The Bridge 19", -459.011f, -1588.86f, 1.15897f },
 	{ "Under The Bridge 20", -379.011f, -1668.98f, 1.15931f },
 	{ "Under The Bridge 21", -191.593f, -1802.79f, 1.49136f },
@@ -3894,7 +3894,6 @@ bool process_teleport_menu(int categoryIndex){
 	}
 	else{
 		std::vector<MenuItem<int>*> menuItems;
-		SelectFromListMenuItem *listItem;
 
 		for (int i = 0; i < VOV_LOCATIONS[categoryIndex].size(); i++){
 			MenuItem<int> *item = new MenuItem<int>();

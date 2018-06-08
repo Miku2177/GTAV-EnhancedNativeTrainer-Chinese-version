@@ -30,3 +30,9 @@ std::wstring ConvertFromUtf8ToUtf16(const std::string& str);
 float degToRad(float degs);
 
 float radToDeg(float rads);
+
+uintptr_t FindPattern(const char *pattern, const char *mask, const char* startAddress, size_t size);
+
+uintptr_t FindPattern(const char *pattern, const char *mask);
+
+bool CompareMemory(const uint8_t* pData, const uint8_t* bMask, const char* sMask);
