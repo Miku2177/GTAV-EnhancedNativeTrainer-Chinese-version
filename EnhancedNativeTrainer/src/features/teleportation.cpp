@@ -19,6 +19,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include <string>     // std::string, std::stof
 
 bool featureEnableMpMaps = false;
+bool feature3dmarker = false;
 
 struct tele_location{
 	std::string text;
@@ -31,14 +32,44 @@ struct tele_location{
 	bool isLoaded;
 };
 
+// 3D Marker
+Vector3 coords_3Dblip, coords_3Dblip_old, temp_coords_3Dblip, driving_reverse;
+Blip my3DBlip = -1;
+bool blip_3d_found = false;
+bool blip_3d_exists_already = false;
+bool close_distance = false;
+int marker_3d_height = -1;
+int marker_3d_size = -1;
+//
+// Drive to marker
+float planecurrspeed = 0;
+float curr_roll = -1;
+float curr_pitch = -1;
+float curr_yaw = -1;
+bool featureStickToGround, landing, landing_gear_off = false;
+bool featureLandAtDestination = true;
+Vector3 coords_marker_to_drive_to, speed;
+Ped driver_to_marker_pilot;
+bool blipFound, reverse_check, altitude_reached = false;
+bool marker_been_set, blipDriveFound = false;
+bool reverse = true;
+Vehicle curr_veh;
+Hash driverPed_tomarker;
+int driving_style = 4;
+int SinceDriverStop_secs_passed, SinceDriverStop_secs_curr, DriverStop_seconds = 0;
+int SinceDriver2Stop_secs_passed, SinceDriver2Stop_secs_curr, Driver2Stop_seconds = 0;
+Blip myChauffeurBlip = -1;
+int temp_dist = -1;
+//
 int mainMenuIndex = 0;
 
 int lastChosenCategory = -1;
 
 int lastMenuChoiceInCategories[] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
-bool beingChauffeured = false;
+//bool beingChauffeured = false;
 int activeLineIndexChauffeur = 0;
+int activeLineIndex3dmarker = 0;
 
 Vehicle waitingToRetakeSeat = -1;
 
@@ -1754,7 +1785,7 @@ std::vector<tele_location> LOCATIONS_HIGH = {
 	{ "Sisyphus Theater Roof", 203.37f, 1166.73f, 245.835f },
 	{ "Tataviam Mountains Top", 1758.23f, 682.072f, 269.991f },
 	{ "Very High Up", -129.964f, 8130.873f, 2699.999f },
-	//{ "Very Very High Up", -119.879f, -977.357f, 10000.0f }, //- doesn't teleport you. Height out of bounds?
+	//{ "Very Very High Up", -119.879f, -977.357f, 9999.0f }, //- doesn't teleport you. Height out of bounds?
 	{ "Vinewood Bowl Theatre Roof", 683.157f, 568.621f, 156.285f },
 	{ "Vinewood Sign", 711.577f, 1197.91f, 348.527f },
 	{ "Weazel Plaza Apartments Roof", -894.349f, -454.021f, 174.811f },
@@ -2515,6 +2546,72 @@ const std::vector<int> TEL_CHAUFFEUR_VALUES{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 
 int TelChauffeurIndex = 3;
 bool TelChauffeur_Changed = true;
 
+//3D Marker Symbol
+const std::vector<std::string> TEL_3DMARKER_CAPTIONS{ "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" };
+const std::vector<int> TEL_3DMARKER_VALUES{ 0, 1, 2, 3, 4, 5, 6, 21, 22, 24, 29, 30, 31 };
+int Tel3dmarkerIndex = 2;
+bool Tel3dmarker_Changed = true;
+
+//3D Marker Max Size
+const std::vector<std::string> TEL_3DMARKER_MSIZE_CAPTIONS{ "50", "100", "200", "300", "400", "500", "600", "700", "800", "900", "1000" };
+const std::vector<int> TEL_3DMARKER_MSIZE_VALUES{ 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000 };
+int Tel3dmarker_msize_Index = 2;
+bool Tel3dmarker_msize_Changed = true;
+
+//Position In The Sky
+const std::vector<std::string> TEL_3DMARKER_SKYPOS_CAPTIONS{ "1000m", "1500m", "2000m", "2500m" };
+const std::vector<int> TEL_3DMARKER_SKYPOS_VALUES{ 1000, 1500, 2000, 2500 };
+int Tel3dmarker_skypos_Index = 0;
+bool Tel3dmarker_skypos_Changed = true;
+
+//Marker Type
+const std::vector<std::string> TEL_3DMARKER_MARTYPE_CAPTIONS{ "Symbol", "Column" };
+const std::vector<int> TEL_3DMARKER_MARTYPE_VALUES{ 1, 2 };
+int Tel3dmarker_martype_Index = 0;
+bool Tel3dmarker_martype_Changed = true;
+
+//3d marker colours_R
+const std::vector<std::string> MARKER3D_COLOURS_R_CAPTIONS{ "0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "210", "220", "230", "240", "250", "255" };
+const std::vector<int> MARKER3D_COLOURS_R_VALUES{ 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 255 };
+int Marker3d_R_Index = 26;
+bool Marker3d_R_Changed = true;
+
+//3d marker colours_G
+const std::vector<std::string> MARKER3D_COLOURS_G_CAPTIONS{ "0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "210", "220", "230", "240", "250", "255" };
+const std::vector<int> MARKER3D_COLOURS_G_VALUES{ 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 255 };
+int Marker3d_G_Index = 26;
+bool Marker3d_G_Changed = true;
+
+//3d marker colours_B
+const std::vector<std::string> MARKER3D_COLOURS_B_CAPTIONS{ "0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "210", "220", "230", "240", "250", "255" };
+const std::vector<int> MARKER3D_COLOURS_B_VALUES{ 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 255 };
+int Marker3d_B_Index = 13;
+bool Marker3d_B_Changed = true;
+
+//Marker alpha
+const std::vector<std::string> MARKER3D_ALPHA_CAPTIONS{ "10", "20", "30", "40", "50", "60", "70", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "210", "220", "230", "240", "250", "255" };
+const std::vector<int> MARKER3D_ALPHA_VALUES{ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 255 };
+int Marker3d_Alpha_Index = 12;
+bool Marker3d_Alpha_Changed = true;
+
+//Chauffeur Speed
+const std::vector<std::string> TEL_CHAUFFEUR_SPEED_CAPTIONS{ "20", "30", "40", "50", "70", "100", "120", "150", "200" };
+const std::vector<int> TEL_CHAUFFEUR_SPEED_VALUES{ 20, 30, 40, 50, 70, 100, 120, 150, 200 };
+int TelChauffeur_speed_Index = 2;
+bool TelChauffeur_speed_Changed = true;
+
+//Chauffeur Altitude
+const std::vector<std::string> TEL_CHAUFFEUR_ALTITUDE_CAPTIONS{ "10", "30", "50", "100", "200", "300", "500", "1000", "1500", "2000", "2500" };
+const std::vector<int> TEL_CHAUFFEUR_ALTITUDE_VALUES{ 10, 30, 50, 100, 200, 300, 500, 1000, 1500, 2000, 2500 };
+int TelChauffeur_altitude_Index = 5;
+bool TelChauffeur_altitude_Changed = true;
+
+//Driving Styles
+const std::vector<std::string> TEL_CHAUFFEUR_DRIVINGSTYLES_CAPTIONS{ "Careless Driver", "Careful Driver", "Prioritise Shortcuts", "Straight To Target" };
+const std::vector<int> TEL_CHAUFFEUR_DRIVINGSTYLES_VALUES{ 786468, 1074528293, 262144, 16777216 };
+int TelChauffeur_drivingstyles_Index = 0;
+bool TelChauffeur_drivingstyles_Changed = true;
+
 void teleport_to_coords(Entity e, Vector3 coords){
 	ENTITY::SET_ENTITY_COORDS_NO_OFFSET(e, coords.x, coords.y, coords.z, 0, 0, 1);
 	WAIT(0);
@@ -2532,7 +2629,7 @@ Vector3 get_blip_marker(){
 	static Vector3 zero;
 	Vector3 coords;
 
-	bool blipFound = false;
+	blipFound = false;
 	// search for marker blip
 	int blipIterator = UI::_GET_BLIP_INFO_ID_ITERATOR();
 	for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)){
@@ -2812,7 +2909,7 @@ float get_euc_distance(Vector3 currentCords, Vector3 destCords){
 	return eucDistance;
 }
 
-void get_chauffeur_to_marker(){
+/*void get_chauffeur_to_marker(){
 	beingChauffeured = true;
 
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
@@ -2842,7 +2939,7 @@ void get_chauffeur_to_marker(){
 		}
 
 		if (!VEHICLE::IS_VEHICLE_SEAT_FREE(veh, -1)){
-			Ped oldDriver = VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh, -1);
+			Ped oldDriver = VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh, -1); 
 			if (VEHICLE::IS_VEHICLE_SEAT_FREE(veh, -2)){
 				PED::SET_PED_INTO_VEHICLE(oldDriver, veh, -2);
 			}
@@ -2902,7 +2999,7 @@ void get_chauffeur_to_marker(){
 
 	PED::SET_PED_INTO_VEHICLE(driver, veh, -1);
 	set_old_vehicle_state(false); // set old vehicle state to false since we changed cars but didn't actually exit the last one
-
+	*/
 	/* DRIVING MODES :
 	0 = Normal behaviour but doesn't recognize other cars on the road, should only be used without ped cars in world.
 	1 = Drives legit and does no overtakes.Drives carefully
@@ -2917,7 +3014,7 @@ void get_chauffeur_to_marker(){
 	10 = Normal behaviour but doesn't recognize other cars on the road, should only be used without ped cars in world.
 	*/
 	//AI::TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE(ped, veh, blipCoords.x, blipCoords.y, blipCoords.z, 100, 5, chauffTolerance);
-
+/*
 	if (is_this_a_heli_or_plane(veh)){
 		//TODO
 	}
@@ -2929,9 +3026,9 @@ void get_chauffeur_to_marker(){
 			AI::TASK_VEHICLE_DRIVE_TO_COORD(driver, veh, blipCoords.x, blipCoords.y, blipCoords.z, 40.0, 1, ENTITY::GET_ENTITY_MODEL(veh), 4, -1.0, -1.0);
 		}
 	}
-}
+}*/
 
-void cancel_chauffeur(std::string message){
+/*void cancel_chauffeur(std::string message){
 	Object taskHdl;
 
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
@@ -2965,7 +3062,7 @@ void cancel_chauffeur(std::string message){
 	ss << message;
 	set_status_text(ss.str());
 	beingChauffeured = false;
-}
+}*/
 /*
 void enableMpMapsinSP()
 {
@@ -2985,19 +3082,83 @@ set_status_text("MP Maps disabled");
 
 }*/
 
-//////////////////////// JUMP TO COORDS ////////////////////////////////
-
 std::string lastJumpSpawn;
 
 void add_coords_generic_settings(std::vector<StringPairSettingDBRow>* results)
 {
-	results->push_back(StringPairSettingDBRow{ "lastJumpSpawn", lastJumpSpawn });
-	results->push_back(StringPairSettingDBRow{ "TelChauffeurIndex", std::to_string(TelChauffeurIndex)});
+	results->push_back(StringPairSettingDBRow{"lastJumpSpawn", lastJumpSpawn});
+	results->push_back(StringPairSettingDBRow{"TelChauffeurIndex", std::to_string(TelChauffeurIndex)});
+	results->push_back(StringPairSettingDBRow{"Tel3dmarkerIndex", std::to_string(Tel3dmarkerIndex)});
+	results->push_back(StringPairSettingDBRow{"Tel3dmarker_msize_Index", std::to_string(Tel3dmarker_msize_Index)});
+	results->push_back(StringPairSettingDBRow{"Tel3dmarker_martype_Index", std::to_string(Tel3dmarker_martype_Index)});
+	results->push_back(StringPairSettingDBRow{"Tel3dmarker_skypos_Index", std::to_string(Tel3dmarker_skypos_Index)});
+	results->push_back(StringPairSettingDBRow{"Marker3d_R_Index", std::to_string(Marker3d_R_Index)});
+	results->push_back(StringPairSettingDBRow{"Marker3d_G_Index", std::to_string(Marker3d_G_Index)});
+	results->push_back(StringPairSettingDBRow{"Marker3d_B_Index", std::to_string(Marker3d_B_Index)});
+	results->push_back(StringPairSettingDBRow{"Marker3d_Alpha_Index", std::to_string(Marker3d_Alpha_Index)});
+	results->push_back(StringPairSettingDBRow{"TelChauffeur_speed_Index", std::to_string(TelChauffeur_speed_Index)});
+	results->push_back(StringPairSettingDBRow{"TelChauffeur_altitude_Index", std::to_string(TelChauffeur_altitude_Index)});
+	results->push_back(StringPairSettingDBRow{"TelChauffeur_drivingstyles_Index", std::to_string(TelChauffeur_drivingstyles_Index)});
 }
 
 void onchange_tel_chauffeur_index(int value, SelectFromListMenuItem *source){
 	TelChauffeurIndex = value;
 	TelChauffeur_Changed = true;
+}
+
+void onchange_tel_3dmarker_index(int value, SelectFromListMenuItem *source){
+	Tel3dmarkerIndex = value;
+	Tel3dmarker_Changed = true;
+}
+
+void onchange_tel_3dmarker_msize_index(int value, SelectFromListMenuItem *source){
+	Tel3dmarker_msize_Index = value;
+	Tel3dmarker_msize_Changed = true;
+}
+
+void onchange_tel_3dmarker_martype_index(int value, SelectFromListMenuItem *source){
+	Tel3dmarker_martype_Index = value;
+	Tel3dmarker_martype_Changed = true;
+}
+
+void onchange_tel_3dmarker_skypos_index(int value, SelectFromListMenuItem *source){
+	Tel3dmarker_skypos_Index = value;
+	Tel3dmarker_skypos_Changed = true;
+}
+
+void onchange_tel_3dmarker_colour_R_index(int value, SelectFromListMenuItem *source){
+	Marker3d_R_Index = value;
+	Marker3d_R_Changed = true;
+}
+
+void onchange_tel_3dmarker_colour_G_index(int value, SelectFromListMenuItem *source){
+	Marker3d_G_Index = value;
+	Marker3d_G_Changed = true;
+}
+
+void onchange_tel_3dmarker_colour_B_index(int value, SelectFromListMenuItem *source){
+	Marker3d_B_Index = value;
+	Marker3d_B_Changed = true;
+}
+
+void onchange_tel_3dmarker_alpha_index(int value, SelectFromListMenuItem *source){
+	Marker3d_Alpha_Index = value;
+	Marker3d_Alpha_Changed = true;
+}
+
+void onchange_tel_chauffeur_speed_index(int value, SelectFromListMenuItem *source){
+	TelChauffeur_speed_Index = value;
+	TelChauffeur_speed_Changed = true;
+}
+
+void onchange_tel_chauffeur_altitude_index(int value, SelectFromListMenuItem *source){
+	TelChauffeur_altitude_Index = value;
+	TelChauffeur_altitude_Changed = true;
+}
+
+void onchange_tel_chauffeur_drivingstyles_index(int value, SelectFromListMenuItem *source){
+	TelChauffeur_drivingstyles_Index = value;
+	TelChauffeur_drivingstyles_Changed = true;
 }
 
 void handle_generic_settings_teleportation(std::vector<StringPairSettingDBRow>* settings){
@@ -3006,8 +3167,43 @@ void handle_generic_settings_teleportation(std::vector<StringPairSettingDBRow>* 
 		if (setting.name.compare("TelChauffeurIndex") == 0){
 			TelChauffeurIndex = stoi(setting.value);
 		}
+		else if(setting.name.compare("Tel3dmarkerIndex") == 0){
+			Tel3dmarkerIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("Tel3dmarker_msize_Index") == 0){
+			Tel3dmarker_msize_Index = stoi(setting.value);
+		}
+		else if (setting.name.compare("Tel3dmarker_martype_Index") == 0){
+			Tel3dmarker_martype_Index = stoi(setting.value);
+		}
+		else if (setting.name.compare("Tel3dmarker_skypos_Index") == 0){
+			Tel3dmarker_skypos_Index = stoi(setting.value);
+		}
+		else if (setting.name.compare("Marker3d_R_Index") == 0){
+			Marker3d_R_Index = stoi(setting.value);
+		}
+		else if (setting.name.compare("Marker3d_G_Index") == 0){
+			Marker3d_G_Index = stoi(setting.value);
+		}
+		else if (setting.name.compare("Marker3d_B_Index") == 0){
+			Marker3d_B_Index = stoi(setting.value);
+		}
+		else if (setting.name.compare("Marker3d_Alpha_Index") == 0){
+			Marker3d_Alpha_Index = stoi(setting.value);
+		}
+		else if (setting.name.compare("TelChauffeur_speed_Index") == 0){
+			TelChauffeur_speed_Index = stoi(setting.value);
+		}
+		else if (setting.name.compare("TelChauffeur_altitude_Index") == 0){
+			TelChauffeur_altitude_Index = stoi(setting.value);
+		}
+		else if (setting.name.compare("TelChauffeur_drivingstyles_Index") == 0){
+			TelChauffeur_drivingstyles_Index = stoi(setting.value);
+		}
 	}
 }
+
+//////////////////////// JUMP TO COORDS ////////////////////////////////
 
 bool onconfirm_jump_category(MenuItem<int> choice)
 {
@@ -3043,17 +3239,319 @@ bool onconfirm_jump_category(MenuItem<int> choice)
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
+////////////////////////////////// DRIVE TO MARKER ////////////////////////////////////
+
+void drive_to_marker()
+{
+	Player drivetomarker_player = PLAYER::PLAYER_PED_ID();
+	curr_veh = PED::GET_VEHICLE_PED_IS_IN(drivetomarker_player, false);
+	speed = ENTITY::GET_ENTITY_VELOCITY(curr_veh);
+	driving_reverse = ENTITY::GET_ENTITY_SPEED_VECTOR(curr_veh, true);
+
+	if (speed.x < 0) speed.x = speed.x * -1;
+	if (speed.y < 0) speed.y = speed.y * -1;
+
+	Vector3 my_coords = ENTITY::GET_ENTITY_COORDS(drivetomarker_player, 1);
+	int tempdistance_x = (my_coords.x - coords_marker_to_drive_to.x);
+	int tempdistance_y = (my_coords.y - coords_marker_to_drive_to.y);
+	if (tempdistance_x < 0) tempdistance_x = (tempdistance_x * -1);
+	if (tempdistance_y < 0) tempdistance_y = (tempdistance_y * -1);
+
+	float dist_to_land_diff = SYSTEM::VDIST(my_coords.x, my_coords.y, my_coords.z, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z);
+
+	if (PED::IS_PED_IN_ANY_VEHICLE(drivetomarker_player, false))
+	{
+		coords_marker_to_drive_to = get_blip_marker();
+		
+		if (blipFound == true)
+		{
+			Ped me_at_the_wheel = VEHICLE::GET_PED_IN_VEHICLE_SEAT(curr_veh, -1);
+			Ped Passenger_Driver = VEHICLE::GET_PED_IN_VEHICLE_SEAT(curr_veh, 0);
+			if (VEHICLE::IS_VEHICLE_SEAT_FREE(curr_veh, 0) || Passenger_Driver == drivetomarker_player)	PED::SET_PED_INTO_VEHICLE(me_at_the_wheel, curr_veh, 0);
+			else{
+				set_status_text("Couldn't make room for your chauffeur");
+				return;
+			}
+
+			Vector3 spawn_coords_for_pilot = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(PLAYER::PLAYER_PED_ID(), 0.0, 5.0, 0.0);
+
+			char *cstr = new char[TEL_CHAUFFEUR_CAPTIONS[TelChauffeurIndex].length() + 1];
+			strcpy(cstr, TEL_CHAUFFEUR_CAPTIONS[TelChauffeurIndex].c_str());
+			driverPed_tomarker = GAMEPLAY::GET_HASH_KEY(cstr);
+			delete[] cstr;
+
+			STREAMING::REQUEST_MODEL(driverPed_tomarker);
+			while (!STREAMING::HAS_MODEL_LOADED(driverPed_tomarker)){
+				make_periodic_feature_call();
+				WAIT(0);
+			}
+
+			if (VEHICLE::IS_VEHICLE_SEAT_FREE(curr_veh, -1)) driver_to_marker_pilot = PED::CREATE_PED(25, driverPed_tomarker, spawn_coords_for_pilot.x, spawn_coords_for_pilot.y, spawn_coords_for_pilot.z, 0, false, false);
+
+			AI::CLEAR_PED_TASKS(driver_to_marker_pilot);
+
+			while (!NETWORK::NETWORK_HAS_CONTROL_OF_ENTITY(curr_veh)){
+				make_periodic_feature_call();
+				NETWORK::NETWORK_REQUEST_CONTROL_OF_ENTITY(curr_veh);
+				WAIT(0);
+			}
+
+			PED::SET_PED_INTO_VEHICLE(driver_to_marker_pilot, curr_veh, -1);
+		}
+		
+		GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, &coords_marker_to_drive_to.z);
+		coords_marker_to_drive_to.z += 3.0;
+
+		if (featureStickToGround && ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(curr_veh) && !PED::IS_PED_IN_ANY_HELI(drivetomarker_player) && !PED::IS_PED_IN_ANY_PLANE(drivetomarker_player))
+		{
+			if (speed.x > 1 || speed.y > 1 || speed.z > 1) VEHICLE::SET_VEHICLE_ON_GROUND_PROPERLY(curr_veh); //	if (speed.z > 1) 
+		}
+		
+		if (speed.x < 5 && speed.y < 5 && reverse == true)
+		{
+			reverse_check = false;
+			SinceDriverStop_secs_passed = clock() / CLOCKS_PER_SEC;
+			if (((clock() / CLOCKS_PER_SEC) - SinceDriverStop_secs_curr) != 0)
+			{
+				DriverStop_seconds = DriverStop_seconds + 1;
+				SinceDriverStop_secs_curr = SinceDriverStop_secs_passed;
+			}
+			if (DriverStop_seconds > -1 && DriverStop_seconds < 1) driving_style = 1024; // 2
+			if (DriverStop_seconds > 2 && DriverStop_seconds < 6) driving_style = TEL_CHAUFFEUR_DRIVINGSTYLES_VALUES[TelChauffeur_drivingstyles_Index];
+			if (DriverStop_seconds > 5) DriverStop_seconds = 0;
+		}
+
+		if ((driving_reverse.x < 5) && (driving_reverse.y < 5) && reverse == false)
+		{
+			SinceDriverStop_secs_passed = clock() / CLOCKS_PER_SEC;
+			if (((clock() / CLOCKS_PER_SEC) - SinceDriverStop_secs_curr) != 0)
+			{
+				DriverStop_seconds = DriverStop_seconds + 1;
+				SinceDriverStop_secs_curr = SinceDriverStop_secs_passed;
+			}
+			if (DriverStop_seconds > 5)
+			{
+				reverse = true;
+				DriverStop_seconds = 0;
+			}
+		}
+
+		if ((driving_reverse.x < 5) && (driving_reverse.y < 5))
+		{
+			SinceDriver2Stop_secs_passed = clock() / CLOCKS_PER_SEC;
+			if (((clock() / CLOCKS_PER_SEC) - SinceDriver2Stop_secs_curr) != 0)
+			{
+				Driver2Stop_seconds = Driver2Stop_seconds + 1;
+				SinceDriver2Stop_secs_curr = SinceDriver2Stop_secs_passed;
+			}
+			if (Driver2Stop_seconds > 8)
+			{
+				driving_style = TEL_CHAUFFEUR_DRIVINGSTYLES_VALUES[TelChauffeur_drivingstyles_Index];
+				Driver2Stop_seconds = 0;
+			}
+		}
+
+		if ((driving_reverse.x < -2) && (driving_reverse.y < -2) && reverse_check == false)
+		{
+			driving_style = TEL_CHAUFFEUR_DRIVINGSTYLES_VALUES[TelChauffeur_drivingstyles_Index];
+			DriverStop_seconds = 0;
+			reverse = false;
+		}
+
+		if ((speed.x > 10) || (speed.y > 10))
+		{
+			reverse = true;
+			reverse_check = true;
+		}
+
+		if (!PED::IS_PED_IN_ANY_HELI(drivetomarker_player) && !PED::IS_PED_IN_ANY_PLANE(drivetomarker_player))
+			AI::TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE(driver_to_marker_pilot, curr_veh, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, TEL_CHAUFFEUR_SPEED_VALUES[TelChauffeur_speed_Index], driving_style, 5.0f); // 4 // 156 // 40.0f
+		
+		if (PED::IS_PED_IN_ANY_HELI(drivetomarker_player)) 
+			AI::TASK_HELI_MISSION(driver_to_marker_pilot, curr_veh, 0, 0, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, 4, TEL_CHAUFFEUR_SPEED_VALUES[TelChauffeur_speed_Index], -1.0, -1.0, 0, TEL_CHAUFFEUR_ALTITUDE_VALUES[TelChauffeur_altitude_Index], -1.0, 32);
+		
+		if (PED::IS_PED_IN_ANY_PLANE(drivetomarker_player)) 
+		{
+			planecurrspeed = ENTITY::GET_ENTITY_SPEED(curr_veh);
+			curr_roll = ENTITY::GET_ENTITY_ROLL(curr_veh);
+			curr_pitch = ENTITY::GET_ENTITY_PITCH(curr_veh);
+			curr_yaw = ENTITY::GET_ENTITY_HEADING(curr_veh);
+
+			if (TEL_CHAUFFEUR_ALTITUDE_VALUES[TelChauffeur_altitude_Index] < 1000) temp_dist = 1500;
+			if (TEL_CHAUFFEUR_ALTITUDE_VALUES[TelChauffeur_altitude_Index] > 999) temp_dist = TEL_CHAUFFEUR_ALTITUDE_VALUES[TelChauffeur_altitude_Index] + 1000;
+
+			if (planecurrspeed > 20 && my_coords.z < TEL_CHAUFFEUR_ALTITUDE_VALUES[TelChauffeur_altitude_Index] && altitude_reached == false) //  && dist_to_land_diff > temp_dist - 1 
+			{
+				if (curr_pitch < 20) ENTITY::SET_ENTITY_ROTATION(curr_veh, curr_pitch + 0.2, curr_roll, curr_yaw, 1, true);
+			}
+			
+			if (my_coords.z > TEL_CHAUFFEUR_ALTITUDE_VALUES[TelChauffeur_altitude_Index]) altitude_reached = true;
+
+			if (my_coords.z > 102 && landing_gear_off == false)
+			{
+				VEHICLE::CONTROL_LANDING_GEAR(curr_veh, 1);
+				landing_gear_off = true;
+			}
+
+			if (my_coords.z < 99 && landing_gear_off == true)
+			{
+				VEHICLE::CONTROL_LANDING_GEAR(curr_veh, 2);
+				landing_gear_off = false;
+			}
+
+			if (planecurrspeed < 25 && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(curr_veh))
+			{
+				planecurrspeed = planecurrspeed + 0.4;
+				VEHICLE::SET_VEHICLE_FORWARD_SPEED(curr_veh, planecurrspeed);
+			}
+			
+			if (altitude_reached == true && dist_to_land_diff > temp_dist - 1 && featureLandAtDestination) 
+				AI::TASK_PLANE_MISSION(driver_to_marker_pilot, curr_veh, 0, 0, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, 4, TEL_CHAUFFEUR_SPEED_VALUES[TelChauffeur_speed_Index], 0, 90, 2600, 300);
+
+			if (altitude_reached == true && !featureLandAtDestination) 
+				AI::TASK_PLANE_MISSION(driver_to_marker_pilot, curr_veh, 0, 0, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, 4, TEL_CHAUFFEUR_SPEED_VALUES[TelChauffeur_speed_Index], 0, 90, 0, TEL_CHAUFFEUR_ALTITUDE_VALUES[TelChauffeur_altitude_Index]);
+		}
+
+		if (featureLandAtDestination)
+		{
+			if (PED::IS_PED_IN_ANY_HELI(drivetomarker_player) && tempdistance_x < 20 && tempdistance_y < 20)
+			{
+				AI::TASK_HELI_MISSION(driver_to_marker_pilot, curr_veh, 0, 0, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, 20, TEL_CHAUFFEUR_SPEED_VALUES[TelChauffeur_speed_Index], -1.0, -1.0, 0, 0, -1.0, 32);
+				if (ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(curr_veh) && marker_been_set == true)
+				{
+					AI::CLEAR_PED_TASKS(driver_to_marker_pilot);
+					VEHICLE::SET_VEHICLE_ENGINE_ON(curr_veh, false, true);
+					AI::TASK_LEAVE_VEHICLE(driver_to_marker_pilot, curr_veh, 4160);
+					marker_been_set = false;
+					blipDriveFound = false;
+					AI::TASK_SMART_FLEE_PED(driver_to_marker_pilot, drivetomarker_player, 1000, -1, true, true);
+				}
+			}
+
+			if (PED::IS_PED_IN_ANY_PLANE(drivetomarker_player) && dist_to_land_diff < temp_dist && altitude_reached == true)
+			{
+				if (dist_to_land_diff > 399 && dist_to_land_diff < temp_dist)
+				{
+					AI::TASK_PLANE_MISSION(driver_to_marker_pilot, curr_veh, 0, 0, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, 4, 30, 0, 90, 0, 200);
+					if (my_coords.z > 200) AI::TASK_PLANE_MISSION(driver_to_marker_pilot, curr_veh, 0, 0, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, 4, 30, 0, 90, 0, -500);
+				}
+				
+				if (dist_to_land_diff < 400)
+					AI::TASK_PLANE_MISSION(driver_to_marker_pilot, curr_veh, 0, 0, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, 4, 20, 0, 90, 0, -500);
+				
+				if (landing == false)
+				{
+					AI::TASK_PLANE_LAND(driver_to_marker_pilot, curr_veh, my_coords.x, my_coords.y, my_coords.z, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z);
+					landing = true;
+				}
+
+				if (ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(curr_veh) && marker_been_set == true)
+				{
+					AI::CLEAR_PED_TASKS(driver_to_marker_pilot);
+					VEHICLE::SET_VEHICLE_ENGINE_ON(curr_veh, false, true);
+					PED::DELETE_PED(&driver_to_marker_pilot);
+					marker_been_set = false;
+					blipDriveFound = false;
+					landing = false;
+					planecurrspeed = 0;
+					altitude_reached = false;
+				}
+			}
+		}
+
+		marker_been_set = true; 
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+
+bool onconfirm_3dmarker_menu(MenuItem<int> choice)
+{
+	return false;
+}
+
+void set_3d_marker(){
+	std::string caption = "3D Marker Options";
+
+	std::vector<MenuItem<int>*> menuItems;
+
+	MenuItem<int> *item;
+	SelectFromListMenuItem *listItem;
+	ToggleMenuItem<int>* toggleItem;
+
+	int i = 0;
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Enabled";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &feature3dmarker;
+	menuItems.push_back(toggleItem);
+
+	listItem = new SelectFromListMenuItem(TEL_3DMARKER_MARTYPE_CAPTIONS, onchange_tel_3dmarker_martype_index);
+	listItem->wrap = true;
+	listItem->caption = "Marker Type";
+	listItem->value = Tel3dmarker_martype_Index;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(TEL_3DMARKER_CAPTIONS, onchange_tel_3dmarker_index);
+	listItem->wrap = true;
+	listItem->caption = "Marker Symbol";
+	listItem->value = Tel3dmarkerIndex;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(TEL_3DMARKER_MSIZE_CAPTIONS, onchange_tel_3dmarker_msize_index);
+	listItem->wrap = true;
+	listItem->caption = "Marker Symbol Max Size";
+	listItem->value = Tel3dmarker_msize_Index;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(TEL_3DMARKER_SKYPOS_CAPTIONS, onchange_tel_3dmarker_skypos_index);
+	listItem->wrap = true;
+	listItem->caption = "Marker Symbol Altitude";
+	listItem->value = Tel3dmarker_skypos_Index;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(MARKER3D_COLOURS_R_CAPTIONS, onchange_tel_3dmarker_colour_R_index);
+	listItem->wrap = true;
+	listItem->caption = "R:";
+	listItem->value = Marker3d_R_Index;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(MARKER3D_COLOURS_G_CAPTIONS, onchange_tel_3dmarker_colour_G_index);
+	listItem->wrap = true;
+	listItem->caption = "G:";
+	listItem->value = Marker3d_G_Index;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(MARKER3D_COLOURS_B_CAPTIONS, onchange_tel_3dmarker_colour_B_index);
+	listItem->wrap = true;
+	listItem->caption = "B:";
+	listItem->value = Marker3d_B_Index;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(MARKER3D_ALPHA_CAPTIONS, onchange_tel_3dmarker_alpha_index);
+	listItem->wrap = true;
+	listItem->caption = "Marker Transparency";
+	listItem->value = Marker3d_Alpha_Index;
+	menuItems.push_back(listItem);
+
+	draw_generic_menu<int>(menuItems, &activeLineIndex3dmarker, caption, onconfirm_3dmarker_menu, NULL, NULL);
+}
+
 bool onconfirm_chauffeur_menu(MenuItem<int> choice)
 {
 	switch (activeLineIndexChauffeur){
+	//case 0:
+	//	if (beingChauffeured){
+	//		cancel_chauffeur("Chauffeur cancelled");
+	//		}
+	//		else{
+	//			get_chauffeur_to_marker();
+	//			break;
+	//			}
 	case 0:
-		if (beingChauffeured){
-			cancel_chauffeur("Chauffeur cancelled");
-			}
-			else{
-				get_chauffeur_to_marker();
-				break;
-				}
+		drive_to_marker();
+		break;
 	default:
 		break;
 	}
@@ -3070,11 +3568,47 @@ void getTelChauffeurIndex(){
 
 	int i = 0;
  
+	//item = new MenuItem<int>();
+	//item->caption = "Chauffeur To Marker";
+	//item->value = i++;
+	//item->isLeaf = true;
+	//menuItems.push_back(item);
+
 	item = new MenuItem<int>();
-	item->caption = "Chauffeur To Marker";
+	item->caption = "Drive To Marker";
 	item->value = i++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Stick Vehicle To Ground";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureStickToGround;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Land At Destination";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureLandAtDestination;
+	menuItems.push_back(toggleItem);
+
+	listItem = new SelectFromListMenuItem(TEL_CHAUFFEUR_SPEED_CAPTIONS, onchange_tel_chauffeur_speed_index);
+	listItem->wrap = true;
+	listItem->caption = "Max Speed (MPH):";
+	listItem->value = TelChauffeur_speed_Index;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(TEL_CHAUFFEUR_ALTITUDE_CAPTIONS, onchange_tel_chauffeur_altitude_index);
+	listItem->wrap = true;
+	listItem->caption = "Altitude:";
+	listItem->value = TelChauffeur_altitude_Index;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(TEL_CHAUFFEUR_DRIVINGSTYLES_CAPTIONS, onchange_tel_chauffeur_drivingstyles_index);
+	listItem->wrap = true;
+	listItem->caption = "Driving Style";
+	listItem->value = TelChauffeur_drivingstyles_Index;
+	menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(TEL_CHAUFFEUR_CAPTIONS, onchange_tel_chauffeur_index);
 	listItem->wrap = true;
@@ -3117,6 +3651,10 @@ bool onconfirm_teleport_category(MenuItem<int> choice){
 	}
 	else if (choice.value == -9){
 		getTelChauffeurIndex();
+		return false;
+	}
+	else if (choice.value == -10){
+		set_3d_marker();
 		return false;
 	}
 
@@ -3331,6 +3869,12 @@ bool process_teleport_menu(int categoryIndex){
 		dialogItem->value = -1;
 		dialogItem->isLeaf = true;
 		menuItems.push_back(dialogItem);
+
+		markerItem = new MenuItem<int>();
+		markerItem->caption = "3D Marker";
+		markerItem->value = -10;
+		markerItem->isLeaf = false;
+		menuItems.push_back(markerItem);
 		
 		for (int i = 0; i < MENU_LOCATION_CATEGORIES.size(); i++){
 			if (MENU_LOCATION_CATEGORIES[i].compare(JELLMAN_CAPTION) == 0 && !is_jellman_scenery_enabled()){
@@ -3367,10 +3911,33 @@ void reset_teleporter_globals()
 		lastMenuChoiceInCategories[i] = 0;
 	}
 	featureEnableMpMaps = false;
+	feature3dmarker = false;
+	featureStickToGround = false;
+	featureLandAtDestination = true;
 
 	lastChosenCategory = 0;
 	TelChauffeurIndex = 3;
+	Tel3dmarkerIndex = 2;
+	Tel3dmarker_msize_Index = 2;
+	Tel3dmarker_martype_Index = 0;
+	Tel3dmarker_skypos_Index = 0;
+	Marker3d_R_Index = 26;
+	Marker3d_G_Index = 26;
+	Marker3d_B_Index = 13;
+	Marker3d_Alpha_Index = 12;
+	TelChauffeur_speed_Index = 2;
+	TelChauffeur_altitude_Index = 5;
+	TelChauffeur_drivingstyles_Index = 0;
+
 	activeLineIndexChauffeur = 0;
+	activeLineIndex3dmarker = 0;
+}
+
+void add_teleporter_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){
+	
+	results->push_back(FeatureEnabledLocalDefinition{"feature3dmarker", &feature3dmarker});
+	results->push_back(FeatureEnabledLocalDefinition{"featureStickToGround", &featureStickToGround});
+	results->push_back(FeatureEnabledLocalDefinition{"featureLandAtDestination", &featureLandAtDestination});
 }
 
 const std::vector<std::string> TOGGLE_IPLS
@@ -3446,7 +4013,7 @@ void process_toggles_menu(){
 void update_teleport_features(){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
-	if (beingChauffeured){
+	/*if (beingChauffeured){
 		Vector3 playerCoords = ENTITY::GET_ENTITY_COORDS(playerPed, 0);
 		// Moved blipCoords to global scope... we don't want to call for new blip coords each time (we've already told mr. monkey where to go)
 
@@ -3466,5 +4033,134 @@ void update_teleport_features(){
 		else{
 			waitingToRetakeSeat = -1;
 		}
+	}*/
+
+	/////////////////////////////////////// 3D MARKER /////////////////////////////////////////
+
+	if (feature3dmarker)
+	{
+		int blip3DIterator = UI::IS_WAYPOINT_ACTIVE() ? BlipSpriteWaypoint : BlipSpriteStandard;
+		Vector3 playerPosition = ENTITY::GET_ENTITY_COORDS(playerPed, false);
+
+		// Check if marker set
+		if (blip3DIterator != BlipSpriteStandard)
+		{
+			my3DBlip = UI::GET_FIRST_BLIP_INFO_ID(blip3DIterator);
+			if (UI::DOES_BLIP_EXIST(my3DBlip) != 0)
+			{
+				// Player's marker?
+				if (UI::GET_BLIP_INFO_ID_TYPE(my3DBlip) == 4)
+				{
+					coords_3Dblip = UI::GET_BLIP_INFO_ID_COORD(my3DBlip);
+					if (blip_3d_exists_already == false) blip_3d_found = true;
+				}
+			}
+		}
+
+		// No marker or coords changed
+		if (blip_3d_exists_already == true && (UI::DOES_BLIP_EXIST(my3DBlip) == 0 || coords_3Dblip.x != coords_3Dblip_old.x || coords_3Dblip.y != coords_3Dblip_old.y))
+		{
+			blip_3d_exists_already = false;
+			close_distance = false;
+		}
+
+		// Marker has been set
+		if (blip_3d_found == true)
+		{
+			coords_3Dblip_old.x = coords_3Dblip.x;
+			coords_3Dblip_old.y = coords_3Dblip.y;
+			marker_3d_height = TEL_3DMARKER_SKYPOS_VALUES[Tel3dmarker_skypos_Index];
+			marker_3d_size = TEL_3DMARKER_MSIZE_VALUES[Tel3dmarker_msize_Index];
+			blip_3d_found = false;
+			blip_3d_exists_already = true;
+		}
+		
+		// Get distance between player and marker
+		int dist_diff_x = (playerPosition.x - coords_3Dblip.x);
+		int dist_diff_y = (playerPosition.y - coords_3Dblip.y);
+		if (dist_diff_x < 0) dist_diff_x = (dist_diff_x * -1);
+		if (dist_diff_y < 0) dist_diff_y = (dist_diff_y * -1);
+		char* temp_zone_name = ZONE::GET_NAME_OF_ZONE(coords_3Dblip.x, coords_3Dblip.y, coords_3Dblip.z);
+		float dist_diff = SYSTEM::VDIST(playerPosition.x, playerPosition.y, playerPosition.z, coords_3Dblip.x, coords_3Dblip.y, coords_3Dblip.z);
+		if (dist_diff > TEL_3DMARKER_SKYPOS_VALUES[Tel3dmarker_skypos_Index]) marker_3d_height = TEL_3DMARKER_SKYPOS_VALUES[Tel3dmarker_skypos_Index];
+		if (dist_diff < TEL_3DMARKER_SKYPOS_VALUES[Tel3dmarker_skypos_Index] && strcmp(temp_zone_name, "MTCHIL") != 0 && strcmp(temp_zone_name, "MTGORDO") != 0 && strcmp(temp_zone_name, "MTJOSE") != 0 &&
+			strcmp(temp_zone_name, "SANCHIA") != 0 && strcmp(temp_zone_name, "TATAMO") != 0 && strcmp(temp_zone_name, "CHIL") != 0 && strcmp(temp_zone_name, "BHAMCA") != 0)
+			marker_3d_height = dist_diff - (dist_diff * 0.5);
+		if (marker_3d_height > TEL_3DMARKER_MSIZE_VALUES[Tel3dmarker_msize_Index] - 1) marker_3d_size = TEL_3DMARKER_MSIZE_VALUES[Tel3dmarker_msize_Index];
+		if (marker_3d_height < TEL_3DMARKER_MSIZE_VALUES[Tel3dmarker_msize_Index] && marker_3d_size > 20) marker_3d_size = marker_3d_height - (marker_3d_height * 0.3);
+		if (dist_diff_x > 100 || dist_diff_y > 100) close_distance = false;
+
+		// Get Z coord
+		if (dist_diff_x < 100 && dist_diff_y < 100 && close_distance == false)
+		{
+			static float groundCheckHeight[] =
+			{ 100.0, 150.0, 50.0, 0.0, 200.0, 250.0, 300.0, 350.0, 400.0, 450.0, 500.0, 550.0, 600.0, 650.0, 700.0, 750.0, 800.0 };
+			for (int i = 0; i < sizeof(groundCheckHeight) / sizeof(float); i++)
+			{
+				if (GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(coords_3Dblip.x, coords_3Dblip.y, groundCheckHeight[i], &coords_3Dblip.z) > 0){
+					coords_3Dblip.z += 3.0;
+					temp_coords_3Dblip.z = coords_3Dblip.z;
+					close_distance = true;
+					break;
+				}
+			}
+		}
+
+		if (TEL_3DMARKER_MARTYPE_VALUES[Tel3dmarker_martype_Index] == 1 && close_distance == true && blip_3d_exists_already == true) GRAPHICS::DRAW_MARKER(TEL_3DMARKER_VALUES[Tel3dmarkerIndex]/*int type*/, coords_3Dblip.x/*float posX*/, 
+			coords_3Dblip.y/*float posY*/, temp_coords_3Dblip.z + 5/*float posZ*/, 20/*float dirX*/, 20/*float dirY*/, 20/*float dirZ*/, 90/*float rotX*/, 90/*float rotY*/, 90/*float rotZ*/, 10/*float scaleX*/, 10/*float scaleY*/, 10/*float scaleZ*/,
+			MARKER3D_COLOURS_R_VALUES[Marker3d_R_Index]/*int red*/, MARKER3D_COLOURS_G_VALUES[Marker3d_G_Index]/*int green*/, MARKER3D_COLOURS_B_VALUES[Marker3d_B_Index]/*int blue*/, MARKER3D_ALPHA_VALUES[Marker3d_Alpha_Index]/*int alpha*/, 
+			50/*BOOL bobUpAndDown*/, 1/*BOOL faceCamera*/, 1/*int p19*/, 1/*BOOL rotate*/, 0/*char* textureDict*/, 0/*char* textureName*/, 0/*BOOL drawOnEnts*/);
+
+		if ((dist_diff_x > 100 || dist_diff_y > 100) && close_distance == false)
+		{
+			if (TEL_3DMARKER_MARTYPE_VALUES[Tel3dmarker_martype_Index] == 1 && blip_3d_exists_already == true) GRAPHICS::DRAW_MARKER(TEL_3DMARKER_VALUES[Tel3dmarkerIndex]/*int type*/, coords_3Dblip.x/*float posX*/, coords_3Dblip.y/*float posY*/, 
+				marker_3d_height/*float posZ*/,	20/*float dirX*/, 20/*float dirY*/, 20/*float dirZ*/, 90/*float rotX*/, 90/*float rotY*/, 90/*float rotZ*/, marker_3d_size/*float scaleX*/, marker_3d_size/*float scaleY*/, marker_3d_size/*float scaleZ*/,
+				MARKER3D_COLOURS_R_VALUES[Marker3d_R_Index]/*int red*/, MARKER3D_COLOURS_G_VALUES[Marker3d_G_Index]/*int green*/, MARKER3D_COLOURS_B_VALUES[Marker3d_B_Index]/*int blue*/, MARKER3D_ALPHA_VALUES[Marker3d_Alpha_Index]/*int alpha*/, 
+				50/*BOOL bobUpAndDown*/, 1/*BOOL faceCamera*/, 1/*int p19*/, 1/*BOOL rotate*/, 0/*char* textureDict*/, 0/*char* textureName*/, 0/*BOOL drawOnEnts*/);
+		}
+
+		if (TEL_3DMARKER_MARTYPE_VALUES[Tel3dmarker_martype_Index] == 2 && blip_3d_exists_already == true) GRAPHICS::DRAW_MARKER(1/*int type*/, coords_3Dblip.x/*float posX*/, coords_3Dblip.y/*float posY*/, 0/*float posZ*/,
+			0/*float dirX*/, 0/*float dirY*/, 0/*float dirZ*/, 0/*float rotX*/, 0/*float rotY*/, 0/*float rotZ*/, dist_diff / 50/*float scaleX*/, dist_diff / 50/*float scaleY*/, 10000.0f/*float scaleZ*/,
+			MARKER3D_COLOURS_R_VALUES[Marker3d_R_Index]/*int red*/, MARKER3D_COLOURS_G_VALUES[Marker3d_G_Index]/*int green*/, MARKER3D_COLOURS_B_VALUES[Marker3d_B_Index]/*int blue*/, MARKER3D_ALPHA_VALUES[Marker3d_Alpha_Index]/*int alpha*/, 
+			50/*BOOL bobUpAndDown*/, 1/*BOOL faceCamera*/, 1/*int p19*/, 0/*BOOL rotate*/, 0/*char* textureDict*/, 0/*char* textureName*/, 0/*BOOL drawOnEnts*/);
+	}
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+
+	int blipMarkerIterator = UI::IS_WAYPOINT_ACTIVE() ? BlipSpriteWaypoint : BlipSpriteStandard;
+
+	if (blipMarkerIterator != BlipSpriteStandard)
+	{
+		myChauffeurBlip = UI::GET_FIRST_BLIP_INFO_ID(blipMarkerIterator);
+		if (UI::DOES_BLIP_EXIST(myChauffeurBlip) != 0 && UI::GET_BLIP_INFO_ID_TYPE(myChauffeurBlip) == 4) blipDriveFound = true;
+	}
+
+	if (blipMarkerIterator == 1)
+	{
+		blipDriveFound = false;
+		planecurrspeed = 0;
+		landing = false;
+		altitude_reached = false;
+	}
+	
+	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) || planecurrspeed < 2)
+	{
+		landing = false;
+		altitude_reached = false;
+	}
+
+	if (blipDriveFound == true && marker_been_set == true) drive_to_marker();
+
+	if ((blipDriveFound == false && marker_been_set == true) || (CONTROLS::IS_CONTROL_PRESSED(2, 75) && marker_been_set == true))
+	{
+		AI::CLEAR_PED_TASKS(driver_to_marker_pilot);
+		VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(curr_veh, false);
+		AI::TASK_LEAVE_VEHICLE(driver_to_marker_pilot, curr_veh, 4160);
+		marker_been_set = false;
+		blipDriveFound = false;
+		landing = false;
+		altitude_reached = false;
+		planecurrspeed = 0;
+		AI::TASK_SMART_FLEE_PED(driver_to_marker_pilot, PLAYER::PLAYER_PED_ID(), 1000, -1, true, true);
 	}
 }
