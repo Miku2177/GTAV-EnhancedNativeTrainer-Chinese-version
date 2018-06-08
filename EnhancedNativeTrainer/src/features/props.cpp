@@ -190,7 +190,7 @@ void do_spawn_model(Hash propHash, char* model, std::string title, SimpleVector3
 	if (ENTITY::DOES_ENTITY_EXIST(obj))
 	{
 		ENTITY::SET_ENTITY_VELOCITY(obj, 0.0f, 0.0f, 0.0f);
-		ENTITY::SET_ENTITY_ROTATION(obj, pitch, roll, heading, 0, false);
+		ENTITY::SET_ENTITY_ROTATION(obj, pitch, roll, heading, 0, false); 
 
 		ENTITY::SET_ENTITY_COLLISION(obj, 1, 0);
 
