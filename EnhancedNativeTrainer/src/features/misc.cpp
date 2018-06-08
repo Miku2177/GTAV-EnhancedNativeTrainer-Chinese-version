@@ -767,7 +767,7 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 	results->push_back(FeatureEnabledLocalDefinition{"featureZeroBalance", &featureZeroBalance});
 	results->push_back(FeatureEnabledLocalDefinition{"featureShowVehiclePreviews", &featureShowVehiclePreviews});
 
-	results->push_back(FeatureEnabledLocalDefinition{ "featureFindDespawnPointer", &featureFindDespawnPointer, &featureFindDespawnPointerUpdated });
+	//results->push_back(FeatureEnabledLocalDefinition{ "featureFindDespawnPointer", &featureFindDespawnPointer, &featureFindDespawnPointerUpdated });
 
 	results->push_back(FeatureEnabledLocalDefinition{"featureMiscJellmanScenery", &featureMiscJellmanScenery});
 
