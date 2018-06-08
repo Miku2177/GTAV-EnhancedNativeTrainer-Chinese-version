@@ -917,16 +917,8 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 		VirtualProtect(pFrom, 16, protect, &protect);
 	}
 
-	bool CompareMemory(const uint8_t* pData, const uint8_t* bMask, const char* sMask)
-	{
-		for (; *sMask; ++sMask, ++pData, ++bMask)
-			if (*sMask == 'x' && *pData != *bMask)
-				return false;
-
-		return *sMask == NULL;
-	}
-
-	intptr_t FindPattern(const char* bMask, const char* sMask)
+	
+	intptr_t FindSnowPattern(const char* bMask, const char* sMask)
 	{
 		// Game Base & Size
 		static intptr_t pGameBase = (intptr_t)GetModuleHandle(nullptr);
@@ -949,7 +941,7 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 
 	void EnableTracks(bool tracksVehicle = false, bool tracksPeds = false, bool deepTracksVehicle = false, bool deepTracksPed = false)
 	{
-		static auto VAR_FeetSnowTracks_call = FindPattern("\x80\x3D\x00\x00\x00\x00\x00\x48\x8B\xD9\x74\x37", "xx?????xxxxx");
+		static auto VAR_FeetSnowTracks_call = FindSnowPattern("\x80\x3D\x00\x00\x00\x00\x00\x48\x8B\xD9\x74\x37", "xx?????xxxxx");
 
 		if (!VAR_FeetSnowTracks_call)
 		{
@@ -957,7 +949,7 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 		}
 		static auto VAR_FeetSnowTracks = VAR_FeetSnowTracks_call + (*(int32_t *)(VAR_FeetSnowTracks_call + 2)) + 7;
 		
-		static auto VAR_VehicleSnowTracks_call = FindPattern("\x40\x38\x3D\x00\x00\x00\x00\x48\x8B\x42\x20", "xxx????xxxx");
+		static auto VAR_VehicleSnowTracks_call = FindSnowPattern("\x40\x38\x3D\x00\x00\x00\x00\x48\x8B\x42\x20", "xxx????xxxx");
 
 		if (!VAR_VehicleSnowTracks_call)
 		{
@@ -973,7 +965,7 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 		*(uint8_t *)VAR_VehicleSnowTracks = tracksPeds;
 
 		// Switch for big/small tracks
-		static auto vehicleTrackTypes = FindPattern("\xB9\x00\x00\x00\x00\x84\xC0\x44\x0F\x44\xF1", "x????xxxxxx");
+		static auto vehicleTrackTypes = FindSnowPattern("\xB9\x00\x00\x00\x00\x84\xC0\x44\x0F\x44\xF1", "x????xxxxxx");
 		if (!vehicleTrackTypes)
 		{
 			return;
@@ -982,7 +974,7 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 		VirtualProtect((void*)vehicleTrackTypes, 1, PAGE_EXECUTE_READWRITE, nullptr);
 		*(uint8_t *)(vehicleTrackTypes + 1) = deepTracksVehicle ? 0x13 : 0x14;
 
-		static auto pedTrackTypes = FindPattern("\xB9\x00\x00\x00\x00\x84\xC0\x0F\x44\xD9\x48\x8B\x4F\x30", "x????xxxxxxxxx");
+		static auto pedTrackTypes = FindSnowPattern("\xB9\x00\x00\x00\x00\x84\xC0\x0F\x44\xD9\x48\x8B\x4F\x30", "x????xxxxxxxxx");
 		if (!pedTrackTypes)
 		{
 			return;
@@ -1001,8 +993,8 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 
 		// Addresses
 
-		static auto addr1 = FindPattern("\x80\x3D\x00\x00\x00\x00\x00\x74\x27\x84\xC0", "xx?????xxxx");
-		static auto addr2 = FindPattern("\x44\x38\x3D\x00\x00\x00\x00\x74\x0F", "xxx????xx");
+		static auto addr1 = FindSnowPattern("\x80\x3D\x00\x00\x00\x00\x00\x74\x27\x84\xC0", "xx?????xxxx");
+		static auto addr2 = FindSnowPattern("\x44\x38\x3D\x00\x00\x00\x00\x74\x0F", "xxx????xx");
 
 
 		// Outdated
@@ -1010,10 +1002,10 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 		static bool bUseAddr4 = false;
 		if (!addr1)
 		{
-			static auto addr3 = FindPattern("\x40\x38\x35\x00\x00\x00\x00\x74\x18\x84\xdb\x74\x14", "xxx????xxxxxx");
+			static auto addr3 = FindSnowPattern("\x40\x38\x35\x00\x00\x00\x00\x74\x18\x84\xdb\x74\x14", "xxx????xxxxxx");
 			if (!addr3)
 			{
-				static auto addr4 = FindPattern("\x80\x3D\x00\x00\x00\x00\x00\x74\x25\xB9\x40\x00\x00\x00", "xx????xxxxxxxx");
+				static auto addr4 = FindSnowPattern("\x80\x3D\x00\x00\x00\x00\x00\x74\x25\xB9\x40\x00\x00\x00", "xx????xxxxxxxx");
 				if (!addr4)
 				{
 					set_status_text("~r~ Error (1): Cannot enable Snow on this version of GTA V");
@@ -1034,7 +1026,7 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 		static bool bUseAddr5 = false;
 		if (!addr2)
 		{
-			static auto addr5 = FindPattern("\x44\x38\x3D\x00\x00\x00\x00\x74\x1D\xB9\x40\x00\x00\x00", "xxx????xxxxxxx");
+			static auto addr5 = FindSnowPattern("\x44\x38\x3D\x00\x00\x00\x00\x74\x1D\xB9\x40\x00\x00\x00", "xxx????xxxxxxx");
 			if (!addr5)
 			{
 				set_status_text("~r~ Error (2): Cannot enable Snow on this version of GTA V");

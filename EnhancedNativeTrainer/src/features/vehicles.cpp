@@ -1187,7 +1187,7 @@ bool process_value_colour_menu(){
 	return draw_generic_menu<int>(menuItems, 0, "Value Colour", onconfirm_colours2_menu, NULL, NULL);
 }
 
-	bool onconfirm_speed_menu(MenuItem<int> choice)
+bool onconfirm_speed_menu(MenuItem<int> choice)
 {
 	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
 	Player player = PLAYER::PLAYER_ID();
@@ -1961,6 +1961,7 @@ void speedlimiter_switching(){
 
 void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+	int globalindex = 0;
 
 	eGameVersion version = getGameVersion();
 	if (version < 20) *getGlobalPtr(2558120) = 1;
@@ -1985,7 +1986,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 	//if (version > 38) *getGlobalPtr(2606794) = 1; //2606794
 
-
 	if (featureDespawnScriptDisabledUpdated){
 		featureDespawnScriptDisabledUpdated = false;
 		if (featureDespawnScriptDisabled){
@@ -1998,7 +1998,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		}
 		featureDespawnScriptDisabledWasLastOn = featureDespawnScriptDisabled;
 	}
-
 	if (featureDespawnScriptDisabled){
 		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("shop_controller");
 	}
