@@ -358,7 +358,7 @@ void process_misc_menu(){
 		{"Trainer Options", NULL, NULL, false},
 		{"Portable Radio", &featurePlayerRadio, &featurePlayerRadioUpdated, true},
 		{"Next Radio Track", NULL, NULL, true},
-		{"Freeze Radio to Station", nullptr, nullptr, false},
+		{"Freeze Radio To Station", nullptr, nullptr, false},
 		{"Radio Always Off", &featureRadioAlwaysOff, &featureRadioAlwaysOffUpdated, true},
 		{"Boost Radio Volume", &featureBoostRadio, &featureBoostRadioUpdated, true},
 		{"Radio In Police Vehicle", &featurePoliceRadio, &featurePoliceRadioUpdated, true},
@@ -368,9 +368,9 @@ void process_misc_menu(){
 		{"Hide HUD", &featureMiscHideHud, &featureMiscHideHudUpdated},
 		{"Show HUD If Phone In Hand Only", &featurePhoneShowHud, &featurePhoneShowHudUpdated},
 		{"Dynamic Health Bar", &featureDynamicHealthBar, &featureDynamicHealthBarUpdated },
-		{"Reset Player Model on Death", &featureResetPlayerModelOnDeath, nullptr, true},
+		{"Reset Player Model On Death", &featureResetPlayerModelOnDeath, nullptr, true},
 		{"Phone Bill", NULL, NULL, false},
-		{"Auto-Find vehicle despawn pointer", &featureFindDespawnPointer, &featureFindDespawnPointerUpdated, true },
+		{"Auto-Find Vehicle Despawn Pointer", &featureFindDespawnPointer, &featureFindDespawnPointerUpdated, true },
 	};
 
 	draw_menu_from_struct_def(lines, lineCount, &activeLineIndexMisc, caption, onconfirm_misc_menu);
