@@ -63,6 +63,7 @@ bool phone_toggle = false;
 
 bool featureFindDespawnPointer = false;
 bool featureFindDespawnPointerUpdated = false;
+bool despawnPointerDisabledMessage = true;
 
 bool featureShowVehiclePreviews = true;
 bool featureControllerIgnoreInTrainer = false;
@@ -740,7 +741,12 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	}
 	else if (featureFindDespawnPointerUpdated)
 	{
-		set_status_text("~r~Restart your game to disable Despawn Pointer");
+		if (despawnPointerDisabledMessage)
+		{
+			set_status_text("~r~Restart your game to disable Despawn Pointer");
+			despawnPointerDisabledMessage = false;
+			return;
+		}
 		enabledDespawnPointer = false;
 		return;
 	}
