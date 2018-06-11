@@ -441,6 +441,12 @@ const std::vector<double> VEH_STARSPUNISH_VALUES{ 2, 3, 4, 5 };
 int StarsPunishIndex = 0;
 bool StarsPunish_Changed = true;
 
+//Keep The Engine Running
+const std::vector<std::string> VEH_ENGINERUNNING_CAPTIONS{ "Never", "Always", "Hold Exit To Kill Engine" };
+const std::vector<double> VEH_ENGINERUNNING_VALUES{ 0, 1, 2 };
+int EngineRunningIndex = 0;
+bool EngineRunning_Changed = true;
+
 // player in vehicle state... assume true initially since our quicksave might have us in a vehicle already, in which case we can't check if we just got into one
 bool oldVehicleState = true;
 
@@ -1432,7 +1438,7 @@ void blip_delete_generic_settings(std::vector<StringPairSettingDBRow>* results)
 	results->push_back(StringPairSettingDBRow{ "blipDelete", blipDelete });
 }
 
-void del_sel_blip() {
+void del_sel_blip() { 
 	
 	std::string result = show_keyboard(NULL, (char*)blipDelete.c_str());
 	if (!result.empty())
@@ -1876,11 +1882,17 @@ void process_veh_menu(){
 	listItem->value = turnSignalsIndex;
 	menuItems.push_back(listItem);
 
-	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Keep The Engine Running";
-	toggleItem->value = i++;
-	toggleItem->toggleValue = &featureEngineRunning;
-	menuItems.push_back(toggleItem);
+	//toggleItem = new ToggleMenuItem<int>();
+	//toggleItem->caption = "Keep The Engine Running";
+	//toggleItem->value = i++;
+	//toggleItem->toggleValue = &featureEngineRunning;
+	//menuItems.push_back(toggleItem);
+
+	listItem = new SelectFromListMenuItem(VEH_ENGINERUNNING_CAPTIONS, onchange_veh_enginerunning_index);
+	listItem->wrap = false;
+	listItem->caption = "Keep Engine Running";
+	listItem->value = EngineRunningIndex;
+	menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(VEH_SPEEDLIMITER_CAPTIONS, onchange_veh_speedlimiter_index);
 	listItem->wrap = false;
@@ -2402,13 +2414,17 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 	///////////////////////////////////// KEEP THE ENGINE RUNNING ///////////////////////////////////////////////////////////////
 
-	if (bPlayerExists && featureEngineRunning && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
+	if (bPlayerExists && VEH_ENGINERUNNING_VALUES[EngineRunningIndex] > 0 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
 		Vehicle playerVehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
-		if (CONTROLS::IS_CONTROL_PRESSED(2, 75) && !PED::IS_PED_ON_ANY_BIKE(playerPed)) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(playerVehicle, false);
-		if (CONTROLS::IS_CONTROL_PRESSED(2, 75) && PED::IS_PED_ON_ANY_BIKE(playerPed) && EngineRunning_seconds > 1) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(playerVehicle, false);
+		if (VEH_ENGINERUNNING_VALUES[EngineRunningIndex] == 2)
+		{
+			if (CONTROLS::IS_CONTROL_PRESSED(2, 75) && !PED::IS_PED_ON_ANY_BIKE(playerPed)) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(playerVehicle, false);
+			if (CONTROLS::IS_CONTROL_PRESSED(2, 75) && PED::IS_PED_ON_ANY_BIKE(playerPed) && EngineRunning_seconds > 1) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(playerVehicle, false);
+		}
+		if (CONTROLS::IS_CONTROL_PRESSED(2, 75) && VEH_ENGINERUNNING_VALUES[EngineRunningIndex] == 1) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(playerVehicle, true);
 	}
 
-	if (bPlayerExists && featureEngineRunning && CONTROLS::IS_CONTROL_PRESSED(2, 75))
+	if (bPlayerExists && VEH_ENGINERUNNING_VALUES[EngineRunningIndex] == 2 && CONTROLS::IS_CONTROL_PRESSED(2, 75))
 	{
 		EngineRunning_secs_passed = clock() / CLOCKS_PER_SEC;
 		if (((clock() / CLOCKS_PER_SEC) - EngineRunning_secs_curr) != 0)
@@ -2419,16 +2435,16 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		}
 	}
 
-	if (bPlayerExists && featureEngineRunning && CONTROLS::IS_CONTROL_RELEASED(2, 75)) EngineRunning_seconds = 0;
+	if (bPlayerExists && VEH_ENGINERUNNING_VALUES[EngineRunningIndex] == 2 && CONTROLS::IS_CONTROL_RELEASED(2, 75)) EngineRunning_seconds = 0;
 
-	if (bPlayerExists && !featureEngineRunning && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
+	if (bPlayerExists && VEH_ENGINERUNNING_VALUES[EngineRunningIndex] == 0 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
 		Vehicle playerVehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		if (CONTROLS::IS_CONTROL_PRESSED(2, 75)) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(playerVehicle, false);
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	///////////////////////////////////////////////// SPEED LIMIT ///////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////// SPEED LIMIT ////////////////////////////////////////////////////////////////
 
 	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && (VEH_SPEEDLIMITER_VALUES[speedLimiterIndex] > 0) && speedlimiter_switch){
 		Vehicle vehlimit = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
@@ -3733,7 +3749,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-///////////////////////////// REMEMBER STEERING ANGLE //////////////////////////// CODED BY MRGTAMODSGERMAN 
+///////////////////////////// REMEMBER STEERING ANGLE //////////////////////////// ORIGINAL CODE BY MRGTAMODSGERMAN 
 	
 	if (featureVehSteerAngle && PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) && CONTROLS::IS_CONTROL_PRESSED(2, 75) && !PED::IS_PED_ON_ANY_BIKE(playerPed))
 	{
@@ -3872,6 +3888,7 @@ void reset_vehicle_globals(){
 	DetectionRangeIndex = 3;
 	PirsuitRangeIndex = 4;
 	StarsPunishIndex = 0;
+	EngineRunningIndex = 0;
 	SpeedingSpeedwayIndex = 5;
 	FineSizeIndex = 1;
 	VehBlipSymbolIndex = 0;
@@ -4615,6 +4632,7 @@ void add_vehicle_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"DetectionRangeIndex", std::to_string(DetectionRangeIndex)});
 	results->push_back(StringPairSettingDBRow{"PirsuitRangeIndex", std::to_string(PirsuitRangeIndex)});
 	results->push_back(StringPairSettingDBRow{"StarsPunishIndex", std::to_string(StarsPunishIndex)});
+	results->push_back(StringPairSettingDBRow{"EngineRunningIndex", std::to_string(EngineRunningIndex)});
 	results->push_back(StringPairSettingDBRow{"SpeedingSpeedwayIndex", std::to_string(SpeedingSpeedwayIndex)});
 	results->push_back(StringPairSettingDBRow{"FineSizeIndex", std::to_string(FineSizeIndex)});
 	results->push_back(StringPairSettingDBRow{"VehBlipSymbolIndex", std::to_string(VehBlipSymbolIndex)});
@@ -4697,6 +4715,9 @@ void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settin
 		}
 		else if (setting.name.compare("StarsPunishIndex") == 0){
 			StarsPunishIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("EngineRunningIndex") == 0){
+			EngineRunningIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("SpeedingSpeedwayIndex") == 0){
 			SpeedingSpeedwayIndex = stoi(setting.value);
@@ -4867,6 +4888,10 @@ void onchange_pirsuit_range_index(int value, SelectFromListMenuItem* source){
 }
 void onchange_stars_punish_index(int value, SelectFromListMenuItem* source){
 	StarsPunishIndex = value;
+	PositionChanged = true;
+}
+void onchange_veh_enginerunning_index(int value, SelectFromListMenuItem* source){
+	EngineRunningIndex = value;
 	PositionChanged = true;
 }
 void onchange_speeding_speedway_index(int value, SelectFromListMenuItem* source){
