@@ -264,6 +264,8 @@ void onchange_veh_turn_signals_index(int value, SelectFromListMenuItem* source);
 
 void onchange_veh_speedlimiter_index(int value, SelectFromListMenuItem* source);
 
+void onchange_veh_enginerunning_index(int value, SelectFromListMenuItem* source);
+
 void onchange_veh_lightsOff_index(int value, SelectFromListMenuItem* source);
 
 void set_old_vehicle_state(bool updatedState);

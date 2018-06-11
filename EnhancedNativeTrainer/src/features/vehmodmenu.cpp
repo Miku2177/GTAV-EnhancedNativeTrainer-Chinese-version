@@ -1523,11 +1523,126 @@ bool process_vehmod_category_special_menu(int category){
 	return false;
 }
 
+bool process_vehmod_engine_sound() {
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+
+	if (!ENTITY::DOES_ENTITY_EXIST(playerPed) || !PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
+		return false;
+	}
+
+	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+
+	int modChoiceMenuIndex = 0;
+
+	std::vector<int> values;
+
+	for (int e = 0; e < ENGINE_SOUND_COUNT; e++) {
+		values.push_back(e);
+	}
+
+	Player player = PLAYER::PLAYER_ID();
+
+	std::vector<MenuItem<int>*> menuItems;
+	for (int i = 0; i < values.size(); i++) {
+		MenuItem<int> *item = new MenuItem<int>();
+		std::string specialName = ENGINE_SOUND[i]; //geSpecialItemTitle(SPECIAL_ID_FOR_ENGINE_SOUND, i);
+		if (!specialName.empty()) {
+			item->caption = specialName;
+		}
+		else if (i == 0 && values.at(i) == -1) {
+			item->caption = "Default";
+		}
+		else {
+			std::ostringstream ss;
+			ss << getModCategoryName(SPECIAL_ID_FOR_ENGINE_SOUND) << " Item " << i;
+			item->caption = ss.str();
+		}
+		item->value = values.at(i);
+		item->isLeaf = true;
+		menuItems.push_back(item);
+	}
+
+	draw_generic_menu<int>(menuItems, &modChoiceMenuIndex, "Engine Sounds List", onconfirm_vehmod_category_menu, NULL, NULL, vehicle_menu_interrupt);
+
+	return false;
+}
+
+bool onconfirm_vehmod_engine_sound_menu(MenuItem<int> choice) {
+
+	return process_vehmod_engine_sound();
+}
+
+void set_engine_sound(MenuItem<int> choice) {
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+
+	if (ENTITY::DOES_ENTITY_EXIST(playerPed) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, false))
+	{
+		Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
+		bool correct_name = false;
+
+		std::string result = show_keyboard(NULL, "\"\""); 
+		
+		for (int i = 0; i < ENGINE_SOUND_COUNT; i++)
+		{
+			if (ENGINE_SOUND[i] == result)
+			{
+				correct_name = true;
+				current_picked_engine_sound = i;
+			}
+		}
+
+		if (correct_name == true)
+		{
+			char *currSound = new char[result.length() + 1];
+			strcpy(currSound, result.c_str());
+			VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
+			AUDIO::_SET_VEHICLE_AUDIO(veh, currSound);
+			set_status_text("Changed engine sound");
+		}
+		else set_status_text("Either the name is incorrect, or it's not in quotes");
+	}
+}
+
+bool process_vehmod_engine_sound_menu() {
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+
+	if (!ENTITY::DOES_ENTITY_EXIST(playerPed) || !PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
+		return false;
+	}
+
+	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+
+	std::vector<MenuItem<int> *> menuItems;
+	MenuItem<int> *item;
+	std::ostringstream ss;
+
+	item = new MenuItem<int>();
+	ss << "All ~HUD_COLOUR_GREYLIGHT~(" << ENGINE_SOUND_COUNT << ")";
+	item->caption = ss.str();
+	item->value = 0;
+	item->isLeaf = false;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "Enter Name (in quotes)";
+	item->isLeaf = true;
+	item->onConfirmFunction = set_engine_sound;
+	item->value = 1;
+	menuItems.push_back(item);
+
+	ss.str(""), ss.clear();
+
+	return draw_generic_menu<int>(menuItems, nullptr, getModCategoryName(SPECIAL_ID_FOR_ENGINE_SOUND), onconfirm_vehmod_engine_sound_menu, nullptr, nullptr, nullptr);
+}
+
 bool process_vehmod_category_menu(int category){
 	int actualCategory = category;
 
 	if (category == SPECIAL_ID_FOR_WHEEL_SELECTION){
 		return process_vehmod_wheel_selection_menu();
+	}
+	if (category == SPECIAL_ID_FOR_ENGINE_SOUND) {
+		return process_vehmod_engine_sound_menu();
 	}
 	else if (category > SPECIAL_ID_START){
 		return process_vehmod_category_special_menu(category);
@@ -1760,14 +1875,14 @@ bool process_vehmod_menu(){
 		item->isLeaf = false;
 		menuItems.push_back(item);
 
-		ss.str(""), ss.clear();
+		//ss.str(""), ss.clear();
 
-		item = new MenuItem<int>();
-		ss << getModCategoryName(SPECIAL_ID_FOR_ENGINE_SOUND) << " ~HUD_COLOUR_GREYLIGHT~(" << ENGINE_SOUND_COUNT << ")";
-		item->caption = ss.str();
-		item->value = SPECIAL_ID_FOR_ENGINE_SOUND;
-		item->isLeaf = false;
-		menuItems.push_back(item);
+		//item = new MenuItem<int>();
+		//ss << getModCategoryName(SPECIAL_ID_FOR_ENGINE_SOUND) << " ~HUD_COLOUR_GREYLIGHT~(" << ENGINE_SOUND_COUNT << ")";
+		//item->caption = ss.str();
+		//item->value = SPECIAL_ID_FOR_ENGINE_SOUND;
+		//item->isLeaf = false;
+		//menuItems.push_back(item);
 
 		ss.str(""), ss.clear();
 
@@ -1780,6 +1895,14 @@ bool process_vehmod_menu(){
 
 		ss.str(""), ss.clear();
 
+		item = new MenuItem<int>();
+		item->caption = getModCategoryName(SPECIAL_ID_FOR_ENGINE_SOUND);
+		item->value = SPECIAL_ID_FOR_ENGINE_SOUND;
+		item->isLeaf = false;
+		menuItems.push_back(item);
+
+		ss.str(""), ss.clear();
+		
 		item = new MenuItem<int>();
 		item->caption = getModCategoryName(SPECIAL_ID_FOR_WHEEL_SELECTION);
 		item->value = SPECIAL_ID_FOR_WHEEL_SELECTION;
@@ -1854,7 +1977,7 @@ bool process_vehmod_menu(){
 	if (!isWeird && !isAircraft){
 		MenuItem<int>* item = new MenuItem<int>();
 		item->caption = "Change Plate Text";
-		item->isLeaf = false;
+		item->isLeaf = true;
 		item->onConfirmFunction = set_plate_text;
 		item->value = SPECIAL_ID_FOR_PLATE_TEXT;
 		menuItems.push_back(item);
