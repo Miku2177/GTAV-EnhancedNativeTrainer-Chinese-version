@@ -3567,7 +3567,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			}
 
 			// You'll be fined if you don't move
-			if ((vehroadlaws_speed < 1 && vehcoplaws_speed < 1 && tempgotcha_x < 20 && tempgotcha_y < 20 && been_seen_by_a_cop == true) || (been_seen_by_a_cop == true && !PED::IS_PED_IN_VEHICLE(cop_that_fines_you, fine_cop_car, true)))
+			if ((vehroadlaws_speed < 1 && vehcoplaws_speed < 1 && tempgotcha_x < 50 && tempgotcha_y < 50 && been_seen_by_a_cop == true) || (been_seen_by_a_cop == true && !PED::IS_PED_IN_VEHICLE(cop_that_fines_you, fine_cop_car, true)))
 			{
 				VEHICLE::SET_VEHICLE_SIREN(fine_cop_car, false);
 				SinceStop_secs_passed = clock() / CLOCKS_PER_SEC;
@@ -3583,7 +3583,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 					if (PED::IS_PED_IN_VEHICLE(playerPed, vehroadlaws, true))
 					{
 						AI::TASK_LEAVE_VEHICLE(cop_that_fines_you, fine_cop_car, 0);
-						AI::TASK_GOTO_ENTITY_AIMING(cop_that_fines_you, playerPed, 2.0, 30.0);
+						AI::TASK_GOTO_ENTITY_AIMING(cop_that_fines_you, playerPed, 4.5, 30.0);
 						cop_walking = true;
 					}
 				}
