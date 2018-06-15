@@ -90,7 +90,14 @@ bool featurePrison_Yard = true;
 
 bool featureNoRagdoll = false;
 bool featureNoRagdollUpdated = false;
+bool featureRagdollIfInjured = false;
+bool featureRagdollIfInjuredUpdated = false;
 
+// ragdoll if injured variables
+bool been_damaged_by_weapon, ragdoll_task = false;
+float been_damaged_health, been_damaged_armor = -1;
+int ragdoll_secs_passed, ragdoll_secs_curr, ragdoll_seconds = 0;
+//
 Ped oldplayerPed = -1;
 int tick, playerDataMenuIndex, playerPrisonMenuIndex = 0;
 int death_time2 = -1;
@@ -1247,6 +1254,56 @@ void update_features(){
 		featureNoRagdollUpdated = false;
 	}
 
+	//Radgoll If Injured
+	if (featureRagdollIfInjured) {
+		auto addr = getScriptHandleBaseAddress(playerPed);
+		float curr_health = (*(float *)(addr + 0x280)) - 100;
+		float curr_playerArmour = PED::GET_PED_ARMOUR(playerPed);
+
+		if (!ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_OBJECT(playerPed) && !ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_PED(playerPed) && !ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_VEHICLE(playerPed) && !WEAPON::HAS_PED_BEEN_DAMAGED_BY_WEAPON(playerPed, 0, 2))
+		{
+			been_damaged_health = (*(float *)(addr + 0x280)) - 100;
+			been_damaged_armor = PED::GET_PED_ARMOUR(playerPed);
+		}
+
+		if ((been_damaged_health != curr_health || been_damaged_armor != curr_playerArmour))
+		{
+			if (WEAPON::HAS_PED_BEEN_DAMAGED_BY_WEAPON(playerPed, 0, 2) && !WEAPON::HAS_PED_BEEN_DAMAGED_BY_WEAPON(playerPed, 0, 1) && !PED::IS_PED_RAGDOLL(playerPed) && 
+				PED::IS_PED_ON_FOOT(playerPed) && ragdoll_seconds == 0) been_damaged_by_weapon = true;
+			been_damaged_health = curr_health;
+			been_damaged_armor = curr_playerArmour;
+		}
+
+		if (been_damaged_by_weapon == true)
+		{
+			int time1 = (rand() % 3000 + 0); // UP MARGIN + DOWN MARGIN
+			int time2 = (rand() % 3000 + 0); 
+			int ragdollType = (rand() % 3 + 0); 
+			int ScreamType = (rand() % 8 + 5);
+			AUDIO::PLAY_PAIN(ScreamType, 0, 0);
+			AUDIO::_PLAY_AMBIENT_SPEECH1(PLAYER::PLAYER_ID(), "GENERIC_SHOCKED_HIGH", "SPEECH_PARAMS_FORCE");
+			PED::SET_PED_TO_RAGDOLL(playerPed, time1, time2, ragdollType, true, true, false);
+			been_damaged_by_weapon = false;
+			ragdoll_task = true;
+		}
+
+		if (ragdoll_task == true)
+		{
+			ragdoll_secs_passed = clock() / CLOCKS_PER_SEC;
+			if (((clock() / CLOCKS_PER_SEC) - ragdoll_secs_curr) != 0)
+			{
+				ragdoll_seconds = ragdoll_seconds + 1;
+				ragdoll_secs_curr = ragdoll_secs_passed;
+			}
+			
+			if (ragdoll_seconds == 4)
+			{
+				ragdoll_task = false;
+				ragdoll_seconds = 0;
+			}
+		}
+	}
+
 	//Player Invisible
 	if(featurePlayerInvisibleUpdated){
 		featurePlayerInvisibleUpdated = false;
@@ -1536,7 +1593,7 @@ bool onconfirm_player_menu(MenuItem<int> choice){
 }
 
 void process_player_menu(){
-	const int lineCount = 21;
+	const int lineCount = 22;
 
 	std::string caption = "Player Options";
 
@@ -1554,6 +1611,7 @@ void process_player_menu(){
 		{"Fast Run", &featurePlayerFastRun, &featurePlayerFastRunUpdated, true},
 		{"Super Jump", &featurePlayerSuperJump, NULL, true},
 		{"No Ragdoll", &featureNoRagdoll, &featureNoRagdollUpdated, true},
+		{"Ragdoll If Injured", &featureRagdollIfInjured, &featureRagdollIfInjuredUpdated, true },
 		{"Invisibility", &featurePlayerInvisible, &featurePlayerInvisibleUpdated, true},
 		{"Invisibility In Vehicle", &featurePlayerInvisibleInVehicle, &featurePlayerInvisibleInVehicleUpdated, true },
 		{"Drunk", &featurePlayerDrunk, &featurePlayerDrunkUpdated, true},
@@ -1786,6 +1844,7 @@ void reset_globals(){
 		featurePlayerLife_Changed =
 		featurePrison_Hardcore =
 		featureNoRagdoll =
+		featureRagdollIfInjured =
 
 		featureWantedLevelFrozen = false;
 
@@ -1805,6 +1864,7 @@ void reset_globals(){
 		featurePrison_Yard = 
 
 		featureNoRagdollUpdated =
+		featureRagdollIfInjuredUpdated =
 		featureWantedLevelFrozenUpdated = true;
 
 	set_status_text("All settings reset to defaults");
@@ -2017,6 +2077,7 @@ void add_player_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerFastRun", &featurePlayerFastRun, &featurePlayerFastRunUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerSuperJump", &featurePlayerSuperJump});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoRagdoll", &featureNoRagdoll, &featureNoRagdollUpdated});
+	results->push_back(FeatureEnabledLocalDefinition{"featureRagdollIfInjured", &featureRagdollIfInjured, &featureRagdollIfInjuredUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerInvisible", &featurePlayerInvisible, &featurePlayerInvisibleUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerInvisibleInVehicle", &featurePlayerInvisibleInVehicle, &featurePlayerInvisibleInVehicleUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerDrunk", &featurePlayerDrunk, &featurePlayerDrunkUpdated});
