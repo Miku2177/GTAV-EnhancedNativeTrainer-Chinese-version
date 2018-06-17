@@ -84,6 +84,8 @@ void invincibility_switching();
 
 void doorslocked_switching();
 
+void seat_change_hotkey();
+
 void engineonoff_switching();
 
 void engine_kill();
