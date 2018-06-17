@@ -81,6 +81,8 @@ std::vector<Vehicle> STEERING;
 
 int EngineRunning_secs_passed, EngineRunning_secs_curr, EngineRunning_seconds = -1;
 
+int currseat = -1;
+
 // Fuel Option Variables
 bool Car_Refuel = false;
 int Time_tick = 0;
@@ -839,6 +841,27 @@ bool process_veh_door_menu(){
 	menuItems.push_back(item);
 
 	return draw_generic_menu<int>(menuItems, &doorOptionsMenuIndex, caption, onconfirm_vehdoor_menu, NULL, NULL);
+}
+
+void seat_change_hotkey()
+{
+	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
+	Player player = PLAYER::PLAYER_ID();
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+
+	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
+		Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+		Hash currHotkeyVehModel = ENTITY::GET_ENTITY_MODEL(veh);
+		int seats = VEHICLE::GET_VEHICLE_MODEL_NUMBER_OF_SEATS(currHotkeyVehModel);
+
+		if (currseat == (seats - 2)) currseat = -2;
+		currseat = currseat + 1;
+
+		PED::SET_PED_INTO_VEHICLE(playerPed, veh, currseat);
+	}
+	else {
+		set_status_text("Player isn't in a vehicle");
+	}
 }
 
 bool onconfirm_seat_menu(MenuItem<int> choice) {
@@ -2156,6 +2179,9 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		VEHICLE::SET_VEHICLE_DOORS_LOCKED(veh, 4);
 		PED::SET_PED_CAN_BE_DRAGGED_OUT(playerPed, false);
 	}
+
+	// Hotkey for Seats
+	if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) currseat = -1;
 
 	//Prevents player from wearing a helmet
 	if (bPlayerExists){

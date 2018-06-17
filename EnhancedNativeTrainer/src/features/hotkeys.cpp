@@ -237,6 +237,9 @@ void trigger_function_for_hotkey_onkeyup(int hotkey)
 	case HKEY_DOORS_LOCKED_TOGGLE:
 		doorslocked_switching();
 		break;
+	case HKEY_SEAT_CHANGE_TOGGLE:
+		seat_change_hotkey();
+		break;
 
 	default:
 	{

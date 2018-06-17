@@ -1254,7 +1254,7 @@ void update_features(){
 		featureNoRagdollUpdated = false;
 	}
 
-	//Radgoll If Injured
+	//Ragdoll If Shot
 	if (featureRagdollIfInjured) {
 		auto addr = getScriptHandleBaseAddress(playerPed);
 		float curr_health = (*(float *)(addr + 0x280)) - 100;
@@ -1611,7 +1611,7 @@ void process_player_menu(){
 		{"Fast Run", &featurePlayerFastRun, &featurePlayerFastRunUpdated, true},
 		{"Super Jump", &featurePlayerSuperJump, NULL, true},
 		{"No Ragdoll", &featureNoRagdoll, &featureNoRagdollUpdated, true},
-		{"Ragdoll If Injured", &featureRagdollIfInjured, &featureRagdollIfInjuredUpdated, true },
+		{"Ragdoll If Shot", &featureRagdollIfInjured, &featureRagdollIfInjuredUpdated, true },
 		{"Invisibility", &featurePlayerInvisible, &featurePlayerInvisibleUpdated, true},
 		{"Invisibility In Vehicle", &featurePlayerInvisibleInVehicle, &featurePlayerInvisibleInVehicleUpdated, true },
 		{"Drunk", &featurePlayerDrunk, &featurePlayerDrunkUpdated, true},
