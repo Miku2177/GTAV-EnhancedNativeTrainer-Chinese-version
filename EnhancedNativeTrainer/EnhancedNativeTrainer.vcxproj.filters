@@ -112,7 +112,6 @@
     <ClCompile Include="main.cpp">
       <Filter>src\features</Filter>
     </ClCompile>
-    <ClCompile Include="Source.cpp" />
     <ClCompile Include="src\features\prison_break.cpp" />
     <ClCompile Include="src\features\fuel.cpp" />
     <ClCompile Include="src\features\road_laws.cpp" />

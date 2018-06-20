@@ -71,9 +71,9 @@ bool steered_left, steered_right = false;
 Vehicle veh_steering;
 std::vector<Vehicle> STEERING;
 
-int EngineRunning_secs_passed, EngineRunning_secs_curr, EngineRunning_seconds = -1;
-
 int currseat = -1;
+
+int engine_tick = 0;
 
 // Rememeber Vehicles Option Variables
 Blip blip_veh[1];
@@ -1968,26 +1968,17 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 	if (bPlayerExists && VEH_ENGINERUNNING_VALUES[EngineRunningIndex] > 0 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
 		Vehicle playerVehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
-		if (VEH_ENGINERUNNING_VALUES[EngineRunningIndex] == 2)
-		{
-			if (CONTROLS::IS_CONTROL_PRESSED(2, 75) && !PED::IS_PED_ON_ANY_BIKE(playerPed)) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(playerVehicle, false);
-			if (CONTROLS::IS_CONTROL_PRESSED(2, 75) && PED::IS_PED_ON_ANY_BIKE(playerPed) && EngineRunning_seconds > 1) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(playerVehicle, false);
-		}
 		if (CONTROLS::IS_CONTROL_PRESSED(2, 75) && VEH_ENGINERUNNING_VALUES[EngineRunningIndex] == 1) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(playerVehicle, true);
+		if (CONTROLS::IS_CONTROL_PRESSED(2, 75) && VEH_ENGINERUNNING_VALUES[EngineRunningIndex] == 2) engine_tick = engine_tick + 1;
 	}
 
-	if (bPlayerExists && VEH_ENGINERUNNING_VALUES[EngineRunningIndex] == 2 && CONTROLS::IS_CONTROL_PRESSED(2, 75))
-	{
-		EngineRunning_secs_passed = clock() / CLOCKS_PER_SEC;
-		if (((clock() / CLOCKS_PER_SEC) - EngineRunning_secs_curr) != 0)
-		{
-			EngineRunning_seconds = EngineRunning_seconds + 1;
-			EngineRunning_secs_curr = EngineRunning_secs_passed;
-			if (EngineRunning_seconds > 0) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), true);
-		}
-	}
-
-	if (bPlayerExists && VEH_ENGINERUNNING_VALUES[EngineRunningIndex] == 2 && CONTROLS::IS_CONTROL_RELEASED(2, 75)) EngineRunning_seconds = 0;
+	if (engine_tick < 11 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && VEH_ENGINERUNNING_VALUES[EngineRunningIndex] == 2 && (!featureVehSteerAngle || PED::IS_PED_ON_ANY_BIKE(playerPed))) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), true);
+	if (engine_tick > 10 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && VEH_ENGINERUNNING_VALUES[EngineRunningIndex] == 2 && (!featureVehSteerAngle || PED::IS_PED_ON_ANY_BIKE(playerPed))) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), false);
+	// Remember Wheel Angle feature compatibility lines
+	if (engine_tick < 3 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && VEH_ENGINERUNNING_VALUES[EngineRunningIndex] == 2 && featureVehSteerAngle && !PED::IS_PED_ON_ANY_BIKE(playerPed)) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), true);
+	if (engine_tick > 2 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && VEH_ENGINERUNNING_VALUES[EngineRunningIndex] == 2 && featureVehSteerAngle && !PED::IS_PED_ON_ANY_BIKE(playerPed)) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), false);
+	//
+	if (bPlayerExists && VEH_ENGINERUNNING_VALUES[EngineRunningIndex] == 2 && CONTROLS::IS_CONTROL_RELEASED(2, 75)) engine_tick = 0;
 
 	if (bPlayerExists && VEH_ENGINERUNNING_VALUES[EngineRunningIndex] == 0 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
 		Vehicle playerVehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
@@ -2277,7 +2268,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		Vehicle myVehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		Vector3 myvehicle_coords = ENTITY::GET_ENTITY_COORDS(myVehicle, true);
 		float myvehicle_heading = ENTITY::GET_ENTITY_HEADING(myVehicle); 
-		
+
 		STREAMING::REQUEST_MODEL(GAMEPLAY::GET_HASH_KEY("BMX"));
 		while (!STREAMING::HAS_MODEL_LOADED(GAMEPLAY::GET_HASH_KEY("BMX"))) {
 			make_periodic_feature_call();
@@ -2290,13 +2281,15 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			ENTITY::ATTACH_ENTITY_TO_ENTITY_PHYSICALLY(/*ENTITY_1*/myVehicle, /*ENTITY_2*/temp_object, /*BONE_INDEX_1*/0, /*BONE_INDEX_2*/0.0, /*XPOS_1*/50.0, /*YPOS_1*/50.0, /*ZPOS_1*/-0.5,
 				/*XPOS_2*/0.0, /*YPOS_2*/0.0, /*ZPOS_2*/0.0, /*XROT*/0.0, /*YROT*/0.0, /*ZROT*/0.0, /*BREAKFORCE*/1.0, /*FIXEDROT*/true, /*P15*/false, /*COLLISION*/false, /*P17*/1, /*P18*/true);
 			ENTITY::SET_ENTITY_ALPHA(temp_object, 0, 0);
-			WAIT(1000);
+			if (VEH_ENGINERUNNING_VALUES[EngineRunningIndex] < 2) WAIT(1000);
+			if (VEH_ENGINERUNNING_VALUES[EngineRunningIndex] == 2) WAIT(100); // Keep Engine Running feature compatibility line
+				
 			ENTITY::DETACH_ENTITY(myVehicle, true, true);
 
 			VEHICLE::DELETE_VEHICLE(&temp_object);
 		}
 	} 
-
+	
 ///////////////////////////////////////////////////////////////////////////////////
 
 
