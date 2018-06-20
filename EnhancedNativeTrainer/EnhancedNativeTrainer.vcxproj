@@ -17,7 +17,13 @@
     <ClCompile Include="src\features\anims.cpp" />
     <ClCompile Include="src\features\area_effect.cpp" />
     <ClCompile Include="src\features\bodyguards.cpp" />
+    <ClCompile Include="src\features\drive_to_marker.cpp" />
+    <ClCompile Include="src\features\fuel.cpp" />
     <ClCompile Include="src\features\hotkeys.cpp" />
+    <ClCompile Include="src\features\peds_dont_like_weapons.cpp" />
+    <ClCompile Include="src\features\prison_break.cpp" />
+    <ClCompile Include="src\features\road_laws.cpp" />
+    <ClCompile Include="src\features\speed_altitude.cpp" />
     <ClCompile Include="src\features\vehicle_weapons.cpp" />
     <ClCompile Include="src\features\vehmod_interiorcols.cpp" />
     <ClCompile Include="src\features\misc.cpp" />
@@ -59,9 +65,15 @@
     <ClInclude Include="src\features\anims.h" />
     <ClInclude Include="src\features\area_effect.h" />
     <ClInclude Include="src\features\bodyguards.h" />
+    <ClInclude Include="src\features\drive_to_marker.h" />
+    <ClInclude Include="src\features\fuel.h" />
+    <ClInclude Include="src\features\peds_dont_like_weapons.h" />
+    <ClInclude Include="src\features\prison_break.h" />
     <ClInclude Include="src\features\propplacement.h" />
     <ClInclude Include="src\features\props.h" />
     <ClInclude Include="src\features\hotkeys.h" />
+    <ClInclude Include="src\features\road_laws.h" />
+    <ClInclude Include="src\features\speed_altitude.h" />
     <ClInclude Include="src\features\time.h" />
     <ClInclude Include="src\features\vehicle_weapons.h" />
     <ClInclude Include="src\io\config_io.h" />
@@ -294,7 +306,7 @@
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>EnhancedNativeTrainer</RootNamespace>
     <ProjectName>EnhancedNativeTrainer</ProjectName>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
