@@ -1580,11 +1580,14 @@ void set_engine_sound(MenuItem<int> choice) {
 		Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 		bool correct_name = false;
 
-		std::string result = show_keyboard(NULL, "\"\""); 
-		
+		std::string result = show_keyboard(NULL, NULL);
+		std::string amendedResult = "\"" + result + "\"";
+		std::transform(amendedResult.begin(), amendedResult.end(), amendedResult.begin(), ::toupper);
+		char *keyboardInput = &amendedResult[0u];
+
 		for (int i = 0; i < ENGINE_SOUND_COUNT; i++)
 		{
-			if (ENGINE_SOUND[i] == result)
+			if (ENGINE_SOUND[i] == amendedResult)
 			{
 				correct_name = true;
 				current_picked_engine_sound = i;
@@ -1593,13 +1596,11 @@ void set_engine_sound(MenuItem<int> choice) {
 
 		if (correct_name == true)
 		{
-			char *currSound = new char[result.length() + 1];
-			strcpy(currSound, result.c_str());
 			VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
-			AUDIO::_SET_VEHICLE_AUDIO(veh, currSound);
+			AUDIO::_SET_VEHICLE_AUDIO(veh, keyboardInput);
 			set_status_text("Changed engine sound");
 		}
-		else set_status_text("Either the name is incorrect, or it's not in quotes");
+		else set_status_text("Either the name is incorrect or vehicle doesn't exist");
 	}
 }
 
@@ -1624,7 +1625,7 @@ bool process_vehmod_engine_sound_menu() {
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Enter Name (in quotes)";
+	item->caption = "Enter Name";
 	item->isLeaf = true;
 	item->onConfirmFunction = set_engine_sound;
 	item->value = 1;
