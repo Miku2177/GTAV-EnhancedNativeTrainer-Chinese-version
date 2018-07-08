@@ -1179,6 +1179,7 @@ bool ENTDatabase::save_vehicle(Vehicle veh, std::string saveName, sqlite3_int64 
 		sqlite3_bind_int(stmt, index++, interiorCol);
 
 		sqlite3_bind_int(stmt, index++, current_picked_engine_sound);
+		current_picked_engine_sound = -1;
 
 		// commit
 		sqlite3_step(stmt);

@@ -59,7 +59,10 @@ bool featureMiscHideHud = false;
 bool featureMiscHideHudUpdated = false;
 bool featurePhoneShowHud = false;
 bool featurePhoneShowHudUpdated = false;
+bool featureInVehicleNoHud = false;
+bool featureInVehicleNoHudUpdated = false;
 bool phone_toggle = false;
+bool phone_toggle_vehicle = false;
 
 bool featureFindDespawnPointer = false;
 bool featureFindDespawnPointerUpdated = false;
@@ -351,7 +354,7 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 }
 
 void process_misc_menu(){
-	const int lineCount = 16;
+	const int lineCount = 17;
 
 	std::string caption = "Miscellaneous Options";
 
@@ -367,7 +370,8 @@ void process_misc_menu(){
 		{"No Flight Music", &featureFlyingMusic, &featureFlyingMusicUpdated, true},
 		{"No Police Scanner", &featurePoliceScanner, &featurePoliceScannerUpdated, true },
 		{"Hide HUD", &featureMiscHideHud, &featureMiscHideHudUpdated},
-		{"Show HUD If Phone In Hand Only", &featurePhoneShowHud, &featurePhoneShowHudUpdated},
+		{"Show HUD If Phone In Hand", &featurePhoneShowHud, &featurePhoneShowHudUpdated},
+		{"Show HUD In Vehicle", &featureInVehicleNoHud, &featureInVehicleNoHudUpdated },
 		{"Dynamic Health Bar", &featureDynamicHealthBar, &featureDynamicHealthBarUpdated },
 		{"Reset Player Model On Death", &featureResetPlayerModelOnDeath, nullptr, true},
 		{"Phone Bill", NULL, NULL, false},
@@ -390,6 +394,7 @@ void onchange_misc_phone_freeseconds_index(int value, SelectFromListMenuItem* so
 void reset_misc_globals(){
 	featureMiscHideHud =
 		featurePhoneShowHud = 
+		featureInVehicleNoHud =
 		featureDynamicHealthBar =
 		featurePlayerRadio =
 		featureMiscLockRadio =
@@ -415,6 +420,7 @@ void reset_misc_globals(){
 		featureRadioAlwaysOffUpdated =
 		featureMiscHideHudUpdated =
 		featurePhoneShowHudUpdated =
+		featureInVehicleNoHudUpdated =
 		featureDynamicHealthBarUpdated =
 		featureWantedMusicUpdated = 
 		featureFlyingMusicUpdated =
@@ -571,27 +577,47 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		}
 		
 		if (PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed)) {
-		//if (CONTROLS::IS_CONTROL_PRESSED(2, 27)) {
 			UI::DISPLAY_RADAR(true);
 			phone_toggle = true;
 		}
 	
 		if (!PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed)) {
-		//if (CONTROLS::IS_CONTROL_PRESSED(2, 177)) {
 			UI::DISPLAY_RADAR(false);
 			phone_toggle = false;
 		}
-
 	}
-	else if (featurePhoneShowHudUpdated && !featureMiscHideHud){
+	else if (!featureMiscHideHud && !featureInVehicleNoHud){ // featurePhoneShowHudUpdated &&
 		UI::DISPLAY_RADAR(true);
 		phone_toggle = false;
 	}
+	
+	// show hud in vehicle only
+	if (featureInVehicleNoHud) {
+		if (!phone_toggle_vehicle && !featurePhoneShowHud)
+		{
+			UI::DISPLAY_RADAR(false);
+			featureMiscHideHudUpdated = false;
+		}
 
+		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1)) {
+			UI::DISPLAY_RADAR(true);
+			phone_toggle_vehicle = true;
+		}
+
+		if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && !featurePhoneShowHud) {
+			UI::DISPLAY_RADAR(false);
+			phone_toggle_vehicle = false;
+		}
+	}
+	else if (!featureMiscHideHud && !featurePhoneShowHud) { // featureInVehicleNoHudUpdated &&
+		UI::DISPLAY_RADAR(true);
+		phone_toggle_vehicle = false;
+	}
+	
 	// DYNAMIC HEALTH BAR
 	if (featureDynamicHealthBar)
 	{
-		if (!featureMiscHideHud && !featurePhoneShowHud) UI::DISPLAY_RADAR(false); // There is no need to hide HUD if it's already hidden
+		if (!featureMiscHideHud && !featurePhoneShowHud && !featureInVehicleNoHud) UI::DISPLAY_RADAR(false); // There is no need to hide HUD if it's already hidden
 		
 		auto addr = getScriptHandleBaseAddress(playerPed);
 		float health = (*(float *)(addr + 0x280)) - 100;
@@ -765,6 +791,8 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 	results->push_back(FeatureEnabledLocalDefinition{"featureMiscLockRadio", &featureMiscLockRadio});
 	results->push_back(FeatureEnabledLocalDefinition{"featureMiscHideHud", &featureMiscHideHud, &featureMiscHideHudUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePhoneShowHud", &featurePhoneShowHud, &featurePhoneShowHudUpdated});
+	results->push_back(FeatureEnabledLocalDefinition{ "featureInVehicleNoHud", &featureInVehicleNoHud, &featureInVehicleNoHudUpdated });
+
 	results->push_back(FeatureEnabledLocalDefinition{"featureDynamicHealthBar", &featureDynamicHealthBar, &featureDynamicHealthBarUpdated});
 		
 	results->push_back(FeatureEnabledLocalDefinition{"featureControllerIgnoreInTrainer", &featureControllerIgnoreInTrainer});

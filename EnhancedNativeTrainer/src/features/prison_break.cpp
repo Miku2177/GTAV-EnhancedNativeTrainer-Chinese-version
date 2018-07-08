@@ -226,7 +226,7 @@ void prison_break()
 
 			// You don't need a parachute in prison
 			if (WEAPON::HAS_PED_GOT_WEAPON(playerPed_Prison, PARACHUTE_ID, FALSE))	WEAPON::REMOVE_WEAPON_FROM_PED(playerPed_Prison, PARACHUTE_ID);
-
+			
 			// How much time before discharge
 			if (PLAYER_DISCHARGE_VALUES[current_player_discharge] > 0)
 			{
@@ -327,7 +327,7 @@ void prison_break()
 					randomize_jail = (1 + rand() % 10);
 					if (randomize_jail < 6) JailGuard_Weapon3 = GAMEPLAY::GET_HASH_KEY("WEAPON_STUNGUN");
 					else JailGuard_Weapon3 = GAMEPLAY::GET_HASH_KEY("WEAPON_NIGHTSTICK");
-					if (WEAPON::IS_PED_ARMED(guards[i], 7) && WEAPON::IS_PED_ARMED(guards[i], 6) && PED::GET_PED_TYPE(guards[i]) != 0 && PED::GET_PED_TYPE(guards[i]) != 1 && PED::GET_PED_TYPE(guards[i]) != 2 &&
+					if (WEAPON::IS_PED_ARMED(guards[i], 7) && WEAPON::IS_PED_ARMED(guards[i], 6) && PED::GET_PED_TYPE(guards[i]) != 0 && PED::GET_PED_TYPE(guards[i]) != 1 && PED::GET_PED_TYPE(guards[i]) != 2 && PED::GET_PED_TYPE(guards[i]) != 3 &&
 						PED::GET_PED_TYPE(guards[i]) != 6 && PED::GET_PED_TYPE(guards[i]) != 27)
 					{
 						if (!featurePrison_Hardcore) {
@@ -345,12 +345,13 @@ void prison_break()
 					distance_from_guard_y = my_position_in_prison.y - guard_position_in_prison.y;
 					if (distance_from_guard_x < 0) distance_from_guard_x = distance_from_guard_x * -1;
 					if (distance_from_guard_y < 0) distance_from_guard_y = distance_from_guard_y * -1;
-					if (distance_from_guard_x < 55 && distance_from_guard_y < 55 && !WEAPON::IS_PED_ARMED(guards[i], 7) && PED::GET_PED_TYPE(guards[i]) != 0 && PED::GET_PED_TYPE(guards[i]) != 1 && PED::GET_PED_TYPE(guards[i]) != 2)
+					if (distance_from_guard_x < 55 && distance_from_guard_y < 55 && !WEAPON::IS_PED_ARMED(guards[i], 7) && PED::GET_PED_TYPE(guards[i]) != 0 && PED::GET_PED_TYPE(guards[i]) != 1 && PED::GET_PED_TYPE(guards[i]) != 2 && 
+						PED::GET_PED_TYPE(guards[i]) != 3)
 					{
 						std::set<Ped> peds = get_nearby_peds(PLAYER::PLAYER_PED_ID());
 						for each (Ped xped in peds) {
 							if (!PED::IS_PED_GROUP_MEMBER(xped, PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID())) && !WEAPON::IS_PED_ARMED(guards[i], 7) && PED::GET_PED_TYPE(guards[i]) != 0 &&
-								PED::GET_PED_TYPE(guards[i]) != 1 && PED::GET_PED_TYPE(guards[i]) != 2) {
+								PED::GET_PED_TYPE(guards[i]) != 1 && PED::GET_PED_TYPE(guards[i]) != 2 && PED::GET_PED_TYPE(guards[i]) != 3) {
 								PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(xped, true);
 								PED::SET_PED_FLEE_ATTRIBUTES(xped, 0, 0);
 							}
@@ -376,7 +377,7 @@ void prison_break()
 					distance_from_guard_y = my_position_in_prison.y - guard_position_in_prison.y;
 					if (distance_from_guard_x < 0) distance_from_guard_x = distance_from_guard_x * -1;
 					if (distance_from_guard_y < 0) distance_from_guard_y = distance_from_guard_y * -1;
-					if (distance_from_guard_x < 25 && distance_from_guard_y < 25 && PED::GET_PED_TYPE(guards[i]) != 0 && PED::GET_PED_TYPE(guards[i]) != 1 && PED::GET_PED_TYPE(guards[i]) != 2)
+					if (distance_from_guard_x < 25 && distance_from_guard_y < 25 && PED::GET_PED_TYPE(guards[i]) != 0 && PED::GET_PED_TYPE(guards[i]) != 1 && PED::GET_PED_TYPE(guards[i]) != 2 && PED::GET_PED_TYPE(guards[i]) != 3)
 					{
 						PED::SET_PED_AS_ENEMY(playerPed_Prison, true);
 						PED::REGISTER_TARGET(guards[i], playerPed_Prison);
@@ -385,7 +386,7 @@ void prison_break()
 						AI::TASK_COMBAT_PED(guards[i], playerPed_Prison, 0, 16);
 						PED::SET_PED_KEEP_TASK(guards[i], true);
 					}
-					if (WEAPON::IS_PED_ARMED(guards[i], 7) && WEAPON::IS_PED_ARMED(guards[i], 6) && PED::GET_PED_TYPE(guards[i]) != 0 && PED::GET_PED_TYPE(guards[i]) != 1 && PED::GET_PED_TYPE(guards[i]) != 2 &&
+					if (WEAPON::IS_PED_ARMED(guards[i], 7) && WEAPON::IS_PED_ARMED(guards[i], 6) && PED::GET_PED_TYPE(guards[i]) != 0 && PED::GET_PED_TYPE(guards[i]) != 1 && PED::GET_PED_TYPE(guards[i]) != 2 && PED::GET_PED_TYPE(guards[i]) != 3 &&
 						PED::GET_PED_TYPE(guards[i]) != 6 && PED::GET_PED_TYPE(guards[i]) != 27)
 					{
 						if (!featurePrison_Hardcore) {
@@ -423,7 +424,7 @@ void prison_break()
 					distance_from_guard_y = my_position_in_prison.y - guard_position_in_prison.y;
 					if (distance_from_guard_x < 0) distance_from_guard_x = distance_from_guard_x * -1;
 					if (distance_from_guard_y < 0) distance_from_guard_y = distance_from_guard_y * -1;
-					if (distance_from_guard_x < 95 && distance_from_guard_y < 95 && PED::GET_PED_TYPE(guards[i]) != 0 && PED::GET_PED_TYPE(guards[i]) != 1 && PED::GET_PED_TYPE(guards[i]) != 2)
+					if (distance_from_guard_x < 95 && distance_from_guard_y < 95 && PED::GET_PED_TYPE(guards[i]) != 0 && PED::GET_PED_TYPE(guards[i]) != 1 && PED::GET_PED_TYPE(guards[i]) != 2 && PED::GET_PED_TYPE(guards[i]) != 3)
 					{
 						PED::SET_PED_AS_ENEMY(playerPed_Prison, true);
 						PED::REGISTER_TARGET(guards[i], playerPed_Prison);
@@ -432,7 +433,7 @@ void prison_break()
 						AI::TASK_COMBAT_PED(guards[i], playerPed_Prison, 0, 16);
 						PED::SET_PED_KEEP_TASK(guards[i], true);
 					}
-					if (WEAPON::IS_PED_ARMED(guards[i], 7) && PED::GET_PED_TYPE(guards[i]) != 0 && PED::GET_PED_TYPE(guards[i]) != 1 && PED::GET_PED_TYPE(guards[i]) != 2 &&
+					if (WEAPON::IS_PED_ARMED(guards[i], 7) && PED::GET_PED_TYPE(guards[i]) != 0 && PED::GET_PED_TYPE(guards[i]) != 1 && PED::GET_PED_TYPE(guards[i]) != 2 && PED::GET_PED_TYPE(guards[i]) != 3 &&
 						PED::GET_PED_TYPE(guards[i]) != 6 && PED::GET_PED_TYPE(guards[i]) != 27)
 					{
 						if (!featurePrison_Hardcore) {
@@ -465,7 +466,7 @@ void prison_break()
 					distance_from_guard_y = my_position_in_prison.y - guard_position_in_prison.y;
 					if (distance_from_guard_x < 0) distance_from_guard_x = distance_from_guard_x * -1;
 					if (distance_from_guard_y < 0) distance_from_guard_y = distance_from_guard_y * -1;
-					if (distance_from_guard_x < 155 && distance_from_guard_y < 155 && PED::GET_PED_TYPE(guards[i]) != 0 && PED::GET_PED_TYPE(guards[i]) != 1 && PED::GET_PED_TYPE(guards[i]) != 2)
+					if (distance_from_guard_x < 155 && distance_from_guard_y < 155 && PED::GET_PED_TYPE(guards[i]) != 0 && PED::GET_PED_TYPE(guards[i]) != 1 && PED::GET_PED_TYPE(guards[i]) != 2 && PED::GET_PED_TYPE(guards[i]) != 3)
 					{
 						PED::SET_PED_AS_ENEMY(playerPed_Prison, true);
 						PED::REGISTER_TARGET(guards[i], playerPed_Prison);
@@ -474,7 +475,7 @@ void prison_break()
 						AI::TASK_COMBAT_PED(guards[i], playerPed_Prison, 0, 16);
 						PED::SET_PED_KEEP_TASK(guards[i], true);
 					}
-					if (WEAPON::IS_PED_ARMED(guards[i], 7) && PED::GET_PED_TYPE(guards[i]) != 0 && PED::GET_PED_TYPE(guards[i]) != 1 && PED::GET_PED_TYPE(guards[i]) != 2 &&
+					if (WEAPON::IS_PED_ARMED(guards[i], 7) && PED::GET_PED_TYPE(guards[i]) != 0 && PED::GET_PED_TYPE(guards[i]) != 1 && PED::GET_PED_TYPE(guards[i]) != 2 && PED::GET_PED_TYPE(guards[i]) != 3 &&
 						PED::GET_PED_TYPE(guards[i]) != 6 && PED::GET_PED_TYPE(guards[i]) != 27)
 					{
 						if (!featurePrison_Hardcore) {
@@ -599,7 +600,7 @@ void prison_break()
 				if (((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 12) ||
 					(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 1) ||
 					(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 5)) &&
-					(PED::GET_PED_TYPE(guards[i]) == 0 || PED::GET_PED_TYPE(guards[i]) == 1 || PED::GET_PED_TYPE(guards[i]) == 2))
+					(PED::GET_PED_TYPE(guards[i]) == 0 || PED::GET_PED_TYPE(guards[i]) == 1 || PED::GET_PED_TYPE(guards[i]) == 2) || PED::GET_PED_TYPE(guards[i]) == 3)
 				{
 					CONTROLS::DISABLE_CONTROL_ACTION(2, 19, true);
 					MOBILE::DESTROY_MOBILE_PHONE();
@@ -667,7 +668,7 @@ void prison_break()
 				if (((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 12) ||
 					(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 1) ||
 					(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 5)) &&
-					(PED::GET_PED_TYPE(guards[i]) == 0 || PED::GET_PED_TYPE(guards[i]) == 1 || PED::GET_PED_TYPE(guards[i]) == 2))
+					(PED::GET_PED_TYPE(guards[i]) == 0 || PED::GET_PED_TYPE(guards[i]) == 1 || PED::GET_PED_TYPE(guards[i]) == 2) || PED::GET_PED_TYPE(guards[i]) == 3)
 				{
 					CONTROLS::DISABLE_CONTROL_ACTION(2, 19, true);
 					MOBILE::DESTROY_MOBILE_PHONE();
@@ -700,7 +701,8 @@ void prison_break()
 
 				// Met a ped at a distance
 				if (distance_from_ped_x < 20 && distance_from_ped_y < 20 && distance_from_ped_z < 10 && PED::IS_PED_FACING_PED(guards[i], playerPed_Prison, 100) &&
-					(PED::GET_PED_TYPE(guards[i]) == 4 || PED::GET_PED_TYPE(guards[i]) == 5) && PED::GET_PED_TYPE(guards[i]) != 6 && PED::GET_PED_TYPE(guards[i]) != 27 && ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(guards[i], playerPed_Prison, 17))
+					(PED::GET_PED_TYPE(guards[i]) == 4 || PED::GET_PED_TYPE(guards[i]) == 5) && PED::GET_PED_TYPE(guards[i]) != 6 && PED::GET_PED_TYPE(guards[i]) != 27 && 
+					ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(guards[i], playerPed_Prison, 17))
 				{
 					if (((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 12) ||
 						(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 1) ||
@@ -710,7 +712,7 @@ void prison_break()
 						if (!PED::IS_PED_FLEEING(guards[i]) && !AI::IS_PED_RUNNING(guards[i]) && !PED::IS_PED_IN_COMBAT(guards[i], playerPed_Prison))
 						{
 							AUDIO::_PLAY_AMBIENT_SPEECH1(guards[i], "GENERIC_FRIGHTENED_HIGH", "SPEECH_PARAMS_FORCE_SHOUTED");
-							AI::TASK_SMART_FLEE_PED(guards[i], playerPed_Prison, 1000, -1, true, true);
+							if (PED::GET_PED_TYPE(guards[i]) != 0 && PED::GET_PED_TYPE(guards[i]) != 1 && PED::GET_PED_TYPE(guards[i]) != 2 && PED::GET_PED_TYPE(guards[i]) != 3) AI::TASK_SMART_FLEE_PED(guards[i], playerPed_Prison, 1000, -1, true, true);
 							AI::TASK_USE_MOBILE_PHONE_TIMED(guards[i], 10000);
 							alert_police_about_fugitive_distant = true;
 						}
@@ -720,7 +722,7 @@ void prison_break()
 							!PED::IS_PED_FLEEING(guards[i]) && !AI::IS_PED_RUNNING(guards[i]) && !PED::IS_PED_IN_COMBAT(guards[i], playerPed_Prison))
 						{
 							AUDIO::_PLAY_AMBIENT_SPEECH1(guards[i], "GENERIC_FRIGHTENED_HIGH", "SPEECH_PARAMS_FORCE_SHOUTED");
-							AI::TASK_SMART_FLEE_PED(guards[i], playerPed_Prison, 1000, -1, true, true);
+							if (PED::GET_PED_TYPE(guards[i]) != 0 && PED::GET_PED_TYPE(guards[i]) != 1 && PED::GET_PED_TYPE(guards[i]) != 2 && PED::GET_PED_TYPE(guards[i]) != 3) AI::TASK_SMART_FLEE_PED(guards[i], playerPed_Prison, 1000, -1, true, true);
 							AI::TASK_USE_MOBILE_PHONE_TIMED(guards[i], 10000);
 							alert_police_about_fugitive_close = true;
 						}
@@ -739,7 +741,7 @@ void prison_break()
 							!PED::IS_PED_FLEEING(guards[i]) && !AI::IS_PED_RUNNING(guards[i]) && !PED::IS_PED_IN_COMBAT(guards[i], playerPed_Prison) && ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(guards[i], playerPed_Prison, 17))
 						{
 							AUDIO::_PLAY_AMBIENT_SPEECH1(guards[i], "GENERIC_FRIGHTENED_HIGH", "SPEECH_PARAMS_FORCE_SHOUTED");
-							AI::TASK_SMART_FLEE_PED(guards[i], playerPed_Prison, 1000, -1, true, true);
+							if (PED::GET_PED_TYPE(guards[i]) != 0 && PED::GET_PED_TYPE(guards[i]) != 1 && PED::GET_PED_TYPE(guards[i]) != 2 && PED::GET_PED_TYPE(guards[i]) != 3) AI::TASK_SMART_FLEE_PED(guards[i], playerPed_Prison, 1000, -1, true, true);
 							alert_police_about_fugitive_close = true;
 						}
 					}
