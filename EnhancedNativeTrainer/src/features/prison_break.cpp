@@ -600,7 +600,7 @@ void prison_break()
 				if (((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 12) ||
 					(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 1) ||
 					(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 5)) &&
-					(PED::GET_PED_TYPE(guards[i]) == 0 || PED::GET_PED_TYPE(guards[i]) == 1 || PED::GET_PED_TYPE(guards[i]) == 2) || PED::GET_PED_TYPE(guards[i]) == 3)
+					(PED::GET_PED_TYPE(guards[i]) == 0 || PED::GET_PED_TYPE(guards[i]) == 1 || PED::GET_PED_TYPE(guards[i]) == 2 || PED::GET_PED_TYPE(guards[i]) == 3))
 				{
 					CONTROLS::DISABLE_CONTROL_ACTION(2, 19, true);
 					MOBILE::DESTROY_MOBILE_PHONE();
@@ -668,7 +668,7 @@ void prison_break()
 				if (((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 12) ||
 					(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 1) ||
 					(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 5)) &&
-					(PED::GET_PED_TYPE(guards[i]) == 0 || PED::GET_PED_TYPE(guards[i]) == 1 || PED::GET_PED_TYPE(guards[i]) == 2) || PED::GET_PED_TYPE(guards[i]) == 3)
+					(PED::GET_PED_TYPE(guards[i]) == 0 || PED::GET_PED_TYPE(guards[i]) == 1 || PED::GET_PED_TYPE(guards[i]) == 2 || PED::GET_PED_TYPE(guards[i]) == 3))
 				{
 					CONTROLS::DISABLE_CONTROL_ACTION(2, 19, true);
 					MOBILE::DESTROY_MOBILE_PHONE();
