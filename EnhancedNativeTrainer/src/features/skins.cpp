@@ -436,6 +436,35 @@ bool process_skinchanger_choices_players()
 
 /*
 * ===============
+* SKIN ONLINE PLAYER CHOICES
+* =================
+*/
+
+bool onconfirm_skinchanger_choices_online_npc(MenuItem<std::string> choice)
+{
+	skinTypesMenuPositionMemory[0] = choice.currentMenuIndex;
+	applyChosenSkin(choice.value);
+	return false;
+}
+
+bool process_skinchanger_choices_online_npc()
+{
+	std::vector<MenuItem<std::string>*> menuItems;
+	for (int i = 0; i < SKINS_ONLINE_CAPTIONS.size(); i++)
+	{
+		MenuItem<std::string> *item = new MenuItem<std::string>();
+		item->caption = SKINS_ONLINE_CAPTIONS[i];
+		item->value = SKINS_ONLINE_VALUES[i];
+		item->isLeaf = true;
+		menuItems.push_back(item);
+	}
+
+	return draw_generic_menu<std::string>(menuItems, &skinTypesMenuPositionMemory[0], "Online NPC Skins", onconfirm_skinchanger_choices_online_npc, NULL, NULL);
+}
+
+
+/*
+* ===============
 * SKIN ANIMAL CHOICES
 * =================
 */
@@ -531,7 +560,10 @@ bool onconfirm_skinchanger_category_menu(MenuItem<int> choice)
 	case 2: //Misc
 		process_skinchanger_choices_misc();
 		break;
-	case 3: //Custom entry
+	case 3: //Online NPCs
+		process_skinchanger_choices_online_npc();
+		break;
+	case 4: //Custom entry
 	{
 		std::string result = show_keyboard(NULL, (char*)lastCustomSkinSpawn.c_str());
 		if (!result.empty())
@@ -613,6 +645,12 @@ bool process_skinchanger_category_menu()
 
 	item = new MenuItem<int>();
 	item->caption = "NPCs";
+	item->value = i++;
+	item->isLeaf = false;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "Online NPCs";
 	item->value = i++;
 	item->isLeaf = false;
 	menuItems.push_back(item);
