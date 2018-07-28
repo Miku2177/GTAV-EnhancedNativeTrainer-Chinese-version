@@ -278,7 +278,7 @@ const std::vector<std::string> MENU_INDUS_CATEGORIES{ "Industrial", "Commercial"
 
 const std::vector<std::string> CAPTIONS_INDUSTRIAL{ "Brute Tipper (2 Axle)", "Brute Tipper (3 Axle)", "Dock Handler", "HVY Cutter", "HVY Dozer", "HVY Dump", "HVY Mixer", "HVY Mixer (Support Wheel)", "JoBuilt Rubble", "MTL Flatbed", "Vapid Guardian" };
 
-const std::vector<std::string> CAPTIONS_COMMERCIAL{ "Brute Stockade", "Brute Stockade (Snow)", "HVY Biff", "JoBuilt Hauler", "JoBuilt Hauler Custom (Gun Runner)", "JoBuilt Phantom", "JoBuilt Phantom Custom (Gun Runner)", "JoBuilt Phantom Wedge (Import-Export)", "Maibatsu Mule (Graphics 1)", "Maibatsu Mule (Graphics 2)", "Maibatsu Mule (Plain)", "Maibatsu Mule Custom (After Hours)", "MTL Packer", "MTL Pounder", "MTL Pounder Custom (After Hours)", "Vapid Benson" };
+const std::vector<std::string> CAPTIONS_COMMERCIAL{ "Benefactor Terrorbyte (After Hours)", "Brute Stockade", "Brute Stockade (Snow)", "HVY Biff", "JoBuilt Hauler", "JoBuilt Hauler Custom (Gun Runner)", "JoBuilt Phantom", "JoBuilt Phantom Custom (Gun Runner)", "JoBuilt Phantom Wedge (Import-Export)", "Maibatsu Mule (Graphics 1)", "Maibatsu Mule (Graphics 2)", "Maibatsu Mule (Plain)", "Maibatsu Mule Custom (After Hours)", "MTL Packer", "MTL Pounder", "MTL Pounder Custom (After Hours)", "Vapid Benson" };
 
 /*const std::vector<std::string> CAPTIONS_PICKUPS{ "Bravado Bison", "Bravado Bison (Backrack)", "Bravado Bison (Construction)", "Bravado Ratloader", "Bravado Ratloader (Rusty)", "Vapid Bobcat XL", "Vapid Sadler", "Vapid Sadler (Snow)" };*/
 
@@ -294,7 +294,7 @@ const std::vector<std::string> CAPTIONS_TRAINS{ "Container Car 1", "Container Ca
 
 const std::vector<std::string> VALUES_INDUSTRIAL{ "TIPTRUCK", "TIPTRUCK2", "HANDLER", "CUTTER", "BULLDOZER", "DUMP", "MIXER", "MIXER2", "RUBBLE", "FLATBED", "GUARDIAN" };
 
-const std::vector<std::string> VALUES_COMMERCIAL{ "STOCKADE", "STOCKADE3", "BIFF", "HAULER", "HAULER2", "PHANTOM", "PHANTOM3", "PHANTOM2", "MULE", "MULE2", "MULE3", "MULE4", "PACKER", "POUNDER", "POUNDER2", "BENSON" };
+const std::vector<std::string> VALUES_COMMERCIAL{ "TERBYTE", "STOCKADE", "STOCKADE3", "BIFF", "HAULER", "HAULER2", "PHANTOM", "PHANTOM3", "PHANTOM2", "MULE", "MULE2", "MULE3", "MULE4", "PACKER", "POUNDER", "POUNDER2", "BENSON" };
 
 /*const std::vector<std::string> VALUES_PICKUPS{ "BISON", "BISON3", "BISON2", "RATLOADER2", "RATLOADER", "BOBCATXL", "SADLER", "SADLER2" };*/
 
@@ -3961,7 +3961,7 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ "TEZERACT", "lgm_dlc_assault", "tezeract" },
 	{ "TYRANT", "lgm_dlc_assault", "tyrant" },
 	//After Hours
-	{ "PBUS2", "sssa_dlc_battle", "pbus" },
+	{ "PBUS2", "sssa_dlc_battle", "pbus2" },
 	{ "PATRIOT", "sssa_dlc_battle", "patriot" },
 	{ "PATRIOT2", "sssa_dlc_battle", "patriot2" },
 	{ "TERBYTE", "candc_hacker", "banner0" },
@@ -4203,7 +4203,6 @@ void init_vehicle_feature(){
 	unpack_veh_preview("SKYLIFT", VP_SKYLIFT, "VP_SKYLIFT");
 	unpack_veh_preview("SLAMVAN2", VP_SLAMVAN_LOSTMC, "VP_SLAMVAN_LOSTMC");
 	unpack_veh_preview("SPEEDO", VP_SPEEDO, "VP_SPEEDO");
-	unpack_veh_preview("SPEEDO3", VP_SPEEDO, "VP_SPEEDO");
 	unpack_veh_preview("SPEEDO2", VP_SPEEDO2, "VP_SPEEDO2");
 	unpack_veh_preview("STOCKADE", VP_STOCKADE, "VP_STOCKADE");
 	unpack_veh_preview("STOCKADE3", VP_STOCKADE3, "VP_STOCKADE3");
