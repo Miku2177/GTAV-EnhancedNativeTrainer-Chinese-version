@@ -251,13 +251,21 @@ void engineonoff_switching() {
 	WAIT(100);
 }
 
+void engine_damage() {
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
+		Vehicle veh3 = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
+		VEHICLE::SET_VEHICLE_ENGINE_HEALTH(veh3, 0);
+	}
+}
+
 void engine_kill(){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
 		Vehicle veh2 = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		if (VEHICLE_KILLED.empty()) VEHICLE_KILLED.push_back(veh2);
 		if (!VEHICLE_KILLED.empty()) VEHICLE_KILLED[0] = veh2;
-		engine_killed = true;//!engine_killed;
+		engine_killed = true;
 		set_status_text("You have destroyed your vehicle's engine for some reason");
 	}
 }
@@ -739,11 +747,11 @@ bool process_player_life_menu(){
 	listItem->value = current_player_armor;
 	menuItems.push_back(listItem);
 	
-	item2 = new LifeItem<int>();
-	item2->caption = "Current Health";
-	item2->value = 0;
-	item2->life = ENTITY::GET_ENTITY_HEALTH(playerPed) - 100;
-	menuItems.push_back(item2);
+	//item2 = new LifeItem<int>();
+	//item2->caption = "Current Health";
+	//item2->value = 0;
+	//item2->life = ENTITY::GET_ENTITY_HEALTH(playerPed) - 100;
+	//menuItems.push_back(item2);
 
 	//item = new LifeItem<int>();
 	//item->caption = "Maximum Health";
@@ -753,11 +761,11 @@ bool process_player_life_menu(){
 	//item->life = PED::GET_PED_MAX_HEALTH(playerPed);
 	//menuItems.push_back(item);
 
-	item2 = new LifeItem<int>();
-	item2->caption = "Current Armor";
-	item2->value = 1;
-	item2->life = PED::GET_PED_ARMOUR(playerPed);
-	menuItems.push_back(item2);
+	//item2 = new LifeItem<int>();
+	//item2->caption = "Current Armor";
+	//item2->value = 1;
+	//item2->life = PED::GET_PED_ARMOUR(playerPed);
+	//menuItems.push_back(item2);
 
 	//item = new LifeItem<int>();
 	//item->caption = "Maximum Armor";

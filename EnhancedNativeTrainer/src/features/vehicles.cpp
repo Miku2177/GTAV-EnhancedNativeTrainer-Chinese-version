@@ -468,15 +468,19 @@ bool onconfirm_vehdoor_menu(MenuItem<int> choice){
 	{
 		engineonoff_switching();
 	}
-	else if (choice.value == -10)//kill the engine
+	else if (choice.value == -10)//damage the engine
+	{
+		engine_damage();
+	}
+	else if (choice.value == -11)//kill the engine
 	{
 		engine_kill();
 	}
-	else if (choice.value == -11)//vehicle alarm
+	else if (choice.value == -12)//vehicle alarm
 	{
 		vehicle_alarm();
 	}
-	else if (choice.value == -12)//vehicle alarm
+	else if (choice.value == -13)//vehicle alarm
 	{
 		vehicle_brake();
 	}
@@ -580,20 +584,26 @@ bool process_veh_door_menu(){
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Kill The Engine";
+	item->caption = "Damage The Engine";
 	item->value = -10;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Set Alarm On/Off";
+	item->caption = "Kill The Engine";
 	item->value = -11;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Handbrake On/Off";
+	item->caption = "Set Alarm On/Off";
 	item->value = -12;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "Handbrake On/Off";
+	item->value = -13;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
@@ -2269,14 +2279,14 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		Vector3 myvehicle_coords = ENTITY::GET_ENTITY_COORDS(myVehicle, true);
 		float myvehicle_heading = ENTITY::GET_ENTITY_HEADING(myVehicle); 
 
-		STREAMING::REQUEST_MODEL(GAMEPLAY::GET_HASH_KEY("BMX"));
-		while (!STREAMING::HAS_MODEL_LOADED(GAMEPLAY::GET_HASH_KEY("BMX"))) {
-			make_periodic_feature_call();
-			WAIT(0);
-		}
+		//STREAMING::REQUEST_MODEL(GAMEPLAY::GET_HASH_KEY("BMX"));
+		//while (!STREAMING::HAS_MODEL_LOADED(GAMEPLAY::GET_HASH_KEY("BMX"))) {
+		//	make_periodic_feature_call();
+		//	WAIT(0);
+		//}
 		
-		if (STREAMING::HAS_MODEL_LOADED(GAMEPLAY::GET_HASH_KEY("BMX")))
-		{
+		//if (STREAMING::HAS_MODEL_LOADED(GAMEPLAY::GET_HASH_KEY("BMX")))
+		//{
 			Vehicle temp_object = VEHICLE::CREATE_VEHICLE(GAMEPLAY::GET_HASH_KEY("BMX"), myvehicle_coords.x, myvehicle_coords.y, myvehicle_coords.z, myvehicle_heading, 1, 1); // 20, 1
 			ENTITY::ATTACH_ENTITY_TO_ENTITY_PHYSICALLY(/*ENTITY_1*/myVehicle, /*ENTITY_2*/temp_object, /*BONE_INDEX_1*/0, /*BONE_INDEX_2*/0.0, /*XPOS_1*/50.0, /*YPOS_1*/50.0, /*ZPOS_1*/-0.5,
 				/*XPOS_2*/0.0, /*YPOS_2*/0.0, /*ZPOS_2*/0.0, /*XROT*/0.0, /*YROT*/0.0, /*ZROT*/0.0, /*BREAKFORCE*/1.0, /*FIXEDROT*/true, /*P15*/false, /*COLLISION*/false, /*P17*/1, /*P18*/true);
@@ -2287,7 +2297,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			ENTITY::DETACH_ENTITY(myVehicle, true, true);
 
 			VEHICLE::DELETE_VEHICLE(&temp_object);
-		}
+		//}
 	} 
 	
 ///////////////////////////////////////////////////////////////////////////////////

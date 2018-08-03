@@ -454,7 +454,7 @@ void road_laws()
 					if (PED::IS_PED_IN_VEHICLE(playerPed, vehroadlaws, true))
 					{
 						AI::TASK_LEAVE_VEHICLE(cop_that_fines_you, fine_cop_car, 0);
-						AI::TASK_GOTO_ENTITY_AIMING(cop_that_fines_you, playerPed, 4.5, 30.0);
+						AI::TASK_GOTO_ENTITY_AIMING(cop_that_fines_you, playerPed, 5.0, 30.0);
 						cop_walking = true;
 					}
 				}
