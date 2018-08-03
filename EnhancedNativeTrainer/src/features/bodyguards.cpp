@@ -502,8 +502,9 @@ void do_spawn_bodyguard(){
 
 		PED::SET_PED_COMBAT_ABILITY(bodyGuard, 2);
 		PED::SET_PED_COMBAT_RANGE(bodyGuard, 2);
-		//PED::SET_PED_COMBAT_MOVEMENT(bodyGuard, 3);
-		//PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 46, true);
+		
+		PED::SET_PED_COMBAT_MOVEMENT(bodyGuard, 3);
+		PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 5, true);
 
 		if (bodyguard_animal == false) PED::SET_PED_CAN_SWITCH_WEAPON(bodyGuard, true);
 		PED::SET_GROUP_FORMATION(myGroup, 1);
@@ -565,7 +566,7 @@ void maintain_bodyguards(){
 		}
 		animal_in_group = false;
 	}
-
+	
 	while(iter != spawnedBodyguards.end()){
 
 		if (animal_in_group == true && PED::IS_PED_FLEEING(*iter)) AI::TASK_STAND_STILL(*iter, 10000);

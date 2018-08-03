@@ -88,6 +88,8 @@ void seat_change_hotkey();
 
 void engineonoff_switching();
 
+void engine_damage();
+
 void engine_kill();
 
 void process_window_roll();
