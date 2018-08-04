@@ -98,6 +98,8 @@ void interior_light();
 
 void search_light();
 
+void damage_door();
+
 bool process_spawn_menu_generic(int topMenuSelection);
 
 bool spawn_saved_car(int slot, std::string caption);
