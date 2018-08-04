@@ -97,6 +97,7 @@ int ragdoll_secs_passed, ragdoll_secs_curr, ragdoll_seconds = 0;
 //
 Ped oldplayerPed = -1;
 int tick, playerDataMenuIndex, playerPrisonMenuIndex = 0;
+int NPCragdollMenuIndex = 0;
 int death_time2 = -1;
 
 int  frozenWantedLevel = 0;
@@ -132,6 +133,12 @@ const std::vector<double> PLAYER_ARMOR_VALUES{ 0, 15, 20, 30, 40, 50, 100 };
 int current_player_armor = 6;
 bool current_player_armor_Changed = true;
 
+//NPC Ragdoll If Shot
+const std::vector<std::string> NPC_RAGDOLL_CAPTIONS{ "OFF", "Never", "Always" };
+const std::vector<double> NPC_RAGDOLL_VALUES{ 0, 1, 2 };
+int current_npc_ragdoll = 0;
+bool current_npc_ragdoll_Changed = true;
+
 /* Prop unblocker related code - will need to clean up later*/
 
 /*THIS causes ENT not to load when Menyoo is present!*/
@@ -157,6 +164,11 @@ void onchange_player_armor_mode(int value, SelectFromListMenuItem* source){
 void onchange_player_prison_mode(int value, SelectFromListMenuItem* source){
 	current_player_prison = value;
 	current_player_prison_Changed = true;
+}
+
+void onchange_NPC_ragdoll_mode(int value, SelectFromListMenuItem* source) {
+	current_npc_ragdoll = value;
+	current_npc_ragdoll_Changed = true;
 }
 
 void onchange_player_escapemoney_mode(int value, SelectFromListMenuItem* source){
@@ -577,7 +589,36 @@ void update_features(){
 			}
 		}
 	}
+	
+	//NPC Ragdoll If Shot
+	if (NPC_RAGDOLL_VALUES[current_npc_ragdoll] == 1 || NPC_RAGDOLL_VALUES[current_npc_ragdoll] == 2) {
+		const int arrSize5 = 1024;
+		Ped NPCragdoll[arrSize5];
+		int count_NPC_ragdoll = worldGetAllPeds(NPCragdoll, arrSize5);
 
+		for (int i = 0; i < count_NPC_ragdoll; i++)
+		{
+			if (NPC_RAGDOLL_VALUES[current_npc_ragdoll] == 1 &&	PED::GET_PED_TYPE(NPCragdoll[i]) != 0 && PED::GET_PED_TYPE(NPCragdoll[i]) != 1 && PED::GET_PED_TYPE(NPCragdoll[i]) != 2 && PED::GET_PED_TYPE(NPCragdoll[i]) != 3)
+			{
+				if (WEAPON::HAS_PED_BEEN_DAMAGED_BY_WEAPON(NPCragdoll[i], 0, 1)) PED::_RESET_PED_RAGDOLL_BLOCKING_FLAGS(NPCragdoll[i], 1);
+				if (!WEAPON::HAS_PED_BEEN_DAMAGED_BY_WEAPON(NPCragdoll[i], 0, 1)) PED::_SET_PED_RAGDOLL_BLOCKING_FLAGS(NPCragdoll[i], 1);
+			}
+
+			if (NPC_RAGDOLL_VALUES[current_npc_ragdoll] == 2 && WEAPON::HAS_PED_BEEN_DAMAGED_BY_WEAPON(NPCragdoll[i], 0, 2) && !WEAPON::HAS_PED_BEEN_DAMAGED_BY_WEAPON(NPCragdoll[i], 0, 1) && !PED::IS_PED_RAGDOLL(NPCragdoll[i]) &&
+				PED::IS_PED_ON_FOOT(NPCragdoll[i]) && PED::GET_PED_TYPE(NPCragdoll[i]) != 0 && PED::GET_PED_TYPE(NPCragdoll[i]) != 1 &&	PED::GET_PED_TYPE(NPCragdoll[i]) != 2 && PED::GET_PED_TYPE(NPCragdoll[i]) != 3)
+			{
+				int time1 = (rand() % 3000 + 0); // UP MARGIN + DOWN MARGIN
+				int time2 = (rand() % 3000 + 0);
+				int ragdollType = (rand() % 3 + 0);
+				int ScreamType = (rand() % 8 + 5);
+				AUDIO::PLAY_PAIN(ScreamType, 0, 0);
+				AUDIO::_PLAY_AMBIENT_SPEECH1(NPCragdoll[i], "GENERIC_SHOCKED_HIGH", "SPEECH_PARAMS_FORCE");
+				PED::_RESET_PED_RAGDOLL_BLOCKING_FLAGS(NPCragdoll[i], 1);
+				PED::SET_PED_TO_RAGDOLL(NPCragdoll[i], time1, time2, ragdollType, true, true, false);
+			}
+		}
+	}
+	
 	//Player Invisible
 	if(featurePlayerInvisibleUpdated){
 		featurePlayerInvisibleUpdated = false;
@@ -692,6 +733,11 @@ bool onconfirm_playerData_menu(MenuItem<int> choice){
 	return false;
 }
 
+bool onconfirm_NPCragdoll_menu(MenuItem<int> choice) {
+
+	return false;
+}
+
 bool onconfirm_playerPrison_menu(MenuItem<int> choice){
 
 	return false;
@@ -784,6 +830,26 @@ bool process_player_life_menu(){
 	//draw_generic_menu<int>(menuItems, nullptr, "Player Data", nullptr, nullptr, nullptr, nullptr);
 }
 
+bool process_npc_ragdoll_menu() {
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+
+	std::vector<MenuItem<int> *> menuItems;
+	std::string caption = "NPC Ragdoll Options";
+
+	MenuItem<int> *item;
+	SelectFromListMenuItem *listItem;
+	ToggleMenuItem<int>* toggleItem;
+
+	int i = 0;
+	listItem = new SelectFromListMenuItem(NPC_RAGDOLL_CAPTIONS, onchange_NPC_ragdoll_mode);
+	listItem->wrap = false;
+	listItem->caption = "Ragdoll";
+	listItem->value = current_npc_ragdoll;
+	menuItems.push_back(listItem);
+	
+	return draw_generic_menu<int>(menuItems, &NPCragdollMenuIndex, caption, onconfirm_NPCragdoll_menu, NULL, NULL);
+}
+
 bool process_player_prison_menu(){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
@@ -850,13 +916,16 @@ bool onconfirm_player_menu(MenuItem<int> choice){
 		case 1:
 			heal_player();
 			break;
-		case 19:
-			process_anims_menu_top();
+		case 14:
+			process_npc_ragdoll_menu();
 			break;
 		case 20:
-			process_player_life_menu();
+			process_anims_menu_top();
 			break;
 		case 21:
+			process_player_life_menu();
+			break;
+		case 22:
 			process_player_prison_menu();
 			break;
 		default:
@@ -867,7 +936,7 @@ bool onconfirm_player_menu(MenuItem<int> choice){
 }
 
 void process_player_menu(){
-	const int lineCount = 22;
+	const int lineCount = 23;
 
 	std::string caption = "Player Options";
 
@@ -886,6 +955,7 @@ void process_player_menu(){
 		{"Super Jump", &featurePlayerSuperJump, NULL, true},
 		{"No Ragdoll", &featureNoRagdoll, &featureNoRagdollUpdated, true},
 		{"Ragdoll If Shot", &featureRagdollIfInjured, &featureRagdollIfInjuredUpdated, true },
+		{"NPC Ragdoll If Shot", NULL, NULL, false},
 		{"Invisibility", &featurePlayerInvisible, &featurePlayerInvisibleUpdated, true},
 		{"Invisibility In Vehicle", &featurePlayerInvisibleInVehicle, &featurePlayerInvisibleInVehicleUpdated, true },
 		{"Drunk", &featurePlayerDrunk, &featurePlayerDrunkUpdated, true},

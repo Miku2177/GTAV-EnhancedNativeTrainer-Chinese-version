@@ -399,6 +399,15 @@ void vehicle_brake() {
 	WAIT(100);
 }
 
+void damage_door() {
+	Player PlayerPedDamage = PLAYER::PLAYER_PED_ID(); 
+	Vehicle veh_damage = PED::GET_VEHICLE_PED_IS_USING(PlayerPedDamage);
+	std::string::size_type sz;
+	std::string result = show_keyboard(NULL, NULL);
+	int dec_result = std::stoi(result, &sz);
+	VEHICLE::SET_VEHICLE_DOOR_BROKEN(veh_damage, dec_result, false);
+}
+
 bool onconfirm_vehdoor_menu(MenuItem<int> choice){
 
 	if(choice.value == -1){
@@ -483,6 +492,10 @@ bool onconfirm_vehdoor_menu(MenuItem<int> choice){
 	else if (choice.value == -13)//vehicle alarm
 	{
 		vehicle_brake();
+	}
+	else if (choice.value == -14)//damage door
+	{
+		damage_door();
 	}
 	return false;
 }
@@ -604,6 +617,12 @@ bool process_veh_door_menu(){
 	item = new MenuItem<int>();
 	item->caption = "Handbrake On/Off";
 	item->value = -13;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "Damage Door (0-5)";
+	item->value = -14;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
