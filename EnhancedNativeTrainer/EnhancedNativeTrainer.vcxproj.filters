@@ -267,6 +267,9 @@
     <ClInclude Include="src\features\fuel.h">
       <Filter>inc\features</Filter>
     </ClInclude>
+    <ClInclude Include="src\features\interior_props.h">
+      <Filter>inc\features</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />
