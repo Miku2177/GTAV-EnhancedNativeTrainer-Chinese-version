@@ -88,6 +88,8 @@ void seat_change_hotkey();
 
 void engineonoff_switching();
 
+void engine_damage();
+
 void engine_kill();
 
 void process_window_roll();
@@ -95,6 +97,8 @@ void process_window_roll();
 void interior_light();
 
 void search_light();
+
+void damage_door();
 
 bool process_spawn_menu_generic(int topMenuSelection);
 
