@@ -446,7 +446,7 @@ std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Stilthouse 8", -667.5856f, 582.3726f, 143.9697f, { "apa_ch2_09c_interior_2_v_mp_stilts_b_milo_" }, {}, {}, false },
 	{ "Stilthouse 9", -1286.362f, 431.7878f, 96.49426f, { "apa_ch2_12b_interior_0_v_mp_stilts_a_milo_" }, {}, {}, false },
 	{ "Studio Flat", 260.3297f, -997.4288f, -100.0f, { "hei_hw1_blimp_interior_v_studio_lo_milo_" }, {}, {}, false },
-	{ "Terrorbyte Interior", 260.3297f, -997.4288f, -100.0f,{ "ba_int_placement_ba_interior_2_dlc_int_03_ba_milo_" },{},{ IPL_PROPS_NIGHTCLUB_TERRORBYTE_INTERIOR }, false },
+	{ "Terrorbyte Interior", -1421.01500000f, -3012.58700000f, -80.00000000f,{ "ba_int_placement_ba_interior_2_dlc_int_03_ba_milo_" },{},{ IPL_PROPS_NIGHTCLUB_TERRORBYTE_INTERIOR }, false },
 	{ "Tinsel Towers Apt 42", -614.86f, 40.6783f, 97.6f, {}, {}, {}, false },
 	//
 	//{ "Gun Runnning Bunker", 938.3077f, -3196.112f, -100.0f, IPLS_GUNRUNNING_INTERIOR, {}, {}, false },
