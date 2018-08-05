@@ -37,6 +37,10 @@ int healthbar_secs_passed, healthbar_secs_curr, healthbar_seconds = -1;
 float health_bar_x = 0.015;
 float health_bar_y = 0.966;
 //
+// Show FPS
+int fpsgrab, fps, FrameCountPre = 0;
+bool featureFPS = false;
+//
 bool featurePlayerRadio = false;
 bool featurePlayerRadioUpdated = false;
 bool featureRadioFreeze = false, featureRadioFreezeUpdated = false;
@@ -67,6 +71,9 @@ bool phone_toggle_vehicle = false;
 bool featureFindDespawnPointer = false;
 bool featureFindDespawnPointerUpdated = false;
 bool despawnPointerDisabledMessage = true;
+
+bool featureShowFPS = false;
+bool featureShowFPSUpdated = false;
 
 bool featureShowVehiclePreviews = true;
 bool featureControllerIgnoreInTrainer = false;
@@ -343,7 +350,7 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 		case 3:
 			process_misc_freezeradio_menu();
 			break;
-		case 14:
+		case 15:
 			process_phone_bill_menu();
 			break;
 		default:
@@ -376,6 +383,7 @@ void process_misc_menu(){
 		{"Reset Player Model On Death", &featureResetPlayerModelOnDeath, nullptr, true},
 		{"Phone Bill", NULL, NULL, false},
 		{"Auto-Find Vehicle Despawn Pointer", &featureFindDespawnPointer, &featureFindDespawnPointerUpdated, true },
+		//{"Show FPS", &featureShowFPS, &featureShowFPSUpdated },
 	};
 
 	draw_menu_from_struct_def(lines, lineCount, &activeLineIndexMisc, caption, onconfirm_misc_menu);
@@ -415,6 +423,7 @@ void reset_misc_globals(){
 	featurePhoneBillEnabled = false;
 	featureZeroBalance = false;
 	featureFindDespawnPointer = false;
+	featureShowFPS = false;
 
 	featureRadioFreezeUpdated =
 		featureRadioAlwaysOffUpdated =
@@ -429,6 +438,7 @@ void reset_misc_globals(){
 		featureBoostRadioUpdated = 
 		featurePoliceRadioUpdated = 
 		featurePlayerRadioUpdated = 
+		featureShowFPSUpdated =
 		featureFindDespawnPointerUpdated = true;
 
 	ENTColor::reset_colors();
@@ -753,6 +763,48 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		}
 	}
 
+	//Show FPS
+	//if (featureShowFPS)
+	//{
+	//	SYSTEM::SETTIMERA(0);
+	//	WAIT(0);
+
+	//	std::stringstream ss55;
+		//ss55 << "\n featureShowFPS: " << featureShowFPS;
+	//	ss55 << "\n FPS: " << fps;
+	//	ss55 << "\n TRA: " << SYSTEM::TIMERA();
+	//	ss55 << "\n fpsgrab: " << fpsgrab;
+	//	callsPerFrame = 0;
+	//	set_status_text_centre_screen(ss55.str());
+
+	//	if (SYSTEM::TIMERA() <= 20)
+	//	{
+	//		fpsgrab = SYSTEM::TIMERA();
+	//		FrameCountPre = GAMEPLAY::GET_FRAME_COUNT();
+	//	}
+
+	//	if (SYSTEM::TIMERA() >= 25 + fpsgrab)
+	//	{
+	//		fps = (GAMEPLAY::GET_FRAME_COUNT() - FrameCountPre);
+			//PRINT FPS TO SCREEN
+			//char *currFPS = new char[fps];
+			//strcpy(currSound, ENGINE_SOUND[choice.value].c_str()); 
+			//UI::BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
+			//UI::_ADD_TEXT_COMPONENT_SCALEFORM(currFPS);
+			//UI::SET_TEXT_FONT(0);
+			//UI::SET_TEXT_SCALE(0.35, 035);
+			//UI::SET_TEXT_WRAP(0.0, 1.0);
+			//UI::SET_TEXT_COLOUR(240, 160, 0, 200);
+			//UI::SET_TEXT_CENTRE(0);
+			//UI::SET_TEXT_DROPSHADOW(20, 20, 20, 20, 20);
+			//UI::SET_TEXT_EDGE(100, 100, 100, 100, 205);
+			//UI::SET_TEXT_LEADING(1); 
+			//UI::END_TEXT_COMMAND_DISPLAY_TEXT(0.005f, 0.005f);
+
+	//		SYSTEM::SETTIMERA(0); //Reset timer back to 0 for next frame.
+	//	}
+	//}
+
 	//Auto find anti-despawn pointer
 	if (featureFindDespawnPointer)
 	{
@@ -800,6 +852,7 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 	results->push_back(FeatureEnabledLocalDefinition{"featurePhoneBillEnabled", &featurePhoneBillEnabled});
 	results->push_back(FeatureEnabledLocalDefinition{"featureZeroBalance", &featureZeroBalance});
 	results->push_back(FeatureEnabledLocalDefinition{"featureShowVehiclePreviews", &featureShowVehiclePreviews});
+	results->push_back(FeatureEnabledLocalDefinition{"featureShowFPS", &featureShowFPS });
 
 	//results->push_back(FeatureEnabledLocalDefinition{ "featureFindDespawnPointer", &featureFindDespawnPointer, &featureFindDespawnPointerUpdated });
 
