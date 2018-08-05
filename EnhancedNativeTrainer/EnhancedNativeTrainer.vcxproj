@@ -67,6 +67,7 @@
     <ClInclude Include="src\features\bodyguards.h" />
     <ClInclude Include="src\features\drive_to_marker.h" />
     <ClInclude Include="src\features\fuel.h" />
+    <ClInclude Include="src\features\interior_props.h" />
     <ClInclude Include="src\features\peds_dont_like_weapons.h" />
     <ClInclude Include="src\features\prison_break.h" />
     <ClInclude Include="src\features\propplacement.h" />
