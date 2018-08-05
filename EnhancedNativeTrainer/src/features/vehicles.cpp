@@ -206,6 +206,12 @@ const std::vector<double> VEH_ENGINERUNNING_VALUES{ 0, 1, 2 };
 int EngineRunningIndex = 0;
 bool EngineRunning_Changed = true;
 
+//Visualize Vehicle Indicators
+const std::vector<std::string> VEH_VISLIGHT_CAPTIONS{ "OFF", "1x", "3x", "5x", "7x", "10x", "12x" };
+const std::vector<double> VEH_VISLIGHT_VALUES{ 0, 0.01, 0.03, 0.05, 0.07, 0.1, 0.2 };
+int VisLightIndex = 0;
+bool VisLight_Changed = true;
+
 // player in vehicle state... assume true initially since our quicksave might have us in a vehicle already, in which case we can't check if we just got into one
 bool oldVehicleState = true;
 
@@ -908,6 +914,13 @@ bool onconfirm_fuel_menu(MenuItem<int> choice)
 	return false;
 }
 
+void DrawSprite(char * Streamedtexture, char * textureName, float x, float y, float width, float height, float rotation, int r, int g, int b, int a) // This is fo the 'Visualize Indicators' feature
+{
+	GRAPHICS::REQUEST_STREAMED_TEXTURE_DICT(Streamedtexture, false);
+	GRAPHICS::HAS_STREAMED_TEXTURE_DICT_LOADED(Streamedtexture);
+	GRAPHICS::DRAW_SPRITE(Streamedtexture, textureName, x, y, width, height, rotation, r, g, b, a);
+}
+
 void process_fuel_menu(){
 	std::string caption = "Fuel Consumption Options";
 
@@ -1306,13 +1319,13 @@ bool onconfirm_veh_menu(MenuItem<int> choice){
 		case 19: // speed menu
 			process_speed_menu();
 			break;
-		case 24: // fuel menu
+		case 25: // fuel menu
 			process_fuel_menu();
 			break;
-		case 25: // remember vehicles menu
+		case 26: // remember vehicles menu
 			process_remember_vehicles_menu();
 			break;
-		case 26: // remember vehicles menu
+		case 27: // remember vehicles menu
 			process_road_laws_menu();
 			break;
 		default:
@@ -1459,6 +1472,12 @@ void process_veh_menu(){
 	listItem->wrap = false;
 	listItem->caption = "Enable Indicators";
 	listItem->value = turnSignalsIndex;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(VEH_VISLIGHT_CAPTIONS, onchange_veh_vislight_index);
+	listItem->wrap = false;
+	listItem->caption = "Visualize Vehicle Indicators";
+	listItem->value = VisLightIndex;
 	menuItems.push_back(listItem);
 
 	//toggleItem = new ToggleMenuItem<int>();
@@ -1993,6 +2012,21 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+	///////////////////////////////////// VISUALIZE VEHICLE INDICATORS //////////////////////////////////////////////////////////
+
+	if (bPlayerExists && VEH_VISLIGHT_VALUES[VisLightIndex] > 0 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
+				
+		if (turn_check_left) DrawSprite("commonmenu", "arrowleft", 0.4500, 0.95, VEH_VISLIGHT_VALUES[VisLightIndex], VEH_VISLIGHT_VALUES[VisLightIndex], 1, 44, 255, 32, 255);
+		if (turn_check_right) DrawSprite("commonmenu", "arrowright", 0.5500, 0.95, VEH_VISLIGHT_VALUES[VisLightIndex], VEH_VISLIGHT_VALUES[VisLightIndex], 1, 44, 255, 32, 255);
+		if (turn_check_left && turn_check_right)
+		{
+			DrawSprite("commonmenu", "arrowleft", 0.4500, 0.95, VEH_VISLIGHT_VALUES[VisLightIndex], VEH_VISLIGHT_VALUES[VisLightIndex], 1, 44, 255, 32, 255);
+			DrawSprite("commonmenu", "arrowright", 0.5500, 0.95, VEH_VISLIGHT_VALUES[VisLightIndex], VEH_VISLIGHT_VALUES[VisLightIndex], 1, 44, 255, 32, 255);
+		}
+	}
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	///////////////////////////////////// KEEP THE ENGINE RUNNING ///////////////////////////////////////////////////////////////
 
 	if (bPlayerExists && VEH_ENGINERUNNING_VALUES[EngineRunningIndex] > 0 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
@@ -2015,7 +2049,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+	
 	///////////////////////////////////////////////// SPEED LIMIT ////////////////////////////////////////////////////////////////
 
 	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && (VEH_SPEEDLIMITER_VALUES[speedLimiterIndex] > 0) && speedlimiter_switch){
@@ -2441,6 +2475,7 @@ void reset_vehicle_globals(){
 	PirsuitRangeIndex = 4;
 	StarsPunishIndex = 0;
 	EngineRunningIndex = 0;
+	VisLightIndex = 0;
 	SpeedingSpeedwayIndex = 5;
 	FineSizeIndex = 1;
 	VehBlipSymbolIndex = 0;
@@ -3185,6 +3220,7 @@ void add_vehicle_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"PirsuitRangeIndex", std::to_string(PirsuitRangeIndex)});
 	results->push_back(StringPairSettingDBRow{"StarsPunishIndex", std::to_string(StarsPunishIndex)});
 	results->push_back(StringPairSettingDBRow{"EngineRunningIndex", std::to_string(EngineRunningIndex)});
+	results->push_back(StringPairSettingDBRow{"VisLightIndex", std::to_string(VisLightIndex)});
 	results->push_back(StringPairSettingDBRow{"SpeedingSpeedwayIndex", std::to_string(SpeedingSpeedwayIndex)});
 	results->push_back(StringPairSettingDBRow{"FineSizeIndex", std::to_string(FineSizeIndex)});
 	results->push_back(StringPairSettingDBRow{"VehBlipSymbolIndex", std::to_string(VehBlipSymbolIndex)});
@@ -3270,6 +3306,9 @@ void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settin
 		}
 		else if (setting.name.compare("EngineRunningIndex") == 0){
 			EngineRunningIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("VisLightIndex") == 0) {
+			VisLightIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("SpeedingSpeedwayIndex") == 0){
 			SpeedingSpeedwayIndex = stoi(setting.value);
@@ -3444,6 +3483,10 @@ void onchange_stars_punish_index(int value, SelectFromListMenuItem* source){
 }
 void onchange_veh_enginerunning_index(int value, SelectFromListMenuItem* source){
 	EngineRunningIndex = value;
+	PositionChanged = true;
+}
+void onchange_veh_vislight_index(int value, SelectFromListMenuItem* source) {
+	VisLightIndex = value;
 	PositionChanged = true;
 }
 void onchange_speeding_speedway_index(int value, SelectFromListMenuItem* source){
