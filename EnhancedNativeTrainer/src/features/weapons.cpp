@@ -53,6 +53,7 @@ DWORD grav_partfx = 0;
 DWORD featureWeaponVehShootLastTime = 0;
 
 std::string lastCustomWeapon;
+char* currWeaponCompHash;
 
 int const SAVED_WEAPONS_COUNT = TOTAL_WEAPONS_COUNT;
 int saved_weapon_model[SAVED_WEAPONS_COUNT];
@@ -438,6 +439,15 @@ bool process_individual_weapon_menu(int weaponIndex){
 			tintItem->isLeaf = false;
 			tintItem->onConfirmFunction = onconfirm_open_tint_menu;
 			menuItems.push_back(tintItem);
+
+			/* Returns empty menu - needs work!
+
+			MenuItem<int> *LiveryTintItem = new MenuItem<int>();
+			LiveryTintItem->caption = "Weapon Livery Colours";
+			LiveryTintItem->value = 5;
+			LiveryTintItem->isLeaf = false;
+			LiveryTintItem->onConfirmFunction = onconfirm_open_tint_menu_colour;
+			menuItems.push_back(LiveryTintItem);*/
 		}
 	}
 
@@ -1696,41 +1706,86 @@ bool onconfirm_weapon_mod_menu_tint(MenuItem<int> choice){
 void onconfirm_open_tint_menu(MenuItem<int> choice) {
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	int tintSelection = 0;
-	std::vector<std::string> CAPTIONS_TINT_TEST{};
 
 	std::string weaponValue = VOV_WEAPON_VALUES[lastSelectedWeaponCategory].at(lastSelectedWeapon);
 	char *weaponChar = (char*)weaponValue.c_str();
 	int weapHash = GAMEPLAY::GET_HASH_KEY(weaponChar);
 	std::vector<MenuItem<int>*> menuItems;
+		
+	for (int i = 0; i < WEAPON::GET_WEAPON_TINT_COUNT(weapHash); i++) {
+		MenuItem<int> *item = new MenuItem<int>();
+		item->caption = UI::_GET_LABEL_TEXT((char*)("WCT_C_TINT_" + std::to_string(i)).c_str()); //  CAPTIONS_TINT_MK2[i];
+		item->value = i;
+		menuItems.push_back(item);
+	}
 
-	if (WEAPON::GET_WEAPON_TINT_COUNT(weapHash) <= 8)
+	/*
+	for (int i = 0; i < WEAPONTYPES_TINT.size(); i++) {
+		if (WEAPON::GET_PED_WEAPON_TINT_INDEX(playerPed, weapHash) == VALUES_TINT_MK2[i]) {
+			tintSelection = i;
+			break;
+		}
+	}
+	else
 	{
 		for (int i = 0; i < VALUES_TINT.size(); i++) {
 			MenuItem<int> *item = new MenuItem<int>();
 			item->caption = CAPTIONS_TINT[i];
 			item->value = VALUES_TINT[i];
 			menuItems.push_back(item);
-		}
-	}
-	else
-	{
-		for (int i = 0; i < VALUES_TINT_MK2.size(); i++) {
-			MenuItem<int> *item = new MenuItem<int>();
-			item->caption = CAPTIONS_TINT_MK2[i];
-			item->value = VALUES_TINT_MK2[i];
-			menuItems.push_back(item);
-		}
-
-		int tintSelection = 0;
-		for (int i = 0; i < WEAPONTYPES_TINT.size(); i++) {
-			if (WEAPON::GET_PED_WEAPON_TINT_INDEX(playerPed, weapHash) == VALUES_TINT_MK2[i]) {
-				tintSelection = i;
-				break;
 			}
 		}
+		*/
+		draw_generic_menu<int>(menuItems, &tintSelection, "Select Weapon Tint", onconfirm_weapon_mod_menu_tint, onhighlight_weapon_mod_menu_tint, NULL);
+}
 
-		draw_generic_menu<int>(menuItems, &tintSelection, "Select Tint Color", onconfirm_weapon_mod_menu_tint, onhighlight_weapon_mod_menu_tint, NULL);
+void onhighlight_weapon_mod_menu_tint_colour(MenuItem<int> choice) {
+	onconfirm_weapon_mod_menu_tint_colour(choice);
+}
+
+bool onconfirm_weapon_mod_menu_tint_colour(MenuItem<int> choice) {
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	std::string weaponName = VOV_WEAPON_VALUES[lastSelectedWeaponCategory].at(lastSelectedWeapon);
+	int weapHash = GAMEPLAY::GET_HASH_KEY((char*)weaponName.c_str());
+
+	WEAPON::SET_WEAPON_LIVERY_COLOR(playerPed, weapHash, GAMEPLAY::GET_HASH_KEY(currWeaponCompHash), choice.value);
+
+	return true;
+}
+
+void onconfirm_open_tint_menu_colour(MenuItem<int> choice) {
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	int tintColourSelection = 0;
+	std::vector<MenuItem<int>*> menuItems;
+
+	std::string weaponName = VOV_WEAPON_VALUES[lastSelectedWeaponCategory].at(lastSelectedWeapon);
+	int weapHash = GAMEPLAY::GET_HASH_KEY((char*)weaponName.c_str());
+
+	for each(char* MK2_wep in MK2_WEAPONS)
+	{
+		if (weapHash == GAMEPLAY::GET_HASH_KEY((char*)MK2_wep))
+		{
+			for each (char* MK2_wep_comp in MK2_WEAPONS_LIVERY_COMP)
+			{
+				if (WEAPON::HAS_PED_GOT_WEAPON_COMPONENT(playerPed, weapHash, GAMEPLAY::GET_HASH_KEY(MK2_wep_comp)))
+				{
+					currWeaponCompHash = MK2_wep_comp;
+
+					for (int i = 0; i < WEAPON::GET_WEAPON_TINT_COUNT(weapHash); i++) {
+						MenuItem<int> *item = new MenuItem<int>();
+						item->caption = UI::_GET_LABEL_TEXT((char*)("WCT_C_TINT_" + std::to_string(i)).c_str()); //  CAPTIONS_TINT_MK2[i];
+						item->value = i;
+						menuItems.push_back(item);
+					}
+				}
+			}
+
+		}
+		else
+			set_status_text("Error applying Livery colour");
 	}
+
+	draw_generic_menu<int>(menuItems, &tintColourSelection, "Select Weapon Livery Color", onconfirm_weapon_mod_menu_tint_colour, onhighlight_weapon_mod_menu_tint_colour, NULL);
 }
 
 void add_weapon_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){
