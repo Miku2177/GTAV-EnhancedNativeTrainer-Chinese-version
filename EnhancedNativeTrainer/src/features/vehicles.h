@@ -58,6 +58,8 @@ void process_veh_menu();
 
 void process_speed_menu();
 
+void process_visualize_menu();
+
 bool process_savedveh_menu();
 
 bool process_savedveh_sort_menu();
@@ -275,6 +277,8 @@ void onchange_veh_enginerunning_index(int value, SelectFromListMenuItem* source)
 void onchange_veh_lightsOff_index(int value, SelectFromListMenuItem* source);
 
 void onchange_veh_vislight_index(int value, SelectFromListMenuItem* source);
+
+void onchange_veh_vislight3d_index(int value, SelectFromListMenuItem* source);
 
 void set_old_vehicle_state(bool updatedState);
 
