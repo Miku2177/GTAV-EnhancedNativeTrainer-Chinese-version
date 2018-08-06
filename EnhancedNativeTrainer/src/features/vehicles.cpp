@@ -40,6 +40,8 @@ bool featureVehNoDamage = false;
 
 bool featureVehInvulnIncludesCosmetic = false;
 
+bool feature3rdpersonviewonly, featureDaytimeonly = false;
+
 bool turn_check_left, turn_check_right = false;
 bool controllightsenabled_l = false;
 bool controllightsenabled_r = false;
@@ -102,6 +104,7 @@ bool featureDespawnScriptDisabledWasLastOn = false; //do not persist this partic
 int activeLineIndexVeh = 0;
 int activeSavedVehicleIndex = -1;
 int activeLineIndexSpeed = 0;
+int activeLineIndexVisualize = 0;
 int activeLineIndexFuel = 0;
 int activeLineIndexRemember = 0;
 int activeLineIndexRoadLaws = 0;
@@ -206,11 +209,17 @@ const std::vector<double> VEH_ENGINERUNNING_VALUES{ 0, 1, 2 };
 int EngineRunningIndex = 0;
 bool EngineRunning_Changed = true;
 
-//Visualize Vehicle Indicators
+//Visualize Vehicle Indicators (Sprite)
 const std::vector<std::string> VEH_VISLIGHT_CAPTIONS{ "OFF", "1x", "3x", "5x", "7x", "10x", "12x" };
 const std::vector<double> VEH_VISLIGHT_VALUES{ 0, 0.01, 0.03, 0.05, 0.07, 0.1, 0.2 };
 int VisLightIndex = 0;
 bool VisLight_Changed = true;
+
+//Visualize Vehicle Indicators (Vector)
+const std::vector<std::string> VEH_VISLIGHT3D_CAPTIONS{ "OFF", "1x", "3x", "5x", "7x", "10x", "12x" };
+const std::vector<double> VEH_VISLIGHT3D_VALUES{ 0, 0.01, 0.03, 0.05, 0.07, 0.1, 0.2 };
+int VisLight3dIndex = 0;
+bool VisLight3d_Changed = true;
 
 // player in vehicle state... assume true initially since our quicksave might have us in a vehicle already, in which case we can't check if we just got into one
 bool oldVehicleState = true;
@@ -389,6 +398,14 @@ void vehicle_alarm() {
 	WAIT(100);
 }
 
+void vehicle_set_alarm() {
+	Player PlayerPedSetAlarm = PLAYER::PLAYER_PED_ID();
+	Vehicle veh_setalarming = PED::GET_VEHICLE_PED_IS_USING(PlayerPedSetAlarm);
+	AI::TASK_LEAVE_VEHICLE(PlayerPedSetAlarm, veh_setalarming, 0);
+	VEHICLE::SET_VEHICLE_DOORS_LOCKED(veh_setalarming, 4); 
+	VEHICLE::SET_VEHICLE_ALARM(veh_setalarming, true);
+}
+
 void doorslocked_switching(){
 	featureLockVehicleDoors = !featureLockVehicleDoors;
 	featureLockVehicleDoorsUpdated = true;
@@ -406,12 +423,18 @@ void vehicle_brake() {
 }
 
 void damage_door() {
-	Player PlayerPedDamage = PLAYER::PLAYER_PED_ID(); 
-	Vehicle veh_damage = PED::GET_VEHICLE_PED_IS_USING(PlayerPedDamage);
-	std::string::size_type sz;
-	std::string result = show_keyboard(NULL, NULL);
-	int dec_result = std::stoi(result, &sz);
-	VEHICLE::SET_VEHICLE_DOOR_BROKEN(veh_damage, dec_result, false);
+	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0))
+	{
+		Player PlayerPedDamage = PLAYER::PLAYER_PED_ID();
+		Vehicle veh_damage = PED::GET_VEHICLE_PED_IS_USING(PlayerPedDamage);
+		std::string::size_type sz;
+		std::string result_damage = show_keyboard(NULL, NULL);
+		if (!result_damage.empty())
+		{
+			int dec_result = std::stoi(result_damage, &sz);
+			VEHICLE::SET_VEHICLE_DOOR_BROKEN(veh_damage, dec_result, false);
+		}
+	}
 }
 
 bool onconfirm_vehdoor_menu(MenuItem<int> choice){
@@ -495,11 +518,15 @@ bool onconfirm_vehdoor_menu(MenuItem<int> choice){
 	{
 		vehicle_alarm();
 	}
-	else if (choice.value == -13)//vehicle alarm
+	else if (choice.value == -13)//vehicle set alarm
+	{
+		vehicle_set_alarm();
+	}
+	else if (choice.value == -14)//vehicle brake
 	{
 		vehicle_brake();
 	}
-	else if (choice.value == -14)//damage door
+	else if (choice.value == -15)//damage door
 	{
 		damage_door();
 	}
@@ -621,14 +648,20 @@ bool process_veh_door_menu(){
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Handbrake On/Off";
+	item->caption = "Set The Alarm";
 	item->value = -13;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Damage Door (0-5)";
+	item->caption = "Handbrake On/Off";
 	item->value = -14;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "Damage Door (0-5)";
+	item->value = -15;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
@@ -863,6 +896,49 @@ void process_speed_menu(){
 	menuItems.push_back(item);
 	
 	draw_generic_menu<int>(menuItems, &activeLineIndexSpeed, caption, onconfirm_speed_menu, NULL, NULL);
+}
+
+bool onconfirm_visualize_menu(MenuItem<int> choice)
+{
+	return false;
+}
+
+void process_visualize_menu() {
+	std::string caption = "Visualize Vehicle Idicators Options";
+
+	std::vector<MenuItem<int>*> menuItems;
+
+	MenuItem<int> *item;
+	SelectFromListMenuItem *listItem;
+	ToggleMenuItem<int>* toggleItem;
+
+	int i = 0;
+
+	listItem = new SelectFromListMenuItem(VEH_VISLIGHT_CAPTIONS, onchange_veh_vislight_index);
+	listItem->wrap = false;
+	listItem->caption = "2D Sprite";
+	listItem->value = VisLightIndex;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(VEH_VISLIGHT3D_CAPTIONS, onchange_veh_vislight3d_index);
+	listItem->wrap = false;
+	listItem->caption = "3D Vector";
+	listItem->value = VisLight3dIndex;
+	menuItems.push_back(listItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Third Person View Only";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &feature3rdpersonviewonly;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Daytime Only";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureDaytimeonly;
+	menuItems.push_back(toggleItem);
+
+	draw_generic_menu<int>(menuItems, &activeLineIndexVisualize, caption, onconfirm_visualize_menu, NULL, NULL);
 }
 
 bool onconfirm_fuel_colour_menu(MenuItem<int> choice)
@@ -1319,6 +1395,9 @@ bool onconfirm_veh_menu(MenuItem<int> choice){
 		case 19: // speed menu
 			process_speed_menu();
 			break;
+		case 21: // speed menu
+			process_visualize_menu();
+			break;
 		case 25: // fuel menu
 			process_fuel_menu();
 			break;
@@ -1474,11 +1553,11 @@ void process_veh_menu(){
 	listItem->value = turnSignalsIndex;
 	menuItems.push_back(listItem);
 
-	listItem = new SelectFromListMenuItem(VEH_VISLIGHT_CAPTIONS, onchange_veh_vislight_index);
-	listItem->wrap = false;
-	listItem->caption = "Visualize Vehicle Indicators";
-	listItem->value = VisLightIndex;
-	menuItems.push_back(listItem);
+	item = new MenuItem<int>();
+	item->caption = "Visualize Vehicle Indicators";
+	item->value = i++;
+	item->isLeaf = false;
+	menuItems.push_back(item);
 
 	//toggleItem = new ToggleMenuItem<int>();
 	//toggleItem->caption = "Keep The Engine Running";
@@ -2014,14 +2093,53 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 	///////////////////////////////////// VISUALIZE VEHICLE INDICATORS //////////////////////////////////////////////////////////
 
-	if (bPlayerExists && VEH_VISLIGHT_VALUES[VisLightIndex] > 0 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
-				
-		if (turn_check_left) DrawSprite("commonmenu", "arrowleft", 0.4500, 0.95, VEH_VISLIGHT_VALUES[VisLightIndex], VEH_VISLIGHT_VALUES[VisLightIndex], 1, 44, 255, 32, 255);
-		if (turn_check_right) DrawSprite("commonmenu", "arrowright", 0.5500, 0.95, VEH_VISLIGHT_VALUES[VisLightIndex], VEH_VISLIGHT_VALUES[VisLightIndex], 1, 44, 255, 32, 255);
-		if (turn_check_left && turn_check_right)
+	if (bPlayerExists && (VEH_VISLIGHT_VALUES[VisLightIndex] > 0 || VEH_VISLIGHT3D_VALUES[VisLight3dIndex] > 0) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
+		Vehicle playerVehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
+		Vector3 veh_indicators = ENTITY::GET_ENTITY_COORDS(playerVehicle, true);
+		int time_indicators = TIME::GET_CLOCK_HOURS();
+
+		if (turn_check_left)
 		{
-			DrawSprite("commonmenu", "arrowleft", 0.4500, 0.95, VEH_VISLIGHT_VALUES[VisLightIndex], VEH_VISLIGHT_VALUES[VisLightIndex], 1, 44, 255, 32, 255);
-			DrawSprite("commonmenu", "arrowright", 0.5500, 0.95, VEH_VISLIGHT_VALUES[VisLightIndex], VEH_VISLIGHT_VALUES[VisLightIndex], 1, 44, 255, 32, 255);
+			if (!featureDaytimeonly) 
+			{
+				if (!feature3rdpersonviewonly && VEH_VISLIGHT_VALUES[VisLightIndex] > 0) DrawSprite("commonmenu", "arrowleft", 0.4500, 0.95, VEH_VISLIGHT_VALUES[VisLightIndex], VEH_VISLIGHT_VALUES[VisLightIndex], 1, 44, 255, 32, 255);
+				if (feature3rdpersonviewonly && CAM::GET_FOLLOW_VEHICLE_CAM_VIEW_MODE() != 4 && VEH_VISLIGHT_VALUES[VisLightIndex] > 0) DrawSprite("commonmenu", "arrowleft", 0.4500, 0.95, VEH_VISLIGHT_VALUES[VisLightIndex], VEH_VISLIGHT_VALUES[VisLightIndex], 1, 44, 255, 32, 255);
+				if (VEH_VISLIGHT3D_VALUES[VisLight3dIndex] > 0) GRAPHICS::DRAW_MARKER(2/*int type*/, veh_indicators.x + 0.5/*float posX*/, veh_indicators.y + 0.5/*float posY*/, veh_indicators.z + 3/*float posZ*/, 20/*float dirX*/, 20/*float dirY*/, 20/*float dirZ*/, 0/*float rotX*/, 270/*float rotY*/,
+					0/*float rotZ*/, VEH_VISLIGHT3D_VALUES[VisLight3dIndex] * 10/*float scaleX*/, VEH_VISLIGHT3D_VALUES[VisLight3dIndex] * 10/*float scaleY*/, VEH_VISLIGHT3D_VALUES[VisLight3dIndex] * 10/*float scaleZ*/,
+					44/*int red*/, 255/*int green*/, 32/*int blue*/, 155/*int alpha*/,
+					50/*BOOL bobUpAndDown*/, 1/*BOOL faceCamera*/, 1/*int p19*/, 0/*BOOL rotate*/, 0/*char* textureDict*/, 0/*char* textureName*/, 0/*BOOL drawOnEnts*/);
+			}
+			if (featureDaytimeonly && time_indicators > 6 && time_indicators < 20)
+			{
+				if (!feature3rdpersonviewonly && VEH_VISLIGHT_VALUES[VisLightIndex] > 0) DrawSprite("commonmenu", "arrowleft", 0.4500, 0.95, VEH_VISLIGHT_VALUES[VisLightIndex], VEH_VISLIGHT_VALUES[VisLightIndex], 1, 44, 255, 32, 255);
+				if (feature3rdpersonviewonly && CAM::GET_FOLLOW_VEHICLE_CAM_VIEW_MODE() != 4 && VEH_VISLIGHT_VALUES[VisLightIndex] > 0) DrawSprite("commonmenu", "arrowleft", 0.4500, 0.95, VEH_VISLIGHT_VALUES[VisLightIndex], VEH_VISLIGHT_VALUES[VisLightIndex], 1, 44, 255, 32, 255);
+				if (VEH_VISLIGHT3D_VALUES[VisLight3dIndex] > 0) GRAPHICS::DRAW_MARKER(2/*int type*/, veh_indicators.x + 0.5/*float posX*/, veh_indicators.y + 0.5/*float posY*/, veh_indicators.z + 3/*float posZ*/, 20/*float dirX*/, 20/*float dirY*/, 20/*float dirZ*/, 0/*float rotX*/, 270/*float rotY*/,
+					0/*float rotZ*/, VEH_VISLIGHT3D_VALUES[VisLight3dIndex] * 10/*float scaleX*/, VEH_VISLIGHT3D_VALUES[VisLight3dIndex] * 10/*float scaleY*/, VEH_VISLIGHT3D_VALUES[VisLight3dIndex] * 10/*float scaleZ*/,
+					44/*int red*/, 255/*int green*/, 32/*int blue*/, 155/*int alpha*/,
+					50/*BOOL bobUpAndDown*/, 1/*BOOL faceCamera*/, 1/*int p19*/, 0/*BOOL rotate*/, 0/*char* textureDict*/, 0/*char* textureName*/, 0/*BOOL drawOnEnts*/);
+			}
+		}
+		
+		if (turn_check_right) 
+		{
+			if (!featureDaytimeonly)
+			{
+				if (!feature3rdpersonviewonly && VEH_VISLIGHT_VALUES[VisLightIndex] > 0) DrawSprite("commonmenu", "arrowright", 0.5500, 0.95, VEH_VISLIGHT_VALUES[VisLightIndex], VEH_VISLIGHT_VALUES[VisLightIndex], 1, 44, 255, 32, 255);
+				if (feature3rdpersonviewonly && CAM::GET_FOLLOW_VEHICLE_CAM_VIEW_MODE() != 4 && VEH_VISLIGHT_VALUES[VisLightIndex] > 0) DrawSprite("commonmenu", "arrowright", 0.5500, 0.95, VEH_VISLIGHT_VALUES[VisLightIndex], VEH_VISLIGHT_VALUES[VisLightIndex], 1, 44, 255, 32, 255);
+				if (VEH_VISLIGHT3D_VALUES[VisLight3dIndex] > 0) GRAPHICS::DRAW_MARKER(2/*int type*/, veh_indicators.x - 0.5/*float posX*/, veh_indicators.y - 0.5/*float posY*/, veh_indicators.z + 3/*float posZ*/, 20/*float dirX*/, 20/*float dirY*/, 20/*float dirZ*/, 0/*float rotX*/, 90/*float rotY*/,
+					0/*float rotZ*/, VEH_VISLIGHT3D_VALUES[VisLight3dIndex] * 10/*float scaleX*/, VEH_VISLIGHT3D_VALUES[VisLight3dIndex] * 10/*float scaleY*/, VEH_VISLIGHT3D_VALUES[VisLight3dIndex] * 10/*float scaleZ*/,
+					44/*int red*/, 255/*int green*/, 32/*int blue*/, 155/*int alpha*/,
+					50/*BOOL bobUpAndDown*/, 1/*BOOL faceCamera*/, 1/*int p19*/, 0/*BOOL rotate*/, 0/*char* textureDict*/, 0/*char* textureName*/, 0/*BOOL drawOnEnts*/);
+			}
+			if (featureDaytimeonly && time_indicators > 6 && time_indicators < 20)
+			{
+				if (!feature3rdpersonviewonly && VEH_VISLIGHT_VALUES[VisLightIndex] > 0) DrawSprite("commonmenu", "arrowright", 0.5500, 0.95, VEH_VISLIGHT_VALUES[VisLightIndex], VEH_VISLIGHT_VALUES[VisLightIndex], 1, 44, 255, 32, 255);
+				if (feature3rdpersonviewonly && CAM::GET_FOLLOW_VEHICLE_CAM_VIEW_MODE() != 4 && VEH_VISLIGHT_VALUES[VisLightIndex] > 0) DrawSprite("commonmenu", "arrowright", 0.5500, 0.95, VEH_VISLIGHT_VALUES[VisLightIndex], VEH_VISLIGHT_VALUES[VisLightIndex], 1, 44, 255, 32, 255);
+				if (VEH_VISLIGHT3D_VALUES[VisLight3dIndex] > 0) GRAPHICS::DRAW_MARKER(2/*int type*/, veh_indicators.x - 0.5/*float posX*/, veh_indicators.y - 0.5/*float posY*/, veh_indicators.z + 3/*float posZ*/, 20/*float dirX*/, 20/*float dirY*/, 20/*float dirZ*/, 0/*float rotX*/, 90/*float rotY*/,
+					0/*float rotZ*/, VEH_VISLIGHT3D_VALUES[VisLight3dIndex] * 10/*float scaleX*/, VEH_VISLIGHT3D_VALUES[VisLight3dIndex] * 10/*float scaleY*/, VEH_VISLIGHT3D_VALUES[VisLight3dIndex] * 10/*float scaleZ*/,
+					44/*int red*/, 255/*int green*/, 32/*int blue*/, 155/*int alpha*/,
+					50/*BOOL bobUpAndDown*/, 1/*BOOL faceCamera*/, 1/*int p19*/, 0/*BOOL rotate*/, 0/*char* textureDict*/, 0/*char* textureName*/, 0/*BOOL drawOnEnts*/);
+			}
 		}
 	}
 
@@ -2443,6 +2561,7 @@ void reset_vehicle_globals(){
 	//veh_spawn_menu_index = 0;
 
 	activeLineIndexSpeed = 0;
+	activeLineIndexVisualize = 0;
 	activeLineIndexFuel = 0;
 	activeLineIndexRemember = 0;
 	activeLineIndexRoadLaws = 0;
@@ -2476,6 +2595,7 @@ void reset_vehicle_globals(){
 	StarsPunishIndex = 0;
 	EngineRunningIndex = 0;
 	VisLightIndex = 0;
+	VisLight3dIndex = 0;
 	SpeedingSpeedwayIndex = 5;
 	FineSizeIndex = 1;
 	VehBlipSymbolIndex = 0;
@@ -2495,6 +2615,8 @@ void reset_vehicle_globals(){
 	featureAltitude = true;
 	featureSpeedOnFoot =
 	featureKMH =
+	feature3rdpersonviewonly = 
+	featureDaytimeonly =
 	featureSpeedOnGround =
 	featureSpeedInAir =
 	
@@ -2786,8 +2908,10 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureBlips", &featureBlips});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBlipsPhone", &featureBlipsPhone});
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehMassMult", &featureVehMassMult});
-	results->push_back(FeatureEnabledLocalDefinition{"featureSpeedOnFoot", &featureSpeedOnFoot });
-	results->push_back(FeatureEnabledLocalDefinition{"featureKMH", &featureKMH });
+	results->push_back(FeatureEnabledLocalDefinition{"featureSpeedOnFoot", &featureSpeedOnFoot});
+	results->push_back(FeatureEnabledLocalDefinition{"featureKMH", &featureKMH});
+	results->push_back(FeatureEnabledLocalDefinition{"feature3rdpersonviewonly", &feature3rdpersonviewonly});
+	results->push_back(FeatureEnabledLocalDefinition{"featureDaytimeonly", &featureDaytimeonly});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAltitude", &featureAltitude });
 	results->push_back(FeatureEnabledLocalDefinition{"featureSpeedOnGround", &featureSpeedOnGround });
 	results->push_back(FeatureEnabledLocalDefinition{"featureSpeedInAir", &featureSpeedInAir });
@@ -3221,6 +3345,7 @@ void add_vehicle_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"StarsPunishIndex", std::to_string(StarsPunishIndex)});
 	results->push_back(StringPairSettingDBRow{"EngineRunningIndex", std::to_string(EngineRunningIndex)});
 	results->push_back(StringPairSettingDBRow{"VisLightIndex", std::to_string(VisLightIndex)});
+	results->push_back(StringPairSettingDBRow{"VisLight3dIndex", std::to_string(VisLight3dIndex)});
 	results->push_back(StringPairSettingDBRow{"SpeedingSpeedwayIndex", std::to_string(SpeedingSpeedwayIndex)});
 	results->push_back(StringPairSettingDBRow{"FineSizeIndex", std::to_string(FineSizeIndex)});
 	results->push_back(StringPairSettingDBRow{"VehBlipSymbolIndex", std::to_string(VehBlipSymbolIndex)});
@@ -3309,6 +3434,9 @@ void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settin
 		}
 		else if (setting.name.compare("VisLightIndex") == 0) {
 			VisLightIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("VisLight3dIndex") == 0) {
+			VisLight3dIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("SpeedingSpeedwayIndex") == 0){
 			SpeedingSpeedwayIndex = stoi(setting.value);
@@ -3487,6 +3615,10 @@ void onchange_veh_enginerunning_index(int value, SelectFromListMenuItem* source)
 }
 void onchange_veh_vislight_index(int value, SelectFromListMenuItem* source) {
 	VisLightIndex = value;
+	PositionChanged = true;
+}
+void onchange_veh_vislight3d_index(int value, SelectFromListMenuItem* source) {
+	VisLight3dIndex = value;
 	PositionChanged = true;
 }
 void onchange_speeding_speedway_index(int value, SelectFromListMenuItem* source){
