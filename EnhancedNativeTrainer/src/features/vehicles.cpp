@@ -49,6 +49,8 @@ bool autocontrol = false;
 bool speedlimiter_switch = true;
 bool LightAlwaysOff = true;
 
+bool alarmischarged = false;
+
 bool featureNoVehFallOff = false;
 bool featureNoVehFallOffUpdated = false;
 bool featureVehSpeedBoost = false;
@@ -404,6 +406,8 @@ void vehicle_set_alarm() {
 	AI::TASK_LEAVE_VEHICLE(PlayerPedSetAlarm, veh_setalarming, 0);
 	VEHICLE::SET_VEHICLE_DOORS_LOCKED(veh_setalarming, 4); 
 	VEHICLE::SET_VEHICLE_ALARM(veh_setalarming, true);
+	WAIT(1000);
+	alarmischarged = true;
 }
 
 void doorslocked_switching(){
@@ -1719,6 +1723,13 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		}
 	}
 
+	// Set The Alarm Check
+	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && alarmischarged == true)
+	{
+		VEHICLE::SET_VEHICLE_DOORS_LOCKED(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 0);
+		alarmischarged = false;
+	}
+
 	// player's vehicle invincible
 	if (featureVehInvincibleUpdated){
 		if (bPlayerExists && !featureVehInvincible && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
@@ -2422,7 +2433,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		} 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+	
 ////////////////////////////////////////////////////// NO VEHICLE FLIP //////////////////////////////////////////////////////
 
 	if (featureNoVehFlip && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1)) {
