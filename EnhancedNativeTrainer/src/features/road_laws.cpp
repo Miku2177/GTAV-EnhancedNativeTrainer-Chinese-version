@@ -66,6 +66,7 @@ bool red_light_veh_detected = false;
 Vehicle red_light_vehicle;
 BOOL lightsOn = -1;
 BOOL highbeamsOn = -1;
+int Still_seconds, Still_secs_curr, Still_secs_passed = 0;
 
 int SpeedingCityIndex = 3;
 bool SpeedingCity_Changed = true;
@@ -466,8 +467,22 @@ void road_laws()
 			int tempfined_y = (temp_fine_cop.y - vehroadlaws_coords.y);
 			if (tempfined_x < 0) tempfined_x = (tempfined_x * -1);
 			if (tempfined_y < 0) tempfined_y = (tempfined_y * -1);
-
-			if (!PED::IS_PED_IN_VEHICLE(playerPed, vehroadlaws, true) && AI::IS_PED_STILL(cop_that_fines_you) && cop_walking == true && (tempfined_x > 4 || tempfined_y > 4)) AI::TASK_GOTO_ENTITY_AIMING(cop_that_fines_you, playerPed, 3.5, 30.0);
+			
+			if (cop_walking == true && AI::IS_PED_STILL(cop_that_fines_you))
+			{
+				Still_secs_passed = clock() / CLOCKS_PER_SEC;
+				if (((clock() / CLOCKS_PER_SEC) - Still_secs_curr) != 0)
+				{
+					Still_seconds = Still_seconds + 1;
+					Still_secs_curr = Still_secs_passed;
+				}
+			}
+			
+			if (!PED::IS_PED_IN_VEHICLE(cop_that_fines_you, fine_cop_car, true) && cop_walking == true && Still_seconds > 2 && (tempfined_x > 4 || tempfined_y > 4)) // && AI::IS_PED_STILL(cop_that_fines_you)
+			{
+				AI::TASK_GOTO_ENTITY_AIMING(cop_that_fines_you, playerPed, 4.0, 30.0);
+				Still_seconds = 0;
+			}
 			
 			// You're being fined
 			if (tempfined_x < 5 && tempfined_y < 5 && Stop_seconds > 4 && PED::IS_PED_IN_VEHICLE(playerPed, vehroadlaws, true)) // && AI::IS_PED_STILL(cop_that_fines_you)
@@ -619,11 +634,22 @@ void road_laws()
 
 			if (been_seen_by_a_cop == false) cop_walking = false;
 
-			if (PED::IS_PED_DEAD_OR_DYING(cop_that_fines_you, true))
+			if (PED::IS_PED_DEAD_OR_DYING(cop_that_fines_you, true) || PED::IS_PED_SHOOTING(cop_that_fines_you))
 			{
 				ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&cop_that_fines_you);
 				ENTITY::SET_VEHICLE_AS_NO_LONGER_NEEDED(&fine_cop_car);
 				if (featurePoliceVehicleBlip && UI::DOES_BLIP_EXIST(blip_laws)) UI::REMOVE_BLIP(&blip_laws);
+				cop_walking = false;
+				if (stolenvehicle_check == false) been_seen_by_a_cop = false;
+				blip_check = false;
+				num_of_taxes = 0;
+				Stop_seconds = -1;
+				Stop_seconds_final = 5;
+				tempgotcha_x = 0;
+				tempgotcha_y = 0;
+				approached = false;
+				red_light_veh_detected = false;
+				Collision_seconds = -1;
 			}
 
 			if (featurePoliceVehicleBlip && !UI::DOES_BLIP_EXIST(blip_laws))
