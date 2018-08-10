@@ -57,6 +57,7 @@ Vehicle veh_cop_in, hijacking_veh, fine_cop_car;
 Vector3 veh_cop_in_coords;
 Vector3 temp_fine_cop;
 int tempgotcha_x, tempgotcha_y = -1;
+int num_of_taxes = 0;
 Ped cop_that_fines_you;
 float vehcoplaws_speed = -1;
 bool cop_walking, wanted_level_on, alarm_check, found_stolen_in_vector, hijacked_vehicle = false;
@@ -454,7 +455,7 @@ void road_laws()
 					if (PED::IS_PED_IN_VEHICLE(playerPed, vehroadlaws, true))
 					{
 						AI::TASK_LEAVE_VEHICLE(cop_that_fines_you, fine_cop_car, 0);
-						AI::TASK_GOTO_ENTITY_AIMING(cop_that_fines_you, playerPed, 5.0, 30.0);
+						AI::TASK_GOTO_ENTITY_AIMING(cop_that_fines_you, playerPed, 4.0, 30.0);
 						cop_walking = true;
 					}
 				}
@@ -466,8 +467,10 @@ void road_laws()
 			if (tempfined_x < 0) tempfined_x = (tempfined_x * -1);
 			if (tempfined_y < 0) tempfined_y = (tempfined_y * -1);
 
+			if (!PED::IS_PED_IN_VEHICLE(playerPed, vehroadlaws, true) && AI::IS_PED_STILL(cop_that_fines_you) && cop_walking == true && (tempfined_x > 4 || tempfined_y > 4)) AI::TASK_GOTO_ENTITY_AIMING(cop_that_fines_you, playerPed, 3.5, 30.0);
+			
 			// You're being fined
-			if (tempfined_x < 7 && tempfined_y < 7 && Stop_seconds > 4 && AI::IS_PED_STILL(cop_that_fines_you) && PED::IS_PED_IN_VEHICLE(playerPed, vehroadlaws, true))
+			if (tempfined_x < 5 && tempfined_y < 5 && Stop_seconds > 4 && PED::IS_PED_IN_VEHICLE(playerPed, vehroadlaws, true)) // && AI::IS_PED_STILL(cop_that_fines_you)
 			{
 				Stop_seconds = 6;
 				SinceStop_secs_passed_final = clock() / CLOCKS_PER_SEC;
@@ -532,24 +535,42 @@ void road_laws()
 				{
 					int outValue_beingfined = -1;
 					int statHash_beingfined = -1;
-					if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO)
+
+					if (againsttraffic_check == true) num_of_taxes = num_of_taxes + 1;
+					if (pavementdriving_check == true) num_of_taxes = num_of_taxes + 1;
+					if (vehicledamaged_check == true) num_of_taxes = num_of_taxes + 1;
+					if (hohelmet_check == true) num_of_taxes = num_of_taxes + 1;
+					if (mobilephone_check == true) num_of_taxes = num_of_taxes + 1;
+					if (vehiclecollision_check == true) num_of_taxes = num_of_taxes + 1;
+					if (speedingincity_check == true) num_of_taxes = num_of_taxes + 1;
+					if (speedingonspeedway_check == true) num_of_taxes = num_of_taxes + 1;
+					if (runningredlight_check == true) num_of_taxes = num_of_taxes + 1;
+					if (stolenvehicle_check == true) num_of_taxes = num_of_taxes + 1;
+					if (nolightsnighttime_check == true) num_of_taxes = num_of_taxes + 1;
+
+
+					for (int i = 0; i < num_of_taxes; i++)
 					{
-						STATS::STAT_GET_INT(SP0_TOTAL_CASH, &outValue_beingfined, -1);
-						statHash_beingfined = SP0_TOTAL_CASH;
-						STATS::STAT_SET_INT(statHash_beingfined, outValue_beingfined - VEH_FINESIZE_VALUES[FineSizeIndex], true);
+						if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO)
+						{
+							STATS::STAT_GET_INT(SP0_TOTAL_CASH, &outValue_beingfined, -1);
+							statHash_beingfined = SP0_TOTAL_CASH;
+							STATS::STAT_SET_INT(statHash_beingfined, outValue_beingfined - VEH_FINESIZE_VALUES[FineSizeIndex], true);
+						}
+						if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE)
+						{
+							STATS::STAT_GET_INT(SP1_TOTAL_CASH, &outValue_beingfined, -1);
+							statHash_beingfined = SP1_TOTAL_CASH;
+							STATS::STAT_SET_INT(statHash_beingfined, outValue_beingfined - VEH_FINESIZE_VALUES[FineSizeIndex], true);
+						}
+						if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO)
+						{
+							STATS::STAT_GET_INT(SP2_TOTAL_CASH, &outValue_beingfined, -1);
+							statHash_beingfined = SP2_TOTAL_CASH;
+							STATS::STAT_SET_INT(statHash_beingfined, outValue_beingfined - VEH_FINESIZE_VALUES[FineSizeIndex], true);
+						}
 					}
-					if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE)
-					{
-						STATS::STAT_GET_INT(SP1_TOTAL_CASH, &outValue_beingfined, -1);
-						statHash_beingfined = SP1_TOTAL_CASH;
-						STATS::STAT_SET_INT(statHash_beingfined, outValue_beingfined - VEH_FINESIZE_VALUES[FineSizeIndex], true);
-					}
-					if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO)
-					{
-						STATS::STAT_GET_INT(SP2_TOTAL_CASH, &outValue_beingfined, -1);
-						statHash_beingfined = SP2_TOTAL_CASH;
-						STATS::STAT_SET_INT(statHash_beingfined, outValue_beingfined - VEH_FINESIZE_VALUES[FineSizeIndex], true);
-					}
+
 					if (againsttraffic_check == true) set_status_text("YOU'RE FINED FOR DRIVING AGAINST TRAFFIC");
 					if (pavementdriving_check == true) set_status_text("YOU'RE FINED FOR DRIVING ON THE PAVEMENT");
 					if (vehicledamaged_check == true) set_status_text("YOU'RE FINED FOR USING A DAMAGED VEHICLE");
@@ -562,6 +583,7 @@ void road_laws()
 					if (stolenvehicle_check == true) set_status_text("YOU'RE FINED FOR USING A STOLEN VEHICLE");
 					if (nolightsnighttime_check == true) set_status_text("YOU'RE FINED FOR DRIVING WITHOUT HEADLIGHTS");
 				}
+				
 				againsttraffic_check = false;
 				pavementdriving_check = false;
 				vehicledamaged_check = false;
@@ -583,6 +605,7 @@ void road_laws()
 				if (stolenvehicle_check == false) been_seen_by_a_cop = false;
 				if (featurePoliceVehicleBlip && UI::DOES_BLIP_EXIST(blip_laws)) UI::REMOVE_BLIP(&blip_laws);
 				blip_check = false;
+				num_of_taxes = 0;
 				Stop_seconds = -1;
 				Stop_seconds_final = 5;
 				tempgotcha_x = 0;
