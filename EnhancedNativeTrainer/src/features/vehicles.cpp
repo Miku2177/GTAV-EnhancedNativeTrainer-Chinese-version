@@ -33,6 +33,8 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include <cstdlib>
 using namespace std;
 
+const static int ENGINE_SOUND_COUNT_VEHICLES = 346;
+
 bool featureVehInvincible = false;
 bool featureVehInvincibleUpdated = false;
 
@@ -50,6 +52,9 @@ bool speedlimiter_switch = true;
 bool LightAlwaysOff = true;
 
 bool alarmischarged = false;
+Vehicle alrarmchargedvehicle;
+
+int turn_angle = 0;
 
 bool featureNoVehFallOff = false;
 bool featureNoVehFallOffUpdated = false;
@@ -403,6 +408,7 @@ void vehicle_alarm() {
 void vehicle_set_alarm() {
 	Player PlayerPedSetAlarm = PLAYER::PLAYER_PED_ID();
 	Vehicle veh_setalarming = PED::GET_VEHICLE_PED_IS_USING(PlayerPedSetAlarm);
+	alrarmchargedvehicle = veh_setalarming;
 	AI::TASK_LEAVE_VEHICLE(PlayerPedSetAlarm, veh_setalarming, 0);
 	VEHICLE::SET_VEHICLE_DOORS_LOCKED(veh_setalarming, 4); 
 	VEHICLE::SET_VEHICLE_ALARM(veh_setalarming, true);
@@ -1724,7 +1730,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 
 	// Set The Alarm Check
-	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && alarmischarged == true)
+	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && alarmischarged == true && PED::GET_VEHICLE_PED_IS_USING(playerPed) == alrarmchargedvehicle)
 	{
 		VEHICLE::SET_VEHICLE_DOORS_LOCKED(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 0);
 		alarmischarged = false;
@@ -2038,16 +2044,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			WAIT(100);
 		}
 
-		//Vector3 rel_vector = ENTITY::GET_ENTITY_SPEED_VECTOR(vehturn, true);
-		//float angle = acos(rel_vector.y / vehturnspeed)* 180.0f / 3.14159265f;
-		//if (isnan(angle)) angle = 0.0;
-
-		//if (angle > 15 && (!turn_check_left || !turn_check_right))
-		//{
-		//	turn_check_right = false;
-		//	turn_check_left = false;
-		//}
-
 		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && turn_check_left && !controllightsenabled_l) {
 			turn_check_left = false;
 		}
@@ -2090,14 +2086,15 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			turn_check_right = false;
 			autocontrol = false;
 		}
-
-		//Vector3 vel = ENTITY::GET_ENTITY_VELOCITY(vehturn);
-		//Vector3 pos = ENTITY::GET_ENTITY_COORDS(vehturn, 1);
-		//Vector3 motion = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(vehturn, pos.x + vel.x, pos.y + vel.y, pos.z + vel.z);
-
-		VEHICLE::SET_VEHICLE_INDICATOR_LIGHTS(vehturn, 1, turn_check_left);  //Left Signal
-		VEHICLE::SET_VEHICLE_INDICATOR_LIGHTS(vehturn, 0, turn_check_right); // Right Signal	
-
+		
+		if (steer_turn == 254 || steer_turn == 0) turn_angle = turn_angle + 1;
+		else turn_angle = 0;
+		
+		if (turn_angle > 19 || leftKey || rightKey || emergencyKey || vehturnspeed > (VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] + 10))
+		{
+			VEHICLE::SET_VEHICLE_INDICATOR_LIGHTS(vehturn, 1, turn_check_left);  //Left Signal
+			VEHICLE::SET_VEHICLE_INDICATOR_LIGHTS(vehturn, 0, turn_check_right); // Right Signal	
+		}
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3034,10 +3031,23 @@ bool spawn_saved_car(int slot, std::string caption){
 
 		//
 		if (savedVeh->engineSound > -1) {
-			char *currSound = new char[ENGINE_SOUND[savedVeh->engineSound].length() + 1];
-			strcpy(currSound, ENGINE_SOUND[savedVeh->engineSound].c_str());
-			VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
-			AUDIO::_SET_VEHICLE_AUDIO(veh, currSound); 
+			bool correct_name_to_load = false;
+			for (int i = 0; i < ENGINE_SOUND_COUNT_VEHICLES; i++)
+			{
+				if (ENGINE_SOUND_NUMBERS[i] == savedVeh->engineSound)
+				{
+					correct_name_to_load = true;
+					current_picked_engine_sound = i;
+				}
+			}
+			if (correct_name_to_load == true)
+			{
+				//char *currSound = new char[ENGINE_SOUND[savedVeh->engineSound].length() + 1];
+				char *currSound = new char[ENGINE_SOUND[current_picked_engine_sound].length() + 1];
+				strcpy(currSound, ENGINE_SOUND[current_picked_engine_sound].c_str());
+				VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
+				AUDIO::_SET_VEHICLE_AUDIO(veh, currSound);
+			}
 		}
 		//
 

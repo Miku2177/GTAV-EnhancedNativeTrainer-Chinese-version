@@ -1435,7 +1435,8 @@ bool onconfirm_vehmod_category_menu(MenuItem<int> choice){
 	else if (lastSelectedModValue == SPECIAL_ID_FOR_ENGINE_SOUND){ 
 		char *currSound = new char[ENGINE_SOUND[choice.value].length() + 1];
 		strcpy(currSound, ENGINE_SOUND[choice.value].c_str());
-		current_picked_engine_sound = choice.value;
+		//current_picked_engine_sound = choice.value;
+		current_picked_engine_sound = ENGINE_SOUND_NUMBERS[choice.value];
 		VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
 		AUDIO::_SET_VEHICLE_AUDIO(veh, currSound);
 		set_status_text("Changed engine sound");
@@ -1590,7 +1591,8 @@ void set_engine_sound(MenuItem<int> choice) {
 			if (ENGINE_SOUND[i] == amendedResult)
 			{
 				correct_name = true;
-				current_picked_engine_sound = i;
+				//current_picked_engine_sound = i;
+				current_picked_engine_sound = ENGINE_SOUND_NUMBERS[i];
 			}
 		}
 
