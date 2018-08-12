@@ -270,6 +270,8 @@ void onchange_fuel_colours_b_index(int value, SelectFromListMenuItem* source);
 
 void onchange_veh_turn_signals_index(int value, SelectFromListMenuItem* source);
 
+void onchange_veh_turn_signals_angle_index(int value, SelectFromListMenuItem* source);
+
 void onchange_veh_speedlimiter_index(int value, SelectFromListMenuItem* source);
 
 void onchange_veh_enginerunning_index(int value, SelectFromListMenuItem* source);

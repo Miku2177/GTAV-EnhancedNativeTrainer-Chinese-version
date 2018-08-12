@@ -47,6 +47,8 @@ bool featurePenitentiaryMap = false;
 bool featurePenitentiaryMapUpdated = false;
 bool featureZancudoMap = false;
 bool featureZancudoMapUpdated = false;
+bool featureBusLight = false;
+bool featureBusLightUpdated = false;
 
 bool police_blips_toogle = false;
 bool fullmap_toogle = false;
@@ -451,6 +453,13 @@ void process_world_menu()
 	togItem->toggleValueUpdated = &featureMPMapUpdated;
 	menuItems.push_back(togItem);
 
+	//togItem = new ToggleMenuItem<int>();
+	//togItem->caption = "Bus Interior Light On At Night";
+	//togItem->value = 1;
+	//togItem->toggleValue = &featureBusLight;
+	//togItem->toggleValueUpdated = &featureBusLightUpdated;
+	//menuItems.push_back(togItem);
+
 	draw_generic_menu<int>(menuItems, &activeLineIndexWorld, caption, onconfirm_world_menu, NULL, NULL);
 }
 
@@ -479,6 +488,7 @@ void reset_world_globals()
 	featureFullMap = false;
 	featurePenitentiaryMap = false;
 	featureZancudoMap = false;
+	featureBusLight = false;
 	featureBlackout = false;
 	featureSnow = false;
 	featureMPMap = false;
@@ -497,6 +507,7 @@ void reset_world_globals()
 	featureFullMapUpdated =
 	featurePenitentiaryMapUpdated =
 	featureZancudoMapUpdated =
+	featureBusLightUpdated = 
 	featureWorldGarbageTrucksUpdated =
 	featureWorldRandomBoatsUpdated =
 	featureWorldRandomCopsUpdated =
@@ -850,6 +861,7 @@ void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* r
 	results->push_back(FeatureEnabledLocalDefinition{ "featureFullMap", &featureFullMap, &featureFullMapUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featurePenitentiaryMap", &featurePenitentiaryMap, &featurePenitentiaryMapUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureZancudoMap", &featureZancudoMap, &featureZancudoMapUpdated });
+	results->push_back(FeatureEnabledLocalDefinition{ "featureBusLight", &featureBusLight, &featureBusLightUpdated });
 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureSnow", &featureSnow, &featureSnowUpdated});
 
