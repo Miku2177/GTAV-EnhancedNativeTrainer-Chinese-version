@@ -149,6 +149,24 @@ const std::vector<int> VEH_TURN_SIGNALS_VALUES{ 0, 1, 5, 10, 15, 20, 30, 40, 50,
 int turnSignalsIndex = 0;
 bool turnSignalsChanged = true;
 
+//Turn Signals Angle
+const std::vector<std::string> VEH_TURN_SIGNALS_ANGLE_CAPTIONS{ "0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100" };
+const std::vector<int> VEH_TURN_SIGNALS_ANGLE_VALUES{ 0, 1, 5, 10, 15, 17, 20, 25, 30, 40, 50 };
+int turnSignalsAngleIndex = 5;
+bool turnSignalsAngleChanged = true;
+
+//Visualize Vehicle Indicators (Sprite)
+const std::vector<std::string> VEH_VISLIGHT_CAPTIONS{ "OFF", "1x", "3x", "5x", "7x", "10x", "12x" };
+const std::vector<double> VEH_VISLIGHT_VALUES{ 0, 0.01, 0.03, 0.05, 0.07, 0.1, 0.2 };
+int VisLightIndex = 0;
+bool VisLight_Changed = true;
+
+//Visualize Vehicle Indicators (Vector)
+const std::vector<std::string> VEH_VISLIGHT3D_CAPTIONS{ "OFF", "1x", "3x", "5x", "7x", "10x", "12x" };
+const std::vector<double> VEH_VISLIGHT3D_VALUES{ 0, 0.01, 0.03, 0.05, 0.07, 0.1, 0.2 };
+int VisLight3dIndex = 0;
+bool VisLight3d_Changed = true;
+
 //Speed Limiter
 const std::vector<std::string> VEH_SPEEDLIMITER_CAPTIONS{ "OFF", "10 (MPH)", "20 (MPH)", "30 (MPH)", "40 (MPH)", "50 (MPH)", "60 (MPH)", "70 (MPH)", "80 (MPH)", "90 (MPH)", "100 (MPH)", "120 (MPH)", "150 (MPH)", "180 (MPH)", "200 (MPH)" };
 const std::vector<int> VEH_SPEEDLIMITER_VALUES{ 0, 4, 9, 13, 18, 22, 27, 31, 36, 40, 44, 53, 67, 80, 89 };
@@ -215,18 +233,6 @@ const std::vector<std::string> VEH_ENGINERUNNING_CAPTIONS{ "Never", "Always", "H
 const std::vector<double> VEH_ENGINERUNNING_VALUES{ 0, 1, 2 };
 int EngineRunningIndex = 0;
 bool EngineRunning_Changed = true;
-
-//Visualize Vehicle Indicators (Sprite)
-const std::vector<std::string> VEH_VISLIGHT_CAPTIONS{ "OFF", "1x", "3x", "5x", "7x", "10x", "12x" };
-const std::vector<double> VEH_VISLIGHT_VALUES{ 0, 0.01, 0.03, 0.05, 0.07, 0.1, 0.2 };
-int VisLightIndex = 0;
-bool VisLight_Changed = true;
-
-//Visualize Vehicle Indicators (Vector)
-const std::vector<std::string> VEH_VISLIGHT3D_CAPTIONS{ "OFF", "1x", "3x", "5x", "7x", "10x", "12x" };
-const std::vector<double> VEH_VISLIGHT3D_VALUES{ 0, 0.01, 0.03, 0.05, 0.07, 0.1, 0.2 };
-int VisLight3dIndex = 0;
-bool VisLight3d_Changed = true;
 
 // player in vehicle state... assume true initially since our quicksave might have us in a vehicle already, in which case we can't check if we just got into one
 bool oldVehicleState = true;
@@ -914,7 +920,7 @@ bool onconfirm_visualize_menu(MenuItem<int> choice)
 }
 
 void process_visualize_menu() {
-	std::string caption = "Visualize Vehicle Idicators Options";
+	std::string caption = "Vehicle Indicators Options";
 
 	std::vector<MenuItem<int>*> menuItems;
 
@@ -923,6 +929,18 @@ void process_visualize_menu() {
 	ToggleMenuItem<int>* toggleItem;
 
 	int i = 0;
+
+	listItem = new SelectFromListMenuItem(VEH_TURN_SIGNALS_CAPTIONS, onchange_veh_turn_signals_index);
+	listItem->wrap = false;
+	listItem->caption = "Enable Indicators";
+	listItem->value = turnSignalsIndex;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(VEH_TURN_SIGNALS_ANGLE_CAPTIONS, onchange_veh_turn_signals_angle_index);
+	listItem->wrap = false;
+	listItem->caption = "Switch Indicators On If Turn Angle Is";
+	listItem->value = turnSignalsAngleIndex;
+	menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(VEH_VISLIGHT_CAPTIONS, onchange_veh_vislight_index);
 	listItem->wrap = false;
@@ -1405,16 +1423,16 @@ bool onconfirm_veh_menu(MenuItem<int> choice){
 		case 19: // speed menu
 			process_speed_menu();
 			break;
-		case 21: // speed menu
+		case 20: // vehicle indicators menu
 			process_visualize_menu();
 			break;
-		case 25: // fuel menu
+		case 24: // fuel menu
 			process_fuel_menu();
 			break;
-		case 26: // remember vehicles menu
+		case 25: // remember vehicles menu
 			process_remember_vehicles_menu();
 			break;
-		case 27: // remember vehicles menu
+		case 26: // remember vehicles menu
 			process_road_laws_menu();
 			break;
 		default:
@@ -1556,15 +1574,9 @@ void process_veh_menu(){
 	item->value = i++;
 	item->isLeaf = false;
 	menuItems.push_back(item);
-
-	listItem = new SelectFromListMenuItem(VEH_TURN_SIGNALS_CAPTIONS, onchange_veh_turn_signals_index);
-	listItem->wrap = false;
-	listItem->caption = "Enable Indicators";
-	listItem->value = turnSignalsIndex;
-	menuItems.push_back(listItem);
-
+	
 	item = new MenuItem<int>();
-	item->caption = "Visualize Vehicle Indicators";
+	item->caption = "Vehicle Indicators";
 	item->value = i++;
 	item->isLeaf = false;
 	menuItems.push_back(item);
@@ -2090,7 +2102,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		if (steer_turn == 254 || steer_turn == 0) turn_angle = turn_angle + 1;
 		else turn_angle = 0;
 		
-		if (turn_angle > 19 || leftKey || rightKey || emergencyKey || vehturnspeed > (VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] + 10))
+		if (turn_angle > VEH_TURN_SIGNALS_ANGLE_VALUES[turnSignalsAngleIndex] || leftKey || rightKey || emergencyKey || vehturnspeed > (VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] + 10))
 		{
 			VEHICLE::SET_VEHICLE_INDICATOR_LIGHTS(vehturn, 1, turn_check_left);  //Left Signal
 			VEHICLE::SET_VEHICLE_INDICATOR_LIGHTS(vehturn, 0, turn_check_right); // Right Signal	
@@ -2584,6 +2596,7 @@ void reset_vehicle_globals(){
 	FuelColours_G_Index = 18;
 	FuelColours_B_Index = 12;
 	turnSignalsIndex = 0;
+	turnSignalsAngleIndex = 5;
 	speedLimiterIndex = 0;
 	lightsOffIndex = 0;
 	speedBoostIndex = 0;
@@ -3351,6 +3364,7 @@ void add_vehicle_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"engPowMultIndex", std::to_string(engPowMultIndex)});
 	results->push_back(StringPairSettingDBRow{"VehMassMultIndex", std::to_string(VehMassMultIndex)});
 	results->push_back(StringPairSettingDBRow{"TurnSignalsIndex", std::to_string(turnSignalsIndex)});
+	results->push_back(StringPairSettingDBRow{"turnSignalsAngleIndex", std::to_string(turnSignalsAngleIndex)});
 	results->push_back(StringPairSettingDBRow{"speedLimiterIndex", std::to_string(speedLimiterIndex)});
 	results->push_back(StringPairSettingDBRow{"lightsOffIndex", std::to_string(lightsOffIndex)});
 	results->push_back(StringPairSettingDBRow{"SpeedSizeIndex", std::to_string(SpeedSizeIndex)});
@@ -3410,6 +3424,9 @@ void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settin
 		}
 		else if (setting.name.compare("TurnSignalsIndex") == 0){
 			turnSignalsIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("turnSignalsAngleIndex") == 0) {
+			turnSignalsAngleIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("speedLimiterIndex") == 0){
 			speedLimiterIndex = stoi(setting.value);
@@ -3576,6 +3593,11 @@ void onchange_veh_mass_index(int value, SelectFromListMenuItem* source){
 void onchange_veh_turn_signals_index(int value, SelectFromListMenuItem* source){
 	turnSignalsIndex = value;
 	turnSignalsChanged = true;
+}
+
+void onchange_veh_turn_signals_angle_index(int value, SelectFromListMenuItem* source) {
+	turnSignalsAngleIndex = value;
+	turnSignalsAngleChanged = true;
 }
 
 void onchange_veh_lightsOff_index(int value, SelectFromListMenuItem* source){
