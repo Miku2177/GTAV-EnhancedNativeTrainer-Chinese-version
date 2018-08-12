@@ -49,6 +49,10 @@ bool featureZancudoMap = false;
 bool featureZancudoMapUpdated = false;
 bool featureBusLight = false;
 bool featureBusLightUpdated = false;
+bool featureNPCNoLights = false;
+bool featureNPCNoLightsUpdated = false;
+bool featureNPCNeonLights = false;
+bool featureNPCNeonLightsUpdated = false;
 
 bool police_blips_toogle = false;
 bool fullmap_toogle = false;
@@ -460,6 +464,20 @@ void process_world_menu()
 	//togItem->toggleValueUpdated = &featureBusLightUpdated;
 	//menuItems.push_back(togItem);
 
+	togItem = new ToggleMenuItem<int>();
+	togItem->caption = "NPC Vehicles No Lights";
+	togItem->value = 1;
+	togItem->toggleValue = &featureNPCNoLights;
+	togItem->toggleValueUpdated = &featureNPCNoLightsUpdated;
+	menuItems.push_back(togItem);
+
+	togItem = new ToggleMenuItem<int>();
+	togItem->caption = "All NPC Vehicles Have Neon Lights";
+	togItem->value = 1;
+	togItem->toggleValue = &featureNPCNeonLights;
+	togItem->toggleValueUpdated = &featureNPCNeonLightsUpdated;
+	menuItems.push_back(togItem);
+
 	draw_generic_menu<int>(menuItems, &activeLineIndexWorld, caption, onconfirm_world_menu, NULL, NULL);
 }
 
@@ -489,6 +507,8 @@ void reset_world_globals()
 	featurePenitentiaryMap = false;
 	featureZancudoMap = false;
 	featureBusLight = false;
+	featureNPCNoLights = false;
+	featureNPCNeonLights = false;
 	featureBlackout = false;
 	featureSnow = false;
 	featureMPMap = false;
@@ -508,6 +528,8 @@ void reset_world_globals()
 	featurePenitentiaryMapUpdated =
 	featureZancudoMapUpdated =
 	featureBusLightUpdated = 
+	featureNPCNoLightsUpdated = 
+	featureNPCNeonLightsUpdated =
 	featureWorldGarbageTrucksUpdated =
 	featureWorldRandomBoatsUpdated =
 	featureWorldRandomCopsUpdated =
@@ -736,6 +758,42 @@ void update_world_features()
 		featureZancudoMapUpdated = true;
 	}
 	
+	// Bus Interior Light On At Night && NPC No Lights && NPC Neon Lights
+	if (featureBusLight || featureNPCNoLights || featureNPCNeonLights) {
+		int time_bus_indicators = TIME::GET_CLOCK_HOURS();
+		//if (time_bus_indicators < 6 && time_bus_indicators > 20)
+		//{
+			const int BUS_ARR_SIZE = 1024;
+			Vehicle bus_veh[BUS_ARR_SIZE];
+			int found = worldGetAllVehicles(bus_veh, BUS_ARR_SIZE);
+
+			for (int i = 0; i < found; i++) {
+				//Hash currVehModel = ENTITY::GET_ENTITY_MODEL(bus_veh[i]);
+				//if (currVehModel == GAMEPLAY::GET_HASH_KEY("BUS") || currVehModel == GAMEPLAY::GET_HASH_KEY("RENTALBUS") || currVehModel == GAMEPLAY::GET_HASH_KEY("TOURBUS") || currVehModel == GAMEPLAY::GET_HASH_KEY("COACH") ||
+				//	currVehModel == GAMEPLAY::GET_HASH_KEY("AIRBUS")) 
+				//VEHICLE::SET_VEHICLE_INTERIORLIGHT(bus_veh[i], true);
+				
+				if (featureNPCNoLights) VEHICLE::SET_VEHICLE_LIGHTS(bus_veh[i], 1);
+				if (featureNPCNeonLights && !VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 0) && !VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 1) && !VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 2) && 
+					!VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 3))
+				{
+					const std::vector<NeonLightsColor> NPC_NEON_COLORS = {
+					{ "Bright White", NEON_COLOR_WHITE }, { "Dim White", NEON_COLOR_BLACK }, { "Electric Blue", NEON_COLOR_ELECTRICBLUE }, { "Mint Green", NEON_COLOR_MINTGREEN }, { "Lime Green", NEON_COLOR_LIMEGREEN },
+					{ "Yellow", NEON_COLOR_YELLOW }, { "Gold", NEON_COLOR_GOLDENSHOWER }, { "Orange", NEON_COLOR_ORANGE }, { "Red", NEON_COLOR_RED }, { "Pink", NEON_COLOR_PONYPINK }, { "Hot Pink", NEON_COLOR_HOTPINK },
+					{ "Purple", NEON_COLOR_PURPLE }, { "Black Light", NEON_COLOR_BLACKLIGHT }
+					};
+					int temp_colour = rand() % 12 + 1;
+					NeonLightsColor npc_whichcolor = NPC_NEON_COLORS[temp_colour];
+					VEHICLE::_SET_VEHICLE_NEON_LIGHTS_COLOUR(bus_veh[i], npc_whichcolor.rVal, npc_whichcolor.gVal, npc_whichcolor.bVal);
+					VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 0, true);
+					VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 1, true);
+					VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 2, true);
+					VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 3, true);
+				}
+			}
+		//}
+	}
+
 	// Wind Strength
 	if (windstrength_toggle == false)
 		{
@@ -862,6 +920,8 @@ void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* r
 	results->push_back(FeatureEnabledLocalDefinition{ "featurePenitentiaryMap", &featurePenitentiaryMap, &featurePenitentiaryMapUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureZancudoMap", &featureZancudoMap, &featureZancudoMapUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureBusLight", &featureBusLight, &featureBusLightUpdated });
+	results->push_back(FeatureEnabledLocalDefinition{ "featureNPCNoLights", &featureNPCNoLights, &featureNPCNoLightsUpdated });
+	results->push_back(FeatureEnabledLocalDefinition{ "featureNPCNeonLights", &featureNPCNeonLights, &featureNPCNeonLightsUpdated });
 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureSnow", &featureSnow, &featureSnowUpdated});
 
