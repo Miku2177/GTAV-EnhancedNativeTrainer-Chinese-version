@@ -42,6 +42,8 @@ void update_world_features();
 
 void onchange_world_radar_map_index(int value, SelectFromListMenuItem* source);
 
+void onchange_world_damaged_vehicles_index(int value, SelectFromListMenuItem* source);
+
 void onchange_world_wind_strength_index(int value, SelectFromListMenuItem* source);
 
 void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results);
