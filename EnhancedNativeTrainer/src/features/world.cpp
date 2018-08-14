@@ -886,7 +886,9 @@ void update_world_features()
 			}
 		//}
 	}
-		
+	
+	if (!featureAcidWater) PED::SET_PED_DIES_INSTANTLY_IN_WATER(PLAYER::PLAYER_PED_ID(), false);
+
 	// NPC No Gravity Peds && Acid Water
 	if (featureNPCNoGravityPeds || featureAcidWater) {
 		const int BUS_ARR_PED_SIZE = 1024;
