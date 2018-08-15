@@ -478,12 +478,12 @@ void process_world_menu()
 	togItem->toggleValueUpdated = &featureMPMapUpdated;
 	menuItems.push_back(togItem);
 
-	//togItem = new ToggleMenuItem<int>();
-	//togItem->caption = "Bus Interior Light On At Night";
-	//togItem->value = 1;
-	//togItem->toggleValue = &featureBusLight;
-	//togItem->toggleValueUpdated = &featureBusLightUpdated;
-	//menuItems.push_back(togItem);
+	togItem = new ToggleMenuItem<int>();
+	togItem->caption = "Bus Interior Light On At Night";
+	togItem->value = 1;
+	togItem->toggleValue = &featureBusLight;
+	togItem->toggleValueUpdated = &featureBusLightUpdated;
+	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "NPC Vehicles No Lights";
@@ -833,58 +833,113 @@ void update_world_features()
 	
 	// Bus Interior Light On At Night && NPC No Lights && NPC Neon Lights && NPC Dirty Vehicles && NPC Damaged Vehicles && NPC No Gravity Vehicles && NPC Vehicles Reduced Grip
 	if (featureBusLight || featureNPCNoLights || featureNPCNeonLights || featureDirtyVehicles || WORLD_DAMAGED_VEHICLES_VALUES[DamagedVehiclesIndex] > 0 || featureNPCNoGravityVehicles || featureNPCReducedGripVehicles) {
-		int time_bus_indicators = TIME::GET_CLOCK_HOURS();
 		Vehicle veh_mycurrveh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
-		//if (time_bus_indicators < 6 && time_bus_indicators > 20)
-		//{
-			const int BUS_ARR_SIZE = 1024;
-			Vehicle bus_veh[BUS_ARR_SIZE];
-			int found = worldGetAllVehicles(bus_veh, BUS_ARR_SIZE);
+		const int BUS_ARR_SIZE = 1024;
+		Vehicle bus_veh[BUS_ARR_SIZE];
+		int found = worldGetAllVehicles(bus_veh, BUS_ARR_SIZE);
 			
-			for (int i = 0; i < found; i++) {
-				//Hash currVehModel = ENTITY::GET_ENTITY_MODEL(bus_veh[i]);
-				//if (currVehModel == GAMEPLAY::GET_HASH_KEY("BUS") || currVehModel == GAMEPLAY::GET_HASH_KEY("RENTALBUS") || currVehModel == GAMEPLAY::GET_HASH_KEY("TOURBUS") || currVehModel == GAMEPLAY::GET_HASH_KEY("COACH") ||
-				//	currVehModel == GAMEPLAY::GET_HASH_KEY("AIRBUS")) 
-				//VEHICLE::SET_VEHICLE_INTERIORLIGHT(bus_veh[i], true);
-				
-				if (featureNPCNoLights && bus_veh[i] != veh_mycurrveh)	{
+		for (int i = 0; i < found; i++) {
+			if (featureBusLight) {
+				Hash currVehModel = ENTITY::GET_ENTITY_MODEL(bus_veh[i]);
+				Vector3 coords_vehicle = ENTITY::GET_ENTITY_COORDS(bus_veh[i], true);
+				if (currVehModel == GAMEPLAY::GET_HASH_KEY("BUS") || currVehModel == GAMEPLAY::GET_HASH_KEY("RENTALBUS") || currVehModel == GAMEPLAY::GET_HASH_KEY("TOURBUS") || currVehModel == GAMEPLAY::GET_HASH_KEY("COACH") ||
+					currVehModel == GAMEPLAY::GET_HASH_KEY("AIRBUS")) {
 					BOOL lightsOn = -1;
 					BOOL highbeamsOn = -1;
 					VEHICLE::GET_VEHICLE_LIGHTS_STATE(bus_veh[i], &lightsOn, &highbeamsOn);
-					if (lightsOn || highbeamsOn) VEHICLE::SET_VEHICLE_LIGHTS(bus_veh[i], 1);
-				}
-				if (featureNPCNeonLights && !VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 0) && !VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 1) && !VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 2) && 
-					!VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 3) && bus_veh[i] != veh_mycurrveh) {
-					const std::vector<NeonLightsColor> NPC_NEON_COLORS = {
-					{ "Bright White", NEON_COLOR_WHITE }, { "Dim White", NEON_COLOR_BLACK }, { "Electric Blue", NEON_COLOR_ELECTRICBLUE }, { "Mint Green", NEON_COLOR_MINTGREEN }, { "Lime Green", NEON_COLOR_LIMEGREEN },
-					{ "Yellow", NEON_COLOR_YELLOW }, { "Gold", NEON_COLOR_GOLDENSHOWER }, { "Orange", NEON_COLOR_ORANGE }, { "Red", NEON_COLOR_RED }, { "Pink", NEON_COLOR_PONYPINK }, { "Hot Pink", NEON_COLOR_HOTPINK },
-					{ "Purple", NEON_COLOR_PURPLE }, { "Black Light", NEON_COLOR_BLACKLIGHT }
-					};
-					int temp_colour = rand() % 12 + 1;
-					NeonLightsColor npc_whichcolor = NPC_NEON_COLORS[temp_colour];
-					VEHICLE::_SET_VEHICLE_NEON_LIGHTS_COLOUR(bus_veh[i], npc_whichcolor.rVal, npc_whichcolor.gVal, npc_whichcolor.bVal);
-					VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 0, true);
-					VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 1, true);
-					VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 2, true);
-					VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 3, true);
-				}
-				if (WORLD_DAMAGED_VEHICLES_VALUES[DamagedVehiclesIndex] > 0 && bus_veh[i] != veh_mycurrveh) {
-					Vector3 coords_ped = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
-					int temp_damage = rand() % WORLD_DAMAGED_VEHICLES_VALUES[DamagedVehiclesIndex] + 1;
-					if (!VEHICLE::_IS_VEHICLE_DAMAGED(bus_veh[i])) VEHICLE::SET_VEHICLE_DAMAGE(bus_veh[i], coords_ped.x, coords_ped.y, coords_ped.z, temp_damage, 1000, 1);
-				}
-				if (featureDirtyVehicles) {
-					int temp_dirty = rand() % 15 + 0;
-					if (VEHICLE::GET_VEHICLE_DIRT_LEVEL(bus_veh[i]) == 0 && bus_veh[i] != veh_mycurrveh) VEHICLE::SET_VEHICLE_DIRT_LEVEL(bus_veh[i], temp_dirty);
-				} 
-				if (featureNPCNoGravityVehicles) {
-					if (bus_veh[i] != veh_mycurrveh) VEHICLE::SET_VEHICLE_GRAVITY(bus_veh[i], false);
-				}
-				if (featureNPCReducedGripVehicles) {
-					if (bus_veh[i] != veh_mycurrveh) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], true);
+					if (lightsOn || highbeamsOn) {
+						int bone1_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(bus_veh[i], "window_lf");
+						Vector3 bone1_coord = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(bus_veh[i], bone1_index);
+						int bone2_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(bus_veh[i], "window_rf");
+						Vector3 bone2_coord = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(bus_veh[i], bone2_index);
+						int bone3_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(bus_veh[i], "window_lr");
+						Vector3 bone3_coord = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(bus_veh[i], bone3_index);
+						int bone4_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(bus_veh[i], "window_rr");
+						Vector3 bone4_coord = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(bus_veh[i], bone4_index);
+						int bone7_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(bus_veh[i], "seat_dside_f");
+						Vector3 bone7_coord = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(bus_veh[i], bone7_index);
+						int bone8_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(bus_veh[i], "seat_dside_r");
+						Vector3 bone8_coord = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(bus_veh[i], bone8_index);
+						int bone9_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(bus_veh[i], "seat_dside_r1");
+						Vector3 bone9_coord = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(bus_veh[i], bone9_index);
+						int bone10_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(bus_veh[i], "seat_dside_r2");
+						Vector3 bone10_coord = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(bus_veh[i], bone10_index);
+						int bone15_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(bus_veh[i], "seat_dside_r7");
+						Vector3 bone15_coord = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(bus_veh[i], bone15_index);
+						int bone16_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(bus_veh[i], "seat_pside_f");
+						Vector3 bone16_coord = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(bus_veh[i], bone16_index);
+						int bone17_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(bus_veh[i], "seat_pside_r");
+						Vector3 bone17_coord = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(bus_veh[i], bone17_index);
+						int bone18_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(bus_veh[i], "seat_pside_r1");
+						Vector3 bone18_coord = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(bus_veh[i], bone18_index);
+						int bone19_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(bus_veh[i], "seat_pside_r2");
+						Vector3 bone19_coord = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(bus_veh[i], bone19_index);
+						int bone22_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(bus_veh[i], "seat_pside_r5");
+						Vector3 bone22_coord = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(bus_veh[i], bone22_index);
+						int bone23_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(bus_veh[i], "seat_pside_r6");
+						Vector3 bone23_coord = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(bus_veh[i], bone23_index);
+						int bone24_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(bus_veh[i], "seat_pside_r7");
+						Vector3 bone24_coord = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(bus_veh[i], bone24_index);
+						float dirVector_lf_lr_x = bone3_coord.x - bone1_coord.x;
+						float dirVector_lf_lr_y = bone3_coord.y - bone1_coord.y;
+						float dirVector_lf_lr_z = bone3_coord.z - bone1_coord.z;
+						GRAPHICS::DRAW_SPOT_LIGHT(bone1_coord.x, bone1_coord.y, bone1_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 1.0, 1000, 50, 930, 900);
+						GRAPHICS::DRAW_SPOT_LIGHT(bone2_coord.x, bone2_coord.y, bone2_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 1.0, 1000, 50, 930, 900);
+						GRAPHICS::DRAW_SPOT_LIGHT(bone3_coord.x, bone3_coord.y, bone1_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 1.0, 1000, 50, 930, 900);
+						GRAPHICS::DRAW_SPOT_LIGHT(bone4_coord.x, bone4_coord.y, bone4_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 1.0, 1000, 50, 930, 900);
+						GRAPHICS::DRAW_SPOT_LIGHT(bone7_coord.x, bone7_coord.y, bone7_coord.z + 1, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 2.0, 1000, 50, 930, 900);
+						GRAPHICS::DRAW_SPOT_LIGHT(bone8_coord.x, bone8_coord.y, bone8_coord.z + 1, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 2.0, 1000, 50, 930, 900);
+						GRAPHICS::DRAW_SPOT_LIGHT(bone9_coord.x, bone9_coord.y, bone9_coord.z + 1, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 2.0, 1000, 50, 930, 900);
+						GRAPHICS::DRAW_SPOT_LIGHT(bone10_coord.x, bone10_coord.y, bone10_coord.z + 1, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 2.0, 1000, 50, 930, 900);
+						GRAPHICS::DRAW_SPOT_LIGHT(bone15_coord.x, bone15_coord.y, bone15_coord.z + 1, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 2.0, 1000, 50, 930, 900);
+						GRAPHICS::DRAW_SPOT_LIGHT(bone16_coord.x, bone16_coord.y, bone16_coord.z + 1, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 2.0, 1000, 50, 930, 900);
+						GRAPHICS::DRAW_SPOT_LIGHT(bone17_coord.x, bone17_coord.y, bone17_coord.z + 1, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 2.0, 1000, 50, 930, 900);
+						GRAPHICS::DRAW_SPOT_LIGHT(bone18_coord.x, bone18_coord.y, bone18_coord.z + 1, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 2.0, 1000, 50, 930, 900);
+						GRAPHICS::DRAW_SPOT_LIGHT(bone19_coord.x, bone19_coord.y, bone19_coord.z + 1, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 2.0, 1000, 50, 930, 900);
+						GRAPHICS::DRAW_SPOT_LIGHT(bone22_coord.x, bone22_coord.y, bone22_coord.z + 1, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 2.0, 1000, 50, 930, 900);
+						GRAPHICS::DRAW_SPOT_LIGHT(bone23_coord.x, bone23_coord.y, bone23_coord.z + 1, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 2.0, 1000, 50, 930, 900);
+						GRAPHICS::DRAW_SPOT_LIGHT(bone24_coord.x, bone24_coord.y, bone24_coord.z + 1, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 2.0, 1000, 50, 930, 900);
+						VEHICLE::SET_VEHICLE_INTERIORLIGHT(bus_veh[i], true);
+					}
 				}
 			}
-		//}
+			if (featureNPCNoLights && bus_veh[i] != veh_mycurrveh)	{
+				BOOL lightsOn = -1;
+				BOOL highbeamsOn = -1;
+				VEHICLE::GET_VEHICLE_LIGHTS_STATE(bus_veh[i], &lightsOn, &highbeamsOn);
+				if (lightsOn || highbeamsOn) VEHICLE::SET_VEHICLE_LIGHTS(bus_veh[i], 1);
+			}
+			if (featureNPCNeonLights && !VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 0) && !VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 1) && !VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 2) && 
+				!VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 3) && bus_veh[i] != veh_mycurrveh) {
+				const std::vector<NeonLightsColor> NPC_NEON_COLORS = {
+				{ "Bright White", NEON_COLOR_WHITE }, { "Dim White", NEON_COLOR_BLACK }, { "Electric Blue", NEON_COLOR_ELECTRICBLUE }, { "Mint Green", NEON_COLOR_MINTGREEN }, { "Lime Green", NEON_COLOR_LIMEGREEN },
+				{ "Yellow", NEON_COLOR_YELLOW }, { "Gold", NEON_COLOR_GOLDENSHOWER }, { "Orange", NEON_COLOR_ORANGE }, { "Red", NEON_COLOR_RED }, { "Pink", NEON_COLOR_PONYPINK }, { "Hot Pink", NEON_COLOR_HOTPINK },
+				{ "Purple", NEON_COLOR_PURPLE }, { "Black Light", NEON_COLOR_BLACKLIGHT }
+				};
+				int temp_colour = rand() % 12 + 1;
+				NeonLightsColor npc_whichcolor = NPC_NEON_COLORS[temp_colour];
+				VEHICLE::_SET_VEHICLE_NEON_LIGHTS_COLOUR(bus_veh[i], npc_whichcolor.rVal, npc_whichcolor.gVal, npc_whichcolor.bVal);
+				VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 0, true);
+				VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 1, true);
+				VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 2, true);
+				VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 3, true);
+			}
+			if (WORLD_DAMAGED_VEHICLES_VALUES[DamagedVehiclesIndex] > 0 && bus_veh[i] != veh_mycurrveh) {
+				Vector3 coords_ped = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
+				int temp_damage = rand() % WORLD_DAMAGED_VEHICLES_VALUES[DamagedVehiclesIndex] + 1;
+				if (!VEHICLE::_IS_VEHICLE_DAMAGED(bus_veh[i])) VEHICLE::SET_VEHICLE_DAMAGE(bus_veh[i], coords_ped.x, coords_ped.y, coords_ped.z, temp_damage, 1000, 1);
+			}
+			if (featureDirtyVehicles) {
+				int temp_dirty = rand() % 15 + 0;
+				if (VEHICLE::GET_VEHICLE_DIRT_LEVEL(bus_veh[i]) == 0 && bus_veh[i] != veh_mycurrveh) VEHICLE::SET_VEHICLE_DIRT_LEVEL(bus_veh[i], temp_dirty);
+			} 
+			if (featureNPCNoGravityVehicles) {
+				if (bus_veh[i] != veh_mycurrveh) VEHICLE::SET_VEHICLE_GRAVITY(bus_veh[i], false);
+			}
+			if (featureNPCReducedGripVehicles) {
+				if (bus_veh[i] != veh_mycurrveh) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], true);
+			}
+		}
 	}
 	
 	if (!featureAcidWater) PED::SET_PED_DIES_INSTANTLY_IN_WATER(PLAYER::PLAYER_PED_ID(), false);
@@ -910,7 +965,11 @@ void update_world_features()
 				if (GAMEPLAY::GET_RAIN_LEVEL() > 0 && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_ped.x, coords_ped.y, coords_ped.z) && !PED::IS_PED_IN_ANY_VEHICLE(bus_ped[i], 0) && hit == 0) ENTITY::SET_ENTITY_HEALTH(bus_ped[i], 0);
 				if (GAMEPLAY::GET_RAIN_LEVEL() > 0 && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_ped.x, coords_ped.y, coords_ped.z) && PED::IS_PED_IN_ANY_VEHICLE(bus_ped[i], 0) &&
 					(VEHICLE::GET_CONVERTIBLE_ROOF_STATE(veh_currveh) == 2 || !VEHICLE::DOES_VEHICLE_HAVE_ROOF(veh_currveh) || PED::IS_PED_ON_ANY_BIKE(bus_ped[i]) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(currVehModel) ||
-					VEHICLE::IS_THIS_MODEL_A_BICYCLE(currVehModel) || VEHICLE::IS_THIS_MODEL_A_BOAT(currVehModel)) && hit == 0) ENTITY::SET_ENTITY_HEALTH(bus_ped[i], 0);
+					VEHICLE::IS_THIS_MODEL_A_BICYCLE(currVehModel) || currVehModel == GAMEPLAY::GET_HASH_KEY("BODHI2") || currVehModel == GAMEPLAY::GET_HASH_KEY("AIRTUG") || currVehModel == GAMEPLAY::GET_HASH_KEY("CADDY3") || 
+						currVehModel == GAMEPLAY::GET_HASH_KEY("MOWER") || currVehModel == GAMEPLAY::GET_HASH_KEY("TRACTOR") || currVehModel == GAMEPLAY::GET_HASH_KEY("THRUSTER") || currVehModel == GAMEPLAY::GET_HASH_KEY("DUSTER") || 
+						currVehModel == GAMEPLAY::GET_HASH_KEY("TORO") || currVehModel == GAMEPLAY::GET_HASH_KEY("DINGHY2") || currVehModel == GAMEPLAY::GET_HASH_KEY("DINGHY3") || currVehModel == GAMEPLAY::GET_HASH_KEY("DINGHY") || 
+						currVehModel == GAMEPLAY::GET_HASH_KEY("SPEEDER") || currVehModel == GAMEPLAY::GET_HASH_KEY("JETMAX") || currVehModel == GAMEPLAY::GET_HASH_KEY("SQUALO") || currVehModel == GAMEPLAY::GET_HASH_KEY("SUNTRAP") || 
+						currVehModel == GAMEPLAY::GET_HASH_KEY("SEASHARK") || currVehModel == GAMEPLAY::GET_HASH_KEY("SEASHARK2")) && hit == 0) ENTITY::SET_ENTITY_HEALTH(bus_ped[i], 0);
 			}
 		}
 	}
