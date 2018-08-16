@@ -56,12 +56,16 @@ Vehicle alrarmchargedvehicle;
 
 int turn_angle = 0;
 
+int Time_tick_mileage = 0;
+float mileage = 0;
+
 bool featureNoVehFallOff = false;
 bool featureNoVehFallOffUpdated = false;
 bool featureVehSpeedBoost = false;
 bool featureVehSteerAngle = false;
 bool featureEngineRunning = false;
 bool featureNoVehFlip = false;
+bool featureMileage = false;
 bool featureVehMassMult = false;
 bool featureVehSpawnInto = false;
 bool featureVehSpawnTuned = false;
@@ -1377,7 +1381,7 @@ void process_road_laws_menu(){
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Driving Without Headlights At Night";
+	toggleItem->caption = "Driving Without Headlights At Night"; 
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureNoLightsNightTime;
 	menuItems.push_back(toggleItem);
@@ -1647,7 +1651,13 @@ void process_veh_menu(){
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureVehSteerAngle;
 	menuItems.push_back(toggleItem);
-	
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Show Current Mileage";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureMileage;
+	menuItems.push_back(toggleItem);
+		
 	draw_generic_menu<int>(menuItems, &activeLineIndexVeh, caption, onconfirm_veh_menu, NULL, NULL);
 }
 
@@ -2443,6 +2453,52 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
+////////////////////////////////////////////////////// MILEAGE OPTION ///////////////////////////////////////////////////////
+
+	if (featureMileage && PED::IS_PED_IN_ANY_VEHICLE(playerPed, true))
+	{
+		Vehicle vehmileage = PED::GET_VEHICLE_PED_IS_IN(playerPed, 1);
+		float veh_mileage_speed = ENTITY::GET_ENTITY_SPEED(vehmileage);
+		int screen_w, screen_h;
+		GRAPHICS::GET_SCREEN_RESOLUTION(&screen_w, &screen_h);
+
+		if ((GAMEPLAY::GET_GAME_TIMER() - Time_tick_mileage) > 200) {
+			mileage = mileage + ((veh_mileage_speed * (1.60934 * 0.02)) * 6.6);
+			Time_tick_mileage = GAMEPLAY::GET_GAME_TIMER();
+		}
+
+		std::string MileageStatusLines[1];
+		std::stringstream ss;
+		ss << fixed << setprecision(2) << "\n Mileage: " << mileage << " m" << endl;
+		int index = 0;
+		MileageStatusLines[index++] = ss.str();
+		int numActualLines = 0;
+		for (int i = 0; i < 1; i++) {
+			numActualLines++;
+			UI::BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
+			UI::_ADD_TEXT_COMPONENT_SCALEFORM((char *)MileageStatusLines[i].c_str());
+			UI::SET_TEXT_FONT(0);
+			UI::SET_TEXT_SCALE(0.5, 0.5);
+			UI::SET_TEXT_WRAP(0.0, 1.0);
+			UI::SET_TEXT_COLOUR(255, 128, 64, 255);
+			UI::SET_TEXT_CENTRE(0);
+			UI::SET_TEXT_DROPSHADOW(20, 20, 20, 20, 20);
+			UI::SET_TEXT_EDGE(100, 100, 100, 100, 205);
+			UI::SET_TEXT_LEADING(1);
+			UI::END_TEXT_COMMAND_DISPLAY_TEXT(0.7, 0.9);
+		}
+
+		float rectXScaled = 1 - ((1130 / (float)screen_w) / 4);
+		float rectYScaled = 1 - (((6 + (1 * 1)) / (float)screen_h) * 5);
+		float rectWidthScaled = (460 / (float)screen_w) / 2;
+		float rectHeightScaled = (30 + (1 * 18)) / (float)screen_h;
+		int rect_col[4] = { 128, 128, 128, 75 };
+		GRAPHICS::DRAW_RECT(rectXScaled, rectYScaled, rectWidthScaled, rectHeightScaled, rect_col[0], rect_col[1], rect_col[2], rect_col[3]);
+	}
+	else mileage = 0;
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ////////////////////////////////////////////////////// NO VEHICLE FLIP //////////////////////////////////////////////////////
 
 	if (featureNoVehFlip && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1)) {
@@ -2646,6 +2702,7 @@ void reset_vehicle_globals(){
 		featureVehSteerAngle = 
 		featureEngineRunning =
 		featureNoVehFlip =
+		featureMileage = 
 		featureRememberVehicles =
 		featureRoadLaws =
 		featureFuel = 
@@ -2909,6 +2966,7 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehSteerAngle", &featureVehSteerAngle});
 	results->push_back(FeatureEnabledLocalDefinition{"featureEngineRunning", &featureEngineRunning});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoVehFlip", &featureNoVehFlip});
+	results->push_back(FeatureEnabledLocalDefinition{"featureMileage", &featureMileage});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRememberVehicles", &featureRememberVehicles});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRoadLaws", &featureRoadLaws});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePoliceVehicleBlip", &featurePoliceVehicleBlip});
