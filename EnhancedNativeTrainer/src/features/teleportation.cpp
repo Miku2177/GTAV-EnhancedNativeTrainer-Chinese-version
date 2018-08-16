@@ -32,6 +32,7 @@ struct tele_location{
 	std::vector<const char*> scenery_required;
 	std::vector<const char*> scenery_toremove;
 	std::vector<char*> scenery_props;
+	//char* scenery_props[200];
 	bool isLoaded;
 };
 
@@ -334,21 +335,21 @@ std::vector<tele_location> LOCATIONS_REQSCEN = {
 	{ "Carrier", 3069.330f, -4632.4f, 15.043f, IPLS_CARRIER, {}, {}, false },
 	{ "Fort Zancudo UFO", -2052.000f, 3237.000f, 1456.973f, { "ufo", "ufo_lod", "ufo_eye" }, {}, {}, false },
 	{ "Max Renda Refit", -583.1606f, -282.3967f, 35.394f, { "refit_unload" }, { "bh1_16_doors_shut" }, {}, false },
-	{ "North Yankton", 3360.19f, -4849.67f, 111.8f, IPLS_NORTH_YANKTON, {}, {}, false },
-	{ "North Yankton Bank", 5309.519f, -5212.375f, 83.522f, IPLS_NORTH_YANKTON, {}, {}, false },
+	//{ "North Yankton", 3360.19f, -4849.67f, 111.8f, IPLS_NORTH_YANKTON, {}, {}, false },
+	//{ "North Yankton Bank", 5309.519f, -5212.375f, 83.522f, IPLS_NORTH_YANKTON, {}, {}, false },
 	{ "Red Carpet", 293.314f, 180.388f, 104.297f, { "redCarpet" }, {}, {}, false },
 	{ "Simeon's Showroom", -58.1993f, -1096.64f, 26.4224f, { "shr_int" }, { "fakeint" }, {}, false },
 	{ "SS Bulker (Intact)", -163.749f, -2377.94f, 9.3192f, { "cargoship" }, { "sunkcargoship" }, {}, false },
 	{ "SS Bulker (Sunk)", -162.8918f, -2365.769f, 0.0f, { "sunkcargoship" }, { "cargoship" }, {}, false },
 	{ "Train Crash Bridge", -532.1309f, 4526.187f, 88.7955f, { "canyonriver01_traincrash", "railing_end" }, { "railing_start", "canyonriver01" }, {}, false },
 	{ "Yacht", -2023.661f, -1038.038f, 5.577f, { "smboat", "smboat_lod" }, {}, {}, false },
-	{ "Yacht Galaxy Super East", 3411.10000000f, 1193.44500000f, 5.42995500f, IPLS_APAYACHT8_2, {}, {}, false },
-	{ "Yacht Galaxy Super North", 1396.63800000f, 6860.20300000f, 5.42995500f, IPLS_APAYACHT11_3, {}, {}, false },
-	{ "Yacht Galaxy Super South", -351.06080000f, -3553.32300000f, 5.42995500f, IPLS_APAYACHT5_2, {}, {}, false },
-	{ "Yacht Galaxy Super South West", -1995.72500000f, -1523.69400000f, 5.42997000f, IPLS_APAYACHT4_1, {}, {}, false },
-	{ "Yacht Galaxy Super West", -3148.37900000f, 2807.55500000f, 5.42995500f, IPLS_APAYACHT1_2, {}, {}, false },
-	{ "Yacht Gun Runnning", -1419.56f, 6752.45f, 11.909f, IPLS_GUNRUNNING_YACHT, {}, {}, false },//-1418.21000000f, 6749.81100000f, 10.98968000f
-	{ "Yacht Heist", -2043.974f, -1031.582f, 11.981f, IPLS_HEISTYACHT, {}, {}, false },
+	//{ "Yacht Galaxy Super East", 3411.10000000f, 1193.44500000f, 5.42995500f, IPLS_APAYACHT8_2, {}, {}, false },
+	//{ "Yacht Galaxy Super North", 1396.63800000f, 6860.20300000f, 5.42995500f, IPLS_APAYACHT11_3, {}, {}, false },
+	//{ "Yacht Galaxy Super South", -351.06080000f, -3553.32300000f, 5.42995500f, IPLS_APAYACHT5_2, {}, {}, false },
+	//{ "Yacht Galaxy Super South West", -1995.72500000f, -1523.69400000f, 5.42997000f, IPLS_APAYACHT4_1, {}, {}, false },
+	//{ "Yacht Galaxy Super West", -3148.37900000f, 2807.55500000f, 5.42995500f, IPLS_APAYACHT1_2, {}, {}, false },
+	//{ "Yacht Gun Runnning", -1419.56f, 6752.45f, 11.909f, IPLS_GUNRUNNING_YACHT, {}, {}, false },//-1418.21000000f, 6749.81100000f, 10.98968000f
+	//{ "Yacht Heist", -2043.974f, -1031.582f, 11.981f, IPLS_HEISTYACHT, {}, {}, false },
 };
 
 /* Name, coords, IPL name, scenary (props) required, scenary to remove, bool isloaded*/
@@ -423,10 +424,10 @@ std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Maze Bank Del Perro Office: Style 8", -1384.56400000f, -478.26990000f, 71.04205000f, { "ex_sm_15_office_03b" }, {}, {}, false },
 	{ "Maze Bank Del Perro Office: Style 9", -1384.56400000f, -478.26990000f, 71.04205000f, { "ex_sm_15_office_03c" }, {}, {}, false },
 	{ "Mission Row Underground 'Winning' Garage", 400.09610000f, -956.67870000f, -100.00000000f/*, { "hw1_int_placement_interior_v_winningroom_milo_" }, {}, {}, false */ },
-	{ "Night Club Interior (Edgy)", -1569.25f, -3017.39f, -73.22f, { "ba_int_placement_ba_interior_0_dlc_int_01_ba_milo_" }, {}, { IPL_PROPS_NIGHTCLUB_COMMON_PROPS }, false },
-	{ "Night Club Interior (Glamorous)", -1569.25f, -3017.39f, -73.22f, { "ba_int_placement_ba_interior_0_dlc_int_01_ba_milo_" }, {}, { IPL_PROPS_NIGHTCLUB_COMMON_PROPS, /*IPL_PROPS_NIGHTCLUB_GLAM*/ }, false },
-	{ "Night Club Interior (Traditional)", -1569.25f, -3017.39f, -73.22f, { "ba_int_placement_ba_interior_0_dlc_int_01_ba_milo_" }, {}, { IPL_PROPS_NIGHTCLUB_COMMON_PROPS, /*IPL_PROPS_NIGHTCLUB_TRAD*/ }, false },
-	{ "Night Club Basement", -1509.31f, -2990.44f, -79.74f, { "ba_int_placement_ba_interior_1_dlc_int_02_ba_milo_" },{},{ IPL_PROPS_NIGHTCLUB_BASEMENT }, false },
+	//{ "Night Club Interior (Edgy)", -1569.25f, -3017.39f, -73.22f, { "ba_int_placement_ba_interior_0_dlc_int_01_ba_milo_" }, {}, { IPL_PROPS_NIGHTCLUB_EDGY }, false }, //IPL_PROPS_NIGHTCLUB_COMMON_PROPS + IPL_PROPS_NIGHTCLUB_EDGY
+	//{ "Night Club Interior (Glamorous)", -1569.25f, -3017.39f, -73.22f, { "ba_int_placement_ba_interior_0_dlc_int_01_ba_milo_" }, {}, { IPL_PROPS_NIGHTCLUB_GLAM, /*IPL_PROPS_NIGHTCLUB_GLAM*/ }, false },
+	//{ "Night Club Interior (Traditional)", -1569.25f, -3017.39f, -73.22f, { "ba_int_placement_ba_interior_0_dlc_int_01_ba_milo_" }, {}, { IPL_PROPS_NIGHTCLUB_TRAD, /*IPL_PROPS_NIGHTCLUB_TRAD*/ }, false },
+	//{ "Night Club Basement", -1509.31f, -2990.44f, -79.74f, { "ba_int_placement_ba_interior_1_dlc_int_02_ba_milo_" },{},{ IPL_PROPS_NIGHTCLUB_BASEMENT }, false },
 	{ "Online Character Creator Interior", 415.275f, -999.037f, -99.4041f, { "hw1_int_placement_interior_v_mugshot_milo_ " }, {}, {}, false },
 	{ "Penthouse: Style 2", -787.7805f, 334.9232f, 215.8384f, { "apa_v_mp_h_02_a", "apa_v_mp_h_02_b", "apa_v_mp_h_02_c" }, {}, {}, false },
 	{ "Penthouse: Style 3", -787.7805f, 334.9232f, 215.8384f, { "apa_v_mp_h_03_a", "apa_v_mp_h_03_b", "apa_v_mp_h_03_c" }, {}, {}, false },
@@ -1652,6 +1653,7 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 	}
 
 	Vector3 coords;
+	std::vector<char*> emptyVec;
 
 	coords.x = value->x;
 	coords.y = value->y;
@@ -1674,7 +1676,7 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 					STREAMING::REQUEST_IPL(scenery);
 				}
 			}
-			if (value->scenery_props.size() > 0)
+			if (sizeof(value->scenery_props) > 0)
 			{
 				for each (char* prop in value->scenery_props){
 					int interiorID = INTERIOR::GET_INTERIOR_AT_COORDS(coords.x, coords.y, coords.z);
@@ -1694,6 +1696,16 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 
 		value->isLoaded = true;
 
+		//Attempt to prevent the "out of memory" error by first swapping the vector (which is now no longer needed) with an empty one and release memory.
+		if (value->isLoaded)
+		{
+			value->scenery_props.swap(emptyVec);
+			value->scenery_props.shrink_to_fit();
+		}
+
+		//Attempt to prevent the "out of memory" error by shrinking the vector down instead of leaving it ballooned.
+		//value->scenery_props.shrink_to_fit();
+		
 		DWORD time = GetTickCount() + 1000;
 		while (GetTickCount() < time){
 			make_periodic_feature_call();
