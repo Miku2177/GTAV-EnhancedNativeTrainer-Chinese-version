@@ -2759,6 +2759,8 @@ namespace CAM
 
 namespace WEAPON
 {
+	static void SET_WEAPON_LIVERY_COLOR(Ped ped, Hash weaponHash, Hash liveryComp, int colourValue) { invoke<Void>(0x9FE5633880ECD8ED, ped, weaponHash, liveryComp, colourValue); } // _0x9FE5633880ECD8ED
+	static void GET_CURRENT_WEAPON_LIVERY_COLOR(Ped ped, Hash weaponHash, Hash liveryComp) { invoke<Void>(0xF0A60040BE558F2D, ped, weaponHash, liveryComp); } // _0xF0A60040BE558F2D
 	static void ENABLE_LASER_SIGHT_RENDERING(BOOL toggle) { invoke<Void>(0xC8B46D7727D864AA, toggle); } // 0xC8B46D7727D864AA 0xE3438955
 	static Hash GET_WEAPON_COMPONENT_TYPE_MODEL(Hash componentHash) { return invoke<Hash>(0x0DB57B41EC1DB083, componentHash); } // 0x0DB57B41EC1DB083 0x324FA47A
 	static Hash GET_WEAPONTYPE_MODEL(Hash weaponHash) { return invoke<Hash>(0xF46CDC33180FDA94, weaponHash); } // 0xF46CDC33180FDA94 0x44E1C269
@@ -5353,6 +5355,8 @@ namespace UNK2
 
 namespace UNK3
 {
+
+	static Any _0x477D9DB48F889591(char* radioStation, BOOL p1) { return invoke<Any>(0x477D9DB48F889591, radioStation, p1); } // 0x477D9DB48F889591
 	static int _NETWORK_SHOP_GET_PRICE(Hash hash, Hash hash2, BOOL p2) { return invoke<int>(0xC27009422FCCA88D, hash, hash2, p2); } // 0xC27009422FCCA88D
 	static Any _0x3C4487461E9B0DCB() { return invoke<Any>(0x3C4487461E9B0DCB); } // 0x3C4487461E9B0DCB
 	static Any _0x2B949A1E6AEC8F6A() { return invoke<Any>(0x2B949A1E6AEC8F6A); } // 0x2B949A1E6AEC8F6A
