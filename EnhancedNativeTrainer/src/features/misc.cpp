@@ -82,6 +82,8 @@ bool featureMiscJellmanScenery = false;
 
 bool featureResetPlayerModelOnDeath = true;
 
+bool featureEnableMissingRadioStation = false;
+
 const int TRAINERCONFIG_HOTKEY_MENU = 99;
 int radioStationIndex = -1;
 
@@ -361,7 +363,7 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 }
 
 void process_misc_menu(){
-	const int lineCount = 17;
+	const int lineCount = 18;
 
 	std::string caption = "Miscellaneous Options";
 
@@ -372,6 +374,7 @@ void process_misc_menu(){
 		{"Freeze Radio To Station", nullptr, nullptr, false},
 		{"Radio Always Off", &featureRadioAlwaysOff, &featureRadioAlwaysOffUpdated, true},
 		{"Boost Radio Volume", &featureBoostRadio, &featureBoostRadioUpdated, true},
+		{"Restore Missing Radio Station", &featureEnableMissingRadioStation, NULL, false },
 		{"Radio In Police Vehicle", &featurePoliceRadio, &featurePoliceRadioUpdated, true},
 		{"No Wanted Music", &featureWantedMusic, &featureWantedMusicUpdated, true},
 		{"No Flight Music", &featureFlyingMusic, &featureFlyingMusicUpdated, true},
@@ -828,6 +831,21 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		enabledDespawnPointer = false;
 		return;
 	}
+
+	//Enable's 1.44's new radio station. Credit goes to Sjaak for finding this!
+	if (featureEnableMissingRadioStation)
+	{
+		int version = getGameVersion();
+		if (version > 41)
+		{
+			UNK3::_0x477D9DB48F889591("RADIO_22_DLC_BATTLE_MIX1_RADIO", 0);
+		}
+		else 
+		{
+			set_status_text("Game version outdated. This requires 1.44 onwards to function!");
+			featureEnableMissingRadioStation = false;
+		}
+	}
 }
 
 void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){
@@ -852,7 +870,8 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 	results->push_back(FeatureEnabledLocalDefinition{"featurePhoneBillEnabled", &featurePhoneBillEnabled});
 	results->push_back(FeatureEnabledLocalDefinition{"featureZeroBalance", &featureZeroBalance});
 	results->push_back(FeatureEnabledLocalDefinition{"featureShowVehiclePreviews", &featureShowVehiclePreviews});
-	results->push_back(FeatureEnabledLocalDefinition{"featureShowFPS", &featureShowFPS });
+	results->push_back(FeatureEnabledLocalDefinition{"featureShowFPS", &featureShowFPS});
+	results->push_back(FeatureEnabledLocalDefinition{"featureHiddenRadioStation", &featureEnableMissingRadioStation});
 
 	//results->push_back(FeatureEnabledLocalDefinition{ "featureFindDespawnPointer", &featureFindDespawnPointer, &featureFindDespawnPointerUpdated });
 
