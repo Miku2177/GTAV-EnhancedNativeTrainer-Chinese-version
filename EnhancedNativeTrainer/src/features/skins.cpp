@@ -618,6 +618,13 @@ bool onconfirm_skinchanger_menu(MenuItem<int> choice)
 	case 5:
 		PED::CLEAR_ALL_PED_PROPS(playerPed);
 		break;
+	case 6:
+		PED::SET_PED_RANDOM_COMPONENT_VARIATION(playerPed, true);
+		PED::SET_PED_RANDOM_PROPS(playerPed);
+		break;
+	case 7:
+		PED::SET_PED_RANDOM_PROPS(playerPed);
+		break;
 	}
 	return false;
 }
@@ -703,6 +710,18 @@ bool process_skinchanger_menu()
 
 	item = new MenuItem<int>();
 	item->caption = "Clear Props";
+	item->value = i++;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "Randomize Your Appearance";
+	item->value = i++;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "Randomize Head Stuff";
 	item->value = i++;
 	item->isLeaf = true;
 	menuItems.push_back(item);

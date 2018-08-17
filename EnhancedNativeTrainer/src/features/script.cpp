@@ -98,6 +98,7 @@ int ragdoll_secs_passed, ragdoll_secs_curr, ragdoll_seconds = 0;
 Ped oldplayerPed = -1;
 int tick, playerDataMenuIndex, playerPrisonMenuIndex = 0;
 int NPCragdollMenuIndex = 0;
+int PlayerMovementMenuIndex = 0;
 int death_time2 = -1;
 
 int  frozenWantedLevel = 0;
@@ -139,6 +140,12 @@ const std::vector<double> NPC_RAGDOLL_VALUES{ 0, 1, 2 };
 int current_npc_ragdoll = 0;
 bool current_npc_ragdoll_Changed = true;
 
+//Player Movement Speed
+const std::vector<std::string> PLAYER_MOVEMENT_CAPTIONS{ "Normal", "1x", "2x", "3x", "4x", "5x", "6x", "7x", "8x", "9x", "10x" };
+const std::vector<double> PLAYER_MOVEMENT_VALUES{ 0.00, 1.00, 2.00, 3.00, 4.00, 5.00, 6.00, 7.00, 8.00, 9.00, 10.00 };
+int current_player_movement = 0;
+bool current_player_movement_Changed = true; 
+
 /* Prop unblocker related code - will need to clean up later*/
 
 /*THIS causes ENT not to load when Menyoo is present!*/
@@ -164,6 +171,11 @@ void onchange_player_armor_mode(int value, SelectFromListMenuItem* source){
 void onchange_player_prison_mode(int value, SelectFromListMenuItem* source){
 	current_player_prison = value;
 	current_player_prison_Changed = true;
+}
+
+void onchange_player_movement_mode(int value, SelectFromListMenuItem* source) {
+	current_player_movement = value;
+	current_player_movement_Changed = true;
 }
 
 void onchange_NPC_ragdoll_mode(int value, SelectFromListMenuItem* source) {
@@ -507,7 +519,7 @@ void update_features(){
 		PLAYER::SET_SWIM_MULTIPLIER_FOR_PLAYER(player, 1.49);
 	}
 
-	// player fast run
+	// player fast run 
 	if(featurePlayerFastRunUpdated){
 		if(bPlayerExists && !featurePlayerFastRun){
 			PLAYER::SET_RUN_SPRINT_MULTIPLIER_FOR_PLAYER(player, 1.0);
@@ -589,7 +601,7 @@ void update_features(){
 			}
 		}
 	}
-	
+	 
 	//NPC Ragdoll If Shot
 	if (NPC_RAGDOLL_VALUES[current_npc_ragdoll] == 1 || NPC_RAGDOLL_VALUES[current_npc_ragdoll] == 2) {
 		const int arrSize5 = 1024;
@@ -619,6 +631,12 @@ void update_features(){
 		}
 	}
 	
+	//Player Movement Speed
+	if (PLAYER_MOVEMENT_VALUES[current_player_movement] > 0.00)
+	{
+		PED::SET_PED_MOVE_RATE_OVERRIDE(playerPed, PLAYER_MOVEMENT_VALUES[current_player_movement]);
+	}
+
 	//Player Invisible
 	if(featurePlayerInvisibleUpdated){
 		featurePlayerInvisibleUpdated = false;
@@ -733,6 +751,11 @@ bool onconfirm_playerData_menu(MenuItem<int> choice){
 	return false;
 }
 
+bool onconfirm_PlayerMovement_menu(MenuItem<int> choice) {
+
+	return false;
+}
+
 bool onconfirm_NPCragdoll_menu(MenuItem<int> choice) {
 
 	return false;
@@ -830,6 +853,26 @@ bool process_player_life_menu(){
 	//draw_generic_menu<int>(menuItems, nullptr, "Player Data", nullptr, nullptr, nullptr, nullptr);
 }
 
+bool player_movement_speed() {
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+
+	std::vector<MenuItem<int> *> menuItems;
+	std::string caption = "Player Movement Speed Options";
+
+	MenuItem<int> *item;
+	SelectFromListMenuItem *listItem;
+	ToggleMenuItem<int>* toggleItem;
+
+	int i = 0;
+	listItem = new SelectFromListMenuItem(PLAYER_MOVEMENT_CAPTIONS, onchange_player_movement_mode);
+	listItem->wrap = false;
+	listItem->caption = "Speed:";
+	listItem->value = current_player_movement;
+	menuItems.push_back(listItem);
+
+	return draw_generic_menu<int>(menuItems, &PlayerMovementMenuIndex, caption, onconfirm_PlayerMovement_menu, NULL, NULL);
+}
+
 bool process_npc_ragdoll_menu() {
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
@@ -916,16 +959,19 @@ bool onconfirm_player_menu(MenuItem<int> choice){
 		case 1:
 			heal_player();
 			break;
-		case 14:
+		case 11:
+			player_movement_speed();
+			break;
+		case 15:
 			process_npc_ragdoll_menu();
 			break;
-		case 20:
+		case 21:
 			process_anims_menu_top();
 			break;
-		case 21:
+		case 22:
 			process_player_life_menu();
 			break;
-		case 22:
+		case 23:
 			process_player_prison_menu();
 			break;
 		default:
@@ -936,7 +982,7 @@ bool onconfirm_player_menu(MenuItem<int> choice){
 }
 
 void process_player_menu(){
-	const int lineCount = 23;
+	const int lineCount = 24;
 
 	std::string caption = "Player Options";
 
@@ -952,6 +998,7 @@ void process_player_menu(){
 		{"Noiseless", &featurePlayerNoNoise, &featurePlayerNoNoiseUpdated, true},
 		{"Fast Swim", &featurePlayerFastSwim, &featurePlayerFastSwimUpdated, true},
 		{"Fast Run", &featurePlayerFastRun, &featurePlayerFastRunUpdated, true},
+		{"Player Movement Speed", NULL, NULL, false},
 		{"Super Jump", &featurePlayerSuperJump, NULL, true},
 		{"No Ragdoll", &featureNoRagdoll, &featureNoRagdollUpdated, true},
 		{"Ragdoll If Shot", &featureRagdollIfInjured, &featureRagdollIfInjuredUpdated, true },
@@ -1166,6 +1213,8 @@ void reset_globals(){
 		
 	current_player_health = 2;
 	current_player_armor = 6;
+	current_npc_ragdoll = 0;
+	current_player_movement = 0;
 	current_player_prison = 0;
 	current_player_escapemoney = 4;
 	current_player_discharge = 3;
@@ -1440,6 +1489,8 @@ void add_world_feature_enablements3(std::vector<StringPairSettingDBRow>* results
 {
 	results->push_back(StringPairSettingDBRow{"current_player_health", std::to_string(current_player_health)});
 	results->push_back(StringPairSettingDBRow{"current_player_armor", std::to_string(current_player_armor)});
+	results->push_back(StringPairSettingDBRow{"current_npc_ragdoll", std::to_string(current_npc_ragdoll)});
+	results->push_back(StringPairSettingDBRow{"current_player_movement", std::to_string(current_player_movement)});
 	results->push_back(StringPairSettingDBRow{"current_player_prison", std::to_string(current_player_prison)});
 	results->push_back(StringPairSettingDBRow{"current_player_escapemoney", std::to_string(current_player_escapemoney)});
 	results->push_back(StringPairSettingDBRow{"current_player_discharge", std::to_string(current_player_discharge)});
@@ -1511,6 +1562,12 @@ void handle_generic_settings(std::vector<StringPairSettingDBRow> settings){
 		}
 		else if (setting.name.compare("current_player_armor") == 0){
 			current_player_armor = stoi(setting.value);
+		}
+		else if (setting.name.compare("current_npc_ragdoll") == 0) {
+			current_npc_ragdoll = stoi(setting.value);
+		}
+		else if (setting.name.compare("current_player_movement") == 0) {
+			current_player_movement = stoi(setting.value);
 		}
 		else if (setting.name.compare("current_player_prison") == 0){
 			current_player_prison = stoi(setting.value);

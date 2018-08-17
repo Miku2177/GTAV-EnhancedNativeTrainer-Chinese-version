@@ -95,6 +95,8 @@ bool process_skinchanger_menu();
 
 bool process_skinchanger_detail_menu();
 
+bool player_movement_speed();
+
 bool process_npc_ragdoll_menu();
 
 bool process_player_life_menu();
@@ -108,6 +110,8 @@ void onchange_player_health_mode(int value, SelectFromListMenuItem* source);
 void onchange_player_armor_mode(int value, SelectFromListMenuItem* source);
 
 void onchange_player_prison_mode(int value, SelectFromListMenuItem* source);
+
+void onchange_player_movement_mode(int value, SelectFromListMenuItem* source);
 
 void onchange_NPC_ragdoll_mode(int value, SelectFromListMenuItem* source);
 

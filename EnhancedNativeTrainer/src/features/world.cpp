@@ -118,6 +118,12 @@ const std::vector<int> WORLD_DAMAGED_VEHICLES_VALUES{ 0, 5, 7, 10, 12, 15, 20, 3
 int DamagedVehiclesIndex = 0;
 bool DamagedVehiclesChanged = true;
 
+// NPC Vehicle Speed
+const std::vector<std::string> WORLD_NPC_VEHICLESPEED_CAPTIONS{ "OFF", "1", "3", "5", "10", "15", "20", "30", "50", "70", "100" };
+const std::vector<int> WORLD_NPC_VEHICLESPEED_VALUES{ 0, 1, 3, 5, 10, 15, 20, 30, 50, 70, 100 };
+int NPCVehicleSpeedIndex = 0;
+bool NPCVehicleSpeedChanged = true;
+
 bool onconfirm_weather_menu(MenuItem<std::string> choice)
 {
 	std::stringstream ss; ss << "Weather Frozen at: " << lastWeatherName;
@@ -312,6 +318,11 @@ void onchange_world_wind_strength_index(int value, SelectFromListMenuItem* sourc
 void onchange_world_damaged_vehicles_index(int value, SelectFromListMenuItem* source) {
 	DamagedVehiclesIndex = value;
 	DamagedVehiclesChanged = true;
+}
+
+void onchange_world_npc_vehicles_speed_index(int value, SelectFromListMenuItem* source) {
+	NPCVehicleSpeedIndex = value;
+	NPCVehicleSpeedChanged = true;
 }
 
 bool onconfirm_world_menu(MenuItem<int> choice)
@@ -533,6 +544,12 @@ void process_world_menu()
 	togItem->toggleValueUpdated = &featureNPCReducedGripVehiclesUpdated;
 	menuItems.push_back(togItem);
 
+	listItem = new SelectFromListMenuItem(WORLD_NPC_VEHICLESPEED_CAPTIONS, onchange_world_npc_vehicles_speed_index);
+	listItem->wrap = false;
+	listItem->caption = "NPC Vehicles Speed";
+	listItem->value = NPCVehicleSpeedIndex;
+	menuItems.push_back(listItem);
+
 	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "Deadly Water";
 	togItem->value = 1;
@@ -550,6 +567,7 @@ void reset_world_globals()
 	activeLineIndexClouds = 0;
 	RadarMapIndex = 0;
 	DamagedVehiclesIndex = 0;
+	NPCVehicleSpeedIndex = 0;
 	WindStrengthIndex = 0;
 	lastWeather.clear();
 	lastWeatherName.clear();
@@ -831,8 +849,9 @@ void update_world_features()
 		featureZancudoMapUpdated = true;
 	}
 	
-	// Bus Interior Light On At Night && NPC No Lights && NPC Neon Lights && NPC Dirty Vehicles && NPC Damaged Vehicles && NPC No Gravity Vehicles && NPC Vehicles Reduced Grip
-	if (featureBusLight || featureNPCNoLights || featureNPCNeonLights || featureDirtyVehicles || WORLD_DAMAGED_VEHICLES_VALUES[DamagedVehiclesIndex] > 0 || featureNPCNoGravityVehicles || featureNPCReducedGripVehicles) {
+	// Bus Interior Light On At Night && NPC No Lights && NPC Neon Lights && NPC Dirty Vehicles && NPC Damaged Vehicles && NPC No Gravity Vehicles && NPC Vehicles Reduced Grip && NPC Vehicle Speed
+	if (featureBusLight || featureNPCNoLights || featureNPCNeonLights || featureDirtyVehicles || WORLD_DAMAGED_VEHICLES_VALUES[DamagedVehiclesIndex] > 0 || featureNPCNoGravityVehicles || featureNPCReducedGripVehicles ||
+		WORLD_NPC_VEHICLESPEED_VALUES[NPCVehicleSpeedIndex] > 0) {
 		Vehicle veh_mycurrveh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 		const int BUS_ARR_SIZE = 1024;
 		Vehicle bus_veh[BUS_ARR_SIZE];
@@ -939,6 +958,9 @@ void update_world_features()
 			if (featureNPCReducedGripVehicles) {
 				if (bus_veh[i] != veh_mycurrveh) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], true);
 			}
+			if (WORLD_NPC_VEHICLESPEED_VALUES[NPCVehicleSpeedIndex] > 0 && bus_veh[i] != veh_mycurrveh) {
+				VEHICLE::SET_VEHICLE_FORWARD_SPEED(bus_veh[i], WORLD_NPC_VEHICLESPEED_VALUES[NPCVehicleSpeedIndex]);
+			}
 		}
 	}
 	
@@ -950,7 +972,18 @@ void update_world_features()
 		Ped bus_ped[BUS_ARR_PED_SIZE];
 		int found_ped = worldGetAllPeds(bus_ped, BUS_ARR_PED_SIZE);
 		for (int i = 0; i < found_ped; i++) {
-			if (featureNPCNoGravityPeds && bus_ped[i] != PLAYER::PLAYER_PED_ID()) ENTITY::SET_ENTITY_HAS_GRAVITY(bus_ped[i], false);
+			if (featureNPCNoGravityPeds && bus_ped[i] != PLAYER::PLAYER_PED_ID()) {
+				PED::SET_PED_CAN_RAGDOLL(bus_ped[i], true);
+				PED::SET_PED_RAGDOLL_FORCE_FALL(PLAYER::PLAYER_PED_ID());
+				PED::SET_PED_RAGDOLL_FORCE_FALL(bus_ped[i]);
+				PED::SET_PED_RAGDOLL_ON_COLLISION(bus_ped[i], true);
+				if (!AI::IS_PED_STILL(bus_ped[i])) AI::TASK_STAND_STILL(bus_ped[i], 1000);
+				//if (AI::IS_PED_WALKING(bus_ped[i]) || PED::IS_PED_FLEEING(bus_ped[i]) || AI::IS_PED_RUNNING(bus_ped[i]) || PED::IS_PED_IN_COMBAT(bus_ped[i], PLAYER::PLAYER_PED_ID()) || AI::IS_PED_STILL(bus_ped[i]))
+				ENTITY::APPLY_FORCE_TO_ENTITY(bus_ped[i], 0, 300, 0, 0, 0, 0, 0, 1, true, true, false, true, true);
+				if (!PED::IS_PED_RAGDOLL(bus_ped[i])) PED::SET_PED_TO_RAGDOLL(bus_ped[i], 10000, 10000, 0, true, true, false); //  && !PED::IS_PED_RAGDOLL(bus_ped[i])
+				if (PED::IS_PED_SHOOTING(bus_ped[i])) ENTITY::APPLY_FORCE_TO_ENTITY(bus_ped[i], 4, 1000, 0, 0, 0, 0, 0, 1, true, true, true, true, true);
+				ENTITY::SET_ENTITY_HAS_GRAVITY(bus_ped[i], false);
+			}
 			if (featureAcidWater) {
 				PED::SET_PED_DIES_INSTANTLY_IN_WATER(bus_ped[i], true);
 				Vector3 coords_ped = ENTITY::GET_ENTITY_COORDS(bus_ped[i], true); 
@@ -1126,6 +1159,7 @@ void add_world_feature_enablements2(std::vector<StringPairSettingDBRow>* results
 	results->push_back(StringPairSettingDBRow{ "RadarMapIndex", std::to_string(RadarMapIndex) });
 	results->push_back(StringPairSettingDBRow{ "WindStrengthIndex", std::to_string(WindStrengthIndex) });
 	results->push_back(StringPairSettingDBRow{ "DamagedVehiclesIndex", std::to_string(DamagedVehiclesIndex) });
+	results->push_back(StringPairSettingDBRow{ "NPCVehicleSpeedIndex", std::to_string(NPCVehicleSpeedIndex) });
 }
 
 void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings)
@@ -1157,6 +1191,9 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 		}
 		else if (setting.name.compare("DamagedVehiclesIndex") == 0) {
 			DamagedVehiclesIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("NPCVehicleSpeedIndex") == 0) {
+			NPCVehicleSpeedIndex = stoi(setting.value);
 		}
 	}
 }
