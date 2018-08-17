@@ -352,7 +352,7 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 		case 3:
 			process_misc_freezeradio_menu();
 			break;
-		case 15:
+		case 16:
 			process_phone_bill_menu();
 			break;
 		default:
