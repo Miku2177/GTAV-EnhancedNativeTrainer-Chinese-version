@@ -715,13 +715,13 @@ bool process_skinchanger_menu()
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Randomize Your Appearance";
+	item->caption = "Randomize Appearance";
 	item->value = i++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Randomize Head Stuff";
+	item->caption = "Randomize Head Accessories";
 	item->value = i++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
