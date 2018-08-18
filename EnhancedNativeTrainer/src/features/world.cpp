@@ -546,7 +546,7 @@ void process_world_menu()
 
 	listItem = new SelectFromListMenuItem(WORLD_NPC_VEHICLESPEED_CAPTIONS, onchange_world_npc_vehicles_speed_index);
 	listItem->wrap = false;
-	listItem->caption = "NPC Vehicles Speed";
+	listItem->caption = "NPC Vehicles Forced Speed";
 	listItem->value = NPCVehicleSpeedIndex;
 	menuItems.push_back(listItem);
 
@@ -926,8 +926,12 @@ void update_world_features()
 				BOOL lightsOn = -1;
 				BOOL highbeamsOn = -1;
 				VEHICLE::GET_VEHICLE_LIGHTS_STATE(bus_veh[i], &lightsOn, &highbeamsOn);
+				GRAPHICS::DISABLE_VEHICLE_DISTANTLIGHTS(true);
+				VEHICLE::SET_VEHICLE_BRAKE_LIGHTS(bus_veh[i], false);
+				VEHICLE::SET_VEHICLE_INDICATOR_LIGHTS(bus_veh[i], 1, false);
+				VEHICLE::SET_VEHICLE_INDICATOR_LIGHTS(bus_veh[i], 0, false);
 				if (lightsOn || highbeamsOn) VEHICLE::SET_VEHICLE_LIGHTS(bus_veh[i], 1);
-			}
+			} else GRAPHICS::DISABLE_VEHICLE_DISTANTLIGHTS(false);
 			if (featureNPCNeonLights && !VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 0) && !VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 1) && !VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 2) && 
 				!VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 3) && bus_veh[i] != veh_mycurrveh) {
 				const std::vector<NeonLightsColor> NPC_NEON_COLORS = {
