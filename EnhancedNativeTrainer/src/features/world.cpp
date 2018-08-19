@@ -959,7 +959,7 @@ void update_world_features()
 			if (featureNPCNoGravityVehicles) {
 				if (bus_veh[i] != veh_mycurrveh) {
 					VEHICLE::SET_VEHICLE_GRAVITY(bus_veh[i], false);
-					if (ENTITY::GET_ENTITY_HEIGHT_ABOVE_GROUND(bus_veh[i]) < 2) ENTITY::APPLY_FORCE_TO_ENTITY(bus_veh[i], 1, 0, 0, 5, 0, 0, 0, 1, true, true, false, true, true);
+					if (ENTITY::GET_ENTITY_HEIGHT_ABOVE_GROUND(bus_veh[i]) < 2 && (ENTITY::GET_ENTITY_SPEED(bus_veh[i]) * 3.6) < 20) ENTITY::APPLY_FORCE_TO_ENTITY(bus_veh[i], 1, 0, 0, 5, 0, 0, 0, 1, true, true, false, true, true);
 				}
 			}
 			if (featureNPCReducedGripVehicles) {
