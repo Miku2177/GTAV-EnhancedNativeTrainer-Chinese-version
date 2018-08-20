@@ -28,6 +28,8 @@ int activeLineIndexWorld = 0;
 int activeLineIndexWeather = 0;
 int activeLineIndexClouds = 0;
 
+int r, g, b = -1;
+
 bool featureRestrictedZones = true;
 
 bool featureWorldMoonGravity = false;
@@ -932,20 +934,25 @@ void update_world_features()
 				VEHICLE::SET_VEHICLE_INDICATOR_LIGHTS(bus_veh[i], 0, false);
 				if (lightsOn || highbeamsOn) VEHICLE::SET_VEHICLE_LIGHTS(bus_veh[i], 1);
 			} else GRAPHICS::DISABLE_VEHICLE_DISTANTLIGHTS(false);
-			if (featureNPCNeonLights && !VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 0) && !VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 1) && !VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 2) && 
-				!VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 3) && bus_veh[i] != veh_mycurrveh) {
-				const std::vector<NeonLightsColor> NPC_NEON_COLORS = {
-				{ "Bright White", NEON_COLOR_WHITE }, { "Dim White", NEON_COLOR_BLACK }, { "Electric Blue", NEON_COLOR_ELECTRICBLUE }, { "Mint Green", NEON_COLOR_MINTGREEN }, { "Lime Green", NEON_COLOR_LIMEGREEN },
-				{ "Yellow", NEON_COLOR_YELLOW }, { "Gold", NEON_COLOR_GOLDENSHOWER }, { "Orange", NEON_COLOR_ORANGE }, { "Red", NEON_COLOR_RED }, { "Pink", NEON_COLOR_PONYPINK }, { "Hot Pink", NEON_COLOR_HOTPINK },
-				{ "Purple", NEON_COLOR_PURPLE }, { "Black Light", NEON_COLOR_BLACKLIGHT }
-				};
-				int temp_colour = rand() % 12 + 1;
-				NeonLightsColor npc_whichcolor = NPC_NEON_COLORS[temp_colour];
-				VEHICLE::_SET_VEHICLE_NEON_LIGHTS_COLOUR(bus_veh[i], npc_whichcolor.rVal, npc_whichcolor.gVal, npc_whichcolor.bVal);
-				VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 0, true);
-				VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 1, true);
-				VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 2, true);
-				VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 3, true);
+			if (featureNPCNeonLights) {
+				Hash currVehModel_neon = ENTITY::GET_ENTITY_MODEL(bus_veh[i]);
+				//if (VEHICLE::IS_THIS_MODEL_A_CAR(currVehModel_neon)) VEHICLE::_GET_VEHICLE_NEON_LIGHTS_COLOUR(bus_veh[i], &r, &g, &b);
+				if (!VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 0) && !VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 1) && !VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 2) &&
+					!VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 3)) {
+				//if (r == 255 && g == 0 && b == 255) { 
+					if (bus_veh[i] != veh_mycurrveh && VEHICLE::IS_THIS_MODEL_A_CAR(currVehModel_neon)) {
+						const std::vector<NeonLightsColor> NPC_NEON_COLORS = {{ "Bright White", NEON_COLOR_WHITE }, { "Dim White", NEON_COLOR_BLACK }, { "Electric Blue", NEON_COLOR_ELECTRICBLUE }, { "Mint Green", NEON_COLOR_MINTGREEN }, { "Lime Green", NEON_COLOR_LIMEGREEN },
+						{ "Yellow", NEON_COLOR_YELLOW }, { "Gold", NEON_COLOR_GOLDENSHOWER }, { "Orange", NEON_COLOR_ORANGE }, { "Red", NEON_COLOR_RED }, { "Pink", NEON_COLOR_PONYPINK }, { "Hot Pink", NEON_COLOR_HOTPINK },
+						{ "Purple", NEON_COLOR_PURPLE }, { "Black Light", NEON_COLOR_BLACKLIGHT }};
+						int temp_colour = rand() % 12 + 1;
+						NeonLightsColor npc_whichcolor = NPC_NEON_COLORS[temp_colour];
+						VEHICLE::_SET_VEHICLE_NEON_LIGHTS_COLOUR(bus_veh[i], npc_whichcolor.rVal, npc_whichcolor.gVal, npc_whichcolor.bVal);
+						VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 0, true);
+						VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 1, true);
+						VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 2, true);
+						VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 3, true);
+					}
+				}
 			}
 			if (WORLD_DAMAGED_VEHICLES_VALUES[DamagedVehiclesIndex] > 0 && bus_veh[i] != veh_mycurrveh) {
 				Vector3 coords_ped = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);

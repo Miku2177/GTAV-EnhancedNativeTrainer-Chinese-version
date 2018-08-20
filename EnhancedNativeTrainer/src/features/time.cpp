@@ -15,13 +15,17 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 #include "..\ui_support\menu_functions.h"
 
-const std::vector<std::string> TIME_SPEED_CAPTIONS{"Minimum", "0.1x", "0.5x", "0.75x", "1x (Normal)"};
-const std::vector<float> TIME_SPEED_VALUES{0.0f, 0.1f, 0.5f, 0.75f, 1.0f};
+const std::vector<std::string> TIME_SPEED_CAPTIONS{ "Minimum", "0.1x", "0.2x", "0.3x", "0.4x", "0.5x", "0.6x", "0.7x", "0.8x", "0.9x", "1x (Normal)" };
+const std::vector<float> TIME_SPEED_VALUES{ 0.0f, 0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f, 1.0f };
 const int DEFAULT_TIME_SPEED = 4;
 
 const std::vector<std::string> TIME_FLOW_RATE_CAPTIONS{"Frozen Time (0s/s)", "Half a Second per Second", "Real Time (1s/s)", "2 Seconds per Second", "3 Seconds per Second", "5 Seconds per Second", "6 Seconds per Second", "10 Seconds per Second", "12 Seconds per Second", "15 Seconds per Second", "Normal Time (30s/s)", "1 Minute per Second", "2 Minutes per Second", "3 Minutes per Second", "5 Minutes per Second", "6 Minutes per Second", "10 Minutes per Second", "12 Minutes per Second", "15 Minutes per Second", "30 Minutes per Second", "1 Hour per Second", "3 Hours per Second", "6 Hours per Second", "12 Hours per Second", "1 Day per Second"}; // 25
 const std::vector<float> TIME_FLOW_RATE_VALUES{0.0f, 0.5f, 1.0f, 2.0f, 3.0f, 5.0f, 6.0f, 10.0f, 12.0f, 15.0f, 30.0f, 60.0f, 120.0f, 180.0f, 300.0f, 360.0f, 600.0f, 720.0f, 900.0f, 1800.0f, 3600.0f, 10800.0f, 21600.0f, 43200.0f, 86400.0f};
 const int DEFAULT_TIME_FLOW_RATE = 10;
+
+const std::vector<std::string> HOTKEY_FLOW_RATE_CAPTIONS{ "Minimum", "0.1x", "0.2x", "0.3x", "0.4x", "0.5x", "0.6x", "0.7x", "0.8x", "0.9x", "1x (Normal)" };
+const std::vector<float> HOTKEY_FLOW_RATE_VALUES{ 0.0f, 0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f, 1.0f };
+const int DEFAULT_HOTKEY_FLOW_RATE = 10;
 
 const int TIME_TO_SLOW_AIM = 2000;
 
@@ -29,9 +33,11 @@ int timeSpeedIndexWhileAiming = DEFAULT_TIME_SPEED;
 int timeSpeedIndex = DEFAULT_TIME_SPEED;
 
 int timeFlowRateIndex = DEFAULT_TIME_FLOW_RATE;
+int HotkeyFlowRateIndex = DEFAULT_HOTKEY_FLOW_RATE;
 
 bool featureTimeSynced = false;
 bool timeFlowRateChanged = true, timeFlowRateLocked = true;
+bool HotkeyFlowRateChanged = true, HotkeyFlowRateLocked = true;
 
 int activeLineIndexTime = 0;
 
@@ -90,6 +96,91 @@ bool onconfirm_time_set_menu(MenuItem<int> choice){
 	return false;
 }
 
+void onconfirm_time_flow_rate(MenuItem<int> choice) {
+	if (timeFlowRateLocked = !timeFlowRateLocked) {
+		std::ostringstream ss;
+		ss << "Time flow rate: " << TIME_FLOW_RATE_CAPTIONS.at(choice.value);
+		set_status_text(ss.str());
+	}
+}
+
+void onchange_game_speed_callback(int value, SelectFromListMenuItem* source) {
+	timeSpeedIndex = value;
+	std::ostringstream ss;
+	ss << "Game speed: " << TIME_SPEED_CAPTIONS.at(value);
+	set_status_text(ss.str());
+}
+
+void onchange_aiming_speed_callback(int value, SelectFromListMenuItem* source) {
+	timeSpeedIndexWhileAiming = value;
+	std::ostringstream ss;
+	ss << "Aiming speed: " << TIME_SPEED_CAPTIONS.at(value);
+	set_status_text(ss.str());
+}
+
+void onchange_time_flow_rate_callback(int value, SelectFromListMenuItem *source) {
+	timeFlowRateIndex = value, timeFlowRateChanged = true, timeFlowRateLocked = false;
+}
+
+void onchange_hotkey_flow_rate_callback(int value, SelectFromListMenuItem *source) {
+	HotkeyFlowRateIndex = value, HotkeyFlowRateChanged = true, HotkeyFlowRateLocked = false;
+}
+
+bool onconfirm_time_flowrate_menu(MenuItem<int> choice) {
+	switch (activeLineIndexTime) {
+	case 0:
+		if (featureTimeSynced) {
+			set_status_text("Time synced with system");
+		}
+		break;
+	}
+	return false;
+}
+
+void all_time_flow_rate() {
+	std::vector<MenuItem<int> *> menuItems;
+	int index = 0;
+
+	ToggleMenuItem<int> *togItem = new ToggleMenuItem<int>();
+	togItem->caption = "Sync With System";
+	togItem->value = 0;
+	togItem->toggleValue = &featureTimeSynced;
+	togItem->toggleValueUpdated = NULL;
+	menuItems.push_back(togItem);
+
+	//SelectFromListMenuItem *listItem = new SelectFromListMenuItem(TIME_SPEED_CAPTIONS, onchange_game_speed_callback);
+	//listItem->wrap = false;
+	//listItem->caption = "Global Game Speed";
+	//if (timeSpeedIndex == -1) {
+	//	listItem->value = TIME_SPEED_VALUES.size() - 1;
+	//}
+	//else {
+	//	listItem->value = timeSpeedIndex;
+	//}
+	//menuItems.push_back(listItem);
+
+	SelectFromListMenuItem *listItem = new SelectFromListMenuItem(HOTKEY_FLOW_RATE_CAPTIONS, onchange_hotkey_flow_rate_callback);
+	listItem->wrap = false;
+	listItem->caption = "Global Game Speed";
+	listItem->value = HotkeyFlowRateIndex;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(TIME_SPEED_CAPTIONS, onchange_aiming_speed_callback);
+	listItem->wrap = false;
+	listItem->caption = "Game Speed While Aiming";
+	listItem->value = timeSpeedIndexWhileAiming;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(TIME_FLOW_RATE_CAPTIONS, onchange_time_flow_rate_callback);
+	listItem->caption = "Time Flow Rate";
+	listItem->value = timeFlowRateIndex;
+	listItem->wrap = false;
+	listItem->onConfirmFunction = onconfirm_time_flow_rate;
+	menuItems.push_back(listItem);
+
+	draw_generic_menu<int>(menuItems, nullptr, "Time Flow Rate Options", onconfirm_time_flowrate_menu, nullptr, nullptr, nullptr);
+}
+
 void process_time_set_menu(){
 	std::vector<MenuItem<int> *> menuItems;
 	int index = 0;
@@ -142,7 +233,7 @@ void process_time_set_menu(){
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
-	draw_generic_menu<int>(menuItems, nullptr, "Set Time to ", onconfirm_time_set_menu, nullptr, nullptr, nullptr);
+	draw_generic_menu<int>(menuItems, nullptr, "Set Time To ", onconfirm_time_set_menu, nullptr, nullptr, nullptr);
 }
 
 bool onconfirm_time_menu(MenuItem<int> choice){
@@ -169,38 +260,10 @@ bool onconfirm_time_menu(MenuItem<int> choice){
 			movetime_day_backward();
 			break;
 		case 7:
-			if(featureTimeSynced){
-				set_status_text("Time synced with system");
-			}
+			all_time_flow_rate();
 			break;
 	}
 	return false;
-}
-
-void onchange_game_speed_callback(int value, SelectFromListMenuItem* source){
-	timeSpeedIndex = value;
-	std::ostringstream ss;
-	ss << "Game speed: " << TIME_SPEED_CAPTIONS.at(value);
-	set_status_text(ss.str());
-}
-
-void onchange_aiming_speed_callback(int value, SelectFromListMenuItem* source){
-	timeSpeedIndexWhileAiming = value;
-	std::ostringstream ss;
-	ss << "Aiming speed: " << TIME_SPEED_CAPTIONS.at(value);
-	set_status_text(ss.str());
-}
-
-void onchange_time_flow_rate_callback(int value, SelectFromListMenuItem *source){
-	timeFlowRateIndex = value, timeFlowRateChanged = true, timeFlowRateLocked = false;
-}
-
-void onconfirm_time_flow_rate(MenuItem<int> choice){
-	if(timeFlowRateLocked = !timeFlowRateLocked){
-		std::ostringstream ss;
-		ss << "Time flow rate: " << TIME_FLOW_RATE_CAPTIONS.at(choice.value);
-		set_status_text(ss.str());
-	}
 }
 
 void process_time_menu(){
@@ -211,6 +274,12 @@ void process_time_menu(){
 	int index = 0;
 
 	MenuItem<int> *item = new MenuItem<int>();
+	item->caption = "Set Time to Preset";
+	item->value = -1;
+	item->isLeaf = false;
+	menuItems.insert(menuItems.begin(), item);
+
+	item = new MenuItem<int>();
 	item->caption = "1 Hour Forward";
 	item->value = index++;
 	item->isLeaf = true;
@@ -245,43 +314,12 @@ void process_time_menu(){
 	item->value = index++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
-
-	ToggleMenuItem<int> *togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Sync With System";
-	togItem->value = -2;
-	togItem->toggleValue = &featureTimeSynced;
-	togItem->toggleValueUpdated = NULL;
-	menuItems.push_back(togItem);
-
-	SelectFromListMenuItem *listItem = new SelectFromListMenuItem(TIME_SPEED_CAPTIONS, onchange_game_speed_callback);
-	listItem->wrap = false;
-	listItem->caption = "Game Speed";
-	if(timeSpeedIndex == -1){
-		listItem->value = TIME_SPEED_VALUES.size() - 1;
-	}
-	else{
-		listItem->value = timeSpeedIndex;
-	}
-	menuItems.push_back(listItem);
-
-	listItem = new SelectFromListMenuItem(TIME_SPEED_CAPTIONS, onchange_aiming_speed_callback);
-	listItem->wrap = false;
-	listItem->caption = "Game Speed While Aiming";
-	listItem->value = timeSpeedIndexWhileAiming;
-	menuItems.push_back(listItem);
-
+	
 	item = new MenuItem<int>();
-	item->caption = "Set Time to Preset";
-	item->value = -4;
+	item->caption = "Time Flow Rate";
+	item->value = index++;
 	item->isLeaf = false;
-	menuItems.insert(menuItems.begin(), item);
-
-	listItem = new SelectFromListMenuItem(TIME_FLOW_RATE_CAPTIONS, onchange_time_flow_rate_callback);
-	listItem->caption = "Time Flow Rate";
-	listItem->value = timeFlowRateIndex;
-	listItem->wrap = false;
-	listItem->onConfirmFunction = onconfirm_time_flow_rate;
-	menuItems.push_back(listItem);
+	menuItems.insert(menuItems.end(), item);
 
 	draw_generic_menu<int>(menuItems, &activeLineIndexTime, caption, onconfirm_time_menu, nullptr, nullptr, nullptr);
 }
@@ -289,10 +327,12 @@ void process_time_menu(){
 void reset_time_globals(){
 	featureTimeSynced = false;
 	timeFlowRateChanged = true;
+	HotkeyFlowRateChanged = true;
 
 	timeSpeedIndexWhileAiming = DEFAULT_TIME_SPEED;
 	timeSpeedIndex = DEFAULT_TIME_SPEED;
 	timeFlowRateIndex = DEFAULT_TIME_FLOW_RATE;
+	HotkeyFlowRateIndex = DEFAULT_HOTKEY_FLOW_RATE;
 }
 
 void add_time_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){
@@ -493,6 +533,12 @@ void movetime_set(int hour, int minute){
 	set_status_text(text);
 }
 
+void toggle_game_speed()
+{
+	if (HotkeyFlowRateIndex != DEFAULT_HOTKEY_FLOW_RATE && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID()) && !PLAYER::IS_PLAYER_DEAD(PLAYER::PLAYER_ID())) HotkeyFlowRateLocked = !HotkeyFlowRateLocked;
+	WAIT(100);
+}
+
 std::string get_day_of_game_week(){
 	int day = TIME::GET_CLOCK_DAY_OF_WEEK();
 	switch(day){
@@ -523,12 +569,16 @@ void handle_generic_settings_time(std::vector<StringPairSettingDBRow>* settings)
 		else if(setting.name.compare("timeFlowRateIndex") == 0){
 			timeFlowRateIndex = stoi(setting.value);
 		}
+		else if (setting.name.compare("HotkeyFlowRateIndex") == 0) {
+			HotkeyFlowRateIndex = stoi(setting.value);
+		}
 	}
 }
 
 void add_time_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"timeSpeedIndexWhileAiming", std::to_string(timeSpeedIndexWhileAiming)});
 	results->push_back(StringPairSettingDBRow{"timeFlowRateIndex", std::to_string(timeFlowRateIndex)});
+	results->push_back(StringPairSettingDBRow{"HotkeyFlowRateIndex", std::to_string(HotkeyFlowRateIndex)});
 }
 
 void update_time_features(Player player){
@@ -544,7 +594,7 @@ void update_time_features(Player player){
 		localtime_s(&t, &now);
 		TIME::SET_CLOCK_TIME(t.tm_hour, t.tm_min, t.tm_sec);
 	}
-
+		
 	// time flow rate
 	if(timeFlowRateChanged){
 		timeFlowRateChanged = false;
@@ -588,9 +638,16 @@ void update_time_features(Player player){
 		GAMEPLAY::SET_TIME_SCALE(0.4f);
 		weHaveChangedTimeScale = true;
 	}
+	else if (!HotkeyFlowRateLocked && HotkeyFlowRateIndex != DEFAULT_HOTKEY_FLOW_RATE && PLAYER::IS_PLAYER_CONTROL_ON(player) && !PLAYER::IS_PLAYER_DEAD(PLAYER::PLAYER_ID())) { // toggle game speed via hotkey
+		GAMEPLAY::SET_TIME_SCALE(HOTKEY_FLOW_RATE_VALUES.at(HotkeyFlowRateIndex));
+		weHaveChangedTimeScale = true;
+	}
 	else if(PLAYER::IS_PLAYER_FREE_AIMING(player) && PLAYER::IS_PLAYER_CONTROL_ON(player)){
 		if(timeSinceAimingBegan == 0){
 			timeSinceAimingBegan = GetTickCount();
+		} else{ // this must fix a bug when the game stayed slow even when not aiming
+			GAMEPLAY::SET_TIME_SCALE(1.0f);
+			weHaveChangedTimeScale = true;
 		}
 
 		if((GetTickCount() - timeSinceAimingBegan) < TIME_TO_SLOW_AIM){
@@ -608,10 +665,10 @@ void update_time_features(Player player){
 			weHaveChangedTimeScale = true;
 		}
 	}
-	else if(PLAYER::IS_PLAYER_CONTROL_ON(player)){
-		GAMEPLAY::SET_TIME_SCALE(TIME_SPEED_VALUES.at(timeSpeedIndex));
-		weHaveChangedTimeScale = true;
-	}
+	//else if(PLAYER::IS_PLAYER_CONTROL_ON(player)){
+	//	GAMEPLAY::SET_TIME_SCALE(TIME_SPEED_VALUES.at(timeSpeedIndex));
+	//	weHaveChangedTimeScale = true;
+	//}
 	else if(weHaveChangedTimeScale){
 		GAMEPLAY::SET_TIME_SCALE(1.0f);
 		weHaveChangedTimeScale = false;

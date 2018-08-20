@@ -27,6 +27,8 @@ bool hotkey_held_half_normal_speed = false;
 
 bool hotkey_held_normal_speed = false;
 
+bool hotkey_toggled_speed = false;
+
 bool hotkey_held_veh_burnout = false;
 
 bool hotkey_held_veh_extrapower = false;
@@ -40,9 +42,15 @@ bool is_hotkey_held_half_normal_speed()
 {
 	return hotkey_held_half_normal_speed;
 }
+
 bool is_hotkey_held_normal_speed()
 {
 	return hotkey_held_normal_speed;
+}
+
+bool is_hotkey_toggled_speed()
+{
+	return hotkey_toggled_speed;
 }
 
 bool is_hotkey_held_veh_burnout()
@@ -239,6 +247,9 @@ void trigger_function_for_hotkey_onkeyup(int hotkey)
 		break;
 	case HKEY_SEAT_CHANGE_TOGGLE:
 		seat_change_hotkey();
+		break;
+	case HKEY_TOGGLED_SPEED:
+		toggle_game_speed();
 		break;
 
 	default:
