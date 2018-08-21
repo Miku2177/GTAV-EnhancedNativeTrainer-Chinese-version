@@ -124,19 +124,19 @@ int regenIndex = REGEN_DEFAULT;
 
 //Player Health
 const std::vector<std::string> PLAYER_HEALTH_CAPTIONS{ "1", "10", "20", "30", "40", "50", "100", "200", "300", "500", "1000", "5000", "10000", "20000", "30000" };
-const std::vector<double> PLAYER_HEALTH_VALUES{ 101, 110, 120, 130, 140, 150, 200, 300, 400, 600, 1100, 5100, 10100, 20100, 30100 };
+const std::vector<int> PLAYER_HEALTH_VALUES{ 101, 110, 120, 130, 140, 150, 200, 300, 400, 600, 1100, 5100, 10100, 20100, 30100 };
 int current_player_health = 2;
 bool current_player_health_Changed = true;
 
 //Player Armor
 const std::vector<std::string> PLAYER_ARMOR_CAPTIONS{ "0", "15", "20", "30", "40", "50", "100" };
-const std::vector<double> PLAYER_ARMOR_VALUES{ 0, 15, 20, 30, 40, 50, 100 };
+const std::vector<int> PLAYER_ARMOR_VALUES{ 0, 15, 20, 30, 40, 50, 100 };
 int current_player_armor = 6;
 bool current_player_armor_Changed = true;
 
 //NPC Ragdoll If Shot
 const std::vector<std::string> NPC_RAGDOLL_CAPTIONS{ "OFF", "Never", "Always" };
-const std::vector<double> NPC_RAGDOLL_VALUES{ 0, 1, 2 };
+const std::vector<int> NPC_RAGDOLL_VALUES{ 0, 1, 2 };
 int current_npc_ragdoll = 0;
 bool current_npc_ragdoll_Changed = true;
 
