@@ -51,6 +51,8 @@ int SinceAgainstTraffic_secs_passed, SinceAgainstTraffic_secs_curr, AgainstTraff
 int SinceStop_secs_passed, SinceStop_secs_curr, Stop_seconds = -1;
 int SinceStop_secs_passed_final, SinceStop_secs_curr_final = -1;
 int Stop_seconds_final = 5;
+int veh_redlight_distance_x = -1;
+int veh_redlight_distance_y = -1;
 bool been_seen_by_a_cop, approached, blip_check = false;
 Blip blip_laws;
 Vehicle veh_cop_in, hijacking_veh, fine_cop_car;
@@ -302,9 +304,6 @@ void road_laws()
 				int temp_heading = veh_stopped_red_light_heading - my_vehicle_heading;
 				if (temp_heading < 0) temp_heading = (temp_heading * -1);
 
-				int veh_redlight_distance_x;
-				int veh_redlight_distance_y;
-
 				if (VEHICLE::IS_VEHICLE_STOPPED_AT_TRAFFIC_LIGHTS(veh_stopped_red_light) && temp_heading < 80) approached = true;
 
 				if (approached == true && red_light_veh_detected == false)
@@ -328,6 +327,7 @@ void road_laws()
 						if (been_seen_by_a_cop == false) runningredlight_check = false;
 						red_light_veh_detected = false;
 						approached = false;
+						veh_redlight_distance_x, veh_redlight_distance_y = -1;
 					}
 				}
 			}
@@ -647,8 +647,8 @@ void road_laws()
 				Stop_seconds_final = 5;
 				tempgotcha_x = 0;
 				tempgotcha_y = 0;
-				approached = false;
-				red_light_veh_detected = false;
+				//approached = false;
+				//red_light_veh_detected = false;
 				Collision_seconds = -1;
 			}
 

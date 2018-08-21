@@ -234,7 +234,7 @@ bool VehBlipFlash_Changed = true;
 
 //Keep The Engine Running
 const std::vector<std::string> VEH_ENGINERUNNING_CAPTIONS{ "Never", "Always", "Hold Exit To Kill Engine" };
-const std::vector<double> VEH_ENGINERUNNING_VALUES{ 0, 1, 2 };
+const std::vector<int> VEH_ENGINERUNNING_VALUES{ 0, 1, 2 };
 int EngineRunningIndex = 0;
 bool EngineRunning_Changed = true;
 

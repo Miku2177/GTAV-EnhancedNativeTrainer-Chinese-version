@@ -45,7 +45,7 @@ extern bool PirsuitRange_Changed;
 
 //Stars If Try To Escape
 const std::vector<std::string> VEH_STARSPUNISH_CAPTIONS{ "2 Stars", "3 Stars", "4 Stars", "5 Stars" };
-const std::vector<double> VEH_STARSPUNISH_VALUES{ 2, 3, 4, 5 };
+const std::vector<int> VEH_STARSPUNISH_VALUES{ 2, 3, 4, 5 };
 extern int StarsPunishIndex;
 extern bool StarsPunish_Changed;
 
