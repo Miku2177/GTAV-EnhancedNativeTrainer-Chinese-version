@@ -56,6 +56,8 @@ int current_player_escapemoney = 4;
 bool current_player_escapemoney_Changed = true;
 int current_player_discharge = 3;
 bool current_player_discharge_Changed = true;
+int current_escape_stars = 2;
+bool current_escape_stars_Changed = true;
 
 ////////////////////////////////////////// PRISON BREAK //////////////////////////////////////////
 
@@ -90,7 +92,9 @@ void prison_break()
 		if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) > PLAYER_PRISON_VALUES[current_player_prison] && !in_prison) detained = true;
 		// You won't be detained if you escape the police
 		if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) > -1 && current_player_prison < 4 && PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < PLAYER_PRISON_VALUES[current_player_prison + 1] &&
-			time_before_get_to_prison > 6000) detained = false;
+			time_before_get_to_prison > 6000 && ((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) != 12) ||
+			(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) != 1) ||
+				(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) != 5))) detained = false;
 
 		// TRANSFERING YOU TO PRISON
 		if ((detained && time_before_get_to_prison > 0 && time_before_get_to_prison < 6000 && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID())) ||
@@ -493,13 +497,14 @@ void prison_break()
 					}
 				}
 				PLAYER::SET_MAX_WANTED_LEVEL(5);
-				PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 5, 0);
+				if (!featurePrison_Hardcore) PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), PLAYER_ESCAPESTARS_VALUES[current_escape_stars], 0);
+				if (featurePrison_Hardcore) PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 5, 0);
 				PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
 				PLAYER::SET_POLICE_IGNORE_PLAYER(PLAYER::PLAYER_ID(), false);
 				PLAYER::SET_EVERYONE_IGNORE_PLAYER(PLAYER::PLAYER_ID(), false);
 				AUDIO::STOP_ALARM("PRISON_ALARMS", false);
 				in_prison = false;
-				alert_level = 0;
+				//alert_level = 0;
 				CONTROLS::ENABLE_CONTROL_ACTION(2, 19, true);
 				if (!ADDITIONAL_PRISONERS.empty()) {
 					for (int i = 0; i < ADDITIONAL_PRISONERS.size(); i++) {
@@ -540,6 +545,19 @@ void prison_break()
 				PED::SET_PED_RANDOM_COMPONENT_VARIATION(playerPed_Prison, true);
 			}
 		} // END OF IMPRISONED
+
+		// You still wear prison clothes. If you die you'll get back to prison unless you disabled corresponding options.
+		if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) == 0 && in_prison == false && time_before_get_to_prison > 5999 && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID())) {
+			alert_level = 0;
+			if (!featurePrison_Hardcore && !featurePrison_Robe && !featurePedPrison_Robe) detained = false;
+			if ((featurePrison_Robe || featurePedPrison_Robe || featurePrison_Hardcore) && ((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) != 12) ||
+				(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) != 1) ||
+				(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) != 5))) detained = false;
+		}
+
+		if ((featurePrison_Robe || featurePedPrison_Robe || featurePrison_Hardcore) && in_prison == false && ((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 12) ||
+			(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 1) ||
+			(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 5))) detained = true;
 
 		if (clear_wanted_level == true && (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) > 0))
 		{
@@ -621,6 +639,7 @@ void prison_break()
 							PLAYER::SET_MAX_WANTED_LEVEL(5);
 							PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 1, 0);
 							PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
+							alert_level = 1;
 						}
 						// Met a cop right in front of you
 						if (distance_from_police_x < 10 && distance_from_police_y < 10 && distance_from_police_z < 1 && (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 4))
@@ -628,6 +647,7 @@ void prison_break()
 							PLAYER::SET_MAX_WANTED_LEVEL(5);
 							PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 3, 0);
 							PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
+							alert_level = 1;
 						}
 					}
 				}
@@ -645,6 +665,7 @@ void prison_break()
 							PLAYER::SET_MAX_WANTED_LEVEL(5);
 							PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 3, 0);
 							PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
+							alert_level = 1;
 						}
 					}
 				}
@@ -686,11 +707,13 @@ void prison_break()
 							PLAYER::SET_MAX_WANTED_LEVEL(5);
 							PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 1, 0);
 							PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
+							alert_level = 1;
 						}
 						if (alert_police_about_fugitive_close == true) {
 							PLAYER::SET_MAX_WANTED_LEVEL(5);
 							PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 3, 0);
 							PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
+							alert_level = 1;
 						}
 
 						tick_callpoliceaboutfugitive = 0;
@@ -754,6 +777,7 @@ void prison_break()
 	if (!PLAYER_PRISON_VALUES.empty()) std::vector<int>(PLAYER_PRISON_VALUES).swap(emptyVec);
 	if (!PLAYER_ESCAPEMONEY_VALUES.empty()) std::vector<int>(PLAYER_ESCAPEMONEY_VALUES).swap(emptyVec);
 	if (!PLAYER_DISCHARGE_VALUES.empty()) std::vector<int>(PLAYER_DISCHARGE_VALUES).swap(emptyVec);
+	if (!PLAYER_ESCAPESTARS_VALUES.empty()) std::vector<int>(PLAYER_ESCAPESTARS_VALUES).swap(emptyVec);
 	}
 }
 

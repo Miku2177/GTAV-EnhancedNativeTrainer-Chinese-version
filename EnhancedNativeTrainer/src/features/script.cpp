@@ -193,6 +193,11 @@ void onchange_player_discharge_mode(int value, SelectFromListMenuItem* source){
 	current_player_discharge_Changed = true;
 }
 
+void onchange_player_escapestars_mode(int value, SelectFromListMenuItem* source) {
+	current_escape_stars = value;
+	current_escape_stars_Changed = true;
+}
+
 void check_player_model(){
 	/*
 	std::stringstream ss;
@@ -916,6 +921,12 @@ bool process_player_prison_menu(){
 	listItem->value = current_player_escapemoney;
 	menuItems.push_back(listItem);
 
+	listItem = new SelectFromListMenuItem(PLAYER_ESCAPESTARS_CAPTIONS, onchange_player_escapestars_mode);
+	listItem->wrap = false;
+	listItem->caption = "Number Of Stars When Escape";
+	listItem->value = current_escape_stars;
+	menuItems.push_back(listItem);
+
 	listItem = new SelectFromListMenuItem(PLAYER_DISCHARGE_CAPTIONS, onchange_player_discharge_mode);
 	listItem->wrap = false;
 	listItem->caption = "Time To Discharge";
@@ -1218,6 +1229,7 @@ void reset_globals(){
 	current_player_prison = 0;
 	current_player_escapemoney = 4;
 	current_player_discharge = 3;
+	current_escape_stars = 2;
 
 	featurePlayerDrunk =
 		featurePlayerInvincible =
@@ -1494,6 +1506,7 @@ void add_world_feature_enablements3(std::vector<StringPairSettingDBRow>* results
 	results->push_back(StringPairSettingDBRow{"current_player_prison", std::to_string(current_player_prison)});
 	results->push_back(StringPairSettingDBRow{"current_player_escapemoney", std::to_string(current_player_escapemoney)});
 	results->push_back(StringPairSettingDBRow{"current_player_discharge", std::to_string(current_player_discharge)});
+	results->push_back(StringPairSettingDBRow{"current_escape_stars", std::to_string(current_escape_stars)});
 }
 
 std::vector<FeatureEnabledLocalDefinition> get_feature_enablements(){
@@ -1577,6 +1590,9 @@ void handle_generic_settings(std::vector<StringPairSettingDBRow> settings){
 		}
 		else if (setting.name.compare("current_player_discharge") == 0){
 			current_player_discharge = stoi(setting.value);
+		}
+		else if (setting.name.compare("current_escape_stars") == 0) {
+			current_escape_stars = stoi(setting.value);
 		}
 	}
 

@@ -119,6 +119,8 @@ void onchange_player_escapemoney_mode(int value, SelectFromListMenuItem* source)
 
 void onchange_player_discharge_mode(int value, SelectFromListMenuItem* source);
 
+void onchange_player_escapestars_mode(int value, SelectFromListMenuItem* source);
+
 void process_reset_menu();
 
 void process_main_menu();
