@@ -265,6 +265,17 @@ void update_vehicles(Ped playerPed) {
 		}
 	}
 
+	if (!featureSpeedOnFoot && !featureSpeedOnGround && !featureSpeedInAir) {
+		std::vector<int> emptyVec;
+		if (!SPEED_SIZE_VALUES.empty()) std::vector<int>(SPEED_SIZE_VALUES).swap(emptyVec);
+		if (!SPEED_POSITION_VALUES.empty()) std::vector<int>(SPEED_POSITION_VALUES).swap(emptyVec);
+		if (!SPEED_COLOURS_R_VALUES.empty()) std::vector<int>(SPEED_COLOURS_R_VALUES).swap(emptyVec);
+		if (!SPEED_COLOURS_G_VALUES.empty()) std::vector<int>(SPEED_COLOURS_G_VALUES).swap(emptyVec);
+		if (!SPEED_COLOURS_B_VALUES.empty()) std::vector<int>(SPEED_COLOURS_B_VALUES).swap(emptyVec);
+		if (!SPEED_COLOURS2_R_VALUES.empty()) std::vector<int>(SPEED_COLOURS2_R_VALUES).swap(emptyVec);
+		if (!SPEED_COLOURS2_G_VALUES.empty()) std::vector<int>(SPEED_COLOURS2_G_VALUES).swap(emptyVec);
+		if (!SPEED_COLOURS2_B_VALUES.empty()) std::vector<int>(SPEED_COLOURS2_B_VALUES).swap(emptyVec);
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////

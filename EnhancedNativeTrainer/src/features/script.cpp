@@ -468,6 +468,12 @@ void update_features(){
 		}
 	}
 	
+	if (!featurePlayerLife && !featurePlayerLife_Died && !featurePlayerLife_Changed) {
+		std::vector<int> emptyVec;
+		if (!PLAYER_HEALTH_VALUES.empty()) std::vector<int>(PLAYER_HEALTH_VALUES).swap(emptyVec);
+		if (!PLAYER_ARMOR_VALUES.empty()) std::vector<int>(PLAYER_ARMOR_VALUES).swap(emptyVec);
+	}
+
 	if (featurePlayerLife_Died) death_time2 = PLAYER::GET_TIME_SINCE_LAST_DEATH();
 	if (death_time2 > -1 && death_time2 < 2000 && featurePlayerLife_Died)
 	{
@@ -635,11 +641,19 @@ void update_features(){
 			}
 		}
 	}
+	else {
+		std::vector<int> emptyVec;
+		if (!NPC_RAGDOLL_VALUES.empty()) std::vector<int>(NPC_RAGDOLL_VALUES).swap(emptyVec);
+	}
 	
 	//Player Movement Speed
 	if (PLAYER_MOVEMENT_VALUES[current_player_movement] > 0.00)
 	{
 		PED::SET_PED_MOVE_RATE_OVERRIDE(playerPed, PLAYER_MOVEMENT_VALUES[current_player_movement]);
+	}
+	else {
+		std::vector<double> emptyVec_d;
+		if (!PLAYER_MOVEMENT_VALUES.empty()) std::vector<double>(PLAYER_MOVEMENT_VALUES).swap(emptyVec_d);
 	}
 
 	//Player Invisible
@@ -703,6 +717,8 @@ void update_features(){
 
 	update_vehicle_features(bPlayerExists, playerPed);
 
+	update_vehmodmenu_features(bPlayerExists, playerPed);
+
 	update_misc_features(bPlayerExists, playerPed);
 
 	update_time_features(player);
@@ -751,7 +767,7 @@ bool onconfirm_playerData_menu(MenuItem<int> choice){
 
 	if (choice.value == -1){
 		featurePlayerLifeUpdated = true; 
-		set_status_text("Settings Are Being Applied");
+		set_status_text("Settings are being applied");
 	}
 	return false;
 }
@@ -923,7 +939,7 @@ bool process_player_prison_menu(){
 
 	listItem = new SelectFromListMenuItem(PLAYER_ESCAPESTARS_CAPTIONS, onchange_player_escapestars_mode);
 	listItem->wrap = false;
-	listItem->caption = "Number Of Stars When Escape";
+	listItem->caption = "Number Of Stars After Escaping";
 	listItem->value = current_escape_stars;
 	menuItems.push_back(listItem);
 
@@ -1198,6 +1214,8 @@ void reset_globals(){
 	reset_skin_globals();
 
 	reset_vehicle_globals();
+
+	reset_vehmodmenu_globals();
 
 	reset_bodyguards_globals();
 
@@ -1523,6 +1541,8 @@ std::vector<FeatureEnabledLocalDefinition> get_feature_enablements(){
 	add_props_feature_enablements(&results);
 
 	add_vehicle_feature_enablements(&results);
+
+	add_vehmodmenu_feature_enablements(&results);
 
 	add_teleporter_feature_enablements(&results);
 

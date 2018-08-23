@@ -1,8 +1,21 @@
+#pragma once
+
+#include "..\..\inc\natives.h"
+#include "..\..\inc\types.h"
+#include "..\..\inc\enums.h"
+
+#include "..\..\inc\main.h"
+#include "..\ui_support\menu_functions.h"
+
+#include <string>
+
 #include "vehicles.h"
 
 #include "..\debug\debuglog.h"
 
 extern int current_picked_engine_sound;
+
+extern bool featureEngineSound;
 
 const static std::string ENGINE_SOUND[] = { "\"ADDER\"", "\"AIRTUG\"", "\"AKUMA\"", "\"ALPHA\"", "\"AMBULANCE\"", "\"APC\"", "\"ARDENT\"", "\"ASEA\"", "\"ASTEROPE\"", "\"AUTARCH\"", "\"AVARUS\"", "\"BAGGER\"", "\"BALLER3\"", "\"BALLER\"", 
 "\"BANSHEE2\"", "\"BANSHEE\"", "\"BARRAGE\"", "\"BATI\"", "\"BESTIAGTS\"", "\"BF400\"", "\"BFINJECTION\"", "\"BIFTA\"", "\"BISON3\"", "\"BJXL\"", "\"BLADE\"", "\"BLAZER3\"", "\"BLAZER5\"", "\"BLAZER\"", "\"BLISTA2\"", "\"BLISTA\"", 
@@ -34,3 +47,13 @@ const static std::vector<int> ENGINE_SOUND_NUMBERS{ 34, 263, 304, 40, 282, 294, 
 83, 201, 334, 15, 78, 115, 29, 243, 242, 241, 146, 136, 107, 298, 303, 300, 301, 302, 299, 256, 245, 229, 290, 215, 207, 13, 204, 54, 270, 172, 60, 59, 50, 342, 134, 135, 24, 175, 176, 216, 116, 87, 230, 296, 185, 202, 211, 325, 148, 147,
 249, 250, 70, 138, 279, 314, 312, 186, 95, 36, 45, 46, 47, 192, 88, 89, 189, 61, 7, 292, 291, 318, 157, 156, 343, 62, 261, 139, 224, 102, 238, 227, 48, 217, 110, 14, 75, 220, 49, 246, 213, 32, 257, 223, 3, 55, 56, 275, 178, 177, 25, 26, 295,
 307, 276, 112, 98, 99, 97, 265, 281, 280, 272, 273, 267, 183, 184, 77, 11, 10, 20, 33, 278, 277, 27, 335, 6, 53, 140, 39, 308, 131, 130, 108, 12, 5, 141, 326, 226, 208, 271, 120, 344, 16, 190, 142, 252, 251, 104, 28, 126, 345, 114 };
+
+/***
+* METHODS
+*/
+
+void reset_vehmodmenu_globals();
+
+void add_vehmodmenu_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results);
+
+void update_vehmodmenu_features(BOOL playerExists, Ped playerPed);

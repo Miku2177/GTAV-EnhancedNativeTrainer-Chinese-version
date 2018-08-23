@@ -853,6 +853,9 @@ void give_all_nearby_peds_a_weapon(bool enabled){
 		}
 		if (PED_WEAPON_TITLES[pedWeaponSetIndex] != "Custom Weapon")
 		{
+			std::vector<int> emptyVec;
+			if (!PED_WEAPONS_SELECTIVE_VALUES.empty()) std::vector<int>(PED_WEAPONS_SELECTIVE_VALUES).swap(emptyVec);
+
 			if (!PED::IS_PED_GROUP_MEMBER(xped, PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID()))){
 				ENTTrackedPedestrian* trackedPed = findOrCreateTrackedPed(xped);
 

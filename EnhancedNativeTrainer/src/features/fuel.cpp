@@ -592,6 +592,26 @@ void fuel()
 			}
 		}
 	}
+	else {
+		std::vector<int> emptyVec;
+		std::vector<double> emptyVec_d;
+		if (!VEH_CARFUEL_VALUES.empty()) std::vector<int>(VEH_CARFUEL_VALUES).swap(emptyVec);
+		if (!VEH_BIKEFUEL_VALUES.empty()) std::vector<int>(VEH_BIKEFUEL_VALUES).swap(emptyVec);
+		if (!VEH_PLANEFUEL_VALUES.empty()) std::vector<int>(VEH_PLANEFUEL_VALUES).swap(emptyVec);
+		if (!VEH_BOATFUEL_VALUES.empty()) std::vector<int>(VEH_BOATFUEL_VALUES).swap(emptyVec);
+		if (!VEH_HELIFUEL_VALUES.empty()) std::vector<int>(VEH_HELIFUEL_VALUES).swap(emptyVec);
+		if (!VEH_REFUELSPEED_VALUES.empty()) std::vector<double>(VEH_REFUELSPEED_VALUES).swap(emptyVec_d);
+		if (!VEH_FUELPRICE_VALUES.empty()) std::vector<double>(VEH_FUELPRICE_VALUES).swap(emptyVec_d);
+		if (!VEH_CANPRICE_VALUES.empty()) std::vector<double>(VEH_CANPRICE_VALUES).swap(emptyVec_d);
+		if (!VEH_FUELRANDOM1_VALUES.empty()) std::vector<int>(VEH_FUELRANDOM1_VALUES).swap(emptyVec);
+		if (!VEH_FUELRANDOM2_VALUES.empty()) std::vector<int>(VEH_FUELRANDOM2_VALUES).swap(emptyVec);
+		if (!VEH_FUELBARPOSITION_VALUES.empty()) std::vector<int>(VEH_FUELBARPOSITION_VALUES).swap(emptyVec);
+		if (!FUEL_COLOURS_R_VALUES.empty()) std::vector<int>(FUEL_COLOURS_R_VALUES).swap(emptyVec);
+		if (!FUEL_COLOURS_G_VALUES.empty()) std::vector<int>(FUEL_COLOURS_G_VALUES).swap(emptyVec);
+		if (!FUEL_COLOURS_B_VALUES.empty()) std::vector<int>(FUEL_COLOURS_B_VALUES).swap(emptyVec);
+		if (!VEH_FUELBLIPS_VALUES.empty()) std::vector<int>(VEH_FUELBLIPS_VALUES).swap(emptyVec);
+		if (!FUEL_BACKGROUND_OPACITY_VALUES.empty()) std::vector<int>(FUEL_BACKGROUND_OPACITY_VALUES).swap(emptyVec);
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

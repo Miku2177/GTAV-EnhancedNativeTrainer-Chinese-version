@@ -36,6 +36,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "time.h"
 #include "props.h"
 #include "bodyguards.h"
+#include "vehmodmenu.h"
 
 #include <DbgHelp.h>
 #include <ShlObj.h>

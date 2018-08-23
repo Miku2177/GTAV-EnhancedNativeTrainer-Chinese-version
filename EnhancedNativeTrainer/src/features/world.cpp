@@ -978,6 +978,16 @@ void update_world_features()
 		}
 	}
 	
+	if (WORLD_DAMAGED_VEHICLES_VALUES[DamagedVehiclesIndex] == 0) {
+		std::vector<int> emptyVec;
+		if (!WORLD_DAMAGED_VEHICLES_VALUES.empty()) std::vector<int>(WORLD_DAMAGED_VEHICLES_VALUES).swap(emptyVec);
+	}
+
+	if (WORLD_NPC_VEHICLESPEED_VALUES[NPCVehicleSpeedIndex] == 0) {
+		std::vector<int> emptyVec;
+		if (!WORLD_NPC_VEHICLESPEED_VALUES.empty()) std::vector<int>(WORLD_NPC_VEHICLESPEED_VALUES).swap(emptyVec);
+	}
+
 	if (!featureAcidWater) PED::SET_PED_DIES_INSTANTLY_IN_WATER(PLAYER::PLAYER_PED_ID(), false);
 
 	// NPC No Gravity Peds && Acid Water

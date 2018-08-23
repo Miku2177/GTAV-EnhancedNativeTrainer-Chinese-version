@@ -44,6 +44,8 @@ bool featureVehInvulnIncludesCosmetic = false;
 
 bool feature3rdpersonviewonly, featureDaytimeonly = false;
 
+bool viz_veh_ind_left, viz_veh_ind_right = false;
+
 bool turn_check_left, turn_check_right = false;
 bool controllightsenabled_l = false;
 bool controllightsenabled_r = false;
@@ -1914,7 +1916,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 	//////////////////////////////////////////////////// VEHICLE MASS ////////////////////////////////////////////////////////
 
-	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && (VEH_MASS_VALUES[VehMassMultIndex] > 0)){
+	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && (VEH_MASS_VALUES[VehMassMultIndex] > 0)) {
 
 		const int numElements = 10;
 		const int arrSize = numElements * 2 + 2;
@@ -2017,15 +2019,23 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			}
 		}
 	}
+	else {
+		std::vector<int> emptyVec;
+		if (!VEH_MASS_VALUES.empty()) std::vector<int>(VEH_MASS_VALUES).swap(emptyVec);
+	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	//////////////////////////////////////////////////// TURN SIGNALS ///////////////////////////////////////////////////////////
 
-	if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1)) controllightsenabled_l = false;
-	if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1)) controllightsenabled_r = false;
+	if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1)) {
+		controllightsenabled_l = false;
+		controllightsenabled_r = false;
+		viz_veh_ind_left = false;
+		viz_veh_ind_right = false;
+	}
 
-	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && (VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] > 0)){
+	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && (VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] > 0)) {
 
 		Vehicle vehturn = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		int vehturnspeed = ENTITY::GET_ENTITY_SPEED(vehturn);
@@ -2116,9 +2126,18 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		
 		if (turn_angle > VEH_TURN_SIGNALS_ANGLE_VALUES[turnSignalsAngleIndex] || leftKey || rightKey || emergencyKey || vehturnspeed > (VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] + 10))
 		{
-			VEHICLE::SET_VEHICLE_INDICATOR_LIGHTS(vehturn, 1, turn_check_left);  //Left Signal
+			if (turn_check_left) viz_veh_ind_left = true;
+			else viz_veh_ind_left = false;
+			if (turn_check_right) viz_veh_ind_right = true;
+			else viz_veh_ind_right = false;
+			VEHICLE::SET_VEHICLE_INDICATOR_LIGHTS(vehturn, 1, turn_check_left);  //Left Signal 
 			VEHICLE::SET_VEHICLE_INDICATOR_LIGHTS(vehturn, 0, turn_check_right); // Right Signal	
 		}
+	}
+	else {
+		std::vector<int> emptyVec;
+		if (!VEH_TURN_SIGNALS_VALUES.empty()) std::vector<int>(VEH_TURN_SIGNALS_VALUES).swap(emptyVec);
+		if (!VEH_TURN_SIGNALS_ANGLE_VALUES.empty()) std::vector<int>(VEH_TURN_SIGNALS_ANGLE_VALUES).swap(emptyVec);
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2130,7 +2149,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		Vector3 veh_indicators = ENTITY::GET_ENTITY_COORDS(playerVehicle, true);
 		int time_indicators = TIME::GET_CLOCK_HOURS();
 
-		if (turn_check_left)
+		if (viz_veh_ind_left)
 		{
 			if (!featureDaytimeonly) 
 			{
@@ -2152,7 +2171,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			}
 		}
 		
-		if (turn_check_right) 
+		if (viz_veh_ind_right)
 		{
 			if (!featureDaytimeonly)
 			{
@@ -2173,6 +2192,11 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 					50/*BOOL bobUpAndDown*/, 1/*BOOL faceCamera*/, 1/*int p19*/, 0/*BOOL rotate*/, 0/*char* textureDict*/, 0/*char* textureName*/, 0/*BOOL drawOnEnts*/);
 			}
 		}
+	}
+	else {
+		std::vector<double> emptyVec_d;
+		if (!VEH_VISLIGHT_VALUES.empty()) std::vector<double>(VEH_VISLIGHT_VALUES).swap(emptyVec_d);
+		if (!VEH_VISLIGHT3D_VALUES.empty()) std::vector<double>(VEH_VISLIGHT3D_VALUES).swap(emptyVec_d);
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2218,13 +2242,15 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	{
 		//int vehmax = VEHICLE::_GET_VEHICLE_MODEL_MAX_SPEED(ENTITY::GET_ENTITY_MODEL(PED::GET_VEHICLE_PED_IS_IN(playerPed, false)));
 		ENTITY::SET_ENTITY_MAX_SPEED(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 15000.0);
+		std::vector<int> emptyVec;
+		if (!VEH_SPEEDLIMITER_VALUES.empty()) std::vector<int>(VEH_SPEEDLIMITER_VALUES).swap(emptyVec);
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	///////////////////////////////////////////////// LIGHTS OFF BY DEFAULT ///////////////////////////////////////////////////////////////
 
-	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && (VEH_LIGHTSOFF_VALUES[lightsOffIndex] > 0)){
+	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && (VEH_LIGHTSOFF_VALUES[lightsOffIndex] > 0)) {
 
 		Vehicle vehlights = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		int time = TIME::GET_CLOCK_HOURS();
@@ -2310,6 +2336,10 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		}
 
 	}
+	else {
+		std::vector<int> emptyVec;
+		if (!VEH_LIGHTSOFF_VALUES.empty()) std::vector<int>(VEH_LIGHTSOFF_VALUES).swap(emptyVec);
+	}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -2367,7 +2397,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		}
 	}
 
-	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && featureRememberVehicles){
+	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && featureRememberVehicles) {
 			Vehicle veh_rem = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 			
 			if (VEHICLES_REMEMBER.empty())
@@ -2431,19 +2461,19 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				}
 			}
 	}
-	else
+	else {
 		if (!featureRememberVehicles) {
 			if (!BLIPTABLE_VEH.empty()) {
-			for (int i = 0; i < BLIPTABLE_VEH.size(); i++) {
-				if (UI::DOES_BLIP_EXIST(BLIPTABLE_VEH[i])) {
-					UI::REMOVE_BLIP(&BLIPTABLE_VEH[i]);
+				for (int i = 0; i < BLIPTABLE_VEH.size(); i++) {
+					if (UI::DOES_BLIP_EXIST(BLIPTABLE_VEH[i])) {
+						UI::REMOVE_BLIP(&BLIPTABLE_VEH[i]);
+					}
 				}
+				BLIPTABLE_VEH.clear();
+				BLIPTABLE_VEH.shrink_to_fit();
+				featureDeleteTrackedVehicles_Emptied = false;
 			}
-			BLIPTABLE_VEH.clear();
-			BLIPTABLE_VEH.shrink_to_fit();
-			featureDeleteTrackedVehicles_Emptied = false;
-			}
-			
+
 			if (featureDeleteTrackedVehicles && !VEHICLES_REMEMBER.empty()) {
 				for (int i = 0; i < VEHICLES_REMEMBER.size(); i++) {
 					VEHICLE::DELETE_VEHICLE(&VEHICLES_REMEMBER[i]);
@@ -2451,7 +2481,15 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				VEHICLES_REMEMBER.clear();
 				VEHICLES_REMEMBER.shrink_to_fit();
 			}
-		} 
+		}
+		std::vector<int> emptyVec;
+		std::vector<double> emptyVec_d;
+		if (!VEH_VEHREMEMBER_VALUES.empty()) std::vector<int>(VEH_VEHREMEMBER_VALUES).swap(emptyVec);
+		if (!VEH_BLIPSIZE_VALUES.empty()) std::vector<double>(VEH_BLIPSIZE_VALUES).swap(emptyVec_d);
+		if (!VEH_BLIPCOLOUR_VALUES.empty()) std::vector<int>(VEH_BLIPCOLOUR_VALUES).swap(emptyVec);
+		if (!VEH_BLIPSYMBOL_VALUES.empty()) std::vector<int>(VEH_BLIPSYMBOL_VALUES).swap(emptyVec);
+		if (!VEH_BLIPFLASH_VALUES.empty()) std::vector<int>(VEH_BLIPFLASH_VALUES).swap(emptyVec);
+	}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -3103,7 +3141,7 @@ bool spawn_saved_car(int slot, std::string caption){
 		}
 
 		//
-		if (savedVeh->engineSound > -1) {
+		if (savedVeh->engineSound > -1 && featureEngineSound) {
 			bool correct_name_to_load = false;
 			for (int i = 0; i < ENGINE_SOUND_COUNT_VEHICLES; i++)
 			{
