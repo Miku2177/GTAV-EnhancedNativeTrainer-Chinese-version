@@ -765,6 +765,12 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			}
 		}
 	}
+	else {
+		std::vector<int> emptyVec;
+		std::vector<float> emptyVec_f;
+		if (!MISC_PHONE_BILL_VALUES.empty()) std::vector<float>(MISC_PHONE_BILL_VALUES).swap(emptyVec_f);
+		if (!MISC_PHONE_FREESECONDS_VALUES.empty()) std::vector<int>(MISC_PHONE_FREESECONDS_VALUES).swap(emptyVec);
+	}
 
 	//Show FPS
 	//if (featureShowFPS)

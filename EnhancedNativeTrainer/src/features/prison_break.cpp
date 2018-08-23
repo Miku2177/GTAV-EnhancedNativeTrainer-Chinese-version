@@ -773,11 +773,11 @@ void prison_break()
 		}
 	}
 	else {
-	std::vector<int> emptyVec;
-	if (!PLAYER_PRISON_VALUES.empty()) std::vector<int>(PLAYER_PRISON_VALUES).swap(emptyVec);
-	if (!PLAYER_ESCAPEMONEY_VALUES.empty()) std::vector<int>(PLAYER_ESCAPEMONEY_VALUES).swap(emptyVec);
-	if (!PLAYER_DISCHARGE_VALUES.empty()) std::vector<int>(PLAYER_DISCHARGE_VALUES).swap(emptyVec);
-	if (!PLAYER_ESCAPESTARS_VALUES.empty()) std::vector<int>(PLAYER_ESCAPESTARS_VALUES).swap(emptyVec);
+		std::vector<int> emptyVec;
+		if (!PLAYER_PRISON_VALUES.empty()) std::vector<int>(PLAYER_PRISON_VALUES).swap(emptyVec);
+		if (!PLAYER_ESCAPEMONEY_VALUES.empty()) std::vector<int>(PLAYER_ESCAPEMONEY_VALUES).swap(emptyVec);
+		if (!PLAYER_DISCHARGE_VALUES.empty()) std::vector<int>(PLAYER_DISCHARGE_VALUES).swap(emptyVec);
+		if (!PLAYER_ESCAPESTARS_VALUES.empty()) std::vector<int>(PLAYER_ESCAPESTARS_VALUES).swap(emptyVec);
 	}
 }
 

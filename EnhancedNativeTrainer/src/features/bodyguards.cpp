@@ -488,7 +488,7 @@ void do_spawn_bodyguard(){
 			UI::SET_BLIP_AS_SHORT_RANGE(blip_body[0], true);
 			BLIPTABLE_BODYGUARD.push_back(blip_body[0]);
 		}
-		else
+		else {
 			if (!BLIPTABLE_BODYGUARD.empty()) {
 				for (int i = 0; i < BLIPTABLE_BODYGUARD.size(); i++) {
 					if (UI::DOES_BLIP_EXIST(BLIPTABLE_BODYGUARD[i])) {
@@ -498,6 +498,13 @@ void do_spawn_bodyguard(){
 				BLIPTABLE_BODYGUARD.clear();
 				BLIPTABLE_BODYGUARD.shrink_to_fit();
 			}
+			std::vector<int> emptyVec;
+			std::vector<double> emptyVec_d;
+			if (!BODY_BLIPSIZE_VALUES.empty()) std::vector<double>(BODY_BLIPSIZE_VALUES).swap(emptyVec_d);
+			if (!BODY_BLIPCOLOUR_VALUES.empty()) std::vector<int>(BODY_BLIPCOLOUR_VALUES).swap(emptyVec);
+			if (!BODY_BLIPSYMBOL_VALUES.empty()) std::vector<int>(BODY_BLIPSYMBOL_VALUES).swap(emptyVec);
+			if (!BODY_BLIPFLASH_VALUES.empty()) std::vector<int>(BODY_BLIPFLASH_VALUES).swap(emptyVec);
+		}
 		
 
 		PED::SET_PED_COMBAT_ABILITY(bodyGuard, 2);

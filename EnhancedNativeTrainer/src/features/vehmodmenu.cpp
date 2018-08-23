@@ -21,6 +21,8 @@ int wheelpart = 0;
 
 int current_picked_engine_sound = -1;
 
+bool featureEngineSound = false;
+
 const static int WHEEL_CATEGORY_COUNT = 10;
 
 const static std::string WHEEL_CATEGORY_NAMES[] = { "Sports", "Muscle", "Lowrider", "SUV", "Offroad", "Tuner", "Bike Wheels", "High End", "Benny's Originals", "Benny's Bespoke" };
@@ -1432,7 +1434,7 @@ bool onconfirm_vehmod_category_menu(MenuItem<int> choice){
 		VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT_INDEX(veh, choice.value);
 		set_status_text("Changed license plate");
 	}
-	else if (lastSelectedModValue == SPECIAL_ID_FOR_ENGINE_SOUND){ 
+	else if (lastSelectedModValue == SPECIAL_ID_FOR_ENGINE_SOUND && featureEngineSound){
 		char *currSound = new char[ENGINE_SOUND[choice.value].length() + 1];
 		strcpy(currSound, ENGINE_SOUND[choice.value].c_str());
 		//current_picked_engine_sound = choice.value;
@@ -1576,7 +1578,7 @@ bool onconfirm_vehmod_engine_sound_menu(MenuItem<int> choice) {
 void set_engine_sound(MenuItem<int> choice) {
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
-	if (ENTITY::DOES_ENTITY_EXIST(playerPed) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, false))
+	if (ENTITY::DOES_ENTITY_EXIST(playerPed) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && featureEngineSound)
 	{
 		Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 		bool correct_name = false;
@@ -1618,6 +1620,13 @@ bool process_vehmod_engine_sound_menu() {
 	std::vector<MenuItem<int> *> menuItems;
 	MenuItem<int> *item;
 	std::ostringstream ss;
+
+	ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Enable";
+	toggleItem->value = -1;
+	toggleItem->toggleValue = &featureEngineSound;
+	//toggleItem->toggleValueUpdated = &featureLockVehicleDoorsUpdated;
+	menuItems.push_back(toggleItem);
 
 	item = new MenuItem<int>();
 	ss << "All ~HUD_COLOUR_GREYLIGHT~(" << ENGINE_SOUND_COUNT << ")";
@@ -2260,4 +2269,19 @@ void reset_vehicle(Vehicle veh){
 	fix_vehicle();
 	clean_vehicle();
 	//write_text_to_log_file("reset_vehicle(): complete");
+}
+
+void reset_vehmodmenu_globals() {
+	featureEngineSound = false;
+}
+
+void add_vehmodmenu_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results) {
+	results->push_back(FeatureEnabledLocalDefinition{ "featureEngineSound", &featureEngineSound });
+}
+
+void update_vehmodmenu_features(BOOL bPlayerExists, Ped playerPed) {
+	if (!featureEngineSound) {
+		std::vector<int> emptyVec;
+		if (!ENGINE_SOUND_NUMBERS.empty()) std::vector<int>(ENGINE_SOUND_NUMBERS).swap(emptyVec);
+	}
 }

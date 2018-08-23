@@ -1297,11 +1297,17 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			}
 		}
 	}
+	else {
+		std::vector<int> emptyVec;
+		if (!WEAPONS_COPARMED_VALUES.empty()) std::vector<int>(WEAPONS_COPARMED_VALUES).swap(emptyVec);
+		if (!WEAPONS_COPALARM_VALUES.empty()) std::vector<int>(WEAPONS_COPALARM_VALUES).swap(emptyVec);
+	}
+
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	peds_dont_like_weapons(); ///// <--- PEDS DON'T LIKE WEAPONS /////
 
-	// Cops Take You Weapons If You Die / Arrested
+	// Cops Take Your Weapons If You Die / Arrested
 	playerPed = PLAYER::PLAYER_PED_ID();
 	int pl_health = ENTITY::GET_ENTITY_HEALTH(playerPed);
 	Vector3 coords_me = ENTITY::GET_ENTITY_COORDS(playerPed, true);
