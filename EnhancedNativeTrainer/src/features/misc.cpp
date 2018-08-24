@@ -465,49 +465,49 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	}
 
 	// Portable radio
-	if (featurePlayerRadio || featurePlayerRadioUpdated){
-		if (featurePlayerRadio){
+	if (featurePlayerRadio || featurePlayerRadioUpdated) {
+		if (featurePlayerRadio) {
 			AUDIO::SET_MOBILE_RADIO_ENABLED_DURING_GAMEPLAY(true);
 		}
-		else{
+		else {
 			AUDIO::SET_MOBILE_RADIO_ENABLED_DURING_GAMEPLAY(false);
 		}
 	}
 
 	// No Wanted Music
-	if (featureWantedMusic || featureWantedMusicUpdated){
-		if (featureWantedMusic){
+	if (featureWantedMusic || featureWantedMusicUpdated) {
+		if (featureWantedMusic) {
 			AUDIO::SET_AUDIO_FLAG("WantedMusicDisabled", true);
 		}
-		else{
+		else {
 			AUDIO::SET_AUDIO_FLAG("WantedMusicDisabled", false);
 		}
 	}
 
 	// No Flying Music
-	if (featureFlyingMusic || featureFlyingMusicUpdated){
-		if (featureFlyingMusic){
+	if (featureFlyingMusic || featureFlyingMusicUpdated) {
+		if (featureFlyingMusic) {
 			AUDIO::SET_AUDIO_FLAG("DisableFlightMusic", true);
 		}
-		else{
+		else {
 			AUDIO::SET_AUDIO_FLAG("DisableFlightMusic", false);
 		}
 	}
 
 	// No Police Scanner
-	if (featurePoliceScanner || featurePoliceScannerUpdated){
-		if (featurePoliceScanner){
+	if (featurePoliceScanner || featurePoliceScannerUpdated) {
+		if (featurePoliceScanner) {
 			AUDIO::SET_AUDIO_FLAG("PoliceScannerDisabled", true);
 		}
-		else{
+		else {
 			AUDIO::SET_AUDIO_FLAG("PoliceScannerDisabled", false);
 		}
 	}
 
 	// Radio Boost
-	if (featureBoostRadio || featureBoostRadioUpdated){
+	if (featureBoostRadio || featureBoostRadioUpdated) {
 		if (featureBoostRadio) {
-			if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
+			if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
 				Vehicle playerVeh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 				AUDIO::SET_VEHICLE_RADIO_LOUD(playerVeh, 1);
 				AUDIO::RELEASE_AMBIENT_AUDIO_BANK();
@@ -518,12 +518,12 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	if (!featureBoostRadio) AUDIO::SET_VEHICLE_RADIO_LOUD(PED::GET_VEHICLE_PED_IS_USING(playerPed), 0);
 
 	// Radio In Police Vehicles
-	if (featurePoliceRadio || featurePoliceRadioUpdated){
-		if (featurePoliceRadio){
+	if (featurePoliceRadio || featurePoliceRadioUpdated) {
+		if (featurePoliceRadio) {
 			Vehicle playerVeh = PED::GET_VEHICLE_PED_IS_IN(playerPed, 1);
 			Vector3 coords_radio = ENTITY::GET_ENTITY_COORDS(playerVeh, 1);
 			Vector3 coords_radio_2 = ENTITY::GET_ENTITY_COORDS(playerPed, 1);
-			if (PED::IS_PED_IN_ANY_POLICE_VEHICLE(playerPed) && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(playerVeh)){
+			if (PED::IS_PED_IN_ANY_POLICE_VEHICLE(playerPed) && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(playerVeh)) {
 				police_radio_check = true;
 				AUDIO::SET_VEHICLE_RADIO_ENABLED(playerVeh, true);
 				AUDIO::SET_MOBILE_PHONE_RADIO_STATE(true);
@@ -535,8 +535,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1)) if (!PED::IS_PED_IN_ANY_POLICE_VEHICLE(playerPed)) police_radio_check = false;
 
 			if (GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(coords_radio.x, coords_radio.y, coords_radio.z, coords_radio_2.x, coords_radio_2.y, coords_radio_2.z, false) < 3 && 
-				VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(playerVeh) && police_radio_check)
-			{
+				VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(playerVeh) && police_radio_check) {
 				AUDIO::SET_VEHICLE_RADIO_ENABLED(playerVeh, true);
 				AUDIO::SET_MOBILE_PHONE_RADIO_STATE(true);
 				AUDIO::SET_MOBILE_RADIO_ENABLED_DURING_GAMEPLAY(true);
@@ -547,18 +546,18 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	}
 	
 	// Freeze radio to station
-	if (featureRadioFreeze){
-		if (AUDIO::GET_PLAYER_RADIO_STATION_INDEX() != radioStationIndex){
+	if (featureRadioFreeze) {
+		if (AUDIO::GET_PLAYER_RADIO_STATION_INDEX() != radioStationIndex) {
 			AUDIO::SET_RADIO_TO_STATION_INDEX(radioStationIndex);
 		}
 	}
-	else if (featureRadioFreezeUpdated){
+	else if (featureRadioFreezeUpdated) {
 		// Leave it empty for now.
 	}
 
 	// hide hud
-	if (featureMiscHideHud){
-		for (int i = 0; i < 21; i++){
+	if (featureMiscHideHud) {
+		for (int i = 0; i < 21; i++) {
 			//at least in theory...
 			switch (i){
 			case 5: //mp message
@@ -582,9 +581,8 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	}
 	
 	// show hud if phone in hand
-	if (featurePhoneShowHud){
-		if (!phone_toggle) 
-		{
+	if (featurePhoneShowHud) {
+		if (!phone_toggle) {
 			UI::DISPLAY_RADAR(false);
 			featureMiscHideHudUpdated = false;
 		}
@@ -599,15 +597,14 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			phone_toggle = false;
 		}
 	}
-	else if (!featureMiscHideHud && !featureInVehicleNoHud){ // featurePhoneShowHudUpdated &&
+	else if (!featureMiscHideHud && !featureInVehicleNoHud) { // featurePhoneShowHudUpdated &&
 		UI::DISPLAY_RADAR(true);
 		phone_toggle = false;
 	}
 	
 	// show hud in vehicle only
 	if (featureInVehicleNoHud) {
-		if (!phone_toggle_vehicle && !featurePhoneShowHud)
-		{
+		if (!phone_toggle_vehicle && !featurePhoneShowHud) {
 			UI::DISPLAY_RADAR(false);
 			featureMiscHideHudUpdated = false;
 		}
@@ -628,52 +625,44 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	}
 	
 	// DYNAMIC HEALTH BAR
-	if (featureDynamicHealthBar)
-	{
+	if (featureDynamicHealthBar) {
 		if (!featureMiscHideHud && !featurePhoneShowHud && !featureInVehicleNoHud) UI::DISPLAY_RADAR(false); // There is no need to hide HUD if it's already hidden
 		
 		auto addr = getScriptHandleBaseAddress(playerPed);
 		float health = (*(float *)(addr + 0x280)) - 100;
 		float playerArmour = PED::GET_PED_ARMOUR(playerPed);
 
-		if (!ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_OBJECT(playerPed) && !ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_PED(playerPed) && !ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_VEHICLE(playerPed))
-		{
+		if (!ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_OBJECT(playerPed) && !ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_PED(playerPed) && !ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_VEHICLE(playerPed)) {
 			curr_damaged_health = (*(float *)(addr + 0x280)) - 100;
 			curr_damaged_armor = PED::GET_PED_ARMOUR(playerPed);
 		}
 		
-		if (curr_damaged_health != health || curr_damaged_armor != playerArmour)
-		{
+		if (curr_damaged_health != health || curr_damaged_armor != playerArmour) {
 			healthbar_seconds = -1;
 			been_damaged = true;
 			curr_damaged_health = health;
 			curr_damaged_armor = playerArmour;
 		}
 		
-		if (been_damaged == true)
-		{
+		if (been_damaged == true) {
 			healthbar_secs_passed = clock() / CLOCKS_PER_SEC;
-			if (((clock() / CLOCKS_PER_SEC) - healthbar_secs_curr) != 0)
-			{
+			if (((clock() / CLOCKS_PER_SEC) - healthbar_secs_curr) != 0) {
 				healthbar_seconds = healthbar_seconds + 1;
 				healthbar_secs_curr = healthbar_secs_passed;
 			}
 
-			if (healthbar_seconds == 15)
-			{
+			if (healthbar_seconds == 15) {
 				been_damaged = false;
 				healthbar_seconds = -1;
 			}
 
 			// Health
-			if (health < 20)
-			{
+			if (health < 20) {
 				GRAPHICS::DRAW_RECT(health_bar_x + 0.035, health_bar_y + 0.01, 0.070, 0.017, 41, 86, 40, 110);
 				GRAPHICS::DRAW_RECT(health_bar_x + 0.035, health_bar_y + 0.01, 0.070, 0.009, 220, 20, 20, 55);
 				if ((health_bar_x + (health / 1399)) > 0.015) GRAPHICS::DRAW_RECT(health_bar_x + 0.00 + (health / 2799), health_bar_y + 0.01, (health / 1399), 0.009, 220, 20, 20, 255);
 			}
-			else
-			{
+			else {
 				GRAPHICS::DRAW_RECT(health_bar_x + 0.035, health_bar_y + 0.01, 0.070, 0.017, 41, 86, 40, 110);
 				GRAPHICS::DRAW_RECT(health_bar_x + 0.035, health_bar_y + 0.01, 0.070, 0.009, 41, 56, 40, 75);
 				if ((health / 1399) < 0.070) GRAPHICS::DRAW_RECT(health_bar_x + 0.00 + (health / 2799), health_bar_y + 0.01, (health / 1399), 0.009, 78, 150, 77, 255);
@@ -688,13 +677,10 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	}
 
 	// Phone Bill
-	if (featurePhoneBillEnabled)
-	{
-		if (PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed) && AUDIO::IS_MOBILE_PHONE_CALL_ONGOING())
-		{
+	if (featurePhoneBillEnabled) {
+		if (PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed) && AUDIO::IS_MOBILE_PHONE_CALL_ONGOING()) {
 			secs_passed = clock() / CLOCKS_PER_SEC;
-			if (((clock() / CLOCKS_PER_SEC) - secs_curr) != 0)
-			{
+			if (((clock() / CLOCKS_PER_SEC) - secs_curr) != 0) {
 				temp_seconds = temp_seconds + 1;
 				if (temp_seconds > MISC_PHONE_FREESECONDS_VALUES[PhoneFreeSecondsIndex]) bill_seconds = bill_seconds + 1;
 				secs_curr = secs_passed;
@@ -703,27 +689,23 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		
 		if (!AUDIO::IS_MOBILE_PHONE_CALL_ONGOING() && temp_seconds != 0) temp_seconds = 0;
 		
-		if (!AUDIO::IS_MOBILE_PHONE_CALL_ONGOING() && bill_seconds > 0)
-		{ 
+		if (!AUDIO::IS_MOBILE_PHONE_CALL_ONGOING() && bill_seconds > 0) { 
 			int outValue_your_phone_bill = -1;
 			int statHash_all_your_money = -1;
 			mins = bill_seconds / 60.0;
 			bill_to_pay = MISC_PHONE_BILL_VALUES[PhoneBillIndex] * mins;
 			
-			if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO)
-			{
+			if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO) {
 				STATS::STAT_GET_INT(SP0_TOTAL_CASH, &outValue_your_phone_bill, -1);
 				statHash_all_your_money = SP0_TOTAL_CASH;
 				STATS::STAT_SET_INT(statHash_all_your_money, outValue_your_phone_bill - bill_to_pay, true);
 			}
-			if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE)
-			{
+			if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE) {
 				STATS::STAT_GET_INT(SP1_TOTAL_CASH, &outValue_your_phone_bill, -1);
 				statHash_all_your_money = SP1_TOTAL_CASH;
 				STATS::STAT_SET_INT(statHash_all_your_money, outValue_your_phone_bill - bill_to_pay, true);
 			}
-			if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO)
-			{
+			if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO) {
 				STATS::STAT_GET_INT(SP2_TOTAL_CASH, &outValue_your_phone_bill, -1);
 				statHash_all_your_money = SP2_TOTAL_CASH;
 				STATS::STAT_SET_INT(statHash_all_your_money, outValue_your_phone_bill - bill_to_pay, true);
@@ -732,12 +714,11 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			bill_seconds = 0;
 		}
 		
-		if (featureZeroBalance)
-		{
+		if (featureZeroBalance) {
 			int outValue_your_phone_bill = -1;
 			int statHash_all_your_money = -1;
-			if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO)
-			{
+			
+			if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO) {
 				STATS::STAT_GET_INT(SP0_TOTAL_CASH, &outValue_your_phone_bill, -1);
 				statHash_all_your_money = SP0_TOTAL_CASH;
 				if (outValue_your_phone_bill < 1) {
@@ -745,8 +726,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 					CONTROLS::DISABLE_CONTROL_ACTION(2, 27, 1);
 				}
 			}
-			if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE)
-			{
+			if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE) {
 				STATS::STAT_GET_INT(SP1_TOTAL_CASH, &outValue_your_phone_bill, -1);
 				statHash_all_your_money = SP1_TOTAL_CASH;
 				if (outValue_your_phone_bill < 1) {
@@ -754,8 +734,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 					CONTROLS::DISABLE_CONTROL_ACTION(2, 27, 1);
 				}
 			}
-			if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO)
-			{
+			if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO) {
 				STATS::STAT_GET_INT(SP2_TOTAL_CASH, &outValue_your_phone_bill, -1);
 				statHash_all_your_money = SP2_TOTAL_CASH;
 				if (outValue_your_phone_bill < 1) {

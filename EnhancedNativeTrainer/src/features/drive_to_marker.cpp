@@ -92,12 +92,10 @@ void drive_to_marker()
 
 	float dist_to_land_diff = SYSTEM::VDIST(my_coords.x, my_coords.y, my_coords.z, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z);
 
-	if (PED::IS_PED_IN_ANY_VEHICLE(drivetomarker_player, false))
-	{
+	if (PED::IS_PED_IN_ANY_VEHICLE(drivetomarker_player, false)) {
 		coords_marker_to_drive_to = get_blip_marker();
 
-		if (blipFound == true)
-		{
+		if (blipFound == true) {
 			Ped me_at_the_wheel = VEHICLE::GET_PED_IN_VEHICLE_SEAT(curr_veh, -1);
 			Ped Passenger_Driver = VEHICLE::GET_PED_IN_VEHICLE_SEAT(curr_veh, 0);
 			if (VEHICLE::IS_VEHICLE_SEAT_FREE(curr_veh, 0) || Passenger_Driver == drivetomarker_player)	PED::SET_PED_INTO_VEHICLE(me_at_the_wheel, curr_veh, 0);
@@ -135,17 +133,14 @@ void drive_to_marker()
 		GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, &coords_marker_to_drive_to.z);
 		coords_marker_to_drive_to.z += 3.0;
 
-		if (featureStickToGround && ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(curr_veh) && !PED::IS_PED_IN_ANY_HELI(drivetomarker_player) && !PED::IS_PED_IN_ANY_PLANE(drivetomarker_player))
-		{
+		if (featureStickToGround && ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(curr_veh) && !PED::IS_PED_IN_ANY_HELI(drivetomarker_player) && !PED::IS_PED_IN_ANY_PLANE(drivetomarker_player)) {
 			if (speed.x > 1 || speed.y > 1 || speed.z > 1) VEHICLE::SET_VEHICLE_ON_GROUND_PROPERLY(curr_veh); //	if (speed.z > 1) 
 		}
 
-		if (speed.x < 5 && speed.y < 5 && reverse == true)
-		{
+		if (speed.x < 5 && speed.y < 5 && reverse == true) {
 			reverse_check = false;
 			SinceDriverStop_secs_passed = clock() / CLOCKS_PER_SEC;
-			if (((clock() / CLOCKS_PER_SEC) - SinceDriverStop_secs_curr) != 0)
-			{
+			if (((clock() / CLOCKS_PER_SEC) - SinceDriverStop_secs_curr) != 0) {
 				DriverStop_seconds = DriverStop_seconds + 1;
 				SinceDriverStop_secs_curr = SinceDriverStop_secs_passed;
 			}
@@ -154,45 +149,37 @@ void drive_to_marker()
 			if (DriverStop_seconds > 5) DriverStop_seconds = 0;
 		}
 
-		if ((driving_reverse.x < 5) && (driving_reverse.y < 5) && reverse == false)
-		{
+		if ((driving_reverse.x < 5) && (driving_reverse.y < 5) && reverse == false) {
 			SinceDriverStop_secs_passed = clock() / CLOCKS_PER_SEC;
-			if (((clock() / CLOCKS_PER_SEC) - SinceDriverStop_secs_curr) != 0)
-			{
+			if (((clock() / CLOCKS_PER_SEC) - SinceDriverStop_secs_curr) != 0) {
 				DriverStop_seconds = DriverStop_seconds + 1;
 				SinceDriverStop_secs_curr = SinceDriverStop_secs_passed;
 			}
-			if (DriverStop_seconds > 5)
-			{
+			if (DriverStop_seconds > 5) {
 				reverse = true;
 				DriverStop_seconds = 0;
 			}
 		}
 
-		if ((driving_reverse.x < 5) && (driving_reverse.y < 5))
-		{
+		if ((driving_reverse.x < 5) && (driving_reverse.y < 5)) {
 			SinceDriver2Stop_secs_passed = clock() / CLOCKS_PER_SEC;
-			if (((clock() / CLOCKS_PER_SEC) - SinceDriver2Stop_secs_curr) != 0)
-			{
+			if (((clock() / CLOCKS_PER_SEC) - SinceDriver2Stop_secs_curr) != 0) {
 				Driver2Stop_seconds = Driver2Stop_seconds + 1;
 				SinceDriver2Stop_secs_curr = SinceDriver2Stop_secs_passed;
 			}
-			if (Driver2Stop_seconds > 8)
-			{
+			if (Driver2Stop_seconds > 8) {
 				driving_style = TEL_CHAUFFEUR_DRIVINGSTYLES_VALUES[TelChauffeur_drivingstyles_Index];
 				Driver2Stop_seconds = 0;
 			}
 		}
 
-		if ((driving_reverse.x < -2) && (driving_reverse.y < -2) && reverse_check == false)
-		{
+		if ((driving_reverse.x < -2) && (driving_reverse.y < -2) && reverse_check == false) {
 			driving_style = TEL_CHAUFFEUR_DRIVINGSTYLES_VALUES[TelChauffeur_drivingstyles_Index];
 			DriverStop_seconds = 0;
 			reverse = false;
 		}
 
-		if ((speed.x > 10) || (speed.y > 10))
-		{
+		if ((speed.x > 10) || (speed.y > 10)) {
 			reverse = true;
 			reverse_check = true;
 		}
@@ -203,8 +190,7 @@ void drive_to_marker()
 		if (PED::IS_PED_IN_ANY_HELI(drivetomarker_player))
 			AI::TASK_HELI_MISSION(driver_to_marker_pilot, curr_veh, 0, 0, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, 4, TEL_CHAUFFEUR_SPEED_VALUES[TelChauffeur_speed_Index], -1.0, -1.0, 0, TEL_CHAUFFEUR_ALTITUDE_VALUES[TelChauffeur_altitude_Index], -1.0, 32);
 
-		if (PED::IS_PED_IN_ANY_PLANE(drivetomarker_player))
-		{
+		if (PED::IS_PED_IN_ANY_PLANE(drivetomarker_player)) {
 			planecurrspeed = ENTITY::GET_ENTITY_SPEED(curr_veh);
 			curr_roll = ENTITY::GET_ENTITY_ROLL(curr_veh);
 			curr_pitch = ENTITY::GET_ENTITY_PITCH(curr_veh);
@@ -213,27 +199,23 @@ void drive_to_marker()
 			if (TEL_CHAUFFEUR_ALTITUDE_VALUES[TelChauffeur_altitude_Index] < 1000) temp_dist = 1500;
 			if (TEL_CHAUFFEUR_ALTITUDE_VALUES[TelChauffeur_altitude_Index] > 999) temp_dist = TEL_CHAUFFEUR_ALTITUDE_VALUES[TelChauffeur_altitude_Index] + 1000;
 
-			if (planecurrspeed > 20 && my_coords.z < TEL_CHAUFFEUR_ALTITUDE_VALUES[TelChauffeur_altitude_Index] && altitude_reached == false) //  && dist_to_land_diff > temp_dist - 1 
-			{
+			if (planecurrspeed > 20 && my_coords.z < TEL_CHAUFFEUR_ALTITUDE_VALUES[TelChauffeur_altitude_Index] && altitude_reached == false) { //  && dist_to_land_diff > temp_dist - 1 
 				if (curr_pitch < 20) ENTITY::SET_ENTITY_ROTATION(curr_veh, curr_pitch + 0.2, curr_roll, curr_yaw, 1, true);
 			}
 
 			if (my_coords.z > TEL_CHAUFFEUR_ALTITUDE_VALUES[TelChauffeur_altitude_Index]) altitude_reached = true;
 
-			if (my_coords.z > 102 && landing_gear_off == false)
-			{
+			if (my_coords.z > 102 && landing_gear_off == false) {
 				VEHICLE::CONTROL_LANDING_GEAR(curr_veh, 1);
 				landing_gear_off = true;
 			}
 
-			if (my_coords.z < 99 && landing_gear_off == true)
-			{
+			if (my_coords.z < 99 && landing_gear_off == true) {
 				VEHICLE::CONTROL_LANDING_GEAR(curr_veh, 2);
 				landing_gear_off = false;
 			}
 
-			if (planecurrspeed < 25 && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(curr_veh))
-			{
+			if (planecurrspeed < 25 && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(curr_veh)) {
 				planecurrspeed = planecurrspeed + 0.4;
 				VEHICLE::SET_VEHICLE_FORWARD_SPEED(curr_veh, planecurrspeed);
 			}
@@ -245,13 +227,10 @@ void drive_to_marker()
 				AI::TASK_PLANE_MISSION(driver_to_marker_pilot, curr_veh, 0, 0, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, 4, TEL_CHAUFFEUR_SPEED_VALUES[TelChauffeur_speed_Index], 0, 90, 0, TEL_CHAUFFEUR_ALTITUDE_VALUES[TelChauffeur_altitude_Index]);
 		}
 
-		if (featureLandAtDestination)
-		{
-			if (PED::IS_PED_IN_ANY_HELI(drivetomarker_player) && tempdistance_x < 20 && tempdistance_y < 20)
-			{
+		if (featureLandAtDestination) {
+			if (PED::IS_PED_IN_ANY_HELI(drivetomarker_player) && tempdistance_x < 20 && tempdistance_y < 20) {
 				AI::TASK_HELI_MISSION(driver_to_marker_pilot, curr_veh, 0, 0, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, 20, TEL_CHAUFFEUR_SPEED_VALUES[TelChauffeur_speed_Index], -1.0, -1.0, 0, 0, -1.0, 32);
-				if (ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(curr_veh) && marker_been_set == true)
-				{
+				if (ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(curr_veh) && marker_been_set == true) {
 					AI::CLEAR_PED_TASKS(driver_to_marker_pilot);
 					VEHICLE::SET_VEHICLE_ENGINE_ON(curr_veh, false, true);
 					AI::TASK_LEAVE_VEHICLE(driver_to_marker_pilot, curr_veh, 4160);
@@ -261,10 +240,8 @@ void drive_to_marker()
 				}
 			}
 
-			if (PED::IS_PED_IN_ANY_PLANE(drivetomarker_player) && dist_to_land_diff < temp_dist && altitude_reached == true)
-			{
-				if (dist_to_land_diff > 399 && dist_to_land_diff < temp_dist)
-				{
+			if (PED::IS_PED_IN_ANY_PLANE(drivetomarker_player) && dist_to_land_diff < temp_dist && altitude_reached == true) {
+				if (dist_to_land_diff > 399 && dist_to_land_diff < temp_dist) {
 					AI::TASK_PLANE_MISSION(driver_to_marker_pilot, curr_veh, 0, 0, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, 4, 30, 0, 90, 0, 200);
 					if (my_coords.z > 200) AI::TASK_PLANE_MISSION(driver_to_marker_pilot, curr_veh, 0, 0, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, 4, 30, 0, 90, 0, -500);
 				}
@@ -272,14 +249,12 @@ void drive_to_marker()
 				if (dist_to_land_diff < 400)
 					AI::TASK_PLANE_MISSION(driver_to_marker_pilot, curr_veh, 0, 0, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, 4, 20, 0, 90, 0, -500);
 
-				if (landing == false)
-				{
+				if (landing == false) {
 					AI::TASK_PLANE_LAND(driver_to_marker_pilot, curr_veh, my_coords.x, my_coords.y, my_coords.z, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z);
 					landing = true;
 				}
 
-				if (ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(curr_veh) && marker_been_set == true)
-				{
+				if (ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(curr_veh) && marker_been_set == true) {
 					AI::CLEAR_PED_TASKS(driver_to_marker_pilot);
 					VEHICLE::SET_VEHICLE_ENGINE_ON(curr_veh, false, true);
 					PED::DELETE_PED(&driver_to_marker_pilot);
