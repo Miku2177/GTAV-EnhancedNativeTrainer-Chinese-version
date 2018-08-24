@@ -446,6 +446,23 @@ void update_features(){
 		featureWantedLevelFrozenUpdated = false;
 	}
 
+
+
+	/*Vector3 coords_apprun_ped = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
+	if (!INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_apprun_ped.x, coords_apprun_ped.y, coords_apprun_ped.z) && PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) == 0) {
+		PED::RESET_PED_MOVEMENT_CLIPSET(PLAYER::PLAYER_PED_ID(), 0.0);
+		PED::SET_PED_ALERTNESS(PLAYER::PLAYER_PED_ID(), 3);
+		AUDIO::SET_PLAYER_ANGRY(PLAYER::PLAYER_PED_ID(), true); 
+		GAMEPLAY::SET_FAKE_WANTED_LEVEL(6);
+		UI::FLASH_WANTED_DISPLAY(1);
+		UI::FLASH_MINIMAP_DISPLAY();
+	}
+	else GAMEPLAY::SET_FAKE_WANTED_LEVEL(0);*/
+
+
+
+
+
 	////////////////////////////////////// PLAYER DATA ////////////////////////////////////////////////
 	
 	Ped playerPed_Data = PLAYER::PLAYER_PED_ID();
@@ -475,8 +492,7 @@ void update_features(){
 	}
 
 	if (featurePlayerLife_Died) death_time2 = PLAYER::GET_TIME_SINCE_LAST_DEATH();
-	if (death_time2 > -1 && death_time2 < 2000 && featurePlayerLife_Died)
-	{
+	if (death_time2 > -1 && death_time2 < 2000 && featurePlayerLife_Died) {
 		featurePlayerLifeUpdated = true;
 	}
 	
@@ -569,22 +585,19 @@ void update_features(){
 		float curr_health = (*(float *)(addr + 0x280)) - 100;
 		float curr_playerArmour = PED::GET_PED_ARMOUR(playerPed);
 
-		if (!ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_OBJECT(playerPed) && !ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_PED(playerPed) && !ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_VEHICLE(playerPed) && !WEAPON::HAS_PED_BEEN_DAMAGED_BY_WEAPON(playerPed, 0, 2))
-		{
+		if (!ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_OBJECT(playerPed) && !ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_PED(playerPed) && !ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_VEHICLE(playerPed) && !WEAPON::HAS_PED_BEEN_DAMAGED_BY_WEAPON(playerPed, 0, 2)) {
 			been_damaged_health = (*(float *)(addr + 0x280)) - 100;
 			been_damaged_armor = PED::GET_PED_ARMOUR(playerPed);
 		}
 
-		if ((been_damaged_health != curr_health || been_damaged_armor != curr_playerArmour))
-		{
+		if ((been_damaged_health != curr_health || been_damaged_armor != curr_playerArmour)) {
 			if (WEAPON::HAS_PED_BEEN_DAMAGED_BY_WEAPON(playerPed, 0, 2) && !WEAPON::HAS_PED_BEEN_DAMAGED_BY_WEAPON(playerPed, 0, 1) && !PED::IS_PED_RAGDOLL(playerPed) && 
 				PED::IS_PED_ON_FOOT(playerPed) && ragdoll_seconds == 0) been_damaged_by_weapon = true;
 			been_damaged_health = curr_health;
 			been_damaged_armor = curr_playerArmour;
 		}
 
-		if (been_damaged_by_weapon == true)
-		{
+		if (been_damaged_by_weapon == true) {
 			int time1 = (rand() % 3000 + 0); // UP MARGIN + DOWN MARGIN
 			int time2 = (rand() % 3000 + 0); 
 			int ragdollType = (rand() % 3 + 0); 
@@ -596,17 +609,14 @@ void update_features(){
 			ragdoll_task = true;
 		}
 
-		if (ragdoll_task == true)
-		{
+		if (ragdoll_task == true) {
 			ragdoll_secs_passed = clock() / CLOCKS_PER_SEC;
-			if (((clock() / CLOCKS_PER_SEC) - ragdoll_secs_curr) != 0)
-			{
+			if (((clock() / CLOCKS_PER_SEC) - ragdoll_secs_curr) != 0) {
 				ragdoll_seconds = ragdoll_seconds + 1;
 				ragdoll_secs_curr = ragdoll_secs_passed;
 			}
 			
-			if (ragdoll_seconds == 4)
-			{
+			if (ragdoll_seconds == 4) {
 				ragdoll_task = false;
 				ragdoll_seconds = 0;
 			}
@@ -619,17 +629,14 @@ void update_features(){
 		Ped NPCragdoll[arrSize5];
 		int count_NPC_ragdoll = worldGetAllPeds(NPCragdoll, arrSize5);
 
-		for (int i = 0; i < count_NPC_ragdoll; i++)
-		{
-			if (NPC_RAGDOLL_VALUES[current_npc_ragdoll] == 1 &&	PED::GET_PED_TYPE(NPCragdoll[i]) != 0 && PED::GET_PED_TYPE(NPCragdoll[i]) != 1 && PED::GET_PED_TYPE(NPCragdoll[i]) != 2 && PED::GET_PED_TYPE(NPCragdoll[i]) != 3)
-			{
+		for (int i = 0; i < count_NPC_ragdoll; i++) {
+			if (NPC_RAGDOLL_VALUES[current_npc_ragdoll] == 1 &&	PED::GET_PED_TYPE(NPCragdoll[i]) != 0 && PED::GET_PED_TYPE(NPCragdoll[i]) != 1 && PED::GET_PED_TYPE(NPCragdoll[i]) != 2 && PED::GET_PED_TYPE(NPCragdoll[i]) != 3) {
 				if (WEAPON::HAS_PED_BEEN_DAMAGED_BY_WEAPON(NPCragdoll[i], 0, 1)) PED::_RESET_PED_RAGDOLL_BLOCKING_FLAGS(NPCragdoll[i], 1);
 				if (!WEAPON::HAS_PED_BEEN_DAMAGED_BY_WEAPON(NPCragdoll[i], 0, 1)) PED::_SET_PED_RAGDOLL_BLOCKING_FLAGS(NPCragdoll[i], 1);
 			}
 
 			if (NPC_RAGDOLL_VALUES[current_npc_ragdoll] == 2 && WEAPON::HAS_PED_BEEN_DAMAGED_BY_WEAPON(NPCragdoll[i], 0, 2) && !WEAPON::HAS_PED_BEEN_DAMAGED_BY_WEAPON(NPCragdoll[i], 0, 1) && !PED::IS_PED_RAGDOLL(NPCragdoll[i]) &&
-				PED::IS_PED_ON_FOOT(NPCragdoll[i]) && PED::GET_PED_TYPE(NPCragdoll[i]) != 0 && PED::GET_PED_TYPE(NPCragdoll[i]) != 1 &&	PED::GET_PED_TYPE(NPCragdoll[i]) != 2 && PED::GET_PED_TYPE(NPCragdoll[i]) != 3)
-			{
+				PED::IS_PED_ON_FOOT(NPCragdoll[i]) && PED::GET_PED_TYPE(NPCragdoll[i]) != 0 && PED::GET_PED_TYPE(NPCragdoll[i]) != 1 &&	PED::GET_PED_TYPE(NPCragdoll[i]) != 2 && PED::GET_PED_TYPE(NPCragdoll[i]) != 3) {
 				int time1 = (rand() % 3000 + 0); // UP MARGIN + DOWN MARGIN
 				int time2 = (rand() % 3000 + 0);
 				int ragdollType = (rand() % 3 + 0);
@@ -647,8 +654,7 @@ void update_features(){
 	}
 	
 	//Player Movement Speed
-	if (PLAYER_MOVEMENT_VALUES[current_player_movement] > 0.00)
-	{
+	if (PLAYER_MOVEMENT_VALUES[current_player_movement] > 0.00) {
 		PED::SET_PED_MOVE_RATE_OVERRIDE(playerPed, PLAYER_MOVEMENT_VALUES[current_player_movement]);
 	}
 	else {

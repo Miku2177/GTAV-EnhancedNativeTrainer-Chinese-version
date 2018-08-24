@@ -344,8 +344,7 @@ void mouse_view() // Control By A Mouse
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	Entity target = playerPed;
 
-	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0))
-	{
+	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
 		target = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 	}
 
@@ -359,15 +358,13 @@ void mouse_view() // Control By A Mouse
 	y_cur_coords = coord.y;
 	x_prev_coords = screen_width / 2;
 
-	if (x_cur_coords > x_prev_coords)
-	{
+	if (x_cur_coords > x_prev_coords) {
 		curHeading -= rotationSpeed;
 		x_cur_coords = screen_width / 2;
 		SetCursorPos(screen_width / 2, y_cur_coords);
 	}
 
-	if (x_cur_coords < x_prev_coords)
-	{
+	if (x_cur_coords < x_prev_coords) {
 		curHeading += rotationSpeed;
 		x_cur_coords = screen_width / 2;
 		SetCursorPos(screen_width / 2, y_cur_coords);
@@ -381,33 +378,27 @@ void mouse_view() // Control By A Mouse
 	if (body_rotation_up < 0) body_rotation_up = (body_rotation_up * -1);
 	if (body_rotation_down < 0) body_rotation_down = (body_rotation_down * -1);
 	
-	if (y_cur_coords < (screen_height / 2)) //Head is raised
-	{
+	if (y_cur_coords < (screen_height / 2)) { //Head is raised
 		ENTITY::SET_ENTITY_ROTATION(target, (curRotation.x + body_rotation_up), (curRotation.y + body_rotation_up), curRotation.z, 2, true);
 	}
 
-	if (y_cur_coords > (screen_height / 2)) //Head is lowered
-	{
+	if (y_cur_coords > (screen_height / 2)) { //Head is lowered
 		ENTITY::SET_ENTITY_ROTATION(target, (curRotation.x - body_rotation_down), (curRotation.y - body_rotation_down), curRotation.z, 2, true);
 	}
 
-	if ((moveForwardKey) && (y_cur_coords > ((screen_height / 2) + (screen_height / 4)) && !(SpaceKey)))//Head is lowered
-	{
+	if ((moveForwardKey) && (y_cur_coords > ((screen_height / 2) + (screen_height / 4)) && !(SpaceKey))) { //Head is lowered
 		curLocation.z -= (forwardPush * 1.1);
 	}
 
-	if ((moveForwardKey) && (y_cur_coords < ((screen_height / 2) - (screen_height / 10))) && !(SpaceKey)) //Head is raised
-	{
+	if ((moveForwardKey) && (y_cur_coords < ((screen_height / 2) - (screen_height / 10))) && !(SpaceKey)) { //Head is raised
 		curLocation.z += (forwardPush * 1.1);
 	}
 
-	if ((moveBackKey) && (y_cur_coords > ((screen_height / 2) + (screen_height / 4)) && !(SpaceKey)))//Head is lowered
-	{
+	if ((moveBackKey) && (y_cur_coords > ((screen_height / 2) + (screen_height / 4)) && !(SpaceKey))) { //Head is lowered
 		curLocation.z += (forwardPush * 1.1);
 	}
 
-	if ((moveBackKey) && (y_cur_coords < ((screen_height / 2) - (screen_height / 10))) && !(SpaceKey)) //Head is raised
-	{
+	if ((moveBackKey) && (y_cur_coords < ((screen_height / 2) - (screen_height / 10))) && !(SpaceKey)) { //Head is raised
 		curLocation.z -= (forwardPush * 1.1);
 	}
 }

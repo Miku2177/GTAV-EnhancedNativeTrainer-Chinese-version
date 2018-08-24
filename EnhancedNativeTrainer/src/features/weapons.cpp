@@ -630,8 +630,7 @@ void onchange_sniper_vision_modifier(int value, SelectFromListMenuItem* source){
 
 void sniper_vision_toggle()
 {
-	if (WEAPONS_SNIPERVISION_VALUES[SniperVisionIndex] == 1)
-	{
+	if (WEAPONS_SNIPERVISION_VALUES[SniperVisionIndex] == 1) {
 		Player player = PLAYER::PLAYER_ID();
 		Ped playerPed = PLAYER::PLAYER_PED_ID();
 
@@ -643,18 +642,15 @@ void sniper_vision_toggle()
 			vision_toggle = vision_toggle + 1;
 			if (vision_toggle == 3) vision_toggle = 0;
 
-			if (vision_toggle == 0)
-			{
+			if (vision_toggle == 0) {
 				GRAPHICS::SET_NIGHTVISION(false);
 				GRAPHICS::SET_SEETHROUGH(false);
 			}
-			if (vision_toggle == 1)
-			{
+			if (vision_toggle == 1) {
 				GRAPHICS::SET_NIGHTVISION(true);
 				GRAPHICS::SET_SEETHROUGH(false);
 			}
-			if (vision_toggle == 2)
-			{
+			if (vision_toggle == 2) {
 				GRAPHICS::SET_NIGHTVISION(false);
 				GRAPHICS::SET_SEETHROUGH(true);
 			}
@@ -1231,7 +1227,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	}
 
 	// No reticle
-	if (featureNoReticle){
+	if (featureNoReticle) {
 		bool sniper_rifle = false;
 		if (WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_SNIPERRIFLE")) sniper_rifle = true;
 		if (WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_HEAVYSNIPER")) sniper_rifle = true;
@@ -1260,17 +1256,14 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		
 			if (featurePlayerMelee && (Weapon_Type == 3566412244 || Weapon_Type == 2685387236)) {
 				for (int i = 0; i < count_cops; i++) {
-					if (PED::GET_PED_TYPE(cops[i]) == 6 || PED::GET_PED_TYPE(cops[i]) == 27)
-					{
-						if (WEAPON::GET_SELECTED_PED_WEAPON(cops[i]) != Cop_Weapon)
-						{
+					
+					if (PED::GET_PED_TYPE(cops[i]) == 6 || PED::GET_PED_TYPE(cops[i]) == 27) {
+						if (WEAPON::GET_SELECTED_PED_WEAPON(cops[i]) != Cop_Weapon) {
 							WEAPON::GIVE_WEAPON_TO_PED(cops[i], Cop_Weapon, 999, false, true);
 						}
 					}
-					if (featureArmyMelee && PED::GET_PED_TYPE(cops[i]) == 29)
-					{
-						if (WEAPON::GET_SELECTED_PED_WEAPON(cops[i]) != Cop_Weapon)
-						{
+					if (featureArmyMelee && PED::GET_PED_TYPE(cops[i]) == 29) {
+						if (WEAPON::GET_SELECTED_PED_WEAPON(cops[i]) != Cop_Weapon) {
 							WEAPON::GIVE_WEAPON_TO_PED(cops[i], Cop_Weapon, 999, false, true);
 						}
 					}
@@ -1279,17 +1272,14 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			
 			if (!featurePlayerMelee) {
 				for (int i = 0; i < count_cops; i++) {
-					if (PED::GET_PED_TYPE(cops[i]) == 6 || PED::GET_PED_TYPE(cops[i]) == 27)
-					{
-						if (WEAPON::GET_SELECTED_PED_WEAPON(cops[i]) != Cop_Weapon)
-						{
+					
+					if (PED::GET_PED_TYPE(cops[i]) == 6 || PED::GET_PED_TYPE(cops[i]) == 27) {
+						if (WEAPON::GET_SELECTED_PED_WEAPON(cops[i]) != Cop_Weapon) {
 							WEAPON::GIVE_WEAPON_TO_PED(cops[i], Cop_Weapon, 999, false, true);
 						}
 					}
-					if (featureArmyMelee && PED::GET_PED_TYPE(cops[i]) == 29)
-					{
-						if (WEAPON::GET_SELECTED_PED_WEAPON(cops[i]) != Cop_Weapon)
-						{
+					if (featureArmyMelee && PED::GET_PED_TYPE(cops[i]) == 29) {
+						if (WEAPON::GET_SELECTED_PED_WEAPON(cops[i]) != Cop_Weapon) {
 							WEAPON::GIVE_WEAPON_TO_PED(cops[i], Cop_Weapon, 999, false, true);
 						}
 					}
@@ -1324,8 +1314,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	if (featureCopWeapon && !VEHICLE::IS_COP_VEHICLE_IN_AREA_3D(coords_me.x - 200, coords_me.y - 200, coords_me.z - 200, coords_me.x + 200, coords_me.y + 200, coords_me.z + 200) && pl_health < 115 && 
 		!PED::IS_COP_PED_IN_AREA_3D(coords_me.x - 200, coords_me.y - 200, coords_me.z - 200, coords_me.x + 200, coords_me.y + 200, coords_me.z + 200) && pl_health < 115) cops_on = false;
 
-	if (cops_took_weapons && cops_on) 
-	{
+	if (cops_took_weapons && cops_on) {
 		WEAPON::REMOVE_ALL_PED_WEAPONS(playerPed, false);
 		cops_on = false;
 		cops_took_weapons = false;
@@ -1347,32 +1336,27 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_REMOTESNIPER") || WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_HEAVYSNIPER_MK2") ||
 		WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_MARKSMANRIFLE") || WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_MARKSMANRIFLE_MK2")))
 	{
-		if (!PED::GET_PED_CONFIG_FLAG(playerPed, 78, 1))
-		{
+		if (!PED::GET_PED_CONFIG_FLAG(playerPed, 78, 1)) {
 			GRAPHICS::SET_NIGHTVISION(false);
 			GRAPHICS::SET_SEETHROUGH(false);
 			vision_toggle = 0;
 		}
-		if (WEAPONS_SNIPERVISION_VALUES[SniperVisionIndex] == 2 && !PED::GET_PED_CONFIG_FLAG(playerPed, 58, 1) && PED::GET_PED_CONFIG_FLAG(playerPed, 78, 1))
-		{
+		if (WEAPONS_SNIPERVISION_VALUES[SniperVisionIndex] == 2 && !PED::GET_PED_CONFIG_FLAG(playerPed, 58, 1) && PED::GET_PED_CONFIG_FLAG(playerPed, 78, 1)) {
 			GRAPHICS::SET_NIGHTVISION(true);
 			GRAPHICS::SET_SEETHROUGH(false);
 		}
-		if (WEAPONS_SNIPERVISION_VALUES[SniperVisionIndex] == 3 && !PED::GET_PED_CONFIG_FLAG(playerPed, 58, 1) && PED::GET_PED_CONFIG_FLAG(playerPed, 78, 1))
-		{
+		if (WEAPONS_SNIPERVISION_VALUES[SniperVisionIndex] == 3 && !PED::GET_PED_CONFIG_FLAG(playerPed, 58, 1) && PED::GET_PED_CONFIG_FLAG(playerPed, 78, 1)) {
 			GRAPHICS::SET_NIGHTVISION(false);
 			GRAPHICS::SET_SEETHROUGH(true);
 		}
 	}
 
 	// Friendly Fire
-	if (featureFriendlyFire)
-	{
+	if (featureFriendlyFire) {
 		NETWORK::NETWORK_SET_FRIENDLY_FIRE_OPTION(true);
 		PED::SET_CAN_ATTACK_FRIENDLY(playerPed, true, false);
 	}
-	else
-	{
+	else {
 		NETWORK::NETWORK_SET_FRIENDLY_FIRE_OPTION(false);
 		PED::SET_CAN_ATTACK_FRIENDLY(playerPed, false, false);
 	}

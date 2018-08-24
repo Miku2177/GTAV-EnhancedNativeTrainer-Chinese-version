@@ -785,18 +785,18 @@ void update_world_features()
 	}
 
 	// No Police Blips
-	if (featureNoPoliceBlips){// && !police_blips_toogle){
+	if (featureNoPoliceBlips) { // && !police_blips_toogle){
 			PLAYER::SET_POLICE_RADAR_BLIPS(false);
 			//police_blips_toogle = true;
 		}
 
-	if (!featureNoPoliceBlips){// && police_blips_toogle) {
+	if (!featureNoPoliceBlips) { // && police_blips_toogle) {
 		PLAYER::SET_POLICE_RADAR_BLIPS(true);
 		//police_blips_toogle = false;
 	}
 
 	// Full Map Toggle
-	if (featureFullMap && !fullmap_toogle){
+	if (featureFullMap && !fullmap_toogle) {
 		UI::_SET_MINIMAP_REVEALED(true);
 		fullmap_toogle = true;
 	}
@@ -807,21 +807,21 @@ void update_world_features()
 	}
 	
 	// Radar Map Size
-	if (WORLD_RADAR_MAP_VALUES[RadarMapIndex] == 1 && radar_map_toogle_1 == false){
+	if (WORLD_RADAR_MAP_VALUES[RadarMapIndex] == 1 && radar_map_toogle_1 == false) {
 		UI::_SET_RADAR_BIGMAP_ENABLED(false, false);
 		radar_map_toogle_1 = true;
 		radar_map_toogle_2 = false;
 		radar_map_toogle_3 = false;
 	}
 
-	if (WORLD_RADAR_MAP_VALUES[RadarMapIndex] == 2 && radar_map_toogle_2 == false){
+	if (WORLD_RADAR_MAP_VALUES[RadarMapIndex] == 2 && radar_map_toogle_2 == false) {
 		UI::_SET_RADAR_BIGMAP_ENABLED(true, false);
 		radar_map_toogle_1 = false;
 		radar_map_toogle_2 = true;
 		radar_map_toogle_3 = false;
 	}
 
-	if (WORLD_RADAR_MAP_VALUES[RadarMapIndex] == 3 && radar_map_toogle_3 == false){
+	if (WORLD_RADAR_MAP_VALUES[RadarMapIndex] == 3 && radar_map_toogle_3 == false) {
 		UI::_SET_RADAR_BIGMAP_ENABLED(true, true);
 		radar_map_toogle_1 = false;
 		radar_map_toogle_2 = false;
@@ -829,24 +829,23 @@ void update_world_features()
 	}
 
 	// Full Map Toggle
-	if (featureFullMap && !fullmap_toogle){
+	if (featureFullMap && !fullmap_toogle) {
 		UI::_SET_MINIMAP_REVEALED(true);
 		fullmap_toogle = true;
 	}
 	
 	// Show Bolingbroke Penitentiary On Map
-	if (featurePenitentiaryMap){
+	if (featurePenitentiaryMap) {
 		UI::SET_RADAR_AS_INTERIOR_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("V_FakePrison"), 1700, 2580, 0, 0);
 		UI::SET_RADAR_AS_EXTERIOR_THIS_FRAME();
 	}
 
 	// Show Fort Zancudo On Map
-	if (featureZancudoMap && featureZancudoMapUpdated == true){
+	if (featureZancudoMap && featureZancudoMapUpdated == true) {
 		UI::SET_MINIMAP_COMPONENT(15, true, -1);
 		featureZancudoMapUpdated = false;
 	}
-	if (!featureZancudoMap)
-	{
+	if (!featureZancudoMap) {
 		UI::SET_MINIMAP_COMPONENT(15, false, -1);
 		featureZancudoMapUpdated = true;
 	}
@@ -924,7 +923,7 @@ void update_world_features()
 					}
 				}
 			}
-			if (featureNPCNoLights && bus_veh[i] != veh_mycurrveh)	{
+			if (featureNPCNoLights && bus_veh[i] != veh_mycurrveh) {
 				BOOL lightsOn = -1;
 				BOOL highbeamsOn = -1;
 				VEHICLE::GET_VEHICLE_LIGHTS_STATE(bus_veh[i], &lightsOn, &highbeamsOn);
@@ -1032,8 +1031,7 @@ void update_world_features()
 	}
 
 	// Wind Strength
-	if (windstrength_toggle == false)
-		{
+	if (windstrength_toggle == false) {
 			GAMEPLAY::SET_WIND(WORLD_WIND_STRENGTH_VALUES[WindStrengthIndex]);
 			if (WORLD_WIND_STRENGTH_VALUES[WindStrengthIndex] != 0) GAMEPLAY::SET_WIND_DIRECTION(ENTITY::GET_ENTITY_HEADING(PLAYER::PLAYER_PED_ID()));
 			if (WORLD_WIND_STRENGTH_VALUES[WindStrengthIndex] == 0) GAMEPLAY::SET_WIND_SPEED(0.0);

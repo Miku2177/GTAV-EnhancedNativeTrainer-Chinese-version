@@ -35,8 +35,7 @@ bool ChanceAttackingYouChanged = true;
 
 /////////////////////////////////// PEDS DON'T LIKE WEAPONS /////////////////////////////////////////////
 
-void peds_dont_like_weapons()
-{
+void peds_dont_like_weapons() {
 
 	float pedagainstweapons_height = ENTITY::GET_ENTITY_HEIGHT_ABOVE_GROUND(PLAYER::PLAYER_ID());
 
@@ -54,8 +53,7 @@ void peds_dont_like_weapons()
 		Vector3 coords_weapon_me = ENTITY::GET_ENTITY_COORDS(playerPed, true);
 		Vector3 coords_ped = ENTITY::GET_ENTITY_COORDS(weaponhaters[0], true);
 
-		for (int i = 0; i < count_weapon_haters; i++)
-		{
+		for (int i = 0; i < count_weapon_haters; i++) {
 			coords_weapon_me = ENTITY::GET_ENTITY_COORDS(playerPed, true);
 			coords_ped = ENTITY::GET_ENTITY_COORDS(weaponhaters[i], true);
 
@@ -90,8 +88,7 @@ void peds_dont_like_weapons()
 				}
 			}
 
-			if (call_the_police == true)
-			{
+			if (call_the_police == true) {
 				tick_pedagainstweapons = tick_pedagainstweapons + 1;
 
 				if (tick_pedagainstweapons > 60000) {

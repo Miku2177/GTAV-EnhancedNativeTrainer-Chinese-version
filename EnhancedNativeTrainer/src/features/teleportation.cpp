@@ -234,6 +234,7 @@ std::vector<tele_location> LOCATIONS_HIGH = {
 	{ "Stab City", 126.845f, 3714.25f, 48.9273f },
 	{ "Sisyphus Theater Roof", 203.37f, 1166.73f, 245.835f },
 	{ "Tataviam Mountains Top", 1758.23f, 682.072f, 269.991f },
+	{ "High Up", -75.015f, -818.215f, 1500.176f },
 	{ "Very High Up", -129.964f, 8130.873f, 2699.999f },
 	//{ "Very Very High Up", -119.879f, -977.357f, 9999.0f }, //- doesn't teleport you. Height out of bounds?
 	{ "Vinewood Bowl Theatre Roof", 683.157f, 568.621f, 156.285f },
@@ -1062,36 +1063,28 @@ void teleport_to_mission_marker(){
 	int blipIterator = UI::IS_WAYPOINT_ACTIVE() ? BlipSpriteWaypoint : BlipSpriteStandard;
 	Blip myBlip;
 		
-	if (blipIterator != BlipSpriteStandard)
-	{
+	if (blipIterator != BlipSpriteStandard) {
 		myBlip = UI::GET_FIRST_BLIP_INFO_ID(blipIterator);
-		if (UI::DOES_BLIP_EXIST(myBlip) != 0)
-		{
-			if (UI::GET_BLIP_INFO_ID_TYPE(myBlip) == 4)
-			{
+		if (UI::DOES_BLIP_EXIST(myBlip) != 0) {
+			if (UI::GET_BLIP_INFO_ID_TYPE(myBlip) == 4) {
 				coords_mission = UI::GET_BLIP_INFO_ID_COORD(myBlip);
 				blip_mission = true;
 			}
 		}
 	}
-	else
-	{
+	else {
 		if (blipIterator){
-			for (myBlip = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(myBlip) != 0; myBlip = UI::GET_NEXT_BLIP_INFO_ID(blipIterator))
-			{
-				if (UI::GET_BLIP_INFO_ID_TYPE(myBlip) == 4 && UI::GET_BLIP_COLOUR(myBlip) != BlipColorBlue)
-				{
+			for (myBlip = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(myBlip) != 0; myBlip = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) {
+				if (UI::GET_BLIP_INFO_ID_TYPE(myBlip) == 4 && UI::GET_BLIP_COLOUR(myBlip) != BlipColorBlue) {
 					coords_mission = UI::GET_BLIP_INFO_ID_COORD(myBlip);
 					blip_mission = true;
 					break;
 				}
 			}
 
-			if (!blip_mission)
-			{
+			if (!blip_mission) {
 				myBlip = UI::GET_FIRST_BLIP_INFO_ID(BlipSpriteRaceFinish);
-				if (UI::DOES_BLIP_EXIST(myBlip) != 0)
-				{
+				if (UI::DOES_BLIP_EXIST(myBlip) != 0) {
 					coords_mission = UI::GET_BLIP_INFO_ID_COORD(myBlip);
 					blip_mission = true;
 				}
@@ -1102,7 +1095,7 @@ void teleport_to_mission_marker(){
 	if(blip_mission == true) {
 		Entity e = PLAYER::PLAYER_PED_ID();
 		
-		if (PED::IS_PED_IN_ANY_VEHICLE(e, 0)){
+		if (PED::IS_PED_IN_ANY_VEHICLE(e, 0)) {
 			e = PED::GET_VEHICLE_PED_IS_USING(e);
 		}
 		
@@ -1113,7 +1106,7 @@ void teleport_to_mission_marker(){
 		if (!ENTITY::IS_ENTITY_IN_WATER(e)) {
 			static float groundCheckHeight[] =
 			{ 100.0, 150.0, 50.0, 0.0, 200.0, 250.0, 300.0, 350.0, 400.0, 450.0, 500.0, 550.0, 600.0, 650.0, 700.0, 750.0, 800.0 };
-			for (int i = 0; i < sizeof(groundCheckHeight) / sizeof(float); i++){
+			for (int i = 0; i < sizeof(groundCheckHeight) / sizeof(float); i++) {
 				ENTITY::SET_ENTITY_COORDS_NO_OFFSET(e, coords_mission.x, coords_mission.y, groundCheckHeight[i], 0, 0, 1);
 				WAIT(100);
 				if (GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(coords_mission.x, coords_mission.y, groundCheckHeight[i], &coords_mission.z)){
@@ -1125,7 +1118,7 @@ void teleport_to_mission_marker(){
 			}
 		}
 		
-		if (!groundFound){
+		if (!groundFound) {
 			coords_mission.z = 1000.0;
 			WEAPON::GIVE_DELAYED_WEAPON_TO_PED(PLAYER::PLAYER_PED_ID(), 0xFBAB5776, 1, 0);
 		}
@@ -1136,7 +1129,7 @@ void teleport_to_mission_marker(){
 
 /////////////////////// TELEPORT TO A VEHICLE IN SIGHT ///////////////////////////////
 
-void teleport_to_vehicle_in_sight(){
+void teleport_to_vehicle_in_sight() {
 	
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	const int numElements = 10;
@@ -1145,14 +1138,11 @@ void teleport_to_vehicle_in_sight(){
 	nearbyPed[0] = numElements;
 	int count = PED::GET_PED_NEARBY_PEDS(PLAYER::PLAYER_PED_ID(), nearbyPed, -1);
 
-	if (nearbyPed != NULL)
-	{
-		for (int i = 0; i < count; i++)
-		{
+	if (nearbyPed != NULL) {
+		for (int i = 0; i < count; i++) {
 			int offsettedID = i * 2 + 2;
 				
-			if (nearbyPed[offsettedID] != NULL && ENTITY::DOES_ENTITY_EXIST(nearbyPed[offsettedID]) && PED::IS_PED_IN_ANY_VEHICLE(nearbyPed[offsettedID], 1))
-			{
+			if (nearbyPed[offsettedID] != NULL && ENTITY::DOES_ENTITY_EXIST(nearbyPed[offsettedID]) && PED::IS_PED_IN_ANY_VEHICLE(nearbyPed[offsettedID], 1)) {
 				ENTITY::GET_ENTITY_HEADING(playerPed);
 				Vector3 coords_me = ENTITY::GET_ENTITY_COORDS(playerPed, true);
 				Vehicle veh2 = PED::GET_VEHICLE_PED_IS_IN(nearbyPed[offsettedID], true);
@@ -1173,8 +1163,7 @@ void teleport_to_vehicle_in_sight(){
 
 				if (((coords_veh.y < coords_me.y) && (coords_veh.y < (camCoords.y * 100000))) || ((coords_veh.y > coords_me.y) && (coords_veh.y >(camCoords.y * 100000))))
 				{}
-				else
-				{
+				else {
 					int primary, secondary;
 					Hash currVehModel = ENTITY::GET_ENTITY_MODEL(veh2);
 					Vector3 coords_veh2 = ENTITY::GET_ENTITY_COORDS(veh2, true);
@@ -1193,7 +1182,7 @@ void teleport_to_vehicle_in_sight(){
 					ENTITY::SET_ENTITY_VELOCITY(veh, vehspeed.x, vehspeed.y, vehspeed.z);
 					VEHICLE::SET_VEHICLE_ENGINE_ON(veh, true, true);
 
-					if (ENTITY::DOES_ENTITY_EXIST(veh)){
+					if (ENTITY::DOES_ENTITY_EXIST(veh)) {
 						PED::SET_PED_INTO_VEHICLE(playerPed, veh, -1);
 						if (is_this_a_heli_or_plane(veh)){
 							VEHICLE::SET_HELI_BLADES_FULL_SPEED(PED::GET_VEHICLE_PED_IS_USING(playerPed));
@@ -1210,7 +1199,7 @@ void teleport_to_vehicle_in_sight(){
 
 /////////////////////// TELEPORT TO A VEHICLE AS A PASSENGER ///////////////////////////////
 
-void teleport_to_vehicle_as_passenger(){
+void teleport_to_vehicle_as_passenger() {
 
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	const int numElements = 10;
@@ -1219,17 +1208,14 @@ void teleport_to_vehicle_as_passenger(){
 	nearbyPed[0] = numElements;
 	int count = PED::GET_PED_NEARBY_PEDS(PLAYER::PLAYER_PED_ID(), nearbyPed, -1);
 
-	if (nearbyPed != NULL)
-	{
-		for (int i = 0; i < count; i++)
-		{
+	if (nearbyPed != NULL) {
+		for (int i = 0; i < count; i++) {
 			int offsettedID = i * 2 + 2;
 
-			if (nearbyPed[offsettedID] != NULL && ENTITY::DOES_ENTITY_EXIST(nearbyPed[offsettedID]) && PED::IS_PED_IN_ANY_VEHICLE(nearbyPed[offsettedID], 1))
-			{
+			if (nearbyPed[offsettedID] != NULL && ENTITY::DOES_ENTITY_EXIST(nearbyPed[offsettedID]) && PED::IS_PED_IN_ANY_VEHICLE(nearbyPed[offsettedID], 1)) {
 				Vehicle veh2 = PED::GET_VEHICLE_PED_IS_IN(nearbyPed[offsettedID], true);
 
-				if (ENTITY::DOES_ENTITY_EXIST(veh2)){
+				if (ENTITY::DOES_ENTITY_EXIST(veh2)) {
 					PED::SET_PED_INTO_VEHICLE(playerPed, veh2, -2);
 					if (is_this_a_heli_or_plane(veh2)){
 						VEHICLE::SET_HELI_BLADES_FULL_SPEED(PED::GET_VEHICLE_PED_IS_USING(playerPed));
@@ -1421,8 +1407,7 @@ void handle_generic_settings_teleportation(std::vector<StringPairSettingDBRow>* 
 
 bool onconfirm_jump_category(MenuItem<int> choice)
 {
-	if (choice.value == -5)
-	{
+	if (choice.value == -5) {
 		std::string result = show_keyboard(NULL, (char*)lastJumpSpawn.c_str());
 		if (!result.empty())
 		{
@@ -1438,7 +1423,7 @@ bool onconfirm_jump_category(MenuItem<int> choice)
 			float y = std::stof(a.substr(sz), &sz);
 			float z = std::stof(a.substr(sz).substr(sz));
 
-			if (PED::IS_PED_IN_ANY_VEHICLE(e, 0)){
+			if (PED::IS_PED_IN_ANY_VEHICLE(e, 0)) {
 				e = PED::GET_VEHICLE_PED_IS_USING(e);
 			}
 			ENTITY::SET_ENTITY_COORDS_NO_OFFSET(e, x, y, z, 0, 0, 1);
@@ -2001,20 +1986,16 @@ void update_teleport_features(){
 
 	/////////////////////////////////////// 3D MARKER /////////////////////////////////////////
 
-	if (feature3dmarker)
-	{
+	if (feature3dmarker) {
 		int blip3DIterator = UI::IS_WAYPOINT_ACTIVE() ? BlipSpriteWaypoint : BlipSpriteStandard;
 		Vector3 playerPosition = ENTITY::GET_ENTITY_COORDS(playerPed, false);
 
 		// Check if marker set
-		if (blip3DIterator != BlipSpriteStandard)
-		{
+		if (blip3DIterator != BlipSpriteStandard) {
 			my3DBlip = UI::GET_FIRST_BLIP_INFO_ID(blip3DIterator);
-			if (UI::DOES_BLIP_EXIST(my3DBlip) != 0)
-			{
+			if (UI::DOES_BLIP_EXIST(my3DBlip) != 0) {
 				// Player's marker?
-				if (UI::GET_BLIP_INFO_ID_TYPE(my3DBlip) == 4)
-				{
+				if (UI::GET_BLIP_INFO_ID_TYPE(my3DBlip) == 4) {
 					coords_3Dblip = UI::GET_BLIP_INFO_ID_COORD(my3DBlip);
 					if (blip_3d_exists_already == false) blip_3d_found = true;
 				}
@@ -2022,15 +2003,13 @@ void update_teleport_features(){
 		}
 
 		// No marker or coords changed
-		if (blip_3d_exists_already == true && (UI::DOES_BLIP_EXIST(my3DBlip) == 0 || coords_3Dblip.x != coords_3Dblip_old.x || coords_3Dblip.y != coords_3Dblip_old.y))
-		{
+		if (blip_3d_exists_already == true && (UI::DOES_BLIP_EXIST(my3DBlip) == 0 || coords_3Dblip.x != coords_3Dblip_old.x || coords_3Dblip.y != coords_3Dblip_old.y)) {
 			blip_3d_exists_already = false;
 			close_distance = false;
 		}
 
 		// Marker has been set
-		if (blip_3d_found == true)
-		{
+		if (blip_3d_found == true) {
 			coords_3Dblip_old.x = coords_3Dblip.x;
 			coords_3Dblip_old.y = coords_3Dblip.y;
 			marker_3d_height = TEL_3DMARKER_SKYPOS_VALUES[Tel3dmarker_skypos_Index];
@@ -2055,13 +2034,12 @@ void update_teleport_features(){
 		if (dist_diff_x > 100 || dist_diff_y > 100) close_distance = false;
 
 		// Get Z coord
-		if (dist_diff_x < 100 && dist_diff_y < 100 && close_distance == false)
-		{
+		if (dist_diff_x < 100 && dist_diff_y < 100 && close_distance == false) {
 			static float groundCheckHeight[] =
 			{ 100.0, 150.0, 50.0, 0.0, 200.0, 250.0, 300.0, 350.0, 400.0, 450.0, 500.0, 550.0, 600.0, 650.0, 700.0, 750.0, 800.0 };
-			for (int i = 0; i < sizeof(groundCheckHeight) / sizeof(float); i++)
-			{
-				if (GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(coords_3Dblip.x, coords_3Dblip.y, groundCheckHeight[i], &coords_3Dblip.z) > 0){
+			
+			for (int i = 0; i < sizeof(groundCheckHeight) / sizeof(float); i++) {
+				if (GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(coords_3Dblip.x, coords_3Dblip.y, groundCheckHeight[i], &coords_3Dblip.z) > 0) {
 					coords_3Dblip.z += 3.0;
 					temp_coords_3Dblip.z = coords_3Dblip.z;
 					close_distance = true;
@@ -2075,8 +2053,7 @@ void update_teleport_features(){
 			MARKER3D_COLOURS_R_VALUES[Marker3d_R_Index]/*int red*/, MARKER3D_COLOURS_G_VALUES[Marker3d_G_Index]/*int green*/, MARKER3D_COLOURS_B_VALUES[Marker3d_B_Index]/*int blue*/, MARKER3D_ALPHA_VALUES[Marker3d_Alpha_Index]/*int alpha*/, 
 			50/*BOOL bobUpAndDown*/, 1/*BOOL faceCamera*/, 1/*int p19*/, 1/*BOOL rotate*/, 0/*char* textureDict*/, 0/*char* textureName*/, 0/*BOOL drawOnEnts*/);
 
-		if ((dist_diff_x > 100 || dist_diff_y > 100) && close_distance == false)
-		{
+		if ((dist_diff_x > 100 || dist_diff_y > 100) && close_distance == false) {
 			if (TEL_3DMARKER_MARTYPE_VALUES[Tel3dmarker_martype_Index] == 1 && blip_3d_exists_already == true) GRAPHICS::DRAW_MARKER(TEL_3DMARKER_VALUES[Tel3dmarkerIndex]/*int type*/, coords_3Dblip.x/*float posX*/, coords_3Dblip.y/*float posY*/, 
 				marker_3d_height/*float posZ*/,	20/*float dirX*/, 20/*float dirY*/, 20/*float dirZ*/, 90/*float rotX*/, 90/*float rotY*/, 90/*float rotZ*/, marker_3d_size/*float scaleX*/, marker_3d_size/*float scaleY*/, marker_3d_size/*float scaleZ*/,
 				MARKER3D_COLOURS_R_VALUES[Marker3d_R_Index]/*int red*/, MARKER3D_COLOURS_G_VALUES[Marker3d_G_Index]/*int green*/, MARKER3D_COLOURS_B_VALUES[Marker3d_B_Index]/*int blue*/, MARKER3D_ALPHA_VALUES[Marker3d_Alpha_Index]/*int alpha*/, 
@@ -2104,22 +2081,19 @@ void update_teleport_features(){
 
 	int blipMarkerIterator = UI::IS_WAYPOINT_ACTIVE() ? BlipSpriteWaypoint : BlipSpriteStandard;
 
-	if (blipMarkerIterator != BlipSpriteStandard)
-	{
+	if (blipMarkerIterator != BlipSpriteStandard) {
 		myChauffeurBlip = UI::GET_FIRST_BLIP_INFO_ID(blipMarkerIterator);
 		if (UI::DOES_BLIP_EXIST(myChauffeurBlip) != 0 && UI::GET_BLIP_INFO_ID_TYPE(myChauffeurBlip) == 4) blipDriveFound = true;
 	}
 
-	if (blipMarkerIterator == 1)
-	{
+	if (blipMarkerIterator == 1) {
 		blipDriveFound = false;
 		planecurrspeed = 0;
 		landing = false;
 		altitude_reached = false;
 	}
 	
-	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) || planecurrspeed < 2)
-	{
+	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) || planecurrspeed < 2) {
 		landing = false;
 		altitude_reached = false;
 	}
@@ -2133,8 +2107,7 @@ void update_teleport_features(){
 		if (!TEL_CHAUFFEUR_DRIVINGSTYLES_VALUES.empty()) std::vector<int>(TEL_CHAUFFEUR_DRIVINGSTYLES_VALUES).swap(emptyVec);
 	}
 
-	if ((blipDriveFound == false && marker_been_set == true) || (CONTROLS::IS_CONTROL_PRESSED(2, 75) && marker_been_set == true))
-	{
+	if ((blipDriveFound == false && marker_been_set == true) || (CONTROLS::IS_CONTROL_PRESSED(2, 75) && marker_been_set == true)) {
 		AI::CLEAR_PED_TASKS(driver_to_marker_pilot);
 		VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(curr_veh, false);
 		AI::TASK_LEAVE_VEHICLE(driver_to_marker_pilot, curr_veh, 4160);

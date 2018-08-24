@@ -102,6 +102,8 @@ void search_light();
 
 void damage_door();
 
+void enter_damaged_vehicle();
+
 bool process_spawn_menu_generic(int topMenuSelection);
 
 bool spawn_saved_car(int slot, std::string caption);
@@ -271,6 +273,8 @@ void onchange_fuel_colours_b_index(int value, SelectFromListMenuItem* source);
 void onchange_veh_turn_signals_index(int value, SelectFromListMenuItem* source);
 
 void onchange_veh_turn_signals_angle_index(int value, SelectFromListMenuItem* source);
+
+void onchange_veh_turn_signals_acceleration_index(int value, SelectFromListMenuItem* source);
 
 void onchange_veh_speedlimiter_index(int value, SelectFromListMenuItem* source);
 

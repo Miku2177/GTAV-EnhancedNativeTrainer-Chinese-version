@@ -1434,7 +1434,7 @@ bool onconfirm_vehmod_category_menu(MenuItem<int> choice){
 		VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT_INDEX(veh, choice.value);
 		set_status_text("Changed license plate");
 	}
-	else if (lastSelectedModValue == SPECIAL_ID_FOR_ENGINE_SOUND && featureEngineSound){
+	else if (lastSelectedModValue == SPECIAL_ID_FOR_ENGINE_SOUND && featureEngineSound) { // pick engine sound through the menu/list
 		char *currSound = new char[ENGINE_SOUND[choice.value].length() + 1];
 		strcpy(currSound, ENGINE_SOUND[choice.value].c_str());
 		//current_picked_engine_sound = choice.value;
@@ -1575,7 +1575,7 @@ bool onconfirm_vehmod_engine_sound_menu(MenuItem<int> choice) {
 	return process_vehmod_engine_sound();
 }
 
-void set_engine_sound(MenuItem<int> choice) {
+void set_engine_sound(MenuItem<int> choice) { // pick engine sound via message box
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if (ENTITY::DOES_ENTITY_EXIST(playerPed) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && featureEngineSound)
@@ -1588,18 +1588,15 @@ void set_engine_sound(MenuItem<int> choice) {
 		std::transform(amendedResult.begin(), amendedResult.end(), amendedResult.begin(), ::toupper);
 		char *keyboardInput = &amendedResult[0u];
 
-		for (int i = 0; i < ENGINE_SOUND_COUNT; i++)
-		{
-			if (ENGINE_SOUND[i] == amendedResult)
-			{
+		for (int i = 0; i < ENGINE_SOUND_COUNT; i++) {
+			if (ENGINE_SOUND[i] == amendedResult) {
 				correct_name = true;
 				//current_picked_engine_sound = i;
 				current_picked_engine_sound = ENGINE_SOUND_NUMBERS[i];
 			}
 		}
 
-		if (correct_name == true)
-		{
+		if (correct_name == true) {
 			VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
 			AUDIO::_SET_VEHICLE_AUDIO(veh, keyboardInput);
 			set_status_text("Changed engine sound");
