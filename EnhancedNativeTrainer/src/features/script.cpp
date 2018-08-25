@@ -63,6 +63,7 @@ bool featurePlayerFastSwim = false;
 bool featurePlayerFastSwimUpdated = false;
 bool featurePlayerFastRun = false;
 bool featurePlayerFastRunUpdated = false;
+bool featurePlayerRunApartments = false;
 bool featurePlayerSuperJump = false;
 bool featurePlayerInvisible = false;
 bool featurePlayerInvisibleUpdated = false;
@@ -79,6 +80,7 @@ bool featureWantedLevelFrozenUpdated = false;
 bool engine_running = true;
 bool engine_switched = false;
 bool engine_killed = false;
+bool we_have_troubles, iaminside = false;
 
 bool featurePlayerLife = false;
 bool featurePlayerLifeUpdated = true;
@@ -446,23 +448,48 @@ void update_features(){
 		featureWantedLevelFrozenUpdated = false;
 	}
 
+	// Can run in apartments
+	if (featurePlayerRunApartments) {
+		Ped playerPed_RunInApartment = PLAYER::PLAYER_PED_ID();
+		Vector3 coords_apprun_ped = ENTITY::GET_ENTITY_COORDS(playerPed_RunInApartment, true);
+		if (!INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_apprun_ped.x, coords_apprun_ped.y, coords_apprun_ped.z) && 
+			(INTERIOR::GET_INTERIOR_AT_COORDS(coords_apprun_ped.x, coords_apprun_ped.y, coords_apprun_ped.z) == 206849 ||
+			INTERIOR::GET_INTERIOR_AT_COORDS(coords_apprun_ped.x, coords_apprun_ped.y, coords_apprun_ped.z) == 166657 ||
+			INTERIOR::GET_INTERIOR_AT_COORDS(coords_apprun_ped.x, coords_apprun_ped.y, coords_apprun_ped.z) == 115458 ||
+			INTERIOR::GET_INTERIOR_AT_COORDS(coords_apprun_ped.x, coords_apprun_ped.y, coords_apprun_ped.z) == 4866 ||
+			INTERIOR::GET_INTERIOR_AT_COORDS(coords_apprun_ped.x, coords_apprun_ped.y, coords_apprun_ped.z) == 36866)) {
+			
+			iaminside = true;
+			
+			if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 1) {
+				we_have_troubles = false;
+				PLAYER::SET_MAX_WANTED_LEVEL(5);
+				PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 1, 0);
+				PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
+			}
 
+			if (PED::IS_PED_SHOOTING(playerPed_RunInApartment)) we_have_troubles = true;
 
-	/*Vector3 coords_apprun_ped = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
-	if (!INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_apprun_ped.x, coords_apprun_ped.y, coords_apprun_ped.z) && PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) == 0) {
-		PED::RESET_PED_MOVEMENT_CLIPSET(PLAYER::PLAYER_PED_ID(), 0.0);
-		PED::SET_PED_ALERTNESS(PLAYER::PLAYER_PED_ID(), 3);
-		AUDIO::SET_PLAYER_ANGRY(PLAYER::PLAYER_PED_ID(), true); 
-		GAMEPLAY::SET_FAKE_WANTED_LEVEL(6);
-		UI::FLASH_WANTED_DISPLAY(1);
-		UI::FLASH_MINIMAP_DISPLAY();
+			if (we_have_troubles == false) {
+				GAMEPLAY::CLEAR_AREA_OF_COPS(coords_apprun_ped.x, coords_apprun_ped.y, coords_apprun_ped.z, 20, 0);
+				PLAYER::SET_POLICE_IGNORE_PLAYER(PLAYER::PLAYER_ID(), true);
+				UI::HIDE_HUD_COMPONENT_THIS_FRAME(1);
+			}
+			else {
+				PLAYER::SET_POLICE_IGNORE_PLAYER(PLAYER::PLAYER_ID(), false);
+				UI::SHOW_HUD_COMPONENT_THIS_FRAME(1);
+			}
+		}
+		else {
+			if (iaminside && we_have_troubles == false) {
+				PLAYER::SET_MAX_WANTED_LEVEL(5);
+				PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 0, 0);
+				PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
+			}
+			iaminside = false;
+		}
 	}
-	else GAMEPLAY::SET_FAKE_WANTED_LEVEL(0);*/
-
-
-
-
-
+	
 	////////////////////////////////////// PLAYER DATA ////////////////////////////////////////////////
 	
 	Ped playerPed_Data = PLAYER::PLAYER_PED_ID();
@@ -992,19 +1019,19 @@ bool onconfirm_player_menu(MenuItem<int> choice){
 		case 1:
 			heal_player();
 			break;
-		case 11:
+		case 12:
 			player_movement_speed();
 			break;
-		case 15:
+		case 16:
 			process_npc_ragdoll_menu();
 			break;
-		case 21:
+		case 22:
 			process_anims_menu_top();
 			break;
-		case 22:
+		case 23:
 			process_player_life_menu();
 			break;
-		case 23:
+		case 24:
 			process_player_prison_menu();
 			break;
 		default:
@@ -1015,7 +1042,7 @@ bool onconfirm_player_menu(MenuItem<int> choice){
 }
 
 void process_player_menu(){
-	const int lineCount = 24;
+	const int lineCount = 25;
 
 	std::string caption = "Player Options";
 
@@ -1031,6 +1058,7 @@ void process_player_menu(){
 		{"Noiseless", &featurePlayerNoNoise, &featurePlayerNoNoiseUpdated, true},
 		{"Fast Swim", &featurePlayerFastSwim, &featurePlayerFastSwimUpdated, true},
 		{"Fast Run", &featurePlayerFastRun, &featurePlayerFastRunUpdated, true},
+		{"Can Run In Apartments", &featurePlayerRunApartments, NULL, true},
 		{"Player Movement Speed", NULL, NULL, false},
 		{"Super Jump", &featurePlayerSuperJump, NULL, true},
 		{"No Ragdoll", &featureNoRagdoll, &featureNoRagdollUpdated, true},
@@ -1262,6 +1290,7 @@ void reset_globals(){
 		featurePlayerNoNoise =
 		featurePlayerFastSwim =
 		featurePlayerFastRun =
+		featurePlayerRunApartments =
 		featurePlayerSuperJump =
 		featurePlayerInvisible =
 		featurePlayerInvisibleInVehicle =
@@ -1504,6 +1533,7 @@ void add_player_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerNoNoise", &featurePlayerNoNoise, &featurePlayerNoNoiseUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerFastSwim", &featurePlayerFastSwim, &featurePlayerFastSwimUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerFastRun", &featurePlayerFastRun, &featurePlayerFastRunUpdated});
+	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerRunApartments", &featurePlayerRunApartments});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerSuperJump", &featurePlayerSuperJump});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoRagdoll", &featureNoRagdoll, &featureNoRagdollUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRagdollIfInjured", &featureRagdollIfInjured, &featureRagdollIfInjuredUpdated});

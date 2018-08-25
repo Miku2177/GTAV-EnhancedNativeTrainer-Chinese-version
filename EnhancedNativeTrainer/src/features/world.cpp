@@ -997,7 +997,7 @@ void update_world_features()
 		for (int i = 0; i < found_ped; i++) {
 			if (featureNPCNoGravityPeds && bus_ped[i] != PLAYER::PLAYER_PED_ID()) {
 				PED::SET_PED_CAN_RAGDOLL(bus_ped[i], true);
-				PED::SET_PED_RAGDOLL_FORCE_FALL(PLAYER::PLAYER_PED_ID());
+				//PED::SET_PED_RAGDOLL_FORCE_FALL(PLAYER::PLAYER_PED_ID());
 				PED::SET_PED_RAGDOLL_FORCE_FALL(bus_ped[i]);
 				PED::SET_PED_RAGDOLL_ON_COLLISION(bus_ped[i], true);
 				if (!AI::IS_PED_STILL(bus_ped[i])) AI::TASK_STAND_STILL(bus_ped[i], 1000);

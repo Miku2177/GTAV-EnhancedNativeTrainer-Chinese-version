@@ -465,7 +465,7 @@ void damage_door() {
 	}
 }
 
-void enter_damaged_vehicle() { // enter damaged vehicle
+void enter_damaged_vehicle() { // enter destroyed vehicle
 	Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 	const int ENTER_ARR_SIZE = 1024;
 	Vehicle enter_veh[ENTER_ARR_SIZE];
@@ -473,7 +473,8 @@ void enter_damaged_vehicle() { // enter damaged vehicle
 	for (int i = 0; i < found_to_enter; i++) {
 		Vector3 coordsdamagedvehicle = ENTITY::GET_ENTITY_COORDS(enter_veh[i], true);
 		float dist_to_damaged_diff = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsdamagedvehicle.x, coordsdamagedvehicle.y, coordsdamagedvehicle.z);
-		if (VEHICLE::_IS_VEHICLE_DAMAGED(enter_veh[i]) && dist_to_damaged_diff < 5) AI::TASK_ENTER_VEHICLE(PLAYER::PLAYER_PED_ID(), enter_veh[i], 1000, -1, 1.0, 1, 0);
+		if (dist_to_damaged_diff < 5) PED::SET_PED_INTO_VEHICLE(PLAYER::PLAYER_PED_ID(), enter_veh[i], -1);
+		//AI::TASK_ENTER_VEHICLE(PLAYER::PLAYER_PED_ID(), enter_veh[i], 1000, -1, 2.0, 16, 0); // && VEHICLE::_IS_VEHICLE_DAMAGED(enter_veh[i])
 	}
 }
 
@@ -710,7 +711,7 @@ bool process_veh_door_menu(){
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Enter Destroyed Vehicle";
+	item->caption = "Teleport In Destroyed Vehicle";
 	item->value = -16;
 	item->isLeaf = true;
 	menuItems.push_back(item);
