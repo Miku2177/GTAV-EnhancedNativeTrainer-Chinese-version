@@ -999,6 +999,7 @@ void update_world_features()
 				PED::SET_PED_CAN_RAGDOLL(bus_ped[i], true);
 				//PED::SET_PED_RAGDOLL_FORCE_FALL(PLAYER::PLAYER_PED_ID());
 				PED::SET_PED_RAGDOLL_FORCE_FALL(bus_ped[i]);
+				PED::SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(bus_ped[i], true);
 				PED::SET_PED_RAGDOLL_ON_COLLISION(bus_ped[i], true);
 				if (!AI::IS_PED_STILL(bus_ped[i])) AI::TASK_STAND_STILL(bus_ped[i], 1000);
 				//if (AI::IS_PED_WALKING(bus_ped[i]) || PED::IS_PED_FLEEING(bus_ped[i]) || AI::IS_PED_RUNNING(bus_ped[i]) || PED::IS_PED_IN_COMBAT(bus_ped[i], PLAYER::PLAYER_PED_ID()) || AI::IS_PED_STILL(bus_ped[i]))

@@ -35,6 +35,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 // Road Laws
 bool featureRoadLaws = false;
 bool featurePoliceVehicleBlip = true;
+bool featurePoliceAgressiveDriving = false;
 bool featureCopsUseRadio = false;
 bool featureRunningRedLight = true;
 bool featurePavementDriving = true;
@@ -69,6 +70,7 @@ Vehicle red_light_vehicle;
 BOOL lightsOn = -1;
 BOOL highbeamsOn = -1;
 int Still_seconds, Still_secs_curr, Still_secs_passed = 0;
+bool no_agressive = false;
 
 int SpeedingCityIndex = 3;
 bool SpeedingCity_Changed = true;
@@ -333,15 +335,23 @@ void road_laws()
 							if (featurePoliceVehicleBlip) UI::SET_BLIP_SPRITE(blip_laws, 42);
 							ENTITY::SET_ENTITY_AS_MISSION_ENTITY(cop_that_fines_you, 1, 1);
 							ENTITY::SET_ENTITY_AS_MISSION_ENTITY(fine_cop_car, 1, 1);
-							AI::TASK_VEHICLE_ESCORT(cop_that_fines_you, fine_cop_car, vehroadlaws, -1, 140.0f, 786468, 3, 1, 1);
-							AI::SET_DRIVE_TASK_DRIVING_STYLE(fine_cop_car, 262144);
-							AI::SET_DRIVE_TASK_DRIVING_STYLE(fine_cop_car, 4);
-							AI::SET_DRIVE_TASK_DRIVING_STYLE(fine_cop_car, 512);
-							AI::SET_DRIVE_TASK_CRUISE_SPEED(fine_cop_car, 300.0);
-							//AI::TASK_VEHICLE_CHASE(fine_cop_car, vehroadlaws);
-							AI::SET_TASK_VEHICLE_CHASE_IDEAL_PURSUIT_DISTANCE(fine_cop_car, 40);
-							AI::SET_TASK_VEHICLE_CHASE_BEHAVIOR_FLAG(fine_cop_car, 32, true);
-							PED::SET_DRIVER_ABILITY(cop_that_fines_you, 0.9);
+							if (!featurePoliceAgressiveDriving) {
+								AI::TASK_VEHICLE_ESCORT(cop_that_fines_you, fine_cop_car, vehroadlaws, -1, 140.0f, 786468, 3, 1, 1);
+								AI::SET_DRIVE_TASK_DRIVING_STYLE(cop_that_fines_you, 262144);
+								AI::SET_DRIVE_TASK_DRIVING_STYLE(cop_that_fines_you, 4);
+								AI::SET_DRIVE_TASK_DRIVING_STYLE(cop_that_fines_you, 512);
+								AI::SET_DRIVE_TASK_CRUISE_SPEED(cop_that_fines_you, 300.0);
+								AI::SET_TASK_VEHICLE_CHASE_IDEAL_PURSUIT_DISTANCE(cop_that_fines_you, 40.0f);
+								AI::SET_TASK_VEHICLE_CHASE_BEHAVIOR_FLAG(cop_that_fines_you, 32, true);
+								PED::SET_DRIVER_ABILITY(cop_that_fines_you, 0.9f);
+							}
+							else {
+								AI::SET_DRIVE_TASK_CRUISE_SPEED(cop_that_fines_you, 300.0);
+								AI::TASK_VEHICLE_CHASE(cop_that_fines_you, playerPed);
+								AI::SET_TASK_VEHICLE_CHASE_IDEAL_PURSUIT_DISTANCE(cop_that_fines_you, 60.0f);
+								AI::SET_TASK_VEHICLE_CHASE_BEHAVIOR_FLAG(cop_that_fines_you, 32, true);
+								PED::SET_DRIVER_ABILITY(cop_that_fines_you, 0.9f);
+							}
 							ENTITY::SET_ENTITY_INVINCIBLE(fine_cop_car, true);
 							AUDIO::BLIP_SIREN(fine_cop_car);
 							AUDIO::_PLAY_AMBIENT_SPEECH1(cop_that_fines_you, "PROVOKE_GENERIC", "SPEECH_PARAMS_FORCE_SHOUTED");
@@ -382,15 +392,23 @@ void road_laws()
 						if (featurePoliceVehicleBlip) UI::SET_BLIP_SPRITE(blip_laws, 42);
 						ENTITY::SET_ENTITY_AS_MISSION_ENTITY(cop_that_fines_you, 1, 1);
 						ENTITY::SET_ENTITY_AS_MISSION_ENTITY(fine_cop_car, 1, 1);
-						AI::TASK_VEHICLE_ESCORT(cop_that_fines_you, fine_cop_car, vehroadlaws, -1, 140.0f, 786468, 2, 1, 1);
-						AI::SET_DRIVE_TASK_DRIVING_STYLE(fine_cop_car, 262144);
-						AI::SET_DRIVE_TASK_DRIVING_STYLE(fine_cop_car, 4);
-						AI::SET_DRIVE_TASK_DRIVING_STYLE(fine_cop_car, 512);
-						AI::SET_DRIVE_TASK_CRUISE_SPEED(fine_cop_car, 300.0);
-						//AI::TASK_VEHICLE_CHASE(fine_cop_car, vehroadlaws);
-						AI::SET_TASK_VEHICLE_CHASE_IDEAL_PURSUIT_DISTANCE(fine_cop_car, 40);
-						AI::SET_TASK_VEHICLE_CHASE_BEHAVIOR_FLAG(fine_cop_car, 32, true);
-						PED::SET_DRIVER_ABILITY(cop_that_fines_you, 0.9);
+						if (!featurePoliceAgressiveDriving) {
+							AI::TASK_VEHICLE_ESCORT(cop_that_fines_you, fine_cop_car, vehroadlaws, -1, 140.0f, 786468, 2, 1, 1);
+							AI::SET_DRIVE_TASK_DRIVING_STYLE(cop_that_fines_you, 262144);
+							AI::SET_DRIVE_TASK_DRIVING_STYLE(cop_that_fines_you, 4);
+							AI::SET_DRIVE_TASK_DRIVING_STYLE(cop_that_fines_you, 512);
+							AI::SET_DRIVE_TASK_CRUISE_SPEED(cop_that_fines_you, 300.0);
+							AI::SET_TASK_VEHICLE_CHASE_IDEAL_PURSUIT_DISTANCE(cop_that_fines_you, 40);
+							AI::SET_TASK_VEHICLE_CHASE_BEHAVIOR_FLAG(cop_that_fines_you, 32, true);
+							PED::SET_DRIVER_ABILITY(cop_that_fines_you, 0.9);
+						}
+						else {
+							AI::SET_DRIVE_TASK_CRUISE_SPEED(cop_that_fines_you, 300.0);
+							AI::TASK_VEHICLE_CHASE(cop_that_fines_you, playerPed);
+							AI::SET_TASK_VEHICLE_CHASE_IDEAL_PURSUIT_DISTANCE(cop_that_fines_you, 60.0f);
+							AI::SET_TASK_VEHICLE_CHASE_BEHAVIOR_FLAG(cop_that_fines_you, 32, true);
+							PED::SET_DRIVER_ABILITY(cop_that_fines_you, 0.9f);
+						}
 						ENTITY::SET_ENTITY_INVINCIBLE(fine_cop_car, true);
 						AUDIO::BLIP_SIREN(fine_cop_car);
 						AUDIO::_PLAY_AMBIENT_SPEECH1(cop_that_fines_you, "PROVOKE_GENERIC", "SPEECH_PARAMS_FORCE_SHOUTED");
@@ -402,8 +420,7 @@ void road_laws()
 				}
 			}
 
-			if (been_seen_by_a_cop == true)
-			{
+			if (been_seen_by_a_cop == true)	{
 				VEHICLE::SET_VEHICLE_SIREN(fine_cop_car, true);
 				veh_cop_in_coords = ENTITY::GET_ENTITY_COORDS(fine_cop_car, true);
 				vehcoplaws_speed = ENTITY::GET_ENTITY_SPEED(fine_cop_car);
@@ -411,6 +428,28 @@ void road_laws()
 				tempgotcha_y = (vehroadlaws_coords.y - veh_cop_in_coords.y);
 				if (tempgotcha_x < 0) tempgotcha_x = (tempgotcha_x * -1);
 				if (tempgotcha_y < 0) tempgotcha_y = (tempgotcha_y * -1);
+				if (featurePoliceAgressiveDriving) {
+					if (tempgotcha_x < 35 && tempgotcha_y < 35 && vehroadlaws_speed < 10 && no_agressive == false && PED::IS_PED_FACING_PED(cop_that_fines_you, playerPed, 90)) { // && vehcoplaws_speed > 20
+						AI::TASK_VEHICLE_TEMP_ACTION(cop_that_fines_you, fine_cop_car, 6, 100);
+						AI::TASK_VEHICLE_ESCORT(cop_that_fines_you, fine_cop_car, vehroadlaws, -1, 140.0f, 786468, 2, 1, 1);
+						AI::SET_DRIVE_TASK_DRIVING_STYLE(cop_that_fines_you, 262144);
+						AI::SET_DRIVE_TASK_DRIVING_STYLE(cop_that_fines_you, 4);
+						AI::SET_DRIVE_TASK_DRIVING_STYLE(cop_that_fines_you, 512);
+						AI::SET_DRIVE_TASK_CRUISE_SPEED(cop_that_fines_you, 300.0);
+						AI::SET_TASK_VEHICLE_CHASE_IDEAL_PURSUIT_DISTANCE(cop_that_fines_you, 40);
+						AI::SET_TASK_VEHICLE_CHASE_BEHAVIOR_FLAG(cop_that_fines_you, 32, true);
+						PED::SET_DRIVER_ABILITY(cop_that_fines_you, 0.9);
+						no_agressive = true;
+					}
+					else if (vehroadlaws_speed > 9 && no_agressive == true) {  
+						AI::SET_DRIVE_TASK_CRUISE_SPEED(cop_that_fines_you, 300.0);
+						AI::TASK_VEHICLE_CHASE(cop_that_fines_you, playerPed);
+						AI::SET_TASK_VEHICLE_CHASE_IDEAL_PURSUIT_DISTANCE(cop_that_fines_you, 60.0f);
+						AI::SET_TASK_VEHICLE_CHASE_BEHAVIOR_FLAG(cop_that_fines_you, 32, true);
+						PED::SET_DRIVER_ABILITY(cop_that_fines_you, 0.9f);
+						no_agressive = false;
+					}
+				}
 			}
 
 			// You'll be fined if you don't move
@@ -432,6 +471,8 @@ void road_laws()
 					}
 				}
 			}
+			
+			if (vehroadlaws_speed > 1 && cop_walking == false && wanted_level_on == false) Stop_seconds = -1;
 
 			temp_fine_cop = ENTITY::GET_ENTITY_COORDS(cop_that_fines_you, true);
 			int tempfined_x = (temp_fine_cop.x - vehroadlaws_coords.x);
@@ -583,9 +624,10 @@ void road_laws()
 				approached = false;
 				red_light_veh_detected = false;
 				Collision_seconds = -1;
+				no_agressive = false;
 			}
 
-			if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID() == 0)) wanted_level_on = false;
+			if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID() < 1)) wanted_level_on = false;
 
 			if (been_seen_by_a_cop == false) cop_walking = false;
 
@@ -601,9 +643,8 @@ void road_laws()
 				Stop_seconds_final = 5;
 				tempgotcha_x = 0;
 				tempgotcha_y = 0;
-				//approached = false;
-				//red_light_veh_detected = false;
 				Collision_seconds = -1;
+				no_agressive = false;
 			}
 
 			if (featurePoliceVehicleBlip && !UI::DOES_BLIP_EXIST(blip_laws)) {
