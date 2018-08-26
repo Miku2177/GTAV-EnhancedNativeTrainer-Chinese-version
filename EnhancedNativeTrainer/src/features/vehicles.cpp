@@ -1342,6 +1342,12 @@ void process_road_laws_menu(){
 	menuItems.push_back(listItem);
 
 	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Cops Drive Aggressively";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featurePoliceAgressiveDriving;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Police Vehicle Blip";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featurePoliceVehicleBlip;
@@ -2759,6 +2765,7 @@ void reset_vehicle_globals() {
 		featureWearHelmetOffUpdated = true;
 		featureDeleteTrackedVehicles = true;
 		featurePoliceVehicleBlip = true;
+		featurePoliceAgressiveDriving = true;
 		featureCopsUseRadio = false;
 		featureRunningRedLight = true;
 		featurePavementDriving = true;
@@ -3003,6 +3010,7 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureRememberVehicles", &featureRememberVehicles});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRoadLaws", &featureRoadLaws});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePoliceVehicleBlip", &featurePoliceVehicleBlip});
+	results->push_back(FeatureEnabledLocalDefinition{"featurePoliceAgressiveDriving", &featurePoliceAgressiveDriving});
 	results->push_back(FeatureEnabledLocalDefinition{"featureCopsUseRadio", &featureCopsUseRadio});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRunningRedLight", &featureRunningRedLight});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePavementDriving", &featurePavementDriving});
