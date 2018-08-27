@@ -71,6 +71,8 @@ BOOL lightsOn = -1;
 BOOL highbeamsOn = -1;
 int Still_seconds, Still_secs_curr, Still_secs_passed = 0;
 bool no_agressive = false;
+bool cop_hit_you = false;
+int SinceCopHit_secs_passed, SinceCopHit_secs_curr, CopHit_seconds = 0;
 
 int SpeedingCityIndex = 3;
 bool SpeedingCity_Changed = true;
@@ -420,7 +422,7 @@ void road_laws()
 				}
 			}
 
-			if (been_seen_by_a_cop == true)	{
+			if (been_seen_by_a_cop == true)	{ 
 				VEHICLE::SET_VEHICLE_SIREN(fine_cop_car, true);
 				veh_cop_in_coords = ENTITY::GET_ENTITY_COORDS(fine_cop_car, true);
 				vehcoplaws_speed = ENTITY::GET_ENTITY_SPEED(fine_cop_car);
@@ -453,7 +455,7 @@ void road_laws()
 			}
 
 			// You'll be fined if you don't move
-			if ((vehroadlaws_speed < 1 && vehcoplaws_speed < 1 && tempgotcha_x < 50 && tempgotcha_y < 50 && been_seen_by_a_cop == true) || (been_seen_by_a_cop == true && !PED::IS_PED_IN_VEHICLE(cop_that_fines_you, fine_cop_car, true)))
+			if ((vehroadlaws_speed < 1 && vehcoplaws_speed < 1 && tempgotcha_x < 100 && tempgotcha_y < 100 && been_seen_by_a_cop == true) || (been_seen_by_a_cop == true && !PED::IS_PED_IN_VEHICLE(cop_that_fines_you, fine_cop_car, true)))
 			{
 				VEHICLE::SET_VEHICLE_SIREN(fine_cop_car, false);
 				SinceStop_secs_passed = clock() / CLOCKS_PER_SEC;
@@ -472,14 +474,35 @@ void road_laws()
 				}
 			}
 			
-			if (vehroadlaws_speed > 1 && cop_walking == false && wanted_level_on == false) Stop_seconds = -1;
-
+			if ((vehroadlaws_speed > 1 || vehcoplaws_speed > 1) && cop_walking == false && wanted_level_on == false) Stop_seconds = -1;
+			
+			// Distance between you and the cop that's chasing after you
 			temp_fine_cop = ENTITY::GET_ENTITY_COORDS(cop_that_fines_you, true);
 			int tempfined_x = (temp_fine_cop.x - vehroadlaws_coords.x);
 			int tempfined_y = (temp_fine_cop.y - vehroadlaws_coords.y);
 			if (tempfined_x < 0) tempfined_x = (tempfined_x * -1);
 			if (tempfined_y < 0) tempfined_y = (tempfined_y * -1);
-			
+
+			// You won't get wanted stars if cop pursuer hits you
+			if (been_seen_by_a_cop == true && PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 1 && ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(fine_cop_car) &&
+				tempfined_x < 5 && tempfined_y < 5) {
+				PLAYER::SET_MAX_WANTED_LEVEL(0);
+				cop_hit_you = true;
+			}
+			if (cop_hit_you == true) {
+				SinceCopHit_secs_passed = clock() / CLOCKS_PER_SEC;
+				if (((clock() / CLOCKS_PER_SEC) - SinceCopHit_secs_curr) != 0) { 
+					CopHit_seconds = CopHit_seconds + 1;
+					SinceCopHit_secs_curr = SinceCopHit_secs_passed;
+				}
+				if (CopHit_seconds > 1) {
+					PLAYER::SET_MAX_WANTED_LEVEL(5);
+					CopHit_seconds = 0;
+					cop_hit_you = false;
+				}
+			}
+			if (been_seen_by_a_cop == true && (PED::IS_PED_SHOOTING(playerPed) || !PED::IS_PED_IN_ANY_POLICE_VEHICLE(cop_that_fines_you))) PLAYER::SET_MAX_WANTED_LEVEL(5);
+
 			if (cop_walking == true && AI::IS_PED_STILL(cop_that_fines_you)) {
 				Still_secs_passed = clock() / CLOCKS_PER_SEC;
 				if (((clock() / CLOCKS_PER_SEC) - Still_secs_curr) != 0) {
@@ -625,6 +648,7 @@ void road_laws()
 				red_light_veh_detected = false;
 				Collision_seconds = -1;
 				no_agressive = false;
+				PLAYER::SET_MAX_WANTED_LEVEL(5);
 			}
 
 			if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID() < 1)) wanted_level_on = false;
@@ -645,6 +669,7 @@ void road_laws()
 				tempgotcha_y = 0;
 				Collision_seconds = -1;
 				no_agressive = false;
+				PLAYER::SET_MAX_WANTED_LEVEL(5);
 			}
 
 			if (featurePoliceVehicleBlip && !UI::DOES_BLIP_EXIST(blip_laws)) {

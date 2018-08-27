@@ -2077,6 +2077,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			controllightsenabled_r = false;
 			WAIT(100);
 		}
+
 		if (rightKey) { // Manual Right Turn Signal
 			turn_check_right = !turn_check_right;
 			turn_check_left = false;
@@ -2765,7 +2766,7 @@ void reset_vehicle_globals() {
 		featureWearHelmetOffUpdated = true;
 		featureDeleteTrackedVehicles = true;
 		featurePoliceVehicleBlip = true;
-		featurePoliceAgressiveDriving = true;
+		featurePoliceAgressiveDriving = false;
 		featureCopsUseRadio = false;
 		featureRunningRedLight = true;
 		featurePavementDriving = true;
