@@ -63,12 +63,19 @@ void update_speed_text(int speed, Vector3 player_coords)
 {
 	std::string speedometerStatusLines[1];
 	std::stringstream ss;
-	int col_R = SPEED_COLOURS_R_VALUES[SpeedColours_R_Index];
+	/*int col_R = SPEED_COLOURS_R_VALUES[SpeedColours_R_Index];
 	int col_G = SPEED_COLOURS_G_VALUES[SpeedColours_G_Index];
 	int col_B = SPEED_COLOURS_B_VALUES[SpeedColours_B_Index];
 	int col2_R = SPEED_COLOURS2_R_VALUES[SpeedColours2_R_Index];
 	int col2_G = SPEED_COLOURS2_G_VALUES[SpeedColours2_G_Index];
-	int col2_B = SPEED_COLOURS2_B_VALUES[SpeedColours2_B_Index];
+	int col2_B = SPEED_COLOURS2_B_VALUES[SpeedColours2_B_Index];*/
+	int col_R = ENTColor::colsMenu[3].rgba[0];
+	int col_G = ENTColor::colsMenu[3].rgba[1];
+	int col_B = ENTColor::colsMenu[3].rgba[2];
+	int col2_R = ENTColor::colsMenu[5].rgba[0];
+	int col2_G = ENTColor::colsMenu[5].rgba[1];
+	int col2_B = ENTColor::colsMenu[5].rgba[2];
+
 	int numLines = sizeof(speedometerStatusLines) / sizeof(speedometerStatusLines[0]);
 
 	if (featureKMH) {
@@ -269,12 +276,12 @@ void update_vehicles(Ped playerPed) {
 		std::vector<int> emptyVec;
 		if (!SPEED_SIZE_VALUES.empty()) std::vector<int>(SPEED_SIZE_VALUES).swap(emptyVec);
 		if (!SPEED_POSITION_VALUES.empty()) std::vector<int>(SPEED_POSITION_VALUES).swap(emptyVec);
-		if (!SPEED_COLOURS_R_VALUES.empty()) std::vector<int>(SPEED_COLOURS_R_VALUES).swap(emptyVec);
-		if (!SPEED_COLOURS_G_VALUES.empty()) std::vector<int>(SPEED_COLOURS_G_VALUES).swap(emptyVec);
-		if (!SPEED_COLOURS_B_VALUES.empty()) std::vector<int>(SPEED_COLOURS_B_VALUES).swap(emptyVec);
-		if (!SPEED_COLOURS2_R_VALUES.empty()) std::vector<int>(SPEED_COLOURS2_R_VALUES).swap(emptyVec);
-		if (!SPEED_COLOURS2_G_VALUES.empty()) std::vector<int>(SPEED_COLOURS2_G_VALUES).swap(emptyVec);
-		if (!SPEED_COLOURS2_B_VALUES.empty()) std::vector<int>(SPEED_COLOURS2_B_VALUES).swap(emptyVec);
+		//if (!SPEED_COLOURS_R_VALUES.empty()) std::vector<int>(SPEED_COLOURS_R_VALUES).swap(emptyVec);
+		//if (!SPEED_COLOURS_G_VALUES.empty()) std::vector<int>(SPEED_COLOURS_G_VALUES).swap(emptyVec);
+		//if (!SPEED_COLOURS_B_VALUES.empty()) std::vector<int>(SPEED_COLOURS_B_VALUES).swap(emptyVec);
+		//if (!SPEED_COLOURS2_R_VALUES.empty()) std::vector<int>(SPEED_COLOURS2_R_VALUES).swap(emptyVec);
+		//if (!SPEED_COLOURS2_G_VALUES.empty()) std::vector<int>(SPEED_COLOURS2_G_VALUES).swap(emptyVec);
+		//if (!SPEED_COLOURS2_B_VALUES.empty()) std::vector<int>(SPEED_COLOURS2_B_VALUES).swap(emptyVec);
 	}
 }
 
