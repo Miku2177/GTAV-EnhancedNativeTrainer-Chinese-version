@@ -431,7 +431,7 @@ void road_laws()
 				if (tempgotcha_x < 0) tempgotcha_x = (tempgotcha_x * -1);
 				if (tempgotcha_y < 0) tempgotcha_y = (tempgotcha_y * -1);
 				if (featurePoliceAgressiveDriving) {
-					if (tempgotcha_x < 35 && tempgotcha_y < 35 && vehroadlaws_speed < 15 && no_agressive == false && PED::IS_PED_FACING_PED(cop_that_fines_you, playerPed, 90)) { // && vehcoplaws_speed > 20
+					if (tempgotcha_x < 35 && tempgotcha_y < 35 && vehroadlaws_speed < 10 && no_agressive == false && PED::IS_PED_FACING_PED(cop_that_fines_you, playerPed, 90)) { // && vehcoplaws_speed > 20
 						AI::TASK_VEHICLE_TEMP_ACTION(cop_that_fines_you, fine_cop_car, 6, 100);
 						AI::TASK_VEHICLE_ESCORT(cop_that_fines_you, fine_cop_car, vehroadlaws, -1, 140.0f, 786468, 2, 1, 1);
 						AI::SET_DRIVE_TASK_DRIVING_STYLE(cop_that_fines_you, 262144);
@@ -443,7 +443,7 @@ void road_laws()
 						PED::SET_DRIVER_ABILITY(cop_that_fines_you, 0.9);
 						no_agressive = true;
 					}
-					else if (vehroadlaws_speed > 14 && no_agressive == true) {  
+					else if (vehroadlaws_speed > 9 && no_agressive == true) {  
 						AI::SET_DRIVE_TASK_CRUISE_SPEED(cop_that_fines_you, 300.0);
 						AI::TASK_VEHICLE_CHASE(cop_that_fines_you, playerPed);
 						AI::SET_TASK_VEHICLE_CHASE_IDEAL_PURSUIT_DISTANCE(cop_that_fines_you, 60.0f);

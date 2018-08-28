@@ -749,11 +749,14 @@ void handle_generic_settings_bodyguards(std::vector<StringPairSettingDBRow>* set
 		else if (setting.name.compare("BodyBlipColourIndex") == 0){
 			BodyBlipColourIndex = stoi(setting.value);
 		}
-		else if (setting.name.compare("BodyBlipSymbolIndex") == NULL) {
-			BodyBlipSymbolIndex = 0;
-		}
-		else if (setting.name.compare("BodyBlipSymbolIndex") == 0){
+		//else if (setting.name.compare("BodyBlipSymbolIndex") == NULL) {
+		//	BodyBlipSymbolIndex = 0;
+		//}
+		else if (setting.name.compare("BodyBlipSymbolIndex") == 0 && BODY_BLIPSYMBOL_VALUES.size() > 0 && BodyBlipSymbolIndex < BODY_BLIPSYMBOL_VALUES.size()){
 			BodyBlipSymbolIndex = stoi(setting.value);
+		}
+		else if (BODY_BLIPSYMBOL_VALUES.size() > 0 && BodyBlipSymbolIndex >= BODY_BLIPSYMBOL_VALUES.size()) { // setting.name.compare("BodyBlipSymbolIndex") == 0 && 
+			BodyBlipSymbolIndex = 0;
 		}
 		else if (setting.name.compare("BodyBlipFlashIndex") == 0){
 			BodyBlipFlashIndex = stoi(setting.value);
