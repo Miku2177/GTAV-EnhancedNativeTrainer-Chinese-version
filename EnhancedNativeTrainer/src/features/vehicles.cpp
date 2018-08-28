@@ -3589,11 +3589,14 @@ void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settin
 		else if (setting.name.compare("FineSizeIndex") == 0){
 			FineSizeIndex = stoi(setting.value);
 		}
-		else if (setting.name.compare("VehBlipSymbolIndex") == NULL) {
-			VehBlipSymbolIndex = 0;
-		}
-		else if (setting.name.compare("VehBlipSymbolIndex") == 0){
+		//else if (setting.name.compare("VehBlipSymbolIndex") == NULL) {
+		//	VehBlipSymbolIndex = 0;
+		//}
+		else if (setting.name.compare("VehBlipSymbolIndex") == 0 && VEH_BLIPSYMBOL_VALUES.size() > 0 && VehBlipSymbolIndex < VEH_BLIPSYMBOL_VALUES.size()){
 			VehBlipSymbolIndex = stoi(setting.value);
+		} 
+		else if (VEH_BLIPSYMBOL_VALUES.size() > 0 && VehBlipSymbolIndex >= VEH_BLIPSYMBOL_VALUES.size()) { // setting.name.compare("VehBlipSymbolIndex") == 0 &&
+			VehBlipSymbolIndex = 0;
 		}
 		else if (setting.name.compare("VehBlipFlashIndex") == 0){
 			VehBlipFlashIndex = stoi(setting.value);
