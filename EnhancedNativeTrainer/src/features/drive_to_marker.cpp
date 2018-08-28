@@ -12,6 +12,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "drive_to_marker.h"
 
 #include "misc.h"
+#include "skins.h"
 #include "vehicles.h"
 #include "..\ui_support\menu_functions.h"
 #include "..\debug\debuglog.h"
@@ -106,8 +107,10 @@ void drive_to_marker()
 
 			Vector3 spawn_coords_for_pilot = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(PLAYER::PLAYER_PED_ID(), 0.0, 5.0, 0.0);
 
-			char *cstr = new char[TEL_CHAUFFEUR_CAPTIONS[TelChauffeurIndex].length() + 1];
-			strcpy(cstr, TEL_CHAUFFEUR_CAPTIONS[TelChauffeurIndex].c_str());
+			//char *cstr = new char[TEL_CHAUFFEUR_CAPTIONS[TelChauffeurIndex].length() + 1];
+			//strcpy(cstr, TEL_CHAUFFEUR_CAPTIONS[TelChauffeurIndex].c_str());
+			char *cstr = new char[SKINS_GENERAL_VALUES[TelChauffeurIndex].length() + 1];
+			strcpy(cstr, SKINS_GENERAL_VALUES[TelChauffeurIndex].c_str());
 			driverPed_tomarker = GAMEPLAY::GET_HASH_KEY(cstr);
 			delete[] cstr;
 

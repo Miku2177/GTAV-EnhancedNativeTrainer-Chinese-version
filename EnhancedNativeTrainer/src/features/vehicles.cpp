@@ -212,8 +212,8 @@ int VehBlipColourIndex = 4;
 bool VehBlipColour_Changed = true;
 
 //Blip Symbol
-const std::vector<std::string> VEH_BLIPSYMBOL_CAPTIONS{ "Standard", "Player", "North", "Waypoint", "BigCircleOutline", "ArrowUpOutlined", "ArrowDownOutlined", "ArrowUp", "ArrowDown", "PoliceHelicopterAnimated", "Jet",
-"Lift", "RaceFinish", "Safehouse", "PoliceHelicopter", "ChatBubble", "Garage2", "Drugs", "Store", "PoliceCar", "PolicePlayer", "PoliceStation", "Hospital", "Helicopter", "StrangersAndFreaks", "Truck", "TowTruck", "Barber",
+const std::vector<std::string> VEH_BLIPSYMBOL_CAPTIONS{ "Standard", "Player", "North", "Waypoint", "BigCircleOutline", "ArrowUpOutlined", "ArrowDownOutlined", "ArrowUp", "ArrowDown", "PoliceHelicopterAnimated", "Jet" };
+/*"Lift", "RaceFinish", "Safehouse", "PoliceHelicopter", "ChatBubble", "Garage2", "Drugs", "Store", "PoliceCar", "PolicePlayer", "PoliceStation", "Hospital", "Helicopter", "StrangersAndFreaks", "Truck", "TowTruck", "Barber",
 "LosSantosCustoms", "Clothes", "TattooParlor", "Simeon", "Lester", "Michael", "Trevor", "H", "Rampage", "VinewoodTours", "Franklin", "Chinese", "Airport", "Bar", "BaseJump", "CarWash", "ComedyClub", "Dart", "FIB", 
 "DollarSign", "Golf", "AmmuNation", "Exile", "ShootingRange", "Solomon", "StripClub", "Tennis", "Triathlon", "OffRoadRaceFinish", "Chat", "Key", "MovieTheater", "Music", "Marijuana", "Hunting", "ArmsTraffickingGround", "Nigel", 
 "Health", "SonicWave", "PointOfInterest", "GTAOPassive", "GTAOUsingMenu", "Link", "Armor", "Castle", "Castle", "Camera",
@@ -225,14 +225,14 @@ const std::vector<std::string> VEH_BLIPSYMBOL_CAPTIONS{ "Standard", "Player", "N
 "GTAOPlayerSafehouse", "GTAOPlayerSafehouseDead", "CaptureAmericanFlag", "CaptureFlag", "Tank", "HelicopterAnimated", "Plane", "PlayerNoColor", "GunCar", "Speedboat", "Stopwatch", "DollarSignCircled", "Crosshair2", "DollarSignSquared", 
 "Competititon", "Fire", "Skulls", "Crown", "Bag", "CrossedArrows", "WolfHead", "LD", "Service", "Ship", "Question", "Sniper", "WiFi", "Bolide", "Shield", "Hourglass", "Bomb", "ArrowCircle", "Star", "Iron", "Rugby", "Garage", "Garage2", 
 "Building", "Building2", "Van", "Crate", "Trailer", "Man", "HeliHook", "Speedometer", "Ghost", "Radio", "Perfume", "Shield2", "BurningWheel", "Heart", "BurningDollar", "People", "HouseGarage", "BikeArrows", "BikeCircle", "BikeFlags", 
-"Blade", "Badge", "Tube", "Money", "Package", "ATV", "Bus", "Parcel", "Arrow", "Notebook" };
-const std::vector<int> VEH_BLIPSYMBOL_VALUES{ 1, 6, 7, 8, 10, 11, 12, 13, 14, 15, 16, 36, 38, 40, 43, 47, 50, 51, 52, 56, 58, 60, 61, 64, 66, 67, 68, 71, 72, 73, 75, 76, 77,
-78, 79, 80, 84, 85, 88, 89, 90, 93, 94, 100, 102, 103, 106, 108, 109, 110, 112, 119, 120, 121, 122, 126, 127, 133, 134, 135, 136, 140, 141, 147, 149, 153, 161, 162, 163, 164, 171,
+"Blade", "Badge", "Tube", "Money", "Package", "ATV", "Bus", "Parcel", "Arrow", "Notebook" };*/
+const std::vector<int> VEH_BLIPSYMBOL_VALUES{ 1, 6, 7, 8, 10, 11, 12, 13, 14, 15, 16 }; //, 36, 38, 40, 43, 47, 50, 51, 52, 56, 58, 60, 61, 64, 66, 67, 68, 71, 72, 73, 75, 76, 77,
+/*78, 79, 80, 84, 85, 88, 89, 90, 93, 94, 100, 102, 103, 106, 108, 109, 110, 112, 119, 120, 121, 122, 126, 127, 133, 134, 135, 136, 140, 141, 147, 149, 153, 161, 162, 163, 164, 171,
 175, 176, 181, 184, 188, 197, 198, 205, 206, 207, 225, 226, 229, 237, 251, 266, 267, 269, 270, 273, 274, 279, 280, 303, 304, 305, 306, 307, 308, 309, 310, 311,
 313, 314, 315, 316, 318, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 367, 368, 369, 370, 371, 372, 374, 375, 376, 377, 378, 379, 380, 381, 382, 383, 384, 385, 386, 387, 388,
 389, 390, 398, 399, 400, 401, 402, 403, 404, 405, 407, 408, 409, 410, 411, 415, 416, 417, 418, 419, 420, 421, 422, 423, 425, 426, 427, 430, 431, 432, 434, 435, 436, 437, 439, 440,
 441, 442, 445, 446, 455, 456, 458, 459, 460, 461, 464, 466, 467, 468, 471, 472, 473, 474, 475, 476, 477, 478, 479, 480, 481, 483, 484, 485, 486, 487, 488, 489, 490,
-491, 492, 493, 494, 495, 497, 498, 499, 500, 501, 512, 513, 514, 515, 521 };
+491, 492, 493, 494, 495, 497, 498, 499, 500, 501, 512, 513, 514, 515, 521 };*/
 int VehBlipSymbolIndex = 0;
 bool VehBlipSymbol_Changed = true;
 
@@ -805,7 +805,7 @@ bool onconfirm_colours2_menu(MenuItem<int> choice)
 	return false;
 }
 
-bool process_message_colour_menu(){
+/*bool process_message_colour_menu(){
 	std::string caption = "RGB Settings";
 
 	std::vector<MenuItem<int>*> menuItems;
@@ -833,9 +833,9 @@ bool process_message_colour_menu(){
 	menuItems.push_back(listItem);
 
 	return draw_generic_menu<int>(menuItems, 0, "Message Colour", onconfirm_colours_menu, NULL, NULL);
-}
+}*/
 
-bool process_value_colour_menu(){
+/*bool process_value_colour_menu(){
 	std::string caption = "RGB Settings";
 
 	std::vector<MenuItem<int>*> menuItems;
@@ -862,22 +862,22 @@ bool process_value_colour_menu(){
 	menuItems.push_back(listItem);
 
 	return draw_generic_menu<int>(menuItems, 0, "Value Colour", onconfirm_colours2_menu, NULL, NULL);
-}
+}*/
 
 bool onconfirm_speed_menu(MenuItem<int> choice)
 {
-	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
-	Player player = PLAYER::PLAYER_ID();
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	//BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
+	//Player player = PLAYER::PLAYER_ID();
+	//Ped playerPed = PLAYER::PLAYER_PED_ID();
 
-	switch (activeLineIndexSpeed){
-	case 7:
-		if (process_message_colour_menu()) return false;
-		break;
-	case 8:
-		if (process_value_colour_menu()) return false;
-		break;
-	}
+	//switch (activeLineIndexSpeed){
+	//case 7:
+	//	if (process_message_colour_menu()) return false;
+	//	break;
+	//case 8:
+	//	if (process_value_colour_menu()) return false;
+	//	break;
+	//}
 	return false;
 }
 
@@ -934,17 +934,17 @@ void process_speed_menu(){
 	listItem->value = SpeedPositionIndex;
 	menuItems.push_back(listItem);
 
-	item = new MenuItem<int>();
-	item->caption = "Message Colour";
-	item->value = i++;
-	item->isLeaf = false;
-	menuItems.push_back(item);
+	//item = new MenuItem<int>();
+	//item->caption = "Message Colour";
+	//item->value = i++;
+	//item->isLeaf = false;
+	//menuItems.push_back(item);
 
-	item = new MenuItem<int>();
-	item->caption = "Value Colour";
-	item->value = i++;
-	item->isLeaf = false;
-	menuItems.push_back(item);
+	//item = new MenuItem<int>();
+	//item->caption = "Value Colour";
+	//item->value = i++;
+	//item->isLeaf = false;
+	//menuItems.push_back(item);
 	
 	draw_generic_menu<int>(menuItems, &activeLineIndexSpeed, caption, onconfirm_speed_menu, NULL, NULL);
 }
@@ -2361,11 +2361,14 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		been_already = false;
 	}
 	
+	//if (featureRememberVehicles && VehBlipSymbolIndex == NULL) VehBlipSymbolIndex = 0;
+
 	if (!VEHICLES_REMEMBER.empty() && !featureDeleteTrackedVehicles && featureDeleteTrackedVehicles_Emptied == false) {
 		for (int i = 0; i < VEHICLES_REMEMBER.size(); i++) {
 			blip_veh[0] = UI::ADD_BLIP_FOR_ENTITY(VEHICLES_REMEMBER[i]);
 			UI::SET_BLIP_AS_FRIENDLY(blip_veh[0], true);
-			UI::SET_BLIP_SPRITE(blip_veh[0], VEH_BLIPSYMBOL_VALUES[VehBlipSymbolIndex]);
+			if (VEH_BLIPSYMBOL_VALUES[VehBlipSymbolIndex] != NULL) UI::SET_BLIP_SPRITE(blip_veh[0], VEH_BLIPSYMBOL_VALUES[VehBlipSymbolIndex]);
+			else UI::SET_BLIP_SPRITE(blip_veh[0], VEH_BLIPSYMBOL_VALUES[0]);
 			UI::SET_BLIP_CATEGORY(blip_veh[0], 2);
 			if (featureBlipNumber) UI::SHOW_NUMBER_ON_BLIP(blip_veh[0], BLIPTABLE_VEH.size());
 			if (VEH_BLIPFLASH_VALUES[VehBlipFlashIndex] == 1) UI::SET_BLIP_FLASHES(blip_veh[0], true);
@@ -2405,7 +2408,8 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			if (VEHICLES_REMEMBER.empty()) {
 				blip_veh[0] = UI::ADD_BLIP_FOR_ENTITY(veh_rem);
 				UI::SET_BLIP_AS_FRIENDLY(blip_veh[0], true);
-				UI::SET_BLIP_SPRITE(blip_veh[0], VEH_BLIPSYMBOL_VALUES[VehBlipSymbolIndex]);
+				if (VEH_BLIPSYMBOL_VALUES[VehBlipSymbolIndex] != NULL) UI::SET_BLIP_SPRITE(blip_veh[0], VEH_BLIPSYMBOL_VALUES[VehBlipSymbolIndex]);
+				else UI::SET_BLIP_SPRITE(blip_veh[0], VEH_BLIPSYMBOL_VALUES[0]);
 				UI::SET_BLIP_CATEGORY(blip_veh[0], 2);
 				if (featureBlipNumber) UI::SHOW_NUMBER_ON_BLIP(blip_veh[0], BLIPTABLE_VEH.size());
 				if (VEH_BLIPFLASH_VALUES[VehBlipFlashIndex] == 1) UI::SET_BLIP_FLASHES(blip_veh[0], true);
@@ -2436,7 +2440,8 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			if (been_already == false) {
 				blip_veh[0] = UI::ADD_BLIP_FOR_ENTITY(veh_rem);
 				UI::SET_BLIP_AS_FRIENDLY(blip_veh[0], true);
-				UI::SET_BLIP_SPRITE(blip_veh[0], VEH_BLIPSYMBOL_VALUES[VehBlipSymbolIndex]);
+				if (VEH_BLIPSYMBOL_VALUES[VehBlipSymbolIndex] != NULL) UI::SET_BLIP_SPRITE(blip_veh[0], VEH_BLIPSYMBOL_VALUES[VehBlipSymbolIndex]);
+				else UI::SET_BLIP_SPRITE(blip_veh[0], VEH_BLIPSYMBOL_VALUES[0]);
 				UI::SET_BLIP_CATEGORY(blip_veh[0], 2);
 				if (featureBlipNumber) UI::SHOW_NUMBER_ON_BLIP(blip_veh[0], BLIPTABLE_VEH.size());
 				if (VEH_BLIPFLASH_VALUES[VehBlipFlashIndex] == 1) UI::SET_BLIP_FLASHES(blip_veh[0], true);
@@ -2681,12 +2686,12 @@ void reset_vehicle_globals() {
 	activeLineIndexRemember = 0;
 	activeLineIndexRoadLaws = 0;
 
-	SpeedColours_R_Index = 26;
-	SpeedColours_G_Index = 0;
-	SpeedColours_B_Index = 0;
-	SpeedColours2_R_Index = 26;
-	SpeedColours2_G_Index = 26;
-	SpeedColours2_B_Index = 0;
+	//SpeedColours_R_Index = 26;
+	//SpeedColours_G_Index = 0;
+	//SpeedColours_B_Index = 0;
+	//SpeedColours2_R_Index = 26;
+	//SpeedColours2_G_Index = 26;
+	//SpeedColours2_B_Index = 0;
 	FuelColours_R_Index = 26;
 	FuelColours_G_Index = 18;
 	FuelColours_B_Index = 12;
@@ -3495,12 +3500,12 @@ void add_vehicle_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"Random1Index", std::to_string(Random1Index)});
 	results->push_back(StringPairSettingDBRow{"Random2Index", std::to_string(Random2Index)});
 	results->push_back(StringPairSettingDBRow{"BarPositionIndex", std::to_string(BarPositionIndex)});
-	results->push_back(StringPairSettingDBRow{"SpeedColours_R_Index", std::to_string(SpeedColours_R_Index)});
-	results->push_back(StringPairSettingDBRow{"SpeedColours_G_Index", std::to_string(SpeedColours_G_Index)});
-	results->push_back(StringPairSettingDBRow{"SpeedColours_B_Index", std::to_string(SpeedColours_B_Index)});
-	results->push_back(StringPairSettingDBRow{"SpeedColours2_R_Index", std::to_string(SpeedColours2_R_Index)});
-	results->push_back(StringPairSettingDBRow{"SpeedColours2_G_Index", std::to_string(SpeedColours2_G_Index)});
-	results->push_back(StringPairSettingDBRow{"SpeedColours2_B_Index", std::to_string(SpeedColours2_B_Index)});
+	//results->push_back(StringPairSettingDBRow{"SpeedColours_R_Index", std::to_string(SpeedColours_R_Index)});
+	//results->push_back(StringPairSettingDBRow{"SpeedColours_G_Index", std::to_string(SpeedColours_G_Index)});
+	//results->push_back(StringPairSettingDBRow{"SpeedColours_B_Index", std::to_string(SpeedColours_B_Index)});
+	//results->push_back(StringPairSettingDBRow{"SpeedColours2_R_Index", std::to_string(SpeedColours2_R_Index)});
+	//results->push_back(StringPairSettingDBRow{"SpeedColours2_G_Index", std::to_string(SpeedColours2_G_Index)});
+	//results->push_back(StringPairSettingDBRow{"SpeedColours2_B_Index", std::to_string(SpeedColours2_B_Index)});
 	results->push_back(StringPairSettingDBRow{"FuelColours_R_Index", std::to_string(FuelColours_R_Index)});
 	results->push_back(StringPairSettingDBRow{"FuelColours_G_Index", std::to_string(FuelColours_G_Index)});
 	results->push_back(StringPairSettingDBRow{"FuelColours_B_Index", std::to_string(FuelColours_B_Index)});
@@ -3584,6 +3589,9 @@ void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settin
 		else if (setting.name.compare("FineSizeIndex") == 0){
 			FineSizeIndex = stoi(setting.value);
 		}
+		else if (setting.name.compare("VehBlipSymbolIndex") == NULL) {
+			VehBlipSymbolIndex = 0;
+		}
 		else if (setting.name.compare("VehBlipSymbolIndex") == 0){
 			VehBlipSymbolIndex = stoi(setting.value);
 		}
@@ -3623,24 +3631,24 @@ void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settin
 		else if (setting.name.compare("BarPositionIndex") == 0){
 			BarPositionIndex = stoi(setting.value);
 		}
-		else if (setting.name.compare("SpeedColours_R_Index") == 0){
-			SpeedColours_R_Index = stoi(setting.value);
-		}
-		else if (setting.name.compare("SpeedColours_G_Index") == 0){
-			SpeedColours_G_Index = stoi(setting.value);
-		}
-		else if (setting.name.compare("SpeedColours_B_Index") == 0){
-			SpeedColours_B_Index = stoi(setting.value);
-		}
-		else if (setting.name.compare("SpeedColours2_R_Index") == 0){
-			SpeedColours2_R_Index = stoi(setting.value);
-		}
-		else if (setting.name.compare("SpeedColours2_G_Index") == 0){
-			SpeedColours2_G_Index = stoi(setting.value);
-		}
-		else if (setting.name.compare("SpeedColours2_B_Index") == 0){
-			SpeedColours2_B_Index = stoi(setting.value);
-		}
+		//else if (setting.name.compare("SpeedColours_R_Index") == 0){
+		//	SpeedColours_R_Index = stoi(setting.value);
+		//}
+		//else if (setting.name.compare("SpeedColours_G_Index") == 0){
+		//	SpeedColours_G_Index = stoi(setting.value);
+		//}
+		//else if (setting.name.compare("SpeedColours_B_Index") == 0){
+		//	SpeedColours_B_Index = stoi(setting.value);
+		//}
+		//else if (setting.name.compare("SpeedColours2_R_Index") == 0){
+		//	SpeedColours2_R_Index = stoi(setting.value);
+		//}
+		//else if (setting.name.compare("SpeedColours2_G_Index") == 0){
+		//	SpeedColours2_G_Index = stoi(setting.value);
+		//}
+		//else if (setting.name.compare("SpeedColours2_B_Index") == 0){
+		//	SpeedColours2_B_Index = stoi(setting.value);
+		//}
 		else if (setting.name.compare("FuelColours_R_Index") == 0){
 			FuelColours_R_Index = stoi(setting.value);
 		}
@@ -3847,35 +3855,35 @@ void onchange_barposition_index(int value, SelectFromListMenuItem* source){
 	PositionChanged = true;
 }
 
-void onchange_speed_colours_r_index(int value, SelectFromListMenuItem* source){
-	SpeedColours_R_Index = value;
-	Colours_R_Changed = true;
-}
+//void onchange_speed_colours_r_index(int value, SelectFromListMenuItem* source){
+//	SpeedColours_R_Index = value;
+//	Colours_R_Changed = true;
+//}
 
-void onchange_speed_colours_g_index(int value, SelectFromListMenuItem* source){
-	SpeedColours_G_Index = value;
-	Colours_G_Changed = true;
-}
+//void onchange_speed_colours_g_index(int value, SelectFromListMenuItem* source){
+//	SpeedColours_G_Index = value;
+//	Colours_G_Changed = true;
+//}
 
-void onchange_speed_colours_b_index(int value, SelectFromListMenuItem* source){
-	SpeedColours_B_Index = value;
-	Colours_B_Changed = true;
-}
+//void onchange_speed_colours_b_index(int value, SelectFromListMenuItem* source){
+//	SpeedColours_B_Index = value;
+//	Colours_B_Changed = true;
+//}
 
-void onchange_speed_colours2_r_index(int value, SelectFromListMenuItem* source){
-	SpeedColours2_R_Index = value;
-	Colours2_R_Changed = true;
-}
+//void onchange_speed_colours2_r_index(int value, SelectFromListMenuItem* source){
+//	SpeedColours2_R_Index = value;
+//	Colours2_R_Changed = true;
+//}
 
-void onchange_speed_colours2_g_index(int value, SelectFromListMenuItem* source){
-	SpeedColours2_G_Index = value;
-	Colours2_G_Changed = true;
-}
+//void onchange_speed_colours2_g_index(int value, SelectFromListMenuItem* source){
+//	SpeedColours2_G_Index = value;
+//	Colours2_G_Changed = true;
+//}
 
-void onchange_speed_colours2_b_index(int value, SelectFromListMenuItem* source){
-	SpeedColours2_B_Index = value;
-	Colours2_B_Changed = true;
-}
+//void onchange_speed_colours2_b_index(int value, SelectFromListMenuItem* source){
+//	SpeedColours2_B_Index = value;
+//	Colours2_B_Changed = true;
+//}
 
 void onchange_fuel_colours_r_index(int value, SelectFromListMenuItem* source){
 	FuelColours_R_Index = value;

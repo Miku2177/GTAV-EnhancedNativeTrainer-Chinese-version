@@ -985,22 +985,22 @@ int Tel3dmarker_martype_Index = 0;
 bool Tel3dmarker_martype_Changed = true;
 
 //3d marker colours_R
-const std::vector<std::string> MARKER3D_COLOURS_R_CAPTIONS{ "0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "210", "220", "230", "240", "250", "255" };
-const std::vector<int> MARKER3D_COLOURS_R_VALUES{ 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 255 };
-int Marker3d_R_Index = 26;
-bool Marker3d_R_Changed = true;
+//const std::vector<std::string> MARKER3D_COLOURS_R_CAPTIONS{ "0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "210", "220", "230", "240", "250", "255" };
+//const std::vector<int> MARKER3D_COLOURS_R_VALUES{ 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 255 };
+//int Marker3d_R_Index = 26;
+//bool Marker3d_R_Changed = true;
 
 //3d marker colours_G
-const std::vector<std::string> MARKER3D_COLOURS_G_CAPTIONS{ "0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "210", "220", "230", "240", "250", "255" };
-const std::vector<int> MARKER3D_COLOURS_G_VALUES{ 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 255 };
-int Marker3d_G_Index = 26;
-bool Marker3d_G_Changed = true;
+//const std::vector<std::string> MARKER3D_COLOURS_G_CAPTIONS{ "0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "210", "220", "230", "240", "250", "255" };
+//const std::vector<int> MARKER3D_COLOURS_G_VALUES{ 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 255 };
+//int Marker3d_G_Index = 26;
+//bool Marker3d_G_Changed = true;
 
 //3d marker colours_B
-const std::vector<std::string> MARKER3D_COLOURS_B_CAPTIONS{ "0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "210", "220", "230", "240", "250", "255" };
-const std::vector<int> MARKER3D_COLOURS_B_VALUES{ 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 255 };
-int Marker3d_B_Index = 13;
-bool Marker3d_B_Changed = true;
+//const std::vector<std::string> MARKER3D_COLOURS_B_CAPTIONS{ "0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "210", "220", "230", "240", "250", "255" };
+//const std::vector<int> MARKER3D_COLOURS_B_VALUES{ 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 255 };
+//int Marker3d_B_Index = 13;
+//bool Marker3d_B_Changed = true;
 
 //Marker alpha
 const std::vector<std::string> MARKER3D_ALPHA_CAPTIONS{ "10", "20", "30", "40", "50", "60", "70", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "210", "220", "230", "240", "250", "255" };
@@ -1292,9 +1292,9 @@ void add_coords_generic_settings(std::vector<StringPairSettingDBRow>* results)
 	results->push_back(StringPairSettingDBRow{"Tel3dmarker_msize_Index", std::to_string(Tel3dmarker_msize_Index)});
 	results->push_back(StringPairSettingDBRow{"Tel3dmarker_martype_Index", std::to_string(Tel3dmarker_martype_Index)});
 	results->push_back(StringPairSettingDBRow{"Tel3dmarker_skypos_Index", std::to_string(Tel3dmarker_skypos_Index)});
-	results->push_back(StringPairSettingDBRow{"Marker3d_R_Index", std::to_string(Marker3d_R_Index)});
-	results->push_back(StringPairSettingDBRow{"Marker3d_G_Index", std::to_string(Marker3d_G_Index)});
-	results->push_back(StringPairSettingDBRow{"Marker3d_B_Index", std::to_string(Marker3d_B_Index)});
+	//results->push_back(StringPairSettingDBRow{"Marker3d_R_Index", std::to_string(Marker3d_R_Index)});
+	//results->push_back(StringPairSettingDBRow{"Marker3d_G_Index", std::to_string(Marker3d_G_Index)});
+	//results->push_back(StringPairSettingDBRow{"Marker3d_B_Index", std::to_string(Marker3d_B_Index)});
 	results->push_back(StringPairSettingDBRow{"Marker3d_Alpha_Index", std::to_string(Marker3d_Alpha_Index)});
 	results->push_back(StringPairSettingDBRow{"TelChauffeur_speed_Index", std::to_string(TelChauffeur_speed_Index)});
 	results->push_back(StringPairSettingDBRow{"TelChauffeur_altitude_Index", std::to_string(TelChauffeur_altitude_Index)});
@@ -1326,20 +1326,20 @@ void onchange_tel_3dmarker_skypos_index(int value, SelectFromListMenuItem *sourc
 	Tel3dmarker_skypos_Changed = true;
 }
 
-void onchange_tel_3dmarker_colour_R_index(int value, SelectFromListMenuItem *source){
-	Marker3d_R_Index = value;
-	Marker3d_R_Changed = true;
-}
+//void onchange_tel_3dmarker_colour_R_index(int value, SelectFromListMenuItem *source){
+//	Marker3d_R_Index = value;
+//	Marker3d_R_Changed = true;
+//}
 
-void onchange_tel_3dmarker_colour_G_index(int value, SelectFromListMenuItem *source){
-	Marker3d_G_Index = value;
-	Marker3d_G_Changed = true;
-}
+//void onchange_tel_3dmarker_colour_G_index(int value, SelectFromListMenuItem *source){
+//	Marker3d_G_Index = value;
+//	Marker3d_G_Changed = true;
+//}
 
-void onchange_tel_3dmarker_colour_B_index(int value, SelectFromListMenuItem *source){
-	Marker3d_B_Index = value;
-	Marker3d_B_Changed = true;
-}
+//void onchange_tel_3dmarker_colour_B_index(int value, SelectFromListMenuItem *source){
+//	Marker3d_B_Index = value;
+//	Marker3d_B_Changed = true;
+//}
 
 void onchange_tel_3dmarker_alpha_index(int value, SelectFromListMenuItem *source){
 	Marker3d_Alpha_Index = value;
@@ -1379,15 +1379,15 @@ void handle_generic_settings_teleportation(std::vector<StringPairSettingDBRow>* 
 		else if (setting.name.compare("Tel3dmarker_skypos_Index") == 0){
 			Tel3dmarker_skypos_Index = stoi(setting.value);
 		}
-		else if (setting.name.compare("Marker3d_R_Index") == 0){
-			Marker3d_R_Index = stoi(setting.value);
-		}
-		else if (setting.name.compare("Marker3d_G_Index") == 0){
-			Marker3d_G_Index = stoi(setting.value);
-		}
-		else if (setting.name.compare("Marker3d_B_Index") == 0){
-			Marker3d_B_Index = stoi(setting.value);
-		}
+		//else if (setting.name.compare("Marker3d_R_Index") == 0){
+		//	Marker3d_R_Index = stoi(setting.value);
+		//}
+		//else if (setting.name.compare("Marker3d_G_Index") == 0){
+		//	Marker3d_G_Index = stoi(setting.value);
+		//}
+		//else if (setting.name.compare("Marker3d_B_Index") == 0){
+		//	Marker3d_B_Index = stoi(setting.value);
+		//}
 		else if (setting.name.compare("Marker3d_Alpha_Index") == 0){
 			Marker3d_Alpha_Index = stoi(setting.value);
 		}
@@ -1484,23 +1484,23 @@ void set_3d_marker(){
 	listItem->value = Tel3dmarker_skypos_Index;
 	menuItems.push_back(listItem);
 
-	listItem = new SelectFromListMenuItem(MARKER3D_COLOURS_R_CAPTIONS, onchange_tel_3dmarker_colour_R_index);
-	listItem->wrap = true;
-	listItem->caption = "R:";
-	listItem->value = Marker3d_R_Index;
-	menuItems.push_back(listItem);
+	//listItem = new SelectFromListMenuItem(MARKER3D_COLOURS_R_CAPTIONS, onchange_tel_3dmarker_colour_R_index);
+	//listItem->wrap = true;
+	//listItem->caption = "R:";
+	//listItem->value = Marker3d_R_Index;
+	//menuItems.push_back(listItem);
 
-	listItem = new SelectFromListMenuItem(MARKER3D_COLOURS_G_CAPTIONS, onchange_tel_3dmarker_colour_G_index);
-	listItem->wrap = true;
-	listItem->caption = "G:";
-	listItem->value = Marker3d_G_Index;
-	menuItems.push_back(listItem);
+	//listItem = new SelectFromListMenuItem(MARKER3D_COLOURS_G_CAPTIONS, onchange_tel_3dmarker_colour_G_index);
+	//listItem->wrap = true;
+	//listItem->caption = "G:";
+	//listItem->value = Marker3d_G_Index;
+	//menuItems.push_back(listItem);
 
-	listItem = new SelectFromListMenuItem(MARKER3D_COLOURS_B_CAPTIONS, onchange_tel_3dmarker_colour_B_index);
-	listItem->wrap = true;
-	listItem->caption = "B:";
-	listItem->value = Marker3d_B_Index;
-	menuItems.push_back(listItem);
+	//listItem = new SelectFromListMenuItem(MARKER3D_COLOURS_B_CAPTIONS, onchange_tel_3dmarker_colour_B_index);
+	//listItem->wrap = true;
+	//listItem->caption = "B:";
+	//listItem->value = Marker3d_B_Index;
+	//menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(MARKER3D_ALPHA_CAPTIONS, onchange_tel_3dmarker_alpha_index);
 	listItem->wrap = true;
@@ -1570,7 +1570,7 @@ void getTelChauffeurIndex(){
 	listItem->value = TelChauffeur_drivingstyles_Index;
 	menuItems.push_back(listItem);
 
-	listItem = new SelectFromListMenuItem(TEL_CHAUFFEUR_CAPTIONS, onchange_tel_chauffeur_index);
+	listItem = new SelectFromListMenuItem(SKINS_GENERAL_VALUES, onchange_tel_chauffeur_index);
 	listItem->wrap = true;
 	listItem->caption = "Chauffeur Model";
 	listItem->value = TelChauffeurIndex;
@@ -1892,9 +1892,9 @@ void reset_teleporter_globals()
 	Tel3dmarker_msize_Index = 2;
 	Tel3dmarker_martype_Index = 0;
 	Tel3dmarker_skypos_Index = 0;
-	Marker3d_R_Index = 26;
-	Marker3d_G_Index = 26;
-	Marker3d_B_Index = 13;
+	//Marker3d_R_Index = 26;
+	//Marker3d_G_Index = 26;
+	//Marker3d_B_Index = 13;
 	Marker3d_Alpha_Index = 12;
 	TelChauffeur_speed_Index = 2;
 	TelChauffeur_altitude_Index = 5;
@@ -1990,6 +1990,10 @@ void update_teleport_features(){
 		int blip3DIterator = UI::IS_WAYPOINT_ACTIVE() ? BlipSpriteWaypoint : BlipSpriteStandard;
 		Vector3 playerPosition = ENTITY::GET_ENTITY_COORDS(playerPed, false);
 
+		int col2_R = ENTColor::colsMenu[5].rgba[0];
+		int col2_G = ENTColor::colsMenu[5].rgba[1];
+		int col2_B = ENTColor::colsMenu[5].rgba[2];
+		
 		// Check if marker set
 		if (blip3DIterator != BlipSpriteStandard) {
 			my3DBlip = UI::GET_FIRST_BLIP_INFO_ID(blip3DIterator);
@@ -2050,19 +2054,19 @@ void update_teleport_features(){
 
 		if (TEL_3DMARKER_MARTYPE_VALUES[Tel3dmarker_martype_Index] == 1 && close_distance == true && blip_3d_exists_already == true) GRAPHICS::DRAW_MARKER(TEL_3DMARKER_VALUES[Tel3dmarkerIndex]/*int type*/, coords_3Dblip.x/*float posX*/, 
 			coords_3Dblip.y/*float posY*/, temp_coords_3Dblip.z + 5/*float posZ*/, 20/*float dirX*/, 20/*float dirY*/, 20/*float dirZ*/, 90/*float rotX*/, 90/*float rotY*/, 90/*float rotZ*/, 10/*float scaleX*/, 10/*float scaleY*/, 10/*float scaleZ*/,
-			MARKER3D_COLOURS_R_VALUES[Marker3d_R_Index]/*int red*/, MARKER3D_COLOURS_G_VALUES[Marker3d_G_Index]/*int green*/, MARKER3D_COLOURS_B_VALUES[Marker3d_B_Index]/*int blue*/, MARKER3D_ALPHA_VALUES[Marker3d_Alpha_Index]/*int alpha*/, 
+			col2_R/*int red*/, col2_G/*int green*/, col2_B/*int blue*/, MARKER3D_ALPHA_VALUES[Marker3d_Alpha_Index]/*int alpha*/,
 			50/*BOOL bobUpAndDown*/, 1/*BOOL faceCamera*/, 1/*int p19*/, 1/*BOOL rotate*/, 0/*char* textureDict*/, 0/*char* textureName*/, 0/*BOOL drawOnEnts*/);
 
 		if ((dist_diff_x > 100 || dist_diff_y > 100) && close_distance == false) {
 			if (TEL_3DMARKER_MARTYPE_VALUES[Tel3dmarker_martype_Index] == 1 && blip_3d_exists_already == true) GRAPHICS::DRAW_MARKER(TEL_3DMARKER_VALUES[Tel3dmarkerIndex]/*int type*/, coords_3Dblip.x/*float posX*/, coords_3Dblip.y/*float posY*/, 
 				marker_3d_height/*float posZ*/,	20/*float dirX*/, 20/*float dirY*/, 20/*float dirZ*/, 90/*float rotX*/, 90/*float rotY*/, 90/*float rotZ*/, marker_3d_size/*float scaleX*/, marker_3d_size/*float scaleY*/, marker_3d_size/*float scaleZ*/,
-				MARKER3D_COLOURS_R_VALUES[Marker3d_R_Index]/*int red*/, MARKER3D_COLOURS_G_VALUES[Marker3d_G_Index]/*int green*/, MARKER3D_COLOURS_B_VALUES[Marker3d_B_Index]/*int blue*/, MARKER3D_ALPHA_VALUES[Marker3d_Alpha_Index]/*int alpha*/, 
+				col2_R/*int red*/, col2_G/*int green*/, col2_B/*int blue*/, MARKER3D_ALPHA_VALUES[Marker3d_Alpha_Index]/*int alpha*/,
 				50/*BOOL bobUpAndDown*/, 1/*BOOL faceCamera*/, 1/*int p19*/, 1/*BOOL rotate*/, 0/*char* textureDict*/, 0/*char* textureName*/, 0/*BOOL drawOnEnts*/);
 		}
 
 		if (TEL_3DMARKER_MARTYPE_VALUES[Tel3dmarker_martype_Index] == 2 && blip_3d_exists_already == true) GRAPHICS::DRAW_MARKER(1/*int type*/, coords_3Dblip.x/*float posX*/, coords_3Dblip.y/*float posY*/, 0/*float posZ*/,
 			0/*float dirX*/, 0/*float dirY*/, 0/*float dirZ*/, 0/*float rotX*/, 0/*float rotY*/, 0/*float rotZ*/, dist_diff / 50/*float scaleX*/, dist_diff / 50/*float scaleY*/, 10000.0f/*float scaleZ*/,
-			MARKER3D_COLOURS_R_VALUES[Marker3d_R_Index]/*int red*/, MARKER3D_COLOURS_G_VALUES[Marker3d_G_Index]/*int green*/, MARKER3D_COLOURS_B_VALUES[Marker3d_B_Index]/*int blue*/, MARKER3D_ALPHA_VALUES[Marker3d_Alpha_Index]/*int alpha*/, 
+			col2_R/*int red*/, col2_G/*int green*/, col2_B/*int blue*/, MARKER3D_ALPHA_VALUES[Marker3d_Alpha_Index]/*int alpha*/,
 			50/*BOOL bobUpAndDown*/, 1/*BOOL faceCamera*/, 1/*int p19*/, 0/*BOOL rotate*/, 0/*char* textureDict*/, 0/*char* textureName*/, 0/*BOOL drawOnEnts*/);
 	}
 	else {
@@ -2071,9 +2075,9 @@ void update_teleport_features(){
 		if (!TEL_3DMARKER_MSIZE_VALUES.empty()) std::vector<int>(TEL_3DMARKER_MSIZE_VALUES).swap(emptyVec);
 		if (!TEL_3DMARKER_SKYPOS_VALUES.empty()) std::vector<int>(TEL_3DMARKER_SKYPOS_VALUES).swap(emptyVec);
 		if (!TEL_3DMARKER_MARTYPE_VALUES.empty()) std::vector<int>(TEL_3DMARKER_MARTYPE_VALUES).swap(emptyVec);
-		if (!MARKER3D_COLOURS_R_VALUES.empty()) std::vector<int>(MARKER3D_COLOURS_R_VALUES).swap(emptyVec);
-		if (!MARKER3D_COLOURS_G_VALUES.empty()) std::vector<int>(MARKER3D_COLOURS_G_VALUES).swap(emptyVec);
-		if (!MARKER3D_COLOURS_B_VALUES.empty()) std::vector<int>(MARKER3D_COLOURS_B_VALUES).swap(emptyVec);
+		//if (!MARKER3D_COLOURS_R_VALUES.empty()) std::vector<int>(MARKER3D_COLOURS_R_VALUES).swap(emptyVec);
+		//if (!MARKER3D_COLOURS_G_VALUES.empty()) std::vector<int>(MARKER3D_COLOURS_G_VALUES).swap(emptyVec);
+		//if (!MARKER3D_COLOURS_B_VALUES.empty()) std::vector<int>(MARKER3D_COLOURS_B_VALUES).swap(emptyVec);
 		if (!MARKER3D_ALPHA_VALUES.empty()) std::vector<int>(MARKER3D_ALPHA_VALUES).swap(emptyVec);
 	}
 	
@@ -2101,7 +2105,7 @@ void update_teleport_features(){
 	if (blipDriveFound == true && marker_been_set == true) drive_to_marker();
 	if (marker_been_set == false) {
 		std::vector<int> emptyVec;
-		if (!TEL_CHAUFFEUR_VALUES.empty()) std::vector<int>(TEL_CHAUFFEUR_VALUES).swap(emptyVec);
+		//if (!TEL_CHAUFFEUR_VALUES.empty()) std::vector<int>(TEL_CHAUFFEUR_VALUES).swap(emptyVec);
 		if (!TEL_CHAUFFEUR_SPEED_VALUES.empty()) std::vector<int>(TEL_CHAUFFEUR_SPEED_VALUES).swap(emptyVec);
 		if (!TEL_CHAUFFEUR_ALTITUDE_VALUES.empty()) std::vector<int>(TEL_CHAUFFEUR_ALTITUDE_VALUES).swap(emptyVec);
 		if (!TEL_CHAUFFEUR_DRIVINGSTYLES_VALUES.empty()) std::vector<int>(TEL_CHAUFFEUR_DRIVINGSTYLES_VALUES).swap(emptyVec);
