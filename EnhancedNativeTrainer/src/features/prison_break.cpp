@@ -304,10 +304,15 @@ void prison_break()
 				Vector3 check_insideguard_position_in_prison = ENTITY::GET_ENTITY_COORDS(guards[i], true);
 				distance_guard_from_center_x = check_insideguard_position_in_prison.x - prison_x;
 				distance_guard_from_center_y = check_insideguard_position_in_prison.y - prison_y;
-				if (distance_guard_from_center_x < 190 && distance_guard_from_center_y < 200) {
+				if (distance_guard_from_center_x < 190 && distance_guard_from_center_y < 200 && time_before_get_to_prison > 6000) {
 					if (((ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(guards[i], playerPed_Prison, 1) && ENTITY::GET_ENTITY_HEALTH(guards[i]) > 100) || (my_position_in_prison.z - prison_z) > 8) && alert_level < 2 && time_in_prison_tick > 0) alert_level = 1;
-					if (playerPed_Prison == PED::GET_PED_SOURCE_OF_DEATH(guards[i]) || WEAPON::IS_PED_ARMED(playerPed_Prison, 7) ||
-						(ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(guards[i], playerPed_Prison, 1) && (PED::GET_PED_TYPE(guards[i]) == 27 || PED::GET_PED_TYPE(guards[i]) == 6))) alert_level = 2;
+					if (WEAPON::IS_PED_ARMED(playerPed_Prison, 7) || (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(guards[i], playerPed_Prison, 1) && (PED::GET_PED_TYPE(guards[i]) == 27 || PED::GET_PED_TYPE(guards[i]) == 6))) alert_level = 2;
+					if (PED::IS_PED_DEAD_OR_DYING(guards[i], 1)) {
+						if (playerPed_Prison == PED::GET_PED_SOURCE_OF_DEATH(guards[i])) {
+							alert_level = 2;
+							ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&guards[i]);
+						}
+					}
 					//if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_PED(guards[i]) && !ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(guards[i], playerPed_Prison, 1) &&
 					//	alert_level < 3 && alert_level == 1 && PED::GET_PED_TYPE(guards[i]) != 0 && PED::GET_PED_TYPE(guards[i]) != 1 && PED::GET_PED_TYPE(guards[i]) != 2) alert_level = 2; // In case you spawned bodyguards 
 				}
@@ -360,6 +365,7 @@ void prison_break()
 				PLAYER::SET_POLICE_IGNORE_PLAYER(PLAYER::PLAYER_ID(), true);
 				PLAYER::SET_EVERYONE_IGNORE_PLAYER(PLAYER::PLAYER_ID(), true);
 				AUDIO::STOP_ALARM("PRISON_ALARMS", true);
+				UI::HIDE_HUD_COMPONENT_THIS_FRAME(1);
 			}
 
 			if (alert_level == 1) { // Hit someone in the face / Withdraw a weapon / Got lost?!
@@ -406,6 +412,7 @@ void prison_break()
 				PLAYER::SET_POLICE_IGNORE_PLAYER(PLAYER::PLAYER_ID(), true);
 				PLAYER::SET_EVERYONE_IGNORE_PLAYER(PLAYER::PLAYER_ID(), false);
 				AUDIO::STOP_ALARM("PRISON_ALARMS", true);
+				UI::SHOW_HUD_COMPONENT_THIS_FRAME(1);
 			}
 
 			if (alert_level == 2) { // Trying to leave the courtyard. Being uppish?
@@ -445,6 +452,7 @@ void prison_break()
 				PLAYER::SET_POLICE_IGNORE_PLAYER(PLAYER::PLAYER_ID(), false);
 				PLAYER::SET_EVERYONE_IGNORE_PLAYER(PLAYER::PLAYER_ID(), false);
 				AUDIO::STOP_ALARM("PRISON_ALARMS", false);
+				UI::SHOW_HUD_COMPONENT_THIS_FRAME(1);
 			}
 
 			if (alert_level == 3) { // Escaping the prison. A death wish?
@@ -478,6 +486,7 @@ void prison_break()
 						}
 					}
 				}
+				
 				PLAYER::SET_MAX_WANTED_LEVEL(5);
 				if (!featurePrison_Hardcore) PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), PLAYER_ESCAPESTARS_VALUES[current_escape_stars], 0);
 				if (featurePrison_Hardcore) PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 5, 0);
@@ -485,6 +494,7 @@ void prison_break()
 				PLAYER::SET_POLICE_IGNORE_PLAYER(PLAYER::PLAYER_ID(), false);
 				PLAYER::SET_EVERYONE_IGNORE_PLAYER(PLAYER::PLAYER_ID(), false);
 				AUDIO::STOP_ALARM("PRISON_ALARMS", false);
+				UI::SHOW_HUD_COMPONENT_THIS_FRAME(1);
 				in_prison = false;
 				//alert_level = 0;
 				CONTROLS::ENABLE_CONTROL_ACTION(2, 19, true);
@@ -506,6 +516,7 @@ void prison_break()
 				PLAYER::SET_POLICE_IGNORE_PLAYER(PLAYER::PLAYER_ID(), false);
 				PLAYER::SET_EVERYONE_IGNORE_PLAYER(PLAYER::PLAYER_ID(), false);
 				AUDIO::STOP_ALARM("PRISON_ALARMS", false);
+				UI::SHOW_HUD_COMPONENT_THIS_FRAME(1);
 				PLAYER::CLEAR_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID());
 				alert_level = 0;
 				CONTROLS::ENABLE_CONTROL_ACTION(2, 19, true);

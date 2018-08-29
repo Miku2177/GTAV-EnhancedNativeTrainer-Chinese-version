@@ -3163,6 +3163,7 @@ bool spawn_saved_car(int slot, std::string caption){
 				strcpy(currSound, ENGINE_SOUND[current_picked_engine_sound].c_str());
 				VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
 				AUDIO::_SET_VEHICLE_AUDIO(veh, currSound);
+				current_picked_engine_sound = -1;
 			}
 		}
 		//
