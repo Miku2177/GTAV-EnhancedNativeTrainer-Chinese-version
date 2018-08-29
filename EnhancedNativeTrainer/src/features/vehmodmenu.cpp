@@ -1438,7 +1438,7 @@ bool onconfirm_vehmod_category_menu(MenuItem<int> choice){
 		char *currSound = new char[ENGINE_SOUND[choice.value].length() + 1];
 		strcpy(currSound, ENGINE_SOUND[choice.value].c_str());
 		//current_picked_engine_sound = choice.value;
-		current_picked_engine_sound = ENGINE_SOUND_NUMBERS[choice.value];
+		current_picked_engine_sound = ENGINE_SOUND_NUMBERS[choice.value]; 
 		VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
 		AUDIO::_SET_VEHICLE_AUDIO(veh, currSound);
 		set_status_text("Changed engine sound");
@@ -2280,5 +2280,9 @@ void update_vehmodmenu_features(BOOL bPlayerExists, Ped playerPed) {
 	if (!featureEngineSound) {
 		std::vector<int> emptyVec;
 		if (!ENGINE_SOUND_NUMBERS.empty()) std::vector<int>(ENGINE_SOUND_NUMBERS).swap(emptyVec);
+		current_picked_engine_sound = -1;
 	}
+
+	if (featureEngineSound && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) current_picked_engine_sound = -1;
+
 }
