@@ -69,6 +69,7 @@ bool featureVehSpeedBoost = false;
 bool featureVehSteerAngle = false;
 bool featureEngineRunning = false;
 bool featureNoVehFlip = false;
+bool featureAutoToggleLights = false;
 bool featureMileage = false;
 bool featureVehMassMult = false;
 bool featureVehSpawnInto = false;
@@ -91,6 +92,11 @@ std::vector<Vehicle> STEERING;
 int currseat = -1;
 
 int engine_tick = 0;
+
+BOOL lightsAutoOn = -1;
+BOOL highbeamsAutoOn = -1;
+bool no_autotoggle = false;
+bool autotoggle_temp = false;
 
 // Rememeber Vehicles Option Variables
 Blip blip_veh[1];
@@ -1469,13 +1475,13 @@ bool onconfirm_veh_menu(MenuItem<int> choice){
 		case 20: // vehicle indicators menu
 			process_visualize_menu();
 			break;
-		case 24: // fuel menu
+		case 25: // fuel menu
 			process_fuel_menu();
 			break;
-		case 25: // remember vehicles menu
+		case 26: // remember vehicles menu
 			process_remember_vehicles_menu();
 			break;
-		case 26: // remember vehicles menu
+		case 27: // road laws menu
 			process_road_laws_menu();
 			break;
 		default:
@@ -1647,6 +1653,12 @@ void process_veh_menu(){
 	listItem->caption = "Vehicle Lights Off By Default";
 	listItem->value = lightsOffIndex;
 	menuItems.push_back(listItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "No Lights On Auto Toggle In The Evening";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureAutoToggleLights;
+	menuItems.push_back(toggleItem);
 
 	item = new MenuItem<int>();
 	item->caption = "Fuel Consumption";
@@ -2349,6 +2361,32 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+//////////////////////////////////////////////// NO LIGHTS ON AT NIGHT AUTO TOGGLE ///////////////////////////////////////////////////////
+
+	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && featureAutoToggleLights) { 
+		Vehicle vehlights = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
+		int autotime = TIME::GET_CLOCK_HOURS();
+		bool autolights_state = VEHICLE::GET_VEHICLE_LIGHTS_STATE(vehlights, &lightsAutoOn, &highbeamsAutoOn);
+		if (autotime > 18 && autotime < 20 && !lightsAutoOn && !highbeamsAutoOn) {
+			no_autotoggle = true;
+			autotoggle_temp = true;
+		}
+		if (CONTROLS::IS_CONTROL_JUST_PRESSED(2, 74) && autotime > 19) {
+			no_autotoggle = !no_autotoggle;
+			autotoggle_temp = true;
+		}
+		if (no_autotoggle == true && autotoggle_temp == true) {
+			VEHICLE::SET_VEHICLE_LIGHTS(vehlights, 1);
+			autotoggle_temp = false;
+		}
+		if (no_autotoggle == false && autotoggle_temp == true) {
+			VEHICLE::SET_VEHICLE_LIGHTS(vehlights, 0);
+			autotoggle_temp = false;
+		}
+	}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	fuel(); ///// <--- FUEL CONSUMPTION /////
 	
 	road_laws(); ///// <--- ROAD LAWS /////
@@ -2747,6 +2785,7 @@ void reset_vehicle_globals() {
 		featureVehSteerAngle = 
 		featureEngineRunning =
 		featureNoVehFlip =
+		featureAutoToggleLights =
 		featureMileage = 
 		featureRememberVehicles =
 		featureRoadLaws =
@@ -3012,6 +3051,7 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehSteerAngle", &featureVehSteerAngle});
 	results->push_back(FeatureEnabledLocalDefinition{"featureEngineRunning", &featureEngineRunning});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoVehFlip", &featureNoVehFlip});
+	results->push_back(FeatureEnabledLocalDefinition{"featureAutoToggleLights", &featureAutoToggleLights});
 	results->push_back(FeatureEnabledLocalDefinition{"featureMileage", &featureMileage});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRememberVehicles", &featureRememberVehicles});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRoadLaws", &featureRoadLaws});

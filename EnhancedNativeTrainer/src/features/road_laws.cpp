@@ -246,7 +246,7 @@ void road_laws()
 			if (vehroadlaws_speed > 1 && VEHICLE::GET_IS_LEFT_VEHICLE_HEADLIGHT_DAMAGED(vehroadlaws) && VEHICLE::GET_IS_RIGHT_VEHICLE_HEADLIGHT_DAMAGED(vehroadlaws) && (time_road_laws < 5 || time_road_laws > 20)) nolightsnighttime_check = true;
 			if (vehroadlaws_speed > 1 && !lightsOn && !highbeamsOn && (time_road_laws < 5 || time_road_laws > 20)) nolightsnighttime_check = true;
 			if (((lightsOn || highbeamsOn) && (!VEHICLE::GET_IS_LEFT_VEHICLE_HEADLIGHT_DAMAGED(vehroadlaws) || !VEHICLE::GET_IS_RIGHT_VEHICLE_HEADLIGHT_DAMAGED(vehroadlaws)) &&
-				been_seen_by_a_cop == false) || (time_road_laws > 4 && time_road_laws < 21 && been_seen_by_a_cop == false)) nolightsnighttime_check = false;
+				been_seen_by_a_cop == false) || (time_road_laws > 4 && time_road_laws < 21 && been_seen_by_a_cop == false) || (vehroadlaws_speed < 1 && been_seen_by_a_cop == false)) nolightsnighttime_check = false;
 		}
 		else if (been_seen_by_a_cop == false) nolightsnighttime_check = false;
 
