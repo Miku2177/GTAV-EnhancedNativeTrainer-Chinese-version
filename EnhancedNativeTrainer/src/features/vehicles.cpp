@@ -1655,7 +1655,7 @@ void process_veh_menu(){
 	menuItems.push_back(listItem);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "No Lights On Auto Toggle In The Evening";
+	toggleItem->caption = "No Headlights In The Evening";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureAutoToggleLights;
 	menuItems.push_back(toggleItem);

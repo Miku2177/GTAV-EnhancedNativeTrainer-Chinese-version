@@ -494,8 +494,8 @@ void update_features(){
 	
 	Ped playerPed_Data = PLAYER::PLAYER_PED_ID();
 	
-	int playerHealth = ENTITY::GET_ENTITY_HEALTH(playerPed_Data);
-	playerHealth = (playerHealth - 100);
+	//int playerHealth = ENTITY::GET_ENTITY_HEALTH(playerPed_Data);
+	//playerHealth = (playerHealth - 100);
 	
 	if ((bPlayerExists && featurePlayerLife && featurePlayerLifeUpdated) || (bPlayerExists && featurePlayerLife_Died && featurePlayerLifeUpdated) ||
 		(bPlayerExists && featurePlayerLife_Changed && featurePlayerLifeUpdated)) {

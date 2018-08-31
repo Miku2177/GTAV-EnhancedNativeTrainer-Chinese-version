@@ -180,6 +180,7 @@ void prison_break()
 
 			// Populate the prison
 			if (featurePrison_Yard) {
+				TIME::SET_CLOCK_TIME(12, 0, 0);
 				if (populate_tick < 15) populate_tick = populate_tick + 1;
 				if (populate_tick > 5 && populate_tick < 15) {
 					int randomize_peds_in_jail_rot = (1 + rand() % 90);
