@@ -11,6 +11,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\..\resource.h"
 #include "vehicles.h"
 #include "fuel.h"
+#include "enginedegrade.h"
 #include "road_laws.h"
 #include "speed_altitude.h"
 #include "..\features\vehmodmenu.h"
@@ -127,6 +128,7 @@ int activeSavedVehicleIndex = -1;
 int activeLineIndexSpeed = 0;
 int activeLineIndexVisualize = 0;
 int activeLineIndexFuel = 0;
+int activeLineIndexEngineDegrade = 0;
 int activeLineIndexRemember = 0;
 int activeLineIndexRoadLaws = 0;
 std::string activeSavedVehicleSlotName;
@@ -1036,19 +1038,116 @@ bool process_fuel_colour_menu(){
 	listItem->value = FuelColours_R_Index;
 	menuItems.push_back(listItem);
 
-	listItem = new SelectFromListMenuItem(FUEL_COLOURS_G_CAPTIONS, onchange_fuel_colours_g_index);
+	listItem = new SelectFromListMenuItem(FUEL_COLOURS_R_CAPTIONS, onchange_fuel_colours_g_index);
 	listItem->wrap = false;
 	listItem->caption = "G:";
 	listItem->value = FuelColours_G_Index;
 	menuItems.push_back(listItem);
 
-	listItem = new SelectFromListMenuItem(FUEL_COLOURS_B_CAPTIONS, onchange_fuel_colours_b_index);
+	listItem = new SelectFromListMenuItem(FUEL_COLOURS_R_CAPTIONS, onchange_fuel_colours_b_index);
 	listItem->wrap = false;
 	listItem->caption = "B:";
 	listItem->value = FuelColours_B_Index;
 	menuItems.push_back(listItem);
 
 	return draw_generic_menu<int>(menuItems, 0, "Fuel Bar Colour", onconfirm_fuel_colour_menu, NULL, NULL);
+}
+
+bool onconfirm_enginedegrade_menu(MenuItem<int> choice)
+{
+	return false;
+}
+
+void process_engine_degrade_menu() {
+	std::string caption = "Engine Can Overheat Options";
+
+	std::vector<MenuItem<int>*> menuItems;
+
+	MenuItem<int> *item;
+	SelectFromListMenuItem *listItem;
+	ToggleMenuItem<int>* toggleItem;
+
+	int i = 0;
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Enabled";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureEngineDegrade;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Show Health Bar";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureEngineHealthBar;
+	menuItems.push_back(toggleItem);
+
+	listItem = new SelectFromListMenuItem(VEH_ENGINEHEALTH_CAPTIONS, onchange_car_enginehealth_index);
+	listItem->wrap = false;
+	listItem->caption = "Car Engine Health (Min %)";
+	listItem->value = CarEngineHealthIndex;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(VEH_ENGINEHEALTH_CAPTIONS, onchange_bike_enginehealth_index);
+	listItem->wrap = false;
+	listItem->caption = "Bike Engine Health (Min %)";
+	listItem->value = BikeEngineHealthIndex;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(VEH_ENGINEHEALTH_CAPTIONS, onchange_boat_enginehealth_index);
+	listItem->wrap = false;
+	listItem->caption = "Boat Engine Health (Min %)";
+	listItem->value = BoatEngineHealthIndex;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(VEH_ENGINEHEALTH_CAPTIONS, onchange_plane_enginehealth_index);
+	listItem->wrap = false;
+	listItem->caption = "Plane Engine Health (Min %)";
+	listItem->value = PlaneEngineHealthIndex;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(VEH_ENGINEHEALTH_CAPTIONS, onchange_heli_enginehealth_index);
+	listItem->wrap = false;
+	listItem->caption = "Heli Engine Health (Min %)";
+	listItem->value = HeliEngineHealthIndex;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(VEH_ENGINEDEGRADE_CAPTIONS, onchange_car_enginedegrade_index);
+	listItem->wrap = false;
+	listItem->caption = "Car Engine Overheat Speed (% Per Mile)";
+	listItem->value = CarEngineDegradeIndex;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(VEH_ENGINEDEGRADE_CAPTIONS, onchange_bike_enginedegrade_index);
+	listItem->wrap = false;
+	listItem->caption = "Bike Engine Overheat Speed (% Per Mile)";
+	listItem->value = BikeEngineDegradeIndex;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(VEH_ENGINEDEGRADE_CAPTIONS, onchange_boat_enginedegrade_index);
+	listItem->wrap = false;
+	listItem->caption = "Boat Engine Overheat Speed (% Per Mile)";
+	listItem->value = BoatEngineDegradeIndex;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(VEH_ENGINEDEGRADE_CAPTIONS, onchange_plane_enginedegrade_index);
+	listItem->wrap = false;
+	listItem->caption = "Plane Engine Overheat Speed (% Per Mile)";
+	listItem->value = PlaneEngineDegradeIndex;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(VEH_ENGINEDEGRADE_CAPTIONS, onchange_heli_enginedegrade_index);
+	listItem->wrap = false;
+	listItem->caption = "Heli Engine Overheat Speed (% Per Mile)";
+	listItem->value = HeliEngineDegradeIndex;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(VEH_ENGINEHEALTH_CAPTIONS, onchange_restoration_speed_index);
+	listItem->wrap = false;
+	listItem->caption = "Cooling-down Speed (% Per Minute)";
+	listItem->value = RestorationSpeedIndex;
+	menuItems.push_back(listItem);
+
+	draw_generic_menu<int>(menuItems, &activeLineIndexEngineDegrade, caption, onconfirm_enginedegrade_menu, NULL, NULL);
 }
 
 bool onconfirm_fuel_menu(MenuItem<int> choice)
@@ -1101,25 +1200,25 @@ void process_fuel_menu(){
 	listItem->value = CarConsumptionIndex;
 	menuItems.push_back(listItem);
 
-	listItem = new SelectFromListMenuItem(VEH_BIKEFUEL_CAPTIONS, onchange_bike_consumption_index);
+	listItem = new SelectFromListMenuItem(VEH_CARFUEL_CAPTIONS, onchange_bike_consumption_index);
 	listItem->wrap = false;
 	listItem->caption = "Bike Fuel Consumption";
 	listItem->value = BikeConsumptionIndex;
 	menuItems.push_back(listItem);
 
-	listItem = new SelectFromListMenuItem(VEH_BOATFUEL_CAPTIONS, onchange_boat_consumption_index);
+	listItem = new SelectFromListMenuItem(VEH_CARFUEL_CAPTIONS, onchange_boat_consumption_index);
 	listItem->wrap = false;
 	listItem->caption = "Boat Fuel Consumption";
 	listItem->value = BoatConsumptionIndex;
 	menuItems.push_back(listItem);
 	
-	listItem = new SelectFromListMenuItem(VEH_PLANEFUEL_CAPTIONS, onchange_plane_consumption_index);
+	listItem = new SelectFromListMenuItem(VEH_CARFUEL_CAPTIONS, onchange_plane_consumption_index);
 	listItem->wrap = false;
 	listItem->caption = "Plane Fuel Consumption";
 	listItem->value = PlaneConsumptionIndex;
 	menuItems.push_back(listItem);
 
-	listItem = new SelectFromListMenuItem(VEH_HELIFUEL_CAPTIONS, onchange_heli_consumption_index);
+	listItem = new SelectFromListMenuItem(VEH_CARFUEL_CAPTIONS, onchange_heli_consumption_index);
 	listItem->wrap = false;
 	listItem->caption = "Heli Fuel Consumption";
 	listItem->value = HeliConsumptionIndex;
@@ -1484,6 +1583,9 @@ bool onconfirm_veh_menu(MenuItem<int> choice){
 		case 27: // road laws menu
 			process_road_laws_menu();
 			break;
+		case 33: // engine can degrade
+			process_engine_degrade_menu();
+			break;
 		default:
 			break;
 	}
@@ -1708,6 +1810,12 @@ void process_veh_menu(){
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureMileage;
 	menuItems.push_back(toggleItem);
+
+	item = new MenuItem<int>();
+	item->caption = "Engine Can Overheat";
+	item->value = i++;
+	item->isLeaf = false;
+	menuItems.push_back(item);
 		
 	draw_generic_menu<int>(menuItems, &activeLineIndexVeh, caption, onconfirm_veh_menu, NULL, NULL);
 }
@@ -2391,6 +2499,8 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	
 	road_laws(); ///// <--- ROAD LAWS /////
 
+	engine_can_degrade(); ///// <--- ENGINE CAN OVERHEAT /////
+
 /////////////////////////////////////////////  REMEMBER VEHICLES /////////////////////////////////////////////////////////////
 	
 	Ped playerPed_Tracking = PLAYER::PLAYER_PED_ID();
@@ -2546,7 +2656,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		GRAPHICS::GET_SCREEN_RESOLUTION(&screen_w, &screen_h);
 
 		if ((GAMEPLAY::GET_GAME_TIMER() - Time_tick_mileage) > 200) {
-			mileage = mileage + ((veh_mileage_speed * (1.60934 * 0.02)) * 6.6);
+			mileage = mileage + ((veh_mileage_speed * (1.60934 * 0.02)) * 6.6); 
 			Time_tick_mileage = GAMEPLAY::GET_GAME_TIMER();
 		}
 
@@ -2721,6 +2831,7 @@ void reset_vehicle_globals() {
 	activeLineIndexSpeed = 0;
 	activeLineIndexVisualize = 0;
 	activeLineIndexFuel = 0;
+	activeLineIndexEngineDegrade = 0;
 	activeLineIndexRemember = 0;
 	activeLineIndexRoadLaws = 0;
 
@@ -2772,6 +2883,18 @@ void reset_vehicle_globals() {
 	Random2Index = 1;
 	BarPositionIndex = 0;
 	
+	CarEngineHealthIndex = 11;
+	BikeEngineHealthIndex = 11;
+	PlaneEngineHealthIndex = 11;
+	HeliEngineHealthIndex = 11;
+	BoatEngineHealthIndex = 11;
+	RestorationSpeedIndex = 2;
+	CarEngineDegradeIndex = 5;
+	BikeEngineDegradeIndex = 5;
+	PlaneEngineDegradeIndex = 5;
+	HeliEngineDegradeIndex = 5;
+	BoatEngineDegradeIndex = 5;
+
 	featureAltitude = true;
 	featureSpeedOnFoot =
 	featureKMH =
@@ -2800,6 +2923,8 @@ void reset_vehicle_globals() {
 		featureNoVehFallOff =
 		featureWearHelmetOff =
 		featureDeleteTrackedVehicles_CharacterChanged = 
+		featureEngineDegrade = 
+		featureEngineHealthBar = 
 		featureVehLightsOn = false;
 
 	featureLockVehicleDoorsUpdated = true;
@@ -3088,6 +3213,8 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureDespawnScriptDisabled", &featureDespawnScriptDisabled, &featureDespawnScriptDisabledUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehLightsOn", &featureVehLightsOn, &featureVehLightsOnUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAntiTheftSystem", &featureAntiTheftSystem});
+	results->push_back(FeatureEnabledLocalDefinition{"featureEngineDegrade", &featureEngineDegrade});
+	results->push_back(FeatureEnabledLocalDefinition{"featureEngineHealthBar", &featureEngineHealthBar});
 }
 
 bool spawn_saved_car(int slot, std::string caption){
@@ -3535,6 +3662,17 @@ void add_vehicle_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"BoatConsumptionIndex", std::to_string(BoatConsumptionIndex)});
 	results->push_back(StringPairSettingDBRow{"PlaneConsumptionIndex", std::to_string(PlaneConsumptionIndex)});
 	results->push_back(StringPairSettingDBRow{"HeliConsumptionIndex", std::to_string(HeliConsumptionIndex)});
+	results->push_back(StringPairSettingDBRow{"CarEngineHealthIndex", std::to_string(CarEngineHealthIndex)});
+	results->push_back(StringPairSettingDBRow{"BikeEngineHealthIndex", std::to_string(BikeEngineHealthIndex)});
+	results->push_back(StringPairSettingDBRow{"BoatEngineHealthIndex", std::to_string(BoatEngineHealthIndex)});
+	results->push_back(StringPairSettingDBRow{"PlaneEngineHealthIndex", std::to_string(PlaneEngineHealthIndex)});
+	results->push_back(StringPairSettingDBRow{"HeliEngineHealthIndex", std::to_string(HeliEngineHealthIndex)});
+	results->push_back(StringPairSettingDBRow{"CarEngineDegradeIndex", std::to_string(CarEngineDegradeIndex)});
+	results->push_back(StringPairSettingDBRow{"BikeEngineDegradeIndex", std::to_string(BikeEngineDegradeIndex)});
+	results->push_back(StringPairSettingDBRow{"BoatEngineDegradeIndex", std::to_string(BoatEngineDegradeIndex)});
+	results->push_back(StringPairSettingDBRow{"PlaneEngineDegradeIndex", std::to_string(PlaneEngineDegradeIndex)});
+	results->push_back(StringPairSettingDBRow{"HeliEngineDegradeIndex", std::to_string(HeliEngineDegradeIndex)});
+	results->push_back(StringPairSettingDBRow{"RestorationSpeedIndex", std::to_string(RestorationSpeedIndex)});
 	results->push_back(StringPairSettingDBRow{"RefuelingSpeedIndex", std::to_string(RefuelingSpeedIndex)});
 	results->push_back(StringPairSettingDBRow{"FuelPriceIndex", std::to_string(FuelPriceIndex)});
 	results->push_back(StringPairSettingDBRow{"JerrycanPriceIndex", std::to_string(JerrycanPriceIndex)});
@@ -3656,6 +3794,39 @@ void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settin
 		}
 		else if (setting.name.compare("HeliConsumptionIndex") == 0){
 			HeliConsumptionIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("CarEngineHealthIndex") == 0) {
+		CarEngineHealthIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("BikeEngineHealthIndex") == 0) {
+		BikeEngineHealthIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("BoatEngineHealthIndex") == 0) {
+		BoatEngineHealthIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("PlaneEngineHealthIndex") == 0) {
+		PlaneEngineHealthIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("HeliEngineHealthIndex") == 0) {
+		HeliEngineHealthIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("CarEngineDegradeIndex") == 0) {
+		CarEngineDegradeIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("BikeEngineDegradeIndex") == 0) {
+		BikeEngineDegradeIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("BoatEngineDegradeIndex") == 0) {
+		BoatEngineDegradeIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("PlaneEngineDegradeIndex") == 0) {
+		PlaneEngineDegradeIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("HeliEngineDegradeIndex") == 0) {
+		HeliEngineDegradeIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("RestorationSpeedIndex") == 0) {
+		RestorationSpeedIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("RefuelingSpeedIndex") == 0){
 			RefuelingSpeedIndex = stoi(setting.value);
@@ -3866,6 +4037,61 @@ void onchange_plane_consumption_index(int value, SelectFromListMenuItem* source)
 
 void onchange_heli_consumption_index(int value, SelectFromListMenuItem* source){
 	HeliConsumptionIndex = value;
+	PositionChanged = true;
+}
+
+void onchange_car_enginehealth_index(int value, SelectFromListMenuItem* source) {
+	CarEngineHealthIndex = value;
+	PositionChanged = true;
+}
+
+void onchange_bike_enginehealth_index(int value, SelectFromListMenuItem* source) {
+	BikeEngineHealthIndex = value;
+	PositionChanged = true;
+}
+
+void onchange_boat_enginehealth_index(int value, SelectFromListMenuItem* source) {
+	BoatEngineHealthIndex = value;
+	PositionChanged = true;
+}
+
+void onchange_plane_enginehealth_index(int value, SelectFromListMenuItem* source) {
+	PlaneEngineHealthIndex = value;
+	PositionChanged = true;
+}
+
+void onchange_heli_enginehealth_index(int value, SelectFromListMenuItem* source) {
+	HeliEngineHealthIndex = value;
+	PositionChanged = true;
+}
+
+void onchange_car_enginedegrade_index(int value, SelectFromListMenuItem* source) {
+	CarEngineDegradeIndex = value;
+	PositionChanged = true;
+}
+
+void onchange_bike_enginedegrade_index(int value, SelectFromListMenuItem* source) {
+	BikeEngineDegradeIndex = value;
+	PositionChanged = true;
+}
+
+void onchange_boat_enginedegrade_index(int value, SelectFromListMenuItem* source) {
+	BoatEngineDegradeIndex = value;
+	PositionChanged = true;
+}
+
+void onchange_plane_enginedegrade_index(int value, SelectFromListMenuItem* source) {
+	PlaneEngineDegradeIndex = value;
+	PositionChanged = true;
+}
+
+void onchange_heli_enginedegrade_index(int value, SelectFromListMenuItem* source) {
+	HeliEngineDegradeIndex = value;
+	PositionChanged = true;
+}
+
+void onchange_restoration_speed_index(int value, SelectFromListMenuItem* source) {
+	RestorationSpeedIndex = value;
 	PositionChanged = true;
 }
 

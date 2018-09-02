@@ -252,17 +252,39 @@ void onchange_random2_index(int value, SelectFromListMenuItem* source);
 
 void onchange_barposition_index(int value, SelectFromListMenuItem* source);
 
-void onchange_speed_colours_r_index(int value, SelectFromListMenuItem* source);
+//void onchange_speed_colours_r_index(int value, SelectFromListMenuItem* source);
 
-void onchange_speed_colours_g_index(int value, SelectFromListMenuItem* source);
+//void onchange_speed_colours_g_index(int value, SelectFromListMenuItem* source);
 
-void onchange_speed_colours_b_index(int value, SelectFromListMenuItem* source);
+//void onchange_speed_colours_b_index(int value, SelectFromListMenuItem* source);
 
-void onchange_speed_colours2_r_index(int value, SelectFromListMenuItem* source);
+//void onchange_speed_colours2_r_index(int value, SelectFromListMenuItem* source);
 
-void onchange_speed_colours2_g_index(int value, SelectFromListMenuItem* source);
+//void onchange_speed_colours2_g_index(int value, SelectFromListMenuItem* source);
 
-void onchange_speed_colours2_b_index(int value, SelectFromListMenuItem* source);
+//void onchange_speed_colours2_b_index(int value, SelectFromListMenuItem* source);
+
+void onchange_car_enginehealth_index(int value, SelectFromListMenuItem* source);
+
+void onchange_bike_enginehealth_index(int value, SelectFromListMenuItem* source);
+
+void onchange_boat_enginehealth_index(int value, SelectFromListMenuItem* source);
+
+void onchange_plane_enginehealth_index(int value, SelectFromListMenuItem* source);
+
+void onchange_heli_enginehealth_index(int value, SelectFromListMenuItem* source);
+
+void onchange_car_enginedegrade_index(int value, SelectFromListMenuItem* source);
+
+void onchange_bike_enginedegrade_index(int value, SelectFromListMenuItem* source);
+
+void onchange_boat_enginedegrade_index(int value, SelectFromListMenuItem* source);
+
+void onchange_plane_enginedegrade_index(int value, SelectFromListMenuItem* source);
+
+void onchange_heli_enginedegrade_index(int value, SelectFromListMenuItem* source);
+
+void onchange_restoration_speed_index(int value, SelectFromListMenuItem* source);
 
 void onchange_fuel_colours_r_index(int value, SelectFromListMenuItem* source);
 

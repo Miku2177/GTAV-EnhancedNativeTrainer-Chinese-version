@@ -10,6 +10,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 #include "misc.h"
 #include "hotkeys.h"
+#include "world.h"
 #include <Psapi.h>
 
 //==================
@@ -71,6 +72,8 @@ bool phone_toggle_vehicle = false;
 bool featureFindDespawnPointer = false;
 bool featureFindDespawnPointerUpdated = false;
 bool despawnPointerDisabledMessage = true;
+bool featureFirstPersonDeathCamera = false;
+bool featureFirstPersonStuntJumpCamera = false;
 
 bool featureShowFPS = false;
 bool featureShowFPSUpdated = false;
@@ -92,6 +95,8 @@ GlobalTable globalTable;
 ScriptHeader* shopController;
 HINSTANCE _hinstDLL;
 bool enabledDespawnPointer = false;
+
+Camera StuntCam = NULL;
 
 // Main characters
 const Hash PLAYER_ZERO = 0xD7114C9;
@@ -363,7 +368,7 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 }
 
 void process_misc_menu(){
-	const int lineCount = 18;
+	const int lineCount = 20;
 
 	std::string caption = "Miscellaneous Options";
 
@@ -386,6 +391,8 @@ void process_misc_menu(){
 		{"Reset Player Model On Death", &featureResetPlayerModelOnDeath, nullptr, true},
 		{"Phone Bill", NULL, NULL, false},
 		{"Auto-Find Vehicle Despawn Pointer", &featureFindDespawnPointer, &featureFindDespawnPointerUpdated, true },
+		{"First Person Death Camera", &featureFirstPersonDeathCamera, NULL },
+		{"First Person Stunt Jump Camera", &featureFirstPersonStuntJumpCamera, NULL },
 		//{"Show FPS", &featureShowFPS, &featureShowFPSUpdated },
 	};
 
@@ -426,6 +433,8 @@ void reset_misc_globals(){
 	featurePhoneBillEnabled = false;
 	featureZeroBalance = false;
 	featureFindDespawnPointer = false;
+	featureFirstPersonDeathCamera = false;
+	featureFirstPersonStuntJumpCamera = false;
 	featureShowFPS = false;
 
 	featureRadioFreezeUpdated =
@@ -750,6 +759,42 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		if (!MISC_PHONE_BILL_VALUES.empty()) std::vector<float>(MISC_PHONE_BILL_VALUES).swap(emptyVec_f);
 		if (!MISC_PHONE_FREESECONDS_VALUES.empty()) std::vector<int>(MISC_PHONE_FREESECONDS_VALUES).swap(emptyVec);
 	}
+ 
+	// First Person Stunt Jump Camera
+	if (featureFirstPersonStuntJumpCamera) {
+		Ped stunt_player = PLAYER::PLAYER_PED_ID();
+
+		if (GAMEPLAY::IS_STUNT_JUMP_IN_PROGRESS() && StuntCam == NULL) {
+			Vector3 playerPosition = ENTITY::GET_ENTITY_COORDS(stunt_player, true);
+			Vector3 curRotation = ENTITY::GET_ENTITY_ROTATION(stunt_player, 2);
+
+			StuntCam = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_FLY_CAMERA", playerPosition.x, playerPosition.y, playerPosition.z, curRotation.x, curRotation.y, curRotation.z, 50.0, true, 2);
+
+			CAM::SET_CAM_ROT(StuntCam, curRotation.x, curRotation.y, curRotation.z, 2);
+			if (!PED::IS_PED_ON_ANY_BIKE(stunt_player)) {
+				CAM::ATTACH_CAM_TO_ENTITY(StuntCam, stunt_player, 0.0f, -0.15f, 0.67f, true);
+				CAM::POINT_CAM_AT_ENTITY(StuntCam, stunt_player, 0.0f, 0.0f, 0.67f, true);
+			}
+			if (PED::IS_PED_ON_ANY_BIKE(stunt_player)) {
+				CAM::ATTACH_CAM_TO_ENTITY(StuntCam, stunt_player, 0.0f, -0.01f, 0.37f, true);
+				CAM::POINT_CAM_AT_ENTITY(StuntCam, stunt_player, 0.0f, 0.0f, 0.37f, true);
+			}
+			CAM::RENDER_SCRIPT_CAMS(true, false, 0, true, true);
+			CAM::SET_CAM_ACTIVE(StuntCam, true);
+			ENTITY::SET_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID(), false);
+		}
+
+		if (!GAMEPLAY::IS_STUNT_JUMP_IN_PROGRESS() && StuntCam != NULL) {
+			ENTITY::SET_ENTITY_COLLISION(PLAYER::PLAYER_PED_ID(), 1, 1);
+			CAM::RENDER_SCRIPT_CAMS(false, false, 0, false, false);
+			CAM::DETACH_CAM(StuntCam);
+			CAM::SET_CAM_ACTIVE(StuntCam, false);
+			CAM::DESTROY_CAM(StuntCam, true);
+			StuntCam = NULL;
+			ENTITY::SET_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID(), true);
+		}
+	}
+
 
 	//Show FPS
 	//if (featureShowFPS)
@@ -859,7 +904,8 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 	results->push_back(FeatureEnabledLocalDefinition{"featureHiddenRadioStation", &featureEnableMissingRadioStation});
 
 	//results->push_back(FeatureEnabledLocalDefinition{ "featureFindDespawnPointer", &featureFindDespawnPointer, &featureFindDespawnPointerUpdated });
-
+	results->push_back(FeatureEnabledLocalDefinition{"featureFirstPersonDeathCamera", &featureFirstPersonDeathCamera});
+	results->push_back(FeatureEnabledLocalDefinition{"featureFirstPersonStuntJumpCamera", &featureFirstPersonStuntJumpCamera});
 	results->push_back(FeatureEnabledLocalDefinition{"featureMiscJellmanScenery", &featureMiscJellmanScenery});
 
 	results->push_back(FeatureEnabledLocalDefinition{"featureResetPlayerModelOnDeath", &featureResetPlayerModelOnDeath});

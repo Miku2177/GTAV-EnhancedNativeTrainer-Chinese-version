@@ -354,12 +354,11 @@ void fuel()
 							}
 						}
 					}
-
 					// BIKE & ATV
-					if (VEH_BIKEFUEL_VALUES[BikeConsumptionIndex] > 0) {
+					if (VEH_CARFUEL_VALUES[BikeConsumptionIndex] > 0) {
 						if ((GAMEPLAY::GET_GAME_TIMER() - Time_tick) > 200 && ((VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(veh)) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(veh))))) {
 							if (FUEL[0] > 0 && VEHICLES[0] == veh) {
-								FUEL[0] = FUEL[0] - (vehspeed / VEH_BIKEFUEL_VALUES[BikeConsumptionIndex]);
+								FUEL[0] = FUEL[0] - (vehspeed / VEH_CARFUEL_VALUES[BikeConsumptionIndex]);
 								Time_tick = GAMEPLAY::GET_GAME_TIMER();
 							}
 							else {
@@ -367,12 +366,11 @@ void fuel()
 							}
 						}
 					}
-
 					// PLANE
-					if (VEH_PLANEFUEL_VALUES[PlaneConsumptionIndex] > 0) {
+					if (VEH_CARFUEL_VALUES[PlaneConsumptionIndex] > 0) {
 						if ((GAMEPLAY::GET_GAME_TIMER() - Time_tick) > 200 && VEHICLE::IS_THIS_MODEL_A_PLANE(ENTITY::GET_ENTITY_MODEL(veh))) {
 							if (FUEL[0] > 0 && VEHICLES[0] == veh) {
-								FUEL[0] = FUEL[0] - (vehspeed / VEH_PLANEFUEL_VALUES[PlaneConsumptionIndex]);
+								FUEL[0] = FUEL[0] - (vehspeed / VEH_CARFUEL_VALUES[PlaneConsumptionIndex]);
 								Time_tick = GAMEPLAY::GET_GAME_TIMER();
 							}
 							else {
@@ -380,12 +378,11 @@ void fuel()
 							}
 						}
 					}
-
 					// BOAT
-					if (VEH_BOATFUEL_VALUES[BoatConsumptionIndex] > 0) {
+					if (VEH_CARFUEL_VALUES[BoatConsumptionIndex] > 0) {
 						if ((GAMEPLAY::GET_GAME_TIMER() - Time_tick) > 200 && VEHICLE::IS_THIS_MODEL_A_BOAT(ENTITY::GET_ENTITY_MODEL(veh))) {
 							if (FUEL[0] > 0 && VEHICLES[0] == veh) {
-								FUEL[0] = FUEL[0] - (vehspeed / VEH_BOATFUEL_VALUES[BoatConsumptionIndex]);
+								FUEL[0] = FUEL[0] - (vehspeed / VEH_CARFUEL_VALUES[BoatConsumptionIndex]);
 								Time_tick = GAMEPLAY::GET_GAME_TIMER();
 							}
 							else {
@@ -393,12 +390,11 @@ void fuel()
 							}
 						}
 					}
-
 					// HELICOPTER
-					if (VEH_HELIFUEL_VALUES[HeliConsumptionIndex] > 0) {
+					if (VEH_CARFUEL_VALUES[HeliConsumptionIndex] > 0) {
 						if ((GAMEPLAY::GET_GAME_TIMER() - Time_tick) > 200 && VEHICLE::IS_THIS_MODEL_A_HELI(ENTITY::GET_ENTITY_MODEL(veh))) {
 							if (FUEL[0] > 0 && VEHICLES[0] == veh) {
-								FUEL[0] = FUEL[0] - (vehspeed / VEH_HELIFUEL_VALUES[HeliConsumptionIndex]);
+								FUEL[0] = FUEL[0] - (vehspeed / VEH_CARFUEL_VALUES[HeliConsumptionIndex]);
 								Time_tick = GAMEPLAY::GET_GAME_TIMER();
 							}
 							else {
@@ -569,10 +565,10 @@ void fuel()
 		std::vector<int> emptyVec;
 		std::vector<double> emptyVec_d;
 		if (!VEH_CARFUEL_VALUES.empty()) std::vector<int>(VEH_CARFUEL_VALUES).swap(emptyVec);
-		if (!VEH_BIKEFUEL_VALUES.empty()) std::vector<int>(VEH_BIKEFUEL_VALUES).swap(emptyVec);
-		if (!VEH_PLANEFUEL_VALUES.empty()) std::vector<int>(VEH_PLANEFUEL_VALUES).swap(emptyVec);
-		if (!VEH_BOATFUEL_VALUES.empty()) std::vector<int>(VEH_BOATFUEL_VALUES).swap(emptyVec);
-		if (!VEH_HELIFUEL_VALUES.empty()) std::vector<int>(VEH_HELIFUEL_VALUES).swap(emptyVec);
+		//if (!VEH_BIKEFUEL_VALUES.empty()) std::vector<int>(VEH_BIKEFUEL_VALUES).swap(emptyVec);
+		//if (!VEH_PLANEFUEL_VALUES.empty()) std::vector<int>(VEH_PLANEFUEL_VALUES).swap(emptyVec);
+		//if (!VEH_BOATFUEL_VALUES.empty()) std::vector<int>(VEH_BOATFUEL_VALUES).swap(emptyVec);
+		//if (!VEH_HELIFUEL_VALUES.empty()) std::vector<int>(VEH_HELIFUEL_VALUES).swap(emptyVec);
 		if (!VEH_REFUELSPEED_VALUES.empty()) std::vector<double>(VEH_REFUELSPEED_VALUES).swap(emptyVec_d);
 		if (!VEH_FUELPRICE_VALUES.empty()) std::vector<double>(VEH_FUELPRICE_VALUES).swap(emptyVec_d);
 		if (!VEH_CANPRICE_VALUES.empty()) std::vector<double>(VEH_CANPRICE_VALUES).swap(emptyVec_d);
