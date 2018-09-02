@@ -61,8 +61,12 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 
 bool CompareMemory(const uint8_t* pData, const uint8_t* bMask, const char* sMask);
 
+extern bool featureFirstPersonDeathCamera;
+
 //intptr_t FindPattern(const char* bMask, const char* sMask);
 
 void EnableTracks(bool tracksVehicle, bool tracksPeds, bool deepTracksVehicle, bool deepTracksPed);
 
 void EnableSnow(bool featureSnow);
+
+void FirstPersonDeathCamera();

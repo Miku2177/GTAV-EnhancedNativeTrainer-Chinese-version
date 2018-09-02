@@ -30,6 +30,8 @@ int activeLineIndexClouds = 0;
 
 int r, g, b = -1;
 
+Camera DeathCam = NULL;
+
 bool featureRestrictedZones = true;
 
 bool featureWorldMoonGravity = false;
@@ -786,9 +788,9 @@ void update_world_features()
 
 	// No Police Blips
 	if (featureNoPoliceBlips) { // && !police_blips_toogle){
-			PLAYER::SET_POLICE_RADAR_BLIPS(false);
-			//police_blips_toogle = true;
-		}
+		PLAYER::SET_POLICE_RADAR_BLIPS(false);
+		//police_blips_toogle = true;
+	}
 
 	if (!featureNoPoliceBlips) { // && police_blips_toogle) {
 		PLAYER::SET_POLICE_RADAR_BLIPS(true);
@@ -801,11 +803,11 @@ void update_world_features()
 		fullmap_toogle = true;
 	}
 
-	if (!featureFullMap && fullmap_toogle) { 
+	if (!featureFullMap && fullmap_toogle) {
 		UI::_SET_MINIMAP_REVEALED(false);
 		fullmap_toogle = false;
 	}
-	
+
 	// Radar Map Size
 	if (WORLD_RADAR_MAP_VALUES[RadarMapIndex] == 1 && radar_map_toogle_1 == false) {
 		UI::_SET_RADAR_BIGMAP_ENABLED(false, false);
@@ -833,7 +835,7 @@ void update_world_features()
 		UI::_SET_MINIMAP_REVEALED(true);
 		fullmap_toogle = true;
 	}
-	
+
 	// Show Bolingbroke Penitentiary On Map
 	if (featurePenitentiaryMap) {
 		UI::SET_RADAR_AS_INTERIOR_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("V_FakePrison"), 1700, 2580, 0, 0);
@@ -850,6 +852,8 @@ void update_world_features()
 		featureZancudoMapUpdated = true;
 	}
 	
+	if (featureFirstPersonDeathCamera) FirstPersonDeathCamera();
+
 	// Bus Interior Light On At Night && NPC No Lights && NPC Neon Lights && NPC Dirty Vehicles && NPC Damaged Vehicles && NPC No Gravity Vehicles && NPC Vehicles Reduced Grip && NPC Vehicle Speed
 	if (featureBusLight || featureNPCNoLights || featureNPCNeonLights || featureDirtyVehicles || WORLD_DAMAGED_VEHICLES_VALUES[DamagedVehiclesIndex] > 0 || featureNPCNoGravityVehicles || featureNPCReducedGripVehicles ||
 		WORLD_NPC_VEHICLESPEED_VALUES[NPCVehicleSpeedIndex] > 0) {
@@ -1302,6 +1306,33 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 		}
 		VirtualProtect((void*)pedTrackTypes, 1, PAGE_EXECUTE_READWRITE, nullptr);
 		*(uint8_t *)(pedTrackTypes + 1) = deepTracksPed ? 0x13 : 0x14;
+	}
+
+	void FirstPersonDeathCamera() {
+		Ped dead_player = PLAYER::PLAYER_PED_ID();
+
+		if (ENTITY::GET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID()) < 1 && DeathCam == NULL) {
+			Vector3 playerPosition = ENTITY::GET_ENTITY_COORDS(dead_player, true);
+			Vector3 curRotation = ENTITY::GET_ENTITY_ROTATION(dead_player, 2);
+
+			DeathCam = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_FLY_CAMERA", playerPosition.x, playerPosition.y, playerPosition.z, curRotation.x, curRotation.y, curRotation.z, 50.0, true, 2);
+
+			CAM::ATTACH_CAM_TO_ENTITY(DeathCam, dead_player, 0.0f, -0.01f, 0.00f, true);
+			CAM::POINT_CAM_AT_ENTITY(DeathCam, dead_player, 0.0f, 0.0f, 0.00f, true);
+			CAM::RENDER_SCRIPT_CAMS(true, false, 0, true, true);
+			CAM::SET_CAM_ACTIVE(DeathCam, true);
+			ENTITY::SET_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID(), false);
+		}
+
+		if (ENTITY::GET_ENTITY_HEALTH(dead_player) > 0 && !PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID())) {
+			ENTITY::SET_ENTITY_COLLISION(PLAYER::PLAYER_PED_ID(), 1, 1);
+			CAM::RENDER_SCRIPT_CAMS(false, false, 0, false, false);
+			CAM::DETACH_CAM(DeathCam);
+			CAM::SET_CAM_ACTIVE(DeathCam, false);
+			CAM::DESTROY_CAM(DeathCam, true);
+			DeathCam = NULL;
+			ENTITY::SET_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID(), true);
+		}
 	}
 
 	// Snow

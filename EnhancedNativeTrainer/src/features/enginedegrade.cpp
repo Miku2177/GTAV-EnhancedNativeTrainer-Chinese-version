@@ -1,0 +1,273 @@
+/*
+Some of this code began its life as a part of GTA V SCRIPT HOOK SDK.
+http://dev-c.com
+(C) Alexander Blade 2015
+
+It is now part of the Enhanced Native Trainer project.
+https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
+(C) Rob Pridham and fellow contributors 2015
+*/
+
+#include "vehicles.h"
+#include "enginedegrade.h"
+
+#include "..\..\resource.h"
+#include "..\features\vehmodmenu.h"
+#include "hotkeys.h"
+#include "script.h"
+#include "..\ui_support\menu_functions.h"
+#include "..\io\config_io.h"
+#include "..\debug\debuglog.h"
+#include "area_effect.h"
+
+#include <fstream>
+#include "vehicle_weapons.h"
+
+#include <string>
+#include <iterator>
+#include <iostream>
+#include <algorithm>
+#include <array>
+#include <vector>
+#include <cstdlib>
+
+// Engine Can Overheat Variables
+std::vector<Vehicle> E_VEHICLES;
+std::vector<float> E_HEALTH;
+
+int E_Time_tick = 0;
+int E_Time_tick_mileage = 0;
+float e_mileage = 0;
+
+int EngineCooling_secs_passed, EngineCooling_secs_curr, EngineCooling_seconds = -1;
+
+bool featureEngineDegrade = false;
+bool featureEngineHealthBar = false;
+
+int CarEngineHealthIndex = 11;
+bool CarEngineHealthChanged = true;
+int BikeEngineHealthIndex = 11;
+bool BikeEngineHealthChanged = true;
+int PlaneEngineHealthIndex = 11;
+bool PlaneEngineHealthChanged = true;
+int HeliEngineHealthIndex = 11;
+bool HeliEngineHealthChanged = true;
+int BoatEngineHealthIndex = 11;
+bool BoatEngineHealthChanged = true;
+int RestorationSpeedIndex = 2;
+bool RestorationSpeedChanged = true;
+int CarEngineDegradeIndex = 5;
+bool CarEngineDegradeChanged = true;
+int BikeEngineDegradeIndex = 5;
+bool BikeEngineDegradeChanged = true;
+int PlaneEngineDegradeIndex = 5;
+bool PlaneEngineDegradeChanged = true;
+int HeliEngineDegradeIndex = 5;
+bool HeliEngineDegradeChanged = true;
+int BoatEngineDegradeIndex = 5;
+bool BoatEngineDegradeChanged = true;
+//
+
+//////////////////////////////////////////////// ENGINE CAN DEGRADE/OVERHEAT /////////////////////////////////////////////////////////////////
+
+void engine_can_degrade()
+{
+	if (featureEngineDegrade) {
+
+		Player player = PLAYER::PLAYER_ID();
+		Ped playerPed = PLAYER::PLAYER_PED_ID();
+		
+		float randomize = -1;
+
+		//Vector3 playerPosition = ENTITY::GET_ENTITY_COORDS(playerPed, false);
+
+		// CHECK IF ARRAY IS NOT EMPTY
+		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && E_VEHICLES.empty()) {
+			Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
+			E_VEHICLES.push_back(veh);
+			// UP MARGIN + DOWN MARGIN
+			if (VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(veh)) && VEH_ENGINEHEALTH_VALUES[CarEngineHealthIndex] < 100) randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[CarEngineHealthIndex]);
+			if (VEH_ENGINEHEALTH_VALUES[CarEngineHealthIndex] == 100) randomize = 100;
+			if (VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(veh)) && VEH_ENGINEHEALTH_VALUES[BikeEngineHealthIndex] < 100) randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[BikeEngineHealthIndex]);
+			if (VEH_ENGINEHEALTH_VALUES[BikeEngineHealthIndex] == 100) randomize = 100;
+			if (VEHICLE::IS_THIS_MODEL_A_PLANE(ENTITY::GET_ENTITY_MODEL(veh)) && VEH_ENGINEHEALTH_VALUES[PlaneEngineHealthIndex] < 100) randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[PlaneEngineHealthIndex]);
+			if (VEH_ENGINEHEALTH_VALUES[PlaneEngineHealthIndex] == 100) randomize = 100;
+			if (VEHICLE::IS_THIS_MODEL_A_BOAT(ENTITY::GET_ENTITY_MODEL(veh)) && VEH_ENGINEHEALTH_VALUES[BoatEngineHealthIndex] < 100) randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[BoatEngineHealthIndex]);
+			if (VEH_ENGINEHEALTH_VALUES[BoatEngineHealthIndex] == 100) randomize = 100;
+			if (VEHICLE::IS_THIS_MODEL_A_HELI(ENTITY::GET_ENTITY_MODEL(veh)) && VEH_ENGINEHEALTH_VALUES[HeliEngineHealthIndex] < 100) randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[HeliEngineHealthIndex]);
+			if (VEH_ENGINEHEALTH_VALUES[HeliEngineHealthIndex] == 100) randomize = 100;
+			if (randomize > 100) randomize = 100;
+			E_HEALTH.push_back(randomize);
+		}
+
+		if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) e_mileage = 0;
+
+		// ENTERED VEHICLE
+		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
+			Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
+			float vehspeed = ENTITY::GET_ENTITY_SPEED(veh);
+
+			if (E_VEHICLES[0] != veh) {
+				bool been_used_before = false;
+				for (int i = 0; i < E_VEHICLES.size(); i++) {
+					if (E_VEHICLES[i] == veh) {
+						std::swap(E_VEHICLES[0], E_VEHICLES[i]);
+						std::swap(E_HEALTH[0], E_HEALTH[i]);
+						been_used_before = true;
+					}
+				}
+
+				if (!been_used_before) {
+					E_VEHICLES.push_back(veh);
+					if (VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(veh)) && VEH_ENGINEHEALTH_VALUES[CarEngineHealthIndex] < 100) randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[CarEngineHealthIndex]);
+					if (VEH_ENGINEHEALTH_VALUES[CarEngineHealthIndex] == 100) randomize = 100;
+					if (VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(veh)) && VEH_ENGINEHEALTH_VALUES[BikeEngineHealthIndex] < 100) randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[BikeEngineHealthIndex]);
+					if (VEH_ENGINEHEALTH_VALUES[BikeEngineHealthIndex] == 100) randomize = 100;
+					if (VEHICLE::IS_THIS_MODEL_A_PLANE(ENTITY::GET_ENTITY_MODEL(veh)) && VEH_ENGINEHEALTH_VALUES[PlaneEngineHealthIndex] < 100) randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[PlaneEngineHealthIndex]);
+					if (VEH_ENGINEHEALTH_VALUES[PlaneEngineHealthIndex] == 100) randomize = 100;
+					if (VEHICLE::IS_THIS_MODEL_A_BOAT(ENTITY::GET_ENTITY_MODEL(veh)) && VEH_ENGINEHEALTH_VALUES[BoatEngineHealthIndex] < 100) randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[BoatEngineHealthIndex]);
+					if (VEH_ENGINEHEALTH_VALUES[BoatEngineHealthIndex] == 100) randomize = 100;
+					if (VEHICLE::IS_THIS_MODEL_A_HELI(ENTITY::GET_ENTITY_MODEL(veh)) && VEH_ENGINEHEALTH_VALUES[HeliEngineHealthIndex] < 100) randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[HeliEngineHealthIndex]);
+					if (VEH_ENGINEHEALTH_VALUES[HeliEngineHealthIndex] == 100) randomize = 100;
+					if (randomize > 100) randomize = 100;
+					E_HEALTH.push_back(randomize);
+					std::swap(E_VEHICLES[0], E_VEHICLES.back());
+					std::swap(E_HEALTH[0], E_HEALTH.back());
+				}
+			}
+
+			// CALCULATING MILEAGE
+			if ((GAMEPLAY::GET_GAME_TIMER() - E_Time_tick_mileage) > 200) {
+				e_mileage = e_mileage + floor(((vehspeed * (1.60934 * 0.02)) * 6.6) * 1) / 1;
+				E_Time_tick_mileage = GAMEPLAY::GET_GAME_TIMER();
+				if (e_mileage > 31) e_mileage = 0;
+			}
+
+			// ENGINE HEALTH DEGRADATION
+			// CAR
+			if (VEH_ENGINEHEALTH_VALUES[CarEngineHealthIndex] > 0 && vehspeed > 0) {
+				VEHICLE::SET_VEHICLE_ENGINE_CAN_DEGRADE(E_VEHICLES[0], true);
+				if ((GAMEPLAY::GET_GAME_TIMER() - E_Time_tick) > 200 && VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(veh))) {
+					if (E_HEALTH[0] > 0 && E_VEHICLES[0] == veh) {
+						if (e_mileage > 14 && e_mileage < 31) {
+							E_HEALTH[0] = (E_HEALTH[0] - (VEH_ENGINEDEGRADE_VALUES[CarEngineDegradeIndex] / 40));
+							e_mileage = 31;
+						}
+						E_Time_tick = GAMEPLAY::GET_GAME_TIMER();
+					}
+					else {
+						E_HEALTH[0] = 0;
+					}
+				}
+			}
+			// BIKE
+			if (VEH_ENGINEHEALTH_VALUES[BikeEngineHealthIndex] > 0 && vehspeed > 0) {
+				VEHICLE::SET_VEHICLE_ENGINE_CAN_DEGRADE(E_VEHICLES[0], true);
+				if ((GAMEPLAY::GET_GAME_TIMER() - E_Time_tick) > 200 && VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(veh))) {
+					if (E_HEALTH[0] > 0 && E_VEHICLES[0] == veh) {
+						if (e_mileage > 14 && e_mileage < 26) {
+							E_HEALTH[0] = (E_HEALTH[0] - (VEH_ENGINEDEGRADE_VALUES[BikeEngineDegradeIndex] / 40));
+							e_mileage = 27;
+						}
+						E_Time_tick = GAMEPLAY::GET_GAME_TIMER();
+					}
+					else {
+						E_HEALTH[0] = 0;
+					}
+				}
+			}
+			// BOAT
+			if (VEH_ENGINEHEALTH_VALUES[BoatEngineHealthIndex] > 0 && vehspeed > 0) {
+				VEHICLE::SET_VEHICLE_ENGINE_CAN_DEGRADE(E_VEHICLES[0], true);
+				if ((GAMEPLAY::GET_GAME_TIMER() - E_Time_tick) > 200 && VEHICLE::IS_THIS_MODEL_A_BOAT(ENTITY::GET_ENTITY_MODEL(veh))) {
+					if (E_HEALTH[0] > 0 && E_VEHICLES[0] == veh) {
+						if (e_mileage > 14 && e_mileage < 26) {
+							E_HEALTH[0] = (E_HEALTH[0] - (VEH_ENGINEDEGRADE_VALUES[BoatEngineDegradeIndex] / 40));
+							e_mileage = 27;
+						}
+						E_Time_tick = GAMEPLAY::GET_GAME_TIMER();
+					}
+					else {
+						E_HEALTH[0] = 0;
+					}
+				}
+			}
+			// PLANE
+			if (VEH_ENGINEHEALTH_VALUES[PlaneEngineHealthIndex] > 0 && vehspeed > 0) {
+				VEHICLE::SET_VEHICLE_ENGINE_CAN_DEGRADE(E_VEHICLES[0], true);
+				if ((GAMEPLAY::GET_GAME_TIMER() - E_Time_tick) > 200 && VEHICLE::IS_THIS_MODEL_A_PLANE(ENTITY::GET_ENTITY_MODEL(veh))) {
+					if (E_HEALTH[0] > 0 && E_VEHICLES[0] == veh) {
+						if (e_mileage > 14 && e_mileage < 26) {
+							E_HEALTH[0] = (E_HEALTH[0] - (VEH_ENGINEDEGRADE_VALUES[PlaneEngineDegradeIndex] / 40));
+							e_mileage = 27;
+						}
+						E_Time_tick = GAMEPLAY::GET_GAME_TIMER();
+					}
+					else {
+						E_HEALTH[0] = 0;
+					}
+				}
+			}
+			// HELI
+			if (VEH_ENGINEHEALTH_VALUES[HeliEngineHealthIndex] > 0 && vehspeed > 0) {
+				VEHICLE::SET_VEHICLE_ENGINE_CAN_DEGRADE(E_VEHICLES[0], true);
+				if ((GAMEPLAY::GET_GAME_TIMER() - E_Time_tick) > 200 && VEHICLE::IS_THIS_MODEL_A_HELI(ENTITY::GET_ENTITY_MODEL(veh))) {
+					if (E_HEALTH[0] > 0 && E_VEHICLES[0] == veh) {
+						if (e_mileage > 14 && e_mileage < 26) {
+							E_HEALTH[0] = (E_HEALTH[0] - (VEH_ENGINEDEGRADE_VALUES[HeliEngineDegradeIndex] / 40));
+							e_mileage = 27;
+						}
+						E_Time_tick = GAMEPLAY::GET_GAME_TIMER();
+					}
+					else {
+						E_HEALTH[0] = 0;
+					}
+				}
+			}
+
+			// ENGINE HEALTH BAR
+			if (featureEngineHealthBar) {
+				if (E_HEALTH[0] > 40) GRAPHICS::DRAW_RECT(0.0, 1.0, E_HEALTH[0] / 50, 0.005, 100, 225, 137, 200);
+				if (E_HEALTH[0] < 41 && E_HEALTH[0] > 10) GRAPHICS::DRAW_RECT(0.00, 1.0, E_HEALTH[0] / 50, 0.005, 255, 255, 0, 200);
+				if (E_HEALTH[0] < 11) GRAPHICS::DRAW_RECT(0.00, 1.0, E_HEALTH[0] / 50, 0.005, 255, 0, 0, 200);
+			}
+
+			// ENGINE HEALTH LEVEL
+			VEHICLE::SET_VEHICLE_ENGINE_HEALTH(E_VEHICLES[0], E_HEALTH[0] * 10);
+
+			if (E_HEALTH[0] == 0) {
+					VEHICLE::SET_VEHICLE_ENGINE_ON(E_VEHICLES[0], false, true);
+			}
+		} // in vehicle
+		
+		// ENGINE COOLING-DOWN
+		if (VEH_ENGINEHEALTH_VALUES[RestorationSpeedIndex] > 0 && !E_VEHICLES.empty()) {
+			EngineCooling_secs_passed = clock() / CLOCKS_PER_SEC;
+			if (((clock() / CLOCKS_PER_SEC) - EngineCooling_secs_curr) != 0) {
+				EngineCooling_seconds = EngineCooling_seconds + 1;
+				EngineCooling_secs_curr = EngineCooling_secs_passed;
+			}
+
+			if (EngineCooling_seconds > 6) EngineCooling_seconds = 0;
+
+			if (EngineCooling_seconds == 6 && (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) || ENTITY::GET_ENTITY_SPEED(PED::GET_VEHICLE_PED_IS_IN(playerPed, false)) < 1)) {
+				for (int i = 0; i < E_VEHICLES.size(); i++) {
+					if (E_HEALTH[i] < 100) {
+						if (VEH_ENGINEHEALTH_VALUES[RestorationSpeedIndex] != 5) E_HEALTH[i] = E_HEALTH[i] + (VEH_ENGINEHEALTH_VALUES[RestorationSpeedIndex] / 10);
+						else E_HEALTH[i] = E_HEALTH[i] + 0.5;
+						VEHICLE::SET_VEHICLE_ENGINE_HEALTH(E_VEHICLES[i], E_HEALTH[i] * 10);
+					}
+				}
+				EngineCooling_seconds = 7;
+			}
+		}
+	}
+	else {
+		std::vector<int> emptyVec;
+		std::vector<double> emptyVec_d;
+		if (!VEH_ENGINEHEALTH_VALUES.empty()) std::vector<int>(VEH_ENGINEHEALTH_VALUES).swap(emptyVec);
+		if (!VEH_ENGINEDEGRADE_VALUES.empty()) std::vector<double>(VEH_ENGINEDEGRADE_VALUES).swap(emptyVec_d);
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

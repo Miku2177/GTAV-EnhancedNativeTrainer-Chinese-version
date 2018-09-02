@@ -130,6 +130,9 @@
     <ClCompile Include="src\features\speed_altitude.cpp">
       <Filter>src\features</Filter>
     </ClCompile>
+    <ClCompile Include="src\features\enginedegrade.cpp">
+      <Filter>src\features</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\features\aimbot_esp.h">
@@ -270,6 +273,7 @@
     <ClInclude Include="src\features\interior_props.h">
       <Filter>inc\features</Filter>
     </ClInclude>
+    <ClInclude Include="src\features\enginedegrade.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />
