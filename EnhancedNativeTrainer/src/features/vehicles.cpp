@@ -1059,7 +1059,7 @@ bool onconfirm_enginedegrade_menu(MenuItem<int> choice)
 }
 
 void process_engine_degrade_menu() {
-	std::string caption = "Engine Can Overheat Options";
+	std::string caption = "Engine Damage Options";
 
 	std::vector<MenuItem<int>*> menuItems;
 
@@ -1079,6 +1079,12 @@ void process_engine_degrade_menu() {
 	toggleItem->caption = "Show Health Bar";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureEngineHealthBar;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Limp Mode";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureLimpMode;
 	menuItems.push_back(toggleItem);
 
 	listItem = new SelectFromListMenuItem(VEH_ENGINEHEALTH_CAPTIONS, onchange_car_enginehealth_index);
@@ -1113,37 +1119,37 @@ void process_engine_degrade_menu() {
 
 	listItem = new SelectFromListMenuItem(VEH_ENGINEDEGRADE_CAPTIONS, onchange_car_enginedegrade_index);
 	listItem->wrap = false;
-	listItem->caption = "Car Engine Overheat Speed (% Per Mile)";
+	listItem->caption = "Car Engine Damage Speed (% Per Mile)";
 	listItem->value = CarEngineDegradeIndex;
 	menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(VEH_ENGINEDEGRADE_CAPTIONS, onchange_bike_enginedegrade_index);
 	listItem->wrap = false;
-	listItem->caption = "Bike Engine Overheat Speed (% Per Mile)";
+	listItem->caption = "Bike Engine Damage Speed (% Per Mile)";
 	listItem->value = BikeEngineDegradeIndex;
 	menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(VEH_ENGINEDEGRADE_CAPTIONS, onchange_boat_enginedegrade_index);
 	listItem->wrap = false;
-	listItem->caption = "Boat Engine Overheat Speed (% Per Mile)";
+	listItem->caption = "Boat Engine Damage Speed (% Per Mile)";
 	listItem->value = BoatEngineDegradeIndex;
 	menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(VEH_ENGINEDEGRADE_CAPTIONS, onchange_plane_enginedegrade_index);
 	listItem->wrap = false;
-	listItem->caption = "Plane Engine Overheat Speed (% Per Mile)";
+	listItem->caption = "Plane Engine Damage Speed (% Per Mile)";
 	listItem->value = PlaneEngineDegradeIndex;
 	menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(VEH_ENGINEDEGRADE_CAPTIONS, onchange_heli_enginedegrade_index);
 	listItem->wrap = false;
-	listItem->caption = "Heli Engine Overheat Speed (% Per Mile)";
+	listItem->caption = "Heli Engine Damage Speed (% Per Mile)";
 	listItem->value = HeliEngineDegradeIndex;
 	menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(VEH_ENGINEHEALTH_CAPTIONS, onchange_restoration_speed_index);
 	listItem->wrap = false;
-	listItem->caption = "Cooling-down Speed (% Per Minute)";
+	listItem->caption = "Engine Recovery Speed (% Per Minute)";
 	listItem->value = RestorationSpeedIndex;
 	menuItems.push_back(listItem);
 
@@ -1812,7 +1818,7 @@ void process_veh_menu(){
 	menuItems.push_back(toggleItem);
 
 	item = new MenuItem<int>();
-	item->caption = "Engine Can Overheat";
+	item->caption = "Engine Damage";
 	item->value = i++;
 	item->isLeaf = false;
 	menuItems.push_back(item);
@@ -2925,6 +2931,7 @@ void reset_vehicle_globals() {
 		featureDeleteTrackedVehicles_CharacterChanged = 
 		featureEngineDegrade = 
 		featureEngineHealthBar = 
+		featureLimpMode = 
 		featureVehLightsOn = false;
 
 	featureLockVehicleDoorsUpdated = true;
@@ -3215,6 +3222,7 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureAntiTheftSystem", &featureAntiTheftSystem});
 	results->push_back(FeatureEnabledLocalDefinition{"featureEngineDegrade", &featureEngineDegrade});
 	results->push_back(FeatureEnabledLocalDefinition{"featureEngineHealthBar", &featureEngineHealthBar});
+	results->push_back(FeatureEnabledLocalDefinition{"featureLimpMode", &featureLimpMode});
 }
 
 bool spawn_saved_car(int slot, std::string caption){

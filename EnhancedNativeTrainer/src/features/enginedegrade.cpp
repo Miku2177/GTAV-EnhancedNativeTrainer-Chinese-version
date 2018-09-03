@@ -31,7 +31,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include <vector>
 #include <cstdlib>
 
-// Engine Can Overheat Variables
+// Engine Damage Variables
 std::vector<Vehicle> E_VEHICLES;
 std::vector<float> E_HEALTH;
 
@@ -43,6 +43,7 @@ int EngineCooling_secs_passed, EngineCooling_secs_curr, EngineCooling_seconds = 
 
 bool featureEngineDegrade = false;
 bool featureEngineHealthBar = false;
+bool featureLimpMode = false;
 
 int CarEngineHealthIndex = 11;
 bool CarEngineHealthChanged = true;
@@ -68,7 +69,7 @@ int BoatEngineDegradeIndex = 5;
 bool BoatEngineDegradeChanged = true;
 //
 
-//////////////////////////////////////////////// ENGINE CAN DEGRADE/OVERHEAT /////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////// ENGINE DAMAGE /////////////////////////////////////////////////////////////////
 
 void engine_can_degrade()
 {
@@ -78,8 +79,6 @@ void engine_can_degrade()
 		Ped playerPed = PLAYER::PLAYER_PED_ID();
 		
 		float randomize = -1;
-
-		//Vector3 playerPosition = ENTITY::GET_ENTITY_COORDS(playerPed, false);
 
 		// CHECK IF ARRAY IS NOT EMPTY
 		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && E_VEHICLES.empty()) {
@@ -227,20 +226,26 @@ void engine_can_degrade()
 
 			// ENGINE HEALTH BAR
 			if (featureEngineHealthBar) {
-				if (E_HEALTH[0] > 40) GRAPHICS::DRAW_RECT(0.0, 1.0, E_HEALTH[0] / 50, 0.005, 100, 225, 137, 200);
-				if (E_HEALTH[0] < 41 && E_HEALTH[0] > 10) GRAPHICS::DRAW_RECT(0.00, 1.0, E_HEALTH[0] / 50, 0.005, 255, 255, 0, 200);
-				if (E_HEALTH[0] < 11) GRAPHICS::DRAW_RECT(0.00, 1.0, E_HEALTH[0] / 50, 0.005, 255, 0, 0, 200);
+				if (E_HEALTH[0] > 40) GRAPHICS::DRAW_RECT(0.0, 1.0, E_HEALTH[0] / 50, 0.005, 100, 225, 137, 110);
+				if (E_HEALTH[0] < 41 && E_HEALTH[0] > 10) GRAPHICS::DRAW_RECT(0.00, 1.0, E_HEALTH[0] / 50, 0.005, 255, 255, 0, 110);
+				if (E_HEALTH[0] < 11) GRAPHICS::DRAW_RECT(0.00, 1.0, E_HEALTH[0] / 50, 0.005, 255, 0, 0, 110);
 			}
 
 			// ENGINE HEALTH LEVEL
 			VEHICLE::SET_VEHICLE_ENGINE_HEALTH(E_VEHICLES[0], E_HEALTH[0] * 10);
-
-			if (E_HEALTH[0] == 0) {
-					VEHICLE::SET_VEHICLE_ENGINE_ON(E_VEHICLES[0], false, true);
+			if (E_HEALTH[0] == 0) VEHICLE::SET_VEHICLE_ENGINE_ON(E_VEHICLES[0], false, true);
+			
+			// LIMP MODE
+			if (featureLimpMode) {
+				if (vehspeed < 30 && E_HEALTH[0] > 10 && E_HEALTH[0] < 41) ENTITY::SET_ENTITY_MAX_SPEED(E_VEHICLES[0], 27); // 60 MPH
+				if (E_HEALTH[0] < 11) ENTITY::SET_ENTITY_MAX_SPEED(E_VEHICLES[0], 18); // 40 MPH
+				if (E_HEALTH[0] > 40) ENTITY::SET_ENTITY_MAX_SPEED(E_VEHICLES[0], 15000.0);
 			}
+			else ENTITY::SET_ENTITY_MAX_SPEED(veh, 15000.0);
+
 		} // in vehicle
 		
-		// ENGINE COOLING-DOWN
+		// ENGINE RECOVERY
 		if (VEH_ENGINEHEALTH_VALUES[RestorationSpeedIndex] > 0 && !E_VEHICLES.empty()) {
 			EngineCooling_secs_passed = clock() / CLOCKS_PER_SEC;
 			if (((clock() / CLOCKS_PER_SEC) - EngineCooling_secs_curr) != 0) {
@@ -253,8 +258,9 @@ void engine_can_degrade()
 			if (EngineCooling_seconds == 6 && (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) || ENTITY::GET_ENTITY_SPEED(PED::GET_VEHICLE_PED_IS_IN(playerPed, false)) < 1)) {
 				for (int i = 0; i < E_VEHICLES.size(); i++) {
 					if (E_HEALTH[i] < 100) {
-						if (VEH_ENGINEHEALTH_VALUES[RestorationSpeedIndex] != 5) E_HEALTH[i] = E_HEALTH[i] + (VEH_ENGINEHEALTH_VALUES[RestorationSpeedIndex] / 10);
-						else E_HEALTH[i] = E_HEALTH[i] + 0.5;
+						if (VEH_ENGINEHEALTH_VALUES[RestorationSpeedIndex] != 5 && VEH_ENGINEHEALTH_VALUES[RestorationSpeedIndex] != 2) E_HEALTH[i] = E_HEALTH[i] + (VEH_ENGINEHEALTH_VALUES[RestorationSpeedIndex] / 10);
+						if (VEH_ENGINEHEALTH_VALUES[RestorationSpeedIndex] == 5) E_HEALTH[i] = E_HEALTH[i] + 0.5;
+						if (VEH_ENGINEHEALTH_VALUES[RestorationSpeedIndex] == 2) E_HEALTH[i] = E_HEALTH[i] + 0.2;
 						VEHICLE::SET_VEHICLE_ENGINE_HEALTH(E_VEHICLES[i], E_HEALTH[i] * 10);
 					}
 				}

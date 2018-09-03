@@ -423,6 +423,7 @@ void road_laws()
 			}
 
 			if (been_seen_by_a_cop == true)	{ 
+				VEHICLE::DISABLE_VEHICLE_IMPACT_EXPLOSION_ACTIVATION(fine_cop_car, false);
 				VEHICLE::SET_VEHICLE_SIREN(fine_cop_car, true);
 				veh_cop_in_coords = ENTITY::GET_ENTITY_COORDS(fine_cop_car, true);
 				vehcoplaws_speed = ENTITY::GET_ENTITY_SPEED(fine_cop_car);
@@ -457,7 +458,8 @@ void road_laws()
 			// You'll be fined if you don't move
 			if ((vehroadlaws_speed < 1 && vehcoplaws_speed < 1 && tempgotcha_x < 100 && tempgotcha_y < 100 && been_seen_by_a_cop == true) || (been_seen_by_a_cop == true && !PED::IS_PED_IN_VEHICLE(cop_that_fines_you, fine_cop_car, true)))
 			{
-				VEHICLE::SET_VEHICLE_SIREN(fine_cop_car, false);
+				//VEHICLE::SET_VEHICLE_SIREN(fine_cop_car, false);
+				VEHICLE::DISABLE_VEHICLE_IMPACT_EXPLOSION_ACTIVATION(fine_cop_car, true);
 				SinceStop_secs_passed = clock() / CLOCKS_PER_SEC;
 				if (((clock() / CLOCKS_PER_SEC) - SinceStop_secs_curr) != 0) {
 					if (Stop_seconds < 5 && been_seen_by_a_cop == true) Stop_seconds = Stop_seconds + 1;
@@ -528,7 +530,7 @@ void road_laws()
 				if (Stop_seconds_final < 17) AUDIO::_PLAY_AMBIENT_SPEECH1(cop_that_fines_you, "GENERIC_INSULT_HIGH", "SPEECH_PARAMS_FORCE_SHOUTED");
 				if (Stop_seconds_final == 17) {
 					AI::TASK_TURN_PED_TO_FACE_ENTITY(cop_that_fines_you, playerPed, -1);
-					AUDIO::STOP_CURRENT_PLAYING_AMBIENT_SPEECH(cop_that_fines_you);
+					if (!AUDIO::IS_AMBIENT_SPEECH_PLAYING(cop_that_fines_you)) AUDIO::STOP_CURRENT_PLAYING_AMBIENT_SPEECH(cop_that_fines_you);
 				}
 				if (Stop_seconds_final == 18) {
 					AUDIO::_PLAY_AMBIENT_SPEECH1(cop_that_fines_you, "GENERIC_THANKS", "SPEECH_PARAMS_FORCE_SHOUTED");
@@ -629,6 +631,7 @@ void road_laws()
 				runningredlight_check = false;
 				nolightsnighttime_check = false;
 
+				VEHICLE::SET_VEHICLE_SIREN(fine_cop_car, false);
 				ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&cop_that_fines_you);
 				ENTITY::SET_VEHICLE_AS_NO_LONGER_NEEDED(&fine_cop_car);
 				AI::TASK_GO_TO_COORD_AND_AIM_AT_HATED_ENTITIES_NEAR_COORD(cop_that_fines_you, veh_cop_in_coords.x, veh_cop_in_coords.y, veh_cop_in_coords.z, veh_cop_in_coords.x, veh_cop_in_coords.y, veh_cop_in_coords.z, 1.0f /*walk*/,
