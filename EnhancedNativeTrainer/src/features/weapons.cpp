@@ -717,7 +717,7 @@ void process_pedagainstweapons_menu(){
 	listItem->value = ChancePoliceCallingIndex;
 	menuItems.push_back(listItem);
 
-	listItem = new SelectFromListMenuItem(WEAPONS_CHANCEATTACKINGYOU_CAPTIONS, onchange_chance_attacking_you_index);
+	listItem = new SelectFromListMenuItem(WEAPONS_CHANCEPOLICECALLING_CAPTIONS, onchange_chance_attacking_you_index);
 	listItem->wrap = false;
 	listItem->caption = "Chance Of Attacking You";
 	listItem->value = ChanceAttackingYouIndex;

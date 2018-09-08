@@ -12,7 +12,7 @@ extern const Hash SP0_TOTAL_CASH;
 extern const Hash SP1_TOTAL_CASH;
 extern const Hash SP2_TOTAL_CASH;
 
-const std::vector<std::string> VALUES_VEHICLES_NOFUEL{ "BMX", "CRUISER", "TRIBIKE2", "FIXTER", "SCORCHER", "TRIBIKE3", "TRIBIKE" };
+//const std::vector<std::string> VALUES_VEHICLES_NOFUEL{ "BMX", "CRUISER", "TRIBIKE2", "FIXTER", "SCORCHER", "TRIBIKE3", "TRIBIKE" };
 
 //Car Fuel
 const std::vector<std::string> VEH_CARFUEL_CAPTIONS{ "NO", "0.1", "0.5", "1.0", "1.4", "1.8", "2.2", "2.6", "2.8", "3.0", "3.3", "3.6", "5.0", "6.0", "8.0", "10.0", "13.0", "15.0", "18.0", "20.0", "23.0", "25.0" };
@@ -57,8 +57,8 @@ extern int FuelPriceIndex;
 extern bool FuelPriceChanged;
 
 //Jerry Can Price
-const std::vector<std::string> VEH_CANPRICE_CAPTIONS{ "NO", "0.1", "0.5", "1.0", "2.0", "3.0", "4.0", "5.0", "10.0", "20.0", "30.0", "50.0", "100.0", "200.0", "300.0", "500.0", "1000.0", "5000.0", "10000.0" };
-const std::vector<double> VEH_CANPRICE_VALUES{ 0, 0.1, 0.5, 1, 2, 3, 4, 5, 10, 20, 30, 50, 100, 200, 300, 500, 1000, 5000, 10000 };
+//const std::vector<std::string> VEH_CANPRICE_CAPTIONS{ "NO", "0.1", "0.5", "1.0", "2.0", "3.0", "4.0", "5.0", "10.0", "20.0", "30.0", "50.0", "100.0", "200.0", "300.0", "500.0", "1000.0", "5000.0", "10000.0" };
+//const std::vector<double> VEH_CANPRICE_VALUES{ 0, 0.1, 0.5, 1, 2, 3, 4, 5, 10, 20, 30, 50, 100, 200, 300, 500, 1000, 5000, 10000 };
 extern int JerrycanPriceIndex;
 extern bool JerrycanChanged;
 
@@ -87,14 +87,14 @@ extern int FuelColours_R_Index;
 extern bool FuelColours_R_Changed;
 
 //Fuel colours_G
-const std::vector<std::string> FUEL_COLOURS_G_CAPTIONS{ "0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "210", "220", "230", "240", "250", "255" };
-const std::vector<int> FUEL_COLOURS_G_VALUES{ 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 255 };
+//const std::vector<std::string> FUEL_COLOURS_G_CAPTIONS{ "0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "210", "220", "230", "240", "250", "255" };
+//const std::vector<int> FUEL_COLOURS_G_VALUES{ 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 255 };
 extern int FuelColours_G_Index;
 extern bool FuelColours_G_Changed;
 
 //Fuel colours_B
-const std::vector<std::string> FUEL_COLOURS_B_CAPTIONS{ "0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "210", "220", "230", "240", "250", "255" };
-const std::vector<int> FUEL_COLOURS_B_VALUES{ 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 255 };
+//const std::vector<std::string> FUEL_COLOURS_B_CAPTIONS{ "0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "210", "220", "230", "240", "250", "255" };
+//const std::vector<int> FUEL_COLOURS_B_VALUES{ 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 255 };
 extern int FuelColours_B_Index;
 extern bool FuelColours_B_Changed;
 
@@ -105,8 +105,8 @@ extern int FuelBlipsIndex;
 extern bool FuelBlipsChanged;
 
 //Fuel Bar Background Opacity
-const std::vector<std::string> FUEL_BACKGROUND_OPACITY_CAPTIONS{ "0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "210", "220", "230", "240", "250", "255" };
-const std::vector<int> FUEL_BACKGROUND_OPACITY_VALUES{ 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 255 };
+//const std::vector<std::string> FUEL_BACKGROUND_OPACITY_CAPTIONS{ "0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "210", "220", "230", "240", "250", "255" };
+//const std::vector<int> FUEL_BACKGROUND_OPACITY_VALUES{ 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 255 };
 extern int FuelBackground_Opacity_Index;
 extern bool FuelBackgound_Opacity_Changed;
 

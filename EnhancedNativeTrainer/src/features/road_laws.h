@@ -13,6 +13,7 @@ extern bool featureVehicleHeavilyDamaged;
 extern bool featureNoHelmetOnBike;
 extern bool featureStolenVehicle;
 extern bool featureNoLightsNightTime;
+extern bool featureEscapingPolice;
 
 //Speeding In A City
 const std::vector<std::string> VEH_SPEEDINGCITY_CAPTIONS{ "OFF", "45 MPH", "60 MPH", "80 MPH", "100 MPH", "120 MPH", "150 MPH", "180 MPH" };
@@ -21,8 +22,8 @@ extern int SpeedingCityIndex;
 extern bool SpeedingCity_Changed;
 
 //Speeding On Speedway
-const std::vector<std::string> VEH_SPEEDINGSPEEDWAY_CAPTIONS{ "OFF", "45 MPH", "60 MPH", "80 MPH", "100 MPH", "120 MPH", "150 MPH", "180 MPH" };
-const std::vector<int> VEH_SPEEDINGSPEEDWAY_VALUES{ 0, 45, 60, 80, 100, 120, 150, 180 };
+//const std::vector<std::string> VEH_SPEEDINGSPEEDWAY_CAPTIONS{ "OFF", "45 MPH", "60 MPH", "80 MPH", "100 MPH", "120 MPH", "150 MPH", "180 MPH" };
+//const std::vector<int> VEH_SPEEDINGSPEEDWAY_VALUES{ 0, 45, 60, 80, 100, 120, 150, 180 };
 extern int SpeedingSpeedwayIndex;
 extern bool SpeedingSpeedway_Changed;
 
