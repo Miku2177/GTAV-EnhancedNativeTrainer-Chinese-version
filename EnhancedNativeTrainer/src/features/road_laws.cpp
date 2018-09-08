@@ -46,8 +46,10 @@ bool featureVehicleHeavilyDamaged = true;
 bool featureNoHelmetOnBike = true;
 bool featureStolenVehicle = true;
 bool featureNoLightsNightTime = true;
-bool againsttraffic_check, pavementdriving_check, vehiclecollision_check, vehicledamaged_check, hohelmet_check, mobilephone_check, speedingincity_check, speedingonspeedway_check, runningredlight_check, stolenvehicle_check, nolightsnighttime_check = false;
+bool featureEscapingPolice = true;
+bool againsttraffic_check, pavementdriving_check, vehiclecollision_check, vehicledamaged_check, hohelmet_check, mobilephone_check, speedingincity_check, speedingonspeedway_check, runningredlight_check, stolenvehicle_check, nolightsnighttime_check, escapingpolice_check = false;
 int SinceCollision_secs_passed, SinceCollision_secs_curr, Collision_seconds = -1;
+int SinceEscape_secs_passed, SinceEscape_secs_curr, Escape_seconds = -1;
 int SinceAgainstTraffic_secs_passed, SinceAgainstTraffic_secs_curr, AgainstTraffic_seconds = -1;
 int SinceStop_secs_passed, SinceStop_secs_curr, Stop_seconds = -1;
 int SinceStop_secs_passed_final, SinceStop_secs_curr_final = -1;
@@ -92,10 +94,10 @@ bool StarsPunish_Changed = true;
 
 void road_laws()
 {
-	if (featureRoadLaws) {
+	if (featureRoadLaws && !VEHICLE::IS_THIS_MODEL_A_BICYCLE(ENTITY::GET_ENTITY_MODEL(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false)))) {
+		
 		Player player = PLAYER::PLAYER_ID();
 		Ped playerPed = PLAYER::PLAYER_PED_ID();
-		
 		Vehicle vehroadlaws = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		Vector3 vehroadlaws_coords = ENTITY::GET_ENTITY_COORDS(vehroadlaws, true);
 		Vector3 vehroadlaws_ped_coords = ENTITY::GET_ENTITY_COORDS(playerPed, true);
@@ -168,7 +170,7 @@ void road_laws()
 		else if (been_seen_by_a_cop == false) speedingincity_check = false;
 
 		// Speeding On A Motorway
-		if (VEH_SPEEDINGSPEEDWAY_VALUES[SpeedingSpeedwayIndex] > 0 && vehroadlaws_speed * 2.3 > VEH_SPEEDINGSPEEDWAY_VALUES[SpeedingSpeedwayIndex] && PED::IS_PED_IN_ANY_VEHICLE(playerPed, true))
+		if (VEH_SPEEDINGCITY_VALUES[SpeedingSpeedwayIndex] > 0 && vehroadlaws_speed * 2.3 > VEH_SPEEDINGCITY_VALUES[SpeedingSpeedwayIndex] && PED::IS_PED_IN_ANY_VEHICLE(playerPed, true))
 		{
 			char* temp_zone_name2 = ZONE::GET_NAME_OF_ZONE(vehroadlaws_coords.x, vehroadlaws_coords.y, vehroadlaws_coords.z);
 			if (strcmp(temp_zone_name2, "PALHIGH") == 0 || strcmp(temp_zone_name2, "TATAMO") == 0 || strcmp(temp_zone_name2, "CHIL") == 0 || strcmp(temp_zone_name2, "WINDF") == 0 || strcmp(temp_zone_name2, "SANCHIA") == 0 ||
@@ -250,6 +252,20 @@ void road_laws()
 		}
 		else if (been_seen_by_a_cop == false) nolightsnighttime_check = false;
 
+		// Escaping The Police
+		if (featureEscapingPolice && PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) && been_seen_by_a_cop == true) {
+			SinceEscape_secs_passed = clock() / CLOCKS_PER_SEC;
+			if (((clock() / CLOCKS_PER_SEC) - SinceEscape_secs_curr) != 0) {
+				Escape_seconds = Escape_seconds + 1;
+				SinceEscape_secs_curr = SinceEscape_secs_passed;
+			}
+			if (vehroadlaws_speed > 10) escapingpolice_check = true;
+		}
+		else if (been_seen_by_a_cop == false) {
+			escapingpolice_check = false;
+			Escape_seconds = 0;
+		}
+
 		// ALL THE PEDS AROUND
 		for (int i = 0; i < count_laws; i++) {
 			// Vehicle Collided
@@ -321,7 +337,7 @@ void road_laws()
 				vehcoplaws_speed = ENTITY::GET_ENTITY_SPEED(veh_cop_in);
 				vehroadlaws_coords = ENTITY::GET_ENTITY_COORDS(vehroadlaws, true);
 				if (againsttraffic_check == true || pavementdriving_check == true || vehiclecollision_check == true || hohelmet_check == true || mobilephone_check == true ||
-					vehicledamaged_check == true || speedingincity_check == true || speedingonspeedway_check == true || runningredlight_check == true || stolenvehicle_check == true || nolightsnighttime_check == true)
+					vehicledamaged_check == true || speedingincity_check == true || speedingonspeedway_check == true || runningredlight_check == true || stolenvehicle_check == true || nolightsnighttime_check == true || escapingpolice_check == true)
 				{
 					tempgotcha_x = (vehroadlaws_coords.x - veh_cop_in_coords.x);
 					tempgotcha_y = (vehroadlaws_coords.y - veh_cop_in_coords.y);
@@ -453,6 +469,9 @@ void road_laws()
 						no_agressive = false;
 					}
 				}
+				// Escaping the police check 
+				if (Escape_seconds < 16 && vehroadlaws_speed < 11) escapingpolice_check = false;
+				if (Escape_seconds > 15 && vehroadlaws_speed > 10 && vehcoplaws_speed > 10) escapingpolice_check = true;
 			}
 
 			// You'll be fined if you don't move
@@ -588,6 +607,7 @@ void road_laws()
 					if (runningredlight_check == true) num_of_taxes = num_of_taxes + 1;
 					if (stolenvehicle_check == true) num_of_taxes = num_of_taxes + 1;
 					if (nolightsnighttime_check == true) num_of_taxes = num_of_taxes + 1;
+					if (escapingpolice_check == true) num_of_taxes = num_of_taxes + 1;
 
 					for (int i = 0; i < num_of_taxes; i++) {
 						if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO) {
@@ -618,6 +638,7 @@ void road_laws()
 					if (runningredlight_check == true) set_status_text("YOU'RE FINED FOR RUNNING A REDLIGHT");
 					if (stolenvehicle_check == true) set_status_text("YOU'RE FINED FOR USING A STOLEN VEHICLE");
 					if (nolightsnighttime_check == true) set_status_text("YOU'RE FINED FOR DRIVING WITHOUT HEADLIGHTS");
+					if (escapingpolice_check == true) set_status_text("YOU'RE FINED FOR ESCAPING THE POLICE");
 				}
 				
 				againsttraffic_check = false;
@@ -630,6 +651,7 @@ void road_laws()
 				speedingonspeedway_check = false;
 				runningredlight_check = false;
 				nolightsnighttime_check = false;
+				escapingpolice_check = false;
 
 				VEHICLE::SET_VEHICLE_SIREN(fine_cop_car, false);
 				ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&cop_that_fines_you);
@@ -690,7 +712,7 @@ void road_laws()
 	else {
 		std::vector<int> emptyVec;
 		if (!VEH_SPEEDINGCITY_VALUES.empty()) std::vector<int>(VEH_SPEEDINGCITY_VALUES).swap(emptyVec);
-		if (!VEH_SPEEDINGSPEEDWAY_VALUES.empty()) std::vector<int>(VEH_SPEEDINGSPEEDWAY_VALUES).swap(emptyVec);
+		//if (!VEH_SPEEDINGSPEEDWAY_VALUES.empty()) std::vector<int>(VEH_SPEEDINGSPEEDWAY_VALUES).swap(emptyVec);
 		if (!VEH_FINESIZE_VALUES.empty()) std::vector<int>(VEH_FINESIZE_VALUES).swap(emptyVec);
 		if (!VEH_DETECTIONRANGE_VALUES.empty()) std::vector<int>(VEH_DETECTIONRANGE_VALUES).swap(emptyVec);
 		if (!VEH_PIRSUITRANGE_VALUES.empty()) std::vector<int>(VEH_PIRSUITRANGE_VALUES).swap(emptyVec);

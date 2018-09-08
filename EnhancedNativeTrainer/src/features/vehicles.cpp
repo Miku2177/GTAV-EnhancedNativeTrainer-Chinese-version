@@ -1242,7 +1242,7 @@ void process_fuel_menu(){
 	listItem->value = FuelPriceIndex;
 	menuItems.push_back(listItem);
 
-	listItem = new SelectFromListMenuItem(VEH_CANPRICE_CAPTIONS, onchange_canprice_index);
+	listItem = new SelectFromListMenuItem(VEH_FUELPRICE_CAPTIONS, onchange_canprice_index);
 	listItem->wrap = false;
 	listItem->caption = "Jerry Can Fuel Price";
 	listItem->value = JerrycanPriceIndex;
@@ -1266,7 +1266,7 @@ void process_fuel_menu(){
 	listItem->value = BarPositionIndex;
 	menuItems.push_back(listItem);
 
-	listItem = new SelectFromListMenuItem(FUEL_BACKGROUND_OPACITY_CAPTIONS, onchange_fuel_background_opacity_index);
+	listItem = new SelectFromListMenuItem(FUEL_COLOURS_R_CAPTIONS, onchange_fuel_background_opacity_index);
 	listItem->wrap = false;
 	listItem->caption = "Fuel Bar Background Opacity";
 	listItem->value = FuelBackground_Opacity_Index;
@@ -1476,7 +1476,7 @@ void process_road_laws_menu(){
 	listItem->value = SpeedingCityIndex;
 	menuItems.push_back(listItem);
 
-	listItem = new SelectFromListMenuItem(VEH_SPEEDINGSPEEDWAY_CAPTIONS, onchange_speeding_speedway_index);
+	listItem = new SelectFromListMenuItem(VEH_SPEEDINGCITY_CAPTIONS, onchange_speeding_speedway_index);
 	listItem->wrap = false;
 	listItem->caption = "Speeding On Freeway";
 	listItem->value = SpeedingSpeedwayIndex;
@@ -1534,6 +1534,12 @@ void process_road_laws_menu(){
 	toggleItem->caption = "Driving Without Headlights At Night"; 
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureNoLightsNightTime;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Escaping Police";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureEscapingPolice;
 	menuItems.push_back(toggleItem);
 
 	draw_generic_menu<int>(menuItems, &activeLineIndexRoadLaws, caption, onconfirm_road_laws_menu, NULL, NULL);
@@ -2953,6 +2959,7 @@ void reset_vehicle_globals() {
 		featureNoHelmetOnBike = true;
 		featureStolenVehicle = true;
 		featureNoLightsNightTime = true;
+		featureEscapingPolice = true;
 		featureVehLightsOnUpdated = true;
 
 	featureDespawnScriptDisabled = false;
@@ -3199,6 +3206,7 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoHelmetOnBike", &featureNoHelmetOnBike});
 	results->push_back(FeatureEnabledLocalDefinition{"featureStolenVehicle", &featureStolenVehicle});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoLightsNightTime", &featureNoLightsNightTime});
+	results->push_back(FeatureEnabledLocalDefinition{"featureEscapingPolice", &featureEscapingPolice});
 	results->push_back(FeatureEnabledLocalDefinition{"featureDeleteTrackedVehicles", &featureDeleteTrackedVehicles});
 	results->push_back(FeatureEnabledLocalDefinition{"featureDeleteTrackedVehicles_CharacterChanged", &featureDeleteTrackedVehicles_CharacterChanged});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBlipNumber", &featureBlipNumber});

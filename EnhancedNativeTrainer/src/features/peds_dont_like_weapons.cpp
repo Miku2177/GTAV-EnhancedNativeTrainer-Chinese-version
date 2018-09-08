@@ -68,17 +68,17 @@ void peds_dont_like_weapons() {
 			callpolice_randomize = (rand() % 100 + 1);
 
 			// Aiming
-			if (featureAimAtDriver && PED::GET_PED_TYPE(weaponhaters[i]) != 6 && PED::GET_PED_TYPE(weaponhaters[i]) != 27 && PED::GET_PED_TYPE(weaponhaters[i]) != 29) {
+			if (featureAimAtDriver && PED::GET_PED_TYPE(weaponhaters[i]) != 6 && PED::GET_PED_TYPE(weaponhaters[i]) != 27 && PED::GET_PED_TYPE(weaponhaters[i]) != 29 && !ENTITY::IS_ENTITY_A_MISSION_ENTITY(weaponhaters[i])) {
 				Vehicle aim_veh = PED::GET_VEHICLE_PED_IS_IN(weaponhaters[i], true);
 				Vector3 aim_veh_speed = ENTITY::GET_ENTITY_VELOCITY(aim_veh);
 				if (PLAYER::IS_PLAYER_FREE_AIMING_AT_ENTITY(PLAYER::PLAYER_ID(), weaponhaters[i]) && PED::IS_PED_FACING_PED(weaponhaters[i], playerPed, 100) && ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(weaponhaters[i], playerPed, 17)
 					&& PED::IS_PED_IN_ANY_VEHICLE(weaponhaters[i], false) && WEAPON::IS_PED_ARMED(playerPed, 6) && PED::GET_PED_TYPE(weaponhaters[i]) != 0 && PED::GET_PED_TYPE(weaponhaters[i]) != 1 &&
-					PED::GET_PED_TYPE(weaponhaters[i]) != 2 && PED::GET_PED_TYPE(weaponhaters[i]) != 3 && ped_distance_x < 4 && ped_distance_y < 4 && ped_distance_z < 2 && aim_veh_speed.x < 20 && aim_veh_speed.y < 20)
+					PED::GET_PED_TYPE(weaponhaters[i]) != 2 && PED::GET_PED_TYPE(weaponhaters[i]) != 3 && !PLAYER::IS_PLAYER_CONTROL_ON(weaponhaters[i]) && ped_distance_x < 4 && ped_distance_y < 4 && ped_distance_z < 2 && aim_veh_speed.x < 20 && aim_veh_speed.y < 20)
 				{
 					AI::TASK_LEAVE_VEHICLE(weaponhaters[i], aim_veh, 4160);
 
 					if (!featureAgainstMeleeWeapons && WEAPON::IS_PED_ARMED(playerPed, 7) && WEAPON::IS_PED_ARMED(playerPed, 6)) {
-						if (callpolice_randomize < WEAPONS_CHANCEATTACKINGYOU_VALUES[ChanceAttackingYouIndex]) {
+						if (callpolice_randomize < WEAPONS_CHANCEPOLICECALLING_VALUES[ChanceAttackingYouIndex]) {
 							PED::SET_PED_AS_ENEMY(weaponhaters[i], true);
 							PED::REGISTER_TARGET(weaponhaters[i], playerPed);
 							AI::TASK_COMBAT_PED(weaponhaters[i], playerPed, 0, 16);
@@ -104,13 +104,13 @@ void peds_dont_like_weapons() {
 
 			// Peds Against
 			if (featurePedAgainst && !PED::IS_PED_IN_ANY_VEHICLE(weaponhaters[i], false) && PED::GET_PED_TYPE(weaponhaters[i]) != 6 && PED::GET_PED_TYPE(weaponhaters[i]) != 27 && PED::GET_PED_TYPE(weaponhaters[i]) != 28 && 
-				PED::GET_PED_TYPE(weaponhaters[i]) != 29) {
+				PED::GET_PED_TYPE(weaponhaters[i]) != 29 && !ENTITY::IS_ENTITY_A_MISSION_ENTITY(weaponhaters[i])) {
 				if (ped_distance_x < 9 && ped_distance_y < 9 && ped_distance_z < 3 && PED::IS_PED_FACING_PED(weaponhaters[i], playerPed, 100) && ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(weaponhaters[i], playerPed, 17)
 					&& !PLAYER::IS_PLAYER_FREE_AIMING_AT_ENTITY(playerPed, weaponhaters[i]) && PED::GET_PED_TYPE(weaponhaters[i]) != 0 && PED::GET_PED_TYPE(weaponhaters[i]) != 1 && PED::GET_PED_TYPE(weaponhaters[i]) != 2 && 
-					PED::GET_PED_TYPE(weaponhaters[i]) != 3)
+					PED::GET_PED_TYPE(weaponhaters[i]) != 3 && !PLAYER::IS_PLAYER_CONTROL_ON(weaponhaters[i]))
 				{
 					if (featureAgainstMeleeWeapons && WEAPON::IS_PED_ARMED(playerPed, 7) && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
-						if (callpolice_randomize < WEAPONS_CHANCEATTACKINGYOU_VALUES[ChanceAttackingYouIndex]) {
+						if (callpolice_randomize < WEAPONS_CHANCEPOLICECALLING_VALUES[ChanceAttackingYouIndex]) {
 							PED::SET_PED_AS_ENEMY(weaponhaters[i], true);
 							PED::REGISTER_TARGET(weaponhaters[i], playerPed);
 							AI::TASK_COMBAT_PED(weaponhaters[i], playerPed, 0, 16);
@@ -132,7 +132,7 @@ void peds_dont_like_weapons() {
 					}
 
 					if (!featureAgainstMeleeWeapons && WEAPON::IS_PED_ARMED(playerPed, 7) && WEAPON::IS_PED_ARMED(playerPed, 6) && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
-						if (callpolice_randomize < WEAPONS_CHANCEATTACKINGYOU_VALUES[ChanceAttackingYouIndex]) {
+						if (callpolice_randomize < WEAPONS_CHANCEPOLICECALLING_VALUES[ChanceAttackingYouIndex]) {
 							PED::SET_PED_AS_ENEMY(weaponhaters[i], true);
 							PED::REGISTER_TARGET(weaponhaters[i], playerPed);
 							AI::TASK_COMBAT_PED(weaponhaters[i], playerPed, 0, 16);
@@ -157,13 +157,13 @@ void peds_dont_like_weapons() {
 
 			// Drivers Against						
 			if (featureDriverAgainst && PED::IS_PED_IN_ANY_VEHICLE(weaponhaters[i], false) && PED::GET_PED_TYPE(weaponhaters[i]) != 6 && PED::GET_PED_TYPE(weaponhaters[i]) != 27 && PED::GET_PED_TYPE(weaponhaters[i]) != 28 && 
-				PED::GET_PED_TYPE(weaponhaters[i]) != 29) {
+				PED::GET_PED_TYPE(weaponhaters[i]) != 29 && !ENTITY::IS_ENTITY_A_MISSION_ENTITY(weaponhaters[i])) {
 				if (ped_distance_x < 9 && ped_distance_y < 9 && ped_distance_z < 3 && PED::IS_PED_FACING_PED(weaponhaters[i], playerPed, 100) && ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(weaponhaters[i], playerPed, 17)
 					&& !PLAYER::IS_PLAYER_FREE_AIMING_AT_ENTITY(playerPed, weaponhaters[i]) && PED::GET_PED_TYPE(weaponhaters[i]) != 0 && PED::GET_PED_TYPE(weaponhaters[i]) != 1 && PED::GET_PED_TYPE(weaponhaters[i]) != 2 && 
-					PED::GET_PED_TYPE(weaponhaters[i]) != 3)
+					PED::GET_PED_TYPE(weaponhaters[i]) != 3 && !PLAYER::IS_PLAYER_CONTROL_ON(weaponhaters[i]))
 				{
 					if (featureAgainstMeleeWeapons && WEAPON::IS_PED_ARMED(playerPed, 7) && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
-						if (callpolice_randomize < WEAPONS_CHANCEATTACKINGYOU_VALUES[ChanceAttackingYouIndex]) {
+						if (callpolice_randomize < WEAPONS_CHANCEPOLICECALLING_VALUES[ChanceAttackingYouIndex]) {
 							PED::SET_PED_AS_ENEMY(weaponhaters[i], true);
 							PED::REGISTER_TARGET(weaponhaters[i], playerPed);
 							AI::TASK_COMBAT_PED(weaponhaters[i], playerPed, 0, 16);
@@ -185,7 +185,7 @@ void peds_dont_like_weapons() {
 					}
 
 					if (!featureAgainstMeleeWeapons && WEAPON::IS_PED_ARMED(playerPed, 7) && WEAPON::IS_PED_ARMED(playerPed, 6) && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
-						if (callpolice_randomize < WEAPONS_CHANCEATTACKINGYOU_VALUES[ChanceAttackingYouIndex]) {
+						if (callpolice_randomize < WEAPONS_CHANCEPOLICECALLING_VALUES[ChanceAttackingYouIndex]) {
 							PED::SET_PED_AS_ENEMY(weaponhaters[i], true);
 							PED::REGISTER_TARGET(weaponhaters[i], playerPed);
 							AI::TASK_COMBAT_PED(weaponhaters[i], playerPed, 0, 16);
@@ -210,7 +210,7 @@ void peds_dont_like_weapons() {
 
 			// Police Against
 			if (featurePoliceAgainst && (PED::GET_PED_TYPE(weaponhaters[i]) == 6 || PED::GET_PED_TYPE(weaponhaters[i]) == 27 || PED::GET_PED_TYPE(weaponhaters[i]) == 29) &&
-				PED::GET_PED_TYPE(weaponhaters[i]) != 0 && PED::GET_PED_TYPE(weaponhaters[i]) != 1 && PED::GET_PED_TYPE(weaponhaters[i]) != 2 && PED::GET_PED_TYPE(weaponhaters[i]) != 3) {
+				PED::GET_PED_TYPE(weaponhaters[i]) != 0 && PED::GET_PED_TYPE(weaponhaters[i]) != 1 && PED::GET_PED_TYPE(weaponhaters[i]) != 2 && PED::GET_PED_TYPE(weaponhaters[i]) != 3 && !ENTITY::IS_ENTITY_A_MISSION_ENTITY(weaponhaters[i])) {
 				if (ped_distance_x < 9 && ped_distance_y < 9 && ped_distance_z < 3 && PED::IS_PED_FACING_PED(weaponhaters[i], playerPed, 100) && ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(weaponhaters[i], playerPed, 17))
 				{
 					Vehicle veh_police = PED::GET_VEHICLE_PED_IS_IN(weaponhaters[i], true);
@@ -241,7 +241,7 @@ void peds_dont_like_weapons() {
 	else {
 		std::vector<int> emptyVec;
 		if (!WEAPONS_CHANCEPOLICECALLING_VALUES.empty()) std::vector<int>(WEAPONS_CHANCEPOLICECALLING_VALUES).swap(emptyVec);
-		if (!WEAPONS_CHANCEATTACKINGYOU_VALUES.empty()) std::vector<int>(WEAPONS_CHANCEATTACKINGYOU_VALUES).swap(emptyVec);
+		//if (!WEAPONS_CHANCEATTACKINGYOU_VALUES.empty()) std::vector<int>(WEAPONS_CHANCEATTACKINGYOU_VALUES).swap(emptyVec);
 	}
 }
 
