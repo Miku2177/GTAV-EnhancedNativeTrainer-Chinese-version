@@ -127,7 +127,7 @@ int regenIndex = REGEN_DEFAULT;
 //Player Health
 const std::vector<std::string> PLAYER_HEALTH_CAPTIONS{ "1", "10", "20", "30", "40", "50", "100", "200", "300", "500", "1000", "5000", "10000", "20000", "30000" };
 const std::vector<int> PLAYER_HEALTH_VALUES{ 101, 110, 120, 130, 140, 150, 200, 300, 400, 600, 1100, 5100, 10100, 20100, 30100 };
-int current_player_health = 2;
+int current_player_health = 6;
 bool current_player_health_Changed = true;
 
 //Player Armor
@@ -1249,6 +1249,8 @@ void reset_globals(){
 
 	reset_vehicle_globals();
 
+	reset_time_globals();
+
 	reset_vehmodmenu_globals();
 
 	reset_bodyguards_globals();
@@ -1274,7 +1276,7 @@ void reset_globals(){
 		activeLineIndexWantedFreeze =
 		frozenWantedLevel = 0;
 		
-	current_player_health = 2;
+	current_player_health = 6;
 	current_player_armor = 6;
 	current_npc_ragdoll = 0;
 	current_player_movement = 0;

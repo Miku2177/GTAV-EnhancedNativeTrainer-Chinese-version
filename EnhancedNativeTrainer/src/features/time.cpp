@@ -331,7 +331,7 @@ void reset_time_globals(){
 
 	timeSpeedIndexWhileAiming = DEFAULT_TIME_SPEED;
 	timeSpeedIndex = DEFAULT_TIME_SPEED;
-	timeFlowRateIndex = DEFAULT_TIME_FLOW_RATE;
+	timeFlowRateIndex = DEFAULT_TIME_FLOW_RATE; 
 	HotkeyFlowRateIndex = DEFAULT_HOTKEY_FLOW_RATE;
 }
 

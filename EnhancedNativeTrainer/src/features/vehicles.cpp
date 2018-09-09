@@ -109,7 +109,7 @@ Ped old_playerPed_Tracking = -1;
 bool featureRememberVehicles = false;
 bool featureDeleteTrackedVehicles = true;
 bool featureDeleteTrackedVehicles_Emptied = false;
-bool featureDeleteTrackedVehicles_CharacterChanged = false;
+bool featureDeleteTrackedVehicles_CharacterChanged = true;
 bool featureBlipNumber = true;
 //
 // Anti-Theft System variables
@@ -1537,7 +1537,7 @@ void process_road_laws_menu(){
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Escaping Police";
+	toggleItem->caption = "Evading Police";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureEscapingPolice;
 	menuItems.push_back(toggleItem);
@@ -1680,7 +1680,7 @@ void process_veh_menu(){
 	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Spawn Vehicles Fully Tuned";
 	toggleItem->value = i++;
-	toggleItem->toggleValue = &featureVehSpawnTuned;
+	toggleItem->toggleValue = &featureVehSpawnTuned; 
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
@@ -2398,7 +2398,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		}
 	}
 	else {
-		//int vehmax = VEHICLE::_GET_VEHICLE_MODEL_MAX_SPEED(ENTITY::GET_ENTITY_MODEL(PED::GET_VEHICLE_PED_IS_IN(playerPed, false)));
 		ENTITY::SET_ENTITY_MAX_SPEED(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 15000.0);
 		std::vector<int> emptyVec;
 		if (!VEH_SPEEDLIMITER_VALUES.empty()) std::vector<int>(VEH_SPEEDLIMITER_VALUES).swap(emptyVec);
@@ -2562,7 +2561,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		}
 	}
 
-	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && featureRememberVehicles) {
+	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && featureRememberVehicles && !ENTITY::IS_ENTITY_A_MISSION_ENTITY(PED::GET_VEHICLE_PED_IS_IN(playerPed, false))) {
 			Vehicle veh_rem = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 			
 			if (VEHICLES_REMEMBER.empty()) {
@@ -2907,9 +2906,9 @@ void reset_vehicle_globals() {
 	HeliEngineDegradeIndex = 5;
 	BoatEngineDegradeIndex = 5;
 
-	featureAltitude = true;
 	featureSpeedOnFoot =
 	featureKMH =
+	featureAltitude =
 	feature3rdpersonviewonly = 
 	featureDaytimeonly =
 	featureSpeedOnGround =
@@ -2931,16 +2930,18 @@ void reset_vehicle_globals() {
 		featureVehicleDoorInstant =
 		featureLockVehicleDoors =
 		featureAntiTheftSystem =
-		featureVehSpawnInto =
+		featureVehSpawnInto = 
 		featureNoVehFallOff =
 		featureWearHelmetOff =
-		featureDeleteTrackedVehicles_CharacterChanged = 
 		featureEngineDegrade = 
 		featureEngineHealthBar = 
 		featureLimpMode = 
+		featureVehSpawnTuned =
+		featureVehSpawnOptic =
 		featureVehLightsOn = false;
 
 	featureLockVehicleDoorsUpdated = true;
+	featureDeleteTrackedVehicles_CharacterChanged = true;
 		featureNoVehFallOffUpdated = true;
 		featureBlipNumber = true;
 		featureWearHelmetOffUpdated = true;
