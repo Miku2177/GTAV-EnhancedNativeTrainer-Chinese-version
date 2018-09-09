@@ -638,7 +638,7 @@ void road_laws()
 					if (runningredlight_check == true) set_status_text("YOU'RE FINED FOR RUNNING A REDLIGHT");
 					if (stolenvehicle_check == true) set_status_text("YOU'RE FINED FOR USING A STOLEN VEHICLE");
 					if (nolightsnighttime_check == true) set_status_text("YOU'RE FINED FOR DRIVING WITHOUT HEADLIGHTS");
-					if (escapingpolice_check == true) set_status_text("YOU'RE FINED FOR ESCAPING THE POLICE");
+					if (escapingpolice_check == true) set_status_text("YOU'RE FINED FOR EVADING THE POLICE");
 				}
 				
 				againsttraffic_check = false;

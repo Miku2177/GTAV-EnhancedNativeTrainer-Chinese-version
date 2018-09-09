@@ -623,7 +623,7 @@ void reset_world_globals()
 	featureDirtyVehiclesUpdated =
 	featureNPCNoGravityVehiclesUpdated = 
 	featureNPCNoGravityPedsUpdated = 
-	featureAcidWater = 
+	featureAcidWaterUpdated = 
 	featureNPCReducedGripVehiclesUpdated =
 	featureWorldGarbageTrucksUpdated =
 	featureWorldRandomBoatsUpdated =

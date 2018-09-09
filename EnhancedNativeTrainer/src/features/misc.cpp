@@ -422,6 +422,7 @@ void reset_misc_globals(){
 		featureFlyingMusic = 
 		featurePoliceScanner = 
 		featurePoliceRadio =
+		featureEnableMissingRadioStation =
 		featureRadioAlwaysOff = false;
 
 	PhoneBillIndex = 2;

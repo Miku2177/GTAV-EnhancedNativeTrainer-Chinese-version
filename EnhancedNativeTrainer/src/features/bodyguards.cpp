@@ -775,6 +775,10 @@ void reset_bodyguards_globals(){
 	activeLineIndexBodyguardBlips = 0;
 	featureBodyBlipNumber = false;
 	featureBodyguardOnMap = false;
+	featureBodyguardInvincible = false;
+	featureBodyguardInvincibleUpdated = false;
+	featureBodyguardHelmet = false;
+	featureBodyguardInfAmmo = false;
 	BodyBlipSizeIndex = 2;
 	BodyBlipColourIndex = 0;
 	BodyBlipSymbolIndex = 0;
