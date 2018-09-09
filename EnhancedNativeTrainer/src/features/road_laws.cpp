@@ -627,18 +627,18 @@ void road_laws()
 						}
 					}
 
-					if (againsttraffic_check == true) set_status_text("YOU'RE FINED FOR DRIVING AGAINST TRAFFIC");
-					if (pavementdriving_check == true) set_status_text("YOU'RE FINED FOR DRIVING ON THE PAVEMENT");
-					if (vehicledamaged_check == true) set_status_text("YOU'RE FINED FOR USING A DAMAGED VEHICLE");
-					if (hohelmet_check == true) set_status_text("YOU'RE FINED FOR NOT WEARING A HELMET WHILE DRIVING");
-					if (mobilephone_check == true) set_status_text("YOU'RE FINED FOR USING A MOBILE PHONE WHILE DRIVING");
-					if (vehiclecollision_check == true) set_status_text("YOU'RE FINED FOR A VEHICLE ACCIDENT");
-					if (speedingincity_check == true) set_status_text("YOU'RE FINED FOR SPEEDING IN THE CITY");
-					if (speedingonspeedway_check == true) set_status_text("YOU'RE FINED FOR SPEEDING ON A FREEWAY");
-					if (runningredlight_check == true) set_status_text("YOU'RE FINED FOR RUNNING A REDLIGHT");
-					if (stolenvehicle_check == true) set_status_text("YOU'RE FINED FOR USING A STOLEN VEHICLE");
-					if (nolightsnighttime_check == true) set_status_text("YOU'RE FINED FOR DRIVING WITHOUT HEADLIGHTS");
-					if (escapingpolice_check == true) set_status_text("YOU'RE FINED FOR EVADING THE POLICE");
+					if (againsttraffic_check == true) set_status_text("FINED FOR DRIVING AGAINST TRAFFIC");
+					if (pavementdriving_check == true) set_status_text("FINED FOR DRIVING ON THE PAVEMENT");
+					if (vehicledamaged_check == true) set_status_text("FINED FOR USING A DAMAGED VEHICLE");
+					if (hohelmet_check == true) set_status_text("FINED FOR NOT WEARING A HELMET WHILE DRIVING");
+					if (mobilephone_check == true) set_status_text("FINED FOR USING A MOBILE PHONE WHILE DRIVING");
+					if (vehiclecollision_check == true) set_status_text("FINED FOR A VEHICLE ACCIDENT");
+					if (speedingincity_check == true) set_status_text("FINED FOR SPEEDING IN THE CITY");
+					if (speedingonspeedway_check == true) set_status_text("FINED FOR SPEEDING ON A FREEWAY");
+					if (runningredlight_check == true) set_status_text("FINED FOR RUNNING A REDLIGHT");
+					if (stolenvehicle_check == true) set_status_text("FINED FOR USING A STOLEN VEHICLE");
+					if (nolightsnighttime_check == true) set_status_text("FINED FOR DRIVING WITHOUT HEADLIGHTS");
+					if (escapingpolice_check == true) set_status_text("FINED FOR EVADING THE POLICE");
 				}
 				
 				againsttraffic_check = false;
