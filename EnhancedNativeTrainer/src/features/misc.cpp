@@ -74,6 +74,7 @@ bool featureFindDespawnPointerUpdated = false;
 bool despawnPointerDisabledMessage = true;
 bool featureFirstPersonDeathCamera = false;
 bool featureFirstPersonStuntJumpCamera = false;
+bool featureNoStuntJumps = false;
 
 bool featureShowFPS = false;
 bool featureShowFPSUpdated = false;
@@ -368,7 +369,7 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 }
 
 void process_misc_menu(){
-	const int lineCount = 20;
+	const int lineCount = 21;
 
 	std::string caption = "Miscellaneous Options";
 
@@ -393,6 +394,7 @@ void process_misc_menu(){
 		{"Auto-Find Vehicle Despawn Pointer", &featureFindDespawnPointer, &featureFindDespawnPointerUpdated, true },
 		{"First Person Death Camera", &featureFirstPersonDeathCamera, NULL },
 		{"First Person Stunt Jump Camera", &featureFirstPersonStuntJumpCamera, NULL },
+		{"No Stunt Jumps", &featureNoStuntJumps, NULL },
 		//{"Show FPS", &featureShowFPS, &featureShowFPSUpdated },
 	};
 
@@ -436,6 +438,7 @@ void reset_misc_globals(){
 	featureFindDespawnPointer = false;
 	featureFirstPersonDeathCamera = false;
 	featureFirstPersonStuntJumpCamera = false;
+	featureNoStuntJumps = false;
 	featureShowFPS = false;
 
 	featureRadioFreezeUpdated =
@@ -767,27 +770,31 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 
 		if (GAMEPLAY::IS_STUNT_JUMP_IN_PROGRESS() && StuntCam == NULL) {
 			Vector3 playerPosition = ENTITY::GET_ENTITY_COORDS(stunt_player, true);
-			Vector3 curRotation = ENTITY::GET_ENTITY_ROTATION(stunt_player, 2);
+			Vector3 curRotation = ENTITY::GET_ENTITY_ROTATION(PED::GET_VEHICLE_PED_IS_USING(stunt_player), 2);
 
 			StuntCam = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_FLY_CAMERA", playerPosition.x, playerPosition.y, playerPosition.z, curRotation.x, curRotation.y, curRotation.z, 50.0, true, 2);
-
-			CAM::SET_CAM_ROT(StuntCam, curRotation.x, curRotation.y, curRotation.z, 2);
+			
 			if (!PED::IS_PED_ON_ANY_BIKE(stunt_player)) {
-				CAM::ATTACH_CAM_TO_ENTITY(StuntCam, stunt_player, 0.0f, -0.15f, 0.67f, true);
-				CAM::POINT_CAM_AT_ENTITY(StuntCam, stunt_player, 0.0f, 0.0f, 0.67f, true);
+				//CAM::ATTACH_CAM_TO_ENTITY(StuntCam, stunt_player, 0.0f, -0.15f, 0.67f, true);
+				//CAM::POINT_CAM_AT_ENTITY(StuntCam, stunt_player, 0.0f, 0.0f, 0.67f, true);
+				CAM::ATTACH_CAM_TO_PED_BONE(StuntCam, stunt_player, 31086, 0, -0.15, 0.05, 1);
+				CAM::POINT_CAM_AT_PED_BONE(StuntCam, stunt_player, 31086, 0, 0.0, 0.05, 1);
 			}
 			if (PED::IS_PED_ON_ANY_BIKE(stunt_player)) {
-				CAM::ATTACH_CAM_TO_ENTITY(StuntCam, stunt_player, 0.0f, -0.01f, 0.37f, true);
-				CAM::POINT_CAM_AT_ENTITY(StuntCam, stunt_player, 0.0f, 0.0f, 0.37f, true);
+				//CAM::ATTACH_CAM_TO_ENTITY(StuntCam, stunt_player, 0.0f, -0.01f, 0.37f, true);
+				//CAM::POINT_CAM_AT_ENTITY(StuntCam, stunt_player, 0.0f, 0.0f, 0.37f, true);
+				CAM::ATTACH_CAM_TO_PED_BONE(StuntCam, stunt_player, 31086, 0, -0.15, -0.10, 1);
+				CAM::POINT_CAM_AT_PED_BONE(StuntCam, stunt_player, 31086, 0, 0.0, -0.10, 1);
 			}
-			CAM::RENDER_SCRIPT_CAMS(true, false, 0, true, true);
+			CAM::SET_CAM_ROT(StuntCam, curRotation.x, curRotation.y, curRotation.z, 2);
+			CAM::RENDER_SCRIPT_CAMS(true, false, 1, true, true);
 			CAM::SET_CAM_ACTIVE(StuntCam, true);
 			ENTITY::SET_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID(), false);
 		}
 
 		if (!GAMEPLAY::IS_STUNT_JUMP_IN_PROGRESS() && StuntCam != NULL) {
 			ENTITY::SET_ENTITY_COLLISION(PLAYER::PLAYER_PED_ID(), 1, 1);
-			CAM::RENDER_SCRIPT_CAMS(false, false, 0, false, false);
+			CAM::RENDER_SCRIPT_CAMS(false, false, 1, false, false);
 			CAM::DETACH_CAM(StuntCam);
 			CAM::SET_CAM_ACTIVE(StuntCam, false);
 			CAM::DESTROY_CAM(StuntCam, true);
@@ -796,6 +803,8 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		}
 	}
 
+	// no stunt jumps
+	if (featureNoStuntJumps && GAMEPLAY::IS_STUNT_JUMP_IN_PROGRESS()) GAMEPLAY::CANCEL_STUNT_JUMP();
 
 	//Show FPS
 	//if (featureShowFPS)
@@ -907,6 +916,7 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 	//results->push_back(FeatureEnabledLocalDefinition{ "featureFindDespawnPointer", &featureFindDespawnPointer, &featureFindDespawnPointerUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{"featureFirstPersonDeathCamera", &featureFirstPersonDeathCamera});
 	results->push_back(FeatureEnabledLocalDefinition{"featureFirstPersonStuntJumpCamera", &featureFirstPersonStuntJumpCamera});
+	results->push_back(FeatureEnabledLocalDefinition{"featureNoStuntJumps", &featureNoStuntJumps});
 	results->push_back(FeatureEnabledLocalDefinition{"featureMiscJellmanScenery", &featureMiscJellmanScenery});
 
 	results->push_back(FeatureEnabledLocalDefinition{"featureResetPlayerModelOnDeath", &featureResetPlayerModelOnDeath});
