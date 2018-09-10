@@ -106,6 +106,10 @@ void road_laws()
 		int vehcollidedwith_distance_x = 100;
 		int vehcollidedwith_distance_y = 100;
 
+		float offsetX = 0;
+		float offsetY = 0;
+		float offsetZ = 0;
+
 		const int arrSize_laws = 1024;
 		Vehicle vehicles_laws[arrSize_laws];
 		int count_laws = worldGetAllPeds(vehicles_laws, arrSize_laws);
@@ -278,19 +282,18 @@ void road_laws()
 				if (vehcollidedwith_distance_x < 0) vehcollidedwith_distance_x = (vehcollidedwith_distance_x * -1);
 				if (vehcollidedwith_distance_y < 0) vehcollidedwith_distance_y = (vehcollidedwith_distance_y * -1);
 
-				if (ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(vehroadlaws) && vehcollidedwith_distance_x < 5 && vehcollidedwith_distance_y < 5)
-					if (Collision_seconds == -1) vehiclecollision_check = true;
+				if (ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(vehroadlaws) && vehcollidedwith_distance_x < 5 && vehcollidedwith_distance_y < 5 && Collision_seconds == -1) vehiclecollision_check = true;
 
 				if (vehiclecollision_check == true) {
 					SinceCollision_secs_passed = clock() / CLOCKS_PER_SEC;
 					if (((clock() / CLOCKS_PER_SEC) - SinceCollision_secs_curr) != 0) {
-						Collision_seconds = Collision_seconds + 1;
+						if (been_seen_by_a_cop == false) Collision_seconds = Collision_seconds + 1;
 						SinceCollision_secs_curr = SinceCollision_secs_passed;
 					}
-					if (Collision_seconds > 3) {
-						if (been_seen_by_a_cop == false) vehiclecollision_check = false;
-						Collision_seconds = -1;
-					}
+				}
+				if (Collision_seconds > 3) {
+					if (been_seen_by_a_cop == false) vehiclecollision_check = false;
+					Collision_seconds = -1;
 				}
 			}
 
@@ -477,7 +480,6 @@ void road_laws()
 			// You'll be fined if you don't move
 			if ((vehroadlaws_speed < 1 && vehcoplaws_speed < 1 && tempgotcha_x < 100 && tempgotcha_y < 100 && been_seen_by_a_cop == true) || (been_seen_by_a_cop == true && !PED::IS_PED_IN_VEHICLE(cop_that_fines_you, fine_cop_car, true)))
 			{
-				//VEHICLE::SET_VEHICLE_SIREN(fine_cop_car, false);
 				VEHICLE::DISABLE_VEHICLE_IMPACT_EXPLOSION_ACTIVATION(fine_cop_car, true);
 				SinceStop_secs_passed = clock() / CLOCKS_PER_SEC;
 				if (((clock() / CLOCKS_PER_SEC) - SinceStop_secs_curr) != 0) {
@@ -545,10 +547,15 @@ void road_laws()
 					if (Stop_seconds_final < 24 && been_seen_by_a_cop == true) Stop_seconds_final = Stop_seconds_final + 1;
 					SinceStop_secs_curr_final = SinceStop_secs_passed_final;
 				}
-				if (Stop_seconds_final == 7) AI::TASK_TURN_PED_TO_FACE_ENTITY(cop_that_fines_you, playerPed, -1);
+				Vector3 head_coords = PED::GET_PED_BONE_COORDS(playerPed, 31086, offsetX, offsetY, offsetZ);
+				if (Stop_seconds_final == 7) AI::TASK_TURN_PED_TO_FACE_COORD(cop_that_fines_you, head_coords.x, head_coords.y, head_coords.z, 10000);
+				if (Stop_seconds_final == 8) AI::TASK_TURN_PED_TO_FACE_COORD(cop_that_fines_you, head_coords.x, head_coords.y, head_coords.z, 10000);
+				if (Stop_seconds_final == 10) AI::TASK_TURN_PED_TO_FACE_COORD(cop_that_fines_you, head_coords.x, head_coords.y, head_coords.z, 10000);
+				if (Stop_seconds_final == 12) AI::TASK_TURN_PED_TO_FACE_COORD(cop_that_fines_you, head_coords.x, head_coords.y, head_coords.z, 10000);
+				if (Stop_seconds_final == 15) AI::TASK_TURN_PED_TO_FACE_COORD(cop_that_fines_you, head_coords.x, head_coords.y, head_coords.z, 10000);
 				if (Stop_seconds_final < 17) AUDIO::_PLAY_AMBIENT_SPEECH1(cop_that_fines_you, "GENERIC_INSULT_HIGH", "SPEECH_PARAMS_FORCE_SHOUTED");
 				if (Stop_seconds_final == 17) {
-					AI::TASK_TURN_PED_TO_FACE_ENTITY(cop_that_fines_you, playerPed, -1);
+					AI::TASK_TURN_PED_TO_FACE_COORD(cop_that_fines_you, head_coords.x, head_coords.y, head_coords.z, 100);
 					if (!AUDIO::IS_AMBIENT_SPEECH_PLAYING(cop_that_fines_you)) AUDIO::STOP_CURRENT_PLAYING_AMBIENT_SPEECH(cop_that_fines_you);
 				}
 				if (Stop_seconds_final == 18) {
@@ -558,7 +565,7 @@ void road_laws()
 					AI::TASK_PLAY_ANIM(cop_that_fines_you, "amb@code_human_in_car_mp_actions@gang_sign_b@low@ds@base", "enter", 8.0, 0.0, -1, 9, 0, 0, 0, 0);
 				}
 				if (Stop_seconds_final == 19) {
-					AI::TASK_TURN_PED_TO_FACE_ENTITY(cop_that_fines_you, playerPed, -1);
+					AI::TASK_TURN_PED_TO_FACE_COORD(cop_that_fines_you, head_coords.x, head_coords.y, head_coords.z, 100);
 					AUDIO::STOP_CURRENT_PLAYING_AMBIENT_SPEECH(cop_that_fines_you);
 					AI::STOP_ANIM_TASK(cop_that_fines_you, "amb@code_human_in_car_mp_actions@gang_sign_b@low@ds@base", "enter", 1.0);
 				}
@@ -680,7 +687,7 @@ void road_laws()
 
 			if (been_seen_by_a_cop == false) cop_walking = false;
 
-			if (PED::IS_PED_DEAD_OR_DYING(cop_that_fines_you, true) || PED::IS_PED_SHOOTING(cop_that_fines_you)) {
+			if (been_seen_by_a_cop == true && (PED::IS_PED_DEAD_OR_DYING(cop_that_fines_you, true) || PED::IS_PED_SHOOTING(cop_that_fines_you))) {
 				ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&cop_that_fines_you);
 				ENTITY::SET_VEHICLE_AS_NO_LONGER_NEEDED(&fine_cop_car);
 				if (featurePoliceVehicleBlip && UI::DOES_BLIP_EXIST(blip_laws)) UI::REMOVE_BLIP(&blip_laws);
