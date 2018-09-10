@@ -188,9 +188,6 @@ void trigger_function_for_hotkey_onkeyup(int hotkey)
 	case HKEY_TOGGLE_THERMAL_VIS:
 		toggle_thermal_vision();
 		break;
-	case HKEY_PASSENGER:
-		drive_passenger();
-		break;
 	case HKEY_VEHICLE_BURNOUT:
 		hotkey_held_veh_burnout = false;
 		break;

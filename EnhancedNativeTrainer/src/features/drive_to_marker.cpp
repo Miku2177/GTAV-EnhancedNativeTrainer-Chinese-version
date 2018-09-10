@@ -107,8 +107,6 @@ void drive_to_marker()
 
 			Vector3 spawn_coords_for_pilot = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(PLAYER::PLAYER_PED_ID(), 0.0, 5.0, 0.0);
 
-			//char *cstr = new char[TEL_CHAUFFEUR_CAPTIONS[TelChauffeurIndex].length() + 1];
-			//strcpy(cstr, TEL_CHAUFFEUR_CAPTIONS[TelChauffeurIndex].c_str());
 			char *cstr = new char[SKINS_GENERAL_VALUES[TelChauffeurIndex].length() + 1];
 			strcpy(cstr, SKINS_GENERAL_VALUES[TelChauffeurIndex].c_str());
 			driverPed_tomarker = GAMEPLAY::GET_HASH_KEY(cstr);
@@ -202,7 +200,7 @@ void drive_to_marker()
 			if (TEL_CHAUFFEUR_ALTITUDE_VALUES[TelChauffeur_altitude_Index] < 1000) temp_dist = 1500;
 			if (TEL_CHAUFFEUR_ALTITUDE_VALUES[TelChauffeur_altitude_Index] > 999) temp_dist = TEL_CHAUFFEUR_ALTITUDE_VALUES[TelChauffeur_altitude_Index] + 1000;
 
-			if (planecurrspeed > 20 && my_coords.z < TEL_CHAUFFEUR_ALTITUDE_VALUES[TelChauffeur_altitude_Index] && altitude_reached == false) { //  && dist_to_land_diff > temp_dist - 1 
+			if (planecurrspeed > 20 && my_coords.z < TEL_CHAUFFEUR_ALTITUDE_VALUES[TelChauffeur_altitude_Index] && altitude_reached == false) { 
 				if (curr_pitch < 20) ENTITY::SET_ENTITY_ROTATION(curr_veh, curr_pitch + 0.2, curr_roll, curr_yaw, 1, true);
 			}
 

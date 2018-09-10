@@ -429,7 +429,6 @@ void update_features(){
 		Vehicle veh2 = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		if (!VEHICLE_KILLED.empty() && VEHICLE_KILLED[0] == veh2) {
 			VEHICLE::SET_VEHICLE_ENGINE_HEALTH(veh2, -4000);
-			//VEHICLE::_SET_VEHICLE_HALT(veh2, 1000.0, 1, 1);
 		}
 	}
 
@@ -493,9 +492,6 @@ void update_features(){
 	////////////////////////////////////// PLAYER DATA ////////////////////////////////////////////////
 	
 	Ped playerPed_Data = PLAYER::PLAYER_PED_ID();
-	
-	//int playerHealth = ENTITY::GET_ENTITY_HEALTH(playerPed_Data);
-	//playerHealth = (playerHealth - 100);
 	
 	if ((bPlayerExists && featurePlayerLife && featurePlayerLifeUpdated) || (bPlayerExists && featurePlayerLife_Died && featurePlayerLifeUpdated) ||
 		(bPlayerExists && featurePlayerLife_Changed && featurePlayerLifeUpdated)) {
@@ -870,41 +866,12 @@ bool process_player_life_menu(){
 	listItem->value = current_player_armor;
 	menuItems.push_back(listItem);
 	
-	//item2 = new LifeItem<int>();
-	//item2->caption = "Current Health";
-	//item2->value = 0;
-	//item2->life = ENTITY::GET_ENTITY_HEALTH(playerPed) - 100;
-	//menuItems.push_back(item2);
-
-	//item = new LifeItem<int>();
-	//item->caption = "Maximum Health";
-	//item->value = 1;
-	//item->lifeType = MAXHEALTH;
-	//item->minimum = 100;
-	//item->life = PED::GET_PED_MAX_HEALTH(playerPed);
-	//menuItems.push_back(item);
-
-	//item2 = new LifeItem<int>();
-	//item2->caption = "Current Armor";
-	//item2->value = 1;
-	//item2->life = PED::GET_PED_ARMOUR(playerPed);
-	//menuItems.push_back(item2);
-
-	//item = new LifeItem<int>();
-	//item->caption = "Maximum Armor";
-	//item->value = 3;
-	//item->lifeType = MAXARMOR;
-	//item->minimum = 0;
-	//item->life = PLAYER::GET_PLAYER_MAX_ARMOUR(PLAYER::PLAYER_ID());
-	//menuItems.push_back(item);
-
 	listItem = new SelectFromListMenuItem(REGEN_CAPTIONS, onchange_regen_callback);
 	listItem->caption = "Health Regeneration Rate";
 	listItem->value = regenIndex;
 	menuItems.push_back(listItem);
 
 	return draw_generic_menu<int>(menuItems, &playerDataMenuIndex, caption, onconfirm_playerData_menu, NULL, NULL);
-	//draw_generic_menu<int>(menuItems, nullptr, "Player Data", nullptr, nullptr, nullptr, nullptr);
 }
 
 bool player_movement_speed() {

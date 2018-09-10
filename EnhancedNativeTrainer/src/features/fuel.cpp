@@ -210,7 +210,6 @@ void fuel()
 			// SHOW BLIPS
 			show_blips = true;
 			if (PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed) && phone_blips == false) {
-				//if (CONTROLS::IS_CONTROL_PRESSED(2, 27)) {
 				for (int i = 0; i < 32; i++) {
 					blip[i] = UI::ADD_BLIP_FOR_COORD(gasStations[i][0], gasStations[i][1], gasStations[i][2]);
 					UI::SET_BLIP_SPRITE(blip[i], 361);
@@ -223,7 +222,6 @@ void fuel()
 
 			// HIDE BLIPS
 			if (!PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed) && phone_blips == true) {
-				//if (CONTROLS::IS_CONTROL_PRESSED(2, 177)) {
 				for (int i = 0; i < BLIPTABLE.size(); i++) {
 					if (UI::DOES_BLIP_EXIST(BLIPTABLE[i])) {
 						UI::REMOVE_BLIP(&BLIPTABLE[i]);
@@ -326,15 +324,6 @@ void fuel()
 					std::swap(FUEL[0], FUEL.back());
 				}
 			}
-
-			// Is it bicycle? 
-			//is_it_bicycle = false;
-
-			//for (int i = 0; i < VALUES_VEHICLES_NOFUEL.size(); i++) {
-			//	char *currVeh = new char[VALUES_VEHICLES_NOFUEL[i].length() + 1];
-			//	strcpy(currVeh, VALUES_VEHICLES_NOFUEL[i].c_str());
-			//	if (ENTITY::GET_ENTITY_MODEL(veh) == GAMEPLAY::GET_HASH_KEY(currVeh)) is_it_bicycle = true;
-			//}
 
 			if (!VEHICLE::IS_THIS_MODEL_A_BICYCLE(ENTITY::GET_ENTITY_MODEL(veh))) {
 				// TYPES OF VEHICLES USING FUEL
@@ -565,21 +554,13 @@ void fuel()
 		std::vector<int> emptyVec;
 		std::vector<double> emptyVec_d;
 		if (!VEH_CARFUEL_VALUES.empty()) std::vector<int>(VEH_CARFUEL_VALUES).swap(emptyVec);
-		//if (!VEH_BIKEFUEL_VALUES.empty()) std::vector<int>(VEH_BIKEFUEL_VALUES).swap(emptyVec);
-		//if (!VEH_PLANEFUEL_VALUES.empty()) std::vector<int>(VEH_PLANEFUEL_VALUES).swap(emptyVec);
-		//if (!VEH_BOATFUEL_VALUES.empty()) std::vector<int>(VEH_BOATFUEL_VALUES).swap(emptyVec);
-		//if (!VEH_HELIFUEL_VALUES.empty()) std::vector<int>(VEH_HELIFUEL_VALUES).swap(emptyVec);
 		if (!VEH_REFUELSPEED_VALUES.empty()) std::vector<double>(VEH_REFUELSPEED_VALUES).swap(emptyVec_d);
 		if (!VEH_FUELPRICE_VALUES.empty()) std::vector<double>(VEH_FUELPRICE_VALUES).swap(emptyVec_d);
-		//if (!VEH_CANPRICE_VALUES.empty()) std::vector<double>(VEH_CANPRICE_VALUES).swap(emptyVec_d);
 		if (!VEH_FUELRANDOM1_VALUES.empty()) std::vector<int>(VEH_FUELRANDOM1_VALUES).swap(emptyVec);
 		if (!VEH_FUELRANDOM2_VALUES.empty()) std::vector<int>(VEH_FUELRANDOM2_VALUES).swap(emptyVec);
 		if (!VEH_FUELBARPOSITION_VALUES.empty()) std::vector<int>(VEH_FUELBARPOSITION_VALUES).swap(emptyVec);
 		if (!FUEL_COLOURS_R_VALUES.empty()) std::vector<int>(FUEL_COLOURS_R_VALUES).swap(emptyVec);
-		//if (!FUEL_COLOURS_G_VALUES.empty()) std::vector<int>(FUEL_COLOURS_G_VALUES).swap(emptyVec);
-		//if (!FUEL_COLOURS_B_VALUES.empty()) std::vector<int>(FUEL_COLOURS_B_VALUES).swap(emptyVec);
 		if (!VEH_FUELBLIPS_VALUES.empty()) std::vector<int>(VEH_FUELBLIPS_VALUES).swap(emptyVec);
-		//if (!FUEL_BACKGROUND_OPACITY_VALUES.empty()) std::vector<int>(FUEL_BACKGROUND_OPACITY_VALUES).swap(emptyVec);
 	}
 }
 

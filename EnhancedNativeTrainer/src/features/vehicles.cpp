@@ -34,7 +34,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include <cstdlib>
 using namespace std;
 
-const static int ENGINE_SOUND_COUNT_VEHICLES = 346;
+const static int ENGINE_SOUND_COUNT_VEHICLES = 347;
 
 bool featureVehInvincible = false;
 bool featureVehInvincibleUpdated = false;
@@ -221,26 +221,7 @@ bool VehBlipColour_Changed = true;
 
 //Blip Symbol
 const std::vector<std::string> VEH_BLIPSYMBOL_CAPTIONS{ "Standard", "Player", "North", "Waypoint", "BigCircleOutline", "ArrowUpOutlined", "ArrowDownOutlined", "ArrowUp", "ArrowDown", "PoliceHelicopterAnimated", "Jet" };
-/*"Lift", "RaceFinish", "Safehouse", "PoliceHelicopter", "ChatBubble", "Garage2", "Drugs", "Store", "PoliceCar", "PolicePlayer", "PoliceStation", "Hospital", "Helicopter", "StrangersAndFreaks", "Truck", "TowTruck", "Barber",
-"LosSantosCustoms", "Clothes", "TattooParlor", "Simeon", "Lester", "Michael", "Trevor", "H", "Rampage", "VinewoodTours", "Franklin", "Chinese", "Airport", "Bar", "BaseJump", "CarWash", "ComedyClub", "Dart", "FIB", 
-"DollarSign", "Golf", "AmmuNation", "Exile", "ShootingRange", "Solomon", "StripClub", "Tennis", "Triathlon", "OffRoadRaceFinish", "Chat", "Key", "MovieTheater", "Music", "Marijuana", "Hunting", "ArmsTraffickingGround", "Nigel", 
-"Health", "SonicWave", "PointOfInterest", "GTAOPassive", "GTAOUsingMenu", "Link", "Armor", "Castle", "Castle", "Camera",
-"Handcuffs", "Yoga", "Cab", "Shrink", "Epsilon", "Dollar", "PersonalVehicleCar", "PersonalVehicleBike", "CarPistol", "Custody", "ArmsTraffickingAir", "Fairground", "PropertyManagement", "Altruist", "Enemy", "Chop", "Dead", "Hooker",
-"Friend", "BountyHit", "GTAOMission", "GTAOSurvival", "CrateDrop", "PlaneDrop", "Sub", "Race", "Deathmatch", "ArmWrestling", "AmmuNationShootingRange", "RaceAir", "RaceCar", "RaceSea", "GarbageTruck", "SafehouseForSale", "Package",
-"MartinMadrazo", "EnemyHelicopter", "Boost", "Devin", "Marina", "Garage", "GolfFlag", "Hangar", "Helipad", "JerryCan", "Masks", "HeistSetup", "Incapacitated", "PickupSpawn", "BoilerSuit", "Completed", "Rockets", "GarageForSale",
-"HelipadForSale", "MarinaForSale", "HangarForSale", "Business", "BusinessForSale", "RaceBike", "Parachute", "TeamDeathmatch", "RaceFoot", "VehicleDeathmatch", "Barry", "Dom", "MaryAnn", "Cletus", "Josh", "Minute", "Omega", "Tonya",
-"Paparazzo", "Crosshair", "Creator", "CreatorDirection", "Abigail", "Blimp", "Repair", "Testosterone", "Dinghy", "Fanatic", "Information", "CaptureBriefcase", "LastTeamStanding", "Boat", "CaptureHouse", "JerryCan2", "RP", 
-"GTAOPlayerSafehouse", "GTAOPlayerSafehouseDead", "CaptureAmericanFlag", "CaptureFlag", "Tank", "HelicopterAnimated", "Plane", "PlayerNoColor", "GunCar", "Speedboat", "Stopwatch", "DollarSignCircled", "Crosshair2", "DollarSignSquared", 
-"Competititon", "Fire", "Skulls", "Crown", "Bag", "CrossedArrows", "WolfHead", "LD", "Service", "Ship", "Question", "Sniper", "WiFi", "Bolide", "Shield", "Hourglass", "Bomb", "ArrowCircle", "Star", "Iron", "Rugby", "Garage", "Garage2", 
-"Building", "Building2", "Van", "Crate", "Trailer", "Man", "HeliHook", "Speedometer", "Ghost", "Radio", "Perfume", "Shield2", "BurningWheel", "Heart", "BurningDollar", "People", "HouseGarage", "BikeArrows", "BikeCircle", "BikeFlags", 
-"Blade", "Badge", "Tube", "Money", "Package", "ATV", "Bus", "Parcel", "Arrow", "Notebook" };*/
-const std::vector<int> VEH_BLIPSYMBOL_VALUES{ 1, 6, 7, 8, 10, 11, 12, 13, 14, 15, 16 }; //, 36, 38, 40, 43, 47, 50, 51, 52, 56, 58, 60, 61, 64, 66, 67, 68, 71, 72, 73, 75, 76, 77,
-/*78, 79, 80, 84, 85, 88, 89, 90, 93, 94, 100, 102, 103, 106, 108, 109, 110, 112, 119, 120, 121, 122, 126, 127, 133, 134, 135, 136, 140, 141, 147, 149, 153, 161, 162, 163, 164, 171,
-175, 176, 181, 184, 188, 197, 198, 205, 206, 207, 225, 226, 229, 237, 251, 266, 267, 269, 270, 273, 274, 279, 280, 303, 304, 305, 306, 307, 308, 309, 310, 311,
-313, 314, 315, 316, 318, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 367, 368, 369, 370, 371, 372, 374, 375, 376, 377, 378, 379, 380, 381, 382, 383, 384, 385, 386, 387, 388,
-389, 390, 398, 399, 400, 401, 402, 403, 404, 405, 407, 408, 409, 410, 411, 415, 416, 417, 418, 419, 420, 421, 422, 423, 425, 426, 427, 430, 431, 432, 434, 435, 436, 437, 439, 440,
-441, 442, 445, 446, 455, 456, 458, 459, 460, 461, 464, 466, 467, 468, 471, 472, 473, 474, 475, 476, 477, 478, 479, 480, 481, 483, 484, 485, 486, 487, 488, 489, 490,
-491, 492, 493, 494, 495, 497, 498, 499, 500, 501, 512, 513, 514, 515, 521 };*/
+const std::vector<int> VEH_BLIPSYMBOL_VALUES{ 1, 6, 7, 8, 10, 11, 12, 13, 14, 15, 16 }; 
 int VehBlipSymbolIndex = 0;
 bool VehBlipSymbol_Changed = true;
 
@@ -296,8 +277,6 @@ const std::vector<std::string> CAPTIONS_SEDANS{ "Albany Emperor", "Albany Empero
 
 const std::vector<std::string> CAPTIONS_COMPACTS{ "Benefactor Panto", "Bollokan Prairie", "Declasse Rhapsody", "Dinka Blista", "Grotti Brioso R/A (Race)",  "Karin Dilettante", "Karin Dilettante (Liveried)", "Weeny Issi", "Weeny Issi Classic (Super Sports)" };
 
-/*const std::vector<std::string> CAPTIONS_LOWRIDERS{ "Albany Buccaneer (Custom)", "Albany Primo (Custom)", "Albany Virgo (Custom Donk)", "Albany Virgo (Custom)", "Declasse Moonbeam (Custom)", "Declasse Sabre Turbo (Custom)", "Declasse Tornado (Custom)", "Declasse Voodoo (Custom)", "Vapid Chino (Custom)", "Vapid Minivan (Custom)", "Vapid Slamvan (Custom)", "Willard Faction (Custom Donk)", "Willard Faction (Custom)" };*/
-
 const std::vector<std::string> VALUES_SUPERCARS{ "LE7B", "BANSHEE2", "TAIPAN", "CYCLONE", "VOLTIC2", "VOLTIC", "SCRAMJET", "VAGNER", "SHEAVA", "CHEETAH", "TURISMOR", "VISIONE", "PROTOTIPO", "SULTANRS", "PENETRATOR", "XA21", "AUTARCH", "ENTITYXF", "ENTITY2", "TYRANT", "INFERNUS", "OSIRIS", "REAPER", "TEMPESTA", "TEZERACT", "VACCA", "ZENTORNO", "PFISTER811", "GP1", "ITALIGTB", "ITALIGTB2", "T20", "TYRUS", "ADDER", "NERO", "NERO2", "SC1", "BULLET", "FMJ", "VIGILANTE" };
 
 const std::vector<std::string> VALUES_SPORTS{ "ALPHA", "ELEGY", "ELEGY2", "FELTZER2", "SCHAFTER4", "SCHAFTER3", "SCHWARZER", "STREITER", "SURANO", "RAPTOR", "BANSHEE", "BUFFALO", "BUFFALO2", "BUFFALO3", "VERLIERER2", "RAIDEN", "TAMPA2", "HOTRING", "MASSACRO", "MASSACRO2", "RAPIDGT", "RAPIDGT2", "SEVEN70", "SPECTER", "SPECTER2", "BLISTA2", "BLISTA3", "JESTER", "JESTER3", "JESTER2", "BESTIAGTS", "CARBONIZZARE", "KHAMELION", "RUSTON", "COQUETTE", "FUTO", "KURUMA", "KURUMA2", "SULTAN", "FUROREGT", "TROPOS", "PENUMBRA", "NINEF", "NINEF2", "OMNIS", "LYNX", "PARIAH", "COMET2", "COMET3", "COMET4", "COMET5", "NEON", "FUSILADE", "REVOLTER", "SENTINEL3", "FLASHGT", "GB200" };
@@ -316,25 +295,19 @@ const std::vector<std::string> VALUES_SEDANS{ "EMPEROR", "EMPEROR2", "EMPEROR3",
 
 const std::vector<std::string> VALUES_COMPACTS{ "PANTO", "PRAIRIE", "RHAPSODY", "BLISTA", "BRIOSO", "DILETTANTE", "DILETTANTE2", "ISSI2", "ISSI3" };
 
-/*const std::vector<std::string> VALUES_LOWRIDERS{ "BUCCANEER2", "PRIMO2", "VIRGO3", "VIRGO2", "MOONBEAM2", "SABREGT2", "TORNADO5", "VOODOO", "CHINO2", "SLAMVAN3", "FACTION3", "FACTION2" };*/
-
 const std::vector<std::string> VOV_CAR_CAPTIONS[] = { CAPTIONS_SUPERCARS, CAPTIONS_SPORTS, CAPTIONS_SPORTSCLASSICS, CAPTIONS_COUPES, CAPTIONS_MUSCLE, CAPTIONS_OFFROAD, CAPTIONS_SUVS, CAPTIONS_SEDANS, CAPTIONS_COMPACTS/*, CAPTIONS_LOWRIDERS*/ };
 
 const std::vector<std::string> VOV_CAR_VALUES[] = { VALUES_SUPERCARS, VALUES_SPORTS, VALUES_SPORTSCLASSICS, VALUES_COUPES, VALUES_MUSCLE, VALUES_OFFROAD, VALUES_SUVS, VALUES_SEDANS, VALUES_COMPACTS/*, VALUES_LOWRIDERS*/ };
 
 //Industrial
 
-const std::vector<std::string> MENU_INDUS_CATEGORIES{ "Industrial", "Commercial", /*"Pickups",*/ "Vans", /*"Trucks",*/ "Service/Utility", "Trailers", "Trains (Undriveable)" };
+const std::vector<std::string> MENU_INDUS_CATEGORIES{ "Industrial", "Commercial", "Vans", "Service/Utility", "Trailers", "Trains (Undriveable)" };
 
 const std::vector<std::string> CAPTIONS_INDUSTRIAL{ "Brute Tipper (2 Axle)", "Brute Tipper (3 Axle)", "Dock Handler", "HVY Cutter", "HVY Dozer", "HVY Dump", "HVY Mixer", "HVY Mixer (Support Wheel)", "JoBuilt Rubble", "MTL Flatbed", "Vapid Guardian" };
 
 const std::vector<std::string> CAPTIONS_COMMERCIAL{ "Benefactor Terrorbyte (After Hours)", "Brute Stockade", "Brute Stockade (Snow)", "HVY Biff", "JoBuilt Hauler", "JoBuilt Hauler Custom (Gun Runner)", "JoBuilt Phantom", "JoBuilt Phantom Custom (Gun Runner)", "JoBuilt Phantom Wedge (Import-Export)", "Maibatsu Mule (Graphics 1)", "Maibatsu Mule (Graphics 2)", "Maibatsu Mule (Plain)", "Maibatsu Mule Custom (After Hours)", "MTL Packer", "MTL Pounder", "MTL Pounder Custom (After Hours)", "Vapid Benson" };
 
-/*const std::vector<std::string> CAPTIONS_PICKUPS{ "Bravado Bison", "Bravado Bison (Backrack)", "Bravado Bison (Construction)", "Bravado Ratloader", "Bravado Ratloader (Rusty)", "Vapid Bobcat XL", "Vapid Sadler", "Vapid Sadler (Snow)" };*/
-
 const std::vector<std::string> CAPTIONS_VANS{ "BF Surfer", "BF Surfer (Rusty)", "Bravado Bison", "Bravado Bison (Backrack)", "Bravado Bison (Construction)", "Bravado Paradise", "Bravado Rumpo (Deludamol)", "Bravado Rumpo (Plain/Weazel)", "Bravado Rumpo Custom (Executive)", "Bravado Youga", "Bravado Youga classic (Bikers)", "Brute Boxville (Go Postal)", "Brute Boxville (Humane Labs)", "Brute Boxville Armored (Import-Export)", "Brute Boxville (Post OP)", "Brute Boxville (Water & Power)", "Brute Camper", "Brute Pony (Business)", "Brute Pony (Cannibus Shop)", "Brute Taco Van", "Declasse Burrito", "Declasse Burrito (Bug Stars)", "Declasse Burrito (Construction)", "Declasse Burrito (Gang)", "Declasse Burrito (Graphics)", "Declasse Burrito (Snow)", "Declasse Burrito Gang (The Lost)", "Vapid Bobcat XL", "Vapid Minivan", "Vapid Minivan (Custom)", "Vapid Speedo", "Vapid Speedo Clown Van", "Vapid Speedo Custom (After Hours)", "Zirconium Journey" };
-
-/*const std::vector<std::string> CAPTIONS_TRUCKS{ "Bravado Halftrack (Gun Runner)", "Brute Boxville (Go Postal)", "Brute Boxville (Humane Labs)", "Brute Boxville (Post OP)", "Brute Boxville (Water & Power)","Brute Armoured Boxville (Import-Export)", "Brute Stockade", "Brute Stockade (Snow)", "Brute Tipper (2 Axle)", "Brute Tipper (3 Axle)", "Cutter", "Dock Handler", "Dock Tug", "Dump Truck", "HVY Biff", "HVY APC (Gun Runner)", "HVY Nightshark (Gun Runner)", "JoBuilt Hauler", "JoBuilt Hauler (Gun Runner)", "JoBuilt Phantom", "JoBuilt Phantom Wedge (Import-Export)" ,"JoBuilt Phantom (Gun Runner)", "JoBuilt Rubble", "Maibatsu Mule (Graphics 1)", "Maibatsu Mule (Graphics 2)", "Maibatsu Mule (Plain)", "Mixer", "Mixer (Support Wheel)", "MTL Flatbed Truck", "MTL Packer", "MTL Pounder", "MTL Wastelander (Import-Export)", "Vapid Benson", "Vapid Scrap Truck", "Vapid Tow Truck", "Vapid Tow Truck (Old)" };*/
 
 const std::vector<std::string> CAPTIONS_SERVICES{ "Airtug", "Brute Airport Bus", "Brute Bus (City Bus)", "Brute Rental Shuttle Bus", "Brute Tourbus", "Cable Car (Mt. Chilliad)", "Dashound Coach", "Docktug", "HVY Forklift", "JoBuilt Trashmaster", "JoBuilt Trashmaster (Rusty)", "MTL Brickade (Executive)", "MTL Dune (Race)", "MTL Wastelander (Import-Export)", "Nagasaki Caddy (New)", "Nagasaki Caddy (Gun Runner)", "Nagasaki Caddy (Old)", "Ripley (Airport Tug)", "Stanley Fieldmaster Tractor", "Stanley Fieldmaster Tractor (Snow)", "Stanley Lawn Mower", "Stanley Tractor (Rusty)", "Taxi", "Vapid Festival Bus (After Hours)", "Vapid Pickup Utility", "Vapid Plumbing Utility Truck", "Vapid Sadler", "Vapid Sadler (Snow)", "Vapid Scrap Truck", "Vapid Telephone Utility Truck", "Vapid Tow Truck", "Vapid Tow Truck (Old)" };
 
@@ -346,11 +319,7 @@ const std::vector<std::string> VALUES_INDUSTRIAL{ "TIPTRUCK", "TIPTRUCK2", "HAND
 
 const std::vector<std::string> VALUES_COMMERCIAL{ "TERBYTE", "STOCKADE", "STOCKADE3", "BIFF", "HAULER", "HAULER2", "PHANTOM", "PHANTOM3", "PHANTOM2", "MULE", "MULE2", "MULE3", "MULE4", "PACKER", "POUNDER", "POUNDER2", "BENSON" };
 
-/*const std::vector<std::string> VALUES_PICKUPS{ "BISON", "BISON3", "BISON2", "RATLOADER2", "RATLOADER", "BOBCATXL", "SADLER", "SADLER2" };*/
-
 const std::vector<std::string> VALUES_VANS{ "SURFER", "SURFER2", "BISON", "BISON3", "BISON2", "PARADISE", "RUMPO2", "RUMPO", "RUMPO3", "YOUGA", "YOUGA2", "BOXVILLE2", "BOXVILLE3", "BOXVILLE5", "BOXVILLE4", "BOXVILLE", "CAMPER", "PONY", "PONY2", "TACO", "BURRITO3", "BURRITO2", "BURRITO4", "GBURRITO2", "BURRITO", "BURRITO5", "GBURRITO", "BOBCATXL", "MINIVAN", "MINIVAN2", "SPEEDO", "SPEEDO2", "SPEEDO4", "JOURNEY" };
-
-/*const std::vector<std::string> VALUES_TRUCKS{ "HALFTRACK", "BOXVILLE2", "BOXVILLE3", "BOXVILLE4", "BOXVILLE","BOXVILLE5", "STOCKADE", "STOCKADE3", "TIPTRUCK", "TIPTRUCK2", "CUTTER", "HANDLER", "DOCKTUG", "DUMP", "BIFF", "APC", "NIGHTSHARK", "HAULER", "HAULER2", "PHANTOM","PHANTOM2", "PHANTOM3", "RUBBLE", "MULE", "MULE2", "MULE3", "MIXER", "MIXER2", "FLATBED", "PACKER", "POUNDER", "WASTELANDER", "BENSON", "SCRAP", "TOWTRUCK", "TOWTRUCK2" };*/
 
 const std::vector<std::string> VALUES_SERVICES{ "AIRTUG", "AIRBUS", "BUS", "RENTALBUS", "TOURBUS", "CABLECAR", "COACH", "DOCKTUG", "FORKLIFT", "TRASH", "TRASH2", "BRICKADE", "RALLYTRUCK", "WASTELANDER", "CADDY", "CADDY3", "CADDY2", "RIPLEY", "TRACTOR2", "TRACTOR3", "MOWER", "TRACTOR", "TAXI", "PBUS2", "UTILLITRUCK3", "UTILLITRUCK2", "SADLER", "SADLER2", "SCRAP", "UTILLITRUCK", "TOWTRUCK", "TOWTRUCK2" };
 
@@ -358,9 +327,9 @@ const std::vector<std::string> VALUES_TRAILERS{ "ARMYTRAILER", "ARMYTRAILER2", "
 
 const std::vector<std::string> VALUES_TRAINS{ "FREIGHTCONT1", "FREIGHTCONT2", "FREIGHTCAR", "FREIGHT", "FREIGHTGRAIN", "METROTRAIN", "TANKERCAR" };
 
-const std::vector<std::string> VOV_INDUS_CAPTIONS[] = { CAPTIONS_INDUSTRIAL, CAPTIONS_COMMERCIAL, /*CAPTIONS_PICKUPS,*/ CAPTIONS_VANS, /*CAPTIONS_TRUCKS,*/ CAPTIONS_SERVICES, CAPTIONS_TRAILERS, CAPTIONS_TRAINS };
+const std::vector<std::string> VOV_INDUS_CAPTIONS[] = { CAPTIONS_INDUSTRIAL, CAPTIONS_COMMERCIAL, CAPTIONS_VANS, CAPTIONS_SERVICES, CAPTIONS_TRAILERS, CAPTIONS_TRAINS };
 
-const std::vector<std::string> VOV_INDUS_VALUES[] = { VALUES_INDUSTRIAL, VALUES_COMMERCIAL,/*VALUES_PICKUPS,*/ VALUES_VANS, /*VALUES_TRUCKS,*/ VALUES_SERVICES, VALUES_TRAILERS, VALUES_TRAINS };
+const std::vector<std::string> VOV_INDUS_VALUES[] = { VALUES_INDUSTRIAL, VALUES_COMMERCIAL, VALUES_VANS, VALUES_SERVICES, VALUES_TRAILERS, VALUES_TRAINS };
 
 //Everything else
 
@@ -482,7 +451,6 @@ void enter_damaged_vehicle() { // enter destroyed vehicle
 		Vector3 coordsdamagedvehicle = ENTITY::GET_ENTITY_COORDS(enter_veh[i], true);
 		float dist_to_damaged_diff = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsdamagedvehicle.x, coordsdamagedvehicle.y, coordsdamagedvehicle.z);
 		if (dist_to_damaged_diff < 5) PED::SET_PED_INTO_VEHICLE(PLAYER::PLAYER_PED_ID(), enter_veh[i], -1);
-		//AI::TASK_ENTER_VEHICLE(PLAYER::PLAYER_PED_ID(), enter_veh[i], 1000, -1, 2.0, 16, 0); // && VEHICLE::_IS_VEHICLE_DAMAGED(enter_veh[i])
 	}
 }
 
@@ -813,79 +781,8 @@ bool onconfirm_colours2_menu(MenuItem<int> choice)
 	return false;
 }
 
-/*bool process_message_colour_menu(){
-	std::string caption = "RGB Settings";
-
-	std::vector<MenuItem<int>*> menuItems;
-
-	SelectFromListMenuItem *listItem;
-
-	int i = 0;
-	
-	listItem = new SelectFromListMenuItem(SPEED_COLOURS_R_CAPTIONS, onchange_speed_colours_r_index);
-	listItem->wrap = false;
-	listItem->caption = "R:";
-	listItem->value = SpeedColours_R_Index;
-	menuItems.push_back(listItem);
-
-	listItem = new SelectFromListMenuItem(SPEED_COLOURS_G_CAPTIONS, onchange_speed_colours_g_index);
-	listItem->wrap = false;
-	listItem->caption = "G:";
-	listItem->value = SpeedColours_G_Index;
-	menuItems.push_back(listItem);
-
-	listItem = new SelectFromListMenuItem(SPEED_COLOURS_B_CAPTIONS, onchange_speed_colours_b_index);
-	listItem->wrap = false;
-	listItem->caption = "B:";
-	listItem->value = SpeedColours_B_Index;
-	menuItems.push_back(listItem);
-
-	return draw_generic_menu<int>(menuItems, 0, "Message Colour", onconfirm_colours_menu, NULL, NULL);
-}*/
-
-/*bool process_value_colour_menu(){
-	std::string caption = "RGB Settings";
-
-	std::vector<MenuItem<int>*> menuItems;
-	SelectFromListMenuItem *listItem;
-
-	int i = 0;
-
-	listItem = new SelectFromListMenuItem(SPEED_COLOURS2_R_CAPTIONS, onchange_speed_colours2_r_index);
-	listItem->wrap = false;
-	listItem->caption = "R:";
-	listItem->value = SpeedColours2_R_Index;
-	menuItems.push_back(listItem);
-
-	listItem = new SelectFromListMenuItem(SPEED_COLOURS2_G_CAPTIONS, onchange_speed_colours2_g_index);
-	listItem->wrap = false;
-	listItem->caption = "G:";
-	listItem->value = SpeedColours2_G_Index;
-	menuItems.push_back(listItem);
-
-	listItem = new SelectFromListMenuItem(SPEED_COLOURS2_B_CAPTIONS, onchange_speed_colours2_b_index);
-	listItem->wrap = false;
-	listItem->caption = "B:";
-	listItem->value = SpeedColours2_B_Index;
-	menuItems.push_back(listItem);
-
-	return draw_generic_menu<int>(menuItems, 0, "Value Colour", onconfirm_colours2_menu, NULL, NULL);
-}*/
-
 bool onconfirm_speed_menu(MenuItem<int> choice)
 {
-	//BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
-	//Player player = PLAYER::PLAYER_ID();
-	//Ped playerPed = PLAYER::PLAYER_PED_ID();
-
-	//switch (activeLineIndexSpeed){
-	//case 7:
-	//	if (process_message_colour_menu()) return false;
-	//	break;
-	//case 8:
-	//	if (process_value_colour_menu()) return false;
-	//	break;
-	//}
 	return false;
 }
 
@@ -942,18 +839,6 @@ void process_speed_menu(){
 	listItem->value = SpeedPositionIndex;
 	menuItems.push_back(listItem);
 
-	//item = new MenuItem<int>();
-	//item->caption = "Message Colour";
-	//item->value = i++;
-	//item->isLeaf = false;
-	//menuItems.push_back(item);
-
-	//item = new MenuItem<int>();
-	//item->caption = "Value Colour";
-	//item->value = i++;
-	//item->isLeaf = false;
-	//menuItems.push_back(item);
-	
 	draw_generic_menu<int>(menuItems, &activeLineIndexSpeed, caption, onconfirm_speed_menu, NULL, NULL);
 }
 
@@ -1744,12 +1629,6 @@ void process_veh_menu(){
 	item->isLeaf = false;
 	menuItems.push_back(item);
 
-	//toggleItem = new ToggleMenuItem<int>();
-	//toggleItem->caption = "Keep The Engine Running";
-	//toggleItem->value = i++;
-	//toggleItem->toggleValue = &featureEngineRunning;
-	//menuItems.push_back(toggleItem);
-
 	listItem = new SelectFromListMenuItem(VEH_ENGINERUNNING_CAPTIONS, onchange_veh_enginerunning_index);
 	listItem->wrap = false;
 	listItem->caption = "Keep Engine Running";
@@ -2047,8 +1926,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	if (bPlayerExists){
 		if (featureWearHelmetOffUpdated || did_player_just_enter_vehicle(playerPed)){
 			PED::SET_PED_HELMET(playerPed, !featureWearHelmetOff);
-			//PED::REMOVE_PED_HELMET(playerPed, true);
-			//PED::SET_PED_HELMET(playerPed, false);
 			featureWearHelmetOffUpdated = false;
 		}
 	}
@@ -2128,7 +2005,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 								direction.y = 1 * direction.y;
 								direction.z = 1 * direction.z;
 								ENTITY::APPLY_FORCE_TO_ENTITY(nearbyPed[i], 1, direction.x, direction.y, direction.z, Rot.x, Rot.y, Rot.z, false, false, true, true, false, true);
-								//ENTITY::APPLY_FORCE_TO_ENTITY(veh2, 4, (ENTITY::GET_ENTITY_SPEED(veh) * VEH_MASS_VALUES[VehMassMultIndex]), 0, 0, 0, 0, 0, 1, true, true, true, true, true);
 							}
 						}
 					}
@@ -2146,7 +2022,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 							direction.y = 1 * direction.y;
 							direction.z = 1 * direction.z;
 							ENTITY::APPLY_FORCE_TO_ENTITY(nearbyPed[i], 1, direction.x, direction.y, VEH_MASS_VALUES[VehMassMultIndex] / 100, Rot.x, Rot.y, Rot.z, false, false, true, true, false, true);
-							//ENTITY::APPLY_FORCE_TO_ENTITY(veh2, 4, (ENTITY::GET_ENTITY_SPEED(veh) * VEH_MASS_VALUES[VehMassMultIndex]), 0, 0, 0, 0, 0, 1, true, true, true, true, true);
 						}
 					}
 				} 
@@ -2168,7 +2043,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 							if (VEH_MASS_VALUES[VehMassMultIndex] == 1000) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyPed[i], 1, direction.x, direction.y, VEH_MASS_VALUES[VehMassMultIndex] / 100, Rot.x, Rot.y, Rot.z, false, false, true, true, false, true);
 							if (VEH_MASS_VALUES[VehMassMultIndex] == 5000) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyPed[i], 1, direction.x, direction.y, VEH_MASS_VALUES[VehMassMultIndex] / 10, Rot.x, Rot.y, Rot.z, false, false, true, true, false, true);
 							if (VEH_MASS_VALUES[VehMassMultIndex] == 10000) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyPed[i], 1, direction.x, direction.y, VEH_MASS_VALUES[VehMassMultIndex] / 1, Rot.x, Rot.y, Rot.z, false, false, true, true, false, true);
-							//if (VEH_MASS_VALUES[VehMassMultIndex] == 50000) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyPed[i], 1, direction.x, direction.y, VEH_MASS_VALUES[VehMassMultIndex] / 10, Rot.x, Rot.y, Rot.z, false, false, true, true, false, true);
 							if (VEH_MASS_VALUES[VehMassMultIndex] == 50000) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyPed[i], 4, (ENTITY::GET_ENTITY_SPEED(veh) * VEH_MASS_VALUES[VehMassMultIndex]), 0, 0, 0, 0, 0, 1, true, true, true, true, true);
 						}
 					}
@@ -2520,8 +2394,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		been_already = false;
 	}
 	
-	//if (featureRememberVehicles && VehBlipSymbolIndex == NULL) VehBlipSymbolIndex = 0;
-
 	if (!VEHICLES_REMEMBER.empty() && !featureDeleteTrackedVehicles && featureDeleteTrackedVehicles_Emptied == false) {
 		for (int i = 0; i < VEHICLES_REMEMBER.size(); i++) {
 			blip_veh[0] = UI::ADD_BLIP_FOR_ENTITY(VEHICLES_REMEMBER[i]);
@@ -2730,25 +2602,16 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		Vector3 myvehicle_coords = ENTITY::GET_ENTITY_COORDS(myVehicle, true);
 		float myvehicle_heading = ENTITY::GET_ENTITY_HEADING(myVehicle); 
 
-		//STREAMING::REQUEST_MODEL(GAMEPLAY::GET_HASH_KEY("BMX"));
-		//while (!STREAMING::HAS_MODEL_LOADED(GAMEPLAY::GET_HASH_KEY("BMX"))) {
-		//	make_periodic_feature_call();
-		//	WAIT(0);
-		//}
-		
-		//if (STREAMING::HAS_MODEL_LOADED(GAMEPLAY::GET_HASH_KEY("BMX")))
-		//{
-			Vehicle temp_object = VEHICLE::CREATE_VEHICLE(GAMEPLAY::GET_HASH_KEY("BMX"), myvehicle_coords.x, myvehicle_coords.y, myvehicle_coords.z, myvehicle_heading, 1, 1); // 20, 1
-			ENTITY::ATTACH_ENTITY_TO_ENTITY_PHYSICALLY(/*ENTITY_1*/myVehicle, /*ENTITY_2*/temp_object, /*BONE_INDEX_1*/0, /*BONE_INDEX_2*/0.0, /*XPOS_1*/50.0, /*YPOS_1*/50.0, /*ZPOS_1*/-0.5,
-				/*XPOS_2*/0.0, /*YPOS_2*/0.0, /*ZPOS_2*/0.0, /*XROT*/0.0, /*YROT*/0.0, /*ZROT*/0.0, /*BREAKFORCE*/1.0, /*FIXEDROT*/true, /*P15*/false, /*COLLISION*/false, /*P17*/1, /*P18*/true);
-			ENTITY::SET_ENTITY_ALPHA(temp_object, 0, 0);
-			if (VEH_ENGINERUNNING_VALUES[EngineRunningIndex] < 2) WAIT(1000);
-			if (VEH_ENGINERUNNING_VALUES[EngineRunningIndex] == 2) WAIT(100); // Keep Engine Running feature compatibility line
+		Vehicle temp_object = VEHICLE::CREATE_VEHICLE(GAMEPLAY::GET_HASH_KEY("BMX"), myvehicle_coords.x, myvehicle_coords.y, myvehicle_coords.z, myvehicle_heading, 1, 1); // 20, 1
+		ENTITY::ATTACH_ENTITY_TO_ENTITY_PHYSICALLY(/*ENTITY_1*/myVehicle, /*ENTITY_2*/temp_object, /*BONE_INDEX_1*/0, /*BONE_INDEX_2*/0.0, /*XPOS_1*/50.0, /*YPOS_1*/50.0, /*ZPOS_1*/-0.5,
+			/*XPOS_2*/0.0, /*YPOS_2*/0.0, /*ZPOS_2*/0.0, /*XROT*/0.0, /*YROT*/0.0, /*ZROT*/0.0, /*BREAKFORCE*/1.0, /*FIXEDROT*/true, /*P15*/false, /*COLLISION*/false, /*P17*/1, /*P18*/true);
+		ENTITY::SET_ENTITY_ALPHA(temp_object, 0, 0);
+		if (VEH_ENGINERUNNING_VALUES[EngineRunningIndex] < 2) WAIT(1000);
+		if (VEH_ENGINERUNNING_VALUES[EngineRunningIndex] == 2) WAIT(100); // Keep Engine Running feature compatibility line
 				
-			ENTITY::DETACH_ENTITY(myVehicle, true, true);
+		ENTITY::DETACH_ENTITY(myVehicle, true, true);
 
-			VEHICLE::DELETE_VEHICLE(&temp_object);
-		//}
+		VEHICLE::DELETE_VEHICLE(&temp_object);
 	} 
 	
 ///////////////////////////////////////////////////////////////////////////////////
@@ -2846,12 +2709,6 @@ void reset_vehicle_globals() {
 	activeLineIndexRemember = 0;
 	activeLineIndexRoadLaws = 0;
 
-	//SpeedColours_R_Index = 26;
-	//SpeedColours_G_Index = 0;
-	//SpeedColours_B_Index = 0;
-	//SpeedColours2_R_Index = 26;
-	//SpeedColours2_G_Index = 26;
-	//SpeedColours2_B_Index = 0;
 	FuelColours_R_Index = 26;
 	FuelColours_G_Index = 18;
 	FuelColours_B_Index = 12;
@@ -3696,12 +3553,6 @@ void add_vehicle_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"Random1Index", std::to_string(Random1Index)});
 	results->push_back(StringPairSettingDBRow{"Random2Index", std::to_string(Random2Index)});
 	results->push_back(StringPairSettingDBRow{"BarPositionIndex", std::to_string(BarPositionIndex)});
-	//results->push_back(StringPairSettingDBRow{"SpeedColours_R_Index", std::to_string(SpeedColours_R_Index)});
-	//results->push_back(StringPairSettingDBRow{"SpeedColours_G_Index", std::to_string(SpeedColours_G_Index)});
-	//results->push_back(StringPairSettingDBRow{"SpeedColours_B_Index", std::to_string(SpeedColours_B_Index)});
-	//results->push_back(StringPairSettingDBRow{"SpeedColours2_R_Index", std::to_string(SpeedColours2_R_Index)});
-	//results->push_back(StringPairSettingDBRow{"SpeedColours2_G_Index", std::to_string(SpeedColours2_G_Index)});
-	//results->push_back(StringPairSettingDBRow{"SpeedColours2_B_Index", std::to_string(SpeedColours2_B_Index)});
 	results->push_back(StringPairSettingDBRow{"FuelColours_R_Index", std::to_string(FuelColours_R_Index)});
 	results->push_back(StringPairSettingDBRow{"FuelColours_G_Index", std::to_string(FuelColours_G_Index)});
 	results->push_back(StringPairSettingDBRow{"FuelColours_B_Index", std::to_string(FuelColours_B_Index)});
@@ -3785,13 +3636,10 @@ void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settin
 		else if (setting.name.compare("FineSizeIndex") == 0){
 			FineSizeIndex = stoi(setting.value);
 		}
-		//else if (setting.name.compare("VehBlipSymbolIndex") == NULL) {
-		//	VehBlipSymbolIndex = 0;
-		//}
 		else if (setting.name.compare("VehBlipSymbolIndex") == 0 && VEH_BLIPSYMBOL_VALUES.size() > 0 && VehBlipSymbolIndex < VEH_BLIPSYMBOL_VALUES.size()){
 			VehBlipSymbolIndex = stoi(setting.value);
 		} 
-		else if (VEH_BLIPSYMBOL_VALUES.size() > 0 && VehBlipSymbolIndex >= VEH_BLIPSYMBOL_VALUES.size()) { // setting.name.compare("VehBlipSymbolIndex") == 0 &&
+		else if (VEH_BLIPSYMBOL_VALUES.size() > 0 && VehBlipSymbolIndex >= VEH_BLIPSYMBOL_VALUES.size()) { 
 			VehBlipSymbolIndex = 0;
 		}
 		else if (setting.name.compare("VehBlipFlashIndex") == 0){
@@ -3863,24 +3711,6 @@ void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settin
 		else if (setting.name.compare("BarPositionIndex") == 0){
 			BarPositionIndex = stoi(setting.value);
 		}
-		//else if (setting.name.compare("SpeedColours_R_Index") == 0){
-		//	SpeedColours_R_Index = stoi(setting.value);
-		//}
-		//else if (setting.name.compare("SpeedColours_G_Index") == 0){
-		//	SpeedColours_G_Index = stoi(setting.value);
-		//}
-		//else if (setting.name.compare("SpeedColours_B_Index") == 0){
-		//	SpeedColours_B_Index = stoi(setting.value);
-		//}
-		//else if (setting.name.compare("SpeedColours2_R_Index") == 0){
-		//	SpeedColours2_R_Index = stoi(setting.value);
-		//}
-		//else if (setting.name.compare("SpeedColours2_G_Index") == 0){
-		//	SpeedColours2_G_Index = stoi(setting.value);
-		//}
-		//else if (setting.name.compare("SpeedColours2_B_Index") == 0){
-		//	SpeedColours2_B_Index = stoi(setting.value);
-		//}
 		else if (setting.name.compare("FuelColours_R_Index") == 0){
 			FuelColours_R_Index = stoi(setting.value);
 		}
@@ -4141,36 +3971,6 @@ void onchange_barposition_index(int value, SelectFromListMenuItem* source){
 	BarPositionIndex = value;
 	PositionChanged = true;
 }
-
-//void onchange_speed_colours_r_index(int value, SelectFromListMenuItem* source){
-//	SpeedColours_R_Index = value;
-//	Colours_R_Changed = true;
-//}
-
-//void onchange_speed_colours_g_index(int value, SelectFromListMenuItem* source){
-//	SpeedColours_G_Index = value;
-//	Colours_G_Changed = true;
-//}
-
-//void onchange_speed_colours_b_index(int value, SelectFromListMenuItem* source){
-//	SpeedColours_B_Index = value;
-//	Colours_B_Changed = true;
-//}
-
-//void onchange_speed_colours2_r_index(int value, SelectFromListMenuItem* source){
-//	SpeedColours2_R_Index = value;
-//	Colours2_R_Changed = true;
-//}
-
-//void onchange_speed_colours2_g_index(int value, SelectFromListMenuItem* source){
-//	SpeedColours2_G_Index = value;
-//	Colours2_G_Changed = true;
-//}
-
-//void onchange_speed_colours2_b_index(int value, SelectFromListMenuItem* source){
-//	SpeedColours2_B_Index = value;
-//	Colours2_B_Changed = true;
-//}
 
 void onchange_fuel_colours_r_index(int value, SelectFromListMenuItem* source){
 	FuelColours_R_Index = value;
@@ -4992,39 +4792,3 @@ void set_bombbay_open(bool applied, std::vector<int> extras){
 		VEHICLE::CLOSE_BOMB_BAY_DOORS(veh);
 	}
 }
-
-void drive_passenger(){
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
-	Vector3 coords = ENTITY::GET_ENTITY_COORDS(playerPed, 1);
-	Vehicle veh = VEHICLE::GET_CLOSEST_VEHICLE(coords.x, coords.y, coords.z, 20.f, 0, 70);
-
-	if(veh){
-		if(PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
-			Object mytask;
-			AI::CLEAR_PED_TASKS_IMMEDIATELY(playerPed);
-			AI::OPEN_SEQUENCE_TASK(&mytask);
-			AI::TASK_LEAVE_ANY_VEHICLE(playerPed, 0, 0);
-			AI::CLOSE_SEQUENCE_TASK(mytask);
-			AI::TASK_PERFORM_SEQUENCE(playerPed, mytask);
-			AI::CLEAR_SEQUENCE_TASK(&mytask);
-
-		}
-		else{
-			set_status_text("Vehicle found");
-			//		AI::TASK_ENTER_VEHICLE(playerPed, veh, 0, 0, 2, 1, 0);
-			//		PED::SET_PED_INTO_VEHICLE(playerPed, veh, -1);
-			Object mytask;
-			AI::CLEAR_PED_TASKS_IMMEDIATELY(playerPed);
-			AI::OPEN_SEQUENCE_TASK(&mytask);
-			AI::TASK_ENTER_VEHICLE(0, veh, -1, 0, 2, 1, 0); 
-			AI::TASK_VEHICLE_DRIVE_WANDER(0, veh, 30, 786599);
-			AI::CLOSE_SEQUENCE_TASK(mytask);
-			AI::TASK_PERFORM_SEQUENCE(playerPed, mytask);
-			AI::CLEAR_SEQUENCE_TASK(&mytask);
-
-			PED::SET_PED_CAN_BE_DRAGGED_OUT(playerPed, 0);
-		}
-
-	}
-}
-

@@ -75,7 +75,6 @@ const std::vector<std::string> WEAPONS_COPARMED_CAPTIONS{ "\"WEAPON_UNARMED\"", 
 "\"WEAPON_MACHINEPISTOL\"", "\"WEAPON_MARKSMANPISTOL\"", "\"WEAPON_MINISMG\"", "\"WEAPON_ASSAULTSMG\"", "\"WEAPON_ASSAULTRIFLE\"", "\"WEAPON_CARBINERIFLE\"", "\"WEAPON_ADVANCEDRIFLE\"", "\"WEAPON_COMPACTRIFLE\"", "\"WEAPON_HEAVYSHOTGUN\"", 
 "\"WEAPON_DBSHOTGUN\"", "\"WEAPON_AUTOSHOTGUN\"", "\"WEAPON_MUSKET\"", "\"WEAPON_SAWNOFFSHOTGUN\"", "\"WEAPON_COMBATMG\"", "\"WEAPON_MINIGUN\"", "\"WEAPON_GUSENBERG\"", "\"WEAPON_SNIPERRIFLE\"", "\"WEAPON_HEAVYSNIPER\"", 
 "\"WEAPON_GRENADELAUNCHER\"", "\"WEAPON_GRENADELAUNCHER_SMOKE\"", "\"WEAPON_RPG\"", "\"WEAPON_HOMINGLAUNCHER\"", "\"WEAPON_COMPACTLAUNCHER\"", "\"WEAPON_RAILGUN\"", "\"WEAPON_FIREWORK\"" };
-//const std::vector<int> WEAPONS_COPARMED_VALUES{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44 };
 int CopCurrArmedIndex = 1;
 bool CopCurrArmedChanged = true;
 
@@ -633,7 +632,7 @@ void sniper_vision_toggle()
 	if (WEAPONS_SNIPERVISION_VALUES[SniperVisionIndex] == 1) {
 		Player player = PLAYER::PLAYER_ID();
 		Ped playerPed = PLAYER::PLAYER_PED_ID();
-
+				
 		if ((WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_SNIPERRIFLE") || WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_HEAVYSNIPER") ||
 			WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_REMOTESNIPER") || WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_HEAVYSNIPER_MK2") ||
 			WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_MARKSMANRIFLE") || WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_MARKSMANRIFLE_MK2")) &&
@@ -1098,7 +1097,6 @@ bool process_weapon_menu(){
 	toggleItem->caption = "Friendly Fire";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureFriendlyFire;
-	//toggleItem->toggleValueUpdated = NULL;
 	menuItems.push_back(toggleItem);
 
 	return draw_generic_menu<int>(menuItems, &activeLineIndexWeapon, caption, onconfirm_weapon_menu, NULL, NULL);
@@ -1289,7 +1287,6 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	}
 	else {
 		std::vector<int> emptyVec;
-		//if (!WEAPONS_COPARMED_VALUES.empty()) std::vector<int>(WEAPONS_COPARMED_VALUES).swap(emptyVec);
 		if (!WEAPONS_COPALARM_VALUES.empty()) std::vector<int>(WEAPONS_COPALARM_VALUES).swap(emptyVec);
 	}
 
@@ -1319,8 +1316,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		cops_on = false;
 		cops_took_weapons = false;
 	}
-	
-	//if (PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 1)) WEAPON::REMOVE_ALL_PED_WEAPONS(PLAYER::PLAYER_ID(), false);
+		
 	if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) > 2) WEAPON::REMOVE_ALL_PED_WEAPONS(PLAYER::PLAYER_ID(), false);
 
 	if (death_time > 10000) cops_took_weapons = false;
@@ -1332,13 +1328,21 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	};
 
 	// Disables visions if not aiming
-	if (WEAPONS_SNIPERVISION_VALUES[SniperVisionIndex] != 0 && (WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_SNIPERRIFLE") || WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_HEAVYSNIPER") ||
-		WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_REMOTESNIPER") || WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_HEAVYSNIPER_MK2") ||
-		WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_MARKSMANRIFLE") || WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_MARKSMANRIFLE_MK2")))
+	if (WEAPONS_SNIPERVISION_VALUES[SniperVisionIndex] != 0)
 	{
-		if (!PED::GET_PED_CONFIG_FLAG(playerPed, 78, 1)) {
-			GRAPHICS::SET_NIGHTVISION(false);
-			GRAPHICS::SET_SEETHROUGH(false);
+		if (WEAPONS_SNIPERVISION_VALUES[SniperVisionIndex] == 1 && !PED::GET_PED_CONFIG_FLAG(playerPed, 78, 1)) {
+			if (!featureNightVision && !featureThermalVision) {
+				GRAPHICS::SET_NIGHTVISION(false);
+				GRAPHICS::SET_SEETHROUGH(false);
+			}
+			if (featureNightVision && !featureThermalVision) {
+				GRAPHICS::SET_SEETHROUGH(false);
+				GRAPHICS::SET_NIGHTVISION(true);
+			}
+			if (!featureNightVision && featureThermalVision) {
+				GRAPHICS::SET_NIGHTVISION(false);
+				GRAPHICS::SET_SEETHROUGH(true);
+			}
 			vision_toggle = 0;
 		}
 		if (WEAPONS_SNIPERVISION_VALUES[SniperVisionIndex] == 2 && !PED::GET_PED_CONFIG_FLAG(playerPed, 58, 1) && PED::GET_PED_CONFIG_FLAG(playerPed, 78, 1)) {

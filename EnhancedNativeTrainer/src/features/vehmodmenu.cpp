@@ -33,7 +33,7 @@ const static std::string TINT_NAMES[] = { "No Tint", "Dark", "Medium", "Light", 
 
 const static std::string PLATE_NAMES[] = { "Blue on White", "Yellow/Black", "Gold/Blue", "Blue/White SA Caps", "Blue/White SA Exempt", "Blue/White Yankton" };
 
-const static int ENGINE_SOUND_COUNT = 346;
+const static int ENGINE_SOUND_COUNT = 347;
 
 const static int SPECIAL_ID_START = 90;
 
@@ -1437,7 +1437,6 @@ bool onconfirm_vehmod_category_menu(MenuItem<int> choice){
 	else if (lastSelectedModValue == SPECIAL_ID_FOR_ENGINE_SOUND && featureEngineSound) { // pick engine sound through the menu/list
 		char *currSound = new char[ENGINE_SOUND[choice.value].length() + 1];
 		strcpy(currSound, ENGINE_SOUND[choice.value].c_str());
-		//current_picked_engine_sound = choice.value;
 		current_picked_engine_sound = ENGINE_SOUND_NUMBERS[choice.value]; 
 		VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
 		AUDIO::_SET_VEHICLE_AUDIO(veh, currSound);
@@ -1548,7 +1547,7 @@ bool process_vehmod_engine_sound() {
 	std::vector<MenuItem<int>*> menuItems;
 	for (int i = 0; i < values.size(); i++) {
 		MenuItem<int> *item = new MenuItem<int>();
-		std::string specialName = ENGINE_SOUND[i]; //geSpecialItemTitle(SPECIAL_ID_FOR_ENGINE_SOUND, i);
+		std::string specialName = ENGINE_SOUND[i]; 
 		if (!specialName.empty()) {
 			item->caption = specialName;
 		}
@@ -1591,7 +1590,6 @@ void set_engine_sound(MenuItem<int> choice) { // pick engine sound via message b
 		for (int i = 0; i < ENGINE_SOUND_COUNT; i++) {
 			if (ENGINE_SOUND[i] == amendedResult) {
 				correct_name = true;
-				//current_picked_engine_sound = i;
 				current_picked_engine_sound = ENGINE_SOUND_NUMBERS[i];
 			}
 		}
@@ -1622,7 +1620,6 @@ bool process_vehmod_engine_sound_menu() {
 	toggleItem->caption = "Enable";
 	toggleItem->value = -1;
 	toggleItem->toggleValue = &featureEngineSound;
-	//toggleItem->toggleValueUpdated = &featureLockVehicleDoorsUpdated;
 	menuItems.push_back(toggleItem);
 
 	item = new MenuItem<int>();
@@ -1883,15 +1880,6 @@ bool process_vehmod_menu(){
 		item->value = SPECIAL_ID_FOR_LICENSE_PLATES;
 		item->isLeaf = false;
 		menuItems.push_back(item);
-
-		//ss.str(""), ss.clear();
-
-		//item = new MenuItem<int>();
-		//ss << getModCategoryName(SPECIAL_ID_FOR_ENGINE_SOUND) << " ~HUD_COLOUR_GREYLIGHT~(" << ENGINE_SOUND_COUNT << ")";
-		//item->caption = ss.str();
-		//item->value = SPECIAL_ID_FOR_ENGINE_SOUND;
-		//item->isLeaf = false;
-		//menuItems.push_back(item);
 
 		ss.str(""), ss.clear();
 
@@ -2169,8 +2157,6 @@ void fully_tune_vehicle(Vehicle veh, bool optics){
 
 		VEHICLE::SET_VEHICLE_WINDOW_TINT(veh, 1);
 
-		//VEHICLE::SET_VEHICLE_COLOURS(veh, 120, 120);
-		//VEHICLE::SET_VEHICLE_EXTRA_COLOURS(veh, 120, 120);
 		VEHICLE::SET_VEHICLE_COLOURS(veh, (rand() % 160 + 1), (rand() % 160 + 1));
 		VEHICLE::SET_VEHICLE_EXTRA_COLOURS(veh, (rand() % 160 + 1), (rand() % 160 + 1));
 
