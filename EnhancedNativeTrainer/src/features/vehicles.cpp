@@ -34,7 +34,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include <cstdlib>
 using namespace std;
 
-const static int ENGINE_SOUND_COUNT_VEHICLES = 347;
+const static int ENGINE_SOUND_COUNT_VEHICLES = 346;
 
 bool featureVehInvincible = false;
 bool featureVehInvincibleUpdated = false;
