@@ -101,6 +101,8 @@ void road_laws()
 		Vehicle vehroadlaws = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		Vector3 vehroadlaws_coords = ENTITY::GET_ENTITY_COORDS(vehroadlaws, true);
 		Vector3 vehroadlaws_ped_coords = ENTITY::GET_ENTITY_COORDS(playerPed, true);
+		Vehicle veh_collided_with = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
+		Vector3 veh_collided_with_coords = ENTITY::GET_ENTITY_COORDS(veh_collided_with, true);
 		float vehroadlaws_speed = ENTITY::GET_ENTITY_SPEED(vehroadlaws);
 
 		int vehcollidedwith_distance_x = 100;
@@ -274,15 +276,18 @@ void road_laws()
 		for (int i = 0; i < count_laws; i++) {
 			// Vehicle Collided
 			if (featureCarCollision) {
-				Vehicle veh_collided_with = PED::GET_VEHICLE_PED_IS_IN(vehicles_laws[i], false);
-				Vector3 veh_collided_with_coords = ENTITY::GET_ENTITY_COORDS(veh_collided_with, true);
+				if (PED::GET_PED_TYPE(vehicles_laws[i]) != 0 && PED::GET_PED_TYPE(vehicles_laws[i]) != 1 && PED::GET_PED_TYPE(vehicles_laws[i]) != 2 && PED::GET_PED_TYPE(vehicles_laws[i]) != 3) {
+					veh_collided_with = PED::GET_VEHICLE_PED_IS_IN(vehicles_laws[i], false);
+					veh_collided_with_coords = ENTITY::GET_ENTITY_COORDS(veh_collided_with, true);
+				}
 
 				vehcollidedwith_distance_x = (vehroadlaws_coords.x - veh_collided_with_coords.x);
 				vehcollidedwith_distance_y = (vehroadlaws_coords.y - veh_collided_with_coords.y);
 				if (vehcollidedwith_distance_x < 0) vehcollidedwith_distance_x = (vehcollidedwith_distance_x * -1);
 				if (vehcollidedwith_distance_y < 0) vehcollidedwith_distance_y = (vehcollidedwith_distance_y * -1);
 
-				if (ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(vehroadlaws) && vehcollidedwith_distance_x < 5 && vehcollidedwith_distance_y < 5 && Collision_seconds == -1) vehiclecollision_check = true;
+				if (veh_collided_with != PED::GET_VEHICLE_PED_IS_IN(playerPed, false) && ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(vehroadlaws) && ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(veh_collided_with) &&
+					vehcollidedwith_distance_x < 5 && vehcollidedwith_distance_y < 5 && Collision_seconds == -1) vehiclecollision_check = true;
 
 				if (vehiclecollision_check == true) {
 					SinceCollision_secs_passed = clock() / CLOCKS_PER_SEC;
