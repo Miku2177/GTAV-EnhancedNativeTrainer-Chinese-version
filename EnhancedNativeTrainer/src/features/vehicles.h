@@ -252,18 +252,6 @@ void onchange_random2_index(int value, SelectFromListMenuItem* source);
 
 void onchange_barposition_index(int value, SelectFromListMenuItem* source);
 
-//void onchange_speed_colours_r_index(int value, SelectFromListMenuItem* source);
-
-//void onchange_speed_colours_g_index(int value, SelectFromListMenuItem* source);
-
-//void onchange_speed_colours_b_index(int value, SelectFromListMenuItem* source);
-
-//void onchange_speed_colours2_r_index(int value, SelectFromListMenuItem* source);
-
-//void onchange_speed_colours2_g_index(int value, SelectFromListMenuItem* source);
-
-//void onchange_speed_colours2_b_index(int value, SelectFromListMenuItem* source);
-
 void onchange_car_enginehealth_index(int value, SelectFromListMenuItem* source);
 
 void onchange_bike_enginehealth_index(int value, SelectFromListMenuItem* source);
@@ -363,8 +351,6 @@ bool onconfirm_dash_colour_selection(MenuItem<int> choice);
 bool process_dash_colour_menu();
 
 bool process_interior_colour_menu();
-
-void drive_passenger();
 
 bool inline is_this_a_car(Vehicle veh){
 	// Return true if the current vehicle is a car, e.g. as certain vehicles don't support neon lights

@@ -133,22 +133,6 @@ bool onconfirm_weather_menu(MenuItem<std::string> choice)
 	std::stringstream ss; ss << "Weather Frozen at: " << lastWeatherName;
 	switch (choice.currentMenuIndex)
 	{
-	//case 0:
-		// wind
-		//if (featureWeatherWind)
-		//if (WORLD_WIND_STRENGTH_VALUES[WindStrengthIndex] > 0)
-		//{
-		//	GAMEPLAY::SET_WIND(1.0);
-			//GAMEPLAY::SET_WIND_SPEED(11.99);
-		//	GAMEPLAY::SET_WIND_DIRECTION(ENTITY::GET_ENTITY_HEADING(PLAYER::PLAYER_PED_ID()));
-		//}
-		//else
-		//{
-		//	GAMEPLAY::SET_WIND(0.0);
-			//GAMEPLAY::SET_WIND_SPEED(0.0);
-		//}
-		//break;
-		
 	case 0:
 		// set weather
 		GAMEPLAY::CLEAR_OVERRIDE_WEATHER();
@@ -206,7 +190,6 @@ void process_weather_menu()
 	std::string caption = "Weather Options";
 	
 	StringStandardOrToggleMenuDef lines[lineCount] = {
-		//{ "Wind", "WIND", &featureWeatherWind, NULL },
 		{ "Freeze Weather", "FREEZEWEATHER", &featureWeatherFreeze, NULL },
 		{ "Reset Weather", "RESETWEATHER", NULL, NULL },
 		{ "Extra Sunny", "EXTRASUNNY", NULL, NULL },
@@ -578,7 +561,6 @@ void reset_world_globals()
 	lastClouds.clear();
 	lastCloudsName.clear();
 
-	//featureWeatherWind =
 	featureWeatherFreeze =
 	featureCloudsNo =
 	featureCloudsFreeze =
@@ -787,16 +769,10 @@ void update_world_features()
 	}
 
 	// No Police Blips
-	if (featureNoPoliceBlips) { // && !police_blips_toogle){
-		PLAYER::SET_POLICE_RADAR_BLIPS(false);
-		//police_blips_toogle = true;
-	}
-
-	if (!featureNoPoliceBlips) { // && police_blips_toogle) {
-		PLAYER::SET_POLICE_RADAR_BLIPS(true);
-		//police_blips_toogle = false;
-	}
-
+	if (featureNoPoliceBlips) PLAYER::SET_POLICE_RADAR_BLIPS(false);
+	
+	if (!featureNoPoliceBlips) PLAYER::SET_POLICE_RADAR_BLIPS(true);
+	
 	// Full Map Toggle
 	if (featureFullMap && !fullmap_toogle) {
 		UI::_SET_MINIMAP_REVEALED(true);

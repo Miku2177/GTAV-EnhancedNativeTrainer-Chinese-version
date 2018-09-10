@@ -524,7 +524,6 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 				Vehicle playerVeh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 				AUDIO::SET_VEHICLE_RADIO_LOUD(playerVeh, 1);
 				AUDIO::RELEASE_AMBIENT_AUDIO_BANK();
-				//AUDIO::SET_VEHICLE_BOOST_ACTIVE(playerVeh, true); // hissing
 			}
 		}
 	}
@@ -610,7 +609,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			phone_toggle = false;
 		}
 	}
-	else if (!featureMiscHideHud && !featureInVehicleNoHud) { // featurePhoneShowHudUpdated &&
+	else if (!featureMiscHideHud && !featureInVehicleNoHud) { 
 		UI::DISPLAY_RADAR(true);
 		phone_toggle = false;
 	}
@@ -632,7 +631,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			phone_toggle_vehicle = false;
 		}
 	}
-	else if (!featureMiscHideHud && !featurePhoneShowHud) { // featureInVehicleNoHudUpdated &&
+	else if (!featureMiscHideHud && !featurePhoneShowHud) { 
 		UI::DISPLAY_RADAR(true);
 		phone_toggle_vehicle = false;
 	}
@@ -775,14 +774,10 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			StuntCam = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_FLY_CAMERA", playerPosition.x, playerPosition.y, playerPosition.z, curRotation.x, curRotation.y, curRotation.z, 50.0, true, 2);
 			
 			if (!PED::IS_PED_ON_ANY_BIKE(stunt_player)) {
-				//CAM::ATTACH_CAM_TO_ENTITY(StuntCam, stunt_player, 0.0f, -0.15f, 0.67f, true);
-				//CAM::POINT_CAM_AT_ENTITY(StuntCam, stunt_player, 0.0f, 0.0f, 0.67f, true);
 				CAM::ATTACH_CAM_TO_PED_BONE(StuntCam, stunt_player, 31086, 0, -0.15, 0.05, 1);
 				CAM::POINT_CAM_AT_PED_BONE(StuntCam, stunt_player, 31086, 0, 0.0, 0.05, 1);
 			}
 			if (PED::IS_PED_ON_ANY_BIKE(stunt_player)) {
-				//CAM::ATTACH_CAM_TO_ENTITY(StuntCam, stunt_player, 0.0f, -0.01f, 0.37f, true);
-				//CAM::POINT_CAM_AT_ENTITY(StuntCam, stunt_player, 0.0f, 0.0f, 0.37f, true);
 				CAM::ATTACH_CAM_TO_PED_BONE(StuntCam, stunt_player, 31086, 0, -0.15, -0.10, 1);
 				CAM::POINT_CAM_AT_PED_BONE(StuntCam, stunt_player, 31086, 0, 0.0, -0.10, 1);
 			}

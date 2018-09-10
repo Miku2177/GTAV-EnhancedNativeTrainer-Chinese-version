@@ -232,6 +232,9 @@ const int TOTAL_WEAPONS_COUNT = 81;
 const int TOTAL_WEAPONS_SLOTS = 80;
 const int MAX_MOD_SLOTS = 15; 
 
+extern bool featureNightVision;
+extern bool featureThermalVision;
+
 bool process_weapon_menu();
 
 bool process_give_melee();

@@ -51,7 +51,6 @@ int lastChosenCategory = -1;
 
 int lastMenuChoiceInCategories[] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
-//bool beingChauffeured = false;
 int activeLineIndexChauffeur = 0;
 int activeLineIndex3dmarker = 0;
 
@@ -84,9 +83,9 @@ std::vector<tele_location> LOCATIONS_LANDMARKS = {
 	{ "Airport Entrance", -1034.6f, -2733.6f, 13.8f },
 	{ "Airport Field", -1336.0f, -3044.0f, 13.9f },
 	{ "Altruist Cult Camp", -1004.04f, 4856.94f, 280.681f },
-	{ "Arcadius Carpark", -164.38220000f, -619.08840000f, 33.33181000f/*, { "hei_dt1_02_interior_dt1_02_carpark" }, {}, {}, false */ },
+	{ "Arcadius Carpark", -164.38220000f, -619.08840000f, 33.33181000f},
 	{ "Beaver Bush Ranger Station", 389.712f, 791.305f, 190.41f },
-	{ "Bluff Tower Carpark", -1526.45900000f, -581.92970000f, 25.99675000f/*, { "hei_sm_13_interior_0_sm_13_carpark" }, {}, {}, false */ },
+	{ "Bluff Tower Carpark", -1526.45900000f, -581.92970000f, 25.99675000f},
 	{ "Bolingbroke Penitentiary Entrance", 1879.45f, 2604.83f, 45.672f },
 	{ "Bolingbroke Penitentiary Inside", 1671.37f, 2502.7f, 45.5706f },
 	{ "Calafia Train Bridge", -517.869f, 4425.284f, 89.795f },
@@ -94,7 +93,7 @@ std::vector<tele_location> LOCATIONS_LANDMARKS = {
 	{ "Casino", 926.407f, 46.392f, 80.9041f },
 	{ "Chumash", -3192.6f, 1100.0f, 20.2f },
 	{ "Chumash Historic Family Pier", -3426.683f, 967.738f, 8.347f },
-	{ "Davis Fire Department", 203.00000000f, -1655.57000000f, 28.80310000f/*, { "hei_sc1_23_interior_v_firedept_milo_" }, {}, {}, false */ },
+	{ "Davis Fire Department", 203.00000000f, -1655.57000000f, 28.80310000f},
 	{ "Del Perro Pier", -1850.127f, -1231.751f, 13.017f },
 	{ "Devin Weston's House", -2639.872f, 1866.812f, 160.135f },
 	{ "East Alamo View Observation Desk", -523.647f, 4194.51f, 193.731f },
@@ -103,7 +102,7 @@ std::vector<tele_location> LOCATIONS_LANDMARKS = {
 	{ "Epsilon Building Entrance", -698.472f, 46.3927f, 44.0338f },
 	{ "Far North San Andreas", 24.775f, 7644.102f, 19.055f },
 	{ "Ferris Wheel", -1670.7f, -1125.0f, 13.0f },
-	{ "FIB Carpark", 141.20440000f, -717.21670000f, 34.76831000f/*, { "hei_dt1_05_interior_dt1_05_carpark" }, {}, {}, false */ },
+	{ "FIB Carpark", 141.20440000f, -717.21670000f, 34.76831000f},
 	{ "Fort Zancudo", -2047.4f, 3132.1f, 32.8f },
 	{ "Fort Zancudo ATC Entrance", -2344.373f, 3267.498f, 32.811f },
 	{ "Fort Zancudo ATC Top Floor", -2358.132f, 3249.754f, 101.451f },
@@ -121,13 +120,13 @@ std::vector<tele_location> LOCATIONS_LANDMARKS = {
 	{ "Junk Yard/Tank", -445.022f, -1715.71f, 25.0233f },
 	{ "Kortz Center", -2243.810f, 264.048f, 174.615f },
 	{ "Lake Vinewood", 16.728f, 638.686f, 210.595f },
-	{ "Lombank Carpark", -676.295f, -589.195f, 25.4536f/*, { "hei_kt1_04_interior_kt1_04_roadtunnel_int" }, {}, {}, false */ },
-	{ "Los Santos County Fire Department", 1201.39500000f, -1478.45300000f, 33.85941000f/*, { "bkr_id1_33_interior_v_firedept_milo_" }, {}, {}, false */ },
+	{ "Lombank Carpark", -676.295f, -589.195f, 25.4536f},
+	{ "Los Santos County Fire Department", 1201.39500000f, -1478.45300000f, 33.85941000f},
 	{ "LSDWP", 738.286f, 132.192f, 80.5797f },
 	{ "Main LS Customs", -365.425f, -131.809f, 37.873f },
 	{ "Marlowe Vineyards", -1868.971f, 2095.674f, 139.115f },
-	{ "Maze Bank Carpark", -84.13106000f, -821.34520000f, 36.71491000f/*, { "hei_dt1_11_interior_0_dt1_11_carpark" }, {}, {}, false */ },
-	{ "Maze Bank Del Perro Carpark", -1387.31300000f, -475.34900000f, 33.85337000f/*, { "hei_sm_15_interior_0_sm_15_carpark" }, {}, {}, false */ },
+	{ "Maze Bank Carpark", -84.13106000f, -821.34520000f, 36.71491000f},
+	{ "Maze Bank Del Perro Carpark", -1387.31300000f, -475.34900000f, 33.85337000f},
 	{ "McKenzie Airfield", 2121.7f, 4796.3f, 41.1f },
 	{ "Merryweather Dock", 486.417f, -3339.692f, 6.070f },
 	{ "Mineshaft", -595.342f, 2086.008f, 131.412f },
@@ -147,24 +146,20 @@ std::vector<tele_location> LOCATIONS_LANDMARKS = {
 	{ "Quarry", 2954.196f, 2783.410f, 41.004f },
 	{ "Race", 1059.65f, 147.134f, 85.7408f },
 	{ "Raton Canyon Obsevation Desk", -840.581f, 4182.65f, 215.29f },
-	{ "Rockford Plaza Carpark", -179.31400000f, -180.21540000f, 46.31482000f/*, { "apa_bt1_04_interior_bt1_04_carpark" }, {}, {}, false */ },
+	{ "Rockford Plaza Carpark", -179.31400000f, -180.21540000f, 46.31482000f},
 	{ "Sandy Shores Airfield", 1747.0f, 3273.7f, 41.1f },
 	{ "Satellite Dishes", 2062.123f, 2942.055f, 47.431f },
 	{ "Sisyphus Theater Stage", 208.714f, 1167.75f, 227.005f },
 	{ "Snack-Bar With Pink Dinosaur", 2569.48f, 2580.4f, 37.7605f },
 	{ "Sonar Collections Dock", -1611.26f, 5261.74f, 3.9741f },
-	{ "Subway Burton", -297.004f, -358.18f, 10.0631f },//apa_bt1_04_interior_bt1_04_burton_subway
+	{ "Subway Burton", -297.004f, -358.18f, 10.0631f },
 	{ "Subway Davis", 98.6135f, -1711.78f, 30.1124f },
-	{ "Subway Del Perro", -1363.85f, -439.754f, 15.0453f },//hei_sm_15_interior_sm_15_delperro_subway
-	{ "Subway Little Seoul", -529.163f, -671.127f, 11.809f },//hei_kt1_09_interior_kt1_09_seoul_subway
-	{ "Subway LSIA Parking", -871.209f, -2291.86f, -11.7328f },//hei_ap1_03_interior_ap1_03_lisapark_subway
-	{ "Subway LSIA Terminal 4", -1103.9f, -2737.14f, -7.41013f },//hei_ap1_01_b_interior_ap1_01_b_lsiaterm_subway
-	//{ "Subway Pillbox North (Closed/Under Construction)", 165.872f, -583.893f, 18.758f },// { "v_tunnels_interior_v_31_tun_05_milo_" }, {}, {}, false },
-	//{ "Subway Pillbox North (Closed/Under Construction)4", -49.0384f, -556.731f, 29.9747f },
-	//{ "Subway Pillbox North (Closed/Under Construction)9", 1028.87900000f, -261.09210000f, 49.57593000f, { "v_tunnels_interior_v_31_newtun5_milo_" }, {}, {}, false },
-	//{ "Subway Pillbox North (Closed/Under Construction)10", 481.76460000f, -577.73980000f, 3.63916000f, { "v_tunnels_interior_v_31_newtunnel1_milo_" }, {}, {}, false },
+	{ "Subway Del Perro", -1363.85f, -439.754f, 15.0453f },
+	{ "Subway Little Seoul", -529.163f, -671.127f, 11.809f },
+	{ "Subway LSIA Parking", -871.209f, -2291.86f, -11.7328f },
+	{ "Subway LSIA Terminal 4", -1103.9f, -2737.14f, -7.41013f },
 	{ "Subway Pillbox South", -205.724f, -1012.65f, 30.1379f },
-	{ "Subway Portola Drive", -791.0f, -125.857f, 19.9503f },//hei_bh1_rd_interior_bh1_rd2_portola_subway
+	{ "Subway Portola Drive", -791.0f, -125.857f, 19.9503f },
 	{ "Subway Puerto Del Sol", -531.937f, -1263.36f, 26.9016f },
 	{ "Subway Strawberry", 305.736f, -1204.4f, 38.8926f },
 	{ "Tractor Parts", 925.238f, -1568.29f, 30.6312f },
@@ -177,10 +172,9 @@ std::vector<tele_location> LOCATIONS_LANDMARKS = {
 	{ "Ursula's House", 3352.57f, 5150.35f, 20.1294f },
 	{ "Ursula's Mother Grave", 3200.96f, 4730.4f, 193.284f },
 	{ "Utopia Gardens", 1390.26f, -746.747f, 67.1903f },
-	{ "Vagos Garage", -1078.97300000f, -1678.98800000f, 3.85791000f/*, { "hei_vb_33_interior_vb_33_garage" }, {}, {}, false */ },
+	{ "Vagos Garage", -1078.97300000f, -1678.98800000f, 3.85791000f},
 	{ "Vinewood Bowl Theatre Stage", 686.245f, 577.950f, 130.461f },
 	{ "Vinewood Cemetery", -1733.11f, -178.004f, 59.2933f },
-	//{ "Vinewood Tour", 106.727f, 251.725f, 108.155f },
 	{ "Weed Farm", 2208.777f, 5578.235f, 53.735f },
 	{ "Wind Farm", 2354.0f, 1830.3f, 101.1f },
 	{ "Wind Farm Trailer Park", 2353.21f, 2549.4f, 55.7455f },
@@ -248,7 +242,7 @@ std::vector<tele_location> LOCATIONS_UNDERWATER = {
 	{ "Dead Sea Monster 2", -3515.15f, 3809.09f, -77.9381f },
 	{ "Dead Sea Monster 3", 3985.13f, 4858.07f, -32.9598f },
 	{ "Dead Sea Monster 4", 3629.43f, 5531.41f, -21.75f },
-	{ "Humane Labs Tunnel", 3832.00f, 3663.67f, -23.0722f },// {}, { "chemgrill_grp1" }, {}, false },
+	{ "Humane Labs Tunnel", 3832.00f, 3663.67f, -23.0722f },
 	{ "Murder Mystery Body", -3161.078f, 3001.998f, -37.974f },
 	{ "Sunken Ancient Ship", 2627.76f, -1391.54f, -10.5533f },
 	{ "Sunken Armored Carrier", 4196.41f, 3564.53f, -57.6304f },
@@ -284,7 +278,7 @@ std::vector<tele_location> LOCATIONS_UNDERWATER = {
 };
 
 std::vector<tele_location> LOCATIONS_INTERIORS = {
-	{ "Airport Facility Interior", -1588.56f, -3228.38f, 26.3362f, {/* "hei_ap1_01_d_interior_v_ap1_01_d_int"*/ }, {}, {}, false },
+	{ "Airport Facility Interior", -1588.56f, -3228.38f, 26.3362f, {}, {}, {}, false },
 	{ "Airport Facility Interior 2", -1144.38f, -2803.47f, 34.4773f, {}, {}, {}, false },
 	{ "Ammunation Gun Range", 22.153f, -1072.854f, 29.797f },
 	{ "Ammunation Office", 12.494f, -1110.130f, 29.797f },
@@ -307,12 +301,12 @@ std::vector<tele_location> LOCATIONS_INTERIORS = {
 	{ "Humane Labs Upper Level", 3542.94f, 3670.83f, 28.1211f },
 	{ "IAA Office", 116.389f, -632.25f, 206.047f },
 	{ "Ice Planet Jewelery", 243.516f, 364.099f, 105.738f },
-	{ "Janitor's Apartment", -110.721f, -8.22095f, 70.5197f/*, { "ss1_05_interior_v_janitor_milo_" }, { "ss1_05_strm_1" }, {}, false*/ }, // No need to load a scenario anymore
+	{ "Janitor's Apartment", -110.721f, -8.22095f, 70.5197f},
 	{ "Jewel Store", -630.07f, -236.332f, 38.0571f, { "post_hiest_unload" }, { "jewel2fake", "bh1_16_refurb" }, {}, false },
 	{ "Lester's House", 1273.898f, -1719.304f, 54.771f },
 	{ "Life Invader Office", -1049.13f, -231.779f, 39.0144f, { "facelobby" }, { "facelobbyfake" }, {}, false },
 	{ "Morgue", 275.446f, -1361.11f, 24.5378f, { "Coroner_Int_on" }, { "Coroner_Int_off" }, {}, false },
-	{ "Omega's Trailer Interior", 2330.38000000f, 2572.53100000f, 45.67811000f/*, { "hei_ch3_01_interior_ch3_01_trlr_int" }, {}, {}, false */ },
+	{ "Omega's Trailer Interior", 2330.38000000f, 2572.53100000f, 45.67811000f},
 	{ "O'Neil Farm", 2454.78f, 4971.92f, 46.8103f, { "farm", "farm_props", "farmint" }, { "farm_burnt", "farm_burnt_props", "farmint_cap" }, {}, false },
 	{ "Pacific Standard Bank", 235.046f, 216.434f, 106.287f },
 	{ "Pacific Standard Bank Vault", 255.851f, 217.030f, 101.683f },
@@ -324,7 +318,7 @@ std::vector<tele_location> LOCATIONS_INTERIORS = {
 	{ "Split Sides West Comedy Club", -453.8519f, 280.5149f, 77.52148f, { "apa_ss1_12_interior_v_comedy_milo_" }, {}, {}, false },
 	{ "Stadium", -248.4916f, -2010.509f, 34.5743f, { "SP1_10_real_interior" }, { "SP1_10_fake_interior" }, {}, false },
 	{ "Strip Club DJ Booth", 126.135f, -1278.583f, 29.270f },
-	{ "Tequi-la-la", -564.518f, 277.754f, 83.1363f }, //"apa_ss1_11_interior_v_rockclub_milo_"
+	{ "Tequi-la-la", -564.518f, 277.754f, 83.1363f }, 
 	{ "Torture Warehouse", 136.514f, -2203.15f, 7.30914f },
 	{ "Union Depository Corridor", -8.78971f, -656.287f, 35.4514f, { "Finbank" }, { "DT1_03_Shutter" }, {}, false },
 	{ "Union Depository Underground Parking", 23.9346f, -669.7552f, 31.8853f, { "Finbank" }, { "DT1_03_Shutter" }, {}, false },
@@ -336,21 +330,12 @@ std::vector<tele_location> LOCATIONS_REQSCEN = {
 	{ "Carrier", 3069.330f, -4632.4f, 15.043f, IPLS_CARRIER, {}, {}, false },
 	{ "Fort Zancudo UFO", -2052.000f, 3237.000f, 1456.973f, { "ufo", "ufo_lod", "ufo_eye" }, {}, {}, false },
 	{ "Max Renda Refit", -583.1606f, -282.3967f, 35.394f, { "refit_unload" }, { "bh1_16_doors_shut" }, {}, false },
-	//{ "North Yankton", 3360.19f, -4849.67f, 111.8f, IPLS_NORTH_YANKTON, {}, {}, false },
-	//{ "North Yankton Bank", 5309.519f, -5212.375f, 83.522f, IPLS_NORTH_YANKTON, {}, {}, false },
 	{ "Red Carpet", 293.314f, 180.388f, 104.297f, { "redCarpet" }, {}, {}, false },
 	{ "Simeon's Showroom", -58.1993f, -1096.64f, 26.4224f, { "shr_int" }, { "fakeint" }, {}, false },
 	{ "SS Bulker (Intact)", -163.749f, -2377.94f, 9.3192f, { "cargoship" }, { "sunkcargoship" }, {}, false },
 	{ "SS Bulker (Sunk)", -162.8918f, -2365.769f, 0.0f, { "sunkcargoship" }, { "cargoship" }, {}, false },
 	{ "Train Crash Bridge", -532.1309f, 4526.187f, 88.7955f, { "canyonriver01_traincrash", "railing_end" }, { "railing_start", "canyonriver01" }, {}, false },
 	{ "Yacht", -2023.661f, -1038.038f, 5.577f, { "smboat", "smboat_lod" }, {}, {}, false },
-	//{ "Yacht Galaxy Super East", 3411.10000000f, 1193.44500000f, 5.42995500f, IPLS_APAYACHT8_2, {}, {}, false },
-	//{ "Yacht Galaxy Super North", 1396.63800000f, 6860.20300000f, 5.42995500f, IPLS_APAYACHT11_3, {}, {}, false },
-	//{ "Yacht Galaxy Super South", -351.06080000f, -3553.32300000f, 5.42995500f, IPLS_APAYACHT5_2, {}, {}, false },
-	//{ "Yacht Galaxy Super South West", -1995.72500000f, -1523.69400000f, 5.42997000f, IPLS_APAYACHT4_1, {}, {}, false },
-	//{ "Yacht Galaxy Super West", -3148.37900000f, 2807.55500000f, 5.42995500f, IPLS_APAYACHT1_2, {}, {}, false },
-	//{ "Yacht Gun Runnning", -1419.56f, 6752.45f, 11.909f, IPLS_GUNRUNNING_YACHT, {}, {}, false },//-1418.21000000f, 6749.81100000f, 10.98968000f
-	//{ "Yacht Heist", -2043.974f, -1031.582f, 11.981f, IPLS_HEISTYACHT, {}, {}, false },
 };
 
 /* Name, coords, IPL name, scenary (props) required, scenary to remove, bool isloaded*/
@@ -367,7 +352,7 @@ std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Arcadius Business Center Office: Style 7", -139.53950000f, -629.07570000f, 167.82040000f, { "ex_dt1_02_office_03a" }, {}, {}, false },
 	{ "Arcadius Business Center Office: Style 8", -139.53950000f, -629.07570000f, 167.82040000f, { "ex_dt1_02_office_03b" }, {}, {}, false },
 	{ "Arcadius Business Center Office: Style 9", -139.53950000f, -629.07570000f, 167.82040000f, { "ex_dt1_02_office_03c" }, {}, {}, false },
-	{ "Benny's Garage", -209.759f, -1319.617f, 30.08367f }, // { "lr_sc1_02_interior_0_supermod_int_milo_" }, {}, {}, false },
+	{ "Benny's Garage", -209.759f, -1319.617f, 30.08367f }, 
 	{ "Biker Club Garage 1", 1005.861f, -3156.162f, -39.90727f, { "bkr_biker_interior_placement_interior_1_biker_dlc_int_02_milo_" }, {}, {}, false },
 	{ "Biker Club Garage 2", 1102.477f, -3156.162f, -37.77361f, { "bkr_biker_interior_placement_interior_0_biker_dlc_int_01_milo_" }, {}, {}, false },
 	{ "Biker Cocaine Factory", 1093.581f, -3196.597f, -39.99353f, { "bkr_biker_interior_placement_interior_4_biker_dlc_int_ware03_milo_" }, {}, {}, false },
@@ -379,7 +364,6 @@ std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "CEO Garage Modshop", 730.0f, -2990.0f, -40.0f, { "imp_impexp_interior_placement_interior_2_imptexp_mod_int_01_milo_" }, {}, {}, false },//No ceiling, floor, walls textures.
 	{ "Del Perro Heights Apt 27", -1468.02100000f, -529.94370000f, 49.72156000f, { "hei_hw1_blimp_interior_27_dlc_apart_high_new_milo_" }, {}, {}, false },
 	{ "Del Perro Heights Apt 28", -1468.14f, -541.815f, 73.4442f, {}, {}, {}, false },
-	//{ "Doomsday Heist Base", -1266.80200000f, -3014.83700000f, -50.00000000f, { "xm_x17dlc_int_placement_strm_0" }, {}, { IPL_PROPS_DOOMSDAY_BASE }, false }, //- props don't load
 	{ "Executive CEO Office: Style 1", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_01a" }, {}, {}, false }, //ex_dt1_11_office_01a[b, c....]
 	{ "Executive CEO Office: Style 2", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_01b" }, {}, {}, false },
 	{ "Executive CEO Office: Style 3", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_01c" }, {}, {}, false },
@@ -401,7 +385,7 @@ std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Executive Warehouse (Small)", 1095.0f, -3100.0f, -40.0f, { "ex_exec_warehouse_placement_interior_1_int_warehouse_s_dlc_milo_" }, {}, {}, false },
 	{ "Executive Warehouse (Medium)", 1060.0f, -3100.0f, -40.0f, { "ex_exec_warehouse_placement_interior_0_int_warehouse_m_dlc_milo_" }, {}, {}, false },
 	{ "Executive Warehouse (Large)", 1010.0f, -3100.0f, -40.0f, { "ex_exec_warehouse_placement_interior_2_int_warehouse_l_dlc_milo_" }, {}, {}, false },
-	{ "Foundry", 1082.32f, -1975.65f, 31.4724f }, //{ "bkr_id1_17_interior_v_foundry_milo_" }, {}, {}, false }, Not need. It's already in the game
+	{ "Foundry", 1082.32f, -1975.65f, 31.4724f }, 
 	{ "Heist Police Station", 445.488f, -983.779f, 30.6896f, { "" }, {}, {}, false },
 	{ "Import-Export Garage", 975.0f, -3000.0f, -40.0f, IPLS_IMPORT_EXPORT_WAREHOUSES, {}, {}, false },
 	{ "Jetsam Interior", 795.00000000f, -3000.00000000f, -40.00000000f, { "imp_impexp_interior_placement_interior_0_impexp_int_01_milo_" }, {}, {}, false },
@@ -414,7 +398,7 @@ std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Lombank Office: Style 7", -1573.84900000f, -571.02540000f, 107.52290000f, { "ex_sm_13_office_03a" }, {}, {}, false },
 	{ "Lombank Office: Style 8", -1573.84900000f, -571.02540000f, 107.52290000f, { "ex_sm_13_office_03b" }, {}, {}, false },
 	{ "Lombank Office: Style 9", -1573.84900000f, -571.02540000f, 107.52290000f, { "ex_sm_13_office_03c" }, {}, {}, false },
-	{ "Martin Madrazo's House", 1396.58f, 1141.79f, 114.334f }, // { "apa_ch2_03c_interior_v_ranch_milo_" }, {}, {}, false },
+	{ "Martin Madrazo's House", 1396.58f, 1141.79f, 114.334f }, 
 	{ "Maze Bank Del Perro Office: Style 1", -1384.56400000f, -478.26990000f, 71.04205000f, { "ex_sm_15_office_01a" }, {}, {}, false },
 	{ "Maze Bank Del Perro Office: Style 2", -1384.56400000f, -478.26990000f, 71.04205000f, { "ex_sm_15_office_01b" }, {}, {}, false },
 	{ "Maze Bank Del Perro Office: Style 3", -1384.56400000f, -478.26990000f, 71.04205000f, { "ex_sm_15_office_01c" }, {}, {}, false },
@@ -424,7 +408,7 @@ std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Maze Bank Del Perro Office: Style 7", -1384.56400000f, -478.26990000f, 71.04205000f, { "ex_sm_15_office_03a" }, {}, {}, false },
 	{ "Maze Bank Del Perro Office: Style 8", -1384.56400000f, -478.26990000f, 71.04205000f, { "ex_sm_15_office_03b" }, {}, {}, false },
 	{ "Maze Bank Del Perro Office: Style 9", -1384.56400000f, -478.26990000f, 71.04205000f, { "ex_sm_15_office_03c" }, {}, {}, false },
-	{ "Mission Row Underground 'Winning' Garage", 400.09610000f, -956.67870000f, -100.00000000f/*, { "hw1_int_placement_interior_v_winningroom_milo_" }, {}, {}, false */ },
+	{ "Mission Row Underground 'Winning' Garage", 400.09610000f, -956.67870000f, -100.00000000f},
 	//{ "Night Club Interior (Edgy)", -1569.25f, -3017.39f, -73.22f, { "ba_int_placement_ba_interior_0_dlc_int_01_ba_milo_" }, {}, { IPL_PROPS_NIGHTCLUB_EDGY }, false }, //IPL_PROPS_NIGHTCLUB_COMMON_PROPS + IPL_PROPS_NIGHTCLUB_EDGY
 	//{ "Night Club Interior (Glamorous)", -1569.25f, -3017.39f, -73.22f, { "ba_int_placement_ba_interior_0_dlc_int_01_ba_milo_" }, {}, { IPL_PROPS_NIGHTCLUB_GLAM, /*IPL_PROPS_NIGHTCLUB_GLAM*/ }, false },
 	//{ "Night Club Interior (Traditional)", -1569.25f, -3017.39f, -73.22f, { "ba_int_placement_ba_interior_0_dlc_int_01_ba_milo_" }, {}, { IPL_PROPS_NIGHTCLUB_TRAD, /*IPL_PROPS_NIGHTCLUB_TRAD*/ }, false },
@@ -450,14 +434,7 @@ std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Studio Flat", 260.3297f, -997.4288f, -100.0f, { "hei_hw1_blimp_interior_v_studio_lo_milo_" }, {}, {}, false },
 	{ "Terrorbyte Interior", -1421.01500000f, -3012.58700000f, -80.00000000f,{ "ba_int_placement_ba_interior_2_dlc_int_03_ba_milo_" },{},{ IPL_PROPS_NIGHTCLUB_TERRORBYTE_INTERIOR }, false },
 	{ "Tinsel Towers Apt 42", -614.86f, 40.6783f, 97.6f, {}, {}, {}, false },
-	//
-	//{ "Gun Runnning Bunker", 938.3077f, -3196.112f, -100.0f, IPLS_GUNRUNNING_INTERIOR, {}, {}, false },
-	//{ "Eclipse Apartment 5", -773.023f, 341.627f, 211.397f },
-	//{ "Eclipse Apartment 9", -773.023f, 341.627f, 211.397f },
-	//{ "Eclipse Apartment 31", -773.023f, 341.627f, 211.397 },
-	//{ "Gun Runnning Bunker", 938.3077f, -3196.112f, -100.0f, { "DLC_GR_Bunker_Interior" }, {}, { "Bunker_Style_C", "upgrade_bunker_set", "security_upgrade", "Office_Upgrade_set", "Gun_schematic_set" }, false }, //No interior at all
-	//{ "Gun Runnning MOC", 1103.562f, -3000.0f, -40.0f, { "gr_grdlc_interior_placement_interior_0_grdlc_int_01_milo_" }, {}, {}, false }, //No interior at all
-	//
+	// not sorted alphabetically in menu
 	{ "2 Car Garage", 173.1176f, -1003.279f, -99.000f, { "hw1_blimp_interior_v_garages_milo_" }, {}, {}, false },
 	{ "3 Alta Street Apt 3", -282.30380000f, -954.78150000f, 85.30347000f, { "hw1_blimp_interior_v_apartment_high_milo__3" }, {}, {}, false },
 	{ "3 Alta Street Apt 4", -260.88210000f, -953.55720000f, 70.02390000f, { "hw1_blimp_interior_v_apartment_high_milo__4" }, {}, {}, false },
@@ -500,15 +477,6 @@ std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Submarine", 514.266f, 4855.68f, -62.5621f, { "xm_x17dlc_int_placement_interior_8_x17dlc_int_sub_milo_" }, {}, {}, false },
 	{ "Upgraded Base", 462.09f, 4820.42f, -59.0f, IPL_PROPS_DOOMSDAY_MAIN_BASE, {}, { IPL_PROPS_FACILITY }, false },
 	//
-	/*{ "x17DLC_1", 550.9484f, 5939.262f, -157.2159f, IPL_PROPS_DOOMSDAY_MAIN_BASE, {}, { "xm_x17dlc_int_placement_interior_3_x17dlc_int_base_milo_" }, false },
-	{ "x17DLC_2", 446.1718f, 5922.125f, -157.2159f, IPL_PROPS_DOOMSDAY_MAIN_BASE, {}, { "xm_x17dlc_int_placement_interior_2_x17dlc_int_bse_tun_milo_" }, false },
-	{ "x17DLC_3", 252.0616f, 5972.125f, -159.102f, IPL_PROPS_DOOMSDAY_MAIN_BASE, {}, { "xm_x17dlc_int_placement_interior_1_x17dlc_int_base_loop_milo_" }, false },
-	{ "x17DLC_4", 305.0158f, 6297.938f, -159.8097f, IPL_PROPS_DOOMSDAY_MAIN_BASE, {}, { "xm_x17dlc_int_placement_interior_7_x17dlc_int_silo_02_milo_" }, false },
-	{ "x17DLC_5", 361.2802f, 6306.356f, -159.4669f, IPL_PROPS_DOOMSDAY_MAIN_BASE, {}, { "xm_x17dlc_int_placement_interior_6_x17dlc_int_silo_01_milo_" }, false },
-	{ "x17DLC_1", 1261.14f, 4808.669f, -36.32168f, IPL_PROPS_DOOMSDAY_MAIN_BASE, {}, { "xm_x17dlc_int_placement_interior_20_x17dlc_int_tun_flat_slope_milo_" }, false },*/
-	//{ "FIB Interior (From Beta Version)", 161.78270000f, -745.89030000f, 69.65520000f, { "hidden_int_placement_interior_v_int_69_milo_" }, {}, {}, false },
-	//{ "High Life Update Hidden Garage", 228.60580000f, -92.05370000f, -100.00000000f, { "hidden_int_placement_interior_v_mp_gar_h_01_milo_" }, {}, {}, false },	
-	//{ "Rogers Salvage & Scrap", -609.484f, -1611.63f, 27.0105f, IPL_PROPS_SCRAP, {}, { "sp1_03_interior_v_recycle_milo_" }, false },
 	{ "Rogers Salvage & Scrap", -609.484f, -1611.63f, 27.0105f, { "sp1_03_interior_v_recycle_milo_" }, {}, { IPL_PROPS_SCRAP }, false },
 }; 
 
@@ -914,46 +882,6 @@ std::vector<tele_location> LOCATIONS_STUNTS = {
 	{ "Under The Bridge 50", 2410.98f, 2900.99f, 49.3331f },
 };
 
-//-been commented out to fix build
-
-/*
-std::vector<tele_location> LOCATIONS_BROKEN = {
-{ "Carrier", 3069.330f, -4704.220f, 15.043f, IPLS_CARRIER, {}, false },
-{ "des_farmhouse", 2447.9f, 4973.4f, 47.7f, {}, {}, false },
-{ "canyon", -1600.6194f, 4443.4565f, 0.725f, {}, {}, false },
-{ "vb_30_crimetape", -1150.0391f, -1521.761f, 9.6331f, {}, {}, false },
-{ "sheriff_cap", 1856.0288f, 3682.9983f, 33.2675f, {}, {}, false },
-{ "CS1_16_sheriff_Cap", -440.5073f, 6018.766f, 30.49f, {}, {}, false },
-{ "chemgrill_grp1", 3832.9f, 3665.5f, -23.4f, {}, {}, false },
-{ "Hospitaldoorsfixed", {}, {}, false },
-{ "SP1_10_fake/real_interior", -248.4916f, -2010.509f, 34.5743f, {}, {}, false },
-{ "id2_14_pre_no_int etc", 716.84f, -962.05f, 31.59f, {}, {}, false },
-{ "burnt_switch_off", 716.84f, -962.05f, 31.59f, {}, {}, false },
-{ "des_farmhouse", 2447.9f, 4973.4f, 47.7f, {}, {}, false },
-{ "FINBANK (1)", 2.69689322f, -667.0166f, 16.1306286f, {}, {}, false },
-{ "FINBANK (2)", 6.194215f, -660.759338f, 33.4501877f, {}, {}, false },
-{ "DT1_03_Shutter", 23.9346f, -669.7552f, 30.8853f, {}, {}, false },
-{ "CS3_07_MPGates", -1601.424072265625f, 2808.212646484375f, 16.2598f, {}, {}, false },
-{ "PaperRCM", -1459.1273193359375f, 486.12811279296875f, 115.20159912109375f, {}, {}, false },
-{ "KorizTempWalls", -2199.1376953125f, 223.4647979736328f, 181.11180114746094f, {}, {}, false },
-{ "mic3_chopper_debris", -2242.78466796875f, 263.4779052734375f, 173.6154022216797f },
-{ "showroom", -59.79359817504883f, -1098.7840576171875f, 27.2612f },
-{ "FBI_colPLUG, repair, rubble", 74.29f, -736.0499877929688f, 46.76f },
-{ "FBI heist", 136.00399780273438f, -749.2869873046875f, 153.302f },
-{ "Director Mod Trailer", -20.004f, -10.889f, 500.602f },
-};*/
-
-/*std::vector<tele_location> LOCATIONS_JELLMAN = {
-{ "Aircraft Carrier", 3069.330f, -4704.220f, 15.043f, IPLS_CARRIER, {}, false },
-{ "Heist Police Station", 445.488f, -983.779f, 30.6896f, { "" }, {}, false },
-{ "Heist Yacht", -2043.974f, -1031.582f, 11.981f, IPLS_HEISTYACHT, {}, false },
-{ "Integrity Way Apt 28", -14.7964f, -581.709f, 79.4307f, {}, {}, false },
-{ "Del Perro Heights Apt 28", -1468.14f, -541.815f, 73.4442f, {}, {}, false },
-{ "Richard Majestic Apt 2", -915.811f, -379.432f, 113.675f, {}, {}, false },
-{ "Tinsel Towers Apt 42", -614.86f, 40.6783f, 97.6f, {}, {}, false },
-{ "Eclipse Towers Apt 3", -773.407f, 341.766f, 211.397f, {}, {}, false },
-};*/
-
 std::string JELLMAN_CAPTION = "Heist Map Updates In SP";
 
 static std::vector<std::string> MENU_LOCATION_CATEGORIES{ "Safehouses", "Landmarks", "Roof/High Up", "Underwater", "Interiors", "Extra Exterior Scenery", "Online Maps", "Special Actors/Freaks Locations", "Collectibles", "Stunts" };// <-- not sure what went wrong here, but it don't look right.
@@ -983,24 +911,6 @@ const std::vector<std::string> TEL_3DMARKER_MARTYPE_CAPTIONS{ "Symbol", "Column"
 const std::vector<int> TEL_3DMARKER_MARTYPE_VALUES{ 1, 2 };
 int Tel3dmarker_martype_Index = 0;
 bool Tel3dmarker_martype_Changed = true;
-
-//3d marker colours_R
-//const std::vector<std::string> MARKER3D_COLOURS_R_CAPTIONS{ "0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "210", "220", "230", "240", "250", "255" };
-//const std::vector<int> MARKER3D_COLOURS_R_VALUES{ 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 255 };
-//int Marker3d_R_Index = 26;
-//bool Marker3d_R_Changed = true;
-
-//3d marker colours_G
-//const std::vector<std::string> MARKER3D_COLOURS_G_CAPTIONS{ "0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "210", "220", "230", "240", "250", "255" };
-//const std::vector<int> MARKER3D_COLOURS_G_VALUES{ 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 255 };
-//int Marker3d_G_Index = 26;
-//bool Marker3d_G_Changed = true;
-
-//3d marker colours_B
-//const std::vector<std::string> MARKER3D_COLOURS_B_CAPTIONS{ "0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "210", "220", "230", "240", "250", "255" };
-//const std::vector<int> MARKER3D_COLOURS_B_VALUES{ 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 255 };
-//int Marker3d_B_Index = 13;
-//bool Marker3d_B_Changed = true;
 
 //Marker alpha
 const std::vector<std::string> MARKER3D_ALPHA_CAPTIONS{ "10", "20", "30", "40", "50", "60", "70", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "210", "220", "230", "240", "250", "255" };
@@ -1095,9 +1005,7 @@ void teleport_to_mission_marker(){
 	if(blip_mission == true) {
 		Entity e = PLAYER::PLAYER_PED_ID();
 		
-		if (PED::IS_PED_IN_ANY_VEHICLE(e, 0)) {
-			e = PED::GET_VEHICLE_PED_IS_USING(e);
-		}
+		if (PED::IS_PED_IN_ANY_VEHICLE(e, 0)) e = PED::GET_VEHICLE_PED_IS_USING(e);
 		
 		bool groundFound = false;
 	
@@ -1292,9 +1200,6 @@ void add_coords_generic_settings(std::vector<StringPairSettingDBRow>* results)
 	results->push_back(StringPairSettingDBRow{"Tel3dmarker_msize_Index", std::to_string(Tel3dmarker_msize_Index)});
 	results->push_back(StringPairSettingDBRow{"Tel3dmarker_martype_Index", std::to_string(Tel3dmarker_martype_Index)});
 	results->push_back(StringPairSettingDBRow{"Tel3dmarker_skypos_Index", std::to_string(Tel3dmarker_skypos_Index)});
-	//results->push_back(StringPairSettingDBRow{"Marker3d_R_Index", std::to_string(Marker3d_R_Index)});
-	//results->push_back(StringPairSettingDBRow{"Marker3d_G_Index", std::to_string(Marker3d_G_Index)});
-	//results->push_back(StringPairSettingDBRow{"Marker3d_B_Index", std::to_string(Marker3d_B_Index)});
 	results->push_back(StringPairSettingDBRow{"Marker3d_Alpha_Index", std::to_string(Marker3d_Alpha_Index)});
 	results->push_back(StringPairSettingDBRow{"TelChauffeur_speed_Index", std::to_string(TelChauffeur_speed_Index)});
 	results->push_back(StringPairSettingDBRow{"TelChauffeur_altitude_Index", std::to_string(TelChauffeur_altitude_Index)});
@@ -1325,21 +1230,6 @@ void onchange_tel_3dmarker_skypos_index(int value, SelectFromListMenuItem *sourc
 	Tel3dmarker_skypos_Index = value;
 	Tel3dmarker_skypos_Changed = true;
 }
-
-//void onchange_tel_3dmarker_colour_R_index(int value, SelectFromListMenuItem *source){
-//	Marker3d_R_Index = value;
-//	Marker3d_R_Changed = true;
-//}
-
-//void onchange_tel_3dmarker_colour_G_index(int value, SelectFromListMenuItem *source){
-//	Marker3d_G_Index = value;
-//	Marker3d_G_Changed = true;
-//}
-
-//void onchange_tel_3dmarker_colour_B_index(int value, SelectFromListMenuItem *source){
-//	Marker3d_B_Index = value;
-//	Marker3d_B_Changed = true;
-//}
 
 void onchange_tel_3dmarker_alpha_index(int value, SelectFromListMenuItem *source){
 	Marker3d_Alpha_Index = value;
@@ -1379,15 +1269,6 @@ void handle_generic_settings_teleportation(std::vector<StringPairSettingDBRow>* 
 		else if (setting.name.compare("Tel3dmarker_skypos_Index") == 0){
 			Tel3dmarker_skypos_Index = stoi(setting.value);
 		}
-		//else if (setting.name.compare("Marker3d_R_Index") == 0){
-		//	Marker3d_R_Index = stoi(setting.value);
-		//}
-		//else if (setting.name.compare("Marker3d_G_Index") == 0){
-		//	Marker3d_G_Index = stoi(setting.value);
-		//}
-		//else if (setting.name.compare("Marker3d_B_Index") == 0){
-		//	Marker3d_B_Index = stoi(setting.value);
-		//}
 		else if (setting.name.compare("Marker3d_Alpha_Index") == 0){
 			Marker3d_Alpha_Index = stoi(setting.value);
 		}
@@ -1432,7 +1313,6 @@ bool onconfirm_jump_category(MenuItem<int> choice)
 		}
 		return false;
 	}
-	
 	return false;
 }
 
@@ -1483,24 +1363,6 @@ void set_3d_marker(){
 	listItem->caption = "Marker Symbol Altitude";
 	listItem->value = Tel3dmarker_skypos_Index;
 	menuItems.push_back(listItem);
-
-	//listItem = new SelectFromListMenuItem(MARKER3D_COLOURS_R_CAPTIONS, onchange_tel_3dmarker_colour_R_index);
-	//listItem->wrap = true;
-	//listItem->caption = "R:";
-	//listItem->value = Marker3d_R_Index;
-	//menuItems.push_back(listItem);
-
-	//listItem = new SelectFromListMenuItem(MARKER3D_COLOURS_G_CAPTIONS, onchange_tel_3dmarker_colour_G_index);
-	//listItem->wrap = true;
-	//listItem->caption = "G:";
-	//listItem->value = Marker3d_G_Index;
-	//menuItems.push_back(listItem);
-
-	//listItem = new SelectFromListMenuItem(MARKER3D_COLOURS_B_CAPTIONS, onchange_tel_3dmarker_colour_B_index);
-	//listItem->wrap = true;
-	//listItem->caption = "B:";
-	//listItem->value = Marker3d_B_Index;
-	//menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(MARKER3D_ALPHA_CAPTIONS, onchange_tel_3dmarker_alpha_index);
 	listItem->wrap = true;
@@ -1892,9 +1754,6 @@ void reset_teleporter_globals()
 	Tel3dmarker_msize_Index = 2;
 	Tel3dmarker_martype_Index = 0;
 	Tel3dmarker_skypos_Index = 0;
-	//Marker3d_R_Index = 26;
-	//Marker3d_G_Index = 26;
-	//Marker3d_B_Index = 13;
 	Marker3d_Alpha_Index = 12;
 	TelChauffeur_speed_Index = 2;
 	TelChauffeur_altitude_Index = 5;
@@ -2075,9 +1934,6 @@ void update_teleport_features(){
 		if (!TEL_3DMARKER_MSIZE_VALUES.empty()) std::vector<int>(TEL_3DMARKER_MSIZE_VALUES).swap(emptyVec);
 		if (!TEL_3DMARKER_SKYPOS_VALUES.empty()) std::vector<int>(TEL_3DMARKER_SKYPOS_VALUES).swap(emptyVec);
 		if (!TEL_3DMARKER_MARTYPE_VALUES.empty()) std::vector<int>(TEL_3DMARKER_MARTYPE_VALUES).swap(emptyVec);
-		//if (!MARKER3D_COLOURS_R_VALUES.empty()) std::vector<int>(MARKER3D_COLOURS_R_VALUES).swap(emptyVec);
-		//if (!MARKER3D_COLOURS_G_VALUES.empty()) std::vector<int>(MARKER3D_COLOURS_G_VALUES).swap(emptyVec);
-		//if (!MARKER3D_COLOURS_B_VALUES.empty()) std::vector<int>(MARKER3D_COLOURS_B_VALUES).swap(emptyVec);
 		if (!MARKER3D_ALPHA_VALUES.empty()) std::vector<int>(MARKER3D_ALPHA_VALUES).swap(emptyVec);
 	}
 	
@@ -2105,7 +1961,6 @@ void update_teleport_features(){
 	if (blipDriveFound == true && marker_been_set == true) drive_to_marker();
 	if (marker_been_set == false) {
 		std::vector<int> emptyVec;
-		//if (!TEL_CHAUFFEUR_VALUES.empty()) std::vector<int>(TEL_CHAUFFEUR_VALUES).swap(emptyVec);
 		if (!TEL_CHAUFFEUR_SPEED_VALUES.empty()) std::vector<int>(TEL_CHAUFFEUR_SPEED_VALUES).swap(emptyVec);
 		if (!TEL_CHAUFFEUR_ALTITUDE_VALUES.empty()) std::vector<int>(TEL_CHAUFFEUR_ALTITUDE_VALUES).swap(emptyVec);
 		if (!TEL_CHAUFFEUR_DRIVINGSTYLES_VALUES.empty()) std::vector<int>(TEL_CHAUFFEUR_DRIVINGSTYLES_VALUES).swap(emptyVec);

@@ -108,7 +108,6 @@ const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "Doors Locked", HKEY_DOORS_LOCKED_TOGGLE },
 	{ "Change Seat", HKEY_SEAT_CHANGE_TOGGLE },
 	{ "Toggle Global Game Speed", HKEY_TOGGLED_SPEED },
-	//{ "Drive as Passenger", HKEY_PASSENGER }
 };
 
 void change_hotkey_function(int hotkey, int funcIndex);

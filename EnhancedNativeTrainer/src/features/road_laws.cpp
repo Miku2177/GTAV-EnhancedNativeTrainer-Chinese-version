@@ -712,7 +712,6 @@ void road_laws()
 	else {
 		std::vector<int> emptyVec;
 		if (!VEH_SPEEDINGCITY_VALUES.empty()) std::vector<int>(VEH_SPEEDINGCITY_VALUES).swap(emptyVec);
-		//if (!VEH_SPEEDINGSPEEDWAY_VALUES.empty()) std::vector<int>(VEH_SPEEDINGSPEEDWAY_VALUES).swap(emptyVec);
 		if (!VEH_FINESIZE_VALUES.empty()) std::vector<int>(VEH_FINESIZE_VALUES).swap(emptyVec);
 		if (!VEH_DETECTIONRANGE_VALUES.empty()) std::vector<int>(VEH_DETECTIONRANGE_VALUES).swap(emptyVec);
 		if (!VEH_PIRSUITRANGE_VALUES.empty()) std::vector<int>(VEH_PIRSUITRANGE_VALUES).swap(emptyVec);
