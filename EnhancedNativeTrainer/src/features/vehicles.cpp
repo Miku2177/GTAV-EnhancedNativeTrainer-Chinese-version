@@ -146,8 +146,8 @@ const std::vector<std::string> VEH_SPEED_BOOST_CAPTIONS{"Only When Already Movin
 int speedBoostIndex = 0;
 
 // engine power stuff
-const std::vector<std::string> VEH_ENG_POW_CAPTIONS{"1x", "5x", "10x", "25x", "50x", "75x", "100x", "125x", "150x", "175x", "200x", "225x", "250x", "275x", "300x", "325x", "350x", "375x", "400x"};
-const std::vector<int> VEH_ENG_POW_VALUES{0, 5, 10, 25, 50, 75, 100, 125, 150, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400};
+const std::vector<std::string> VEH_ENG_POW_CAPTIONS{"OFF", "1x", "5x", "10x", "25x", "50x", "75x", "100x", "125x", "150x", "175x", "200x", "225x", "250x", "275x", "300x", "325x", "350x", "375x", "400x"};
+const std::vector<int> VEH_ENG_POW_VALUES{-1, 0, 5, 10, 25, 50, 75, 100, 125, 150, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400};
 int engPowMultIndex = 0;
 bool powChanged = true;
 
@@ -1948,12 +1948,12 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		VEHICLE::_SET_VEHICLE_ENGINE_POWER_MULTIPLIER(veh, 250.0f);
 		powChanged = true;
 	}
-	else if (bPlayerExists && (did_player_just_enter_vehicle(playerPed) || powChanged)){ // check if player entered vehicle, only need to set mults once
+	else if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && VEH_ENG_POW_VALUES[engPowMultIndex] >= 0) { 
 		VEHICLE::_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(veh, 1.0f);
 		VEHICLE::_SET_VEHICLE_ENGINE_POWER_MULTIPLIER(veh, VEH_ENG_POW_VALUES[engPowMultIndex]);
 		powChanged = true;
 	}
-
+	
 	//////////////////////////////////////////////////// VEHICLE MASS ////////////////////////////////////////////////////////
 
 	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && !PED::IS_PED_IN_ANY_PLANE(playerPed) && !PED::IS_PED_IN_ANY_HELI(playerPed) && (VEH_MASS_VALUES[VehMassMultIndex] > 0)) {
