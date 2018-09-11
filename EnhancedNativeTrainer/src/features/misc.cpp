@@ -39,8 +39,10 @@ float health_bar_x = 0.015;
 float health_bar_y = 0.966;
 //
 // Show FPS
-int fpsgrab, fps, FrameCountPre = 0;
-bool featureFPS = false;
+static int frames = 0;
+static double FPStime, FPStime_passed, FPStime_curr, starttime = 0;
+int fps = 0; 
+char fps_to_show_char_modifiable[15];
 //
 bool featurePlayerRadio = false;
 bool featurePlayerRadioUpdated = false;
@@ -369,7 +371,7 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 }
 
 void process_misc_menu(){
-	const int lineCount = 21;
+	const int lineCount = 22;
 
 	std::string caption = "Miscellaneous Options";
 
@@ -395,7 +397,7 @@ void process_misc_menu(){
 		{"First Person Death Camera", &featureFirstPersonDeathCamera, NULL },
 		{"First Person Stunt Jump Camera", &featureFirstPersonStuntJumpCamera, NULL },
 		{"No Stunt Jumps", &featureNoStuntJumps, NULL },
-		//{"Show FPS", &featureShowFPS, &featureShowFPSUpdated },
+		{"Show FPS", &featureShowFPS, &featureShowFPSUpdated },
 	};
 
 	draw_menu_from_struct_def(lines, lineCount, &activeLineIndexMisc, caption, onconfirm_misc_menu);
@@ -798,50 +800,38 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		}
 	}
 
-	// no stunt jumps
+	// No Stunt Jumps
 	if (featureNoStuntJumps && GAMEPLAY::IS_STUNT_JUMP_IN_PROGRESS()) GAMEPLAY::CANCEL_STUNT_JUMP();
 
 	//Show FPS
-	//if (featureShowFPS)
-	//{
-	//	SYSTEM::SETTIMERA(0);
-	//	WAIT(0);
+	if (featureShowFPS)	{
+		FPStime_passed = clock() / CLOCKS_PER_SEC;
+		if (((clock() / CLOCKS_PER_SEC) - FPStime_curr) != 0) {
+			FPStime = FPStime + 1;
+			FPStime_curr = FPStime_passed;
+		}
 
-	//	std::stringstream ss55;
-		//ss55 << "\n featureShowFPS: " << featureShowFPS;
-	//	ss55 << "\n FPS: " << fps;
-	//	ss55 << "\n TRA: " << SYSTEM::TIMERA();
-	//	ss55 << "\n fpsgrab: " << fpsgrab;
-	//	callsPerFrame = 0;
-	//	set_status_text_centre_screen(ss55.str());
-
-	//	if (SYSTEM::TIMERA() <= 20)
-	//	{
-	//		fpsgrab = SYSTEM::TIMERA();
-	//		FrameCountPre = GAMEPLAY::GET_FRAME_COUNT();
-	//	}
-
-	//	if (SYSTEM::TIMERA() >= 25 + fpsgrab)
-	//	{
-	//		fps = (GAMEPLAY::GET_FRAME_COUNT() - FrameCountPre);
-			//PRINT FPS TO SCREEN
-			//char *currFPS = new char[fps];
-			//strcpy(currSound, ENGINE_SOUND[choice.value].c_str()); 
-			//UI::BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
-			//UI::_ADD_TEXT_COMPONENT_SCALEFORM(currFPS);
-			//UI::SET_TEXT_FONT(0);
-			//UI::SET_TEXT_SCALE(0.35, 035);
-			//UI::SET_TEXT_WRAP(0.0, 1.0);
-			//UI::SET_TEXT_COLOUR(240, 160, 0, 200);
-			//UI::SET_TEXT_CENTRE(0);
-			//UI::SET_TEXT_DROPSHADOW(20, 20, 20, 20, 20);
-			//UI::SET_TEXT_EDGE(100, 100, 100, 100, 205);
-			//UI::SET_TEXT_LEADING(1); 
-			//UI::END_TEXT_COMMAND_DISPLAY_TEXT(0.005f, 0.005f);
-
-	//		SYSTEM::SETTIMERA(0); //Reset timer back to 0 for next frame.
-	//	}
-	//}
+		frames++;
+		
+		if (FPStime - starttime > 0.25 && frames > 10) {
+			fps = (double)frames / (FPStime - starttime);
+			if ((FPStime - starttime) >= 0) starttime = FPStime;
+			frames = 0;
+		}
+			
+		sprintf(fps_to_show_char_modifiable, "%d", fps);
+		UI::SET_TEXT_FONT(4);
+		UI::SET_TEXT_SCALE(0.0, 0.45);
+		UI::SET_TEXT_PROPORTIONAL(1);
+		UI::SET_TEXT_COLOUR(255, 242, 0, 255);
+		UI::SET_TEXT_EDGE(3, 0, 0, 0, 255);
+		UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 255);
+		UI::SET_TEXT_OUTLINE();
+		UI::_SET_TEXT_ENTRY("STRING");
+		UI::_ADD_TEXT_COMPONENT_SCALEFORM(fps_to_show_char_modifiable);
+		UI::_DRAW_TEXT(0.003, 0.135);
+		GRAPHICS::DRAW_RECT(0.0, 0.15, 0.05, 0.03, 10, 10, 10, 100);
+	}
 
 	//Auto find anti-despawn pointer
 	if (featureFindDespawnPointer)

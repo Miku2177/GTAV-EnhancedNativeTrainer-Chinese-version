@@ -2146,7 +2146,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		if (steer_turn == 254 || steer_turn == 0) turn_angle = turn_angle + 1;
 		else turn_angle = 0;
 
-		if (CONTROLS::IS_CONTROL_PRESSED(2, 71) && VEH_TURN_SIGNALS_ACCELERATION_VALUES[turnSignalsAccelerationIndex] > 0 && turn_angle < 15) { // && !CONTROLS::IS_CONTROL_PRESSED(2, 63) && !CONTROLS::IS_CONTROL_PRESSED(2, 64) 
+		if (CONTROLS::IS_CONTROL_PRESSED(2, 71) && VEH_TURN_SIGNALS_ACCELERATION_VALUES[turnSignalsAccelerationIndex] > 0 && turn_angle < 15) { 
 			Accel_secs_passed = clock() / CLOCKS_PER_SEC;
 			if (((clock() / CLOCKS_PER_SEC) - Accel_secs_curr) != 0) {
 				Accel_seconds = Accel_seconds + 1;
@@ -2384,7 +2384,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	
 	road_laws(); ///// <--- ROAD LAWS /////
 
-	engine_can_degrade(); ///// <--- ENGINE CAN OVERHEAT /////
+	engine_can_degrade(); ///// <--- ENGINE CAN DAMAGE /////
 
 /////////////////////////////////////////////  REMEMBER VEHICLES /////////////////////////////////////////////////////////////
 	
