@@ -63,7 +63,7 @@ bool current_escape_stars_Changed = true;
 
 void prison_break()
 {
-	if (PLAYER_PRISON_VALUES[current_player_prison] > 0 && !ENTITY::IS_ENTITY_A_MISSION_ENTITY(PLAYER::PLAYER_PED_ID())) {
+	if (PLAYER_PRISON_VALUES[current_player_prison] > 0) { 
 		Ped playerPed_Prison = PLAYER::PLAYER_PED_ID();
 		Vector3 my_position_in_prison = ENTITY::GET_ENTITY_COORDS(playerPed_Prison, true);
 		time_before_get_to_prison = PLAYER::GET_TIME_SINCE_LAST_DEATH();
@@ -256,7 +256,7 @@ void prison_break()
 					if (mins == 8) minutes_to_show_char = "08";
 					if (mins == 9) minutes_to_show_char = "09";
 				}
-				std::string temp_text = std::to_string(mins);
+
 				UI::SET_TEXT_FONT(4);
 				UI::SET_TEXT_SCALE(0.0, 0.45);
 				UI::SET_TEXT_PROPORTIONAL(1);
