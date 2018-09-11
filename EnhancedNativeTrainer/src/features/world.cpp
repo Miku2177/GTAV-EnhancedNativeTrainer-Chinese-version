@@ -69,7 +69,6 @@ bool featureNPCReducedGripVehicles = false;
 bool featureNPCReducedGripVehiclesUpdated = false;
 
 bool police_blips_toogle = false;
-bool fullmap_toogle = false;
 bool windstrength_toggle = false;
 int windstrength_changed = -1;
 
@@ -773,16 +772,8 @@ void update_world_features()
 	
 	if (!featureNoPoliceBlips) PLAYER::SET_POLICE_RADAR_BLIPS(true);
 	
-	// Full Map Toggle
-	if (featureFullMap && !fullmap_toogle) {
-		UI::_SET_MINIMAP_REVEALED(true);
-		fullmap_toogle = true;
-	}
-
-	if (!featureFullMap && fullmap_toogle) {
-		UI::_SET_MINIMAP_REVEALED(false);
-		fullmap_toogle = false;
-	}
+	if (featureFullMap) UI::_SET_MINIMAP_REVEALED(true);
+	else UI::_SET_MINIMAP_REVEALED(false);
 
 	// Radar Map Size
 	if (WORLD_RADAR_MAP_VALUES[RadarMapIndex] == 1 && radar_map_toogle_1 == false) {
@@ -805,13 +796,7 @@ void update_world_features()
 		radar_map_toogle_2 = false;
 		radar_map_toogle_3 = true;
 	}
-
-	// Full Map Toggle
-	if (featureFullMap && !fullmap_toogle) {
-		UI::_SET_MINIMAP_REVEALED(true);
-		fullmap_toogle = true;
-	}
-
+	
 	// Show Bolingbroke Penitentiary On Map
 	if (featurePenitentiaryMap) {
 		UI::SET_RADAR_AS_INTERIOR_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("V_FakePrison"), 1700, 2580, 0, 0);
