@@ -397,7 +397,7 @@ void process_misc_menu(){
 		{"First Person Death Camera", &featureFirstPersonDeathCamera, NULL },
 		{"First Person Stunt Jump Camera", &featureFirstPersonStuntJumpCamera, NULL },
 		{"No Stunt Jumps", &featureNoStuntJumps, NULL },
-		{"Show FPS", &featureShowFPS, &featureShowFPSUpdated },
+		{"FPS Counter", &featureShowFPS, &featureShowFPSUpdated },
 	};
 
 	draw_menu_from_struct_def(lines, lineCount, &activeLineIndexMisc, caption, onconfirm_misc_menu);
@@ -803,7 +803,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	// No Stunt Jumps
 	if (featureNoStuntJumps && GAMEPLAY::IS_STUNT_JUMP_IN_PROGRESS()) GAMEPLAY::CANCEL_STUNT_JUMP();
 
-	//Show FPS
+	// FPS Counter
 	if (featureShowFPS)	{
 		FPStime_passed = clock() / CLOCKS_PER_SEC;
 		if (((clock() / CLOCKS_PER_SEC) - FPStime_curr) != 0) {
