@@ -832,7 +832,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		UI::_DRAW_TEXT(0.003, 0.135);
 		GRAPHICS::DRAW_RECT(0.0, 0.15, 0.05, 0.03, 10, 10, 10, 100);
 	}
-
+	
 	//Auto find anti-despawn pointer
 	if (featureFindDespawnPointer)
 	{

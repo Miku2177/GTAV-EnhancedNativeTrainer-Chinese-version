@@ -72,6 +72,7 @@ bool featureEngineRunning = false;
 bool featureNoVehFlip = false;
 bool featureAutoToggleLights = false;
 bool featureMileage = false;
+bool featureSeasharkLights = false;
 bool featureVehMassMult = false;
 bool featureVehSpawnInto = false;
 bool featureVehSpawnTuned = false;
@@ -116,6 +117,8 @@ bool featureBlipNumber = true;
 std::vector<Vehicle> VEHICLES_STEERLOCKED;
 bool check_if_stolen, lock_stolen_veh = false;
 //
+
+int sheshark_light_toogle = 1;
 
 Vehicle ped_temp_veh = -1;
 
@@ -1707,7 +1710,13 @@ void process_veh_menu(){
 	item->value = i++;
 	item->isLeaf = false;
 	menuItems.push_back(item);
-		
+	
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Seashark Has Head Lights";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureSeasharkLights;
+	menuItems.push_back(toggleItem);
+
 	draw_generic_menu<int>(menuItems, &activeLineIndexVeh, caption, onconfirm_veh_menu, NULL, NULL);
 }
 
@@ -1954,6 +1963,30 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		powChanged = true;
 	}
 	
+	// Seashark has head lights
+	if (featureSeasharkLights && PED::IS_PED_IN_ANY_BOAT(playerPed)) {
+		Vehicle veh_boat = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
+		if (ENTITY::GET_ENTITY_MODEL(veh_boat) == GAMEPLAY::GET_HASH_KEY("SEASHARK") || ENTITY::GET_ENTITY_MODEL(veh_boat) == GAMEPLAY::GET_HASH_KEY("SEASHARK2")) {
+			int bone_boat_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(veh_boat, "windscreen");
+			int bone2_boat_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(veh_boat, "bodyshell");
+			Vector3 bone_boat_coord = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(veh_boat, bone_boat_index);
+			Vector3 bone2_boat_coord = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(veh_boat, bone2_boat_index);
+			float dirVector_lf_lr_x = bone_boat_coord.x - bone2_boat_coord.x;
+			float dirVector_lf_lr_y = bone_boat_coord.y - bone2_boat_coord.y;
+			float dirVector_lf_lr_z = bone_boat_coord.z - (bone2_boat_coord.z + 1);
+			if (VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(veh_boat)) {
+				if (CONTROLS::IS_CONTROL_PRESSED(2, 74)) {
+					sheshark_light_toogle = sheshark_light_toogle + 1;
+					WAIT(100);
+				}
+				if (sheshark_light_toogle == 3) sheshark_light_toogle = 0;
+				if (sheshark_light_toogle == 1) GRAPHICS::DRAW_SPOT_LIGHT(bone_boat_coord.x, bone_boat_coord.y, bone_boat_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 40.0, 1, 50, 31, 2.7);
+				if (sheshark_light_toogle == 2) GRAPHICS::DRAW_SPOT_LIGHT(bone_boat_coord.x, bone_boat_coord.y, bone_boat_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 60.0, 1, 50, 41, 2.7);
+			}
+		}
+	} 
+	if (featureSeasharkLights && !PED::IS_PED_IN_ANY_BOAT(playerPed)) sheshark_light_toogle = 1;
+
 	//////////////////////////////////////////////////// VEHICLE MASS ////////////////////////////////////////////////////////
 
 	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && !PED::IS_PED_IN_ANY_PLANE(playerPed) && !PED::IS_PED_IN_ANY_HELI(playerPed) && (VEH_MASS_VALUES[VehMassMultIndex] > 0)) {
@@ -2778,6 +2811,7 @@ void reset_vehicle_globals() {
 		featureNoVehFlip =
 		featureAutoToggleLights =
 		featureMileage = 
+		featureSeasharkLights =
 		featureRememberVehicles =
 		featureRoadLaws =
 		featureFuel = 
@@ -3050,6 +3084,7 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoVehFlip", &featureNoVehFlip});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAutoToggleLights", &featureAutoToggleLights});
 	results->push_back(FeatureEnabledLocalDefinition{"featureMileage", &featureMileage});
+	results->push_back(FeatureEnabledLocalDefinition{"featureSeasharkLights", &featureSeasharkLights});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRememberVehicles", &featureRememberVehicles});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRoadLaws", &featureRoadLaws});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePoliceVehicleBlip", &featurePoliceVehicleBlip});
