@@ -187,8 +187,6 @@ int VisLightIndex = 0;
 bool VisLight_Changed = true;
 
 //Visualize Vehicle Indicators (Vector)
-const std::vector<std::string> VEH_VISLIGHT3D_CAPTIONS{ "OFF", "1x", "3x", "5x", "7x", "10x", "12x" };
-const std::vector<double> VEH_VISLIGHT3D_VALUES{ 0, 0.01, 0.03, 0.05, 0.07, 0.1, 0.2 };
 int VisLight3dIndex = 0;
 bool VisLight3d_Changed = true;
 
@@ -230,13 +228,12 @@ bool VehBlipSymbol_Changed = true;
 
 //Blip Flashing
 const std::vector<std::string> VEH_BLIPFLASH_CAPTIONS{ "OFF", "Mode One", "Mode Two" };
-const std::vector<int> VEH_BLIPFLASH_VALUES{ 0, 1, 2 };
+const std::vector<int> VEH_BLIPFLASHandENGINERUNNING_VALUES{ 0, 1, 2 };
 int VehBlipFlashIndex = 0;
 bool VehBlipFlash_Changed = true;
 
 //Keep The Engine Running
 const std::vector<std::string> VEH_ENGINERUNNING_CAPTIONS{ "Never", "Always", "Hold Exit To Kill Engine" };
-const std::vector<int> VEH_ENGINERUNNING_VALUES{ 0, 1, 2 };
 int EngineRunningIndex = 0;
 bool EngineRunning_Changed = true;
 
@@ -885,7 +882,7 @@ void process_visualize_menu() {
 	listItem->value = VisLightIndex;
 	menuItems.push_back(listItem);
 
-	listItem = new SelectFromListMenuItem(VEH_VISLIGHT3D_CAPTIONS, onchange_veh_vislight3d_index);
+	listItem = new SelectFromListMenuItem(VEH_VISLIGHT_CAPTIONS, onchange_veh_vislight3d_index);
 	listItem->wrap = false;
 	listItem->caption = "3D Vector";
 	listItem->value = VisLight3dIndex;
@@ -1712,7 +1709,7 @@ void process_veh_menu(){
 	menuItems.push_back(item);
 	
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Seashark Has Head Lights";
+	toggleItem->caption = "Seashark Spotlight";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureSeasharkLights;
 	menuItems.push_back(toggleItem);
@@ -1964,29 +1961,33 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 	
 	// Seashark has head lights
-	if (featureSeasharkLights && PED::IS_PED_IN_ANY_BOAT(playerPed)) {
-		Vehicle veh_boat = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
-		if (ENTITY::GET_ENTITY_MODEL(veh_boat) == GAMEPLAY::GET_HASH_KEY("SEASHARK") || ENTITY::GET_ENTITY_MODEL(veh_boat) == GAMEPLAY::GET_HASH_KEY("SEASHARK2")) {
-			int bone_boat_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(veh_boat, "windscreen");
-			int bone2_boat_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(veh_boat, "bodyshell");
-			Vector3 bone_boat_coord = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(veh_boat, bone_boat_index);
-			Vector3 bone2_boat_coord = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(veh_boat, bone2_boat_index);
-			float dirVector_lf_lr_x = bone_boat_coord.x - bone2_boat_coord.x;
-			float dirVector_lf_lr_y = bone_boat_coord.y - bone2_boat_coord.y;
-			float dirVector_lf_lr_z = bone_boat_coord.z - (bone2_boat_coord.z + 1);
-			if (VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(veh_boat)) {
-				if (CONTROLS::IS_CONTROL_PRESSED(2, 74)) {
-					sheshark_light_toogle = sheshark_light_toogle + 1;
-					WAIT(100);
+	if (featureSeasharkLights) {
+		int time = TIME::GET_CLOCK_HOURS();
+		if (!PED::IS_PED_IN_ANY_BOAT(playerPed)) sheshark_light_toogle = 1;
+		if (!PED::IS_PED_IN_ANY_BOAT(playerPed) && ((VEH_LIGHTSOFF_VALUES[lightsOffIndex] > 0 && VEH_LIGHTSOFF_VALUES[lightsOffIndex] < 2 && time > 6 && time < 21) || (VEH_LIGHTSOFF_VALUES[lightsOffIndex] > 1))) sheshark_light_toogle = 0;
+		if (PED::IS_PED_IN_ANY_BOAT(playerPed)) {
+			Vehicle veh_boat = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
+			if (ENTITY::GET_ENTITY_MODEL(veh_boat) == GAMEPLAY::GET_HASH_KEY("SEASHARK") || ENTITY::GET_ENTITY_MODEL(veh_boat) == GAMEPLAY::GET_HASH_KEY("SEASHARK2")) {
+				int bone_boat_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(veh_boat, "windscreen");
+				int bone2_boat_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(veh_boat, "bodyshell");
+				Vector3 bone_boat_coord = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(veh_boat, bone_boat_index);
+				Vector3 bone2_boat_coord = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(veh_boat, bone2_boat_index);
+				float dirVector_lf_lr_x = bone_boat_coord.x - bone2_boat_coord.x;
+				float dirVector_lf_lr_y = bone_boat_coord.y - bone2_boat_coord.y;
+				float dirVector_lf_lr_z = bone_boat_coord.z - (bone2_boat_coord.z + 1);
+				if (VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(veh_boat)) {
+					if (CONTROLS::IS_CONTROL_PRESSED(2, 74)) {
+						sheshark_light_toogle = sheshark_light_toogle + 1;
+						WAIT(100);
+					}
+					if (sheshark_light_toogle == 3) sheshark_light_toogle = 0;
+					if (sheshark_light_toogle == 1) GRAPHICS::DRAW_SPOT_LIGHT(bone_boat_coord.x, bone_boat_coord.y, bone_boat_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 40.0, 1, 50, 31, 2.7);
+					if (sheshark_light_toogle == 2) GRAPHICS::DRAW_SPOT_LIGHT(bone_boat_coord.x, bone_boat_coord.y, bone_boat_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 60.0, 1, 50, 41, 2.7);
 				}
-				if (sheshark_light_toogle == 3) sheshark_light_toogle = 0;
-				if (sheshark_light_toogle == 1) GRAPHICS::DRAW_SPOT_LIGHT(bone_boat_coord.x, bone_boat_coord.y, bone_boat_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 40.0, 1, 50, 31, 2.7);
-				if (sheshark_light_toogle == 2) GRAPHICS::DRAW_SPOT_LIGHT(bone_boat_coord.x, bone_boat_coord.y, bone_boat_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 60.0, 1, 50, 41, 2.7);
 			}
 		}
 	} 
-	if (featureSeasharkLights && !PED::IS_PED_IN_ANY_BOAT(playerPed)) sheshark_light_toogle = 1;
-
+	 
 	//////////////////////////////////////////////////// VEHICLE MASS ////////////////////////////////////////////////////////
 
 	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && !PED::IS_PED_IN_ANY_PLANE(playerPed) && !PED::IS_PED_IN_ANY_HELI(playerPed) && (VEH_MASS_VALUES[VehMassMultIndex] > 0)) {
@@ -2216,7 +2217,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 	///////////////////////////////////// VISUALIZE VEHICLE INDICATORS //////////////////////////////////////////////////////////
 
-	if (bPlayerExists && (VEH_VISLIGHT_VALUES[VisLightIndex] > 0 || VEH_VISLIGHT3D_VALUES[VisLight3dIndex] > 0) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
+	if (bPlayerExists && (VEH_VISLIGHT_VALUES[VisLightIndex] > 0 || VEH_VISLIGHT_VALUES[VisLight3dIndex] > 0) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
 		Vehicle playerVehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		Vector3 veh_indicators = ENTITY::GET_ENTITY_COORDS(playerVehicle, true);
 		int time_indicators = TIME::GET_CLOCK_HOURS();
@@ -2225,16 +2226,16 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			if (!featureDaytimeonly) {
 				if (!feature3rdpersonviewonly && VEH_VISLIGHT_VALUES[VisLightIndex] > 0) DrawSprite("commonmenu", "arrowleft", 0.4500, 0.95, VEH_VISLIGHT_VALUES[VisLightIndex], VEH_VISLIGHT_VALUES[VisLightIndex], 1, 44, 255, 32, 255);
 				if (feature3rdpersonviewonly && CAM::GET_FOLLOW_VEHICLE_CAM_VIEW_MODE() != 4 && VEH_VISLIGHT_VALUES[VisLightIndex] > 0) DrawSprite("commonmenu", "arrowleft", 0.4500, 0.95, VEH_VISLIGHT_VALUES[VisLightIndex], VEH_VISLIGHT_VALUES[VisLightIndex], 1, 44, 255, 32, 255);
-				if (VEH_VISLIGHT3D_VALUES[VisLight3dIndex] > 0) GRAPHICS::DRAW_MARKER(2/*int type*/, veh_indicators.x + 0.5/*float posX*/, veh_indicators.y + 0.5/*float posY*/, veh_indicators.z + 3/*float posZ*/, 20/*float dirX*/, 20/*float dirY*/, 20/*float dirZ*/, 0/*float rotX*/, 270/*float rotY*/,
-					0/*float rotZ*/, VEH_VISLIGHT3D_VALUES[VisLight3dIndex] * 10/*float scaleX*/, VEH_VISLIGHT3D_VALUES[VisLight3dIndex] * 10/*float scaleY*/, VEH_VISLIGHT3D_VALUES[VisLight3dIndex] * 10/*float scaleZ*/,
+				if (VEH_VISLIGHT_VALUES[VisLight3dIndex] > 0) GRAPHICS::DRAW_MARKER(2/*int type*/, veh_indicators.x + 0.5/*float posX*/, veh_indicators.y + 0.5/*float posY*/, veh_indicators.z + 3/*float posZ*/, 20/*float dirX*/, 20/*float dirY*/, 20/*float dirZ*/, 0/*float rotX*/, 270/*float rotY*/,
+					0/*float rotZ*/, VEH_VISLIGHT_VALUES[VisLight3dIndex] * 10/*float scaleX*/, VEH_VISLIGHT_VALUES[VisLight3dIndex] * 10/*float scaleY*/, VEH_VISLIGHT_VALUES[VisLight3dIndex] * 10/*float scaleZ*/,
 					44/*int red*/, 255/*int green*/, 32/*int blue*/, 155/*int alpha*/,
 					50/*BOOL bobUpAndDown*/, 1/*BOOL faceCamera*/, 1/*int p19*/, 0/*BOOL rotate*/, 0/*char* textureDict*/, 0/*char* textureName*/, 0/*BOOL drawOnEnts*/);
 			}
 			if (featureDaytimeonly && time_indicators > 6 && time_indicators < 20) {
 				if (!feature3rdpersonviewonly && VEH_VISLIGHT_VALUES[VisLightIndex] > 0) DrawSprite("commonmenu", "arrowleft", 0.4500, 0.95, VEH_VISLIGHT_VALUES[VisLightIndex], VEH_VISLIGHT_VALUES[VisLightIndex], 1, 44, 255, 32, 255);
 				if (feature3rdpersonviewonly && CAM::GET_FOLLOW_VEHICLE_CAM_VIEW_MODE() != 4 && VEH_VISLIGHT_VALUES[VisLightIndex] > 0) DrawSprite("commonmenu", "arrowleft", 0.4500, 0.95, VEH_VISLIGHT_VALUES[VisLightIndex], VEH_VISLIGHT_VALUES[VisLightIndex], 1, 44, 255, 32, 255);
-				if (VEH_VISLIGHT3D_VALUES[VisLight3dIndex] > 0) GRAPHICS::DRAW_MARKER(2/*int type*/, veh_indicators.x + 0.5/*float posX*/, veh_indicators.y + 0.5/*float posY*/, veh_indicators.z + 3/*float posZ*/, 20/*float dirX*/, 20/*float dirY*/, 20/*float dirZ*/, 0/*float rotX*/, 270/*float rotY*/,
-					0/*float rotZ*/, VEH_VISLIGHT3D_VALUES[VisLight3dIndex] * 10/*float scaleX*/, VEH_VISLIGHT3D_VALUES[VisLight3dIndex] * 10/*float scaleY*/, VEH_VISLIGHT3D_VALUES[VisLight3dIndex] * 10/*float scaleZ*/,
+				if (VEH_VISLIGHT_VALUES[VisLight3dIndex] > 0) GRAPHICS::DRAW_MARKER(2/*int type*/, veh_indicators.x + 0.5/*float posX*/, veh_indicators.y + 0.5/*float posY*/, veh_indicators.z + 3/*float posZ*/, 20/*float dirX*/, 20/*float dirY*/, 20/*float dirZ*/, 0/*float rotX*/, 270/*float rotY*/,
+					0/*float rotZ*/, VEH_VISLIGHT_VALUES[VisLight3dIndex] * 10/*float scaleX*/, VEH_VISLIGHT_VALUES[VisLight3dIndex] * 10/*float scaleY*/, VEH_VISLIGHT_VALUES[VisLight3dIndex] * 10/*float scaleZ*/,
 					44/*int red*/, 255/*int green*/, 32/*int blue*/, 155/*int alpha*/,
 					50/*BOOL bobUpAndDown*/, 1/*BOOL faceCamera*/, 1/*int p19*/, 0/*BOOL rotate*/, 0/*char* textureDict*/, 0/*char* textureName*/, 0/*BOOL drawOnEnts*/);
 			}
@@ -2244,16 +2245,16 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			if (!featureDaytimeonly) {
 				if (!feature3rdpersonviewonly && VEH_VISLIGHT_VALUES[VisLightIndex] > 0) DrawSprite("commonmenu", "arrowright", 0.5500, 0.95, VEH_VISLIGHT_VALUES[VisLightIndex], VEH_VISLIGHT_VALUES[VisLightIndex], 1, 44, 255, 32, 255);
 				if (feature3rdpersonviewonly && CAM::GET_FOLLOW_VEHICLE_CAM_VIEW_MODE() != 4 && VEH_VISLIGHT_VALUES[VisLightIndex] > 0) DrawSprite("commonmenu", "arrowright", 0.5500, 0.95, VEH_VISLIGHT_VALUES[VisLightIndex], VEH_VISLIGHT_VALUES[VisLightIndex], 1, 44, 255, 32, 255);
-				if (VEH_VISLIGHT3D_VALUES[VisLight3dIndex] > 0) GRAPHICS::DRAW_MARKER(2/*int type*/, veh_indicators.x - 0.5/*float posX*/, veh_indicators.y - 0.5/*float posY*/, veh_indicators.z + 3/*float posZ*/, 20/*float dirX*/, 20/*float dirY*/, 20/*float dirZ*/, 0/*float rotX*/, 90/*float rotY*/,
-					0/*float rotZ*/, VEH_VISLIGHT3D_VALUES[VisLight3dIndex] * 10/*float scaleX*/, VEH_VISLIGHT3D_VALUES[VisLight3dIndex] * 10/*float scaleY*/, VEH_VISLIGHT3D_VALUES[VisLight3dIndex] * 10/*float scaleZ*/,
+				if (VEH_VISLIGHT_VALUES[VisLight3dIndex] > 0) GRAPHICS::DRAW_MARKER(2/*int type*/, veh_indicators.x - 0.5/*float posX*/, veh_indicators.y - 0.5/*float posY*/, veh_indicators.z + 3/*float posZ*/, 20/*float dirX*/, 20/*float dirY*/, 20/*float dirZ*/, 0/*float rotX*/, 90/*float rotY*/,
+					0/*float rotZ*/, VEH_VISLIGHT_VALUES[VisLight3dIndex] * 10/*float scaleX*/, VEH_VISLIGHT_VALUES[VisLight3dIndex] * 10/*float scaleY*/, VEH_VISLIGHT_VALUES[VisLight3dIndex] * 10/*float scaleZ*/,
 					44/*int red*/, 255/*int green*/, 32/*int blue*/, 155/*int alpha*/,
 					50/*BOOL bobUpAndDown*/, 1/*BOOL faceCamera*/, 1/*int p19*/, 0/*BOOL rotate*/, 0/*char* textureDict*/, 0/*char* textureName*/, 0/*BOOL drawOnEnts*/);
 			}
 			if (featureDaytimeonly && time_indicators > 6 && time_indicators < 20) {
 				if (!feature3rdpersonviewonly && VEH_VISLIGHT_VALUES[VisLightIndex] > 0) DrawSprite("commonmenu", "arrowright", 0.5500, 0.95, VEH_VISLIGHT_VALUES[VisLightIndex], VEH_VISLIGHT_VALUES[VisLightIndex], 1, 44, 255, 32, 255);
 				if (feature3rdpersonviewonly && CAM::GET_FOLLOW_VEHICLE_CAM_VIEW_MODE() != 4 && VEH_VISLIGHT_VALUES[VisLightIndex] > 0) DrawSprite("commonmenu", "arrowright", 0.5500, 0.95, VEH_VISLIGHT_VALUES[VisLightIndex], VEH_VISLIGHT_VALUES[VisLightIndex], 1, 44, 255, 32, 255);
-				if (VEH_VISLIGHT3D_VALUES[VisLight3dIndex] > 0) GRAPHICS::DRAW_MARKER(2/*int type*/, veh_indicators.x - 0.5/*float posX*/, veh_indicators.y - 0.5/*float posY*/, veh_indicators.z + 3/*float posZ*/, 20/*float dirX*/, 20/*float dirY*/, 20/*float dirZ*/, 0/*float rotX*/, 90/*float rotY*/,
-					0/*float rotZ*/, VEH_VISLIGHT3D_VALUES[VisLight3dIndex] * 10/*float scaleX*/, VEH_VISLIGHT3D_VALUES[VisLight3dIndex] * 10/*float scaleY*/, VEH_VISLIGHT3D_VALUES[VisLight3dIndex] * 10/*float scaleZ*/,
+				if (VEH_VISLIGHT_VALUES[VisLight3dIndex] > 0) GRAPHICS::DRAW_MARKER(2/*int type*/, veh_indicators.x - 0.5/*float posX*/, veh_indicators.y - 0.5/*float posY*/, veh_indicators.z + 3/*float posZ*/, 20/*float dirX*/, 20/*float dirY*/, 20/*float dirZ*/, 0/*float rotX*/, 90/*float rotY*/,
+					0/*float rotZ*/, VEH_VISLIGHT_VALUES[VisLight3dIndex] * 10/*float scaleX*/, VEH_VISLIGHT_VALUES[VisLight3dIndex] * 10/*float scaleY*/, VEH_VISLIGHT_VALUES[VisLight3dIndex] * 10/*float scaleZ*/,
 					44/*int red*/, 255/*int green*/, 32/*int blue*/, 155/*int alpha*/,
 					50/*BOOL bobUpAndDown*/, 1/*BOOL faceCamera*/, 1/*int p19*/, 0/*BOOL rotate*/, 0/*char* textureDict*/, 0/*char* textureName*/, 0/*BOOL drawOnEnts*/);
 			}
@@ -2262,28 +2263,27 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	else {
 		std::vector<double> emptyVec_d;
 		if (!VEH_VISLIGHT_VALUES.empty()) std::vector<double>(VEH_VISLIGHT_VALUES).swap(emptyVec_d);
-		if (!VEH_VISLIGHT3D_VALUES.empty()) std::vector<double>(VEH_VISLIGHT3D_VALUES).swap(emptyVec_d);
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	///////////////////////////////////// KEEP THE ENGINE RUNNING ///////////////////////////////////////////////////////////////
 
-	if (bPlayerExists && VEH_ENGINERUNNING_VALUES[EngineRunningIndex] > 0 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
+	if (bPlayerExists && VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] > 0 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
 		Vehicle playerVehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
-		if (CONTROLS::IS_CONTROL_PRESSED(2, 75) && VEH_ENGINERUNNING_VALUES[EngineRunningIndex] == 1) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(playerVehicle, true);
-		if (CONTROLS::IS_CONTROL_PRESSED(2, 75) && VEH_ENGINERUNNING_VALUES[EngineRunningIndex] == 2) engine_tick = engine_tick + 1;
+		if (CONTROLS::IS_CONTROL_PRESSED(2, 75) && VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] == 1) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(playerVehicle, true);
+		if (CONTROLS::IS_CONTROL_PRESSED(2, 75) && VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] == 2) engine_tick = engine_tick + 1;
 	}
 
-	if (engine_tick < 11 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && VEH_ENGINERUNNING_VALUES[EngineRunningIndex] == 2 && (!featureVehSteerAngle || PED::IS_PED_ON_ANY_BIKE(playerPed))) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), true);
-	if (engine_tick > 10 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && VEH_ENGINERUNNING_VALUES[EngineRunningIndex] == 2 && (!featureVehSteerAngle || PED::IS_PED_ON_ANY_BIKE(playerPed))) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), false);
+	if (engine_tick < 11 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] == 2 && (!featureVehSteerAngle || PED::IS_PED_ON_ANY_BIKE(playerPed))) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), true);
+	if (engine_tick > 10 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] == 2 && (!featureVehSteerAngle || PED::IS_PED_ON_ANY_BIKE(playerPed))) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), false);
 	// Remember Wheel Angle feature compatibility lines
-	if (engine_tick < 3 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && VEH_ENGINERUNNING_VALUES[EngineRunningIndex] == 2 && featureVehSteerAngle && !PED::IS_PED_ON_ANY_BIKE(playerPed)) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), true);
-	if (engine_tick > 2 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && VEH_ENGINERUNNING_VALUES[EngineRunningIndex] == 2 && featureVehSteerAngle && !PED::IS_PED_ON_ANY_BIKE(playerPed)) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), false);
+	if (engine_tick < 3 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] == 2 && featureVehSteerAngle && !PED::IS_PED_ON_ANY_BIKE(playerPed)) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), true);
+	if (engine_tick > 2 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] == 2 && featureVehSteerAngle && !PED::IS_PED_ON_ANY_BIKE(playerPed)) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), false);
 	//
-	if (bPlayerExists && VEH_ENGINERUNNING_VALUES[EngineRunningIndex] == 2 && CONTROLS::IS_CONTROL_RELEASED(2, 75)) engine_tick = 0;
+	if (bPlayerExists && VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] == 2 && CONTROLS::IS_CONTROL_RELEASED(2, 75)) engine_tick = 0;
 
-	if (bPlayerExists && VEH_ENGINERUNNING_VALUES[EngineRunningIndex] == 0 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
+	if (bPlayerExists && VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] == 0 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
 		Vehicle playerVehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		if (CONTROLS::IS_CONTROL_PRESSED(2, 75)) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(playerVehicle, false);
 	}
@@ -2435,8 +2435,8 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			else UI::SET_BLIP_SPRITE(blip_veh[0], VEH_BLIPSYMBOL_VALUES[0]);
 			UI::SET_BLIP_CATEGORY(blip_veh[0], 2);
 			if (featureBlipNumber) UI::SHOW_NUMBER_ON_BLIP(blip_veh[0], BLIPTABLE_VEH.size());
-			if (VEH_BLIPFLASH_VALUES[VehBlipFlashIndex] == 1) UI::SET_BLIP_FLASHES(blip_veh[0], true);
-			if (VEH_BLIPFLASH_VALUES[VehBlipFlashIndex] == 2) UI::SET_BLIP_FLASHES_ALTERNATE(blip_veh[0], true);
+			if (VEH_BLIPFLASHandENGINERUNNING_VALUES[VehBlipFlashIndex] == 1) UI::SET_BLIP_FLASHES(blip_veh[0], true);
+			if (VEH_BLIPFLASHandENGINERUNNING_VALUES[VehBlipFlashIndex] == 2) UI::SET_BLIP_FLASHES_ALTERNATE(blip_veh[0], true);
 			UI::SET_BLIP_SCALE(blip_veh[0], VEH_BLIPSIZE_VALUES[VehBlipSizeIndex]);
 			UI::SET_BLIP_COLOUR(blip_veh[0], VEH_BLIPCOLOUR_VALUES[VehBlipColourIndex]);
 			UI::SET_BLIP_AS_SHORT_RANGE(blip_veh[0], true);
@@ -2476,8 +2476,8 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				else UI::SET_BLIP_SPRITE(blip_veh[0], VEH_BLIPSYMBOL_VALUES[0]);
 				UI::SET_BLIP_CATEGORY(blip_veh[0], 2);
 				if (featureBlipNumber) UI::SHOW_NUMBER_ON_BLIP(blip_veh[0], BLIPTABLE_VEH.size());
-				if (VEH_BLIPFLASH_VALUES[VehBlipFlashIndex] == 1) UI::SET_BLIP_FLASHES(blip_veh[0], true);
-				if (VEH_BLIPFLASH_VALUES[VehBlipFlashIndex] == 2) UI::SET_BLIP_FLASHES_ALTERNATE(blip_veh[0], true);
+				if (VEH_BLIPFLASHandENGINERUNNING_VALUES[VehBlipFlashIndex] == 1) UI::SET_BLIP_FLASHES(blip_veh[0], true);
+				if (VEH_BLIPFLASHandENGINERUNNING_VALUES[VehBlipFlashIndex] == 2) UI::SET_BLIP_FLASHES_ALTERNATE(blip_veh[0], true);
 				UI::SET_BLIP_SCALE(blip_veh[0], VEH_BLIPSIZE_VALUES[VehBlipSizeIndex]);
 				UI::SET_BLIP_COLOUR(blip_veh[0], VEH_BLIPCOLOUR_VALUES[VehBlipColourIndex]);
 				UI::SET_BLIP_AS_SHORT_RANGE(blip_veh[0], true);
@@ -2508,8 +2508,8 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				else UI::SET_BLIP_SPRITE(blip_veh[0], VEH_BLIPSYMBOL_VALUES[0]);
 				UI::SET_BLIP_CATEGORY(blip_veh[0], 2);
 				if (featureBlipNumber) UI::SHOW_NUMBER_ON_BLIP(blip_veh[0], BLIPTABLE_VEH.size());
-				if (VEH_BLIPFLASH_VALUES[VehBlipFlashIndex] == 1) UI::SET_BLIP_FLASHES(blip_veh[0], true);
-				if (VEH_BLIPFLASH_VALUES[VehBlipFlashIndex] == 2) UI::SET_BLIP_FLASHES_ALTERNATE(blip_veh[0], true);
+				if (VEH_BLIPFLASHandENGINERUNNING_VALUES[VehBlipFlashIndex] == 1) UI::SET_BLIP_FLASHES(blip_veh[0], true);
+				if (VEH_BLIPFLASHandENGINERUNNING_VALUES[VehBlipFlashIndex] == 2) UI::SET_BLIP_FLASHES_ALTERNATE(blip_veh[0], true);
 				UI::SET_BLIP_SCALE(blip_veh[0], VEH_BLIPSIZE_VALUES[VehBlipSizeIndex]);
 				UI::SET_BLIP_COLOUR(blip_veh[0], VEH_BLIPCOLOUR_VALUES[VehBlipColourIndex]);
 				UI::SET_BLIP_AS_SHORT_RANGE(blip_veh[0], true);
@@ -2557,7 +2557,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		if (!VEH_BLIPSIZE_VALUES.empty()) std::vector<double>(VEH_BLIPSIZE_VALUES).swap(emptyVec_d);
 		if (!VEH_BLIPCOLOUR_VALUES.empty()) std::vector<int>(VEH_BLIPCOLOUR_VALUES).swap(emptyVec);
 		if (!VEH_BLIPSYMBOL_VALUES.empty()) std::vector<int>(VEH_BLIPSYMBOL_VALUES).swap(emptyVec);
-		if (!VEH_BLIPFLASH_VALUES.empty()) std::vector<int>(VEH_BLIPFLASH_VALUES).swap(emptyVec);
 	}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2639,8 +2638,8 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		ENTITY::ATTACH_ENTITY_TO_ENTITY_PHYSICALLY(/*ENTITY_1*/myVehicle, /*ENTITY_2*/temp_object, /*BONE_INDEX_1*/0, /*BONE_INDEX_2*/0.0, /*XPOS_1*/50.0, /*YPOS_1*/50.0, /*ZPOS_1*/-0.5,
 			/*XPOS_2*/0.0, /*YPOS_2*/0.0, /*ZPOS_2*/0.0, /*XROT*/0.0, /*YROT*/0.0, /*ZROT*/0.0, /*BREAKFORCE*/1.0, /*FIXEDROT*/true, /*P15*/false, /*COLLISION*/false, /*P17*/1, /*P18*/true);
 		ENTITY::SET_ENTITY_ALPHA(temp_object, 0, 0);
-		if (VEH_ENGINERUNNING_VALUES[EngineRunningIndex] < 2) WAIT(1000);
-		if (VEH_ENGINERUNNING_VALUES[EngineRunningIndex] == 2) WAIT(100); // Keep Engine Running feature compatibility line
+		if (VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] < 2) WAIT(1000);
+		if (VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] == 2) WAIT(100); // Keep Engine Running feature compatibility line
 				
 		ENTITY::DETACH_ENTITY(myVehicle, true, true);
 
