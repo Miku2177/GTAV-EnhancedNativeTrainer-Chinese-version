@@ -83,7 +83,7 @@ void engine_can_degrade()
 		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && E_VEHICLES.empty()) {
 			Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 
-			if (!VEHICLE::IS_THIS_MODEL_A_BICYCLE(ENTITY::GET_ENTITY_MODEL(veh))) { // Bikes do not have engine
+			if (!VEHICLE::IS_THIS_MODEL_A_BICYCLE(ENTITY::GET_ENTITY_MODEL(veh)) && !PED::IS_PED_IN_ANY_TRAIN(playerPed)) { // Bikes do not have engine
 				E_VEHICLES.push_back(veh);
 				// UP MARGIN + DOWN MARGIN
 				if (VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(veh)) && VEH_ENGINEHEALTH_VALUES[CarEngineHealthIndex] < 100) e_randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[CarEngineHealthIndex]);
@@ -111,7 +111,7 @@ void engine_can_degrade()
 			Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 			float vehspeed = ENTITY::GET_ENTITY_SPEED(veh);
 
-			if (!VEHICLE::IS_THIS_MODEL_A_BICYCLE(ENTITY::GET_ENTITY_MODEL(veh))) { // Bikes do not have engine
+			if (!VEHICLE::IS_THIS_MODEL_A_BICYCLE(ENTITY::GET_ENTITY_MODEL(veh)) && !PED::IS_PED_IN_ANY_TRAIN(playerPed)) { // Bikes do not have engine
 
 				if (E_VEHICLES[0] != veh) {
 					bool been_used_before = false;

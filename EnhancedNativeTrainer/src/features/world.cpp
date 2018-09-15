@@ -1277,9 +1277,7 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 			Vector3 curRotation = ENTITY::GET_ENTITY_ROTATION(dead_player, 2);
 
 			DeathCam = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_FLY_CAMERA", playerPosition.x, playerPosition.y, playerPosition.z, curRotation.x, curRotation.y, curRotation.z, 50.0, true, 2);
-
-			//CAM::ATTACH_CAM_TO_ENTITY(DeathCam, dead_player, 0.0f, -0.01f, 0.00f, true);
-			//CAM::POINT_CAM_AT_ENTITY(DeathCam, dead_player, 0.0f, 0.0f, 0.00f, true);
+						
 			CAM::ATTACH_CAM_TO_PED_BONE(DeathCam, dead_player, 31086, 0, -0.15, 0, 1);
 			CAM::POINT_CAM_AT_PED_BONE(DeathCam, dead_player, 31086, 0, 0.0, 0, 1);
 
