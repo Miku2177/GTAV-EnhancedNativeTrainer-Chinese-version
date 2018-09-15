@@ -544,20 +544,20 @@ void road_laws()
 				}
 			}
 			
-			if (!PED::IS_PED_IN_VEHICLE(cop_that_fines_you, fine_cop_car, true) && cop_walking == true && Still_seconds > 2 && (tempfined_x > 4 || tempfined_y > 4)) { // && AI::IS_PED_STILL(cop_that_fines_you)
+			if (!PED::IS_PED_IN_VEHICLE(cop_that_fines_you, fine_cop_car, true) && cop_walking == true && Still_seconds > 2 && (tempfined_x > 4 || tempfined_y > 4)) { 
 				AI::TASK_GOTO_ENTITY_AIMING(cop_that_fines_you, playerPed, 4.0, 30.0);
 				Still_seconds = 0;
 			}
 			
 			// You're being fined
-			if (tempfined_x < 5 && tempfined_y < 5 && Stop_seconds > 4 && PED::IS_PED_IN_VEHICLE(playerPed, vehroadlaws, true)) { // && AI::IS_PED_STILL(cop_that_fines_you)
+			if (tempfined_x < 5 && tempfined_y < 5 && Stop_seconds > 4 && PED::IS_PED_IN_VEHICLE(playerPed, vehroadlaws, true)) { 
 				Stop_seconds = 6;
 				SinceStop_secs_passed_final = clock() / CLOCKS_PER_SEC;
 				if (((clock() / CLOCKS_PER_SEC) - SinceStop_secs_curr_final) != 0) {
 					if (Stop_seconds_final < 24 && been_seen_by_a_cop == true) Stop_seconds_final = Stop_seconds_final + 1;
 					SinceStop_secs_curr_final = SinceStop_secs_passed_final;
 				}
-				Vector3 head_coords = PED::GET_PED_BONE_COORDS(playerPed, 31086, offsetX, offsetY, offsetZ);
+				Vector3 head_coords = PED::GET_PED_BONE_COORDS(playerPed, 31086, offsetX, offsetY, offsetZ); // head bone
 				if (Stop_seconds_final == 7) AI::TASK_TURN_PED_TO_FACE_COORD(cop_that_fines_you, head_coords.x, head_coords.y, head_coords.z, 10000);
 				if (Stop_seconds_final == 8) AI::TASK_TURN_PED_TO_FACE_COORD(cop_that_fines_you, head_coords.x, head_coords.y, head_coords.z, 10000);
 				if (Stop_seconds_final == 10) AI::TASK_TURN_PED_TO_FACE_COORD(cop_that_fines_you, head_coords.x, head_coords.y, head_coords.z, 10000);

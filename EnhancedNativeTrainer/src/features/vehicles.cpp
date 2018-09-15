@@ -1987,7 +1987,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			}
 		}
 	} 
-	 
+	
 	//////////////////////////////////////////////////// VEHICLE MASS ////////////////////////////////////////////////////////
 
 	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && !PED::IS_PED_IN_ANY_PLANE(playerPed) && !PED::IS_PED_IN_ANY_HELI(playerPed) && (VEH_MASS_VALUES[VehMassMultIndex] > 0)) {
