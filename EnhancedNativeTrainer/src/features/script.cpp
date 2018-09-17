@@ -627,7 +627,8 @@ void update_features(){
 			int ScreamType = (rand() % 8 + 5);
 			AUDIO::PLAY_PAIN(ScreamType, 0, 0);
 			AUDIO::_PLAY_AMBIENT_SPEECH1(PLAYER::PLAYER_ID(), "GENERIC_SHOCKED_HIGH", "SPEECH_PARAMS_FORCE");
-			PED::SET_PED_TO_RAGDOLL(playerPed, time1, time2, ragdollType, true, true, false);
+			if (PED::GET_PED_ARMOUR(playerPed) > 4 && (ragdollType == 2 || ragdollType == 3)) PED::SET_PED_TO_RAGDOLL(playerPed, time1, time2, ragdollType, true, true, false);
+			if (PED::GET_PED_ARMOUR(playerPed) < 5) PED::SET_PED_TO_RAGDOLL(playerPed, time1, time2, ragdollType, true, true, false);
 			been_damaged_by_weapon = false;
 			ragdoll_task = true;
 		}
