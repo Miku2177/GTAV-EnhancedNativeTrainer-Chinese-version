@@ -36,6 +36,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 bool featureRoadLaws = false;
 bool featurePoliceVehicleBlip = true;
 bool featurePoliceAgressiveDriving = false;
+bool featurePoliceNoFlip = false;
 bool featureCopsUseRadio = false;
 bool featureRunningRedLight = true;
 bool featurePavementDriving = true;
@@ -451,6 +452,7 @@ void road_laws()
 				VEHICLE::SET_VEHICLE_SIREN(fine_cop_car, true);
 				veh_cop_in_coords = ENTITY::GET_ENTITY_COORDS(fine_cop_car, true);
 				vehcoplaws_speed = ENTITY::GET_ENTITY_SPEED(fine_cop_car);
+				if (featurePoliceNoFlip && ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(fine_cop_car) && vehcoplaws_speed > 1) VEHICLE::SET_VEHICLE_ON_GROUND_PROPERLY(fine_cop_car);
 				tempgotcha_x = (vehroadlaws_coords.x - veh_cop_in_coords.x);
 				tempgotcha_y = (vehroadlaws_coords.y - veh_cop_in_coords.y);
 				if (tempgotcha_x < 0) tempgotcha_x = (tempgotcha_x * -1);
