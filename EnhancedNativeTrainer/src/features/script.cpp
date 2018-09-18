@@ -642,7 +642,7 @@ void update_features(){
 			
 			if (ragdoll_seconds == 4) {
 				ragdoll_task = false;
-				ragdoll_seconds = 0;
+				ragdoll_seconds = 0; 
 			}
 		}
 	}
