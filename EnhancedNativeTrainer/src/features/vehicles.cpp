@@ -1350,6 +1350,12 @@ void process_road_laws_menu(){
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Cop Vehicles Don't Take Damage";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featurePoliceNoDamage;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Police Vehicle Blip";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featurePoliceVehicleBlip;
@@ -1841,7 +1847,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			VEHICLE::SET_VEHICLE_ENGINE_HEALTH(veh, 10000.0);
 			VEHICLE::SET_VEHICLE_PETROL_TANK_HEALTH(veh, 10000.0);
 
-			ENTITY::SET_ENTITY_PROOFS(veh, 1, 1, 1, featureVehNoDamage, 1, 1, 1, 1);
+			ENTITY::SET_ENTITY_PROOFS(veh, 1, 1, 1, featureVehNoDamage, 1, 1, 1, 1); 
 			VEHICLE::SET_VEHICLE_TYRES_CAN_BURST(veh, 0);
 			VEHICLE::SET_VEHICLE_WHEELS_CAN_BREAK(veh, 0);
 
@@ -2847,6 +2853,7 @@ void reset_vehicle_globals() {
 		featurePoliceVehicleBlip = true;
 		featurePoliceAgressiveDriving = false;
 		featurePoliceNoFlip = false;
+		featurePoliceNoDamage = false;
 		featureCopsUseRadio = false;
 		featureRunningRedLight = true;
 		featurePavementDriving = true;
@@ -3096,6 +3103,7 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featurePoliceVehicleBlip", &featurePoliceVehicleBlip});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePoliceAgressiveDriving", &featurePoliceAgressiveDriving});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePoliceNoFlip", &featurePoliceNoFlip});
+	results->push_back(FeatureEnabledLocalDefinition{"featurePoliceNoDamage", &featurePoliceNoDamage});
 	results->push_back(FeatureEnabledLocalDefinition{"featureCopsUseRadio", &featureCopsUseRadio});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRunningRedLight", &featureRunningRedLight});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePavementDriving", &featurePavementDriving});

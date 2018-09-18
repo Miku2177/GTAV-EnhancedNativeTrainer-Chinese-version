@@ -37,6 +37,7 @@ bool featureRoadLaws = false;
 bool featurePoliceVehicleBlip = true;
 bool featurePoliceAgressiveDriving = false;
 bool featurePoliceNoFlip = false;
+bool featurePoliceNoDamage = false;
 bool featureCopsUseRadio = false;
 bool featureRunningRedLight = true;
 bool featurePavementDriving = true;
@@ -379,7 +380,13 @@ void road_laws()
 								AI::SET_TASK_VEHICLE_CHASE_BEHAVIOR_FLAG(cop_that_fines_you, 32, true);
 								PED::SET_DRIVER_ABILITY(cop_that_fines_you, 0.9f);
 							}
-							ENTITY::SET_ENTITY_INVINCIBLE(fine_cop_car, true);
+							if (featurePoliceNoDamage) {
+								ENTITY::SET_ENTITY_INVINCIBLE(fine_cop_car, true);
+								VEHICLE::SET_VEHICLE_TYRES_CAN_BURST(fine_cop_car, 0);
+								VEHICLE::SET_VEHICLE_WHEELS_CAN_BREAK(fine_cop_car, 0);
+								ENTITY::SET_ENTITY_CAN_BE_DAMAGED(fine_cop_car, 0);
+								VEHICLE::SET_VEHICLE_CAN_BE_VISIBLY_DAMAGED(fine_cop_car, 0);
+							}
 							AUDIO::BLIP_SIREN(fine_cop_car);
 							AUDIO::_PLAY_AMBIENT_SPEECH1(cop_that_fines_you, "PROVOKE_GENERIC", "SPEECH_PARAMS_FORCE_SHOUTED");
 							blip_check = true;
@@ -436,7 +443,13 @@ void road_laws()
 							AI::SET_TASK_VEHICLE_CHASE_BEHAVIOR_FLAG(cop_that_fines_you, 32, true);
 							PED::SET_DRIVER_ABILITY(cop_that_fines_you, 0.9f);
 						}
-						ENTITY::SET_ENTITY_INVINCIBLE(fine_cop_car, true);
+						if (featurePoliceNoDamage) {
+							ENTITY::SET_ENTITY_INVINCIBLE(fine_cop_car, true);
+							VEHICLE::SET_VEHICLE_TYRES_CAN_BURST(fine_cop_car, 0);
+							VEHICLE::SET_VEHICLE_WHEELS_CAN_BREAK(fine_cop_car, 0);
+							ENTITY::SET_ENTITY_CAN_BE_DAMAGED(fine_cop_car, 0);
+							VEHICLE::SET_VEHICLE_CAN_BE_VISIBLY_DAMAGED(fine_cop_car, 0);
+						}
 						AUDIO::BLIP_SIREN(fine_cop_car);
 						AUDIO::_PLAY_AMBIENT_SPEECH1(cop_that_fines_you, "PROVOKE_GENERIC", "SPEECH_PARAMS_FORCE_SHOUTED");
 						tempgotcha_x = tempradiocop.x;
