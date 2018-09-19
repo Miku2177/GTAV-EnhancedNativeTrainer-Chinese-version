@@ -764,7 +764,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		if (!MISC_PHONE_BILL_VALUES.empty()) std::vector<float>(MISC_PHONE_BILL_VALUES).swap(emptyVec_f);
 		if (!MISC_PHONE_FREESECONDS_VALUES.empty()) std::vector<int>(MISC_PHONE_FREESECONDS_VALUES).swap(emptyVec);
 	}
- 
+
 	// First Person Stunt Jump Camera
 	if (featureFirstPersonStuntJumpCamera) {
 		Ped stunt_player = PLAYER::PLAYER_PED_ID();
