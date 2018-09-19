@@ -18,6 +18,7 @@
     <ClCompile Include="src\features\area_effect.cpp" />
     <ClCompile Include="src\features\bodyguards.cpp" />
     <ClCompile Include="src\features\drive_to_marker.cpp" />
+    <ClCompile Include="src\features\enginedegrade.cpp" />
     <ClCompile Include="src\features\fuel.cpp" />
     <ClCompile Include="src\features\hotkeys.cpp" />
     <ClCompile Include="src\features\peds_dont_like_weapons.cpp" />
@@ -66,6 +67,7 @@
     <ClInclude Include="src\features\area_effect.h" />
     <ClInclude Include="src\features\bodyguards.h" />
     <ClInclude Include="src\features\drive_to_marker.h" />
+    <ClInclude Include="src\features\enginedegrade.h" />
     <ClInclude Include="src\features\fuel.h" />
     <ClInclude Include="src\features\interior_props.h" />
     <ClInclude Include="src\features\peds_dont_like_weapons.h" />
