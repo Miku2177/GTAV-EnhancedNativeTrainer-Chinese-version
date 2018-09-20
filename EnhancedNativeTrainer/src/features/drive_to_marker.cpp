@@ -134,8 +134,8 @@ void drive_to_marker()
 		GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, &coords_marker_to_drive_to.z);
 		coords_marker_to_drive_to.z += 3.0;
 
-		if (featureStickToGround && ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(curr_veh) && !PED::IS_PED_IN_ANY_HELI(drivetomarker_player) && !PED::IS_PED_IN_ANY_PLANE(drivetomarker_player)) {
-			if (speed.x > 1 || speed.y > 1 || speed.z > 1) VEHICLE::SET_VEHICLE_ON_GROUND_PROPERLY(curr_veh); //	if (speed.z > 1) 
+		if (featureStickToGround && (ENTITY::GET_ENTITY_ROLL(curr_veh) > 40 || ENTITY::GET_ENTITY_ROLL(curr_veh) < -40) && !PED::IS_PED_IN_ANY_HELI(drivetomarker_player) && !PED::IS_PED_IN_ANY_PLANE(drivetomarker_player)) {
+			if (speed.x > 1 || speed.y > 1 || speed.z > 1) VEHICLE::SET_VEHICLE_ON_GROUND_PROPERLY(curr_veh); 
 		}
 
 		if (speed.x < 5 && speed.y < 5 && reverse == true) {
