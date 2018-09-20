@@ -1272,7 +1272,8 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 	void FirstPersonDeathCamera() {
 		Ped dead_player = PLAYER::PLAYER_PED_ID();
 
-		if (ENTITY::GET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID()) < 1 && DeathCam == NULL) {
+		if (ENTITY::GET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID()) < 1 && DeathCam == NULL && (PED::GET_PED_TYPE(dead_player) == 0 || PED::GET_PED_TYPE(dead_player) == 1 ||
+			PED::GET_PED_TYPE(dead_player) == 2 || PED::GET_PED_TYPE(dead_player) == 3)) {
 			Vector3 playerPosition = ENTITY::GET_ENTITY_COORDS(dead_player, true);
 			Vector3 curRotation = ENTITY::GET_ENTITY_ROTATION(dead_player, 2);
 
@@ -1286,7 +1287,7 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 			ENTITY::SET_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID(), false);
 		}
 
-		if (ENTITY::GET_ENTITY_HEALTH(dead_player) > 0 && !PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID())) {
+		if (ENTITY::GET_ENTITY_HEALTH(dead_player) > 0 && !PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID()) && DeathCam != NULL) {
 			ENTITY::SET_ENTITY_COLLISION(PLAYER::PLAYER_PED_ID(), 1, 1);
 			CAM::RENDER_SCRIPT_CAMS(false, false, 0, false, false);
 			CAM::DETACH_CAM(DeathCam);

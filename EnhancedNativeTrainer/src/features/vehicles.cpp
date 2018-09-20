@@ -2020,31 +2020,26 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				int offsettedID = i * 2 + 2;
 				Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(veh, true);
 				Vector3 coordsped = ENTITY::GET_ENTITY_COORDS(nearbyPed[i], true);
+				Vector3 speed = ENTITY::GET_ENTITY_VELOCITY(veh);
 				
 				veh_distance_x = (coordsme.x - coordsped.x);
 				veh_distance_y = (coordsme.y - coordsped.y);
 
-				if (ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(veh)) {
-					Vector3 speed = ENTITY::GET_ENTITY_VELOCITY(veh);
-					if ((speed.x > 1) || (speed.y > 1) || (speed.z > 1)) {
-						VEHICLE::SET_VEHICLE_ON_GROUND_PROPERLY(veh);
-					}
+				if (((speed.x > 1) || (speed.y > 1) || (speed.z > 1)) && (ENTITY::GET_ENTITY_ROLL(veh) > 40 || ENTITY::GET_ENTITY_ROLL(veh) < -40)) VEHICLE::SET_VEHICLE_ON_GROUND_PROPERLY(veh);
 
-					if (VEH_MASS_VALUES[VehMassMultIndex] > 3) {
-						ENTITY::SET_ENTITY_VELOCITY(veh, vehspeed.x, vehspeed.y, vehspeed.z);
-					}
+				if (ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(veh)) {
+
+					if (VEH_MASS_VALUES[VehMassMultIndex] > 3) ENTITY::SET_ENTITY_VELOCITY(veh, vehspeed.x, vehspeed.y, vehspeed.z);
 
 					if (nearbyPed[offsettedID] != NULL && ENTITY::DOES_ENTITY_EXIST(nearbyPed[offsettedID]) && nearbyPed[i] != veh) {
 						if (veh_distance_x < 0) veh_distance_x = (veh_distance_x * -1);
 						if (veh_distance_y < 0) veh_distance_y = (veh_distance_y * -1);
 
 						if ((veh_distance_x + veh_distance_y) < 7) {
-
 							ENTITY::SET_ENTITY_LOAD_COLLISION_FLAG(veh, true);
 							ENTITY::HAS_COLLISION_LOADED_AROUND_ENTITY(veh);
 							ENTITY::APPLY_FORCE_TO_ENTITY(nearbyPed[i], 4, (ENTITY::GET_ENTITY_SPEED(veh) * VEH_MASS_VALUES[VehMassMultIndex]), 0, 0, 0, 0, 0, 1, true, true, true, true, true);
 							if (ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(nearbyPed[i])) {
-
 								Rot = CAM::GET_GAMEPLAY_CAM_ROT(2);
 								direction = RotationToDirection2(&Rot);
 								direction.x = 1 * direction.x;
@@ -2073,8 +2068,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				} 
 
 				if (VEH_MASS_VALUES[VehMassMultIndex] > 150) {
-					if (nearbyPed[offsettedID] != NULL && ENTITY::DOES_ENTITY_EXIST(nearbyPed[offsettedID]) && nearbyPed[i] != veh)
-					{
+					if (nearbyPed[offsettedID] != NULL && ENTITY::DOES_ENTITY_EXIST(nearbyPed[offsettedID]) && nearbyPed[i] != veh) {
 						if (veh_distance_x < 0) veh_distance_x = (veh_distance_x * -1);
 						if (veh_distance_y < 0) veh_distance_y = (veh_distance_y * -1);
 
