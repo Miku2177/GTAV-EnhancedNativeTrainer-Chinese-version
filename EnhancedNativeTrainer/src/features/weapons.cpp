@@ -1250,37 +1250,19 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		strcpy(currWeapon, WEAPONS_COPARMED_CAPTIONS[CopCurrArmedIndex].c_str());
 		Hash Cop_Weapon = GAMEPLAY::GET_HASH_KEY(currWeapon);
 		
-		if ((PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) <= WEAPONS_COPALARM_VALUES[CopAlarmIndex]) || (WEAPONS_COPALARM_VALUES[CopAlarmIndex] > 5)) {
+		if ((PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) <= WEAPONS_COPALARM_VALUES[CopAlarmIndex] || WEAPONS_COPALARM_VALUES[CopAlarmIndex] > 5) && PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) > 0) {
 		
 			if (featurePlayerMelee && (Weapon_Type == 3566412244 || Weapon_Type == 2685387236)) {
 				for (int i = 0; i < count_cops; i++) {
-					
-					if (PED::GET_PED_TYPE(cops[i]) == 6 || PED::GET_PED_TYPE(cops[i]) == 27) {
-						if (WEAPON::GET_SELECTED_PED_WEAPON(cops[i]) != Cop_Weapon) {
-							WEAPON::GIVE_WEAPON_TO_PED(cops[i], Cop_Weapon, 999, false, true);
-						}
-					}
-					if (featureArmyMelee && PED::GET_PED_TYPE(cops[i]) == 29) {
-						if (WEAPON::GET_SELECTED_PED_WEAPON(cops[i]) != Cop_Weapon) {
-							WEAPON::GIVE_WEAPON_TO_PED(cops[i], Cop_Weapon, 999, false, true);
-						}
-					}
+					if ((PED::GET_PED_TYPE(cops[i]) == 6 || PED::GET_PED_TYPE(cops[i]) == 27) && WEAPON::GET_SELECTED_PED_WEAPON(cops[i]) != Cop_Weapon) WEAPON::GIVE_WEAPON_TO_PED(cops[i], Cop_Weapon, 999, false, true);
+					if (featureArmyMelee && PED::GET_PED_TYPE(cops[i]) == 29 && WEAPON::GET_SELECTED_PED_WEAPON(cops[i]) != Cop_Weapon) WEAPON::GIVE_WEAPON_TO_PED(cops[i], Cop_Weapon, 999, false, true);
 				}
 			}
 			
 			if (!featurePlayerMelee) {
 				for (int i = 0; i < count_cops; i++) {
-					
-					if (PED::GET_PED_TYPE(cops[i]) == 6 || PED::GET_PED_TYPE(cops[i]) == 27) {
-						if (WEAPON::GET_SELECTED_PED_WEAPON(cops[i]) != Cop_Weapon) {
-							WEAPON::GIVE_WEAPON_TO_PED(cops[i], Cop_Weapon, 999, false, true);
-						}
-					}
-					if (featureArmyMelee && PED::GET_PED_TYPE(cops[i]) == 29) {
-						if (WEAPON::GET_SELECTED_PED_WEAPON(cops[i]) != Cop_Weapon) {
-							WEAPON::GIVE_WEAPON_TO_PED(cops[i], Cop_Weapon, 999, false, true);
-						}
-					}
+					if ((PED::GET_PED_TYPE(cops[i]) == 6 || PED::GET_PED_TYPE(cops[i]) == 27) && WEAPON::GET_SELECTED_PED_WEAPON(cops[i]) != Cop_Weapon) WEAPON::GIVE_WEAPON_TO_PED(cops[i], Cop_Weapon, 999, false, true);
+					if (featureArmyMelee && PED::GET_PED_TYPE(cops[i]) == 29 && WEAPON::GET_SELECTED_PED_WEAPON(cops[i]) != Cop_Weapon) WEAPON::GIVE_WEAPON_TO_PED(cops[i], Cop_Weapon, 999, false, true);
 				}
 			}
 		}
