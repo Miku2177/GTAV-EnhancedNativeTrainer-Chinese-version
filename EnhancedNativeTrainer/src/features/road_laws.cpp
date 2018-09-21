@@ -517,13 +517,13 @@ void road_laws()
 				}
 			}
 			
-			if (cop_walking == true && PED::IS_PED_IN_VEHICLE(cop_that_fines_you, fine_cop_car, true)) {
+			if (cop_walking == true && PED::IS_PED_IN_VEHICLE(cop_that_fines_you, fine_cop_car, true)) { //  && tempgotcha_x < 100 && tempgotcha_y < 100
 				AI::TASK_LEAVE_VEHICLE(cop_that_fines_you, fine_cop_car, 0);
 				AI::TASK_GOTO_ENTITY_AIMING(cop_that_fines_you, playerPed, 4.0, 30.0);
 			}
 
 			if ((vehroadlaws_speed > 1 || vehcoplaws_speed > 1) && cop_walking == false && wanted_level_on == false) Stop_seconds = -1;
-			
+
 			// Distance between you and the cop that's chasing after you
 			temp_fine_cop = ENTITY::GET_ENTITY_COORDS(cop_that_fines_you, true);
 			int tempfined_x = (temp_fine_cop.x - vehroadlaws_coords.x);
