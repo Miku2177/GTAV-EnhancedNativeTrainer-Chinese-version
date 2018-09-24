@@ -363,6 +363,7 @@ void road_laws()
 							if (featurePoliceVehicleBlip) UI::SET_BLIP_SPRITE(blip_laws, 42);
 							ENTITY::SET_ENTITY_AS_MISSION_ENTITY(cop_that_fines_you, 1, 1);
 							ENTITY::SET_ENTITY_AS_MISSION_ENTITY(fine_cop_car, 1, 1);
+							//AI::TASK_SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(cop_that_fines_you, true);
 							if (!featurePoliceAgressiveDriving) {
 								AI::TASK_VEHICLE_ESCORT(cop_that_fines_you, fine_cop_car, vehroadlaws, -1, 140.0f, 786468, 3, 1, 1);
 								AI::SET_DRIVE_TASK_DRIVING_STYLE(cop_that_fines_you, 262144);
@@ -381,6 +382,7 @@ void road_laws()
 								PED::SET_DRIVER_ABILITY(cop_that_fines_you, 0.9f);
 							}
 							if (featurePoliceNoDamage) {
+								ENTITY::SET_ENTITY_INVINCIBLE(cop_that_fines_you, true);
 								ENTITY::SET_ENTITY_INVINCIBLE(fine_cop_car, true);
 								VEHICLE::SET_VEHICLE_TYRES_CAN_BURST(fine_cop_car, 0);
 								VEHICLE::SET_VEHICLE_WHEELS_CAN_BREAK(fine_cop_car, 0);
@@ -426,6 +428,7 @@ void road_laws()
 						if (featurePoliceVehicleBlip) UI::SET_BLIP_SPRITE(blip_laws, 42);
 						ENTITY::SET_ENTITY_AS_MISSION_ENTITY(cop_that_fines_you, 1, 1);
 						ENTITY::SET_ENTITY_AS_MISSION_ENTITY(fine_cop_car, 1, 1);
+						//AI::TASK_SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(cop_that_fines_you, true);
 						if (!featurePoliceAgressiveDriving) {
 							AI::TASK_VEHICLE_ESCORT(cop_that_fines_you, fine_cop_car, vehroadlaws, -1, 140.0f, 786468, 2, 1, 1);
 							AI::SET_DRIVE_TASK_DRIVING_STYLE(cop_that_fines_you, 262144);
@@ -444,6 +447,7 @@ void road_laws()
 							PED::SET_DRIVER_ABILITY(cop_that_fines_you, 0.9f);
 						}
 						if (featurePoliceNoDamage) {
+							ENTITY::SET_ENTITY_INVINCIBLE(cop_that_fines_you, true);
 							ENTITY::SET_ENTITY_INVINCIBLE(fine_cop_car, true);
 							VEHICLE::SET_VEHICLE_TYRES_CAN_BURST(fine_cop_car, 0);
 							VEHICLE::SET_VEHICLE_WHEELS_CAN_BREAK(fine_cop_car, 0);
@@ -510,6 +514,7 @@ void road_laws()
 				// You agree to be fined
 				if (Stop_seconds == 5 && cop_walking == false) {
 					if (PED::IS_PED_IN_VEHICLE(playerPed, vehroadlaws, true)) {
+						//AI::TASK_SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(cop_that_fines_you, false);
 						AI::TASK_LEAVE_VEHICLE(cop_that_fines_you, fine_cop_car, 0);
 						AI::TASK_GOTO_ENTITY_AIMING(cop_that_fines_you, playerPed, 4.0, 30.0);
 						cop_walking = true;
@@ -517,6 +522,8 @@ void road_laws()
 				}
 			}
 			
+			if (cop_walking == true) ENTITY::SET_ENTITY_INVINCIBLE(cop_that_fines_you, false);
+
 			if (cop_walking == true && PED::IS_PED_IN_VEHICLE(cop_that_fines_you, fine_cop_car, true)) { //  && tempgotcha_x < 100 && tempgotcha_y < 100
 				AI::TASK_LEAVE_VEHICLE(cop_that_fines_you, fine_cop_car, 0);
 				AI::TASK_GOTO_ENTITY_AIMING(cop_that_fines_you, playerPed, 4.0, 30.0);
