@@ -1958,6 +1958,11 @@ void update_teleport_features(){
 		altitude_reached = false;
 	}
 
+	if (!PED::IS_PED_IN_ANY_VEHICLE(driver_to_marker_pilot, false)) {
+		AI::TASK_SMART_FLEE_PED(driver_to_marker_pilot, PLAYER::PLAYER_PED_ID(), 1000, -1, true, true);
+		ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&driver_to_marker_pilot);
+	}
+
 	if (blipDriveFound == true && marker_been_set == true) drive_to_marker();
 	if (marker_been_set == false) {
 		std::vector<int> emptyVec;
@@ -1970,6 +1975,8 @@ void update_teleport_features(){
 		AI::CLEAR_PED_TASKS(driver_to_marker_pilot);
 		VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(curr_veh, false);
 		AI::TASK_LEAVE_VEHICLE(driver_to_marker_pilot, curr_veh, 4160);
+		AI::TASK_SMART_FLEE_PED(driver_to_marker_pilot, PLAYER::PLAYER_PED_ID(), 1000, -1, true, true);
+		ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&driver_to_marker_pilot);
 		marker_been_set = false;
 		blipDriveFound = false;
 		landing = false;

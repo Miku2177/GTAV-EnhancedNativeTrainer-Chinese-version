@@ -238,6 +238,7 @@ void drive_to_marker()
 					marker_been_set = false;
 					blipDriveFound = false;
 					AI::TASK_SMART_FLEE_PED(driver_to_marker_pilot, drivetomarker_player, 1000, -1, true, true);
+					ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&driver_to_marker_pilot);
 				}
 			}
 
