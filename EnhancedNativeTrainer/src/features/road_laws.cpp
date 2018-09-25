@@ -53,6 +53,7 @@ bool againsttraffic_check, pavementdriving_check, vehiclecollision_check, vehicl
 int SinceCollision_secs_passed, SinceCollision_secs_curr, Collision_seconds = -1;
 int SinceEscape_secs_passed, SinceEscape_secs_curr, Escape_seconds = -1;
 int SinceAgainstTraffic_secs_passed, SinceAgainstTraffic_secs_curr, AgainstTraffic_seconds = -1;
+int Stuck_secs_passed, Stuck_secs_curr, Stuck_seconds = -1;
 int SinceStop_secs_passed, SinceStop_secs_curr, Stop_seconds = -1;
 int SinceStop_secs_passed_final, SinceStop_secs_curr_final = -1;
 int Stop_seconds_final = 5;
@@ -64,7 +65,7 @@ Vehicle veh_cop_in, hijacking_veh, fine_cop_car;
 Vector3 veh_cop_in_coords;
 Vector3 temp_fine_cop;
 int tempgotcha_x, tempgotcha_y = -1;
-int num_of_taxes = 0;
+int num_of_taxes, stuck_completely = 0;
 Ped cop_that_fines_you;
 float vehcoplaws_speed = -1;
 bool cop_walking, wanted_level_on, alarm_check, found_stolen_in_vector, hijacked_vehicle = false;
@@ -373,8 +374,7 @@ void road_laws()
 								AI::SET_TASK_VEHICLE_CHASE_IDEAL_PURSUIT_DISTANCE(cop_that_fines_you, 40.0f);
 								AI::SET_TASK_VEHICLE_CHASE_BEHAVIOR_FLAG(cop_that_fines_you, 32, true);
 								PED::SET_DRIVER_ABILITY(cop_that_fines_you, 0.9f);
-							}
-							else {
+							} else {
 								AI::SET_DRIVE_TASK_CRUISE_SPEED(cop_that_fines_you, 300.0);
 								AI::TASK_VEHICLE_CHASE(cop_that_fines_you, playerPed);
 								AI::SET_TASK_VEHICLE_CHASE_IDEAL_PURSUIT_DISTANCE(cop_that_fines_you, 60.0f);
@@ -438,8 +438,7 @@ void road_laws()
 							AI::SET_TASK_VEHICLE_CHASE_IDEAL_PURSUIT_DISTANCE(cop_that_fines_you, 40);
 							AI::SET_TASK_VEHICLE_CHASE_BEHAVIOR_FLAG(cop_that_fines_you, 32, true);
 							PED::SET_DRIVER_ABILITY(cop_that_fines_you, 0.9);
-						}
-						else {
+						} else {
 							AI::SET_DRIVE_TASK_CRUISE_SPEED(cop_that_fines_you, 300.0);
 							AI::TASK_VEHICLE_CHASE(cop_that_fines_you, playerPed);
 							AI::SET_TASK_VEHICLE_CHASE_IDEAL_PURSUIT_DISTANCE(cop_that_fines_you, 60.0f);
@@ -486,8 +485,7 @@ void road_laws()
 						AI::SET_TASK_VEHICLE_CHASE_BEHAVIOR_FLAG(cop_that_fines_you, 32, true);
 						PED::SET_DRIVER_ABILITY(cop_that_fines_you, 0.9);
 						no_agressive = true;
-					}
-					else if (vehroadlaws_speed > 9 && no_agressive == true) {  
+					} else if (vehroadlaws_speed > 9 && no_agressive == true) {  
 						AI::SET_DRIVE_TASK_CRUISE_SPEED(cop_that_fines_you, 300.0);
 						AI::TASK_VEHICLE_CHASE(cop_that_fines_you, playerPed);
 						AI::SET_TASK_VEHICLE_CHASE_IDEAL_PURSUIT_DISTANCE(cop_that_fines_you, 60.0f);
@@ -499,6 +497,39 @@ void road_laws()
 				// Escaping the police check 
 				if (Escape_seconds < 16 && vehroadlaws_speed < 11) escapingpolice_check = false;
 				if (Escape_seconds > 15 && vehroadlaws_speed > 10 && vehcoplaws_speed > 10) escapingpolice_check = true;
+
+				// Do not stuck
+				if (vehcoplaws_speed < 1 && cop_walking == false) {
+					Stuck_secs_passed = clock() / CLOCKS_PER_SEC;
+					if (((clock() / CLOCKS_PER_SEC) - Stuck_secs_curr) != 0) {
+						Stuck_seconds = Stuck_seconds + 1;
+						Stuck_secs_curr = Stuck_secs_passed;
+					}
+					if (Stuck_seconds > 4) {
+						if (!featurePoliceAgressiveDriving) {
+							AI::TASK_VEHICLE_ESCORT(cop_that_fines_you, fine_cop_car, vehroadlaws, -1, 140.0f, 786468, 2, 1, 1);
+							AI::SET_DRIVE_TASK_DRIVING_STYLE(cop_that_fines_you, 262144);
+							AI::SET_DRIVE_TASK_DRIVING_STYLE(cop_that_fines_you, 4);
+							AI::SET_DRIVE_TASK_DRIVING_STYLE(cop_that_fines_you, 512);
+							AI::SET_DRIVE_TASK_CRUISE_SPEED(cop_that_fines_you, 300.0);
+							AI::SET_TASK_VEHICLE_CHASE_IDEAL_PURSUIT_DISTANCE(cop_that_fines_you, 40);
+							AI::SET_TASK_VEHICLE_CHASE_BEHAVIOR_FLAG(cop_that_fines_you, 32, true);
+							PED::SET_DRIVER_ABILITY(cop_that_fines_you, 0.9);
+						} else {
+							AI::SET_DRIVE_TASK_CRUISE_SPEED(cop_that_fines_you, 300.0);
+							AI::TASK_VEHICLE_CHASE(cop_that_fines_you, playerPed);
+							AI::SET_TASK_VEHICLE_CHASE_IDEAL_PURSUIT_DISTANCE(cop_that_fines_you, 60.0f);
+							AI::SET_TASK_VEHICLE_CHASE_BEHAVIOR_FLAG(cop_that_fines_you, 32, true);
+							PED::SET_DRIVER_ABILITY(cop_that_fines_you, 0.9f);
+						}
+						Stuck_seconds = 0;
+						stuck_completely = stuck_completely + 1;
+					}
+				}
+				if (vehcoplaws_speed > 1) {
+					Stuck_seconds = 0;
+					stuck_completely = 0;
+				}
 			}
 
 			// You'll be fined if you don't move
@@ -591,24 +622,24 @@ void road_laws()
 					if (!AUDIO::IS_AMBIENT_SPEECH_PLAYING(cop_that_fines_you)) AUDIO::STOP_CURRENT_PLAYING_AMBIENT_SPEECH(cop_that_fines_you);
 				}
 				if (Stop_seconds_final == 18) {
-					AUDIO::_PLAY_AMBIENT_SPEECH1(cop_that_fines_you, "GENERIC_THANKS", "SPEECH_PARAMS_FORCE_SHOUTED");
+					if (!AUDIO::IS_AMBIENT_SPEECH_PLAYING(cop_that_fines_you)) AUDIO::_PLAY_AMBIENT_SPEECH1(cop_that_fines_you, "GENERIC_THANKS", "SPEECH_PARAMS_FORCE_SHOUTED");
 					STREAMING::REQUEST_ANIM_DICT("amb@code_human_in_car_mp_actions@gang_sign_b@low@ds@base");
 					while (!STREAMING::HAS_ANIM_DICT_LOADED("amb@code_human_in_car_mp_actions@gang_sign_b@low@ds@base")) WAIT(0);
 					AI::TASK_PLAY_ANIM(cop_that_fines_you, "amb@code_human_in_car_mp_actions@gang_sign_b@low@ds@base", "enter", 8.0, 0.0, -1, 9, 0, 0, 0, 0);
 				}
 				if (Stop_seconds_final == 19) {
 					AI::TASK_TURN_PED_TO_FACE_COORD(cop_that_fines_you, head_coords.x, head_coords.y, head_coords.z, 100);
-					AUDIO::STOP_CURRENT_PLAYING_AMBIENT_SPEECH(cop_that_fines_you);
+					if (!AUDIO::IS_AMBIENT_SPEECH_PLAYING(cop_that_fines_you)) AUDIO::STOP_CURRENT_PLAYING_AMBIENT_SPEECH(cop_that_fines_you);
 					AI::STOP_ANIM_TASK(cop_that_fines_you, "amb@code_human_in_car_mp_actions@gang_sign_b@low@ds@base", "enter", 1.0);
 				}
 				if (Stop_seconds_final == 20 && STREAMING::DOES_ANIM_DICT_EXIST("amb@code_human_in_car_mp_actions@gang_sign_b@low@ds@base") && !ENTITY::HAS_ENTITY_ANIM_FINISHED(cop_that_fines_you, "amb@code_human_in_car_mp_actions@gang_sign_b@low@ds@base", "enter", 3)) {
-					AUDIO::_PLAY_AMBIENT_SPEECH1(cop_that_fines_you, "GENERIC_BYE", "SPEECH_PARAMS_FORCE_SHOUTED");
+					if (!AUDIO::IS_AMBIENT_SPEECH_PLAYING(cop_that_fines_you)) AUDIO::_PLAY_AMBIENT_SPEECH1(cop_that_fines_you, "GENERIC_BYE", "SPEECH_PARAMS_FORCE_SHOUTED");
 					STREAMING::REQUEST_ANIM_DICT("anim@mp_player_intincarrocklow@ds@");
 					while (!STREAMING::HAS_ANIM_DICT_LOADED("anim@mp_player_intincarrocklow@ds@")) WAIT(0);
 					AI::TASK_PLAY_ANIM(cop_that_fines_you, "anim@mp_player_intincarrocklow@ds@", "enter_fp", 8.0, 0.0, -1, 9, 0, 0, 0, 0);
 				}
 				if (Stop_seconds_final == 22) {
-					AUDIO::STOP_CURRENT_PLAYING_AMBIENT_SPEECH(cop_that_fines_you);
+					if (!AUDIO::IS_AMBIENT_SPEECH_PLAYING(cop_that_fines_you)) AUDIO::STOP_CURRENT_PLAYING_AMBIENT_SPEECH(cop_that_fines_you);
 					AI::STOP_ANIM_TASK(cop_that_fines_you, "anim@mp_player_intincarrocklow@ds@", "enter_fp", 1.0);
 				}
 			}
@@ -625,7 +656,7 @@ void road_laws()
 
 			// Been fined or escaped
 			if (Stop_seconds_final == 24 || tempgotcha_x > VEH_PIRSUITRANGE_VALUES[PirsuitRangeIndex] || tempgotcha_y > VEH_PIRSUITRANGE_VALUES[PirsuitRangeIndex] ||
-				(PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) > 1 && !featureCopsUseRadio) || (vehroadlaws_speed > 20 && Stop_seconds > -1 && wanted_level_on == true && !featureCopsUseRadio))
+				(PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) > 1 && !featureCopsUseRadio) || (vehroadlaws_speed > 20 && Stop_seconds > -1 && wanted_level_on == true && !featureCopsUseRadio) || stuck_completely > 7)
 			{
 				if (STREAMING::DOES_ANIM_DICT_EXIST("ah_3a_ext-17") && !ENTITY::HAS_ENTITY_ANIM_FINISHED(cop_that_fines_you, "ah_3a_ext-17", "player_zero_dual-17", 3))
 					AI::STOP_ANIM_TASK(cop_that_fines_you, "ah_3a_ext-17", "player_zero_dual-17", 1.0);
@@ -711,6 +742,8 @@ void road_laws()
 				approached = false;
 				red_light_veh_detected = false;
 				Collision_seconds = -1;
+				Stuck_seconds = 0;
+				stuck_completely = 0;
 				no_agressive = false;
 				PLAYER::SET_MAX_WANTED_LEVEL(5);
 			}
