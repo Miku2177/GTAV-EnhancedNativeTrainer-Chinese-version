@@ -19,11 +19,13 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 int activeLineIndexTrainerConfig = 0;
 int activeLineIndexPhoneBill = 0;
+int activeLineIndexDefMenuTab = 0;
 int activeLineHotkeyConfig = 0;
 
 // Phone Bill variables
 bool featureBlockInputInMenu = false;
 bool featurePhoneBillEnabled = false;
+bool featureGamePause = false;
 bool featureZeroBalance = false;
 int secs_passed, secs_curr = -1;
 float temp_seconds, bill_seconds = 0;
@@ -121,6 +123,12 @@ const std::vector<std::string> MISC_PHONE_FREESECONDS_CAPTIONS{ "0", "3", "5", "
 const std::vector<int> MISC_PHONE_FREESECONDS_VALUES{ 0, 3, 5, 10, 15 };
 int PhoneFreeSecondsIndex = 0;
 bool PhoneFreeSecondsChanged = true;
+
+// Default Menu Tab
+const std::vector<std::string> MISC_DEF_MENUTAB_CAPTIONS{ "OFF", "Map", "Brief", "Friends", "Gallery", "Game", "Settings", "Stats", "Store", "Online" };
+const std::vector<int> MISC_DEF_MANUTAB_VALUES{ -2, -1, 1, 2, 3, 5, 6, 10, 18, 42 };
+int DefMenuTabIndex = 0;
+bool DefMenuTabChanged = true;
 
 void onchange_hotkey_function(int value, SelectFromListMenuItem* source){
 	change_hotkey_function(source->extras.at(0), value);
@@ -310,6 +318,31 @@ void process_misc_freezeradio_menu(){
 	draw_generic_menu<int>(menuItems, nullptr, "Freeze Radio to Station", onconfirm_misc_freezeradio_menu, nullptr, nullptr, nullptr);
 }
 
+bool onconfirm_defmenutab_menu(MenuItem<int> choice) {
+
+	return false;
+}
+
+void process_def_menutab_menu() {
+	std::string caption = "Default Pause Menu Tab Options";
+
+	std::vector<MenuItem<int>*> menuItems;
+	SelectFromListMenuItem *listItem;
+	
+	listItem = new SelectFromListMenuItem(MISC_DEF_MENUTAB_CAPTIONS, onchange_misc_def_menutab_index);
+	listItem->wrap = false;
+	listItem->caption = "Default Pause Menu Tab";
+	listItem->value = DefMenuTabIndex;
+	menuItems.push_back(listItem);
+
+	ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Pause Game When Menu Open";
+	toggleItem->toggleValue = &featureGamePause;
+	menuItems.push_back(toggleItem);
+
+	draw_generic_menu<int>(menuItems, &activeLineIndexDefMenuTab, caption, onconfirm_defmenutab_menu, NULL, NULL);
+}
+
 bool onconfirm_phonebill_menu(MenuItem<int> choice){
 	
 	return false;
@@ -363,6 +396,9 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 		case 16:
 			process_phone_bill_menu();
 			break;
+		case 22:
+			process_def_menutab_menu();
+			break;
 		default:
 			// switchable features
 			break;
@@ -371,7 +407,7 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 }
 
 void process_misc_menu(){
-	const int lineCount = 22;
+	const int lineCount = 23;
 
 	std::string caption = "Miscellaneous Options";
 
@@ -398,6 +434,7 @@ void process_misc_menu(){
 		{"First Person Stunt Jump Camera", &featureFirstPersonStuntJumpCamera, NULL },
 		{"No Stunt Jumps", &featureNoStuntJumps, NULL },
 		{"FPS Counter", &featureShowFPS, &featureShowFPSUpdated },
+		{"Default Pause Menu Tab", NULL, NULL, false},
 	};
 
 	draw_menu_from_struct_def(lines, lineCount, &activeLineIndexMisc, caption, onconfirm_misc_menu);
@@ -406,6 +443,11 @@ void process_misc_menu(){
 void onchange_misc_phone_bill_index(int value, SelectFromListMenuItem* source){
 	PhoneBillIndex = value;
 	PhoneBillChanged = true;
+}
+
+void onchange_misc_def_menutab_index(int value, SelectFromListMenuItem* source) {
+	DefMenuTabIndex = value;
+	DefMenuTabChanged = true;
 }
 
 void onchange_misc_phone_freeseconds_index(int value, SelectFromListMenuItem* source){
@@ -432,10 +474,13 @@ void reset_misc_globals(){
 	PhoneBillIndex = 2;
 	PhoneFreeSecondsIndex = 0;
 
+	DefMenuTabIndex = 0;
+
 	featureShowVehiclePreviews = true;
 	featureControllerIgnoreInTrainer = false;
 	featureBlockInputInMenu = false;
 	featurePhoneBillEnabled = false;
+	featureGamePause = false;
 	featureZeroBalance = false;
 	featureFindDespawnPointer = false;
 	featureFirstPersonDeathCamera = false;
@@ -689,6 +734,19 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			else GRAPHICS::DRAW_RECT(health_bar_x + 0.0885, health_bar_y + 0.01, 0.034, 0.009, 62, 129, 164, 255);
 		}
 	}
+	
+	// Default Menu Tab
+	if (MISC_DEF_MANUTAB_VALUES[DefMenuTabIndex] > -2) {
+		int GetHash = GAMEPLAY::GET_HASH_KEY("FE_MENU_VERSION_SP_PAUSE");
+		if (CONTROLS::IS_CONTROL_PRESSED(2, 199) || CONTROLS::IS_CONTROL_PRESSED(2, 200)) {
+			UI::ACTIVATE_FRONTEND_MENU(GetHash, featureGamePause, MISC_DEF_MANUTAB_VALUES[DefMenuTabIndex]);
+			WAIT(100);
+		} 
+	} 
+	else {
+		std::vector<int> emptyVec;
+		if (!MISC_DEF_MANUTAB_VALUES.empty()) std::vector<int>(MISC_DEF_MANUTAB_VALUES).swap(emptyVec);
+	}
 
 	// Phone Bill
 	if (featurePhoneBillEnabled) {
@@ -893,6 +951,7 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 	results->push_back(FeatureEnabledLocalDefinition{"featureControllerIgnoreInTrainer", &featureControllerIgnoreInTrainer});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBlockInputInMenu", &featureBlockInputInMenu});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePhoneBillEnabled", &featurePhoneBillEnabled});
+	results->push_back(FeatureEnabledLocalDefinition{"featureNoGamePause", &featureGamePause});
 	results->push_back(FeatureEnabledLocalDefinition{"featureZeroBalance", &featureZeroBalance});
 	results->push_back(FeatureEnabledLocalDefinition{"featureShowVehiclePreviews", &featureShowVehiclePreviews});
 	results->push_back(FeatureEnabledLocalDefinition{"featureShowFPS", &featureShowFPS});
@@ -911,6 +970,7 @@ void add_misc_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"radioStationIndex", std::to_string(radioStationIndex)});
 	results->push_back(StringPairSettingDBRow{"PhoneBillIndex", std::to_string(PhoneBillIndex)});
 	results->push_back(StringPairSettingDBRow{"PhoneFreeSecondsIndex", std::to_string(PhoneFreeSecondsIndex)});
+	results->push_back(StringPairSettingDBRow{"DefMenuTabIndex", std::to_string(DefMenuTabIndex)});
 }
 
 void handle_generic_settings_misc(std::vector<StringPairSettingDBRow>* settings){
@@ -924,6 +984,9 @@ void handle_generic_settings_misc(std::vector<StringPairSettingDBRow>* settings)
 		}
 		else if (setting.name.compare("PhoneFreeSecondsIndex") == 0){
 			PhoneFreeSecondsIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("DefMenuTabIndex") == 0) {
+			DefMenuTabIndex = stoi(setting.value);
 		}
 	}
 }
