@@ -499,7 +499,7 @@ void road_laws()
 				if (Escape_seconds > 15 && vehroadlaws_speed > 10 && vehcoplaws_speed > 10) escapingpolice_check = true;
 
 				// Do not stuck
-				if (vehcoplaws_speed < 1 && cop_walking == false) {
+				if (vehcoplaws_speed < 1 && cop_walking == false && (tempgotcha_x > 99 || tempgotcha_y > 99)) {
 					Stuck_secs_passed = clock() / CLOCKS_PER_SEC;
 					if (((clock() / CLOCKS_PER_SEC) - Stuck_secs_curr) != 0) {
 						Stuck_seconds = Stuck_seconds + 1;
