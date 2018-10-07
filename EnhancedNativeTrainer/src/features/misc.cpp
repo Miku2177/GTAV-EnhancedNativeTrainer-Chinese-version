@@ -72,6 +72,7 @@ bool featureInVehicleNoHud = false;
 bool featureInVehicleNoHudUpdated = false;
 bool phone_toggle = false;
 bool phone_toggle_vehicle = false;
+bool phone_toggle_defaultphone = false;
 
 bool featureFindDespawnPointer = false;
 bool featureFindDespawnPointerUpdated = false;
@@ -129,6 +130,12 @@ const std::vector<std::string> MISC_DEF_MENUTAB_CAPTIONS{ "OFF", "Map", "Brief",
 const std::vector<int> MISC_DEF_MANUTAB_VALUES{ -2, -1, 1, 2, 3, 5, 6, 10, 18, 42 };
 int DefMenuTabIndex = 0;
 bool DefMenuTabChanged = true;
+
+// Default Phone
+const std::vector<std::string> MISC_PHONE_DEFAULT_CAPTIONS{ "OFF", "Michael's", "Trevor's", "Franklin's", "Military", "Prologue" };
+const std::vector<int> MISC_PHONE_DEFAULT_VALUES{ -1, 0, 1, 2, 3, 4 };
+int PhoneDefaultIndex = 0;
+bool PhoneDefaultChanged = true;
 
 void onchange_hotkey_function(int value, SelectFromListMenuItem* source){
 	change_hotkey_function(source->extras.at(0), value);
@@ -349,13 +356,19 @@ bool onconfirm_phonebill_menu(MenuItem<int> choice){
 }
 
 void process_phone_bill_menu(){
-	std::string caption = "Phone Bill Options";
+	std::string caption = "Phone Settings Options";
 
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
 
+	listItem = new SelectFromListMenuItem(MISC_PHONE_DEFAULT_CAPTIONS, onchange_misc_phone_default_index);
+	listItem->wrap = false;
+	listItem->caption = "Default Phone Model";
+	listItem->value = PhoneDefaultIndex;
+	menuItems.push_back(listItem);
+
 	ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Enable";
+	toggleItem->caption = "Enable Phone Bill";
 	toggleItem->toggleValue = &featurePhoneBillEnabled;
 	menuItems.push_back(toggleItem);
 
@@ -428,7 +441,7 @@ void process_misc_menu(){
 		{"Show HUD In Vehicle Only", &featureInVehicleNoHud, &featureInVehicleNoHudUpdated },
 		{"Dynamic Health Bar", &featureDynamicHealthBar, &featureDynamicHealthBarUpdated },
 		{"Reset Player Model On Death", &featureResetPlayerModelOnDeath, nullptr, true},
-		{"Phone Bill", NULL, NULL, false},
+		{"Phone Settings", NULL, NULL, false},
 		{"Auto-Find Vehicle Despawn Pointer", &featureFindDespawnPointer, &featureFindDespawnPointerUpdated, true },
 		{"First Person Death Camera", &featureFirstPersonDeathCamera, NULL },
 		{"First Person Stunt Jump Camera", &featureFirstPersonStuntJumpCamera, NULL },
@@ -443,6 +456,11 @@ void process_misc_menu(){
 void onchange_misc_phone_bill_index(int value, SelectFromListMenuItem* source){
 	PhoneBillIndex = value;
 	PhoneBillChanged = true;
+}
+
+void onchange_misc_phone_default_index(int value, SelectFromListMenuItem* source) {
+	PhoneDefaultIndex = value;
+	PhoneDefaultChanged = true;
 }
 
 void onchange_misc_def_menutab_index(int value, SelectFromListMenuItem* source) {
@@ -472,6 +490,7 @@ void reset_misc_globals(){
 		featureRadioAlwaysOff = false;
 
 	PhoneBillIndex = 2;
+	PhoneDefaultIndex = 0;
 	PhoneFreeSecondsIndex = 0;
 
 	DefMenuTabIndex = 0;
@@ -683,8 +702,20 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		phone_toggle_vehicle = false;
 	}
 	
+	// Default Phone
+	if (MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] > -1) {
+		if (PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed) && phone_toggle_defaultphone == false) {
+			MOBILE::CREATE_MOBILE_PHONE(MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex]);
+			phone_toggle_defaultphone = true;
+		}
+		if (!PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed) && phone_toggle_defaultphone == true) {
+			MOBILE::DESTROY_MOBILE_PHONE();
+			phone_toggle_defaultphone = false;
+		}
+	}
+
 	// DYNAMIC HEALTH BAR
-	if (featureDynamicHealthBar) {
+	if (featureDynamicHealthBar && !CUTSCENE::IS_CUTSCENE_PLAYING()) {
 		if (!featureMiscHideHud && !featurePhoneShowHud && !featureInVehicleNoHud) UI::DISPLAY_RADAR(false); // There is no need to hide HUD if it's already hidden
 		
 		auto addr = getScriptHandleBaseAddress(playerPed);
@@ -969,6 +1000,7 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 void add_misc_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"radioStationIndex", std::to_string(radioStationIndex)});
 	results->push_back(StringPairSettingDBRow{"PhoneBillIndex", std::to_string(PhoneBillIndex)});
+	results->push_back(StringPairSettingDBRow{"PhoneDefaultIndex", std::to_string(PhoneDefaultIndex)});
 	results->push_back(StringPairSettingDBRow{"PhoneFreeSecondsIndex", std::to_string(PhoneFreeSecondsIndex)});
 	results->push_back(StringPairSettingDBRow{"DefMenuTabIndex", std::to_string(DefMenuTabIndex)});
 }
@@ -981,6 +1013,9 @@ void handle_generic_settings_misc(std::vector<StringPairSettingDBRow>* settings)
 		}
 		else if (setting.name.compare("PhoneBillIndex") == 0){
 			PhoneBillIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("PhoneDefaultIndex") == 0) {
+			PhoneDefaultIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("PhoneFreeSecondsIndex") == 0){
 			PhoneFreeSecondsIndex = stoi(setting.value);

@@ -1537,7 +1537,7 @@ std::vector<char*> IPL_PROPS_SCRAP = {
 	"v_ilev_rc_door3_l",// : 6754215 : X : -6, 971424 Y : 20, 37699 Z : 1, 148965 LODTYPES_DEPTH_ORPHANHD
 };
 
-std::vector<char*> IPL_PROPS_NIGHTCLUB_COMMON_PROPS = {
+std::vector<const char*> IPL_PROPS_NIGHTCLUB_COMMON_PROPS = {
 	"ba_aircon_system",
 	"ba_back_hall_decals",
 	"ba_bars1_01",
@@ -1610,6 +1610,7 @@ std::vector<char*> IPL_PROPS_NIGHTCLUB_COMMON_PROPS = {
 	"ba_int_01_light_grid",
 	"ba_louis_pic",
 	"ba_lower_bar_pipes",
+	//
 	"ba_main_architraves",
 	"ba_main_area_architrave",
 	"ba_main_grubby",
@@ -1682,9 +1683,10 @@ std::vector<char*> IPL_PROPS_NIGHTCLUB_COMMON_PROPS = {
 	"ba_work_light_clutter002",
 	"ba_int01_bacl_mad_posters",
 	"ba_int01_mule",
+	//
 };
 
-std::vector<char*> IPL_PROPS_NIGHTCLUB_EDGY = { //Dixon posters
+std::vector<const char*> IPL_PROPS_NIGHTCLUB_EDGY = { //Dixon posters
 	"ba_edgybot_stairs",
 	"ba_edgy_barriers",
 	"ba_edgy_bar_shelves",
@@ -1747,26 +1749,26 @@ std::vector<char*> IPL_PROPS_NIGHTCLUB_EDGY = { //Dixon posters
 	"ba_club_bathmirror",
 	"ba_club_elevator_01",
 	"ba_club_elevator_02",
-	"ba_coke_doll",
-	"ba_curtain1",
-	"ba_curtain2",
-	"ba_curtain3",
-	"ba_daybed1",
-	"ba_daybed2",
-	"ba_daybed3",
-	"ba_daybed_detail1",
-	"ba_daybed_detail2",
-	"ba_daybed_detail3",
-	"ba_desk1",
-	"ba_desk2",
-	"ba_desk3",
-	"ba_dj_stage",
+	//"ba_coke_doll",
+	//"ba_curtain1",
+	//"ba_curtain2",
+	//"ba_curtain3",
+	//"ba_daybed1",
+	//"ba_daybed2",
+	//"ba_daybed3",
+	//"ba_daybed_detail1",
+	//"ba_daybed_detail2",
+	//"ba_daybed_detail3",
+	//"ba_desk1",
+	//"ba_desk2",
+	//"ba_desk3",
+	//"ba_dj_stage",
 	"ba_dj_unit",
-	"ba_dri_ice_dummy",
-	"ba_entrance_grubby",
-	"ba_entry_pipes",
-	"ba_entry_trim",
-	"ba_fakeid_bundlepassports",
+	//"ba_dri_ice_dummy",
+	//"ba_entrance_grubby",
+	//"ba_entry_pipes",
+	//"ba_entry_trim",
+	//"ba_fakeid_bundlepassports",
 	"ba_flr_paper_crap",
 	"ba_garage_decals",
 	"ba_garage_floor_decals",
@@ -1798,24 +1800,24 @@ std::vector<char*> IPL_PROPS_NIGHTCLUB_EDGY = { //Dixon posters
 	"ba_podium1",
 	"ba_podium2",
 	"ba_podium3",
-	"ba_prop_weed_bigbag_open_01a",
-	"ba_pv2_club_stairs",
-	"ba_rear_hall_sprinkler",
-	"ba_scrunched_moneypage",
-	"ba_security_screen_overlay",
-	"ba_security_screen_upgrade",
-	"ba_setup_firdges",
-	"ba_shell_master_coll_dummy",
-	"ba_sideboard1",
-	"ba_sideboard2",
-	"ba_sideboard3",
-	"ba_sink1",
-	"ba_sink2",
-	"ba_sink3",
-	"ba_small_sign_palace",
-	"ba_sofa1",
-	"ba_sofa2",
-	"ba_sofa3",
+	//"ba_prop_weed_bigbag_open_01a",
+	//"ba_pv2_club_stairs",
+	//"ba_rear_hall_sprinkler",
+	//"ba_scrunched_moneypage",
+	//"ba_security_screen_overlay",
+	//"ba_security_screen_upgrade",
+	//"ba_setup_firdges",
+	//"ba_shell_master_coll_dummy",
+	//"ba_sideboard1",
+	//"ba_sideboard2",
+	//"ba_sideboard3",
+	//"ba_sink1",
+	//"ba_sink2",
+	//"ba_sink3",
+	//"ba_small_sign_palace",
+	//"ba_sofa1",
+	//"ba_sofa2",
+	//"ba_sofa3",
 	"ba_sol_coll_dummy",
 	"ba_speaker_brack_main",
 	"ba_speaker_brack_vip",
@@ -1849,9 +1851,9 @@ std::vector<char*> IPL_PROPS_NIGHTCLUB_EDGY = { //Dixon posters
 	"ba_vip_table1",
 	"ba_vip_table2",
 	"ba_vip_table3",
-	"ba_v_64_dance_bar",
-	"ba_v_64_dance_bar001",
-	"ba_wardrobe",
+	//"ba_v_64_dance_bar",
+	//"ba_v_64_dance_bar001",
+	//"ba_wardrobe",
 	"ba_work_light_clutter",
 	"ba_work_light_clutter001",
 	"ba_work_light_clutter002",
@@ -1859,7 +1861,7 @@ std::vector<char*> IPL_PROPS_NIGHTCLUB_EDGY = { //Dixon posters
 	"ba_int01_mule",
 };
 
-std::vector<char*> IPL_PROPS_NIGHTCLUB_GLAM = { //Solomon
+std::vector<const char*> IPL_PROPS_NIGHTCLUB_GLAM = { //Solomon
 	"ba_glam_bar_shelves",
 	"ba_glam_booth",
 	"ba_glam_collpased_dr",
@@ -2025,7 +2027,7 @@ std::vector<char*> IPL_PROPS_NIGHTCLUB_GLAM = { //Solomon
 	"ba_int01_mule",
 };
 
-std::vector<char*> IPL_PROPS_NIGHTCLUB_TRAD = { //Madonna posters
+std::vector<const char*> IPL_PROPS_NIGHTCLUB_TRAD = { //Madonna posters
 	"ba_traddyoffice_supports",
 	"ba_trad_bar_shelves",
 	"ba_trad_booth",
@@ -2429,7 +2431,7 @@ std::vector<char*> IPL_PROPS_NIGHTCLUB_TRAD = { //Madonna posters
 */
 
 
-std::vector<char*> IPL_PROPS_NIGHTCLUB_BASEMENT = {
+std::vector<const char*> IPL_PROPS_NIGHTCLUB_BASEMENT = {
 	"ba_dlc_ba_int2_air_comp",
 	"ba_dlc_ba_int2_axel_stand_01a",
 	"ba_dlc_ba_int2_bench003",
@@ -2537,7 +2539,7 @@ std::vector<char*> IPL_PROPS_NIGHTCLUB_BASEMENT = {
 	"ba_int02_storage_computer",
 };
 
-std::vector<char*> IPL_PROPS_NIGHTCLUB_TERRORBYTE_INTERIOR{
+std::vector<const char*> IPL_PROPS_NIGHTCLUB_TERRORBYTE_INTERIOR{
 	"ba_dlc_int_03_ba_bikefloor",
 	"ba_dlc_int_03_ba_bikergear",
 	"ba_dlc_int_03_ba_bikescanlines",

@@ -4442,7 +4442,7 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ "HOTRING", "sssa_dlc_assault", "hotring" },
 	{ "ISSI3", "sssa_dlc_assault", "issi3" },
 	{ "MICHELLI", "sssa_dlc_assault", "michelli" },
-	{ "SPARROW", "elt_dlc_assault", "sparrow" },
+	{ "SEASPARROW", "elt_dlc_assault", "sparrow" },
 	{ "CARACARA", "candc_assault", "caracara" },
 	{ "ENTITY2", "lgm_dlc_assault", "entity2" },
 	{ "FLASHGT", "lgm_dlc_assault", "flashgt" },
