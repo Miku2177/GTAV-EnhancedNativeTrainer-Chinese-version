@@ -94,7 +94,7 @@ bool FuelBackgound_Opacity_Changed = true;
 
 void fuel()
 {
-	if (featureFuel) {
+	if (featureFuel && !CUTSCENE::IS_CUTSCENE_PLAYING()) { 
 
 		Player player = PLAYER::PLAYER_ID();
 		Ped playerPed = PLAYER::PLAYER_PED_ID();
