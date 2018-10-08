@@ -713,7 +713,11 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			phone_toggle_defaultphone = false;
 		}
 	}
-
+	else {
+		std::vector<int> emptyVec;
+		if (!MISC_PHONE_DEFAULT_VALUES.empty()) std::vector<int>(MISC_PHONE_DEFAULT_VALUES).swap(emptyVec);
+	}
+	
 	// DYNAMIC HEALTH BAR
 	if (featureDynamicHealthBar && !CUTSCENE::IS_CUTSCENE_PLAYING()) {
 		if (!featureMiscHideHud && !featurePhoneShowHud && !featureInVehicleNoHud) UI::DISPLAY_RADAR(false); // There is no need to hide HUD if it's already hidden

@@ -5063,6 +5063,8 @@ namespace NETWORK
 
 namespace NETWORKCASH
 {
+	static void _NETWORK_TRANSFER_BANK_TO_WALLET(int charStatInt, int amount) { invoke<Void>(0xD47A2C1BA117471D, charStatInt, amount); } // 0xD47A2C1BA117471D
+	static void _NETWORK_TRANSFER_WALLET_TO_BANK(int charStatInt, int amount) { invoke<Void>(0xC2F7FE5309181C7D, charStatInt, amount); } // 0xC2F7FE5309181C7D
 	static void NETWORK_INITIALIZE_CASH(int p0, int p1) { invoke<Void>(0x3DA5ECD1A56CBA6D, p0, p1); } // 0x3DA5ECD1A56CBA6D 0x66DA9935
 	static void NETWORK_DELETE_CHARACTER(int characterIndex, BOOL p1, BOOL p2) { invoke<Void>(0x05A50AF38947EB8D, characterIndex, p1, p2); } // 0x05A50AF38947EB8D 0xA9F7E9C3
 	static void NETWORK_CLEAR_CHARACTER_WALLET(Any p0) { invoke<Void>(0xA921DED15FDF28F5, p0); } // 0xA921DED15FDF28F5 0x19F0C471
