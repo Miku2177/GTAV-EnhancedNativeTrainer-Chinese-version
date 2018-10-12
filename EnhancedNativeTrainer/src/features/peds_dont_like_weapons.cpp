@@ -37,9 +37,9 @@ bool ChanceAttackingYouChanged = true;
 
 void peds_dont_like_weapons() {
 
-	float pedagainstweapons_height = ENTITY::GET_ENTITY_HEIGHT_ABOVE_GROUND(PLAYER::PLAYER_ID());
+	//float pedagainstweapons_height = ENTITY::GET_ENTITY_HEIGHT_ABOVE_GROUND(PLAYER::PLAYER_ID());
 
-	if (featurePedAgainstWeapons && pedagainstweapons_height < 1) {
+	if (featurePedAgainstWeapons) { // && pedagainstweapons_height < 1
 		Player player = PLAYER::PLAYER_ID();
 		Ped playerPed = PLAYER::PLAYER_PED_ID();
 		

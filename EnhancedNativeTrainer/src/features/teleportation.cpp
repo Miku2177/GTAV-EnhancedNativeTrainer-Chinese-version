@@ -312,6 +312,7 @@ std::vector<tele_location> LOCATIONS_INTERIORS = {
 	{ "Pacific Standard Bank Vault", 255.851f, 217.030f, 101.683f },
 	{ "Paleto Bay Sheriff", -446.135f, 6012.91f, 31.7164f },
 	{ "Raven Slaughterhouse", 967.357f, -2184.71f, 30.0613f },
+	{ "Rogers Salvage & Scrap", -609.484f, -1611.63f, 27.0105f, { "sp1_03_interior_v_recycle_milo_" }, {}, { IPL_PROPS_SCRAP }, false },
 	{ "Sandy Shores Sheriff", 1853.18f, 3686.63f, 34.2671f },
 	{ "Solomon's Office", -1002.89f, -478.003f, 50.0271f },
 	{ "Spaceship Interior", 41.64376000f, -779.93910000f, 832.40240000f, { "spaceinterior" }, {}, {}, false },
@@ -432,7 +433,7 @@ std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Maze Bank Del Perro Office: Style 8", -1384.56400000f, -478.26990000f, 71.04205000f, { "ex_sm_15_office_03b" }, {}, {}, false },
 	{ "Maze Bank Del Perro Office: Style 9", -1384.56400000f, -478.26990000f, 71.04205000f, { "ex_sm_15_office_03c" }, {}, {}, false },
 	{ "Mission Row Underground 'Winning' Garage", 400.09610000f, -956.67870000f, -100.00000000f},
-	{ "Night Club Interior (Edgy)", -1569.25f, -3017.39f, -73.22f, IPL_PROPS_NIGHTCLUB_EDGY, {}, { "ba_int_placement_ba_interior_0_dlc_int_01_ba_milo_" }, false }, //IPL_PROPS_NIGHTCLUB_COMMON_PROPS + IPL_PROPS_NIGHTCLUB_EDGY
+	{ "Night Club Interior (Edgy)", -1569.25f, -3017.39f, -73.22f, IPL_PROPS_NIGHTCLUB_EDGY, {}, { "ba_int_01_club_shell" }, false }, //IPL_PROPS_NIGHTCLUB_COMMON_PROPS + IPL_PROPS_NIGHTCLUB_EDGY
 	//{ "Night Club Interior (Glamorous)", -1569.25f, -3017.39f, -73.22f, { /*"ba_int_placement_ba_interior_0_dlc_int_01_ba_milo_"*/ }, {  }, { IPL_PROPS_NIGHTCLUB_GLAM }, false },
 	//{ "Night Club Interior (Traditional)", -1569.25f, -3017.39f, -73.22f, { /*"ba_int_placement_ba_interior_0_dlc_int_01_ba_milo_"*/ }, {  }, { IPL_PROPS_NIGHTCLUB_TRAD }, false },
 	{ "Night Club Basement", -1509.31f, -2990.44f, -79.74f, IPL_PROPS_NIGHTCLUB_BASEMENT, {}, { /*IPL_PROPS_NIGHTCLUB_COMMON_PROPS/*"ba_int_01_club_shell"/*IPL_PROPS_NIGHTCLUB_COMMON_PROPS/*"ba_int_placement_ba_interior_1_dlc_int_02_ba_milo_"*/ }, false },
@@ -450,7 +451,6 @@ std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Richards Majestic Apt 10", -925.54970000f, -374.22030000f, 102.23290000f, { "hw1_blimp_interior_v_apartment_high_milo__10" }, {}, {}, false },
 	{ "Richards Majestic Apt 16", -904.56680000f, -377.00050000f, 78.27306000f, { "hei_hw1_blimp_interior_16_dlc_apart_high_new_milo_" }, {}, {}, false },
 	{ "Richards Majestic Apt 18", -925.54970000f, -374.22030000f, 102.23290000f, { "hei_hw1_blimp_interior_18_dlc_apart_high_new_milo_" }, {}, {}, false },
-	{ "Rogers Salvage & Scrap", -609.484f, -1611.63f, 27.0105f, { "sp1_03_interior_v_recycle_milo_" }, {}, { IPL_PROPS_SCRAP }, false },
 	{ "Stilthouse 1", 328.5579f, 425.9027f, 147.9707f, { "apa_ch2_04_interior_0_v_mp_stilts_b_milo_" }, {}, {}, false },
 	{ "Stilthouse 2", 372.6725f, 405.5155f, 144.4997f, { "apa_ch2_04_interior_1_v_mp_stilts_a_milo_" }, {}, {}, false },
 	{ "Stilthouse 3", 122.5349f, 542.5076f, 182.8967f, { "apa_ch2_05c_interior_1_v_mp_stilts_a_milo_" }, {}, {}, false },
@@ -1523,8 +1523,10 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 			if (sizeof(value->scenery_props) > 0)
 			{
 				for each (char* prop in value->scenery_props){
-					int interiorID = INTERIOR::GET_INTERIOR_AT_COORDS(coords.x, coords.y, coords.z);
+					int interiorID = INTERIOR::GET_INTERIOR_AT_COORDS(coords.x, coords.y, coords.z); 
+					//INTERIOR::DISABLE_INTERIOR(interiorID, false);
 					INTERIOR::_0x2CA429C029CCF247(interiorID); //Mysterious native used to load the Doomsday base. Will remove once we know when it is needed.
+					//INTERIOR::_LOAD_INTERIOR(interiorID); //It looks like it does the same is the native above 
 
 					if (!INTERIOR::_IS_INTERIOR_PROP_ENABLED(interiorID, prop))
 					{
@@ -1534,6 +1536,8 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 					{
 						INTERIOR::_DISABLE_INTERIOR_PROP(interiorID, prop);
 					}
+					INTERIOR::REFRESH_INTERIOR(interiorID);
+					//STREAMING::SET_INTERIOR_ACTIVE(interiorID, true);
 				}
 			}
 		}
