@@ -1259,6 +1259,13 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 				}
 			}
 			
+			if (featurePlayerMelee && Weapon_Type != 3566412244 && Weapon_Type != 2685387236) {
+				for (int i = 0; i < count_cops; i++) {
+					if ((PED::GET_PED_TYPE(cops[i]) == 6 || PED::GET_PED_TYPE(cops[i]) == 27) && WEAPON::GET_SELECTED_PED_WEAPON(cops[i]) == GAMEPLAY::GET_HASH_KEY("WEAPON_STUNGUN")) WEAPON::GIVE_WEAPON_TO_PED(cops[i], GAMEPLAY::GET_HASH_KEY("WEAPON_PISTOL"), 999, false, true);
+					if (featureArmyMelee && PED::GET_PED_TYPE(cops[i]) == 29 && WEAPON::GET_SELECTED_PED_WEAPON(cops[i]) == GAMEPLAY::GET_HASH_KEY("WEAPON_STUNGUN")) WEAPON::GIVE_WEAPON_TO_PED(cops[i], GAMEPLAY::GET_HASH_KEY("WEAPON_PISTOL"), 999, false, true);
+				}
+			}
+
 			if (!featurePlayerMelee) {
 				for (int i = 0; i < count_cops; i++) {
 					if ((PED::GET_PED_TYPE(cops[i]) == 6 || PED::GET_PED_TYPE(cops[i]) == 27) && WEAPON::GET_SELECTED_PED_WEAPON(cops[i]) != Cop_Weapon) WEAPON::GIVE_WEAPON_TO_PED(cops[i], Cop_Weapon, 999, false, true);
@@ -1273,7 +1280,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+	
 	peds_dont_like_weapons(); ///// <--- PEDS DON'T LIKE WEAPONS /////
 
 	// Cops Take Your Weapons If You Die / Arrested

@@ -1610,7 +1610,6 @@ std::vector<const char*> IPL_PROPS_NIGHTCLUB_COMMON_PROPS = {
 	"ba_int_01_light_grid",
 	"ba_louis_pic",
 	"ba_lower_bar_pipes",
-	//
 	"ba_main_architraves",
 	"ba_main_area_architrave",
 	"ba_main_grubby",
@@ -1859,6 +1858,7 @@ std::vector<const char*> IPL_PROPS_NIGHTCLUB_EDGY = { //Dixon posters
 	"ba_work_light_clutter002",
 	"ba_int01_bacl_mad_posters",
 	"ba_int01_mule",
+	//
 };
 
 std::vector<const char*> IPL_PROPS_NIGHTCLUB_GLAM = { //Solomon

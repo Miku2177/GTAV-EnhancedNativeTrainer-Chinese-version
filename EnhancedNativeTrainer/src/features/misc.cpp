@@ -80,6 +80,7 @@ bool despawnPointerDisabledMessage = true;
 bool featureFirstPersonDeathCamera = false;
 bool featureFirstPersonStuntJumpCamera = false;
 bool featureNoStuntJumps = false;
+bool featureHidePlayerInfo = false;
 
 bool featureShowFPS = false;
 bool featureShowFPSUpdated = false;
@@ -420,7 +421,7 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 }
 
 void process_misc_menu(){
-	const int lineCount = 23;
+	const int lineCount = 24;
 
 	std::string caption = "Miscellaneous Options";
 
@@ -448,8 +449,9 @@ void process_misc_menu(){
 		{"No Stunt Jumps", &featureNoStuntJumps, NULL },
 		{"FPS Counter", &featureShowFPS, &featureShowFPSUpdated },
 		{"Default Pause Menu Tab", NULL, NULL, false},
+		{"Hide Player Info In Pause Menu", &featureHidePlayerInfo, NULL },
 	};
-
+	
 	draw_menu_from_struct_def(lines, lineCount, &activeLineIndexMisc, caption, onconfirm_misc_menu);
 }
 
@@ -505,6 +507,7 @@ void reset_misc_globals(){
 	featureFirstPersonDeathCamera = false;
 	featureFirstPersonStuntJumpCamera = false;
 	featureNoStuntJumps = false;
+	featureHidePlayerInfo = false;
 	featureShowFPS = false;
 
 	featureRadioFreezeUpdated =
@@ -926,6 +929,10 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		GRAPHICS::DRAW_RECT(0.0, 0.15, 0.05, 0.03, 10, 10, 10, 100);
 	}
 	
+	// Hide player info in pause menu
+	if (featureHidePlayerInfo) UI::_SET_DIRECTOR_MODE(true);
+	else UI::_SET_DIRECTOR_MODE(false);
+
 	//Auto find anti-despawn pointer
 	if (featureFindDespawnPointer)
 	{
@@ -996,6 +1003,7 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 	results->push_back(FeatureEnabledLocalDefinition{"featureFirstPersonDeathCamera", &featureFirstPersonDeathCamera});
 	results->push_back(FeatureEnabledLocalDefinition{"featureFirstPersonStuntJumpCamera", &featureFirstPersonStuntJumpCamera});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoStuntJumps", &featureNoStuntJumps});
+	results->push_back(FeatureEnabledLocalDefinition{"featureHidePlayerInfo", &featureHidePlayerInfo});
 	results->push_back(FeatureEnabledLocalDefinition{"featureMiscJellmanScenery", &featureMiscJellmanScenery});
 
 	results->push_back(FeatureEnabledLocalDefinition{"featureResetPlayerModelOnDeath", &featureResetPlayerModelOnDeath});
