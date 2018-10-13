@@ -22,10 +22,6 @@ Camera AirCam = NULL;
 
 bool in_airbrake_mode = false;
 
-bool frozen_time = false;
-bool help_showing = true;
-bool mouse_view_control = false;
-
 Vector3 curLocation;
 Vector3 curRotation;
 float curHeading;
@@ -72,7 +68,7 @@ void process_airbrake_menu()
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	bool inVehicle = PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) ? true : false;
 
-	frozen_time = false;
+	//frozen_time = false;
 	if (!inVehicle)
 	{
 		STREAMING::REQUEST_ANIM_DICT(AIRBRAKE_ANIM_A);

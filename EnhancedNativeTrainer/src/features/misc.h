@@ -24,6 +24,10 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 /* From Zorg93's "EnableMPCars" code */
 #include <cstddef>
 
+extern bool mouse_view_control;
+extern bool help_showing;
+extern bool frozen_time;
+
 void process_misc_menu();
 
 void reset_misc_globals();
