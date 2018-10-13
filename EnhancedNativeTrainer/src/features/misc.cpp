@@ -20,7 +20,13 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 int activeLineIndexTrainerConfig = 0;
 int activeLineIndexPhoneBill = 0;
 int activeLineIndexDefMenuTab = 0;
+int activeLineIndexAirbrake = 0;
 int activeLineHotkeyConfig = 0;
+
+// airbrake mode variables
+bool mouse_view_control = false;
+bool help_showing = true;
+bool frozen_time = false;
 
 // Phone Bill variables
 bool featureBlockInputInMenu = false;
@@ -326,13 +332,52 @@ void process_misc_freezeradio_menu(){
 	draw_generic_menu<int>(menuItems, nullptr, "Freeze Radio to Station", onconfirm_misc_freezeradio_menu, nullptr, nullptr, nullptr);
 }
 
+bool onconfirm_airbrake_menu(MenuItem<int> choice) {
+
+	if (choice.value == -1) {
+		process_airbrake_menu();
+	}
+	return false;
+}
+
+void process_airbrake_global_menu() {
+	std::string caption = "Airbrake Menu Options";
+
+	std::vector<MenuItem<int>*> menuItems;
+	//SelectFromListMenuItem *listItem;
+	MenuItem<int> *item;
+
+	item = new MenuItem<int>();
+	item->caption = "Enable Airbrake Mode [F6 to open/close]";
+	item->value = -1;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Mouse Mode";
+	toggleItem->toggleValue = &mouse_view_control;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Show Help & Controls";
+	toggleItem->toggleValue = &help_showing;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Frozen Time";
+	toggleItem->toggleValue = &frozen_time;
+	menuItems.push_back(toggleItem);
+
+	draw_generic_menu<int>(menuItems, &activeLineIndexAirbrake, caption, onconfirm_airbrake_menu, NULL, NULL);
+}
+
 bool onconfirm_defmenutab_menu(MenuItem<int> choice) {
 
 	return false;
 }
 
 void process_def_menutab_menu() {
-	std::string caption = "Default Pause Menu Tab Options";
+	std::string caption = "Pause Menu Settings Options";
 
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
@@ -346,6 +391,11 @@ void process_def_menutab_menu() {
 	ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Pause Game When Menu Open";
 	toggleItem->toggleValue = &featureGamePause;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Hide Player Info In Pause Menu";
+	toggleItem->toggleValue = &featureHidePlayerInfo;
 	menuItems.push_back(toggleItem);
 
 	draw_generic_menu<int>(menuItems, &activeLineIndexDefMenuTab, caption, onconfirm_defmenutab_menu, NULL, NULL);
@@ -413,6 +463,9 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 		case 22:
 			process_def_menutab_menu();
 			break;
+		case 23:
+			process_airbrake_global_menu();
+			break;
 		default:
 			// switchable features
 			break;
@@ -448,8 +501,8 @@ void process_misc_menu(){
 		{"First Person Stunt Jump Camera", &featureFirstPersonStuntJumpCamera, NULL },
 		{"No Stunt Jumps", &featureNoStuntJumps, NULL },
 		{"FPS Counter", &featureShowFPS, &featureShowFPSUpdated },
-		{"Default Pause Menu Tab", NULL, NULL, false},
-		{"Hide Player Info In Pause Menu", &featureHidePlayerInfo, NULL },
+		{"Pause Menu Settings", NULL, NULL, false},
+		{"Airbrake Menu", NULL, NULL, false},
 	};
 	
 	draw_menu_from_struct_def(lines, lineCount, &activeLineIndexMisc, caption, onconfirm_misc_menu);
@@ -500,6 +553,9 @@ void reset_misc_globals(){
 	featureShowVehiclePreviews = true;
 	featureControllerIgnoreInTrainer = false;
 	featureBlockInputInMenu = false;
+	mouse_view_control = false;
+	help_showing = true;
+	frozen_time = false;
 	featurePhoneBillEnabled = false;
 	featureGamePause = false;
 	featureZeroBalance = false;
@@ -882,7 +938,8 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			CAM::SET_CAM_ROT(StuntCam, curRotation.x, curRotation.y, curRotation.z, 2);
 			CAM::RENDER_SCRIPT_CAMS(true, false, 1, true, true);
 			CAM::SET_CAM_ACTIVE(StuntCam, true);
-			ENTITY::SET_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID(), false);
+			//ENTITY::SET_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID(), false);
+			CAM::SET_CAM_NEAR_CLIP(StuntCam, .329);
 		}
 
 		if (!GAMEPLAY::IS_STUNT_JUMP_IN_PROGRESS() && StuntCam != NULL) {
@@ -892,7 +949,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			CAM::SET_CAM_ACTIVE(StuntCam, false);
 			CAM::DESTROY_CAM(StuntCam, true);
 			StuntCam = NULL;
-			ENTITY::SET_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID(), true);
+			//ENTITY::SET_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID(), true);
 		}
 	}
 
@@ -992,6 +1049,9 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 		
 	results->push_back(FeatureEnabledLocalDefinition{"featureControllerIgnoreInTrainer", &featureControllerIgnoreInTrainer});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBlockInputInMenu", &featureBlockInputInMenu});
+	results->push_back(FeatureEnabledLocalDefinition{"mouse_view_control", &mouse_view_control});
+	results->push_back(FeatureEnabledLocalDefinition{"help_showing", &help_showing});
+	results->push_back(FeatureEnabledLocalDefinition{"frozen_time", &frozen_time});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePhoneBillEnabled", &featurePhoneBillEnabled});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoGamePause", &featureGamePause});
 	results->push_back(FeatureEnabledLocalDefinition{"featureZeroBalance", &featureZeroBalance});

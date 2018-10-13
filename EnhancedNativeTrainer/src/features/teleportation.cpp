@@ -23,6 +23,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 bool featureEnableMpMaps = false;
 bool feature3dmarker = false;
+bool teleported_in_ped = false;
 
 struct tele_location{
 	std::string text;
@@ -1102,6 +1103,58 @@ void teleport_to_vehicle_in_sight() {
 
 ////////////////////////////////////////////////////////////////////////////////////
 
+/////////////////////// TELEPORT IN NEARBY PED ///////////////////////////////
+
+void teleport_in_ped() {
+	const int arrSizeEyes = 1024;
+	Ped eyes[arrSizeEyes];
+	int count_eyes = worldGetAllPeds(eyes, arrSizeEyes);
+	Cam EyesCam = -1;
+	float dist_diff = 100;
+	bool found = false;
+	Vector3 my_eyes = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
+
+	teleported_in_ped = !teleported_in_ped;
+		
+	for (int i = 0; i < count_eyes; i++) {
+		if (teleported_in_ped == true && PED::GET_PED_TYPE(eyes[i]) != 0 && PED::GET_PED_TYPE(eyes[i]) != 1 && PED::GET_PED_TYPE(eyes[i]) != 2 && PED::GET_PED_TYPE(eyes[i]) != 3) {
+			Vector3 eyes_coord = ENTITY::GET_ENTITY_COORDS(eyes[i], true);
+			Vector3 eyesRotation = ENTITY::GET_ENTITY_ROTATION(eyes[i], 2);
+			
+			dist_diff = SYSTEM::VDIST(my_eyes.x, my_eyes.y, my_eyes.z, eyes_coord.x, eyes_coord.y, eyes_coord.z);
+			if (dist_diff < 7) {
+				EyesCam = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_FLY_CAMERA", eyes_coord.x, eyes_coord.y, eyes_coord.z, eyesRotation.x, eyesRotation.y, eyesRotation.z, 50.0, true, 2);
+				CAM::ATTACH_CAM_TO_PED_BONE(EyesCam, eyes[i], 31086, 0, -0.15, 0.05, 1);
+				CAM::POINT_CAM_AT_PED_BONE(EyesCam, eyes[i], 31086, 0, 0.0, 0.05, 1);
+				CAM::SET_CAM_NEAR_CLIP(EyesCam, .329);
+				CAM::SET_CAM_ROT(EyesCam, eyesRotation.x, eyesRotation.y, eyesRotation.z, 2);
+				CAM::RENDER_SCRIPT_CAMS(true, false, 1, true, true);
+				CAM::SET_CAM_ACTIVE(EyesCam, true);
+				NETWORK::NETWORK_REQUEST_CONTROL_OF_ENTITY(eyes[i]);
+				found = true;
+			}
+		}
+	}
+	
+	if (teleported_in_ped == true && found == false) {
+		set_status_text("No peds around or they're too far");
+		teleported_in_ped = false;
+	}
+
+	if (teleported_in_ped == false) {
+		CAM::RENDER_SCRIPT_CAMS(0, 1, 100, 1, 1);
+		CAM::SET_CAM_NEAR_CLIP(EyesCam, .0);
+		CAM::DETACH_CAM(EyesCam);
+		CAM::SET_CAM_ACTIVE(EyesCam, false);
+		CAM::DESTROY_CAM(EyesCam, true);
+		EyesCam = NULL;
+	}
+
+	WAIT(100);
+}
+
+////////////////////////////////////////////////////////////////////////////////////
+
 /////////////////////// TELEPORT TO A VEHICLE AS A PASSENGER ///////////////////////////////
 
 void teleport_to_vehicle_as_passenger() {
@@ -1476,6 +1529,10 @@ bool onconfirm_teleport_category(MenuItem<int> choice){
 		set_3d_marker();
 		return false;
 	}
+	else if (choice.value == -11) {
+		teleport_in_ped();
+		return false;
+	}
 
 	lastChosenCategory = choice.value;
 
@@ -1701,6 +1758,12 @@ bool process_teleport_menu(int categoryIndex){
 		MenuItem<int> *dialogItem = new MenuItem<int>();
 		dialogItem->caption = "Show Coordinates";
 		dialogItem->value = -1;
+		dialogItem->isLeaf = true;
+		menuItems.push_back(dialogItem);
+
+		dialogItem = new MenuItem<int>();
+		dialogItem->caption = "Teleport In Nearest Ped";
+		dialogItem->value = -11;
 		dialogItem->isLeaf = true;
 		menuItems.push_back(dialogItem);
 

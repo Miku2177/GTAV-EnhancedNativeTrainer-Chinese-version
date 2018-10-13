@@ -1240,7 +1240,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 
 	if (featureCopArmedWith) {
 		const int arrSize2 = 1024;
-		Vehicle cops[arrSize2];
+		Ped cops[arrSize2];
 		int count_cops = worldGetAllPeds(cops, arrSize2);
 
 		Hash curr_weapon = WEAPON::GET_SELECTED_PED_WEAPON(playerPed);
