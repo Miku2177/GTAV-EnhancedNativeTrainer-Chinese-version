@@ -65,6 +65,8 @@ bool featureNPCNoGravityPeds = false;
 bool featureNPCNoGravityPedsUpdated = false;
 bool featureAcidWater = false;
 bool featureAcidWaterUpdated = false;
+bool featureAcidRain = false;
+bool featureAcidRainUpdated = false;
 bool featureNPCReducedGripVehicles = false;
 bool featureNPCReducedGripVehiclesUpdated = false;
 
@@ -543,6 +545,13 @@ void process_world_menu()
 	togItem->toggleValueUpdated = &featureAcidWaterUpdated;
 	menuItems.push_back(togItem);
 
+	togItem = new ToggleMenuItem<int>();
+	togItem->caption = "Deadly Rain";
+	togItem->value = 1;
+	togItem->toggleValue = &featureAcidRain;
+	togItem->toggleValueUpdated = &featureAcidRainUpdated;
+	menuItems.push_back(togItem);
+
 	draw_generic_menu<int>(menuItems, &activeLineIndexWorld, caption, onconfirm_world_menu, NULL, NULL);
 }
 
@@ -579,6 +588,7 @@ void reset_world_globals()
 	featureNPCNoGravityVehicles = false;
 	featureNPCNoGravityPeds = false;
 	featureAcidWater = false;
+	featureAcidRain = false;
 	featureNPCReducedGripVehicles = false;
 	featureBlackout = false;
 	featureSnow = false;
@@ -605,6 +615,7 @@ void reset_world_globals()
 	featureNPCNoGravityVehiclesUpdated = 
 	featureNPCNoGravityPedsUpdated = 
 	featureAcidWaterUpdated = 
+	featureAcidRainUpdated =
 	featureNPCReducedGripVehiclesUpdated =
 	featureWorldGarbageTrucksUpdated =
 	featureWorldRandomBoatsUpdated =
@@ -954,8 +965,8 @@ void update_world_features()
 
 	if (!featureAcidWater) PED::SET_PED_DIES_INSTANTLY_IN_WATER(PLAYER::PLAYER_PED_ID(), false);
 
-	// NPC No Gravity Peds && Acid Water
-	if (featureNPCNoGravityPeds || featureAcidWater) {
+	// NPC No Gravity Peds && Acid Water && Acid Rain
+	if (featureNPCNoGravityPeds || featureAcidWater || featureAcidRain) {
 		const int BUS_ARR_PED_SIZE = 1024;
 		Ped bus_ped[BUS_ARR_PED_SIZE];
 		int found_ped = worldGetAllPeds(bus_ped, BUS_ARR_PED_SIZE);
@@ -973,8 +984,8 @@ void update_world_features()
 				if (PED::IS_PED_SHOOTING(bus_ped[i])) ENTITY::APPLY_FORCE_TO_ENTITY(bus_ped[i], 4, 1000, 0, 0, 0, 0, 0, 1, true, true, true, true, true);
 				ENTITY::SET_ENTITY_HAS_GRAVITY(bus_ped[i], false);
 			}
-			if (featureAcidWater) {
-				PED::SET_PED_DIES_INSTANTLY_IN_WATER(bus_ped[i], true);
+			if (featureAcidWater) PED::SET_PED_DIES_INSTANTLY_IN_WATER(bus_ped[i], true);
+			if (featureAcidRain) {
 				Vector3 coords_ped = ENTITY::GET_ENTITY_COORDS(bus_ped[i], true); 
 				Vehicle veh_currveh = PED::GET_VEHICLE_PED_IS_USING(bus_ped[i]);
 				Hash currVehModel = ENTITY::GET_ENTITY_MODEL(veh_currveh);
@@ -1127,6 +1138,7 @@ void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* r
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNPCNoGravityVehicles", &featureNPCNoGravityVehicles, &featureNPCNoGravityVehiclesUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNPCNoGravityPeds", &featureNPCNoGravityPeds, &featureNPCNoGravityPedsUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureAcidWater", &featureAcidWater, &featureAcidWaterUpdated });
+	results->push_back(FeatureEnabledLocalDefinition{ "featureAcidRain", &featureAcidRain, &featureAcidRainUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNPCReducedGripVehicles", &featureNPCReducedGripVehicles, &featureNPCReducedGripVehiclesUpdated });
 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureSnow", &featureSnow, &featureSnowUpdated});
