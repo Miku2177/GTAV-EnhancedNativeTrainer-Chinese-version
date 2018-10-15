@@ -341,7 +341,7 @@ void road_laws()
 
 			// CHECK IF COPS AROUND
 			if ((PED::GET_PED_TYPE(vehicles_laws[i]) == 6 || PED::GET_PED_TYPE(vehicles_laws[i]) == 27) && PED::IS_PED_IN_ANY_POLICE_VEHICLE(vehicles_laws[i]) && !PED::IS_PED_IN_ANY_HELI(vehicles_laws[i]) &&
-				PED::IS_PED_FACING_PED(vehicles_laws[i], playerPed, 100) && ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(vehicles_laws[i], playerPed, 17) && been_seen_by_a_cop == false)
+				PED::IS_PED_FACING_PED(vehicles_laws[i], playerPed, 100) && ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(vehicles_laws[i], playerPed, 17) && been_seen_by_a_cop == false && !VEHICLE::IS_VEHICLE_SEAT_FREE(PED::GET_VEHICLE_PED_IS_IN(vehicles_laws[i], 1), -1))
 			{
 				veh_cop_in = PED::GET_VEHICLE_PED_IS_IN(vehicles_laws[i], false);
 				veh_cop_in_coords = ENTITY::GET_ENTITY_COORDS(veh_cop_in, true);
@@ -494,6 +494,9 @@ void road_laws()
 						no_agressive = false;
 					}
 				}
+
+				if (tempgotcha_x < 10 && tempgotcha_y < 10 && vehroadlaws_speed < 1 && no_agressive == false) AI::TASK_VEHICLE_TEMP_ACTION(cop_that_fines_you, fine_cop_car, 6, 100000);
+
 				// Escaping the police check 
 				if (Escape_seconds < 16 && vehroadlaws_speed < 11) escapingpolice_check = false;
 				if (Escape_seconds > 15 && vehroadlaws_speed > 10 && vehcoplaws_speed > 10) escapingpolice_check = true;
