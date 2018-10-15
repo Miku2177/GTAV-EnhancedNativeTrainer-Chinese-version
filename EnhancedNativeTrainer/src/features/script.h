@@ -98,7 +98,7 @@ bool process_skinchanger_detail_menu();
 
 bool player_movement_speed();
 
-bool process_npc_ragdoll_menu();
+bool process_ragdoll_menu();
 
 bool process_player_life_menu();
 
