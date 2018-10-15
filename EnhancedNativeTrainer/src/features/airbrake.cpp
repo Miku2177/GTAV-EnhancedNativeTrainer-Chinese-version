@@ -11,6 +11,10 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\utils.h"
 #include "script.h"
 
+#define _USE_MATH_DEFINES
+#include <math.h>
+# define M_PI           3.14159265358979323846  /* pi */
+
 bool exitFlag = false;
 
 char* AIRBRAKE_ANIM_A = "amb@world_human_stand_impatient@male@no_sign@base";
@@ -28,6 +32,8 @@ float curHeading;
 
 float rotationSpeed;
 float forwardPush;
+
+Entity target = -1;
 
 std::string airbrakeStatusLines[20];
 
@@ -284,26 +290,30 @@ void camera_view()
 		target_player = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 	}
 	
-	if (AirCam == NULL)
-	{
-	Vector3 playerPosition = ENTITY::GET_ENTITY_COORDS(target_player, true);
-	curRotation = ENTITY::GET_ENTITY_ROTATION(target_player, 0);
+	if (AirCam == NULL)	{
+		Vector3 playerPosition = ENTITY::GET_ENTITY_COORDS(target_player, true);
+		curRotation = ENTITY::GET_ENTITY_ROTATION(target_player, 2);
 
-	AirCam = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_FLY_CAMERA", playerPosition.x, playerPosition.y, playerPosition.z, curRotation.x, curRotation.y, curRotation.z, 50.0, true, 2);
-
-	if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0))
-	{
-		CAM::ATTACH_CAM_TO_ENTITY(AirCam, target_player, 0.0f, -0.01f, 0.0f, true);
-		CAM::POINT_CAM_AT_ENTITY(AirCam, target_player, 0.0f, 0.0f, 0.0f, true);
-		CAM::RENDER_SCRIPT_CAMS(true, false, 0, true, true);
-		CAM::SET_CAM_ACTIVE(AirCam, true);
-		ENTITY::SET_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID(), false);
-	}
-	else
-	{
-		CAM::DESTROY_CAM(AirCam, true);
-		AirCam = NULL;
-	}
+		AirCam = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_FLY_CAMERA", playerPosition.x, playerPosition.y, playerPosition.z, curRotation.x, curRotation.y, curRotation.z, 50.0, true, 2);
+		//AirCam = CAM::CREATE_CAM("DEFAULT_SCRIPTED_FLY_CAMERA", true);
+	
+		if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0))
+		{
+			if (CAM::GET_FOLLOW_PED_CAM_VIEW_MODE() != 4) {
+				CAM::ATTACH_CAM_TO_PED_BONE(AirCam, target_player, 31086, 0, -0.15, 0.05, 1);
+				CAM::POINT_CAM_AT_PED_BONE(AirCam, target_player, 31086, 0, 0.0, 0.05, 1);
+				//CAM::ATTACH_CAM_TO_ENTITY(AirCam, target_player, 0.0f, -0.01f, 0.0f, true);
+				//CAM::POINT_CAM_AT_ENTITY(AirCam, target_player, 0.0f, 0.0f, 0.0f, true);
+				CAM::RENDER_SCRIPT_CAMS(true, false, 1, true, true);
+			}
+			CAM::SET_CAM_ACTIVE(AirCam, true);
+			ENTITY::SET_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID(), false);
+		}
+		else
+		{
+			CAM::DESTROY_CAM(AirCam, true);
+			AirCam = NULL;
+		}
 	}
 	else if (exitFlag == true)
 	{
@@ -333,12 +343,13 @@ void mouse_view() // Control By A Mouse
 	int screen_height;
 	int x_prev_coords;
 	
-	int body_rotation_up = -1;
-	int body_rotation_down = -1;
+	float body_rotation_up = -1;
+	float body_rotation_down = -1;
 	//		
 
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
-	Entity target = playerPed;
+	if (CAM::GET_FOLLOW_PED_CAM_VIEW_MODE() == 4) target = AirCam;
+	else target = playerPed;
 
 	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
 		target = PED::GET_VEHICLE_PED_IS_USING(playerPed);
@@ -366,8 +377,20 @@ void mouse_view() // Control By A Mouse
 		SetCursorPos(screen_width / 2, y_cur_coords);
 	}
 	
-	curRotation = ENTITY::GET_ENTITY_ROTATION(target, 0);
+	curRotation = ENTITY::GET_ENTITY_ROTATION(target, 2);
 	
+	float offset = 1.0f;
+	
+	float pitch = curRotation.x;
+	float yaw = curRotation.y;
+
+	float pitchRadian = pitch * (M_PI / 180); // X rotation
+	float yawRadian = yaw * (M_PI / 180); // Y rotation
+
+	float newPosX = offset * sinf(yawRadian) * cosf(pitchRadian);
+	float newPosY = offset * -sinf(pitchRadian);
+	float newPosZ = offset * cosf(yawRadian) * cosf(pitchRadian);
+
 	body_rotation_up = (((screen_height - y_cur_coords) / 6) - 86);
 	body_rotation_down = (86 - ((screen_height - y_cur_coords) / 6));
 
@@ -375,11 +398,11 @@ void mouse_view() // Control By A Mouse
 	if (body_rotation_down < 0) body_rotation_down = (body_rotation_down * -1);
 	
 	if (y_cur_coords < (screen_height / 2)) { //Head is raised
-		ENTITY::SET_ENTITY_ROTATION(target, (curRotation.x + body_rotation_up), (curRotation.y + body_rotation_up), curRotation.z, 2, true);
+		ENTITY::SET_ENTITY_ROTATION(target, (newPosX + body_rotation_up), (newPosY + body_rotation_up), newPosZ, 2, true);
 	}
 
 	if (y_cur_coords > (screen_height / 2)) { //Head is lowered
-		ENTITY::SET_ENTITY_ROTATION(target, (curRotation.x - body_rotation_down), (curRotation.y - body_rotation_down), curRotation.z, 2, true);
+		ENTITY::SET_ENTITY_ROTATION(target, (newPosX - body_rotation_down), (newPosY - body_rotation_down), newPosZ, 2, true);
 	}
 
 	if ((moveForwardKey) && (y_cur_coords > ((screen_height / 2) + (screen_height / 4)) && !(SpaceKey))) { //Head is lowered

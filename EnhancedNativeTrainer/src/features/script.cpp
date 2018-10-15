@@ -886,29 +886,55 @@ bool player_movement_speed() {
 	ToggleMenuItem<int>* toggleItem;
 
 	int i = 0;
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Fast Swim";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featurePlayerFastSwim;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Fast Run";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featurePlayerFastRun;
+	menuItems.push_back(toggleItem);
+
 	listItem = new SelectFromListMenuItem(PLAYER_MOVEMENT_CAPTIONS, onchange_player_movement_mode);
 	listItem->wrap = false;
-	listItem->caption = "Speed:";
-	listItem->value = current_player_movement;
+	listItem->caption = "Movement Speed:";
+	listItem->value = current_player_movement; 
 	menuItems.push_back(listItem);
 
 	return draw_generic_menu<int>(menuItems, &PlayerMovementMenuIndex, caption, onconfirm_PlayerMovement_menu, NULL, NULL);
 }
 
-bool process_npc_ragdoll_menu() {
+bool process_ragdoll_menu() {
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	std::vector<MenuItem<int> *> menuItems;
-	std::string caption = "NPC Ragdoll Options";
+	std::string caption = "Ragdoll Options";
 
 	MenuItem<int> *item;
 	SelectFromListMenuItem *listItem;
 	ToggleMenuItem<int>* toggleItem;
 
 	int i = 0;
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "No Ragdoll";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureNoRagdoll;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Ragdoll If Shot";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureRagdollIfInjured;
+	menuItems.push_back(toggleItem);
+
 	listItem = new SelectFromListMenuItem(NPC_RAGDOLL_CAPTIONS, onchange_NPC_ragdoll_mode);
 	listItem->wrap = false;
-	listItem->caption = "Ragdoll";
+	listItem->caption = "NPC Ragdoll If Shot";
 	listItem->value = current_npc_ragdoll;
 	menuItems.push_back(listItem);
 	
@@ -987,19 +1013,19 @@ bool onconfirm_player_menu(MenuItem<int> choice){
 		case 1:
 			heal_player();
 			break;
-		case 12:
+		case 10:
 			player_movement_speed();
 			break;
-		case 16:
-			process_npc_ragdoll_menu();
+		case 12:
+			process_ragdoll_menu();
 			break;
-		case 22:
+		case 18:
 			process_anims_menu_top();
 			break;
-		case 23:
+		case 19:
 			process_player_life_menu();
 			break;
-		case 24:
+		case 20:
 			process_player_prison_menu();
 			break;
 		default:
@@ -1010,7 +1036,7 @@ bool onconfirm_player_menu(MenuItem<int> choice){
 }
 
 void process_player_menu(){
-	const int lineCount = 25;
+	const int lineCount = 21;
 
 	std::string caption = "Player Options";
 
@@ -1024,14 +1050,10 @@ void process_player_menu(){
 		{"Police Ignore You", &featurePlayerIgnoredByPolice, &featurePlayerIgnoredByPoliceUpdated, true},
 		{"Unlimited Ability", &featurePlayerUnlimitedAbility, NULL, true},
 		{"Noiseless", &featurePlayerNoNoise, &featurePlayerNoNoiseUpdated, true},
-		{"Fast Swim", &featurePlayerFastSwim, &featurePlayerFastSwimUpdated, true},
-		{"Fast Run", &featurePlayerFastRun, &featurePlayerFastRunUpdated, true},
 		{"Can Run In Apartments", &featurePlayerRunApartments, NULL, true},
 		{"Player Movement Speed", NULL, NULL, false},
 		{"Super Jump", &featurePlayerSuperJump, NULL, true},
-		{"No Ragdoll", &featureNoRagdoll, &featureNoRagdollUpdated, true},
-		{"Ragdoll If Shot", &featureRagdollIfInjured, &featureRagdollIfInjuredUpdated, true },
-		{"NPC Ragdoll If Shot", NULL, NULL, false},
+		{"Ragdoll", NULL, NULL, false},
 		{"Invisibility", &featurePlayerInvisible, &featurePlayerInvisibleUpdated, true},
 		{"Invisibility In Vehicle", &featurePlayerInvisibleInVehicle, &featurePlayerInvisibleInVehicleUpdated, true },
 		{"Drunk", &featurePlayerDrunk, &featurePlayerDrunkUpdated, true},
