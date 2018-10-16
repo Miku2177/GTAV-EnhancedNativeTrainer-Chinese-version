@@ -200,8 +200,8 @@ std::vector<tele_location> LOCATIONS_HIGH = {
 	{ "Dam Roof", 1665.2f, -28.1639f, 196.936f },
 	{ "Drawbridge Summit", 215.681f, -2345.98f, 77.4659f },
 	{ "Eclipse Towers Roof", -782.235f, 331.659f, 244.673f },
-	{ "El Burro Heights Tank Roof", 1610.86f, -2242.01f, 132.794f },
-	{ "Elysian Island High", 338.21f, -2758.38f, 43.6318f },
+	{ "El Burro Heights Tank Roof", 1610.86f, -2242.01f, 132.794f }, 
+	{ "Elysian Island High", 338.21f, -2758.38f, 44.6318f },
 	{ "FIB Building Roof", 150.126f, -754.591f, 262.865f },
 	{ "Fort Zancudo Tower Roof", -2358.13f, 3248.81f, 106.046f },
 	{ "Galileo Observatory Roof", -438.804f, 1076.097f, 352.411f },
@@ -1344,22 +1344,41 @@ bool onconfirm_jump_category(MenuItem<int> choice)
 		{
 			result = trim(result);
 			lastJumpSpawn = result;
-			Hash hash = GAMEPLAY::GET_HASH_KEY((char*)result.c_str());
-			
+						
 			Entity e = PLAYER::PLAYER_PED_ID();
 			std::string a = (char*)result.c_str();
-			std::string::size_type sz;
+			std::string tmp_str_x, tmp_str_y, tmp_str_z;
+			int found_separator = 0;
+			bool found_symbol = false;
 			
-			float x = std::stof(a, &sz);
-			float y = std::stof(a.substr(sz), &sz);
-			float z = std::stof(a.substr(sz).substr(sz));
+			for (int i = 0; i < a.size(); i++) {
+				if (a[i] != *"," && a[i] != *" ") found_symbol = true;
+				if ((a[i] == *"," || a[i] == *" ") && found_symbol == true) {
+					found_separator = found_separator + 1;
+					found_symbol = false;
+				}
+				for (int n = 0; n < 10; n++) {
+					char n_string = n + '0';
+					if (found_separator == 0 && a[i] == n_string) tmp_str_x = tmp_str_x + a[i];
+					if (found_separator == 1 && a[i] == n_string) tmp_str_y = tmp_str_y + a[i];
+					if (found_separator == 2 && a[i] == n_string) tmp_str_z = tmp_str_z + a[i];
+				}
+				if (found_separator == 0 && (a[i] == *"-" || a[i] == *".")) tmp_str_x = tmp_str_x + a[i];
+				if (found_separator == 1 && (a[i] == *"-" || a[i] == *".")) tmp_str_y = tmp_str_y + a[i];
+				if (found_separator == 2 && (a[i] == *"-" || a[i] == *".")) tmp_str_z = tmp_str_z + a[i];
+			}
+			
+			std::string::size_type sz;
+			float x = std::stof(tmp_str_x, &sz);
+			float y = std::stof(tmp_str_y, &sz);
+			float z = std::stof(tmp_str_z, &sz);
 
 			if (PED::IS_PED_IN_ANY_VEHICLE(e, 0)) {
 				e = PED::GET_VEHICLE_PED_IS_USING(e);
 			}
-			ENTITY::SET_ENTITY_COORDS_NO_OFFSET(e, x, y, z, 0, 0, 1);
+			ENTITY::SET_ENTITY_COORDS(e, x, y, z, 1, 0, 0, 1);
 			WAIT(0);
-			set_status_text("Teleported");
+			set_status_text("Teleported"); 
 		}
 		return false;
 	}

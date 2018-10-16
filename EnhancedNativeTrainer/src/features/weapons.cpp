@@ -629,15 +629,15 @@ void onchange_sniper_vision_modifier(int value, SelectFromListMenuItem* source){
 
 void sniper_vision_toggle()
 {
-	if (WEAPONS_SNIPERVISION_VALUES[SniperVisionIndex] == 1) {
-		Player player = PLAYER::PLAYER_ID();
-		Ped playerPed = PLAYER::PLAYER_PED_ID();
-				
-		if ((WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_SNIPERRIFLE") || WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_HEAVYSNIPER") ||
-			WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_REMOTESNIPER") || WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_HEAVYSNIPER_MK2") ||
-			WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_MARKSMANRIFLE") || WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_MARKSMANRIFLE_MK2")) &&
-			PED::GET_PED_CONFIG_FLAG(playerPed, 78, 1) && !PED::GET_PED_CONFIG_FLAG(playerPed, 58, 1)) 
-		{
+	Player player = PLAYER::PLAYER_ID();
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+
+	if ((WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_SNIPERRIFLE") || WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_HEAVYSNIPER") ||
+		WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_REMOTESNIPER") || WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_HEAVYSNIPER_MK2") ||
+		WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_MARKSMANRIFLE") || WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_MARKSMANRIFLE_MK2")) &&
+		PED::GET_PED_CONFIG_FLAG(playerPed, 78, 1) && !PED::GET_PED_CONFIG_FLAG(playerPed, 58, 1))
+	{
+		if (WEAPONS_SNIPERVISION_VALUES[SniperVisionIndex] == 1) {
 			vision_toggle = vision_toggle + 1;
 			if (vision_toggle == 3) vision_toggle = 0;
 
@@ -1317,9 +1317,9 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	};
 
 	// Disables visions if not aiming
-	if (WEAPONS_SNIPERVISION_VALUES[SniperVisionIndex] != 0)
+	if (WEAPONS_SNIPERVISION_VALUES[SniperVisionIndex] != 0) 
 	{
-		if (WEAPONS_SNIPERVISION_VALUES[SniperVisionIndex] == 1 && !PED::GET_PED_CONFIG_FLAG(playerPed, 78, 1)) {
+		if (!PED::GET_PED_CONFIG_FLAG(playerPed, 78, 1)) { // WEAPONS_SNIPERVISION_VALUES[SniperVisionIndex] == 1 && 
 			if (!featureNightVision && !featureThermalVision) {
 				GRAPHICS::SET_NIGHTVISION(false);
 				GRAPHICS::SET_SEETHROUGH(false);
@@ -1332,15 +1332,23 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 				GRAPHICS::SET_NIGHTVISION(false);
 				GRAPHICS::SET_SEETHROUGH(true);
 			}
+			if (featureNightVision && featureThermalVision) {
+				GRAPHICS::SET_NIGHTVISION(true);
+				GRAPHICS::SET_SEETHROUGH(true);
+			}
 			vision_toggle = 0;
 		}
-		if (WEAPONS_SNIPERVISION_VALUES[SniperVisionIndex] == 2 && !PED::GET_PED_CONFIG_FLAG(playerPed, 58, 1) && PED::GET_PED_CONFIG_FLAG(playerPed, 78, 1)) {
-			GRAPHICS::SET_NIGHTVISION(true);
-			GRAPHICS::SET_SEETHROUGH(false);
-		}
-		if (WEAPONS_SNIPERVISION_VALUES[SniperVisionIndex] == 3 && !PED::GET_PED_CONFIG_FLAG(playerPed, 58, 1) && PED::GET_PED_CONFIG_FLAG(playerPed, 78, 1)) {
-			GRAPHICS::SET_NIGHTVISION(false);
-			GRAPHICS::SET_SEETHROUGH(true);
+		if (WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_SNIPERRIFLE") || WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_HEAVYSNIPER") ||
+			WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_REMOTESNIPER") || WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_HEAVYSNIPER_MK2") ||
+			WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_MARKSMANRIFLE") || WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_MARKSMANRIFLE_MK2")) {
+			if (WEAPONS_SNIPERVISION_VALUES[SniperVisionIndex] == 2 && !PED::GET_PED_CONFIG_FLAG(playerPed, 58, 1) && PED::GET_PED_CONFIG_FLAG(playerPed, 78, 1)) {
+				GRAPHICS::SET_NIGHTVISION(true);
+				GRAPHICS::SET_SEETHROUGH(false);
+			}
+			if (WEAPONS_SNIPERVISION_VALUES[SniperVisionIndex] == 3 && !PED::GET_PED_CONFIG_FLAG(playerPed, 58, 1) && PED::GET_PED_CONFIG_FLAG(playerPed, 78, 1)) {
+				GRAPHICS::SET_NIGHTVISION(false);
+				GRAPHICS::SET_SEETHROUGH(true);
+			}
 		}
 	}
 
