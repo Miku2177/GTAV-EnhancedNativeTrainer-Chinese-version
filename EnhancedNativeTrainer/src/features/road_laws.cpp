@@ -91,6 +91,7 @@ int PirsuitRangeIndex = 4;
 bool PirsuitRange_Changed = true;
 int StarsPunishIndex = 0;
 bool StarsPunish_Changed = true;
+bool cop_close_stop = false;
 //
 
 //////////////////////////////////////////////////////// ROAD LAWS //////////////////////////////////////////////////////////
@@ -495,14 +496,17 @@ void road_laws()
 					}
 				}
 
-				if (tempgotcha_x < 10 && tempgotcha_y < 10 && vehroadlaws_speed < 1 && no_agressive == false) AI::TASK_VEHICLE_TEMP_ACTION(cop_that_fines_you, fine_cop_car, 6, 100000);
+				if (tempgotcha_x < 10 && tempgotcha_y < 10 && vehroadlaws_speed < 1 && vehcoplaws_speed < 5 && cop_close_stop == false) {
+					AI::TASK_VEHICLE_TEMP_ACTION(cop_that_fines_you, fine_cop_car, 6, 100000);
+					cop_close_stop = true;
+				}
 
 				// Escaping the police check 
 				if (Escape_seconds < 16 && vehroadlaws_speed < 11) escapingpolice_check = false;
 				if (Escape_seconds > 15 && vehroadlaws_speed > 10 && vehcoplaws_speed > 10) escapingpolice_check = true;
 
 				// Do not stuck
-				if (vehcoplaws_speed < 1 && cop_walking == false && (tempgotcha_x > 99 || tempgotcha_y > 99)) {
+				if ((vehcoplaws_speed < 1 && cop_walking == false && (tempgotcha_x > 99 || tempgotcha_y > 99)) || (cop_walking == true && AI::IS_PED_STILL(cop_that_fines_you))) {
 					Stuck_secs_passed = clock() / CLOCKS_PER_SEC;
 					if (((clock() / CLOCKS_PER_SEC) - Stuck_secs_curr) != 0) {
 						Stuck_seconds = Stuck_seconds + 1;
@@ -529,7 +533,7 @@ void road_laws()
 						stuck_completely = stuck_completely + 1;
 					}
 				}
-				if (vehcoplaws_speed > 1) {
+				if (vehcoplaws_speed > 1 || (cop_walking == true && !AI::IS_PED_STILL(cop_that_fines_you))) {
 					Stuck_seconds = 0;
 					stuck_completely = 0;
 				}
@@ -563,7 +567,10 @@ void road_laws()
 				AI::TASK_GOTO_ENTITY_AIMING(cop_that_fines_you, playerPed, 4.0, 30.0);
 			}
 
-			if ((vehroadlaws_speed > 1 || vehcoplaws_speed > 1) && cop_walking == false && wanted_level_on == false) Stop_seconds = -1; 
+			if ((vehroadlaws_speed > 1 || vehcoplaws_speed > 1) && cop_walking == false && wanted_level_on == false) {
+				Stop_seconds = -1;
+				cop_close_stop = false;
+			}
 
 			// Distance between you and the cop that's chasing after you
 			temp_fine_cop = ENTITY::GET_ENTITY_COORDS(cop_that_fines_you, true);
