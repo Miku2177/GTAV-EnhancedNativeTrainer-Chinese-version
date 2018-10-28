@@ -365,6 +365,12 @@ void road_laws()
 							if (featurePoliceVehicleBlip) UI::SET_BLIP_SPRITE(blip_laws, 42);
 							ENTITY::SET_ENTITY_AS_MISSION_ENTITY(cop_that_fines_you, 1, 1);
 							ENTITY::SET_ENTITY_AS_MISSION_ENTITY(fine_cop_car, 1, 1);
+							//PED::SET_PED_SHOOT_RATE(cop_that_fines_you, 0);
+							//PLAYER::SET_PLAYER_CAN_DO_DRIVE_BY(cop_that_fines_you, false);
+							int myRoadlawsGroup = PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID());
+							PED::SET_PED_AS_GROUP_LEADER(PLAYER::PLAYER_PED_ID(), myRoadlawsGroup);
+							PED::SET_PED_AS_GROUP_MEMBER(cop_that_fines_you, myRoadlawsGroup);
+							PED::SET_PED_NEVER_LEAVES_GROUP(cop_that_fines_you, true);
 							//AI::TASK_SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(cop_that_fines_you, true);
 							if (!featurePoliceAgressiveDriving) {
 								AI::TASK_VEHICLE_ESCORT(cop_that_fines_you, fine_cop_car, vehroadlaws, -1, 140.0f, 786468, 3, 1, 1);
@@ -417,6 +423,9 @@ void road_laws()
 				if (PED::GET_VEHICLE_PED_IS_IN(vehicles_laws[i], false) != fine_cop_car && tempradiocop1_x < tempradiocop2_x && tempradiocop1_y < tempradiocop2_y && vehroadlaws_speed > 1)
 				{
 					if (UI::DOES_BLIP_EXIST(blip_laws)) UI::REMOVE_BLIP(&blip_laws);
+					PED::SET_PED_NEVER_LEAVES_GROUP(cop_that_fines_you, false);
+					AI::CLEAR_PED_TASKS(cop_that_fines_you);
+					PED::REMOVE_PED_FROM_GROUP(cop_that_fines_you);
 					ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&cop_that_fines_you);
 					ENTITY::SET_VEHICLE_AS_NO_LONGER_NEEDED(&fine_cop_car);
 					been_seen_by_a_cop = false;
@@ -429,6 +438,10 @@ void road_laws()
 						if (featurePoliceVehicleBlip) UI::SET_BLIP_SPRITE(blip_laws, 42);
 						ENTITY::SET_ENTITY_AS_MISSION_ENTITY(cop_that_fines_you, 1, 1);
 						ENTITY::SET_ENTITY_AS_MISSION_ENTITY(fine_cop_car, 1, 1);
+						int myRoadlawsGroup = PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID());
+						PED::SET_PED_AS_GROUP_LEADER(PLAYER::PLAYER_PED_ID(), myRoadlawsGroup);
+						PED::SET_PED_AS_GROUP_MEMBER(cop_that_fines_you, myRoadlawsGroup);
+						PED::SET_PED_NEVER_LEAVES_GROUP(cop_that_fines_you, true);
 						//AI::TASK_SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(cop_that_fines_you, true);
 						if (!featurePoliceAgressiveDriving) {
 							AI::TASK_VEHICLE_ESCORT(cop_that_fines_you, fine_cop_car, vehroadlaws, -1, 140.0f, 786468, 2, 1, 1);
@@ -614,6 +627,8 @@ void road_laws()
 			
 			// You're being fined
 			if (tempfined_x < 5 && tempfined_y < 5 && Stop_seconds > 4 && PED::IS_PED_IN_VEHICLE(playerPed, vehroadlaws, true)) { 
+				PED::SET_PED_NEVER_LEAVES_GROUP(cop_that_fines_you, false);
+				PED::REMOVE_PED_FROM_GROUP(cop_that_fines_you);
 				Stop_seconds = 6;
 				SinceStop_secs_passed_final = clock() / CLOCKS_PER_SEC;
 				if (((clock() / CLOCKS_PER_SEC) - SinceStop_secs_curr_final) != 0) {
@@ -666,7 +681,7 @@ void road_laws()
 
 			// Been fined or escaped
 			if (Stop_seconds_final == 24 || tempgotcha_x > VEH_PIRSUITRANGE_VALUES[PirsuitRangeIndex] || tempgotcha_y > VEH_PIRSUITRANGE_VALUES[PirsuitRangeIndex] ||
-				(PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) > 1 && !featureCopsUseRadio) || (vehroadlaws_speed > 20 && Stop_seconds > -1 && wanted_level_on == true && !featureCopsUseRadio) || stuck_completely > 7)
+				(PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) > 1 && !featureCopsUseRadio) || (vehroadlaws_speed > 20 && Stop_seconds > -1 && wanted_level_on == true && !featureCopsUseRadio) || stuck_completely > 6)
 			{
 				if (STREAMING::DOES_ANIM_DICT_EXIST("ah_3a_ext-17") && !ENTITY::HAS_ENTITY_ANIM_FINISHED(cop_that_fines_you, "ah_3a_ext-17", "player_zero_dual-17", 3))
 					AI::STOP_ANIM_TASK(cop_that_fines_you, "ah_3a_ext-17", "player_zero_dual-17", 1.0);
@@ -734,10 +749,11 @@ void road_laws()
 				escapingpolice_check = false;
 
 				VEHICLE::SET_VEHICLE_SIREN(fine_cop_car, false);
+				AI::CLEAR_PED_TASKS(cop_that_fines_you);
 				ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&cop_that_fines_you);
 				ENTITY::SET_VEHICLE_AS_NO_LONGER_NEEDED(&fine_cop_car);
-				AI::TASK_GO_TO_COORD_AND_AIM_AT_HATED_ENTITIES_NEAR_COORD(cop_that_fines_you, veh_cop_in_coords.x, veh_cop_in_coords.y, veh_cop_in_coords.z, veh_cop_in_coords.x, veh_cop_in_coords.y, veh_cop_in_coords.z, 1.0f /*walk*/,
-					false /*don't shoot*/, 0.0f /*stop at*/, 0.0f /*noRoadsDistance*/, true /*always true*/, 0 /*possible flag*/, 0, -957453492 /*FullAuto pattern*/);
+				//AI::TASK_GO_TO_COORD_AND_AIM_AT_HATED_ENTITIES_NEAR_COORD(cop_that_fines_you, veh_cop_in_coords.x, veh_cop_in_coords.y, veh_cop_in_coords.z, veh_cop_in_coords.x, veh_cop_in_coords.y, veh_cop_in_coords.z, 1.0f /*walk*/,
+				//	false /*don't shoot*/, 0.0f /*stop at*/, 0.0f /*noRoadsDistance*/, true /*always true*/, 0 /*possible flag*/, 0, -957453492 /*FullAuto pattern*/);
 				AI::TASK_GOTO_ENTITY_AIMING(cop_that_fines_you, fine_cop_car, 0.0, 10.0);
 				AI::TASK_ENTER_VEHICLE(cop_that_fines_you, fine_cop_car, -1, 0, 2, 1, 0);
 				cop_walking = false;
@@ -759,10 +775,15 @@ void road_laws()
 			}
 
 			if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 1) wanted_level_on = false;
-
+			
+			if (been_seen_by_a_cop == true) PED::SET_PED_CAN_BE_DRAGGED_OUT(playerPed, false);
+			
 			if (been_seen_by_a_cop == false) cop_walking = false;
 
 			if (been_seen_by_a_cop == true && (PED::IS_PED_DEAD_OR_DYING(cop_that_fines_you, true) || PED::IS_PED_SHOOTING(cop_that_fines_you))) {
+				PED::SET_PED_NEVER_LEAVES_GROUP(cop_that_fines_you, false);
+				AI::CLEAR_PED_TASKS(cop_that_fines_you);
+				PED::REMOVE_PED_FROM_GROUP(cop_that_fines_you);
 				ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&cop_that_fines_you);
 				ENTITY::SET_VEHICLE_AS_NO_LONGER_NEEDED(&fine_cop_car);
 				if (featurePoliceVehicleBlip && UI::DOES_BLIP_EXIST(blip_laws)) UI::REMOVE_BLIP(&blip_laws);

@@ -1356,7 +1356,7 @@ void process_road_laws_menu(){
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Police Vehicle Blip";
+	toggleItem->caption = "Cop Vehicle Blip";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featurePoliceVehicleBlip;
 	menuItems.push_back(toggleItem);
