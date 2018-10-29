@@ -111,6 +111,11 @@ bool enabledDespawnPointer = false;
 
 Camera StuntCam = NULL;
 
+// First Person Cutscene Camera Variables
+Cam CutCam = NULL;
+Object propstore1, propstore2 = -1;
+//
+
 // Main characters
 const Hash PLAYER_ZERO = 0xD7114C9;
 const Hash PLAYER_ONE = 0x9B22DBAF;
@@ -952,6 +957,51 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			//ENTITY::SET_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID(), true);
 		}
 	}
+
+	// First Person Cutscene Camera 
+	/*if (CUTSCENE::IS_CUTSCENE_PLAYING() && ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()) {
+		Vector3 Pedrotation = ENTITY::GET_ENTITY_ROTATION(PLAYER::PLAYER_PED_ID(), 2);
+		if (!CAM::DOES_CAM_EXIST(CutCam)) {
+			int PlayerIndex = PED::GET_PED_BONE_INDEX(PLAYER::PLAYER_PED_ID(), 8433);
+			int PedHash = GAMEPLAY::GET_HASH_KEY("bot_01b_bit_03");
+			Vector3 Ped1Coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(PLAYER::PLAYER_PED_ID(), 0.0f, 1.0f, 0.0f);
+			Vector3 Ped2Coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(PLAYER::PLAYER_PED_ID(), 0.0f, 2.0f, 0.0f);
+			float PedlookDir = ENTITY::GET_ENTITY_HEADING(PLAYER::PLAYER_PED_ID());
+
+			propstore1 = OBJECT::CREATE_OBJECT(PedHash, Ped1Coords.x, Ped1Coords.y, Ped1Coords.z, 1, true, 1);
+			propstore2 = OBJECT::CREATE_OBJECT(PedHash, Ped2Coords.x, Ped2Coords.y, Ped2Coords.z, 1, true, 1);
+			ENTITY::SET_ENTITY_VISIBLE(propstore1, false);
+			ENTITY::SET_ENTITY_VISIBLE(propstore2, false);
+			ENTITY::SET_ENTITY_COLLISION(propstore1, false, true);
+			ENTITY::SET_ENTITY_COLLISION(propstore2, false, true);
+			ENTITY::ATTACH_ENTITY_TO_ENTITY(propstore1, PLAYER::PLAYER_PED_ID(), PlayerIndex, 0.0f, 0.0f, -0.1f, 105.0f, 0.0f, 0.0f, false, false, false, true, 0, true);
+			ENTITY::ATTACH_ENTITY_TO_ENTITY(propstore2, PLAYER::PLAYER_PED_ID(), PlayerIndex, 0.0f, 0.08f, -0.1f, 50.0f, 0.0f, 0.0f, false, false, false, true, 0, true);
+
+			Vector3 coordsPed = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
+			Vector3 cam_coords = CAM::GET_GAMEPLAY_CAM_COORD();
+			Vector3 cam_rot = CAM::GET_GAMEPLAY_CAM_ROT(2);
+			CutCam = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_FLY_CAMERA", coordsPed.x, coordsPed.y, coordsPed.z, Pedrotation.x, Pedrotation.y, Pedrotation.z, 50.0, true, 2);
+			CAM::ATTACH_CAM_TO_ENTITY(CutCam, propstore2, 0, 0, 0, true);
+		}
+
+		if (CAM::DOES_CAM_EXIST(CutCam)) {
+			CAM::RENDER_SCRIPT_CAMS(true, false, 1, false, false);
+
+			CAM::STOP_CUTSCENE_CAM_SHAKING();
+			CUTSCENE::CAN_SET_EXIT_STATE_FOR_CAMERA(1);
+			Vector3 Ped1rotation = ENTITY::GET_ENTITY_ROTATION(propstore1, 2);
+			Vector3 Ped2rotation = ENTITY::GET_ENTITY_ROTATION(propstore2, 2);
+			CAM::SET_CAM_ROT(CutCam, Ped1rotation.x, Pedrotation.y, Ped2rotation.z, 2); 
+		}
+	}
+	else {
+		OBJECT::DELETE_OBJECT(&propstore1);
+		OBJECT::DELETE_OBJECT(&propstore2);
+		if (CAM::DOES_CAM_EXIST(CutCam)) {
+			CAM::RENDER_SCRIPT_CAMS(false, false, 1, false, false);
+			CAM::DESTROY_CAM(CutCam, true);
+		}
+	}*/
 
 	// No Stunt Jumps
 	if (featureNoStuntJumps && GAMEPLAY::IS_STUNT_JUMP_IN_PROGRESS()) GAMEPLAY::CANCEL_STUNT_JUMP();
