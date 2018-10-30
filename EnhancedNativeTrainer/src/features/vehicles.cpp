@@ -364,6 +364,17 @@ const std::vector<std::string> VOV_SHALLOW_VALUES[] = { VALUES_EMERGENCY, VALUES
 
 std::string lastCustomVehicleSpawn;
 
+Vector3 RotationToDirection2(Vector3* rot)
+{
+	float radiansZ = rot->z * 0.0174532924f;
+	float radiansX = rot->x * 0.0174532924f;
+	float num = std::abs((float)std::cos((double)radiansX));
+	Vector3 dir;
+	dir.x = (float)((double)((float)(-(float)std::sin((double)radiansZ))) * (double)num);
+	dir.y = (float)((double)((float)std::cos((double)radiansZ)) * (double)num);
+	dir.z = (float)std::sin((double)radiansX);
+	return dir;
+}
 
 void process_window_roll() {
 	Player PlayerPedRoll = PLAYER::PLAYER_PED_ID();
@@ -452,6 +463,21 @@ void enter_damaged_vehicle() { // enter destroyed vehicle
 		Vector3 coordsdamagedvehicle = ENTITY::GET_ENTITY_COORDS(enter_veh[i], true);
 		float dist_to_damaged_diff = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsdamagedvehicle.x, coordsdamagedvehicle.y, coordsdamagedvehicle.z);
 		if (dist_to_damaged_diff < 5) PED::SET_PED_INTO_VEHICLE(PLAYER::PLAYER_PED_ID(), enter_veh[i], -1);
+	}
+}
+
+void eject_seat() { // eject seat
+	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0) && !VEHICLE::IS_VEHICLE_SEAT_FREE(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false), -1)) {
+		Ped PedToEject = VEHICLE::GET_PED_IN_VEHICLE_SEAT(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false), -1);
+		Vector3 coordsmetoeject = ENTITY::GET_ENTITY_COORDS(PedToEject, true);
+		Vector3 Rot = CAM::GET_GAMEPLAY_CAM_ROT(2);
+		Vector3 direction = RotationToDirection2(&Rot);
+		direction.x = 1 * direction.x;
+		direction.y = 1 * direction.y;
+		direction.z = 1 * direction.z;
+		FIRE::ADD_EXPLOSION(coordsmetoeject.x, coordsmetoeject.y, coordsmetoeject.z, 28, 0, 1, 0, 100);
+		ENTITY::SET_ENTITY_COORDS(PedToEject, coordsmetoeject.x, coordsmetoeject.y, coordsmetoeject.z + 1, 1, 0, 0, 1);
+		ENTITY::APPLY_FORCE_TO_ENTITY(PedToEject, 1, direction.x, direction.y, 90.275, Rot.x, Rot.y, Rot.z, false, true, true, true, false, true);
 	}
 }
 
@@ -551,6 +577,10 @@ bool onconfirm_vehdoor_menu(MenuItem<int> choice){
 	else if (choice.value == -16)//enter damaged vehicle
 	{
 		enter_damaged_vehicle();
+	}
+	else if (choice.value == -17)//eject seat
+	{
+		eject_seat();
 	}
 	return false;
 }
@@ -690,6 +720,12 @@ bool process_veh_door_menu(){
 	item = new MenuItem<int>();
 	item->caption = "Teleport In Destroyed Vehicle";
 	item->value = -16;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "Eject Driver Seat";
+	item->value = -17;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
@@ -1736,18 +1772,6 @@ void process_veh_menu(){
 	draw_generic_menu<int>(menuItems, &activeLineIndexVeh, caption, onconfirm_veh_menu, NULL, NULL);
 }
 
-Vector3 RotationToDirection2(Vector3* rot)
-{
-	float radiansZ = rot->z * 0.0174532924f;
-	float radiansX = rot->x * 0.0174532924f;
-	float num = std::abs((float)std::cos((double)radiansX));
-	Vector3 dir;
-	dir.x = (float)((double)((float)(-(float)std::sin((double)radiansZ))) * (double)num);
-	dir.y = (float)((double)((float)std::cos((double)radiansZ)) * (double)num);
-	dir.z = (float)std::sin((double)radiansX);
-	return dir;
-}
-
 void speedlimiter_switching(){
 	speedlimiter_switch = !speedlimiter_switch;
 	if (speedlimiter_switch) set_status_text("Speed Limiter ON");
@@ -2111,7 +2135,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 							if (VEH_MASS_VALUES[VehMassMultIndex] == 1000) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyPed[i], 1, direction.x, direction.y, VEH_MASS_VALUES[VehMassMultIndex] / 100, Rot.x, Rot.y, Rot.z, false, false, true, true, false, true);
 							if (VEH_MASS_VALUES[VehMassMultIndex] == 5000) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyPed[i], 1, direction.x, direction.y, VEH_MASS_VALUES[VehMassMultIndex] / 10, Rot.x, Rot.y, Rot.z, false, false, true, true, false, true);
 							if (VEH_MASS_VALUES[VehMassMultIndex] == 10000) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyPed[i], 1, direction.x, direction.y, VEH_MASS_VALUES[VehMassMultIndex] / 1, Rot.x, Rot.y, Rot.z, false, false, true, true, false, true);
-							if (VEH_MASS_VALUES[VehMassMultIndex] == 50000) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyPed[i], 4, (ENTITY::GET_ENTITY_SPEED(veh) * VEH_MASS_VALUES[VehMassMultIndex]), 0, 0, 0, 0, 0, 1, true, true, true, true, true);
+							if (VEH_MASS_VALUES[VehMassMultIndex] == 50000) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyPed[i], 4, (ENTITY::GET_ENTITY_SPEED(veh) * VEH_MASS_VALUES[VehMassMultIndex]), 0, 0, 0, 0, 0, 1, true, true, true, true, true); 
 						}
 					}
 				}
