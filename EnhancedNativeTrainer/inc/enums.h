@@ -1508,7 +1508,6 @@ enum eHudComponent
 	HudComponentReplayTimer
 };
 
-
 enum eHudColours
 {
 	HUD_COLOUR_BLACK,

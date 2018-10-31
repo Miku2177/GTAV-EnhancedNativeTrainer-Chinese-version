@@ -1439,9 +1439,13 @@ void ScriptMain(){
 		write_text_to_log_file("Init storage complete");
 
 		write_text_to_log_file("Trying to init XINPUT");
-		init_xinput();
-		write_text_to_log_file("Init XINPUT complete");
 
+		if (PLAYER::IS_PLAYER_PLAYING(PLAYER::PLAYER_ID()))
+		{
+			init_xinput(); //Init it after loading to prevent loading screen hangs
+			write_text_to_log_file("Init XINPUT complete");
+		}
+		
 		database = new ENTDatabase();
 		if(!database->open()){
 			write_text_to_log_file("Failed to open database");
