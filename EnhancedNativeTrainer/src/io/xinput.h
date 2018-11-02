@@ -38,7 +38,7 @@ static const ButtonsWithNames ALL_BUTTONS[] =
 	{ ControllerButtonConfig::CONTROLLER_BTN_DPAD_R, XINPUT_GAMEPAD_DPAD_RIGHT, false },
 	{ ControllerButtonConfig::CONTROLLER_BTN_X, XINPUT_GAMEPAD_X, false },
 	{ ControllerButtonConfig::CONTROLLER_BTN_Y, XINPUT_GAMEPAD_Y, false },
-	{ ControllerButtonConfig::CONTROLLER_BTN_A, XINPUT_GAMEPAD_A, false },
+	{ ControllerButtonConfig::CONTROLLER_BTN_A, XINPUT_GAMEPAD_A, false }, /*XINPUT_GAMEPAD_A*/
 	{ ControllerButtonConfig::CONTROLLER_BTN_B, XINPUT_GAMEPAD_B, false },
 	{ ControllerButtonConfig::CONTROLLER_BTN_SHOULDER_L, XINPUT_GAMEPAD_LEFT_SHOULDER, false },
 	{ ControllerButtonConfig::CONTROLLER_BTN_SHOULDER_R, XINPUT_GAMEPAD_RIGHT_SHOULDER, false },
