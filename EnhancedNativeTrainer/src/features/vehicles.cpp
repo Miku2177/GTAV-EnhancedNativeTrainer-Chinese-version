@@ -468,16 +468,42 @@ void enter_damaged_vehicle() { // enter destroyed vehicle
 
 void eject_seat() { // eject seat
 	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0) && !VEHICLE::IS_VEHICLE_SEAT_FREE(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false), -1)) {
-		Ped PedToEject = VEHICLE::GET_PED_IN_VEHICLE_SEAT(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false), -1);
+		Vehicle veh_eject = PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 0);
+		Ped PedToEject = VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh_eject, -1);
 		Vector3 coordsmetoeject = ENTITY::GET_ENTITY_COORDS(PedToEject, true);
 		Vector3 Rot = CAM::GET_GAMEPLAY_CAM_ROT(2);
 		Vector3 direction = RotationToDirection2(&Rot);
 		direction.x = 1 * direction.x;
 		direction.y = 1 * direction.y;
 		direction.z = 1 * direction.z;
+			   
+		ENTITY::GET_ENTITY_HEADING(PedToEject);
+		Hash currVehModel = ENTITY::GET_ENTITY_MODEL(veh_eject);
+		Vector3 coords_veh2 = ENTITY::GET_ENTITY_COORDS(veh_eject, true);
+		float rot = (ENTITY::GET_ENTITY_ROTATION(veh_eject, 0)).z;
+		Vector3 vehspeed = ENTITY::GET_ENTITY_VELOCITY(veh_eject);
+		
 		FIRE::ADD_EXPLOSION(coordsmetoeject.x, coordsmetoeject.y, coordsmetoeject.z, 28, 0, 1, 0, 100);
-		ENTITY::SET_ENTITY_COORDS(PedToEject, coordsmetoeject.x, coordsmetoeject.y, coordsmetoeject.z + 1, 1, 0, 0, 1);
-		ENTITY::APPLY_FORCE_TO_ENTITY(PedToEject, 1, direction.x, direction.y, 90.275, Rot.x, Rot.y, Rot.z, false, true, true, true, false, true);
+		AI::TASK_LEAVE_VEHICLE(PedToEject, PED::GET_VEHICLE_PED_IS_USING(PedToEject), 16);
+		Vehicle veh = VEHICLE::CREATE_VEHICLE(currVehModel, coords_veh2.x, coords_veh2.y, coords_veh2.z + 10, rot, 1, 0);
+		ENTITY::SET_ENTITY_VELOCITY(veh, vehspeed.x, vehspeed.y, vehspeed.z);
+		ENTITY::SET_ENTITY_VISIBLE(veh, false);
+		ENTITY::SET_ENTITY_COLLISION(veh, false, false);
+		if (ENTITY::DOES_ENTITY_EXIST(veh)) PED::SET_PED_INTO_VEHICLE(PedToEject, veh, -1);
+		AUDIO::SET_VEHICLE_RADIO_ENABLED(veh, false);
+
+		int PedEjectHash = GAMEPLAY::GET_HASH_KEY("prop_ejector_seat_01"); // prop_car_seat // prop_ejector_seat_01 
+		Object seat_obj = OBJECT::CREATE_OBJECT(PedEjectHash, coordsmetoeject.x, coordsmetoeject.y, coordsmetoeject.z, 1, true, 1);
+		int PlayerEjectIndex = PED::GET_PED_BONE_INDEX(PedToEject, 0x2e28);
+		ENTITY::ATTACH_ENTITY_TO_ENTITY(seat_obj, PedToEject, PlayerEjectIndex, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, false, false, false, true, 0, true);
+
+		ENTITY::APPLY_FORCE_TO_ENTITY(veh, 1, direction.x, direction.y, 90.275, Rot.x, Rot.y, Rot.z, false, true, true, true, false, true);
+		WAIT(1500);
+		OBJECT::SET_OBJECT_PHYSICS_PARAMS(seat_obj, 100.0f, 100.2f, -1.0f, -1.0f, -1.0f, 100.0f, -1.0f, -1.0f, -1.0f, -1.0f, 2.0f); 
+		ENTITY::DETACH_ENTITY(seat_obj, true, true);
+
+		WAIT(5000); // 4000
+		VEHICLE::DELETE_VEHICLE(&veh);
 	}
 }
 
