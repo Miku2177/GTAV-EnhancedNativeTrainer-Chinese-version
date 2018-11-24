@@ -779,6 +779,7 @@ void road_laws()
 			if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 1) wanted_level_on = false;
 			
 			if (been_seen_by_a_cop == true) PED::SET_PED_CAN_BE_DRAGGED_OUT(playerPed, false);
+			else PED::SET_PED_CAN_BE_DRAGGED_OUT(playerPed, true);
 			
 			if (been_seen_by_a_cop == false) cop_walking = false;
 

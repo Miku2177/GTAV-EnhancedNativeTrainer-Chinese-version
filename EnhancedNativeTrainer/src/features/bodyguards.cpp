@@ -23,6 +23,9 @@ bool featureBodyguardHelmet = false;
 bool featureBodyguardOnMap = false;
 bool featureBodyguardInfAmmo = false;
 
+bool added_nearest_b = false;
+Ped bodyGuard, temp_bodyguard = -1;
+
 bool requireRefreshOfBodyguardMainMenu = false;
 int activeLineIndexBodyguardBlips = 0;
 bool featureBodyBlipNumber = false;
@@ -405,6 +408,8 @@ void dismiss_bodyguards(){
 void do_spawn_bodyguard(){
 	requireRefreshOfBodyguardMainMenu = true;
 	bool bodyguard_animal = false;
+	bodyGuard = -1;
+	bool exist_already = false;
 
 	if(spawnedBodyguards.size() >= BODYGUARD_LIMIT){
 		set_status_text("Cannot spawn any more bodyguards");
@@ -413,7 +418,7 @@ void do_spawn_bodyguard(){
 
 	DWORD bodyGuardModel = get_current_model_hash();
 
-	if(STREAMING::IS_MODEL_IN_CDIMAGE(bodyGuardModel) && STREAMING::IS_MODEL_VALID(bodyGuardModel)){
+	if((STREAMING::IS_MODEL_IN_CDIMAGE(bodyGuardModel) && STREAMING::IS_MODEL_VALID(bodyGuardModel)) || added_nearest_b == true){
 		STREAMING::REQUEST_MODEL(bodyGuardModel);
 		while(!STREAMING::HAS_MODEL_LOADED(bodyGuardModel)){
 			make_periodic_feature_call();
@@ -423,106 +428,149 @@ void do_spawn_bodyguard(){
 		int myGroup = PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID());
 
 		Vector3 spawnCoords = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(PLAYER::PLAYER_PED_ID(), 2.5, 2.5, 0.0);
-		Ped bodyGuard = PED::CREATE_PED(25, bodyGuardModel, spawnCoords.x, spawnCoords.y, spawnCoords.z, 0, 0, 0);
-
-		for (int i = 0; i < SKINS_ANIMALS_VALUES.size(); i++) {
-			char *currAnimal = new char[SKINS_ANIMALS_VALUES[i].length() + 1];
-			strcpy(currAnimal, SKINS_ANIMALS_VALUES[i].c_str());
-			DWORD curr_animal_body = GAMEPLAY::GET_HASH_KEY(currAnimal);
-			if (bodyGuardModel == curr_animal_body)
-			{
-				bodyguard_animal = true;
-				animal_in_group = true;
-			}
-		}
-
-		spawnedBodyguards.push_back(bodyGuard); // save the current bodyguard
-
-		PED::SET_PED_AS_GROUP_LEADER(PLAYER::PLAYER_PED_ID(), myGroup);
-		PED::SET_PED_AS_GROUP_MEMBER(bodyGuard, myGroup);
-		PED::SET_PED_NEVER_LEAVES_GROUP(bodyGuard, true);
-
-		if(featureBodyguardInvincible){
-			ENTITY::SET_ENTITY_INVINCIBLE(bodyGuard, true);
-		}
-
-		if (featureBodyguardHelmet && bodyguard_animal == false){
-			PED::GIVE_PED_HELMET(bodyGuard, 1, 4096, -1);
-		}
-		
-		if (featureBodyguardOnMap) {
-			blip_body[0] = UI::ADD_BLIP_FOR_ENTITY(bodyGuard);
-			UI::SET_BLIP_AS_FRIENDLY(blip_body[0], true);
-			if (BODY_BLIPSYMBOL_VALUES[BodyBlipSymbolIndex] != NULL) UI::SET_BLIP_SPRITE(blip_body[0], BODY_BLIPSYMBOL_VALUES[BodyBlipSymbolIndex]);
-			else UI::SET_BLIP_SPRITE(blip_body[0], BODY_BLIPSYMBOL_VALUES[0]);
-			UI::SET_BLIP_CATEGORY(blip_body[0], 2);
-			if (featureBodyBlipNumber) UI::SHOW_NUMBER_ON_BLIP(blip_body[0], BLIPTABLE_BODYGUARD.size());
-			if (BODY_BLIPFLASH_VALUES[BodyBlipFlashIndex] == 1) UI::SET_BLIP_FLASHES(blip_body[0], true);
-			if (BODY_BLIPFLASH_VALUES[BodyBlipFlashIndex] == 2) UI::SET_BLIP_FLASHES_ALTERNATE(blip_body[0], true);
-			UI::SET_BLIP_SCALE(blip_body[0], BODY_BLIPSIZE_VALUES[BodyBlipSizeIndex]);
-			UI::SET_BLIP_COLOUR(blip_body[0], BODY_BLIPCOLOUR_VALUES[BodyBlipColourIndex]);
-			UI::SET_BLIP_AS_SHORT_RANGE(blip_body[0], true);
-			BLIPTABLE_BODYGUARD.push_back(blip_body[0]);
-		}
-		else {
-			if (!BLIPTABLE_BODYGUARD.empty()) {
-				for (int i = 0; i < BLIPTABLE_BODYGUARD.size(); i++) {
-					if (UI::DOES_BLIP_EXIST(BLIPTABLE_BODYGUARD[i])) {
-						UI::REMOVE_BLIP(&BLIPTABLE_BODYGUARD[i]);
+		Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
+		if (added_nearest_b == false) bodyGuard = PED::CREATE_PED(25, bodyGuardModel, spawnCoords.x, spawnCoords.y, spawnCoords.z, 0, 0, 0);
+		if (added_nearest_b == true) {
+			animal_in_group = true;
+			const int arrSize33 = 1024;
+			Ped surr_peds[arrSize33];
+			int count_surr_peds = worldGetAllPeds(surr_peds, arrSize33);
+			float dist_diff = -1.0;
+			float temp_dist = 20.0;
+			for (int i = 0; i < count_surr_peds; i++) {
+				if (PED::GET_PED_TYPE(surr_peds[i]) != 0 && PED::GET_PED_TYPE(surr_peds[i]) != 1 && PED::GET_PED_TYPE(surr_peds[i]) != 2 &&
+					PED::GET_PED_TYPE(surr_peds[i]) != 3) {
+					Vector3 coordsped = ENTITY::GET_ENTITY_COORDS(surr_peds[i], true);
+					dist_diff = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsped.x, coordsped.y, coordsped.z);
+					exist_already = false;
+					if (!spawnedBodyguards.empty()) {
+						for (int j = 0; j < spawnedBodyguards.size(); j++) {
+							if (spawnedBodyguards[j] == surr_peds[i]) exist_already = true;
+						}
+					}
+					if (temp_dist > dist_diff && exist_already == false) {
+						temp_dist = dist_diff;
+						temp_bodyguard = surr_peds[i];
 					}
 				}
-				BLIPTABLE_BODYGUARD.clear();
-				BLIPTABLE_BODYGUARD.shrink_to_fit();
 			}
-			std::vector<int> emptyVec;
-			std::vector<double> emptyVec_d;
-			if (!BODY_BLIPSIZE_VALUES.empty()) std::vector<double>(BODY_BLIPSIZE_VALUES).swap(emptyVec_d);
-			if (!BODY_BLIPCOLOUR_VALUES.empty()) std::vector<int>(BODY_BLIPCOLOUR_VALUES).swap(emptyVec);
-			if (!BODY_BLIPSYMBOL_VALUES.empty()) std::vector<int>(BODY_BLIPSYMBOL_VALUES).swap(emptyVec);
-			if (!BODY_BLIPFLASH_VALUES.empty()) std::vector<int>(BODY_BLIPFLASH_VALUES).swap(emptyVec);
+			//PED::GET_CLOSEST_PED(coordsme.x, coordsme.y, coordsme.z, 50, 1, 0, &temp_bodyguard, 1, 1, -1);
+			exist_already = false;
+			if (!spawnedBodyguards.empty()) {
+				for (int i = 0; i < spawnedBodyguards.size(); i++) {
+					if (spawnedBodyguards[i] == temp_bodyguard) exist_already = true;
+				}
+			}
+			if (exist_already == false) bodyGuard = temp_bodyguard;
 		}
-		
 
-		PED::SET_PED_COMBAT_ABILITY(bodyGuard, 2);
-		PED::SET_PED_COMBAT_RANGE(bodyGuard, 2);
-		
-		PED::SET_PED_COMBAT_MOVEMENT(bodyGuard, 3);
-		PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 5, true);
+		if (bodyGuard != -1) {
+			for (int i = 0; i < SKINS_ANIMALS_VALUES.size(); i++) {
+				char *currAnimal = new char[SKINS_ANIMALS_VALUES[i].length() + 1];
+				strcpy(currAnimal, SKINS_ANIMALS_VALUES[i].c_str());
+				DWORD curr_animal_body = GAMEPLAY::GET_HASH_KEY(currAnimal);
+				if (bodyGuardModel == curr_animal_body)
+				{
+					bodyguard_animal = true;
+					animal_in_group = true;
+				}
+			}
 
-		if (bodyguard_animal == false) PED::SET_PED_CAN_SWITCH_WEAPON(bodyGuard, true);
-		PED::SET_GROUP_FORMATION(myGroup, 1);
-		PED::SET_CAN_ATTACK_FRIENDLY(bodyGuard, false, false);
-		if (bodyguard_animal == false) PED::SET_PED_FIRING_PATTERN(bodyGuard, GAMEPLAY::GET_HASH_KEY("FIRING_PATTERN_FULL_AUTO")); // 0xC6EE6B4C
+			spawnedBodyguards.push_back(bodyGuard); // save the current bodyguard
 
-		if (bodyguard_animal == false)
-		{
-			for(int a = 0; a < MENU_WEAPON_CATEGORIES.size(); a++){
-				for(int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++){
-					if(*bodyguardWeaponsToggle[a].at(b)){
-						Hash tmp = GAMEPLAY::GET_HASH_KEY((char *) VOV_WEAPON_VALUES[a].at(b).c_str());
-						if(!WEAPON::HAS_PED_GOT_WEAPON(bodyGuard, tmp, false)){
-							WEAPON::GIVE_WEAPON_TO_PED(bodyGuard, tmp, 1000, false, true);
+			PED::SET_PED_AS_GROUP_LEADER(PLAYER::PLAYER_PED_ID(), myGroup);
+			PED::SET_PED_AS_GROUP_MEMBER(bodyGuard, myGroup);
+			PED::SET_PED_NEVER_LEAVES_GROUP(bodyGuard, true);
+
+			if (featureBodyguardInvincible) {
+				ENTITY::SET_ENTITY_INVINCIBLE(bodyGuard, true);
+			}
+
+			if (featureBodyguardHelmet && bodyguard_animal == false) {
+				PED::GIVE_PED_HELMET(bodyGuard, 1, 4096, -1);
+			}
+
+			if (featureBodyguardOnMap) {
+				blip_body[0] = UI::ADD_BLIP_FOR_ENTITY(bodyGuard);
+				UI::SET_BLIP_AS_FRIENDLY(blip_body[0], true);
+				if (BODY_BLIPSYMBOL_VALUES[BodyBlipSymbolIndex] != NULL) UI::SET_BLIP_SPRITE(blip_body[0], BODY_BLIPSYMBOL_VALUES[BodyBlipSymbolIndex]);
+				else UI::SET_BLIP_SPRITE(blip_body[0], BODY_BLIPSYMBOL_VALUES[0]);
+				UI::SET_BLIP_CATEGORY(blip_body[0], 2);
+				if (featureBodyBlipNumber) UI::SHOW_NUMBER_ON_BLIP(blip_body[0], BLIPTABLE_BODYGUARD.size());
+				if (BODY_BLIPFLASH_VALUES[BodyBlipFlashIndex] == 1) UI::SET_BLIP_FLASHES(blip_body[0], true);
+				if (BODY_BLIPFLASH_VALUES[BodyBlipFlashIndex] == 2) UI::SET_BLIP_FLASHES_ALTERNATE(blip_body[0], true);
+				UI::SET_BLIP_SCALE(blip_body[0], BODY_BLIPSIZE_VALUES[BodyBlipSizeIndex]);
+				UI::SET_BLIP_COLOUR(blip_body[0], BODY_BLIPCOLOUR_VALUES[BodyBlipColourIndex]);
+				UI::SET_BLIP_AS_SHORT_RANGE(blip_body[0], true);
+				BLIPTABLE_BODYGUARD.push_back(blip_body[0]);
+			}
+			else {
+				if (!BLIPTABLE_BODYGUARD.empty()) {
+					for (int i = 0; i < BLIPTABLE_BODYGUARD.size(); i++) {
+						if (UI::DOES_BLIP_EXIST(BLIPTABLE_BODYGUARD[i])) {
+							UI::REMOVE_BLIP(&BLIPTABLE_BODYGUARD[i]);
+						}
+					}
+					BLIPTABLE_BODYGUARD.clear();
+					BLIPTABLE_BODYGUARD.shrink_to_fit();
+				}
+				std::vector<int> emptyVec;
+				std::vector<double> emptyVec_d;
+				if (!BODY_BLIPSIZE_VALUES.empty()) std::vector<double>(BODY_BLIPSIZE_VALUES).swap(emptyVec_d);
+				if (!BODY_BLIPCOLOUR_VALUES.empty()) std::vector<int>(BODY_BLIPCOLOUR_VALUES).swap(emptyVec);
+				if (!BODY_BLIPSYMBOL_VALUES.empty()) std::vector<int>(BODY_BLIPSYMBOL_VALUES).swap(emptyVec);
+				if (!BODY_BLIPFLASH_VALUES.empty()) std::vector<int>(BODY_BLIPFLASH_VALUES).swap(emptyVec);
+			}
+
+			PED::SET_PED_COMBAT_ABILITY(bodyGuard, 2);
+			PED::SET_PED_COMBAT_RANGE(bodyGuard, 2);
+
+			PED::SET_PED_COMBAT_MOVEMENT(bodyGuard, 3);
+			PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 5, true);
+
+			if (bodyguard_animal == false) PED::SET_PED_CAN_SWITCH_WEAPON(bodyGuard, true);
+			PED::SET_GROUP_FORMATION(myGroup, 1);
+			PED::SET_CAN_ATTACK_FRIENDLY(bodyGuard, false, false);
+			if (bodyguard_animal == false) PED::SET_PED_FIRING_PATTERN(bodyGuard, GAMEPLAY::GET_HASH_KEY("FIRING_PATTERN_FULL_AUTO")); // 0xC6EE6B4C
+
+			if (bodyguard_animal == false) {
+				for (int a = 0; a < MENU_WEAPON_CATEGORIES.size(); a++) {
+					for (int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++) {
+						if (*bodyguardWeaponsToggle[a].at(b)) {
+							Hash tmp = GAMEPLAY::GET_HASH_KEY((char *)VOV_WEAPON_VALUES[a].at(b).c_str());
+							if (!WEAPON::HAS_PED_GOT_WEAPON(bodyGuard, tmp, false)) {
+								WEAPON::GIVE_WEAPON_TO_PED(bodyGuard, tmp, 1000, false, true);
+							}
 						}
 					}
 				}
 			}
-		}
 
-		if (featureBodyguardInfAmmo && bodyguard_animal == false){
-			WEAPON::SET_PED_INFINITE_AMMO_CLIP(bodyGuard, true);
-		}
+			if (added_nearest_b == true && !WEAPON::IS_PED_ARMED(bodyGuard, 7)) {
+				for (int a = 0; a < MENU_WEAPON_CATEGORIES.size(); a++) {
+					for (int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++) {
+						Hash tmp = GAMEPLAY::GET_HASH_KEY((char *)VOV_WEAPON_VALUES[a].at(b).c_str());
+						WEAPON::GIVE_WEAPON_TO_PED(bodyGuard, tmp, 999, false, true);
+						WEAPON::SET_CURRENT_PED_WEAPON(bodyGuard, tmp, 1);
+						WEAPON::SET_PED_CURRENT_WEAPON_VISIBLE(bodyGuard, true, false, 1, 1);
+					}
+				}
+			}
 
-		PED::SET_PED_DEFAULT_COMPONENT_VARIATION(bodyGuard);
-		WAIT(0);
+			if (featureBodyguardInfAmmo && bodyguard_animal == false) WEAPON::SET_PED_INFINITE_AMMO_CLIP(bodyGuard, true);
 
-		if(PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)){
-			Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
+			if (added_nearest_b == false) PED::SET_PED_DEFAULT_COMPONENT_VARIATION(bodyGuard);
+			WAIT(0);
 
-			for(int i = 0; i < VEHICLE::GET_VEHICLE_MAX_NUMBER_OF_PASSENGERS(veh); i++){
-				if(VEHICLE::IS_VEHICLE_SEAT_FREE(veh, i)){
-					AI::TASK_WARP_PED_INTO_VEHICLE(bodyGuard, veh, i);
-					//PED::SET_PED_INTO_VEHICLE(bodyGuard, veh, i);
-					break;
+			if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) {
+				Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
+
+				for (int i = 0; i < VEHICLE::GET_VEHICLE_MAX_NUMBER_OF_PASSENGERS(veh); i++) {
+					if (VEHICLE::IS_VEHICLE_SEAT_FREE(veh, i)) {
+						AI::TASK_WARP_PED_INTO_VEHICLE(bodyGuard, veh, i);
+						//PED::SET_PED_INTO_VEHICLE(bodyGuard, veh, i);
+						break;
+					}
 				}
 			}
 		}
@@ -530,6 +578,13 @@ void do_spawn_bodyguard(){
 		WAIT(50);
 		STREAMING::SET_MODEL_AS_NO_LONGER_NEEDED(bodyGuardModel);
 	}
+	added_nearest_b = false;
+	return;
+}
+
+void do_add_near_bodyguard() {
+	added_nearest_b = true;
+	do_spawn_bodyguard();
 	return;
 }
 
@@ -553,6 +608,7 @@ void maintain_bodyguards(){
 	while(iter != spawnedBodyguards.end()){
 
 		if (animal_in_group == true && PED::IS_PED_FLEEING(*iter)) AI::TASK_STAND_STILL(*iter, 10000);
+		//PED::SET_PED_FLEE_ATTRIBUTES(*iter, 0, 0);
 
 		if(PED::IS_PED_DEAD_OR_DYING(*iter, true)){
 			// clean up PED stuff, for now let's assume the game handles everything and we just worry about our vector
@@ -578,8 +634,14 @@ bool process_bodyguard_menu(){
 
 		item = new MenuItem<int>();
 		std::ostringstream ss;
-		ss << "Spawn Bodyguard: " << get_current_model_name();
+		ss << "Spawn Bodyguard: " << get_current_model_name(); 
 		item->caption = ss.str();
+		item->value = i++;
+		item->isLeaf = true;
+		menuItems.push_back(item);
+
+		item = new MenuItem<int>();
+		item->caption = "Add Nearest Ped As Bodyguard";
 		item->value = i++;
 		item->isLeaf = true;
 		menuItems.push_back(item);
@@ -655,15 +717,18 @@ bool onconfirm_bodyguard_menu(MenuItem<int> choice){
 			do_spawn_bodyguard();
 			break;
 		case 1:
-			dismiss_bodyguards();
+			do_add_near_bodyguard();
 			break;
 		case 2:
-			process_bodyguard_skins_menu();
+			dismiss_bodyguards();
 			break;
 		case 3:
-			process_bodyguard_weapons_menu();
+			process_bodyguard_skins_menu();
 			break;
 		case 4:
+			process_bodyguard_weapons_menu();
+			break;
+		case 5:
 			process_bodyguard_blips_menu();
 			break;
 		default:
