@@ -45,6 +45,8 @@ void reset_bodyguards_globals();
 
 void do_spawn_bodyguard();
 
+void do_add_near_bodyguard();
+
 void update_bodyguard_features();
 
 void add_bodyguards_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results);
