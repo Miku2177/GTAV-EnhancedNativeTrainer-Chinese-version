@@ -431,7 +431,7 @@ void do_spawn_bodyguard(){
 		Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 		if (added_nearest_b == false) bodyGuard = PED::CREATE_PED(25, bodyGuardModel, spawnCoords.x, spawnCoords.y, spawnCoords.z, 0, 0, 0);
 		if (added_nearest_b == true) {
-			animal_in_group = true;
+			//animal_in_group = true;
 			const int arrSize33 = 1024;
 			Ped surr_peds[arrSize33];
 			int count_surr_peds = worldGetAllPeds(surr_peds, arrSize33);
@@ -531,6 +531,10 @@ void do_spawn_bodyguard(){
 			if (bodyguard_animal == false) PED::SET_PED_CAN_SWITCH_WEAPON(bodyGuard, true);
 			PED::SET_GROUP_FORMATION(myGroup, 1);
 			PED::SET_CAN_ATTACK_FRIENDLY(bodyGuard, false, false);
+
+			AI::TASK_COMBAT_HATED_TARGETS_AROUND_PED(bodyGuard, 100, 0);
+			PED::SET_PED_KEEP_TASK(bodyGuard, true);
+
 			if (bodyguard_animal == false) PED::SET_PED_FIRING_PATTERN(bodyGuard, GAMEPLAY::GET_HASH_KEY("FIRING_PATTERN_FULL_AUTO")); // 0xC6EE6B4C
 
 			if (bodyguard_animal == false) {
@@ -607,7 +611,7 @@ void maintain_bodyguards(){
 	
 	while(iter != spawnedBodyguards.end()){
 
-		if (animal_in_group == true && PED::IS_PED_FLEEING(*iter)) AI::TASK_STAND_STILL(*iter, 10000);
+		if (animal_in_group == true && PED::IS_PED_FLEEING(*iter)) AI::TASK_STAND_STILL(*iter, 10000); //  || AI::IS_PED_RUNNING(*iter))
 		//PED::SET_PED_FLEE_ATTRIBUTES(*iter, 0, 0);
 
 		if(PED::IS_PED_DEAD_OR_DYING(*iter, true)){
