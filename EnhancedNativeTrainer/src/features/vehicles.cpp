@@ -85,6 +85,8 @@ bool featureAntiTheftSystem = false;
 bool featureWearHelmetOff = false;
 bool featureWearHelmetOffUpdated = false;
 bool featureVehLightsOn = false, featureVehLightsOnUpdated = false;
+bool featureInfiniteRocketBoost = false;
+bool featureInfiniteRocketBoostUpdated = false;
 bool window_roll, interior_lights, veh_searching, veh_alarm, veh_brake_toggle = false;
 int lights = -1, highbeams = -1;
 
@@ -1795,6 +1797,13 @@ void process_veh_menu(){
 	toggleItem->toggleValue = &featurePoliceLightsBlackout;
 	menuItems.push_back(toggleItem);
 
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Infinite Rocket Boost";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureInfiniteRocketBoost;
+	toggleItem->toggleValueUpdated = &featureInfiniteRocketBoostUpdated;
+	menuItems.push_back(toggleItem);
+
 	draw_generic_menu<int>(menuItems, &activeLineIndexVeh, caption, onconfirm_veh_menu, NULL, NULL);
 }
 
@@ -2746,6 +2755,21 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		}
 	}
 
+	if (bPlayerExists) {
+		if (featureInfiniteRocketBoostUpdated && VEHICLE::_HAS_VEHICLE_ROCKET_BOOST(veh)) {
+			if (featureInfiniteRocketBoost) {
+				VEHICLE::_SET_VEHICLE_ROCKET_BOOST_REFILL_TIME(veh, 0);
+				VEHICLE::_SET_VEHICLE_ROCKET_BOOST_PERCENTAGE(veh, 100.0f);
+				featureInfiniteRocketBoostUpdated = false;
+			}
+			else {
+				VEHICLE::_SET_VEHICLE_ROCKET_BOOST_REFILL_TIME(veh, 10);
+				VEHICLE::_SET_VEHICLE_ROCKET_BOOST_PERCENTAGE(veh, 0.5f);
+				featureInfiniteRocketBoostUpdated = false;
+			}
+		}
+	}
+
 
 	// testing code; DO NOT DELETE
 	//if(bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && IsKeyJustUp(KeyConfig::KEY_VEH_STOP)){
@@ -2939,6 +2963,7 @@ void reset_vehicle_globals() {
 		featureNoLightsNightTime = true;
 		featureEscapingPolice = true;
 		featureVehLightsOnUpdated = true;
+		featureInfiniteRocketBoostUpdated = true;
 
 	featureDespawnScriptDisabled = false;
 	featureDespawnScriptDisabledUpdated = true;
@@ -3213,6 +3238,8 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureEngineDegrade", &featureEngineDegrade});
 	results->push_back(FeatureEnabledLocalDefinition{"featureEngineHealthBar", &featureEngineHealthBar});
 	results->push_back(FeatureEnabledLocalDefinition{"featureLimpMode", &featureLimpMode});
+	results->push_back(FeatureEnabledLocalDefinition{"featureInfiniteRocketBoost", &featureInfiniteRocketBoost, &featureInfiniteRocketBoostUpdated});
+
 }
 
 bool spawn_saved_car(int slot, std::string caption){
