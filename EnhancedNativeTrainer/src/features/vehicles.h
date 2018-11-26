@@ -200,6 +200,8 @@ void onchange_veh_eng_pow_index(int value, SelectFromListMenuItem* source);
 
 void onchange_veh_mass_index(int value, SelectFromListMenuItem* source);
 
+void onchange_veh_infiniteboost_index(int value, SelectFromListMenuItem* source);
+
 void onchange_speed_size_index(int value, SelectFromListMenuItem* source);
 
 void onchange_speed_position_index(int value, SelectFromListMenuItem* source);
