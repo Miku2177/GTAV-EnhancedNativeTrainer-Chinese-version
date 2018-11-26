@@ -238,6 +238,12 @@ const std::vector<std::string> VEH_ENGINERUNNING_CAPTIONS{ "Never", "Always", "H
 int EngineRunningIndex = 0;
 bool EngineRunning_Changed = true;
 
+//Infinite Boost For Rocket Engine Vehicles
+const std::vector<std::string> VEH_INFINITEBOOST_CAPTIONS{ "OFF", "Hold", "Always" };
+const std::vector<int> VEH_INFINITEBOOST_VALUES{ 0, 1, 2 };
+int InfiniteBoostIndex = 0;
+bool InfiniteBoost_Changed = true;
+
 // player in vehicle state... assume true initially since our quicksave might have us in a vehicle already, in which case we can't check if we just got into one
 bool oldVehicleState = true;
 
@@ -1673,6 +1679,12 @@ void process_veh_menu(){
 	listItem->value = VehMassMultIndex;
 	menuItems.push_back(listItem);
 
+	listItem = new SelectFromListMenuItem(VEH_INFINITEBOOST_CAPTIONS, onchange_veh_infiniteboost_index);
+	listItem->wrap = false;
+	listItem->caption = "Infinite Boost For Rocket Engine Vehicles";
+	listItem->value = InfiniteBoostIndex;
+	menuItems.push_back(listItem);
+
 	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Disable Despawn Of DLC Cars";
 	toggleItem->value = i++;
@@ -2077,11 +2089,22 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			if (highbeamsAutoOn) GRAPHICS::_DRAW_SPOT_LIGHT_WITH_SHADOW(bone_cruiser_coord.x, bone_cruiser_coord.y, bone_cruiser_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 60.0, 1, 50, 41, 2.7, 10);
 		}
 	}
+	
+	// Infinite Boost For Rocket Engine Vehicles
+	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && VEHICLE::_HAS_VEHICLE_ROCKET_BOOST(PED::GET_VEHICLE_PED_IS_IN(playerPed, false))) {
+		if (VEH_INFINITEBOOST_VALUES[InfiniteBoostIndex] == 1 && CONTROLS::IS_CONTROL_PRESSED(2, 103)) {
+			VEHICLE::_SET_VEHICLE_ROCKET_BOOST_REFILL_TIME(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 0.0f);
+			VEHICLE::_SET_VEHICLE_ROCKET_BOOST_PERCENTAGE(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 100.0f);
+		}
+		if (VEH_INFINITEBOOST_VALUES[InfiniteBoostIndex] == 2) {
+			VEHICLE::_SET_VEHICLE_ROCKET_BOOST_REFILL_TIME(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 0.0f);
+			VEHICLE::_SET_VEHICLE_ROCKET_BOOST_PERCENTAGE(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 100.0f); 
+		}
+	}
 
 	//////////////////////////////////////////////////// VEHICLE MASS ////////////////////////////////////////////////////////
 
 	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && !PED::IS_PED_IN_ANY_PLANE(playerPed) && !PED::IS_PED_IN_ANY_HELI(playerPed) && (VEH_MASS_VALUES[VehMassMultIndex] > 0)) {
-
 		const int numElements = 10;
 		const int arrSize = numElements * 2 + 2;
 		int nearbyPed[arrSize];
@@ -2836,6 +2859,7 @@ void reset_vehicle_globals() {
 	speedBoostIndex = 0;
 	engPowMultIndex = 0;
 	VehMassMultIndex = 0;
+	InfiniteBoostIndex = 0;
 	SpeedSizeIndex = 0;
 	SpeedPositionIndex = 0;
 
@@ -3632,6 +3656,7 @@ void add_vehicle_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"speedBoostIndex", std::to_string(speedBoostIndex)});
 	results->push_back(StringPairSettingDBRow{"engPowMultIndex", std::to_string(engPowMultIndex)});
 	results->push_back(StringPairSettingDBRow{"VehMassMultIndex", std::to_string(VehMassMultIndex)});
+	results->push_back(StringPairSettingDBRow{"InfiniteBoostIndex", std::to_string(InfiniteBoostIndex)});
 	results->push_back(StringPairSettingDBRow{"TurnSignalsIndex", std::to_string(turnSignalsIndex)});
 	results->push_back(StringPairSettingDBRow{"turnSignalsAngleIndex", std::to_string(turnSignalsAngleIndex)});
 	results->push_back(StringPairSettingDBRow{"turnSignalsAccelerationIndex", std::to_string(turnSignalsAccelerationIndex)});
@@ -3696,6 +3721,9 @@ void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settin
 		}
 		else if (setting.name.compare("VehMassMultIndex") == 0){
 			VehMassMultIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("InfiniteBoostIndex") == 0) {
+			InfiniteBoostIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("TurnSignalsIndex") == 0){
 			turnSignalsIndex = stoi(setting.value);
@@ -3884,6 +3912,11 @@ void onchange_veh_eng_pow_index(int value, SelectFromListMenuItem* source){
 void onchange_veh_mass_index(int value, SelectFromListMenuItem* source){
 	VehMassMultIndex = value;
 	massChanged = true;
+}
+
+void onchange_veh_infiniteboost_index(int value, SelectFromListMenuItem* source) {
+	InfiniteBoostIndex = value;
+	InfiniteBoost_Changed = true;
 }
 
 void onchange_veh_turn_signals_index(int value, SelectFromListMenuItem* source){
