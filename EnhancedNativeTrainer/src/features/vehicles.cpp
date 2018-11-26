@@ -240,7 +240,7 @@ const std::vector<std::string> VEH_ENGINERUNNING_CAPTIONS{ "Never", "Always", "H
 int EngineRunningIndex = 0;
 bool EngineRunning_Changed = true;
 
-//Infinite Boost For Rocket Engine Vehicles
+//Infinite Rocket Boost
 const std::vector<std::string> VEH_INFINITEBOOST_CAPTIONS{ "OFF", "Hold", "Always" };
 const std::vector<int> VEH_INFINITEBOOST_VALUES{ 0, 1, 2 };
 int InfiniteBoostIndex = 0;
@@ -1683,7 +1683,7 @@ void process_veh_menu(){
 
 	listItem = new SelectFromListMenuItem(VEH_INFINITEBOOST_CAPTIONS, onchange_veh_infiniteboost_index);
 	listItem->wrap = false;
-	listItem->caption = "Infinite Boost For Rocket Engine Vehicles";
+	listItem->caption = "Infinite Rocket Boost";
 	listItem->value = InfiniteBoostIndex;
 	menuItems.push_back(listItem);
 
@@ -1809,12 +1809,12 @@ void process_veh_menu(){
 	toggleItem->toggleValue = &featurePoliceLightsBlackout;
 	menuItems.push_back(toggleItem);
 
-	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Infinite Rocket Boost";
-	toggleItem->value = i++;
-	toggleItem->toggleValue = &featureInfiniteRocketBoost;
-	toggleItem->toggleValueUpdated = &featureInfiniteRocketBoostUpdated;
-	menuItems.push_back(toggleItem);
+	//toggleItem = new ToggleMenuItem<int>();
+	//toggleItem->caption = "Infinite Rocket Boost";
+	//toggleItem->value = i++;
+	//toggleItem->toggleValue = &featureInfiniteRocketBoost;
+	//toggleItem->toggleValueUpdated = &featureInfiniteRocketBoostUpdated;
+	//menuItems.push_back(toggleItem);
 
 	draw_generic_menu<int>(menuItems, &activeLineIndexVeh, caption, onconfirm_veh_menu, NULL, NULL);
 }
@@ -2099,7 +2099,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		}
 	}
 	
-	// Infinite Boost For Rocket Engine Vehicles
+	// Infinite Rocket Boost
 	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && VEHICLE::_HAS_VEHICLE_ROCKET_BOOST(PED::GET_VEHICLE_PED_IS_IN(playerPed, false))) {
 		if (VEH_INFINITEBOOST_VALUES[InfiniteBoostIndex] == 1 && CONTROLS::IS_CONTROL_PRESSED(2, 103)) {
 			VEHICLE::_SET_VEHICLE_ROCKET_BOOST_REFILL_TIME(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 0.0f);
@@ -2778,20 +2778,20 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		}
 	}
 
-	if (bPlayerExists) {
-		if (featureInfiniteRocketBoostUpdated && VEHICLE::_HAS_VEHICLE_ROCKET_BOOST(veh)) {
-			if (featureInfiniteRocketBoost) {
-				VEHICLE::_SET_VEHICLE_ROCKET_BOOST_REFILL_TIME(veh, 0);
-				VEHICLE::_SET_VEHICLE_ROCKET_BOOST_PERCENTAGE(veh, 100.0f);
-				featureInfiniteRocketBoostUpdated = false;
-			}
-			else {
-				VEHICLE::_SET_VEHICLE_ROCKET_BOOST_REFILL_TIME(veh, 10);
-				VEHICLE::_SET_VEHICLE_ROCKET_BOOST_PERCENTAGE(veh, 0.5f);
-				featureInfiniteRocketBoostUpdated = false;
-			}
-		}
-	}
+	//if (bPlayerExists) { 
+	//	if (featureInfiniteRocketBoostUpdated && VEHICLE::_HAS_VEHICLE_ROCKET_BOOST(veh)) {
+	//		if (featureInfiniteRocketBoost) {
+	//			VEHICLE::_SET_VEHICLE_ROCKET_BOOST_REFILL_TIME(veh, 0);
+	//			VEHICLE::_SET_VEHICLE_ROCKET_BOOST_PERCENTAGE(veh, 100.0f);
+	//			featureInfiniteRocketBoostUpdated = false;
+	//		}
+	//		else {
+	//			VEHICLE::_SET_VEHICLE_ROCKET_BOOST_REFILL_TIME(veh, 10);
+	//			VEHICLE::_SET_VEHICLE_ROCKET_BOOST_PERCENTAGE(veh, 0.5f);
+	//			featureInfiniteRocketBoostUpdated = false;
+	//		}
+	//	}
+	//}
 
 
 	// testing code; DO NOT DELETE
