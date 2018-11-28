@@ -17,6 +17,9 @@ extern bool featureStolenVehicle;
 extern bool featureNoLightsNightTime;
 extern bool featureEscapingPolice;
 
+extern bool featurePlayerMostWanted;
+extern bool featurePlayerNoSwitch;
+
 //Speeding In A City
 const std::vector<std::string> VEH_SPEEDINGCITY_CAPTIONS{ "OFF", "45 MPH", "60 MPH", "80 MPH", "100 MPH", "120 MPH", "150 MPH", "180 MPH" };
 const std::vector<int> VEH_SPEEDINGCITY_VALUES{ 0, 45, 60, 80, 100, 120, 150, 180 };
@@ -50,5 +53,9 @@ const std::vector<std::string> VEH_STARSPUNISH_CAPTIONS{ "2 Stars", "3 Stars", "
 const std::vector<int> VEH_STARSPUNISH_VALUES{ 2, 3, 4, 5 };
 extern int StarsPunishIndex;
 extern bool StarsPunish_Changed;
+//Most Wanted
+extern int current_player_mostwanted;
+extern bool current_player_mostwanted_Changed;
 
 void road_laws();
+void most_wanted();

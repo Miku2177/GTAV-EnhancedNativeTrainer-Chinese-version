@@ -24,6 +24,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "propplacement.h"
 #include "area_effect.h"
 #include "prison_break.h"
+#include "road_laws.h"
 
 #include "../version.h"
 #include "../utils.h"
@@ -101,6 +102,7 @@ Ped oldplayerPed = -1;
 int tick, playerDataMenuIndex, playerPrisonMenuIndex = 0;
 int NPCragdollMenuIndex = 0;
 int PlayerMovementMenuIndex = 0;
+int PlayerMostWantedMenuIndex = 0;
 int death_time2 = -1;
 
 int  frozenWantedLevel = 0;
@@ -173,6 +175,11 @@ void onchange_player_armor_mode(int value, SelectFromListMenuItem* source){
 void onchange_player_prison_mode(int value, SelectFromListMenuItem* source){
 	current_player_prison = value;
 	current_player_prison_Changed = true;
+}
+
+void onchange_player_mostwanted_mode(int value, SelectFromListMenuItem* source) {
+	current_player_mostwanted = value;
+	current_player_mostwanted_Changed = true;
 }
 
 void onchange_player_movement_mode(int value, SelectFromListMenuItem* source) {
@@ -526,6 +533,7 @@ void update_features(){
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 
 	prison_break(); ///// <--- PRISON BREAK /////
+	most_wanted(); ///// <--- WANTED FUGITIVE /////
 
 	// police ignore player
 	if(featurePlayerIgnoredByPolice){
@@ -802,6 +810,11 @@ bool onconfirm_playerData_menu(MenuItem<int> choice){
 	return false;
 }
 
+bool onconfirm_PlayerMostWanted_menu(MenuItem<int> choice) {
+
+	return false;
+}
+
 bool onconfirm_PlayerMovement_menu(MenuItem<int> choice) {
 
 	return false;
@@ -873,6 +886,39 @@ bool process_player_life_menu(){
 	menuItems.push_back(listItem);
 
 	return draw_generic_menu<int>(menuItems, &playerDataMenuIndex, caption, onconfirm_playerData_menu, NULL, NULL);
+}
+
+bool mostwanted_menu() {
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+
+	std::vector<MenuItem<int> *> menuItems;
+	std::string caption = "Wanted Fugitive Options";
+
+	MenuItem<int> *item;
+	SelectFromListMenuItem *listItem;
+	ToggleMenuItem<int>* toggleItem;
+
+	int i = 0;
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Enable";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featurePlayerMostWanted;
+	menuItems.push_back(toggleItem);
+
+	listItem = new SelectFromListMenuItem(VEH_STARSPUNISH_CAPTIONS, onchange_player_mostwanted_mode);
+	listItem->wrap = false;
+	listItem->caption = "Wanted Stars When Seen";
+	listItem->value = current_player_mostwanted;
+	menuItems.push_back(listItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Disable Player Switching While Fugitive";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featurePlayerNoSwitch;
+	menuItems.push_back(toggleItem);
+
+	return draw_generic_menu<int>(menuItems, &PlayerMostWantedMenuIndex, caption, onconfirm_PlayerMostWanted_menu, NULL, NULL);
 }
 
 bool player_movement_speed() {
@@ -1013,19 +1059,22 @@ bool onconfirm_player_menu(MenuItem<int> choice){
 		case 1:
 			heal_player();
 			break;
-		case 10:
+		case 5:
+			mostwanted_menu();
+			break;
+		case 11:
 			player_movement_speed();
 			break;
-		case 12:
+		case 13:
 			process_ragdoll_menu();
 			break;
-		case 18:
+		case 19:
 			process_anims_menu_top();
 			break;
-		case 19:
+		case 20:
 			process_player_life_menu();
 			break;
-		case 20:
+		case 21:
 			process_player_prison_menu();
 			break;
 		default:
@@ -1036,7 +1085,7 @@ bool onconfirm_player_menu(MenuItem<int> choice){
 }
 
 void process_player_menu(){
-	const int lineCount = 21;
+	const int lineCount = 22;
 
 	std::string caption = "Player Options";
 
@@ -1046,6 +1095,7 @@ void process_player_menu(){
 		{"Add or Remove Cash", NULL, NULL, true, CASH},
 		{"Wanted Level", NULL, NULL, true, WANTED},
 		{"Freeze Wanted Level", &featureWantedLevelFrozen, &featureWantedLevelFrozenUpdated, true},
+		{"Wanted Fugitive", NULL, NULL, false},
 		{"Invincible", &featurePlayerInvincible, &featurePlayerInvincibleUpdated, true},
 		{"Police Ignore You", &featurePlayerIgnoredByPolice, &featurePlayerIgnoredByPoliceUpdated, true},
 		{"Unlimited Ability", &featurePlayerUnlimitedAbility, NULL, true},
@@ -1270,6 +1320,7 @@ void reset_globals(){
 	current_player_armor = 6;
 	current_npc_ragdoll = 0;
 	current_player_movement = 0;
+	current_player_mostwanted = 0;
 	current_player_prison = 0;
 	current_player_escapemoney = 4;
 	current_player_discharge = 3;
@@ -1280,6 +1331,7 @@ void reset_globals(){
 		featurePlayerIgnoredByPolice =
 		featurePlayerUnlimitedAbility =
 		featurePlayerNoNoise =
+		featurePlayerMostWanted =
 		featurePlayerFastSwim =
 		featurePlayerFastRun =
 		featurePlayerRunApartments =
@@ -1313,6 +1365,7 @@ void reset_globals(){
 		featurePedPrison_Robe =
 		featurePrison_Yard = 
 
+		featurePlayerNoSwitch =
 		featureNoRagdollUpdated =
 		featureRagdollIfInjuredUpdated =
 		featureWantedLevelFrozenUpdated = true;
@@ -1528,6 +1581,8 @@ void add_player_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerUnlimitedAbility", &featurePlayerUnlimitedAbility});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerNoNoise", &featurePlayerNoNoise, &featurePlayerNoNoiseUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerFastSwim", &featurePlayerFastSwim, &featurePlayerFastSwimUpdated});
+	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerMostWanted", &featurePlayerMostWanted});
+	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerNoSwitch", &featurePlayerNoSwitch});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerFastRun", &featurePlayerFastRun, &featurePlayerFastRunUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerRunApartments", &featurePlayerRunApartments});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerSuperJump", &featurePlayerSuperJump});
@@ -1553,6 +1608,7 @@ void add_world_feature_enablements3(std::vector<StringPairSettingDBRow>* results
 	results->push_back(StringPairSettingDBRow{"current_player_armor", std::to_string(current_player_armor)});
 	results->push_back(StringPairSettingDBRow{"current_npc_ragdoll", std::to_string(current_npc_ragdoll)});
 	results->push_back(StringPairSettingDBRow{"current_player_movement", std::to_string(current_player_movement)});
+	results->push_back(StringPairSettingDBRow{"current_player_mostwanted", std::to_string(current_player_mostwanted)});
 	results->push_back(StringPairSettingDBRow{"current_player_prison", std::to_string(current_player_prison)});
 	results->push_back(StringPairSettingDBRow{"current_player_escapemoney", std::to_string(current_player_escapemoney)});
 	results->push_back(StringPairSettingDBRow{"current_player_discharge", std::to_string(current_player_discharge)});
@@ -1633,6 +1689,9 @@ void handle_generic_settings(std::vector<StringPairSettingDBRow> settings){
 		}
 		else if (setting.name.compare("current_player_movement") == 0) {
 			current_player_movement = stoi(setting.value);
+		}
+		else if (setting.name.compare("current_player_mostwanted") == 0) {
+			current_player_mostwanted = stoi(setting.value);
 		}
 		else if (setting.name.compare("current_player_prison") == 0){
 			current_player_prison = stoi(setting.value);
