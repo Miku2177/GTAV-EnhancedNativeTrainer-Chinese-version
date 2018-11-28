@@ -32,7 +32,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include <vector>
 #include <cstdlib>
 
-// Road Laws
+// Road Laws variables
 bool featureRoadLaws = false;
 bool featurePoliceVehicleBlip = true;
 bool featurePoliceAgressiveDriving = false;
@@ -92,6 +92,14 @@ bool PirsuitRange_Changed = true;
 int StarsPunishIndex = 0;
 bool StarsPunish_Changed = true;
 bool cop_close_stop = false;
+//
+// Wanted Fugitive variables
+std::vector<Vehicle> VEH_CRIME;
+std::vector<int> CLOTHES_BODY_CRIME;
+bool featurePlayerMostWanted = false;
+bool featurePlayerNoSwitch = true;
+int current_player_mostwanted = 0;
+bool current_player_mostwanted_Changed;
 //
 
 //////////////////////////////////////////////////////// ROAD LAWS //////////////////////////////////////////////////////////
@@ -822,6 +830,94 @@ void road_laws()
 		if (!VEH_DETECTIONRANGE_VALUES.empty()) std::vector<int>(VEH_DETECTIONRANGE_VALUES).swap(emptyVec);
 		if (!VEH_PIRSUITRANGE_VALUES.empty()) std::vector<int>(VEH_PIRSUITRANGE_VALUES).swap(emptyVec);
 		if (!VEH_STARSPUNISH_VALUES.empty()) std::vector<int>(VEH_STARSPUNISH_VALUES).swap(emptyVec);
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////// MOST WANTED ////////////////////////////////////////////////////
+
+void most_wanted() 
+{
+	if (featurePlayerMostWanted) {
+		Player Bad_ass = PLAYER::PLAYER_PED_ID();
+		Vehicle Crime_veh = PED::GET_VEHICLE_PED_IS_IN(Bad_ass, true);
+		Vector3 my_position = ENTITY::GET_ENTITY_COORDS(Bad_ass, true);
+		bool added_already = false;
+		// wanted level
+		if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) > 1) {
+			if (PED::IS_PED_IN_ANY_VEHICLE(Bad_ass, 1) && !PED::IS_PED_ON_ANY_BIKE(Bad_ass)) {
+				if (!VEH_CRIME.empty()) {
+					for (int j = 0; j < VEH_CRIME.size(); j++) {
+						if (VEH_CRIME[j] == Crime_veh) added_already = true;
+					}
+				}
+				if (added_already == false && !VEH_CRIME.empty()) VEH_CRIME.push_back(Crime_veh);
+				if (VEH_CRIME.empty()) VEH_CRIME.push_back(Crime_veh);
+			}
+			if (!PED::IS_PED_IN_ANY_VEHICLE(Bad_ass, 1) || PED::IS_PED_ON_ANY_BIKE(Bad_ass)) {
+				if (!CLOTHES_BODY_CRIME.empty()) {
+					for (int j = 0; j < CLOTHES_BODY_CRIME.size(); j++) {
+						if (CLOTHES_BODY_CRIME[j] == PED::GET_PED_DRAWABLE_VARIATION(Bad_ass, 3)) added_already = true;
+					}
+				}
+				if (added_already == false && !CLOTHES_BODY_CRIME.empty()) CLOTHES_BODY_CRIME.push_back(PED::GET_PED_DRAWABLE_VARIATION(Bad_ass, 3));
+				if (CLOTHES_BODY_CRIME.empty()) CLOTHES_BODY_CRIME.push_back(PED::GET_PED_DRAWABLE_VARIATION(Bad_ass, 3));
+			}
+		}
+		// NO wanted level
+		if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 2 && (!VEH_CRIME.empty() || !CLOTHES_BODY_CRIME.empty())) {
+			const int arrSize36 = 1024;
+			Ped cops_nearby[arrSize36];
+			int count_cops_nearby = worldGetAllPeds(cops_nearby, arrSize36);
+			for (int i = 0; i < count_cops_nearby; i++) {
+				Vector3 cops_position = ENTITY::GET_ENTITY_COORDS(cops_nearby[i], true);
+				int distance_from_me_x = my_position.x - cops_position.x;
+				int distance_from_me_y = my_position.y - cops_position.y;
+				int distance_from_me_z = my_position.z - cops_position.z;
+				if (distance_from_me_x < 0) distance_from_me_x = distance_from_me_x * -1;
+				if (distance_from_me_y < 0) distance_from_me_y = distance_from_me_y * -1;
+				if (distance_from_me_z < 0) distance_from_me_z = distance_from_me_z * -1;
+
+				if (PED::IS_PED_IN_ANY_VEHICLE(Bad_ass, 1) && !PED::IS_PED_ON_ANY_BIKE(Bad_ass) && !VEH_CRIME.empty()) {
+					for (int j = 0; j < VEH_CRIME.size(); j++) {
+						if (VEH_CRIME[j] == PED::GET_VEHICLE_PED_IS_IN(Bad_ass, true)) added_already = true;
+					}
+				}
+				if ((!PED::IS_PED_IN_ANY_VEHICLE(Bad_ass, 1) || PED::IS_PED_ON_ANY_BIKE(Bad_ass)) && (!CLOTHES_BODY_CRIME.empty())) {
+					for (int j = 0; j < CLOTHES_BODY_CRIME.size(); j++) {
+						if (CLOTHES_BODY_CRIME[j] == PED::GET_PED_DRAWABLE_VARIATION(Bad_ass, 3)) added_already = true;
+					}
+				}
+				if (added_already == true && distance_from_me_x < 20 && distance_from_me_y < 20 && distance_from_me_z < 10 && PED::IS_PED_FACING_PED(cops_nearby[i], Bad_ass, 100) &&
+					(PED::GET_PED_TYPE(cops_nearby[i]) == 6 || PED::GET_PED_TYPE(cops_nearby[i]) == 27) && ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(cops_nearby[i], Bad_ass, 17))	{
+					PLAYER::SET_MAX_WANTED_LEVEL(5);
+					PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), VEH_STARSPUNISH_VALUES[current_player_mostwanted], 0);
+					PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
+				}
+			}
+			
+			if (featurePlayerNoSwitch && PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 2 && added_already == true) CONTROLS::DISABLE_CONTROL_ACTION(2, 19, true);
+			if (added_already == true) {
+				UI::SET_TEXT_FONT(4);
+				UI::SET_TEXT_SCALE(0.0, 0.45);
+				UI::SET_TEXT_PROPORTIONAL(1);
+				UI::SET_TEXT_COLOUR(246, 255, 102, 255);
+				UI::SET_TEXT_EDGE(3, 0, 0, 0, 255);
+				UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 255);
+				UI::SET_TEXT_OUTLINE();
+				UI::_SET_TEXT_ENTRY("STRING");
+				UI::_ADD_TEXT_COMPONENT_SCALEFORM("WANTED");
+				UI::_DRAW_TEXT(0.008, 0.65);
+				GRAPHICS::DRAW_RECT(0.0, 0.665, 0.1, 0.05, 10, 10, 10, 25);
+			}
+		}
+	}
+	else {
+		std::vector<int> emptyVec;
+		std::vector<Vehicle> emptyVec1;
+		if (!CLOTHES_BODY_CRIME.empty()) std::vector<int>(CLOTHES_BODY_CRIME).swap(emptyVec);
+		if (!VEH_CRIME.empty()) std::vector<Vehicle>(VEH_CRIME).swap(emptyVec1);
 	}
 }
 

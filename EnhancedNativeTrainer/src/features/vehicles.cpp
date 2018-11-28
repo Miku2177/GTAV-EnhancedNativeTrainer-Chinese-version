@@ -4536,7 +4536,7 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ "TULA", "candc_smuggler", "tula" },
 	{ "VIGILANTE", "candc_smuggler", "vigilante" },
 	{ "CYCLONE", "lgm_dlc_smuggler", "cyclone" },
-	{ "RAPIDGT3", "lgm_dlc_smuggler" "rapidgt3" },
+	{ "RAPIDGT3", "lgm_dlc_smuggler", "rapidgt3" }, 
 	{ "VISIONE", "lgm_dlc_smuggler", "visione" },
 	{ "RETINUE", "sssa_dlc_smuggler", "retinue" },
 	{ "ALPHAZ1", "elt_dlc_smuggler", "alphaz1" },
