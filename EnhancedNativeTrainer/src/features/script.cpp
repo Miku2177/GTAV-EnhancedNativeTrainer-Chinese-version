@@ -559,23 +559,23 @@ void update_features(){
 	}
 
 	// player fast swim
-	if(featurePlayerFastSwimUpdated){
+	//if(featurePlayerFastSwimUpdated){
 		if(bPlayerExists && !featurePlayerFastSwim){
 			PLAYER::SET_SWIM_MULTIPLIER_FOR_PLAYER(player, 1.0);
 		}
-		featurePlayerFastSwimUpdated = false;
-	}
+	//	featurePlayerFastSwimUpdated = false;
+	//}
 	if(featurePlayerFastSwim){
 		PLAYER::SET_SWIM_MULTIPLIER_FOR_PLAYER(player, 1.49);
 	}
 
 	// player fast run 
-	if(featurePlayerFastRunUpdated){
+	//if(featurePlayerFastRunUpdated){
 		if(bPlayerExists && !featurePlayerFastRun){
 			PLAYER::SET_RUN_SPRINT_MULTIPLIER_FOR_PLAYER(player, 1.0);
 		}
-		featurePlayerFastRunUpdated = false;
-	}
+	//	featurePlayerFastRunUpdated = false;
+	//}
 	if(featurePlayerFastRun){
 		PLAYER::SET_RUN_SPRINT_MULTIPLIER_FOR_PLAYER(player, 1.49);
 	}
