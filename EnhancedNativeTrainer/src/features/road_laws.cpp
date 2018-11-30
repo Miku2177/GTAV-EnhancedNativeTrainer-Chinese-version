@@ -100,6 +100,8 @@ bool featurePlayerMostWanted = false;
 bool featurePlayerNoSwitch = true;
 int current_player_mostwanted = 0;
 bool current_player_mostwanted_Changed;
+int mostwanted_level_enable = 0;
+bool mostwanted_level_enable_Changed;
 //
 
 //////////////////////////////////////////////////////// ROAD LAWS //////////////////////////////////////////////////////////
@@ -845,7 +847,7 @@ void most_wanted()
 		Vector3 my_position = ENTITY::GET_ENTITY_COORDS(Bad_ass, true);
 		bool added_already = false;
 		// wanted level
-		if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) > 1) {
+		if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) >= VEH_STARSPUNISH_VALUES[mostwanted_level_enable]) {
 			if (PED::IS_PED_IN_ANY_VEHICLE(Bad_ass, 1) && !PED::IS_PED_ON_ANY_BIKE(Bad_ass)) {
 				if (!VEH_CRIME.empty()) {
 					for (int j = 0; j < VEH_CRIME.size(); j++) {
@@ -866,7 +868,7 @@ void most_wanted()
 			}
 		}
 		// NO wanted level
-		if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 2 && (!VEH_CRIME.empty() || !CLOTHES_BODY_CRIME.empty())) {
+		if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < VEH_STARSPUNISH_VALUES[mostwanted_level_enable] && (!VEH_CRIME.empty() || !CLOTHES_BODY_CRIME.empty())) {
 			const int arrSize36 = 1024;
 			Ped cops_nearby[arrSize36];
 			int count_cops_nearby = worldGetAllPeds(cops_nearby, arrSize36);
@@ -897,7 +899,7 @@ void most_wanted()
 				}
 			}
 			
-			if (featurePlayerNoSwitch && PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 2 && added_already == true) CONTROLS::DISABLE_CONTROL_ACTION(2, 19, true);
+			if (featurePlayerNoSwitch && PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < VEH_STARSPUNISH_VALUES[mostwanted_level_enable] && added_already == true) CONTROLS::DISABLE_CONTROL_ACTION(2, 19, true);
 			if (added_already == true) {
 				UI::SET_TEXT_FONT(4);
 				UI::SET_TEXT_SCALE(0.0, 0.45);
@@ -911,6 +913,14 @@ void most_wanted()
 				UI::_DRAW_TEXT(0.008, 0.65);
 				GRAPHICS::DRAW_RECT(0.0, 0.665, 0.1, 0.05, 10, 10, 10, 25);
 			}
+		}
+
+		if (PLAYER::GET_TIME_SINCE_LAST_DEATH() > 0 && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 5000) {
+			VEH_CRIME.clear();
+			VEH_CRIME.shrink_to_fit();
+			CLOTHES_BODY_CRIME.clear();
+			CLOTHES_BODY_CRIME.shrink_to_fit();
+			added_already = false;
 		}
 	}
 	else {
