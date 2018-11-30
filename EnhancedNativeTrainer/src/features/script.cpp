@@ -182,6 +182,11 @@ void onchange_player_mostwanted_mode(int value, SelectFromListMenuItem* source) 
 	current_player_mostwanted_Changed = true;
 }
 
+void onchange_player_mostwanted_level_mode(int value, SelectFromListMenuItem* source) {
+	mostwanted_level_enable = value;
+	mostwanted_level_enable_Changed = true;
+}
+
 void onchange_player_movement_mode(int value, SelectFromListMenuItem* source) {
 	current_player_movement = value;
 	current_player_movement_Changed = true;
@@ -906,9 +911,15 @@ bool mostwanted_menu() {
 	toggleItem->toggleValue = &featurePlayerMostWanted;
 	menuItems.push_back(toggleItem);
 
+	listItem = new SelectFromListMenuItem(VEH_STARSPUNISH_CAPTIONS, onchange_player_mostwanted_level_mode);
+	listItem->wrap = false;
+	listItem->caption = "Wanted Status At";
+	listItem->value = mostwanted_level_enable;
+	menuItems.push_back(listItem);
+	
 	listItem = new SelectFromListMenuItem(VEH_STARSPUNISH_CAPTIONS, onchange_player_mostwanted_mode);
 	listItem->wrap = false;
-	listItem->caption = "Wanted Stars When Seen";
+	listItem->caption = "Wanted Stars If Seen";
 	listItem->value = current_player_mostwanted;
 	menuItems.push_back(listItem);
 
@@ -1321,6 +1332,7 @@ void reset_globals(){
 	current_npc_ragdoll = 0;
 	current_player_movement = 0;
 	current_player_mostwanted = 0;
+	mostwanted_level_enable = 0;
 	current_player_prison = 0;
 	current_player_escapemoney = 4;
 	current_player_discharge = 3;
@@ -1609,6 +1621,7 @@ void add_world_feature_enablements3(std::vector<StringPairSettingDBRow>* results
 	results->push_back(StringPairSettingDBRow{"current_npc_ragdoll", std::to_string(current_npc_ragdoll)});
 	results->push_back(StringPairSettingDBRow{"current_player_movement", std::to_string(current_player_movement)});
 	results->push_back(StringPairSettingDBRow{"current_player_mostwanted", std::to_string(current_player_mostwanted)});
+	results->push_back(StringPairSettingDBRow{"mostwanted_level_enable", std::to_string(mostwanted_level_enable)});
 	results->push_back(StringPairSettingDBRow{"current_player_prison", std::to_string(current_player_prison)});
 	results->push_back(StringPairSettingDBRow{"current_player_escapemoney", std::to_string(current_player_escapemoney)});
 	results->push_back(StringPairSettingDBRow{"current_player_discharge", std::to_string(current_player_discharge)});
@@ -1692,6 +1705,9 @@ void handle_generic_settings(std::vector<StringPairSettingDBRow> settings){
 		}
 		else if (setting.name.compare("current_player_mostwanted") == 0) {
 			current_player_mostwanted = stoi(setting.value);
+		}
+		else if (setting.name.compare("mostwanted_level_enable") == 0) {
+			mostwanted_level_enable = stoi(setting.value);
 		}
 		else if (setting.name.compare("current_player_prison") == 0){
 			current_player_prison = stoi(setting.value);

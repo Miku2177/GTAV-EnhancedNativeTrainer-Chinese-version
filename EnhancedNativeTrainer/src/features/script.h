@@ -116,6 +116,8 @@ void onchange_player_prison_mode(int value, SelectFromListMenuItem* source);
 
 void onchange_player_mostwanted_mode(int value, SelectFromListMenuItem* source);
 
+void onchange_player_mostwanted_level_mode(int value, SelectFromListMenuItem* source);
+
 void onchange_player_movement_mode(int value, SelectFromListMenuItem* source);
 
 void onchange_NPC_ragdoll_mode(int value, SelectFromListMenuItem* source);
