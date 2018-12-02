@@ -198,6 +198,8 @@ const std::vector<std::string> VEH_SPEEDLIMITER_CAPTIONS{ "OFF", "10 (MPH)", "20
 const std::vector<int> VEH_SPEEDLIMITER_VALUES{ 0, 4, 9, 13, 18, 22, 27, 31, 36, 40, 44, 53, 67, 80, 89 };
 int speedLimiterIndex = 0;
 bool speedLimiterChanged = true;
+int DoorAutolockIndex = 0;
+bool DoorAutolockChanged = true;
 
 //Lights OFF
 const std::vector<std::string> VEH_LIGHTSOFF_CAPTIONS{ "Never", "Daytime Only", "Always" };
@@ -682,7 +684,8 @@ bool process_veh_door_menu(){
 	std::vector<MenuItem<int>*> menuItemsRoll;
 
 	MenuItem<int> *item;
-	
+	SelectFromListMenuItem *listItem;
+
 	int i = 0;
 
 	item = new MenuItem<int>();
@@ -761,7 +764,13 @@ bool process_veh_door_menu(){
 	item->caption = "Eject Driver Seat";
 	item->value = -17;
 	item->isLeaf = true;
-	menuItems.push_back(item);
+	menuItems.push_back(item); 
+
+	listItem = new SelectFromListMenuItem(VEH_SPEEDLIMITER_CAPTIONS, onchange_door_autolock_index); 
+	listItem->wrap = false;
+	listItem->caption = "Autolock Driver Door At";
+	listItem->value = DoorAutolockIndex;
+	menuItems.push_back(listItem);
 
 	return draw_generic_menu<int>(menuItems, &doorOptionsMenuIndex, caption, onconfirm_vehdoor_menu, NULL, NULL);
 }
@@ -1541,29 +1550,29 @@ bool onconfirm_veh_menu(MenuItem<int> choice){
 		//case 6: // Plane bombs -- incomplete so commenting out in mean time
 			//if (process_veh_weapons_menu()) return false;
 		//	break;
-		case 17: // door menu
+		case 18: // door menu
 			if(process_veh_door_menu()) return false;
 			break;
-		case 18: // seat menu
+		case 19: // seat menu
 			if (PED::IS_PED_SITTING_IN_ANY_VEHICLE(playerPed))
 				if(process_veh_seat_menu()) return false;
 			break;
-		case 19: // speed menu
+		case 20: // speed menu
 			process_speed_menu();
 			break;
-		case 20: // vehicle indicators menu
+		case 21: // vehicle indicators menu
 			process_visualize_menu();
 			break;
-		case 25: // fuel menu
+		case 26: // fuel menu
 			process_fuel_menu();
 			break;
-		case 26: // remember vehicles menu
+		case 27: // remember vehicles menu
 			process_remember_vehicles_menu();
 			break;
-		case 27: // road laws menu
+		case 28: // road laws menu
 			process_road_laws_menu();
 			break;
-		case 33: // engine can degrade
+		case 34: // engine can degrade
 			process_engine_degrade_menu();
 			break;
 		default:
@@ -2428,7 +2437,20 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	///////////////////////////////////////////////// LIGHTS OFF BY DEFAULT ///////////////////////////////////////////////////////////////
+	///////////////////////////////////////////// AUTOLOCK DRIVER DOOR ///////////////////////////////////////////////////////////
+
+	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && (VEH_SPEEDLIMITER_VALUES[DoorAutolockIndex] > 0)) { 
+		Vehicle vehautolock = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
+		int vehcurrautospeed = ENTITY::GET_ENTITY_SPEED(vehautolock);
+
+		if (vehcurrautospeed > VEH_SPEEDLIMITER_VALUES[DoorAutolockIndex]) {
+			VEHICLE::SET_VEHICLE_DOORS_LOCKED(vehautolock, 4);
+		} else VEHICLE::SET_VEHICLE_DOORS_LOCKED(vehautolock, 0);
+	}
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	///////////////////////////////////////////////// LIGHTS OFF BY DEFAULT ///////////////////////////////////////////////////////
 
 	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && (VEH_LIGHTSOFF_VALUES[lightsOffIndex] > 0)) {
 
@@ -2877,6 +2899,7 @@ void reset_vehicle_globals() {
 	FuelColours_B_Index = 12;
 	turnSignalsIndex = 0;
 	turnSignalsAngleIndex = 5;
+	DoorAutolockIndex = 0;
 	turnSignalsAccelerationIndex = 4;
 	speedLimiterIndex = 0;
 	lightsOffIndex = 0;
@@ -3686,6 +3709,7 @@ void add_vehicle_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"InfiniteBoostIndex", std::to_string(InfiniteBoostIndex)});
 	results->push_back(StringPairSettingDBRow{"TurnSignalsIndex", std::to_string(turnSignalsIndex)});
 	results->push_back(StringPairSettingDBRow{"turnSignalsAngleIndex", std::to_string(turnSignalsAngleIndex)});
+	results->push_back(StringPairSettingDBRow{"DoorAutolockIndex", std::to_string(DoorAutolockIndex)});
 	results->push_back(StringPairSettingDBRow{"turnSignalsAccelerationIndex", std::to_string(turnSignalsAccelerationIndex)});
 	results->push_back(StringPairSettingDBRow{"speedLimiterIndex", std::to_string(speedLimiterIndex)});
 	results->push_back(StringPairSettingDBRow{"lightsOffIndex", std::to_string(lightsOffIndex)});
@@ -3757,6 +3781,9 @@ void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settin
 		}
 		else if (setting.name.compare("turnSignalsAngleIndex") == 0) {
 			turnSignalsAngleIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("DoorAutolockIndex") == 0) {
+			DoorAutolockIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("turnSignalsAccelerationIndex") == 0) {
 			turnSignalsAccelerationIndex = stoi(setting.value);
@@ -3979,6 +4006,11 @@ void onchange_speed_size_index(int value, SelectFromListMenuItem* source){
 void onchange_speed_position_index(int value, SelectFromListMenuItem* source){
 	SpeedPositionIndex = value;
 	PositionChanged = true;
+}
+
+void onchange_door_autolock_index(int value, SelectFromListMenuItem* source) {
+	DoorAutolockIndex = value;
+	DoorAutolockChanged = true;
 }
 
 void onchange_fuel_background_opacity_index(int value, SelectFromListMenuItem* source){

@@ -423,7 +423,7 @@ void fuel()
 
 				// GAS STATION REFUELING
 				if (Car_Refuel == true) {
-					if (FUEL[0] < fuel_amount && outValue_station > 0) {
+					if (FUEL[0] < fuel_amount && (outValue_station > 0 || VEH_FUELPRICE_VALUES[FuelPriceIndex] == 0)) {
 						FUEL[0] = FUEL[0] + VEH_REFUELSPEED_VALUES[RefuelingSpeedIndex];
 
 						VEHICLE::SET_VEHICLE_ENGINE_ON(veh, false, false);
@@ -539,7 +539,7 @@ void fuel()
 							}
 						}
 
-						if (refill_button && ammo > 0 && outValue_jerrycan > 0) {
+						if (refill_button && ammo > 0 && (outValue_jerrycan > 0 || VEH_FUELPRICE_VALUES[JerrycanPriceIndex] == 0)) {
 							FUEL[i] = FUEL[i] + VEH_REFUELSPEED_VALUES[RefuelingSpeedIndex];
 							WEAPON::SET_PED_AMMO(playerPed, WEAPON::GET_SELECTED_PED_WEAPON(playerPed), ammo - 10);
 							UI::DISPLAY_CASH(true);

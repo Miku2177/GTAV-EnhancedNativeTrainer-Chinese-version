@@ -206,6 +206,8 @@ void onchange_speed_size_index(int value, SelectFromListMenuItem* source);
 
 void onchange_speed_position_index(int value, SelectFromListMenuItem* source);
 
+void onchange_door_autolock_index(int value, SelectFromListMenuItem* source);
+
 void onchange_fuel_blips_index(int value, SelectFromListMenuItem* source);
 
 void onchange_fuel_background_opacity_index(int value, SelectFromListMenuItem* source);
