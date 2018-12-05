@@ -58,6 +58,8 @@ extern int current_player_mostwanted;
 extern bool current_player_mostwanted_Changed;
 extern int mostwanted_level_enable;
 extern bool mostwanted_level_enable_Changed;
+extern int wanted_maxpossible_level;
+extern bool wanted_maxpossible_level_Changed;
 
 void road_laws();
 void most_wanted();
