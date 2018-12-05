@@ -103,7 +103,11 @@ int tick, playerDataMenuIndex, playerPrisonMenuIndex = 0;
 int NPCragdollMenuIndex = 0;
 int PlayerMovementMenuIndex = 0;
 int PlayerMostWantedMenuIndex = 0;
+int PlayerWantedMaxPossibleLevelMenuIndex = 0;
 int death_time2 = -1;
+
+int wanted_maxpossible_level = 3;
+bool wanted_maxpossible_level_Changed;
 
 int  frozenWantedLevel = 0;
 
@@ -185,6 +189,11 @@ void onchange_player_mostwanted_mode(int value, SelectFromListMenuItem* source) 
 void onchange_player_mostwanted_level_mode(int value, SelectFromListMenuItem* source) {
 	mostwanted_level_enable = value;
 	mostwanted_level_enable_Changed = true;
+}
+
+void onchange_player_wanted_maxpossible_level_mode(int value, SelectFromListMenuItem* source) {
+	wanted_maxpossible_level = value;
+	wanted_maxpossible_level_Changed = true;
 }
 
 void onchange_player_movement_mode(int value, SelectFromListMenuItem* source) {
@@ -501,6 +510,13 @@ void update_features(){
 		}
 	}
 	
+	// max wanted level
+	if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) > VEH_STARSPUNISH_VALUES[wanted_maxpossible_level]) {
+		PLAYER::SET_MAX_WANTED_LEVEL(5);
+		PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), VEH_STARSPUNISH_VALUES[wanted_maxpossible_level], 0);
+		PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
+	}
+
 	////////////////////////////////////// PLAYER DATA ////////////////////////////////////////////////
 	
 	Ped playerPed_Data = PLAYER::PLAYER_PED_ID();
@@ -815,6 +831,11 @@ bool onconfirm_playerData_menu(MenuItem<int> choice){
 	return false;
 }
 
+bool onconfirm_PlayerWantedMaxPossibleLevel_menu(MenuItem<int> choice) {
+
+	return false;
+}
+
 bool onconfirm_PlayerMostWanted_menu(MenuItem<int> choice) {
 
 	return false;
@@ -891,6 +912,33 @@ bool process_player_life_menu(){
 	menuItems.push_back(listItem);
 
 	return draw_generic_menu<int>(menuItems, &playerDataMenuIndex, caption, onconfirm_playerData_menu, NULL, NULL);
+}
+
+bool maxwantedlevel_menu() {
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+
+	std::vector<MenuItem<int> *> menuItems;
+	std::string caption = "Wanted Level Options";
+
+	MenuItem<int> *item;
+	SelectFromListMenuItem *listItem;
+	ToggleMenuItem<int>* toggleItem;
+
+	int i = 0;
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Freeze Wanted Level";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureWantedLevelFrozen;
+	menuItems.push_back(toggleItem);
+
+	listItem = new SelectFromListMenuItem(VEH_STARSPUNISH_CAPTIONS, onchange_player_wanted_maxpossible_level_mode);
+	listItem->wrap = false;
+	listItem->caption = "Max Wanted Level";
+	listItem->value = wanted_maxpossible_level;
+	menuItems.push_back(listItem);
+
+	return draw_generic_menu<int>(menuItems, &PlayerWantedMaxPossibleLevelMenuIndex, caption, onconfirm_PlayerWantedMaxPossibleLevel_menu, NULL, NULL);
 }
 
 bool mostwanted_menu() {
@@ -1070,6 +1118,9 @@ bool onconfirm_player_menu(MenuItem<int> choice){
 		case 1:
 			heal_player();
 			break;
+		case 4:
+			maxwantedlevel_menu();
+			break;
 		case 5:
 			mostwanted_menu();
 			break;
@@ -1105,7 +1156,8 @@ void process_player_menu(){
 		{"Heal Player", NULL, NULL, true},
 		{"Add or Remove Cash", NULL, NULL, true, CASH},
 		{"Wanted Level", NULL, NULL, true, WANTED},
-		{"Freeze Wanted Level", &featureWantedLevelFrozen, &featureWantedLevelFrozenUpdated, true},
+		{"Wanted Level Settings", NULL, NULL, false},
+		//{"Freeze Wanted Level", &featureWantedLevelFrozen, &featureWantedLevelFrozenUpdated, true},
 		{"Wanted Fugitive", NULL, NULL, false},
 		{"Invincible", &featurePlayerInvincible, &featurePlayerInvincibleUpdated, true},
 		{"Police Ignore You", &featurePlayerIgnoredByPolice, &featurePlayerIgnoredByPoliceUpdated, true},
@@ -1333,6 +1385,7 @@ void reset_globals(){
 	current_player_movement = 0;
 	current_player_mostwanted = 0;
 	mostwanted_level_enable = 0;
+	wanted_maxpossible_level = 3;
 	current_player_prison = 0;
 	current_player_escapemoney = 4;
 	current_player_discharge = 3;
@@ -1622,6 +1675,7 @@ void add_world_feature_enablements3(std::vector<StringPairSettingDBRow>* results
 	results->push_back(StringPairSettingDBRow{"current_player_movement", std::to_string(current_player_movement)});
 	results->push_back(StringPairSettingDBRow{"current_player_mostwanted", std::to_string(current_player_mostwanted)});
 	results->push_back(StringPairSettingDBRow{"mostwanted_level_enable", std::to_string(mostwanted_level_enable)});
+	results->push_back(StringPairSettingDBRow{"wanted_maxpossible_level", std::to_string(wanted_maxpossible_level)});
 	results->push_back(StringPairSettingDBRow{"current_player_prison", std::to_string(current_player_prison)});
 	results->push_back(StringPairSettingDBRow{"current_player_escapemoney", std::to_string(current_player_escapemoney)});
 	results->push_back(StringPairSettingDBRow{"current_player_discharge", std::to_string(current_player_discharge)});
@@ -1708,6 +1762,9 @@ void handle_generic_settings(std::vector<StringPairSettingDBRow> settings){
 		}
 		else if (setting.name.compare("mostwanted_level_enable") == 0) {
 			mostwanted_level_enable = stoi(setting.value);
+		}
+		else if (setting.name.compare("wanted_maxpossible_level") == 0) {
+			wanted_maxpossible_level = stoi(setting.value);
 		}
 		else if (setting.name.compare("current_player_prison") == 0){
 			current_player_prison = stoi(setting.value);
