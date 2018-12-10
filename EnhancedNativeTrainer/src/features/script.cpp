@@ -292,34 +292,37 @@ void invincibility_switching(){
 
 void engineonoff_switching() {
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
-	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) {
-		Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
-		if (!VEHICLE_ENGINE.empty() && VEHICLE_ENGINE[0] != veh) VEHICLE_ENGINE[0] = veh;
-		if (VEHICLE_ENGINE.empty()) VEHICLE_ENGINE.push_back(veh);
-		if (VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(veh)) engine_running = true;
-		engine_running = !engine_running;
-		engine_switched = true;
-	}
+	Vehicle veh = -1;
+	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh = vehicle_been_used;
+
+	if (!VEHICLE_ENGINE.empty() && VEHICLE_ENGINE[0] != veh) VEHICLE_ENGINE[0] = veh;
+	if (VEHICLE_ENGINE.empty()) VEHICLE_ENGINE.push_back(veh);
+	if (VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(veh)) engine_running = true;
+	engine_running = !engine_running;
+	engine_switched = true;
 	WAIT(100);
 }
 
 void engine_damage() {
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
-	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
-		Vehicle veh3 = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
-		VEHICLE::SET_VEHICLE_ENGINE_HEALTH(veh3, 0);
-	}
+	Vehicle veh3 = -1;
+	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh3 = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh3 = vehicle_been_used;
+	
+	VEHICLE::SET_VEHICLE_ENGINE_HEALTH(veh3, -1);
 }
 
 void engine_kill(){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
-	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
-		Vehicle veh2 = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
-		if (VEHICLE_KILLED.empty()) VEHICLE_KILLED.push_back(veh2);
-		if (!VEHICLE_KILLED.empty()) VEHICLE_KILLED[0] = veh2;
-		engine_killed = true;
-		set_status_text("You have destroyed your vehicle's engine for some reason");
-	}
+	Vehicle veh2 = -1;
+	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh2 = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh2 = vehicle_been_used;
+
+	if (VEHICLE_KILLED.empty()) VEHICLE_KILLED.push_back(veh2);
+	if (!VEHICLE_KILLED.empty()) VEHICLE_KILLED[0] = veh2;
+	engine_killed = true;
+	set_status_text("You have destroyed your vehicle's engine for some reason");
 }
 
 // Updates all features that can be turned off by the game, being called each game frame
@@ -434,22 +437,14 @@ void update_features(){
 		PLAYER::SET_PLAYER_INVINCIBLE(player, TRUE);
 	}
 	
-	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) && engine_switched) {
-		Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
-		if (VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(veh) && !VEHICLE_ENGINE.empty() && VEHICLE_ENGINE[0] != veh) engine_running = true;
-		VEHICLE::SET_VEHICLE_ENGINE_ON(veh, engine_running, false);
-		if (!VEHICLE_ENGINE.empty() && VEHICLE_ENGINE[0] != veh)
-		{
-			VEHICLE_ENGINE[0] = veh;
-			engine_running = false;
-			engine_switched = false;
-		}
+	if (engine_switched) { // PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) && 
+		if (!VEHICLE_ENGINE.empty()) VEHICLE::SET_VEHICLE_ENGINE_ON(VEHICLE_ENGINE[0], engine_running, true);
 	}
 	
-	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) && engine_killed) {
-		Vehicle veh2 = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
-		if (!VEHICLE_KILLED.empty() && VEHICLE_KILLED[0] == veh2) {
-			VEHICLE::SET_VEHICLE_ENGINE_HEALTH(veh2, -4000);
+	if (engine_killed) {
+		if (!VEHICLE_KILLED.empty()) {
+			VEHICLE::SET_VEHICLE_ENGINE_ON(VEHICLE_KILLED[0], false, true);
+			VEHICLE::SET_VEHICLE_ENGINE_HEALTH(VEHICLE_KILLED[0], -4000);
 		}
 	}
 
