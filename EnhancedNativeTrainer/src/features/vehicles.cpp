@@ -90,6 +90,8 @@ bool featureInfiniteRocketBoostUpdated = false;
 bool window_roll, interior_lights, veh_searching, veh_alarm, veh_brake_toggle = false;
 int lights = -1, highbeams = -1;
 
+Vehicle vehicle_been_used = -1;
+
 bool steered_left, steered_right = false;
 Vehicle veh_steering;
 std::vector<Vehicle> STEERING;
@@ -103,7 +105,7 @@ BOOL highbeamsAutoOn = -1;
 bool no_autotoggle = false;
 bool autotoggle_temp = false;
 
-// Rememeber Vehicles Option Variables
+// Remember Vehicles Option Variables
 Blip blip_veh[1];
 std::vector<Blip> BLIPTABLE_VEH;
 std::vector<Vehicle> VEHICLES_REMEMBER;
@@ -388,23 +390,26 @@ Vector3 RotationToDirection2(Vector3* rot)
 
 void process_window_roll() {
 	Player PlayerPedRoll = PLAYER::PLAYER_PED_ID();
+	Vehicle veh_roll = -1;
+	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_roll = PED::GET_VEHICLE_PED_IS_USING(PlayerPedRoll);
+	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh_roll = vehicle_been_used;
 	
-	if (PED::IS_PED_IN_ANY_VEHICLE(PlayerPedRoll, 1) && window_roll == false) {
-		VEHICLE::ROLL_DOWN_WINDOW(PED::GET_VEHICLE_PED_IS_IN(PlayerPedRoll, true), 0);
+	if (window_roll == false) {
+		VEHICLE::ROLL_DOWN_WINDOW(veh_roll, 0);
 	}
-
-	if (PED::IS_PED_IN_ANY_VEHICLE(PlayerPedRoll, 1) && window_roll == true) {
-		VEHICLE::ROLL_UP_WINDOW(PED::GET_VEHICLE_PED_IS_IN(PlayerPedRoll, true), 0);
+	if (window_roll == true) {
+		VEHICLE::ROLL_UP_WINDOW(veh_roll, 0); 
 	}
 
 	window_roll = !window_roll;
 }
 
-void interior_light() {
+void interior_light() { 
 	Player PlayerPedInterior = PLAYER::PLAYER_PED_ID();
 	Vehicle veh_interior = PED::GET_VEHICLE_PED_IS_USING(PlayerPedInterior);
 	interior_lights = !interior_lights;
 	VEHICLE::SET_VEHICLE_INTERIORLIGHT(veh_interior, interior_lights);
+	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) VEHICLE::SET_VEHICLE_INTERIORLIGHT(vehicle_been_used, interior_lights);
 }
 
 void search_light() {
@@ -416,7 +421,10 @@ void search_light() {
 
 void vehicle_alarm() {
 	Player PlayerPedAlarm = PLAYER::PLAYER_PED_ID();
-	Vehicle veh_alarming = PED::GET_VEHICLE_PED_IS_USING(PlayerPedAlarm);
+	Vehicle veh_alarming = -1;
+	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_alarming = PED::GET_VEHICLE_PED_IS_USING(PlayerPedAlarm);
+	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh_alarming = vehicle_been_used;
+	
 	if (!VEHICLE::IS_VEHICLE_ALARM_ACTIVATED(veh_alarming)) veh_alarm = false;
 	veh_alarm = !veh_alarm;
 	VEHICLE::SET_VEHICLE_ALARM(veh_alarming, veh_alarm);
@@ -426,7 +434,10 @@ void vehicle_alarm() {
 
 void vehicle_set_alarm() {
 	Player PlayerPedSetAlarm = PLAYER::PLAYER_PED_ID();
-	Vehicle veh_setalarming = PED::GET_VEHICLE_PED_IS_USING(PlayerPedSetAlarm);
+	Vehicle veh_setalarming = -1;
+	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_setalarming = PED::GET_VEHICLE_PED_IS_USING(PlayerPedSetAlarm);
+	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh_setalarming = vehicle_been_used;
+	
 	alrarmchargedvehicle = veh_setalarming;
 	AI::TASK_LEAVE_VEHICLE(PlayerPedSetAlarm, veh_setalarming, 0);
 	VEHICLE::SET_VEHICLE_DOORS_LOCKED(veh_setalarming, 4); 
@@ -445,22 +456,26 @@ void doorslocked_switching() {
 
 void vehicle_brake() {
 	Player PlayerPedBrake = PLAYER::PLAYER_PED_ID();
-	Vehicle veh_brake = PED::GET_VEHICLE_PED_IS_USING(PlayerPedBrake);
+	Vehicle veh_brake = -1;
+	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_brake = PED::GET_VEHICLE_PED_IS_USING(PlayerPedBrake);
+	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh_brake = vehicle_been_used;
+
 	veh_brake_toggle = !veh_brake_toggle;
 	VEHICLE::SET_VEHICLE_HANDBRAKE(veh_brake, veh_brake_toggle);
 	WAIT(100);
 }
 
 void damage_door() {
-	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) {
-		Player PlayerPedDamage = PLAYER::PLAYER_PED_ID();
-		Vehicle veh_damage = PED::GET_VEHICLE_PED_IS_USING(PlayerPedDamage);
-		std::string::size_type sz;
-		std::string result_damage = show_keyboard(NULL, NULL);
-		if (!result_damage.empty()) {
-			int dec_result = std::stoi(result_damage, &sz);
-			VEHICLE::SET_VEHICLE_DOOR_BROKEN(veh_damage, dec_result, false);
-		}
+	Player PlayerPedDamage = PLAYER::PLAYER_PED_ID();
+	Vehicle veh_damage = -1;
+	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_damage = PED::GET_VEHICLE_PED_IS_USING(PlayerPedDamage);
+	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh_damage = vehicle_been_used;
+
+	std::string::size_type sz;
+	std::string result_damage = show_keyboard(NULL, NULL);
+	if (!result_damage.empty()) {
+		int dec_result = std::stoi(result_damage, &sz);
+		VEHICLE::SET_VEHICLE_DOOR_BROKEN(veh_damage, dec_result, false);
 	}
 }
 
@@ -528,8 +543,11 @@ bool onconfirm_vehdoor_menu(MenuItem<int> choice){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if(choice.value >= 0){
-		if(bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
-			Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+		if(bPlayerExists){ //  && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)
+			Vehicle veh = -1;
+			if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+			if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh = vehicle_been_used;
+
 			int value = choice.value;
 
 			float doorAngle = VEHICLE::GET_VEHICLE_DOOR_ANGLE_RATIO(veh, value); //Best way I could figure out to detect if the part is animated.
@@ -560,18 +578,24 @@ bool onconfirm_vehdoor_menu(MenuItem<int> choice){
 	}
 	else if(choice.value == -4)//lock doors
 	{
-		if(bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
-			Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+		if(bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){  
+			Vehicle veh = -1;
+			if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+			if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh = vehicle_been_used;
+
 			VEHICLE::SET_VEHICLE_DOORS_LOCKED(veh, featureLockVehicleDoors);
 		}
 	}
 	else if (choice.value == -5)//driver window roll
 	{
-		process_window_roll();
+		process_window_roll(); 
 	}
 	else if (choice.value == -6)//all windows down
 	{
-		Vehicle veh_roll = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+		Vehicle veh_roll = -1;
+		if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_roll = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+		if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh_roll = vehicle_been_used;
+
 		VEHICLE::ROLL_DOWN_WINDOWS(veh_roll);
 	}
 	else if (choice.value == -7)//interior light on/off
@@ -582,17 +606,17 @@ bool onconfirm_vehdoor_menu(MenuItem<int> choice){
 	{
 		search_light();
 	}
-	else if (choice.value == -9)//engine on/off
+	else if (choice.value == -9)//engine on/off 
 	{
-		engineonoff_switching();
+		engineonoff_switching(); 
 	}
 	else if (choice.value == -10)//damage the engine
 	{
-		engine_damage();
+		engine_damage(); 
 	}
 	else if (choice.value == -11)//kill the engine
 	{
-		engine_kill();
+		engine_kill(); 
 	}
 	else if (choice.value == -12)//vehicle alarm
 	{
@@ -606,7 +630,7 @@ bool onconfirm_vehdoor_menu(MenuItem<int> choice){
 	{
 		vehicle_brake();
 	}
-	else if (choice.value == -15)//damage door
+	else if (choice.value == -15)//damage door 
 	{
 		damage_door();
 	}
@@ -2119,6 +2143,9 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			VEHICLE::_SET_VEHICLE_ROCKET_BOOST_PERCENTAGE(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 100.0f); 
 		}
 	}
+
+	// outside vehicle control
+	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) vehicle_been_used = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 
 	//////////////////////////////////////////////////// VEHICLE MASS ////////////////////////////////////////////////////////
 
