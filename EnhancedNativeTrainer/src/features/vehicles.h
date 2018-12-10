@@ -294,6 +294,8 @@ void onchange_veh_speedlimiter_index(int value, SelectFromListMenuItem* source);
 
 void onchange_veh_enginerunning_index(int value, SelectFromListMenuItem* source);
 
+void onchange_veh_autoshutengine_index(int value, SelectFromListMenuItem* source);
+
 void onchange_veh_lightsOff_index(int value, SelectFromListMenuItem* source);
 
 void onchange_veh_vislight_index(int value, SelectFromListMenuItem* source);
