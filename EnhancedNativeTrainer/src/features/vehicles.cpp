@@ -123,6 +123,8 @@ std::vector<Vehicle> VEHICLES_STEERLOCKED;
 bool check_if_stolen, lock_stolen_veh = false;
 //
 
+int Shut_secs_passed, Shut_secs_curr, Shut_seconds = -1;
+
 int sheshark_light_toogle = 1;
 
 Vehicle ped_temp_veh = -1;
@@ -249,6 +251,12 @@ const std::vector<std::string> VEH_INFINITEBOOST_CAPTIONS{ "OFF", "Hold", "Alway
 const std::vector<int> VEH_INFINITEBOOST_VALUES{ 0, 1, 2 };
 int InfiniteBoostIndex = 0;
 bool InfiniteBoost_Changed = true;
+
+//Auto-shut engine after
+const std::vector<std::string> VEH_AUTO_SHUT_ENGINE_CAPTIONS{ "OFF", "5", "10", "20", "30" };
+const std::vector<int> VEH_AUTO_SHUT_ENGINE_VALUES{ 0, 5, 10, 20, 30 };
+int AutoShutEngineIndex = 0;
+bool AutoShutEngineChanged = true;
 
 // player in vehicle state... assume true initially since our quicksave might have us in a vehicle already, in which case we can't check if we just got into one
 bool oldVehicleState = true;
@@ -1587,16 +1595,16 @@ bool onconfirm_veh_menu(MenuItem<int> choice){
 		case 21: // vehicle indicators menu
 			process_visualize_menu();
 			break;
-		case 26: // fuel menu
+		case 27: // fuel menu
 			process_fuel_menu();
 			break;
-		case 27: // remember vehicles menu
+		case 28: // remember vehicles menu
 			process_remember_vehicles_menu();
 			break;
-		case 28: // road laws menu
+		case 29: // road laws menu
 			process_road_laws_menu();
 			break;
-		case 34: // engine can degrade
+		case 35: // engine can degrade
 			process_engine_degrade_menu();
 			break;
 		default:
@@ -1755,6 +1763,12 @@ void process_veh_menu(){
 	listItem->wrap = false;
 	listItem->caption = "Keep Engine Running";
 	listItem->value = EngineRunningIndex;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(VEH_AUTO_SHUT_ENGINE_CAPTIONS, onchange_veh_autoshutengine_index);
+	listItem->wrap = false;
+	listItem->caption = "Shut Engine After (s)";
+	listItem->value = AutoShutEngineIndex;
 	menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(VEH_SPEEDLIMITER_CAPTIONS, onchange_veh_speedlimiter_index);
@@ -2145,7 +2159,20 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 
 	// outside vehicle control
-	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) vehicle_been_used = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
+	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
+		vehicle_been_used = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
+		Shut_seconds = 0;
+	}
+
+	// Shut the engine with time
+	if (VEH_AUTO_SHUT_ENGINE_VALUES[AutoShutEngineIndex] > 0 && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(vehicle_been_used)) {
+		Shut_secs_passed = clock() / CLOCKS_PER_SEC;
+		if (((clock() / CLOCKS_PER_SEC) - Shut_secs_curr) != 0) {
+			Shut_seconds = Shut_seconds + 1;
+			Shut_secs_curr = Shut_secs_passed;
+		}
+		if (Shut_seconds == VEH_AUTO_SHUT_ENGINE_VALUES[AutoShutEngineIndex]) VEHICLE::SET_VEHICLE_ENGINE_ON(vehicle_been_used, false, true);
+	}
 
 	//////////////////////////////////////////////////// VEHICLE MASS ////////////////////////////////////////////////////////
 
@@ -2947,6 +2974,7 @@ void reset_vehicle_globals() {
 	PirsuitRangeIndex = 4;
 	StarsPunishIndex = 0;
 	EngineRunningIndex = 0;
+	AutoShutEngineIndex = 0;
 	VisLightIndex = 0;
 	VisLight3dIndex = 0;
 	SpeedingSpeedwayIndex = 5;
@@ -3752,6 +3780,7 @@ void add_vehicle_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"PirsuitRangeIndex", std::to_string(PirsuitRangeIndex)});
 	results->push_back(StringPairSettingDBRow{"StarsPunishIndex", std::to_string(StarsPunishIndex)});
 	results->push_back(StringPairSettingDBRow{"EngineRunningIndex", std::to_string(EngineRunningIndex)});
+	results->push_back(StringPairSettingDBRow{"AutoShutEngineIndex", std::to_string(AutoShutEngineIndex)});
 	results->push_back(StringPairSettingDBRow{"VisLightIndex", std::to_string(VisLightIndex)});
 	results->push_back(StringPairSettingDBRow{"VisLight3dIndex", std::to_string(VisLight3dIndex)});
 	results->push_back(StringPairSettingDBRow{"SpeedingSpeedwayIndex", std::to_string(SpeedingSpeedwayIndex)});
@@ -3856,6 +3885,9 @@ void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settin
 		}
 		else if (setting.name.compare("EngineRunningIndex") == 0){
 			EngineRunningIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("AutoShutEngineIndex") == 0) {
+			AutoShutEngineIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("VisLightIndex") == 0) {
 			VisLightIndex = stoi(setting.value);
@@ -4074,6 +4106,10 @@ void onchange_stars_punish_index(int value, SelectFromListMenuItem* source){
 }
 void onchange_veh_enginerunning_index(int value, SelectFromListMenuItem* source){
 	EngineRunningIndex = value;
+	PositionChanged = true;
+}
+void onchange_veh_autoshutengine_index(int value, SelectFromListMenuItem* source) {
+	AutoShutEngineIndex = value;
 	PositionChanged = true;
 }
 void onchange_veh_vislight_index(int value, SelectFromListMenuItem* source) {
