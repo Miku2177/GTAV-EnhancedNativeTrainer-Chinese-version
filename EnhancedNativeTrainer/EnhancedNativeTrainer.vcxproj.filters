@@ -849,6 +849,132 @@
     <Image Include="Documents\veh-previews\technical3.png">
       <Filter>Documents\veh-previews</Filter>
     </Image>
+    <Image Include="..\..\..\..\Desktop\1.46 vehicle previews\Converted\BRUISER1.png">
+      <Filter>Documents\veh-previews</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Desktop\1.46 vehicle previews\Converted\BRUISER2.png">
+      <Filter>Documents\veh-previews</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Desktop\1.46 vehicle previews\Converted\BRUISER3.png">
+      <Filter>Documents\veh-previews</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Desktop\1.46 vehicle previews\Converted\DEATHBIKE1.png">
+      <Filter>Documents\veh-previews</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Desktop\1.46 vehicle previews\Converted\DEATHBIKE2.png">
+      <Filter>Documents\veh-previews</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Desktop\1.46 vehicle previews\Converted\DEATHBIKE3.png">
+      <Filter>Documents\veh-previews</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Desktop\1.46 vehicle previews\Converted\DOMINATOR1.png">
+      <Filter>Documents\veh-previews</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Desktop\1.46 vehicle previews\Converted\DOMINATOR2.png">
+      <Filter>Documents\veh-previews</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Desktop\1.46 vehicle previews\Converted\DOMINATOR3.png">
+      <Filter>Documents\veh-previews</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Desktop\1.46 vehicle previews\Converted\IMPALER1.png">
+      <Filter>Documents\veh-previews</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Desktop\1.46 vehicle previews\Converted\IMPALER2.png">
+      <Filter>Documents\veh-previews</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Desktop\1.46 vehicle previews\Converted\IMPALER3.png">
+      <Filter>Documents\veh-previews</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Desktop\1.46 vehicle previews\Converted\ISSI1.png">
+      <Filter>Documents\veh-previews</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Desktop\1.46 vehicle previews\Converted\ISSI2.png">
+      <Filter>Documents\veh-previews</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Desktop\1.46 vehicle previews\Converted\ISSI3.png">
+      <Filter>Documents\veh-previews</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Desktop\1.46 vehicle previews\Converted\MONSTER1.png">
+      <Filter>Documents\veh-previews</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Desktop\1.46 vehicle previews\Converted\MONSTER2.png">
+      <Filter>Documents\veh-previews</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Desktop\1.46 vehicle previews\Converted\MONSTER3.png">
+      <Filter>Documents\veh-previews</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Desktop\1.46 vehicle previews\Converted\SLAMVAN1.png">
+      <Filter>Documents\veh-previews</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Desktop\1.46 vehicle previews\Converted\SLAMVAN2.png">
+      <Filter>Documents\veh-previews</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Desktop\1.46 vehicle previews\Converted\SLAMVAN3.png">
+      <Filter>Documents\veh-previews</Filter>
+    </Image>
+    <Image Include="Documents\veh-previews\BRUISER1.png">
+      <Filter>Documents\veh-previews</Filter>
+    </Image>
+    <Image Include="Documents\veh-previews\BRUISER2.png">
+      <Filter>Documents\veh-previews</Filter>
+    </Image>
+    <Image Include="Documents\veh-previews\BRUISER3.png">
+      <Filter>Documents\veh-previews</Filter>
+    </Image>
+    <Image Include="Documents\veh-previews\DEATHBIKE1.png">
+      <Filter>Documents\veh-previews</Filter>
+    </Image>
+    <Image Include="Documents\veh-previews\DEATHBIKE2.png">
+      <Filter>Documents\veh-previews</Filter>
+    </Image>
+    <Image Include="Documents\veh-previews\DEATHBIKE3.png">
+      <Filter>Documents\veh-previews</Filter>
+    </Image>
+    <Image Include="Documents\veh-previews\DOMINATOR1.png">
+      <Filter>Documents\veh-previews</Filter>
+    </Image>
+    <Image Include="Documents\veh-previews\DOMINATOR2.png">
+      <Filter>Documents\veh-previews</Filter>
+    </Image>
+    <Image Include="Documents\veh-previews\DOMINATOR3.png">
+      <Filter>Documents\veh-previews</Filter>
+    </Image>
+    <Image Include="Documents\veh-previews\IMPALER1.png">
+      <Filter>Documents\veh-previews</Filter>
+    </Image>
+    <Image Include="Documents\veh-previews\IMPALER2.png">
+      <Filter>Documents\veh-previews</Filter>
+    </Image>
+    <Image Include="Documents\veh-previews\IMPALER3.png">
+      <Filter>Documents\veh-previews</Filter>
+    </Image>
+    <Image Include="Documents\veh-previews\ISSI1.png">
+      <Filter>Documents\veh-previews</Filter>
+    </Image>
+    <Image Include="Documents\veh-previews\ISSI2.png">
+      <Filter>Documents\veh-previews</Filter>
+    </Image>
+    <Image Include="Documents\veh-previews\ISSI3.png">
+      <Filter>Documents\veh-previews</Filter>
+    </Image>
+    <Image Include="Documents\veh-previews\MONSTER1.png">
+      <Filter>Documents\veh-previews</Filter>
+    </Image>
+    <Image Include="Documents\veh-previews\MONSTER2.png">
+      <Filter>Documents\veh-previews</Filter>
+    </Image>
+    <Image Include="Documents\veh-previews\MONSTER3.png">
+      <Filter>Documents\veh-previews</Filter>
+    </Image>
+    <Image Include="Documents\veh-previews\SLAMVAN1.png">
+      <Filter>Documents\veh-previews</Filter>
+    </Image>
+    <Image Include="Documents\veh-previews\SLAMVAN2.png">
+      <Filter>Documents\veh-previews</Filter>
+    </Image>
+    <Image Include="Documents\veh-previews\SLAMVAN3.png">
+      <Filter>Documents\veh-previews</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Documents">

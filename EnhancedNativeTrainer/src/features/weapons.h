@@ -25,14 +25,14 @@ const std::vector<std::string> MENU_WEAPON_CATEGORIES{"Melee", "Handguns", "Subm
 const std::vector<std::string> CAPTIONS_MELEE{ "Knife", "Nightstick", "Hammer", "Baseball Bat", "Chop's Ball", "Digiscanner", "Golf Club", "Crowbar", "Bottle", "Antique Dagger", "Hatchet", "Knuckle Duster", "Machete", "Flashlight", "Switchblade", "Battleaxe", "Pipe Wrench", "Poolcue", "Stone Hatchet" };
 const std::vector<std::string> VALUES_MELEE{ "WEAPON_KNIFE", "WEAPON_NIGHTSTICK", "WEAPON_HAMMER", "WEAPON_BAT", "WEAPON_BALL", "WEAPON_DIGISCANNER", "WEAPON_GOLFCLUB", "WEAPON_CROWBAR", "WEAPON_BOTTLE", "WEAPON_DAGGER", "WEAPON_HATCHET", "WEAPON_KNUCKLE", "WEAPON_MACHETE", "WEAPON_FLASHLIGHT", "WEAPON_SWITCHBLADE", "WEAPON_BATTLEAXE", "WEAPON_WRENCH", "WEAPON_POOLCUE", "WEAPON_STONE_HATCHET" };
 // Count: 15
-const std::vector<std::string> CAPTIONS_HANDGUN{ "Pistol", "Pistol MK2", "Combat Pistol", "AP Pistol", "Pistol .50", "SNS Pistol", "SNS Pistol MK2", "Heavy Pistol", "Vintage Pistol", "Stun Gun", "Flare Gun", "Marksman Pistol", "Revolver", "Revolver MK2", "Double Action Revolver" };
-const std::vector<std::string> VALUES_HANDGUN{ "WEAPON_PISTOL", "WEAPON_PISTOL_MK2", "WEAPON_COMBATPISTOL", "WEAPON_APPISTOL", "WEAPON_PISTOL50", "WEAPON_SNSPISTOL", "WEAPON_SNSPISTOL_MK2", "WEAPON_HEAVYPISTOL", "WEAPON_VINTAGEPISTOL", "WEAPON_STUNGUN", "WEAPON_FLAREGUN", "WEAPON_MARKSMANPISTOL", "WEAPON_REVOLVER", "WEAPON_REVOLVER_MK2", "WEAPON_DOUBLEACTION" };
+const std::vector<std::string> CAPTIONS_HANDGUN{ "Pistol", "Pistol MK2", "Combat Pistol", "AP Pistol", "Pistol .50", "SNS Pistol", "SNS Pistol MK2", "Heavy Pistol", "Vintage Pistol", "Stun Gun", "Flare Gun", "Marksman Pistol", "Revolver", "Revolver MK2", "Double Action Revolver", "Ray-Pistol" };
+const std::vector<std::string> VALUES_HANDGUN{ "WEAPON_PISTOL", "WEAPON_PISTOL_MK2", "WEAPON_COMBATPISTOL", "WEAPON_APPISTOL", "WEAPON_PISTOL50", "WEAPON_SNSPISTOL", "WEAPON_SNSPISTOL_MK2", "WEAPON_HEAVYPISTOL", "WEAPON_VINTAGEPISTOL", "WEAPON_STUNGUN", "WEAPON_FLAREGUN", "WEAPON_MARKSMANPISTOL", "WEAPON_REVOLVER", "WEAPON_REVOLVER_MK2", "WEAPON_DOUBLEACTION", "WEAPON_RAYPISTOL" };
 // Count: 10
 const std::vector<std::string> CAPTIONS_SUBMACHINE{ "Micro SMG", "SMG", "SMG MK2", "Assault SMG", "MG", "Combat MG", "Combat MG MK2", "Gusenberg Sweeper", "Combat PDW", "Machine Pistol", "Mini SMG", };
 const std::vector<std::string> VALUES_SUBMACHINE{ "WEAPON_MICROSMG", "WEAPON_SMG", "WEAPON_SMG_MK2", "WEAPON_ASSAULTSMG", "WEAPON_MG", "WEAPON_COMBATMG", "WEAPON_COMBATMG_MK2", "WEAPON_GUSENBERG", "WEAPON_COMBATPDW", "WEAPON_MACHINEPISTOL", "WEAPON_MINISMG" };
 // Count: 8
-const std::vector<std::string> CAPTIONS_ASSAULT{ "Assault Rifle", "Assault Rifle MK2", "Bullpup Rifle MK2", "Carbine Rifle", "Carbine Rifle MK2", "Advanced Rifle", "Special Carbine", "Special Carbine MK2", "Bullpup Rifle", "Compact Rifle",  };
-const std::vector<std::string> VALUES_ASSAULT{ "WEAPON_ASSAULTRIFLE", "WEAPON_ASSAULTRIFLE_MK2", "WEAPON_BULLPUPRIFLE_MK2", "WEAPON_CARBINERIFLE", "WEAPON_CARBINERIFLE_MK2", "WEAPON_ADVANCEDRIFLE", "WEAPON_SPECIALCARBINE", "WEAPON_SPECIALCARBINE_MK2", "WEAPON_BULLPUPRIFLE", "WEAPON_COMPACTRIFLE" };
+const std::vector<std::string> CAPTIONS_ASSAULT{ "Assault Rifle", "Assault Rifle MK2", "Bullpup Rifle MK2", "Carbine Rifle", "Carbine Rifle MK2", "Advanced Rifle", "Special Carbine", "Special Carbine MK2", "Bullpup Rifle", "Compact Rifle", "Ray-Carbine" };
+const std::vector<std::string> VALUES_ASSAULT{ "WEAPON_ASSAULTRIFLE", "WEAPON_ASSAULTRIFLE_MK2", "WEAPON_BULLPUPRIFLE_MK2", "WEAPON_CARBINERIFLE", "WEAPON_CARBINERIFLE_MK2", "WEAPON_ADVANCEDRIFLE", "WEAPON_SPECIALCARBINE", "WEAPON_SPECIALCARBINE_MK2", "WEAPON_BULLPUPRIFLE", "WEAPON_COMPACTRIFLE", "WEAPON_RAYCARBINE" };
 // Count: 9
 const std::vector<std::string> CAPTIONS_SHOTGUN{ "Pump Shotgun", "Pump Shotgun MK2", "Sawed-Off Shotgun", "Bullpup Shotgun", "Assault Shotgun", "Musket", "Heavy Shotgun", "Double Barrel Shotgun", "Sweeper Shotgun",  };
 const std::vector<std::string> VALUES_SHOTGUN{ "WEAPON_PUMPSHOTGUN", "WEAPON_PUMPSHOTGUN_MK2", "WEAPON_SAWNOFFSHOTGUN", "WEAPON_BULLPUPSHOTGUN", "WEAPON_ASSAULTSHOTGUN", "WEAPON_MUSKET", "WEAPON_HEAVYSHOTGUN", "WEAPON_DBSHOTGUN", "WEAPON_AUTOSHOTGUN",  };
@@ -40,8 +40,8 @@ const std::vector<std::string> VALUES_SHOTGUN{ "WEAPON_PUMPSHOTGUN", "WEAPON_PUM
 const std::vector<std::string> CAPTIONS_SNIPER{ "Sniper Rifle", "Heavy Sniper", "Heavy Sniper MK2", "Marksman Rifle", "Marksman Rifle MK2",  };
 const std::vector<std::string> VALUES_SNIPER{ "WEAPON_SNIPERRIFLE", "WEAPON_HEAVYSNIPER", "WEAPON_HEAVYSNIPER_MK2", "WEAPON_MARKSMANRIFLE", "WEAPON_MARKSMANRIFLE_MK2",  };
 // Count: 7
-const std::vector<std::string> CAPTIONS_HEAVY{ "Grenade Launcher", "RPG", "Minigun", "Fireworks Launcher", "Railgun", "Homing Launcher", "Compact Grenade Launcher" };
-const std::vector<std::string> VALUES_HEAVY{ "WEAPON_GRENADELAUNCHER", "WEAPON_RPG", "WEAPON_MINIGUN", "WEAPON_FIREWORK", "WEAPON_RAILGUN", "WEAPON_HOMINGLAUNCHER", "WEAPON_COMPACTLAUNCHER" };
+const std::vector<std::string> CAPTIONS_HEAVY{ "Grenade Launcher", "RPG", "Minigun", "Fireworks Launcher", "Railgun", "Homing Launcher", "Compact Grenade Launcher", "Ray-Minigun" };
+const std::vector<std::string> VALUES_HEAVY{ "WEAPON_GRENADELAUNCHER", "WEAPON_RPG", "WEAPON_MINIGUN", "WEAPON_FIREWORK", "WEAPON_RAILGUN", "WEAPON_HOMINGLAUNCHER", "WEAPON_COMPACTLAUNCHER", "WEAPON_RAYMINIGUN" };
 // Count: 10
 const std::vector<std::string> CAPTIONS_THROWN{ "Grenade", "Sticky Bomb", "Proximity Mine", "Teargas", "Molotov", "Fire Extinguisher", "Jerry Can", "Snowball", "Flare", "Pipebomb" };
 const std::vector<std::string> VALUES_THROWN{ "WEAPON_GRENADE", "WEAPON_STICKYBOMB", "WEAPON_PROXMINE", "WEAPON_SMOKEGRENADE", "WEAPON_MOLOTOV", "WEAPON_FIREEXTINGUISHER", "WEAPON_PETROLCAN", "WEAPON_SNOWBALL", "WEAPON_FLARE", "WEAPON_PIPEBOMB" };
@@ -221,6 +221,10 @@ const std::vector<std::string> VOV_WEAPONMOD_VALUES[] = { VALUES_ATTACH_PISTOL, 
 const std::vector<char*> MK2_WEAPONS{"WEAPON_PISTOL_MK2", "WEAPON_SNSPISTOL_MK2", "WEAPON_REVOLVER_MK2", "WEAPON_SMG_MK2", "WEAPON_COMBATMG_MK2", "WEAPON_ASSAULTRIFLE_MK2", "WEAPON_BULLPUPRIFLE_MK2", "WEAPON_CARBINERIFLE_MK2", "WEAPON_SPECIALCARBINE_MK2", "WEAPON_PUMPSHOTGUN_MK2", "WEAPON_HEAVYSNIPER_MK2", "WEAPON_MARKSMANRIFLE_MK2"};
 const std::vector<char*> MK2_WEAPONS_LIVERY_COMP{"COMPONENT_PISTOL_MK2_CAMO", "COMPONENT_SNSPISTOL_MK2_CAMO", "COMPONENT_REVOLVER_MK2_CAMO", "COMPONENT_SMG_MK2_CAMO", "COMPONENT_COMBATMG_MK2_CAMO", "COMPONENT_ASSAULTRIFLE_MK2_CAMO", "COMPONENT_BULLPUPRIFLE_MK2_CAMO", "COMPONENT_CARBINERIFLE_MK2_CAMO", "COMPONENT_SPECIALCARBINE_MK2_CAMO", "COMPONENT_PUMPSHOTGUN_MK2_CAMO", "COMPONENT_HEAVYSNIPER_MK2_CAMO", "COMPONENT_MARKSMANRIFLE_MK2_CAMO" };
 
+//Ray Pistol
+const std::vector<std::string> CAPTIONS_ATTACH_RAY_PISTOL{ "Xmas 18 mod" };
+const std::vector<std::string> VALUES_ATTACH_RAY_PISTOL{ "COMPONENT_RAYPISTOL_VARMOD_XMAS18" };
+
 
 //Weapon damage modifier list
 const std::vector<std::string> WEAP_DMG_CAPTIONS{"1.0x", "1.5x", "2.0x", "3.0x", "5.0x", "10.0x", "50.0x", "100.0x", "1000.0x"};
@@ -228,7 +232,7 @@ const std::vector<float> WEAP_DMG_FLOAT{1.0, 1.5, 2.0, 3.0, 5.0, 10.0, 50.0, 100
 
 const int PARACHUTE_ID = 0xFBAB5776;
 
-const int TOTAL_WEAPONS_COUNT = 81;
+const int TOTAL_WEAPONS_COUNT = 85;
 const int TOTAL_WEAPONS_SLOTS = 80;
 const int MAX_MOD_SLOTS = 15; 
 
