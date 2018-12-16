@@ -25,13 +25,13 @@ const std::vector<std::string> MENU_WEAPON_CATEGORIES{"Melee", "Handguns", "Subm
 const std::vector<std::string> CAPTIONS_MELEE{ "Knife", "Nightstick", "Hammer", "Baseball Bat", "Chop's Ball", "Digiscanner", "Golf Club", "Crowbar", "Bottle", "Antique Dagger", "Hatchet", "Knuckle Duster", "Machete", "Flashlight", "Switchblade", "Battleaxe", "Pipe Wrench", "Poolcue", "Stone Hatchet" };
 const std::vector<std::string> VALUES_MELEE{ "WEAPON_KNIFE", "WEAPON_NIGHTSTICK", "WEAPON_HAMMER", "WEAPON_BAT", "WEAPON_BALL", "WEAPON_DIGISCANNER", "WEAPON_GOLFCLUB", "WEAPON_CROWBAR", "WEAPON_BOTTLE", "WEAPON_DAGGER", "WEAPON_HATCHET", "WEAPON_KNUCKLE", "WEAPON_MACHETE", "WEAPON_FLASHLIGHT", "WEAPON_SWITCHBLADE", "WEAPON_BATTLEAXE", "WEAPON_WRENCH", "WEAPON_POOLCUE", "WEAPON_STONE_HATCHET" };
 // Count: 15
-const std::vector<std::string> CAPTIONS_HANDGUN{ "Pistol", "Pistol MK2", "Combat Pistol", "AP Pistol", "Pistol .50", "SNS Pistol", "SNS Pistol MK2", "Heavy Pistol", "Vintage Pistol", "Stun Gun", "Flare Gun", "Marksman Pistol", "Revolver", "Revolver MK2", "Double Action Revolver", "Ray-Pistol" };
+const std::vector<std::string> CAPTIONS_HANDGUN{ "Pistol", "Pistol MK2", "Combat Pistol", "AP Pistol", "Pistol .50", "SNS Pistol", "SNS Pistol MK2", "Heavy Pistol", "Vintage Pistol", "Stun Gun", "Flare Gun", "Marksman Pistol", "Revolver", "Revolver MK2", "Double Action Revolver", "Up-n-Atomizer" };
 const std::vector<std::string> VALUES_HANDGUN{ "WEAPON_PISTOL", "WEAPON_PISTOL_MK2", "WEAPON_COMBATPISTOL", "WEAPON_APPISTOL", "WEAPON_PISTOL50", "WEAPON_SNSPISTOL", "WEAPON_SNSPISTOL_MK2", "WEAPON_HEAVYPISTOL", "WEAPON_VINTAGEPISTOL", "WEAPON_STUNGUN", "WEAPON_FLAREGUN", "WEAPON_MARKSMANPISTOL", "WEAPON_REVOLVER", "WEAPON_REVOLVER_MK2", "WEAPON_DOUBLEACTION", "WEAPON_RAYPISTOL" };
 // Count: 10
 const std::vector<std::string> CAPTIONS_SUBMACHINE{ "Micro SMG", "SMG", "SMG MK2", "Assault SMG", "MG", "Combat MG", "Combat MG MK2", "Gusenberg Sweeper", "Combat PDW", "Machine Pistol", "Mini SMG", };
 const std::vector<std::string> VALUES_SUBMACHINE{ "WEAPON_MICROSMG", "WEAPON_SMG", "WEAPON_SMG_MK2", "WEAPON_ASSAULTSMG", "WEAPON_MG", "WEAPON_COMBATMG", "WEAPON_COMBATMG_MK2", "WEAPON_GUSENBERG", "WEAPON_COMBATPDW", "WEAPON_MACHINEPISTOL", "WEAPON_MINISMG" };
 // Count: 8
-const std::vector<std::string> CAPTIONS_ASSAULT{ "Assault Rifle", "Assault Rifle MK2", "Bullpup Rifle MK2", "Carbine Rifle", "Carbine Rifle MK2", "Advanced Rifle", "Special Carbine", "Special Carbine MK2", "Bullpup Rifle", "Compact Rifle", "Ray-Carbine" };
+const std::vector<std::string> CAPTIONS_ASSAULT{ "Assault Rifle", "Assault Rifle MK2", "Bullpup Rifle MK2", "Carbine Rifle", "Carbine Rifle MK2", "Advanced Rifle", "Special Carbine", "Special Carbine MK2", "Bullpup Rifle", "Compact Rifle", "Unholy Hellbringer" };
 const std::vector<std::string> VALUES_ASSAULT{ "WEAPON_ASSAULTRIFLE", "WEAPON_ASSAULTRIFLE_MK2", "WEAPON_BULLPUPRIFLE_MK2", "WEAPON_CARBINERIFLE", "WEAPON_CARBINERIFLE_MK2", "WEAPON_ADVANCEDRIFLE", "WEAPON_SPECIALCARBINE", "WEAPON_SPECIALCARBINE_MK2", "WEAPON_BULLPUPRIFLE", "WEAPON_COMPACTRIFLE", "WEAPON_RAYCARBINE" };
 // Count: 9
 const std::vector<std::string> CAPTIONS_SHOTGUN{ "Pump Shotgun", "Pump Shotgun MK2", "Sawed-Off Shotgun", "Bullpup Shotgun", "Assault Shotgun", "Musket", "Heavy Shotgun", "Double Barrel Shotgun", "Sweeper Shotgun",  };
@@ -40,7 +40,7 @@ const std::vector<std::string> VALUES_SHOTGUN{ "WEAPON_PUMPSHOTGUN", "WEAPON_PUM
 const std::vector<std::string> CAPTIONS_SNIPER{ "Sniper Rifle", "Heavy Sniper", "Heavy Sniper MK2", "Marksman Rifle", "Marksman Rifle MK2",  };
 const std::vector<std::string> VALUES_SNIPER{ "WEAPON_SNIPERRIFLE", "WEAPON_HEAVYSNIPER", "WEAPON_HEAVYSNIPER_MK2", "WEAPON_MARKSMANRIFLE", "WEAPON_MARKSMANRIFLE_MK2",  };
 // Count: 7
-const std::vector<std::string> CAPTIONS_HEAVY{ "Grenade Launcher", "RPG", "Minigun", "Fireworks Launcher", "Railgun", "Homing Launcher", "Compact Grenade Launcher", "Ray-Minigun" };
+const std::vector<std::string> CAPTIONS_HEAVY{ "Grenade Launcher", "RPG", "Minigun", "Fireworks Launcher", "Railgun", "Homing Launcher", "Compact Grenade Launcher", "Widowmaker" };
 const std::vector<std::string> VALUES_HEAVY{ "WEAPON_GRENADELAUNCHER", "WEAPON_RPG", "WEAPON_MINIGUN", "WEAPON_FIREWORK", "WEAPON_RAILGUN", "WEAPON_HOMINGLAUNCHER", "WEAPON_COMPACTLAUNCHER", "WEAPON_RAYMINIGUN" };
 // Count: 10
 const std::vector<std::string> CAPTIONS_THROWN{ "Grenade", "Sticky Bomb", "Proximity Mine", "Teargas", "Molotov", "Fire Extinguisher", "Jerry Can", "Snowball", "Flare", "Pipebomb" };
