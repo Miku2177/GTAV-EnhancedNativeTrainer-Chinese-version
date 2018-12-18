@@ -463,10 +463,10 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 		case 16:
 			process_phone_bill_menu();
 			break;
-		case 22:
+		case 21:
 			process_def_menutab_menu();
 			break;
-		case 23:
+		case 22:
 			process_airbrake_global_menu();
 			break;
 		default:
@@ -477,7 +477,7 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 }
 
 void process_misc_menu(){
-	const int lineCount = 24;
+	const int lineCount = 23;
 
 	std::string caption = "Miscellaneous Options";
 
