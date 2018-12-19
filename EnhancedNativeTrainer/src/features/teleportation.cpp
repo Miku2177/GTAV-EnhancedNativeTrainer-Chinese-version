@@ -476,6 +476,11 @@ std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Weazel Plaza Apt 11", -889.30300000f, -451.77510000f, 119.32700000f, { "hw1_blimp_interior_v_apartment_high_milo__11" }, {}, {}, false },
 	{ "Weazel Plaza Apt 15", -892.29590000f, -434.41470000f, 88.25368000f, { "hei_hw1_blimp_interior_15_dlc_apart_high_new_milo_" }, {}, {}, false },
 	{ "Weazel Plaza Apt 17", -909.10180000f, -438.19030000f, 114.39970000f, { "hei_hw1_blimp_interior_17_dlc_apart_high_new_milo_" }, {}, {}, false },
+	//
+	{ "xs_arena_interior", 2800.00000000f, -3800.00000000f, 100.00000000f, { "xs_arena_interior" }, { "xs_x18int01_shell" }, {}, false },
+	{ "xs_arena_interior_mod", 205.00000000f, 5180.00000000f, -90.00000000f, { "xs_arena_interior_mod" }, { "xs_x18intmod_interior_shell_shad" }, {}, false },
+	{ "xs_Arena_Interior_Mod_2", 170.00000000f, 5190.00000000f, 10.00000000f, { "xs_Arena_Interior_Mod_2" }, { "xs_x18intmod_mod2shell" }, {}, false },
+	{ "xs_arena_interior_vip", 2799.52900000f, -3930.53900000f, 182.23560000f, { "xs_arena_interior_vip" }, { "xs_x18intvip_vip_lounge_shell" }, {}, false },
 }; 
 
 std::vector<tele_location> LOCATIONS_ACTORS = {
