@@ -4706,8 +4706,8 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ "JESTER3", "sssa_dlc_christmas_2", "jester2" },
 	//Arena War
 	{ "BLISTA3", "sssa_dlc_arena", "blista3" },
-	{ "BRUTUS", "sssa_dlc_arena", "brutus1" },
-	{ "BRUTUS3", "sssa_dlc_arena", "brutus3" },
+	{ "BRUTUS", "mba_vehicles", "brutus1" },
+	{ "BRUTUS3", "mba_vehicles", "brutus3" },
 	{ "CERBERUS", "mba_vehicles", "cerberus1" },
 	{ "CERBERUS2", "mba_vehicles", "cerberus2" },
 	{ "CERBERUS3", "mba_vehicles", "cerberus3" },
@@ -5017,27 +5017,27 @@ void init_vehicle_feature(){
 	unpack_veh_preview("TECHNICAL3", VP_TECHNICAL3, "VP_TECHNICAL3");
 	unpack_veh_preview("CLIFFHANGER", VP_CLIFFHANGER, "VP_CLIFFHANGER");
 	
-	unpack_veh_preview("ISSI1", VP_ISSI1, "VP_ISSI1");
-	unpack_veh_preview("ISSI2", VP_ISSI2, "VP_ISSI2");
-	unpack_veh_preview("ISSI3", VP_ISSI3, "VP_ISSI3");
-	unpack_veh_preview("BRUISER1", VP_BRUISER1, "VP_BRUISER1");
+	unpack_veh_preview("ISSI3", VP_ISSI1, "VP_ISSI4");
+	unpack_veh_preview("ISSI5", VP_ISSI2, "VP_ISSI5");
+	unpack_veh_preview("ISSI6", VP_ISSI3, "VP_ISSI6");
+	unpack_veh_preview("BRUISER", VP_BRUISER1, "VP_BRUISER");
 	unpack_veh_preview("BRUISER2", VP_BRUISER2, "VP_BRUISER2");
 	unpack_veh_preview("BRUISER3", VP_BRUISER3, "VP_BRUISER3");
-	unpack_veh_preview("DEATHBIKE1", VP_DEATHBIKE1, "VP_DEATHBIKE1");
+	unpack_veh_preview("DEATHBIKE", VP_DEATHBIKE1, "VP_DEATHBIKE");
 	unpack_veh_preview("DEATHBIKE2", VP_DEATHBIIKE2, "VP_DEATHBIIKE2");
 	unpack_veh_preview("DEATHBIKE3", VP_DEATHBIKE3, "VP_DEATHBIKE3");
-	unpack_veh_preview("DOMINATOR1", VP_DOMINATOR1, "VP_DOMINATOR1");
-	unpack_veh_preview("DOMINATOR2", VP_DOMINATOR2, "VP_DOMINATOR2");
-	unpack_veh_preview("DOMINATOR3", VP_DOMINATOR3, "VP_DOMINATOR3");
-	unpack_veh_preview("IMPALER1", VP_IMPALER1, "VP_IMPALER1");
-	unpack_veh_preview("IMPALER2", VP_IMPALER2, "VP_IMPALER2");
-	unpack_veh_preview("IMPALER3", VP_IMPALER3, "VP_IMPALER3");
-	unpack_veh_preview("MONSTER1", VP_MONSTER1, "VP_MONSTER1");
-	unpack_veh_preview("MONSTER2", VP_MONSTER2, "VP_MONSTER2");
-	unpack_veh_preview("MONSTER3", VP_MONSTER3, "VP_MONSTER3");
-	unpack_veh_preview("SLAMVAN1", VP_SLAMVAN1, "VP_SLAMVAN1");
-	unpack_veh_preview("SLAMVAN2", VP_SLAMVAN2, "VP_SLAMVAN2");
-	unpack_veh_preview("SLAMVAN3", VP_SLAMVAN3, "VP_SLAMVAN3");
+	unpack_veh_preview("DOMINATOR4", VP_DOMINATOR1, "VP_DOMINATOR4");
+	unpack_veh_preview("DOMINATOR5", VP_DOMINATOR2, "VP_DOMINATOR5");
+	unpack_veh_preview("DOMINATOR6", VP_DOMINATOR3, "VP_DOMINATOR6");
+	unpack_veh_preview("IMPALER2", VP_IMPALER1, "VP_IMPALER1");
+	unpack_veh_preview("IMPALER3", VP_IMPALER2, "VP_IMPALER2");
+	unpack_veh_preview("IMPALER4", VP_IMPALER3, "VP_IMPALER3");
+	unpack_veh_preview("MONSTER3", VP_MONSTER1, "VP_MONSTER1");
+	unpack_veh_preview("MONSTER4", VP_MONSTER2, "VP_MONSTER2");
+	unpack_veh_preview("MONSTER5", VP_MONSTER3, "VP_MONSTER3");
+	unpack_veh_preview("SLAMVAN3", VP_SLAMVAN1, "VP_SLAMVAN4");
+	unpack_veh_preview("SLAMVAN5", VP_SLAMVAN2, "VP_SLAMVAN5");
+	unpack_veh_preview("SLAMVAN6", VP_SLAMVAN3, "VP_SLAMVAN6");
 
 
 }
