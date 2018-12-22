@@ -978,15 +978,16 @@ std::vector<const char*> IPL_PROPS_DOOMSDAY_MAIN_BASE = {
 
 };
 
-std::vector<char*> IPL_PROPS_ARENAWAR_MAIN_PROPS = {
-	//"x18dlc_int_01",
-	//"x18dlc_int_mod",
-	//"x18dlc_int_vip",
-	//"xs_arena_interior",
-	//"xs_arena_interior_mod",
-	//"xs_Arena_Interior_Mod_2",
-	//"xs_arena_interior_vip",
-	//"xs_int_placement_xs",
+std::vector<const char*> IPL_PROPS_ARENAWAR_MAIN_PROPS = {
+	"x18dlc_int_01",
+	"x18dlc_int_mod",
+	"x18dlc_int_vip",
+	"xs_arena_interior",
+	"xs_arena_interior_mod",
+	"xs_Arena_Interior_Mod_2",
+	"xs_arena_interior_vip",
+	"xs_int_placement_xs",
+	//
 	"xs_x18int01_light_connector",
 	"xs_x18int01_pit_fencedemo_col",
 	"xs_x18int01_pit_fenceoval_col",

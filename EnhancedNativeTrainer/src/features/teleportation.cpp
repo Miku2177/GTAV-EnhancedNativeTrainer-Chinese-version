@@ -480,7 +480,8 @@ std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "xs_arena_interior", 2800.00000000f, -3800.00000000f, 100.00000000f, { "xs_arena_interior" }, { "xs_x18int01_shell" }, {}, false },
 	{ "xs_arena_interior_mod", 205.00000000f, 5180.00000000f, -90.00000000f, { "xs_arena_interior_mod" }, { "xs_x18intmod_interior_shell_shad" }, {}, false },
 	{ "xs_Arena_Interior_Mod_2", 170.00000000f, 5190.00000000f, 10.00000000f, { "xs_Arena_Interior_Mod_2" }, { "xs_x18intmod_mod2shell" }, {}, false },
-	{ "xs_arena_interior_vip", 2799.52900000f, -3930.53900000f, 182.23560000f, { "xs_arena_interior_vip" }, { "xs_x18intvip_vip_lounge_shell" }, {}, false },
+	//{ "xs_arena_interior_vip", 2799.52900000f, -3930.53900000f, 182.23560000f, { "xs_arena_interior_vip" }, { "xs_x18intvip_vip_lounge_shell" }, {}, false },
+	{ "xs_arena_interior_vip", 2799.52900000f, -3930.53900000f, 182.23560000f, IPL_PROPS_ARENAWAR_MAIN_PROPS, {}, { "xs_arena_interior_vip" }, false },
 }; 
 
 std::vector<tele_location> LOCATIONS_ACTORS = {
