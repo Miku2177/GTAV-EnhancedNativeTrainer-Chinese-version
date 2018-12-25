@@ -30,6 +30,8 @@ int activeLineIndexClouds = 0;
 
 int r, g, b = -1;
 
+int acid_counter, acid_counter_p = -1;
+
 Camera DeathCam = NULL;
 
 bool featureRestrictedZones = true;
@@ -962,9 +964,7 @@ void update_world_features()
 		std::vector<int> emptyVec;
 		if (!WORLD_NPC_VEHICLESPEED_VALUES.empty()) std::vector<int>(WORLD_NPC_VEHICLESPEED_VALUES).swap(emptyVec);
 	}
-
-	if (!featureAcidWater) PED::SET_PED_DIES_INSTANTLY_IN_WATER(PLAYER::PLAYER_PED_ID(), false);
-
+	
 	// NPC No Gravity Peds && Acid Water && Acid Rain
 	if (featureNPCNoGravityPeds || featureAcidWater || featureAcidRain) {
 		const int BUS_ARR_PED_SIZE = 1024;
@@ -984,7 +984,33 @@ void update_world_features()
 				if (PED::IS_PED_SHOOTING(bus_ped[i])) ENTITY::APPLY_FORCE_TO_ENTITY(bus_ped[i], 4, 1000, 0, 0, 0, 0, 0, 1, true, true, true, true, true);
 				ENTITY::SET_ENTITY_HAS_GRAVITY(bus_ped[i], false);
 			}
-			if (featureAcidWater) PED::SET_PED_DIES_INSTANTLY_IN_WATER(bus_ped[i], true);
+			
+			if (featureAcidWater && (ENTITY::IS_ENTITY_IN_WATER(bus_ped[i]) || PED::IS_PED_SWIMMING_UNDER_WATER(bus_ped[i]))) {
+				if (PED::GET_PED_TYPE(bus_ped[i]) != 0 && PED::GET_PED_TYPE(bus_ped[i]) != 1 && PED::GET_PED_TYPE(bus_ped[i]) != 2 && PED::GET_PED_TYPE(bus_ped[i]) != 3) acid_counter = acid_counter + 1;
+				if (PED::GET_PED_TYPE(bus_ped[i]) == 0 || PED::GET_PED_TYPE(bus_ped[i]) == 1 || PED::GET_PED_TYPE(bus_ped[i]) == 2 || PED::GET_PED_TYPE(bus_ped[i]) == 3) {
+					acid_counter_p = acid_counter_p + 1;
+					been_damaged = true;
+				}
+				if (PED::GET_PED_ARMOUR(bus_ped[i]) > 0) {
+					if (!AUDIO::IS_AMBIENT_SPEECH_PLAYING(bus_ped[i])) AUDIO::_PLAY_AMBIENT_SPEECH1(bus_ped[i], "BLOCKED_GENERIC", "SPEECH_PARAMS_FORCE_SHOUTED");
+					if (PED::GET_PED_TYPE(bus_ped[i]) != 0 && PED::GET_PED_TYPE(bus_ped[i]) != 1 && PED::GET_PED_TYPE(bus_ped[i]) != 2 && PED::GET_PED_TYPE(bus_ped[i]) != 3 && acid_counter > 9)
+						PED::SET_PED_ARMOUR(bus_ped[i], PED::GET_PED_ARMOUR(bus_ped[i]) - 1);
+					if ((PED::GET_PED_TYPE(bus_ped[i]) == 0 || PED::GET_PED_TYPE(bus_ped[i]) == 1 || PED::GET_PED_TYPE(bus_ped[i]) == 2 || PED::GET_PED_TYPE(bus_ped[i]) == 3) && acid_counter_p > 10) 
+						PED::SET_PED_ARMOUR(bus_ped[i], PED::GET_PED_ARMOUR(bus_ped[i]) - 1);
+					if (PED::GET_PED_TYPE(bus_ped[i]) != 0 && PED::GET_PED_TYPE(bus_ped[i]) != 1 && PED::GET_PED_TYPE(bus_ped[i]) != 2 && PED::GET_PED_TYPE(bus_ped[i]) != 3 && acid_counter > 9) acid_counter = 0;
+					if ((PED::GET_PED_TYPE(bus_ped[i]) == 0 || PED::GET_PED_TYPE(bus_ped[i]) == 1 || PED::GET_PED_TYPE(bus_ped[i]) == 2 || PED::GET_PED_TYPE(bus_ped[i]) == 3) && acid_counter_p > 10) acid_counter_p = 0;
+				}
+				if (ENTITY::GET_ENTITY_HEALTH(bus_ped[i]) > 0 && PED::GET_PED_ARMOUR(bus_ped[i]) < 1) {
+					if (!AUDIO::IS_AMBIENT_SPEECH_PLAYING(bus_ped[i])) AUDIO::_PLAY_AMBIENT_SPEECH1(bus_ped[i], "BLOCKED_GENERIC", "SPEECH_PARAMS_FORCE_SHOUTED");
+					if (PED::GET_PED_TYPE(bus_ped[i]) != 0 && PED::GET_PED_TYPE(bus_ped[i]) != 1 && PED::GET_PED_TYPE(bus_ped[i]) != 2 && PED::GET_PED_TYPE(bus_ped[i]) != 3 && acid_counter > 4)
+						ENTITY::SET_ENTITY_HEALTH(bus_ped[i], ENTITY::GET_ENTITY_HEALTH(bus_ped[i]) - 1);
+					if ((PED::GET_PED_TYPE(bus_ped[i]) == 0 || PED::GET_PED_TYPE(bus_ped[i]) == 1 || PED::GET_PED_TYPE(bus_ped[i]) == 2 || PED::GET_PED_TYPE(bus_ped[i]) == 3) && acid_counter_p > 5)
+						ENTITY::SET_ENTITY_HEALTH(bus_ped[i], ENTITY::GET_ENTITY_HEALTH(bus_ped[i]) - 1);
+					if (PED::GET_PED_TYPE(bus_ped[i]) != 0 && PED::GET_PED_TYPE(bus_ped[i]) != 1 && PED::GET_PED_TYPE(bus_ped[i]) != 2 && PED::GET_PED_TYPE(bus_ped[i]) != 3 && acid_counter > 4) acid_counter = 0;
+					if ((PED::GET_PED_TYPE(bus_ped[i]) == 0 || PED::GET_PED_TYPE(bus_ped[i]) == 1 || PED::GET_PED_TYPE(bus_ped[i]) == 2 || PED::GET_PED_TYPE(bus_ped[i]) == 3) && acid_counter_p > 5) acid_counter_p = 0;
+				}
+			}
+
 			if (featureAcidRain) {
 				Vector3 coords_ped = ENTITY::GET_ENTITY_COORDS(bus_ped[i], true); 
 				Vehicle veh_currveh = PED::GET_VEHICLE_PED_IS_USING(bus_ped[i]);
@@ -995,14 +1021,38 @@ void update_world_features()
 				Entity entityHit = ENTITY::DOES_ENTITY_EXIST(bus_ped[i]);
 				int temp1 = WORLDPROBE::_START_SHAPE_TEST_RAY(coords_ped.x, coords_ped.y, coords_ped.z, coords_ped.x, coords_ped.y, coords_ped.z + 2000, -1, bus_ped[i], 1);
 				int result = WORLDPROBE::GET_SHAPE_TEST_RESULT(temp1, &hit, &endCoords, &surfaceNormal, &entityHit);
-				if (GAMEPLAY::GET_RAIN_LEVEL() > 0 && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_ped.x, coords_ped.y, coords_ped.z) && !PED::IS_PED_IN_ANY_VEHICLE(bus_ped[i], 0) && hit == 0) ENTITY::SET_ENTITY_HEALTH(bus_ped[i], 0);
-				if (GAMEPLAY::GET_RAIN_LEVEL() > 0 && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_ped.x, coords_ped.y, coords_ped.z) && PED::IS_PED_IN_ANY_VEHICLE(bus_ped[i], 0) &&
+				
+				if (GAMEPLAY::GET_RAIN_LEVEL() > 0 && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_ped.x, coords_ped.y, coords_ped.z) && hit == 0 && (!PED::IS_PED_IN_ANY_VEHICLE(bus_ped[i], 0) || (PED::IS_PED_IN_ANY_VEHICLE(bus_ped[i], 0) &&
 					(VEHICLE::GET_CONVERTIBLE_ROOF_STATE(veh_currveh) == 2 || !VEHICLE::DOES_VEHICLE_HAVE_ROOF(veh_currveh) || PED::IS_PED_ON_ANY_BIKE(bus_ped[i]) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(currVehModel) ||
-					VEHICLE::IS_THIS_MODEL_A_BICYCLE(currVehModel) || currVehModel == GAMEPLAY::GET_HASH_KEY("BODHI2") || currVehModel == GAMEPLAY::GET_HASH_KEY("AIRTUG") || currVehModel == GAMEPLAY::GET_HASH_KEY("CADDY3") || 
-						currVehModel == GAMEPLAY::GET_HASH_KEY("MOWER") || currVehModel == GAMEPLAY::GET_HASH_KEY("TRACTOR") || currVehModel == GAMEPLAY::GET_HASH_KEY("THRUSTER") || currVehModel == GAMEPLAY::GET_HASH_KEY("DUSTER") || 
-						currVehModel == GAMEPLAY::GET_HASH_KEY("TORO") || currVehModel == GAMEPLAY::GET_HASH_KEY("DINGHY2") || currVehModel == GAMEPLAY::GET_HASH_KEY("DINGHY3") || currVehModel == GAMEPLAY::GET_HASH_KEY("DINGHY") || 
-						currVehModel == GAMEPLAY::GET_HASH_KEY("SPEEDER") || currVehModel == GAMEPLAY::GET_HASH_KEY("JETMAX") || currVehModel == GAMEPLAY::GET_HASH_KEY("SQUALO") || currVehModel == GAMEPLAY::GET_HASH_KEY("SUNTRAP") || 
-						currVehModel == GAMEPLAY::GET_HASH_KEY("SEASHARK") || currVehModel == GAMEPLAY::GET_HASH_KEY("SEASHARK2")) && hit == 0) ENTITY::SET_ENTITY_HEALTH(bus_ped[i], 0);
+						VEHICLE::IS_THIS_MODEL_A_BICYCLE(currVehModel) || currVehModel == GAMEPLAY::GET_HASH_KEY("BODHI2") || currVehModel == GAMEPLAY::GET_HASH_KEY("AIRTUG") || currVehModel == GAMEPLAY::GET_HASH_KEY("CADDY3") ||
+						currVehModel == GAMEPLAY::GET_HASH_KEY("MOWER") || currVehModel == GAMEPLAY::GET_HASH_KEY("TRACTOR") || currVehModel == GAMEPLAY::GET_HASH_KEY("THRUSTER") || currVehModel == GAMEPLAY::GET_HASH_KEY("DUSTER") ||
+						currVehModel == GAMEPLAY::GET_HASH_KEY("TORO") || currVehModel == GAMEPLAY::GET_HASH_KEY("DINGHY2") || currVehModel == GAMEPLAY::GET_HASH_KEY("DINGHY3") || currVehModel == GAMEPLAY::GET_HASH_KEY("DINGHY") ||
+						currVehModel == GAMEPLAY::GET_HASH_KEY("SPEEDER") || currVehModel == GAMEPLAY::GET_HASH_KEY("JETMAX") || currVehModel == GAMEPLAY::GET_HASH_KEY("SQUALO") || currVehModel == GAMEPLAY::GET_HASH_KEY("SUNTRAP") ||
+						currVehModel == GAMEPLAY::GET_HASH_KEY("SEASHARK") || currVehModel == GAMEPLAY::GET_HASH_KEY("SEASHARK2"))))) {
+					if (PED::GET_PED_TYPE(bus_ped[i]) != 0 && PED::GET_PED_TYPE(bus_ped[i]) != 1 && PED::GET_PED_TYPE(bus_ped[i]) != 2 && PED::GET_PED_TYPE(bus_ped[i]) != 3) acid_counter = acid_counter + 1;
+					if (PED::GET_PED_TYPE(bus_ped[i]) == 0 || PED::GET_PED_TYPE(bus_ped[i]) == 1 || PED::GET_PED_TYPE(bus_ped[i]) == 2 || PED::GET_PED_TYPE(bus_ped[i]) == 3) {
+						acid_counter_p = acid_counter_p + 1;
+						been_damaged = true;
+					}
+					if (PED::GET_PED_ARMOUR(bus_ped[i]) > 0) {
+						if (!AUDIO::IS_AMBIENT_SPEECH_PLAYING(bus_ped[i])) AUDIO::_PLAY_AMBIENT_SPEECH1(bus_ped[i], "BLOCKED_GENERIC", "SPEECH_PARAMS_FORCE_SHOUTED");
+						if (PED::GET_PED_TYPE(bus_ped[i]) != 0 && PED::GET_PED_TYPE(bus_ped[i]) != 1 && PED::GET_PED_TYPE(bus_ped[i]) != 2 && PED::GET_PED_TYPE(bus_ped[i]) != 3 && acid_counter > 15)
+							PED::SET_PED_ARMOUR(bus_ped[i], PED::GET_PED_ARMOUR(bus_ped[i]) - 1);
+						if ((PED::GET_PED_TYPE(bus_ped[i]) == 0 || PED::GET_PED_TYPE(bus_ped[i]) == 1 || PED::GET_PED_TYPE(bus_ped[i]) == 2 || PED::GET_PED_TYPE(bus_ped[i]) == 3) && acid_counter_p > 30)
+							PED::SET_PED_ARMOUR(bus_ped[i], PED::GET_PED_ARMOUR(bus_ped[i]) - 1);
+						if (PED::GET_PED_TYPE(bus_ped[i]) != 0 && PED::GET_PED_TYPE(bus_ped[i]) != 1 && PED::GET_PED_TYPE(bus_ped[i]) != 2 && PED::GET_PED_TYPE(bus_ped[i]) != 3 && acid_counter > 15) acid_counter = 0;
+						if ((PED::GET_PED_TYPE(bus_ped[i]) == 0 || PED::GET_PED_TYPE(bus_ped[i]) == 1 || PED::GET_PED_TYPE(bus_ped[i]) == 2 || PED::GET_PED_TYPE(bus_ped[i]) == 3) && acid_counter_p > 30) acid_counter_p = 0;
+					}
+					if (ENTITY::GET_ENTITY_HEALTH(bus_ped[i]) > 0 && PED::GET_PED_ARMOUR(bus_ped[i]) < 1) {
+						if (!AUDIO::IS_AMBIENT_SPEECH_PLAYING(bus_ped[i])) AUDIO::_PLAY_AMBIENT_SPEECH1(bus_ped[i], "BLOCKED_GENERIC", "SPEECH_PARAMS_FORCE_SHOUTED");
+						if (PED::GET_PED_TYPE(bus_ped[i]) != 0 && PED::GET_PED_TYPE(bus_ped[i]) != 1 && PED::GET_PED_TYPE(bus_ped[i]) != 2 && PED::GET_PED_TYPE(bus_ped[i]) != 3 && acid_counter > 6)
+							ENTITY::SET_ENTITY_HEALTH(bus_ped[i], ENTITY::GET_ENTITY_HEALTH(bus_ped[i]) - 1);
+						if ((PED::GET_PED_TYPE(bus_ped[i]) == 0 || PED::GET_PED_TYPE(bus_ped[i]) == 1 || PED::GET_PED_TYPE(bus_ped[i]) == 2 || PED::GET_PED_TYPE(bus_ped[i]) == 3) && acid_counter_p > 10)
+							ENTITY::SET_ENTITY_HEALTH(bus_ped[i], ENTITY::GET_ENTITY_HEALTH(bus_ped[i]) - 1);
+						if (PED::GET_PED_TYPE(bus_ped[i]) != 0 && PED::GET_PED_TYPE(bus_ped[i]) != 1 && PED::GET_PED_TYPE(bus_ped[i]) != 2 && PED::GET_PED_TYPE(bus_ped[i]) != 3 && acid_counter > 6) acid_counter = 0;
+						if ((PED::GET_PED_TYPE(bus_ped[i]) == 0 || PED::GET_PED_TYPE(bus_ped[i]) == 1 || PED::GET_PED_TYPE(bus_ped[i]) == 2 || PED::GET_PED_TYPE(bus_ped[i]) == 3) && acid_counter_p > 10) acid_counter_p = 0;
+					}
+				}
 			}
 		}
 	}
