@@ -71,6 +71,8 @@ bool featureAcidRain = false;
 bool featureAcidRainUpdated = false;
 bool featureNPCReducedGripVehicles = false;
 bool featureNPCReducedGripVehiclesUpdated = false;
+bool featureReducedGripVehiclesIfSnow = false;
+bool featureReducedGripVehiclesIfSnowUpdated = false;
 
 bool police_blips_toogle = false;
 bool windstrength_toggle = false;
@@ -446,6 +448,13 @@ void process_world_menu()
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
+	togItem->caption = "Reduced Grip If Heavy Snow";
+	togItem->value = 7;
+	togItem->toggleValue = &featureReducedGripVehiclesIfSnow;
+	togItem->toggleValueUpdated = &featureReducedGripVehiclesIfSnowUpdated;
+	menuItems.push_back(togItem);
+
+	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "Show Full Map";
 	togItem->value = 1;
 	togItem->toggleValue = &featureFullMap;
@@ -592,6 +601,7 @@ void reset_world_globals()
 	featureAcidWater = false;
 	featureAcidRain = false;
 	featureNPCReducedGripVehicles = false;
+	featureReducedGripVehiclesIfSnow = false;
 	featureBlackout = false;
 	featureSnow = false;
 	featureMPMap = false;
@@ -619,6 +629,7 @@ void reset_world_globals()
 	featureAcidWaterUpdated = 
 	featureAcidRainUpdated =
 	featureNPCReducedGripVehiclesUpdated =
+	featureReducedGripVehiclesIfSnowUpdated =
 	featureWorldGarbageTrucksUpdated =
 	featureWorldRandomBoatsUpdated =
 	featureWorldRandomCopsUpdated =
@@ -830,7 +841,7 @@ void update_world_features()
 	
 	// Bus Interior Light On At Night && NPC No Lights && NPC Neon Lights && NPC Dirty Vehicles && NPC Damaged Vehicles && NPC No Gravity Vehicles && NPC Vehicles Reduced Grip && NPC Vehicle Speed
 	if (featureBusLight || featureNPCNoLights || featureNPCNeonLights || featureDirtyVehicles || WORLD_DAMAGED_VEHICLES_VALUES[DamagedVehiclesIndex] > 0 || featureNPCNoGravityVehicles || featureNPCReducedGripVehicles ||
-		WORLD_NPC_VEHICLESPEED_VALUES[NPCVehicleSpeedIndex] > 0) {
+		WORLD_NPC_VEHICLESPEED_VALUES[NPCVehicleSpeedIndex] > 0 || featureReducedGripVehiclesIfSnow) {
 		Vehicle veh_mycurrveh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 		const int BUS_ARR_SIZE = 1024;
 		Vehicle bus_veh[BUS_ARR_SIZE];
@@ -949,12 +960,36 @@ void update_world_features()
 			if (featureNPCReducedGripVehicles) {
 				if (bus_veh[i] != veh_mycurrveh) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], true);
 			}
+			if (featureReducedGripVehiclesIfSnow && featureSnow) {
+				Vehicle my_veh_on_snow = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
+				Vehicle veh_on_snow = PED::GET_VEHICLE_PED_IS_USING(bus_veh[i]);
+				float my_speed_on_snow = ENTITY::GET_ENTITY_SPEED(my_veh_on_snow);
+				float speed_on_snow = ENTITY::GET_ENTITY_SPEED(veh_on_snow);
+				float slippery_randomize = -1;
+				Vector3 coords_slip = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
+				Vector3 coords_slip_ped = ENTITY::GET_ENTITY_COORDS(bus_veh[i], true);
+				if (bus_veh[i] != my_veh_on_snow && (speed_on_snow < 1 || (speed_on_snow > 20 && speed_on_snow < 22) || (speed_on_snow > 30 && speed_on_snow < 32)) &&
+					INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip_ped.x, coords_slip_ped.y, coords_slip_ped.z)) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], true);
+				else VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], false); 
+				if ((my_speed_on_snow < 1 || (my_speed_on_snow > 8 && my_speed_on_snow < 10) || (my_speed_on_snow > 16 && my_speed_on_snow < 18) || (my_speed_on_snow > 25 && my_speed_on_snow < 27) || 
+					(my_speed_on_snow > 33 && my_speed_on_snow < 35)) && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip.x, coords_slip.y, coords_slip.z)) VEHICLE::SET_VEHICLE_REDUCE_GRIP(my_veh_on_snow, true);
+				else VEHICLE::SET_VEHICLE_REDUCE_GRIP(my_veh_on_snow, false);
+				srand(time(0));
+				int time11 = (rand() % 3000 + 0); // UP MARGIN + DOWN MARGIN
+				int time12 = (rand() % 3000 + 0);
+				int r_Type = (rand() % 3 + 0);
+				slippery_randomize = (rand() % 1000 + 1);
+				if (slippery_randomize > 960 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) && AI::IS_PED_RUNNING(PLAYER::PLAYER_PED_ID()) &&
+					INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip.x, coords_slip.y, coords_slip.z)) PED::SET_PED_TO_RAGDOLL(PLAYER::PLAYER_PED_ID(), time11, time12, r_Type, true, true, false);
+				if (slippery_randomize > 860 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) && AI::IS_PED_SPRINTING(PLAYER::PLAYER_PED_ID()) &&
+					INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip.x, coords_slip.y, coords_slip.z)) PED::SET_PED_TO_RAGDOLL(PLAYER::PLAYER_PED_ID(), time11, time12, r_Type, true, true, false);
+			}
 			if (WORLD_NPC_VEHICLESPEED_VALUES[NPCVehicleSpeedIndex] > 0 && bus_veh[i] != veh_mycurrveh) {
 				VEHICLE::SET_VEHICLE_FORWARD_SPEED(bus_veh[i], WORLD_NPC_VEHICLESPEED_VALUES[NPCVehicleSpeedIndex]);
 			}
 		}
 	}
-	
+
 	if (WORLD_DAMAGED_VEHICLES_VALUES[DamagedVehiclesIndex] == 0) {
 		std::vector<int> emptyVec;
 		if (!WORLD_DAMAGED_VEHICLES_VALUES.empty()) std::vector<int>(WORLD_DAMAGED_VEHICLES_VALUES).swap(emptyVec);
@@ -984,7 +1019,7 @@ void update_world_features()
 				if (PED::IS_PED_SHOOTING(bus_ped[i])) ENTITY::APPLY_FORCE_TO_ENTITY(bus_ped[i], 4, 1000, 0, 0, 0, 0, 0, 1, true, true, true, true, true);
 				ENTITY::SET_ENTITY_HAS_GRAVITY(bus_ped[i], false);
 			}
-			
+
 			if (featureAcidWater && (ENTITY::IS_ENTITY_IN_WATER(bus_ped[i]) || PED::IS_PED_SWIMMING_UNDER_WATER(bus_ped[i]))) {
 				if (PED::GET_PED_TYPE(bus_ped[i]) != 0 && PED::GET_PED_TYPE(bus_ped[i]) != 1 && PED::GET_PED_TYPE(bus_ped[i]) != 2 && PED::GET_PED_TYPE(bus_ped[i]) != 3) acid_counter = acid_counter + 1;
 				if (PED::GET_PED_TYPE(bus_ped[i]) == 0 || PED::GET_PED_TYPE(bus_ped[i]) == 1 || PED::GET_PED_TYPE(bus_ped[i]) == 2 || PED::GET_PED_TYPE(bus_ped[i]) == 3) {
@@ -1012,7 +1047,7 @@ void update_world_features()
 			}
 
 			if (featureAcidRain) {
-				Vector3 coords_ped = ENTITY::GET_ENTITY_COORDS(bus_ped[i], true); 
+				Vector3 coords_ped = ENTITY::GET_ENTITY_COORDS(bus_ped[i], true);  
 				Vehicle veh_currveh = PED::GET_VEHICLE_PED_IS_USING(bus_ped[i]);
 				Hash currVehModel = ENTITY::GET_ENTITY_MODEL(veh_currveh);
 				BOOL hit = false;
@@ -1190,6 +1225,7 @@ void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* r
 	results->push_back(FeatureEnabledLocalDefinition{ "featureAcidWater", &featureAcidWater, &featureAcidWaterUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureAcidRain", &featureAcidRain, &featureAcidRainUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNPCReducedGripVehicles", &featureNPCReducedGripVehicles, &featureNPCReducedGripVehiclesUpdated });
+	results->push_back(FeatureEnabledLocalDefinition{ "featureReducedGripVehiclesIfSnow", &featureReducedGripVehiclesIfSnow, &featureReducedGripVehiclesIfSnowUpdated });
 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureSnow", &featureSnow, &featureSnowUpdated});
 
