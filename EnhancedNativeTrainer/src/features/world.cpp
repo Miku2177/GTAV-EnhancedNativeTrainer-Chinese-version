@@ -968,11 +968,11 @@ void update_world_features()
 				float slippery_randomize = -1;
 				Vector3 coords_slip = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 				Vector3 coords_slip_ped = ENTITY::GET_ENTITY_COORDS(bus_veh[i], true);
-				if (bus_veh[i] != my_veh_on_snow && (speed_on_snow < 1 || (speed_on_snow > 20 && speed_on_snow < 22) || (speed_on_snow > 30 && speed_on_snow < 32)) &&
+				if (bus_veh[i] != my_veh_on_snow && (speed_on_snow < 0.5 || (speed_on_snow > 20.5 && speed_on_snow < 21.5) || (speed_on_snow > 30.5 && speed_on_snow < 31.5)) &&
 					INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip_ped.x, coords_slip_ped.y, coords_slip_ped.z)) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], true);
 				else VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], false); 
-				if ((my_speed_on_snow < 1 || (my_speed_on_snow > 8 && my_speed_on_snow < 10) || (my_speed_on_snow > 16 && my_speed_on_snow < 18) || (my_speed_on_snow > 25 && my_speed_on_snow < 27) || 
-					(my_speed_on_snow > 33 && my_speed_on_snow < 35)) && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip.x, coords_slip.y, coords_slip.z)) VEHICLE::SET_VEHICLE_REDUCE_GRIP(my_veh_on_snow, true);
+				if ((my_speed_on_snow < 0.5 || (my_speed_on_snow > 8 && my_speed_on_snow < 9.5) || (my_speed_on_snow > 16 && my_speed_on_snow < 17.5) || (my_speed_on_snow > 25 && my_speed_on_snow < 26.5) || 
+					(my_speed_on_snow > 33 && my_speed_on_snow < 34.5)) && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip.x, coords_slip.y, coords_slip.z)) VEHICLE::SET_VEHICLE_REDUCE_GRIP(my_veh_on_snow, true);
 				else VEHICLE::SET_VEHICLE_REDUCE_GRIP(my_veh_on_snow, false);
 				srand(time(0));
 				int time11 = (rand() % 3000 + 0); // UP MARGIN + DOWN MARGIN
