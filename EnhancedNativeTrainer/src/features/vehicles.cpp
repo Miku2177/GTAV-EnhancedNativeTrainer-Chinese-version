@@ -2803,18 +2803,22 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 ////////////////////////////////////////////////////// NO VEHICLE FLIP //////////////////////////////////////////////////////
 
-	if (featureNoVehFlip && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1)) {
+	if (featureNoVehFlip) {
 		Vehicle vehnoflip = PED::GET_VEHICLE_PED_IS_IN(playerPed, 1);
 		Vector3 veh_flip = ENTITY::GET_ENTITY_COORDS(vehnoflip, true);
+		Hash currVehModel_noflip = ENTITY::GET_ENTITY_MODEL(vehnoflip);
 		float veh_flips_speed = ENTITY::GET_ENTITY_SPEED(vehnoflip);
-		if (ENTITY::GET_ENTITY_ROLL(vehnoflip) > 90 || ENTITY::GET_ENTITY_ROLL(vehnoflip) < -90) {
-			VEHICLE::SET_VEHICLE_CAN_BREAK(vehnoflip, true);
-			VEHICLE::SET_VEHICLE_OUT_OF_CONTROL(vehnoflip, false, false);
-		}
 		
-		if ((veh_flips_speed * 3.6) > 50 && (ENTITY::GET_ENTITY_ROLL(vehnoflip) > 50 || ENTITY::GET_ENTITY_ROLL(vehnoflip) < -50)) {
-			VEHICLE::SET_VEHICLE_CEILING_HEIGHT(vehnoflip, 0.0);
-			VEHICLE::SET_VEHICLE_DAMAGE(vehnoflip, veh_flip.x, veh_flip.y, veh_flip.z, 1000, 100, true);
+		if (VEHICLE::IS_THIS_MODEL_A_CAR(currVehModel_noflip)) {
+			if (ENTITY::GET_ENTITY_ROLL(vehnoflip) > 90 || ENTITY::GET_ENTITY_ROLL(vehnoflip) < -90) {
+				VEHICLE::SET_VEHICLE_CAN_BREAK(vehnoflip, true);
+				VEHICLE::SET_VEHICLE_OUT_OF_CONTROL(vehnoflip, false, false);
+			}
+
+			if ((veh_flips_speed * 3.6) > 50 && (ENTITY::GET_ENTITY_ROLL(vehnoflip) > 50 || ENTITY::GET_ENTITY_ROLL(vehnoflip) < -50)) {
+				VEHICLE::SET_VEHICLE_CEILING_HEIGHT(vehnoflip, 0.0);
+				VEHICLE::SET_VEHICLE_DAMAGE(vehnoflip, veh_flip.x, veh_flip.y, veh_flip.z, 1000, 100, true);
+			}
 		}
 	}
 	
