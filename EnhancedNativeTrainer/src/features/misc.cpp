@@ -125,25 +125,29 @@ const Hash SP2_TOTAL_CASH = 0x8D75047D;
 
 // Phone Bill Amount
 const std::vector<std::string> MISC_PHONE_BILL_CAPTIONS{ "10$", "50$", "100$", "500$", "1000$", "5000$", "10000$", "50000$", "100000$", "500000$", "1000000$" };
-const std::vector<float> MISC_PHONE_BILL_VALUES{ 10.0, 50.0, 100.0, 500.0, 1000.0, 5000.0, 10000.0, 50000.0, 100000.0, 500000.0, 1000000.0 };
+const float MISC_PHONE_BILL_VALUES[] = { 10.0, 50.0, 100.0, 500.0, 1000.0, 5000.0, 10000.0, 50000.0, 100000.0, 500000.0, 1000000.0 };
+//const std::vector<float> MISC_PHONE_BILL_VALUES{ 10.0, 50.0, 100.0, 500.0, 1000.0, 5000.0, 10000.0, 50000.0, 100000.0, 500000.0, 1000000.0 };
 int PhoneBillIndex = 2;
 bool PhoneBillChanged = true;
 
 // Phone Bill Free Seconds
 const std::vector<std::string> MISC_PHONE_FREESECONDS_CAPTIONS{ "0", "3", "5", "10", "15" };
-const std::vector<int> MISC_PHONE_FREESECONDS_VALUES{ 0, 3, 5, 10, 15 };
+const int MISC_PHONE_FREESECONDS_VALUES[] = { 0, 3, 5, 10, 15 };
+//const std::vector<int> MISC_PHONE_FREESECONDS_VALUES{ 0, 3, 5, 10, 15 };
 int PhoneFreeSecondsIndex = 0;
 bool PhoneFreeSecondsChanged = true;
 
 // Default Menu Tab
 const std::vector<std::string> MISC_DEF_MENUTAB_CAPTIONS{ "OFF", "Map", "Brief", "Friends", "Gallery", "Game", "Settings", "Stats", "Store", "Online" };
-const std::vector<int> MISC_DEF_MANUTAB_VALUES{ -2, -1, 1, 2, 3, 5, 6, 10, 18, 42 };
+const int MISC_DEF_MANUTAB_VALUES[] = { -2, -1, 1, 2, 3, 5, 6, 10, 18, 42 };
+//const std::vector<int> MISC_DEF_MANUTAB_VALUES{ -2, -1, 1, 2, 3, 5, 6, 10, 18, 42 };
 int DefMenuTabIndex = 0;
 bool DefMenuTabChanged = true;
 
 // Default Phone
 const std::vector<std::string> MISC_PHONE_DEFAULT_CAPTIONS{ "OFF", "Michael's", "Trevor's", "Franklin's", "Military", "Prologue" };
-const std::vector<int> MISC_PHONE_DEFAULT_VALUES{ -1, 0, 1, 2, 3, 4 };
+const int MISC_PHONE_DEFAULT_VALUES[] = { -1, 0, 1, 2, 3, 4 };
+//const std::vector<int> MISC_PHONE_DEFAULT_VALUES{ -1, 0, 1, 2, 3, 4 };
 int PhoneDefaultIndex = 0;
 bool PhoneDefaultChanged = true;
 
@@ -772,10 +776,10 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			phone_toggle_defaultphone = false;
 		}
 	}
-	else {
-		std::vector<int> emptyVec;
-		if (!MISC_PHONE_DEFAULT_VALUES.empty()) std::vector<int>(MISC_PHONE_DEFAULT_VALUES).swap(emptyVec);
-	}
+	//else {
+	//	std::vector<int> emptyVec;
+	//	if (!MISC_PHONE_DEFAULT_VALUES.empty()) std::vector<int>(MISC_PHONE_DEFAULT_VALUES).swap(emptyVec);
+	//}
 	
 	// DYNAMIC HEALTH BAR
 	if (featureDynamicHealthBar && !CUTSCENE::IS_CUTSCENE_PLAYING()) {
@@ -837,10 +841,10 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			WAIT(100);
 		} 
 	} 
-	else {
-		std::vector<int> emptyVec;
-		if (!MISC_DEF_MANUTAB_VALUES.empty()) std::vector<int>(MISC_DEF_MANUTAB_VALUES).swap(emptyVec);
-	}
+	//else {
+	//	std::vector<int> emptyVec;
+	//	if (!MISC_DEF_MANUTAB_VALUES.empty()) std::vector<int>(MISC_DEF_MANUTAB_VALUES).swap(emptyVec);
+	//}
 
 	// Phone Bill
 	if (featurePhoneBillEnabled) {
@@ -910,12 +914,12 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			}
 		}
 	}
-	else {
-		std::vector<int> emptyVec;
-		std::vector<float> emptyVec_f;
-		if (!MISC_PHONE_BILL_VALUES.empty()) std::vector<float>(MISC_PHONE_BILL_VALUES).swap(emptyVec_f);
-		if (!MISC_PHONE_FREESECONDS_VALUES.empty()) std::vector<int>(MISC_PHONE_FREESECONDS_VALUES).swap(emptyVec);
-	}
+	//else {
+	//	std::vector<int> emptyVec;
+	//	std::vector<float> emptyVec_f;
+	//	if (!MISC_PHONE_BILL_VALUES.empty()) std::vector<float>(MISC_PHONE_BILL_VALUES).swap(emptyVec_f);
+	//	if (!MISC_PHONE_FREESECONDS_VALUES.empty()) std::vector<int>(MISC_PHONE_FREESECONDS_VALUES).swap(emptyVec);
+	//}
 
 	// First Person Stunt Jump Camera
 	if (featureFirstPersonStuntJumpCamera) {

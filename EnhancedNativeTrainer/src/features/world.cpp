@@ -111,31 +111,36 @@ std::string lastCloudsName;
 
 // Radar Map Size
 const std::vector<std::string> WORLD_RADAR_MAP_CAPTIONS{ "Normal", "Big", "Full" };
-const std::vector<int> WORLD_RADAR_MAP_VALUES{ 1, 2, 3 };
+const int WORLD_RADAR_MAP_VALUES[] = { 1, 2, 3 };
+//const std::vector<int> WORLD_RADAR_MAP_VALUES{ 1, 2, 3 };
 int RadarMapIndex = 0;
 bool RadarMapChanged = true;
 
 // Wind Strength
 const std::vector<std::string> WORLD_WIND_STRENGTH_CAPTIONS{ "Calm", "Gentle Breeze", "Strong Breeze" };
-const std::vector<int> WORLD_WIND_STRENGTH_VALUES{ 0, 3, 999 };
+const int WORLD_WIND_STRENGTH_VALUES[] = { 0, 3, 999 };
+//const std::vector<int> WORLD_WIND_STRENGTH_VALUES{ 0, 3, 999 };
 int WindStrengthIndex = 0;
 bool WindStrengthChanged = true;
 
 // NPC Damaged Vehicles
 const std::vector<std::string> WORLD_DAMAGED_VEHICLES_CAPTIONS{ "OFF", "5", "7", "10", "12", "15", "20", "30", "50", "100", "500", "1000" };
-const std::vector<int> WORLD_DAMAGED_VEHICLES_VALUES{ 0, 5, 7, 10, 12, 15, 20, 30, 50, 100, 500, 1000 };
+const int WORLD_DAMAGED_VEHICLES_VALUES[] = { 0, 5, 7, 10, 12, 15, 20, 30, 50, 100, 500, 1000 };
+//const std::vector<int> WORLD_DAMAGED_VEHICLES_VALUES{ 0, 5, 7, 10, 12, 15, 20, 30, 50, 100, 500, 1000 };
 int DamagedVehiclesIndex = 0;
 bool DamagedVehiclesChanged = true;
 
 // NPC Vehicle Speed
 const std::vector<std::string> WORLD_NPC_VEHICLESPEED_CAPTIONS{ "OFF", "1", "3", "5", "10", "15", "20", "30", "50", "70", "100" };
-const std::vector<int> WORLD_NPC_VEHICLESPEED_VALUES{ 0, 1, 3, 5, 10, 15, 20, 30, 50, 70, 100 };
+const int WORLD_NPC_VEHICLESPEED_VALUES[] = { 0, 1, 3, 5, 10, 15, 20, 30, 50, 70, 100 };
+//const std::vector<int> WORLD_NPC_VEHICLESPEED_VALUES{ 0, 1, 3, 5, 10, 15, 20, 30, 50, 70, 100 };
 int NPCVehicleSpeedIndex = 0;
 bool NPCVehicleSpeedChanged = true;
 
 // Reduced Grip If Heavy Snow
 const std::vector<std::string> WORLD_REDUCEDGRIP_SNOWING_CAPTIONS{ "OFF", "Simulation", "Arcade" };
-const std::vector<int> WORLD_REDUCEDGRIP_SNOWING_VALUES{ 0, 1, 2 };
+const int WORLD_REDUCEDGRIP_SNOWING_VALUES[] = { 0, 1, 2 };
+//const std::vector<int> WORLD_REDUCEDGRIP_SNOWING_VALUES{ 0, 1, 2 };
 int RadarReducedGripSnowingIndex = 0;
 bool RadarReducedGripSnowingChanged = true;
 
@@ -533,7 +538,7 @@ void process_world_menu()
 	togItem->toggleValueUpdated = &featureDirtyVehiclesUpdated;
 	menuItems.push_back(togItem);
 
-	listItem = new SelectFromListMenuItem(WORLD_DAMAGED_VEHICLES_CAPTIONS, onchange_world_damaged_vehicles_index);
+	listItem = new SelectFromListMenuItem(WORLD_DAMAGED_VEHICLES_CAPTIONS, onchange_world_damaged_vehicles_index); 
 	listItem->wrap = false;
 	listItem->caption = "NPC Damaged Vehicles";
 	listItem->value = DamagedVehiclesIndex;
@@ -978,8 +983,8 @@ void update_world_features()
 			if (featureNPCReducedGripVehicles) {
 				if (bus_veh[i] != veh_mycurrveh) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], true);
 			}
+			 
 			if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 && featureSnow) {
-
 				//if (!featureSnowUpdated && !featureSnow) featureSnowUpdated = true;
 				//if (featureSnowUpdated && !featureSnow) featureSnow = true;
 
@@ -1000,10 +1005,10 @@ void update_world_features()
 					else VEHICLE::SET_VEHICLE_REDUCE_GRIP(my_veh_on_snow, false);
 				}
 				if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] == 2) { // arcade
-					if (bus_veh[i] != my_veh_on_snow && (speed_on_snow < 0.3 || (speed_on_snow > 20.5 && speed_on_snow < 21) || (speed_on_snow > 30.5 && speed_on_snow < 31)) &&
+					if (bus_veh[i] != my_veh_on_snow && (speed_on_snow < 0.2 || (speed_on_snow > 20.5 && speed_on_snow < 21) || (speed_on_snow > 30.5 && speed_on_snow < 31)) &&
 						INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip_ped.x, coords_slip_ped.y, coords_slip_ped.z)) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], true);
 					else VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], false);
-					if ((my_speed_on_snow < 0.3 || (my_speed_on_snow > 8.1 && my_speed_on_snow < 9) || (my_speed_on_snow > 16.1 && my_speed_on_snow < 17) ||
+					if ((my_speed_on_snow < 0.2 || (my_speed_on_snow > 8.1 && my_speed_on_snow < 9) || (my_speed_on_snow > 16.1 && my_speed_on_snow < 17) ||
 						(my_speed_on_snow > 25.1 && my_speed_on_snow < 26) || (my_speed_on_snow > 33.1 && my_speed_on_snow < 34)) && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip.x, coords_slip.y, coords_slip.z))
 						VEHICLE::SET_VEHICLE_REDUCE_GRIP(my_veh_on_snow, true);
 					else VEHICLE::SET_VEHICLE_REDUCE_GRIP(my_veh_on_snow, false);
@@ -1030,15 +1035,15 @@ void update_world_features()
 		}
 	}
 
-	if (WORLD_DAMAGED_VEHICLES_VALUES[DamagedVehiclesIndex] == 0) {
-		std::vector<int> emptyVec;
-		if (!WORLD_DAMAGED_VEHICLES_VALUES.empty()) std::vector<int>(WORLD_DAMAGED_VEHICLES_VALUES).swap(emptyVec);
-	}
+	//if (WORLD_DAMAGED_VEHICLES_VALUES[DamagedVehiclesIndex] == 0) {
+	//	std::vector<int> emptyVec;
+	//	if (!WORLD_DAMAGED_VEHICLES_VALUES.empty()) std::vector<int>(WORLD_DAMAGED_VEHICLES_VALUES).swap(emptyVec);
+	//}
 
-	if (WORLD_NPC_VEHICLESPEED_VALUES[NPCVehicleSpeedIndex] == 0) {
-		std::vector<int> emptyVec;
-		if (!WORLD_NPC_VEHICLESPEED_VALUES.empty()) std::vector<int>(WORLD_NPC_VEHICLESPEED_VALUES).swap(emptyVec);
-	}
+	//if (WORLD_NPC_VEHICLESPEED_VALUES[NPCVehicleSpeedIndex] == 0) {
+	//	std::vector<int> emptyVec;
+	//	if (!WORLD_NPC_VEHICLESPEED_VALUES.empty()) std::vector<int>(WORLD_NPC_VEHICLESPEED_VALUES).swap(emptyVec);
+	//}
 	
 	// NPC No Gravity Peds && Acid Water && Acid Rain
 	if (featureNPCNoGravityPeds || featureAcidWater || featureAcidRain) {
