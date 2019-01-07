@@ -157,7 +157,8 @@ int speedBoostIndex = 0;
 
 // engine power stuff
 const std::vector<std::string> VEH_ENG_POW_CAPTIONS{"OFF", "1x", "5x", "10x", "25x", "50x", "75x", "100x", "125x", "150x", "175x", "200x", "225x", "250x", "275x", "300x", "325x", "350x", "375x", "400x"};
-const std::vector<int> VEH_ENG_POW_VALUES{-1, 0, 5, 10, 25, 50, 75, 100, 125, 150, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400};
+const int VEH_ENG_POW_VALUES[] = { -1, 0, 5, 10, 25, 50, 75, 100, 125, 150, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400 };
+//const std::vector<int> VEH_ENG_POW_VALUES{-1, 0, 5, 10, 25, 50, 75, 100, 125, 150, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400};
 int engPowMultIndex = 0;
 bool powChanged = true;
 
@@ -165,31 +166,36 @@ bool burnoutApplied = false;
 
 //vehicle mass stuff
 const std::vector<std::string> VEH_MASS_CAPTIONS{"1x", "3x", "5x", "10x", "30x", "50x", "70x", "100x", "150x", "200x", "250x", "300x", "500x", "1000x", "MESS" };
-const std::vector<int> VEH_MASS_VALUES{0, 5, 10, 30, 50, 100, 150, 200, 300, 400, 500, 1000, 5000, 10000, 50000 };
+const int VEH_MASS_VALUES[] = { 0, 5, 10, 30, 50, 100, 150, 200, 300, 400, 500, 1000, 5000, 10000, 50000 };
+//const std::vector<int> VEH_MASS_VALUES{0, 5, 10, 30, 50, 100, 150, 200, 300, 400, 500, 1000, 5000, 10000, 50000 };
 int VehMassMultIndex = 0;
 bool massChanged = true;
 
 //Turn Signals
 const std::vector<std::string> VEH_TURN_SIGNALS_CAPTIONS{ "OFF", "Manual Only", "< 10 (MPH)", "< 20 (MPH)", "< 30 (MPH)", "< 40 (MPH)", "< 60 (MPH)", "< 80 (MPH)", "< 100 (MPH)", "< 120 (MPH)", "< 140 (MPH)", "< 160 (MPH)", "< 180 (MPH)", "< 200 (MPH)" };
-const std::vector<int> VEH_TURN_SIGNALS_VALUES{ 0, 1, 5, 10, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
+const int VEH_TURN_SIGNALS_VALUES[] = { 0, 1, 5, 10, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
+//const std::vector<int> VEH_TURN_SIGNALS_VALUES{ 0, 1, 5, 10, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
 int turnSignalsIndex = 0;
 bool turnSignalsChanged = true;
 
 //Turn Signals Angle
 const std::vector<std::string> VEH_TURN_SIGNALS_ANGLE_CAPTIONS{ "0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100" };
-const std::vector<int> VEH_TURN_SIGNALS_ANGLE_VALUES{ 0, 1, 5, 10, 15, 17, 20, 25, 30, 40, 50 };
+const int VEH_TURN_SIGNALS_ANGLE_VALUES[] = { 0, 1, 5, 10, 15, 17, 20, 25, 30, 40, 50 };
+//const std::vector<int> VEH_TURN_SIGNALS_ANGLE_VALUES{ 0, 1, 5, 10, 15, 17, 20, 25, 30, 40, 50 };
 int turnSignalsAngleIndex = 5;
 bool turnSignalsAngleChanged = true;
 
 //Turn Signals Off Acceleration
 const std::vector<std::string> VEH_TURN_SIGNALS_ACCELERATION_CAPTIONS{ "OFF", "1", "2", "3", "4", "5", "7", "10" };
-const std::vector<int> VEH_TURN_SIGNALS_ACCELERATION_VALUES{ 0, 1, 2, 3, 4, 5, 7, 10 };
+const int VEH_TURN_SIGNALS_ACCELERATION_VALUES[] = { 0, 1, 2, 3, 4, 5, 7, 10 };
+//const std::vector<int> VEH_TURN_SIGNALS_ACCELERATION_VALUES{ 0, 1, 2, 3, 4, 5, 7, 10 };
 int turnSignalsAccelerationIndex = 4;
 bool turnSignalsAccelerationChanged = true;
 
 //Visualize Vehicle Indicators (Sprite)
 const std::vector<std::string> VEH_VISLIGHT_CAPTIONS{ "OFF", "1x", "3x", "5x", "7x", "10x", "12x" };
-const std::vector<double> VEH_VISLIGHT_VALUES{ 0, 0.01, 0.03, 0.05, 0.07, 0.1, 0.2 };
+const double VEH_VISLIGHT_VALUES[] = { 0, 0.01, 0.03, 0.05, 0.07, 0.1, 0.2 };
+//const std::vector<double> VEH_VISLIGHT_VALUES{ 0, 0.01, 0.03, 0.05, 0.07, 0.1, 0.2 };
 int VisLightIndex = 0;
 bool VisLight_Changed = true;
 
@@ -199,7 +205,8 @@ bool VisLight3d_Changed = true;
 
 //Speed Limiter
 const std::vector<std::string> VEH_SPEEDLIMITER_CAPTIONS{ "OFF", "10 (MPH)", "20 (MPH)", "30 (MPH)", "40 (MPH)", "50 (MPH)", "60 (MPH)", "70 (MPH)", "80 (MPH)", "90 (MPH)", "100 (MPH)", "120 (MPH)", "150 (MPH)", "180 (MPH)", "200 (MPH)" };
-const std::vector<int> VEH_SPEEDLIMITER_VALUES{ 0, 4, 9, 13, 18, 22, 27, 31, 36, 40, 44, 53, 67, 80, 89 };
+const int VEH_SPEEDLIMITER_VALUES[] = { 0, 4, 9, 13, 18, 22, 27, 31, 36, 40, 44, 53, 67, 80, 89 };
+//const std::vector<int> VEH_SPEEDLIMITER_VALUES{ 0, 4, 9, 13, 18, 22, 27, 31, 36, 40, 44, 53, 67, 80, 89 };
 int speedLimiterIndex = 0;
 bool speedLimiterChanged = true;
 int DoorAutolockIndex = 0;
@@ -207,37 +214,43 @@ bool DoorAutolockChanged = true;
 
 //Lights OFF
 const std::vector<std::string> VEH_LIGHTSOFF_CAPTIONS{ "Never", "Daytime Only", "Always" };
-const std::vector<int> VEH_LIGHTSOFF_VALUES{ 0, 1, 2 };
+const int VEH_LIGHTSOFF_VALUES[] = { 0, 1, 2 };
+//const std::vector<int> VEH_LIGHTSOFF_VALUES{ 0, 1, 2 };
 int lightsOffIndex = 0;
 bool lightsOffChanged = true;
 
 //Number Of Vehicles To Remember
 const std::vector<std::string> VEH_VEHREMEMBER_CAPTIONS{ "3", "5", "7", "10", "15", "20", "30", "40", "50", "60" };
-const std::vector<int> VEH_VEHREMEMBER_VALUES{ 3, 5, 7, 10, 15, 20, 30, 40, 50, 60 };
+const int VEH_VEHREMEMBER_VALUES[] = { 3, 5, 7, 10, 15, 20, 30, 40, 50, 60 };
+//const std::vector<int> VEH_VEHREMEMBER_VALUES{ 3, 5, 7, 10, 15, 20, 30, 40, 50, 60 };
 int VehRememberIndex = 3;
 bool VehRemember_Changed = true;
 
 //Blip Size
 const std::vector<std::string> VEH_BLIPSIZE_CAPTIONS{ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
-const std::vector<double> VEH_BLIPSIZE_VALUES{ 0.3, 0.5, 0.8, 1.0, 1.2, 1.5, 1.7, 2.0, 2.5, 3.0 };
+const double VEH_BLIPSIZE_VALUES[] = { 0.3, 0.5, 0.8, 1.0, 1.2, 1.5, 1.7, 2.0, 2.5, 3.0 };
+//const std::vector<double> VEH_BLIPSIZE_VALUES{ 0.3, 0.5, 0.8, 1.0, 1.2, 1.5, 1.7, 2.0, 2.5, 3.0 };
 int VehBlipSizeIndex = 2;
 bool VehBlipSize_Changed = true;
 
 //Blip Colour
 const std::vector<std::string> VEH_BLIPCOLOUR_CAPTIONS{ "White", "Red", "Green", "Blue", "Orange", "Purple", "Grey", "Brown", "Pink", "Dark Green", "Dark Purple", "Dark Blue" };
-const std::vector<int> VEH_BLIPCOLOUR_VALUES{ 0, 1, 2, 3, 17, 19, 20, 21, 23, 25, 27, 29 };
+const int VEH_BLIPCOLOUR_VALUES[] = { 0, 1, 2, 3, 17, 19, 20, 21, 23, 25, 27, 29 };
+//const std::vector<int> VEH_BLIPCOLOUR_VALUES{ 0, 1, 2, 3, 17, 19, 20, 21, 23, 25, 27, 29 };
 int VehBlipColourIndex = 4;
 bool VehBlipColour_Changed = true;
 
 //Blip Symbol
 const std::vector<std::string> VEH_BLIPSYMBOL_CAPTIONS{ "Standard", "Player", "North", "Waypoint", "BigCircleOutline", "ArrowUpOutlined", "ArrowDownOutlined", "ArrowUp", "ArrowDown", "PoliceHelicopterAnimated", "Jet" };
+//const int VEH_BLIPSYMBOL_VALUES[] = { 1, 6, 7, 8, 10, 11, 12, 13, 14, 15, 16 };
 const std::vector<int> VEH_BLIPSYMBOL_VALUES{ 1, 6, 7, 8, 10, 11, 12, 13, 14, 15, 16 }; 
 int VehBlipSymbolIndex = 0;
 bool VehBlipSymbol_Changed = true;
 
 //Blip Flashing
 const std::vector<std::string> VEH_BLIPFLASH_CAPTIONS{ "OFF", "Mode One", "Mode Two" };
-const std::vector<int> VEH_BLIPFLASHandENGINERUNNING_VALUES{ 0, 1, 2 };
+const int VEH_BLIPFLASHandENGINERUNNING_VALUES[] = { 0, 1, 2 };
+//const std::vector<int> VEH_BLIPFLASHandENGINERUNNING_VALUES{ 0, 1, 2 };
 int VehBlipFlashIndex = 0;
 bool VehBlipFlash_Changed = true;
 
@@ -248,13 +261,15 @@ bool EngineRunning_Changed = true;
 
 //Infinite Rocket Boost
 const std::vector<std::string> VEH_INFINITEBOOST_CAPTIONS{ "OFF", "Hold", "Always" };
-const std::vector<int> VEH_INFINITEBOOST_VALUES{ 0, 1, 2 };
+const int VEH_INFINITEBOOST_VALUES[] = { 0, 1, 2 };
+//const std::vector<int> VEH_INFINITEBOOST_VALUES{ 0, 1, 2 };
 int InfiniteBoostIndex = 0;
 bool InfiniteBoost_Changed = true;
 
 //Auto-shut engine after
 const std::vector<std::string> VEH_AUTO_SHUT_ENGINE_CAPTIONS{ "OFF", "5", "10", "20", "30" };
-const std::vector<int> VEH_AUTO_SHUT_ENGINE_VALUES{ 0, 5, 10, 20, 30 };
+const int VEH_AUTO_SHUT_ENGINE_VALUES[] = { 0, 5, 10, 20, 30 };
+//const std::vector<int> VEH_AUTO_SHUT_ENGINE_VALUES{ 0, 5, 10, 20, 30 };
 int AutoShutEngineIndex = 0;
 bool AutoShutEngineChanged = true;
 
@@ -2265,10 +2280,10 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			}
 		}
 	}
-	else {
-		std::vector<int> emptyVec;
-		if (!VEH_MASS_VALUES.empty()) std::vector<int>(VEH_MASS_VALUES).swap(emptyVec);
-	}
+	//else {
+	//	std::vector<int> emptyVec;
+	//	if (!VEH_MASS_VALUES.empty()) std::vector<int>(VEH_MASS_VALUES).swap(emptyVec);
+	//}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -2387,12 +2402,12 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			VEHICLE::SET_VEHICLE_INDICATOR_LIGHTS(vehturn, 0, turn_check_right); // Right Signal	
 		}
 	}
-	else {
-		std::vector<int> emptyVec;
-		if (!VEH_TURN_SIGNALS_VALUES.empty()) std::vector<int>(VEH_TURN_SIGNALS_VALUES).swap(emptyVec);
-		if (!VEH_TURN_SIGNALS_ANGLE_VALUES.empty()) std::vector<int>(VEH_TURN_SIGNALS_ANGLE_VALUES).swap(emptyVec);
-		if (!VEH_TURN_SIGNALS_ACCELERATION_VALUES.empty()) std::vector<int>(VEH_TURN_SIGNALS_ACCELERATION_VALUES).swap(emptyVec);
-	}
+	//else {
+	//	std::vector<int> emptyVec;
+	//	if (!VEH_TURN_SIGNALS_VALUES.empty()) std::vector<int>(VEH_TURN_SIGNALS_VALUES).swap(emptyVec);
+	//	if (!VEH_TURN_SIGNALS_ANGLE_VALUES.empty()) std::vector<int>(VEH_TURN_SIGNALS_ANGLE_VALUES).swap(emptyVec);
+	//	if (!VEH_TURN_SIGNALS_ACCELERATION_VALUES.empty()) std::vector<int>(VEH_TURN_SIGNALS_ACCELERATION_VALUES).swap(emptyVec);
+	//}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -2441,10 +2456,10 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			}
 		}
 	}
-	else {
-		std::vector<double> emptyVec_d;
-		if (!VEH_VISLIGHT_VALUES.empty()) std::vector<double>(VEH_VISLIGHT_VALUES).swap(emptyVec_d);
-	}
+	//else {
+	//	std::vector<double> emptyVec_d;
+	//	if (!VEH_VISLIGHT_VALUES.empty()) std::vector<double>(VEH_VISLIGHT_VALUES).swap(emptyVec_d);
+	//}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -2487,8 +2502,8 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 	else {
 		ENTITY::SET_ENTITY_MAX_SPEED(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 15000.0);
-		std::vector<int> emptyVec;
-		if (!VEH_SPEEDLIMITER_VALUES.empty()) std::vector<int>(VEH_SPEEDLIMITER_VALUES).swap(emptyVec);
+		//std::vector<int> emptyVec;
+		//if (!VEH_SPEEDLIMITER_VALUES.empty()) std::vector<int>(VEH_SPEEDLIMITER_VALUES).swap(emptyVec);
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2574,10 +2589,10 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			}
 		}
 	}
-	else {
-		std::vector<int> emptyVec;
-		if (!VEH_LIGHTSOFF_VALUES.empty()) std::vector<int>(VEH_LIGHTSOFF_VALUES).swap(emptyVec);
-	}
+	//else {
+	//	std::vector<int> emptyVec;
+	//	if (!VEH_LIGHTSOFF_VALUES.empty()) std::vector<int>(VEH_LIGHTSOFF_VALUES).swap(emptyVec);
+	//}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -2746,10 +2761,10 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			}
 		}
 		std::vector<int> emptyVec;
-		std::vector<double> emptyVec_d;
-		if (!VEH_VEHREMEMBER_VALUES.empty()) std::vector<int>(VEH_VEHREMEMBER_VALUES).swap(emptyVec);
-		if (!VEH_BLIPSIZE_VALUES.empty()) std::vector<double>(VEH_BLIPSIZE_VALUES).swap(emptyVec_d);
-		if (!VEH_BLIPCOLOUR_VALUES.empty()) std::vector<int>(VEH_BLIPCOLOUR_VALUES).swap(emptyVec);
+		//std::vector<double> emptyVec_d;
+		//if (!VEH_VEHREMEMBER_VALUES.empty()) std::vector<int>(VEH_VEHREMEMBER_VALUES).swap(emptyVec);
+		//if (!VEH_BLIPSIZE_VALUES.empty()) std::vector<double>(VEH_BLIPSIZE_VALUES).swap(emptyVec_d);
+		//if (!VEH_BLIPCOLOUR_VALUES.empty()) std::vector<int>(VEH_BLIPCOLOUR_VALUES).swap(emptyVec);
 		if (!VEH_BLIPSYMBOL_VALUES.empty()) std::vector<int>(VEH_BLIPSYMBOL_VALUES).swap(emptyVec);
 	}
 

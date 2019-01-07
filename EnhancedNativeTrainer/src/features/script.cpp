@@ -123,34 +123,40 @@ char* mplayer_models[] = {"mp_f_freemode_01", "mp_m_freemode_01"};
 const char* CLIPSET_DRUNK = "move_m@drunk@verydrunk";
 
 const std::vector<std::string> GRAVITY_CAPTIONS{"Minimum", "0.1x", "0.5x", "0.75x", "1x (Normal)"};
-const std::vector<float> GRAVITY_VALUES{0.0f, 0.1f, 0.5f, 0.75f, 1.0f};
+const float GRAVITY_VALUES[] = { 0.0f, 0.1f, 0.5f, 0.75f, 1.0f };
+//const std::vector<float> GRAVITY_VALUES{0.0f, 0.1f, 0.5f, 0.75f, 1.0f};
 
 const std::vector<std::string> REGEN_CAPTIONS{"Minimum", "0.1x", "0.25x", "0.5x", "1x (Normal)", "2x", "5x", "10x", "20x", "50x", "100x", "200x", "500x", "1000x"};
+//const float REGEN_VALUES[] = { 0.0f, 0.1f, 0.25f, 0.5f, 1.0f, 2.0f, 5.0f, 10.0f, 20.0f, 50.0f, 100.0f, 200.0f, 500.0f, 1000.0f };
 const std::vector<float> REGEN_VALUES{0.0f, 0.1f, 0.25f, 0.5f, 1.0f, 2.0f, 5.0f, 10.0f, 20.0f, 50.0f, 100.0f, 200.0f, 500.0f, 1000.0f};
 const int REGEN_DEFAULT = 4;
 int regenIndex = REGEN_DEFAULT;
 
 //Player Health
 const std::vector<std::string> PLAYER_HEALTH_CAPTIONS{ "1", "10", "20", "30", "40", "50", "100", "200", "300", "500", "1000", "5000", "10000", "20000", "30000" };
-const std::vector<int> PLAYER_HEALTH_VALUES{ 101, 110, 120, 130, 140, 150, 200, 300, 400, 600, 1100, 5100, 10100, 20100, 30100 };
+const int PLAYER_HEALTH_VALUES[] = { 101, 110, 120, 130, 140, 150, 200, 300, 400, 600, 1100, 5100, 10100, 20100, 30100 };
+//const std::vector<int> PLAYER_HEALTH_VALUES{ 101, 110, 120, 130, 140, 150, 200, 300, 400, 600, 1100, 5100, 10100, 20100, 30100 };
 int current_player_health = 6;
 bool current_player_health_Changed = true;
 
 //Player Armor
 const std::vector<std::string> PLAYER_ARMOR_CAPTIONS{ "0", "15", "20", "30", "40", "50", "100" };
-const std::vector<int> PLAYER_ARMOR_VALUES{ 0, 15, 20, 30, 40, 50, 100 };
+const int PLAYER_ARMOR_VALUES[] = { 0, 15, 20, 30, 40, 50, 100 };
+//const std::vector<int> PLAYER_ARMOR_VALUES{ 0, 15, 20, 30, 40, 50, 100 };
 int current_player_armor = 6;
 bool current_player_armor_Changed = true;
 
 //NPC Ragdoll If Shot
 const std::vector<std::string> NPC_RAGDOLL_CAPTIONS{ "OFF", "Never", "Always" };
-const std::vector<int> NPC_RAGDOLL_VALUES{ 0, 1, 2 };
+const int NPC_RAGDOLL_VALUES[] = { 0, 1, 2 };
+//const std::vector<int> NPC_RAGDOLL_VALUES{ 0, 1, 2 };
 int current_npc_ragdoll = 0;
 bool current_npc_ragdoll_Changed = true;
 
 //Player Movement Speed
 const std::vector<std::string> PLAYER_MOVEMENT_CAPTIONS{ "Normal", "1x", "2x", "3x", "4x", "5x", "6x", "7x", "8x", "9x", "10x" };
-const std::vector<double> PLAYER_MOVEMENT_VALUES{ 0.00, 1.00, 2.00, 3.00, 4.00, 5.00, 6.00, 7.00, 8.00, 9.00, 10.00 };
+const double PLAYER_MOVEMENT_VALUES[] = { 0.00, 1.00, 2.00, 3.00, 4.00, 5.00, 6.00, 7.00, 8.00, 9.00, 10.00 };
+//const std::vector<double> PLAYER_MOVEMENT_VALUES{ 0.00, 1.00, 2.00, 3.00, 4.00, 5.00, 6.00, 7.00, 8.00, 9.00, 10.00 };
 int current_player_movement = 0;
 bool current_player_movement_Changed = true; 
 
@@ -531,11 +537,11 @@ void update_features(){
 		}
 	}
 	
-	if (!featurePlayerLife && !featurePlayerLife_Died && !featurePlayerLife_Changed) {
-		std::vector<int> emptyVec;
-		if (!PLAYER_HEALTH_VALUES.empty()) std::vector<int>(PLAYER_HEALTH_VALUES).swap(emptyVec);
-		if (!PLAYER_ARMOR_VALUES.empty()) std::vector<int>(PLAYER_ARMOR_VALUES).swap(emptyVec);
-	}
+	//if (!featurePlayerLife && !featurePlayerLife_Died && !featurePlayerLife_Changed) {
+	//	std::vector<int> emptyVec;
+	//	if (!PLAYER_HEALTH_VALUES.empty()) std::vector<int>(PLAYER_HEALTH_VALUES).swap(emptyVec);
+	//	if (!PLAYER_ARMOR_VALUES.empty()) std::vector<int>(PLAYER_ARMOR_VALUES).swap(emptyVec);
+	//}
 
 	if (featurePlayerLife_Died) death_time2 = PLAYER::GET_TIME_SINCE_LAST_DEATH();
 	if (death_time2 > -1 && death_time2 < 2000 && featurePlayerLife_Died) {
@@ -696,19 +702,19 @@ void update_features(){
 			}
 		}
 	}
-	else {
-		std::vector<int> emptyVec;
-		if (!NPC_RAGDOLL_VALUES.empty()) std::vector<int>(NPC_RAGDOLL_VALUES).swap(emptyVec);
-	}
+	//else {
+	//	std::vector<int> emptyVec;
+	//	if (!NPC_RAGDOLL_VALUES.empty()) std::vector<int>(NPC_RAGDOLL_VALUES).swap(emptyVec);
+	//}
 	
 	//Player Movement Speed
 	if (PLAYER_MOVEMENT_VALUES[current_player_movement] > 0.00) {
 		PED::SET_PED_MOVE_RATE_OVERRIDE(playerPed, PLAYER_MOVEMENT_VALUES[current_player_movement]);
 	}
-	else {
-		std::vector<double> emptyVec_d;
-		if (!PLAYER_MOVEMENT_VALUES.empty()) std::vector<double>(PLAYER_MOVEMENT_VALUES).swap(emptyVec_d);
-	}
+	//else {
+	//	std::vector<double> emptyVec_d;
+	//	if (!PLAYER_MOVEMENT_VALUES.empty()) std::vector<double>(PLAYER_MOVEMENT_VALUES).swap(emptyVec_d);
+	//}
 
 	//Player Invisible
 	if(featurePlayerInvisibleUpdated){

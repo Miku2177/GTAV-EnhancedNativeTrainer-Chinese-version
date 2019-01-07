@@ -276,12 +276,12 @@ void engine_can_degrade()
 			}
 		}
 	}
-	else {
-		std::vector<int> emptyVec;
-		std::vector<double> emptyVec_d;
-		if (!VEH_ENGINEHEALTH_VALUES.empty()) std::vector<int>(VEH_ENGINEHEALTH_VALUES).swap(emptyVec);
-		if (!VEH_ENGINEDEGRADE_VALUES.empty()) std::vector<double>(VEH_ENGINEDEGRADE_VALUES).swap(emptyVec_d);
-	}
+	//else {
+	//	std::vector<int> emptyVec;
+	//	std::vector<double> emptyVec_d;
+	//	if (!VEH_ENGINEHEALTH_VALUES.empty()) std::vector<int>(VEH_ENGINEHEALTH_VALUES).swap(emptyVec);
+	//	if (!VEH_ENGINEDEGRADE_VALUES.empty()) std::vector<double>(VEH_ENGINEDEGRADE_VALUES).swap(emptyVec_d);
+	//}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

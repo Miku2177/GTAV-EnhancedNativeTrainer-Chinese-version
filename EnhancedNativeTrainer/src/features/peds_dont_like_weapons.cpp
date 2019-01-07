@@ -244,10 +244,10 @@ void peds_dont_like_weapons() {
 			}
 		}
 	}
-	else {
-		std::vector<int> emptyVec;
-		if (!WEAPONS_CHANCEPOLICECALLING_VALUES.empty()) std::vector<int>(WEAPONS_CHANCEPOLICECALLING_VALUES).swap(emptyVec);
-	}
+	//else {
+	//	std::vector<int> emptyVec;
+	//	if (!WEAPONS_CHANCEPOLICECALLING_VALUES.empty()) std::vector<int>(WEAPONS_CHANCEPOLICECALLING_VALUES).swap(emptyVec);
+	//}
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

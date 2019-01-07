@@ -80,13 +80,15 @@ bool CopCurrArmedChanged = true;
 
 // Cop Wanted Level
 const std::vector<std::string> WEAPONS_COPALARM_CAPTIONS{ "One Star", "Two Stars Or Less", "Three Stars Or Less", "Four Stars Or Less", "Five Stars Or Less", "Always" };
-const std::vector<int> WEAPONS_COPALARM_VALUES{ 1, 2, 3, 4, 5, 6 };
+const int WEAPONS_COPALARM_VALUES[] = { 1, 2, 3, 4, 5, 6 };
+//const std::vector<int> WEAPONS_COPALARM_VALUES{ 1, 2, 3, 4, 5, 6 };
 int CopAlarmIndex = 1;
 bool CopAlarmChanged = true;
 
 // Toggle Vision For Sniper Rifles
 const std::vector<std::string> WEAPONS_SNIPERVISION_CAPTIONS{ "OFF", "Via Hotkey", "Night Vision", "Thermal Vision" };
-const std::vector<int> WEAPONS_SNIPERVISION_VALUES{ 0, 1, 2, 3 };
+const int WEAPONS_SNIPERVISION_VALUES[] = { 0, 1, 2, 3 };
+//const std::vector<int> WEAPONS_SNIPERVISION_VALUES{ 0, 1, 2, 3 };
 int SniperVisionIndex = 0;
 bool SniperVisionChanged = true;
 
@@ -1274,10 +1276,10 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			}
 		}
 	}
-	else {
-		std::vector<int> emptyVec;
-		if (!WEAPONS_COPALARM_VALUES.empty()) std::vector<int>(WEAPONS_COPALARM_VALUES).swap(emptyVec);
-	}
+	//else {
+	//	std::vector<int> emptyVec;
+	//	if (!WEAPONS_COPALARM_VALUES.empty()) std::vector<int>(WEAPONS_COPALARM_VALUES).swap(emptyVec);
+	//}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////
 	

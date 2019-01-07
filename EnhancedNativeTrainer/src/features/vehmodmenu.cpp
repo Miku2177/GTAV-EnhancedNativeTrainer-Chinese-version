@@ -25,13 +25,17 @@ bool featureEngineSound = false;
 
 const static int WHEEL_CATEGORY_COUNT = 10;
 
-const static std::string WHEEL_CATEGORY_NAMES[] = { "Sports", "Muscle", "Lowrider", "SUV", "Offroad", "Tuner", "Bike Wheels", "High End", "Benny's Originals", "Benny's Bespoke" };
+const char* WHEEL_CATEGORY_NAMES[] = { "Sports", "Muscle", "Lowrider", "SUV", "Offroad", "Tuner", "Bike Wheels", "High End", "Benny's Originals", "Benny's Bespoke" };
+//const static std::string WHEEL_CATEGORY_NAMES[] = { "Sports", "Muscle", "Lowrider", "SUV", "Offroad", "Tuner", "Bike Wheels", "High End", "Benny's Originals", "Benny's Bespoke" };
 
-const static int WHEEL_CATEGORY_COUNTS[] = { 50, 36, 30, 38, 20, 48, 72, 40, 217, 217 };
+const int WHEEL_CATEGORY_COUNTS[] = { 50, 36, 30, 38, 20, 48, 72, 40, 217, 217 };
+//const static int WHEEL_CATEGORY_COUNTS[] = { 50, 36, 30, 38, 20, 48, 72, 40, 217, 217 };
 
-const static std::string TINT_NAMES[] = { "No Tint", "Dark", "Medium", "Light", "Very Light", "Safety Value" };
+const char* TINT_NAMES[] = { "No Tint", "Dark", "Medium", "Light", "Very Light", "Safety Value" };
+//const static std::string TINT_NAMES[] = { "No Tint", "Dark", "Medium", "Light", "Very Light", "Safety Value" };
 
-const static std::string PLATE_NAMES[] = { "Blue on White", "Yellow/Black", "Gold/Blue", "Blue/White SA Caps", "Blue/White SA Exempt", "Blue/White Yankton" };
+const char* PLATE_NAMES[] = { "Blue on White", "Yellow/Black", "Gold/Blue", "Blue/White SA Caps", "Blue/White SA Exempt", "Blue/White Yankton" };
+//const static std::string PLATE_NAMES[] = { "Blue on White", "Yellow/Black", "Gold/Blue", "Blue/White SA Caps", "Blue/White SA Exempt", "Blue/White Yankton" };
 
 const static int ENGINE_SOUND_COUNT = 346;
 
@@ -2264,8 +2268,8 @@ void add_vehmodmenu_feature_enablements(std::vector<FeatureEnabledLocalDefinitio
 
 void update_vehmodmenu_features(BOOL bPlayerExists, Ped playerPed) {
 	if (!featureEngineSound) {
-		std::vector<int> emptyVec;
-		if (!ENGINE_SOUND_NUMBERS.empty()) std::vector<int>(ENGINE_SOUND_NUMBERS).swap(emptyVec);
+		//std::vector<int> emptyVec;
+		//if (!ENGINE_SOUND_NUMBERS.empty()) std::vector<int>(ENGINE_SOUND_NUMBERS).swap(emptyVec);
 		current_picked_engine_sound = -1;
 	}
 
