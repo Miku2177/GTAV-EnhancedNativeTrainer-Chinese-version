@@ -27,6 +27,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 extern bool mouse_view_control;
 extern bool help_showing;
 extern bool frozen_time;
+extern bool been_damaged;
 
 void process_misc_menu();
 
