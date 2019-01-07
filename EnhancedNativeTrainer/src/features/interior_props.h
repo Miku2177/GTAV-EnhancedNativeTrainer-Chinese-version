@@ -1138,6 +1138,7 @@ std::vector<const char*> IPL_PROPS_ARENAWAR_MAIN_PROPS = {
 	"xs_x18intmod_office_det_ind",
 	"xs_x18intmod_office_det_stnd",
 	"xs_x18intmod_office_det_tech",
+	//
 	"xs_x18intmod_office_door003",
 	"xs_x18intmod_office_door004",
 	"xs_x18intmod_office_door02",

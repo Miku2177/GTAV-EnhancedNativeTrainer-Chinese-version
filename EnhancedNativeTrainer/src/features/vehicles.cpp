@@ -290,7 +290,7 @@ const std::vector<std::string> CAPTIONS_COUPES{ "Dewbauchee Exemplar", "Enus Cog
 
 const std::vector<std::string> CAPTIONS_MUSCLE{ "Albany Buccaneer", "Albany Buccaneer (Custom)", "Albany Hermes (Doomsday Heist)", "Albany Lurcher", "Albany Virgo", "Bravado Gauntlet", "Bravado Gauntlet Redwood (Race)", "Bravado Rat-Truck", "Bravado Rat-Loader (Rusty)", "Cheval Picador", "Declasse Impaler", "Declasse Impaler Apocalypse (Arena War)", "Declasse Impaler Future Shock (Arena War)", "Declasse Impaler Nightmare (Arena War)", "Declasse Moonbeam", "Declasse Moonbeam (Custom)", "Declasse Sabre Turbo", "Declasse Sabre Turbo (Custom)", "Declasse Stallion", "Declasse Stallion (Race)", "Declasse Tampa", "Declasse Tampa Weaponized (Gun Runner)", "Declasse Tulip (Arena War)", "Declasse Vamos (Arena War)", "Declasse Vigero", "Declasse Voodoo", "Declasse Voodoo (Custom)", "Declasse Yosemite (Doomsday Heist)" , "Dundreary Virgo Classic (Custom Donk)", "Dundreary Virgo Classic Custom", "Imponte Duke O' Death", "Imponte Dukes", "Imponte Nightshade", "Imponte Phoenix", "Imponte Ruiner", "Imponte Ruiner 2000 (Import-Export)", "Invetero Coquette BlackFin", "Schyster Deviant (Arena War)", "Vapid Blade", "Vapid Chino", "Vapid Chino (Custom)", "Vapid Clique (Arena War)", "Vapid Dominator", "Vapid Dominator GTX (Super Sports)", "Vapid Dominator (Race)", "Vapid Dominator Apocalypse (Arena War)", "Vapid Dominator Future Shock (Arena War)", "Vapid Dominator Nightmare (Arena War)", "Vapid Ellie (Super Sports)", "Vapid Hotknife", "Vapid Hustler (Doomsday Heist)", "Vapid Imperator Apocalypse (Arena War)", "Vapid Imperator Future Shock (Arena War)", "Vapid Imperator Nightmare (Arena War)", "Vapid Slamvan", "Vapid Slamvan (Custom)", "Vapid Slamvan (Lost MC)", "Vapid Slamvan Apocalypse (Arena War)", "Vapid Slamvan Future Shock (Arena War)", "Vapid Slamvan Nightmare (Arena War)" , "Willard Faction", "Willard Faction (Custom)", "Willard Faction (Custom Donk)" };
 
-const std::vector<std::string> CAPTIONS_OFFROAD{ "Benefactor Bruiser Apocalypse (Arena War)", "Benefactor Bruiser Future Shock (Arena War)", "Benefactor Bruiser Nightmare (Arena War)", "Benefactor Dubsta 6x6", "BF Bifta", "BF Dune Buggy", "BF Dune FAV (Gun Runner)", "BF Injection", "BF Space Docker", "Bravado Duneloader", "Bravado Sasquatch Apocalypse (Arena War)","Bravado Sasquatch Future Shock (Arena War)", "Bravado Sasquatch Nightmare (Arena War)", "Canis Bodhi", "Canis Freecrawler (After Hours)", "Canis Kalahari", "Canis Kamacho (Doomsday Heist)", "Canis Mesa (Off-Road)", "Cheval Marshall", "Coil Brawler", "Declasse Brutus Apocalypse (Arena War)", "Declasse Brutus Nightmare (Arena War)", "Declasse Rancher XL", "Declasse Rancher XL (Snow)", "HVY Insurgent", "HVY Insurgent Pick-Up (Gun Runner)", "HVY Insurgent Pick-Up Custom (Gun Mount)", "HVY Menacer (After Hours)", "HVY Nightshark (Gun Runner)", "Karin Rebel", "Karin Rebel (Rusty)", "Karin Technical", "Karin Technical Aqua (Import-Export)", "Karin Technical Custom (Gun Runner)", "Nagasaki Blazer", "Nagasaki Blazer (Hot Rod)", "Nagasaki Blazer (Lifeguard)", "Nagasaki Blazer Aqua (Import-Export)", "Nagasaki Street Blazer (Bikers)", "Ramp Buggy (Import-Export)", "Ramp Buggy Spoilerless (Import-Export)", "RC Bandito (Arena War)", "Vapid Caracara (Super Sports)", "Vapid Desert Raid (Race)", "Vapid Riata (Doomsday Heist)", "Vapid Sandking SWB", "Vapid Sandking XL", "Vapid Trophy Truck (Race)", "Vapid Liberator" };
+const std::vector<std::string> CAPTIONS_OFFROAD{ "Benefactor Bruiser Apocalypse (Arena War)", "Benefactor Bruiser Future Shock (Arena War)", "Benefactor Bruiser Nightmare (Arena War)", "Benefactor Dubsta 6x6", "BF Bifta", "BF Dune Buggy", "BF Dune FAV (Gun Runner)", "BF Injection", "BF Space Docker", "Bravado Duneloader", "Bravado Sasquatch Apocalypse (Arena War)","Bravado Sasquatch Future Shock (Arena War)", "Bravado Sasquatch Nightmare (Arena War)", "Canis Bodhi", "Canis Freecrawler (After Hours)", "Canis Kalahari", "Canis Kamacho (Doomsday Heist)", "Canis Mesa (Off-Road)", "Cheval Marshall", "Coil Brawler", "Declasse Brutus Apocalypse (Arena War)", "Declasse Brutus Future Shock (Arena War)", "Declasse Brutus Nightmare (Arena War)", "Declasse Rancher XL", "Declasse Rancher XL (Snow)", "HVY Insurgent", "HVY Insurgent Pick-Up (Gun Runner)", "HVY Insurgent Pick-Up Custom (Gun Mount)", "HVY Menacer (After Hours)", "HVY Nightshark (Gun Runner)", "Karin Rebel", "Karin Rebel (Rusty)", "Karin Technical", "Karin Technical Aqua (Import-Export)", "Karin Technical Custom (Gun Runner)", "Nagasaki Blazer", "Nagasaki Blazer (Hot Rod)", "Nagasaki Blazer (Lifeguard)", "Nagasaki Blazer Aqua (Import-Export)", "Nagasaki Street Blazer (Bikers)", "Ramp Buggy (Import-Export)", "Ramp Buggy Spoilerless (Import-Export)", "RC Bandito (Arena War)", "Vapid Caracara (Super Sports)", "Vapid Desert Raid (Race)", "Vapid Riata (Doomsday Heist)", "Vapid Sandking SWB", "Vapid Sandking XL", "Vapid Trophy Truck (Race)", "Vapid Liberator" };
 
 const std::vector<std::string> CAPTIONS_SUVS{ "Albany Cavalcade", "Albany Cavalcade Mk2", "Benefactor Dubsta", "Benefactor Dubsta (Flat Black)", "Benefactor Serrano", "Benefactor XLS (Executive)", "Benefactor XLS Armoured (Executive)", "Bravado Gresley", "Canis Mesa", "Canis Mesa (Snow)", "Canis Seminole", "Declasse Granger", "Dundreary Landstalker", "Emperor Habanero", "Enus Huntley S", "Fathom FQ 2", "Gallivanter Baller (Large)", "Gallivanter Baller (Small)", "Gallivanter Baller LE (Large)", "Gallivanter Baller LE LWB (Small)", "Gallivanter Baller LE (Armoured)", "Gallivanter Baller LE LWB (Armoured)", "Karin BeeJay XL", "Mammoth Patriot", "Mammoth Patriot Stretch (After Hours)", "Obey Rocoto", "Pegassi Toros (Arena War)", "Vapid Contender (Race)", "Vapid Radius" };
 
@@ -308,7 +308,7 @@ const std::vector<std::string> VALUES_COUPES{ "EXEMPLAR", "COGCABRIO", "WINDSOR"
 
 const std::vector<std::string> VALUES_MUSCLE{ "BUCCANEER", "BUCCANEER2", "HERMES", "LURCHER", "VIRGO", "GAUNTLET", "GAUNTLET2", "RATLOADER2", "RATLOADER", "PICADOR", "IMPALER", "IMPALER2", "IMPALER3", "IMPALER4", "MOONBEAM", "MOONBEAM2", "SABREGT", "SABREGT2", "STALION", "STALION2", "TAMPA", "TAMPA3", "TULIP", "VAMOS", "VIGERO", "VOODOO2", "VOODOO", "YOSEMITE", "VIRGO3", "VIRGO2", "DUKES2", "DUKES", "NIGHTSHADE", "PHOENIX", "RUINER", "RUINER2", "COQUETTE3", "DEVIANT", "BLADE", "CHINO", "CHINO2", "CLIQUE", "DOMINATOR", "DOMINATOR3", "DOMINATOR2", "DOMINATOR4", "DOMINATOR5", "DOMINATOR6", "ELLIE", "HOTKNIFE", "HUSTLER", "IMPERATOR", "IMPERATOR2", "IMPERATOR3", "SLAMVAN", "SLAMVAN3", "SLAMVAN2","SLAMVAN4", "SLAMVAN5", "SLAMVAN6","FACTION", "FACTION2", "FACTION3" };
 
-const std::vector<std::string> VALUES_OFFROAD{ "BRUISER", "BRUISER2", "BRUISER3", "DUBSTA3", "BIFTA", "DUNE", "DUNE3", "BFINJECTION", "DUNE2", "DLOADER", "MONSTER3", "MONSTER4", "MONSTER5", "BODHI2", "FREECRAWLER", "KALAHARI", "KAMACHO", "MESA3", "MARSHALL", "BRAWLER", "BRUTUS", "BRUTUS3", "RANCHERXL", "RANCHERXL2", "INSURGENT2", "INSURGENT", "INSURGENT3", "MENACER", "NIGHTSHARK", "REBEL2", "REBEL", "TECHNICAL", "TECHNICAL2", "TECHNICAL3", "BLAZER", "BLAZER3", "BLAZER2", "BLAZER5", "BLAZER4", "DUNE4", "DUNE5", "RCBANDITO", "CARACARA", "TROPHYTRUCK2", "RIATA", "SANDKING2", "SANDKING", "TROPHYTRUCK", "MONSTER" };
+const std::vector<std::string> VALUES_OFFROAD{ "BRUISER", "BRUISER2", "BRUISER3", "DUBSTA3", "BIFTA", "DUNE", "DUNE3", "BFINJECTION", "DUNE2", "DLOADER", "MONSTER3", "MONSTER4", "MONSTER5", "BODHI2", "FREECRAWLER", "KALAHARI", "KAMACHO", "MESA3", "MARSHALL", "BRAWLER", "BRUTUS", "BRUTUS2", "BRUTUS3", "RANCHERXL", "RANCHERXL2", "INSURGENT2", "INSURGENT", "INSURGENT3", "MENACER", "NIGHTSHARK", "REBEL2", "REBEL", "TECHNICAL", "TECHNICAL2", "TECHNICAL3", "BLAZER", "BLAZER3", "BLAZER2", "BLAZER5", "BLAZER4", "DUNE4", "DUNE5", "RCBANDITO", "CARACARA", "TROPHYTRUCK2", "RIATA", "SANDKING2", "SANDKING", "TROPHYTRUCK", "MONSTER" };
 
 const std::vector<std::string> VALUES_SUVS{ "CAVALCADE", "CAVALCADE2", "DUBSTA", "DUBSTA2", "SERRANO", "XLS", "XLS2", "GRESLEY", "MESA", "MESA2", "SEMINOLE", "GRANGER", "LANDSTALKER", "HABANERO", "HUNTLEY", "FQ2", "BALLER", "BALLER2", "BALLER3", "BALLER4", "BALLER5", "BALLER6", "BJXL", "PATRIOT", "PATRIOT2", "ROCOTO", "TOROS", "CONTENDER", "RADI" };
 
@@ -2803,18 +2803,22 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 ////////////////////////////////////////////////////// NO VEHICLE FLIP //////////////////////////////////////////////////////
 
-	if (featureNoVehFlip && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1)) {
+	if (featureNoVehFlip) {
 		Vehicle vehnoflip = PED::GET_VEHICLE_PED_IS_IN(playerPed, 1);
 		Vector3 veh_flip = ENTITY::GET_ENTITY_COORDS(vehnoflip, true);
+		Hash currVehModel_noflip = ENTITY::GET_ENTITY_MODEL(vehnoflip);
 		float veh_flips_speed = ENTITY::GET_ENTITY_SPEED(vehnoflip);
-		if (ENTITY::GET_ENTITY_ROLL(vehnoflip) > 90 || ENTITY::GET_ENTITY_ROLL(vehnoflip) < -90) {
-			VEHICLE::SET_VEHICLE_CAN_BREAK(vehnoflip, true);
-			VEHICLE::SET_VEHICLE_OUT_OF_CONTROL(vehnoflip, false, false);
-		}
 		
-		if ((veh_flips_speed * 3.6) > 50 && (ENTITY::GET_ENTITY_ROLL(vehnoflip) > 50 || ENTITY::GET_ENTITY_ROLL(vehnoflip) < -50)) {
-			VEHICLE::SET_VEHICLE_CEILING_HEIGHT(vehnoflip, 0.0);
-			VEHICLE::SET_VEHICLE_DAMAGE(vehnoflip, veh_flip.x, veh_flip.y, veh_flip.z, 1000, 100, true);
+		if (VEHICLE::IS_THIS_MODEL_A_CAR(currVehModel_noflip)) {
+			if (ENTITY::GET_ENTITY_ROLL(vehnoflip) > 90 || ENTITY::GET_ENTITY_ROLL(vehnoflip) < -90) {
+				VEHICLE::SET_VEHICLE_CAN_BREAK(vehnoflip, true);
+				VEHICLE::SET_VEHICLE_OUT_OF_CONTROL(vehnoflip, false, false);
+			}
+
+			if ((veh_flips_speed * 3.6) > 50 && (ENTITY::GET_ENTITY_ROLL(vehnoflip) > 50 || ENTITY::GET_ENTITY_ROLL(vehnoflip) < -50)) {
+				VEHICLE::SET_VEHICLE_CEILING_HEIGHT(vehnoflip, 0.0);
+				VEHICLE::SET_VEHICLE_DAMAGE(vehnoflip, veh_flip.x, veh_flip.y, veh_flip.z, 1000, 100, true);
+			}
 		}
 	}
 	
@@ -4707,6 +4711,7 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	//Arena War
 	{ "BLISTA3", "sssa_dlc_arena", "blista3" },
 	{ "BRUTUS", "mba_vehicles", "brutus1" },
+	{ "BRUTUS2", "mba_vehicles", "brutus2" },
 	{ "BRUTUS3", "mba_vehicles", "brutus3" },
 	{ "CERBERUS", "mba_vehicles", "cerberus1" },
 	{ "CERBERUS2", "mba_vehicles", "cerberus2" },
