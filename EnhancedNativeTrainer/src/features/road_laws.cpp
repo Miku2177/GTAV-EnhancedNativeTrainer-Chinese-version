@@ -531,7 +531,7 @@ void road_laws()
 					cop_close_stop = true;
 				}
 				
-				// i shout when i seen
+				// i shout when i'm seen
 				if (idontlikeiwasseen == true) {
 					Seen_secs_passed = clock() / CLOCKS_PER_SEC;
 					if (((clock() / CLOCKS_PER_SEC) - Seen_secs_curr) != 0) {
