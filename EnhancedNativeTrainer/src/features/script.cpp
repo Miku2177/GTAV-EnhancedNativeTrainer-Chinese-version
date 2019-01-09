@@ -129,8 +129,10 @@ const float GRAVITY_VALUES[] = { 0.0f, 0.1f, 0.5f, 0.75f, 1.0f };
 const std::vector<std::string> REGEN_CAPTIONS{"Minimum", "0.1x", "0.25x", "0.5x", "1x (Normal)", "2x", "5x", "10x", "20x", "50x", "100x", "200x", "500x", "1000x"};
 //const float REGEN_VALUES[] = { 0.0f, 0.1f, 0.25f, 0.5f, 1.0f, 2.0f, 5.0f, 10.0f, 20.0f, 50.0f, 100.0f, 200.0f, 500.0f, 1000.0f };
 const std::vector<float> REGEN_VALUES{0.0f, 0.1f, 0.25f, 0.5f, 1.0f, 2.0f, 5.0f, 10.0f, 20.0f, 50.0f, 100.0f, 200.0f, 500.0f, 1000.0f};
-const int REGEN_DEFAULT = 4;
-int regenIndex = REGEN_DEFAULT;
+//const int REGEN_DEFAULT = 4;
+//int regenIndex = REGEN_DEFAULT;
+int current_regen_speed = 4;
+bool current_regen_speed_changed = true;
 
 //Player Health
 const std::vector<std::string> PLAYER_HEALTH_CAPTIONS{ "1", "10", "20", "30", "40", "50", "100", "200", "300", "500", "1000", "5000", "10000", "20000", "30000" };
@@ -815,10 +817,13 @@ void updateFrozenWantedFeature(int level){
 }
 
 void onchange_regen_callback(int index, SelectFromListMenuItem *source){
+	current_regen_speed = index;
+	current_regen_speed_changed = true;
+
 	if(ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID())){
-		PLAYER::SET_PLAYER_HEALTH_RECHARGE_MULTIPLIER(PLAYER::PLAYER_ID(), REGEN_VALUES.at(regenIndex = index));
+		PLAYER::SET_PLAYER_HEALTH_RECHARGE_MULTIPLIER(PLAYER::PLAYER_ID(), REGEN_VALUES.at(current_regen_speed = index));
 		std::ostringstream ss;
-		ss << "Health regeneration rate: " << REGEN_VALUES.at(regenIndex);
+		ss << "Health regeneration rate: " << REGEN_VALUES.at(current_regen_speed);
 		set_status_text(ss.str());
 	}
 }
@@ -909,7 +914,7 @@ bool process_player_life_menu(){
 	
 	listItem = new SelectFromListMenuItem(REGEN_CAPTIONS, onchange_regen_callback);
 	listItem->caption = "Health Regeneration Rate";
-	listItem->value = regenIndex;
+	listItem->value = current_regen_speed;
 	menuItems.push_back(listItem);
 
 	return draw_generic_menu<int>(menuItems, &playerDataMenuIndex, caption, onconfirm_playerData_menu, NULL, NULL);
@@ -1381,6 +1386,7 @@ void reset_globals(){
 		frozenWantedLevel = 0;
 		
 	current_player_health = 6;
+	current_regen_speed = 4;
 	current_player_armor = 6;
 	current_npc_ragdoll = 0;
 	current_player_movement = 0;
@@ -1671,6 +1677,7 @@ void add_player_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 void add_world_feature_enablements3(std::vector<StringPairSettingDBRow>* results)
 {
 	results->push_back(StringPairSettingDBRow{"current_player_health", std::to_string(current_player_health)});
+	results->push_back(StringPairSettingDBRow{"current_regen_speed", std::to_string(current_regen_speed)});
 	results->push_back(StringPairSettingDBRow{"current_player_armor", std::to_string(current_player_armor)});
 	results->push_back(StringPairSettingDBRow{"current_npc_ragdoll", std::to_string(current_npc_ragdoll)});
 	results->push_back(StringPairSettingDBRow{"current_player_movement", std::to_string(current_player_movement)});
@@ -1748,6 +1755,9 @@ void handle_generic_settings(std::vector<StringPairSettingDBRow> settings){
 		}
 		else if (setting.name.compare("current_player_health") == 0){
 			current_player_health = stoi(setting.value);
+		}
+		else if (setting.name.compare("current_regen_speed") == 0) {
+			current_regen_speed = stoi(setting.value);
 		}
 		else if (setting.name.compare("current_player_armor") == 0){
 			current_player_armor = stoi(setting.value);
