@@ -903,7 +903,6 @@ void process_speed_menu(){
 
 	std::vector<MenuItem<int>*> menuItems;
 
-	MenuItem<int> *item;
 	SelectFromListMenuItem *listItem;
 	ToggleMenuItem<int>* toggleItem;
 
@@ -964,7 +963,6 @@ void process_visualize_menu() {
 
 	std::vector<MenuItem<int>*> menuItems;
 
-	MenuItem<int> *item;
 	SelectFromListMenuItem *listItem;
 	ToggleMenuItem<int>* toggleItem;
 
@@ -1060,7 +1058,6 @@ void process_engine_degrade_menu() {
 
 	std::vector<MenuItem<int>*> menuItems;
 
-	MenuItem<int> *item;
 	SelectFromListMenuItem *listItem;
 	ToggleMenuItem<int>* toggleItem;
 
@@ -1413,7 +1410,6 @@ void process_road_laws_menu(){
 
 	std::vector<MenuItem<int>*> menuItems;
 
-	MenuItem<int> *item;
 	SelectFromListMenuItem *listItem;
 	ToggleMenuItem<int>* toggleItem;
 
