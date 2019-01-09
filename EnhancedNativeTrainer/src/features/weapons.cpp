@@ -25,6 +25,12 @@ int weapDmgModIndex = 0;
 int activeLineIndexCopArmed = 0;
 int activeLineIndexPedAgainstWeapons = 0;
 
+// give all weapons automatically variables
+bool featureGiveAllWeapons = false;
+int tick_allw = 0;
+Ped oldplayerPed_W = -1;
+bool PlayerUpdated_w = true;
+//
 bool featureWeaponInfiniteAmmo = false;
 bool featureWeaponInfiniteParachutes = false, featureWeaponInfiniteParachutesUpdated = false;
 bool featureWeaponNoParachutes = false, featureWeaponNoParachutesUpdated = false;
@@ -43,8 +49,6 @@ bool featureArmyMelee = false;
 bool featureGravityGun = false;
 bool featureGravityGunUpdated = false;
 bool featureFriendlyFire = false;
-bool featureGiveAllWeapons = false;
-bool Give_All_Weapons_Check = false;
 
 bool grav_target_locked = false;
 Entity grav_entity = 0;
@@ -933,7 +937,7 @@ bool process_weapon_menu(){
 
 	ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
 	//toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Give All Weapons On Startup";
+	toggleItem->caption = "Give All Weapons Automatically";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureGiveAllWeapons;
 	toggleItem->toggleValueUpdated = NULL;
@@ -1312,12 +1316,24 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 
 	if (death_time > 10000) cops_took_weapons = false;
 
-	// Give All Weapons On Startup Option
-	if (featureGiveAllWeapons && !Give_All_Weapons_Check) {
-		give_all_weapons_hotkey();
-		Give_All_Weapons_Check = true;
-	};
+	// Give All Weapons Automatically Option
+	if (featureGiveAllWeapons) {
+		Ped playerPed_W = PLAYER::PLAYER_PED_ID();
 
+		tick_allw = tick_allw + 1;
+		if (tick_allw > 200 && PlayerUpdated_w) {
+			give_all_weapons_hotkey();
+			oldplayerPed_W = playerPed_W;
+			tick_allw = 0;
+			PlayerUpdated_w = false; 
+		}
+
+		int death_time2 = PLAYER::GET_TIME_SINCE_LAST_DEATH();
+		if (death_time2 > -1 && death_time2 < 2000) PlayerUpdated_w = true; 
+		
+		if (playerPed_W != oldplayerPed_W) PlayerUpdated_w = true;
+	}
+	
 	// Disables visions if not aiming
 	if (WEAPONS_SNIPERVISION_VALUES[SniperVisionIndex] != 0) 
 	{
