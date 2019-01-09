@@ -48,6 +48,10 @@ struct WheelSelection{
 	std::string name;
 };
 
+struct XenonColour {
+	std::string colorString;
+	int colour;
+};
 extern const std::vector<std::string> VALUES_SUPERCARS;
 
 /***
@@ -357,6 +361,16 @@ bool onconfirm_dash_colour_selection(MenuItem<int> choice);
 bool process_dash_colour_menu();
 
 bool process_interior_colour_menu();
+
+//Xenon colours
+
+void apply_xenon_colors(int colorIndex);
+
+void onhighlight_xenon_selection(MenuItem<int> choice);
+
+bool onconfirm_xenon_selection(MenuItem<int> choice);
+
+bool process_xenon_colour_menu();
 
 bool inline is_this_a_car(Vehicle veh){
 	// Return true if the current vehicle is a car, e.g. as certain vehicles don't support neon lights

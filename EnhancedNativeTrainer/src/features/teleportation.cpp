@@ -1403,7 +1403,6 @@ void set_3d_marker(){
 
 	std::vector<MenuItem<int>*> menuItems;
 
-	MenuItem<int> *item;
 	SelectFromListMenuItem *listItem;
 	ToggleMenuItem<int>* toggleItem;
 
