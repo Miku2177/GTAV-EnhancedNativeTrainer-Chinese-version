@@ -1345,6 +1345,8 @@ std::vector<SavedVehicleDBRow*> ENTDatabase::get_saved_vehicles(int index)
 
 			veh->engineSound = sqlite3_column_int(stmt, index++);
 
+			veh->xenonColour = sqlite3_column_int(stmt, index++);
+
 			results.push_back(veh);
 
 			r = sqlite3_step(stmt);
