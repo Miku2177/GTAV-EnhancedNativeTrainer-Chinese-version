@@ -1316,7 +1316,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 
 	if (death_time > 10000) cops_took_weapons = false;
 
-	// Give All Weapons Automatically Option
+	// Give All Weapons Automatically
 	if (featureGiveAllWeapons) {
 		Ped playerPed_W = PLAYER::PLAYER_PED_ID();
 

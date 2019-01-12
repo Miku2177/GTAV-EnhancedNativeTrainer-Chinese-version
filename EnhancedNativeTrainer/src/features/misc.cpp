@@ -940,6 +940,11 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 				CAM::POINT_CAM_AT_PED_BONE(StuntCam, stunt_player, 31086, 0, 0.0, -0.10, 1);
 			}
 			CAM::SET_CAM_ROT(StuntCam, curRotation.x, curRotation.y, curRotation.z, 2);
+
+			CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE_BLEND_LEVEL(StuntCam, 1.0);
+			CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE(StuntCam, 1.0);
+			CAM::_SET_CAM_DOF_FOCUS_DISTANCE_BIAS(StuntCam, 1.0);
+
 			CAM::RENDER_SCRIPT_CAMS(true, false, 1, true, true);
 			CAM::SET_CAM_ACTIVE(StuntCam, true);
 			CAM::SET_CAM_NEAR_CLIP(StuntCam, .329);
@@ -980,6 +985,9 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		}
 
 		if (CAM::DOES_CAM_EXIST(CutCam)) {
+			CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE_BLEND_LEVEL(CutCam, 1.0);
+			CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE(CutCam, 1.0);
+			CAM::_SET_CAM_DOF_FOCUS_DISTANCE_BIAS(CutCam, 1.0);
 			CAM::RENDER_SCRIPT_CAMS(true, false, 1, false, false);
 
 			CAM::STOP_CUTSCENE_CAM_SHAKING();
