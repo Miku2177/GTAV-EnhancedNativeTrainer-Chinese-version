@@ -1796,6 +1796,7 @@ bool process_vehmod_menu(){
 	}
 
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
+	eGameVersion version = getGameVersion();
 
 	VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
 
@@ -1926,7 +1927,7 @@ bool process_vehmod_menu(){
 		menuItems.push_back(item);
 	}
 
-	if (VEHICLE::IS_TOGGLE_MOD_ON(veh, 22)) {
+	if (VEHICLE::IS_TOGGLE_MOD_ON(veh, 22) && version > 45) {
 		MenuItem<int> * item = new MenuItem<int>();
 		item->caption = "Xenon Colour Menu";
 		item->value = SPECIAL_ID_FOR_XENON_COLOUR;

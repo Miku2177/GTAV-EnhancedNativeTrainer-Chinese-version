@@ -3462,6 +3462,10 @@ bool spawn_saved_car(int slot, std::string caption){
 				current_picked_engine_sound = -1;
 			}
 		}
+
+		if (savedVeh->xenonColour != -1) {
+			VEHICLE::SET_VEHICLE_XENON_COLOUR(veh, savedVeh->xenonColour);
+		}
 		//
 
 		ENTITY::SET_VEHICLE_AS_NO_LONGER_NEEDED(&veh);
