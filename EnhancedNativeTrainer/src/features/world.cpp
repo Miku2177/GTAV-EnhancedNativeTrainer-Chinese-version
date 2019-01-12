@@ -1429,6 +1429,10 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 			CAM::ATTACH_CAM_TO_PED_BONE(DeathCam, dead_player, 31086, 0, -0.15, 0, 1);
 			CAM::POINT_CAM_AT_PED_BONE(DeathCam, dead_player, 31086, 0, 0.0, 0, 1);
 
+			CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE_BLEND_LEVEL(DeathCam, 1.0);
+			CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE(DeathCam, 1.0);
+			CAM::_SET_CAM_DOF_FOCUS_DISTANCE_BIAS(DeathCam, 1.0);
+
 			CAM::RENDER_SCRIPT_CAMS(true, false, 0, true, true);
 			CAM::SET_CAM_ACTIVE(DeathCam, true);
 			ENTITY::SET_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID(), false);
