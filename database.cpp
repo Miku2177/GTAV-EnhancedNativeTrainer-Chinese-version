@@ -17,7 +17,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 /**This value should be increased whenever you change the schema and a release is made.
 However you must also put in code to upgrade from older versions, in ENTDatabase::handle_version,
 as they will be deployed in the wild already.*/
-const int DATABASE_VERSION = 10;
+const int DATABASE_VERSION = 11;
 
 static int singleIntResultCallback(void *data, int count, char **rows, char **azColName)
 {
@@ -146,7 +146,8 @@ void ENTDatabase::handle_version(int oldVersion)
 			convertibleRoofUp INTEGER DEFAULT 0, \
 			dashColour INTEGER DEFAULT -1, \
 			interiorColour INTEGER DEFAULT -1, \
-			engineSound INTEGER DEFAULT -1 \
+			engineSound INTEGER DEFAULT -1, \
+			xenonColour INTEGER DEFAULT -1 \
 			)";
 		int rcVeh1 = sqlite3_exec(db, CREATE_VEHICLE_TABLE_QUERY, NULL, 0, &zErrMsg);
 		if (rcVeh1 != SQLITE_OK)
@@ -407,6 +408,18 @@ void ENTDatabase::handle_version(int oldVersion)
 		if (custTyresAddition != SQLITE_OK)
 		{
 			write_text_to_log_file("Couldn't add engine sound column");
+			sqlite3_free(zErrMsg);
+		}
+	}
+
+	if (oldVersion < 11)
+	{
+		char* ADD_XENONCOLOUR_COL = "ALTER TABLE ENT_SAVED_VEHICLES ADD xenonColour INTEGER DEFAULT -1";
+
+		int custTyresAddition = sqlite3_exec(db, ADD_XENONCOLOUR_COL, NULL, 0, &zErrMsg);
+		if (custTyresAddition != SQLITE_OK)
+		{
+			write_text_to_log_file("Couldn't add xenon colour column");
 			sqlite3_free(zErrMsg);
 		}
 	}
@@ -818,7 +831,7 @@ void ENTDatabase::save_vehicle_mods(Vehicle veh, sqlite3_int64 rowID)
 
 	begin_transaction();
 
-	for (int i = 0; i < 49; i++) //49 mods total (that is including Bennys mods) 
+	for (int i = 0; i < 50; i++) //50 mods total (that is including Bennys mods) 
 	{
 		std::stringstream ss;
 		ss << "INSERT OR REPLACE INTO ENT_VEHICLE_MODS VALUES (?, ?, ?, ?, ?)";
@@ -1006,7 +1019,7 @@ bool ENTDatabase::save_vehicle(Vehicle veh, std::string saveName, sqlite3_int64 
 
 	std::stringstream ss;
 	ss << "INSERT OR REPLACE INTO ENT_SAVED_VEHICLES VALUES (";
-	for (int i = 0; i < 41; i++)
+	for (int i = 0; i < 42; i++)
 	{
 		if (i > 0)
 		{
@@ -1123,6 +1136,7 @@ bool ENTDatabase::save_vehicle(Vehicle veh, std::string saveName, sqlite3_int64 
 		windowTint INTEGER, \ 23
 		burstableTyres INTEGER \ 24
 		engineSound INTEGER, \ 25
+		xenonColour INTEGER, \ 26
 		*/
 
 		sqlite3_bind_int(stmt, index++, VEHICLE::GET_VEHICLE_LIVERY(veh)); 

@@ -63,6 +63,8 @@ const static int SPECIAL_ID_FOR_INTERIOR_COLOUR = 100;
 
 const static int SPECIAL_ID_FOR_ENGINE_SOUND = 101;
 
+const static int SPECIAL_ID_FOR_XENON_COLOUR = 102;
+
 const std::vector<WheelSelection> WHEELS_SPORTS = {
 	{ 0, "Inferno" },
 	{ 25, "Inferno (Chrome)" },
@@ -1017,12 +1019,12 @@ std::string getModCategoryName(int i){
 		return "License Plates";
 	case SPECIAL_ID_FOR_ENGINE_SOUND:
 		return "Engine Sound";
+	case SPECIAL_ID_FOR_XENON_COLOUR:
+		return "Xenon Lights Colour";
 	default:
 		return std::to_string(i);
 	}
 }
-
-
 
 std::string geSpecialItemTitle(int category, int index){
 	switch (category){
@@ -1780,6 +1782,9 @@ bool onconfirm_vehmod_menu(MenuItem<int> choice){
 	case SPECIAL_ID_FOR_TIRE_SMOKE:
 		process_smoke_colour_menu();
 		break;
+	case SPECIAL_ID_FOR_XENON_COLOUR:
+		process_xenon_colour_menu();
+		break;
 	default:
 		process_vehmod_category_menu(choice.value);
 		break;
@@ -1795,6 +1800,7 @@ bool process_vehmod_menu(){
 	}
 
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
+	eGameVersion version = getGameVersion();
 
 	VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
 
@@ -1921,6 +1927,14 @@ bool process_vehmod_menu(){
 		item = new MenuItem<int>();
 		item->caption = "Tire Smoke Menu";
 		item->value = SPECIAL_ID_FOR_TIRE_SMOKE;
+		item->isLeaf = false;
+		menuItems.push_back(item);
+	}
+
+	if (VEHICLE::IS_TOGGLE_MOD_ON(veh, 22) && version > 45) {
+		MenuItem<int> * item = new MenuItem<int>();
+		item->caption = "Xenon Colour Menu";
+		item->value = SPECIAL_ID_FOR_XENON_COLOUR;
 		item->isLeaf = false;
 		menuItems.push_back(item);
 	}
