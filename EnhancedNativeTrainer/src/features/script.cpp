@@ -871,7 +871,7 @@ bool process_player_life_menu(){
 	MenuItem<int> *item;
 	SelectFromListMenuItem *listItem;
 	ToggleMenuItem<int>* toggleItem;
-	LifeItem<int> *item2;
+	//LifeItem<int> *item2;
 
 	int i = 0;
 
@@ -926,7 +926,6 @@ bool maxwantedlevel_menu() {
 	std::vector<MenuItem<int> *> menuItems;
 	std::string caption = "Wanted Level Options";
 
-	MenuItem<int> *item;
 	SelectFromListMenuItem *listItem;
 	ToggleMenuItem<int>* toggleItem;
 
@@ -953,7 +952,6 @@ bool mostwanted_menu() {
 	std::vector<MenuItem<int> *> menuItems;
 	std::string caption = "Wanted Fugitive Options";
 
-	MenuItem<int> *item;
 	SelectFromListMenuItem *listItem;
 	ToggleMenuItem<int>* toggleItem;
 
@@ -992,7 +990,6 @@ bool player_movement_speed() {
 	std::vector<MenuItem<int> *> menuItems;
 	std::string caption = "Player Movement Speed Options";
 
-	MenuItem<int> *item;
 	SelectFromListMenuItem *listItem;
 	ToggleMenuItem<int>* toggleItem;
 
@@ -1025,7 +1022,6 @@ bool process_ragdoll_menu() {
 	std::vector<MenuItem<int> *> menuItems;
 	std::string caption = "Ragdoll Options";
 
-	MenuItem<int> *item;
 	SelectFromListMenuItem *listItem;
 	ToggleMenuItem<int>* toggleItem;
 
@@ -1058,7 +1054,6 @@ bool process_player_prison_menu(){
 	std::vector<MenuItem<int> *> menuItems;
 	std::string caption = "Prison Break Options";
 
-	MenuItem<int> *item;
 	SelectFromListMenuItem *listItem;
 	ToggleMenuItem<int>* toggleItem;
 
