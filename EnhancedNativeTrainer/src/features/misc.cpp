@@ -98,6 +98,8 @@ bool featureResetPlayerModelOnDeath = true;
 
 bool featureEnableMissingRadioStation = false;
 
+bool slipperywhenwet = false;
+
 const int TRAINERCONFIG_HOTKEY_MENU = 99;
 int radioStationIndex = -1;
 
@@ -630,6 +632,9 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	if (featureFlyingMusic || featureFlyingMusicUpdated) {
 		if (featureFlyingMusic) {
 			AUDIO::SET_AUDIO_FLAG("DisableFlightMusic", true);
+			//
+			//AUDIO::SET_AUDIO_FLAG("HoldMissionCompleteWhenPrepared", true);
+			//
 		}
 		else {
 			AUDIO::SET_AUDIO_FLAG("DisableFlightMusic", false);
@@ -695,6 +700,24 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	else if (featureRadioFreezeUpdated) {
 		// Leave it empty for now.
 	}
+
+	// Slippery When Wet
+	//if (featureFlyingMusic && !slipperywhenwet) { //  && PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)
+	//	Vector3 coords_slippery = ENTITY::GET_ENTITY_COORDS(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), true);
+	//	if (GAMEPLAY::GET_RAIN_LEVEL() > 0) { // INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slippery.x, coords_slippery.y, coords_slippery.z) && GAMEPLAY::GET_NEXT_WEATHER_TYPE_HASH_NAME() == 1420204096
+	//		GAMEPLAY::_SET_RAIN_FX_INTENSITY(14);
+	//		slipperywhenwet = true;
+	//	}
+		//if (INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slippery.x, coords_slippery.y, coords_slippery.z) && GAMEPLAY::GET_NEXT_WEATHER_TYPE_HASH_NAME() == 3061285535) {
+		//	GAMEPLAY::_SET_RAIN_FX_INTENSITY(14);
+		//	slipperywhenwet = true;
+		//}
+	//}
+	//if ((!featureFlyingMusic || !INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(ENTITY::GET_ENTITY_COORDS(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), true).x, ENTITY::GET_ENTITY_COORDS(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), true).y, ENTITY::GET_ENTITY_COORDS(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), true).z) ||
+	//	(GAMEPLAY::GET_NEXT_WEATHER_TYPE_HASH_NAME() != 1420204096 && GAMEPLAY::GET_NEXT_WEATHER_TYPE_HASH_NAME() != 3061285535)) && slipperywhenwet) {
+	//	GAMEPLAY::_SET_RAIN_FX_INTENSITY(-1);
+	//	slipperywhenwet = false;
+	//}
 
 	// hide hud
 	if (featureMiscHideHud) {
