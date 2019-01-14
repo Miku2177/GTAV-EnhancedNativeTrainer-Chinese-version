@@ -920,6 +920,7 @@ void most_wanted()
 					}
 				}
 				if (added_already == true && distance_from_me_x < 20 && distance_from_me_y < 20 && distance_from_me_z < 10 && PED::IS_PED_FACING_PED(cops_nearby[i], Bad_ass, 100) &&
+					PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < VEH_STARSPUNISH_VALUES[current_player_mostwanted] &&
 					(PED::GET_PED_TYPE(cops_nearby[i]) == 6 || PED::GET_PED_TYPE(cops_nearby[i]) == 27) && ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(cops_nearby[i], Bad_ass, 17))	{
 					PLAYER::SET_MAX_WANTED_LEVEL(5);
 					PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), VEH_STARSPUNISH_VALUES[current_player_mostwanted], 0);
