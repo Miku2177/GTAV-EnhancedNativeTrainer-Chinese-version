@@ -964,6 +964,8 @@ namespace PED
 
 namespace VEHICLE
 {
+	static Any GET_VEHICLE_XENON_COLOUR(Any p0) { return invoke<Any>(0x3DFF319A831E0CDB, p0); } // EE21293DAD47C9513D53892    
+	static void SET_VEHICLE_XENON_COLOUR(Any p0, int p1) { invoke<Void>(0xE41033B25D003A07, p0, p1); }
 	static void _SET_VEHICLE_DOOR_CAN_BREAK(Vehicle vehicle, int doorIndex, BOOL isBreakable) { invoke<Void>(0x2FA133A4A9D37ED8, vehicle, doorIndex, isBreakable); } // 0x2FA133A4A9D37ED8 0x065B92B3
 	static void SET_VEHICLE_GRAVITY_AMOUNT(Vehicle vehicle, float gravity) { invoke<Void>(0x1a963e58, vehicle, gravity); }
 	static void _SET_VEHICLE_INTERIOR_COLOUR(Vehicle vehicle, int color) { invoke<Void>(0xF40DD601A65F7F19, vehicle, color); }

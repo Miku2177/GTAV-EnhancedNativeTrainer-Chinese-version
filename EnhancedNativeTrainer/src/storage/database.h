@@ -136,6 +136,7 @@ public:
 	int dashboardColour;
 	int interiorColour;
 	int engineSound;
+	int xenonColour;
 
 	std::vector<SavedVehicleExtraDBRow*> extras;
 	std::vector<SavedVehicleModDBRow*> mods;
