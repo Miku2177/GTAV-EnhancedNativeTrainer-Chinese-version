@@ -471,13 +471,13 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 		case 3:
 			process_misc_freezeradio_menu();
 			break;
-		case 17:
+		case 16:
 			process_phone_bill_menu();
 			break;
-		case 22:
+		case 21:
 			process_def_menutab_menu();
 			break;
-		case 23:
+		case 22:
 			process_airbrake_global_menu();
 			break;
 		default:
@@ -488,7 +488,7 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 }
 
 void process_misc_menu(){
-	const int lineCount = 24;
+	const int lineCount = 23;
 
 	std::string caption = "Miscellaneous Options";
 
@@ -504,7 +504,7 @@ void process_misc_menu(){
 		{"No Wanted Music", &featureWantedMusic, &featureWantedMusicUpdated, true},
 		{"No Flight Music", &featureFlyingMusic, &featureFlyingMusicUpdated, true},
 		{"No Police Scanner", &featurePoliceScanner, &featurePoliceScannerUpdated, true },
-		{"No 'Mission Passed' Message", &featureNoComleteMessage, &featureNoComleteMessageUpdated, true },
+		//{"No 'Mission Passed' Message", &featureNoComleteMessage, &featureNoComleteMessageUpdated, true },
 		{"Hide HUD", &featureMiscHideHud, &featureMiscHideHudUpdated},
 		{"Show HUD If Phone In Hand Only", &featurePhoneShowHud, &featurePhoneShowHudUpdated},
 		{"Show HUD In Vehicle Only", &featureInVehicleNoHud, &featureInVehicleNoHudUpdated },
@@ -657,7 +657,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	}
 
 	// No 'Mission Passed' Message
-	if (featureNoComleteMessage) {
+	/*if (featureNoComleteMessage) {
 		AUDIO::SET_AUDIO_FLAG("HoldMissionCompleteWhenPrepared", true);
 		if (GAMEPLAY::GET_MISSION_FLAG() == 1) Comp_seconds = -1;
 
@@ -669,13 +669,14 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			}
 			if (Comp_seconds > 5) {
 				AUDIO::SET_AUDIO_FLAG("HoldMissionCompleteWhenPrepared", false);
+				NETWORK::NETWORK_SET_MISSION_FINISHED();
 				Comp_seconds = -1;
 			}
 		}
 	}
 	else {
 		AUDIO::SET_AUDIO_FLAG("HoldMissionCompleteWhenPrepared", false);
-	}
+	}*/
 
 	// Radio Boost
 	if (featureBoostRadio || featureBoostRadioUpdated) {

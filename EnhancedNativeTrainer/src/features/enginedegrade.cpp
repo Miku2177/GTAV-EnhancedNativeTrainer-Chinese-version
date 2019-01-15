@@ -74,7 +74,7 @@ bool BoatEngineDegradeChanged = true;
 
 void engine_can_degrade()
 {
-	if (featureEngineDegrade) {
+	if (featureEngineDegrade && GAMEPLAY::GET_MISSION_FLAG() == 0) {
 
 		Player player = PLAYER::PLAYER_ID();
 		Ped playerPed = PLAYER::PLAYER_PED_ID();

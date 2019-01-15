@@ -487,17 +487,17 @@ void damage_door() {
 	}
 }
 
-void enter_damaged_vehicle() { // enter destroyed vehicle
-	Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
-	const int ENTER_ARR_SIZE = 1024;
-	Vehicle enter_veh[ENTER_ARR_SIZE];
-	int found_to_enter = worldGetAllVehicles(enter_veh, ENTER_ARR_SIZE);
-	for (int i = 0; i < found_to_enter; i++) {
-		Vector3 coordsdamagedvehicle = ENTITY::GET_ENTITY_COORDS(enter_veh[i], true);
-		float dist_to_damaged_diff = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsdamagedvehicle.x, coordsdamagedvehicle.y, coordsdamagedvehicle.z);
-		if (dist_to_damaged_diff < 5) PED::SET_PED_INTO_VEHICLE(PLAYER::PLAYER_PED_ID(), enter_veh[i], -1);
-	}
-}
+//void enter_damaged_vehicle() { // enter destroyed vehicle
+//	Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
+//	const int ENTER_ARR_SIZE = 1024;
+//	Vehicle enter_veh[ENTER_ARR_SIZE];
+//	int found_to_enter = worldGetAllVehicles(enter_veh, ENTER_ARR_SIZE);
+//	for (int i = 0; i < found_to_enter; i++) {
+//		Vector3 coordsdamagedvehicle = ENTITY::GET_ENTITY_COORDS(enter_veh[i], true);
+//		float dist_to_damaged_diff = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsdamagedvehicle.x, coordsdamagedvehicle.y, coordsdamagedvehicle.z);
+//		if (dist_to_damaged_diff < 5) PED::SET_PED_INTO_VEHICLE(PLAYER::PLAYER_PED_ID(), enter_veh[i], -1);
+//	}
+//}
 
 void eject_seat() { // eject seat
 	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0) && !VEHICLE::IS_VEHICLE_SEAT_FREE(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false), -1)) {
@@ -642,11 +642,11 @@ bool onconfirm_vehdoor_menu(MenuItem<int> choice){
 	{
 		damage_door();
 	}
-	else if (choice.value == -16)//enter damaged vehicle
-	{
-		enter_damaged_vehicle();
-	}
-	else if (choice.value == -17)//eject seat
+	//else if (choice.value == -16)//enter damaged vehicle
+	//{
+	//	enter_damaged_vehicle();
+	//}
+	else if (choice.value == -16)//eject seat
 	{
 		eject_seat();
 	}
@@ -786,15 +786,15 @@ bool process_veh_door_menu(){
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
-	item = new MenuItem<int>();
-	item->caption = "Teleport In Destroyed Vehicle";
-	item->value = -16;
-	item->isLeaf = true;
-	menuItems.push_back(item);
+	//item = new MenuItem<int>();
+	//item->caption = "Teleport In Destroyed Vehicle";
+	//item->value = -16;
+	//item->isLeaf = true;
+	//menuItems.push_back(item);
 
 	item = new MenuItem<int>();
 	item->caption = "Eject Driver Seat";
-	item->value = -17;
+	item->value = -16;
 	item->isLeaf = true;
 	menuItems.push_back(item); 
 
