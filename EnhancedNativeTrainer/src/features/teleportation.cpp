@@ -834,7 +834,7 @@ std::vector<tele_location> LOCATIONS_STUNTS = {
 	{ "Stunt Jump 48", 1681.85f, 3144.88f, 43.8315f },
 	{ "Stunt Jump 49", 1638.65f, 3607.11f, 35.4718f },
 	{ "Stunt Jump 50", 3343.38f, 5151.73f, 18.7621f },
-	{ "Under The Bridge 1", 2820.96f, 4980.96f, 63.4593f },
+	/*{ "Under The Bridge 1", 2820.96f, 4980.96f, 63.4593f },
 	{ "Under The Bridge 2", 2681.0f, 4840.96f, 44.6341f },
 	{ "Under The Bridge 3", 1948.6f, 6230.54f, 44.2015f },
 	{ "Under The Bridge 4", -1048.4f, 4756.42f, 235.808f },
@@ -883,7 +883,7 @@ std::vector<tele_location> LOCATIONS_STUNTS = {
 	{ "Under The Bridge 47", 2271.02f, 1130.84f, 67.556f },
 	{ "Under The Bridge 48", 1817.1f, 2050.54f, 55.8578f },
 	{ "Under The Bridge 49", 2563.81f, 2172.33f, 18.8863f },
-	{ "Under The Bridge 50", 2410.98f, 2900.99f, 49.3331f },
+	{ "Under The Bridge 50", 2410.98f, 2900.99f, 49.3331f },*/
 };
 
 std::string JELLMAN_CAPTION = "Heist Map Updates In SP";

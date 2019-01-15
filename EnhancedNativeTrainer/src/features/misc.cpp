@@ -52,6 +52,9 @@ static double FPStime, FPStime_passed, FPStime_curr, starttime = 0;
 int fps = 0; 
 char fps_to_show_char_modifiable[15];
 //
+
+int Comp_secs_passed, Comp_secs_curr, Comp_seconds = -1;
+
 bool featurePlayerRadio = false;
 bool featurePlayerRadioUpdated = false;
 bool featureRadioFreeze = false, featureRadioFreezeUpdated = false;
@@ -65,6 +68,8 @@ bool featureFlyingMusic = false;
 bool featureFlyingMusicUpdated = false;
 bool featurePoliceScanner = false;
 bool featurePoliceScannerUpdated = false;
+bool featureNoComleteMessage = false;
+bool featureNoComleteMessageUpdated = false;
 bool featurePoliceRadio = false;
 bool featurePoliceRadioUpdated = false;
 bool police_radio_check = false;
@@ -466,13 +471,13 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 		case 3:
 			process_misc_freezeradio_menu();
 			break;
-		case 16:
+		case 17:
 			process_phone_bill_menu();
 			break;
-		case 21:
+		case 22:
 			process_def_menutab_menu();
 			break;
-		case 22:
+		case 23:
 			process_airbrake_global_menu();
 			break;
 		default:
@@ -483,7 +488,7 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 }
 
 void process_misc_menu(){
-	const int lineCount = 23;
+	const int lineCount = 24;
 
 	std::string caption = "Miscellaneous Options";
 
@@ -499,6 +504,7 @@ void process_misc_menu(){
 		{"No Wanted Music", &featureWantedMusic, &featureWantedMusicUpdated, true},
 		{"No Flight Music", &featureFlyingMusic, &featureFlyingMusicUpdated, true},
 		{"No Police Scanner", &featurePoliceScanner, &featurePoliceScannerUpdated, true },
+		{"No 'Mission Passed' Message", &featureNoComleteMessage, &featureNoComleteMessageUpdated, true },
 		{"Hide HUD", &featureMiscHideHud, &featureMiscHideHudUpdated},
 		{"Show HUD If Phone In Hand Only", &featurePhoneShowHud, &featurePhoneShowHudUpdated},
 		{"Show HUD In Vehicle Only", &featureInVehicleNoHud, &featureInVehicleNoHudUpdated },
@@ -548,6 +554,7 @@ void reset_misc_globals(){
 		featureWantedMusic = 
 		featureFlyingMusic = 
 		featurePoliceScanner = 
+		featureNoComleteMessage =
 		featurePoliceRadio =
 		featureEnableMissingRadioStation =
 		featureRadioAlwaysOff = false;
@@ -582,6 +589,7 @@ void reset_misc_globals(){
 		featureWantedMusicUpdated =
 		featureFlyingMusicUpdated =
 		featurePoliceScannerUpdated =
+		featureNoComleteMessageUpdated =
 		featureBoostRadio =
 		featureBoostRadioUpdated =
 		featurePoliceRadioUpdated =
@@ -632,9 +640,6 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	if (featureFlyingMusic || featureFlyingMusicUpdated) {
 		if (featureFlyingMusic) {
 			AUDIO::SET_AUDIO_FLAG("DisableFlightMusic", true);
-			//
-			//AUDIO::SET_AUDIO_FLAG("HoldMissionCompleteWhenPrepared", true);
-			//
 		}
 		else {
 			AUDIO::SET_AUDIO_FLAG("DisableFlightMusic", false);
@@ -649,6 +654,27 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		else {
 			AUDIO::SET_AUDIO_FLAG("PoliceScannerDisabled", false);
 		}
+	}
+
+	// No 'Mission Passed' Message
+	if (featureNoComleteMessage) {
+		AUDIO::SET_AUDIO_FLAG("HoldMissionCompleteWhenPrepared", true);
+		if (GAMEPLAY::GET_MISSION_FLAG() == 1) Comp_seconds = -1;
+
+		if (GAMEPLAY::GET_MISSION_FLAG() == 0) {
+			Comp_secs_passed = clock() / CLOCKS_PER_SEC;
+			if (((clock() / CLOCKS_PER_SEC) - Comp_secs_curr) != 0) {
+				Comp_seconds = Comp_seconds + 1;
+				Comp_secs_curr = Comp_secs_passed;
+			}
+			if (Comp_seconds > 5) {
+				AUDIO::SET_AUDIO_FLAG("HoldMissionCompleteWhenPrepared", false);
+				Comp_seconds = -1;
+			}
+		}
+	}
+	else {
+		AUDIO::SET_AUDIO_FLAG("HoldMissionCompleteWhenPrepared", false);
 	}
 
 	// Radio Boost
@@ -1091,6 +1117,7 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 	results->push_back(FeatureEnabledLocalDefinition{"featureWantedMUsic", &featureWantedMusic, &featureWantedMusicUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureFlyingMusic", &featureFlyingMusic, &featureFlyingMusicUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePoliceScanner", &featurePoliceScanner, &featurePoliceScannerUpdated});
+	results->push_back(FeatureEnabledLocalDefinition{"featureNoComleteMessage", &featureNoComleteMessage, &featureNoComleteMessageUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePoliceRadio", &featurePoliceRadio, &featurePoliceRadioUpdated});
 	
 	results->push_back(FeatureEnabledLocalDefinition{"featureMiscLockRadio", &featureMiscLockRadio});
