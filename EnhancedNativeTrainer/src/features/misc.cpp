@@ -53,7 +53,7 @@ int fps = 0;
 char fps_to_show_char_modifiable[15];
 //
 
-int Comp_secs_passed, Comp_secs_curr, Comp_seconds = -1;
+//int Comp_secs_passed, Comp_secs_curr, Comp_seconds = -1;
 
 bool featurePlayerRadio = false;
 bool featurePlayerRadioUpdated = false;
@@ -471,13 +471,13 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 		case 3:
 			process_misc_freezeradio_menu();
 			break;
-		case 16:
+		case 17:
 			process_phone_bill_menu();
 			break;
-		case 21:
+		case 22:
 			process_def_menutab_menu();
 			break;
-		case 22:
+		case 23:
 			process_airbrake_global_menu();
 			break;
 		default:
@@ -488,7 +488,7 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 }
 
 void process_misc_menu(){
-	const int lineCount = 23;
+	const int lineCount = 24;
 
 	std::string caption = "Miscellaneous Options";
 
@@ -504,7 +504,7 @@ void process_misc_menu(){
 		{"No Wanted Music", &featureWantedMusic, &featureWantedMusicUpdated, true},
 		{"No Flight Music", &featureFlyingMusic, &featureFlyingMusicUpdated, true},
 		{"No Police Scanner", &featurePoliceScanner, &featurePoliceScannerUpdated, true },
-		//{"No 'Mission Passed' Message", &featureNoComleteMessage, &featureNoComleteMessageUpdated, true },
+		{"No 'Mission Passed' Message", &featureNoComleteMessage, &featureNoComleteMessageUpdated, true },
 		{"Hide HUD", &featureMiscHideHud, &featureMiscHideHudUpdated},
 		{"Show HUD If Phone In Hand Only", &featurePhoneShowHud, &featurePhoneShowHudUpdated},
 		{"Show HUD In Vehicle Only", &featureInVehicleNoHud, &featureInVehicleNoHudUpdated },
@@ -657,27 +657,10 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	}
 
 	// No 'Mission Passed' Message
-	/*if (featureNoComleteMessage) {
-		AUDIO::SET_AUDIO_FLAG("HoldMissionCompleteWhenPrepared", true);
-		if (GAMEPLAY::GET_MISSION_FLAG() == 1) Comp_seconds = -1;
-
-		if (GAMEPLAY::GET_MISSION_FLAG() == 0) {
-			Comp_secs_passed = clock() / CLOCKS_PER_SEC;
-			if (((clock() / CLOCKS_PER_SEC) - Comp_secs_curr) != 0) {
-				Comp_seconds = Comp_seconds + 1;
-				Comp_secs_curr = Comp_secs_passed;
-			}
-			if (Comp_seconds > 5) {
-				AUDIO::SET_AUDIO_FLAG("HoldMissionCompleteWhenPrepared", false);
-				NETWORK::NETWORK_SET_MISSION_FINISHED();
-				Comp_seconds = -1;
-			}
-		}
+	if (featureNoComleteMessage) {
+		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("mission_stat_watcher");
 	}
-	else {
-		AUDIO::SET_AUDIO_FLAG("HoldMissionCompleteWhenPrepared", false);
-	}*/
-
+	
 	// Radio Boost
 	if (featureBoostRadio || featureBoostRadioUpdated) {
 		if (featureBoostRadio) {
