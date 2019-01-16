@@ -658,7 +658,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 
 	// No 'Mission Passed' Message
 	if (featureNoComleteMessage) {
-		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("mission_stat_watcher");
+		if (!SCRIPT::HAS_SCRIPT_LOADED("family3")) GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("mission_stat_watcher");
 	}
 	
 	// Radio Boost
