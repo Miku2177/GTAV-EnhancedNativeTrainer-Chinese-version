@@ -2635,7 +2635,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		}
 	}
 
-	if (featureRememberVehicles && featureDeleteTrackedVehicles_CharacterChanged && playerPed_Tracking != old_playerPed_Tracking) {
+	if (featureRememberVehicles && featureDeleteTrackedVehicles_CharacterChanged && playerPed_Tracking != old_playerPed_Tracking && GAMEPLAY::GET_MISSION_FLAG() == 0) {
 		if (!BLIPTABLE_VEH.empty()) {
 			for (int i = 0; i < BLIPTABLE_VEH.size(); i++) {
 				if (UI::DOES_BLIP_EXIST(BLIPTABLE_VEH[i])) {
@@ -2656,7 +2656,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		}
 	}
 
-	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && featureRememberVehicles && !ENTITY::IS_ENTITY_A_MISSION_ENTITY(PED::GET_VEHICLE_PED_IS_IN(playerPed, false))) {
+	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && featureRememberVehicles && GAMEPLAY::GET_MISSION_FLAG() == 0) { // && !ENTITY::IS_ENTITY_A_MISSION_ENTITY(PED::GET_VEHICLE_PED_IS_IN(playerPed, false))
 			Vehicle veh_rem = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 			
 			if (VEHICLES_REMEMBER.empty()) {

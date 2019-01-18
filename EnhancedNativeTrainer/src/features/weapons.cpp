@@ -641,7 +641,7 @@ void sniper_vision_toggle()
 	if ((WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_SNIPERRIFLE") || WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_HEAVYSNIPER") ||
 		WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_REMOTESNIPER") || WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_HEAVYSNIPER_MK2") ||
 		WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_MARKSMANRIFLE") || WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_MARKSMANRIFLE_MK2")) &&
-		PED::GET_PED_CONFIG_FLAG(playerPed, 78, 1) && !PED::GET_PED_CONFIG_FLAG(playerPed, 58, 1))
+		PED::GET_PED_CONFIG_FLAG(playerPed, 78, 1) && !PED::GET_PED_CONFIG_FLAG(playerPed, 58, 1) && !SCRIPT::HAS_SCRIPT_LOADED("carsteal2"))
 	{
 		if (WEAPONS_SNIPERVISION_VALUES[SniperVisionIndex] == 1) {
 			vision_toggle = vision_toggle + 1;
@@ -1335,7 +1335,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	}
 	
 	// Disables visions if not aiming
-	if (WEAPONS_SNIPERVISION_VALUES[SniperVisionIndex] != 0) 
+	if (WEAPONS_SNIPERVISION_VALUES[SniperVisionIndex] != 0 && !SCRIPT::HAS_SCRIPT_LOADED("carsteal2"))
 	{
 		if (!PED::GET_PED_CONFIG_FLAG(playerPed, 78, 1)) { // WEAPONS_SNIPERVISION_VALUES[SniperVisionIndex] == 1 && 
 			if (!featureNightVision && !featureThermalVision) {
