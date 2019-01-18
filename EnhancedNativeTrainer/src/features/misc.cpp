@@ -658,9 +658,10 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 
 	// No 'Mission Passed' Message
 	if (featureNoComleteMessage) {
-		if (!SCRIPT::HAS_SCRIPT_LOADED("family3") && !SCRIPT::HAS_SCRIPT_LOADED("jewelry_heist")) GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("mission_stat_watcher");
+		if (!SCRIPT::HAS_SCRIPT_LOADED("family3") && !SCRIPT::HAS_SCRIPT_LOADED("jewelry_heist") && !SCRIPT::HAS_SCRIPT_LOADED("family5") && !SCRIPT::HAS_SCRIPT_LOADED("wardrobe_sp")) 
+			GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("mission_stat_watcher");
 	}
-	
+
 	// Radio Boost
 	if (featureBoostRadio || featureBoostRadioUpdated) {
 		if (featureBoostRadio) {
