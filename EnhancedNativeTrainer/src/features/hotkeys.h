@@ -36,7 +36,7 @@ static const int HKEY_TOGGLE_INVISIBILITY = 106;
 static const int HKEY_FILL_AMMO = 107;
 static const int HKEY_TELEPORT_TO_MARKER = 108;
 static const int HKEY_TELEPORT_TO_MISSION_MARKER = 109;
-static const int HKEY_TELEPORT_TO_VEHICLE_IN_SIGHT = 110;
+//static const int HKEY_TELEPORT_TO_VEHICLE_IN_SIGHT = 110;
 static const int HKEY_TELEPORT_TO_VEHICLE_AS_PASSENGER = 111;
 static const int HKEY_MENU_VEHICLE_SPAWN = 112;
 static const int HKEY_MENU_VEHICLE_PAINT = 113;
@@ -76,7 +76,7 @@ const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "Replay Last Anim", HKEY_REPLAY_ANIM },
 	{ "Teleport To Marker", HKEY_TELEPORT_TO_MARKER },
 	{ "Teleport To Mission Marker", HKEY_TELEPORT_TO_MISSION_MARKER },
-	{ "Teleport To Vehicle In Sight", HKEY_TELEPORT_TO_VEHICLE_IN_SIGHT },
+	//{ "Teleport To Vehicle In Sight", HKEY_TELEPORT_TO_VEHICLE_IN_SIGHT },
 	{ "Teleport To Vehicle As Passenger", HKEY_TELEPORT_TO_VEHICLE_AS_PASSENGER },
 	{ "Teleport To Last Veh", HKEY_TELEPORT_TO_VEHICLE },
 	{ "Toggle Invisibility", HKEY_TOGGLE_INVISIBILITY },

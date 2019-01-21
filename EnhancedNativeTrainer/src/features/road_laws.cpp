@@ -104,6 +104,7 @@ int current_player_mostwanted = 0;
 bool current_player_mostwanted_Changed;
 int mostwanted_level_enable = 0;
 bool mostwanted_level_enable_Changed;
+Player temp = -1;
 //
 
 //////////////////////////////////////////////////////// ROAD LAWS //////////////////////////////////////////////////////////
@@ -876,6 +877,7 @@ void most_wanted()
 		bool added_already = false;
 		// wanted level
 		if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) >= VEH_STARSPUNISH_VALUES[mostwanted_level_enable]) {
+			temp = PLAYER::PLAYER_PED_ID();
 			if (PED::IS_PED_IN_ANY_VEHICLE(Bad_ass, 1) && !PED::IS_PED_ON_ANY_BIKE(Bad_ass)) {
 				if (!VEH_CRIME.empty()) {
 					for (int j = 0; j < VEH_CRIME.size(); j++) {
@@ -946,7 +948,7 @@ void most_wanted()
 			}
 		}
 
-		if (PLAYER::GET_TIME_SINCE_LAST_DEATH() > 0 && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 5000) {
+		if ((PLAYER::GET_TIME_SINCE_LAST_DEATH() > 0 && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 5000) || (Bad_ass != temp)) {
 			VEH_CRIME.clear();
 			VEH_CRIME.shrink_to_fit();
 			CLOTHES_BODY_CRIME.clear();

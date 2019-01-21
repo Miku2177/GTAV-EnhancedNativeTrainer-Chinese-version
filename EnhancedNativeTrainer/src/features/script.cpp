@@ -472,7 +472,7 @@ void update_features(){
 	}
 
 	// Can run in apartments
-	if (featurePlayerRunApartments) {
+	if (featurePlayerRunApartments && GAMEPLAY::GET_MISSION_FLAG() == 0) {
 		Ped playerPed_RunInApartment = PLAYER::PLAYER_PED_ID();
 		Vector3 coords_apprun_ped = ENTITY::GET_ENTITY_COORDS(playerPed_RunInApartment, true);
 		if (!INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_apprun_ped.x, coords_apprun_ped.y, coords_apprun_ped.z) && 

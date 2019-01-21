@@ -52,6 +52,9 @@ static double FPStime, FPStime_passed, FPStime_curr, starttime = 0;
 int fps = 0; 
 char fps_to_show_char_modifiable[15];
 //
+
+//int Comp_secs_passed, Comp_secs_curr, Comp_seconds = -1;
+
 bool featurePlayerRadio = false;
 bool featurePlayerRadioUpdated = false;
 bool featureRadioFreeze = false, featureRadioFreezeUpdated = false;
@@ -65,6 +68,10 @@ bool featureFlyingMusic = false;
 bool featureFlyingMusicUpdated = false;
 bool featurePoliceScanner = false;
 bool featurePoliceScannerUpdated = false;
+bool featureNoScubaSound = false;
+bool featureNoScubaSoundUpdated = false;
+bool featureNoComleteMessage = false;
+bool featureNoComleteMessageUpdated = false;
 bool featurePoliceRadio = false;
 bool featurePoliceRadioUpdated = false;
 bool police_radio_check = false;
@@ -466,13 +473,13 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 		case 3:
 			process_misc_freezeradio_menu();
 			break;
-		case 16:
+		case 18:
 			process_phone_bill_menu();
 			break;
-		case 21:
+		case 23:
 			process_def_menutab_menu();
 			break;
-		case 22:
+		case 24:
 			process_airbrake_global_menu();
 			break;
 		default:
@@ -483,7 +490,7 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 }
 
 void process_misc_menu(){
-	const int lineCount = 23;
+	const int lineCount = 25;
 
 	std::string caption = "Miscellaneous Options";
 
@@ -499,6 +506,8 @@ void process_misc_menu(){
 		{"No Wanted Music", &featureWantedMusic, &featureWantedMusicUpdated, true},
 		{"No Flight Music", &featureFlyingMusic, &featureFlyingMusicUpdated, true},
 		{"No Police Scanner", &featurePoliceScanner, &featurePoliceScannerUpdated, true },
+		{"No Scuba Breathing Sound", &featureNoScubaSound, &featureNoScubaSoundUpdated, true },
+		{"No 'Mission Passed' Message", &featureNoComleteMessage, &featureNoComleteMessageUpdated, true },
 		{"Hide HUD", &featureMiscHideHud, &featureMiscHideHudUpdated},
 		{"Show HUD If Phone In Hand Only", &featurePhoneShowHud, &featurePhoneShowHudUpdated},
 		{"Show HUD In Vehicle Only", &featureInVehicleNoHud, &featureInVehicleNoHudUpdated },
@@ -548,6 +557,8 @@ void reset_misc_globals(){
 		featureWantedMusic = 
 		featureFlyingMusic = 
 		featurePoliceScanner = 
+		featureNoScubaSound = 
+		featureNoComleteMessage =
 		featurePoliceRadio =
 		featureEnableMissingRadioStation =
 		featureRadioAlwaysOff = false;
@@ -582,6 +593,8 @@ void reset_misc_globals(){
 		featureWantedMusicUpdated =
 		featureFlyingMusicUpdated =
 		featurePoliceScannerUpdated =
+		featureNoScubaSoundUpdated = 
+		featureNoComleteMessageUpdated =
 		featureBoostRadio =
 		featureBoostRadioUpdated =
 		featurePoliceRadioUpdated =
@@ -632,9 +645,6 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	if (featureFlyingMusic || featureFlyingMusicUpdated) {
 		if (featureFlyingMusic) {
 			AUDIO::SET_AUDIO_FLAG("DisableFlightMusic", true);
-			//
-			//AUDIO::SET_AUDIO_FLAG("HoldMissionCompleteWhenPrepared", true);
-			//
 		}
 		else {
 			AUDIO::SET_AUDIO_FLAG("DisableFlightMusic", false);
@@ -649,6 +659,23 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		else {
 			AUDIO::SET_AUDIO_FLAG("PoliceScannerDisabled", false);
 		}
+	}
+
+	// No Scuba Breathing Sound
+	if (featureNoScubaSound || featureNoScubaSoundUpdated) {
+		if (featureNoScubaSound) {
+			AUDIO::SET_AUDIO_FLAG("SuppressPlayerScubaBreathing", true);
+		}
+		else {
+			AUDIO::SET_AUDIO_FLAG("SuppressPlayerScubaBreathing", false);
+		}
+	}
+
+	// No 'Mission Passed' Message
+	if (featureNoComleteMessage) {
+		if (!SCRIPT::HAS_SCRIPT_LOADED("family3") && !SCRIPT::HAS_SCRIPT_LOADED("jewelry_heist") && !SCRIPT::HAS_SCRIPT_LOADED("family5") && !SCRIPT::HAS_SCRIPT_LOADED("wardrobe_sp") &&
+			!SCRIPT::HAS_SCRIPT_LOADED("family6"))
+			GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("mission_stat_watcher");
 	}
 
 	// Radio Boost
@@ -1091,6 +1118,8 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 	results->push_back(FeatureEnabledLocalDefinition{"featureWantedMUsic", &featureWantedMusic, &featureWantedMusicUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureFlyingMusic", &featureFlyingMusic, &featureFlyingMusicUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePoliceScanner", &featurePoliceScanner, &featurePoliceScannerUpdated});
+	results->push_back(FeatureEnabledLocalDefinition{"featureNoScubaSound", &featureNoScubaSound, &featureNoScubaSoundUpdated});
+	results->push_back(FeatureEnabledLocalDefinition{"featureNoComleteMessage", &featureNoComleteMessage, &featureNoComleteMessageUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePoliceRadio", &featurePoliceRadio, &featurePoliceRadioUpdated});
 	
 	results->push_back(FeatureEnabledLocalDefinition{"featureMiscLockRadio", &featureMiscLockRadio});
