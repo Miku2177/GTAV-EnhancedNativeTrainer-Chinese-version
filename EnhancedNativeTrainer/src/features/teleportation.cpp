@@ -834,56 +834,6 @@ std::vector<tele_location> LOCATIONS_STUNTS = {
 	{ "Stunt Jump 48", 1681.85f, 3144.88f, 43.8315f },
 	{ "Stunt Jump 49", 1638.65f, 3607.11f, 35.4718f },
 	{ "Stunt Jump 50", 3343.38f, 5151.73f, 18.7621f },
-	{ "Under The Bridge 1", 2820.96f, 4980.96f, 63.4593f },
-	{ "Under The Bridge 2", 2681.0f, 4840.96f, 44.6341f },
-	{ "Under The Bridge 3", 1948.6f, 6230.54f, 44.2015f },
-	{ "Under The Bridge 4", -1048.4f, 4756.42f, 235.808f },
-	{ "Under The Bridge 5", -1909.67f, 4608.76f, 1.76036f },
-	{ "Under The Bridge 6", -520.777f, 4422.24f, 89.6376f },
-	{ "Under The Bridge 7", -182.58f, 4225.84f, 44.9276f },
-	{ "Under The Bridge 8", 137.914f, 3415.9f, 40.6049f },
-	{ "Under The Bridge 9", 90.9247f, 3341.08f, 35.1224f },
-	{ "Under The Bridge 10", -419.059f, 2960.67f, 30.9102f },
-	{ "Under The Bridge 11", -189.006f, 2851.15f, 32.3326f },
-	{ "Under The Bridge 12", -1478.18f, 2659.08f, 2.32919f },
-	{ "Under The Bridge 13", -1504.44f, 2400.59f, 26.2684f },
-	{ "Under The Bridge 14", -2659.01f, 2661.05f, 0.993904f },
-	{ "Under The Bridge 15", -3080.13f, 766.578f, 31.3605f },
-	{ "Under The Bridge 16", -718.772f, -1539.21f, 0.947559f },
-	{ "Under The Bridge 17", -657.192f, -1512.15f, 1.21292f },
-	{ "Under The Bridge 18", -612.299f, -1485.65f, 6.60787f },
-	{ "Under The Bridge 19", -459.011f, -1588.86f, 1.15897f },
-	{ "Under The Bridge 20", -379.011f, -1668.98f, 1.15931f },
-	{ "Under The Bridge 21", -191.593f, -1802.79f, 1.49136f },
-	{ "Under The Bridge 22", 30.9927f, -2049.01f, 18.2984f },
-	{ "Under The Bridge 23", -613.332f, -2204.89f, 76.0721f },
-	{ "Under The Bridge 24", 204.204f, -2346.28f, 5.41457f },
-	{ "Under The Bridge 25", 361.845f, -2232.78f, 10.7003f },
-	{ "Under The Bridge 26", 579.648f, -2503.69f, 16.7411f },
-	{ "Under The Bridge 27", 590.187f, -2594.43f, 6.09948f },
-	{ "Under The Bridge 28", 734.742f, -2588.46f, 18.6941f },
-	{ "Under The Bridge 29", 859.802f, -2605.3f, 3.98948f },
-	{ "Under The Bridge 30", 620.98f, -2048.94f, 29.3264f },
-	{ "Under The Bridge 31", 661.007f, -1739.03f, 29.3466f },
-	{ "Under The Bridge 32", 630.977f, -1448.94f, 30.369f },
-	{ "Under The Bridge 33", 577.495f, -1200.08f, 42.0138f },
-	{ "Under The Bridge 34", 569.496f, -1022.48f, 37.0223f },
-	{ "Under The Bridge 35", 591.526f, -849.559f, 41.3585f },
-	{ "Under The Bridge 36", 611.023f, -568.989f, 35.9756f },
-	{ "Under The Bridge 37", 711.037f, -449.085f, 38.7341f },
-	{ "Under The Bridge 38", 1191.06f, -1161.29f, 51.5053f },
-	{ "Under The Bridge 39", 971.026f, -839.034f, 33.6387f },
-	{ "Under The Bridge 40", 1030.84f, -976.699f, 43.2173f },
-	{ "Under The Bridge 41", 995.54f, -344.957f, 47.593f },
-	{ "Under The Bridge 42", 1061.05f, -218.971f, 70.0311f },
-	{ "Under The Bridge 43", 1888.06f, -734.642f, 84.8287f },
-	{ "Under The Bridge 44", 2367.63f, -441.996f, 72.6805f },
-	{ "Under The Bridge 45", 2964.38f, 757.95f, 1.69324f },
-	{ "Under The Bridge 46", 2340.99f, 1170.91f, 59.6383f },
-	{ "Under The Bridge 47", 2271.02f, 1130.84f, 67.556f },
-	{ "Under The Bridge 48", 1817.1f, 2050.54f, 55.8578f },
-	{ "Under The Bridge 49", 2563.81f, 2172.33f, 18.8863f },
-	{ "Under The Bridge 50", 2410.98f, 2900.99f, 49.3331f },
 };
 
 std::string JELLMAN_CAPTION = "Heist Map Updates In SP";
@@ -1040,128 +990,6 @@ void teleport_to_mission_marker(){
 			WEAPON::GIVE_DELAYED_WEAPON_TO_PED(PLAYER::PLAYER_PED_ID(), 0xFBAB5776, 1, 0);
 		}
 	}
-}
-
-////////////////////////////////////////////////////////////////////////////////////
-
-/////////////////////// TELEPORT TO A VEHICLE IN SIGHT ///////////////////////////////
-
-void teleport_to_vehicle_in_sight() {
-	
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
-	const int numElements = 10;
-	const int arrSize = numElements * 2 + 2;
-	int nearbyPed[arrSize];
-	nearbyPed[0] = numElements;
-	int count = PED::GET_PED_NEARBY_PEDS(PLAYER::PLAYER_PED_ID(), nearbyPed, -1);
-
-	if (nearbyPed != NULL) {
-		for (int i = 0; i < count; i++) {
-			int offsettedID = i * 2 + 2;
-				
-			if (nearbyPed[offsettedID] != NULL && ENTITY::DOES_ENTITY_EXIST(nearbyPed[offsettedID]) && PED::IS_PED_IN_ANY_VEHICLE(nearbyPed[offsettedID], 1)) {
-				ENTITY::GET_ENTITY_HEADING(playerPed);
-				Vector3 coords_me = ENTITY::GET_ENTITY_COORDS(playerPed, true);
-				Vehicle veh2 = PED::GET_VEHICLE_PED_IS_IN(nearbyPed[offsettedID], true);
-					
-				UI::DISPLAY_SNIPER_SCOPE_THIS_FRAME();
-										
-				Vector3 coords_veh = ENTITY::GET_ENTITY_COORDS(veh2, true);
-				Vector3 camCoords = CAM::GET_GAMEPLAY_CAM_COORD();
-				Vector3 rot2 = CAM::GET_GAMEPLAY_CAM_ROT(2);
-					
-				float tZ = rot2.z * 0.0174532924;
-				float tX = rot2.x * 0.0174532924;
-				float num = abs(cos(tX));
-
-				camCoords.x = (-sin(tZ)) * (num);
-				camCoords.y = (cos(tZ)) * (num);
-				camCoords.z = sin(tX);
-
-				if (((coords_veh.y < coords_me.y) && (coords_veh.y < (camCoords.y * 100000))) || ((coords_veh.y > coords_me.y) && (coords_veh.y >(camCoords.y * 100000))))
-				{}
-				else {
-					int primary, secondary;
-					Hash currVehModel = ENTITY::GET_ENTITY_MODEL(veh2);
-					Vector3 coords_veh2 = ENTITY::GET_ENTITY_COORDS(veh2, true);
-					float rot = (ENTITY::GET_ENTITY_ROTATION(veh2, 0)).z;
-					Vector3 vehspeed = ENTITY::GET_ENTITY_VELOCITY(veh2);
-					VEHICLE::GET_VEHICLE_COLOURS(veh2, &primary, &secondary);
-					AI::TASK_LEAVE_VEHICLE(playerPed, PED::GET_VEHICLE_PED_IS_USING(playerPed), 4160);
-
-					WAIT(100);
-							
-					ENTITY::SET_ENTITY_AS_MISSION_ENTITY(veh2, true, true);
-					VEHICLE::DELETE_VEHICLE(&veh2);
-
-					Vehicle veh = VEHICLE::CREATE_VEHICLE(currVehModel, coords_veh2.x, coords_veh2.y, coords_veh2.z, rot, 1, 0);
-					VEHICLE::SET_VEHICLE_COLOURS(veh, primary, secondary);
-					ENTITY::SET_ENTITY_VELOCITY(veh, vehspeed.x, vehspeed.y, vehspeed.z);
-					VEHICLE::SET_VEHICLE_ENGINE_ON(veh, true, true);
-
-					if (ENTITY::DOES_ENTITY_EXIST(veh)) {
-						PED::SET_PED_INTO_VEHICLE(playerPed, veh, -1);
-						if (is_this_a_heli_or_plane(veh)){
-							VEHICLE::SET_HELI_BLADES_FULL_SPEED(PED::GET_VEHICLE_PED_IS_USING(playerPed));
-						}
-						set_old_vehicle_state(false);
-					}
-				}
-			}
-		}
-	}
-}
-
-////////////////////////////////////////////////////////////////////////////////////
-
-/////////////////////// TELEPORT IN NEARBY PED ///////////////////////////////
-
-void teleport_in_ped() {
-	const int arrSizeEyes = 1024;
-	Ped eyes[arrSizeEyes];
-	int count_eyes = worldGetAllPeds(eyes, arrSizeEyes);
-	Cam EyesCam = -1;
-	float dist_diff = 100;
-	bool found = false;
-	Vector3 my_eyes = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
-
-	teleported_in_ped = !teleported_in_ped;
-		
-	for (int i = 0; i < count_eyes; i++) {
-		if (teleported_in_ped == true && PED::GET_PED_TYPE(eyes[i]) != 0 && PED::GET_PED_TYPE(eyes[i]) != 1 && PED::GET_PED_TYPE(eyes[i]) != 2 && PED::GET_PED_TYPE(eyes[i]) != 3) {
-			Vector3 eyes_coord = ENTITY::GET_ENTITY_COORDS(eyes[i], true);
-			Vector3 eyesRotation = ENTITY::GET_ENTITY_ROTATION(eyes[i], 2);
-			
-			dist_diff = SYSTEM::VDIST(my_eyes.x, my_eyes.y, my_eyes.z, eyes_coord.x, eyes_coord.y, eyes_coord.z);
-			if (dist_diff < 7) {
-				EyesCam = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_FLY_CAMERA", eyes_coord.x, eyes_coord.y, eyes_coord.z, eyesRotation.x, eyesRotation.y, eyesRotation.z, 50.0, true, 2);
-				CAM::ATTACH_CAM_TO_PED_BONE(EyesCam, eyes[i], 31086, 0, -0.15, 0.05, 1);
-				CAM::POINT_CAM_AT_PED_BONE(EyesCam, eyes[i], 31086, 0, 0.0, 0.05, 1);
-				CAM::SET_CAM_NEAR_CLIP(EyesCam, .329);
-				CAM::SET_CAM_ROT(EyesCam, eyesRotation.x, eyesRotation.y, eyesRotation.z, 2);
-				CAM::RENDER_SCRIPT_CAMS(true, false, 1, true, true);
-				CAM::SET_CAM_ACTIVE(EyesCam, true);
-				NETWORK::NETWORK_REQUEST_CONTROL_OF_ENTITY(eyes[i]);
-				found = true;
-			}
-		}
-	}
-	
-	if (teleported_in_ped == true && found == false) {
-		set_status_text("No peds around or they're too far");
-		teleported_in_ped = false;
-	}
-
-	if (teleported_in_ped == false) {
-		CAM::RENDER_SCRIPT_CAMS(0, 1, 100, 1, 1);
-		CAM::SET_CAM_NEAR_CLIP(EyesCam, .0);
-		CAM::DETACH_CAM(EyesCam);
-		CAM::SET_CAM_ACTIVE(EyesCam, false);
-		CAM::DESTROY_CAM(EyesCam, true);
-		EyesCam = NULL;
-	}
-
-	WAIT(100);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -1542,10 +1370,10 @@ bool onconfirm_teleport_category(MenuItem<int> choice){
 		teleport_to_mission_marker();
 		return false;
 	}
-	else if (choice.value == -7){
-		teleport_to_vehicle_in_sight();
-		return false;
-	}
+	//else if (choice.value == -7){
+	//	teleport_to_vehicle_in_sight();
+	//	return false;
+	//}
 	else if (choice.value == -8){
 		teleport_to_vehicle_as_passenger();
 		return false;
@@ -1554,14 +1382,14 @@ bool onconfirm_teleport_category(MenuItem<int> choice){
 		getTelChauffeurIndex();
 		return false;
 	}
-	else if (choice.value == -10){
+	else if (choice.value == -11){
 		set_3d_marker();
 		return false;
 	}
-	else if (choice.value == -11) {
-		teleport_in_ped();
-		return false;
-	}
+	//else if (choice.value == -11) {
+	//	teleport_in_ped();
+	//	return false;
+	//}
 
 	lastChosenCategory = choice.value;
 
@@ -1766,11 +1594,11 @@ bool process_teleport_menu(int categoryIndex){
 		markerItem->isLeaf = true;
 		menuItems.push_back(markerItem);
 
-		markerItem = new MenuItem<int>();
-		markerItem->caption = "Go To Ped Vehicle In Sight";
-		markerItem->value = -7;
-		markerItem->isLeaf = true;
-		menuItems.push_back(markerItem);
+		//markerItem = new MenuItem<int>();
+		//markerItem->caption = "Go To Ped Vehicle In Sight";
+		//markerItem->value = -7;
+		//markerItem->isLeaf = true;
+		//menuItems.push_back(markerItem);
 
 		markerItem = new MenuItem<int>();
 		markerItem->caption = "Go To Nearest Vehicle As Passenger";
@@ -1789,19 +1617,19 @@ bool process_teleport_menu(int categoryIndex){
 		dialogItem->value = -1;
 		dialogItem->isLeaf = true;
 		menuItems.push_back(dialogItem);
-
-		dialogItem = new MenuItem<int>();
-		dialogItem->caption = "Teleport In Nearest Ped";
-		dialogItem->value = -11;
-		dialogItem->isLeaf = true;
-		menuItems.push_back(dialogItem);
-
+		
 		markerItem = new MenuItem<int>();
 		markerItem->caption = "3D Marker";
-		markerItem->value = -10;
+		markerItem->value = -11;
 		markerItem->isLeaf = false;
 		menuItems.push_back(markerItem);
-		
+
+		//dialogItem = new MenuItem<int>();
+		//dialogItem->caption = "Teleport In Nearest Ped";
+		//dialogItem->value = -11;
+		//dialogItem->isLeaf = true;
+		//menuItems.push_back(dialogItem);
+
 		for (int i = 0; i < MENU_LOCATION_CATEGORIES.size(); i++){
 			if (MENU_LOCATION_CATEGORIES[i].compare(JELLMAN_CAPTION) == 0 && !is_jellman_scenery_enabled()){
 				continue;

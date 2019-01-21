@@ -487,17 +487,17 @@ void damage_door() {
 	}
 }
 
-void enter_damaged_vehicle() { // enter destroyed vehicle
-	Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
-	const int ENTER_ARR_SIZE = 1024;
-	Vehicle enter_veh[ENTER_ARR_SIZE];
-	int found_to_enter = worldGetAllVehicles(enter_veh, ENTER_ARR_SIZE);
-	for (int i = 0; i < found_to_enter; i++) {
-		Vector3 coordsdamagedvehicle = ENTITY::GET_ENTITY_COORDS(enter_veh[i], true);
-		float dist_to_damaged_diff = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsdamagedvehicle.x, coordsdamagedvehicle.y, coordsdamagedvehicle.z);
-		if (dist_to_damaged_diff < 5) PED::SET_PED_INTO_VEHICLE(PLAYER::PLAYER_PED_ID(), enter_veh[i], -1);
-	}
-}
+//void enter_damaged_vehicle() { // enter destroyed vehicle
+//	Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
+//	const int ENTER_ARR_SIZE = 1024;
+//	Vehicle enter_veh[ENTER_ARR_SIZE];
+//	int found_to_enter = worldGetAllVehicles(enter_veh, ENTER_ARR_SIZE);
+//	for (int i = 0; i < found_to_enter; i++) {
+//		Vector3 coordsdamagedvehicle = ENTITY::GET_ENTITY_COORDS(enter_veh[i], true);
+//		float dist_to_damaged_diff = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsdamagedvehicle.x, coordsdamagedvehicle.y, coordsdamagedvehicle.z);
+//		if (dist_to_damaged_diff < 5) PED::SET_PED_INTO_VEHICLE(PLAYER::PLAYER_PED_ID(), enter_veh[i], -1);
+//	}
+//}
 
 void eject_seat() { // eject seat
 	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0) && !VEHICLE::IS_VEHICLE_SEAT_FREE(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false), -1)) {
@@ -642,11 +642,11 @@ bool onconfirm_vehdoor_menu(MenuItem<int> choice){
 	{
 		damage_door();
 	}
-	else if (choice.value == -16)//enter damaged vehicle
-	{
-		enter_damaged_vehicle();
-	}
-	else if (choice.value == -17)//eject seat
+	//else if (choice.value == -16)//enter damaged vehicle
+	//{
+	//	enter_damaged_vehicle();
+	//}
+	else if (choice.value == -16)//eject seat
 	{
 		eject_seat();
 	}
@@ -786,15 +786,15 @@ bool process_veh_door_menu(){
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
-	item = new MenuItem<int>();
-	item->caption = "Teleport In Destroyed Vehicle";
-	item->value = -16;
-	item->isLeaf = true;
-	menuItems.push_back(item);
+	//item = new MenuItem<int>();
+	//item->caption = "Teleport In Destroyed Vehicle";
+	//item->value = -16;
+	//item->isLeaf = true;
+	//menuItems.push_back(item);
 
 	item = new MenuItem<int>();
 	item->caption = "Eject Driver Seat";
-	item->value = -17;
+	item->value = -16;
 	item->isLeaf = true;
 	menuItems.push_back(item); 
 
@@ -2611,31 +2611,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 /////////////////////////////////////////////  REMEMBER VEHICLES /////////////////////////////////////////////////////////////
 	
-	Ped playerPed_Tracking = PLAYER::PLAYER_PED_ID();
-
-	if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && been_already == true) {
-		been_already = false;
-	}
-	
-	if (!VEHICLES_REMEMBER.empty() && !featureDeleteTrackedVehicles && featureDeleteTrackedVehicles_Emptied == false) {
-		for (int i = 0; i < VEHICLES_REMEMBER.size(); i++) {
-			blip_veh[0] = UI::ADD_BLIP_FOR_ENTITY(VEHICLES_REMEMBER[i]);
-			UI::SET_BLIP_AS_FRIENDLY(blip_veh[0], true);
-			if (VEH_BLIPSYMBOL_VALUES[VehBlipSymbolIndex] != NULL) UI::SET_BLIP_SPRITE(blip_veh[0], VEH_BLIPSYMBOL_VALUES[VehBlipSymbolIndex]);
-			else UI::SET_BLIP_SPRITE(blip_veh[0], VEH_BLIPSYMBOL_VALUES[0]);
-			UI::SET_BLIP_CATEGORY(blip_veh[0], 2);
-			if (featureBlipNumber) UI::SHOW_NUMBER_ON_BLIP(blip_veh[0], BLIPTABLE_VEH.size());
-			if (VEH_BLIPFLASHandENGINERUNNING_VALUES[VehBlipFlashIndex] == 1) UI::SET_BLIP_FLASHES(blip_veh[0], true);
-			if (VEH_BLIPFLASHandENGINERUNNING_VALUES[VehBlipFlashIndex] == 2) UI::SET_BLIP_FLASHES_ALTERNATE(blip_veh[0], true);
-			UI::SET_BLIP_SCALE(blip_veh[0], VEH_BLIPSIZE_VALUES[VehBlipSizeIndex]);
-			UI::SET_BLIP_COLOUR(blip_veh[0], VEH_BLIPCOLOUR_VALUES[VehBlipColourIndex]);
-			UI::SET_BLIP_AS_SHORT_RANGE(blip_veh[0], true);
-			BLIPTABLE_VEH.push_back(blip_veh[0]);
-			featureDeleteTrackedVehicles_Emptied = true;
-		}
-	}
-
-	if (featureRememberVehicles && featureDeleteTrackedVehicles_CharacterChanged && playerPed_Tracking != old_playerPed_Tracking) {
+	if (featureRememberVehicles && GAMEPLAY::GET_MISSION_FLAG() == 1) {
 		if (!BLIPTABLE_VEH.empty()) {
 			for (int i = 0; i < BLIPTABLE_VEH.size(); i++) {
 				if (UI::DOES_BLIP_EXIST(BLIPTABLE_VEH[i])) {
@@ -2646,19 +2622,58 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			BLIPTABLE_VEH.shrink_to_fit();
 			featureDeleteTrackedVehicles_Emptied = false;
 		}
-
-		if (!VEHICLES_REMEMBER.empty()) {
-			for (int i = 0; i < VEHICLES_REMEMBER.size(); i++) {
-				VEHICLE::DELETE_VEHICLE(&VEHICLES_REMEMBER[i]);
-			}
-			VEHICLES_REMEMBER.clear();
-			VEHICLES_REMEMBER.shrink_to_fit();
-		}
 	}
 
-	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && featureRememberVehicles && !ENTITY::IS_ENTITY_A_MISSION_ENTITY(PED::GET_VEHICLE_PED_IS_IN(playerPed, false))) {
+	if (GAMEPLAY::GET_MISSION_FLAG() == 0) {
+
+		Ped playerPed_Tracking = PLAYER::PLAYER_PED_ID();
+
+		if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && been_already == true) {
+			been_already = false;
+		}
+
+		if (!VEHICLES_REMEMBER.empty() && !featureDeleteTrackedVehicles && featureDeleteTrackedVehicles_Emptied == false) {
+			for (int i = 0; i < VEHICLES_REMEMBER.size(); i++) {
+				blip_veh[0] = UI::ADD_BLIP_FOR_ENTITY(VEHICLES_REMEMBER[i]);
+				UI::SET_BLIP_AS_FRIENDLY(blip_veh[0], true);
+				if (VEH_BLIPSYMBOL_VALUES[VehBlipSymbolIndex] != NULL) UI::SET_BLIP_SPRITE(blip_veh[0], VEH_BLIPSYMBOL_VALUES[VehBlipSymbolIndex]);
+				else UI::SET_BLIP_SPRITE(blip_veh[0], VEH_BLIPSYMBOL_VALUES[0]);
+				UI::SET_BLIP_CATEGORY(blip_veh[0], 2);
+				if (featureBlipNumber) UI::SHOW_NUMBER_ON_BLIP(blip_veh[0], BLIPTABLE_VEH.size());
+				if (VEH_BLIPFLASHandENGINERUNNING_VALUES[VehBlipFlashIndex] == 1) UI::SET_BLIP_FLASHES(blip_veh[0], true);
+				if (VEH_BLIPFLASHandENGINERUNNING_VALUES[VehBlipFlashIndex] == 2) UI::SET_BLIP_FLASHES_ALTERNATE(blip_veh[0], true);
+				UI::SET_BLIP_SCALE(blip_veh[0], VEH_BLIPSIZE_VALUES[VehBlipSizeIndex]);
+				UI::SET_BLIP_COLOUR(blip_veh[0], VEH_BLIPCOLOUR_VALUES[VehBlipColourIndex]);
+				UI::SET_BLIP_AS_SHORT_RANGE(blip_veh[0], true);
+				BLIPTABLE_VEH.push_back(blip_veh[0]);
+				featureDeleteTrackedVehicles_Emptied = true;
+			}
+		}
+
+		if (featureRememberVehicles && featureDeleteTrackedVehicles_CharacterChanged && playerPed_Tracking != old_playerPed_Tracking) {
+			if (!BLIPTABLE_VEH.empty()) {
+				for (int i = 0; i < BLIPTABLE_VEH.size(); i++) {
+					if (UI::DOES_BLIP_EXIST(BLIPTABLE_VEH[i])) {
+						UI::REMOVE_BLIP(&BLIPTABLE_VEH[i]);
+					}
+				}
+				BLIPTABLE_VEH.clear();
+				BLIPTABLE_VEH.shrink_to_fit();
+				featureDeleteTrackedVehicles_Emptied = false;
+			}
+
+			if (!VEHICLES_REMEMBER.empty()) {
+				for (int i = 0; i < VEHICLES_REMEMBER.size(); i++) {
+					VEHICLE::DELETE_VEHICLE(&VEHICLES_REMEMBER[i]);
+				}
+				VEHICLES_REMEMBER.clear();
+				VEHICLES_REMEMBER.shrink_to_fit();
+			}
+		}
+
+		if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && featureRememberVehicles) { // && GAMEPLAY::GET_MISSION_FLAG() == 0
 			Vehicle veh_rem = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
-			
+
 			if (VEHICLES_REMEMBER.empty()) {
 				blip_veh[0] = UI::ADD_BLIP_FOR_ENTITY(veh_rem);
 				UI::SET_BLIP_AS_FRIENDLY(blip_veh[0], true);
@@ -2678,13 +2693,13 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				featureDeleteTrackedVehicles_Emptied = true;
 				old_playerPed_Tracking = playerPed_Tracking;
 			}
-			 
+
 			for (int i = 0; i < VEHICLES_REMEMBER.size(); i++) {
 				if (VEHICLES_REMEMBER[i] == veh_rem) {
 					been_already = true;
 					curr_veh_remember = veh_rem;
 				}
-			} 
+			}
 
 			if (curr_veh_remember != veh_rem) {
 				been_already = false;
@@ -2712,41 +2727,42 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 					VEHICLE::DELETE_VEHICLE(&VEHICLES_REMEMBER[0]);
 					BLIPTABLE_VEH.erase(BLIPTABLE_VEH.begin());
 					VEHICLES_REMEMBER.erase(VEHICLES_REMEMBER.begin());
-					if (featureBlipNumber){
+					if (featureBlipNumber) {
 						for (int i = 0; i < BLIPTABLE_VEH.size(); i++) {
 							UI::SHOW_NUMBER_ON_BLIP(BLIPTABLE_VEH[i], i);
 						}
 					}
 				}
 			}
-	}
-	else {
-		if (!featureRememberVehicles) {
-			if (!BLIPTABLE_VEH.empty()) {
-				for (int i = 0; i < BLIPTABLE_VEH.size(); i++) {
-					if (UI::DOES_BLIP_EXIST(BLIPTABLE_VEH[i])) {
-						UI::REMOVE_BLIP(&BLIPTABLE_VEH[i]);
-					}
-				}
-				BLIPTABLE_VEH.clear();
-				BLIPTABLE_VEH.shrink_to_fit();
-				featureDeleteTrackedVehicles_Emptied = false;
-			}
-
-			if (featureDeleteTrackedVehicles && !VEHICLES_REMEMBER.empty()) {
-				for (int i = 0; i < VEHICLES_REMEMBER.size(); i++) {
-					VEHICLE::DELETE_VEHICLE(&VEHICLES_REMEMBER[i]);
-				}
-				VEHICLES_REMEMBER.clear();
-				VEHICLES_REMEMBER.shrink_to_fit();
-			}
 		}
-		std::vector<int> emptyVec;
-		std::vector<double> emptyVec_d;
-		if (!VEH_VEHREMEMBER_VALUES.empty()) std::vector<int>(VEH_VEHREMEMBER_VALUES).swap(emptyVec);
-		if (!VEH_BLIPSIZE_VALUES.empty()) std::vector<double>(VEH_BLIPSIZE_VALUES).swap(emptyVec_d);
-		if (!VEH_BLIPCOLOUR_VALUES.empty()) std::vector<int>(VEH_BLIPCOLOUR_VALUES).swap(emptyVec);
-		if (!VEH_BLIPSYMBOL_VALUES.empty()) std::vector<int>(VEH_BLIPSYMBOL_VALUES).swap(emptyVec);
+		else {
+			if (!featureRememberVehicles) {
+				if (!BLIPTABLE_VEH.empty()) {
+					for (int i = 0; i < BLIPTABLE_VEH.size(); i++) {
+						if (UI::DOES_BLIP_EXIST(BLIPTABLE_VEH[i])) {
+							UI::REMOVE_BLIP(&BLIPTABLE_VEH[i]);
+						}
+					}
+					BLIPTABLE_VEH.clear();
+					BLIPTABLE_VEH.shrink_to_fit();
+					featureDeleteTrackedVehicles_Emptied = false;
+				}
+
+				if (featureDeleteTrackedVehicles && !VEHICLES_REMEMBER.empty()) {
+					for (int i = 0; i < VEHICLES_REMEMBER.size(); i++) {
+						VEHICLE::DELETE_VEHICLE(&VEHICLES_REMEMBER[i]);
+					}
+					VEHICLES_REMEMBER.clear();
+					VEHICLES_REMEMBER.shrink_to_fit();
+				}
+			}
+			std::vector<int> emptyVec;
+			std::vector<double> emptyVec_d;
+			if (!VEH_VEHREMEMBER_VALUES.empty()) std::vector<int>(VEH_VEHREMEMBER_VALUES).swap(emptyVec);
+			if (!VEH_BLIPSIZE_VALUES.empty()) std::vector<double>(VEH_BLIPSIZE_VALUES).swap(emptyVec_d);
+			if (!VEH_BLIPCOLOUR_VALUES.empty()) std::vector<int>(VEH_BLIPCOLOUR_VALUES).swap(emptyVec);
+			if (!VEH_BLIPSYMBOL_VALUES.empty()) std::vector<int>(VEH_BLIPSYMBOL_VALUES).swap(emptyVec);
+		}
 	}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

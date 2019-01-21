@@ -149,9 +149,9 @@ void trigger_function_for_hotkey_onkeyup(int hotkey)
 	case HKEY_TELEPORT_TO_MISSION_MARKER:
 		teleport_to_mission_marker();
 		break;
-	case HKEY_TELEPORT_TO_VEHICLE_IN_SIGHT:
-		teleport_to_vehicle_in_sight();
-		break;
+	//case HKEY_TELEPORT_TO_VEHICLE_IN_SIGHT:
+	//	teleport_to_vehicle_in_sight();
+	//	break;
 	case HKEY_TELEPORT_TO_VEHICLE_AS_PASSENGER:
 		teleport_to_vehicle_as_passenger();
 		break;

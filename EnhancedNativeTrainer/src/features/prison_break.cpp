@@ -63,7 +63,7 @@ bool current_escape_stars_Changed = true;
 
 void prison_break()
 {
-	if (PLAYER_PRISON_VALUES[current_player_prison] > 0) { 
+	if (PLAYER_PRISON_VALUES[current_player_prison] > 0 && GAMEPLAY::GET_MISSION_FLAG() == 0) {
 		Ped playerPed_Prison = PLAYER::PLAYER_PED_ID();
 		Vector3 my_position_in_prison = ENTITY::GET_ENTITY_COORDS(playerPed_Prison, true);
 		time_before_get_to_prison = PLAYER::GET_TIME_SINCE_LAST_DEATH();
