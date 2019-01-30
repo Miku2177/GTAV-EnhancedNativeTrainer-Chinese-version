@@ -345,25 +345,25 @@ void update_area_effects(Ped playerPed){
 	do_maintenance_on_tracked_entities();
 
 	// everyone ignores player
-	if(featurePlayerIgnoredByAll){
+	if(featurePlayerIgnoredByAll || featurePlayerInvisible || featurePlayerInvisibleInVehicle){ 
 		if(bPlayerExists){
 			PLAYER::SET_POLICE_IGNORE_PLAYER(player, true);
 			PLAYER::SET_EVERYONE_IGNORE_PLAYER(player, true);
 			PLAYER::SET_PLAYER_CAN_BE_HASSLED_BY_GANGS(player, false);
 			PLAYER::SET_IGNORE_LOW_PRIORITY_SHOCKING_EVENTS(player, true);
-			if(get_frame_number() % 5 == 0){
+			//if(get_frame_number() % 99 == 0){
 				set_all_nearby_peds_to_calm();
-			}
+			//}
 		}
 	}
-	else if(featurePlayerIgnoredByAllUpdated){
+	if(!featurePlayerIgnoredByAll && !featurePlayerInvisible && !featurePlayerInvisibleInVehicle){
 		if(bPlayerExists){
 			PLAYER::SET_POLICE_IGNORE_PLAYER(player, is_player_ignored_by_police());
 			PLAYER::SET_EVERYONE_IGNORE_PLAYER(player, false);
 			PLAYER::SET_PLAYER_CAN_BE_HASSLED_BY_GANGS(player, true);
 			PLAYER::SET_IGNORE_LOW_PRIORITY_SHOCKING_EVENTS(player, false);
 		}
-		featurePlayerIgnoredByAllUpdated = false;
+		//featurePlayerIgnoredByAllUpdated = false;
 	}
 
 	if(featureAreaPedsInvincible || featureAreaPedsInvincibleUpdated){
@@ -423,13 +423,16 @@ void show_debug_info_on_screen(bool enabled){
 }
 
 void set_all_nearby_peds_to_calm(){
-	std::set<Ped> peds = get_nearby_peds(PLAYER::PLAYER_PED_ID());
-	for each (Ped xped in peds){
-		// Only calm down peds if they're NOT in our group (keeps our bodyguards from chilling out and being lazy)
-		if(!PED::IS_PED_GROUP_MEMBER(xped, PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID()))){
-			PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(xped, true);
-			PED::SET_PED_FLEE_ATTRIBUTES(xped, 0, 0);
-			//PED::SET_PED_COMBAT_ATTRIBUTES(xped, 17, 1);
+	const int IGN_ARR_PED_SIZE = 1024;
+	Ped ign_ped[IGN_ARR_PED_SIZE];
+	int found_ign_ped = worldGetAllPeds(ign_ped, IGN_ARR_PED_SIZE);
+	for (int i = 0; i < found_ign_ped; i++) {
+		if (ign_ped[i] != PLAYER::PLAYER_PED_ID()) {
+			if (!PED::IS_PED_GROUP_MEMBER(ign_ped[i], PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID()))) { // Only calm down peds if they're NOT in our group (keeps our bodyguards from chilling out and being lazy)
+				PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ign_ped[i], true);
+				//AI::TASK_SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ign_ped[i], true);
+				PED::SET_PED_FLEE_ATTRIBUTES(ign_ped[i], 0, 0);
+			}
 		}
 	}
 }
@@ -854,9 +857,6 @@ void give_all_nearby_peds_a_weapon(bool enabled){
 		}
 		if (PED_WEAPON_TITLES[pedWeaponSetIndex] != "Custom Weapon")
 		{
-			//std::vector<int> emptyVec;
-			//if (!PED_WEAPONS_SELECTIVE_VALUES.empty()) std::vector<int>(PED_WEAPONS_SELECTIVE_VALUES).swap(emptyVec);
-
 			if (!PED::IS_PED_GROUP_MEMBER(xped, PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID()))){
 				ENTTrackedPedestrian* trackedPed = findOrCreateTrackedPed(xped);
 

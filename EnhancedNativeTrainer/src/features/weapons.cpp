@@ -1280,11 +1280,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			}
 		}
 	}
-	//else {
-	//	std::vector<int> emptyVec;
-	//	if (!WEAPONS_COPALARM_VALUES.empty()) std::vector<int>(WEAPONS_COPALARM_VALUES).swap(emptyVec);
-	//}
-
+	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	peds_dont_like_weapons(); ///// <--- PEDS DON'T LIKE WEAPONS /////
