@@ -1195,8 +1195,10 @@ bool ENTDatabase::save_vehicle(Vehicle veh, std::string saveName, sqlite3_int64 
 		sqlite3_bind_int(stmt, index++, current_picked_engine_sound);
 		current_picked_engine_sound = -1;
 
-		int xenonColour = VEHICLE::GET_VEHICLE_XENON_COLOUR(veh);
-		sqlite3_bind_int(stmt, index++, xenonColour);
+		int xenonColour = -1;
+		if (getGameVersion() > 45) xenonColour = VEHICLE::GET_VEHICLE_XENON_COLOUR(veh);
+		//if (getGameVersion() < 46) xenonColour = -1;
+		sqlite3_bind_int(stmt, index++, xenonColour); 
 
 		// commit
 		sqlite3_step(stmt);

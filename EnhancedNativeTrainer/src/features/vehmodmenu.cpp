@@ -1783,7 +1783,11 @@ bool onconfirm_vehmod_menu(MenuItem<int> choice){
 		process_smoke_colour_menu();
 		break;
 	case SPECIAL_ID_FOR_XENON_COLOUR:
-		process_xenon_colour_menu();
+		if (VEHICLE::IS_TOGGLE_MOD_ON(veh, 22) && getGameVersion() > 45) process_xenon_colour_menu();
+		else {
+			if (!VEHICLE::IS_TOGGLE_MOD_ON(veh, 22)) set_status_text("~r~Xenon lights are not enabled");
+			if (getGameVersion() < 46) set_status_text("~r~Your game version does not support Xenon colours");
+		}
 		break;
 	default:
 		process_vehmod_category_menu(choice.value);
@@ -1931,13 +1935,13 @@ bool process_vehmod_menu(){
 		menuItems.push_back(item);
 	}
 
-	if (VEHICLE::IS_TOGGLE_MOD_ON(veh, 22) && version > 45) {
+	//if (VEHICLE::IS_TOGGLE_MOD_ON(veh, 22) && version > 45) { 
 		MenuItem<int> * item = new MenuItem<int>();
 		item->caption = "Xenon Colour Menu";
 		item->value = SPECIAL_ID_FOR_XENON_COLOUR;
 		item->isLeaf = false;
 		menuItems.push_back(item);
-	}
+	//}
 
 	FunctionDrivenToggleMenuItem<int> *toggleItem;
 
@@ -2281,12 +2285,8 @@ void add_vehmodmenu_feature_enablements(std::vector<FeatureEnabledLocalDefinitio
 }
 
 void update_vehmodmenu_features(BOOL bPlayerExists, Ped playerPed) {
-	if (!featureEngineSound) {
-		//std::vector<int> emptyVec;
-		//if (!ENGINE_SOUND_NUMBERS.empty()) std::vector<int>(ENGINE_SOUND_NUMBERS).swap(emptyVec);
-		current_picked_engine_sound = -1;
-	}
-
+	if (!featureEngineSound) current_picked_engine_sound = -1;
+	
 	if (featureEngineSound && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) current_picked_engine_sound = -1;
 
 }

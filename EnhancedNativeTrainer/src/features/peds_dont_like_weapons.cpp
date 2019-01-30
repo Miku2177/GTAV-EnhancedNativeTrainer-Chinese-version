@@ -10,6 +10,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 #include "weapons.h"
 #include "peds_dont_like_weapons.h"
+#include "area_effect.h"
 
 #include "script.h"
 #include "..\ui_support\menu_functions.h"
@@ -39,7 +40,7 @@ void peds_dont_like_weapons() {
 
 	//float pedagainstweapons_height = ENTITY::GET_ENTITY_HEIGHT_ABOVE_GROUND(PLAYER::PLAYER_ID());
 
-	if (featurePedAgainstWeapons) { // && pedagainstweapons_height < 1
+	if (featurePedAgainstWeapons && !featurePlayerInvisible && !featurePlayerIgnoredByAll) { // && pedagainstweapons_height < 1
 		Player player = PLAYER::PLAYER_ID();
 		Ped playerPed = PLAYER::PLAYER_PED_ID();
 		
@@ -244,10 +245,6 @@ void peds_dont_like_weapons() {
 			}
 		}
 	}
-	//else {
-	//	std::vector<int> emptyVec;
-	//	if (!WEAPONS_CHANCEPOLICECALLING_VALUES.empty()) std::vector<int>(WEAPONS_CHANCEPOLICECALLING_VALUES).swap(emptyVec);
-	//}
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

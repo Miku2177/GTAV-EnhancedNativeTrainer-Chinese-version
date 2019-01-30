@@ -1035,16 +1035,6 @@ void update_world_features()
 		}
 	}
 
-	//if (WORLD_DAMAGED_VEHICLES_VALUES[DamagedVehiclesIndex] == 0) {
-	//	std::vector<int> emptyVec;
-	//	if (!WORLD_DAMAGED_VEHICLES_VALUES.empty()) std::vector<int>(WORLD_DAMAGED_VEHICLES_VALUES).swap(emptyVec);
-	//}
-
-	//if (WORLD_NPC_VEHICLESPEED_VALUES[NPCVehicleSpeedIndex] == 0) {
-	//	std::vector<int> emptyVec;
-	//	if (!WORLD_NPC_VEHICLESPEED_VALUES.empty()) std::vector<int>(WORLD_NPC_VEHICLESPEED_VALUES).swap(emptyVec);
-	//}
-	
 	// NPC No Gravity Peds && Acid Water && Acid Rain
 	if (featureNPCNoGravityPeds || featureAcidWater || featureAcidRain) {
 		const int BUS_ARR_PED_SIZE = 1024;

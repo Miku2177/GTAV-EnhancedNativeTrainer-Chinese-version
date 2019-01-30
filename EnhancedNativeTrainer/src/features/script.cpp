@@ -539,12 +539,6 @@ void update_features(){
 		}
 	}
 	
-	//if (!featurePlayerLife && !featurePlayerLife_Died && !featurePlayerLife_Changed) {
-	//	std::vector<int> emptyVec;
-	//	if (!PLAYER_HEALTH_VALUES.empty()) std::vector<int>(PLAYER_HEALTH_VALUES).swap(emptyVec);
-	//	if (!PLAYER_ARMOR_VALUES.empty()) std::vector<int>(PLAYER_ARMOR_VALUES).swap(emptyVec);
-	//}
-
 	if (featurePlayerLife_Died) death_time2 = PLAYER::GET_TIME_SINCE_LAST_DEATH();
 	if (death_time2 > -1 && death_time2 < 2000 && featurePlayerLife_Died) {
 		featurePlayerLifeUpdated = true;
@@ -704,43 +698,18 @@ void update_features(){
 			}
 		}
 	}
-	//else {
-	//	std::vector<int> emptyVec;
-	//	if (!NPC_RAGDOLL_VALUES.empty()) std::vector<int>(NPC_RAGDOLL_VALUES).swap(emptyVec);
-	//}
-	
+		
 	//Player Movement Speed
 	if (PLAYER_MOVEMENT_VALUES[current_player_movement] > 0.00) {
 		PED::SET_PED_MOVE_RATE_OVERRIDE(playerPed, PLAYER_MOVEMENT_VALUES[current_player_movement]);
 	}
-	//else {
-	//	std::vector<double> emptyVec_d;
-	//	if (!PLAYER_MOVEMENT_VALUES.empty()) std::vector<double>(PLAYER_MOVEMENT_VALUES).swap(emptyVec_d);
-	//}
-
-	//Player Invisible
-	if(featurePlayerInvisibleUpdated){
-		featurePlayerInvisibleUpdated = false;
-
-		if(bPlayerExists && featurePlayerInvisible){
-			ENTITY::SET_ENTITY_VISIBLE(playerPed, false);
-		}
-		else if(bPlayerExists){
-			ENTITY::SET_ENTITY_VISIBLE(playerPed, true);
-		}
-	}
-
-	//Player Invisible In Vehicle
-	if (featurePlayerInvisibleInVehicle) {
-		if (bPlayerExists && featurePlayerInvisibleInVehicle && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1))
-		ENTITY::SET_ENTITY_VISIBLE(playerPed, false);
-		else if (bPlayerExists)	ENTITY::SET_ENTITY_VISIBLE(playerPed, true);
-		featurePlayerInvisibleInVehicleUpdated = true;
-	}
 	
-	if (!featurePlayerInvisibleInVehicle && featurePlayerInvisibleInVehicleUpdated) {
-		if (bPlayerExists)	ENTITY::SET_ENTITY_VISIBLE(playerPed, true);
-		featurePlayerInvisibleInVehicleUpdated = false;
+	//Player Invisible && Player Invisible In Vehicle
+	if(featurePlayerInvisible || (featurePlayerInvisibleInVehicle && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1))){
+		ENTITY::SET_ENTITY_VISIBLE(playerPed, false);
+	}
+	if(!featurePlayerInvisible && !featurePlayerInvisibleInVehicle){
+		ENTITY::SET_ENTITY_VISIBLE(playerPed, true);
 	}
 
 	if(featurePlayerDrunkUpdated){

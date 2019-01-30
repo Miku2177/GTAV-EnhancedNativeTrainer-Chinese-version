@@ -826,10 +826,6 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			phone_toggle_defaultphone = false;
 		}
 	}
-	//else {
-	//	std::vector<int> emptyVec;
-	//	if (!MISC_PHONE_DEFAULT_VALUES.empty()) std::vector<int>(MISC_PHONE_DEFAULT_VALUES).swap(emptyVec);
-	//}
 	
 	// DYNAMIC HEALTH BAR
 	if (featureDynamicHealthBar && !CUTSCENE::IS_CUTSCENE_PLAYING()) {
@@ -891,11 +887,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			WAIT(100);
 		} 
 	} 
-	//else {
-	//	std::vector<int> emptyVec;
-	//	if (!MISC_DEF_MANUTAB_VALUES.empty()) std::vector<int>(MISC_DEF_MANUTAB_VALUES).swap(emptyVec);
-	//}
-
+	
 	// Phone Bill
 	if (featurePhoneBillEnabled) {
 		if (PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed) && AUDIO::IS_MOBILE_PHONE_CALL_ONGOING()) {
@@ -964,13 +956,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			}
 		}
 	}
-	//else {
-	//	std::vector<int> emptyVec;
-	//	std::vector<float> emptyVec_f;
-	//	if (!MISC_PHONE_BILL_VALUES.empty()) std::vector<float>(MISC_PHONE_BILL_VALUES).swap(emptyVec_f);
-	//	if (!MISC_PHONE_FREESECONDS_VALUES.empty()) std::vector<int>(MISC_PHONE_FREESECONDS_VALUES).swap(emptyVec);
-	//}
-
+	
 	// First Person Stunt Jump Camera
 	if (featureFirstPersonStuntJumpCamera) {
 		Ped stunt_player = PLAYER::PLAYER_PED_ID();

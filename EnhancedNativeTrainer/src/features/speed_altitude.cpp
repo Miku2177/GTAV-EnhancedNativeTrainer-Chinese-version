@@ -264,12 +264,6 @@ void update_vehicles(Ped playerPed) {
 			}
 		}
 	}
-
-	//if (!featureSpeedOnFoot && !featureSpeedOnGround && !featureSpeedInAir) {
-	//	std::vector<int> emptyVec;
-	//	if (!SPEED_SIZE_VALUES.empty()) std::vector<int>(SPEED_SIZE_VALUES).swap(emptyVec);
-	//	if (!SPEED_POSITION_VALUES.empty()) std::vector<int>(SPEED_POSITION_VALUES).swap(emptyVec);
-	//}
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////

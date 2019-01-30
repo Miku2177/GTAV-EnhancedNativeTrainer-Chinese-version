@@ -519,11 +519,7 @@ void do_spawn_bodyguard(){
 					BLIPTABLE_BODYGUARD.shrink_to_fit();
 				}
 				std::vector<int> emptyVec;
-				//std::vector<double> emptyVec_d;
-				//if (!BODY_BLIPSIZE_VALUES.empty()) std::vector<double>(BODY_BLIPSIZE_VALUES).swap(emptyVec_d);
-				//if (!BODY_BLIPCOLOUR_VALUES.empty()) std::vector<int>(BODY_BLIPCOLOUR_VALUES).swap(emptyVec);
 				if (!BODY_BLIPSYMBOL_VALUES.empty()) std::vector<int>(BODY_BLIPSYMBOL_VALUES).swap(emptyVec);
-				//if (!BODY_BLIPFLASH_VALUES.empty()) std::vector<int>(BODY_BLIPFLASH_VALUES).swap(emptyVec);
 			}
 
 			PED::SET_PED_COMBAT_ABILITY(bodyGuard, 2);

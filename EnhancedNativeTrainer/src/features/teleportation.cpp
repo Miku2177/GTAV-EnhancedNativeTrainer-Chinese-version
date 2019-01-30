@@ -1849,14 +1849,6 @@ void update_teleport_features(){
 			col2_R/*int red*/, col2_G/*int green*/, col2_B/*int blue*/, MARKER3D_ALPHA_VALUES[Marker3d_Alpha_Index]/*int alpha*/,
 			50/*BOOL bobUpAndDown*/, 1/*BOOL faceCamera*/, 1/*int p19*/, 0/*BOOL rotate*/, 0/*char* textureDict*/, 0/*char* textureName*/, 0/*BOOL drawOnEnts*/);
 	}
-	//else {
-	//	std::vector<int> emptyVec;
-	//	if (!TEL_3DMARKER_VALUES.empty()) std::vector<int>(TEL_3DMARKER_VALUES).swap(emptyVec);
-	//	if (!TEL_3DMARKER_MSIZE_VALUES.empty()) std::vector<int>(TEL_3DMARKER_MSIZE_VALUES).swap(emptyVec);
-	//	if (!TEL_3DMARKER_SKYPOS_VALUES.empty()) std::vector<int>(TEL_3DMARKER_SKYPOS_VALUES).swap(emptyVec);
-	//	if (!TEL_3DMARKER_MARTYPE_VALUES.empty()) std::vector<int>(TEL_3DMARKER_MARTYPE_VALUES).swap(emptyVec);
-	//	if (!MARKER3D_ALPHA_VALUES.empty()) std::vector<int>(MARKER3D_ALPHA_VALUES).swap(emptyVec);
-	//}
 	
 	///////////////////////////////////////////////////////////////////////////////////////
 
@@ -1885,13 +1877,7 @@ void update_teleport_features(){
 	}
 
 	if (blipDriveFound == true && marker_been_set == true) drive_to_marker();
-	//if (marker_been_set == false) {
-	//	std::vector<int> emptyVec;
-	//	if (!TEL_CHAUFFEUR_SPEED_VALUES.empty()) std::vector<int>(TEL_CHAUFFEUR_SPEED_VALUES).swap(emptyVec);
-	//	if (!TEL_CHAUFFEUR_ALTITUDE_VALUES.empty()) std::vector<int>(TEL_CHAUFFEUR_ALTITUDE_VALUES).swap(emptyVec);
-	//	if (!TEL_CHAUFFEUR_DRIVINGSTYLES_VALUES.empty()) std::vector<int>(TEL_CHAUFFEUR_DRIVINGSTYLES_VALUES).swap(emptyVec);
-	//}
-
+	
 	if ((blipDriveFound == false && marker_been_set == true) || (CONTROLS::IS_CONTROL_PRESSED(2, 75) && marker_been_set == true)) {
 		AI::CLEAR_PED_TASKS(driver_to_marker_pilot);
 		VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(curr_veh, false);
