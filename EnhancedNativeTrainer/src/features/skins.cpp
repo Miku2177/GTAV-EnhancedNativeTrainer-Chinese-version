@@ -23,6 +23,8 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 bool DEBUG_MODE_SKINS = false;
 
+bool featurenoblood = false;
+
 int skinDetailMenuIndex = 0;
 int skinDetailMenuValue = 0;
 
@@ -51,6 +53,7 @@ int skinTypesMenuPositionMemory[4] = { 0, 0, 0, 0 }; //player, animals, general,
 void reset_skin_globals()
 {
 	//chosenSkinName = "";
+	featurenoblood = false;
 }
 
 /*
@@ -215,6 +218,10 @@ void onexit_skinchanger_texture_menu(bool returnValue)
 	PED::SET_PED_COMPONENT_VARIATION(PLAYER::PLAYER_PED_ID(), skinDetailMenuValue, skinDrawableMenuValue, texture, 0);
 	}
 	*/
+}
+
+void update_skin_features() {
+	if (featurenoblood) PED::CLEAR_PED_BLOOD_DAMAGE(PLAYER::PLAYER_PED_ID());
 }
 
 bool process_skinchanger_texture_menu(std::string caption)
@@ -678,6 +685,8 @@ bool process_skinchanger_menu()
 	MenuItem<int> *item;
 	int i = 0;
 
+	ToggleMenuItem<int>* toggleItem;
+
 	item = new MenuItem<int>();
 	item->caption = "Saved Appearances";
 	item->value = i++;
@@ -725,6 +734,12 @@ bool process_skinchanger_menu()
 	item->value = i++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "No Blood Or Bullet Holes If Shot";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featurenoblood;
+	menuItems.push_back(toggleItem);
 
 	return draw_generic_menu<int>(menuItems, &skinMainMenuPosition, "Player Skin Options", onconfirm_skinchanger_menu, NULL, NULL);
 }
@@ -1131,6 +1146,10 @@ void save_current_skin(int slot)
 void add_skin_generic_settings(std::vector<StringPairSettingDBRow>* results)
 {
 	results->push_back(StringPairSettingDBRow{ "lastCustomSkinSpawn", lastCustomSkinSpawn });
+}
+
+void add_player_skin_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results) {
+	results->push_back(FeatureEnabledLocalDefinition{ "featurenoblood", &featurenoblood });
 }
 
 void handle_generic_settings_skin(std::vector<StringPairSettingDBRow>* settings)

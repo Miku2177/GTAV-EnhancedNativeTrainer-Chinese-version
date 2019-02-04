@@ -529,7 +529,7 @@ void do_spawn_bodyguard(){
 			PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 5, true);
 
 			if (bodyguard_animal == false) PED::SET_PED_CAN_SWITCH_WEAPON(bodyGuard, true);
-			PED::SET_GROUP_FORMATION(myGroup, 1);
+			PED::SET_GROUP_FORMATION(myGroup, 1); // 1
 			PED::SET_CAN_ATTACK_FRIENDLY(bodyGuard, false, false);
 
 			AI::TASK_COMBAT_HATED_TARGETS_AROUND_PED(bodyGuard, 100, 0);
