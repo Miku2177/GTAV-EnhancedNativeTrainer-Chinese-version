@@ -111,6 +111,7 @@ namespace PLAYER
 	static void DISPLAY_SYSTEM_SIGNIN_UI(BOOL unk) { invoke<Void>(0x94DD7888C10A979E, unk); } // 0x94DD7888C10A979E 0x4264CED2
 	static BOOL IS_SYSTEM_UI_BEING_DISPLAYED() { return invoke<BOOL>(0x5D511E3867C87139); } // 0x5D511E3867C87139 0xE495B6DA
 	static void SET_PLAYER_INVINCIBLE(Player player, BOOL toggle) { invoke<Void>(0x239528EACDC3E7DE, player, toggle); } // 0x239528EACDC3E7DE 0xDFB9A2A2
+	static void _0x733A643B5B0C53C1(Player player, BOOL toggle) { invoke<Void>(0x733A643B5B0C53C1, player, toggle); } // 0x733A643B5B0C53C1 0xDFB9A2A2
 	static BOOL GET_PLAYER_INVINCIBLE(Player player) { return invoke<BOOL>(0xB721981B2B939E07, player); } // 0xB721981B2B939E07 0x680C90EE
 	static void _0xCAC57395B151135F(Player player, BOOL p1) { invoke<Void>(0xCAC57395B151135F, player, p1); } // 0xCAC57395B151135F 0x00563E0D
 	static void REMOVE_PLAYER_HELMET(Player player, BOOL p2) { invoke<Void>(0xF3AC26D3CC576528, player, p2); } // 0xF3AC26D3CC576528 0x6255F3B4

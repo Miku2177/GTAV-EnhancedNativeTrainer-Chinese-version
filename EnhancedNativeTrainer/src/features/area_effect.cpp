@@ -53,6 +53,19 @@ bool featureAngryPedsTargetYou = false;
 bool featurePedsIncludeDrivers = false;
 bool featurePedsIncludePilots = false;
 
+bool featureNPCNoLights = false;
+bool featureNPCNoLightsUpdated = false;
+bool featureNPCNeonLights = false;
+bool featureNPCNeonLightsUpdated = false;
+bool featureDirtyVehicles = false;
+bool featureDirtyVehiclesUpdated = false;
+bool featureNPCNoGravityVehicles = false;
+bool featureNPCNoGravityVehiclesUpdated = false;
+bool featureNPCNoGravityPeds = false;
+bool featureNPCNoGravityPedsUpdated = false;
+bool featureNPCReducedGripVehicles = false;
+bool featureNPCReducedGripVehiclesUpdated = false;
+
 int pedWeaponSetIndex = 0;
 bool pedWeaponSetUpdated = false;
 
@@ -74,6 +87,20 @@ const int PED_WEAPONS_SELECTIVE_VALUES[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 
 //const std::vector<int> PED_WEAPONS_SELECTIVE_VALUES{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44 };
 int PedWeaponsSelectiveIndex = 0;
 bool PedWeaponsSelective1Changed = true;
+
+// NPC Damaged Vehicles
+const std::vector<std::string> WORLD_DAMAGED_VEHICLES_CAPTIONS{ "OFF", "5", "7", "10", "12", "15", "20", "30", "50", "100", "500", "1000" };
+const int WORLD_DAMAGED_VEHICLES_VALUES[] = { 0, 5, 7, 10, 12, 15, 20, 30, 50, 100, 500, 1000 };
+//const std::vector<int> WORLD_DAMAGED_VEHICLES_VALUES{ 0, 5, 7, 10, 12, 15, 20, 30, 50, 100, 500, 1000 };
+int DamagedVehiclesIndex = 0;
+bool DamagedVehiclesChanged = true;
+
+// NPC Vehicle Speed
+const std::vector<std::string> WORLD_NPC_VEHICLESPEED_CAPTIONS{ "OFF", "1", "3", "5", "10", "15", "20", "30", "50", "70", "100" };
+const int WORLD_NPC_VEHICLESPEED_VALUES[] = { 0, 1, 3, 5, 10, 15, 20, 30, 50, 70, 100 };
+//const std::vector<int> WORLD_NPC_VEHICLESPEED_VALUES{ 0, 1, 3, 5, 10, 15, 20, 30, 50, 70, 100 };
+int NPCVehicleSpeedIndex = 0;
+bool NPCVehicleSpeedChanged = true;
 
 //For onscreen debug info
 bool featureShowDebugInfo = false;
@@ -97,6 +124,13 @@ void add_areaeffect_feature_enablements(std::vector<FeatureEnabledLocalDefinitio
 	results->push_back(FeatureEnabledLocalDefinition{"featurePedsIncludePilots", &featurePedsIncludePilots});
 
 	results->push_back(FeatureEnabledLocalDefinition{"featureShowDebugInfo", &featureShowDebugInfo, &featureShowDebugInfoUpdated});
+
+	results->push_back(FeatureEnabledLocalDefinition{ "featureNPCNoLights", &featureNPCNoLights, &featureNPCNoLightsUpdated });
+	results->push_back(FeatureEnabledLocalDefinition{ "featureNPCNeonLights", &featureNPCNeonLights, &featureNPCNeonLightsUpdated });
+	results->push_back(FeatureEnabledLocalDefinition{ "featureDirtyVehicles", &featureDirtyVehicles, &featureDirtyVehiclesUpdated });
+	results->push_back(FeatureEnabledLocalDefinition{ "featureNPCNoGravityVehicles", &featureNPCNoGravityVehicles, &featureNPCNoGravityVehiclesUpdated });
+	results->push_back(FeatureEnabledLocalDefinition{ "featureNPCNoGravityPeds", &featureNPCNoGravityPeds, &featureNPCNoGravityPedsUpdated });
+	results->push_back(FeatureEnabledLocalDefinition{ "featureNPCReducedGripVehicles", &featureNPCReducedGripVehicles, &featureNPCReducedGripVehiclesUpdated });
 
 }
 
@@ -126,7 +160,24 @@ void reset_areaeffect_globals(){
 	featureShowDebugInfo = false;
 	featureShowDebugInfoUpdated = true;
 
+	featureNPCNoLights = false;
+	featureNPCNeonLights = false;
+	featureDirtyVehicles = false;
+	featureNPCNoGravityVehicles = false;
+	featureNPCNoGravityPeds = false;
+	featureNPCReducedGripVehicles = false;
+
+	DamagedVehiclesIndex = 0;
+	NPCVehicleSpeedIndex = 0;
+
 	pedWeaponSetIndex = 0;
+
+	featureNPCNoLightsUpdated =
+	featureNPCNeonLightsUpdated =
+	featureDirtyVehiclesUpdated =
+	featureNPCNoGravityVehiclesUpdated =
+	featureNPCNoGravityPedsUpdated =
+	featureNPCReducedGripVehiclesUpdated = true;
 }
 
 void process_areaeffect_peds_menu(){
@@ -172,19 +223,26 @@ void process_areaeffect_peds_menu(){
 	togItem->toggleValueUpdated = &featureAreaPedsRiotingUpdated;
 	menuItems.push_back(togItem);
 
+	togItem = new ToggleMenuItem<int>();
+	togItem->caption = "NPC No Gravity Peds";
+	togItem->value = 1;
+	togItem->toggleValue = &featureNPCNoGravityPeds;
+	togItem->toggleValueUpdated = &featureNPCNoGravityPedsUpdated;
+	menuItems.push_back(togItem);
+
 	MenuItem<int> *item = new MenuItem<int>();
 	item->caption = "Advanced Config";
 	item->value = 1;
 	item->isLeaf = false;
 	menuItems.push_back(item);
 
-
-
 	draw_generic_menu<int>(menuItems, &areaeffect_ped_level_menu_index, "Ped Effects", onconfirm_areaeffect_ped_menu, NULL, NULL);
 }
 
 void process_areaeffect_vehicle_menu(){
 	std::vector<MenuItem<int>*> menuItems;
+
+	SelectFromListMenuItem *listItem;
 
 	ToggleMenuItem<int> *togItem = new ToggleMenuItem<int>();
 	togItem->caption = "All Vehicles Invincible";
@@ -206,6 +264,53 @@ void process_areaeffect_vehicle_menu(){
 	togItem->toggleValue = &featureAreaVehiclesExploded;
 	//togItem->toggleValueUpdated = &featureAreaVehiclesExplodedUpdated;
 	menuItems.push_back(togItem);
+
+	togItem = new ToggleMenuItem<int>();
+	togItem->caption = "NPC Vehicles No Lights";
+	togItem->value = 1;
+	togItem->toggleValue = &featureNPCNoLights;
+	togItem->toggleValueUpdated = &featureNPCNoLightsUpdated;
+	menuItems.push_back(togItem);
+
+	togItem = new ToggleMenuItem<int>();
+	togItem->caption = "NPC Vehicles Have Neon/Xenon Lights";
+	togItem->value = 1;
+	togItem->toggleValue = &featureNPCNeonLights;
+	togItem->toggleValueUpdated = &featureNPCNeonLightsUpdated;
+	menuItems.push_back(togItem);
+
+	togItem = new ToggleMenuItem<int>();
+	togItem->caption = "NPC Dirty Vehicles";
+	togItem->value = 1;
+	togItem->toggleValue = &featureDirtyVehicles;
+	togItem->toggleValueUpdated = &featureDirtyVehiclesUpdated;
+	menuItems.push_back(togItem);
+
+	listItem = new SelectFromListMenuItem(WORLD_DAMAGED_VEHICLES_CAPTIONS, onchange_world_damaged_vehicles_index);
+	listItem->wrap = false;
+	listItem->caption = "NPC Damaged Vehicles";
+	listItem->value = DamagedVehiclesIndex;
+	menuItems.push_back(listItem);
+
+	togItem = new ToggleMenuItem<int>();
+	togItem->caption = "NPC No Gravity Vehicles";
+	togItem->value = 1;
+	togItem->toggleValue = &featureNPCNoGravityVehicles;
+	togItem->toggleValueUpdated = &featureNPCNoGravityVehiclesUpdated;
+	menuItems.push_back(togItem);
+
+	togItem = new ToggleMenuItem<int>();
+	togItem->caption = "NPC Vehicles Reduced Grip";
+	togItem->value = 1;
+	togItem->toggleValue = &featureNPCReducedGripVehicles;
+	togItem->toggleValueUpdated = &featureNPCReducedGripVehiclesUpdated;
+	menuItems.push_back(togItem);
+
+	listItem = new SelectFromListMenuItem(WORLD_NPC_VEHICLESPEED_CAPTIONS, onchange_world_npc_vehicles_speed_index);
+	listItem->wrap = false;
+	listItem->caption = "NPC Vehicles Forced Speed";
+	listItem->value = NPCVehicleSpeedIndex;
+	menuItems.push_back(listItem);
 
 	draw_generic_menu<int>(menuItems, &areaeffect_veh_level_menu_index, "Vehicle Effects", NULL, NULL, NULL);
 }
@@ -345,7 +450,7 @@ void update_area_effects(Ped playerPed){
 	do_maintenance_on_tracked_entities();
 
 	// everyone ignores player
-	if(featurePlayerIgnoredByAll || featurePlayerInvisible || featurePlayerInvisibleInVehicle){ 
+	if(featurePlayerIgnoredByAll || featurePlayerInvisible || (featurePlayerInvisibleInVehicle && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1))){
 		if(bPlayerExists){
 			PLAYER::SET_POLICE_IGNORE_PLAYER(player, true);
 			PLAYER::SET_EVERYONE_IGNORE_PLAYER(player, true);
@@ -835,6 +940,16 @@ void clear_up_missionised_entitities(){
 void onchange_areaeffect_ped_weapons(int value, SelectFromListMenuItem* source){
 	pedWeaponSetIndex = value;
 	pedWeaponSetUpdated = true;
+}
+
+void onchange_world_damaged_vehicles_index(int value, SelectFromListMenuItem* source) {
+	DamagedVehiclesIndex = value;
+	DamagedVehiclesChanged = true;
+}
+
+void onchange_world_npc_vehicles_speed_index(int value, SelectFromListMenuItem* source) {
+	NPCVehicleSpeedIndex = value;
+	NPCVehicleSpeedChanged = true;
 }
 
 void onchange_ped_weapons_selective_index(int value, SelectFromListMenuItem* source){

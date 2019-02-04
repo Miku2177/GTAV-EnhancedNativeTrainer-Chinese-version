@@ -83,6 +83,8 @@ bool engine_switched = false;
 bool engine_killed = false;
 bool we_have_troubles, iaminside = false;
 
+bool p_invisible = false;
+
 bool featurePlayerLife = false;
 bool featurePlayerLifeUpdated = true;
 bool featurePlayerLife_Died = false;
@@ -413,6 +415,8 @@ void update_features(){
 
 	update_world_features();
 
+	update_skin_features();
+
 	update_teleport_features();
 
 	check_player_model();
@@ -435,6 +439,7 @@ void update_features(){
 	if(featurePlayerInvincibleUpdated){
 		if(bPlayerExists && !featurePlayerInvincible){
 			PLAYER::SET_PLAYER_INVINCIBLE(player, FALSE);
+			//PLAYER::_0x733A643B5B0C53C1(player, FALSE);
 		}
 		WAIT(100);
 		featurePlayerInvincibleUpdated = false;
@@ -443,6 +448,7 @@ void update_features(){
 
 	if(featurePlayerInvincible && bPlayerExists){
 		PLAYER::SET_PLAYER_INVINCIBLE(player, TRUE);
+		//PLAYER::_0x733A643B5B0C53C1(player, TRUE); 
 	}
 	
 	if (engine_switched) { // PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) && 
@@ -646,6 +652,15 @@ void update_features(){
 			been_damaged_armor = curr_playerArmour;
 		}
 
+		if (featurePlayerInvincible) {
+			Vector3 coords_bullet = ENTITY::GET_ENTITY_COORDS(playerPed, true);
+			if (GAMEPLAY::HAS_BULLET_IMPACTED_IN_AREA(coords_bullet.x, coords_bullet.y, coords_bullet.z, 1.0, 0, 0) && !PED::IS_PED_RAGDOLL(playerPed) && PED::IS_PED_ON_FOOT(playerPed) && ragdoll_seconds == 0 &&
+				!PED::IS_PED_SHOOTING(playerPed)) {
+				been_damaged_by_weapon = true;
+				ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(playerPed); 
+			}
+		}
+		
 		if (been_damaged_by_weapon == true) {
 			int time1 = (rand() % 3000 + 0); // UP MARGIN + DOWN MARGIN
 			int time2 = (rand() % 3000 + 0); 
@@ -654,7 +669,7 @@ void update_features(){
 			AUDIO::PLAY_PAIN(ScreamType, 0, 0);
 			AUDIO::_PLAY_AMBIENT_SPEECH1(PLAYER::PLAYER_ID(), "GENERIC_SHOCKED_HIGH", "SPEECH_PARAMS_FORCE");
 			if (PED::GET_PED_ARMOUR(playerPed) > 4 && (ragdollType == 2 || ragdollType == 3)) PED::SET_PED_TO_RAGDOLL(playerPed, time1, time2, ragdollType, true, true, false);
-			if (PED::GET_PED_ARMOUR(playerPed) < 5) PED::SET_PED_TO_RAGDOLL(playerPed, time1, time2, ragdollType, true, true, false);
+			if (PED::GET_PED_ARMOUR(playerPed) < 5 || featurePlayerInvincible) PED::SET_PED_TO_RAGDOLL(playerPed, time1, time2, ragdollType, true, true, false);
 			been_damaged_by_weapon = false;
 			ragdoll_task = true;
 		}
@@ -705,13 +720,16 @@ void update_features(){
 	}
 	
 	//Player Invisible && Player Invisible In Vehicle
-	if(featurePlayerInvisible || (featurePlayerInvisibleInVehicle && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1))){
-		ENTITY::SET_ENTITY_VISIBLE(playerPed, false);
-	}
-	if(!featurePlayerInvisible && !featurePlayerInvisibleInVehicle){
-		ENTITY::SET_ENTITY_VISIBLE(playerPed, true);
+	if ((!featurePlayerInvisible && !featurePlayerInvisibleInVehicle && p_invisible == true) || (featurePlayerInvisibleInVehicle && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && p_invisible == true)) {
+		ENTITY::SET_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID(), true);
+		p_invisible = false;
 	}
 
+	if(featurePlayerInvisible || (featurePlayerInvisibleInVehicle && PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1))) {
+		ENTITY::SET_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID(), false);
+		p_invisible = true;
+	}
+	
 	if(featurePlayerDrunkUpdated){
 		featurePlayerDrunkUpdated = false;
 		if(featurePlayerDrunk){
@@ -1664,6 +1682,8 @@ std::vector<FeatureEnabledLocalDefinition> get_feature_enablements(){
 	add_time_feature_enablements(&results);
 
 	add_misc_feature_enablements(&results);
+
+	add_player_skin_feature_enablements(&results);
 
 	add_props_feature_enablements(&results);
 

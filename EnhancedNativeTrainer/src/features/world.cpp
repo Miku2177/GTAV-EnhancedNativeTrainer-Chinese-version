@@ -55,22 +55,10 @@ bool featureZancudoMap = false;
 bool featureZancudoMapUpdated = false;
 bool featureBusLight = false;
 bool featureBusLightUpdated = false;
-bool featureNPCNoLights = false;
-bool featureNPCNoLightsUpdated = false;
-bool featureNPCNeonLights = false;
-bool featureNPCNeonLightsUpdated = false;
-bool featureDirtyVehicles = false;
-bool featureDirtyVehiclesUpdated = false;
-bool featureNPCNoGravityVehicles = false;
-bool featureNPCNoGravityVehiclesUpdated = false;
-bool featureNPCNoGravityPeds = false;
-bool featureNPCNoGravityPedsUpdated = false;
 bool featureAcidWater = false;
 bool featureAcidWaterUpdated = false;
 bool featureAcidRain = false;
 bool featureAcidRainUpdated = false;
-bool featureNPCReducedGripVehicles = false;
-bool featureNPCReducedGripVehiclesUpdated = false;
 bool featureReducedGripVehiclesIfSnow = false;
 bool featureReducedGripVehiclesIfSnowUpdated = false;
 
@@ -122,20 +110,6 @@ const int WORLD_WIND_STRENGTH_VALUES[] = { 0, 3, 999 };
 //const std::vector<int> WORLD_WIND_STRENGTH_VALUES{ 0, 3, 999 };
 int WindStrengthIndex = 0;
 bool WindStrengthChanged = true;
-
-// NPC Damaged Vehicles
-const std::vector<std::string> WORLD_DAMAGED_VEHICLES_CAPTIONS{ "OFF", "5", "7", "10", "12", "15", "20", "30", "50", "100", "500", "1000" };
-const int WORLD_DAMAGED_VEHICLES_VALUES[] = { 0, 5, 7, 10, 12, 15, 20, 30, 50, 100, 500, 1000 };
-//const std::vector<int> WORLD_DAMAGED_VEHICLES_VALUES{ 0, 5, 7, 10, 12, 15, 20, 30, 50, 100, 500, 1000 };
-int DamagedVehiclesIndex = 0;
-bool DamagedVehiclesChanged = true;
-
-// NPC Vehicle Speed
-const std::vector<std::string> WORLD_NPC_VEHICLESPEED_CAPTIONS{ "OFF", "1", "3", "5", "10", "15", "20", "30", "50", "70", "100" };
-const int WORLD_NPC_VEHICLESPEED_VALUES[] = { 0, 1, 3, 5, 10, 15, 20, 30, 50, 70, 100 };
-//const std::vector<int> WORLD_NPC_VEHICLESPEED_VALUES{ 0, 1, 3, 5, 10, 15, 20, 30, 50, 70, 100 };
-int NPCVehicleSpeedIndex = 0;
-bool NPCVehicleSpeedChanged = true;
 
 // Reduced Grip If Heavy Snow
 const std::vector<std::string> WORLD_REDUCEDGRIP_SNOWING_CAPTIONS{ "OFF", "Simulation", "Arcade" };
@@ -316,16 +290,6 @@ void onchange_world_radar_map_index(int value, SelectFromListMenuItem* source){
 void onchange_world_wind_strength_index(int value, SelectFromListMenuItem* source){
 	WindStrengthIndex = value;
 	WindStrengthChanged = true;
-}
-
-void onchange_world_damaged_vehicles_index(int value, SelectFromListMenuItem* source) {
-	DamagedVehiclesIndex = value;
-	DamagedVehiclesChanged = true;
-}
-
-void onchange_world_npc_vehicles_speed_index(int value, SelectFromListMenuItem* source) {
-	NPCVehicleSpeedIndex = value;
-	NPCVehicleSpeedChanged = true;
 }
 
 void onchange_world_reducedgrip_snowing_index(int value, SelectFromListMenuItem* source) {
@@ -518,60 +482,6 @@ void process_world_menu()
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "NPC Vehicles No Lights";
-	togItem->value = 1;
-	togItem->toggleValue = &featureNPCNoLights;
-	togItem->toggleValueUpdated = &featureNPCNoLightsUpdated;
-	menuItems.push_back(togItem);
-
-	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "NPC Vehicles Have Neon/Xenon Lights";
-	togItem->value = 1;
-	togItem->toggleValue = &featureNPCNeonLights;
-	togItem->toggleValueUpdated = &featureNPCNeonLightsUpdated;
-	menuItems.push_back(togItem); 
-
-	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "NPC Dirty Vehicles";
-	togItem->value = 1;
-	togItem->toggleValue = &featureDirtyVehicles;
-	togItem->toggleValueUpdated = &featureDirtyVehiclesUpdated;
-	menuItems.push_back(togItem);
-
-	listItem = new SelectFromListMenuItem(WORLD_DAMAGED_VEHICLES_CAPTIONS, onchange_world_damaged_vehicles_index); 
-	listItem->wrap = false;
-	listItem->caption = "NPC Damaged Vehicles";
-	listItem->value = DamagedVehiclesIndex;
-	menuItems.push_back(listItem);
-
-	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "NPC No Gravity Vehicles";
-	togItem->value = 1;
-	togItem->toggleValue = &featureNPCNoGravityVehicles;
-	togItem->toggleValueUpdated = &featureNPCNoGravityVehiclesUpdated;
-	menuItems.push_back(togItem);
-
-	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "NPC No Gravity Peds";
-	togItem->value = 1;
-	togItem->toggleValue = &featureNPCNoGravityPeds;
-	togItem->toggleValueUpdated = &featureNPCNoGravityPedsUpdated;
-	menuItems.push_back(togItem);
-
-	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "NPC Vehicles Reduced Grip";
-	togItem->value = 1;
-	togItem->toggleValue = &featureNPCReducedGripVehicles;
-	togItem->toggleValueUpdated = &featureNPCReducedGripVehiclesUpdated;
-	menuItems.push_back(togItem);
-
-	listItem = new SelectFromListMenuItem(WORLD_NPC_VEHICLESPEED_CAPTIONS, onchange_world_npc_vehicles_speed_index);
-	listItem->wrap = false;
-	listItem->caption = "NPC Vehicles Forced Speed";
-	listItem->value = NPCVehicleSpeedIndex;
-	menuItems.push_back(listItem);
-
-	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "Deadly Water";
 	togItem->value = 1;
 	togItem->toggleValue = &featureAcidWater;
@@ -594,8 +504,6 @@ void reset_world_globals()
 	activeLineIndexWeather = 0;
 	activeLineIndexClouds = 0;
 	RadarMapIndex = 0;
-	DamagedVehiclesIndex = 0;
-	NPCVehicleSpeedIndex = 0;
 	RadarReducedGripSnowingIndex = 0;
 	WindStrengthIndex = 0;
 	lastWeather.clear();
@@ -616,14 +524,8 @@ void reset_world_globals()
 	featurePenitentiaryMap = false;
 	featureZancudoMap = false;
 	featureBusLight = false;
-	featureNPCNoLights = false;
-	featureNPCNeonLights = false;
-	featureDirtyVehicles = false;
-	featureNPCNoGravityVehicles = false;
-	featureNPCNoGravityPeds = false;
 	featureAcidWater = false;
 	featureAcidRain = false;
-	featureNPCReducedGripVehicles = false;
 	featureReducedGripVehiclesIfSnow = false;
 	featureBlackout = false;
 	featureSnow = false;
@@ -644,14 +546,8 @@ void reset_world_globals()
 	featurePenitentiaryMapUpdated =
 	featureZancudoMapUpdated =
 	featureBusLightUpdated = 
-	featureNPCNoLightsUpdated = 
-	featureNPCNeonLightsUpdated =
-	featureDirtyVehiclesUpdated =
-	featureNPCNoGravityVehiclesUpdated = 
-	featureNPCNoGravityPedsUpdated = 
 	featureAcidWaterUpdated = 
 	featureAcidRainUpdated =
-	featureNPCReducedGripVehiclesUpdated =
 	featureReducedGripVehiclesIfSnowUpdated =
 	featureWorldGarbageTrucksUpdated =
 	featureWorldRandomBoatsUpdated =
@@ -1256,14 +1152,8 @@ void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* r
 	results->push_back(FeatureEnabledLocalDefinition{ "featurePenitentiaryMap", &featurePenitentiaryMap, &featurePenitentiaryMapUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureZancudoMap", &featureZancudoMap, &featureZancudoMapUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureBusLight", &featureBusLight, &featureBusLightUpdated });
-	results->push_back(FeatureEnabledLocalDefinition{ "featureNPCNoLights", &featureNPCNoLights, &featureNPCNoLightsUpdated });
-	results->push_back(FeatureEnabledLocalDefinition{ "featureNPCNeonLights", &featureNPCNeonLights, &featureNPCNeonLightsUpdated });
-	results->push_back(FeatureEnabledLocalDefinition{ "featureDirtyVehicles", &featureDirtyVehicles, &featureDirtyVehiclesUpdated });
-	results->push_back(FeatureEnabledLocalDefinition{ "featureNPCNoGravityVehicles", &featureNPCNoGravityVehicles, &featureNPCNoGravityVehiclesUpdated });
-	results->push_back(FeatureEnabledLocalDefinition{ "featureNPCNoGravityPeds", &featureNPCNoGravityPeds, &featureNPCNoGravityPedsUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureAcidWater", &featureAcidWater, &featureAcidWaterUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureAcidRain", &featureAcidRain, &featureAcidRainUpdated });
-	results->push_back(FeatureEnabledLocalDefinition{ "featureNPCReducedGripVehicles", &featureNPCReducedGripVehicles, &featureNPCReducedGripVehiclesUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureReducedGripVehiclesIfSnow", &featureReducedGripVehiclesIfSnow, &featureReducedGripVehiclesIfSnowUpdated });
 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureSnow", &featureSnow, &featureSnowUpdated});

@@ -22,6 +22,20 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include <set>
 #include <queue>
 
+extern bool featureNPCNoLights;
+extern bool featureNPCNeonLights;
+extern bool featureDirtyVehicles;
+extern bool featureNPCNoGravityVehicles;
+extern bool featureNPCNoGravityPeds;
+extern bool featureNPCReducedGripVehicles;
+
+extern const int WORLD_DAMAGED_VEHICLES_VALUES[];
+extern int DamagedVehiclesIndex;
+extern bool DamagedVehiclesChanged;
+extern const int WORLD_NPC_VEHICLESPEED_VALUES[];
+extern int NPCVehicleSpeedIndex;
+extern bool NPCVehicleSpeedChanged;
+
 class ENTTrackedPedestrian{
 	public:
 
