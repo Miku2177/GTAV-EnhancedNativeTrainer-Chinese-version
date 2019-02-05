@@ -144,12 +144,12 @@ struct GlobalTable
 	bool IsInitialised()const { return *GlobalBasePtr != NULL; }
 };
 
-void FindScriptAddresses();
+//void FindScriptAddresses();
 
-void FindPatterns();
+//void FindPatterns();
 
-uintptr_t FindPattern2(const char *pattern, const char *mask, const char* startAddress, size_t size);
+//uintptr_t FindPattern2(const char *pattern, const char *mask, const char* startAddress, size_t size);
 
-uintptr_t FindPattern2(const char *pattern, const char *mask);
+//uintptr_t FindPattern2(const char *pattern, const char *mask);
 
-void EnableCarsGlobal();
+//void EnableCarsGlobal();

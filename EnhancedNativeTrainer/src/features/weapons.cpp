@@ -32,8 +32,8 @@ Ped oldplayerPed_W = -1;
 bool PlayerUpdated_w = true;
 //
 bool featureWeaponInfiniteAmmo = false;
-bool featureWeaponInfiniteParachutes = false, featureWeaponInfiniteParachutesUpdated = false;
-bool featureWeaponNoParachutes = false, featureWeaponNoParachutesUpdated = false;
+bool featureWeaponInfiniteParachutes = false , featureWeaponInfiniteParachutesUpdated = false;
+bool featureWeaponNoParachutes = false , featureWeaponNoParachutesUpdated = false;
 bool featureWeaponNoReload = false;
 bool featureNoReticle = false;
 bool featureCopWeapon = false;
@@ -47,7 +47,7 @@ bool featurePlayerMelee = true;
 bool featureArmyMelee = false;
 
 bool featureGravityGun = false;
-bool featureGravityGunUpdated = false;
+//bool featureGravityGunUpdated = false;
 bool featureFriendlyFire = false;
 
 bool grav_target_locked = false;
@@ -1450,7 +1450,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		}*/
 
 
-		featureGravityGunUpdated = false;
+		//featureGravityGunUpdated = false;
 
 		//set_status_text("Gravity gun: ~r~called");
 	}
@@ -1798,8 +1798,8 @@ void add_weapon_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponExplosiveMelee", &featureWeaponExplosiveMelee});
 	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponFireAmmo", &featureWeaponFireAmmo});
 	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponInfiniteAmmo", &featureWeaponInfiniteAmmo});
-	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponInfiniteParachutes", &featureWeaponInfiniteParachutes, &featureWeaponInfiniteParachutesUpdated});
-	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponNoParachutes", &featureWeaponNoParachutes, &featureWeaponNoParachutesUpdated});
+	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponInfiniteParachutes", &featureWeaponInfiniteParachutes, &featureWeaponInfiniteParachutesUpdated });
+	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponNoParachutes", &featureWeaponNoParachutes, &featureWeaponNoParachutesUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponNoReload", &featureWeaponNoReload});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoReticle", &featureNoReticle});
 	results->push_back(FeatureEnabledLocalDefinition{"featureCopWeapon", &featureCopWeapon});

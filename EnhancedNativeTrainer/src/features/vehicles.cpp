@@ -65,7 +65,7 @@ int Time_tick_mileage = 0;
 float mileage = 0;
 
 bool featureNoVehFallOff = false;
-bool featureNoVehFallOffUpdated = false;
+//bool featureNoVehFallOffUpdated = false;
 bool featureVehSpeedBoost = false;
 bool featureVehSteerAngle = false;
 bool featureEngineRunning = false;
@@ -80,13 +80,13 @@ bool featureVehSpawnTuned = false;
 bool featureVehSpawnOptic = false;
 bool featureVehicleDoorInstant = false;
 bool featureLockVehicleDoors = false;
-bool featureLockVehicleDoorsUpdated = false;
+//bool featureLockVehicleDoorsUpdated = false;
 bool featureAntiTheftSystem = false;
 bool featureWearHelmetOff = false;
 bool featureWearHelmetOffUpdated = false;
 bool featureVehLightsOn = false, featureVehLightsOnUpdated = false;
 bool featureInfiniteRocketBoost = false;
-bool featureInfiniteRocketBoostUpdated = false;
+//bool featureInfiniteRocketBoostUpdated = false;
 bool window_roll, interior_lights, veh_searching, veh_alarm, veh_brake_toggle = false;
 int lights = -1, highbeams = -1;
 
@@ -456,7 +456,7 @@ void vehicle_set_alarm() {
 
 void doorslocked_switching() {
 	featureLockVehicleDoors = !featureLockVehicleDoors;
-	featureLockVehicleDoorsUpdated = true;
+	//featureLockVehicleDoorsUpdated = true;
 	if (featureLockVehicleDoors) set_status_text("Doors Locked");
 	else set_status_text("Doors Unlocked");
 	WAIT(100);
@@ -710,7 +710,7 @@ bool process_veh_door_menu(){
 	toggleItem->caption = "Lock Vehicle Doors";
 	toggleItem->value = -4;
 	toggleItem->toggleValue = &featureLockVehicleDoors;
-	toggleItem->toggleValueUpdated = &featureLockVehicleDoorsUpdated;
+	//toggleItem->toggleValueUpdated = &featureLockVehicleDoorsUpdated;
 	menuItems.push_back(toggleItem);
 
 	std::vector<MenuItem<int>*> menuItemsRoll;
@@ -1666,7 +1666,7 @@ void process_veh_menu(){
 	toggleItem->caption = "No Falling Off/Out";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureNoVehFallOff;
-	toggleItem->toggleValueUpdated = &featureNoVehFallOffUpdated;
+	//toggleItem->toggleValueUpdated = &featureNoVehFallOffUpdated;
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
@@ -2001,10 +2001,10 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 
 	// fall off
-	if (bPlayerExists && featureNoVehFallOffUpdated && !featureNoVehFallOff){
+	if (bPlayerExists && !featureNoVehFallOff) { // && featureNoVehFallOffUpdated
 		PED::SET_PED_CONFIG_FLAG(playerPed, PED_FLAG_THROUGH_WINDSCREEN, TRUE);
 		PED::SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE(playerPed, 0);
-		featureNoVehFallOffUpdated = false;
+		//featureNoVehFallOffUpdated = false;
 	}
 	else if (bPlayerExists && featureNoVehFallOff){
 		PED::SET_PED_CONFIG_FLAG(playerPed, PED_FLAG_THROUGH_WINDSCREEN, FALSE);
@@ -2046,14 +2046,14 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 
 	//Lock player vehicle doors
-	if (featureLockVehicleDoorsUpdated){
+	//if (featureLockVehicleDoorsUpdated){
 		if (bPlayerExists && !featureLockVehicleDoors){
 			Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 			VEHICLE::SET_VEHICLE_DOORS_LOCKED(veh, 0);
 			PED::SET_PED_CAN_BE_DRAGGED_OUT(playerPed, true);
 		}
-		featureLockVehicleDoorsUpdated = false;
-	}
+	//	featureLockVehicleDoorsUpdated = false;
+	//}
 	if (featureLockVehicleDoors){
 		Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 		VEHICLE::SET_VEHICLE_DOORS_LOCKED(veh, 4);
@@ -3059,9 +3059,9 @@ void reset_vehicle_globals() {
 		featureVehSpawnOptic =
 		featureVehLightsOn = false;
 
-	featureLockVehicleDoorsUpdated = true;
+	//featureLockVehicleDoorsUpdated = true;
 	featureDeleteTrackedVehicles_CharacterChanged = true;
-		featureNoVehFallOffUpdated = true;
+		//featureNoVehFallOffUpdated = true;
 		featureBlipNumber = true;
 		featureWearHelmetOffUpdated = true;
 		featureVehInvincibleUpdated = true;
@@ -3083,7 +3083,7 @@ void reset_vehicle_globals() {
 		featureNoLightsNightTime = true;
 		featureEscapingPolice = true;
 		featureVehLightsOnUpdated = true;
-		featureInfiniteRocketBoostUpdated = true;
+		//featureInfiniteRocketBoostUpdated = true;
 
 	featureDespawnScriptDisabled = false;
 	featureDespawnScriptDisabledUpdated = true;
@@ -3304,7 +3304,7 @@ Vehicle do_spawn_vehicle(DWORD model, std::string modelTitle, bool cleanup){
 }
 
 void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){
-	results->push_back(FeatureEnabledLocalDefinition{"featureNoVehFallOff", &featureNoVehFallOff, &featureNoVehFallOffUpdated});
+	results->push_back(FeatureEnabledLocalDefinition{"featureNoVehFallOff", &featureNoVehFallOff}); // , &featureNoVehFallOffUpdated
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehicleDoorInstant", &featureVehicleDoorInstant});
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehInvincible", &featureVehInvincible, &featureVehInvincibleUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehNoDamage", &featureVehNoDamage, &featureVehInvincibleUpdated});
@@ -3358,7 +3358,7 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureEngineDegrade", &featureEngineDegrade});
 	results->push_back(FeatureEnabledLocalDefinition{"featureEngineHealthBar", &featureEngineHealthBar});
 	results->push_back(FeatureEnabledLocalDefinition{"featureLimpMode", &featureLimpMode});
-	results->push_back(FeatureEnabledLocalDefinition{"featureInfiniteRocketBoost", &featureInfiniteRocketBoost, &featureInfiniteRocketBoostUpdated});
+	results->push_back(FeatureEnabledLocalDefinition{"featureInfiniteRocketBoost", &featureInfiniteRocketBoost}); // , &featureInfiniteRocketBoostUpdated
 
 }
 
