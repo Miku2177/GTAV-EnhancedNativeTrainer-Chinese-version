@@ -923,7 +923,7 @@ void most_wanted()
 			}
 			
 			if (featurePlayerNoSwitch && PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < VEH_STARSPUNISH_VALUES[mostwanted_level_enable] && added_already == true) CONTROLS::DISABLE_CONTROL_ACTION(2, 19, true);
-			if (added_already == true) {
+			if (added_already == true && !CUTSCENE::IS_CUTSCENE_PLAYING()) {
 				UI::SET_TEXT_FONT(4);
 				UI::SET_TEXT_SCALE(0.0, 0.45);
 				UI::SET_TEXT_PROPORTIONAL(1);

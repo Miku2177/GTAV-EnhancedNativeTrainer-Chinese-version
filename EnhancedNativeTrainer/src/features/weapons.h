@@ -238,7 +238,7 @@ extern bool featureThermalVision;
 
 bool process_weapon_menu();
 
-bool process_give_melee();
+//bool process_give_melee();
 bool do_give_weapon(std::string modelName);
 bool process_weaponlist_menu();
 
@@ -284,7 +284,7 @@ void onconfirm_open_tint_menu(MenuItem<int> choice);
 
 //Weapon mod menu
 
-bool process_weapon_mod_menu_tint();
+//bool process_weapon_mod_menu_tint();
 
 bool onconfirm_weapon_mod_menu_tint(MenuItem<int> choice);
 

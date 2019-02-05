@@ -56,20 +56,20 @@ bool onlineWarningShown = false;
 bool featurePlayerInvincible = false;
 bool featurePlayerInvincibleUpdated = false;
 bool featurePlayerIgnoredByPolice = false;
-bool featurePlayerIgnoredByPoliceUpdated = false;
+//bool featurePlayerIgnoredByPoliceUpdated = false;
 bool featurePlayerUnlimitedAbility = false;
 bool featurePlayerNoNoise = false;
-bool featurePlayerNoNoiseUpdated = false;
+//bool featurePlayerNoNoiseUpdated = false;
 bool featurePlayerFastSwim = false;
-bool featurePlayerFastSwimUpdated = false;
+//bool featurePlayerFastSwimUpdated = false;
 bool featurePlayerFastRun = false;
-bool featurePlayerFastRunUpdated = false;
+//bool featurePlayerFastRunUpdated = false;
 bool featurePlayerRunApartments = false;
 bool featurePlayerSuperJump = false;
 bool featurePlayerInvisible = false;
-bool featurePlayerInvisibleUpdated = false;
+//bool featurePlayerInvisibleUpdated = false;
 bool featurePlayerInvisibleInVehicle = false;
-bool featurePlayerInvisibleInVehicleUpdated = false;
+//bool featurePlayerInvisibleInVehicleUpdated = false;
 bool featurePlayerDrunk = false;
 bool featurePlayerDrunkUpdated = false;
 bool featureNightVision = false;
@@ -91,9 +91,9 @@ bool featurePlayerLife_Died = false;
 bool featurePlayerLife_Changed = false;
 
 bool featureNoRagdoll = false;
-bool featureNoRagdollUpdated = false;
+//bool featureNoRagdollUpdated = false;
 bool featureRagdollIfInjured = false;
-bool featureRagdollIfInjuredUpdated = false;
+//bool featureRagdollIfInjuredUpdated = false;
 
 // ragdoll if injured variables
 bool been_damaged_by_weapon, ragdoll_task = false;
@@ -565,12 +565,12 @@ void update_features(){
 			PLAYER::SET_POLICE_IGNORE_PLAYER(player, true);
 		}
 	}
-	else if(featurePlayerIgnoredByPoliceUpdated){
+	else //if(featurePlayerIgnoredByPoliceUpdated){
 		if(bPlayerExists){
 			PLAYER::SET_POLICE_IGNORE_PLAYER(player, false);
 		}
-		featurePlayerIgnoredByPoliceUpdated = false;
-	}
+		//featurePlayerIgnoredByPoliceUpdated = false;
+	//}
 
 	// player special ability
 	if(featurePlayerUnlimitedAbility){
@@ -580,12 +580,12 @@ void update_features(){
 	}
 
 	// player no noise
-	if(featurePlayerNoNoiseUpdated){
+	//if(featurePlayerNoNoiseUpdated){
 		if(bPlayerExists && !featurePlayerNoNoise){
 			PLAYER::SET_PLAYER_NOISE_MULTIPLIER(player, 1.0);
 		}
-		featurePlayerNoNoiseUpdated = false;
-	}
+	//	featurePlayerNoNoiseUpdated = false;
+	//}
 	if(featurePlayerNoNoise){
 		PLAYER::SET_PLAYER_NOISE_MULTIPLIER(player, 0.0);
 	}
@@ -626,13 +626,13 @@ void update_features(){
 			PED::SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(playerPed, 0);
 		}
 	}
-	else if(featureNoRagdollUpdated){
+	else //if(featureNoRagdollUpdated){
 		if(bPlayerExists){
 			PED::SET_PED_CAN_RAGDOLL(playerPed, 1);
 			PED::SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(playerPed, 1);
 		}
-		featureNoRagdollUpdated = false;
-	}
+		//featureNoRagdollUpdated = false;
+	//}
 
 	//Ragdoll If Shot
 	if (featureRagdollIfInjured) {
@@ -1148,15 +1148,15 @@ void process_player_menu(){
 		//{"Freeze Wanted Level", &featureWantedLevelFrozen, &featureWantedLevelFrozenUpdated, true},
 		{"Wanted Fugitive", NULL, NULL, false},
 		{"Invincible", &featurePlayerInvincible, &featurePlayerInvincibleUpdated, true},
-		{"Police Ignore You", &featurePlayerIgnoredByPolice, &featurePlayerIgnoredByPoliceUpdated, true},
+		{"Police Ignore You", &featurePlayerIgnoredByPolice, NULL, true}, // &featurePlayerIgnoredByPoliceUpdated
 		{"Unlimited Ability", &featurePlayerUnlimitedAbility, NULL, true},
-		{"Noiseless", &featurePlayerNoNoise, &featurePlayerNoNoiseUpdated, true},
+		{"Noiseless", &featurePlayerNoNoise, NULL, true}, // &featurePlayerNoNoiseUpdated
 		{"Can Run In Apartments", &featurePlayerRunApartments, NULL, true},
 		{"Player Movement Speed", NULL, NULL, false},
 		{"Super Jump", &featurePlayerSuperJump, NULL, true},
 		{"Ragdoll", NULL, NULL, false},
-		{"Invisibility", &featurePlayerInvisible, &featurePlayerInvisibleUpdated, true},
-		{"Invisibility In Vehicle", &featurePlayerInvisibleInVehicle, &featurePlayerInvisibleInVehicleUpdated, true },
+		{"Invisibility", &featurePlayerInvisible, NULL, true}, // &featurePlayerInvisibleUpdated
+		{"Invisibility In Vehicle", &featurePlayerInvisibleInVehicle, NULL, true }, // &featurePlayerInvisibleInVehicleUpdated
 		{"Drunk", &featurePlayerDrunk, &featurePlayerDrunkUpdated, true},
 		{"Night Vision", &featureNightVision, &featureNightVisionUpdated, true},
 		{"Thermal Vision", &featureThermalVision, &featureThermalVisionUpdated, true},
@@ -1405,23 +1405,23 @@ void reset_globals(){
 		featureWantedLevelFrozen = false;
 
 	featurePlayerInvincibleUpdated =
-		featurePlayerIgnoredByPoliceUpdated =
-		featurePlayerNoNoiseUpdated =
-		featurePlayerFastSwimUpdated =
-		featurePlayerFastRunUpdated =
+		//featurePlayerIgnoredByPoliceUpdated =
+		//featurePlayerNoNoiseUpdated =
+		//featurePlayerFastSwimUpdated =
+		//featurePlayerFastRunUpdated =
 		featurePlayerDrunkUpdated =
 		featureNightVisionUpdated =
 		featureThermalVisionUpdated =
-		featurePlayerInvisibleUpdated =
-		featurePlayerInvisibleInVehicleUpdated =
+		//featurePlayerInvisibleUpdated =
+		//featurePlayerInvisibleInVehicleUpdated =
 		featurePlayerLifeUpdated =
 		featurePrison_Robe =
 		featurePedPrison_Robe =
 		featurePrison_Yard = 
 
-		featurePlayerNoSwitch =
-		featureNoRagdollUpdated =
-		featureRagdollIfInjuredUpdated =
+		featurePlayerNoSwitch = true;
+		//featureNoRagdollUpdated =
+		//featureRagdollIfInjuredUpdated = true;
 		featureWantedLevelFrozenUpdated = true;
 
 	set_status_text("All settings reset to defaults");
@@ -1630,20 +1630,20 @@ void ScriptTidyUp(){
 
 void add_player_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerInvincible", &featurePlayerInvincible, &featurePlayerInvincibleUpdated});
-	results->push_back(FeatureEnabledLocalDefinition{"featureWantedLevelFrozen", &featureWantedLevelFrozen, &featureWantedLevelFrozenUpdated});
-	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerIgnoredByPolice", &featurePlayerIgnoredByPolice, &featurePlayerIgnoredByPoliceUpdated});
+	results->push_back(FeatureEnabledLocalDefinition{"featureWantedLevelFrozen", &featureWantedLevelFrozen, &featureWantedLevelFrozenUpdated });
+	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerIgnoredByPolice", &featurePlayerIgnoredByPolice}); // , &featurePlayerIgnoredByPoliceUpdated
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerUnlimitedAbility", &featurePlayerUnlimitedAbility});
-	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerNoNoise", &featurePlayerNoNoise, &featurePlayerNoNoiseUpdated});
-	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerFastSwim", &featurePlayerFastSwim, &featurePlayerFastSwimUpdated});
+	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerNoNoise", &featurePlayerNoNoise}); // , &featurePlayerNoNoiseUpdated
+	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerFastSwim", &featurePlayerFastSwim}); // , &featurePlayerFastSwimUpdated
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerMostWanted", &featurePlayerMostWanted});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerNoSwitch", &featurePlayerNoSwitch});
-	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerFastRun", &featurePlayerFastRun, &featurePlayerFastRunUpdated});
+	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerFastRun", &featurePlayerFastRun}); // , &featurePlayerFastRunUpdated
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerRunApartments", &featurePlayerRunApartments});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerSuperJump", &featurePlayerSuperJump});
-	results->push_back(FeatureEnabledLocalDefinition{"featureNoRagdoll", &featureNoRagdoll, &featureNoRagdollUpdated});
-	results->push_back(FeatureEnabledLocalDefinition{"featureRagdollIfInjured", &featureRagdollIfInjured, &featureRagdollIfInjuredUpdated});
-	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerInvisible", &featurePlayerInvisible, &featurePlayerInvisibleUpdated});
-	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerInvisibleInVehicle", &featurePlayerInvisibleInVehicle, &featurePlayerInvisibleInVehicleUpdated});
+	results->push_back(FeatureEnabledLocalDefinition{"featureNoRagdoll", &featureNoRagdoll}); // , &featureNoRagdollUpdated
+	results->push_back(FeatureEnabledLocalDefinition{"featureRagdollIfInjured", &featureRagdollIfInjured}); // , &featureRagdollIfInjuredUpdated
+	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerInvisible", &featurePlayerInvisible}); // , &featurePlayerInvisibleUpdated
+	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerInvisibleInVehicle", &featurePlayerInvisibleInVehicle}); // , &featurePlayerInvisibleInVehicleUpdated
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerDrunk", &featurePlayerDrunk, &featurePlayerDrunkUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNightVision", &featureNightVision, &featureNightVisionUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureThermalVision", &featureThermalVision, &featureThermalVisionUpdated});
@@ -2253,7 +2253,7 @@ void toggle_invisibility(){
 	else{
 		set_status_text("Player no longer invisible");
 	}
-	featurePlayerInvisibleUpdated = true;
+	//featurePlayerInvisibleUpdated = true;
 }
 
 void reset_wanted_level(){

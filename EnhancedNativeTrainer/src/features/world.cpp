@@ -37,30 +37,30 @@ Camera DeathCam = NULL;
 bool featureRestrictedZones = true;
 
 bool featureWorldMoonGravity = false;
-bool featureWorldMoonGravityUpdated = false;
+//bool featureWorldMoonGravityUpdated = false;
 
 bool featureWorldNoPeds = false;
-bool featureWorldNoPedsUpdated = false;
+//bool featureWorldNoPedsUpdated = false;
 bool featureWorldNoTraffic = false;
-bool featureWorldNoTrafficUpdated = false;
+//bool featureWorldNoTrafficUpdated = false;
 bool featureNoPoliceBlips = false;
-bool featureNoPoliceBlipsUpdated = false;
+//bool featureNoPoliceBlipsUpdated = false;
 bool featureWorldNoAnimals = false;
-bool featureWorldNoAnimalsUpdated = false;
+//bool featureWorldNoAnimalsUpdated = false;
 bool featureFullMap = false;
-bool featureFullMapUpdated = false;
+//bool featureFullMapUpdated = false;
 bool featurePenitentiaryMap = false;
-bool featurePenitentiaryMapUpdated = false;
+//bool featurePenitentiaryMapUpdated = false;
 bool featureZancudoMap = false;
 bool featureZancudoMapUpdated = false;
 bool featureBusLight = false;
-bool featureBusLightUpdated = false;
+//bool featureBusLightUpdated = false;
 bool featureAcidWater = false;
-bool featureAcidWaterUpdated = false;
+//bool featureAcidWaterUpdated = false;
 bool featureAcidRain = false;
-bool featureAcidRainUpdated = false;
+//bool featureAcidRainUpdated = false;
 bool featureReducedGripVehiclesIfSnow = false;
-bool featureReducedGripVehiclesIfSnowUpdated = false;
+//bool featureReducedGripVehiclesIfSnowUpdated = false;
 
 bool police_blips_toogle = false;
 bool windstrength_toggle = false;
@@ -355,28 +355,28 @@ void process_world_menu()
 	togItem->caption = "Moon Gravity";
 	togItem->value = 1;
 	togItem->toggleValue = &featureWorldMoonGravity;
-	togItem->toggleValueUpdated = &featureWorldMoonGravityUpdated;
+	//togItem->toggleValueUpdated = &featureWorldMoonGravityUpdated;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "No Pedestrians";
 	togItem->value = 1;
 	togItem->toggleValue = &featureWorldNoPeds;
-	togItem->toggleValueUpdated = &featureWorldNoPedsUpdated;
+	//togItem->toggleValueUpdated = &featureWorldNoPedsUpdated;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "No Traffic";
 	togItem->value = 1;
 	togItem->toggleValue = &featureWorldNoTraffic;
-	togItem->toggleValueUpdated = &featureWorldNoTrafficUpdated;
+	//togItem->toggleValueUpdated = &featureWorldNoTrafficUpdated;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "No Police Blips";
 	togItem->value = 1;
 	togItem->toggleValue = &featureNoPoliceBlips;
-	togItem->toggleValueUpdated = &featureNoPoliceBlipsUpdated;
+	//togItem->toggleValueUpdated = &featureNoPoliceBlipsUpdated;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
@@ -433,25 +433,18 @@ void process_world_menu()
 	listItem->value = RadarReducedGripSnowingIndex;
 	menuItems.push_back(listItem);
 
-	//togItem = new ToggleMenuItem<int>();
-	//togItem->caption = "Reduced Grip If Heavy Snow";
-	//togItem->value = 7;
-	//togItem->toggleValue = &featureReducedGripVehiclesIfSnow;
-	//togItem->toggleValueUpdated = &featureReducedGripVehiclesIfSnowUpdated;
-	//menuItems.push_back(togItem);
-
 	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "Show Full Map";
 	togItem->value = 1;
 	togItem->toggleValue = &featureFullMap;
-	togItem->toggleValueUpdated = &featureFullMapUpdated;
+	//togItem->toggleValueUpdated = &featureFullMapUpdated;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "Show Bolingbroke Penitentiary On Map";
 	togItem->value = 1;
 	togItem->toggleValue = &featurePenitentiaryMap;
-	togItem->toggleValueUpdated = &featurePenitentiaryMapUpdated;
+	//togItem->toggleValueUpdated = &featurePenitentiaryMapUpdated;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
@@ -478,21 +471,21 @@ void process_world_menu()
 	togItem->caption = "Bus Interior Light On At Night";
 	togItem->value = 1;
 	togItem->toggleValue = &featureBusLight;
-	togItem->toggleValueUpdated = &featureBusLightUpdated;
+	//togItem->toggleValueUpdated = &featureBusLightUpdated;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "Deadly Water";
 	togItem->value = 1;
 	togItem->toggleValue = &featureAcidWater;
-	togItem->toggleValueUpdated = &featureAcidWaterUpdated;
+	//togItem->toggleValueUpdated = &featureAcidWaterUpdated;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "Deadly Rain";
 	togItem->value = 1;
 	togItem->toggleValue = &featureAcidRain;
-	togItem->toggleValueUpdated = &featureAcidRainUpdated;
+	//togItem->toggleValueUpdated = &featureAcidRainUpdated;
 	menuItems.push_back(togItem);
 
 	draw_generic_menu<int>(menuItems, &activeLineIndexWorld, caption, onconfirm_world_menu, NULL, NULL);
@@ -537,23 +530,23 @@ void reset_world_globals()
 		featureWorldRandomBoats =
 		featureWorldGarbageTrucks = true;
 
-	featureWorldNoPedsUpdated = 
-	featureWorldMoonGravityUpdated = 
-	featureWorldNoTrafficUpdated = 
-	featureNoPoliceBlipsUpdated =
-	featureWorldNoAnimalsUpdated =
-	featureFullMapUpdated =
-	featurePenitentiaryMapUpdated =
+	//featureWorldNoPedsUpdated = 
+	//featureWorldMoonGravityUpdated = 
+	//featureWorldNoTrafficUpdated = 
+	//featureNoPoliceBlipsUpdated =
+	//featureWorldNoAnimalsUpdated =
+	//featureFullMapUpdated =
+	//featurePenitentiaryMapUpdated =
 	featureZancudoMapUpdated =
-	featureBusLightUpdated = 
-	featureAcidWaterUpdated = 
-	featureAcidRainUpdated =
-	featureReducedGripVehiclesIfSnowUpdated =
+	//featureBusLightUpdated = 
+	//featureAcidWaterUpdated = 
+	//featureAcidRainUpdated =
+	//featureReducedGripVehiclesIfSnowUpdated =
 	featureWorldGarbageTrucksUpdated =
 	featureWorldRandomBoatsUpdated =
 	featureWorldRandomCopsUpdated =
 	featureWorldRandomTrainsUpdated =
-	featureBlackoutUpdated = 
+	featureBlackoutUpdated =
 	featureSnowUpdated =
 	featureMPMapUpdated = true;
 }
@@ -564,7 +557,7 @@ void update_world_features()
 	{
 		GAMEPLAY::SET_GRAVITY_LEVEL(1);
 	}
-	else if (featureWorldMoonGravityUpdated)
+	else //if (featureWorldMoonGravityUpdated)
 	{
 		GAMEPLAY::SET_GRAVITY_LEVEL(0);
 	}
@@ -688,8 +681,8 @@ void update_world_features()
 	}
 	}*/
 
-	if (featureWorldNoPedsUpdated)
-	{
+	//if (featureWorldNoPedsUpdated)
+	//{
 		if (featureWorldNoPeds)
 		{
 			Vector3 v3 = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 1);
@@ -701,9 +694,9 @@ void update_world_features()
 			STREAMING::SET_PED_POPULATION_BUDGET(3);
 		}
 
-		featureWorldNoPedsUpdated = false;
-	}
-	else if (featureWorldNoPeds && get_frame_number() % 100 == 50)
+		//featureWorldNoPedsUpdated = false;
+	//}
+	if (featureWorldNoPeds && get_frame_number() % 100 == 50) // else 
 	{
 		Vector3 v3 = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 1);
 		GAMEPLAY::CLEAR_AREA_OF_PEDS(v3.x, v3.y, v3.z, 1000.0, 0);
@@ -712,12 +705,12 @@ void update_world_features()
 
 	// No Police Blips
 	if (featureNoPoliceBlips) PLAYER::SET_POLICE_RADAR_BLIPS(false);
-	
 	if (!featureNoPoliceBlips) PLAYER::SET_POLICE_RADAR_BLIPS(true);
 	
-	if (featureFullMap) UI::_SET_MINIMAP_REVEALED(true);
-	else UI::_SET_MINIMAP_REVEALED(false);
-
+	// Show Full Map
+	if (featureFullMap) UI::_SET_MINIMAP_REVEALED(true); 
+	if (!featureFullMap) UI::_SET_MINIMAP_REVEALED(false);
+	
 	// Radar Map Size
 	if (WORLD_RADAR_MAP_VALUES[RadarMapIndex] == 1 && radar_map_toogle_1 == false) {
 		UI::_SET_RADAR_BIGMAP_ENABLED(false, false);
@@ -885,9 +878,6 @@ void update_world_features()
 			}
 			 
 			if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 && featureSnow) {
-				//if (!featureSnowUpdated && !featureSnow) featureSnowUpdated = true;
-				//if (featureSnowUpdated && !featureSnow) featureSnow = true;
-
 				Vehicle my_veh_on_snow = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()); 
 				Vehicle veh_on_snow = PED::GET_VEHICLE_PED_IS_USING(bus_veh[i]);
 				float my_speed_on_snow = ENTITY::GET_ENTITY_SPEED(my_veh_on_snow);
@@ -1038,8 +1028,8 @@ void update_world_features()
 
 	if (windstrength_changed != WORLD_WIND_STRENGTH_VALUES[WindStrengthIndex]) windstrength_toggle = false;
 
-	if (featureWorldNoTrafficUpdated)
-	{
+	//if (featureWorldNoTrafficUpdated)
+	//{
 		VEHICLE::_DISPLAY_DISTANT_VEHICLES(!featureWorldNoTraffic);
 		GRAPHICS::DISABLE_VEHICLE_DISTANTLIGHTS(featureWorldNoTraffic);
 
@@ -1057,9 +1047,9 @@ void update_world_features()
 			VEHICLE::SET_ALL_LOW_PRIORITY_VEHICLE_GENERATORS_ACTIVE(true);
 		}
 
-		featureWorldNoTrafficUpdated = false;
-	}
-	else if (featureWorldNoTraffic)// && get_frame_number() % 100 == 0)
+		//featureWorldNoTrafficUpdated = false;
+	//}
+	if (featureWorldNoTraffic)// && get_frame_number() % 100 == 0) // else 
 	{
 		if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0))
 		{
@@ -1124,13 +1114,12 @@ void update_world_features()
 		}
 
 		featureMPMapUpdated = false;
-
 	}
 }
 
 void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results)
 {
-	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldMoonGravity", &featureWorldMoonGravity, &featureWorldMoonGravityUpdated });
+	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldMoonGravity", &featureWorldMoonGravity }); // , &featureWorldMoonGravity
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldRandomCops", &featureWorldRandomCops, &featureWorldRandomCopsUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldRandomTrains", &featureWorldRandomTrains, &featureWorldRandomTrainsUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldRandomBoats", &featureWorldRandomBoats, &featureWorldRandomBoatsUpdated });
@@ -1144,19 +1133,19 @@ void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* r
 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureRestrictedZones", &featureRestrictedZones });
 
-	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoPeds", &featureWorldNoPeds, &featureWorldNoPedsUpdated });
-	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoTraffic", &featureWorldNoTraffic, &featureWorldNoTrafficUpdated });
-	results->push_back(FeatureEnabledLocalDefinition{ "featureNoPoliceBlips", &featureNoPoliceBlips, &featureNoPoliceBlipsUpdated });
-	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoAnimals", &featureWorldNoAnimals, &featureWorldNoAnimalsUpdated });
-	results->push_back(FeatureEnabledLocalDefinition{ "featureFullMap", &featureFullMap, &featureFullMapUpdated });
-	results->push_back(FeatureEnabledLocalDefinition{ "featurePenitentiaryMap", &featurePenitentiaryMap, &featurePenitentiaryMapUpdated });
+	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoPeds", &featureWorldNoPeds }); // , &featureWorldNoPedsUpdated
+	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoTraffic", &featureWorldNoTraffic }); // , &featureWorldNoTrafficUpdated
+	results->push_back(FeatureEnabledLocalDefinition{ "featureNoPoliceBlips", &featureNoPoliceBlips }); // , &featureNoPoliceBlipsUpdated
+	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoAnimals", &featureWorldNoAnimals }); // , &featureWorldNoAnimalsUpdated
+	results->push_back(FeatureEnabledLocalDefinition{ "featureFullMap", &featureFullMap }); // , &featureFullMapUpdated
+	results->push_back(FeatureEnabledLocalDefinition{ "featurePenitentiaryMap", &featurePenitentiaryMap }); // , &featurePenitentiaryMapUpdated
 	results->push_back(FeatureEnabledLocalDefinition{ "featureZancudoMap", &featureZancudoMap, &featureZancudoMapUpdated });
-	results->push_back(FeatureEnabledLocalDefinition{ "featureBusLight", &featureBusLight, &featureBusLightUpdated });
-	results->push_back(FeatureEnabledLocalDefinition{ "featureAcidWater", &featureAcidWater, &featureAcidWaterUpdated });
-	results->push_back(FeatureEnabledLocalDefinition{ "featureAcidRain", &featureAcidRain, &featureAcidRainUpdated });
-	results->push_back(FeatureEnabledLocalDefinition{ "featureReducedGripVehiclesIfSnow", &featureReducedGripVehiclesIfSnow, &featureReducedGripVehiclesIfSnowUpdated });
+	results->push_back(FeatureEnabledLocalDefinition{ "featureBusLight", &featureBusLight }); // , &featureBusLightUpdated
+	results->push_back(FeatureEnabledLocalDefinition{ "featureAcidWater", &featureAcidWater }); // , &featureAcidWaterUpdated
+	results->push_back(FeatureEnabledLocalDefinition{ "featureAcidRain", &featureAcidRain }); // , &featureAcidRainUpdated
+	results->push_back(FeatureEnabledLocalDefinition{ "featureReducedGripVehiclesIfSnow", &featureReducedGripVehiclesIfSnow }); // , &featureReducedGripVehiclesIfSnowUpdated
 
-	results->push_back(FeatureEnabledLocalDefinition{ "featureSnow", &featureSnow, &featureSnowUpdated});
+	results->push_back(FeatureEnabledLocalDefinition{ "featureSnow", &featureSnow, &featureSnowUpdated });
 
 	//results->push_back(FeatureEnabledLocalDefinition{ "featureMPMap", &featureMPMap, &featureMPMapUpdated }); //Was causing issues as ENT was trying to load the MP map during the save load screen...
 }
