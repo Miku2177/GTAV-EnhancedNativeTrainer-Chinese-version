@@ -20,7 +20,6 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include <iostream>   // std::cout
 #include <string>     // std::string, std::stof
 
-
 bool featureEnableMpMaps = false;
 bool feature3dmarker = false;
 bool teleported_in_ped = false;
@@ -60,8 +59,6 @@ Vehicle waitingToRetakeSeat = -1;
 float chauffTolerance = 25.0;
 
 Vector3 blipCoords = { 0, 0, 0 };
-
-
 
 std::vector<tele_location> LOCATIONS_SAFE = {
 	{ "Franklin's Safehouse", -18.0355f, -1456.94f, 30.4548f },

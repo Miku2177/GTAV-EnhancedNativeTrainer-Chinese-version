@@ -565,12 +565,12 @@ void update_features(){
 			PLAYER::SET_POLICE_IGNORE_PLAYER(player, true);
 		}
 	}
-	else //if(featurePlayerIgnoredByPoliceUpdated){
+	if(!featurePlayerIgnoredByPolice){
 		if(bPlayerExists){
 			PLAYER::SET_POLICE_IGNORE_PLAYER(player, false);
 		}
 		//featurePlayerIgnoredByPoliceUpdated = false;
-	//}
+	}
 
 	// player special ability
 	if(featurePlayerUnlimitedAbility){
@@ -626,13 +626,13 @@ void update_features(){
 			PED::SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(playerPed, 0);
 		}
 	}
-	else //if(featureNoRagdollUpdated){
+	if(!featureNoRagdoll){
 		if(bPlayerExists){
 			PED::SET_PED_CAN_RAGDOLL(playerPed, 1);
 			PED::SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(playerPed, 1);
 		}
 		//featureNoRagdollUpdated = false;
-	//}
+	}
 
 	//Ragdoll If Shot
 	if (featureRagdollIfInjured) {

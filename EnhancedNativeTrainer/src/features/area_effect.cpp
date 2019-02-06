@@ -500,12 +500,12 @@ void update_area_effects(Ped playerPed){
 		//featureAreaPedsRiotingUpdated = false;
 	}
 
-	if(pedWeaponSetIndex != 0){ //  || pedWeaponSetUpdated
+	if(featureAreaPedsRioting && pedWeaponSetIndex != 0){ //  || pedWeaponSetUpdated // 
 		give_all_nearby_peds_a_weapon(pedWeaponSetIndex != 0);
 		//pedWeaponSetUpdated = false;
 	}
 
-	if (PedWeaponsSelectiveIndex != 0 || PedWeaponsSelective1Changed){
+	if ((featureAreaPedsRioting && PedWeaponsSelectiveIndex != 0) || PedWeaponsSelective1Changed){
 		give_all_nearby_peds_a_weapon(PedWeaponsSelectiveIndex != 0);
 		PedWeaponsSelective1Changed = false;
 	}
@@ -563,7 +563,7 @@ void set_all_nearby_peds_to_invincible(bool enabled){
 	}
 }
 
-void set_all_nearby_peds_to_angry(bool enabled){ 
+void set_all_nearby_peds_to_angry(bool enabled){  
 	std::set<Ped> peds = get_nearby_peds(PLAYER::PLAYER_PED_ID());
 
 	for each (Ped xped in peds){
