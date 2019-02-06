@@ -42,11 +42,9 @@ bool featureWorldMoonGravity = false;
 bool featureWorldNoPeds = false;
 //bool featureWorldNoPedsUpdated = false;
 bool featureWorldNoTraffic = false;
-//bool featureWorldNoTrafficUpdated = false;
+bool featureWorldNoTrafficUpdated = false;
 bool featureNoPoliceBlips = false;
 //bool featureNoPoliceBlipsUpdated = false;
-bool featureWorldNoAnimals = false;
-//bool featureWorldNoAnimalsUpdated = false;
 bool featureFullMap = false;
 //bool featureFullMapUpdated = false;
 bool featurePenitentiaryMap = false;
@@ -369,7 +367,7 @@ void process_world_menu()
 	togItem->caption = "No Traffic";
 	togItem->value = 1;
 	togItem->toggleValue = &featureWorldNoTraffic;
-	//togItem->toggleValueUpdated = &featureWorldNoTrafficUpdated;
+	togItem->toggleValueUpdated = &featureWorldNoTrafficUpdated;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
@@ -512,7 +510,6 @@ void reset_world_globals()
 	featureWorldNoPeds = false;
 	featureWorldNoTraffic = false;
 	featureNoPoliceBlips = false;
-	featureWorldNoAnimals = false;
 	featureFullMap = false;
 	featurePenitentiaryMap = false;
 	featureZancudoMap = false;
@@ -530,11 +527,10 @@ void reset_world_globals()
 		featureWorldRandomBoats =
 		featureWorldGarbageTrucks = true;
 
-	//featureWorldNoPedsUpdated = 
 	//featureWorldMoonGravityUpdated = 
-	//featureWorldNoTrafficUpdated = 
+	//featureWorldNoPedsUpdated = 
+	featureWorldNoTrafficUpdated = 
 	//featureNoPoliceBlipsUpdated =
-	//featureWorldNoAnimalsUpdated =
 	//featureFullMapUpdated =
 	//featurePenitentiaryMapUpdated =
 	featureZancudoMapUpdated =
@@ -696,12 +692,12 @@ void update_world_features()
 
 		//featureWorldNoPedsUpdated = false;
 	//}
-	if (featureWorldNoPeds && get_frame_number() % 100 == 50) // else 
-	{
-		Vector3 v3 = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 1);
-		GAMEPLAY::CLEAR_AREA_OF_PEDS(v3.x, v3.y, v3.z, 1000.0, 0);
-		STREAMING::SET_PED_POPULATION_BUDGET(0);
-	}
+	//if (featureWorldNoPeds && get_frame_number() % 100 == 50) // else 
+	//{
+	//	Vector3 v3 = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 1);
+	//	GAMEPLAY::CLEAR_AREA_OF_PEDS(v3.x, v3.y, v3.z, 1000.0, 0);
+	//	STREAMING::SET_PED_POPULATION_BUDGET(0);
+	//}
 
 	// No Police Blips
 	if (featureNoPoliceBlips) PLAYER::SET_POLICE_RADAR_BLIPS(false);
@@ -1028,8 +1024,8 @@ void update_world_features()
 
 	if (windstrength_changed != WORLD_WIND_STRENGTH_VALUES[WindStrengthIndex]) windstrength_toggle = false;
 
-	//if (featureWorldNoTrafficUpdated)
-	//{
+	if (featureWorldNoTrafficUpdated)
+	{
 		VEHICLE::_DISPLAY_DISTANT_VEHICLES(!featureWorldNoTraffic);
 		GRAPHICS::DISABLE_VEHICLE_DISTANTLIGHTS(featureWorldNoTraffic);
 
@@ -1047,8 +1043,8 @@ void update_world_features()
 			VEHICLE::SET_ALL_LOW_PRIORITY_VEHICLE_GENERATORS_ACTIVE(true);
 		}
 
-		//featureWorldNoTrafficUpdated = false;
-	//}
+		featureWorldNoTrafficUpdated = false;
+	}
 	if (featureWorldNoTraffic)// && get_frame_number() % 100 == 0) // else 
 	{
 		if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0))
@@ -1119,7 +1115,7 @@ void update_world_features()
 
 void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results)
 {
-	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldMoonGravity", &featureWorldMoonGravity }); // , &featureWorldMoonGravity
+	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldMoonGravity", &featureWorldMoonGravity });  // , &featureWorldMoonGravityUpdated
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldRandomCops", &featureWorldRandomCops, &featureWorldRandomCopsUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldRandomTrains", &featureWorldRandomTrains, &featureWorldRandomTrainsUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldRandomBoats", &featureWorldRandomBoats, &featureWorldRandomBoatsUpdated });
@@ -1134,9 +1130,8 @@ void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* r
 	results->push_back(FeatureEnabledLocalDefinition{ "featureRestrictedZones", &featureRestrictedZones });
 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoPeds", &featureWorldNoPeds }); // , &featureWorldNoPedsUpdated
-	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoTraffic", &featureWorldNoTraffic }); // , &featureWorldNoTrafficUpdated
+	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoTraffic", &featureWorldNoTraffic, &featureWorldNoTrafficUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNoPoliceBlips", &featureNoPoliceBlips }); // , &featureNoPoliceBlipsUpdated
-	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoAnimals", &featureWorldNoAnimals }); // , &featureWorldNoAnimalsUpdated
 	results->push_back(FeatureEnabledLocalDefinition{ "featureFullMap", &featureFullMap }); // , &featureFullMapUpdated
 	results->push_back(FeatureEnabledLocalDefinition{ "featurePenitentiaryMap", &featurePenitentiaryMap }); // , &featurePenitentiaryMapUpdated
 	results->push_back(FeatureEnabledLocalDefinition{ "featureZancudoMap", &featureZancudoMap, &featureZancudoMapUpdated });
