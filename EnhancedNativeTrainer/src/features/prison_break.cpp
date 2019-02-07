@@ -91,9 +91,10 @@ void prison_break()
 
 		// Got wanted level? You'd better not die
 		if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) > PLAYER_PRISON_VALUES[current_player_prison] && !in_prison) detained = true;
+			
 		// You won't be detained if you escape the police
 		if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) > -1 && current_player_prison < 4 && PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < PLAYER_PRISON_VALUES[current_player_prison + 1] &&
-			time_before_get_to_prison > 6000 && ((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) != 12) ||
+			(time_before_get_to_prison > 6000 || time_before_get_to_prison == -1) && ((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) != 12) ||
 			(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) != 1) ||
 				(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) != 5))) detained = false;
 

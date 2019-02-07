@@ -934,9 +934,9 @@ void most_wanted()
 				UI::SET_TEXT_OUTLINE();
 				UI::_SET_TEXT_ENTRY("STRING");
 				UI::_ADD_TEXT_COMPONENT_SCALEFORM("WANTED");
-				UI::_DRAW_TEXT(0.008, 0.55);
+				UI::_DRAW_TEXT(0.008, 0.70);
 				//GRAPHICS::DRAW_RECT(0.0, 0.665, 0.1, 0.05, 10, 10, 10, 25);
-				GRAPHICS::DRAW_RECT(0.0, 0.565, 0.1, 0.05, 0, 0, 0, 255);
+				GRAPHICS::DRAW_RECT(0.0, 0.714, 0.1, 0.05, 0, 0, 0, 255);
 			}
 		}
 

@@ -10,6 +10,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 #include "script.h"
 #include "peds_dont_like_weapons.h"
+#include "prison_break.h"
 #include "..\ui_support\menu_functions.h"
 #include "weapons.h"
 #include "..\io\config_io.h"
@@ -1313,7 +1314,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	if (death_time > 10000) cops_took_weapons = false;
 
 	// Give All Weapons Automatically
-	if (featureGiveAllWeapons) {
+	if (featureGiveAllWeapons && detained == false) {
 		Ped playerPed_W = PLAYER::PLAYER_PED_ID();
 
 		tick_allw = tick_allw + 1;

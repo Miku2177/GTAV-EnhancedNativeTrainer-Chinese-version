@@ -4,6 +4,7 @@ extern bool featurePrison_Hardcore;
 extern bool featurePrison_Robe;
 extern bool featurePedPrison_Robe;
 extern bool featurePrison_Yard;
+extern bool detained;
 
 //Player Goes To Prison
 const std::vector<std::string> PLAYER_PRISON_CAPTIONS{ "OFF", "Died At 2 Stars Or More", "Died At 3 Stars Or More", "Died At 4 Stars Or More", "Died At 5 Stars" };
