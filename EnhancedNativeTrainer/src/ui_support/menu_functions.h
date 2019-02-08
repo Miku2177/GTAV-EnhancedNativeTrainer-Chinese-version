@@ -1353,3 +1353,5 @@ void draw_menu_from_struct_def(StandardOrToggleMenuDef defs[], int lineCount, in
 void draw_menu_from_struct_def(StringStandardOrToggleMenuDef defs[], int lineCount, int* selectionRef, std::string caption, bool(*onConfirmation)(MenuItem<std::string> value));
 
 std::string show_keyboard(char* title_id, char* prepopulated_text);
+
+extern bool menu_showing;
