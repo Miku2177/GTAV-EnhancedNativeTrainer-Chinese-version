@@ -12,6 +12,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "hotkeys.h"
 #include "world.h"
 #include <Psapi.h>
+#include "..\ui_support\menu_functions.h"
 
 //==================
 // MISC MENU
@@ -80,6 +81,7 @@ bool featureMiscLockRadio = false;
 bool featureMiscHideHud = false;
 bool featureMiscHideHudUpdated = false;
 bool featurePhoneShowHud = false;
+bool featureMiscHideENTHud = false;
 //bool featurePhoneShowHudUpdated = false;
 bool featureInVehicleNoHud = false;
 //bool featureInVehicleNoHudUpdated = false;
@@ -473,13 +475,13 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 		case 3:
 			process_misc_freezeradio_menu();
 			break;
-		case 18:
+		case 19:
 			process_phone_bill_menu();
 			break;
-		case 23:
+		case 24:
 			process_def_menutab_menu();
 			break;
-		case 24:
+		case 25:
 			process_airbrake_global_menu();
 			break;
 		default:
@@ -490,7 +492,7 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 }
 
 void process_misc_menu(){
-	const int lineCount = 25;
+	const int lineCount = 26;
 
 	std::string caption = "Miscellaneous Options";
 
@@ -509,6 +511,7 @@ void process_misc_menu(){
 		{"No Scuba Breathing Sound", &featureNoScubaSound, NULL, true }, // &featureNoScubaSoundUpdated
 		{"No 'Mission Passed' Message", &featureNoComleteMessage, NULL, true },
 		{"Hide HUD", &featureMiscHideHud, &featureMiscHideHudUpdated},
+		{"Hide HUD If Menu Open", &featureMiscHideENTHud},
 		{"Show HUD If Phone In Hand Only", &featurePhoneShowHud, NULL }, // &featurePhoneShowHudUpdated
 		{"Show HUD In Vehicle Only", &featureInVehicleNoHud, NULL }, // &featureInVehicleNoHudUpdated
 		{"Dynamic Health Bar", &featureDynamicHealthBar }, // , &featureDynamicHealthBarUpdated
@@ -548,6 +551,7 @@ void onchange_misc_phone_freeseconds_index(int value, SelectFromListMenuItem* so
 void reset_misc_globals(){
 	featureMiscHideHud =
 		featurePhoneShowHud = 
+		featureMiscHideENTHud =
 		featureInVehicleNoHud =
 		featureDynamicHealthBar =
 		featurePlayerRadio =
@@ -729,7 +733,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	}
 
 	// hide hud
-	if (featureMiscHideHud) {
+	if (featureMiscHideHud || (featureMiscHideENTHud && menu_showing == true)) {
 		for (int i = 0; i < 21; i++) {
 			//at least in theory...
 			switch (i){
@@ -748,7 +752,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		UI::DISPLAY_RADAR(false);
 		featureMiscHideHudUpdated = false;
 	}
-	else if (featureMiscHideHudUpdated){
+	else if ((featureMiscHideHudUpdated && !featureMiscHideENTHud) || (featureMiscHideENTHud && menu_showing == false)){
 		UI::DISPLAY_RADAR(true);
 		featureMiscHideHudUpdated = false;
 	}
@@ -770,7 +774,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			phone_toggle = false;
 		}
 	}
-	else if (!featureMiscHideHud && !featureInVehicleNoHud) { 
+	else if (!featureMiscHideHud && !featureInVehicleNoHud && !featureMiscHideENTHud) {
 		UI::DISPLAY_RADAR(true);
 		phone_toggle = false;
 	}
@@ -792,7 +796,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			phone_toggle_vehicle = false;
 		}
 	}
-	else if (!featureMiscHideHud && !featurePhoneShowHud) { 
+	else if (!featureMiscHideHud && !featurePhoneShowHud && !featureMiscHideENTHud) {
 		UI::DISPLAY_RADAR(true);
 		phone_toggle_vehicle = false;
 	}
@@ -811,7 +815,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	
 	// DYNAMIC HEALTH BAR
 	if (featureDynamicHealthBar && !CUTSCENE::IS_CUTSCENE_PLAYING()) {
-		if (!featureMiscHideHud && !featurePhoneShowHud && !featureInVehicleNoHud) UI::DISPLAY_RADAR(false); // There is no need to hide HUD if it's already hidden
+		if (!featureMiscHideHud && !featurePhoneShowHud && !featureInVehicleNoHud && !featureMiscHideENTHud) UI::DISPLAY_RADAR(false); // There is no need to hide HUD if it's already hidden
 		
 		auto addr = getScriptHandleBaseAddress(playerPed);
 		float health = (*(float *)(addr + 0x280)) - 100;
@@ -1093,7 +1097,8 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 	results->push_back(FeatureEnabledLocalDefinition{"featureMiscLockRadio", &featureMiscLockRadio});
 	results->push_back(FeatureEnabledLocalDefinition{"featureMiscHideHud", &featureMiscHideHud, &featureMiscHideHudUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePhoneShowHud", &featurePhoneShowHud}); // , &featurePhoneShowHudUpdated
-	results->push_back(FeatureEnabledLocalDefinition{ "featureInVehicleNoHud", &featureInVehicleNoHud }); // , &featureInVehicleNoHudUpdated
+	results->push_back(FeatureEnabledLocalDefinition{"featureMiscHideENTHud", &featureMiscHideENTHud});
+	results->push_back(FeatureEnabledLocalDefinition{"featureInVehicleNoHud", &featureInVehicleNoHud}); // , &featureInVehicleNoHudUpdated
 
 	results->push_back(FeatureEnabledLocalDefinition{"featureDynamicHealthBar", &featureDynamicHealthBar}); // , &featureDynamicHealthBarUpdated
 		
