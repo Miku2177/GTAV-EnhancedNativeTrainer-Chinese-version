@@ -34,6 +34,7 @@ bool featureBlockInputInMenu = false;
 bool featurePhoneBillEnabled = false;
 bool featureGamePause = false;
 bool featureZeroBalance = false;
+bool featurePhone3DOnBike = false;
 int secs_passed, secs_curr = -1;
 float temp_seconds, bill_seconds = 0;
 float bill_to_pay, mins = -1;
@@ -458,6 +459,11 @@ void process_phone_bill_menu(){
 	toggleItem->toggleValue = &featureZeroBalance;
 	menuItems.push_back(toggleItem);
 
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "3D Phone On Bike";
+	toggleItem->toggleValue = &featurePhone3DOnBike;
+	menuItems.push_back(toggleItem);
+
 	draw_generic_menu<int>(menuItems, &activeLineIndexPhoneBill, caption, onconfirm_phonebill_menu, NULL, NULL);
 }
 
@@ -582,6 +588,7 @@ void reset_misc_globals(){
 	featurePhoneBillEnabled = false;
 	featureGamePause = false;
 	featureZeroBalance = false;
+	featurePhone3DOnBike = false;
 	featureFirstPersonDeathCamera = false;
 	featureFirstPersonStuntJumpCamera = false;
 	featureNoStuntJumps = false;
@@ -813,6 +820,27 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		}
 	}
 	
+	// 3D Phone On Bike
+	if (featurePhone3DOnBike) {
+		if (PED::IS_PED_ON_ANY_BIKE(playerPed) && PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed)) {
+			if (!STREAMING::HAS_ANIM_DICT_LOADED("anim@cellphone@in_car@ps")) {
+				STREAMING::REQUEST_ANIM_DICT("anim@cellphone@in_car@ps");
+				while (!STREAMING::HAS_ANIM_DICT_LOADED("anim@cellphone@in_car@ps")) WAIT(0);
+				if (STREAMING::HAS_ANIM_DICT_LOADED("anim@cellphone@in_car@ps")) {
+					AI::TASK_PLAY_ANIM(playerPed, "anim@cellphone@in_car@ps", "cellphone_text_read_base", 8.0, 0.0, -1, 9, 0, 0, 0, 0);
+				}
+			}
+		}
+		
+		//if (PED::IS_PED_ON_ANY_BIKE(playerPed) && PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed)) AI::TASK_VEHICLE_TEMP_ACTION(playerPed, PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 27, 100000);
+		
+		if ((PED::IS_PED_ON_ANY_BIKE(playerPed) && !PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed) && STREAMING::HAS_ANIM_DICT_LOADED("anim@cellphone@in_car@ps")) || 
+			(!PED::IS_PED_ON_ANY_BIKE(playerPed) && STREAMING::HAS_ANIM_DICT_LOADED("anim@cellphone@in_car@ps"))) {
+			AI::STOP_ANIM_TASK(playerPed, "anim@cellphone@in_car@ps", "cellphone_text_read_base", 1.0);
+			STREAMING::REMOVE_ANIM_DICT("anim@cellphone@in_car@ps");
+		}
+	}
+
 	// DYNAMIC HEALTH BAR
 	if (featureDynamicHealthBar && !CUTSCENE::IS_CUTSCENE_PLAYING()) {
 		if (!featureMiscHideHud && !featurePhoneShowHud && !featureInVehicleNoHud && !featureMiscHideENTHud) UI::DISPLAY_RADAR(false); // There is no need to hide HUD if it's already hidden
@@ -1110,6 +1138,7 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 	results->push_back(FeatureEnabledLocalDefinition{"featurePhoneBillEnabled", &featurePhoneBillEnabled});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoGamePause", &featureGamePause});
 	results->push_back(FeatureEnabledLocalDefinition{"featureZeroBalance", &featureZeroBalance});
+	results->push_back(FeatureEnabledLocalDefinition{"featurePhone3DOnBike", &featurePhone3DOnBike});
 	results->push_back(FeatureEnabledLocalDefinition{"featureShowVehiclePreviews", &featureShowVehiclePreviews});
 	results->push_back(FeatureEnabledLocalDefinition{"featureShowFPS", &featureShowFPS});
 	results->push_back(FeatureEnabledLocalDefinition{"featureHiddenRadioStation", &featureEnableMissingRadioStation});
