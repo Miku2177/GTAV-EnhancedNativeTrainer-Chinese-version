@@ -54,8 +54,11 @@ static double FPStime, FPStime_passed, FPStime_curr, starttime = 0;
 int fps = 0; 
 char fps_to_show_char_modifiable[15];
 //
-
+// Use Phone While On Bike
 Object temp_obj = -1;
+char* anim_dict = "anim@cellphone@in_car@ps";
+char* animation_of_d = "cellphone_text_read_base";
+//
 //int Comp_secs_passed, Comp_secs_curr, Comp_seconds = -1;
 
 bool featurePlayerRadio = false;
@@ -149,6 +152,8 @@ const int MISC_PHONE_FREESECONDS_VALUES[] = { 0, 3, 5, 10, 15 };
 //const std::vector<int> MISC_PHONE_FREESECONDS_VALUES{ 0, 3, 5, 10, 15 };
 int PhoneFreeSecondsIndex = 0;
 bool PhoneFreeSecondsChanged = true;
+int PhoneBikeAnimationIndex = 0;
+bool PhoneBikeAnimationChanged = true;
 
 // Default Menu Tab
 const std::vector<std::string> MISC_DEF_MENUTAB_CAPTIONS{ "OFF", "Map", "Brief", "Friends", "Gallery", "Game", "Settings", "Stats", "Store", "Online" };
@@ -465,6 +470,12 @@ void process_phone_bill_menu(){
 	toggleItem->toggleValue = &featurePhone3DOnBike;
 	menuItems.push_back(toggleItem);
 
+	listItem = new SelectFromListMenuItem(MISC_PHONE_FREESECONDS_CAPTIONS, onchange_misc_phone_bike_index);
+	listItem->wrap = false;
+	listItem->caption = "Animation Type";
+	listItem->value = PhoneBikeAnimationIndex;
+	menuItems.push_back(listItem);
+
 	draw_generic_menu<int>(menuItems, &activeLineIndexPhoneBill, caption, onconfirm_phonebill_menu, NULL, NULL);
 }
 
@@ -555,6 +566,11 @@ void onchange_misc_phone_freeseconds_index(int value, SelectFromListMenuItem* so
 	PhoneFreeSecondsChanged = true;
 }
 
+void onchange_misc_phone_bike_index(int value, SelectFromListMenuItem* source) {
+	PhoneBikeAnimationIndex = value;
+	PhoneBikeAnimationChanged = true;
+}
+
 void reset_misc_globals(){
 	featureMiscHideHud =
 		featurePhoneShowHud = 
@@ -577,6 +593,7 @@ void reset_misc_globals(){
 	PhoneBillIndex = 2;
 	PhoneDefaultIndex = 0;
 	PhoneFreeSecondsIndex = 0;
+	PhoneBikeAnimationIndex = 0;
 
 	DefMenuTabIndex = 0;
 
@@ -823,13 +840,38 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	
 	// Use Phone While On Bike
 	if (featurePhone3DOnBike) {
+		if (MISC_PHONE_FREESECONDS_VALUES[PhoneBikeAnimationIndex] == 0) {
+			anim_dict = "anim@cellphone@in_car@ps";
+			animation_of_d = "cellphone_text_read_base";
+		}
+		if (MISC_PHONE_FREESECONDS_VALUES[PhoneBikeAnimationIndex] == 3) {
+			anim_dict = "cellphone@";
+			animation_of_d = "cellphone_text_read_base_cover_low";
+		}
+		if (MISC_PHONE_FREESECONDS_VALUES[PhoneBikeAnimationIndex] == 5) {
+			anim_dict = "cellphone@str";
+			animation_of_d = "cellphone_text_read_a";
+		}
+		if (MISC_PHONE_FREESECONDS_VALUES[PhoneBikeAnimationIndex] == 10) {
+			anim_dict = "cellphone@female";
+			animation_of_d = "cellphone_email_read_base";
+		}
+		if (MISC_PHONE_FREESECONDS_VALUES[PhoneBikeAnimationIndex] == 15) {
+			anim_dict = "cellphone@first_person";
+			animation_of_d = "cellphone_text_read_base";
+		}
+
 		if (PED::IS_PED_ON_ANY_BIKE(playerPed) && PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed)) {
-			if (!STREAMING::HAS_ANIM_DICT_LOADED("anim@cellphone@in_car@ps")) {
-				STREAMING::REQUEST_ANIM_DICT("anim@cellphone@in_car@ps");
-				while (!STREAMING::HAS_ANIM_DICT_LOADED("anim@cellphone@in_car@ps")) WAIT(0);
-				if (STREAMING::HAS_ANIM_DICT_LOADED("anim@cellphone@in_car@ps")) {
-					AI::TASK_PLAY_ANIM(playerPed, "anim@cellphone@in_car@ps", "cellphone_text_read_base", 8.0, 0.0, -1, 9, 0, 0, 0, 0);
-					Hash temp_Hash = GAMEPLAY::GET_HASH_KEY("prop_prologue_phone"); // prop_prologue_phone
+			if (!STREAMING::HAS_ANIM_DICT_LOADED(anim_dict)) {
+				STREAMING::REQUEST_ANIM_DICT(anim_dict);
+				while (!STREAMING::HAS_ANIM_DICT_LOADED(anim_dict)) WAIT(0);
+				if (STREAMING::HAS_ANIM_DICT_LOADED(anim_dict)) {
+					AI::TASK_PLAY_ANIM(playerPed, anim_dict, animation_of_d, 8.0, 0.0, -1, 9, 0, 0, 0, 0);
+					Hash temp_Hash = -1;
+					if (PED::GET_PED_TYPE(playerPed) == 0) temp_Hash = GAMEPLAY::GET_HASH_KEY("prop_phone_ing");
+					if (PED::GET_PED_TYPE(playerPed) == 1) temp_Hash = GAMEPLAY::GET_HASH_KEY("prop_phone_ing_03");
+					if (PED::GET_PED_TYPE(playerPed) == 2 || PED::GET_PED_TYPE(playerPed) == 3) temp_Hash = GAMEPLAY::GET_HASH_KEY("prop_phone_ing_02");
+					if (PED::GET_PED_TYPE(playerPed) != 0 && PED::GET_PED_TYPE(playerPed) != 1 && PED::GET_PED_TYPE(playerPed) != 2 && PED::GET_PED_TYPE(playerPed) != 3) temp_Hash = GAMEPLAY::GET_HASH_KEY("prop_prologue_phone");
 					Vector3 temp_pos = ENTITY::GET_ENTITY_COORDS(playerPed, true);
 					temp_obj = OBJECT::CREATE_OBJECT(temp_Hash, temp_pos.x, temp_pos.y, temp_pos.z, 1, true, 1);
 					int PlayerIndex1 = PED::GET_PED_BONE_INDEX(playerPed, 0x6f06);
@@ -839,11 +881,11 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			CONTROLS::DISABLE_CONTROL_ACTION(0, 71, 1);
 		}
 		
-		if ((PED::IS_PED_ON_ANY_BIKE(playerPed) && !PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed) && STREAMING::HAS_ANIM_DICT_LOADED("anim@cellphone@in_car@ps")) || 
-			(!PED::IS_PED_ON_ANY_BIKE(playerPed) && STREAMING::HAS_ANIM_DICT_LOADED("anim@cellphone@in_car@ps"))) {
-			AI::STOP_ANIM_TASK(playerPed, "anim@cellphone@in_car@ps", "cellphone_text_read_base", 1.0);
+		if ((PED::IS_PED_ON_ANY_BIKE(playerPed) && !PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed) && STREAMING::HAS_ANIM_DICT_LOADED(anim_dict)) ||
+			(!PED::IS_PED_ON_ANY_BIKE(playerPed) && STREAMING::HAS_ANIM_DICT_LOADED(anim_dict))) {
+			AI::STOP_ANIM_TASK(playerPed, anim_dict, animation_of_d, 1.0);
 			OBJECT::DELETE_OBJECT(&temp_obj);
-			STREAMING::REMOVE_ANIM_DICT("anim@cellphone@in_car@ps");
+			STREAMING::REMOVE_ANIM_DICT(anim_dict);
 		} 
 	}
 
@@ -1163,6 +1205,7 @@ void add_misc_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"PhoneBillIndex", std::to_string(PhoneBillIndex)});
 	results->push_back(StringPairSettingDBRow{"PhoneDefaultIndex", std::to_string(PhoneDefaultIndex)});
 	results->push_back(StringPairSettingDBRow{"PhoneFreeSecondsIndex", std::to_string(PhoneFreeSecondsIndex)});
+	results->push_back(StringPairSettingDBRow{"PhoneBikeAnimationIndex", std::to_string(PhoneBikeAnimationIndex)});
 	results->push_back(StringPairSettingDBRow{"DefMenuTabIndex", std::to_string(DefMenuTabIndex)});
 }
 
@@ -1180,6 +1223,9 @@ void handle_generic_settings_misc(std::vector<StringPairSettingDBRow>* settings)
 		}
 		else if (setting.name.compare("PhoneFreeSecondsIndex") == 0){
 			PhoneFreeSecondsIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("PhoneBikeAnimationIndex") == 0) {
+			PhoneBikeAnimationIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("DefMenuTabIndex") == 0) {
 			DefMenuTabIndex = stoi(setting.value);
