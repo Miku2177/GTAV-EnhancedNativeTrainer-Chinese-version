@@ -55,6 +55,7 @@ int fps = 0;
 char fps_to_show_char_modifiable[15];
 //
 
+Object temp_obj = -1;
 //int Comp_secs_passed, Comp_secs_curr, Comp_seconds = -1;
 
 bool featurePlayerRadio = false;
@@ -460,7 +461,7 @@ void process_phone_bill_menu(){
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "3D Phone On Bike";
+	toggleItem->caption = "Use Phone While On Bike";
 	toggleItem->toggleValue = &featurePhone3DOnBike;
 	menuItems.push_back(toggleItem);
 
@@ -820,7 +821,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		}
 	}
 	
-	// 3D Phone On Bike
+	// Use Phone While On Bike
 	if (featurePhone3DOnBike) {
 		if (PED::IS_PED_ON_ANY_BIKE(playerPed) && PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed)) {
 			if (!STREAMING::HAS_ANIM_DICT_LOADED("anim@cellphone@in_car@ps")) {
@@ -828,17 +829,22 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 				while (!STREAMING::HAS_ANIM_DICT_LOADED("anim@cellphone@in_car@ps")) WAIT(0);
 				if (STREAMING::HAS_ANIM_DICT_LOADED("anim@cellphone@in_car@ps")) {
 					AI::TASK_PLAY_ANIM(playerPed, "anim@cellphone@in_car@ps", "cellphone_text_read_base", 8.0, 0.0, -1, 9, 0, 0, 0, 0);
+					Hash temp_Hash = GAMEPLAY::GET_HASH_KEY("prop_prologue_phone"); // prop_prologue_phone
+					Vector3 temp_pos = ENTITY::GET_ENTITY_COORDS(playerPed, true);
+					temp_obj = OBJECT::CREATE_OBJECT(temp_Hash, temp_pos.x, temp_pos.y, temp_pos.z, 1, true, 1);
+					int PlayerIndex1 = PED::GET_PED_BONE_INDEX(playerPed, 0x6f06);
+					ENTITY::ATTACH_ENTITY_TO_ENTITY(temp_obj, playerPed, PlayerIndex1, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, false, false, false, true, 0, true);
 				}
 			}
+			CONTROLS::DISABLE_CONTROL_ACTION(0, 71, 1);
 		}
-		
-		//if (PED::IS_PED_ON_ANY_BIKE(playerPed) && PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed)) AI::TASK_VEHICLE_TEMP_ACTION(playerPed, PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 27, 100000);
 		
 		if ((PED::IS_PED_ON_ANY_BIKE(playerPed) && !PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed) && STREAMING::HAS_ANIM_DICT_LOADED("anim@cellphone@in_car@ps")) || 
 			(!PED::IS_PED_ON_ANY_BIKE(playerPed) && STREAMING::HAS_ANIM_DICT_LOADED("anim@cellphone@in_car@ps"))) {
 			AI::STOP_ANIM_TASK(playerPed, "anim@cellphone@in_car@ps", "cellphone_text_read_base", 1.0);
+			OBJECT::DELETE_OBJECT(&temp_obj);
 			STREAMING::REMOVE_ANIM_DICT("anim@cellphone@in_car@ps");
-		}
+		} 
 	}
 
 	// DYNAMIC HEALTH BAR
