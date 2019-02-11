@@ -832,7 +832,7 @@ void update_world_features()
 			} else GRAPHICS::DISABLE_VEHICLE_DISTANTLIGHTS(false);
 			if (featureNPCNeonLights) {
 				//if (VEHICLE::IS_THIS_MODEL_A_CAR(currVehModel_neon)) VEHICLE::_GET_VEHICLE_NEON_LIGHTS_COLOUR(bus_veh[i], &r, &g, &b);
-				if (!VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 0) && !VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 1) && !VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 2) &&
+				if (ENTITY::DOES_ENTITY_EXIST(bus_veh[i]) && !VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 0) && !VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 1) && !VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 2) &&
 					!VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 3)) {
 				//if (r == 255 && g == 0 && b == 255) { 
 					Hash currVehModel_neon = ENTITY::GET_ENTITY_MODEL(bus_veh[i]);
