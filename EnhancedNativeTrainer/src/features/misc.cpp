@@ -864,17 +864,17 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		}
 
 		if (PED::IS_PED_ON_ANY_BIKE(playerPed) && PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed)) {
+			Hash temp_Hash = -1;
+			Vector3 temp_pos = ENTITY::GET_ENTITY_COORDS(playerPed, true);
 			if (!STREAMING::HAS_ANIM_DICT_LOADED(anim_dict)) {
 				STREAMING::REQUEST_ANIM_DICT(anim_dict);
 				while (!STREAMING::HAS_ANIM_DICT_LOADED(anim_dict)) WAIT(0);
 				if (STREAMING::HAS_ANIM_DICT_LOADED(anim_dict)) {
 					AI::TASK_PLAY_ANIM(playerPed, anim_dict, animation_of_d, 8.0, 0.0, -1, 9, 0, 0, 0, 0);
-					Hash temp_Hash = -1;
 					if (PED::GET_PED_TYPE(playerPed) == 0) temp_Hash = GAMEPLAY::GET_HASH_KEY("prop_phone_ing");
 					if (PED::GET_PED_TYPE(playerPed) == 1) temp_Hash = GAMEPLAY::GET_HASH_KEY("prop_phone_ing_03");
 					if (PED::GET_PED_TYPE(playerPed) == 2 || PED::GET_PED_TYPE(playerPed) == 3) temp_Hash = GAMEPLAY::GET_HASH_KEY("prop_phone_ing_02");
 					if (PED::GET_PED_TYPE(playerPed) != 0 && PED::GET_PED_TYPE(playerPed) != 1 && PED::GET_PED_TYPE(playerPed) != 2 && PED::GET_PED_TYPE(playerPed) != 3) temp_Hash = GAMEPLAY::GET_HASH_KEY("prop_prologue_phone");
-					Vector3 temp_pos = ENTITY::GET_ENTITY_COORDS(playerPed, true);
 					temp_obj = OBJECT::CREATE_OBJECT(temp_Hash, temp_pos.x, temp_pos.y, temp_pos.z, 1, true, 1);
 					int PlayerIndex1 = PED::GET_PED_BONE_INDEX(playerPed, 0x6f06);
 					ENTITY::ATTACH_ENTITY_TO_ENTITY(temp_obj, playerPed, PlayerIndex1, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, false, false, false, true, 0, true);
@@ -886,6 +886,11 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 				STREAMING::REMOVE_ANIM_DICT(anim_dict);
 				CONTROLS::DISABLE_CONTROL_ACTION(0, 71, 1);
 				accel = false;
+			}
+			if (STREAMING::HAS_ANIM_DICT_LOADED(anim_dict) && !ENTITY::DOES_ENTITY_EXIST(temp_obj)) {
+				AI::STOP_ANIM_TASK(playerPed, anim_dict, animation_of_d, 1.0);
+				OBJECT::DELETE_OBJECT(&temp_obj);
+				STREAMING::REMOVE_ANIM_DICT(anim_dict);
 			}
 		}
 		
