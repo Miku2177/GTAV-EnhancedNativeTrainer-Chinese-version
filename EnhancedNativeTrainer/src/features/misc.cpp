@@ -58,6 +58,7 @@ char fps_to_show_char_modifiable[15];
 Object temp_obj = -1;
 char* anim_dict = "anim@cellphone@in_car@ps";
 char* animation_of_d = "cellphone_text_read_base";
+bool accel = false;
 //
 //int Comp_secs_passed, Comp_secs_curr, Comp_seconds = -1;
 
@@ -840,6 +841,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	
 	// Use Phone While On Bike
 	if (featurePhone3DOnBike) {
+		Vector3 veh_s = ENTITY::GET_ENTITY_VELOCITY(PED::GET_VEHICLE_PED_IS_USING(playerPed));
 		if (MISC_PHONE_FREESECONDS_VALUES[PhoneBikeAnimationIndex] == 0) {
 			anim_dict = "anim@cellphone@in_car@ps";
 			animation_of_d = "cellphone_text_read_base";
@@ -878,14 +880,29 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 					ENTITY::ATTACH_ENTITY_TO_ENTITY(temp_obj, playerPed, PlayerIndex1, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, false, false, false, true, 0, true);
 				}
 			}
-			CONTROLS::DISABLE_CONTROL_ACTION(0, 71, 1);
+			if (CONTROLS::IS_CONTROL_RELEASED(2, 71) && accel == true) {
+				AI::STOP_ANIM_TASK(playerPed, anim_dict, animation_of_d, 1.0);
+				OBJECT::DELETE_OBJECT(&temp_obj);
+				STREAMING::REMOVE_ANIM_DICT(anim_dict);
+				CONTROLS::DISABLE_CONTROL_ACTION(0, 71, 1);
+				accel = false;
+			}
 		}
 		
+		if (CONTROLS::IS_CONTROL_PRESSED(2, 75) || CONTROLS::IS_CONTROL_PRESSED(2, 72) || CONTROLS::IS_CONTROL_PRESSED(2, 63) || CONTROLS::IS_CONTROL_PRESSED(2, 64) || 
+			(CONTROLS::IS_CONTROL_PRESSED(2, 71) && veh_s.x == 0 && veh_s.y == 0)) {
+			AI::STOP_ANIM_TASK(playerPed, anim_dict, animation_of_d, 1.0);
+			OBJECT::DELETE_OBJECT(&temp_obj);
+			STREAMING::REMOVE_ANIM_DICT(anim_dict);
+			accel = true;
+		}
+
 		if ((PED::IS_PED_ON_ANY_BIKE(playerPed) && !PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed) && STREAMING::HAS_ANIM_DICT_LOADED(anim_dict)) ||
 			(!PED::IS_PED_ON_ANY_BIKE(playerPed) && STREAMING::HAS_ANIM_DICT_LOADED(anim_dict))) {
 			AI::STOP_ANIM_TASK(playerPed, anim_dict, animation_of_d, 1.0);
 			OBJECT::DELETE_OBJECT(&temp_obj);
 			STREAMING::REMOVE_ANIM_DICT(anim_dict);
+			accel = false;
 		} 
 	}
 
