@@ -1045,7 +1045,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	if (featureFirstPersonStuntJumpCamera) {
 		Ped stunt_player = PLAYER::PLAYER_PED_ID();
 
-		if (GAMEPLAY::IS_STUNT_JUMP_IN_PROGRESS() && StuntCam == NULL) {
+		if (GAMEPLAY::IS_STUNT_JUMP_IN_PROGRESS() && !CAM::DOES_CAM_EXIST(StuntCam)) {
 			Vector3 playerPosition = ENTITY::GET_ENTITY_COORDS(stunt_player, true);
 			Vector3 curRotation = ENTITY::GET_ENTITY_ROTATION(PED::GET_VEHICLE_PED_IS_USING(stunt_player), 2);
 
@@ -1070,13 +1070,13 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			CAM::SET_CAM_NEAR_CLIP(StuntCam, .329);
 		}
 
-		if (!GAMEPLAY::IS_STUNT_JUMP_IN_PROGRESS() && StuntCam != NULL) {
+		if (!GAMEPLAY::IS_STUNT_JUMP_IN_PROGRESS() && CAM::DOES_CAM_EXIST(StuntCam)) {
 			ENTITY::SET_ENTITY_COLLISION(PLAYER::PLAYER_PED_ID(), 1, 1);
 			CAM::RENDER_SCRIPT_CAMS(false, false, 1, false, false);
 			CAM::DETACH_CAM(StuntCam);
 			CAM::SET_CAM_ACTIVE(StuntCam, false);
 			CAM::DESTROY_CAM(StuntCam, true);
-			StuntCam = NULL;
+			//StuntCam = NULL;
 		}
 	}
 	
