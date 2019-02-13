@@ -649,6 +649,10 @@ bool onconfirm_vehdoor_menu(MenuItem<int> choice){
 	{
 		eject_seat();
 	}
+	else if (choice.value == -17)//detach windscreen
+	{
+		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) VEHICLE::_DETACH_VEHICLE_WINDSCREEN(PED::GET_VEHICLE_PED_IS_USING(playerPed));
+	}
 	return false;
 }
 
@@ -796,6 +800,12 @@ bool process_veh_door_menu(){
 	item->value = -16;
 	item->isLeaf = true;
 	menuItems.push_back(item); 
+
+	item = new MenuItem<int>();
+	item->caption = "Detach Windscreen";
+	item->value = -17;
+	item->isLeaf = true;
+	menuItems.push_back(item);
 
 	listItem = new SelectFromListMenuItem(VEH_SPEEDLIMITER_CAPTIONS, onchange_door_autolock_index); 
 	listItem->wrap = false;
