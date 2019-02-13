@@ -1308,13 +1308,15 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 		}
 
 		if (ENTITY::GET_ENTITY_HEALTH(dead_player) > 0 && !PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID())) { //  && DeathCam != NULL
-			ENTITY::SET_ENTITY_COLLISION(PLAYER::PLAYER_PED_ID(), 1, 1);
-			CAM::RENDER_SCRIPT_CAMS(false, false, 0, false, false);
-			CAM::DETACH_CAM(DeathCam);
-			CAM::SET_CAM_ACTIVE(DeathCam, false);
-			CAM::DESTROY_CAM(DeathCam, true);
-			//DeathCam = NULL;
-			ENTITY::SET_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID(), true);
+			if (CAM::DOES_CAM_EXIST(DeathCam)) {
+				ENTITY::SET_ENTITY_COLLISION(PLAYER::PLAYER_PED_ID(), 1, 1);
+				CAM::RENDER_SCRIPT_CAMS(false, false, 0, false, false);
+				CAM::DETACH_CAM(DeathCam);
+				CAM::SET_CAM_ACTIVE(DeathCam, false);
+				CAM::DESTROY_CAM(DeathCam, true);
+				//DeathCam = NULL;
+				ENTITY::SET_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID(), true);
+			}
 		}
 	}
 

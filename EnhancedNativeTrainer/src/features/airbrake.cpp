@@ -290,7 +290,7 @@ void camera_view()
 		target_player = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 	}
 	
-	if (AirCam == NULL)	{
+	if (!CAM::DOES_CAM_EXIST(AirCam)) {
 		Vector3 playerPosition = ENTITY::GET_ENTITY_COORDS(target_player, true);
 		curRotation = ENTITY::GET_ENTITY_ROTATION(target_player, 2);
 
@@ -312,7 +312,7 @@ void camera_view()
 		else
 		{
 			CAM::DESTROY_CAM(AirCam, true);
-			AirCam = NULL;
+			//AirCam = NULL;
 		}
 	}
 	else if (exitFlag == true)
