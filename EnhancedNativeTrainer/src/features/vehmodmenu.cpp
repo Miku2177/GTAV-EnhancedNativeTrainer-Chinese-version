@@ -1575,11 +1575,6 @@ bool process_vehmod_engine_sound() {
 	return false;
 }
 
-bool onconfirm_vehmod_engine_sound_menu(MenuItem<int> choice) {
-
-	return process_vehmod_engine_sound();
-}
-
 void set_engine_sound(MenuItem<int> choice) { // pick engine sound via message box
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
@@ -1607,6 +1602,21 @@ void set_engine_sound(MenuItem<int> choice) { // pick engine sound via message b
 		}
 		else set_status_text("Either the name is incorrect or vehicle doesn't exist");
 	}
+}
+
+bool onconfirm_vehmod_engine_sound_menu(MenuItem<int> choice) {
+	switch (choice.value) {
+	case 0:
+		process_vehmod_engine_sound();
+		break;
+	case 1:
+		set_engine_sound;
+		break;
+	default:
+		break;
+	}
+	return false;
+	//return process_vehmod_engine_sound();
 }
 
 bool process_vehmod_engine_sound_menu() {

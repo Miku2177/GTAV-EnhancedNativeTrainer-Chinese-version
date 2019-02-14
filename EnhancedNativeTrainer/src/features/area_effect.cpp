@@ -231,7 +231,7 @@ void process_areaeffect_peds_menu(){
 
 	MenuItem<int> *item = new MenuItem<int>();
 	item->caption = "Advanced Config";
-	item->value = 1;
+	item->value = -1;
 	item->isLeaf = false;
 	menuItems.push_back(item);
 
@@ -349,11 +349,19 @@ void process_areaeffect_advanced_ped_menu(){
 }
 
 bool onconfirm_areaeffect_ped_menu(MenuItem<int> choice){
-	if(choice.value == 1) //advance options
-	{
+	switch (choice.value) {
+	case -1:
 		process_areaeffect_advanced_ped_menu();
+		break;
+	default:
+		break;
 	}
 	return false;
+	//if(choice.value == 1) //advance options
+	//{
+	//	process_areaeffect_advanced_ped_menu();
+	//}
+	//return false;
 }
 
 bool onconfirm_areaeffect_menu(MenuItem<int> choice){
