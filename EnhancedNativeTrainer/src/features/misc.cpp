@@ -21,6 +21,8 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 int activeLineIndexTrainerConfig = 0;
 int activeLineIndexPhoneBill = 0;
 int activeLineIndexDefMenuTab = 0;
+int activeLineIndexBillSettings = 0;
+int activeLineIndexPhoneOnBike = 0;
 int activeLineIndexAirbrake = 0;
 int activeLineHotkeyConfig = 0;
 
@@ -35,6 +37,7 @@ bool featurePhoneBillEnabled = false;
 bool featureGamePause = false;
 bool featureZeroBalance = false;
 bool featurePhone3DOnBike = false;
+bool featureNoPhoneOnHUD = false;
 int secs_passed, secs_curr = -1;
 float temp_seconds, bill_seconds = 0;
 float bill_to_pay, mins = -1;
@@ -427,22 +430,16 @@ void process_def_menutab_menu() {
 	draw_generic_menu<int>(menuItems, &activeLineIndexDefMenuTab, caption, onconfirm_defmenutab_menu, NULL, NULL);
 }
 
-bool onconfirm_phonebill_menu(MenuItem<int> choice){
-	
+bool onconfirm_billsettings_menu(MenuItem<int> choice) {
+
 	return false;
 }
 
-void process_phone_bill_menu(){
-	std::string caption = "Phone Settings Options";
+void process_billsettings_menu() {
+	std::string caption = "Phone Bill Options";
 
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
-
-	listItem = new SelectFromListMenuItem(MISC_PHONE_DEFAULT_CAPTIONS, onchange_misc_phone_default_index);
-	listItem->wrap = false;
-	listItem->caption = "Default Phone Model";
-	listItem->value = PhoneDefaultIndex;
-	menuItems.push_back(listItem);
 
 	ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Enable Phone Bill";
@@ -466,9 +463,28 @@ void process_phone_bill_menu(){
 	toggleItem->toggleValue = &featureZeroBalance;
 	menuItems.push_back(toggleItem);
 
-	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Use Phone While On Bike";
+	draw_generic_menu<int>(menuItems, &activeLineIndexBillSettings, caption, onconfirm_billsettings_menu, NULL, NULL);
+}
+
+bool onconfirm_phoneonbike_menu(MenuItem<int> choice) {
+
+	return false;
+}
+
+void process_phoneonbike_menu() {
+	std::string caption = "Use Phone While On Bike Options";
+
+	std::vector<MenuItem<int>*> menuItems;
+	SelectFromListMenuItem *listItem;
+
+	ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Enable";
 	toggleItem->toggleValue = &featurePhone3DOnBike;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "No Phone On HUD While In First Person";
+	toggleItem->toggleValue = &featureNoPhoneOnHUD;
 	menuItems.push_back(toggleItem);
 
 	listItem = new SelectFromListMenuItem(MISC_PHONE_FREESECONDS_CAPTIONS, onchange_misc_phone_bike_index);
@@ -476,6 +492,50 @@ void process_phone_bill_menu(){
 	listItem->caption = "Animation Type";
 	listItem->value = PhoneBikeAnimationIndex;
 	menuItems.push_back(listItem);
+
+	draw_generic_menu<int>(menuItems, &activeLineIndexPhoneOnBike, caption, onconfirm_phoneonbike_menu, NULL, NULL);
+}
+
+bool onconfirm_phonebill_menu(MenuItem<int> choice){
+	switch (activeLineIndexPhoneBill) {
+		case 1:
+			process_billsettings_menu();
+			break;
+		case 2:
+			process_phoneonbike_menu();
+			break;
+		default:
+			break;
+		}
+	return false;
+}
+
+void process_phone_bill_menu(){
+	std::string caption = "Phone Settings Options";
+
+	std::vector<MenuItem<int>*> menuItems;
+	SelectFromListMenuItem *listItem;
+	MenuItem<int> *item;
+
+	int i = 0;
+
+	listItem = new SelectFromListMenuItem(MISC_PHONE_DEFAULT_CAPTIONS, onchange_misc_phone_default_index);
+	listItem->wrap = false;
+	listItem->caption = "Default Phone Model";
+	listItem->value = PhoneDefaultIndex;
+	menuItems.push_back(listItem);
+
+	item = new MenuItem<int>();
+	item->caption = "Phone Bill";
+	item->value = i++;
+	item->isLeaf = false;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "Use Phone While On Bike";
+	item->value = i++;
+	item->isLeaf = false;
+	menuItems.push_back(item);
 
 	draw_generic_menu<int>(menuItems, &activeLineIndexPhoneBill, caption, onconfirm_phonebill_menu, NULL, NULL);
 }
@@ -608,6 +668,7 @@ void reset_misc_globals(){
 	featureGamePause = false;
 	featureZeroBalance = false;
 	featurePhone3DOnBike = false;
+	featureNoPhoneOnHUD = false;
 	featureFirstPersonDeathCamera = false;
 	featureFirstPersonStuntJumpCamera = false;
 	featureNoStuntJumps = false;
@@ -864,22 +925,32 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		}
 
 		if (PED::IS_PED_ON_ANY_BIKE(playerPed) && PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed)) {
+			if (featureNoPhoneOnHUD && CAM::GET_FOLLOW_PED_CAM_VIEW_MODE() == 4) MOBILE::SET_MOBILE_PHONE_POSITION(100, 200, 300);
+			
 			Hash temp_Hash = -1;
 			Vector3 temp_pos = ENTITY::GET_ENTITY_COORDS(playerPed, true);
+			
 			if (!STREAMING::HAS_ANIM_DICT_LOADED(anim_dict)) {
 				STREAMING::REQUEST_ANIM_DICT(anim_dict);
 				while (!STREAMING::HAS_ANIM_DICT_LOADED(anim_dict)) WAIT(0);
 				if (STREAMING::HAS_ANIM_DICT_LOADED(anim_dict)) {
 					AI::TASK_PLAY_ANIM(playerPed, anim_dict, animation_of_d, 8.0, 0.0, -1, 9, 0, 0, 0, 0);
-					if (PED::GET_PED_TYPE(playerPed) == 0) temp_Hash = GAMEPLAY::GET_HASH_KEY("prop_phone_ing");
-					if (PED::GET_PED_TYPE(playerPed) == 1) temp_Hash = GAMEPLAY::GET_HASH_KEY("prop_phone_ing_03");
-					if (PED::GET_PED_TYPE(playerPed) == 2 || PED::GET_PED_TYPE(playerPed) == 3) temp_Hash = GAMEPLAY::GET_HASH_KEY("prop_phone_ing_02");
-					if (PED::GET_PED_TYPE(playerPed) != 0 && PED::GET_PED_TYPE(playerPed) != 1 && PED::GET_PED_TYPE(playerPed) != 2 && PED::GET_PED_TYPE(playerPed) != 3) temp_Hash = GAMEPLAY::GET_HASH_KEY("prop_prologue_phone");
+					if (PED::GET_PED_TYPE(playerPed) == 0 && (MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == -1 || MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == 3)) temp_Hash = GAMEPLAY::GET_HASH_KEY("prop_phone_ing"); // michael
+					if (PED::GET_PED_TYPE(playerPed) == 1 && (MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == -1 || MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == 3)) temp_Hash = GAMEPLAY::GET_HASH_KEY("prop_phone_ing_03"); // franklin
+					if ((PED::GET_PED_TYPE(playerPed) == 2 || PED::GET_PED_TYPE(playerPed) == 3) && (MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == -1 || MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == 3)) 
+						temp_Hash = GAMEPLAY::GET_HASH_KEY("prop_phone_ing_02"); // trevor
+					if (PED::GET_PED_TYPE(playerPed) != 0 && PED::GET_PED_TYPE(playerPed) != 1 && PED::GET_PED_TYPE(playerPed) != 2 && PED::GET_PED_TYPE(playerPed) != 3 &&
+						(MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == -1 || MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == 3)) temp_Hash = GAMEPLAY::GET_HASH_KEY("prop_prologue_phone");
+					if (MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == 0) temp_Hash = GAMEPLAY::GET_HASH_KEY("prop_phone_ing");
+					if (MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == 1) temp_Hash = GAMEPLAY::GET_HASH_KEY("prop_phone_ing_02");
+					if (MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == 2) temp_Hash = GAMEPLAY::GET_HASH_KEY("prop_phone_ing_03");
+					if (MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == 4) temp_Hash = GAMEPLAY::GET_HASH_KEY("prop_prologue_phone");
 					temp_obj = OBJECT::CREATE_OBJECT(temp_Hash, temp_pos.x, temp_pos.y, temp_pos.z, 1, true, 1);
 					int PlayerIndex1 = PED::GET_PED_BONE_INDEX(playerPed, 0x6f06);
 					ENTITY::ATTACH_ENTITY_TO_ENTITY(temp_obj, playerPed, PlayerIndex1, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, false, false, false, true, 0, true);
 				}
 			}
+
 			if (CONTROLS::IS_CONTROL_RELEASED(2, 71) && accel == true) {
 				AI::STOP_ANIM_TASK(playerPed, anim_dict, animation_of_d, 1.0);
 				OBJECT::DELETE_OBJECT(&temp_obj);
@@ -1209,6 +1280,7 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoGamePause", &featureGamePause});
 	results->push_back(FeatureEnabledLocalDefinition{"featureZeroBalance", &featureZeroBalance});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePhone3DOnBike", &featurePhone3DOnBike});
+	results->push_back(FeatureEnabledLocalDefinition{"featureNoPhoneOnHUD", &featureNoPhoneOnHUD});
 	results->push_back(FeatureEnabledLocalDefinition{"featureShowVehiclePreviews", &featureShowVehiclePreviews});
 	results->push_back(FeatureEnabledLocalDefinition{"featureShowFPS", &featureShowFPS});
 	results->push_back(FeatureEnabledLocalDefinition{"featureHiddenRadioStation", &featureEnableMissingRadioStation});
