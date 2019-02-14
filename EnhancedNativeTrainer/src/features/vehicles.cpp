@@ -651,7 +651,10 @@ bool onconfirm_vehdoor_menu(MenuItem<int> choice){
 	}
 	else if (choice.value == -17)//detach windscreen
 	{
-		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) VEHICLE::_DETACH_VEHICLE_WINDSCREEN(PED::GET_VEHICLE_PED_IS_USING(playerPed));
+		Vehicle veh_detach = -1;
+		if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_detach = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+		if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh_detach = vehicle_been_used;
+		VEHICLE::_DETACH_VEHICLE_WINDSCREEN(veh_detach);
 	}
 	return false;
 }
