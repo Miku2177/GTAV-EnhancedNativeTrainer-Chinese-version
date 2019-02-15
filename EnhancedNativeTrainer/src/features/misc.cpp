@@ -925,7 +925,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		}
 
 		if (PED::IS_PED_ON_ANY_BIKE(playerPed) && PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed)) {
-			if (featureNoPhoneOnHUD && CAM::GET_FOLLOW_PED_CAM_VIEW_MODE() == 4) MOBILE::SET_MOBILE_PHONE_POSITION(100, 200, 300);
+			if (featureNoPhoneOnHUD && CAM::GET_FOLLOW_PED_CAM_VIEW_MODE() == 4) MOBILE::SET_MOBILE_PHONE_POSITION(100, 100, 100);
 			
 			Hash temp_Hash = -1;
 			Vector3 temp_pos = ENTITY::GET_ENTITY_COORDS(playerPed, true);
