@@ -62,6 +62,7 @@ Object temp_obj = -1;
 char* anim_dict = "anim@cellphone@in_car@ps";
 char* animation_of_d = "cellphone_text_read_base";
 bool accel = false;
+bool p_exist = false;
 //
 //int Comp_secs_passed, Comp_secs_curr, Comp_seconds = -1;
 
@@ -902,6 +903,10 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	
 	// Use Phone While On Bike
 	if (featurePhone3DOnBike) {
+		if (!STREAMING::HAS_ANIM_DICT_LOADED(anim_dict)) {
+			STREAMING::REQUEST_ANIM_DICT(anim_dict);
+			while (!STREAMING::HAS_ANIM_DICT_LOADED(anim_dict)) WAIT(0);
+		}
 		Vector3 veh_s = ENTITY::GET_ENTITY_VELOCITY(PED::GET_VEHICLE_PED_IS_USING(playerPed));
 		if (MISC_PHONE_FREESECONDS_VALUES[PhoneBikeAnimationIndex] == 0) {
 			anim_dict = "anim@cellphone@in_car@ps";
@@ -930,55 +935,48 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			Hash temp_Hash = -1;
 			Vector3 temp_pos = ENTITY::GET_ENTITY_COORDS(playerPed, true);
 			
-			if (!STREAMING::HAS_ANIM_DICT_LOADED(anim_dict)) {
-				STREAMING::REQUEST_ANIM_DICT(anim_dict);
-				while (!STREAMING::HAS_ANIM_DICT_LOADED(anim_dict)) WAIT(0);
-				if (STREAMING::HAS_ANIM_DICT_LOADED(anim_dict)) {
-					AI::TASK_PLAY_ANIM(playerPed, anim_dict, animation_of_d, 8.0, 0.0, -1, 9, 0, 0, 0, 0);
+			if (STREAMING::HAS_ANIM_DICT_LOADED(anim_dict) && p_exist == false) {
+				WAIT(0);
+				AI::TASK_PLAY_ANIM(playerPed, anim_dict, animation_of_d, 8.0, 0.0, -1, 9, 0, 0, 0, 0);
+				if (!ENTITY::DOES_ENTITY_EXIST(temp_obj)) {
 					if (PED::GET_PED_TYPE(playerPed) == 0 && (MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == -1 || MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == 3)) temp_Hash = GAMEPLAY::GET_HASH_KEY("prop_phone_ing"); // michael
-					if (PED::GET_PED_TYPE(playerPed) == 1 && (MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == -1 || MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == 3)) temp_Hash = GAMEPLAY::GET_HASH_KEY("prop_phone_ing_03"); // franklin
-					if ((PED::GET_PED_TYPE(playerPed) == 2 || PED::GET_PED_TYPE(playerPed) == 3) && (MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == -1 || MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == 3)) 
-						temp_Hash = GAMEPLAY::GET_HASH_KEY("prop_phone_ing_02"); // trevor
-					if (PED::GET_PED_TYPE(playerPed) != 0 && PED::GET_PED_TYPE(playerPed) != 1 && PED::GET_PED_TYPE(playerPed) != 2 && PED::GET_PED_TYPE(playerPed) != 3 &&
-						(MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == -1 || MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == 3)) temp_Hash = GAMEPLAY::GET_HASH_KEY("prop_prologue_phone");
-					if (MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == 0) temp_Hash = GAMEPLAY::GET_HASH_KEY("prop_phone_ing");
-					if (MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == 1) temp_Hash = GAMEPLAY::GET_HASH_KEY("prop_phone_ing_02");
-					if (MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == 2) temp_Hash = GAMEPLAY::GET_HASH_KEY("prop_phone_ing_03");
-					if (MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == 4) temp_Hash = GAMEPLAY::GET_HASH_KEY("prop_prologue_phone");
-					temp_obj = OBJECT::CREATE_OBJECT(temp_Hash, temp_pos.x, temp_pos.y, temp_pos.z, 1, true, 1);
-					int PlayerIndex1 = PED::GET_PED_BONE_INDEX(playerPed, 0x6f06);
-					ENTITY::ATTACH_ENTITY_TO_ENTITY(temp_obj, playerPed, PlayerIndex1, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, false, false, false, true, 0, true);
+						if (PED::GET_PED_TYPE(playerPed) == 1 && (MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == -1 || MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == 3)) temp_Hash = GAMEPLAY::GET_HASH_KEY("prop_phone_ing_03"); // franklin
+						if ((PED::GET_PED_TYPE(playerPed) == 2 || PED::GET_PED_TYPE(playerPed) == 3) && (MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == -1 || MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == 3))
+							temp_Hash = GAMEPLAY::GET_HASH_KEY("prop_phone_ing_02"); // trevor
+						if (PED::GET_PED_TYPE(playerPed) != 0 && PED::GET_PED_TYPE(playerPed) != 1 && PED::GET_PED_TYPE(playerPed) != 2 && PED::GET_PED_TYPE(playerPed) != 3 &&
+							(MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == -1 || MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == 3)) temp_Hash = GAMEPLAY::GET_HASH_KEY("prop_prologue_phone");
+						if (MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == 0) temp_Hash = GAMEPLAY::GET_HASH_KEY("prop_phone_ing");
+						if (MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == 1) temp_Hash = GAMEPLAY::GET_HASH_KEY("prop_phone_ing_02");
+						if (MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == 2) temp_Hash = GAMEPLAY::GET_HASH_KEY("prop_phone_ing_03");
+						if (MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == 4) temp_Hash = GAMEPLAY::GET_HASH_KEY("prop_prologue_phone");
+						temp_obj = OBJECT::CREATE_OBJECT(temp_Hash, temp_pos.x, temp_pos.y, temp_pos.z, 1, true, 1);
+						int PlayerIndex1 = PED::GET_PED_BONE_INDEX(playerPed, 0x6f06);
+						ENTITY::ATTACH_ENTITY_TO_ENTITY(temp_obj, playerPed, PlayerIndex1, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, false, false, false, true, 0, true);
 				}
+				p_exist = true;
 			}
 
-			if (CONTROLS::IS_CONTROL_RELEASED(2, 71) && accel == true) {
+			if (CONTROLS::IS_CONTROL_RELEASED(2, 71) && CONTROLS::IS_CONTROL_RELEASED(2, 72) && accel == true) { 
 				AI::STOP_ANIM_TASK(playerPed, anim_dict, animation_of_d, 1.0);
-				OBJECT::DELETE_OBJECT(&temp_obj);
-				STREAMING::REMOVE_ANIM_DICT(anim_dict);
-				CONTROLS::DISABLE_CONTROL_ACTION(0, 71, 1);
+				CONTROLS::DISABLE_CONTROL_ACTION(2, 71, 1);
+				CONTROLS::DISABLE_CONTROL_ACTION(2, 72, 1);
 				accel = false;
+				p_exist = false;
 			}
-			if (STREAMING::HAS_ANIM_DICT_LOADED(anim_dict) && !ENTITY::DOES_ENTITY_EXIST(temp_obj)) {
+			if (CONTROLS::IS_CONTROL_JUST_PRESSED(2, 75) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, 72) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, 63) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, 64) ||
+				(CONTROLS::IS_CONTROL_JUST_PRESSED(2, 71) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, 62) && veh_s.x < 2 && veh_s.y < 2)) {
 				AI::STOP_ANIM_TASK(playerPed, anim_dict, animation_of_d, 1.0);
-				OBJECT::DELETE_OBJECT(&temp_obj);
-				STREAMING::REMOVE_ANIM_DICT(anim_dict);
+				accel = true;
+				p_exist = false;
 			}
 		}
 		
-		if (CONTROLS::IS_CONTROL_PRESSED(2, 75) || CONTROLS::IS_CONTROL_PRESSED(2, 72) || CONTROLS::IS_CONTROL_PRESSED(2, 63) || CONTROLS::IS_CONTROL_PRESSED(2, 64) || 
-			(CONTROLS::IS_CONTROL_PRESSED(2, 71) && veh_s.x == 0 && veh_s.y == 0)) {
-			AI::STOP_ANIM_TASK(playerPed, anim_dict, animation_of_d, 1.0);
-			OBJECT::DELETE_OBJECT(&temp_obj);
-			STREAMING::REMOVE_ANIM_DICT(anim_dict);
-			accel = true;
-		}
-
 		if ((PED::IS_PED_ON_ANY_BIKE(playerPed) && !PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed) && STREAMING::HAS_ANIM_DICT_LOADED(anim_dict)) ||
 			(!PED::IS_PED_ON_ANY_BIKE(playerPed) && STREAMING::HAS_ANIM_DICT_LOADED(anim_dict))) {
-			AI::STOP_ANIM_TASK(playerPed, anim_dict, animation_of_d, 1.0);
 			OBJECT::DELETE_OBJECT(&temp_obj);
-			STREAMING::REMOVE_ANIM_DICT(anim_dict);
+			AI::STOP_ANIM_TASK(playerPed, anim_dict, animation_of_d, 1.0);
 			accel = false;
+			p_exist = false;
 		} 
 	}
 
