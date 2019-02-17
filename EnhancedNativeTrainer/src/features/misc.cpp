@@ -935,7 +935,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			Hash temp_Hash = -1;
 			Vector3 temp_pos = ENTITY::GET_ENTITY_COORDS(playerPed, true);
 			
-			if (STREAMING::HAS_ANIM_DICT_LOADED(anim_dict) && p_exist == false) {
+			if (STREAMING::HAS_ANIM_DICT_LOADED(anim_dict) && p_exist == false && CONTROLS::GET_CONTROL_VALUE(0, 9) == 127) {
 				WAIT(0);
 				AI::TASK_PLAY_ANIM(playerPed, anim_dict, animation_of_d, 8.0, 0.0, -1, 9, 0, 0, 0, 0);
 				if (!ENTITY::DOES_ENTITY_EXIST(temp_obj)) {
