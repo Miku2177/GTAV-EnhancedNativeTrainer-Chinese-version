@@ -99,6 +99,11 @@ void drive_to_marker()
 		if (blipFound == true) {
 			Ped me_at_the_wheel = VEHICLE::GET_PED_IN_VEHICLE_SEAT(curr_veh, -1);
 			Ped Passenger_Driver = VEHICLE::GET_PED_IN_VEHICLE_SEAT(curr_veh, 0);
+			if (!VEHICLE::IS_VEHICLE_SEAT_FREE(curr_veh, 0) && Passenger_Driver != drivetomarker_player) {
+				AI::TASK_LEAVE_VEHICLE(Passenger_Driver, curr_veh, 16);
+				WAIT(1000);
+			}
+			
 			if (VEHICLE::IS_VEHICLE_SEAT_FREE(curr_veh, 0) || Passenger_Driver == drivetomarker_player)	PED::SET_PED_INTO_VEHICLE(me_at_the_wheel, curr_veh, 0);
 			else {
 				set_status_text("Couldn't make room for your chauffeur");
