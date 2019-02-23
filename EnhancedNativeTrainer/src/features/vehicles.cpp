@@ -85,7 +85,7 @@ bool featureAntiTheftSystem = false;
 bool featureWearHelmetOff = false;
 bool featureWearHelmetOffUpdated = false;
 bool featureVehLightsOn = false, featureVehLightsOnUpdated = false;
-bool featureInfiniteRocketBoost = false;
+//bool featureInfiniteRocketBoost = false;
 bool window_roll, interior_lights, veh_searching, veh_alarm, veh_brake_toggle = false;
 int lights = -1, highbeams = -1;
 
@@ -2150,14 +2150,16 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 	
 	// Infinite Rocket Boost
-	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && VEHICLE::_HAS_VEHICLE_ROCKET_BOOST(PED::GET_VEHICLE_PED_IS_IN(playerPed, false))) {
-		if (VEH_INFINITEBOOST_VALUES[InfiniteBoostIndex] == 1 && CONTROLS::IS_CONTROL_PRESSED(2, 103)) {
-			VEHICLE::_SET_VEHICLE_ROCKET_BOOST_REFILL_TIME(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 0.0f);
-			VEHICLE::_SET_VEHICLE_ROCKET_BOOST_PERCENTAGE(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 100.0f);
-		}
-		if (VEH_INFINITEBOOST_VALUES[InfiniteBoostIndex] == 2) {
-			VEHICLE::_SET_VEHICLE_ROCKET_BOOST_REFILL_TIME(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 0.0f);
-			VEHICLE::_SET_VEHICLE_ROCKET_BOOST_PERCENTAGE(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 100.0f); 
+	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && getGameVersion() > 36) {
+		if (VEHICLE::_HAS_VEHICLE_ROCKET_BOOST(PED::GET_VEHICLE_PED_IS_IN(playerPed, false))) {
+			if (VEH_INFINITEBOOST_VALUES[InfiniteBoostIndex] == 1 && CONTROLS::IS_CONTROL_PRESSED(2, 103)) {
+				VEHICLE::_SET_VEHICLE_ROCKET_BOOST_REFILL_TIME(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 0.0f);
+				VEHICLE::_SET_VEHICLE_ROCKET_BOOST_PERCENTAGE(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 100.0f);
+			}
+			if (VEH_INFINITEBOOST_VALUES[InfiniteBoostIndex] == 2) {
+				VEHICLE::_SET_VEHICLE_ROCKET_BOOST_REFILL_TIME(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 0.0f);
+				VEHICLE::_SET_VEHICLE_ROCKET_BOOST_PERCENTAGE(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 100.0f);
+			}
 		}
 	}
 
@@ -3346,7 +3348,7 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureEngineDegrade", &featureEngineDegrade});
 	results->push_back(FeatureEnabledLocalDefinition{"featureEngineHealthBar", &featureEngineHealthBar});
 	results->push_back(FeatureEnabledLocalDefinition{"featureLimpMode", &featureLimpMode});
-	results->push_back(FeatureEnabledLocalDefinition{"featureInfiniteRocketBoost", &featureInfiniteRocketBoost});
+	//results->push_back(FeatureEnabledLocalDefinition{"featureInfiniteRocketBoost", &featureInfiniteRocketBoost});
 
 }
 
