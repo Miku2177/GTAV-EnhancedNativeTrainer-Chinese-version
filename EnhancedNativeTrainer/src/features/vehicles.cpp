@@ -3619,13 +3619,20 @@ void save_current_vehicle(int slot){
 			Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 
 			std::ostringstream ss;
-			if(slot != -1){
-				ss << activeSavedVehicleSlotName;
-			}
-			else{
-				ss << "Saved Vehicle " << (lastKnownSavedVehicleCount + 1);
-			}
+			
+			Hash currVehModelS = ENTITY::GET_ENTITY_MODEL(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()));
+			//Hash vehVal = GAMEPLAY::GET_HASH_KEY(currVehModel);
+			char *name = VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(currVehModelS);
+			std::string displayName = UI::_GET_LABEL_TEXT(name);
+			ss << displayName;
 
+			//if(slot != -1){
+			//	ss << activeSavedVehicleSlotName;
+			//}
+			//else{
+			//	ss << "Saved Vehicle " << (lastKnownSavedVehicleCount + 1);
+			//}
+			
 			auto existingText = ss.str();
 			std::string result = show_keyboard(NULL, (char*) existingText.c_str());
 			if(!result.empty()){
