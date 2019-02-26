@@ -3621,17 +3621,18 @@ void save_current_vehicle(int slot){
 			std::ostringstream ss;
 			
 			Hash currVehModelS = ENTITY::GET_ENTITY_MODEL(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()));
-			//Hash vehVal = GAMEPLAY::GET_HASH_KEY(currVehModel);
-			char *name = VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(currVehModelS);
-			std::string displayName = UI::_GET_LABEL_TEXT(name);
-			ss << displayName;
-
+			if (STREAMING::IS_MODEL_IN_CDIMAGE(currVehModelS) && STREAMING::IS_MODEL_A_VEHICLE(currVehModelS) && STREAMING::IS_MODEL_VALID(currVehModelS)) {
+				//Hash vehVal = GAMEPLAY::GET_HASH_KEY(currVehModel);
+				char *name = VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(currVehModelS);
+				std::string displayName = UI::_GET_LABEL_TEXT(name);
+				ss << displayName;
+			}
 			//if(slot != -1){
 			//	ss << activeSavedVehicleSlotName;
 			//}
-			//else{
-			//	ss << "Saved Vehicle " << (lastKnownSavedVehicleCount + 1);
-			//}
+			else{
+				ss << "Saved Vehicle " << (lastKnownSavedVehicleCount + 1);
+			}
 			
 			auto existingText = ss.str();
 			std::string result = show_keyboard(NULL, (char*) existingText.c_str());
