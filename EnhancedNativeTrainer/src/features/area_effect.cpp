@@ -56,6 +56,7 @@ bool featureNPCNoLights = false;
 //bool featureNPCNoLightsUpdated = false;
 bool featureNPCNeonLights = false;
 //bool featureNPCNeonLightsUpdated = false;
+bool featureNPCFullBeam = false;
 bool featureDirtyVehicles = false;
 //bool featureDirtyVehiclesUpdated = false;
 bool featureNPCNoGravityVehicles = false;
@@ -126,6 +127,7 @@ void add_areaeffect_feature_enablements(std::vector<FeatureEnabledLocalDefinitio
 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNPCNoLights", &featureNPCNoLights }); // , &featureNPCNoLightsUpdated
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNPCNeonLights", &featureNPCNeonLights }); // , &featureNPCNeonLightsUpdated
+	results->push_back(FeatureEnabledLocalDefinition{ "featureNPCFullBeam", &featureNPCFullBeam });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureDirtyVehicles", &featureDirtyVehicles }); // , &featureDirtyVehiclesUpdated
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNPCNoGravityVehicles", &featureNPCNoGravityVehicles }); // , &featureNPCNoGravityVehiclesUpdated
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNPCNoGravityPeds", &featureNPCNoGravityPeds }); // , &featureNPCNoGravityPedsUpdated
@@ -161,6 +163,7 @@ void reset_areaeffect_globals(){
 
 	featureNPCNoLights = false;
 	featureNPCNeonLights = false;
+	featureNPCFullBeam = false;
 	featureDirtyVehicles = false;
 	featureNPCNoGravityVehicles = false;
 	featureNPCNoGravityPeds = false;
@@ -276,6 +279,12 @@ void process_areaeffect_vehicle_menu(){
 	togItem->value = 1;
 	togItem->toggleValue = &featureNPCNeonLights;
 	//togItem->toggleValueUpdated = &featureNPCNeonLightsUpdated;
+	menuItems.push_back(togItem);
+
+	togItem = new ToggleMenuItem<int>();
+	togItem->caption = "NPC Vehicles Use Full Beam";
+	togItem->value = 1;
+	togItem->toggleValue = &featureNPCFullBeam;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
