@@ -74,6 +74,7 @@ bool featureAutoToggleLights = false;
 bool featureMileage = false;
 bool featureSeasharkLights = false;
 bool featurePoliceLightsBlackout = false;
+bool featureNeverDirty = false;
 bool featureVehMassMult = false;
 bool featureVehSpawnInto = false;
 bool featureVehSpawnTuned = false;
@@ -1581,38 +1582,38 @@ bool onconfirm_veh_menu(MenuItem<int> choice){
 		case 3: // clean
 			clean_vehicle();
 			break;
-		case 4: // paint
+		case 5: // paint
 			if(process_paint_menu()) return false;
 			break;
-		case 5: // mods
+		case 6: // mods
 			if(process_vehmod_menu()) return false;
 			break;
 		//case 6: // Plane bombs -- incomplete so commenting out in mean time
 			//if (process_veh_weapons_menu()) return false;
 		//	break;
-		case 18: // door menu
+		case 19: // door menu
 			if(process_veh_door_menu()) return false;
 			break;
-		case 19: // seat menu
+		case 20: // seat menu
 			if (PED::IS_PED_SITTING_IN_ANY_VEHICLE(playerPed))
 				if(process_veh_seat_menu()) return false;
 			break;
-		case 20: // speed menu
+		case 21: // speed menu
 			process_speed_menu();
 			break;
-		case 21: // vehicle indicators menu
+		case 22: // vehicle indicators menu
 			process_visualize_menu();
 			break;
-		case 27: // fuel menu
+		case 28: // fuel menu
 			process_fuel_menu();
 			break;
-		case 28: // remember vehicles menu
+		case 29: // remember vehicles menu
 			process_remember_vehicles_menu();
 			break;
-		case 29: // road laws menu
+		case 30: // road laws menu
 			process_road_laws_menu();
 			break;
-		case 35: // engine can degrade
+		case 36: // engine can degrade
 			process_engine_degrade_menu();
 			break;
 		default:
@@ -1655,6 +1656,12 @@ void process_veh_menu(){
 	item->value = i++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Vehicle Never Gets Dirty";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureNeverDirty;
+	menuItems.push_back(toggleItem);
 
 	item = new MenuItem<int>();
 	item->caption = "Paint Menu";
@@ -2149,6 +2156,9 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		}
 	}
 	
+	// Never Gets Dirty
+	if (featureNeverDirty && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) VEHICLE::SET_VEHICLE_DIRT_LEVEL(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 0.0);
+
 	// Infinite Rocket Boost
 	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && getGameVersion() > 36) {
 		if (VEHICLE::_HAS_VEHICLE_ROCKET_BOOST(PED::GET_VEHICLE_PED_IS_IN(playerPed, false))) {
@@ -3031,6 +3041,7 @@ void reset_vehicle_globals() {
 		featureMileage = 
 		featureSeasharkLights =
 		featurePoliceLightsBlackout =
+		featureNeverDirty =
 		featureRememberVehicles =
 		featureRoadLaws =
 		featureFuel = 
@@ -3307,6 +3318,7 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureMileage", &featureMileage});
 	results->push_back(FeatureEnabledLocalDefinition{"featureSeasharkLights", &featureSeasharkLights});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePoliceLightsBlackout", &featurePoliceLightsBlackout});
+	results->push_back(FeatureEnabledLocalDefinition{"featureNeverDirty", &featureNeverDirty});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRememberVehicles", &featureRememberVehicles});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRoadLaws", &featureRoadLaws});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePoliceVehicleBlip", &featurePoliceVehicleBlip});
