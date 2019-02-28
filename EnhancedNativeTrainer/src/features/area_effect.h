@@ -24,6 +24,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 extern bool featureNPCNoLights;
 extern bool featureNPCNeonLights;
+extern bool featureNPCFullBeam;
 extern bool featureDirtyVehicles;
 extern bool featureNPCNoGravityVehicles;
 extern bool featureNPCNoGravityPeds;

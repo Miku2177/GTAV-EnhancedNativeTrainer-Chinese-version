@@ -747,9 +747,9 @@ void update_world_features()
 	
 	if (featureFirstPersonDeathCamera) FirstPersonDeathCamera();
 	
-	// Bus Interior Light On At Night && NPC No Lights && NPC Neon Lights && NPC Dirty Vehicles && NPC Damaged Vehicles && NPC No Gravity Vehicles && NPC Vehicles Reduced Grip && NPC Vehicle Speed
+	// Bus Interior Light On At Night && NPC No Lights && NPC Neon Lights && NPC Dirty Vehicles && NPC Damaged Vehicles && NPC No Gravity Vehicles && NPC Vehicles Reduced Grip && NPC Vehicle Speed // NPC Use Fullbeam
 	if (featureBusLight || featureNPCNoLights || featureNPCNeonLights || featureDirtyVehicles || WORLD_DAMAGED_VEHICLES_VALUES[DamagedVehiclesIndex] > 0 || featureNPCNoGravityVehicles || featureNPCReducedGripVehicles ||
-		WORLD_NPC_VEHICLESPEED_VALUES[NPCVehicleSpeedIndex] > 0 || WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0) {
+		WORLD_NPC_VEHICLESPEED_VALUES[NPCVehicleSpeedIndex] > 0 || WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 || featureNPCFullBeam) {
 		Vehicle veh_mycurrveh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 		const int BUS_ARR_SIZE = 1024;
 		Vehicle bus_veh[BUS_ARR_SIZE];
@@ -872,7 +872,6 @@ void update_world_features()
 			if (featureNPCReducedGripVehicles) {
 				if (bus_veh[i] != veh_mycurrveh) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], true);
 			}
-			 
 			if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 && featureSnow) {
 				Vehicle my_veh_on_snow = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()); 
 				Vehicle veh_on_snow = PED::GET_VEHICLE_PED_IS_USING(bus_veh[i]);
@@ -917,6 +916,12 @@ void update_world_features()
 			}
 			if (WORLD_NPC_VEHICLESPEED_VALUES[NPCVehicleSpeedIndex] > 0 && bus_veh[i] != veh_mycurrveh) {
 				VEHICLE::SET_VEHICLE_FORWARD_SPEED(bus_veh[i], WORLD_NPC_VEHICLESPEED_VALUES[NPCVehicleSpeedIndex]); 
+			}
+			if (featureNPCFullBeam) {
+				BOOL lightsAutoOn = -1;
+				BOOL highbeamsAutoOn = -1;
+				bool npclights_state = VEHICLE::GET_VEHICLE_LIGHTS_STATE(bus_veh[i], &lightsAutoOn, &highbeamsAutoOn);
+				if (lightsAutoOn && !highbeamsAutoOn && bus_veh[i] != PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false)) VEHICLE::SET_VEHICLE_FULLBEAM(bus_veh[i], 1);
 			}
 		}
 	}
@@ -1017,7 +1022,7 @@ void update_world_features()
 	if (windstrength_toggle == false) {
 			GAMEPLAY::SET_WIND(WORLD_WIND_STRENGTH_VALUES[WindStrengthIndex]);
 			if (WORLD_WIND_STRENGTH_VALUES[WindStrengthIndex] != 0) GAMEPLAY::SET_WIND_DIRECTION(ENTITY::GET_ENTITY_HEADING(PLAYER::PLAYER_PED_ID()));
-			if (WORLD_WIND_STRENGTH_VALUES[WindStrengthIndex] == 0) GAMEPLAY::SET_WIND_SPEED(0.0);
+			if (WORLD_WIND_STRENGTH_VALUES[WindStrengthIndex] == 0) GAMEPLAY::SET_WIND(0.0); // GAMEPLAY::SET_WIND_SPEED(0.0);
 			windstrength_changed = WORLD_WIND_STRENGTH_VALUES[WindStrengthIndex];
 			windstrength_toggle = true;
 		}
