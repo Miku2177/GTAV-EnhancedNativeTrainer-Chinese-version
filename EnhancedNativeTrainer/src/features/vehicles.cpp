@@ -87,7 +87,7 @@ bool featureWearHelmetOff = false;
 bool featureWearHelmetOffUpdated = false;
 bool featureVehLightsOn = false, featureVehLightsOnUpdated = false;
 //bool featureInfiniteRocketBoost = false;
-bool window_roll, interior_lights, veh_searching, veh_alarm, veh_brake_toggle = false;
+bool window_roll, interior_lights, veh_searching, veh_alarm, veh_brake_toggle, vehicle_burnout_toggle = false;
 int lights = -1, highbeams = -1;
 
 Vehicle vehicle_been_used = -1;
@@ -473,6 +473,17 @@ void vehicle_brake() {
 	WAIT(100);
 }
 
+void vehicle_burnout() {
+	Player PlayerPedBurnout = PLAYER::PLAYER_PED_ID();
+	Vehicle veh_burnout = -1;
+	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_burnout = PED::GET_VEHICLE_PED_IS_USING(PlayerPedBurnout);
+	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh_burnout = vehicle_been_used;
+
+	vehicle_burnout_toggle = !vehicle_burnout_toggle;
+	VEHICLE::SET_VEHICLE_BURNOUT(veh_burnout, vehicle_burnout_toggle);
+	WAIT(100);
+}
+
 void damage_door() {
 	Player PlayerPedDamage = PLAYER::PLAYER_PED_ID();
 	Vehicle veh_damage = -1;
@@ -486,18 +497,6 @@ void damage_door() {
 		VEHICLE::SET_VEHICLE_DOOR_BROKEN(veh_damage, dec_result, false);
 	}
 }
-
-//void enter_damaged_vehicle() { // enter destroyed vehicle
-//	Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
-//	const int ENTER_ARR_SIZE = 1024;
-//	Vehicle enter_veh[ENTER_ARR_SIZE];
-//	int found_to_enter = worldGetAllVehicles(enter_veh, ENTER_ARR_SIZE);
-//	for (int i = 0; i < found_to_enter; i++) {
-//		Vector3 coordsdamagedvehicle = ENTITY::GET_ENTITY_COORDS(enter_veh[i], true);
-//		float dist_to_damaged_diff = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsdamagedvehicle.x, coordsdamagedvehicle.y, coordsdamagedvehicle.z);
-//		if (dist_to_damaged_diff < 5) PED::SET_PED_INTO_VEHICLE(PLAYER::PLAYER_PED_ID(), enter_veh[i], -1);
-//	}
-//}
 
 void eject_seat() { // eject seat
 	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0) && !VEHICLE::IS_VEHICLE_SEAT_FREE(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false), -1)) {
@@ -638,7 +637,11 @@ bool onconfirm_vehdoor_menu(MenuItem<int> choice){
 	{
 		vehicle_brake();
 	}
-	else if (choice.value == -15)//damage door 
+	else if (choice.value == -15)//vehicle burnout
+	{
+		vehicle_burnout();
+	}
+	else if (choice.value == -16)//damage door 
 	{
 		damage_door();
 	}
@@ -646,11 +649,11 @@ bool onconfirm_vehdoor_menu(MenuItem<int> choice){
 	//{
 	//	enter_damaged_vehicle();
 	//}
-	else if (choice.value == -16)//eject seat
+	else if (choice.value == -17)//eject seat
 	{
 		eject_seat();
 	}
-	else if (choice.value == -17)//detach windscreen
+	else if (choice.value == -18)//detach windscreen
 	{
 		Vehicle veh_detach = -1;
 		if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_detach = PED::GET_VEHICLE_PED_IS_USING(playerPed);
@@ -788,8 +791,14 @@ bool process_veh_door_menu(){
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Damage Door (0-5)";
+	item->caption = "Burnout On/Off";
 	item->value = -15;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "Damage Door (0-5)";
+	item->value = -16;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
@@ -801,13 +810,13 @@ bool process_veh_door_menu(){
 
 	item = new MenuItem<int>();
 	item->caption = "Eject Driver Seat";
-	item->value = -16;
+	item->value = -17;
 	item->isLeaf = true;
 	menuItems.push_back(item); 
 
 	item = new MenuItem<int>();
 	item->caption = "Detach Windscreen";
-	item->value = -17;
+	item->value = -18;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
@@ -2280,7 +2289,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 	else {
 		std::vector<int> emptyVec;
-		if (!VEH_MASS_VALUES.empty()) std::vector<int>(VEH_MASS_VALUES).swap(emptyVec);
+		if (!VEH_MASS_VALUES.empty()) std::vector<int>(VEH_MASS_VALUES).swap(emptyVec); 
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
