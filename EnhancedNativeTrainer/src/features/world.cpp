@@ -62,7 +62,9 @@ bool featureReducedGripVehiclesIfSnow = false;
 
 bool police_blips_toogle = false;
 bool windstrength_toggle = false;
+bool wavesstrength_toggle = false;
 int windstrength_changed = -1;
+int wavesstrength_changed = -1;
 
 bool featureWorldRandomCops = true;
 bool featureWorldRandomTrains = true;
@@ -115,6 +117,12 @@ const int WORLD_REDUCEDGRIP_SNOWING_VALUES[] = { 0, 1, 2 };
 //const std::vector<int> WORLD_REDUCEDGRIP_SNOWING_VALUES{ 0, 1, 2 };
 int RadarReducedGripSnowingIndex = 0;
 bool RadarReducedGripSnowingChanged = true;
+
+// Waves Intensity
+const std::vector<std::string> WORLD_WAVES_CAPTIONS{ "Default", "No Waves", "0.1x", "1x", "3x", "5x", "10x", "15x", "20x", "30x" };
+const std::vector<int> WORLD_WAVES_VALUES{ -1, -400000, 0, 1, 3, 5, 10, 15, 20, 30 };
+int WorldWavesIndex = 0;
+bool WorldWavesChanged = true;
 
 bool onconfirm_weather_menu(MenuItem<std::string> choice)
 {
@@ -283,6 +291,11 @@ void process_clouds_menu()
 void onchange_world_radar_map_index(int value, SelectFromListMenuItem* source){
 	RadarMapIndex = value;
 	RadarMapChanged = true;
+}
+
+void onchange_world_waves_index(int value, SelectFromListMenuItem* source) {
+	WorldWavesIndex = value;
+	WorldWavesChanged = true;
 }
 
 void onchange_world_wind_strength_index(int value, SelectFromListMenuItem* source){
@@ -486,6 +499,12 @@ void process_world_menu()
 	//togItem->toggleValueUpdated = &featureAcidRainUpdated;
 	menuItems.push_back(togItem);
 
+	listItem = new SelectFromListMenuItem(WORLD_WAVES_CAPTIONS, onchange_world_waves_index);
+	listItem->wrap = false;
+	listItem->caption = "Waves Intensity";
+	listItem->value = WorldWavesIndex;
+	menuItems.push_back(listItem);
+
 	draw_generic_menu<int>(menuItems, &activeLineIndexWorld, caption, onconfirm_world_menu, NULL, NULL);
 }
 
@@ -495,6 +514,7 @@ void reset_world_globals()
 	activeLineIndexWeather = 0;
 	activeLineIndexClouds = 0;
 	RadarMapIndex = 0;
+	WorldWavesIndex = 0;
 	RadarReducedGripSnowingIndex = 0;
 	WindStrengthIndex = 0;
 	lastWeather.clear();
@@ -746,6 +766,15 @@ void update_world_features()
 	}
 	
 	if (featureFirstPersonDeathCamera) FirstPersonDeathCamera();
+	
+	// Waves Intensity
+	if (WORLD_WAVES_VALUES[WorldWavesIndex] == -1 && wavesstrength_toggle == false) {
+		WATER::_RESET_WAVES_INTENSITY();
+		wavesstrength_changed = WORLD_WAVES_VALUES[WorldWavesIndex];
+		wavesstrength_toggle = true;
+	}
+	if (wavesstrength_changed != WORLD_WAVES_VALUES[WorldWavesIndex]) wavesstrength_toggle = false;
+	if (WORLD_WAVES_VALUES[WorldWavesIndex] != -1) WATER::_SET_WAVES_INTENSITY(WORLD_WAVES_VALUES[WorldWavesIndex]);
 	
 	// Bus Interior Light On At Night && NPC No Lights && NPC Neon Lights && NPC Dirty Vehicles && NPC Damaged Vehicles && NPC No Gravity Vehicles && NPC Vehicles Reduced Grip && NPC Vehicle Speed // NPC Use Fullbeam
 	if (featureBusLight || featureNPCNoLights || featureNPCNeonLights || featureDirtyVehicles || WORLD_DAMAGED_VEHICLES_VALUES[DamagedVehiclesIndex] > 0 || featureNPCNoGravityVehicles || featureNPCReducedGripVehicles ||
@@ -1161,6 +1190,7 @@ void add_world_generic_settings(std::vector<StringPairSettingDBRow>* settings)
 void add_world_feature_enablements2(std::vector<StringPairSettingDBRow>* results)
 {
 	results->push_back(StringPairSettingDBRow{ "RadarMapIndex", std::to_string(RadarMapIndex) });
+	results->push_back(StringPairSettingDBRow{ "WorldWavesIndex", std::to_string(WorldWavesIndex) });
 	results->push_back(StringPairSettingDBRow{ "WindStrengthIndex", std::to_string(WindStrengthIndex) });
 	results->push_back(StringPairSettingDBRow{ "DamagedVehiclesIndex", std::to_string(DamagedVehiclesIndex) });
 	results->push_back(StringPairSettingDBRow{ "NPCVehicleSpeedIndex", std::to_string(NPCVehicleSpeedIndex) });
@@ -1190,6 +1220,9 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 		}
 		else if (setting.name.compare("RadarMapIndex") == 0){
 			RadarMapIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("WorldWavesIndex") == 0) {
+			WorldWavesIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("WindStrengthIndex") == 0){
 			WindStrengthIndex = stoi(setting.value);
