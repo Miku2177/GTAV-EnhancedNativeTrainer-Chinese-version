@@ -37,7 +37,7 @@ const char* TINT_NAMES[] = { "No Tint", "Dark", "Medium", "Light", "Very Light",
 const char* PLATE_NAMES[] = { "Blue on White", "Yellow/Black", "Gold/Blue", "Blue/White SA Caps", "Blue/White SA Exempt", "Blue/White Yankton" };
 //const static std::string PLATE_NAMES[] = { "Blue on White", "Yellow/Black", "Gold/Blue", "Blue/White SA Caps", "Blue/White SA Exempt", "Blue/White Yankton" };
 
-const static int ENGINE_SOUND_COUNT = 346;
+const static int ENGINE_SOUND_COUNT = 366; // 346
 
 const static int SPECIAL_ID_START = 90;
 
