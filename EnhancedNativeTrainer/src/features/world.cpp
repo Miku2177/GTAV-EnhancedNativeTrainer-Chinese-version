@@ -119,8 +119,9 @@ int RadarReducedGripSnowingIndex = 0;
 bool RadarReducedGripSnowingChanged = true;
 
 // Waves Intensity
-const std::vector<std::string> WORLD_WAVES_CAPTIONS{ "Default", "No Waves", "0.1x", "1x", "3x", "5x", "10x", "15x", "20x", "30x" };
-const std::vector<int> WORLD_WAVES_VALUES{ -1, -400000, 0, 1, 3, 5, 10, 15, 20, 30 };
+const std::vector<std::string> WORLD_WAVES_CAPTIONS{ "Default", "No Waves", "0.1x", "5x", "10x", "20x", "30x", "50x" };
+const int WORLD_WAVES_VALUES[] = { -1, -400000, 0, 5, 10, 20, 30, 50 };
+//const std::vector<int> WORLD_WAVES_VALUES{ -1, -400000, 0, 1, 3, 5, 10, 15, 20, 30 };
 int WorldWavesIndex = 0;
 bool WorldWavesChanged = true;
 
@@ -771,7 +772,7 @@ void update_world_features()
 	if (WORLD_WAVES_VALUES[WorldWavesIndex] == -1 && wavesstrength_toggle == false) {
 		WATER::_RESET_WAVES_INTENSITY();
 		wavesstrength_changed = WORLD_WAVES_VALUES[WorldWavesIndex];
-		wavesstrength_toggle = true;
+		wavesstrength_toggle = true; 
 	}
 	if (wavesstrength_changed != WORLD_WAVES_VALUES[WorldWavesIndex]) wavesstrength_toggle = false;
 	if (WORLD_WAVES_VALUES[WorldWavesIndex] != -1) WATER::_SET_WAVES_INTENSITY(WORLD_WAVES_VALUES[WorldWavesIndex]);
