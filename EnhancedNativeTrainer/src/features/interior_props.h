@@ -2,122 +2,122 @@
 
 
 std::vector<const char*> IPLS_HEIST_APT_1 = {
-	"hw1_blimp_interior_v_apartment_high_milo_",// 300.63300000f, -997.42880000f, -100.00000000f
-	"hw1_blimp_interior_v_apartment_high_milo__1",// -13.08014000f, -593.61680000f, 93.02542000f
-	"hw1_blimp_interior_v_apartment_high_milo__2",// -32.17249000f, -579.01830000f, 82.90740000f
-	"hw1_blimp_interior_v_apartment_high_milo__3",// -282.30380000f, -954.78150000f, 85.30347000
-	"hw1_blimp_interior_v_apartment_high_milo__4",// -260.88210000f, -953.55720000f, 70.02390000f
-	"hw1_blimp_interior_v_apartment_high_milo__5",// -475.04570000f, -706.68080000f, 46.19837000f
-	"hw1_blimp_interior_v_apartment_high_milo__6",// -460.61330000f, -691.55620000f, 69.87947000f
-	"hw1_blimp_interior_v_apartment_high_milo__7",// -892.29590000f, -434.41470000f, 88.25368000f
-	"hw1_blimp_interior_v_apartment_high_milo__8",// -904.56690000f, -377.00050000f, 78.27306000f
-	"hw1_blimp_interior_v_apartment_high_milo__9",// -909.10170000f, -438.19030000f, 114.39970000f
-	"hw1_blimp_interior_v_apartment_high_milo__10",// -925.54970000f, -374.22030000f, 102.23290000f
-	"hw1_blimp_interior_v_apartment_high_milo__11",// -889.30300000f, -451.77510000f, 119.32700000f
-	"hw1_blimp_interior_v_apartment_high_milo__12",// -791.29410000f, 338.07100000f, 200.41350000f
-	"hw1_blimp_interior_v_apartment_high_milo__13",// -764.81310000f, 319.18510000f, 216.05030000f
-	"hw1_blimp_interior_v_apartment_high_milo__14",// -791.76130000f, 338.46320000f, 152.79410000f
-	"hw1_blimp_interior_v_apartment_high_milo__15",// -764.72250000f, 319.18510000f, 169.59630000f
-	"hw1_blimp_interior_v_apartment_high_milo__16",// -613.54040000f, 63.04870000f, 100.81960000f
-	"hw1_blimp_interior_v_apartment_high_milo__17",// -587.82590000f, 44.26880000f, 86.41870000f
-	"hw1_blimp_interior_v_apartment_high_milo__18",// -1468.02100000f, -529.94380000f, 62.34918000f
-	"hw1_blimp_interior_v_apartment_high_milo__19"// -1468.02100000f, -529.94380000f, 49.72156000f
+	"hw1_blimp_interior_v_apartment_high_milo_",
+	"hw1_blimp_interior_v_apartment_high_milo__1",
+	"hw1_blimp_interior_v_apartment_high_milo__2",
+	"hw1_blimp_interior_v_apartment_high_milo__3",
+	"hw1_blimp_interior_v_apartment_high_milo__4",
+	"hw1_blimp_interior_v_apartment_high_milo__5",
+	"hw1_blimp_interior_v_apartment_high_milo__6",
+	"hw1_blimp_interior_v_apartment_high_milo__7",
+	"hw1_blimp_interior_v_apartment_high_milo__8",
+	"hw1_blimp_interior_v_apartment_high_milo__9",
+	"hw1_blimp_interior_v_apartment_high_milo__10",
+	"hw1_blimp_interior_v_apartment_high_milo__11",
+	"hw1_blimp_interior_v_apartment_high_milo__12",
+	"hw1_blimp_interior_v_apartment_high_milo__13",
+	"hw1_blimp_interior_v_apartment_high_milo__14",
+	"hw1_blimp_interior_v_apartment_high_milo__15",
+	"hw1_blimp_interior_v_apartment_high_milo__16",
+	"hw1_blimp_interior_v_apartment_high_milo__17",
+	"hw1_blimp_interior_v_apartment_high_milo__18",
+	"hw1_blimp_interior_v_apartment_high_milo__19"
 };
 
 std::vector<const char*> IPLS_HEIST_APT_2 = {
-	"hei_hw1_blimp_interior_8_dlc_apart_high_new_milo_",// 300.63300000f, -997.42880000f, -100.00000000f
-	"hei_hw1_blimp_interior_9_dlc_apart_high_new_milo_",// -13.08014000f, -593.61680000f, 93.02542000f
-	"hei_hw1_blimp_interior_10_dlc_apart_high_new_milo_",// -32.17249000f, -579.01830000f, 82.90740000f
-	"hei_hw1_blimp_interior_11_dlc_apart_high_new_milo_",// -282.30390000f, -954.78150000f, 85.30347000f
-	"hei_hw1_blimp_interior_12_dlc_apart_high_new_milo_",// -260.88210000f, -953.55720000f, 70.02390000f
-	"hei_hw1_blimp_interior_13_dlc_apart_high_new_milo_",// -475.04560000f, -706.68080000f, 46.19837000f
-	"hei_hw1_blimp_interior_14_dlc_apart_high_new_milo_",// -460.61330000f, -691.55620000f, 69.87947000f
-	"hei_hw1_blimp_interior_15_dlc_apart_high_new_milo_",// -892.29590000f, -434.41470000f, 88.25368000f
-	"hei_hw1_blimp_interior_16_dlc_apart_high_new_milo_",// -904.56680000f, -377.00050000f, 78.27306000f
-	"hei_hw1_blimp_interior_17_dlc_apart_high_new_milo_",// -909.10180000f, -438.19030000f, 114.39970000f
-	"hei_hw1_blimp_interior_18_dlc_apart_high_new_milo_",// -925.54970000f, -374.22030000f, 102.23290000f
-	"hei_hw1_blimp_interior_19_dlc_apart_high_new_milo_",// -889.30290000f, -451.77500000f, 119.32700000f
-	"hei_hw1_blimp_interior_20_dlc_apart_high_new_milo_",// -791.29410000f, 338.07100000f, 200.41350000f
-	"hei_hw1_blimp_interior_21_dlc_apart_high_new_milo_",// -764.81310000f, 319.18510000f, 216.05020000f
-	"hei_hw1_blimp_interior_22_dlc_apart_high_new_milo_",// -791.76130000f, 338.46320000f, 152.79410000f
-	"hei_hw1_blimp_interior_23_dlc_apart_high_new_milo_",// -764.72260000f, 319.18510000f, 169.59630000f
-	"hei_hw1_blimp_interior_24_dlc_apart_high_new_milo_",// -613.54050000f, 63.04870000f, 100.81960000f
-	"hei_hw1_blimp_interior_25_dlc_apart_high_new_milo_",// -587.82590000f, 44.26880000f, 86.41870000f
-	"hei_hw1_blimp_interior_26_dlc_apart_high_new_milo_",// -1468.02100000f, -529.94370000f, 62.34918000f
-	"hei_hw1_blimp_interior_27_dlc_apart_high_new_milo_",// -1468.02100000f, -529.94370000f, 49.72156000f
+	"hei_hw1_blimp_interior_8_dlc_apart_high_new_milo_",
+	"hei_hw1_blimp_interior_9_dlc_apart_high_new_milo_",
+	"hei_hw1_blimp_interior_10_dlc_apart_high_new_milo_",
+	"hei_hw1_blimp_interior_11_dlc_apart_high_new_milo_",
+	"hei_hw1_blimp_interior_12_dlc_apart_high_new_milo_",
+	"hei_hw1_blimp_interior_13_dlc_apart_high_new_milo_",
+	"hei_hw1_blimp_interior_14_dlc_apart_high_new_milo_",
+	"hei_hw1_blimp_interior_15_dlc_apart_high_new_milo_",
+	"hei_hw1_blimp_interior_16_dlc_apart_high_new_milo_",
+	"hei_hw1_blimp_interior_17_dlc_apart_high_new_milo_",
+	"hei_hw1_blimp_interior_18_dlc_apart_high_new_milo_",
+	"hei_hw1_blimp_interior_19_dlc_apart_high_new_milo_",
+	"hei_hw1_blimp_interior_20_dlc_apart_high_new_milo_",
+	"hei_hw1_blimp_interior_21_dlc_apart_high_new_milo_",
+	"hei_hw1_blimp_interior_22_dlc_apart_high_new_milo_",
+	"hei_hw1_blimp_interior_23_dlc_apart_high_new_milo_",
+	"hei_hw1_blimp_interior_24_dlc_apart_high_new_milo_",
+	"hei_hw1_blimp_interior_25_dlc_apart_high_new_milo_",
+	"hei_hw1_blimp_interior_26_dlc_apart_high_new_milo_",
+	"hei_hw1_blimp_interior_27_dlc_apart_high_new_milo_",
 };
 
 std::vector<const char*> IPLS_HEIST_APT_3 = {
 	"mpbusiness_int_placement",
-	"mpbusiness_int_placement_interior_v_mp_apt_h_01_milo_",// -1462.28100000f, -539.62760000f, 72.44434000f
-	"mpbusiness_int_placement_interior_v_mp_apt_h_01_milo__1",// -914.90260000f, -374.87310000f, 112.67480000f
-	"mpbusiness_int_placement_interior_v_mp_apt_h_01_milo__2",// -609.56690000f, 51.28212000f, 96.60023000f
-	"mpbusiness_int_placement_interior_v_mp_apt_h_01_milo__3",// -778.50610000f, 331.31600000f, 210.39720000f
-	"mpbusiness_int_placement_interior_v_mp_apt_h_01_milo__4",// -22.61353000f, -590.14320000f, 78.43091000f
-	"mpbusiness_int_placement_interior_v_mp_apt_h_01_milo__5"// -609.56690000f, 51.28212000f, -183.98080000f
+	"mpbusiness_int_placement_interior_v_mp_apt_h_01_milo_",
+	"mpbusiness_int_placement_interior_v_mp_apt_h_01_milo__1",
+	"mpbusiness_int_placement_interior_v_mp_apt_h_01_milo__2",
+	"mpbusiness_int_placement_interior_v_mp_apt_h_01_milo__3",
+	"mpbusiness_int_placement_interior_v_mp_apt_h_01_milo__4",
+	"mpbusiness_int_placement_interior_v_mp_apt_h_01_milo__5"
 };
 
 std::vector<const char*> IPLS_HEIST_APT_4 = {
-	"hei_hw1_blimp_interior_28_dlc_apart_high_new_milo_",// -1462.28100000f, -539.62760000f, 72.44433000f
-	"hei_hw1_blimp_interior_29_dlc_apart_high_new_milo_",// -914.90250000f, -374.87310000f, 112.67480000f
-	"hei_hw1_blimp_interior_30_dlc_apart_high_new_milo_",// -609.56680000f, 51.28211000f, 96.60022000f
-	"hei_hw1_blimp_interior_31_dlc_apart_high_new_milo_",// -778.50600000f, 331.31600000f, 210.39720000f
-	"hei_hw1_blimp_interior_32_dlc_apart_high_new_milo_",// -22.61353000f, -590.14320000f, 78.43091000f
-	"hei_hw1_blimp_interior_33_dlc_apart_high_new_milo_",// -609.56680000f, 51.28211000f, -183.98080000f
+	"hei_hw1_blimp_interior_28_dlc_apart_high_new_milo_",
+	"hei_hw1_blimp_interior_29_dlc_apart_high_new_milo_",
+	"hei_hw1_blimp_interior_30_dlc_apart_high_new_milo_",
+	"hei_hw1_blimp_interior_31_dlc_apart_high_new_milo_",
+	"hei_hw1_blimp_interior_32_dlc_apart_high_new_milo_",
+	"hei_hw1_blimp_interior_33_dlc_apart_high_new_milo_",
 };
 
 std::vector<const char*> IPLS_HEIST_APT_5 = {
-	"hei_mpheist_int_placement_interior_0_dlc_apart_high2_new_milo_",// 300.63300000f, -997.42880000f, -100.00000000f
-	"hei_mpheist_int_placement_interior_1_dlc_apart_high2_new_milo_",// -13.08014000f, -593.61680000f, 93.02542000f
-	"hei_mpheist_int_placement_interior_2_dlc_apart_high2_new_milo_",// -32.17249000f, -579.01830000f, 82.90740000f
-	"hei_mpheist_int_placement_interior_3_dlc_apart_high2_new_milo_",// -282.30380000f, -954.78150000f, 85.30347000f
-	"hei_mpheist_int_placement_interior_4_dlc_apart_high2_new_milo_",// -260.88210000f, -953.55720000f, 70.02390000f
-	"hei_mpheist_int_placement_interior_5_dlc_apart_high2_new_milo_",// -475.04570000f, -706.68080000f, 46.19837000f
-	"hei_mpheist_int_placement_interior_6_dlc_apart_high2_new_milo_",// -460.61330000f, -691.55620000f, 69.87947000f
-	"hei_mpheist_int_placement_interior_7_dlc_apart_high2_new_milo_",// -892.29590000f, -434.41470000f, 88.25368000f
-	"hei_mpheist_int_placement_interior_8_dlc_apart_high2_new_milo_",// -904.56690000f, -377.00050000f, 78.27306000f
-	"hei_mpheist_int_placement_interior_9_dlc_apart_high2_new_milo_",// -909.10170000f, -438.19030000f, 114.39970000f
-	"hei_mpheist_int_placement_interior_10_dlc_apart_high2_new_milo_",// -925.54970000f, -374.22030000f, 102.23290000f
-	"hei_mpheist_int_placement_interior_11_dlc_apart_high2_new_milo_",// -889.30300000f, -451.77510000f, 119.32700000f
-	"hei_mpheist_int_placement_interior_12_dlc_apart_high2_new_milo_",// -791.29410000f, 338.07100000f, 200.41350000f
-	"hei_mpheist_int_placement_interior_13_dlc_apart_high2_new_milo_",// -764.81310000f, 319.18510000f, 216.05030000f
-	"hei_mpheist_int_placement_interior_14_dlc_apart_high2_new_milo_",// -791.76130000f, 338.46320000f, 152.79410000f
-	"hei_mpheist_int_placement_interior_15_dlc_apart_high2_new_milo_",// -764.72250000f, 319.18510000f, 169.59630000f
-	"hei_mpheist_int_placement_interior_16_dlc_apart_high2_new_milo_",// -613.54040000f, 63.04870000f, 100.81960000f
-	"hei_mpheist_int_placement_interior_17_dlc_apart_high2_new_milo_",// -587.82590000f, 44.26880000f, 86.41870000f
-	"hei_mpheist_int_placement_interior_18_dlc_apart_high2_new_milo_",// -1468.02100000f, -529.94380000f, 62.34918000f
-	"hei_mpheist_int_placement_interior_19_dlc_apart_high2_new_milo_",// -1468.02100000f, -529.94380000f, 49.72156000f
-	"hei_mpheist_int_placement_interior_20_dlc_apart_high2_new_milo_",// -1462.28100000f, -539.62760000f, 72.44434000f
-	"hei_mpheist_int_placement_interior_21_dlc_apart_high2_new_milo_",// -914.90260000f, -374.87310000f, 112.67480000f
-	"hei_mpheist_int_placement_interior_22_dlc_apart_high2_new_milo_",// -609.56690000f, 51.28212000f, 96.60023000f
-	"hei_mpheist_int_placement_interior_23_dlc_apart_high2_new_milo_",// -778.50610000f, 331.31600000f, 210.39720000f
-	"hei_mpheist_int_placement_interior_24_dlc_apart_high2_new_milo_",// -22.61353000f, -590.14320000f, 78.43091000f
-	"hei_mpheist_int_placement_interior_25_dlc_apart_high2_new_milo_",// -609.56690000f, 51.28212000f, -183.98080000f
+	"hei_mpheist_int_placement_interior_0_dlc_apart_high2_new_milo_",
+	"hei_mpheist_int_placement_interior_1_dlc_apart_high2_new_milo_",
+	"hei_mpheist_int_placement_interior_2_dlc_apart_high2_new_milo_",
+	"hei_mpheist_int_placement_interior_3_dlc_apart_high2_new_milo_",
+	"hei_mpheist_int_placement_interior_4_dlc_apart_high2_new_milo_",
+	"hei_mpheist_int_placement_interior_5_dlc_apart_high2_new_milo_",
+	"hei_mpheist_int_placement_interior_6_dlc_apart_high2_new_milo_",
+	"hei_mpheist_int_placement_interior_7_dlc_apart_high2_new_milo_",
+	"hei_mpheist_int_placement_interior_8_dlc_apart_high2_new_milo_",
+	"hei_mpheist_int_placement_interior_9_dlc_apart_high2_new_milo_",
+	"hei_mpheist_int_placement_interior_10_dlc_apart_high2_new_milo_",
+	"hei_mpheist_int_placement_interior_11_dlc_apart_high2_new_milo_",
+	"hei_mpheist_int_placement_interior_12_dlc_apart_high2_new_milo_",
+	"hei_mpheist_int_placement_interior_13_dlc_apart_high2_new_milo_",
+	"hei_mpheist_int_placement_interior_14_dlc_apart_high2_new_milo_",
+	"hei_mpheist_int_placement_interior_15_dlc_apart_high2_new_milo_",
+	"hei_mpheist_int_placement_interior_16_dlc_apart_high2_new_milo_",
+	"hei_mpheist_int_placement_interior_17_dlc_apart_high2_new_milo_",
+	"hei_mpheist_int_placement_interior_18_dlc_apart_high2_new_milo_",
+	"hei_mpheist_int_placement_interior_19_dlc_apart_high2_new_milo_",
+	"hei_mpheist_int_placement_interior_20_dlc_apart_high2_new_milo_",
+	"hei_mpheist_int_placement_interior_21_dlc_apart_high2_new_milo_",
+	"hei_mpheist_int_placement_interior_22_dlc_apart_high2_new_milo_",
+	"hei_mpheist_int_placement_interior_23_dlc_apart_high2_new_milo_",
+	"hei_mpheist_int_placement_interior_24_dlc_apart_high2_new_milo_",
+	"hei_mpheist_int_placement_interior_25_dlc_apart_high2_new_milo_",
 };
 
 std::vector<const char*> IPLS_BIKER_TUNNEL = {
-	"bkr_id1_11_interior_id1_11_tunnel1_int",// 826.98910000f, -1617.15200000f, 21.70428000f
-	"bkr_id1_11_interior_id1_11_tunnel2_int",// 829.75200000f, -1718.51200000f, 22.55545000f
-	"bkr_id1_11_interior_id1_11_tunnel3_int",// 815.85230000f, -1832.20300000f, 24.56372000f
-	"bkr_id1_11_interior_id1_11_tunnel4_int",// 788.93970000f, -1963.58000000f, 24.56372000f
-	"bkr_id1_11_interior_id1_11_tunnel5_int",// 769.88880000f, -2124.23800000f, 23.50781000f
-	"bkr_id1_11_interior_id1_11_tunnel6_int",// 758.95660000f, -2260.08300000f, 24.01923000f
-	"bkr_id1_11_interior_id1_11_tunnel7_int",// 749.49420000f, -2364.78900000f, 15.36389000f
-	"bkr_id1_11_interior_id1_11_tunnel8_int"// 732.46500000f, -2486.45200000f, 12.20399000f
+	"bkr_id1_11_interior_id1_11_tunnel1_int",
+	"bkr_id1_11_interior_id1_11_tunnel2_int",
+	"bkr_id1_11_interior_id1_11_tunnel3_int",
+	"bkr_id1_11_interior_id1_11_tunnel4_int",
+	"bkr_id1_11_interior_id1_11_tunnel5_int",
+	"bkr_id1_11_interior_id1_11_tunnel6_int",
+	"bkr_id1_11_interior_id1_11_tunnel7_int",
+	"bkr_id1_11_interior_id1_11_tunnel8_int"
 };
 
 std::vector<const char*> IPLS_GUNRUNNING_INTERIOR = {
-	"gr_grdlc_interior_placement_interior_0_grdlc_int_01_milo_",// 1103.56200000f, -3000.00000000f, -40.00000000f
-	"gr_grdlc_interior_placement_interior_1_grdlc_int_02_milo_",// 938.30770000f, -3196.11200000f, -100.00000000f
+	"gr_grdlc_interior_placement_interior_0_grdlc_int_01_milo_",
+	"gr_grdlc_interior_placement_interior_1_grdlc_int_02_milo_",
 	"gr_grdlc_interior_placement",
 	"DLC_GR_Bunker_Interior"
 };
 
 std::vector<const char*> IPLS_IMPORT_EXPORT_WAREHOUSES = {
-	"imp_impexp_interior_placement_interior_0_impexp_int_01_milo_",// 795.00000000f, -3000.00000000f, -40.00000000f
-	"imp_impexp_interior_placement_interior_1_impexp_intwaremed_milo_",// 975.00000000f, -3000.00000000f, -40.00000000f
-	"imp_impexp_interior_placement_interior_2_imptexp_mod_int_01_milo_",// 730.00000000f, -2990.00000000f, -40.00000000f
-	"imp_impexp_interior_placement_interior_3_impexp_int_02_milo_"// 969.53760000f, -3000.41100000f, -48.64689000f
+	"imp_impexp_interior_placement_interior_0_impexp_int_01_milo_",
+	"imp_impexp_interior_placement_interior_1_impexp_intwaremed_milo_",
+	"imp_impexp_interior_placement_interior_2_imptexp_mod_int_01_milo_",
+	"imp_impexp_interior_placement_interior_3_impexp_int_02_milo_"
 };
 
 std::vector<const char*> IPLS_NORTH_YANKTON = {
@@ -251,59 +251,11 @@ std::vector<const char*> IPLS_HEISTYACHT = {
 	"hei_yacht_heist_Lounge"
 };
 
-/*std::vector<const char*> IPLS_APAYACHT1_1 = {
-"apa_yacht_grp01_1",
-"apa_yacht_grp01_1_int",
-"apa_yacht_grp01_1_lod",
-};*/
-
 std::vector<const char*> IPLS_APAYACHT1_2 = {
 	"apa_yacht_grp01_2",
 	"apa_yacht_grp01_2_int",
 	"apa_yacht_grp01_2_lod",
 };
-
-/*std::vector<const char*> IPLS_APAYACHT1_3 = {
-"apa_yacht_grp01_3",
-"apa_yacht_grp01_3_int",
-"apa_yacht_grp01_3_lod",
-};
-
-std::vector<const char*> IPLS_APAYACHT2_1 = {
-"apa_yacht_grp02_1",
-"apa_yacht_grp02_1_int",
-"apa_yacht_grp02_1_lod",
-};
-
-std::vector<const char*> IPLS_APAYACHT2_2 = {
-"apa_yacht_grp02_2",
-"apa_yacht_grp02_2_int",
-"apa_yacht_grp02_2_lod",
-};
-
-std::vector<const char*> IPLS_APAYACHT2_3 = {
-"apa_yacht_grp02_3",
-"apa_yacht_grp02_3_int",
-"apa_yacht_grp02_3_lod",
-};
-
-std::vector<const char*> IPLS_APAYACHT3_1 = {
-"apa_yacht_grp03_1",
-"apa_yacht_grp03_1_int",
-"apa_yacht_grp03_1_lod",
-};
-
-std::vector<const char*> IPLS_APAYACHT3_2 = {
-"apa_yacht_grp03_2",
-"apa_yacht_grp03_2_int",
-"apa_yacht_grp03_2_lod",
-};
-
-std::vector<const char*> IPLS_APAYACHT3_3 = {
-"apa_yacht_grp03_3",
-"apa_yacht_grp03_3_int",
-"apa_yacht_grp03_3_lod",
-};*/
 
 std::vector<const char*> IPLS_APAYACHT4_1 = {
 	"apa_yacht_grp04_1",
@@ -311,77 +263,11 @@ std::vector<const char*> IPLS_APAYACHT4_1 = {
 	"apa_yacht_grp04_1_lod",
 };
 
-/*std::vector<const char*> IPLS_APAYACHT4_2 = {
-"apa_yacht_grp04_2",
-"apa_yacht_grp04_2_int",
-"apa_yacht_grp04_2_lod",
-};
-
-std::vector<const char*> IPLS_APAYACHT4_3 = {
-"apa_yacht_grp04_3",
-"apa_yacht_grp04_3_int",
-"apa_yacht_grp04_3_lod",
-};
-
-std::vector<const char*> IPLS_APAYACHT5_1 = {
-"apa_yacht_grp05_1",
-"apa_yacht_grp05_1_int",
-"apa_yacht_grp05_1_lod",
-};*/
-
 std::vector<const char*> IPLS_APAYACHT5_2 = {
 	"apa_yacht_grp05_2",
 	"apa_yacht_grp05_2_int",
 	"apa_yacht_grp05_2_lod",
 };
-
-/*std::vector<const char*> IPLS_APAYACHT5_3 = {
-"apa_yacht_grp05_3",
-"apa_yacht_grp05_3_int",
-"apa_yacht_grp05_3_lod",
-};
-
-std::vector<const char*> IPLS_APAYACHT6_1 = {
-"apa_yacht_grp06_1",
-"apa_yacht_grp06_1_int",
-"apa_yacht_grp06_1_lod",
-};
-
-std::vector<const char*> IPLS_APAYACHT6_2 = {
-"apa_yacht_grp06_2",
-"apa_yacht_grp06_2_int",
-"apa_yacht_grp06_2_lod",
-};
-
-std::vector<const char*> IPLS_APAYACHT6_3 = {
-"apa_yacht_grp06_3",
-"apa_yacht_grp06_3_int",
-"apa_yacht_grp06_3_lod",
-};
-
-std::vector<const char*> IPLS_APAYACHT7_1 = {
-"apa_yacht_grp07_1",
-"apa_yacht_grp07_1_int",
-"apa_yacht_grp07_1_lod",
-};
-
-std::vector<const char*> IPLS_APAYACHT7_2 = {
-"apa_yacht_grp07_2",
-"apa_yacht_grp07_2_int",
-"apa_yacht_grp07_2_lod",
-};
-
-std::vector<const char*> IPLS_APAYACHT7_3 = {
-"apa_yacht_grp07_3",
-"apa_yacht_grp07_3_int",
-"apa_yacht_grp07_3_lod",
-};
-
-std::vector<const char*> IPLS_APAYACHT8_1 = {
-"apa_yacht_grp08_1",
-"apa_yacht_grp08_1_int",
-"apa_yacht_grp08_1_lod",
-};*/
 
 std::vector<const char*> IPLS_APAYACHT8_2 = {
 	"apa_yacht_grp08_2",
@@ -389,83 +275,11 @@ std::vector<const char*> IPLS_APAYACHT8_2 = {
 	"apa_yacht_grp08_2_lod",
 };
 
-/*std::vector<const char*> IPLS_APAYACHT8_3 = {
-"apa_yacht_grp08_3",
-"apa_yacht_grp08_3_int",
-"apa_yacht_grp08_3_lod",
-};
-
-std::vector<const char*> IPLS_APAYACHT9_1 = {
-"apa_yacht_grp09_1",
-"apa_yacht_grp09_1_int",
-"apa_yacht_grp09_1_lod",
-};
-
-std::vector<const char*> IPLS_APAYACHT9_2 = {
-"apa_yacht_grp09_2",
-"apa_yacht_grp09_2_int",
-"apa_yacht_grp09_2_lod",
-};
-
-std::vector<const char*> IPLS_APAYACHT9_3 = {
-"apa_yacht_grp09_3",
-"apa_yacht_grp09_3_int",
-"apa_yacht_grp09_3_lod",
-};
-
-std::vector<const char*> IPLS_APAYACHT10_1 = {
-"apa_yacht_grp10_1",
-"apa_yacht_grp10_1_int",
-"apa_yacht_grp10_1_lod",
-};
-
-std::vector<const char*> IPLS_APAYACHT10_2 = {
-"apa_yacht_grp10_2",
-"apa_yacht_grp10_2_int",
-"apa_yacht_grp10_2_lod",
-};
-
-std::vector<const char*> IPLS_APAYACHT10_3 = {
-"apa_yacht_grp10_3",
-"apa_yacht_grp10_3_int",
-"apa_yacht_grp10_3_lod",
-};
-
-std::vector<const char*> IPLS_APAYACHT11_1 = {
-"apa_yacht_grp11_1",
-"apa_yacht_grp11_1_int",
-"apa_yacht_grp11_1_lod",
-};
-
-std::vector<const char*> IPLS_APAYACHT11_2 = {
-"apa_yacht_grp11_2",
-"apa_yacht_grp11_2_int",
-"apa_yacht_grp11_2_lod",
-};*/
-
 std::vector<const char*> IPLS_APAYACHT11_3 = {
 	"apa_yacht_grp11_3",
 	"apa_yacht_grp11_3_int",
 	"apa_yacht_grp11_3_lod",
 };
-
-/*std::vector<const char*> IPLS_APAYACHT12_1 = {
-"apa_yacht_grp12_1",
-"apa_yacht_grp12_1_int",
-"apa_yacht_grp12_1_lod",
-};
-
-std::vector<const char*> IPLS_APAYACHT12_2 = {
-"apa_yacht_grp12_2",
-"apa_yacht_grp12_2_int",
-"apa_yacht_grp12_2_lod",
-};
-
-std::vector<const char*> IPLS_APAYACHT12_3 = {
-"apa_yacht_grp12_3",
-"apa_yacht_grp12_3_int",
-"apa_yacht_grp12_3_lod",
-};*/
 
 std::vector<char*> IPL_PROPS_CEO_OFFICE = {
 	"office_chairs",
@@ -1246,248 +1060,122 @@ std::vector<const char*> IPL_PROPS_ARENAWAR_MAIN_PROPS = {
 
 std::vector<char*> IPL_PROPS_HANGAR = {
 	// Hangar
-	//"set_bedroom_blinds_closed",
 	"set_bedroom_blinds_open",
-	//"set_bedroom_clutter",
-	//"set_bedroom_modern",
 	"set_bedroom_traditional",
-	//"set_bedroom_tint",
 	"set_crane_tint",
 	"set_tint_shell",
 	"set_modarea",
 	"set_lighting_tint_props",
 	"set_floor_1",
-	//"set_floor_2",
 	"set_floor_decal_1",
-	//"set_floor_decal_2",
-	//"set_floor_decal_3",
-	//"set_floor_decal_4",
-	//"set_floor_decal_5",
-	//"set_floor_decal_6",
-	//"set_floor_decal_7",
-	//"set_floor_decal_8",
-	//"set_floor_decal_9",
 	"set_lighting_hangar_a",
-	//"set_lighting_hangar_b",
-	//"set_lighting_hangar_c",
-	//"set_lighting_wall_neutral",
 	"set_lighting_wall_tint01",
-	//"set_lighting_wall_tint02",
-	//"set_lighting_wall_tint03",
-	//"set_lighting_wall_tint04",
-	//"set_lighting_wall_tint05",
-	//"set_lighting_wall_tint06",
-	//"set_lighting_wall_tint07",
-	//"set_lighting_wall_tint08",
-	//"set_lighting_wall_tint09",
-	//"set_office_basic",
-	//"set_office_modern",
 	"set_office_traditional",
 };
 
 std::vector<char*> IPL_PROPS_FACILITY = {
 	// Facility
 	"set_int_02_shell",
-	//"set_int_02_lounge1",
-	//"set_int_02_lounge2",
 	"set_int_02_lounge3",
 	"set_int_02_no_sleep",
-	//"set_int_02_sleep",
-	//"set_int_02_sleep2",
-	//"set_int_02_sleep3",
-	//"set_int_02_no_security",
 	"set_int_02_security",
-	//"set_int_02_no_cannon",
 	"set_int_02_cannon",
-	//"set_int_02_decal_01",
-	//"set_int_02_decal_02",
-	//"set_int_02_decal_03",
-	//"set_int_02_decal_04",
-	//"set_int_02_decal_05",
-	//"set_int_02_decal_06",
-	//"set_int_02_decal_07",
-	//"set_int_02_decal_08",
 	"set_int_02_decal_09",
 	"set_int_02_trophy1",
-	//"set_int_02_trophy_iaa",
-	//"set_int_02_trophy_sub",
-	//"Set_Int_02_Parts_Panther1",
-	//"Set_Int_02_Parts_Panther2",
 	"Set_Int_02_Parts_Panther3",
-	//"Set_Int_02_Parts_Riot1",
-	//"Set_Int_02_Parts_Riot2",
 	"Set_Int_02_Parts_Riot3",
-	//"Set_Int_02_Parts_Cheno1",
-	//"Set_Int_02_Parts_Cheno2",
 	"Set_Int_02_Parts_Cheno3",
-	//"Set_Int_02_Parts_Thruster1",
-	//"Set_Int_02_Parts_Thruster2",
 	"Set_Int_02_Parts_Thruster3",
-	//"Set_Int_02_Parts_Avenger1",
-	//"Set_Int_02_Parts_Avenger2",
 	"Set_Int_02_Parts_Avenger3",
-	//"set_int_02_clutter1",
-	//"set_int_02_clutter2",
-	//"set_int_02_clutter3",
-	//"set_int_02_clutter4",
 	"set_int_02_clutter5",
 	"set_int_02_crewemblem",
-	//"set_int_02_paramedic_complete",
 	"set_int_02_forcedentry_complete",
-	//"set_int_02_aqualungs_complete",
-	//"set_int_02_daylightrob_complete",
-	//"set_int_02_burglary_complete",
-	//"set_int_02_flightrecord_complete",
-	//"Set_Int_02_outfit_paramedic",
-	//"Set_Int_02_outfit_morgue",
-	//"Set_Int_02_outfit_serverfarm",
-	//"Set_Int_02_outfit_iaa",
-	//"Set_Int_02_outfit_steal_avenger",
-	//"Set_Int_02_outfit_foundry",
-	//"Set_Int_02_outfit_riot_van",
-	//"Set_Int_02_outfit_stromberg",
 	"Set_Int_02_outfit_sub_finale",
-	//"Set_Int_02_outfit_predator",
-	//"Set_Int_02_outfit_khanjali",
-	//"Set_Int_02_outfit_volatol",
 };
 
 std::vector<char*> IPL_PROPS_SCRAP = {
 	// Scrap
-	//"v_int_13",
-	//"v_recycle",
-	//"sp1_03",
-	//"v_13_shell",//: 3797958435",// : X : 0 Y : 0 Z : 0 LODTYPES_DEPTH_ORPHANHD
-	//"sp1_03_interior_v_recycle_milo_",
-	//"prop_barrel_01a",// : 2225197879 : X : 7, 114488 Y : 21, 4465 Z : 0, 44288 LODTYPES_DEPTH_ORPHANHD
-	//"prop_crate_05a",// : 2112679280 : X : -2, 670362 Y : 21, 38941 Z : 0 LODTYPES_DEPTH_ORPHANHD
-	//"prop_crate_04a",// : 2762260943 : X : -4, 672222 Y : 21, 33954 Z : 0 LODTYPES_DEPTH_ORPHANHD
-	//"prop_rub_boxpile_04",// : 2184506468 : X : -5, 960032 Y : 21, 28047 Z : 0, 116 LODTYPES_DEPTH_ORPHANHD
-	//"v_13_rec_exit_over",// : 2889088389 : X : 0, 581789 Y : 19, 05719 Z : 1, 800381 LODTYPES_DEPTH_ORPHANHD
-	//"v_13_rec_exit_deta",// : 2287133508 : X : 0, 581789 Y : 19, 05719 Z : 1, 800381 LODTYPES_DEPTH_ORPHANHD
-	//"v_13_rec_exit_refl",// : 3928310582 : X : 0, 581789 Y : 19, 05719 Z : 1, 800381 LODTYPES_DEPTH_ORPHANHD
-	//"v_13_rec_shei_over",// : 3859396105 : X : -36, 32893 Y : -2, 120281 Z : 1, 700617 LODTYPES_DEPTH_ORPHANHD
-	//"v_13_rec_shei_deta",// : 1602735274 : X : -33, 96786 Y : -3, 586166 Z : 1, 224517 LODTYPES_DEPTH_ORPHANHD
-	//"v_serv_1socket",// : 2520642683 : X : -38, 53799 Y : 0, 843353 Z : 0, 15 LODTYPES_DEPTH_ORPHANHD
-	//"prop_alarm_01",// : 3527469646 : X : -38, 5384 Y : -6, 506397 Z : 2, 099999 LODTYPES_DEPTH_ORPHANHD
-	//"prop_fire_exting_2a",// : 3856569263 : X : -38, 53127 Y : -7, 73542 Z : 0, 952987 LODTYPES_DEPTH_ORPHANHD
-	//"prop_box_wood01a",// : 1943428799 : X : -35, 5423 Y : -0, 337009 Z : 0 LODTYPES_DEPTH_ORPHANHD
-	//"v_serv_switch_3",// : 2557687157 : X : -1, 009537 Y : 9, 639644 Z : 7, 7 LODTYPES_DEPTH_ORPHANHD
-	//"v_serv_2socket",// : 199939582 : X : 5, 679047 Y : 5, 040057 Z : 6, 150001 LODTYPES_DEPTH_ORPHANHD
-	//"prop_crate_03a",// : 2810265453 : X : 7, 700874 Y : 6, 663268 Z : 6 LODTYPES_DEPTH_ORPHANHD
-	//"v_ind_rc_lockeropn",// : 2117467747 : X : 1, 435054 Y : 9, 18936 Z : 6 LODTYPES_DEPTH_ORPHANHD
-	//"v_ind_rc_locker",// : 2157118360 : X : 0, 639997 Y : 9, 23502 Z : 6 LODTYPES_DEPTH_ORPHANHD
-	//"v_13_rec_door_over",// : 4237482523 : X : -1, 355057 Y : 9, 924643 Z : 7, 224347 LODTYPES_DEPTH_ORPHANHD
-	//"v_13_rec_door_deta",// : 4062680858 : X : -1, 355057 Y : 9, 924643 Z : 7, 224347 LODTYPES_DEPTH_ORPHANHD
-	//"prop_watercooler_dark",// : 876126020 : X : -9, 591345 Y : 5, 254051 Z : 6, 000203 LODTYPES_DEPTH_ORPHANHD
-	//"prop_boombox_01",// : 2152037570 : X : -8, 15619 Y : 5, 37073 Z : 6, 659933 LODTYPES_DEPTH_ORPHANHD
-	//"v_ret_gc_cup",// : 3050033165 : X : -8, 439014 Y : 5, 775933 Z : 6, 479617 LODTYPES_DEPTH_ORPHANHD
-	//"v_ret_gc_bin",// : 2378634147 : X : -10, 15488 Y : 5, 286704 Z : 6, 194997 LODTYPES_DEPTH_ORPHANHD
-	//"v_13_shell + hidr",
-	//"v_13_rec_wind_deta001 + hidr",
-	//"v_13_rec_off1_det2 + hidr",
-	//"v_13_rec_main_refl + hidr",
-	//"v_13_rec_door_refl + hidr",
-	//"v_13_recycle_txd"
-	//"v_ret_gc_boot04",// : 3965857081 : X : -10, 39501 Y : 6, 887379 Z : 6, 16949 LODTYPES_DEPTH_ORPHANHD
-	//"v_res_tabloidsa",// : 2217320446 : X : -10, 47245 Y : 7, 299943 Z : 6, 445932 LODTYPES_DEPTH_ORPHANHD
-	//"v_res_tabloidsc",// : 1612448733 : X : -8, 402193 Y : 5, 626567 Z : 6, 415395 LODTYPES_DEPTH_ORPHANHD
-	//"v_ind_rc_bench",// : 1997869033 : X : -10, 52626 Y : 6, 628745 Z : 6, 000892 LODTYPES_DEPTH_ORPHANHD
-	//"v_ind_rc_dustmask",// : 309068065 : X : -10, 65249 Y : 7, 544528 Z : 7, 243415 LODTYPES_DEPTH_ORPHANHD
-	//"v_ind_rc_lowtable",// : 1205746757 : X : -8, 175355 Y : 5, 504794 Z : 6, 000892 LODTYPES_DEPTH_ORPHANHD
-	//"v_ind_rc_overalldrp",// : 1751543790 : X : -4, 715253 Y : 9, 211905 Z : 6, 485023 LODTYPES_DEPTH_ORPHANHD
-	//"v_ind_rc_overallfld",//
-	//"v_ind_rc_plaztray",// : 1078335474 : X : -10, 45117 Y : 8, 510565 Z : 6, 000892 LODTYPES_DEPTH_ORPHANHD
-	//"v_ind_rc_towel",// : 731006868 : X : -4, 74564 Y : 5, 845942 Z : 6, 780433 LODTYPES_DEPTH_ORPHANHD
-	//"v_ind_rc_workbag",// : 1867896613 : X : -10, 50798 Y : 5, 99369 Z : 6, 406623 LODTYPES_DEPTH_ORPHANHD
-	//"prop_rub_litter_09",// : 2190195942 : X : -3, 172503 Y : 5, 468811 Z : 6 LODTYPES_DEPTH_ORPHANHD
-	//"prop_rub_litter_8",// : 1835154782 : X : -2, 786409 Y : 5, 298294 Z : 6 LODTYPES_DEPTH_ORPHANHD
-	//"v_13_rec_door_refl",// : 1865558873 : X : -1, 355057 Y : 9, 924643 Z : 7, 224347 LODTYPES_DEPTH_ORPHANHD
-	//"v_ilev_rc_door1_st",// : 2035743501 : X : -8, 197277 Y : 10, 09014 Z : 7, 150241 LODTYPES_DEPTH_ORPHANHD
-	//"v_13_rec_shei_refl",// : 3786606812 : X : -33, 96786 Y : -3, 586166 Z : 1, 224517 LODTYPES_DEPTH_ORPHANHD
-	//"prop_box_wood03a",// : 3748366545 : X : -35, 61897 Y : 1, 942882 Z : 0 LODTYPES_DEPTH_ORPHANHD
-	//"v_ret_gc_chair02",// : 3258508156 : X : -8, 981443 Y : 5, 483121 Z : 6, 525002 LODTYPES_DEPTH_ORPHANHD
 	"v_13_recycle_txd"
-	"v_13_rec_sta2_over",// : 4030253059 : X : -37, 0749 Y : 15, 1115 Z : 0, 250598 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_sta2_deta",// : 528483088 : X : -37, 0749 Y : 15, 1115 Z : 0, 250598 LODTYPES_DEPTH_ORPHANHD
-	"prop_rcyl_win_02",// : 2377864610 : X : -36, 03803 Y : 18, 58554 Z : 8, 199896 LODTYPES_DEPTH_ORPHANHD
-	"prop_rcyl_win_01",// : 1115558725 : X : -36, 03803 Y : 18, 48554 Z : 4, 199896 LODTYPES_DEPTH_ORPHANHD
-	"v_ind_rc_balec2",// : 378890333 : X : -34, 52791 Y : 13, 08117 Z : 0 LODTYPES_DEPTH_ORPHANHD
-	"v_ind_rc_balec1",// : 4014637001 : X : -34, 54401 Y : 11, 32771 Z : 0 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_sta2_refl",// : 247606487 : X : -37, 0749 Y : 15, 1115 Z : 0, 250598 LODTYPES_DEPTH_ORPHANHD
-	"v_13_windowshadows1",// : 1821399648 : X : -36, 03794 Y : 18, 66558 Z : 6, 199983 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_sta2_shad",// : 1097838716 : X : -36, 04476 Y : 18, 67121 Z : 6, 198223 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_sta1_deta",// : 2017783441 : X : 14, 23966 Y : 9, 37739 Z : 0, 250261 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_sta1_over",// : 1173024569 : X : 14, 23966 Y : 9, 37739 Z : 0, 250261 LODTYPES_DEPTH_ORPHANHD
-	"v_ind_rc_rubbish",// : 3312442175 : X : 12, 20135 Y : 7, 262641 Z : 0, 008 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_sta1_refl",// : 1201184945 : X : 14, 23966 Y : 9, 37739 Z : 0, 250261 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_rear_over",// : 322572200 : X : 6, 212446 Y : 9, 186882 Z : 1, 800518 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_rear_deta",// : 2485072286 : X : 6, 212446 Y : 9, 186882 Z : 1, 800518 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_rear_refl",// : 3333853081 : X : 6, 212446 Y : 9, 186882 Z : 1, 800518 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_cor1_deta",// : 3558451145 : X : 6, 371046 Y : 13, 14045 Z : 7, 800101 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_cor1_over",// : 2343828719 : X : 6, 199555 Y : 13, 14053 Z : 7, 800101 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_cor1_refl",// : 2666448577 : X : 6, 371046 Y : 13, 14045 Z : 7, 800101 LODTYPES_DEPTH_ORPHANHD
-	"prop_rub_stool",// : 3387080792 : X : 22, 93847 Y : 8, 154065 Z : 6, 223009 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_off1_over",// : 51609690 : X : 21, 27645 Y : 11, 97579 Z : 7, 800121 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_off1_deta",// : 2236262851 : X : 21, 343 Y : 11, 95857 Z : 7, 79985 LODTYPES_DEPTH_ORPHANHD
-	"prop_fire_exting_3a",// : 605164496 : X : 23, 43737 Y : 7, 89049 Z : 6, 950372 LODTYPES_DEPTH_ORPHANHD
-	"prop_tv_05",// : 4189265615 : X : 16, 92011 Y : 12, 49191 Z : 7, 166889 LODTYPES_DEPTH_ORPHANHD
-	"v_corp_cd_desklamp",// : 1573992347 : X : 18, 27549 Y : 12, 82933 Z : 6, 801392 LODTYPES_DEPTH_ORPHANHD
-	"v_corp_cd_intercom",// : 3777920095 : X : 16, 80545 Y : 12, 94558 Z : 6, 796265 LODTYPES_DEPTH_ORPHANHD
-	"prop_dest_cctv_01",// : 705170205 : X : 16, 34369 Y : 13, 00701 Z : 7, 020281 LODTYPES_DEPTH_ORPHANHD
-	"v_corp_cd_heater",// : 4169845773 : X : 26, 89122 Y : 11, 63263 Z : 6, 011655 LODTYPES_DEPTH_ORPHANHD
-	"v_corp_cd_poncho",// : 2929368121 : X : 18, 06806 Y : 7, 962349 Z : 7, 055664 LODTYPES_DEPTH_ORPHANHD
-	"v_ret_fh_pizza01",// : 2870990013 : X : 17, 15672 Y : 13, 02112 Z : 6, 979846 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_off1_det2",// : 3583787008 : X : 17, 65784 Y : 12, 84862 Z : 6, 629454 LODTYPES_DEPTH_ORPHANHD
-	"prop_water_bottle_dark",//
-	"v_13_rec_off1_refl",// : 3229289116 : X : 21, 343 Y : 11, 95857 Z : 7, 79985 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_off1_exlamp",// : 2196674386 : X : 29, 20151 Y : 19, 97887 Z : 9, 897261 LODTYPES_DEPTH_ORPHANHD
-	"v_13_windowshadows5",// : 465957576 : X : 27, 31256 Y : 11, 92719 Z : 7, 895609 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_off1_shad",// : 1746793944 : X : 27, 28268 Y : 11, 60713 Z : 8, 199377 LODTYPES_DEPTH_ORPHANHD
-	"v_ind_rc_hanger",// : 483438098 : X : 18, 30114 Y : 7, 881586 Z : 7, 798479 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_off1_deta_ns",// : 1158228119 : X : 20, 3652 Y : 12, 77985 Z : 8, 832331 LODTYPES_DEPTH_ORPHANHD
-	"v_ilev_rc_doorel_l",// : 1853359271 : X : 15, 07467 Y : 17, 47609 Z : 5, 999972 LODTYPES_DEPTH_ORPHANHD
-	"v_ilev_rc_doorel_r",// : 980548213 : X : 12, 51463 Y : 17, 48533 Z : 5, 999972 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_wind_over",// : 1578828858 : X : 15, 514 Y : 20, 6368 Z : 7, 800021 LODTYPES_DEPTH_ORPHANHD
-	"prop_box_wood07a",// : 959133507 : X : 18, 66819 Y : 18, 4543 Z : 6, 113658 LODTYPES_DEPTH_ORPHANHD
-	"prop_boxpile_10a",//
-	"v_13_rec_wind_deta",// : 1711768644 : X : 15, 514 Y : 20, 6368 Z : 7, 800021 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_wind_card",// : 3823801313 : X : 15, 48661 Y : 21, 2551 Z : 6, 499477 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_wind_deta001",// : 1209056948 : X : 15, 514 Y : 20, 6368 Z : 7, 800021 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_wind_exlamp",// : 623604376 : X : 15, 50889 Y : 25, 10809 Z : 8, 419306 LODTYPES_DEPTH_ORPHANHD
-	"v_13_windowshadows4",// : 3443718029 : X : 15, 48536 Y : 25, 10151 Z : 8, 196571 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_wind_shad",// : 543064205 : X : 15, 52075 Y : 25, 07177 Z : 8, 199585 LODTYPES_DEPTH_ORPHANHD
-	"prop_ld_bale01",//
-	"v_13_rec_chop_over",// : 2582087435 : X : -21, 98889 Y : 13, 80788 Z : 9, 400029 LODTYPES_DEPTH_ORPHANHD
-	"v_ind_rc_cage",// : 1161000136 : X : -21, 47522 Y : 14, 92805 Z : 6, 000738 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_chop_deta",// : 2929381116 : X : -21, 98889 Y : 13, 80788 Z : 9, 400029 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_chop_card",// : 199323923 : X : -20, 18268 Y : 13, 75529 Z : 6, 500773 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_chop_refl",// : 927639804 : X : -21, 98889 Y : 13, 80788 Z : 9, 400029 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_chop_exlamp",// : 1545599635 : X : -21, 98734 Y : 18, 93975 Z : 8, 690485 LODTYPES_DEPTH_ORPHANHD
-	"v_13_windowshadows2",// : 157998348 : X : -20, 30954 Y : 17, 66557 Z : 8, 196102 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_chop_shad",// : 2664964398 : X : -20, 11275 Y : 17, 63519 Z : 8, 19938 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_main_deta",// : 1118370211 : X : -10, 752 Y : -5, 751761 Z : 3, 117328 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_main_lamp",// : 3206130463 : X : -10, 75537 Y : -5, 973235 Z : 6, 297043 LODTYPES_DEPTH_ORPHANHD
-	"prop_rcyl_win_03",//
-	"prop_box_wood04a",// : 3845178009 : X : -0, 078114 Y : 0, 768924 Z : 0, 001044 LODTYPES_DEPTH_ORPHANHD
-	"v_ind_rc_balep2",//
-	"v_ind_rc_balep3",//
-	"v_ind_rc_balep1",//
-	"v_13_rec_main_over",// : 16499716 : X : -10, 752 Y : -5, 751761 Z : 3, 117328 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_main_shre",// : 1984994623 : X : 0, 44944 Y : -9, 019174 Z : 2, 235501 LODTYPES_DEPTH_ORPHANHD
-	"v_ind_rc_fans",//
-	"v_ind_rc_rubbishppr",//
-	"v_ind_rc_rubbish2",//
-	"v_ind_rc_brush",// : 2294605585 : X : -3, 059305 Y : -3, 922024 Z : 0 LODTYPES_DEPTH_ORPHANHD
-	"v_ind_rc_shovel",// : 2737093276 : X : -1, 948132 Y : -3, 887685 Z : 0 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_main_card",// : 1393612916 : X : -14, 90939 Y : -5, 940733 Z : 0, 503729 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_main_refl",// : 3005665246 : X : -10, 752 Y : -5, 751761 Z : 3, 117328 LODTYPES_DEPTH_ORPHANHD
-	"prop_recycle_light",//
-	"v_ind_rc_balec3",//
-	"v_13_rec_she2_over",// : 3067913654 : X : -34, 21302 Y : -12, 02941 Z : 1, 62472 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_she2_deta",// : 821278968 : X : -34, 16096 Y : -12, 16807 Z : 1, 799176 LODTYPES_DEPTH_ORPHANHD
-	"v_ilev_rc_door3_r",// : 1765637986 : X : 13, 21391 Y : 0, 572568 Z : 1, 148592 LODTYPES_DEPTH_ORPHANHD
-	"v_ilev_rc_door3_l",// : 991116435 : X : 10, 61292 Y : 0, 572571 Z : 1, 148592 LODTYPES_DEPTH_ORPHANHD
+	"v_13_rec_sta2_over",
+	"v_13_rec_sta2_deta",
+	"prop_rcyl_win_02",
+	"prop_rcyl_win_01",
+	"v_ind_rc_balec2",
+	"v_ind_rc_balec1",
+	"v_13_rec_sta2_refl",
+	"v_13_windowshadows1",
+	"v_13_rec_sta2_shad",
+	"v_13_rec_sta1_deta",
+	"v_13_rec_sta1_over",
+	"v_ind_rc_rubbish",
+	"v_13_rec_sta1_refl",
+	"v_13_rec_rear_over",
+	"v_13_rec_rear_deta",
+	"v_13_rec_rear_refl",
+	"v_13_rec_cor1_deta",
+	"v_13_rec_cor1_over",
+	"v_13_rec_cor1_refl",
+	"prop_rub_stool",
+	"v_13_rec_off1_over",
+	"v_13_rec_off1_deta",
+	"prop_fire_exting_3a",
+	"prop_tv_05",
+	"v_corp_cd_desklamp",
+	"v_corp_cd_intercom",
+	"prop_dest_cctv_01",
+	"v_corp_cd_heater",
+	"v_corp_cd_poncho",
+	"v_ret_fh_pizza01",
+	"v_13_rec_off1_det2",
+	"prop_water_bottle_dark",
+	"v_13_rec_off1_refl",
+	"v_13_rec_off1_exlamp",
+	"v_13_windowshadows5",
+	"v_13_rec_off1_shad",
+	"v_ind_rc_hanger",
+	"v_13_rec_off1_deta_ns",
+	"v_ilev_rc_doorel_l",
+	"v_ilev_rc_doorel_r",
+	"v_13_rec_wind_over",
+	"prop_box_wood07a",
+	"prop_boxpile_10a",
+	"v_13_rec_wind_deta",
+	"v_13_rec_wind_card",
+	"v_13_rec_wind_deta001",
+	"v_13_rec_wind_exlamp",
+	"v_13_windowshadows4",
+	"v_13_rec_wind_shad",
+	"prop_ld_bale01",
+	"v_13_rec_chop_over",
+	"v_ind_rc_cage",
+	"v_13_rec_chop_deta",
+	"v_13_rec_chop_card",
+	"v_13_rec_chop_refl",
+	"v_13_rec_chop_exlamp",
+	"v_13_windowshadows2",
+	"v_13_rec_chop_shad",
+	"v_13_rec_main_deta",
+	"v_13_rec_main_lamp",
+	"prop_rcyl_win_03",
+	"prop_box_wood04a",
+	"v_ind_rc_balep2",
+	"v_ind_rc_balep3",
+	"v_ind_rc_balep1",
+	"v_13_rec_main_over",
+	"v_13_rec_main_shre",
+	"v_ind_rc_fans",
+	"v_ind_rc_rubbishppr",
+	"v_ind_rc_rubbish2",
+	"v_ind_rc_brush",
+	"v_ind_rc_shovel",
+	"v_13_rec_main_card",
+	"v_13_rec_main_refl",
+	"prop_recycle_light",
+	"v_ind_rc_balec3",
+	"v_13_rec_she2_over",
+	"v_13_rec_she2_deta",
+	"v_ilev_rc_door3_r",
+	"v_ilev_rc_door3_l",
 	"v_13_rec_chop_card",
 	"v_13_rec_chop_deta",
 	"v_13_rec_chop_exlamp",
@@ -1542,265 +1230,265 @@ std::vector<char*> IPL_PROPS_SCRAP = {
 	"v_13_windowshadows2",
 	"v_13_windowshadows4",
 	"v_13_windowshadows5",
-	"prop_rcyl_win_02",// : 2377864610 : X : -36, 03803 Y : 18, 58554 Z : 8, 199896 LODTYPES_DEPTH_ORPHANHD
-	"prop_rcyl_win_01",// : 1115558725 : X : -36, 03803 Y : 18, 48554 Z : 4, 199896 LODTYPES_DEPTH_ORPHANHD
-	"v_ind_rc_balec2",// : 378890333 : X : -34, 52791 Y : 13, 08117 Z : 0 LODTYPES_DEPTH_ORPHANHD
-	"v_ind_rc_balec1",// : 4014637001 : X : -34, 54401 Y : 11, 32771 Z : 0 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_sta2_refl",// : 247606487 : X : -37, 0749 Y : 15, 1115 Z : 0, 250598 LODTYPES_DEPTH_ORPHANHD
-	"v_13_windowshadows1",// : 1821399648 : X : -36, 03794 Y : 18, 66558 Z : 6, 199983 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_sta2_shad",// : 1097838716 : X : -36, 04476 Y : 18, 67121 Z : 6, 198223 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_sta1_deta",// : 2017783441 : X : 14, 23966 Y : 9, 37739 Z : 0, 250261 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_sta1_over",// : 1173024569 : X : 14, 23966 Y : 9, 37739 Z : 0, 250261 LODTYPES_DEPTH_ORPHANHD
-	"v_ind_rc_balec1",// : 302239122 : X : 14, 19215 Y : 5, 492913 Z : 0 LODTYPES_DEPTH_ORPHANHD
-	"v_ind_rc_balec2",// : 195432592 : X : 14, 21845 Y : 7, 125601 Z : 0 LODTYPES_DEPTH_ORPHANHD
-	"v_ind_rc_rubbish",// : 3312442175 : X : 12, 20135 Y : 7, 262641 Z : 0, 008 LODTYPES_DEPTH_ORPHANHD
-	"v_ind_rc_balec1",// : 1430547344 : X : 12, 65382 Y : 8, 533257 Z : 0 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_sta1_refl",// : 1201184945 : X : 14, 23966 Y : 9, 37739 Z : 0, 250261 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_rear_over",// : 322572200 : X : 6, 212446 Y : 9, 186882 Z : 1, 800518 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_rear_deta",// : 2485072286 : X : 6, 212446 Y : 9, 186882 Z : 1, 800518 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_rear_refl",// : 3333853081 : X : 6, 212446 Y : 9, 186882 Z : 1, 800518 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_cor1_deta",// : 3558451145 : X : 6, 371046 Y : 13, 14045 Z : 7, 800101 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_cor1_over",// : 2343828719 : X : 6, 199555 Y : 13, 14053 Z : 7, 800101 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_cor1_refl",// : 2666448577 : X : 6, 371046 Y : 13, 14045 Z : 7, 800101 LODTYPES_DEPTH_ORPHANHD
-	"prop_rcyl_win_02",// : 1303688441 : X : 27, 23301 Y : 9, 732134 Z : 8, 199894 LODTYPES_DEPTH_ORPHANHD
-	"prop_rcyl_win_01",// : 920397884 : X : 27, 13301 Y : 13, 48213 Z : 8, 199894 LODTYPES_DEPTH_ORPHANHD
-	"prop_rub_stool",// : 3387080792 : X : 22, 93847 Y : 8, 154065 Z : 6, 223009 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_off1_over",// : 51609690 : X : 21, 27645 Y : 11, 97579 Z : 7, 800121 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_off1_deta",// : 2236262851 : X : 21, 343 Y : 11, 95857 Z : 7, 79985 LODTYPES_DEPTH_ORPHANHD
-	"prop_fire_exting_3a",// : 605164496 : X : 23, 43737 Y : 7, 89049 Z : 6, 950372 LODTYPES_DEPTH_ORPHANHD
-	"prop_tv_05",// : 4189265615 : X : 16, 92011 Y : 12, 49191 Z : 7, 166889 LODTYPES_DEPTH_ORPHANHD
-	"v_corp_cd_desklamp",// : 1573992347 : X : 18, 27549 Y : 12, 82933 Z : 6, 801392 LODTYPES_DEPTH_ORPHANHD
-	"v_corp_cd_intercom",// : 3777920095 : X : 16, 80545 Y : 12, 94558 Z : 6, 796265 LODTYPES_DEPTH_ORPHANHD
-	"prop_dest_cctv_01",// : 705170205 : X : 16, 34369 Y : 13, 00701 Z : 7, 020281 LODTYPES_DEPTH_ORPHANHD
-	"v_corp_cd_heater",// : 4169845773 : X : 26, 89122 Y : 11, 63263 Z : 6, 011655 LODTYPES_DEPTH_ORPHANHD
-	"v_corp_cd_poncho",// : 2929368121 : X : 18, 06806 Y : 7, 962349 Z : 7, 055664 LODTYPES_DEPTH_ORPHANHD
-	"v_corp_cd_poncho",// : 2747193130 : X : 18, 57523 Y : 7, 962349 Z : 7, 055664 LODTYPES_DEPTH_ORPHANHD
-	"v_ret_fh_pizza01",// : 2870990013 : X : 17, 15672 Y : 13, 02112 Z : 6, 979846 LODTYPES_DEPTH_ORPHANHD
-	"v_corp_cd_heater",// : 3070208464 : X : 17, 56959 Y : 15, 60773 Z : 6, 011655 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_off1_det2",// : 3583787008 : X : 17, 65784 Y : 12, 84862 Z : 6, 629454 LODTYPES_DEPTH_ORPHANHD
-	"prop_rub_stool",// : 3913981803 : X : 15, 76751 Y : 14, 77157 Z : 6, 223009 LODTYPES_DEPTH_ORPHANHD
-	"prop_water_bottle_dark",//
-	"prop_water_bottle_dark",//
-	"prop_water_bottle_dark",//
-	"prop_water_bottle_dark",//
-	"v_13_rec_off1_refl",// : 3229289116 : X : 21, 343 Y : 11, 95857 Z : 7, 79985 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_off1_exlamp",// : 2196674386 : X : 29, 20151 Y : 19, 97887 Z : 9, 897261 LODTYPES_DEPTH_ORPHANHD
-	"v_13_windowshadows5",// : 465957576 : X : 27, 31256 Y : 11, 92719 Z : 7, 895609 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_off1_shad",// : 1746793944 : X : 27, 28268 Y : 11, 60713 Z : 8, 199377 LODTYPES_DEPTH_ORPHANHD
-	"v_ind_rc_hanger",// : 483438098 : X : 18, 30114 Y : 7, 881586 Z : 7, 798479 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_off1_deta_ns",// : 1158228119 : X : 20, 3652 Y : 12, 77985 Z : 8, 832331 LODTYPES_DEPTH_ORPHANHD
-	"v_ilev_rc_doorel_l",// : 1853359271 : X : 15, 07467 Y : 17, 47609 Z : 5, 999972 LODTYPES_DEPTH_ORPHANHD
-	"v_ilev_rc_doorel_r",// : 980548213 : X : 12, 51463 Y : 17, 48533 Z : 5, 999972 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_wind_over",// : 1578828858 : X : 15, 514 Y : 20, 6368 Z : 7, 800021 LODTYPES_DEPTH_ORPHANHD
-	"prop_box_wood07a",// : 959133507 : X : 18, 66819 Y : 18, 4543 Z : 6, 113658 LODTYPES_DEPTH_ORPHANHD
-	"prop_boxpile_10a",//
-	"prop_boxpile_10a",//
-	"prop_boxpile_10a",//
-	"prop_boxpile_10a",//
-	"prop_boxpile_10a",//
-	"prop_rcyl_win_01",// : 740029729 : X : 9, 889025 Y : 24, 92211 Z : 8, 200102 LODTYPES_DEPTH_ORPHANHD
-	"prop_rcyl_win_02",// : 3600800763 : X : 6, 139026 Y : 25, 02211 Z : 8, 200102 LODTYPES_DEPTH_ORPHANHD
-	"prop_rcyl_win_01",// : 1174324986 : X : 24, 88903 Y : 24, 92211 Z : 8, 200102 LODTYPES_DEPTH_ORPHANHD
-	"prop_rcyl_win_02",// : 3688154830 : X : 13, 63902 Y : 25, 02211 Z : 8, 200102 LODTYPES_DEPTH_ORPHANHD
-	"prop_rcyl_win_02",// : 2870046021 : X : 21, 13903 Y : 25, 02211 Z : 8, 200102 LODTYPES_DEPTH_ORPHANHD
-	"prop_rcyl_win_02",// : 1381512282 : X : 17, 38902 Y : 25, 02211 Z : 8, 200102 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_wind_deta",// : 1711768644 : X : 15, 514 Y : 20, 6368 Z : 7, 800021 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_wind_card",// : 3823801313 : X : 15, 48661 Y : 21, 2551 Z : 6, 499477 LODTYPES_DEPTH_ORPHANHD
-	"prop_box_wood07a",// : 1294558871 : X : 16, 97157 Y : 18, 29211 Z : 6, 113658 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_wind_deta001",// : 1209056948 : X : 15, 514 Y : 20, 6368 Z : 7, 800021 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_wind_exlamp",// : 623604376 : X : 15, 50889 Y : 25, 10809 Z : 8, 419306 LODTYPES_DEPTH_ORPHANHD
-	"v_13_windowshadows4",// : 3443718029 : X : 15, 48536 Y : 25, 10151 Z : 8, 196571 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_wind_shad",// : 543064205 : X : 15, 52075 Y : 25, 07177 Z : 8, 199585 LODTYPES_DEPTH_ORPHANHD
-	"prop_box_wood07a",// : 1199300617 : X : 5, 03868 Y : 21, 3706 Z : 6, 113658 LODTYPES_DEPTH_ORPHANHD
-	"prop_rcyl_win_01",// : 3685694781 : X : -23, 86275 Y : 17, 48553 Z : 8, 199897 LODTYPES_DEPTH_ORPHANHD
-	"prop_rcyl_win_02",// : 2608474932 : X : -20, 11275 Y : 17, 58553 Z : 8, 199897 LODTYPES_DEPTH_ORPHANHD
-	"prop_rcyl_win_02",// : 207168716 : X : -16, 36275 Y : 17, 58553 Z : 8, 199897 LODTYPES_DEPTH_ORPHANHD
-	"prop_rcyl_win_01",// : 213862550 : X : -12, 61275 Y : 17, 48553 Z : 8, 199897 LODTYPES_DEPTH_ORPHANHD
-	"prop_rcyl_win_02",// : 410344918 : X : -8, 862752 Y : 17, 58553 Z : 8, 199897 LODTYPES_DEPTH_ORPHANHD
-	"prop_rcyl_win_02",// : 1406294673 : X : -31, 36276 Y : 17, 58553 Z : 8, 199897 LODTYPES_DEPTH_ORPHANHD
-	"prop_rcyl_win_01",// : 3746870980 : X : -27, 61276 Y : 17, 48553 Z : 8, 199897 LODTYPES_DEPTH_ORPHANHD
-	"prop_ld_bale01",//
-	"prop_ld_bale01",//
-	"prop_ld_bale01",//
-	"prop_ld_bale01",//
-	"prop_ld_bale01",//
-	"prop_ld_bale01",//
-	"v_13_rec_chop_over",// : 2582087435 : X : -21, 98889 Y : 13, 80788 Z : 9, 400029 LODTYPES_DEPTH_ORPHANHD
-	"v_ind_rc_cage",// : 1161000136 : X : -21, 47522 Y : 14, 92805 Z : 6, 000738 LODTYPES_DEPTH_ORPHANHD
-	"v_ind_rc_rubbish",// : 2403362048 : X : -21, 17676 Y : 12, 35151 Z : 6, 008 LODTYPES_DEPTH_ORPHANHD
-	"v_ind_rc_rubbish",// : 2569864433 : X : -28, 63801 Y : 13, 3436 Z : 6, 010359 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_chop_deta",// : 2929381116 : X : -21, 98889 Y : 13, 80788 Z : 9, 400029 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_chop_card",// : 199323923 : X : -20, 18268 Y : 13, 75529 Z : 6, 500773 LODTYPES_DEPTH_ORPHANHD
-	"v_ind_rc_rubbishppr",// : 2447213022 : X : -24, 41922 Y : 13, 37727 Z : 6, 007962 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_chop_refl",// : 927639804 : X : -21, 98889 Y : 13, 80788 Z : 9, 400029 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_chop_exlamp",// : 1545599635 : X : -21, 98734 Y : 18, 93975 Z : 8, 690485 LODTYPES_DEPTH_ORPHANHD
-	"v_13_windowshadows2",// : 157998348 : X : -20, 30954 Y : 17, 66557 Z : 8, 196102 LODTYPES_DEPTH_ORPHANHD
-	"prop_ld_bale01",// : 197199555 : X : -28, 25599 Y : 12, 61305 Z : 6 LODTYPES_DEPTH_ORPHANHD
-	"prop_box_wood07a",// : 3109873612 : X : -15, 26297 Y : 10, 84949 Z : 6, 113658 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_chop_shad",// : 2664964398 : X : -20, 11275 Y : 17, 63519 Z : 8, 19938 LODTYPES_DEPTH_ORPHANHD
-	"prop_ld_bale01",//
-	"prop_ld_bale01",//
-	"prop_ld_bale01",//
-	"prop_ld_bale01",//
-	"prop_ld_bale01",//
-	"prop_ld_bale01",//
-	"prop_ld_bale01",//
-	"prop_ld_bale01",//
-	"prop_ld_bale01",//
-	"prop_ld_bale01",//
-	"prop_ld_bale01",//
-	"v_13_rec_main_deta",// : 1118370211 : X : -10, 752 Y : -5, 751761 Z : 3, 117328 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_main_lamp",// : 3206130463 : X : -10, 75537 Y : -5, 973235 Z : 6, 297043 LODTYPES_DEPTH_ORPHANHD
-	"prop_rcyl_win_03",//
-	"prop_rcyl_win_03",//
-	"prop_rcyl_win_03",//
-	"prop_rcyl_win_03",//
-	"prop_rcyl_win_03",//
-	"prop_rcyl_win_03",//
-	"prop_rcyl_win_03",//
-	"prop_rcyl_win_03",//
-	"prop_rcyl_win_03",//
-	"prop_rcyl_win_03",//
-	"prop_box_wood04a",// : 3845178009 : X : -0, 078114 Y : 0, 768924 Z : 0, 001044 LODTYPES_DEPTH_ORPHANHD
-	"prop_box_wood04a",// : 557170551 : X : -21, 97403 Y : -12, 69401 Z : 0, 001044 LODTYPES_DEPTH_ORPHANHD
-	"prop_box_wood07a",// : 3762954438 : X : -28, 79346 Y : -6, 619852 Z : 0, 089 LODTYPES_DEPTH_ORPHANHD
-	"prop_box_wood07a",// : 2909435365 : X : -28, 73815 Y : -8, 390873 Z : 0, 089044 LODTYPES_DEPTH_ORPHANHD
-	"v_ind_rc_balep2",//
-	"v_ind_rc_balep3",//
-	"v_ind_rc_balep1",//
-	"v_ind_rc_balep3",//
-	"v_ind_rc_balep3",//
-	"v_ind_rc_balep2",//
-	"v_ind_rc_balep2",//
-	"v_ind_rc_balep2",//
-	"v_ind_rc_balep1",//
-	"v_ind_rc_balep1",//
-	"v_ind_rc_balep1",//
-	"v_ind_rc_balep1",//
-	"v_ind_rc_balep1",//
-	"v_ind_rc_balep2",//
-	"v_ind_rc_balep2",//
-	"v_ind_rc_balep2",//
-	"v_ind_rc_balep2",//
-	"v_ind_rc_balep2",//
-	"v_ind_rc_balep1",//
-	"v_ind_rc_balep1",//",//
-	"v_ind_rc_balep1",//
-	"v_ind_rc_balep1",//
-	"v_ind_rc_balep1",//
-	"v_ind_rc_balep1",//
-	"v_ind_rc_balep1",//
-	"v_ind_rc_balep1",//
-	"v_ind_rc_balep1",//
-	"v_ind_rc_balep3",//
-	"v_ind_rc_balep3",//
-	"v_ind_rc_balep3",//
-	"v_ind_rc_balep2",//
-	"v_ind_rc_balep2",//
-	"v_ind_rc_balep1",//
-	"v_ind_rc_balep3",//
-	"v_ind_rc_balep3",//
-	"v_ind_rc_balep3",//
-	"v_ind_rc_balep3",//
-	"v_ind_rc_balep3",//
-	"v_ind_rc_balep3",//
-	"v_ind_rc_balep3",//
-	"v_ind_rc_balep3",//
-	"v_ind_rc_balep3",//
-	"v_ind_rc_balep2",//
-	"v_ind_rc_balep1",//
-	"v_ind_rc_balep1",//
-	"v_ind_rc_balep1",//
-	"v_ind_rc_balep1",//
-	"v_ind_rc_balep2",//
-	"v_ind_rc_balep1",//
-	"v_ind_rc_balep3",//
-	"v_ind_rc_balep2",//
-	"v_ind_rc_balep2",//
-	"v_ind_rc_balep1",//
-	"v_ind_rc_balep1",//
-	"v_ind_rc_balep1",//
-	"v_ind_rc_balep1",//
-	"v_ind_rc_balep1",//",//
-	"v_ind_rc_balep1",//
-	"v_ind_rc_balep2",//
-	"v_ind_rc_balep3",//
-	"v_ind_rc_balep1",//
-	"v_ind_rc_balep3",//
-	"v_ind_rc_balep1",//
-	"v_ind_rc_balep2",//
-	"v_ind_rc_balep3",//
-	"v_ind_rc_balep1",//
-	"v_ind_rc_balep1",//
-	"v_ind_rc_balep1",// : 1795618358 : X : -12, 12384 Y : -7, 21904 Z : 0 LODTYPES_DEPTH_ORPHANHD
-	"v_ind_rc_balep1",// : 2683776748 : X : -13, 29945 Y : -7, 55834 Z : 0 LODTYPES_DEPTH_ORPHANHD
-	"v_ind_rc_balep1",// : 4266386254 : X : -8, 105227 Y : -0, 775635 Z : 0 LODTYPES_DEPTH_ORPHANHD
-	"prop_box_wood04a",// : 778793526 : X : -24, 49049 Y : -11, 42914 Z : 0, 001044 LODTYPES_DEPTH_ORPHANHD
-	"prop_box_wood04a",// : 535656681 : X : -23, 79013 Y : -13, 0984 Z : 0, 001044 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_main_over",// : 16499716 : X : -10, 752 Y : -5, 751761 Z : 3, 117328 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_main_shre",// : 1984994623 : X : 0, 44944 Y : -9, 019174 Z : 2, 235501 LODTYPES_DEPTH_ORPHANHD
-	"v_ind_rc_fans",//
-	"v_ind_rc_fans",//
-	"v_ind_rc_fans",//
-	"v_ind_rc_cage",// : 1065823016 : X : -2, 571568 Y : -7, 583492 Z : 0 LODTYPES_DEPTH_ORPHANHD
-	"v_ind_rc_rubbish",//
-	"v_ind_rc_rubbish",//
-	"v_ind_rc_rubbish",//
-	"v_ind_rc_rubbish",//
-	"v_ind_rc_rubbishppr",//
-	"v_ind_rc_rubbishppr",//
-	"v_ind_rc_rubbishppr",//
-	"v_ind_rc_rubbishppr",//
-	"v_ind_rc_rubbishppr",//
-	"v_ind_rc_rubbish2",//
-	"v_ind_rc_rubbish2",//
-	"v_ind_rc_rubbish2",//
-	"v_ind_rc_brush",// : 2294605585 : X : -3, 059305 Y : -3, 922024 Z : 0 LODTYPES_DEPTH_ORPHANHD
-	"v_ind_rc_shovel",// : 2737093276 : X : -1, 948132 Y : -3, 887685 Z : 0 LODTYPES_DEPTH_ORPHANHD
-	"v_ind_rc_rubbish2",// : 1868376995 : X : -0, 612995 Y : -4, 29877 Z : 0, 008545 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_main_card",// : 1393612916 : X : -14, 90939 Y : -5, 940733 Z : 0, 503729 LODTYPES_DEPTH_ORPHANHD
-	"v_ind_rc_rubbishppr",// : 2644996870 : X : -16, 04118 Y : -1, 448059 Z : 0, 010729 LODTYPES_DEPTH_ORPHANHD
-	"v_ind_rc_rubbishppr",// : 356477944 : X : -9, 721573 Y : -1, 035455 Z : 0, 010729 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_main_refl",// : 3005665246 : X : -10, 752 Y : -5, 751761 Z : 3, 117328 LODTYPES_DEPTH_ORPHANHD
-	"v_ind_rc_balep2",// : 2584984960 : X : -12, 46292 Y : -0, 941858 Z : 0 LODTYPES_DEPTH_ORPHANHD
-	"prop_recycle_light",//
-	"prop_recycle_light",//
-	"prop_recycle_light",//
-	"prop_recycle_light",//
-	"v_ind_rc_balec3",//
-	"v_ind_rc_balec3",//
-	"v_ind_rc_balec3",//
-	"v_ind_rc_balec2",//
-	"v_ind_rc_balec3",//
-	"v_ind_rc_balec3",//",//",//
-	"v_ind_rc_balec1",//
-	"v_ind_rc_balec1",//
-	"v_ind_rc_balec2",//
-	"v_ind_rc_balec1",//
-	"v_ilev_rc_door1",//
-	"v_ilev_rc_door1",//
-	"v_ilev_rc_door1",//
-	"v_ilev_rc_door1",//
-	"v_ilev_rc_door1",//
-	"v_ilev_rc_door1",//
-	"v_ilev_rc_door1",//
-	"v_ilev_rc_door1",//
-	"v_ilev_rc_door1",//
-	"v_ilev_rc_door1",//
-	"v_ilev_rc_door1",//
-	"v_ilev_rc_door1",//
-	"v_ilev_rc_door1",//
-	"v_ilev_rc_door1",//",//
-	"v_ilev_rc_door1",//
-	"v_ilev_rc_door1",//
-	"v_ilev_rc_door1",//
-	"v_ilev_rc_door1",//
-	"v_13_rec_she2_over",// : 3067913654 : X : -34, 21302 Y : -12, 02941 Z : 1, 62472 LODTYPES_DEPTH_ORPHANHD
-	"v_13_rec_she2_deta",// : 821278968 : X : -34, 16096 Y : -12, 16807 Z : 1, 799176 LODTYPES_DEPTH_ORPHANHD
-	"v_ilev_rc_door3_r",// : 1765637986 : X : 13, 21391 Y : 0, 572568 Z : 1, 148592 LODTYPES_DEPTH_ORPHANHD
-	"v_ilev_rc_door3_l",// : 991116435 : X : 10, 61292 Y : 0, 572571 Z : 1, 148592 LODTYPES_DEPTH_ORPHANHD
-	"v_ilev_rc_door3_r",// : 3387314603 : X : -6, 971426 Y : 17, 776 Z : 1, 148965 LODTYPES_DEPTH_ORPHANHD
-	"v_ilev_rc_door3_l",// : 6754215 : X : -6, 971424 Y : 20, 37699 Z : 1, 148965 LODTYPES_DEPTH_ORPHANHD
+	"prop_rcyl_win_02",
+	"prop_rcyl_win_01",
+	"v_ind_rc_balec2",
+	"v_ind_rc_balec1",
+	"v_13_rec_sta2_refl",
+	"v_13_windowshadows1",
+	"v_13_rec_sta2_shad",
+	"v_13_rec_sta1_deta",
+	"v_13_rec_sta1_over",
+	"v_ind_rc_balec1",
+	"v_ind_rc_balec2",
+	"v_ind_rc_rubbish",
+	"v_ind_rc_balec1",
+	"v_13_rec_sta1_refl",
+	"v_13_rec_rear_over",
+	"v_13_rec_rear_deta",
+	"v_13_rec_rear_refl",
+	"v_13_rec_cor1_deta",
+	"v_13_rec_cor1_over",
+	"v_13_rec_cor1_refl",
+	"prop_rcyl_win_02",
+	"prop_rcyl_win_01",
+	"prop_rub_stool",
+	"v_13_rec_off1_over",
+	"v_13_rec_off1_deta",
+	"prop_fire_exting_3a",
+	"prop_tv_05",
+	"v_corp_cd_desklamp",
+	"v_corp_cd_intercom",
+	"prop_dest_cctv_01",
+	"v_corp_cd_heater",
+	"v_corp_cd_poncho",
+	"v_corp_cd_poncho",
+	"v_ret_fh_pizza01",
+	"v_corp_cd_heater",
+	"v_13_rec_off1_det2",
+	"prop_rub_stool",
+	"prop_water_bottle_dark",
+	"prop_water_bottle_dark",
+	"prop_water_bottle_dark",
+	"prop_water_bottle_dark",
+	"v_13_rec_off1_refl",
+	"v_13_rec_off1_exlamp",
+	"v_13_windowshadows5",
+	"v_13_rec_off1_shad",
+	"v_ind_rc_hanger",
+	"v_13_rec_off1_deta_ns",
+	"v_ilev_rc_doorel_l",
+	"v_ilev_rc_doorel_r",
+	"v_13_rec_wind_over",
+	"prop_box_wood07a",
+	"prop_boxpile_10a",
+	"prop_boxpile_10a",
+	"prop_boxpile_10a",
+	"prop_boxpile_10a",
+	"prop_boxpile_10a",
+	"prop_rcyl_win_01",
+	"prop_rcyl_win_02",
+	"prop_rcyl_win_01",
+	"prop_rcyl_win_02",
+	"prop_rcyl_win_02",
+	"prop_rcyl_win_02",
+	"v_13_rec_wind_deta",
+	"v_13_rec_wind_card",
+	"prop_box_wood07a",
+	"v_13_rec_wind_deta001",
+	"v_13_rec_wind_exlamp",
+	"v_13_windowshadows4",
+	"v_13_rec_wind_shad",
+	"prop_box_wood07a",
+	"prop_rcyl_win_01",
+	"prop_rcyl_win_02",
+	"prop_rcyl_win_02",
+	"prop_rcyl_win_01",
+	"prop_rcyl_win_02",
+	"prop_rcyl_win_02",
+	"prop_rcyl_win_01",
+	"prop_ld_bale01",
+	"prop_ld_bale01",
+	"prop_ld_bale01",
+	"prop_ld_bale01",
+	"prop_ld_bale01",
+	"prop_ld_bale01",
+	"v_13_rec_chop_over",
+	"v_ind_rc_cage",
+	"v_ind_rc_rubbish",
+	"v_ind_rc_rubbish",
+	"v_13_rec_chop_deta",
+	"v_13_rec_chop_card",
+	"v_ind_rc_rubbishppr",
+	"v_13_rec_chop_refl",
+	"v_13_rec_chop_exlamp",
+	"v_13_windowshadows2",
+	"prop_ld_bale01",
+	"prop_box_wood07a",
+	"v_13_rec_chop_shad",
+	"prop_ld_bale01",
+	"prop_ld_bale01",
+	"prop_ld_bale01",
+	"prop_ld_bale01",
+	"prop_ld_bale01",
+	"prop_ld_bale01",
+	"prop_ld_bale01",
+	"prop_ld_bale01",
+	"prop_ld_bale01",
+	"prop_ld_bale01",
+	"prop_ld_bale01",
+	"v_13_rec_main_deta",
+	"v_13_rec_main_lamp",
+	"prop_rcyl_win_03",
+	"prop_rcyl_win_03",
+	"prop_rcyl_win_03",
+	"prop_rcyl_win_03",
+	"prop_rcyl_win_03",
+	"prop_rcyl_win_03",
+	"prop_rcyl_win_03",
+	"prop_rcyl_win_03",
+	"prop_rcyl_win_03",
+	"prop_rcyl_win_03",
+	"prop_box_wood04a",
+	"prop_box_wood04a",
+	"prop_box_wood07a",
+	"prop_box_wood07a",
+	"v_ind_rc_balep2",
+	"v_ind_rc_balep3",
+	"v_ind_rc_balep1",
+	"v_ind_rc_balep3",
+	"v_ind_rc_balep3",
+	"v_ind_rc_balep2",
+	"v_ind_rc_balep2",
+	"v_ind_rc_balep2",
+	"v_ind_rc_balep1",
+	"v_ind_rc_balep1",
+	"v_ind_rc_balep1",
+	"v_ind_rc_balep1",
+	"v_ind_rc_balep1",
+	"v_ind_rc_balep2",
+	"v_ind_rc_balep2",
+	"v_ind_rc_balep2",
+	"v_ind_rc_balep2",
+	"v_ind_rc_balep2",
+	"v_ind_rc_balep1",
+	"v_ind_rc_balep1",
+	"v_ind_rc_balep1",
+	"v_ind_rc_balep1",
+	"v_ind_rc_balep1",
+	"v_ind_rc_balep1",
+	"v_ind_rc_balep1",
+	"v_ind_rc_balep1",
+	"v_ind_rc_balep1",
+	"v_ind_rc_balep3",
+	"v_ind_rc_balep3",
+	"v_ind_rc_balep3",
+	"v_ind_rc_balep2",
+	"v_ind_rc_balep2",
+	"v_ind_rc_balep1",
+	"v_ind_rc_balep3",
+	"v_ind_rc_balep3",
+	"v_ind_rc_balep3",
+	"v_ind_rc_balep3",
+	"v_ind_rc_balep3",
+	"v_ind_rc_balep3",
+	"v_ind_rc_balep3",
+	"v_ind_rc_balep3",
+	"v_ind_rc_balep3",
+	"v_ind_rc_balep2",
+	"v_ind_rc_balep1",
+	"v_ind_rc_balep1",
+	"v_ind_rc_balep1",
+	"v_ind_rc_balep1",
+	"v_ind_rc_balep2",
+	"v_ind_rc_balep1",
+	"v_ind_rc_balep3",
+	"v_ind_rc_balep2",
+	"v_ind_rc_balep2",
+	"v_ind_rc_balep1",
+	"v_ind_rc_balep1",
+	"v_ind_rc_balep1",
+	"v_ind_rc_balep1",
+	"v_ind_rc_balep1",
+	"v_ind_rc_balep1",
+	"v_ind_rc_balep2",
+	"v_ind_rc_balep3",
+	"v_ind_rc_balep1",
+	"v_ind_rc_balep3",
+	"v_ind_rc_balep1",
+	"v_ind_rc_balep2",
+	"v_ind_rc_balep3",
+	"v_ind_rc_balep1",
+	"v_ind_rc_balep1",
+	"v_ind_rc_balep1",
+	"v_ind_rc_balep1",
+	"v_ind_rc_balep1",
+	"prop_box_wood04a",
+	"prop_box_wood04a",
+	"v_13_rec_main_over",
+	"v_13_rec_main_shre",
+	"v_ind_rc_fans",
+	"v_ind_rc_fans",
+	"v_ind_rc_fans",
+	"v_ind_rc_cage",
+	"v_ind_rc_rubbish",
+	"v_ind_rc_rubbish",
+	"v_ind_rc_rubbish",
+	"v_ind_rc_rubbish",
+	"v_ind_rc_rubbishppr",
+	"v_ind_rc_rubbishppr",
+	"v_ind_rc_rubbishppr",
+	"v_ind_rc_rubbishppr",
+	"v_ind_rc_rubbishppr",
+	"v_ind_rc_rubbish2",
+	"v_ind_rc_rubbish2",
+	"v_ind_rc_rubbish2",
+	"v_ind_rc_brush",
+	"v_ind_rc_shovel",
+	"v_ind_rc_rubbish2",
+	"v_13_rec_main_card",
+	"v_ind_rc_rubbishppr",
+	"v_ind_rc_rubbishppr",
+	"v_13_rec_main_refl",
+	"v_ind_rc_balep2",
+	"prop_recycle_light",
+	"prop_recycle_light",
+	"prop_recycle_light",
+	"prop_recycle_light",
+	"v_ind_rc_balec3",
+	"v_ind_rc_balec3",
+	"v_ind_rc_balec3",
+	"v_ind_rc_balec2",
+	"v_ind_rc_balec3",
+	"v_ind_rc_balec3",
+	"v_ind_rc_balec1",
+	"v_ind_rc_balec1",
+	"v_ind_rc_balec2",
+	"v_ind_rc_balec1",
+	"v_ilev_rc_door1",
+	"v_ilev_rc_door1",
+	"v_ilev_rc_door1",
+	"v_ilev_rc_door1",
+	"v_ilev_rc_door1",
+	"v_ilev_rc_door1",
+	"v_ilev_rc_door1",
+	"v_ilev_rc_door1",
+	"v_ilev_rc_door1",
+	"v_ilev_rc_door1",
+	"v_ilev_rc_door1",
+	"v_ilev_rc_door1",
+	"v_ilev_rc_door1",
+	"v_ilev_rc_door1",
+	"v_ilev_rc_door1",
+	"v_ilev_rc_door1",
+	"v_ilev_rc_door1",
+	"v_ilev_rc_door1",
+	"v_13_rec_she2_over",
+	"v_13_rec_she2_deta",
+	"v_ilev_rc_door3_r",
+	"v_ilev_rc_door3_l",
+	"v_ilev_rc_door3_r",
+	"v_ilev_rc_door3_l",
 };
 
 std::vector<const char*> IPL_PROPS_NIGHTCLUB_COMMON_PROPS = {
@@ -1948,7 +1636,6 @@ std::vector<const char*> IPL_PROPS_NIGHTCLUB_COMMON_PROPS = {
 	"ba_work_light_clutter002",
 	"ba_int01_bacl_mad_posters",
 	"ba_int01_mule",
-	//
 };
 
 std::vector<const char*> IPL_PROPS_NIGHTCLUB_EDGY = { //Dixon posters
@@ -2014,26 +1701,7 @@ std::vector<const char*> IPL_PROPS_NIGHTCLUB_EDGY = { //Dixon posters
 	"ba_club_bathmirror",
 	"ba_club_elevator_01",
 	"ba_club_elevator_02",
-	//"ba_coke_doll",
-	//"ba_curtain1",
-	//"ba_curtain2",
-	//"ba_curtain3",
-	//"ba_daybed1",
-	//"ba_daybed2",
-	//"ba_daybed3",
-	//"ba_daybed_detail1",
-	//"ba_daybed_detail2",
-	//"ba_daybed_detail3",
-	//"ba_desk1",
-	//"ba_desk2",
-	//"ba_desk3",
-	//"ba_dj_stage",
 	"ba_dj_unit",
-	//"ba_dri_ice_dummy",
-	//"ba_entrance_grubby",
-	//"ba_entry_pipes",
-	//"ba_entry_trim",
-	//"ba_fakeid_bundlepassports",
 	"ba_flr_paper_crap",
 	"ba_garage_decals",
 	"ba_garage_floor_decals",
@@ -2065,24 +1733,6 @@ std::vector<const char*> IPL_PROPS_NIGHTCLUB_EDGY = { //Dixon posters
 	"ba_podium1",
 	"ba_podium2",
 	"ba_podium3",
-	//"ba_prop_weed_bigbag_open_01a",
-	//"ba_pv2_club_stairs",
-	//"ba_rear_hall_sprinkler",
-	//"ba_scrunched_moneypage",
-	//"ba_security_screen_overlay",
-	//"ba_security_screen_upgrade",
-	//"ba_setup_firdges",
-	//"ba_shell_master_coll_dummy",
-	//"ba_sideboard1",
-	//"ba_sideboard2",
-	//"ba_sideboard3",
-	//"ba_sink1",
-	//"ba_sink2",
-	//"ba_sink3",
-	//"ba_small_sign_palace",
-	//"ba_sofa1",
-	//"ba_sofa2",
-	//"ba_sofa3",
 	"ba_sol_coll_dummy",
 	"ba_speaker_brack_main",
 	"ba_speaker_brack_vip",
@@ -2116,15 +1766,11 @@ std::vector<const char*> IPL_PROPS_NIGHTCLUB_EDGY = { //Dixon posters
 	"ba_vip_table1",
 	"ba_vip_table2",
 	"ba_vip_table3",
-	//"ba_v_64_dance_bar",
-	//"ba_v_64_dance_bar001",
-	//"ba_wardrobe",
 	"ba_work_light_clutter",
 	"ba_work_light_clutter001",
 	"ba_work_light_clutter002",
 	"ba_int01_bacl_mad_posters",
 	"ba_int01_mule",
-	//
 };
 
 std::vector<const char*> IPL_PROPS_NIGHTCLUB_GLAM = { //Solomon
@@ -2742,11 +2388,6 @@ std::vector<const char*> IPL_PROPS_NIGHTCLUB_BASEMENT = {
 	"ba_dlc_ba_int2_elvt_floor",
 	"ba_dlc_ba_int2_engine_hoist",
 	"ba_dlc_ba_int2_engine_hoist001",
-	//"ba_dlc_ba_int2_floor_1",
-	//"ba_dlc_ba_int2_floor_2",
-	//"ba_dlc_ba_int2_floor_3",
-	//"ba_dlc_ba_int2_floor_4",
-	//"ba_dlc_ba_int2_floor_5",
 	"ba_dlc_ba_int2_floor_b",
 	"ba_dlc_ba_int2_forged_eqp",
 	"ba_dlc_ba_int2_frame",

@@ -37,15 +37,9 @@ void teleport_to_marker();
 
 void teleport_to_mission_marker();
 
-//void teleport_to_vehicle_in_sight();
-
 void teleport_to_vehicle_as_passenger();
 
 void teleport_to_last_vehicle();
-
-//void get_chauffeur_to_marker();
-
-//void cancel_chauffeur(std::string message);
 
 void handle_generic_settings_teleportation(std::vector<StringPairSettingDBRow>* settings);
 
@@ -66,12 +60,6 @@ void onchange_tel_3dmarker_msize_index(int value, SelectFromListMenuItem *source
 void onchange_tel_3dmarker_martype_index(int value, SelectFromListMenuItem *source);
 
 void onchange_tel_3dmarker_skypos_index(int value, SelectFromListMenuItem *source);
-
-//void onchange_tel_3dmarker_colour_R_index(int value, SelectFromListMenuItem *source);
-
-//void onchange_tel_3dmarker_colour_G_index(int value, SelectFromListMenuItem *source);
-
-//void onchange_tel_3dmarker_colour_B_index(int value, SelectFromListMenuItem *source);
 
 void onchange_tel_3dmarker_alpha_index(int value, SelectFromListMenuItem *source);
 
