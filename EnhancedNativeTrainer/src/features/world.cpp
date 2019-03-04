@@ -37,28 +37,18 @@ Camera DeathCam = NULL;
 bool featureRestrictedZones = true;
 
 bool featureWorldMoonGravity = false;
-//bool featureWorldMoonGravityUpdated = false;
-
 bool featureWorldNoPeds = false;
-//bool featureWorldNoPedsUpdated = false;
 bool featureWorldNoTraffic = false;
 bool featureWorldNoTrafficUpdated = false;
 bool featureNoPoliceBlips = false;
-//bool featureNoPoliceBlipsUpdated = false;
 bool featureFullMap = false;
-//bool featureFullMapUpdated = false;
 bool featurePenitentiaryMap = false;
-//bool featurePenitentiaryMapUpdated = false;
 bool featureZancudoMap = false;
 bool featureZancudoMapUpdated = false;
 bool featureBusLight = false;
-//bool featureBusLightUpdated = false;
 bool featureAcidWater = false;
-//bool featureAcidWaterUpdated = false;
 bool featureAcidRain = false;
-//bool featureAcidRainUpdated = false;
 bool featureReducedGripVehiclesIfSnow = false;
-//bool featureReducedGripVehiclesIfSnowUpdated = false;
 
 bool police_blips_toogle = false;
 bool windstrength_toggle = false;
@@ -100,28 +90,24 @@ std::string lastCloudsName;
 // Radar Map Size
 const std::vector<std::string> WORLD_RADAR_MAP_CAPTIONS{ "Normal", "Big", "Full" };
 const int WORLD_RADAR_MAP_VALUES[] = { 1, 2, 3 };
-//const std::vector<int> WORLD_RADAR_MAP_VALUES{ 1, 2, 3 };
 int RadarMapIndex = 0;
 bool RadarMapChanged = true;
 
 // Wind Strength
 const std::vector<std::string> WORLD_WIND_STRENGTH_CAPTIONS{ "Calm", "Gentle Breeze", "Strong Breeze" };
 const int WORLD_WIND_STRENGTH_VALUES[] = { 0, 3, 999 };
-//const std::vector<int> WORLD_WIND_STRENGTH_VALUES{ 0, 3, 999 };
 int WindStrengthIndex = 0;
 bool WindStrengthChanged = true;
 
 // Reduced Grip If Heavy Snow
 const std::vector<std::string> WORLD_REDUCEDGRIP_SNOWING_CAPTIONS{ "OFF", "Simulation", "Arcade" };
 const int WORLD_REDUCEDGRIP_SNOWING_VALUES[] = { 0, 1, 2 };
-//const std::vector<int> WORLD_REDUCEDGRIP_SNOWING_VALUES{ 0, 1, 2 };
 int RadarReducedGripSnowingIndex = 0;
 bool RadarReducedGripSnowingChanged = true;
 
 // Waves Intensity
 const std::vector<std::string> WORLD_WAVES_CAPTIONS{ "Default", "No Waves", "0.1x", "5x", "10x", "20x", "30x", "50x" };
 const int WORLD_WAVES_VALUES[] = { -1, -400000, 0, 5, 10, 20, 30, 50 };
-//const std::vector<int> WORLD_WAVES_VALUES{ -1, -400000, 0, 1, 3, 5, 10, 15, 20, 30 };
 int WorldWavesIndex = 0;
 bool WorldWavesChanged = true;
 
@@ -367,14 +353,12 @@ void process_world_menu()
 	togItem->caption = "Moon Gravity";
 	togItem->value = 1;
 	togItem->toggleValue = &featureWorldMoonGravity;
-	//togItem->toggleValueUpdated = &featureWorldMoonGravityUpdated;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "No Pedestrians";
 	togItem->value = 1;
 	togItem->toggleValue = &featureWorldNoPeds;
-	//togItem->toggleValueUpdated = &featureWorldNoPedsUpdated;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
@@ -388,7 +372,7 @@ void process_world_menu()
 	togItem->caption = "No Police Blips";
 	togItem->value = 1;
 	togItem->toggleValue = &featureNoPoliceBlips;
-	//togItem->toggleValueUpdated = &featureNoPoliceBlipsUpdated;
+
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
@@ -449,14 +433,12 @@ void process_world_menu()
 	togItem->caption = "Show Full Map";
 	togItem->value = 1;
 	togItem->toggleValue = &featureFullMap;
-	//togItem->toggleValueUpdated = &featureFullMapUpdated;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "Show Bolingbroke Penitentiary On Map";
 	togItem->value = 1;
 	togItem->toggleValue = &featurePenitentiaryMap;
-	//togItem->toggleValueUpdated = &featurePenitentiaryMapUpdated;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
@@ -483,21 +465,18 @@ void process_world_menu()
 	togItem->caption = "Bus Interior Light On At Night";
 	togItem->value = 1;
 	togItem->toggleValue = &featureBusLight;
-	//togItem->toggleValueUpdated = &featureBusLightUpdated;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "Deadly Water";
 	togItem->value = 1;
 	togItem->toggleValue = &featureAcidWater;
-	//togItem->toggleValueUpdated = &featureAcidWaterUpdated;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "Deadly Rain";
 	togItem->value = 1;
 	togItem->toggleValue = &featureAcidRain;
-	//togItem->toggleValueUpdated = &featureAcidRainUpdated;
 	menuItems.push_back(togItem);
 
 	listItem = new SelectFromListMenuItem(WORLD_WAVES_CAPTIONS, onchange_world_waves_index);
@@ -548,17 +527,8 @@ void reset_world_globals()
 		featureWorldRandomBoats =
 		featureWorldGarbageTrucks = true;
 
-	//featureWorldMoonGravityUpdated = 
-	//featureWorldNoPedsUpdated = 
 	featureWorldNoTrafficUpdated = 
-	//featureNoPoliceBlipsUpdated =
-	//featureFullMapUpdated =
-	//featurePenitentiaryMapUpdated =
 	featureZancudoMapUpdated =
-	//featureBusLightUpdated = 
-	//featureAcidWaterUpdated = 
-	//featureAcidRainUpdated =
-	//featureReducedGripVehiclesIfSnowUpdated =
 	featureWorldGarbageTrucksUpdated =
 	featureWorldRandomBoatsUpdated =
 	featureWorldRandomCopsUpdated =
@@ -574,7 +544,7 @@ void update_world_features()
 	{
 		GAMEPLAY::SET_GRAVITY_LEVEL(1);
 	}
-	else //if (featureWorldMoonGravityUpdated)
+	else 
 	{
 		GAMEPLAY::SET_GRAVITY_LEVEL(0);
 	}
@@ -698,27 +668,16 @@ void update_world_features()
 	}
 	}*/
 
-	//if (featureWorldNoPedsUpdated)
-	//{
-		if (featureWorldNoPeds)
-		{
-			Vector3 v3 = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 1);
-			GAMEPLAY::CLEAR_AREA_OF_PEDS(v3.x, v3.y, v3.z, 1000.0, 0);
-			STREAMING::SET_PED_POPULATION_BUDGET(0);
-		}
-		else
-		{
-			STREAMING::SET_PED_POPULATION_BUDGET(3);
-		}
-
-		//featureWorldNoPedsUpdated = false;
-	//}
-	//if (featureWorldNoPeds && get_frame_number() % 100 == 50) // else 
-	//{
-	//	Vector3 v3 = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 1);
-	//	GAMEPLAY::CLEAR_AREA_OF_PEDS(v3.x, v3.y, v3.z, 1000.0, 0);
-	//	STREAMING::SET_PED_POPULATION_BUDGET(0);
-	//}
+	if (featureWorldNoPeds)
+	{
+		Vector3 v3 = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 1);
+		GAMEPLAY::CLEAR_AREA_OF_PEDS(v3.x, v3.y, v3.z, 1000.0, 0);
+		STREAMING::SET_PED_POPULATION_BUDGET(0);
+	}
+	else
+	{
+		STREAMING::SET_PED_POPULATION_BUDGET(3);
+	}
 
 	// No Police Blips
 	if (featureNoPoliceBlips) PLAYER::SET_POLICE_RADAR_BLIPS(false);
@@ -1080,7 +1039,7 @@ void update_world_features()
 
 		featureWorldNoTrafficUpdated = false;
 	}
-	if (featureWorldNoTraffic)// && get_frame_number() % 100 == 0) // else 
+	if (featureWorldNoTraffic)
 	{
 		if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0))
 		{
@@ -1150,13 +1109,12 @@ void update_world_features()
 
 void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results)
 {
-	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldMoonGravity", &featureWorldMoonGravity });  // , &featureWorldMoonGravityUpdated
+	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldMoonGravity", &featureWorldMoonGravity });  
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldRandomCops", &featureWorldRandomCops, &featureWorldRandomCopsUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldRandomTrains", &featureWorldRandomTrains, &featureWorldRandomTrainsUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldRandomBoats", &featureWorldRandomBoats, &featureWorldRandomBoatsUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldGarbageTrucks", &featureWorldGarbageTrucks, &featureWorldGarbageTrucksUpdated });
-
-	//results->push_back(FeatureEnabledLocalDefinition{ "featureWeatherWind", &featureWeatherWind });
+		
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWeatherFreeze", &featureWeatherFreeze });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureCloudsNo", &featureCloudsNo });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureCloudsFreeze", &featureCloudsFreeze });
@@ -1164,16 +1122,16 @@ void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* r
 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureRestrictedZones", &featureRestrictedZones });
 
-	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoPeds", &featureWorldNoPeds }); // , &featureWorldNoPedsUpdated
+	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoPeds", &featureWorldNoPeds }); 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoTraffic", &featureWorldNoTraffic, &featureWorldNoTrafficUpdated });
-	results->push_back(FeatureEnabledLocalDefinition{ "featureNoPoliceBlips", &featureNoPoliceBlips }); // , &featureNoPoliceBlipsUpdated
-	results->push_back(FeatureEnabledLocalDefinition{ "featureFullMap", &featureFullMap }); // , &featureFullMapUpdated
-	results->push_back(FeatureEnabledLocalDefinition{ "featurePenitentiaryMap", &featurePenitentiaryMap }); // , &featurePenitentiaryMapUpdated
+	results->push_back(FeatureEnabledLocalDefinition{ "featureNoPoliceBlips", &featureNoPoliceBlips }); 
+	results->push_back(FeatureEnabledLocalDefinition{ "featureFullMap", &featureFullMap }); 
+	results->push_back(FeatureEnabledLocalDefinition{ "featurePenitentiaryMap", &featurePenitentiaryMap }); 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureZancudoMap", &featureZancudoMap, &featureZancudoMapUpdated });
-	results->push_back(FeatureEnabledLocalDefinition{ "featureBusLight", &featureBusLight }); // , &featureBusLightUpdated
-	results->push_back(FeatureEnabledLocalDefinition{ "featureAcidWater", &featureAcidWater }); // , &featureAcidWaterUpdated
-	results->push_back(FeatureEnabledLocalDefinition{ "featureAcidRain", &featureAcidRain }); // , &featureAcidRainUpdated
-	results->push_back(FeatureEnabledLocalDefinition{ "featureReducedGripVehiclesIfSnow", &featureReducedGripVehiclesIfSnow }); // , &featureReducedGripVehiclesIfSnowUpdated
+	results->push_back(FeatureEnabledLocalDefinition{ "featureBusLight", &featureBusLight }); 
+	results->push_back(FeatureEnabledLocalDefinition{ "featureAcidWater", &featureAcidWater }); 
+	results->push_back(FeatureEnabledLocalDefinition{ "featureAcidRain", &featureAcidRain }); 
+	results->push_back(FeatureEnabledLocalDefinition{ "featureReducedGripVehiclesIfSnow", &featureReducedGripVehiclesIfSnow }); 
 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureSnow", &featureSnow, &featureSnowUpdated });
 
@@ -1326,7 +1284,7 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 	void FirstPersonDeathCamera() {
 		Ped dead_player = PLAYER::PLAYER_PED_ID();
 
-		if (ENTITY::GET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID()) < 1 && (PED::GET_PED_TYPE(dead_player) == 0 || PED::GET_PED_TYPE(dead_player) == 1 || // && DeathCam == NULL
+		if (ENTITY::GET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID()) < 1 && (PED::GET_PED_TYPE(dead_player) == 0 || PED::GET_PED_TYPE(dead_player) == 1 || 
 			PED::GET_PED_TYPE(dead_player) == 2 || PED::GET_PED_TYPE(dead_player) == 3)) {
 			Vector3 playerPosition = ENTITY::GET_ENTITY_COORDS(dead_player, true);
 			Vector3 curRotation = ENTITY::GET_ENTITY_ROTATION(dead_player, 2);
@@ -1346,14 +1304,13 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 			ENTITY::SET_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID(), false);
 		}
 
-		if (ENTITY::GET_ENTITY_HEALTH(dead_player) > 0 && !PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID())) { //  && DeathCam != NULL
+		if (ENTITY::GET_ENTITY_HEALTH(dead_player) > 0 && !PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID())) {
 			if (CAM::DOES_CAM_EXIST(DeathCam)) {
 				ENTITY::SET_ENTITY_COLLISION(PLAYER::PLAYER_PED_ID(), 1, 1);
 				CAM::RENDER_SCRIPT_CAMS(false, false, 0, false, false);
 				CAM::DETACH_CAM(DeathCam);
 				CAM::SET_CAM_ACTIVE(DeathCam, false);
 				CAM::DESTROY_CAM(DeathCam, true);
-				//DeathCam = NULL;
 				ENTITY::SET_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID(), true);
 			}
 		}

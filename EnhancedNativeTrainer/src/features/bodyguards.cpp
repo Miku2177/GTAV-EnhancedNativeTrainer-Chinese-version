@@ -50,20 +50,17 @@ bool bodyguardWeaponsToggleInitialized = false;
 //Blip Size
 const std::vector<std::string> BODY_BLIPSIZE_CAPTIONS{ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
 const double BODY_BLIPSIZE_VALUES[] = { 0.3, 0.5, 0.8, 1.0, 1.2, 1.5, 1.7, 2.0, 2.5, 3.0 };
-//const std::vector<double> BODY_BLIPSIZE_VALUES{ 0.3, 0.5, 0.8, 1.0, 1.2, 1.5, 1.7, 2.0, 2.5, 3.0 };
 int BodyBlipSizeIndex = 2;
 bool BodyBlipSize_Changed = true;
 
 //Blip Colour
 const std::vector<std::string> BODY_BLIPCOLOUR_CAPTIONS{ "White", "Red", "Green", "Blue", "Orange", "Purple", "Grey", "Brown", "Pink", "Dark Green", "Dark Purple", "Dark Blue" };
 const int BODY_BLIPCOLOUR_VALUES[] = { 0, 1, 2, 3, 17, 19, 20, 21, 23, 25, 27, 29 };
-//const std::vector<int> BODY_BLIPCOLOUR_VALUES{ 0, 1, 2, 3, 17, 19, 20, 21, 23, 25, 27, 29 };
 int BodyBlipColourIndex = 0;
 bool BodyBlipColour_Changed = true;
 
 //Blip Symbol
 const std::vector<std::string> BODY_BLIPSYMBOL_CAPTIONS{ "Standard", "Player", "North", "Waypoint", "BigCircleOutline", "ArrowUpOutlined", "ArrowDownOutlined", "ArrowUp", "ArrowDown", "PoliceHelicopterAnimated", "Jet" }; 
-//const int BODY_BLIPSYMBOL_VALUES[] = { 1, 6, 7, 8, 10, 11, 12, 13, 14, 15, 16 };
 const std::vector<int> BODY_BLIPSYMBOL_VALUES{ 1, 6, 7, 8, 10, 11, 12, 13, 14, 15, 16 }; 
 int BodyBlipSymbolIndex = 0;
 bool BodyBlipSymbol_Changed = true;
@@ -71,7 +68,6 @@ bool BodyBlipSymbol_Changed = true;
 //Blip Flashing
 const std::vector<std::string> BODY_BLIPFLASH_CAPTIONS{ "OFF", "Mode One", "Mode Two" };
 const int BODY_BLIPFLASH_VALUES[] = { 0, 1, 2 };
-//const std::vector<int> BODY_BLIPFLASH_VALUES{ 0, 1, 2 };
 int BodyBlipFlashIndex = 0;
 bool BodyBlipFlash_Changed = true;
 

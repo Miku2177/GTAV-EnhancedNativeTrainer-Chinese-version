@@ -842,35 +842,30 @@ static std::vector<tele_location> VOV_LOCATIONS[] = { LOCATIONS_SAFE, LOCATIONS_
 //3D Marker Symbol
 const std::vector<std::string> TEL_3DMARKER_CAPTIONS{ "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" };
 const int TEL_3DMARKER_VALUES[] = { 0, 1, 2, 3, 4, 5, 6, 21, 22, 24, 29, 30, 31 };
-//const std::vector<int> TEL_3DMARKER_VALUES{ 0, 1, 2, 3, 4, 5, 6, 21, 22, 24, 29, 30, 31 };
 int Tel3dmarkerIndex = 2;
 bool Tel3dmarker_Changed = true;
 
 //3D Marker Max Size
 const std::vector<std::string> TEL_3DMARKER_MSIZE_CAPTIONS{ "50", "100", "200", "300", "400", "500", "600", "700", "800", "900", "1000" };
 const int TEL_3DMARKER_MSIZE_VALUES[] = { 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000 };
-//const std::vector<int> TEL_3DMARKER_MSIZE_VALUES{ 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000 };
 int Tel3dmarker_msize_Index = 2;
 bool Tel3dmarker_msize_Changed = true;
 
 //Position In The Sky
 const std::vector<std::string> TEL_3DMARKER_SKYPOS_CAPTIONS{ "1000m", "1500m", "2000m", "2500m" };
 const int TEL_3DMARKER_SKYPOS_VALUES[] = { 1000, 1500, 2000, 2500 };
-//const std::vector<int> TEL_3DMARKER_SKYPOS_VALUES{ 1000, 1500, 2000, 2500 };
 int Tel3dmarker_skypos_Index = 0;
 bool Tel3dmarker_skypos_Changed = true;
 
 //Marker Type
 const std::vector<std::string> TEL_3DMARKER_MARTYPE_CAPTIONS{ "Symbol", "Column" };
 const int TEL_3DMARKER_MARTYPE_VALUES[] = { 1, 2 };
-//const std::vector<int> TEL_3DMARKER_MARTYPE_VALUES{ 1, 2 };
 int Tel3dmarker_martype_Index = 0;
 bool Tel3dmarker_martype_Changed = true;
 
 //Marker alpha
 const std::vector<std::string> MARKER3D_ALPHA_CAPTIONS{ "10", "20", "30", "40", "50", "60", "70", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "210", "220", "230", "240", "250", "255" };
 const int MARKER3D_ALPHA_VALUES[] = { 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 255 };
-//const std::vector<int> MARKER3D_ALPHA_VALUES{ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 255 };
 int Marker3d_Alpha_Index = 12;
 bool Marker3d_Alpha_Changed = true;
 
@@ -1367,10 +1362,6 @@ bool onconfirm_teleport_category(MenuItem<int> choice){
 		teleport_to_mission_marker();
 		return false;
 	}
-	//else if (choice.value == -7){
-	//	teleport_to_vehicle_in_sight();
-	//	return false;
-	//}
 	else if (choice.value == -8){
 		teleport_to_vehicle_as_passenger();
 		return false;
@@ -1383,10 +1374,6 @@ bool onconfirm_teleport_category(MenuItem<int> choice){
 		set_3d_marker();
 		return false;
 	}
-	//else if (choice.value == -11) {
-	//	teleport_in_ped();
-	//	return false;
-	//}
 
 	lastChosenCategory = choice.value;
 
@@ -1591,12 +1578,6 @@ bool process_teleport_menu(int categoryIndex){
 		markerItem->isLeaf = true;
 		menuItems.push_back(markerItem);
 
-		//markerItem = new MenuItem<int>();
-		//markerItem->caption = "Go To Ped Vehicle In Sight";
-		//markerItem->value = -7;
-		//markerItem->isLeaf = true;
-		//menuItems.push_back(markerItem);
-
 		markerItem = new MenuItem<int>();
 		markerItem->caption = "Go To Nearest Vehicle As Passenger";
 		markerItem->value = -8;
@@ -1620,12 +1601,6 @@ bool process_teleport_menu(int categoryIndex){
 		markerItem->value = -11;
 		markerItem->isLeaf = false;
 		menuItems.push_back(markerItem);
-
-		//dialogItem = new MenuItem<int>();
-		//dialogItem->caption = "Teleport In Nearest Ped";
-		//dialogItem->value = -11;
-		//dialogItem->isLeaf = true;
-		//menuItems.push_back(dialogItem);
 
 		for (int i = 0; i < MENU_LOCATION_CATEGORIES.size(); i++){
 			if (MENU_LOCATION_CATEGORIES[i].compare(JELLMAN_CAPTION) == 0 && !is_jellman_scenery_enabled()){
@@ -1879,8 +1854,6 @@ void update_teleport_features(){
 		AI::CLEAR_PED_TASKS(driver_to_marker_pilot);
 		VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(curr_veh, false);
 		AI::TASK_LEAVE_VEHICLE(driver_to_marker_pilot, curr_veh, 4160);
-		//AI::TASK_SMART_FLEE_PED(driver_to_marker_pilot, PLAYER::PLAYER_PED_ID(), 1000, -1, true, true);
-		//ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&driver_to_marker_pilot);
 		marker_been_set = false;
 		blipDriveFound = false;
 		landing = false;

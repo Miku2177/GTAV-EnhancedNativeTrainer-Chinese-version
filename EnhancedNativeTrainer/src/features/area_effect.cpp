@@ -28,46 +28,25 @@ std::deque<ENTTrackedVehicle*> trackedVehicles;
 
 //features
 bool featurePlayerIgnoredByAll = false;
-//bool featurePlayerIgnoredByAllUpdated = false;
-
 bool featureAreaPedsInvincible = false;
-//bool featureAreaPedsInvincibleUpdated = false;
-
 bool featureAreaVehiclesInvincible = false;
-//bool featureAreaVehiclesInvincibleUpdated = false;
-
 bool featureAreaVehiclesBroken = false;
-//bool featureAreaVehiclesBrokenUpdated = false;
-
 bool featureAreaPedsRioting = false;
-//bool featureAreaPedsRiotingUpdated = false;
-
 bool featureAreaVehiclesExploded = false;
-
 bool featureAreaPedsHeadExplode = false;
-//bool featureAreaPedsHeadExplodeUpdated = false;
-
 bool featureAngryPedsUseCover = false;
 bool featureAngryPedsTargetYou = false;
 bool featurePedsIncludeDrivers = false;
 bool featurePedsIncludePilots = false;
-
 bool featureNPCNoLights = false;
-//bool featureNPCNoLightsUpdated = false;
 bool featureNPCNeonLights = false;
-//bool featureNPCNeonLightsUpdated = false;
 bool featureNPCFullBeam = false;
 bool featureDirtyVehicles = false;
-//bool featureDirtyVehiclesUpdated = false;
 bool featureNPCNoGravityVehicles = false;
-//bool featureNPCNoGravityVehiclesUpdated = false;
 bool featureNPCNoGravityPeds = false;
-//bool featureNPCNoGravityPedsUpdated = false;
 bool featureNPCReducedGripVehicles = false;
-//bool featureNPCReducedGripVehiclesUpdated = false;
 
 int pedWeaponSetIndex = 0;
-//bool pedWeaponSetUpdated = false;
 
 std::set<Ped> allWorldPedsThisFrame;
 bool allWorldPedsThisFrameFilled = false;
@@ -84,38 +63,34 @@ const std::vector<std::string> PED_WEAPONS_SELECTIVE_CAPTIONS{ "\"WEAPON_UNARMED
 "\"WEAPON_DBSHOTGUN\"", "\"WEAPON_AUTOSHOTGUN\"", "\"WEAPON_MUSKET\"", "\"WEAPON_SAWNOFFSHOTGUN\"", "\"WEAPON_COMBATMG\"", "\"WEAPON_MINIGUN\"", "\"WEAPON_GUSENBERG\"", "\"WEAPON_SNIPERRIFLE\"", "\"WEAPON_HEAVYSNIPER\"",
 "\"WEAPON_GRENADELAUNCHER\"", "\"WEAPON_GRENADELAUNCHER_SMOKE\"", "\"WEAPON_RPG\"", "\"WEAPON_HOMINGLAUNCHER\"", "\"WEAPON_COMPACTLAUNCHER\"", "\"WEAPON_RAILGUN\"", "\"WEAPON_FIREWORK\"" };
 const int PED_WEAPONS_SELECTIVE_VALUES[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44 };
-//const std::vector<int> PED_WEAPONS_SELECTIVE_VALUES{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44 };
 int PedWeaponsSelectiveIndex = 0;
 bool PedWeaponsSelective1Changed = true;
 
 // NPC Damaged Vehicles
 const std::vector<std::string> WORLD_DAMAGED_VEHICLES_CAPTIONS{ "OFF", "5", "7", "10", "12", "15", "20", "30", "50", "100", "500", "1000" };
 const int WORLD_DAMAGED_VEHICLES_VALUES[] = { 0, 5, 7, 10, 12, 15, 20, 30, 50, 100, 500, 1000 };
-//const std::vector<int> WORLD_DAMAGED_VEHICLES_VALUES{ 0, 5, 7, 10, 12, 15, 20, 30, 50, 100, 500, 1000 };
 int DamagedVehiclesIndex = 0;
 bool DamagedVehiclesChanged = true;
 
 // NPC Vehicle Speed
 const std::vector<std::string> WORLD_NPC_VEHICLESPEED_CAPTIONS{ "OFF", "1", "3", "5", "10", "15", "20", "30", "50", "70", "100" };
 const int WORLD_NPC_VEHICLESPEED_VALUES[] = { 0, 1, 3, 5, 10, 15, 20, 30, 50, 70, 100 };
-//const std::vector<int> WORLD_NPC_VEHICLESPEED_VALUES{ 0, 1, 3, 5, 10, 15, 20, 30, 50, 70, 100 };
 int NPCVehicleSpeedIndex = 0;
 bool NPCVehicleSpeedChanged = true;
 
 //For onscreen debug info
 bool featureShowDebugInfo = false;
-//bool featureShowDebugInfoUpdated = false;
 
 void add_areaeffect_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){
-	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerIgnoredByAll", &featurePlayerIgnoredByAll}); // , &featurePlayerIgnoredByAllUpdated
-	results->push_back(FeatureEnabledLocalDefinition{"featureAreaPedsInvincible", &featureAreaPedsInvincible}); // , &featureAreaPedsInvincibleUpdated
+	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerIgnoredByAll", &featurePlayerIgnoredByAll}); 
+	results->push_back(FeatureEnabledLocalDefinition{"featureAreaPedsInvincible", &featureAreaPedsInvincible}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureAreaPedsHeadExplode", &featureAreaPedsHeadExplode});
 
-	results->push_back(FeatureEnabledLocalDefinition{"featureAreaVehiclesInvincible", &featureAreaVehiclesInvincible}); // , &featureAreaVehiclesInvincibleUpdated
-	results->push_back(FeatureEnabledLocalDefinition{"featureAreaVehiclesBroken", &featureAreaVehiclesBroken}); // , &featureAreaVehiclesBrokenUpdated
+	results->push_back(FeatureEnabledLocalDefinition{"featureAreaVehiclesInvincible", &featureAreaVehiclesInvincible}); 
+	results->push_back(FeatureEnabledLocalDefinition{"featureAreaVehiclesBroken", &featureAreaVehiclesBroken}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureAreaVehiclesExploded", &featureAreaVehiclesExploded});
 
-	results->push_back(FeatureEnabledLocalDefinition{"featureAreaPedsRioting", &featureAreaPedsRioting}); // , &featureAreaPedsRiotingUpdated
+	results->push_back(FeatureEnabledLocalDefinition{"featureAreaPedsRioting", &featureAreaPedsRioting}); 
 
 	results->push_back(FeatureEnabledLocalDefinition{"featureAngryPedsUseCover", &featureAngryPedsUseCover});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAngryPedsTargetYou", &featureAngryPedsTargetYou});
@@ -123,44 +98,30 @@ void add_areaeffect_feature_enablements(std::vector<FeatureEnabledLocalDefinitio
 	results->push_back(FeatureEnabledLocalDefinition{"featurePedsIncludeDrivers", &featurePedsIncludeDrivers});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePedsIncludePilots", &featurePedsIncludePilots});
 
-	results->push_back(FeatureEnabledLocalDefinition{"featureShowDebugInfo", &featureShowDebugInfo}); // , &featureShowDebugInfoUpdated
+	results->push_back(FeatureEnabledLocalDefinition{"featureShowDebugInfo", &featureShowDebugInfo}); 
 
-	results->push_back(FeatureEnabledLocalDefinition{ "featureNPCNoLights", &featureNPCNoLights }); // , &featureNPCNoLightsUpdated
-	results->push_back(FeatureEnabledLocalDefinition{ "featureNPCNeonLights", &featureNPCNeonLights }); // , &featureNPCNeonLightsUpdated
+	results->push_back(FeatureEnabledLocalDefinition{ "featureNPCNoLights", &featureNPCNoLights }); 
+	results->push_back(FeatureEnabledLocalDefinition{ "featureNPCNeonLights", &featureNPCNeonLights }); 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNPCFullBeam", &featureNPCFullBeam });
-	results->push_back(FeatureEnabledLocalDefinition{ "featureDirtyVehicles", &featureDirtyVehicles }); // , &featureDirtyVehiclesUpdated
-	results->push_back(FeatureEnabledLocalDefinition{ "featureNPCNoGravityVehicles", &featureNPCNoGravityVehicles }); // , &featureNPCNoGravityVehiclesUpdated
-	results->push_back(FeatureEnabledLocalDefinition{ "featureNPCNoGravityPeds", &featureNPCNoGravityPeds }); // , &featureNPCNoGravityPedsUpdated
-	results->push_back(FeatureEnabledLocalDefinition{ "featureNPCReducedGripVehicles", &featureNPCReducedGripVehicles }); // , &featureNPCReducedGripVehiclesUpdated
+	results->push_back(FeatureEnabledLocalDefinition{ "featureDirtyVehicles", &featureDirtyVehicles }); 
+	results->push_back(FeatureEnabledLocalDefinition{ "featureNPCNoGravityVehicles", &featureNPCNoGravityVehicles }); 
+	results->push_back(FeatureEnabledLocalDefinition{ "featureNPCNoGravityPeds", &featureNPCNoGravityPeds }); 
+	results->push_back(FeatureEnabledLocalDefinition{ "featureNPCReducedGripVehicles", &featureNPCReducedGripVehicles }); 
 
 }
 
 void reset_areaeffect_globals(){
 	featurePlayerIgnoredByAll = false;
-	//featurePlayerIgnoredByAllUpdated = true;
-
 	featureAreaVehiclesBroken = false;
-	//featureAreaVehiclesBrokenUpdated = true;
-
 	featureAreaPedsInvincible = false;
-	//featureAreaPedsInvincibleUpdated = true;
-
 	featureAreaPedsHeadExplode = false;
-
 	featureAreaVehiclesExploded = false;
-
 	featureAreaPedsRioting = false;
-	//featureAreaPedsRiotingUpdated = true;
-
 	featureAngryPedsTargetYou = false;
 	featureAngryPedsUseCover = false;
-
 	featurePedsIncludeDrivers = false;
 	featurePedsIncludePilots = false;
-
 	featureShowDebugInfo = false;
-	//featureShowDebugInfoUpdated = true;
-
 	featureNPCNoLights = false;
 	featureNPCNeonLights = false;
 	featureNPCFullBeam = false;
@@ -173,13 +134,6 @@ void reset_areaeffect_globals(){
 	NPCVehicleSpeedIndex = 0;
 
 	pedWeaponSetIndex = 0;
-
-	//featureNPCNoLightsUpdated =
-	//featureNPCNeonLightsUpdated =
-	//featureDirtyVehiclesUpdated =
-	//featureNPCNoGravityVehiclesUpdated =
-	//featureNPCNoGravityPedsUpdated =
-	//featureNPCReducedGripVehiclesUpdated = true;
 }
 
 void process_areaeffect_peds_menu(){
@@ -189,21 +143,18 @@ void process_areaeffect_peds_menu(){
 	togItem->caption = "Everyone Permanently Calm";
 	togItem->value = 1;
 	togItem->toggleValue = &featurePlayerIgnoredByAll;
-	//togItem->toggleValueUpdated = &featurePlayerIgnoredByAllUpdated;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "Everyone Invincible";
 	togItem->value = 1;
 	togItem->toggleValue = &featureAreaPedsInvincible;
-	//togItem->toggleValueUpdated = &featureAreaPedsInvincibleUpdated;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "Everyone Dies";
 	togItem->value = 1;
 	togItem->toggleValue = &featureAreaPedsHeadExplode;
-	//togItem->toggleValueUpdated = &featureAreaPedsInvincibleUpdated;
 	menuItems.push_back(togItem);
 
 	SelectFromListMenuItem* listItem = new SelectFromListMenuItem(PED_WEAPON_TITLES, onchange_areaeffect_ped_weapons);
@@ -222,14 +173,12 @@ void process_areaeffect_peds_menu(){
 	togItem->caption = "Peds Angry";
 	togItem->value = 1;
 	togItem->toggleValue = &featureAreaPedsRioting;
-	//togItem->toggleValueUpdated = &featureAreaPedsRiotingUpdated;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "NPC No Gravity Peds";
 	togItem->value = 1;
 	togItem->toggleValue = &featureNPCNoGravityPeds;
-	//togItem->toggleValueUpdated = &featureNPCNoGravityPedsUpdated;
 	menuItems.push_back(togItem);
 
 	MenuItem<int> *item = new MenuItem<int>();
@@ -250,35 +199,30 @@ void process_areaeffect_vehicle_menu(){
 	togItem->caption = "All Vehicles Invincible";
 	togItem->value = 1;
 	togItem->toggleValue = &featureAreaVehiclesInvincible;
-	//togItem->toggleValueUpdated = &featureAreaVehiclesInvincibleUpdated;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "All Vehicles Abandoned";
 	togItem->value = 1;
 	togItem->toggleValue = &featureAreaVehiclesBroken;
-	//togItem->toggleValueUpdated = &featureAreaVehiclesBrokenUpdated;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "All Vehicles Exploded";
 	togItem->value = 1;
 	togItem->toggleValue = &featureAreaVehiclesExploded;
-	//togItem->toggleValueUpdated = &featureAreaVehiclesExplodedUpdated;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "NPC Vehicles No Lights";
 	togItem->value = 1;
 	togItem->toggleValue = &featureNPCNoLights;
-	//togItem->toggleValueUpdated = &featureNPCNoLightsUpdated;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "NPC Vehicles Have Neon/Xenon Lights";
 	togItem->value = 1;
 	togItem->toggleValue = &featureNPCNeonLights;
-	//togItem->toggleValueUpdated = &featureNPCNeonLightsUpdated;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
@@ -291,7 +235,6 @@ void process_areaeffect_vehicle_menu(){
 	togItem->caption = "NPC Dirty Vehicles";
 	togItem->value = 1;
 	togItem->toggleValue = &featureDirtyVehicles;
-	//togItem->toggleValueUpdated = &featureDirtyVehiclesUpdated;
 	menuItems.push_back(togItem);
 
 	listItem = new SelectFromListMenuItem(WORLD_DAMAGED_VEHICLES_CAPTIONS, onchange_world_damaged_vehicles_index);
@@ -304,14 +247,12 @@ void process_areaeffect_vehicle_menu(){
 	togItem->caption = "NPC No Gravity Vehicles";
 	togItem->value = 1;
 	togItem->toggleValue = &featureNPCNoGravityVehicles;
-	//togItem->toggleValueUpdated = &featureNPCNoGravityVehiclesUpdated;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "NPC Vehicles Reduced Grip";
 	togItem->value = 1;
 	togItem->toggleValue = &featureNPCReducedGripVehicles;
-	//togItem->toggleValueUpdated = &featureNPCReducedGripVehiclesUpdated;
 	menuItems.push_back(togItem);
 
 	listItem = new SelectFromListMenuItem(WORLD_NPC_VEHICLESPEED_CAPTIONS, onchange_world_npc_vehicles_speed_index);
@@ -330,28 +271,24 @@ void process_areaeffect_advanced_ped_menu(){
 	togItem->caption = "Angry Peds Use Cover";
 	togItem->value = 1;
 	togItem->toggleValue = &featureAngryPedsUseCover;
-	//togItem->toggleValueUpdated = &featureAreaVehiclesExplodedUpdated;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "Angry Peds All Target You";
 	togItem->value = 1;
 	togItem->toggleValue = &featureAngryPedsTargetYou;
-	//togItem->toggleValueUpdated = &featureAreaVehiclesExplodedUpdated;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "Effects Include Drivers";
 	togItem->value = 1;
 	togItem->toggleValue = &featurePedsIncludeDrivers;
-	//togItem->toggleValueUpdated = &featureAreaVehiclesExplodedUpdated;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "Effects Include Pilots";
 	togItem->value = 1;
 	togItem->toggleValue = &featurePedsIncludePilots;
-	//togItem->toggleValueUpdated = &featureAreaVehiclesExplodedUpdated;
 	menuItems.push_back(togItem);
 
 	draw_generic_menu<int>(menuItems, &areaeffect_ped_advconfig_menu_index, "Advanced Ped Config", NULL, NULL, NULL);
@@ -404,7 +341,6 @@ void process_areaeffect_menu(){
 	togItem->caption = "Show Area Effect Debug Info";
 	togItem->value = 1;
 	togItem->toggleValue = &featureShowDebugInfo;
-	//togItem->toggleValueUpdated = &featureShowDebugInfoUpdated;
 	menuItems.push_back(togItem);
 
 	draw_generic_menu<int>(menuItems, &areaeffect_top_level_menu_index, "Area Effects", onconfirm_areaeffect_menu, NULL, NULL);
@@ -484,13 +420,11 @@ void update_area_effects(Ped playerPed){
 			PLAYER::SET_PLAYER_CAN_BE_HASSLED_BY_GANGS(player, true);
 			PLAYER::SET_IGNORE_LOW_PRIORITY_SHOCKING_EVENTS(player, false);
 		}
-		//featurePlayerIgnoredByAllUpdated = false;
 	}
 
-	if(featureAreaPedsInvincible){ //  || featureAreaPedsInvincibleUpdated
+	if(featureAreaPedsInvincible){ 
 		if(get_frame_number() % 5 == 0){
 			set_all_nearby_peds_to_invincible(featureAreaPedsInvincible);
-			//featureAreaPedsInvincibleUpdated = false;
 		}
 	}
 
@@ -498,28 +432,24 @@ void update_area_effects(Ped playerPed){
 		kill_all_nearby_peds_continuous();
 	}
 
-	if(featureAreaVehiclesInvincible){ //  || featureAreaVehiclesInvincibleUpdated
+	if(featureAreaVehiclesInvincible){ 
 		set_all_nearby_vehs_to_invincible(featureAreaVehiclesInvincible, false);
-		//featureAreaVehiclesInvincibleUpdated = false;
 	}
 
-	if(featureAreaVehiclesBroken){ //  || featureAreaVehiclesBrokenUpdated
+	if(featureAreaVehiclesBroken){ 
 		set_all_nearby_vehs_to_broken(featureAreaVehiclesBroken);
-		//featureAreaVehiclesBrokenUpdated = false;
 	}
 
 	if(featureAreaVehiclesExploded){
 		kill_all_nearby_vehicles_continuous();
 	}
 
-	if(featureAreaPedsRioting){ //  || featureAreaPedsRiotingUpdated
+	if(featureAreaPedsRioting){ 
 		set_all_nearby_peds_to_angry(featureAreaPedsRioting);
-		//featureAreaPedsRiotingUpdated = false;
 	}
 
-	if(featureAreaPedsRioting && pedWeaponSetIndex != 0){ //  || pedWeaponSetUpdated // 
+	if(featureAreaPedsRioting && pedWeaponSetIndex != 0){ 
 		give_all_nearby_peds_a_weapon(pedWeaponSetIndex != 0);
-		//pedWeaponSetUpdated = false;
 	}
 
 	if ((featureAreaPedsRioting && PedWeaponsSelectiveIndex != 0) || PedWeaponsSelective1Changed){
@@ -527,9 +457,8 @@ void update_area_effects(Ped playerPed){
 		PedWeaponsSelective1Changed = false;
 	}
 
-	if(featureShowDebugInfo){ //  || featureShowDebugInfoUpdated
+	if(featureShowDebugInfo){ 
 		show_debug_info_on_screen(featureShowDebugInfo);
-		//featureShowDebugInfoUpdated = false;
 	}
 
 }

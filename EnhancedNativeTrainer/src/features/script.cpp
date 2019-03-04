@@ -56,20 +56,14 @@ bool onlineWarningShown = false;
 bool featurePlayerInvincible = false;
 bool featurePlayerInvincibleUpdated = false;
 bool featurePlayerIgnoredByPolice = false;
-//bool featurePlayerIgnoredByPoliceUpdated = false;
 bool featurePlayerUnlimitedAbility = false;
 bool featurePlayerNoNoise = false;
-//bool featurePlayerNoNoiseUpdated = false;
 bool featurePlayerFastSwim = false;
-//bool featurePlayerFastSwimUpdated = false;
 bool featurePlayerFastRun = false;
-//bool featurePlayerFastRunUpdated = false;
 bool featurePlayerRunApartments = false;
 bool featurePlayerSuperJump = false;
 bool featurePlayerInvisible = false;
-//bool featurePlayerInvisibleUpdated = false;
 bool featurePlayerInvisibleInVehicle = false;
-//bool featurePlayerInvisibleInVehicleUpdated = false;
 bool featurePlayerDrunk = false;
 bool featurePlayerDrunkUpdated = false;
 bool featureNightVision = false;
@@ -91,9 +85,7 @@ bool featurePlayerLife_Died = false;
 bool featurePlayerLife_Changed = false;
 
 bool featureNoRagdoll = false;
-//bool featureNoRagdollUpdated = false;
 bool featureRagdollIfInjured = false;
-//bool featureRagdollIfInjuredUpdated = false;
 
 // ragdoll if injured variables
 bool been_damaged_by_weapon, ragdoll_task = false;
@@ -129,38 +121,31 @@ const float GRAVITY_VALUES[] = { 0.0f, 0.1f, 0.5f, 0.75f, 1.0f };
 //const std::vector<float> GRAVITY_VALUES{0.0f, 0.1f, 0.5f, 0.75f, 1.0f};
 
 const std::vector<std::string> REGEN_CAPTIONS{"Minimum", "0.1x", "0.25x", "0.5x", "1x (Normal)", "2x", "5x", "10x", "20x", "50x", "100x", "200x", "500x", "1000x"};
-//const float REGEN_VALUES[] = { 0.0f, 0.1f, 0.25f, 0.5f, 1.0f, 2.0f, 5.0f, 10.0f, 20.0f, 50.0f, 100.0f, 200.0f, 500.0f, 1000.0f };
 const std::vector<float> REGEN_VALUES{0.0f, 0.1f, 0.25f, 0.5f, 1.0f, 2.0f, 5.0f, 10.0f, 20.0f, 50.0f, 100.0f, 200.0f, 500.0f, 1000.0f};
-//const int REGEN_DEFAULT = 4;
-//int regenIndex = REGEN_DEFAULT;
 int current_regen_speed = 4;
 bool current_regen_speed_changed = true;
 
 //Player Health
 const std::vector<std::string> PLAYER_HEALTH_CAPTIONS{ "1", "10", "20", "30", "40", "50", "100", "200", "300", "500", "1000", "5000", "10000", "20000", "30000" };
 const int PLAYER_HEALTH_VALUES[] = { 101, 110, 120, 130, 140, 150, 200, 300, 400, 600, 1100, 5100, 10100, 20100, 30100 };
-//const std::vector<int> PLAYER_HEALTH_VALUES{ 101, 110, 120, 130, 140, 150, 200, 300, 400, 600, 1100, 5100, 10100, 20100, 30100 };
 int current_player_health = 6;
 bool current_player_health_Changed = true;
 
 //Player Armor
 const std::vector<std::string> PLAYER_ARMOR_CAPTIONS{ "0", "15", "20", "30", "40", "50", "100" };
 const int PLAYER_ARMOR_VALUES[] = { 0, 15, 20, 30, 40, 50, 100 };
-//const std::vector<int> PLAYER_ARMOR_VALUES{ 0, 15, 20, 30, 40, 50, 100 };
 int current_player_armor = 6;
 bool current_player_armor_Changed = true;
 
 //NPC Ragdoll If Shot
 const std::vector<std::string> NPC_RAGDOLL_CAPTIONS{ "OFF", "Never", "Always" };
 const int NPC_RAGDOLL_VALUES[] = { 0, 1, 2 };
-//const std::vector<int> NPC_RAGDOLL_VALUES{ 0, 1, 2 };
 int current_npc_ragdoll = 0;
 bool current_npc_ragdoll_Changed = true;
 
 //Player Movement Speed
 const std::vector<std::string> PLAYER_MOVEMENT_CAPTIONS{ "Normal", "1x", "2x", "3x", "4x", "5x", "6x", "7x", "8x", "9x", "10x" };
 const double PLAYER_MOVEMENT_VALUES[] = { 0.00, 1.00, 2.00, 3.00, 4.00, 5.00, 6.00, 7.00, 8.00, 9.00, 10.00 };
-//const std::vector<double> PLAYER_MOVEMENT_VALUES{ 0.00, 1.00, 2.00, 3.00, 4.00, 5.00, 6.00, 7.00, 8.00, 9.00, 10.00 };
 int current_player_movement = 0;
 bool current_player_movement_Changed = true; 
 
@@ -439,7 +424,6 @@ void update_features(){
 	if(featurePlayerInvincibleUpdated){
 		if(bPlayerExists && !featurePlayerInvincible){
 			PLAYER::SET_PLAYER_INVINCIBLE(player, FALSE);
-			//PLAYER::_0x733A643B5B0C53C1(player, FALSE);
 		}
 		WAIT(100);
 		featurePlayerInvincibleUpdated = false;
@@ -448,10 +432,9 @@ void update_features(){
 
 	if(featurePlayerInvincible && bPlayerExists){
 		PLAYER::SET_PLAYER_INVINCIBLE(player, TRUE);
-		//PLAYER::_0x733A643B5B0C53C1(player, TRUE); 
 	}
 	
-	if (engine_switched) { // PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) && 
+	if (engine_switched) { 
 		if (!VEHICLE_ENGINE.empty()) VEHICLE::SET_VEHICLE_ENGINE_ON(VEHICLE_ENGINE[0], engine_running, true);
 	}
 	
@@ -569,7 +552,6 @@ void update_features(){
 		if(bPlayerExists){
 			PLAYER::SET_POLICE_IGNORE_PLAYER(player, false);
 		}
-		//featurePlayerIgnoredByPoliceUpdated = false;
 	}
 
 	// player special ability
@@ -580,34 +562,25 @@ void update_features(){
 	}
 
 	// player no noise
-	//if(featurePlayerNoNoiseUpdated){
-		if(bPlayerExists && !featurePlayerNoNoise){
-			PLAYER::SET_PLAYER_NOISE_MULTIPLIER(player, 1.0);
-		}
-	//	featurePlayerNoNoiseUpdated = false;
-	//}
+	if(bPlayerExists && !featurePlayerNoNoise){
+		PLAYER::SET_PLAYER_NOISE_MULTIPLIER(player, 1.0);
+	}
 	if(featurePlayerNoNoise){
 		PLAYER::SET_PLAYER_NOISE_MULTIPLIER(player, 0.0);
 	}
 
 	// player fast swim
-	//if(featurePlayerFastSwimUpdated){
-		if(bPlayerExists && !featurePlayerFastSwim){
-			PLAYER::SET_SWIM_MULTIPLIER_FOR_PLAYER(player, 1.0);
-		}
-	//	featurePlayerFastSwimUpdated = false;
-	//}
+	if(bPlayerExists && !featurePlayerFastSwim){
+		PLAYER::SET_SWIM_MULTIPLIER_FOR_PLAYER(player, 1.0);
+	}
 	if(featurePlayerFastSwim){
 		PLAYER::SET_SWIM_MULTIPLIER_FOR_PLAYER(player, 1.49);
 	}
 
 	// player fast run 
-	//if(featurePlayerFastRunUpdated){
-		if(bPlayerExists && !featurePlayerFastRun){
-			PLAYER::SET_RUN_SPRINT_MULTIPLIER_FOR_PLAYER(player, 1.0);
-		}
-	//	featurePlayerFastRunUpdated = false;
-	//}
+	if(bPlayerExists && !featurePlayerFastRun){
+		PLAYER::SET_RUN_SPRINT_MULTIPLIER_FOR_PLAYER(player, 1.0);
+	}
 	if(featurePlayerFastRun){
 		PLAYER::SET_RUN_SPRINT_MULTIPLIER_FOR_PLAYER(player, 1.49);
 	}
@@ -631,7 +604,6 @@ void update_features(){
 			PED::SET_PED_CAN_RAGDOLL(playerPed, 1);
 			PED::SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(playerPed, 1);
 		}
-		//featureNoRagdollUpdated = false;
 	}
 
 	//Ragdoll If Shot
@@ -1145,18 +1117,17 @@ void process_player_menu(){
 		{"Add or Remove Cash", NULL, NULL, true, CASH},
 		{"Wanted Level", NULL, NULL, true, WANTED},
 		{"Wanted Level Settings", NULL, NULL, false},
-		//{"Freeze Wanted Level", &featureWantedLevelFrozen, &featureWantedLevelFrozenUpdated, true},
 		{"Wanted Fugitive", NULL, NULL, false},
 		{"Invincible", &featurePlayerInvincible, &featurePlayerInvincibleUpdated, true},
-		{"Police Ignore You", &featurePlayerIgnoredByPolice, NULL, true}, // &featurePlayerIgnoredByPoliceUpdated
+		{"Police Ignore You", &featurePlayerIgnoredByPolice, NULL, true}, 
 		{"Unlimited Ability", &featurePlayerUnlimitedAbility, NULL, true},
-		{"Noiseless", &featurePlayerNoNoise, NULL, true}, // &featurePlayerNoNoiseUpdated
+		{"Noiseless", &featurePlayerNoNoise, NULL, true}, 
 		{"Can Run In Apartments", &featurePlayerRunApartments, NULL, true},
 		{"Player Movement Speed", NULL, NULL, false},
 		{"Super Jump", &featurePlayerSuperJump, NULL, true},
 		{"Ragdoll", NULL, NULL, false},
-		{"Invisibility", &featurePlayerInvisible, NULL, true}, // &featurePlayerInvisibleUpdated
-		{"Invisibility In Vehicle", &featurePlayerInvisibleInVehicle, NULL, true }, // &featurePlayerInvisibleInVehicleUpdated
+		{"Invisibility", &featurePlayerInvisible, NULL, true}, 
+		{"Invisibility In Vehicle", &featurePlayerInvisibleInVehicle, NULL, true }, 
 		{"Drunk", &featurePlayerDrunk, &featurePlayerDrunkUpdated, true},
 		{"Night Vision", &featureNightVision, &featureNightVisionUpdated, true},
 		{"Thermal Vision", &featureThermalVision, &featureThermalVisionUpdated, true},
@@ -1405,23 +1376,15 @@ void reset_globals(){
 		featureWantedLevelFrozen = false;
 
 	featurePlayerInvincibleUpdated =
-		//featurePlayerIgnoredByPoliceUpdated =
-		//featurePlayerNoNoiseUpdated =
-		//featurePlayerFastSwimUpdated =
-		//featurePlayerFastRunUpdated =
 		featurePlayerDrunkUpdated =
 		featureNightVisionUpdated =
 		featureThermalVisionUpdated =
-		//featurePlayerInvisibleUpdated =
-		//featurePlayerInvisibleInVehicleUpdated =
 		featurePlayerLifeUpdated =
 		featurePrison_Robe =
 		featurePedPrison_Robe =
 		featurePrison_Yard = 
 
 		featurePlayerNoSwitch = true;
-		//featureNoRagdollUpdated =
-		//featureRagdollIfInjuredUpdated = true;
 		featureWantedLevelFrozenUpdated = true;
 
 	set_status_text("All settings reset to defaults");
@@ -1631,19 +1594,19 @@ void ScriptTidyUp(){
 void add_player_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerInvincible", &featurePlayerInvincible, &featurePlayerInvincibleUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureWantedLevelFrozen", &featureWantedLevelFrozen, &featureWantedLevelFrozenUpdated });
-	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerIgnoredByPolice", &featurePlayerIgnoredByPolice}); // , &featurePlayerIgnoredByPoliceUpdated
+	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerIgnoredByPolice", &featurePlayerIgnoredByPolice}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerUnlimitedAbility", &featurePlayerUnlimitedAbility});
-	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerNoNoise", &featurePlayerNoNoise}); // , &featurePlayerNoNoiseUpdated
-	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerFastSwim", &featurePlayerFastSwim}); // , &featurePlayerFastSwimUpdated
+	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerNoNoise", &featurePlayerNoNoise}); 
+	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerFastSwim", &featurePlayerFastSwim}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerMostWanted", &featurePlayerMostWanted});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerNoSwitch", &featurePlayerNoSwitch});
-	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerFastRun", &featurePlayerFastRun}); // , &featurePlayerFastRunUpdated
+	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerFastRun", &featurePlayerFastRun}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerRunApartments", &featurePlayerRunApartments});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerSuperJump", &featurePlayerSuperJump});
-	results->push_back(FeatureEnabledLocalDefinition{"featureNoRagdoll", &featureNoRagdoll}); // , &featureNoRagdollUpdated
-	results->push_back(FeatureEnabledLocalDefinition{"featureRagdollIfInjured", &featureRagdollIfInjured}); // , &featureRagdollIfInjuredUpdated
-	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerInvisible", &featurePlayerInvisible}); // , &featurePlayerInvisibleUpdated
-	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerInvisibleInVehicle", &featurePlayerInvisibleInVehicle}); // , &featurePlayerInvisibleInVehicleUpdated
+	results->push_back(FeatureEnabledLocalDefinition{"featureNoRagdoll", &featureNoRagdoll}); 
+	results->push_back(FeatureEnabledLocalDefinition{"featureRagdollIfInjured", &featureRagdollIfInjured}); 
+	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerInvisible", &featurePlayerInvisible}); 
+	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerInvisibleInVehicle", &featurePlayerInvisibleInVehicle}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerDrunk", &featurePlayerDrunk, &featurePlayerDrunkUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNightVision", &featureNightVision, &featureNightVisionUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureThermalVision", &featureThermalVision, &featureThermalVisionUpdated});
@@ -2253,7 +2216,6 @@ void toggle_invisibility(){
 	else{
 		set_status_text("Player no longer invisible");
 	}
-	//featurePlayerInvisibleUpdated = true;
 }
 
 void reset_wanted_level(){

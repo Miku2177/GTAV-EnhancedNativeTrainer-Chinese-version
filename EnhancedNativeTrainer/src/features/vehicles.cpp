@@ -65,7 +65,6 @@ int Time_tick_mileage = 0;
 float mileage = 0;
 
 bool featureNoVehFallOff = false;
-//bool featureNoVehFallOffUpdated = false;
 bool featureVehSpeedBoost = false;
 bool featureVehSteerAngle = false;
 bool featureEngineRunning = false;
@@ -86,7 +85,6 @@ bool featureAntiTheftSystem = false;
 bool featureWearHelmetOff = false;
 bool featureWearHelmetOffUpdated = false;
 bool featureVehLightsOn = false, featureVehLightsOnUpdated = false;
-//bool featureInfiniteRocketBoost = false;
 bool window_roll, interior_lights, veh_searching, veh_alarm, veh_brake_toggle, vehicle_burnout_toggle = false;
 int lights = -1, highbeams = -1;
 
@@ -645,10 +643,6 @@ bool onconfirm_vehdoor_menu(MenuItem<int> choice){
 	{
 		damage_door();
 	}
-	//else if (choice.value == -16)//enter damaged vehicle
-	//{
-	//	enter_damaged_vehicle();
-	//}
 	else if (choice.value == -17)//eject seat
 	{
 		eject_seat();
@@ -801,12 +795,6 @@ bool process_veh_door_menu(){
 	item->value = -16;
 	item->isLeaf = true;
 	menuItems.push_back(item);
-
-	//item = new MenuItem<int>();
-	//item->caption = "Teleport In Destroyed Vehicle";
-	//item->value = -16;
-	//item->isLeaf = true;
-	//menuItems.push_back(item);
 
 	item = new MenuItem<int>();
 	item->caption = "Eject Driver Seat";
@@ -2022,10 +2010,9 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 
 	// fall off
-	if (bPlayerExists && !featureNoVehFallOff) { // && featureNoVehFallOffUpdated
+	if (bPlayerExists && !featureNoVehFallOff) { 
 		PED::SET_PED_CONFIG_FLAG(playerPed, PED_FLAG_THROUGH_WINDSCREEN, TRUE);
 		PED::SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE(playerPed, 0);
-		//featureNoVehFallOffUpdated = false;
 	}
 	if (bPlayerExists && featureNoVehFallOff){
 		PED::SET_PED_CONFIG_FLAG(playerPed, PED_FLAG_THROUGH_WINDSCREEN, FALSE);
@@ -2697,7 +2684,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			}
 		}
 
-		if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && featureRememberVehicles) { // && GAMEPLAY::GET_MISSION_FLAG() == 0
+		if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && featureRememberVehicles) { 
 			Vehicle veh_rem = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 
 			if (VEHICLES_REMEMBER.empty()) {
@@ -3072,7 +3059,6 @@ void reset_vehicle_globals() {
 
 	featureLockVehicleDoorsUpdated = true;
 	featureDeleteTrackedVehicles_CharacterChanged = true;
-		//featureNoVehFallOffUpdated = true;
 		featureBlipNumber = true;
 		featureWearHelmetOffUpdated = true;
 		featureVehInvincibleUpdated = true;
@@ -3369,8 +3355,6 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureEngineDegrade", &featureEngineDegrade});
 	results->push_back(FeatureEnabledLocalDefinition{"featureEngineHealthBar", &featureEngineHealthBar});
 	results->push_back(FeatureEnabledLocalDefinition{"featureLimpMode", &featureLimpMode});
-	//results->push_back(FeatureEnabledLocalDefinition{"featureInfiniteRocketBoost", &featureInfiniteRocketBoost});
-
 }
 
 bool spawn_saved_car(int slot, std::string caption){
@@ -3481,7 +3465,6 @@ bool spawn_saved_car(int slot, std::string caption){
 				}
 			}
 			if (correct_name_to_load == true) {
-				//char *currSound = new char[ENGINE_SOUND[savedVeh->engineSound].length() + 1];
 				char *currSound = new char[ENGINE_SOUND[current_picked_engine_sound].length() + 1];
 				strcpy(currSound, ENGINE_SOUND[current_picked_engine_sound].c_str());
 				VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);

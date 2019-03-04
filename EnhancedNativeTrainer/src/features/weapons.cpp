@@ -49,7 +49,6 @@ bool featureSwitchWeaponIfDanger = false;
 bool featureArmyMelee = false;
 
 bool featureGravityGun = false;
-//bool featureGravityGunUpdated = false;
 bool featureFriendlyFire = false;
 // Cop Weapons
 bool someonehasgunandshooting = false;
@@ -90,14 +89,12 @@ bool CopCurrArmedChanged = true;
 // Cop Wanted Level
 const std::vector<std::string> WEAPONS_COPALARM_CAPTIONS{ "One Star", "Two Stars Or Less", "Three Stars Or Less", "Four Stars Or Less", "Five Stars Or Less", "Always" };
 const int WEAPONS_COPALARM_VALUES[] = { 1, 2, 3, 4, 5, 6 };
-//const std::vector<int> WEAPONS_COPALARM_VALUES{ 1, 2, 3, 4, 5, 6 };
 int CopAlarmIndex = 1;
 bool CopAlarmChanged = true;
 
 // Toggle Vision For Sniper Rifles
 const std::vector<std::string> WEAPONS_SNIPERVISION_CAPTIONS{ "OFF", "Via Hotkey", "Night Vision", "Thermal Vision" };
 const int WEAPONS_SNIPERVISION_VALUES[] = { 0, 1, 2, 3 };
-//const std::vector<int> WEAPONS_SNIPERVISION_VALUES{ 0, 1, 2, 3 };
 int SniperVisionIndex = 0;
 bool SniperVisionChanged = true;
 
@@ -947,7 +944,6 @@ bool process_weapon_menu(){
 	menuItems.push_back(item);
 
 	ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
-	//toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Give All Weapons Automatically";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureGiveAllWeapons;
@@ -1015,7 +1011,6 @@ bool process_weapon_menu(){
 	menuItems.push_back(listItem);
 
 	toggleItem = new ToggleMenuItem<int>();
-	//ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Infinite Ammo";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureWeaponInfiniteAmmo;

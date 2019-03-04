@@ -44,7 +44,6 @@ float bill_to_pay, mins = -1;
 //
 // Dynamic Health Bar variables
 bool featureDynamicHealthBar = false;
-//bool featureDynamicHealthBarUpdated = false;
 bool been_damaged = false;
 float curr_damaged_health, curr_damaged_armor = -1;
 int healthbar_secs_passed, healthbar_secs_curr, healthbar_seconds = -1;
@@ -64,7 +63,6 @@ char* animation_of_d = "cellphone_text_read_base";
 bool accel = false;
 bool p_exist = false;
 //
-//int Comp_secs_passed, Comp_secs_curr, Comp_seconds = -1;
 
 bool featurePlayerRadio = false;
 bool featurePlayerRadioUpdated = false;
@@ -72,19 +70,12 @@ bool featureRadioFreeze = false, featureRadioFreezeUpdated = false;
 bool featureRadioAlwaysOff = false;
 bool featureRadioAlwaysOffUpdated = false;
 bool featureBoostRadio = true;
-//bool featureBoostRadioUpdated = true;
 bool featureWantedMusic = false;
-//bool featureWantedMusicUpdated = false;
 bool featureFlyingMusic = false;
-//bool featureFlyingMusicUpdated = false;
 bool featurePoliceScanner = false;
-//bool featurePoliceScannerUpdated = false;
 bool featureNoScubaSound = false;
-//bool featureNoScubaSoundUpdated = false;
 bool featureNoComleteMessage = false;
-//bool featureNoComleteMessageUpdated = false;
 bool featurePoliceRadio = false;
-//bool featurePoliceRadioUpdated = false;
 bool police_radio_check = false;
 
 bool featureMiscLockRadio = false;
@@ -92,9 +83,7 @@ bool featureMiscHideHud = false;
 bool featureMiscHideHudUpdated = false;
 bool featurePhoneShowHud = false;
 bool featureMiscHideENTHud = false;
-//bool featurePhoneShowHudUpdated = false;
 bool featureInVehicleNoHud = false;
-//bool featureInVehicleNoHudUpdated = false;
 bool phone_toggle = false;
 bool phone_toggle_vehicle = false;
 bool phone_toggle_defaultphone = false;
@@ -106,7 +95,6 @@ bool featureNoStuntJumps = false;
 bool featureHidePlayerInfo = false;
 
 bool featureShowFPS = false;
-//bool featureShowFPSUpdated = false;
 
 bool featureShowVehiclePreviews = true;
 bool featureControllerIgnoreInTrainer = false;
@@ -147,14 +135,12 @@ const Hash SP2_TOTAL_CASH = 0x8D75047D;
 // Phone Bill Amount
 const std::vector<std::string> MISC_PHONE_BILL_CAPTIONS{ "10$", "50$", "100$", "500$", "1000$", "5000$", "10000$", "50000$", "100000$", "500000$", "1000000$" };
 const float MISC_PHONE_BILL_VALUES[] = { 10.0, 50.0, 100.0, 500.0, 1000.0, 5000.0, 10000.0, 50000.0, 100000.0, 500000.0, 1000000.0 };
-//const std::vector<float> MISC_PHONE_BILL_VALUES{ 10.0, 50.0, 100.0, 500.0, 1000.0, 5000.0, 10000.0, 50000.0, 100000.0, 500000.0, 1000000.0 };
 int PhoneBillIndex = 2;
 bool PhoneBillChanged = true;
 
 // Phone Bill Free Seconds
 const std::vector<std::string> MISC_PHONE_FREESECONDS_CAPTIONS{ "0", "3", "5", "10", "15" };
 const int MISC_PHONE_FREESECONDS_VALUES[] = { 0, 3, 5, 10, 15 };
-//const std::vector<int> MISC_PHONE_FREESECONDS_VALUES{ 0, 3, 5, 10, 15 };
 int PhoneFreeSecondsIndex = 0;
 bool PhoneFreeSecondsChanged = true;
 int PhoneBikeAnimationIndex = 0;
@@ -163,14 +149,12 @@ bool PhoneBikeAnimationChanged = true;
 // Default Menu Tab
 const std::vector<std::string> MISC_DEF_MENUTAB_CAPTIONS{ "OFF", "Map", "Brief", "Friends", "Gallery", "Game", "Settings", "Stats", "Store", "Online" };
 const int MISC_DEF_MANUTAB_VALUES[] = { -2, -1, 1, 2, 3, 5, 6, 10, 18, 42 };
-//const std::vector<int> MISC_DEF_MANUTAB_VALUES{ -2, -1, 1, 2, 3, 5, 6, 10, 18, 42 };
 int DefMenuTabIndex = 0;
 bool DefMenuTabChanged = true;
 
 // Default Phone
 const std::vector<std::string> MISC_PHONE_DEFAULT_CAPTIONS{ "OFF", "Michael's", "Trevor's", "Franklin's", "Military", "Prologue" };
 const int MISC_PHONE_DEFAULT_VALUES[] = { -1, 0, 1, 2, 3, 4 };
-//const std::vector<int> MISC_PHONE_DEFAULT_VALUES{ -1, 0, 1, 2, 3, 4 };
 int PhoneDefaultIndex = 0;
 bool PhoneDefaultChanged = true;
 
@@ -374,7 +358,6 @@ void process_airbrake_global_menu() {
 	std::string caption = "Airbrake Menu Options";
 
 	std::vector<MenuItem<int>*> menuItems;
-	//SelectFromListMenuItem *listItem;
 	MenuItem<int> *item;
 
 	item = new MenuItem<int>();
@@ -582,25 +565,25 @@ void process_misc_menu(){
 		{"Next Radio Track", NULL, NULL, true},
 		{"Freeze Radio To Station", nullptr, nullptr, false},
 		{"Radio Always Off", &featureRadioAlwaysOff, &featureRadioAlwaysOffUpdated, true},
-		{"Boost Radio Volume", &featureBoostRadio, NULL, true}, // &featureBoostRadioUpdated
+		{"Boost Radio Volume", &featureBoostRadio, NULL, true}, 
 		{"Restore Missing Radio Station", &featureEnableMissingRadioStation, NULL, false },
-		{"Radio In Police Vehicle", &featurePoliceRadio, NULL, true}, // &featurePoliceRadioUpdated
-		{"No Wanted Music", &featureWantedMusic, NULL, true}, // &featureWantedMusicUpdated
-		{"No Flight Music", &featureFlyingMusic, NULL, true}, // &featureFlyingMusicUpdated
-		{"No Police Scanner", &featurePoliceScanner, NULL, true }, // &featurePoliceScannerUpdated
-		{"No Scuba Breathing Sound", &featureNoScubaSound, NULL, true }, // &featureNoScubaSoundUpdated
+		{"Radio In Police Vehicle", &featurePoliceRadio, NULL, true}, 
+		{"No Wanted Music", &featureWantedMusic, NULL, true}, 
+		{"No Flight Music", &featureFlyingMusic, NULL, true}, 
+		{"No Police Scanner", &featurePoliceScanner, NULL, true }, 
+		{"No Scuba Breathing Sound", &featureNoScubaSound, NULL, true }, 
 		{"No 'Mission Passed' Message", &featureNoComleteMessage, NULL, true },
 		{"Hide HUD", &featureMiscHideHud, &featureMiscHideHudUpdated},
 		{"Hide HUD If Menu Open", &featureMiscHideENTHud},
-		{"Show HUD If Phone In Hand Only", &featurePhoneShowHud, NULL }, // &featurePhoneShowHudUpdated
-		{"Show HUD In Vehicle Only", &featureInVehicleNoHud, NULL }, // &featureInVehicleNoHudUpdated
-		{"Dynamic Health Bar", &featureDynamicHealthBar }, // , &featureDynamicHealthBarUpdated
+		{"Show HUD If Phone In Hand Only", &featurePhoneShowHud, NULL }, 
+		{"Show HUD In Vehicle Only", &featureInVehicleNoHud, NULL }, 
+		{"Dynamic Health Bar", &featureDynamicHealthBar }, 
 		{"Reset Player Model On Death", &featureResetPlayerModelOnDeath, nullptr, true},
 		{"Phone Settings", NULL, NULL, false},
 		{"First Person Death Camera", &featureFirstPersonDeathCamera, NULL },
 		{"First Person Stunt Jump Camera", &featureFirstPersonStuntJumpCamera, NULL },
 		{"No Stunt Jumps", &featureNoStuntJumps, NULL },
-		{"FPS Counter", &featureShowFPS, NULL }, // &featureShowFPSUpdated
+		{"FPS Counter", &featureShowFPS, NULL }, 
 		{"Pause Menu Settings", NULL, NULL, false},
 		{"Airbrake Menu", NULL, NULL, false},
 	};
@@ -677,21 +660,9 @@ void reset_misc_globals(){
 	featureShowFPS = false;
 
 	featureRadioFreezeUpdated =
-		featureRadioAlwaysOffUpdated =
-		featureMiscHideHudUpdated =
-		//featurePhoneShowHudUpdated =
-		//featureInVehicleNoHudUpdated =
-		//featureDynamicHealthBarUpdated =
-		//featureWantedMusicUpdated =
-		//featureFlyingMusicUpdated =
-		//featurePoliceScannerUpdated =
-		//featureNoScubaSoundUpdated = 
-		//featureNoComleteMessageUpdated =
-		featureBoostRadio = true;
-		//featureBoostRadioUpdated = true;
-		//featurePoliceRadioUpdated =
-		//featurePlayerRadioUpdated =
-		//featureShowFPSUpdated = true;
+	featureRadioAlwaysOffUpdated =
+	featureMiscHideHudUpdated =
+	featureBoostRadio = true;
 
 	ENTColor::reset_colors();
 }
@@ -724,44 +695,36 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	}
 
 	// No Wanted Music
-	//if (featureWantedMusic || featureWantedMusicUpdated) {
-		if (featureWantedMusic) {
-			AUDIO::SET_AUDIO_FLAG("WantedMusicDisabled", true);
-		}
-		else {
-			AUDIO::SET_AUDIO_FLAG("WantedMusicDisabled", false);
-		}
-	//}
+	if (featureWantedMusic) {
+		AUDIO::SET_AUDIO_FLAG("WantedMusicDisabled", true);
+	}
+	else {
+		AUDIO::SET_AUDIO_FLAG("WantedMusicDisabled", false);
+	}
 
 	// No Flying Music
-	//if (featureFlyingMusic || featureFlyingMusicUpdated) {
-		if (featureFlyingMusic) {
-			AUDIO::SET_AUDIO_FLAG("DisableFlightMusic", true);
-		}
-		else {
-			AUDIO::SET_AUDIO_FLAG("DisableFlightMusic", false);
-		}
-	//}
+	if (featureFlyingMusic) {
+		AUDIO::SET_AUDIO_FLAG("DisableFlightMusic", true);
+	}
+	else {
+		AUDIO::SET_AUDIO_FLAG("DisableFlightMusic", false);
+	}
 
 	// No Police Scanner
-	//if (featurePoliceScanner || featurePoliceScannerUpdated) {
-		if (featurePoliceScanner) {
-			AUDIO::SET_AUDIO_FLAG("PoliceScannerDisabled", true);
-		}
-		else {
-			AUDIO::SET_AUDIO_FLAG("PoliceScannerDisabled", false);
-		}
-	//}
+	if (featurePoliceScanner) {
+		AUDIO::SET_AUDIO_FLAG("PoliceScannerDisabled", true);
+	}
+	else {
+		AUDIO::SET_AUDIO_FLAG("PoliceScannerDisabled", false);
+	}
 
 	// No Scuba Breathing Sound
-	//if (featureNoScubaSound || featureNoScubaSoundUpdated) {
-		if (featureNoScubaSound) {
-			AUDIO::SET_AUDIO_FLAG("SuppressPlayerScubaBreathing", true);
-		}
-		else {
-			AUDIO::SET_AUDIO_FLAG("SuppressPlayerScubaBreathing", false);
-		}
-	//}
+	if (featureNoScubaSound) {
+		AUDIO::SET_AUDIO_FLAG("SuppressPlayerScubaBreathing", true);
+	}
+	else {
+		AUDIO::SET_AUDIO_FLAG("SuppressPlayerScubaBreathing", false);
+	}
 
 	// No 'Mission Passed' Message
 	if (featureNoComleteMessage) {
@@ -771,44 +734,40 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	}
 
 	// Radio Boost
-	//if (featureBoostRadio || featureBoostRadioUpdated) {
-		if (featureBoostRadio) {
-			if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
-				Vehicle playerVeh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
-				AUDIO::SET_VEHICLE_RADIO_LOUD(playerVeh, 1);
-				AUDIO::RELEASE_AMBIENT_AUDIO_BANK();
-			}
+	if (featureBoostRadio) {
+		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
+			Vehicle playerVeh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+			AUDIO::SET_VEHICLE_RADIO_LOUD(playerVeh, 1);
+			AUDIO::RELEASE_AMBIENT_AUDIO_BANK();
 		}
-	//}
+	}
 	if (!featureBoostRadio) AUDIO::SET_VEHICLE_RADIO_LOUD(PED::GET_VEHICLE_PED_IS_USING(playerPed), 0);
 
 	// Radio In Police Vehicles
-	//if (featurePoliceRadio || featurePoliceRadioUpdated) {
-		if (featurePoliceRadio) {
-			Vehicle playerVeh = PED::GET_VEHICLE_PED_IS_IN(playerPed, 1);
-			Vector3 coords_radio = ENTITY::GET_ENTITY_COORDS(playerVeh, 1);
-			Vector3 coords_radio_2 = ENTITY::GET_ENTITY_COORDS(playerPed, 1);
-			if (PED::IS_PED_IN_ANY_POLICE_VEHICLE(playerPed) && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(playerVeh)) {
-				police_radio_check = true;
-				AUDIO::SET_VEHICLE_RADIO_ENABLED(playerVeh, true);
-				AUDIO::SET_MOBILE_PHONE_RADIO_STATE(true);
-				AUDIO::SET_MOBILE_RADIO_ENABLED_DURING_GAMEPLAY(true);
-				AUDIO::SET_RADIO_AUTO_UNFREEZE(true);
-				AUDIO::SET_USER_RADIO_CONTROL_ENABLED(true);
-			}
-			
-			if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1)) if (!PED::IS_PED_IN_ANY_POLICE_VEHICLE(playerPed)) police_radio_check = false;
-
-			if (GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(coords_radio.x, coords_radio.y, coords_radio.z, coords_radio_2.x, coords_radio_2.y, coords_radio_2.z, false) < 3 && 
-				VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(playerVeh) && police_radio_check) {
-				AUDIO::SET_VEHICLE_RADIO_ENABLED(playerVeh, true);
-				AUDIO::SET_MOBILE_PHONE_RADIO_STATE(true);
-				AUDIO::SET_MOBILE_RADIO_ENABLED_DURING_GAMEPLAY(true);
-				AUDIO::SET_RADIO_AUTO_UNFREEZE(true);
-				AUDIO::SET_USER_RADIO_CONTROL_ENABLED(true);
-			}
+	if (featurePoliceRadio) {
+		Vehicle playerVeh = PED::GET_VEHICLE_PED_IS_IN(playerPed, 1);
+		Vector3 coords_radio = ENTITY::GET_ENTITY_COORDS(playerVeh, 1);
+		Vector3 coords_radio_2 = ENTITY::GET_ENTITY_COORDS(playerPed, 1);
+		if (PED::IS_PED_IN_ANY_POLICE_VEHICLE(playerPed) && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(playerVeh)) {
+			police_radio_check = true;
+			AUDIO::SET_VEHICLE_RADIO_ENABLED(playerVeh, true);
+			AUDIO::SET_MOBILE_PHONE_RADIO_STATE(true);
+			AUDIO::SET_MOBILE_RADIO_ENABLED_DURING_GAMEPLAY(true);
+			AUDIO::SET_RADIO_AUTO_UNFREEZE(true);
+			AUDIO::SET_USER_RADIO_CONTROL_ENABLED(true);
 		}
-	//}
+			
+		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1)) if (!PED::IS_PED_IN_ANY_POLICE_VEHICLE(playerPed)) police_radio_check = false;
+
+		if (GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(coords_radio.x, coords_radio.y, coords_radio.z, coords_radio_2.x, coords_radio_2.y, coords_radio_2.z, false) < 3 && 
+			VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(playerVeh) && police_radio_check) {
+			AUDIO::SET_VEHICLE_RADIO_ENABLED(playerVeh, true);
+			AUDIO::SET_MOBILE_PHONE_RADIO_STATE(true);
+			AUDIO::SET_MOBILE_RADIO_ENABLED_DURING_GAMEPLAY(true);
+			AUDIO::SET_RADIO_AUTO_UNFREEZE(true);
+			AUDIO::SET_USER_RADIO_CONTROL_ENABLED(true);
+		}
+	}
 	
 	// Freeze radio to station
 	if (featureRadioFreeze) {
@@ -1253,21 +1212,21 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerRadio", &featurePlayerRadio, &featurePlayerRadioUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{"featureRadioFreeze", &featureRadioFreeze, &featureRadioFreezeUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{"featureRadioAlwaysOff", &featureRadioAlwaysOff, &featureRadioAlwaysOffUpdated });
-	results->push_back(FeatureEnabledLocalDefinition{"featureBoostRadio", &featureBoostRadio }); // , &featureBoostRadioUpdated
-	results->push_back(FeatureEnabledLocalDefinition{"featureWantedMUsic", &featureWantedMusic}); // , &featureWantedMusicUpdated
-	results->push_back(FeatureEnabledLocalDefinition{"featureFlyingMusic", &featureFlyingMusic}); // , &featureFlyingMusicUpdated
-	results->push_back(FeatureEnabledLocalDefinition{"featurePoliceScanner", &featurePoliceScanner}); // , &featurePoliceScannerUpdated
-	results->push_back(FeatureEnabledLocalDefinition{"featureNoScubaSound", &featureNoScubaSound}); // , &featureNoScubaSoundUpdated
-	results->push_back(FeatureEnabledLocalDefinition{"featureNoComleteMessage", &featureNoComleteMessage}); // , &featureNoComleteMessageUpdated
-	results->push_back(FeatureEnabledLocalDefinition{"featurePoliceRadio", &featurePoliceRadio}); // , &featurePoliceRadioUpdated
+	results->push_back(FeatureEnabledLocalDefinition{"featureBoostRadio", &featureBoostRadio }); 
+	results->push_back(FeatureEnabledLocalDefinition{"featureWantedMUsic", &featureWantedMusic}); 
+	results->push_back(FeatureEnabledLocalDefinition{"featureFlyingMusic", &featureFlyingMusic}); 
+	results->push_back(FeatureEnabledLocalDefinition{"featurePoliceScanner", &featurePoliceScanner}); 
+	results->push_back(FeatureEnabledLocalDefinition{"featureNoScubaSound", &featureNoScubaSound}); 
+	results->push_back(FeatureEnabledLocalDefinition{"featureNoComleteMessage", &featureNoComleteMessage}); 
+	results->push_back(FeatureEnabledLocalDefinition{"featurePoliceRadio", &featurePoliceRadio}); 
 	
 	results->push_back(FeatureEnabledLocalDefinition{"featureMiscLockRadio", &featureMiscLockRadio});
 	results->push_back(FeatureEnabledLocalDefinition{"featureMiscHideHud", &featureMiscHideHud, &featureMiscHideHudUpdated});
-	results->push_back(FeatureEnabledLocalDefinition{"featurePhoneShowHud", &featurePhoneShowHud}); // , &featurePhoneShowHudUpdated
+	results->push_back(FeatureEnabledLocalDefinition{"featurePhoneShowHud", &featurePhoneShowHud}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureMiscHideENTHud", &featureMiscHideENTHud});
-	results->push_back(FeatureEnabledLocalDefinition{"featureInVehicleNoHud", &featureInVehicleNoHud}); // , &featureInVehicleNoHudUpdated
+	results->push_back(FeatureEnabledLocalDefinition{"featureInVehicleNoHud", &featureInVehicleNoHud}); 
 
-	results->push_back(FeatureEnabledLocalDefinition{"featureDynamicHealthBar", &featureDynamicHealthBar}); // , &featureDynamicHealthBarUpdated
+	results->push_back(FeatureEnabledLocalDefinition{"featureDynamicHealthBar", &featureDynamicHealthBar}); 
 		
 	results->push_back(FeatureEnabledLocalDefinition{"featureControllerIgnoreInTrainer", &featureControllerIgnoreInTrainer});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBlockInputInMenu", &featureBlockInputInMenu});
@@ -1357,7 +1316,6 @@ void set_hud_hidden(bool hidden){
 
 void set_hud_shown(bool hidden){
 	featurePhoneShowHud = hidden;
-	//featurePhoneShowHudUpdated = true;
 }
 
 bool is_jellman_scenery_enabled(){

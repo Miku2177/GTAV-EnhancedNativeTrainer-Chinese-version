@@ -37,7 +37,6 @@ int Time_tick = 0;
 bool Fuel_Low = false;
 bool show_blips = false;
 bool phone_blips = false;
-//bool is_it_bicycle = false;
 
 Blip blip[32];
 std::vector<Vehicle> VEHICLES;

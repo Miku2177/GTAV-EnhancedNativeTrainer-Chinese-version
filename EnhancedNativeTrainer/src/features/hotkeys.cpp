@@ -149,9 +149,6 @@ void trigger_function_for_hotkey_onkeyup(int hotkey)
 	case HKEY_TELEPORT_TO_MISSION_MARKER:
 		teleport_to_mission_marker();
 		break;
-	//case HKEY_TELEPORT_TO_VEHICLE_IN_SIGHT:
-	//	teleport_to_vehicle_in_sight();
-	//	break;
 	case HKEY_TELEPORT_TO_VEHICLE_AS_PASSENGER:
 		teleport_to_vehicle_as_passenger();
 		break;
@@ -176,9 +173,6 @@ void trigger_function_for_hotkey_onkeyup(int hotkey)
 		set_menu_showing(true);
 		process_skinchanger_menu();
 		break;
-	//case HKEY_MENU_SKIN_CUST: -- I don't really see if this is needed
-	//	set_status_text("Not implemented yet");
-	//	break;
 	case HKEY_MENU_NEXT_RADIO_TRACK:
 		AUDIO::SKIP_RADIO_FORWARD();
 		break;

@@ -280,6 +280,7 @@ void moveThroughDoor()
 bool lshiftWasDown = false;
 
 //////////////////////////////////////// CAMERA & MOUSE CODE ////////////////////////
+
 void camera_view()
 {
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
@@ -309,11 +310,7 @@ void camera_view()
 			CAM::SET_CAM_ACTIVE(AirCam, true);
 			ENTITY::SET_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID(), false);
 		}
-		else
-		{
-			CAM::DESTROY_CAM(AirCam, true);
-			//AirCam = NULL;
-		}
+		else CAM::DESTROY_CAM(AirCam, true);
 	}
 	else if (exitFlag == true)
 	{

@@ -26,16 +26,12 @@ bool featureEngineSound = false;
 const static int WHEEL_CATEGORY_COUNT = 10;
 
 const char* WHEEL_CATEGORY_NAMES[] = { "Sports", "Muscle", "Lowrider", "SUV", "Offroad", "Tuner", "Bike Wheels", "High End", "Benny's Originals", "Benny's Bespoke" };
-//const static std::string WHEEL_CATEGORY_NAMES[] = { "Sports", "Muscle", "Lowrider", "SUV", "Offroad", "Tuner", "Bike Wheels", "High End", "Benny's Originals", "Benny's Bespoke" };
 
 const int WHEEL_CATEGORY_COUNTS[] = { 50, 36, 30, 38, 20, 48, 72, 40, 217, 217 };
-//const static int WHEEL_CATEGORY_COUNTS[] = { 50, 36, 30, 38, 20, 48, 72, 40, 217, 217 };
 
 const char* TINT_NAMES[] = { "No Tint", "Dark", "Medium", "Light", "Very Light", "Safety Value" };
-//const static std::string TINT_NAMES[] = { "No Tint", "Dark", "Medium", "Light", "Very Light", "Safety Value" };
 
 const char* PLATE_NAMES[] = { "Blue on White", "Yellow/Black", "Gold/Blue", "Blue/White SA Caps", "Blue/White SA Exempt", "Blue/White Yankton" };
-//const static std::string PLATE_NAMES[] = { "Blue on White", "Yellow/Black", "Gold/Blue", "Blue/White SA Caps", "Blue/White SA Exempt", "Blue/White Yankton" };
 
 const static int ENGINE_SOUND_COUNT = 366; // 346
 
@@ -1945,14 +1941,12 @@ bool process_vehmod_menu(){
 		menuItems.push_back(item);
 	}
 
-	//if (VEHICLE::IS_TOGGLE_MOD_ON(veh, 22) && version > 45) { 
-		MenuItem<int> * item = new MenuItem<int>();
-		item->caption = "Xenon Colour Menu";
-		item->value = SPECIAL_ID_FOR_XENON_COLOUR;
-		item->isLeaf = false;
-		menuItems.push_back(item);
-	//}
-
+	MenuItem<int> * item = new MenuItem<int>();
+	item->caption = "Xenon Colour Menu";
+	item->value = SPECIAL_ID_FOR_XENON_COLOUR;
+	item->isLeaf = false;
+	menuItems.push_back(item);
+	
 	FunctionDrivenToggleMenuItem<int> *toggleItem;
 
 	if (!isWeird){ //if(!isWeird && !isAircraft){
