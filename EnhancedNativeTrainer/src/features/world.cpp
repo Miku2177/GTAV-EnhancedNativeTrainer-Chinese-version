@@ -746,7 +746,8 @@ void update_world_features()
 	if (wavesstrength_changed != WORLD_WAVES_VALUES[WorldWavesIndex]) wavesstrength_toggle = false;
 	if (WORLD_WAVES_VALUES[WorldWavesIndex] != -1) WATER::_SET_WAVES_INTENSITY(WORLD_WAVES_VALUES[WorldWavesIndex]);
 	
-	// Bus Interior Light On At Night && NPC No Lights && NPC Neon Lights && NPC Dirty Vehicles && NPC Damaged Vehicles && NPC No Gravity Vehicles && NPC Vehicles Reduced Grip && NPC Vehicle Speed && NPC Use Fullbeam && Headlights During Blackout
+	// Bus Interior Light On At Night && NPC No Lights && NPC Neon Lights && NPC Dirty Vehicles && NPC Damaged Vehicles && NPC No Gravity Vehicles && NPC Vehicles Reduced Grip && NPC Vehicle Speed && NPC Use Fullbeam && 
+	// Headlights During Blackout 
 	if (featureBusLight || featureNPCNoLights || featureNPCNeonLights || featureDirtyVehicles || WORLD_DAMAGED_VEHICLES_VALUES[DamagedVehiclesIndex] > 0 || featureNPCNoGravityVehicles || featureNPCReducedGripVehicles ||
 		WORLD_NPC_VEHICLESPEED_VALUES[NPCVehicleSpeedIndex] > 0 || WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 || featureNPCFullBeam || featureLightsBlackout) {
 		Vehicle veh_mycurrveh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
@@ -924,7 +925,6 @@ void update_world_features()
 				bool npclights_state = VEHICLE::GET_VEHICLE_LIGHTS_STATE(bus_veh[i], &lightsAutoOn, &highbeamsAutoOn);
 				if (lightsAutoOn && !highbeamsAutoOn && bus_veh[i] != PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false)) VEHICLE::SET_VEHICLE_FULLBEAM(bus_veh[i], 1);
 			}
-			// Enable Headlights During Blackout
 			if (featureLightsBlackout && featureBlackout && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(bus_veh[i])) {
 				Vehicle vehpolicelights = bus_veh[i];
 				bool autolights_state = VEHICLE::GET_VEHICLE_LIGHTS_STATE(vehpolicelights, &lightsBAutoOn, &highbeamsBAutoOn);
@@ -942,20 +942,41 @@ void update_world_features()
 				float dirVector_rf_rr_x = bone3_cruiser_coord.x - bone4_cruiser_coord.x;
 				float dirVector_rf_rr_y = bone3_cruiser_coord.y - bone4_cruiser_coord.y;
 				float dirVector_rf_rr_z = bone3_cruiser_coord.z - (bone4_cruiser_coord.z + 1);
+				int r = 43;
+				int g = 47;
+				int b = 48;
+				if (VEHICLE::IS_TOGGLE_MOD_ON(bus_veh[i], 22)) {
+					r = 31;	g = 44; b = 54;
+					int curColour = VEHICLE::GET_VEHICLE_XENON_COLOUR(bus_veh[i]);
+					if (curColour == 0) { r = 61; g = 60; b = 60; } // White
+					if (curColour == 1) { r = 12; g = 16; b = 32; } // Blue
+					if (curColour == 2) { r = 17; g = 30; b = 40; } // Electric Blue
+					if (curColour == 3) { r = 31; g = 71; b = 51; } // Mint Green
+					if (curColour == 4) { r = 43; g = 56; b = 25; } // Lime Green
+					if (curColour == 5) { r = 255; g = 255;	b = 0; } // Yellow
+					if (curColour == 6) { r = 34; g = 27; b = 14; } // Golden Shower
+					if (curColour == 7) { r = 51; g = 30; b = 17; } // Orange
+					if (curColour == 8) { r = 255; g = 0; b = 0; } // Red
+					if (curColour == 9) { r = 67; g = 38; b = 44; } // Pony Pink
+					if (curColour == 10) { r = 236;	g = 5; b = 142;	} // Hot Pink
+					if (curColour == 11) { r = 25;	g = 15;	b = 43; } // Purple
+					if (curColour == 12) { r = 17;	g = 14; b = 36; } // Blacklight
+					if (curColour == 13) { r = 31;	g = 44; b = 54; } // Stock
+				}
 				if (lightsBAutoOn) {
-					//GRAPHICS::_DRAW_SPOT_LIGHT_WITH_SHADOW(bone_cruiser_coord.x, bone_cruiser_coord.y, bone_cruiser_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 40.0, 1, 50, 31, 2.7, 5);
-					//GRAPHICS::_DRAW_SPOT_LIGHT_WITH_SHADOW(bone3_cruiser_coord.x, bone3_cruiser_coord.y, bone3_cruiser_coord.z, dirVector_rf_rr_x, dirVector_rf_rr_y, dirVector_rf_rr_z, 255, 255, 255, 40.0, 1, 50, 31, 2.7, 5);
-					GRAPHICS::DRAW_SPOT_LIGHT(bone_cruiser_coord.x, bone_cruiser_coord.y, bone_cruiser_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 40.0, 1, 50, 31, 2.7);
-					GRAPHICS::DRAW_SPOT_LIGHT(bone3_cruiser_coord.x, bone3_cruiser_coord.y, bone3_cruiser_coord.z, dirVector_rf_rr_x, dirVector_rf_rr_y, dirVector_rf_rr_z, 255, 255, 255, 40.0, 1, 50, 31, 2.7);
+					//GRAPHICS::_DRAW_SPOT_LIGHT_WITH_SHADOW(bone_cruiser_coord.x, bone_cruiser_coord.y, bone_cruiser_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, r, g, b, 40.0, 1, 50, 31, 2.7, 5);
+					//GRAPHICS::_DRAW_SPOT_LIGHT_WITH_SHADOW(bone3_cruiser_coord.x, bone3_cruiser_coord.y, bone3_cruiser_coord.z, dirVector_rf_rr_x, dirVector_rf_rr_y, dirVector_rf_rr_z, r, g, b, 40.0, 1, 50, 31, 2.7, 5);
+					GRAPHICS::DRAW_SPOT_LIGHT(bone_cruiser_coord.x, bone_cruiser_coord.y, bone_cruiser_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, r, g, b, 40.0, 1, 50, 31, 2.7);
+					GRAPHICS::DRAW_SPOT_LIGHT(bone3_cruiser_coord.x, bone3_cruiser_coord.y, bone3_cruiser_coord.z, dirVector_rf_rr_x, dirVector_rf_rr_y, dirVector_rf_rr_z, r, g, b, 40.0, 1, 50, 31, 2.7);
 				}
 				if (highbeamsBAutoOn) {
-					//GRAPHICS::_DRAW_SPOT_LIGHT_WITH_SHADOW(bone_cruiser_coord.x, bone_cruiser_coord.y, bone_cruiser_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 60.0, 1, 50, 41, 2.7, 10);
-					//GRAPHICS::_DRAW_SPOT_LIGHT_WITH_SHADOW(bone3_cruiser_coord.x, bone3_cruiser_coord.y, bone3_cruiser_coord.z, dirVector_rf_rr_x, dirVector_rf_rr_y, dirVector_rf_rr_z, 255, 255, 255, 60.0, 1, 50, 41, 2.7, 10);
-					GRAPHICS::DRAW_SPOT_LIGHT(bone_cruiser_coord.x, bone_cruiser_coord.y, bone_cruiser_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 60.0, 1, 50, 41, 2.7);
-					GRAPHICS::DRAW_SPOT_LIGHT(bone3_cruiser_coord.x, bone3_cruiser_coord.y, bone3_cruiser_coord.z, dirVector_rf_rr_x, dirVector_rf_rr_y, dirVector_rf_rr_z, 255, 255, 255, 60.0, 1, 50, 41, 2.7);
+					//GRAPHICS::_DRAW_SPOT_LIGHT_WITH_SHADOW(bone_cruiser_coord.x, bone_cruiser_coord.y, bone_cruiser_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, r, g, b, 60.0, 1, 50, 41, 2.7, 10);
+					//GRAPHICS::_DRAW_SPOT_LIGHT_WITH_SHADOW(bone3_cruiser_coord.x, bone3_cruiser_coord.y, bone3_cruiser_coord.z, dirVector_rf_rr_x, dirVector_rf_rr_y, dirVector_rf_rr_z, r, g, b, 60.0, 1, 50, 41, 2.7, 10);
+					GRAPHICS::DRAW_SPOT_LIGHT(bone_cruiser_coord.x, bone_cruiser_coord.y, bone_cruiser_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, r, g, b, 60.0, 1, 50, 41, 2.7);
+					GRAPHICS::DRAW_SPOT_LIGHT(bone3_cruiser_coord.x, bone3_cruiser_coord.y, bone3_cruiser_coord.z, dirVector_rf_rr_x, dirVector_rf_rr_y, dirVector_rf_rr_z, r, g, b, 60.0, 1, 50, 41, 2.7);
 				}
 			}
-		}
+		} // for
 	}
 
 	// NPC No Gravity Peds && Acid Water && Acid Rain
