@@ -34,7 +34,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include <cstdlib>
 using namespace std;
 
-const static int ENGINE_SOUND_COUNT_VEHICLES = 346;
+const static int ENGINE_SOUND_COUNT_VEHICLES = 366; // 346
 
 bool featureVehInvincible = false;
 bool featureVehInvincibleUpdated = false;
@@ -72,7 +72,6 @@ bool featureNoVehFlip = false;
 bool featureAutoToggleLights = false;
 bool featureMileage = false;
 bool featureSeasharkLights = false;
-bool featurePoliceLightsBlackout = false;
 bool featureNeverDirty = false;
 bool featureVehMassMult = false;
 bool featureVehSpawnInto = false;
@@ -1862,12 +1861,6 @@ void process_veh_menu(){
 	toggleItem->toggleValue = &featureSeasharkLights;
 	menuItems.push_back(toggleItem);
 
-	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Enable Police Spotlight During Blackout";
-	toggleItem->value = i++;
-	toggleItem->toggleValue = &featurePoliceLightsBlackout;
-	menuItems.push_back(toggleItem);
-
 	draw_generic_menu<int>(menuItems, &activeLineIndexVeh, caption, onconfirm_veh_menu, NULL, NULL);
 }
 
@@ -2130,27 +2123,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			}
 		}
 	} 
-	
-	// Enable Police Spotlight during Blackout
-	if (featurePoliceLightsBlackout && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(PED::GET_VEHICLE_PED_IS_IN(playerPed, false))) {
-		Vehicle vehpolicelights = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
-		bool autolights_state = VEHICLE::GET_VEHICLE_LIGHTS_STATE(vehpolicelights, &lightsAutoOn, &highbeamsAutoOn);
-		if (ENTITY::GET_ENTITY_MODEL(vehpolicelights) == GAMEPLAY::GET_HASH_KEY("POLICEOLD2") || ENTITY::GET_ENTITY_MODEL(vehpolicelights) == GAMEPLAY::GET_HASH_KEY("FBI") || ENTITY::GET_ENTITY_MODEL(vehpolicelights) == GAMEPLAY::GET_HASH_KEY("FBI2") ||
-			ENTITY::GET_ENTITY_MODEL(vehpolicelights) == GAMEPLAY::GET_HASH_KEY("LGUARD") || ENTITY::GET_ENTITY_MODEL(vehpolicelights) == GAMEPLAY::GET_HASH_KEY("PRANGER") || ENTITY::GET_ENTITY_MODEL(vehpolicelights) == GAMEPLAY::GET_HASH_KEY("POLICEOLD1") ||
-			ENTITY::GET_ENTITY_MODEL(vehpolicelights) == GAMEPLAY::GET_HASH_KEY("POLICET") || ENTITY::GET_ENTITY_MODEL(vehpolicelights) == GAMEPLAY::GET_HASH_KEY("SHERIFF2") || ENTITY::GET_ENTITY_MODEL(vehpolicelights) == GAMEPLAY::GET_HASH_KEY("POLICE2") ||
-			ENTITY::GET_ENTITY_MODEL(vehpolicelights) == GAMEPLAY::GET_HASH_KEY("POLICE") || ENTITY::GET_ENTITY_MODEL(vehpolicelights) == GAMEPLAY::GET_HASH_KEY("POLICE3") || ENTITY::GET_ENTITY_MODEL(vehpolicelights) == GAMEPLAY::GET_HASH_KEY("SHERIFF") ||
-			ENTITY::GET_ENTITY_MODEL(vehpolicelights) == GAMEPLAY::GET_HASH_KEY("POLICE4")) {
-			int bone_cruiser_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(vehpolicelights, "windscreen");
-			int bone2_cruiser_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(vehpolicelights, "bodyshell");
-			Vector3 bone_cruiser_coord = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(vehpolicelights, bone_cruiser_index);
-			Vector3 bone2_cruiser_coord = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(vehpolicelights, bone2_cruiser_index);
-			float dirVector_lf_lr_x = bone_cruiser_coord.x - bone2_cruiser_coord.x;
-			float dirVector_lf_lr_y = bone_cruiser_coord.y - bone2_cruiser_coord.y;
-			float dirVector_lf_lr_z = bone_cruiser_coord.z - (bone2_cruiser_coord.z + 1);
-			if (lightsAutoOn) GRAPHICS::_DRAW_SPOT_LIGHT_WITH_SHADOW(bone_cruiser_coord.x, bone_cruiser_coord.y, bone_cruiser_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 40.0, 1, 50, 31, 2.7, 5);
-			if (highbeamsAutoOn) GRAPHICS::_DRAW_SPOT_LIGHT_WITH_SHADOW(bone_cruiser_coord.x, bone_cruiser_coord.y, bone_cruiser_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 60.0, 1, 50, 41, 2.7, 10);
-		}
-	}
 	
 	// Never Gets Dirty
 	if (featureNeverDirty && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) VEHICLE::SET_VEHICLE_DIRT_LEVEL(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 0.0);
@@ -3036,7 +3008,6 @@ void reset_vehicle_globals() {
 		featureAutoToggleLights =
 		featureMileage = 
 		featureSeasharkLights =
-		featurePoliceLightsBlackout =
 		featureNeverDirty =
 		featureRememberVehicles =
 		featureRoadLaws =
@@ -3312,7 +3283,6 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureAutoToggleLights", &featureAutoToggleLights});
 	results->push_back(FeatureEnabledLocalDefinition{"featureMileage", &featureMileage});
 	results->push_back(FeatureEnabledLocalDefinition{"featureSeasharkLights", &featureSeasharkLights});
-	results->push_back(FeatureEnabledLocalDefinition{"featurePoliceLightsBlackout", &featurePoliceLightsBlackout});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNeverDirty", &featureNeverDirty});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRememberVehicles", &featureRememberVehicles});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRoadLaws", &featureRoadLaws});

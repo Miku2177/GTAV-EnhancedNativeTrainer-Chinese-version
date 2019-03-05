@@ -49,6 +49,7 @@ bool featureBusLight = false;
 bool featureAcidWater = false;
 bool featureAcidRain = false;
 bool featureReducedGripVehiclesIfSnow = false;
+bool featureLightsBlackout = false;
 
 bool police_blips_toogle = false;
 bool windstrength_toggle = false;
@@ -86,6 +87,9 @@ std::string lastWeatherName;
 
 std::string lastClouds;
 std::string lastCloudsName;
+
+BOOL lightsBAutoOn = -1;
+BOOL highbeamsBAutoOn = -1;
 
 // Radar Map Size
 const std::vector<std::string> WORLD_RADAR_MAP_CAPTIONS{ "Normal", "Big", "Full" };
@@ -417,6 +421,12 @@ void process_world_menu()
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
+	togItem->caption = "Enable Headlights During Blackout";
+	togItem->value = 1;
+	togItem->toggleValue = &featureLightsBlackout;
+	menuItems.push_back(togItem);
+
+	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "Heavy Snow";
 	togItem->value = 7;
 	togItem->toggleValue = &featureSnow;
@@ -506,7 +516,7 @@ void reset_world_globals()
 	featureCloudsNo =
 	featureCloudsFreeze =
 	featureWorldMoonGravity = false;
-
+	featureLightsBlackout = false;
 	featureWorldNoPeds = false;
 	featureWorldNoTraffic = false;
 	featureNoPoliceBlips = false;
@@ -736,9 +746,9 @@ void update_world_features()
 	if (wavesstrength_changed != WORLD_WAVES_VALUES[WorldWavesIndex]) wavesstrength_toggle = false;
 	if (WORLD_WAVES_VALUES[WorldWavesIndex] != -1) WATER::_SET_WAVES_INTENSITY(WORLD_WAVES_VALUES[WorldWavesIndex]);
 	
-	// Bus Interior Light On At Night && NPC No Lights && NPC Neon Lights && NPC Dirty Vehicles && NPC Damaged Vehicles && NPC No Gravity Vehicles && NPC Vehicles Reduced Grip && NPC Vehicle Speed // NPC Use Fullbeam
+	// Bus Interior Light On At Night && NPC No Lights && NPC Neon Lights && NPC Dirty Vehicles && NPC Damaged Vehicles && NPC No Gravity Vehicles && NPC Vehicles Reduced Grip && NPC Vehicle Speed && NPC Use Fullbeam && Headlights During Blackout
 	if (featureBusLight || featureNPCNoLights || featureNPCNeonLights || featureDirtyVehicles || WORLD_DAMAGED_VEHICLES_VALUES[DamagedVehiclesIndex] > 0 || featureNPCNoGravityVehicles || featureNPCReducedGripVehicles ||
-		WORLD_NPC_VEHICLESPEED_VALUES[NPCVehicleSpeedIndex] > 0 || WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 || featureNPCFullBeam) {
+		WORLD_NPC_VEHICLESPEED_VALUES[NPCVehicleSpeedIndex] > 0 || WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 || featureNPCFullBeam || featureLightsBlackout) {
 		Vehicle veh_mycurrveh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 		const int BUS_ARR_SIZE = 1024;
 		Vehicle bus_veh[BUS_ARR_SIZE];
@@ -834,8 +844,10 @@ void update_world_features()
 						VEHICLE::_SET_VEHICLE_NEON_LIGHTS_COLOUR(bus_veh[i], npc_whichcolor.rVal, npc_whichcolor.gVal, npc_whichcolor.bVal);
 						VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 0, true);
 						VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 1, true);
-						//VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 2, true);
-						//VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 3, true); 
+						//
+						VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 2, true);
+						VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 3, true); 
+						//
 						if (getGameVersion() > 45) {
 							VEHICLE::SET_VEHICLE_XENON_COLOUR(bus_veh[i], temp_colour);
 							VEHICLE::TOGGLE_VEHICLE_MOD(bus_veh[i], 22, 1);
@@ -911,6 +923,37 @@ void update_world_features()
 				BOOL highbeamsAutoOn = -1;
 				bool npclights_state = VEHICLE::GET_VEHICLE_LIGHTS_STATE(bus_veh[i], &lightsAutoOn, &highbeamsAutoOn);
 				if (lightsAutoOn && !highbeamsAutoOn && bus_veh[i] != PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false)) VEHICLE::SET_VEHICLE_FULLBEAM(bus_veh[i], 1);
+			}
+			// Enable Headlights During Blackout
+			if (featureLightsBlackout && featureBlackout && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(bus_veh[i])) {
+				Vehicle vehpolicelights = bus_veh[i];
+				bool autolights_state = VEHICLE::GET_VEHICLE_LIGHTS_STATE(vehpolicelights, &lightsBAutoOn, &highbeamsBAutoOn);
+				int bone_cruiser_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(vehpolicelights, "headlight_l");
+				int bone2_cruiser_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(vehpolicelights, "taillight_l");
+				int bone3_cruiser_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(vehpolicelights, "headlight_r");
+				int bone4_cruiser_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(vehpolicelights, "taillight_r");
+				Vector3 bone_cruiser_coord = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(vehpolicelights, bone_cruiser_index);
+				Vector3 bone2_cruiser_coord = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(vehpolicelights, bone2_cruiser_index);
+				Vector3 bone3_cruiser_coord = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(vehpolicelights, bone3_cruiser_index);
+				Vector3 bone4_cruiser_coord = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(vehpolicelights, bone4_cruiser_index);
+				float dirVector_lf_lr_x = bone_cruiser_coord.x - bone2_cruiser_coord.x;
+				float dirVector_lf_lr_y = bone_cruiser_coord.y - bone2_cruiser_coord.y;
+				float dirVector_lf_lr_z = bone_cruiser_coord.z - (bone2_cruiser_coord.z + 1);
+				float dirVector_rf_rr_x = bone3_cruiser_coord.x - bone4_cruiser_coord.x;
+				float dirVector_rf_rr_y = bone3_cruiser_coord.y - bone4_cruiser_coord.y;
+				float dirVector_rf_rr_z = bone3_cruiser_coord.z - (bone4_cruiser_coord.z + 1);
+				if (lightsBAutoOn) {
+					//GRAPHICS::_DRAW_SPOT_LIGHT_WITH_SHADOW(bone_cruiser_coord.x, bone_cruiser_coord.y, bone_cruiser_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 40.0, 1, 50, 31, 2.7, 5);
+					//GRAPHICS::_DRAW_SPOT_LIGHT_WITH_SHADOW(bone3_cruiser_coord.x, bone3_cruiser_coord.y, bone3_cruiser_coord.z, dirVector_rf_rr_x, dirVector_rf_rr_y, dirVector_rf_rr_z, 255, 255, 255, 40.0, 1, 50, 31, 2.7, 5);
+					GRAPHICS::DRAW_SPOT_LIGHT(bone_cruiser_coord.x, bone_cruiser_coord.y, bone_cruiser_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 40.0, 1, 50, 31, 2.7);
+					GRAPHICS::DRAW_SPOT_LIGHT(bone3_cruiser_coord.x, bone3_cruiser_coord.y, bone3_cruiser_coord.z, dirVector_rf_rr_x, dirVector_rf_rr_y, dirVector_rf_rr_z, 255, 255, 255, 40.0, 1, 50, 31, 2.7);
+				}
+				if (highbeamsBAutoOn) {
+					//GRAPHICS::_DRAW_SPOT_LIGHT_WITH_SHADOW(bone_cruiser_coord.x, bone_cruiser_coord.y, bone_cruiser_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 60.0, 1, 50, 41, 2.7, 10);
+					//GRAPHICS::_DRAW_SPOT_LIGHT_WITH_SHADOW(bone3_cruiser_coord.x, bone3_cruiser_coord.y, bone3_cruiser_coord.z, dirVector_rf_rr_x, dirVector_rf_rr_y, dirVector_rf_rr_z, 255, 255, 255, 60.0, 1, 50, 41, 2.7, 10);
+					GRAPHICS::DRAW_SPOT_LIGHT(bone_cruiser_coord.x, bone_cruiser_coord.y, bone_cruiser_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 60.0, 1, 50, 41, 2.7);
+					GRAPHICS::DRAW_SPOT_LIGHT(bone3_cruiser_coord.x, bone3_cruiser_coord.y, bone3_cruiser_coord.z, dirVector_rf_rr_x, dirVector_rf_rr_y, dirVector_rf_rr_z, 255, 255, 255, 60.0, 1, 50, 41, 2.7);
+				}
 			}
 		}
 	}
@@ -1121,7 +1164,7 @@ void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* r
 	results->push_back(FeatureEnabledLocalDefinition{ "featureBlackout", &featureBlackout, &featureBlackoutUpdated });
 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureRestrictedZones", &featureRestrictedZones });
-
+	results->push_back(FeatureEnabledLocalDefinition{ "featureLightsBlackout", &featureLightsBlackout });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoPeds", &featureWorldNoPeds }); 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoTraffic", &featureWorldNoTraffic, &featureWorldNoTrafficUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNoPoliceBlips", &featureNoPoliceBlips }); 
