@@ -968,12 +968,20 @@ void update_world_features()
 					//GRAPHICS::_DRAW_SPOT_LIGHT_WITH_SHADOW(bone3_cruiser_coord.x, bone3_cruiser_coord.y, bone3_cruiser_coord.z, dirVector_rf_rr_x, dirVector_rf_rr_y, dirVector_rf_rr_z, r, g, b, 40.0, 1, 50, 31, 2.7, 5);
 					GRAPHICS::DRAW_SPOT_LIGHT(bone_cruiser_coord.x, bone_cruiser_coord.y, bone_cruiser_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, r, g, b, 40.0, 1, 50, 31, 2.7);
 					GRAPHICS::DRAW_SPOT_LIGHT(bone3_cruiser_coord.x, bone3_cruiser_coord.y, bone3_cruiser_coord.z, dirVector_rf_rr_x, dirVector_rf_rr_y, dirVector_rf_rr_z, r, g, b, 40.0, 1, 50, 31, 2.7);
+					GRAPHICS::DRAW_MARKER(28, bone_cruiser_coord.x, bone_cruiser_coord.y, bone_cruiser_coord.z, 20, 20, 20, 0, 0, 0, 0.1, 0.1, 0.1,	255, 255, 255, 255, 0, 1, 1, 0, 0, 0, 0);
+					GRAPHICS::DRAW_MARKER(28, bone3_cruiser_coord.x, bone3_cruiser_coord.y, bone3_cruiser_coord.z, 20, 20, 20, 0, 0, 0, 0.1, 0.1, 0.1, 255, 255, 255, 255, 0, 1, 1, 0, 0, 0, 0);
+					GRAPHICS::DRAW_LIGHT_WITH_RANGE(bone_cruiser_coord.x, bone_cruiser_coord.y, bone_cruiser_coord.z, 255, 255, 255, 1, 15);
+					GRAPHICS::DRAW_LIGHT_WITH_RANGE(bone3_cruiser_coord.x, bone3_cruiser_coord.y, bone3_cruiser_coord.z, 255, 255, 255, 1, 15);
 				}
 				if (highbeamsBAutoOn) {
 					//GRAPHICS::_DRAW_SPOT_LIGHT_WITH_SHADOW(bone_cruiser_coord.x, bone_cruiser_coord.y, bone_cruiser_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, r, g, b, 60.0, 1, 50, 41, 2.7, 10);
 					//GRAPHICS::_DRAW_SPOT_LIGHT_WITH_SHADOW(bone3_cruiser_coord.x, bone3_cruiser_coord.y, bone3_cruiser_coord.z, dirVector_rf_rr_x, dirVector_rf_rr_y, dirVector_rf_rr_z, r, g, b, 60.0, 1, 50, 41, 2.7, 10);
 					GRAPHICS::DRAW_SPOT_LIGHT(bone_cruiser_coord.x, bone_cruiser_coord.y, bone_cruiser_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, r, g, b, 60.0, 1, 50, 41, 2.7);
 					GRAPHICS::DRAW_SPOT_LIGHT(bone3_cruiser_coord.x, bone3_cruiser_coord.y, bone3_cruiser_coord.z, dirVector_rf_rr_x, dirVector_rf_rr_y, dirVector_rf_rr_z, r, g, b, 60.0, 1, 50, 41, 2.7);
+					GRAPHICS::DRAW_MARKER(28, bone_cruiser_coord.x, bone_cruiser_coord.y, bone_cruiser_coord.z, 20, 20, 20, 0, 0, 0, 0.1, 0.1, 0.1, 255, 255, 255, 255, 0, 1, 1, 0, 0, 0, 0);
+					GRAPHICS::DRAW_MARKER(28, bone3_cruiser_coord.x, bone3_cruiser_coord.y, bone3_cruiser_coord.z, 20, 20, 20, 0, 0, 0, 0.1, 0.1, 0.1, 255, 255, 255, 255, 0, 1, 1, 0, 0, 0, 0);
+					GRAPHICS::DRAW_LIGHT_WITH_RANGE(bone_cruiser_coord.x, bone_cruiser_coord.y, bone_cruiser_coord.z, 255, 255, 255, 1, 15);
+					GRAPHICS::DRAW_LIGHT_WITH_RANGE(bone3_cruiser_coord.x, bone3_cruiser_coord.y, bone3_cruiser_coord.z, 255, 255, 255, 1, 15);
 				}
 			}
 		} // for
