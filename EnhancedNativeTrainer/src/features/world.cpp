@@ -947,21 +947,23 @@ void update_world_features()
 				int b = 48;
 				if (VEHICLE::IS_TOGGLE_MOD_ON(bus_veh[i], 22)) {
 					r = 31;	g = 44; b = 54;
-					int curColour = VEHICLE::GET_VEHICLE_XENON_COLOUR(bus_veh[i]);
-					if (curColour == 0) { r = 61; g = 60; b = 60; } // White
-					if (curColour == 1) { r = 12; g = 16; b = 32; } // Blue
-					if (curColour == 2) { r = 17; g = 30; b = 40; } // Electric Blue
-					if (curColour == 3) { r = 31; g = 71; b = 51; } // Mint Green
-					if (curColour == 4) { r = 43; g = 56; b = 25; } // Lime Green
-					if (curColour == 5) { r = 255; g = 255;	b = 0; } // Yellow
-					if (curColour == 6) { r = 34; g = 27; b = 14; } // Golden Shower
-					if (curColour == 7) { r = 51; g = 30; b = 17; } // Orange
-					if (curColour == 8) { r = 255; g = 0; b = 0; } // Red
-					if (curColour == 9) { r = 67; g = 38; b = 44; } // Pony Pink
-					if (curColour == 10) { r = 236;	g = 5; b = 142;	} // Hot Pink
-					if (curColour == 11) { r = 25;	g = 15;	b = 43; } // Purple
-					if (curColour == 12) { r = 17;	g = 14; b = 36; } // Blacklight
-					if (curColour == 13) { r = 31;	g = 44; b = 54; } // Stock
+					if (getGameVersion() > 45) {
+						int curColour = VEHICLE::GET_VEHICLE_XENON_COLOUR(bus_veh[i]);
+						if (curColour == 0) { r = 61; g = 60; b = 60; } // White
+						if (curColour == 1) { r = 12; g = 16; b = 32; } // Blue
+						if (curColour == 2) { r = 17; g = 30; b = 40; } // Electric Blue
+						if (curColour == 3) { r = 31; g = 71; b = 51; } // Mint Green
+						if (curColour == 4) { r = 43; g = 56; b = 25; } // Lime Green
+						if (curColour == 5) { r = 255; g = 255;	b = 0; } // Yellow
+						if (curColour == 6) { r = 34; g = 27; b = 14; } // Golden Shower
+						if (curColour == 7) { r = 51; g = 30; b = 17; } // Orange
+						if (curColour == 8) { r = 255; g = 0; b = 0; } // Red
+						if (curColour == 9) { r = 67; g = 38; b = 44; } // Pony Pink
+						if (curColour == 10) { r = 236;	g = 5; b = 142; } // Hot Pink
+						if (curColour == 11) { r = 25;	g = 15;	b = 43; } // Purple
+						if (curColour == 12) { r = 17;	g = 14; b = 36; } // Blacklight
+						if (curColour == 13) { r = 31;	g = 44; b = 54; } // Stock
+					}
 				}
 				if (lightsBAutoOn) {
 					//GRAPHICS::_DRAW_SPOT_LIGHT_WITH_SHADOW(bone_cruiser_coord.x, bone_cruiser_coord.y, bone_cruiser_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, r, g, b, 40.0, 1, 50, 31, 2.7, 5);
