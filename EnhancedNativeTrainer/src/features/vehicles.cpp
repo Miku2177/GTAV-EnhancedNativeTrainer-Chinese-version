@@ -1166,7 +1166,7 @@ bool onconfirm_fuel_menu(MenuItem<int> choice)
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	switch (activeLineIndexFuel){
-	case 14:
+	case 15:
 		if (process_fuel_colour_menu()) return false;
 		break;
 	}
@@ -3043,9 +3043,9 @@ void reset_vehicle_globals() {
 		featureWearHelmetOffUpdated = true;
 		featureDeleteTrackedVehicles = true;
 		featurePoliceVehicleBlip = true;
-		featurePoliceAgressiveDriving = false;
-		featurePoliceNoFlip = false;
-		featurePoliceNoDamage = false;
+		featurePoliceAgressiveDriving = true;
+		featurePoliceNoFlip = true;
+		featurePoliceNoDamage = true;
 		featureCopsUseRadio = false;
 		featureRunningRedLight = true;
 		featurePavementDriving = true;
