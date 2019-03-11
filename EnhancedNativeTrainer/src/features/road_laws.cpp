@@ -35,9 +35,9 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 // Road Laws variables
 bool featureRoadLaws = false;
 bool featurePoliceVehicleBlip = true;
-bool featurePoliceAgressiveDriving = false;
-bool featurePoliceNoFlip = false;
-bool featurePoliceNoDamage = false;
+bool featurePoliceAgressiveDriving = true;
+bool featurePoliceNoFlip = true;
+bool featurePoliceNoDamage = true;
 bool featureCopsUseRadio = false;
 bool featureRunningRedLight = true;
 bool featurePavementDriving = true;
