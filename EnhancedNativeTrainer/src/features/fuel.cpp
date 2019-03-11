@@ -55,6 +55,8 @@ const Hash SP0_TOTAL_CASH = 0x324C31D;
 const Hash SP1_TOTAL_CASH = 0x44BD6982;
 const Hash SP2_TOTAL_CASH = 0x8D75047D;
 
+int IdleConsume_secs_passed, IdleConsume_secs_curr, IdleConsume_seconds = -1;
+
 int CarConsumptionIndex = 11;
 bool CarConsumptionChanged = true;
 int BikeConsumptionIndex = 12;
@@ -85,6 +87,8 @@ int FuelColours_B_Index = 0;
 bool FuelColours_B_Changed = true;
 int FuelBlipsIndex = 0;
 bool FuelBlipsChanged = true;
+int IdleConsumptionIndex = 7;
+bool IdleConsumptionChanged = true;
 int FuelBackground_Opacity_Index = 5;
 bool FuelBackgound_Opacity_Changed = true;
 //
@@ -483,7 +487,7 @@ void fuel()
 					}
 				}
 			}
-		}
+		} // entered vehicle
 		else {
 			Car_Refuel = false;
 			Fuel_Low = false;
@@ -547,8 +551,29 @@ void fuel()
 					}
 				}
 			}
+		} // refuel jerry can
+
+		// idle consumption
+		if (VEH_CARFUEL_VALUES[IdleConsumptionIndex] > 0 && !VEHICLES.empty()) {
+			IdleConsume_secs_passed = clock() / CLOCKS_PER_SEC;
+			if (((clock() / CLOCKS_PER_SEC) - IdleConsume_secs_curr) != 0) {
+				IdleConsume_seconds = IdleConsume_seconds + 1;
+				IdleConsume_secs_curr = IdleConsume_secs_passed;
+			}
+
+			if (IdleConsume_seconds > (VEH_CARFUEL_VALUES[IdleConsumptionIndex] / 85000)) IdleConsume_seconds = 0;
+
+			if (IdleConsume_seconds == (VEH_CARFUEL_VALUES[IdleConsumptionIndex] / 85000)) {
+				for (int i = 0; i < VEHICLES.size(); i++) {
+					Vector3  curr_s = ENTITY::GET_ENTITY_VELOCITY(VEHICLES[i]);
+					if (curr_s.x < 1 && curr_s.y < 1 && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(VEHICLES[i]) && FUEL[i] > 0) FUEL[i] = FUEL[i] - 0.001;
+					if (VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(VEHICLES[i]) && FUEL[i] <= 0) VEHICLE::SET_VEHICLE_ENGINE_ON(VEHICLES[i], false, true);
+				}
+				IdleConsume_seconds = (VEH_CARFUEL_VALUES[IdleConsumptionIndex] / 85000) + 1;
+			}
 		}
-	}
+
+	} // featureFuel
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

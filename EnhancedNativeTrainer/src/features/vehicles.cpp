@@ -1202,6 +1202,12 @@ void process_fuel_menu(){
 	listItem->caption = "Blips";
 	listItem->value = FuelBlipsIndex;
 	menuItems.push_back(listItem);
+	
+	listItem = new SelectFromListMenuItem(VEH_CARFUEL_CAPTIONS, onchange_idle_consumption_index);
+	listItem->wrap = false;
+	listItem->caption = "Idle Consumption";
+	listItem->value = IdleConsumptionIndex;
+	menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(VEH_CARFUEL_CAPTIONS, onchange_car_consumption_index);
 	listItem->wrap = false;
@@ -2952,6 +2958,7 @@ void reset_vehicle_globals() {
 	SpeedPositionIndex = 0;
 
 	FuelBlipsIndex = 0;
+	IdleConsumptionIndex = 7;
 	FuelBackground_Opacity_Index = 5;
 	VehRememberIndex = 3;
 	VehBlipSizeIndex = 2;
@@ -3764,6 +3771,7 @@ void add_vehicle_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"SpeedSizeIndex", std::to_string(SpeedSizeIndex)});
 	results->push_back(StringPairSettingDBRow{"SpeedPositionIndex", std::to_string(SpeedPositionIndex)});
 	results->push_back(StringPairSettingDBRow{"FuelBlipsIndex", std::to_string(FuelBlipsIndex)});
+	results->push_back(StringPairSettingDBRow{"IdleConsumptionIndex", std::to_string(IdleConsumptionIndex)});
 	results->push_back(StringPairSettingDBRow{"FuelBackground_Opacity_Index", std::to_string(FuelBackground_Opacity_Index)});
 	results->push_back(StringPairSettingDBRow{"VehRememberIndex", std::to_string(VehRememberIndex)});
 	results->push_back(StringPairSettingDBRow{"VehBlipSizeIndex", std::to_string(VehBlipSizeIndex)});
@@ -3851,6 +3859,9 @@ void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settin
 		}
 		else if (setting.name.compare("FuelBlipsIndex") == 0){
 			FuelBlipsIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("IdleConsumptionIndex") == 0) {
+			IdleConsumptionIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("FuelBackground_Opacity_Index") == 0){
 			FuelBackground_Opacity_Index = stoi(setting.value);
@@ -4131,6 +4142,11 @@ void onchange_veh_blipflash_index(int value, SelectFromListMenuItem* source){
 }
 void onchange_fuel_blips_index(int value, SelectFromListMenuItem* source){
 	FuelBlipsIndex = value;
+	PositionChanged = true;
+}
+
+void onchange_idle_consumption_index(int value, SelectFromListMenuItem* source) {
+	IdleConsumptionIndex = value;
 	PositionChanged = true;
 }
 
