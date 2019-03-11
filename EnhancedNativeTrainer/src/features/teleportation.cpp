@@ -1240,31 +1240,31 @@ void set_3d_marker(){
 	menuItems.push_back(toggleItem);
 
 	listItem = new SelectFromListMenuItem(TEL_3DMARKER_MARTYPE_CAPTIONS, onchange_tel_3dmarker_martype_index);
-	listItem->wrap = true;
+	listItem->wrap = false;
 	listItem->caption = "Marker Type";
 	listItem->value = Tel3dmarker_martype_Index;
 	menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(TEL_3DMARKER_CAPTIONS, onchange_tel_3dmarker_index);
-	listItem->wrap = true;
+	listItem->wrap = false;
 	listItem->caption = "Marker Symbol";
 	listItem->value = Tel3dmarkerIndex;
 	menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(TEL_3DMARKER_MSIZE_CAPTIONS, onchange_tel_3dmarker_msize_index);
-	listItem->wrap = true;
+	listItem->wrap = false;
 	listItem->caption = "Marker Symbol Max Size";
 	listItem->value = Tel3dmarker_msize_Index;
 	menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(TEL_3DMARKER_SKYPOS_CAPTIONS, onchange_tel_3dmarker_skypos_index);
-	listItem->wrap = true;
+	listItem->wrap = false;
 	listItem->caption = "Marker Symbol Altitude";
 	listItem->value = Tel3dmarker_skypos_Index;
 	menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(MARKER3D_ALPHA_CAPTIONS, onchange_tel_3dmarker_alpha_index);
-	listItem->wrap = true;
+	listItem->wrap = false;
 	listItem->caption = "Marker Transparency";
 	listItem->value = Marker3d_Alpha_Index;
 	menuItems.push_back(listItem);
@@ -1314,25 +1314,25 @@ void getTelChauffeurIndex(){
 	menuItems.push_back(toggleItem);
 
 	listItem = new SelectFromListMenuItem(TEL_CHAUFFEUR_SPEED_CAPTIONS, onchange_tel_chauffeur_speed_index);
-	listItem->wrap = true;
+	listItem->wrap = false;
 	listItem->caption = "Max Speed (MPH):";
 	listItem->value = TelChauffeur_speed_Index;
 	menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(TEL_CHAUFFEUR_ALTITUDE_CAPTIONS, onchange_tel_chauffeur_altitude_index);
-	listItem->wrap = true;
+	listItem->wrap = false;
 	listItem->caption = "Altitude:";
 	listItem->value = TelChauffeur_altitude_Index;
 	menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(TEL_CHAUFFEUR_DRIVINGSTYLES_CAPTIONS, onchange_tel_chauffeur_drivingstyles_index);
-	listItem->wrap = true;
+	listItem->wrap = false;
 	listItem->caption = "Driving Style";
 	listItem->value = TelChauffeur_drivingstyles_Index;
 	menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(SKINS_GENERAL_VALUES, onchange_tel_chauffeur_index);
-	listItem->wrap = true;
+	listItem->wrap = false;
 	listItem->caption = "Chauffeur Model";
 	listItem->value = TelChauffeurIndex;
 	menuItems.push_back(listItem);
