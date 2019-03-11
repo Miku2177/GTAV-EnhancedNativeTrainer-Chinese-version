@@ -13,8 +13,8 @@ extern const Hash SP1_TOTAL_CASH;
 extern const Hash SP2_TOTAL_CASH;
 
 //Car Fuel
-const std::vector<std::string> VEH_CARFUEL_CAPTIONS{ "NO", "0.1", "0.5", "1.0", "1.4", "1.8", "2.2", "2.6", "2.8", "3.0", "3.3", "3.6", "5.0", "6.0", "8.0", "10.0", "13.0", "15.0", "18.0", "20.0", "23.0", "25.0" };
-const int VEH_CARFUEL_VALUES[] = { 0, 20000000, 10000000, 5000000, 3500000, 3000000, 2600000, 2200000, 1800000, 1700000, 1600000, 1400000, 1300000, 1000000, 400000, 100000, 50000, 10000, 5000, 1000, 500, 100 };
+const std::vector<std::string> VEH_CARFUEL_CAPTIONS{ "NO", "0.1", "0.5", "1.0", "1.4", "1.8", "2.2", "2.6", "2.8", "3.0", "3.3", "3.6", "5.0", "6.0", "8.0", "10.0" }; // , "13.0", "15.0", "18.0", "20.0", "23.0", "25.0"
+const int VEH_CARFUEL_VALUES[] = { 0, 20000000, 10000000, 5000000, 3500000, 3000000, 2600000, 2200000, 1800000, 1700000, 1600000, 1400000, 1300000, 1000000, 400000, 100000 }; // , 50000, 10000, 5000, 1000, 500, 100
 extern int CarConsumptionIndex;
 extern bool CarConsumptionChanged;
 extern int BikeConsumptionIndex;
@@ -25,6 +25,8 @@ extern int BoatConsumptionIndex;
 extern bool BoatConsumptionChanged;
 extern int HeliConsumptionIndex;
 extern bool HeliConsumptionChanged;
+extern int IdleConsumptionIndex;
+extern bool IdleConsumptionChanged;
 
 //Refueling Speed
 const std::vector<std::string> VEH_REFUELSPEED_CAPTIONS{ "0.1", "0.5", "0.9", "1.0", "1.5", "1.9", "2.1", "2.2", "2.3", "2.5", "3.0", "5.0", "10.0" };

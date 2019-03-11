@@ -214,6 +214,8 @@ void onchange_door_autolock_index(int value, SelectFromListMenuItem* source);
 
 void onchange_fuel_blips_index(int value, SelectFromListMenuItem* source);
 
+void onchange_idle_consumption_index(int value, SelectFromListMenuItem* source);
+
 void onchange_fuel_background_opacity_index(int value, SelectFromListMenuItem* source);
 
 void onchange_veh_remember_index(int value, SelectFromListMenuItem* source);
