@@ -1882,7 +1882,73 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	int globalindex = 0;
 
 	eGameVersion version = getGameVersion();
-	if (version < 20) *getGlobalPtr(2558120) = 1;
+
+	switch (version) 
+	{
+		case VER_1_0_678_1_STEAM:
+		case VER_1_0_678_1_NOSTEAM:
+			*getGlobalPtr(2558120) = 1;
+			break;
+
+		case VER_1_0_757_4_STEAM:
+		case VER_1_0_757_4_NOSTEAM:
+			*getGlobalPtr(0x271803) = 1;
+			break;
+
+		case VER_1_0_791_2_STEAM:
+		case VER_1_0_791_2_NOSTEAM:
+			*getGlobalPtr(0x272A34) = 1;
+			break;
+
+		case VER_1_0_877_1_STEAM:
+		case VER_1_0_877_1_NOSTEAM:
+			*getGlobalPtr(0x2750BD) = 1;
+			break;
+
+		case VER_1_0_944_2_STEAM:
+		case VER_1_0_944_2_NOSTEAM:
+			*getGlobalPtr(0x279476) = 1;
+			break;
+
+		case VER_1_0_1011_1_STEAM:
+		case VER_1_0_1011_1_NOSTEAM:
+		case VER_1_0_1032_1_STEAM:
+		case VER_1_0_1032_1_NOSTEAM:
+			*getGlobalPtr(2593970) = 1;
+			break;
+
+		case VER_1_0_1103_2_STEAM:
+		case VER_1_0_1103_2_NOSTEAM:
+			*getGlobalPtr(2599337) = 1;
+			break;
+
+		case VER_1_0_1180_2_STEAM:
+		case VER_1_0_1180_2_NOSTEAM:
+			*getGlobalPtr(2606794) = 1;
+			break;
+
+		case VER_1_0_1290_1_STEAM:
+		case VER_1_0_1290_1_NOSTEAM:
+		case VER_1_0_1365_1_STEAM:
+		case VER_1_0_1365_1_NOSTEAM:
+			*getGlobalPtr(4265719) = 1;
+			break;
+
+		case VER_1_0_1493_0_STEAM:
+		case VER_1_0_1493_0_NOSTEAM:
+		case VER_1_0_1493_1_STEAM:
+		case VER_1_0_1493_1_NOSTEAM:
+			*getGlobalPtr(4266042) = 1;
+			break;
+
+		case VER_1_0_1604_0_STEAM:
+		case VER_1_0_1604_0_NOSTEAM:
+		case VER_1_0_1604_1_STEAM:
+		case VER_1_0_1604_1_NOSTEAM:
+			*getGlobalPtr(4266905) = 1;
+			break;
+	}
+	/*if (version < 20) *getGlobalPtr(2558120) = 1;
 
 	if ((version < 22 && version > 19)) *getGlobalPtr(2562051) = 1; 
 
@@ -1906,7 +1972,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 	if ((version > 44) && (version < 48)) *getGlobalPtr(4266905) = 1; //Global can be found in shop_controller.c
 
-	//if (version > 38) *getGlobalPtr(2606794) = 1; //2606794
+	//if (version > 38) *getGlobalPtr(2606794) = 1; //2606794*/
 
 	if (featureDespawnScriptDisabledUpdated){
 		featureDespawnScriptDisabledUpdated = false;
