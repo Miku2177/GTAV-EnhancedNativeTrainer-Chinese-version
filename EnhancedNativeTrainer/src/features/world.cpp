@@ -49,7 +49,7 @@ bool featureBusLight = false;
 bool featureAcidWater = false;
 bool featureAcidRain = false;
 bool featureReducedGripVehiclesIfSnow = false;
-bool featureLightsBlackout = false;
+//bool featureLightsBlackout = false;
 
 bool police_blips_toogle = false;
 bool windstrength_toggle = false;
@@ -114,6 +114,12 @@ const std::vector<std::string> WORLD_WAVES_CAPTIONS{ "Default", "No Waves", "0.1
 const int WORLD_WAVES_VALUES[] = { -1, -400000, 0, 5, 10, 20, 30, 50 };
 int WorldWavesIndex = 0;
 bool WorldWavesChanged = true;
+
+// Headlights During Blackout
+const std::vector<std::string> WORLD_HEADLIGHTS_BLACKOUT_CAPTIONS{ "OFF", "No Shadows", "With Shadows" };
+const int WORLD_HEADLIGHTS_BLACKOUT_VALUES[] = { 1, 2, 3 };
+int featureLightsBlackoutIndex = 0;
+bool featureLightsBlackoutChanged = true;
 
 bool onconfirm_weather_menu(MenuItem<std::string> choice)
 {
@@ -299,6 +305,11 @@ void onchange_world_reducedgrip_snowing_index(int value, SelectFromListMenuItem*
 	RadarReducedGripSnowingChanged = true;
 }
 
+void onchange_world_headlights_blackout_index(int value, SelectFromListMenuItem* source) {
+	featureLightsBlackoutIndex = value;
+	featureLightsBlackoutChanged = true;
+}
+
 bool onconfirm_world_menu(MenuItem<int> choice)
 {
 	switch (choice.value)
@@ -420,11 +431,17 @@ void process_world_menu()
 	togItem->toggleValueUpdated = &featureBlackoutUpdated;
 	menuItems.push_back(togItem);
 
-	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Enable Headlights During Blackout";
-	togItem->value = 1;
-	togItem->toggleValue = &featureLightsBlackout;
-	menuItems.push_back(togItem);
+	listItem = new SelectFromListMenuItem(WORLD_HEADLIGHTS_BLACKOUT_CAPTIONS, onchange_world_headlights_blackout_index);
+	listItem->wrap = false;
+	listItem->caption = "Enable Headlights During Blackout";
+	listItem->value = featureLightsBlackoutIndex;
+	menuItems.push_back(listItem);
+
+	//togItem = new ToggleMenuItem<int>();
+	//togItem->caption = "Enable Headlights During Blackout";
+	//togItem->value = 1;
+	//togItem->toggleValue = &featureLightsBlackout;
+	//menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "Heavy Snow";
@@ -506,6 +523,7 @@ void reset_world_globals()
 	RadarMapIndex = 0;
 	WorldWavesIndex = 0;
 	RadarReducedGripSnowingIndex = 0;
+	featureLightsBlackoutIndex = 0;
 	WindStrengthIndex = 0;
 	lastWeather.clear();
 	lastWeatherName.clear();
@@ -516,7 +534,7 @@ void reset_world_globals()
 	featureCloudsNo =
 	featureCloudsFreeze =
 	featureWorldMoonGravity = false;
-	featureLightsBlackout = false;
+	//featureLightsBlackout = false;
 	featureWorldNoPeds = false;
 	featureWorldNoTraffic = false;
 	featureNoPoliceBlips = false;
@@ -749,7 +767,7 @@ void update_world_features()
 	// Bus Interior Light On At Night && NPC No Lights && NPC Neon Lights && NPC Dirty Vehicles && NPC Damaged Vehicles && NPC No Gravity Vehicles && NPC Vehicles Reduced Grip && NPC Vehicle Speed && NPC Use Fullbeam && 
 	// Headlights During Blackout 
 	if (featureBusLight || featureNPCNoLights || featureNPCNeonLights || featureDirtyVehicles || WORLD_DAMAGED_VEHICLES_VALUES[DamagedVehiclesIndex] > 0 || featureNPCNoGravityVehicles || featureNPCReducedGripVehicles ||
-		WORLD_NPC_VEHICLESPEED_VALUES[NPCVehicleSpeedIndex] > 0 || WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 || featureNPCFullBeam || featureLightsBlackout) {
+		WORLD_NPC_VEHICLESPEED_VALUES[NPCVehicleSpeedIndex] > 0 || WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 || featureNPCFullBeam || WORLD_HEADLIGHTS_BLACKOUT_VALUES[featureLightsBlackoutIndex] > 1) {
 		Vehicle veh_mycurrveh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 		const int BUS_ARR_SIZE = 1024;
 		Vehicle bus_veh[BUS_ARR_SIZE];
@@ -925,7 +943,7 @@ void update_world_features()
 				bool npclights_state = VEHICLE::GET_VEHICLE_LIGHTS_STATE(bus_veh[i], &lightsAutoOn, &highbeamsAutoOn);
 				if (lightsAutoOn && !highbeamsAutoOn && bus_veh[i] != PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false)) VEHICLE::SET_VEHICLE_FULLBEAM(bus_veh[i], 1);
 			}
-			if (featureLightsBlackout && featureBlackout && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(bus_veh[i])) {
+			if (WORLD_HEADLIGHTS_BLACKOUT_VALUES[featureLightsBlackoutIndex] > 1 && featureBlackout && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(bus_veh[i])) {
 				Vehicle vehpolicelights = bus_veh[i];
 				bool autolights_state = VEHICLE::GET_VEHICLE_LIGHTS_STATE(vehpolicelights, &lightsBAutoOn, &highbeamsBAutoOn);
 				int bone_cruiser_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(vehpolicelights, "headlight_l");
@@ -965,21 +983,34 @@ void update_world_features()
 						if (curColour == 13) { r = 31;	g = 44; b = 54; } // Stock
 					}
 				}
+				//if (VEHICLE::_IS_VEHICLE_DAMAGED(vehpolicelights)) VEHICLE::SET_VEHICLE_FIXED(vehpolicelights);
+				VEHICLE::SET_VEHICLE_CAN_BREAK(vehpolicelights, false);
+				ENTITY::SET_ENTITY_INVINCIBLE(vehpolicelights, true);
+				ENTITY::SET_ENTITY_CAN_BE_DAMAGED(vehpolicelights, false);
+				VEHICLE::SET_VEHICLE_CAN_BE_VISIBLY_DAMAGED(vehpolicelights, false);
 				if (lightsBAutoOn) {
-					//GRAPHICS::_DRAW_SPOT_LIGHT_WITH_SHADOW(bone_cruiser_coord.x, bone_cruiser_coord.y, bone_cruiser_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, r, g, b, 40.0, 1, 50, 31, 2.7, 5);
-					//GRAPHICS::_DRAW_SPOT_LIGHT_WITH_SHADOW(bone3_cruiser_coord.x, bone3_cruiser_coord.y, bone3_cruiser_coord.z, dirVector_rf_rr_x, dirVector_rf_rr_y, dirVector_rf_rr_z, r, g, b, 40.0, 1, 50, 31, 2.7, 5);
-					GRAPHICS::DRAW_SPOT_LIGHT(bone_cruiser_coord.x, bone_cruiser_coord.y, bone_cruiser_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, r, g, b, 40.0, 1, 50, 31, 2.7);
-					GRAPHICS::DRAW_SPOT_LIGHT(bone3_cruiser_coord.x, bone3_cruiser_coord.y, bone3_cruiser_coord.z, dirVector_rf_rr_x, dirVector_rf_rr_y, dirVector_rf_rr_z, r, g, b, 40.0, 1, 50, 31, 2.7);
+					if (WORLD_HEADLIGHTS_BLACKOUT_VALUES[featureLightsBlackoutIndex] == 3) { // with shadows
+						GRAPHICS::_DRAW_SPOT_LIGHT_WITH_SHADOW(bone_cruiser_coord.x, bone_cruiser_coord.y, bone_cruiser_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, r, g, b, 40.0, 1, 50, 31, 2.7, 5);
+						GRAPHICS::_DRAW_SPOT_LIGHT_WITH_SHADOW(bone3_cruiser_coord.x, bone3_cruiser_coord.y, bone3_cruiser_coord.z, dirVector_rf_rr_x, dirVector_rf_rr_y, dirVector_rf_rr_z, r, g, b, 40.0, 1, 50, 31, 2.7, 5);
+					}
+					if (WORLD_HEADLIGHTS_BLACKOUT_VALUES[featureLightsBlackoutIndex] == 2) { // no shadows
+						GRAPHICS::DRAW_SPOT_LIGHT(bone_cruiser_coord.x, bone_cruiser_coord.y, bone_cruiser_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, r, g, b, 40.0, 1, 50, 31, 2.7);
+						GRAPHICS::DRAW_SPOT_LIGHT(bone3_cruiser_coord.x, bone3_cruiser_coord.y, bone3_cruiser_coord.z, dirVector_rf_rr_x, dirVector_rf_rr_y, dirVector_rf_rr_z, r, g, b, 40.0, 1, 50, 31, 2.7);
+					}
 					GRAPHICS::DRAW_LIGHT_WITH_RANGE(bone_cruiser_coord.x, bone_cruiser_coord.y, bone_cruiser_coord.z, 255, 255, 255, 1, 15);
 					GRAPHICS::DRAW_LIGHT_WITH_RANGE(bone3_cruiser_coord.x, bone3_cruiser_coord.y, bone3_cruiser_coord.z, 255, 255, 255, 1, 15);
 					GRAPHICS::DRAW_LIGHT_WITH_RANGE(bone2_cruiser_coord.x, bone2_cruiser_coord.y, bone2_cruiser_coord.z, 255, 0, 0, 0.7, 15);
 					GRAPHICS::DRAW_LIGHT_WITH_RANGE(bone4_cruiser_coord.x, bone4_cruiser_coord.y, bone4_cruiser_coord.z, 255, 0, 0, 0.7, 15);
 				}
 				if (highbeamsBAutoOn) {
-					//GRAPHICS::_DRAW_SPOT_LIGHT_WITH_SHADOW(bone_cruiser_coord.x, bone_cruiser_coord.y, bone_cruiser_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, r, g, b, 60.0, 1, 50, 41, 2.7, 10);
-					//GRAPHICS::_DRAW_SPOT_LIGHT_WITH_SHADOW(bone3_cruiser_coord.x, bone3_cruiser_coord.y, bone3_cruiser_coord.z, dirVector_rf_rr_x, dirVector_rf_rr_y, dirVector_rf_rr_z, r, g, b, 60.0, 1, 50, 41, 2.7, 10);
-					GRAPHICS::DRAW_SPOT_LIGHT(bone_cruiser_coord.x, bone_cruiser_coord.y, bone_cruiser_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, r, g, b, 60.0, 1, 50, 41, 2.7);
-					GRAPHICS::DRAW_SPOT_LIGHT(bone3_cruiser_coord.x, bone3_cruiser_coord.y, bone3_cruiser_coord.z, dirVector_rf_rr_x, dirVector_rf_rr_y, dirVector_rf_rr_z, r, g, b, 60.0, 1, 50, 41, 2.7);
+					if (WORLD_HEADLIGHTS_BLACKOUT_VALUES[featureLightsBlackoutIndex] == 3) { // with shadows
+						GRAPHICS::_DRAW_SPOT_LIGHT_WITH_SHADOW(bone_cruiser_coord.x, bone_cruiser_coord.y, bone_cruiser_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, r, g, b, 60.0, 1, 50, 41, 2.7, 10);
+						GRAPHICS::_DRAW_SPOT_LIGHT_WITH_SHADOW(bone3_cruiser_coord.x, bone3_cruiser_coord.y, bone3_cruiser_coord.z, dirVector_rf_rr_x, dirVector_rf_rr_y, dirVector_rf_rr_z, r, g, b, 60.0, 1, 50, 41, 2.7, 10);
+					}
+					if (WORLD_HEADLIGHTS_BLACKOUT_VALUES[featureLightsBlackoutIndex] == 2) { // no shadows
+						GRAPHICS::DRAW_SPOT_LIGHT(bone_cruiser_coord.x, bone_cruiser_coord.y, bone_cruiser_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, r, g, b, 60.0, 1, 50, 41, 2.7);
+						GRAPHICS::DRAW_SPOT_LIGHT(bone3_cruiser_coord.x, bone3_cruiser_coord.y, bone3_cruiser_coord.z, dirVector_rf_rr_x, dirVector_rf_rr_y, dirVector_rf_rr_z, r, g, b, 60.0, 1, 50, 41, 2.7);
+					}
 					GRAPHICS::DRAW_LIGHT_WITH_RANGE(bone_cruiser_coord.x, bone_cruiser_coord.y, bone_cruiser_coord.z, 255, 255, 255, 1, 15);
 					GRAPHICS::DRAW_LIGHT_WITH_RANGE(bone3_cruiser_coord.x, bone3_cruiser_coord.y, bone3_cruiser_coord.z, 255, 255, 255, 1, 15);
 					GRAPHICS::DRAW_LIGHT_WITH_RANGE(bone2_cruiser_coord.x, bone2_cruiser_coord.y, bone2_cruiser_coord.z, 255, 0, 0, 0.7, 15);
@@ -1195,7 +1226,7 @@ void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* r
 	results->push_back(FeatureEnabledLocalDefinition{ "featureBlackout", &featureBlackout, &featureBlackoutUpdated });
 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureRestrictedZones", &featureRestrictedZones });
-	results->push_back(FeatureEnabledLocalDefinition{ "featureLightsBlackout", &featureLightsBlackout });
+	//results->push_back(FeatureEnabledLocalDefinition{ "featureLightsBlackout", &featureLightsBlackout });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoPeds", &featureWorldNoPeds }); 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoTraffic", &featureWorldNoTraffic, &featureWorldNoTrafficUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNoPoliceBlips", &featureNoPoliceBlips }); 
@@ -1228,6 +1259,7 @@ void add_world_feature_enablements2(std::vector<StringPairSettingDBRow>* results
 	results->push_back(StringPairSettingDBRow{ "DamagedVehiclesIndex", std::to_string(DamagedVehiclesIndex) });
 	results->push_back(StringPairSettingDBRow{ "NPCVehicleSpeedIndex", std::to_string(NPCVehicleSpeedIndex) });
 	results->push_back(StringPairSettingDBRow{ "RadarReducedGripSnowingIndex", std::to_string(RadarReducedGripSnowingIndex) });
+	results->push_back(StringPairSettingDBRow{ "featureLightsBlackoutIndex", std::to_string(featureLightsBlackoutIndex) });
 }
 
 void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings)
@@ -1268,6 +1300,9 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 		}
 		else if (setting.name.compare("RadarReducedGripSnowingIndex") == 0) {
 			RadarReducedGripSnowingIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("featureLightsBlackoutIndex") == 0) {
+			featureLightsBlackoutIndex = stoi(setting.value);
 		}
 	}
 }

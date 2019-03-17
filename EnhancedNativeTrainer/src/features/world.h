@@ -46,6 +46,8 @@ void onchange_world_waves_index(int value, SelectFromListMenuItem* source);
 
 void onchange_world_reducedgrip_snowing_index(int value, SelectFromListMenuItem* source);
 
+void onchange_world_headlights_blackout_index(int value, SelectFromListMenuItem* source);
+
 void onchange_world_damaged_vehicles_index(int value, SelectFromListMenuItem* source);
 
 void onchange_world_npc_vehicles_speed_index(int value, SelectFromListMenuItem* source);
