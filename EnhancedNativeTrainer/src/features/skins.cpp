@@ -626,10 +626,12 @@ bool onconfirm_skinchanger_menu(MenuItem<int> choice)
 		PED::CLEAR_ALL_PED_PROPS(playerPed);
 		break;
 	case 6:
+		PED::CLEAR_ALL_PED_PROPS(playerPed);
 		PED::SET_PED_RANDOM_COMPONENT_VARIATION(playerPed, true);
 		PED::SET_PED_RANDOM_PROPS(playerPed);
 		break;
 	case 7:
+		PED::CLEAR_ALL_PED_PROPS(playerPed);
 		PED::SET_PED_RANDOM_PROPS(playerPed);
 		break;
 	}
