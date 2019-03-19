@@ -50,6 +50,7 @@ bool featureArmyMelee = false;
 
 bool featureGravityGun = false;
 bool featureFriendlyFire = false;
+bool featurePowerPunch = false;
 // Cop Weapons
 bool someonehasgunandshooting = false;
 Ped shooting_criminal = -1;
@@ -1111,6 +1112,12 @@ bool process_weapon_menu(){
 	toggleItem->toggleValue = &featureFriendlyFire;
 	menuItems.push_back(toggleItem);
 
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Power Punch";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featurePowerPunch;
+	menuItems.push_back(toggleItem);
+
 	return draw_generic_menu<int>(menuItems, &activeLineIndexWeapon, caption, onconfirm_weapon_menu, NULL, NULL);
 }
 
@@ -1153,6 +1160,7 @@ void reset_weapon_globals(){
 		featureAgainstMeleeWeapons =
 		featureAimAtDriver =
 		featureFriendlyFire =
+		featurePowerPunch =
 		featureSwitchWeaponIfDanger =
 		featureGravityGun = false;
 }
@@ -1302,6 +1310,52 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	peds_dont_like_weapons(); ///// <--- PEDS DON'T LIKE WEAPONS /////
+
+	// Power Punch
+	if (featurePowerPunch && (CONTROLS::IS_CONTROL_PRESSED(2, 24) || CONTROLS::IS_CONTROL_PRESSED(2, 140) || CONTROLS::IS_CONTROL_PRESSED(2, 141))) {
+		WAIT(550);
+		Ped playerPed = PLAYER::PLAYER_PED_ID();
+		Ped temp_bodyguard = -1;
+		Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(playerPed, true);
+		Vector3 vec = ENTITY::GET_ENTITY_FORWARD_VECTOR(playerPed);
+		Vector3 loc = ENTITY::GET_ENTITY_COORDS(playerPed, 0); // 1
+		Vector3 CamRot = CAM::GET_GAMEPLAY_CAM_ROT(2);
+		int p_force = 5;
+		float rad = 2 * 3.14 * (CamRot.z / 360);
+		//radians = ( degrees * pi ) / 180 ;
+		float v_x = -(sin(rad) * p_force * 10);
+		float v_y = (cos(rad) * p_force * 10);
+		float v_z = p_force * (CamRot.x*0.2);
+		
+		//PLAYER::SET_PLAYER_WEAPON_DAMAGE_MODIFIER(player, 1000.0);
+		//PLAYER::SET_PLAYER_MELEE_WEAPON_DAMAGE_MODIFIER(player, 1000.0, 1);
+		//PLAYER::SET_PLAYER_VEHICLE_DAMAGE_MODIFIER(playerPed, 1000.0);
+
+		const int arrSize_p = 1024;
+		Ped surr_p_peds[arrSize_p];
+		int count_surr_p_peds = worldGetAllPeds(surr_p_peds, arrSize_p);
+		float dist_diff = -1.0;
+		float temp_dist = 20.0;
+		for (int i = 0; i < count_surr_p_peds; i++) {
+			if (PED::GET_PED_TYPE(surr_p_peds[i]) != 0 && PED::GET_PED_TYPE(surr_p_peds[i]) != 1 && PED::GET_PED_TYPE(surr_p_peds[i]) != 2 &&
+				PED::GET_PED_TYPE(surr_p_peds[i]) != 3) {
+				Vector3 coordsped = ENTITY::GET_ENTITY_COORDS(surr_p_peds[i], true);
+				dist_diff = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsped.x, coordsped.y, coordsped.z);
+				if (temp_dist > dist_diff) {
+					temp_dist = dist_diff;
+					temp_bodyguard = surr_p_peds[i];
+				}
+			}
+		} // end of int
+		Vector3 coords_p_ped = ENTITY::GET_ENTITY_COORDS(temp_bodyguard, true);
+		float temp_dist_diff = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coords_p_ped.x, coords_p_ped.y, coords_p_ped.z);
+		if (temp_dist_diff < 5) {
+			PED::SET_PED_CAN_RAGDOLL(temp_bodyguard, true);
+			PED::SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(temp_bodyguard, true);
+			PED::SET_PED_RAGDOLL_FORCE_FALL(temp_bodyguard);
+			ENTITY::APPLY_FORCE_TO_ENTITY(temp_bodyguard, 1, v_x, v_y, v_z, 0, 0, 0, true, false, true, true, true, true);
+		}
+	}
 
 	// Cops Take Your Weapons If You Die / Arrested
 	playerPed = PLAYER::PLAYER_PED_ID();
@@ -1824,6 +1878,7 @@ void add_weapon_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponVehRockets", &featureWeaponVehRockets});
 	results->push_back(FeatureEnabledLocalDefinition{"featureGravityGun", &featureGravityGun});
 	results->push_back(FeatureEnabledLocalDefinition{"featureFriendlyFire", &featureFriendlyFire});
+	results->push_back(FeatureEnabledLocalDefinition{"featurePowerPunch", &featurePowerPunch});
 	results->push_back(FeatureEnabledLocalDefinition{"featureGiveAllWeapons", &featureGiveAllWeapons});
 	results->push_back(FeatureEnabledLocalDefinition{"featureCopArmedWith", &featureCopArmedWith});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePedAgainstWeapons", &featurePedAgainstWeapons});
