@@ -1315,7 +1315,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	if (featurePowerPunch && (CONTROLS::IS_CONTROL_PRESSED(2, 24) || CONTROLS::IS_CONTROL_PRESSED(2, 140) || CONTROLS::IS_CONTROL_PRESSED(2, 141))) {
 		WAIT(550);
 		Ped playerPed = PLAYER::PLAYER_PED_ID();
-		Ped temp_bodyguard = -1;
+		Ped temp_nearest_ped = -1;
 		Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(playerPed, true);
 		Vector3 vec = ENTITY::GET_ENTITY_FORWARD_VECTOR(playerPed);
 		Vector3 loc = ENTITY::GET_ENTITY_COORDS(playerPed, 0); // 1
@@ -1343,17 +1343,17 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 				dist_diff = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsped.x, coordsped.y, coordsped.z);
 				if (temp_dist > dist_diff) {
 					temp_dist = dist_diff;
-					temp_bodyguard = surr_p_peds[i];
+					temp_nearest_ped = surr_p_peds[i];
 				}
 			}
 		} // end of int
-		Vector3 coords_p_ped = ENTITY::GET_ENTITY_COORDS(temp_bodyguard, true);
+		Vector3 coords_p_ped = ENTITY::GET_ENTITY_COORDS(temp_nearest_ped, true);
 		float temp_dist_diff = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coords_p_ped.x, coords_p_ped.y, coords_p_ped.z);
 		if (temp_dist_diff < 5) {
-			PED::SET_PED_CAN_RAGDOLL(temp_bodyguard, true);
-			PED::SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(temp_bodyguard, true);
-			PED::SET_PED_RAGDOLL_FORCE_FALL(temp_bodyguard);
-			ENTITY::APPLY_FORCE_TO_ENTITY(temp_bodyguard, 1, v_x, v_y, v_z, 0, 0, 0, true, false, true, true, true, true);
+			PED::SET_PED_CAN_RAGDOLL(temp_nearest_ped, true);
+			PED::SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(temp_nearest_ped, true);
+			PED::SET_PED_RAGDOLL_FORCE_FALL(temp_nearest_ped);
+			ENTITY::APPLY_FORCE_TO_ENTITY(temp_nearest_ped, 1, v_x, v_y, v_z, 0, 0, 0, true, false, true, true, true, true);
 		}
 	}
 
