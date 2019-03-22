@@ -55,6 +55,10 @@ bool featurePowerPunch = false;
 bool someonehasgunandshooting = false;
 Ped shooting_criminal = -1;
 //
+
+Ped temp_nearest_ped = -1;
+bool force_nearest_ped = false;
+
 bool grav_target_locked = false;
 Entity grav_entity = 0;
 DWORD grav_partfx = 0;
@@ -1312,48 +1316,48 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	peds_dont_like_weapons(); ///// <--- PEDS DON'T LIKE WEAPONS /////
 
 	// Power Punch
-	if (featurePowerPunch && (CONTROLS::IS_CONTROL_PRESSED(2, 24) || CONTROLS::IS_CONTROL_PRESSED(2, 140) || CONTROLS::IS_CONTROL_PRESSED(2, 141))) {
-		WAIT(550);
+	if (featurePowerPunch && !WEAPON::IS_PED_ARMED(playerPed, 7)) {
 		Ped playerPed = PLAYER::PLAYER_PED_ID();
-		Ped temp_nearest_ped = -1;
 		Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(playerPed, true);
 		Vector3 vec = ENTITY::GET_ENTITY_FORWARD_VECTOR(playerPed);
 		Vector3 loc = ENTITY::GET_ENTITY_COORDS(playerPed, 0); // 1
 		Vector3 CamRot = CAM::GET_GAMEPLAY_CAM_ROT(2);
 		int p_force = 5;
 		float rad = 2 * 3.14 * (CamRot.z / 360);
-		//radians = ( degrees * pi ) / 180 ;
+		//float rad = (degrees * pi) / 180 ;
 		float v_x = -(sin(rad) * p_force * 10);
 		float v_y = (cos(rad) * p_force * 10);
-		float v_z = p_force * (CamRot.x*0.2);
-		
-		//PLAYER::SET_PLAYER_WEAPON_DAMAGE_MODIFIER(player, 1000.0);
-		//PLAYER::SET_PLAYER_MELEE_WEAPON_DAMAGE_MODIFIER(player, 1000.0, 1);
-		//PLAYER::SET_PLAYER_VEHICLE_DAMAGE_MODIFIER(playerPed, 1000.0);
+		float v_z = p_force * (CamRot.x * 0.2);
 
-		const int arrSize_p = 1024;
-		Ped surr_p_peds[arrSize_p];
-		int count_surr_p_peds = worldGetAllPeds(surr_p_peds, arrSize_p);
-		float dist_diff = -1.0;
-		float temp_dist = 20.0;
-		for (int i = 0; i < count_surr_p_peds; i++) {
-			if (PED::GET_PED_TYPE(surr_p_peds[i]) != 0 && PED::GET_PED_TYPE(surr_p_peds[i]) != 1 && PED::GET_PED_TYPE(surr_p_peds[i]) != 2 &&
-				PED::GET_PED_TYPE(surr_p_peds[i]) != 3) {
-				Vector3 coordsped = ENTITY::GET_ENTITY_COORDS(surr_p_peds[i], true);
-				dist_diff = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsped.x, coordsped.y, coordsped.z);
-				if (temp_dist > dist_diff) {
-					temp_dist = dist_diff;
-					temp_nearest_ped = surr_p_peds[i];
+		PLAYER::SET_PLAYER_WEAPON_DAMAGE_MODIFIER(player, 1000.0);
+		PLAYER::SET_PLAYER_MELEE_WEAPON_DAMAGE_MODIFIER(player, 1000.0, 1);
+		PLAYER::SET_PLAYER_VEHICLE_DAMAGE_MODIFIER(playerPed, 1000.0);
+
+		if (CONTROLS::IS_CONTROL_PRESSED(2, 24) || CONTROLS::IS_CONTROL_PRESSED(2, 140) || CONTROLS::IS_CONTROL_PRESSED(2, 141)) {
+			const int arrSize_p = 1024;
+			Ped surr_p_peds[arrSize_p];
+			int count_surr_p_peds = worldGetAllPeds(surr_p_peds, arrSize_p);
+			float dist_diff = -1.0;
+			float temp_dist = 1000.0;
+			for (int i = 0; i < count_surr_p_peds; i++) {
+				if (PED::GET_PED_TYPE(surr_p_peds[i]) != 0 && PED::GET_PED_TYPE(surr_p_peds[i]) != 1 && PED::GET_PED_TYPE(surr_p_peds[i]) != 2 && PED::GET_PED_TYPE(surr_p_peds[i]) != 3 &&
+					!PED::IS_PED_DEAD_OR_DYING(surr_p_peds[i], true)) {
+					Vector3 coordsped = ENTITY::GET_ENTITY_COORDS(surr_p_peds[i], true);
+					dist_diff = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsped.x, coordsped.y, coordsped.z);
+					if (temp_dist > dist_diff) {
+						temp_dist = dist_diff;
+						temp_nearest_ped = surr_p_peds[i];
+					}
 				}
-			}
-		} // end of int
-		Vector3 coords_p_ped = ENTITY::GET_ENTITY_COORDS(temp_nearest_ped, true);
-		float temp_dist_diff = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coords_p_ped.x, coords_p_ped.y, coords_p_ped.z);
-		if (temp_dist_diff < 5) {
-			PED::SET_PED_CAN_RAGDOLL(temp_nearest_ped, true);
-			PED::SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(temp_nearest_ped, true);
-			PED::SET_PED_RAGDOLL_FORCE_FALL(temp_nearest_ped);
+			} // end of int
+			if (temp_nearest_ped != -1) force_nearest_ped = true;
+		} // end of control pressed
+
+		if (force_nearest_ped == true && ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(temp_nearest_ped, playerPed, 1)) {
 			ENTITY::APPLY_FORCE_TO_ENTITY(temp_nearest_ped, 1, v_x, v_y, v_z, 0, 0, 0, true, false, true, true, true, true);
+			ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(temp_nearest_ped);
+			temp_nearest_ped = -1;
+			force_nearest_ped = false;
 		}
 	}
 
