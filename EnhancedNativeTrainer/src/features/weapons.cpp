@@ -1333,31 +1333,28 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		PLAYER::SET_PLAYER_MELEE_WEAPON_DAMAGE_MODIFIER(player, 1000.0, 1);
 		PLAYER::SET_PLAYER_VEHICLE_DAMAGE_MODIFIER(playerPed, 1000.0);
 
-		if (CONTROLS::IS_CONTROL_PRESSED(2, 24) || CONTROLS::IS_CONTROL_PRESSED(2, 140) || CONTROLS::IS_CONTROL_PRESSED(2, 141)) {
+		if (CONTROLS::IS_CONTROL_PRESSED(2, 24) || CONTROLS::IS_CONTROL_PRESSED(2, 140) || CONTROLS::IS_CONTROL_PRESSED(2, 141)) force_nearest_ped = true;
+		
+		if (force_nearest_ped == true) {
 			const int arrSize_p = 1024;
 			Ped surr_p_peds[arrSize_p];
 			int count_surr_p_peds = worldGetAllPeds(surr_p_peds, arrSize_p);
 			float dist_diff = -1.0;
 			float temp_dist = 1000.0;
 			for (int i = 0; i < count_surr_p_peds; i++) {
-				if (PED::GET_PED_TYPE(surr_p_peds[i]) != 0 && PED::GET_PED_TYPE(surr_p_peds[i]) != 1 && PED::GET_PED_TYPE(surr_p_peds[i]) != 2 && PED::GET_PED_TYPE(surr_p_peds[i]) != 3 &&
-					!PED::IS_PED_DEAD_OR_DYING(surr_p_peds[i], true)) {
-					Vector3 coordsped = ENTITY::GET_ENTITY_COORDS(surr_p_peds[i], true);
-					dist_diff = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsped.x, coordsped.y, coordsped.z);
-					if (temp_dist > dist_diff) {
-						temp_dist = dist_diff;
+				if (PED::GET_PED_TYPE(surr_p_peds[i]) != 0 && PED::GET_PED_TYPE(surr_p_peds[i]) != 1 && PED::GET_PED_TYPE(surr_p_peds[i]) != 2 && PED::GET_PED_TYPE(surr_p_peds[i]) != 3) { //  && !PED::IS_PED_DEAD_OR_DYING(surr_p_peds[i], true)
+					if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(surr_p_peds[i], playerPed, 1)) {
 						temp_nearest_ped = surr_p_peds[i];
+						force_nearest_ped = false;
 					}
 				}
 			} // end of int
-			if (temp_nearest_ped != -1) force_nearest_ped = true;
-		} // end of control pressed
+		}
 
-		if (force_nearest_ped == true && ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(temp_nearest_ped, playerPed, 1)) {
+		if (temp_nearest_ped != -1) { //  && ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(temp_nearest_ped, playerPed, 1)
 			ENTITY::APPLY_FORCE_TO_ENTITY(temp_nearest_ped, 1, v_x, v_y, v_z, 0, 0, 0, true, false, true, true, true, true);
 			ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(temp_nearest_ped);
 			temp_nearest_ped = -1;
-			force_nearest_ped = false;
 		}
 	}
 
