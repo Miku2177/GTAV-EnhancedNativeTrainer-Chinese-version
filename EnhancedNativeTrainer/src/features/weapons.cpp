@@ -1339,8 +1339,6 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			const int arrSize_p = 1024;
 			Ped surr_p_peds[arrSize_p];
 			int count_surr_p_peds = worldGetAllPeds(surr_p_peds, arrSize_p);
-			float dist_diff = -1.0;
-			float temp_dist = 1000.0;
 			for (int i = 0; i < count_surr_p_peds; i++) {
 				if (PED::GET_PED_TYPE(surr_p_peds[i]) != 0 && PED::GET_PED_TYPE(surr_p_peds[i]) != 1 && PED::GET_PED_TYPE(surr_p_peds[i]) != 2 && PED::GET_PED_TYPE(surr_p_peds[i]) != 3) { //  && !PED::IS_PED_DEAD_OR_DYING(surr_p_peds[i], true)
 					if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(surr_p_peds[i], playerPed, 1)) {
@@ -1352,6 +1350,10 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		}
 
 		if (temp_nearest_ped != -1) { //  && ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(temp_nearest_ped, playerPed, 1)
+			AI::CLEAR_PED_TASKS_IMMEDIATELY(temp_nearest_ped);
+			PED::SET_PED_CAN_RAGDOLL(temp_nearest_ped, true);
+			PED::SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(temp_nearest_ped, true);
+			PED::SET_PED_RAGDOLL_FORCE_FALL(temp_nearest_ped);
 			ENTITY::APPLY_FORCE_TO_ENTITY(temp_nearest_ped, 1, v_x, v_y, v_z, 0, 0, 0, true, false, true, true, true, true);
 			ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(temp_nearest_ped);
 			temp_nearest_ped = -1;
