@@ -1316,7 +1316,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	peds_dont_like_weapons(); ///// <--- PEDS DON'T LIKE WEAPONS /////
 
 	// Power Punch
-	if (featurePowerPunch && !WEAPON::IS_PED_ARMED(playerPed, 7)) {
+	if (featurePowerPunch && !WEAPON::IS_PED_ARMED(playerPed, 7) && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
 		Ped playerPed = PLAYER::PLAYER_PED_ID();
 		Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(playerPed, true);
 		Vector3 vec = ENTITY::GET_ENTITY_FORWARD_VECTOR(playerPed);
