@@ -91,6 +91,8 @@ std::string lastCloudsName;
 BOOL lightsBAutoOn = -1;
 BOOL highbeamsBAutoOn = -1;
 
+int Lightning_secs_passed, Lightning_secs_curr, Lightning_seconds = 0;
+
 // Radar Map Size
 const std::vector<std::string> WORLD_RADAR_MAP_CAPTIONS{ "Normal", "Big", "Full" };
 const int WORLD_RADAR_MAP_VALUES[] = { 1, 2, 3 };
@@ -120,6 +122,12 @@ const std::vector<std::string> WORLD_HEADLIGHTS_BLACKOUT_CAPTIONS{ "OFF", "No Sh
 const int WORLD_HEADLIGHTS_BLACKOUT_VALUES[] = { 1, 2, 3 };
 int featureLightsBlackoutIndex = 0;
 bool featureLightsBlackoutChanged = true;
+
+// Lightning Intensity
+const std::vector<std::string> WORLD_LIGHTNING_INTENSITY_CAPTIONS{ "OFF", "Often", "Very Often" };
+const int WORLD_LIGHTNING_INTENSITY_VALUES[] = { -2, 2, -1 };
+int featureLightIntensityIndex = 0;
+bool featureLightIntensityChanged = true;
 
 bool onconfirm_weather_menu(MenuItem<std::string> choice)
 {
@@ -165,7 +173,7 @@ bool onconfirm_weather_menu(MenuItem<std::string> choice)
 		GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
 
 		GAMEPLAY::SET_WEATHER_TYPE_NOW((char *)lastWeather.c_str());
-
+		if (GAMEPLAY::GET_NEXT_WEATHER_TYPE_HASH_NAME() == 3061285535) GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 1.0);
 		GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
 
 		std::ostringstream ss2;
@@ -293,6 +301,11 @@ void onchange_world_radar_map_index(int value, SelectFromListMenuItem* source){
 void onchange_world_waves_index(int value, SelectFromListMenuItem* source) {
 	WorldWavesIndex = value;
 	WorldWavesChanged = true;
+}
+
+void onchange_lightning_intensity_index(int value, SelectFromListMenuItem* source) {
+	featureLightIntensityIndex = value;
+	featureLightIntensityChanged = true;
 }
 
 void onchange_world_wind_strength_index(int value, SelectFromListMenuItem* source){
@@ -512,6 +525,12 @@ void process_world_menu()
 	listItem->value = WorldWavesIndex;
 	menuItems.push_back(listItem);
 
+	listItem = new SelectFromListMenuItem(WORLD_LIGHTNING_INTENSITY_CAPTIONS, onchange_lightning_intensity_index);
+	listItem->wrap = false;
+	listItem->caption = "Lightning Intensity";
+	listItem->value = featureLightIntensityIndex;
+	menuItems.push_back(listItem);
+
 	draw_generic_menu<int>(menuItems, &activeLineIndexWorld, caption, onconfirm_world_menu, NULL, NULL);
 }
 
@@ -522,6 +541,7 @@ void reset_world_globals()
 	activeLineIndexClouds = 0;
 	RadarMapIndex = 0;
 	WorldWavesIndex = 0;
+	featureLightIntensityIndex = 0;
 	RadarReducedGripSnowingIndex = 0;
 	featureLightsBlackoutIndex = 0;
 	WindStrengthIndex = 0;
@@ -764,6 +784,20 @@ void update_world_features()
 	if (wavesstrength_changed != WORLD_WAVES_VALUES[WorldWavesIndex]) wavesstrength_toggle = false;
 	if (WORLD_WAVES_VALUES[WorldWavesIndex] != -1) WATER::_SET_WAVES_INTENSITY(WORLD_WAVES_VALUES[WorldWavesIndex]);
 	
+	// Lightning Intensity
+	if (WORLD_LIGHTNING_INTENSITY_VALUES[featureLightIntensityIndex] > -2 && GAMEPLAY::GET_NEXT_WEATHER_TYPE_HASH_NAME() == 3061285535) {
+		Lightning_secs_passed = clock() / CLOCKS_PER_SEC;
+		if (((clock() / CLOCKS_PER_SEC) - Lightning_secs_curr) != 0) {
+			Lightning_seconds = Lightning_seconds + 1;
+			Lightning_secs_curr = Lightning_secs_passed;
+		}
+
+		if (Lightning_seconds > WORLD_LIGHTNING_INTENSITY_VALUES[featureLightIntensityIndex]) {
+			GAMEPLAY::_CREATE_LIGHTNING_THUNDER();
+			Lightning_seconds = 0;
+		}
+	}
+
 	// Bus Interior Light On At Night && NPC No Lights && NPC Neon Lights && NPC Dirty Vehicles && NPC Damaged Vehicles && NPC No Gravity Vehicles && NPC Vehicles Reduced Grip && NPC Vehicle Speed && NPC Use Fullbeam && 
 	// Headlights During Blackout 
 	if (featureBusLight || featureNPCNoLights || featureNPCNeonLights || featureDirtyVehicles || WORLD_DAMAGED_VEHICLES_VALUES[DamagedVehiclesIndex] > 0 || featureNPCNoGravityVehicles || featureNPCReducedGripVehicles ||
@@ -1255,6 +1289,7 @@ void add_world_feature_enablements2(std::vector<StringPairSettingDBRow>* results
 {
 	results->push_back(StringPairSettingDBRow{ "RadarMapIndex", std::to_string(RadarMapIndex) });
 	results->push_back(StringPairSettingDBRow{ "WorldWavesIndex", std::to_string(WorldWavesIndex) });
+	results->push_back(StringPairSettingDBRow{ "featureLightIntensityIndex", std::to_string(featureLightIntensityIndex) });
 	results->push_back(StringPairSettingDBRow{ "WindStrengthIndex", std::to_string(WindStrengthIndex) });
 	results->push_back(StringPairSettingDBRow{ "DamagedVehiclesIndex", std::to_string(DamagedVehiclesIndex) });
 	results->push_back(StringPairSettingDBRow{ "NPCVehicleSpeedIndex", std::to_string(NPCVehicleSpeedIndex) });
@@ -1288,6 +1323,9 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 		}
 		else if (setting.name.compare("WorldWavesIndex") == 0) {
 			WorldWavesIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("featureLightIntensityIndex") == 0) {
+			featureLightIntensityIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("WindStrengthIndex") == 0){
 			WindStrengthIndex = stoi(setting.value);
