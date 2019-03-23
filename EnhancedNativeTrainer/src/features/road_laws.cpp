@@ -50,6 +50,7 @@ bool featureStolenVehicle = true;
 bool featureNoLightsNightTime = true;
 bool featureEscapingPolice = true;
 bool idontlikeiwasseen = false;
+bool p_blinks = false;
 int Seen_secs_passed, Seen_secs_curr, Seen_seconds = 0;
 bool againsttraffic_check, pavementdriving_check, vehiclecollision_check, vehicledamaged_check, hohelmet_check, mobilephone_check, speedingincity_check, speedingonspeedway_check, runningredlight_check, stolenvehicle_check, nolightsnighttime_check, escapingpolice_check = false;
 int SinceCollision_secs_passed, SinceCollision_secs_curr, Collision_seconds = -1;
@@ -495,9 +496,11 @@ void road_laws()
 				}
 			}
 
-			if (been_seen_by_a_cop == true)	{ 
-				VEHICLE::DISABLE_VEHICLE_IMPACT_EXPLOSION_ACTIVATION(fine_cop_car, false);
-				VEHICLE::SET_VEHICLE_SIREN(fine_cop_car, true);
+			if (been_seen_by_a_cop == true)	{
+				if (p_blinks == false) {
+					VEHICLE::DISABLE_VEHICLE_IMPACT_EXPLOSION_ACTIVATION(fine_cop_car, false);
+					VEHICLE::SET_VEHICLE_SIREN(fine_cop_car, true);
+				}
 				veh_cop_in_coords = ENTITY::GET_ENTITY_COORDS(fine_cop_car, true);
 				vehcoplaws_speed = ENTITY::GET_ENTITY_SPEED(fine_cop_car);
 				if (featurePoliceNoFlip && (ENTITY::GET_ENTITY_ROLL(fine_cop_car) > 40 || ENTITY::GET_ENTITY_ROLL(fine_cop_car) < -40) && vehcoplaws_speed > 1) VEHICLE::SET_VEHICLE_ON_GROUND_PROPERLY(fine_cop_car); 
@@ -582,12 +585,17 @@ void road_laws()
 					Stuck_seconds = 0;
 					stuck_completely = 0;
 				}
+				if (vehcoplaws_speed > 1) p_blinks = false;
 			}
-
+			
 			// You'll be fined if you don't move
 			if ((vehroadlaws_speed < 1 && vehcoplaws_speed < 1 && tempgotcha_x < 100 && tempgotcha_y < 100 && been_seen_by_a_cop == true) || (been_seen_by_a_cop == true && !PED::IS_PED_IN_VEHICLE(cop_that_fines_you, fine_cop_car, true)))
 			{
-				VEHICLE::DISABLE_VEHICLE_IMPACT_EXPLOSION_ACTIVATION(fine_cop_car, true);
+				if (p_blinks == false) {
+					VEHICLE::DISABLE_VEHICLE_IMPACT_EXPLOSION_ACTIVATION(fine_cop_car, true);
+					VEHICLE::SET_VEHICLE_SIREN(fine_cop_car, true);
+					p_blinks = true;
+				}
 				SinceStop_secs_passed = clock() / CLOCKS_PER_SEC;
 				if (((clock() / CLOCKS_PER_SEC) - SinceStop_secs_curr) != 0) {
 					if (Stop_seconds < 5 && been_seen_by_a_cop == true) Stop_seconds = Stop_seconds + 1;
@@ -780,6 +788,7 @@ void road_laws()
 				pavementdriving_check = false;
 				vehicledamaged_check = false;
 				hohelmet_check = false;
+				p_blinks = false;
 				mobilephone_check = false;
 				vehiclecollision_check = false;
 				speedingincity_check = false;
@@ -834,6 +843,7 @@ void road_laws()
 				Stop_seconds_final = 5;
 				tempgotcha_x = 0;
 				tempgotcha_y = 0;
+				p_blinks = false;
 				Collision_seconds = -1;
 				no_agressive = false;
 				PLAYER::SET_MAX_WANTED_LEVEL(5);
@@ -850,6 +860,7 @@ void road_laws()
 				tempgotcha_y = 0;
 				Seen_seconds = 0;
 				idontlikeiwasseen = false;
+				p_blinks = false;
 			}
 
 		} // end of ped loop

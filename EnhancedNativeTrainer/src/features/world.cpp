@@ -125,7 +125,7 @@ bool featureLightsBlackoutChanged = true;
 
 // Lightning Intensity
 const std::vector<std::string> WORLD_LIGHTNING_INTENSITY_CAPTIONS{ "OFF", "Often", "Very Often" };
-const int WORLD_LIGHTNING_INTENSITY_VALUES[] = { -2, 2, -1 };
+const int WORLD_LIGHTNING_INTENSITY_VALUES[] = { -2, 3, -1 };
 int featureLightIntensityIndex = 0;
 bool featureLightIntensityChanged = true;
 
