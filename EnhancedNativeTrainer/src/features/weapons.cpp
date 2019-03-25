@@ -1318,9 +1318,9 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	// Power Punch
 	if (featurePowerPunch && !WEAPON::IS_PED_ARMED(playerPed, 7) && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
 		Ped playerPed = PLAYER::PLAYER_PED_ID();
-		Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(playerPed, true);
-		Vector3 vec = ENTITY::GET_ENTITY_FORWARD_VECTOR(playerPed);
-		Vector3 loc = ENTITY::GET_ENTITY_COORDS(playerPed, 0); // 1
+		//Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(playerPed, true);
+		//Vector3 vec = ENTITY::GET_ENTITY_FORWARD_VECTOR(playerPed);
+		//Vector3 loc = ENTITY::GET_ENTITY_COORDS(playerPed, 0); // 1
 		Vector3 CamRot = CAM::GET_GAMEPLAY_CAM_ROT(2);
 		int p_force = 5;
 		float rad = 2 * 3.14 * (CamRot.z / 360);
