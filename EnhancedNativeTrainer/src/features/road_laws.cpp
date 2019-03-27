@@ -53,6 +53,7 @@ bool idontlikeiwasseen = false;
 bool p_blinks = false;
 bool keeponwalking = false;
 float spot_to_stop = -1;
+bool being_arrested = false;
 int Seen_secs_passed, Seen_secs_curr, Seen_seconds = 0;
 bool againsttraffic_check, pavementdriving_check, vehiclecollision_check, vehicledamaged_check, hohelmet_check, mobilephone_check, speedingincity_check, speedingonspeedway_check, runningredlight_check, stolenvehicle_check, nolightsnighttime_check, escapingpolice_check = false;
 int SinceCollision_secs_passed, SinceCollision_secs_curr, Collision_seconds = -1;
@@ -823,16 +824,19 @@ void road_laws()
 							STATS::STAT_GET_INT(SP0_TOTAL_CASH, &outValue_beingfined, -1);
 							statHash_beingfined = SP0_TOTAL_CASH;
 							STATS::STAT_SET_INT(statHash_beingfined, outValue_beingfined - VEH_FINESIZE_VALUES[FineSizeIndex], true);
+							if (outValue_beingfined < VEH_FINESIZE_VALUES[FineSizeIndex]) being_arrested = true; 
 						}
 						if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE) {
 							STATS::STAT_GET_INT(SP1_TOTAL_CASH, &outValue_beingfined, -1);
 							statHash_beingfined = SP1_TOTAL_CASH;
 							STATS::STAT_SET_INT(statHash_beingfined, outValue_beingfined - VEH_FINESIZE_VALUES[FineSizeIndex], true);
+							if (outValue_beingfined < VEH_FINESIZE_VALUES[FineSizeIndex]) being_arrested = true; 
 						}
 						if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO) {
 							STATS::STAT_GET_INT(SP2_TOTAL_CASH, &outValue_beingfined, -1);
 							statHash_beingfined = SP2_TOTAL_CASH;
 							STATS::STAT_SET_INT(statHash_beingfined, outValue_beingfined - VEH_FINESIZE_VALUES[FineSizeIndex], true);
+							if (outValue_beingfined < VEH_FINESIZE_VALUES[FineSizeIndex]) being_arrested = true; 
 						}
 					}
 
@@ -863,12 +867,14 @@ void road_laws()
 				nolightsnighttime_check = false;
 				escapingpolice_check = false;
 
-				VEHICLE::SET_VEHICLE_SIREN(fine_cop_car, false);
-				AI::CLEAR_PED_TASKS(cop_that_fines_you);
-				ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&cop_that_fines_you);
-				ENTITY::SET_VEHICLE_AS_NO_LONGER_NEEDED(&fine_cop_car);
-				AI::TASK_GOTO_ENTITY_AIMING(cop_that_fines_you, fine_cop_car, 0.0, 10.0);
-				AI::TASK_ENTER_VEHICLE(cop_that_fines_you, fine_cop_car, -1, 0, 2, 1, 0);
+				if (being_arrested == false) {
+					VEHICLE::SET_VEHICLE_SIREN(fine_cop_car, false);
+					AI::CLEAR_PED_TASKS(cop_that_fines_you);
+					ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&cop_that_fines_you);
+					ENTITY::SET_VEHICLE_AS_NO_LONGER_NEEDED(&fine_cop_car);
+					AI::TASK_GOTO_ENTITY_AIMING(cop_that_fines_you, fine_cop_car, 0.0, 10.0);
+					AI::TASK_ENTER_VEHICLE(cop_that_fines_you, fine_cop_car, -1, 0, 2, 1, 0);
+				}
 				cop_walking = false;
 				if (stolenvehicle_check == false) been_seen_by_a_cop = false;
 				if (featurePoliceVehicleBlip && UI::DOES_BLIP_EXIST(blip_laws)) UI::REMOVE_BLIP(&blip_laws);
@@ -918,6 +924,17 @@ void road_laws()
 				been_seen_by_a_cop = false;
 			}
 			
+			if (being_arrested == true) {
+				AI::TASK_ARREST_PED(cop_that_fines_you, PLAYER::PLAYER_PED_ID());
+				being_arrested = false;
+			}
+
+			if (PLAYER::GET_TIME_SINCE_LAST_ARREST() > 2 && PLAYER::GET_TIME_SINCE_LAST_ARREST() < 100) {
+				VEHICLE::SET_VEHICLE_SIREN(fine_cop_car, false);
+				ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&cop_that_fines_you);
+				ENTITY::SET_VEHICLE_AS_NO_LONGER_NEEDED(&fine_cop_car);
+			}
+
 			if (been_seen_by_a_cop == false) {
 				cop_walking = false;
 				tempgotcha_x = 0;

@@ -996,8 +996,9 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		int GetHash = GAMEPLAY::GET_HASH_KEY("FE_MENU_VERSION_SP_PAUSE");
 		if (CONTROLS::IS_CONTROL_PRESSED(2, 199) || CONTROLS::IS_CONTROL_PRESSED(2, 200)) {
 			UI::ACTIVATE_FRONTEND_MENU(GetHash, featureGamePause, MISC_DEF_MANUTAB_VALUES[DefMenuTabIndex]);
+			AUDIO::SET_AUDIO_FLAG("PlayMenuMusic", true);
 			WAIT(100);
-		} 
+		} else AUDIO::SET_AUDIO_FLAG("PlayMenuMusic", false);
 	} 
 	
 	// Phone Bill
