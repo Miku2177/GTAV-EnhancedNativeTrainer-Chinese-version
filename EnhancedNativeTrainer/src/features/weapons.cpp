@@ -41,6 +41,7 @@ bool featureCopWeapon = false;
 bool featureWeaponFireAmmo = false;
 bool featureWeaponExplosiveAmmo = false;
 bool featureWeaponExplosiveMelee = false;
+bool featureWeaponExplosiveGrenades = false;
 bool featureWeaponVehRockets = false;
 
 bool featureCopArmedWith = false;
@@ -924,10 +925,10 @@ bool onconfirm_weapon_menu(MenuItem<int> choice){
 			}
 			break;
 		}
-		case 22:
+		case 23:
 			process_copweapon_menu();
 			break;
-		case 23:
+		case 24:
 			process_pedagainstweapons_menu();
 			break;
 	default:
@@ -1079,6 +1080,13 @@ bool process_weapon_menu(){
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Explosive Grenades";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureWeaponExplosiveGrenades;
+	toggleItem->toggleValueUpdated = NULL;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Vehicle Rockets";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureWeaponVehRockets;
@@ -1156,6 +1164,7 @@ void reset_weapon_globals(){
 		featureWeaponFireAmmo =
 		featureWeaponExplosiveAmmo =
 		featureWeaponExplosiveMelee =
+		featureWeaponExplosiveGrenades =
 		featureWeaponVehRockets =
 		featureGiveAllWeapons =
 		featureCopArmedWith =
@@ -1193,6 +1202,21 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	if(featureWeaponExplosiveMelee){
 		if(bPlayerExists)
 			GAMEPLAY::SET_EXPLOSIVE_MELEE_THIS_FRAME(player);
+	}
+
+	if (featureWeaponExplosiveGrenades) {
+		const int array_g = 1024;
+		Object objects_g[array_g];
+		int count_h = worldGetAllObjects(objects_g, array_g);
+		for (int i = 0; i < count_h; i++) {
+			Hash model = ENTITY::GET_ENTITY_MODEL(objects_g[i]);
+			if ((model == 0x1152354B || model == 0x741FD3C4) && ENTITY::IS_ENTITY_IN_AIR(objects_g[i])) {
+				Vector3 v = ENTITY::GET_ENTITY_COORDS(objects_g[i], TRUE);
+				Vector3 plv = ENTITY::GET_ENTITY_COORDS(playerPed, TRUE);
+				float dist = GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(plv.x, plv.y, plv.z, v.x, v.y, v.z, TRUE);
+				if (dist > 15.0) FIRE::ADD_EXPLOSION(v.x, v.y, v.z, ExplosionTypeGrenadeL, 1.0, rand() % 3 == 0, FALSE, 0.0);
+			}
+		}
 	}
 
 	// infinite ammo
@@ -1318,9 +1342,6 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	// Power Punch
 	if (featurePowerPunch && !WEAPON::IS_PED_ARMED(playerPed, 7) && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
 		Ped playerPed = PLAYER::PLAYER_PED_ID();
-		//Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(playerPed, true);
-		//Vector3 vec = ENTITY::GET_ENTITY_FORWARD_VECTOR(playerPed);
-		//Vector3 loc = ENTITY::GET_ENTITY_COORDS(playerPed, 0); // 1
 		Vector3 CamRot = CAM::GET_GAMEPLAY_CAM_ROT(2);
 		int p_force = 5;
 		float rad = 2 * 3.14 * (CamRot.z / 360);
@@ -1328,7 +1349,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		float v_x = -(sin(rad) * p_force * 10);
 		float v_y = (cos(rad) * p_force * 10);
 		float v_z = p_force * (CamRot.x * 0.2);
-
+		
 		PLAYER::SET_PLAYER_WEAPON_DAMAGE_MODIFIER(player, 1000.0);
 		PLAYER::SET_PLAYER_MELEE_WEAPON_DAMAGE_MODIFIER(player, 1000.0, 1);
 		PLAYER::SET_PLAYER_VEHICLE_DAMAGE_MODIFIER(playerPed, 1000.0);
@@ -1336,17 +1357,33 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		if (CONTROLS::IS_CONTROL_PRESSED(2, 24) || CONTROLS::IS_CONTROL_PRESSED(2, 140) || CONTROLS::IS_CONTROL_PRESSED(2, 141)) force_nearest_ped = true;
 		
 		if (force_nearest_ped == true) {
-			const int arrSize_p = 1024;
-			Ped surr_p_peds[arrSize_p];
-			int count_surr_p_peds = worldGetAllPeds(surr_p_peds, arrSize_p);
+			const int arrSize_punch = 1024;
+			Ped surr_p_peds[arrSize_punch];
+			int count_surr_p_peds = worldGetAllPeds(surr_p_peds, arrSize_punch);
 			for (int i = 0; i < count_surr_p_peds; i++) {
-				if (PED::GET_PED_TYPE(surr_p_peds[i]) != 0 && PED::GET_PED_TYPE(surr_p_peds[i]) != 1 && PED::GET_PED_TYPE(surr_p_peds[i]) != 2 && PED::GET_PED_TYPE(surr_p_peds[i]) != 3) { //  && !PED::IS_PED_DEAD_OR_DYING(surr_p_peds[i], true)
+				if (PED::GET_PED_TYPE(surr_p_peds[i]) != 0 && PED::GET_PED_TYPE(surr_p_peds[i]) != 1 && PED::GET_PED_TYPE(surr_p_peds[i]) != 2 && PED::GET_PED_TYPE(surr_p_peds[i]) != 3) {
 					if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(surr_p_peds[i], playerPed, 1)) {
 						temp_nearest_ped = surr_p_peds[i];
 						force_nearest_ped = false;
 					}
 				}
-			} // end of int
+			} // end of int (peds)
+			Object surr_objects[arrSize_punch];
+			int count_surr_o = worldGetAllObjects(surr_objects, arrSize_punch);
+			for (int i = 0; i < count_surr_o; i++) {
+				if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(surr_objects[i], playerPed, 1)) {
+					temp_nearest_ped = surr_objects[i];
+					force_nearest_ped = false;
+				}
+			} // end of int (objects)
+			Vehicle surr_vehicles[arrSize_punch];
+			int count_surr_v = worldGetAllVehicles(surr_vehicles, arrSize_punch);
+			for (int i = 0; i < count_surr_v; i++) {
+				if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(surr_vehicles[i], playerPed, 1)) {
+					temp_nearest_ped = surr_vehicles[i];
+					force_nearest_ped = false;
+				}
+			} // end of int (vehicles)
 		}
 
 		if (temp_nearest_ped != -1) { //  && ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(temp_nearest_ped, playerPed, 1)
@@ -1871,6 +1908,7 @@ void onconfirm_open_tint_menu_colour(MenuItem<int> choice) {
 void add_weapon_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){
 	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponExplosiveAmmo", &featureWeaponExplosiveAmmo});
 	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponExplosiveMelee", &featureWeaponExplosiveMelee});
+	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponExplosiveGrenades", &featureWeaponExplosiveGrenades});
 	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponFireAmmo", &featureWeaponFireAmmo});
 	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponInfiniteAmmo", &featureWeaponInfiniteAmmo});
 	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponInfiniteParachutes", &featureWeaponInfiniteParachutes, &featureWeaponInfiniteParachutesUpdated });
