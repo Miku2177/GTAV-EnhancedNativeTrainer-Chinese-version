@@ -1080,7 +1080,7 @@ bool process_weapon_menu(){
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Explosive Grenades";
+	toggleItem->caption = "Super Explosive Grenades";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureWeaponExplosiveGrenades;
 	toggleItem->toggleValueUpdated = NULL;
