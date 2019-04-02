@@ -606,6 +606,7 @@ void update_world_features()
 	if (featureWorldRandomCopsUpdated)
 	{
 		PED::SET_CREATE_RANDOM_COPS(featureWorldRandomCops);
+		PED::SET_CREATE_RANDOM_COPS_ON_SCENARIOS(featureWorldRandomCops);
 		featureWorldRandomCopsUpdated = false;
 	}
 

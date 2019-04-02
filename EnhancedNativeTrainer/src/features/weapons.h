@@ -254,6 +254,8 @@ void onchange_chance_attacking_you_index(int value, SelectFromListMenuItem* sour
 
 void onchange_sniper_vision_modifier(int value, SelectFromListMenuItem* source);
 
+void onchange_vehicle_weapon_modifier(int value, SelectFromListMenuItem* source);
+
 void onchange_cop_alarm_index(int value, SelectFromListMenuItem* source);
 
 void add_weapon_feature_enablements2(std::vector<StringPairSettingDBRow>* results);

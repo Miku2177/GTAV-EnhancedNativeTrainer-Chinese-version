@@ -92,6 +92,13 @@ const std::vector<std::string> WEAPONS_COPARMED_CAPTIONS{ "\"WEAPON_UNARMED\"", 
 int CopCurrArmedIndex = 1;
 bool CopCurrArmedChanged = true;
 
+// Vehicle Weapon
+const std::vector<std::string> WEAPONS_VEHICLE_CAPTIONS{ "OFF", "\"WEAPON_FLAREGUN\"", "\"WEAPON_DBSHOTGUN\"", "\"WEAPON_GRENADELAUNCHER\"", "\"WEAPON_RPG\"", "\"WEAPON_RAILGUN\"", "\"WEAPON_FIREWORK\"",
+"\"WEAPON_RAYPISTOL\"", "\"WEAPON_GRENADE\"", "\"WEAPON_MOLOTOV\"" };
+const int WEAPONS_VEHICLE_VALUES[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+int VehCurrWeaponIndex = 0;
+bool VehCurrWeaponChanged = true;
+
 // Cop Wanted Level
 const std::vector<std::string> WEAPONS_COPALARM_CAPTIONS{ "One Star", "Two Stars Or Less", "Three Stars Or Less", "Four Stars Or Less", "Five Stars Or Less", "Always" };
 const int WEAPONS_COPALARM_VALUES[] = { 1, 2, 3, 4, 5, 6 };
@@ -566,7 +573,7 @@ bool do_give_weapon(std::string modelName){
 	}
 }
 
-void onchange_cop_armed_index(int value, SelectFromListMenuItem* source){
+void onchange_cop_armed_index(int value, SelectFromListMenuItem* source){ 
 	CopCurrArmedIndex = value;
 	CopCurrArmedChanged = true;
 }
@@ -643,6 +650,11 @@ void onchange_chance_attacking_you_index(int value, SelectFromListMenuItem* sour
 void onchange_sniper_vision_modifier(int value, SelectFromListMenuItem* source){
 	SniperVisionIndex = value;
 	SniperVisionChanged = true;
+}
+
+void onchange_vehicle_weapon_modifier(int value, SelectFromListMenuItem* source) {
+	VehCurrWeaponIndex = value;
+	VehCurrWeaponChanged = true;
 }
 
 ///////////////////////////////// TOGGLE VISION FOR SNIPER RIFLES /////////////////////////////////
@@ -1086,12 +1098,18 @@ bool process_weapon_menu(){
 	toggleItem->toggleValueUpdated = NULL;
 	menuItems.push_back(toggleItem);
 
-	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Vehicle Rockets";
-	toggleItem->value = i++;
-	toggleItem->toggleValue = &featureWeaponVehRockets;
-	toggleItem->toggleValueUpdated = NULL;
-	menuItems.push_back(toggleItem);
+	//toggleItem = new ToggleMenuItem<int>();
+	//toggleItem->caption = "Vehicle Rockets";
+	//toggleItem->value = i++;
+	//toggleItem->toggleValue = &featureWeaponVehRockets;
+	//toggleItem->toggleValueUpdated = NULL;
+	//menuItems.push_back(toggleItem);
+
+	listItem = new SelectFromListMenuItem(WEAPONS_VEHICLE_CAPTIONS, onchange_vehicle_weapon_modifier);
+	listItem->wrap = false;
+	listItem->caption = "Vehicle Weapon";
+	listItem->value = VehCurrWeaponIndex;
+	menuItems.push_back(listItem);
 
 	item = new MenuItem<int>();
 	item->caption = "Cop Weapons";
@@ -1139,6 +1157,7 @@ void reset_weapon_globals(){
 	weapDmgModIndex = 0;
 
 	CopCurrArmedIndex = 1;
+	VehCurrWeaponIndex = 0;
 	CopAlarmIndex = 1;
 
 	ChancePoliceCallingIndex = 5;
@@ -1214,8 +1233,8 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 				Vector3 gr_cor = ENTITY::GET_ENTITY_COORDS(objects_g[i], TRUE);
 				Vector3 me_cor = ENTITY::GET_ENTITY_COORDS(playerPed, TRUE);
 				float dist = GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(me_cor.x, me_cor.y, me_cor.z, gr_cor.x, gr_cor.y, gr_cor.z, TRUE);
-				if (ENTITY::IS_ENTITY_IN_AIR(objects_g[i]) && dist > 15.0) FIRE::ADD_EXPLOSION(gr_cor.x, gr_cor.y, gr_cor.z, ExplosionTypeGrenadeL, 1.0, true, false, 0.0); // rand() % 3 == 0
-				if (!ENTITY::IS_ENTITY_IN_AIR(objects_g[i]) && dist > 15.0 && dist < 100.0) FIRE::ADD_EXPLOSION(gr_cor.x, gr_cor.y, gr_cor.z, ExplosionTypeGrenadeL, 3.0, true, false, 0.0);
+				if (ENTITY::IS_ENTITY_IN_AIR(objects_g[i]) && dist > 15.0) FIRE::ADD_EXPLOSION(gr_cor.x, gr_cor.y, gr_cor.z, ExplosionTypeGrenadeL, 3.0, rand() % 3 == 0, false, 0.0); // rand() % 3 == 0
+				if (!ENTITY::IS_ENTITY_IN_AIR(objects_g[i]) && dist > 15.0 && dist < 70.0) FIRE::ADD_EXPLOSION(gr_cor.x, gr_cor.y, gr_cor.z, ExplosionTypeGrenadeL, 3.0, rand() % 3 == 0, false, 0.0);
 			}
 		}
 	}
@@ -1568,43 +1587,39 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		//set_status_text("Gravity gun: ~r~called");
 	}
 }
+
 void update_vehicle_guns(){
-	Player player = PLAYER::PLAYER_ID();
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	if (WEAPONS_VEHICLE_VALUES[VehCurrWeaponIndex] > 0 && PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) {
+		Player player = PLAYER::PLAYER_ID();
+		Ped playerPed = PLAYER::PLAYER_PED_ID();
 
-	if(!ENTITY::DOES_ENTITY_EXIST(playerPed) || !featureWeaponVehRockets) return;
+		//if (!ENTITY::DOES_ENTITY_EXIST(playerPed) || !featureWeaponVehRockets) return;
 
-	bool bSelect = IsKeyDown(KeyConfig::KEY_VEH_ROCKETS) || IsControllerButtonDown(KeyConfig::KEY_VEH_ROCKETS) || (CONTROLS::IS_CONTROL_PRESSED(2, 69) && !CONTROLS::IS_CONTROL_PRESSED(2, 70));
+		bool bSelect = IsKeyDown(KeyConfig::KEY_VEH_ROCKETS) || IsControllerButtonDown(KeyConfig::KEY_VEH_ROCKETS) || (CONTROLS::IS_CONTROL_PRESSED(2, 69) && !CONTROLS::IS_CONTROL_PRESSED(2, 70));
 
-	if(bSelect && featureWeaponVehShootLastTime + 150 < GetTickCount() &&
-	   PLAYER::IS_PLAYER_CONTROL_ON(player) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
-		Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+		if (bSelect && featureWeaponVehShootLastTime + 150 < GetTickCount() && PLAYER::IS_PLAYER_CONTROL_ON(player)) {
+			Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+			Vector3 v0, v1;
+			GAMEPLAY::GET_MODEL_DIMENSIONS(ENTITY::GET_ENTITY_MODEL(veh), &v0, &v1);
 
-		Vector3 v0, v1;
-		GAMEPLAY::GET_MODEL_DIMENSIONS(ENTITY::GET_ENTITY_MODEL(veh), &v0, &v1);
-
-		Hash weaponAssetRocket = GAMEPLAY::GET_HASH_KEY("WEAPON_VEHICLE_ROCKET");
-		if(!WEAPON::HAS_WEAPON_ASSET_LOADED(weaponAssetRocket)){
-			WEAPON::REQUEST_WEAPON_ASSET(weaponAssetRocket, 31, 0);
-			while(!WEAPON::HAS_WEAPON_ASSET_LOADED(weaponAssetRocket)){
-				WAIT(0);
+			//Hash weaponAssetRocket = GAMEPLAY::GET_HASH_KEY("WEAPON_VEHICLE_ROCKET");
+			char *currWeapon_v = new char[WEAPONS_VEHICLE_CAPTIONS[VehCurrWeaponIndex].length() + 1];
+			strcpy(currWeapon_v, WEAPONS_VEHICLE_CAPTIONS[VehCurrWeaponIndex].c_str());
+			Hash weaponAssetRocket = GAMEPLAY::GET_HASH_KEY(currWeapon_v);
+			if (!WEAPON::HAS_WEAPON_ASSET_LOADED(weaponAssetRocket)) {
+				WEAPON::REQUEST_WEAPON_ASSET(weaponAssetRocket, 31, 0);
+				while (!WEAPON::HAS_WEAPON_ASSET_LOADED(weaponAssetRocket)) {
+					WAIT(0);
+				}
 			}
+			Vector3 coords0from = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(veh, -(v1.x + 0.25f), v1.y + 1.25f, 0.1);
+			Vector3 coords1from = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(veh, (v1.x + 0.25f), v1.y + 1.25f, 0.1);
+			Vector3 coords0to = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(veh, -v1.x, v1.y + 100.0f, 0.1f);
+			Vector3 coords1to = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(veh, v1.x, v1.y + 100.0f, 0.1f);
+			GAMEPLAY::SHOOT_SINGLE_BULLET_BETWEEN_COORDS(coords0from.x, coords0from.y, coords0from.z, coords0to.x, coords0to.y, coords0to.z, 250, 1, weaponAssetRocket, playerPed, 1, 0, -1.0);
+			GAMEPLAY::SHOOT_SINGLE_BULLET_BETWEEN_COORDS(coords1from.x, coords1from.y, coords1from.z, coords1to.x, coords1to.y, coords1to.z, 250, 1, weaponAssetRocket, playerPed, 1, 0, -1.0);
+			featureWeaponVehShootLastTime = GetTickCount();
 		}
-
-		Vector3 coords0from = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(veh, -(v1.x + 0.25f), v1.y + 1.25f, 0.1);
-		Vector3 coords1from = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(veh, (v1.x + 0.25f), v1.y + 1.25f, 0.1);
-		Vector3 coords0to = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(veh, -v1.x, v1.y + 100.0f, 0.1f);
-		Vector3 coords1to = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(veh, v1.x, v1.y + 100.0f, 0.1f);
-
-		GAMEPLAY::SHOOT_SINGLE_BULLET_BETWEEN_COORDS(coords0from.x, coords0from.y, coords0from.z,
-													 coords0to.x, coords0to.y, coords0to.z,
-													 250, 1, weaponAssetRocket, playerPed, 1, 0, -1.0);
-
-		GAMEPLAY::SHOOT_SINGLE_BULLET_BETWEEN_COORDS(coords1from.x, coords1from.y, coords1from.z,
-													 coords1to.x, coords1to.y, coords1to.z,
-													 250, 1, weaponAssetRocket, playerPed, 1, 0, -1.0);
-
-		featureWeaponVehShootLastTime = GetTickCount();
 	}
 }
 
@@ -1937,6 +1952,7 @@ void add_weapon_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 void add_weapon_feature_enablements2(std::vector<StringPairSettingDBRow>* results)
 {
 	results->push_back(StringPairSettingDBRow{ "CopCurrArmedIndex", std::to_string(CopCurrArmedIndex) });
+	results->push_back(StringPairSettingDBRow{ "VehCurrWeaponIndex", std::to_string(VehCurrWeaponIndex) });
 	results->push_back(StringPairSettingDBRow{ "CopAlarmIndex", std::to_string(CopAlarmIndex) });
 	results->push_back(StringPairSettingDBRow{ "ChancePoliceCallingIndex", std::to_string(ChancePoliceCallingIndex) });
 	results->push_back(StringPairSettingDBRow{ "ChanceAttackingYouIndex", std::to_string(ChanceAttackingYouIndex) });
@@ -1959,6 +1975,9 @@ void handle_generic_settings_weapons(std::vector<StringPairSettingDBRow>* settin
 		}
 		else if (setting.name.compare("CopCurrArmedIndex") == 0){
 			CopCurrArmedIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("VehCurrWeaponIndex") == 0) {
+			VehCurrWeaponIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("CopAlarmIndex") == 0){
 			CopAlarmIndex = stoi(setting.value);
