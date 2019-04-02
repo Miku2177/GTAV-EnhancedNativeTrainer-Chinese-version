@@ -1207,14 +1207,15 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	if (featureWeaponExplosiveGrenades) {
 		const int array_g = 1024;
 		Object objects_g[array_g];
-		int count_h = worldGetAllObjects(objects_g, array_g);
-		for (int i = 0; i < count_h; i++) {
-			Hash model = ENTITY::GET_ENTITY_MODEL(objects_g[i]);
-			if ((model == 0x1152354B || model == 0x741FD3C4) && ENTITY::IS_ENTITY_IN_AIR(objects_g[i])) {
-				Vector3 v = ENTITY::GET_ENTITY_COORDS(objects_g[i], TRUE);
-				Vector3 plv = ENTITY::GET_ENTITY_COORDS(playerPed, TRUE);
-				float dist = GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(plv.x, plv.y, plv.z, v.x, v.y, v.z, TRUE);
-				if (dist > 15.0) FIRE::ADD_EXPLOSION(v.x, v.y, v.z, ExplosionTypeGrenadeL, 1.0, rand() % 3 == 0, FALSE, 0.0);
+		int count_g = worldGetAllObjects(objects_g, array_g);
+		for (int i = 0; i < count_g; i++) {
+			Hash grenade = ENTITY::GET_ENTITY_MODEL(objects_g[i]);
+			if ((grenade == 0x1152354B || grenade == 0x741FD3C4)) {
+				Vector3 gr_cor = ENTITY::GET_ENTITY_COORDS(objects_g[i], TRUE);
+				Vector3 me_cor = ENTITY::GET_ENTITY_COORDS(playerPed, TRUE);
+				float dist = GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(me_cor.x, me_cor.y, me_cor.z, gr_cor.x, gr_cor.y, gr_cor.z, TRUE);
+				if (ENTITY::IS_ENTITY_IN_AIR(objects_g[i]) && dist > 15.0) FIRE::ADD_EXPLOSION(gr_cor.x, gr_cor.y, gr_cor.z, ExplosionTypeGrenadeL, 1.0, true, false, 0.0); // rand() % 3 == 0
+				if (!ENTITY::IS_ENTITY_IN_AIR(objects_g[i]) && dist > 15.0 && dist < 100.0) FIRE::ADD_EXPLOSION(gr_cor.x, gr_cor.y, gr_cor.z, ExplosionTypeGrenadeL, 3.0, true, false, 0.0);
 			}
 		}
 	}
