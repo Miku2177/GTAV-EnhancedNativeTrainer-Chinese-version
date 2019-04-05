@@ -57,6 +57,7 @@ bool being_arrested = false;
 int Seen_secs_passed, Seen_secs_curr, Seen_seconds = 0;
 bool againsttraffic_check, pavementdriving_check, vehiclecollision_check, vehicledamaged_check, hohelmet_check, mobilephone_check, speedingincity_check, speedingonspeedway_check, runningredlight_check, stolenvehicle_check, nolightsnighttime_check, escapingpolice_check = false;
 int SinceCollision_secs_passed, SinceCollision_secs_curr, Collision_seconds = -1;
+int TargetBlocked_secs_passed, TargetBlocked_secs_curr, TargetBlocked_seconds = -1;
 int SinceEscape_secs_passed, SinceEscape_secs_curr, Escape_seconds = -1;
 int SinceAgainstTraffic_secs_passed, SinceAgainstTraffic_secs_curr, AgainstTraffic_seconds = -1;
 int Stuck_secs_passed, Stuck_secs_curr, Stuck_seconds = -1;
@@ -688,6 +689,7 @@ void road_laws()
 				}
 			}
 			
+			// Cop Must Go To The Driver
 			if (!PED::IS_PED_IN_VEHICLE(cop_that_fines_you, fine_cop_car, true) && cop_walking == true && Still_seconds > 2 && (tempfined_x > 4 || tempfined_y > 4)) { 
 				//Vector3 temp_fine_me = ENTITY::GET_ENTITY_COORDS(playerPed, true);
 				int bone_mycar_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(playerPed, "BONETAG_L_FINGER0"); // IK_Head
@@ -712,7 +714,7 @@ void road_laws()
 				//Vector3 temp_fine_me = ENTITY::GET_ENTITY_COORDS(playerPed, true);
 				int bone_mycar_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(playerPed, "BONETAG_L_FINGER0"); // IK_Head
 				Vector3 temp_fine_me = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(playerPed, bone_mycar_index);
-				if (keeponwalking == false && AI::IS_PED_STILL(cop_that_fines_you) && ((((ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) > 135 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) < 225) ||
+				if (TargetBlocked_seconds < 10 && keeponwalking == false && AI::IS_PED_STILL(cop_that_fines_you) && ((((ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) > 135 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) < 225) ||
 					(ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) > 315 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) < 45)) && temp_walking_cop.x != spot_to_stop) ||
 					(((ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) > 44 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) < 136) ||
 					(ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) > 224 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) < 316)) && temp_walking_cop.y != spot_to_stop))) {
@@ -730,6 +732,19 @@ void road_laws()
 				}
 			}
 			if (!AI::IS_PED_STILL(cop_that_fines_you)) keeponwalking = false;
+
+			// Find Another Place If Not Possible To Approach Driver
+			if (keeponwalking == true) {
+				TargetBlocked_secs_passed = clock() / CLOCKS_PER_SEC;
+				if (((clock() / CLOCKS_PER_SEC) - TargetBlocked_secs_curr) != 0) {
+					TargetBlocked_seconds = TargetBlocked_seconds + 1;
+					TargetBlocked_secs_curr = TargetBlocked_secs_passed;
+				}
+			}
+			if (TargetBlocked_seconds > 9) {
+				AI::TASK_GOTO_ENTITY_AIMING(cop_that_fines_you, playerPed, 4.0, 30.0); // 4.0
+				TargetBlocked_seconds = 0;
+			}
 
 			// You're being fined
 			if (tempfined_x < 5 && tempfined_y < 5 && Stop_seconds > 4 && PED::IS_PED_IN_VEHICLE(playerPed, vehroadlaws, true) && AI::IS_PED_STILL(cop_that_fines_you)) {
@@ -942,6 +957,7 @@ void road_laws()
 				Seen_seconds = 0;
 				idontlikeiwasseen = false;
 				p_blinks = false;
+				TargetBlocked_seconds = 0;
 			}
 
 		} // end of ped loop
