@@ -662,6 +662,7 @@ void reset_misc_globals(){
 	featureRadioFreezeUpdated =
 	featureRadioAlwaysOffUpdated =
 	featureMiscHideHudUpdated =
+	featureResetPlayerModelOnDeath =
 	featureBoostRadio = true;
 
 	ENTColor::reset_colors();
