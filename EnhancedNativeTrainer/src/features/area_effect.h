@@ -29,6 +29,7 @@ extern bool featureDirtyVehicles;
 extern bool featureNPCNoGravityVehicles;
 extern bool featureNPCNoGravityPeds;
 extern bool featureNPCReducedGripVehicles;
+extern bool featureBoostNPCRadio;
 
 extern const int WORLD_DAMAGED_VEHICLES_VALUES[];
 extern int DamagedVehiclesIndex;
