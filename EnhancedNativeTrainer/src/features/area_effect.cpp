@@ -45,6 +45,7 @@ bool featureDirtyVehicles = false;
 bool featureNPCNoGravityVehicles = false;
 bool featureNPCNoGravityPeds = false;
 bool featureNPCReducedGripVehicles = false;
+bool featureBoostNPCRadio = false;
 
 int pedWeaponSetIndex = 0;
 
@@ -107,7 +108,7 @@ void add_areaeffect_feature_enablements(std::vector<FeatureEnabledLocalDefinitio
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNPCNoGravityVehicles", &featureNPCNoGravityVehicles }); 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNPCNoGravityPeds", &featureNPCNoGravityPeds }); 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNPCReducedGripVehicles", &featureNPCReducedGripVehicles }); 
-
+	results->push_back(FeatureEnabledLocalDefinition{ "featureBoostNPCRadio", &featureBoostNPCRadio });
 }
 
 void reset_areaeffect_globals(){
@@ -129,6 +130,7 @@ void reset_areaeffect_globals(){
 	featureNPCNoGravityVehicles = false;
 	featureNPCNoGravityPeds = false;
 	featureNPCReducedGripVehicles = false;
+	featureBoostNPCRadio = false;
 
 	DamagedVehiclesIndex = 0;
 	NPCVehicleSpeedIndex = 0;
@@ -260,6 +262,12 @@ void process_areaeffect_vehicle_menu(){
 	listItem->caption = "NPC Vehicles Forced Speed";
 	listItem->value = NPCVehicleSpeedIndex;
 	menuItems.push_back(listItem);
+
+	togItem = new ToggleMenuItem<int>();
+	togItem->caption = "Boost NPC Radio Volume";
+	togItem->value = 1;
+	togItem->toggleValue = &featureBoostNPCRadio;
+	menuItems.push_back(togItem);
 
 	draw_generic_menu<int>(menuItems, &areaeffect_veh_level_menu_index, "Vehicle Effects", NULL, NULL, NULL);
 }

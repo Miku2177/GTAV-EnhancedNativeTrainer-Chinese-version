@@ -64,6 +64,8 @@ bool accel = false;
 bool p_exist = false;
 //
 
+Vehicle playerVeh = -1;
+
 bool featurePlayerRadio = false;
 bool featurePlayerRadioUpdated = false;
 bool featureRadioFreeze = false, featureRadioFreezeUpdated = false;
@@ -736,14 +738,11 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 
 	// Radio Boost
 	if (featureBoostRadio) {
-		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
-			Vehicle playerVeh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
-			AUDIO::SET_VEHICLE_RADIO_LOUD(playerVeh, 1);
-			AUDIO::RELEASE_AMBIENT_AUDIO_BANK();
-		}
+		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) playerVeh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+		AUDIO::SET_VEHICLE_RADIO_LOUD(playerVeh, 1);
 	}
 	if (!featureBoostRadio) AUDIO::SET_VEHICLE_RADIO_LOUD(PED::GET_VEHICLE_PED_IS_USING(playerPed), 0);
-
+	
 	// Radio In Police Vehicles
 	if (featurePoliceRadio) {
 		Vehicle playerVeh = PED::GET_VEHICLE_PED_IS_IN(playerPed, 1);
