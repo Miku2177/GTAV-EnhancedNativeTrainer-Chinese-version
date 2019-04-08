@@ -48,6 +48,8 @@ void onchange_lightning_intensity_index(int value, SelectFromListMenuItem* sourc
 
 void onchange_world_reducedgrip_snowing_index(int value, SelectFromListMenuItem* source);
 
+void onchange_world_reducedgrip_raining_index(int value, SelectFromListMenuItem* source);
+
 void onchange_world_headlights_blackout_index(int value, SelectFromListMenuItem* source);
 
 void onchange_world_damaged_vehicles_index(int value, SelectFromListMenuItem* source);
