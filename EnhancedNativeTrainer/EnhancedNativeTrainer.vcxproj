@@ -381,7 +381,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <TargetExt>.asi</TargetExt>
-    <OutDir>bin\$(Configuration)\</OutDir>
+    <OutDir>D:\Relax\Grand Theft Auto V</OutDir>
     <IntDir>tmp\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
