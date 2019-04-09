@@ -29,6 +29,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "../version.h"
 #include "../utils.h"
 #include "../ui_support/file_dialog.h"
+#include "..\ui_support\menu_functions.h"
 
 #include <set>
 #include <iostream>
@@ -1432,7 +1433,7 @@ void main(){
 		}
 		else if(airbrake_switch_pressed()){
 			menu_beep();
-			process_airbrake_menu();
+			if (airbrake_enable) process_airbrake_menu();
 		}
 
 		update_features();

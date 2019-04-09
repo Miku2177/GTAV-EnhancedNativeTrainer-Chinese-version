@@ -27,6 +27,7 @@ int activeLineIndexAirbrake = 0;
 int activeLineHotkeyConfig = 0;
 
 // airbrake mode variables
+bool airbrake_enable = true;
 bool mouse_view_control = false;
 bool help_showing = true;
 bool frozen_time = false;
@@ -351,24 +352,29 @@ void process_misc_freezeradio_menu(){
 bool onconfirm_airbrake_menu(MenuItem<int> choice) {
 
 	if (choice.value == -1) {
-		process_airbrake_menu();
+		if (airbrake_enable) process_airbrake_menu();
 	}
 	return false;
 }
-
+ 
 void process_airbrake_global_menu() {
 	std::string caption = "Airbrake Menu Options";
 
 	std::vector<MenuItem<int>*> menuItems;
 	MenuItem<int> *item;
 
+	ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Enable";
+	toggleItem->toggleValue = &airbrake_enable;
+	menuItems.push_back(toggleItem);
+
 	item = new MenuItem<int>();
-	item->caption = "Enable Airbrake Mode [F6 to open/close]";
+	item->caption = "Toggle Airbrake Mode [F6 to open/close]";
 	item->value = -1;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
-	ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
+	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Mouse Mode";
 	toggleItem->toggleValue = &mouse_view_control;
 	menuItems.push_back(toggleItem);
@@ -645,6 +651,7 @@ void reset_misc_globals(){
 	DefMenuTabIndex = 0;
 
 	featureShowVehiclePreviews = true;
+	airbrake_enable = true;
 	featureControllerIgnoreInTrainer = false;
 	featureBlockInputInMenu = false;
 	mouse_view_control = false;
@@ -1232,6 +1239,7 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 	results->push_back(FeatureEnabledLocalDefinition{"featureControllerIgnoreInTrainer", &featureControllerIgnoreInTrainer});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBlockInputInMenu", &featureBlockInputInMenu});
 	results->push_back(FeatureEnabledLocalDefinition{"mouse_view_control", &mouse_view_control});
+	results->push_back(FeatureEnabledLocalDefinition{"airbrake_enable", &airbrake_enable});
 	results->push_back(FeatureEnabledLocalDefinition{"help_showing", &help_showing});
 	results->push_back(FeatureEnabledLocalDefinition{"frozen_time", &frozen_time});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePhoneBillEnabled", &featurePhoneBillEnabled});
