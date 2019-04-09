@@ -981,11 +981,11 @@ void update_world_features()
 					int slip_index = -1;
 					if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripRainingIndex] == 1) { // arcade
 						if (GAMEPLAY::GET_NEXT_WEATHER_TYPE_HASH_NAME() == 1420204096) slip_index = 4;
-						if (GAMEPLAY::GET_NEXT_WEATHER_TYPE_HASH_NAME() == 3061285535) slip_index = 6;
+						if (GAMEPLAY::GET_NEXT_WEATHER_TYPE_HASH_NAME() == 3061285535) slip_index = 5;
 					}
 					if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripRainingIndex] == 2) { // realistic
-						if (GAMEPLAY::GET_NEXT_WEATHER_TYPE_HASH_NAME() == 1420204096) slip_index = 7;
-						if (GAMEPLAY::GET_NEXT_WEATHER_TYPE_HASH_NAME() == 3061285535) slip_index = 9;
+						if (GAMEPLAY::GET_NEXT_WEATHER_TYPE_HASH_NAME() == 1420204096) slip_index = 6;
+						if (GAMEPLAY::GET_NEXT_WEATHER_TYPE_HASH_NAME() == 3061285535) slip_index = 7;
 					}
 					slippery_r = slippery_r + 1;
 					if (slippery_r < slip_index && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip_r.x, coords_slip_r.y, coords_slip_r.z)) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], true);
