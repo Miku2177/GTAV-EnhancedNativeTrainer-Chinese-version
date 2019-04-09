@@ -38,6 +38,12 @@ extern void(*periodic_feature_call)(void);
 
 extern void(*menu_per_frame_call)(void);
 
+extern bool airbrake_enable;
+extern bool mouse_view_control;
+extern bool help_showing;
+extern bool frozen_time;
+extern bool been_damaged;
+
 static const char* LOCAL_TEXTURE_DICT = "LOCALTEXTURES";
 
 template<class T>
@@ -1117,7 +1123,7 @@ bool draw_generic_menu(MenuParameters<T> params){
 		else if(airbrake_switch_pressed()){
 			menu_beep();
 			set_menu_showing(false);
-			process_airbrake_menu();
+			if (airbrake_enable) process_airbrake_menu();
 		}
 		else if(params.interruptCheck != NULL && params.interruptCheck()){
 			return false;
