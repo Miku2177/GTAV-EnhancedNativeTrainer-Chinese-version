@@ -584,7 +584,6 @@ void reset_world_globals()
 	featureWorldNoPeds = false;
 	featureWorldNoTraffic = false;
 	featureNoMinimapRot = false;
-	featureNoMinimapRotUpdated = false;
 	featureNoPoliceBlips = false;
 	featureFullMap = false;
 	featurePenitentiaryMap = false;
@@ -611,6 +610,7 @@ void reset_world_globals()
 	featureWorldRandomTrainsUpdated =
 	featureBlackoutUpdated =
 	featureSnowUpdated =
+	featureNoMinimapRotUpdated =
 	featureMPMapUpdated = true;
 }
 
