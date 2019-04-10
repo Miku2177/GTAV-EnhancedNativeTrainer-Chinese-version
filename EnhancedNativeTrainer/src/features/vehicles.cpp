@@ -45,6 +45,8 @@ bool featureVehInvulnIncludesCosmetic = false;
 
 bool feature3rdpersonviewonly, featureDaytimeonly = false;
 
+bool window_up = true;
+
 int Accel_secs_passed, Accel_secs_curr, Accel_seconds = 0;
 
 bool viz_veh_ind_left, viz_veh_ind_right = false;
@@ -67,6 +69,7 @@ float mileage = 0;
 bool featureNoVehFallOff = false;
 bool featureVehSpeedBoost = false;
 bool featureVehSteerAngle = false;
+bool featureRollWhenShoot = false;
 bool featureEngineRunning = false;
 bool featureNoVehFlip = false;
 bool featureAutoToggleLights = false;
@@ -1867,6 +1870,12 @@ void process_veh_menu(){
 	toggleItem->toggleValue = &featureSeasharkLights;
 	menuItems.push_back(toggleItem);
 
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Autoroll Driver Window When Shoot";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureRollWhenShoot;
+	menuItems.push_back(toggleItem);
+
 	draw_generic_menu<int>(menuItems, &activeLineIndexVeh, caption, onconfirm_veh_menu, NULL, NULL);
 }
 
@@ -2916,6 +2925,21 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 ///////////////////////////////////////////////////////////////////////////////////
 	
+///////////////////////////// AUTOROLL DRIVER WINDOW WHEN SHOOT ////////////////////////////
+
+	if (featureRollWhenShoot && PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) && VEHICLE::GET_PED_IN_VEHICLE_SEAT(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), -1) == playerPed) {
+		if (CONTROLS::IS_CONTROL_PRESSED(2, 70) && VEHICLE::IS_VEHICLE_WINDOW_INTACT(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 0)) {
+			VEHICLE::ROLL_DOWN_WINDOW(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 0);
+			window_up = false;
+		}
+		if (!CONTROLS::IS_CONTROL_PRESSED(2, 70) && window_up == false) {
+			VEHICLE::ROLL_UP_WINDOW(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 0);
+			window_up = true;
+		}
+	}
+
+///////////////////////////////////////////////////////////////////////////////////
+
 	if(bPlayerExists) {
 		if(featureVehLightsOnUpdated || did_player_just_enter_vehicle(playerPed)){
 			if(featureVehLightsOn){
@@ -3076,6 +3100,7 @@ void reset_vehicle_globals() {
 	featureVehInvincible =
 		featureVehSpeedBoost =
 		featureVehSteerAngle = 
+		featureRollWhenShoot =
 		featureEngineRunning =
 		featureNoVehFlip =
 		featureAutoToggleLights =
@@ -3351,6 +3376,7 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehSpawnInto", &featureVehSpawnInto});
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehSpeedBoost", &featureVehSpeedBoost});
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehSteerAngle", &featureVehSteerAngle});
+	results->push_back(FeatureEnabledLocalDefinition{"featureRollWhenShoot", &featureRollWhenShoot});
 	results->push_back(FeatureEnabledLocalDefinition{"featureEngineRunning", &featureEngineRunning});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoVehFlip", &featureNoVehFlip});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAutoToggleLights", &featureAutoToggleLights});
