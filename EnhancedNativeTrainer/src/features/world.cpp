@@ -42,6 +42,8 @@ bool featureWorldMoonGravity = false;
 bool featureWorldNoPeds = false;
 bool featureWorldNoTraffic = false;
 bool featureWorldNoTrafficUpdated = false;
+bool featureNoMinimapRot = false;
+bool featureNoMinimapRotUpdated = false;
 bool featureNoPoliceBlips = false;
 bool featureFullMap = false;
 bool featurePenitentiaryMap = false;
@@ -511,6 +513,13 @@ void process_world_menu()
 	menuItems.push_back(listItem); 
 
 	togItem = new ToggleMenuItem<int>();
+	togItem->caption = "No Minimap Rotation";
+	togItem->value = 1;
+	togItem->toggleValue = &featureNoMinimapRot;
+	togItem->toggleValueUpdated = &featureNoMinimapRotUpdated;
+	menuItems.push_back(togItem);
+
+	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "Load Online Map";
 	togItem->value = 8;
 	togItem->toggleValue = &featureMPMap;
@@ -574,6 +583,8 @@ void reset_world_globals()
 	//featureLightsBlackout = false;
 	featureWorldNoPeds = false;
 	featureWorldNoTraffic = false;
+	featureNoMinimapRot = false;
+	featureNoMinimapRotUpdated = false;
 	featureNoPoliceBlips = false;
 	featureFullMap = false;
 	featurePenitentiaryMap = false;
@@ -1174,14 +1185,23 @@ void update_world_features()
 
 	// Wind Strength
 	if (windstrength_toggle == false) {
-			GAMEPLAY::SET_WIND(WORLD_WIND_STRENGTH_VALUES[WindStrengthIndex]);
-			if (WORLD_WIND_STRENGTH_VALUES[WindStrengthIndex] != 0) GAMEPLAY::SET_WIND_DIRECTION(ENTITY::GET_ENTITY_HEADING(PLAYER::PLAYER_PED_ID()));
-			if (WORLD_WIND_STRENGTH_VALUES[WindStrengthIndex] == 0) GAMEPLAY::SET_WIND(0.0); // GAMEPLAY::SET_WIND_SPEED(0.0);
-			windstrength_changed = WORLD_WIND_STRENGTH_VALUES[WindStrengthIndex];
-			windstrength_toggle = true;
-		}
-
+		GAMEPLAY::SET_WIND(WORLD_WIND_STRENGTH_VALUES[WindStrengthIndex]);
+		if (WORLD_WIND_STRENGTH_VALUES[WindStrengthIndex] != 0) GAMEPLAY::SET_WIND_DIRECTION(ENTITY::GET_ENTITY_HEADING(PLAYER::PLAYER_PED_ID()));
+		if (WORLD_WIND_STRENGTH_VALUES[WindStrengthIndex] == 0) GAMEPLAY::SET_WIND(0.0); // GAMEPLAY::SET_WIND_SPEED(0.0);
+		windstrength_changed = WORLD_WIND_STRENGTH_VALUES[WindStrengthIndex];
+		windstrength_toggle = true;
+	}
 	if (windstrength_changed != WORLD_WIND_STRENGTH_VALUES[WindStrengthIndex]) windstrength_toggle = false;
+
+	// No Minimap Rotation
+	if (featureNoMinimapRot) {
+		UI::LOCK_MINIMAP_ANGLE(0);
+		featureNoMinimapRotUpdated = true;
+	}
+	if (!featureNoMinimapRot && featureNoMinimapRotUpdated == true) {
+		UI::UNLOCK_MINIMAP_ANGLE();
+		featureNoMinimapRotUpdated = false;
+	}
 
 	if (featureWorldNoTrafficUpdated)
 	{
@@ -1289,6 +1309,7 @@ void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* r
 	//results->push_back(FeatureEnabledLocalDefinition{ "featureLightsBlackout", &featureLightsBlackout });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoPeds", &featureWorldNoPeds }); 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoTraffic", &featureWorldNoTraffic, &featureWorldNoTrafficUpdated });
+	results->push_back(FeatureEnabledLocalDefinition{ "featureNoMinimapRot", &featureNoMinimapRot });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNoPoliceBlips", &featureNoPoliceBlips }); 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureFullMap", &featureFullMap }); 
 	results->push_back(FeatureEnabledLocalDefinition{ "featurePenitentiaryMap", &featurePenitentiaryMap }); 
