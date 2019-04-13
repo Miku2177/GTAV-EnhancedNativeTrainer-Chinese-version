@@ -1871,7 +1871,7 @@ void process_veh_menu(){
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Autoroll Driver Window When Shoot";
+	toggleItem->caption = "Roll Driver Window Down When Shooting";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureRollWhenShoot;
 	menuItems.push_back(toggleItem);
