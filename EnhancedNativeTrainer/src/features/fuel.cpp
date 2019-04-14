@@ -35,7 +35,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 bool Car_Refuel = false;
 int Time_tick = 0;
 bool Fuel_Low = false;
-bool show_blips = false;
+bool show_blips = true;
 bool phone_blips = false;
 
 Blip blip[32];
@@ -168,6 +168,13 @@ void fuel()
 		if (FUEL_COLOURS_R_VALUES[FuelBackground_Opacity_Index] < 2) fuelbar_edge_opacity = 0;
 
 		if (IsKeyDown(KeyConfig::KEY_MENU_LEFT) || IsControllerButtonDown(KeyConfig::KEY_MENU_LEFT) || IsKeyDown(KeyConfig::KEY_MENU_RIGHT) || IsControllerButtonDown(KeyConfig::KEY_MENU_RIGHT)) {
+			if (!BLIPTABLE.empty()) {
+				for (int i = 0; i < BLIPTABLE.size(); i++) {
+					if (UI::DOES_BLIP_EXIST(BLIPTABLE[i])) {
+						UI::REMOVE_BLIP(&BLIPTABLE[i]);
+					}
+				}
+			}
 			show_blips = true;
 		}
 
@@ -196,9 +203,8 @@ void fuel()
 			}
 			show_blips = false;
 		}
-
 		if (VEH_FUELBLIPS_VALUES[FuelBlipsIndex] > 1 && VEH_FUELBLIPS_VALUES[FuelBlipsIndex] < 3) {
-			if (IsKeyDown(VK_ESCAPE)) {
+			if ((IsKeyDown(VK_ESCAPE) || CONTROLS::IS_CONTROL_PRESSED(2, 156)) && !BLIPTABLE.empty()) {
 				for (int i = 0; i < BLIPTABLE.size(); i++) {
 					if (UI::DOES_BLIP_EXIST(BLIPTABLE[i])) {
 						UI::REMOVE_BLIP(&BLIPTABLE[i]);
@@ -222,9 +228,8 @@ void fuel()
 				}
 				phone_blips = true;
 			}
-
 			// HIDE BLIPS
-			if (!PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed) && phone_blips == true) {
+			if (!PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed) && phone_blips == true && !BLIPTABLE.empty()) {
 				for (int i = 0; i < BLIPTABLE.size(); i++) {
 					if (UI::DOES_BLIP_EXIST(BLIPTABLE[i])) {
 						UI::REMOVE_BLIP(&BLIPTABLE[i]);
@@ -237,9 +242,11 @@ void fuel()
 		// BLIPS OFF
 		if (VEH_FUELBLIPS_VALUES[FuelBlipsIndex] < 1 && show_blips == true) {
 			// HIDE BLIPS
-			for (int i = 0; i < BLIPTABLE.size(); i++) {
-				if (UI::DOES_BLIP_EXIST(BLIPTABLE[i])) {
-					UI::REMOVE_BLIP(&BLIPTABLE[i]);
+			if (!BLIPTABLE.empty()) {
+				for (int i = 0; i < BLIPTABLE.size(); i++) {
+					if (UI::DOES_BLIP_EXIST(BLIPTABLE[i])) {
+						UI::REMOVE_BLIP(&BLIPTABLE[i]);
+					}
 				}
 			}
 			show_blips = false;
