@@ -66,6 +66,7 @@ int SinceStop_secs_passed_final, SinceStop_secs_curr_final = -1;
 int Stop_seconds_final = 5;
 int veh_redlight_distance_x = -1;
 int veh_redlight_distance_y = -1;
+int myRoadlawsGroup = -1;
 bool been_seen_by_a_cop, approached, blip_check = false;
 Blip blip_laws;
 Vehicle veh_cop_in, hijacking_veh, fine_cop_car;
@@ -385,7 +386,7 @@ void road_laws()
 							ENTITY::SET_ENTITY_AS_MISSION_ENTITY(fine_cop_car, 1, 1);
 							//PED::SET_PED_SHOOT_RATE(cop_that_fines_you, 0);
 							//PLAYER::SET_PLAYER_CAN_DO_DRIVE_BY(cop_that_fines_you, false);
-							int myRoadlawsGroup = PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID());
+							myRoadlawsGroup = PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID());
 							PED::SET_PED_AS_GROUP_LEADER(PLAYER::PLAYER_PED_ID(), myRoadlawsGroup);
 							PED::SET_PED_AS_GROUP_MEMBER(cop_that_fines_you, myRoadlawsGroup);
 							PED::SET_PED_NEVER_LEAVES_GROUP(cop_that_fines_you, true);
@@ -458,7 +459,7 @@ void road_laws()
 						if (featurePoliceVehicleBlip) UI::SET_BLIP_SPRITE(blip_laws, 42);
 						ENTITY::SET_ENTITY_AS_MISSION_ENTITY(cop_that_fines_you, 1, 1);
 						ENTITY::SET_ENTITY_AS_MISSION_ENTITY(fine_cop_car, 1, 1);
-						int myRoadlawsGroup = PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID());
+						myRoadlawsGroup = PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID());
 						PED::SET_PED_AS_GROUP_LEADER(PLAYER::PLAYER_PED_ID(), myRoadlawsGroup);
 						PED::SET_PED_AS_GROUP_MEMBER(cop_that_fines_you, myRoadlawsGroup);
 						PED::SET_PED_NEVER_LEAVES_GROUP(cop_that_fines_you, true);
@@ -715,18 +716,18 @@ void road_laws()
 				//Vector3 temp_fine_me = ENTITY::GET_ENTITY_COORDS(playerPed, true);
 				int bone_mycar_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(playerPed, "BONETAG_L_FINGER0"); // IK_Head
 				Vector3 temp_fine_me = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(playerPed, bone_mycar_index);
-				if (TargetBlocked_seconds < 10 && keeponwalking == false && AI::IS_PED_STILL(cop_that_fines_you) && ((((ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) > 135 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) < 225) ||
-					(ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) > 315 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) < 45)) && temp_walking_cop.x != spot_to_stop) ||
-					(((ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) > 44 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) < 136) ||
-					(ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) > 224 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) < 316)) && temp_walking_cop.y != spot_to_stop))) {
+				if (TargetBlocked_seconds < 10 && keeponwalking == false && AI::IS_PED_STILL(cop_that_fines_you) && ((((ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) >= 135 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) <= 225) ||
+					(ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) >= 315 || ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) <= 45)) && temp_walking_cop.x != spot_to_stop) ||
+					(((ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) >= 46 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) <= 134) ||
+					(ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) >= 226 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) <= 314)) && temp_walking_cop.y != spot_to_stop))) {
 					if ((ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) >= 135 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) <= 225) ||
 						ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) >= 315 || ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) <= 45) {
 						spot_to_stop = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerPed, -1.5, 0.0, 0.0).x; // south && north
 						if (tempfined_x > 6 || tempfined_y > 6) AI::TASK_GO_TO_COORD_ANY_MEANS(cop_that_fines_you, spot_to_stop, temp_fine_me.y, temp_fine_me.z, 1.5, 0, 0, 786603, 0xbf800000);
 						if (tempfined_x < 7 && tempfined_y < 7) AI::TASK_GO_TO_COORD_ANY_MEANS(cop_that_fines_you, spot_to_stop, temp_fine_me.y, temp_fine_me.z, 1.0, 0, 0, 786603, 0xbf800000);
 					}
-					if ((ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) > 44 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) < 136) ||
-						(ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) > 224 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) < 316)) {
+					if ((ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) >= 46 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) <= 134) ||
+						(ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) >= 226 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) <= 314)) {
 						spot_to_stop = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerPed, -1.5, 0.0, 0.0).y; // west && east
 						if (tempfined_x > 6 || tempfined_y > 6) AI::TASK_GO_TO_COORD_ANY_MEANS(cop_that_fines_you, temp_fine_me.x, spot_to_stop, temp_fine_me.z, 1.5, 0, 0, 786603, 0xbf800000);
 						if (tempfined_x < 7 && tempfined_y < 7) AI::TASK_GO_TO_COORD_ANY_MEANS(cop_that_fines_you, temp_fine_me.x, spot_to_stop, temp_fine_me.z, 1.0, 0, 0, 786603, 0xbf800000);
@@ -744,7 +745,7 @@ void road_laws()
 					TargetBlocked_secs_curr = TargetBlocked_secs_passed;
 				}
 			}
-			if (TargetBlocked_seconds > 9 && been_seen_by_a_cop == true) {
+			if (TargetBlocked_seconds > 9 && been_seen_by_a_cop == true && Stop_seconds_final < 17) {
 				AI::TASK_GOTO_ENTITY_AIMING(cop_that_fines_you, playerPed, 4.0, 30.0); // 4.0
 				TargetBlocked_seconds = 0;
 			}
@@ -812,7 +813,7 @@ void road_laws()
 			}
 
 			// Been fined or escaped
-			if (Stop_seconds_final == 22 || tempgotcha_x > VEH_PIRSUITRANGE_VALUES[PirsuitRangeIndex] || tempgotcha_y > VEH_PIRSUITRANGE_VALUES[PirsuitRangeIndex] ||
+			if (Stop_seconds_final > 21 || tempgotcha_x > VEH_PIRSUITRANGE_VALUES[PirsuitRangeIndex] || tempgotcha_y > VEH_PIRSUITRANGE_VALUES[PirsuitRangeIndex] ||
 				(PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) > 1 && !featureCopsUseRadio) || (vehroadlaws_speed > 20 && Stop_seconds > -1 && wanted_level_on == true && !featureCopsUseRadio) || stuck_completely > 6 ||
 				PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) > 0)
 			{
@@ -820,7 +821,7 @@ void road_laws()
 					AI::STOP_ANIM_TASK(cop_that_fines_you, "ah_3a_ext-17", "player_zero_dual-17", 1.0);
 
 				// Thank you for your contribution, sir
-				if (Stop_seconds_final == 22) {
+				if (Stop_seconds_final > 21) {
 					int outValue_beingfined = -1;
 					int statHash_beingfined = -1;
 
