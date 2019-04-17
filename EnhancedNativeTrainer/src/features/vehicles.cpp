@@ -164,8 +164,8 @@ bool powChanged = true;
 bool burnoutApplied = false;
 
 //vehicle mass stuff
-const std::vector<std::string> VEH_MASS_CAPTIONS{"1x", "3x", "5x", "10x", "30x", "50x", "70x", "100x", "150x", "200x", "250x", "300x", "500x", "1000x", "MESS" };
-const std::vector<int> VEH_MASS_VALUES{0, 5, 10, 30, 50, 100, 150, 200, 300, 400, 500, 1000, 5000, 10000, 50000 };
+const std::vector<std::string> VEH_MASS_CAPTIONS{"1x", "3x", "5x", "10x", "30x", "50x", "Mayhem" };
+const std::vector<int> VEH_MASS_VALUES{0, 5, 10, 30, 50, 100, 50000 };
 int VehMassMultIndex = 0;
 bool massChanged = true;
 
@@ -2238,94 +2238,68 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		if (Shut_seconds == VEH_AUTO_SHUT_ENGINE_VALUES[AutoShutEngineIndex]) VEHICLE::SET_VEHICLE_ENGINE_ON(vehicle_been_used, false, true);
 	}
 
-	//////////////////////////////////////////////////// VEHICLE MASS ////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////// VEHICLE FORCE SHIELD POWER ////////////////////////////////////////////////////////
 
 	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && !PED::IS_PED_IN_ANY_PLANE(playerPed) && !PED::IS_PED_IN_ANY_HELI(playerPed) && (VEH_MASS_VALUES[VehMassMultIndex] > 0)) {
-		const int numElements = 10;
-		const int arrSize = numElements * 2 + 2;
-		int nearbyPed[arrSize];
+		const int OBJ_ARR_SIZE = 1024;
+		Vehicle nearbyObj[OBJ_ARR_SIZE];
 		int veh_distance_x = 100;
 		int veh_distance_y = 100;
 		Vector3 vehspeed = ENTITY::GET_ENTITY_VELOCITY(veh);
-		Vector3 Rot = CAM::GET_GAMEPLAY_CAM_ROT(2);
-		Vector3 direction = RotationToDirection2(&Rot);
-		nearbyPed[0] = numElements;
-		int count = PED::GET_PED_NEARBY_VEHICLES(PLAYER::PLAYER_PED_ID(), nearbyPed); 
+		Vector3 CamRot = CAM::GET_GAMEPLAY_CAM_ROT(2);
+		Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(veh, true);
+		int p_force = 5;
+		float rad = 2 * 3.14 * (CamRot.z / 360);
+		float v_x = -(sin(rad) * p_force * 10);
+		float v_y = (cos(rad) * p_force * 10);
+		float v_z = p_force * (CamRot.x * 0.2);
+		if (((vehspeed.x > 1) || (vehspeed.y > 1) || (vehspeed.z > 1)) && (ENTITY::GET_ENTITY_ROLL(veh) > 20 || ENTITY::GET_ENTITY_ROLL(veh) < -20)) VEHICLE::SET_VEHICLE_ON_GROUND_PROPERLY(veh);
+		if (ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(veh) && VEH_MASS_VALUES[VehMassMultIndex] > 3) ENTITY::SET_ENTITY_VELOCITY(veh, vehspeed.x, vehspeed.y, vehspeed.z);
 
-		if (nearbyPed != NULL) {
-			for (int i = 0; i < count; i++)	{
-				int offsettedID = i * 2 + 2;
-				Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(veh, true);
-				Vector3 coordsped = ENTITY::GET_ENTITY_COORDS(nearbyPed[i], true);
-				Vector3 speed = ENTITY::GET_ENTITY_VELOCITY(veh);
-				
-				veh_distance_x = (coordsme.x - coordsped.x);
-				veh_distance_y = (coordsme.y - coordsped.y);
-
-				if (((speed.x > 1) || (speed.y > 1) || (speed.z > 1)) && (ENTITY::GET_ENTITY_ROLL(veh) > 40 || ENTITY::GET_ENTITY_ROLL(veh) < -40)) VEHICLE::SET_VEHICLE_ON_GROUND_PROPERLY(veh);
-
-				if (ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(veh)) {
-
-					if (VEH_MASS_VALUES[VehMassMultIndex] > 3) ENTITY::SET_ENTITY_VELOCITY(veh, vehspeed.x, vehspeed.y, vehspeed.z);
-
-					if (nearbyPed[offsettedID] != NULL && ENTITY::DOES_ENTITY_EXIST(nearbyPed[offsettedID]) && nearbyPed[i] != veh) {
-						if (veh_distance_x < 0) veh_distance_x = (veh_distance_x * -1);
-						if (veh_distance_y < 0) veh_distance_y = (veh_distance_y * -1);
-
-						if ((veh_distance_x + veh_distance_y) < 7) {
-							ENTITY::SET_ENTITY_LOAD_COLLISION_FLAG(veh, true);
-							ENTITY::HAS_COLLISION_LOADED_AROUND_ENTITY(veh);
-							ENTITY::APPLY_FORCE_TO_ENTITY(nearbyPed[i], 4, (ENTITY::GET_ENTITY_SPEED(veh) * VEH_MASS_VALUES[VehMassMultIndex]), 0, 0, 0, 0, 0, 1, true, true, true, true, true);
-							if (ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(nearbyPed[i])) {
-								Rot = CAM::GET_GAMEPLAY_CAM_ROT(2);
-								direction = RotationToDirection2(&Rot);
-								direction.x = 1 * direction.x;
-								direction.y = 1 * direction.y;
-								direction.z = 1 * direction.z;
-								ENTITY::APPLY_FORCE_TO_ENTITY(nearbyPed[i], 1, direction.x, direction.y, direction.z, Rot.x, Rot.y, Rot.z, false, false, true, true, false, true);
-							}
-						}
-					}
-				}
-
-				if ((VEH_MASS_VALUES[VehMassMultIndex] > 30) && (VEH_MASS_VALUES[VehMassMultIndex] < 200)){
-					if (nearbyPed[offsettedID] != NULL && ENTITY::DOES_ENTITY_EXIST(nearbyPed[offsettedID]) && nearbyPed[i] != veh) {
-						if (veh_distance_x < 0) veh_distance_x = (veh_distance_x * -1);
-						if (veh_distance_y < 0) veh_distance_y = (veh_distance_y * -1);
-
-						if ((veh_distance_x + veh_distance_y) < 7) {
-							Rot = CAM::GET_GAMEPLAY_CAM_ROT(2);
-							direction = RotationToDirection2(&Rot);
-							direction.x = 1 * direction.x;
-							direction.y = 1 * direction.y;
-							direction.z = 1 * direction.z;
-							ENTITY::APPLY_FORCE_TO_ENTITY(nearbyPed[i], 1, direction.x, direction.y, VEH_MASS_VALUES[VehMassMultIndex] / 100, Rot.x, Rot.y, Rot.z, false, false, true, true, false, true);
-						}
-					}
-				} 
-
-				if (VEH_MASS_VALUES[VehMassMultIndex] > 150) {
-					if (nearbyPed[offsettedID] != NULL && ENTITY::DOES_ENTITY_EXIST(nearbyPed[offsettedID]) && nearbyPed[i] != veh) {
-						if (veh_distance_x < 0) veh_distance_x = (veh_distance_x * -1);
-						if (veh_distance_y < 0) veh_distance_y = (veh_distance_y * -1);
-
-						if ((veh_distance_x + veh_distance_y) < (VEH_MASS_VALUES[VehMassMultIndex] / 1)) {
-							Rot = CAM::GET_GAMEPLAY_CAM_ROT(2);
-							direction = RotationToDirection2(&Rot);
-							direction.x = 1 * direction.x;
-							direction.y = 1 * direction.y;
-							direction.z = 1 * direction.z;
-							if (VEH_MASS_VALUES[VehMassMultIndex] < 500) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyPed[i], 1, direction.x, direction.y, direction.z, Rot.x, Rot.y, Rot.z, false, false, true, true, false, true);
-							if (VEH_MASS_VALUES[VehMassMultIndex] == 500) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyPed[i], 1, direction.x, direction.y, VEH_MASS_VALUES[VehMassMultIndex] / 500, Rot.x, Rot.y, Rot.z, false, false, true, true, false, true);
-							if (VEH_MASS_VALUES[VehMassMultIndex] == 1000) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyPed[i], 1, direction.x, direction.y, VEH_MASS_VALUES[VehMassMultIndex] / 100, Rot.x, Rot.y, Rot.z, false, false, true, true, false, true);
-							if (VEH_MASS_VALUES[VehMassMultIndex] == 5000) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyPed[i], 1, direction.x, direction.y, VEH_MASS_VALUES[VehMassMultIndex] / 10, Rot.x, Rot.y, Rot.z, false, false, true, true, false, true);
-							if (VEH_MASS_VALUES[VehMassMultIndex] == 10000) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyPed[i], 1, direction.x, direction.y, VEH_MASS_VALUES[VehMassMultIndex] / 1, Rot.x, Rot.y, Rot.z, false, false, true, true, false, true);
-							if (VEH_MASS_VALUES[VehMassMultIndex] == 50000) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyPed[i], 4, (ENTITY::GET_ENTITY_SPEED(veh) * VEH_MASS_VALUES[VehMassMultIndex]), 0, 0, 0, 0, 0, 1, true, true, true, true, true); 
-						}
-					}
+		int count_v = worldGetAllVehicles(nearbyObj, OBJ_ARR_SIZE); // vehicles
+		for (int i = 0; i < count_v; i++)	{
+			Vector3 coordsveh = ENTITY::GET_ENTITY_COORDS(nearbyObj[i], true);
+			veh_distance_x = (coordsme.x - coordsveh.x);
+			veh_distance_y = (coordsme.y - coordsveh.y);
+			if (veh_distance_x < 0) veh_distance_x = (veh_distance_x * -1);
+			if (veh_distance_y < 0) veh_distance_y = (veh_distance_y * -1);
+			if (nearbyObj[i] != veh) {
+				if ((veh_distance_x + veh_distance_y) < (VEH_MASS_VALUES[VehMassMultIndex] / 1)) {
+					if (VEH_MASS_VALUES[VehMassMultIndex] < 101) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyObj[i], 1, v_x, v_y, VEH_MASS_VALUES[VehMassMultIndex] / 3, 0, 0, 0, false, false, true, true, false, true);
+					if (VEH_MASS_VALUES[VehMassMultIndex] == 50000) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyObj[i], 4, (ENTITY::GET_ENTITY_SPEED(veh) * VEH_MASS_VALUES[VehMassMultIndex]), 0, 0, 0, 0, 0, 1, true, true, true, true, true);
 				}
 			}
-		}
+		} // end of for
+		
+		int count_p = worldGetAllPeds(nearbyObj, OBJ_ARR_SIZE); // pedestrians
+		for (int i = 0; i < count_p; i++) {
+			Vector3 coordsveh = ENTITY::GET_ENTITY_COORDS(nearbyObj[i], true);
+			veh_distance_x = (coordsme.x - coordsveh.x);
+			veh_distance_y = (coordsme.y - coordsveh.y);
+			if (veh_distance_x < 0) veh_distance_x = (veh_distance_x * -1);
+			if (veh_distance_y < 0) veh_distance_y = (veh_distance_y * -1);
+			if (nearbyObj[i] != veh) {
+				if ((veh_distance_x + veh_distance_y) < (VEH_MASS_VALUES[VehMassMultIndex] / 1)) {
+					if (VEH_MASS_VALUES[VehMassMultIndex] < 101) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyObj[i], 1, v_x, v_y, VEH_MASS_VALUES[VehMassMultIndex] / 3, 0, 0, 0, false, false, true, true, false, true);
+					if (VEH_MASS_VALUES[VehMassMultIndex] == 50000) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyObj[i], 4, (ENTITY::GET_ENTITY_SPEED(veh) * VEH_MASS_VALUES[VehMassMultIndex]), 0, 0, 0, 0, 0, 1, true, true, true, true, true);
+				}
+			}
+		} // end of for
+		
+		int count_o = worldGetAllObjects(nearbyObj, OBJ_ARR_SIZE); // objects
+		for (int i = 0; i < count_o; i++) {
+			Vector3 coordsveh = ENTITY::GET_ENTITY_COORDS(nearbyObj[i], true);
+			veh_distance_x = (coordsme.x - coordsveh.x);
+			veh_distance_y = (coordsme.y - coordsveh.y);
+			if (veh_distance_x < 0) veh_distance_x = (veh_distance_x * -1);
+			if (veh_distance_y < 0) veh_distance_y = (veh_distance_y * -1);
+			if (nearbyObj[i] != veh) {
+				if ((veh_distance_x + veh_distance_y) < (VEH_MASS_VALUES[VehMassMultIndex] / 1)) {
+					if (VEH_MASS_VALUES[VehMassMultIndex] < 101) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyObj[i], 1, v_x, v_y, VEH_MASS_VALUES[VehMassMultIndex] / 3, 0, 0, 0, false, false, true, true, false, true);
+					if (VEH_MASS_VALUES[VehMassMultIndex] == 50000) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyObj[i], 4, (ENTITY::GET_ENTITY_SPEED(veh) * VEH_MASS_VALUES[VehMassMultIndex]), 0, 0, 0, 0, 0, 1, true, true, true, true, true);
+				}
+			}
+		} // end of for
 	}
 	else {
 		std::vector<int> emptyVec;
