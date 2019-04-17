@@ -87,6 +87,7 @@ bool featureMiscHideHudUpdated = false;
 bool featurePhoneShowHud = false;
 bool featureMiscHideENTHud = false;
 bool featureInVehicleNoHud = false;
+bool featureMarkerHud = false;
 bool phone_toggle = false;
 bool phone_toggle_vehicle = false;
 bool phone_toggle_defaultphone = false;
@@ -546,13 +547,13 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 		case 3:
 			process_misc_freezeradio_menu();
 			break;
-		case 19:
+		case 20:
 			process_phone_bill_menu();
 			break;
-		case 24:
+		case 25:
 			process_def_menutab_menu();
 			break;
-		case 25:
+		case 26:
 			process_airbrake_global_menu();
 			break;
 		default:
@@ -563,7 +564,7 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 }
 
 void process_misc_menu(){
-	const int lineCount = 26;
+	const int lineCount = 27;
 
 	std::string caption = "Miscellaneous Options";
 
@@ -585,6 +586,7 @@ void process_misc_menu(){
 		{"Hide HUD If Menu Open", &featureMiscHideENTHud},
 		{"Show HUD If Phone In Hand Only", &featurePhoneShowHud, NULL }, 
 		{"Show HUD In Vehicle Only", &featureInVehicleNoHud, NULL }, 
+		{"Show HUD If Map Marker Set Only", &featureMarkerHud, NULL },
 		{"Dynamic Health Bar", &featureDynamicHealthBar }, 
 		{"Reset Player Model On Death", &featureResetPlayerModelOnDeath, nullptr, true},
 		{"Phone Settings", NULL, NULL, false},
@@ -629,6 +631,7 @@ void reset_misc_globals(){
 		featurePhoneShowHud = 
 		featureMiscHideENTHud =
 		featureInVehicleNoHud =
+		featureMarkerHud =
 		featureDynamicHealthBar =
 		featurePlayerRadio =
 		featureMiscLockRadio =
@@ -828,7 +831,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			phone_toggle = false;
 		}
 	}
-	else if (!featureMiscHideHud && !featureInVehicleNoHud && !featureMiscHideENTHud) {
+	else if (!featureMiscHideHud && !featureInVehicleNoHud && !featureMarkerHud && !featureMiscHideENTHud) {
 		UI::DISPLAY_RADAR(true);
 		phone_toggle = false;
 	}
@@ -850,11 +853,41 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			phone_toggle_vehicle = false;
 		}
 	}
-	else if (!featureMiscHideHud && !featurePhoneShowHud && !featureMiscHideENTHud) {
+	else if (!featureMiscHideHud && !featurePhoneShowHud && !featureMarkerHud && !featureMiscHideENTHud) {
 		UI::DISPLAY_RADAR(true);
 		phone_toggle_vehicle = false;
 	}
 	
+	// show hud if marker set only
+	if (featureMarkerHud) {
+		if (!phone_toggle_vehicle && !featurePhoneShowHud && !featureInVehicleNoHud) {
+			UI::DISPLAY_RADAR(false);
+			featureMiscHideHudUpdated = false;
+		}
+		Vector3 coords;
+		bool blipFound = false;
+		int blipIterator = UI::_GET_BLIP_INFO_ID_ITERATOR(); // search for marker blip
+		for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) {
+			if (UI::GET_BLIP_INFO_ID_TYPE(i) == 4) {
+				coords = UI::GET_BLIP_INFO_ID_COORD(i);
+				blipFound = true;
+				break;
+			}
+		}
+		if (blipFound) {
+			UI::DISPLAY_RADAR(true);
+			phone_toggle_vehicle = true;
+		}
+		if (!blipFound && !featurePhoneShowHud && !featureInVehicleNoHud) {
+			UI::DISPLAY_RADAR(false);
+			phone_toggle_vehicle = false;
+		}
+	}
+	else if (!featureMiscHideHud && !featurePhoneShowHud && !featureInVehicleNoHud && !featureMiscHideENTHud) {
+		UI::DISPLAY_RADAR(true);
+		phone_toggle_vehicle = false;
+	}
+
 	// Default Phone
 	if (MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] > -1) {
 		if (PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed) && phone_toggle_defaultphone == false) {
@@ -948,7 +981,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 
 	// DYNAMIC HEALTH BAR
 	if (featureDynamicHealthBar && !CUTSCENE::IS_CUTSCENE_PLAYING()) {
-		if (!featureMiscHideHud && !featurePhoneShowHud && !featureInVehicleNoHud && !featureMiscHideENTHud) UI::DISPLAY_RADAR(false); // There is no need to hide HUD if it's already hidden
+		if (!featureMiscHideHud && !featurePhoneShowHud && !featureInVehicleNoHud && !featureMarkerHud && !featureMiscHideENTHud) UI::DISPLAY_RADAR(false); // There is no need to hide HUD if it's already hidden
 		
 		auto addr = getScriptHandleBaseAddress(playerPed);
 		float health = (*(float *)(addr + 0x280)) - 100;
@@ -1232,7 +1265,8 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 	results->push_back(FeatureEnabledLocalDefinition{"featureMiscHideHud", &featureMiscHideHud, &featureMiscHideHudUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePhoneShowHud", &featurePhoneShowHud}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureMiscHideENTHud", &featureMiscHideENTHud});
-	results->push_back(FeatureEnabledLocalDefinition{"featureInVehicleNoHud", &featureInVehicleNoHud}); 
+	results->push_back(FeatureEnabledLocalDefinition{"featureInVehicleNoHud", &featureInVehicleNoHud});
+	results->push_back(FeatureEnabledLocalDefinition{"featureMarkerHud", &featureMarkerHud});
 
 	results->push_back(FeatureEnabledLocalDefinition{"featureDynamicHealthBar", &featureDynamicHealthBar}); 
 		
