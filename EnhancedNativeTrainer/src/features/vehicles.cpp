@@ -2278,7 +2278,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			veh_distance_y = (coordsme.y - coordsveh.y);
 			if (veh_distance_x < 0) veh_distance_x = (veh_distance_x * -1);
 			if (veh_distance_y < 0) veh_distance_y = (veh_distance_y * -1);
-			if (nearbyObj[i] != veh) {
+			if (nearbyObj[i] != playerPed) {
 				if ((veh_distance_x + veh_distance_y) < (VEH_MASS_VALUES[VehMassMultIndex] / 1)) {
 					if (VEH_MASS_VALUES[VehMassMultIndex] < 101) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyObj[i], 1, v_x, v_y, VEH_MASS_VALUES[VehMassMultIndex] / 3, 0, 0, 0, false, false, true, true, false, true);
 					if (VEH_MASS_VALUES[VehMassMultIndex] == 50000) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyObj[i], 4, (ENTITY::GET_ENTITY_SPEED(veh) * VEH_MASS_VALUES[VehMassMultIndex]), 0, 0, 0, 0, 0, 1, true, true, true, true, true);

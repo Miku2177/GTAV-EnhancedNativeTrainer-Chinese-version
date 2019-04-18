@@ -252,6 +252,8 @@ void onchange_chance_police_calling_index(int value, SelectFromListMenuItem* sou
 
 void onchange_chance_attacking_you_index(int value, SelectFromListMenuItem* source);
 
+void onchange_power_punch_index(int value, SelectFromListMenuItem* source);
+
 void onchange_sniper_vision_modifier(int value, SelectFromListMenuItem* source);
 
 void onchange_vehicle_weapon_modifier(int value, SelectFromListMenuItem* source);
