@@ -1110,7 +1110,6 @@ void update_world_features()
 				if (PED::IS_PED_SHOOTING(bus_ped[i])) ENTITY::APPLY_FORCE_TO_ENTITY(bus_ped[i], 4, 1000, 0, 0, 0, 0, 0, 1, true, true, true, true, true);
 				ENTITY::SET_ENTITY_HAS_GRAVITY(bus_ped[i], false);
 			}
-
 			if (featureAcidWater && (ENTITY::IS_ENTITY_IN_WATER(bus_ped[i]) || PED::IS_PED_SWIMMING_UNDER_WATER(bus_ped[i]))) {
 				if (PED::GET_PED_TYPE(bus_ped[i]) != 0 && PED::GET_PED_TYPE(bus_ped[i]) != 1 && PED::GET_PED_TYPE(bus_ped[i]) != 2 && PED::GET_PED_TYPE(bus_ped[i]) != 3) acid_counter = acid_counter + 1;
 				if (PED::GET_PED_TYPE(bus_ped[i]) == 0 || PED::GET_PED_TYPE(bus_ped[i]) == 1 || PED::GET_PED_TYPE(bus_ped[i]) == 2 || PED::GET_PED_TYPE(bus_ped[i]) == 3) {
@@ -1136,7 +1135,6 @@ void update_world_features()
 					if ((PED::GET_PED_TYPE(bus_ped[i]) == 0 || PED::GET_PED_TYPE(bus_ped[i]) == 1 || PED::GET_PED_TYPE(bus_ped[i]) == 2 || PED::GET_PED_TYPE(bus_ped[i]) == 3) && acid_counter_p > 5) acid_counter_p = 0;
 				}
 			}
-
 			if (featureAcidRain) {
 				Vector3 coords_ped = ENTITY::GET_ENTITY_COORDS(bus_ped[i], true);  
 				Vehicle veh_currveh = PED::GET_VEHICLE_PED_IS_USING(bus_ped[i]);
@@ -1147,7 +1145,6 @@ void update_world_features()
 				Entity entityHit = ENTITY::DOES_ENTITY_EXIST(bus_ped[i]);
 				int temp1 = WORLDPROBE::_START_SHAPE_TEST_RAY(coords_ped.x, coords_ped.y, coords_ped.z, coords_ped.x, coords_ped.y, coords_ped.z + 2000, -1, bus_ped[i], 1);
 				int result = WORLDPROBE::GET_SHAPE_TEST_RESULT(temp1, &hit, &endCoords, &surfaceNormal, &entityHit);
-				
 				if (GAMEPLAY::GET_RAIN_LEVEL() > 0 && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_ped.x, coords_ped.y, coords_ped.z) && hit == 0 && (!PED::IS_PED_IN_ANY_VEHICLE(bus_ped[i], 0) || (PED::IS_PED_IN_ANY_VEHICLE(bus_ped[i], 0) &&
 					(VEHICLE::GET_CONVERTIBLE_ROOF_STATE(veh_currveh) == 2 || !VEHICLE::DOES_VEHICLE_HAVE_ROOF(veh_currveh) || PED::IS_PED_ON_ANY_BIKE(bus_ped[i]) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(currVehModel) ||
 						VEHICLE::IS_THIS_MODEL_A_BICYCLE(currVehModel) || currVehModel == GAMEPLAY::GET_HASH_KEY("BODHI2") || currVehModel == GAMEPLAY::GET_HASH_KEY("AIRTUG") || currVehModel == GAMEPLAY::GET_HASH_KEY("CADDY3") ||

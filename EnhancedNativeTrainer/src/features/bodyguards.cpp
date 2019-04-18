@@ -17,6 +17,7 @@ int activeLineIndexBodyguards = 0;
 
 int const BODYGUARD_LIMIT = 7;
 
+bool stop_b = false;
 bool featureBodyguardInvincible = false;
 bool featureBodyguardInvincibleUpdated = false;
 bool featureBodyguardHelmet = false;
@@ -608,6 +609,16 @@ void maintain_bodyguards(){
 	while(iter != spawnedBodyguards.end()){
 
 		if (animal_in_group == true && PED::IS_PED_FLEEING(*iter)) AI::TASK_STAND_STILL(*iter, 10000); //  || AI::IS_PED_RUNNING(*iter))
+		//
+		if (stop_b == false) {
+			PED::SET_PED_AS_GROUP_MEMBER(*iter, PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID()));
+			PED::SET_PED_NEVER_LEAVES_GROUP(*iter, true);
+		}
+		if (stop_b == true) {
+			PED::REMOVE_PED_FROM_GROUP(*iter);
+			AI::CLEAR_PED_TASKS(*iter);
+		}
+		//
 		//PED::SET_PED_FLEE_ATTRIBUTES(*iter, 0, 0);
 
 		if(PED::IS_PED_DEAD_OR_DYING(*iter, true)){
@@ -648,6 +659,12 @@ bool process_bodyguard_menu(){
 
 		item = new MenuItem<int>();
 		item->caption = "Dismiss All Bodyguards";
+		item->value = i++;
+		item->isLeaf = true;
+		menuItems.push_back(item);
+
+		item = new MenuItem<int>();
+		item->caption = "Toggle Bodyguards To Follow Player";
 		item->value = i++;
 		item->isLeaf = true;
 		menuItems.push_back(item);
@@ -723,12 +740,17 @@ bool onconfirm_bodyguard_menu(MenuItem<int> choice){
 			dismiss_bodyguards();
 			break;
 		case 3:
-			process_bodyguard_skins_menu();
+			stop_b = !stop_b;
+			if (stop_b) set_status_text("Stay Put");
+			else set_status_text("Follow");
 			break;
 		case 4:
-			process_bodyguard_weapons_menu();
+			process_bodyguard_skins_menu();
 			break;
 		case 5:
+			process_bodyguard_weapons_menu();
+			break;
+		case 6:
 			process_bodyguard_blips_menu();
 			break;
 		default:
