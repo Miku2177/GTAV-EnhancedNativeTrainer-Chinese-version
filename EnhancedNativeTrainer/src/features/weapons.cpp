@@ -1442,10 +1442,6 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		float v_y = (cos(rad) * p_force * 10);
 		float v_z = p_force * (CamRot.x * 0.2);
 		
-		PLAYER::SET_PLAYER_WEAPON_DAMAGE_MODIFIER(player, 1000.0);
-		PLAYER::SET_PLAYER_MELEE_WEAPON_DAMAGE_MODIFIER(player, 1000.0, 1);
-		PLAYER::SET_PLAYER_VEHICLE_DAMAGE_MODIFIER(playerPed, 1000.0);
-
 		if (CONTROLS::IS_CONTROL_PRESSED(2, 24) || CONTROLS::IS_CONTROL_PRESSED(2, 140) || CONTROLS::IS_CONTROL_PRESSED(2, 141)) force_nearest_ped = true;
 		
 		bool cur_weapon_e = false;
@@ -1455,6 +1451,10 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		if (featurePunchFireWeapons && WEAPON::IS_PED_ARMED(playerPed, 7) && WEAPON::IS_PED_ARMED(playerPed, 6)) cur_weapon_e = true;
 
 		if (force_nearest_ped == true && cur_weapon_e == true) {
+			PLAYER::SET_PLAYER_WEAPON_DAMAGE_MODIFIER(player, 1000.0);
+			PLAYER::SET_PLAYER_MELEE_WEAPON_DAMAGE_MODIFIER(player, 1000.0, 1);
+			PLAYER::SET_PLAYER_VEHICLE_DAMAGE_MODIFIER(playerPed, 1000.0);
+
 			const int arrSize_punch = 1024;
 			Ped surr_p_peds[arrSize_punch];
 			int count_surr_p_peds = worldGetAllPeds(surr_p_peds, arrSize_punch);
