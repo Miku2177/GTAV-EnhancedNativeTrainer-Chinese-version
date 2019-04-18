@@ -25,6 +25,7 @@ int vision_toggle = 0;
 int weapDmgModIndex = 0;
 int activeLineIndexCopArmed = 0;
 int activeLineIndexPedAgainstWeapons = 0;
+int activeLineIndexPowerPunchWeapons = 0;
 
 // give all weapons automatically variables
 bool featureGiveAllWeapons = false;
@@ -43,6 +44,10 @@ bool featureWeaponExplosiveAmmo = false;
 bool featureWeaponExplosiveMelee = false;
 bool featureWeaponExplosiveGrenades = false;
 bool featureWeaponVehRockets = false;
+
+bool featurePunchFists = true;
+bool featurePunchMeleeWeapons = false;
+bool featurePunchFireWeapons = false;
 
 bool featureCopArmedWith = false;
 bool featurePlayerMelee = true;
@@ -110,6 +115,12 @@ const std::vector<std::string> WEAPONS_SNIPERVISION_CAPTIONS{ "OFF", "Via Hotkey
 const int WEAPONS_SNIPERVISION_VALUES[] = { 0, 1, 2, 3 };
 int SniperVisionIndex = 0;
 bool SniperVisionChanged = true;
+
+// Power Punch Strength
+const std::vector<std::string> WEAPONS_POWERPUNCH_CAPTIONS{ "1", "3", "5", "10", "50" };
+const int WEAPONS_POWERPUNCH_VALUES[] = { 1, 3, 5, 10, 50 };
+int PowerPunchIndex = 2;
+bool PowerPunchChanged = true;
 
 /* Begin Gravity Gun related code */
 
@@ -652,6 +663,11 @@ void onchange_sniper_vision_modifier(int value, SelectFromListMenuItem* source){
 	SniperVisionChanged = true;
 }
 
+void onchange_power_punch_index(int value, SelectFromListMenuItem* source) {
+	PowerPunchIndex = value;
+	PowerPunchChanged = true;
+}
+
 void onchange_vehicle_weapon_modifier(int value, SelectFromListMenuItem* source) {
 	VehCurrWeaponIndex = value;
 	VehCurrWeaponChanged = true;
@@ -707,7 +723,7 @@ void process_pedagainstweapons_menu(){
 	int i = 0;
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Enabled";
+	toggleItem->caption = "Enable";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featurePedAgainstWeapons;
 	menuItems.push_back(toggleItem);
@@ -755,6 +771,54 @@ void process_pedagainstweapons_menu(){
 	menuItems.push_back(listItem);
 		
 	draw_generic_menu<int>(menuItems, &activeLineIndexPedAgainstWeapons, caption, onconfirm_pedagainstweapons_menu, NULL, NULL);
+}
+
+bool onconfirm_powerpunch_menu(MenuItem<int> choice)
+{
+	return false;
+}
+
+void process_powerpunch_menu() {
+	std::string caption = "Power Punch Options";
+
+	std::vector<MenuItem<int>*> menuItems;
+
+	SelectFromListMenuItem *listItem;
+	ToggleMenuItem<int>* toggleItem;
+
+	int i = 0;
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Enable";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featurePowerPunch;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Fists Only";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featurePunchFists;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Melee Weapons";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featurePunchMeleeWeapons;
+	menuItems.push_back(toggleItem);
+	
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Fire Arms";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featurePunchFireWeapons;
+	menuItems.push_back(toggleItem);
+
+	listItem = new SelectFromListMenuItem(WEAPONS_POWERPUNCH_CAPTIONS, onchange_power_punch_index);
+	listItem->wrap = false;
+	listItem->caption = "Power Punch Strength";
+	listItem->value = PowerPunchIndex;
+	menuItems.push_back(listItem);
+
+	draw_generic_menu<int>(menuItems, &activeLineIndexPowerPunchWeapons, caption, onconfirm_powerpunch_menu, NULL, NULL);
 }
 
 bool onconfirm_weapon_menu(MenuItem<int> choice){
@@ -942,6 +1006,9 @@ bool onconfirm_weapon_menu(MenuItem<int> choice){
 			break;
 		case 24:
 			process_pedagainstweapons_menu();
+			break;
+		case 28:
+			process_powerpunch_menu();
 			break;
 	default:
 		break;
@@ -1142,11 +1209,11 @@ bool process_weapon_menu(){
 	toggleItem->toggleValue = &featureFriendlyFire;
 	menuItems.push_back(toggleItem);
 
-	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Power Punch";
-	toggleItem->value = i++;
-	toggleItem->toggleValue = &featurePowerPunch;
-	menuItems.push_back(toggleItem);
+	item = new MenuItem<int>();
+	item->caption = "Power Punch";
+	item->value = i++;
+	item->isLeaf = false;
+	menuItems.push_back(item);
 
 	return draw_generic_menu<int>(menuItems, &activeLineIndexWeapon, caption, onconfirm_weapon_menu, NULL, NULL);
 }
@@ -1163,13 +1230,16 @@ void reset_weapon_globals(){
 	ChancePoliceCallingIndex = 5;
 	ChanceAttackingYouIndex = 1;
 	SniperVisionIndex = 0;
+	PowerPunchIndex = 2;
 
 	activeLineIndexCopArmed = 0;
 	activeLineIndexPedAgainstWeapons = 0;
+	activeLineIndexPowerPunchWeapons = 0;
 	
 	featurePedAgainst = 
 	featureDriverAgainst =
 	featurePoliceAgainst =
+	featurePunchFists =
 	featurePlayerMelee = true;
 	
 	featureWeaponInfiniteAmmo =
@@ -1194,6 +1264,8 @@ void reset_weapon_globals(){
 		featureFriendlyFire =
 		featurePowerPunch =
 		featureSwitchWeaponIfDanger =
+		featurePunchMeleeWeapons =
+		featurePunchFireWeapons =
 		featureGravityGun = false;
 }
 
@@ -1360,10 +1432,10 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	peds_dont_like_weapons(); ///// <--- PEDS DON'T LIKE WEAPONS /////
 
 	// Power Punch
-	if (featurePowerPunch && !WEAPON::IS_PED_ARMED(playerPed, 7) && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
+	if (featurePowerPunch && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
 		Ped playerPed = PLAYER::PLAYER_PED_ID();
 		Vector3 CamRot = CAM::GET_GAMEPLAY_CAM_ROT(2);
-		int p_force = 5;
+		int p_force = WEAPONS_POWERPUNCH_VALUES[PowerPunchIndex];
 		float rad = 2 * 3.14 * (CamRot.z / 360);
 		//float rad = (degrees * pi) / 180 ;
 		float v_x = -(sin(rad) * p_force * 10);
@@ -1376,7 +1448,13 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 
 		if (CONTROLS::IS_CONTROL_PRESSED(2, 24) || CONTROLS::IS_CONTROL_PRESSED(2, 140) || CONTROLS::IS_CONTROL_PRESSED(2, 141)) force_nearest_ped = true;
 		
-		if (force_nearest_ped == true) {
+		bool cur_weapon_e = false;
+		temp_nearest_ped = -1;
+		if (featurePunchFists && !WEAPON::IS_PED_ARMED(playerPed, 7)) cur_weapon_e = true;
+		if (featurePunchMeleeWeapons && !WEAPON::IS_PED_ARMED(playerPed, 6) && WEAPON::IS_PED_ARMED(playerPed, 7)) cur_weapon_e = true;
+		if (featurePunchFireWeapons && WEAPON::IS_PED_ARMED(playerPed, 7) && WEAPON::IS_PED_ARMED(playerPed, 6)) cur_weapon_e = true;
+
+		if (force_nearest_ped == true && cur_weapon_e == true) {
 			const int arrSize_punch = 1024;
 			Ped surr_p_peds[arrSize_punch];
 			int count_surr_p_peds = worldGetAllPeds(surr_p_peds, arrSize_punch);
@@ -1405,9 +1483,10 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 				}
 			} // end of int (vehicles)
 		}
-
 		if (temp_nearest_ped != -1) { //  && ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(temp_nearest_ped, playerPed, 1)
 			AI::CLEAR_PED_TASKS_IMMEDIATELY(temp_nearest_ped);
+			AI::CLEAR_PED_SECONDARY_TASK(temp_nearest_ped);
+			AI::CLEAR_PED_TASKS(temp_nearest_ped);
 			PED::SET_PED_CAN_RAGDOLL(temp_nearest_ped, true);
 			PED::SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(temp_nearest_ped, true);
 			PED::SET_PED_RAGDOLL_FORCE_FALL(temp_nearest_ped);
@@ -1941,6 +2020,9 @@ void add_weapon_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePedAgainstWeapons", &featurePedAgainstWeapons});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAgainstMeleeWeapons", &featureAgainstMeleeWeapons});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePedAgainst", &featurePedAgainst});
+	results->push_back(FeatureEnabledLocalDefinition{"featurePunchFists", &featurePunchFists});
+	results->push_back(FeatureEnabledLocalDefinition{"featurePunchMeleeWeapons", &featurePunchMeleeWeapons});
+	results->push_back(FeatureEnabledLocalDefinition{"featurePunchFireWeapons", &featurePunchFireWeapons});
 	results->push_back(FeatureEnabledLocalDefinition{"featureDriverAgainst", &featureDriverAgainst});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePoliceAgainst", &featurePoliceAgainst});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAimAtDriver", &featureAimAtDriver});
@@ -1957,6 +2039,7 @@ void add_weapon_feature_enablements2(std::vector<StringPairSettingDBRow>* result
 	results->push_back(StringPairSettingDBRow{ "ChancePoliceCallingIndex", std::to_string(ChancePoliceCallingIndex) });
 	results->push_back(StringPairSettingDBRow{ "ChanceAttackingYouIndex", std::to_string(ChanceAttackingYouIndex) });
 	results->push_back(StringPairSettingDBRow{ "SniperVisionIndex", std::to_string(SniperVisionIndex) });
+	results->push_back(StringPairSettingDBRow{ "PowerPunchIndex", std::to_string(PowerPunchIndex) });
 }
 
 void onchange_weap_dmg_modifier(int value, SelectFromListMenuItem* source){
@@ -1990,6 +2073,9 @@ void handle_generic_settings_weapons(std::vector<StringPairSettingDBRow>* settin
 		}
 		else if (setting.name.compare("SniperVisionIndex") == 0){
 			SniperVisionIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("PowerPunchIndex") == 0) {
+			PowerPunchIndex = stoi(setting.value);
 		}
 	}
 }
