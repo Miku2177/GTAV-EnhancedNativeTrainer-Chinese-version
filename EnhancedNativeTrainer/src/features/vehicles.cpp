@@ -1076,7 +1076,7 @@ void process_engine_degrade_menu() {
 	int i = 0;
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Enabled";
+	toggleItem->caption = "Enable";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureEngineDegrade;
 	menuItems.push_back(toggleItem);

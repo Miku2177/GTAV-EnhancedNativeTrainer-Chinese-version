@@ -30,6 +30,8 @@ int skinDetailMenuValue = 0;
 
 int skinMainMenuPosition = 0;
 
+bool helmet_on = false;
+
 int skinPropsMenuPosition = 0;
 int skinPropsCategoryValue = 0;
 int skinPropsDrawablePosition[10] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -634,6 +636,18 @@ bool onconfirm_skinchanger_menu(MenuItem<int> choice)
 		PED::CLEAR_ALL_PED_PROPS(playerPed);
 		PED::SET_PED_RANDOM_PROPS(playerPed);
 		break;
+	case 8:
+		if (helmet_on == false) {
+			Hash model = -1;
+			if (PED::GET_PED_TYPE(playerPed) == 0) model = GAMEPLAY::GET_HASH_KEY("player_zero");
+			if (PED::GET_PED_TYPE(playerPed) == 1) model = GAMEPLAY::GET_HASH_KEY("player_one");
+			if (PED::GET_PED_TYPE(playerPed) == 2 || PED::GET_PED_TYPE(playerPed) == 3) model = GAMEPLAY::GET_HASH_KEY("player_two");
+			applyChosenSkin(model);
+			helmet_on = true;
+		}
+		int temp_choice = rand() % 15 + 0;
+		PED::GIVE_PED_HELMET(playerPed, 1, 4096, temp_choice);
+		break;
 	}
 	return false;
 }
@@ -733,6 +747,12 @@ bool process_skinchanger_menu()
 
 	item = new MenuItem<int>();
 	item->caption = "Randomize Head Accessories";
+	item->value = i++;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "Give Helmet";
 	item->value = i++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
