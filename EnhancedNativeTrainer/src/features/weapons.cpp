@@ -1305,8 +1305,8 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 				Vector3 gr_cor = ENTITY::GET_ENTITY_COORDS(objects_g[i], TRUE);
 				Vector3 me_cor = ENTITY::GET_ENTITY_COORDS(playerPed, TRUE);
 				float dist = GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(me_cor.x, me_cor.y, me_cor.z, gr_cor.x, gr_cor.y, gr_cor.z, TRUE);
-				if (ENTITY::IS_ENTITY_IN_AIR(objects_g[i]) && dist > 10.0) FIRE::ADD_EXPLOSION(gr_cor.x, gr_cor.y, gr_cor.z, ExplosionTypeGrenadeL, 3.0, rand() % 3 == 0, false, 0.0); // rand() % 3 == 0
-				if (!ENTITY::IS_ENTITY_IN_AIR(objects_g[i]) && dist > 10.0 && dist < 70.0) FIRE::ADD_EXPLOSION(gr_cor.x, gr_cor.y, gr_cor.z, ExplosionTypeGrenadeL, 3.0, rand() % 15 == 0, false, 0.0);
+				if (ENTITY::IS_ENTITY_IN_AIR(objects_g[i]) && dist > 10.0) FIRE::ADD_EXPLOSION(gr_cor.x, gr_cor.y, gr_cor.z, ExplosionTypeGrenadeL, 3.0, rand() % 15 == 0, false, 0.0); // rand() % 3 == 0
+				if (!ENTITY::IS_ENTITY_IN_AIR(objects_g[i]) && dist > 10.0 && dist < 90.0) FIRE::ADD_EXPLOSION(gr_cor.x, gr_cor.y, gr_cor.z, ExplosionTypeGrenadeL, 5.0, rand() % 15 == 0, false, 0.0);
 			}
 		}
 	}
