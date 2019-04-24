@@ -199,3 +199,4 @@ bool is_player_ignored_by_police();
 extern Vehicle vehicle_been_used;
 extern bool featurePlayerInvisible;
 extern bool featurePlayerInvisibleInVehicle;
+extern bool featureShowStatusMessage;
