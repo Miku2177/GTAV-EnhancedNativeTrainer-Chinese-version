@@ -9,6 +9,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 */
 
 #include "misc.h"
+#include "script.h"
 #include "hotkeys.h"
 #include "world.h"
 #include <Psapi.h>
@@ -101,6 +102,7 @@ bool featureHidePlayerInfo = false;
 bool featureShowFPS = false;
 
 bool featureShowVehiclePreviews = true;
+bool featureShowStatusMessage = true;
 bool featureControllerIgnoreInTrainer = false;
 
 bool featureMiscJellmanScenery = false;
@@ -298,6 +300,11 @@ void process_misc_trainerconfig_menu(){
 	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Show Vehicle Previews";
 	toggleItem->toggleValue = &featureShowVehiclePreviews;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Show Status Message On Startup";
+	toggleItem->toggleValue = &featureShowStatusMessage;
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
@@ -654,6 +661,7 @@ void reset_misc_globals(){
 	DefMenuTabIndex = 0;
 
 	featureShowVehiclePreviews = true;
+	featureShowStatusMessage = true;
 	airbrake_enable = true;
 	featureControllerIgnoreInTrainer = false;
 	featureBlockInputInMenu = false;
@@ -1282,6 +1290,7 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 	results->push_back(FeatureEnabledLocalDefinition{"featurePhone3DOnBike", &featurePhone3DOnBike});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoPhoneOnHUD", &featureNoPhoneOnHUD});
 	results->push_back(FeatureEnabledLocalDefinition{"featureShowVehiclePreviews", &featureShowVehiclePreviews});
+	results->push_back(FeatureEnabledLocalDefinition{"featureShowStatusMessage", &featureShowStatusMessage});
 	results->push_back(FeatureEnabledLocalDefinition{"featureShowFPS", &featureShowFPS});
 	results->push_back(FeatureEnabledLocalDefinition{"featureHiddenRadioStation", &featureEnableMissingRadioStation});
 

@@ -454,7 +454,7 @@ void fuel()
 				}
 
 				// OUT OF GAS
-				if (FUEL[0] == 0) {
+				if (FUEL[0] <= 0) {
 					VEHICLE::SET_VEHICLE_ENGINE_ON(veh, false, true);
 				}
 
