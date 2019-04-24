@@ -606,7 +606,7 @@ void maintain_bodyguards(){
 		animal_in_group = false;
 	}
 	
-	if (spawnedBodyguards.size() > 0) {
+	if (!spawnedBodyguards.empty()) {
 		for (int i = 0; i < spawnedBodyguards.size(); i++) {
 			if (animal_in_group == true && PED::IS_PED_FLEEING(spawnedBodyguards[i])) AI::TASK_STAND_STILL(spawnedBodyguards[i], 10000); //  || AI::IS_PED_RUNNING(*iter))
 			if (stop_b == false) {
