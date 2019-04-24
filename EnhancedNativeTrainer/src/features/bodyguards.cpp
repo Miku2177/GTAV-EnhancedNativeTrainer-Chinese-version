@@ -395,8 +395,10 @@ void dismiss_bodyguards(){
 
 	for(int i = 0; i < spawnedBodyguards.size(); i++){
 		ENTITY::SET_ENTITY_INVINCIBLE(spawnedBodyguards[i], false);
+		PED::SET_PED_NEVER_LEAVES_GROUP(spawnedBodyguards[i], false);
 		PED::REMOVE_PED_FROM_GROUP(spawnedBodyguards[i]);
 		AI::CLEAR_PED_TASKS(spawnedBodyguards[i]);
+		ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&spawnedBodyguards[i]);
 	}
 
 	spawnedBodyguards.clear();
@@ -590,8 +592,6 @@ void do_add_near_bodyguard() {
 }
 
 void maintain_bodyguards(){
-	std::vector<Ped>::iterator iter = spawnedBodyguards.begin();
-	
 	if (spawnedBodyguards.size() == 0)
 	{
 		if (!BLIPTABLE_BODYGUARD.empty()) {
@@ -606,28 +606,24 @@ void maintain_bodyguards(){
 		animal_in_group = false;
 	}
 	
-	while(iter != spawnedBodyguards.end()){
-
-		if (animal_in_group == true && PED::IS_PED_FLEEING(*iter)) AI::TASK_STAND_STILL(*iter, 10000); //  || AI::IS_PED_RUNNING(*iter))
-		//
-		if (stop_b == false) {
-			PED::SET_PED_AS_GROUP_MEMBER(*iter, PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID()));
-			PED::SET_PED_NEVER_LEAVES_GROUP(*iter, true);
-		}
-		if (stop_b == true) {
-			PED::REMOVE_PED_FROM_GROUP(*iter);
-			AI::CLEAR_PED_TASKS(*iter);
-		}
-		//
-		//PED::SET_PED_FLEE_ATTRIBUTES(*iter, 0, 0);
-
-		if(PED::IS_PED_DEAD_OR_DYING(*iter, true)){
-			// clean up PED stuff, for now let's assume the game handles everything and we just worry about our vector
-			iter = spawnedBodyguards.erase(iter);
-			requireRefreshOfBodyguardMainMenu = true; 
-		}
-		else{
-			++iter;
+	if (spawnedBodyguards.size() > 0) {
+		for (int i = 0; i < spawnedBodyguards.size(); i++) {
+			if (animal_in_group == true && PED::IS_PED_FLEEING(spawnedBodyguards[i])) AI::TASK_STAND_STILL(spawnedBodyguards[i], 10000); //  || AI::IS_PED_RUNNING(*iter))
+			if (stop_b == false) {
+				PED::SET_PED_AS_GROUP_MEMBER(spawnedBodyguards[i], PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID()));
+				PED::SET_PED_NEVER_LEAVES_GROUP(spawnedBodyguards[i], true);
+			}
+			if (stop_b == true) {
+				PED::REMOVE_PED_FROM_GROUP(spawnedBodyguards[i]);
+				AI::CLEAR_PED_TASKS(spawnedBodyguards[i]);
+			}
+			if (PED::IS_PED_DEAD_OR_DYING(spawnedBodyguards[i], true)) {
+				PED::SET_PED_NEVER_LEAVES_GROUP(spawnedBodyguards[i], false);
+				PED::REMOVE_PED_FROM_GROUP(spawnedBodyguards[i]);
+				ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&spawnedBodyguards[i]);
+				spawnedBodyguards.erase(spawnedBodyguards.begin() + i);
+				requireRefreshOfBodyguardMainMenu = true;
+			}
 		}
 	}
 }
