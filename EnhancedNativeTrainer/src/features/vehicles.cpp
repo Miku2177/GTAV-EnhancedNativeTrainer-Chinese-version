@@ -66,10 +66,13 @@ int turn_angle = 0;
 int Time_tick_mileage = 0;
 float mileage = 0;
 
+int traction_tick = 0;
+
 bool featureNoVehFallOff = false;
 bool featureVehSpeedBoost = false;
 bool featureVehSteerAngle = false;
 bool featureRollWhenShoot = false;
+bool featureTractionControl = false;
 bool featureEngineRunning = false;
 bool featureNoVehFlip = false;
 bool featureAutoToggleLights = false;
@@ -1876,6 +1879,12 @@ void process_veh_menu(){
 	toggleItem->toggleValue = &featureRollWhenShoot;
 	menuItems.push_back(toggleItem);
 
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Traction Control";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureTractionControl;
+	menuItems.push_back(toggleItem);
+
 	draw_generic_menu<int>(menuItems, &activeLineIndexVeh, caption, onconfirm_veh_menu, NULL, NULL);
 }
 
@@ -2204,6 +2213,23 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			}
 		}
 	} 
+
+	// Traction Control
+	if (featureTractionControl && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
+		Vector3 vehspeed = ENTITY::GET_ENTITY_VELOCITY(PED::GET_VEHICLE_PED_IS_IN(playerPed, false));
+		if (vehspeed.x < 0) vehspeed.x = (vehspeed.x * -1);
+		if (vehspeed.y < 0) vehspeed.y = (vehspeed.y * -1);
+		if (!CONTROLS::IS_CONTROL_PRESSED(2, 71) && !CONTROLS::IS_CONTROL_PRESSED(2, 62) && !CONTROLS::IS_CONTROL_PRESSED(2, 72) && vehspeed.x < 3 && vehspeed.y < 3) traction_tick = 0;
+		if (CONTROLS::IS_CONTROL_PRESSED(2, 71) || CONTROLS::IS_CONTROL_PRESSED(2, 62) || CONTROLS::IS_CONTROL_PRESSED(2, 72)) traction_tick = traction_tick + 1;
+		if (traction_tick < 100) {
+			if (traction_tick < 50) VEHICLE::_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 0.2);
+			if (traction_tick > 49 && traction_tick < 100) VEHICLE::_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 0.6);
+		}
+		else
+		if (traction_tick > 99 && traction_tick < 109) {
+			VEHICLE::_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 1.0);
+		}
+	}
 	
 	// Never Gets Dirty
 	if (featureNeverDirty && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) VEHICLE::SET_VEHICLE_DIRT_LEVEL(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 0.0);
@@ -3075,6 +3101,7 @@ void reset_vehicle_globals() {
 		featureVehSpeedBoost =
 		featureVehSteerAngle = 
 		featureRollWhenShoot =
+		featureTractionControl =
 		featureEngineRunning =
 		featureNoVehFlip =
 		featureAutoToggleLights =
@@ -3351,6 +3378,7 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehSpeedBoost", &featureVehSpeedBoost});
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehSteerAngle", &featureVehSteerAngle});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRollWhenShoot", &featureRollWhenShoot});
+	results->push_back(FeatureEnabledLocalDefinition{"featureTractionControl", &featureTractionControl});
 	results->push_back(FeatureEnabledLocalDefinition{"featureEngineRunning", &featureEngineRunning});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoVehFlip", &featureNoVehFlip});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAutoToggleLights", &featureAutoToggleLights});
