@@ -537,7 +537,6 @@ void update_features(){
 			featurePlayerLifeUpdated = false;
 
 			if (featurePlayerStatsEnable && featurePlayerStatsUpdated && GAMEPLAY::GET_MISSION_FLAG() == 0) {
-				GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("stats_controller");
 
 				if (PED::GET_PED_TYPE(playerPed_Data) == 0) {
 					STATS::STAT_SET_INT(GAMEPLAY::GET_HASH_KEY("SP0_SPECIAL_ABILITY_UNLOCKED"), PLAYER_ARMOR_VALUES[current_player_stats], true);
@@ -570,6 +569,8 @@ void update_features(){
 					STATS::STAT_SET_INT(GAMEPLAY::GET_HASH_KEY("SP2_STEALTH_ABILITY"), PLAYER_ARMOR_VALUES[current_player_stats], true);
 				}
 
+				GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("stats_controller");
+
 				featurePlayerStatsUpdated = false;
 			}
 		} // end of tick
@@ -584,6 +585,23 @@ void update_features(){
 	if (playerPed_Data != oldplayerPed && featurePlayerLife_Changed) { // If You Switch Character Your Health & Armor Will Be Restored
 		featurePlayerLifeUpdated = true;
 		featurePlayerStatsUpdated = true;
+	}
+
+	if (featurePlayerStatsEnable && GAMEPLAY::GET_MISSION_FLAG() == 1) { //  && !SCRIPT::HAS_SCRIPT_LOADED("stats_controller")
+		while (!SCRIPT::HAS_SCRIPT_LOADED("stats_controller")) {
+			SCRIPT::REQUEST_SCRIPT("stats_controller");
+			SYSTEM::WAIT(0);
+		}
+		//SCRIPT::REQUEST_SCRIPT("stats_controller");
+		SYSTEM::START_NEW_SCRIPT("stats_controller", 1424);
+	}
+
+	if (featurePlayerStatsUpdated == true) {
+		while (!SCRIPT::HAS_SCRIPT_LOADED("stats_controller")) {
+			SCRIPT::REQUEST_SCRIPT("stats_controller");
+			SYSTEM::WAIT(0);
+		}
+		SYSTEM::START_NEW_SCRIPT("stats_controller", 1424);
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////
@@ -930,14 +948,14 @@ bool process_player_life_menu(){
 	menuItems.push_back(listItem);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Remember Stats";
+	toggleItem->caption = "Toggle Modified Stats";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featurePlayerStatsEnable;
 	menuItems.push_back(toggleItem);
 
 	listItem = new SelectFromListMenuItem(PLAYER_ARMOR_CAPTIONS, onchange_player_stats_mode);
 	listItem->wrap = false;
-	listItem->caption = "Set Player Stats";
+	listItem->caption = "Character Ability Stats";
 	listItem->value = current_player_stats;
 	menuItems.push_back(listItem);
 
