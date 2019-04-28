@@ -82,7 +82,9 @@ bool p_invisible = false;
 
 bool featurePlayerLife = false;
 bool featurePlayerLifeUpdated = true;
+bool featurePlayerStatsUpdated = true;
 bool featurePlayerLife_Died = false;
+bool featurePlayerStatsEnable = false;
 bool featurePlayerLife_Changed = false;
 
 bool featureNoRagdoll = false;
@@ -137,6 +139,8 @@ const std::vector<std::string> PLAYER_ARMOR_CAPTIONS{ "0", "15", "20", "30", "40
 const int PLAYER_ARMOR_VALUES[] = { 0, 15, 20, 30, 40, 50, 100 };
 int current_player_armor = 6;
 bool current_player_armor_Changed = true;
+int current_player_stats = 6;
+bool current_player_stats_Changed = true;
 
 //NPC Ragdoll If Shot
 const std::vector<std::string> NPC_RAGDOLL_CAPTIONS{ "OFF", "Never", "Always" };
@@ -170,6 +174,11 @@ void onchange_player_health_mode(int value, SelectFromListMenuItem* source){
 void onchange_player_armor_mode(int value, SelectFromListMenuItem* source){
 	current_player_armor = value;
 	current_player_armor_Changed = true;
+}
+
+void onchange_player_stats_mode(int value, SelectFromListMenuItem* source) {
+	current_player_stats = value;
+	current_player_stats_Changed = true;
 }
 
 void onchange_player_prison_mode(int value, SelectFromListMenuItem* source){
@@ -515,7 +524,7 @@ void update_features(){
 	Ped playerPed_Data = PLAYER::PLAYER_PED_ID();
 	
 	if ((bPlayerExists && featurePlayerLife && featurePlayerLifeUpdated) || (bPlayerExists && featurePlayerLife_Died && featurePlayerLifeUpdated) ||
-		(bPlayerExists && featurePlayerLife_Changed && featurePlayerLifeUpdated)) {
+		(bPlayerExists && featurePlayerLife_Changed && featurePlayerLifeUpdated) || (featurePlayerStatsEnable && featurePlayerStatsUpdated)) {
 
 		tick = tick + 1;
 		if (tick > 200) {
@@ -526,16 +535,55 @@ void update_features(){
 			oldplayerPed = playerPed_Data;
 			tick = 0;
 			featurePlayerLifeUpdated = false;
-		}
-	}
+
+			if (featurePlayerStatsEnable && featurePlayerStatsUpdated && GAMEPLAY::GET_MISSION_FLAG() == 0) {
+				GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("stats_controller");
+
+				if (PED::GET_PED_TYPE(playerPed_Data) == 0) {
+					STATS::STAT_SET_INT(GAMEPLAY::GET_HASH_KEY("SP0_SPECIAL_ABILITY_UNLOCKED"), PLAYER_ARMOR_VALUES[current_player_stats], true);
+					STATS::STAT_SET_INT(GAMEPLAY::GET_HASH_KEY("SP0_STAMINA"), PLAYER_ARMOR_VALUES[current_player_stats], true);
+					STATS::STAT_SET_INT(GAMEPLAY::GET_HASH_KEY("SP0_STRENGTH"), PLAYER_ARMOR_VALUES[current_player_stats], true);
+					STATS::STAT_SET_INT(GAMEPLAY::GET_HASH_KEY("SP0_LUNG_CAPACITY"), PLAYER_ARMOR_VALUES[current_player_stats], true);
+					STATS::STAT_SET_INT(GAMEPLAY::GET_HASH_KEY("SP0_WHEELIE_ABILITY"), PLAYER_ARMOR_VALUES[current_player_stats], true);
+					STATS::STAT_SET_INT(GAMEPLAY::GET_HASH_KEY("SP0_FLYING_ABILITY"), PLAYER_ARMOR_VALUES[current_player_stats], true);
+					STATS::STAT_SET_INT(GAMEPLAY::GET_HASH_KEY("SP0_SHOOTING_ABILITY"), PLAYER_ARMOR_VALUES[current_player_stats], true);
+					STATS::STAT_SET_INT(GAMEPLAY::GET_HASH_KEY("SP0_STEALTH_ABILITY"), PLAYER_ARMOR_VALUES[current_player_stats], true);
+				}
+				if (PED::GET_PED_TYPE(playerPed_Data) == 1) {
+					STATS::STAT_SET_INT(GAMEPLAY::GET_HASH_KEY("SP1_SPECIAL_ABILITY_UNLOCKED"), PLAYER_ARMOR_VALUES[current_player_stats], true);
+					STATS::STAT_SET_INT(GAMEPLAY::GET_HASH_KEY("SP1_STAMINA"), PLAYER_ARMOR_VALUES[current_player_stats], true);
+					STATS::STAT_SET_INT(GAMEPLAY::GET_HASH_KEY("SP1_STRENGTH"), PLAYER_ARMOR_VALUES[current_player_stats], true);
+					STATS::STAT_SET_INT(GAMEPLAY::GET_HASH_KEY("SP1_LUNG_CAPACITY"), PLAYER_ARMOR_VALUES[current_player_stats], true);
+					STATS::STAT_SET_INT(GAMEPLAY::GET_HASH_KEY("SP1_WHEELIE_ABILITY"), PLAYER_ARMOR_VALUES[current_player_stats], true);
+					STATS::STAT_SET_INT(GAMEPLAY::GET_HASH_KEY("SP1_FLYING_ABILITY"), PLAYER_ARMOR_VALUES[current_player_stats], true);
+					STATS::STAT_SET_INT(GAMEPLAY::GET_HASH_KEY("SP1_SHOOTING_ABILITY"), PLAYER_ARMOR_VALUES[current_player_stats], true);
+					STATS::STAT_SET_INT(GAMEPLAY::GET_HASH_KEY("SP1_STEALTH_ABILITY"), PLAYER_ARMOR_VALUES[current_player_stats], true);
+				}
+				if (PED::GET_PED_TYPE(playerPed_Data) == 2 || PED::GET_PED_TYPE(playerPed_Data) == 3) {
+					STATS::STAT_SET_INT(GAMEPLAY::GET_HASH_KEY("SP2_SPECIAL_ABILITY_UNLOCKED"), PLAYER_ARMOR_VALUES[current_player_stats], true);
+					STATS::STAT_SET_INT(GAMEPLAY::GET_HASH_KEY("SP2_STAMINA"), PLAYER_ARMOR_VALUES[current_player_stats], true);
+					STATS::STAT_SET_INT(GAMEPLAY::GET_HASH_KEY("SP2_STRENGTH"), PLAYER_ARMOR_VALUES[current_player_stats], true);
+					STATS::STAT_SET_INT(GAMEPLAY::GET_HASH_KEY("SP2_LUNG_CAPACITY"), PLAYER_ARMOR_VALUES[current_player_stats], true);
+					STATS::STAT_SET_INT(GAMEPLAY::GET_HASH_KEY("SP2_WHEELIE_ABILITY"), PLAYER_ARMOR_VALUES[current_player_stats], true);
+					STATS::STAT_SET_INT(GAMEPLAY::GET_HASH_KEY("SP2_FLYING_ABILITY"), PLAYER_ARMOR_VALUES[current_player_stats], true);
+					STATS::STAT_SET_INT(GAMEPLAY::GET_HASH_KEY("SP2_SHOOTING_ABILITY"), PLAYER_ARMOR_VALUES[current_player_stats], true);
+					STATS::STAT_SET_INT(GAMEPLAY::GET_HASH_KEY("SP2_STEALTH_ABILITY"), PLAYER_ARMOR_VALUES[current_player_stats], true);
+				}
+
+				featurePlayerStatsUpdated = false;
+			}
+		} // end of tick
+	} 
 	
 	if (featurePlayerLife_Died) death_time2 = PLAYER::GET_TIME_SINCE_LAST_DEATH();
 	if (death_time2 > -1 && death_time2 < 2000 && featurePlayerLife_Died) {
 		featurePlayerLifeUpdated = true;
+		featurePlayerStatsUpdated = true;
 	}
 	
 	if (playerPed_Data != oldplayerPed && featurePlayerLife_Changed) { // If You Switch Character Your Health & Armor Will Be Restored
 		featurePlayerLifeUpdated = true;
+		featurePlayerStatsUpdated = true;
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////
@@ -789,11 +837,15 @@ void onchange_regen_callback(int index, SelectFromListMenuItem *source){
 }
 
 bool onconfirm_playerData_menu(MenuItem<int> choice){
-
-	if (choice.value == -1){
-		featurePlayerLifeUpdated = true; 
+	if (choice.value == -1) {
+		featurePlayerLifeUpdated = true;
+		featurePlayerStatsUpdated = true;
 		set_status_text("Settings are being applied");
 	}
+	//else if (choice.value == -2) {
+	//	featurePlayerStatsUpdated = true;
+	//	set_status_text("Stats were changed");
+	//}
 	return false;
 }
 
@@ -876,6 +928,24 @@ bool process_player_life_menu(){
 	listItem->caption = "Health Regeneration Rate";
 	listItem->value = current_regen_speed;
 	menuItems.push_back(listItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Remember Stats";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featurePlayerStatsEnable;
+	menuItems.push_back(toggleItem);
+
+	listItem = new SelectFromListMenuItem(PLAYER_ARMOR_CAPTIONS, onchange_player_stats_mode);
+	listItem->wrap = false;
+	listItem->caption = "Set Player Stats";
+	listItem->value = current_player_stats;
+	menuItems.push_back(listItem);
+
+	//item = new MenuItem<int>();
+	//item->caption = "Change Stats";
+	//item->value = -2;
+	//item->isLeaf = true;
+	//menuItems.push_back(item);
 
 	return draw_generic_menu<int>(menuItems, &playerDataMenuIndex, caption, onconfirm_playerData_menu, NULL, NULL);
 }
@@ -1342,6 +1412,7 @@ void reset_globals(){
 	current_player_health = 6;
 	current_regen_speed = 4;
 	current_player_armor = 6;
+	current_player_stats = 6;
 	current_npc_ragdoll = 0;
 	current_player_movement = 0;
 	current_player_mostwanted = 0;
@@ -1369,6 +1440,7 @@ void reset_globals(){
 
 		featurePlayerLife =
 		featurePlayerLife_Died = 
+		featurePlayerStatsEnable =
 		featurePlayerLife_Changed =
 		featurePrison_Hardcore =
 		featureNoRagdoll =
@@ -1384,6 +1456,7 @@ void reset_globals(){
 		featurePrison_Robe =
 		featurePedPrison_Robe =
 		featurePrison_Yard = 
+		featurePlayerStatsUpdated =
 
 		featurePlayerNoSwitch = true;
 		featureWantedLevelFrozenUpdated = true;
@@ -1613,6 +1686,7 @@ void add_player_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featureThermalVision", &featureThermalVision, &featureThermalVisionUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerLife", &featurePlayerLife, &featurePlayerLifeUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerLife_Died", &featurePlayerLife_Died});
+	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerStatsEnable", &featurePlayerStatsEnable});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerLife_Changed", &featurePlayerLife_Changed});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePrison_Hardcore", &featurePrison_Hardcore});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePrison_Robe", &featurePrison_Robe});
@@ -1625,6 +1699,7 @@ void add_world_feature_enablements3(std::vector<StringPairSettingDBRow>* results
 	results->push_back(StringPairSettingDBRow{"current_player_health", std::to_string(current_player_health)});
 	results->push_back(StringPairSettingDBRow{"current_regen_speed", std::to_string(current_regen_speed)});
 	results->push_back(StringPairSettingDBRow{"current_player_armor", std::to_string(current_player_armor)});
+	results->push_back(StringPairSettingDBRow{"current_player_stats", std::to_string(current_player_stats)});
 	results->push_back(StringPairSettingDBRow{"current_npc_ragdoll", std::to_string(current_npc_ragdoll)});
 	results->push_back(StringPairSettingDBRow{"current_player_movement", std::to_string(current_player_movement)});
 	results->push_back(StringPairSettingDBRow{"current_player_mostwanted", std::to_string(current_player_mostwanted)});
@@ -1709,6 +1784,9 @@ void handle_generic_settings(std::vector<StringPairSettingDBRow> settings){
 		}
 		else if (setting.name.compare("current_player_armor") == 0){
 			current_player_armor = stoi(setting.value);
+		}
+		else if (setting.name.compare("current_player_stats") == 0) {
+			current_player_stats = stoi(setting.value);
 		}
 		else if (setting.name.compare("current_npc_ragdoll") == 0) {
 			current_npc_ragdoll = stoi(setting.value);
