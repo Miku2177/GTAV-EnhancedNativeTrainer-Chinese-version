@@ -38,6 +38,8 @@ bool featureTimeSynced = false;
 bool timeFlowRateChanged = true, timeFlowRateLocked = true;
 bool HotkeyFlowRateChanged = true, HotkeyFlowRateLocked = true;
 
+float frozentimestate = -1;
+
 int activeLineIndexTime = 0;
 
 float timeFactor = 1000.0f / TIME_FLOW_RATE_VALUES.at(timeFlowRateIndex);
@@ -126,18 +128,39 @@ void onchange_hotkey_flow_rate_callback(int value, SelectFromListMenuItem *sourc
 }
 
 bool onconfirm_time_flowrate_menu(MenuItem<int> choice) {
-	switch (activeLineIndexTime) {
-	case 0:
+	if (choice.value == 0) {
 		if (featureTimeSynced) {
 			set_status_text("Time synced with system");
 		}
-		break;
+	}
+	else if (choice.value == 1) {
+		if (timeFlowRateIndex != 0) {
+			frozentimestate = timeFlowRateIndex;
+			timeFlowRateIndex = 0;
+			timeFlowRateChanged = true;
+			set_status_text("Time is frozen");
+			process_time_menu();
+		}
+		else
+		{
+			if (frozentimestate != -1) {
+				timeFlowRateIndex = frozentimestate;
+				timeFlowRateChanged = true;
+			}
+			else {
+				timeFlowRateIndex = DEFAULT_TIME_FLOW_RATE;
+				timeFlowRateChanged = true;
+			}
+			set_status_text("Time is unfrozen");
+			process_time_menu();
+		}
 	}
 	return false;
 }
 
 void all_time_flow_rate() {
 	std::vector<MenuItem<int> *> menuItems;
+	MenuItem<int> *item;
 	int index = 0;
 
 	ToggleMenuItem<int> *togItem = new ToggleMenuItem<int>();
@@ -165,6 +188,12 @@ void all_time_flow_rate() {
 	listItem->wrap = false;
 	listItem->onConfirmFunction = onconfirm_time_flow_rate;
 	menuItems.push_back(listItem);
+
+	item = new MenuItem<int>();
+	item->caption = "Toggle Frozen Time On/Off";
+	item->value = 1;
+	item->isLeaf = true;
+	menuItems.push_back(item);
 
 	draw_generic_menu<int>(menuItems, nullptr, "Time Flow Rate Options", onconfirm_time_flowrate_menu, nullptr, nullptr, nullptr);
 }
