@@ -594,6 +594,8 @@ void update_features(){
 		}
 		//SCRIPT::REQUEST_SCRIPT("stats_controller");
 		SYSTEM::START_NEW_SCRIPT("stats_controller", 1424);
+		
+		featurePlayerStatsUpdated = true;
 	}
 
 	if (featurePlayerStatsUpdated == true && !SCRIPT::HAS_SCRIPT_LOADED("stats_controller")) {
