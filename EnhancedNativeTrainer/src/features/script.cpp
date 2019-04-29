@@ -587,7 +587,7 @@ void update_features(){
 		featurePlayerStatsUpdated = true;
 	}
 
-	if (featurePlayerStatsEnable && GAMEPLAY::GET_MISSION_FLAG() == 1) { //  && !SCRIPT::HAS_SCRIPT_LOADED("stats_controller")
+	if (featurePlayerStatsEnable && GAMEPLAY::GET_MISSION_FLAG() == 1 && !SCRIPT::HAS_SCRIPT_LOADED("stats_controller")) {
 		while (!SCRIPT::HAS_SCRIPT_LOADED("stats_controller")) {
 			SCRIPT::REQUEST_SCRIPT("stats_controller");
 			SYSTEM::WAIT(0);
@@ -596,7 +596,7 @@ void update_features(){
 		SYSTEM::START_NEW_SCRIPT("stats_controller", 1424);
 	}
 
-	if (featurePlayerStatsUpdated == true) {
+	if (featurePlayerStatsUpdated == true && !SCRIPT::HAS_SCRIPT_LOADED("stats_controller")) {
 		while (!SCRIPT::HAS_SCRIPT_LOADED("stats_controller")) {
 			SCRIPT::REQUEST_SCRIPT("stats_controller");
 			SYSTEM::WAIT(0);
