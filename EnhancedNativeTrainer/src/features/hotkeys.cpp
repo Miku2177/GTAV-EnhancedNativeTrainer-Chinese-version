@@ -242,6 +242,12 @@ void trigger_function_for_hotkey_onkeyup(int hotkey)
 	case HKEY_TOGGLED_SPEED:
 		toggle_game_speed();
 		break;
+	case HKEY_HANDBRAKE_SWITCHING:
+		vehicle_brake();
+		break;
+	case HKEY_BURNOUT_SWITCHING:
+		vehicle_burnout();
+		break;
 
 	default:
 	{

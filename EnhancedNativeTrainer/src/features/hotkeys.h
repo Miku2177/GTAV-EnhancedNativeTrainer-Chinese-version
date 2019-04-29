@@ -65,6 +65,8 @@ static const int HKEY_SNIPER_VISION_TOGGLE = 136;
 static const int HKEY_DOORS_LOCKED_TOGGLE = 137;
 static const int HKEY_SEAT_CHANGE_TOGGLE = 138;
 static const int HKEY_TOGGLED_SPEED = 139;
+static const int HKEY_HANDBRAKE_SWITCHING = 140;
+static const int HKEY_BURNOUT_SWITCHING = 141;
 
 const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "No Function", 0 },
@@ -105,6 +107,8 @@ const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "Doors Locked", HKEY_DOORS_LOCKED_TOGGLE },
 	{ "Change Seat", HKEY_SEAT_CHANGE_TOGGLE },
 	{ "Toggle Global Game Speed", HKEY_TOGGLED_SPEED },
+	{ "Toggle Handbrake", HKEY_HANDBRAKE_SWITCHING },
+	{ "Toggle Burnout", HKEY_BURNOUT_SWITCHING },
 };
 
 void change_hotkey_function(int hotkey, int funcIndex);

@@ -94,6 +94,10 @@ void seat_change_hotkey();
 
 void engineonoff_switching();
 
+void vehicle_brake();
+
+void vehicle_burnout();
+
 void engine_damage();
 
 void engine_kill();
