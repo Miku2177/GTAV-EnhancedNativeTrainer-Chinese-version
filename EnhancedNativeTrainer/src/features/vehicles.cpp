@@ -59,7 +59,8 @@ bool speedlimiter_switch = true;
 bool LightAlwaysOff = true;
 
 bool alarmischarged = false;
-Vehicle alrarmchargedvehicle;
+bool alarm_enabled = false;
+//Vehicle alrarmchargedvehicle;
 
 int turn_angle = 0;
 
@@ -120,6 +121,10 @@ bool featureDeleteTrackedVehicles = true;
 bool featureDeleteTrackedVehicles_Emptied = false;
 bool featureDeleteTrackedVehicles_CharacterChanged = true;
 bool featureBlipNumber = true;
+bool featureAutoalarm = false;
+Vehicle alarmed_veh = -1;
+bool near_enough = false;
+int a_counter_tick = 0;
 //
 // Anti-Theft System variables
 std::vector<Vehicle> VEHICLES_STEERLOCKED;
@@ -445,15 +450,11 @@ void vehicle_alarm() {
 
 void vehicle_set_alarm() {
 	Player PlayerPedSetAlarm = PLAYER::PLAYER_PED_ID();
-	Vehicle veh_setalarming = -1;
-	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_setalarming = PED::GET_VEHICLE_PED_IS_USING(PlayerPedSetAlarm);
-	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh_setalarming = vehicle_been_used;
-	
-	alrarmchargedvehicle = veh_setalarming;
-	AI::TASK_LEAVE_VEHICLE(PlayerPedSetAlarm, veh_setalarming, 0);
-	VEHICLE::SET_VEHICLE_DOORS_LOCKED(veh_setalarming, 4); 
-	VEHICLE::SET_VEHICLE_ALARM(veh_setalarming, true);
-	WAIT(1000);
+	if (!featureAutoalarm) {
+		if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) alarmed_veh = PED::GET_VEHICLE_PED_IS_USING(PlayerPedSetAlarm);
+		if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) alarmed_veh = vehicle_been_used;
+	}
+	if (!featureAutoalarm) alarm_enabled = !alarm_enabled;
 	alarmischarged = true;
 }
 
@@ -778,7 +779,7 @@ bool process_veh_door_menu(){
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Set The Alarm";
+	item->caption = "Toggle Vehicle Alarm";
 	item->value = -13;
 	item->isLeaf = true;
 	menuItems.push_back(item);
@@ -1418,6 +1419,12 @@ void process_remember_vehicles_menu() {
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Toggle Vehicle Alarm Automatically";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureAutoalarm;
+	menuItems.push_back(toggleItem);
+
 	draw_generic_menu<int>(menuItems, &activeLineIndexRemember, caption, onconfirm_vehicle_remember_menu, NULL, NULL);
 }
 
@@ -2031,10 +2038,64 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		}
 	}
 
-	// Set The Alarm Check
-	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && alarmischarged == true && PED::GET_VEHICLE_PED_IS_USING(playerPed) == alrarmchargedvehicle) {
-		VEHICLE::SET_VEHICLE_DOORS_LOCKED(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 0);
-		alarmischarged = false;
+	// Toggle Vehicle Alarm Check
+	if (alarmischarged == true) { 
+		if (featureAutoalarm && !VEHICLES_REMEMBER.empty()) { // Toggle Vehicle Alarm Automatically
+			float dist_diff = -1.0;
+			Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(playerPed, true);
+			for (int i = 0; i < VEHICLES_REMEMBER.size(); i++) {
+				Vector3 coordsveh = ENTITY::GET_ENTITY_COORDS(VEHICLES_REMEMBER[i], true);
+				dist_diff = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsveh.x, coordsveh.y, coordsveh.z);
+				if (dist_diff < 10.0) {
+					alarmed_veh = VEHICLES_REMEMBER[i];
+					alarm_enabled = false;
+				}
+				if (dist_diff > 10.0 && alarmed_veh == VEHICLES_REMEMBER[i]) { 
+					alarm_enabled = true;
+				}
+			}
+		}
+
+		if (alarm_enabled == true && alarmed_veh != -1) { // set the alarm
+			a_counter_tick = a_counter_tick + 1;
+			for (int j = 0; j < 6; j++) VEHICLE::SET_VEHICLE_DOOR_SHUT(alarmed_veh, j, true);
+			VEHICLE::SET_VEHICLE_ENGINE_ON(alarmed_veh, false, true);
+			if (a_counter_tick > 71) {
+				VEHICLE::SET_VEHICLE_DOORS_LOCKED(alarmed_veh, 4);
+				VEHICLE::SET_VEHICLE_ALARM(alarmed_veh, true);
+				alarmed_veh = -1;
+				near_enough = false;
+				a_counter_tick = 0;
+				if (!featureAutoalarm) alarmischarged = false;
+			}
+		}
+
+		if (alarmed_veh != -1 && near_enough == false && alarm_enabled == false) { // disable the alarm
+			a_counter_tick = a_counter_tick + 1;
+			VEHICLE::SET_VEHICLE_ENGINE_ON(alarmed_veh, true, true);
+			if (a_counter_tick > 71) {
+				VEHICLE::SET_VEHICLE_DOORS_LOCKED(alarmed_veh, 0);
+				VEHICLE::SET_VEHICLE_ALARM(alarmed_veh, false);
+				near_enough = true;
+				a_counter_tick = 0;
+				if (!featureAutoalarm) alarmischarged = false;
+			}
+		}
+		if (a_counter_tick > 5 && a_counter_tick < 70) {
+			VEHICLE::SET_VEHICLE_INDICATOR_LIGHTS(alarmed_veh, 1, true); // Left Signal 
+			VEHICLE::SET_VEHICLE_INDICATOR_LIGHTS(alarmed_veh, 0, true); // Right Signal
+			VEHICLE::SET_VEHICLE_BRAKE_LIGHTS(alarmed_veh, true);
+			if ((a_counter_tick > 5 && a_counter_tick < 20) || (a_counter_tick > 40 && a_counter_tick < 60)) VEHICLE::SET_VEHICLE_LIGHTS(alarmed_veh, 2);
+			//AUDIO::PLAY_SOUND_FROM_ENTITY(-1, "LAMAR1_FAKE_POLICE_SIREN2_MASTER", alarmed_veh, 0, 0, 0);
+			if (a_counter_tick == 50) AUDIO::PLAY_SOUND_FROM_ENTITY(-1, "unlocked_bleep", alarmed_veh, "HACKING_DOOR_UNLOCK_SOUNDS", 0, 0);
+			if (a_counter_tick > 20 && a_counter_tick < 40 || (a_counter_tick > 60 && a_counter_tick < 70)) VEHICLE::SET_VEHICLE_LIGHTS(alarmed_veh, 1);
+		}
+		if (a_counter_tick > 70) {
+			VEHICLE::SET_VEHICLE_INDICATOR_LIGHTS(alarmed_veh, 1, false); // Left Signal 
+			VEHICLE::SET_VEHICLE_INDICATOR_LIGHTS(alarmed_veh, 0, false); // Right Signal
+			VEHICLE::SET_VEHICLE_BRAKE_LIGHTS(alarmed_veh, false);
+			VEHICLE::SET_VEHICLE_LIGHTS(alarmed_veh, 0);
+		}
 	}
 
 	// player's vehicle invincible
@@ -2691,12 +2752,9 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 
 	if (GAMEPLAY::GET_MISSION_FLAG() == 0) {
-
 		Ped playerPed_Tracking = PLAYER::PLAYER_PED_ID();
 
-		if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && been_already == true) {
-			been_already = false;
-		}
+		if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && been_already == true) been_already = false;
 
 		if (!VEHICLES_REMEMBER.empty() && !featureDeleteTrackedVehicles && featureDeleteTrackedVehicles_Emptied == false) {
 			for (int i = 0; i < VEHICLES_REMEMBER.size(); i++) {
@@ -2800,27 +2858,26 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 					}
 				}
 			}
-		}
-		else {
-			if (!featureRememberVehicles) {
-				if (!BLIPTABLE_VEH.empty()) {
-					for (int i = 0; i < BLIPTABLE_VEH.size(); i++) {
-						if (UI::DOES_BLIP_EXIST(BLIPTABLE_VEH[i])) {
-							UI::REMOVE_BLIP(&BLIPTABLE_VEH[i]);
-						}
-					}
-					BLIPTABLE_VEH.clear();
-					BLIPTABLE_VEH.shrink_to_fit();
-					featureDeleteTrackedVehicles_Emptied = false;
-				}
+		} // end of the main body
 
-				if (featureDeleteTrackedVehicles && !VEHICLES_REMEMBER.empty()) {
-					for (int i = 0; i < VEHICLES_REMEMBER.size(); i++) {
-						VEHICLE::DELETE_VEHICLE(&VEHICLES_REMEMBER[i]);
+		if (!featureRememberVehicles) {
+			if (!BLIPTABLE_VEH.empty()) {
+				for (int i = 0; i < BLIPTABLE_VEH.size(); i++) {
+					if (UI::DOES_BLIP_EXIST(BLIPTABLE_VEH[i])) {
+						UI::REMOVE_BLIP(&BLIPTABLE_VEH[i]);
 					}
-					VEHICLES_REMEMBER.clear();
-					VEHICLES_REMEMBER.shrink_to_fit();
 				}
+				BLIPTABLE_VEH.clear();
+				BLIPTABLE_VEH.shrink_to_fit();
+				featureDeleteTrackedVehicles_Emptied = false;
+			}
+
+			if (featureDeleteTrackedVehicles && !VEHICLES_REMEMBER.empty()) {
+				for (int i = 0; i < VEHICLES_REMEMBER.size(); i++) {
+					VEHICLE::DELETE_VEHICLE(&VEHICLES_REMEMBER[i]);
+				}
+				VEHICLES_REMEMBER.clear();
+				VEHICLES_REMEMBER.shrink_to_fit();
 			}
 			std::vector<int> emptyVec;
 			std::vector<double> emptyVec_d;
@@ -2828,6 +2885,11 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			if (!VEH_BLIPSIZE_VALUES.empty()) std::vector<double>(VEH_BLIPSIZE_VALUES).swap(emptyVec_d);
 			if (!VEH_BLIPCOLOUR_VALUES.empty()) std::vector<int>(VEH_BLIPCOLOUR_VALUES).swap(emptyVec);
 			if (!VEH_BLIPSYMBOL_VALUES.empty()) std::vector<int>(VEH_BLIPSYMBOL_VALUES).swap(emptyVec);
+		}
+		
+		if (featureAutoalarm) {
+			alarmischarged = true;
+			vehicle_set_alarm();
 		}
 	}
 
@@ -3125,6 +3187,7 @@ void reset_vehicle_globals() {
 		featureLimpMode = 
 		featureVehSpawnTuned =
 		featureVehSpawnOptic =
+		featureAutoalarm =
 		featureVehLightsOn = false;
 
 	featureLockVehicleDoorsUpdated = true;
@@ -3405,6 +3468,7 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureDeleteTrackedVehicles", &featureDeleteTrackedVehicles});
 	results->push_back(FeatureEnabledLocalDefinition{"featureDeleteTrackedVehicles_CharacterChanged", &featureDeleteTrackedVehicles_CharacterChanged});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBlipNumber", &featureBlipNumber});
+	results->push_back(FeatureEnabledLocalDefinition{"featureAutoalarm", &featureAutoalarm});
 	results->push_back(FeatureEnabledLocalDefinition{"featureFuel", &featureFuel});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBlips", &featureBlips});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBlipsPhone", &featureBlipsPhone});

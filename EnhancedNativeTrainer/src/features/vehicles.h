@@ -98,6 +98,8 @@ void vehicle_brake();
 
 void vehicle_burnout();
 
+void vehicle_set_alarm();
+
 void engine_damage();
 
 void engine_kill();
