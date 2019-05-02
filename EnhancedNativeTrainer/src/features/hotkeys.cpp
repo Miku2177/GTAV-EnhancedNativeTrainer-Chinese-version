@@ -248,6 +248,9 @@ void trigger_function_for_hotkey_onkeyup(int hotkey)
 	case HKEY_BURNOUT_SWITCHING:
 		vehicle_burnout();
 		break;
+	case HKEY_ALARM_SWITCHING:
+		vehicle_set_alarm();
+		break;
 
 	default:
 	{
