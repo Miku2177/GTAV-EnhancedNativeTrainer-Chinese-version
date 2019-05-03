@@ -2086,8 +2086,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			VEHICLE::SET_VEHICLE_INDICATOR_LIGHTS(alarmed_veh, 0, true); // Right Signal
 			VEHICLE::SET_VEHICLE_BRAKE_LIGHTS(alarmed_veh, true);
 			if ((a_counter_tick > 5 && a_counter_tick < 20) || (a_counter_tick > 40 && a_counter_tick < 60)) VEHICLE::SET_VEHICLE_LIGHTS(alarmed_veh, 2);
-			//AUDIO::PLAY_SOUND_FROM_ENTITY(-1, "LAMAR1_FAKE_POLICE_SIREN2_MASTER", alarmed_veh, 0, 0, 0);
-			if (a_counter_tick == 50) AUDIO::PLAY_SOUND_FROM_ENTITY(-1, "unlocked_bleep", alarmed_veh, "HACKING_DOOR_UNLOCK_SOUNDS", 0, 0);
+			if (a_counter_tick == 50) AUDIO::PLAY_SOUND_FROM_ENTITY(-1, "SIREN_BLIP", alarmed_veh, "BIG_SCORE_3A_SOUNDS", 0, 0);
 			if (a_counter_tick > 20 && a_counter_tick < 40 || (a_counter_tick > 60 && a_counter_tick < 70)) VEHICLE::SET_VEHICLE_LIGHTS(alarmed_veh, 1);
 		}
 		if (a_counter_tick > 70) {
