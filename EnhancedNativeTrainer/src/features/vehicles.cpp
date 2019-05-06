@@ -49,6 +49,8 @@ bool window_up = true;
 
 int Accel_secs_passed, Accel_secs_curr, Accel_seconds = 0;
 
+Vehicle current_veh_e = -1;
+
 bool viz_veh_ind_left, viz_veh_ind_right = false;
 
 bool turn_check_left, turn_check_right = false;
@@ -2576,6 +2578,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		Vehicle playerVehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		if (CONTROLS::IS_CONTROL_PRESSED(2, 75) && VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] == 1) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(playerVehicle, true);
 		if (CONTROLS::IS_CONTROL_PRESSED(2, 75) && VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] == 2) engine_tick = engine_tick + 1;
+		if (CONTROLS::IS_CONTROL_PRESSED(2, 75) && VEHICLE::IS_THIS_MODEL_A_HELI(ENTITY::GET_ENTITY_MODEL(playerVehicle))) current_veh_e = playerVehicle;
 	}
 
 	if (engine_tick < 11 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] == 2 && (!featureVehSteerAngle || PED::IS_PED_ON_ANY_BIKE(playerPed))) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), true);
@@ -2589,6 +2592,12 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	if (bPlayerExists && VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] == 0 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
 		Vehicle playerVehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		if (CONTROLS::IS_CONTROL_PRESSED(2, 75)) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(playerVehicle, false);
+	}
+	// Helicopter's lines
+	if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && current_veh_e != -1 && VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] > 0) {
+		if (VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] == 1) VEHICLE::SET_HELI_BLADES_SPEED(current_veh_e, 1.0f);
+		if (VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] == 2 && engine_tick < 3) VEHICLE::SET_HELI_BLADES_SPEED(current_veh_e, 1.0f);
+		if (VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] == 2 && engine_tick > 2) current_veh_e = -1;
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2970,12 +2979,12 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	if (featureVehSteerAngle && PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) && CONTROLS::IS_CONTROL_PRESSED(2, 75) && !PED::IS_PED_ON_ANY_BIKE(playerPed)) {
 		Vehicle myVehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 
-		if (ENTITY::GET_ENTITY_MODEL(myVehicle) != GAMEPLAY::GET_HASH_KEY("HAULER")) {
+		//if (ENTITY::GET_ENTITY_MODEL(myVehicle) != GAMEPLAY::GET_HASH_KEY("HAULER")) {
 			Vector3 myvehicle_coords = ENTITY::GET_ENTITY_COORDS(myVehicle, true);
 			float myvehicle_heading = ENTITY::GET_ENTITY_HEADING(myVehicle);
 
-			Vehicle temp_object = VEHICLE::CREATE_VEHICLE(GAMEPLAY::GET_HASH_KEY("BMX"), myvehicle_coords.x, myvehicle_coords.y, myvehicle_coords.z, myvehicle_heading, 1, 1); // 20, 1
-			ENTITY::ATTACH_ENTITY_TO_ENTITY_PHYSICALLY(/*ENTITY_1*/myVehicle, /*ENTITY_2*/temp_object, /*BONE_INDEX_1*/0, /*BONE_INDEX_2*/0.0, /*XPOS_1*/50.0, /*YPOS_1*/50.0, /*ZPOS_1*/-0.5,
+			Vehicle temp_object = VEHICLE::CREATE_VEHICLE(GAMEPLAY::GET_HASH_KEY("BMX"), myvehicle_coords.x, myvehicle_coords.y, myvehicle_coords.z + 10, myvehicle_heading, 1, 1); // 20, 1
+			ENTITY::ATTACH_ENTITY_TO_ENTITY_PHYSICALLY(/*ENTITY_1*/myVehicle, /*ENTITY_2*/temp_object, /*BONE_INDEX_1*/0, /*BONE_INDEX_2*/0.0, /*XPOS_1*/50.0, /*YPOS_1*/50.0, /*ZPOS_1*/+10.0,
 				/*XPOS_2*/0.0, /*YPOS_2*/0.0, /*ZPOS_2*/0.0, /*XROT*/0.0, /*YROT*/0.0, /*ZROT*/0.0, /*BREAKFORCE*/1.0, /*FIXEDROT*/true, /*P15*/false, /*COLLISION*/false, /*P17*/1, /*P18*/true);
 			ENTITY::SET_ENTITY_ALPHA(temp_object, 0, 0);
 			if (VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] < 2) WAIT(1000);
@@ -2983,7 +2992,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 			ENTITY::DETACH_ENTITY(myVehicle, true, true);
 			VEHICLE::DELETE_VEHICLE(&temp_object);
-		}
+		//}
 	} 
 
 ///////////////////////////////////////////////////////////////////////////////////
