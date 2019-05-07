@@ -971,17 +971,17 @@ void update_world_features()
 				int r_Type = (rand() % 3 + 0);
 				slippery_randomize = (rand() % 1000 + 1);
 				// arcade
-				if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] == 1 && slippery_randomize > 980 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
+				if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] == 1 && slippery_randomize > 990 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
 					AI::IS_PED_RUNNING(PLAYER::PLAYER_PED_ID()) && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip.x, coords_slip.y, coords_slip.z) && !ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID()))
 					PED::SET_PED_TO_RAGDOLL(PLAYER::PLAYER_PED_ID(), time11, time12, r_Type, true, true, false);
-				if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] == 1 && slippery_randomize > 900 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
+				if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] == 1 && slippery_randomize > 920 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
 					AI::IS_PED_SPRINTING(PLAYER::PLAYER_PED_ID()) && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip.x, coords_slip.y, coords_slip.z) && !ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID())) 
 					PED::SET_PED_TO_RAGDOLL(PLAYER::PLAYER_PED_ID(), time11, time12, r_Type, true, true, false);
 				// realistic
-				if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] == 2 && slippery_randomize > 960 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
+				if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] == 2 && slippery_randomize > 970 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
 					AI::IS_PED_RUNNING(PLAYER::PLAYER_PED_ID()) && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip.x, coords_slip.y, coords_slip.z) && !ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID())) 
 					PED::SET_PED_TO_RAGDOLL(PLAYER::PLAYER_PED_ID(), time11, time12, r_Type, true, true, false);
-				if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] == 2 && slippery_randomize > 860 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
+				if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] == 2 && slippery_randomize > 880 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
 					AI::IS_PED_SPRINTING(PLAYER::PLAYER_PED_ID()) && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip.x, coords_slip.y, coords_slip.z) && !ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID())) 
 					PED::SET_PED_TO_RAGDOLL(PLAYER::PLAYER_PED_ID(), time11, time12, r_Type, true, true, false);
 			}
@@ -1091,22 +1091,44 @@ void update_world_features()
 	}
 
 	// NPC No Gravity Peds && Acid Water && Acid Rain
-	if (featureNPCNoGravityPeds || featureAcidWater || featureAcidRain) {
+	if (featureNPCNoGravityPeds || featureAcidWater || featureAcidRain || WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0) {
 		const int BUS_ARR_PED_SIZE = 1024;
 		Ped bus_ped[BUS_ARR_PED_SIZE];
 		int found_ped = worldGetAllPeds(bus_ped, BUS_ARR_PED_SIZE);
 		for (int i = 0; i < found_ped; i++) {
+			//if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 && featureSnow && bus_ped[i] != PLAYER::PLAYER_PED_ID()) {
+			//	int slippery_randomize2 = (rand() % 1000 + 1);
+			//	if (((WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] == 1 && slippery_randomize2 > 995) || (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] == 2 && slippery_randomize2 > 985)) && 
+			//		(AI::IS_PED_RUNNING(bus_ped[i]) || AI::IS_PED_SPRINTING(bus_ped[i]))) {
+			//		STREAMING::REQUEST_ANIM_DICT("anim@veh@btype@side_ps@base");
+			//		while (!STREAMING::HAS_ANIM_DICT_LOADED("anim@veh@btype@side_ps@base")) WAIT(0);
+			//		if (!ENTITY::IS_ENTITY_PLAYING_ANIM(bus_ped[i], "anim@veh@btype@side_ps@base", "dead_fall_out", 3)) {
+			//			AI::TASK_PLAY_ANIM(bus_ped[i], "anim@veh@btype@side_ps@base", "dead_fall_out", 8.0, 0.0, -1, 9, 0, 0, 0, 0);
+			//			AI::STOP_ANIM_TASK(bus_ped[i], "anim@veh@btype@side_ps@base", "dead_fall_out", 1.0);
+			//			STREAMING::REMOVE_ANIM_DICT("anim@veh@btype@side_ps@base");
+			//		}
+			//	}
+			//}
 			if (featureNPCNoGravityPeds && bus_ped[i] != PLAYER::PLAYER_PED_ID()) {
+				Vector3 CamRot = CAM::GET_GAMEPLAY_CAM_ROT(2);
+				int p_force = 5;
+				float rad = 2 * 3.14 * (CamRot.z / 360);
+				float v_x = -(sin(rad) * p_force * 10);
+				float v_y = (cos(rad) * p_force * 10);
+				float v_z = p_force * (CamRot.x * 0.2);
 				PED::SET_PED_CAN_RAGDOLL(bus_ped[i], true);
-				//PED::SET_PED_RAGDOLL_FORCE_FALL(PLAYER::PLAYER_PED_ID());
 				PED::SET_PED_RAGDOLL_FORCE_FALL(bus_ped[i]);
 				PED::SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(bus_ped[i], true);
 				PED::SET_PED_RAGDOLL_ON_COLLISION(bus_ped[i], true);
-				if (!AI::IS_PED_STILL(bus_ped[i])) AI::TASK_STAND_STILL(bus_ped[i], 1000);
-				//if (AI::IS_PED_WALKING(bus_ped[i]) || PED::IS_PED_FLEEING(bus_ped[i]) || AI::IS_PED_RUNNING(bus_ped[i]) || PED::IS_PED_IN_COMBAT(bus_ped[i], PLAYER::PLAYER_PED_ID()) || AI::IS_PED_STILL(bus_ped[i]))
-				ENTITY::APPLY_FORCE_TO_ENTITY(bus_ped[i], 0, 300, 0, 0, 0, 0, 0, 1, true, true, false, true, true);
-				if (!PED::IS_PED_RAGDOLL(bus_ped[i])) PED::SET_PED_TO_RAGDOLL(bus_ped[i], 10000, 10000, 0, true, true, false); //  && !PED::IS_PED_RAGDOLL(bus_ped[i])
-				if (PED::IS_PED_SHOOTING(bus_ped[i])) ENTITY::APPLY_FORCE_TO_ENTITY(bus_ped[i], 4, 1000, 0, 0, 0, 0, 0, 1, true, true, true, true, true);
+				if (!PED::IS_PED_RAGDOLL(bus_ped[i])) PED::SET_PED_TO_RAGDOLL(bus_ped[i], 1, 1, 1, 1, 1, 1);
+				STREAMING::REQUEST_ANIM_DICT("dead@fall");
+				while (!STREAMING::HAS_ANIM_DICT_LOADED("dead@fall")) WAIT(0);
+				if (!ENTITY::IS_ENTITY_PLAYING_ANIM(bus_ped[i], "dead@fall", "dead_fall_down", 3) && !PED::IS_PED_RAGDOLL(bus_ped[i]) && PED::GET_PED_TYPE(bus_ped[i]) != 6 && !ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(bus_ped[i])) {
+					AI::TASK_PLAY_ANIM(bus_ped[i], "dead@fall", "dead_fall_down", 8.0, 0.0, -1, 9, 0, 0, 0, 0);
+					PED::SET_PED_TO_RAGDOLL(bus_ped[i], 1, 1, 1, 1, 1, 1);
+				}
+				if (PED::IS_PED_SHOOTING(bus_ped[i])) ENTITY::APPLY_FORCE_TO_ENTITY(bus_ped[i], 1, v_x, v_y, v_z, 0, 0, 0, false, false, true, true, false, true);
+				if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(bus_ped[i], PLAYER::PLAYER_PED_ID(), 1)) ENTITY::APPLY_FORCE_TO_ENTITY(bus_ped[i], 1, v_x, v_y, v_z, 0, 0, 0, false, false, true, true, false, true);
 				ENTITY::SET_ENTITY_HAS_GRAVITY(bus_ped[i], false);
 			}
 			if (featureAcidWater && (ENTITY::IS_ENTITY_IN_WATER(bus_ped[i]) || PED::IS_PED_SWIMMING_UNDER_WATER(bus_ped[i]))) {
