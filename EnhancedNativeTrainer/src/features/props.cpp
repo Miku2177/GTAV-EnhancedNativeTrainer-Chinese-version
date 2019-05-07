@@ -45,7 +45,7 @@ bool creationParam2 = true;
 bool creationParam3 = true;
 
 bool propCreationIsInvincible = false;
-bool propCreationIsImmovable = false;
+bool propCreationIsImmovable = true;
 bool propCreationHasGravity = true;
 int propCreationAlphaIndex = 0;
 
@@ -53,7 +53,7 @@ void reset_prop_globals()
 {
 	lastSelectedCategoryIndex = 0;
 	propCreationIsInvincible = false;
-	propCreationIsImmovable = false;
+	propCreationIsImmovable = true;
 	propCreationHasGravity = true;
 	propCreationAlphaIndex = 0;
 	lastCustomPropSpawn = "";
