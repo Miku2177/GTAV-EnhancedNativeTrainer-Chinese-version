@@ -37,7 +37,7 @@ Vehicle curr_veh;
 Hash driverPed_tomarker;
 int driving_style = 4;
 int SinceDriverStop_secs_passed, SinceDriverStop_secs_curr, DriverStop_seconds = 0;
-int SinceDriver2Stop_secs_passed, SinceDriver2Stop_secs_curr, Driver2Stop_seconds = 0;
+int Driver2Stop_seconds = 0; // SinceDriver2Stop_secs_passed, SinceDriver2Stop_secs_curr, 
 Blip myChauffeurBlip = -1;
 int temp_dist = -1;
 //
@@ -168,10 +168,10 @@ void drive_to_marker()
 		}
 
 		if ((driving_reverse.x < 5) && (driving_reverse.y < 5)) {
-			SinceDriver2Stop_secs_passed = clock() / CLOCKS_PER_SEC;
-			if (((clock() / CLOCKS_PER_SEC) - SinceDriver2Stop_secs_curr) != 0) {
+			SinceDriverStop_secs_passed = clock() / CLOCKS_PER_SEC;
+			if (((clock() / CLOCKS_PER_SEC) - SinceDriverStop_secs_curr) != 0) {
 				Driver2Stop_seconds = Driver2Stop_seconds + 1;
-				SinceDriver2Stop_secs_curr = SinceDriver2Stop_secs_passed;
+				SinceDriverStop_secs_curr = SinceDriverStop_secs_passed;
 			}
 			if (Driver2Stop_seconds > 8) {
 				driving_style = TEL_CHAUFFEUR_DRIVINGSTYLES_VALUES[TelChauffeur_drivingstyles_Index];

@@ -30,12 +30,13 @@ int activeLineIndexPowerPunchWeapons = 0;
 // give all weapons automatically variables
 bool featureGiveAllWeapons = false;
 int tick_allw = 0;
+int w_tick_secs_passed, w_tick_secs_curr = 0;
 Ped oldplayerPed_W = -1;
 bool PlayerUpdated_w = true;
 //
 bool featureWeaponInfiniteAmmo = false;
-bool featureWeaponInfiniteParachutes = false , featureWeaponInfiniteParachutesUpdated = false;
-bool featureWeaponNoParachutes = false , featureWeaponNoParachutesUpdated = false;
+bool featureWeaponInfiniteParachutes = false, featureWeaponInfiniteParachutesUpdated = false;
+bool featureWeaponNoParachutes = false, featureWeaponNoParachutesUpdated = false;
 bool featureWeaponNoReload = false;
 bool featureNoReticle = false;
 bool featureCopWeapon = false;
@@ -1526,8 +1527,11 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	// Give All Weapons Automatically
 	if (featureGiveAllWeapons && detained == false) {
 		Ped playerPed_W = PLAYER::PLAYER_PED_ID();
-
-		tick_allw = tick_allw + 1;
+		w_tick_secs_passed = clock() / CLOCKS_PER_SEC;
+		if (((clock() / (CLOCKS_PER_SEC / 1000)) - w_tick_secs_curr) != 0) {
+			tick_allw = tick_allw + 1;
+			w_tick_secs_curr = w_tick_secs_passed;
+		}
 		if (tick_allw > 200 && PlayerUpdated_w) {
 			give_all_weapons_hotkey();
 			oldplayerPed_W = playerPed_W;

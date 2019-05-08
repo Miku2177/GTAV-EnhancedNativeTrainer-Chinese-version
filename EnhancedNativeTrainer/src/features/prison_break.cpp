@@ -38,11 +38,12 @@ char* minutes_to_show_char = "60";
 char seconds_to_show_char_modifiable[2], minutes_to_show_char_modifiable[2];
 bool clear_wanted_level = false;
 int populate_tick = 0;
+int pb_tick_secs_passed, pb_tick_secs_curr = 0;
 Hash JailGuard_Weapon2 = -1;
 Ped prisonPed, temp_ped, temp_ped2 = -1;
 std::vector<Ped> ADDITIONAL_PRISONERS;
 int civilian_torso_drawable, civilian_torso_texture, civilian_legs_drawable, civilian_legs_texture = -1;
-int tick_pedsagainstprisonrobe = 0;
+//int tick_pedsagainstprisonrobe = 0;
 bool alert_police_about_fugitive_close, alert_police_about_fugitive_distant = false;
 
 bool featurePrison_Hardcore = false;
@@ -182,7 +183,13 @@ void prison_break()
 			// Populate the prison
 			if (featurePrison_Yard) {
 				TIME::SET_CLOCK_TIME(12, 0, 0);
-				if (populate_tick < 15) populate_tick = populate_tick + 1;
+				if (populate_tick < 15) {
+					pb_tick_secs_passed = clock() / CLOCKS_PER_SEC;
+					if (((clock() / (CLOCKS_PER_SEC / 1000)) - pb_tick_secs_curr) != 0) {
+						populate_tick = populate_tick + 1;
+						pb_tick_secs_curr = pb_tick_secs_passed;
+					}
+				}
 				if (populate_tick > 5 && populate_tick < 15) {
 					int randomize_peds_in_jail_rot = (1 + rand() % 90);
 					int randomize_peds_in_jail_x1 = (1 + rand() % 40);
@@ -569,7 +576,13 @@ void prison_break()
 			ExPrisonerDrunk_tick = ExPrisonerDrunk_tick + 1;
 		}
 
-		if (ExPrisonerDrunk_tick > 0 && ExPrisonerDrunk_tick < 3000) ExPrisonerDrunk_tick = ExPrisonerDrunk_tick + 1;
+		if (ExPrisonerDrunk_tick > 0 && ExPrisonerDrunk_tick < 3000) {
+			pb_tick_secs_passed = clock() / CLOCKS_PER_SEC;
+			if (((clock() / (CLOCKS_PER_SEC / 1000)) - pb_tick_secs_curr) != 0) {
+				ExPrisonerDrunk_tick = ExPrisonerDrunk_tick + 1;
+				pb_tick_secs_curr = pb_tick_secs_passed;
+			}
+		}
 
 		if (ExPrisonerDrunk_tick == 3000) {
 			PED::RESET_PED_MOVEMENT_CLIPSET(playerPed_Prison, 1.0f);
@@ -687,7 +700,11 @@ void prison_break()
 
 				// You've been seen.
 				if (alert_police_about_fugitive_close == true || alert_police_about_fugitive_distant == true) {
-					tick_callpoliceaboutfugitive = tick_callpoliceaboutfugitive + 1;
+					pb_tick_secs_passed = clock() / CLOCKS_PER_SEC;
+					if (((clock() / (CLOCKS_PER_SEC / 1000)) - pb_tick_secs_curr) != 0) {
+						tick_callpoliceaboutfugitive = tick_callpoliceaboutfugitive + 1;
+						pb_tick_secs_curr = pb_tick_secs_passed;
+					}
 
 					if (tick_callpoliceaboutfugitive > 60000) {
 						if (alert_police_about_fugitive_distant == true && (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 2) && alert_police_about_fugitive_close == false) {

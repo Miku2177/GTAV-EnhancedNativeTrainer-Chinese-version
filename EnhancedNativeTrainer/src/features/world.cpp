@@ -34,7 +34,7 @@ int acid_counter, acid_counter_p = -1;
 
 Camera DeathCam = NULL;
 // peds chance to slip
-int s_tick = -1;
+int s_tick_secs, s_tick_secs_passed, s_tick_secs_curr = 0;
 bool slipped = false;
 Ped temp_ped_s = -1;
 
@@ -99,7 +99,7 @@ std::string lastCloudsName;
 BOOL lightsBAutoOn = -1;
 BOOL highbeamsBAutoOn = -1;
 
-int Lightning_secs_passed, Lightning_secs_curr, Lightning_seconds = 0;
+int Lightning_seconds = 0; // Lightning_secs_passed, Lightning_secs_curr, 
 
 // Radar Map Size
 const std::vector<std::string> WORLD_RADAR_MAP_CAPTIONS{ "Normal", "Big", "Full" };
@@ -818,12 +818,12 @@ void update_world_features()
 	
 	// Lightning Intensity
 	if (WORLD_LIGHTNING_INTENSITY_VALUES[featureLightIntensityIndex] > -2 && GAMEPLAY::GET_NEXT_WEATHER_TYPE_HASH_NAME() == 3061285535) {
-		Lightning_secs_passed = clock() / CLOCKS_PER_SEC;
-		if (((clock() / CLOCKS_PER_SEC) - Lightning_secs_curr) != 0) {
+		s_tick_secs_passed = clock() / CLOCKS_PER_SEC;
+		if (((clock() / CLOCKS_PER_SEC) - s_tick_secs_curr) != 0) {
 			Lightning_seconds = Lightning_seconds + 1;
-			Lightning_secs_curr = Lightning_secs_passed;
+			s_tick_secs_curr = s_tick_secs_passed;
 		}
-
+		
 		if (Lightning_seconds > WORLD_LIGHTNING_INTENSITY_VALUES[featureLightIntensityIndex]) {
 			GAMEPLAY::_CREATE_LIGHTNING_THUNDER();
 			Lightning_seconds = 0;
@@ -1108,8 +1108,12 @@ void update_world_features()
 					slipped = true;
 				}
 				if (slipped == true) {
-					s_tick = s_tick + 1;
-					if (s_tick == 20) {
+					s_tick_secs_passed = clock() / CLOCKS_PER_SEC;
+					if (((clock() / (CLOCKS_PER_SEC / 1000)) - s_tick_secs_curr) != 0) {
+						s_tick_secs = s_tick_secs + 1;
+						s_tick_secs_curr = s_tick_secs_passed;
+					}
+					if (s_tick_secs == 20) {
 						STREAMING::REQUEST_ANIM_DICT("missheist_agency3astumble_getup");
 						while (!STREAMING::HAS_ANIM_DICT_LOADED("missheist_agency3astumble_getup")) WAIT(0);
 						if (!ENTITY::IS_ENTITY_PLAYING_ANIM(temp_ped_s, "missheist_agency3astumble_getup", "stumble_getup", 3)) {
@@ -1118,10 +1122,10 @@ void update_world_features()
 							STREAMING::REMOVE_ANIM_DICT("missheist_agency3astumble_getup");
 						}
 					}
-					if (s_tick == 19400) {
+					if (s_tick_secs == 19400) {
 						AI::CLEAR_PED_TASKS_IMMEDIATELY(temp_ped_s);
 						slipped = false;
-						s_tick = -1;
+						s_tick_secs = 0;
 					}
 				}
 			}
@@ -1150,7 +1154,11 @@ void update_world_features()
 			if (featureAcidWater && (ENTITY::IS_ENTITY_IN_WATER(bus_ped[i]) || PED::IS_PED_SWIMMING_UNDER_WATER(bus_ped[i]))) {
 				if (PED::GET_PED_TYPE(bus_ped[i]) != 0 && PED::GET_PED_TYPE(bus_ped[i]) != 1 && PED::GET_PED_TYPE(bus_ped[i]) != 2 && PED::GET_PED_TYPE(bus_ped[i]) != 3) acid_counter = acid_counter + 1;
 				if (PED::GET_PED_TYPE(bus_ped[i]) == 0 || PED::GET_PED_TYPE(bus_ped[i]) == 1 || PED::GET_PED_TYPE(bus_ped[i]) == 2 || PED::GET_PED_TYPE(bus_ped[i]) == 3) {
-					acid_counter_p = acid_counter_p + 1;
+					s_tick_secs_passed = clock() / CLOCKS_PER_SEC;
+					if (((clock() / (CLOCKS_PER_SEC / 1000)) - s_tick_secs_curr) != 0) {
+						acid_counter_p = acid_counter_p + 1;
+						s_tick_secs_curr = s_tick_secs_passed;
+					}
 					been_damaged = true;
 				}
 				if (PED::GET_PED_ARMOUR(bus_ped[i]) > 0) {
@@ -1191,7 +1199,11 @@ void update_world_features()
 						currVehModel == GAMEPLAY::GET_HASH_KEY("SEASHARK") || currVehModel == GAMEPLAY::GET_HASH_KEY("SEASHARK2"))))) {
 					if (PED::GET_PED_TYPE(bus_ped[i]) != 0 && PED::GET_PED_TYPE(bus_ped[i]) != 1 && PED::GET_PED_TYPE(bus_ped[i]) != 2 && PED::GET_PED_TYPE(bus_ped[i]) != 3) acid_counter = acid_counter + 1;
 					if (PED::GET_PED_TYPE(bus_ped[i]) == 0 || PED::GET_PED_TYPE(bus_ped[i]) == 1 || PED::GET_PED_TYPE(bus_ped[i]) == 2 || PED::GET_PED_TYPE(bus_ped[i]) == 3) {
-						acid_counter_p = acid_counter_p + 1;
+						s_tick_secs_passed = clock() / CLOCKS_PER_SEC;
+						if (((clock() / (CLOCKS_PER_SEC / 1000)) - s_tick_secs_curr) != 0) {
+							acid_counter_p = acid_counter_p + 1;
+							s_tick_secs_curr = s_tick_secs_passed;
+						}
 						been_damaged = true;
 					}
 					if (PED::GET_PED_ARMOUR(bus_ped[i]) > 0) {

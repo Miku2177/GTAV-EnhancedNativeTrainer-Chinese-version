@@ -86,21 +86,15 @@ void add_areaeffect_feature_enablements(std::vector<FeatureEnabledLocalDefinitio
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerIgnoredByAll", &featurePlayerIgnoredByAll}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureAreaPedsInvincible", &featureAreaPedsInvincible}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureAreaPedsHeadExplode", &featureAreaPedsHeadExplode});
-
 	results->push_back(FeatureEnabledLocalDefinition{"featureAreaVehiclesInvincible", &featureAreaVehiclesInvincible}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureAreaVehiclesBroken", &featureAreaVehiclesBroken}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureAreaVehiclesExploded", &featureAreaVehiclesExploded});
-
 	results->push_back(FeatureEnabledLocalDefinition{"featureAreaPedsRioting", &featureAreaPedsRioting}); 
-
 	results->push_back(FeatureEnabledLocalDefinition{"featureAngryPedsUseCover", &featureAngryPedsUseCover});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAngryPedsTargetYou", &featureAngryPedsTargetYou});
-
 	results->push_back(FeatureEnabledLocalDefinition{"featurePedsIncludeDrivers", &featurePedsIncludeDrivers});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePedsIncludePilots", &featurePedsIncludePilots});
-
 	results->push_back(FeatureEnabledLocalDefinition{"featureShowDebugInfo", &featureShowDebugInfo}); 
-
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNPCNoLights", &featureNPCNoLights }); 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNPCNeonLights", &featureNPCNeonLights }); 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNPCFullBeam", &featureNPCFullBeam });
@@ -134,7 +128,6 @@ void reset_areaeffect_globals(){
 
 	DamagedVehiclesIndex = 0;
 	NPCVehicleSpeedIndex = 0;
-
 	pedWeaponSetIndex = 0;
 }
 

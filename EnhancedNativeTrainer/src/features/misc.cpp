@@ -48,7 +48,7 @@ float bill_to_pay, mins = -1;
 bool featureDynamicHealthBar = false;
 bool been_damaged = false;
 float curr_damaged_health, curr_damaged_armor = -1;
-int healthbar_secs_passed, healthbar_secs_curr, healthbar_seconds = -1;
+int healthbar_secs_curr, healthbar_seconds = -1; // healthbar_secs_passed
 float health_bar_x = 0.015;
 float health_bar_y = 0.966;
 //
@@ -1008,10 +1008,10 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		}
 		
 		if (been_damaged == true) {
-			healthbar_secs_passed = clock() / CLOCKS_PER_SEC;
+			secs_passed = clock() / CLOCKS_PER_SEC;
 			if (((clock() / CLOCKS_PER_SEC) - healthbar_secs_curr) != 0) {
 				healthbar_seconds = healthbar_seconds + 1;
-				healthbar_secs_curr = healthbar_secs_passed;
+				healthbar_secs_curr = secs_passed;
 			}
 
 			if (healthbar_seconds == 15) {
