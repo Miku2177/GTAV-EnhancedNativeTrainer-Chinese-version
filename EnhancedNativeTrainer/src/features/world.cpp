@@ -33,6 +33,10 @@ int r, g, b = -1;
 int acid_counter, acid_counter_p = -1;
 
 Camera DeathCam = NULL;
+// peds chance to slip
+int s_tick = -1;
+bool slipped = false;
+Ped temp_ped_s = -1;
 
 int slippery_s, slippery_r = 0;
 
@@ -1096,19 +1100,31 @@ void update_world_features()
 		Ped bus_ped[BUS_ARR_PED_SIZE];
 		int found_ped = worldGetAllPeds(bus_ped, BUS_ARR_PED_SIZE);
 		for (int i = 0; i < found_ped; i++) {
-			//if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 && featureSnow && bus_ped[i] != PLAYER::PLAYER_PED_ID()) {
-			//	int slippery_randomize2 = (rand() % 1000 + 1);
-			//	if (((WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] == 1 && slippery_randomize2 > 995) || (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] == 2 && slippery_randomize2 > 985)) && 
-			//		(AI::IS_PED_RUNNING(bus_ped[i]) || AI::IS_PED_SPRINTING(bus_ped[i]))) {
-			//		STREAMING::REQUEST_ANIM_DICT("anim@veh@btype@side_ps@base");
-			//		while (!STREAMING::HAS_ANIM_DICT_LOADED("anim@veh@btype@side_ps@base")) WAIT(0);
-			//		if (!ENTITY::IS_ENTITY_PLAYING_ANIM(bus_ped[i], "anim@veh@btype@side_ps@base", "dead_fall_out", 3)) {
-			//			AI::TASK_PLAY_ANIM(bus_ped[i], "anim@veh@btype@side_ps@base", "dead_fall_out", 8.0, 0.0, -1, 9, 0, 0, 0, 0);
-			//			AI::STOP_ANIM_TASK(bus_ped[i], "anim@veh@btype@side_ps@base", "dead_fall_out", 1.0);
-			//			STREAMING::REMOVE_ANIM_DICT("anim@veh@btype@side_ps@base");
-			//		}
-			//	}
-			//}
+			if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 && featureSnow && bus_ped[i] != PLAYER::PLAYER_PED_ID()) {
+				int slippery_randomize2 = (rand() % 1000 + 1);
+				if (((WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] == 1 && slippery_randomize2 > 995) || (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] == 2 && slippery_randomize2 > 985)) &&
+					(AI::IS_PED_RUNNING(bus_ped[i]) || AI::IS_PED_SPRINTING(bus_ped[i])) && slipped == false && PED::GET_PED_TYPE(bus_ped[i]) != 6) {
+					temp_ped_s = bus_ped[i];
+					slipped = true;
+				}
+				if (slipped == true) {
+					s_tick = s_tick + 1;
+					if (s_tick == 20) {
+						STREAMING::REQUEST_ANIM_DICT("missheist_agency3astumble_getup");
+						while (!STREAMING::HAS_ANIM_DICT_LOADED("missheist_agency3astumble_getup")) WAIT(0);
+						if (!ENTITY::IS_ENTITY_PLAYING_ANIM(temp_ped_s, "missheist_agency3astumble_getup", "stumble_getup", 3)) {
+							AI::TASK_PLAY_ANIM(temp_ped_s, "missheist_agency3astumble_getup", "stumble_getup", 8.0, 0.0, -1, 9, 0, 0, 0, 0);
+							AI::STOP_ANIM_TASK(temp_ped_s, "missheist_agency3astumble_getup", "stumble_getup", 1.0);
+							STREAMING::REMOVE_ANIM_DICT("missheist_agency3astumble_getup");
+						}
+					}
+					if (s_tick == 19400) {
+						AI::CLEAR_PED_TASKS_IMMEDIATELY(temp_ped_s);
+						slipped = false;
+						s_tick = -1;
+					}
+				}
+			}
 			if (featureNPCNoGravityPeds && bus_ped[i] != PLAYER::PLAYER_PED_ID()) {
 				Vector3 CamRot = CAM::GET_GAMEPLAY_CAM_ROT(2);
 				int p_force = 5;
@@ -1128,7 +1144,7 @@ void update_world_features()
 					PED::SET_PED_TO_RAGDOLL(bus_ped[i], 1, 1, 1, 1, 1, 1);
 				}
 				if (PED::IS_PED_SHOOTING(bus_ped[i])) ENTITY::APPLY_FORCE_TO_ENTITY(bus_ped[i], 1, v_x, v_y, v_z, 0, 0, 0, false, false, true, true, false, true);
-				if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(bus_ped[i], PLAYER::PLAYER_PED_ID(), 1)) ENTITY::APPLY_FORCE_TO_ENTITY(bus_ped[i], 1, v_x, v_y, v_z, 0, 0, 0, false, false, true, true, false, true);
+				if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(bus_ped[i], PLAYER::PLAYER_PED_ID(), 1)) ENTITY::APPLY_FORCE_TO_ENTITY(bus_ped[i], 1, v_x / 10, v_y / 10, v_z / 10, 0, 0, 0, false, false, true, true, false, true);
 				ENTITY::SET_ENTITY_HAS_GRAVITY(bus_ped[i], false);
 			}
 			if (featureAcidWater && (ENTITY::IS_ENTITY_IN_WATER(bus_ped[i]) || PED::IS_PED_SWIMMING_UNDER_WATER(bus_ped[i]))) {
