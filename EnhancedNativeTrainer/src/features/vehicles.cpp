@@ -66,10 +66,10 @@ bool alarm_enabled = false;
 
 int turn_angle = 0;
 
-int Time_tick_mileage = 0;
-float mileage = 0;
-
 int traction_tick = 0;
+int Time_tick_mileage = 0;
+
+float mileage = 0;
 
 bool featureNoVehFallOff = false;
 bool featureVehSpeedBoost = false;
@@ -105,6 +105,7 @@ std::vector<Vehicle> STEERING;
 int currseat = -1;
 
 int engine_tick = 0;
+int engine_secs_passed, engine_secs_curr = 0;
 
 BOOL lightsAutoOn = -1;
 BOOL highbeamsAutoOn = -1;
@@ -133,7 +134,7 @@ std::vector<Vehicle> VEHICLES_STEERLOCKED;
 bool check_if_stolen, lock_stolen_veh = false;
 //
 
-int Shut_secs_passed, Shut_secs_curr, Shut_seconds = -1;
+int Shut_seconds = -1; // Shut_secs_passed, Shut_secs_curr, 
 
 int sheshark_light_toogle = 1;
 
@@ -2059,7 +2060,11 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		}
 
 		if (alarm_enabled == true && alarmed_veh != -1) { // set the alarm
-			a_counter_tick = a_counter_tick + 1;
+			engine_secs_passed = clock() / CLOCKS_PER_SEC;
+			if (((clock() / (CLOCKS_PER_SEC / 1000)) - engine_secs_curr) != 0) {
+				a_counter_tick = a_counter_tick + 1;
+				engine_secs_curr = engine_secs_passed;
+			}
 			for (int j = 0; j < 6; j++) VEHICLE::SET_VEHICLE_DOOR_SHUT(alarmed_veh, j, true);
 			VEHICLE::SET_VEHICLE_ENGINE_ON(alarmed_veh, false, true);
 			if (a_counter_tick > 71) {
@@ -2282,7 +2287,13 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		if (vehspeed.x < 0) vehspeed.x = (vehspeed.x * -1);
 		if (vehspeed.y < 0) vehspeed.y = (vehspeed.y * -1);
 		if (!CONTROLS::IS_CONTROL_PRESSED(2, 71) && !CONTROLS::IS_CONTROL_PRESSED(2, 62) && !CONTROLS::IS_CONTROL_PRESSED(2, 72) && vehspeed.x < 3 && vehspeed.y < 3) traction_tick = 0;
-		if (CONTROLS::IS_CONTROL_PRESSED(2, 71) || CONTROLS::IS_CONTROL_PRESSED(2, 62) || CONTROLS::IS_CONTROL_PRESSED(2, 72)) traction_tick = traction_tick + 1;
+		if (CONTROLS::IS_CONTROL_PRESSED(2, 71) || CONTROLS::IS_CONTROL_PRESSED(2, 62) || CONTROLS::IS_CONTROL_PRESSED(2, 72)) {
+			engine_secs_passed = clock() / CLOCKS_PER_SEC;
+			if (((clock() / (CLOCKS_PER_SEC / 1000)) - engine_secs_curr) != 0) {
+				traction_tick = traction_tick + 1;
+				engine_secs_curr = engine_secs_passed;
+			}
+		}
 		if (traction_tick < 100) {
 			if (traction_tick < 50) VEHICLE::_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 0.2);
 			if (traction_tick > 49 && traction_tick < 100) VEHICLE::_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 0.6);
@@ -2315,13 +2326,13 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		vehicle_been_used = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		Shut_seconds = 0;
 	}
-
+	
 	// Shut the engine with time
 	if (VEH_AUTO_SHUT_ENGINE_VALUES[AutoShutEngineIndex] > 0 && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(vehicle_been_used)) {
-		Shut_secs_passed = clock() / CLOCKS_PER_SEC;
-		if (((clock() / CLOCKS_PER_SEC) - Shut_secs_curr) != 0) {
+		engine_secs_passed = clock() / CLOCKS_PER_SEC;
+		if (((clock() / CLOCKS_PER_SEC) - engine_secs_curr) != 0) {
 			Shut_seconds = Shut_seconds + 1;
-			Shut_secs_curr = Shut_secs_passed;
+			engine_secs_curr = engine_secs_passed;
 		}
 		if (Shut_seconds == VEH_AUTO_SHUT_ENGINE_VALUES[AutoShutEngineIndex]) VEHICLE::SET_VEHICLE_ENGINE_ON(vehicle_been_used, false, true);
 	}
@@ -2482,9 +2493,15 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			}
 		}
 
-		if (steer_turn == 254 || steer_turn == 0) turn_angle = turn_angle + 1;
+		if (steer_turn == 254 || steer_turn == 0) {
+			engine_secs_passed = clock() / CLOCKS_PER_SEC;
+			if (((clock() / (CLOCKS_PER_SEC / 1000)) - engine_secs_curr) != 0) {
+				turn_angle = turn_angle + 1;
+				engine_secs_curr = engine_secs_passed;
+			}
+		}
 		else turn_angle = 0;
-
+		
 		if (CONTROLS::IS_CONTROL_PRESSED(2, 71) && VEH_TURN_SIGNALS_ACCELERATION_VALUES[turnSignalsAccelerationIndex] > 0 && turn_angle < 15) { 
 			Accel_secs_passed = clock() / CLOCKS_PER_SEC;
 			if (((clock() / CLOCKS_PER_SEC) - Accel_secs_curr) != 0) {
@@ -2577,10 +2594,16 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	if (bPlayerExists && VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] > 0 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
 		Vehicle playerVehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		if (CONTROLS::IS_CONTROL_PRESSED(2, 75) && VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] == 1) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(playerVehicle, true);
-		if (CONTROLS::IS_CONTROL_PRESSED(2, 75) && VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] == 2) engine_tick = engine_tick + 1;
+		if (CONTROLS::IS_CONTROL_PRESSED(2, 75) && VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] == 2) {
+			engine_secs_passed = clock() / CLOCKS_PER_SEC;
+			if (((clock() / (CLOCKS_PER_SEC / 1000)) - engine_secs_curr) != 0) {
+				engine_tick = engine_tick + 1;
+				engine_secs_curr = engine_secs_passed;
+			}
+		}
 		if (CONTROLS::IS_CONTROL_PRESSED(2, 75) && VEHICLE::IS_THIS_MODEL_A_HELI(ENTITY::GET_ENTITY_MODEL(playerVehicle))) current_veh_e = playerVehicle;
 	}
-
+	
 	if (engine_tick < 11 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] == 2 && (!featureVehSteerAngle || PED::IS_PED_ON_ANY_BIKE(playerPed))) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), true);
 	if (engine_tick > 10 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] == 2 && (!featureVehSteerAngle || PED::IS_PED_ON_ANY_BIKE(playerPed))) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), false);
 	// Remember Wheel Angle feature compatibility lines

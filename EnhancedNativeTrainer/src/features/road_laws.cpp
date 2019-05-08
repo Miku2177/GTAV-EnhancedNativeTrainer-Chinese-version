@@ -54,15 +54,16 @@ bool p_blinks = false;
 bool keeponwalking = false;
 float spot_to_stop = -1;
 bool being_arrested = false;
-int Seen_secs_passed, Seen_secs_curr, Seen_seconds = 0;
+int r_tick_secs_passed = 0; // , r_tick_secs_curr
+int Seen_secs_curr, Seen_seconds = 0; // Seen_secs_passed, 
 bool againsttraffic_check, pavementdriving_check, vehiclecollision_check, vehicledamaged_check, hohelmet_check, mobilephone_check, speedingincity_check, speedingonspeedway_check, runningredlight_check, stolenvehicle_check, nolightsnighttime_check, escapingpolice_check = false;
-int SinceCollision_secs_passed, SinceCollision_secs_curr, Collision_seconds = -1;
-int TargetBlocked_secs_passed, TargetBlocked_secs_curr, TargetBlocked_seconds = -1;
-int SinceEscape_secs_passed, SinceEscape_secs_curr, Escape_seconds = -1;
-int SinceAgainstTraffic_secs_passed, SinceAgainstTraffic_secs_curr, AgainstTraffic_seconds = -1;
-int Stuck_secs_passed, Stuck_secs_curr, Stuck_seconds = -1;
-int SinceStop_secs_passed, SinceStop_secs_curr, Stop_seconds = -1;
-int SinceStop_secs_passed_final, SinceStop_secs_curr_final = -1;
+int SinceCollision_secs_curr, Collision_seconds = -1; // SinceCollision_secs_passed, 
+int TargetBlocked_secs_curr, TargetBlocked_seconds = -1; // TargetBlocked_secs_passed, 
+int SinceEscape_secs_curr, Escape_seconds = -1; // SinceEscape_secs_passed, 
+int SinceAgainstTraffic_secs_curr, AgainstTraffic_seconds = -1; // SinceAgainstTraffic_secs_passed, 
+int Stuck_secs_curr, Stuck_seconds = -1; // Stuck_secs_passed, 
+int SinceStop_secs_curr, Stop_seconds = -1; // SinceStop_secs_passed, 
+int SinceStop_secs_curr_final = -1; // SinceStop_secs_passed_final, 
 int Stop_seconds_final = 5;
 int veh_redlight_distance_x = -1;
 int veh_redlight_distance_y = -1;
@@ -82,10 +83,10 @@ bool red_light_veh_detected = false;
 Vehicle red_light_vehicle;
 BOOL lightsOn = -1;
 BOOL highbeamsOn = -1;
-int Still_seconds, Still_secs_curr, Still_secs_passed = 0;
+int Still_seconds, Still_secs_curr = 0; // , Still_secs_passed
 bool no_agressive = false;
 bool cop_hit_you = false;
-int SinceCopHit_secs_passed, SinceCopHit_secs_curr, CopHit_seconds = 0;
+int SinceCopHit_secs_curr, CopHit_seconds = 0; // SinceCopHit_secs_passed, 
 int SpeedingCityIndex = 3;
 bool SpeedingCity_Changed = true;
 int SpeedingSpeedwayIndex = 5;
@@ -145,10 +146,10 @@ void road_laws()
 			int temp_against_traffic = PLAYER::GET_TIME_SINCE_PLAYER_DROVE_AGAINST_TRAFFIC(PLAYER::PLAYER_ID());
 			if (temp_against_traffic == 0)
 			{
-				SinceAgainstTraffic_secs_passed = clock() / CLOCKS_PER_SEC;
+				r_tick_secs_passed = clock() / CLOCKS_PER_SEC;
 				if (((clock() / CLOCKS_PER_SEC) - SinceAgainstTraffic_secs_curr) != 0) {
 					AgainstTraffic_seconds = AgainstTraffic_seconds + 1;
-					SinceAgainstTraffic_secs_curr = SinceAgainstTraffic_secs_passed;
+					SinceAgainstTraffic_secs_curr = r_tick_secs_passed;
 				}
 				if (AgainstTraffic_seconds > 2) againsttraffic_check = true;
 			}
@@ -282,10 +283,10 @@ void road_laws()
 
 		// Escaping The Police
 		if (featureEscapingPolice && PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) && been_seen_by_a_cop == true) {
-			SinceEscape_secs_passed = clock() / CLOCKS_PER_SEC;
+			r_tick_secs_passed = clock() / CLOCKS_PER_SEC;
 			if (((clock() / CLOCKS_PER_SEC) - SinceEscape_secs_curr) != 0) {
 				Escape_seconds = Escape_seconds + 1;
-				SinceEscape_secs_curr = SinceEscape_secs_passed;
+				SinceEscape_secs_curr = r_tick_secs_passed;
 			}
 			if (vehroadlaws_speed > 10) escapingpolice_check = true;
 		}
@@ -312,10 +313,10 @@ void road_laws()
 					vehcollidedwith_distance_x < 5 && vehcollidedwith_distance_y < 5 && Collision_seconds == -1) vehiclecollision_check = true;
 
 				if (vehiclecollision_check == true) {
-					SinceCollision_secs_passed = clock() / CLOCKS_PER_SEC;
+					r_tick_secs_passed = clock() / CLOCKS_PER_SEC;
 					if (((clock() / CLOCKS_PER_SEC) - SinceCollision_secs_curr) != 0) {
 						if (been_seen_by_a_cop == false) Collision_seconds = Collision_seconds + 1;
-						SinceCollision_secs_curr = SinceCollision_secs_passed;
+						SinceCollision_secs_curr = r_tick_secs_passed;
 					}
 				}
 				if (Collision_seconds > 3) {
@@ -541,10 +542,10 @@ void road_laws()
 				
 				// i shout when i'm seen
 				if (idontlikeiwasseen == true) {
-					Seen_secs_passed = clock() / CLOCKS_PER_SEC;
+					r_tick_secs_passed = clock() / CLOCKS_PER_SEC;
 					if (((clock() / CLOCKS_PER_SEC) - Seen_secs_curr) != 0) {
 						Seen_seconds = Seen_seconds + 1;
-						Seen_secs_curr = Seen_secs_passed;
+						Seen_secs_curr = r_tick_secs_passed;
 					}
 					if (Seen_seconds > 2) {
 						if (!AUDIO::IS_AMBIENT_SPEECH_PLAYING(playerPed)) AUDIO::_PLAY_AMBIENT_SPEECH1(playerPed, "BLOCKED_GENERIC", "SPEECH_PARAMS_FORCE_SHOUTED");
@@ -559,10 +560,10 @@ void road_laws()
 
 				// Do not stuck
 				if ((vehcoplaws_speed < 1 && cop_walking == false && (tempgotcha_x > 99 || tempgotcha_y > 99)) || (cop_walking == true && AI::IS_PED_STILL(cop_that_fines_you))) {
-					Stuck_secs_passed = clock() / CLOCKS_PER_SEC;
+					r_tick_secs_passed = clock() / CLOCKS_PER_SEC;
 					if (((clock() / CLOCKS_PER_SEC) - Stuck_secs_curr) != 0) {
 						Stuck_seconds = Stuck_seconds + 1;
-						Stuck_secs_curr = Stuck_secs_passed;
+						Stuck_secs_curr = r_tick_secs_passed;
 					}
 					if (Stuck_seconds > 4) {
 						if (!featurePoliceAgressiveDriving) {
@@ -600,10 +601,10 @@ void road_laws()
 					VEHICLE::SET_VEHICLE_SIREN(fine_cop_car, true);
 					p_blinks = true;
 				}
-				SinceStop_secs_passed = clock() / CLOCKS_PER_SEC;
+				r_tick_secs_passed = clock() / CLOCKS_PER_SEC;
 				if (((clock() / CLOCKS_PER_SEC) - SinceStop_secs_curr) != 0) {
 					if (Stop_seconds < 5 && been_seen_by_a_cop == true) Stop_seconds = Stop_seconds + 1;
-					SinceStop_secs_curr = SinceStop_secs_passed;
+					SinceStop_secs_curr = r_tick_secs_passed;
 				}
 
 				// You agree to be fined
@@ -668,10 +669,10 @@ void road_laws()
 				cop_hit_you = true;
 			}
 			if (cop_hit_you == true) {
-				SinceCopHit_secs_passed = clock() / CLOCKS_PER_SEC;
+				r_tick_secs_passed = clock() / CLOCKS_PER_SEC;
 				if (((clock() / CLOCKS_PER_SEC) - SinceCopHit_secs_curr) != 0) { 
 					CopHit_seconds = CopHit_seconds + 1;
-					SinceCopHit_secs_curr = SinceCopHit_secs_passed;
+					SinceCopHit_secs_curr = r_tick_secs_passed;
 				}
 				if (CopHit_seconds > 1) {
 					PLAYER::SET_MAX_WANTED_LEVEL(5);
@@ -682,10 +683,10 @@ void road_laws()
 			if (been_seen_by_a_cop == true && (PED::IS_PED_SHOOTING(playerPed) || !PED::IS_PED_IN_ANY_POLICE_VEHICLE(cop_that_fines_you))) PLAYER::SET_MAX_WANTED_LEVEL(5);
 
 			if (cop_walking == true && AI::IS_PED_STILL(cop_that_fines_you)) {
-				Still_secs_passed = clock() / CLOCKS_PER_SEC;
+				r_tick_secs_passed = clock() / CLOCKS_PER_SEC;
 				if (((clock() / CLOCKS_PER_SEC) - Still_secs_curr) != 0) {
 					Still_seconds = Still_seconds + 1;
-					Still_secs_curr = Still_secs_passed;
+					Still_secs_curr = r_tick_secs_passed;
 				}
 			}
 			
@@ -739,10 +740,10 @@ void road_laws()
 
 			// Find Another Place If Not Possible To Approach Driver
 			if (keeponwalking == true) {
-				TargetBlocked_secs_passed = clock() / CLOCKS_PER_SEC;
+				r_tick_secs_passed = clock() / CLOCKS_PER_SEC;
 				if (((clock() / CLOCKS_PER_SEC) - TargetBlocked_secs_curr) != 0) {
 					TargetBlocked_seconds = TargetBlocked_seconds + 1;
-					TargetBlocked_secs_curr = TargetBlocked_secs_passed;
+					TargetBlocked_secs_curr = r_tick_secs_passed;
 				}
 			}
 			if (TargetBlocked_seconds > 9 && been_seen_by_a_cop == true && Stop_seconds_final < 17) {
@@ -755,10 +756,10 @@ void road_laws()
 				PED::SET_PED_NEVER_LEAVES_GROUP(cop_that_fines_you, false);
 				PED::REMOVE_PED_FROM_GROUP(cop_that_fines_you);
 				Stop_seconds = 6;
-				SinceStop_secs_passed_final = clock() / CLOCKS_PER_SEC;
+				r_tick_secs_passed = clock() / CLOCKS_PER_SEC;
 				if (((clock() / CLOCKS_PER_SEC) - SinceStop_secs_curr_final) != 0) {
 					if (Stop_seconds_final < 22 && been_seen_by_a_cop == true) Stop_seconds_final = Stop_seconds_final + 1;
-					SinceStop_secs_curr_final = SinceStop_secs_passed_final;
+					SinceStop_secs_curr_final = r_tick_secs_passed;
 				}
 				Vector3 head_coords = PED::GET_PED_BONE_COORDS(playerPed, 31086, offsetX, offsetY, offsetZ); // head bone
 				if (!PED::IS_PED_FACING_PED(cop_that_fines_you, playerPed, 50) && AI::IS_PED_STILL(cop_that_fines_you) && Stop_seconds_final < 17) AI::TASK_TURN_PED_TO_FACE_COORD(cop_that_fines_you, head_coords.x, head_coords.y, head_coords.z, 10000);

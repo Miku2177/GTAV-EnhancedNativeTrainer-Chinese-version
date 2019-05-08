@@ -93,10 +93,11 @@ bool featureRagdollIfInjured = false;
 // ragdoll if injured variables
 bool been_damaged_by_weapon, ragdoll_task = false;
 float been_damaged_health, been_damaged_armor = -1;
-int ragdoll_secs_passed, ragdoll_secs_curr, ragdoll_seconds = 0;
+int ragdoll_seconds = 0; //  ragdoll_secs_passed, ragdoll_secs_curr, 
 //
 Ped oldplayerPed = -1;
 int tick, playerDataMenuIndex, playerPrisonMenuIndex = 0;
+int scr_tick_secs_passed, scr_tick_secs_curr = 0;
 int NPCragdollMenuIndex = 0;
 int PlayerMovementMenuIndex = 0;
 int PlayerMostWantedMenuIndex = 0;
@@ -106,7 +107,7 @@ int death_time2 = -1;
 int wanted_maxpossible_level = 3;
 bool wanted_maxpossible_level_Changed;
 
-int  frozenWantedLevel = 0;
+int frozenWantedLevel = 0;
 
 std::vector<Vehicle> VEHICLE_ENGINE;
 std::vector<Vehicle> VEHICLE_KILLED;
@@ -525,8 +526,12 @@ void update_features(){
 	
 	if ((bPlayerExists && featurePlayerLife && featurePlayerLifeUpdated) || (bPlayerExists && featurePlayerLife_Died && featurePlayerLifeUpdated) ||
 		(bPlayerExists && featurePlayerLife_Changed && featurePlayerLifeUpdated) || (featurePlayerStatsEnable && featurePlayerStatsUpdated)) {
-
-		tick = tick + 1;
+		
+		scr_tick_secs_passed = clock() / CLOCKS_PER_SEC;
+		if (((clock() / (CLOCKS_PER_SEC / 1000)) - scr_tick_secs_curr) != 0) {
+			tick = tick + 1;
+			scr_tick_secs_curr = scr_tick_secs_passed;
+		}
 		if (tick > 200) {
 			PED::SET_PED_MAX_HEALTH(playerPed_Data, PLAYER_HEALTH_VALUES[current_player_health]);
 			ENTITY::SET_ENTITY_HEALTH(playerPed_Data, PLAYER_HEALTH_VALUES[current_player_health]);
@@ -714,12 +719,12 @@ void update_features(){
 			been_damaged_by_weapon = false;
 			ragdoll_task = true;
 		}
-
+		
 		if (ragdoll_task == true) {
-			ragdoll_secs_passed = clock() / CLOCKS_PER_SEC;
-			if (((clock() / CLOCKS_PER_SEC) - ragdoll_secs_curr) != 0) {
+			scr_tick_secs_passed = clock() / CLOCKS_PER_SEC;
+			if (((clock() / CLOCKS_PER_SEC) - scr_tick_secs_curr) != 0) {
 				ragdoll_seconds = ragdoll_seconds + 1;
-				ragdoll_secs_curr = ragdoll_secs_passed;
+				scr_tick_secs_curr = scr_tick_secs_passed;
 			}
 			
 			if (ragdoll_seconds == 4) {

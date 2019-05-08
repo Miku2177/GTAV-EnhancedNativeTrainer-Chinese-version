@@ -19,13 +19,14 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 // Peds Don't Like Weapons variables
 int tick_pedagainstweapons = 0;
+int pw_tick_secs_passed, pw_tick_secs_curr = 0;
 bool featurePedAgainstWeapons = false;
 bool featureAgainstMeleeWeapons = false;
 bool featurePedAgainst = true;
 bool featureDriverAgainst = true;
 bool featurePoliceAgainst = true;
 bool featureAimAtDriver = false;
-int peddontlikeweapons_tick = 0;
+//int peddontlikeweapons_tick = 0;
 bool call_the_police = false;
 //
 
@@ -81,7 +82,11 @@ void peds_dont_like_weapons() {
 				}
 			}
 			if (call_the_police == true) {
-				tick_pedagainstweapons = tick_pedagainstweapons + 1;
+				pw_tick_secs_passed = clock() / CLOCKS_PER_SEC;
+				if (((clock() / (CLOCKS_PER_SEC / 1000)) - pw_tick_secs_curr) != 0) {
+					tick_pedagainstweapons = tick_pedagainstweapons + 1;
+					pw_tick_secs_curr = pw_tick_secs_passed;
+				}
 				if (tick_pedagainstweapons > 60000) {
 					if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 1) {
 						PLAYER::SET_MAX_WANTED_LEVEL(5);
