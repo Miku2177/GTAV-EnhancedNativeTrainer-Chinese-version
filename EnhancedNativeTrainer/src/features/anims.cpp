@@ -22465,6 +22465,8 @@ void cleanup_anims()
 
 bool onconfirm_scenarios_menu_l2(MenuItem<int> choice)
 {
+	bool sitting_scenario = false;
+	
 	activeScenarioLineIndex[1] = choice.value;
 
 	std::vector<MenuItem<int>*> menuItems;
@@ -22473,17 +22475,26 @@ bool onconfirm_scenarios_menu_l2(MenuItem<int> choice)
 	if (activeScenarioLineIndex[0] == 0)
 	{
 		value = SCENARIOS_NORMAL_VALUES[activeScenarioLineIndex[1]];
+		caption = SCENARIOS_NORMAL_CAPTIONS[activeScenarioLineIndex[1]];
 	}
 	else
 	{
 		value = SCENARIOS_ANIMAL_VALUES[activeScenarioLineIndex[1]]; 
+		caption = SCENARIOS_ANIMAL_CAPTIONS[activeScenarioLineIndex[1]];
 	}
+	
+	std::string sentence = caption;
+	std::string wordToFind = "Sitting:";
+	size_t word = sentence.find(wordToFind);
+	//If we don't reach end of the sentence - we found it!
+	if (word != std::string::npos) sitting_scenario = true;
 
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	AI::CLEAR_PED_TASKS(playerPed);
 	set_status_text("Press Menu Back to stop this scenario");
-	AI::TASK_START_SCENARIO_IN_PLACE(playerPed, (char*) value.c_str(), 0, true);
-
+	if (sitting_scenario == false) AI::TASK_START_SCENARIO_IN_PLACE(playerPed, (char*) value.c_str(), 0, true);
+	else AI::TASK_START_SCENARIO_AT_POSITION(playerPed, (char*)value.c_str(), ENTITY::GET_ENTITY_COORDS(playerPed, true).x, ENTITY::GET_ENTITY_COORDS(playerPed, true).y, ENTITY::GET_ENTITY_COORDS(playerPed, true).z - 1, ENTITY::GET_ENTITY_HEADING(playerPed), 0, 0, 1);
+	
 	while (true)
 	{
 		if (IsKeyJustUp(KeyConfig::KEY_MENU_BACK) || IsControllerButtonJustUp(KeyConfig::KEY_MENU_BACK))
