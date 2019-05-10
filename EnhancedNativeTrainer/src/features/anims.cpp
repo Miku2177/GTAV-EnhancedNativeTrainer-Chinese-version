@@ -22486,8 +22486,7 @@ bool onconfirm_scenarios_menu_l2(MenuItem<int> choice)
 	std::string sentence = caption;
 	std::string wordToFind = "Sitting:";
 	size_t word = sentence.find(wordToFind);
-	//If we don't reach end of the sentence - we found it!
-	if (word != std::string::npos) sitting_scenario = true;
+	if (word != std::string::npos) sitting_scenario = true; //If we don't reach end of the sentence - we found it!
 
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	AI::CLEAR_PED_TASKS(playerPed);
