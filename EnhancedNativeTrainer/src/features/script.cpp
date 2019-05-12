@@ -41,6 +41,8 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 bool AIMBOT_INCLUDED = false;
 
+bool player_died = false;
+
 int last_player_slot_seen = 0;
 
 int game_frame_num = 0;
@@ -279,11 +281,10 @@ void check_player_model(){
 			else{
 				applyChosenSkin(mplayer_models[last_player_slot_seen - spPlayerCount]);
 			}
-		}
-
-		// wait until player is resurrected
-		while(ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())){
-			WAIT(0);
+			// wait until player is resurrected
+			while (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) {
+				WAIT(0);
+			}
 		}
 	}
 }
@@ -404,6 +405,22 @@ void update_features(){
 	else{
 		setAirbrakeRelatedInputToBlocked(false);
 	}
+
+	if (featureNoAutoRespawn) {
+		if (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && player_died == false) {
+			GAMEPLAY::_DISABLE_AUTOMATIC_RESPAWN(true);
+			SCRIPT::SET_NO_LOADING_SCREEN(true);
+			if (CAM::IS_SCREEN_FADED_OUT()) CAM::DO_SCREEN_FADE_IN(100);
+		}
+		if (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && (CONTROLS::IS_CONTROL_JUST_PRESSED(2, 176) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, 22))) { // 23 // 
+			player_died = true;
+			GAMEPLAY::_DISABLE_AUTOMATIC_RESPAWN(false);
+			SCRIPT::SET_NO_LOADING_SCREEN(false);
+			CAM::DO_SCREEN_FADE_OUT(4000);
+		}
+		if (!ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) player_died = false;
+	}
+	if (featureFirstPersonDeathCamera && featureNoAutoRespawn) set_status_text("'Manual Respawn' and 'First Person Death Camera' options are not compatible. Disable one of them.");
 
 	update_centre_screen_status_text();
 
@@ -1495,7 +1512,7 @@ void reset_globals(){
 
 void main(){
 	//reset_globals();
-
+	
 	setGameInputToEnabled(true, true);
 	setAirbrakeRelatedInputToBlocked(false, true);
 
@@ -1533,7 +1550,7 @@ void main(){
 			menu_beep();
 			if (airbrake_enable) process_airbrake_menu();
 		}
-
+		
 		update_features();
 
 		WAIT(0);
