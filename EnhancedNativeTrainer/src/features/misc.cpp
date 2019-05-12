@@ -105,6 +105,7 @@ bool featureShowFPS = false;
 
 bool featureShowVehiclePreviews = true;
 bool featureShowStatusMessage = true;
+bool featureNoAutoRespawn = false;
 bool featureControllerIgnoreInTrainer = false;
 
 bool featureMiscJellmanScenery = false;
@@ -739,7 +740,7 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 }
 
 void process_misc_menu(){
-	const int lineCount = 28;
+	const int lineCount = 29;
 
 	std::string caption = "Miscellaneous Options";
 
@@ -772,6 +773,7 @@ void process_misc_menu(){
 		{"FPS Counter", &featureShowFPS, NULL }, 
 		{"Pause Menu Settings", NULL, NULL, false},
 		{"Airbrake Menu", NULL, NULL, false},
+		{"Manual Respawn", &featureNoAutoRespawn, NULL },
 	};
 	
 	draw_menu_from_struct_def(lines, lineCount, &activeLineIndexMisc, caption, onconfirm_misc_menu);
@@ -847,6 +849,7 @@ void reset_misc_globals(){
 	featureNoStuntJumps = false;
 	featureHidePlayerInfo = false;
 	featureShowFPS = false;
+	featureNoAutoRespawn = false;
 
 	featureRadioFreezeUpdated =
 	featureRadioAlwaysOffUpdated =
@@ -1460,6 +1463,7 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoPhoneOnHUD", &featureNoPhoneOnHUD});
 	results->push_back(FeatureEnabledLocalDefinition{"featureShowVehiclePreviews", &featureShowVehiclePreviews});
 	results->push_back(FeatureEnabledLocalDefinition{"featureShowStatusMessage", &featureShowStatusMessage});
+	results->push_back(FeatureEnabledLocalDefinition{"featureNoAutoRespawn", &featureNoAutoRespawn});
 	results->push_back(FeatureEnabledLocalDefinition{"featureShowFPS", &featureShowFPS});
 	results->push_back(FeatureEnabledLocalDefinition{"featureHiddenRadioStation", &featureEnableMissingRadioStation});
 

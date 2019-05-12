@@ -202,3 +202,4 @@ extern Vehicle vehicle_been_used;
 extern bool featurePlayerInvisible;
 extern bool featurePlayerInvisibleInVehicle;
 extern bool featureShowStatusMessage;
+extern bool featureNoAutoRespawn;
