@@ -505,6 +505,16 @@ void damage_door() {
 	}
 }
 
+void toggle_tractioncontrol() {
+	featureTractionControl = !featureTractionControl;
+	if (featureTractionControl) {
+		set_status_text("Traction Control Enabled");
+	}
+	else {
+		set_status_text("Traction Control Disabled");
+	}
+}
+
 void eject_seat() { // eject seat
 	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0) && !VEHICLE::IS_VEHICLE_SEAT_FREE(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false), -1)) {
 		Vehicle veh_eject = PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 0);
