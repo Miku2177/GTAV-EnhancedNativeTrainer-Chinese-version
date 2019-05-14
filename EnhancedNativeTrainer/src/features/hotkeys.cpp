@@ -251,7 +251,9 @@ void trigger_function_for_hotkey_onkeyup(int hotkey)
 	case HKEY_ALARM_SWITCHING:
 		vehicle_set_alarm();
 		break;
-
+	case HKEY_TRACTIONCONTROL_SWITCHING:
+		toggle_tractioncontrol();
+		break;
 	default:
 	{
 		std::ostringstream ss;

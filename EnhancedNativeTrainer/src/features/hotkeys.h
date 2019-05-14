@@ -68,6 +68,7 @@ static const int HKEY_TOGGLED_SPEED = 139;
 static const int HKEY_HANDBRAKE_SWITCHING = 140;
 static const int HKEY_BURNOUT_SWITCHING = 141;
 static const int HKEY_ALARM_SWITCHING = 142;
+static const int HKEY_TRACTIONCONTROL_SWITCHING = 143;
 
 const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "No Function", 0 },
@@ -111,6 +112,7 @@ const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "Toggle Handbrake", HKEY_HANDBRAKE_SWITCHING },
 	{ "Toggle Burnout", HKEY_BURNOUT_SWITCHING },
 	{ "Toggle Vehicle Alarm", HKEY_ALARM_SWITCHING },
+	{ "Toggle Traction Control", HKEY_TRACTIONCONTROL_SWITCHING },
 };
 
 void change_hotkey_function(int hotkey, int funcIndex);

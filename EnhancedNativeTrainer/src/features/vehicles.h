@@ -112,6 +112,8 @@ void search_light();
 
 void damage_door();
 
+void toggle_tractioncontrol();
+
 //void enter_damaged_vehicle();
 
 bool process_spawn_menu_generic(int topMenuSelection);
