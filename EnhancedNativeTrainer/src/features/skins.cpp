@@ -21,6 +21,8 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 //std::string chosenSkinName = "";
 
+DWORD model_to_restore = -1;
+
 bool DEBUG_MODE_SKINS = false;
 
 bool featurenoblood = false;
@@ -74,6 +76,8 @@ bool applyChosenSkin(DWORD model)
 {
 	if (STREAMING::IS_MODEL_IN_CDIMAGE(model) && STREAMING::IS_MODEL_VALID(model))
 	{
+		if (npc_player_died == false) model_to_restore = model;
+
 		STREAMING::REQUEST_MODEL(model);
 		while (!STREAMING::HAS_MODEL_LOADED(model))
 		{

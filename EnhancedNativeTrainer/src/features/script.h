@@ -203,3 +203,4 @@ extern bool featurePlayerInvisible;
 extern bool featurePlayerInvisibleInVehicle;
 extern bool featureShowStatusMessage;
 extern bool featureNoAutoRespawn;
+extern bool npc_player_died;
