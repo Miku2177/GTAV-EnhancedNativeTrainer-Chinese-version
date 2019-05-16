@@ -74,3 +74,5 @@ void add_skin_generic_settings(std::vector<StringPairSettingDBRow>* results);
 void handle_generic_settings_skin(std::vector<StringPairSettingDBRow>* settings);
 
 void add_player_skin_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results);
+
+extern DWORD model_to_restore;

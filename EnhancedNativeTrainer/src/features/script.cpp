@@ -20,6 +20,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #pragma comment(lib, "Shlwapi.lib")
 
 #include "script.h"
+#include "skins.h"
 #include "hotkeys.h"
 #include "propplacement.h"
 #include "area_effect.h"
@@ -42,6 +43,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 bool AIMBOT_INCLUDED = false;
 
 bool player_died = false;
+bool npc_player_died = false;
 
 int last_player_slot_seen = 0;
 
@@ -237,16 +239,16 @@ void check_player_model(){
 	*/
 
 	// common variables
-	Player player = PLAYER::PLAYER_ID(); 
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	//Player player = PLAYER::PLAYER_ID(); 
+	//Ped playerPed = PLAYER::PLAYER_PED_ID();
 
-	if(!ENTITY::DOES_ENTITY_EXIST(playerPed)){
+	if(!ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID())){
 		return;
 	}
 
 	//find out whether we're a default player model
 	bool found = false;
-	Hash playerModel = ENTITY::GET_ENTITY_MODEL(playerPed);
+	Hash playerModel = ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID());
 	int playerSlot = 0;
 
 	for each (char* model  in player_models){
@@ -269,23 +271,42 @@ void check_player_model(){
 		}
 	}
 
-	if(ENTITY::IS_ENTITY_DEAD(playerPed) && is_player_reset_on_death()){
+	if(ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())){ //  && is_player_reset_on_death()
 		if(!found){
-			set_status_text("Resetting death state because a custom skin was used");
+			if (is_player_reset_on_death()) set_status_text("Resetting death state because a custom skin was used");
 			GAMEPLAY::_RESET_LOCALPLAYER_STATE();
-
+			if (!is_player_reset_on_death()) WAIT(8500);
 			int spPlayerCount = sizeof(player_models) / sizeof(player_models[0]);
 			if(last_player_slot_seen < spPlayerCount){
+				if (!is_player_reset_on_death()) npc_player_died = true;
 				applyChosenSkin(player_models[last_player_slot_seen]);
 			}
 			else{
+				if (!is_player_reset_on_death()) npc_player_died = true;
 				applyChosenSkin(mplayer_models[last_player_slot_seen - spPlayerCount]);
 			}
-			// wait until player is resurrected
-			while (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) {
-				WAIT(0);
-			}
+			while (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) WAIT(0); // wait until player is resurrected
 		}
+	}
+
+	if (!is_player_reset_on_death() && !ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID()) && npc_player_died == true) {
+		Hash model_temp = -1;
+		if (PED::GET_PED_TYPE(PLAYER::PLAYER_PED_ID()) == 0) model_temp = GAMEPLAY::GET_HASH_KEY("player_zero");
+		if (PED::GET_PED_TYPE(PLAYER::PLAYER_PED_ID()) == 1) model_temp = GAMEPLAY::GET_HASH_KEY("player_one");
+		if (PED::GET_PED_TYPE(PLAYER::PLAYER_PED_ID()) == 2 || PED::GET_PED_TYPE(PLAYER::PLAYER_PED_ID()) == 3) model_temp = GAMEPLAY::GET_HASH_KEY("player_two");
+		STREAMING::REQUEST_MODEL(model_temp);
+		while (!STREAMING::HAS_MODEL_LOADED(model_temp)) {
+			make_periodic_feature_call();
+			WAIT(0);
+		}
+		if (STREAMING::HAS_MODEL_LOADED(model_temp)) {
+			PLAYER::SET_PLAYER_MODEL(PLAYER::PLAYER_PED_ID(), model_temp);
+			PED::SET_PED_DEFAULT_COMPONENT_VARIATION(PLAYER::PLAYER_PED_ID());
+			STREAMING::SET_MODEL_AS_NO_LONGER_NEEDED(model_temp);
+			//applyChosenSkin(model_temp);
+			npc_player_died = false;
+		}
+		if (npc_player_died == false) applyChosenSkin(model_to_restore);
 	}
 }
 
@@ -410,12 +431,14 @@ void update_features(){
 		if (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && player_died == false) {
 			GAMEPLAY::_DISABLE_AUTOMATIC_RESPAWN(true);
 			SCRIPT::SET_NO_LOADING_SCREEN(true);
+			GAMEPLAY::SET_FADE_OUT_AFTER_DEATH(false);
 			if (CAM::IS_SCREEN_FADED_OUT()) CAM::DO_SCREEN_FADE_IN(100);
 		}
 		if (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && (CONTROLS::IS_CONTROL_JUST_PRESSED(2, 176) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, 22))) { // 23 // 
 			player_died = true;
 			GAMEPLAY::_DISABLE_AUTOMATIC_RESPAWN(false);
 			SCRIPT::SET_NO_LOADING_SCREEN(false);
+			GAMEPLAY::SET_FADE_OUT_AFTER_DEATH(true);
 			CAM::DO_SCREEN_FADE_OUT(4000);
 		}
 		if (!ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) player_died = false;
