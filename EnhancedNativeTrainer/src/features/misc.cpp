@@ -72,7 +72,7 @@ char *temp_musiceventname = "";
 
 Vehicle playerVeh = -1;
 
-bool cutscene_is_playing = false;
+bool cutscene_is_playing, cutscene_being_watched = false;
 
 bool featurePlayerRadio = false;
 bool featurePlayerRadioUpdated = false;
@@ -392,7 +392,7 @@ void process_misc_cutplayer_menu() {
 		menuItems.push_back(item);
 	}
 
-	draw_generic_menu<int>(menuItems, nullptr, "Play Cutscene", onconfirm_misc_cutscene_menu, nullptr, nullptr, nullptr);
+	draw_generic_menu<int>(menuItems, nullptr, "View Cutscene", onconfirm_misc_cutscene_menu, nullptr, nullptr, nullptr);
 }
 
 bool onconfirm_misc_musicevent_menu(MenuItem<int> choice) {
@@ -687,7 +687,7 @@ void process_misc_menu(){
 		{"Next Radio Track", NULL, NULL, true},
 		{"Freeze Radio To Station", nullptr, nullptr, false},
 		{"Scripted Music", nullptr, nullptr, false},
-		{"Cutscene Player", nullptr, nullptr, false},
+		{"Cutscene Viewer", nullptr, nullptr, false},
 		{"Radio Always Off", &featureRadioAlwaysOff, &featureRadioAlwaysOffUpdated, true},
 		{"Boost Radio Volume", &featureBoostRadio, NULL, true}, 
 		{"Restore Missing Radio Station", &featureEnableMissingRadioStation, NULL, false },
@@ -1099,7 +1099,12 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 
 	if (cutscene_is_playing == true) CONTROLS::DISABLE_ALL_CONTROL_ACTIONS(0);
 	else CONTROLS::ENABLE_ALL_CONTROL_ACTIONS(0);
-
+	if (cutscene_is_playing == true && CUTSCENE::IS_CUTSCENE_PLAYING()) cutscene_being_watched = true;
+	if (cutscene_being_watched == true && !CUTSCENE::IS_CUTSCENE_PLAYING()) {
+		cutscene_is_playing = false;
+		cutscene_being_watched = false;
+	}
+	
 	// DYNAMIC HEALTH BAR
 	if (featureDynamicHealthBar && !CUTSCENE::IS_CUTSCENE_PLAYING()) {
 		if (!featureMiscHideHud && !featurePhoneShowHud && !featureInVehicleNoHud && !featureMarkerHud && !featureMiscHideENTHud) UI::DISPLAY_RADAR(false); // There is no need to hide HUD if it's already hidden
