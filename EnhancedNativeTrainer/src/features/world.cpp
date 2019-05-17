@@ -151,6 +151,8 @@ bool onconfirm_weather_menu(MenuItem<std::string> choice)
 
 		if (featureWeatherFreeze && !lastWeather.empty())
 		{
+			GRAPHICS::_CLEAR_CLOUD_HAT();
+			GAMEPLAY::SET_WEATHER_TYPE_NOW((char *)lastWeather.c_str());
 			std::stringstream ss; ss << "Weather frozen at: " << lastWeatherName;
 			set_status_text(ss.str());
 		}
@@ -169,9 +171,11 @@ bool onconfirm_weather_menu(MenuItem<std::string> choice)
 		GAMEPLAY::CLEAR_OVERRIDE_WEATHER();
 		GAMEPLAY::CLEAR_WEATHER_TYPE_PERSIST();
 		GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
-		GAMEPLAY::SET_WEATHER_TYPE_NOW("EXTRASUNNY");
 		GRAPHICS::_CLEAR_CLOUD_HAT();
+		GAMEPLAY::SET_WEATHER_TYPE_NOW("EXTRASUNNY");
 		GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
+		lastWeather = 2;
+		lastWeatherName = "EXTRASUNNY";
 		break;
 	default:
 		lastWeather = choice.value.c_str();
