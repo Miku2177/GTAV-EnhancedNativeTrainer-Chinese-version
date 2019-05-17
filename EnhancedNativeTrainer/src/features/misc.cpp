@@ -72,6 +72,8 @@ char *temp_musiceventname = "";
 
 Vehicle playerVeh = -1;
 
+bool cutscene_is_playing = false;
+
 bool featurePlayerRadio = false;
 bool featurePlayerRadioUpdated = false;
 bool featureRadioFreeze = false, featureRadioFreezeUpdated = false;
@@ -168,112 +170,6 @@ const std::vector<std::string> MISC_PHONE_DEFAULT_CAPTIONS{ "OFF", "Michael's", 
 const int MISC_PHONE_DEFAULT_VALUES[] = { -1, 0, 1, 2, 3, 4 };
 int PhoneDefaultIndex = 0;
 bool PhoneDefaultChanged = true;
-
-const std::vector<std::string> MISC_MUSICEVENT_VALUES = { 
- "AH1_HOLE_RESTART",
- "AH2A_FIRST_FLOOR_RESTART",
- "AH3A_ABSEIL_RT",
- "AH3A_FIB_DOCS_RT",
- "AH3A_RUBBLE_RT",
- "AH3B_BURNTOUT_RT",
- "AH3B_BURNTOUT_TWO_RT",
- "AH3B_DOWNLOADING_RT",
- "AH3B_EVADE_COPS_RT",
- "AH3B_GET_TO_VAN_RT",
- "AH3B_HACK_RT",
- "AH3B_HELI_LIFT_OFF",
- "AH3B_STAIRWELL",
- "APT_COUNTDOWN_30S",
- "APT_SUDDEN_DEATH_START_MUSIC",
- "ARM3_CS",
- "ARM3_RESTART_4",
- "BG_SIGHTSEER_START_ATTACK",
- "BST_START",
- "CAR1_COPS_RESTART",
- "CAR4_TRUCK_RESTART",
- "CHN1_AFTER_GRENADE_RT",
- "DH1_START",
- "DH2A_1ST_BOMB_RT",
- "DH2A_WAY_OUT_RT",
- "DH2B_DROP_SUB_RT",
- "DH2B_FLY_AWAY_RT",
- "EPS6_START",
- "EXL2_SNIPE_RT",
- "EXL3_SWITCH_1",
- "EXTREME1_BIKE",
- "EXTREME1_RESTART1",
- "EXTREME2_RESTART2",
- "FAM1_DO_CHASE_RT",
- "FAM2_NECK_GRAB",
- "FAM3_CHASE_RESTART",
- "FAM4_CHASE_RESTART",
- "FAM5_YOGA_MUSIC_RESTART",
- "FBI1_OUTSIDE_CORONERS_RT",
- "FBI1_SHOOTOUT_HALFWAY_RT",
- "FBI3_TORTURE_START",
- "FBI4_COVER_RESTART",
- "FBI5A_FORKLIFT_RESTART",
- "FBI5A_HELI_RESTART",
- "FH2A_BANK_MID_RESTART",
- "FH2A_CARS",
- "FH2A_FIGHT_RESTART",
- "FH2A_VAN_RESTART",
- "FH2B_BOMBS_RESTART",
- "FH2B_DROP_GOLD_RESTART",
- "FH2B_FIGHT_1_RESTART",
- "FH2B_HELI_CHASE_RESTART",
- "FH2B_LEAVE_BANK",
- "FH2B_NOOSE_FIGHT_RESTART",
- "FH2B_SWITCH_3",
- "FIN1_SO_2_RT",
- "FINA_RESTART_CHASE",
- "FINB_RESTART_ARRIVE",
- "FM_COUNTDOWN_30S",
- "FM_INTRO_START",
- "FRA1_FIGHT_RESTART",
- "FRA1_SPEED",
- "FRA2_CUT_LAMAR_RT",
- "GA_KILL_ALERTED_RS",
- "GA_KILL_HALF_RS",
- "HALLOWEEN_START_MUSIC",
- "JH2A_EXIT_TUNNEL_RESTART",
- "JH2A_GAS_SHOP_RESTART",
- "KILL_LIST_START_MUSIC",
- "LM1_TERMINADOR_ENTER_WAREHOUSE_RESTART",
- "LM1_TERMINADOR_GAMEPLAY_BEGINS",
- "MGPS_START",
- "MIC1_ARGUE_CS_SKIP",
- "MIC1_DRIVE_TO_GRAVEYARD",
- "MIC2_HANGING_RT",
- "MIC3_DAVE_ESCAPES_RESTART",
- "MIC3_ESCAPE_RESTART",
- "MM2_RESTART1",
- "MM3_RESTART1",
- "MP_DM_START_ALL",
- "OJDA5_START",
- "OJDG2_START",
- "PAP2_CAR_RESTART",
- "PENNED_IN_START_MUSIC",
- "PEYOTE_TRIPS_START",
- "PROLOGUE_TEST_GETAWAY_RT",
- "PTP_START",
- "RC18B_START",
- "RH1_START",
- "RH2A_BANK_RESTART",
- "RH2A_RESCUE_RESTART",
- "SOL1_CHASE_PLANE_RT",
- "SOL1_FIGHT_RT",
- "SOL1_GET_SOL_RT",
- "SOL1_SHOOT_PLANE_RT",
- "SOL2_RESTART1",
- "SOL5_FIGHT_BAD_RT",
- "TRV1_CHASE_BIKERS_RT",
- "TRV1_DRIVE_TRAILER_RT",
- "TRV2_RACE",
- "TRV2_WING_RESTART",
- "TRV4_EVADE_RT",
- "TRV4_FOOT_CHASE_RT",
- "TRV4_START_CS_SKIP" };
 
 void onchange_hotkey_function(int value, SelectFromListMenuItem* source){
 	change_hotkey_function(source->extras.at(0), value);
@@ -445,6 +341,58 @@ bool onconfirm_misc_freezeradio_menu(MenuItem<int> choice){
 	radioStationIndex = choice.value;
 
 	return false;
+}
+
+bool onconfirm_misc_cutscene_menu(MenuItem<int> choice) {
+	if (choice.value == -1) {
+		cutscene_is_playing = false;
+		CUTSCENE::STOP_CUTSCENE_IMMEDIATELY();
+		CUTSCENE::REMOVE_CUTSCENE();
+	}
+	else {
+		std::string value_m = MISC_CUTSCENE_VALUES[choice.value];
+		char *cstr = new char[value_m.length() + 1];
+		strcpy(cstr, value_m.c_str());
+
+		CUTSCENE::REQUEST_CUTSCENE(cstr, 8);
+		while (!CUTSCENE::HAS_CUTSCENE_LOADED()) {
+			make_periodic_feature_call();
+			WAIT(0);
+		}
+		if (CUTSCENE::HAS_CUTSCENE_LOADED()) {
+			cutscene_is_playing = true;
+			CUTSCENE::SET_CUTSCENE_FADE_VALUES(0, 0, 1, 0);
+			CUTSCENE::START_CUTSCENE(0);
+			CAM::SET_WIDESCREEN_BORDERS(0, 0);
+			delete[] cstr;
+		}
+	}
+	return false;
+}
+
+void process_misc_cutplayer_menu() {
+	std::vector<MenuItem<int>*> menuItems;
+	std::vector<std::string> captions;
+	std::string menuCaption;
+	captions = MISC_CUTSCENE_VALUES;
+
+	MenuItem<int> *item = new MenuItem<int>();
+	item->caption = "Stop";
+	item->value = -1;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	int i = 0;
+	for each (std::string scenario in captions)
+	{
+		item = new MenuItem<int>();
+		//MenuItem<int> *item = new MenuItem<int>();
+		item->caption = scenario;
+		item->value = i++;
+		menuItems.push_back(item);
+	}
+
+	draw_generic_menu<int>(menuItems, nullptr, "Play Cutscene", onconfirm_misc_cutscene_menu, nullptr, nullptr, nullptr);
 }
 
 bool onconfirm_misc_musicevent_menu(MenuItem<int> choice) {
@@ -709,13 +657,16 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 		case 4:
 			process_misc_musicevent_menu();
 			break;
-		case 21:
+		case 5:
+			process_misc_cutplayer_menu();
+			break;
+		case 22:
 			process_phone_bill_menu();
 			break;
-		case 26:
+		case 27:
 			process_def_menutab_menu();
 			break;
-		case 27:
+		case 28:
 			process_airbrake_global_menu();
 			break;
 		default:
@@ -726,7 +677,7 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 }
 
 void process_misc_menu(){
-	const int lineCount = 29;
+	const int lineCount = 30;
 
 	std::string caption = "Miscellaneous Options";
 
@@ -736,6 +687,7 @@ void process_misc_menu(){
 		{"Next Radio Track", NULL, NULL, true},
 		{"Freeze Radio To Station", nullptr, nullptr, false},
 		{"Scripted Music", nullptr, nullptr, false},
+		{"Cutscene Player", nullptr, nullptr, false},
 		{"Radio Always Off", &featureRadioAlwaysOff, &featureRadioAlwaysOffUpdated, true},
 		{"Boost Radio Volume", &featureBoostRadio, NULL, true}, 
 		{"Restore Missing Radio Station", &featureEnableMissingRadioStation, NULL, false },
@@ -1144,6 +1096,9 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			p_exist = false;
 		} 
 	}
+
+	if (cutscene_is_playing == true) CONTROLS::DISABLE_ALL_CONTROL_ACTIONS(0);
+	else CONTROLS::ENABLE_ALL_CONTROL_ACTIONS(0);
 
 	// DYNAMIC HEALTH BAR
 	if (featureDynamicHealthBar && !CUTSCENE::IS_CUTSCENE_PLAYING()) {
