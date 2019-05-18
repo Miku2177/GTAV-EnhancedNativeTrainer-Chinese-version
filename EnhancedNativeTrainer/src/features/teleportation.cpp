@@ -36,6 +36,8 @@ struct tele_location{
 	bool isLoaded;
 };
 
+int interiorID_temp = -1;
+
 // 3D Marker
 Vector3 coords_3Dblip, coords_3Dblip_old, temp_coords_3Dblip;
 Blip my3DBlip = -1;
@@ -433,10 +435,10 @@ std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Maze Bank Del Perro Office: Style 8", -1384.56400000f, -478.26990000f, 71.04205000f, { "ex_sm_15_office_03b" }, {}, {}, false },
 	{ "Maze Bank Del Perro Office: Style 9", -1384.56400000f, -478.26990000f, 71.04205000f, { "ex_sm_15_office_03c" }, {}, {}, false },
 	{ "Mission Row Underground 'Winning' Garage", 400.09610000f, -956.67870000f, -100.00000000f},
-	{ "Night Club Interior (Edgy)", -1569.25f, -3017.39f, -73.22f, IPL_PROPS_NIGHTCLUB_EDGY, {}, { "ba_int_01_club_shell" }, false }, //IPL_PROPS_NIGHTCLUB_COMMON_PROPS + IPL_PROPS_NIGHTCLUB_EDGY
-	//{ "Night Club Interior (Glamorous)", -1569.25f, -3017.39f, -73.22f, { /*"ba_int_placement_ba_interior_0_dlc_int_01_ba_milo_"*/ }, {  }, { IPL_PROPS_NIGHTCLUB_GLAM }, false },
-	//{ "Night Club Interior (Traditional)", -1569.25f, -3017.39f, -73.22f, { /*"ba_int_placement_ba_interior_0_dlc_int_01_ba_milo_"*/ }, {  }, { IPL_PROPS_NIGHTCLUB_TRAD }, false },
-	{ "Night Club Basement", -1509.31f, -2990.44f, -79.74f, IPL_PROPS_NIGHTCLUB_BASEMENT, {}, { /*IPL_PROPS_NIGHTCLUB_COMMON_PROPS/*"ba_int_01_club_shell"/*IPL_PROPS_NIGHTCLUB_COMMON_PROPS/*"ba_int_placement_ba_interior_1_dlc_int_02_ba_milo_"*/ }, false },
+	{ "Nightclub (Edgy)", -1569.2500f, -3017.3900f, -73.2200f, { "ba_int_placement_ba_interior_0_dlc_int_01_ba_milo_" }, {}, { IPL_PROPS_NIGHTCLUB_COMMON_PROPS }, false },
+	{ "Nightclub (Glamorous)", -1569.2500f, -3017.3900f, -73.2200f, { "ba_int_placement_ba_interior_0_dlc_int_01_ba_milo_" }, {}, { IPL_PROPS_NIGHTCLUB_COMMON_PROPS }, false },
+	{ "Night Club Interior (Traditional)", -1569.2500f, -3017.3900f, -73.2200f, { "ba_int_placement_ba_interior_0_dlc_int_01_ba_milo_" }, {}, { IPL_PROPS_NIGHTCLUB_COMMON_PROPS }, false },
+	{ "Night Club Basement", -1509.3100f, -2990.4400f, -79.7400f, { "ba_int_placement_ba_interior_1_dlc_int_02_ba_milo_" }, {}, { IPL_PROPS_NIGHTCLUB_BASEMENT }, false },
 	{ "Online Character Creator Interior", 415.275f, -999.037f, -99.4041f, { "hw1_int_placement_interior_v_mugshot_milo_ " }, {}, {}, false },
 	{ "Penthouse: Style 1", -786.168f, 334.319f, 211.197f, { "apa_v_mp_h_01_a", "apa_v_mp_h_01_b", "apa_v_mp_h_01_c" }, {}, {}, false },
 	{ "Penthouse: Style 2", -787.7805f, 334.9232f, 215.8384f, { "apa_v_mp_h_02_a", "apa_v_mp_h_02_b", "apa_v_mp_h_02_c" }, {}, {}, false },
@@ -462,7 +464,7 @@ std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Stilthouse 9", -1286.362f, 431.7878f, 96.49426f, { "apa_ch2_12b_interior_0_v_mp_stilts_a_milo_" }, {}, {}, false },
 	{ "Studio Flat", 260.3297f, -997.4288f, -100.0f, { "hei_hw1_blimp_interior_v_studio_lo_milo_" }, {}, {}, false },
 	{ "Submarine", 514.266f, 4855.68f, -62.5621f, { "xm_x17dlc_int_placement_interior_8_x17dlc_int_sub_milo_" }, {}, {}, false },
-	{ "Terrorbyte Interior", -1421.01500000f, -3012.58700000f, -80.00000000f, IPL_PROPS_NIGHTCLUB_TERRORBYTE_INTERIOR/*"ba_int_placement_ba_interior_2_dlc_int_03_ba_milo_"*/, {}, { /*IPL_PROPS_NIGHTCLUB_COMMON_PROPS/*"ba_dlc_int_03_ba_shell"/*"ba_int_placement_ba_interior_2_dlc_int_03_ba_milo_"/*IPL_PROPS_NIGHTCLUB_TERRORBYTE_INTERIOR*/ }, false },
+	{ "Terrorbyte Interior", -1421.0150f, -3012.5870f, -80.0000f, { "ba_int_placement_ba_interior_2_dlc_int_03_ba_milo_" }, {}, { IPL_PROPS_NIGHTCLUB_TERRORBYTE_INTERIOR }, false },
 	{ "Tinsel Towers Apt 16", -613.54040000f, 63.04870000f, 100.81960000f, { "hw1_blimp_interior_v_apartment_high_milo__16" }, {}, {}, false },
 	{ "Tinsel Towers Apt 17", -587.82590000f, 44.26880000f, 86.41870000f, { "hw1_blimp_interior_v_apartment_high_milo__17" }, {}, {}, false },
 	{ "Tinsel Towers Apt 24", -613.54050000f, 63.04870000f, 100.81960000f, { "hei_hw1_blimp_interior_24_dlc_apart_high_new_milo_" }, {}, {}, false },
@@ -476,11 +478,13 @@ std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Weazel Plaza Apt 15", -892.29590000f, -434.41470000f, 88.25368000f, { "hei_hw1_blimp_interior_15_dlc_apart_high_new_milo_" }, {}, {}, false },
 	{ "Weazel Plaza Apt 17", -909.10180000f, -438.19030000f, 114.39970000f, { "hei_hw1_blimp_interior_17_dlc_apart_high_new_milo_" }, {}, {}, false },
 	//
-	{ "xs_arena_interior", 2800.00000000f, -3800.00000000f, 100.00000000f, { "xs_arena_interior" }, { "xs_x18int01_shell" }, {}, false },
-	{ "xs_arena_interior_mod", 205.00000000f, 5180.00000000f, -90.00000000f, { "xs_arena_interior_mod" }, { "xs_x18intmod_interior_shell_shad" }, {}, false },
-	{ "xs_Arena_Interior_Mod_2", 170.00000000f, 5190.00000000f, 10.00000000f, { "xs_Arena_Interior_Mod_2" }, { "xs_x18intmod_mod2shell" }, {}, false },
-	//{ "xs_arena_interior_vip", 2799.52900000f, -3930.53900000f, 182.23560000f, { "xs_arena_interior_vip" }, { "xs_x18intvip_vip_lounge_shell" }, {}, false },
-	{ "xs_arena_interior_vip", 2799.52900000f, -3930.53900000f, 184.23560000f, IPL_PROPS_ARENAWAR_MAIN_PROPS, {}, { "xs_arena_interior_vip" }, false },
+	{ "XS_Arena_Interior", 2800.00000000f, -3800.00000000f, 100.00000000f, { "xs_arena_interior" }, {}, { IPL_PROPS_ARENAWAR_MAIN_PROPS }, false },
+	{ "XS_Arena_Interior_Mod", 205.00000000f, 5180.00000000f, -90.00000000f, { "xs_arena_interior_mod" }, {}, { IPL_PROPS_ARENAWAR_MAIN_PROPS }, false }, // !!
+	{ "XS_Arena_Interior_Mod_2", 170.00000000f, 5190.00000000f, 10.00000000f, { "xs_arena_interior_mod" }, {}, { IPL_PROPS_ARENAWAR_MAIN_PROPS }, false },
+	{ "XS_Arena_Interior_Vip", 2799.52900000f, -3930.53900000f, 184.23560000f, {"xs_arena_interior_vip"}, {}, { IPL_PROPS_ARENAWAR_MAIN_PROPS }, false },
+	//
+	{ "Gunrunning Regular", 938.3077f, -3196.1120f, -98.0000f, { "gr_grdlc_interior_placement_interior_1_grdlc_int_02_milo_" }, {}, {}, false },
+	
 }; 
 
 std::vector<tele_location> LOCATIONS_ACTORS = {
@@ -1408,6 +1412,16 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 
 		if (ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()))// && STREAMING::IS_IPL_ACTIVE("plg_01") == 0)
 		{
+			//
+			for each (const char* scenery in value->scenery_toremove) STREAMING::REMOVE_IPL(scenery);
+			for each (const char* scenery in value->scenery_required) STREAMING::REMOVE_IPL(scenery);
+			for each (char* prop in value->scenery_props) {
+				INTERIOR::DISABLE_INTERIOR(interiorID_temp, true);
+				STREAMING::SET_INTERIOR_ACTIVE(interiorID_temp, false);
+				INTERIOR::_DISABLE_INTERIOR_PROP(interiorID_temp, prop);
+				INTERIOR::REFRESH_INTERIOR(interiorID_temp);
+			}
+			//
 			for each (const char* scenery in value->scenery_toremove){
 				if (STREAMING::IS_IPL_ACTIVE(scenery))
 				{
@@ -1425,8 +1439,10 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 				for each (char* prop in value->scenery_props){
 					int interiorID = INTERIOR::GET_INTERIOR_AT_COORDS(coords.x, coords.y, coords.z); 
 					//INTERIOR::DISABLE_INTERIOR(interiorID, false);
-					INTERIOR::_0x2CA429C029CCF247(interiorID); //Mysterious native used to load the Doomsday base. Will remove once we know when it is needed.
-					//INTERIOR::_LOAD_INTERIOR(interiorID); //It looks like it does the same is the native above 
+					//INTERIOR::_0x2CA429C029CCF247(interiorID); //Mysterious native used to load the Doomsday base. Will remove once we know when it is needed.
+					INTERIOR::_LOAD_INTERIOR(interiorID); //It looks like it does the same as the native above 
+					STREAMING::SET_INTERIOR_ACTIVE(interiorID, true);
+					INTERIOR::DISABLE_INTERIOR(interiorID, false);
 
 					if (!INTERIOR::_IS_INTERIOR_PROP_ENABLED(interiorID, prop))
 					{
@@ -1436,8 +1452,10 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 					{
 						INTERIOR::_DISABLE_INTERIOR_PROP(interiorID, prop);
 					}
+					//_0xC1F1920BAF281317(interiorID, prop, 1);
 					INTERIOR::REFRESH_INTERIOR(interiorID);
 					//STREAMING::SET_INTERIOR_ACTIVE(interiorID, true);
+					interiorID_temp = interiorID;
 				}
 			}
 		}
@@ -1524,7 +1542,6 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 						}
 					}
 				}
-
 				unloadedAnything = true;
 				loc->isLoaded = false;
 			}
