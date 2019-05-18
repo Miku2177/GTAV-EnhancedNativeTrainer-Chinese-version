@@ -449,8 +449,8 @@ void update_area_effects(Ped playerPed){
 		set_all_nearby_peds_to_angry(featureAreaPedsRioting);
 	}
 
-	if(featureAreaPedsRioting && pedWeaponSetIndex != 0){ 
-		give_all_nearby_peds_a_weapon(pedWeaponSetIndex != 0);
+	if((featureAreaPedsRioting && pedWeaponSetIndex != 0) || pedWeaponSetIndex != 0){
+		give_all_nearby_peds_a_weapon(pedWeaponSetIndex); //  != 0
 	}
 
 	if ((featureAreaPedsRioting && PedWeaponsSelectiveIndex != 0) || PedWeaponsSelective1Changed || PedWeaponsSelectiveIndex != 0){
@@ -959,16 +959,15 @@ void give_all_nearby_peds_a_weapon(bool enabled){
 		else
 		{
 			if (!PED::IS_PED_GROUP_MEMBER(xped, PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID()))) {
-				//ENTTrackedPedestrian* trackedPed = findOrCreateTrackedPed(xped);
 				char *currWeapon = new char[PED_WEAPONS_SELECTIVE_CAPTIONS[PedWeaponsSelectiveIndex].length() + 1];
 				strcpy(currWeapon, PED_WEAPONS_SELECTIVE_CAPTIONS[PedWeaponsSelectiveIndex].c_str());
 				Hash Ped_Selective_Weapon = GAMEPLAY::GET_HASH_KEY(currWeapon);
-				if (!WEAPON::HAS_PED_GOT_WEAPON(xped, Ped_Selective_Weapon, 0)) WEAPON::GIVE_WEAPON_TO_PED(xped, Ped_Selective_Weapon, 9999, FALSE, TRUE);
+				if (!featurePedsIncludeDrivers && !WEAPON::HAS_PED_GOT_WEAPON(xped, Ped_Selective_Weapon, 0) && !PED::IS_PED_IN_ANY_VEHICLE(xped, false)) WEAPON::GIVE_WEAPON_TO_PED(xped, Ped_Selective_Weapon, 9999, FALSE, TRUE);
+				if (featurePedsIncludeDrivers && !WEAPON::HAS_PED_GOT_WEAPON(xped, Ped_Selective_Weapon, 0)) WEAPON::GIVE_WEAPON_TO_PED(xped, Ped_Selective_Weapon, 9999, FALSE, TRUE);
 				WEAPON::SET_PED_INFINITE_AMMO_CLIP(xped, true);
 				PED::SET_PED_CAN_SWITCH_WEAPON(xped, true);
-				if (WEAPON::HAS_PED_GOT_WEAPON(xped, Ped_Selective_Weapon, 0)) { //  && !PED::IS_PED_IN_ANY_VEHICLE(xped, false) && !PED::IS_PED_INJURED(xped)
-					WEAPON::SET_CURRENT_PED_WEAPON(xped, Ped_Selective_Weapon, 0);
-				}
+				if (!featurePedsIncludeDrivers && WEAPON::HAS_PED_GOT_WEAPON(xped, Ped_Selective_Weapon, 0) && !PED::IS_PED_IN_ANY_VEHICLE(xped, false)) WEAPON::SET_CURRENT_PED_WEAPON(xped, Ped_Selective_Weapon, 0);
+				if (featurePedsIncludeDrivers && WEAPON::HAS_PED_GOT_WEAPON(xped, Ped_Selective_Weapon, 0)) WEAPON::SET_CURRENT_PED_WEAPON(xped, Ped_Selective_Weapon, 0);
 			}
 		}
 	}
