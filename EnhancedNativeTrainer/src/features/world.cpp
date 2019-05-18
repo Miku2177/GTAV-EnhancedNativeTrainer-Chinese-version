@@ -1326,11 +1326,13 @@ void update_world_features()
 	{
 		if (featureMPMap)
 		{
+			//GAMEPLAY::_USE_FREEMODE_MAP_BEHAVIOR(true);
 			DLC2::_LOAD_MP_DLC_MAPS();
 			set_status_text("MP Maps enabled");
 		}
 		else
 		{
+			//GAMEPLAY::_USE_FREEMODE_MAP_BEHAVIOR(true);
 			DLC2::_LOAD_SP_DLC_MAPS();
 			set_status_text("MP Maps disabled");
 		}
