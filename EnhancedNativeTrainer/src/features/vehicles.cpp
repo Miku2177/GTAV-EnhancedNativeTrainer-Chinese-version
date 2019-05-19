@@ -175,10 +175,10 @@ bool powChanged = true;
 bool burnoutApplied = false;
 
 //vehicle mass stuff
-const std::vector<std::string> VEH_MASS_CAPTIONS{"1x", "3x", "5x", "10x", "30x", "50x", "Mayhem" };
-const std::vector<int> VEH_MASS_VALUES{0, 5, 10, 30, 50, 100, 50000 };
 int VehMassMultIndex = 0;
 bool massChanged = true;
+int current_player_forceshield = 0;
+bool player_massChanged = true;
 
 //Turn Signals
 const std::vector<std::string> VEH_TURN_SIGNALS_CAPTIONS{ "OFF", "Manual Only", "< 10 (MPH)", "< 20 (MPH)", "< 30 (MPH)", "< 40 (MPH)", "< 60 (MPH)", "< 80 (MPH)", "< 100 (MPH)", "< 120 (MPH)", "< 140 (MPH)", "< 160 (MPH)", "< 180 (MPH)", "< 200 (MPH)" };
@@ -2347,23 +2347,29 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		if (Shut_seconds == VEH_AUTO_SHUT_ENGINE_VALUES[AutoShutEngineIndex]) VEHICLE::SET_VEHICLE_ENGINE_ON(vehicle_been_used, false, true);
 	}
 
-	//////////////////////////////////////////////////// VEHICLE FORCE SHIELD POWER ////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////// PLAYER/VEHICLE FORCE SHIELD POWER ////////////////////////////////////////////////////////
 
-	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && !PED::IS_PED_IN_ANY_PLANE(playerPed) && !PED::IS_PED_IN_ANY_HELI(playerPed) && (VEH_MASS_VALUES[VehMassMultIndex] > 0)) {
+	if ((VEH_MASS_VALUES[VehMassMultIndex] > 0 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && !PED::IS_PED_IN_ANY_PLANE(playerPed) && !PED::IS_PED_IN_ANY_HELI(playerPed)) || 
+		(VEH_MASS_VALUES[current_player_forceshield] > 0 && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0))) { // bPlayerExists && 
 		const int OBJ_ARR_SIZE = 1024;
-		Vehicle nearbyObj[OBJ_ARR_SIZE];
+		Object nearbyObj[OBJ_ARR_SIZE];
 		int veh_distance_x = 100;
 		int veh_distance_y = 100;
-		Vector3 vehspeed = ENTITY::GET_ENTITY_VELOCITY(veh);
+		Object my_shield = -1;
+		if (VEH_MASS_VALUES[VehMassMultIndex] > 0) my_shield = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+		if (VEH_MASS_VALUES[current_player_forceshield] > 0) my_shield = PLAYER::PLAYER_PED_ID();
+		Vector3 vehspeed = ENTITY::GET_ENTITY_VELOCITY(my_shield);
 		Vector3 CamRot = CAM::GET_GAMEPLAY_CAM_ROT(2);
-		Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(veh, true);
+		Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(my_shield, true);
 		int p_force = 5;
 		float rad = 2 * 3.14 * (CamRot.z / 360);
 		float v_x = -(sin(rad) * p_force * 10);
 		float v_y = (cos(rad) * p_force * 10);
 		float v_z = p_force * (CamRot.x * 0.2);
-		if (((vehspeed.x > 1) || (vehspeed.y > 1) || (vehspeed.z > 1)) && (ENTITY::GET_ENTITY_ROLL(veh) > 20 || ENTITY::GET_ENTITY_ROLL(veh) < -20)) VEHICLE::SET_VEHICLE_ON_GROUND_PROPERLY(veh);
-		if (ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(veh) && VEH_MASS_VALUES[VehMassMultIndex] > 3) ENTITY::SET_ENTITY_VELOCITY(veh, vehspeed.x, vehspeed.y, vehspeed.z);
+		if (VEH_MASS_VALUES[VehMassMultIndex] > 0) {
+			if (((vehspeed.x > 1) || (vehspeed.y > 1) || (vehspeed.z > 1)) && (ENTITY::GET_ENTITY_ROLL(my_shield) > 20 || ENTITY::GET_ENTITY_ROLL(my_shield) < -20)) VEHICLE::SET_VEHICLE_ON_GROUND_PROPERLY(my_shield);
+			if (ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(my_shield) && VEH_MASS_VALUES[VehMassMultIndex] > 3) ENTITY::SET_ENTITY_VELOCITY(my_shield, vehspeed.x, vehspeed.y, vehspeed.z);
+		}
 
 		int count_v = worldGetAllVehicles(nearbyObj, OBJ_ARR_SIZE); // vehicles
 		for (int i = 0; i < count_v; i++)	{
@@ -2372,10 +2378,12 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			veh_distance_y = (coordsme.y - coordsveh.y);
 			if (veh_distance_x < 0) veh_distance_x = (veh_distance_x * -1);
 			if (veh_distance_y < 0) veh_distance_y = (veh_distance_y * -1);
-			if (nearbyObj[i] != veh) {
-				if ((veh_distance_x + veh_distance_y) < (VEH_MASS_VALUES[VehMassMultIndex] / 1)) {
-					if (VEH_MASS_VALUES[VehMassMultIndex] < 101) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyObj[i], 1, v_x, v_y, VEH_MASS_VALUES[VehMassMultIndex] / 3, 0, 0, 0, false, false, true, true, false, true);
-					if (VEH_MASS_VALUES[VehMassMultIndex] == 50000) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyObj[i], 4, (ENTITY::GET_ENTITY_SPEED(veh) * VEH_MASS_VALUES[VehMassMultIndex]), 0, 0, 0, 0, 0, 1, true, true, true, true, true);
+			if (nearbyObj[i] != PED::GET_VEHICLE_PED_IS_USING(playerPed)) { // my_shield
+				if (((veh_distance_x + veh_distance_y) < (VEH_MASS_VALUES[VehMassMultIndex] / 1)) || ((veh_distance_x + veh_distance_y) < (VEH_MASS_VALUES[current_player_forceshield] / 1))) {
+					if (VEH_MASS_VALUES[VehMassMultIndex] > 0 && VEH_MASS_VALUES[VehMassMultIndex] < 101) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyObj[i], 1, v_x, v_y, VEH_MASS_VALUES[VehMassMultIndex] / 3, 0, 0, 0, false, false, true, true, false, true);
+					if (VEH_MASS_VALUES[VehMassMultIndex] == 50000) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyObj[i], 4, (ENTITY::GET_ENTITY_SPEED(my_shield) * VEH_MASS_VALUES[VehMassMultIndex]), 0, 0, 0, 0, 0, 1, true, true, true, true, true);
+					if (VEH_MASS_VALUES[current_player_forceshield] > 0 && VEH_MASS_VALUES[current_player_forceshield] < 101) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyObj[i], 1, v_x, v_y, VEH_MASS_VALUES[current_player_forceshield] / 3, 0, 0, 0, false, false, true, true, false, true);
+					if (VEH_MASS_VALUES[current_player_forceshield] == 50000) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyObj[i], 4, (ENTITY::GET_ENTITY_SPEED(my_shield) * VEH_MASS_VALUES[current_player_forceshield]), 0, 0, 0, 0, 0, 1, true, true, true, true, true);
 				}
 			}
 		} // end of for
@@ -2388,9 +2396,11 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			if (veh_distance_x < 0) veh_distance_x = (veh_distance_x * -1);
 			if (veh_distance_y < 0) veh_distance_y = (veh_distance_y * -1);
 			if (nearbyObj[i] != playerPed) {
-				if ((veh_distance_x + veh_distance_y) < (VEH_MASS_VALUES[VehMassMultIndex] / 1)) {
-					if (VEH_MASS_VALUES[VehMassMultIndex] < 101) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyObj[i], 1, v_x, v_y, VEH_MASS_VALUES[VehMassMultIndex] / 3, 0, 0, 0, false, false, true, true, false, true);
-					if (VEH_MASS_VALUES[VehMassMultIndex] == 50000) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyObj[i], 4, (ENTITY::GET_ENTITY_SPEED(veh) * VEH_MASS_VALUES[VehMassMultIndex]), 0, 0, 0, 0, 0, 1, true, true, true, true, true);
+				if (((veh_distance_x + veh_distance_y) < (VEH_MASS_VALUES[VehMassMultIndex] / 1)) || ((veh_distance_x + veh_distance_y) < (VEH_MASS_VALUES[current_player_forceshield] / 1))) {
+					if (VEH_MASS_VALUES[VehMassMultIndex] > 0 && VEH_MASS_VALUES[VehMassMultIndex] < 101) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyObj[i], 1, v_x, v_y, VEH_MASS_VALUES[VehMassMultIndex] / 3, 0, 0, 0, false, false, true, true, false, true);
+					if (VEH_MASS_VALUES[VehMassMultIndex] == 50000) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyObj[i], 4, (ENTITY::GET_ENTITY_SPEED(my_shield) * VEH_MASS_VALUES[VehMassMultIndex]), 0, 0, 0, 0, 0, 1, true, true, true, true, true);
+					if (VEH_MASS_VALUES[current_player_forceshield] > 0 && VEH_MASS_VALUES[current_player_forceshield] < 101) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyObj[i], 1, v_x, v_y, VEH_MASS_VALUES[current_player_forceshield] / 3, 0, 0, 0, false, false, true, true, false, true);
+					if (VEH_MASS_VALUES[current_player_forceshield] == 50000) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyObj[i], 4, (ENTITY::GET_ENTITY_SPEED(my_shield) * VEH_MASS_VALUES[current_player_forceshield]), 0, 0, 0, 0, 0, 1, true, true, true, true, true);
 				}
 			}
 		} // end of for
@@ -2402,10 +2412,12 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			veh_distance_y = (coordsme.y - coordsveh.y);
 			if (veh_distance_x < 0) veh_distance_x = (veh_distance_x * -1);
 			if (veh_distance_y < 0) veh_distance_y = (veh_distance_y * -1);
-			if (nearbyObj[i] != veh) {
-				if ((veh_distance_x + veh_distance_y) < (VEH_MASS_VALUES[VehMassMultIndex] / 1)) {
-					if (VEH_MASS_VALUES[VehMassMultIndex] < 101) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyObj[i], 1, v_x, v_y, VEH_MASS_VALUES[VehMassMultIndex] / 3, 0, 0, 0, false, false, true, true, false, true);
-					if (VEH_MASS_VALUES[VehMassMultIndex] == 50000) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyObj[i], 4, (ENTITY::GET_ENTITY_SPEED(veh) * VEH_MASS_VALUES[VehMassMultIndex]), 0, 0, 0, 0, 0, 1, true, true, true, true, true);
+			if (nearbyObj[i] != my_shield) {
+				if (((veh_distance_x + veh_distance_y) < (VEH_MASS_VALUES[VehMassMultIndex] / 1)) || ((veh_distance_x + veh_distance_y) < (VEH_MASS_VALUES[current_player_forceshield] / 1))) {
+					if (VEH_MASS_VALUES[VehMassMultIndex] > 0 && VEH_MASS_VALUES[VehMassMultIndex] < 101) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyObj[i], 1, v_x, v_y, VEH_MASS_VALUES[VehMassMultIndex] / 3, 0, 0, 0, false, false, true, true, false, true);
+					if (VEH_MASS_VALUES[VehMassMultIndex] == 50000) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyObj[i], 4, (ENTITY::GET_ENTITY_SPEED(my_shield) * VEH_MASS_VALUES[VehMassMultIndex]), 0, 0, 0, 0, 0, 1, true, true, true, true, true);
+					if (VEH_MASS_VALUES[current_player_forceshield] > 0 && VEH_MASS_VALUES[current_player_forceshield] < 101) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyObj[i], 1, v_x, v_y, VEH_MASS_VALUES[current_player_forceshield] / 3, 0, 0, 0, false, false, true, true, false, true);
+					if (VEH_MASS_VALUES[current_player_forceshield] == 50000) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyObj[i], 4, (ENTITY::GET_ENTITY_SPEED(my_shield) * VEH_MASS_VALUES[current_player_forceshield]), 0, 0, 0, 0, 0, 1, true, true, true, true, true);
 				}
 			}
 		} // end of for
@@ -3148,6 +3160,7 @@ void reset_vehicle_globals() {
 	speedBoostIndex = 0;
 	engPowMultIndex = 0;
 	VehMassMultIndex = 0;
+	current_player_forceshield = 0;
 	InfiniteBoostIndex = 0;
 	SpeedSizeIndex = 0;
 	SpeedPositionIndex = 0;
@@ -3962,6 +3975,7 @@ void add_vehicle_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"speedBoostIndex", std::to_string(speedBoostIndex)});
 	results->push_back(StringPairSettingDBRow{"engPowMultIndex", std::to_string(engPowMultIndex)});
 	results->push_back(StringPairSettingDBRow{"VehMassMultIndex", std::to_string(VehMassMultIndex)});
+	results->push_back(StringPairSettingDBRow{"current_player_forceshield", std::to_string(current_player_forceshield)});
 	results->push_back(StringPairSettingDBRow{"InfiniteBoostIndex", std::to_string(InfiniteBoostIndex)});
 	results->push_back(StringPairSettingDBRow{"TurnSignalsIndex", std::to_string(turnSignalsIndex)});
 	results->push_back(StringPairSettingDBRow{"turnSignalsAngleIndex", std::to_string(turnSignalsAngleIndex)});
@@ -4030,6 +4044,9 @@ void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settin
 		}
 		else if (setting.name.compare("VehMassMultIndex") == 0){
 			VehMassMultIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("current_player_forceshield") == 0) {
+			current_player_forceshield = stoi(setting.value);
 		}
 		else if (setting.name.compare("InfiniteBoostIndex") == 0) {
 			InfiniteBoostIndex = stoi(setting.value);
@@ -4230,6 +4247,11 @@ void onchange_veh_eng_pow_index(int value, SelectFromListMenuItem* source){
 void onchange_veh_mass_index(int value, SelectFromListMenuItem* source){
 	VehMassMultIndex = value;
 	massChanged = true;
+}
+
+void onchange_player_forceshield_mode(int value, SelectFromListMenuItem* source) {
+	current_player_forceshield = value;
+	player_massChanged = true;
 }
 
 void onchange_veh_infiniteboost_index(int value, SelectFromListMenuItem* source) {
