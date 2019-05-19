@@ -26,6 +26,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "area_effect.h"
 #include "prison_break.h"
 #include "road_laws.h"
+#include "vehicles.h"
 
 #include "../version.h"
 #include "../utils.h"
@@ -103,7 +104,7 @@ float been_damaged_health, been_damaged_armor = -1;
 int ragdoll_seconds = 0; //  ragdoll_secs_passed, ragdoll_secs_curr, 
 //
 Ped oldplayerPed = -1;
-int tick, playerDataMenuIndex, playerPrisonMenuIndex = 0;
+int tick, playerDataMenuIndex, playerPrisonMenuIndex, playerForceshieldMenuIndex = 0;
 int scr_tick_secs_passed, scr_tick_secs_curr = 0;
 int NPCragdollMenuIndex = 0;
 int PlayerMovementMenuIndex = 0;
@@ -994,6 +995,11 @@ bool onconfirm_playerPrison_menu(MenuItem<int> choice){
 	return false;
 }
 
+bool onconfirm_playerForceshield_menu(MenuItem<int> choice) {
+
+	return false;
+}
+
 bool process_player_life_menu(){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
@@ -1271,6 +1277,25 @@ bool process_player_prison_menu(){
 	return draw_generic_menu<int>(menuItems, &playerPrisonMenuIndex, caption, onconfirm_playerPrison_menu, NULL, NULL);
 }
 
+bool process_player_forceshield_menu() {
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+
+	std::vector<MenuItem<int> *> menuItems;
+	std::string caption = "Player Force Shield Power Options";
+
+	SelectFromListMenuItem *listItem;
+	//ToggleMenuItem<int>* toggleItem;
+
+	int i = 0;
+	listItem = new SelectFromListMenuItem(VEH_MASS_CAPTIONS, onchange_player_forceshield_mode);
+	listItem->wrap = false;
+	listItem->caption = "Player Force Shield Power";
+	listItem->value = current_player_forceshield;
+	menuItems.push_back(listItem);
+
+	return draw_generic_menu<int>(menuItems, &playerForceshieldMenuIndex, caption, onconfirm_playerForceshield_menu, NULL, NULL);
+}
+
 int activeLineIndexPlayer = 0;
 
 bool onconfirm_player_menu(MenuItem<int> choice){
@@ -1281,10 +1306,10 @@ bool onconfirm_player_menu(MenuItem<int> choice){
 		case 1:
 			heal_player();
 			break;
-		case 4:
+		case 5:
 			maxwantedlevel_menu();
 			break;
-		case 5:
+		case 6:
 			mostwanted_menu();
 			break;
 		case 11:
@@ -1302,6 +1327,9 @@ bool onconfirm_player_menu(MenuItem<int> choice){
 		case 20:
 			process_player_prison_menu();
 			break;
+		case 21:
+			process_player_forceshield_menu();
+			break;
 		default:
 			break;
 	}
@@ -1310,18 +1338,18 @@ bool onconfirm_player_menu(MenuItem<int> choice){
 }
 
 void process_player_menu(){
-	const int lineCount = 21;
+	const int lineCount = 22;
 
 	std::string caption = "Player Options";
 
 	StandardOrToggleMenuDef lines[lineCount] = {
 		{"Player Appearance", NULL, NULL, false},
 		{"Heal Player", NULL, NULL, true},
+		{"Invincible", &featurePlayerInvincible, &featurePlayerInvincibleUpdated, true},
 		{"Add or Remove Cash", NULL, NULL, true, CASH},
 		{"Wanted Level", NULL, NULL, true, WANTED},
 		{"Wanted Level Settings", NULL, NULL, false},
 		{"Wanted Fugitive", NULL, NULL, false},
-		{"Invincible", &featurePlayerInvincible, &featurePlayerInvincibleUpdated, true},
 		{"Police Ignore You", &featurePlayerIgnoredByPolice, NULL, true}, 
 		{"Unlimited Ability", &featurePlayerUnlimitedAbility, NULL, true},
 		{"Noiseless", &featurePlayerNoNoise, NULL, true}, 
@@ -1335,7 +1363,8 @@ void process_player_menu(){
 		{"Thermal Vision", &featureThermalVision, &featureThermalVisionUpdated, true},
 		{"Animations", NULL, NULL, false},
 		{"Player Data", NULL, NULL, false},
-		{"Prison Break", NULL, NULL, false}
+		{"Prison Break", NULL, NULL, false},
+		{"Player Force Shield Power", NULL, NULL, false}
 	};
 
 	draw_menu_from_struct_def(lines, lineCount, &activeLineIndexPlayer, caption, onconfirm_player_menu);

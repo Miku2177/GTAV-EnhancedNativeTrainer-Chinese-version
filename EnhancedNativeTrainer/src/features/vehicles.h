@@ -54,6 +54,13 @@ struct XenonColour {
 };
 extern const std::vector<std::string> VALUES_SUPERCARS;
 
+const std::vector<std::string> VEH_MASS_CAPTIONS{ "1x", "3x", "5x", "10x", "30x", "50x", "Mayhem" };
+const std::vector<int> VEH_MASS_VALUES{ 0, 5, 10, 30, 50, 100, 50000 };
+extern int VehMassMultIndex;
+extern bool massChanged;
+extern int current_player_forceshield;
+extern bool player_massChanged;
+
 /***
 * METHODS
 */
@@ -211,6 +218,8 @@ int get_current_veh_eng_pow_index();
 void onchange_veh_eng_pow_index(int value, SelectFromListMenuItem* source);
 
 void onchange_veh_mass_index(int value, SelectFromListMenuItem* source);
+
+void onchange_player_forceshield_mode(int value, SelectFromListMenuItem* source);
 
 void onchange_veh_infiniteboost_index(int value, SelectFromListMenuItem* source);
 
