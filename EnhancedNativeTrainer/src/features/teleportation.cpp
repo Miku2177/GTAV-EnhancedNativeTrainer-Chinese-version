@@ -1448,7 +1448,7 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 					{
 						INTERIOR::_ENABLE_INTERIOR_PROP(interiorID, prop);
 					}
-					else //if (interiorID != INTERIOR::GET_INTERIOR_AT_COORDS(coords.x, coords.y, coords.z))
+					else if (interiorID != INTERIOR::GET_INTERIOR_AT_COORDS(coords.x, coords.y, coords.z))
 					{
 						INTERIOR::_DISABLE_INTERIOR_PROP(interiorID, prop);
 					}

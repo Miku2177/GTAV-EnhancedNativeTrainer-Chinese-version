@@ -49,6 +49,9 @@ int last_player_slot_seen = 0;
 
 int game_frame_num = 0;
 
+int jumpfly_secs_passed, jumpfly_secs_curr, jumpfly_tick = 0;
+bool skydiving = false;
+
 bool everInitialised = false;
 
 ENTDatabase* database = NULL;
@@ -153,11 +156,13 @@ const int NPC_RAGDOLL_VALUES[] = { 0, 1, 2 };
 int current_npc_ragdoll = 0;
 bool current_npc_ragdoll_Changed = true;
 
-//Player Movement Speed
+//Player Movement Speed && Hancock Mode
 const std::vector<std::string> PLAYER_MOVEMENT_CAPTIONS{ "Normal", "1x", "2x", "3x", "4x", "5x", "6x", "7x", "8x", "9x", "10x" };
 const double PLAYER_MOVEMENT_VALUES[] = { 0.00, 1.00, 2.00, 3.00, 4.00, 5.00, 6.00, 7.00, 8.00, 9.00, 10.00 };
 int current_player_movement = 0;
 bool current_player_movement_Changed = true; 
+int current_player_jumpfly = 0;
+bool current_player_jumpfly_Changed = true;
 
 /* Prop unblocker related code - will need to clean up later*/
 
@@ -209,6 +214,11 @@ void onchange_player_wanted_maxpossible_level_mode(int value, SelectFromListMenu
 void onchange_player_movement_mode(int value, SelectFromListMenuItem* source) {
 	current_player_movement = value;
 	current_player_movement_Changed = true;
+}
+
+void onchange_player_jumpfly_mode(int value, SelectFromListMenuItem* source) {
+	current_player_jumpfly = value;
+	current_player_jumpfly_Changed = true;
 }
 
 void onchange_NPC_ragdoll_mode(int value, SelectFromListMenuItem* source) {
@@ -509,6 +519,51 @@ void update_features(){
 	if(featureWantedLevelFrozenUpdated && !featureWantedLevelFrozen){
 		PLAYER::SET_MAX_WANTED_LEVEL(5);
 		featureWantedLevelFrozenUpdated = false;
+	}
+	
+	// Hancock Mode
+	if (PLAYER_MOVEMENT_VALUES[current_player_jumpfly] > 0.00 && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1)) {
+		Vector3 CamRot = CAM::GET_GAMEPLAY_CAM_ROT(2);
+		int p_force = PLAYER_MOVEMENT_VALUES[current_player_jumpfly]; //5;
+		float rad = 2 * 3.14 * (CamRot.z / 360);
+		float v_x = -(sin(rad) * p_force * 10);
+		float v_y = (cos(rad) * p_force * 10);
+		float v_z = p_force * (CamRot.x * 0.2);
+		if (CONTROLS::IS_CONTROL_PRESSED(2, 22)) {
+			if (!ENTITY::IS_ENTITY_PLAYING_ANIM(PLAYER::PLAYER_PED_ID(), "skydive@base", "free_idle", 3)) AI::TASK_PLAY_ANIM(PLAYER::PLAYER_PED_ID(), "skydive@base", "free_idle", 8.0, 0.0, -1, 9, 0, 0, 0, 0); // free_idle
+			ENTITY::APPLY_FORCE_TO_ENTITY(PLAYER::PLAYER_PED_ID(), 1, 0, 0, p_force, 0, 0, 0, true, false, true, true, true, true);
+			if (ENTITY::IS_ENTITY_PLAYING_ANIM(PLAYER::PLAYER_PED_ID(), "skydive@base", "free_idle", 3)) skydiving = true;
+		}
+		if (CONTROLS::IS_CONTROL_PRESSED(2, 32) && skydiving == true) { // && ENTITY::IS_ENTITY_PLAYING_ANIM(PLAYER::PLAYER_PED_ID(), "skydive@base", "free_idle", 3)
+			if (!ENTITY::IS_ENTITY_PLAYING_ANIM(PLAYER::PLAYER_PED_ID(), "skydive@base", "free_idle", 3)) AI::TASK_PLAY_ANIM(PLAYER::PLAYER_PED_ID(), "skydive@base", "free_idle", 8.0, 0.0, -1, 9, 0, 0, 0, 0); // free_idle
+			ENTITY::SET_ENTITY_ROTATION(PLAYER::PLAYER_PED_ID(), CamRot.x, CamRot.y, CamRot.z, 1, true);
+			ENTITY::APPLY_FORCE_TO_ENTITY(PLAYER::PLAYER_PED_ID(), 1, v_x / 8, v_y / 8, v_z / 8, 0, 0, 0, true, false, true, true, true, true);
+		}
+		if (CONTROLS::IS_CONTROL_PRESSED(2, 33) && skydiving == true) { // && ENTITY::IS_ENTITY_PLAYING_ANIM(PLAYER::PLAYER_PED_ID(), "skydive@base", "free_idle", 3)
+			jumpfly_secs_passed = clock() / CLOCKS_PER_SEC;
+			if (((clock() / (CLOCKS_PER_SEC / 1000)) - jumpfly_secs_curr) != 0) {
+				jumpfly_tick = jumpfly_tick + 1;
+				jumpfly_secs_curr = jumpfly_secs_passed;
+			}
+			if (!ENTITY::IS_ENTITY_PLAYING_ANIM(PLAYER::PLAYER_PED_ID(), "skydive@base", "free_idle", 3)) AI::TASK_PLAY_ANIM(PLAYER::PLAYER_PED_ID(), "skydive@base", "free_idle", 8.0, 0.0, -1, 9, 0, 0, 0, 0); // free_idle
+			ENTITY::SET_ENTITY_ROTATION(PLAYER::PLAYER_PED_ID(), CamRot.x, CamRot.y, CamRot.z, 1, true);
+			if (jumpfly_tick < 10) ENTITY::FREEZE_ENTITY_POSITION(PLAYER::PLAYER_PED_ID(), true);
+			else {
+				ENTITY::FREEZE_ENTITY_POSITION(PLAYER::PLAYER_PED_ID(), false);
+				ENTITY::APPLY_FORCE_TO_ENTITY(PLAYER::PLAYER_PED_ID(), 1, -(v_x / 8), -(v_y / 8), -(v_z / 8), 0, 0, 0, true, false, true, true, true, true);
+			}
+		}
+		if (CONTROLS::IS_CONTROL_RELEASED(2, 33)) { 
+			ENTITY::FREEZE_ENTITY_POSITION(PLAYER::PLAYER_PED_ID(), false);
+			jumpfly_tick = 0; 
+		}
+		if (ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(PLAYER::PLAYER_PED_ID())) { //  && CONTROLS::IS_CONTROL_RELEASED(2, 22) && CONTROLS::IS_CONTROL_RELEASED(2, 32) && CONTROLS::IS_CONTROL_RELEASED(2, 33)
+			skydiving = false;
+			AI::STOP_ANIM_TASK(PLAYER::PLAYER_PED_ID(), "skydive@base", "free_idle", 3);
+		}
+		if (skydiving == false)	AI::STOP_ANIM_TASK(PLAYER::PLAYER_PED_ID(), "skydive@base", "free_idle", 3);
+		if (ENTITY::IS_ENTITY_PLAYING_ANIM(PLAYER::PLAYER_PED_ID(), "skydive@base", "free_idle", 3)) skydiving = true;
+		else skydiving = false;
 	}
 
 	// Can run in apartments
@@ -1101,6 +1156,18 @@ bool player_movement_speed() {
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featurePlayerFastRun;
 	menuItems.push_back(toggleItem);
+	
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Super Jump";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featurePlayerSuperJump;
+	menuItems.push_back(toggleItem);
+	
+	listItem = new SelectFromListMenuItem(PLAYER_MOVEMENT_CAPTIONS, onchange_player_jumpfly_mode);
+	listItem->wrap = false;
+	listItem->caption = "Hancock Mode";
+	listItem->value = current_player_jumpfly;
+	menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(PLAYER_MOVEMENT_CAPTIONS, onchange_player_movement_mode);
 	listItem->wrap = false;
@@ -1223,16 +1290,16 @@ bool onconfirm_player_menu(MenuItem<int> choice){
 		case 11:
 			player_movement_speed();
 			break;
-		case 13:
+		case 12:
 			process_ragdoll_menu();
 			break;
-		case 19:
+		case 18:
 			process_anims_menu_top();
 			break;
-		case 20:
+		case 19:
 			process_player_life_menu();
 			break;
-		case 21:
+		case 20:
 			process_player_prison_menu();
 			break;
 		default:
@@ -1243,7 +1310,7 @@ bool onconfirm_player_menu(MenuItem<int> choice){
 }
 
 void process_player_menu(){
-	const int lineCount = 22;
+	const int lineCount = 21;
 
 	std::string caption = "Player Options";
 
@@ -1260,7 +1327,6 @@ void process_player_menu(){
 		{"Noiseless", &featurePlayerNoNoise, NULL, true}, 
 		{"Can Run In Apartments", &featurePlayerRunApartments, NULL, true},
 		{"Player Movement Speed", NULL, NULL, false},
-		{"Super Jump", &featurePlayerSuperJump, NULL, true},
 		{"Ragdoll", NULL, NULL, false},
 		{"Invisibility", &featurePlayerInvisible, NULL, true}, 
 		{"Invisibility In Vehicle", &featurePlayerInvisibleInVehicle, NULL, true }, 
@@ -1480,6 +1546,7 @@ void reset_globals(){
 	current_player_stats = 6;
 	current_npc_ragdoll = 0;
 	current_player_movement = 0;
+	current_player_jumpfly = 0;
 	current_player_mostwanted = 0;
 	mostwanted_level_enable = 0;
 	wanted_maxpossible_level = 3;
@@ -1767,6 +1834,7 @@ void add_world_feature_enablements3(std::vector<StringPairSettingDBRow>* results
 	results->push_back(StringPairSettingDBRow{"current_player_stats", std::to_string(current_player_stats)});
 	results->push_back(StringPairSettingDBRow{"current_npc_ragdoll", std::to_string(current_npc_ragdoll)});
 	results->push_back(StringPairSettingDBRow{"current_player_movement", std::to_string(current_player_movement)});
+	results->push_back(StringPairSettingDBRow{"current_player_jumpfly", std::to_string(current_player_jumpfly)});
 	results->push_back(StringPairSettingDBRow{"current_player_mostwanted", std::to_string(current_player_mostwanted)});
 	results->push_back(StringPairSettingDBRow{"mostwanted_level_enable", std::to_string(mostwanted_level_enable)});
 	results->push_back(StringPairSettingDBRow{"wanted_maxpossible_level", std::to_string(wanted_maxpossible_level)});
@@ -1858,6 +1926,9 @@ void handle_generic_settings(std::vector<StringPairSettingDBRow> settings){
 		}
 		else if (setting.name.compare("current_player_movement") == 0) {
 			current_player_movement = stoi(setting.value);
+		}
+		else if (setting.name.compare("current_player_jumpfly") == 0) {
+			current_player_jumpfly = stoi(setting.value);
 		}
 		else if (setting.name.compare("current_player_mostwanted") == 0) {
 			current_player_mostwanted = stoi(setting.value);
