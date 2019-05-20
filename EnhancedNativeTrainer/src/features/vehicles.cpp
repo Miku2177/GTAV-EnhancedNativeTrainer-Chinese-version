@@ -112,6 +112,9 @@ BOOL highbeamsAutoOn = -1;
 bool no_autotoggle = false;
 bool autotoggle_temp = false;
 
+bool being_in_city = false;
+bool being_on_motorway = false;
+
 // Remember Vehicles Option Variables
 Blip blip_veh[1];
 std::vector<Blip> BLIPTABLE_VEH;
@@ -148,6 +151,7 @@ int activeLineIndexVeh = 0;
 int activeSavedVehicleIndex = -1;
 int activeLineIndexSpeed = 0;
 int activeLineIndexVisualize = 0;
+int activeLineIndexSpeedlimit = 0;
 int activeLineIndexFuel = 0;
 int activeLineIndexEngineDegrade = 0;
 int activeLineIndexRemember = 0;
@@ -209,12 +213,16 @@ int VisLight3dIndex = 0;
 bool VisLight3d_Changed = true;
 
 //Speed Limiter
-const std::vector<std::string> VEH_SPEEDLIMITER_CAPTIONS{ "OFF", "10 (MPH)", "20 (MPH)", "30 (MPH)", "40 (MPH)", "50 (MPH)", "60 (MPH)", "70 (MPH)", "80 (MPH)", "90 (MPH)", "100 (MPH)", "120 (MPH)", "150 (MPH)", "180 (MPH)", "200 (MPH)" };
-const std::vector<int> VEH_SPEEDLIMITER_VALUES{ 0, 4, 9, 13, 18, 22, 27, 31, 36, 40, 44, 53, 67, 80, 89 };
+const std::vector<std::string> VEH_SPEEDLIMITER_CAPTIONS{ "OFF", "10 (MPH)", "20 (MPH)", "30 (MPH)", "40 (MPH)", "50 (MPH)", "60 (MPH)", "70 (MPH)", "80 (MPH)", "90 (MPH)", "100 (MPH)", "110 (MPH)", "120 (MPH)", "130 (MPH)", "140 (MPH)", "150 (MPH)", "180 (MPH)", "200 (MPH)" };
+const std::vector<int> VEH_SPEEDLIMITER_VALUES{ 0, 4, 9, 13, 18, 22, 27, 31, 36, 40, 44, 48, 53, 57, 61, 66, 80, 89 };
 int speedLimiterIndex = 0;
 bool speedLimiterChanged = true;
 int DoorAutolockIndex = 0;
 bool DoorAutolockChanged = true;
+int speedCityLimiterIndex = 0;
+bool speedCityLimiterChanged = true;
+int speedCountryLimiterIndex = 0;
+bool speedCountryLimiterChanged = true;
 
 //Lights OFF
 const std::vector<std::string> VEH_LIGHTSOFF_CAPTIONS{ "Never", "Daytime Only", "Always" };
@@ -1042,6 +1050,42 @@ void process_visualize_menu() {
 	draw_generic_menu<int>(menuItems, &activeLineIndexVisualize, caption, onconfirm_visualize_menu, NULL, NULL);
 }
 
+bool onconfirm_speedlimit_menu(MenuItem<int> choice)
+{
+	return false;
+}
+
+void process_speedlimit_menu() {
+	std::string caption = "Speed Limit Options";
+
+	std::vector<MenuItem<int>*> menuItems;
+
+	SelectFromListMenuItem *listItem;
+	ToggleMenuItem<int>* toggleItem;
+
+	int i = 0;
+
+	listItem = new SelectFromListMenuItem(VEH_SPEEDLIMITER_CAPTIONS, onchange_veh_speedlimiter_index);
+	listItem->wrap = false;
+	listItem->caption = "Common Speed Limit";
+	listItem->value = speedLimiterIndex;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(VEH_SPEEDLIMITER_CAPTIONS, onchange_veh_cityspeedlimiter_index);
+	listItem->wrap = false;
+	listItem->caption = "City Auto Speed Limit";
+	listItem->value = speedCityLimiterIndex;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(VEH_SPEEDLIMITER_CAPTIONS, onchange_veh_countryspeedlimiter_index);
+	listItem->wrap = false;
+	listItem->caption = "Country Auto Speed Limit";
+	listItem->value = speedCountryLimiterIndex;
+	menuItems.push_back(listItem);
+
+	draw_generic_menu<int>(menuItems, &activeLineIndexSpeedlimit, caption, onconfirm_speedlimit_menu, NULL, NULL);
+}
+
 bool onconfirm_fuel_colour_menu(MenuItem<int> choice)
 {
 	return false;
@@ -1607,13 +1651,13 @@ bool onconfirm_veh_menu(MenuItem<int> choice){
 		case 2: // fix
 			fix_vehicle();
 			break;
-		case 3: // clean
+		case 4: // clean
 			clean_vehicle();
 			break;
-		case 5: // paint
+		case 6: // paint
 			if(process_paint_menu()) return false;
 			break;
-		case 6: // mods
+		case 7: // mods
 			if(process_vehmod_menu()) return false;
 			break;
 		//case 6: // Plane bombs -- incomplete so commenting out in mean time
@@ -1631,6 +1675,9 @@ bool onconfirm_veh_menu(MenuItem<int> choice){
 			break;
 		case 22: // vehicle indicators menu
 			process_visualize_menu();
+			break;
+		case 25: // vehicle indicators menu
+			process_speedlimit_menu();
 			break;
 		case 28: // fuel menu
 			process_fuel_menu();
@@ -1679,6 +1726,12 @@ void process_veh_menu(){
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
+	listItem = new SelectFromListMenuItem(VEH_INVINC_MODE_CAPTIONS, onchange_veh_invincibility_mode);
+	listItem->wrap = false;
+	listItem->caption = "Vehicle Invincibility";
+	listItem->value = get_current_veh_invincibility_mode();
+	menuItems.push_back(listItem);
+
 	item = new MenuItem<int>();
 	item->caption = "Clean";
 	item->value = i++;
@@ -1702,12 +1755,6 @@ void process_veh_menu(){
 	item->value = i++;
 	item->isLeaf = false;
 	menuItems.push_back(item);
-
-	listItem = new SelectFromListMenuItem(VEH_INVINC_MODE_CAPTIONS, onchange_veh_invincibility_mode);
-	listItem->wrap = false;
-	listItem->caption = "Vehicle Invincibility";
-	listItem->value = get_current_veh_invincibility_mode();
-	menuItems.push_back(listItem);
 
 	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "No Falling Off/Out";
@@ -1814,11 +1861,17 @@ void process_veh_menu(){
 	listItem->value = AutoShutEngineIndex;
 	menuItems.push_back(listItem);
 
-	listItem = new SelectFromListMenuItem(VEH_SPEEDLIMITER_CAPTIONS, onchange_veh_speedlimiter_index);
-	listItem->wrap = false;
-	listItem->caption = "Speed Limiter";
-	listItem->value = speedLimiterIndex;
-	menuItems.push_back(listItem);
+	item = new MenuItem<int>();
+	item->caption = "Speed Limiter";
+	item->value = i++;
+	item->isLeaf = false;
+	menuItems.push_back(item);
+
+	//listItem = new SelectFromListMenuItem(VEH_SPEEDLIMITER_CAPTIONS, onchange_veh_speedlimiter_index);
+	//listItem->wrap = false;
+	//listItem->caption = "Speed Limiter";
+	//listItem->value = speedLimiterIndex;
+	//menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(VEH_LIGHTSOFF_CAPTIONS, onchange_veh_lightsOff_index);
 	listItem->wrap = false;
@@ -2397,6 +2450,9 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			if (veh_distance_y < 0) veh_distance_y = (veh_distance_y * -1);
 			if (nearbyObj[i] != playerPed) {
 				if (((veh_distance_x + veh_distance_y) < (VEH_MASS_VALUES[VehMassMultIndex] / 1)) || ((veh_distance_x + veh_distance_y) < (VEH_MASS_VALUES[current_player_forceshield] / 1))) {
+					PED::SET_PED_CAN_RAGDOLL(nearbyObj[i], true);
+					PED::SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(nearbyObj[i], true);
+					PED::SET_PED_RAGDOLL_FORCE_FALL(nearbyObj[i]);
 					if (VEH_MASS_VALUES[VehMassMultIndex] > 0 && VEH_MASS_VALUES[VehMassMultIndex] < 101) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyObj[i], 1, v_x, v_y, VEH_MASS_VALUES[VehMassMultIndex] / 3, 0, 0, 0, false, false, true, true, false, true);
 					if (VEH_MASS_VALUES[VehMassMultIndex] == 50000) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyObj[i], 4, (ENTITY::GET_ENTITY_SPEED(my_shield) * VEH_MASS_VALUES[VehMassMultIndex]), 0, 0, 0, 0, 0, 1, true, true, true, true, true);
 					if (VEH_MASS_VALUES[current_player_forceshield] > 0 && VEH_MASS_VALUES[current_player_forceshield] < 101) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyObj[i], 1, v_x, v_y, VEH_MASS_VALUES[current_player_forceshield] / 3, 0, 0, 0, false, false, true, true, false, true);
@@ -2651,17 +2707,56 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && (VEH_SPEEDLIMITER_VALUES[speedLimiterIndex] > 0) && speedlimiter_switch){
 		Vehicle vehlimit = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
-		int vehcurrspeed = ENTITY::GET_ENTITY_SPEED(vehlimit);
-
-		if (vehcurrspeed > VEH_SPEEDLIMITER_VALUES[speedLimiterIndex]) {
-			ENTITY::SET_ENTITY_MAX_SPEED(vehlimit, VEH_SPEEDLIMITER_VALUES[speedLimiterIndex]);
-		}
-
-		if (vehcurrspeed < VEH_SPEEDLIMITER_VALUES[speedLimiterIndex]) {
-			ENTITY::SET_ENTITY_MAX_SPEED(vehlimit, VEH_SPEEDLIMITER_VALUES[speedLimiterIndex]);
-		}
+		ENTITY::SET_ENTITY_MAX_SPEED(vehlimit, VEH_SPEEDLIMITER_VALUES[speedLimiterIndex]);
 	}
-	else {
+	 
+	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && ((VEH_SPEEDLIMITER_VALUES[speedCityLimiterIndex] > 0) || (VEH_SPEEDLIMITER_VALUES[speedCountryLimiterIndex] > 0))) {
+		Vehicle vehlimit = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
+		Vector3 vehme_coords = ENTITY::GET_ENTITY_COORDS(vehlimit, true);
+
+		char* temp_zone_name = ZONE::GET_NAME_OF_ZONE(vehme_coords.x, vehme_coords.y, vehme_coords.z);
+		if (strcmp(temp_zone_name, "PALETO") == 0 || strcmp(temp_zone_name, "PALFOR") == 0 || strcmp(temp_zone_name, "GRAPES") == 0 || strcmp(temp_zone_name, "SANDY") == 0 || strcmp(temp_zone_name, "RICHM") == 0 ||
+			strcmp(temp_zone_name, "GOLF") == 0 || strcmp(temp_zone_name, "MORN") == 0 || strcmp(temp_zone_name, "ROCKF") == 0 || strcmp(temp_zone_name, "WVINE") == 0 || strcmp(temp_zone_name, "BURTON") == 0 ||
+			strcmp(temp_zone_name, "DTVINE") == 0 || strcmp(temp_zone_name, "HAWICK") == 0 || strcmp(temp_zone_name, "ALTA") == 0 || strcmp(temp_zone_name, "EAST_V") == 0 || strcmp(temp_zone_name, "DELBE") == 0 ||
+			strcmp(temp_zone_name, "DELPE") == 0 || strcmp(temp_zone_name, "MOVIE") == 0 || strcmp(temp_zone_name, "KOREAT") == 0 || strcmp(temp_zone_name, "VINE") == 0 || strcmp(temp_zone_name, "DOWNT") == 0 ||
+			strcmp(temp_zone_name, "VESP") == 0 || strcmp(temp_zone_name, "PBOX") == 0 || strcmp(temp_zone_name, "TEXTI") == 0 || strcmp(temp_zone_name, "SKID") == 0 || strcmp(temp_zone_name, "LMESA") == 0 ||
+			strcmp(temp_zone_name, "MIRR") == 0 || strcmp(temp_zone_name, "MURRI") == 0 || strcmp(temp_zone_name, "BEACH") == 0 || strcmp(temp_zone_name, "DELSOL") == 0 || strcmp(temp_zone_name, "STRAW") == 0 ||
+			strcmp(temp_zone_name, "CHAMH") == 0 || strcmp(temp_zone_name, "STAD") == 0 || strcmp(temp_zone_name, "DAVIS") == 0 || strcmp(temp_zone_name, "RANCHO") == 0 || strcmp(temp_zone_name, "BANNING") == 0 ||
+			strcmp(temp_zone_name, "CYPRE") == 0 || strcmp(temp_zone_name, "HARMO") == 0 || strcmp(temp_zone_name, "PBLUFF") == 0) {
+			being_in_city = true;
+			being_on_motorway = false;
+		}
+
+		if (strcmp(temp_zone_name, "PALHIGH") == 0 || strcmp(temp_zone_name, "TATAMO") == 0 || strcmp(temp_zone_name, "CHIL") == 0 || strcmp(temp_zone_name, "WINDF") == 0 || strcmp(temp_zone_name, "SANCHIA") == 0 ||
+			strcmp(temp_zone_name, "MTGORDO") == 0 || strcmp(temp_zone_name, "BRADP") == 0 || strcmp(temp_zone_name, "MTCHIL") == 0 || strcmp(temp_zone_name, "CMSW") == 0 || strcmp(temp_zone_name, "NCHU") == 0 ||
+			strcmp(temp_zone_name, "LAGO") == 0 || strcmp(temp_zone_name, "TONGVAH") == 0 || strcmp(temp_zone_name, "CHU") == 0 || strcmp(temp_zone_name, "BANHAMC") == 0 || strcmp(temp_zone_name, "DESRT") == 0 ||
+			strcmp(temp_zone_name, "BHAMCA") == 0) {
+			being_on_motorway = true;
+			being_in_city = false;
+		}
+
+		if (strcmp(temp_zone_name, "AIRP") == 0 || strcmp(temp_zone_name, "ALAMO") == 0 || strcmp(temp_zone_name, "ARMYB") == 0 || strcmp(temp_zone_name, "BRADT") == 0 || strcmp(temp_zone_name, "CALAFB") == 0 ||
+			strcmp(temp_zone_name, "CANNY") == 0 || strcmp(temp_zone_name, "CCREAK") == 0 || strcmp(temp_zone_name, "EBURO") == 0 || strcmp(temp_zone_name, "ELGORL") == 0 || strcmp(temp_zone_name, "ELYSIAN") == 0 ||
+			strcmp(temp_zone_name, "GALFISH") == 0 || strcmp(temp_zone_name, "GREATC") == 0 || strcmp(temp_zone_name, "HORS") == 0 || strcmp(temp_zone_name, "HUMLAB") == 0 || strcmp(temp_zone_name, "JAIL") == 0 ||
+			strcmp(temp_zone_name, "LACT") == 0 || strcmp(temp_zone_name, "LDAM") == 0 || strcmp(temp_zone_name, "LEGSQU") == 0 || strcmp(temp_zone_name, "LOSPUER") == 0 || strcmp(temp_zone_name, "MTJOSE") == 0 ||
+			strcmp(temp_zone_name, "NOOSE") == 0 || strcmp(temp_zone_name, "OCEANA") == 0 || strcmp(temp_zone_name, "PALCOV") == 0 || strcmp(temp_zone_name, "PALMPOW") == 0 || strcmp(temp_zone_name, "PROCOB") == 0 ||
+			strcmp(temp_zone_name, "RGLEN") == 0 || strcmp(temp_zone_name, "RTRAK") == 0 || strcmp(temp_zone_name, "SANAND") == 0 || strcmp(temp_zone_name, "SLAB") == 0 || strcmp(temp_zone_name, "TERMINA") == 0 ||
+			strcmp(temp_zone_name, "TONGVAV") == 0 || strcmp(temp_zone_name, "VCANA") == 0 || strcmp(temp_zone_name, "ZANCUDO") == 0 || strcmp(temp_zone_name, "ZP_ORT") == 0 || strcmp(temp_zone_name, "ZQ_UAR") == 0)
+		{
+			being_in_city = false;
+			being_on_motorway = false;
+		}
+
+		if ((VEH_SPEEDLIMITER_VALUES[speedCityLimiterIndex] > 0) && being_in_city == true) ENTITY::SET_ENTITY_MAX_SPEED(vehlimit, VEH_SPEEDLIMITER_VALUES[speedCityLimiterIndex]);
+		if ((VEH_SPEEDLIMITER_VALUES[speedCountryLimiterIndex] > 0) && being_on_motorway == true) ENTITY::SET_ENTITY_MAX_SPEED(vehlimit, VEH_SPEEDLIMITER_VALUES[speedCountryLimiterIndex]);
+		if (being_in_city == false && being_on_motorway == false) ENTITY::SET_ENTITY_MAX_SPEED(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 15000.0);
+	}
+
+	if ((((VEH_SPEEDLIMITER_VALUES[speedCityLimiterIndex] == 0 && being_in_city == true && VEH_SPEEDLIMITER_VALUES[speedCountryLimiterIndex] > 0 && being_on_motorway == false) || 
+		(VEH_SPEEDLIMITER_VALUES[speedCityLimiterIndex] > 0 && being_in_city == false && VEH_SPEEDLIMITER_VALUES[speedCountryLimiterIndex] == 0 && being_on_motorway == true)) &&
+		((VEH_SPEEDLIMITER_VALUES[speedLimiterIndex] > 0 && !speedlimiter_switch) || VEH_SPEEDLIMITER_VALUES[speedLimiterIndex] == 0)) ||
+		(VEH_SPEEDLIMITER_VALUES[speedCityLimiterIndex] == 0 && VEH_SPEEDLIMITER_VALUES[speedCountryLimiterIndex] == 0 && VEH_SPEEDLIMITER_VALUES[speedLimiterIndex] == 0) ||
+		(VEH_SPEEDLIMITER_VALUES[speedLimiterIndex] > 0 && !speedlimiter_switch && VEH_SPEEDLIMITER_VALUES[speedCityLimiterIndex] == 0 && VEH_SPEEDLIMITER_VALUES[speedCountryLimiterIndex] == 0)) {
 		ENTITY::SET_ENTITY_MAX_SPEED(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 15000.0);
 		std::vector<int> emptyVec;
 		if (!VEH_SPEEDLIMITER_VALUES.empty()) std::vector<int>(VEH_SPEEDLIMITER_VALUES).swap(emptyVec);
@@ -3143,6 +3238,7 @@ void reset_vehicle_globals() {
 
 	activeLineIndexSpeed = 0;
 	activeLineIndexVisualize = 0;
+	activeLineIndexSpeedlimit = 0;
 	activeLineIndexFuel = 0;
 	activeLineIndexEngineDegrade = 0;
 	activeLineIndexRemember = 0;
@@ -3156,6 +3252,8 @@ void reset_vehicle_globals() {
 	DoorAutolockIndex = 0;
 	turnSignalsAccelerationIndex = 4;
 	speedLimiterIndex = 0;
+	speedCityLimiterIndex = 0;
+	speedCountryLimiterIndex = 0;
 	lightsOffIndex = 0;
 	speedBoostIndex = 0;
 	engPowMultIndex = 0;
@@ -3982,6 +4080,8 @@ void add_vehicle_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"DoorAutolockIndex", std::to_string(DoorAutolockIndex)});
 	results->push_back(StringPairSettingDBRow{"turnSignalsAccelerationIndex", std::to_string(turnSignalsAccelerationIndex)});
 	results->push_back(StringPairSettingDBRow{"speedLimiterIndex", std::to_string(speedLimiterIndex)});
+	results->push_back(StringPairSettingDBRow{"speedCityLimiterIndex", std::to_string(speedCityLimiterIndex)});
+	results->push_back(StringPairSettingDBRow{"speedCountryLimiterIndex", std::to_string(speedCountryLimiterIndex)});
 	results->push_back(StringPairSettingDBRow{"lightsOffIndex", std::to_string(lightsOffIndex)});
 	results->push_back(StringPairSettingDBRow{"SpeedSizeIndex", std::to_string(SpeedSizeIndex)});
 	results->push_back(StringPairSettingDBRow{"SpeedPositionIndex", std::to_string(SpeedPositionIndex)});
@@ -4065,6 +4165,12 @@ void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settin
 		}
 		else if (setting.name.compare("speedLimiterIndex") == 0){
 			speedLimiterIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("speedCityLimiterIndex") == 0) {
+			speedCityLimiterIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("speedCountryLimiterIndex") == 0) {
+			speedCountryLimiterIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("lightsOffIndex") == 0){
 			lightsOffIndex = stoi(setting.value);
@@ -4282,6 +4388,16 @@ void onchange_veh_lightsOff_index(int value, SelectFromListMenuItem* source){
 void onchange_veh_speedlimiter_index(int value, SelectFromListMenuItem* source){
 	speedLimiterIndex = value;
 	speedLimiterChanged = true;
+}
+
+void onchange_veh_cityspeedlimiter_index(int value, SelectFromListMenuItem* source) {
+	speedCityLimiterIndex = value;
+	speedCityLimiterChanged = true;
+}
+
+void onchange_veh_countryspeedlimiter_index(int value, SelectFromListMenuItem* source) {
+	speedCountryLimiterIndex = value;
+	speedCountryLimiterChanged = true;
 }
 
 void onchange_speed_size_index(int value, SelectFromListMenuItem* source){
