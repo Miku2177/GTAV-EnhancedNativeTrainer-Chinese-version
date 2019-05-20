@@ -315,6 +315,10 @@ void onchange_veh_turn_signals_acceleration_index(int value, SelectFromListMenuI
 
 void onchange_veh_speedlimiter_index(int value, SelectFromListMenuItem* source);
 
+void onchange_veh_cityspeedlimiter_index(int value, SelectFromListMenuItem* source);
+
+void onchange_veh_countryspeedlimiter_index(int value, SelectFromListMenuItem* source);
+
 void onchange_veh_enginerunning_index(int value, SelectFromListMenuItem* source);
 
 void onchange_veh_autoshutengine_index(int value, SelectFromListMenuItem* source);

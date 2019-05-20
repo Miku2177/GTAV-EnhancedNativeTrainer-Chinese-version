@@ -494,7 +494,7 @@ bool process_paint_menu(){
 		menuItems.push_back(item);
 	}
 
-	return draw_generic_menu<int>(menuItems, 0, "Choose which part to paint", onconfirm_paint_menu, NULL, NULL, vehicle_menu_interrupt);
+	return draw_generic_menu<int>(menuItems, 0, "Choose Which Part To Paint", onconfirm_paint_menu, NULL, NULL, vehicle_menu_interrupt);
 }
 
 bool onconfirm_paint_menu_type(MenuItem<int> choice){
