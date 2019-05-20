@@ -192,17 +192,33 @@ void road_laws()
 			}
 		}
 		else if (been_seen_by_a_cop == false) speedingincity_check = false;
-
+		
+		// Speeding On A Motorway
 		if (VEH_SPEEDINGCITY_VALUES[SpeedingSpeedwayIndex] > 0 && vehroadlaws_speed * 2.3 > VEH_SPEEDINGCITY_VALUES[SpeedingSpeedwayIndex] && PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) {
 			if (strcmp(temp_zone_name, "PALHIGH") == 0 || strcmp(temp_zone_name, "TATAMO") == 0 || strcmp(temp_zone_name, "CHIL") == 0 || strcmp(temp_zone_name, "WINDF") == 0 || strcmp(temp_zone_name, "SANCHIA") == 0 ||
 				strcmp(temp_zone_name, "MTGORDO") == 0 || strcmp(temp_zone_name, "BRADP") == 0 || strcmp(temp_zone_name, "MTCHIL") == 0 || strcmp(temp_zone_name, "CMSW") == 0 || strcmp(temp_zone_name, "NCHU") == 0 ||
 				strcmp(temp_zone_name, "LAGO") == 0 || strcmp(temp_zone_name, "TONGVAH") == 0 || strcmp(temp_zone_name, "CHU") == 0 || strcmp(temp_zone_name, "BANHAMC") == 0 || strcmp(temp_zone_name, "DESRT") == 0 ||
-				strcmp(temp_zone_name, "BHAMCA") == 0) {
+				strcmp(temp_zone_name, "BHAMCA") == 0 || strcmp(temp_zone_name, "RGLEN") == 0 || strcmp(temp_zone_name, "GREATC") == 0) {
 				speedingonspeedway_check = true;
 				speedingincity_check = false;
 			}
 		}
 		else if (been_seen_by_a_cop == false) speedingonspeedway_check = false;
+
+		// Neutral territories where nobody cares about speeding
+		char* temp_zone_name3 = ZONE::GET_NAME_OF_ZONE(vehroadlaws_coords.x, vehroadlaws_coords.y, vehroadlaws_coords.z);
+		if (been_seen_by_a_cop == false) {
+			if (strcmp(temp_zone_name3, "AIRP") == 0 || strcmp(temp_zone_name3, "ALAMO") == 0 || strcmp(temp_zone_name3, "ARMYB") == 0 || strcmp(temp_zone_name3, "BRADT") == 0 || strcmp(temp_zone_name3, "CALAFB") == 0 ||
+				strcmp(temp_zone_name3, "CANNY") == 0 || strcmp(temp_zone_name3, "CCREAK") == 0 || strcmp(temp_zone_name3, "EBURO") == 0 || strcmp(temp_zone_name3, "ELGORL") == 0 || strcmp(temp_zone_name3, "ELYSIAN") == 0 ||
+				strcmp(temp_zone_name3, "GALFISH") == 0 || strcmp(temp_zone_name3, "HORS") == 0 || strcmp(temp_zone_name3, "HUMLAB") == 0 || strcmp(temp_zone_name3, "JAIL") == 0 ||
+				strcmp(temp_zone_name3, "LACT") == 0 || strcmp(temp_zone_name3, "LDAM") == 0 || strcmp(temp_zone_name3, "LEGSQU") == 0 || strcmp(temp_zone_name3, "LOSPUER") == 0 || strcmp(temp_zone_name3, "MTJOSE") == 0 ||
+				strcmp(temp_zone_name3, "NOOSE") == 0 || strcmp(temp_zone_name3, "OCEANA") == 0 || strcmp(temp_zone_name3, "PALCOV") == 0 || strcmp(temp_zone_name3, "PALMPOW") == 0 || strcmp(temp_zone_name3, "PROCOB") == 0 ||
+				strcmp(temp_zone_name3, "RTRAK") == 0 || strcmp(temp_zone_name3, "SANAND") == 0 || strcmp(temp_zone_name3, "SLAB") == 0 || strcmp(temp_zone_name3, "TERMINA") == 0 ||
+				strcmp(temp_zone_name3, "TONGVAV") == 0 || strcmp(temp_zone_name3, "VCANA") == 0 || strcmp(temp_zone_name3, "ZANCUDO") == 0 || strcmp(temp_zone_name3, "ZP_ORT") == 0 || strcmp(temp_zone_name3, "ZQ_UAR") == 0) {
+				speedingincity_check = false;
+				speedingonspeedway_check = false;
+			}
+		}
 
 		// Speeding On A Motorway
 		/*if (VEH_SPEEDINGCITY_VALUES[SpeedingSpeedwayIndex] > 0 && vehroadlaws_speed * 2.3 > VEH_SPEEDINGCITY_VALUES[SpeedingSpeedwayIndex] && PED::IS_PED_IN_ANY_VEHICLE(playerPed, true))
@@ -225,20 +241,6 @@ void road_laws()
 				speedingonspeedway_check = false;
 		}
 		else if (been_seen_by_a_cop == false) speedingonspeedway_check = false;*/
-
-		// Neutral territories so nobody cares about speeding
-		char* temp_zone_name3 = ZONE::GET_NAME_OF_ZONE(vehroadlaws_coords.x, vehroadlaws_coords.y, vehroadlaws_coords.z);
-		if (strcmp(temp_zone_name3, "AIRP") == 0 || strcmp(temp_zone_name3, "ALAMO") == 0 || strcmp(temp_zone_name3, "ARMYB") == 0 || strcmp(temp_zone_name3, "BRADT") == 0 || strcmp(temp_zone_name3, "CALAFB") == 0 ||
-			strcmp(temp_zone_name3, "CANNY") == 0 || strcmp(temp_zone_name3, "CCREAK") == 0 || strcmp(temp_zone_name3, "EBURO") == 0 || strcmp(temp_zone_name3, "ELGORL") == 0 || strcmp(temp_zone_name3, "ELYSIAN") == 0 ||
-			strcmp(temp_zone_name3, "GALFISH") == 0 || strcmp(temp_zone_name3, "GREATC") == 0 || strcmp(temp_zone_name3, "HORS") == 0 || strcmp(temp_zone_name3, "HUMLAB") == 0 || strcmp(temp_zone_name3, "JAIL") == 0 ||
-			strcmp(temp_zone_name3, "LACT") == 0 || strcmp(temp_zone_name3, "LDAM") == 0 || strcmp(temp_zone_name3, "LEGSQU") == 0 || strcmp(temp_zone_name3, "LOSPUER") == 0 || strcmp(temp_zone_name3, "MTJOSE") == 0 ||
-			strcmp(temp_zone_name3, "NOOSE") == 0 || strcmp(temp_zone_name3, "OCEANA") == 0 || strcmp(temp_zone_name3, "PALCOV") == 0 || strcmp(temp_zone_name3, "PALMPOW") == 0 || strcmp(temp_zone_name3, "PROCOB") == 0 ||
-			strcmp(temp_zone_name3, "RGLEN") == 0 || strcmp(temp_zone_name3, "RTRAK") == 0 || strcmp(temp_zone_name3, "SANAND") == 0 || strcmp(temp_zone_name3, "SLAB") == 0 || strcmp(temp_zone_name3, "TERMINA") == 0 ||
-			strcmp(temp_zone_name3, "TONGVAV") == 0 || strcmp(temp_zone_name3, "VCANA") == 0 || strcmp(temp_zone_name3, "ZANCUDO") == 0 || strcmp(temp_zone_name3, "ZP_ORT") == 0 || strcmp(temp_zone_name3, "ZQ_UAR") == 0)
-		{
-			speedingincity_check = false;
-			speedingonspeedway_check = false;
-		}
 
 		// Stolen Vehicle 
 		if (featureStolenVehicle) {
