@@ -47,6 +47,8 @@ bool feature3rdpersonviewonly, featureDaytimeonly = false;
 
 bool window_up = true;
 
+int veh_jumped_n = 0;
+
 int Accel_secs_passed, Accel_secs_curr, Accel_seconds = 0;
 
 Vehicle current_veh_e = -1;
@@ -201,6 +203,8 @@ const std::vector<std::string> VEH_TURN_SIGNALS_ACCELERATION_CAPTIONS{ "OFF", "1
 const std::vector<int> VEH_TURN_SIGNALS_ACCELERATION_VALUES{ 0, 1, 2, 3, 4, 5, 7, 10 };
 int turnSignalsAccelerationIndex = 4;
 bool turnSignalsAccelerationChanged = true;
+int JumpyVehIndex = 0;
+bool JumpyVehChanged = true;
 
 //Visualize Vehicle Indicators (Sprite)
 const std::vector<std::string> VEH_VISLIGHT_CAPTIONS{ "OFF", "1x", "3x", "5x", "7x", "10x", "12x" };
@@ -276,6 +280,12 @@ const std::vector<std::string> VEH_AUTO_SHUT_ENGINE_CAPTIONS{ "OFF", "5", "10", 
 const std::vector<int> VEH_AUTO_SHUT_ENGINE_VALUES{ 0, 5, 10, 20, 30 };
 int AutoShutEngineIndex = 0;
 bool AutoShutEngineChanged = true;
+
+// Hydraulics
+const std::vector<std::string> VEH_HYDRAULICS_CAPTIONS{ "OFF", "0.20", "0.10", "-0.10", "-0.20" };
+const std::vector<float> VEH_HYDRAULICS_VALUES{ 0.0f, 0.20f, 0.10f, -0.10f, -0.20f };
+int HydraulicsIndex = 0;
+//bool HydraulicsChanged = true;
 
 // player in vehicle state... assume true initially since our quicksave might have us in a vehicle already, in which case we can't check if we just got into one
 bool oldVehicleState = true;
@@ -1958,6 +1968,18 @@ void process_veh_menu(){
 	toggleItem->toggleValue = &featureTractionControl;
 	menuItems.push_back(toggleItem);
 
+	listItem = new SelectFromListMenuItem(VEH_TURN_SIGNALS_ACCELERATION_CAPTIONS, onchange_veh_jumpy_index);
+	listItem->wrap = false;
+	listItem->caption = "Vehicle Jump";
+	listItem->value = JumpyVehIndex;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(VEH_HYDRAULICS_CAPTIONS, onchange_veh_hydraulics_index);
+	listItem->wrap = false;
+	listItem->caption = "Suspension Height";
+	listItem->value = HydraulicsIndex;
+	menuItems.push_back(listItem);
+
 	draw_generic_menu<int>(menuItems, &activeLineIndexVeh, caption, onconfirm_veh_menu, NULL, NULL);
 }
 
@@ -3152,6 +3174,33 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 ///////////////////////////////////////////////////////////////////////////////////
 
+/////////////////////////////////// VEHICLE HYDRAULICS ////////////////////////////
+
+	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) && VEH_HYDRAULICS_VALUES[HydraulicsIndex] != 0.0f) {
+		Vehicle myVehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
+		if (VEHICLE::IS_VEHICLE_ON_ALL_WHEELS(myVehicle))
+			ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, VEH_HYDRAULICS_VALUES[HydraulicsIndex], 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
+	}
+
+///////////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////// JUMPY VEHICLE /////////////////////////////////
+
+	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) && VEH_TURN_SIGNALS_ACCELERATION_VALUES[JumpyVehIndex] > 0) {
+		Vehicle myVehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
+		if (CONTROLS::IS_CONTROL_JUST_PRESSED(2, 22)) {
+			veh_jumped_n = veh_jumped_n + 1;
+			if (veh_jumped_n < 4) {
+				ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0, 0, VEH_TURN_SIGNALS_ACCELERATION_VALUES[JumpyVehIndex], 0, 0, 0, true, false, true, true, true, true);
+				Vector3 curr_rot = ENTITY::GET_ENTITY_ROTATION(myVehicle, 1);
+				ENTITY::SET_ENTITY_ROTATION(myVehicle, curr_rot.x, curr_rot.y, curr_rot.z, 1, 1);
+			}
+		}
+		if ((veh_jumped_n > 3 && VEHICLE::IS_VEHICLE_ON_ALL_WHEELS(myVehicle)) || VEHICLE::IS_VEHICLE_ON_ALL_WHEELS(myVehicle)) veh_jumped_n = 0;
+	}
+
+///////////////////////////////////////////////////////////////////////////////////
+
 	if(bPlayerExists) {
 		if(featureVehLightsOnUpdated || did_player_just_enter_vehicle(playerPed)){
 			if(featureVehLightsOn){
@@ -3251,6 +3300,7 @@ void reset_vehicle_globals() {
 	turnSignalsAngleIndex = 5;
 	DoorAutolockIndex = 0;
 	turnSignalsAccelerationIndex = 4;
+	JumpyVehIndex = 0;
 	speedLimiterIndex = 0;
 	speedCityLimiterIndex = 0;
 	speedCountryLimiterIndex = 0;
@@ -3275,6 +3325,7 @@ void reset_vehicle_globals() {
 	StarsPunishIndex = 0;
 	EngineRunningIndex = 0;
 	AutoShutEngineIndex = 0;
+	HydraulicsIndex = 0;
 	VisLightIndex = 0;
 	VisLight3dIndex = 0;
 	SpeedingSpeedwayIndex = 5;
@@ -4079,6 +4130,7 @@ void add_vehicle_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"turnSignalsAngleIndex", std::to_string(turnSignalsAngleIndex)});
 	results->push_back(StringPairSettingDBRow{"DoorAutolockIndex", std::to_string(DoorAutolockIndex)});
 	results->push_back(StringPairSettingDBRow{"turnSignalsAccelerationIndex", std::to_string(turnSignalsAccelerationIndex)});
+	results->push_back(StringPairSettingDBRow{"JumpyVehIndex", std::to_string(JumpyVehIndex)});
 	results->push_back(StringPairSettingDBRow{"speedLimiterIndex", std::to_string(speedLimiterIndex)});
 	results->push_back(StringPairSettingDBRow{"speedCityLimiterIndex", std::to_string(speedCityLimiterIndex)});
 	results->push_back(StringPairSettingDBRow{"speedCountryLimiterIndex", std::to_string(speedCountryLimiterIndex)});
@@ -4097,6 +4149,7 @@ void add_vehicle_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"StarsPunishIndex", std::to_string(StarsPunishIndex)});
 	results->push_back(StringPairSettingDBRow{"EngineRunningIndex", std::to_string(EngineRunningIndex)});
 	results->push_back(StringPairSettingDBRow{"AutoShutEngineIndex", std::to_string(AutoShutEngineIndex)});
+	results->push_back(StringPairSettingDBRow{"HydraulicsIndex", std::to_string(HydraulicsIndex)});
 	results->push_back(StringPairSettingDBRow{"VisLightIndex", std::to_string(VisLightIndex)});
 	results->push_back(StringPairSettingDBRow{"VisLight3dIndex", std::to_string(VisLight3dIndex)});
 	results->push_back(StringPairSettingDBRow{"SpeedingSpeedwayIndex", std::to_string(SpeedingSpeedwayIndex)});
@@ -4163,6 +4216,9 @@ void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settin
 		else if (setting.name.compare("turnSignalsAccelerationIndex") == 0) {
 			turnSignalsAccelerationIndex = stoi(setting.value);
 		}
+		else if (setting.name.compare("JumpyVehIndex") == 0) {
+			JumpyVehIndex = stoi(setting.value);
+		}
 		else if (setting.name.compare("speedLimiterIndex") == 0){
 			speedLimiterIndex = stoi(setting.value);
 		}
@@ -4216,6 +4272,9 @@ void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settin
 		}
 		else if (setting.name.compare("AutoShutEngineIndex") == 0) {
 			AutoShutEngineIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("HydraulicsIndex") == 0) {
+			HydraulicsIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("VisLightIndex") == 0) {
 			VisLightIndex = stoi(setting.value);
@@ -4380,6 +4439,11 @@ void onchange_veh_turn_signals_acceleration_index(int value, SelectFromListMenuI
 	turnSignalsAccelerationChanged = true;
 }
 
+void onchange_veh_jumpy_index(int value, SelectFromListMenuItem* source) {
+	JumpyVehIndex = value;
+	JumpyVehChanged = true;
+}
+
 void onchange_veh_lightsOff_index(int value, SelectFromListMenuItem* source){
 	lightsOffIndex = value;
 	lightsOffChanged = true;
@@ -4453,6 +4517,10 @@ void onchange_veh_enginerunning_index(int value, SelectFromListMenuItem* source)
 }
 void onchange_veh_autoshutengine_index(int value, SelectFromListMenuItem* source) {
 	AutoShutEngineIndex = value;
+	PositionChanged = true;
+}
+void onchange_veh_hydraulics_index(int value, SelectFromListMenuItem* source) {
+	HydraulicsIndex = value;
 	PositionChanged = true;
 }
 void onchange_veh_vislight_index(int value, SelectFromListMenuItem* source) {
