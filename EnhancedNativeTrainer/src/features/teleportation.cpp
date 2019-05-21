@@ -409,6 +409,7 @@ std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Executive Warehouse (Medium)", 1060.0f, -3100.0f, -40.0f, { "ex_exec_warehouse_placement_interior_0_int_warehouse_m_dlc_milo_" }, {}, {}, false },
 	{ "Executive Warehouse (Large)", 1010.0f, -3100.0f, -40.0f, { "ex_exec_warehouse_placement_interior_2_int_warehouse_l_dlc_milo_" }, {}, {}, false },
 	{ "Foundry", 1082.32f, -1975.65f, 31.4724f }, 
+	{ "Gunrunning Regular", 938.3077f, -3196.1120f, -98.0000f, { "gr_grdlc_interior_placement_interior_1_grdlc_int_02_milo_" }, {}, {}, false },
 	{ "Hangar", -1292.45f, -3015.19f, -44.0864f, IPL_PROPS_DOOMSDAY_MAIN_BASE, {}, { IPL_PROPS_HANGAR }, false },
 	{ "Heist Police Station", 445.488f, -983.779f, 30.6896f, { "" }, {}, {}, false },
 	{ "IAA Server Hub", 2168.08900000f, 2920.89000000f, -85.80049000f, { "xm_x17dlc_int_placement_interior_5_x17dlc_int_facility2_milo_" }, {}, {}, false },
@@ -482,9 +483,6 @@ std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "XS_Arena_Interior_Mod", 205.00000000f, 5180.00000000f, -90.00000000f, { "xs_arena_interior_mod" }, {}, { IPL_PROPS_ARENAWAR_MAIN_PROPS }, false }, // !!
 	{ "XS_Arena_Interior_Mod_2", 170.00000000f, 5190.00000000f, 10.00000000f, { "xs_arena_interior_mod" }, {}, { IPL_PROPS_ARENAWAR_MAIN_PROPS }, false },
 	{ "XS_Arena_Interior_Vip", 2799.52900000f, -3930.53900000f, 184.23560000f, {"xs_arena_interior_vip"}, {}, { IPL_PROPS_ARENAWAR_MAIN_PROPS }, false },
-	//
-	{ "Gunrunning Regular", 938.3077f, -3196.1120f, -98.0000f, { "gr_grdlc_interior_placement_interior_1_grdlc_int_02_milo_" }, {}, {}, false },
-	
 }; 
 
 std::vector<tele_location> LOCATIONS_ACTORS = {

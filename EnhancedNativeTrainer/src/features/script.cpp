@@ -81,13 +81,13 @@ bool featureThermalVision = false;
 bool featureThermalVisionUpdated = false;
 bool featureWantedLevelFrozen = false;
 bool featureWantedLevelFrozenUpdated = false;
+bool featureLevitation = false;
 bool engine_running = true;
 bool engine_switched = false;
 bool engine_killed = false;
 bool we_have_troubles, iaminside = false;
 
 bool p_invisible = false;
-
 bool featurePlayerLife = false;
 bool featurePlayerLifeUpdated = true;
 bool featurePlayerStatsUpdated = true;
@@ -522,6 +522,68 @@ void update_features(){
 		featureWantedLevelFrozenUpdated = false;
 	}
 	
+	// Levitation
+	if (featureLevitation) {
+		if (CONTROLS::IS_CONTROL_RELEASED(2, 22)) set_status_text("Hold 'Jump' to use your force.");
+		Vector3 my_coords = ENTITY::GET_ENTITY_COORDS(playerPed, true);
+		const int arrSize_punch = 1024;
+		Ped surr_p_peds[arrSize_punch];
+		int count_surr_p_peds = worldGetAllPeds(surr_p_peds, arrSize_punch);
+		for (int i = 0; i < count_surr_p_peds; i++) {
+			Vector3 obj_coords = ENTITY::GET_ENTITY_COORDS(surr_p_peds[i], true);
+			int tempgot_x = (my_coords.x - obj_coords.x);
+			int tempgot_y = (my_coords.y - obj_coords.y);
+			int tempgot_z = (my_coords.z - obj_coords.z);
+			if (tempgot_x < 0) tempgot_x = (tempgot_x * -1);
+			if (tempgot_y < 0) tempgot_y = (tempgot_y * -1);
+			if (tempgot_z < 0) tempgot_z = (tempgot_z * -1);
+			if (PED::GET_PED_TYPE(surr_p_peds[i]) != 0 && PED::GET_PED_TYPE(surr_p_peds[i]) != 1 && PED::GET_PED_TYPE(surr_p_peds[i]) != 2 && PED::GET_PED_TYPE(surr_p_peds[i]) != 3) {
+				if (CONTROLS::IS_CONTROL_PRESSED(2, 22) && tempgot_x < 20 && tempgot_y < 20 && tempgot_z < 20) {
+					PED::SET_PED_CAN_RAGDOLL(surr_p_peds[i], true);
+					PED::SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(surr_p_peds[i], true);
+					PED::SET_PED_RAGDOLL_FORCE_FALL(surr_p_peds[i]);
+					STREAMING::REQUEST_ANIM_DICT("dead@fall");
+					while (!STREAMING::HAS_ANIM_DICT_LOADED("dead@fall")) WAIT(0);
+					if (!ENTITY::IS_ENTITY_PLAYING_ANIM(surr_p_peds[i], "dead@fall", "dead_fall_down", 3)) {
+						AI::TASK_PLAY_ANIM(surr_p_peds[i], "dead@fall", "dead_fall_down", 8.0, 0.0, -1, 9, 0, 0, 0, 0);
+						PED::SET_PED_TO_RAGDOLL(surr_p_peds[i], 1, 1, 1, 1, 1, 1);
+					}
+					ENTITY::APPLY_FORCE_TO_ENTITY(surr_p_peds[i], 1, 0, 0, 0.4, 0, 0, 0, true, false, true, true, true, true);
+				}
+				if (CONTROLS::IS_CONTROL_RELEASED(2, 22)) {
+					AI::STOP_ANIM_TASK(surr_p_peds[i], "dead@fall", "dead_fall_down", 1.0);
+					ENTITY::APPLY_FORCE_TO_ENTITY(surr_p_peds[i], 4, 0, 0, -50, 0, 0, 0, 1, true, true, false, true, true);
+				}
+			}
+		} // end of int (peds)
+		Object surr_objects[arrSize_punch];
+		int count_surr_o = worldGetAllObjects(surr_objects, arrSize_punch);
+		for (int i = 0; i < count_surr_o; i++) {
+			Vector3 obj_coords = ENTITY::GET_ENTITY_COORDS(surr_objects[i], true);
+			int tempgot_x = (my_coords.x - obj_coords.x);
+			int tempgot_y = (my_coords.y - obj_coords.y);
+			int tempgot_z = (my_coords.z - obj_coords.z);
+			if (tempgot_x < 0) tempgot_x = (tempgot_x * -1);
+			if (tempgot_y < 0) tempgot_y = (tempgot_y * -1);
+			if (tempgot_z < 0) tempgot_z = (tempgot_z * -1);
+			if (CONTROLS::IS_CONTROL_PRESSED(2, 22) && tempgot_x < 20 && tempgot_y < 20 && tempgot_z < 20) ENTITY::APPLY_FORCE_TO_ENTITY(surr_objects[i], 1, 0, 0, 0.4, 0, 0, 0, true, false, true, true, true, true);
+			if (CONTROLS::IS_CONTROL_RELEASED(2, 22)) ENTITY::APPLY_FORCE_TO_ENTITY(surr_objects[i], 4, 0, 0, -50, 0, 0, 0, 1, true, true, false, true, true);
+		} // end of int (objects)
+		Vehicle surr_vehicles[arrSize_punch];
+		int count_surr_v = worldGetAllVehicles(surr_vehicles, arrSize_punch);
+		for (int i = 0; i < count_surr_v; i++) {
+			Vector3 obj_coords = ENTITY::GET_ENTITY_COORDS(surr_vehicles[i], true);
+			int tempgot_x = (my_coords.x - obj_coords.x);
+			int tempgot_y = (my_coords.y - obj_coords.y);
+			int tempgot_z = (my_coords.z - obj_coords.z);
+			if (tempgot_x < 0) tempgot_x = (tempgot_x * -1);
+			if (tempgot_y < 0) tempgot_y = (tempgot_y * -1);
+			if (tempgot_z < 0) tempgot_z = (tempgot_z * -1);
+			if (CONTROLS::IS_CONTROL_PRESSED(2, 22) && tempgot_x < 20 && tempgot_y < 20 && tempgot_z < 20) ENTITY::APPLY_FORCE_TO_ENTITY(surr_vehicles[i], 1, 0, 0, 0.4, 0, 0, 0, true, false, true, true, true, true);
+			if (CONTROLS::IS_CONTROL_RELEASED(2, 22)) ENTITY::APPLY_FORCE_TO_ENTITY(surr_vehicles[i], 4, 0, 0, -50, 0, 0, 0, 1, true, true, false, true, true);
+		} // end of int (vehicles)
+	}
+
 	// Hancock Mode
 	if (PLAYER_MOVEMENT_VALUES[current_player_jumpfly] > 0.00 && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1)) {
 		Vector3 CamRot = CAM::GET_GAMEPLAY_CAM_ROT(2);
@@ -1281,17 +1343,23 @@ bool process_player_forceshield_menu() {
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	std::vector<MenuItem<int> *> menuItems;
-	std::string caption = "Player Force Shield Power Options";
+	std::string caption = "Player Force Shield Options";
 
 	SelectFromListMenuItem *listItem;
-	//ToggleMenuItem<int>* toggleItem;
+	ToggleMenuItem<int>* toggleItem;
 
 	int i = 0;
 	listItem = new SelectFromListMenuItem(VEH_MASS_CAPTIONS, onchange_player_forceshield_mode);
 	listItem->wrap = false;
-	listItem->caption = "Player Force Shield Power";
+	listItem->caption = "Player Force Shield";
 	listItem->value = current_player_forceshield;
 	menuItems.push_back(listItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Levitation";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureLevitation;
+	menuItems.push_back(toggleItem);
 
 	return draw_generic_menu<int>(menuItems, &playerForceshieldMenuIndex, caption, onconfirm_playerForceshield_menu, NULL, NULL);
 }
@@ -1606,6 +1674,7 @@ void reset_globals(){
 		featurePrison_Hardcore =
 		featureNoRagdoll =
 		featureRagdollIfInjured =
+		featureLevitation =
 
 		featureWantedLevelFrozen = false;
 
@@ -1853,6 +1922,7 @@ void add_player_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePrison_Robe", &featurePrison_Robe});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePedPrison_Robe", &featurePedPrison_Robe});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePrison_Yard", &featurePrison_Yard});
+	results->push_back(FeatureEnabledLocalDefinition{"featureLevitation", &featureLevitation});
 }
 
 void add_world_feature_enablements3(std::vector<StringPairSettingDBRow>* results)

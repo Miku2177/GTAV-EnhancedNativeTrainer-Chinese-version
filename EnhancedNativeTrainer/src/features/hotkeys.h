@@ -69,6 +69,7 @@ static const int HKEY_HANDBRAKE_SWITCHING = 140;
 static const int HKEY_BURNOUT_SWITCHING = 141;
 static const int HKEY_ALARM_SWITCHING = 142;
 static const int HKEY_TRACTIONCONTROL_SWITCHING = 143;
+static const int HKEY_DELETE_CHECKPOINT = 144;
 
 const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "No Function", 0 },
@@ -113,6 +114,7 @@ const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "Toggle Burnout", HKEY_BURNOUT_SWITCHING },
 	{ "Toggle Vehicle Alarm", HKEY_ALARM_SWITCHING },
 	{ "Toggle Traction Control", HKEY_TRACTIONCONTROL_SWITCHING },
+	{ "Remove Waypoint Marker", HKEY_DELETE_CHECKPOINT },
 };
 
 void change_hotkey_function(int hotkey, int funcIndex);

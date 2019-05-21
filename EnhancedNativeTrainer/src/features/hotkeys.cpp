@@ -254,6 +254,9 @@ void trigger_function_for_hotkey_onkeyup(int hotkey)
 	case HKEY_TRACTIONCONTROL_SWITCHING:
 		toggle_tractioncontrol();
 		break;
+	case HKEY_DELETE_CHECKPOINT:
+		UI::SET_WAYPOINT_OFF();
+		break;
 	default:
 	{
 		std::ostringstream ss;
