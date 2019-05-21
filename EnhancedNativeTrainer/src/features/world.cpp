@@ -47,6 +47,7 @@ bool featureWorldNoTraffic = false;
 bool featureWorldNoTrafficUpdated = false;
 bool featureNoMinimapRot = false;
 bool featureNoMinimapRotUpdated = false;
+bool featureNoWaypoint = false;
 bool featureNoPoliceBlips = false;
 bool featureFullMap = false;
 bool featurePenitentiaryMap = false;
@@ -526,6 +527,13 @@ void process_world_menu()
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
+	togItem->caption = "No Waypoint GPS Line";
+	togItem->value = 1;
+	togItem->toggleValue = &featureNoWaypoint;
+	//togItem->toggleValueUpdated = &featureNoMinimapRotUpdated;
+	menuItems.push_back(togItem);
+
+	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "Load Online Map";
 	togItem->value = 8;
 	togItem->toggleValue = &featureMPMap;
@@ -590,6 +598,7 @@ void reset_world_globals()
 	featureWorldNoPeds = false;
 	featureWorldNoTraffic = false;
 	featureNoMinimapRot = false;
+	featureNoWaypoint = false;
 	featureNoPoliceBlips = false;
 	featureFullMap = false;
 	featurePenitentiaryMap = false;
@@ -1250,6 +1259,9 @@ void update_world_features()
 		featureNoMinimapRotUpdated = false;
 	}
 
+	// No Waypoint
+	if (featureNoWaypoint) UI::CLEAR_GPS_PLAYER_WAYPOINT();
+
 	if (featureWorldNoTrafficUpdated)
 	{
 		VEHICLE::_DISPLAY_DISTANT_VEHICLES(!featureWorldNoTraffic);
@@ -1359,6 +1371,7 @@ void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* r
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoPeds", &featureWorldNoPeds }); 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoTraffic", &featureWorldNoTraffic, &featureWorldNoTrafficUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNoMinimapRot", &featureNoMinimapRot });
+	results->push_back(FeatureEnabledLocalDefinition{ "featureNoWaypoint", &featureNoWaypoint });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNoPoliceBlips", &featureNoPoliceBlips }); 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureFullMap", &featureFullMap }); 
 	results->push_back(FeatureEnabledLocalDefinition{ "featurePenitentiaryMap", &featurePenitentiaryMap }); 

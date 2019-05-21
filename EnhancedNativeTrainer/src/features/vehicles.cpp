@@ -1818,7 +1818,7 @@ void process_veh_menu(){
 
 	listItem = new SelectFromListMenuItem(VEH_MASS_CAPTIONS, onchange_veh_mass_index);
 	listItem->wrap = false;
-	listItem->caption = "Vehicle Force Shield Power";
+	listItem->caption = "Vehicle Force Shield";
 	listItem->value = VehMassMultIndex;
 	menuItems.push_back(listItem);
 
@@ -2422,7 +2422,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		if (Shut_seconds == VEH_AUTO_SHUT_ENGINE_VALUES[AutoShutEngineIndex]) VEHICLE::SET_VEHICLE_ENGINE_ON(vehicle_been_used, false, true);
 	}
 
-	//////////////////////////////////////////////////// PLAYER/VEHICLE FORCE SHIELD POWER ////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////// PLAYER/VEHICLE FORCE SHIELD ////////////////////////////////////////////////////////
 
 	if ((VEH_MASS_VALUES[VehMassMultIndex] > 0 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && !PED::IS_PED_IN_ANY_PLANE(playerPed) && !PED::IS_PED_IN_ANY_HELI(playerPed)) || 
 		(VEH_MASS_VALUES[current_player_forceshield] > 0 && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0))) { // bPlayerExists && 
@@ -3176,7 +3176,8 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 /////////////////////////////////// VEHICLE HYDRAULICS ////////////////////////////
 
-	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) && VEH_HYDRAULICS_VALUES[HydraulicsIndex] != 0.0f) {
+	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) && (VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(veh)) || VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(veh)) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(veh))) && 
+		VEH_HYDRAULICS_VALUES[HydraulicsIndex] != 0.0f) {
 		Vehicle myVehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		if (VEHICLE::IS_VEHICLE_ON_ALL_WHEELS(myVehicle))
 			ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, VEH_HYDRAULICS_VALUES[HydraulicsIndex], 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
@@ -3186,7 +3187,8 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 /////////////////////////////////// JUMPY VEHICLE /////////////////////////////////
 
-	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) && VEH_TURN_SIGNALS_ACCELERATION_VALUES[JumpyVehIndex] > 0) {
+	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) && (VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(veh)) || VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(veh)) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(veh))) && 
+		VEH_TURN_SIGNALS_ACCELERATION_VALUES[JumpyVehIndex] > 0) {
 		Vehicle myVehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		if (CONTROLS::IS_CONTROL_JUST_PRESSED(2, 22)) {
 			veh_jumped_n = veh_jumped_n + 1;
@@ -3196,7 +3198,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				ENTITY::SET_ENTITY_ROTATION(myVehicle, curr_rot.x, curr_rot.y, curr_rot.z, 1, 1);
 			}
 		}
-		if ((veh_jumped_n > 3 && VEHICLE::IS_VEHICLE_ON_ALL_WHEELS(myVehicle)) || VEHICLE::IS_VEHICLE_ON_ALL_WHEELS(myVehicle)) veh_jumped_n = 0;
+		if (VEHICLE::IS_VEHICLE_ON_ALL_WHEELS(myVehicle)) veh_jumped_n = 0; // (veh_jumped_n > 3 && VEHICLE::IS_VEHICLE_ON_ALL_WHEELS(myVehicle)) || 
 	}
 
 ///////////////////////////////////////////////////////////////////////////////////
