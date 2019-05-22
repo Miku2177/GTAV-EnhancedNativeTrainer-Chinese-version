@@ -395,6 +395,35 @@ void process_misc_cutplayer_menu() {
 	draw_generic_menu<int>(menuItems, nullptr, "View Cutscene", onconfirm_misc_cutscene_menu, nullptr, nullptr, nullptr);
 }
 
+bool onconfirm_misc_filters_menu(MenuItem<int> choice) {
+	std::string value_m = MISC_FILTERS_VALUES[choice.value];
+	char *cstr = new char[value_m.length() + 1];
+	strcpy(cstr, value_m.c_str());
+
+	GRAPHICS::SET_TIMECYCLE_MODIFIER(cstr);
+	GRAPHICS::SET_TIMECYCLE_MODIFIER_STRENGTH(1.0f);
+	return false;
+}
+
+void process_misc_filters_menu() {
+	std::vector<MenuItem<int>*> menuItems;
+	std::vector<std::string> captions;
+	std::string menuCaption;
+	captions = MISC_FILTERS_VALUES;
+	MenuItem<int> *item = new MenuItem<int>();
+	
+	int i = 0;
+	for each (std::string scenario in captions)
+	{
+		item = new MenuItem<int>();
+		item->caption = scenario;
+		item->value = i++;
+		menuItems.push_back(item);
+	}
+
+	draw_generic_menu<int>(menuItems, nullptr, "Screen Filters", onconfirm_misc_filters_menu, nullptr, nullptr, nullptr);
+}
+
 bool onconfirm_misc_musicevent_menu(MenuItem<int> choice) {
 	if (choice.value == -1) {
 		//AUDIO::CANCEL_MUSIC_EVENT(temp_musiceventname);
@@ -660,13 +689,16 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 		case 5:
 			process_misc_cutplayer_menu();
 			break;
-		case 22:
+		case 6:
+			process_misc_filters_menu();
+			break;
+		case 23:
 			process_phone_bill_menu();
 			break;
-		case 27:
+		case 28:
 			process_def_menutab_menu();
 			break;
-		case 28:
+		case 29:
 			process_airbrake_global_menu();
 			break;
 		default:
@@ -677,7 +709,7 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 }
 
 void process_misc_menu(){
-	const int lineCount = 30;
+	const int lineCount = 31;
 
 	std::string caption = "Miscellaneous Options";
 
@@ -688,6 +720,7 @@ void process_misc_menu(){
 		{"Freeze Radio To Station", nullptr, nullptr, false},
 		{"Scripted Music", nullptr, nullptr, false},
 		{"Cutscene Viewer", nullptr, nullptr, false},
+		{"Screen Filters", nullptr, nullptr, false},
 		{"Radio Always Off", &featureRadioAlwaysOff, &featureRadioAlwaysOffUpdated, true},
 		{"Boost Radio Volume", &featureBoostRadio, NULL, true}, 
 		{"Restore Missing Radio Station", &featureEnableMissingRadioStation, NULL, false },
