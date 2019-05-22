@@ -1596,7 +1596,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		Ped tempPed;
 		Hash tempWeap;
 
-		set_status_text("Equip the ~g~ Stungun");
+		if (WEAPON::GET_SELECTED_PED_WEAPON(playerPed) != GAMEPLAY::GET_HASH_KEY("WEAPON_STUNGUN")) set_status_text("Equip the ~g~ Stungun");
 
 		if(!grav_target_locked) PLAYER::GET_ENTITY_PLAYER_IS_FREE_AIMING_AT(PLAYER::PLAYER_ID(), &grav_entity);
 

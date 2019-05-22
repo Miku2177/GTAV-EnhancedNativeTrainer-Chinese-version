@@ -24,7 +24,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 /* From Zorg93's "EnableMPCars" code */
 #include <cstddef>
 
-const std::vector<std::string> MISC_MUSICEVENT_VALUES = { "AH1_HOLE_RESTART", "AH2A_FIRST_FLOOR_RESTART", "AH3A_ABSEIL_RT", "AH3A_FIB_DOCS_RT", "AH3A_RUBBLE_RT", "AH3B_BURNTOUT_RT", "AH3B_BURNTOUT_TWO_RT", "AH3B_DOWNLOADING_RT",
+const std::vector<std::string> MISC_MUSICEVENT_VALUES{ "AH1_HOLE_RESTART", "AH2A_FIRST_FLOOR_RESTART", "AH3A_ABSEIL_RT", "AH3A_FIB_DOCS_RT", "AH3A_RUBBLE_RT", "AH3B_BURNTOUT_RT", "AH3B_BURNTOUT_TWO_RT", "AH3B_DOWNLOADING_RT",
  "AH3B_EVADE_COPS_RT", "AH3B_GET_TO_VAN_RT", "AH3B_HACK_RT", "AH3B_HELI_LIFT_OFF", "AH3B_STAIRWELL", "APT_COUNTDOWN_30S", "APT_SUDDEN_DEATH_START_MUSIC", "ARM3_CS", "ARM3_RESTART_4", "BG_SIGHTSEER_START_ATTACK", "BST_START",
  "CAR1_COPS_RESTART", "CAR4_TRUCK_RESTART", "CHN1_AFTER_GRENADE_RT", "DH1_START", "DH2A_1ST_BOMB_RT", "DH2A_WAY_OUT_RT", "DH2B_DROP_SUB_RT", "DH2B_FLY_AWAY_RT", "EPS6_START", "EXL2_SNIPE_RT", "EXL3_SWITCH_1", "EXTREME1_BIKE",
  "EXTREME1_RESTART1", "EXTREME2_RESTART2", "FAM1_DO_CHASE_RT", "FAM2_NECK_GRAB", "FAM3_CHASE_RESTART", "FAM4_CHASE_RESTART", "FAM5_YOGA_MUSIC_RESTART", "FBI1_OUTSIDE_CORONERS_RT", "FBI1_SHOOTOUT_HALFWAY_RT", "FBI3_TORTURE_START",
@@ -74,6 +74,13 @@ const std::vector<std::string> MISC_CUTSCENE_VALUES{ "abigail_mcs_1_concat", "ab
 "trv_dri_ext", "trv_dri_mcs_concat", "under_int_1", "under_int_1_p2", "under_int_2", "under_int_2_p2", "under_int_3", "under_int_4", "under_int_4_p2", "under_int_4_p3", "under_int_5", "under_int_5_p2", "under_int_6", "under_int_6_p2",
 "under_int_6_p3", "under_int_7"
 };
+
+const std::vector<std::string> MISC_FILTERS_VALUES{	"DEFAULT", "AmbientPUSH", "BeastIntro01", "CAMERA_secuirity_FUZZ", "DeadlineNeon01", "FIB_B", "glasses_black", "glasses_blue", "glasses_brown", "glasses_Darkblue", "glasses_green", "glasses_orange",
+	"glasses_pink", "glasses_purple", "glasses_red", "glasses_yellow", "graveyard_shootout", "hud_def_desatcrunch", "hud_def_flash", "lab_none_dark_OVR", "LostTimeDark", "LostTimeFlash", "METRO_Tunnels", "michealspliff", "mp_bkr_int01_garage",
+	"MP_corona_heist_BW", "MP_corona_heist_DOF", "MP_corona_switch", "mp_gr_int01_black", "MP_heli_cam", "mugShot", "mugShot_lineup", "New_sewers", "NEW_station_unfinished", "NG_filmic04", "NG_filmic11", "NG_filmic12", "NG_filmic16",
+	"NG_filmic17", "NG_filmic18", "NG_filmic19", "plane_inside_mode", "prologue_ending_fog", "prologue_shootout", "rply_brightness_neg", "rply_contrast_neg", "rply_saturation", "rply_saturation_neg", "SALTONSEA", "secret_camera", "shades_pink",
+	"StuntFastDark", "switch_cam_2", "torpedo", "trailer_explosion_optimise", "ufo", "ufo_deathray", "underwater_deep", "v_bahama", "V_FIB_stairs", "WATER_cove", "WATER_hills", "WATER_lab", "WATER_militaryPOOP", "WATER_muddy", "WATER_port",
+	"WATER_resevoir", "WATER_river", "WATER_salton", "WATER_shore", "WATER_silverlake", "WhiteOut" };
 
 void process_misc_menu();
 
