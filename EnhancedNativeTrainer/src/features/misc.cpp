@@ -361,9 +361,10 @@ bool onconfirm_misc_cutscene_menu(MenuItem<int> choice) {
 		}
 		if (CUTSCENE::HAS_CUTSCENE_LOADED()) {
 			cutscene_is_playing = true;
-			CUTSCENE::SET_CUTSCENE_FADE_VALUES(0, 0, 1, 0);
+			//CUTSCENE::SET_CUTSCENE_FADE_VALUES(0, 0, 1, 0);
 			CUTSCENE::START_CUTSCENE(0);
 			CAM::SET_WIDESCREEN_BORDERS(0, 0);
+			//AUDIO::SET_AUDIO_FLAG("AllowCutsceneOverScreenFade", false);
 			delete[] cstr;
 		}
 	}
@@ -1130,10 +1131,13 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		} 
 	}
 
+	// is a cutscene currently playing?
 	if (cutscene_is_playing == true) CONTROLS::DISABLE_ALL_CONTROL_ACTIONS(0);
 	else CONTROLS::ENABLE_ALL_CONTROL_ACTIONS(0);
 	if (cutscene_is_playing == true && CUTSCENE::IS_CUTSCENE_PLAYING()) cutscene_being_watched = true;
-	if (cutscene_being_watched == true && !CUTSCENE::IS_CUTSCENE_PLAYING()) {
+	if (cutscene_being_watched == true && (!CUTSCENE::IS_CUTSCENE_PLAYING() || ((CUTSCENE::GET_CUTSCENE_TOTAL_DURATION() - CUTSCENE::GET_CUTSCENE_TIME() < 3000) && CAM::IS_SCREEN_FADING_OUT()))) { // && CUTSCENE::HAS_CUTSCENE_FINISHED()
+		CUTSCENE::STOP_CUTSCENE_IMMEDIATELY();
+		CUTSCENE::REMOVE_CUTSCENE();
 		cutscene_is_playing = false;
 		cutscene_being_watched = false;
 	}

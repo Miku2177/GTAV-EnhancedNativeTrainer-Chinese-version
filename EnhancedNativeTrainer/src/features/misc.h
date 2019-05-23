@@ -77,7 +77,7 @@ const std::vector<std::string> MISC_CUTSCENE_VALUES{ "abigail_mcs_1_concat", "ab
 
 const std::vector<std::string> MISC_FILTERS_VALUES{	"DEFAULT", "AmbientPUSH", "BeastIntro01", "CAMERA_secuirity_FUZZ", "DeadlineNeon01", "FIB_B", "glasses_black", "glasses_blue", "glasses_brown", "glasses_Darkblue", "glasses_green", "glasses_orange",
 	"glasses_pink", "glasses_purple", "glasses_red", "glasses_yellow", "graveyard_shootout", "hud_def_desatcrunch", "hud_def_flash", "lab_none_dark_OVR", "LostTimeDark", "LostTimeFlash", "METRO_Tunnels", "michealspliff", "mp_bkr_int01_garage",
-	"MP_corona_heist_BW", "MP_corona_heist_DOF", "MP_corona_switch", "mp_gr_int01_black", "MP_heli_cam", "mugShot", "mugShot_lineup", "New_sewers", "NEW_station_unfinished", "NG_filmic04", "NG_filmic11", "NG_filmic12", "NG_filmic16",
+	"MP_corona_heist_DOF", "MP_corona_switch", "mp_gr_int01_black", "MP_heli_cam", "mugShot", "mugShot_lineup", "New_sewers", "NEW_station_unfinished", "NG_filmic04", "NG_filmic11", "NG_filmic12", "NG_filmic16",
 	"NG_filmic17", "NG_filmic18", "NG_filmic19", "plane_inside_mode", "prologue_ending_fog", "prologue_shootout", "rply_brightness_neg", "rply_contrast_neg", "rply_saturation", "rply_saturation_neg", "SALTONSEA", "secret_camera", "shades_pink",
 	"StuntFastDark", "switch_cam_2", "torpedo", "trailer_explosion_optimise", "ufo", "ufo_deathray", "underwater_deep", "v_bahama", "V_FIB_stairs", "WATER_cove", "WATER_hills", "WATER_lab", "WATER_militaryPOOP", "WATER_muddy", "WATER_port",
 	"WATER_resevoir", "WATER_river", "WATER_salton", "WATER_shore", "WATER_silverlake", "WhiteOut" };
