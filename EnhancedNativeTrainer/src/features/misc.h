@@ -57,7 +57,7 @@ const std::vector<std::string> MISC_CUTSCENE_VALUES{ "abigail_mcs_1_concat", "ab
 "low_drv_ext", "low_drv_int", "low_fin_ext", "low_fin_int", "low_fin_mcs1", "low_fun_ext", "low_fun_int", "low_fun_mcs1", "low_int", "low_pho_ext", "low_pho_int", "low_tra_ext", "low_tra_int",
 "lsdhs_mcs_2", "lsdhs_mcs_3_p1_concat", "lsdhs_mcs_3_p2", "lsdh_2a_ext", "lsdh_2a_int", /*"lsdh_2a_rf_01",*/ "lsdh_2b_int", "lsdh_2b_mcs_1", "lsdh_int", "martin_1_ext", "martin_1_int", "martin_1_mcs_1", "maude_mcs_1", "maude_mcs_2", "maude_mcs_3",
 "maude_mcs_4", "maude_mcs_5", "mic_1_int", "mic_1_mcs_1", "mic_1_mcs_2", "mic_1_mcs_3", "mic_2_int", "mic_2_mcs_1", "mic_2_mcs_3_concat", "mic_3_ext", "mic_3_int", "mic_3_int_p1_alt", "mic_3_mcs_1_p1_a2", "mic_4_int", "mmb_1_rcm", "mmb_2_rcm",
-"mmb_3_rcm", "mph_fin_cel_apt", "mph_fin_cel_apt1", "mph_fin_cel_bar", "mph_fin_cel_roo", "mph_fin_cel_str", "mph_fin_cel_tre", "mph_hum_arm_ext", "mph_hum_del_ext", "mph_hum_emp_ext", "mph_hum_fin_ext", "mph_hum_fin_int", "mph_hum_fin_mcs1",
+"mmb_3_rcm", "mph_fin_cel_apt", "mph_fin_cel_apt1", /*!*/"mph_fin_cel_bar", /*!*/"mph_fin_cel_roo", "mph_fin_cel_str", "mph_fin_cel_tre", "mph_hum_arm_ext", "mph_hum_del_ext", "mph_hum_emp_ext", "mph_hum_fin_ext", "mph_hum_fin_int", "mph_hum_fin_mcs1",
 "mph_hum_int", "mph_hum_key_ext", "mph_hum_key_mcs1", "mph_hum_mid", "mph_hum_val_ext", "mph_nar_bik_ext", "mph_nar_cok_ext", "mph_nar_fin_ext", "mph_nar_fin_int", "mph_nar_int", "mph_nar_met_ext", "mph_nar_mid", "mph_nar_tra_ext", "mph_nar_wee_ext",
 "mph_pac_bik_ext", "mph_pac_con_ext", "mph_pac_fin_ext", "mph_pac_fin_int", "mph_pac_fin_mcs0", "mph_pac_fin_mcs1", "mph_pac_fin_mcs2", "mph_pac_hac_ext", "mph_pac_hac_mcs1", "mph_pac_int", "mph_pac_mid", "mph_pac_pho_ext", "mph_pac_wit_mcs1",
 "mph_pac_wit_mcs2", "mph_pri_bus_ext", "mph_pri_fin_ext", "mph_pri_fin_int", "mph_pri_fin_mcs1", "mph_pri_fin_mcs2", "mph_pri_int", "mph_pri_mid", "mph_pri_pla_ext", "mph_pri_sta_ext", "mph_pri_sta_mcs1", "mph_pri_sta_mcs2", "mph_pri_unf_ext",
@@ -65,15 +65,14 @@ const std::vector<std::string> MISC_CUTSCENE_VALUES{ "abigail_mcs_1_concat", "ab
 "mp_intro_mcs_11", "mp_intro_mcs_11_a1", "mp_intro_mcs_12_a1", "mp_intro_mcs_12_a2", "mp_intro_mcs_12_a3", "mp_intro_mcs_13", "mp_intro_mcs_14_b", "mp_intro_mcs_16_a1", "mp_intro_mcs_16_a2", "mp_intro_mcs_17_a5", "mp_intro_mcs_17_a8",
 "mp_intro_mcs_17_a9", "mp_intro_mcs_8_a1", "mp_intro_mcs_8_a1_cc", "mp_int_mcs_12_a3_3", "mp_int_mcs_12_a3_4", "mp_int_mcs_15_a1_b", "mp_int_mcs_15_a2b", "mp_int_mcs_15_a3", "mp_int_mcs_15_a4", "mp_int_mcs_17_a1", "mp_int_mcs_17_a2", 
 "mp_int_mcs_17_a3", "mp_int_mcs_17_a4", "mp_int_mcs_17_a6", "mp_int_mcs_17_a7", "mp_int_mcs_18_a1", "mp_int_mcs_18_a2", "mp_int_mcs_5_alt1", "mp_int_mcs_5_alt2", "mp_int_mcs_7_a1", "nmt_1_rcm", "nmt_2_mcs_2", "nmt_2_rcm", "nmt_3_rcm", "oscar_mcs_1",
-"paper_1_rcm_alt1", "pap_1_mcs_1", "pap_1_rcm", "pap_2_mcs_1", "pap_2_rcm_p2", "pap_3_rcm", "pap_4_rcm", "pro_mcs_1",  "pro_mcs_2", "pro_mcs_3_pt1", "pro_mcs_5", "pro_mcs_6", "pro_mcs_7_concat", "rbhs_int", "rbhs_mcs_1", "rbhs_mcs_3", "rbhs_msc_3_p3",
-"rbh_2ab_mcs_6", "rbh_2a_ext1_a1_p1", "rbh_2a_ext_1", "rbh_2a_int", "rbh_2a_mcs_2_p3", "rbh_2a_mcs_2_p7",  "rbh_2a_mcs_4", "rbh_2a_mcs_5", "sas_1_rcm_concat", "sas_2_rcm_t7", "scrap_1_rcm", "scrap_2_rcm", "sdrm_mcs_2", "sil_int", "sil_pred_mcs1",
+"paper_1_rcm_alt1", "pap_1_mcs_1", "pap_1_rcm", "pap_2_mcs_1", "pap_2_rcm_p2", "pap_3_rcm", "pap_4_rcm", "pro_mcs_1",  "pro_mcs_2", "pro_mcs_3_pt1", "pro_mcs_5", /*"pro_mcs_6",*/ "pro_mcs_7_concat", "rbhs_int", "rbhs_mcs_1", "rbhs_mcs_3", "rbhs_msc_3_p3",
+"rbh_2ab_mcs_6", /*!*//*"rbh_2a_ext1_a1_p1",*/ "rbh_2a_ext_1", "rbh_2a_int", "rbh_2a_mcs_2_p3", "rbh_2a_mcs_2_p7",  "rbh_2a_mcs_4", "rbh_2a_mcs_5", "sas_1_rcm_concat", "sas_2_rcm_t7", "scrap_1_rcm", "scrap_2_rcm", "sdrm_mcs_2", "sil_int", "sil_pred_mcs1",
 "silj_ext", "silj_int", "silj_mcs1", "silj_mcs2", "smun_intro", "smun_intro2", "sol_1_ext", "sol_1_int_alt",
 "sol_1_mcs_1_concat",  "sol_1_mcs_2", "sol_1_mcs_3",  "sol_2_ext_concat", "sol_2_int_alt1", "sol_3_int", "sol_5_mcs_1", "sol_5_mcs_2", "sol_5_mcs_2_p5", "sub_int", "subj_ext", "subj_mcs0", "subj_mcs1", "tale_intro","tmom_1_rcm", "tmom_2_rcm", 
 "tonya_mcs_1", "tonya_mcs_2", "tonya_mcs_3", "trevor_1_int",
 "trevor_2_int", "trevor_drive_int", "trv2_mcs_8", "trvram_1", "trvram_2_concat", "trvram_3", "trvram_4", "trvram_5_con", "trv_1_mcs_1_p1", "trv_1_mcs_3_concat", "trv_1_mcs_4", "trv_2_mcs_4_concat", "trv_2_mcs_6", "trv_5_ext", "trv_5_int",
-"trv_dri_ext", "trv_dri_mcs_concat", "under_int_1", "under_int_1_p2", "under_int_2", "under_int_2_p2", "under_int_3", "under_int_4", "under_int_4_p2", "under_int_4_p3", "under_int_5", "under_int_5_p2", "under_int_6", "under_int_6_p2",
-"under_int_6_p3", "under_int_7"
-};
+"trv_dri_ext", "trv_dri_mcs_concat" /*"under_int_1",*/ /*"under_int_1_p2",*/ /*"under_int_2",*/ /*"under_int_2_p2",*/ /*"under_int_3",*/ /*"under_int_4",*/ /*"under_int_4_p2",*/ /*"under_int_4_p3",*/
+/*"under_int_5",*/ /*"under_int_5_p2",*/ /*"under_int_6",*/ /*"under_int_6_p2",*/ /*"under_int_6_p3",*/ /*"under_int_7"*/ };
 
 const std::vector<std::string> MISC_FILTERS_VALUES{	"DEFAULT", "AmbientPUSH", "BeastIntro01", "CAMERA_secuirity_FUZZ", "DeadlineNeon01", "FIB_B", "glasses_black", "glasses_blue", "glasses_brown", "glasses_Darkblue", "glasses_green", "glasses_orange",
 	"glasses_pink", "glasses_purple", "glasses_red", "glasses_yellow", "graveyard_shootout", "hud_def_desatcrunch", "hud_def_flash", "lab_none_dark_OVR", "LostTimeDark", "LostTimeFlash", "METRO_Tunnels", "michealspliff", "mp_bkr_int01_garage",
