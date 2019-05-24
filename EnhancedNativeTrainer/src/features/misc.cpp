@@ -361,7 +361,7 @@ bool onconfirm_misc_cutscene_menu(MenuItem<int> choice) {
 		}
 		if (CUTSCENE::HAS_CUTSCENE_LOADED()) {
 			cutscene_is_playing = true;
-			//CUTSCENE::SET_CUTSCENE_FADE_VALUES(0, 0, 1, 0);
+			CUTSCENE::SET_CUTSCENE_FADE_VALUES(0, 0, 0, 0); //CUTSCENE::SET_CUTSCENE_FADE_VALUES(0, 0, 0, 0); || CUTSCENE::SET_CUTSCENE_FADE_VALUES(1, 1, 1, 1); // actually both of them work or both or them can be removed
 			CUTSCENE::START_CUTSCENE(0);
 			CAM::SET_WIDESCREEN_BORDERS(0, 0);
 			//AUDIO::SET_AUDIO_FLAG("AllowCutsceneOverScreenFade", false);
@@ -1136,8 +1136,10 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	else CONTROLS::ENABLE_ALL_CONTROL_ACTIONS(0);
 	if (cutscene_is_playing == true && CUTSCENE::IS_CUTSCENE_PLAYING()) cutscene_being_watched = true;
 	if (cutscene_being_watched == true && (!CUTSCENE::IS_CUTSCENE_PLAYING() || ((CUTSCENE::GET_CUTSCENE_TOTAL_DURATION() - CUTSCENE::GET_CUTSCENE_TIME() < 3000) && CAM::IS_SCREEN_FADING_OUT()))) { // && CUTSCENE::HAS_CUTSCENE_FINISHED()
+		CAM::DO_SCREEN_FADE_IN(0);
 		CUTSCENE::STOP_CUTSCENE_IMMEDIATELY();
 		CUTSCENE::REMOVE_CUTSCENE();
+		CAM::DO_SCREEN_FADE_IN(0);
 		cutscene_is_playing = false;
 		cutscene_being_watched = false;
 	}
