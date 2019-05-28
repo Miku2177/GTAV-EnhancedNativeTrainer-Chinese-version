@@ -1105,7 +1105,7 @@ void update_world_features()
 	}
 
 	// NPC No Gravity Peds && Acid Water && Acid Rain
-	if (featureNPCNoGravityPeds || featureAcidWater || featureAcidRain || WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0) {
+	if (featureNPCNoGravityPeds || featureAcidWater || featureAcidRain || (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 && featureSnow)) {
 		const int BUS_ARR_PED_SIZE = 1024;
 		Ped bus_ped[BUS_ARR_PED_SIZE];
 		int found_ped = worldGetAllPeds(bus_ped, BUS_ARR_PED_SIZE);
