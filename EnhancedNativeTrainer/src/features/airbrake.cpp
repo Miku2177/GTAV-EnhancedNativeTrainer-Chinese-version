@@ -406,12 +406,28 @@ void airbrake(bool inVehicle)
 		if (CONTROLS::IS_CONTROL_PRESSED(2, 32)) {
 			ENTITY::FREEZE_ENTITY_POSITION(target, false);
 			ENTITY::APPLY_FORCE_TO_ENTITY(target, 1, v_x, v_y, v_z, 0, 0, 0, true, false, true, true, true, true);
+			curLocation = CAM::GET_GAMEPLAY_CAM_COORD();
+			curHeading = CAM::GET_GAMEPLAY_CAM_RELATIVE_HEADING();
 		}
 		if (CONTROLS::IS_CONTROL_PRESSED(2, 33)) {
 			ENTITY::FREEZE_ENTITY_POSITION(target, false);
 			ENTITY::APPLY_FORCE_TO_ENTITY(target, 1, -v_x, -v_y, -v_z, 0, 0, 0, true, false, true, true, true, true);
+			curLocation = CAM::GET_GAMEPLAY_CAM_COORD();
+			curHeading = CAM::GET_GAMEPLAY_CAM_RELATIVE_HEADING();
 		}
 		if (CONTROLS::IS_CONTROL_RELEASED(2, 32) && CONTROLS::IS_CONTROL_RELEASED(2, 33)) ENTITY::FREEZE_ENTITY_POSITION(target, true);
+		if (moveUpKey) {
+			ENTITY::FREEZE_ENTITY_POSITION(target, false);
+			ENTITY::APPLY_FORCE_TO_ENTITY(target, 1, 0, 0, p_force, 0, 0, 0, true, false, true, true, true, true);
+			curLocation = CAM::GET_GAMEPLAY_CAM_COORD();
+			curHeading = CAM::GET_GAMEPLAY_CAM_RELATIVE_HEADING();
+		}
+		if (moveDownKey) {
+			ENTITY::FREEZE_ENTITY_POSITION(target, false);
+			ENTITY::APPLY_FORCE_TO_ENTITY(target, 1, 0, 0, -p_force, 0, 0, 0, true, false, true, true, true, true);
+			curLocation = CAM::GET_GAMEPLAY_CAM_COORD();
+			curHeading = CAM::GET_GAMEPLAY_CAM_RELATIVE_HEADING();
+		}
 	}
 	else {
 		ENTITY::FREEZE_ENTITY_POSITION(target, false);
