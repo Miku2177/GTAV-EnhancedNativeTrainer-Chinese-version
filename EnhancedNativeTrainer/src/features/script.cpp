@@ -551,8 +551,7 @@ void update_features(){
 					ENTITY::APPLY_FORCE_TO_ENTITY(surr_p_peds[i], 1, 0, 0, 0.4, 0, 0, 0, true, false, true, true, true, true);
 				}
 				if (CONTROLS::IS_CONTROL_RELEASED(2, 22)) {
-					AI::STOP_ANIM_TASK(surr_p_peds[i], "dead@fall", "dead_fall_down", 1.0);
-					ENTITY::APPLY_FORCE_TO_ENTITY(surr_p_peds[i], 4, 0, 0, -50, 0, 0, 0, 1, true, true, false, true, true);
+					if (ENTITY::IS_ENTITY_PLAYING_ANIM(surr_p_peds[i], "dead@fall", "dead_fall_down", 3)) AI::STOP_ANIM_TASK(surr_p_peds[i], "dead@fall", "dead_fall_down", 1.0); //ENTITY::APPLY_FORCE_TO_ENTITY(surr_p_peds[i], 4, 0, 0, -50, 0, 0, 0, 1, true, true, false, true, true);
 				}
 			}
 		} // end of int (peds)
@@ -567,7 +566,7 @@ void update_features(){
 			if (tempgot_y < 0) tempgot_y = (tempgot_y * -1);
 			if (tempgot_z < 0) tempgot_z = (tempgot_z * -1);
 			if (CONTROLS::IS_CONTROL_PRESSED(2, 22) && tempgot_x < 20 && tempgot_y < 20 && tempgot_z < 20) ENTITY::APPLY_FORCE_TO_ENTITY(surr_objects[i], 1, 0, 0, 0.4, 0, 0, 0, true, false, true, true, true, true);
-			if (CONTROLS::IS_CONTROL_RELEASED(2, 22)) ENTITY::APPLY_FORCE_TO_ENTITY(surr_objects[i], 4, 0, 0, -50, 0, 0, 0, 1, true, true, false, true, true);
+			//if (CONTROLS::IS_CONTROL_RELEASED(2, 22)) ENTITY::APPLY_FORCE_TO_ENTITY(surr_objects[i], 4, 0, 0, -50, 0, 0, 0, 1, true, true, false, true, true);
 		} // end of int (objects)
 		Vehicle surr_vehicles[arrSize_punch];
 		int count_surr_v = worldGetAllVehicles(surr_vehicles, arrSize_punch);
@@ -580,7 +579,7 @@ void update_features(){
 			if (tempgot_y < 0) tempgot_y = (tempgot_y * -1);
 			if (tempgot_z < 0) tempgot_z = (tempgot_z * -1);
 			if (CONTROLS::IS_CONTROL_PRESSED(2, 22) && tempgot_x < 20 && tempgot_y < 20 && tempgot_z < 20) ENTITY::APPLY_FORCE_TO_ENTITY(surr_vehicles[i], 1, 0, 0, 0.4, 0, 0, 0, true, false, true, true, true, true);
-			if (CONTROLS::IS_CONTROL_RELEASED(2, 22)) ENTITY::APPLY_FORCE_TO_ENTITY(surr_vehicles[i], 4, 0, 0, -50, 0, 0, 0, 1, true, true, false, true, true);
+			//if (CONTROLS::IS_CONTROL_RELEASED(2, 22)) ENTITY::APPLY_FORCE_TO_ENTITY(surr_vehicles[i], 4, 0, 0, -50, 0, 0, 0, 1, true, true, false, true, true);
 		} // end of int (vehicles)
 	}
 
