@@ -21,6 +21,7 @@ bool stop_b = false;
 bool featureBodyguardInvincible = false;
 bool featureBodyguardInvincibleUpdated = false;
 bool featureBodyguardHelmet = false;
+bool featureBodyguardDespawn = true;
 bool featureBodyguardOnMap = false;
 bool featureBodyguardInfAmmo = false;
 
@@ -397,8 +398,10 @@ void dismiss_bodyguards(){
 		ENTITY::SET_ENTITY_INVINCIBLE(spawnedBodyguards[i], false);
 		PED::SET_PED_NEVER_LEAVES_GROUP(spawnedBodyguards[i], false);
 		PED::REMOVE_PED_FROM_GROUP(spawnedBodyguards[i]);
-		AI::CLEAR_PED_TASKS(spawnedBodyguards[i]);
-		ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&spawnedBodyguards[i]);
+		if (featureBodyguardDespawn) {
+			AI::CLEAR_PED_TASKS(spawnedBodyguards[i]);
+			ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&spawnedBodyguards[i]);
+		}
 	}
 
 	spawnedBodyguards.clear();
@@ -620,7 +623,7 @@ void maintain_bodyguards(){
 			if (PED::IS_PED_DEAD_OR_DYING(spawnedBodyguards[i], true)) {
 				PED::SET_PED_NEVER_LEAVES_GROUP(spawnedBodyguards[i], false);
 				PED::REMOVE_PED_FROM_GROUP(spawnedBodyguards[i]);
-				ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&spawnedBodyguards[i]);
+				if (featureBodyguardDespawn) ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&spawnedBodyguards[i]);
 				spawnedBodyguards.erase(spawnedBodyguards.begin() + i);
 				requireRefreshOfBodyguardMainMenu = true;
 			}
@@ -704,6 +707,13 @@ bool process_bodyguard_menu(){
 		toggleItem->toggleValueUpdated = NULL;
 		menuItems.push_back(toggleItem);
 
+		toggleItem = new ToggleMenuItem<int>();
+		toggleItem->caption = "Despawn When Dead/Dismissed";
+		toggleItem->value = i++;
+		toggleItem->toggleValue = &featureBodyguardDespawn;
+		toggleItem->toggleValueUpdated = NULL;
+		menuItems.push_back(toggleItem);
+
 		if(!bodyguardWeaponsToggleInitialized){
 			for(int a = 0; a < MENU_WEAPON_CATEGORIES.size(); a++){
 				for(int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++){
@@ -766,6 +776,7 @@ void update_bodyguard_features(){
 void add_bodyguards_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardInvincible", &featureBodyguardInvincible});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardHelmet", &featureBodyguardHelmet});
+	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardDespawn", &featureBodyguardDespawn});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardOnMap", &featureBodyguardOnMap});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyBlipNumber", &featureBodyBlipNumber});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardInfAmmo", &featureBodyguardInfAmmo});
@@ -833,6 +844,7 @@ void reset_bodyguards_globals(){
 	featureBodyguardInvincible = false;
 	featureBodyguardInvincibleUpdated = false;
 	featureBodyguardHelmet = false;
+	featureBodyguardDespawn = true;
 	featureBodyguardInfAmmo = false;
 	BodyBlipSizeIndex = 2;
 	BodyBlipColourIndex = 0;
