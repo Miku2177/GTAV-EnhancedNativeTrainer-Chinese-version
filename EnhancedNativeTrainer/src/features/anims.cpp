@@ -22402,12 +22402,30 @@ void replay_last_anim()
 	}
 }
 
+void update_anims_features(BOOL bPlayerExists, Ped playerPed) {
+	if (IsKeyDown(KeyConfig::KEY_MENU_BACK) || IsControllerButtonDown(KeyConfig::KEY_MENU_BACK)) {
+		AI::STOP_ANIM_TASK(PLAYER::PLAYER_PED_ID(), lastImmediatePlayDict, lastImmediatePlayAnim, 1.0);
+		PED::CLEAR_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 0, 0);
+		PED::CLEAR_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 1, 0);
+		PED::CLEAR_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 2, 0);
+		PED::RESET_PED_MOVEMENT_CLIPSET(playerPed, 1.0f);
+		PED::CLEAR_FACIAL_IDLE_ANIM_OVERRIDE(playerPed);
+		STREAMING::REMOVE_ANIM_DICT(lastImmediatePlayDict);
+		STREAMING::REMOVE_ANIM_SET(lastImmediatePlayAnim);
+		AI::CLEAR_PED_TASKS_IMMEDIATELY(PLAYER::PLAYER_PED_ID());
+	}
+}
+
 void do_play_anim(Ped playerPed, char* dict, char* anim, int mode)
 {
+	AI::CLEAR_PED_TASKS_IMMEDIATELY(PLAYER::PLAYER_PED_ID());
 	PED::SET_PED_CAN_PLAY_AMBIENT_ANIMS(playerPed, true);
 	PED::SET_PED_CAN_PLAY_AMBIENT_BASE_ANIMS(playerPed, true);
 	PED::SET_PED_CAN_PLAY_GESTURE_ANIMS(playerPed, true);
 	//PED::SET_PED_CAN_PLAY_VISEME_ANIMS(playerPed, true);
+
+	lastImmediatePlayDict = dict;
+	lastImmediatePlayAnim = anim;
 
 	switch (mode)
 	{
@@ -22418,7 +22436,7 @@ void do_play_anim(Ped playerPed, char* dict, char* anim, int mode)
 		PED::SET_FACIAL_IDLE_ANIM_OVERRIDE(playerPed, anim, dict);
 		break;
 	case CATEGORY_GENERAL_NOW:
-		AI::TASK_PLAY_ANIM(playerPed, dict, anim, 8, -8, -1, 0, 0, false, 0, true);
+		AI::TASK_PLAY_ANIM(playerPed, dict, anim, 8, -8, -1, 0, 0, false, 0, true); // AI::TASK_PLAY_ANIM(playerPed, dict, anim, 8.0, 0.0, -1, 9, 0, 0, 0, 0);
 		break;
 	case CATEGORY_MOVE_IDLE:
 		PED::SET_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 0, dict, anim, 0, true);
