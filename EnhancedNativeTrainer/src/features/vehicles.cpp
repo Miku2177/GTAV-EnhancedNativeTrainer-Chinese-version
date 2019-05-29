@@ -78,6 +78,7 @@ bool featureVehSpeedBoost = false;
 bool featureVehSteerAngle = false;
 bool featureRollWhenShoot = false;
 bool featureTractionControl = false;
+bool featureSticktoground = false;
 bool featureEngineRunning = false;
 bool featureNoVehFlip = false;
 bool featureAutoToggleLights = false;
@@ -1980,6 +1981,12 @@ void process_veh_menu(){
 	listItem->value = HydraulicsIndex;
 	menuItems.push_back(listItem);
 
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Stick Vehicle To Ground";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureSticktoground;
+	menuItems.push_back(toggleItem);
+
 	draw_generic_menu<int>(menuItems, &activeLineIndexVeh, caption, onconfirm_veh_menu, NULL, NULL);
 }
 
@@ -2422,6 +2429,13 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		if (Shut_seconds == VEH_AUTO_SHUT_ENGINE_VALUES[AutoShutEngineIndex]) VEHICLE::SET_VEHICLE_ENGINE_ON(vehicle_been_used, false, true);
 	}
 
+	// stick to the ground
+	if (featureSticktoground) {
+		Vector3 vehstickspeed = ENTITY::GET_ENTITY_VELOCITY(PED::GET_VEHICLE_PED_IS_USING(playerPed));
+		Vehicle groundcar = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+		if (((vehstickspeed.x > 1) || (vehstickspeed.y > 1) || (vehstickspeed.z > 1)) && (ENTITY::GET_ENTITY_ROLL(groundcar) > 20 || ENTITY::GET_ENTITY_ROLL(groundcar) < -20)) VEHICLE::SET_VEHICLE_ON_GROUND_PROPERLY(groundcar);
+	}
+
 	//////////////////////////////////////////////////// PLAYER/VEHICLE FORCE SHIELD ////////////////////////////////////////////////////////
 
 	if ((VEH_MASS_VALUES[VehMassMultIndex] > 0 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && !PED::IS_PED_IN_ANY_PLANE(playerPed) && !PED::IS_PED_IN_ANY_HELI(playerPed)) || 
@@ -2441,11 +2455,8 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		float v_x = -(sin(rad) * p_force * 10);
 		float v_y = (cos(rad) * p_force * 10);
 		float v_z = p_force * (CamRot.x * 0.2);
-		if (VEH_MASS_VALUES[VehMassMultIndex] > 0) {
-			if (((vehspeed.x > 1) || (vehspeed.y > 1) || (vehspeed.z > 1)) && (ENTITY::GET_ENTITY_ROLL(my_shield) > 20 || ENTITY::GET_ENTITY_ROLL(my_shield) < -20)) VEHICLE::SET_VEHICLE_ON_GROUND_PROPERLY(my_shield);
-			if (ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(my_shield) && VEH_MASS_VALUES[VehMassMultIndex] > 3) ENTITY::SET_ENTITY_VELOCITY(my_shield, vehspeed.x, vehspeed.y, vehspeed.z);
-		}
-
+		if (VEH_MASS_VALUES[VehMassMultIndex] > 0 && ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(my_shield) && VEH_MASS_VALUES[VehMassMultIndex] > 3) ENTITY::SET_ENTITY_VELOCITY(my_shield, vehspeed.x, vehspeed.y, vehspeed.z);
+		
 		int count_v = worldGetAllVehicles(nearbyObj, OBJ_ARR_SIZE); // vehicles
 		for (int i = 0; i < count_v; i++) {
 			Vector3 coordsveh = ENTITY::GET_ENTITY_COORDS(nearbyObj[i], true);
@@ -3371,6 +3382,7 @@ void reset_vehicle_globals() {
 		featureVehSteerAngle = 
 		featureRollWhenShoot =
 		featureTractionControl =
+		featureSticktoground =
 		featureEngineRunning =
 		featureNoVehFlip =
 		featureAutoToggleLights =
@@ -3649,6 +3661,7 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehSteerAngle", &featureVehSteerAngle});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRollWhenShoot", &featureRollWhenShoot});
 	results->push_back(FeatureEnabledLocalDefinition{"featureTractionControl", &featureTractionControl});
+	results->push_back(FeatureEnabledLocalDefinition{"featureSticktoground", &featureSticktoground});
 	results->push_back(FeatureEnabledLocalDefinition{"featureEngineRunning", &featureEngineRunning});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoVehFlip", &featureNoVehFlip});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAutoToggleLights", &featureAutoToggleLights});
