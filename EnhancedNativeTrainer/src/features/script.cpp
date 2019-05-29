@@ -989,6 +989,8 @@ void update_features(){
 
 	update_vehicle_features(bPlayerExists, playerPed);
 
+	update_anims_features(bPlayerExists, playerPed);
+
 	update_vehmodmenu_features(bPlayerExists, playerPed);
 
 	update_misc_features(bPlayerExists, playerPed);
