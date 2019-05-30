@@ -2429,11 +2429,14 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		if (Shut_seconds == VEH_AUTO_SHUT_ENGINE_VALUES[AutoShutEngineIndex]) VEHICLE::SET_VEHICLE_ENGINE_ON(vehicle_been_used, false, true);
 	}
 
-	// stick to the ground
+	// stick vehicle to ground
 	if (featureSticktoground) {
-		Vector3 vehstickspeed = ENTITY::GET_ENTITY_VELOCITY(PED::GET_VEHICLE_PED_IS_USING(playerPed));
 		Vehicle groundcar = PED::GET_VEHICLE_PED_IS_USING(playerPed);
-		if (((vehstickspeed.x > 1) || (vehstickspeed.y > 1) || (vehstickspeed.z > 1)) && (ENTITY::GET_ENTITY_ROLL(groundcar) > 20 || ENTITY::GET_ENTITY_ROLL(groundcar) < -20)) VEHICLE::SET_VEHICLE_ON_GROUND_PROPERLY(groundcar);
+		if (VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(groundcar)) || VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(groundcar)) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(groundcar)) ||
+			VEHICLE::IS_THIS_MODEL_A_BOAT(ENTITY::GET_ENTITY_MODEL(groundcar))) {
+			Vector3 vehstickspeed = ENTITY::GET_ENTITY_VELOCITY(PED::GET_VEHICLE_PED_IS_USING(playerPed));
+			if (((vehstickspeed.x > 1) || (vehstickspeed.y > 1) || (vehstickspeed.z > 1)) && (ENTITY::GET_ENTITY_ROLL(groundcar) > 20 || ENTITY::GET_ENTITY_ROLL(groundcar) < -20)) VEHICLE::SET_VEHICLE_ON_GROUND_PROPERLY(groundcar);
+		}
 	}
 
 	//////////////////////////////////////////////////// PLAYER/VEHICLE FORCE SHIELD ////////////////////////////////////////////////////////
