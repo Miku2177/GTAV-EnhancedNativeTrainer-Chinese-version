@@ -72,7 +72,7 @@ char *temp_musiceventname = "";
 
 Vehicle playerVeh = -1;
 
-bool cutscene_is_playing, cutscene_being_watched = false;
+//bool cutscene_is_playing, cutscene_being_watched = false;
 
 bool featurePlayerRadio = false;
 bool featurePlayerRadioUpdated = false;
@@ -343,7 +343,7 @@ bool onconfirm_misc_freezeradio_menu(MenuItem<int> choice){
 	return false;
 }
 
-bool onconfirm_misc_cutscene_menu(MenuItem<int> choice) {
+/*bool onconfirm_misc_cutscene_menu(MenuItem<int> choice) {
 	if (choice.value == -1) {
 		cutscene_is_playing = false;
 		CUTSCENE::STOP_CUTSCENE_IMMEDIATELY();
@@ -369,9 +369,9 @@ bool onconfirm_misc_cutscene_menu(MenuItem<int> choice) {
 		}
 	}
 	return false;
-}
+}*/
 
-void process_misc_cutplayer_menu() {
+/*void process_misc_cutplayer_menu() {
 	std::vector<MenuItem<int>*> menuItems;
 	std::vector<std::string> captions;
 	std::string menuCaption;
@@ -394,7 +394,7 @@ void process_misc_cutplayer_menu() {
 	}
 
 	draw_generic_menu<int>(menuItems, nullptr, "View Cutscene", onconfirm_misc_cutscene_menu, nullptr, nullptr, nullptr);
-}
+}*/
 
 bool onconfirm_misc_filters_menu(MenuItem<int> choice) {
 	std::string value_m = MISC_FILTERS_VALUES[choice.value];
@@ -687,19 +687,19 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 		case 4:
 			process_misc_musicevent_menu();
 			break;
+		//case 5:
+		//	process_misc_cutplayer_menu();
+		//	break;
 		case 5:
-			process_misc_cutplayer_menu();
-			break;
-		case 6:
 			process_misc_filters_menu();
 			break;
-		case 23:
+		case 22:
 			process_phone_bill_menu();
 			break;
-		case 28:
+		case 27:
 			process_def_menutab_menu();
 			break;
-		case 29:
+		case 28:
 			process_airbrake_global_menu();
 			break;
 		default:
@@ -710,7 +710,7 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 }
 
 void process_misc_menu(){
-	const int lineCount = 31;
+	const int lineCount = 30;
 
 	std::string caption = "Miscellaneous Options";
 
@@ -720,7 +720,7 @@ void process_misc_menu(){
 		{"Next Radio Track", NULL, NULL, true},
 		{"Freeze Radio To Station", nullptr, nullptr, false},
 		{"Scripted Music", nullptr, nullptr, false},
-		{"Cutscene Viewer", nullptr, nullptr, false},
+		//{"Cutscene Viewer", nullptr, nullptr, false},
 		{"Screen Filters", nullptr, nullptr, false},
 		{"Radio Always Off", &featureRadioAlwaysOff, &featureRadioAlwaysOffUpdated, true},
 		{"Boost Radio Volume", &featureBoostRadio, NULL, true}, 
@@ -1132,7 +1132,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	}
 
 	// is a cutscene currently playing?
-	if (cutscene_is_playing == true) CONTROLS::DISABLE_ALL_CONTROL_ACTIONS(0);
+	/*if (cutscene_is_playing == true) CONTROLS::DISABLE_ALL_CONTROL_ACTIONS(0);
 	else CONTROLS::ENABLE_ALL_CONTROL_ACTIONS(0);
 	if (cutscene_is_playing == true && CUTSCENE::IS_CUTSCENE_PLAYING()) cutscene_being_watched = true;
 	if (cutscene_being_watched == true && (!CUTSCENE::IS_CUTSCENE_PLAYING() || ((CUTSCENE::GET_CUTSCENE_TOTAL_DURATION() - CUTSCENE::GET_CUTSCENE_TIME() < 3000) && CAM::IS_SCREEN_FADING_OUT()))) { // && CUTSCENE::HAS_CUTSCENE_FINISHED()
@@ -1142,7 +1142,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		CAM::DO_SCREEN_FADE_IN(0);
 		cutscene_is_playing = false;
 		cutscene_being_watched = false;
-	}
+	}*/
 	
 	// DYNAMIC HEALTH BAR
 	if (featureDynamicHealthBar && !CUTSCENE::IS_CUTSCENE_PLAYING()) {
