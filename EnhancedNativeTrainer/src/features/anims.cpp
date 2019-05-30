@@ -46,7 +46,7 @@ const int CATEGORY_SCENARIOS = 96;
 const int CATEGORY_MOVE_CLIPSET = 97;
 
 bool loaded = false;
-
+bool anim_p = false;
 const std::vector<std::string> ALL_ANIMS =
 {
 //#ifdef _DEBUG
@@ -22403,7 +22403,7 @@ void replay_last_anim()
 }
 
 void update_anims_features(BOOL bPlayerExists, Ped playerPed) {
-	if (IsKeyDown(KeyConfig::KEY_MENU_BACK) || IsControllerButtonDown(KeyConfig::KEY_MENU_BACK)) {
+	if ((IsKeyDown(KeyConfig::KEY_MENU_BACK) || IsControllerButtonDown(KeyConfig::KEY_MENU_BACK)) && anim_p == true) {
 		AI::STOP_ANIM_TASK(PLAYER::PLAYER_PED_ID(), lastImmediatePlayDict, lastImmediatePlayAnim, 1.0);
 		PED::CLEAR_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 0, 0);
 		PED::CLEAR_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 1, 0);
@@ -22413,6 +22413,7 @@ void update_anims_features(BOOL bPlayerExists, Ped playerPed) {
 		STREAMING::REMOVE_ANIM_DICT(lastImmediatePlayDict);
 		STREAMING::REMOVE_ANIM_SET(lastImmediatePlayAnim);
 		AI::CLEAR_PED_TASKS_IMMEDIATELY(PLAYER::PLAYER_PED_ID());
+		anim_p = false;
 	}
 }
 
@@ -22423,6 +22424,8 @@ void do_play_anim(Ped playerPed, char* dict, char* anim, int mode)
 	PED::SET_PED_CAN_PLAY_AMBIENT_BASE_ANIMS(playerPed, true);
 	PED::SET_PED_CAN_PLAY_GESTURE_ANIMS(playerPed, true);
 	//PED::SET_PED_CAN_PLAY_VISEME_ANIMS(playerPed, true);
+
+	anim_p = true;
 
 	lastImmediatePlayDict = dict;
 	lastImmediatePlayAnim = anim;
