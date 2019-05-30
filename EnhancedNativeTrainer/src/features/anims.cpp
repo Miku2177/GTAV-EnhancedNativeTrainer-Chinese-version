@@ -22099,21 +22099,21 @@ bool onconfirm_anim_menu(MenuItem<int> choice)
 		case CATEGORY_FACIAL_NOW:
 		case CATEGORY_GENERAL_NOW:
 			break;
-		case CATEGORY_FACIAL_IDLE:
-			PED::CLEAR_FACIAL_IDLE_ANIM_OVERRIDE(playerPed);
-			break;
+		//case CATEGORY_FACIAL_IDLE:
+		//	PED::CLEAR_FACIAL_IDLE_ANIM_OVERRIDE(playerPed);
+		//	break;
 		case CATEGORY_MOVE_IDLE:
 			PED::CLEAR_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 0, true);
 			break;
-		case CATEGORY_MOVE_WALK:
-			PED::CLEAR_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 1, true);
-			break;
-		case CATEGORY_MOVE_RUN:
-			PED::CLEAR_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 2, true);
-			break;
-		case CATEGORY_MOVE_CLIPSET:
-			PED::RESET_PED_MOVEMENT_CLIPSET(playerPed, 1.0f);
-			break;
+		//case CATEGORY_MOVE_WALK:
+		//	PED::CLEAR_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 1, true);
+		//	break;
+		//case CATEGORY_MOVE_RUN:
+		//	PED::CLEAR_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 2, true);
+		//	break;
+		//case CATEGORY_MOVE_CLIPSET:
+		//	PED::RESET_PED_MOVEMENT_CLIPSET(playerPed, 1.0f);
+		//	break;
 		}
 		return false;
 	}
@@ -22136,11 +22136,11 @@ bool onconfirm_anim_menu(MenuItem<int> choice)
 		switch (currentAnimMenuMode)
 		{
 			case CATEGORY_FACIAL_NOW:
-			case CATEGORY_FACIAL_IDLE:
+			//case CATEGORY_FACIAL_IDLE:
 			case CATEGORY_GENERAL_NOW:
 			case CATEGORY_MOVE_IDLE:
-			case CATEGORY_MOVE_WALK:
-			case CATEGORY_MOVE_RUN:
+			//case CATEGORY_MOVE_WALK:
+			//case CATEGORY_MOVE_RUN:
 			{
 				if (STREAMING::DOES_ANIM_DICT_EXIST(dict))
 				{
@@ -22225,13 +22225,13 @@ bool process_anims_menu()
 			currentMenuNode = facialsNode;
 			break;
 		case CATEGORY_MOVE_IDLE:
-		case CATEGORY_MOVE_WALK:
-		case CATEGORY_MOVE_RUN:
+		//case CATEGORY_MOVE_WALK:
+		//case CATEGORY_MOVE_RUN:
 			currentMenuNode = movementNode;
 			break;
-		case CATEGORY_MOVE_CLIPSET:
-			currentMenuNode = movementClipsetNode;
-			break;
+		//case CATEGORY_MOVE_CLIPSET:
+		//	currentMenuNode = movementClipsetNode;
+		//	break;
 		case CATEGORY_GENERAL_NOW:
 		default:
 			currentMenuNode = rootNode;
@@ -22248,9 +22248,9 @@ bool process_anims_menu()
 		{
 		case CATEGORY_FACIAL_IDLE: //facial delay
 		case CATEGORY_MOVE_IDLE:
-		case CATEGORY_MOVE_WALK:
-		case CATEGORY_MOVE_RUN:
-		case CATEGORY_MOVE_CLIPSET:
+		//case CATEGORY_MOVE_WALK:
+		//case CATEGORY_MOVE_RUN:
+		//case CATEGORY_MOVE_CLIPSET:
 			addClearItem = true;
 			break;
 		}
@@ -22291,21 +22291,21 @@ bool process_anims_menu()
 	case CATEGORY_GENERAL_NOW:
 		caption = "Player Anims";
 		break;
-	case CATEGORY_FACIAL_IDLE: //facial delay
-		caption = "Facial Idle Anims";
-		break;
+	//case CATEGORY_FACIAL_IDLE: //facial delay
+	//	caption = "Facial Idle Anims";
+	//	break;
 	case CATEGORY_MOVE_IDLE:
 		caption = "Idle Anims";
 		break;
-	case CATEGORY_MOVE_WALK:
-		caption = "Walking Anims";
-		break;
-	case CATEGORY_MOVE_CLIPSET:
-		caption = "Movement Clipsets";
-		break;
-	case CATEGORY_MOVE_RUN:
-		caption = "Running Anims";
-		break;
+	//case CATEGORY_MOVE_WALK:
+	//	caption = "Walking Anims";
+	//	break;
+	//case CATEGORY_MOVE_CLIPSET:
+	//	caption = "Movement Clipsets";
+	//	break;
+	//case CATEGORY_MOVE_RUN:
+	//	caption = "Running Anims";
+	//	break;
 	}
 
 	std::stringstream caption_ss;
@@ -22349,35 +22349,35 @@ bool process_anims_menu_top()
 	item->value = CATEGORY_FACIAL_NOW;
 	menuItems.push_back(item);
 
-	item = new MenuItem<int>();
-	item->isLeaf = false;
-	item->caption = "Facial Anims: Idle";
-	item->value = CATEGORY_FACIAL_IDLE;
-	menuItems.push_back(item);
+	//item = new MenuItem<int>();
+	//item->isLeaf = false;
+	//item->caption = "Facial Anims: Idle";
+	//item->value = CATEGORY_FACIAL_IDLE;
+	//menuItems.push_back(item);
 
 	item = new MenuItem<int>();
 	item->isLeaf = false;
-	item->caption = "Movement Anims: Idle";
+	item->caption = "Movement Anims";
 	item->value = CATEGORY_MOVE_IDLE;
 	menuItems.push_back(item);
 
-	item = new MenuItem<int>();
-	item->isLeaf = false;
-	item->caption = "Movement Clipsets";
-	item->value = CATEGORY_MOVE_CLIPSET;
-	menuItems.push_back(item);
+	//item = new MenuItem<int>();
+	//item->isLeaf = false;
+	//item->caption = "Movement Clipsets";
+	//item->value = CATEGORY_MOVE_CLIPSET;
+	//menuItems.push_back(item);
 
-	item = new MenuItem<int>();
-	item->isLeaf = false;
-	item->caption = "Movement Anims: Walking";
-	item->value = CATEGORY_MOVE_WALK;
-	menuItems.push_back(item);
+	//item = new MenuItem<int>();
+	//item->isLeaf = false;
+	//item->caption = "Movement Anims: Walking";
+	//item->value = CATEGORY_MOVE_WALK;
+	//menuItems.push_back(item);
 
-	item = new MenuItem<int>();
-	item->isLeaf = false;
-	item->caption = "Movement Anims: Running";
-	item->value = CATEGORY_MOVE_RUN;
-	menuItems.push_back(item);
+	//item = new MenuItem<int>();
+	//item->isLeaf = false;
+	//item->caption = "Movement Anims: Running";
+	//item->value = CATEGORY_MOVE_RUN;
+	//menuItems.push_back(item);
 
 	item = new MenuItem<int>();
 	item->isLeaf = false;
@@ -22435,24 +22435,24 @@ void do_play_anim(Ped playerPed, char* dict, char* anim, int mode)
 	case CATEGORY_FACIAL_NOW:
 		PED::PLAY_FACIAL_ANIM(playerPed, anim, dict);
 		break;
-	case CATEGORY_FACIAL_IDLE:
-		PED::SET_FACIAL_IDLE_ANIM_OVERRIDE(playerPed, anim, dict);
-		break;
+	//case CATEGORY_FACIAL_IDLE:
+	//	PED::SET_FACIAL_IDLE_ANIM_OVERRIDE(playerPed, anim, dict);
+	//	break;
 	case CATEGORY_GENERAL_NOW:
 		AI::TASK_PLAY_ANIM(playerPed, dict, anim, 8, -8, -1, 0, 0, false, 0, true); // AI::TASK_PLAY_ANIM(playerPed, dict, anim, 8.0, 0.0, -1, 9, 0, 0, 0, 0);
 		break;
 	case CATEGORY_MOVE_IDLE:
 		PED::SET_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 0, dict, anim, 0, true);
 		break;
-	case CATEGORY_MOVE_WALK:
-		PED::SET_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 1, dict, anim, 0, true);
-		break;
-	case CATEGORY_MOVE_RUN:
-		PED::SET_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 2, dict, anim, 0, true);
-		break;
-	case CATEGORY_MOVE_CLIPSET:
-		PED::SET_PED_MOVEMENT_CLIPSET(playerPed, dict, 1.0f);
-		break;
+	//case CATEGORY_MOVE_WALK:
+	//	PED::SET_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 1, dict, anim, 0, true);
+	//	break;
+	//case CATEGORY_MOVE_RUN:
+	//	PED::SET_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 2, dict, anim, 0, true);
+	//	break;
+	//case CATEGORY_MOVE_CLIPSET:
+	//	PED::SET_PED_MOVEMENT_CLIPSET(playerPed, dict, 1.0f);
+	//	break;
 	}
 }
 
