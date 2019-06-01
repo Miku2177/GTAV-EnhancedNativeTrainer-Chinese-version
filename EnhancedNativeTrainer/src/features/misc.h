@@ -35,7 +35,7 @@ const std::vector<std::string> MISC_MUSICEVENT_VALUES{ "AH1_HOLE_RESTART", "AH2A
  "PENNED_IN_START_MUSIC", "PEYOTE_TRIPS_START", "PROLOGUE_TEST_GETAWAY_RT", "PTP_START", "RC18B_START", "RH1_START", "RH2A_BANK_RESTART", "RH2A_RESCUE_RESTART", "SOL1_CHASE_PLANE_RT", "SOL1_FIGHT_RT", "SOL1_GET_SOL_RT",
  "SOL1_SHOOT_PLANE_RT", "SOL2_RESTART1", "SOL5_FIGHT_BAD_RT", "TRV1_CHASE_BIKERS_RT", "TRV1_DRIVE_TRAILER_RT", "TRV2_RACE", "TRV2_WING_RESTART", "TRV4_EVADE_RT", "TRV4_FOOT_CHASE_RT", "TRV4_START_CS_SKIP" };
 
-/*const std::vector<std::string> MISC_CUTSCENE_VALUES{ "abigail_mcs_1_concat", "abigail_mcs_2", "ac_ig_3_p3_b", "ah_1_ext_t6", "ah_1_int", "ah_1_mcs_1", "ah_2_ext_alt", "ah_2_ext_p4", "ah_3a_explosion", "ah_3a_ext", "ah_3a_int", "ah_3a_mcs_3",
+const std::vector<std::string> MISC_CUTSCENE_VALUES{ "abigail_mcs_1_concat", "abigail_mcs_2", "ac_ig_3_p3_b", "ah_1_ext_t6", "ah_1_int", "ah_1_mcs_1", "ah_2_ext_alt", "ah_2_ext_p4", "ah_3a_explosion", "ah_3a_ext", "ah_3a_int", "ah_3a_mcs_3",
 "ah_3a_mcs_6", "ah_3b_ext", "ah_3b_int", "ah_3b_mcs_1", "ah_3b_mcs_2", "ah_3b_mcs_3", "ah_3b_mcs_4", "ah_3b_mcs_5", "ah_3b_mcs_6_p1", "ah_3b_mcs_7", "apa_fin_cel_apt2", "apa_fin_cel_apt3", "apa_fin_cel_apt4", "apa_hum_fin_int", "apa_nar_int",
 "apa_nar_mid", "apa_pri_int", "arena_int", "arena_int2", "armenian_1_int", "armenian_1_mcs_1", "armenian_2_int", "armenian_2_mcs_6", "armenian_3_int",
 "armenian_3_mcs_3", "armenian_3_mcs_4", "armenian_3_mcs_5", "armenian_3_mcs_6", "armenian_3_mcs_7", "armenian_3_mcs_8", "armenian_3_mcs_9_concat", "arm_1_mcs_2_concat", "arm_2_mcs_4", "ass_int_2_alt1", "ass_mcs_1", "bar_1_rcm_p2", "bar_2_rcm",
@@ -57,7 +57,7 @@ const std::vector<std::string> MISC_MUSICEVENT_VALUES{ "AH1_HOLE_RESTART", "AH2A
 "low_drv_ext", "low_drv_int", "low_fin_ext", "low_fin_int", "low_fin_mcs1", "low_fun_ext", "low_fun_int", "low_fun_mcs1", "low_int", "low_pho_ext", "low_pho_int", "low_tra_ext", "low_tra_int",
 "lsdhs_mcs_2", "lsdhs_mcs_3_p1_concat", "lsdhs_mcs_3_p2", "lsdh_2a_ext", "lsdh_2a_int", "lsdh_2b_int", "lsdh_2b_mcs_1", "lsdh_int", "martin_1_ext", "martin_1_int", "martin_1_mcs_1", "maude_mcs_1", "maude_mcs_2", "maude_mcs_3",
 "maude_mcs_4", "maude_mcs_5", "mic_1_int", "mic_1_mcs_1", "mic_1_mcs_2", "mic_1_mcs_3", "mic_2_int", "mic_2_mcs_1", "mic_2_mcs_3_concat", "mic_3_ext", "mic_3_int", "mic_3_mcs_1_p1_a2", "mic_4_int", "mmb_1_rcm", "mmb_2_rcm",
-"mmb_3_rcm", "mph_fin_cel_apt", "mph_fin_cel_apt1", "mph_fin_cel_bar", "mph_fin_cel_roo", "mph_fin_cel_str", "mph_fin_cel_tre", "mph_hum_arm_ext", "mph_hum_del_ext", "mph_hum_emp_ext", "mph_hum_fin_ext", "mph_hum_fin_int", "mph_hum_fin_mcs1",
+"mmb_3_rcm", "mph_fin_cel_apt", "mph_fin_cel_apt1", "mph_fin_cel_str", "mph_fin_cel_tre", "mph_hum_arm_ext", "mph_hum_del_ext", "mph_hum_emp_ext", "mph_hum_fin_ext", "mph_hum_fin_int", "mph_hum_fin_mcs1",
 "mph_hum_int", "mph_hum_key_ext", "mph_hum_key_mcs1", "mph_hum_mid", "mph_hum_val_ext", "mph_nar_bik_ext", "mph_nar_cok_ext", "mph_nar_fin_ext", "mph_nar_fin_int", "mph_nar_int", "mph_nar_met_ext", "mph_nar_mid", "mph_nar_tra_ext", "mph_nar_wee_ext",
 "mph_pac_bik_ext", "mph_pac_con_ext", "mph_pac_fin_ext", "mph_pac_fin_int", "mph_pac_fin_mcs0", "mph_pac_fin_mcs1", "mph_pac_fin_mcs2", "mph_pac_hac_ext", "mph_pac_hac_mcs1", "mph_pac_int", "mph_pac_mid", "mph_pac_pho_ext", "mph_pac_wit_mcs1",
 "mph_pac_wit_mcs2", "mph_pri_bus_ext", "mph_pri_fin_ext", "mph_pri_fin_int", "mph_pri_fin_mcs1", "mph_pri_fin_mcs2", "mph_pri_int", "mph_pri_mid", "mph_pri_pla_ext", "mph_pri_sta_ext", "mph_pri_sta_mcs1", "mph_pri_sta_mcs2", "mph_pri_unf_ext",
@@ -71,7 +71,7 @@ const std::vector<std::string> MISC_MUSICEVENT_VALUES{ "AH1_HOLE_RESTART", "AH2A
 "sol_1_mcs_1_concat",  "sol_1_mcs_2", "sol_1_mcs_3",  "sol_2_ext_concat", "sol_2_int_alt1", "sol_3_int", "sol_5_mcs_1", "sol_5_mcs_2", "sol_5_mcs_2_p5", "sub_int", "subj_ext", "subj_mcs0", "subj_mcs1", "tale_intro","tmom_1_rcm", "tmom_2_rcm", 
 "tonya_mcs_1", "tonya_mcs_2", "tonya_mcs_3", "trevor_1_int",
 "trevor_2_int", "trevor_drive_int", "trv2_mcs_8", "trvram_1", "trvram_2_concat", "trvram_3", "trvram_4", "trvram_5_con", "trv_1_mcs_1_p1", "trv_1_mcs_3_concat", "trv_1_mcs_4", "trv_2_mcs_4_concat", "trv_2_mcs_6", "trv_5_ext", "trv_5_int",
-"trv_dri_ext", "trv_dri_mcs_concat" };*/
+"trv_dri_ext", "trv_dri_mcs_concat" };
 
 const std::vector<std::string> MISC_FILTERS_VALUES{	"DEFAULT", "AmbientPUSH", "BeastIntro01", "CAMERA_secuirity_FUZZ", "DeadlineNeon01", "FIB_B", "glasses_black", "glasses_blue", "glasses_brown", "glasses_Darkblue", "glasses_green", "glasses_orange",
 	"glasses_pink", "glasses_purple", "glasses_red", "glasses_yellow", "graveyard_shootout", "hud_def_desatcrunch", "hud_def_flash", "lab_none_dark_OVR", "LostTimeDark", "LostTimeFlash", "METRO_Tunnels", "michealspliff", "mp_bkr_int01_garage",
