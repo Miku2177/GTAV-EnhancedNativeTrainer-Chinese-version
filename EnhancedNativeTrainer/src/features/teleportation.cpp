@@ -314,7 +314,7 @@ std::vector<tele_location> LOCATIONS_INTERIORS = {
 	{ "Pacific Standard Bank Vault", 255.851f, 217.030f, 101.683f },
 	{ "Paleto Bay Sheriff", -446.135f, 6012.91f, 31.7164f },
 	{ "Raven Slaughterhouse", 967.357f, -2184.71f, 30.0613f },
-	{ "Rogers Salvage & Scrap", -609.484f, -1611.63f, 27.0105f, { "sp1_03_interior_v_recycle_milo_" }, {}, { IPL_PROPS_SCRAP }, false },
+	{ "Rogers Salvage & Scrap", -609.484f, -1611.63f, 27.0105f, { "sp1_03_interior_v_recycle_milo_" }, {}, {}, false }, //  IPL_PROPS_SCRAP
 	{ "Sandy Shores Sheriff", 1853.18f, 3686.63f, 34.2671f },
 	{ "Solomon's Office", -1002.89f, -478.003f, 50.0271f },
 	{ "Spaceship Interior", 41.64376000f, -779.93910000f, 832.40240000f, { "spaceinterior" }, {}, {}, false },
