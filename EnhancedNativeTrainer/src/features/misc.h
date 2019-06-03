@@ -50,7 +50,7 @@ const std::vector<std::string> MISC_CUTSCENE_VALUES{ "abigail_mcs_1_concat", "ab
 "fam_6_mcs_2_concat", "fam_6_mcs_3", "fam_6_mcs_4", "fam_6_mcs_5", "fam_6_mcs_6", "fam_6_mcs_6_p4_b", "fbi_1_ext", "fbi_1_int", "fbi_1_mcs_1_concat", "fbi_2_ext", "fbi_2_int", "fbi_2_mcs_1", "fbi_2_mcs_2", "fbi_2_mcs_3b",
 "fbi_3_int", "fbi_3_mcs_1", "fbi_3_mcs_2", "fbi_3_mcs_3", "fbi_3_mcs_4p2", "fbi_3_mcs_5", "fbi_3_mcs_5p2", "fbi_3_mcs_6p1_b", "fbi_3_mcs_6p2", "fbi_3_mcs_7", "fbi_3_mcs_8", "fbi_4_int", "fbi_4_mcs_2_concat", "fbi_4_mcs_3_concat", "fbi_5a_mcs_1",
 "fbi_5a_mcs_10", "fbi_5b_mcs_1", "fbi_5_ext", "fbi_5_int", "fin_a_ext", "fin_a_int", "fin_b_ext", "fin_b_mcs_1_aandb", "fin_b_mcs_2", "fin_c2_mcs_1", "fin_c2_mcs_5", "fin_c_ext", "fin_c_int", "fin_c_mcs_1", "fin_c_mcs_1_p1_a",
-"fin_ext_p1", "fin_ext_p2", "franklin_1_int", "fra_0_int", "fra_0_int_p1_alt", "fra_0_mcs_1", "fra_0_mcs_4_p2_t3", "fra_0_mcs_5_p1", "fra_1_mcs_1", "fra_2_ext", "fra_2_ig_4_alt1_concat", "fra_2_int", 
+"fin_ext_p1", "fin_ext_p2", "franklin_1_int", "fra_0_int", "fra_0_mcs_1", "fra_0_mcs_4_p2_t3", "fra_0_mcs_5_p1", "fra_1_mcs_1", "fra_2_ext", "fra_2_ig_4_alt1_concat", "fra_2_int", 
 "iaa_int", "iaaj_ext", "iaaj_int", "impexp_int", "impexp_int_l1", "hao_mcs_1", "hang_int", "hang_int_plane", "heist_int", "hun_2_mcs_1",
 "jh2_fina_mcs4_a1a2", "jh_1_ig_3", "jh_1_int", "jh_1_mcs_4p2", "jh_1_mcs_4_p1_alt1", "jh_2a_intp4", "jh_2a_mcs_1", "jh_2b_int", "jh_2b_mcs_1", "jh_2_arrest_fail_c", "jh_2_celeb", "jh_2_fin_a_mcs4_a1", "jh_end_pt2_a1_p2_a", "josh_1_int_concat",
 "josh_2_intp1_t4", "josh_3_intp1", "josh_4_int_concat", "lamar_1_int", "lam_1_mcs_1_concat", "lam_1_mcs_2", "lam_1_mcs_3", "lester_1_int", "les_1a_mcs_0", "les_1a_mcs_1", "les_1a_mcs_2", "les_1a_mcs_3", "les_1a_mcs_4", "les_1b_mcs_1",
