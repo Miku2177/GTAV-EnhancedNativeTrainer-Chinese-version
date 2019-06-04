@@ -2458,7 +2458,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		float v_x = -(sin(rad) * p_force * 10);
 		float v_y = (cos(rad) * p_force * 10);
 		float v_z = p_force * (CamRot.x * 0.2);
-		if (VEH_MASS_VALUES[VehMassMultIndex] > 0 && ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(my_shield) && VEH_MASS_VALUES[VehMassMultIndex] > 3) ENTITY::SET_ENTITY_VELOCITY(my_shield, vehspeed.x, vehspeed.y, vehspeed.z);
+		//if (VEH_MASS_VALUES[VehMassMultIndex] > 0 && ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(my_shield) && VEH_MASS_VALUES[VehMassMultIndex] > 3) ENTITY::SET_ENTITY_VELOCITY(my_shield, vehspeed.x, vehspeed.y, vehspeed.z);
 		
 		int count_v = worldGetAllVehicles(nearbyObj, OBJ_ARR_SIZE); // vehicles
 		for (int i = 0; i < count_v; i++) {
