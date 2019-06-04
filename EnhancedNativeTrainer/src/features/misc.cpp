@@ -1132,7 +1132,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	}
 
 	// is a cutscene currently playing?
-	/*if (cutscene_is_playing == true) CONTROLS::DISABLE_ALL_CONTROL_ACTIONS(0);
+	if (cutscene_is_playing == true) CONTROLS::DISABLE_ALL_CONTROL_ACTIONS(0);
 	else CONTROLS::ENABLE_ALL_CONTROL_ACTIONS(0);
 	if (cutscene_is_playing == true && CUTSCENE::IS_CUTSCENE_PLAYING()) cutscene_being_watched = true;
 	if (cutscene_being_watched == true && (!CUTSCENE::IS_CUTSCENE_PLAYING() || ((CUTSCENE::GET_CUTSCENE_TOTAL_DURATION() - CUTSCENE::GET_CUTSCENE_TIME() < 3000) && CAM::IS_SCREEN_FADING_OUT()))) { // && CUTSCENE::HAS_CUTSCENE_FINISHED()
@@ -1142,7 +1142,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		CAM::DO_SCREEN_FADE_IN(0);
 		cutscene_is_playing = false;
 		cutscene_being_watched = false;
-	}*/
+	}
 	
 	// DYNAMIC HEALTH BAR
 	if (featureDynamicHealthBar && !CUTSCENE::IS_CUTSCENE_PLAYING()) {
@@ -1357,7 +1357,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		Vector3 Pedrotation = ENTITY::GET_ENTITY_ROTATION(PLAYER::PLAYER_PED_ID(), 2);
 		if (!CAM::DOES_CAM_EXIST(CutCam)) {
 			int PlayerIndex = PED::GET_PED_BONE_INDEX(PLAYER::PLAYER_PED_ID(), 8433);
-			int PedHash = GAMEPLAY::GET_HASH_KEY("bot_01b_bit_03");
+			int PedHash = GAMEPLAY::GET_HASH_KEY("prop_wardrobe_door_01"); // bot_01b_bit_03
 			Vector3 Ped1Coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(PLAYER::PLAYER_PED_ID(), 0.0f, 1.0f, 0.0f);
 			Vector3 Ped2Coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(PLAYER::PLAYER_PED_ID(), 0.0f, 2.0f, 0.0f);
 			float PedlookDir = ENTITY::GET_ENTITY_HEADING(PLAYER::PLAYER_PED_ID());
