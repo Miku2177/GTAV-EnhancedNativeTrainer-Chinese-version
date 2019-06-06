@@ -15,6 +15,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 int activeLineIndexBodyguards = 0;
 
+int myGroup = -1;
 int const BODYGUARD_LIMIT = 7;
 
 bool stop_b = false;
@@ -431,7 +432,7 @@ void do_spawn_bodyguard(){
 			WAIT(0);
 		}
 
-		int myGroup = PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID());
+		myGroup = PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID());
 
 		Vector3 spawnCoords = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(PLAYER::PLAYER_PED_ID(), 2.5, 2.5, 0.0);
 		Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
@@ -526,15 +527,26 @@ void do_spawn_bodyguard(){
 
 			PED::SET_PED_COMBAT_ABILITY(bodyGuard, 2);
 			PED::SET_PED_COMBAT_RANGE(bodyGuard, 2);
-
 			PED::SET_PED_COMBAT_MOVEMENT(bodyGuard, 3);
 			PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 5, true);
-
+			//
+			if (bodyguard_animal == true) {
+				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 46, true);
+				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 17, true);
+				PED::SET_PED_FLEE_ATTRIBUTES(bodyGuard, 0, false);
+				Hash temp_p = PED::GET_PED_RELATIONSHIP_GROUP_HASH(bodyGuard);
+				PED::ADD_RELATIONSHIP_GROUP("DogChop", &temp_p);
+				PED::SET_RELATIONSHIP_BETWEEN_GROUPS(2, myGroup, temp_p); // 0
+				PED::SET_RELATIONSHIP_BETWEEN_GROUPS(2, temp_p, myGroup);
+				PED::SET_PED_CAN_BE_TARGETTED(bodyGuard, false);
+				//WEAPON::GIVE_WEAPON_TO_PED(bodyGuard, -1569615261, 1, true, true);
+			}
+			//
 			if (bodyguard_animal == false) PED::SET_PED_CAN_SWITCH_WEAPON(bodyGuard, true);
 			PED::SET_GROUP_FORMATION(myGroup, 1); // 1
 			PED::SET_CAN_ATTACK_FRIENDLY(bodyGuard, false, false);
 
-			AI::TASK_COMBAT_HATED_TARGETS_AROUND_PED(bodyGuard, 100, 0);
+			AI::TASK_COMBAT_HATED_TARGETS_AROUND_PED(bodyGuard, 10000, 0);
 			PED::SET_PED_KEEP_TASK(bodyGuard, true);
 
 			if (bodyguard_animal == false) PED::SET_PED_FIRING_PATTERN(bodyGuard, GAMEPLAY::GET_HASH_KEY("FIRING_PATTERN_FULL_AUTO")); // 0xC6EE6B4C
@@ -611,7 +623,28 @@ void maintain_bodyguards(){
 	
 	if (!spawnedBodyguards.empty()) {
 		for (int i = 0; i < spawnedBodyguards.size(); i++) {
+			PED::SET_PED_KEEP_TASK(spawnedBodyguards[i], true);
 			if (animal_in_group == true && PED::IS_PED_FLEEING(spawnedBodyguards[i])) AI::TASK_STAND_STILL(spawnedBodyguards[i], 10000); //  || AI::IS_PED_RUNNING(*iter))
+			//
+			/*if (animal_in_group == true) {
+				Vector3 coords_mebullet = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
+				if (GAMEPLAY::HAS_BULLET_IMPACTED_IN_AREA(coords_mebullet.x, coords_mebullet.y, coords_mebullet.z, 200.0, 0, 0)) {
+					const int BOD_ARR_PED_SIZE = 1024;
+					Ped bod_ped[BOD_ARR_PED_SIZE];
+					int found_ped = worldGetAllPeds(bod_ped, BOD_ARR_PED_SIZE);
+					for (int j = 0; j < found_ped; j++) {
+						if (PED::IS_PED_SHOOTING(bod_ped[j])) {
+							Hash temp_e = PED::GET_PED_RELATIONSHIP_GROUP_HASH(bod_ped[j]);
+							PED::ADD_RELATIONSHIP_GROUP("meleetarget", &temp_e);
+							PED::SET_RELATIONSHIP_BETWEEN_GROUPS(5, myGroup, temp_e); // 0
+							PED::SET_RELATIONSHIP_BETWEEN_GROUPS(5, temp_e, myGroup);
+							PED::SET_PED_AS_ENEMY(bod_ped[j], true);
+							AI::TASK_COMBAT_PED(spawnedBodyguards[i], bod_ped[j], 0, 16);
+						}
+					}
+				}
+			}*/
+			//
 			if (stop_b == false) {
 				PED::SET_PED_AS_GROUP_MEMBER(spawnedBodyguards[i], PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID()));
 				PED::SET_PED_NEVER_LEAVES_GROUP(spawnedBodyguards[i], true);
