@@ -30,6 +30,8 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\common\ENTUtil.h"
 #include <random>
 
+extern bool featureWorldMoonGravity;
+
 void process_world_menu();
 
 void process_weather_menu();
