@@ -32,6 +32,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include <array>
 #include <vector>
 #include <cstdlib>
+
 using namespace std;
 
 const static int ENGINE_SOUND_COUNT_VEHICLES = 366; // 346
@@ -3220,7 +3221,8 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		VEH_HYDRAULICS_VALUES[HydraulicsIndex] != 0.0f) {
 		Vehicle myVehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		if (VEHICLE::IS_VEHICLE_ON_ALL_WHEELS(myVehicle))
-			ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, VEH_HYDRAULICS_VALUES[HydraulicsIndex], 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
+			if (!featureWorldMoonGravity) ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, VEH_HYDRAULICS_VALUES[HydraulicsIndex], 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
+			else ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, VEH_HYDRAULICS_VALUES[HydraulicsIndex] / 4, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
 	}
 
 ///////////////////////////////////////////////////////////////////////////////////
