@@ -218,8 +218,6 @@ int VisLight3dIndex = 0;
 bool VisLight3d_Changed = true;
 
 //Speed Limiter
-const std::vector<std::string> VEH_SPEEDLIMITER_CAPTIONS{ "OFF", "10 (MPH)", "20 (MPH)", "30 (MPH)", "40 (MPH)", "50 (MPH)", "60 (MPH)", "70 (MPH)", "80 (MPH)", "90 (MPH)", "100 (MPH)", "110 (MPH)", "120 (MPH)", "130 (MPH)", "140 (MPH)", "150 (MPH)", "180 (MPH)", "200 (MPH)" };
-const std::vector<int> VEH_SPEEDLIMITER_VALUES{ 0, 4, 9, 13, 18, 22, 27, 31, 36, 40, 44, 48, 53, 57, 61, 66, 80, 89 };
 int speedLimiterIndex = 0;
 bool speedLimiterChanged = true;
 int DoorAutolockIndex = 0;
@@ -2768,12 +2766,13 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	
 	///////////////////////////////////////////////// SPEED LIMIT ////////////////////////////////////////////////////////////////
 
-	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && (VEH_SPEEDLIMITER_VALUES[speedLimiterIndex] > 0) && speedlimiter_switch){
+	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && (VEH_SPEEDLIMITER_VALUES[speedLimiterIndex] > 0) && speedlimiter_switch && !PED::IS_PED_IN_ANY_PLANE(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_HELI(PLAYER::PLAYER_PED_ID())) {
 		Vehicle vehlimit = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		ENTITY::SET_ENTITY_MAX_SPEED(vehlimit, VEH_SPEEDLIMITER_VALUES[speedLimiterIndex]);
 	}
 	 
-	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && ((VEH_SPEEDLIMITER_VALUES[speedCityLimiterIndex] > 0) || (VEH_SPEEDLIMITER_VALUES[speedCountryLimiterIndex] > 0))) {
+	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && ((VEH_SPEEDLIMITER_VALUES[speedCityLimiterIndex] > 0) || (VEH_SPEEDLIMITER_VALUES[speedCountryLimiterIndex] > 0)) && 
+		!PED::IS_PED_IN_ANY_PLANE(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_HELI(PLAYER::PLAYER_PED_ID())) {
 		Vehicle vehlimit = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		Vector3 vehme_coords = ENTITY::GET_ENTITY_COORDS(vehlimit, true);
 
