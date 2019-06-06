@@ -1355,7 +1355,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	// First Person Cutscene Camera 
 	/*if (CUTSCENE::IS_CUTSCENE_PLAYING()) {
 		Ped curr_cut_ped = -1;
-		curr_cut_ped =PLAYER::PLAYER_PED_ID();
+		curr_cut_ped = PLAYER::PLAYER_PED_ID();
 		Vector3 Pedrotation = ENTITY::GET_ENTITY_ROTATION(curr_cut_ped, 2);
 		if (!CAM::DOES_CAM_EXIST(CutCam)) {
 			int PlayerIndex = PED::GET_PED_BONE_INDEX(curr_cut_ped, 8433);
