@@ -1465,6 +1465,8 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 				CAM::RENDER_SCRIPT_CAMS(false, false, 1, false, false);
 				CAM::DESTROY_CAM(CutCam, true);
 			}
+			found_ped_in_cutscene = false;
+			switched_c = -1;
 		}
 	}
 	else {
@@ -1474,6 +1476,8 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			CAM::RENDER_SCRIPT_CAMS(false, false, 1, false, false);
 			CAM::DESTROY_CAM(CutCam, true);
 		}
+		found_ped_in_cutscene = false;
+		switched_c = -1;
 	}
 
 	// No Stunt Jumps
