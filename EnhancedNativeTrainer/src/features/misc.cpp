@@ -72,7 +72,10 @@ char *temp_musiceventname = "";
 
 Vehicle playerVeh = -1;
 
-bool cutscene_is_playing, cutscene_being_watched = false;
+// Cutscene Viewer & First Person Cutscene Camera
+bool cutscene_is_playing, cutscene_being_watched, found_ped_in_cutscene = false;
+Ped curr_cut_ped, switched_c = -1;
+bool featureFirstPersonCutscene = false;
 
 bool featurePlayerRadio = false;
 bool featurePlayerRadioUpdated = false;
@@ -346,8 +349,13 @@ bool onconfirm_misc_freezeradio_menu(MenuItem<int> choice){
 bool onconfirm_misc_cutscene_menu(MenuItem<int> choice) {
 	if (choice.value == -1) {
 		cutscene_is_playing = false;
+		found_ped_in_cutscene = false;
+		switched_c = -1;
 		CUTSCENE::STOP_CUTSCENE_IMMEDIATELY();
 		CUTSCENE::REMOVE_CUTSCENE();
+	} 
+	else if(choice.value == -2) {
+		found_ped_in_cutscene = false;
 	}
 	else {
 		std::string value_m = MISC_CUTSCENE_VALUES[choice.value];
@@ -377,13 +385,27 @@ void process_misc_cutplayer_menu() {
 	std::string menuCaption;
 	captions = MISC_CUTSCENE_VALUES;
 
+	ToggleMenuItem<int>* toggleItem;
+	int i = -1;
+
 	MenuItem<int> *item = new MenuItem<int>();
 	item->caption = "Stop";
 	item->value = -1;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
-	int i = 0;
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "First Person Cutscene Camera";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureFirstPersonCutscene;
+	menuItems.push_back(toggleItem);
+
+	item = new MenuItem<int>();
+	item->caption = "Switch Camera";
+	item->value = -2;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
 	for each (std::string scenario in captions)
 	{
 		item = new MenuItem<int>();
@@ -806,6 +828,7 @@ void reset_misc_globals(){
 	featureShowVehiclePreviews = true;
 	featureShowStatusMessage = true;
 	airbrake_enable = true;
+	featureFirstPersonCutscene = false;
 	featureControllerIgnoreInTrainer = false;
 	featureBlockInputInMenu = false;
 	mouse_view_control = false;
@@ -1131,19 +1154,6 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		} 
 	}
 
-	// is a cutscene currently playing?
-	if (cutscene_is_playing == true) CONTROLS::DISABLE_ALL_CONTROL_ACTIONS(0);
-	else CONTROLS::ENABLE_ALL_CONTROL_ACTIONS(0);
-	if (cutscene_is_playing == true && CUTSCENE::IS_CUTSCENE_PLAYING()) cutscene_being_watched = true;
-	if (cutscene_being_watched == true && (!CUTSCENE::IS_CUTSCENE_PLAYING() || ((CUTSCENE::GET_CUTSCENE_TOTAL_DURATION() - CUTSCENE::GET_CUTSCENE_TIME() < 3000) && CAM::IS_SCREEN_FADING_OUT()))) { // && CUTSCENE::HAS_CUTSCENE_FINISHED()
-		CAM::DO_SCREEN_FADE_IN(0);
-		CUTSCENE::STOP_CUTSCENE_IMMEDIATELY();
-		CUTSCENE::REMOVE_CUTSCENE();
-		CAM::DO_SCREEN_FADE_IN(0);
-		cutscene_is_playing = false;
-		cutscene_being_watched = false;
-	}
-	
 	// DYNAMIC HEALTH BAR
 	if (featureDynamicHealthBar && !CUTSCENE::IS_CUTSCENE_PLAYING()) {
 		if (!featureMiscHideHud && !featurePhoneShowHud && !featureInVehicleNoHud && !featureMarkerHud && !featureMiscHideENTHud) UI::DISPLAY_RADAR(false); // There is no need to hide HUD if it's already hidden
@@ -1352,43 +1362,109 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		}
 	}
 	
+	// is a cutscene currently playing?
+	if (cutscene_is_playing == true) CONTROLS::DISABLE_ALL_CONTROL_ACTIONS(0);
+	else CONTROLS::ENABLE_ALL_CONTROL_ACTIONS(0);
+	if (cutscene_is_playing == true && CUTSCENE::IS_CUTSCENE_PLAYING()) cutscene_being_watched = true;
+	if (cutscene_being_watched == true && (!CUTSCENE::IS_CUTSCENE_PLAYING() || ((CUTSCENE::GET_CUTSCENE_TOTAL_DURATION() - CUTSCENE::GET_CUTSCENE_TIME() < 3000) && CAM::IS_SCREEN_FADING_OUT()))) { // && CUTSCENE::HAS_CUTSCENE_FINISHED()
+		CAM::DO_SCREEN_FADE_IN(0);
+		CUTSCENE::STOP_CUTSCENE_IMMEDIATELY();
+		CUTSCENE::REMOVE_CUTSCENE();
+		CAM::DO_SCREEN_FADE_IN(0);
+		cutscene_is_playing = false;
+		cutscene_being_watched = false;
+		found_ped_in_cutscene = false;
+		switched_c = -1;
+	}
+	if (CUTSCENE::IS_CUTSCENE_PLAYING()) cutscene_being_watched = true;
+	else cutscene_being_watched = false;
+
 	// First Person Cutscene Camera 
-	/*if (CUTSCENE::IS_CUTSCENE_PLAYING()) {
-		Ped curr_cut_ped = -1;
-		curr_cut_ped = PLAYER::PLAYER_PED_ID();
-		Vector3 Pedrotation = ENTITY::GET_ENTITY_ROTATION(curr_cut_ped, 2);
-		if (!CAM::DOES_CAM_EXIST(CutCam)) {
+	if (featureFirstPersonCutscene) {
+		if (CUTSCENE::IS_CUTSCENE_PLAYING()) {
+			Vector3 Pedrotation = ENTITY::GET_ENTITY_ROTATION(curr_cut_ped, 2);
 			int PlayerIndex = PED::GET_PED_BONE_INDEX(curr_cut_ped, 8433);
-			int PedHash = GAMEPLAY::GET_HASH_KEY("prop_wardrobe_door_01"); // bot_01b_bit_03
+			int PedHash = GAMEPLAY::GET_HASH_KEY("bot_01b_bit_03"); // prop_wardrobe_door_01
 			Vector3 Ped1Coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(curr_cut_ped, 0.0f, 1.0f, 0.0f);
 			Vector3 Ped2Coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(curr_cut_ped, 0.0f, 2.0f, 0.0f);
 			float PedlookDir = ENTITY::GET_ENTITY_HEADING(curr_cut_ped);
+			if (!CAM::DOES_CAM_EXIST(CutCam)) { // && ENTITY::IS_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID())
+				curr_cut_ped = PLAYER::PLAYER_PED_ID();
+				PlayerIndex = PED::GET_PED_BONE_INDEX(curr_cut_ped, 8433);
+				Ped1Coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(curr_cut_ped, 0.0f, 1.0f, 0.0f);
+				Ped2Coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(curr_cut_ped, 0.0f, 2.0f, 0.0f);
+				PedlookDir = ENTITY::GET_ENTITY_HEADING(curr_cut_ped);
+				xaxis = OBJECT::CREATE_OBJECT(PedHash, Ped1Coords.x, Ped1Coords.y, Ped1Coords.z, 1, true, 1);
+				zaxis = OBJECT::CREATE_OBJECT(PedHash, Ped2Coords.x, Ped2Coords.y, Ped2Coords.z, 1, true, 1);
+				ENTITY::SET_ENTITY_VISIBLE(xaxis, false);
+				ENTITY::SET_ENTITY_VISIBLE(zaxis, false);
+				ENTITY::SET_ENTITY_COLLISION(xaxis, false, true);
+				ENTITY::SET_ENTITY_COLLISION(zaxis, false, true);
+				ENTITY::ATTACH_ENTITY_TO_ENTITY(xaxis, curr_cut_ped, PlayerIndex, 0.0f, 0.0f, -0.1f, 105.0f, 0.0f, 0.0f, false, false, false, true, 0, true);
+				ENTITY::ATTACH_ENTITY_TO_ENTITY(zaxis, curr_cut_ped, PlayerIndex, 0.0f, 0.08f, -0.1f, 50.0f, 0.0f, 0.0f, false, false, false, true, 0, true);
 
-			xaxis = OBJECT::CREATE_OBJECT(PedHash, Ped1Coords.x, Ped1Coords.y, Ped1Coords.z, 1, true, 1);
-			zaxis = OBJECT::CREATE_OBJECT(PedHash, Ped2Coords.x, Ped2Coords.y, Ped2Coords.z, 1, true, 1);
-			ENTITY::SET_ENTITY_VISIBLE(xaxis, false);
-			ENTITY::SET_ENTITY_VISIBLE(zaxis, false);
-			ENTITY::SET_ENTITY_COLLISION(xaxis, false, true);
-			ENTITY::SET_ENTITY_COLLISION(zaxis, false, true);
-			ENTITY::ATTACH_ENTITY_TO_ENTITY(xaxis, curr_cut_ped, PlayerIndex, 0.0f, 0.0f, -0.1f, 105.0f, 0.0f, 0.0f, false, false, false, true, 0, true);
-			ENTITY::ATTACH_ENTITY_TO_ENTITY(zaxis, curr_cut_ped, PlayerIndex, 0.0f, 0.08f, -0.1f, 50.0f, 0.0f, 0.0f, false, false, false, true, 0, true);
+				Vector3 coordsPed = ENTITY::GET_ENTITY_COORDS(curr_cut_ped, true);
+				CutCam = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_FLY_CAMERA", coordsPed.x, coordsPed.y, coordsPed.z, Pedrotation.x, Pedrotation.y, Pedrotation.z, 50.0, true, 2);
+				CAM::ATTACH_CAM_TO_ENTITY(CutCam, zaxis, 0, 0, 0, true);
+			}
 
-			Vector3 coordsPed = ENTITY::GET_ENTITY_COORDS(curr_cut_ped, true);
-			CutCam = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_FLY_CAMERA", coordsPed.x, coordsPed.y, coordsPed.z, Pedrotation.x, Pedrotation.y, Pedrotation.z, 50.0, true, 2);
-			CAM::ATTACH_CAM_TO_ENTITY(CutCam, zaxis, 0, 0, 0, true);
+			if (CAM::DOES_CAM_EXIST(CutCam)) {
+				if (cutscene_being_watched == true && found_ped_in_cutscene == false) { //
+					const int BUS_ARR_PED_SIZE = 1024;
+					Ped bus_ped[BUS_ARR_PED_SIZE];
+					int found_ped = worldGetAllPeds(bus_ped, BUS_ARR_PED_SIZE);
+					for (int i = 0; i < found_ped; i++) {
+						if (ENTITY::IS_ENTITY_ON_SCREEN(bus_ped[i]) && (ENTITY::GET_ENTITY_MODEL(bus_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_zero") ||
+							ENTITY::GET_ENTITY_MODEL(bus_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_one") || ENTITY::GET_ENTITY_MODEL(bus_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_two") ||
+							ENTITY::GET_ENTITY_MODEL(bus_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"mp_f_freemode_01") || ENTITY::GET_ENTITY_MODEL(bus_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"mp_m_freemode_01")) && found_ped_in_cutscene == false &&
+							ENTITY::IS_ENTITY_VISIBLE(bus_ped[i]) && switched_c != bus_ped[i]) { // NETWORK::IS_PLAYER_IN_CUTSCENE(bus_ped[i]) && ENTITY::IS_ENTITY_ON_SCREEN(bus_ped[i]) && bus_ped[i] != PLAYER::PLAYER_PED_ID()
+							curr_cut_ped = bus_ped[i];
+							OBJECT::DELETE_OBJECT(&xaxis);
+							OBJECT::DELETE_OBJECT(&zaxis);
+							if (CAM::DOES_CAM_EXIST(CutCam)) {
+								CAM::RENDER_SCRIPT_CAMS(false, false, 1, false, false);
+								CAM::DESTROY_CAM(CutCam, true);
+							}
+							PlayerIndex = PED::GET_PED_BONE_INDEX(curr_cut_ped, 8433);
+							Ped1Coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(curr_cut_ped, 0.0f, 1.0f, 0.0f);
+							Ped2Coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(curr_cut_ped, 0.0f, 2.0f, 0.0f);
+							PedlookDir = ENTITY::GET_ENTITY_HEADING(curr_cut_ped);
+							xaxis = OBJECT::CREATE_OBJECT(PedHash, Ped1Coords.x, Ped1Coords.y, Ped1Coords.z, 1, true, 1);
+							zaxis = OBJECT::CREATE_OBJECT(PedHash, Ped2Coords.x, Ped2Coords.y, Ped2Coords.z, 1, true, 1);
+							ENTITY::SET_ENTITY_VISIBLE(xaxis, false);
+							ENTITY::SET_ENTITY_VISIBLE(zaxis, false);
+							ENTITY::SET_ENTITY_COLLISION(xaxis, false, true);
+							ENTITY::SET_ENTITY_COLLISION(zaxis, false, true);
+							ENTITY::ATTACH_ENTITY_TO_ENTITY(xaxis, curr_cut_ped, PlayerIndex, 0.0f, 0.0f, -0.1f, 105.0f, 0.0f, 0.0f, false, false, false, true, 0, true);
+							ENTITY::ATTACH_ENTITY_TO_ENTITY(zaxis, curr_cut_ped, PlayerIndex, 0.0f, 0.08f, -0.1f, 50.0f, 0.0f, 0.0f, false, false, false, true, 0, true);
+
+							Vector3 coordsPed = ENTITY::GET_ENTITY_COORDS(curr_cut_ped, true);
+							CutCam = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_FLY_CAMERA", coordsPed.x, coordsPed.y, coordsPed.z, Pedrotation.x, Pedrotation.y, Pedrotation.z, 50.0, true, 2);
+							CAM::ATTACH_CAM_TO_ENTITY(CutCam, zaxis, 0, 0, 0, true);
+							switched_c = curr_cut_ped;
+							found_ped_in_cutscene = true;
+						}
+					}
+				} //
+				CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE_BLEND_LEVEL(CutCam, 1.0);
+				CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE(CutCam, 1.0);
+				CAM::_SET_CAM_DOF_FOCUS_DISTANCE_BIAS(CutCam, 1.0);
+				CAM::RENDER_SCRIPT_CAMS(true, false, 1, false, false);
+
+				CAM::STOP_CUTSCENE_CAM_SHAKING();
+				CUTSCENE::CAN_SET_EXIT_STATE_FOR_CAMERA(1);
+				Vector3 Ped1rotation = ENTITY::GET_ENTITY_ROTATION(xaxis, 2);
+				Vector3 Ped2rotation = ENTITY::GET_ENTITY_ROTATION(zaxis, 2);
+				CAM::SET_CAM_ROT(CutCam, Ped1rotation.x, Pedrotation.y, Ped2rotation.z, 2);
+			}
 		}
-
-		if (CAM::DOES_CAM_EXIST(CutCam)) {
-			CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE_BLEND_LEVEL(CutCam, 1.0);
-			CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE(CutCam, 1.0);
-			CAM::_SET_CAM_DOF_FOCUS_DISTANCE_BIAS(CutCam, 1.0);
-			CAM::RENDER_SCRIPT_CAMS(true, false, 1, false, false);
-
-			CAM::STOP_CUTSCENE_CAM_SHAKING();
-			CUTSCENE::CAN_SET_EXIT_STATE_FOR_CAMERA(1);
-			Vector3 Ped1rotation = ENTITY::GET_ENTITY_ROTATION(xaxis, 2);
-			Vector3 Ped2rotation = ENTITY::GET_ENTITY_ROTATION(zaxis, 2);
-			CAM::SET_CAM_ROT(CutCam, Ped1rotation.x, Pedrotation.y, Ped2rotation.z, 2); 
+		else {
+			OBJECT::DELETE_OBJECT(&xaxis);
+			OBJECT::DELETE_OBJECT(&zaxis);
+			if (CAM::DOES_CAM_EXIST(CutCam)) {
+				CAM::RENDER_SCRIPT_CAMS(false, false, 1, false, false);
+				CAM::DESTROY_CAM(CutCam, true);
+			}
 		}
 	}
 	else {
@@ -1398,7 +1474,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			CAM::RENDER_SCRIPT_CAMS(false, false, 1, false, false);
 			CAM::DESTROY_CAM(CutCam, true);
 		}
-	}*/
+	}
 
 	// No Stunt Jumps
 	if (featureNoStuntJumps && GAMEPLAY::IS_STUNT_JUMP_IN_PROGRESS()) GAMEPLAY::CANCEL_STUNT_JUMP();
@@ -1479,6 +1555,7 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 	results->push_back(FeatureEnabledLocalDefinition{"featureBlockInputInMenu", &featureBlockInputInMenu});
 	results->push_back(FeatureEnabledLocalDefinition{"mouse_view_control", &mouse_view_control});
 	results->push_back(FeatureEnabledLocalDefinition{"airbrake_enable", &airbrake_enable});
+	results->push_back(FeatureEnabledLocalDefinition{"featureFirstPersonCutscene", &featureFirstPersonCutscene});
 	results->push_back(FeatureEnabledLocalDefinition{"help_showing", &help_showing});
 	results->push_back(FeatureEnabledLocalDefinition{"frozen_time", &frozen_time});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePhoneBillEnabled", &featurePhoneBillEnabled});
