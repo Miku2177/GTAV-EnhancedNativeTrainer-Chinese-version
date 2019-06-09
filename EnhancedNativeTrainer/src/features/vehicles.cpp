@@ -5478,7 +5478,7 @@ void init_vehicle_feature(){
 	unpack_veh_preview("TECHNICAL3", VP_TECHNICAL3, "VP_TECHNICAL3");
 	unpack_veh_preview("CLIFFHANGER", VP_CLIFFHANGER, "VP_CLIFFHANGER");
 	
-	unpack_veh_preview("ISSI3", VP_ISSI1, "VP_ISSI4");
+	unpack_veh_preview("ISSI4", VP_ISSI1, "VP_ISSI4");
 	unpack_veh_preview("ISSI5", VP_ISSI2, "VP_ISSI5");
 	unpack_veh_preview("ISSI6", VP_ISSI3, "VP_ISSI6");
 	unpack_veh_preview("BRUISER", VP_BRUISER1, "VP_BRUISER");
@@ -5496,7 +5496,7 @@ void init_vehicle_feature(){
 	unpack_veh_preview("MONSTER3", VP_MONSTER1, "VP_MONSTER1");
 	unpack_veh_preview("MONSTER4", VP_MONSTER2, "VP_MONSTER2");
 	unpack_veh_preview("MONSTER5", VP_MONSTER3, "VP_MONSTER3");
-	unpack_veh_preview("SLAMVAN3", VP_SLAMVAN1, "VP_SLAMVAN4");
+	unpack_veh_preview("SLAMVAN4", VP_SLAMVAN1, "VP_SLAMVAN4");
 	unpack_veh_preview("SLAMVAN5", VP_SLAMVAN2, "VP_SLAMVAN5");
 	unpack_veh_preview("SLAMVAN6", VP_SLAMVAN3, "VP_SLAMVAN6");
 
