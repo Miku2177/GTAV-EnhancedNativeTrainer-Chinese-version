@@ -1390,24 +1390,38 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			float PedlookDir = ENTITY::GET_ENTITY_HEADING(curr_cut_ped);
 			
 			if (!CAM::DOES_CAM_EXIST(CutCam)) { // && ENTITY::IS_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID())
-				curr_cut_ped = PLAYER::PLAYER_PED_ID();
-				PlayerIndex = PED::GET_PED_BONE_INDEX(curr_cut_ped, 8433);
-				Ped1Coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(curr_cut_ped, 0.0f, 1.0f, 0.0f);
-				Ped2Coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(curr_cut_ped, 0.0f, 2.0f, 0.0f);
-				PedlookDir = ENTITY::GET_ENTITY_HEADING(curr_cut_ped);
-				xaxis = OBJECT::CREATE_OBJECT(PedHash, Ped1Coords.x, Ped1Coords.y, Ped1Coords.z, 1, true, 1);
-				zaxis = OBJECT::CREATE_OBJECT(PedHash, Ped2Coords.x, Ped2Coords.y, Ped2Coords.z, 1, true, 1);
-				ENTITY::SET_ENTITY_VISIBLE(xaxis, false);
-				ENTITY::SET_ENTITY_VISIBLE(zaxis, false);
-				ENTITY::SET_ENTITY_COLLISION(xaxis, false, true);
-				ENTITY::SET_ENTITY_COLLISION(zaxis, false, true);
-				ENTITY::ATTACH_ENTITY_TO_ENTITY(xaxis, curr_cut_ped, PlayerIndex, 0.0f, 0.0f, -0.1f, 105.0f, 0.0f, 0.0f, false, false, false, true, 0, true);
-				ENTITY::ATTACH_ENTITY_TO_ENTITY(zaxis, curr_cut_ped, PlayerIndex, 0.0f, 0.08f, -0.1f, 50.0f, 0.0f, 0.0f, false, false, false, true, 0, true);
+				const int BUS_ARR_PED_SIZE = 1024;
+				Ped bus_ped[BUS_ARR_PED_SIZE];
+				int found_ped = worldGetAllPeds(bus_ped, BUS_ARR_PED_SIZE);
+				for (int i = 0; i < found_ped; i++) {
+					Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
+					Vector3 coordsPed_temp = ENTITY::GET_ENTITY_COORDS(bus_ped[i], true);
+					float dist_t = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsPed_temp.x, coordsPed_temp.y, coordsPed_temp.z);
+					if (dist_t < 100) {
+						if (ENTITY::IS_ENTITY_ON_SCREEN(bus_ped[i]) /*&& (ENTITY::GET_ENTITY_MODEL(bus_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_zero") ||
+							ENTITY::GET_ENTITY_MODEL(bus_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_one") || ENTITY::GET_ENTITY_MODEL(bus_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_two"))*/ && found_ped_in_cutscene == false &&
+							ENTITY::IS_ENTITY_VISIBLE(bus_ped[i]) && switched_c != bus_ped[i]) {
+							curr_cut_ped = PLAYER::PLAYER_PED_ID();
+							PlayerIndex = PED::GET_PED_BONE_INDEX(curr_cut_ped, 8433);
+							Ped1Coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(curr_cut_ped, 0.0f, 1.0f, 0.0f);
+							Ped2Coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(curr_cut_ped, 0.0f, 2.0f, 0.0f);
+							PedlookDir = ENTITY::GET_ENTITY_HEADING(curr_cut_ped);
+							xaxis = OBJECT::CREATE_OBJECT(PedHash, Ped1Coords.x, Ped1Coords.y, Ped1Coords.z, 1, true, 1);
+							zaxis = OBJECT::CREATE_OBJECT(PedHash, Ped2Coords.x, Ped2Coords.y, Ped2Coords.z, 1, true, 1);
+							ENTITY::SET_ENTITY_VISIBLE(xaxis, false);
+							ENTITY::SET_ENTITY_VISIBLE(zaxis, false);
+							ENTITY::SET_ENTITY_COLLISION(xaxis, false, true);
+							ENTITY::SET_ENTITY_COLLISION(zaxis, false, true);
+							ENTITY::ATTACH_ENTITY_TO_ENTITY(xaxis, curr_cut_ped, PlayerIndex, 0.0f, 0.0f, -0.1f, 105.0f, 0.0f, 0.0f, false, false, false, true, 0, true);
+							ENTITY::ATTACH_ENTITY_TO_ENTITY(zaxis, curr_cut_ped, PlayerIndex, 0.0f, 0.08f, -0.1f, 50.0f, 0.0f, 0.0f, false, false, false, true, 0, true);
 
-				Vector3 coordsPed = ENTITY::GET_ENTITY_COORDS(curr_cut_ped, true);
-				CutCam = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_FLY_CAMERA", coordsPed.x, coordsPed.y, coordsPed.z, Pedrotation.x, Pedrotation.y, Pedrotation.z, 50.0, true, 2);
-				CAM::ATTACH_CAM_TO_ENTITY(CutCam, zaxis, 0, 0, 0, true);
-				CAM::SET_CAM_NEAR_CLIP(CutCam, .229); // 329
+							Vector3 coordsPed = ENTITY::GET_ENTITY_COORDS(curr_cut_ped, true);
+							CutCam = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_FLY_CAMERA", coordsPed.x, coordsPed.y, coordsPed.z, Pedrotation.x, Pedrotation.y, Pedrotation.z, 50.0, true, 2);
+							CAM::ATTACH_CAM_TO_ENTITY(CutCam, zaxis, 0, 0, 0, true);
+							CAM::SET_CAM_NEAR_CLIP(CutCam, .229); // 329
+						}
+					}
+				}
 			}
 
 			if (CAM::DOES_CAM_EXIST(CutCam)) {
