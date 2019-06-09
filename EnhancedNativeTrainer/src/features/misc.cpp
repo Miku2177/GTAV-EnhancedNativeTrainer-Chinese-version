@@ -1397,7 +1397,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 					Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 					Vector3 coordsPed_temp = ENTITY::GET_ENTITY_COORDS(bus_ped[i], true);
 					float dist_t = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsPed_temp.x, coordsPed_temp.y, coordsPed_temp.z);
-					if (dist_t < 100) {
+					if (dist_t < 150) {
 						if (ENTITY::IS_ENTITY_ON_SCREEN(bus_ped[i]) /*&& (ENTITY::GET_ENTITY_MODEL(bus_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_zero") ||
 							ENTITY::GET_ENTITY_MODEL(bus_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_one") || ENTITY::GET_ENTITY_MODEL(bus_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_two"))*/ && found_ped_in_cutscene == false &&
 							ENTITY::IS_ENTITY_VISIBLE(bus_ped[i]) && switched_c != bus_ped[i]) {
@@ -1433,7 +1433,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 						Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 						Vector3 coordsPed_temp = ENTITY::GET_ENTITY_COORDS(bus_ped[i], true);
 						float dist_t = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsPed_temp.x, coordsPed_temp.y, coordsPed_temp.z);
-						if (dist_t < 100) {
+						if (dist_t < 150) {
 							if (ENTITY::IS_ENTITY_ON_SCREEN(bus_ped[i]) /*&& (ENTITY::GET_ENTITY_MODEL(bus_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_zero") ||
 								ENTITY::GET_ENTITY_MODEL(bus_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_one") || ENTITY::GET_ENTITY_MODEL(bus_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_two"))*/ && found_ped_in_cutscene == false &&
 								ENTITY::IS_ENTITY_VISIBLE(bus_ped[i]) && switched_c != bus_ped[i]) { // NETWORK::IS_PLAYER_IN_CUTSCENE(bus_ped[i]) && ENTITY::IS_ENTITY_ON_SCREEN(bus_ped[i]) && bus_ped[i] != PLAYER::PLAYER_PED_ID()
@@ -1476,6 +1476,16 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 						}
 					}
 				} //
+				if (!ENTITY::DOES_ENTITY_EXIST(curr_cut_ped)) {
+					OBJECT::DELETE_OBJECT(&xaxis);
+					OBJECT::DELETE_OBJECT(&zaxis);
+					if (CAM::DOES_CAM_EXIST(CutCam)) {
+						CAM::RENDER_SCRIPT_CAMS(false, false, 1, false, false);
+						CAM::DESTROY_CAM(CutCam, true);
+					}
+					found_ped_in_cutscene = false;
+					switched_c = -1;
+				}
 				CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE_BLEND_LEVEL(CutCam, 1.0);
 				CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE(CutCam, 1.0);
 				CAM::_SET_CAM_DOF_FOCUS_DISTANCE_BIAS(CutCam, 1.0);
