@@ -5500,8 +5500,7 @@ void init_vehicle_feature(){
 	unpack_veh_preview("SLAMVAN4", VP_SLAMVAN1, "VP_SLAMVAN4");
 	unpack_veh_preview("SLAMVAN5", VP_SLAMVAN2, "VP_SLAMVAN5");
 	unpack_veh_preview("SLAMVAN6", VP_SLAMVAN3, "VP_SLAMVAN6");
-
-
+	unpack_veh_preview("SPEEDO4", VP_SPEEDO, "VP_SPEEDO");
 }
 
 void fix_vehicle(){
