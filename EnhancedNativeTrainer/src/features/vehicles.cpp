@@ -5419,6 +5419,7 @@ void init_vehicle_feature(){
 	unpack_veh_preview("SLAMVAN2", VP_SLAMVAN_LOSTMC, "VP_SLAMVAN_LOSTMC");
 	unpack_veh_preview("SPEEDO", VP_SPEEDO, "VP_SPEEDO");
 	unpack_veh_preview("SPEEDO2", VP_SPEEDO2, "VP_SPEEDO2");
+	unpack_veh_preview("SPEEDO4", VP_SPEEDO, "VP_SPEEDO");
 	unpack_veh_preview("STOCKADE", VP_STOCKADE, "VP_STOCKADE");
 	unpack_veh_preview("STOCKADE3", VP_STOCKADE3, "VP_STOCKADE3");
 	unpack_veh_preview("SUBMERSIBLE", VP_SUB, "VP_SUB");
