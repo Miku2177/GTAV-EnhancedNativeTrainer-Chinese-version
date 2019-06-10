@@ -1375,7 +1375,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	
 	// is a cutscene currently playing?
 	if (cutscene_is_playing == true) CONTROLS::DISABLE_ALL_CONTROL_ACTIONS(0);
-	else CONTROLS::ENABLE_ALL_CONTROL_ACTIONS(0);
+	if (!CUTSCENE::IS_CUTSCENE_PLAYING()) CONTROLS::ENABLE_ALL_CONTROL_ACTIONS(0);
 	if (cutscene_is_playing == true && CUTSCENE::IS_CUTSCENE_PLAYING()) cutscene_being_watched = true;
 	if (cutscene_being_watched == true && (!CUTSCENE::IS_CUTSCENE_PLAYING() || ((CUTSCENE::GET_CUTSCENE_TOTAL_DURATION() - CUTSCENE::GET_CUTSCENE_TIME() < 3000) && CAM::IS_SCREEN_FADING_OUT()))) { // && CUTSCENE::HAS_CUTSCENE_FINISHED()
 		CAM::DO_SCREEN_FADE_IN(0);
@@ -1386,6 +1386,10 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		cutscene_being_watched = false;
 		found_ped_in_cutscene = false;
 		switched_c = -1;
+		//
+		curr_cut_ped_me = -1;
+		my_first_coords = -1;
+		curr_cut_ped = -1;
 	}
 	if (CUTSCENE::IS_CUTSCENE_PLAYING()) cutscene_being_watched = true;
 	else cutscene_being_watched = false;
