@@ -35,7 +35,7 @@ const std::vector<std::string> MISC_MUSICEVENT_VALUES{ "AH1_HOLE_RESTART", "AH2A
  "PENNED_IN_START_MUSIC", "PEYOTE_TRIPS_START", "PROLOGUE_TEST_GETAWAY_RT", "PTP_START", "RC18B_START", "RH1_START", "RH2A_BANK_RESTART", "RH2A_RESCUE_RESTART", "SOL1_CHASE_PLANE_RT", "SOL1_FIGHT_RT", "SOL1_GET_SOL_RT",
  "SOL1_SHOOT_PLANE_RT", "SOL2_RESTART1", "SOL5_FIGHT_BAD_RT", "TRV1_CHASE_BIKERS_RT", "TRV1_DRIVE_TRAILER_RT", "TRV2_RACE", "TRV2_WING_RESTART", "TRV4_EVADE_RT", "TRV4_FOOT_CHASE_RT", "TRV4_START_CS_SKIP" };
 
-const std::vector<std::string> MISC_CUTSCENE_VALUES{ "abigail_mcs_1_concat", "abigail_mcs_2", "ac_ig_3_p3_b", "ah_1_ext_t6", "ah_1_int", "ah_1_mcs_1", "ah_2_ext_alt", "ah_2_ext_p4", "ah_3a_explosion", "ah_3a_ext", "ah_3a_int", "ah_3a_mcs_3",
+const std::vector<std::string> MISC_CUTSCENE_VALUES{ "abigail_mcs_1_concat", "abigail_mcs_2", "ac_ig_3_p3_b", "ah_1_ext_t6", "ah_1_int", "ah_1_mcs_1", "ah_2_ext_alt", "ah_2_ext_p4", /*"ah_3a_explosion",*/ "ah_3a_ext", "ah_3a_int", "ah_3a_mcs_3",
 "ah_3a_mcs_6", "ah_3b_ext", "ah_3b_int", "ah_3b_mcs_1", "ah_3b_mcs_2", "ah_3b_mcs_3", "ah_3b_mcs_4", "ah_3b_mcs_5", /*"ah_3b_mcs_6_p1",*/ "ah_3b_mcs_7", "apa_fin_cel_apt2", /*"apa_fin_cel_apt3", "apa_fin_cel_apt4",*/ "apa_hum_fin_int", "apa_nar_int",
 "apa_nar_mid", "apa_pri_int", "arena_int", "arena_int2", "armenian_1_int", "armenian_1_mcs_1", "armenian_2_int", "armenian_2_mcs_6", "armenian_3_int",
 "armenian_3_mcs_3", "armenian_3_mcs_4", "armenian_3_mcs_5", "armenian_3_mcs_6", "armenian_3_mcs_7", "armenian_3_mcs_8", "armenian_3_mcs_9_concat", "arm_1_mcs_2_concat", "arm_2_mcs_4", "ass_int_2_alt1", "ass_mcs_1", "bar_1_rcm_p2", "bar_2_rcm",
