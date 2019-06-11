@@ -348,22 +348,24 @@ bool onconfirm_misc_freezeradio_menu(MenuItem<int> choice){
 
 bool onconfirm_misc_cutscene_menu(MenuItem<int> choice) {
 	if (choice.value == -1) {
-		if (!ENTITY::DOES_ENTITY_EXIST(curr_cut_ped)) {
-			OBJECT::DELETE_OBJECT(&xaxis);
-			OBJECT::DELETE_OBJECT(&zaxis);
-			if (CAM::DOES_CAM_EXIST(CutCam)) {
-				CAM::RENDER_SCRIPT_CAMS(false, false, 1, false, false);
-				CAM::DESTROY_CAM(CutCam, true);
-			}
+		CONTROLS::ENABLE_ALL_CONTROL_ACTIONS(0);
+		OBJECT::DELETE_OBJECT(&xaxis);
+		OBJECT::DELETE_OBJECT(&zaxis);
+		if (CAM::DOES_CAM_EXIST(CutCam)) {
+			CAM::RENDER_SCRIPT_CAMS(false, false, 1, false, false);
+			CAM::DESTROY_CAM(CutCam, true);
 		}
-		found_ped_in_cutscene = false;
 		CAM::DO_SCREEN_FADE_IN(0);
 		CUTSCENE::STOP_CUTSCENE_IMMEDIATELY();
 		CUTSCENE::REMOVE_CUTSCENE();
 		CAM::DO_SCREEN_FADE_IN(0);
+		curr_cut_ped_me = -1;
+		my_first_coords = -1;
+		curr_cut_ped = -1;
 		cutscene_is_playing = false;
 		cutscene_being_watched = false;
 		switched_c = -1;
+		found_ped_in_cutscene = false;
 	} 
 	else if(choice.value == -2) {
 		found_ped_in_cutscene = false;
@@ -1375,7 +1377,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	
 	// is a cutscene currently playing?
 	if (cutscene_is_playing == true) CONTROLS::DISABLE_ALL_CONTROL_ACTIONS(0);
-	if (!CUTSCENE::IS_CUTSCENE_PLAYING()) {
+	else { 
 		CONTROLS::ENABLE_ALL_CONTROL_ACTIONS(0);
 		OBJECT::DELETE_OBJECT(&xaxis);
 		OBJECT::DELETE_OBJECT(&zaxis);
@@ -1386,7 +1388,6 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		curr_cut_ped_me = -1;
 		my_first_coords = -1;
 		curr_cut_ped = -1;
-		cutscene_is_playing = false;
 		cutscene_being_watched = false;
 		found_ped_in_cutscene = false;
 		switched_c = -1;
@@ -1399,22 +1400,10 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		CAM::DO_SCREEN_FADE_IN(0);
 		cutscene_is_playing = false;
 		cutscene_being_watched = false;
-		found_ped_in_cutscene = false;
-		switched_c = -1;
-		//
-		OBJECT::DELETE_OBJECT(&xaxis);
-		OBJECT::DELETE_OBJECT(&zaxis);
-		if (CAM::DOES_CAM_EXIST(CutCam)) {
-			CAM::RENDER_SCRIPT_CAMS(false, false, 1, false, false);
-			CAM::DESTROY_CAM(CutCam, true);
-		}
-		curr_cut_ped_me = -1;
-		my_first_coords = -1;
-		curr_cut_ped = -1;
 	}
-	if (CUTSCENE::IS_CUTSCENE_PLAYING()) cutscene_being_watched = true;
-	else cutscene_being_watched = false;
-
+	if (CUTSCENE::IS_CUTSCENE_PLAYING()) cutscene_is_playing = true;
+	//else cutscene_being_watched = false;
+	
 	// First Person Cutscene Camera 
 	if (featureFirstPersonCutscene) {
 		if (CUTSCENE::IS_CUTSCENE_PLAYING()) {
@@ -1425,68 +1414,61 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			Vector3 Ped2Coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(curr_cut_ped, 0.0f, 2.0f, 0.0f);
 			float PedlookDir = ENTITY::GET_ENTITY_HEADING(curr_cut_ped);
 			
-			if (!CAM::DOES_CAM_EXIST(CutCam)) { // && ENTITY::IS_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID())
-				const int BUS_ARR_PED_SIZE = 1024;
-				Ped bus_ped[BUS_ARR_PED_SIZE];
-				int found_ped = worldGetAllPeds(bus_ped, BUS_ARR_PED_SIZE);
+			if (!CAM::DOES_CAM_EXIST(CutCam)) { 
+				const int US_ARR_PED_SIZE = 1024;
+				Ped us_ped[US_ARR_PED_SIZE];
+				int found_ped = worldGetAllPeds(us_ped, US_ARR_PED_SIZE);
 				for (int i = 0; i < found_ped; i++) {
-					//Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
-					//Vector3 coordsPed_temp = ENTITY::GET_ENTITY_COORDS(bus_ped[i], true);
-					//float dist_t = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsPed_temp.x, coordsPed_temp.y, coordsPed_temp.z);
-					//if (dist_t < 150) {
-						if (ENTITY::IS_ENTITY_ON_SCREEN(bus_ped[i]) && (ENTITY::GET_ENTITY_MODEL(bus_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_zero") ||
-							ENTITY::GET_ENTITY_MODEL(bus_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_one") || ENTITY::GET_ENTITY_MODEL(bus_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_two") ||
-							ENTITY::GET_ENTITY_MODEL(bus_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"mp_f_freemode_01") || ENTITY::GET_ENTITY_MODEL(bus_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"mp_m_freemode_01")) && found_ped_in_cutscene == false &&
-							ENTITY::IS_ENTITY_VISIBLE(bus_ped[i]) && switched_c != bus_ped[i] && PED::GET_PED_TYPE(bus_ped[i]) != 28) {
-							//curr_cut_ped = PLAYER::PLAYER_PED_ID();
-							curr_cut_ped_me = bus_ped[i];
-							my_first_coords = bus_ped[i];
-							PlayerIndex = PED::GET_PED_BONE_INDEX(curr_cut_ped_me, 8433);
-							Ped1Coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(curr_cut_ped_me, 0.0f, 1.0f, 0.0f);
-							Ped2Coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(curr_cut_ped_me, 0.0f, 2.0f, 0.0f);
-							PedlookDir = ENTITY::GET_ENTITY_HEADING(curr_cut_ped_me);
-							xaxis = OBJECT::CREATE_OBJECT(PedHash, Ped1Coords.x, Ped1Coords.y, Ped1Coords.z, 1, true, 1);
-							zaxis = OBJECT::CREATE_OBJECT(PedHash, Ped2Coords.x, Ped2Coords.y, Ped2Coords.z, 1, true, 1);
-							ENTITY::SET_ENTITY_VISIBLE(xaxis, false);
-							ENTITY::SET_ENTITY_VISIBLE(zaxis, false);
-							ENTITY::SET_ENTITY_COLLISION(xaxis, false, true);
-							ENTITY::SET_ENTITY_COLLISION(zaxis, false, true);
-							ENTITY::ATTACH_ENTITY_TO_ENTITY(xaxis, curr_cut_ped_me, PlayerIndex, 0.0f, 0.0f, -0.1f, 105.0f, 0.0f, 0.0f, false, false, false, true, 0, true);
-							ENTITY::ATTACH_ENTITY_TO_ENTITY(zaxis, curr_cut_ped_me, PlayerIndex, 0.0f, 0.08f, -0.1f, 50.0f, 0.0f, 0.0f, false, false, false, true, 0, true);
+					if (ENTITY::IS_ENTITY_ON_SCREEN(us_ped[i]) && (ENTITY::GET_ENTITY_MODEL(us_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_zero") ||
+						ENTITY::GET_ENTITY_MODEL(us_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_one") || ENTITY::GET_ENTITY_MODEL(us_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_two") ||
+						ENTITY::GET_ENTITY_MODEL(us_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"mp_f_freemode_01") || ENTITY::GET_ENTITY_MODEL(us_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"mp_m_freemode_01")) && found_ped_in_cutscene == false &&
+						ENTITY::IS_ENTITY_VISIBLE(us_ped[i]) && switched_c != us_ped[i] && PED::GET_PED_TYPE(us_ped[i]) != 28) {
+						curr_cut_ped_me = us_ped[i];
+						my_first_coords = us_ped[i];
+						PlayerIndex = PED::GET_PED_BONE_INDEX(curr_cut_ped, 8433);
+						Ped1Coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(curr_cut_ped_me, 0.0f, 1.0f, 0.0f);
+						Ped2Coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(curr_cut_ped_me, 0.0f, 2.0f, 0.0f);
+						PedlookDir = ENTITY::GET_ENTITY_HEADING(curr_cut_ped_me);
+						xaxis = OBJECT::CREATE_OBJECT(PedHash, Ped1Coords.x, Ped1Coords.y, Ped1Coords.z, 1, true, 1);
+						zaxis = OBJECT::CREATE_OBJECT(PedHash, Ped2Coords.x, Ped2Coords.y, Ped2Coords.z, 1, true, 1);
+						ENTITY::SET_ENTITY_VISIBLE(xaxis, false);
+						ENTITY::SET_ENTITY_VISIBLE(zaxis, false);
+						ENTITY::SET_ENTITY_COLLISION(xaxis, false, true);
+						ENTITY::SET_ENTITY_COLLISION(zaxis, false, true);
+						ENTITY::ATTACH_ENTITY_TO_ENTITY(xaxis, curr_cut_ped_me, PlayerIndex, 0.0f, 0.0f, -0.1f, 105.0f, 0.0f, 0.0f, false, false, false, true, 0, true);
+						ENTITY::ATTACH_ENTITY_TO_ENTITY(zaxis, curr_cut_ped_me, PlayerIndex, 0.0f, 0.08f, -0.1f, 50.0f, 0.0f, 0.0f, false, false, false, true, 0, true);
 
-							Vector3 coordsPed = ENTITY::GET_ENTITY_COORDS(curr_cut_ped_me, true);
-							CutCam = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_FLY_CAMERA", coordsPed.x, coordsPed.y, coordsPed.z, Pedrotation.x, Pedrotation.y, Pedrotation.z, 50.0, true, 2);
-							CAM::ATTACH_CAM_TO_ENTITY(CutCam, zaxis, 0, 0, 0, true);
-							CAM::SET_CAM_NEAR_CLIP(CutCam, .229); // 329
-						}
-					//}
+						Vector3 coordsPed = ENTITY::GET_ENTITY_COORDS(curr_cut_ped_me, true);
+						CutCam = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_FLY_CAMERA", coordsPed.x, coordsPed.y, coordsPed.z, Pedrotation.x, Pedrotation.y, Pedrotation.z, 50.0, true, 2);
+						CAM::ATTACH_CAM_TO_ENTITY(CutCam, zaxis, 0, 0, 0, true);
+						CAM::SET_CAM_NEAR_CLIP(CutCam, .229); // 329
+					}
 				}
 			}
 
 			if (CAM::DOES_CAM_EXIST(CutCam)) {
 				if (cutscene_being_watched == true && found_ped_in_cutscene == false) { //
-					const int BUS_ARR_PED_SIZE = 1024;
-					Ped bus_ped[BUS_ARR_PED_SIZE];
-					int found_ped = worldGetAllPeds(bus_ped, BUS_ARR_PED_SIZE);
+					const int US_ARR_PED_SIZE = 1024;
+					Ped us_ped[US_ARR_PED_SIZE];
+					int found_ped = worldGetAllPeds(us_ped, US_ARR_PED_SIZE);
 					for (int i = 0; i < found_ped; i++) {
-						//Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 						Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(my_first_coords, true);
-						Vector3 coordsPed_temp = ENTITY::GET_ENTITY_COORDS(bus_ped[i], true);
+						Vector3 coordsPed_temp = ENTITY::GET_ENTITY_COORDS(us_ped[i], true);
 						float dist_t = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsPed_temp.x, coordsPed_temp.y, coordsPed_temp.z);
 						if (dist_t < 30) { // 50 100 150
-							if (ENTITY::IS_ENTITY_ON_SCREEN(bus_ped[i]) /*&& (ENTITY::GET_ENTITY_MODEL(bus_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_zero") ||
+							if (ENTITY::IS_ENTITY_ON_SCREEN(us_ped[i]) /*&& (ENTITY::GET_ENTITY_MODEL(bus_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_zero") ||
 								ENTITY::GET_ENTITY_MODEL(bus_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_one") || ENTITY::GET_ENTITY_MODEL(bus_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_two"))*/ && found_ped_in_cutscene == false &&
-								ENTITY::IS_ENTITY_VISIBLE(bus_ped[i]) && switched_c != bus_ped[i] && PED::GET_PED_TYPE(bus_ped[i]) != 28) { // NETWORK::IS_PLAYER_IN_CUTSCENE(bus_ped[i]) && ENTITY::IS_ENTITY_ON_SCREEN(bus_ped[i]) && bus_ped[i] != PLAYER::PLAYER_PED_ID()
+								ENTITY::IS_ENTITY_VISIBLE(us_ped[i]) && switched_c != us_ped[i] && PED::GET_PED_TYPE(us_ped[i]) != 28) { 
 								if (curr_cut_ped_me != -1) curr_cut_ped = curr_cut_ped_me;
-								else curr_cut_ped = bus_ped[i];
+								else curr_cut_ped = us_ped[i];
 								OBJECT::DELETE_OBJECT(&xaxis);
 								OBJECT::DELETE_OBJECT(&zaxis);
 								if (CAM::DOES_CAM_EXIST(CutCam)) {
 									CAM::RENDER_SCRIPT_CAMS(false, false, 1, false, false);
 									CAM::DESTROY_CAM(CutCam, true);
 								}
-								if (ENTITY::GET_ENTITY_MODEL(bus_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_zero") || ENTITY::GET_ENTITY_MODEL(bus_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_one") ||
-									ENTITY::GET_ENTITY_MODEL(bus_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_two")) PlayerIndex = PED::GET_PED_BONE_INDEX(curr_cut_ped, 8433);
+								if (ENTITY::GET_ENTITY_MODEL(us_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_zero") || ENTITY::GET_ENTITY_MODEL(us_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_one") ||
+									ENTITY::GET_ENTITY_MODEL(us_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_two")) PlayerIndex = PED::GET_PED_BONE_INDEX(curr_cut_ped, 8433);
 								else PlayerIndex = PED::GET_PED_BONE_INDEX(curr_cut_ped, 31086); // 8433
 								Ped1Coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(curr_cut_ped, 0.0f, 1.0f, 0.0f);
 								Ped2Coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(curr_cut_ped, 0.0f, 2.0f, 0.0f);
@@ -1497,8 +1479,8 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 								ENTITY::SET_ENTITY_VISIBLE(zaxis, false);
 								ENTITY::SET_ENTITY_COLLISION(xaxis, false, true);
 								ENTITY::SET_ENTITY_COLLISION(zaxis, false, true);
-								if (ENTITY::GET_ENTITY_MODEL(bus_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_zero") || ENTITY::GET_ENTITY_MODEL(bus_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_one") ||
-									ENTITY::GET_ENTITY_MODEL(bus_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_two")) {
+								if (ENTITY::GET_ENTITY_MODEL(us_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_zero") || ENTITY::GET_ENTITY_MODEL(us_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_one") ||
+									ENTITY::GET_ENTITY_MODEL(us_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_two")) {
 									ENTITY::ATTACH_ENTITY_TO_ENTITY(xaxis, curr_cut_ped, PlayerIndex, 0.0f, 0.0f, -0.1f, 105.0f, 0.0f, 0.0f, false, false, false, true, 0, true);
 									ENTITY::ATTACH_ENTITY_TO_ENTITY(zaxis, curr_cut_ped, PlayerIndex, 0.0f, 0.08f, -0.1f, 50.0f, 0.0f, 0.0f, false, false, false, true, 0, true);
 								}
