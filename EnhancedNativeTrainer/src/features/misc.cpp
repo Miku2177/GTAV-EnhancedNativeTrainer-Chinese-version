@@ -1375,7 +1375,22 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	
 	// is a cutscene currently playing?
 	if (cutscene_is_playing == true) CONTROLS::DISABLE_ALL_CONTROL_ACTIONS(0);
-	if (!CUTSCENE::IS_CUTSCENE_PLAYING()) CONTROLS::ENABLE_ALL_CONTROL_ACTIONS(0);
+	if (!CUTSCENE::IS_CUTSCENE_PLAYING()) {
+		CONTROLS::ENABLE_ALL_CONTROL_ACTIONS(0);
+		OBJECT::DELETE_OBJECT(&xaxis);
+		OBJECT::DELETE_OBJECT(&zaxis);
+		if (CAM::DOES_CAM_EXIST(CutCam)) {
+			CAM::RENDER_SCRIPT_CAMS(false, false, 1, false, false);
+			CAM::DESTROY_CAM(CutCam, true);
+		}
+		curr_cut_ped_me = -1;
+		my_first_coords = -1;
+		curr_cut_ped = -1;
+		cutscene_is_playing = false;
+		cutscene_being_watched = false;
+		found_ped_in_cutscene = false;
+		switched_c = -1;
+	}
 	if (cutscene_is_playing == true && CUTSCENE::IS_CUTSCENE_PLAYING()) cutscene_being_watched = true;
 	if (cutscene_being_watched == true && (!CUTSCENE::IS_CUTSCENE_PLAYING() || ((CUTSCENE::GET_CUTSCENE_TOTAL_DURATION() - CUTSCENE::GET_CUTSCENE_TIME() < 3000) && CAM::IS_SCREEN_FADING_OUT()))) { // && CUTSCENE::HAS_CUTSCENE_FINISHED()
 		CAM::DO_SCREEN_FADE_IN(0);
@@ -1387,6 +1402,12 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		found_ped_in_cutscene = false;
 		switched_c = -1;
 		//
+		OBJECT::DELETE_OBJECT(&xaxis);
+		OBJECT::DELETE_OBJECT(&zaxis);
+		if (CAM::DOES_CAM_EXIST(CutCam)) {
+			CAM::RENDER_SCRIPT_CAMS(false, false, 1, false, false);
+			CAM::DESTROY_CAM(CutCam, true);
+		}
 		curr_cut_ped_me = -1;
 		my_first_coords = -1;
 		curr_cut_ped = -1;
@@ -1452,7 +1473,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 						Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(my_first_coords, true);
 						Vector3 coordsPed_temp = ENTITY::GET_ENTITY_COORDS(bus_ped[i], true);
 						float dist_t = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsPed_temp.x, coordsPed_temp.y, coordsPed_temp.z);
-						if (dist_t < 50) { // 100 150
+						if (dist_t < 30) { // 50 100 150
 							if (ENTITY::IS_ENTITY_ON_SCREEN(bus_ped[i]) /*&& (ENTITY::GET_ENTITY_MODEL(bus_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_zero") ||
 								ENTITY::GET_ENTITY_MODEL(bus_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_one") || ENTITY::GET_ENTITY_MODEL(bus_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_two"))*/ && found_ped_in_cutscene == false &&
 								ENTITY::IS_ENTITY_VISIBLE(bus_ped[i]) && switched_c != bus_ped[i] && PED::GET_PED_TYPE(bus_ped[i]) != 28) { // NETWORK::IS_PLAYER_IN_CUTSCENE(bus_ped[i]) && ENTITY::IS_ENTITY_ON_SCREEN(bus_ped[i]) && bus_ped[i] != PLAYER::PLAYER_PED_ID()
