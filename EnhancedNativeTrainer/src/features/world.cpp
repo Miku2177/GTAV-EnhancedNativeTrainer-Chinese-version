@@ -32,6 +32,8 @@ int r, g, b = -1;
 
 int acid_counter, acid_counter_p = -1;
 
+bool snow_e = false;
+
 // peds chance to slip
 int s_tick_secs, s_tick_secs_passed, s_tick_secs_curr = 0;
 bool slipped = false;
@@ -175,21 +177,23 @@ bool onconfirm_weather_menu(MenuItem<std::string> choice)
 		GRAPHICS::_CLEAR_CLOUD_HAT();
 		GAMEPLAY::SET_WEATHER_TYPE_NOW("EXTRASUNNY");
 		GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
-		lastWeather = 2;
-		lastWeatherName = "EXTRASUNNY";
+		lastWeather = "EXTRASUNNY";
+		lastWeatherName = "Extra Sunny";
 		break;
 	default:
 		lastWeather = choice.value.c_str();
 		lastWeatherName = choice.caption;
 
-		GAMEPLAY::CLEAR_OVERRIDE_WEATHER();
-		GAMEPLAY::CLEAR_WEATHER_TYPE_PERSIST();
-		GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
-		GRAPHICS::_CLEAR_CLOUD_HAT();
+		if (!lastWeather.empty()) {
+			GAMEPLAY::CLEAR_OVERRIDE_WEATHER();
+			GAMEPLAY::CLEAR_WEATHER_TYPE_PERSIST();
+			GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
+			GRAPHICS::_CLEAR_CLOUD_HAT();
 
-		GAMEPLAY::SET_WEATHER_TYPE_NOW((char *)lastWeather.c_str());
-		if (GAMEPLAY::GET_NEXT_WEATHER_TYPE_HASH_NAME() == 3061285535) GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 1.0);
-		GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
+			GAMEPLAY::SET_WEATHER_TYPE_NOW((char *)lastWeather.c_str());
+			if (GAMEPLAY::GET_NEXT_WEATHER_TYPE_HASH_NAME() == 3061285535) GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 1.0);
+			GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
+		}
 
 		std::ostringstream ss2;
 		ss2 << "Weather: " << choice.caption;
@@ -1618,6 +1622,8 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 		}
 		if (featureSnow)
 		{
+			snow_e = true;
+
 			// Weather
 			GAMEPLAY::SET_WEATHER_TYPE_NOW_PERSIST("XMAS");
 
@@ -1650,8 +1656,11 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 			memcpy((void*)addr2, &original2, 14);
 
 			// Weather
-			GAMEPLAY::CLEAR_WEATHER_TYPE_PERSIST();
-			GAMEPLAY::SET_WEATHER_TYPE_NOW("CLEAR");
+			if (snow_e == true) {
+				GAMEPLAY::CLEAR_WEATHER_TYPE_PERSIST();
+				GAMEPLAY::SET_WEATHER_TYPE_NOW("CLEAR");
+				snow_e = false;
+			}
 
 			// Notification
 			set_status_text("Snow Disabled");
