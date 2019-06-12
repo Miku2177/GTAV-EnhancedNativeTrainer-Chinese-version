@@ -1402,7 +1402,6 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		cutscene_being_watched = false;
 	}
 	if (CUTSCENE::IS_CUTSCENE_PLAYING()) cutscene_is_playing = true;
-	//else cutscene_being_watched = false;
 	
 	// First Person Cutscene Camera 
 	if (featureFirstPersonCutscene) {
@@ -1499,7 +1498,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 							}
 						}
 					}
-				} //
+				} 
 				if (!ENTITY::DOES_ENTITY_EXIST(curr_cut_ped)) {
 					OBJECT::DELETE_OBJECT(&xaxis);
 					OBJECT::DELETE_OBJECT(&zaxis);
@@ -1510,19 +1509,22 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 					found_ped_in_cutscene = false;
 					switched_c = -1;
 				}
-				CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE_BLEND_LEVEL(CutCam, 1.0);
-				CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE(CutCam, 1.0);
-				CAM::_SET_CAM_DOF_FOCUS_DISTANCE_BIAS(CutCam, 1.0);
-				CAM::RENDER_SCRIPT_CAMS(true, false, 1, false, false);
+				if (CAM::DOES_CAM_EXIST(CutCam)) {
+					CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE_BLEND_LEVEL(CutCam, 1.0);
+					CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE(CutCam, 1.0);
+					CAM::_SET_CAM_DOF_FOCUS_DISTANCE_BIAS(CutCam, 1.0);
+					CAM::RENDER_SCRIPT_CAMS(true, false, 1, false, false);
 
-				CAM::STOP_CUTSCENE_CAM_SHAKING();
-				CUTSCENE::CAN_SET_EXIT_STATE_FOR_CAMERA(1);
-				Vector3 Ped1rotation = ENTITY::GET_ENTITY_ROTATION(xaxis, 2);
-				Vector3 Ped2rotation = ENTITY::GET_ENTITY_ROTATION(zaxis, 2);
-				CAM::SET_CAM_ROT(CutCam, Ped1rotation.x, Pedrotation.y, Ped2rotation.z, 2);
+					CAM::STOP_CUTSCENE_CAM_SHAKING();
+					CUTSCENE::CAN_SET_EXIT_STATE_FOR_CAMERA(1);
+					Vector3 Ped1rotation = ENTITY::GET_ENTITY_ROTATION(xaxis, 2);
+					Vector3 Ped2rotation = ENTITY::GET_ENTITY_ROTATION(zaxis, 2);
+					CAM::SET_CAM_ROT(CutCam, Ped1rotation.x, Pedrotation.y, Ped2rotation.z, 2);
+				}
 			}
 		}
-		else {
+		else if (cutscene_is_playing == false) {
+			CONTROLS::ENABLE_ALL_CONTROL_ACTIONS(0);
 			OBJECT::DELETE_OBJECT(&xaxis);
 			OBJECT::DELETE_OBJECT(&zaxis);
 			if (CAM::DOES_CAM_EXIST(CutCam)) {
