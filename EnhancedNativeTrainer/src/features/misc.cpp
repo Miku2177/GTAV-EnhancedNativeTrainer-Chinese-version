@@ -1333,7 +1333,6 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			CAM::DETACH_CAM(StuntCam);
 			CAM::SET_CAM_ACTIVE(StuntCam, false);
 			CAM::DESTROY_CAM(StuntCam, true);
-			//StuntCam = NULL;
 		}
 	}
 
@@ -1446,7 +1445,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			}
 
 			if (CAM::DOES_CAM_EXIST(CutCam)) {
-				if (cutscene_being_watched == true && found_ped_in_cutscene == false) { //
+				if (cutscene_being_watched == true && found_ped_in_cutscene == false) {
 					const int US_ARR_PED_SIZE = 1024;
 					Ped us_ped[US_ARR_PED_SIZE];
 					int found_ped = worldGetAllPeds(us_ped, US_ARR_PED_SIZE);
@@ -1536,6 +1535,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		}
 	}
 	else {
+		CONTROLS::ENABLE_ALL_CONTROL_ACTIONS(0);
 		OBJECT::DELETE_OBJECT(&xaxis);
 		OBJECT::DELETE_OBJECT(&zaxis);
 		if (CAM::DOES_CAM_EXIST(CutCam)) {
