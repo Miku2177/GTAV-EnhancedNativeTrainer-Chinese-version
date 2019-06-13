@@ -355,6 +355,7 @@ bool onconfirm_misc_cutscene_menu(MenuItem<int> choice) {
 			CAM::RENDER_SCRIPT_CAMS(false, false, 1, false, false);
 			CAM::DESTROY_CAM(CutCam, true);
 		}
+		CAM::DESTROY_ALL_CAMS(true);
 		CAM::DO_SCREEN_FADE_IN(0);
 		CUTSCENE::STOP_CUTSCENE_IMMEDIATELY();
 		CUTSCENE::REMOVE_CUTSCENE();
@@ -1383,6 +1384,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		if (CAM::DOES_CAM_EXIST(CutCam)) {
 			CAM::RENDER_SCRIPT_CAMS(false, false, 1, false, false);
 			CAM::DESTROY_CAM(CutCam, true);
+			CAM::DESTROY_ALL_CAMS(true);
 		}
 		curr_cut_ped_me = -1;
 		my_first_coords = -1;
@@ -1453,7 +1455,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 						Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(my_first_coords, true);
 						Vector3 coordsPed_temp = ENTITY::GET_ENTITY_COORDS(us_ped[i], true);
 						float dist_t = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsPed_temp.x, coordsPed_temp.y, coordsPed_temp.z);
-						if (dist_t < 30) { // 50 100 150
+						if (dist_t < 20) { // 30 50 100 150
 							if (ENTITY::IS_ENTITY_ON_SCREEN(us_ped[i]) /*&& (ENTITY::GET_ENTITY_MODEL(bus_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_zero") ||
 								ENTITY::GET_ENTITY_MODEL(bus_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_one") || ENTITY::GET_ENTITY_MODEL(bus_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_two"))*/ && found_ped_in_cutscene == false &&
 								ENTITY::IS_ENTITY_VISIBLE(us_ped[i]) && switched_c != us_ped[i] && PED::GET_PED_TYPE(us_ped[i]) != 28) { 
@@ -1461,10 +1463,11 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 								else curr_cut_ped = us_ped[i];
 								OBJECT::DELETE_OBJECT(&xaxis);
 								OBJECT::DELETE_OBJECT(&zaxis);
-								if (CAM::DOES_CAM_EXIST(CutCam)) {
+								//if (CAM::DOES_CAM_EXIST(CutCam)) {
 									CAM::RENDER_SCRIPT_CAMS(false, false, 1, false, false);
 									CAM::DESTROY_CAM(CutCam, true);
-								}
+									CAM::DESTROY_ALL_CAMS(true);
+								//}
 								if (ENTITY::GET_ENTITY_MODEL(us_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_zero") || ENTITY::GET_ENTITY_MODEL(us_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_one") ||
 									ENTITY::GET_ENTITY_MODEL(us_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_two")) PlayerIndex = PED::GET_PED_BONE_INDEX(curr_cut_ped, 8433);
 								else PlayerIndex = PED::GET_PED_BONE_INDEX(curr_cut_ped, 31086); // 8433
@@ -1505,6 +1508,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 						CAM::RENDER_SCRIPT_CAMS(false, false, 1, false, false);
 						CAM::DESTROY_CAM(CutCam, true);
 					}
+					CAM::DESTROY_ALL_CAMS(true);
 					found_ped_in_cutscene = false;
 					switched_c = -1;
 				}
@@ -1529,6 +1533,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			if (CAM::DOES_CAM_EXIST(CutCam)) {
 				CAM::RENDER_SCRIPT_CAMS(false, false, 1, false, false);
 				CAM::DESTROY_CAM(CutCam, true);
+				CAM::DESTROY_ALL_CAMS(true);
 			}
 			found_ped_in_cutscene = false;
 			switched_c = -1;
@@ -1541,6 +1546,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		if (CAM::DOES_CAM_EXIST(CutCam)) {
 			CAM::RENDER_SCRIPT_CAMS(false, false, 1, false, false);
 			CAM::DESTROY_CAM(CutCam, true);
+			CAM::DESTROY_ALL_CAMS(true);
 		}
 		found_ped_in_cutscene = false;
 		switched_c = -1;
