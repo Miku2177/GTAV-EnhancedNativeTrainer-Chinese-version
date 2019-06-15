@@ -83,6 +83,7 @@ bool featureRadioFreeze = false, featureRadioFreezeUpdated = false;
 bool featureRadioAlwaysOff = false;
 bool featureRadioAlwaysOffUpdated = false;
 bool featureBoostRadio = true;
+bool featureRealisticRadioVolume = false;
 bool featureWantedMusic = false;
 bool featureFlyingMusic = false;
 bool featurePoliceScanner = false;
@@ -729,13 +730,13 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 		case 6:
 			process_misc_filters_menu();
 			break;
-		case 23:
+		case 24:
 			process_phone_bill_menu();
 			break;
-		case 28:
+		case 29:
 			process_def_menutab_menu();
 			break;
-		case 29:
+		case 30:
 			process_airbrake_global_menu();
 			break;
 		default:
@@ -746,7 +747,7 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 }
 
 void process_misc_menu(){
-	const int lineCount = 31;
+	const int lineCount = 32;
 
 	std::string caption = "Miscellaneous Options";
 
@@ -760,6 +761,7 @@ void process_misc_menu(){
 		{"Screen Filters", nullptr, nullptr, false},
 		{"Radio Always Off", &featureRadioAlwaysOff, &featureRadioAlwaysOffUpdated, true},
 		{"Boost Radio Volume", &featureBoostRadio, NULL, true}, 
+		{"Realistic Radio Volume", &featureRealisticRadioVolume, NULL, true},
 		{"Restore Missing Radio Station", &featureEnableMissingRadioStation, NULL, false },
 		{"Radio In Police Vehicle", &featurePoliceRadio, NULL, true}, 
 		{"No Wanted Music", &featureWantedMusic, NULL, true}, 
@@ -859,6 +861,7 @@ void reset_misc_globals(){
 	featureHidePlayerInfo = false;
 	featureShowFPS = false;
 	featureNoAutoRespawn = false;
+	featureRealisticRadioVolume = false;
 
 	featureRadioFreezeUpdated =
 	featureRadioAlwaysOffUpdated =
@@ -942,6 +945,24 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	}
 	if (!featureBoostRadio) AUDIO::SET_VEHICLE_RADIO_LOUD(PED::GET_VEHICLE_PED_IS_USING(playerPed), 0);
 	
+	// Realistic Radio Volume
+	if (featureRealisticRadioVolume && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
+		Vehicle cur_v = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+		if (VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(cur_v)) && CAM::_0xEE778F8C7E1142E2(1) != 4) AUDIO::SET_FRONTEND_RADIO_ACTIVE(false);
+		if (VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(cur_v)) && CAM::_0xEE778F8C7E1142E2(1) == 4) AUDIO::SET_FRONTEND_RADIO_ACTIVE(true);
+		//if ((VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(cur_v)) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(cur_v))) && CAM::_0xEE778F8C7E1142E2(2) != 4) AUDIO::SET_FRONTEND_RADIO_ACTIVE(false);
+		//if ((VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(cur_v)) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(cur_v))) && CAM::_0xEE778F8C7E1142E2(2) == 4) AUDIO::SET_FRONTEND_RADIO_ACTIVE(true);
+		if (VEHICLE::IS_THIS_MODEL_A_BOAT(ENTITY::GET_ENTITY_MODEL(cur_v)) && CAM::_0xEE778F8C7E1142E2(3) != 4) AUDIO::SET_FRONTEND_RADIO_ACTIVE(false);
+		if (VEHICLE::IS_THIS_MODEL_A_BOAT(ENTITY::GET_ENTITY_MODEL(cur_v)) && CAM::_0xEE778F8C7E1142E2(3) == 4) AUDIO::SET_FRONTEND_RADIO_ACTIVE(true);
+		if (VEHICLE::IS_THIS_MODEL_A_PLANE(ENTITY::GET_ENTITY_MODEL(cur_v)) && CAM::_0xEE778F8C7E1142E2(4) != 4) AUDIO::SET_FRONTEND_RADIO_ACTIVE(false);
+		if (VEHICLE::IS_THIS_MODEL_A_PLANE(ENTITY::GET_ENTITY_MODEL(cur_v)) && CAM::_0xEE778F8C7E1142E2(4) == 4) AUDIO::SET_FRONTEND_RADIO_ACTIVE(true);
+		//if (VEHICLE::_IS_THIS_MODEL_A_SUBMERSIBLE(ENTITY::GET_ENTITY_MODEL(cur_v)) && CAM::_0xEE778F8C7E1142E2(5) != 4) AUDIO::SET_FRONTEND_RADIO_ACTIVE(false);
+		//if (VEHICLE::_IS_THIS_MODEL_A_SUBMERSIBLE(ENTITY::GET_ENTITY_MODEL(cur_v)) && CAM::_0xEE778F8C7E1142E2(5) == 4) AUDIO::SET_FRONTEND_RADIO_ACTIVE(true);
+		if (VEHICLE::IS_THIS_MODEL_A_HELI(ENTITY::GET_ENTITY_MODEL(cur_v)) && CAM::_0xEE778F8C7E1142E2(6) != 4) AUDIO::SET_FRONTEND_RADIO_ACTIVE(false);
+		if (VEHICLE::IS_THIS_MODEL_A_HELI(ENTITY::GET_ENTITY_MODEL(cur_v)) && CAM::_0xEE778F8C7E1142E2(6) == 4) AUDIO::SET_FRONTEND_RADIO_ACTIVE(true);
+	}
+	if (!featureRealisticRadioVolume && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) AUDIO::SET_FRONTEND_RADIO_ACTIVE(true);
+	
 	// Radio In Police Vehicles
 	if (featurePoliceRadio) {
 		Vehicle playerVeh = PED::GET_VEHICLE_PED_IS_IN(playerPed, 1);
@@ -955,7 +976,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			AUDIO::SET_RADIO_AUTO_UNFREEZE(true);
 			AUDIO::SET_USER_RADIO_CONTROL_ENABLED(true);
 		}
-			
+
 		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1)) if (!PED::IS_PED_IN_ANY_POLICE_VEHICLE(playerPed)) police_radio_check = false;
 
 		if (GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(coords_radio.x, coords_radio.y, coords_radio.z, coords_radio_2.x, coords_radio_2.y, coords_radio_2.z, false) < 3 && 
@@ -1611,6 +1632,7 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 	results->push_back(FeatureEnabledLocalDefinition{"featureRadioFreeze", &featureRadioFreeze, &featureRadioFreezeUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{"featureRadioAlwaysOff", &featureRadioAlwaysOff, &featureRadioAlwaysOffUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{"featureBoostRadio", &featureBoostRadio }); 
+	results->push_back(FeatureEnabledLocalDefinition{"featureRealisticRadioVolume", &featureRealisticRadioVolume});
 	results->push_back(FeatureEnabledLocalDefinition{"featureWantedMUsic", &featureWantedMusic}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureFlyingMusic", &featureFlyingMusic}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePoliceScanner", &featurePoliceScanner}); 
