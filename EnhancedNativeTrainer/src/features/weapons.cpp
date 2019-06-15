@@ -39,7 +39,7 @@ bool featureWeaponInfiniteParachutes = false, featureWeaponInfiniteParachutesUpd
 bool featureWeaponNoParachutes = false, featureWeaponNoParachutesUpdated = false;
 bool featureWeaponNoReload = false;
 bool featureNoReticle = false;
-bool featureCopWeapon = false;
+bool featureCopTakeWeapon = false;
 bool featureWeaponFireAmmo = false;
 bool featureWeaponExplosiveAmmo = false;
 bool featureWeaponExplosiveMelee = false;
@@ -1120,7 +1120,7 @@ bool process_weapon_menu(){
 	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Lose Weapons On Arrest";
 	toggleItem->value = i++;
-	toggleItem->toggleValue = &featureCopWeapon;
+	toggleItem->toggleValue = &featureCopTakeWeapon;
 	toggleItem->toggleValueUpdated = NULL;
 	menuItems.push_back(toggleItem);
 
@@ -1250,7 +1250,7 @@ void reset_weapon_globals(){
 		featureWeaponNoParachutesUpdated =
 		featureWeaponNoReload =
 		featureNoReticle =
-		featureCopWeapon =
+		featureCopTakeWeapon =
 		featureWeaponFireAmmo =
 		featureWeaponExplosiveAmmo =
 		featureWeaponExplosiveMelee =
@@ -1498,31 +1498,11 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	}
 
 	// Cops Take Your Weapons If You Die / Arrested
-	playerPed = PLAYER::PLAYER_PED_ID();
-	int pl_health = ENTITY::GET_ENTITY_HEALTH(playerPed);
-	Vector3 coords_me = ENTITY::GET_ENTITY_COORDS(playerPed, true);
-	int death_time = -1;
-
-	if (featureCopWeapon) death_time = PLAYER::GET_TIME_SINCE_LAST_DEATH();
-	if (death_time > -1 && death_time < 10000 && featureCopWeapon && !cops_took_weapons) cops_took_weapons = true;
-
-	if ((featureCopWeapon && VEHICLE::IS_COP_VEHICLE_IN_AREA_3D(coords_me.x - 200, coords_me.y - 200, coords_me.z - 200, coords_me.x + 200, coords_me.y + 200, coords_me.z + 200) && pl_health < 115 && 
-		PED::IS_ANY_PED_SHOOTING_IN_AREA(coords_me.x - 200, coords_me.y - 200, coords_me.z - 200, coords_me.x + 200, coords_me.y + 200, coords_me.z + 200, true, true)) || (featureCopWeapon &&
-		PED::IS_COP_PED_IN_AREA_3D(coords_me.x - 200, coords_me.y - 200, coords_me.z - 200, coords_me.x + 200, coords_me.y + 200, coords_me.z + 200) && pl_health < 115 &&
-		PED::IS_ANY_PED_SHOOTING_IN_AREA(coords_me.x - 200, coords_me.y - 200, coords_me.z - 200, coords_me.x + 200, coords_me.y + 200, coords_me.z + 200, true, true))) cops_on = true;
-		
-	if (featureCopWeapon && !VEHICLE::IS_COP_VEHICLE_IN_AREA_3D(coords_me.x - 200, coords_me.y - 200, coords_me.z - 200, coords_me.x + 200, coords_me.y + 200, coords_me.z + 200) && pl_health < 115 && 
-		!PED::IS_COP_PED_IN_AREA_3D(coords_me.x - 200, coords_me.y - 200, coords_me.z - 200, coords_me.x + 200, coords_me.y + 200, coords_me.z + 200) && pl_health < 115) cops_on = false;
-
-	if (cops_took_weapons && cops_on) {
-		WEAPON::REMOVE_ALL_PED_WEAPONS(playerPed, false);
-		cops_on = false;
-		cops_took_weapons = false;
+	if (featureCopTakeWeapon) {
+		if ((PLAYER::GET_TIME_SINCE_LAST_DEATH() > 100 && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 5000) || (PLAYER::GET_TIME_SINCE_LAST_ARREST() > 100 && PLAYER::GET_TIME_SINCE_LAST_ARREST() < 5000)) {
+			WEAPON::REMOVE_ALL_PED_WEAPONS(playerPed, false);
+		}
 	}
-		
-	if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) > 2) WEAPON::REMOVE_ALL_PED_WEAPONS(PLAYER::PLAYER_ID(), false);
-
-	if (death_time > 10000) cops_took_weapons = false;
 
 	// Give All Weapons Automatically
 	if (featureGiveAllWeapons && detained == false) {
@@ -2014,7 +1994,7 @@ void add_weapon_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponNoParachutes", &featureWeaponNoParachutes, &featureWeaponNoParachutesUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponNoReload", &featureWeaponNoReload});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoReticle", &featureNoReticle});
-	results->push_back(FeatureEnabledLocalDefinition{"featureCopWeapon", &featureCopWeapon});
+	results->push_back(FeatureEnabledLocalDefinition{"featureCopTakeWeapon", &featureCopTakeWeapon });
 	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponVehRockets", &featureWeaponVehRockets});
 	results->push_back(FeatureEnabledLocalDefinition{"featureGravityGun", &featureGravityGun});
 	results->push_back(FeatureEnabledLocalDefinition{"featureFriendlyFire", &featureFriendlyFire});
