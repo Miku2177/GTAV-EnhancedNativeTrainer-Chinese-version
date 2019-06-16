@@ -841,7 +841,7 @@ void process_powerpunch_menu() {
 	menuItems.push_back(listItem); 
 
 	item = new MenuItem<int>();
-	item->caption = "Enter Punch Strength Manually";
+	item->caption = "Enter Punch Strength";
 	item->value = i++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
