@@ -72,6 +72,8 @@ DWORD grav_partfx = 0;
 
 DWORD featureWeaponVehShootLastTime = 0;
 
+std::string result_p;
+std::string lastPowerWeapon;
 std::string lastCustomWeapon;
 char* currWeaponCompHash;
 
@@ -118,8 +120,8 @@ int SniperVisionIndex = 0;
 bool SniperVisionChanged = true;
 
 // Power Punch Strength
-const std::vector<std::string> WEAPONS_POWERPUNCH_CAPTIONS{ "1", "3", "5", "10", "50" };
-const int WEAPONS_POWERPUNCH_VALUES[] = { 1, 3, 5, 10, 50 };
+const std::vector<std::string> WEAPONS_POWERPUNCH_CAPTIONS{ "1", "3", "5", "10", "50", "Manual" };
+const int WEAPONS_POWERPUNCH_VALUES[] = { 1, 3, 5, 10, 50, 55 };
 int PowerPunchIndex = 2;
 bool PowerPunchChanged = true;
 
@@ -776,6 +778,24 @@ void process_pedagainstweapons_menu(){
 
 bool onconfirm_powerpunch_menu(MenuItem<int> choice)
 {
+	switch (activeLineIndexPowerPunchWeapons) {
+		case 5:
+		{
+			if (WEAPONS_POWERPUNCH_VALUES[PowerPunchIndex] != 55) {
+				std::ostringstream ss;
+				ss << "~r~Warning! Enable Manual Mode To Use It";
+				set_status_text(ss.str());
+			}
+			std::string result_p = show_keyboard(nullptr, (char *)lastPowerWeapon.c_str());
+			if (!result_p.empty()) {
+				result_p = trim(result_p);
+				lastPowerWeapon = result_p;
+			}
+			break;
+		}
+	default:
+		break;
+	}
 	return false;
 }
 
@@ -786,6 +806,7 @@ void process_powerpunch_menu() {
 
 	SelectFromListMenuItem *listItem;
 	ToggleMenuItem<int>* toggleItem;
+	MenuItem<int> *item = new MenuItem<int>();
 
 	int i = 0;
 
@@ -817,7 +838,13 @@ void process_powerpunch_menu() {
 	listItem->wrap = false;
 	listItem->caption = "Power Punch Strength";
 	listItem->value = PowerPunchIndex;
-	menuItems.push_back(listItem);
+	menuItems.push_back(listItem); 
+
+	item = new MenuItem<int>();
+	item->caption = "Enter Punch Strength Manually";
+	item->value = i++;
+	item->isLeaf = true;
+	menuItems.push_back(item);
 
 	draw_generic_menu<int>(menuItems, &activeLineIndexPowerPunchWeapons, caption, onconfirm_powerpunch_menu, NULL, NULL);
 }
@@ -1436,7 +1463,13 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	if (featurePowerPunch && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
 		Ped playerPed = PLAYER::PLAYER_PED_ID();
 		Vector3 CamRot = CAM::GET_GAMEPLAY_CAM_ROT(2);
-		int p_force = WEAPONS_POWERPUNCH_VALUES[PowerPunchIndex];
+		float p_force = -1; 
+		if (WEAPONS_POWERPUNCH_VALUES[PowerPunchIndex] != 55) p_force = WEAPONS_POWERPUNCH_VALUES[PowerPunchIndex];
+		if (WEAPONS_POWERPUNCH_VALUES[PowerPunchIndex] == 55 && !lastPowerWeapon.empty()) {
+			std::string::size_type sz;
+			p_force = std::stof(lastPowerWeapon, &sz);
+		}
+		//if (WEAPONS_POWERPUNCH_VALUES[PowerPunchIndex] == 55 && result_p.empty()) p_force = 0;
 		float rad = 2 * 3.14 * (CamRot.z / 360);
 		//float rad = (degrees * pi) / 180 ;
 		float v_x = -(sin(rad) * p_force * 10);
@@ -2031,6 +2064,8 @@ void onchange_weap_dmg_modifier(int value, SelectFromListMenuItem* source){
 }
 
 void add_weapons_generic_settings(std::vector<StringPairSettingDBRow>* results){
+	results->push_back(StringPairSettingDBRow{"lastCustomWeapon", lastCustomWeapon});
+	results->push_back(StringPairSettingDBRow{"lastPowerWeapon", lastPowerWeapon});
 	results->push_back(StringPairSettingDBRow{"weapDmgModIndex", std::to_string(weapDmgModIndex)});
 }
 
@@ -2060,6 +2095,12 @@ void handle_generic_settings_weapons(std::vector<StringPairSettingDBRow>* settin
 		}
 		else if (setting.name.compare("PowerPunchIndex") == 0) {
 			PowerPunchIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("lastCustomWeapon") == 0) {
+			lastCustomWeapon = setting.value;
+		}
+		else if (setting.name.compare("lastPowerWeapon") == 0) {
+			lastPowerWeapon = setting.value;
 		}
 	}
 }
