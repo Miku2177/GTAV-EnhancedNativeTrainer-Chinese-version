@@ -763,7 +763,7 @@ void process_misc_menu(){
 		{"Screen Filters", nullptr, nullptr, false},
 		{"Radio Always Off", &featureRadioAlwaysOff, &featureRadioAlwaysOffUpdated, true},
 		{"Boost Radio Volume", &featureBoostRadio, NULL, true}, 
-		{"Realistic Radio Volume", &featureRealisticRadioVolume, NULL, true},
+		{"Consistent Radio Volume", &featureRealisticRadioVolume, NULL, true},
 		{"Restore Missing Radio Station", &featureEnableMissingRadioStation, NULL, false },
 		{"Radio In Police Vehicle", &featurePoliceRadio, NULL, true}, 
 		{"No Wanted Music", &featureWantedMusic, NULL, true}, 
@@ -947,7 +947,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	}
 	if (!featureBoostRadio) AUDIO::SET_VEHICLE_RADIO_LOUD(PED::GET_VEHICLE_PED_IS_USING(playerPed), 0);
 	
-	// Realistic Radio Volume
+	// Consistent Radio Volume
 	if (featureRealisticRadioVolume && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && radio_v_checked == false) {
 		Vehicle cur_v = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 		if (VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(cur_v)) && CAM::_0xEE778F8C7E1142E2(1) != 4) AUDIO::SET_FRONTEND_RADIO_ACTIVE(false);
