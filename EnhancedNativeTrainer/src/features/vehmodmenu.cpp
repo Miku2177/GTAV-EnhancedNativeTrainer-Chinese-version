@@ -1606,7 +1606,7 @@ bool onconfirm_vehmod_engine_sound_menu(MenuItem<int> choice) {
 		process_vehmod_engine_sound();
 		break;
 	case 1:
-		set_engine_sound;
+		set_engine_sound(choice);
 		break;
 	default:
 		break;
