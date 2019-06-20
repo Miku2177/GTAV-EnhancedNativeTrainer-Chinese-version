@@ -27,6 +27,9 @@ int activeLineIndexCopArmed = 0;
 int activeLineIndexPedAgainstWeapons = 0;
 int activeLineIndexPowerPunchWeapons = 0;
 
+int dropweapon_seconds = 0;
+bool dropped_weapon = false;
+
 // give all weapons automatically variables
 bool featureGiveAllWeapons = false;
 int tick_allw = 0;
@@ -57,6 +60,7 @@ bool featureArmyMelee = false;
 
 bool featureGravityGun = false;
 bool featureFriendlyFire = false;
+bool featureDropWeapon = false;
 bool featurePowerPunch = false;
 // Cop Weapons
 bool someonehasgunandshooting = false;
@@ -1243,6 +1247,12 @@ bool process_weapon_menu(){
 	item->isLeaf = false;
 	menuItems.push_back(item);
 
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Drop Weapon If Hand Damaged";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureDropWeapon;
+	menuItems.push_back(toggleItem);
+
 	return draw_generic_menu<int>(menuItems, &activeLineIndexWeapon, caption, onconfirm_weapon_menu, NULL, NULL);
 }
 
@@ -1290,6 +1300,7 @@ void reset_weapon_globals(){
 		featureAgainstMeleeWeapons =
 		featureAimAtDriver =
 		featureFriendlyFire =
+		featureDropWeapon = 
 		featurePowerPunch =
 		featureSwitchWeaponIfDanger =
 		featurePunchMeleeWeapons =
@@ -1405,6 +1416,32 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		if (!sniper_rifle) UI::HIDE_HUD_COMPONENT_THIS_FRAME(14);
 	}
 	
+	// Drop Weapon If Hand Damaged
+	if (featureDropWeapon) {
+		int b_l_index = PED::GET_PED_BONE_INDEX(playerPed, 18905);
+		int b_r_index = PED::GET_PED_BONE_INDEX(playerPed, 57005);
+		if ((PED::GET_PED_LAST_DAMAGE_BONE(playerPed, &b_l_index) || PED::GET_PED_LAST_DAMAGE_BONE(playerPed, &b_r_index)) && dropped_weapon == false && WEAPON::IS_PED_ARMED(playerPed, 7)) {
+			Hash curr_w = WEAPON::GET_SELECTED_PED_WEAPON(playerPed);
+			Vector3 p_coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(playerPed, 10.0f, 10.0f, 0.0f);
+			WEAPON::SET_PED_DROPS_INVENTORY_WEAPON(playerPed, curr_w, p_coords.x, p_coords.y, p_coords.z, 1);
+			WEAPON::REMOVE_WEAPON_FROM_PED(playerPed, curr_w);
+			PED::CLEAR_PED_LAST_DAMAGE_BONE(playerPed);
+			dropped_weapon = true;
+		}
+		if (dropped_weapon == true) {
+			w_tick_secs_passed = clock() / CLOCKS_PER_SEC;
+			if (((clock() / CLOCKS_PER_SEC) - w_tick_secs_curr) != 0) {
+				dropweapon_seconds = dropweapon_seconds + 1;
+				w_tick_secs_curr = w_tick_secs_passed;
+			}
+		}
+		if (dropweapon_seconds == 3) {
+			PED::CLEAR_PED_LAST_DAMAGE_BONE(playerPed);
+			dropweapon_seconds = 0;
+			dropped_weapon = false;
+		}
+	}
+
 	////////////////////////////////////////////// COPS WEAPON ////////////////////////////////////////
 
 	if (featureCopArmedWith) {
@@ -2031,6 +2068,7 @@ void add_weapon_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponVehRockets", &featureWeaponVehRockets});
 	results->push_back(FeatureEnabledLocalDefinition{"featureGravityGun", &featureGravityGun});
 	results->push_back(FeatureEnabledLocalDefinition{"featureFriendlyFire", &featureFriendlyFire});
+	results->push_back(FeatureEnabledLocalDefinition{"featureDropWeapon", &featureDropWeapon});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePowerPunch", &featurePowerPunch});
 	results->push_back(FeatureEnabledLocalDefinition{"featureGiveAllWeapons", &featureGiveAllWeapons});
 	results->push_back(FeatureEnabledLocalDefinition{"featureCopArmedWith", &featureCopArmedWith});
