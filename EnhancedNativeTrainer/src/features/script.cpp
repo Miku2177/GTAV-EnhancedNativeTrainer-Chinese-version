@@ -282,7 +282,7 @@ void check_player_model(){
 		}
 	}
 
-	if(ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())){ //  && is_player_reset_on_death()
+	if(ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) { //  && is_player_reset_on_death()
 		if(!found){
 			if (is_player_reset_on_death()) set_status_text("Resetting death state because a custom skin was used");
 			GAMEPLAY::_RESET_LOCALPLAYER_STATE();
