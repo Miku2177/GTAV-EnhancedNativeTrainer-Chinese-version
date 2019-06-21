@@ -1418,14 +1418,15 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	
 	// Drop Weapon If Hand Damaged
 	if (featureDropWeapon) {
-		int b_l_index = PED::GET_PED_BONE_INDEX(playerPed, 18905);
-		int b_r_index = PED::GET_PED_BONE_INDEX(playerPed, 57005);
-		if ((PED::GET_PED_LAST_DAMAGE_BONE(playerPed, &b_l_index) || PED::GET_PED_LAST_DAMAGE_BONE(playerPed, &b_r_index)) && dropped_weapon == false && WEAPON::IS_PED_ARMED(playerPed, 7)) {
+		//int b_l_index = PED::GET_PED_BONE_INDEX(playerPed, 18905);
+		int b_r_index = PED::GET_PED_BONE_INDEX(playerPed, 64016); // 28252 57005
+		if (/*(PED::GET_PED_LAST_DAMAGE_BONE(playerPed, &b_l_index) || */PED::GET_PED_LAST_DAMAGE_BONE(playerPed, &b_r_index)/*)*/ && dropped_weapon == false && WEAPON::IS_PED_ARMED(playerPed, 7)) {
 			Hash curr_w = WEAPON::GET_SELECTED_PED_WEAPON(playerPed);
 			Vector3 p_coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(playerPed, 10.0f, 10.0f, 0.0f);
 			WEAPON::SET_PED_DROPS_INVENTORY_WEAPON(playerPed, curr_w, p_coords.x, p_coords.y, p_coords.z, 1);
 			WEAPON::REMOVE_WEAPON_FROM_PED(playerPed, curr_w);
 			PED::CLEAR_PED_LAST_DAMAGE_BONE(playerPed);
+			ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(playerPed);
 			dropped_weapon = true;
 		}
 		if (dropped_weapon == true) {
@@ -1435,8 +1436,9 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 				w_tick_secs_curr = w_tick_secs_passed;
 			}
 		}
-		if (dropweapon_seconds == 3) {
+		if (dropweapon_seconds == 5) { // 3
 			PED::CLEAR_PED_LAST_DAMAGE_BONE(playerPed);
+			ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(playerPed);
 			dropweapon_seconds = 0;
 			dropped_weapon = false;
 		}
