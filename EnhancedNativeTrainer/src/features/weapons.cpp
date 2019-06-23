@@ -1149,7 +1149,7 @@ bool process_weapon_menu(){
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Lose Weapons On Arrest";
+	toggleItem->caption = "Lose Weapons On Arrest/Death";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureCopTakeWeapon;
 	toggleItem->toggleValueUpdated = NULL;
