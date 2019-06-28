@@ -2449,7 +2449,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		Object my_shield = -1;
 		if (VEH_MASS_VALUES[VehMassMultIndex] > 0) my_shield = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 		if (VEH_MASS_VALUES[current_player_forceshield] > 0) my_shield = PLAYER::PLAYER_PED_ID();
-		Vector3 vehspeed = ENTITY::GET_ENTITY_VELOCITY(my_shield);
+		//Vector3 vehspeed = ENTITY::GET_ENTITY_VELOCITY(my_shield);
 		Vector3 CamRot = CAM::GET_GAMEPLAY_CAM_ROT(2);
 		Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(my_shield, true);
 		int p_force = 5;

@@ -1659,10 +1659,9 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 			if (snow_e == true) {
 				GAMEPLAY::CLEAR_WEATHER_TYPE_PERSIST();
 				GAMEPLAY::SET_WEATHER_TYPE_NOW("CLEAR");
+				// Notification
+				set_status_text("Snow Disabled");
 				snow_e = false;
 			}
-
-			// Notification
-			set_status_text("Snow Disabled");
 		}
 }
