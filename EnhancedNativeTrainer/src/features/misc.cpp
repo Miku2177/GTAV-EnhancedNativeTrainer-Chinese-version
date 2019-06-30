@@ -77,6 +77,7 @@ Vehicle playerVeh = -1;
 // Cutscene Viewer & First Person Cutscene Camera
 bool cutscene_is_playing, cutscene_being_watched, found_ped_in_cutscene = false;
 bool con_disabled = false;
+bool manual_cutscene = false;
 Ped curr_cut_ped_me, my_first_coords, curr_cut_ped, switched_c = -1;
 bool featureFirstPersonCutscene = false;
 
@@ -387,6 +388,7 @@ bool onconfirm_misc_cutscene_menu(MenuItem<int> choice) {
 		}
 		if (CUTSCENE::HAS_CUTSCENE_LOADED()) {
 			cutscene_is_playing = true;
+			manual_cutscene = true;
 			CUTSCENE::SET_CUTSCENE_FADE_VALUES(0, 0, 0, 0); //CUTSCENE::SET_CUTSCENE_FADE_VALUES(0, 0, 0, 0); || CUTSCENE::SET_CUTSCENE_FADE_VALUES(1, 1, 1, 1); // actually both of them work or both or them can be removed
 			CUTSCENE::START_CUTSCENE(0);
 			CAM::SET_WIDESCREEN_BORDERS(0, 0);
@@ -1410,12 +1412,13 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	// is a cutscene currently playing?
 	if (cutscene_is_playing == true) {
 		con_disabled = true;
-		CONTROLS::DISABLE_ALL_CONTROL_ACTIONS(0);
+		if (manual_cutscene == true) CONTROLS::DISABLE_ALL_CONTROL_ACTIONS(0);
 	}
 	else { 
-		if (con_disabled == true) {
+		if (con_disabled == true && manual_cutscene == true) {
 			for (int i = 0; i <= 33; i++) CONTROLS::ENABLE_ALL_CONTROL_ACTIONS(i);
 			con_disabled = false;
+			manual_cutscene = false;
 		}
 		OBJECT::DELETE_OBJECT(&xaxis);
 		OBJECT::DELETE_OBJECT(&zaxis);
@@ -1565,9 +1568,10 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			}
 		}
 		else if (cutscene_is_playing == false) {
-			if (con_disabled == true) {
+			if (con_disabled == true && manual_cutscene == true) {
 				for (int i = 0; i <= 33; i++) CONTROLS::ENABLE_ALL_CONTROL_ACTIONS(i);
 				con_disabled = false;
+				manual_cutscene = false;
 			}
 			OBJECT::DELETE_OBJECT(&xaxis);
 			OBJECT::DELETE_OBJECT(&zaxis);
