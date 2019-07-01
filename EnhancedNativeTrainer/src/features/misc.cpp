@@ -74,6 +74,12 @@ char *temp_musiceventname = "";
 
 Vehicle playerVeh = -1;
 
+//Skip track
+static uintptr_t* g_radioStationList;
+static int* g_radioStationCount;
+static void(*CRadioStation__Advance)(uintptr_t This, uint32_t a2);
+static uintptr_t* g_unkRadioStationData;
+
 // Cutscene Viewer & First Person Cutscene Camera
 bool cutscene_is_playing, cutscene_being_watched, found_ped_in_cutscene = false;
 bool con_disabled = false;
@@ -721,7 +727,8 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 			break;
 		case 2:
 			// next radio track
-			AUDIO::SKIP_RADIO_FORWARD();
+			if (getGameVersion() > 41) SKIP_RADIO_FORWARD_CUSTOM();
+			else AUDIO::SKIP_RADIO_FORWARD();
 			break;
 		case 3:
 			process_misc_freezeradio_menu();
@@ -1768,4 +1775,103 @@ void set_hud_shown(bool hidden){
 
 bool is_jellman_scenery_enabled(){
 	return featureMiscJellmanScenery;
+}
+
+void SkipRadioFwd1(uint32_t a1)
+{
+	for (int i = 0; i < *g_radioStationCount; i++)
+	{
+		uintptr_t radioStation = g_radioStationList[i];
+
+		if (radioStation)
+		{
+			CRadioStation__Advance(radioStation, a1);
+		}
+	}
+}
+
+static void SkipRadioFwd2Internal(uintptr_t a1, uint32_t a2)
+{
+	uint64_t v2; // rax
+
+	if (*(uint32_t*)(a1 + 0x2BC) == 2)
+	{
+		v2 = *(uint64_t*)(a1 + 0x2A0);
+		if (v2)
+		{
+			*(uint32_t*)(a1 + 0x2C0) = 0;
+			*(uint8_t*)(a1 + 0x2CC) = 1;
+			*(uint32_t*)(a1 + 0x2B4) = a2;
+			*(uint64_t*)(a1 + 0x2A8) = v2;
+			*(uint32_t*)(a1 + 0x2BC) = 5;
+		}
+	}
+}
+
+void SkipRadioFwd2(uint32_t a1)
+{
+	uint32_t v1; // esi
+	uintptr_t* v2; // rbx
+	size_t v3; // rdi
+
+	v1 = a1;
+	v2 = g_unkRadioStationData;
+	v3 = 3;
+	do
+	{
+		SkipRadioFwd2Internal(*v2, v1);
+		++v2;
+		--v3;
+	} while (v3);
+}
+
+static void SKIP_RADIO_FORWARD_CUSTOM()
+	{
+		SkipRadioFwd1(200000);
+		SkipRadioFwd2(200000);
+	}
+
+//Will need to condense this as there's already a scanner for Tuneable snow as well
+bool CompareMemoryJACCO(const uint8_t* pData, const uint8_t* bMask, const char* sMask)
+{
+	for (; *sMask; ++sMask, ++pData, ++bMask)
+		if (*sMask == 'x' && *pData != *bMask)
+			return false;
+
+	return *sMask == NULL;
+}
+
+intptr_t FindPatternJACCO(const char* bMask, const char* sMask)
+{
+	// Game Base & Size
+	static intptr_t pGameBase = (intptr_t)GetModuleHandle(nullptr);
+	static uint32_t pGameSize = 0;
+	if (!pGameSize)
+	{
+		MODULEINFO info;
+		GetModuleInformation(GetCurrentProcess(), (HMODULE)pGameBase, &info, sizeof(MODULEINFO));
+		pGameSize = info.SizeOfImage;
+	}
+
+	// Scan
+	for (uint32_t i = 0; i < pGameSize; i++)
+		if (CompareMemoryJACCO((uint8_t*)(pGameBase + i), (uint8_t*)bMask, sMask))
+			return pGameBase + i;
+
+	return 0;
+}
+
+void SInit()
+{
+	uintptr_t address = FindPatternJACCO("\x3B\x0D\x00\x00\x00\x00\x73\x0E\x48\x8B\x05\x00\x00\x00\x00\x8B\xC9", "xx????xxxxx????xx");
+
+	g_radioStationList = *(uintptr_t**)(address + *(int*)(address + 11) + 15);
+	g_radioStationCount = (int*)(address + *(int*)(address + 2) + 6);
+
+	address = FindPatternJACCO("\x80\xB9\x00\x00\x00\x00\x00\x8B\xF2\x48\x8B\xD9\x0F\x85", "xx?????xxxxxxx");
+	CRadioStation__Advance = (decltype(CRadioStation__Advance))(address - 15);
+
+	address = FindPatternJACCO("\x48\x8D\x1D\x00\x00\x00\x00\xBF\x00\x00\x00\x00\x48\x83\x3B\x00", "xxx????x????xxxx");
+	g_unkRadioStationData = (uintptr_t*)(address + *(int*)(address + 3) + 7);
+
 }

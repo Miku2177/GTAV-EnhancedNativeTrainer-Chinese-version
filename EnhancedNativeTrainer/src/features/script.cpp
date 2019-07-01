@@ -1878,6 +1878,9 @@ void ScriptMain(){
 
 		//UnlockAllObjects();
 
+		//Find the radio skip patterns
+		SInit();
+
 		main();
 
 		write_text_to_log_file("ScriptMain ended");
