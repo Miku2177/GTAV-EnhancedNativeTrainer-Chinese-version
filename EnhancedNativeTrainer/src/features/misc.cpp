@@ -1825,7 +1825,7 @@ void SkipRadioFwd2(uint32_t a1)
 	} while (v3);
 }
 
-static void SKIP_RADIO_FORWARD_CUSTOM()
+void SKIP_RADIO_FORWARD_CUSTOM()
 	{
 		SkipRadioFwd1(200000);
 		SkipRadioFwd2(200000);
