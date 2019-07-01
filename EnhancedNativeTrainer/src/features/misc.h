@@ -197,12 +197,11 @@ struct GlobalTable
 	bool IsInitialised()const { return *GlobalBasePtr != NULL; }
 };
 
-//void FindScriptAddresses();
-
-//void FindPatterns();
-
-//uintptr_t FindPattern2(const char *pattern, const char *mask, const char* startAddress, size_t size);
-
-//uintptr_t FindPattern2(const char *pattern, const char *mask);
-
-//void EnableCarsGlobal();
+//Radio track skipping.
+void SkipRadioFwd1(uint32_t a1);
+static void SkipRadioFwd2Internal(uintptr_t a1, uint32_t a2);
+void SkipRadioFwd2(uint32_t a1);
+static void SKIP_RADIO_FORWARD_CUSTOM();
+bool CompareMemoryJACCO(const uint8_t* pData, const uint8_t* bMask, const char* sMask);
+intptr_t FindPatternJACCO(const char* bMask, const char* sMask);
+void SInit();
