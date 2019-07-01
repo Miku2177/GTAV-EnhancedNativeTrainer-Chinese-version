@@ -80,6 +80,7 @@ bool featureVehSteerAngle = false;
 bool featureRollWhenShoot = false;
 bool featureTractionControl = false;
 bool featureSticktoground = false;
+bool featureHeavyVehicle = false;
 bool featureEngineRunning = false;
 bool featureNoVehFlip = false;
 bool featureAutoToggleLights = false;
@@ -1986,6 +1987,12 @@ void process_veh_menu(){
 	toggleItem->toggleValue = &featureSticktoground;
 	menuItems.push_back(toggleItem);
 
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Heavy Vehicle";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureHeavyVehicle;
+	menuItems.push_back(toggleItem);
+
 	draw_generic_menu<int>(menuItems, &activeLineIndexVeh, caption, onconfirm_veh_menu, NULL, NULL);
 }
 
@@ -2547,6 +2554,138 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	/////////////////// HEAVY VEHICLE /////////////////////
+
+	if (featureHeavyVehicle && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && !PED::IS_PED_IN_ANY_PLANE(playerPed) && !PED::IS_PED_IN_ANY_HELI(playerPed)) {
+		const int OBJ_ARR_SIZE = 1024;
+		Object nearbyObj[OBJ_ARR_SIZE];
+		Object my_shield = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+		float vehspeed = ENTITY::GET_ENTITY_SPEED(my_shield);
+		//Vector3 CamRot = CAM::GET_GAMEPLAY_CAM_ROT(2);
+		Vector3 CamRot = ENTITY::GET_ENTITY_ROTATION(playerPed, 0);
+		int p_force = 1; // 3; // vehspeed; // / 10; // 5;
+		float rad = 2 * 3.14 * (CamRot.z / 360);
+		float v_x = -(sin(rad) * p_force * 10);
+		float v_y = (cos(rad) * p_force * 10);
+		float v_z = p_force * (CamRot.x * 0.2);
+		
+		int count_v = worldGetAllVehicles(nearbyObj, OBJ_ARR_SIZE); // vehicles
+		for (int i = 0; i < count_v; i++) {
+			if (ENTITY::IS_ENTITY_TOUCHING_ENTITY(PED::GET_VEHICLE_PED_IS_USING(playerPed), nearbyObj[i]) && nearbyObj[i] != PED::GET_VEHICLE_PED_IS_USING(playerPed)) {
+				bool v_atfront = false;
+				bool v_behind = false;
+				Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(my_shield, true);
+				Vector3 coordsentity = ENTITY::GET_ENTITY_COORDS(nearbyObj[i], true);
+				if (ENTITY::_GET_ENTITY_PHYSICS_HEADING(playerPed) >= 135 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(playerPed) <= 225) { // south
+					if (coordsentity.y < coordsme.y) v_atfront = true;
+					else v_behind = true;
+				}
+				if (ENTITY::_GET_ENTITY_PHYSICS_HEADING(playerPed) >= 315 || ENTITY::_GET_ENTITY_PHYSICS_HEADING(playerPed) <= 45) { // north
+					if (coordsentity.y > coordsme.y) v_atfront = true;
+					else v_behind = true;
+				}
+				if (ENTITY::_GET_ENTITY_PHYSICS_HEADING(playerPed) >= 46 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(playerPed) <= 134) { // west
+					if (coordsentity.x < coordsme.x) v_atfront = true;
+					else v_behind = true;
+				}
+				if (ENTITY::_GET_ENTITY_PHYSICS_HEADING(playerPed) >= 226 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(playerPed) <= 314) { // east
+					if (coordsentity.x > coordsme.x) v_atfront = true;
+					else v_behind = true;
+				}
+				if (v_atfront == true) {
+					ENTITY::APPLY_FORCE_TO_ENTITY(nearbyObj[i], 1, v_x, v_y, v_z, 0, 0, 0, false, false, true, true, false, true);
+					VEHICLE::SET_VEHICLE_FORWARD_SPEED(PED::GET_VEHICLE_PED_IS_USING(playerPed), vehspeed);
+					v_atfront = false;
+				}
+				if (v_behind == true) {
+					ENTITY::APPLY_FORCE_TO_ENTITY(nearbyObj[i], 1, -v_x, -v_y, -v_z, 0, 0, 0, false, false, true, true, false, true);
+					VEHICLE::SET_VEHICLE_FORWARD_SPEED(PED::GET_VEHICLE_PED_IS_USING(playerPed), vehspeed);
+					v_behind = false;
+				}
+			}
+		} // end of for
+
+		int count_p = worldGetAllPeds(nearbyObj, OBJ_ARR_SIZE); // pedestrians
+		for (int i = 0; i < count_p; i++) {
+			if (ENTITY::IS_ENTITY_TOUCHING_ENTITY(PED::GET_VEHICLE_PED_IS_USING(playerPed), nearbyObj[i]) && nearbyObj[i] != playerPed) {
+				bool v_atfront = false;
+				bool v_behind = false;
+				Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(my_shield, true);
+				Vector3 coordsentity = ENTITY::GET_ENTITY_COORDS(nearbyObj[i], true);
+				if (ENTITY::_GET_ENTITY_PHYSICS_HEADING(playerPed) >= 135 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(playerPed) <= 225) { // south
+					if (coordsentity.y < coordsme.y) v_atfront = true;
+					else v_behind = true;
+				}
+				if (ENTITY::_GET_ENTITY_PHYSICS_HEADING(playerPed) >= 315 || ENTITY::_GET_ENTITY_PHYSICS_HEADING(playerPed) <= 45) { // north
+					if (coordsentity.y > coordsme.y) v_atfront = true;
+					else v_behind = true;
+				}
+				if (ENTITY::_GET_ENTITY_PHYSICS_HEADING(playerPed) >= 46 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(playerPed) <= 134) { // west
+					if (coordsentity.x < coordsme.x) v_atfront = true;
+					else v_behind = true;
+				}
+				if (ENTITY::_GET_ENTITY_PHYSICS_HEADING(playerPed) >= 226 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(playerPed) <= 314) { // east
+					if (coordsentity.x > coordsme.x) v_atfront = true;
+					else v_behind = true;
+				}
+				if (v_atfront == true) {
+					PED::SET_PED_CAN_RAGDOLL(nearbyObj[i], true);
+					PED::SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(nearbyObj[i], true);
+					PED::SET_PED_RAGDOLL_FORCE_FALL(nearbyObj[i]);
+					ENTITY::APPLY_FORCE_TO_ENTITY(nearbyObj[i], 1, v_x, v_y, v_z, 0, 0, 0, false, false, true, true, false, true);
+					VEHICLE::SET_VEHICLE_FORWARD_SPEED(PED::GET_VEHICLE_PED_IS_USING(playerPed), vehspeed);
+					v_atfront = false;
+				}
+				if (v_behind == true) {
+					PED::SET_PED_CAN_RAGDOLL(nearbyObj[i], true);
+					PED::SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(nearbyObj[i], true);
+					PED::SET_PED_RAGDOLL_FORCE_FALL(nearbyObj[i]);
+					ENTITY::APPLY_FORCE_TO_ENTITY(nearbyObj[i], 1, -v_x, -v_y, -v_z, 0, 0, 0, false, false, true, true, false, true);
+					VEHICLE::SET_VEHICLE_FORWARD_SPEED(PED::GET_VEHICLE_PED_IS_USING(playerPed), vehspeed);
+					v_behind = false;
+				}
+			}
+		} // end of for
+
+		int count_o = worldGetAllObjects(nearbyObj, OBJ_ARR_SIZE); // objects
+		for (int i = 0; i < count_o; i++) {
+			if (ENTITY::IS_ENTITY_TOUCHING_ENTITY(PED::GET_VEHICLE_PED_IS_USING(playerPed), nearbyObj[i]) && nearbyObj[i] != my_shield) {
+				bool v_atfront = false;
+				bool v_behind = false;
+				Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(my_shield, true);
+				Vector3 coordsentity = ENTITY::GET_ENTITY_COORDS(nearbyObj[i], true);
+				if (ENTITY::_GET_ENTITY_PHYSICS_HEADING(playerPed) >= 135 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(playerPed) <= 225) { // south
+					if (coordsentity.y < coordsme.y) v_atfront = true;
+					else v_behind = true;
+				}
+				if (ENTITY::_GET_ENTITY_PHYSICS_HEADING(playerPed) >= 315 || ENTITY::_GET_ENTITY_PHYSICS_HEADING(playerPed) <= 45) { // north
+					if (coordsentity.y > coordsme.y) v_atfront = true;
+					else v_behind = true;
+				}
+				if (ENTITY::_GET_ENTITY_PHYSICS_HEADING(playerPed) >= 46 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(playerPed) <= 134) { // west
+					if (coordsentity.x < coordsme.x) v_atfront = true;
+					else v_behind = true;
+				}
+				if (ENTITY::_GET_ENTITY_PHYSICS_HEADING(playerPed) >= 226 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(playerPed) <= 314) { // east
+					if (coordsentity.x > coordsme.x) v_atfront = true;
+					else v_behind = true;
+				}
+				if (v_atfront == true) {
+					ENTITY::APPLY_FORCE_TO_ENTITY(nearbyObj[i], 1, v_x, v_y, v_z, 0, 0, 0, false, false, true, true, false, true);
+					VEHICLE::SET_VEHICLE_FORWARD_SPEED(PED::GET_VEHICLE_PED_IS_USING(playerPed), vehspeed);
+					v_atfront = false;
+				}
+				if (v_behind == true) {
+					ENTITY::APPLY_FORCE_TO_ENTITY(nearbyObj[i], 1, -v_x, -v_y, -v_z, 0, 0, 0, false, false, true, true, false, true);
+					VEHICLE::SET_VEHICLE_FORWARD_SPEED(PED::GET_VEHICLE_PED_IS_USING(playerPed), vehspeed);
+					v_behind = false;
+				}
+			}
+		} // end of for
+	}
+
+	////////////////////////////////////////////////////
+
 	//////////////////////////////////////////////////// TURN SIGNALS ///////////////////////////////////////////////////////////
 
 	if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1)) {
@@ -3414,6 +3553,7 @@ void reset_vehicle_globals() {
 		featureRollWhenShoot =
 		featureTractionControl =
 		featureSticktoground =
+		featureHeavyVehicle =
 		featureEngineRunning =
 		featureNoVehFlip =
 		featureAutoToggleLights =
@@ -3693,6 +3833,7 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureRollWhenShoot", &featureRollWhenShoot});
 	results->push_back(FeatureEnabledLocalDefinition{"featureTractionControl", &featureTractionControl});
 	results->push_back(FeatureEnabledLocalDefinition{"featureSticktoground", &featureSticktoground});
+	results->push_back(FeatureEnabledLocalDefinition{"featureHeavyVehicle", &featureHeavyVehicle});
 	results->push_back(FeatureEnabledLocalDefinition{"featureEngineRunning", &featureEngineRunning});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoVehFlip", &featureNoVehFlip});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAutoToggleLights", &featureAutoToggleLights});
