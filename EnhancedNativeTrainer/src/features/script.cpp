@@ -82,6 +82,12 @@ bool featureThermalVisionUpdated = false;
 bool featureWantedLevelFrozen = false;
 bool featureWantedLevelFrozenUpdated = false;
 bool featureLevitation = false;
+
+bool featureWantedLevelNoPHeli = false;
+bool featureWantedNoPRoadB = false;
+bool featureWantedLevelNoPBoats = false;
+bool featureWantedLevelNoSWATVehicles = false;
+
 bool engine_running = true;
 bool engine_switched = false;
 bool engine_killed = false;
@@ -527,6 +533,21 @@ void update_features(){
 		featureWantedLevelFrozenUpdated = false;
 	}
 	
+	// No Police Helicopters
+	if (featureWantedLevelNoPHeli) {
+		GAMEPLAY::ENABLE_DISPATCH_SERVICE(2, false);
+		GAMEPLAY::ENABLE_DISPATCH_SERVICE(12, false);
+	}
+
+	// No Road Blocks
+	if (featureWantedNoPRoadB) GAMEPLAY::ENABLE_DISPATCH_SERVICE(8, false);
+
+	// No Police Boats
+	if (featureWantedLevelNoPBoats) GAMEPLAY::ENABLE_DISPATCH_SERVICE(13, false);
+
+	// No SWAT Vehicles
+	if (featureWantedLevelNoSWATVehicles) GAMEPLAY::ENABLE_DISPATCH_SERVICE(4, false);
+
 	// Levitation
 	if (featureLevitation) {
 		if (CONTROLS::IS_CONTROL_RELEASED(2, 22)) set_status_text("Hold 'Jump' to use your force.");
@@ -1197,6 +1218,30 @@ bool maxwantedlevel_menu() {
 	listItem->value = wanted_maxpossible_level;
 	menuItems.push_back(listItem);
 
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "No Police Helicopters";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureWantedLevelNoPHeli;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "No Road Blocks";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureWantedNoPRoadB;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "No Police Boats";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureWantedLevelNoPBoats;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "No SWAT Vehicles";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureWantedLevelNoSWATVehicles;
+	menuItems.push_back(toggleItem);
+
 	return draw_generic_menu<int>(menuItems, &PlayerWantedMaxPossibleLevelMenuIndex, caption, onconfirm_PlayerWantedMaxPossibleLevel_menu, NULL, NULL);
 }
 
@@ -1712,6 +1757,11 @@ void reset_globals(){
 		featureRagdollIfInjured =
 		featureLevitation =
 
+		featureWantedLevelNoPHeli =
+		featureWantedNoPRoadB =
+		featureWantedLevelNoPBoats =
+		featureWantedLevelNoSWATVehicles =
+
 		featureWantedLevelFrozen = false;
 
 	featurePlayerInvincibleUpdated =
@@ -1936,8 +1986,14 @@ void ScriptTidyUp(){
 
 void add_player_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerInvincible", &featurePlayerInvincible, &featurePlayerInvincibleUpdated});
-	results->push_back(FeatureEnabledLocalDefinition{"featureWantedLevelFrozen", &featureWantedLevelFrozen, &featureWantedLevelFrozenUpdated });
+	results->push_back(FeatureEnabledLocalDefinition{"featureWantedLevelFrozen", &featureWantedLevelFrozen, &featureWantedLevelFrozenUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerIgnoredByPolice", &featurePlayerIgnoredByPolice}); 
+
+	results->push_back(FeatureEnabledLocalDefinition{"featureWantedLevelNoPHeli", &featureWantedLevelNoPHeli});
+	results->push_back(FeatureEnabledLocalDefinition{"featureWantedNoPRoadB", &featureWantedNoPRoadB});
+	results->push_back(FeatureEnabledLocalDefinition{"featureWantedLevelNoPBoats", &featureWantedLevelNoPBoats});
+	results->push_back(FeatureEnabledLocalDefinition{"featureWantedLevelNoSWATVehicles", &featureWantedLevelNoSWATVehicles});
+
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerUnlimitedAbility", &featurePlayerUnlimitedAbility});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerNoNoise", &featurePlayerNoNoise}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerFastSwim", &featurePlayerFastSwim}); 

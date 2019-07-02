@@ -173,8 +173,7 @@ void trigger_function_for_hotkey_onkeyup(int hotkey)
 		set_menu_showing(true);
 		process_skinchanger_menu();
 		break;
-	case HKEY_MENU_NEXT_RADIO_TRACK:
-		// next radio track
+	case HKEY_MENU_NEXT_RADIO_TRACK: // next radio track
 		if (getGameVersion() > 41) SKIP_RADIO_FORWARD_CUSTOM();
 		else AUDIO::SKIP_RADIO_FORWARD();
 		break;
