@@ -46,6 +46,10 @@ bool featureRestrictedZones = true;
 bool featureWorldMoonGravity = false;
 bool featureWorldNoPeds = false;
 bool featureWorldNoTraffic = false;
+
+bool featureWorldNoFireTruck = false;
+bool featureWorldNoAmbulance = false;
+
 bool featureWorldNoTrafficUpdated = false;
 bool featureNoMinimapRot = false;
 bool featureNoMinimapRotUpdated = false;
@@ -420,6 +424,18 @@ void process_world_menu()
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
+	togItem->caption = "No Fire Department Dispatch";
+	togItem->value = 1;
+	togItem->toggleValue = &featureWorldNoFireTruck;
+	menuItems.push_back(togItem);
+
+	togItem = new ToggleMenuItem<int>();
+	togItem->caption = "No Ambulance Department Dispatch";
+	togItem->value = 1;
+	togItem->toggleValue = &featureWorldNoAmbulance;
+	menuItems.push_back(togItem);
+
+	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "No Police Blips";
 	togItem->value = 1;
 	togItem->toggleValue = &featureNoPoliceBlips;
@@ -601,6 +617,10 @@ void reset_world_globals()
 	//featureLightsBlackout = false;
 	featureWorldNoPeds = false;
 	featureWorldNoTraffic = false;
+
+	featureWorldNoFireTruck = false;
+	featureWorldNoAmbulance = false;
+
 	featureNoMinimapRot = false;
 	featureNoWaypoint = false;
 	featureNoPoliceBlips = false;
@@ -615,12 +635,10 @@ void reset_world_globals()
 	featureSnow = false;
 	featureMPMap = false;
 
-	
 	featureWorldRandomCops =
 		featureWorldRandomTrains =
 		featureWorldRandomBoats =
-		featureWorldGarbageTrucks = true;
-
+		featureWorldGarbageTrucks =
 	featureWorldNoTrafficUpdated = 
 	featureZancudoMapUpdated =
 	featureWorldGarbageTrucksUpdated =
@@ -1263,6 +1281,12 @@ void update_world_features()
 		featureNoMinimapRotUpdated = false;
 	}
 
+	// No Fire Department Dispatch
+	if (featureWorldNoFireTruck) GAMEPLAY::ENABLE_DISPATCH_SERVICE(3, false);
+
+	// No Ambulance Department Dispatch
+	if (featureWorldNoAmbulance) GAMEPLAY::ENABLE_DISPATCH_SERVICE(5, false);
+
 	// No Waypoint
 	if (featureNoWaypoint) UI::CLEAR_GPS_PLAYER_WAYPOINT();
 
@@ -1373,6 +1397,10 @@ void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* r
 	results->push_back(FeatureEnabledLocalDefinition{ "featureRestrictedZones", &featureRestrictedZones });
 	//results->push_back(FeatureEnabledLocalDefinition{ "featureLightsBlackout", &featureLightsBlackout });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoPeds", &featureWorldNoPeds }); 
+
+	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoFireTruck", &featureWorldNoFireTruck });
+	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoAmbulance", &featureWorldNoAmbulance });
+
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoTraffic", &featureWorldNoTraffic, &featureWorldNoTrafficUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNoMinimapRot", &featureNoMinimapRot });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNoWaypoint", &featureNoWaypoint });
