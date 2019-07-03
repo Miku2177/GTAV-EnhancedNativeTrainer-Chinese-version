@@ -359,7 +359,7 @@ bool onconfirm_misc_freezeradio_menu(MenuItem<int> choice){
 
 bool onconfirm_misc_cutscene_menu(MenuItem<int> choice) {
 	if (choice.value == -1) {
-		CONTROLS::ENABLE_ALL_CONTROL_ACTIONS(0);
+		for (int i = 0; i <= 33; i++) CONTROLS::ENABLE_ALL_CONTROL_ACTIONS(i);
 		OBJECT::DELETE_OBJECT(&xaxis);
 		OBJECT::DELETE_OBJECT(&zaxis);
 		if (CAM::DOES_CAM_EXIST(CutCam)) {
