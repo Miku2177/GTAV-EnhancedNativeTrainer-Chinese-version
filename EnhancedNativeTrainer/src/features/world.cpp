@@ -1283,9 +1283,11 @@ void update_world_features()
 
 	// No Fire Department Dispatch
 	if (featureWorldNoFireTruck) GAMEPLAY::ENABLE_DISPATCH_SERVICE(3, false);
+	else GAMEPLAY::ENABLE_DISPATCH_SERVICE(3, true);
 
 	// No Ambulance Department Dispatch
 	if (featureWorldNoAmbulance) GAMEPLAY::ENABLE_DISPATCH_SERVICE(5, false);
+	else GAMEPLAY::ENABLE_DISPATCH_SERVICE(5, true);
 
 	// No Waypoint
 	if (featureNoWaypoint) UI::CLEAR_GPS_PLAYER_WAYPOINT();
