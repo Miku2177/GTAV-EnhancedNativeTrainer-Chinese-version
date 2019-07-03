@@ -538,15 +538,22 @@ void update_features(){
 		GAMEPLAY::ENABLE_DISPATCH_SERVICE(2, false);
 		GAMEPLAY::ENABLE_DISPATCH_SERVICE(12, false);
 	}
+	else {
+		GAMEPLAY::ENABLE_DISPATCH_SERVICE(2, true);
+		GAMEPLAY::ENABLE_DISPATCH_SERVICE(12, true);
+	}
 
 	// No Road Blocks
 	if (featureWantedNoPRoadB) GAMEPLAY::ENABLE_DISPATCH_SERVICE(8, false);
+	else GAMEPLAY::ENABLE_DISPATCH_SERVICE(8, true);
 
 	// No Police Boats
 	if (featureWantedLevelNoPBoats) GAMEPLAY::ENABLE_DISPATCH_SERVICE(13, false);
+	else GAMEPLAY::ENABLE_DISPATCH_SERVICE(13, true);
 
 	// No SWAT Vehicles
 	if (featureWantedLevelNoSWATVehicles) GAMEPLAY::ENABLE_DISPATCH_SERVICE(4, false);
+	else GAMEPLAY::ENABLE_DISPATCH_SERVICE(4, true);
 
 	// Levitation
 	if (featureLevitation) {
