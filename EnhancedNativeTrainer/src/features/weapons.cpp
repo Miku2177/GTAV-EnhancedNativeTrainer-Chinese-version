@@ -61,6 +61,7 @@ bool featureArmyMelee = false;
 bool featureGravityGun = false;
 bool featureFriendlyFire = false;
 bool featureDropWeapon = false;
+bool featureCanDisarmNPC = false;
 bool featurePowerPunch = false;
 // Cop Weapons
 bool someonehasgunandshooting = false;
@@ -1253,6 +1254,12 @@ bool process_weapon_menu(){
 	toggleItem->toggleValue = &featureDropWeapon;
 	menuItems.push_back(toggleItem);
 
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Can Disarm NPC";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureCanDisarmNPC;
+	menuItems.push_back(toggleItem);
+
 	return draw_generic_menu<int>(menuItems, &activeLineIndexWeapon, caption, onconfirm_weapon_menu, NULL, NULL);
 }
 
@@ -1301,6 +1308,7 @@ void reset_weapon_globals(){
 		featureAimAtDriver =
 		featureFriendlyFire =
 		featureDropWeapon = 
+		featureCanDisarmNPC =
 		featurePowerPunch =
 		featureSwitchWeaponIfDanger =
 		featurePunchMeleeWeapons =
@@ -1420,7 +1428,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	if (featureDropWeapon) {
 		//int b_l_index = PED::GET_PED_BONE_INDEX(playerPed, 18905);
 		int b_r_index = PED::GET_PED_BONE_INDEX(playerPed, 64016); // 28252 57005
-		if (/*(PED::GET_PED_LAST_DAMAGE_BONE(playerPed, &b_l_index) || */PED::GET_PED_LAST_DAMAGE_BONE(playerPed, &b_r_index)/*)*/ && dropped_weapon == false && WEAPON::IS_PED_ARMED(playerPed, 7)) {
+		if (PED::GET_PED_LAST_DAMAGE_BONE(playerPed, &b_r_index) && dropped_weapon == false && WEAPON::IS_PED_ARMED(playerPed, 7)) {
 			int randomize = (rand() % 3 + 0); // UP MARGIN + DOWN MARGIN
 			if (randomize == 2) {
 				Hash curr_w = WEAPON::GET_SELECTED_PED_WEAPON(playerPed);
@@ -1448,6 +1456,27 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(playerPed);
 			dropweapon_seconds = 0;
 			dropped_weapon = false;
+		}
+	}
+
+	// Can Disarm NPC
+	if (featureCanDisarmNPC) {
+		const int arrSize2 = 1024;
+		Ped a_npcs[arrSize2];
+		int count_npcs = worldGetAllPeds(a_npcs, arrSize2);
+		for (int i = 0; i < count_npcs; i++) {
+			int b_r_index = PED::GET_PED_BONE_INDEX(a_npcs[i], 64016); // 28252 57005
+			if (PED::GET_PED_LAST_DAMAGE_BONE(a_npcs[i], &b_r_index) && WEAPON::IS_PED_ARMED(a_npcs[i], 7)) {
+				int randomize = (rand() % 3 + 0); // UP MARGIN + DOWN MARGIN
+				if (randomize == 2) {
+					Hash curr_w = WEAPON::GET_SELECTED_PED_WEAPON(a_npcs[i]);
+					Vector3 p_coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(a_npcs[i], 10.0f, 10.0f, 0.0f);
+					WEAPON::SET_PED_DROPS_INVENTORY_WEAPON(a_npcs[i], curr_w, p_coords.x, p_coords.y, p_coords.z, 1);
+					WEAPON::REMOVE_WEAPON_FROM_PED(a_npcs[i], curr_w);
+					PED::CLEAR_PED_LAST_DAMAGE_BONE(a_npcs[i]);
+					ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(a_npcs[i]);
+				}
+			}
 		}
 	}
 
@@ -2078,6 +2107,7 @@ void add_weapon_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featureGravityGun", &featureGravityGun});
 	results->push_back(FeatureEnabledLocalDefinition{"featureFriendlyFire", &featureFriendlyFire});
 	results->push_back(FeatureEnabledLocalDefinition{"featureDropWeapon", &featureDropWeapon});
+	results->push_back(FeatureEnabledLocalDefinition{"featureCanDisarmNPC", &featureCanDisarmNPC});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePowerPunch", &featurePowerPunch});
 	results->push_back(FeatureEnabledLocalDefinition{"featureGiveAllWeapons", &featureGiveAllWeapons});
 	results->push_back(FeatureEnabledLocalDefinition{"featureCopArmedWith", &featureCopArmedWith});
