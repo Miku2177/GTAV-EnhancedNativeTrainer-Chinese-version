@@ -1255,7 +1255,7 @@ bool process_weapon_menu(){
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Can Disarm NPC";
+	toggleItem->caption = "Shoot To Disarm NPCs";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureCanDisarmNPC;
 	menuItems.push_back(toggleItem);
