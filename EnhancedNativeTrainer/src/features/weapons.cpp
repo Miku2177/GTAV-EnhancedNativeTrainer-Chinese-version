@@ -1459,22 +1459,24 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		}
 	}
 
-	// Can Disarm NPC
+	// Shoot To Disarm NPCs
 	if (featureCanDisarmNPC) {
 		const int arrSize2 = 1024;
 		Ped a_npcs[arrSize2];
 		int count_npcs = worldGetAllPeds(a_npcs, arrSize2);
 		for (int i = 0; i < count_npcs; i++) {
-			int b_r_index = PED::GET_PED_BONE_INDEX(a_npcs[i], 64016); // 28252 57005
-			if (PED::GET_PED_LAST_DAMAGE_BONE(a_npcs[i], &b_r_index) && WEAPON::IS_PED_ARMED(a_npcs[i], 7)) {
-				int randomize = (rand() % 3 + 0); // UP MARGIN + DOWN MARGIN
-				if (randomize == 2) {
-					Hash curr_w = WEAPON::GET_SELECTED_PED_WEAPON(a_npcs[i]);
-					Vector3 p_coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(a_npcs[i], 10.0f, 10.0f, 0.0f);
-					WEAPON::SET_PED_DROPS_INVENTORY_WEAPON(a_npcs[i], curr_w, p_coords.x, p_coords.y, p_coords.z, 1);
-					WEAPON::REMOVE_WEAPON_FROM_PED(a_npcs[i], curr_w);
-					PED::CLEAR_PED_LAST_DAMAGE_BONE(a_npcs[i]);
-					ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(a_npcs[i]);
+			if (a_npcs[i] != playerPed) {
+				int b_r_index = PED::GET_PED_BONE_INDEX(a_npcs[i], 64016); // 28252 57005
+				if (PED::GET_PED_LAST_DAMAGE_BONE(a_npcs[i], &b_r_index) && WEAPON::IS_PED_ARMED(a_npcs[i], 7)) {
+					int randomize = (rand() % 3 + 0); // UP MARGIN + DOWN MARGIN
+					if (randomize == 2) {
+						Hash curr_w = WEAPON::GET_SELECTED_PED_WEAPON(a_npcs[i]);
+						Vector3 p_coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(a_npcs[i], 10.0f, 10.0f, 0.0f);
+						WEAPON::SET_PED_DROPS_INVENTORY_WEAPON(a_npcs[i], curr_w, p_coords.x, p_coords.y, p_coords.z, 1);
+						WEAPON::REMOVE_WEAPON_FROM_PED(a_npcs[i], curr_w);
+						PED::CLEAR_PED_LAST_DAMAGE_BONE(a_npcs[i]);
+						ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(a_npcs[i]);
+					}
 				}
 			}
 		}
