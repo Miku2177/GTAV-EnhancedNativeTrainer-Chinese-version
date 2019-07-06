@@ -48,7 +48,9 @@ bool featureWorldNoPeds = false;
 bool featureWorldNoTraffic = false;
 
 bool featureWorldNoFireTruck = false;
+bool featureWorldNoFireTruckUpdated = false;
 bool featureWorldNoAmbulance = false;
+bool featureWorldNoAmbulanceUpdated = false;
 
 bool featureWorldNoTrafficUpdated = false;
 bool featureNoMinimapRot = false;
@@ -1282,12 +1284,24 @@ void update_world_features()
 	}
 
 	// No Fire Department Dispatch
-	if (featureWorldNoFireTruck) GAMEPLAY::ENABLE_DISPATCH_SERVICE(3, false);
-	else GAMEPLAY::ENABLE_DISPATCH_SERVICE(3, true);
+	if (featureWorldNoFireTruck) {
+		GAMEPLAY::ENABLE_DISPATCH_SERVICE(3, false);
+		featureWorldNoFireTruckUpdated = true;
+	}
+	else if (featureWorldNoFireTruckUpdated == true) {
+		GAMEPLAY::ENABLE_DISPATCH_SERVICE(3, true);
+		featureWorldNoFireTruckUpdated = false;
+	}
 
 	// No Ambulance Department Dispatch
-	if (featureWorldNoAmbulance) GAMEPLAY::ENABLE_DISPATCH_SERVICE(5, false);
-	else GAMEPLAY::ENABLE_DISPATCH_SERVICE(5, true);
+	if (featureWorldNoAmbulance) {
+		GAMEPLAY::ENABLE_DISPATCH_SERVICE(5, false);
+		featureWorldNoAmbulanceUpdated = true;
+	}
+	else if (featureWorldNoAmbulanceUpdated == true) {
+		GAMEPLAY::ENABLE_DISPATCH_SERVICE(5, true);
+		featureWorldNoAmbulanceUpdated = false;
+	}
 
 	// No Waypoint
 	if (featureNoWaypoint) UI::CLEAR_GPS_PLAYER_WAYPOINT();

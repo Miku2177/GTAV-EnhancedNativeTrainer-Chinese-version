@@ -84,9 +84,15 @@ bool featureWantedLevelFrozenUpdated = false;
 bool featureLevitation = false;
 
 bool featureWantedLevelNoPHeli = false;
+bool featureWantedLevelNoPHeliUpdated = false;
 bool featureWantedNoPRoadB = false;
+bool featureWantedNoPRoadBUpdated = false;
 bool featureWantedLevelNoPBoats = false;
+bool featureWantedLevelNoPBoatsUpdated = false;
 bool featureWantedLevelNoSWATVehicles = false;
+bool featureWantedLevelNoSWATVehiclesUpdated = false;
+
+bool NoTaxiWhistling = false;
 
 bool engine_running = true;
 bool engine_switched = false;
@@ -537,23 +543,47 @@ void update_features(){
 	if (featureWantedLevelNoPHeli) {
 		GAMEPLAY::ENABLE_DISPATCH_SERVICE(2, false);
 		GAMEPLAY::ENABLE_DISPATCH_SERVICE(12, false);
+		featureWantedLevelNoPHeliUpdated = true;
 	}
-	else {
+	else if (featureWantedLevelNoPHeliUpdated == true) {
 		GAMEPLAY::ENABLE_DISPATCH_SERVICE(2, true);
 		GAMEPLAY::ENABLE_DISPATCH_SERVICE(12, true);
+		featureWantedLevelNoPHeliUpdated = false;
 	}
 
 	// No Road Blocks
-	if (featureWantedNoPRoadB) GAMEPLAY::ENABLE_DISPATCH_SERVICE(8, false);
-	else GAMEPLAY::ENABLE_DISPATCH_SERVICE(8, true);
+	if (featureWantedNoPRoadB) {
+		GAMEPLAY::ENABLE_DISPATCH_SERVICE(8, false);
+		featureWantedNoPRoadBUpdated = true;
+	}
+	else if (featureWantedNoPRoadBUpdated == true) {
+		GAMEPLAY::ENABLE_DISPATCH_SERVICE(8, true);
+		featureWantedNoPRoadBUpdated = false;
+	}
 
 	// No Police Boats
-	if (featureWantedLevelNoPBoats) GAMEPLAY::ENABLE_DISPATCH_SERVICE(13, false);
-	else GAMEPLAY::ENABLE_DISPATCH_SERVICE(13, true);
+	if (featureWantedLevelNoPBoats) {
+		GAMEPLAY::ENABLE_DISPATCH_SERVICE(13, false);
+		featureWantedLevelNoPBoatsUpdated = true;
+	}
+	else if (featureWantedLevelNoPBoatsUpdated == true) {
+		GAMEPLAY::ENABLE_DISPATCH_SERVICE(13, true);
+		featureWantedLevelNoPBoatsUpdated = false;
+	}
 
 	// No SWAT Vehicles
-	if (featureWantedLevelNoSWATVehicles) GAMEPLAY::ENABLE_DISPATCH_SERVICE(4, false);
-	else GAMEPLAY::ENABLE_DISPATCH_SERVICE(4, true);
+	if (featureWantedLevelNoSWATVehicles) {
+		GAMEPLAY::ENABLE_DISPATCH_SERVICE(4, false);
+		featureWantedLevelNoSWATVehiclesUpdated = true;
+
+	}
+	else if (featureWantedLevelNoSWATVehiclesUpdated == true) {
+		GAMEPLAY::ENABLE_DISPATCH_SERVICE(4, true);
+		featureWantedLevelNoSWATVehiclesUpdated = false;
+	}
+
+	// No Whistling For Taxi
+	if (NoTaxiWhistling) CONTROLS::DISABLE_CONTROL_ACTION(2, 51, 1);
 
 	// Levitation
 	if (featureLevitation) {
@@ -1494,7 +1524,7 @@ bool onconfirm_player_menu(MenuItem<int> choice){
 }
 
 void process_player_menu(){
-	const int lineCount = 22;
+	const int lineCount = 23;
 
 	std::string caption = "Player Options";
 
@@ -1520,7 +1550,8 @@ void process_player_menu(){
 		{"Animations", NULL, NULL, false},
 		{"Player Data", NULL, NULL, false},
 		{"Prison Break", NULL, NULL, false},
-		{"Player Force Shield Power", NULL, NULL, false}
+		{"Player Force Shield Power", NULL, NULL, false},
+		{"No Whistling For Taxi", &NoTaxiWhistling, NULL, false}
 	};
 
 	draw_menu_from_struct_def(lines, lineCount, &activeLineIndexPlayer, caption, onconfirm_player_menu);
@@ -1768,6 +1799,7 @@ void reset_globals(){
 		featureWantedNoPRoadB =
 		featureWantedLevelNoPBoats =
 		featureWantedLevelNoSWATVehicles =
+		NoTaxiWhistling =
 
 		featureWantedLevelFrozen = false;
 
@@ -2000,6 +2032,7 @@ void add_player_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featureWantedNoPRoadB", &featureWantedNoPRoadB});
 	results->push_back(FeatureEnabledLocalDefinition{"featureWantedLevelNoPBoats", &featureWantedLevelNoPBoats});
 	results->push_back(FeatureEnabledLocalDefinition{"featureWantedLevelNoSWATVehicles", &featureWantedLevelNoSWATVehicles});
+	results->push_back(FeatureEnabledLocalDefinition{"NoTaxiWhistling", &NoTaxiWhistling});
 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerUnlimitedAbility", &featurePlayerUnlimitedAbility});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerNoNoise", &featurePlayerNoNoise}); 
