@@ -31,6 +31,8 @@ void add_time_generic_settings(std::vector<StringPairSettingDBRow>* results);
 
 void handle_generic_settings_time(std::vector<StringPairSettingDBRow>* settings);
 
+void all_time_flow_rate();
+
 void movetime_day_forward();
 
 void movetime_day_backward();

@@ -161,18 +161,18 @@ void trigger_function_for_hotkey_onkeyup(int hotkey)
 	case HKEY_FILL_AMMO:
 		fill_weapon_ammo_hotkey();
 		break;
-	case HKEY_MENU_VEHICLE_SPAWN:
-		set_menu_showing(true);
-		process_veh_menu();
-		break;
-	case HKEY_MENU_VEHICLE_PAINT:
-		set_menu_showing(true);
-		process_paint_menu();
-		break;
-	case HKEY_MENU_SKINS:
-		set_menu_showing(true);
-		process_skinchanger_menu();
-		break;
+	//case HKEY_MENU_VEHICLE_SPAWN:
+	//	set_menu_showing(true);
+	//	process_veh_menu();
+	//	break;
+	//case HKEY_MENU_VEHICLE_PAINT:
+	//	set_menu_showing(true);
+	//	process_paint_menu();
+	//	break;
+	//case HKEY_MENU_SKINS:
+	//	set_menu_showing(true);
+	//	process_skinchanger_menu();
+	//	break;
 	case HKEY_MENU_NEXT_RADIO_TRACK: // next radio track
 		if (getGameVersion() > 41) SKIP_RADIO_FORWARD_CUSTOM();
 		else AUDIO::SKIP_RADIO_FORWARD();
@@ -183,9 +183,9 @@ void trigger_function_for_hotkey_onkeyup(int hotkey)
 	case HKEY_TOGGLE_THERMAL_VIS:
 		toggle_thermal_vision();
 		break;
-	case HKEY_VEHICLE_BURNOUT:
-		hotkey_held_veh_burnout = false;
-		break;
+	//case HKEY_VEHICLE_BURNOUT:
+	//	hotkey_held_veh_burnout = false;
+	//	break;
 	case HKEY_VEHICLE_POWER:
 		hotkey_held_veh_extrapower = false;
 		break;
@@ -281,9 +281,9 @@ void trigger_function_for_hotkey_onkeydown(int hotkey)
 
 	switch (function)
 	{
-		case HKEY_VEHICLE_BURNOUT:
-			hotkey_held_veh_burnout = true;
-			break;
+		//case HKEY_VEHICLE_BURNOUT:
+		//	hotkey_held_veh_burnout = true;
+		//	break;
 		case HKEY_SLOW_MOTION:
 			hotkey_held_slow_mo = true;
 			break;
