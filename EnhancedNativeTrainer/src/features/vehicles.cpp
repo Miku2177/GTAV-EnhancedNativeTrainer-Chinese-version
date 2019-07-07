@@ -53,6 +53,7 @@ int veh_jumped_n = 0;
 int Accel_secs_passed, Accel_secs_curr, Accel_seconds = 0;
 
 Vehicle current_veh_e = -1;
+Vehicle temp_vehicle = -1;
 
 bool viz_veh_ind_left, viz_veh_ind_right = false;
 
@@ -534,6 +535,26 @@ void toggle_tractioncontrol() {
 	}
 }
 
+void enter_damaged_vehicle() {
+	//if (CONTROLS::IS_CONTROL_PRESSED(2, 23)) { // VEHICLE::_IS_VEHICLE_DAMAGED(bus_veh[i]) && 
+		Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
+		const int arrSize33 = 1024;
+		Ped surr_vehs[arrSize33];
+		int count_surr_vehs = worldGetAllVehicles(surr_vehs, arrSize33);
+		float dist_diff = -1.0;
+		float temp_dist = 20.0;
+		for (int i = 0; i < count_surr_vehs; i++) {
+			Vector3 coordsped = ENTITY::GET_ENTITY_COORDS(surr_vehs[i], true);
+			dist_diff = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsped.x, coordsped.y, coordsped.z);
+			if (temp_dist > dist_diff) {
+				temp_dist = dist_diff;
+				temp_vehicle = surr_vehs[i];
+			}
+		}
+		AI::TASK_ENTER_VEHICLE(PLAYER::PLAYER_PED_ID(), temp_vehicle, 1000, -1, 1.0, 1, 0);
+	//}
+}
+
 void eject_seat() { // eject seat
 	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0) && !VEHICLE::IS_VEHICLE_SEAT_FREE(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false), -1)) {
 		Vehicle veh_eject = PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 0);
@@ -692,6 +713,10 @@ bool onconfirm_vehdoor_menu(MenuItem<int> choice){
 		if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh_detach = vehicle_been_used;
 		VEHICLE::_DETACH_VEHICLE_WINDSCREEN(veh_detach);
 	}
+	else if (choice.value == -19)//enter damaged vehicle
+	{
+	enter_damaged_vehicle();
+	}
 	return false;
 }
 
@@ -843,6 +868,12 @@ bool process_veh_door_menu(){
 	item = new MenuItem<int>();
 	item->caption = "Detach Windscreen";
 	item->value = -18;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "Enter Damaged Vehicle";
+	item->value = -19;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 

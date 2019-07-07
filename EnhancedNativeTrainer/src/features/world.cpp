@@ -1175,7 +1175,7 @@ void update_world_features()
 				PED::SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(bus_ped[i], true);
 				PED::SET_PED_RAGDOLL_ON_COLLISION(bus_ped[i], true);
 				if (!PED::IS_PED_RAGDOLL(bus_ped[i])) PED::SET_PED_TO_RAGDOLL(bus_ped[i], 1, 1, 1, 1, 1, 1);
-				STREAMING::REQUEST_ANIM_DICT("dead@fall");
+				if (!STREAMING::HAS_ANIM_DICT_LOADED("dead@fall")) STREAMING::REQUEST_ANIM_DICT("dead@fall");
 				while (!STREAMING::HAS_ANIM_DICT_LOADED("dead@fall")) WAIT(0);
 				if (!ENTITY::IS_ENTITY_PLAYING_ANIM(bus_ped[i], "dead@fall", "dead_fall_down", 3) && !PED::IS_PED_RAGDOLL(bus_ped[i]) && PED::GET_PED_TYPE(bus_ped[i]) != 6 && !ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(bus_ped[i])) {
 					AI::TASK_PLAY_ANIM(bus_ped[i], "dead@fall", "dead_fall_down", 8.0, 0.0, -1, 9, 0, 0, 0, 0);
