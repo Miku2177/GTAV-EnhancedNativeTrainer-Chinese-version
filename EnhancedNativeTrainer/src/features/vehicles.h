@@ -130,6 +130,8 @@ void search_light();
 
 void damage_door();
 
+void enter_damaged_vehicle();
+
 void toggle_tractioncontrol();
 
 //void enter_damaged_vehicle();

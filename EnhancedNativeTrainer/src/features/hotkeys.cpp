@@ -261,6 +261,9 @@ void trigger_function_for_hotkey_onkeyup(int hotkey)
 	case HKEY_CLEAR_PROPS:
 		PED::CLEAR_ALL_PED_PROPS(PLAYER::PLAYER_PED_ID());
 		break;
+	case HKEY_ENTER_DAMAGED_V:
+		enter_damaged_vehicle();
+		break;
 	default:
 	{
 		std::ostringstream ss;

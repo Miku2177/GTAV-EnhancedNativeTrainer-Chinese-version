@@ -71,6 +71,7 @@ static const int HKEY_ALARM_SWITCHING = 142;
 static const int HKEY_TRACTIONCONTROL_SWITCHING = 143;
 static const int HKEY_DELETE_CHECKPOINT = 144;
 static const int HKEY_CLEAR_PROPS = 145;
+static const int HKEY_ENTER_DAMAGED_V = 146;
 
 const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "No Function", 0 },
@@ -117,6 +118,7 @@ const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "Toggle Traction Control", HKEY_TRACTIONCONTROL_SWITCHING },
 	{ "Remove Waypoint Marker", HKEY_DELETE_CHECKPOINT },
 	{ "Clear Props", HKEY_CLEAR_PROPS },
+	{ "Enter Damaged Vehicle", HKEY_ENTER_DAMAGED_V },
 };
 
 void change_hotkey_function(int hotkey, int funcIndex);
