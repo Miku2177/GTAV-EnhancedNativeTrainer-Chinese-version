@@ -792,7 +792,7 @@ std::vector<const char*> IPL_PROPS_DOOMSDAY_MAIN_BASE = {
 
 };
 
-std::vector<char*> IPL_PROPS_ARENAWAR_MAIN_PROPS = {
+/*std::vector<char*> IPL_PROPS_ARENAWAR_MAIN_PROPS = {
 	"xs_x18int01_light_connector",
 			"xs_x18int01_pit_fencedemo_col",
 			"xs_x18int01_pit_fenceoval_col",
@@ -938,7 +938,7 @@ std::vector<char*> IPL_PROPS_ARENAWAR_MAIN_PROPS = {
 "SET_OFFICE_TRINKET_02",
 "SET_OFFICE_TRINKET_01"
 "VIP_XMAS_DECS"
-};
+};*/
 
 std::vector<char*> IPL_PROPS_HANGAR = {
 	// Hangar

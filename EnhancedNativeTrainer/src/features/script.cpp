@@ -583,7 +583,7 @@ void update_features(){
 	}
 
 	// No Whistling For Taxi
-	if (NoTaxiWhistling) CONTROLS::DISABLE_CONTROL_ACTION(2, 51, 1);
+	if (NoTaxiWhistling && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID())) CONTROLS::DISABLE_CONTROL_ACTION(2, 51, 1);
 
 	// Levitation
 	if (featureLevitation) {

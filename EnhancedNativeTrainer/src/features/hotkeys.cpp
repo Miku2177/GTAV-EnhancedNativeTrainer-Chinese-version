@@ -258,6 +258,9 @@ void trigger_function_for_hotkey_onkeyup(int hotkey)
 	case HKEY_DELETE_CHECKPOINT:
 		UI::SET_WAYPOINT_OFF();
 		break;
+	case HKEY_CLEAR_PROPS:
+		PED::CLEAR_ALL_PED_PROPS(PLAYER::PLAYER_PED_ID());
+		break;
 	default:
 	{
 		std::ostringstream ss;
