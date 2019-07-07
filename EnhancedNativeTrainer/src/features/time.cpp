@@ -139,7 +139,8 @@ bool onconfirm_time_flowrate_menu(MenuItem<int> choice) {
 			timeFlowRateIndex = 0;
 			timeFlowRateChanged = true;
 			set_status_text("Time is frozen");
-			process_time_menu();
+			//process_time_menu();
+			all_time_flow_rate();
 		}
 		else
 		{
@@ -152,7 +153,8 @@ bool onconfirm_time_flowrate_menu(MenuItem<int> choice) {
 				timeFlowRateChanged = true;
 			}
 			set_status_text("Time is unfrozen");
-			process_time_menu();
+			//process_time_menu();
+			all_time_flow_rate();
 		}
 	}
 	return false;
