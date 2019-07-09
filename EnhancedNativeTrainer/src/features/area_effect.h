@@ -34,7 +34,7 @@ extern bool featureBoostNPCRadio;
 extern const int WORLD_DAMAGED_VEHICLES_VALUES[];
 extern int DamagedVehiclesIndex;
 extern bool DamagedVehiclesChanged;
-extern const int WORLD_NPC_VEHICLESPEED_VALUES[];
+extern const float WORLD_NPC_VEHICLESPEED_VALUES[];
 extern int NPCVehicleSpeedIndex;
 extern bool NPCVehicleSpeedChanged;
 extern int PedAccuracyIndex;
