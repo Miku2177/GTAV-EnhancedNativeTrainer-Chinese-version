@@ -37,6 +37,8 @@ extern bool DamagedVehiclesChanged;
 extern const int WORLD_NPC_VEHICLESPEED_VALUES[];
 extern int NPCVehicleSpeedIndex;
 extern bool NPCVehicleSpeedChanged;
+extern int PedAccuracyIndex;
+extern bool PedAccuracyChanged;
 
 class ENTTrackedPedestrian{
 	public:
