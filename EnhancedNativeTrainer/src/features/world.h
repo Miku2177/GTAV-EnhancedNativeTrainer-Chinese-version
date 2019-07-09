@@ -58,6 +58,8 @@ void onchange_world_damaged_vehicles_index(int value, SelectFromListMenuItem* so
 
 void onchange_world_npc_vehicles_speed_index(int value, SelectFromListMenuItem* source);
 
+void onchange_ped_accuracy_index(int value, SelectFromListMenuItem* source);
+
 void onchange_world_wind_strength_index(int value, SelectFromListMenuItem* source);
 
 void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results);

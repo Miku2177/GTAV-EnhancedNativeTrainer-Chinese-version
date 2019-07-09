@@ -78,6 +78,8 @@ const std::vector<std::string> WORLD_NPC_VEHICLESPEED_CAPTIONS{ "OFF", "1", "3",
 const int WORLD_NPC_VEHICLESPEED_VALUES[] = { 0, 1, 3, 5, 10, 15, 20, 30, 50, 70, 100 };
 int NPCVehicleSpeedIndex = 0;
 bool NPCVehicleSpeedChanged = true;
+int PedAccuracyIndex = 0;
+bool PedAccuracyChanged = true;
 
 //For onscreen debug info
 bool featureShowDebugInfo = false;
@@ -128,6 +130,7 @@ void reset_areaeffect_globals(){
 
 	DamagedVehiclesIndex = 0;
 	NPCVehicleSpeedIndex = 0;
+	PedAccuracyIndex = 0;
 	pedWeaponSetIndex = 0;
 }
 
@@ -162,6 +165,12 @@ void process_areaeffect_peds_menu(){
 	listItem->wrap = false;
 	listItem->caption = "Custom Weapon";
 	listItem->value = PedWeaponsSelectiveIndex;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(WORLD_NPC_VEHICLESPEED_CAPTIONS, onchange_ped_accuracy_index);
+	listItem->wrap = false;
+	listItem->caption = "Peds Accuracy";
+	listItem->value = PedAccuracyIndex;
 	menuItems.push_back(listItem);
 
 	togItem = new ToggleMenuItem<int>();
@@ -526,6 +535,8 @@ void set_all_nearby_peds_to_angry(bool enabled){
 				PED::SET_PED_COMBAT_ATTRIBUTES(xped, 3, featurePedsIncludeDrivers ? 1 : 0); //can leave vehicle
 				PED::SET_PED_COMBAT_ATTRIBUTES(xped, 2, featurePedsIncludeDrivers ? 1 : 0); //can do driveby
 				PED::SET_PED_FLEE_ATTRIBUTES(xped, 0, 0);
+
+				//if (WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex] > 0) PED::SET_PED_ACCURACY(xped, WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex]); //peds accuracy
 
 				//PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(xped, true);
 
@@ -898,6 +909,11 @@ void onchange_world_npc_vehicles_speed_index(int value, SelectFromListMenuItem* 
 	NPCVehicleSpeedChanged = true;
 }
 
+void onchange_ped_accuracy_index(int value, SelectFromListMenuItem* source) {
+	PedAccuracyIndex = value;
+	PedAccuracyChanged = true;
+}
+
 void onchange_ped_weapons_selective_index(int value, SelectFromListMenuItem* source){
 	PedWeaponsSelectiveIndex = value;
 	PedWeaponsSelective1Changed = true;
@@ -941,6 +957,7 @@ void give_all_nearby_peds_a_weapon(bool enabled){
 						WEAPON::GIVE_WEAPON_TO_PED(xped, weapHash, 9999, FALSE, TRUE);
 						WEAPON::SET_PED_INFINITE_AMMO_CLIP(xped, true);
 						PED::SET_PED_CAN_SWITCH_WEAPON(xped, true);
+						if (WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex] > 0) PED::SET_PED_ACCURACY(xped, WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex]); //peds accuracy
 						if (WEAPON::HAS_PED_GOT_WEAPON(xped, weapHash, 0) && !PED::IS_PED_IN_ANY_VEHICLE(xped, false) && !PED::IS_PED_INJURED(xped)){
 							WEAPON::SET_CURRENT_PED_WEAPON(xped, weapHash, 0);
 						}
@@ -966,6 +983,7 @@ void give_all_nearby_peds_a_weapon(bool enabled){
 				if (featurePedsIncludeDrivers && !WEAPON::HAS_PED_GOT_WEAPON(xped, Ped_Selective_Weapon, 0)) WEAPON::GIVE_WEAPON_TO_PED(xped, Ped_Selective_Weapon, 9999, FALSE, TRUE);
 				WEAPON::SET_PED_INFINITE_AMMO_CLIP(xped, true);
 				PED::SET_PED_CAN_SWITCH_WEAPON(xped, true);
+				if (WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex] > 0) PED::SET_PED_ACCURACY(xped, WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex]); //peds accuracy
 				if (!featurePedsIncludeDrivers && WEAPON::HAS_PED_GOT_WEAPON(xped, Ped_Selective_Weapon, 0) && !PED::IS_PED_IN_ANY_VEHICLE(xped, false)) WEAPON::SET_CURRENT_PED_WEAPON(xped, Ped_Selective_Weapon, 0);
 				if (featurePedsIncludeDrivers && WEAPON::HAS_PED_GOT_WEAPON(xped, Ped_Selective_Weapon, 0)) WEAPON::SET_CURRENT_PED_WEAPON(xped, Ped_Selective_Weapon, 0);
 			}

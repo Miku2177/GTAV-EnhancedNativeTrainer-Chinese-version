@@ -1450,6 +1450,7 @@ void add_world_feature_enablements2(std::vector<StringPairSettingDBRow>* results
 	results->push_back(StringPairSettingDBRow{ "WindStrengthIndex", std::to_string(WindStrengthIndex) });
 	results->push_back(StringPairSettingDBRow{ "DamagedVehiclesIndex", std::to_string(DamagedVehiclesIndex) });
 	results->push_back(StringPairSettingDBRow{ "NPCVehicleSpeedIndex", std::to_string(NPCVehicleSpeedIndex) });
+	results->push_back(StringPairSettingDBRow{ "PedAccuracyIndex", std::to_string(PedAccuracyIndex) });
 	results->push_back(StringPairSettingDBRow{ "RadarReducedGripSnowingIndex", std::to_string(RadarReducedGripSnowingIndex) });
 	results->push_back(StringPairSettingDBRow{ "RadarReducedGripRainingIndex", std::to_string(RadarReducedGripRainingIndex) });
 	results->push_back(StringPairSettingDBRow{ "featureLightsBlackoutIndex", std::to_string(featureLightsBlackoutIndex) });
@@ -1493,6 +1494,9 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 		}
 		else if (setting.name.compare("NPCVehicleSpeedIndex") == 0) {
 			NPCVehicleSpeedIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("PedAccuracyIndex") == 0) {
+			PedAccuracyIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("RadarReducedGripSnowingIndex") == 0) {
 			RadarReducedGripSnowingIndex = stoi(setting.value);
