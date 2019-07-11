@@ -18,11 +18,15 @@ int activeLineIndexBodyguards = 0;
 int myGroup = -1;
 int const BODYGUARD_LIMIT = 7;
 
+int pop, all_selected = -1;
+std::vector<Hash> WEAPONS;
+
 bool stop_b = false;
 bool featureBodyguardInvincible = false;
 bool featureBodyguardInvincibleUpdated = false;
 bool featureBodyguardHelmet = false;
 bool featureBodyguardDespawn = true;
+bool featureDifferentWeapons = false;
 bool featureBodyguardOnMap = false;
 bool featureBodyguardInfAmmo = false;
 
@@ -409,6 +413,13 @@ void dismiss_bodyguards(){
 	spawnedBodyguards.shrink_to_fit();
 	requireRefreshOfBodyguardMainMenu = true;
 
+	pop = -1;
+	all_selected = -1;
+	if (!WEAPONS.empty()) {
+		WEAPONS.clear();
+		WEAPONS.shrink_to_fit();
+	}
+
 	set_status_text("Bodyguards dismissed");
 }
 
@@ -551,26 +562,50 @@ void do_spawn_bodyguard(){
 
 			if (bodyguard_animal == false) PED::SET_PED_FIRING_PATTERN(bodyGuard, GAMEPLAY::GET_HASH_KEY("FIRING_PATTERN_FULL_AUTO")); // 0xC6EE6B4C
 
-			if (bodyguard_animal == false) {
-				for (int a = 0; a < MENU_WEAPON_CATEGORIES.size(); a++) {
-					for (int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++) {
-						if (*bodyguardWeaponsToggle[a].at(b)) {
-							Hash tmp = GAMEPLAY::GET_HASH_KEY((char *)VOV_WEAPON_VALUES[a].at(b).c_str());
-							if (!WEAPON::HAS_PED_GOT_WEAPON(bodyGuard, tmp, false)) {
-								WEAPON::GIVE_WEAPON_TO_PED(bodyGuard, tmp, 1000, false, true);
+			// Different Weapons
+			if (featureDifferentWeapons) {
+				if (WEAPONS.empty()) {
+					for (int a = 0; a < MENU_WEAPON_CATEGORIES.size(); a++) {
+						for (int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++) {
+							if (*bodyguardWeaponsToggle[a].at(b)) {
+								all_selected = all_selected + 1;
+								WEAPONS.push_back(GAMEPLAY::GET_HASH_KEY((char *)VOV_WEAPON_VALUES[a].at(b).c_str()));
 							}
 						}
 					}
 				}
+				pop = pop + 1;
+				if (bodyguard_animal == false) WEAPON::GIVE_WEAPON_TO_PED(bodyGuard, WEAPONS[pop], 1000, false, true);
+				if (added_nearest_b == true && !WEAPON::IS_PED_ARMED(bodyGuard, 7)) {
+					WEAPON::GIVE_WEAPON_TO_PED(bodyGuard, WEAPONS[pop], 999, false, true);
+					WEAPON::SET_CURRENT_PED_WEAPON(bodyGuard, WEAPONS[pop], 1);
+					WEAPON::SET_PED_CURRENT_WEAPON_VISIBLE(bodyGuard, true, false, 1, 1);
+				}
+				if (pop == all_selected) pop = -1;
 			}
+			
+			if (!featureDifferentWeapons) {
+				if (bodyguard_animal == false) {
+					for (int a = 0; a < MENU_WEAPON_CATEGORIES.size(); a++) {
+						for (int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++) {
+							if (*bodyguardWeaponsToggle[a].at(b)) {
+								Hash tmp = GAMEPLAY::GET_HASH_KEY((char *)VOV_WEAPON_VALUES[a].at(b).c_str());
+								if (!WEAPON::HAS_PED_GOT_WEAPON(bodyGuard, tmp, false)) {
+									WEAPON::GIVE_WEAPON_TO_PED(bodyGuard, tmp, 1000, false, true);
+								}
+							}
+						}
+					}
+				}
 
-			if (added_nearest_b == true && !WEAPON::IS_PED_ARMED(bodyGuard, 7)) {
-				for (int a = 0; a < MENU_WEAPON_CATEGORIES.size(); a++) {
-					for (int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++) {
-						Hash tmp = GAMEPLAY::GET_HASH_KEY((char *)VOV_WEAPON_VALUES[a].at(b).c_str());
-						WEAPON::GIVE_WEAPON_TO_PED(bodyGuard, tmp, 999, false, true);
-						WEAPON::SET_CURRENT_PED_WEAPON(bodyGuard, tmp, 1);
-						WEAPON::SET_PED_CURRENT_WEAPON_VISIBLE(bodyGuard, true, false, 1, 1);
+				if (added_nearest_b == true && !WEAPON::IS_PED_ARMED(bodyGuard, 7)) {
+					for (int a = 0; a < MENU_WEAPON_CATEGORIES.size(); a++) {
+						for (int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++) {
+							Hash tmp = GAMEPLAY::GET_HASH_KEY((char *)VOV_WEAPON_VALUES[a].at(b).c_str());
+							WEAPON::GIVE_WEAPON_TO_PED(bodyGuard, tmp, 999, false, true);
+							WEAPON::SET_CURRENT_PED_WEAPON(bodyGuard, tmp, 1);
+							WEAPON::SET_PED_CURRENT_WEAPON_VISIBLE(bodyGuard, true, false, 1, 1);
+						}
 					}
 				}
 			}
@@ -619,6 +654,13 @@ void maintain_bodyguards(){
 			BLIPTABLE_BODYGUARD.shrink_to_fit();
 		}
 		animal_in_group = false;
+
+		pop = -1;
+		all_selected = -1;
+		if (!WEAPONS.empty()) {
+			WEAPONS.clear();
+			WEAPONS.shrink_to_fit();
+		}
 	}
 	
 	if (!spawnedBodyguards.empty()) {
@@ -747,6 +789,13 @@ bool process_bodyguard_menu(){
 		toggleItem->toggleValueUpdated = NULL;
 		menuItems.push_back(toggleItem);
 
+		toggleItem = new ToggleMenuItem<int>();
+		toggleItem->caption = "Different Weapons";
+		toggleItem->value = i++;
+		toggleItem->toggleValue = &featureDifferentWeapons;
+		toggleItem->toggleValueUpdated = NULL;
+		menuItems.push_back(toggleItem);
+
 		if(!bodyguardWeaponsToggleInitialized){
 			for(int a = 0; a < MENU_WEAPON_CATEGORIES.size(); a++){
 				for(int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++){
@@ -810,6 +859,7 @@ void add_bodyguards_feature_enablements(std::vector<FeatureEnabledLocalDefinitio
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardInvincible", &featureBodyguardInvincible});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardHelmet", &featureBodyguardHelmet});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardDespawn", &featureBodyguardDespawn});
+	results->push_back(FeatureEnabledLocalDefinition{"featureDifferentWeapons", &featureDifferentWeapons});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardOnMap", &featureBodyguardOnMap});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyBlipNumber", &featureBodyBlipNumber});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardInfAmmo", &featureBodyguardInfAmmo});
@@ -879,6 +929,7 @@ void reset_bodyguards_globals(){
 	featureBodyguardHelmet = false;
 	featureBodyguardDespawn = true;
 	featureBodyguardInfAmmo = false;
+	featureDifferentWeapons = false;
 	BodyBlipSizeIndex = 2;
 	BodyBlipColourIndex = 0;
 	BodyBlipSymbolIndex = 0;
