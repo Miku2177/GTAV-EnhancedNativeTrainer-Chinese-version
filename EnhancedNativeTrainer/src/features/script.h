@@ -199,6 +199,7 @@ void cleanup_script();
 bool is_player_ignored_by_police();
 
 extern Vehicle vehicle_been_used;
+extern Vehicle temp_vehicle;
 extern bool featurePlayerInvisible;
 extern bool featurePlayerInvisibleInVehicle;
 extern bool featureShowStatusMessage;

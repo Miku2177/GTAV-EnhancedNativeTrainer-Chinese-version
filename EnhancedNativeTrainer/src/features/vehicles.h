@@ -132,6 +132,8 @@ void damage_door();
 
 void enter_damaged_vehicle();
 
+Vehicle find_nearest_vehicle();
+
 void toggle_tractioncontrol();
 
 //void enter_damaged_vehicle();
