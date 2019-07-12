@@ -487,7 +487,11 @@ void vehicle_set_alarm() {
 	Player PlayerPedSetAlarm = PLAYER::PLAYER_PED_ID();
 	if (!featureAutoalarm) {
 		if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) alarmed_veh = PED::GET_VEHICLE_PED_IS_USING(PlayerPedSetAlarm);
-		if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) alarmed_veh = vehicle_been_used;
+		//if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) alarmed_veh = vehicle_been_used;
+		if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
+			find_nearest_vehicle();
+			alarmed_veh = temp_vehicle;
+		}
 	}
 	if (!featureAutoalarm) alarm_enabled = !alarm_enabled;
 	alarmischarged = true;
