@@ -431,7 +431,11 @@ void process_window_roll() {
 	Player PlayerPedRoll = PLAYER::PLAYER_PED_ID();
 	Vehicle veh_roll = -1;
 	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_roll = PED::GET_VEHICLE_PED_IS_USING(PlayerPedRoll);
-	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh_roll = vehicle_been_used;
+	//if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh_roll = vehicle_been_used;
+	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
+		find_nearest_vehicle();
+		veh_roll = temp_vehicle;
+	}
 	
 	if (window_roll == false) {
 		VEHICLE::ROLL_DOWN_WINDOW(veh_roll, 0);
@@ -448,7 +452,11 @@ void interior_light() {
 	Vehicle veh_interior = PED::GET_VEHICLE_PED_IS_USING(PlayerPedInterior);
 	interior_lights = !interior_lights;
 	VEHICLE::SET_VEHICLE_INTERIORLIGHT(veh_interior, interior_lights);
-	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) VEHICLE::SET_VEHICLE_INTERIORLIGHT(vehicle_been_used, interior_lights);
+	//if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) VEHICLE::SET_VEHICLE_INTERIORLIGHT(vehicle_been_used, interior_lights);
+	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
+		find_nearest_vehicle();
+		VEHICLE::SET_VEHICLE_INTERIORLIGHT(temp_vehicle, interior_lights);
+	}
 }
 
 void search_light() {
@@ -462,7 +470,11 @@ void vehicle_alarm() {
 	Player PlayerPedAlarm = PLAYER::PLAYER_PED_ID();
 	Vehicle veh_alarming = -1;
 	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_alarming = PED::GET_VEHICLE_PED_IS_USING(PlayerPedAlarm);
-	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh_alarming = vehicle_been_used;
+	//if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh_alarming = vehicle_been_used;
+	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
+		find_nearest_vehicle();
+		veh_alarming = temp_vehicle;
+	}
 	
 	if (!VEHICLE::IS_VEHICLE_ALARM_ACTIVATED(veh_alarming)) veh_alarm = false;
 	veh_alarm = !veh_alarm;
@@ -493,7 +505,11 @@ void vehicle_brake() {
 	Player PlayerPedBrake = PLAYER::PLAYER_PED_ID();
 	Vehicle veh_brake = -1;
 	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_brake = PED::GET_VEHICLE_PED_IS_USING(PlayerPedBrake);
-	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh_brake = vehicle_been_used;
+	//if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh_brake = vehicle_been_used;
+	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
+		find_nearest_vehicle();
+		veh_brake = temp_vehicle;
+	}
 
 	veh_brake_toggle = !veh_brake_toggle;
 	VEHICLE::SET_VEHICLE_HANDBRAKE(veh_brake, veh_brake_toggle);
@@ -504,7 +520,11 @@ void vehicle_burnout() {
 	Player PlayerPedBurnout = PLAYER::PLAYER_PED_ID();
 	Vehicle veh_burnout = -1;
 	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_burnout = PED::GET_VEHICLE_PED_IS_USING(PlayerPedBurnout);
-	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh_burnout = vehicle_been_used;
+	//if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh_burnout = vehicle_been_used;
+	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
+		find_nearest_vehicle();
+		veh_burnout = temp_vehicle;
+	}
 
 	vehicle_burnout_toggle = !vehicle_burnout_toggle;
 	VEHICLE::SET_VEHICLE_BURNOUT(veh_burnout, vehicle_burnout_toggle);
@@ -515,7 +535,11 @@ void damage_door() {
 	Player PlayerPedDamage = PLAYER::PLAYER_PED_ID();
 	Vehicle veh_damage = -1;
 	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_damage = PED::GET_VEHICLE_PED_IS_USING(PlayerPedDamage);
-	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh_damage = vehicle_been_used;
+	//if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh_damage = vehicle_been_used;
+	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
+		find_nearest_vehicle();
+		veh_damage = temp_vehicle;
+	}
 
 	std::string::size_type sz;
 	std::string result_damage = show_keyboard(NULL, NULL);
@@ -536,64 +560,79 @@ void toggle_tractioncontrol() {
 }
 
 void enter_damaged_vehicle() {
-	//if (CONTROLS::IS_CONTROL_PRESSED(2, 23)) { // VEHICLE::_IS_VEHICLE_DAMAGED(bus_veh[i]) && 
-		Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
-		const int arrSize33 = 1024;
-		Ped surr_vehs[arrSize33];
-		int count_surr_vehs = worldGetAllVehicles(surr_vehs, arrSize33);
-		float dist_diff = -1.0;
-		float temp_dist = 20.0;
-		for (int i = 0; i < count_surr_vehs; i++) {
-			Vector3 coordsped = ENTITY::GET_ENTITY_COORDS(surr_vehs[i], true);
-			dist_diff = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsped.x, coordsped.y, coordsped.z);
-			if (temp_dist > dist_diff) {
-				temp_dist = dist_diff;
-				temp_vehicle = surr_vehs[i];
-			}
+	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) find_nearest_vehicle();
+	AI::TASK_ENTER_VEHICLE(PLAYER::PLAYER_PED_ID(), temp_vehicle, 1000, -1, 1.0, 1, 0);
+}
+
+Vehicle find_nearest_vehicle() {
+	Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
+	const int arrSize33 = 1024;
+	Ped surr_vehs[arrSize33];
+	int count_surr_vehs = worldGetAllVehicles(surr_vehs, arrSize33);
+	float dist_diff = -1.0;
+	float temp_dist = 20.0;
+	for (int i = 0; i < count_surr_vehs; i++) {
+		Vector3 coordsped = ENTITY::GET_ENTITY_COORDS(surr_vehs[i], true);
+		dist_diff = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsped.x, coordsped.y, coordsped.z);
+		if (temp_dist > dist_diff) {
+			temp_dist = dist_diff;
+			temp_vehicle = surr_vehs[i];
 		}
-		AI::TASK_ENTER_VEHICLE(PLAYER::PLAYER_PED_ID(), temp_vehicle, 1000, -1, 1.0, 1, 0);
-	//}
+	}
+	return temp_vehicle;
 }
 
 void eject_seat() { // eject seat
-	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0) && !VEHICLE::IS_VEHICLE_SEAT_FREE(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false), -1)) {
-		Vehicle veh_eject = PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 0);
-		Ped PedToEject = VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh_eject, -1);
-		Vector3 coordsmetoeject = ENTITY::GET_ENTITY_COORDS(PedToEject, true);
-		Vector3 Rot = CAM::GET_GAMEPLAY_CAM_ROT(2);
-		Vector3 direction = RotationToDirection2(&Rot);
-		direction.x = 1 * direction.x;
-		direction.y = 1 * direction.y;
-		direction.z = 1 * direction.z;
-			   
-		ENTITY::GET_ENTITY_HEADING(PedToEject);
-		Hash currVehModel = ENTITY::GET_ENTITY_MODEL(veh_eject);
-		Vector3 coords_veh2 = ENTITY::GET_ENTITY_COORDS(veh_eject, true);
-		float rot = (ENTITY::GET_ENTITY_ROTATION(veh_eject, 0)).z;
-		Vector3 vehspeed = ENTITY::GET_ENTITY_VELOCITY(veh_eject);
-		
-		FIRE::ADD_EXPLOSION(coordsmetoeject.x, coordsmetoeject.y, coordsmetoeject.z, 28, 0, 1, 0, 100);
-		AI::TASK_LEAVE_VEHICLE(PedToEject, PED::GET_VEHICLE_PED_IS_USING(PedToEject), 16);
-		Vehicle veh = VEHICLE::CREATE_VEHICLE(currVehModel, coords_veh2.x, coords_veh2.y, coords_veh2.z + 10, rot, 1, 0);
-		ENTITY::SET_ENTITY_VELOCITY(veh, vehspeed.x, vehspeed.y, vehspeed.z);
-		ENTITY::SET_ENTITY_VISIBLE(veh, false);
-		ENTITY::SET_ENTITY_COLLISION(veh, false, false);
-		if (ENTITY::DOES_ENTITY_EXIST(veh)) PED::SET_PED_INTO_VEHICLE(PedToEject, veh, -1);
-		AUDIO::SET_VEHICLE_RADIO_ENABLED(veh, false);
-
-		int PedEjectHash = GAMEPLAY::GET_HASH_KEY("prop_ejector_seat_01"); // prop_car_seat // prop_ejector_seat_01 
-		Object seat_obj = OBJECT::CREATE_OBJECT(PedEjectHash, coordsmetoeject.x, coordsmetoeject.y, coordsmetoeject.z, 1, true, 1);
-		int PlayerEjectIndex = PED::GET_PED_BONE_INDEX(PedToEject, 0x2e28);
-		ENTITY::ATTACH_ENTITY_TO_ENTITY(seat_obj, PedToEject, PlayerEjectIndex, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, false, false, false, true, 0, true);
-
-		ENTITY::APPLY_FORCE_TO_ENTITY(veh, 1, direction.x, direction.y, 90.275, Rot.x, Rot.y, Rot.z, false, true, true, true, false, true);
-		WAIT(1500);
-		OBJECT::SET_OBJECT_PHYSICS_PARAMS(seat_obj, 100.0f, 100.2f, -1.0f, -1.0f, -1.0f, 100.0f, -1.0f, -1.0f, -1.0f, -1.0f, 2.0f); 
-		ENTITY::DETACH_ENTITY(seat_obj, true, true);
-
-		WAIT(5000); // 4000
-		VEHICLE::DELETE_VEHICLE(&veh);
+	//if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0) && !VEHICLE::IS_VEHICLE_SEAT_FREE(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false), -1)) {
+	Vehicle veh_eject = -1;
+	Ped PedToEject = -1;
+	Hash currVehModel = -1;
+	Vehicle veh = -1;
+	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
+		find_nearest_vehicle();
+		veh_eject = temp_vehicle;
+		PedToEject = VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh_eject, -1);
 	}
+	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
+		veh_eject = PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 0);
+		PedToEject = VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh_eject, -1);
+	}
+	Vector3 coordsmetoeject = ENTITY::GET_ENTITY_COORDS(PedToEject, true);
+	Vector3 Rot = CAM::GET_GAMEPLAY_CAM_ROT(2);
+	Vector3 direction = RotationToDirection2(&Rot);
+	direction.x = 1 * direction.x;
+	direction.y = 1 * direction.y;
+	direction.z = 1 * direction.z;
+			   
+	ENTITY::GET_ENTITY_HEADING(PedToEject);
+	currVehModel = ENTITY::GET_ENTITY_MODEL(veh_eject);
+	Vector3 coords_veh2 = ENTITY::GET_ENTITY_COORDS(veh_eject, true);
+	float rot = (ENTITY::GET_ENTITY_ROTATION(veh_eject, 0)).z;
+	Vector3 vehspeed = ENTITY::GET_ENTITY_VELOCITY(veh_eject);
+		
+	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) FIRE::ADD_EXPLOSION(coordsmetoeject.x, coordsmetoeject.y, coordsmetoeject.z, 28, 0, 1, 1, 100);
+	else FIRE::ADD_EXPLOSION(coordsmetoeject.x, coordsmetoeject.y, coordsmetoeject.z, 28, 0, 1, 1, 10);
+	AI::TASK_LEAVE_VEHICLE(PedToEject, veh_eject, 16);
+	veh = VEHICLE::CREATE_VEHICLE(currVehModel, coords_veh2.x, coords_veh2.y, coords_veh2.z + 10, rot, 1, 0);
+	ENTITY::SET_ENTITY_VELOCITY(veh, vehspeed.x, vehspeed.y, vehspeed.z);
+	ENTITY::SET_ENTITY_VISIBLE(veh, false);
+	ENTITY::SET_ENTITY_COLLISION(veh, false, false);
+	if (ENTITY::DOES_ENTITY_EXIST(veh)) PED::SET_PED_INTO_VEHICLE(PedToEject, veh, -1);
+	AUDIO::SET_VEHICLE_RADIO_ENABLED(veh, false);
+
+	int PedEjectHash = GAMEPLAY::GET_HASH_KEY("prop_ejector_seat_01"); // prop_car_seat // prop_ejector_seat_01 
+	Object seat_obj = OBJECT::CREATE_OBJECT(PedEjectHash, coordsmetoeject.x, coordsmetoeject.y, coordsmetoeject.z, 1, true, 1);
+	int PlayerEjectIndex = PED::GET_PED_BONE_INDEX(PedToEject, 0x2e28);
+	ENTITY::ATTACH_ENTITY_TO_ENTITY(seat_obj, PedToEject, PlayerEjectIndex, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, false, false, false, true, 0, true);
+
+	ENTITY::APPLY_FORCE_TO_ENTITY(veh, 1, direction.x, direction.y, 90.275, Rot.x, Rot.y, Rot.z, false, true, true, true, false, true);
+	WAIT(1500);
+	OBJECT::SET_OBJECT_PHYSICS_PARAMS(seat_obj, 100.0f, 100.2f, -1.0f, -1.0f, -1.0f, 100.0f, -1.0f, -1.0f, -1.0f, -1.0f, 2.0f); 
+	ENTITY::DETACH_ENTITY(seat_obj, true, true);
+
+	WAIT(5000); // 4000
+	VEHICLE::DELETE_VEHICLE(&veh);
+	//}
 }
 
 bool onconfirm_vehdoor_menu(MenuItem<int> choice){
@@ -610,7 +649,11 @@ bool onconfirm_vehdoor_menu(MenuItem<int> choice){
 		if(bPlayerExists){ //  && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)
 			Vehicle veh = -1;
 			if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
-			if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh = vehicle_been_used;
+			//if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh = vehicle_been_used;
+			if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
+				find_nearest_vehicle();
+				veh = temp_vehicle;
+			}
 
 			int value = choice.value;
 
@@ -645,7 +688,11 @@ bool onconfirm_vehdoor_menu(MenuItem<int> choice){
 		if(bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){  
 			Vehicle veh = -1;
 			if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
-			if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh = vehicle_been_used;
+			//if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh = vehicle_been_used;
+			if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
+				find_nearest_vehicle();
+				veh = temp_vehicle;
+			}
 
 			VEHICLE::SET_VEHICLE_DOORS_LOCKED(veh, featureLockVehicleDoors);
 		}
@@ -658,7 +705,11 @@ bool onconfirm_vehdoor_menu(MenuItem<int> choice){
 	{
 		Vehicle veh_roll = -1;
 		if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_roll = PED::GET_VEHICLE_PED_IS_USING(playerPed);
-		if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh_roll = vehicle_been_used;
+		//if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh_roll = vehicle_been_used;
+		if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
+			find_nearest_vehicle();
+			veh_roll = temp_vehicle;
+		}
 
 		VEHICLE::ROLL_DOWN_WINDOWS(veh_roll);
 	}
@@ -710,7 +761,11 @@ bool onconfirm_vehdoor_menu(MenuItem<int> choice){
 	{
 		Vehicle veh_detach = -1;
 		if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_detach = PED::GET_VEHICLE_PED_IS_USING(playerPed);
-		if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh_detach = vehicle_been_used;
+		//if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh_detach = vehicle_been_used;
+		if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
+			find_nearest_vehicle();
+			veh_detach = temp_vehicle;
+		}
 		VEHICLE::_DETACH_VEHICLE_WINDSCREEN(veh_detach);
 	}
 	else if (choice.value == -19)//enter damaged vehicle

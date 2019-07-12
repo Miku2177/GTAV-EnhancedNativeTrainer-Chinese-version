@@ -350,7 +350,11 @@ void engineonoff_switching() {
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	Vehicle veh = -1;
 	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
-	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh = vehicle_been_used;
+	//if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh = vehicle_been_used;
+	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
+		find_nearest_vehicle();
+		veh = temp_vehicle;
+	}
 
 	if (!VEHICLE_ENGINE.empty() && VEHICLE_ENGINE[0] != veh) VEHICLE_ENGINE[0] = veh;
 	if (VEHICLE_ENGINE.empty()) VEHICLE_ENGINE.push_back(veh);
@@ -364,7 +368,11 @@ void engine_damage() {
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	Vehicle veh3 = -1;
 	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh3 = PED::GET_VEHICLE_PED_IS_USING(playerPed);
-	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh3 = vehicle_been_used;
+	//if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh3 = vehicle_been_used;
+	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
+		find_nearest_vehicle();
+		veh3 = temp_vehicle;
+	}
 	
 	VEHICLE::SET_VEHICLE_ENGINE_HEALTH(veh3, -1);
 }
@@ -373,7 +381,11 @@ void engine_kill(){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	Vehicle veh2 = -1;
 	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh2 = PED::GET_VEHICLE_PED_IS_USING(playerPed);
-	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh2 = vehicle_been_used;
+	//if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh2 = vehicle_been_used;
+	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
+		find_nearest_vehicle();
+		veh2 = temp_vehicle;
+	}
 
 	if (VEHICLE_KILLED.empty()) VEHICLE_KILLED.push_back(veh2);
 	if (!VEHICLE_KILLED.empty()) VEHICLE_KILLED[0] = veh2;
