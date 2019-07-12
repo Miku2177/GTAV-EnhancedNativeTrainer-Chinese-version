@@ -597,6 +597,7 @@ void eject_seat() { // eject seat
 		veh_eject = PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 0);
 		PedToEject = VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh_eject, -1);
 	}
+	ENTITY::SET_ENTITY_AS_MISSION_ENTITY(veh_eject, true, true);
 	Vector3 coordsmetoeject = ENTITY::GET_ENTITY_COORDS(PedToEject, true);
 	Vector3 Rot = CAM::GET_GAMEPLAY_CAM_ROT(2);
 	Vector3 direction = RotationToDirection2(&Rot);

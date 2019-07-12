@@ -390,7 +390,7 @@ void engine_kill(){
 	if (VEHICLE_KILLED.empty()) VEHICLE_KILLED.push_back(veh2);
 	if (!VEHICLE_KILLED.empty()) VEHICLE_KILLED[0] = veh2;
 	engine_killed = true;
-	set_status_text("You have destroyed your vehicle's engine for some reason");
+	set_status_text("You have destroyed this vehicle's engine for some reason");
 }
 
 // Updates all features that can be turned off by the game, being called each game frame
