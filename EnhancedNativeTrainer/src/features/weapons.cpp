@@ -32,10 +32,12 @@ bool dropped_weapon = false;
 
 // give all weapons automatically variables
 bool featureGiveAllWeapons = false;
+bool featureAddAllWeaponsAttachments = false;
 int tick_allw = 0;
 int w_tick_secs_passed, w_tick_secs_curr = 0;
-Ped oldplayerPed_W = -1;
-bool PlayerUpdated_w = true;
+int tick_a_allw, w_a_tick_secs_curr = 0;
+Ped oldplayerPed_W, oldplayerPed_A = -1;
+bool PlayerUpdated_w, PlayerUpdated_a = true;
 //
 bool featureWeaponInfiniteAmmo = false;
 bool featureWeaponInfiniteParachutes = false, featureWeaponInfiniteParachutesUpdated = false;
@@ -328,13 +330,66 @@ void give_all_weapons_hotkey() {
 			WEAPON::GIVE_WEAPON_TO_PED(playerPed, weaponHash, clipMax * 2, false, false);
 		}
 	}
-
 	// parachute
 	WEAPON::GIVE_WEAPON_TO_PED(playerPed, PARACHUTE_ID, 1, false, false);
 	PLAYER::SET_PLAYER_HAS_RESERVE_PARACHUTE(playerPed);
 
 	set_status_text("All weapons added");
+}
 
+void add_all_weapons_attachments() {
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	for (int a = 0; a < WEAPONTYPES_MOD.size(); a++) {
+		for (int b = 0; b < VOV_WEAPONMOD_VALUES[a].size(); b++) {
+			char *weaponName = (char *)WEAPONTYPES_MOD.at(a).c_str(), *compName = (char *)VOV_WEAPONMOD_VALUES[a].at(b).c_str();
+			Hash weaponHash = GAMEPLAY::GET_HASH_KEY(weaponName), compHash = GAMEPLAY::GET_HASH_KEY(compName);
+			if (!WEAPON::HAS_PED_GOT_WEAPON(playerPed, weaponHash, 0)) {
+				break;
+			}
+
+			if (strcmp(weaponName, "WEAPON_SMG") == 0 && b == 0) {
+				continue;
+			}
+			if (strcmp(weaponName, "WEAPON_ASSAULTRIFLE") == 0 && b == 0) {
+				continue;
+			}
+			if (strcmp(weaponName, "WEAPON_CARBINERIFLE") == 0 && b == 0) {
+				continue;
+			}
+			if (strcmp(weaponName, "WEAPON_HEAVYSNIPER") == 0) {
+				break;
+			}
+			if (strcmp(weaponName, "WEAPON_COMBATPDW") == 0 && b == 0) {
+				continue;
+			}
+			if (strcmp(weaponName, "WEAPON_COMPACTRIFLE") == 0 && b == 0) {
+				continue;
+			}
+			if (strcmp(weaponName, "WEAPON_HEAVYSHOTGUN") == 0 && b == 0) {
+				continue;
+			}
+			if (strcmp(weaponName, "WEAPON_MACHINEPISTOL") == 0 && b == 0) {
+				continue;
+			}
+			if (strcmp(weaponName, "WEAPON_REVOLVER") == 0) {
+				break;
+			}
+			if (strcmp(weaponName, "WEAPON_SPECIALCARBINE") == 0 && b == 0) {
+				continue;
+			}
+			if (strcmp(weaponName, "WEAPON_SWITCHBLADE") == 0) {
+				break;
+			}
+
+			if (WEAPON::HAS_PED_GOT_WEAPON_COMPONENT(playerPed, weaponHash, compHash)) {
+				continue;
+			}
+
+			WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, weaponHash, compHash);
+		}
+	}
+
+	set_status_text("All weapon attachments added to existing weapons");
 }
 
 int get_current_revolver_appearance(){
@@ -862,80 +917,16 @@ bool onconfirm_weapon_menu(MenuItem<int> choice){
 
 	switch(activeLineIndexWeapon){
 		case 0:
-			for(int a = 0; a < sizeof(VOV_WEAPON_VALUES) / sizeof(VOV_WEAPON_VALUES[0]); a++){
-				for(int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++){
-					char *weaponName = (char*) VOV_WEAPON_VALUES[a].at(b).c_str();
-					Hash weaponHash = GAMEPLAY::GET_HASH_KEY(weaponName);
-					int clipMax = WEAPON::GET_MAX_AMMO_IN_CLIP(playerPed, weaponHash, true); clipMax = min(clipMax, 250);
-					WEAPON::GIVE_WEAPON_TO_PED(playerPed, weaponHash, clipMax * 2, false, false);
-				}
-			}
-
-			// parachute
-			WEAPON::GIVE_WEAPON_TO_PED(playerPed, PARACHUTE_ID, 1, false, false);
-			PLAYER::SET_PLAYER_HAS_RESERVE_PARACHUTE(player);
-
-			set_status_text("All weapons added");
+			give_all_weapons_hotkey();
 			break;
 		case 2:
 			WEAPON::REMOVE_ALL_PED_WEAPONS(playerPed, false);
-
 			set_status_text("All weapons removed");
 			break;
 		case 3:
-			for(int a = 0; a < WEAPONTYPES_MOD.size(); a++){
-				for(int b = 0; b < VOV_WEAPONMOD_VALUES[a].size(); b++){
-					char *weaponName = (char *) WEAPONTYPES_MOD.at(a).c_str(), *compName = (char *) VOV_WEAPONMOD_VALUES[a].at(b).c_str();
-					Hash weaponHash = GAMEPLAY::GET_HASH_KEY(weaponName), compHash = GAMEPLAY::GET_HASH_KEY(compName);
-					if(!WEAPON::HAS_PED_GOT_WEAPON(playerPed, weaponHash, 0)){
-						break;
-					}
-
-					if(strcmp(weaponName, "WEAPON_SMG") == 0 && b == 0){
-						continue;
-					}
-					if(strcmp(weaponName, "WEAPON_ASSAULTRIFLE") == 0 && b == 0){
-						continue;
-					}
-					if(strcmp(weaponName, "WEAPON_CARBINERIFLE") == 0 && b == 0){
-						continue;
-					}
-					if(strcmp(weaponName, "WEAPON_HEAVYSNIPER") == 0){
-						break;
-					}
-					if(strcmp(weaponName, "WEAPON_COMBATPDW") == 0 && b == 0){
-						continue;
-					}
-					if(strcmp(weaponName, "WEAPON_COMPACTRIFLE") == 0 && b == 0){
-						continue;
-					}
-					if(strcmp(weaponName, "WEAPON_HEAVYSHOTGUN") == 0 && b == 0){
-						continue;
-					}
-					if(strcmp(weaponName, "WEAPON_MACHINEPISTOL") == 0 && b == 0){
-						continue;
-					}
-					if(strcmp(weaponName, "WEAPON_REVOLVER") == 0){
-						break;
-					}
-					if(strcmp(weaponName, "WEAPON_SPECIALCARBINE") == 0 && b == 0){
-						continue;
-					}
-					if(strcmp(weaponName, "WEAPON_SWITCHBLADE") == 0){
-						break;
-					}
-
-					if(WEAPON::HAS_PED_GOT_WEAPON_COMPONENT(playerPed, weaponHash, compHash)){
-						continue;
-					}
-
-					WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, weaponHash, compHash);
-				}
-			}
-
-			set_status_text("All weapon attachments added to existing weapons");
+			add_all_weapons_attachments();
 			break;
-		case 4:
+		case 5:
 			for(int a = 0; a < WEAPONTYPES_MOD.size(); a++){
 				for(int b = 0; b < VOV_WEAPONMOD_VALUES[a].size(); b++){
 					char *weaponName = (char *) WEAPONTYPES_MOD.at(a).c_str(), *compName = (char *) VOV_WEAPONMOD_VALUES[a].at(b).c_str();
@@ -971,7 +962,7 @@ bool onconfirm_weapon_menu(MenuItem<int> choice){
 
 			set_status_text("All weapon attachments and tints removed from existing weapons");
 			break;
-		case 5:
+		case 6:
 			for(int a = 0; a < sizeof(VOV_WEAPON_VALUES) / sizeof(VOV_WEAPON_VALUES[0]); a++){
 				for(int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++){
 					char *weaponName = (char*) VOV_WEAPON_VALUES[a].at(b).c_str();
@@ -988,7 +979,7 @@ bool onconfirm_weapon_menu(MenuItem<int> choice){
 
 			set_status_text("All ammo filled");
 			break;
-		case 6:
+		case 7:
 			for(int a = 0; a < sizeof(VOV_WEAPON_VALUES) / sizeof(VOV_WEAPON_VALUES[0]); a++){
 				for(int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++){
 					char *weaponName = (char *) VOV_WEAPON_VALUES[a].at(b).c_str();
@@ -1001,21 +992,21 @@ bool onconfirm_weapon_menu(MenuItem<int> choice){
 
 			set_status_text("All ammo removed");
 			break;
-		case 7:
+		case 8:
 			WEAPON::GIVE_WEAPON_TO_PED(playerPed, PARACHUTE_ID, 1, false, false);
 			PLAYER::SET_PLAYER_HAS_RESERVE_PARACHUTE(player);
 
 			set_status_text("Parachute added");
 			break;
-		case 8:
+		case 9:
 			WEAPON::REMOVE_WEAPON_FROM_PED(playerPed, PARACHUTE_ID);
 
 			set_status_text("Parachute removed");
 			break;
-		case 9:
+		case 10:
 			process_weaponlist_menu();
 			break;
-		case 10:
+		case 11:
 		{
 			std::string result = show_keyboard(nullptr, (char *) lastCustomWeapon.c_str());
 			if(!result.empty()){
@@ -1034,13 +1025,13 @@ bool onconfirm_weapon_menu(MenuItem<int> choice){
 			}
 			break;
 		}
-		case 23:
+		case 24:
 			process_copweapon_menu();
 			break;
-		case 24:
+		case 25:
 			process_pedagainstweapons_menu();
 			break;
-		case 28:
+		case 29:
 			process_powerpunch_menu();
 			break;
 	default:
@@ -1079,6 +1070,13 @@ bool process_weapon_menu(){
 	item->value = i++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Add All Weapon Attachments Automatically";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureAddAllWeaponsAttachments;
+	toggleItem->toggleValueUpdated = NULL;
+	menuItems.push_back(toggleItem);
 
 	item = new MenuItem<int>();
 	item->caption = "Remove All Weapon Attachments and Tints";
@@ -1301,6 +1299,7 @@ void reset_weapon_globals(){
 		featureWeaponExplosiveGrenades =
 		featureWeaponVehRockets =
 		featureGiveAllWeapons =
+		featureAddAllWeaponsAttachments =
 		featureCopArmedWith =
 		featureArmyMelee =
 		featurePedAgainstWeapons = 
@@ -1635,6 +1634,27 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		if (playerPed_W != oldplayerPed_W) PlayerUpdated_w = true;
 	}
 	
+	// Add All Weapons Attachments Automatically
+	if (featureAddAllWeaponsAttachments && detained == false) {
+		Ped playerPed_A = PLAYER::PLAYER_PED_ID();
+		w_tick_secs_passed = clock() / CLOCKS_PER_SEC;
+		if (((clock() / (CLOCKS_PER_SEC / 1000)) - w_a_tick_secs_curr) != 0) {
+			tick_a_allw = tick_a_allw + 1;
+			w_a_tick_secs_curr = w_tick_secs_passed;
+		}
+		if (tick_a_allw > 400 && PlayerUpdated_a) {
+			add_all_weapons_attachments();
+			oldplayerPed_A = playerPed_A;
+			tick_a_allw = 0;
+			PlayerUpdated_a = false;
+		}
+
+		int death_time2 = PLAYER::GET_TIME_SINCE_LAST_DEATH();
+		if (death_time2 > -1 && death_time2 < 2000) PlayerUpdated_a = true;
+
+		if (playerPed_A != oldplayerPed_A) PlayerUpdated_a = true;
+	}
+
 	// Disables visions if not aiming
 	if (WEAPONS_SNIPERVISION_VALUES[SniperVisionIndex] != 0 && !SCRIPT::HAS_SCRIPT_LOADED("carsteal2"))
 	{
@@ -2112,6 +2132,7 @@ void add_weapon_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featureCanDisarmNPC", &featureCanDisarmNPC});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePowerPunch", &featurePowerPunch});
 	results->push_back(FeatureEnabledLocalDefinition{"featureGiveAllWeapons", &featureGiveAllWeapons});
+	results->push_back(FeatureEnabledLocalDefinition{"featureAddAllWeaponsAttachments", &featureAddAllWeaponsAttachments});
 	results->push_back(FeatureEnabledLocalDefinition{"featureCopArmedWith", &featureCopArmedWith});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePedAgainstWeapons", &featurePedAgainstWeapons});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAgainstMeleeWeapons", &featureAgainstMeleeWeapons});
