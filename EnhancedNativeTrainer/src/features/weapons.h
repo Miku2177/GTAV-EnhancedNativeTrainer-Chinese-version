@@ -268,6 +268,8 @@ void save_player_weapons();
 
 void give_all_weapons_hotkey();
 
+void featureAddAllAttachments();
+
 void sniper_vision_toggle();
 
 void restore_player_weapons();
