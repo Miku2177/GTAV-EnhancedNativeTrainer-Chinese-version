@@ -1268,6 +1268,12 @@ bool maxwantedlevel_menu() {
 	menuItems.push_back(listItem);
 
 	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Police Ignore You";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featurePlayerIgnoredByPolice;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "No Police Helicopters";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureWantedLevelNoPHeli;
@@ -1510,22 +1516,22 @@ bool onconfirm_player_menu(MenuItem<int> choice){
 		case 6:
 			mostwanted_menu();
 			break;
-		case 11:
+		case 10:
 			player_movement_speed();
 			break;
-		case 12:
+		case 11:
 			process_ragdoll_menu();
 			break;
-		case 18:
+		case 17:
 			process_anims_menu_top();
 			break;
-		case 19:
+		case 18:
 			process_player_life_menu();
 			break;
-		case 20:
+		case 19:
 			process_player_prison_menu();
 			break;
-		case 21:
+		case 20:
 			process_player_forceshield_menu();
 			break;
 		default:
@@ -1536,7 +1542,7 @@ bool onconfirm_player_menu(MenuItem<int> choice){
 }
 
 void process_player_menu(){
-	const int lineCount = 23;
+	const int lineCount = 22;
 
 	std::string caption = "Player Options";
 
@@ -1548,7 +1554,6 @@ void process_player_menu(){
 		{"Wanted Level", NULL, NULL, true, WANTED},
 		{"Wanted Level Settings", NULL, NULL, false},
 		{"Wanted Fugitive", NULL, NULL, false},
-		{"Police Ignore You", &featurePlayerIgnoredByPolice, NULL, true}, 
 		{"Unlimited Ability", &featurePlayerUnlimitedAbility, NULL, true},
 		{"Noiseless", &featurePlayerNoNoise, NULL, true}, 
 		{"Can Run In Apartments", &featurePlayerRunApartments, NULL, true},
