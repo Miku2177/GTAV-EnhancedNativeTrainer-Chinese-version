@@ -1280,17 +1280,17 @@ bool maxwantedlevel_menu() {
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "No Road Blocks";
-	toggleItem->value = i++;
-	toggleItem->toggleValue = &featureWantedNoPRoadB;
-	menuItems.push_back(toggleItem);
-
-	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "No Police Boats";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureWantedLevelNoPBoats;
 	menuItems.push_back(toggleItem);
 
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "No Road Blocks";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureWantedNoPRoadB;
+	menuItems.push_back(toggleItem);
+	
 	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "No SWAT Vehicles";
 	toggleItem->value = i++;
