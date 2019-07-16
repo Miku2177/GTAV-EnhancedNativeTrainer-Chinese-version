@@ -1827,8 +1827,8 @@ void SkipRadioFwd2(uint32_t a1)
 
 void SKIP_RADIO_FORWARD_CUSTOM()
 	{
-		SkipRadioFwd1(200000);
-		SkipRadioFwd2(200000);
+		SkipRadioFwd1(300000);
+		SkipRadioFwd2(300000);
 	}
 
 //Will need to condense this as there's already a scanner for Tuneable snow as well
