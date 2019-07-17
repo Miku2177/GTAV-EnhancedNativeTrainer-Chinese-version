@@ -76,11 +76,6 @@ bool applyChosenSkin(DWORD model)
 {
 	if (STREAMING::IS_MODEL_IN_CDIMAGE(model) && STREAMING::IS_MODEL_VALID(model))
 	{
-		//if (npc_player_died == false) model_to_restore = model;
-		if (!ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && model != GAMEPLAY::GET_HASH_KEY("a_c_dolphin") && model != GAMEPLAY::GET_HASH_KEY("a_c_sharkhammer") && model != GAMEPLAY::GET_HASH_KEY("a_c_humpback") &&
-			model != GAMEPLAY::GET_HASH_KEY("a_c_killerwhale") && model != GAMEPLAY::GET_HASH_KEY("a_c_seagull") && model != GAMEPLAY::GET_HASH_KEY("a_c_stingray") && model != GAMEPLAY::GET_HASH_KEY("a_c_sharktiger") &&
-			model != GAMEPLAY::GET_HASH_KEY("a_c_fish") && model != GAMEPLAY::GET_HASH_KEY("a_c_whalegrey")) model_to_restore = model;
-
 		STREAMING::REQUEST_MODEL(model);
 		while (!STREAMING::HAS_MODEL_LOADED(model))
 		{
