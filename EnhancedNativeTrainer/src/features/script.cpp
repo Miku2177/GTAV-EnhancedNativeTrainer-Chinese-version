@@ -297,6 +297,12 @@ void check_player_model(){
 	if(ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) { //  && is_player_reset_on_death()
 		if(!found){
 			if (is_player_reset_on_death()) set_status_text("Resetting death state because a custom skin was used");
+			if (!is_player_reset_on_death()) {
+				Hash model_d = ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID());
+				if (model_d != GAMEPLAY::GET_HASH_KEY("a_c_dolphin") && model_d != GAMEPLAY::GET_HASH_KEY("a_c_sharkhammer") && model_d != GAMEPLAY::GET_HASH_KEY("a_c_humpback") &&
+					model_d != GAMEPLAY::GET_HASH_KEY("a_c_killerwhale") && model_d != GAMEPLAY::GET_HASH_KEY("a_c_seagull") && model_d != GAMEPLAY::GET_HASH_KEY("a_c_stingray") && model_d != GAMEPLAY::GET_HASH_KEY("a_c_sharktiger") &&
+					model_d != GAMEPLAY::GET_HASH_KEY("a_c_fish") && model_d != GAMEPLAY::GET_HASH_KEY("a_c_whalegrey")) model_to_restore = model_d; // !ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && 
+			}
 			GAMEPLAY::_RESET_LOCALPLAYER_STATE();
 			//if (!is_player_reset_on_death()) WAIT(5500); // 8500
 			int spPlayerCount = sizeof(player_models) / sizeof(player_models[0]);
@@ -319,21 +325,7 @@ void check_player_model(){
 	}
 
 	if (!is_player_reset_on_death() && npc_player_died == true && PLAYER::GET_TIME_SINCE_LAST_DEATH() > 100 && !ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID())) { //  && !ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID()) //  && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 10000 
-		//Hash model_temp = -1;
-		//if (PED::GET_PED_TYPE(PLAYER::PLAYER_PED_ID()) == 0) model_temp = GAMEPLAY::GET_HASH_KEY("player_zero");
-		//if (PED::GET_PED_TYPE(PLAYER::PLAYER_PED_ID()) == 1) model_temp = GAMEPLAY::GET_HASH_KEY("player_one");
-		//if (PED::GET_PED_TYPE(PLAYER::PLAYER_PED_ID()) == 2 || PED::GET_PED_TYPE(PLAYER::PLAYER_PED_ID()) == 3) model_temp = GAMEPLAY::GET_HASH_KEY("player_two");
-		//STREAMING::REQUEST_MODEL(model_temp);
-		//while (!STREAMING::HAS_MODEL_LOADED(model_temp)) {
-		//	make_periodic_feature_call();
-		//	WAIT(0);
-		//}
-		//if (STREAMING::HAS_MODEL_LOADED(model_temp)) {
-		//	PLAYER::SET_PLAYER_MODEL(PLAYER::PLAYER_PED_ID(), model_temp);
-		//	PED::SET_PED_DEFAULT_COMPONENT_VARIATION(PLAYER::PLAYER_PED_ID());
-		//	STREAMING::SET_MODEL_AS_NO_LONGER_NEEDED(model_temp);
-			npc_player_died = false;
-		//}
+		npc_player_died = false;
 		if (npc_player_died == false && !ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID())) applyChosenSkin(model_to_restore);
 	}
 }
