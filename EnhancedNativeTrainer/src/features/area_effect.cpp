@@ -74,8 +74,8 @@ int DamagedVehiclesIndex = 0;
 bool DamagedVehiclesChanged = true;
 
 // NPC Vehicle Speed
-const std::vector<std::string> WORLD_NPC_VEHICLESPEED_CAPTIONS{ "OFF", "1", "3", "5", "10", "15", "30", "50", "70", "100" };
-const int WORLD_NPC_VEHICLESPEED_VALUES[] = { 0, 1, 3, 5, 10, 15, 30, 50, 70, 100 };
+const std::vector<std::string> WORLD_NPC_VEHICLESPEED_CAPTIONS{ "OFF", "1", "5", "10", "15", "30", "50", "70", "100" };
+const int WORLD_NPC_VEHICLESPEED_VALUES[] = { -1, 1, 5, 10, 15, 30, 50, 70, 100 };
 int NPCVehicleSpeedIndex = 0;
 bool NPCVehicleSpeedChanged = true;
 int PedAccuracyIndex = 0;
@@ -97,14 +97,14 @@ void add_areaeffect_feature_enablements(std::vector<FeatureEnabledLocalDefinitio
 	results->push_back(FeatureEnabledLocalDefinition{"featurePedsIncludeDrivers", &featurePedsIncludeDrivers});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePedsIncludePilots", &featurePedsIncludePilots});
 	results->push_back(FeatureEnabledLocalDefinition{"featureShowDebugInfo", &featureShowDebugInfo}); 
-	results->push_back(FeatureEnabledLocalDefinition{ "featureNPCNoLights", &featureNPCNoLights }); 
-	results->push_back(FeatureEnabledLocalDefinition{ "featureNPCNeonLights", &featureNPCNeonLights }); 
-	results->push_back(FeatureEnabledLocalDefinition{ "featureNPCFullBeam", &featureNPCFullBeam });
-	results->push_back(FeatureEnabledLocalDefinition{ "featureDirtyVehicles", &featureDirtyVehicles }); 
-	results->push_back(FeatureEnabledLocalDefinition{ "featureNPCNoGravityVehicles", &featureNPCNoGravityVehicles }); 
-	results->push_back(FeatureEnabledLocalDefinition{ "featureNPCNoGravityPeds", &featureNPCNoGravityPeds }); 
-	results->push_back(FeatureEnabledLocalDefinition{ "featureNPCReducedGripVehicles", &featureNPCReducedGripVehicles }); 
-	results->push_back(FeatureEnabledLocalDefinition{ "featureBoostNPCRadio", &featureBoostNPCRadio });
+	results->push_back(FeatureEnabledLocalDefinition{"featureNPCNoLights", &featureNPCNoLights}); 
+	results->push_back(FeatureEnabledLocalDefinition{"featureNPCNeonLights", &featureNPCNeonLights}); 
+	results->push_back(FeatureEnabledLocalDefinition{"featureNPCFullBeam", &featureNPCFullBeam});
+	results->push_back(FeatureEnabledLocalDefinition{"featureDirtyVehicles", &featureDirtyVehicles}); 
+	results->push_back(FeatureEnabledLocalDefinition{"featureNPCNoGravityVehicles", &featureNPCNoGravityVehicles}); 
+	results->push_back(FeatureEnabledLocalDefinition{"featureNPCNoGravityPeds", &featureNPCNoGravityPeds}); 
+	results->push_back(FeatureEnabledLocalDefinition{"featureNPCReducedGripVehicles", &featureNPCReducedGripVehicles}); 
+	results->push_back(FeatureEnabledLocalDefinition{"featureBoostNPCRadio", &featureBoostNPCRadio});
 }
 
 void reset_areaeffect_globals(){
@@ -541,7 +541,7 @@ void set_all_nearby_peds_to_angry(bool enabled){
 				PED::SET_PED_COMBAT_ATTRIBUTES(xped, 2, featurePedsIncludeDrivers ? 1 : 0); //can do driveby
 				PED::SET_PED_FLEE_ATTRIBUTES(xped, 0, 0);
 
-				//if (WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex] > 0) PED::SET_PED_ACCURACY(xped, WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex]); //peds accuracy
+				//if (WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex] > -1) PED::SET_PED_ACCURACY(xped, WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex]); //peds accuracy
 
 				//PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(xped, true);
 
@@ -962,7 +962,7 @@ void give_all_nearby_peds_a_weapon(bool enabled){
 						WEAPON::GIVE_WEAPON_TO_PED(xped, weapHash, 9999, FALSE, TRUE);
 						WEAPON::SET_PED_INFINITE_AMMO_CLIP(xped, true);
 						PED::SET_PED_CAN_SWITCH_WEAPON(xped, true);
-						if (WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex] > 0) PED::SET_PED_ACCURACY(xped, WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex]); //peds accuracy
+						if (WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex] > -1) PED::SET_PED_ACCURACY(xped, WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex]); //peds accuracy
 						if (WEAPON::HAS_PED_GOT_WEAPON(xped, weapHash, 0) && !PED::IS_PED_IN_ANY_VEHICLE(xped, false) && !PED::IS_PED_INJURED(xped)){
 							WEAPON::SET_CURRENT_PED_WEAPON(xped, weapHash, 0);
 						}
@@ -988,7 +988,7 @@ void give_all_nearby_peds_a_weapon(bool enabled){
 				if (featurePedsIncludeDrivers && !WEAPON::HAS_PED_GOT_WEAPON(xped, Ped_Selective_Weapon, 0)) WEAPON::GIVE_WEAPON_TO_PED(xped, Ped_Selective_Weapon, 9999, FALSE, TRUE);
 				WEAPON::SET_PED_INFINITE_AMMO_CLIP(xped, true);
 				PED::SET_PED_CAN_SWITCH_WEAPON(xped, true);
-				if (WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex] > 0) PED::SET_PED_ACCURACY(xped, WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex]); //peds accuracy
+				if (WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex] > -1) PED::SET_PED_ACCURACY(xped, WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex]); //peds accuracy
 				if (!featurePedsIncludeDrivers && WEAPON::HAS_PED_GOT_WEAPON(xped, Ped_Selective_Weapon, 0) && !PED::IS_PED_IN_ANY_VEHICLE(xped, false)) WEAPON::SET_CURRENT_PED_WEAPON(xped, Ped_Selective_Weapon, 0);
 				if (featurePedsIncludeDrivers && WEAPON::HAS_PED_GOT_WEAPON(xped, Ped_Selective_Weapon, 0)) WEAPON::SET_CURRENT_PED_WEAPON(xped, Ped_Selective_Weapon, 0);
 			}
