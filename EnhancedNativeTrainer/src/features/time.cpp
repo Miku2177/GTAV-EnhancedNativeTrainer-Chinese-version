@@ -279,6 +279,12 @@ bool onconfirm_time_menu(MenuItem<int> choice){
 			movetime_day_backward();
 			break;
 		case 7:
+			movetime_year_forward();
+			break;
+		case 8:
+			movetime_year_backward();
+			break;
+		case 9:
 			all_time_flow_rate();
 			break;
 	}
@@ -334,6 +340,18 @@ void process_time_menu(){
 	item->isLeaf = true;
 	menuItems.push_back(item);
 	
+	item = new MenuItem<int>();
+	item->caption = "Year Forward";
+	item->value = index++;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "Year Backward";
+	item->value = index++;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
 	item = new MenuItem<int>();
 	item->caption = "Time Flow Rate";
 	item->value = index++;
@@ -457,6 +475,52 @@ void movetime_day_backward(){
 		}
 		calMon--;
 	}
+
+	TIME::SET_CLOCK_DATE(calDay, calMon, calYear);
+	TIME::SET_CLOCK_TIME(gameHour, gameMins, 0);
+
+	std::ostringstream ss;
+	ss << "Date is now " << get_day_of_game_week() << " ";
+	ss << std::setfill('0') << std::setw(2) << calDay;
+	ss << ".";
+	ss << std::setfill('0') << std::setw(2) << calMon;
+	ss << ".";
+	ss << calYear;
+	set_status_text(ss.str());
+}
+
+void movetime_year_forward() {
+	int calDay = TIME::GET_CLOCK_DAY_OF_MONTH();
+	int calMon = TIME::GET_CLOCK_MONTH();
+	int calYear = TIME::GET_CLOCK_YEAR();
+
+	int gameHour = TIME::GET_CLOCK_HOURS();
+	int gameMins = TIME::GET_CLOCK_MINUTES();
+
+	calYear++;
+
+	TIME::SET_CLOCK_DATE(calDay, calMon, calYear);
+	TIME::SET_CLOCK_TIME(gameHour, gameMins, 0);
+
+	std::ostringstream ss;
+	ss << "Date is now: " << get_day_of_game_week() << " ";
+	ss << std::setfill('0') << std::setw(2) << TIME::GET_CLOCK_DAY_OF_MONTH();
+	ss << ".";
+	ss << std::setfill('0') << std::setw(2) << TIME::GET_CLOCK_MONTH();
+	ss << ".";
+	ss << TIME::GET_CLOCK_YEAR();
+	set_status_text(ss.str());
+}
+
+void movetime_year_backward() {
+	int calDay = TIME::GET_CLOCK_DAY_OF_MONTH();
+	int calMon = TIME::GET_CLOCK_MONTH();
+	int calYear = TIME::GET_CLOCK_YEAR();
+
+	int gameHour = TIME::GET_CLOCK_HOURS();
+	int gameMins = TIME::GET_CLOCK_MINUTES();
+
+	calYear--;
 
 	TIME::SET_CLOCK_DATE(calDay, calMon, calYear);
 	TIME::SET_CLOCK_TIME(gameHour, gameMins, 0);
