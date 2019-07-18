@@ -867,7 +867,7 @@ void update_world_features()
 	// Bus Interior Light On At Night && NPC No Lights && NPC Neon Lights && NPC Dirty Vehicles && NPC Damaged Vehicles && NPC No Gravity Vehicles && NPC Vehicles Reduced Grip && NPC Vehicle Speed && NPC Use Fullbeam && 
 	// Headlights During Blackout && Boost NPC Radio Volume && Slippery When Wet
 	if (featureBusLight || featureNPCNoLights || featureNPCNeonLights || featureDirtyVehicles || WORLD_DAMAGED_VEHICLES_VALUES[DamagedVehiclesIndex] > 0 || featureNPCNoGravityVehicles || featureNPCReducedGripVehicles ||
-		WORLD_NPC_VEHICLESPEED_VALUES[NPCVehicleSpeedIndex] > 0 || WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 || featureNPCFullBeam || WORLD_HEADLIGHTS_BLACKOUT_VALUES[featureLightsBlackoutIndex] > 1 ||
+		WORLD_NPC_VEHICLESPEED_VALUES[NPCVehicleSpeedIndex] > -1 || WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 || featureNPCFullBeam || WORLD_HEADLIGHTS_BLACKOUT_VALUES[featureLightsBlackoutIndex] > 1 ||
 		featureBoostNPCRadio || WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripRainingIndex] > 0) {
 		Vehicle veh_mycurrveh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 		const int BUS_ARR_SIZE = 1024;
@@ -1042,7 +1042,7 @@ void update_world_features()
 					if (GAMEPLAY::GET_NEXT_WEATHER_TYPE_HASH_NAME() != 1420204096 && GAMEPLAY::GET_NEXT_WEATHER_TYPE_HASH_NAME() != 3061285535) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], false);
 				}
 			}
-			if (WORLD_NPC_VEHICLESPEED_VALUES[NPCVehicleSpeedIndex] > 0 && bus_veh[i] != veh_mycurrveh) {
+			if (WORLD_NPC_VEHICLESPEED_VALUES[NPCVehicleSpeedIndex] > -1 && bus_veh[i] != veh_mycurrveh) {
 				VEHICLE::SET_VEHICLE_FORWARD_SPEED(bus_veh[i], WORLD_NPC_VEHICLESPEED_VALUES[NPCVehicleSpeedIndex]); 
 			}
 			if (featureNPCFullBeam) {
