@@ -1471,7 +1471,7 @@ bool process_player_forceshield_menu() {
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	std::vector<MenuItem<int> *> menuItems;
-	std::string caption = "Player Force Shield Options";
+	std::string caption = "Jedi Powers Options";
 
 	SelectFromListMenuItem *listItem;
 	ToggleMenuItem<int>* toggleItem;
@@ -1559,7 +1559,7 @@ void process_player_menu(){
 		{"Animations", NULL, NULL, false},
 		{"Player Data", NULL, NULL, false},
 		{"Prison Break", NULL, NULL, false},
-		{"Player Force Shield Power", NULL, NULL, false},
+		{"Jedi Powers", NULL, NULL, false},
 		{"No Whistling For Taxi", &NoTaxiWhistling, NULL, false}
 	};
 
