@@ -846,10 +846,18 @@ bool onconfirm_powerpunch_menu(MenuItem<int> choice)
 				ss << "~r~Warning! Enable Manual Mode To Use It";
 				set_status_text(ss.str());
 			}
+			std::string::size_type sz;
 			std::string result_p = show_keyboard(nullptr, (char *)lastPowerWeapon.c_str());
-			if (!result_p.empty()) {
+			if (!result_p.empty() && std::stof(result_p, &sz) < 10001) {
 				result_p = trim(result_p);
 				lastPowerWeapon = result_p;
+			}
+			if (!result_p.empty() && std::stof(result_p, &sz) > 10000) {
+				std::ostringstream ss;
+				ss << "~r~Warning! 10000 Is Max!";
+				set_status_text(ss.str());
+				result_p.clear();
+				lastPowerWeapon.clear();
 			}
 			break;
 		}
