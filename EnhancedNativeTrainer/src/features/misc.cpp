@@ -1309,7 +1309,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			bill_seconds = 0;
 		}
 		
-		if (featureZeroBalance) {
+		if (featureZeroBalance && !SCRIPT::HAS_SCRIPT_LOADED("prologue1")) {
 			int outValue_your_phone_bill = -1;
 			int statHash_all_your_money = -1;
 			
