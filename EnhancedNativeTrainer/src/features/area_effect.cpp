@@ -43,11 +43,12 @@ bool featureNPCNeonLights = false;
 bool featureNPCFullBeam = false;
 bool featureDirtyVehicles = false;
 bool featureNPCNoGravityVehicles = false;
-bool featureNPCNoGravityPeds = false;
+//bool featureNPCNoGravityPeds = false;
 bool featureNPCReducedGripVehicles = false;
 bool featureBoostNPCRadio = false;
 
 int pedWeaponSetIndex = 0;
+//int NoPedsGravityIndex = 0;
 
 std::set<Ped> allWorldPedsThisFrame;
 bool allWorldPedsThisFrameFilled = false;
@@ -81,6 +82,16 @@ bool NPCVehicleSpeedChanged = true;
 int PedAccuracyIndex = 0;
 bool PedAccuracyChanged = true;
 
+// Reduced Grip If Heavy Snow && Slippery When Wet && No Peds Gravity
+const std::vector<std::string> WORLD_REDUCEDGRIP_SNOWING_CAPTIONS{ "OFF", "Arcade", "Realistic" };
+const int WORLD_REDUCEDGRIP_SNOWING_VALUES[] = { 0, 1, 2 };
+int RadarReducedGripSnowingIndex = 0;
+bool RadarReducedGripSnowingChanged = true;
+int RadarReducedGripRainingIndex = 0;
+bool RadarReducedGripRainingChanged = true;
+int NoPedsGravityIndex = 0;
+bool NoPedsGravityChanged = true;
+
 //For onscreen debug info
 bool featureShowDebugInfo = false;
 
@@ -102,7 +113,8 @@ void add_areaeffect_feature_enablements(std::vector<FeatureEnabledLocalDefinitio
 	results->push_back(FeatureEnabledLocalDefinition{"featureNPCFullBeam", &featureNPCFullBeam});
 	results->push_back(FeatureEnabledLocalDefinition{"featureDirtyVehicles", &featureDirtyVehicles}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureNPCNoGravityVehicles", &featureNPCNoGravityVehicles}); 
-	results->push_back(FeatureEnabledLocalDefinition{"featureNPCNoGravityPeds", &featureNPCNoGravityPeds}); 
+	//results->push_back(FeatureEnabledLocalDefinition{"featureNPCNoGravityPeds", &featureNPCNoGravityPeds}); 
+	//results->push_back(FeatureEnabledLocalDefinition{"NoPedsGravityIndex", &NoPedsGravityIndex});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNPCReducedGripVehicles", &featureNPCReducedGripVehicles}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureBoostNPCRadio", &featureBoostNPCRadio});
 }
@@ -124,7 +136,6 @@ void reset_areaeffect_globals(){
 	featureNPCFullBeam = false;
 	featureDirtyVehicles = false;
 	featureNPCNoGravityVehicles = false;
-	featureNPCNoGravityPeds = false;
 	featureNPCReducedGripVehicles = false;
 	featureBoostNPCRadio = false;
 
@@ -132,10 +143,16 @@ void reset_areaeffect_globals(){
 	NPCVehicleSpeedIndex = 0;
 	PedAccuracyIndex = 0;
 	pedWeaponSetIndex = 0;
+	//NoPedsGravityIndex = 0;
+
+	RadarReducedGripSnowingIndex = 0;
+	RadarReducedGripRainingIndex = 0;
+	NoPedsGravityIndex = 0;
 }
 
 void process_areaeffect_peds_menu(){
 	std::vector<MenuItem<int>*> menuItems;
+	SelectFromListMenuItem *listItem;
 
 	MenuItem<int> *item = new MenuItem<int>();
 	item->caption = "Peds Angry";
@@ -173,11 +190,17 @@ void process_areaeffect_peds_menu(){
 	togItem->toggleValue = &featurePedsIncludePilots;
 	menuItems.push_back(togItem);
 
-	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "NPC No Gravity Peds";
-	togItem->value = 1;
-	togItem->toggleValue = &featureNPCNoGravityPeds;
-	menuItems.push_back(togItem);
+	//togItem = new ToggleMenuItem<int>();
+	//togItem->caption = "NPC No Gravity Peds";
+	//togItem->value = 1;
+	//togItem->toggleValue = &featureNPCNoGravityPeds;
+	//menuItems.push_back(togItem);
+
+	listItem = new SelectFromListMenuItem(WORLD_REDUCEDGRIP_SNOWING_CAPTIONS, onchange_world_no_peds_gravity_index);
+	listItem->wrap = false;
+	listItem->caption = "NPC No Gravity Peds";
+	listItem->value = NoPedsGravityIndex;
+	menuItems.push_back(listItem);
 
 	draw_generic_menu<int>(menuItems, &areaeffect_ped_level_menu_index, "Ped Effects", onconfirm_areaeffect_ped_menu, NULL, NULL);
 }
@@ -912,6 +935,21 @@ void onchange_world_damaged_vehicles_index(int value, SelectFromListMenuItem* so
 void onchange_world_npc_vehicles_speed_index(int value, SelectFromListMenuItem* source) {
 	NPCVehicleSpeedIndex = value;
 	NPCVehicleSpeedChanged = true;
+}
+
+void onchange_world_reducedgrip_snowing_index(int value, SelectFromListMenuItem* source) {
+	RadarReducedGripSnowingIndex = value;
+	RadarReducedGripSnowingChanged = true;
+}
+
+void onchange_world_reducedgrip_raining_index(int value, SelectFromListMenuItem* source) {
+	RadarReducedGripRainingIndex = value;
+	RadarReducedGripRainingChanged = true;
+}
+
+void onchange_world_no_peds_gravity_index(int value, SelectFromListMenuItem* source) {
+	NoPedsGravityIndex = value;
+	NoPedsGravityChanged = true;
 }
 
 void onchange_ped_accuracy_index(int value, SelectFromListMenuItem* source) {
