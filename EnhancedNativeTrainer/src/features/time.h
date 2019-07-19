@@ -37,9 +37,9 @@ void movetime_day_forward();
 
 void movetime_day_backward();
 
-void movetime_year_forward();
+void set_data();
 
-void movetime_year_backward();
+void set_time();
 
 void toggle_game_speed();
 
