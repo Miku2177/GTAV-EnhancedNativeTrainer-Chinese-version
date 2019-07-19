@@ -14,6 +14,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include <iomanip>
 
 #include "..\ui_support\menu_functions.h"
+#include "script.h"
 
 const std::vector<std::string> TIME_SPEED_CAPTIONS{ "Minimum", "0.1x", "0.2x", "0.3x", "0.4x", "0.5x", "0.6x", "0.7x", "0.8x", "0.9x", "1x (Normal)" };
 const std::vector<float> TIME_SPEED_VALUES{ 0.0f, 0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f, 1.0f };
@@ -279,10 +280,10 @@ bool onconfirm_time_menu(MenuItem<int> choice){
 			movetime_day_backward();
 			break;
 		case 7:
-			movetime_year_forward();
+			set_data();
 			break;
 		case 8:
-			movetime_year_backward();
+			set_time();
 			break;
 		case 9:
 			all_time_flow_rate();
@@ -341,13 +342,13 @@ void process_time_menu(){
 	menuItems.push_back(item);
 	
 	item = new MenuItem<int>();
-	item->caption = "Year Forward";
+	item->caption = "Set Date (MM/DD/YYYY)";
 	item->value = index++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Year Backward";
+	item->caption = "Set Time (HH:MM)";
 	item->value = index++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
@@ -489,18 +490,43 @@ void movetime_day_backward(){
 	set_status_text(ss.str());
 }
 
-void movetime_year_forward() {
-	int calDay = TIME::GET_CLOCK_DAY_OF_MONTH();
-	int calMon = TIME::GET_CLOCK_MONTH();
-	int calYear = TIME::GET_CLOCK_YEAR();
+void set_data() {
+	std::string lastDateSpawn;
+	std::string tmp_Day, tmp_Mon, tmp_Year;
+	std::string result = show_keyboard(NULL, (char*)lastDateSpawn.c_str());
+	if (!result.empty())
+	{
+		result = trim(result);
+		lastDateSpawn = result;
 
-	int gameHour = TIME::GET_CLOCK_HOURS();
-	int gameMins = TIME::GET_CLOCK_MINUTES();
+		Entity e = PLAYER::PLAYER_PED_ID();
+		std::string a = (char*)result.c_str();
+		int found_separator = 0;
+		bool found_symbol = false;
 
-	calYear++;
+		for (int i = 0; i < a.size(); i++) {
+			if (a[i] != *"/" && a[i] != *" ") found_symbol = true;
+			if ((a[i] == *"/" || a[i] == *" ") && found_symbol == true) {
+				found_separator = found_separator + 1;
+				found_symbol = false;
+			}
+			for (int n = 0; n < 10; n++) {
+				char n_string = n + '0';
+				if (found_separator == 0 && a[i] == n_string) tmp_Mon = tmp_Mon + a[i];
+				if (found_separator == 1 && a[i] == n_string) tmp_Day = tmp_Day + a[i];
+				if (found_separator == 2 && a[i] == n_string) tmp_Year = tmp_Year + a[i];
+			}
+		}
+		std::string::size_type sz;
+		if (strlen(tmp_Mon.c_str()) > 2) tmp_Mon.resize(2);
+		if (std::stoi(tmp_Mon, &sz) > 12) tmp_Mon = "12";
+		if (strlen(tmp_Day.c_str()) > 2) tmp_Day.resize(2);
+		if (std::stoi(tmp_Day, &sz) > 31) tmp_Day = "31";
+		if (strlen(tmp_Year.c_str()) > 4) tmp_Year.resize(4);
+		if (std::stoi(tmp_Year, &sz) > 9999) tmp_Year = "9999";
 
-	TIME::SET_CLOCK_DATE(calDay, calMon, calYear);
-	TIME::SET_CLOCK_TIME(gameHour, gameMins, 0);
+		TIME::SET_CLOCK_DATE(std::stoi(tmp_Mon, &sz), std::stoi(tmp_Day, &sz), std::stoi(tmp_Year, &sz));
+	}
 
 	std::ostringstream ss;
 	ss << "Date is now: " << get_day_of_game_week() << " ";
@@ -512,26 +538,46 @@ void movetime_year_forward() {
 	set_status_text(ss.str());
 }
 
-void movetime_year_backward() {
-	int calDay = TIME::GET_CLOCK_DAY_OF_MONTH();
-	int calMon = TIME::GET_CLOCK_MONTH();
-	int calYear = TIME::GET_CLOCK_YEAR();
+void set_time() {
+	std::string lastTimeSpawn;
+	std::string tmp_Hour, tmp_Min;
+	std::string result = show_keyboard(NULL, (char*)lastTimeSpawn.c_str());
+	if (!result.empty())
+	{
+		result = trim(result);
+		lastTimeSpawn = result;
 
-	int gameHour = TIME::GET_CLOCK_HOURS();
-	int gameMins = TIME::GET_CLOCK_MINUTES();
+		Entity e = PLAYER::PLAYER_PED_ID();
+		std::string a = (char*)result.c_str();
+		int found_separator = 0;
+		bool found_symbol = false;
 
-	calYear--;
+		for (int i = 0; i < a.size(); i++) {
+			if (a[i] != *":" && a[i] != *" ") found_symbol = true;
+			if ((a[i] == *":" || a[i] == *" ") && found_symbol == true) {
+				found_separator = found_separator + 1;
+				found_symbol = false;
+			}
+			for (int n = 0; n < 10; n++) {
+				char n_string = n + '0';
+				if (found_separator == 0 && a[i] == n_string) tmp_Hour = tmp_Hour + a[i];
+				if (found_separator == 1 && a[i] == n_string) tmp_Min = tmp_Min + a[i];
+			}
+		}
+		std::string::size_type sz;
+		if (strlen(tmp_Hour.c_str()) > 2) tmp_Hour.resize(2);
+		if (std::stoi(tmp_Hour, &sz) > 24) tmp_Hour = "24";
+		if (strlen(tmp_Min.c_str()) > 2) tmp_Min.resize(2);
+		if (std::stoi(tmp_Min, &sz) > 60) tmp_Min = "60";
 
-	TIME::SET_CLOCK_DATE(calDay, calMon, calYear);
-	TIME::SET_CLOCK_TIME(gameHour, gameMins, 0);
+		TIME::SET_CLOCK_TIME(std::stoi(tmp_Hour, &sz), std::stoi(tmp_Min, &sz), 0);
+	}
 
 	std::ostringstream ss;
-	ss << "Date is now " << get_day_of_game_week() << " ";
-	ss << std::setfill('0') << std::setw(2) << calDay;
-	ss << ".";
-	ss << std::setfill('0') << std::setw(2) << calMon;
-	ss << ".";
-	ss << calYear;
+	ss << "Time is now " << get_day_of_game_week() << " ";
+	ss << std::setfill('0') << std::setw(2) << tmp_Hour;
+	ss << ":";
+	ss << std::setfill('0') << std::setw(2) << tmp_Min;
 	set_status_text(ss.str());
 }
 
