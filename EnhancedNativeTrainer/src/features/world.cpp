@@ -121,14 +121,6 @@ const int WORLD_WIND_STRENGTH_VALUES[] = { 0, 3, 999 };
 int WindStrengthIndex = 0;
 bool WindStrengthChanged = true;
 
-// Reduced Grip If Heavy Snow && Slippery When Wet
-const std::vector<std::string> WORLD_REDUCEDGRIP_SNOWING_CAPTIONS{ "OFF", "Arcade", "Realistic" };
-const int WORLD_REDUCEDGRIP_SNOWING_VALUES[] = { 0, 1, 2 };
-int RadarReducedGripSnowingIndex = 0;
-bool RadarReducedGripSnowingChanged = true;
-int RadarReducedGripRainingIndex = 0;
-bool RadarReducedGripRainingChanged = true;
-
 // Waves Intensity
 const std::vector<std::string> WORLD_WAVES_CAPTIONS{ "Default", "No Waves", "0.1x", "5x", "10x", "20x", "30x", "50x" };
 const int WORLD_WAVES_VALUES[] = { -1, -400000, 0, 5, 10, 20, 30, 50 };
@@ -335,16 +327,6 @@ void onchange_lightning_intensity_index(int value, SelectFromListMenuItem* sourc
 void onchange_world_wind_strength_index(int value, SelectFromListMenuItem* source){
 	WindStrengthIndex = value;
 	WindStrengthChanged = true;
-}
-
-void onchange_world_reducedgrip_snowing_index(int value, SelectFromListMenuItem* source) {
-	RadarReducedGripSnowingIndex = value;
-	RadarReducedGripSnowingChanged = true;
-}
-
-void onchange_world_reducedgrip_raining_index(int value, SelectFromListMenuItem* source) {
-	RadarReducedGripRainingIndex = value;
-	RadarReducedGripRainingChanged = true;
 }
 
 void onchange_world_headlights_blackout_index(int value, SelectFromListMenuItem* source) {
@@ -605,6 +587,7 @@ void reset_world_globals()
 	featureLightIntensityIndex = 0;
 	RadarReducedGripSnowingIndex = 0;
 	RadarReducedGripRainingIndex = 0;
+	NoPedsGravityIndex = 0;
 	featureLightsBlackoutIndex = 0;
 	WindStrengthIndex = 0;
 	lastWeather.clear();
@@ -1129,7 +1112,7 @@ void update_world_features()
 	}
 
 	// NPC No Gravity Peds && Acid Water && Acid Rain
-	if (featureNPCNoGravityPeds || featureAcidWater || featureAcidRain || (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 && featureSnow)) {
+	if (WORLD_REDUCEDGRIP_SNOWING_VALUES[NoPedsGravityIndex] > 0 || featureAcidWater || featureAcidRain || (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 && featureSnow)) {
 		const int BUS_ARR_PED_SIZE = 1024;
 		Ped bus_ped[BUS_ARR_PED_SIZE];
 		int found_ped = worldGetAllPeds(bus_ped, BUS_ARR_PED_SIZE);
@@ -1163,23 +1146,25 @@ void update_world_features()
 					}
 				}
 			}
-			if (featureNPCNoGravityPeds && bus_ped[i] != PLAYER::PLAYER_PED_ID() && !VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(PED::GET_VEHICLE_PED_IS_USING(bus_ped[i])))) {
+			if (WORLD_REDUCEDGRIP_SNOWING_VALUES[NoPedsGravityIndex] > 0 && bus_ped[i] != PLAYER::PLAYER_PED_ID() && !VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(PED::GET_VEHICLE_PED_IS_USING(bus_ped[i])))) {
 				Vector3 CamRot = CAM::GET_GAMEPLAY_CAM_ROT(2);
 				int p_force = 5;
 				float rad = 2 * 3.14 * (CamRot.z / 360);
 				float v_x = -(sin(rad) * p_force * 10);
 				float v_y = (cos(rad) * p_force * 10);
 				float v_z = p_force * (CamRot.x * 0.2);
-				PED::SET_PED_CAN_RAGDOLL(bus_ped[i], true);
-				PED::SET_PED_RAGDOLL_FORCE_FALL(bus_ped[i]);
-				PED::SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(bus_ped[i], true);
-				PED::SET_PED_RAGDOLL_ON_COLLISION(bus_ped[i], true);
-				if (!PED::IS_PED_RAGDOLL(bus_ped[i])) PED::SET_PED_TO_RAGDOLL(bus_ped[i], 1, 1, 1, 1, 1, 1);
-				if (!STREAMING::HAS_ANIM_DICT_LOADED("dead@fall")) STREAMING::REQUEST_ANIM_DICT("dead@fall");
-				while (!STREAMING::HAS_ANIM_DICT_LOADED("dead@fall")) WAIT(0);
-				if (!ENTITY::IS_ENTITY_PLAYING_ANIM(bus_ped[i], "dead@fall", "dead_fall_down", 3) && !PED::IS_PED_RAGDOLL(bus_ped[i]) && PED::GET_PED_TYPE(bus_ped[i]) != 6 && !ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(bus_ped[i])) {
-					AI::TASK_PLAY_ANIM(bus_ped[i], "dead@fall", "dead_fall_down", 8.0, 0.0, -1, 9, 0, 0, 0, 0);
-					PED::SET_PED_TO_RAGDOLL(bus_ped[i], 1, 1, 1, 1, 1, 1);
+				if (WORLD_REDUCEDGRIP_SNOWING_VALUES[NoPedsGravityIndex] == 2) {
+					PED::SET_PED_CAN_RAGDOLL(bus_ped[i], true);
+					PED::SET_PED_RAGDOLL_FORCE_FALL(bus_ped[i]);
+					PED::SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(bus_ped[i], true);
+					PED::SET_PED_RAGDOLL_ON_COLLISION(bus_ped[i], true);
+					if (!PED::IS_PED_RAGDOLL(bus_ped[i])) PED::SET_PED_TO_RAGDOLL(bus_ped[i], 1, 1, 1, 1, 1, 1);
+					if (!STREAMING::HAS_ANIM_DICT_LOADED("dead@fall")) STREAMING::REQUEST_ANIM_DICT("dead@fall");
+					while (!STREAMING::HAS_ANIM_DICT_LOADED("dead@fall")) WAIT(0);
+					if (!ENTITY::IS_ENTITY_PLAYING_ANIM(bus_ped[i], "dead@fall", "dead_fall_down", 3) && !PED::IS_PED_RAGDOLL(bus_ped[i]) && PED::GET_PED_TYPE(bus_ped[i]) != 6 && !ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(bus_ped[i])) {
+						AI::TASK_PLAY_ANIM(bus_ped[i], "dead@fall", "dead_fall_down", 8.0, 0.0, -1, 9, 0, 0, 0, 0);
+						PED::SET_PED_TO_RAGDOLL(bus_ped[i], 1, 1, 1, 1, 1, 1);
+					}
 				}
 				if (PED::IS_PED_SHOOTING(bus_ped[i])) ENTITY::APPLY_FORCE_TO_ENTITY(bus_ped[i], 1, v_x, v_y, v_z, 0, 0, 0, false, false, true, true, false, true);
 				if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(bus_ped[i], PLAYER::PLAYER_PED_ID(), 1)) ENTITY::APPLY_FORCE_TO_ENTITY(bus_ped[i], 1, v_x / 10, v_y / 10, v_z / 10, 0, 0, 0, false, false, true, true, false, true);
@@ -1453,6 +1438,7 @@ void add_world_feature_enablements2(std::vector<StringPairSettingDBRow>* results
 	results->push_back(StringPairSettingDBRow{ "PedAccuracyIndex", std::to_string(PedAccuracyIndex) });
 	results->push_back(StringPairSettingDBRow{ "RadarReducedGripSnowingIndex", std::to_string(RadarReducedGripSnowingIndex) });
 	results->push_back(StringPairSettingDBRow{ "RadarReducedGripRainingIndex", std::to_string(RadarReducedGripRainingIndex) });
+	results->push_back(StringPairSettingDBRow{ "NoPedsGravityIndex", std::to_string(NoPedsGravityIndex) });
 	results->push_back(StringPairSettingDBRow{ "featureLightsBlackoutIndex", std::to_string(featureLightsBlackoutIndex) });
 }
 
@@ -1503,6 +1489,9 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 		}
 		else if (setting.name.compare("RadarReducedGripRainingIndex") == 0) {
 			RadarReducedGripRainingIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("NoPedsGravityIndex") == 0) {
+			NoPedsGravityIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("featureLightsBlackoutIndex") == 0) {
 			featureLightsBlackoutIndex = stoi(setting.value);

@@ -574,7 +574,7 @@ void set_time() {
 	}
 
 	std::ostringstream ss;
-	ss << "Time is now " << get_day_of_game_week() << " ";
+	ss << "Time is now: ";
 	ss << std::setfill('0') << std::setw(2) << tmp_Hour;
 	ss << ":";
 	ss << std::setfill('0') << std::setw(2) << tmp_Min;
