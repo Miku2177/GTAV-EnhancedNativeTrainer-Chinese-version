@@ -937,12 +937,6 @@ bool process_veh_door_menu(){
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
-	listItem = new SelectFromListMenuItem(VEH_SPEEDLIMITER_CAPTIONS, onchange_door_autolock_index); 
-	listItem->wrap = false;
-	listItem->caption = "Autolock Driver Door At";
-	listItem->value = DoorAutolockIndex;
-	menuItems.push_back(listItem);
-
 	return draw_generic_menu<int>(menuItems, &doorOptionsMenuIndex, caption, onconfirm_vehdoor_menu, NULL, NULL);
 }
 
@@ -2084,6 +2078,12 @@ void process_veh_menu(){
 	toggleItem->toggleValue = &featureHeavyVehicle;
 	menuItems.push_back(toggleItem);
 
+	listItem = new SelectFromListMenuItem(VEH_SPEEDLIMITER_CAPTIONS, onchange_door_autolock_index);
+	listItem->wrap = false;
+	listItem->caption = "Autolock Driver Door At";
+	listItem->value = DoorAutolockIndex;
+	menuItems.push_back(listItem);
+	
 	draw_generic_menu<int>(menuItems, &activeLineIndexVeh, caption, onconfirm_veh_menu, NULL, NULL);
 }
 
