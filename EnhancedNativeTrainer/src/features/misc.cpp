@@ -365,6 +365,7 @@ bool onconfirm_misc_cutscene_menu(MenuItem<int> choice) {
 		if (CAM::DOES_CAM_EXIST(CutCam)) {
 			CAM::RENDER_SCRIPT_CAMS(false, false, 1, false, false);
 			CAM::DESTROY_CAM(CutCam, true);
+			CAM::DESTROY_ALL_CAMS(true);
 		}
 		CAM::DESTROY_ALL_CAMS(true);
 		CAM::DO_SCREEN_FADE_IN(0);
@@ -378,6 +379,8 @@ bool onconfirm_misc_cutscene_menu(MenuItem<int> choice) {
 		cutscene_being_watched = false;
 		switched_c = -1;
 		found_ped_in_cutscene = false;
+		con_disabled = false;
+		manual_cutscene = false;
 	} 
 	else if(choice.value == -2) {
 		found_ped_in_cutscene = false;
@@ -1442,7 +1445,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		switched_c = -1;
 	}
 	if (cutscene_is_playing == true && CUTSCENE::IS_CUTSCENE_PLAYING()) cutscene_being_watched = true;
-	if (cutscene_being_watched == true && (!CUTSCENE::IS_CUTSCENE_PLAYING() || ((CUTSCENE::GET_CUTSCENE_TOTAL_DURATION() - CUTSCENE::GET_CUTSCENE_TIME() < 3000) && CAM::IS_SCREEN_FADING_OUT()))) { // && CUTSCENE::HAS_CUTSCENE_FINISHED()
+	if (cutscene_being_watched == true && manual_cutscene == true && (!CUTSCENE::IS_CUTSCENE_PLAYING() || ((CUTSCENE::GET_CUTSCENE_TOTAL_DURATION() - CUTSCENE::GET_CUTSCENE_TIME() < 3000) && CAM::IS_SCREEN_FADING_OUT()))) { // && CUTSCENE::HAS_CUTSCENE_FINISHED()
 		CAM::DO_SCREEN_FADE_IN(0);
 		CUTSCENE::STOP_CUTSCENE_IMMEDIATELY();
 		CUTSCENE::REMOVE_CUTSCENE();
