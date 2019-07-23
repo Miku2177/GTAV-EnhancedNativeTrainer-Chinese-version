@@ -88,6 +88,7 @@ bool featureBlackoutUpdated = false;
 
 //bool featureWeatherWind = false;
 bool featureWeatherFreeze = false;
+
 bool featureCloudsFreeze = false;
 bool featureCloudsNo = false;
 
