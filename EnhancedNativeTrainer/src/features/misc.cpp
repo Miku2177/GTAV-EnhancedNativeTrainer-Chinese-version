@@ -1496,7 +1496,6 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 					}
 				}
 			}
-
 			if (CAM::DOES_CAM_EXIST(CutCam)) {
 				if (cutscene_being_watched == true && found_ped_in_cutscene == false) {
 					const int US_ARR_PED_SIZE = 1024;

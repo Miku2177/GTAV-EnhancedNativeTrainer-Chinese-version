@@ -342,6 +342,8 @@ void onchange_veh_lightsOff_index(int value, SelectFromListMenuItem* source);
 
 void onchange_veh_jumpy_index(int value, SelectFromListMenuItem* source);
 
+void onchange_heavy_veh_index(int value, SelectFromListMenuItem* source);
+
 void onchange_veh_hydraulics_index(int value, SelectFromListMenuItem* source);
 
 void onchange_veh_vislight_index(int value, SelectFromListMenuItem* source);

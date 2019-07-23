@@ -81,7 +81,7 @@ bool featureVehSteerAngle = false;
 bool featureRollWhenShoot = false;
 bool featureTractionControl = false;
 bool featureSticktoground = false;
-bool featureHeavyVehicle = false;
+//bool featureHeavyVehicle = false;
 bool featureEngineRunning = false;
 bool featureNoVehFlip = false;
 bool featureAutoToggleLights = false;
@@ -209,6 +209,8 @@ int turnSignalsAccelerationIndex = 4;
 bool turnSignalsAccelerationChanged = true;
 int JumpyVehIndex = 0;
 bool JumpyVehChanged = true;
+int HeavyVehIndex = 0;
+bool HeavyVehChanged = true;
 
 //Visualize Vehicle Indicators (Sprite)
 const std::vector<std::string> VEH_VISLIGHT_CAPTIONS{ "OFF", "1x", "3x", "5x", "7x", "10x", "12x" };
@@ -2072,11 +2074,11 @@ void process_veh_menu(){
 	toggleItem->toggleValue = &featureSticktoground;
 	menuItems.push_back(toggleItem);
 
-	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Heavy Vehicle";
-	toggleItem->value = i++;
-	toggleItem->toggleValue = &featureHeavyVehicle;
-	menuItems.push_back(toggleItem);
+	listItem = new SelectFromListMenuItem(VEH_TURN_SIGNALS_ACCELERATION_CAPTIONS, onchange_heavy_veh_index);
+	listItem->wrap = false;
+	listItem->caption = "Heavy Vehicle";
+	listItem->value = HeavyVehIndex;
+	menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(VEH_SPEEDLIMITER_CAPTIONS, onchange_door_autolock_index);
 	listItem->wrap = false;
@@ -2647,14 +2649,14 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	
 	/////////////////// HEAVY VEHICLE /////////////////////
 
-	if (featureHeavyVehicle && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && !PED::IS_PED_IN_ANY_PLANE(playerPed) && !PED::IS_PED_IN_ANY_HELI(playerPed)) {
+	if (VEH_TURN_SIGNALS_ACCELERATION_VALUES[HeavyVehIndex] > 0 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && !PED::IS_PED_IN_ANY_PLANE(playerPed) && !PED::IS_PED_IN_ANY_HELI(playerPed)) {
 		const int OBJ_ARR_SIZE = 1024;
 		Object nearbyObj[OBJ_ARR_SIZE];
 		Object my_shield = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 		float vehspeed = ENTITY::GET_ENTITY_SPEED(my_shield);
 		//Vector3 CamRot = CAM::GET_GAMEPLAY_CAM_ROT(2);
 		Vector3 CamRot = ENTITY::GET_ENTITY_ROTATION(playerPed, 0);
-		int p_force = 1; // 3; // vehspeed; // / 10; // 5;
+		int p_force = VEH_TURN_SIGNALS_ACCELERATION_VALUES[HeavyVehIndex]; // 1; // 3; // vehspeed; // / 10; // 5; 
 		float rad = 2 * 3.14 * (CamRot.z / 360);
 		float v_x = -(sin(rad) * p_force * 10);
 		float v_y = (cos(rad) * p_force * 10);
@@ -3575,6 +3577,7 @@ void reset_vehicle_globals() {
 	DoorAutolockIndex = 0;
 	turnSignalsAccelerationIndex = 4;
 	JumpyVehIndex = 0;
+	HeavyVehIndex = 0;
 	speedLimiterIndex = 0;
 	speedCityLimiterIndex = 0;
 	speedCountryLimiterIndex = 0;
@@ -3644,7 +3647,7 @@ void reset_vehicle_globals() {
 		featureRollWhenShoot =
 		featureTractionControl =
 		featureSticktoground =
-		featureHeavyVehicle =
+		//featureHeavyVehicle =
 		featureEngineRunning =
 		featureNoVehFlip =
 		featureAutoToggleLights =
@@ -3924,7 +3927,7 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureRollWhenShoot", &featureRollWhenShoot});
 	results->push_back(FeatureEnabledLocalDefinition{"featureTractionControl", &featureTractionControl});
 	results->push_back(FeatureEnabledLocalDefinition{"featureSticktoground", &featureSticktoground});
-	results->push_back(FeatureEnabledLocalDefinition{"featureHeavyVehicle", &featureHeavyVehicle});
+	//results->push_back(FeatureEnabledLocalDefinition{"featureHeavyVehicle", &featureHeavyVehicle});
 	results->push_back(FeatureEnabledLocalDefinition{"featureEngineRunning", &featureEngineRunning});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoVehFlip", &featureNoVehFlip});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAutoToggleLights", &featureAutoToggleLights});
@@ -4409,6 +4412,7 @@ void add_vehicle_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"DoorAutolockIndex", std::to_string(DoorAutolockIndex)});
 	results->push_back(StringPairSettingDBRow{"turnSignalsAccelerationIndex", std::to_string(turnSignalsAccelerationIndex)});
 	results->push_back(StringPairSettingDBRow{"JumpyVehIndex", std::to_string(JumpyVehIndex)});
+	results->push_back(StringPairSettingDBRow{"HeavyVehIndex", std::to_string(HeavyVehIndex)});
 	results->push_back(StringPairSettingDBRow{"speedLimiterIndex", std::to_string(speedLimiterIndex)});
 	results->push_back(StringPairSettingDBRow{"speedCityLimiterIndex", std::to_string(speedCityLimiterIndex)});
 	results->push_back(StringPairSettingDBRow{"speedCountryLimiterIndex", std::to_string(speedCountryLimiterIndex)});
@@ -4496,6 +4500,9 @@ void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settin
 		}
 		else if (setting.name.compare("JumpyVehIndex") == 0) {
 			JumpyVehIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("HeavyVehIndex") == 0) {
+			HeavyVehIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("speedLimiterIndex") == 0){
 			speedLimiterIndex = stoi(setting.value);
@@ -4720,6 +4727,11 @@ void onchange_veh_turn_signals_acceleration_index(int value, SelectFromListMenuI
 void onchange_veh_jumpy_index(int value, SelectFromListMenuItem* source) {
 	JumpyVehIndex = value;
 	JumpyVehChanged = true;
+}
+
+void onchange_heavy_veh_index(int value, SelectFromListMenuItem* source) {
+	HeavyVehIndex = value;
+	HeavyVehChanged = true;
 }
 
 void onchange_veh_lightsOff_index(int value, SelectFromListMenuItem* source){
