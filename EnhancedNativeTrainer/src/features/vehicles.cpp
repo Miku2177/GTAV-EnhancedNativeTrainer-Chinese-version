@@ -66,7 +66,6 @@ bool LightAlwaysOff = true;
 
 bool alarmischarged = false;
 bool alarm_enabled = false;
-//Vehicle alrarmchargedvehicle;
 
 int turn_angle = 0;
 
@@ -81,7 +80,6 @@ bool featureVehSteerAngle = false;
 bool featureRollWhenShoot = false;
 bool featureTractionControl = false;
 bool featureSticktoground = false;
-//bool featureHeavyVehicle = false;
 bool featureEngineRunning = false;
 bool featureNoVehFlip = false;
 bool featureAutoToggleLights = false;
@@ -3647,7 +3645,6 @@ void reset_vehicle_globals() {
 		featureRollWhenShoot =
 		featureTractionControl =
 		featureSticktoground =
-		//featureHeavyVehicle =
 		featureEngineRunning =
 		featureNoVehFlip =
 		featureAutoToggleLights =
@@ -3927,7 +3924,6 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureRollWhenShoot", &featureRollWhenShoot});
 	results->push_back(FeatureEnabledLocalDefinition{"featureTractionControl", &featureTractionControl});
 	results->push_back(FeatureEnabledLocalDefinition{"featureSticktoground", &featureSticktoground});
-	//results->push_back(FeatureEnabledLocalDefinition{"featureHeavyVehicle", &featureHeavyVehicle});
 	results->push_back(FeatureEnabledLocalDefinition{"featureEngineRunning", &featureEngineRunning});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoVehFlip", &featureNoVehFlip});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAutoToggleLights", &featureAutoToggleLights});

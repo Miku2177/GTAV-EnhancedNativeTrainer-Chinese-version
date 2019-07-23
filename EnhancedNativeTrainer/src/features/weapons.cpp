@@ -109,8 +109,8 @@ bool CopCurrArmedChanged = true;
 
 // Vehicle Weapon
 const std::vector<std::string> WEAPONS_VEHICLE_CAPTIONS{ "OFF", "\"WEAPON_FLAREGUN\"", "\"WEAPON_DBSHOTGUN\"", "\"WEAPON_GRENADELAUNCHER\"", "\"WEAPON_RPG\"", "\"WEAPON_RAILGUN\"", "\"WEAPON_FIREWORK\"",
-"\"WEAPON_RAYPISTOL\"", "\"WEAPON_GRENADE\"", "\"WEAPON_MOLOTOV\"" };
-const int WEAPONS_VEHICLE_VALUES[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+"\"WEAPON_RAYPISTOL\"", "\"WEAPON_GRENADE\"", "\"WEAPON_MOLOTOV\"", "\"VEHICLE_WEAPON_TANK\"", "\"VEHICLE_WEAPON_PLAYER_BULLET\"", "\"VEHICLE_WEAPON_PLAYER_LAZER\"", "\"VEHICLE_WEAPON_TURRET_VALKYRIE\"" };
+const int WEAPONS_VEHICLE_VALUES[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 };
 int VehCurrWeaponIndex = 0;
 bool VehCurrWeaponChanged = true;
 
