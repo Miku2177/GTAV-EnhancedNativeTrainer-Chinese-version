@@ -46,7 +46,6 @@ bool featureRestrictedZones = true;
 bool featureWorldMoonGravity = false;
 bool featureWorldNoPeds = false;
 bool featureWorldNoTraffic = false;
-bool featureNoTrains = false;
 bool featureNoPlanesHelis = false;
 bool featureNoAnimals = false;
 
@@ -412,13 +411,7 @@ void process_world_menu()
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "No Trains";
-	togItem->value = 1;
-	togItem->toggleValue = &featureNoTrains;
-	menuItems.push_back(togItem);
-
-	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "No Planes/Helis";
+	togItem->caption = "No Planes/Helicopters";
 	togItem->value = 1;
 	togItem->toggleValue = &featureNoPlanesHelis;
 	menuItems.push_back(togItem);
@@ -624,7 +617,6 @@ void reset_world_globals()
 	//featureLightsBlackout = false;
 	featureWorldNoPeds = false;
 	featureWorldNoTraffic = false;
-	featureNoTrains = false;
 	featureNoPlanesHelis = false;
 	featureNoAnimals = false;
 
@@ -1349,10 +1341,9 @@ void update_world_features()
 		STREAMING::SET_VEHICLE_POPULATION_BUDGET(0);
 	}
 
-	if (featureNoTrains) VEHICLE::DELETE_ALL_TRAINS();
-
 	if (featureNoPlanesHelis) {
 		AI::SET_SCENARIO_GROUP_ENABLED("ALAMO_PLANES", 0);
+		AI::SET_SCENARIO_GROUP_ENABLED("ARMY_HELI", 0);
 		AI::SET_SCENARIO_GROUP_ENABLED("GRAPESEED_PLANES", 0);
 		AI::SET_SCENARIO_GROUP_ENABLED("Grapeseed_Planes", 0);
 		AI::SET_SCENARIO_GROUP_ENABLED("LSA_Planes", 0);
@@ -1376,12 +1367,50 @@ void update_world_features()
 		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("FROGGER2"), 1);
 		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("SWIFT"), 1);
 		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("BLIMP"), 1);
+		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("BLIMP2"), 1);
 		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("BLIMP3"), 1);
+		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("FROGGER"), 1);
+		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("CARGOBOB"), 1);
+		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("CARGOBOB2"), 1);
+		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("CARGOBOB3"), 1);
 	}
 	
 	if (featureNoAnimals) {
 		AI::SET_SCENARIO_TYPE_ENABLED("WORLD_MOUNTAIN_LION_REST", 0);
 		AI::SET_SCENARIO_TYPE_ENABLED("WORLD_MOUNTAIN_LION_WANDER", 0);
+		AI::SET_SCENARIO_GROUP_ENABLED("ng_birds", 0);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_boar"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_cat_01"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_chimp"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_cormorant"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_cow"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_coyote"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_crow"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_deer"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_dolphin"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_fish"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_shepherd"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_whalegrey"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_sharkhammer"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_chickenhawk"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_hen"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_humpback"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_husky"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_killerwhale"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_mtlion"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_pig"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_pigeon"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_poodle"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_pug"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_rabbit_01"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_rat"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_retriever"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_rhesus"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_rottweiler"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_seagull"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_stingray"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_sharktiger"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_westy"), 1);
 	}
 
 	if (!featureWorldRandomTrains)
@@ -1465,7 +1494,6 @@ void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* r
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoAmbulance", &featureWorldNoAmbulance });
 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoTraffic", &featureWorldNoTraffic, &featureWorldNoTrafficUpdated });
-	results->push_back(FeatureEnabledLocalDefinition{ "featureNoTrains", &featureNoTrains });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNoPlanesHelis", &featureNoPlanesHelis });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNoAnimals", &featureNoAnimals });
 
