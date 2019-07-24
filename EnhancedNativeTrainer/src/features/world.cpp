@@ -417,7 +417,7 @@ void process_world_menu()
 	togItem->toggleValue = &featureNoTrains;
 	menuItems.push_back(togItem);
 
-	/*togItem = new ToggleMenuItem<int>();
+	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "No Planes/Helis";
 	togItem->value = 1;
 	togItem->toggleValue = &featureNoPlanesHelis;
@@ -427,7 +427,7 @@ void process_world_menu()
 	togItem->caption = "No Animals";
 	togItem->value = 1;
 	togItem->toggleValue = &featureNoAnimals;
-	menuItems.push_back(togItem);*/
+	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "No Fire Department Dispatch";
@@ -1351,7 +1351,7 @@ void update_world_features()
 
 	if (featureNoTrains) VEHICLE::DELETE_ALL_TRAINS();
 
-	/*if (featureNoPlanesHelis) {
+	if (featureNoPlanesHelis) {
 		AI::SET_SCENARIO_GROUP_ENABLED("ALAMO_PLANES", 0);
 		AI::SET_SCENARIO_GROUP_ENABLED("GRAPESEED_PLANES", 0);
 		AI::SET_SCENARIO_GROUP_ENABLED("Grapeseed_Planes", 0);
@@ -1382,7 +1382,7 @@ void update_world_features()
 	if (featureNoAnimals) {
 		AI::SET_SCENARIO_TYPE_ENABLED("WORLD_MOUNTAIN_LION_REST", 0);
 		AI::SET_SCENARIO_TYPE_ENABLED("WORLD_MOUNTAIN_LION_WANDER", 0);
-	}*/
+	}
 
 	if (!featureWorldRandomTrains)
 	{
