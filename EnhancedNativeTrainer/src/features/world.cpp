@@ -46,6 +46,9 @@ bool featureRestrictedZones = true;
 bool featureWorldMoonGravity = false;
 bool featureWorldNoPeds = false;
 bool featureWorldNoTraffic = false;
+bool featureNoTrains = false;
+bool featureNoPlanesHelis = false;
+bool featureNoAnimals = false;
 
 bool featureWorldNoFireTruck = false;
 bool featureWorldNoFireTruckUpdated = false;
@@ -409,6 +412,24 @@ void process_world_menu()
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
+	togItem->caption = "No Trains";
+	togItem->value = 1;
+	togItem->toggleValue = &featureNoTrains;
+	menuItems.push_back(togItem);
+
+	/*togItem = new ToggleMenuItem<int>();
+	togItem->caption = "No Planes/Helis";
+	togItem->value = 1;
+	togItem->toggleValue = &featureNoPlanesHelis;
+	menuItems.push_back(togItem);
+
+	togItem = new ToggleMenuItem<int>();
+	togItem->caption = "No Animals";
+	togItem->value = 1;
+	togItem->toggleValue = &featureNoAnimals;
+	menuItems.push_back(togItem);*/
+
+	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "No Fire Department Dispatch";
 	togItem->value = 1;
 	togItem->toggleValue = &featureWorldNoFireTruck;
@@ -603,6 +624,9 @@ void reset_world_globals()
 	//featureLightsBlackout = false;
 	featureWorldNoPeds = false;
 	featureWorldNoTraffic = false;
+	featureNoTrains = false;
+	featureNoPlanesHelis = false;
+	featureNoAnimals = false;
 
 	featureWorldNoFireTruck = false;
 	featureWorldNoAmbulance = false;
@@ -1325,6 +1349,41 @@ void update_world_features()
 		STREAMING::SET_VEHICLE_POPULATION_BUDGET(0);
 	}
 
+	if (featureNoTrains) VEHICLE::DELETE_ALL_TRAINS();
+
+	/*if (featureNoPlanesHelis) {
+		AI::SET_SCENARIO_GROUP_ENABLED("ALAMO_PLANES", 0);
+		AI::SET_SCENARIO_GROUP_ENABLED("GRAPESEED_PLANES", 0);
+		AI::SET_SCENARIO_GROUP_ENABLED("Grapeseed_Planes", 0);
+		AI::SET_SCENARIO_GROUP_ENABLED("LSA_Planes", 0);
+		AI::SET_SCENARIO_GROUP_ENABLED("SANDY_PLANES", 0);
+		AI::SET_SCENARIO_GROUP_ENABLED("ng_planes", 0);
+		AI::SET_SCENARIO_TYPE_ENABLED("WORLD_VEHICLE_MILITARY_PLANES_SMALL", 0);
+		AI::SET_SCENARIO_TYPE_ENABLED("WORLD_VEHICLE_MILITARY_PLANES_BIG", 0);
+		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("SHAMAL"), 1);
+		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("LUXOR"), 1);
+		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("LUXOR2"), 1);
+		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("JET"), 1);
+		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("LAZER"), 1);
+		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("TITAN"), 1);
+		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("BARRACKS"), 1);
+		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("BARRACKS2"), 1);
+		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("CRUSADER"), 1);
+		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("RHINO"), 1);
+		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("AIRTUG"), 1);
+		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("RIPLEY"), 1);
+		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("POLMAV"), 1);
+		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("FROGGER2"), 1);
+		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("SWIFT"), 1);
+		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("BLIMP"), 1);
+		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("BLIMP3"), 1);
+	}
+	
+	if (featureNoAnimals) {
+		AI::SET_SCENARIO_TYPE_ENABLED("WORLD_MOUNTAIN_LION_REST", 0);
+		AI::SET_SCENARIO_TYPE_ENABLED("WORLD_MOUNTAIN_LION_WANDER", 0);
+	}*/
+
 	if (!featureWorldRandomTrains)
 	{
 		VEHICLE::DELETE_ALL_TRAINS();
@@ -1406,6 +1465,10 @@ void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* r
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoAmbulance", &featureWorldNoAmbulance });
 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoTraffic", &featureWorldNoTraffic, &featureWorldNoTrafficUpdated });
+	results->push_back(FeatureEnabledLocalDefinition{ "featureNoTrains", &featureNoTrains });
+	results->push_back(FeatureEnabledLocalDefinition{ "featureNoPlanesHelis", &featureNoPlanesHelis });
+	results->push_back(FeatureEnabledLocalDefinition{ "featureNoAnimals", &featureNoAnimals });
+
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNoMinimapRot", &featureNoMinimapRot });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNoWaypoint", &featureNoWaypoint });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNoPoliceBlips", &featureNoPoliceBlips }); 
