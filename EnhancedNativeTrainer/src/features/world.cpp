@@ -142,6 +142,14 @@ const int WORLD_LIGHTNING_INTENSITY_VALUES[] = { -2, 3, -1 };
 int featureLightIntensityIndex = 0;
 bool featureLightIntensityChanged = true;
 
+// Vehicles & Peds Density
+const std::vector<std::string> WORLD_VEHICLESPEDS_DENSITY_CAPTIONS{ "OFF", "5%", "20%", "40%", "60%", "80%" };
+const float WORLD_VEHICLESPEDS_DENSITY_VALUES[] = { 0, 0.05, 0.2, 0.4, 0.6, 0.8 };
+int featureVehiclesDensity = 0;
+bool featureVehiclesDensityChanged = true;
+int featurePedsDensity = 0;
+bool featurePedsDensityChanged = true;
+
 bool onconfirm_weather_menu(MenuItem<std::string> choice)
 {
 	std::stringstream ss; ss << "Weather Frozen at: " << lastWeatherName;
@@ -327,6 +335,16 @@ void onchange_lightning_intensity_index(int value, SelectFromListMenuItem* sourc
 	featureLightIntensityChanged = true;
 }
 
+void onchange_world_vehicles_density_index(int value, SelectFromListMenuItem* source) {
+	featureVehiclesDensity = value;
+	featureVehiclesDensityChanged = true;
+}
+
+void onchange_world_peds_density_index(int value, SelectFromListMenuItem* source) {
+	featurePedsDensity = value;
+	featurePedsDensityChanged = true;
+}
+
 void onchange_world_wind_strength_index(int value, SelectFromListMenuItem* source){
 	WindStrengthIndex = value;
 	WindStrengthChanged = true;
@@ -409,6 +427,18 @@ void process_world_menu()
 	togItem->toggleValue = &featureWorldNoTraffic;
 	togItem->toggleValueUpdated = &featureWorldNoTrafficUpdated;
 	menuItems.push_back(togItem);
+
+	listItem = new SelectFromListMenuItem(WORLD_VEHICLESPEDS_DENSITY_CAPTIONS, onchange_world_vehicles_density_index);
+	listItem->wrap = false;
+	listItem->caption = "Vehicles Density";
+	listItem->value = featureVehiclesDensity;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(WORLD_VEHICLESPEDS_DENSITY_CAPTIONS, onchange_world_peds_density_index);
+	listItem->wrap = false;
+	listItem->caption = "Peds Density";
+	listItem->value = featurePedsDensity;
+	menuItems.push_back(listItem);
 
 	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "No Planes/Helicopters";
@@ -600,6 +630,10 @@ void reset_world_globals()
 	RadarMapIndex = 0;
 	WorldWavesIndex = 0;
 	featureLightIntensityIndex = 0;
+
+	featureVehiclesDensity = 0;
+	featurePedsDensity = 0;
+
 	RadarReducedGripSnowingIndex = 0;
 	RadarReducedGripRainingIndex = 0;
 	NoPedsGravityIndex = 0;
@@ -1341,6 +1375,12 @@ void update_world_features()
 		STREAMING::SET_VEHICLE_POPULATION_BUDGET(0);
 	}
 
+	// Vehicles Density
+	if (WORLD_VEHICLESPEDS_DENSITY_VALUES[featureVehiclesDensity] > 0) VEHICLE::SET_VEHICLE_DENSITY_MULTIPLIER_THIS_FRAME(WORLD_VEHICLESPEDS_DENSITY_VALUES[featureVehiclesDensity]);
+
+	// Peds Density
+	if (WORLD_VEHICLESPEDS_DENSITY_VALUES[featurePedsDensity] > 0) PED::SET_PED_DENSITY_MULTIPLIER_THIS_FRAME(WORLD_VEHICLESPEDS_DENSITY_VALUES[featurePedsDensity]);
+	
 	if (featureNoPlanesHelis) {
 		AI::SET_SCENARIO_GROUP_ENABLED("ALAMO_PLANES", 0);
 		AI::SET_SCENARIO_GROUP_ENABLED("ARMY_HELI", 0);
@@ -1526,6 +1566,10 @@ void add_world_feature_enablements2(std::vector<StringPairSettingDBRow>* results
 	results->push_back(StringPairSettingDBRow{ "RadarMapIndex", std::to_string(RadarMapIndex) });
 	results->push_back(StringPairSettingDBRow{ "WorldWavesIndex", std::to_string(WorldWavesIndex) });
 	results->push_back(StringPairSettingDBRow{ "featureLightIntensityIndex", std::to_string(featureLightIntensityIndex) });
+
+	results->push_back(StringPairSettingDBRow{ "featureVehiclesDensity", std::to_string(featureVehiclesDensity) });
+	results->push_back(StringPairSettingDBRow{ "featurePedsDensity", std::to_string(featurePedsDensity) });
+
 	results->push_back(StringPairSettingDBRow{ "WindStrengthIndex", std::to_string(WindStrengthIndex) });
 	results->push_back(StringPairSettingDBRow{ "DamagedVehiclesIndex", std::to_string(DamagedVehiclesIndex) });
 	results->push_back(StringPairSettingDBRow{ "NPCVehicleSpeedIndex", std::to_string(NPCVehicleSpeedIndex) });
@@ -1565,6 +1609,12 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 		}
 		else if (setting.name.compare("featureLightIntensityIndex") == 0) {
 			featureLightIntensityIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("featureVehiclesDensity") == 0) {
+			featureVehiclesDensity = stoi(setting.value);
+		}
+		else if (setting.name.compare("featurePedsDensity") == 0) {
+			featurePedsDensity = stoi(setting.value);
 		}
 		else if (setting.name.compare("WindStrengthIndex") == 0){
 			WindStrengthIndex = stoi(setting.value);
