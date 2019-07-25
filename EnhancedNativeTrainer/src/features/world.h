@@ -48,6 +48,10 @@ void onchange_world_waves_index(int value, SelectFromListMenuItem* source);
 
 void onchange_lightning_intensity_index(int value, SelectFromListMenuItem* source);
 
+void onchange_world_vehicles_density_index(int value, SelectFromListMenuItem* source);
+
+void onchange_world_peds_density_index(int value, SelectFromListMenuItem* source);
+
 void onchange_world_reducedgrip_snowing_index(int value, SelectFromListMenuItem* source);
 
 void onchange_world_reducedgrip_raining_index(int value, SelectFromListMenuItem* source);
