@@ -1209,7 +1209,7 @@ void update_world_features()
 					PED::SET_PED_RAGDOLL_FORCE_FALL(bus_ped[i]);
 					PED::SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(bus_ped[i], true);
 					PED::SET_PED_RAGDOLL_ON_COLLISION(bus_ped[i], true);
-					if (!PED::IS_PED_RAGDOLL(bus_ped[i])) PED::SET_PED_TO_RAGDOLL(bus_ped[i], 1, 1, 1, 1, 1, 1);
+					if (!PED::IS_PED_RAGDOLL(bus_ped[i])) PED::SET_PED_TO_RAGDOLL(bus_ped[i], 1500, 1500, 1, true, true, false); // PED::SET_PED_TO_RAGDOLL(bus_ped[i], 1, 1, 1, 1, 1, 1);
 					if (!STREAMING::HAS_ANIM_DICT_LOADED("dead@fall")) STREAMING::REQUEST_ANIM_DICT("dead@fall");
 					while (!STREAMING::HAS_ANIM_DICT_LOADED("dead@fall")) WAIT(0);
 					if (!ENTITY::IS_ENTITY_PLAYING_ANIM(bus_ped[i], "dead@fall", "dead_fall_down", 3) && !PED::IS_PED_RAGDOLL(bus_ped[i]) && PED::GET_PED_TYPE(bus_ped[i]) != 6 && !ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(bus_ped[i])) {
@@ -1217,8 +1217,12 @@ void update_world_features()
 						PED::SET_PED_TO_RAGDOLL(bus_ped[i], 1, 1, 1, 1, 1, 1);
 					}
 				}
-				if (PED::IS_PED_SHOOTING(bus_ped[i])) ENTITY::APPLY_FORCE_TO_ENTITY(bus_ped[i], 1, v_x, v_y, v_z, 0, 0, 0, false, false, true, true, false, true);
+				if (PED::IS_PED_SHOOTING(bus_ped[i])) {
+					PED::SET_PED_TO_RAGDOLL(bus_ped[i], 1500, 1500, 1, true, true, false);
+					ENTITY::APPLY_FORCE_TO_ENTITY(bus_ped[i], 1, v_x, v_y, v_z, 0, 0, 0, false, false, true, true, false, true);
+				}
 				if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(bus_ped[i], PLAYER::PLAYER_PED_ID(), 1)) {
+					PED::SET_PED_TO_RAGDOLL(bus_ped[i], 1500, 1500, 1, true, true, false);
 					ENTITY::APPLY_FORCE_TO_ENTITY(bus_ped[i], 1, v_x / 10, v_y / 10, v_z / 10, 0, 0, 0, false, false, true, true, false, true);
 				}
 				ENTITY::SET_ENTITY_HAS_GRAVITY(bus_ped[i], false);
