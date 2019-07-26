@@ -254,6 +254,8 @@ void onchange_chance_attacking_you_index(int value, SelectFromListMenuItem* sour
 
 void onchange_power_punch_index(int value, SelectFromListMenuItem* source);
 
+void onchange_peds_power_punch_index(int value, SelectFromListMenuItem* source);
+
 void onchange_sniper_vision_modifier(int value, SelectFromListMenuItem* source);
 
 void onchange_vehicle_weapon_modifier(int value, SelectFromListMenuItem* source);

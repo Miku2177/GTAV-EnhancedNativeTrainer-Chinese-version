@@ -132,6 +132,12 @@ const int WEAPONS_POWERPUNCH_VALUES[] = { 1, 3, 5, 10, 50, 55 };
 int PowerPunchIndex = 2;
 bool PowerPunchChanged = true;
 
+// Including Peds
+const std::vector<std::string> PEDS_POWERPUNCH_CAPTIONS{ "OFF", "Both You And Peds", "Peds Only" };
+const int PEDS_POWERPUNCH_VALUES[] = { 0, 1, 2 };
+int PedsPowerPunchIndex = 0;
+bool PedsPowerPunchChanged = true;
+
 /* Begin Gravity Gun related code */
 
 // New approach to getting Grav gun entity coords -- from ScripthookV.Net
@@ -731,6 +737,11 @@ void onchange_power_punch_index(int value, SelectFromListMenuItem* source) {
 	PowerPunchChanged = true;
 }
 
+void onchange_peds_power_punch_index(int value, SelectFromListMenuItem* source) {
+	PedsPowerPunchIndex = value;
+	PedsPowerPunchChanged = true;
+}
+
 void onchange_vehicle_weapon_modifier(int value, SelectFromListMenuItem* source) {
 	VehCurrWeaponIndex = value;
 	VehCurrWeaponChanged = true;
@@ -907,6 +918,12 @@ void process_powerpunch_menu() {
 	item->value = i++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
+
+	listItem = new SelectFromListMenuItem(PEDS_POWERPUNCH_CAPTIONS, onchange_peds_power_punch_index);
+	listItem->wrap = false;
+	listItem->caption = "Including Peds";
+	listItem->value = PedsPowerPunchIndex;
+	menuItems.push_back(listItem);
 
 	draw_generic_menu<int>(menuItems, &activeLineIndexPowerPunchWeapons, caption, onconfirm_powerpunch_menu, NULL, NULL);
 }
@@ -1276,6 +1293,7 @@ void reset_weapon_globals(){
 	ChanceAttackingYouIndex = 1;
 	SniperVisionIndex = 0;
 	PowerPunchIndex = 2;
+	PedsPowerPunchIndex = 0;
 
 	activeLineIndexCopArmed = 0;
 	activeLineIndexPedAgainstWeapons = 0;
@@ -1542,17 +1560,15 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		Ped playerPed = PLAYER::PLAYER_PED_ID();
 		Vector3 CamRot = CAM::GET_GAMEPLAY_CAM_ROT(2);
 		int p_force = -1; 
+
+		const int arrSize_punch = 1024;
+		Ped surr_p_peds[arrSize_punch];
+
 		if (WEAPONS_POWERPUNCH_VALUES[PowerPunchIndex] != 55) p_force = WEAPONS_POWERPUNCH_VALUES[PowerPunchIndex];
 		if (WEAPONS_POWERPUNCH_VALUES[PowerPunchIndex] == 55 && !lastPowerWeapon.empty()) {
 			std::string::size_type sz;
 			p_force = std::stoi(lastPowerWeapon, &sz);
 		}
-		//if (WEAPONS_POWERPUNCH_VALUES[PowerPunchIndex] == 55 && result_p.empty()) p_force = 0;
-		float rad = 2 * 3.14 * (CamRot.z / 360);
-		//float rad = (degrees * pi) / 180 ;
-		float v_x = -(sin(rad) * p_force * 10);
-		float v_y = (cos(rad) * p_force * 10);
-		float v_z = p_force * (CamRot.x * 0.2);
 		
 		if (CONTROLS::IS_CONTROL_PRESSED(2, 24) || CONTROLS::IS_CONTROL_PRESSED(2, 140) || CONTROLS::IS_CONTROL_PRESSED(2, 141)) force_nearest_ped = true;
 		
@@ -1562,13 +1578,22 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		if (featurePunchMeleeWeapons && !WEAPON::IS_PED_ARMED(playerPed, 6) && WEAPON::IS_PED_ARMED(playerPed, 7)) cur_weapon_e = true;
 		if (featurePunchFireWeapons && WEAPON::IS_PED_ARMED(playerPed, 7) && WEAPON::IS_PED_ARMED(playerPed, 6)) cur_weapon_e = true;
 
-		if (force_nearest_ped == true && cur_weapon_e == true) {
+		if (PEDS_POWERPUNCH_VALUES[PedsPowerPunchIndex] > 0) {
+			int count_surr_p_peds = worldGetAllPeds(surr_p_peds, arrSize_punch);
+			for (int i = 0; i < count_surr_p_peds; i++) {
+				if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(playerPed, surr_p_peds[i], 1)) {
+					temp_nearest_ped = playerPed;
+					CamRot = ENTITY::GET_ENTITY_ROTATION(surr_p_peds[i], 2);
+					force_nearest_ped = false;
+				}
+			}
+		}
+
+		if (force_nearest_ped == true && cur_weapon_e == true && PEDS_POWERPUNCH_VALUES[PedsPowerPunchIndex] < 2) {
 			PLAYER::SET_PLAYER_WEAPON_DAMAGE_MODIFIER(player, 1000.0);
 			PLAYER::SET_PLAYER_MELEE_WEAPON_DAMAGE_MODIFIER(player, 1000.0, 1);
 			PLAYER::SET_PLAYER_VEHICLE_DAMAGE_MODIFIER(playerPed, 1000.0);
 
-			const int arrSize_punch = 1024;
-			Ped surr_p_peds[arrSize_punch];
 			int count_surr_p_peds = worldGetAllPeds(surr_p_peds, arrSize_punch);
 			for (int i = 0; i < count_surr_p_peds; i++) {
 				if (PED::GET_PED_TYPE(surr_p_peds[i]) != 0 && PED::GET_PED_TYPE(surr_p_peds[i]) != 1 && PED::GET_PED_TYPE(surr_p_peds[i]) != 2 && PED::GET_PED_TYPE(surr_p_peds[i]) != 3) {
@@ -1595,6 +1620,12 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 				}
 			} // end of int (vehicles)
 		}
+
+		float rad = 2 * 3.14 * (CamRot.z / 360);
+		float v_x = -(sin(rad) * p_force * 10);
+		float v_y = (cos(rad) * p_force * 10);
+		float v_z = p_force * (CamRot.x * 0.2);
+
 		if (temp_nearest_ped != -1) { //  && ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(temp_nearest_ped, playerPed, 1)
 			AI::CLEAR_PED_TASKS_IMMEDIATELY(temp_nearest_ped);
 			AI::CLEAR_PED_SECONDARY_TASK(temp_nearest_ped);
@@ -1602,6 +1633,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			PED::SET_PED_CAN_RAGDOLL(temp_nearest_ped, true);
 			PED::SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(temp_nearest_ped, true);
 			PED::SET_PED_RAGDOLL_FORCE_FALL(temp_nearest_ped);
+			PED::SET_PED_TO_RAGDOLL(temp_nearest_ped, 1500, 1500, 1, true, true, false);
 			ENTITY::APPLY_FORCE_TO_ENTITY(temp_nearest_ped, 1, v_x, v_y, v_z, 0, 0, 0, true, false, true, true, true, true);
 			ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(temp_nearest_ped);
 			temp_nearest_ped = -1;
@@ -2159,6 +2191,7 @@ void add_weapon_feature_enablements2(std::vector<StringPairSettingDBRow>* result
 	results->push_back(StringPairSettingDBRow{ "ChanceAttackingYouIndex", std::to_string(ChanceAttackingYouIndex) });
 	results->push_back(StringPairSettingDBRow{ "SniperVisionIndex", std::to_string(SniperVisionIndex) });
 	results->push_back(StringPairSettingDBRow{ "PowerPunchIndex", std::to_string(PowerPunchIndex) });
+	results->push_back(StringPairSettingDBRow{ "PedsPowerPunchIndex", std::to_string(PedsPowerPunchIndex) });
 }
 
 void onchange_weap_dmg_modifier(int value, SelectFromListMenuItem* source){
@@ -2197,6 +2230,9 @@ void handle_generic_settings_weapons(std::vector<StringPairSettingDBRow>* settin
 		}
 		else if (setting.name.compare("PowerPunchIndex") == 0) {
 			PowerPunchIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("PedsPowerPunchIndex") == 0) {
+			PedsPowerPunchIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("lastCustomWeapon") == 0) {
 			lastCustomWeapon = setting.value;
