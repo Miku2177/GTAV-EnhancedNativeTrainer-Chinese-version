@@ -54,6 +54,7 @@ bool featureWeaponVehRockets = false;
 bool featurePunchFists = true;
 bool featurePunchMeleeWeapons = false;
 bool featurePunchFireWeapons = false;
+bool featurepowerpunchpeds = false;
 
 bool featureCopArmedWith = false;
 bool featurePlayerMelee = true;
@@ -925,6 +926,12 @@ void process_powerpunch_menu() {
 	listItem->value = PedsPowerPunchIndex;
 	menuItems.push_back(listItem);
 
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Peds Can Power Punch Peds";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featurepowerpunchpeds;
+	menuItems.push_back(toggleItem);
+
 	draw_generic_menu<int>(menuItems, &activeLineIndexPowerPunchWeapons, caption, onconfirm_powerpunch_menu, NULL, NULL);
 }
 
@@ -1332,6 +1339,7 @@ void reset_weapon_globals(){
 		featureSwitchWeaponIfDanger =
 		featurePunchMeleeWeapons =
 		featurePunchFireWeapons =
+		featurepowerpunchpeds =
 		featureGravityGun = false;
 }
 
@@ -1578,13 +1586,22 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		if (featurePunchMeleeWeapons && !WEAPON::IS_PED_ARMED(playerPed, 6) && WEAPON::IS_PED_ARMED(playerPed, 7)) cur_weapon_e = true;
 		if (featurePunchFireWeapons && WEAPON::IS_PED_ARMED(playerPed, 7) && WEAPON::IS_PED_ARMED(playerPed, 6)) cur_weapon_e = true;
 
-		if (PEDS_POWERPUNCH_VALUES[PedsPowerPunchIndex] > 0) {
+		if (PEDS_POWERPUNCH_VALUES[PedsPowerPunchIndex] > 0) { // including peds
 			int count_surr_p_peds = worldGetAllPeds(surr_p_peds, arrSize_punch);
 			for (int i = 0; i < count_surr_p_peds; i++) {
 				if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(playerPed, surr_p_peds[i], 1)) {
 					temp_nearest_ped = playerPed;
 					CamRot = ENTITY::GET_ENTITY_ROTATION(surr_p_peds[i], 2);
 					force_nearest_ped = false;
+				}
+				if (featurepowerpunchpeds) {
+					for (int j = 0; j < count_surr_p_peds; j++) {
+						if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(surr_p_peds[i], surr_p_peds[j], 1)) {
+							temp_nearest_ped = surr_p_peds[i];
+							CamRot = ENTITY::GET_ENTITY_ROTATION(surr_p_peds[j], 2);
+							force_nearest_ped = false;
+						}
+					}
 				}
 			}
 		}
@@ -1635,6 +1652,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			PED::SET_PED_RAGDOLL_FORCE_FALL(temp_nearest_ped);
 			PED::SET_PED_TO_RAGDOLL(temp_nearest_ped, 1500, 1500, 1, true, true, false);
 			ENTITY::APPLY_FORCE_TO_ENTITY(temp_nearest_ped, 1, v_x, v_y, v_z, 0, 0, 0, true, false, true, true, true, true);
+			PED::CLEAR_PED_LAST_DAMAGE_BONE(temp_nearest_ped);
 			ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(temp_nearest_ped);
 			temp_nearest_ped = -1;
 		}
@@ -2174,6 +2192,7 @@ void add_weapon_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePunchFists", &featurePunchFists});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePunchMeleeWeapons", &featurePunchMeleeWeapons});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePunchFireWeapons", &featurePunchFireWeapons});
+	results->push_back(FeatureEnabledLocalDefinition{"featurepowerpunchpeds", &featurepowerpunchpeds});
 	results->push_back(FeatureEnabledLocalDefinition{"featureDriverAgainst", &featureDriverAgainst});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePoliceAgainst", &featurePoliceAgainst});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAimAtDriver", &featureAimAtDriver});
