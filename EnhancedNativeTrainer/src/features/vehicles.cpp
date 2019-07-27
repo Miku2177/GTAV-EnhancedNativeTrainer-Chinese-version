@@ -2167,6 +2167,8 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 		case VER_1_0_1734_0_STEAM:
 		case VER_1_0_1734_0_NOSTEAM:
+		case VER_1_0_1737_0_STEAM:
+		case VER_1_0_1737_0_NOSTEAM:
 			*getGlobalPtr(4267883) = 1;
 			break;
 	}
