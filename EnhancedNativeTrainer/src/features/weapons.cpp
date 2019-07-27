@@ -1581,6 +1581,8 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		if (CONTROLS::IS_CONTROL_PRESSED(2, 24) || CONTROLS::IS_CONTROL_PRESSED(2, 140) || CONTROLS::IS_CONTROL_PRESSED(2, 141)) force_nearest_ped = true;
 		
 		bool cur_weapon_e = false;
+		bool cur_weapon_peds = false;
+		bool cur_weapon_e_peds = false;
 		temp_nearest_ped = -1;
 		if (featurePunchFists && !WEAPON::IS_PED_ARMED(playerPed, 7)) cur_weapon_e = true;
 		if (featurePunchMeleeWeapons && !WEAPON::IS_PED_ARMED(playerPed, 6) && WEAPON::IS_PED_ARMED(playerPed, 7)) cur_weapon_e = true;
@@ -1590,16 +1592,26 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			int count_surr_p_peds = worldGetAllPeds(surr_p_peds, arrSize_punch);
 			for (int i = 0; i < count_surr_p_peds; i++) {
 				if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(playerPed, surr_p_peds[i], 1)) {
-					temp_nearest_ped = playerPed;
-					CamRot = ENTITY::GET_ENTITY_ROTATION(surr_p_peds[i], 2);
-					force_nearest_ped = false;
+					if (featurePunchFists && !WEAPON::IS_PED_ARMED(surr_p_peds[i], 7)) cur_weapon_peds = true;
+					if (featurePunchMeleeWeapons && !WEAPON::IS_PED_ARMED(surr_p_peds[i], 6) && WEAPON::IS_PED_ARMED(surr_p_peds[i], 7)) cur_weapon_peds = true;
+					if (featurePunchFireWeapons && WEAPON::IS_PED_ARMED(surr_p_peds[i], 7) && WEAPON::IS_PED_ARMED(surr_p_peds[i], 6)) cur_weapon_peds = true;
+					if (cur_weapon_peds == true) {
+						temp_nearest_ped = playerPed;
+						CamRot = ENTITY::GET_ENTITY_ROTATION(surr_p_peds[i], 2);
+						force_nearest_ped = false;
+					}
 				}
 				if (featurepowerpunchpeds) {
 					for (int j = 0; j < count_surr_p_peds; j++) {
 						if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(surr_p_peds[i], surr_p_peds[j], 1)) {
-							temp_nearest_ped = surr_p_peds[i];
-							CamRot = ENTITY::GET_ENTITY_ROTATION(surr_p_peds[j], 2);
-							force_nearest_ped = false;
+							if (featurePunchFists && !WEAPON::IS_PED_ARMED(surr_p_peds[j], 7)) cur_weapon_e_peds = true;
+							if (featurePunchMeleeWeapons && !WEAPON::IS_PED_ARMED(surr_p_peds[j], 6) && WEAPON::IS_PED_ARMED(surr_p_peds[j], 7)) cur_weapon_e_peds = true;
+							if (featurePunchFireWeapons && WEAPON::IS_PED_ARMED(surr_p_peds[j], 7) && WEAPON::IS_PED_ARMED(surr_p_peds[j], 6)) cur_weapon_e_peds = true;
+							if (cur_weapon_e_peds == true) {
+								temp_nearest_ped = surr_p_peds[i];
+								CamRot = ENTITY::GET_ENTITY_ROTATION(surr_p_peds[j], 2);
+								force_nearest_ped = false;
+							}
 						}
 					}
 				}
