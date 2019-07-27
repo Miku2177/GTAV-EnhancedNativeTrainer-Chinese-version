@@ -62,6 +62,8 @@ void onchange_world_damaged_vehicles_index(int value, SelectFromListMenuItem* so
 
 void onchange_world_no_peds_gravity_index(int value, SelectFromListMenuItem* source);
 
+void onchange_peds_health_index(int value, SelectFromListMenuItem* source);
+
 void onchange_world_npc_vehicles_speed_index(int value, SelectFromListMenuItem* source);
 
 void onchange_ped_accuracy_index(int value, SelectFromListMenuItem* source);

@@ -1162,12 +1162,21 @@ void update_world_features()
 		} // for
 	}
 
-	// NPC No Gravity Peds && Acid Water && Acid Rain
-	if (WORLD_REDUCEDGRIP_SNOWING_VALUES[NoPedsGravityIndex] > 0 || featureAcidWater || featureAcidRain || (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 && featureSnow)) {
+	// NPC No Gravity Peds && Acid Water && Acid Rain && Peds Health
+	if (WORLD_REDUCEDGRIP_SNOWING_VALUES[NoPedsGravityIndex] > 0 || featureAcidWater || featureAcidRain || (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 && featureSnow) || PEDS_HEALTH_VALUES[PedsHealthIndex] > 0) {
 		const int BUS_ARR_PED_SIZE = 1024;
 		Ped bus_ped[BUS_ARR_PED_SIZE];
 		int found_ped = worldGetAllPeds(bus_ped, BUS_ARR_PED_SIZE);
 		for (int i = 0; i < found_ped; i++) {
+			if (PEDS_HEALTH_VALUES[PedsHealthIndex] > 0) { // Peds Health
+				if (!ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(bus_ped[i], PLAYER::PLAYER_PED_ID(), 1)) {
+					if (bus_ped[i] != PLAYER::PLAYER_PED_ID()) {
+						ENTITY::SET_ENTITY_HEALTH(bus_ped[i], PEDS_HEALTH_VALUES[PedsHealthIndex]);
+						PED::SET_PED_SUFFERS_CRITICAL_HITS(bus_ped[i], false); // no headshots
+						PED::SET_PED_CONFIG_FLAG(bus_ped[i], 281, true); // no writhe
+					}
+				}
+			}
 			if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 && featureSnow && bus_ped[i] != PLAYER::PLAYER_PED_ID()) {
 				int slippery_randomize2 = (rand() % 1000 + 1);
 				if (((WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] == 1 && slippery_randomize2 > 995) || (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] == 2 && slippery_randomize2 > 985)) &&
@@ -1577,6 +1586,7 @@ void add_world_feature_enablements2(std::vector<StringPairSettingDBRow>* results
 	results->push_back(StringPairSettingDBRow{ "WindStrengthIndex", std::to_string(WindStrengthIndex) });
 	results->push_back(StringPairSettingDBRow{ "DamagedVehiclesIndex", std::to_string(DamagedVehiclesIndex) });
 	results->push_back(StringPairSettingDBRow{ "NPCVehicleSpeedIndex", std::to_string(NPCVehicleSpeedIndex) });
+	results->push_back(StringPairSettingDBRow{ "PedsHealthIndex", std::to_string(PedsHealthIndex) });
 	results->push_back(StringPairSettingDBRow{ "PedAccuracyIndex", std::to_string(PedAccuracyIndex) });
 	results->push_back(StringPairSettingDBRow{ "RadarReducedGripSnowingIndex", std::to_string(RadarReducedGripSnowingIndex) });
 	results->push_back(StringPairSettingDBRow{ "RadarReducedGripRainingIndex", std::to_string(RadarReducedGripRainingIndex) });
@@ -1628,6 +1638,9 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 		}
 		else if (setting.name.compare("NPCVehicleSpeedIndex") == 0) {
 			NPCVehicleSpeedIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("PedsHealthIndex") == 0) {
+			PedsHealthIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("PedAccuracyIndex") == 0) {
 			PedAccuracyIndex = stoi(setting.value);
