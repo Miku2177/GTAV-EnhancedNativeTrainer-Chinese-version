@@ -92,6 +92,12 @@ bool RadarReducedGripRainingChanged = true;
 int NoPedsGravityIndex = 0;
 bool NoPedsGravityChanged = true;
 
+// Peds Health
+const std::vector<std::string> PEDS_HEALTH_CAPTIONS{ "OFF", "500", "700", "1000", "5000", "10000", "30000" };
+const int PEDS_HEALTH_VALUES[] = { 0, 500, 700, 1000, 5000, 10000, 30000 };
+int PedsHealthIndex = 0;
+bool PedsHealthChanged = true;
+
 //For onscreen debug info
 bool featureShowDebugInfo = false;
 
@@ -148,6 +154,7 @@ void reset_areaeffect_globals(){
 	RadarReducedGripSnowingIndex = 0;
 	RadarReducedGripRainingIndex = 0;
 	NoPedsGravityIndex = 0;
+	PedsHealthIndex = 0;
 }
 
 void process_areaeffect_peds_menu(){
@@ -200,6 +207,12 @@ void process_areaeffect_peds_menu(){
 	listItem->wrap = false;
 	listItem->caption = "NPC No Gravity Peds";
 	listItem->value = NoPedsGravityIndex;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(PEDS_HEALTH_CAPTIONS, onchange_peds_health_index);
+	listItem->wrap = false;
+	listItem->caption = "Peds Health";
+	listItem->value = PedsHealthIndex;
 	menuItems.push_back(listItem);
 
 	draw_generic_menu<int>(menuItems, &areaeffect_ped_level_menu_index, "Ped Effects", onconfirm_areaeffect_ped_menu, NULL, NULL);
@@ -945,6 +958,11 @@ void onchange_world_reducedgrip_snowing_index(int value, SelectFromListMenuItem*
 void onchange_world_reducedgrip_raining_index(int value, SelectFromListMenuItem* source) {
 	RadarReducedGripRainingIndex = value;
 	RadarReducedGripRainingChanged = true;
+}
+
+void onchange_peds_health_index(int value, SelectFromListMenuItem* source) {
+	PedsHealthIndex = value;
+	PedsHealthChanged = true;
 }
 
 void onchange_world_no_peds_gravity_index(int value, SelectFromListMenuItem* source) {
