@@ -736,13 +736,13 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 		case 3:
 			process_misc_freezeradio_menu();
 			break;
-		case 4:
+		case 9:
 			process_misc_musicevent_menu();
 			break;
-		case 5:
+		case 10:
 			process_misc_cutplayer_menu();
 			break;
-		case 6:
+		case 11:
 			process_misc_filters_menu();
 			break;
 		case 24:
@@ -771,14 +771,14 @@ void process_misc_menu(){
 		{"Portable Radio", &featurePlayerRadio, &featurePlayerRadioUpdated, true},
 		{"Next Radio Track", NULL, NULL, true},
 		{"Freeze Radio To Station", nullptr, nullptr, false},
-		{"Scripted Music", nullptr, nullptr, false},
-		{"Cutscene Viewer", nullptr, nullptr, false},
-		{"Screen Filters", nullptr, nullptr, false},
 		{"Radio Always Off", &featureRadioAlwaysOff, &featureRadioAlwaysOffUpdated, true},
 		{"Boost Radio Volume", &featureBoostRadio, NULL, true}, 
 		{"Consistent Radio Volume", &featureRealisticRadioVolume, NULL, true},
 		{"Restore Missing Radio Station", &featureEnableMissingRadioStation, NULL, false },
 		{"Radio In Police Vehicle", &featurePoliceRadio, NULL, true}, 
+		{"Scripted Music", nullptr, nullptr, false},
+		{"Cutscene Viewer", nullptr, nullptr, false},
+		{"Screen Filters", nullptr, nullptr, false},
 		{"No Wanted Music", &featureWantedMusic, NULL, true}, 
 		{"No Flight Music", &featureFlyingMusic, NULL, true}, 
 		{"No Police Scanner", &featurePoliceScanner, NULL, true }, 

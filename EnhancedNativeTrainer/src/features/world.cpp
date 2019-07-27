@@ -46,6 +46,8 @@ bool featureRestrictedZones = true;
 bool featureWorldMoonGravity = false;
 bool featureWorldNoPeds = false;
 bool featureWorldNoTraffic = false;
+bool featureNoPlanesHelis = false;
+bool featureNoAnimals = false;
 
 bool featureWorldNoFireTruck = false;
 bool featureWorldNoFireTruckUpdated = false;
@@ -139,6 +141,14 @@ const std::vector<std::string> WORLD_LIGHTNING_INTENSITY_CAPTIONS{ "OFF", "Often
 const int WORLD_LIGHTNING_INTENSITY_VALUES[] = { -2, 3, -1 };
 int featureLightIntensityIndex = 0;
 bool featureLightIntensityChanged = true;
+
+// Vehicles & Peds Density
+//const std::vector<std::string> WORLD_VEHICLESPEDS_DENSITY_CAPTIONS{ "OFF", "5%", "20%", "40%", "60%", "80%" };
+//const float WORLD_VEHICLESPEDS_DENSITY_VALUES[] = { 0, 0.05, 0.2, 0.4, 0.6, 0.8 };
+//int featureVehiclesDensity = 0;
+//bool featureVehiclesDensityChanged = true;
+//int featurePedsDensity = 0;
+//bool featurePedsDensityChanged = true;
 
 bool onconfirm_weather_menu(MenuItem<std::string> choice)
 {
@@ -325,6 +335,16 @@ void onchange_lightning_intensity_index(int value, SelectFromListMenuItem* sourc
 	featureLightIntensityChanged = true;
 }
 
+//void onchange_world_vehicles_density_index(int value, SelectFromListMenuItem* source) {
+//	featureVehiclesDensity = value;
+//	featureVehiclesDensityChanged = true;
+//}
+
+//void onchange_world_peds_density_index(int value, SelectFromListMenuItem* source) {
+//	featurePedsDensity = value;
+//	featurePedsDensityChanged = true;
+//}
+
 void onchange_world_wind_strength_index(int value, SelectFromListMenuItem* source){
 	WindStrengthIndex = value;
 	WindStrengthChanged = true;
@@ -406,6 +426,30 @@ void process_world_menu()
 	togItem->value = 1;
 	togItem->toggleValue = &featureWorldNoTraffic;
 	togItem->toggleValueUpdated = &featureWorldNoTrafficUpdated;
+	menuItems.push_back(togItem);
+
+	//listItem = new SelectFromListMenuItem(WORLD_VEHICLESPEDS_DENSITY_CAPTIONS, onchange_world_vehicles_density_index);
+	//listItem->wrap = false;
+	//listItem->caption = "Vehicles Density";
+	//listItem->value = featureVehiclesDensity;
+	//menuItems.push_back(listItem);
+
+	//listItem = new SelectFromListMenuItem(WORLD_VEHICLESPEDS_DENSITY_CAPTIONS, onchange_world_peds_density_index);
+	//listItem->wrap = false;
+	//listItem->caption = "Peds Density";
+	//listItem->value = featurePedsDensity;
+	//menuItems.push_back(listItem);
+
+	togItem = new ToggleMenuItem<int>();
+	togItem->caption = "No Planes/Helicopters";
+	togItem->value = 1;
+	togItem->toggleValue = &featureNoPlanesHelis;
+	menuItems.push_back(togItem);
+
+	togItem = new ToggleMenuItem<int>();
+	togItem->caption = "No Animals";
+	togItem->value = 1;
+	togItem->toggleValue = &featureNoAnimals;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
@@ -586,6 +630,10 @@ void reset_world_globals()
 	RadarMapIndex = 0;
 	WorldWavesIndex = 0;
 	featureLightIntensityIndex = 0;
+
+	//featureVehiclesDensity = 0;
+	//featurePedsDensity = 0;
+
 	RadarReducedGripSnowingIndex = 0;
 	RadarReducedGripRainingIndex = 0;
 	NoPedsGravityIndex = 0;
@@ -603,6 +651,8 @@ void reset_world_globals()
 	//featureLightsBlackout = false;
 	featureWorldNoPeds = false;
 	featureWorldNoTraffic = false;
+	featureNoPlanesHelis = false;
+	featureNoAnimals = false;
 
 	featureWorldNoFireTruck = false;
 	featureWorldNoAmbulance = false;
@@ -1112,12 +1162,21 @@ void update_world_features()
 		} // for
 	}
 
-	// NPC No Gravity Peds && Acid Water && Acid Rain
-	if (WORLD_REDUCEDGRIP_SNOWING_VALUES[NoPedsGravityIndex] > 0 || featureAcidWater || featureAcidRain || (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 && featureSnow)) {
+	// NPC No Gravity Peds && Acid Water && Acid Rain && Peds Health
+	if (WORLD_REDUCEDGRIP_SNOWING_VALUES[NoPedsGravityIndex] > 0 || featureAcidWater || featureAcidRain || (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 && featureSnow) || PEDS_HEALTH_VALUES[PedsHealthIndex] > 0) {
 		const int BUS_ARR_PED_SIZE = 1024;
 		Ped bus_ped[BUS_ARR_PED_SIZE];
 		int found_ped = worldGetAllPeds(bus_ped, BUS_ARR_PED_SIZE);
 		for (int i = 0; i < found_ped; i++) {
+			if (PEDS_HEALTH_VALUES[PedsHealthIndex] > 0) { // Peds Health
+				if (!ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(bus_ped[i], PLAYER::PLAYER_PED_ID(), 1)) {
+					if (bus_ped[i] != PLAYER::PLAYER_PED_ID()) {
+						ENTITY::SET_ENTITY_HEALTH(bus_ped[i], PEDS_HEALTH_VALUES[PedsHealthIndex]);
+						PED::SET_PED_SUFFERS_CRITICAL_HITS(bus_ped[i], false); // no headshots
+						PED::SET_PED_CONFIG_FLAG(bus_ped[i], 281, true); // no writhe
+					}
+				}
+			}
 			if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 && featureSnow && bus_ped[i] != PLAYER::PLAYER_PED_ID()) {
 				int slippery_randomize2 = (rand() % 1000 + 1);
 				if (((WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] == 1 && slippery_randomize2 > 995) || (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] == 2 && slippery_randomize2 > 985)) &&
@@ -1159,7 +1218,7 @@ void update_world_features()
 					PED::SET_PED_RAGDOLL_FORCE_FALL(bus_ped[i]);
 					PED::SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(bus_ped[i], true);
 					PED::SET_PED_RAGDOLL_ON_COLLISION(bus_ped[i], true);
-					if (!PED::IS_PED_RAGDOLL(bus_ped[i])) PED::SET_PED_TO_RAGDOLL(bus_ped[i], 1, 1, 1, 1, 1, 1);
+					if (!PED::IS_PED_RAGDOLL(bus_ped[i])) PED::SET_PED_TO_RAGDOLL(bus_ped[i], 1500, 1500, 1, true, true, false); // PED::SET_PED_TO_RAGDOLL(bus_ped[i], 1, 1, 1, 1, 1, 1);
 					if (!STREAMING::HAS_ANIM_DICT_LOADED("dead@fall")) STREAMING::REQUEST_ANIM_DICT("dead@fall");
 					while (!STREAMING::HAS_ANIM_DICT_LOADED("dead@fall")) WAIT(0);
 					if (!ENTITY::IS_ENTITY_PLAYING_ANIM(bus_ped[i], "dead@fall", "dead_fall_down", 3) && !PED::IS_PED_RAGDOLL(bus_ped[i]) && PED::GET_PED_TYPE(bus_ped[i]) != 6 && !ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(bus_ped[i])) {
@@ -1167,8 +1226,12 @@ void update_world_features()
 						PED::SET_PED_TO_RAGDOLL(bus_ped[i], 1, 1, 1, 1, 1, 1);
 					}
 				}
-				if (PED::IS_PED_SHOOTING(bus_ped[i])) ENTITY::APPLY_FORCE_TO_ENTITY(bus_ped[i], 1, v_x, v_y, v_z, 0, 0, 0, false, false, true, true, false, true);
+				if (PED::IS_PED_SHOOTING(bus_ped[i])) {
+					PED::SET_PED_TO_RAGDOLL(bus_ped[i], 1500, 1500, 1, true, true, false);
+					ENTITY::APPLY_FORCE_TO_ENTITY(bus_ped[i], 1, v_x, v_y, v_z, 0, 0, 0, false, false, true, true, false, true);
+				}
 				if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(bus_ped[i], PLAYER::PLAYER_PED_ID(), 1)) {
+					PED::SET_PED_TO_RAGDOLL(bus_ped[i], 1500, 1500, 1, true, true, false);
 					ENTITY::APPLY_FORCE_TO_ENTITY(bus_ped[i], 1, v_x / 10, v_y / 10, v_z / 10, 0, 0, 0, false, false, true, true, false, true);
 				}
 				ENTITY::SET_ENTITY_HAS_GRAVITY(bus_ped[i], false);
@@ -1325,6 +1388,84 @@ void update_world_features()
 		STREAMING::SET_VEHICLE_POPULATION_BUDGET(0);
 	}
 
+	// Vehicles Density
+	//if (WORLD_VEHICLESPEDS_DENSITY_VALUES[featureVehiclesDensity] > 0) VEHICLE::SET_VEHICLE_DENSITY_MULTIPLIER_THIS_FRAME(WORLD_VEHICLESPEDS_DENSITY_VALUES[featureVehiclesDensity]);
+
+	// Peds Density
+	//if (WORLD_VEHICLESPEDS_DENSITY_VALUES[featurePedsDensity] > 0) PED::SET_PED_DENSITY_MULTIPLIER_THIS_FRAME(WORLD_VEHICLESPEDS_DENSITY_VALUES[featurePedsDensity]);
+	
+	if (featureNoPlanesHelis) {
+		AI::SET_SCENARIO_GROUP_ENABLED("ALAMO_PLANES", 0);
+		AI::SET_SCENARIO_GROUP_ENABLED("ARMY_HELI", 0);
+		AI::SET_SCENARIO_GROUP_ENABLED("GRAPESEED_PLANES", 0);
+		AI::SET_SCENARIO_GROUP_ENABLED("Grapeseed_Planes", 0);
+		AI::SET_SCENARIO_GROUP_ENABLED("LSA_Planes", 0);
+		AI::SET_SCENARIO_GROUP_ENABLED("SANDY_PLANES", 0);
+		AI::SET_SCENARIO_GROUP_ENABLED("ng_planes", 0);
+		AI::SET_SCENARIO_TYPE_ENABLED("WORLD_VEHICLE_MILITARY_PLANES_SMALL", 0);
+		AI::SET_SCENARIO_TYPE_ENABLED("WORLD_VEHICLE_MILITARY_PLANES_BIG", 0);
+		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("SHAMAL"), 1);
+		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("LUXOR"), 1);
+		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("LUXOR2"), 1);
+		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("JET"), 1);
+		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("LAZER"), 1);
+		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("TITAN"), 1);
+		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("BARRACKS"), 1);
+		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("BARRACKS2"), 1);
+		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("CRUSADER"), 1);
+		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("RHINO"), 1);
+		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("AIRTUG"), 1);
+		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("RIPLEY"), 1);
+		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("POLMAV"), 1);
+		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("FROGGER2"), 1);
+		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("SWIFT"), 1);
+		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("BLIMP"), 1);
+		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("BLIMP2"), 1);
+		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("BLIMP3"), 1);
+		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("FROGGER"), 1);
+		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("CARGOBOB"), 1);
+		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("CARGOBOB2"), 1);
+		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("CARGOBOB3"), 1);
+	}
+	
+	if (featureNoAnimals) {
+		AI::SET_SCENARIO_TYPE_ENABLED("WORLD_MOUNTAIN_LION_REST", 0);
+		AI::SET_SCENARIO_TYPE_ENABLED("WORLD_MOUNTAIN_LION_WANDER", 0);
+		AI::SET_SCENARIO_GROUP_ENABLED("ng_birds", 0);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_boar"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_cat_01"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_chimp"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_cormorant"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_cow"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_coyote"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_crow"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_deer"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_dolphin"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_fish"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_shepherd"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_whalegrey"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_sharkhammer"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_chickenhawk"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_hen"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_humpback"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_husky"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_killerwhale"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_mtlion"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_pig"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_pigeon"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_poodle"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_pug"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_rabbit_01"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_rat"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_retriever"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_rhesus"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_rottweiler"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_seagull"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_stingray"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_sharktiger"), 1);
+		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_westy"), 1);
+	}
+
 	if (!featureWorldRandomTrains)
 	{
 		VEHICLE::DELETE_ALL_TRAINS();
@@ -1406,6 +1547,9 @@ void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* r
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoAmbulance", &featureWorldNoAmbulance });
 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoTraffic", &featureWorldNoTraffic, &featureWorldNoTrafficUpdated });
+	results->push_back(FeatureEnabledLocalDefinition{ "featureNoPlanesHelis", &featureNoPlanesHelis });
+	results->push_back(FeatureEnabledLocalDefinition{ "featureNoAnimals", &featureNoAnimals });
+
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNoMinimapRot", &featureNoMinimapRot });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNoWaypoint", &featureNoWaypoint });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNoPoliceBlips", &featureNoPoliceBlips }); 
@@ -1435,9 +1579,14 @@ void add_world_feature_enablements2(std::vector<StringPairSettingDBRow>* results
 	results->push_back(StringPairSettingDBRow{ "RadarMapIndex", std::to_string(RadarMapIndex) });
 	results->push_back(StringPairSettingDBRow{ "WorldWavesIndex", std::to_string(WorldWavesIndex) });
 	results->push_back(StringPairSettingDBRow{ "featureLightIntensityIndex", std::to_string(featureLightIntensityIndex) });
+
+	//results->push_back(StringPairSettingDBRow{ "featureVehiclesDensity", std::to_string(featureVehiclesDensity) });
+	//results->push_back(StringPairSettingDBRow{ "featurePedsDensity", std::to_string(featurePedsDensity) });
+
 	results->push_back(StringPairSettingDBRow{ "WindStrengthIndex", std::to_string(WindStrengthIndex) });
 	results->push_back(StringPairSettingDBRow{ "DamagedVehiclesIndex", std::to_string(DamagedVehiclesIndex) });
 	results->push_back(StringPairSettingDBRow{ "NPCVehicleSpeedIndex", std::to_string(NPCVehicleSpeedIndex) });
+	results->push_back(StringPairSettingDBRow{ "PedsHealthIndex", std::to_string(PedsHealthIndex) });
 	results->push_back(StringPairSettingDBRow{ "PedAccuracyIndex", std::to_string(PedAccuracyIndex) });
 	results->push_back(StringPairSettingDBRow{ "RadarReducedGripSnowingIndex", std::to_string(RadarReducedGripSnowingIndex) });
 	results->push_back(StringPairSettingDBRow{ "RadarReducedGripRainingIndex", std::to_string(RadarReducedGripRainingIndex) });
@@ -1475,6 +1624,12 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 		else if (setting.name.compare("featureLightIntensityIndex") == 0) {
 			featureLightIntensityIndex = stoi(setting.value);
 		}
+		//else if (setting.name.compare("featureVehiclesDensity") == 0) {
+		//	featureVehiclesDensity = stoi(setting.value);
+		//}
+		//else if (setting.name.compare("featurePedsDensity") == 0) {
+		//	featurePedsDensity = stoi(setting.value);
+		//}
 		else if (setting.name.compare("WindStrengthIndex") == 0){
 			WindStrengthIndex = stoi(setting.value);
 		}
@@ -1483,6 +1638,9 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 		}
 		else if (setting.name.compare("NPCVehicleSpeedIndex") == 0) {
 			NPCVehicleSpeedIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("PedsHealthIndex") == 0) {
+			PedsHealthIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("PedAccuracyIndex") == 0) {
 			PedAccuracyIndex = stoi(setting.value);
