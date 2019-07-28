@@ -48,6 +48,7 @@ bool featureWorldNoPeds = false;
 bool featureWorldNoTraffic = false;
 bool featureNoPlanesHelis = false;
 bool featureNoAnimals = false;
+bool no_animals = false;
 
 bool featureWorldNoFireTruck = false;
 bool featureWorldNoFireTruckUpdated = false;
@@ -1464,6 +1465,11 @@ void update_world_features()
 		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_stingray"), 1);
 		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_sharktiger"), 1);
 		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_westy"), 1);
+		no_animals = true;
+	}
+	if (!featureNoAnimals && no_animals == true) {
+		PED::STOP_ANY_PED_MODEL_BEING_SUPPRESSED();
+		no_animals = false;
 	}
 
 	if (!featureWorldRandomTrains)
