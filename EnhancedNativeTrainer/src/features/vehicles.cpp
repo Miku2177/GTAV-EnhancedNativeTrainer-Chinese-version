@@ -329,7 +329,7 @@ const std::vector<std::string> CAPTIONS_SEDANS{ "Albany Emperor", "Albany Empero
 
 const std::vector<std::string> CAPTIONS_COMPACTS{ "Benefactor Panto", "Bollokan Prairie", "Declasse Rhapsody", "Dinka Blista", "Grotti Brioso R/A (Race)",  "Karin Dilettante", "Karin Dilettante (Liveried)", "Weeny Issi", "Weeny Issi Classic (Super Sports)", "Weeny Issi Apocalypse (Arena War)", "Weeny Issi Future Shock (Arena War)", "Weeny Issi Nightmare (Arena War)" };
 
-const std::vector<std::string> VALUES_SUPERCARS{ "LE7B", "S80", "BANSHEE2", "TAIPAN", "CYCLONE", "VOLTIC2", "VOLTIC", "SCRAMJET", "VAGNER", "SHEAVA", "CHEETAH", "TURISMOR", "VISIONE", "PROTOTIPO", "SULTANRS", "PENETRATOR", "XA21", "AUTARCH", "ENTITYXF", "ENTITY2", "TYRANT", "INFERNUS", "OSIRIS", "REAPER", "TEMPESTA", "TEZERACT", "VACCA", "ZENTORNO", "ZORUSSO", "PFISTER811", "DEVESTE", "EMERUS", "GP1", "ITALIGTB", "ITALIGTB2", "T20", "TYRUS", "ADDER", "NERO", "NERO2", "THRAX", "SC1", "BULLET", "FMJ", "VIGILANTE" };
+const std::vector<std::string> VALUES_SUPERCARS{ "LE7B", "S80", "BANSHEE2", "TAIPAN", "CYCLONE", "VOLTIC2", "VOLTIC", "SCRAMJET", "VAGNER", "SHEAVA", "CHEETAH", "TURISMOR", "VISIONE", "PROTOTIPO", "SULTANRS", "PENETRATOR", "XA21", "AUTARCH", "ENTITYXF", "ENTITY2", "TYRANT", "INFERNUS", "OSIRIS", "REAPER", "TEMPESTA", "TEZERACT", "VACCA", "ZENTORNO", "ZORRUSSO", "PFISTER811", "DEVESTE", "EMERUS", "GP1", "ITALIGTB", "ITALIGTB2", "T20", "TYRUS", "ADDER", "NERO", "NERO2", "THRAX", "SC1", "BULLET", "FMJ", "VIGILANTE" };
 
 const std::vector<std::string> VALUES_SPORTS{ "ALPHA", "ELEGY", "ELEGY2", "ZR380", "ZR3802", "ZR3803", "FELTZER2", "KRIEGER", "SCHAFTER4", "SCHAFTER3", "SCHLAGEN", "SCHWARZER", "STREITER", "SURANO", "RAPTOR", "BANSHEE", "BUFFALO", "BUFFALO2", "BUFFALO3", "VERLIERER2", "RAIDEN", "TAMPA2", "HOTRING", "MASSACRO", "MASSACRO2", "RAPIDGT", "RAPIDGT2", "SEVEN70", "SPECTER", "SPECTER2", "BLISTA2", "BLISTA3", "JESTER", "JESTER3", "JESTER2", "PARAGON", "PARAGON2", "BESTIAGTS", "CARBONIZZARE", "ITALIGTO", "KHAMELION", "RUSTON", "COQUETTE", "FUTO", "KURUMA", "KURUMA2", "SULTAN", "FUROREGT", "TROPOS", "PENUMBRA", "NINEF", "NINEF2", "DRAFTER", "OMNIS", "JUGULAR", "LOCUST", "LYNX", "PARIAH", "COMET2", "COMET3", "COMET4", "COMET5", "NEON", "FUSILADE", "REVOLTER", "SENTINEL3", "FLASHGT", "GB200", "NEO", "ISSI7" };
 
@@ -843,8 +843,6 @@ bool process_veh_door_menu(){
 	std::vector<MenuItem<int>*> menuItemsRoll;
 
 	MenuItem<int> *item;
-	SelectFromListMenuItem *listItem;
-
 	int i = 0;
 
 	item = new MenuItem<int>();
@@ -1157,8 +1155,6 @@ void process_speedlimit_menu() {
 	std::vector<MenuItem<int>*> menuItems;
 
 	SelectFromListMenuItem *listItem;
-	ToggleMenuItem<int>* toggleItem;
-
 	int i = 0;
 
 	listItem = new SelectFromListMenuItem(VEH_SPEEDLIMITER_CAPTIONS, onchange_veh_speedlimiter_index);
@@ -5454,13 +5450,13 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ "NEO", "lgm_dlc_vinewood", "neo" },
 	{ "NOVAK", "lgm_dlc_vinewood", "novak" },
 	{ "PARAGON", "lgm_dlc_vinewood", "paragon" },
-	{ "PARAGON2", "lgm_dlc_vinewood", "paragon2" },
+	{ "PARAGON2", "lgm_dlc_vinewood", "paragon" },
 	{ "PEYOTE2", "sssa_dlc_vinewood", "peyote2" },
 	{ "RROCKET", "lgm_dlc_vinewood", "rrocket" },
 	{ "S80", "lgm_dlc_vinewood", "s80" },
 	{ "THRAX", "lgm_dlc_vinewood", "thrax" },
 	{ "ZION3", "sssa_dlc_vinewood", "zion3" },
-	{ "ZORUSSO", "lgm_dlc_vinewood", "zorusso" }
+	{ "ZORRUSSO", "lgm_dlc_vinewood", "zorrusso" }
 };
 
 static std::vector<VehicleImage> ALL_VEH_IMAGES;
