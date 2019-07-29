@@ -36,6 +36,7 @@ bool featureAreaVehiclesExploded = false;
 bool featureAreaPedsHeadExplode = false;
 bool featureAngryPedsUseCover = false;
 bool featureAngryPedsTargetYou = false;
+bool featureAngryMenOnly = false;
 bool featurePedsIncludeDrivers = false;
 bool featurePedsIncludePilots = false;
 bool featureNPCNoLights = false;
@@ -111,6 +112,7 @@ void add_areaeffect_feature_enablements(std::vector<FeatureEnabledLocalDefinitio
 	results->push_back(FeatureEnabledLocalDefinition{"featureAreaPedsRioting", &featureAreaPedsRioting}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureAngryPedsUseCover", &featureAngryPedsUseCover});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAngryPedsTargetYou", &featureAngryPedsTargetYou});
+	results->push_back(FeatureEnabledLocalDefinition{"featureAngryMenOnly", &featureAngryMenOnly});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePedsIncludeDrivers", &featurePedsIncludeDrivers});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePedsIncludePilots", &featurePedsIncludePilots});
 	results->push_back(FeatureEnabledLocalDefinition{"featureShowDebugInfo", &featureShowDebugInfo}); 
@@ -133,6 +135,7 @@ void reset_areaeffect_globals(){
 	featureAreaVehiclesExploded = false;
 	featureAreaPedsRioting = false;
 	featureAngryPedsTargetYou = false;
+	featureAngryMenOnly = false;
 	featureAngryPedsUseCover = false;
 	featurePedsIncludeDrivers = false;
 	featurePedsIncludePilots = false;
@@ -335,6 +338,12 @@ void process_areaeffect_advanced_ped_menu(){
 	togItem->caption = "Angry Peds Also Target You";
 	togItem->value = 1;
 	togItem->toggleValue = &featureAngryPedsTargetYou;
+	menuItems.push_back(togItem);
+
+	togItem = new ToggleMenuItem<int>();
+	togItem->caption = "Only Men Are Angry";
+	togItem->value = 1;
+	togItem->toggleValue = &featureAngryMenOnly;
 	menuItems.push_back(togItem);
 
 	draw_generic_menu<int>(menuItems, &areaeffect_ped_advconfig_menu_index, "Peds Angry Options", NULL, NULL, NULL);
@@ -720,6 +729,9 @@ std::set<Ped> get_nearby_peds(Ped playerPed){
 			continue;
 		}
 		else if(ENTITY::IS_ENTITY_A_MISSION_ENTITY(item) && !ENTITY::DOES_ENTITY_BELONG_TO_THIS_SCRIPT(item, true)){
+			continue;
+		}
+		else if (featureAngryMenOnly && PED::GET_PED_TYPE(item) == 5) {
 			continue;
 		}
 
