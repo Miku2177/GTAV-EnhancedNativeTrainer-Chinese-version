@@ -94,8 +94,8 @@ int NoPedsGravityIndex = 0;
 bool NoPedsGravityChanged = true;
 
 // Peds Health
-const std::vector<std::string> PEDS_HEALTH_CAPTIONS{ "OFF", "500", "700", "1000", "5000", "10000", "30000" };
-const int PEDS_HEALTH_VALUES[] = { 0, 500, 700, 1000, 5000, 10000, 30000 };
+const std::vector<std::string> PEDS_HEALTH_CAPTIONS{ "OFF", "50", "150", "500", "700", "1000", "5000", "10000", "30000" };
+const int PEDS_HEALTH_VALUES[] = { 0, 50, 150, 500, 700, 1000, 5000, 10000, 30000 };
 int PedsHealthIndex = 0;
 bool PedsHealthChanged = true;
 
