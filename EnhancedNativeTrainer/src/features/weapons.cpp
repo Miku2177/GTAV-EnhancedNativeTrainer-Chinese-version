@@ -861,8 +861,7 @@ bool onconfirm_powerpunch_menu(MenuItem<int> choice)
 			std::string::size_type sz;
 			std::string result_p = show_keyboard(nullptr, (char *)lastPowerWeapon.c_str());
 			if (!result_p.empty()) { 
-				if (strlen(result_p.c_str()) > 5) result_p.resize(5);
-				//result_p = trim(result_p);
+				if (strlen(result_p.c_str()) > 18) result_p = "9223372036854775807"; // result_p.resize(18);
 				lastPowerWeapon = result_p;
 			}
 			break;
@@ -1567,7 +1566,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	if (featurePowerPunch && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
 		Ped playerPed = PLAYER::PLAYER_PED_ID();
 		Vector3 CamRot = CAM::GET_GAMEPLAY_CAM_ROT(2);
-		int p_force = -1; 
+		long long int p_force = -1; 
 
 		const int arrSize_punch = 1024;
 		Ped surr_p_peds[arrSize_punch];
@@ -1575,7 +1574,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		if (WEAPONS_POWERPUNCH_VALUES[PowerPunchIndex] != 55) p_force = WEAPONS_POWERPUNCH_VALUES[PowerPunchIndex];
 		if (WEAPONS_POWERPUNCH_VALUES[PowerPunchIndex] == 55 && !lastPowerWeapon.empty()) {
 			std::string::size_type sz;
-			p_force = std::stoi(lastPowerWeapon, &sz);
+			p_force = std::stoll(lastPowerWeapon, &sz);
 		}
 		
 		if (CONTROLS::IS_CONTROL_PRESSED(2, 24) || CONTROLS::IS_CONTROL_PRESSED(2, 140) || CONTROLS::IS_CONTROL_PRESSED(2, 141)) force_nearest_ped = true;
