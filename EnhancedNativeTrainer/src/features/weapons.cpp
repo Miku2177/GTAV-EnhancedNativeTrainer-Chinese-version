@@ -1765,7 +1765,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	}
 
 	//Gravity Gun
-	if(bPlayerExists && featureGravityGun){
+	if(bPlayerExists && featureGravityGun && GAMEPLAY::GET_MISSION_FLAG() == 0){
 		Ped tempPed;
 		Hash tempWeap;
 
