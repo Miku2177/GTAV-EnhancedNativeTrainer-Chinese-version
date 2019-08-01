@@ -27,9 +27,6 @@ int activeLineIndexCopArmed = 0;
 int activeLineIndexPedAgainstWeapons = 0;
 int activeLineIndexPowerPunchWeapons = 0;
 
-int dropweapon_seconds = 0;
-bool dropped_weapon = false;
-
 // give all weapons automatically variables
 bool featureGiveAllWeapons = false;
 bool featureAddAllWeaponsAttachments = false;
@@ -1272,7 +1269,7 @@ bool process_weapon_menu(){
 	menuItems.push_back(item);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Drop Weapon If Hand Damaged";
+	toggleItem->caption = "Drop Weapon If Hand Shot";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureDropWeapon;
 	menuItems.push_back(toggleItem);
@@ -1450,59 +1447,40 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		if (!sniper_rifle) UI::HIDE_HUD_COMPONENT_THIS_FRAME(14);
 	}
 	
-	// Drop Weapon If Hand Damaged
+	// Drop Weapon If Hand Shot
 	if (featureDropWeapon) {
-		//int b_l_index = PED::GET_PED_BONE_INDEX(playerPed, 18905);
-		int b_r_index = PED::GET_PED_BONE_INDEX(playerPed, 64016); // 28252 57005
-		if (PED::GET_PED_LAST_DAMAGE_BONE(playerPed, &b_r_index) && dropped_weapon == false && WEAPON::IS_PED_ARMED(playerPed, 7)) {
-			int randomize = (rand() % 3 + 0); // UP MARGIN + DOWN MARGIN
-			if (randomize == 2) {
-				Hash curr_w = WEAPON::GET_SELECTED_PED_WEAPON(playerPed);
-				Vector3 p_coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(playerPed, 10.0f, 10.0f, 0.0f);
-				WEAPON::SET_PED_DROPS_INVENTORY_WEAPON(playerPed, curr_w, p_coords.x, p_coords.y, p_coords.z, 1);
-				WEAPON::REMOVE_WEAPON_FROM_PED(playerPed, curr_w);
-				PED::CLEAR_PED_LAST_DAMAGE_BONE(playerPed);
-				ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(playerPed);
-				dropped_weapon = true;
-			}
-			else dropped_weapon = true; //{
-			//	PED::CLEAR_PED_LAST_DAMAGE_BONE(playerPed);
-			//	ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(playerPed);
-			//}
-		}
-		if (dropped_weapon == true) {
-			w_tick_secs_passed = clock() / CLOCKS_PER_SEC;
-			if (((clock() / CLOCKS_PER_SEC) - w_tick_secs_curr) != 0) {
-				dropweapon_seconds = dropweapon_seconds + 1;
-				w_tick_secs_curr = w_tick_secs_passed;
-			}
-		}
-		if (dropweapon_seconds > 5) { // 3
+		float offsetX = 0;
+		float offsetY = 0;
+		float offsetZ = 0;
+		Vector3 coords_myfinger_p = PED::GET_PED_BONE_COORDS(playerPed, 64016, offsetX, offsetY, offsetZ); // right finger bone
+		if (WEAPON::HAS_ENTITY_BEEN_DAMAGED_BY_WEAPON(playerPed, 0, 2) && GAMEPLAY::HAS_BULLET_IMPACTED_IN_AREA(coords_myfinger_p.x, coords_myfinger_p.y, coords_myfinger_p.z, 0.2, 0, 0) && WEAPON::IS_PED_ARMED(playerPed, 7)) {
+			Hash curr_w = WEAPON::GET_SELECTED_PED_WEAPON(playerPed);
+			Vector3 p_coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(playerPed, 10.0f, 10.0f, 0.0f);
+			WEAPON::SET_PED_DROPS_INVENTORY_WEAPON(playerPed, curr_w, p_coords.x, p_coords.y, p_coords.z, 1);
+			WEAPON::REMOVE_WEAPON_FROM_PED(playerPed, curr_w);
 			PED::CLEAR_PED_LAST_DAMAGE_BONE(playerPed);
 			ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(playerPed);
-			dropweapon_seconds = 0;
-			dropped_weapon = false;
 		}
 	}
 
 	// Shoot To Disarm NPCs
 	if (featureCanDisarmNPC) {
+		float offsetX = 0;
+		float offsetY = 0;
+		float offsetZ = 0;
 		const int arrSize2 = 1024;
 		Ped a_npcs[arrSize2];
 		int count_npcs = worldGetAllPeds(a_npcs, arrSize2);
 		for (int i = 0; i < count_npcs; i++) {
 			if (a_npcs[i] != playerPed) {
-				int b_r_index = PED::GET_PED_BONE_INDEX(a_npcs[i], 64016); // 28252 57005
-				if (PED::GET_PED_LAST_DAMAGE_BONE(a_npcs[i], &b_r_index) && WEAPON::IS_PED_ARMED(a_npcs[i], 7)) {
-					int randomize = (rand() % 3 + 0); // UP MARGIN + DOWN MARGIN
-					if (randomize == 2) {
-						Hash curr_w = WEAPON::GET_SELECTED_PED_WEAPON(a_npcs[i]);
-						Vector3 p_coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(a_npcs[i], 10.0f, 10.0f, 0.0f);
-						WEAPON::SET_PED_DROPS_INVENTORY_WEAPON(a_npcs[i], curr_w, p_coords.x, p_coords.y, p_coords.z, 1);
-						WEAPON::REMOVE_WEAPON_FROM_PED(a_npcs[i], curr_w);
-						PED::CLEAR_PED_LAST_DAMAGE_BONE(a_npcs[i]);
-						ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(a_npcs[i]);
-					}
+				Vector3 coords_finger_p = PED::GET_PED_BONE_COORDS(a_npcs[i], 64016, offsetX, offsetY, offsetZ); // right finger bone
+				if (WEAPON::HAS_ENTITY_BEEN_DAMAGED_BY_WEAPON(a_npcs[i], 0, 2) && GAMEPLAY::HAS_BULLET_IMPACTED_IN_AREA(coords_finger_p.x, coords_finger_p.y, coords_finger_p.z, 0.4, 0, 0) && WEAPON::IS_PED_ARMED(a_npcs[i], 7)) {
+					Hash curr_w = WEAPON::GET_SELECTED_PED_WEAPON(a_npcs[i]);
+					Vector3 p_coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(a_npcs[i], 10.0f, 10.0f, 0.0f);
+					WEAPON::SET_PED_DROPS_INVENTORY_WEAPON(a_npcs[i], curr_w, p_coords.x, p_coords.y, p_coords.z, 1);
+					WEAPON::REMOVE_WEAPON_FROM_PED(a_npcs[i], curr_w);
+					PED::CLEAR_PED_LAST_DAMAGE_BONE(a_npcs[i]);
+					ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(a_npcs[i]);
 				}
 			}
 		}
