@@ -760,7 +760,7 @@ bool process_skinchanger_menu()
 	menuItems.push_back(item);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "No Blood Or Bullet Holes If Shot";
+	toggleItem->caption = "No Blood And Bullet Holes If Shot";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featurenoblood;
 	menuItems.push_back(toggleItem);

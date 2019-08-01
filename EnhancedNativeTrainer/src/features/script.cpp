@@ -93,6 +93,7 @@ bool featureWantedLevelNoSWATVehicles = false;
 bool featureWantedLevelNoSWATVehiclesUpdated = false;
 
 bool NoTaxiWhistling = false;
+bool featurePlayerCanBeHeadshot = false;
 
 bool engine_running = true;
 bool engine_switched = false;
@@ -732,6 +733,19 @@ void update_features(){
 		if (ENTITY::IS_ENTITY_PLAYING_ANIM(PLAYER::PLAYER_PED_ID(), "skydive@base", "free_idle", 3)) skydiving = true;
 		else skydiving = false;
 		if (ENTITY::IS_ENTITY_PLAYING_ANIM(PLAYER::PLAYER_PED_ID(), "move_strafe@roll_fps", "combatroll_fwd_p1_00", 3)) skydiving = false;
+	}
+
+	// Player can be headshot
+	if (featurePlayerCanBeHeadshot && !featurePlayerInvincible) {
+		float offsetX = 0;
+		float offsetY = 0;
+		float offsetZ = 0;
+		Vector3 coords_bullet_p = PED::GET_PED_BONE_COORDS(playerPed, 31086, offsetX, offsetY, offsetZ); // head bone
+		if (WEAPON::HAS_ENTITY_BEEN_DAMAGED_BY_WEAPON(playerPed, 0, 2) && GAMEPLAY::HAS_BULLET_IMPACTED_IN_AREA(coords_bullet_p.x, coords_bullet_p.y, coords_bullet_p.z, 0.1, 0, 0)) {
+			PED::CLEAR_PED_LAST_DAMAGE_BONE(playerPed);
+			ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(playerPed);
+			ENTITY::SET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID(), 0);
+		}
 	}
 
 	// Can run in apartments
@@ -1543,7 +1557,7 @@ bool onconfirm_player_menu(MenuItem<int> choice){
 }
 
 void process_player_menu(){
-	const int lineCount = 22;
+	const int lineCount = 23;
 
 	std::string caption = "Player Options";
 
@@ -1569,7 +1583,8 @@ void process_player_menu(){
 		{"Player Data", NULL, NULL, false},
 		{"Prison Break", NULL, NULL, false},
 		{"Jedi Powers", NULL, NULL, false},
-		{"No Whistling For Taxi", &NoTaxiWhistling, NULL, false}
+		{"No Whistling For Taxi", &NoTaxiWhistling, NULL, false},
+		{"Player Can Be Headshot", &featurePlayerCanBeHeadshot, NULL, false}
 	};
 
 	draw_menu_from_struct_def(lines, lineCount, &activeLineIndexPlayer, caption, onconfirm_player_menu);
@@ -1818,6 +1833,7 @@ void reset_globals(){
 		featureWantedLevelNoPBoats =
 		featureWantedLevelNoSWATVehicles =
 		NoTaxiWhistling =
+		featurePlayerCanBeHeadshot =
 
 		featureWantedLevelFrozen = false;
 
@@ -2051,6 +2067,7 @@ void add_player_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featureWantedLevelNoPBoats", &featureWantedLevelNoPBoats});
 	results->push_back(FeatureEnabledLocalDefinition{"featureWantedLevelNoSWATVehicles", &featureWantedLevelNoSWATVehicles});
 	results->push_back(FeatureEnabledLocalDefinition{"NoTaxiWhistling", &NoTaxiWhistling});
+	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerCanBeHeadshot", &featurePlayerCanBeHeadshot});
 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerUnlimitedAbility", &featurePlayerUnlimitedAbility});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerNoNoise", &featurePlayerNoNoise}); 
