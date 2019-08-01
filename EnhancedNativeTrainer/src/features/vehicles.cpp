@@ -2497,7 +2497,10 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 	
 	// Never Gets Dirty
-	if (featureNeverDirty && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) VEHICLE::SET_VEHICLE_DIRT_LEVEL(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 0.0);
+	if (featureNeverDirty && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
+		VEHICLE::SET_VEHICLE_DIRT_LEVEL(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 0.0);
+		GRAPHICS::WASH_DECALS_FROM_VEHICLE(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 100.0);
+	}
 
 	// Infinite Rocket Boost
 	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && getGameVersion() > 36) {
