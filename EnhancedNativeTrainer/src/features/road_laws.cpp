@@ -54,16 +54,16 @@ bool p_blinks = false;
 bool keeponwalking = false;
 float spot_to_stop = -1;
 bool being_arrested = false;
-int r_tick_secs_passed = 0; // , r_tick_secs_curr
-int Seen_secs_curr, Seen_seconds = 0; // Seen_secs_passed, 
+int r_tick_secs_passed = 0; 
+int Seen_secs_curr, Seen_seconds = 0; 
 bool againsttraffic_check, pavementdriving_check, vehiclecollision_check, vehicledamaged_check, hohelmet_check, mobilephone_check, speedingincity_check, speedingonspeedway_check, runningredlight_check, stolenvehicle_check, nolightsnighttime_check, escapingpolice_check = false;
-int SinceCollision_secs_curr, Collision_seconds = -1; // SinceCollision_secs_passed, 
-int TargetBlocked_secs_curr, TargetBlocked_seconds = -1; // TargetBlocked_secs_passed, 
-int SinceEscape_secs_curr, Escape_seconds = -1; // SinceEscape_secs_passed, 
-int SinceAgainstTraffic_secs_curr, AgainstTraffic_seconds = -1; // SinceAgainstTraffic_secs_passed, 
-int Stuck_secs_curr, Stuck_seconds = -1; // Stuck_secs_passed, 
-int SinceStop_secs_curr, Stop_seconds = -1; // SinceStop_secs_passed, 
-int SinceStop_secs_curr_final = -1; // SinceStop_secs_passed_final, 
+int SinceCollision_secs_curr, Collision_seconds = -1; 
+int TargetBlocked_secs_curr, TargetBlocked_seconds = -1; 
+int SinceEscape_secs_curr, Escape_seconds = -1; 
+int SinceAgainstTraffic_secs_curr, AgainstTraffic_seconds = -1; 
+int Stuck_secs_curr, Stuck_seconds = -1; 
+int SinceStop_secs_curr, Stop_seconds = -1; 
+int SinceStop_secs_curr_final = -1; 
 int Stop_seconds_final = 5;
 int veh_redlight_distance_x = -1;
 int veh_redlight_distance_y = -1;
@@ -83,10 +83,10 @@ bool red_light_veh_detected = false;
 Vehicle red_light_vehicle;
 BOOL lightsOn = -1;
 BOOL highbeamsOn = -1;
-int Still_seconds, Still_secs_curr = 0; // , Still_secs_passed
+int Still_seconds, Still_secs_curr = 0; 
 bool no_agressive = false;
 bool cop_hit_you = false;
-int SinceCopHit_secs_curr, CopHit_seconds = 0; // SinceCopHit_secs_passed, 
+int SinceCopHit_secs_curr, CopHit_seconds = 0; 
 int SpeedingCityIndex = 3;
 bool SpeedingCity_Changed = true;
 int SpeedingSpeedwayIndex = 5;
@@ -221,28 +221,6 @@ void road_laws()
 				speedingonspeedway_check = false;
 			}
 		}
-
-		// Speeding On A Motorway
-		/*if (VEH_SPEEDINGCITY_VALUES[SpeedingSpeedwayIndex] > 0 && vehroadlaws_speed * 2.3 > VEH_SPEEDINGCITY_VALUES[SpeedingSpeedwayIndex] && PED::IS_PED_IN_ANY_VEHICLE(playerPed, true))
-		{
-			char* temp_zone_name2 = ZONE::GET_NAME_OF_ZONE(vehroadlaws_coords.x, vehroadlaws_coords.y, vehroadlaws_coords.z);
-			if (strcmp(temp_zone_name2, "PALHIGH") == 0 || strcmp(temp_zone_name2, "TATAMO") == 0 || strcmp(temp_zone_name2, "CHIL") == 0 || strcmp(temp_zone_name2, "WINDF") == 0 || strcmp(temp_zone_name2, "SANCHIA") == 0 ||
-				strcmp(temp_zone_name2, "MTGORDO") == 0 || strcmp(temp_zone_name2, "BRADP") == 0 || strcmp(temp_zone_name2, "MTCHIL") == 0 || strcmp(temp_zone_name2, "CMSW") == 0 || strcmp(temp_zone_name2, "NCHU") == 0 ||
-				strcmp(temp_zone_name2, "LAGO") == 0 || strcmp(temp_zone_name2, "TONGVAH") == 0 || strcmp(temp_zone_name2, "CHU") == 0 || strcmp(temp_zone_name2, "BANHAMC") == 0 || strcmp(temp_zone_name2, "DESRT") == 0 ||
-				strcmp(temp_zone_name2, "BHAMCA") == 0)
-				speedingonspeedway_check = true;
-
-			if (strcmp(temp_zone_name2, "PALETO") == 0 || strcmp(temp_zone_name2, "PALFOR") == 0 || strcmp(temp_zone_name2, "GRAPES") == 0 || strcmp(temp_zone_name2, "SANDY") == 0 || strcmp(temp_zone_name2, "RICHM") == 0 ||
-				strcmp(temp_zone_name2, "GOLF") == 0 || strcmp(temp_zone_name2, "MORN") == 0 || strcmp(temp_zone_name2, "ROCKF") == 0 || strcmp(temp_zone_name2, "WVINE") == 0 || strcmp(temp_zone_name2, "BURTON") == 0 ||
-				strcmp(temp_zone_name2, "DTVINE") == 0 || strcmp(temp_zone_name2, "HAWICK") == 0 || strcmp(temp_zone_name2, "ALTA") == 0 || strcmp(temp_zone_name2, "EAST_V") == 0 || strcmp(temp_zone_name2, "DELBE") == 0 ||
-				strcmp(temp_zone_name2, "DELPE") == 0 || strcmp(temp_zone_name2, "MOVIE") == 0 || strcmp(temp_zone_name2, "KOREAT") == 0 || strcmp(temp_zone_name2, "VINE") == 0 || strcmp(temp_zone_name2, "DOWNT") == 0 ||
-				strcmp(temp_zone_name2, "VESP") == 0 || strcmp(temp_zone_name2, "PBOX") == 0 || strcmp(temp_zone_name2, "TEXTI") == 0 || strcmp(temp_zone_name2, "SKID") == 0 || strcmp(temp_zone_name2, "LMESA") == 0 ||
-				strcmp(temp_zone_name2, "MIRR") == 0 || strcmp(temp_zone_name2, "MURRI") == 0 || strcmp(temp_zone_name2, "BEACH") == 0 || strcmp(temp_zone_name2, "DELSOL") == 0 || strcmp(temp_zone_name2, "STRAW") == 0 ||
-				strcmp(temp_zone_name2, "CHAMH") == 0 || strcmp(temp_zone_name2, "STAD") == 0 || strcmp(temp_zone_name2, "DAVIS") == 0 || strcmp(temp_zone_name2, "RANCHO") == 0 || strcmp(temp_zone_name2, "BANNING") == 0 ||
-				strcmp(temp_zone_name2, "CYPRE") == 0 || strcmp(temp_zone_name2, "HARMO") == 0 || strcmp(temp_zone_name2, "PBLUFF") == 0)
-				speedingonspeedway_check = false;
-		}
-		else if (been_seen_by_a_cop == false) speedingonspeedway_check = false;*/
 
 		// Stolen Vehicle 
 		if (featureStolenVehicle) {
@@ -395,13 +373,10 @@ void road_laws()
 							if (featurePoliceVehicleBlip) UI::SET_BLIP_SPRITE(blip_laws, 42);
 							ENTITY::SET_ENTITY_AS_MISSION_ENTITY(cop_that_fines_you, 1, 1);
 							ENTITY::SET_ENTITY_AS_MISSION_ENTITY(fine_cop_car, 1, 1);
-							//PED::SET_PED_SHOOT_RATE(cop_that_fines_you, 0);
-							//PLAYER::SET_PLAYER_CAN_DO_DRIVE_BY(cop_that_fines_you, false);
 							myRoadlawsGroup = PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID());
 							PED::SET_PED_AS_GROUP_LEADER(PLAYER::PLAYER_PED_ID(), myRoadlawsGroup);
 							PED::SET_PED_AS_GROUP_MEMBER(cop_that_fines_you, myRoadlawsGroup);
 							PED::SET_PED_NEVER_LEAVES_GROUP(cop_that_fines_you, true);
-							//AI::TASK_SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(cop_that_fines_you, true);
 							if (!featurePoliceAgressiveDriving) {
 								AI::TASK_VEHICLE_ESCORT(cop_that_fines_you, fine_cop_car, vehroadlaws, -1, 140.0f, 786468, 3, 1, 1);
 								AI::SET_DRIVE_TASK_DRIVING_STYLE(cop_that_fines_you, 262144);
@@ -428,7 +403,6 @@ void road_laws()
 							}
 							AUDIO::BLIP_SIREN(fine_cop_car);
 							AUDIO::_PLAY_AMBIENT_SPEECH1(cop_that_fines_you, "PROVOKE_GENERIC", "SPEECH_PARAMS_FORCE_SHOUTED");
-							//WAIT(1500);
 							idontlikeiwasseen = true;
 							blip_check = true;
 						}
@@ -474,7 +448,6 @@ void road_laws()
 						PED::SET_PED_AS_GROUP_LEADER(PLAYER::PLAYER_PED_ID(), myRoadlawsGroup);
 						PED::SET_PED_AS_GROUP_MEMBER(cop_that_fines_you, myRoadlawsGroup);
 						PED::SET_PED_NEVER_LEAVES_GROUP(cop_that_fines_you, true);
-						//AI::TASK_SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(cop_that_fines_you, true);
 						if (!featurePoliceAgressiveDriving) {
 							AI::TASK_VEHICLE_ESCORT(cop_that_fines_you, fine_cop_car, vehroadlaws, -1, 140.0f, 786468, 2, 1, 1);
 							AI::SET_DRIVE_TASK_DRIVING_STYLE(cop_that_fines_you, 262144);
@@ -501,7 +474,6 @@ void road_laws()
 						}
 						AUDIO::BLIP_SIREN(fine_cop_car);
 						AUDIO::_PLAY_AMBIENT_SPEECH1(cop_that_fines_you, "PROVOKE_GENERIC", "SPEECH_PARAMS_FORCE_SHOUTED");
-						//WAIT(1500);
 						idontlikeiwasseen = true;
 						tempgotcha_x = tempradiocop.x;
 						tempgotcha_y = tempradiocop.y;
@@ -620,11 +592,9 @@ void road_laws()
 				// You agree to be fined
 				if (been_seen_by_a_cop == true && Stop_seconds == 5 && cop_walking == false) {
 					if (PED::IS_PED_IN_VEHICLE(playerPed, vehroadlaws, true)) {
-						//Vector3 temp_fine_me = ENTITY::GET_ENTITY_COORDS(playerPed, true);
 						int bone_mycar_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(playerPed, "BONETAG_L_FINGER0"); // IK_Head
 						Vector3 temp_fine_me = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(playerPed, bone_mycar_index);
 						AI::TASK_LEAVE_VEHICLE(cop_that_fines_you, fine_cop_car, 0);
-						//AI::TASK_GOTO_ENTITY_AIMING(cop_that_fines_you, playerPed, 4.0, 30.0); // 4.0
 						if ((ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) >= 135 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) <= 225) ||
 							ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) >= 315 || ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) <= 45) {
 							spot_to_stop = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerPed, -1.5, 0.0, 0.0).x; // south && north
@@ -642,12 +612,10 @@ void road_laws()
 			
 			if (cop_walking == true) ENTITY::SET_ENTITY_INVINCIBLE(cop_that_fines_you, false);
 
-			if (been_seen_by_a_cop == true && cop_walking == true && PED::IS_PED_IN_VEHICLE(cop_that_fines_you, fine_cop_car, true)) { //  && tempgotcha_x < 100 && tempgotcha_y < 100
-				//Vector3 temp_fine_me = ENTITY::GET_ENTITY_COORDS(playerPed, true);
+			if (been_seen_by_a_cop == true && cop_walking == true && PED::IS_PED_IN_VEHICLE(cop_that_fines_you, fine_cop_car, true)) { 
 				int bone_mycar_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(playerPed, "BONETAG_L_FINGER0"); // IK_Head
 				Vector3 temp_fine_me = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(playerPed, bone_mycar_index);
 				AI::TASK_LEAVE_VEHICLE(cop_that_fines_you, fine_cop_car, 0);
-				//AI::TASK_GOTO_ENTITY_AIMING(cop_that_fines_you, playerPed, 4.0, 30.0); // 4.0
 				if ((ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) >= 135 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) <= 225) ||
 					ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) >= 315 || ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) <= 45) {
 					spot_to_stop = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerPed, -1.5, 0.0, 0.0).x; // south && north
@@ -702,10 +670,8 @@ void road_laws()
 			
 			// Cop Must Go To The Driver
 			if (been_seen_by_a_cop == true && !PED::IS_PED_IN_VEHICLE(cop_that_fines_you, fine_cop_car, true) && cop_walking == true && Still_seconds > 2 && (tempfined_x > 4 || tempfined_y > 4)) {
-				//Vector3 temp_fine_me = ENTITY::GET_ENTITY_COORDS(playerPed, true);
 				int bone_mycar_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(playerPed, "BONETAG_L_FINGER0"); // IK_Head
 				Vector3 temp_fine_me = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(playerPed, bone_mycar_index);
-				//AI::TASK_GOTO_ENTITY_AIMING(cop_that_fines_you, playerPed, 4.0, 30.0); // 4.0
 				if ((ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) >= 135 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) <= 225) ||
 					ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) >= 315 || ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) <= 45) {
 					spot_to_stop = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerPed, -1.5, 0.0, 0.0).x; // south && north
@@ -724,7 +690,6 @@ void road_laws()
 			// Keep On Walking
 			if (been_seen_by_a_cop == true && cop_walking == true && Stop_seconds_final < 17) {
 				Vector3 temp_walking_cop = ENTITY::GET_ENTITY_COORDS(cop_that_fines_you, true);
-				//Vector3 temp_fine_me = ENTITY::GET_ENTITY_COORDS(playerPed, true);
 				int bone_mycar_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(playerPed, "BONETAG_L_FINGER0"); // IK_Head
 				Vector3 temp_fine_me = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(playerPed, bone_mycar_index);
 				if (TargetBlocked_seconds < 10 && keeponwalking == false && AI::IS_PED_STILL(cop_that_fines_you) && ((((ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) >= 135 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) <= 225) ||
@@ -797,9 +762,6 @@ void road_laws()
 				}
 				if (Stop_seconds_final == 20 && STREAMING::DOES_ANIM_DICT_EXIST("amb@code_human_in_car_mp_actions@gang_sign_b@low@ds@base") && !ENTITY::HAS_ENTITY_ANIM_FINISHED(cop_that_fines_you, "amb@code_human_in_car_mp_actions@gang_sign_b@low@ds@base", "enter", 3)) {
 					if (!AUDIO::IS_AMBIENT_SPEECH_PLAYING(cop_that_fines_you)) AUDIO::_PLAY_AMBIENT_SPEECH1(cop_that_fines_you, "GENERIC_BYE", "SPEECH_PARAMS_FORCE_SHOUTED");
-					//STREAMING::REQUEST_ANIM_DICT("anim@mp_player_intincarrocklow@ds@");
-					//while (!STREAMING::HAS_ANIM_DICT_LOADED("anim@mp_player_intincarrocklow@ds@")) WAIT(0);
-					//AI::TASK_PLAY_ANIM(cop_that_fines_you, "anim@mp_player_intincarrocklow@ds@", "enter_fp", 8.0, 0.0, -1, 9, 0, 0, 0, 0);
 					Vector3 t_coords = ENTITY::GET_ENTITY_COORDS(cop_that_fines_you, true);
 					Vector3 t_rot = ENTITY::GET_ENTITY_ROTATION(cop_that_fines_you, 2);
 					STREAMING::REQUEST_ANIM_DICT("franklin_1_int-7");
@@ -809,7 +771,6 @@ void road_laws()
 				}
 				if (Stop_seconds_final == 21) { // 22
 					if (!AUDIO::IS_AMBIENT_SPEECH_PLAYING(cop_that_fines_you)) AUDIO::STOP_CURRENT_PLAYING_AMBIENT_SPEECH(cop_that_fines_you);
-					//AI::STOP_ANIM_TASK(cop_that_fines_you, "anim@mp_player_intincarrocklow@ds@", "enter_fp", 1.0);
 					AI::STOP_ANIM_TASK(cop_that_fines_you, "franklin_1_int-7", "player_one_dual-7", 1.0);
 				}
 			}

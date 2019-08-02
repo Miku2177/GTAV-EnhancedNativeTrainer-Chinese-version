@@ -1421,22 +1421,15 @@ const std::vector<std::string> ALL_ANIMS =
 	"anim@heists@heist_safehouse_intro@open_door@ buzz_in_player_cam_dlcapt",
 	"anim@heists@heist_safehouse_intro@open_door@ open_door_cam",
 	"anim@heists@heist_safehouse_intro@phone phone_intro_cam1",
-	//"anim@heists@heist_safehouse_intro@phone phone_intro_facial",
 	"anim@heists@heist_safehouse_intro@phone_couch@female phone_couch_female_idle_cam",
 	"anim@heists@heist_safehouse_intro@phone_couch@female phone_couch_female_part_one_cam",
-	//"anim@heists@heist_safehouse_intro@phone_couch@female phone_couch_female_part_one_facial",
 	"anim@heists@heist_safehouse_intro@phone_couch@female phone_couch_female_part_one_phone",
 	"anim@heists@heist_safehouse_intro@phone_couch@female phone_couch_female_part_two_cam",
-	//"anim@heists@heist_safehouse_intro@phone_couch@female phone_couch_female_part_two_facial",
 	"anim@heists@heist_safehouse_intro@phone_couch@female phone_couch_female_part_two",
-	//"anim@heists@heist_safehouse_intro@phone_couch@male phone_couch_male_facial",
 	"anim@heists@heist_safehouse_intro@phone_couch@male phone_couch_male_idle_cam",
-	//"anim@heists@heist_safehouse_intro@phone_couch@male phone_couch_male_idle_facial",
 	"anim@heists@heist_safehouse_intro@phone_couch@male phone_couch_male_idle",
-	//"anim@heists@heist_safehouse_intro@phone_couch@male phone_couch_male_part_one_facial",
 	"anim@heists@heist_safehouse_intro@phone_couch@male phone_couch_male_part_one_phone",
 	"anim@heists@heist_safehouse_intro@phone_couch@male phone_couch_male_part_two_cam",
-	//"anim@heists@heist_safehouse_intro@phone_couch@male phone_couch_male_part_two_facial",
 	"anim@heists@heist_safehouse_intro@phone_couch@male phone_couch_male_part_two_phone",
 	"anim@heists@heist_safehouse_intro@phone_couch@male phone_couch_male",
 	"anim@heists@heist_safehouse_intro@variations@female@kitchen kitchen_part_one_loop_cam",
@@ -1455,22 +1448,16 @@ const std::vector<std::string> ALL_ANIMS =
 	"anim@heists@heist_safehouse_intro@variations@male@window window_part_one_loop_cam",
 	"anim@heists@heist_safehouse_intro@variations@male@window window_part_two",
 	"anim@heists@heist_safehouse_intro@whisky@window whisky_window_idle_cam",
-	//"anim@heists@heist_safehouse_intro@whisky@window whisky_window_idle_facial",
 	"anim@heists@heist_safehouse_intro@whisky@window whisky_window_idle_glass",
 	"anim@heists@heist_safehouse_intro@whisky@window whisky_window_part_one_cam",
-	//"anim@heists@heist_safehouse_intro@whisky@window whisky_window_part_one_facial",
 	"anim@heists@heist_safehouse_intro@whisky@window whisky_window_part_one",
 	"anim@heists@heist_safehouse_intro@whisky@window whisky_window_part_two_cam",
-	//"anim@heists@heist_safehouse_intro@whisky@window whisky_window_part_two_facial",
 	"anim@heists@heist_safehouse_intro@whisky@window whisky_window_part_two",
 	"anim@heists@heist_safehouse_intro@wine@window wine_window_idle_facial",
-	//"anim@heists@heist_safehouse_intro@wine@window wine_window_idle",
 	"anim@heists@heist_safehouse_intro@wine@window wine_window_part_one_cam",
-	//"anim@heists@heist_safehouse_intro@wine@window wine_window_part_one_facial",
 	"anim@heists@heist_safehouse_intro@wine@window wine_window_part_one_glass",
 	"anim@heists@heist_safehouse_intro@wine@window wine_window_part_one",
 	"anim@heists@heist_safehouse_intro@wine@window wine_window_part_two_cam",
-	//"anim@heists@heist_safehouse_intro@wine@window wine_window_part_two_facial",
 	"anim@heists@heist_safehouse_intro@wine@window wine_window_part_two",
 	"anim@heists@humane_labs@emp@hack_door hack_intro",
 	"anim@heists@humane_labs@finale@ext_idles intro_car",
@@ -1797,14 +1784,11 @@ const std::vector<std::string> ALL_ANIMS =
 	"anim@mp_player_intcelebrationfemale@air_shagging air_shagging",
 	"anim@mp_player_intcelebrationfemale@air_synth air_synth",
 	"anim@mp_player_intcelebrationfemale@blow_kiss blow_kiss",
-	//"anim@mp_player_intcelebrationfemale@dj dj_facial",
 	"anim@mp_player_intcelebrationfemale@dj dj",
-	//"anim@mp_player_intcelebrationfemale@dock dock_facial",
 	"anim@mp_player_intcelebrationfemale@dock dock",
 	"anim@mp_player_intcelebrationfemale@face_palm face_palm",
 	"anim@mp_player_intcelebrationfemale@finger finger",
 	"anim@mp_player_intcelebrationfemale@jazz_hands jazz_hands",
-	//"anim@mp_player_intcelebrationfemale@knuckle_crunch knuckle_crunch_facial",
 	"anim@mp_player_intcelebrationfemale@knuckle_crunch knuckle_crunch",
 	"anim@mp_player_intcelebrationfemale@nose_pick nose_pick",
 	"anim@mp_player_intcelebrationfemale@photography photography",
@@ -1812,21 +1796,15 @@ const std::vector<std::string> ALL_ANIMS =
 	"anim@mp_player_intcelebrationfemale@slow_clap slow_clap",
 	"anim@mp_player_intcelebrationfemale@smoke_flick smoke_flick",
 	"anim@mp_player_intcelebrationfemale@surrender surrender",
-	//"anim@mp_player_intcelebrationfemale@thumbs_up thumbs_up_facial",
-	//"anim@mp_player_intcelebrationfemale@wave wave_facial",
 	"anim@mp_player_intcelebrationmale@air_guitar air_guitar_facial",
 	"anim@mp_player_intcelebrationmale@air_guitar air_guitar",
 	"anim@mp_player_intcelebrationmale@air_shagging air_shagging_facial",
-	//"anim@mp_player_intcelebrationmale@air_synth air_synth_facial",
 	"anim@mp_player_intcelebrationmale@blow_kiss blow_kiss_facial",
-	//"anim@mp_player_intcelebrationmale@dj dj_facial",
 	"anim@mp_player_intcelebrationmale@dj dj",
-	//"anim@mp_player_intcelebrationmale@dock dock_facial",
 	"anim@mp_player_intcelebrationmale@dock dock",
 	"anim@mp_player_intcelebrationmale@face_palm face_palm",
 	"anim@mp_player_intcelebrationmale@finger finger",
 	"anim@mp_player_intcelebrationmale@jazz_hands jazz_hands",
-	//"anim@mp_player_intcelebrationmale@knuckle_crunch knuckle_crunch_facial",
 	"anim@mp_player_intcelebrationmale@nose_pick nose_pick",
 	"anim@mp_player_intcelebrationmale@photography photography",
 	"anim@mp_player_intcelebrationmale@rock rock_facial",
@@ -1841,63 +1819,28 @@ const std::vector<std::string> ALL_ANIMS =
 	"anim@mp_player_intcelebrationmale@wank wank",
 	"anim@mp_player_intcelebrationmale@wave wave_facial",
 	"anim@mp_player_intcelebrationmale@wave wave",
-	//"anim@mp_player_intcelebrationpaired@f_f_backslap backslap_left_facial",
-	//"anim@mp_player_intcelebrationpaired@f_f_backslap backslap_right_facial",
 	"anim@mp_player_intcelebrationpaired@f_f_backslap backslap_right",
-	//"anim@mp_player_intcelebrationpaired@f_f_bro_hug bro_hug_right_facial",
-	//"anim@mp_player_intcelebrationpaired@f_f_cowering cowering_left_facial",
 	"anim@mp_player_intcelebrationpaired@f_f_cowering cowering_left",
-	//"anim@mp_player_intcelebrationpaired@f_f_cowering cowering_right_facial",
-	//"anim@mp_player_intcelebrationpaired@f_f_fist_bump fist_bump_left_facial",
-	//"anim@mp_player_intcelebrationpaired@f_f_fist_bump fist_bump_right_facial",
-	//"anim@mp_player_intcelebrationpaired@f_f_high_five high_five_left_facial",
 	"anim@mp_player_intcelebrationpaired@f_f_high_five high_five_left",
-	//"anim@mp_player_intcelebrationpaired@f_f_high_five high_five_right_facial",
-	//"anim@mp_player_intcelebrationpaired@f_f_manly_handshake manly_handshake_left_facial",
 	"anim@mp_player_intcelebrationpaired@f_f_manly_handshake manly_handshake_left",
-	//"anim@mp_player_intcelebrationpaired@f_f_manly_handshake manly_handshake_right_facial",
 	"anim@mp_player_intcelebrationpaired@f_f_manly_handshake manly_handshake_right",
-	//"anim@mp_player_intcelebrationpaired@f_f_sarcastic sarcastic_left_facial",
 	"anim@mp_player_intcelebrationpaired@f_f_sarcastic sarcastic_left",
-	//"anim@mp_player_intcelebrationpaired@f_f_sarcastic sarcastic_right_facial",
 	"anim@mp_player_intcelebrationpaired@f_f_sarcastic sarcastic_right",
 	"anim@mp_player_intcelebrationpaired@f_m_backslap backslap_left_facial",
 	"anim@mp_player_intcelebrationpaired@f_m_backslap backslap_right_facial",
 	"anim@mp_player_intcelebrationpaired@f_m_backslap backslap_right",
-	//"anim@mp_player_intcelebrationpaired@f_m_bro_hug bro_hug_left_facial",
 	"anim@mp_player_intcelebrationpaired@f_m_bro_hug bro_hug_left",
 	"anim@mp_player_intcelebrationpaired@f_m_bro_hug bro_hug_right",
-	//"anim@mp_player_intcelebrationpaired@f_m_cowering cowering_left_facial",
 	"anim@mp_player_intcelebrationpaired@f_m_cowering cowering_left",
-	//"anim@mp_player_intcelebrationpaired@f_m_cowering cowering_right_facial",
-	//"anim@mp_player_intcelebrationpaired@f_m_fist_bump fist_bump_left_facial",
-	//"anim@mp_player_intcelebrationpaired@f_m_fist_bump fist_bump_right_facial",
-	//"anim@mp_player_intcelebrationpaired@f_m_high_five high_five_left_facial",
-	//"anim@mp_player_intcelebrationpaired@f_m_high_five high_five_right_facial",
-	//"anim@mp_player_intcelebrationpaired@f_m_manly_handshake manly_handshake_left_facial",
 	"anim@mp_player_intcelebrationpaired@f_m_manly_handshake manly_handshake_left",
-	//"anim@mp_player_intcelebrationpaired@f_m_manly_handshake manly_handshake_right_facial",
-	//"anim@mp_player_intcelebrationpaired@f_m_sarcastic sarcastic_left_facial",
 	"anim@mp_player_intcelebrationpaired@f_m_sarcastic sarcastic_left",
-	//"anim@mp_player_intcelebrationpaired@f_m_sarcastic sarcastic_right_facial",
 	"anim@mp_player_intcelebrationpaired@f_m_sarcastic sarcastic_right",
-	//"anim@mp_player_intcelebrationpaired@m_m_backslap backslap_left_facial",
 	"anim@mp_player_intcelebrationpaired@m_m_backslap backslap_left",
-	//"anim@mp_player_intcelebrationpaired@m_m_backslap backslap_right_facial",
-	//"anim@mp_player_intcelebrationpaired@m_m_bro_hug bro_hug_right_facial",
-	//"anim@mp_player_intcelebrationpaired@m_m_cowering cowering_left_facial",
 	"anim@mp_player_intcelebrationpaired@m_m_cowering cowering_left",
-	//"anim@mp_player_intcelebrationpaired@m_m_cowering cowering_right_facial",
 	"anim@mp_player_intcelebrationpaired@m_m_fist_bump fist_bump_left_facial",
-	//"anim@mp_player_intcelebrationpaired@m_m_fist_bump fist_bump_right_facial",
-	//"anim@mp_player_intcelebrationpaired@m_m_high_five high_five_left_facial",
-	//"anim@mp_player_intcelebrationpaired@m_m_high_five high_five_right_facial",
 	"anim@mp_player_intcelebrationpaired@m_m_high_five high_five_right",
 	"anim@mp_player_intcelebrationpaired@m_m_manly_handshake manly_handshake_left_facial",
-	//"anim@mp_player_intcelebrationpaired@m_m_manly_handshake manly_handshake_right_facial",
-	//"anim@mp_player_intcelebrationpaired@m_m_sarcastic sarcastic_left_facial",
 	"anim@mp_player_intcelebrationpaired@m_m_sarcastic sarcastic_left",
-	//"anim@mp_player_intcelebrationpaired@m_m_sarcastic sarcastic_right_facial",
 	"anim@mp_player_intcelebrationpaired@m_m_sarcastic sarcastic_right",
 	"anim@mp_player_intincarair_guitarbodhi@ds@ idle_a",
 	"anim@mp_player_intincarair_guitarbodhi@ps@ idle_a",
@@ -6655,15 +6598,11 @@ const std::vector<std::string> ALL_ANIMS =
 	"mini@golfreactions@generic@ putt_react_good_03_cam",
 	"mini@golfreactions@generic@ putt_react_good_03",
 	"mini@golfreactions@generic@ swing_react_bad_01_cam",
-	//"mini@golfreactions@generic@ swing_react_bad_01_facial",
 	"mini@golfreactions@generic@ swing_react_bad_01",
 	"mini@golfreactions@generic@ swing_react_bad_02_cam",
-	//"mini@golfreactions@generic@ swing_react_bad_02_facial",
 	"mini@golfreactions@generic@ swing_react_bad_02",
 	"mini@golfreactions@generic@ swing_react_good_01_cam",
-	//"mini@golfreactions@generic@ swing_react_good_01_facial",
 	"mini@golfreactions@generic@ swing_react_good_01",
-	//"mini@golfreactions@generic@ swing_react_good_02_facial",
 	"mini@golfreactions@generic@ swing_react_good_02",
 	"mini@golfreactions@generic@ wedge_react_bad_01_cam",
 	"mini@golfreactions@generic@ wedge_react_bad_01",
@@ -6681,10 +6620,8 @@ const std::vector<std::string> ALL_ANIMS =
 	"mini@golfreactions@michael@clubs react_win_club_01_michael_facial",
 	"mini@golfreactions@michael@clubs react_win_club_01_michael",
 	"mini@golfreactions@michael@clubs react_win_club_02_cam",
-	//"mini@golfreactions@michael@clubs react_win_club_02_michael_facial",
 	"mini@golfreactions@michael@clubs react_win_club_02_michael",
 	"mini@golfreactions@michael@clubs react_win_club_03_cam",
-	//"mini@golfreactions@michael@clubs react_win_club_03_michael_facial",
 	"mini@golfreactions@michael@clubs react_win_club_03_michael",
 	"mini@golfreactions@michael@putter react_lose_putter_01_michael_cam",
 	"mini@golfreactions@michael@putter react_lose_putter_01_michael",
@@ -7573,7 +7510,6 @@ const std::vector<std::string> ALL_ANIMS =
 	"mini@tennisexit@michael tennis_outro_michael_facial",
 	"mini@tennisexit@michael tennis_outro_michael",
 	"mini@tennisexit@trevor tennis_outro_trevor_cam",
-	//"mini@tennisexit@trevor tennis_outro_trevor_facial",
 	"mini@tennisexit@trevor tennis_outro_trevor",
 	"mini@tennisintro tennis_ig_intro_cam",
 	"mini@tennisintro tennis_ig_intro_female_a",
@@ -7963,9 +7899,7 @@ const std::vector<std::string> ALL_ANIMS =
 	"missbigscore2aig_1 wait_gate_d",
 	"missbigscore2aig_2 check_id_cam",
 	"missbigscore2aig_2 check_id_guard",
-	//"missbigscore2aig_2 check_id_guy_facial",
 	"missbigscore2aig_2 check_id_guy",
-	//"missbigscore2aig_2 check_id_player0_facial",
 	"missbigscore2aig_2 check_id_player0",
 	"missbigscore2aig_3 mid_mission_inside_helicopter_lester",
 	"missbigscore2aig_3 mid_mission_inside_helicopter_trevor",
@@ -8469,7 +8403,6 @@ const std::vector<std::string> ALL_ANIMS =
 	"missexile2 standing_idle_b",
 	"missexile2 standing_idle_c",
 	"missexile2 take_down_bad_guy_chop",
-	//"missexile2 take_down_bad_guy_facial",
 	"missexile2 take_down_bad_guy_victim",
 	"missexile2 taunt_01",
 	"missexile2 taunt_02",
@@ -8518,7 +8451,6 @@ const std::vector<std::string> ALL_ANIMS =
 	"missexile3 reaction_forward_big_intro_b",
 	"missexile3 reaction_forward_big_intro_d",
 	"missexile3 waterfall_jump_cam",
-	//"missexile3@train_ ex03_attack_driver_outro_driver_facial",
 	"missexile3@train_ ex03_attack_driver_outro_driver",
 	"missexile3@train_ ex03_train_bike_scene_cam",
 	"missexile3@train_ ex03_train_bike_scene_driver",
@@ -8593,10 +8525,8 @@ const std::vector<std::string> ALL_ANIMS =
 	"missfam1_yachtbattleonyacht01_ onyacht_fight02failure_f",
 	"missfam1_yachtbattleonyacht01_ onyacht_fight02failure_thug",
 	"missfam1_yachtbattleonyacht01_ onyacht_fight02intro_f",
-	//"missfam1_yachtbattleonyacht01_ onyacht_fight02intro_thug_facial",
 	"missfam1_yachtbattleonyacht01_ onyacht_fight02intro_thug",
 	"missfam1_yachtbattleonyacht01_ onyacht_fight02loop_f",
-	//"missfam1_yachtbattleonyacht01_ onyacht_fight02loop_thug_facial",
 	"missfam1_yachtbattleonyacht01_ onyacht_fight02loop_thug",
 	"missfam1_yachtbattleonyacht01_ onyacht_fight02success_f",
 	"missfam1_yachtbattleonyacht01_ onyacht_fight02success_thug",
@@ -8778,7 +8708,6 @@ const std::vector<std::string> ALL_ANIMS =
 	"missfam5leadinoutmcs_5 leadout_cam",
 	"missfam5leadinoutmcs_5 leadout_car_door",
 	"missfam5leadinoutmcs_5 leadout_car",
-	//"missfam5leadinoutmcs_5 leadout_dealer_facial",
 	"missfam5leadinoutmcs_5 leadout_dealer",
 	"missfam5leadinoutmcs_5 leadout_door",
 	"missfam5leadinoutmcs_5 leadout_mic",
@@ -9006,9 +8935,7 @@ const std::vector<std::string> ALL_ANIMS =
 	"missfbi2@leadinout fbi_2_int_leadinout_loop_andreas",
 	"missfbi2@leadinout fbi_2_int_leadinout_loop_daven",
 	"missfbi2@leadinout fbi_2_int_leadinout_loop_steve",
-	//"missfbi2@leadinout fbi_2_int_leadout_action_andreas_facial",
 	"missfbi2@leadinout fbi_2_int_leadout_action_andreas",
-	//"missfbi2@leadinout fbi_2_int_leadout_action_steve_facial",
 	"missfbi2@leadinout fbi_2_int_leadout_action_steve",
 	"missfbi2@leadinoutfbi_2_mcs_1 _leadin_action_fbi",
 	"missfbi2@leadinoutfbi_2_mcs_1 _leadin_action_trevor_facial",
@@ -9039,9 +8966,7 @@ const std::vector<std::string> ALL_ANIMS =
 	"missfbi2_driveby sweep_low",
 	"missfbi2_driveby sweep_med",
 	"missfbi2cuts interrogation_a",
-	//"missfbi2cuts interrogation_b_facial",
 	"missfbi2cuts interrogation_b",
-	//"missfbi2cuts interrogation_c_facial",
 	"missfbi2cuts interrogation_c",
 	"missfbi2cuts interrogation_cam",
 	"missfbi2cuts interrogation_chair",
@@ -9069,15 +8994,10 @@ const std::vector<std::string> ALL_ANIMS =
 	"missfbi3_camcrew final_loop_vcam",
 	"missfbi3_camcrew first_action_bmik",
 	"missfbi3_camcrew first_action_clip",
-	//"missfbi3_camcrew first_action_cman_facial",
 	"missfbi3_camcrew first_action_cman",
-	//"missfbi3_camcrew first_action_gal_facial",
 	"missfbi3_camcrew first_action_gal",
-	//"missfbi3_camcrew first_action_guy_facial",
 	"missfbi3_camcrew first_action_guy",
-	//"missfbi3_camcrew first_action_prod_facial",
 	"missfbi3_camcrew first_action_prod",
-	//"missfbi3_camcrew first_action_sman_facial",
 	"missfbi3_camcrew first_action_sman",
 	"missfbi3_camcrew first_action_vcam",
 	"missfbi3_camcrew second_action_bmik",
@@ -9403,7 +9323,6 @@ const std::vector<std::string> ALL_ANIMS =
 	"missfbi3_waterboard waterboard_kick_hand_l",
 	"missfbi3_waterboard waterboard_kick_hand_r",
 	"missfbi3_waterboard waterboard_kick_jerrycan",
-	//"missfbi3_waterboard waterboard_kick_player_facial",
 	"missfbi3_waterboard waterboard_kick_player",
 	"missfbi3_waterboard waterboard_kick_playerface",
 	"missfbi3_waterboard waterboard_kick_rag",
@@ -9414,7 +9333,6 @@ const std::vector<std::string> ALL_ANIMS =
 	"missfbi3_waterboard waterboard_loop_hand_l",
 	"missfbi3_waterboard waterboard_loop_hand_r",
 	"missfbi3_waterboard waterboard_loop_jerrycan",
-	//"missfbi3_waterboard waterboard_loop_player_facial",
 	"missfbi3_waterboard waterboard_loop_player",
 	"missfbi3_waterboard waterboard_loop_rag",
 	"missfbi3_waterboard waterboard_loop_to_ready_cam",
@@ -9422,12 +9340,9 @@ const std::vector<std::string> ALL_ANIMS =
 	"missfbi3_waterboard waterboard_loop_to_ready_hand_l",
 	"missfbi3_waterboard waterboard_loop_to_ready_hand_r",
 	"missfbi3_waterboard waterboard_loop_to_ready_jerrycan",
-	//"missfbi3_waterboard waterboard_loop_to_ready_player_facial",
 	"missfbi3_waterboard waterboard_loop_to_ready_player",
 	"missfbi3_waterboard waterboard_loop_to_ready_rag",
-	//"missfbi3_waterboard waterboard_loop_to_ready_victim_facial",
 	"missfbi3_waterboard waterboard_loop_to_ready_victim",
-	//"missfbi3_waterboard waterboard_loop_victim_facial",
 	"missfbi3_waterboard waterboard_loop_victim",
 	"missfbi3_waterboard waterboard_outro_cam",
 	"missfbi3_waterboard waterboard_outro_chair",
@@ -9451,17 +9366,14 @@ const std::vector<std::string> ALL_ANIMS =
 	"missfbi3_waterboard waterboard_ready_loop_player_facial",
 	"missfbi3_waterboard waterboard_ready_loop_player",
 	"missfbi3_waterboard waterboard_ready_loop_rag",
-	//"missfbi3_waterboard waterboard_ready_loop_victim_facial",
 	"missfbi3_waterboard waterboard_ready_loop_victim",
 	"missfbi3_waterboard waterboard_ready_to_loop_cam",
 	"missfbi3_waterboard waterboard_ready_to_loop_chair",
 	"missfbi3_waterboard waterboard_ready_to_loop_hand_l",
 	"missfbi3_waterboard waterboard_ready_to_loop_hand_r",
 	"missfbi3_waterboard waterboard_ready_to_loop_jerrycan",
-	//"missfbi3_waterboard waterboard_ready_to_loop_player_facial",
 	"missfbi3_waterboard waterboard_ready_to_loop_player",
 	"missfbi3_waterboard waterboard_ready_to_loop_rag",
-	//"missfbi3_waterboard waterboard_ready_to_loop_victim_facial",
 	"missfbi3_waterboard waterboard_ready_to_loop_victim",
 	"missfbi3_waterboard weapon_bench_waterboard_battery",
 	"missfbi3_waterboard weapon_bench_waterboard_can",
@@ -9628,7 +9540,6 @@ const std::vector<std::string> ALL_ANIMS =
 	"missfbi4 fbi4_wallcrush_cam",
 	"missfbi4 idle_loop_devin",
 	"missfbi4 push_agents_agent1",
-	//"missfbi4 push_agents_agent2_facial",
 	"missfbi4 push_agents_agent2",
 	"missfbi4 push_agents_player0",
 	"missfbi4 react_explosion",
@@ -9951,7 +9862,6 @@ const std::vector<std::string> ALL_ANIMS =
 	"missfinale_c2leadinoutfin_c_int _leadout_loop1_lester",
 	"missfinale_c2leadinoutfin_c_int _leadout_loop1_wchair",
 	"missfinale_c2mcs_1 fin_c2_mcs_1_cam",
-	//"missfinale_c2mcs_1 fin_c2_mcs_1_camman_facial",
 	"missfinale_c2mcs_1 fin_c2_mcs_1_camman",
 	"missfinale_c2mcs_1 fin_c2_mcs_1_steve_facial",
 	"missfinale_c2mcs_1 fin_c2_mcs_1_steve",
@@ -11093,7 +11003,6 @@ const std::vector<std::string> ALL_ANIMS =
 	"missheistpaletoscore2mcs_2_p6 empty_safe_enter_safe_05",
 	"missheistpaletoscore2mcs_2_p6 empty_safe_enter_safe_06",
 	"missheistpaletoscore2mcs_2_p6 empty_safe_exit_gunman_bag",
-	//"missheistpaletoscore2mcs_2_p6 empty_safe_exit_gunman_facial",
 	"missheistpaletoscore2mcs_2_p6 empty_safe_exit_gunman",
 	"missheistpaletoscore2mcs_2_p6 empty_safe_exit_player0_bag",
 	"missheistpaletoscore2mcs_2_p6 empty_safe_exit_player0",
@@ -11296,7 +11205,6 @@ const std::vector<std::string> ALL_ANIMS =
 	"misslester1aig_3exit play_airguitar_hipster1",
 	"misslester1aig_3exit play_airguitar_hipster2",
 	"misslester1aig_3main air_guitar_01_a",
-	//"misslester1aig_3main air_guitar_01_b_facial",
 	"misslester1aig_3main air_guitar_01_b",
 	"misslester1aig_3main air_guitar_01_boss",
 	"misslester1aig_3main air_guitar_01_c",
@@ -11314,33 +11222,24 @@ const std::vector<std::string> ALL_ANIMS =
 	"misslester1aig_4exit air_guitar_01_exitloop_chair_boss",
 	"misslester1aig_4exit air_guitar_01_exitloop_chair_d",
 	"misslester1aig_4exit air_guitar_01_exitloop_d",
-	//"misslester1aig_4exit air_guitar_02_exit_a_facial",
 	"misslester1aig_4exit air_guitar_02_exit_a",
-	//"misslester1aig_4exit air_guitar_02_exit_b_facial",
 	"misslester1aig_4exit air_guitar_02_exit_b",
-	//"misslester1aig_4exit air_guitar_02_exit_boss_facial",
 	"misslester1aig_4exit air_guitar_02_exit_boss",
 	"misslester1aig_4exit air_guitar_02_exit_c",
 	"misslester1aig_4exit air_guitar_02_exit_chair_a",
 	"misslester1aig_4exit air_guitar_02_exit_chair_b",
 	"misslester1aig_4exit air_guitar_02_exit_chair_d",
 	"misslester1aig_4exit air_guitar_02_exit_d",
-	//"misslester1aig_4exit air_guitar_02_exitloop_a_facial",
 	"misslester1aig_4exit air_guitar_02_exitloop_a",
-	//"misslester1aig_4exit air_guitar_02_exitloop_b_facial",
 	"misslester1aig_4exit air_guitar_02_exitloop_b",
-	//"misslester1aig_4exit air_guitar_02_exitloop_boss_facial",
 	"misslester1aig_4exit air_guitar_02_exitloop_boss",
 	"misslester1aig_4exit air_guitar_02_exitloop_c",
 	"misslester1aig_4exit air_guitar_02_exitloop_chair_a",
 	"misslester1aig_4exit air_guitar_02_exitloop_chair_b",
 	"misslester1aig_4exit air_guitar_02_exitloop_chair_d",
 	"misslester1aig_4exit air_guitar_02_exitloop_d",
-	//"misslester1aig_4main air_guitar_02_a_facial",
 	"misslester1aig_4main air_guitar_02_a",
-	//"misslester1aig_4main air_guitar_02_b_facial",
 	"misslester1aig_4main air_guitar_02_b",
-	//"misslester1aig_4main air_guitar_02_boss_facial",
 	"misslester1aig_4main air_guitar_02_boss",
 	"misslester1aig_4main air_guitar_02_c",
 	"misslester1aig_4main air_guitar_02_chair_a",
@@ -11438,7 +11337,6 @@ const std::vector<std::string> ALL_ANIMS =
 	"misslester1aig_6 paper_throw_base_m",
 	"misslester1aig_6 paper_throw_base_paper_ball",
 	"misslester1aig_7exit interview_exitloop_f",
-	//"misslester1aig_7main interview_boss_facial",
 	"misslester1aig_7main interview_boss",
 	"misslester1aig_7main interview_f",
 	"misslester1aig_7main interview_m",
@@ -11664,7 +11562,6 @@ const std::vector<std::string> ALL_ANIMS =
 	"missmic2@franklin_beckon beckon_a_player1",
 	"missmic2@franklin_beckon beckon_b_player1",
 	"missmic2@goon1 goon_leap_rail",
-	//"missmic2@goon1 goon_meatslicer_facial",
 	"missmic2@goon1 goon_meatslicer",
 	"missmic2@goon1 goon_rundownstair",
 	"missmic2@goon1 goonfall_into_bin",
@@ -11691,7 +11588,6 @@ const std::vector<std::string> ALL_ANIMS =
 	"missmic2ig_11 mic_2_ig_11_b_goon",
 	"missmic2ig_11 mic_2_ig_11_b_p_one",
 	"missmic2ig_11 mic_2_ig_11_intro_cam",
-	//"missmic2ig_11 mic_2_ig_11_intro_goon_facial",
 	"missmic2ig_11 mic_2_ig_11_intro_goon",
 	"missmic2ig_11 mic_2_ig_11_intro_p_one",
 	"missmic2ig_11 mic_2_ig_11_losing_goon",
@@ -11813,13 +11709,10 @@ const std::vector<std::string> ALL_ANIMS =
 	"missprologueig_1 idle_loop_malehostage01",
 	"missprologueig_1 idle_loop_malehostage02",
 	"missprologueig_1 idle_loop_player_two",
-	//"missprologueig_1 main_brad_facial",
 	"missprologueig_1 main_brad",
 	"missprologueig_1 main_camera",
 	"missprologueig_1 main_entrydoor",
-	//"missprologueig_1 main_femalehostage_facial",
 	"missprologueig_1 main_femalehostage",
-	//"missprologueig_1 main_gaurd_facial",
 	"missprologueig_1 main_gaurd",
 	"missprologueig_1 main_malehostage01",
 	"missprologueig_1 main_malehostage02",
@@ -11862,7 +11755,6 @@ const std::vector<std::string> ALL_ANIMS =
 	"missprologueig_3@react_to_explosion react_to_explosion_player_two",
 	"missprologueig_3@react_to_explosion react_to_explosion_player_zero",
 	"missprologueig_4@hold_head_base hold_head_loop_base_brad",
-	//"missprologueig_4@hold_head_base hold_head_loop_base_guard_facial",
 	"missprologueig_4@hold_head_base hold_head_loop_base_guard",
 	"missprologueig_4@hold_head_base hold_head_loop_base_player0",
 	"missprologueig_4@kill_michael kill_michael_guard",
@@ -11896,7 +11788,6 @@ const std::vector<std::string> ALL_ANIMS =
 	"missprologueig_6 remove_balaclava_skimask",
 	"missprologueig_6 remove_balaclava",
 	"missprologueig_6@first_person remove_balaclava",
-	//"missprologueleadinoutpro_mcs_5_p3 leadout_action_brad_facial",
 	"missprologueleadinoutpro_mcs_5_p3 leadout_action_brad",
 	"missprologueleadinoutpro_mcs_5_p3 leadout_action_michael",
 	"missprologueleadinoutpro_mcs_5_p3 leadout_action_trevor",
@@ -12201,7 +12092,6 @@ const std::vector<std::string> ALL_ANIMS =
 	"misstrevor1ig_7 ortega_03_shouting_idle",
 	"misstrevor1ig_7 ortega_04_1st_hit_reaction",
 	"misstrevor1ig_7 ortega_05_panic_idle",
-	//"misstrevor1ig_7 ortega_06_fall_back_into_trailer_facial",
 	"misstrevor1ig_7 ortega_06_fall_back_into_trailer",
 	"misstrevor1ig_7 ortega_07_holding_onto_side_wall_idle",
 	"misstrevor1ig_7 ortega_08_run_to_door_outro",
@@ -14757,7 +14647,6 @@ const std::vector<std::string> ALL_ANIMS =
 	"random@mugging5 ig_2_guy_handsup_loop",
 	"random@nigel@1c take_collar_cam",
 	"random@nigel@1c take_collar_dog",
-	//"random@nigel@1c take_collar_dogfacial",
 	"random@nigel@1c take_collar_trevor",
 	"random@paparazzi@pap_anims base_pap",
 	"random@paparazzi@pap_anims pap_idle_a",
@@ -15128,7 +15017,6 @@ const std::vector<std::string> ALL_ANIMS =
 	"safe@franklin@ig_13 blunt_base_ashtray",
 	"safe@franklin@ig_13 blunt_base_cam_tv",
 	"safe@franklin@ig_13 blunt_base_cam",
-	//"safe@franklin@ig_13 blunt_base_facial",
 	"safe@franklin@ig_13 blunt_base_joint",
 	"safe@franklin@ig_13 blunt_base_lighter",
 	"safe@franklin@ig_13 blunt_base_remote",
@@ -15168,7 +15056,6 @@ const std::vector<std::string> ALL_ANIMS =
 	"safe@franklin@ig_13 blunt_interrupt_ashtray",
 	"safe@franklin@ig_13 blunt_interrupt_cam_tv",
 	"safe@franklin@ig_13 blunt_interrupt_cam",
-	//"safe@franklin@ig_13 blunt_interrupt_facial",
 	"safe@franklin@ig_13 blunt_interrupt_joint",
 	"safe@franklin@ig_13 blunt_interrupt_lighter",
 	"safe@franklin@ig_13 blunt_interrupt_remote",
@@ -16698,7 +16585,6 @@ const std::vector<std::string> ALL_ANIMS =
 	"special_ped@mime@monologue_7@monologue_7a 11_ig_1_run_aw_0",
 	"special_ped@mime@monologue_8@monologue_8a 08_ig_1_wall_ba_0",
 	"special_ped@mountain_dancer@base base",
-	//"special_ped@mountain_dancer@monologue_1@monologue_1a mtn_dnc_if_you_want_to_get_to_heaven_facial",
 	"special_ped@mountain_dancer@monologue_1@monologue_1a mtn_dnc_if_you_want_to_get_to_heaven",
 	"special_ped@mountain_dancer@monologue_2@monologue_2a mnt_dnc_angel",
 	"special_ped@mountain_dancer@monologue_3@monologue_3a mnt_dnc_buttwag",
@@ -17140,7 +17026,6 @@ const std::vector<std::string> ALL_ANIMS =
 	"swimming@swim walk_turn_r2",
 	"swimming@swim walk",
 	"switch@franklin@002110_04_magd_3_weed_exchange 002110_04_magd_3_weed_exchange_cam",
-	//"switch@franklin@002110_04_magd_3_weed_exchange 002110_04_magd_3_weed_exchange_franklin_facial",
 	"switch@franklin@002110_04_magd_3_weed_exchange 002110_04_magd_3_weed_exchange_franklin",
 	"switch@franklin@002110_04_magd_3_weed_exchange 002110_04_magd_3_weed_exchange_shopkeeper",
 	"switch@franklin@002110_04_magd_3_weed_exchange 002110_04_magd_3_weed_exchange_weedbottle",
@@ -17176,7 +17061,6 @@ const std::vector<std::string> ALL_ANIMS =
 	"switch@franklin@chopshop wiperight_cam",
 	"switch@franklin@chopshop wiperight",
 	"switch@franklin@cleaning_apt 001918_01_fras_v2_1_cleaning_apt_exit_cam",
-	//"switch@franklin@cleaning_apt 001918_01_fras_v2_1_cleaning_apt_exit_facial",
 	"switch@franklin@cleaning_apt 001918_01_fras_v2_1_cleaning_apt_exit",
 	"switch@franklin@cleaning_apt 001918_01_fras_v2_1_cleaning_apt_idle_cam",
 	"switch@franklin@cleaning_apt 001918_01_fras_v2_1_cleaning_apt_idle",
@@ -17361,7 +17245,6 @@ const std::vector<std::string> ALL_ANIMS =
 	"switch@franklin@tanisha_argue tanisha_argue_door",
 	"switch@franklin@tanisha_argue tanisha_argue_franklin_facial",
 	"switch@franklin@tanisha_argue tanisha_argue_franklin",
-	//"switch@franklin@tanisha_argue tanisha_argue_tanisha_facial",
 	"switch@franklin@tanisha_argue tanisha_argue_tanisha",
 	"switch@franklin@throw_cup throw_cup_exit_cam",
 	"switch@franklin@throw_cup throw_cup_exit_cup",
@@ -17381,7 +17264,6 @@ const std::vector<std::string> ALL_ANIMS =
 	"switch@michael@ama_tennis 001833_01_mics3_18_ama_tennis_exit_mic",
 	"switch@michael@ama_tennis 001833_01_mics3_18_ama_tennis_idle_ama",
 	"switch@michael@ama_tennis 001833_01_mics3_18_ama_tennis_idle_mic",
-	//"switch@michael@amanda_exits_car 000606_02_mics1_5_amanda_exits_car_exit_ama_facial",
 	"switch@michael@amanda_exits_car 000606_02_mics1_5_amanda_exits_car_exit_ama",
 	"switch@michael@amanda_exits_car 000606_02_mics1_5_amanda_exits_car_exit_cam",
 	"switch@michael@amanda_exits_car 000606_02_mics1_5_amanda_exits_car_exit_car",
@@ -17409,7 +17291,6 @@ const std::vector<std::string> ALL_ANIMS =
 	"switch@michael@around_the_table_selfish around_the_table_selfish_exit_loop_chair",
 	"switch@michael@around_the_table_selfish around_the_table_selfish_exit_loop_jimmy",
 	"switch@michael@around_the_table_selfish around_the_table_selfish_exit_loop_lap_top",
-	//"switch@michael@around_the_table_selfish around_the_table_selfish_jimmy_facial",
 	"switch@michael@around_the_table_selfish around_the_table_selfish_jimmy",
 	"switch@michael@around_the_table_selfish around_the_table_selfish_lap_top",
 	"switch@michael@around_the_table_selfish around_the_table_selfish_michael",
@@ -17495,7 +17376,6 @@ const std::vector<std::string> ALL_ANIMS =
 	"switch@michael@dropping_off_jmy 001839_02_mics3_20_dropping_off_jmy_exit_$",
 	"switch@michael@dropping_off_jmy 001839_02_mics3_20_dropping_off_jmy_exit_cam",
 	"switch@michael@dropping_off_jmy 001839_02_mics3_20_dropping_off_jmy_exit_car",
-	//"switch@michael@dropping_off_jmy 001839_02_mics3_20_dropping_off_jmy_exit_jmy_facial",
 	"switch@michael@dropping_off_jmy 001839_02_mics3_20_dropping_off_jmy_exit_jmy",
 	"switch@michael@dropping_off_jmy 001839_02_mics3_20_dropping_off_jmy_exit_mic",
 	"switch@michael@dropping_off_jmy 001839_02_mics3_20_dropping_off_jmy_idle_$",
@@ -17530,7 +17410,6 @@ const std::vector<std::string> ALL_ANIMS =
 	"switch@michael@gaming_w_jmy 001518_02_mics3_11_gaming_w_jmy_idle_cam",
 	"switch@michael@gaming_w_jmy 001518_02_mics3_11_gaming_w_jmy_idle_jmy",
 	"switch@michael@gaming_w_jmy 001518_02_mics3_11_gaming_w_jmy_idle_mic",
-	//"switch@michael@gets_ready 001520_02_mics3_14_gets_ready_exit_ama_facial",
 	"switch@michael@gets_ready 001520_02_mics3_14_gets_ready_exit_ama",
 	"switch@michael@gets_ready 001520_02_mics3_14_gets_ready_exit_cam",
 	"switch@michael@gets_ready 001520_02_mics3_14_gets_ready_exit_mic",
@@ -17572,7 +17451,6 @@ const std::vector<std::string> ALL_ANIMS =
 	"switch@michael@on_sofa base_jimmy",
 	"switch@michael@on_sofa base_michael",
 	"switch@michael@on_sofa exit_cam",
-	//"switch@michael@on_sofa exit_jimmy_facial",
 	"switch@michael@on_sofa exit_jimmy",
 	"switch@michael@on_sofa exit_michael",
 	"switch@michael@opens_door_for_ama 001895_02_mics3_17_opens_door_for_ama_exit_ama",
@@ -17583,7 +17461,6 @@ const std::vector<std::string> ALL_ANIMS =
 	"switch@michael@opens_door_for_ama 001895_02_mics3_17_opens_door_for_ama_idle_car",
 	"switch@michael@opens_door_for_ama 001895_02_mics3_17_opens_door_for_ama_idle_mic",
 	"switch@michael@parkbench_smoke_ranger parkbench_smoke_ranger_exit_cam",
-	//"switch@michael@parkbench_smoke_ranger parkbench_smoke_ranger_exit_ranger_facial",
 	"switch@michael@parkbench_smoke_ranger parkbench_smoke_ranger_exit_ranger",
 	"switch@michael@parkbench_smoke_ranger parkbench_smoke_ranger_exit",
 	"switch@michael@parkbench_smoke_ranger parkbench_smoke_ranger_loop_cam",
@@ -17614,7 +17491,6 @@ const std::vector<std::string> ALL_ANIMS =
 	"switch@michael@reads_script 001404_01_mics3_16_reads_script_idle_cam",
 	"switch@michael@reads_script 001404_01_mics3_16_reads_script_idle_prop",
 	"switch@michael@reads_script 001404_01_mics3_16_reads_script_idle",
-	//"switch@michael@rejected_entry 001396_01_mics3_6_rejected_entry_exit_bouncer_facial",
 	"switch@michael@rejected_entry 001396_01_mics3_6_rejected_entry_exit_bouncer",
 	"switch@michael@rejected_entry 001396_01_mics3_6_rejected_entry_exit_cam",
 	"switch@michael@rejected_entry 001396_01_mics3_6_rejected_entry_exit_mic",
@@ -17625,7 +17501,6 @@ const std::vector<std::string> ALL_ANIMS =
 	"switch@michael@restaurant 001510_02_gc_mics3_ig_1_base_chair_2",
 	"switch@michael@restaurant 001510_02_gc_mics3_ig_1_base_chair",
 	"switch@michael@restaurant 001510_02_gc_mics3_ig_1_base_michael",
-	//"switch@michael@restaurant 001510_02_gc_mics3_ig_1_exit_amanda_facial",
 	"switch@michael@restaurant 001510_02_gc_mics3_ig_1_exit_amanda",
 	"switch@michael@restaurant 001510_02_gc_mics3_ig_1_exit_cam",
 	"switch@michael@restaurant 001510_02_gc_mics3_ig_1_exit_chair_2",
@@ -17690,7 +17565,6 @@ const std::vector<std::string> ALL_ANIMS =
 	"switch@michael@sunlounger sunlounger_idle",
 	"switch@michael@talks_to_guard 001393_02_mics3_3_talks_to_guard_exit_cam",
 	"switch@michael@talks_to_guard 001393_02_mics3_3_talks_to_guard_exit_car",
-	//"switch@michael@talks_to_guard 001393_02_mics3_3_talks_to_guard_exit_guard_facial",
 	"switch@michael@talks_to_guard 001393_02_mics3_3_talks_to_guard_exit_guard",
 	"switch@michael@talks_to_guard 001393_02_mics3_3_talks_to_guard_exit_mic",
 	"switch@michael@talks_to_guard 001393_02_mics3_3_talks_to_guard_idle_cam",
@@ -17704,13 +17578,10 @@ const std::vector<std::string> ALL_ANIMS =
 	"switch@michael@tracy_exits_car 001840_01_mics3_ig_21_tracy_exits_car_idle_mic",
 	"switch@michael@tracy_exits_car 001840_01_mics3_ig_21_tracy_exits_car_idle_tra",
 	"switch@michael@tracy_exits_car 001840_01_mics3_ig_21_tracy_exits_car_mic",
-	//"switch@michael@tracy_exits_car 001840_01_mics3_ig_21_tracy_exits_car_tra_facial",
 	"switch@michael@tracy_exits_car 001840_01_mics3_ig_21_tracy_exits_car_tra",
 	"switch@michael@tv_w_kids 001520_02_mics3_14_tv_w_kids_exit_cam",
-	//"switch@michael@tv_w_kids 001520_02_mics3_14_tv_w_kids_exit_jmy_facial",
 	"switch@michael@tv_w_kids 001520_02_mics3_14_tv_w_kids_exit_jmy",
 	"switch@michael@tv_w_kids 001520_02_mics3_14_tv_w_kids_exit_mic",
-	//"switch@michael@tv_w_kids 001520_02_mics3_14_tv_w_kids_exit_trc_facial",
 	"switch@michael@tv_w_kids 001520_02_mics3_14_tv_w_kids_exit_trc",
 	"switch@michael@tv_w_kids 001520_02_mics3_14_tv_w_kids_idle_jmy",
 	"switch@michael@tv_w_kids 001520_02_mics3_14_tv_w_kids_idle_mic",
@@ -17798,7 +17669,6 @@ const std::vector<std::string> ALL_ANIMS =
 	"switch@trevor@block_camera 001220_03_gc_trvs_ig_7_base_generic",
 	"switch@trevor@block_camera 001220_03_gc_trvs_ig_7_base_trevor",
 	"switch@trevor@block_camera 001220_03_gc_trvs_ig_7_exit_cam",
-	//"switch@trevor@block_camera 001220_03_gc_trvs_ig_7_exit_generic_facial",
 	"switch@trevor@block_camera 001220_03_gc_trvs_ig_7_exit_generic",
 	"switch@trevor@block_camera 001220_03_gc_trvs_ig_7_exit_trevor",
 	"switch@trevor@bridge agressive_a",
@@ -17809,7 +17679,6 @@ const std::vector<std::string> ALL_ANIMS =
 	"switch@trevor@bridge hold_loop_victim",
 	"switch@trevor@bridge throw_exit_cam",
 	"switch@trevor@bridge throw_exit_trevor",
-	//"switch@trevor@bridge throw_exit_victim_facial",
 	"switch@trevor@bridge throw_exit_victim",
 	"switch@trevor@chase_strippers exit_bouncer",
 	"switch@trevor@chase_strippers exit_cam",
@@ -17839,9 +17708,7 @@ const std::vector<std::string> ALL_ANIMS =
 	"switch@trevor@dumpster 002002_01_trvs_14_dumpster_exit",
 	"switch@trevor@dumpster 002002_01_trvs_14_dumpster_idle",
 	"switch@trevor@escorted_out 001215_02_trvs_12_escorted_out_exit_cam",
-	//"switch@trevor@escorted_out 001215_02_trvs_12_escorted_out_exit_guard1_facial",
 	"switch@trevor@escorted_out 001215_02_trvs_12_escorted_out_exit_guard1",
-	//"switch@trevor@escorted_out 001215_02_trvs_12_escorted_out_exit_guard2_facial",
 	"switch@trevor@escorted_out 001215_02_trvs_12_escorted_out_exit_guard2",
 	"switch@trevor@escorted_out 001215_02_trvs_12_escorted_out_exit_trv",
 	"switch@trevor@escorted_out 001215_02_trvs_12_escorted_out_idle_guard1",
@@ -17904,7 +17771,6 @@ const std::vector<std::string> ALL_ANIMS =
 	"switch@trevor@jerking_off trev_jerking_off_loop_cam",
 	"switch@trevor@jerking_off trev_jerking_off_loop",
 	"switch@trevor@ko_neighbour 001500_03_trvs_19_ko_neighbour_exit_cam",
-	//"switch@trevor@ko_neighbour 001500_03_trvs_19_ko_neighbour_exit_nbr_facial",
 	"switch@trevor@ko_neighbour 001500_03_trvs_19_ko_neighbour_exit_nbr",
 	"switch@trevor@ko_neighbour 001500_03_trvs_19_ko_neighbour_exit_trv",
 	"switch@trevor@ko_neighbour 001500_03_trvs_19_ko_neighbour_loop_nbr",
@@ -17948,7 +17814,6 @@ const std::vector<std::string> ALL_ANIMS =
 	"switch@trevor@puking_into_fountain trev_fountain_puke_exit_cam",
 	"switch@trevor@puking_into_fountain trev_fountain_puke_exit",
 	"switch@trevor@puking_into_fountain trev_fountain_puke_loop",
-	//"switch@trevor@pushes_bodybuilder 001426_03_trvs_5_pushes_bodybuilder_exit_bb1_facial",
 	"switch@trevor@pushes_bodybuilder 001426_03_trvs_5_pushes_bodybuilder_exit_bb1",
 	"switch@trevor@pushes_bodybuilder 001426_03_trvs_5_pushes_bodybuilder_exit_bb2",
 	"switch@trevor@pushes_bodybuilder 001426_03_trvs_5_pushes_bodybuilder_exit_cam",
@@ -17959,7 +17824,6 @@ const std::vector<std::string> ALL_ANIMS =
 	"switch@trevor@rand_temple tai_chi_cam",
 	"switch@trevor@rand_temple tai_chi_trevor",
 	"switch@trevor@rude_at_cafe 001218_03_trvs_23_rude_at_cafe_exit_cam",
-	//"switch@trevor@rude_at_cafe 001218_03_trvs_23_rude_at_cafe_exit_female_facial",
 	"switch@trevor@rude_at_cafe 001218_03_trvs_23_rude_at_cafe_exit_female",
 	"switch@trevor@rude_at_cafe 001218_03_trvs_23_rude_at_cafe_exit_trv",
 	"switch@trevor@rude_at_cafe 001218_03_trvs_23_rude_at_cafe_idle_cam",
@@ -17986,7 +17850,6 @@ const std::vector<std::string> ALL_ANIMS =
 	"switch@trevor@throw_food agressive_a",
 	"switch@trevor@throw_food agressive_b",
 	"switch@trevor@throw_food exit_cam",
-	//"switch@trevor@throw_food exit_ped_facial",
 	"switch@trevor@throw_food exit_ped",
 	"switch@trevor@throw_food exit_taco",
 	"switch@trevor@throw_food exit_trevor_facial",
@@ -22099,21 +21962,9 @@ bool onconfirm_anim_menu(MenuItem<int> choice)
 		case CATEGORY_FACIAL_NOW:
 		case CATEGORY_GENERAL_NOW:
 			break;
-		//case CATEGORY_FACIAL_IDLE:
-		//	PED::CLEAR_FACIAL_IDLE_ANIM_OVERRIDE(playerPed);
-		//	break;
 		case CATEGORY_MOVE_IDLE:
 			PED::CLEAR_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 0, true);
 			break;
-		//case CATEGORY_MOVE_WALK:
-		//	PED::CLEAR_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 1, true);
-		//	break;
-		//case CATEGORY_MOVE_RUN:
-		//	PED::CLEAR_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 2, true);
-		//	break;
-		//case CATEGORY_MOVE_CLIPSET:
-		//	PED::RESET_PED_MOVEMENT_CLIPSET(playerPed, 1.0f);
-		//	break;
 		}
 		return false;
 	}
@@ -22136,11 +21987,8 @@ bool onconfirm_anim_menu(MenuItem<int> choice)
 		switch (currentAnimMenuMode)
 		{
 			case CATEGORY_FACIAL_NOW:
-			//case CATEGORY_FACIAL_IDLE:
 			case CATEGORY_GENERAL_NOW:
 			case CATEGORY_MOVE_IDLE:
-			//case CATEGORY_MOVE_WALK:
-			//case CATEGORY_MOVE_RUN:
 			{
 				if (STREAMING::DOES_ANIM_DICT_EXIST(dict))
 				{
@@ -22225,13 +22073,8 @@ bool process_anims_menu()
 			currentMenuNode = facialsNode;
 			break;
 		case CATEGORY_MOVE_IDLE:
-		//case CATEGORY_MOVE_WALK:
-		//case CATEGORY_MOVE_RUN:
 			currentMenuNode = movementNode;
 			break;
-		//case CATEGORY_MOVE_CLIPSET:
-		//	currentMenuNode = movementClipsetNode;
-		//	break;
 		case CATEGORY_GENERAL_NOW:
 		default:
 			currentMenuNode = rootNode;
@@ -22248,9 +22091,6 @@ bool process_anims_menu()
 		{
 		case CATEGORY_FACIAL_IDLE: //facial delay
 		case CATEGORY_MOVE_IDLE:
-		//case CATEGORY_MOVE_WALK:
-		//case CATEGORY_MOVE_RUN:
-		//case CATEGORY_MOVE_CLIPSET:
 			addClearItem = true;
 			break;
 		}
@@ -22291,21 +22131,9 @@ bool process_anims_menu()
 	case CATEGORY_GENERAL_NOW:
 		caption = "Player Anims";
 		break;
-	//case CATEGORY_FACIAL_IDLE: //facial delay
-	//	caption = "Facial Idle Anims";
-	//	break;
 	case CATEGORY_MOVE_IDLE:
 		caption = "Idle Anims";
 		break;
-	//case CATEGORY_MOVE_WALK:
-	//	caption = "Walking Anims";
-	//	break;
-	//case CATEGORY_MOVE_CLIPSET:
-	//	caption = "Movement Clipsets";
-	//	break;
-	//case CATEGORY_MOVE_RUN:
-	//	caption = "Running Anims";
-	//	break;
 	}
 
 	std::stringstream caption_ss;
@@ -22349,35 +22177,11 @@ bool process_anims_menu_top()
 	item->value = CATEGORY_FACIAL_NOW;
 	menuItems.push_back(item);
 
-	//item = new MenuItem<int>();
-	//item->isLeaf = false;
-	//item->caption = "Facial Anims: Idle";
-	//item->value = CATEGORY_FACIAL_IDLE;
-	//menuItems.push_back(item);
-
 	item = new MenuItem<int>();
 	item->isLeaf = false;
 	item->caption = "Movement Anims";
 	item->value = CATEGORY_MOVE_IDLE;
 	menuItems.push_back(item);
-
-	//item = new MenuItem<int>();
-	//item->isLeaf = false;
-	//item->caption = "Movement Clipsets";
-	//item->value = CATEGORY_MOVE_CLIPSET;
-	//menuItems.push_back(item);
-
-	//item = new MenuItem<int>();
-	//item->isLeaf = false;
-	//item->caption = "Movement Anims: Walking";
-	//item->value = CATEGORY_MOVE_WALK;
-	//menuItems.push_back(item);
-
-	//item = new MenuItem<int>();
-	//item->isLeaf = false;
-	//item->caption = "Movement Anims: Running";
-	//item->value = CATEGORY_MOVE_RUN;
-	//menuItems.push_back(item);
 
 	item = new MenuItem<int>();
 	item->isLeaf = false;
@@ -22423,7 +22227,6 @@ void do_play_anim(Ped playerPed, char* dict, char* anim, int mode)
 	PED::SET_PED_CAN_PLAY_AMBIENT_ANIMS(playerPed, true);
 	PED::SET_PED_CAN_PLAY_AMBIENT_BASE_ANIMS(playerPed, true);
 	PED::SET_PED_CAN_PLAY_GESTURE_ANIMS(playerPed, true);
-	//PED::SET_PED_CAN_PLAY_VISEME_ANIMS(playerPed, true);
 
 	anim_p = true;
 
@@ -22435,24 +22238,12 @@ void do_play_anim(Ped playerPed, char* dict, char* anim, int mode)
 	case CATEGORY_FACIAL_NOW:
 		PED::PLAY_FACIAL_ANIM(playerPed, anim, dict);
 		break;
-	//case CATEGORY_FACIAL_IDLE:
-	//	PED::SET_FACIAL_IDLE_ANIM_OVERRIDE(playerPed, anim, dict);
-	//	break;
 	case CATEGORY_GENERAL_NOW:
-		AI::TASK_PLAY_ANIM(playerPed, dict, anim, 8, -8, -1, 0, 0, false, 0, true); // AI::TASK_PLAY_ANIM(playerPed, dict, anim, 8.0, 0.0, -1, 9, 0, 0, 0, 0);
+		AI::TASK_PLAY_ANIM(playerPed, dict, anim, 8, -8, -1, 0, 0, false, 0, true); 
 		break;
 	case CATEGORY_MOVE_IDLE:
 		PED::SET_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 0, dict, anim, 0, true);
 		break;
-	//case CATEGORY_MOVE_WALK:
-	//	PED::SET_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 1, dict, anim, 0, true);
-	//	break;
-	//case CATEGORY_MOVE_RUN:
-	//	PED::SET_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 2, dict, anim, 0, true);
-	//	break;
-	//case CATEGORY_MOVE_CLIPSET:
-	//	PED::SET_PED_MOVEMENT_CLIPSET(playerPed, dict, 1.0f);
-	//	break;
 	}
 }
 

@@ -43,7 +43,6 @@ Hash JailGuard_Weapon2 = -1;
 Ped prisonPed, temp_ped, temp_ped2 = -1;
 std::vector<Ped> ADDITIONAL_PRISONERS;
 int civilian_torso_drawable, civilian_torso_texture, civilian_legs_drawable, civilian_legs_texture = -1;
-//int tick_pedsagainstprisonrobe = 0;
 bool alert_police_about_fugitive_close, alert_police_about_fugitive_distant = false;
 
 bool featurePrison_Hardcore = false;
@@ -322,8 +321,6 @@ void prison_break()
 							ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&guards[i]);
 						}
 					}
-					//if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_PED(guards[i]) && !ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(guards[i], playerPed_Prison, 1) &&
-					//	alert_level < 3 && alert_level == 1 && PED::GET_PED_TYPE(guards[i]) != 0 && PED::GET_PED_TYPE(guards[i]) != 1 && PED::GET_PED_TYPE(guards[i]) != 2) alert_level = 2; // In case you spawned bodyguards 
 				}
 			}
 

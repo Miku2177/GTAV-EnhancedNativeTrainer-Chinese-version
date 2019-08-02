@@ -37,7 +37,7 @@ Vehicle curr_veh;
 Hash driverPed_tomarker;
 int driving_style = 4;
 int SinceDriverStop_secs_passed, SinceDriverStop_secs_curr, DriverStop_seconds = 0;
-int Driver2Stop_seconds = 0; // SinceDriver2Stop_secs_passed, SinceDriver2Stop_secs_curr, 
+int Driver2Stop_seconds = 0; 
 Blip myChauffeurBlip = -1;
 int temp_dist = -1;
 //
@@ -242,8 +242,6 @@ void drive_to_marker()
 					AI::TASK_LEAVE_VEHICLE(driver_to_marker_pilot, curr_veh, 4160);
 					marker_been_set = false;
 					blipDriveFound = false;
-					//AI::TASK_SMART_FLEE_PED(driver_to_marker_pilot, drivetomarker_player, 1000, -1, true, true);
-					//ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&driver_to_marker_pilot);
 				}
 			}
 

@@ -198,7 +198,6 @@ void cleanup_script();
 
 bool is_player_ignored_by_police();
 
-//extern Vehicle vehicle_been_used;
 extern Vehicle temp_vehicle;
 extern bool featurePlayerInvisible;
 extern bool featurePlayerInvisibleInVehicle;
@@ -206,3 +205,5 @@ extern bool featureShowStatusMessage;
 extern bool featureNoAutoRespawn;
 extern bool npc_player_died;
 extern bool featureWantedLevelFrozen;
+extern const std::vector<std::string> PLAYER_HEALTH_CAPTIONS;
+extern const int PLAYER_HEALTH_VALUES[];
