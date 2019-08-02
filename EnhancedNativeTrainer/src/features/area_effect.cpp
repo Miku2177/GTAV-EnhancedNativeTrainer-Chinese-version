@@ -44,12 +44,10 @@ bool featureNPCNeonLights = false;
 bool featureNPCFullBeam = false;
 bool featureDirtyVehicles = false;
 bool featureNPCNoGravityVehicles = false;
-//bool featureNPCNoGravityPeds = false;
 bool featureNPCReducedGripVehicles = false;
 bool featureBoostNPCRadio = false;
 
 int pedWeaponSetIndex = 0;
-//int NoPedsGravityIndex = 0;
 
 std::set<Ped> allWorldPedsThisFrame;
 bool allWorldPedsThisFrameFilled = false;
@@ -65,7 +63,6 @@ const std::vector<std::string> PED_WEAPONS_SELECTIVE_CAPTIONS{ "\"WEAPON_UNARMED
 "\"WEAPON_MACHINEPISTOL\"", "\"WEAPON_MARKSMANPISTOL\"", "\"WEAPON_MINISMG\"", "\"WEAPON_ASSAULTSMG\"", "\"WEAPON_ASSAULTRIFLE\"", "\"WEAPON_CARBINERIFLE\"", "\"WEAPON_ADVANCEDRIFLE\"", "\"WEAPON_COMPACTRIFLE\"", "\"WEAPON_HEAVYSHOTGUN\"",
 "\"WEAPON_DBSHOTGUN\"", "\"WEAPON_AUTOSHOTGUN\"", "\"WEAPON_MUSKET\"", "\"WEAPON_SAWNOFFSHOTGUN\"", "\"WEAPON_COMBATMG\"", "\"WEAPON_MINIGUN\"", "\"WEAPON_GUSENBERG\"", "\"WEAPON_SNIPERRIFLE\"", "\"WEAPON_HEAVYSNIPER\"",
 "\"WEAPON_GRENADELAUNCHER\"", "\"WEAPON_GRENADELAUNCHER_SMOKE\"", "\"WEAPON_RPG\"", "\"WEAPON_HOMINGLAUNCHER\"", "\"WEAPON_COMPACTLAUNCHER\"", "\"WEAPON_RAILGUN\"", "\"WEAPON_FIREWORK\"" };
-//const int PED_WEAPONS_SELECTIVE_VALUES[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44 };
 int PedWeaponsSelectiveIndex = 0;
 bool PedWeaponsSelective1Changed = true;
 
@@ -84,7 +81,7 @@ int PedAccuracyIndex = 0;
 bool PedAccuracyChanged = true;
 
 // Reduced Grip If Heavy Snow && Slippery When Wet && No Peds Gravity
-const std::vector<std::string> WORLD_REDUCEDGRIP_SNOWING_CAPTIONS{ "OFF", "Arcade", "Realistic" };
+const std::vector<std::string> WORLD_REDUCEDGRIP_SNOWING_CAPTIONS{ "OFF", "Simple", "Advanced" };
 const int WORLD_REDUCEDGRIP_SNOWING_VALUES[] = { 0, 1, 2 };
 int RadarReducedGripSnowingIndex = 0;
 bool RadarReducedGripSnowingChanged = true;
@@ -92,12 +89,8 @@ int RadarReducedGripRainingIndex = 0;
 bool RadarReducedGripRainingChanged = true;
 int NoPedsGravityIndex = 0;
 bool NoPedsGravityChanged = true;
-
-// Peds Health
-const std::vector<std::string> PEDS_HEALTH_CAPTIONS{ "OFF", "300", "500", "700", "1000", "5000", "10000", "30000" };
-const int PEDS_HEALTH_VALUES[] = { 0, 300, 500, 700, 1000, 5000, 10000, 30000 };
-int PedsHealthIndex = 0;
-bool PedsHealthChanged = true;
+int featureNeverDirty = 0;
+bool NeverDirtyChanged = true;
 
 //For onscreen debug info
 bool featureShowDebugInfo = false;
@@ -121,8 +114,6 @@ void add_areaeffect_feature_enablements(std::vector<FeatureEnabledLocalDefinitio
 	results->push_back(FeatureEnabledLocalDefinition{"featureNPCFullBeam", &featureNPCFullBeam});
 	results->push_back(FeatureEnabledLocalDefinition{"featureDirtyVehicles", &featureDirtyVehicles}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureNPCNoGravityVehicles", &featureNPCNoGravityVehicles}); 
-	//results->push_back(FeatureEnabledLocalDefinition{"featureNPCNoGravityPeds", &featureNPCNoGravityPeds}); 
-	//results->push_back(FeatureEnabledLocalDefinition{"NoPedsGravityIndex", &NoPedsGravityIndex});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNPCReducedGripVehicles", &featureNPCReducedGripVehicles}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureBoostNPCRadio", &featureBoostNPCRadio});
 }
@@ -152,8 +143,7 @@ void reset_areaeffect_globals(){
 	NPCVehicleSpeedIndex = 0;
 	PedAccuracyIndex = 0;
 	pedWeaponSetIndex = 0;
-	//NoPedsGravityIndex = 0;
-
+	
 	RadarReducedGripSnowingIndex = 0;
 	RadarReducedGripRainingIndex = 0;
 	NoPedsGravityIndex = 0;
@@ -200,19 +190,13 @@ void process_areaeffect_peds_menu(){
 	togItem->toggleValue = &featurePedsIncludePilots;
 	menuItems.push_back(togItem);
 
-	//togItem = new ToggleMenuItem<int>();
-	//togItem->caption = "NPC No Gravity Peds";
-	//togItem->value = 1;
-	//togItem->toggleValue = &featureNPCNoGravityPeds;
-	//menuItems.push_back(togItem);
-
 	listItem = new SelectFromListMenuItem(WORLD_REDUCEDGRIP_SNOWING_CAPTIONS, onchange_world_no_peds_gravity_index);
 	listItem->wrap = false;
 	listItem->caption = "NPC No Gravity Peds";
 	listItem->value = NoPedsGravityIndex;
 	menuItems.push_back(listItem);
 
-	listItem = new SelectFromListMenuItem(PEDS_HEALTH_CAPTIONS, onchange_peds_health_index);
+	listItem = new SelectFromListMenuItem(PLAYER_HEALTH_CAPTIONS, onchange_peds_health_index);
 	listItem->wrap = false;
 	listItem->caption = "Peds Health";
 	listItem->value = PedsHealthIndex;
@@ -394,8 +378,6 @@ void process_areaeffect_menu(){
 	menuItems.push_back(togItem);
 
 	draw_generic_menu<int>(menuItems, &areaeffect_top_level_menu_index, "Area Effects", onconfirm_areaeffect_menu, NULL, NULL);
-
-	//		{ "Everyone Ignores You", &featurePlayerIgnoredByAll, &featurePlayerIgnoredByAllUpdated, true },
 }
 
 void do_maintenance_on_tracked_entities(){
@@ -468,9 +450,8 @@ void update_area_effects(Ped playerPed){
 			PLAYER::SET_EVERYONE_IGNORE_PLAYER(player, true);
 			PLAYER::SET_PLAYER_CAN_BE_HASSLED_BY_GANGS(player, false);
 			PLAYER::SET_IGNORE_LOW_PRIORITY_SHOCKING_EVENTS(player, true);
-			//if(get_frame_number() % 99 == 0){
-				set_all_nearby_peds_to_calm();
-			//}
+
+			set_all_nearby_peds_to_calm();
 		}
 	}
 	if(!featurePlayerIgnoredByAll && !featurePlayerInvisible && !featurePlayerInvisibleInVehicle){
@@ -540,7 +521,6 @@ void set_all_nearby_peds_to_calm(){
 		if (ign_ped[i] != PLAYER::PLAYER_PED_ID()) {
 			if (!PED::IS_PED_GROUP_MEMBER(ign_ped[i], PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID()))) { // Only calm down peds if they're NOT in our group (keeps our bodyguards from chilling out and being lazy)
 				PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ign_ped[i], true);
-				//AI::TASK_SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ign_ped[i], true);
 				PED::SET_PED_FLEE_ATTRIBUTES(ign_ped[i], 0, 0);
 			}
 		}
@@ -585,10 +565,6 @@ void set_all_nearby_peds_to_angry(bool enabled){
 				PED::SET_PED_COMBAT_ATTRIBUTES(xped, 3, featurePedsIncludeDrivers ? 1 : 0); //can leave vehicle
 				PED::SET_PED_COMBAT_ATTRIBUTES(xped, 2, featurePedsIncludeDrivers ? 1 : 0); //can do driveby
 				PED::SET_PED_FLEE_ATTRIBUTES(xped, 0, 0);
-
-				//if (WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex] > -1) PED::SET_PED_ACCURACY(xped, WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex]); //peds accuracy
-
-				//PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(xped, true);
 
 				findRandomTargetForPed(trackedPed);
 
@@ -694,7 +670,6 @@ void set_all_nearby_vehs_to_broken(bool enabled){
 			}
 		}
 		else{
-			//VEHICLE::SET_VEHICLE_ENGINE_HEALTH(veh, 1000.0f);
 			VEHICLE::SET_VEHICLE_UNDRIVEABLE(veh, false);
 		}
 	}
@@ -949,7 +924,6 @@ void clear_up_missionised_entitities(){
 
 void onchange_areaeffect_ped_weapons(int value, SelectFromListMenuItem* source){
 	pedWeaponSetIndex = value;
-	//pedWeaponSetUpdated = true;
 }
 
 void onchange_world_damaged_vehicles_index(int value, SelectFromListMenuItem* source) {
@@ -1074,7 +1048,6 @@ void handle_generic_settings_areaeffect(std::vector<StringPairSettingDBRow>* set
 		StringPairSettingDBRow setting = settings->at(i);
 		if(setting.name.compare("pedWeaponSetIndex") == 0){
 			pedWeaponSetIndex = stoi(setting.value);
-			//pedWeaponSetUpdated = true;
 		}
 		else if (setting.name.compare("PedWeaponsSelectiveIndex") == 0){
 			PedWeaponsSelectiveIndex = stoi(setting.value);

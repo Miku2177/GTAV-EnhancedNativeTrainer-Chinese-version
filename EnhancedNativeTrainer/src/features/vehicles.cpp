@@ -85,7 +85,6 @@ bool featureNoVehFlip = false;
 bool featureAutoToggleLights = false;
 bool featureMileage = false;
 bool featureSeasharkLights = false;
-bool featureNeverDirty = false;
 bool featureVehMassMult = false;
 bool featureVehSpawnInto = false;
 bool featureVehSpawnTuned = false;
@@ -135,13 +134,13 @@ bool featureAutoalarm = false;
 Vehicle alarmed_veh = -1;
 bool near_enough = false;
 int a_counter_tick = 0;
-//
+
 // Anti-Theft System variables
 std::vector<Vehicle> VEHICLES_STEERLOCKED;
 bool check_if_stolen, lock_stolen_veh = false;
 //
 
-int Shut_seconds = -1; // Shut_secs_passed, Shut_secs_curr, 
+int Shut_seconds = -1; 
 
 int sheshark_light_toogle = 1;
 
@@ -287,7 +286,6 @@ bool AutoShutEngineChanged = true;
 const std::vector<std::string> VEH_HYDRAULICS_CAPTIONS{ "OFF", "-0.20", "-0.10", "0.10", "0.20" };
 const std::vector<float> VEH_HYDRAULICS_VALUES{ 0.0f, -0.20f, -0.10f, 0.10f, 0.20f };
 int HydraulicsIndex = 0;
-//bool HydraulicsChanged = true;
 
 // player in vehicle state... assume true initially since our quicksave might have us in a vehicle already, in which case we can't check if we just got into one
 bool oldVehicleState = true;
@@ -431,7 +429,6 @@ void process_window_roll() {
 	Player PlayerPedRoll = PLAYER::PLAYER_PED_ID();
 	Vehicle veh_roll = -1;
 	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_roll = PED::GET_VEHICLE_PED_IS_USING(PlayerPedRoll);
-	//if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh_roll = vehicle_been_used;
 	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
 		find_nearest_vehicle();
 		veh_roll = temp_vehicle;
@@ -452,7 +449,6 @@ void interior_light() {
 	Vehicle veh_interior = PED::GET_VEHICLE_PED_IS_USING(PlayerPedInterior);
 	interior_lights = !interior_lights;
 	VEHICLE::SET_VEHICLE_INTERIORLIGHT(veh_interior, interior_lights);
-	//if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) VEHICLE::SET_VEHICLE_INTERIORLIGHT(vehicle_been_used, interior_lights);
 	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
 		find_nearest_vehicle();
 		VEHICLE::SET_VEHICLE_INTERIORLIGHT(temp_vehicle, interior_lights);
@@ -470,7 +466,6 @@ void vehicle_alarm() {
 	Player PlayerPedAlarm = PLAYER::PLAYER_PED_ID();
 	Vehicle veh_alarming = -1;
 	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_alarming = PED::GET_VEHICLE_PED_IS_USING(PlayerPedAlarm);
-	//if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh_alarming = vehicle_been_used;
 	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
 		find_nearest_vehicle();
 		veh_alarming = temp_vehicle;
@@ -487,7 +482,6 @@ void vehicle_set_alarm() {
 	Player PlayerPedSetAlarm = PLAYER::PLAYER_PED_ID();
 	if (!featureAutoalarm) {
 		if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) alarmed_veh = PED::GET_VEHICLE_PED_IS_USING(PlayerPedSetAlarm);
-		//if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) alarmed_veh = vehicle_been_used;
 		if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
 			find_nearest_vehicle();
 			alarmed_veh = temp_vehicle;
@@ -509,7 +503,6 @@ void vehicle_brake() {
 	Player PlayerPedBrake = PLAYER::PLAYER_PED_ID();
 	Vehicle veh_brake = -1;
 	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_brake = PED::GET_VEHICLE_PED_IS_USING(PlayerPedBrake);
-	//if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh_brake = vehicle_been_used;
 	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
 		find_nearest_vehicle();
 		veh_brake = temp_vehicle;
@@ -524,7 +517,6 @@ void vehicle_burnout() {
 	Player PlayerPedBurnout = PLAYER::PLAYER_PED_ID();
 	Vehicle veh_burnout = -1;
 	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_burnout = PED::GET_VEHICLE_PED_IS_USING(PlayerPedBurnout);
-	//if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh_burnout = vehicle_been_used;
 	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
 		find_nearest_vehicle();
 		veh_burnout = temp_vehicle;
@@ -539,7 +531,6 @@ void damage_door() {
 	Player PlayerPedDamage = PLAYER::PLAYER_PED_ID();
 	Vehicle veh_damage = -1;
 	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_damage = PED::GET_VEHICLE_PED_IS_USING(PlayerPedDamage);
-	//if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh_damage = vehicle_been_used;
 	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
 		find_nearest_vehicle();
 		veh_damage = temp_vehicle;
@@ -587,7 +578,6 @@ Vehicle find_nearest_vehicle() {
 }
 
 void eject_seat() { // eject seat
-	//if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0) && !VEHICLE::IS_VEHICLE_SEAT_FREE(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false), -1)) {
 	Vehicle veh_eject = -1;
 	Ped PedToEject = -1;
 	Hash currVehModel = -1;
@@ -637,7 +627,6 @@ void eject_seat() { // eject seat
 
 	WAIT(5000); // 4000
 	VEHICLE::DELETE_VEHICLE(&veh);
-	//}
 }
 
 bool onconfirm_vehdoor_menu(MenuItem<int> choice){
@@ -651,10 +640,9 @@ bool onconfirm_vehdoor_menu(MenuItem<int> choice){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if(choice.value >= 0){
-		if(bPlayerExists){ //  && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)
+		if(bPlayerExists){ 
 			Vehicle veh = -1;
 			if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
-			//if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh = vehicle_been_used;
 			if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
 				find_nearest_vehicle();
 				veh = temp_vehicle;
@@ -693,7 +681,6 @@ bool onconfirm_vehdoor_menu(MenuItem<int> choice){
 		if(bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){  
 			Vehicle veh = -1;
 			if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
-			//if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh = vehicle_been_used;
 			if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
 				find_nearest_vehicle();
 				veh = temp_vehicle;
@@ -710,7 +697,6 @@ bool onconfirm_vehdoor_menu(MenuItem<int> choice){
 	{
 		Vehicle veh_roll = -1;
 		if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_roll = PED::GET_VEHICLE_PED_IS_USING(playerPed);
-		//if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh_roll = vehicle_been_used;
 		if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
 			find_nearest_vehicle();
 			veh_roll = temp_vehicle;
@@ -766,7 +752,6 @@ bool onconfirm_vehdoor_menu(MenuItem<int> choice){
 	{
 		Vehicle veh_detach = -1;
 		if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_detach = PED::GET_VEHICLE_PED_IS_USING(playerPed);
-		//if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh_detach = vehicle_been_used;
 		if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
 			find_nearest_vehicle();
 			veh_detach = temp_vehicle;
@@ -1830,12 +1815,12 @@ void process_veh_menu(){
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
-	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Vehicle Never Gets Dirty";
-	toggleItem->value = i++;
-	toggleItem->toggleValue = &featureNeverDirty;
-	menuItems.push_back(toggleItem);
-
+	listItem = new SelectFromListMenuItem(WORLD_REDUCEDGRIP_SNOWING_CAPTIONS, onchange_veh_never_dirty);
+	listItem->wrap = false;
+	listItem->caption = "Vehicle Never Gets Dirty";
+	listItem->value = featureNeverDirty;
+	menuItems.push_back(listItem);
+	
 	item = new MenuItem<int>();
 	item->caption = "Paint Menu";
 	item->value = i++;
@@ -1958,12 +1943,6 @@ void process_veh_menu(){
 	item->value = i++;
 	item->isLeaf = false;
 	menuItems.push_back(item);
-
-	//listItem = new SelectFromListMenuItem(VEH_SPEEDLIMITER_CAPTIONS, onchange_veh_speedlimiter_index);
-	//listItem->wrap = false;
-	//listItem->caption = "Speed Limiter";
-	//listItem->value = speedLimiterIndex;
-	//menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(VEH_LIGHTSOFF_CAPTIONS, onchange_veh_lightsOff_index);
 	listItem->wrap = false;
@@ -2497,9 +2476,9 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 	
 	// Never Gets Dirty
-	if (featureNeverDirty && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
+	if (WORLD_REDUCEDGRIP_SNOWING_VALUES[featureNeverDirty] > 0 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
 		VEHICLE::SET_VEHICLE_DIRT_LEVEL(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 0.0);
-		GRAPHICS::WASH_DECALS_FROM_VEHICLE(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 100.0);
+		if (WORLD_REDUCEDGRIP_SNOWING_VALUES[featureNeverDirty] == 2) GRAPHICS::WASH_DECALS_FROM_VEHICLE(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 100.0);
 	}
 
 	// Infinite Rocket Boost
@@ -2553,7 +2532,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		Object my_shield = -1;
 		if (VEH_MASS_VALUES[VehMassMultIndex] > 0) my_shield = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 		if (VEH_MASS_VALUES[current_player_forceshield] > 0) my_shield = PLAYER::PLAYER_PED_ID();
-		//Vector3 vehspeed = ENTITY::GET_ENTITY_VELOCITY(my_shield);
 		Vector3 CamRot = CAM::GET_GAMEPLAY_CAM_ROT(2);
 		Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(my_shield, true);
 		int p_force = 5;
@@ -2561,7 +2539,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		float v_x = -(sin(rad) * p_force * 10);
 		float v_y = (cos(rad) * p_force * 10);
 		float v_z = p_force * (CamRot.x * 0.2);
-		//if (VEH_MASS_VALUES[VehMassMultIndex] > 0 && ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(my_shield) && VEH_MASS_VALUES[VehMassMultIndex] > 3) ENTITY::SET_ENTITY_VELOCITY(my_shield, vehspeed.x, vehspeed.y, vehspeed.z);
 		
 		int count_v = worldGetAllVehicles(nearbyObj, OBJ_ARR_SIZE); // vehicles
 		for (int i = 0; i < count_v; i++) {
@@ -2658,7 +2635,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		Object nearbyObj[OBJ_ARR_SIZE];
 		Object my_shield = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 		float vehspeed = ENTITY::GET_ENTITY_SPEED(my_shield);
-		//Vector3 CamRot = CAM::GET_GAMEPLAY_CAM_ROT(2);
 		Vector3 CamRot = ENTITY::GET_ENTITY_ROTATION(playerPed, 0);
 		int p_force = VEH_TURN_SIGNALS_ACCELERATION_VALUES[HeavyVehIndex]; // 1; // 3; // vehspeed; // / 10; // 5; 
 		float rad = 2 * 3.14 * (CamRot.z / 360);
@@ -3418,20 +3394,18 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	if (featureVehSteerAngle && PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) && CONTROLS::IS_CONTROL_PRESSED(2, 75)) { //  && !PED::IS_PED_ON_ANY_BIKE(playerPed)
 		Vehicle myVehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 
-		//if (ENTITY::GET_ENTITY_MODEL(myVehicle) != GAMEPLAY::GET_HASH_KEY("HAULER")) {
-			Vector3 myvehicle_coords = ENTITY::GET_ENTITY_COORDS(myVehicle, true);
-			float myvehicle_heading = ENTITY::GET_ENTITY_HEADING(myVehicle);
+		Vector3 myvehicle_coords = ENTITY::GET_ENTITY_COORDS(myVehicle, true);
+		float myvehicle_heading = ENTITY::GET_ENTITY_HEADING(myVehicle);
 
-			Vehicle temp_object = VEHICLE::CREATE_VEHICLE(GAMEPLAY::GET_HASH_KEY("BMX"), myvehicle_coords.x, myvehicle_coords.y, myvehicle_coords.z + 10, myvehicle_heading, 1, 1); // 20, 1
-			ENTITY::ATTACH_ENTITY_TO_ENTITY_PHYSICALLY(/*ENTITY_1*/myVehicle, /*ENTITY_2*/temp_object, /*BONE_INDEX_1*/0, /*BONE_INDEX_2*/0.0, /*XPOS_1*/50.0, /*YPOS_1*/50.0, /*ZPOS_1*/+10.0,
-				/*XPOS_2*/0.0, /*YPOS_2*/0.0, /*ZPOS_2*/0.0, /*XROT*/0.0, /*YROT*/0.0, /*ZROT*/0.0, /*BREAKFORCE*/1.0, /*FIXEDROT*/true, /*P15*/false, /*COLLISION*/false, /*P17*/1, /*P18*/true);
-			ENTITY::SET_ENTITY_ALPHA(temp_object, 0, 0);
-			if (VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] < 2) WAIT(1000);
-			if (VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] == 2) WAIT(100); // Keep Engine Running feature compatibility line 
+		Vehicle temp_object = VEHICLE::CREATE_VEHICLE(GAMEPLAY::GET_HASH_KEY("BMX"), myvehicle_coords.x, myvehicle_coords.y, myvehicle_coords.z + 10, myvehicle_heading, 1, 1); // 20, 1
+		ENTITY::ATTACH_ENTITY_TO_ENTITY_PHYSICALLY(/*ENTITY_1*/myVehicle, /*ENTITY_2*/temp_object, /*BONE_INDEX_1*/0, /*BONE_INDEX_2*/0.0, /*XPOS_1*/50.0, /*YPOS_1*/50.0, /*ZPOS_1*/+10.0,
+			/*XPOS_2*/0.0, /*YPOS_2*/0.0, /*ZPOS_2*/0.0, /*XROT*/0.0, /*YROT*/0.0, /*ZROT*/0.0, /*BREAKFORCE*/1.0, /*FIXEDROT*/true, /*P15*/false, /*COLLISION*/false, /*P17*/1, /*P18*/true);
+		ENTITY::SET_ENTITY_ALPHA(temp_object, 0, 0);
+		if (VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] < 2) WAIT(1000);
+		if (VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] == 2) WAIT(100); // Keep Engine Running feature compatibility line 
 
-			ENTITY::DETACH_ENTITY(myVehicle, true, true);
-			VEHICLE::DELETE_VEHICLE(&temp_object);
-		//}
+		ENTITY::DETACH_ENTITY(myVehicle, true, true);
+		VEHICLE::DELETE_VEHICLE(&temp_object);
 	} 
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -3563,8 +3537,6 @@ void vehicle_flip()
 }
 
 void reset_vehicle_globals() {
-	//veh_spawn_menu_index = 0;
-
 	activeLineIndexSpeed = 0;
 	activeLineIndexVisualize = 0;
 	activeLineIndexSpeedlimit = 0;
@@ -3587,6 +3559,7 @@ void reset_vehicle_globals() {
 	speedCountryLimiterIndex = 0;
 	lightsOffIndex = 0;
 	speedBoostIndex = 0;
+	featureNeverDirty = 0;
 	engPowMultIndex = 0;
 	VehMassMultIndex = 0;
 	current_player_forceshield = 0;
@@ -3656,7 +3629,6 @@ void reset_vehicle_globals() {
 		featureAutoToggleLights =
 		featureMileage = 
 		featureSeasharkLights =
-		featureNeverDirty =
 		featureRememberVehicles =
 		featureRoadLaws =
 		featureFuel = 
@@ -3935,7 +3907,6 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureAutoToggleLights", &featureAutoToggleLights});
 	results->push_back(FeatureEnabledLocalDefinition{"featureMileage", &featureMileage});
 	results->push_back(FeatureEnabledLocalDefinition{"featureSeasharkLights", &featureSeasharkLights});
-	results->push_back(FeatureEnabledLocalDefinition{"featureNeverDirty", &featureNeverDirty});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRememberVehicles", &featureRememberVehicles});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRoadLaws", &featureRoadLaws});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePoliceVehicleBlip", &featurePoliceVehicleBlip});
@@ -4405,6 +4376,7 @@ bool vehicle_save_slot_menu_interrupt(){
 void add_vehicle_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"lastCustomVehicleSpawn", lastCustomVehicleSpawn});
 	results->push_back(StringPairSettingDBRow{"speedBoostIndex", std::to_string(speedBoostIndex)});
+	results->push_back(StringPairSettingDBRow{"featureNeverDirty", std::to_string(featureNeverDirty)});
 	results->push_back(StringPairSettingDBRow{"engPowMultIndex", std::to_string(engPowMultIndex)});
 	results->push_back(StringPairSettingDBRow{"VehMassMultIndex", std::to_string(VehMassMultIndex)});
 	results->push_back(StringPairSettingDBRow{"current_player_forceshield", std::to_string(current_player_forceshield)});
@@ -4475,6 +4447,9 @@ void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settin
 		}
 		else if(setting.name.compare("speedBoostIndex") == 0){
 			speedBoostIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("featureNeverDirty") == 0) {
+			featureNeverDirty = stoi(setting.value);
 		}
 		else if(setting.name.compare("engPowMultIndex") == 0){
 			engPowMultIndex = stoi(setting.value);
@@ -4694,6 +4669,11 @@ int get_current_veh_eng_pow_index(){
 void onchange_veh_eng_pow_index(int value, SelectFromListMenuItem* source){
 	engPowMultIndex = value;
 	powChanged = true;
+}
+
+void onchange_veh_never_dirty(int value, SelectFromListMenuItem* source) {
+	featureNeverDirty = value;
+	NeverDirtyChanged = true;
 }
 
 void onchange_veh_mass_index(int value, SelectFromListMenuItem* source){

@@ -1218,13 +1218,6 @@ bool process_weapon_menu(){
 	toggleItem->toggleValueUpdated = NULL;
 	menuItems.push_back(toggleItem);
 
-	//toggleItem = new ToggleMenuItem<int>();
-	//toggleItem->caption = "Vehicle Rockets";
-	//toggleItem->value = i++;
-	//toggleItem->toggleValue = &featureWeaponVehRockets;
-	//toggleItem->toggleValueUpdated = NULL;
-	//menuItems.push_back(toggleItem);
-
 	listItem = new SelectFromListMenuItem(WEAPONS_VEHICLE_CAPTIONS, onchange_vehicle_weapon_modifier);
 	listItem->wrap = false;
 	listItem->caption = "Vehicle Weapon";
@@ -1632,7 +1625,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		float v_y = (cos(rad) * p_force * 10);
 		float v_z = p_force * (CamRot.x * 0.2);
 
-		if (temp_nearest_ped != -1) { //  && ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(temp_nearest_ped, playerPed, 1)
+		if (temp_nearest_ped != -1) {
 			AI::CLEAR_PED_TASKS_IMMEDIATELY(temp_nearest_ped);
 			AI::CLEAR_PED_SECONDARY_TASK(temp_nearest_ped);
 			AI::CLEAR_PED_TASKS(temp_nearest_ped);
@@ -1699,7 +1692,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	// Disables visions if not aiming
 	if (WEAPONS_SNIPERVISION_VALUES[SniperVisionIndex] != 0 && !SCRIPT::HAS_SCRIPT_LOADED("carsteal2"))
 	{
-		if (!PED::GET_PED_CONFIG_FLAG(playerPed, 78, 1)) { // WEAPONS_SNIPERVISION_VALUES[SniperVisionIndex] == 1 && 
+		if (!PED::GET_PED_CONFIG_FLAG(playerPed, 78, 1)) { 
 			if (!featureNightVision && !featureThermalVision) {
 				GRAPHICS::SET_NIGHTVISION(false);
 				GRAPHICS::SET_SEETHROUGH(false);
@@ -1826,9 +1819,7 @@ void update_vehicle_guns(){
 	if (WEAPONS_VEHICLE_VALUES[VehCurrWeaponIndex] > 0 && PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) {
 		Player player = PLAYER::PLAYER_ID();
 		Ped playerPed = PLAYER::PLAYER_PED_ID();
-
-		//if (!ENTITY::DOES_ENTITY_EXIST(playerPed) || !featureWeaponVehRockets) return;
-
+		
 		bool bSelect = IsKeyDown(KeyConfig::KEY_VEH_ROCKETS) || IsControllerButtonDown(KeyConfig::KEY_VEH_ROCKETS) || (CONTROLS::IS_CONTROL_PRESSED(2, 69) && !CONTROLS::IS_CONTROL_PRESSED(2, 70));
 
 		if (bSelect && featureWeaponVehShootLastTime + 150 < GetTickCount() && PLAYER::IS_PLAYER_CONTROL_ON(player)) {
@@ -1836,7 +1827,6 @@ void update_vehicle_guns(){
 			Vector3 v0, v1;
 			GAMEPLAY::GET_MODEL_DIMENSIONS(ENTITY::GET_ENTITY_MODEL(veh), &v0, &v1);
 
-			//Hash weaponAssetRocket = GAMEPLAY::GET_HASH_KEY("WEAPON_VEHICLE_ROCKET");
 			char *currWeapon_v = new char[WEAPONS_VEHICLE_CAPTIONS[VehCurrWeaponIndex].length() + 1];
 			strcpy(currWeapon_v, WEAPONS_VEHICLE_CAPTIONS[VehCurrWeaponIndex].c_str());
 			Hash weaponAssetRocket = GAMEPLAY::GET_HASH_KEY(currWeapon_v);

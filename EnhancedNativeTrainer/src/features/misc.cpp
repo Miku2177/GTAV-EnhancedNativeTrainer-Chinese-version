@@ -48,7 +48,7 @@ float bill_to_pay, mins = -1;
 bool featureDynamicHealthBar = false;
 bool been_damaged = false;
 float curr_damaged_health, curr_damaged_armor = -1;
-int healthbar_secs_curr, healthbar_seconds = -1; // healthbar_secs_passed
+int healthbar_secs_curr, healthbar_seconds = -1; 
 float health_bar_x = 0.015;
 float health_bar_y = 0.966;
 //
@@ -69,8 +69,6 @@ bool p_exist = false;
 bool radio_v_checked = false;
 
 Camera DeathCam = NULL;
-
-char *temp_musiceventname = "";
 
 Vehicle playerVeh = -1;
 
@@ -398,10 +396,9 @@ bool onconfirm_misc_cutscene_menu(MenuItem<int> choice) {
 		if (CUTSCENE::HAS_CUTSCENE_LOADED()) {
 			cutscene_is_playing = true;
 			manual_cutscene = true;
-			CUTSCENE::SET_CUTSCENE_FADE_VALUES(0, 0, 0, 0); //CUTSCENE::SET_CUTSCENE_FADE_VALUES(0, 0, 0, 0); || CUTSCENE::SET_CUTSCENE_FADE_VALUES(1, 1, 1, 1); // actually both of them work or both or them can be removed
+			CUTSCENE::SET_CUTSCENE_FADE_VALUES(0, 0, 0, 0); 
 			CUTSCENE::START_CUTSCENE(0);
 			CAM::SET_WIDESCREEN_BORDERS(0, 0);
-			//AUDIO::SET_AUDIO_FLAG("AllowCutsceneOverScreenFade", false);
 			delete[] cstr;
 		}
 	}
@@ -438,7 +435,6 @@ void process_misc_cutplayer_menu() {
 	for each (std::string scenario in captions)
 	{
 		item = new MenuItem<int>();
-		//MenuItem<int> *item = new MenuItem<int>();
 		item->caption = scenario;
 		item->value = i++;
 		menuItems.push_back(item);
@@ -478,7 +474,6 @@ void process_misc_filters_menu() {
 
 bool onconfirm_misc_musicevent_menu(MenuItem<int> choice) {
 	if (choice.value == -1) {
-		//AUDIO::CANCEL_MUSIC_EVENT(temp_musiceventname);
 		AUDIO::TRIGGER_MUSIC_EVENT("AC_STOP");
 	}
 	else {
@@ -486,7 +481,6 @@ bool onconfirm_misc_musicevent_menu(MenuItem<int> choice) {
 		char *cstr = new char[value_m.length() + 1];
 		strcpy(cstr, value_m.c_str());
 		AUDIO::TRIGGER_MUSIC_EVENT(cstr);
-		temp_musiceventname = cstr;
 		delete[] cstr;
 	}
 	return false;
@@ -508,7 +502,6 @@ void process_misc_musicevent_menu() {
 	for each (std::string scenario in captions)
 	{
 		item = new MenuItem<int>();
-		//MenuItem<int> *item = new MenuItem<int>();
 		item->caption = scenario;
 		item->value = i++;
 		menuItems.push_back(item);
@@ -1377,7 +1370,6 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			(PED::GET_PED_TYPE(PLAYER::PLAYER_PED_ID()) == 1 && ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == GAMEPLAY::GET_HASH_KEY("player_one")) ||
 			((PED::GET_PED_TYPE(PLAYER::PLAYER_PED_ID()) == 2 || PED::GET_PED_TYPE(PLAYER::PLAYER_PED_ID()) == 3) && ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == GAMEPLAY::GET_HASH_KEY("player_two"))) {
 			if (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) {
-				//if (ENTITY::GET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID()) < 1) {
 				Vector3 playerPosition = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 				Vector3 curRotation = ENTITY::GET_ENTITY_ROTATION(PLAYER::PLAYER_PED_ID(), 2);
 
@@ -1397,7 +1389,6 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			}
 
 			if (!ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) {
-				//if (ENTITY::GET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID()) > 0) { //  && !PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID())
 				if (CAM::DOES_CAM_EXIST(DeathCam)) {
 					ENTITY::SET_ENTITY_COLLISION(PLAYER::PLAYER_PED_ID(), 1, 1);
 					CAM::RENDER_SCRIPT_CAMS(false, false, 0, false, false);
@@ -1497,18 +1488,17 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 						Vector3 coordsPed_temp = ENTITY::GET_ENTITY_COORDS(us_ped[i], true);
 						float dist_t = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsPed_temp.x, coordsPed_temp.y, coordsPed_temp.z);
 						if (dist_t < 20) { // 30 50 100 150
-							if (ENTITY::IS_ENTITY_ON_SCREEN(us_ped[i]) /*&& (ENTITY::GET_ENTITY_MODEL(bus_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_zero") ||
-								ENTITY::GET_ENTITY_MODEL(bus_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_one") || ENTITY::GET_ENTITY_MODEL(bus_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_two"))*/ && found_ped_in_cutscene == false &&
+							if (ENTITY::IS_ENTITY_ON_SCREEN(us_ped[i]) && found_ped_in_cutscene == false &&
 								ENTITY::IS_ENTITY_VISIBLE(us_ped[i]) && switched_c != us_ped[i] && PED::GET_PED_TYPE(us_ped[i]) != 28) { 
 								if (curr_cut_ped_me != -1) curr_cut_ped = curr_cut_ped_me;
 								else curr_cut_ped = us_ped[i];
 								OBJECT::DELETE_OBJECT(&xaxis);
 								OBJECT::DELETE_OBJECT(&zaxis);
-								//if (CAM::DOES_CAM_EXIST(CutCam)) {
-									CAM::RENDER_SCRIPT_CAMS(false, false, 1, false, false);
-									CAM::DESTROY_CAM(CutCam, true);
-									CAM::DESTROY_ALL_CAMS(true);
-								//}
+
+								CAM::RENDER_SCRIPT_CAMS(false, false, 1, false, false);
+								CAM::DESTROY_CAM(CutCam, true);
+								CAM::DESTROY_ALL_CAMS(true);
+
 								if (ENTITY::GET_ENTITY_MODEL(us_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_zero") || ENTITY::GET_ENTITY_MODEL(us_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_one") ||
 									ENTITY::GET_ENTITY_MODEL(us_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_two")) PlayerIndex = PED::GET_PED_BONE_INDEX(curr_cut_ped, 8433);
 								else PlayerIndex = PED::GET_PED_BONE_INDEX(curr_cut_ped, 31086); // 8433

@@ -136,8 +136,6 @@ Vehicle find_nearest_vehicle();
 
 void toggle_tractioncontrol();
 
-//void enter_damaged_vehicle();
-
 bool process_spawn_menu_generic(int topMenuSelection);
 
 bool spawn_saved_car(int slot, std::string caption);
@@ -225,6 +223,8 @@ void onhighlight_paintfade(MenuItem<float> choice);
 int get_current_veh_invincibility_mode();
 
 void onchange_veh_invincibility_mode(int value, SelectFromListMenuItem* source);
+
+void onchange_veh_never_dirty(int value, SelectFromListMenuItem* source);
 
 void onchange_veh_speed_boost_index(int value, SelectFromListMenuItem *source);
 

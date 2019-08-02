@@ -27,8 +27,6 @@ extern bool featureNPCNeonLights;
 extern bool featureNPCFullBeam;
 extern bool featureDirtyVehicles;
 extern bool featureNPCNoGravityVehicles;
-//extern bool featureNPCNoGravityPeds;
-//extern int NoPedsGravityIndex;
 extern bool featureNPCReducedGripVehicles;
 extern bool featureBoostNPCRadio;
 
@@ -40,7 +38,6 @@ extern const std::vector<std::string> WORLD_REDUCEDGRIP_SNOWING_CAPTIONS;
 extern const int WORLD_REDUCEDGRIP_SNOWING_VALUES[];
 extern int PedsHealthIndex;
 extern bool PedsHealthChanged;
-extern const int PEDS_HEALTH_VALUES[];
 extern int NPCVehicleSpeedIndex;
 extern bool NPCVehicleSpeedChanged;
 extern int PedAccuracyIndex;
@@ -51,6 +48,8 @@ extern int RadarReducedGripRainingIndex;
 extern bool RadarReducedGripRainingChanged;
 extern int NoPedsGravityIndex;
 extern bool NoPedsGravityChange;
+extern int featureNeverDirty;
+extern bool NeverDirtyChanged;
 
 class ENTTrackedPedestrian{
 	public:

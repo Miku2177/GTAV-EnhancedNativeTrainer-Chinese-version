@@ -449,7 +449,6 @@ void do_spawn_bodyguard(){
 		Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 		if (added_nearest_b == false) bodyGuard = PED::CREATE_PED(25, bodyGuardModel, spawnCoords.x, spawnCoords.y, spawnCoords.z, 0, 0, 0);
 		if (added_nearest_b == true) {
-			//animal_in_group = true;
 			const int arrSize33 = 1024;
 			Ped surr_peds[arrSize33];
 			int count_surr_peds = worldGetAllPeds(surr_peds, arrSize33);
@@ -472,7 +471,6 @@ void do_spawn_bodyguard(){
 					}
 				}
 			}
-			//PED::GET_CLOSEST_PED(coordsme.x, coordsme.y, coordsme.z, 50, 1, 0, &temp_bodyguard, 1, 1, -1);
 			exist_already = false;
 			if (!spawnedBodyguards.empty()) {
 				for (int i = 0; i < spawnedBodyguards.size(); i++) {
@@ -550,7 +548,6 @@ void do_spawn_bodyguard(){
 				PED::SET_RELATIONSHIP_BETWEEN_GROUPS(2, myGroup, temp_p); // 0
 				PED::SET_RELATIONSHIP_BETWEEN_GROUPS(2, temp_p, myGroup);
 				PED::SET_PED_CAN_BE_TARGETTED(bodyGuard, false);
-				//WEAPON::GIVE_WEAPON_TO_PED(bodyGuard, -1569615261, 1, true, true);
 			}
 			//
 			if (bodyguard_animal == false) PED::SET_PED_CAN_SWITCH_WEAPON(bodyGuard, true);
@@ -621,7 +618,6 @@ void do_spawn_bodyguard(){
 				for (int i = 0; i < VEHICLE::GET_VEHICLE_MAX_NUMBER_OF_PASSENGERS(veh); i++) {
 					if (VEHICLE::IS_VEHICLE_SEAT_FREE(veh, i)) {
 						AI::TASK_WARP_PED_INTO_VEHICLE(bodyGuard, veh, i);
-						//PED::SET_PED_INTO_VEHICLE(bodyGuard, veh, i);
 						break;
 					}
 				}
@@ -667,26 +663,7 @@ void maintain_bodyguards(){
 		for (int i = 0; i < spawnedBodyguards.size(); i++) {
 			PED::SET_PED_KEEP_TASK(spawnedBodyguards[i], true);
 			if (animal_in_group == true && PED::IS_PED_FLEEING(spawnedBodyguards[i])) AI::TASK_STAND_STILL(spawnedBodyguards[i], 10000); //  || AI::IS_PED_RUNNING(*iter))
-			//
-			/*if (animal_in_group == true) {
-				Vector3 coords_mebullet = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
-				if (GAMEPLAY::HAS_BULLET_IMPACTED_IN_AREA(coords_mebullet.x, coords_mebullet.y, coords_mebullet.z, 200.0, 0, 0)) {
-					const int BOD_ARR_PED_SIZE = 1024;
-					Ped bod_ped[BOD_ARR_PED_SIZE];
-					int found_ped = worldGetAllPeds(bod_ped, BOD_ARR_PED_SIZE);
-					for (int j = 0; j < found_ped; j++) {
-						if (PED::IS_PED_SHOOTING(bod_ped[j])) {
-							Hash temp_e = PED::GET_PED_RELATIONSHIP_GROUP_HASH(bod_ped[j]);
-							PED::ADD_RELATIONSHIP_GROUP("meleetarget", &temp_e);
-							PED::SET_RELATIONSHIP_BETWEEN_GROUPS(5, myGroup, temp_e); // 0
-							PED::SET_RELATIONSHIP_BETWEEN_GROUPS(5, temp_e, myGroup);
-							PED::SET_PED_AS_ENEMY(bod_ped[j], true);
-							AI::TASK_COMBAT_PED(spawnedBodyguards[i], bod_ped[j], 0, 16);
-						}
-					}
-				}
-			}*/
-			//
+			
 			if (stop_b == false) {
 				PED::SET_PED_AS_GROUP_MEMBER(spawnedBodyguards[i], PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID()));
 				PED::SET_PED_NEVER_LEAVES_GROUP(spawnedBodyguards[i], true);

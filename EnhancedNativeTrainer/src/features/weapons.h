@@ -238,8 +238,8 @@ extern bool featureThermalVision;
 
 bool process_weapon_menu();
 
-//bool process_give_melee();
 bool do_give_weapon(std::string modelName);
+
 bool process_weaponlist_menu();
 
 void reset_weapon_globals();
@@ -270,8 +270,6 @@ void save_player_weapons();
 
 void give_all_weapons_hotkey();
 
-//void featureAddAllAttachments();
-
 void sniper_vision_toggle();
 
 void restore_player_weapons();
@@ -291,8 +289,6 @@ void fill_weapon_ammo(MenuItem<int> choice);
 void onconfirm_open_tint_menu(MenuItem<int> choice);
 
 //Weapon mod menu
-
-//bool process_weapon_mod_menu_tint();
 
 bool onconfirm_weapon_mod_menu_tint(MenuItem<int> choice);
 

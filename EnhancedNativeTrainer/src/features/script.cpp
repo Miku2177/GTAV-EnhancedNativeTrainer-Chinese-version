@@ -114,7 +114,7 @@ bool featureRagdollIfInjured = false;
 // ragdoll if injured variables
 bool been_damaged_by_weapon, ragdoll_task = false;
 float been_damaged_health, been_damaged_armor = -1;
-int ragdoll_seconds = 0; //  ragdoll_secs_passed, ragdoll_secs_curr, 
+int ragdoll_seconds = 0; 
 //
 Ped oldplayerPed = -1;
 int tick, playerDataMenuIndex, playerPrisonMenuIndex, playerForceshieldMenuIndex = 0;
@@ -143,7 +143,6 @@ const char* CLIPSET_DRUNK = "move_m@drunk@verydrunk";
 
 const std::vector<std::string> GRAVITY_CAPTIONS{"Minimum", "0.1x", "0.5x", "0.75x", "1x (Normal)"};
 const float GRAVITY_VALUES[] = { 0.0f, 0.1f, 0.5f, 0.75f, 1.0f };
-//const std::vector<float> GRAVITY_VALUES{0.0f, 0.1f, 0.5f, 0.75f, 1.0f};
 
 const std::vector<std::string> REGEN_CAPTIONS{"Minimum", "0.1x", "0.25x", "0.5x", "1x (Normal)", "2x", "5x", "10x", "20x", "50x", "100x", "200x", "500x", "1000x"};
 const std::vector<float> REGEN_VALUES{0.0f, 0.1f, 0.25f, 0.5f, 1.0f, 2.0f, 5.0f, 10.0f, 20.0f, 50.0f, 100.0f, 200.0f, 500.0f, 1000.0f};
@@ -151,10 +150,12 @@ int current_regen_speed = 4;
 bool current_regen_speed_changed = true;
 
 //Player Health
-const std::vector<std::string> PLAYER_HEALTH_CAPTIONS{ "1", "10", "20", "30", "40", "50", "100", "200", "300", "500", "1000", "5000", "10000", "20000", "30000" };
-const int PLAYER_HEALTH_VALUES[] = { 101, 110, 120, 130, 140, 150, 200, 300, 400, 600, 1100, 5100, 10100, 20100, 30100 };
+const std::vector<std::string> PLAYER_HEALTH_CAPTIONS{ "OFF", "10", "20", "30", "40", "50", "100", "200", "300", "500", "1000", "5000", "10000", "20000", "30000" };
+const int PLAYER_HEALTH_VALUES[] = { 0, 110, 120, 130, 140, 150, 200, 300, 400, 600, 1100, 5100, 10100, 20100, 30100 };
 int current_player_health = 6;
 bool current_player_health_Changed = true;
+int PedsHealthIndex = 0;
+bool PedsHealthChanged = true;
 
 //Player Armor
 const std::vector<std::string> PLAYER_ARMOR_CAPTIONS{ "0", "15", "20", "30", "40", "50", "100" };
@@ -343,7 +344,6 @@ void engineonoff_switching() {
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	Vehicle veh = -1;
 	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
-	//if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh = vehicle_been_used;
 	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
 		find_nearest_vehicle();
 		veh = temp_vehicle;
@@ -361,7 +361,6 @@ void engine_damage() {
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	Vehicle veh3 = -1;
 	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh3 = PED::GET_VEHICLE_PED_IS_USING(playerPed);
-	//if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh3 = vehicle_been_used;
 	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
 		find_nearest_vehicle();
 		veh3 = temp_vehicle;
@@ -374,7 +373,6 @@ void engine_kill(){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	Vehicle veh2 = -1;
 	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh2 = PED::GET_VEHICLE_PED_IS_USING(playerPed);
-	//if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && ENTITY::DOES_ENTITY_EXIST(vehicle_been_used) && vehicle_been_used != -1) veh2 = vehicle_been_used;
 	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
 		find_nearest_vehicle();
 		veh2 = temp_vehicle;
@@ -464,14 +462,12 @@ void update_features(){
 		if (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && player_died == false) {
 			GAMEPLAY::_DISABLE_AUTOMATIC_RESPAWN(true);
 			SCRIPT::SET_NO_LOADING_SCREEN(true);
-			//GAMEPLAY::SET_FADE_OUT_AFTER_DEATH(false);
 			if (CAM::IS_SCREEN_FADED_OUT()) CAM::DO_SCREEN_FADE_IN(100);
 		}
 		if (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && (CONTROLS::IS_CONTROL_JUST_PRESSED(2, 176) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, 22))) { // 23 // 
 			player_died = true;
 			GAMEPLAY::_DISABLE_AUTOMATIC_RESPAWN(false);
 			SCRIPT::SET_NO_LOADING_SCREEN(false);
-			//GAMEPLAY::SET_FADE_OUT_AFTER_DEATH(true);
 			CAM::DO_SCREEN_FADE_OUT(4000);
 		}
 		if (!ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) player_died = false;
@@ -632,7 +628,6 @@ void update_features(){
 						Vector3 curPLocation = ENTITY::GET_ENTITY_COORDS(surr_p_peds[i], 0);
 						ENTITY::SET_ENTITY_COORDS_NO_OFFSET(surr_p_peds[i], curPLocation.x, curPLocation.y, curPLocation.z, 1, 1, 1);
 						AI::STOP_ANIM_TASK(surr_p_peds[i], "dead@fall", "dead_fall_down", 1.0); 
-						//ENTITY::APPLY_FORCE_TO_ENTITY(surr_p_peds[i], 4, 0, 0, -50, 0, 0, 0, 1, true, true, false, true, true);
 					}
 				}
 			}
@@ -648,7 +643,6 @@ void update_features(){
 			if (tempgot_y < 0) tempgot_y = (tempgot_y * -1);
 			if (tempgot_z < 0) tempgot_z = (tempgot_z * -1);
 			if (CONTROLS::IS_CONTROL_PRESSED(2, 22) && tempgot_x < 20 && tempgot_y < 20 && tempgot_z < 20) ENTITY::APPLY_FORCE_TO_ENTITY(surr_objects[i], 1, 0, 0, 0.6, 0, 0, 0, true, false, true, true, true, true);
-			//if (CONTROLS::IS_CONTROL_RELEASED(2, 22)) ENTITY::APPLY_FORCE_TO_ENTITY(surr_objects[i], 4, 0, 0, -50, 0, 0, 0, 1, true, true, false, true, true);
 		} // end of int (objects)
 		Vehicle surr_vehicles[arrSize_punch];
 		int count_surr_v = worldGetAllVehicles(surr_vehicles, arrSize_punch);
@@ -661,7 +655,6 @@ void update_features(){
 			if (tempgot_y < 0) tempgot_y = (tempgot_y * -1);
 			if (tempgot_z < 0) tempgot_z = (tempgot_z * -1);
 			if (CONTROLS::IS_CONTROL_PRESSED(2, 22) && tempgot_x < 20 && tempgot_y < 20 && tempgot_z < 20) ENTITY::APPLY_FORCE_TO_ENTITY(surr_vehicles[i], 1, 0, 0, 0.6, 0, 0, 0, true, false, true, true, true, true);
-			//if (CONTROLS::IS_CONTROL_RELEASED(2, 22)) ENTITY::APPLY_FORCE_TO_ENTITY(surr_vehicles[i], 4, 0, 0, -50, 0, 0, 0, 1, true, true, false, true, true);
 		} // end of int (vehicles)
 	}
 
@@ -689,7 +682,7 @@ void update_features(){
 			}
 			if (ENTITY::IS_ENTITY_PLAYING_ANIM(PLAYER::PLAYER_PED_ID(), "skydive@base", "free_idle", 3)) skydiving = true;
 		}
-		if (CONTROLS::IS_CONTROL_PRESSED(2, 32) && skydiving == true) { // && ENTITY::IS_ENTITY_PLAYING_ANIM(PLAYER::PLAYER_PED_ID(), "skydive@base", "free_idle", 3)
+		if (CONTROLS::IS_CONTROL_PRESSED(2, 32) && skydiving == true) { 
 			if (!ENTITY::IS_ENTITY_PLAYING_ANIM(PLAYER::PLAYER_PED_ID(), "skydive@base", "free_idle", 3)) {
 				AI::CLEAR_PED_TASKS_IMMEDIATELY(PLAYER::PLAYER_PED_ID());
 				AI::TASK_PLAY_ANIM(PLAYER::PLAYER_PED_ID(), "skydive@base", "free_idle", 8.0, 0.0, -1, 9, 0, 0, 0, 0); // free_idle
@@ -697,7 +690,7 @@ void update_features(){
 			ENTITY::SET_ENTITY_ROTATION(PLAYER::PLAYER_PED_ID(), CamRot.x, CamRot.y, CamRot.z, 1, true);
 			ENTITY::APPLY_FORCE_TO_ENTITY(PLAYER::PLAYER_PED_ID(), 1, v_x / 8, v_y / 8, v_z / 8, 0, 0, 0, true, false, true, true, true, true);
 		}
-		if (CONTROLS::IS_CONTROL_PRESSED(2, 33) && skydiving == true) { // && ENTITY::IS_ENTITY_PLAYING_ANIM(PLAYER::PLAYER_PED_ID(), "skydive@base", "free_idle", 3)
+		if (CONTROLS::IS_CONTROL_PRESSED(2, 33) && skydiving == true) { 
 			jumpfly_secs_passed = clock() / CLOCKS_PER_SEC;
 			if (((clock() / (CLOCKS_PER_SEC / 1000)) - jumpfly_secs_curr) != 0) {
 				jumpfly_tick = jumpfly_tick + 1;
@@ -708,7 +701,7 @@ void update_features(){
 				AI::TASK_PLAY_ANIM(PLAYER::PLAYER_PED_ID(), "skydive@base", "free_idle", 8.0, 0.0, -1, 9, 0, 0, 0, 0); // free_idle
 			}
 			ENTITY::SET_ENTITY_ROTATION(PLAYER::PLAYER_PED_ID(), CamRot.x, CamRot.y, CamRot.z, 1, true);
-			if (jumpfly_tick < 30) ENTITY::FREEZE_ENTITY_POSITION(PLAYER::PLAYER_PED_ID(), false); // ENTITY::FREEZE_ENTITY_POSITION(PLAYER::PLAYER_PED_ID(), true);
+			if (jumpfly_tick < 30) ENTITY::FREEZE_ENTITY_POSITION(PLAYER::PLAYER_PED_ID(), false); 
 			else {
 				ENTITY::FREEZE_ENTITY_POSITION(PLAYER::PLAYER_PED_ID(), false);
 				ENTITY::APPLY_FORCE_TO_ENTITY(PLAYER::PLAYER_PED_ID(), 1, -(v_x / 8), -(v_y / 8), -(v_z / 8), 0, 0, 0, true, false, true, true, true, true);
@@ -718,7 +711,7 @@ void update_features(){
 			ENTITY::FREEZE_ENTITY_POSITION(PLAYER::PLAYER_PED_ID(), false);
 			jumpfly_tick = 0; 
 		}
-		if (ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(PLAYER::PLAYER_PED_ID())) { // && CONTROLS::IS_CONTROL_RELEASED(2, 22) && CONTROLS::IS_CONTROL_RELEASED(2, 32) && CONTROLS::IS_CONTROL_RELEASED(2, 33)
+		if (ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(PLAYER::PLAYER_PED_ID())) { 
 			AI::STOP_ANIM_TASK(PLAYER::PLAYER_PED_ID(), "skydive@base", "free_idle", 3);
 			if (skydiving == true) {
 				AI::TASK_PLAY_ANIM(PLAYER::PLAYER_PED_ID(), "move_strafe@roll_fps", "combatroll_fwd_p1_00", 8.0, 0.0, -1, 9, 0, 0, 0, 0);
@@ -728,7 +721,7 @@ void update_features(){
 		}
 		if (skydiving == false) {
 			AI::STOP_ANIM_TASK(PLAYER::PLAYER_PED_ID(), "skydive@base", "free_idle", 3);
-			AI::STOP_ANIM_TASK(PLAYER::PLAYER_PED_ID(), "move_strafe@roll_fps", "combatroll_fwd_p1_00", 3); // if (ENTITY::GET_ENTITY_VELOCITY(PLAYER::PLAYER_PED_ID()).x < 1 && ENTITY::GET_ENTITY_VELOCITY(PLAYER::PLAYER_PED_ID()).y < 1) 
+			AI::STOP_ANIM_TASK(PLAYER::PLAYER_PED_ID(), "move_strafe@roll_fps", "combatroll_fwd_p1_00", 3); 
 		}
 		if (ENTITY::IS_ENTITY_PLAYING_ANIM(PLAYER::PLAYER_PED_ID(), "skydive@base", "free_idle", 3)) skydiving = true;
 		else skydiving = false;
@@ -810,8 +803,14 @@ void update_features(){
 			scr_tick_secs_curr = scr_tick_secs_passed;
 		}
 		if (tick > 200) {
-			PED::SET_PED_MAX_HEALTH(playerPed_Data, PLAYER_HEALTH_VALUES[current_player_health]);
-			ENTITY::SET_ENTITY_HEALTH(playerPed_Data, PLAYER_HEALTH_VALUES[current_player_health]);
+			if (PLAYER_HEALTH_VALUES[current_player_health] > 0) {
+				PED::SET_PED_MAX_HEALTH(playerPed_Data, PLAYER_HEALTH_VALUES[current_player_health]);
+				ENTITY::SET_ENTITY_HEALTH(playerPed_Data, PLAYER_HEALTH_VALUES[current_player_health]);
+			}
+			else {
+				PED::SET_PED_MAX_HEALTH(playerPed_Data, 200);
+				ENTITY::SET_ENTITY_HEALTH(playerPed_Data, 200);
+			}
 			PLAYER::SET_PLAYER_MAX_ARMOUR(playerPed_Data, PLAYER_ARMOR_VALUES[current_player_armor]);
 			PED::SET_PED_ARMOUR(playerPed_Data, PLAYER_ARMOR_VALUES[current_player_armor]);
 			oldplayerPed = playerPed_Data;
@@ -874,7 +873,6 @@ void update_features(){
 			SCRIPT::REQUEST_SCRIPT("stats_controller");
 			SYSTEM::WAIT(0);
 		}
-		//SCRIPT::REQUEST_SCRIPT("stats_controller");
 		SYSTEM::START_NEW_SCRIPT("stats_controller", 1424);
 		
 		featurePlayerStatsUpdated = true;
@@ -1192,7 +1190,6 @@ bool process_player_life_menu(){
 	MenuItem<int> *item;
 	SelectFromListMenuItem *listItem;
 	ToggleMenuItem<int>* toggleItem;
-	//LifeItem<int> *item2;
 
 	int i = 0;
 
@@ -1249,12 +1246,6 @@ bool process_player_life_menu(){
 	listItem->caption = "Character Ability Stats";
 	listItem->value = current_player_stats;
 	menuItems.push_back(listItem);
-
-	//item = new MenuItem<int>();
-	//item->caption = "Change Stats";
-	//item->value = -2;
-	//item->isLeaf = true;
-	//menuItems.push_back(item);
 
 	return draw_generic_menu<int>(menuItems, &playerDataMenuIndex, caption, onconfirm_playerData_menu, NULL, NULL);
 }

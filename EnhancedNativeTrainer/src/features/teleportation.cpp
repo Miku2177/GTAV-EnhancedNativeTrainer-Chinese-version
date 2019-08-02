@@ -80,34 +80,27 @@ std::vector<tele_location> LOCATIONS_SAFE = {
 std::vector<tele_location> LOCATIONS_LANDMARKS = {
 	{ "Abandoned Motel", 1567.35f, 3566.76f, 35.4367f },
 	{ "Aerial Tramway", -740.235f, 5594.81f, 41.6546f },
-	//{ "Airport Entrance", -1034.6f, -2733.6f, 13.8f },
 	{ "Airport Field", -1336.0f, -3044.0f, 13.9f },
 	{ "Altruist Cult Camp", -1004.04f, 4856.94f, 280.681f },
 	{ "Arcadius Carpark", -164.38220000f, -619.08840000f, 33.33181000f},
 	{ "Beaver Bush Ranger Station", 389.712f, 791.305f, 190.41f },
 	{ "Bluff Tower Carpark", -1526.45900000f, -581.92970000f, 25.99675000f},
 	{ "Bolingbroke Penitentiary Entrance", 1879.45f, 2604.83f, 45.672f },
-	//{ "Bolingbroke Penitentiary Inside", 1671.37f, 2502.7f, 45.5706f },
 	{ "Calafia Train Bridge", -517.869f, 4425.284f, 89.795f },
 	{ "Cape Catfish Pier", 3866.41f, 4463.61f, 2.72762f },
 	{ "Casino", 926.407f, 46.392f, 80.9041f },
-	//{ "Chumash", -3192.6f, 1100.0f, 20.2f },
 	{ "Chumash Historic Family Pier", -3426.683f, 967.738f, 8.347f },
 	{ "Davis Fire Department", 203.00000000f, -1655.57000000f, 28.80310000f},
 	{ "Del Perro Pier", -1850.127f, -1231.751f, 13.017f },
 	{ "Devin Weston's House", -2639.872f, 1866.812f, 160.135f },
 	{ "East Alamo View Observation Desk", -523.647f, 4194.51f, 193.731f },
 	{ "El Burro Heights", 1384.0f, -2057.1f, 52.0f },
-	//{ "Elysian Island", 306.545f, -2757.75f, 5.98824f },
 	{ "Epsilon Building Entrance", -698.472f, 46.3927f, 44.0338f },
 	{ "Far North San Andreas", 24.775f, 7644.102f, 19.055f },
 	{ "Ferris Wheel", -1670.7f, -1125.0f, 13.0f },
 	{ "FIB Carpark", 141.20440000f, -717.21670000f, 34.76831000f},
-	//{ "Fort Zancudo", -2047.4f, 3132.1f, 32.8f },
-	//{ "Fort Zancudo ATC Entrance", -2344.373f, 3267.498f, 32.811f },
 	{ "Fort Zancudo ATC Top Floor", -2358.132f, 3249.754f, 101.451f },
 	{ "Galilee Pier", 1299.17f, 4216.22f, 33.9087f },
-	//{ "Garage In La Mesa", 970.27453f, -1826.56982f, 31.11477f, { "bkr_bi_id1_23_door" }, {}, {}, false },
 	{ "God's Thumb", -1006.402f, 6272.383f, 1.503f },
 	{ "Golf Club", -1373.22f, 50.4852f, 53.7018f },
 	{ "Grove Street", 117.11f, -1951.27f, 20.7498f },
@@ -115,70 +108,50 @@ std::vector<tele_location> LOCATIONS_LANDMARKS = {
 	{ "Hippy Camp", 2476.712f, 3789.645f, 41.226f },
 	{ "Hobo Camp", 1476.47f, 6373.92f, 23.5239f },
 	{ "Hut On Island", -2167.28f, 5187.76f, 15.9392f },
-	//{ "Jetsam", 760.4f, -2943.2f, 5.8f },
 	{ "Jolene Cranley-Evans Ghost", 3059.620f, 5564.246f, 197.091f },
 	{ "Junk Yard/Tank", -445.022f, -1715.71f, 25.0233f },
 	{ "Kortz Center", -2243.810f, 264.048f, 174.615f },
-	//{ "Lake Vinewood", 16.728f, 638.686f, 210.595f },
 	{ "Lombank Carpark", -676.295f, -589.195f, 25.4536f},
 	{ "Los Santos County Fire Department", 1201.39500000f, -1478.45300000f, 33.85941000f},
 	{ "LSDWP", 738.286f, 132.192f, 80.5797f },
-	//{ "Main LS Customs", -365.425f, -131.809f, 37.873f },
 	{ "Marlowe Vineyards", -1868.971f, 2095.674f, 139.115f },
 	{ "Maze Bank Carpark", -84.13106000f, -821.34520000f, 36.71491000f},
 	{ "Maze Bank Del Perro Carpark", -1387.31300000f, -475.34900000f, 33.85337000f},
 	{ "McKenzie Airfield", 2121.7f, 4796.3f, 41.1f },
-	//{ "Merryweather Dock", 486.417f, -3339.692f, 6.070f },
 	{ "Mineshaft", -595.342f, 2086.008f, 131.412f },
 	{ "Mirror Park", 1071.34f, -712.241f, 58.4852f },
-	//{ "Mirror Park Bridge St", 1041.75f, -347.993f, 67.3033f },
-	//{ "Mirror Park Suburban", 872.814f, -477.402f, 57.6135f },
-	//{ "Mt. Chiliad Observation Desk", 501.724f, 5604.34f, 797.91f },
-	//{ "Mt. Chiliad Platform", 425.4f, 5614.3f, 766.5f },
 	{ "NOOSE Headquarters", 2535.243f, -383.799f, 92.993f },
 	{ "North Yankton", 3360.19f, -4849.67f, 111.8f, IPLS_NORTH_YANKTON, {}, {}, false },
 	{ "Orange Ball Juice Stand", -455.847f, 1601.02f, 359.209f },
 	{ "Paleto Bay Pier", -275.522f, 6635.835f, 7.425f },
 	{ "Paleto Forest Sawmill", -578.305f, 5246.03f, 70.4694f },
-	//{ "Palomino Highlands", 2023.69f, -1588.45f, 252.926f },
 	{ "Playboy Mansion", -1475.234f, 167.088f, 55.841f },
 	{ "Police Station", 432.002f, -981.748f, 30.7107f },
-	//{ "Puerto Del Sol Yacht Club", -921.976f, -1336.04f, 5.00018f },
 	{ "Quarry", 2954.196f, 2783.410f, 41.004f },
 	{ "Race", 1059.65f, 147.134f, 85.7408f },
 	{ "Raton Canyon Obsevation Desk", -840.581f, 4182.65f, 215.29f },
 	{ "Rockford Plaza Carpark", -179.31400000f, -180.21540000f, 46.31482000f},
 	{ "Sandy Shores Airfield", 1747.0f, 3273.7f, 41.1f },
-	//{ "Satellite Dishes", 2062.123f, 2942.055f, 47.431f },
 	{ "Sisyphus Theater Stage", 208.714f, 1167.75f, 227.005f },
 	{ "Snack-Bar With Pink Dinosaur", 2569.48f, 2580.4f, 37.7605f },
 	{ "Sonar Collections Dock", -1611.26f, 5261.74f, 3.9741f },
 	{ "Stab City", 126.845f, 3714.25f, 48.9273f },
 	{ "Subway Burton", -297.004f, -358.18f, 10.0631f },
-	//{ "Subway Davis", 98.6135f, -1711.78f, 30.1124f },
 	{ "Subway Del Perro", -1363.85f, -439.754f, 15.0453f },
 	{ "Subway Little Seoul", -529.163f, -671.127f, 11.809f },
 	{ "Subway LSIA Parking", -871.209f, -2291.86f, -11.7328f },
 	{ "Subway LSIA Terminal 4", -1103.9f, -2737.14f, -7.41013f },
-	//{ "Subway Pillbox South", -205.724f, -1012.65f, 30.1379f },
 	{ "Subway Portola Drive", -791.0f, -125.857f, 19.9503f },
-	//{ "Subway Puerto Del Sol", -531.937f, -1263.36f, 26.9016f },
-	//{ "Subway Strawberry", 305.736f, -1204.4f, 38.8926f },
-	//{ "Tractor Parts", 925.238f, -1568.29f, 30.6312f },
 	{ "Trevor's Meth Lab", 1395.32f, 3597.44f, 34.9675f },
 	{ "Two Hoots Falls", -1575.9f, 2104.26f, 67.4264f },
 	{ "Underground Entrance", -66.5357f, -538.862f, 31.7796f },
 	{ "Underground Exit", 1032.85f, -276.936f, 50.1025f },
 	{ "University Of San Andreas", -1644.09f, 218.244f, 60.6411f },
 	{ "Up-n-Atom Diner/Rocket", 1585.25f, 6447.69f, 25.125f },
-	//{ "Ursula's House", 3352.57f, 5150.35f, 20.1294f },
 	{ "Ursula's Mother Grave", 3200.96f, 4730.4f, 193.284f },
-	//{ "Utopia Gardens", 1390.26f, -746.747f, 67.1903f },
-	//{ "Vagos Garage", -1078.97300000f, -1678.98800000f, 3.85791000f},
 	{ "Vinewood Bowl Theatre Stage", 686.245f, 577.950f, 130.461f },
 	{ "Vinewood Cemetery", -1733.11f, -178.004f, 59.2933f },
 	{ "Weed Farm", 2208.777f, 5578.235f, 53.735f },
-	//{ "Wind Farm", 2354.0f, 1830.3f, 101.1f },
 	{ "Wind Farm Trailer Park", 2353.21f, 2549.4f, 55.7455f },
 	{ "Yellow Jack Inn", 1991.74f, 3058.86f, 47.0568f },
 	{ "You Tool Hardware Store", 2757.12f, 3469.85f, 55.7208f },
@@ -204,12 +177,10 @@ std::vector<tele_location> LOCATIONS_HIGH = {
 	{ "El Burro Heights Tank Roof", 1610.86f, -2242.01f, 132.794f }, 
 	{ "Elysian Island High", 338.21f, -2758.38f, 44.6318f },
 	{ "FIB Building Roof", 150.126f, -754.591f, 262.865f },
-	//{ "Fort Zancudo Tower Roof", -2358.13f, 3248.81f, 106.046f },
 	{ "Galileo Observatory Roof", -438.804f, 1076.097f, 352.411f },
 	{ "Galileo Park Tower Summit", 758.461f, 1273.92f, 453.573f },
 	{ "Humane Labs High", 3556.18f, 3684.96f, 63.4212f },
 	{ "IAA Building Roof", 134.085f, -637.859f, 262.851f },
-	//{ "La Fuente Blanca Watertower Top", 1488.67f, 1144.74f, 131.449f },
 	{ "La Puerta Tower Summit", -472.911f, -1444.01f, 88.5546f },
 	{ "Lighthouse Top Level", 3428.79f, 5174.15f, 35.8053f },
 	{ "Maze Bank Arena Roof", -324.300f, -1968.545f, 67.002f },
@@ -227,12 +198,9 @@ std::vector<tele_location> LOCATIONS_HIGH = {
 	{ "Richards Majestic Water Tower", -1159.98f, -604.803f, 69.0802f },
 	{ "Sandy Shores Building Site Crane", 1051.209f, 2280.452f, 89.727f },
 	{ "Satellite Dish Antenna", 2034.988f, 2953.105f, 74.602f },
-	//{ "Sisyphus Theater Roof", 203.37f, 1166.73f, 245.835f },
 	{ "Tataviam Mountains Top", 1758.23f, 682.072f, 269.991f },
 	{ "Very High Up", -75.015f, -818.215f, 1500.176f },
 	{ "Very Very High Up", -129.964f, 8130.873f, 2699.999f },
-	//{ "Very Very Very High Up", -119.879f, -977.357f, 9999.0f }, //- doesn't teleport you. Height out of bounds?
-	//{ "Vinewood Bowl Theatre Roof", 683.157f, 568.621f, 156.285f },
 	{ "Vinewood Sign", 711.577f, 1197.91f, 348.527f },
 	{ "Weazel Plaza Apartments Roof", -894.349f, -454.021f, 174.811f },
 	{ "Windmill Top", 2026.677f, 1842.684f, 136.213f },
@@ -244,7 +212,6 @@ std::vector<tele_location> LOCATIONS_UNDERWATER = {
 	{ "Dead Sea Monster 3", 3985.13f, 4858.07f, -32.9598f },
 	{ "Dead Sea Monster 4", 3629.43f, 5531.41f, -21.75f },
 	{ "Humane Labs Tunnel", 3832.00f, 3663.67f, -23.0722f },
-	//{ "Murder Mystery Body", -3161.078f, 3001.998f, -37.974f },
 	{ "Sunken Ancient Ship", 2627.76f, -1391.54f, -10.5533f },
 	{ "Sunken Armored Carrier", 4196.41f, 3564.53f, -57.6304f },
 	{ "Sunken Cargo Ship", 3191.12f, -358.279f, -17.7928f },
@@ -310,11 +277,9 @@ std::vector<tele_location> LOCATIONS_INTERIORS = {
 	{ "North Yankton Bank", 5309.519f, -5212.375f, 83.522f, IPLS_NORTH_YANKTON, {}, {}, false },
 	{ "Omega's Trailer Interior", 2330.38000000f, 2572.53100000f, 45.67811000f},
 	{ "O'Neil Farm", 2454.78f, 4971.92f, 46.8103f, { "farm", "farm_props", "farmint" }, { "farm_burnt", "farm_burnt_props", "farmint_cap" }, {}, false },
-	//{ "Pacific Standard Bank", 235.046f, 216.434f, 106.287f },
 	{ "Pacific Standard Bank Vault", 255.851f, 217.030f, 101.683f },
 	{ "Paleto Bay Sheriff", -446.135f, 6012.91f, 31.7164f },
 	{ "Raven Slaughterhouse", 967.357f, -2184.71f, 30.0613f },
-	//`{ "Rogers Salvage & Scrap", -609.484f, -1611.63f, 27.0105f, { "sp1_03_interior_v_recycle_milo_" }, {}, {}, false }, //  IPL_PROPS_SCRAP
 	{ "Sandy Shores Sheriff", 1853.18f, 3686.63f, 34.2671f },
 	{ "Solomon's Office", -1002.89f, -478.003f, 50.0271f },
 	{ "Spaceship Interior", 41.64376000f, -779.93910000f, 832.40240000f, { "spaceinterior" }, {}, {}, false },
@@ -324,7 +289,6 @@ std::vector<tele_location> LOCATIONS_INTERIORS = {
 	{ "Tequi-la-la", -564.518f, 277.754f, 83.1363f }, 
 	{ "Torture Warehouse", 136.514f, -2203.15f, 7.30914f },
 	{ "Union Depository Corridor", -8.78971f, -656.287f, 35.4514f, { "Finbank" }, { "DT1_03_Shutter" }, {}, false },
-	//{ "Union Depository Underground Parking", 23.9346f, -669.7552f, 31.8853f, { "Finbank" }, { "DT1_03_Shutter" }, {}, false },
 	{ "Union Depository Vault", 2.69689322f, -667.0166f, 16.1306286f, { "Finbank" }, {}, {}, false },
 };
 
@@ -344,30 +308,12 @@ std::vector<tele_location> LOCATIONS_REQSCEN = {
 /* Name, coords, IPL name, scenary (props) required, scenary to remove, bool isloaded*/
 std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "2 Car Garage", 173.1176f, -1003.279f, -99.000f, { "hw1_blimp_interior_v_garages_milo_" }, {}, {}, false },
-	//{ "3 Alta Street Apt 3", -282.30380000f, -954.78150000f, 85.30347000f, { "hw1_blimp_interior_v_apartment_high_milo__3" }, {}, {}, false },
-	//{ "3 Alta Street Apt 4", -260.88210000f, -953.55720000f, 70.02390000f, { "hw1_blimp_interior_v_apartment_high_milo__4" }, {}, {}, false },
-	//{ "3 Alta Street Apt 11", -282.30390000f, -954.78150000f, 85.30347000f, { "hei_hw1_blimp_interior_11_dlc_apart_high_new_milo_" }, {}, {}, false },
-	//{ "4 Car Garage", 199.9716f, -1018.954f, -99.4041f, { "hei_hw1_blimp_interior_v_garagem_sp_milo_" }, {}, {}, false },
-	//{ "4 Integrity Way Apt 9", -13.08014000f, -593.61680000f, 93.02542000f, { "hei_hw1_blimp_interior_9_dlc_apart_high_new_milo_" }, {}, {}, false },
 	{ "4 Integrity Way Apt 10", -32.17249000f, -579.01830000f, 82.90740000f, { "hei_hw1_blimp_interior_10_dlc_apart_high_new_milo_" }, {}, {}, false },
 	{ "4 Integrity Way Apt 28", -14.7964f, -581.709f, 79.4307f, {}, {}, {}, false },
 	{ "6 Car Garage", 199.9716f, -999.6678f, -99.000f, { "hw1_blimp_interior_v_garagem_milo_" }, {}, {}, false },
-	//{ "7302 San Andreas Avenue Apt 5", -475.04570000f, -706.68080000f, 46.19837000f, { "hw1_blimp_interior_v_apartment_high_milo__5" }, {}, {}, false },
-	//{ "7302 San Andreas Avenue Apt 6", -460.61330000f, -691.55620000f, 69.87947000f, { "hw1_blimp_interior_v_apartment_high_milo__6" }, {}, {}, false },
-	//{ "7302 San Andreas Avenue Apt 13", -475.04560000f, -706.68080000f, 46.19837000f, { "hei_hw1_blimp_interior_13_dlc_apart_high_new_milo_" }, {}, {}, false },
 	{ "10 Car Garage Back Room", 223.193f, -967.322f, -99.000f, { "hw1_blimp_interior_v_garagel_milo_" }, {}, {}, false },
 	{ "10 Car Garage Bay", 228.135f, -995.350f, -99.000f, { "hw1_blimp_interior_v_garagel_milo_" }, {}, {}, false },
-	//{ "Aircraft Carrier", 3069.330f, -4704.220f, 15.043f, IPLS_CARRIER, {}, {}, false },
 	{ "Arcadius Business Center Office: Style 1", -139.53950000f, -629.07570000f, 167.82040000f, { "ex_dt1_02_office_01a" }, {}, {}, false },
-	//{ "Arcadius Business Center Office: Style 2", -139.53950000f, -629.07570000f, 167.82040000f, { "ex_dt1_02_office_01b" }, {}, {}, false },
-	//{ "Arcadius Business Center Office: Style 3", -139.53950000f, -629.07570000f, 167.82040000f, { "ex_dt1_02_office_01c" }, {}, {}, false },
-	//{ "Arcadius Business Center Office: Style 4", -139.53950000f, -629.07570000f, 167.82040000f, { "ex_dt1_02_office_02a" }, {}, {}, false },
-	//{ "Arcadius Business Center Office: Style 5", -139.53950000f, -629.07570000f, 167.82040000f, { "ex_dt1_02_office_02b" }, {}, {}, false },
-	//{ "Arcadius Business Center Office: Style 6", -139.53950000f, -629.07570000f, 167.82040000f, { "ex_dt1_02_office_02c" }, {}, {}, false },
-	//{ "Arcadius Business Center Office: Style 7", -139.53950000f, -629.07570000f, 167.82040000f, { "ex_dt1_02_office_03a" }, {}, {}, false },
-	//{ "Arcadius Business Center Office: Style 8", -139.53950000f, -629.07570000f, 167.82040000f, { "ex_dt1_02_office_03b" }, {}, {}, false },
-	//{ "Arcadius Business Center Office: Style 9", -139.53950000f, -629.07570000f, 167.82040000f, { "ex_dt1_02_office_03c" }, {}, {}, false },
-	//{ "Avenger Interior", 520.0f, 4750.0f, -70.0f, IPL_PROPS_DOOMSDAY_MAIN_BASE, {}, { "SHELL_TINT" }, false },
 	{ "Benny's Garage", -209.759f, -1319.617f, 30.08367f }, 
 	{ "Biker Club Garage 1", 1005.861f, -3156.162f, -39.90727f, { "bkr_biker_interior_placement_interior_1_biker_dlc_int_02_milo_" }, {}, {}, false },
 	{ "Biker Club Garage 2", 1102.477f, -3156.162f, -37.77361f, { "bkr_biker_interior_placement_interior_0_biker_dlc_int_01_milo_" }, {}, {}, false },
@@ -382,29 +328,8 @@ std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Del Perro Heights Apt 26", -1468.02100000f, -529.94370000f, 62.34918000f, { "hei_hw1_blimp_interior_26_dlc_apart_high_new_milo_" }, {}, {}, false },
 	{ "Del Perro Heights Apt 27", -1468.02100000f, -529.94370000f, 49.72156000f, { "hei_hw1_blimp_interior_27_dlc_apart_high_new_milo_" }, {}, {}, false },
 	{ "Del Perro Heights Apt 28", -1468.14f, -541.815f, 73.4442f, {}, {}, {}, false },
-	//{ "Doomsday Base", 1257.6f, 4806.23f, -39.3286f, IPL_PROPS_DOOMSDAY_MAIN_BASE, {}, { "set_int_02_shell" }, false },
-	//{ "Eclipse Towers Apt 12", -791.29410000f, 338.07100000f, 200.41350000f, { "hw1_blimp_interior_v_apartment_high_milo__12" }, {}, {}, false },
-	//{ "Eclipse Towers Apt 13", -764.81310000f, 319.18510000f, 216.05030000f, { "hw1_blimp_interior_v_apartment_high_milo__13" }, {}, {}, false },
-	//{ "Eclipse Towers Apt 14", -791.76130000f, 338.46320000f, 152.79410000f, { "hw1_blimp_interior_v_apartment_high_milo__14" }, {}, {}, false },
-	//{ "Eclipse Towers Apt 15", -764.72250000f, 319.18510000f, 169.59630000f, { "hw1_blimp_interior_v_apartment_high_milo__15" }, {}, {}, false },
 	{ "Executive CEO Office: Style 1", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_01a" }, {}, {}, false }, //ex_dt1_11_office_01a[b, c....]
-	//{ "Executive CEO Office: Style 2", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_01b" }, {}, {}, false },
-	//{ "Executive CEO Office: Style 3", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_01c" }, {}, {}, false },
-	//{ "Executive CEO Office: Style 4", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_02a" }, {}, {}, false },
-	//{ "Executive CEO Office: Style 5", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_02b" }, {}, {}, false },
-	//{ "Executive CEO Office: Style 6", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_02c" }, {}, {}, false },
-	//{ "Executive CEO Office: Style 7", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_03a" }, {}, {}, false },
-	//{ "Executive CEO Office: Style 8", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_03b" }, {}, {}, false },
-	//{ "Executive CEO Office: Style 9", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_03c" }, {}, {}, false },
-	//{ "Executive CEO Office: Style 1 (Messy)", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_01a" }, {}, { IPL_PROPS_CEO_OFFICE }, false },
 	{ "Executive CEO Office: Style 2 (Messy)", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_01b" }, {}, { IPL_PROPS_CEO_OFFICE }, false },
-	//{ "Executive CEO Office: Style 3 (Messy)", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_01c" }, {}, { IPL_PROPS_CEO_OFFICE }, false },
-	//{ "Executive CEO Office: Style 4 (Messy)", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_02a" }, {}, { IPL_PROPS_CEO_OFFICE }, false },
-	//{ "Executive CEO Office: Style 5 (Messy)", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_02b" }, {}, { IPL_PROPS_CEO_OFFICE }, false },
-	//{ "Executive CEO Office: Style 6 (Messy)", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_02c" }, {}, { IPL_PROPS_CEO_OFFICE }, false },
-	//{ "Executive CEO Office: Style 7 (Messy)", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_03a" }, {}, { IPL_PROPS_CEO_OFFICE }, false },
-	//{ "Executive CEO Office: Style 8 (Messy)", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_03b" }, {}, { IPL_PROPS_CEO_OFFICE }, false },
-	//{ "Executive CEO Office: Style 9 (Messy)", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_03c" }, {}, { IPL_PROPS_CEO_OFFICE }, false },
 	{ "Executive Warehouse (Small)", 1095.0f, -3100.0f, -40.0f, { "ex_exec_warehouse_placement_interior_1_int_warehouse_s_dlc_milo_" }, {}, {}, false },
 	{ "Executive Warehouse (Medium)", 1060.0f, -3100.0f, -40.0f, { "ex_exec_warehouse_placement_interior_0_int_warehouse_m_dlc_milo_" }, {}, {}, false },
 	{ "Executive Warehouse (Large)", 1010.0f, -3100.0f, -40.0f, { "ex_exec_warehouse_placement_interior_2_int_warehouse_l_dlc_milo_" }, {}, {}, false },
@@ -417,43 +342,14 @@ std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Import-Export Garage", 975.0f, -3000.0f, -40.0f, IPLS_IMPORT_EXPORT_WAREHOUSES, {}, {}, false },
 	{ "Jetsam Interior", 795.00000000f, -3000.00000000f, -40.00000000f, { "imp_impexp_interior_placement_interior_0_impexp_int_01_milo_" }, {}, {}, false },
 	{ "Lombank Office: Style 1", -1573.84900000f, -571.02540000f, 107.52290000f, { "ex_sm_13_office_01a" }, {}, {}, false },
-	//{ "Lombank Office: Style 2", -1573.84900000f, -571.02540000f, 107.52290000f, { "ex_sm_13_office_01b" }, {}, {}, false },
-	//{ "Lombank Office: Style 3", -1573.84900000f, -571.02540000f, 107.52290000f, { "ex_sm_13_office_01c" }, {}, {}, false },
-	//{ "Lombank Office: Style 4", -1573.84900000f, -571.02540000f, 107.52290000f, { "ex_sm_13_office_02a" }, {}, {}, false },
-	//{ "Lombank Office: Style 5", -1573.84900000f, -571.02540000f, 107.52290000f, { "ex_sm_13_office_02b" }, {}, {}, false },
-	//{ "Lombank Office: Style 6", -1573.84900000f, -571.02540000f, 107.52290000f, { "ex_sm_13_office_02c" }, {}, {}, false },
-	//{ "Lombank Office: Style 7", -1573.84900000f, -571.02540000f, 107.52290000f, { "ex_sm_13_office_03a" }, {}, {}, false },
-	//{ "Lombank Office: Style 8", -1573.84900000f, -571.02540000f, 107.52290000f, { "ex_sm_13_office_03b" }, {}, {}, false },
-	//{ "Lombank Office: Style 9", -1573.84900000f, -571.02540000f, 107.52290000f, { "ex_sm_13_office_03c" }, {}, {}, false },
 	{ "Martin Madrazo's House", 1396.58f, 1141.79f, 114.334f }, 
 	{ "Maze Bank Del Perro Office: Style 1", -1384.56400000f, -478.26990000f, 71.04205000f, { "ex_sm_15_office_01a" }, {}, {}, false },
-	//{ "Maze Bank Del Perro Office: Style 2", -1384.56400000f, -478.26990000f, 71.04205000f, { "ex_sm_15_office_01b" }, {}, {}, false },
-	//{ "Maze Bank Del Perro Office: Style 3", -1384.56400000f, -478.26990000f, 71.04205000f, { "ex_sm_15_office_01c" }, {}, {}, false },
-	//{ "Maze Bank Del Perro Office: Style 4", -1384.56400000f, -478.26990000f, 71.04205000f, { "ex_sm_15_office_02a" }, {}, {}, false },
-	//{ "Maze Bank Del Perro Office: Style 5", -1384.56400000f, -478.26990000f, 71.04205000f, { "ex_sm_15_office_02b" }, {}, {}, false },
-	//{ "Maze Bank Del Perro Office: Style 6", -1384.56400000f, -478.26990000f, 71.04205000f, { "ex_sm_15_office_02c" }, {}, {}, false },
-	//{ "Maze Bank Del Perro Office: Style 7", -1384.56400000f, -478.26990000f, 71.04205000f, { "ex_sm_15_office_03a" }, {}, {}, false },
-	//{ "Maze Bank Del Perro Office: Style 8", -1384.56400000f, -478.26990000f, 71.04205000f, { "ex_sm_15_office_03b" }, {}, {}, false },
-	//{ "Maze Bank Del Perro Office: Style 9", -1384.56400000f, -478.26990000f, 71.04205000f, { "ex_sm_15_office_03c" }, {}, {}, false },
 	{ "Mission Row Underground 'Winning' Garage", 400.09610000f, -956.67870000f, -100.00000000f},
-	//{ "Nightclub (Edgy)", -1569.2500f, -3017.3900f, -73.2200f, { "ba_int_placement_ba_interior_0_dlc_int_01_ba_milo_" }, {}, { IPL_PROPS_NIGHTCLUB_COMMON_PROPS }, false },
 	{ "Nightclub (Glamorous)", -1569.2500f, -3017.3900f, -73.2200f, { "ba_int_placement_ba_interior_0_dlc_int_01_ba_milo_" }, {}, { IPL_PROPS_NIGHTCLUB_COMMON_PROPS }, false },
-	//{ "Night Club Interior (Traditional)", -1569.2500f, -3017.3900f, -73.2200f, { "ba_int_placement_ba_interior_0_dlc_int_01_ba_milo_" }, {}, { IPL_PROPS_NIGHTCLUB_COMMON_PROPS }, false },
 	{ "Night Club Basement", -1509.3100f, -2990.4400f, -79.7400f, { "ba_int_placement_ba_interior_1_dlc_int_02_ba_milo_" }, {}, { IPL_PROPS_NIGHTCLUB_BASEMENT }, false },
 	{ "Online Character Creator Interior", 415.275f, -999.037f, -99.4041f, { "hw1_int_placement_interior_v_mugshot_milo_ " }, {}, {}, false },
 	{ "Penthouse: Style 1", -786.168f, 334.319f, 211.197f, { "apa_v_mp_h_01_a", "apa_v_mp_h_01_b", "apa_v_mp_h_01_c" }, {}, {}, false },
-	//{ "Penthouse: Style 2", -787.7805f, 334.9232f, 215.8384f, { "apa_v_mp_h_02_a", "apa_v_mp_h_02_b", "apa_v_mp_h_02_c" }, {}, {}, false },
-	//{ "Penthouse: Style 3", -787.7805f, 334.9232f, 215.8384f, { "apa_v_mp_h_03_a", "apa_v_mp_h_03_b", "apa_v_mp_h_03_c" }, {}, {}, false },
-	//{ "Penthouse: Style 4", -787.7805f, 334.9232f, 215.8384f, { "apa_v_mp_h_04_a", "apa_v_mp_h_04_b", "apa_v_mp_h_04_c" }, {}, {}, false },
-	//{ "Penthouse: Style 5", -787.7805f, 334.9232f, 215.8384f, { "apa_v_mp_h_05_a", "apa_v_mp_h_05_b", "apa_v_mp_h_05_c" }, {}, {}, false },
-	//{ "Penthouse: Style 6", -787.7805f, 334.9232f, 215.8384f, { "apa_v_mp_h_06_a", "apa_v_mp_h_06_b", "apa_v_mp_h_06_c" }, {}, {}, false },
-	//{ "Penthouse: Style 7", -787.7805f, 334.9232f, 215.8384f, { "apa_v_mp_h_07_a", "apa_v_mp_h_07_b", "apa_v_mp_h_07_c" }, {}, {}, false },
-	//{ "Penthouse: Style 8", -787.7805f, 334.9232f, 215.8384f, { "apa_v_mp_h_08_a", "apa_v_mp_h_08_b", "apa_v_mp_h_08_c" }, {}, {}, false },
 	{ "Richards Majestic Apt 2", -915.811f, -379.432f, 113.675f, {}, {}, {}, false },
-	//{ "Richards Majestic Apt 8", -904.56690000f, -377.00050000f, 78.27306000f, { "hw1_blimp_interior_v_apartment_high_milo__8" }, {}, {}, false },
-	//{ "Richards Majestic Apt 10", -925.54970000f, -374.22030000f, 102.23290000f, { "hw1_blimp_interior_v_apartment_high_milo__10" }, {}, {}, false },
-	//{ "Richards Majestic Apt 16", -904.56680000f, -377.00050000f, 78.27306000f, { "hei_hw1_blimp_interior_16_dlc_apart_high_new_milo_" }, {}, {}, false },
-	//{ "Richards Majestic Apt 18", -925.54970000f, -374.22030000f, 102.23290000f, { "hei_hw1_blimp_interior_18_dlc_apart_high_new_milo_" }, {}, {}, false },
 	{ "Stilthouse 1", 328.5579f, 425.9027f, 147.9707f, { "apa_ch2_04_interior_0_v_mp_stilts_b_milo_" }, {}, {}, false },
 	{ "Stilthouse 2", 372.6725f, 405.5155f, 144.4997f, { "apa_ch2_04_interior_1_v_mp_stilts_a_milo_" }, {}, {}, false },
 	{ "Stilthouse 3", 122.5349f, 542.5076f, 182.8967f, { "apa_ch2_05c_interior_1_v_mp_stilts_a_milo_" }, {}, {}, false },
@@ -466,23 +362,8 @@ std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Studio Flat", 260.3297f, -997.4288f, -100.0f, { "hei_hw1_blimp_interior_v_studio_lo_milo_" }, {}, {}, false },
 	{ "Submarine", 514.266f, 4855.68f, -62.5621f, { "xm_x17dlc_int_placement_interior_8_x17dlc_int_sub_milo_" }, {}, {}, false },
 	{ "Terrorbyte Interior", -1421.0150f, -3012.5870f, -80.0000f, { "ba_int_placement_ba_interior_2_dlc_int_03_ba_milo_" }, {}, { IPL_PROPS_NIGHTCLUB_TERRORBYTE_INTERIOR }, false },
-	//{ "Tinsel Towers Apt 16", -613.54040000f, 63.04870000f, 100.81960000f, { "hw1_blimp_interior_v_apartment_high_milo__16" }, {}, {}, false },
-	//{ "Tinsel Towers Apt 17", -587.82590000f, 44.26880000f, 86.41870000f, { "hw1_blimp_interior_v_apartment_high_milo__17" }, {}, {}, false },
-	//{ "Tinsel Towers Apt 24", -613.54050000f, 63.04870000f, 100.81960000f, { "hei_hw1_blimp_interior_24_dlc_apart_high_new_milo_" }, {}, {}, false },
-	//{ "Tinsel Towers Apt 25", -587.82590000f, 44.26880000f, 87.41870000f, { "hei_hw1_blimp_interior_25_dlc_apart_high_new_milo_" }, {}, {}, false },
 	{ "Tinsel Towers Apt 42", -614.86f, 40.6783f, 97.6f, {}, {}, {}, false },
 	{ "Upgraded Base", 462.09f, 4820.42f, -59.0f, IPL_PROPS_DOOMSDAY_MAIN_BASE, {}, { IPL_PROPS_FACILITY }, false },
-	//{ "Vespucci Boulevard Studio Flat", 342.8157f, -997.4288f, -99.4041f, { "hei_hw1_blimp_interior_v_apart_midspaz_milo_" }, {}, {}, false },
-	//{ "Weazel Plaza Apt 7", -892.29590000f, -434.41470000f, 88.25368000f, { "hw1_blimp_interior_v_apartment_high_milo__7" }, {}, {}, false },
-	//{ "Weazel Plaza Apt 9", -909.10170000f, -438.19030000f, 114.39970000f, { "hw1_blimp_interior_v_apartment_high_milo__9" }, {}, {}, false },
-	//{ "Weazel Plaza Apt 11", -889.30300000f, -451.77510000f, 119.32700000f, { "hw1_blimp_interior_v_apartment_high_milo__11" }, {}, {}, false },
-	//{ "Weazel Plaza Apt 15", -892.29590000f, -434.41470000f, 88.25368000f, { "hei_hw1_blimp_interior_15_dlc_apart_high_new_milo_" }, {}, {}, false },
-	//{ "Weazel Plaza Apt 17", -909.10180000f, -438.19030000f, 114.39970000f, { "hei_hw1_blimp_interior_17_dlc_apart_high_new_milo_" }, {}, {}, false },
-	//
-	//{ "XS_Arena_Interior", 2800.00000000f, -3800.00000000f, 100.00000000f, { "xs_arena_interior" }, {}, { IPL_PROPS_ARENAWAR_MAIN_PROPS }, false },
-	//{ "XS_Arena_Interior_Mod", 205.00000000f, 5180.00000000f, -90.00000000f, { "xs_arena_interior_mod" }, {}, { IPL_PROPS_ARENAWAR_MAIN_PROPS }, false }, // !!
-	//{ "XS_Arena_Interior_Mod_2", 170.00000000f, 5190.00000000f, 10.00000000f, { "xs_arena_interior_mod" }, {}, { IPL_PROPS_ARENAWAR_MAIN_PROPS }, false },
-	//{ "XS_Arena_Interior_Vip", 2799.52900000f, -3930.53900000f, 184.23560000f, {"xs_arena_interior_vip"}, {}, { IPL_PROPS_ARENAWAR_MAIN_PROPS }, false },
 }; 
 
 std::vector<tele_location> LOCATIONS_ACTORS = {
@@ -867,12 +748,6 @@ const int TEL_3DMARKER_MARTYPE_VALUES[] = { 1, 2 };
 int Tel3dmarker_martype_Index = 0;
 bool Tel3dmarker_martype_Changed = true;
 
-//Marker alpha
-//const std::vector<std::string> MARKER3D_ALPHA_CAPTIONS{ "10", "30", "50", "70", "90", "110", "130", "150", "170", "190", "210", "230", "250", "255" };
-//const int MARKER3D_ALPHA_VALUES[] = { 10, 30, 50, 70, 90, 110, 130, 150, 170, 190, 210, 230, 250, 255 }; // 0 means totally transparent, 255 means totally opaque
-//int Marker3d_Alpha_Index = 12;
-//bool Marker3d_Alpha_Changed = true;
-
 void teleport_to_coords(Entity e, Vector3 coords){
 	ENTITY::SET_ENTITY_COORDS_NO_OFFSET(e, coords.x, coords.y, coords.z, 0, 0, 1);
 	WAIT(0);
@@ -946,7 +821,6 @@ void teleport_to_mission_marker(){
 					break;
 				}
 			}
-
 			if (!blip_mission) {
 				myBlip = UI::GET_FIRST_BLIP_INFO_ID(BlipSpriteRaceFinish);
 				if (UI::DOES_BLIP_EXIST(myBlip) != 0) {
@@ -959,9 +833,7 @@ void teleport_to_mission_marker(){
 
 	if(blip_mission == true) {
 		Entity e = PLAYER::PLAYER_PED_ID();
-		
 		if (PED::IS_PED_IN_ANY_VEHICLE(e, 0)) e = PED::GET_VEHICLE_PED_IS_USING(e);
-		
 		bool groundFound = false;
 	
 		teleport_to_coords(e, coords_mission);
@@ -980,7 +852,6 @@ void teleport_to_mission_marker(){
 				}
 			}
 		}
-		
 		if (!groundFound) {
 			coords_mission.z = 1000.0;
 			WEAPON::GIVE_DELAYED_WEAPON_TO_PED(PLAYER::PLAYER_PED_ID(), 0xFBAB5776, 1, 0);
@@ -993,7 +864,6 @@ void teleport_to_mission_marker(){
 /////////////////////// TELEPORT TO A VEHICLE AS A PASSENGER ///////////////////////////////
 
 void teleport_to_vehicle_as_passenger() {
-
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	const int numElements = 10;
 	const int arrSize = numElements * 2 + 2;
@@ -1004,10 +874,8 @@ void teleport_to_vehicle_as_passenger() {
 	if (nearbyPed != NULL) {
 		for (int i = 0; i < count; i++) {
 			int offsettedID = i * 2 + 2;
-
 			if (nearbyPed[offsettedID] != NULL && ENTITY::DOES_ENTITY_EXIST(nearbyPed[offsettedID]) && PED::IS_PED_IN_ANY_VEHICLE(nearbyPed[offsettedID], 1)) {
 				Vehicle veh2 = PED::GET_VEHICLE_PED_IS_IN(nearbyPed[offsettedID], true);
-
 				if (ENTITY::DOES_ENTITY_EXIST(veh2)) {
 					PED::SET_PED_INTO_VEHICLE(playerPed, veh2, -2);
 					if (is_this_a_heli_or_plane(veh2)){
@@ -1085,7 +953,6 @@ void add_coords_generic_settings(std::vector<StringPairSettingDBRow>* results)
 	results->push_back(StringPairSettingDBRow{"Tel3dmarker_msize_Index", std::to_string(Tel3dmarker_msize_Index)});
 	results->push_back(StringPairSettingDBRow{"Tel3dmarker_martype_Index", std::to_string(Tel3dmarker_martype_Index)});
 	results->push_back(StringPairSettingDBRow{"Tel3dmarker_skypos_Index", std::to_string(Tel3dmarker_skypos_Index)});
-	//results->push_back(StringPairSettingDBRow{"Marker3d_Alpha_Index", std::to_string(Marker3d_Alpha_Index)});
 	results->push_back(StringPairSettingDBRow{"TelChauffeur_speed_Index", std::to_string(TelChauffeur_speed_Index)});
 	results->push_back(StringPairSettingDBRow{"TelChauffeur_altitude_Index", std::to_string(TelChauffeur_altitude_Index)});
 	results->push_back(StringPairSettingDBRow{"TelChauffeur_drivingstyles_Index", std::to_string(TelChauffeur_drivingstyles_Index)});
@@ -1115,11 +982,6 @@ void onchange_tel_3dmarker_skypos_index(int value, SelectFromListMenuItem *sourc
 	Tel3dmarker_skypos_Index = value;
 	Tel3dmarker_skypos_Changed = true;
 }
-
-//void onchange_tel_3dmarker_alpha_index(int value, SelectFromListMenuItem *source){
-//	Marker3d_Alpha_Index = value;
-//	Marker3d_Alpha_Changed = true;
-//}
 
 void onchange_tel_chauffeur_speed_index(int value, SelectFromListMenuItem *source){
 	TelChauffeur_speed_Index = value;
@@ -1154,9 +1016,6 @@ void handle_generic_settings_teleportation(std::vector<StringPairSettingDBRow>* 
 		else if (setting.name.compare("Tel3dmarker_skypos_Index") == 0){
 			Tel3dmarker_skypos_Index = stoi(setting.value);
 		}
-		//else if (setting.name.compare("Marker3d_Alpha_Index") == 0){
-		//	Marker3d_Alpha_Index = stoi(setting.value);
-		//}
 		else if (setting.name.compare("TelChauffeur_speed_Index") == 0){
 			TelChauffeur_speed_Index = stoi(setting.value);
 		}
@@ -1266,12 +1125,6 @@ void set_3d_marker(){
 	listItem->caption = "Marker Symbol Altitude";
 	listItem->value = Tel3dmarker_skypos_Index;
 	menuItems.push_back(listItem);
-
-	//listItem = new SelectFromListMenuItem(MARKER3D_ALPHA_CAPTIONS, onchange_tel_3dmarker_alpha_index);
-	//listItem->wrap = false;
-	//listItem->caption = "Marker Transparency";
-	//listItem->value = Marker3d_Alpha_Index;
-	//menuItems.push_back(listItem);
 
 	draw_generic_menu<int>(menuItems, &activeLineIndex3dmarker, caption, onconfirm_3dmarker_menu, NULL, NULL);
 }
@@ -1664,7 +1517,6 @@ void reset_teleporter_globals()
 	Tel3dmarker_msize_Index = 2;
 	Tel3dmarker_martype_Index = 0;
 	Tel3dmarker_skypos_Index = 0;
-	//Marker3d_Alpha_Index = 12;
 	TelChauffeur_speed_Index = 2;
 	TelChauffeur_altitude_Index = 5;
 	TelChauffeur_drivingstyles_Index = 0;
@@ -1774,13 +1626,11 @@ void update_teleport_features(){
 				}
 			}
 		}
-
 		// No marker or coords changed
 		if (blip_3d_exists_already == true && (UI::DOES_BLIP_EXIST(my3DBlip) == 0 || coords_3Dblip.x != coords_3Dblip_old.x || coords_3Dblip.y != coords_3Dblip_old.y)) {
 			blip_3d_exists_already = false;
 			close_distance = false;
 		}
-
 		// Marker has been set
 		if (blip_3d_found == true) {
 			coords_3Dblip_old.x = coords_3Dblip.x;
@@ -1790,7 +1640,6 @@ void update_teleport_features(){
 			blip_3d_found = false;
 			blip_3d_exists_already = true;
 		}
-		
 		// Get distance between player and marker
 		int dist_diff_x = (playerPosition.x - coords_3Dblip.x);
 		int dist_diff_y = (playerPosition.y - coords_3Dblip.y);

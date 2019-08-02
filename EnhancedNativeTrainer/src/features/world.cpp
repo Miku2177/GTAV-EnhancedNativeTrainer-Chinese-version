@@ -68,7 +68,6 @@ bool featureBusLight = false;
 bool featureAcidWater = false;
 bool featureAcidRain = false;
 bool featureReducedGripVehiclesIfSnow = false;
-//bool featureLightsBlackout = false;
 
 bool police_blips_toogle = false;
 bool windstrength_toggle = false;
@@ -89,7 +88,6 @@ bool featureWorldGarbageTrucksUpdated = false;
 bool featureBlackout = false;
 bool featureBlackoutUpdated = false;
 
-//bool featureWeatherWind = false;
 bool featureWeatherFreeze = false;
 
 bool featureCloudsFreeze = false;
@@ -111,7 +109,7 @@ std::string lastCloudsName;
 BOOL lightsBAutoOn = -1;
 BOOL highbeamsBAutoOn = -1;
 
-int Lightning_seconds = 0; // Lightning_secs_passed, Lightning_secs_curr, 
+int Lightning_seconds = 0; 
 
 // Radar Map Size
 const std::vector<std::string> WORLD_RADAR_MAP_CAPTIONS{ "Normal", "Big", "Full" };
@@ -142,14 +140,6 @@ const std::vector<std::string> WORLD_LIGHTNING_INTENSITY_CAPTIONS{ "OFF", "Often
 const int WORLD_LIGHTNING_INTENSITY_VALUES[] = { -2, 3, -1 };
 int featureLightIntensityIndex = 0;
 bool featureLightIntensityChanged = true;
-
-// Vehicles & Peds Density
-//const std::vector<std::string> WORLD_VEHICLESPEDS_DENSITY_CAPTIONS{ "OFF", "5%", "20%", "40%", "60%", "80%" };
-//const float WORLD_VEHICLESPEDS_DENSITY_VALUES[] = { 0, 0.05, 0.2, 0.4, 0.6, 0.8 };
-//int featureVehiclesDensity = 0;
-//bool featureVehiclesDensityChanged = true;
-//int featurePedsDensity = 0;
-//bool featurePedsDensityChanged = true;
 
 bool onconfirm_weather_menu(MenuItem<std::string> choice)
 {
@@ -336,16 +326,6 @@ void onchange_lightning_intensity_index(int value, SelectFromListMenuItem* sourc
 	featureLightIntensityChanged = true;
 }
 
-//void onchange_world_vehicles_density_index(int value, SelectFromListMenuItem* source) {
-//	featureVehiclesDensity = value;
-//	featureVehiclesDensityChanged = true;
-//}
-
-//void onchange_world_peds_density_index(int value, SelectFromListMenuItem* source) {
-//	featurePedsDensity = value;
-//	featurePedsDensityChanged = true;
-//}
-
 void onchange_world_wind_strength_index(int value, SelectFromListMenuItem* source){
 	WindStrengthIndex = value;
 	WindStrengthChanged = true;
@@ -428,19 +408,7 @@ void process_world_menu()
 	togItem->toggleValue = &featureWorldNoTraffic;
 	togItem->toggleValueUpdated = &featureWorldNoTrafficUpdated;
 	menuItems.push_back(togItem);
-
-	//listItem = new SelectFromListMenuItem(WORLD_VEHICLESPEDS_DENSITY_CAPTIONS, onchange_world_vehicles_density_index);
-	//listItem->wrap = false;
-	//listItem->caption = "Vehicles Density";
-	//listItem->value = featureVehiclesDensity;
-	//menuItems.push_back(listItem);
-
-	//listItem = new SelectFromListMenuItem(WORLD_VEHICLESPEDS_DENSITY_CAPTIONS, onchange_world_peds_density_index);
-	//listItem->wrap = false;
-	//listItem->caption = "Peds Density";
-	//listItem->value = featurePedsDensity;
-	//menuItems.push_back(listItem);
-
+	
 	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "No Planes/Helicopters";
 	togItem->value = 1;
@@ -518,13 +486,7 @@ void process_world_menu()
 	listItem->caption = "Headlights During Blackout";
 	listItem->value = featureLightsBlackoutIndex;
 	menuItems.push_back(listItem);
-
-	//togItem = new ToggleMenuItem<int>();
-	//togItem->caption = "Enable Headlights During Blackout";
-	//togItem->value = 1;
-	//togItem->toggleValue = &featureLightsBlackout;
-	//menuItems.push_back(togItem);
-
+	
 	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "Heavy Snow";
 	togItem->value = 7;
@@ -580,7 +542,6 @@ void process_world_menu()
 	togItem->caption = "No Waypoint GPS Line";
 	togItem->value = 1;
 	togItem->toggleValue = &featureNoWaypoint;
-	//togItem->toggleValueUpdated = &featureNoMinimapRotUpdated;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
@@ -631,10 +592,7 @@ void reset_world_globals()
 	RadarMapIndex = 0;
 	WorldWavesIndex = 0;
 	featureLightIntensityIndex = 0;
-
-	//featureVehiclesDensity = 0;
-	//featurePedsDensity = 0;
-
+	
 	RadarReducedGripSnowingIndex = 0;
 	RadarReducedGripRainingIndex = 0;
 	NoPedsGravityIndex = 0;
@@ -649,7 +607,6 @@ void reset_world_globals()
 	featureCloudsNo =
 	featureCloudsFreeze =
 	featureWorldMoonGravity = false;
-	//featureLightsBlackout = false;
 	featureWorldNoPeds = false;
 	featureWorldNoTraffic = false;
 	featureNoPlanesHelis = false;
@@ -986,10 +943,8 @@ void update_world_features()
 			} else GRAPHICS::DISABLE_VEHICLE_DISTANTLIGHTS(false);
 			if (featureBoostNPCRadio) AUDIO::SET_VEHICLE_RADIO_LOUD(bus_veh[i], 1);
 			if (featureNPCNeonLights) {
-				//if (VEHICLE::IS_THIS_MODEL_A_CAR(currVehModel_neon)) VEHICLE::_GET_VEHICLE_NEON_LIGHTS_COLOUR(bus_veh[i], &r, &g, &b);
 				if (ENTITY::DOES_ENTITY_EXIST(bus_veh[i]) && !VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 0) && !VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 1) && !VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 2) &&
 					!VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 3)) {
-				//if (r == 255 && g == 0 && b == 255) { 
 					Hash currVehModel_neon = ENTITY::GET_ENTITY_MODEL(bus_veh[i]);
 					if (bus_veh[i] != veh_mycurrveh && VEHICLE::IS_THIS_MODEL_A_CAR(currVehModel_neon)) {
 						const std::vector<NeonLightsColor> NPC_NEON_COLORS = {{ "Bright White", NEON_COLOR_WHITE }, { "Dim White", NEON_COLOR_BLACK }, { "Electric Blue", NEON_COLOR_ELECTRICBLUE }, { "Mint Green", NEON_COLOR_MINTGREEN }, { "Lime Green", NEON_COLOR_LIMEGREEN },
@@ -1164,15 +1119,15 @@ void update_world_features()
 	}
 
 	// NPC No Gravity Peds && Acid Water && Acid Rain && Peds Health
-	if (WORLD_REDUCEDGRIP_SNOWING_VALUES[NoPedsGravityIndex] > 0 || featureAcidWater || featureAcidRain || (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 && featureSnow) || PEDS_HEALTH_VALUES[PedsHealthIndex] > 0) {
+	if (WORLD_REDUCEDGRIP_SNOWING_VALUES[NoPedsGravityIndex] > 0 || featureAcidWater || featureAcidRain || (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 && featureSnow) || PLAYER_HEALTH_VALUES[PedsHealthIndex] > 0) {
 		const int BUS_ARR_PED_SIZE = 1024;
 		Ped bus_ped[BUS_ARR_PED_SIZE];
 		int found_ped = worldGetAllPeds(bus_ped, BUS_ARR_PED_SIZE);
 		for (int i = 0; i < found_ped; i++) {
-			if (PEDS_HEALTH_VALUES[PedsHealthIndex] > 0) { // Peds Health
+			if (PLAYER_HEALTH_VALUES[PedsHealthIndex] > 0) { // Peds Health
 				if (!ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(bus_ped[i], PLAYER::PLAYER_PED_ID(), 1)) {
 					if (bus_ped[i] != PLAYER::PLAYER_PED_ID()) {
-						ENTITY::SET_ENTITY_HEALTH(bus_ped[i], PEDS_HEALTH_VALUES[PedsHealthIndex]);
+						ENTITY::SET_ENTITY_HEALTH(bus_ped[i], PLAYER_HEALTH_VALUES[PedsHealthIndex]);
 						PED::SET_PED_SUFFERS_CRITICAL_HITS(bus_ped[i], false); // no headshots
 						PED::SET_PED_CONFIG_FLAG(bus_ped[i], 281, true); // no writhe
 					}
@@ -1389,12 +1344,6 @@ void update_world_features()
 		STREAMING::SET_VEHICLE_POPULATION_BUDGET(0);
 	}
 
-	// Vehicles Density
-	//if (WORLD_VEHICLESPEDS_DENSITY_VALUES[featureVehiclesDensity] > 0) VEHICLE::SET_VEHICLE_DENSITY_MULTIPLIER_THIS_FRAME(WORLD_VEHICLESPEDS_DENSITY_VALUES[featureVehiclesDensity]);
-
-	// Peds Density
-	//if (WORLD_VEHICLESPEDS_DENSITY_VALUES[featurePedsDensity] > 0) PED::SET_PED_DENSITY_MULTIPLIER_THIS_FRAME(WORLD_VEHICLESPEDS_DENSITY_VALUES[featurePedsDensity]);
-	
 	if (featureNoPlanesHelis) {
 		AI::SET_SCENARIO_GROUP_ENABLED("ALAMO_PLANES", 0);
 		AI::SET_SCENARIO_GROUP_ENABLED("ARMY_HELI", 0);
@@ -1546,7 +1495,6 @@ void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* r
 	results->push_back(FeatureEnabledLocalDefinition{ "featureBlackout", &featureBlackout, &featureBlackoutUpdated });
 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureRestrictedZones", &featureRestrictedZones });
-	//results->push_back(FeatureEnabledLocalDefinition{ "featureLightsBlackout", &featureLightsBlackout });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoPeds", &featureWorldNoPeds }); 
 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoFireTruck", &featureWorldNoFireTruck });
@@ -1568,8 +1516,6 @@ void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* r
 	results->push_back(FeatureEnabledLocalDefinition{ "featureReducedGripVehiclesIfSnow", &featureReducedGripVehiclesIfSnow }); 
 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureSnow", &featureSnow, &featureSnowUpdated });
-
-	//results->push_back(FeatureEnabledLocalDefinition{ "featureMPMap", &featureMPMap, &featureMPMapUpdated }); //Was causing issues as ENT was trying to load the MP map during the save load screen...
 }
 
 void add_world_generic_settings(std::vector<StringPairSettingDBRow>* settings)
@@ -1585,9 +1531,6 @@ void add_world_feature_enablements2(std::vector<StringPairSettingDBRow>* results
 	results->push_back(StringPairSettingDBRow{ "RadarMapIndex", std::to_string(RadarMapIndex) });
 	results->push_back(StringPairSettingDBRow{ "WorldWavesIndex", std::to_string(WorldWavesIndex) });
 	results->push_back(StringPairSettingDBRow{ "featureLightIntensityIndex", std::to_string(featureLightIntensityIndex) });
-
-	//results->push_back(StringPairSettingDBRow{ "featureVehiclesDensity", std::to_string(featureVehiclesDensity) });
-	//results->push_back(StringPairSettingDBRow{ "featurePedsDensity", std::to_string(featurePedsDensity) });
 
 	results->push_back(StringPairSettingDBRow{ "WindStrengthIndex", std::to_string(WindStrengthIndex) });
 	results->push_back(StringPairSettingDBRow{ "DamagedVehiclesIndex", std::to_string(DamagedVehiclesIndex) });
@@ -1630,12 +1573,6 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 		else if (setting.name.compare("featureLightIntensityIndex") == 0) {
 			featureLightIntensityIndex = stoi(setting.value);
 		}
-		//else if (setting.name.compare("featureVehiclesDensity") == 0) {
-		//	featureVehiclesDensity = stoi(setting.value);
-		//}
-		//else if (setting.name.compare("featurePedsDensity") == 0) {
-		//	featurePedsDensity = stoi(setting.value);
-		//}
 		else if (setting.name.compare("WindStrengthIndex") == 0){
 			WindStrengthIndex = stoi(setting.value);
 		}

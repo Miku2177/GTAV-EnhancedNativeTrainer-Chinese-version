@@ -26,7 +26,6 @@ bool featurePedAgainst = true;
 bool featureDriverAgainst = true;
 bool featurePoliceAgainst = true;
 bool featureAimAtDriver = false;
-//int peddontlikeweapons_tick = 0;
 bool call_the_police = false;
 //
 
