@@ -503,8 +503,8 @@ void set_data() {
 		bool found_symbol = false;
 
 		for (int i = 0; i < a.size(); i++) {
-			if (a[i] != *"/" && a[i] != *" ") found_symbol = true;
-			if ((a[i] == *"/" || a[i] == *" ") && found_symbol == true) {
+			if (a[i] != *"/" && a[i] != *" " && a[i] != *".") found_symbol = true;
+			if ((a[i] == *"/" || a[i] == *" " || a[i] == *".") && found_symbol == true) {
 				found_separator = found_separator + 1;
 				found_symbol = false;
 			}
