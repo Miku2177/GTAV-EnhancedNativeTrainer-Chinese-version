@@ -1442,11 +1442,8 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	
 	// Drop Weapon If Hand Shot
 	if (featureDropWeapon) {
-		float offsetX = 0;
-		float offsetY = 0;
-		float offsetZ = 0;
-		Vector3 coords_myfinger_p = PED::GET_PED_BONE_COORDS(playerPed, 64016, offsetX, offsetY, offsetZ); // right finger bone
-		if (WEAPON::HAS_ENTITY_BEEN_DAMAGED_BY_WEAPON(playerPed, 0, 2) && GAMEPLAY::HAS_BULLET_IMPACTED_IN_AREA(coords_myfinger_p.x, coords_myfinger_p.y, coords_myfinger_p.z, 0.2, 0, 0) && WEAPON::IS_PED_ARMED(playerPed, 7)) {
+		Vector3 coords_myfinger_p = PED::GET_PED_BONE_COORDS(playerPed, 64016, 0, 0, 0); // right finger bone
+		if (WEAPON::HAS_ENTITY_BEEN_DAMAGED_BY_WEAPON(playerPed, 0, 2) && GAMEPLAY::HAS_BULLET_IMPACTED_IN_AREA(coords_myfinger_p.x, coords_myfinger_p.y, coords_myfinger_p.z, 0.25, 0, 0) && WEAPON::IS_PED_ARMED(playerPed, 7)) { // 0.2
 			Hash curr_w = WEAPON::GET_SELECTED_PED_WEAPON(playerPed);
 			Vector3 p_coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(playerPed, 10.0f, 10.0f, 0.0f);
 			WEAPON::SET_PED_DROPS_INVENTORY_WEAPON(playerPed, curr_w, p_coords.x, p_coords.y, p_coords.z, 1);
@@ -1458,15 +1455,12 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 
 	// Shoot To Disarm NPCs
 	if (featureCanDisarmNPC) {
-		float offsetX = 0;
-		float offsetY = 0;
-		float offsetZ = 0;
 		const int arrSize2 = 1024;
 		Ped a_npcs[arrSize2];
 		int count_npcs = worldGetAllPeds(a_npcs, arrSize2);
 		for (int i = 0; i < count_npcs; i++) {
 			if (a_npcs[i] != playerPed) {
-				Vector3 coords_finger_p = PED::GET_PED_BONE_COORDS(a_npcs[i], 64016, offsetX, offsetY, offsetZ); // right finger bone
+				Vector3 coords_finger_p = PED::GET_PED_BONE_COORDS(a_npcs[i], 64016, 0, 0, 0); // right finger bone
 				if (WEAPON::HAS_ENTITY_BEEN_DAMAGED_BY_WEAPON(a_npcs[i], 0, 2) && GAMEPLAY::HAS_BULLET_IMPACTED_IN_AREA(coords_finger_p.x, coords_finger_p.y, coords_finger_p.z, 0.4, 0, 0) && WEAPON::IS_PED_ARMED(a_npcs[i], 7)) {
 					Hash curr_w = WEAPON::GET_SELECTED_PED_WEAPON(a_npcs[i]);
 					Vector3 p_coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(a_npcs[i], 10.0f, 10.0f, 0.0f);

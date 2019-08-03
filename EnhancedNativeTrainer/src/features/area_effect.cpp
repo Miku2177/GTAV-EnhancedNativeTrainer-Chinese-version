@@ -417,7 +417,6 @@ void findRandomTargetForPed(ENTTrackedPedestrian* tped){
 
 			//if we've found ourselves
 			if(otherPed == tped->ped){
-				PED::SET_PED_AS_ENEMY(PLAYER::PLAYER_PED_ID(), false);
 				continue;
 			}
 
@@ -1002,12 +1001,12 @@ void give_all_nearby_peds_a_weapon(bool enabled){
 
 					if (!foundWeapon){
 						WEAPON::GIVE_WEAPON_TO_PED(xped, weapHash, 9999, FALSE, TRUE);
-						WEAPON::SET_PED_INFINITE_AMMO_CLIP(xped, true);
-						PED::SET_PED_CAN_SWITCH_WEAPON(xped, true);
 						if (WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex] > -1) PED::SET_PED_ACCURACY(xped, WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex]); //peds accuracy
 						if (WEAPON::HAS_PED_GOT_WEAPON(xped, weapHash, 0) && !PED::IS_PED_IN_ANY_VEHICLE(xped, false) && !PED::IS_PED_INJURED(xped)){
 							WEAPON::SET_CURRENT_PED_WEAPON(xped, weapHash, 0);
 						}
+						WEAPON::SET_PED_INFINITE_AMMO_CLIP(xped, true);
+						PED::SET_PED_CAN_SWITCH_WEAPON(xped, true);
 						trackedPed->lastWeaponApplied = weapHash;
 					}
 
@@ -1028,11 +1027,11 @@ void give_all_nearby_peds_a_weapon(bool enabled){
 				Hash Ped_Selective_Weapon = GAMEPLAY::GET_HASH_KEY(currWeapon);
 				if (!featurePedsIncludeDrivers && !WEAPON::HAS_PED_GOT_WEAPON(xped, Ped_Selective_Weapon, 0) && !PED::IS_PED_IN_ANY_VEHICLE(xped, false)) WEAPON::GIVE_WEAPON_TO_PED(xped, Ped_Selective_Weapon, 9999, FALSE, TRUE);
 				if (featurePedsIncludeDrivers && !WEAPON::HAS_PED_GOT_WEAPON(xped, Ped_Selective_Weapon, 0)) WEAPON::GIVE_WEAPON_TO_PED(xped, Ped_Selective_Weapon, 9999, FALSE, TRUE);
-				WEAPON::SET_PED_INFINITE_AMMO_CLIP(xped, true);
-				PED::SET_PED_CAN_SWITCH_WEAPON(xped, true);
 				if (WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex] > -1) PED::SET_PED_ACCURACY(xped, WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex]); //peds accuracy
 				if (!featurePedsIncludeDrivers && WEAPON::HAS_PED_GOT_WEAPON(xped, Ped_Selective_Weapon, 0) && !PED::IS_PED_IN_ANY_VEHICLE(xped, false)) WEAPON::SET_CURRENT_PED_WEAPON(xped, Ped_Selective_Weapon, 0);
 				if (featurePedsIncludeDrivers && WEAPON::HAS_PED_GOT_WEAPON(xped, Ped_Selective_Weapon, 0)) WEAPON::SET_CURRENT_PED_WEAPON(xped, Ped_Selective_Weapon, 0);
+				WEAPON::SET_PED_INFINITE_AMMO_CLIP(xped, true);
+				PED::SET_PED_CAN_SWITCH_WEAPON(xped, true);
 			}
 		}
 	}
