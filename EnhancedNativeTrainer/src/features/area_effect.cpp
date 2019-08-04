@@ -16,6 +16,7 @@ int areaeffect_top_level_menu_index = 0;
 int areaeffect_ped_level_menu_index = 0;
 int areaeffect_veh_level_menu_index = 0;
 int areaeffect_ped_advconfig_menu_index = 0;
+int areaeffect_peds_weapons_menu_index = 0;
 
 int callsA = 0;
 int callsB = 0;
@@ -36,6 +37,7 @@ bool featureAreaVehiclesExploded = false;
 bool featureAreaPedsHeadExplode = false;
 bool featureAngryPedsUseCover = false;
 bool featureAngryPedsTargetYou = false;
+bool featurePedsWeapons = false;
 bool featureAngryMenOnly = false;
 bool featurePedsIncludeDrivers = false;
 bool featurePedsIncludePilots = false;
@@ -105,6 +107,7 @@ void add_areaeffect_feature_enablements(std::vector<FeatureEnabledLocalDefinitio
 	results->push_back(FeatureEnabledLocalDefinition{"featureAreaPedsRioting", &featureAreaPedsRioting}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureAngryPedsUseCover", &featureAngryPedsUseCover});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAngryPedsTargetYou", &featureAngryPedsTargetYou});
+	results->push_back(FeatureEnabledLocalDefinition{"featurePedsWeapons", &featurePedsWeapons});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAngryMenOnly", &featureAngryMenOnly});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePedsIncludeDrivers", &featurePedsIncludeDrivers});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePedsIncludePilots", &featurePedsIncludePilots});
@@ -126,6 +129,7 @@ void reset_areaeffect_globals(){
 	featureAreaVehiclesExploded = false;
 	featureAreaPedsRioting = false;
 	featureAngryPedsTargetYou = false;
+	featurePedsWeapons = false;
 	featureAngryMenOnly = false;
 	featureAngryPedsUseCover = false;
 	featurePedsIncludeDrivers = false;
@@ -159,6 +163,24 @@ void process_areaeffect_peds_menu(){
 	item->value = -1;
 	item->isLeaf = false;
 	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "Peds Weapons";
+	item->value = -2;
+	item->isLeaf = false;
+	menuItems.push_back(item);
+
+	listItem = new SelectFromListMenuItem(PLAYER_HEALTH_CAPTIONS, onchange_peds_health_index);
+	listItem->wrap = false;
+	listItem->caption = "Peds Health";
+	listItem->value = PedsHealthIndex;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(WORLD_NPC_VEHICLESPEED_CAPTIONS, onchange_ped_accuracy_index);
+	listItem->wrap = false;
+	listItem->caption = "Peds Accuracy";
+	listItem->value = PedAccuracyIndex;
+	menuItems.push_back(listItem);
 
 	ToggleMenuItem<int> *togItem = new ToggleMenuItem<int>();
 	togItem->caption = "Everyone Permanently Calm";
@@ -194,12 +216,6 @@ void process_areaeffect_peds_menu(){
 	listItem->wrap = false;
 	listItem->caption = "NPC No Gravity Peds";
 	listItem->value = NoPedsGravityIndex;
-	menuItems.push_back(listItem);
-
-	listItem = new SelectFromListMenuItem(PLAYER_HEALTH_CAPTIONS, onchange_peds_health_index);
-	listItem->wrap = false;
-	listItem->caption = "Peds Health";
-	listItem->value = PedsHealthIndex;
 	menuItems.push_back(listItem);
 
 	draw_generic_menu<int>(menuItems, &areaeffect_ped_level_menu_index, "Ped Effects", onconfirm_areaeffect_ped_menu, NULL, NULL);
@@ -294,24 +310,6 @@ void process_areaeffect_advanced_ped_menu(){
 	togItem->toggleValue = &featureAreaPedsRioting;
 	menuItems.push_back(togItem);
 
-	SelectFromListMenuItem* listItem = new SelectFromListMenuItem(PED_WEAPON_TITLES, onchange_areaeffect_ped_weapons);
-	listItem->wrap = false;
-	listItem->caption = "Peds Armed With...";
-	listItem->value = pedWeaponSetIndex;
-	menuItems.push_back(listItem);
-
-	listItem = new SelectFromListMenuItem(PED_WEAPONS_SELECTIVE_CAPTIONS, onchange_ped_weapons_selective_index);
-	listItem->wrap = false;
-	listItem->caption = "Custom Weapon";
-	listItem->value = PedWeaponsSelectiveIndex;
-	menuItems.push_back(listItem);
-
-	listItem = new SelectFromListMenuItem(WORLD_NPC_VEHICLESPEED_CAPTIONS, onchange_ped_accuracy_index);
-	listItem->wrap = false;
-	listItem->caption = "Peds Accuracy";
-	listItem->value = PedAccuracyIndex;
-	menuItems.push_back(listItem);
-
 	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "Angry Peds Use Cover";
 	togItem->value = 1;
@@ -333,10 +331,37 @@ void process_areaeffect_advanced_ped_menu(){
 	draw_generic_menu<int>(menuItems, &areaeffect_ped_advconfig_menu_index, "Peds Angry Options", NULL, NULL, NULL);
 }
 
+void process_areaeffect_peds_weapons_menu() {
+	std::vector<MenuItem<int>*> menuItems;
+
+	ToggleMenuItem<int> *togItem = new ToggleMenuItem<int>();
+	togItem->caption = "Enabled";
+	togItem->value = 1;
+	togItem->toggleValue = &featurePedsWeapons;
+	menuItems.push_back(togItem);
+
+	SelectFromListMenuItem* listItem = new SelectFromListMenuItem(PED_WEAPON_TITLES, onchange_areaeffect_ped_weapons);
+	listItem->wrap = false;
+	listItem->caption = "Peds Armed With...";
+	listItem->value = pedWeaponSetIndex;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(PED_WEAPONS_SELECTIVE_CAPTIONS, onchange_ped_weapons_selective_index);
+	listItem->wrap = false;
+	listItem->caption = "Custom Weapon";
+	listItem->value = PedWeaponsSelectiveIndex;
+	menuItems.push_back(listItem);
+
+	draw_generic_menu<int>(menuItems, &areaeffect_peds_weapons_menu_index, "Peds Weapons Options", NULL, NULL, NULL);
+}
+
 bool onconfirm_areaeffect_ped_menu(MenuItem<int> choice){
 	switch (choice.value) {
 	case -1:
 		process_areaeffect_advanced_ped_menu();
+		break;
+	case -2:
+		process_areaeffect_peds_weapons_menu();
 		break;
 	default:
 		break;
@@ -488,13 +513,14 @@ void update_area_effects(Ped playerPed){
 		set_all_nearby_peds_to_angry(featureAreaPedsRioting);
 	}
 
-	if((featureAreaPedsRioting && pedWeaponSetIndex != 0) || pedWeaponSetIndex != 0){
-		give_all_nearby_peds_a_weapon(pedWeaponSetIndex); //  != 0
-	}
-
-	if ((featureAreaPedsRioting && PedWeaponsSelectiveIndex != 0) || PedWeaponsSelective1Changed || PedWeaponsSelectiveIndex != 0){
-		give_all_nearby_peds_a_weapon(PedWeaponsSelectiveIndex); //  != 0
-		PedWeaponsSelective1Changed = false;
+	if (featurePedsWeapons) {
+		if((featureAreaPedsRioting && pedWeaponSetIndex != 0) || pedWeaponSetIndex != 0){
+			give_all_nearby_peds_a_weapon(pedWeaponSetIndex); //  != 0
+		}
+		if ((featureAreaPedsRioting && PedWeaponsSelectiveIndex != 0) || PedWeaponsSelective1Changed || PedWeaponsSelectiveIndex != 0) {
+			give_all_nearby_peds_a_weapon(PedWeaponsSelectiveIndex); //  != 0
+			PedWeaponsSelective1Changed = false;
+		}
 	}
 
 	if(featureShowDebugInfo){ 
@@ -574,7 +600,7 @@ void set_all_nearby_peds_to_angry(bool enabled){
 				//stop them being angry
 				PED::SET_PED_COMBAT_ATTRIBUTES(xped, 0, 0); //use cover
 				PED::SET_PED_COMBAT_ATTRIBUTES(xped, 46, 0); //always fight
-				PED::SET_PED_COMBAT_ATTRIBUTES(xped, 5, 0); //fight armed peds when unarmed
+				PED::SET_PED_COMBAT_ATTRIBUTES(xped, 5, 0); //fight armed peds when unarmed 
 				PED::SET_PED_COMBAT_ATTRIBUTES(xped, 3, 0); //can leave vehicle
 				PED::SET_PED_COMBAT_ATTRIBUTES(xped, 2, 0); //can do driveby
 
@@ -965,7 +991,7 @@ void onchange_ped_weapons_selective_index(int value, SelectFromListMenuItem* sou
 	PedWeaponsSelective1Changed = true;
 }
 
-void give_all_nearby_peds_a_weapon(bool enabled){
+void give_all_nearby_peds_a_weapon(bool enabled){ 
 	//callsPerFrame = 0;
 
 	std::set<Ped> peds = get_nearby_peds(PLAYER::PLAYER_PED_ID());
@@ -1001,10 +1027,7 @@ void give_all_nearby_peds_a_weapon(bool enabled){
 
 					if (!foundWeapon){
 						WEAPON::GIVE_WEAPON_TO_PED(xped, weapHash, 9999, FALSE, TRUE);
-						if (WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex] > -1) PED::SET_PED_ACCURACY(xped, WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex]); //peds accuracy
-						if (WEAPON::HAS_PED_GOT_WEAPON(xped, weapHash, 0) && !PED::IS_PED_IN_ANY_VEHICLE(xped, false) && !PED::IS_PED_INJURED(xped)){
-							WEAPON::SET_CURRENT_PED_WEAPON(xped, weapHash, 0);
-						}
+						if (WEAPON::HAS_PED_GOT_WEAPON(xped, weapHash, 0) && !PED::IS_PED_IN_ANY_VEHICLE(xped, false) && !PED::IS_PED_INJURED(xped)) WEAPON::SET_CURRENT_PED_WEAPON(xped, weapHash, 0);
 						WEAPON::SET_PED_INFINITE_AMMO_CLIP(xped, true);
 						PED::SET_PED_CAN_SWITCH_WEAPON(xped, true);
 						trackedPed->lastWeaponApplied = weapHash;
@@ -1027,7 +1050,6 @@ void give_all_nearby_peds_a_weapon(bool enabled){
 				Hash Ped_Selective_Weapon = GAMEPLAY::GET_HASH_KEY(currWeapon);
 				if (!featurePedsIncludeDrivers && !WEAPON::HAS_PED_GOT_WEAPON(xped, Ped_Selective_Weapon, 0) && !PED::IS_PED_IN_ANY_VEHICLE(xped, false)) WEAPON::GIVE_WEAPON_TO_PED(xped, Ped_Selective_Weapon, 9999, FALSE, TRUE);
 				if (featurePedsIncludeDrivers && !WEAPON::HAS_PED_GOT_WEAPON(xped, Ped_Selective_Weapon, 0)) WEAPON::GIVE_WEAPON_TO_PED(xped, Ped_Selective_Weapon, 9999, FALSE, TRUE);
-				if (WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex] > -1) PED::SET_PED_ACCURACY(xped, WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex]); //peds accuracy
 				if (!featurePedsIncludeDrivers && WEAPON::HAS_PED_GOT_WEAPON(xped, Ped_Selective_Weapon, 0) && !PED::IS_PED_IN_ANY_VEHICLE(xped, false)) WEAPON::SET_CURRENT_PED_WEAPON(xped, Ped_Selective_Weapon, 0);
 				if (featurePedsIncludeDrivers && WEAPON::HAS_PED_GOT_WEAPON(xped, Ped_Selective_Weapon, 0)) WEAPON::SET_CURRENT_PED_WEAPON(xped, Ped_Selective_Weapon, 0);
 				WEAPON::SET_PED_INFINITE_AMMO_CLIP(xped, true);

@@ -163,7 +163,10 @@ void process_areaeffect_menu();
 
 void process_areaeffect_advanced_ped_menu();
 
+void process_areaeffect_peds_weapons_menu();
+
 void update_area_effects(Ped playerPed);
+
 void update_vehicles(Ped playerPed);
 
 std::set<Ped> get_nearby_peds(Ped playerPed);

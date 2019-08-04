@@ -730,10 +730,7 @@ void update_features(){
 
 	// Player can be headshot
 	if (featurePlayerCanBeHeadshot && !featurePlayerInvincible) {
-		float offsetX = 0;
-		float offsetY = 0;
-		float offsetZ = 0;
-		Vector3 coords_bullet_p = PED::GET_PED_BONE_COORDS(playerPed, 31086, offsetX, offsetY, offsetZ); // head bone
+		Vector3 coords_bullet_p = PED::GET_PED_BONE_COORDS(playerPed, 31086, 0, 0, 0); // head bone
 		if (WEAPON::HAS_ENTITY_BEEN_DAMAGED_BY_WEAPON(playerPed, 0, 2) && GAMEPLAY::HAS_BULLET_IMPACTED_IN_AREA(coords_bullet_p.x, coords_bullet_p.y, coords_bullet_p.z, 0.1, 0, 0)) {
 			PED::CLEAR_PED_LAST_DAMAGE_BONE(playerPed);
 			ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(playerPed);

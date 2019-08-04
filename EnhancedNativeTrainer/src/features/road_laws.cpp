@@ -133,10 +133,6 @@ void road_laws()
 		int vehcollidedwith_distance_x = 100;
 		int vehcollidedwith_distance_y = 100;
 
-		float offsetX = 0;
-		float offsetY = 0;
-		float offsetZ = 0;
-
 		const int arrSize_laws = 1024;
 		Vehicle vehicles_laws[arrSize_laws];
 		int count_laws = worldGetAllPeds(vehicles_laws, arrSize_laws);
@@ -736,7 +732,7 @@ void road_laws()
 					if (Stop_seconds_final < 22 && been_seen_by_a_cop == true) Stop_seconds_final = Stop_seconds_final + 1;
 					SinceStop_secs_curr_final = r_tick_secs_passed;
 				}
-				Vector3 head_coords = PED::GET_PED_BONE_COORDS(playerPed, 31086, offsetX, offsetY, offsetZ); // head bone
+				Vector3 head_coords = PED::GET_PED_BONE_COORDS(playerPed, 31086, 0, 0, 0); // head bone
 				AI::TASK_LOOK_AT_COORD(cop_that_fines_you, head_coords.x, head_coords.y, head_coords.z + 0.1, 10000, 0, 2); // p5 = 0, p6 = 2
 				if (!PED::IS_PED_FACING_PED(cop_that_fines_you, playerPed, 50) && AI::IS_PED_STILL(cop_that_fines_you) && Stop_seconds_final < 17) AI::TASK_TURN_PED_TO_FACE_COORD(cop_that_fines_you, head_coords.x, head_coords.y, head_coords.z, 10000);
 				if (Stop_seconds_final == 7) AI::TASK_TURN_PED_TO_FACE_COORD(cop_that_fines_you, head_coords.x, head_coords.y, head_coords.z, 10000);
