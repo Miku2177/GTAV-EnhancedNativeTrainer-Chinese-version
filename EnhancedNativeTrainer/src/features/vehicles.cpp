@@ -524,6 +524,7 @@ void vehicle_burnout() {
 
 	vehicle_burnout_toggle = !vehicle_burnout_toggle;
 	VEHICLE::SET_VEHICLE_BURNOUT(veh_burnout, vehicle_burnout_toggle);
+
 	WAIT(100);
 }
 
@@ -2475,7 +2476,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		}
 	}
 	
-	// Never Gets Dirty
+	// Vehicle Never Gets Dirty
 	if (WORLD_REDUCEDGRIP_SNOWING_VALUES[featureNeverDirty] > 0 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
 		VEHICLE::SET_VEHICLE_DIRT_LEVEL(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 0.0);
 		if (WORLD_REDUCEDGRIP_SNOWING_VALUES[featureNeverDirty] == 2) GRAPHICS::WASH_DECALS_FROM_VEHICLE(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 100.0);
@@ -3334,7 +3335,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 		std::string MileageStatusLines[1];
 		std::stringstream ss;
-		ss << fixed << setprecision(2) << "\n Mileage: " << mileage << " m" << endl;
+		ss << fixed << setprecision(2) << "\n" << mileage << " m" << endl;
 		int index = 0;
 		MileageStatusLines[index++] = ss.str();
 		int numActualLines = 0;
@@ -3345,7 +3346,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			UI::SET_TEXT_FONT(0);
 			UI::SET_TEXT_SCALE(0.5, 0.5);
 			UI::SET_TEXT_WRAP(0.0, 1.0);
-			UI::SET_TEXT_COLOUR(255, 128, 64, 255);
+			UI::SET_TEXT_COLOUR(255, 255, 255, 255); // 255, 128, 64, 255
 			UI::SET_TEXT_CENTRE(0);
 			UI::SET_TEXT_DROPSHADOW(20, 20, 20, 20, 20);
 			UI::SET_TEXT_EDGE(100, 100, 100, 100, 205);
@@ -3353,11 +3354,11 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			UI::END_TEXT_COMMAND_DISPLAY_TEXT(0.7, 0.9);
 		}
 
-		float rectXScaled = 1 - ((1130 / (float)screen_w) / 4);
+		float rectXScaled = 1 - ((1230 / (float)screen_w) / 4); // 1130
 		float rectYScaled = 1 - (((6 + (1 * 1)) / (float)screen_h) * 5);
-		float rectWidthScaled = (460 / (float)screen_w) / 2;
-		float rectHeightScaled = (30 + (1 * 18)) / (float)screen_h;
-		int rect_col[4] = { 128, 128, 128, 75 };
+		float rectWidthScaled = (360 / (float)screen_w) / 2; // 460
+		float rectHeightScaled = (25 + (1 * 18)) / (float)screen_h; // 30
+		int rect_col[4] = { 0, 0, 0, 255 }; // 128, 128, 128, 75
 		GRAPHICS::DRAW_RECT(rectXScaled, rectYScaled, rectWidthScaled, rectHeightScaled, rect_col[0], rect_col[1], rect_col[2], rect_col[3]);
 	}
 	else mileage = 0;
