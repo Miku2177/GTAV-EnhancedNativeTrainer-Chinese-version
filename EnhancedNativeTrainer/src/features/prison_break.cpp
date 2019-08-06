@@ -25,6 +25,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 // prison break variables
 int tick_callpoliceaboutfugitive = 0;
 bool detained, in_prison = false;
+bool will_pay_money_for_escape = false;
 int alert_level = 0;
 int time_before_get_to_prison = -1;
 int time_in_prison_tick = -1;
@@ -116,28 +117,10 @@ void prison_break()
 				out_of_prison = false;
 			}
 
-			// Money for trasnfering you to prison / escape attempt
-			// How much money have you got?
-			int outValue_your_current_amount = -1;
-			int statHash_your_purse = -1;
-			// Michael
-			if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO) {
-				STATS::STAT_GET_INT(SP0_TOTAL_CASH, &outValue_your_current_amount, -1);
-				statHash_your_purse = SP0_TOTAL_CASH;
-				if (PLAYER_ESCAPEMONEY_VALUES[current_player_escapemoney] > 0) STATS::STAT_SET_INT(statHash_your_purse, outValue_your_current_amount - PLAYER_ESCAPEMONEY_VALUES[current_player_escapemoney], true);
-			}
-			// Franklin
-			if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE) {
-				STATS::STAT_GET_INT(SP1_TOTAL_CASH, &outValue_your_current_amount, -1);
-				statHash_your_purse = SP1_TOTAL_CASH;
-				if (PLAYER_ESCAPEMONEY_VALUES[current_player_escapemoney] > 0) STATS::STAT_SET_INT(statHash_your_purse, outValue_your_current_amount - PLAYER_ESCAPEMONEY_VALUES[current_player_escapemoney], true);
-			}
-			// Trevor
-			if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO) {
-				STATS::STAT_GET_INT(SP2_TOTAL_CASH, &outValue_your_current_amount, -1);
-				statHash_your_purse = SP2_TOTAL_CASH;
-				if (PLAYER_ESCAPEMONEY_VALUES[current_player_escapemoney] > 0) STATS::STAT_SET_INT(statHash_your_purse, outValue_your_current_amount - PLAYER_ESCAPEMONEY_VALUES[current_player_escapemoney], true);
-			}
+			detained = false;
+			in_prison = true;
+			alert_level = 0;
+			populate_tick = 0;
 
 			// Character Prison Clothes
 			// Michael
@@ -163,11 +146,6 @@ void prison_break()
 				ADDITIONAL_PRISONERS.clear();
 				ADDITIONAL_PRISONERS.shrink_to_fit();
 			}
-
-			detained = false;
-			in_prison = true;
-			alert_level = 0;
-			populate_tick = 0;
 		}
 
 		// IMPRISONED
@@ -178,6 +156,32 @@ void prison_break()
 			Hash JailGuard_Weapon3 = GAMEPLAY::GET_HASH_KEY("WEAPON_STUNGUN");
 			Vector3 guard_position_in_prison = ENTITY::GET_ENTITY_COORDS(guards[0], true);
 			int randomize_jail = -1;
+
+			// Money for escape attempt
+			if (will_pay_money_for_escape == true) { // alert_level > 0 && time_before_get_to_prison > 0 && time_before_get_to_prison < 6000 && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID())
+				// How much money have you got?
+				int outValue_your_current_amount = -1;
+				int statHash_your_purse = -1;
+				// Michael
+				if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO) {
+					STATS::STAT_GET_INT(SP0_TOTAL_CASH, &outValue_your_current_amount, -1);
+					statHash_your_purse = SP0_TOTAL_CASH;
+					if (PLAYER_ESCAPEMONEY_VALUES[current_player_escapemoney] > 0) STATS::STAT_SET_INT(statHash_your_purse, outValue_your_current_amount - PLAYER_ESCAPEMONEY_VALUES[current_player_escapemoney], true);
+				}
+				// Franklin
+				if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE) {
+					STATS::STAT_GET_INT(SP1_TOTAL_CASH, &outValue_your_current_amount, -1);
+					statHash_your_purse = SP1_TOTAL_CASH;
+					if (PLAYER_ESCAPEMONEY_VALUES[current_player_escapemoney] > 0) STATS::STAT_SET_INT(statHash_your_purse, outValue_your_current_amount - PLAYER_ESCAPEMONEY_VALUES[current_player_escapemoney], true);
+				}
+				// Trevor
+				if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO) {
+					STATS::STAT_GET_INT(SP2_TOTAL_CASH, &outValue_your_current_amount, -1);
+					statHash_your_purse = SP2_TOTAL_CASH;
+					if (PLAYER_ESCAPEMONEY_VALUES[current_player_escapemoney] > 0) STATS::STAT_SET_INT(statHash_your_purse, outValue_your_current_amount - PLAYER_ESCAPEMONEY_VALUES[current_player_escapemoney], true);
+				}
+				will_pay_money_for_escape = false;
+			}
 
 			// Populate the prison
 			if (featurePrison_Yard) {
@@ -581,7 +585,7 @@ void prison_break()
 			}
 		}
 
-		if (ExPrisonerDrunk_tick == 3000) {
+		if (ExPrisonerDrunk_tick == 2500) {
 			PED::RESET_PED_MOVEMENT_CLIPSET(playerPed_Prison, 1.0f);
 			CAM::STOP_GAMEPLAY_CAM_SHAKING(true);
 			ExPrisonerDrunk = false;
@@ -772,6 +776,13 @@ void prison_break()
 				}
 			}
 		}
+
+		if (((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 12) ||
+			(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 1) ||
+			(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 5)) && (detained == true || alert_level > 0) &&
+			time_before_get_to_prison > 6000) will_pay_money_for_escape = true; 
+		
+		if (detained == false/* && in_prison == false*/) will_pay_money_for_escape = false;
 	}
 }
 
