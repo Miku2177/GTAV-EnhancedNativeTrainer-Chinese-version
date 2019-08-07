@@ -92,7 +92,6 @@ bool featureVehSpawnOptic = false;
 bool featureVehicleDoorInstant = false;
 bool featureLockVehicleDoors = false;
 bool featureLockVehicleDoorsUpdated = false;
-bool featureAntiTheftSystem = false;
 bool featureWearHelmetOff = false;
 bool featureWearHelmetOffUpdated = false;
 bool featureVehLightsOn = false, featureVehLightsOnUpdated = false;
@@ -134,11 +133,6 @@ bool featureAutoalarm = false;
 Vehicle alarmed_veh = -1;
 bool near_enough = false;
 int a_counter_tick = 0;
-
-// Anti-Theft System variables
-std::vector<Vehicle> VEHICLES_STEERLOCKED;
-bool check_if_stolen, lock_stolen_veh = false;
-//
 
 int Shut_seconds = -1; 
 
@@ -1609,12 +1603,6 @@ void process_road_laws_menu(){
 	menuItems.push_back(listItem);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Cops Drive Aggressively";
-	toggleItem->value = i++;
-	toggleItem->toggleValue = &featurePoliceAgressiveDriving;
-	menuItems.push_back(toggleItem);
-
-	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Cop Vehicles Never Flip";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featurePoliceNoFlip;
@@ -1766,7 +1754,7 @@ bool onconfirm_veh_menu(MenuItem<int> choice){
 		case 30: // road laws menu
 			process_road_laws_menu();
 			break;
-		case 36: // engine can degrade
+		case 35: // engine can degrade
 			process_engine_degrade_menu();
 			break;
 		default:
@@ -1989,12 +1977,6 @@ void process_veh_menu(){
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Anti-Theft System";
-	toggleItem->value = i++;
-	toggleItem->toggleValue = &featureAntiTheftSystem;
-	menuItems.push_back(toggleItem);
-
-	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Remember Wheel Angle";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureVehSteerAngle;
@@ -2188,29 +2170,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 	if (featureDespawnScriptDisabled){
 		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("shop_controller");
-	}
-
-	// Anti-Theft System
-	if (featureAntiTheftSystem) {
-		Vehicle temp_veh = PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed);
-		if (VEHICLE::IS_VEHICLE_ALARM_ACTIVATED(temp_veh)) {
-			if (!VEHICLES_STEERLOCKED.empty()) VEHICLES_STEERLOCKED.push_back(temp_veh);
-			if (VEHICLES_STEERLOCKED.empty()) VEHICLES_STEERLOCKED.push_back(temp_veh);
-		}
-
-		if (!VEHICLES_STEERLOCKED.empty() && PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && check_if_stolen == false) {
-			for (int i = 0; i < VEHICLES_STEERLOCKED.size(); i++) {
-				if (VEHICLES_STEERLOCKED[i] == PED::GET_VEHICLE_PED_IS_IN(playerPed, false)) lock_stolen_veh = true;
-			}
-			check_if_stolen = true;
-		}
-
-		if (lock_stolen_veh == true) VEHICLE::SET_VEHICLE_STEER_BIAS(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 1.0);
-
-		if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
-			lock_stolen_veh = false;
-			check_if_stolen = false;
-		}
 	}
 
 	// Toggle Vehicle Alarm Check
@@ -3638,7 +3597,6 @@ void reset_vehicle_globals() {
 		featureVehMassMult =
 		featureVehicleDoorInstant =
 		featureLockVehicleDoors =
-		featureAntiTheftSystem =
 		featureVehSpawnInto = 
 		featureNoVehFallOff =
 		featureWearHelmetOff =
@@ -3658,7 +3616,6 @@ void reset_vehicle_globals() {
 		featureWearHelmetOffUpdated = true;
 		featureDeleteTrackedVehicles = true;
 		featurePoliceVehicleBlip = true;
-		featurePoliceAgressiveDriving = true;
 		featurePoliceNoFlip = true;
 		featurePoliceNoDamage = true;
 		featureCopsUseRadio = false;
@@ -3911,7 +3868,6 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureRememberVehicles", &featureRememberVehicles});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRoadLaws", &featureRoadLaws});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePoliceVehicleBlip", &featurePoliceVehicleBlip});
-	results->push_back(FeatureEnabledLocalDefinition{"featurePoliceAgressiveDriving", &featurePoliceAgressiveDriving});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePoliceNoFlip", &featurePoliceNoFlip});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePoliceNoDamage", &featurePoliceNoDamage});
 	results->push_back(FeatureEnabledLocalDefinition{"featureCopsUseRadio", &featureCopsUseRadio});
@@ -3946,7 +3902,6 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehInvulnIncludesCosmetic", &featureVehInvulnIncludesCosmetic, &featureVehInvincibleUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureDespawnScriptDisabled", &featureDespawnScriptDisabled, &featureDespawnScriptDisabledUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehLightsOn", &featureVehLightsOn, &featureVehLightsOnUpdated});
-	results->push_back(FeatureEnabledLocalDefinition{"featureAntiTheftSystem", &featureAntiTheftSystem});
 	results->push_back(FeatureEnabledLocalDefinition{"featureEngineDegrade", &featureEngineDegrade});
 	results->push_back(FeatureEnabledLocalDefinition{"featureEngineHealthBar", &featureEngineHealthBar});
 	results->push_back(FeatureEnabledLocalDefinition{"featureLimpMode", &featureLimpMode});

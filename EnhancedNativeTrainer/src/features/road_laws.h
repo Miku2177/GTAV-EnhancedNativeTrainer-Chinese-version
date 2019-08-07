@@ -2,7 +2,6 @@
 
 extern bool featureRoadLaws;
 extern bool featurePoliceVehicleBlip;
-extern bool featurePoliceAgressiveDriving;
 extern bool featurePoliceNoFlip;
 extern bool featurePoliceNoDamage;
 extern bool featureCopsUseRadio;

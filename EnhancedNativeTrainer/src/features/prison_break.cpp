@@ -779,10 +779,10 @@ void prison_break()
 
 		if (((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 12) ||
 			(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 1) ||
-			(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 5)) && (detained == true || alert_level > 0) &&
+			(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO && PED::GET_PED_DRAWABLE_VARIATION(playerPed_Prison, 3) == 5)) && (detained == true/* || alert_level > 0*/) &&
 			time_before_get_to_prison > 6000) will_pay_money_for_escape = true; 
 		
-		if (detained == false/* && in_prison == false*/) will_pay_money_for_escape = false;
+		if (detained == false/* && alert_level == 0*//* && in_prison == false*/) will_pay_money_for_escape = false;
 	}
 }
 
