@@ -9,8 +9,8 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\features\props.h"
 
 #pragma once
-
-const std::vector<std::string> PROP_CATEGORIES =
+const std::string PROP_CATEGORIES[] =
+//const std::vector<std::string> PROP_CATEGORIES =
 {
 	"Agricultural",
 	"Aviation",
