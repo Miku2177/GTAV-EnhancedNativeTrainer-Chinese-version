@@ -1247,13 +1247,11 @@ void addClanLogoToVehicle(Vehicle vehicle, Ped ped){
 }
 
 bool onconfirm_vehmod_wheel_selection(MenuItem<int> choice){
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
-
-	if (!ENTITY::DOES_ENTITY_EXIST(playerPed) || !PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)){
+	if (!ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()) || !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false)){
 		return false;
 	}
 
-	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 
 	VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
 	switch (wheelpart){
@@ -1276,13 +1274,11 @@ bool onconfirm_vehmod_wheel_selection(MenuItem<int> choice){
 }
 
 bool process_vehmod_wheel_selection(){
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
-
-	if (!ENTITY::DOES_ENTITY_EXIST(playerPed) || !PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)){
+	if (!ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()) || !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false)){
 		return false;
 	}
 
-	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 
 	std::vector<MenuItem<int> *> menuItems;
 
@@ -1325,13 +1321,11 @@ bool onconfirm_vehmod_wheel_selection_menu(MenuItem<int> choice){
 }
 
 bool process_vehmod_wheel_selection_menu(){
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
-
-	if (!ENTITY::DOES_ENTITY_EXIST(playerPed) || !PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)){
+	if (!ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()) || !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false)){
 		return false;
 	}
 
-	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 
 	std::vector<MenuItem<int> *> menuItems;
 	MenuItem<int> *item;
@@ -1388,15 +1382,12 @@ bool onconfirm_vehmod_category_menu(MenuItem<int> choice){
 		return false;
 	}
 
-	Player player = PLAYER::PLAYER_ID();
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
-
-	if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
+	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)){
 		set_status_text("~r~Player isn't in a vehicle");
 		return false;
 	}
 
-	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 
 	if (lastSelectedModValue >= 0 && lastSelectedModValue <= 16 || lastSelectedModValue >= 25 && lastSelectedModValue <= 48){
 		VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
@@ -1456,9 +1447,7 @@ bool onconfirm_vehmod_category_menu(MenuItem<int> choice){
 }
 
 bool process_vehmod_category_special_menu(int category){
-	Player player = PLAYER::PLAYER_ID();
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
-	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 
 	std::vector<int> values;
 
@@ -1528,13 +1517,11 @@ bool process_vehmod_category_special_menu(int category){
 }
 
 bool process_vehmod_engine_sound() {
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
-
-	if (!ENTITY::DOES_ENTITY_EXIST(playerPed) || !PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
+	if (!ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()) || !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false)) {
 		return false;
 	}
 
-	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 
 	int modChoiceMenuIndex = 0;
 
@@ -1543,8 +1530,6 @@ bool process_vehmod_engine_sound() {
 	for (int e = 0; e < ENGINE_SOUND_COUNT; e++) {
 		values.push_back(e);
 	}
-
-	Player player = PLAYER::PLAYER_ID();
 
 	std::vector<MenuItem<int>*> menuItems;
 	for (int i = 0; i < values.size(); i++) {
@@ -1572,9 +1557,7 @@ bool process_vehmod_engine_sound() {
 }
 
 void set_engine_sound(MenuItem<int> choice) { // pick engine sound via message box
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
-
-	if (ENTITY::DOES_ENTITY_EXIST(playerPed) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && featureEngineSound)
+	if (ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()) && PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) && featureEngineSound)
 	{
 		Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 		bool correct_name = false;
@@ -1616,13 +1599,11 @@ bool onconfirm_vehmod_engine_sound_menu(MenuItem<int> choice) {
 }
 
 bool process_vehmod_engine_sound_menu() {
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
-
-	if (!ENTITY::DOES_ENTITY_EXIST(playerPed) || !PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
+	if (!ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()) || !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false)) {
 		return false;
 	}
 
-	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 
 	std::vector<MenuItem<int> *> menuItems;
 	MenuItem<int> *item;
@@ -1673,15 +1654,12 @@ bool process_vehmod_category_menu(int category){
 		return false;
 	}
 
-	Player player = PLAYER::PLAYER_ID();
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
-
-	if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
+	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)){
 		set_status_text("~r~Player isn't in a vehicle");
 		return false;
 	}
 
-	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 	std::vector<MenuItem<int>*> menuItems;
 
 	int count = VEHICLE::GET_NUM_VEHICLE_MODS(veh, actualCategory);
@@ -1743,15 +1721,12 @@ bool onconfirm_vehmod_menu(MenuItem<int> choice){
 		return false;
 	}
 
-	Player player = PLAYER::PLAYER_ID();
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
-
-	if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
+	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)){
 		set_status_text("~r~Player isn't in a vehicle");
 		return false;
 	}
 
-	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 
 	switch (choice.value){
 	case -1: //Upgrade Performance
@@ -2138,10 +2113,7 @@ bool vehicle_menu_interrupt(){
 		return true;
 	}
 
-	Player player = PLAYER::PLAYER_ID();
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
-
-	if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
+	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)){
 		return true;
 	}
 

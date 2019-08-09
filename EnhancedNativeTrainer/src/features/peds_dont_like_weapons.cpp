@@ -38,7 +38,6 @@ bool ChanceAttackingYouChanged = true;
 
 void peds_dont_like_weapons() {
 	if (featurePedAgainstWeapons && !featurePlayerInvisible && !featurePlayerIgnoredByAll) {
-		Player player = PLAYER::PLAYER_ID();
 		Ped playerPed = PLAYER::PLAYER_PED_ID();
 		int ped_distance_x = 100;
 		int ped_distance_y = 100;

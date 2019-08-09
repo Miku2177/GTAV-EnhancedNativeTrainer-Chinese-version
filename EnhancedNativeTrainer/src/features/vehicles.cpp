@@ -420,9 +420,8 @@ Vector3 RotationToDirection2(Vector3* rot)
 }
 
 void process_window_roll() {
-	Player PlayerPedRoll = PLAYER::PLAYER_PED_ID();
 	Vehicle veh_roll = -1;
-	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_roll = PED::GET_VEHICLE_PED_IS_USING(PlayerPedRoll);
+	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_roll = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
 		find_nearest_vehicle();
 		veh_roll = temp_vehicle;
@@ -439,8 +438,7 @@ void process_window_roll() {
 }
 
 void interior_light() { 
-	Player PlayerPedInterior = PLAYER::PLAYER_PED_ID();
-	Vehicle veh_interior = PED::GET_VEHICLE_PED_IS_USING(PlayerPedInterior);
+	Vehicle veh_interior = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 	interior_lights = !interior_lights;
 	VEHICLE::SET_VEHICLE_INTERIORLIGHT(veh_interior, interior_lights);
 	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
@@ -450,16 +448,14 @@ void interior_light() {
 }
 
 void search_light() {
-	Player PlayerPedSearch = PLAYER::PLAYER_PED_ID();
-	Vehicle veh_search = PED::GET_VEHICLE_PED_IS_USING(PlayerPedSearch);
+	Vehicle veh_search = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 	veh_searching = !veh_searching;
 	VEHICLE::SET_VEHICLE_SEARCHLIGHT(veh_search, veh_searching, veh_searching);
 }
 
 void vehicle_alarm() {
-	Player PlayerPedAlarm = PLAYER::PLAYER_PED_ID();
 	Vehicle veh_alarming = -1;
-	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_alarming = PED::GET_VEHICLE_PED_IS_USING(PlayerPedAlarm);
+	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_alarming = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
 		find_nearest_vehicle();
 		veh_alarming = temp_vehicle;
@@ -473,9 +469,8 @@ void vehicle_alarm() {
 }
 
 void vehicle_set_alarm() {
-	Player PlayerPedSetAlarm = PLAYER::PLAYER_PED_ID();
 	if (!featureAutoalarm) {
-		if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) alarmed_veh = PED::GET_VEHICLE_PED_IS_USING(PlayerPedSetAlarm);
+		if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) alarmed_veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 		if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
 			find_nearest_vehicle();
 			alarmed_veh = temp_vehicle;
@@ -494,9 +489,8 @@ void doorslocked_switching() {
 }
 
 void vehicle_brake() {
-	Player PlayerPedBrake = PLAYER::PLAYER_PED_ID();
 	Vehicle veh_brake = -1;
-	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_brake = PED::GET_VEHICLE_PED_IS_USING(PlayerPedBrake);
+	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_brake = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
 		find_nearest_vehicle();
 		veh_brake = temp_vehicle;
@@ -508,9 +502,8 @@ void vehicle_brake() {
 }
 
 void vehicle_burnout() {
-	Player PlayerPedBurnout = PLAYER::PLAYER_PED_ID();
 	Vehicle veh_burnout = -1;
-	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_burnout = PED::GET_VEHICLE_PED_IS_USING(PlayerPedBurnout);
+	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_burnout = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
 		find_nearest_vehicle();
 		veh_burnout = temp_vehicle;
@@ -523,9 +516,8 @@ void vehicle_burnout() {
 }
 
 void damage_door() {
-	Player PlayerPedDamage = PLAYER::PLAYER_PED_ID();
 	Vehicle veh_damage = -1;
-	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_damage = PED::GET_VEHICLE_PED_IS_USING(PlayerPedDamage);
+	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_damage = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
 		find_nearest_vehicle();
 		veh_damage = temp_vehicle;
@@ -631,7 +623,6 @@ bool onconfirm_vehdoor_menu(MenuItem<int> choice){
 	}
 
 	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
-	Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if(choice.value >= 0){
@@ -920,11 +911,9 @@ bool process_veh_door_menu(){
 
 void seat_change_hotkey()
 {
-	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
-	Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
-	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
+	if (ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
 		Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 		Hash currHotkeyVehModel = ENTITY::GET_ENTITY_MODEL(veh);
 		int seats = VEHICLE::GET_VEHICLE_MODEL_NUMBER_OF_SEATS(currHotkeyVehModel);
@@ -940,11 +929,9 @@ void seat_change_hotkey()
 }
 
 bool onconfirm_seat_menu(MenuItem<int> choice) {
-	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
-	Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 		
-		if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
+		if (ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
 			Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 			int value = choice.value;
 
@@ -958,10 +945,9 @@ bool onconfirm_seat_menu(MenuItem<int> choice) {
 
 bool process_veh_seat_menu() 
 {
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	std::vector<MenuItem<int>*> menuItems;
 	
-	if (PED::IS_PED_SITTING_IN_ANY_VEHICLE(playerPed))
+	if (PED::IS_PED_SITTING_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID()))
 	{
 		Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 		Hash currVehModel = ENTITY::GET_ENTITY_MODEL(veh);
@@ -1297,10 +1283,6 @@ void process_engine_degrade_menu() {
 
 bool onconfirm_fuel_menu(MenuItem<int> choice)
 {
-	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
-	Player player = PLAYER::PLAYER_ID();
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
-
 	switch (activeLineIndexFuel){
 	case 15:
 		if (process_fuel_colour_menu()) return false;
@@ -1462,11 +1444,6 @@ void del_sel_blip() {
 
 bool onconfirm_vehicle_remember_menu(MenuItem<int> choice)
 {
-	// common variables
-	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
-	Player player = PLAYER::PLAYER_ID();
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
-
 	switch (activeLineIndexRemember){
 	case 9:
 		del_sel_blip();
@@ -1702,11 +1679,6 @@ void process_road_laws_menu(){
 }
 
 bool onconfirm_veh_menu(MenuItem<int> choice){
-	// common variables
-	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
-	Player player = PLAYER::PLAYER_ID();
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
-
 	switch(activeLineIndexVeh){
 		case 0:
 			if(process_carspawn_menu()) return false;
@@ -1733,7 +1705,7 @@ bool onconfirm_veh_menu(MenuItem<int> choice){
 			if(process_veh_door_menu()) return false;
 			break;
 		case 20: // seat menu
-			if (PED::IS_PED_SITTING_IN_ANY_VEHICLE(playerPed))
+			if (PED::IS_PED_SITTING_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID()))
 				if(process_veh_seat_menu()) return false;
 			break;
 		case 21: // speed menu
@@ -1826,7 +1798,6 @@ void process_veh_menu(){
 	toggleItem->caption = "No Falling Off/Out";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureNoVehFallOff;
-	//toggleItem->toggleValueUpdated = &featureNoVehFallOffUpdated;
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
@@ -2189,7 +2160,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				}
 			}
 		}
-
 		if (alarm_enabled == true && alarmed_veh != -1) { // set the alarm
 			engine_secs_passed = clock() / CLOCKS_PER_SEC;
 			if (((clock() / (CLOCKS_PER_SEC / 1000)) - engine_secs_curr) != 0) {
@@ -2207,7 +2177,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				if (!featureAutoalarm) alarmischarged = false;
 			}
 		}
-
 		if (alarmed_veh != -1 && near_enough == false && alarm_enabled == false) { // disable the alarm
 			a_counter_tick = a_counter_tick + 1;
 			VEHICLE::SET_VEHICLE_ENGINE_ON(alarmed_veh, true, true);
@@ -3135,8 +3104,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 
 	if (GAMEPLAY::GET_MISSION_FLAG() == 0) {
-		Ped playerPed_Tracking = PLAYER::PLAYER_PED_ID();
-
 		if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && been_already == true) been_already = false;
 
 		if (!VEHICLES_REMEMBER.empty() && !featureDeleteTrackedVehicles && featureDeleteTrackedVehicles_Emptied == false) {
@@ -3157,7 +3124,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			}
 		}
 
-		if (featureRememberVehicles && featureDeleteTrackedVehicles_CharacterChanged && playerPed_Tracking != old_playerPed_Tracking) {
+		if (featureRememberVehicles && featureDeleteTrackedVehicles_CharacterChanged && PLAYER::PLAYER_PED_ID() != old_playerPed_Tracking) {
 			if (!BLIPTABLE_VEH.empty()) {
 				for (int i = 0; i < BLIPTABLE_VEH.size(); i++) {
 					if (UI::DOES_BLIP_EXIST(BLIPTABLE_VEH[i])) {
@@ -3198,7 +3165,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				ENTITY::SET_ENTITY_AS_MISSION_ENTITY(veh_rem, true, true);
 				curr_veh_remember = veh_rem;
 				featureDeleteTrackedVehicles_Emptied = true;
-				old_playerPed_Tracking = playerPed_Tracking;
+				old_playerPed_Tracking = PLAYER::PLAYER_PED_ID();
 			}
 
 			for (int i = 0; i < VEHICLES_REMEMBER.size(); i++) {
@@ -3486,12 +3453,11 @@ void set_old_vehicle_state(bool updatedState){ // used by other functions, like 
 
 void vehicle_flip()
 {
-	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	Vehicle playerVehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 	Vector3 orig_rot = ENTITY::GET_ENTITY_ROTATION(playerVehicle, 0);
 
-	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
+	if (ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
 		ENTITY::SET_ENTITY_ROTATION(playerVehicle, orig_rot.x, orig_rot.y - 180, orig_rot.z, 0, true);
 	}
 }
@@ -4164,11 +4130,9 @@ bool process_savedveh_sort_menu(){
 }
 
 void save_current_vehicle(int slot){
-	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
-	Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
-	if(bPlayerExists){
+	if(ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID())){
 		if(PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
 			Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 
@@ -5708,10 +5672,9 @@ void init_vehicle_feature(){
 }
 
 void fix_vehicle(){
-	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
-	if(bPlayerExists){
+	if(ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID())){
 		if(PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
 			Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 
@@ -5741,10 +5704,9 @@ void fix_vehicle(){
 }
 
 void clean_vehicle(){
-	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
-	if(bPlayerExists){
+	if(ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID())){
 		if(PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
 			VEHICLE::SET_VEHICLE_DIRT_LEVEL(PED::GET_VEHICLE_PED_IS_USING(playerPed), 0);
 

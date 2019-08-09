@@ -233,7 +233,6 @@ void onchange_knuckle_appearance(int value, SelectFromListMenuItem* source){
 }
 
 int get_current_knuckle_appearance(){
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	int weapHash = GAMEPLAY::GET_HASH_KEY("WEAPON_KNUCKLE");
 
 	int i = 0;
@@ -244,7 +243,7 @@ int get_current_knuckle_appearance(){
 
 		DWORD componentHash = GAMEPLAY::GET_HASH_KEY((char *) componentName.c_str());
 
-		if(WEAPON::HAS_PED_GOT_WEAPON_COMPONENT(playerPed, weapHash, componentHash)){
+		if(WEAPON::HAS_PED_GOT_WEAPON_COMPONENT(PLAYER::PLAYER_PED_ID(), weapHash, componentHash)){
 			return i;
 		}
 
@@ -279,7 +278,6 @@ void onchange_switchblade_appearance(int value, SelectFromListMenuItem* source){
 }
 
 int get_current_switchblade_appearance(){
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	int weapHash = GAMEPLAY::GET_HASH_KEY("WEAPON_SWITCHBLADE");
 
 	int i = 0;
@@ -290,7 +288,7 @@ int get_current_switchblade_appearance(){
 
 		DWORD componentHash = GAMEPLAY::GET_HASH_KEY((char *) componentName.c_str());
 
-		if(WEAPON::HAS_PED_GOT_WEAPON_COMPONENT(playerPed, weapHash, componentHash)){
+		if(WEAPON::HAS_PED_GOT_WEAPON_COMPONENT(PLAYER::PLAYER_PED_ID(), weapHash, componentHash)){
 			return i;
 		}
 
@@ -397,7 +395,6 @@ void add_all_weapons_attachments() {
 }
 
 int get_current_revolver_appearance(){
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	int weapHash = GAMEPLAY::GET_HASH_KEY("WEAPON_REVOLVER");
 
 	int i = 0;
@@ -408,7 +405,7 @@ int get_current_revolver_appearance(){
 
 		DWORD componentHash = GAMEPLAY::GET_HASH_KEY((char *) componentName.c_str());
 
-		if(WEAPON::HAS_PED_GOT_WEAPON_COMPONENT(playerPed, weapHash, componentHash)){
+		if(WEAPON::HAS_PED_GOT_WEAPON_COMPONENT(PLAYER::PLAYER_PED_ID(), weapHash, componentHash)){
 			return i;
 		}
 
@@ -583,9 +580,8 @@ bool process_weapons_in_category_menu(int category){
 	lastSelectedWeaponCategory = category;
 	std::vector<MenuItem<int>*> menuItems;
 
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	int weaponSelectionIndex = 0;
-	int current = WEAPON::GET_SELECTED_PED_WEAPON(playerPed);
+	int current = WEAPON::GET_SELECTED_PED_WEAPON(PLAYER::PLAYER_PED_ID());
 
 	for(int i = 0; i < VOV_WEAPON_CAPTIONS[category].size(); i++){
 		MenuItem<int> *item = new MenuItem<int>();
@@ -612,9 +608,8 @@ bool onconfirm_weaponlist_menu(MenuItem<int> choice){
 bool process_weaponlist_menu(){
 	std::vector<MenuItem<int>*> menuItems;
 
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	int weaponSelectionIndex = 0;
-	int current = WEAPON::GET_SELECTED_PED_WEAPON(playerPed);
+	int current = WEAPON::GET_SELECTED_PED_WEAPON(PLAYER::PLAYER_PED_ID());
 
 	for(int i = 0; i < MENU_WEAPON_CATEGORIES.size(); i++){
 		MenuItem<int> *item = new MenuItem<int>();
@@ -639,12 +634,9 @@ bool process_weaponlist_menu(){
 
 bool do_give_weapon(std::string modelName){
 	// common variables
-	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
-	Player player = PLAYER::PLAYER_ID();
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
-	if(bPlayerExists){
-		WEAPON::GIVE_DELAYED_WEAPON_TO_PED(playerPed, GAMEPLAY::GET_HASH_KEY((char *) modelName.c_str()), 1000, 0); return true;
+	if(ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID())){
+		WEAPON::GIVE_DELAYED_WEAPON_TO_PED(PLAYER::PLAYER_PED_ID(), GAMEPLAY::GET_HASH_KEY((char *) modelName.c_str()), 1000, 0); return true;
 	}
 	else{
 		return false;
@@ -749,7 +741,6 @@ void onchange_vehicle_weapon_modifier(int value, SelectFromListMenuItem* source)
 
 void sniper_vision_toggle()
 {
-	Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if ((WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_SNIPERRIFLE") || WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_HEAVYSNIPER") ||
@@ -935,7 +926,6 @@ bool onconfirm_weapon_menu(MenuItem<int> choice){
 	// common variables
 	Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
-	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(playerPed);
 
 	switch(activeLineIndexWeapon){
 		case 0:
@@ -1509,12 +1499,10 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 					if ((PED::GET_PED_TYPE(cops[i]) == 6 || PED::GET_PED_TYPE(cops[i]) == 27) && WEAPON::GET_SELECTED_PED_WEAPON(cops[i]) != Cop_Weapon) WEAPON::GIVE_WEAPON_TO_PED(cops[i], Cop_Weapon, 999, false, true);
 					if (featureArmyMelee && PED::GET_PED_TYPE(cops[i]) == 29 && WEAPON::GET_SELECTED_PED_WEAPON(cops[i]) != Cop_Weapon) WEAPON::GIVE_WEAPON_TO_PED(cops[i], Cop_Weapon, 999, false, true);
 				}
-
 				if (featurePlayerMelee && Weapon_Type != 3566412244 && Weapon_Type != 2685387236) {
 					if ((PED::GET_PED_TYPE(cops[i]) == 6 || PED::GET_PED_TYPE(cops[i]) == 27) && WEAPON::GET_SELECTED_PED_WEAPON(cops[i]) == GAMEPLAY::GET_HASH_KEY("WEAPON_STUNGUN")) WEAPON::GIVE_WEAPON_TO_PED(cops[i], GAMEPLAY::GET_HASH_KEY("WEAPON_PISTOL"), 999, false, true);
 					if (featureArmyMelee && PED::GET_PED_TYPE(cops[i]) == 29 && WEAPON::GET_SELECTED_PED_WEAPON(cops[i]) == GAMEPLAY::GET_HASH_KEY("WEAPON_STUNGUN")) WEAPON::GIVE_WEAPON_TO_PED(cops[i], GAMEPLAY::GET_HASH_KEY("WEAPON_PISTOL"), 999, false, true);
 				}
-
 				if (!featurePlayerMelee && someonehasgunandshooting == false) {
 					if ((PED::GET_PED_TYPE(cops[i]) == 6 || PED::GET_PED_TYPE(cops[i]) == 27) && WEAPON::GET_SELECTED_PED_WEAPON(cops[i]) != Cop_Weapon) WEAPON::GIVE_WEAPON_TO_PED(cops[i], Cop_Weapon, 999, false, true);
 					if (featureArmyMelee && PED::GET_PED_TYPE(cops[i]) == 29 && WEAPON::GET_SELECTED_PED_WEAPON(cops[i]) != Cop_Weapon) WEAPON::GIVE_WEAPON_TO_PED(cops[i], Cop_Weapon, 999, false, true);
@@ -1529,7 +1517,6 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 
 	// Power Punch
 	if (featurePowerPunch && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
-		Ped playerPed = PLAYER::PLAYER_PED_ID();
 		Vector3 CamRot = CAM::GET_GAMEPLAY_CAM_ROT(2);
 		long long int p_force = -1; 
 
@@ -1643,7 +1630,6 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 
 	// Give All Weapons Automatically
 	if (featureGiveAllWeapons && detained == false) {
-		Ped playerPed_W = PLAYER::PLAYER_PED_ID();
 		w_tick_secs_passed = clock() / CLOCKS_PER_SEC;
 		if (((clock() / (CLOCKS_PER_SEC / 1000)) - w_tick_secs_curr) != 0) {
 			tick_allw = tick_allw + 1;
@@ -1651,7 +1637,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		}
 		if (tick_allw > 200 && PlayerUpdated_w) {
 			give_all_weapons_hotkey();
-			oldplayerPed_W = playerPed_W;
+			oldplayerPed_W = playerPed;
 			tick_allw = 0;
 			PlayerUpdated_w = false; 
 		}
@@ -1659,12 +1645,11 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		int death_time2 = PLAYER::GET_TIME_SINCE_LAST_DEATH();
 		if (death_time2 > -1 && death_time2 < 2000) PlayerUpdated_w = true; 
 		
-		if (playerPed_W != oldplayerPed_W) PlayerUpdated_w = true;
+		if (playerPed != oldplayerPed_W) PlayerUpdated_w = true;
 	}
 	
 	// Add All Weapons Attachments Automatically
 	if (featureAddAllWeaponsAttachments && detained == false) {
-		Ped playerPed_A = PLAYER::PLAYER_PED_ID();
 		w_tick_secs_passed = clock() / CLOCKS_PER_SEC;
 		if (((clock() / (CLOCKS_PER_SEC / 1000)) - w_a_tick_secs_curr) != 0) {
 			tick_a_allw = tick_a_allw + 1;
@@ -1672,7 +1657,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		}
 		if (tick_a_allw > 400 && PlayerUpdated_a) {
 			add_all_weapons_attachments();
-			oldplayerPed_A = playerPed_A;
+			oldplayerPed_A = playerPed;
 			tick_a_allw = 0;
 			PlayerUpdated_a = false;
 		}
@@ -1680,7 +1665,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		int death_time2 = PLAYER::GET_TIME_SINCE_LAST_DEATH();
 		if (death_time2 > -1 && death_time2 < 2000) PlayerUpdated_a = true;
 
-		if (playerPed_A != oldplayerPed_A) PlayerUpdated_a = true;
+		if (playerPed != oldplayerPed_A) PlayerUpdated_a = true;
 	}
 
 	// Disables visions if not aiming
@@ -1842,7 +1827,6 @@ void update_vehicle_guns(){
 }
 
 void save_player_weapons(){
-	Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	int index = 0;
@@ -1879,13 +1863,12 @@ void save_player_weapons(){
 	}
 
 	if((saved_parachute = WEAPON::HAS_PED_GOT_WEAPON(playerPed, PARACHUTE_ID, 0) ? true : false)){
-		PLAYER::GET_PLAYER_PARACHUTE_TINT_INDEX(player, &saved_parachute_tint);
+		PLAYER::GET_PLAYER_PARACHUTE_TINT_INDEX(PLAYER::PLAYER_ID(), &saved_parachute_tint);
 	}
 	saved_armour = PED::GET_PED_ARMOUR(playerPed);
 }
 
 void restore_player_weapons(){
-	Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	WEAPON::REMOVE_ALL_PED_WEAPONS(playerPed, false);
 
@@ -1922,17 +1905,16 @@ void restore_player_weapons(){
 
 	if(saved_parachute){
 		WEAPON::GIVE_WEAPON_TO_PED(playerPed, PARACHUTE_ID, 1, false, false);
-		PLAYER::SET_PLAYER_PARACHUTE_TINT_INDEX(player, saved_parachute_tint);
+		PLAYER::SET_PLAYER_PARACHUTE_TINT_INDEX(PLAYER::PLAYER_ID(), saved_parachute_tint);
 	}
 
 	PED::SET_PED_ARMOUR(playerPed, saved_armour);
 }
 
 bool is_weapon_equipped(std::vector<int> extras){
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	std::string weaponValue = VOV_WEAPON_VALUES[extras.at(0)].at(extras.at(1));
 	char *weaponChar = (char*) weaponValue.c_str();
-	return (WEAPON::HAS_PED_GOT_WEAPON(playerPed, GAMEPLAY::GET_HASH_KEY(weaponChar), 0) ? true : false);
+	return (WEAPON::HAS_PED_GOT_WEAPON(PLAYER::PLAYER_PED_ID(), GAMEPLAY::GET_HASH_KEY(weaponChar), 0) ? true : false);
 }
 
 void set_weapon_equipped(bool equipped, std::vector<int> extras){
@@ -1956,7 +1938,6 @@ void set_weapon_equipped(bool equipped, std::vector<int> extras){
 }
 
 bool is_weaponmod_equipped(std::vector<int> extras){
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	std::string weaponValue = VOV_WEAPON_VALUES[extras.at(0)].at(extras.at(1));
 
 	char *weaponChar = (char*) weaponValue.c_str();
@@ -1966,7 +1947,7 @@ bool is_weaponmod_equipped(std::vector<int> extras){
 	std::string componentName = MOD_VECTOR.at(extras.at(3));
 	DWORD componentHash = GAMEPLAY::GET_HASH_KEY((char *) componentName.c_str());
 
-	return WEAPON::HAS_PED_GOT_WEAPON_COMPONENT(playerPed, weapHash, componentHash) ? true : false;
+	return WEAPON::HAS_PED_GOT_WEAPON_COMPONENT(PLAYER::PLAYER_PED_ID(), weapHash, componentHash) ? true : false;
 }
 
 void set_weaponmod_equipped(bool equipped, std::vector<int> extras){
@@ -2045,17 +2026,15 @@ void onhighlight_weapon_mod_menu_tint(MenuItem<int> choice){
 }
 
 bool onconfirm_weapon_mod_menu_tint(MenuItem<int> choice){
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	std::string weaponName = VOV_WEAPON_VALUES[lastSelectedWeaponCategory].at(lastSelectedWeapon);
 	int weapHash = GAMEPLAY::GET_HASH_KEY((char*) weaponName.c_str());
 
-	WEAPON::SET_PED_WEAPON_TINT_INDEX(playerPed, weapHash, choice.value);
+	WEAPON::SET_PED_WEAPON_TINT_INDEX(PLAYER::PLAYER_PED_ID(), weapHash, choice.value);
 
 	return true;
 }
 
 void onconfirm_open_tint_menu(MenuItem<int> choice) {
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	int tintSelection = 0;
 
 	std::string weaponValue = VOV_WEAPON_VALUES[lastSelectedWeaponCategory].at(lastSelectedWeapon);
@@ -2095,17 +2074,15 @@ void onhighlight_weapon_mod_menu_tint_colour(MenuItem<int> choice) {
 }
 
 bool onconfirm_weapon_mod_menu_tint_colour(MenuItem<int> choice) {
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	std::string weaponName = VOV_WEAPON_VALUES[lastSelectedWeaponCategory].at(lastSelectedWeapon);
 	int weapHash = GAMEPLAY::GET_HASH_KEY((char*)weaponName.c_str());
 
-	WEAPON::SET_WEAPON_LIVERY_COLOR(playerPed, weapHash, GAMEPLAY::GET_HASH_KEY(currWeaponCompHash), choice.value);
+	WEAPON::SET_WEAPON_LIVERY_COLOR(PLAYER::PLAYER_PED_ID(), weapHash, GAMEPLAY::GET_HASH_KEY(currWeaponCompHash), choice.value);
 
 	return true;
 }
 
 void onconfirm_open_tint_menu_colour(MenuItem<int> choice) {
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	int tintColourSelection = 0;
 	std::vector<MenuItem<int>*> menuItems;
 
@@ -2118,7 +2095,7 @@ void onconfirm_open_tint_menu_colour(MenuItem<int> choice) {
 		{
 			for each (char* MK2_wep_comp in MK2_WEAPONS_LIVERY_COMP)
 			{
-				if (WEAPON::HAS_PED_GOT_WEAPON_COMPONENT(playerPed, weapHash, GAMEPLAY::GET_HASH_KEY(MK2_wep_comp)))
+				if (WEAPON::HAS_PED_GOT_WEAPON_COMPONENT(PLAYER::PLAYER_PED_ID(), weapHash, GAMEPLAY::GET_HASH_KEY(MK2_wep_comp)))
 				{
 					currWeaponCompHash = MK2_wep_comp;
 

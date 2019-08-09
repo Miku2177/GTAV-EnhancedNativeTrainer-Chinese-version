@@ -341,9 +341,8 @@ void invincibility_switching(){
 }
 
 void engineonoff_switching() {
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	Vehicle veh = -1;
-	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
 		find_nearest_vehicle();
 		veh = temp_vehicle;
@@ -358,9 +357,8 @@ void engineonoff_switching() {
 }
 
 void engine_damage() {
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	Vehicle veh3 = -1;
-	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh3 = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh3 = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
 		find_nearest_vehicle();
 		veh3 = temp_vehicle;
@@ -370,9 +368,8 @@ void engine_damage() {
 }
 
 void engine_kill(){
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	Vehicle veh2 = -1;
-	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh2 = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh2 = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
 		find_nearest_vehicle();
 		veh2 = temp_vehicle;
@@ -740,8 +737,7 @@ void update_features(){
 
 	// Can run in apartments
 	if (featurePlayerRunApartments && GAMEPLAY::GET_MISSION_FLAG() == 0) {
-		Ped playerPed_RunInApartment = PLAYER::PLAYER_PED_ID();
-		Vector3 coords_apprun_ped = ENTITY::GET_ENTITY_COORDS(playerPed_RunInApartment, true);
+		Vector3 coords_apprun_ped = ENTITY::GET_ENTITY_COORDS(playerPed, true);
 		if (!INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_apprun_ped.x, coords_apprun_ped.y, coords_apprun_ped.z) && 
 			(INTERIOR::GET_INTERIOR_AT_COORDS(coords_apprun_ped.x, coords_apprun_ped.y, coords_apprun_ped.z) == 206849 ||
 			INTERIOR::GET_INTERIOR_AT_COORDS(coords_apprun_ped.x, coords_apprun_ped.y, coords_apprun_ped.z) == 166657 ||
@@ -758,7 +754,7 @@ void update_features(){
 				PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
 			}
 
-			if (PED::IS_PED_SHOOTING(playerPed_RunInApartment)) we_have_troubles = true;
+			if (PED::IS_PED_SHOOTING(playerPed)) we_have_troubles = true;
 
 			if (we_have_troubles == false) {
 				GAMEPLAY::CLEAR_AREA_OF_COPS(coords_apprun_ped.x, coords_apprun_ped.y, coords_apprun_ped.z, 20, 0);
@@ -789,8 +785,6 @@ void update_features(){
 
 	////////////////////////////////////// PLAYER DATA ////////////////////////////////////////////////
 	
-	Ped playerPed_Data = PLAYER::PLAYER_PED_ID();
-	
 	if ((bPlayerExists && featurePlayerLife && featurePlayerLifeUpdated) || (bPlayerExists && featurePlayerLife_Died && featurePlayerLifeUpdated) ||
 		(bPlayerExists && featurePlayerLife_Changed && featurePlayerLifeUpdated) || (featurePlayerStatsEnable && featurePlayerStatsUpdated)) {
 		
@@ -801,22 +795,22 @@ void update_features(){
 		}
 		if (tick > 200) {
 			if (PLAYER_HEALTH_VALUES[current_player_health] > 0) {
-				PED::SET_PED_MAX_HEALTH(playerPed_Data, PLAYER_HEALTH_VALUES[current_player_health]);
-				ENTITY::SET_ENTITY_HEALTH(playerPed_Data, PLAYER_HEALTH_VALUES[current_player_health]);
+				PED::SET_PED_MAX_HEALTH(playerPed, PLAYER_HEALTH_VALUES[current_player_health]);
+				ENTITY::SET_ENTITY_HEALTH(playerPed, PLAYER_HEALTH_VALUES[current_player_health]);
 			}
 			else {
-				PED::SET_PED_MAX_HEALTH(playerPed_Data, 200);
-				ENTITY::SET_ENTITY_HEALTH(playerPed_Data, 200);
+				PED::SET_PED_MAX_HEALTH(playerPed, 200);
+				ENTITY::SET_ENTITY_HEALTH(playerPed, 200);
 			}
-			PLAYER::SET_PLAYER_MAX_ARMOUR(playerPed_Data, PLAYER_ARMOR_VALUES[current_player_armor]);
-			PED::SET_PED_ARMOUR(playerPed_Data, PLAYER_ARMOR_VALUES[current_player_armor]);
-			oldplayerPed = playerPed_Data;
+			PLAYER::SET_PLAYER_MAX_ARMOUR(playerPed, PLAYER_ARMOR_VALUES[current_player_armor]);
+			PED::SET_PED_ARMOUR(playerPed, PLAYER_ARMOR_VALUES[current_player_armor]);
+			oldplayerPed = playerPed;
 			tick = 0;
 			featurePlayerLifeUpdated = false;
 
 			if (featurePlayerStatsEnable && featurePlayerStatsUpdated && GAMEPLAY::GET_MISSION_FLAG() == 0) {
 
-				if (PED::GET_PED_TYPE(playerPed_Data) == 0) {
+				if (PED::GET_PED_TYPE(playerPed) == 0) {
 					STATS::STAT_SET_INT(GAMEPLAY::GET_HASH_KEY("SP0_SPECIAL_ABILITY_UNLOCKED"), PLAYER_ARMOR_VALUES[current_player_stats], true);
 					STATS::STAT_SET_INT(GAMEPLAY::GET_HASH_KEY("SP0_STAMINA"), PLAYER_ARMOR_VALUES[current_player_stats], true);
 					STATS::STAT_SET_INT(GAMEPLAY::GET_HASH_KEY("SP0_STRENGTH"), PLAYER_ARMOR_VALUES[current_player_stats], true);
@@ -826,7 +820,7 @@ void update_features(){
 					STATS::STAT_SET_INT(GAMEPLAY::GET_HASH_KEY("SP0_SHOOTING_ABILITY"), PLAYER_ARMOR_VALUES[current_player_stats], true);
 					STATS::STAT_SET_INT(GAMEPLAY::GET_HASH_KEY("SP0_STEALTH_ABILITY"), PLAYER_ARMOR_VALUES[current_player_stats], true);
 				}
-				if (PED::GET_PED_TYPE(playerPed_Data) == 1) {
+				if (PED::GET_PED_TYPE(playerPed) == 1) {
 					STATS::STAT_SET_INT(GAMEPLAY::GET_HASH_KEY("SP1_SPECIAL_ABILITY_UNLOCKED"), PLAYER_ARMOR_VALUES[current_player_stats], true);
 					STATS::STAT_SET_INT(GAMEPLAY::GET_HASH_KEY("SP1_STAMINA"), PLAYER_ARMOR_VALUES[current_player_stats], true);
 					STATS::STAT_SET_INT(GAMEPLAY::GET_HASH_KEY("SP1_STRENGTH"), PLAYER_ARMOR_VALUES[current_player_stats], true);
@@ -836,7 +830,7 @@ void update_features(){
 					STATS::STAT_SET_INT(GAMEPLAY::GET_HASH_KEY("SP1_SHOOTING_ABILITY"), PLAYER_ARMOR_VALUES[current_player_stats], true);
 					STATS::STAT_SET_INT(GAMEPLAY::GET_HASH_KEY("SP1_STEALTH_ABILITY"), PLAYER_ARMOR_VALUES[current_player_stats], true);
 				}
-				if (PED::GET_PED_TYPE(playerPed_Data) == 2 || PED::GET_PED_TYPE(playerPed_Data) == 3) {
+				if (PED::GET_PED_TYPE(playerPed) == 2 || PED::GET_PED_TYPE(playerPed) == 3) {
 					STATS::STAT_SET_INT(GAMEPLAY::GET_HASH_KEY("SP2_SPECIAL_ABILITY_UNLOCKED"), PLAYER_ARMOR_VALUES[current_player_stats], true);
 					STATS::STAT_SET_INT(GAMEPLAY::GET_HASH_KEY("SP2_STAMINA"), PLAYER_ARMOR_VALUES[current_player_stats], true);
 					STATS::STAT_SET_INT(GAMEPLAY::GET_HASH_KEY("SP2_STRENGTH"), PLAYER_ARMOR_VALUES[current_player_stats], true);
@@ -860,7 +854,7 @@ void update_features(){
 		featurePlayerStatsUpdated = true;
 	}
 	
-	if (playerPed_Data != oldplayerPed && featurePlayerLife_Changed) { // If You Switch Character Your Health & Armor Will Be Restored
+	if (playerPed != oldplayerPed && featurePlayerLife_Changed) { // If You Switch Character Your Health & Armor Will Be Restored
 		featurePlayerLifeUpdated = true;
 		featurePlayerStatsUpdated = true;
 	}
@@ -886,6 +880,7 @@ void update_features(){
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 
 	prison_break(); ///// <--- PRISON BREAK /////
+	
 	most_wanted(); ///// <--- WANTED FUGITIVE /////
 
 	// police ignore player
@@ -1006,7 +1001,7 @@ void update_features(){
 		}
 	}
 	 
-	//NPC Ragdoll If Shot
+	// NPC Ragdoll If Shot
 	if (NPC_RAGDOLL_VALUES[current_npc_ragdoll] == 1 || NPC_RAGDOLL_VALUES[current_npc_ragdoll] == 2) {
 		const int arrSize5 = 1024;
 		Ped NPCragdoll[arrSize5];
@@ -1032,12 +1027,12 @@ void update_features(){
 		}
 	}
 		
-	//Player Movement Speed
+	// Player Movement Speed
 	if (PLAYER_MOVEMENT_VALUES[current_player_movement] > 0.00) {
 		PED::SET_PED_MOVE_RATE_OVERRIDE(playerPed, PLAYER_MOVEMENT_VALUES[current_player_movement]);
 	}
 	
-	//Player Invisible && Player Invisible In Vehicle
+	// Player Invisible && Player Invisible In Vehicle
 	if ((!featurePlayerInvisible && !featurePlayerInvisibleInVehicle && p_invisible == true) || (featurePlayerInvisibleInVehicle && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && p_invisible == true)) {
 		ENTITY::SET_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID(), true);
 		p_invisible = false;
@@ -1179,8 +1174,6 @@ bool onconfirm_playerForceshield_menu(MenuItem<int> choice) {
 }
 
 bool process_player_life_menu(){
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
-
 	std::vector<MenuItem<int> *> menuItems;
 	std::string caption = "Player Data";
 	
@@ -1248,8 +1241,6 @@ bool process_player_life_menu(){
 }
 
 bool maxwantedlevel_menu() {
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
-
 	std::vector<MenuItem<int> *> menuItems;
 	std::string caption = "Wanted Level Options";
 
@@ -1304,8 +1295,6 @@ bool maxwantedlevel_menu() {
 }
 
 bool mostwanted_menu() {
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
-
 	std::vector<MenuItem<int> *> menuItems;
 	std::string caption = "Wanted Fugitive Options";
 
@@ -1342,8 +1331,6 @@ bool mostwanted_menu() {
 }
 
 bool player_movement_speed() {
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
-
 	std::vector<MenuItem<int> *> menuItems;
 	std::string caption = "Player Movement Speed Options";
 
@@ -1386,8 +1373,6 @@ bool player_movement_speed() {
 }
 
 bool process_ragdoll_menu() {
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
-
 	std::vector<MenuItem<int> *> menuItems;
 	std::string caption = "Ragdoll Options";
 
@@ -1418,8 +1403,6 @@ bool process_ragdoll_menu() {
 }
 
 bool process_player_prison_menu(){
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
-
 	std::vector<MenuItem<int> *> menuItems;
 	std::string caption = "Prison Break Options";
 
@@ -1479,8 +1462,6 @@ bool process_player_prison_menu(){
 }
 
 bool process_player_forceshield_menu() {
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
-
 	std::vector<MenuItem<int> *> menuItems;
 	std::string caption = "Jedi Powers Options";
 
@@ -2049,14 +2030,12 @@ void add_player_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerInvincible", &featurePlayerInvincible, &featurePlayerInvincibleUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureWantedLevelFrozen", &featureWantedLevelFrozen, &featureWantedLevelFrozenUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerIgnoredByPolice", &featurePlayerIgnoredByPolice}); 
-
 	results->push_back(FeatureEnabledLocalDefinition{"featureWantedLevelNoPHeli", &featureWantedLevelNoPHeli});
 	results->push_back(FeatureEnabledLocalDefinition{"featureWantedNoPRoadB", &featureWantedNoPRoadB});
 	results->push_back(FeatureEnabledLocalDefinition{"featureWantedLevelNoPBoats", &featureWantedLevelNoPBoats});
 	results->push_back(FeatureEnabledLocalDefinition{"featureWantedLevelNoSWATVehicles", &featureWantedLevelNoSWATVehicles});
 	results->push_back(FeatureEnabledLocalDefinition{"NoTaxiWhistling", &NoTaxiWhistling});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerCanBeHeadshot", &featurePlayerCanBeHeadshot});
-
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerUnlimitedAbility", &featurePlayerUnlimitedAbility});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerNoNoise", &featurePlayerNoNoise}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerFastSwim", &featurePlayerFastSwim}); 
@@ -2459,12 +2438,11 @@ bool get_all_graphics_test(std::vector<int> extras){
 }
 
 bool onconfirm_testmenu(MenuItem<int> choice){
-	Ped ped = PLAYER::PLAYER_PED_ID();
 	Hash hash = GAMEPLAY::GET_HASH_KEY("WEAPON_NIGHTSTICK");
 	DWORD start = GetTickCount();
 	for(int i = 0; i < 100000; i++){
 		Hash hash;
-		WEAPON::GET_CURRENT_PED_WEAPON(ped, &hash, true);
+		WEAPON::GET_CURRENT_PED_WEAPON(PLAYER::PLAYER_PED_ID(), &hash, true);
 	}
 	DWORD end = GetTickCount();
 	std::ostringstream ss;

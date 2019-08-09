@@ -789,11 +789,6 @@ bool process_bodyguard_menu(){
 }
 
 bool onconfirm_bodyguard_menu(MenuItem<int> choice){
-	// common variables
-	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
-	Player player = PLAYER::PLAYER_ID();
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
-
 	switch(choice.value){
 		case 0:
 			do_spawn_bodyguard();
