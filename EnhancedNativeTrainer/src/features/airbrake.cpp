@@ -274,7 +274,6 @@ void airbrake(bool inVehicle)
 {
 	// common variables
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
-	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(playerPed);
 
 	//float tmpHeading = curHeading += ;
 

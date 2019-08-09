@@ -1329,21 +1329,19 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	
 	// First Person Stunt Jump Camera
 	if (featureFirstPersonStuntJumpCamera) {
-		Ped stunt_player = PLAYER::PLAYER_PED_ID();
-
 		if (GAMEPLAY::IS_STUNT_JUMP_IN_PROGRESS() && !CAM::DOES_CAM_EXIST(StuntCam)) {
-			Vector3 playerPosition = ENTITY::GET_ENTITY_COORDS(stunt_player, true);
-			Vector3 curRotation = ENTITY::GET_ENTITY_ROTATION(PED::GET_VEHICLE_PED_IS_USING(stunt_player), 2);
+			Vector3 playerPosition = ENTITY::GET_ENTITY_COORDS(playerPed, true);
+			Vector3 curRotation = ENTITY::GET_ENTITY_ROTATION(PED::GET_VEHICLE_PED_IS_USING(playerPed), 2);
 
 			StuntCam = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_FLY_CAMERA", playerPosition.x, playerPosition.y, playerPosition.z, curRotation.x, curRotation.y, curRotation.z, 50.0, true, 2);
 			
-			if (!PED::IS_PED_ON_ANY_BIKE(stunt_player)) {
-				CAM::ATTACH_CAM_TO_PED_BONE(StuntCam, stunt_player, 31086, 0, -0.15, 0.05, 1);
-				CAM::POINT_CAM_AT_PED_BONE(StuntCam, stunt_player, 31086, 0, 0.0, 0.05, 1);
+			if (!PED::IS_PED_ON_ANY_BIKE(playerPed)) {
+				CAM::ATTACH_CAM_TO_PED_BONE(StuntCam, playerPed, 31086, 0, -0.15, 0.05, 1);
+				CAM::POINT_CAM_AT_PED_BONE(StuntCam, playerPed, 31086, 0, 0.0, 0.05, 1);
 			}
-			if (PED::IS_PED_ON_ANY_BIKE(stunt_player)) {
-				CAM::ATTACH_CAM_TO_PED_BONE(StuntCam, stunt_player, 31086, 0, -0.15, -0.10, 1);
-				CAM::POINT_CAM_AT_PED_BONE(StuntCam, stunt_player, 31086, 0, 0.0, -0.10, 1);
+			if (PED::IS_PED_ON_ANY_BIKE(playerPed)) {
+				CAM::ATTACH_CAM_TO_PED_BONE(StuntCam, playerPed, 31086, 0, -0.15, -0.10, 1);
+				CAM::POINT_CAM_AT_PED_BONE(StuntCam, playerPed, 31086, 0, 0.0, -0.10, 1);
 			}
 			CAM::SET_CAM_ROT(StuntCam, curRotation.x, curRotation.y, curRotation.z, 2);
 
@@ -1652,16 +1650,13 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoScubaSound", &featureNoScubaSound}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoComleteMessage", &featureNoComleteMessage}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePoliceRadio", &featurePoliceRadio}); 
-	
 	results->push_back(FeatureEnabledLocalDefinition{"featureMiscLockRadio", &featureMiscLockRadio});
 	results->push_back(FeatureEnabledLocalDefinition{"featureMiscHideHud", &featureMiscHideHud, &featureMiscHideHudUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePhoneShowHud", &featurePhoneShowHud}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureMiscHideENTHud", &featureMiscHideENTHud});
 	results->push_back(FeatureEnabledLocalDefinition{"featureInVehicleNoHud", &featureInVehicleNoHud});
 	results->push_back(FeatureEnabledLocalDefinition{"featureMarkerHud", &featureMarkerHud});
-
 	results->push_back(FeatureEnabledLocalDefinition{"featureDynamicHealthBar", &featureDynamicHealthBar}); 
-		
 	results->push_back(FeatureEnabledLocalDefinition{"featureControllerIgnoreInTrainer", &featureControllerIgnoreInTrainer});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBlockInputInMenu", &featureBlockInputInMenu});
 	results->push_back(FeatureEnabledLocalDefinition{"mouse_view_control", &mouse_view_control});
@@ -1679,13 +1674,11 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoAutoRespawn", &featureNoAutoRespawn});
 	results->push_back(FeatureEnabledLocalDefinition{"featureShowFPS", &featureShowFPS});
 	results->push_back(FeatureEnabledLocalDefinition{"featureHiddenRadioStation", &featureEnableMissingRadioStation});
-
 	results->push_back(FeatureEnabledLocalDefinition{"featureFirstPersonDeathCamera", &featureFirstPersonDeathCamera});
 	results->push_back(FeatureEnabledLocalDefinition{"featureFirstPersonStuntJumpCamera", &featureFirstPersonStuntJumpCamera});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoStuntJumps", &featureNoStuntJumps});
 	results->push_back(FeatureEnabledLocalDefinition{"featureHidePlayerInfo", &featureHidePlayerInfo});
 	results->push_back(FeatureEnabledLocalDefinition{"featureMiscJellmanScenery", &featureMiscJellmanScenery});
-
 	results->push_back(FeatureEnabledLocalDefinition{"featureResetPlayerModelOnDeath", &featureResetPlayerModelOnDeath});
 }
 

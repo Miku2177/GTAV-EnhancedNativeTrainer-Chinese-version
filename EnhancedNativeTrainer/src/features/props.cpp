@@ -118,8 +118,6 @@ void do_spawn_model_by_player(Hash propHash, char* model, std::string title, boo
 		return;
 	}
 
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
-
 	FLOAT spawnOffX = 0.0f;
 	FLOAT spawnOffY = 3.5f;
 	FLOAT spawnOffZ = 0.0f;
@@ -130,7 +128,7 @@ void do_spawn_model_by_player(Hash propHash, char* model, std::string title, boo
 	spawnOffY = max(3.5f, 2.0f + 0.5f * (maxDimens.y - minDimens.y));
 	spawnOffZ = 0.0f;
 
-	Vector3 r_coords = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerPed, spawnOffX, spawnOffY, spawnOffZ);
+	Vector3 r_coords = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(PLAYER::PLAYER_PED_ID(), spawnOffX, spawnOffY, spawnOffZ);
 	SimpleVector3 coords = { r_coords.x, r_coords.y, r_coords.z };
 
 	float objZBase = 0;
@@ -1234,11 +1232,7 @@ bool spawn_saved_props(int slot, std::string caption)
 
 void save_current_props(int slot)
 {
-	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
-	Player player = PLAYER::PLAYER_ID();
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
-
-	if (bPlayerExists)
+	if (ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()))
 	{
 		std::ostringstream ss;
 		if (slot != -1)

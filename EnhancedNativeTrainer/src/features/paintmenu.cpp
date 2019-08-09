@@ -218,14 +218,10 @@ bool onconfirm_paintdirt(MenuItem<float> choice){
 }
 
 void onhighlight_paintdirt(MenuItem<float> choice){
-	// common variables
-	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
-
-	if(!bPlayerExists){
+	if(!ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID())){
 		return;
 	}
-
-	Player player = PLAYER::PLAYER_ID();
+	
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if(!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
@@ -242,14 +238,10 @@ bool onconfirm_paintfade(MenuItem<float> choice){
 }
 
 void onhighlight_paintfade(MenuItem<float> choice){
-	// common variables
-	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
-
-	if(!bPlayerExists){
+	if(!ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID())){
 		return;
 	}
 
-	Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if(!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
@@ -262,10 +254,7 @@ void onhighlight_paintfade(MenuItem<float> choice){
 }
 
 bool process_paint_menu_fades(){
-	Player player = PLAYER::PLAYER_ID();
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
-
-	if(!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
+	if(!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)){
 		set_status_text("Player isn't in a vehicle");
 		return false;
 	}
@@ -300,10 +289,7 @@ bool process_paint_menu_fades(){
 }
 
 bool process_paint_menu_dirt(){
-	Player player = PLAYER::PLAYER_ID();
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
-
-	if(!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
+	if(!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)){
 		set_status_text("Player isn't in a vehicle");
 		return false;
 	}
@@ -336,14 +322,10 @@ bool process_paint_menu_dirt(){
 }
 
 void onhighlight_livery(MenuItem<int> choice){
-	// common variables
-	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
-
-	if(!bPlayerExists){
+	if(!ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID())){
 		return;
 	}
 
-	Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if(!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
@@ -362,14 +344,10 @@ bool onconfirm_livery(MenuItem<int> choice){
 }
 
 bool process_paint_menu_liveries(){
-	// common variables
-	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
-
-	if(!bPlayerExists){
+	if(!ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID())){
 		return false;
 	}
 
-	Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if(!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
@@ -442,14 +420,10 @@ bool onconfirm_paint_menu(MenuItem<int> choice){
 }
 
 bool process_paint_menu(){
-	// common variables
-	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
-
-	if(!bPlayerExists){
+	if(!ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID())){
 		return false;
 	}
 
-	Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if(!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
@@ -499,8 +473,7 @@ bool process_paint_menu(){
 
 bool onconfirm_paint_menu_type(MenuItem<int> choice){
 	std::string category = choice.caption;
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
-	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 
 	whichtype = choice.value;
 
@@ -608,8 +581,7 @@ bool onconfirm_paint_menu_type(MenuItem<int> choice){
 
 bool process_paint_menu_type(){
 	bool rval = false;
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
-	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 
 	std::vector<MenuItem<int> *> menuItems;
 	MenuItem<int> *item;
@@ -682,11 +654,9 @@ bool onconfirm_color_menu_selection(MenuItem<int> choice){
 }
 
 void apply_paint(PaintColor whichpaint){
-	Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
-	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(playerPed);
 
-	if(bPlayerExists){
+	if(ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID())){
 		if(PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
 			Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 
