@@ -1426,10 +1426,12 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	}
 	if (cutscene_is_playing == true && CUTSCENE::IS_CUTSCENE_PLAYING()) cutscene_being_watched = true;
 	if (cutscene_being_watched == true && (!CUTSCENE::IS_CUTSCENE_PLAYING() || ((CUTSCENE::GET_CUTSCENE_TOTAL_DURATION() - CUTSCENE::GET_CUTSCENE_TIME() < 3000) && CAM::IS_SCREEN_FADING_OUT() && manual_cutscene == true))) { // && CUTSCENE::HAS_CUTSCENE_FINISHED()
-		CAM::DO_SCREEN_FADE_IN(0);
-		CUTSCENE::STOP_CUTSCENE_IMMEDIATELY();
-		CUTSCENE::REMOVE_CUTSCENE();
-		CAM::DO_SCREEN_FADE_IN(0);
+		if (manual_cutscene == true) {
+			CAM::DO_SCREEN_FADE_IN(0);
+			CUTSCENE::STOP_CUTSCENE_IMMEDIATELY();
+			CUTSCENE::REMOVE_CUTSCENE();
+			CAM::DO_SCREEN_FADE_IN(0);
+		}
 		cutscene_is_playing = false;
 		cutscene_being_watched = false;
 	}
