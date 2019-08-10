@@ -2260,13 +2260,17 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 
 	// fall off
-	if (bPlayerExists && !featureNoVehFallOff) { 
+	if (bPlayerExists && !featureNoVehFallOff && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
 		PED::SET_PED_CONFIG_FLAG(playerPed, PED_FLAG_THROUGH_WINDSCREEN, TRUE);
-		PED::SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE(playerPed, 0);
+		PED::SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE(playerPed, 0); // can
 	}
-	if (bPlayerExists && featureNoVehFallOff){
-		PED::SET_PED_CONFIG_FLAG(playerPed, PED_FLAG_THROUGH_WINDSCREEN, FALSE);
-		PED::SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE(playerPed, 1);
+	if (bPlayerExists && featureNoVehFallOff && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
+		for (int i = -1; i < 3; i++) {
+			if (VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh, i) != 0) {
+				PED::SET_PED_CONFIG_FLAG(VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh, i), PED_FLAG_THROUGH_WINDSCREEN, FALSE);
+				PED::SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE(VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh, i), 1); // can't
+			}
+		}
 	}
 
 	// player's vehicle boost
