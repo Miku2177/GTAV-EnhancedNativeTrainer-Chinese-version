@@ -70,7 +70,7 @@ void set_neonLights(bool applied, std::vector<int> extras){
 	int loc = extras.at(0);
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 	int rCol = 0, gCol = 0, bCol = 0;
-	bool lightFound = false;
+	//bool lightFound = false;
 
 	if(!is_this_a_car(veh) && !is_this_a_motorcycle(veh)){
 		set_status_text("~r~Error:~r~ Can't add neon lights to this vehicle");

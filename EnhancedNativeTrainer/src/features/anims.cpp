@@ -21918,7 +21918,7 @@ TreeNode* build_anim_tree(std::vector<std::string> input, bool includeAnim)
 
 		for (int i = 0; i < tokens.size(); i++)
 		{
-			std::string token = tokens.at(i);
+			token = tokens.at(i);
 			if (i == tokens.size() - 1)
 			{
 				//if the last node ends in @, add it
@@ -22278,7 +22278,7 @@ bool onconfirm_scenarios_menu_l2(MenuItem<int> choice)
 	
 	activeScenarioLineIndex[1] = choice.value;
 
-	std::vector<MenuItem<int>*> menuItems;
+	//std::vector<MenuItem<int>*> menuItems;
 	std::string value;
 	std::string caption;
 	if (activeScenarioLineIndex[0] == 0)
@@ -22372,6 +22372,6 @@ bool process_scenarios_menu_l1()
 	item->value = 1;
 	menuItems.push_back(item);
 
-	bool result = draw_generic_menu<int>(menuItems, &activeScenarioLineIndex[0], "Scenarios", onconfirm_scenarios_menu_l1, NULL, NULL, NULL);
+	draw_generic_menu<int>(menuItems, &activeScenarioLineIndex[0], "Scenarios", onconfirm_scenarios_menu_l1, NULL, NULL, NULL);
 	return false;
 }

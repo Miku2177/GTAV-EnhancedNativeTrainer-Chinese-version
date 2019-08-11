@@ -2310,14 +2310,14 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	//Lock player vehicle doors
 	if (featureLockVehicleDoorsUpdated){
 		if (bPlayerExists && !featureLockVehicleDoors){
-			Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+			veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 			VEHICLE::SET_VEHICLE_DOORS_LOCKED(veh, 0);
 			PED::SET_PED_CAN_BE_DRAGGED_OUT(playerPed, true);
 		}
 		featureLockVehicleDoorsUpdated = false;
 	}
 	if (featureLockVehicleDoors){
-		Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+		veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 		VEHICLE::SET_VEHICLE_DOORS_LOCKED(veh, 4);
 		PED::SET_PED_CAN_BE_DRAGGED_OUT(playerPed, false);
 	}
@@ -3583,7 +3583,7 @@ void reset_vehicle_globals() {
 		featureBlipNumber = true;
 		featureWearHelmetOffUpdated = true;
 		featureVehInvincibleUpdated = true;
-		featureWearHelmetOffUpdated = true;
+		//featureWearHelmetOffUpdated = true;
 		featureDeleteTrackedVehicles = true;
 		featurePoliceVehicleBlip = true;
 		featurePoliceNoFlip = true;

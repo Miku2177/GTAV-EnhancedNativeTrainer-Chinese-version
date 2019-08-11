@@ -123,7 +123,7 @@ void road_laws()
 		Ped playerPed = PLAYER::PLAYER_PED_ID();
 		Vehicle vehroadlaws = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		Vector3 vehroadlaws_coords = ENTITY::GET_ENTITY_COORDS(vehroadlaws, true);
-		Vector3 vehroadlaws_ped_coords = ENTITY::GET_ENTITY_COORDS(playerPed, true);
+		//Vector3 vehroadlaws_ped_coords = ENTITY::GET_ENTITY_COORDS(playerPed, true);
 		Vehicle veh_collided_with = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		Vector3 veh_collided_with_coords = ENTITY::GET_ENTITY_COORDS(veh_collided_with, true);
 		float vehroadlaws_speed = ENTITY::GET_ENTITY_SPEED(vehroadlaws);
@@ -254,7 +254,7 @@ void road_laws()
 		// No Lights In The Night Time
 		if (featureNoLightsNightTime && PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) {
 			int time_road_laws = TIME::GET_CLOCK_HOURS();
-			bool headlights_state = VEHICLE::GET_VEHICLE_LIGHTS_STATE(vehroadlaws, &lightsOn, &highbeamsOn);
+			VEHICLE::GET_VEHICLE_LIGHTS_STATE(vehroadlaws, &lightsOn, &highbeamsOn);
 
 			if (vehroadlaws_speed > 1 && VEHICLE::GET_IS_LEFT_VEHICLE_HEADLIGHT_DAMAGED(vehroadlaws) && VEHICLE::GET_IS_RIGHT_VEHICLE_HEADLIGHT_DAMAGED(vehroadlaws) && (time_road_laws < 5 || time_road_laws > 20)) nolightsnighttime_check = true;
 			if (vehroadlaws_speed > 1 && !lightsOn && !highbeamsOn && (time_road_laws < 5 || time_road_laws > 20)) nolightsnighttime_check = true;
