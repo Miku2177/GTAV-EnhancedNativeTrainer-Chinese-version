@@ -134,7 +134,7 @@ void fuel()
 			randomize = (rand() % temp_rand + VEH_FUELRANDOM1_VALUES[Random1Index]); // UP MARGIN + DOWN MARGIN
 		}
 
-		Vector3 playerPosition = ENTITY::GET_ENTITY_COORDS(playerPed, false);
+		//Vector3 playerPosition = ENTITY::GET_ENTITY_COORDS(playerPed, false);
 
 		if (VEH_FUELBARPOSITION_VALUES[BarPositionIndex] == 1) {
 			fuel_bar_x = 0.015;

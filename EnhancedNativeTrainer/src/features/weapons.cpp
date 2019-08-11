@@ -450,7 +450,6 @@ bool process_individual_weapon_menu(int weaponIndex){
 
 	if(isEquipped){
 
-		Ped playerPed = PLAYER::PLAYER_PED_ID();
 		std::string weaponValue = VOV_WEAPON_VALUES[lastSelectedWeaponCategory].at(lastSelectedWeapon);
 		char *weaponChar = (char*) weaponValue.c_str();
 		int weapHash = GAMEPLAY::GET_HASH_KEY(weaponChar);

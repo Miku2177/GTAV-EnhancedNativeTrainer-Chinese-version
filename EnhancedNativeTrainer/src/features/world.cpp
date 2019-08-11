@@ -143,7 +143,8 @@ bool featureLightIntensityChanged = true;
 
 bool onconfirm_weather_menu(MenuItem<std::string> choice)
 {
-	std::stringstream ss; ss << "Weather Frozen at: " << lastWeatherName;
+	std::stringstream ss; 
+	ss << "Weather Frozen at: " << lastWeatherName;
 	switch (choice.currentMenuIndex)
 	{
 	case 0:
@@ -156,7 +157,7 @@ bool onconfirm_weather_menu(MenuItem<std::string> choice)
 		{
 			GRAPHICS::_CLEAR_CLOUD_HAT();
 			GAMEPLAY::SET_WEATHER_TYPE_NOW((char *)lastWeather.c_str());
-			std::stringstream ss; ss << "Weather frozen at: " << lastWeatherName;
+			ss << "Weather frozen at: " << lastWeatherName;
 			set_status_text(ss.str());
 		}
 		else if (!featureWeatherFreeze)
@@ -235,7 +236,8 @@ void process_weather_menu()
 
 bool onconfirm_clouds_menu(MenuItem<std::string> choice)
 {
-	std::stringstream ss; ss << "Clouds Frozen at: " << lastCloudsName;
+	std::stringstream ss; 
+	ss << "Clouds Frozen at: " << lastCloudsName;
 	switch (choice.currentMenuIndex)
 	{
 	case 0:
@@ -1058,9 +1060,9 @@ void update_world_features()
 				float dirVector_rf_rr_x = bone3_cruiser_coord.x - bone4_cruiser_coord.x;
 				float dirVector_rf_rr_y = bone3_cruiser_coord.y - bone4_cruiser_coord.y;
 				float dirVector_rf_rr_z = bone3_cruiser_coord.z - (bone4_cruiser_coord.z + 1);
-				int r = 43;
-				int g = 47;
-				int b = 48;
+				//int r = 43;
+				//int g = 47;
+				//int b = 48;
 				if (VEHICLE::IS_TOGGLE_MOD_ON(bus_veh[i], 22)) {
 					r = 31;	g = 44; b = 54;
 					if (getGameVersion() > 45) {

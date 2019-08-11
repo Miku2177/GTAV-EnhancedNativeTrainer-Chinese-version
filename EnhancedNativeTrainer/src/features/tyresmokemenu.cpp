@@ -35,10 +35,7 @@ bool onconfirm_smoke_selection(MenuItem<int> choice){
 		return true;
 	}
 
-	Player player = PLAYER::PLAYER_ID();
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
-
-	if(!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
+	if(!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)){
 		set_status_text("Player isn't in a vehicle");
 		return true;
 	}
@@ -52,7 +49,7 @@ void set_smoke(bool applied, std::vector<int> extras){
 	int loc = extras.at(0);
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 	int rCol, bCol, gCol = bCol = rCol = 0;
-	bool lightFound = false;
+	//bool lightFound = false;
 
 	if(!is_this_a_car(veh) || !is_this_a_motorcycle(veh)){
 		set_status_text("Can't add smoke to this vehicle");

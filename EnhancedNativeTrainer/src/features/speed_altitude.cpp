@@ -207,8 +207,8 @@ void update_speed_text(int speed, Vector3 player_coords)
 				rectYScaled = 0.24 - (((0 + (1 * 18)) / (float)screen_h) * 5) + ((0 + (1 * 18)) / (float)screen_h);
 			}
 
-			float rectWidthScaled = (230 / (float)screen_w) / 2;
-			float rectHeightScaled = (0 + (1 * 18)) / (float)screen_h;
+			rectWidthScaled = (230 / (float)screen_w) / 2;
+			rectHeightScaled = (0 + (1 * 18)) / (float)screen_h;
 			int rect_col[4] = { 128, 128, 128, 75 };
 			GRAPHICS::DRAW_RECT(rectXScaled, rectYScaled, rectWidthScaled, rectHeightScaled, rect_col[0], rect_col[1], rect_col[2], rect_col[3]);
 		}

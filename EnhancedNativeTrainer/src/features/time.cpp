@@ -497,7 +497,7 @@ void set_data() {
 		result = trim(result);
 		lastDateSpawn = result;
 
-		Entity e = PLAYER::PLAYER_PED_ID();
+		//Entity e = PLAYER::PLAYER_PED_ID();
 		std::string a = (char*)result.c_str();
 		int found_separator = 0;
 		bool found_symbol = false;
@@ -545,7 +545,7 @@ void set_time() {
 		result = trim(result);
 		lastTimeSpawn = result;
 
-		Entity e = PLAYER::PLAYER_PED_ID();
+		//Entity e = PLAYER::PLAYER_PED_ID();
 		std::string a = (char*)result.c_str();
 		int found_separator = 0;
 		bool found_symbol = false;

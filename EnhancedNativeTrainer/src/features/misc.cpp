@@ -365,7 +365,7 @@ bool onconfirm_misc_cutscene_menu(MenuItem<int> choice) {
 			CAM::DESTROY_CAM(CutCam, true);
 			CAM::DESTROY_ALL_CAMS(true);
 		}
-		CAM::DESTROY_ALL_CAMS(true);
+		//CAM::DESTROY_ALL_CAMS(true);
 		CAM::DO_SCREEN_FADE_IN(0);
 		CUTSCENE::STOP_CUTSCENE_IMMEDIATELY();
 		CUTSCENE::REMOVE_CUTSCENE();
@@ -890,7 +890,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		}
 
 		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
-			Vehicle playerVeh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+			playerVeh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 			AUDIO::SET_VEHICLE_RADIO_ENABLED(playerVeh, !featureRadioAlwaysOff);
 		}
 
@@ -981,7 +981,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	
 	// Radio In Police Vehicles
 	if (featurePoliceRadio) {
-		Vehicle playerVeh = PED::GET_VEHICLE_PED_IS_IN(playerPed, 1);
+		playerVeh = PED::GET_VEHICLE_PED_IS_IN(playerPed, 1);
 		Vector3 coords_radio = ENTITY::GET_ENTITY_COORDS(playerVeh, 1);
 		Vector3 coords_radio_2 = ENTITY::GET_ENTITY_COORDS(playerPed, 1);
 		if ((PED::IS_PED_IN_ANY_POLICE_VEHICLE(playerPed) || (GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(coords_radio.x, coords_radio.y, coords_radio.z, coords_radio_2.x, coords_radio_2.y, coords_radio_2.z, false) < 15 && police_radio_check)) 
@@ -1081,12 +1081,12 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			UI::DISPLAY_RADAR(false);
 			featureMiscHideHudUpdated = false;
 		}
-		Vector3 coords;
+		//Vector3 coords;
 		bool blipFound = false;
 		int blipIterator = UI::_GET_BLIP_INFO_ID_ITERATOR(); // search for marker blip
 		for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) {
 			if (UI::GET_BLIP_INFO_ID_TYPE(i) == 4) {
-				coords = UI::GET_BLIP_INFO_ID_COORD(i);
+				//coords = UI::GET_BLIP_INFO_ID_COORD(i);
 				blipFound = true;
 				break;
 			}
@@ -1445,7 +1445,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			int PedHash = GAMEPLAY::GET_HASH_KEY("bot_01b_bit_03"); // prop_wardrobe_door_01
 			Vector3 Ped1Coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(curr_cut_ped, 0.0f, 1.0f, 0.0f);
 			Vector3 Ped2Coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(curr_cut_ped, 0.0f, 2.0f, 0.0f);
-			float PedlookDir = ENTITY::GET_ENTITY_HEADING(curr_cut_ped);
+			//float PedlookDir = ENTITY::GET_ENTITY_HEADING(curr_cut_ped);
 			
 			if (!CAM::DOES_CAM_EXIST(CutCam)) { 
 				const int US_ARR_PED_SIZE = 1024;
@@ -1461,7 +1461,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 						PlayerIndex = PED::GET_PED_BONE_INDEX(curr_cut_ped, 8433);
 						Ped1Coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(curr_cut_ped_me, 0.0f, 1.0f, 0.0f);
 						Ped2Coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(curr_cut_ped_me, 0.0f, 2.0f, 0.0f);
-						PedlookDir = ENTITY::GET_ENTITY_HEADING(curr_cut_ped_me);
+						//PedlookDir = ENTITY::GET_ENTITY_HEADING(curr_cut_ped_me);
 						xaxis = OBJECT::CREATE_OBJECT(PedHash, Ped1Coords.x, Ped1Coords.y, Ped1Coords.z, 1, true, 1);
 						zaxis = OBJECT::CREATE_OBJECT(PedHash, Ped2Coords.x, Ped2Coords.y, Ped2Coords.z, 1, true, 1);
 						ENTITY::SET_ENTITY_VISIBLE(xaxis, false);
@@ -1504,7 +1504,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 								else PlayerIndex = PED::GET_PED_BONE_INDEX(curr_cut_ped, 31086); // 8433
 								Ped1Coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(curr_cut_ped, 0.0f, 1.0f, 0.0f);
 								Ped2Coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(curr_cut_ped, 0.0f, 2.0f, 0.0f);
-								PedlookDir = ENTITY::GET_ENTITY_HEADING(curr_cut_ped);
+								//PedlookDir = ENTITY::GET_ENTITY_HEADING(curr_cut_ped);
 								xaxis = OBJECT::CREATE_OBJECT(PedHash, Ped1Coords.x, Ped1Coords.y, Ped1Coords.z, 1, true, 1);
 								zaxis = OBJECT::CREATE_OBJECT(PedHash, Ped2Coords.x, Ped2Coords.y, Ped2Coords.z, 1, true, 1);
 								ENTITY::SET_ENTITY_VISIBLE(xaxis, false);
@@ -1747,9 +1747,9 @@ void set_hud_hidden(bool hidden){
 	featureMiscHideHudUpdated = true;
 }
 
-void set_hud_shown(bool hidden){
-	featurePhoneShowHud = hidden;
-}
+//void set_hud_shown(bool hidden){
+//	featurePhoneShowHud = hidden;
+//}
 
 bool is_jellman_scenery_enabled(){
 	return featureMiscJellmanScenery;
