@@ -357,7 +357,7 @@ bool onconfirm_misc_freezeradio_menu(MenuItem<int> choice){
 
 bool onconfirm_misc_cutscene_menu(MenuItem<int> choice) {
 	if (choice.value == -1) {
-		for (int i = 0; i <= 33; i++) CONTROLS::ENABLE_ALL_CONTROL_ACTIONS(i);
+		if (GAMEPLAY::GET_MISSION_FLAG() == 0) for (int i = 0; i <= 33; i++) CONTROLS::ENABLE_ALL_CONTROL_ACTIONS(i);
 		OBJECT::DELETE_OBJECT(&xaxis);
 		OBJECT::DELETE_OBJECT(&zaxis);
 		if (CAM::DOES_CAM_EXIST(CutCam)) {
@@ -1402,10 +1402,10 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	// is a cutscene currently playing?
 	if (cutscene_is_playing == true) {
 		con_disabled = true;
-		if (manual_cutscene == true) CONTROLS::DISABLE_ALL_CONTROL_ACTIONS(0);
+		if (manual_cutscene == true && GAMEPLAY::GET_MISSION_FLAG() == 0) CONTROLS::DISABLE_ALL_CONTROL_ACTIONS(0);
 	}
 	else { 
-		if (con_disabled == true && manual_cutscene == true) {
+		if (con_disabled == true && manual_cutscene == true && GAMEPLAY::GET_MISSION_FLAG() == 0) {
 			for (int i = 0; i <= 33; i++) CONTROLS::ENABLE_ALL_CONTROL_ACTIONS(i);
 			con_disabled = false;
 			manual_cutscene = false;
