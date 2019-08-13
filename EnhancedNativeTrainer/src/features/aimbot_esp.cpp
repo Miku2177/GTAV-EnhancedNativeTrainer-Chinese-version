@@ -327,9 +327,10 @@ bool onconfirm_aimbot_esp_menu(MenuItem<int> choice) {
 
 Entity get_ped_in_freeaim() {
 	Entity aimedAt = 0;
+	Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
-	PLAYER::GET_ENTITY_PLAYER_IS_FREE_AIMING_AT(PLAYER::PLAYER_ID(), &aimedAt);
+	PLAYER::GET_ENTITY_PLAYER_IS_FREE_AIMING_AT(player, &aimedAt);
 	Ped targetPed = ENTITY::GET_PED_INDEX_FROM_ENTITY_INDEX(aimedAt);
 
 	bool inSameCar = ENTITY::IS_ENTITY_ATTACHED_TO_ANY_VEHICLE(aimedAt) && (ENTITY::GET_ENTITY_ATTACHED_TO(playerPed) == ENTITY::GET_ENTITY_ATTACHED_TO(aimedAt));
@@ -406,6 +407,7 @@ Entity get_ped_nearest_to_crosshair() {
 void update_aimbot_esp_features() {
 	// common variables
 	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
+	Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	Vector3D playerCam3D(CAM::GET_GAMEPLAY_CAM_COORD());
@@ -420,7 +422,7 @@ void update_aimbot_esp_features() {
 	}
 
 	if (bPlayerExists && aimbotIndex) {
-		if (PLAYER::IS_PLAYER_FREE_AIMING(PLAYER::PLAYER_ID())) {
+		if (PLAYER::IS_PLAYER_FREE_AIMING(player)) {
 
 			if (isTargetLocked == false) {
 				// acquire a new target
