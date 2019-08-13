@@ -56,9 +56,9 @@ void process_airbrake_menu()
 {
 	exitFlag = false;
 
-	//const float lineWidth = 250.0;
-	//const int lineCount = 1;
-	//bool loadedAnims = false;
+	const float lineWidth = 250.0;
+	const int lineCount = 1;
+	bool loadedAnims = false;
 
 	std::string caption = "Airbrake Mode";
 
@@ -76,7 +76,7 @@ void process_airbrake_menu()
 			make_periodic_feature_call();
 			WAIT(0);
 		}
-		//loadedAnims = true;
+		loadedAnims = true;
 	}
 
 	curLocation = ENTITY::GET_ENTITY_COORDS(playerPed, 0);
@@ -259,7 +259,7 @@ void moveThroughDoor()
 	curLocation = ENTITY::GET_ENTITY_COORDS(playerPed, 0);
 	curHeading = ENTITY::GET_ENTITY_HEADING(playerPed);
 
-	forwardPush = 0.6;
+	float forwardPush = 0.6;
 
 	float xVect = forwardPush * sin(degToRad(curHeading)) * -1.0f;
 	float yVect = forwardPush * cos(degToRad(curHeading));
@@ -274,6 +274,7 @@ void airbrake(bool inVehicle)
 {
 	// common variables
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(playerPed);
 
 	//float tmpHeading = curHeading += ;
 
@@ -312,6 +313,10 @@ void airbrake(bool inVehicle)
 	{
 		target = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 	}
+
+	BOOL xBoolParam = 1;
+	BOOL yBoolParam = 1;
+	BOOL zBoolParam = 1;
 
 	ENTITY::SET_ENTITY_VELOCITY(target, 0.0f, 0.0f, 0.0f);
 	ENTITY::SET_ENTITY_ROTATION(target, 0, 0, 0, 0, false);
@@ -429,7 +434,7 @@ void airbrake(bool inVehicle)
 	else {
 		ENTITY::FREEZE_ENTITY_POSITION(target, false);
 		ENTITY::SET_ENTITY_COLLISION(target, 0, 1);
-		ENTITY::SET_ENTITY_COORDS_NO_OFFSET(target, curLocation.x, curLocation.y, curLocation.z, 1, 1, 1);
+		ENTITY::SET_ENTITY_COORDS_NO_OFFSET(target, curLocation.x, curLocation.y, curLocation.z, xBoolParam, yBoolParam, zBoolParam);
 		ENTITY::SET_ENTITY_HEADING(target, curHeading - rotationSpeed);
 	}
 }
@@ -444,8 +449,8 @@ bool is_airbrake_frozen_time()
 	return frozen_time;
 }
 
-//bool mouse_view_con()
-//{
-//	return mouse_view_control;
-//}
+bool mouse_view_con()
+{
+	return mouse_view_control;
+}
 

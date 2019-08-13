@@ -890,6 +890,7 @@ void kill_all_nearby_vehicles_continuous(){
 
 void clear_up_missionised_entitities(){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(playerPed);
 
 	std::deque<ENTTrackedVehicle*>::iterator vit;
 	for(vit = trackedVehicles.begin(); vit != trackedVehicles.end();){

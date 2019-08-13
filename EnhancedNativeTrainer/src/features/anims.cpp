@@ -21918,7 +21918,7 @@ TreeNode* build_anim_tree(std::vector<std::string> input, bool includeAnim)
 
 		for (int i = 0; i < tokens.size(); i++)
 		{
-			token = tokens.at(i);
+			std::string token = tokens.at(i);
 			if (i == tokens.size() - 1)
 			{
 				//if the last node ends in @, add it
@@ -21951,6 +21951,9 @@ TreeNode* build_anim_tree(std::vector<std::string> input, bool includeAnim)
 
 bool onconfirm_anim_menu(MenuItem<int> choice)
 {
+	Player player = PLAYER::PLAYER_ID();
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+
 	switch (choice.value)
 	{
 	case -1:
@@ -21960,7 +21963,7 @@ bool onconfirm_anim_menu(MenuItem<int> choice)
 		case CATEGORY_GENERAL_NOW:
 			break;
 		case CATEGORY_MOVE_IDLE:
-			PED::CLEAR_PED_ALTERNATE_MOVEMENT_ANIM(PLAYER::PLAYER_PED_ID(), 0, true);
+			PED::CLEAR_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 0, true);
 			break;
 		}
 		return false;
@@ -22035,7 +22038,7 @@ bool onconfirm_anim_menu(MenuItem<int> choice)
 			break;
 		}
 
-		do_play_anim(PLAYER::PLAYER_PED_ID(), dict, anim, currentAnimMenuMode);
+		do_play_anim(playerPed, dict, anim, currentAnimMenuMode);
 
 		set_status_text("Animation applied");
 
@@ -22278,7 +22281,7 @@ bool onconfirm_scenarios_menu_l2(MenuItem<int> choice)
 	
 	activeScenarioLineIndex[1] = choice.value;
 
-	//std::vector<MenuItem<int>*> menuItems;
+	std::vector<MenuItem<int>*> menuItems;
 	std::string value;
 	std::string caption;
 	if (activeScenarioLineIndex[0] == 0)
@@ -22372,6 +22375,6 @@ bool process_scenarios_menu_l1()
 	item->value = 1;
 	menuItems.push_back(item);
 
-	draw_generic_menu<int>(menuItems, &activeScenarioLineIndex[0], "Scenarios", onconfirm_scenarios_menu_l1, NULL, NULL, NULL);
+	bool result = draw_generic_menu<int>(menuItems, &activeScenarioLineIndex[0], "Scenarios", onconfirm_scenarios_menu_l1, NULL, NULL, NULL);
 	return false;
 }
