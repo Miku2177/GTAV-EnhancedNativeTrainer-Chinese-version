@@ -1151,7 +1151,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			Hash temp_Hash = -1;
 			Vector3 temp_pos = ENTITY::GET_ENTITY_COORDS(playerPed, true);
 			
-			if (STREAMING::HAS_ANIM_DICT_LOADED(anim_dict) && p_exist == false && CONTROLS::GET_CONTROL_VALUE(0, 9) == 127) {
+			if (STREAMING::HAS_ANIM_DICT_LOADED(anim_dict) && p_exist == false && CONTROLS::GET_CONTROL_VALUE(0, 9) == 127) { // 127 means wheel not turned
 				WAIT(0);
 				AI::TASK_PLAY_ANIM(playerPed, anim_dict, animation_of_d, 8.0, 0.0, -1, 9, 0, 0, 0, 0);
 				if (!ENTITY::DOES_ENTITY_EXIST(temp_obj)) {
@@ -1172,15 +1172,16 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 				p_exist = true;
 			}
 
-			if (CONTROLS::IS_CONTROL_RELEASED(2, 71) && CONTROLS::IS_CONTROL_RELEASED(2, 72) && accel == true) { 
+			if (CONTROLS::IS_CONTROL_RELEASED(2, 71) && CONTROLS::IS_CONTROL_RELEASED(2, 72) && accel == true) { // accelerate/brake
 				AI::STOP_ANIM_TASK(playerPed, anim_dict, animation_of_d, 1.0);
 				CONTROLS::DISABLE_CONTROL_ACTION(2, 71, 1);
 				CONTROLS::DISABLE_CONTROL_ACTION(2, 72, 1);
 				accel = false;
 				p_exist = false;
 			}
+			if (CONTROLS::IS_CONTROL_RELEASED(2, 63) && CONTROLS::IS_CONTROL_RELEASED(2, 64) && CONTROLS::IS_CONTROL_PRESSED(2, 71)) VEHICLE::_SET_BIKE_LEAN_ANGLE(PED::GET_VEHICLE_PED_IS_USING(playerPed), 0, 0);
 			if (CONTROLS::IS_CONTROL_JUST_PRESSED(2, 75) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, 72) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, 63) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, 64) ||
-				(CONTROLS::IS_CONTROL_JUST_PRESSED(2, 71) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, 62) && veh_s.x < 2 && veh_s.y < 2)) {
+				(CONTROLS::IS_CONTROL_JUST_PRESSED(2, 71) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, 62) && veh_s.x < 2 && veh_s.y < 2)) { // exit/brake/left/right/accelerate/down
 				AI::STOP_ANIM_TASK(playerPed, anim_dict, animation_of_d, 1.0);
 				accel = true;
 				p_exist = false;
