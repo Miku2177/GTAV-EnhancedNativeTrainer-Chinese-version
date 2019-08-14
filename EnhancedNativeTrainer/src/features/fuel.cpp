@@ -57,6 +57,9 @@ const Hash SP2_TOTAL_CASH = 0x8D75047D;
 
 int IdleConsume_secs_passed, IdleConsume_secs_curr, IdleConsume_seconds = -1;
 
+Vehicle veh_being_refueled;
+Vehicle veh;
+
 int CarConsumptionIndex = 11;
 bool CarConsumptionChanged = true;
 int BikeConsumptionIndex = 12;
@@ -313,7 +316,10 @@ void fuel()
 
 		// ENTERED VEHICLE
 		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
-			Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
+			if (PED::GET_VEHICLE_PED_IS_IN(playerPed, false) != veh) Car_Refuel = false;
+			veh = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
+			if (Car_Refuel == false) veh_being_refueled = veh;
+
 			float vehspeed = ENTITY::GET_ENTITY_SPEED(veh);
 
 			if (VEHICLES[0] != veh) {
@@ -403,56 +409,6 @@ void fuel()
 					}
 				}
 
-				// BARS
-				if (VEH_FUELBARPOSITION_VALUES[BarPositionIndex] < 3) {
-					GRAPHICS::DRAW_RECT(fuel_bar_x + 0.07, fuel_bar_y, fuel_amount, fuel_bar_h + 0.01, 0, 0, 0, fuelbar_edge_opacity);
-					GRAPHICS::DRAW_RECT(fuel_bar_x + 0.07, fuel_bar_y, fuel_amount, fuel_bar_h, underbar_r, underbar_g, underbar_b, FUEL_COLOURS_R_VALUES[FuelBackground_Opacity_Index]);
-
-					if (FUEL[0] < 0.010) {
-						GRAPHICS::DRAW_RECT(fuel_bar_x + (FUEL[0] / 2), fuel_bar_y, FUEL[0], fuel_bar_h, 220, 20, 20, 255);
-						Fuel_Low = true;
-					}
-					else {
-						GRAPHICS::DRAW_RECT(fuel_bar_x + (FUEL[0] / 2), fuel_bar_y, FUEL[0], fuel_bar_h, bar_colour_r, bar_colour_g, bar_colour_b, 255);
-						Fuel_Low = false;
-					}
-				}
-				else {
-					GRAPHICS::DRAW_RECT(fuel_bar_x, fuel_bar_y + 0.07, 0.009, fuel_amount, 0, 0, 0, fuelbar_edge_opacity);
-					GRAPHICS::DRAW_RECT(fuel_bar_x, fuel_bar_y + 0.07, 0.0055, fuel_amount, underbar_r, underbar_g, underbar_b, FUEL_COLOURS_R_VALUES[FuelBackground_Opacity_Index]);
-
-					if (FUEL[0] < 0.010) {
-						GRAPHICS::DRAW_RECT(fuel_bar_x, (fuel_bar_y + fuel_amount - 0.01) - (FUEL[0] / 2), fuel_bar_h, FUEL[0], 220, 20, 20, 255);
-						Fuel_Low = true;
-					}
-					else {
-						GRAPHICS::DRAW_RECT(fuel_bar_x, (fuel_bar_y + fuel_amount - 0.01) - (FUEL[0] / 2), fuel_bar_h, FUEL[0], bar_colour_r, bar_colour_g, bar_colour_b, 255);
-						Fuel_Low = false;
-					}
-				}
-
-				// GAS STATION REFUELING
-				if (Car_Refuel == true) {
-					if (FUEL[0] < fuel_amount && (outValue_station > 0 || VEH_FUELPRICE_VALUES[FuelPriceIndex] == 0)) {
-						FUEL[0] = FUEL[0] + VEH_REFUELSPEED_VALUES[RefuelingSpeedIndex];
-
-						VEHICLE::SET_VEHICLE_ENGINE_ON(veh, false, false);
-						UI::DISPLAY_CASH(true);
-						STATS::STAT_SET_INT(statHash_station, outValue_station - VEH_FUELPRICE_VALUES[FuelPriceIndex], true);
-						if (stoprefillKey) {
-							VEHICLE::SET_VEHICLE_ENGINE_ON(veh, true, false);
-							Car_Refuel = false;
-						}
-						else {
-							if (outValue_station > 0 && FUEL[0] > (fuel_amount - 0.001)) {
-								FUEL[0] = fuel_amount;
-								VEHICLE::SET_VEHICLE_ENGINE_ON(veh, true, false);
-								Car_Refuel = false;
-							}
-						}
-					}
-				}
-
 				// OUT OF GAS
 				if (FUEL[0] <= 0) {
 					VEHICLE::SET_VEHICLE_ENGINE_ON(veh, false, true);
@@ -495,9 +451,65 @@ void fuel()
 				}
 			}
 		} // entered vehicle
-		else {
-			Car_Refuel = false;
-			Fuel_Low = false;
+		//else {
+		//	Car_Refuel = false;
+		//	Fuel_Low = false;
+		//}
+
+		// BARS
+		if (!VEHICLES.empty() && (Car_Refuel == true || PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) || 
+			(WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_PETROLCAN") && !VEHICLE::IS_THIS_MODEL_A_BICYCLE(ENTITY::GET_ENTITY_MODEL(VEHICLES[0]))))) {
+			if (!FUEL.empty() && VEH_FUELBARPOSITION_VALUES[BarPositionIndex] < 3) {
+				GRAPHICS::DRAW_RECT(fuel_bar_x + 0.07, fuel_bar_y, fuel_amount, fuel_bar_h + 0.01, 0, 0, 0, fuelbar_edge_opacity);
+				GRAPHICS::DRAW_RECT(fuel_bar_x + 0.07, fuel_bar_y, fuel_amount, fuel_bar_h, underbar_r, underbar_g, underbar_b, FUEL_COLOURS_R_VALUES[FuelBackground_Opacity_Index]);
+
+				if (FUEL[0] < 0.010) {
+					GRAPHICS::DRAW_RECT(fuel_bar_x + (FUEL[0] / 2), fuel_bar_y, FUEL[0], fuel_bar_h, 220, 20, 20, 255);
+					Fuel_Low = true;
+				}
+				else {
+					GRAPHICS::DRAW_RECT(fuel_bar_x + (FUEL[0] / 2), fuel_bar_y, FUEL[0], fuel_bar_h, bar_colour_r, bar_colour_g, bar_colour_b, 255);
+					Fuel_Low = false;
+				}
+			}
+			else if (!FUEL.empty()) {
+				GRAPHICS::DRAW_RECT(fuel_bar_x, fuel_bar_y + 0.07, 0.009, fuel_amount, 0, 0, 0, fuelbar_edge_opacity);
+				GRAPHICS::DRAW_RECT(fuel_bar_x, fuel_bar_y + 0.07, 0.0055, fuel_amount, underbar_r, underbar_g, underbar_b, FUEL_COLOURS_R_VALUES[FuelBackground_Opacity_Index]);
+
+				if (FUEL[0] < 0.010) {
+					GRAPHICS::DRAW_RECT(fuel_bar_x, (fuel_bar_y + fuel_amount - 0.01) - (FUEL[0] / 2), fuel_bar_h, FUEL[0], 220, 20, 20, 255);
+					Fuel_Low = true;
+				}
+				else {
+					GRAPHICS::DRAW_RECT(fuel_bar_x, (fuel_bar_y + fuel_amount - 0.01) - (FUEL[0] / 2), fuel_bar_h, FUEL[0], bar_colour_r, bar_colour_g, bar_colour_b, 255);
+					Fuel_Low = false;
+				}
+			}
+		}
+
+		// GAS STATION REFUELING
+		if (!FUEL.empty() && Car_Refuel == true) {
+			if (FUEL[0] < fuel_amount && (outValue_station > 0 || VEH_FUELPRICE_VALUES[FuelPriceIndex] == 0)) {
+				FUEL[0] = FUEL[0] + VEH_REFUELSPEED_VALUES[RefuelingSpeedIndex];
+
+				if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, false, false);
+				else VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, false, true);
+				UI::DISPLAY_CASH(true);
+				STATS::STAT_SET_INT(statHash_station, outValue_station - VEH_FUELPRICE_VALUES[FuelPriceIndex], true);
+				if (stoprefillKey) {
+					if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
+						VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, true, false);
+						Car_Refuel = false;
+					}
+				}
+				else {
+					if (outValue_station > 0 && FUEL[0] > (fuel_amount - 0.001)) {
+						FUEL[0] = fuel_amount;
+						VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, true, false);
+						Car_Refuel = false;
+					}
+				}
+			}
 		}
 
 		// REFUEL USING JERRY CAN
@@ -520,34 +532,6 @@ void fuel()
 						UI::_SET_TEXT_ENTRY("STRING");
 						UI::_ADD_TEXT_COMPONENT_SCALEFORM("HOLD LEFT MOUSE BUTTON TO REFUEL");
 						UI::_DRAW_TEXT(0.015, 0.015);
-
-						// BARS
-						if (VEH_FUELBARPOSITION_VALUES[BarPositionIndex] < 3) {
-							GRAPHICS::DRAW_RECT(fuel_bar_x + 0.07, fuel_bar_y, fuel_amount, fuel_bar_h + 0.01, 0, 0, 0, fuelbar_edge_opacity);
-							GRAPHICS::DRAW_RECT(fuel_bar_x + 0.07, fuel_bar_y, fuel_amount, fuel_bar_h, underbar_r, underbar_g, underbar_b, FUEL_COLOURS_R_VALUES[FuelBackground_Opacity_Index]);
-
-							if (FUEL[0] < 0.010) {
-								GRAPHICS::DRAW_RECT(fuel_bar_x + (FUEL[0] / 2), fuel_bar_y, FUEL[0], fuel_bar_h, 220, 20, 20, 255);
-								Fuel_Low = true;
-							}
-							else {
-								GRAPHICS::DRAW_RECT(fuel_bar_x + (FUEL[0] / 2), fuel_bar_y, FUEL[0], fuel_bar_h, bar_colour_r, bar_colour_g, bar_colour_b, 255);
-								Fuel_Low = false;
-							}
-						}
-						else {
-							GRAPHICS::DRAW_RECT(fuel_bar_x, fuel_bar_y + 0.07, 0.009, fuel_amount, 0, 0, 0, fuelbar_edge_opacity);
-							GRAPHICS::DRAW_RECT(fuel_bar_x, fuel_bar_y + 0.07, 0.0055, fuel_amount, underbar_r, underbar_g, underbar_b, FUEL_COLOURS_R_VALUES[FuelBackground_Opacity_Index]);
-
-							if (FUEL[0] < 0.010) {
-								GRAPHICS::DRAW_RECT(fuel_bar_x, (fuel_bar_y + fuel_amount - 0.01) - (FUEL[0] / 2), fuel_bar_h, FUEL[0], 220, 20, 20, 255);
-								Fuel_Low = true;
-							}
-							else {
-								GRAPHICS::DRAW_RECT(fuel_bar_x, (fuel_bar_y + fuel_amount - 0.01) - (FUEL[0] / 2), fuel_bar_h, FUEL[0], bar_colour_r, bar_colour_g, bar_colour_b, 255);
-								Fuel_Low = false;
-							}
-						}
 
 						if (refill_button && ammo > 0 && (outValue_jerrycan > 0 || VEH_FUELPRICE_VALUES[JerrycanPriceIndex] == 0)) {
 							FUEL[i] = FUEL[i] + VEH_REFUELSPEED_VALUES[RefuelingSpeedIndex];
