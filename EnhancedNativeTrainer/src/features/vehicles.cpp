@@ -553,27 +553,25 @@ void enter_damaged_vehicle() {
 }
 
 void vehicle_anchor() {
-	Player PlayerPehAnchor = PLAYER::PLAYER_PED_ID();
 	if (anchor_dropped == false) {
-		if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_anchor = PED::GET_VEHICLE_PED_IS_USING(PlayerPehAnchor);
+		if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_anchor = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 		if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
 			find_nearest_vehicle();
 			veh_anchor = temp_vehicle;
 		}
 		if (VEHICLE::IS_THIS_MODEL_A_BOAT(ENTITY::GET_ENTITY_MODEL(veh_anchor)) || ENTITY::GET_ENTITY_MODEL(veh_anchor) == GAMEPLAY::GET_HASH_KEY("SUBMERSIBLE") || ENTITY::GET_ENTITY_MODEL(veh_anchor) == GAMEPLAY::GET_HASH_KEY("SUBMERSIBLE2")) {
 			coords_b = ENTITY::GET_ENTITY_COORDS(veh_anchor, true);
-			float height = -1.0;
-			WATER::GET_WATER_HEIGHT(coords_b.x, coords_b.y, coords_b.z, &height);
-			ENTITY::SET_ENTITY_COORDS(veh_anchor, coords_b.x, coords_b.y, height - 1, 1, 0, 0, 1);
 			b_rope = ROPE::ADD_ROPE(coords_b.x, coords_b.y, coords_b.z, 0.0, 0.0, 0.0, 20.0, 4, 20.0, 1.0, 0.0, false, false, false, 5.0, false, NULL);
 			ROPE::START_ROPE_WINDING(b_rope);
 			ROPE::ATTACH_ROPE_TO_ENTITY(b_rope, veh_anchor, coords_b.x, coords_b.y, coords_b.z, 1);
 		}
 	}
 	if (anchor_dropped == true) ROPE::DELETE_ROPE(&b_rope);
-	if (VEHICLE::IS_THIS_MODEL_A_BOAT(ENTITY::GET_ENTITY_MODEL(veh_anchor)) || ENTITY::GET_ENTITY_MODEL(veh_anchor) == GAMEPLAY::GET_HASH_KEY("SUBMERSIBLE") || ENTITY::GET_ENTITY_MODEL(veh_anchor) == GAMEPLAY::GET_HASH_KEY("SUBMERSIBLE2"))
+	if (VEHICLE::IS_THIS_MODEL_A_BOAT(ENTITY::GET_ENTITY_MODEL(veh_anchor)) || ENTITY::GET_ENTITY_MODEL(veh_anchor) == GAMEPLAY::GET_HASH_KEY("SUBMERSIBLE") || ENTITY::GET_ENTITY_MODEL(veh_anchor) == GAMEPLAY::GET_HASH_KEY("SUBMERSIBLE2")) {
 		anchor_dropped = !anchor_dropped;
-
+		if (anchor_dropped) set_status_text("Anchor dropped");
+		else set_status_text("Anchor raised");
+	}
 	WAIT(100);
 }
 
@@ -2500,14 +2498,19 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		float height = -1.0;
 		Vector3 coords_b_m = ENTITY::GET_ENTITY_COORDS(veh_anchor, true);
 		float b_dist_diff = SYSTEM::VDIST(coords_b.x, coords_b.y, coords_b.z, coords_b_m.x, coords_b_m.y, coords_b_m.z);
-		if (b_dist_diff > 5) {
+		WATER::GET_WATER_HEIGHT(coords_b_m.x, coords_b_m.y, coords_b_m.z, &height);
+		if (b_dist_diff > 5 && (coords_b_m.z >= height || ((coords_b_m.z < height) && ((height - coords_b_m.z) < 3)))) {
 			if (coords_b_m.x < coords_b.x) coords_b_m.x = coords_b_m.x + 0.2;
 			if (coords_b_m.x > coords_b.x) coords_b_m.x = coords_b_m.x - 0.2;
 			if (coords_b_m.y < coords_b.y) coords_b_m.y = coords_b_m.y + 0.2;
 			if (coords_b_m.y > coords_b.y) coords_b_m.y = coords_b_m.y - 0.2;
-			WATER::GET_WATER_HEIGHT(coords_b_m.x, coords_b_m.y, coords_b_m.z, &height);
-			ENTITY::SET_ENTITY_COORDS(veh_anchor, coords_b_m.x, coords_b_m.y, height - 1, 1, 0, 0, 1);
+			if (ENTITY::GET_ENTITY_MODEL(veh_anchor) == GAMEPLAY::GET_HASH_KEY("SEASHARK") || ENTITY::GET_ENTITY_MODEL(veh_anchor) == GAMEPLAY::GET_HASH_KEY("SEASHARK2"))
+				ENTITY::SET_ENTITY_COORDS(veh_anchor, coords_b_m.x, coords_b_m.y, height, 1, 0, 0, 1);
+			else if (ENTITY::GET_ENTITY_MODEL(veh_anchor) == GAMEPLAY::GET_HASH_KEY("SUBMERSIBLE") || ENTITY::GET_ENTITY_MODEL(veh_anchor) == GAMEPLAY::GET_HASH_KEY("SUBMERSIBLE2"))
+				ENTITY::SET_ENTITY_COORDS(veh_anchor, coords_b_m.x, coords_b_m.y, height - 3, 1, 0, 0, 1);
+			else ENTITY::SET_ENTITY_COORDS(veh_anchor, coords_b_m.x, coords_b_m.y, height - 1, 1, 0, 0, 1);
 		}
+		if ((coords_b_m.z < height) && ((height - coords_b_m.z) > 2)) ENTITY::SET_ENTITY_COORDS(veh_anchor, coords_b.x, coords_b.y, coords_b.z, 1, 0, 0, 1);
 	}
 
 	//////////////////////////////////////////////////// PLAYER/VEHICLE FORCE SHIELD ////////////////////////////////////////////////////////
