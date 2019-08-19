@@ -62,6 +62,7 @@ bool featureGravityGun = false;
 bool featureFriendlyFire = false;
 bool featureDropWeapon = false;
 bool featureCanDisarmNPC = false;
+bool featurePedNoWeaponDrop = false;
 bool featurePowerPunch = false;
 // Cop Weapons
 bool someonehasgunandshooting = false;
@@ -1262,6 +1263,12 @@ bool process_weapon_menu(){
 	toggleItem->toggleValue = &featureCanDisarmNPC;
 	menuItems.push_back(toggleItem);
 
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Peds Do Not Drop Weapons On Death";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featurePedNoWeaponDrop;
+	menuItems.push_back(toggleItem);
+
 	return draw_generic_menu<int>(menuItems, &activeLineIndexWeapon, caption, onconfirm_weapon_menu, NULL, NULL);
 }
 
@@ -1313,6 +1320,7 @@ void reset_weapon_globals(){
 		featureFriendlyFire =
 		featureDropWeapon = 
 		featureCanDisarmNPC =
+		featurePedNoWeaponDrop =
 		featurePowerPunch =
 		featureSwitchWeaponIfDanger =
 		featurePunchMeleeWeapons =
@@ -1462,9 +1470,9 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		}
 	}
 
-	////////////////////////////////////////////// COPS WEAPON ////////////////////////////////////////
+	////////////////////////////////////////////// COPS WEAPON && PEDS DO NOT DROP WEAPONS ON DEATH ////////////////////////////////////////
 
-	if (featureCopArmedWith) {
+	if (featureCopArmedWith || featurePedNoWeaponDrop) {
 		const int arrSize2 = 1024;
 		Ped cops[arrSize2];
 		int count_cops = worldGetAllPeds(cops, arrSize2);
@@ -1474,8 +1482,10 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		strcpy(currWeapon, WEAPONS_COPARMED_CAPTIONS[CopCurrArmedIndex].c_str());
 		Hash Cop_Weapon = GAMEPLAY::GET_HASH_KEY(currWeapon);
 		
-		if ((PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) <= WEAPONS_COPALARM_VALUES[CopAlarmIndex] || WEAPONS_COPALARM_VALUES[CopAlarmIndex] > 5)) {
+		if ((PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) <= WEAPONS_COPALARM_VALUES[CopAlarmIndex] || WEAPONS_COPALARM_VALUES[CopAlarmIndex] > 5) || featurePedNoWeaponDrop) {
 			for (int i = 0; i < count_cops; i++) {
+				if (featurePedNoWeaponDrop/* ENTITY::GET_ENTITY_HEALTH(cops[i]) > 0 && WEAPON::IS_PED_ARMED(cops[i], 7) && PED::GET_PED_TYPE(cops[i]) == 6*/) WEAPON::SET_PED_DROPS_WEAPONS_WHEN_DEAD(cops[i], false);
+
 				if (featureSwitchWeaponIfDanger && (WEAPONS_COPARMED_CAPTIONS[CopCurrArmedIndex] == "\"WEAPON_UNARMED\"" || WEAPONS_COPARMED_CAPTIONS[CopCurrArmedIndex] == "\"WEAPON_NIGHTSTICK\"" || 
 					WEAPONS_COPARMED_CAPTIONS[CopCurrArmedIndex] == "\"WEAPON_FLASHLIGHT\"" || WEAPONS_COPARMED_CAPTIONS[CopCurrArmedIndex] == "\"WEAPON_KNIFE\"" || WEAPONS_COPARMED_CAPTIONS[CopCurrArmedIndex] == "\"WEAPON_DAGGER\"" ||
 					WEAPONS_COPARMED_CAPTIONS[CopCurrArmedIndex] == "\"WEAPON_HAMMER\"" || WEAPONS_COPARMED_CAPTIONS[CopCurrArmedIndex] == "\"WEAPON_BAT\"" || WEAPONS_COPARMED_CAPTIONS[CopCurrArmedIndex] == "\"WEAPON_GOLFCLUB\"" || 
@@ -1506,8 +1516,8 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 					if ((PED::GET_PED_TYPE(cops[i]) == 6 || PED::GET_PED_TYPE(cops[i]) == 27) && WEAPON::GET_SELECTED_PED_WEAPON(cops[i]) != Cop_Weapon) WEAPON::GIVE_WEAPON_TO_PED(cops[i], Cop_Weapon, 999, false, true);
 					if (featureArmyMelee && PED::GET_PED_TYPE(cops[i]) == 29 && WEAPON::GET_SELECTED_PED_WEAPON(cops[i]) != Cop_Weapon) WEAPON::GIVE_WEAPON_TO_PED(cops[i], Cop_Weapon, 999, false, true);
 				}
-			}
-		}
+			} // end of for
+		} // end of if
 	}
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2131,6 +2141,7 @@ void add_weapon_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featureFriendlyFire", &featureFriendlyFire});
 	results->push_back(FeatureEnabledLocalDefinition{"featureDropWeapon", &featureDropWeapon});
 	results->push_back(FeatureEnabledLocalDefinition{"featureCanDisarmNPC", &featureCanDisarmNPC});
+	results->push_back(FeatureEnabledLocalDefinition{"featurePedNoWeaponDrop", &featurePedNoWeaponDrop});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePowerPunch", &featurePowerPunch});
 	results->push_back(FeatureEnabledLocalDefinition{"featureGiveAllWeapons", &featureGiveAllWeapons});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAddAllWeaponsAttachments", &featureAddAllWeaponsAttachments});
