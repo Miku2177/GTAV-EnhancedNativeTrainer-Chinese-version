@@ -102,6 +102,7 @@ void fuel()
 {
 	if (featureFuel && !CUTSCENE::IS_CUTSCENE_PLAYING()) {
 
+		Player player = PLAYER::PLAYER_ID();
 		Ped playerPed = PLAYER::PLAYER_PED_ID();
 		
 		bool refill_button = IsKeyDown(VK_LBUTTON); // REFUEL KEY FOR JERRY CAN

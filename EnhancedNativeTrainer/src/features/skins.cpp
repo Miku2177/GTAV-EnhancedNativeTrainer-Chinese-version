@@ -234,7 +234,8 @@ bool process_skinchanger_texture_menu(std::string caption)
 	int foundTextures = 0;
 	std::vector<MenuItem<int>*> menuItems;
 
-	Hash model = ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID());
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	Hash model = ENTITY::GET_ENTITY_MODEL(playerPed);
 
 	if (STREAMING::IS_MODEL_IN_CDIMAGE(model) && STREAMING::IS_MODEL_VALID(model))
 	{
@@ -303,7 +304,8 @@ bool process_skinchanger_drawable_menu(std::string caption, int component)
 	int foundTextures = 0;
 	std::vector<MenuItem<int>*> menuItems;
 
-	Hash model = ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID());
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	Hash model = ENTITY::GET_ENTITY_MODEL(playerPed);
 
 	if (STREAMING::IS_MODEL_IN_CDIMAGE(model) && STREAMING::IS_MODEL_VALID(model))
 	{
@@ -372,7 +374,8 @@ bool process_skinchanger_detail_menu()
 
 	int i = 0;
 
-	Hash model = ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID());
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	Hash model = ENTITY::GET_ENTITY_MODEL(playerPed);
 
 	if (STREAMING::IS_MODEL_IN_CDIMAGE(model) && STREAMING::IS_MODEL_VALID(model))
 	{
@@ -469,6 +472,7 @@ bool process_skinchanger_choices_online_npc()
 
 	return draw_generic_menu<std::string>(menuItems, &skinTypesMenuPositionMemory[0], "Online NPC Skins", onconfirm_skinchanger_choices_online_npc, NULL, NULL);
 }
+
 
 /*
 * ===============
@@ -776,7 +780,8 @@ bool onconfirm_props_texture_menu(MenuItem<int> choice)
 
 void onhighlight_props_texture_menu(MenuItem<int> choice)
 {
-	PED::SET_PED_PROP_INDEX(PLAYER::PLAYER_PED_ID(), skinPropsCategoryValue, skinPropsDrawablePosition[skinPropsCategoryValue]-1, choice.value, 0);
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	PED::SET_PED_PROP_INDEX(playerPed, skinPropsCategoryValue, skinPropsDrawablePosition[skinPropsCategoryValue]-1, choice.value, 0);
 }
 
 bool process_prop_texture_menu()
@@ -804,7 +809,8 @@ bool process_prop_texture_menu()
 		menuItems.push_back(item);
 	}
 
-	int lastTexturePosition = PED::GET_PED_PROP_TEXTURE_INDEX(PLAYER::PLAYER_PED_ID(), skinPropsCategoryValue);
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	int lastTexturePosition = PED::GET_PED_PROP_TEXTURE_INDEX(playerPed, skinPropsCategoryValue);
 	return draw_generic_menu<int>(menuItems, &lastTexturePosition, "Available Textures", onconfirm_props_texture_menu, onhighlight_props_texture_menu, NULL);
 }
 
@@ -1126,7 +1132,11 @@ bool spawn_saved_skin(int slot, std::string caption)
 
 void save_current_skin(int slot)
 {
-	if (ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()))
+	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
+	Player player = PLAYER::PLAYER_ID();
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+
+	if (bPlayerExists)
 	{
 		std::ostringstream ss;
 		if (slot != -1)
@@ -1144,7 +1154,7 @@ void save_current_skin(int slot)
 		{
 			ENTDatabase* database = get_database();
 			
-			if (database->save_skin(PLAYER::PLAYER_PED_ID(), result, slot))
+			if (database->save_skin(playerPed, result, slot))
 			{
 				activeSavedSkinSlotName = result;
 				set_status_text("Saved skin");

@@ -41,11 +41,17 @@ void onhighlight_neon_lights_selection(MenuItem<int> choice){
 }
 
 bool onconfirm_neon_lights_selection(MenuItem<int> choice){
-	if(!ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID())){
+	// common variables
+	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
+
+	if(!bPlayerExists){
 		return true;
 	}
 
-	if(!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)){
+	Player player = PLAYER::PLAYER_ID();
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+
+	if(!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
 		set_status_text("~r~Error:~r~ Player isn't in a vehicle");
 		return true;
 	}
@@ -70,7 +76,7 @@ void set_neonLights(bool applied, std::vector<int> extras){
 	int loc = extras.at(0);
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 	int rCol = 0, gCol = 0, bCol = 0;
-	//bool lightFound = false;
+	bool lightFound = false;
 
 	if(!is_this_a_car(veh) && !is_this_a_motorcycle(veh)){
 		set_status_text("~r~Error:~r~ Can't add neon lights to this vehicle");
@@ -173,11 +179,17 @@ bool onconfirm_neon_menu(MenuItem<int> choice){
 
 
 bool process_neon_lights_menu(){
-	if(!ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID())){
+	// common variables
+	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
+
+	if(!bPlayerExists){
 		return false;
 	}
 
-	if(!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)){
+	Player player = PLAYER::PLAYER_ID();
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+
+	if(!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
 		set_status_text("Player isn't in a vehicle");
 		return false;
 	}

@@ -76,6 +76,7 @@ void engine_can_degrade()
 {
 	if (featureEngineDegrade && GAMEPLAY::GET_MISSION_FLAG() == 0) {
 
+		Player player = PLAYER::PLAYER_ID();
 		Ped playerPed = PLAYER::PLAYER_PED_ID();
 		
 		// CHECK IF ARRAY IS NOT EMPTY

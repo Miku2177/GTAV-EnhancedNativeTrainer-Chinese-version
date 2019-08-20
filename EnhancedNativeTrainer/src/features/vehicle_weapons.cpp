@@ -319,11 +319,18 @@ void play_explosion(Entity ent)
 }
 
 bool onconfirm_veh_weapons_menu(MenuItem<int> choice){
-	if (!ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID())){
+	// common variables
+	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
+	Player player = PLAYER::PLAYER_ID();
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+
+
+	if (!bPlayerExists){
 		return true;
 	}
+
 	
-	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0))
+	if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0))
 	{
 		set_status_text("Player isn't in a vehicle");
 		return true;
