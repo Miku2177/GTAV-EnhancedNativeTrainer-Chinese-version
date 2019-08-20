@@ -890,7 +890,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		}
 
 		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
-			playerVeh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+			Vehicle playerVeh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 			AUDIO::SET_VEHICLE_RADIO_ENABLED(playerVeh, !featureRadioAlwaysOff);
 		}
 
@@ -981,7 +981,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	
 	// Radio In Police Vehicles
 	if (featurePoliceRadio) {
-		playerVeh = PED::GET_VEHICLE_PED_IS_IN(playerPed, 1);
+		Vehicle playerVeh = PED::GET_VEHICLE_PED_IS_IN(playerPed, 1);
 		Vector3 coords_radio = ENTITY::GET_ENTITY_COORDS(playerVeh, 1);
 		Vector3 coords_radio_2 = ENTITY::GET_ENTITY_COORDS(playerPed, 1);
 		if ((PED::IS_PED_IN_ANY_POLICE_VEHICLE(playerPed) || (GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(coords_radio.x, coords_radio.y, coords_radio.z, coords_radio_2.x, coords_radio_2.y, coords_radio_2.z, false) < 15 && police_radio_check)) 
@@ -1748,9 +1748,9 @@ void set_hud_hidden(bool hidden){
 	featureMiscHideHudUpdated = true;
 }
 
-//void set_hud_shown(bool hidden){
-//	featurePhoneShowHud = hidden;
-//}
+void set_hud_shown(bool hidden){
+	featurePhoneShowHud = hidden;
+}
 
 bool is_jellman_scenery_enabled(){
 	return featureMiscJellmanScenery;

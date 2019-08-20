@@ -341,8 +341,9 @@ void invincibility_switching(){
 }
 
 void engineonoff_switching() {
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	Vehicle veh = -1;
-	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
+	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
 		find_nearest_vehicle();
 		veh = temp_vehicle;
@@ -357,8 +358,9 @@ void engineonoff_switching() {
 }
 
 void engine_damage() {
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	Vehicle veh3 = -1;
-	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh3 = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
+	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh3 = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
 		find_nearest_vehicle();
 		veh3 = temp_vehicle;
@@ -368,8 +370,9 @@ void engine_damage() {
 }
 
 void engine_kill(){
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	Vehicle veh2 = -1;
-	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh2 = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
+	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh2 = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
 		find_nearest_vehicle();
 		veh2 = temp_vehicle;
@@ -1174,6 +1177,8 @@ bool onconfirm_playerForceshield_menu(MenuItem<int> choice) {
 }
 
 bool process_player_life_menu(){
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+
 	std::vector<MenuItem<int> *> menuItems;
 	std::string caption = "Player Data";
 	
@@ -1241,6 +1246,8 @@ bool process_player_life_menu(){
 }
 
 bool maxwantedlevel_menu() {
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+
 	std::vector<MenuItem<int> *> menuItems;
 	std::string caption = "Wanted Level Options";
 
@@ -1295,6 +1302,8 @@ bool maxwantedlevel_menu() {
 }
 
 bool mostwanted_menu() {
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+
 	std::vector<MenuItem<int> *> menuItems;
 	std::string caption = "Wanted Fugitive Options";
 
@@ -1331,6 +1340,8 @@ bool mostwanted_menu() {
 }
 
 bool player_movement_speed() {
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+
 	std::vector<MenuItem<int> *> menuItems;
 	std::string caption = "Player Movement Speed Options";
 
@@ -1373,6 +1384,8 @@ bool player_movement_speed() {
 }
 
 bool process_ragdoll_menu() {
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+
 	std::vector<MenuItem<int> *> menuItems;
 	std::string caption = "Ragdoll Options";
 
@@ -1403,6 +1416,8 @@ bool process_ragdoll_menu() {
 }
 
 bool process_player_prison_menu(){
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+
 	std::vector<MenuItem<int> *> menuItems;
 	std::string caption = "Prison Break Options";
 
@@ -1462,6 +1477,8 @@ bool process_player_prison_menu(){
 }
 
 bool process_player_forceshield_menu() {
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+
 	std::vector<MenuItem<int> *> menuItems;
 	std::string caption = "Jedi Powers Options";
 
@@ -2438,11 +2455,12 @@ bool get_all_graphics_test(std::vector<int> extras){
 }
 
 bool onconfirm_testmenu(MenuItem<int> choice){
+	Ped ped = PLAYER::PLAYER_PED_ID();
 	Hash hash = GAMEPLAY::GET_HASH_KEY("WEAPON_NIGHTSTICK");
 	DWORD start = GetTickCount();
 	for(int i = 0; i < 100000; i++){
 		Hash hash;
-		WEAPON::GET_CURRENT_PED_WEAPON(PLAYER::PLAYER_PED_ID(), &hash, true);
+		WEAPON::GET_CURRENT_PED_WEAPON(ped, &hash, true);
 	}
 	DWORD end = GetTickCount();
 	std::ostringstream ss;

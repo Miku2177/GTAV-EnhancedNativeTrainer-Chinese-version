@@ -37,10 +37,10 @@ SpawnedPropInstance currentProp;
 
 Camera propCamera;
 
-//void exit_prop_placer_if_showing()
-//{
-//	pp_exit_flag = true;
-//}
+void exit_prop_placer_if_showing()
+{
+	pp_exit_flag = true;
+}
 
 void begin_prop_placement(SpawnedPropInstance prop)
 {

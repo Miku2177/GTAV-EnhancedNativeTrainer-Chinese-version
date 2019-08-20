@@ -143,8 +143,7 @@ bool featureLightIntensityChanged = true;
 
 bool onconfirm_weather_menu(MenuItem<std::string> choice)
 {
-	std::stringstream ss; 
-	ss << "Weather Frozen at: " << lastWeatherName;
+	std::stringstream ss; ss << "Weather Frozen at: " << lastWeatherName;
 	switch (choice.currentMenuIndex)
 	{
 	case 0:
@@ -157,7 +156,7 @@ bool onconfirm_weather_menu(MenuItem<std::string> choice)
 		{
 			GRAPHICS::_CLEAR_CLOUD_HAT();
 			GAMEPLAY::SET_WEATHER_TYPE_NOW((char *)lastWeather.c_str());
-			ss << "Weather frozen at: " << lastWeatherName;
+			std::stringstream ss; ss << "Weather frozen at: " << lastWeatherName;
 			set_status_text(ss.str());
 		}
 		else if (!featureWeatherFreeze)
@@ -236,8 +235,7 @@ void process_weather_menu()
 
 bool onconfirm_clouds_menu(MenuItem<std::string> choice)
 {
-	std::stringstream ss; 
-	ss << "Clouds Frozen at: " << lastCloudsName;
+	std::stringstream ss; ss << "Clouds Frozen at: " << lastCloudsName;
 	switch (choice.currentMenuIndex)
 	{
 	case 0:
@@ -632,9 +630,9 @@ void reset_world_globals()
 	featureMPMap = false;
 
 	featureWorldRandomCops =
-	featureWorldRandomTrains =
-	featureWorldRandomBoats =
-	featureWorldGarbageTrucks =
+		featureWorldRandomTrains =
+		featureWorldRandomBoats =
+		featureWorldGarbageTrucks =
 	featureWorldNoTrafficUpdated = 
 	featureZancudoMapUpdated =
 	featureWorldGarbageTrucksUpdated =
@@ -1493,17 +1491,22 @@ void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* r
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldRandomTrains", &featureWorldRandomTrains, &featureWorldRandomTrainsUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldRandomBoats", &featureWorldRandomBoats, &featureWorldRandomBoatsUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldGarbageTrucks", &featureWorldGarbageTrucks, &featureWorldGarbageTrucksUpdated });
+		
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWeatherFreeze", &featureWeatherFreeze });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureCloudsNo", &featureCloudsNo });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureCloudsFreeze", &featureCloudsFreeze });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureBlackout", &featureBlackout, &featureBlackoutUpdated });
+
 	results->push_back(FeatureEnabledLocalDefinition{ "featureRestrictedZones", &featureRestrictedZones });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoPeds", &featureWorldNoPeds }); 
+
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoFireTruck", &featureWorldNoFireTruck });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoAmbulance", &featureWorldNoAmbulance });
+
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoTraffic", &featureWorldNoTraffic, &featureWorldNoTrafficUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNoPlanesHelis", &featureNoPlanesHelis });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNoAnimals", &featureNoAnimals });
+
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNoMinimapRot", &featureNoMinimapRot });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNoWaypoint", &featureNoWaypoint });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNoPoliceBlips", &featureNoPoliceBlips }); 
@@ -1514,6 +1517,7 @@ void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* r
 	results->push_back(FeatureEnabledLocalDefinition{ "featureAcidWater", &featureAcidWater }); 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureAcidRain", &featureAcidRain }); 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureReducedGripVehiclesIfSnow", &featureReducedGripVehiclesIfSnow }); 
+
 	results->push_back(FeatureEnabledLocalDefinition{ "featureSnow", &featureSnow, &featureSnowUpdated });
 }
 
@@ -1530,6 +1534,7 @@ void add_world_feature_enablements2(std::vector<StringPairSettingDBRow>* results
 	results->push_back(StringPairSettingDBRow{ "RadarMapIndex", std::to_string(RadarMapIndex) });
 	results->push_back(StringPairSettingDBRow{ "WorldWavesIndex", std::to_string(WorldWavesIndex) });
 	results->push_back(StringPairSettingDBRow{ "featureLightIntensityIndex", std::to_string(featureLightIntensityIndex) });
+
 	results->push_back(StringPairSettingDBRow{ "WindStrengthIndex", std::to_string(WindStrengthIndex) });
 	results->push_back(StringPairSettingDBRow{ "DamagedVehiclesIndex", std::to_string(DamagedVehiclesIndex) });
 	results->push_back(StringPairSettingDBRow{ "NPCVehicleSpeedIndex", std::to_string(NPCVehicleSpeedIndex) });
