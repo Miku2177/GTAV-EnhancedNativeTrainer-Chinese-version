@@ -144,7 +144,7 @@ const char* CLIPSET_DRUNK = "move_m@drunk@verydrunk";
 const std::vector<std::string> GRAVITY_CAPTIONS{"Minimum", "0.1x", "0.5x", "0.75x", "1x (Normal)"};
 const float GRAVITY_VALUES[] = { 0.0f, 0.1f, 0.5f, 0.75f, 1.0f };
 
-const std::vector<std::string> REGEN_CAPTIONS{"Minimum", "0.1x", "0.25x", "0.5x", "1x (Normal)", "2x", "5x", "10x", "20x", "50x", "100x", "200x", "500x", "1000x"};
+const std::vector<std::string> REGEN_CAPTIONS{"OFF", "0.1x", "0.25x", "0.5x", "1x (Normal)", "2x", "5x", "10x", "20x", "50x", "100x", "200x", "500x", "1000x"};
 const std::vector<float> REGEN_VALUES{0.0f, 0.1f, 0.25f, 0.5f, 1.0f, 2.0f, 5.0f, 10.0f, 20.0f, 50.0f, 100.0f, 200.0f, 500.0f, 1000.0f};
 int current_regen_speed = 4;
 bool current_regen_speed_changed = true;
@@ -199,6 +199,11 @@ void onchange_player_health_mode(int value, SelectFromListMenuItem* source){
 void onchange_player_armor_mode(int value, SelectFromListMenuItem* source){
 	current_player_armor = value;
 	current_player_armor_Changed = true;
+}
+
+void onchange_regen_callback(int value, SelectFromListMenuItem* source) {
+	current_regen_speed = value;
+	current_regen_speed_changed = true;
 }
 
 void onchange_player_stats_mode(int value, SelectFromListMenuItem* source) {
@@ -1031,10 +1036,11 @@ void update_features(){
 	}
 		
 	// Player Movement Speed
-	if (PLAYER_MOVEMENT_VALUES[current_player_movement] > 0.00) {
-		PED::SET_PED_MOVE_RATE_OVERRIDE(playerPed, PLAYER_MOVEMENT_VALUES[current_player_movement]);
-	}
-	
+	if (PLAYER_MOVEMENT_VALUES[current_player_movement] > 0.00) PED::SET_PED_MOVE_RATE_OVERRIDE(playerPed, PLAYER_MOVEMENT_VALUES[current_player_movement]);
+		
+	// Health Regeneration Rate
+	if (ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()) && REGEN_VALUES[current_regen_speed] != 1.0f) PLAYER::SET_PLAYER_HEALTH_RECHARGE_MULTIPLIER(PLAYER::PLAYER_ID(), REGEN_VALUES[current_regen_speed]);
+
 	// Player Invisible && Player Invisible In Vehicle
 	if ((!featurePlayerInvisible && !featurePlayerInvisibleInVehicle && p_invisible == true) || (featurePlayerInvisibleInVehicle && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && p_invisible == true)) {
 		ENTITY::SET_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID(), true);
@@ -1119,18 +1125,6 @@ bool getFrozenWantedFeature(){
 void updateFrozenWantedFeature(int level){
 	frozenWantedLevel = level;
 	featureWantedLevelFrozenUpdated = true;
-}
-
-void onchange_regen_callback(int index, SelectFromListMenuItem *source){
-	current_regen_speed = index;
-	current_regen_speed_changed = true;
-
-	if(ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID())){
-		PLAYER::SET_PLAYER_HEALTH_RECHARGE_MULTIPLIER(PLAYER::PLAYER_ID(), REGEN_VALUES.at(current_regen_speed = index));
-		std::ostringstream ss;
-		ss << "Health regeneration rate: " << REGEN_VALUES.at(current_regen_speed);
-		set_status_text(ss.str());
-	}
 }
 
 bool onconfirm_playerData_menu(MenuItem<int> choice){
@@ -1226,6 +1220,7 @@ bool process_player_life_menu(){
 	menuItems.push_back(listItem);
 	
 	listItem = new SelectFromListMenuItem(REGEN_CAPTIONS, onchange_regen_callback);
+	listItem->wrap = false;
 	listItem->caption = "Health Regeneration Rate";
 	listItem->value = current_regen_speed;
 	menuItems.push_back(listItem);

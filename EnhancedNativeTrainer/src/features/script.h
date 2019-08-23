@@ -114,6 +114,8 @@ void onchange_player_health_mode(int value, SelectFromListMenuItem* source);
 
 void onchange_player_armor_mode(int value, SelectFromListMenuItem* source);
 
+void onchange_regen_callback(int value, SelectFromListMenuItem* source);
+
 void onchange_player_stats_mode(int value, SelectFromListMenuItem* source);
 
 void onchange_player_prison_mode(int value, SelectFromListMenuItem* source);
