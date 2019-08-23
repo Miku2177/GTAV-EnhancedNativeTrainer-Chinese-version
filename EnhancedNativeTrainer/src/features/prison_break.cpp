@@ -23,6 +23,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #pragma warning(disable : 4244 4305) // double <-> float conversions
 
 // prison break variables
+bool riot_attempt = false;
 int tick_callpoliceaboutfugitive = 0;
 bool detained, in_prison = false;
 bool will_pay_money_for_escape = false;
@@ -146,19 +147,9 @@ void prison_break()
 				ADDITIONAL_PRISONERS.clear();
 				ADDITIONAL_PRISONERS.shrink_to_fit();
 			}
-		}
-
-		// IMPRISONED
-		if (in_prison) {
-			Hash JailGuard_Weapon1 = GAMEPLAY::GET_HASH_KEY("WEAPON_PISTOL");
-			if (!featurePrison_Hardcore) JailGuard_Weapon2 = GAMEPLAY::GET_HASH_KEY("WEAPON_ASSAULTRIFLE");
-			if (featurePrison_Hardcore) JailGuard_Weapon2 = GAMEPLAY::GET_HASH_KEY("WEAPON_SNIPERRIFLE");
-			Hash JailGuard_Weapon3 = GAMEPLAY::GET_HASH_KEY("WEAPON_STUNGUN");
-			Vector3 guard_position_in_prison = ENTITY::GET_ENTITY_COORDS(guards[0], true);
-			int randomize_jail = -1;
 
 			// Money for escape attempt
-			if (will_pay_money_for_escape == true) { // alert_level > 0 && time_before_get_to_prison > 0 && time_before_get_to_prison < 6000 && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID())
+			if (will_pay_money_for_escape == true && time_before_get_to_prison > 0 && time_before_get_to_prison < 6000) { // alert_level > 0 && time_before_get_to_prison > 0 && time_before_get_to_prison < 6000 && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID())
 				// How much money have you got?
 				int outValue_your_current_amount = -1;
 				int statHash_your_purse = -1;
@@ -182,18 +173,33 @@ void prison_break()
 				}
 				will_pay_money_for_escape = false;
 			}
+		}
+
+		// IMPRISONED
+		if (in_prison) {
+			Hash JailGuard_Weapon1 = GAMEPLAY::GET_HASH_KEY("WEAPON_PISTOL");
+			if (!featurePrison_Hardcore) JailGuard_Weapon2 = GAMEPLAY::GET_HASH_KEY("WEAPON_ASSAULTRIFLE");
+			if (featurePrison_Hardcore) JailGuard_Weapon2 = GAMEPLAY::GET_HASH_KEY("WEAPON_SNIPERRIFLE");
+			Hash JailGuard_Weapon3 = GAMEPLAY::GET_HASH_KEY("WEAPON_STUNGUN");
+			Vector3 guard_position_in_prison = ENTITY::GET_ENTITY_COORDS(guards[0], true);
+			int randomize_jail = -1;
+
+			if (alert_level == 0) {
+				riot_attempt = false;
+				will_pay_money_for_escape = false;
+			}
 
 			// Populate the prison
 			if (featurePrison_Yard) {
 				TIME::SET_CLOCK_TIME(12, 0, 0);
-				if (populate_tick < 15) {
+				if (populate_tick < 10) {
 					pb_tick_secs_passed = clock() / CLOCKS_PER_SEC;
 					if (((clock() / (CLOCKS_PER_SEC / 1000)) - pb_tick_secs_curr) != 0) {
 						populate_tick = populate_tick + 1;
 						pb_tick_secs_curr = pb_tick_secs_passed;
 					}
 				}
-				if (populate_tick > 5 && populate_tick < 15) {
+				if (populate_tick > 5 && populate_tick < 10) {
 					int randomize_peds_in_jail_rot = (1 + rand() % 90);
 					int randomize_peds_in_jail_x1 = (1 + rand() % 40);
 					int randomize_peds_in_jail_y1 = (1 + rand() % 60);
@@ -777,12 +783,19 @@ void prison_break()
 			}
 		}
 
+		if (alert_level > 0 && riot_attempt == false && detained == false) {
+			will_pay_money_for_escape = true;
+			riot_attempt = true;
+
+		}
+		if (alert_level == 0) riot_attempt = false;
+
 		if (((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 12) ||
 			(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 1) ||
 			(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 5)) && (detained == true/* || alert_level > 0*/) &&
 			time_before_get_to_prison > 6000) will_pay_money_for_escape = true; 
 		
-		if (detained == false/* && alert_level == 0*//* && in_prison == false*/) will_pay_money_for_escape = false;
+		if (detained == false && alert_level == 0/* && in_prison == false*/) will_pay_money_for_escape = false;
 	}
 }
 

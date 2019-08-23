@@ -21797,6 +21797,145 @@ const std::vector<std::string> ALL_ANIMS =
 	"weapons@unarmed walk_additive_forward",
 	"weapons@unarmed walk_additive_left",
 	"weapons@unarmed walk_additive_right"
+	// restored animations
+	"anim@heists@heist_safehouse_intro@phone phone_intro_facial",
+	"anim@heists@heist_safehouse_intro@phone_couch@female phone_couch_female_part_one_facial",
+	"anim@heists@heist_safehouse_intro@phone_couch@female phone_couch_female_part_two_facial",
+	"anim@heists@heist_safehouse_intro@phone_couch@male phone_couch_male_facial",
+	"anim@heists@heist_safehouse_intro@phone_couch@male phone_couch_male_idle_facial",
+	"anim@heists@heist_safehouse_intro@phone_couch@male phone_couch_male_part_one_facial",
+	"anim@heists@heist_safehouse_intro@phone_couch@male phone_couch_male_part_two_facial",
+	"anim@heists@heist_safehouse_intro@whisky@window whisky_window_idle_facial",
+	"anim@heists@heist_safehouse_intro@whisky@window whisky_window_part_one_facial",
+	"anim@heists@heist_safehouse_intro@whisky@window whisky_window_part_two_facial",
+	"anim@heists@heist_safehouse_intro@wine@window wine_window_idle",
+	"anim@heists@heist_safehouse_intro@wine@window wine_window_part_one_facial",
+	"anim@heists@heist_safehouse_intro@wine@window wine_window_part_two_facial",
+	"anim@mp_player_intcelebrationfemale@dj dj_facial",
+	"anim@mp_player_intcelebrationfemale@dock dock_facial",
+	"anim@mp_player_intcelebrationfemale@knuckle_crunch knuckle_crunch_facial",
+	"anim@mp_player_intcelebrationfemale@thumbs_up thumbs_up_facial",
+	"anim@mp_player_intcelebrationfemale@wave wave_facial",
+	"anim@mp_player_intcelebrationmale@air_synth air_synth_facial",
+	"anim@mp_player_intcelebrationmale@dj dj_facial",
+	"anim@mp_player_intcelebrationmale@dock dock_facial",
+	"anim@mp_player_intcelebrationmale@knuckle_crunch knuckle_crunch_facial",
+	"anim@mp_player_intcelebrationpaired@f_f_backslap backslap_left_facial",
+	"anim@mp_player_intcelebrationpaired@f_f_backslap backslap_right_facial",
+	"anim@mp_player_intcelebrationpaired@f_f_bro_hug bro_hug_right_facial",
+	"anim@mp_player_intcelebrationpaired@f_f_cowering cowering_left_facial",
+	"anim@mp_player_intcelebrationpaired@f_f_cowering cowering_right_facial",
+	"anim@mp_player_intcelebrationpaired@f_f_fist_bump fist_bump_left_facial",
+	"anim@mp_player_intcelebrationpaired@f_f_fist_bump fist_bump_right_facial",
+	"anim@mp_player_intcelebrationpaired@f_f_high_five high_five_left_facial",
+	"anim@mp_player_intcelebrationpaired@f_f_high_five high_five_right_facial",
+	"anim@mp_player_intcelebrationpaired@f_f_manly_handshake manly_handshake_left_facial",
+	"anim@mp_player_intcelebrationpaired@f_f_manly_handshake manly_handshake_right_facial",
+	"anim@mp_player_intcelebrationpaired@f_f_sarcastic sarcastic_left_facial",
+	"anim@mp_player_intcelebrationpaired@f_f_sarcastic sarcastic_right_facial",
+	"anim@mp_player_intcelebrationpaired@f_m_bro_hug bro_hug_left_facial",
+	"anim@mp_player_intcelebrationpaired@f_m_cowering cowering_left_facial",
+	"anim@mp_player_intcelebrationpaired@f_m_cowering cowering_right_facial",
+	"anim@mp_player_intcelebrationpaired@f_m_fist_bump fist_bump_left_facial",
+	"anim@mp_player_intcelebrationpaired@f_m_fist_bump fist_bump_right_facial",
+	"anim@mp_player_intcelebrationpaired@f_m_high_five high_five_left_facial",
+	"anim@mp_player_intcelebrationpaired@f_m_high_five high_five_right_facial",
+	"anim@mp_player_intcelebrationpaired@f_m_manly_handshake manly_handshake_left_facial",
+	"anim@mp_player_intcelebrationpaired@f_m_manly_handshake manly_handshake_right_facial",
+	"anim@mp_player_intcelebrationpaired@f_m_sarcastic sarcastic_left_facial",
+	"anim@mp_player_intcelebrationpaired@f_m_sarcastic sarcastic_right_facial",
+	"anim@mp_player_intcelebrationpaired@m_m_backslap backslap_left_facial",
+	"anim@mp_player_intcelebrationpaired@m_m_backslap backslap_right_facial",
+	"anim@mp_player_intcelebrationpaired@m_m_bro_hug bro_hug_right_facial",
+	"anim@mp_player_intcelebrationpaired@m_m_cowering cowering_left_facial",
+	"anim@mp_player_intcelebrationpaired@m_m_cowering cowering_right_facial",
+	"anim@mp_player_intcelebrationpaired@m_m_fist_bump fist_bump_right_facial",
+	"anim@mp_player_intcelebrationpaired@m_m_high_five high_five_left_facial",
+	"anim@mp_player_intcelebrationpaired@m_m_high_five high_five_right_facial",
+	"anim@mp_player_intcelebrationpaired@m_m_manly_handshake manly_handshake_right_facial",
+	"anim@mp_player_intcelebrationpaired@m_m_sarcastic sarcastic_left_facial",
+	"anim@mp_player_intcelebrationpaired@m_m_sarcastic sarcastic_right_facial",
+	"mini@golfreactions@generic@ swing_react_bad_01_facial",
+	"mini@golfreactions@generic@ swing_react_bad_02_facial",
+	"mini@golfreactions@generic@ swing_react_good_01_facial",
+	"mini@golfreactions@generic@ swing_react_good_02_facial",
+	"mini@golfreactions@michael@clubs react_win_club_02_michael_facial",
+	"mini@golfreactions@michael@clubs react_win_club_03_michael_facial",
+	"mini@tennisexit@trevor tennis_outro_trevor_facial",
+	"missbigscore2aig_2 check_id_guy_facial",
+	"missbigscore2aig_2 check_id_player0_facial",
+	"missexile2 take_down_bad_guy_facial",
+	"missexile3@train_ ex03_attack_driver_outro_driver_facial",
+	"missfam1_yachtbattleonyacht01_ onyacht_fight02intro_thug_facial",
+	"missfam1_yachtbattleonyacht01_ onyacht_fight02loop_thug_facial",
+	"missfam5leadinoutmcs_5 leadout_dealer_facial",
+	"missfbi2@leadinout fbi_2_int_leadout_action_andreas_facial",
+	"missfbi2@leadinout fbi_2_int_leadout_action_steve_facial",
+	"missfbi2cuts interrogation_b_facial",
+	"missfbi2cuts interrogation_c_facial",
+	"missfbi3_camcrew first_action_cman_facial",
+	"missfbi3_camcrew first_action_gal_facial",
+	"missfbi3_camcrew first_action_guy_facial",
+	"missfbi3_camcrew first_action_prod_facial",
+	"missfbi3_camcrew first_action_sman_facial",
+	"missfbi3_waterboard waterboard_kick_player_facial",
+	"missfbi3_waterboard waterboard_loop_player_facial",
+	"missfbi3_waterboard waterboard_loop_to_ready_player_facial",
+	"missfbi3_waterboard waterboard_loop_to_ready_victim_facial",
+	"missfbi3_waterboard waterboard_loop_victim_facial",
+	"missfbi3_waterboard waterboard_ready_loop_victim_facial",
+	"missfbi3_waterboard waterboard_ready_to_loop_player_facial",
+	"missfbi3_waterboard waterboard_ready_to_loop_victim_facial",
+	"missfbi4 push_agents_agent2_facial",
+	"missfinale_c2mcs_1 fin_c2_mcs_1_camman_facial",
+	"missheistpaletoscore2mcs_2_p6 empty_safe_exit_gunman_facial",
+	"misslester1aig_3main air_guitar_01_b_facial",
+	"misslester1aig_4exit air_guitar_02_exit_a_facial",
+	"misslester1aig_4exit air_guitar_02_exit_b_facial",
+	"misslester1aig_4exit air_guitar_02_exit_boss_facial",
+	"misslester1aig_4exit air_guitar_02_exitloop_a_facial",
+	"misslester1aig_4exit air_guitar_02_exitloop_b_facial",
+	"misslester1aig_4exit air_guitar_02_exitloop_boss_facial",
+	"misslester1aig_4main air_guitar_02_a_facial",
+	"misslester1aig_4main air_guitar_02_b_facial",
+	"misslester1aig_4main air_guitar_02_boss_facial",
+	"misslester1aig_7main interview_boss_facial",
+	"missmic2@goon1 goon_meatslicer_facial",
+	"missmic2ig_11 mic_2_ig_11_intro_goon_facial",
+	"missprologueig_1 main_brad_facial",
+	"missprologueig_1 main_femalehostage_facial",
+	"missprologueig_1 main_gaurd_facial",
+	"missprologueig_4@hold_head_base hold_head_loop_base_guard_facial",
+	"missprologueleadinoutpro_mcs_5_p3 leadout_action_brad_facial",
+	"misstrevor1ig_7 ortega_06_fall_back_into_trailer_facial",
+	"random@nigel@1c take_collar_dogfacial",
+	"safe@franklin@ig_13 blunt_base_facial",
+	"safe@franklin@ig_13 blunt_interrupt_facial",
+	"special_ped@mountain_dancer@monologue_1@monologue_1a mtn_dnc_if_you_want_to_get_to_heaven_facial",
+	"switch@franklin@002110_04_magd_3_weed_exchange 002110_04_magd_3_weed_exchange_franklin_facial",
+	"switch@franklin@cleaning_apt 001918_01_fras_v2_1_cleaning_apt_exit_facial",
+	"switch@franklin@tanisha_argue tanisha_argue_tanisha_facial",
+	"switch@michael@amanda_exits_car 000606_02_mics1_5_amanda_exits_car_exit_ama_facial",
+	"switch@michael@around_the_table_selfish around_the_table_selfish_jimmy_facial",
+	"switch@michael@dropping_off_jmy 001839_02_mics3_20_dropping_off_jmy_exit_jmy_facial",
+	"switch@michael@gets_ready 001520_02_mics3_14_gets_ready_exit_ama_facial",
+	"switch@michael@on_sofa exit_jimmy_facial",
+	"switch@michael@parkbench_smoke_ranger parkbench_smoke_ranger_exit_ranger_facial",
+	"switch@michael@rejected_entry 001396_01_mics3_6_rejected_entry_exit_bouncer_facial",
+	"switch@michael@restaurant 001510_02_gc_mics3_ig_1_exit_amanda_facial",
+	"switch@michael@talks_to_guard 001393_02_mics3_3_talks_to_guard_exit_guard_facial",
+	"switch@michael@tracy_exits_car 001840_01_mics3_ig_21_tracy_exits_car_tra_facial",
+	"switch@michael@tv_w_kids 001520_02_mics3_14_tv_w_kids_exit_jmy_facial",
+	"switch@michael@tv_w_kids 001520_02_mics3_14_tv_w_kids_exit_trc_facial",
+	"switch@trevor@block_camera 001220_03_gc_trvs_ig_7_exit_generic_facial",
+	"switch@trevor@bridge throw_exit_victim_facial",
+	"switch@trevor@escorted_out 001215_02_trvs_12_escorted_out_exit_guard1_facial",
+	"switch@trevor@escorted_out 001215_02_trvs_12_escorted_out_exit_guard2_facial",
+	"switch@trevor@ko_neighbour 001500_03_trvs_19_ko_neighbour_exit_nbr_facial",
+	"switch@trevor@pushes_bodybuilder 001426_03_trvs_5_pushes_bodybuilder_exit_bb1_facial",
+	"switch@trevor@rude_at_cafe 001218_03_trvs_23_rude_at_cafe_exit_female_facial",
+	"switch@trevor@throw_food exit_ped_facial",
+//
 //#endif
 };
 
@@ -21962,8 +22101,20 @@ bool onconfirm_anim_menu(MenuItem<int> choice)
 		case CATEGORY_FACIAL_NOW:
 		case CATEGORY_GENERAL_NOW:
 			break;
+		case CATEGORY_FACIAL_IDLE:
+			PED::CLEAR_FACIAL_IDLE_ANIM_OVERRIDE(playerPed);
+			break;
 		case CATEGORY_MOVE_IDLE:
 			PED::CLEAR_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 0, true);
+			break;
+		case CATEGORY_MOVE_WALK:
+			PED::CLEAR_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 1, true);
+			break;
+		case CATEGORY_MOVE_RUN:
+			PED::CLEAR_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 2, true);
+			break;
+		case CATEGORY_MOVE_CLIPSET:
+			PED::RESET_PED_MOVEMENT_CLIPSET(playerPed, 1.0f);
 			break;
 		}
 		return false;
@@ -21987,8 +22138,11 @@ bool onconfirm_anim_menu(MenuItem<int> choice)
 		switch (currentAnimMenuMode)
 		{
 			case CATEGORY_FACIAL_NOW:
+			case CATEGORY_FACIAL_IDLE:
 			case CATEGORY_GENERAL_NOW:
 			case CATEGORY_MOVE_IDLE:
+			case CATEGORY_MOVE_WALK:
+			case CATEGORY_MOVE_RUN:
 			{
 				if (STREAMING::DOES_ANIM_DICT_EXIST(dict))
 				{
@@ -22073,7 +22227,12 @@ bool process_anims_menu()
 			currentMenuNode = facialsNode;
 			break;
 		case CATEGORY_MOVE_IDLE:
+		case CATEGORY_MOVE_WALK:
+		case CATEGORY_MOVE_RUN:
 			currentMenuNode = movementNode;
+			break;
+		case CATEGORY_MOVE_CLIPSET:
+			currentMenuNode = movementClipsetNode;
 			break;
 		case CATEGORY_GENERAL_NOW:
 		default:
@@ -22091,6 +22250,9 @@ bool process_anims_menu()
 		{
 		case CATEGORY_FACIAL_IDLE: //facial delay
 		case CATEGORY_MOVE_IDLE:
+		case CATEGORY_MOVE_WALK:
+		case CATEGORY_MOVE_RUN:
+		case CATEGORY_MOVE_CLIPSET:
 			addClearItem = true;
 			break;
 		}
@@ -22131,8 +22293,20 @@ bool process_anims_menu()
 	case CATEGORY_GENERAL_NOW:
 		caption = "Player Anims";
 		break;
+	case CATEGORY_FACIAL_IDLE: //facial delay
+		caption = "Facial Idle Anims";
+		break;
 	case CATEGORY_MOVE_IDLE:
 		caption = "Idle Anims";
+		break;
+	case CATEGORY_MOVE_WALK:
+		caption = "Walking Anims";
+		break;
+	case CATEGORY_MOVE_CLIPSET:
+		caption = "Movement Clipsets";
+		break;
+	case CATEGORY_MOVE_RUN:
+		caption = "Running Anims";
 		break;
 	}
 
@@ -22179,8 +22353,32 @@ bool process_anims_menu_top()
 
 	item = new MenuItem<int>();
 	item->isLeaf = false;
+	item->caption = "Facial Anims: Idle";
+	item->value = CATEGORY_FACIAL_IDLE;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->isLeaf = false;
 	item->caption = "Movement Anims";
 	item->value = CATEGORY_MOVE_IDLE;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->isLeaf = false;
+	item->caption = "Movement Clipsets";
+	item->value = CATEGORY_MOVE_CLIPSET;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->isLeaf = false;
+	item->caption = "Movement Anims: Walking";
+	item->value = CATEGORY_MOVE_WALK;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->isLeaf = false;
+	item->caption = "Movement Anims: Running";
+	item->value = CATEGORY_MOVE_RUN;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
@@ -22238,11 +22436,23 @@ void do_play_anim(Ped playerPed, char* dict, char* anim, int mode)
 	case CATEGORY_FACIAL_NOW:
 		PED::PLAY_FACIAL_ANIM(playerPed, anim, dict);
 		break;
+	case CATEGORY_FACIAL_IDLE:
+		PED::SET_FACIAL_IDLE_ANIM_OVERRIDE(playerPed, anim, dict);
+		break;
 	case CATEGORY_GENERAL_NOW:
 		AI::TASK_PLAY_ANIM(playerPed, dict, anim, 8, -8, -1, 0, 0, false, 0, true); 
 		break;
 	case CATEGORY_MOVE_IDLE:
 		PED::SET_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 0, dict, anim, 0, true);
+		break;
+	case CATEGORY_MOVE_WALK:
+		PED::SET_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 1, dict, anim, 0, true);
+		break;
+	case CATEGORY_MOVE_RUN:
+		PED::SET_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 2, dict, anim, 0, true);
+		break;
+	case CATEGORY_MOVE_CLIPSET:
+		PED::SET_PED_MOVEMENT_CLIPSET(playerPed, dict, 1.0f);
 		break;
 	}
 }
