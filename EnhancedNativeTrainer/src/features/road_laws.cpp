@@ -729,16 +729,20 @@ void road_laws()
 				}
 				if (Stop_seconds_final == 20 && STREAMING::DOES_ANIM_DICT_EXIST("amb@code_human_in_car_mp_actions@gang_sign_b@low@ds@base") && !ENTITY::HAS_ENTITY_ANIM_FINISHED(cop_that_fines_you, "amb@code_human_in_car_mp_actions@gang_sign_b@low@ds@base", "enter", 3)) {
 					if (!AUDIO::IS_AMBIENT_SPEECH_PLAYING(cop_that_fines_you)) AUDIO::_PLAY_AMBIENT_SPEECH1(cop_that_fines_you, "GENERIC_BYE", "SPEECH_PARAMS_FORCE_SHOUTED");
-					Vector3 t_coords = ENTITY::GET_ENTITY_COORDS(cop_that_fines_you, true);
-					Vector3 t_rot = ENTITY::GET_ENTITY_ROTATION(cop_that_fines_you, 2);
-					STREAMING::REQUEST_ANIM_DICT("franklin_1_int-7");
-					while (!STREAMING::HAS_ANIM_DICT_LOADED("franklin_1_int-7")) WAIT(0);
-					if (!ENTITY::IS_ENTITY_PLAYING_ANIM(cop_that_fines_you, "franklin_1_int-7", "player_one_dual-7", 3))
-						AI::TASK_PLAY_ANIM_ADVANCED(cop_that_fines_you, "franklin_1_int-7", "player_one_dual-7", t_coords.x, t_coords.y, t_coords.z, t_rot.x, t_rot.y, t_rot.z + 20, 8.0, 0.0, -1, 9, 0.8, 0, 0); // 0.8
+					STREAMING::REQUEST_ANIM_DICT("misscommon@response");
+					while (!STREAMING::HAS_ANIM_DICT_LOADED("misscommon@response")) WAIT(0);
+					AI::TASK_PLAY_ANIM(cop_that_fines_you, "misscommon@response", "screw_you", 8.0, 0.0, -1, 9, 0, 0, 0, 0);
+					//Vector3 t_coords = ENTITY::GET_ENTITY_COORDS(cop_that_fines_you, true);
+					//Vector3 t_rot = ENTITY::GET_ENTITY_ROTATION(cop_that_fines_you, 2);
+					//STREAMING::REQUEST_ANIM_DICT("franklin_1_int-7");
+					//while (!STREAMING::HAS_ANIM_DICT_LOADED("franklin_1_int-7")) WAIT(0);
+					//if (!ENTITY::IS_ENTITY_PLAYING_ANIM(cop_that_fines_you, "franklin_1_int-7", "player_one_dual-7", 3))
+					//	AI::TASK_PLAY_ANIM_ADVANCED(cop_that_fines_you, "franklin_1_int-7", "player_one_dual-7", t_coords.x, t_coords.y, t_coords.z, t_rot.x, t_rot.y, t_rot.z + 20, 8.0, 0.0, -1, 9, 0.8, 0, 0); // 0.8
 				}
-				if (Stop_seconds_final == 21) { // 22
+				if (Stop_seconds_final == 22) { // 21
 					if (!AUDIO::IS_AMBIENT_SPEECH_PLAYING(cop_that_fines_you)) AUDIO::STOP_CURRENT_PLAYING_AMBIENT_SPEECH(cop_that_fines_you);
-					AI::STOP_ANIM_TASK(cop_that_fines_you, "franklin_1_int-7", "player_one_dual-7", 1.0);
+					AI::STOP_ANIM_TASK(cop_that_fines_you, "misscommon@response", "screw_you", 1.0);
+					//AI::STOP_ANIM_TASK(cop_that_fines_you, "franklin_1_int-7", "player_one_dual-7", 1.0);
 				}
 			}
 
