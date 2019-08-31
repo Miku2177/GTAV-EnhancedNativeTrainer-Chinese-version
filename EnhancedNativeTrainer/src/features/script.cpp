@@ -590,14 +590,7 @@ void update_features(){
 
 	// No Whistling For Taxi
 	if (NoTaxiWhistling && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID())) {
-		//Vector3 my_coords = ENTITY::GET_ENTITY_COORDS(playerPed, true);
-		//BOOL hit = false;
-		//Vector3 endCoords = ENTITY::GET_ENTITY_COORDS(playerPed, true);
-		//Vector3 surfaceNormal = ENTITY::GET_ENTITY_COORDS(playerPed, true);
-		//Entity entityHit = ENTITY::DOES_ENTITY_EXIST(playerPed);
-		//int temp1 = WORLDPROBE::_START_SHAPE_TEST_RAY(my_coords.x, my_coords.y, my_coords.z, my_coords.x, my_coords.y, my_coords.z + 2000, -1, playerPed, 1);
-		//WORLDPROBE::GET_SHAPE_TEST_RESULT(temp1, &hit, &endCoords, &surfaceNormal, &entityHit);
-		/*if (INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(my_coords.x, my_coords.y, my_coords.z) && hit == 0)*/ CONTROLS::DISABLE_CONTROL_ACTION(2, 51, 1);
+		CONTROLS::DISABLE_CONTROL_ACTION(2, 51, 1);
 	}
 	
 	// Levitation
