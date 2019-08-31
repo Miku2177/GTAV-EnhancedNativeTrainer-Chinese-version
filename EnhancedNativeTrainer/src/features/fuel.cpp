@@ -38,6 +38,8 @@ bool Fuel_Low = false;
 bool show_blips = true;
 bool phone_blips = false;
 
+bool exiting_v = false;
+
 Blip blip[32];
 std::vector<Vehicle> VEHICLES;
 std::vector<float> FUEL;
@@ -451,7 +453,7 @@ void fuel()
 					}
 				}
 			}
-		} // entered vehicle
+		} // enf of entered vehicle
 		//else {
 		//	Car_Refuel = false;
 		//	Fuel_Low = false;
@@ -498,6 +500,7 @@ void fuel()
 
 		// GAS STATION REFUELING
 		if (!FUEL.empty() && Car_Refuel == true) {
+			if (CONTROLS::IS_CONTROL_JUST_PRESSED(2, 75) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) exiting_v = true;
 			if (FUEL[0] < fuel_amount && (outValue_station > 0 || VEH_FUELPRICE_VALUES[FuelPriceIndex] == 0)) {
 				FUEL[0] = FUEL[0] + VEH_REFUELSPEED_VALUES[RefuelingSpeedIndex];
 
@@ -505,7 +508,7 @@ void fuel()
 				else VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, false, true);
 				UI::DISPLAY_CASH(true);
 				STATS::STAT_SET_INT(statHash_station, outValue_station - VEH_FUELPRICE_VALUES[FuelPriceIndex], true);
-				if (stoprefillKey) {
+				if (stoprefillKey && exiting_v == false) {
 					if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
 						VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, true, false);
 						Car_Refuel = false;
@@ -520,6 +523,8 @@ void fuel()
 				}
 			}
 		}
+
+		if (PED::IS_PED_ON_FOOT(playerPed)) exiting_v = false;
 
 		// REFUEL USING JERRY CAN
 		if (!VEHICLES.empty() && WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_PETROLCAN") && !VEHICLE::IS_THIS_MODEL_A_BICYCLE(ENTITY::GET_ENTITY_MODEL(VEHICLES[0]))) {
