@@ -589,7 +589,7 @@ void update_features(){
 	}
 
 	// No Whistling For Taxi
-	if (NoTaxiWhistling && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID())) {
+	if (NoTaxiWhistling && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID()) && !UI::IS_HELP_MESSAGE_BEING_DISPLAYED()) {
 		CONTROLS::DISABLE_CONTROL_ACTION(2, 51, 1);
 	}
 	
