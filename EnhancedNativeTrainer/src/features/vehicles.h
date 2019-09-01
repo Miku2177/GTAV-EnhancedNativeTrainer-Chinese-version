@@ -71,6 +71,9 @@ extern int speedCityLimiterIndex;
 extern bool speedCityLimiterChanged;
 extern int speedCountryLimiterIndex;
 extern bool speedCountryLimiterChanged;
+extern Vehicle veh_l;
+extern bool featureLockVehicleDoors;
+extern bool featureLockVehicleDoorsUpdated;
 
 /***
 * METHODS
