@@ -100,6 +100,7 @@ bool window_roll, interior_lights, veh_searching, veh_alarm, veh_brake_toggle, v
 int lights = -1, highbeams = -1;
 
 Vehicle vehicle_been_used = -1;
+Vehicle veh_l = -1;
 
 bool steered_left, steered_right = false;
 Vehicle veh_steering;
@@ -494,7 +495,7 @@ void vehicle_set_alarm() {
 
 void doorslocked_switching() {
 	featureLockVehicleDoors = !featureLockVehicleDoors;
-	featureLockVehicleDoorsUpdated = true;
+	//featureLockVehicleDoorsUpdated = true;
 	if (featureLockVehicleDoors) set_status_text("Doors Locked");
 	else set_status_text("Doors Unlocked");
 	WAIT(100);
@@ -701,19 +702,9 @@ bool onconfirm_vehdoor_menu(MenuItem<int> choice){
 			VEHICLE::CLOSE_BOMB_BAY_DOORS(veh);
 		}
 	}
-	else if(choice.value == -4)//lock doors
-	{
-		if(bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){  
-			Vehicle veh = -1;
-			if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
-			if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
-				find_nearest_vehicle();
-				veh = temp_vehicle;
-			}
-
-			VEHICLE::SET_VEHICLE_DOORS_LOCKED(veh, featureLockVehicleDoors);
-		}
-	}
+	//else if(choice.value == -4)//lock doors
+	//{
+	//}
 	else if (choice.value == -5)//driver window roll
 	{
 		process_window_roll(); 
@@ -851,7 +842,7 @@ bool process_veh_door_menu(){
 	toggleItem->caption = "Lock Vehicle Doors";
 	toggleItem->value = -4;
 	toggleItem->toggleValue = &featureLockVehicleDoors;
-	toggleItem->toggleValueUpdated = &featureLockVehicleDoorsUpdated;
+	//toggleItem->toggleValueUpdated = &featureLockVehicleDoorsUpdated;
 	menuItems.push_back(toggleItem);
 
 	std::vector<MenuItem<int>*> menuItemsRoll;
@@ -2366,21 +2357,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		}
 	}
 
-	//Lock player vehicle doors
-	if (featureLockVehicleDoorsUpdated){
-		if (bPlayerExists && !featureLockVehicleDoors){
-			Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
-			VEHICLE::SET_VEHICLE_DOORS_LOCKED(veh, 0);
-			PED::SET_PED_CAN_BE_DRAGGED_OUT(playerPed, true);
-		}
-		featureLockVehicleDoorsUpdated = false;
-	}
-	if (featureLockVehicleDoors){
-		Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
-		VEHICLE::SET_VEHICLE_DOORS_LOCKED(veh, 4);
-		PED::SET_PED_CAN_BE_DRAGGED_OUT(playerPed, false);
-	}
-
 	// Hotkey for Seats
 	if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) currseat = -1;
 
@@ -3667,7 +3643,7 @@ void reset_vehicle_globals() {
 		featureAutoalarm =
 		featureVehLightsOn = false;
 
-	featureLockVehicleDoorsUpdated = true;
+	featureLockVehicleDoorsUpdated = false;
 	featureDeleteTrackedVehicles_CharacterChanged = true;
 		featureBlipNumber = true;
 		featureWearHelmetOffUpdated = true;

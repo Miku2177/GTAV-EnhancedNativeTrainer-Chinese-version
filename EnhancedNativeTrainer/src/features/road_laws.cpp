@@ -998,7 +998,7 @@ void most_wanted()
 			}
 		}
 
-		if ((PLAYER::GET_TIME_SINCE_LAST_DEATH() > 0 && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 5000) || (Bad_ass != temp) || in_prison == true) {
+		if ((PLAYER::GET_TIME_SINCE_LAST_DEATH() > 0 && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 5000) || (PLAYER::GET_TIME_SINCE_LAST_ARREST() > 0 && PLAYER::GET_TIME_SINCE_LAST_ARREST() < 5000) || (Bad_ass != temp) || in_prison == true) {
 			VEH_CRIME.clear();
 			VEH_CRIME.shrink_to_fit();
 			CLOTHES_BODY_CRIME.clear();

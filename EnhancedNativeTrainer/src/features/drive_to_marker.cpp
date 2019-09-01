@@ -104,7 +104,7 @@ void drive_to_marker()
 				WAIT(1000);
 			}
 			
-			if (VEHICLE::IS_VEHICLE_SEAT_FREE(curr_veh, 0) || Passenger_Driver == playerPed)	PED::SET_PED_INTO_VEHICLE(me_at_the_wheel, curr_veh, 0);
+			if (VEHICLE::IS_VEHICLE_SEAT_FREE(curr_veh, 0) || Passenger_Driver == playerPed) PED::SET_PED_INTO_VEHICLE(me_at_the_wheel, curr_veh, 0);
 			else {
 				set_status_text("Couldn't make room for your chauffeur");
 				return;

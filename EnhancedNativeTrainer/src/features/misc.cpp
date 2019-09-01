@@ -12,6 +12,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "script.h"
 #include "hotkeys.h"
 #include "world.h"
+#include "vehicles.h"
 #include <Psapi.h>
 #include "..\ui_support\menu_functions.h"
 
@@ -1195,6 +1196,26 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			accel = false;
 			p_exist = false;
 		} 
+	}
+
+	//Lock player vehicle doors
+	if (featureLockVehicleDoors) {
+		if (featureLockVehicleDoorsUpdated == false) {
+			if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_l = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+			if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
+				find_nearest_vehicle();
+				veh_l = temp_vehicle;
+			}
+			VEHICLE::SET_VEHICLE_DOORS_LOCKED(veh_l, 4);
+		}
+		featureLockVehicleDoorsUpdated = true;
+		PED::SET_PED_CAN_BE_DRAGGED_OUT(playerPed, false); // VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh_l, -1)
+	}
+	if (!featureLockVehicleDoors && featureLockVehicleDoorsUpdated == true) {
+		VEHICLE::SET_VEHICLE_DOORS_LOCKED(veh_l, 0);
+		PED::SET_PED_CAN_BE_DRAGGED_OUT(playerPed, true);
+
+		featureLockVehicleDoorsUpdated = false;
 	}
 
 	// DYNAMIC HEALTH BAR
