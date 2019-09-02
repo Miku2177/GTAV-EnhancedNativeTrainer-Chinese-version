@@ -1209,11 +1209,11 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			VEHICLE::SET_VEHICLE_DOORS_LOCKED(veh_l, 4);
 		}
 		featureLockVehicleDoorsUpdated = true;
-		PED::SET_PED_CAN_BE_DRAGGED_OUT(playerPed, false); // VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh_l, -1)
+		PED::SET_PED_CAN_BE_DRAGGED_OUT(VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh_l, -1), false);
 	}
 	if (!featureLockVehicleDoors && featureLockVehicleDoorsUpdated == true) {
 		VEHICLE::SET_VEHICLE_DOORS_LOCKED(veh_l, 0);
-		PED::SET_PED_CAN_BE_DRAGGED_OUT(playerPed, true);
+		PED::SET_PED_CAN_BE_DRAGGED_OUT(VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh_l, -1), true);
 
 		featureLockVehicleDoorsUpdated = false;
 	}
