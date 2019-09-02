@@ -2503,10 +2503,10 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		float b_dist_diff = SYSTEM::VDIST(coords_b.x, coords_b.y, coords_b.z, coords_b_m.x, coords_b_m.y, coords_b_m.z);
 		WATER::GET_WATER_HEIGHT(coords_b_m.x, coords_b_m.y, coords_b_m.z, &height);
 		if (b_dist_diff > 5 && (coords_b_m.z >= height || ((coords_b_m.z < height) && ((height - coords_b_m.z) < 3)))) {
-			if (coords_b_m.x < coords_b.x) coords_b_m.x = coords_b_m.x + 0.2;
-			if (coords_b_m.x > coords_b.x) coords_b_m.x = coords_b_m.x - 0.2;
-			if (coords_b_m.y < coords_b.y) coords_b_m.y = coords_b_m.y + 0.2;
-			if (coords_b_m.y > coords_b.y) coords_b_m.y = coords_b_m.y - 0.2;
+			if (coords_b_m.x < coords_b.x) coords_b_m.x = coords_b_m.x + 0.1; // 0.2
+			if (coords_b_m.x > coords_b.x) coords_b_m.x = coords_b_m.x - 0.1; // 0.2
+			if (coords_b_m.y < coords_b.y) coords_b_m.y = coords_b_m.y + 0.1; // 0.2
+			if (coords_b_m.y > coords_b.y) coords_b_m.y = coords_b_m.y - 0.1; // 0.2
 			if (ENTITY::GET_ENTITY_MODEL(veh_anchor) == GAMEPLAY::GET_HASH_KEY("SEASHARK") || ENTITY::GET_ENTITY_MODEL(veh_anchor) == GAMEPLAY::GET_HASH_KEY("SEASHARK2"))
 				ENTITY::SET_ENTITY_COORDS(veh_anchor, coords_b_m.x, coords_b_m.y, height, 1, 0, 0, 1);
 			else if (ENTITY::GET_ENTITY_MODEL(veh_anchor) == GAMEPLAY::GET_HASH_KEY("SUBMERSIBLE") || ENTITY::GET_ENTITY_MODEL(veh_anchor) == GAMEPLAY::GET_HASH_KEY("SUBMERSIBLE2"))
