@@ -1408,7 +1408,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		featureWeaponInfiniteParachutesUpdated = false;
 	}
 
-	if(bPlayerExists && featureWeaponInfiniteParachutes){
+	if(bPlayerExists && featureWeaponInfiniteParachutes && detained == false && in_prison == false){
 		int pState = PED::GET_PED_PARACHUTE_STATE(playerPed);
 		//unarmed or falling - don't try and give p/chute to player already using one, crashes game
 		if(pState == -1 || pState == 3){
@@ -1649,7 +1649,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	}
 
 	// Give All Weapons Automatically
-	if (featureGiveAllWeapons && detained == false) {
+	if (featureGiveAllWeapons && detained == false && in_prison == false) {
 		w_tick_secs_passed = clock() / CLOCKS_PER_SEC;
 		if (((clock() / (CLOCKS_PER_SEC / 1000)) - w_tick_secs_curr) != 0) {
 			tick_allw = tick_allw + 1;
@@ -1669,7 +1669,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	}
 	
 	// Add All Weapons Attachments Automatically
-	if (featureAddAllWeaponsAttachments && detained == false) {
+	if (featureAddAllWeaponsAttachments && detained == false && in_prison == false) {
 		w_tick_secs_passed = clock() / CLOCKS_PER_SEC;
 		if (((clock() / (CLOCKS_PER_SEC / 1000)) - w_a_tick_secs_curr) != 0) {
 			tick_a_allw = tick_a_allw + 1;
