@@ -803,8 +803,10 @@ void update_features(){
 				PED::SET_PED_MAX_HEALTH(playerPed, 200);
 				ENTITY::SET_ENTITY_HEALTH(playerPed, 200);
 			}
-			PLAYER::SET_PLAYER_MAX_ARMOUR(playerPed, PLAYER_ARMOR_VALUES[current_player_armor]);
-			PED::SET_PED_ARMOUR(playerPed, PLAYER_ARMOR_VALUES[current_player_armor]);
+			if (detained == false && in_prison == false) {
+				PLAYER::SET_PLAYER_MAX_ARMOUR(playerPed, PLAYER_ARMOR_VALUES[current_player_armor]);
+				PED::SET_PED_ARMOUR(playerPed, PLAYER_ARMOR_VALUES[current_player_armor]);
+			}
 			oldplayerPed = playerPed;
 			tick = 0;
 			featurePlayerLifeUpdated = false;
