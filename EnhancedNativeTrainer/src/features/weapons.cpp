@@ -70,6 +70,8 @@ bool someonehasgunandshooting = false;
 Ped shooting_criminal = -1;
 //
 
+int s_vacuum_secs_passed, s_vacuum_secs_curr, vacuum_seconds = 0;
+
 Ped temp_nearest_ped = -1;
 bool force_nearest_ped = false;
 
@@ -1221,7 +1223,7 @@ bool process_weapon_menu(){
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Vacuum Grenades";
+	toggleItem->caption = "Sucking Grenades";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureWeaponVacuumGrenades;
 	toggleItem->toggleValueUpdated = NULL;
@@ -1391,9 +1393,14 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		}
 	}
 
-	// Vacuum Grenades
+	// Sucking Grenades
 	if (featureWeaponVacuumGrenades) {
-		if (WEAPON::GET_SELECTED_PED_WEAPON(playerPed) != GAMEPLAY::GET_HASH_KEY("WEAPON_GRENADELAUNCHER")) set_status_text("Equip the ~g~ Grenade Launcher");
+		s_vacuum_secs_passed = clock() / CLOCKS_PER_SEC;
+		if (((clock() / CLOCKS_PER_SEC) - s_vacuum_secs_curr) != 0) {
+			vacuum_seconds = vacuum_seconds + 1;
+			s_vacuum_secs_curr = s_vacuum_secs_passed;
+		}
+		if (vacuum_seconds < 16 && WEAPON::GET_SELECTED_PED_WEAPON(playerPed) != GAMEPLAY::GET_HASH_KEY("WEAPON_GRENADELAUNCHER")) set_status_text("Equip the ~g~ Grenade Launcher");
 		Vector3 obj_cor = ENTITY::GET_ENTITY_COORDS(playerPed, TRUE);
 		float c_x, c_y, c_z = 0.0;
 		const int array_g = 1024;
@@ -1401,56 +1408,82 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		int count_g = worldGetAllObjects(objects_g, array_g);
 		for (int i = 0; i < count_g; i++) {
 			Hash grenade = ENTITY::GET_ENTITY_MODEL(objects_g[i]);
-			if (grenade == 0x741FD3C4) { // (grenade == 0x1152354B ||
+			if (/*grenade == 0x1152354B || */grenade == 0x741FD3C4) { 
 				Vector3 gr_cor = ENTITY::GET_ENTITY_COORDS(objects_g[i], TRUE);
 				Vector3 me_cor = ENTITY::GET_ENTITY_COORDS(playerPed, TRUE);
 				float dist = GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(me_cor.x, me_cor.y, me_cor.z, gr_cor.x, gr_cor.y, gr_cor.z, TRUE);
 				if (dist > 199) OBJECT::DELETE_OBJECT(&objects_g[i]);
-				if (/*ENTITY::IS_ENTITY_IN_AIR(objects_g[i]) &&*/ dist > 1.0 && dist < 200) {
+				if (/*ENTITY::IS_ENTITY_IN_AIR(objects_g[i]) && */dist > 1.0 && dist < 200) {
 					const int arrSize_bl = 1024;
 					Ped surr_p_peds[arrSize_bl];
 					int count_surr_p_peds = worldGetAllPeds(surr_p_peds, arrSize_bl);
 					c_x, c_y, c_z = 0.0;
 					for (int j = 0; j < count_surr_p_peds; j++) {
 						obj_cor = ENTITY::GET_ENTITY_COORDS(surr_p_peds[j], TRUE);
-						if (obj_cor.x > gr_cor.x) c_x = -0.5; // 0.5
-						else c_x = 0.5;
-						if (obj_cor.y > gr_cor.y) c_y = -0.5;
-						else c_y = 0.5;
+						if (obj_cor.x > gr_cor.x) c_x = -1.5; // 0.5
+						else c_x = 1.5;
+						if (obj_cor.y > gr_cor.y) c_y = -1.5;
+						else c_y = 1.5;
 						if (obj_cor.z > gr_cor.z) c_z = -0.5;
 						else c_z = 0.5;
-						if (surr_p_peds[j] != PLAYER::PLAYER_PED_ID()) {
-							if (PED::IS_PED_FLEEING(surr_p_peds[j]) || AI::IS_PED_RUNNING(surr_p_peds[j])) AI::TASK_SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(surr_p_peds[j], true);
-							PED::SET_PED_CAN_RAGDOLL(surr_p_peds[j], true);
-							PED::SET_PED_TO_RAGDOLL(surr_p_peds[j], 1500, 1500, 1, true, true, false);
+						if (surr_p_peds[j] != PLAYER::PLAYER_PED_ID() && surr_p_peds[j] != objects_g[i]) {
+							if (!PED::IS_PED_RAGDOLL(surr_p_peds[j])) {
+								AI::TASK_SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(surr_p_peds[j], true);
+								PED::SET_PED_CAN_RAGDOLL(surr_p_peds[j], true);
+								PED::SET_PED_TO_RAGDOLL(surr_p_peds[j], 1500, 1500, 1, true, true, false);
+							}
 							ENTITY::APPLY_FORCE_TO_ENTITY(surr_p_peds[j], 1, c_x, c_y, c_z, 0, 0, 0, true, false, true, true, true, true);
+							float dist_center = GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(obj_cor.x, obj_cor.y, obj_cor.z, gr_cor.x, gr_cor.y, gr_cor.z, TRUE);
+							if (dist_center < 95) { // 10, 15, 55
+								ENTITY::SET_ENTITY_MAX_SPEED(surr_p_peds[j], 20); // 10
+								//ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&surr_p_peds[j]);
+								//OBJECT::DELETE_OBJECT(&surr_p_peds[j]);
+							}
 						}
+
 					}
 					Vehicle surr_vehicles[arrSize_bl];
 					int count_surr_v = worldGetAllVehicles(surr_vehicles, arrSize_bl);
 					c_x, c_y, c_z = 0.0;
 					for (int j = 0; j < count_surr_v; j++) {
 						obj_cor = ENTITY::GET_ENTITY_COORDS(surr_vehicles[j], TRUE);
-						if (obj_cor.x > gr_cor.x) c_x = -0.5;
-						else c_x = 0.5;
-						if (obj_cor.y > gr_cor.y) c_y = -0.5;
-						else c_y = 0.5;
+						if (obj_cor.x > gr_cor.x) c_x = -1.5;
+						else c_x = 1.5;
+						if (obj_cor.y > gr_cor.y) c_y = -1.5;
+						else c_y = 1.5;
 						if (obj_cor.z > gr_cor.z) c_z = -0.5;
 						else c_z = 0.5;
-						if (surr_p_peds[j] != PED::GET_VEHICLE_PED_IS_USING(playerPed)) ENTITY::APPLY_FORCE_TO_ENTITY(surr_vehicles[j], 1, c_x, c_y, c_z, 0, 0, 0, true, false, true, true, true, true);
+						if (!VEHICLE::_IS_VEHICLE_DAMAGED(surr_vehicles[j])) VEHICLE::SET_VEHICLE_DAMAGE(surr_vehicles[j], obj_cor.x, obj_cor.y, obj_cor.z, 1000, 1000, 1);
+						if (surr_vehicles[j] != PED::GET_VEHICLE_PED_IS_USING(playerPed) && surr_vehicles[j] != objects_g[i]) {
+							ENTITY::APPLY_FORCE_TO_ENTITY(surr_vehicles[j], 1, c_x, c_y, c_z, 0, 0, 0, true, false, true, true, true, true);
+							float dist_center = GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(obj_cor.x, obj_cor.y, obj_cor.z, gr_cor.x, gr_cor.y, gr_cor.z, TRUE);
+							if (dist_center < 95) { // 10, 15, 55
+								ENTITY::SET_ENTITY_MAX_SPEED(surr_vehicles[j], 20); // 10
+								//ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&surr_vehicles[j]);
+								//OBJECT::DELETE_OBJECT(&surr_vehicles[j]);
+							}
+						}
 					}
 					Object surr_objects[arrSize_bl];
 					int count_surr_o = worldGetAllObjects(surr_objects, arrSize_bl);
 					c_x, c_y, c_z = 0.0;
 					for (int j = 0; j < count_surr_o; j++) {
 						obj_cor = ENTITY::GET_ENTITY_COORDS(surr_objects[j], TRUE);
-						if (obj_cor.x > gr_cor.x) c_x = -0.5;
-						else c_x = 0.5;
-						if (obj_cor.y > gr_cor.y) c_y = -0.5;
-						else c_y = 0.5;
+						if (obj_cor.x > gr_cor.x) c_x = -1.5;
+						else c_x = 1.5;
+						if (obj_cor.y > gr_cor.y) c_y = -1.5;
+						else c_y = 1.5;
 						if (obj_cor.z > gr_cor.z) c_z = -0.5;
 						else c_z = 0.5;
-						ENTITY::APPLY_FORCE_TO_ENTITY(surr_objects[j], 1, c_x, c_y, c_z, 0, 0, 0, true, false, true, true, true, true);
+						if (surr_objects[j] != objects_g[i]) {
+							ENTITY::APPLY_FORCE_TO_ENTITY(surr_objects[j], 1, c_x, c_y, c_z, 0, 0, 0, true, false, true, true, true, true);
+							float dist_center = GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(obj_cor.x, obj_cor.y, obj_cor.z, gr_cor.x, gr_cor.y, gr_cor.z, TRUE);
+							if (dist_center < 95) { // 10, 15, 55
+								ENTITY::SET_ENTITY_MAX_SPEED(surr_objects[j], 20); // 10
+								//ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&surr_objects[j]);
+								//OBJECT::DELETE_OBJECT(&surr_objects[j]);
+							}
+						}
 					}
 				}
 			}
