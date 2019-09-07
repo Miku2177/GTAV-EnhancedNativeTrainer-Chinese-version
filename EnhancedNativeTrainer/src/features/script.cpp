@@ -886,6 +886,12 @@ void update_features(){
 	
 	most_wanted(); ///// <--- WANTED FUGITIVE /////
 
+
+	//
+	//GAMEPLAY::DISABLE_POLICE_RESTART(int policeIndex, false);
+	//GAMEPLAY::DISABLE_HOSPITAL_RESTART(int hospitalIndex, false);
+	//
+
 	// police ignore player
 	if(featurePlayerIgnoredByPolice){
 		if(bPlayerExists){

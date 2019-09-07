@@ -87,6 +87,7 @@ Ped curr_cut_ped_me, my_first_coords, curr_cut_ped, switched_c = -1;
 bool featureFirstPersonCutscene = false;
 
 bool featurePlayerRadio = false;
+bool featureDisablePhone = false;
 bool featurePlayerRadioUpdated = false;
 bool featureRadioFreeze = false, featureRadioFreezeUpdated = false;
 bool featureRadioAlwaysOff = false;
@@ -712,6 +713,11 @@ void process_phone_bill_menu(){
 	item->isLeaf = false;
 	menuItems.push_back(item);
 
+	ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "No Phone";
+	toggleItem->toggleValue = &featureDisablePhone;
+	menuItems.push_back(toggleItem);
+
 	draw_generic_menu<int>(menuItems, &activeLineIndexPhoneBill, caption, onconfirm_phonebill_menu, NULL, NULL);
 }
 
@@ -831,6 +837,7 @@ void reset_misc_globals(){
 		featureMarkerHud =
 		featureDynamicHealthBar =
 		featurePlayerRadio =
+		featureDisablePhone =
 		featureMiscLockRadio =
 		featureMiscJellmanScenery =
 		featureRadioFreeze =
@@ -907,6 +914,9 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			AUDIO::SET_MOBILE_RADIO_ENABLED_DURING_GAMEPLAY(false);
 		}
 	}
+
+	// No Phone 
+	if (featureDisablePhone) GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("cellphone_controller");
 
 	// No Wanted Music
 	if (featureWantedMusic) {
@@ -1328,6 +1338,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 				if (outValue_your_phone_bill < 1) {
 					MOBILE::DESTROY_MOBILE_PHONE();
 					CONTROLS::DISABLE_CONTROL_ACTION(2, 27, 1);
+					GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("cellphone_controller");
 				}
 			}
 			if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE) {
@@ -1336,6 +1347,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 				if (outValue_your_phone_bill < 1) {
 					MOBILE::DESTROY_MOBILE_PHONE();
 					CONTROLS::DISABLE_CONTROL_ACTION(2, 27, 1);
+					GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("cellphone_controller");
 				}
 			}
 			if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO) {
@@ -1344,6 +1356,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 				if (outValue_your_phone_bill < 1) {
 					MOBILE::DESTROY_MOBILE_PHONE();
 					CONTROLS::DISABLE_CONTROL_ACTION(2, 27, 1);
+					GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("cellphone_controller");
 				}
 			}
 		}
@@ -1669,6 +1682,7 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 	results->push_back(FeatureEnabledLocalDefinition{"featureBoostRadio", &featureBoostRadio }); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureRealisticRadioVolume", &featureRealisticRadioVolume});
 	results->push_back(FeatureEnabledLocalDefinition{"featureWantedMUsic", &featureWantedMusic}); 
+	results->push_back(FeatureEnabledLocalDefinition{"featureDisablePhone", &featureDisablePhone});
 	results->push_back(FeatureEnabledLocalDefinition{"featureFlyingMusic", &featureFlyingMusic}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePoliceScanner", &featurePoliceScanner}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoScubaSound", &featureNoScubaSound}); 
