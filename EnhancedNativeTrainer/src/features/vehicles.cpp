@@ -633,7 +633,6 @@ void eject_seat() { // eject seat
 		
 	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) FIRE::ADD_EXPLOSION(coordsmetoeject.x, coordsmetoeject.y, coordsmetoeject.z, 28, 0, 1, 1, 100);
 	else FIRE::ADD_EXPLOSION(coordsmetoeject.x, coordsmetoeject.y, coordsmetoeject.z, 28, 0, 1, 1, 10);
-	//VEHICLE::_EJECT_JB700_ROOF(currVehModel, coords_veh2.x, coords_veh2.y, coords_veh2.z + 100);
 	AI::TASK_LEAVE_VEHICLE(PedToEject, veh_eject, 16);
 	veh = VEHICLE::CREATE_VEHICLE(currVehModel, coords_veh2.x, coords_veh2.y, coords_veh2.z + 10, rot, 1, 0);
 	ENTITY::SET_ENTITY_VELOCITY(veh, vehspeed.x, vehspeed.y, vehspeed.z);
@@ -2183,15 +2182,16 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		if (featureDespawnScriptDisabled){
 			set_status_text("~r~Note:~r~ in-game shops will not work until you turn off the 'disable despawn' option");
 		}
-		else if (!featureDespawnScriptDisabled && featureDespawnScriptDisabledWasLastOn){
-			SCRIPT::REQUEST_SCRIPT("shop_controller");
-			SYSTEM::START_NEW_SCRIPT("shop_controller", 1424);
-			set_status_text("~r~Note:~r~ the shops may still not work until you load a save or restart");
-		}
-		featureDespawnScriptDisabledWasLastOn = featureDespawnScriptDisabled;
 	}
 	if (featureDespawnScriptDisabled){
 		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("shop_controller");
+		featureDespawnScriptDisabledWasLastOn = true;
+	}
+	else if (featureDespawnScriptDisabledWasLastOn == true) {
+		SCRIPT::REQUEST_SCRIPT("shop_controller");
+		SYSTEM::START_NEW_SCRIPT("shop_controller", 1424);
+		//set_status_text("~r~Note:~r~ the shops may still not work until you load a save or restart");
+		featureDespawnScriptDisabledWasLastOn = false;
 	}
 
 	// Toggle Vehicle Alarm Check

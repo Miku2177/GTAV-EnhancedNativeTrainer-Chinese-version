@@ -69,6 +69,8 @@ bool p_exist = false;
 
 bool radio_v_checked = false;
 
+bool no_phone, bill_no_phone = false;
+
 Camera DeathCam = NULL;
 
 Vehicle playerVeh = -1;
@@ -915,9 +917,6 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		}
 	}
 
-	// No Phone 
-	if (featureDisablePhone) GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("cellphone_controller");
-
 	// No Wanted Music
 	if (featureWantedMusic) {
 		AUDIO::SET_AUDIO_FLAG("WantedMusicDisabled", true);
@@ -1290,6 +1289,17 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		} else AUDIO::SET_AUDIO_FLAG("PlayMenuMusic", false);
 	} 
 	
+	// No Phone 
+	if (featureDisablePhone) {
+		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("cellphone_controller");
+		no_phone = true;
+	}
+	else if (no_phone == true) {
+		SCRIPT::REQUEST_SCRIPT("cellphone_controller");
+		SYSTEM::START_NEW_SCRIPT("cellphone_controller", 1424);
+		no_phone = false;
+	}
+
 	// Phone Bill
 	if (featurePhoneBillEnabled) {
 		if (PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed) && AUDIO::IS_MOBILE_PHONE_CALL_ONGOING()) {
@@ -1300,9 +1310,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 				secs_curr = secs_passed;
 			}
 		}
-		
 		if (!AUDIO::IS_MOBILE_PHONE_CALL_ONGOING() && temp_seconds != 0) temp_seconds = 0;
-		
 		if (!AUDIO::IS_MOBILE_PHONE_CALL_ONGOING() && bill_seconds > 0) { 
 			int outValue_your_phone_bill = -1;
 			int statHash_all_your_money = -1;
@@ -1327,11 +1335,9 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			temp_seconds = 0;
 			bill_seconds = 0;
 		}
-		
 		if (featureZeroBalance && !SCRIPT::HAS_SCRIPT_LOADED("prologue1")) {
 			int outValue_your_phone_bill = -1;
 			int statHash_all_your_money = -1;
-			
 			if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO) {
 				STATS::STAT_GET_INT(SP0_TOTAL_CASH, &outValue_your_phone_bill, -1);
 				statHash_all_your_money = SP0_TOTAL_CASH;
@@ -1339,6 +1345,12 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 					MOBILE::DESTROY_MOBILE_PHONE();
 					CONTROLS::DISABLE_CONTROL_ACTION(2, 27, 1);
 					GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("cellphone_controller");
+					bill_no_phone = true;
+				}
+				else if (bill_no_phone == true) {
+					SCRIPT::REQUEST_SCRIPT("cellphone_controller");
+					SYSTEM::START_NEW_SCRIPT("cellphone_controller", 1424);
+					bill_no_phone = false;
 				}
 			}
 			if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE) {
@@ -1348,6 +1360,12 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 					MOBILE::DESTROY_MOBILE_PHONE();
 					CONTROLS::DISABLE_CONTROL_ACTION(2, 27, 1);
 					GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("cellphone_controller");
+					bill_no_phone = true;
+				}
+				else if (bill_no_phone == true) {
+					SCRIPT::REQUEST_SCRIPT("cellphone_controller");
+					SYSTEM::START_NEW_SCRIPT("cellphone_controller", 1424);
+					bill_no_phone = false;
 				}
 			}
 			if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO) {
@@ -1357,6 +1375,12 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 					MOBILE::DESTROY_MOBILE_PHONE();
 					CONTROLS::DISABLE_CONTROL_ACTION(2, 27, 1);
 					GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("cellphone_controller");
+					bill_no_phone = true;
+				}
+				else if (bill_no_phone == true) {
+					SCRIPT::REQUEST_SCRIPT("cellphone_controller");
+					SYSTEM::START_NEW_SCRIPT("cellphone_controller", 1424);
+					bill_no_phone = false;
 				}
 			}
 		}
