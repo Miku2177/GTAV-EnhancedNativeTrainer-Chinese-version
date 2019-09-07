@@ -633,6 +633,7 @@ void eject_seat() { // eject seat
 		
 	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) FIRE::ADD_EXPLOSION(coordsmetoeject.x, coordsmetoeject.y, coordsmetoeject.z, 28, 0, 1, 1, 100);
 	else FIRE::ADD_EXPLOSION(coordsmetoeject.x, coordsmetoeject.y, coordsmetoeject.z, 28, 0, 1, 1, 10);
+	//VEHICLE::_EJECT_JB700_ROOF(currVehModel, coords_veh2.x, coords_veh2.y, coords_veh2.z + 100);
 	AI::TASK_LEAVE_VEHICLE(PedToEject, veh_eject, 16);
 	veh = VEHICLE::CREATE_VEHICLE(currVehModel, coords_veh2.x, coords_veh2.y, coords_veh2.z + 10, rot, 1, 0);
 	ENTITY::SET_ENTITY_VELOCITY(veh, vehspeed.x, vehspeed.y, vehspeed.z);
