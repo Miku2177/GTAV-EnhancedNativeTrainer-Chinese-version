@@ -55,7 +55,7 @@ bool enough_running = false;
 float spot_to_stop = -1;
 bool being_arrested = false;
 int r_tick_secs_passed = 0; 
-int Seen_secs_curr, Seen_seconds = 0; 
+int Seen_secs_passed, Seen_secs_curr, Seen_seconds = 0;
 bool againsttraffic_check, pavementdriving_check, vehiclecollision_check, vehicledamaged_check, hohelmet_check, mobilephone_check, speedingincity_check, speedingonspeedway_check, runningredlight_check, stolenvehicle_check, nolightsnighttime_check, escapingpolice_check = false;
 int SinceCollision_secs_curr, Collision_seconds = -1; 
 int TargetBlocked_secs_curr, TargetBlocked_seconds = -1; 
@@ -501,10 +501,10 @@ void road_laws()
 				
 				// i shout when i'm seen
 				if (idontlikeiwasseen == true) {
-					r_tick_secs_passed = clock() / CLOCKS_PER_SEC;
+					Seen_secs_passed = clock() / CLOCKS_PER_SEC;
 					if (((clock() / CLOCKS_PER_SEC) - Seen_secs_curr) != 0) {
 						Seen_seconds = Seen_seconds + 1;
-						Seen_secs_curr = r_tick_secs_passed;
+						Seen_secs_curr = Seen_secs_passed;
 					}
 					if (Seen_seconds > 2) {
 						if (!AUDIO::IS_AMBIENT_SPEECH_PLAYING(playerPed)) AUDIO::_PLAY_AMBIENT_SPEECH1(playerPed, "BLOCKED_GENERIC", "SPEECH_PARAMS_FORCE_SHOUTED");

@@ -1231,12 +1231,15 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	if (featureDynamicHealthBar && !CUTSCENE::IS_CUTSCENE_PLAYING()) {
 		if (!featureMiscHideHud && !featurePhoneShowHud && !featureInVehicleNoHud && !featureMarkerHud && !featureMiscHideENTHud) UI::DISPLAY_RADAR(false); // There is no need to hide HUD if it's already hidden
 		
-		auto addr = getScriptHandleBaseAddress(playerPed);
-		float health = (*(float *)(addr + 0x280)) - 100;
+		//auto addr = getScriptHandleBaseAddress(playerPed);
+		//float health = (*(float *)(addr + 0x280)) - 100;
+		float health = ENTITY::GET_ENTITY_HEALTH(playerPed) - 100;
+
 		float playerArmour = PED::GET_PED_ARMOUR(playerPed);
 
 		if (!ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_OBJECT(playerPed) && !ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_PED(playerPed) && !ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_VEHICLE(playerPed)) {
-			curr_damaged_health = (*(float *)(addr + 0x280)) - 100;
+			//curr_damaged_health = (*(float *)(addr + 0x280)) - 100;
+			float health = ENTITY::GET_ENTITY_HEALTH(playerPed) - 100;
 			curr_damaged_armor = PED::GET_PED_ARMOUR(playerPed);
 		}
 		
