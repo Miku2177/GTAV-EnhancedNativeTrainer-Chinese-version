@@ -1592,9 +1592,9 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	////////////////////////////////////////////// COPS WEAPON && PEDS DO NOT DROP WEAPONS ON DEATH ////////////////////////////////////////
 
 	if (featureCopArmedWith || featurePedNoWeaponDrop) {
-		const int arrSize2 = 1024;
-		Ped cops[arrSize2];
-		int count_cops = worldGetAllPeds(cops, arrSize2);
+		const int arrSize3 = 1024;
+		Ped cops[arrSize3];
+		int count_cops = worldGetAllPeds(cops, arrSize3);
 		Hash curr_weapon = WEAPON::GET_SELECTED_PED_WEAPON(playerPed);
 		Hash Weapon_Type = WEAPON::GET_WEAPONTYPE_GROUP(curr_weapon);
 		char *currWeapon = new char[WEAPONS_COPARMED_CAPTIONS[CopCurrArmedIndex].length() + 1];
