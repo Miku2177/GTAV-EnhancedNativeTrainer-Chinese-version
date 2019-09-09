@@ -717,8 +717,8 @@ void road_laws()
 			}
 
 			if (been_seen_by_a_cop == true) {
-				Vector3 head_coords_a = PED::GET_PED_BONE_COORDS(playerPed, 31086, 0, 0, 0); // head bone
-				AI::TASK_LOOK_AT_COORD(cop_that_fines_you, head_coords_a.x, head_coords_a.y, head_coords_a.z + 0.1, 10000, 0, 2); // p5 = 0, p6 = 2
+				Vector3 head_coords = PED::GET_PED_BONE_COORDS(playerPed, 31086, 0, 0, 0); // head bone
+				AI::TASK_LOOK_AT_COORD(cop_that_fines_you, head_coords.x, head_coords.y, head_coords.z + 0.1, 10000, 0, 2); // p5 = 0, p6 = 2
 			}
 
 			// You're being fined
