@@ -94,6 +94,7 @@ bool featureWantedLevelNoSWATVehiclesUpdated = false;
 
 bool NoTaxiWhistling = false;
 bool featurePlayerCanBeHeadshot = false;
+bool featureRespawnsWhereDied = false;
 
 bool engine_running = true;
 bool engine_switched = false;
@@ -886,6 +887,24 @@ void update_features(){
 	
 	most_wanted(); ///// <--- WANTED FUGITIVE /////
 
+	// Instant Respawn On Death
+	if (featureRespawnsWhereDied && ENTITY::IS_ENTITY_DEAD(playerPed)) {
+		CAM::DO_SCREEN_FADE_OUT(500);
+		WAIT(1000);
+		GAMEPLAY::IGNORE_NEXT_RESTART(true);
+		GAMEPLAY::_DISABLE_AUTOMATIC_RESPAWN(true);
+		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("respawn_controller");
+		Vector3 ped_me = ENTITY::GET_ENTITY_COORDS(playerPed, true);
+		BOOL onGround = false;
+		Vector3 CoordsWhereDied = ENTITY::GET_ENTITY_COORDS(playerPed, true);
+		PATHFIND::GET_SAFE_COORD_FOR_PED(ped_me.x, ped_me.y, ped_me.z, onGround, &CoordsWhereDied, 16);
+		NETWORK::NETWORK_RESURRECT_LOCAL_PLAYER(CoordsWhereDied.x, CoordsWhereDied.y, CoordsWhereDied.z, 0, false, false);
+		GAMEPLAY::_RESET_LOCALPLAYER_STATE();
+		PLAYER::RESET_PLAYER_ARREST_STATE(playerPed);
+		WAIT(1000);
+		CAM::DO_SCREEN_FADE_IN(500);
+	}
+
 	// police ignore player
 	if(featurePlayerIgnoredByPolice){
 		if(bPlayerExists){
@@ -1533,7 +1552,7 @@ bool onconfirm_player_menu(MenuItem<int> choice){
 }
 
 void process_player_menu(){
-	const int lineCount = 23;
+	const int lineCount = 24;
 
 	std::string caption = "Player Options";
 
@@ -1560,7 +1579,8 @@ void process_player_menu(){
 		{"Prison Break", NULL, NULL, false},
 		{"Jedi Powers", NULL, NULL, false},
 		{"No Whistling For Taxi", &NoTaxiWhistling, NULL, false},
-		{"Player Can Be Headshot", &featurePlayerCanBeHeadshot, NULL, false}
+		{"Player Can Be Headshot", &featurePlayerCanBeHeadshot, NULL, false},
+		{"Instant Respawn On Death", &featureRespawnsWhereDied, NULL, false},
 	};
 
 	draw_menu_from_struct_def(lines, lineCount, &activeLineIndexPlayer, caption, onconfirm_player_menu);
@@ -1810,6 +1830,7 @@ void reset_globals(){
 		featureWantedLevelNoSWATVehicles =
 		NoTaxiWhistling =
 		featurePlayerCanBeHeadshot =
+		featureRespawnsWhereDied =
 
 		featureWantedLevelFrozen = false;
 
@@ -2043,6 +2064,7 @@ void add_player_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featureWantedLevelNoSWATVehicles", &featureWantedLevelNoSWATVehicles});
 	results->push_back(FeatureEnabledLocalDefinition{"NoTaxiWhistling", &NoTaxiWhistling});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerCanBeHeadshot", &featurePlayerCanBeHeadshot});
+	results->push_back(FeatureEnabledLocalDefinition{"featureRespawnsWhereDied", &featureRespawnsWhereDied});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerUnlimitedAbility", &featurePlayerUnlimitedAbility});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerNoNoise", &featurePlayerNoNoise}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerFastSwim", &featurePlayerFastSwim}); 
