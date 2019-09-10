@@ -888,19 +888,19 @@ void update_features(){
 	most_wanted(); ///// <--- WANTED FUGITIVE /////
 
 	// Instant Respawn On Death
-	if (featureRespawnsWhereDied && ENTITY::IS_ENTITY_DEAD(playerPed)) {
+	if (featureRespawnsWhereDied && ENTITY::IS_ENTITY_DEAD(playerPed) && GAMEPLAY::GET_MISSION_FLAG() == 0) {
 		CAM::DO_SCREEN_FADE_OUT(500);
 		WAIT(1000);
-		GAMEPLAY::IGNORE_NEXT_RESTART(true);
 		GAMEPLAY::_DISABLE_AUTOMATIC_RESPAWN(true);
+		GAMEPLAY::IGNORE_NEXT_RESTART(true);
 		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("respawn_controller");
 		Vector3 ped_me = ENTITY::GET_ENTITY_COORDS(playerPed, true);
 		BOOL onGround = false;
 		Vector3 CoordsWhereDied = ENTITY::GET_ENTITY_COORDS(playerPed, true);
 		PATHFIND::GET_SAFE_COORD_FOR_PED(ped_me.x, ped_me.y, ped_me.z, onGround, &CoordsWhereDied, 16);
 		NETWORK::NETWORK_RESURRECT_LOCAL_PLAYER(CoordsWhereDied.x, CoordsWhereDied.y, CoordsWhereDied.z, 0, false, false);
-		GAMEPLAY::_RESET_LOCALPLAYER_STATE();
 		PLAYER::RESET_PLAYER_ARREST_STATE(playerPed);
+		GAMEPLAY::_RESET_LOCALPLAYER_STATE();
 		WAIT(1000);
 		CAM::DO_SCREEN_FADE_IN(500);
 	}
