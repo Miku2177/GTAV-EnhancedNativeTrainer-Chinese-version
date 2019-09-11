@@ -29,6 +29,7 @@ std::deque<ENTTrackedVehicle*> trackedVehicles;
 
 //features
 bool featurePlayerIgnoredByAll = false;
+bool featureNPCShowHealth = false;
 bool featureAreaPedsInvincible = false;
 bool featureAreaVehiclesInvincible = false;
 bool featureAreaVehiclesBroken = false;
@@ -99,6 +100,7 @@ bool featureShowDebugInfo = false;
 
 void add_areaeffect_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerIgnoredByAll", &featurePlayerIgnoredByAll}); 
+	results->push_back(FeatureEnabledLocalDefinition{"featureNPCShowHealth", &featureNPCShowHealth});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAreaPedsInvincible", &featureAreaPedsInvincible}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureAreaPedsHeadExplode", &featureAreaPedsHeadExplode});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAreaVehiclesInvincible", &featureAreaVehiclesInvincible}); 
@@ -123,6 +125,7 @@ void add_areaeffect_feature_enablements(std::vector<FeatureEnabledLocalDefinitio
 
 void reset_areaeffect_globals(){
 	featurePlayerIgnoredByAll = false;
+	featureNPCShowHealth = false;
 	featureAreaVehiclesBroken = false;
 	featureAreaPedsInvincible = false;
 	featureAreaPedsHeadExplode = false;
@@ -183,6 +186,12 @@ void process_areaeffect_peds_menu(){
 	menuItems.push_back(listItem);
 
 	ToggleMenuItem<int> *togItem = new ToggleMenuItem<int>();
+	togItem->caption = "NPC Show Current Health";
+	togItem->value = 1;
+	togItem->toggleValue = &featureNPCShowHealth;
+	menuItems.push_back(togItem);
+
+	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "Everyone Permanently Calm";
 	togItem->value = 1;
 	togItem->toggleValue = &featurePlayerIgnoredByAll;

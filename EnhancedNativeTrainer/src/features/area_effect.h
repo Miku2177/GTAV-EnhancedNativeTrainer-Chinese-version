@@ -220,3 +220,4 @@ bool is_entity_to_be_disposed(Ped playerPed, Entity entity);
 void show_debug_info_on_screen(bool enabled);
 
 extern bool featurePlayerIgnoredByAll;
+extern bool featureNPCShowHealth;
