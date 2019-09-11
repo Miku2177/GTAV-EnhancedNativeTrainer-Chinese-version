@@ -1117,9 +1117,9 @@ void update_world_features()
 		} // for
 	}
 
-	// NPC No Gravity Peds && Acid Water && Acid Rain && Peds Health && Peds Accuracy
+	// NPC No Gravity Peds && Acid Water && Acid Rain && Peds Health && Peds Accuracy && NPC Show Current Health
 	if (WORLD_REDUCEDGRIP_SNOWING_VALUES[NoPedsGravityIndex] > 0 || featureAcidWater || featureAcidRain || (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 && featureSnow) || PLAYER_HEALTH_VALUES[PedsHealthIndex] > 0 ||
-		WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex] > -1) {
+		WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex] > -1 || featureNPCShowHealth) {
 		const int BUS_ARR_PED_SIZE = 1024;
 		Ped bus_ped[BUS_ARR_PED_SIZE];
 		int found_ped = worldGetAllPeds(bus_ped, BUS_ARR_PED_SIZE);
@@ -1137,6 +1137,24 @@ void update_world_features()
 						//PED::SET_PED_CONFIG_FLAG(bus_ped[i], 33, false); // dies by ragdoll
 					}
 				}
+			}
+			if (featureNPCShowHealth && ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_PED(bus_ped[i])/*ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(bus_ped[i], PLAYER::PLAYER_PED_ID(), 1)*/ && !ENTITY::IS_ENTITY_DEAD(bus_ped[i]) &&
+				ENTITY::DOES_ENTITY_EXIST(bus_ped[i]) && bus_ped[i] != PLAYER::PLAYER_PED_ID()) { // NPC Show Current Health
+				Vector3 head_c = PED::GET_PED_BONE_COORDS(bus_ped[i], 31086, 0, 0, 0);
+				std::string curr_h_t = std::to_string(ENTITY::GET_ENTITY_HEALTH(bus_ped[i]) - 100);
+				GRAPHICS::SET_DRAW_ORIGIN(head_c.x, head_c.y, head_c.z + 0.5, 0);
+				UI::BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
+				UI::_ADD_TEXT_COMPONENT_SCALEFORM((char *)curr_h_t.c_str());
+				UI::SET_TEXT_FONT(0);
+				UI::SET_TEXT_SCALE(0.5, 0.5);
+				UI::SET_TEXT_WRAP(0.0, 1.0);
+				UI::SET_TEXT_COLOUR(255, 242, 0, 255);
+				UI::SET_TEXT_CENTRE(0);
+				UI::SET_TEXT_DROPSHADOW(20, 20, 20, 20, 20);
+				UI::SET_TEXT_EDGE(0, 0, 0, 0, 255);
+				UI::SET_TEXT_OUTLINE();
+				UI::SET_TEXT_LEADING(1);
+				UI::END_TEXT_COMMAND_DISPLAY_TEXT(0, 0);
 			}
 			if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 && featureSnow && bus_ped[i] != PLAYER::PLAYER_PED_ID()) {
 				int slippery_randomize2 = (rand() % 1000 + 1);
