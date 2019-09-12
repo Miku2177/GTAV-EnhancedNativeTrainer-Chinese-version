@@ -302,8 +302,8 @@ void check_player_model(){
 		}
 	}
 
-	if(ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) { //  && is_player_reset_on_death()
-		if(!found){
+	if (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && !featureRespawnsWhereDied) { //  && is_player_reset_on_death()
+		if (!found) {
 			if (is_player_reset_on_death()) set_status_text("Resetting death state because a custom skin was used");
 			if (!is_player_reset_on_death()) {
 				Hash model_d = ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID());
@@ -311,27 +311,24 @@ void check_player_model(){
 					model_d != GAMEPLAY::GET_HASH_KEY("a_c_killerwhale") && model_d != GAMEPLAY::GET_HASH_KEY("a_c_seagull") && model_d != GAMEPLAY::GET_HASH_KEY("a_c_stingray") && model_d != GAMEPLAY::GET_HASH_KEY("a_c_sharktiger") &&
 					model_d != GAMEPLAY::GET_HASH_KEY("a_c_fish") && model_d != GAMEPLAY::GET_HASH_KEY("a_c_whalegrey")) model_to_restore = model_d; // !ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && 
 			}
-			//if (is_player_reset_on_death() && featureRespawnsWhereDied) GAMEPLAY::_RESET_LOCALPLAYER_STATE();
-			//if (!featureRespawnsWhereDied) {
-				GAMEPLAY::_RESET_LOCALPLAYER_STATE();
-				//if (!is_player_reset_on_death()) WAIT(5500); // 8500
-				int spPlayerCount = sizeof(player_models) / sizeof(player_models[0]);
-				if (last_player_slot_seen < spPlayerCount) {
-					applyChosenSkin(player_models[last_player_slot_seen]);
-					if (!is_player_reset_on_death()) {
-						npc_player_died = true;
-						if (!featureRespawnsWhereDied) ENTITY::SET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID(), 0);
-					}
+			GAMEPLAY::_RESET_LOCALPLAYER_STATE();
+			//if (!is_player_reset_on_death()) WAIT(5500); // 8500
+			int spPlayerCount = sizeof(player_models) / sizeof(player_models[0]);
+			if (last_player_slot_seen < spPlayerCount) {
+				applyChosenSkin(player_models[last_player_slot_seen]);
+				if (!is_player_reset_on_death()) {
+					npc_player_died = true;
+					ENTITY::SET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID(), 0);
 				}
-				else {
-					applyChosenSkin(mplayer_models[last_player_slot_seen - spPlayerCount]);
-					if (!is_player_reset_on_death()) {
-						npc_player_died = true;
-						if (!featureRespawnsWhereDied) ENTITY::SET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID(), 0);
-					}
+			}
+			else {
+				applyChosenSkin(mplayer_models[last_player_slot_seen - spPlayerCount]);
+				if (!is_player_reset_on_death()) {
+					npc_player_died = true;
+					ENTITY::SET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID(), 0);
 				}
-				while (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) WAIT(0); // wait until player is resurrected
-			//}
+			}
+			while (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) WAIT(0); // wait until player is resurrected
 		}
 	}
 
@@ -891,21 +888,23 @@ void update_features(){
 	most_wanted(); ///// <--- WANTED FUGITIVE /////
 
 	// Instant Respawn On Death
-	if (featureRespawnsWhereDied && ENTITY::IS_ENTITY_DEAD(playerPed) && GAMEPLAY::GET_MISSION_FLAG() == 0) {
-		CAM::DO_SCREEN_FADE_OUT(500);
-		WAIT(1000);
-		GAMEPLAY::_DISABLE_AUTOMATIC_RESPAWN(true);
-		GAMEPLAY::IGNORE_NEXT_RESTART(true);
-		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("respawn_controller");
-		Vector3 ped_me = ENTITY::GET_ENTITY_COORDS(playerPed, true);
-		BOOL onGround = false;
-		Vector3 CoordsWhereDied = ENTITY::GET_ENTITY_COORDS(playerPed, true);
-		PATHFIND::GET_SAFE_COORD_FOR_PED(ped_me.x, ped_me.y, ped_me.z, onGround, &CoordsWhereDied, 16);
-		NETWORK::NETWORK_RESURRECT_LOCAL_PLAYER(CoordsWhereDied.x, CoordsWhereDied.y, CoordsWhereDied.z, 0, false, false);
-		PLAYER::RESET_PLAYER_ARREST_STATE(playerPed);
-		GAMEPLAY::_RESET_LOCALPLAYER_STATE();
-		WAIT(1000);
-		CAM::DO_SCREEN_FADE_IN(500);
+	if (featureRespawnsWhereDied && GAMEPLAY::GET_MISSION_FLAG() == 0) {
+		if (ENTITY::IS_ENTITY_DEAD(playerPed)) {
+			CAM::DO_SCREEN_FADE_OUT(500);
+			WAIT(1000);
+			GAMEPLAY::_DISABLE_AUTOMATIC_RESPAWN(true);
+			GAMEPLAY::IGNORE_NEXT_RESTART(true);
+			GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("respawn_controller");
+			GAMEPLAY::_RESET_LOCALPLAYER_STATE();
+			Vector3 ped_me = ENTITY::GET_ENTITY_COORDS(playerPed, true);
+			BOOL onGround = false;
+			Vector3 CoordsWhereDied = ENTITY::GET_ENTITY_COORDS(playerPed, true);
+			PATHFIND::GET_SAFE_COORD_FOR_PED(ped_me.x, ped_me.y, ped_me.z, onGround, &CoordsWhereDied, 16);
+			NETWORK::NETWORK_RESURRECT_LOCAL_PLAYER(CoordsWhereDied.x, CoordsWhereDied.y, CoordsWhereDied.z, 0, false, false);
+			PLAYER::RESET_PLAYER_ARREST_STATE(playerPed);
+			WAIT(1000);
+			CAM::DO_SCREEN_FADE_IN(500);
+		}
 	}
 
 	// police ignore player
