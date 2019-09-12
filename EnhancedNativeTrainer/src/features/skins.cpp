@@ -26,6 +26,7 @@ DWORD model_to_restore = -1;
 bool DEBUG_MODE_SKINS = false;
 
 bool featurenoblood = false;
+bool featureResetPlayerModelOnDeath = false;
 
 int skinDetailMenuIndex = 0;
 int skinDetailMenuValue = 0;
@@ -58,6 +59,7 @@ void reset_skin_globals()
 {
 	//chosenSkinName = "";
 	featurenoblood = false;
+	featureResetPlayerModelOnDeath = false;
 }
 
 /*
@@ -623,22 +625,22 @@ bool onconfirm_skinchanger_menu(MenuItem<int> choice)
 		PED::SET_PED_DEFAULT_COMPONENT_VARIATION(playerPed);
 		set_status_text("Using default model skin");
 		break;
-	case 4:
+	case 5:
 		process_prop_menu();
 		break;
-	case 5:
+	case 6:
 		PED::CLEAR_ALL_PED_PROPS(playerPed);
 		break;
-	case 6:
+	case 7:
 		PED::CLEAR_ALL_PED_PROPS(playerPed);
 		PED::SET_PED_RANDOM_COMPONENT_VARIATION(playerPed, true);
 		PED::SET_PED_RANDOM_PROPS(playerPed);
 		break;
-	case 7:
+	case 8:
 		PED::CLEAR_ALL_PED_PROPS(playerPed);
 		PED::SET_PED_RANDOM_PROPS(playerPed);
 		break;
-	case 8:
+	case 9:
 		if (helmet_on == false) {
 			Hash model = -1;
 			if (PED::GET_PED_TYPE(playerPed) == 0) model = GAMEPLAY::GET_HASH_KEY("player_zero");
@@ -728,6 +730,12 @@ bool process_skinchanger_menu()
 	item->value = i++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Reset Player Model On Death";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureResetPlayerModelOnDeath;
+	menuItems.push_back(toggleItem);
 
 	item = new MenuItem<int>();
 	item->caption = "Modify Props";
@@ -1174,6 +1182,7 @@ void add_skin_generic_settings(std::vector<StringPairSettingDBRow>* results)
 
 void add_player_skin_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results) {
 	results->push_back(FeatureEnabledLocalDefinition{ "featurenoblood", &featurenoblood });
+	results->push_back(FeatureEnabledLocalDefinition{ "featureResetPlayerModelOnDeath", &featureResetPlayerModelOnDeath });
 }
 
 void handle_generic_settings_skin(std::vector<StringPairSettingDBRow>* settings)
