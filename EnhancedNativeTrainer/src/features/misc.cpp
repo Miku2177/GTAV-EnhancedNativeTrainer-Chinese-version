@@ -130,7 +130,7 @@ bool featureControllerIgnoreInTrainer = false;
 
 bool featureMiscJellmanScenery = false;
 
-bool featureResetPlayerModelOnDeath = true;
+//bool featureResetPlayerModelOnDeath = true;
 
 bool featureEnableMissingRadioStation = false;
 
@@ -747,13 +747,13 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 		case 11:
 			process_misc_filters_menu();
 			break;
-		case 24:
+		case 23:
 			process_phone_bill_menu();
 			break;
-		case 29:
+		case 28:
 			process_def_menutab_menu();
 			break;
-		case 30:
+		case 29:
 			process_airbrake_global_menu();
 			break;
 		default:
@@ -764,7 +764,7 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 }
 
 void process_misc_menu(){
-	const int lineCount = 32;
+	const int lineCount = 31;
 
 	std::string caption = "Miscellaneous Options";
 
@@ -792,7 +792,7 @@ void process_misc_menu(){
 		{"Show HUD In Vehicle Only", &featureInVehicleNoHud, NULL }, 
 		{"Show HUD If Map Marker Set Only", &featureMarkerHud, NULL },
 		{"Dynamic Health Bar", &featureDynamicHealthBar }, 
-		{"Reset Player Model On Death", &featureResetPlayerModelOnDeath, nullptr, true},
+		//{"Reset Player Model On Death", &featureResetPlayerModelOnDeath, nullptr, true},
 		{"Phone Settings", NULL, NULL, false},
 		{"First Person Death Camera", &featureFirstPersonDeathCamera, NULL },
 		{"First Person Stunt Jump Camera", &featureFirstPersonStuntJumpCamera, NULL },
@@ -884,7 +884,7 @@ void reset_misc_globals(){
 	featureRadioFreezeUpdated =
 	featureRadioAlwaysOffUpdated =
 	featureMiscHideHudUpdated =
-	featureResetPlayerModelOnDeath =
+	//featureResetPlayerModelOnDeath =
 	featureBoostRadio = true;
 
 	ENTColor::reset_colors();
@@ -1744,7 +1744,7 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoStuntJumps", &featureNoStuntJumps});
 	results->push_back(FeatureEnabledLocalDefinition{"featureHidePlayerInfo", &featureHidePlayerInfo});
 	results->push_back(FeatureEnabledLocalDefinition{"featureMiscJellmanScenery", &featureMiscJellmanScenery});
-	results->push_back(FeatureEnabledLocalDefinition{"featureResetPlayerModelOnDeath", &featureResetPlayerModelOnDeath});
+	//results->push_back(FeatureEnabledLocalDefinition{"featureResetPlayerModelOnDeath", &featureResetPlayerModelOnDeath});
 }
 
 void add_misc_generic_settings(std::vector<StringPairSettingDBRow>* results){
