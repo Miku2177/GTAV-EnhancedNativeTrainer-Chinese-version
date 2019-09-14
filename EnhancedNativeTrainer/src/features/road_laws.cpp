@@ -771,6 +771,7 @@ void road_laws()
 					if (!AUDIO::IS_AMBIENT_SPEECH_PLAYING(cop_that_fines_you)) AUDIO::STOP_CURRENT_PLAYING_AMBIENT_SPEECH(cop_that_fines_you);
 					AI::STOP_ANIM_TASK(cop_that_fines_you, "misscommon@response", "screw_you", 1.0);
 					//AI::STOP_ANIM_TASK(cop_that_fines_you, "franklin_1_int-7", "player_one_dual-7", 1.0);
+					//if (!AUDIO::IS_AMBIENT_SPEECH_PLAYING(playerPed)) AUDIO::_PLAY_AMBIENT_SPEECH1(playerPed, "GENERIC_INSULT_MED", "SPEECH_PARAMS_FORCE_NORMAL"); // GENERIC_CURSE_MED
 				}
 			}
 

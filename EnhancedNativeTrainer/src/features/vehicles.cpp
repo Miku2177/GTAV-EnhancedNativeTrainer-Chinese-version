@@ -56,6 +56,9 @@ int Accel_secs_passed, Accel_secs_curr, Accel_seconds = 0;
 Vehicle current_veh_e = -1;
 Vehicle temp_vehicle = -1;
 
+std::vector<Object> SPIKES;
+bool s_message = false;
+
 bool viz_veh_ind_left, viz_veh_ind_right = false;
 
 bool turn_check_left, turn_check_right = false;
@@ -81,6 +84,7 @@ bool featureVehSteerAngle = false;
 bool featureRollWhenShoot = false;
 bool featureTractionControl = false;
 bool featureSticktoground = false;
+bool featureDropSpikes = false;
 bool featureEngineRunning = false;
 bool featureNoVehFlip = false;
 bool featureAutoToggleLights = false;
@@ -2063,6 +2067,12 @@ void process_veh_menu(){
 	listItem->value = DoorAutolockIndex;
 	menuItems.push_back(listItem);
 	
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Drop Spikes";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureDropSpikes;
+	menuItems.push_back(toggleItem);
+
 	draw_generic_menu<int>(menuItems, &activeLineIndexVeh, caption, onconfirm_veh_menu, NULL, NULL);
 }
 
@@ -3405,8 +3415,78 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	} 
 
 ///////////////////////////////////////////////////////////////////////////////////
-	
-///////////////////////////// AUTOROLL DRIVER WINDOW WHEN SHOOT ////////////////////////////
+
+//////////////////////////////////// DROP SPIKES //////////////////////////////////
+
+	if (featureDropSpikes && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) s_message = false;
+
+	if (featureDropSpikes && PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) {
+		if (s_message == false) {
+			set_status_text("Press your ~g~ horn button ~w~ to deploy spikes");
+			s_message = true;
+		}
+		Vehicle playerVehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
+		//Vector3 vehspeed = ENTITY::GET_ENTITY_VELOCITY(playerVehicle);
+		if (/*(vehspeed.x > 1 || vehspeed.y > 1) && */(VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(playerVehicle)) || VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(playerVehicle)) ||
+			VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(playerVehicle))) && CONTROLS::IS_CONTROL_JUST_PRESSED(2, 86)) { // horn 
+			Vector3 my_v_coords = ENTITY::GET_ENTITY_COORDS(playerVehicle, true);
+			/*Hash currVehM = ENTITY::GET_ENTITY_MODEL(playerVehicle);
+			Hash vehH = GAMEPLAY::GET_HASH_KEY(currVehM);
+			GAMEPLAY::GET_MODEL_DIMENSIONS(vehH, Vector3* minimum, Vector3* maximum);*/
+			Vector3 my_rot = ENTITY::GET_ENTITY_ROTATION(playerVehicle, 2);
+			Object stinger = OBJECT::CREATE_OBJECT(GAMEPLAY::GET_HASH_KEY("p_ld_stinger_s"), my_v_coords.x, my_v_coords.y, my_v_coords.z, 1, true, 1);
+			ENTITY::SET_ENTITY_ROTATION(stinger, my_rot.x, my_rot.y, my_rot.z - 90, 2, true);
+			if (SPIKES.empty()) SPIKES.push_back(stinger);
+			else SPIKES.push_back(stinger);
+			ENTITY::SET_ENTITY_AS_MISSION_ENTITY(stinger, true, true);
+			STREAMING::REQUEST_ANIM_DICT("p_ld_stinger_s");
+			while (!STREAMING::HAS_ANIM_DICT_LOADED("p_ld_stinger_s")) WAIT(0);
+			AI::TASK_PLAY_ANIM(stinger, "p_ld_stinger_s", "p_stinger_s_idle_deployed", 8.0, 0.0, -1, 9, 0, 1, 1, 1);
+			//AI::TASK_PLAY_ANIM_ADVANCED(stinger, "p_ld_stinger_s", "p_stinger_s_idle_deployed", my_v_coords.x, my_v_coords.y, my_v_coords.z, my_rot.x, my_rot.y, my_rot.z, 8.0, 0.0, -1, 9, 0.8, 0, 0);
+			WAIT(1000);
+			AI::STOP_ANIM_TASK(stinger, "p_ld_stinger_s", "p_stinger_s_idle_deployed", 1.0);
+		}
+		if (!SPIKES.empty() && SPIKES.size() > 20) {
+			ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&SPIKES[0]);
+			OBJECT::DELETE_OBJECT(&SPIKES[0]);
+			SPIKES.erase(SPIKES.begin());
+		}
+		if (!SPIKES.empty()) {
+			const int arrSize_sp = 1024;
+			Vehicle surr_vehicles[arrSize_sp];
+			int count_surr_sp = worldGetAllVehicles(surr_vehicles, arrSize_sp);
+			for (int i = 0; i < count_surr_sp; i++) {
+				if (surr_vehicles[i] != playerVehicle) {
+					//Vector3 ped_veh_coords = ENTITY::GET_ENTITY_COORDS(surr_vehicles[i], true);
+					int t_b_lf = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(surr_vehicles[i], "wheel_lf"); // left front wheel
+					Vector3 w_lf = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(surr_vehicles[i], t_b_lf);
+					int t_b_lr = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(surr_vehicles[i], "wheel_lr"); // left rear wheel
+					Vector3 w_lr = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(surr_vehicles[i], t_b_lr);
+					int t_b_rf = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(surr_vehicles[i], "wheel_rf"); // right front wheel
+					Vector3 w_rf = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(surr_vehicles[i], t_b_rf);
+					int t_b_rr = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(surr_vehicles[i], "wheel_rr"); // right rear wheel
+					Vector3 w_rr = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(surr_vehicles[i], t_b_rr);
+					for (int j = 0; j < SPIKES.size(); j++) {
+						VEHICLE::SET_VEHICLE_TYRES_CAN_BURST(surr_vehicles[i], true);
+						Vector3 spike_coords = ENTITY::GET_ENTITY_COORDS(SPIKES[j], true);
+						float dist_lf = GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(w_lf.x, w_lf.y, w_lf.z, spike_coords.x, spike_coords.y, spike_coords.z, TRUE);
+						float dist_lr = GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(w_lr.x, w_lr.y, w_lr.z, spike_coords.x, spike_coords.y, spike_coords.z, TRUE);
+						float dist_rf = GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(w_rf.x, w_rf.y, w_rf.z, spike_coords.x, spike_coords.y, spike_coords.z, TRUE);
+						float dist_rr = GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(w_rr.x, w_rr.y, w_rr.z, spike_coords.x, spike_coords.y, spike_coords.z, TRUE);
+						if (dist_lf < 1) VEHICLE::SET_VEHICLE_TYRE_BURST(surr_vehicles[i], 0, true, 1000.0);
+						if (dist_lr < 1) VEHICLE::SET_VEHICLE_TYRE_BURST(surr_vehicles[i], 4, true, 1000.0);
+						if (dist_rf < 1) VEHICLE::SET_VEHICLE_TYRE_BURST(surr_vehicles[i], 1, true, 1000.0);
+						if (dist_rr < 1) VEHICLE::SET_VEHICLE_TYRE_BURST(surr_vehicles[i], 5, true, 1000.0);
+						
+					}
+				}
+			}
+		}
+	}
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////// AUTOROLL DRIVER WINDOW WHEN SHOOT /////////////////////
 
 	if (featureRollWhenShoot && PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) && VEHICLE::GET_PED_IN_VEHICLE_SEAT(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), -1) == playerPed) {
 		if (CONTROLS::IS_CONTROL_PRESSED(2, 70) && VEHICLE::IS_VEHICLE_WINDOW_INTACT(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 0)) {
@@ -3620,6 +3700,7 @@ void reset_vehicle_globals() {
 		featureRollWhenShoot =
 		featureTractionControl =
 		featureSticktoground =
+		featureDropSpikes =
 		featureEngineRunning =
 		featureNoVehFlip =
 		featureAutoToggleLights =
@@ -3896,6 +3977,7 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureRollWhenShoot", &featureRollWhenShoot});
 	results->push_back(FeatureEnabledLocalDefinition{"featureTractionControl", &featureTractionControl});
 	results->push_back(FeatureEnabledLocalDefinition{"featureSticktoground", &featureSticktoground});
+	results->push_back(FeatureEnabledLocalDefinition{"featureDropSpikes", &featureDropSpikes});
 	results->push_back(FeatureEnabledLocalDefinition{"featureEngineRunning", &featureEngineRunning});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoVehFlip", &featureNoVehFlip});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAutoToggleLights", &featureAutoToggleLights});
