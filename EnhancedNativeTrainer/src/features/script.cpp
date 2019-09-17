@@ -957,7 +957,7 @@ void update_features(){
 		}
 	}
 
-	//No Radgoll
+	// No Radgoll
 	if(featureNoRagdoll){
 		if(bPlayerExists){
 			PED::SET_PED_CAN_RAGDOLL(playerPed, 0);
@@ -971,14 +971,15 @@ void update_features(){
 		}
 	}
 
-	//Ragdoll If Shot
+	// Ragdoll If Shot
 	if (featureRagdollIfInjured) {
-		auto addr = getScriptHandleBaseAddress(playerPed);
-		float curr_health = (*(float *)(addr + 0x280)) - 100;
+		//auto addr = getScriptHandleBaseAddress(playerPed);
+		//float curr_health = (*(float *)(addr + 0x280)) - 100;
+		float curr_health = ENTITY::GET_ENTITY_HEALTH(playerPed) - 100;
 		float curr_playerArmour = PED::GET_PED_ARMOUR(playerPed);
 
 		if (!ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_OBJECT(playerPed) && !ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_PED(playerPed) && !ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_VEHICLE(playerPed) && !WEAPON::HAS_PED_BEEN_DAMAGED_BY_WEAPON(playerPed, 0, 2)) {
-			been_damaged_health = (*(float *)(addr + 0x280)) - 100;
+			been_damaged_health = ENTITY::GET_ENTITY_HEALTH(playerPed) - 100; // (*(float *)(addr + 0x280)) - 100;
 			been_damaged_armor = PED::GET_PED_ARMOUR(playerPed);
 		}
 
@@ -1883,8 +1884,8 @@ void main(){
 	// tell cout to use our new locale.
 	std::cout.imbue(comma_locale);
 
-	if (featureShowStatusMessage) set_status_text("~HUD_COLOUR_MENU_YELLOW~ENT~HUD_COLOUR_WHITE~ ver. ~HUD_COLOUR_MENU_YELLOW~41 bugfix 2."); // ~HUD_COLOUR_WHITE~ is ready
-
+	if (featureShowStatusMessage) set_status_text("~HUD_COLOUR_MENU_YELLOW~ENT~HUD_COLOUR_WHITE~ ver. ~HUD_COLOUR_MENU_YELLOW~41 bugfix 3."); // ~HUD_COLOUR_WHITE~ is ready
+	
 	while(true){
 		if(trainer_switch_pressed()){
 			menu_beep();

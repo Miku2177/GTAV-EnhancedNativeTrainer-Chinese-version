@@ -548,14 +548,23 @@ void show_debug_info_on_screen(bool enabled){
 }
 
 void set_all_nearby_peds_to_calm(){
-	const int IGN_ARR_PED_SIZE = 1024;
-	Ped ign_ped[IGN_ARR_PED_SIZE];
-	int found_ign_ped = worldGetAllPeds(ign_ped, IGN_ARR_PED_SIZE);
-	for (int i = 0; i < found_ign_ped; i++) {
-		if (ign_ped[i] != PLAYER::PLAYER_PED_ID()) {
-			if (!PED::IS_PED_GROUP_MEMBER(ign_ped[i], PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID()))) { // Only calm down peds if they're NOT in our group (keeps our bodyguards from chilling out and being lazy)
-				PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ign_ped[i], true);
-				PED::SET_PED_FLEE_ATTRIBUTES(ign_ped[i], 0, 0);
+	//const int IGN_ARR_PED_SIZE = 1024;
+	//Ped ign_ped[IGN_ARR_PED_SIZE];
+	//int found_ign_ped = worldGetAllPeds(ign_ped, IGN_ARR_PED_SIZE);
+	//for (int i = 0; i < found_ign_ped; i++) {
+	//	if (ign_ped[i] != PLAYER::PLAYER_PED_ID()) {
+	//		if (!PED::IS_PED_GROUP_MEMBER(ign_ped[i], PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID()))) { // Only calm down peds if they're NOT in our group (keeps our bodyguards from chilling out and being lazy)
+	//			PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ign_ped[i], true);
+	//			PED::SET_PED_FLEE_ATTRIBUTES(ign_ped[i], 0, 0);
+	//		}
+	//	}
+	//}
+	std::set<Ped> peds = get_nearby_peds(PLAYER::PLAYER_PED_ID());
+	for each (Ped xped in peds) {
+		if (xped != PLAYER::PLAYER_PED_ID()) {
+			if (!PED::IS_PED_GROUP_MEMBER(xped, PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID()))) { // Only calm down peds if they're NOT in our group (keeps our bodyguards from chilling out and being lazy)
+				PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(xped, true);
+				PED::SET_PED_FLEE_ATTRIBUTES(xped, 0, 0);
 			}
 		}
 	}
