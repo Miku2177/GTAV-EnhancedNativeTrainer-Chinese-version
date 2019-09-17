@@ -3418,16 +3418,16 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 //////////////////////////////////// DROP ROAD SPIKES //////////////////////////////////
 
-	if (featureDropSpikes && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) s_message = false;
+	if (featureDropSpikes && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) s_message = false;
 
-	if (featureDropSpikes && PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) {
-		if (s_message == false) {
+	if (featureDropSpikes) {
+		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && s_message == false) {
 			set_status_text("Press your ~g~ horn button ~w~ to deploy road spikes");
 			s_message = true;
 		}
 		Vehicle playerVehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		if ((VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(playerVehicle)) || VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(playerVehicle)) ||
-			VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(playerVehicle))) && CONTROLS::IS_CONTROL_JUST_PRESSED(2, 86)) { // horn 
+			VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(playerVehicle))) && CONTROLS::IS_CONTROL_JUST_PRESSED(2, 86) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) { // horn 
 			Vector3 my_v_coords = ENTITY::GET_ENTITY_COORDS(playerVehicle, true);
 			Hash currVeh_m = ENTITY::GET_ENTITY_MODEL(playerVehicle);
 			char *name = VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(currVeh_m);
