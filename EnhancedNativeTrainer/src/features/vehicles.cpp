@@ -54,7 +54,7 @@ int veh_jumped_n = 0;
 int Accel_secs_passed, Accel_secs_curr, Accel_seconds = 0;
 
 Vehicle current_veh_e = -1;
-Vehicle temp_vehicle = -1;
+Vehicle temp_vehicle, playerVehicle_s = -1;
 
 std::vector<Object> SPIKES;
 bool s_message = false;
@@ -3425,18 +3425,18 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			set_status_text("Press your ~g~ horn button ~w~ to deploy road spikes");
 			s_message = true;
 		}
-		Vehicle playerVehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
-		if ((VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(playerVehicle)) || VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(playerVehicle)) ||
-			VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(playerVehicle))) && CONTROLS::IS_CONTROL_JUST_PRESSED(2, 86) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) { // horn 
-			Vector3 my_v_coords = ENTITY::GET_ENTITY_COORDS(playerVehicle, true);
-			Hash currVeh_m = ENTITY::GET_ENTITY_MODEL(playerVehicle);
+		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) playerVehicle_s = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
+		if ((VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(playerVehicle_s)) || VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(playerVehicle_s)) ||
+			VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(playerVehicle_s))) && CONTROLS::IS_CONTROL_JUST_PRESSED(2, 86) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) { // horn 
+			Vector3 my_v_coords = ENTITY::GET_ENTITY_COORDS(playerVehicle_s, true);
+			Hash currVeh_m = ENTITY::GET_ENTITY_MODEL(playerVehicle_s);
 			char *name = VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(currVeh_m);
 			Hash veh_h = GAMEPLAY::GET_HASH_KEY(name);
 			Vector3 minimum;
 			Vector3 maximum;
 			GAMEPLAY::GET_MODEL_DIMENSIONS(veh_h, &minimum, &maximum);
-			Vector3 entitySCoords = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerVehicle, 0.0, -maximum.y, 0.0);
-			Vector3 my_rot = ENTITY::GET_ENTITY_ROTATION(playerVehicle, 2);
+			Vector3 entitySCoords = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerVehicle_s, 0.0, -maximum.y, 0.0);
+			Vector3 my_rot = ENTITY::GET_ENTITY_ROTATION(playerVehicle_s, 2);
 			Object stinger = OBJECT::CREATE_OBJECT(GAMEPLAY::GET_HASH_KEY("p_ld_stinger_s"), entitySCoords.x, entitySCoords.y, entitySCoords.z, 1, true, 1);
 			ENTITY::SET_ENTITY_ROTATION(stinger, my_rot.x, my_rot.y, my_rot.z - 90, 2, true);
 			ROPE::ACTIVATE_PHYSICS(stinger);
@@ -3446,7 +3446,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			STREAMING::REQUEST_ANIM_DICT("p_ld_stinger_s");
 			while (!STREAMING::HAS_ANIM_DICT_LOADED("p_ld_stinger_s")) WAIT(0);
 			AI::TASK_PLAY_ANIM(stinger, "p_ld_stinger_s", "p_stinger_s_idle_deployed", 8.0, 0.0, -1, 9, 0, 1, 1, 1);
-			WAIT(1000);
+			//WAIT(1000);
 			AI::STOP_ANIM_TASK(stinger, "p_ld_stinger_s", "p_stinger_s_idle_deployed", 1.0);
 		}
 		if (!SPIKES.empty() && SPIKES.size() > 20) {
@@ -3459,7 +3459,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			Vehicle surr_vehicles[arrSize_sp];
 			int count_surr_sp = worldGetAllVehicles(surr_vehicles, arrSize_sp);
 			for (int i = 0; i < count_surr_sp; i++) {
-				if (surr_vehicles[i] != playerVehicle) {
+				if (surr_vehicles[i] != playerVehicle_s) {
 					int t_b_lf = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(surr_vehicles[i], "wheel_lf"); // left front wheel
 					Vector3 w_lf = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(surr_vehicles[i], t_b_lf);
 					int t_b_lr = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(surr_vehicles[i], "wheel_lr"); // left rear wheel
@@ -3470,11 +3470,20 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 					Vector3 w_rr = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(surr_vehicles[i], t_b_rr);
 					for (int j = 0; j < SPIKES.size(); j++) {
 						VEHICLE::SET_VEHICLE_TYRES_CAN_BURST(surr_vehicles[i], true);
-						Vector3 spike_coords = ENTITY::GET_ENTITY_COORDS(SPIKES[j], true);
-						float dist_lf = GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(w_lf.x, w_lf.y, w_lf.z, spike_coords.x, spike_coords.y, spike_coords.z, TRUE);
-						float dist_lr = GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(w_lr.x, w_lr.y, w_lr.z, spike_coords.x, spike_coords.y, spike_coords.z, TRUE);
-						float dist_rf = GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(w_rf.x, w_rf.y, w_rf.z, spike_coords.x, spike_coords.y, spike_coords.z, TRUE);
-						float dist_rr = GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(w_rr.x, w_rr.y, w_rr.z, spike_coords.x, spike_coords.y, spike_coords.z, TRUE);
+						Vector3 spike_coords_l = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(SPIKES[j], 0.0, -0.9, 0.0); // -0.7
+						Vector3 spike_coords_r = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(SPIKES[j], 0.0, 0.9, 0.0); // 0.7
+						float dist_lf = GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(w_lf.x, w_lf.y, w_lf.z, spike_coords_l.x, spike_coords_l.y, spike_coords_l.z, TRUE);
+						float dist_lr = GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(w_lr.x, w_lr.y, w_lr.z, spike_coords_l.x, spike_coords_l.y, spike_coords_l.z, TRUE);
+						float dist_rf = GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(w_rf.x, w_rf.y, w_rf.z, spike_coords_l.x, spike_coords_l.y, spike_coords_l.z, TRUE);
+						float dist_rr = GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(w_rr.x, w_rr.y, w_rr.z, spike_coords_l.x, spike_coords_l.y, spike_coords_l.z, TRUE);
+						if (dist_lf < 1 && !VEHICLE::IS_VEHICLE_TYRE_BURST(surr_vehicles[i], 0, true)) VEHICLE::SET_VEHICLE_TYRE_BURST(surr_vehicles[i], 0, true, 1000.0);
+						if (dist_lr < 1 && !VEHICLE::IS_VEHICLE_TYRE_BURST(surr_vehicles[i], 4, true)) VEHICLE::SET_VEHICLE_TYRE_BURST(surr_vehicles[i], 4, true, 1000.0);
+						if (dist_rf < 1 && !VEHICLE::IS_VEHICLE_TYRE_BURST(surr_vehicles[i], 1, true)) VEHICLE::SET_VEHICLE_TYRE_BURST(surr_vehicles[i], 1, true, 1000.0);
+						if (dist_rr < 1 && !VEHICLE::IS_VEHICLE_TYRE_BURST(surr_vehicles[i], 5, true)) VEHICLE::SET_VEHICLE_TYRE_BURST(surr_vehicles[i], 5, true, 1000.0);
+						dist_lf = GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(w_lf.x, w_lf.y, w_lf.z, spike_coords_r.x, spike_coords_r.y, spike_coords_r.z, TRUE);
+						dist_lr = GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(w_lr.x, w_lr.y, w_lr.z, spike_coords_r.x, spike_coords_r.y, spike_coords_r.z, TRUE);
+						dist_rf = GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(w_rf.x, w_rf.y, w_rf.z, spike_coords_r.x, spike_coords_r.y, spike_coords_r.z, TRUE);
+						dist_rr = GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(w_rr.x, w_rr.y, w_rr.z, spike_coords_r.x, spike_coords_r.y, spike_coords_r.z, TRUE);
 						if (dist_lf < 1 && !VEHICLE::IS_VEHICLE_TYRE_BURST(surr_vehicles[i], 0, true)) VEHICLE::SET_VEHICLE_TYRE_BURST(surr_vehicles[i], 0, true, 1000.0);
 						if (dist_lr < 1 && !VEHICLE::IS_VEHICLE_TYRE_BURST(surr_vehicles[i], 4, true)) VEHICLE::SET_VEHICLE_TYRE_BURST(surr_vehicles[i], 4, true, 1000.0);
 						if (dist_rf < 1 && !VEHICLE::IS_VEHICLE_TYRE_BURST(surr_vehicles[i], 1, true)) VEHICLE::SET_VEHICLE_TYRE_BURST(surr_vehicles[i], 1, true, 1000.0);
