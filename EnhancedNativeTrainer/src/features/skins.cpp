@@ -74,7 +74,7 @@ bool applyChosenSkin(std::string skinName)
 	return applyChosenSkin(model);
 }
 
-bool applyChosenSkin(DWORD model)
+bool applyChosenSkin(DWORD model) 
 {
 	if (STREAMING::IS_MODEL_IN_CDIMAGE(model) && STREAMING::IS_MODEL_VALID(model))
 	{
@@ -485,7 +485,20 @@ bool process_skinchanger_choices_online_npc()
 bool onconfirm_skinchanger_choices_animals(MenuItem<std::string> choice)
 {
 	skinTypesMenuPositionMemory[1] = choice.currentMenuIndex;
-	applyChosenSkin(choice.value);
+	
+	Vector3 coords_me = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
+	float height = -1.0;
+	if (choice.value != "a_c_dolphin" && choice.value != "a_c_sharkhammer" && choice.value != "a_c_humpback" &&
+		choice.value != "a_c_killerwhale" && choice.value != "a_c_stingray" &&
+		choice.value != "a_c_sharktiger" && choice.value != "a_c_fish" && choice.value != "a_c_whalegrey") {
+		WATER::GET_WATER_HEIGHT(coords_me.x, coords_me.y, coords_me.z, &height);
+		if (coords_me.z > height) applyChosenSkin(choice.value);
+	}
+	else {
+		WATER::GET_WATER_HEIGHT(coords_me.x, coords_me.y, coords_me.z, &height);
+		if ((coords_me.z < height) && ((height - coords_me.z) > 1)) applyChosenSkin(choice.value);
+	}
+	
 	return false;
 }
 

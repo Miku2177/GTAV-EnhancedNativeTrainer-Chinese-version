@@ -1549,7 +1549,8 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 						Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(my_first_coords, true);
 						Vector3 coordsPed_temp = ENTITY::GET_ENTITY_COORDS(us_ped[i], true);
 						float dist_t = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsPed_temp.x, coordsPed_temp.y, coordsPed_temp.z);
-						if (dist_t < 20) { // 30 50 100 150
+						//float dist_t = GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(coordsme.x, coordsme.y, coordsme.z, coordsPed_temp.x, coordsPed_temp.y, coordsPed_temp.z, TRUE);
+						if (dist_t < 10) { // 20 
 							if (ENTITY::IS_ENTITY_ON_SCREEN(us_ped[i]) && found_ped_in_cutscene == false &&
 								ENTITY::IS_ENTITY_VISIBLE(us_ped[i]) && switched_c != us_ped[i] && PED::GET_PED_TYPE(us_ped[i]) != 28) { 
 								if (curr_cut_ped_me != -1) curr_cut_ped = curr_cut_ped_me;
