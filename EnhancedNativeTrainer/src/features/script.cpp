@@ -308,7 +308,7 @@ void check_player_model(){
 			if (!is_player_reset_on_death()) {
 				Hash model_d = ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID());
 				if (model_d != GAMEPLAY::GET_HASH_KEY("a_c_dolphin") && model_d != GAMEPLAY::GET_HASH_KEY("a_c_sharkhammer") && model_d != GAMEPLAY::GET_HASH_KEY("a_c_humpback") &&
-					model_d != GAMEPLAY::GET_HASH_KEY("a_c_killerwhale") && model_d != GAMEPLAY::GET_HASH_KEY("a_c_seagull") && model_d != GAMEPLAY::GET_HASH_KEY("a_c_stingray") && model_d != GAMEPLAY::GET_HASH_KEY("a_c_sharktiger") &&
+					model_d != GAMEPLAY::GET_HASH_KEY("a_c_killerwhale") && model_d != GAMEPLAY::GET_HASH_KEY("a_c_stingray") && model_d != GAMEPLAY::GET_HASH_KEY("a_c_sharktiger") &&
 					model_d != GAMEPLAY::GET_HASH_KEY("a_c_fish") && model_d != GAMEPLAY::GET_HASH_KEY("a_c_whalegrey")) model_to_restore = model_d; // !ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && 
 			}
 			GAMEPLAY::_RESET_LOCALPLAYER_STATE();
