@@ -94,12 +94,15 @@ bool featureWantedLevelNoSWATVehiclesUpdated = false;
 
 bool NoTaxiWhistling = false;
 bool featurePlayerCanBeHeadshot = false;
+bool featurePlayerInjuredMovement = false;
 bool featureRespawnsWhereDied = false;
 
 bool engine_running = true;
 bool engine_switched = false;
 bool engine_killed = false;
 bool we_have_troubles, iaminside = false;
+
+bool been_injured = false;
 
 bool p_invisible = false;
 bool featurePlayerLife = false;
@@ -737,6 +740,30 @@ void update_features(){
 		}
 	}
 
+	// Injured Player Movement
+	if (featurePlayerInjuredMovement) {
+		if (!STREAMING::HAS_ANIM_DICT_LOADED("move_m@injured")) STREAMING::REQUEST_ANIM_DICT("move_m@injured");
+		float curr_health = ENTITY::GET_ENTITY_HEALTH(playerPed) - 100;
+		Vector3 coords_calf_l = PED::GET_PED_BONE_COORDS(playerPed, 63931, 0, 0, 0); // left calf
+		Vector3 coords_calf_r = PED::GET_PED_BONE_COORDS(playerPed, 36864, 0, 0, 0); // right calf
+		Vector3 coords_pelvis = PED::GET_PED_BONE_COORDS(playerPed, 11816, 0, 0, 0); // pelvis
+		if (WEAPON::HAS_ENTITY_BEEN_DAMAGED_BY_WEAPON(playerPed, 0, 2) && (GAMEPLAY::HAS_BULLET_IMPACTED_IN_AREA(coords_calf_l.x, coords_calf_l.y, coords_calf_l.z, 0.4, 0, 0) || 
+			GAMEPLAY::HAS_BULLET_IMPACTED_IN_AREA(coords_calf_r.x, coords_calf_r.y, coords_calf_r.z, 0.4, 0, 0) || GAMEPLAY::HAS_BULLET_IMPACTED_IN_AREA(coords_pelvis.x, coords_pelvis.y, coords_pelvis.z, 0.2, 0, 0))) {
+			been_injured = true;
+		}
+		if (curr_health < 90 || been_injured == true) PED::SET_PED_MOVEMENT_CLIPSET(playerPed, "move_m@injured", 1.0f); // @walk
+		if (curr_health < 60 || been_injured == true) CONTROLS::DISABLE_CONTROL_ACTION(2, 21, 1); // sprint
+		if (curr_health < 30/* || been_injured == true*/) CONTROLS::DISABLE_CONTROL_ACTION(2, 22, 1); // jump
+		if (curr_health > 89 && been_injured == false) PED::RESET_PED_MOVEMENT_CLIPSET(playerPed, 1.0f);
+		if (curr_health > (PLAYER_HEALTH_VALUES[current_player_health] - 101) || (PLAYER::GET_TIME_SINCE_LAST_DEATH() > 100 && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 5000) || 
+			(PLAYER::GET_TIME_SINCE_LAST_ARREST() > 100 && PLAYER::GET_TIME_SINCE_LAST_ARREST() < 5000)) { // 99
+			PED::RESET_PED_MOVEMENT_CLIPSET(playerPed, 1.0f);
+			PED::CLEAR_PED_LAST_DAMAGE_BONE(playerPed);
+			ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(playerPed);
+			been_injured = false;
+		}
+	}
+
 	// Can run in apartments
 	if (featurePlayerRunApartments && GAMEPLAY::GET_MISSION_FLAG() == 0) {
 		Vector3 coords_apprun_ped = ENTITY::GET_ENTITY_COORDS(playerPed, true);
@@ -1077,7 +1104,7 @@ void update_features(){
 				make_periodic_feature_call();
 				WAIT(0);
 			}
-			PED::SET_PED_MOVEMENT_CLIPSET(playerPed, (char*) CLIPSET_DRUNK, 1.0f);
+			PED::SET_PED_MOVEMENT_CLIPSET(playerPed, (char*) CLIPSET_DRUNK, 1.0f); 
 			CAM::SHAKE_GAMEPLAY_CAM("DRUNK_SHAKE", 1.0f);
 		}
 		else{
@@ -1555,7 +1582,7 @@ bool onconfirm_player_menu(MenuItem<int> choice){
 }
 
 void process_player_menu(){
-	const int lineCount = 24;
+	const int lineCount = 25;
 
 	std::string caption = "Player Options";
 
@@ -1584,6 +1611,7 @@ void process_player_menu(){
 		{"No Whistling For Taxi", &NoTaxiWhistling, NULL, false},
 		{"Player Can Be Headshot", &featurePlayerCanBeHeadshot, NULL, false},
 		{"Instant Respawn On Death", &featureRespawnsWhereDied, NULL, false},
+		{"Injured Player Movement", &featurePlayerInjuredMovement, NULL, false},
 	};
 
 	draw_menu_from_struct_def(lines, lineCount, &activeLineIndexPlayer, caption, onconfirm_player_menu);
@@ -1834,6 +1862,7 @@ void reset_globals(){
 		NoTaxiWhistling =
 		featurePlayerCanBeHeadshot =
 		featureRespawnsWhereDied =
+		featurePlayerInjuredMovement =
 
 		featureWantedLevelFrozen = false;
 
@@ -2067,6 +2096,7 @@ void add_player_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featureWantedLevelNoSWATVehicles", &featureWantedLevelNoSWATVehicles});
 	results->push_back(FeatureEnabledLocalDefinition{"NoTaxiWhistling", &NoTaxiWhistling});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerCanBeHeadshot", &featurePlayerCanBeHeadshot});
+	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerInjuredMovement", &featurePlayerInjuredMovement});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRespawnsWhereDied", &featureRespawnsWhereDied});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerUnlimitedAbility", &featurePlayerUnlimitedAbility});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerNoNoise", &featurePlayerNoNoise}); 
