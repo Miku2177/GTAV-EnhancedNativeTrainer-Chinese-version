@@ -73,6 +73,8 @@ Ped shooting_criminal = -1;
 int s_vacuum_secs_passed, s_vacuum_secs_curr, vacuum_seconds = 0;
 
 Ped temp_nearest_ped = -1;
+Object temp_nearest_object = -1;
+Vehicle temp_nearest_vehicle = -1;
 bool force_nearest_ped = false;
 
 bool grav_target_locked = false;
@@ -1648,7 +1650,8 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 
 	// Power Punch
 	if (featurePowerPunch && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
-		Vector3 CamRot = CAM::GET_GAMEPLAY_CAM_ROT(2);
+		//Vector3 CamRot = CAM::GET_GAMEPLAY_CAM_ROT(2);
+		Vector3 CamRot = ENTITY::GET_ENTITY_ROTATION(playerPed, 2);
 		long long int p_force = -1; 
 
 		const int arrSize_punch = 1024;
@@ -1660,12 +1663,17 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			p_force = std::stoll(lastPowerWeapon, &sz);
 		}
 		
-		if (CONTROLS::IS_CONTROL_PRESSED(2, 24) || CONTROLS::IS_CONTROL_PRESSED(2, 140) || CONTROLS::IS_CONTROL_PRESSED(2, 141)) force_nearest_ped = true;
+		if (CONTROLS::IS_CONTROL_PRESSED(2, 24) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, 140) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, 141)) force_nearest_ped = true;
 		
+		float rad = 2 * 3.14 * (CamRot.z / 360);
+		float v_x = -(sin(rad) * p_force * 10);
+		float v_y = (cos(rad) * p_force * 10);
+		float v_z = p_force * (CamRot.x * 0.2);
+
 		bool cur_weapon_e = false;
 		bool cur_weapon_peds = false;
 		bool cur_weapon_e_peds = false;
-		temp_nearest_ped = -1;
+		
 		if (featurePunchFists && !WEAPON::IS_PED_ARMED(playerPed, 7)) cur_weapon_e = true;
 		if (featurePunchMeleeWeapons && !WEAPON::IS_PED_ARMED(playerPed, 6) && WEAPON::IS_PED_ARMED(playerPed, 7)) cur_weapon_e = true;
 		if (featurePunchFireWeapons && WEAPON::IS_PED_ARMED(playerPed, 7) && WEAPON::IS_PED_ARMED(playerPed, 6)) cur_weapon_e = true;
@@ -1710,7 +1718,6 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 				if (PED::GET_PED_TYPE(surr_p_peds[i]) != 0 && PED::GET_PED_TYPE(surr_p_peds[i]) != 1 && PED::GET_PED_TYPE(surr_p_peds[i]) != 2 && PED::GET_PED_TYPE(surr_p_peds[i]) != 3) {
 					if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(surr_p_peds[i], playerPed, 1)) {
 						temp_nearest_ped = surr_p_peds[i];
-						force_nearest_ped = false;
 					}
 				}
 			} // end of int (peds)
@@ -1718,34 +1725,39 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			int count_surr_o = worldGetAllObjects(surr_objects, arrSize_punch);
 			for (int i = 0; i < count_surr_o; i++) {
 				if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(surr_objects[i], playerPed, 1)) {
-					temp_nearest_ped = surr_objects[i];
+					temp_nearest_object = surr_objects[i];
+					ENTITY::APPLY_FORCE_TO_ENTITY(temp_nearest_object, 1, v_x, v_y, v_z, 0, 0, 0, true, false, true, true, true, true);
 					force_nearest_ped = false;
+					PED::CLEAR_PED_LAST_DAMAGE_BONE(temp_nearest_object);
+					ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(temp_nearest_object);
+					temp_nearest_object = -1;
 				}
 			} // end of int (objects)
 			Vehicle surr_vehicles[arrSize_punch];
 			int count_surr_v = worldGetAllVehicles(surr_vehicles, arrSize_punch);
 			for (int i = 0; i < count_surr_v; i++) {
 				if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(surr_vehicles[i], playerPed, 1)) {
-					temp_nearest_ped = surr_vehicles[i];
+					temp_nearest_vehicle = surr_vehicles[i];
+					ENTITY::APPLY_FORCE_TO_ENTITY(temp_nearest_vehicle, 1, v_x, v_y, v_z, 0, 0, 0, true, false, true, true, true, true);
 					force_nearest_ped = false;
+					PED::CLEAR_PED_LAST_DAMAGE_BONE(temp_nearest_vehicle);
+					ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(temp_nearest_vehicle);
+					temp_nearest_vehicle = -1;
 				}
 			} // end of int (vehicles)
 		}
-
-		float rad = 2 * 3.14 * (CamRot.z / 360);
-		float v_x = -(sin(rad) * p_force * 10);
-		float v_y = (cos(rad) * p_force * 10);
-		float v_z = p_force * (CamRot.x * 0.2);
-
+		
 		if (temp_nearest_ped != -1) {
-			AI::CLEAR_PED_TASKS_IMMEDIATELY(temp_nearest_ped);
-			AI::CLEAR_PED_SECONDARY_TASK(temp_nearest_ped);
-			AI::CLEAR_PED_TASKS(temp_nearest_ped);
 			PED::SET_PED_CAN_RAGDOLL(temp_nearest_ped, true);
 			PED::SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(temp_nearest_ped, true);
 			PED::SET_PED_RAGDOLL_FORCE_FALL(temp_nearest_ped);
-			PED::SET_PED_TO_RAGDOLL(temp_nearest_ped, 1500, 1500, 1, true, true, false);
+			AI::CLEAR_PED_SECONDARY_TASK(temp_nearest_ped);
+			AI::CLEAR_PED_TASKS(temp_nearest_ped);
+			AI::TASK_SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(temp_nearest_ped, true);
+			AI::CLEAR_PED_TASKS_IMMEDIATELY(temp_nearest_ped);
+			//PED::SET_PED_TO_RAGDOLL(temp_nearest_ped, 1500, 1500, 1, true, true, false);
 			ENTITY::APPLY_FORCE_TO_ENTITY(temp_nearest_ped, 1, v_x, v_y, v_z, 0, 0, 0, true, false, true, true, true, true);
+			force_nearest_ped = false;
 			PED::CLEAR_PED_LAST_DAMAGE_BONE(temp_nearest_ped);
 			ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(temp_nearest_ped);
 			temp_nearest_ped = -1;
