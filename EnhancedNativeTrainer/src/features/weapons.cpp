@@ -1665,11 +1665,6 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		
 		if (CONTROLS::IS_CONTROL_PRESSED(2, 24) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, 140) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, 141)) force_nearest_ped = true;
 		
-		float rad = 2 * 3.14 * (CamRot.z / 360);
-		float v_x = -(sin(rad) * p_force * 10);
-		float v_y = (cos(rad) * p_force * 10);
-		float v_z = p_force * (CamRot.x * 0.2);
-
 		bool cur_weapon_e = false;
 		bool cur_weapon_peds = false;
 		bool cur_weapon_e_peds = false;
@@ -1707,6 +1702,11 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 				}
 			}
 		}
+
+		float rad = 2 * 3.14 * (CamRot.z / 360);
+		float v_x = -(sin(rad) * p_force * 10);
+		float v_y = (cos(rad) * p_force * 10);
+		float v_z = p_force * (CamRot.x * 0.2);
 
 		if (force_nearest_ped == true && cur_weapon_e == true && PEDS_POWERPUNCH_VALUES[PedsPowerPunchIndex] < 2) {
 			PLAYER::SET_PLAYER_WEAPON_DAMAGE_MODIFIER(player, 1000.0);
