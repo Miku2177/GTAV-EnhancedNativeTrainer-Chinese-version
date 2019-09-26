@@ -741,7 +741,7 @@ void update_features(){
 	}
 
 	// Injured Player Movement
-	if (featurePlayerInjuredMovement) {
+	if (featurePlayerInjuredMovement && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) {
 		if (!STREAMING::HAS_ANIM_DICT_LOADED("move_m@injured")) STREAMING::REQUEST_ANIM_DICT("move_m@injured");
 		float curr_health = ENTITY::GET_ENTITY_HEALTH(playerPed) - 100;
 		Vector3 coords_calf_l = PED::GET_PED_BONE_COORDS(playerPed, 63931, 0, 0, 0); // left calf
@@ -752,10 +752,9 @@ void update_features(){
 			been_injured = true;
 		}
 		if (curr_health < 90 || been_injured == true) PED::SET_PED_MOVEMENT_CLIPSET(playerPed, "move_m@injured", 1.0f); // @walk
-		if (curr_health < 60 || been_injured == true) CONTROLS::DISABLE_CONTROL_ACTION(2, 21, 1); // sprint
+		if (curr_health < 50 || been_injured == true) CONTROLS::DISABLE_CONTROL_ACTION(2, 21, 1); // sprint
 		if (curr_health < 30/* || been_injured == true*/) CONTROLS::DISABLE_CONTROL_ACTION(2, 22, 1); // jump
-		if (curr_health > 89 && been_injured == false) PED::RESET_PED_MOVEMENT_CLIPSET(playerPed, 1.0f);
-		if (curr_health > (PLAYER_HEALTH_VALUES[current_player_health] - 101) || (PLAYER::GET_TIME_SINCE_LAST_DEATH() > 100 && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 5000) || 
+		if (curr_health > (PLAYER_HEALTH_VALUES[current_player_health] - 111) || (PLAYER::GET_TIME_SINCE_LAST_DEATH() > 100 && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 5000) || 
 			(PLAYER::GET_TIME_SINCE_LAST_ARREST() > 100 && PLAYER::GET_TIME_SINCE_LAST_ARREST() < 5000)) { // 99
 			PED::RESET_PED_MOVEMENT_CLIPSET(playerPed, 1.0f);
 			PED::CLEAR_PED_LAST_DAMAGE_BONE(playerPed);
@@ -1451,6 +1450,12 @@ bool process_ragdoll_menu() {
 	listItem->value = current_npc_ragdoll;
 	menuItems.push_back(listItem);
 	
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Limp If Injured";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featurePlayerInjuredMovement;
+	menuItems.push_back(toggleItem);
+
 	return draw_generic_menu<int>(menuItems, &NPCragdollMenuIndex, caption, onconfirm_NPCragdoll_menu, NULL, NULL);
 }
 
@@ -1582,7 +1587,7 @@ bool onconfirm_player_menu(MenuItem<int> choice){
 }
 
 void process_player_menu(){
-	const int lineCount = 25;
+	const int lineCount = 24;
 
 	std::string caption = "Player Options";
 
@@ -1611,7 +1616,6 @@ void process_player_menu(){
 		{"No Whistling For Taxi", &NoTaxiWhistling, NULL, false},
 		{"Player Can Be Headshot", &featurePlayerCanBeHeadshot, NULL, false},
 		{"Instant Respawn On Death", &featureRespawnsWhereDied, NULL, false},
-		{"Injured Player Movement", &featurePlayerInjuredMovement, NULL, false},
 	};
 
 	draw_menu_from_struct_def(lines, lineCount, &activeLineIndexPlayer, caption, onconfirm_player_menu);
