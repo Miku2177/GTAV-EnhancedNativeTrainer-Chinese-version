@@ -573,7 +573,8 @@ void vehicle_anchor() {
 			find_nearest_vehicle();
 			veh_anchor = temp_vehicle;
 		}
-		if (VEHICLE::IS_THIS_MODEL_A_BOAT(ENTITY::GET_ENTITY_MODEL(veh_anchor)) || ENTITY::GET_ENTITY_MODEL(veh_anchor) == GAMEPLAY::GET_HASH_KEY("SUBMERSIBLE") || ENTITY::GET_ENTITY_MODEL(veh_anchor) == GAMEPLAY::GET_HASH_KEY("SUBMERSIBLE2")) {
+		if (VEHICLE::IS_THIS_MODEL_A_BOAT(ENTITY::GET_ENTITY_MODEL(veh_anchor)) || ENTITY::GET_ENTITY_MODEL(veh_anchor) == GAMEPLAY::GET_HASH_KEY("SUBMERSIBLE") || ENTITY::GET_ENTITY_MODEL(veh_anchor) == GAMEPLAY::GET_HASH_KEY("SUBMERSIBLE2") ||
+			ENTITY::GET_ENTITY_MODEL(veh_anchor) == GAMEPLAY::GET_HASH_KEY("DODO")) {
 			coords_b = ENTITY::GET_ENTITY_COORDS(veh_anchor, true);
 			b_rope = ROPE::ADD_ROPE(coords_b.x, coords_b.y, coords_b.z, 0.0, 0.0, 0.0, 20.0, 4, 20.0, 1.0, 0.0, false, false, false, 5.0, false, NULL);
 			ROPE::START_ROPE_WINDING(b_rope);
@@ -581,7 +582,8 @@ void vehicle_anchor() {
 		}
 	}
 	if (anchor_dropped == true) ROPE::DELETE_ROPE(&b_rope);
-	if (VEHICLE::IS_THIS_MODEL_A_BOAT(ENTITY::GET_ENTITY_MODEL(veh_anchor)) || ENTITY::GET_ENTITY_MODEL(veh_anchor) == GAMEPLAY::GET_HASH_KEY("SUBMERSIBLE") || ENTITY::GET_ENTITY_MODEL(veh_anchor) == GAMEPLAY::GET_HASH_KEY("SUBMERSIBLE2")) {
+	if (VEHICLE::IS_THIS_MODEL_A_BOAT(ENTITY::GET_ENTITY_MODEL(veh_anchor)) || ENTITY::GET_ENTITY_MODEL(veh_anchor) == GAMEPLAY::GET_HASH_KEY("SUBMERSIBLE") || ENTITY::GET_ENTITY_MODEL(veh_anchor) == GAMEPLAY::GET_HASH_KEY("SUBMERSIBLE2") ||
+		ENTITY::GET_ENTITY_MODEL(veh_anchor) == GAMEPLAY::GET_HASH_KEY("DODO")) {
 		anchor_dropped = !anchor_dropped;
 		if (anchor_dropped) set_status_text("Anchor dropped");
 		else set_status_text("Anchor raised");
@@ -2520,6 +2522,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			if (coords_b_m.y > coords_b.y) coords_b_m.y = coords_b_m.y - 0.1; // 0.2
 			if (ENTITY::GET_ENTITY_MODEL(veh_anchor) == GAMEPLAY::GET_HASH_KEY("SUBMERSIBLE") || ENTITY::GET_ENTITY_MODEL(veh_anchor) == GAMEPLAY::GET_HASH_KEY("SUBMERSIBLE2"))
 				ENTITY::SET_ENTITY_COORDS(veh_anchor, coords_b_m.x, coords_b_m.y, height - 3, 1, 0, 0, 1); // - (coords_b_m.z - height)
+			else if (ENTITY::GET_ENTITY_MODEL(veh_anchor) == GAMEPLAY::GET_HASH_KEY("DODO")) ENTITY::SET_ENTITY_COORDS(veh_anchor, coords_b_m.x, coords_b_m.y, height - 0.6, 1, 0, 0, 1); // -0.7
 			else ENTITY::SET_ENTITY_COORDS(veh_anchor, coords_b_m.x, coords_b_m.y, height - (coords_b_m.z - height), 1, 0, 0, 1); // - 1
 		}
 		if ((coords_b_m.z < height) && ((height - coords_b_m.z) > 2)) ENTITY::SET_ENTITY_COORDS(veh_anchor, coords_b.x, coords_b.y, coords_b.z, 1, 0, 0, 1);
@@ -2957,7 +2960,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				engine_secs_curr = engine_secs_passed;
 			}
 		}
-		if (CONTROLS::IS_CONTROL_PRESSED(2, 75) && VEHICLE::IS_THIS_MODEL_A_HELI(ENTITY::GET_ENTITY_MODEL(playerVehicle))) current_veh_e = playerVehicle;
+		if (CONTROLS::IS_CONTROL_PRESSED(2, 75) && (VEHICLE::IS_THIS_MODEL_A_HELI(ENTITY::GET_ENTITY_MODEL(playerVehicle)) || VEHICLE::IS_THIS_MODEL_A_PLANE(ENTITY::GET_ENTITY_MODEL(playerVehicle)))) current_veh_e = playerVehicle;
 	}
 	
 	if (engine_tick < 11 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] == 2 && (!featureVehSteerAngle /*|| PED::IS_PED_ON_ANY_BIKE(playerPed)*/)) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), true);
@@ -2974,8 +2977,14 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 	// Helicopter's lines
 	if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && current_veh_e != -1 && VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] > 0) {
-		if (VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] == 1) VEHICLE::SET_HELI_BLADES_SPEED(current_veh_e, 1.0f);
-		if (VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] == 2 && engine_tick < 3) VEHICLE::SET_HELI_BLADES_SPEED(current_veh_e, 1.0f);
+		if (VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] == 1) {
+			VEHICLE::SET_HELI_BLADES_SPEED(current_veh_e, 1.0f);
+			VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(current_veh_e, true);
+		}
+		if (VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] == 2 && engine_tick < 3) {
+			VEHICLE::SET_HELI_BLADES_SPEED(current_veh_e, 1.0f);
+			VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(current_veh_e, true);
+		}
 		if (VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] == 2 && engine_tick > 2) current_veh_e = -1;
 	}
 
