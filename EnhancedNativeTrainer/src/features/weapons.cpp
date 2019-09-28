@@ -1713,11 +1713,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 
 			int count_surr_p_peds = worldGetAllPeds(surr_p_peds, arrSize_punch);
 			for (int i = 0; i < count_surr_p_peds; i++) {
-				if (PED::IS_PED_IN_MELEE_COMBAT(surr_p_peds[i]) && surr_p_peds[i] != playerPed) {
-					AI::TASK_SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(surr_p_peds[i], true);
-					AI::CLEAR_PED_TASKS_IMMEDIATELY(surr_p_peds[i]);
-				}
-				if (PED::GET_PED_TYPE(surr_p_peds[i]) != 0 && PED::GET_PED_TYPE(surr_p_peds[i]) != 1 && PED::GET_PED_TYPE(surr_p_peds[i]) != 2 && PED::GET_PED_TYPE(surr_p_peds[i]) != 3) {
+				if (PED::GET_PED_TYPE(surr_p_peds[i]) != 0 && PED::GET_PED_TYPE(surr_p_peds[i]) != 1 && PED::GET_PED_TYPE(surr_p_peds[i]) != 2 && PED::GET_PED_TYPE(surr_p_peds[i]) != 3 && !PED::IS_PED_IN_MELEE_COMBAT(surr_p_peds[i])) {
 					if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(surr_p_peds[i], playerPed, 1)) {
 						temp_nearest_ped = surr_p_peds[i];
 					}
