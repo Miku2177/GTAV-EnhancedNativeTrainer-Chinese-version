@@ -1185,7 +1185,7 @@ void update_world_features()
 					}
 				}
 			}
-			if (WORLD_REDUCEDGRIP_SNOWING_VALUES[NoPedsGravityIndex] > 0 && bus_ped[i] != PLAYER::PLAYER_PED_ID() && !VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(PED::GET_VEHICLE_PED_IS_USING(bus_ped[i])))) {
+			if (WORLD_REDUCEDGRIP_SNOWING_VALUES[NoPedsGravityIndex] > 0 && bus_ped[i] != PLAYER::PLAYER_PED_ID() && !PED::IS_PED_IN_ANY_VEHICLE(bus_ped[i], false)) {
 				Vector3 CamRot = CAM::GET_GAMEPLAY_CAM_ROT(2);
 				int p_force = 5;
 				float rad = 2 * 3.14 * (CamRot.z / 360);
