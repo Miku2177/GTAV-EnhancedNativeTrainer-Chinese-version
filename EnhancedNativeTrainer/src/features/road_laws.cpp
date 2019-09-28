@@ -128,6 +128,7 @@ void road_laws()
 		//Vector3 vehroadlaws_ped_coords = ENTITY::GET_ENTITY_COORDS(playerPed, true);
 		Vehicle veh_collided_with = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		Vector3 veh_collided_with_coords = ENTITY::GET_ENTITY_COORDS(veh_collided_with, true);
+		Vehicle veh_stopped_red_light = -1;
 		float vehroadlaws_speed = ENTITY::GET_ENTITY_SPEED(vehroadlaws);
 
 		int vehcollidedwith_distance_x = 100;
@@ -279,6 +280,54 @@ void road_laws()
 			Escape_seconds = 0;
 		}
 
+		// Running Red Light
+		if (featureRunningRedLight) {
+			Vehicle vehicles_red[arrSize_laws];
+			int count_vehs = worldGetAllVehicles(vehicles_red, arrSize_laws);
+			float dist_difference = -1.0;
+			float temp_distance = 20.0;
+			for (int v = 0; v < count_vehs; v++) {
+				if (vehicles_red[v] != vehroadlaws) {
+					Vector3 coordsveh = ENTITY::GET_ENTITY_COORDS(vehicles_red[v], true);
+					dist_difference = SYSTEM::VDIST(vehroadlaws_coords.x, vehroadlaws_coords.y, vehroadlaws_coords.z, coordsveh.x, coordsveh.y, coordsveh.z);
+					if (temp_distance > dist_difference) {
+						temp_distance = dist_difference;
+						veh_stopped_red_light = vehicles_red[v];
+					}
+				}
+			}
+			//Vehicle veh_stopped_red_light = VEHICLE::GET_CLOSEST_VEHICLE(vehroadlaws_coords.x, vehroadlaws_coords.y, vehroadlaws_coords.z, 10, 0, 70);
+			Vector3 veh_stopped_red_light_coords = ENTITY::GET_ENTITY_COORDS(veh_stopped_red_light, true);
+			float veh_stopped_red_light_heading = ENTITY::GET_ENTITY_HEADING(veh_stopped_red_light);
+			float my_vehicle_heading = ENTITY::GET_ENTITY_HEADING(vehroadlaws);
+			int temp_heading = veh_stopped_red_light_heading - my_vehicle_heading;
+			if (temp_heading < 0) temp_heading = (temp_heading * -1);
+
+			if (VEHICLE::IS_VEHICLE_STOPPED_AT_TRAFFIC_LIGHTS(veh_stopped_red_light) && temp_heading < 80) approached = true;
+
+			if (approached == true && red_light_veh_detected == false) {
+				red_light_vehicle = veh_stopped_red_light;
+				red_light_veh_detected = true;
+			}
+
+			if (approached == true) {
+				Vector3 veh_stopped_red_light_coords2 = ENTITY::GET_ENTITY_COORDS(red_light_vehicle, true);
+				veh_redlight_distance_x = vehroadlaws_coords.x - veh_stopped_red_light_coords2.x;
+				veh_redlight_distance_y = vehroadlaws_coords.y - veh_stopped_red_light_coords2.y;
+				if (veh_redlight_distance_x < 0) veh_redlight_distance_x = (veh_redlight_distance_x * -1);
+				if (veh_redlight_distance_y < 0) veh_redlight_distance_y = (veh_redlight_distance_y * -1);
+
+				if (temp_heading < 80 && (veh_redlight_distance_x > 10 || veh_redlight_distance_y > 10)) runningredlight_check = true;
+
+				if (veh_redlight_distance_x > 40 || veh_redlight_distance_y > 40) {
+					if (been_seen_by_a_cop == false) runningredlight_check = false;
+					red_light_veh_detected = false;
+					approached = false;
+					veh_redlight_distance_x, veh_redlight_distance_y = -1;
+				}
+			}
+		}
+
 		// ALL THE PEDS AROUND
 		for (int i = 0; i < count_laws; i++) {
 			// Vehicle Collided
@@ -306,40 +355,6 @@ void road_laws()
 				if (Collision_seconds > 3) {
 					if (been_seen_by_a_cop == false) vehiclecollision_check = false;
 					Collision_seconds = -1;
-				}
-			}
-
-			// Running Red Light
-			if (featureRunningRedLight) {
-				Vehicle veh_stopped_red_light = VEHICLE::GET_CLOSEST_VEHICLE(vehroadlaws_coords.x, vehroadlaws_coords.y, vehroadlaws_coords.z, 10, 0, 70);
-				Vector3 veh_stopped_red_light_coords = ENTITY::GET_ENTITY_COORDS(veh_stopped_red_light, true);
-				float veh_stopped_red_light_heading = ENTITY::GET_ENTITY_HEADING(veh_stopped_red_light);
-				float my_vehicle_heading = ENTITY::GET_ENTITY_HEADING(vehroadlaws);
-				int temp_heading = veh_stopped_red_light_heading - my_vehicle_heading;
-				if (temp_heading < 0) temp_heading = (temp_heading * -1);
-
-				if (VEHICLE::IS_VEHICLE_STOPPED_AT_TRAFFIC_LIGHTS(veh_stopped_red_light) && temp_heading < 80) approached = true;
-
-				if (approached == true && red_light_veh_detected == false) {
-					red_light_vehicle = veh_stopped_red_light;
-					red_light_veh_detected = true;
-				}
-
-				if (approached == true) {
-					Vector3 veh_stopped_red_light_coords2 = ENTITY::GET_ENTITY_COORDS(red_light_vehicle, true);
-					veh_redlight_distance_x = vehroadlaws_coords.x - veh_stopped_red_light_coords2.x;
-					veh_redlight_distance_y = vehroadlaws_coords.y - veh_stopped_red_light_coords2.y;
-					if (veh_redlight_distance_x < 0) veh_redlight_distance_x = (veh_redlight_distance_x * -1);
-					if (veh_redlight_distance_y < 0) veh_redlight_distance_y = (veh_redlight_distance_y * -1);
-
-					if (temp_heading < 80 && (veh_redlight_distance_x > 10 || veh_redlight_distance_y > 10)) runningredlight_check = true;
-
-					if (veh_redlight_distance_x > 40 || veh_redlight_distance_y > 40) {
-						if (been_seen_by_a_cop == false) runningredlight_check = false;
-						red_light_veh_detected = false;
-						approached = false;
-						veh_redlight_distance_x, veh_redlight_distance_y = -1;
-					}
 				}
 			}
 
