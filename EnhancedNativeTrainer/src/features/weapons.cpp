@@ -1650,10 +1650,8 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 
 	// Power Punch
 	if (featurePowerPunch && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
-		//Vector3 CamRot = CAM::GET_GAMEPLAY_CAM_ROT(2);
 		Vector3 CamRot = ENTITY::GET_ENTITY_ROTATION(playerPed, 2);
 		long long int p_force = -1; 
-
 		const int arrSize_punch = 1024;
 		Ped surr_p_peds[arrSize_punch];
 
@@ -1664,7 +1662,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		}
 		
 		if (CONTROLS::IS_CONTROL_PRESSED(2, 24) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, 140) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, 141)) force_nearest_ped = true;
-		
+
 		bool cur_weapon_e = false;
 		bool cur_weapon_peds = false;
 		bool cur_weapon_e_peds = false;
@@ -1715,6 +1713,10 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 
 			int count_surr_p_peds = worldGetAllPeds(surr_p_peds, arrSize_punch);
 			for (int i = 0; i < count_surr_p_peds; i++) {
+				if (PED::IS_PED_IN_MELEE_COMBAT(surr_p_peds[i]) && surr_p_peds[i] != playerPed) {
+					AI::TASK_SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(surr_p_peds[i], true);
+					AI::CLEAR_PED_TASKS_IMMEDIATELY(surr_p_peds[i]);
+				}
 				if (PED::GET_PED_TYPE(surr_p_peds[i]) != 0 && PED::GET_PED_TYPE(surr_p_peds[i]) != 1 && PED::GET_PED_TYPE(surr_p_peds[i]) != 2 && PED::GET_PED_TYPE(surr_p_peds[i]) != 3) {
 					if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(surr_p_peds[i], playerPed, 1)) {
 						temp_nearest_ped = surr_p_peds[i];
@@ -1746,7 +1748,6 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 				}
 			} // end of int (vehicles)
 		}
-		
 		if (temp_nearest_ped != -1) {
 			PED::SET_PED_CAN_RAGDOLL(temp_nearest_ped, true);
 			PED::SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(temp_nearest_ped, true);
@@ -1755,7 +1756,6 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			AI::CLEAR_PED_TASKS(temp_nearest_ped);
 			AI::TASK_SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(temp_nearest_ped, true);
 			AI::CLEAR_PED_TASKS_IMMEDIATELY(temp_nearest_ped);
-			//PED::SET_PED_TO_RAGDOLL(temp_nearest_ped, 1500, 1500, 1, true, true, false);
 			ENTITY::APPLY_FORCE_TO_ENTITY(temp_nearest_ped, 1, v_x, v_y, v_z, 0, 0, 0, true, false, true, true, true, true);
 			force_nearest_ped = false;
 			PED::CLEAR_PED_LAST_DAMAGE_BONE(temp_nearest_ped);

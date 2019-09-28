@@ -764,7 +764,7 @@ void update_features(){
 	}
 
 	// Can run in apartments
-	if (featurePlayerRunApartments && GAMEPLAY::GET_MISSION_FLAG() == 0) {
+	if (featurePlayerRunApartments && GAMEPLAY::GET_MISSION_FLAG() == 0 && !UI::IS_HELP_MESSAGE_BEING_DISPLAYED()) {
 		Vector3 coords_apprun_ped = ENTITY::GET_ENTITY_COORDS(playerPed, true);
 		if (!INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_apprun_ped.x, coords_apprun_ped.y, coords_apprun_ped.z) && 
 			(INTERIOR::GET_INTERIOR_AT_COORDS(coords_apprun_ped.x, coords_apprun_ped.y, coords_apprun_ped.z) == 206849 ||
