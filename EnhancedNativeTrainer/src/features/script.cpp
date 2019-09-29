@@ -769,29 +769,44 @@ void update_features(){
 		if (!INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_apprun_ped.x, coords_apprun_ped.y, coords_apprun_ped.z) && 
 			(INTERIOR::GET_INTERIOR_AT_COORDS(coords_apprun_ped.x, coords_apprun_ped.y, coords_apprun_ped.z) == 206849 ||
 			INTERIOR::GET_INTERIOR_AT_COORDS(coords_apprun_ped.x, coords_apprun_ped.y, coords_apprun_ped.z) == 166657 ||
+			INTERIOR::GET_INTERIOR_AT_COORDS(coords_apprun_ped.x, coords_apprun_ped.y, coords_apprun_ped.z) == 166401 ||
 			INTERIOR::GET_INTERIOR_AT_COORDS(coords_apprun_ped.x, coords_apprun_ped.y, coords_apprun_ped.z) == 115458 ||
+			INTERIOR::GET_INTERIOR_AT_COORDS(coords_apprun_ped.x, coords_apprun_ped.y, coords_apprun_ped.z) == 114946 ||
+			INTERIOR::GET_INTERIOR_AT_COORDS(coords_apprun_ped.x, coords_apprun_ped.y, coords_apprun_ped.z) == 171777 ||
+			INTERIOR::GET_INTERIOR_AT_COORDS(coords_apprun_ped.x, coords_apprun_ped.y, coords_apprun_ped.z) == 197121 ||
+			INTERIOR::GET_INTERIOR_AT_COORDS(coords_apprun_ped.x, coords_apprun_ped.y, coords_apprun_ped.z) == 197889 ||
 			INTERIOR::GET_INTERIOR_AT_COORDS(coords_apprun_ped.x, coords_apprun_ped.y, coords_apprun_ped.z) == 4866 ||
 			INTERIOR::GET_INTERIOR_AT_COORDS(coords_apprun_ped.x, coords_apprun_ped.y, coords_apprun_ped.z) == 36866)) {
-			
 			iaminside = true;
-			
-			if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 1) {
-				we_have_troubles = false;
+			if (!ENTITY::IS_ENTITY_IN_AREA(playerPed, -802.346,	171.234, 70.8347, -799.234, 174.817, 74.8347, 1, 1, 1) &&
+				!ENTITY::IS_ENTITY_IN_AREA(playerPed, -810.195, 169.765, 74.7408, -808.39, 171.398, 78.7408, 1, 1, 1) &&
+				!ENTITY::IS_ENTITY_IN_AREA(playerPed, -10.91648, -1442.35, 29.1015, -8.14864, -1440.2, 33.1015, 1, 1, 1) &&
+				!ENTITY::IS_ENTITY_IN_AREA(playerPed, 2.63788, 528.786, 172.628, 5.68781, 530.781, 176.628, 1, 1, 1) &&
+				!ENTITY::IS_ENTITY_IN_AREA(playerPed, 1977.13, 3819.58, 31.4501, 1978.99, 3820.1, 35.4501, 1, 1, 1) &&
+				!ENTITY::IS_ENTITY_IN_AREA(playerPed, -1161.46,	-1521.46, 8.6327, -1160.53, -1518.42, 12.6327, 1, 1, 1)) {
+				if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 1) {
+					we_have_troubles = false;
+					PLAYER::SET_MAX_WANTED_LEVEL(5);
+					PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 1, 0);
+					PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
+				}
+
+				if (PED::IS_PED_SHOOTING(playerPed)) we_have_troubles = true;
+
+				if (we_have_troubles == false) {
+					GAMEPLAY::CLEAR_AREA_OF_COPS(coords_apprun_ped.x, coords_apprun_ped.y, coords_apprun_ped.z, 20, 0);
+					PLAYER::SET_POLICE_IGNORE_PLAYER(PLAYER::PLAYER_ID(), true);
+					UI::HIDE_HUD_COMPONENT_THIS_FRAME(1);
+				}
+				else {
+					PLAYER::SET_POLICE_IGNORE_PLAYER(PLAYER::PLAYER_ID(), false);
+					UI::SHOW_HUD_COMPONENT_THIS_FRAME(1);
+				}
+			}
+			else if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 2) {
 				PLAYER::SET_MAX_WANTED_LEVEL(5);
-				PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 1, 0);
+				PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 0, 0);
 				PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
-			}
-
-			if (PED::IS_PED_SHOOTING(playerPed)) we_have_troubles = true;
-
-			if (we_have_troubles == false) {
-				GAMEPLAY::CLEAR_AREA_OF_COPS(coords_apprun_ped.x, coords_apprun_ped.y, coords_apprun_ped.z, 20, 0);
-				PLAYER::SET_POLICE_IGNORE_PLAYER(PLAYER::PLAYER_ID(), true);
-				UI::HIDE_HUD_COMPONENT_THIS_FRAME(1);
-			}
-			else {
-				PLAYER::SET_POLICE_IGNORE_PLAYER(PLAYER::PLAYER_ID(), false);
-				UI::SHOW_HUD_COMPONENT_THIS_FRAME(1);
 			}
 		}
 		else {
