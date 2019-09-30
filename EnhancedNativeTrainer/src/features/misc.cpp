@@ -44,6 +44,7 @@ bool featureNoPhoneOnHUD = false;
 int secs_passed, secs_curr = -1;
 float temp_seconds, bill_seconds = 0;
 float bill_to_pay, mins = -1;
+
 //
 // Dynamic Health Bar variables
 bool featureDynamicHealthBar = false;
