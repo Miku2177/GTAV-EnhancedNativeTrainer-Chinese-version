@@ -66,6 +66,7 @@ bool v_collision_check = false;
 bool time_to_attack = true;
 std::vector<Ped> pursuer;
 std::vector<Vehicle> v_collided;
+int s_secs_passed, s_secs_curr, s_seconds = 0;
 
 const std::vector<std::string> PED_WEAPONS_SELECTIVE_CAPTIONS{ "\"WEAPON_UNARMED\"", "\"WEAPON_NIGHTSTICK\"", "\"WEAPON_FLASHLIGHT\"", "\"WEAPON_KNIFE\"", "\"WEAPON_DAGGER\"", "\"WEAPON_HAMMER\"", "\"WEAPON_BAT\"", "\"WEAPON_GOLFCLUB\"",
 "\"WEAPON_CROWBAR\"", "\"WEAPON_POOLCUE\"", "\"WEAPON_WRENCH\"", "\"WEAPON_MACHETE\"", "\"WEAPON_BOTTLE\"", "\"WEAPON_PISTOL\"", "\"WEAPON_APPISTOL\"", "\"WEAPON_REVOLVER\"", "\"WEAPON_STUNGUN\"", "\"WEAPON_FLAREGUN\"",
@@ -550,10 +551,11 @@ void update_area_effects(Ped playerPed){
 		show_debug_info_on_screen(featureShowDebugInfo);
 	}
 
-	// Agressive Drivers
+	// Aggressive Drivers
 	if (featureAggressiveDrivers) {
 		Vehicle veh_me = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		Vector3 veh_me_coords = ENTITY::GET_ENTITY_COORDS(veh_me, true);
+		float veh_me_speed = ENTITY::GET_ENTITY_SPEED(veh_me);
 		const int arrSize_laws = 1024;
 		Vehicle veh_agressive[arrSize_laws];
 		int count_veh = worldGetAllPeds(veh_agressive, arrSize_laws);
@@ -594,13 +596,22 @@ void update_area_effects(Ped playerPed){
 			time_to_attack = false;
 			v_collision_check = false;
 		}
-		if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && time_to_attack == false) {
+		if (time_to_attack == false && veh_me_speed < 1) {
+			s_secs_passed = clock() / CLOCKS_PER_SEC;
+			if (((clock() / CLOCKS_PER_SEC) - s_secs_curr) != 0) {
+				s_seconds = s_seconds + 1;
+				s_secs_curr = s_secs_passed;
+			}
+		}
+		if (veh_me_speed > 1) s_seconds = 0;
+		if ((!PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) || s_seconds > 3) && time_to_attack == false) {
 			for (int j = 0; j < pursuer.size(); j++) {
 				PED::SET_PED_AS_ENEMY(PLAYER::PLAYER_PED_ID(), true);
 				//PED::SET_PED_FLEE_ATTRIBUTES(pursuer[j], 0, 0);
 				PED::REGISTER_TARGET(pursuer[j], PLAYER::PLAYER_PED_ID());
 				AI::TASK_COMBAT_PED(pursuer[j], PLAYER::PLAYER_PED_ID(), 0, 16);
 			}
+			s_seconds = 0;
 			time_to_attack = true;
 		}
 		if (((PLAYER::GET_TIME_SINCE_LAST_DEATH() > 100 && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 5000) || (PLAYER::GET_TIME_SINCE_LAST_ARREST() > 100 && PLAYER::GET_TIME_SINCE_LAST_ARREST() < 5000)) && !pursuer.empty()) {
