@@ -42,6 +42,7 @@ bool featurePedsWeapons = false;
 bool featureAngryMenOnly = false;
 bool featurePedsIncludeDrivers = false;
 bool featurePedsIncludePilots = false;
+bool featureAggressiveDrivers = false;
 bool featureNPCNoLights = false;
 bool featureNPCNeonLights = false;
 bool featureNPCFullBeam = false;
@@ -60,6 +61,11 @@ bool allWorldVehiclesThisFrameFilled = false;
 
 std::set<Ped> releasedPeds;
 std::set<Vehicle> releasedVehicles;
+
+bool v_collision_check = false;
+bool time_to_attack = true;
+std::vector<Ped> pursuer;
+std::vector<Vehicle> v_collided;
 
 const std::vector<std::string> PED_WEAPONS_SELECTIVE_CAPTIONS{ "\"WEAPON_UNARMED\"", "\"WEAPON_NIGHTSTICK\"", "\"WEAPON_FLASHLIGHT\"", "\"WEAPON_KNIFE\"", "\"WEAPON_DAGGER\"", "\"WEAPON_HAMMER\"", "\"WEAPON_BAT\"", "\"WEAPON_GOLFCLUB\"",
 "\"WEAPON_CROWBAR\"", "\"WEAPON_POOLCUE\"", "\"WEAPON_WRENCH\"", "\"WEAPON_MACHETE\"", "\"WEAPON_BOTTLE\"", "\"WEAPON_PISTOL\"", "\"WEAPON_APPISTOL\"", "\"WEAPON_REVOLVER\"", "\"WEAPON_STUNGUN\"", "\"WEAPON_FLAREGUN\"",
@@ -113,6 +119,7 @@ void add_areaeffect_feature_enablements(std::vector<FeatureEnabledLocalDefinitio
 	results->push_back(FeatureEnabledLocalDefinition{"featureAngryMenOnly", &featureAngryMenOnly});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePedsIncludeDrivers", &featurePedsIncludeDrivers});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePedsIncludePilots", &featurePedsIncludePilots});
+	results->push_back(FeatureEnabledLocalDefinition{"featureAggressiveDrivers", &featureAggressiveDrivers});
 	results->push_back(FeatureEnabledLocalDefinition{"featureShowDebugInfo", &featureShowDebugInfo}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureNPCNoLights", &featureNPCNoLights}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureNPCNeonLights", &featureNPCNeonLights}); 
@@ -137,6 +144,7 @@ void reset_areaeffect_globals(){
 	featureAngryPedsUseCover = false;
 	featurePedsIncludeDrivers = false;
 	featurePedsIncludePilots = false;
+	featureAggressiveDrivers = false;
 	featureShowDebugInfo = false;
 	featureNPCNoLights = false;
 	featureNPCNeonLights = false;
@@ -226,6 +234,12 @@ void process_areaeffect_peds_menu(){
 	listItem->caption = "NPC No Gravity Peds";
 	listItem->value = NoPedsGravityIndex;
 	menuItems.push_back(listItem);
+
+	togItem = new ToggleMenuItem<int>();
+	togItem->caption = "Aggressive Drivers";
+	togItem->value = 1;
+	togItem->toggleValue = &featureAggressiveDrivers;
+	menuItems.push_back(togItem);
 
 	draw_generic_menu<int>(menuItems, &areaeffect_ped_level_menu_index, "Ped Effects", onconfirm_areaeffect_ped_menu, NULL, NULL);
 }
@@ -534,6 +548,79 @@ void update_area_effects(Ped playerPed){
 
 	if(featureShowDebugInfo){ 
 		show_debug_info_on_screen(featureShowDebugInfo);
+	}
+
+	// Agressive Drivers
+	if (featureAggressiveDrivers) {
+		Vehicle veh_me = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
+		Vector3 veh_me_coords = ENTITY::GET_ENTITY_COORDS(veh_me, true);
+		const int arrSize_laws = 1024;
+		Vehicle veh_agressive[arrSize_laws];
+		int count_veh = worldGetAllPeds(veh_agressive, arrSize_laws);
+		Vehicle veh_coll_with = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
+		Vector3 veh_coll_with_coords = ENTITY::GET_ENTITY_COORDS(veh_coll_with, true);
+		int vehcoll_with_dist_x = 100;
+		int vehcoll_with_dist_y = 100;
+		for (int i = 0; i < count_veh; i++) {
+			if (PED::GET_PED_TYPE(veh_agressive[i]) != 0 && PED::GET_PED_TYPE(veh_agressive[i]) != 1 && PED::GET_PED_TYPE(veh_agressive[i]) != 2 && PED::GET_PED_TYPE(veh_agressive[i]) != 3 &&
+				PED::GET_PED_TYPE(veh_agressive[i]) != 6 && PED::GET_PED_TYPE(veh_agressive[i]) != 27 && PED::GET_PED_TYPE(veh_agressive[i]) != 29) {
+				veh_coll_with = PED::GET_VEHICLE_PED_IS_IN(veh_agressive[i], false);
+				veh_coll_with_coords = ENTITY::GET_ENTITY_COORDS(veh_coll_with, true);
+
+				vehcoll_with_dist_x = (veh_me_coords.x - veh_coll_with_coords.x);
+				vehcoll_with_dist_y = (veh_me_coords.y - veh_coll_with_coords.y);
+				if (vehcoll_with_dist_x < 0) vehcoll_with_dist_x = (vehcoll_with_dist_x * -1);
+				if (vehcoll_with_dist_y < 0) vehcoll_with_dist_y = (vehcoll_with_dist_y * -1);
+
+				if (veh_coll_with != PED::GET_VEHICLE_PED_IS_IN(playerPed, false) && ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(veh_me) && ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(veh_coll_with) &&
+					vehcoll_with_dist_x < 5 && vehcoll_with_dist_y < 5) {
+					v_collision_check = true;
+					if (pursuer.empty()) pursuer.push_back(veh_agressive[i]);
+					else pursuer.push_back(veh_agressive[i]);
+					if (v_collided.empty()) v_collided.push_back(veh_coll_with);
+					else v_collided.push_back(veh_coll_with);
+					ENTITY::SET_ENTITY_AS_MISSION_ENTITY(pursuer.back(), 1, 1);
+					ENTITY::SET_ENTITY_AS_MISSION_ENTITY(v_collided.back(), 1, 1);
+				}
+			}
+		}
+		if (v_collision_check == true) {
+			AI::SET_DRIVE_TASK_CRUISE_SPEED(pursuer.back(), 300.0);
+			AI::TASK_VEHICLE_CHASE(pursuer.back(), playerPed);
+			AI::SET_TASK_VEHICLE_CHASE_IDEAL_PURSUIT_DISTANCE(pursuer.back(), 60.0f);
+			AI::SET_TASK_VEHICLE_CHASE_BEHAVIOR_FLAG(pursuer.back(), 32, true);
+			PED::SET_DRIVER_ABILITY(pursuer.back(), 0.9f);
+			AUDIO::_PLAY_AMBIENT_SPEECH1(pursuer.back(), "PROVOKE_GENERIC", "SPEECH_PARAMS_FORCE_SHOUTED");
+			time_to_attack = false;
+			v_collision_check = false;
+		}
+		if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && time_to_attack == false) {
+			for (int j = 0; j < pursuer.size(); j++) {
+				PED::SET_PED_AS_ENEMY(PLAYER::PLAYER_PED_ID(), true);
+				//PED::SET_PED_FLEE_ATTRIBUTES(pursuer[j], 0, 0);
+				PED::REGISTER_TARGET(pursuer[j], PLAYER::PLAYER_PED_ID());
+				AI::TASK_COMBAT_PED(pursuer[j], PLAYER::PLAYER_PED_ID(), 0, 16);
+			}
+			time_to_attack = true;
+		}
+		if (((PLAYER::GET_TIME_SINCE_LAST_DEATH() > 100 && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 5000) || (PLAYER::GET_TIME_SINCE_LAST_ARREST() > 100 && PLAYER::GET_TIME_SINCE_LAST_ARREST() < 5000)) && !pursuer.empty()) {
+			for (int j = 0; j < pursuer.size(); j++) {
+				ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&pursuer[j]);
+				ENTITY::SET_VEHICLE_AS_NO_LONGER_NEEDED(&v_collided[j]);
+			}
+			pursuer.clear();
+			pursuer.shrink_to_fit();
+			v_collided.clear();
+			v_collided.shrink_to_fit();
+		}
+		if (!pursuer.empty() && pursuer.size() > 20) {
+			ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&pursuer[0]);
+			PED::DELETE_PED(&pursuer[0]);
+			pursuer.erase(pursuer.begin());
+			ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&v_collided[0]);
+			VEHICLE::DELETE_VEHICLE(&v_collided[0]);
+			v_collided.erase(v_collided.begin());
+		}
 	}
 
 }
