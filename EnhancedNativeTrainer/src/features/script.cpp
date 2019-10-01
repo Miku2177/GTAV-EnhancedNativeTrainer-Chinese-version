@@ -931,6 +931,7 @@ void update_features(){
 	// Instant Respawn On Death
 	if (featureRespawnsWhereDied && GAMEPLAY::GET_MISSION_FLAG() == 0) {
 		if (ENTITY::IS_ENTITY_DEAD(playerPed)) {
+			player_died = true;
 			CAM::DO_SCREEN_FADE_OUT(500);
 			WAIT(1000);
 			GAMEPLAY::_DISABLE_AUTOMATIC_RESPAWN(true);
