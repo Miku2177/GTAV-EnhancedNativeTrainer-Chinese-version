@@ -627,12 +627,13 @@ void update_area_effects(Ped playerPed){
 			s_seconds = 0;
 			time_to_attack = true;
 		}
-		if (((PLAYER::GET_TIME_SINCE_LAST_DEATH() > 100 && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 5000) || (PLAYER::GET_TIME_SINCE_LAST_ARREST() > 100 && PLAYER::GET_TIME_SINCE_LAST_ARREST() < 5000)) && !pursuer.empty()) {
+		if (((PLAYER::GET_TIME_SINCE_LAST_DEATH() > 100 && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 5000) || (PLAYER::GET_TIME_SINCE_LAST_ARREST() > 100 && PLAYER::GET_TIME_SINCE_LAST_ARREST() < 5000) || player_died == true) && !pursuer.empty()) {
 			for (int j = 0; j < pursuer.size(); j++) {
 				ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&pursuer[j]);
 				if (ENTITY::DOES_ENTITY_EXIST(pursuer[j])) PED::DELETE_PED(&pursuer[j]);
 				ENTITY::SET_VEHICLE_AS_NO_LONGER_NEEDED(&v_collided[j]);
 				if (ENTITY::DOES_ENTITY_EXIST(v_collided[j])) VEHICLE::DELETE_VEHICLE(&v_collided[j]);
+				player_died = false;
 			}
 			pursuer.clear();
 			pursuer.shrink_to_fit();
@@ -647,7 +648,7 @@ void update_area_effects(Ped playerPed){
 			VEHICLE::DELETE_VEHICLE(&v_collided[0]);
 			v_collided.erase(v_collided.begin());
 		}
-	}
+	} // end of aggressive drivers
 
 }
 

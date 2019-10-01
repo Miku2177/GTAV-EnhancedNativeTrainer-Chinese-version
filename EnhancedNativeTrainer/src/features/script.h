@@ -205,6 +205,7 @@ extern bool featurePlayerInvisible;
 extern bool featurePlayerInvisibleInVehicle;
 extern bool featureShowStatusMessage;
 extern bool featureNoAutoRespawn;
+extern bool player_died;
 extern bool npc_player_died;
 extern bool featureWantedLevelFrozen;
 extern const std::vector<std::string> PLAYER_HEALTH_CAPTIONS;
