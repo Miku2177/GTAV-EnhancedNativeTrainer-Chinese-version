@@ -577,12 +577,23 @@ void update_area_effects(Ped playerPed){
 				if (veh_coll_with != PED::GET_VEHICLE_PED_IS_IN(playerPed, false) && ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(veh_me) && ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(veh_coll_with) &&
 					vehcoll_with_dist_x < 5 && vehcoll_with_dist_y < 5) {
 					v_collision_check = true;
-					if (pursuer.empty()) pursuer.push_back(veh_agressive[i]);
-					else pursuer.push_back(veh_agressive[i]);
-					if (v_collided.empty()) v_collided.push_back(veh_coll_with);
-					else v_collided.push_back(veh_coll_with);
-					ENTITY::SET_ENTITY_AS_MISSION_ENTITY(pursuer.back(), 1, 1);
-					ENTITY::SET_ENTITY_AS_MISSION_ENTITY(v_collided.back(), 1, 1);
+					if (ENTITY::DOES_ENTITY_EXIST(veh_agressive[i]) && !ENTITY::IS_ENTITY_DEAD(veh_agressive[i])) {
+						if (pursuer.empty()) pursuer.push_back(veh_agressive[i]);
+						if (v_collided.empty()) v_collided.push_back(veh_coll_with);
+						if (!pursuer.empty()) {
+							bool found = false;
+							for (int k = 0; k < pursuer.size(); k++) {
+								if (pursuer[k] == veh_agressive[i]) found = true;
+							}
+							if (found == false) {
+								pursuer.push_back(veh_agressive[i]);
+								v_collided.push_back(veh_coll_with);
+							}
+						}
+						ENTITY::SET_ENTITY_AS_MISSION_ENTITY(pursuer.back(), 1, 1);
+						ENTITY::SET_ENTITY_AS_MISSION_ENTITY(v_collided.back(), 1, 1);
+					}
+					s_seconds = 0;
 				}
 			}
 		}
@@ -606,10 +617,12 @@ void update_area_effects(Ped playerPed){
 		if (veh_me_speed > 1) s_seconds = 0;
 		if ((!PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) || s_seconds > 3) && time_to_attack == false) {
 			for (int j = 0; j < pursuer.size(); j++) {
-				PED::SET_PED_AS_ENEMY(PLAYER::PLAYER_PED_ID(), true);
-				//PED::SET_PED_FLEE_ATTRIBUTES(pursuer[j], 0, 0);
-				PED::REGISTER_TARGET(pursuer[j], PLAYER::PLAYER_PED_ID());
-				AI::TASK_COMBAT_PED(pursuer[j], PLAYER::PLAYER_PED_ID(), 0, 16);
+				if (ENTITY::DOES_ENTITY_EXIST(pursuer[j]) && !ENTITY::IS_ENTITY_DEAD(pursuer[j])) {
+					PED::SET_PED_AS_ENEMY(PLAYER::PLAYER_PED_ID(), true);
+					//PED::SET_PED_FLEE_ATTRIBUTES(pursuer[j], 0, 0);
+					PED::REGISTER_TARGET(pursuer[j], PLAYER::PLAYER_PED_ID());
+					AI::TASK_COMBAT_PED(pursuer[j], PLAYER::PLAYER_PED_ID(), 0, 16);
+				}
 			}
 			s_seconds = 0;
 			time_to_attack = true;
@@ -617,18 +630,20 @@ void update_area_effects(Ped playerPed){
 		if (((PLAYER::GET_TIME_SINCE_LAST_DEATH() > 100 && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 5000) || (PLAYER::GET_TIME_SINCE_LAST_ARREST() > 100 && PLAYER::GET_TIME_SINCE_LAST_ARREST() < 5000)) && !pursuer.empty()) {
 			for (int j = 0; j < pursuer.size(); j++) {
 				ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&pursuer[j]);
+				if (ENTITY::DOES_ENTITY_EXIST(pursuer[j])) PED::DELETE_PED(&pursuer[j]);
 				ENTITY::SET_VEHICLE_AS_NO_LONGER_NEEDED(&v_collided[j]);
+				if (ENTITY::DOES_ENTITY_EXIST(v_collided[j])) VEHICLE::DELETE_VEHICLE(&v_collided[j]);
 			}
 			pursuer.clear();
 			pursuer.shrink_to_fit();
 			v_collided.clear();
 			v_collided.shrink_to_fit();
 		}
-		if (!pursuer.empty() && pursuer.size() > 20) {
+		if (!pursuer.empty() && pursuer.size() > 10) {
 			ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&pursuer[0]);
 			PED::DELETE_PED(&pursuer[0]);
 			pursuer.erase(pursuer.begin());
-			ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&v_collided[0]);
+			ENTITY::SET_VEHICLE_AS_NO_LONGER_NEEDED(&v_collided[0]);
 			VEHICLE::DELETE_VEHICLE(&v_collided[0]);
 			v_collided.erase(v_collided.begin());
 		}
