@@ -61,6 +61,7 @@ bool featureArmyMelee = false;
 
 bool featureGravityGun = false;
 bool featureFriendlyFire = false;
+bool featureRapidFire = false;
 bool featureDropWeapon = false;
 bool featureCanDisarmNPC = false;
 bool featurePedNoWeaponDrop = false;
@@ -1292,6 +1293,12 @@ bool process_weapon_menu(){
 	toggleItem->toggleValue = &featurePedNoWeaponDrop;
 	menuItems.push_back(toggleItem);
 
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Rapid Fire";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureRapidFire;
+	menuItems.push_back(toggleItem);
+
 	return draw_generic_menu<int>(menuItems, &activeLineIndexWeapon, caption, onconfirm_weapon_menu, NULL, NULL);
 }
 
@@ -1342,6 +1349,7 @@ void reset_weapon_globals(){
 		featureAgainstMeleeWeapons =
 		featureAimAtDriver =
 		featureFriendlyFire =
+		featureRapidFire =
 		featureDropWeapon = 
 		featureCanDisarmNPC =
 		featurePedNoWeaponDrop =
@@ -1853,6 +1861,19 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		PED::SET_CAN_ATTACK_FRIENDLY(playerPed, false, false);
 	}
 
+	// Rapid Fire
+	if (featureRapidFire) {
+		if ((CONTROLS::IS_CONTROL_PRESSED(2, 24) || (CONTROLS::IS_CONTROL_PRESSED(2, 24) && CONTROLS::IS_CONTROL_PRESSED(2, 25))) && ENTITY::DOES_ENTITY_EXIST(playerPed) && !ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) &&
+			!PED::IS_PED_RELOADING(playerPed)) {
+			Vector3 myCoords = PED::GET_PED_BONE_COORDS(playerPed, 64016, 0, 0, 0); // right finger bone
+			float Coord[3];
+			Vector3 moveToPos = add(&myCoords, &DirectionOffsetFromCam(5.5f));
+			VectorToFloat(moveToPos, Coord);
+			GAMEPLAY::SHOOT_SINGLE_BULLET_BETWEEN_COORDS(myCoords.x, myCoords.y, myCoords.z, Coord[0], Coord[1], Coord[2]/* + 0.5*/, 250, 1, WEAPON::GET_SELECTED_PED_WEAPON(playerPed), playerPed, 1, 0, -1.0);
+			GAMEPLAY::SHOOT_SINGLE_BULLET_BETWEEN_COORDS(myCoords.x, myCoords.y, myCoords.z, Coord[0], Coord[1], Coord[2]/* + 0.5*/, 250, 1, WEAPON::GET_SELECTED_PED_WEAPON(playerPed), playerPed, 1, 0, -1.0);
+		}
+	}
+
 	//Gravity Gun
 	if(bPlayerExists && featureGravityGun && GAMEPLAY::GET_MISSION_FLAG() == 0){
 		Ped tempPed;
@@ -1894,7 +1915,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			}*/
 
 			RequestControlEntity(grav_entity); //so we can pick up the ped/prop/vehicle
-
+			
 			ENTITY::SET_ENTITY_COORDS_NO_OFFSET(grav_entity, Coord[0], Coord[1], Coord[2], 0, 0, 0); //This is what was causing the props to disappear
 
 			if(ENTITY::IS_ENTITY_A_VEHICLE(grav_entity)){
@@ -2278,6 +2299,7 @@ void add_weapon_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponVehRockets", &featureWeaponVehRockets});
 	results->push_back(FeatureEnabledLocalDefinition{"featureGravityGun", &featureGravityGun});
 	results->push_back(FeatureEnabledLocalDefinition{"featureFriendlyFire", &featureFriendlyFire});
+	results->push_back(FeatureEnabledLocalDefinition{"featureRapidFire", &featureRapidFire});
 	results->push_back(FeatureEnabledLocalDefinition{"featureDropWeapon", &featureDropWeapon});
 	results->push_back(FeatureEnabledLocalDefinition{"featureCanDisarmNPC", &featureCanDisarmNPC});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePedNoWeaponDrop", &featurePedNoWeaponDrop});
