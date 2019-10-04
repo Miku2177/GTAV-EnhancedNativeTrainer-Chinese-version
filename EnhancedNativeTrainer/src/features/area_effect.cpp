@@ -409,7 +409,7 @@ void process_areaeffect_menu(){
 	std::vector<MenuItem<int>*> menuItems;
 
 	MenuItem<int> *item = new MenuItem<int>();
-	item->caption = "Pedestrians";
+	item->caption = "People";
 	item->value = -1;
 	item->isLeaf = false;
 	menuItems.push_back(item);
