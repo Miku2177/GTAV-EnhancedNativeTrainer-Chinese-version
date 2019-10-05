@@ -29,6 +29,9 @@ const int DEFAULT_HOTKEY_FLOW_RATE = 10;
 
 const int TIME_TO_SLOW_AIM = 2000;
 
+std::vector<float> VEH_C_X, VEH_C_Y, VEH_C_Z;
+std::vector<Vehicle> VEH_CURR;
+
 int timeSpeedIndexWhileAiming = DEFAULT_TIME_SPEED;
 int timeSpeedIndex = DEFAULT_TIME_SPEED;
 
@@ -36,6 +39,7 @@ int timeFlowRateIndex = DEFAULT_TIME_FLOW_RATE;
 int HotkeyFlowRateIndex = DEFAULT_HOTKEY_FLOW_RATE;
 
 bool featureTimeSynced = false;
+bool featureMatrixMode = false;
 bool timeFlowRateChanged = true, timeFlowRateLocked = true;
 bool HotkeyFlowRateChanged = true, HotkeyFlowRateLocked = true;
 
@@ -182,6 +186,13 @@ void all_time_flow_rate() {
 	listItem->caption = "Game Speed While Aiming";
 	listItem->value = timeSpeedIndexWhileAiming;
 	menuItems.push_back(listItem);
+
+	togItem = new ToggleMenuItem<int>();
+	togItem->caption = "Matrix Mode While Aiming";
+	togItem->value = 0;
+	togItem->toggleValue = &featureMatrixMode;
+	togItem->toggleValueUpdated = NULL;
+	menuItems.push_back(togItem);
 
 	listItem = new SelectFromListMenuItem(TIME_FLOW_RATE_CAPTIONS, onchange_time_flow_rate_callback);
 	listItem->caption = "Time Flow Rate";
@@ -364,6 +375,7 @@ void reset_time_globals(){
 	featureTimeSynced = false;
 	timeFlowRateChanged = true;
 	HotkeyFlowRateChanged = true;
+	featureMatrixMode = false;
 
 	timeSpeedIndexWhileAiming = DEFAULT_TIME_SPEED;
 	timeSpeedIndex = DEFAULT_TIME_SPEED;
@@ -373,6 +385,7 @@ void reset_time_globals(){
 
 void add_time_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){
 	results->push_back(FeatureEnabledLocalDefinition{"featureTimeSynced", &featureTimeSynced});
+	results->push_back(FeatureEnabledLocalDefinition{"featureMatrixMode", &featureMatrixMode});
 }
 
 void movetime_day_forward(){
@@ -799,5 +812,95 @@ void update_time_features(Player player){
 
 	if(timeSinceAimingBegan > 0 && !(PLAYER::IS_PLAYER_FREE_AIMING(player) && PLAYER::IS_PLAYER_CONTROL_ON(player))){
 		timeSinceAimingBegan = 0;
+	}
+
+	// Matrix Mode While Aiming
+	if (featureMatrixMode) {
+		if (CONTROLS::IS_CONTROL_PRESSED(2, 25)) GRAPHICS::_STOP_ALL_SCREEN_EFFECTS();
+		const int arrSize_punch = 1024;
+		Vehicle surr_vehicles[arrSize_punch];
+		int count_surr_v = worldGetAllVehicles(surr_vehicles, arrSize_punch);
+		for (int i = 0; i < count_surr_v; i++) {
+			if (CONTROLS::IS_CONTROL_PRESSED(2, 25) && surr_vehicles[i] != PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false)) {
+				if (VEH_CURR.empty()) VEH_CURR.push_back(surr_vehicles[i]);
+				if (VEH_C_X.empty()) VEH_C_X.push_back(ENTITY::GET_ENTITY_VELOCITY(surr_vehicles[i]).x);
+				if (VEH_C_Y.empty()) VEH_C_Y.push_back(ENTITY::GET_ENTITY_VELOCITY(surr_vehicles[i]).y);
+				if (VEH_C_Z.empty()) VEH_C_Z.push_back(ENTITY::GET_ENTITY_VELOCITY(surr_vehicles[i]).z);
+				if (!VEH_CURR.empty()) {
+					bool v_exists = false;
+					for (int j = 0; j < VEH_CURR.size(); j++) {
+						if (VEH_CURR[j] == surr_vehicles[i]) v_exists = true;
+					}
+					if (v_exists == false) {
+						VEH_CURR.push_back(surr_vehicles[i]);
+						VEH_C_X.push_back(ENTITY::GET_ENTITY_VELOCITY(surr_vehicles[i]).x);
+						VEH_C_Y.push_back(ENTITY::GET_ENTITY_VELOCITY(surr_vehicles[i]).y);
+						VEH_C_Z.push_back(ENTITY::GET_ENTITY_VELOCITY(surr_vehicles[i]).z);
+					}
+				}
+				ENTITY::FREEZE_ENTITY_POSITION(surr_vehicles[i], true);
+				if (VEHICLE::GET_VEHICLE_CLASS(surr_vehicles[i]) == 15) {
+					VEHICLE::SET_HELI_BLADES_SPEED(surr_vehicles[i], 0.0f);
+					VEHICLE::SET_VEHICLE_ENGINE_ON(surr_vehicles[i], false, true);
+				}
+				if (VEHICLE::GET_VEHICLE_CLASS(surr_vehicles[i]) == 21) {
+					VEHICLE::SET_TRAIN_SPEED(surr_vehicles[i], 0.0f);
+					VEHICLE::SET_TRAIN_CRUISE_SPEED(surr_vehicles[i], 0.0f);
+				}
+			}
+			if (CONTROLS::IS_CONTROL_RELEASED(2, 25)) {
+				if (!VEH_CURR.empty()) {
+					for (int j = 0; j < VEH_CURR.size(); j++) {
+						ENTITY::SET_ENTITY_VELOCITY(VEH_CURR[j], VEH_C_X[j], VEH_C_Y[j], VEH_C_Z[j]);
+					}
+					VEH_CURR.clear();
+					VEH_CURR.shrink_to_fit();
+					VEH_C_X.clear();
+					VEH_C_X.shrink_to_fit();
+					VEH_C_Y.clear();
+					VEH_C_Y.shrink_to_fit();
+					VEH_C_Z.clear();
+					VEH_C_Z.shrink_to_fit();
+				}
+				ENTITY::FREEZE_ENTITY_POSITION(surr_vehicles[i], false);
+				if (VEHICLE::GET_VEHICLE_CLASS(surr_vehicles[i]) == 15) {
+					VEHICLE::SET_HELI_BLADES_SPEED(surr_vehicles[i], 150.0f);
+					VEHICLE::SET_VEHICLE_ENGINE_ON(surr_vehicles[i], true, true);
+				}
+				if (VEHICLE::GET_VEHICLE_CLASS(surr_vehicles[i]) == 21) {
+					VEHICLE::SET_TRAIN_SPEED(surr_vehicles[i], 50.0f);
+					VEHICLE::SET_TRAIN_CRUISE_SPEED(surr_vehicles[i], 50.0f);
+				}
+			}
+		}
+		Object surr_objects[arrSize_punch];
+		int count_surr_o = worldGetAllObjects(surr_objects, arrSize_punch);
+		for (int i = 0; i < count_surr_o; i++) {
+			if (CONTROLS::IS_CONTROL_PRESSED(2, 25)) ENTITY::FREEZE_ENTITY_POSITION(surr_objects[i], true);
+			if (CONTROLS::IS_CONTROL_RELEASED(2, 25)) ENTITY::FREEZE_ENTITY_POSITION(surr_objects[i], false);
+		}
+		Ped surr_p_peds[arrSize_punch];
+		int count_surr_p_peds = worldGetAllPeds(surr_p_peds, arrSize_punch);
+		for (int i = 0; i < count_surr_p_peds; i++) {
+			if (CONTROLS::IS_CONTROL_PRESSED(2, 25) && surr_p_peds[i] != PLAYER::PLAYER_PED_ID()) {
+				//AI::CLEAR_PED_SECONDARY_TASK(surr_p_peds[i]);
+				//AI::CLEAR_PED_TASKS(surr_p_peds[i]);
+				if (PED::IS_PED_IN_ANY_VEHICLE(surr_p_peds[i], false)) AI::TASK_STAND_STILL(surr_p_peds[i], 500);
+				PED::RESET_PED_MOVEMENT_CLIPSET(surr_p_peds[i], 0.0);
+				AUDIO::STOP_CURRENT_PLAYING_AMBIENT_SPEECH(surr_p_peds[i]);
+				ENTITY::FREEZE_ENTITY_POSITION(surr_p_peds[i], true);
+				PED::SET_PED_CAN_USE_AUTO_CONVERSATION_LOOKAT(surr_p_peds[i], false);
+				PED::SET_PED_CONFIG_FLAG(surr_p_peds[i], 292, true);
+			}
+			if (CONTROLS::IS_CONTROL_RELEASED(2, 25)) {
+				ENTITY::FREEZE_ENTITY_POSITION(surr_p_peds[i], false);
+				PED::SET_PED_CAN_USE_AUTO_CONVERSATION_LOOKAT(surr_p_peds[i], true);
+				PED::SET_PED_CONFIG_FLAG(surr_p_peds[i], 292, false);
+			}
+			//PED::SET_PED_CONFIG_FLAG(surr_p_peds[i], 224, true);
+
+			//PED::SET_PED_CAN_EVASIVE_DIVE(surr_p_peds[i], false);
+			//PED::SET_PED_COMBAT_ATTRIBUTES(surr_p_peds[i], 3, false);
+		}
 	}
 }
