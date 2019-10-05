@@ -29,8 +29,8 @@ const int DEFAULT_HOTKEY_FLOW_RATE = 10;
 
 const int TIME_TO_SLOW_AIM = 2000;
 
-std::vector<float> VEH_C_X, VEH_C_Y, VEH_C_Z;
-std::vector<Vehicle> VEH_CURR;
+//std::vector<float> VEH_S;
+//std::vector<Vehicle> VEH_CURR;
 
 int timeSpeedIndexWhileAiming = DEFAULT_TIME_SPEED;
 int timeSpeedIndex = DEFAULT_TIME_SPEED;
@@ -822,22 +822,24 @@ void update_time_features(Player player){
 		int count_surr_v = worldGetAllVehicles(surr_vehicles, arrSize_punch);
 		for (int i = 0; i < count_surr_v; i++) {
 			if (CONTROLS::IS_CONTROL_PRESSED(2, 25) && surr_vehicles[i] != PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false)) {
-				if (VEH_CURR.empty()) VEH_CURR.push_back(surr_vehicles[i]);
-				if (VEH_C_X.empty()) VEH_C_X.push_back(ENTITY::GET_ENTITY_VELOCITY(surr_vehicles[i]).x);
-				if (VEH_C_Y.empty()) VEH_C_Y.push_back(ENTITY::GET_ENTITY_VELOCITY(surr_vehicles[i]).y);
-				if (VEH_C_Z.empty()) VEH_C_Z.push_back(ENTITY::GET_ENTITY_VELOCITY(surr_vehicles[i]).z);
-				if (!VEH_CURR.empty()) {
-					bool v_exists = false;
-					for (int j = 0; j < VEH_CURR.size(); j++) {
-						if (VEH_CURR[j] == surr_vehicles[i]) v_exists = true;
-					}
-					if (v_exists == false) {
+				//
+				/*if (ENTITY::GET_ENTITY_SPEED(surr_vehicles[i]) > 1 && VEHICLE::GET_PED_IN_VEHICLE_SEAT(surr_vehicles[i], -1) != 0) {
+					if (VEH_CURR.empty()) {
 						VEH_CURR.push_back(surr_vehicles[i]);
-						VEH_C_X.push_back(ENTITY::GET_ENTITY_VELOCITY(surr_vehicles[i]).x);
-						VEH_C_Y.push_back(ENTITY::GET_ENTITY_VELOCITY(surr_vehicles[i]).y);
-						VEH_C_Z.push_back(ENTITY::GET_ENTITY_VELOCITY(surr_vehicles[i]).z);
+						VEH_S.push_back(ENTITY::GET_ENTITY_SPEED(surr_vehicles[i]));
 					}
-				}
+					if (!VEH_CURR.empty()) {
+						bool v_exists = false;
+						for (int j = 0; j < VEH_CURR.size(); j++) {
+							if (VEH_CURR[j] == surr_vehicles[i]) v_exists = true;
+						}
+						if (v_exists == false) {
+							VEH_CURR.push_back(surr_vehicles[i]);
+							VEH_S.push_back(ENTITY::GET_ENTITY_SPEED(surr_vehicles[i]));
+						}
+					}
+				}*/
+				//
 				ENTITY::FREEZE_ENTITY_POSITION(surr_vehicles[i], true);
 				if (VEHICLE::GET_VEHICLE_CLASS(surr_vehicles[i]) == 15) {
 					VEHICLE::SET_HELI_BLADES_SPEED(surr_vehicles[i], 0.0f);
@@ -849,22 +851,19 @@ void update_time_features(Player player){
 				}
 			}
 			if (CONTROLS::IS_CONTROL_RELEASED(2, 25)) {
-				if (!VEH_CURR.empty()) {
+				//
+				/*if (!VEH_CURR.empty()) {
 					for (int j = 0; j < VEH_CURR.size(); j++) {
-						ENTITY::SET_ENTITY_VELOCITY(VEH_CURR[j], VEH_C_X[j], VEH_C_Y[j], VEH_C_Z[j]);
+						ENTITY::FREEZE_ENTITY_POSITION(VEH_CURR[j], false);
+						VEHICLE::SET_VEHICLE_FORWARD_SPEED(VEH_CURR[j], VEH_S[j] / 2);
 					}
 					VEH_CURR.clear();
 					VEH_CURR.shrink_to_fit();
-					VEH_C_X.clear();
-					VEH_C_X.shrink_to_fit();
-					VEH_C_Y.clear();
-					VEH_C_Y.shrink_to_fit();
-					VEH_C_Z.clear();
-					VEH_C_Z.shrink_to_fit();
-				}
+				}*/
+				//
 				ENTITY::FREEZE_ENTITY_POSITION(surr_vehicles[i], false);
 				if (VEHICLE::GET_VEHICLE_CLASS(surr_vehicles[i]) == 15) {
-					VEHICLE::SET_HELI_BLADES_SPEED(surr_vehicles[i], 150.0f);
+					VEHICLE::SET_HELI_BLADES_SPEED(surr_vehicles[i], 1.0f);
 					VEHICLE::SET_VEHICLE_ENGINE_ON(surr_vehicles[i], true, true);
 				}
 				if (VEHICLE::GET_VEHICLE_CLASS(surr_vehicles[i]) == 21) {
@@ -877,7 +876,10 @@ void update_time_features(Player player){
 		int count_surr_o = worldGetAllObjects(surr_objects, arrSize_punch);
 		for (int i = 0; i < count_surr_o; i++) {
 			if (CONTROLS::IS_CONTROL_PRESSED(2, 25)) ENTITY::FREEZE_ENTITY_POSITION(surr_objects[i], true);
-			if (CONTROLS::IS_CONTROL_RELEASED(2, 25)) ENTITY::FREEZE_ENTITY_POSITION(surr_objects[i], false);
+			if (CONTROLS::IS_CONTROL_RELEASED(2, 25)) {
+				ENTITY::FREEZE_ENTITY_POSITION(surr_objects[i], false);
+				ROPE::ACTIVATE_PHYSICS(surr_objects[i]);
+			}
 		}
 		Ped surr_p_peds[arrSize_punch];
 		int count_surr_p_peds = worldGetAllPeds(surr_p_peds, arrSize_punch);
@@ -889,18 +891,16 @@ void update_time_features(Player player){
 				PED::RESET_PED_MOVEMENT_CLIPSET(surr_p_peds[i], 0.0);
 				AUDIO::STOP_CURRENT_PLAYING_AMBIENT_SPEECH(surr_p_peds[i]);
 				ENTITY::FREEZE_ENTITY_POSITION(surr_p_peds[i], true);
+				PED::SET_PED_CAN_HEAD_IK(surr_p_peds[i], false);
 				PED::SET_PED_CAN_USE_AUTO_CONVERSATION_LOOKAT(surr_p_peds[i], false);
 				PED::SET_PED_CONFIG_FLAG(surr_p_peds[i], 292, true);
 			}
 			if (CONTROLS::IS_CONTROL_RELEASED(2, 25)) {
 				ENTITY::FREEZE_ENTITY_POSITION(surr_p_peds[i], false);
+				PED::SET_PED_CAN_HEAD_IK(surr_p_peds[i], true);
 				PED::SET_PED_CAN_USE_AUTO_CONVERSATION_LOOKAT(surr_p_peds[i], true);
 				PED::SET_PED_CONFIG_FLAG(surr_p_peds[i], 292, false);
 			}
-			//PED::SET_PED_CONFIG_FLAG(surr_p_peds[i], 224, true);
-
-			//PED::SET_PED_CAN_EVASIVE_DIVE(surr_p_peds[i], false);
-			//PED::SET_PED_COMBAT_ATTRIBUTES(surr_p_peds[i], 3, false);
 		}
 	}
 }
