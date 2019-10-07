@@ -141,6 +141,12 @@ const int WORLD_LIGHTNING_INTENSITY_VALUES[] = { -2, 3, -1 };
 int featureLightIntensityIndex = 0;
 bool featureLightIntensityChanged = true;
 
+// Train Speed
+const std::vector<std::string> WORLD_TRAIN_SPEED_CAPTIONS{ "OFF", "0.0", "5.0", "30.0", "100.0", "200.0", "300.0" };
+const float WORLD_TRAIN_SPEED_VALUES[] = { -1.0, 0.0, 5.0, 30.0, 100.0, 200.0, 300.0 };
+int TrainSpeedIndex = 0;
+bool TrainSpeedChanged = true;
+
 bool onconfirm_weather_menu(MenuItem<std::string> choice)
 {
 	std::stringstream ss; ss << "Weather Frozen at: " << lastWeatherName;
@@ -336,6 +342,11 @@ void onchange_world_headlights_blackout_index(int value, SelectFromListMenuItem*
 	featureLightsBlackoutChanged = true;
 }
 
+void onchange_world_train_speed_index(int value, SelectFromListMenuItem* source) {
+	TrainSpeedIndex = value;
+	TrainSpeedChanged = true;
+}
+
 bool onconfirm_world_menu(MenuItem<int> choice)
 {
 	switch (choice.value)
@@ -453,6 +464,12 @@ void process_world_menu()
 	togItem->toggleValue = &featureWorldRandomTrains;
 	togItem->toggleValueUpdated = &featureWorldRandomTrainsUpdated;
 	menuItems.push_back(togItem);
+
+	listItem = new SelectFromListMenuItem(WORLD_TRAIN_SPEED_CAPTIONS, onchange_world_train_speed_index);
+	listItem->wrap = false;
+	listItem->caption = "Train Speed";
+	listItem->value = TrainSpeedIndex;
+	menuItems.push_back(listItem);
 
 	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "Random Boats";
@@ -597,6 +614,7 @@ void reset_world_globals()
 	RadarReducedGripRainingIndex = 0;
 	NoPedsGravityIndex = 0;
 	featureLightsBlackoutIndex = 0;
+	TrainSpeedIndex = 0;
 	WindStrengthIndex = 0;
 	lastWeather.clear();
 	lastWeatherName.clear();
@@ -857,10 +875,10 @@ void update_world_features()
 	}
 
 	// Bus Interior Light On At Night && NPC No Lights && NPC Neon Lights && NPC Dirty Vehicles && NPC Damaged Vehicles && NPC No Gravity Vehicles && NPC Vehicles Reduced Grip && NPC Vehicle Speed && NPC Use Fullbeam && 
-	// Headlights During Blackout && Boost NPC Radio Volume && Slippery When Wet
+	// Headlights During Blackout && Boost NPC Radio Volume && Slippery When Wet && Train Speed
 	if (featureBusLight || featureNPCNoLights || featureNPCNeonLights || featureDirtyVehicles || WORLD_DAMAGED_VEHICLES_VALUES[DamagedVehiclesIndex] > 0 || featureNPCNoGravityVehicles || featureNPCReducedGripVehicles ||
 		WORLD_NPC_VEHICLESPEED_VALUES[NPCVehicleSpeedIndex] > -1 || WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 || featureNPCFullBeam || WORLD_HEADLIGHTS_BLACKOUT_VALUES[featureLightsBlackoutIndex] > 1 ||
-		featureBoostNPCRadio || WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripRainingIndex] > 0) {
+		featureBoostNPCRadio || WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripRainingIndex] > 0 || WORLD_TRAIN_SPEED_VALUES[TrainSpeedIndex] != -1.0) {
 		Vehicle veh_mycurrveh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 		const int BUS_ARR_SIZE = 1024;
 		Vehicle bus_veh[BUS_ARR_SIZE];
@@ -930,6 +948,10 @@ void update_world_features()
 						VEHICLE::SET_VEHICLE_INTERIORLIGHT(bus_veh[i], true);
 					}
 				}
+			}
+			if (WORLD_TRAIN_SPEED_VALUES[TrainSpeedIndex] != -1.0 && VEHICLE::GET_VEHICLE_CLASS(bus_veh[i]) == 21) { // Train Speed
+				VEHICLE::SET_TRAIN_SPEED(bus_veh[i], WORLD_TRAIN_SPEED_VALUES[TrainSpeedIndex]);
+				VEHICLE::SET_TRAIN_CRUISE_SPEED(bus_veh[i], WORLD_TRAIN_SPEED_VALUES[TrainSpeedIndex]);
 			}
 			if (featureNPCNoLights && bus_veh[i] != veh_mycurrveh) {
 				BOOL lightsOn = -1;
@@ -1564,6 +1586,7 @@ void add_world_feature_enablements2(std::vector<StringPairSettingDBRow>* results
 	results->push_back(StringPairSettingDBRow{ "RadarReducedGripRainingIndex", std::to_string(RadarReducedGripRainingIndex) });
 	results->push_back(StringPairSettingDBRow{ "NoPedsGravityIndex", std::to_string(NoPedsGravityIndex) });
 	results->push_back(StringPairSettingDBRow{ "featureLightsBlackoutIndex", std::to_string(featureLightsBlackoutIndex) });
+	results->push_back(StringPairSettingDBRow{ "TrainSpeedIndex", std::to_string(TrainSpeedIndex) });
 }
 
 void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings)
@@ -1622,6 +1645,9 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 		}
 		else if (setting.name.compare("featureLightsBlackoutIndex") == 0) {
 			featureLightsBlackoutIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("TrainSpeedIndex") == 0) {
+			TrainSpeedIndex = stoi(setting.value);
 		}
 	}
 }
