@@ -59,6 +59,10 @@ Vehicle temp_vehicle, playerVehicle_s = -1;
 std::vector<Object> SPIKES;
 bool s_message = false;
 
+bool airstrike = false;
+Object nuke1, nuke2, nuke3 = -1;
+float nuke_h1_coord, nuke_h2_coord, nuke_h3_coord = -1;
+
 bool viz_veh_ind_left, viz_veh_ind_right = false;
 
 bool turn_check_left, turn_check_right = false;
@@ -85,6 +89,7 @@ bool featureRollWhenShoot = false;
 bool featureTractionControl = false;
 bool featureSticktoground = false;
 bool featureDropSpikes = false;
+bool featureAirStrike = false;
 bool featureEngineRunning = false;
 bool featureNoVehFlip = false;
 bool featureAutoToggleLights = false;
@@ -2075,6 +2080,12 @@ void process_veh_menu(){
 	toggleItem->toggleValue = &featureDropSpikes;
 	menuItems.push_back(toggleItem);
 
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Airstrike";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureAirStrike;
+	menuItems.push_back(toggleItem);
+
 	draw_generic_menu<int>(menuItems, &activeLineIndexVeh, caption, onconfirm_veh_menu, NULL, NULL);
 }
 
@@ -3422,6 +3433,75 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	} 
 
 ///////////////////////////////////////////////////////////////////////////////////
+	
+///////////////////////////////////// AIRSTRIKE ///////////////////////////////////
+
+	if (featureAirStrike && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) s_message = false;
+
+	if (featureAirStrike) {
+		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && s_message == false) {
+			set_status_text("Press your ~g~ horn button ~w~ for airstrike");
+			s_message = true;
+		}
+		Vehicle playerVehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
+		Hash currVeh = ENTITY::GET_ENTITY_MODEL(playerVehicle);
+		char *name = VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(currVeh);
+		Hash veh_a = GAMEPLAY::GET_HASH_KEY(name);
+		Vector3 minimum;
+		Vector3 maximum;
+		GAMEPLAY::GET_MODEL_DIMENSIONS(veh_a, &minimum, &maximum);
+		Vector3 entitySCoords = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerVehicle, 0.0, -maximum.y, 0.0);
+		Vector3 Rot = CAM::GET_GAMEPLAY_CAM_ROT(2);
+		Vector3 direction = RotationToDirection2(&Rot);
+		direction.x = 1 * direction.x;
+		direction.y = 1 * direction.y;
+		STREAMING::HAS_NAMED_PTFX_ASSET_LOADED("scr_agencyheistb");
+		STREAMING::REQUEST_NAMED_PTFX_ASSET("scr_agencyheistb");
+		GRAPHICS::_SET_PTFX_ASSET_NEXT_CALL("scr_agencyheistb");
+
+		if (CONTROLS::IS_CONTROL_JUST_PRESSED(2, 86) && airstrike == false && PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
+			nuke1 = OBJECT::CREATE_OBJECT(GAMEPLAY::GET_HASH_KEY("prop_ld_bomb_anim"), entitySCoords.x, entitySCoords.y, entitySCoords.z + 100, false, false, false);
+			ROPE::ACTIVATE_PHYSICS(nuke1);
+			nuke_h1_coord = entitySCoords.z;
+			nuke2 = OBJECT::CREATE_OBJECT(GAMEPLAY::GET_HASH_KEY("prop_ld_bomb_anim"), entitySCoords.x + 2, entitySCoords.y + 2, entitySCoords.z + 90, false, false, false);
+			ROPE::ACTIVATE_PHYSICS(nuke2);
+			nuke_h2_coord = entitySCoords.z;
+			nuke3 = OBJECT::CREATE_OBJECT(GAMEPLAY::GET_HASH_KEY("prop_ld_bomb_anim"), entitySCoords.x - 2, entitySCoords.y - 2, entitySCoords.z + 110, false, false, false);
+			ROPE::ACTIVATE_PHYSICS(nuke3);
+			nuke_h3_coord = entitySCoords.z;
+			airstrike = true;
+		}
+
+		if (airstrike == true) {
+			Vector3 nuke1_coords = ENTITY::GET_ENTITY_COORDS(nuke1, true);
+			nuke1_coords.z = nuke1_coords.z - 1;
+			ENTITY::SET_ENTITY_COORDS(nuke1, nuke1_coords.x, nuke1_coords.y, nuke1_coords.z, 1, 0, 0, 1);
+			GRAPHICS::START_PARTICLE_FX_NON_LOOPED_AT_COORD("scr_agency3b_heli_expl", nuke1_coords.x, nuke1_coords.y, nuke1_coords.z, 0.0f, 0.0f, 0.0f, 0.5f, false, false, false); // 6.0f
+			if (nuke1_coords.z - nuke_h1_coord < 5) { // ENTITY::GET_LAST_MATERIAL_HIT_BY_ENTITY(Nuke) != 0
+				GRAPHICS::START_PARTICLE_FX_NON_LOOPED_AT_COORD("scr_agency3b_heli_expl", nuke1_coords.x, nuke1_coords.y, nuke1_coords.z, 0.0f, 0.0f, 0.0f, 8.0f, false, false, false); // 6.0f
+				FIRE::ADD_OWNED_EXPLOSION(playerPed, nuke1_coords.x, nuke1_coords.y, nuke1_coords.z, 29, 100.0f, true, false, 2.0f);
+			}
+			Vector3 nuke2_coords = ENTITY::GET_ENTITY_COORDS(nuke2, true);
+			nuke2_coords.z = nuke2_coords.z - 1;
+			ENTITY::SET_ENTITY_COORDS(nuke2, nuke2_coords.x, nuke2_coords.y, nuke2_coords.z, 1, 0, 0, 1);
+			GRAPHICS::START_PARTICLE_FX_NON_LOOPED_AT_COORD("scr_agency3b_heli_expl", nuke2_coords.x, nuke2_coords.y, nuke2_coords.z, 0.0f, 0.0f, 0.0f, 0.5f, false, false, false); // 6.0f
+			if (nuke2_coords.z - nuke_h2_coord < 5) { // ENTITY::GET_LAST_MATERIAL_HIT_BY_ENTITY(Nuke) != 0
+				GRAPHICS::START_PARTICLE_FX_NON_LOOPED_AT_COORD("scr_agency3b_heli_expl", nuke2_coords.x, nuke2_coords.y, nuke2_coords.z, 0.0f, 0.0f, 0.0f, 8.0f, false, false, false); // 6.0f
+				FIRE::ADD_OWNED_EXPLOSION(playerPed, nuke2_coords.x, nuke2_coords.y, nuke2_coords.z, 29, 100.0f, true, false, 2.0f);
+			}
+			Vector3 nuke3_coords = ENTITY::GET_ENTITY_COORDS(nuke3, true);
+			nuke3_coords.z = nuke3_coords.z - 1;
+			ENTITY::SET_ENTITY_COORDS(nuke3, nuke3_coords.x, nuke3_coords.y, nuke3_coords.z, 1, 0, 0, 1);
+			GRAPHICS::START_PARTICLE_FX_NON_LOOPED_AT_COORD("scr_agency3b_heli_expl", nuke3_coords.x, nuke3_coords.y, nuke3_coords.z, 0.0f, 0.0f, 0.0f, 0.5f, false, false, false); // 6.0f
+			if (nuke3_coords.z - nuke_h3_coord < 5) { // ENTITY::GET_LAST_MATERIAL_HIT_BY_ENTITY(Nuke) != 0
+				GRAPHICS::START_PARTICLE_FX_NON_LOOPED_AT_COORD("scr_agency3b_heli_expl", nuke3_coords.x, nuke3_coords.y, nuke3_coords.z, 0.0f, 0.0f, 0.0f, 8.0f, false, false, false); // 6.0f
+				FIRE::ADD_OWNED_EXPLOSION(playerPed, nuke3_coords.x, nuke3_coords.y, nuke3_coords.z, 29, 100.0f, true, false, 2.0f);
+				airstrike = false;
+			}
+		}
+	}
+
+///////////////////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////// DROP ROAD SPIKES //////////////////////////////////
 
@@ -3435,7 +3515,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) playerVehicle_s = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		if ((VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(playerVehicle_s)) || VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(playerVehicle_s)) ||
 			VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(playerVehicle_s))) && CONTROLS::IS_CONTROL_JUST_PRESSED(2, 86) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) { // horn 
-			Vector3 my_v_coords = ENTITY::GET_ENTITY_COORDS(playerVehicle_s, true);
 			Hash currVeh_m = ENTITY::GET_ENTITY_MODEL(playerVehicle_s);
 			char *name = VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(currVeh_m);
 			Hash veh_h = GAMEPLAY::GET_HASH_KEY(name);
@@ -3718,6 +3797,7 @@ void reset_vehicle_globals() {
 		featureTractionControl =
 		featureSticktoground =
 		featureDropSpikes =
+		featureAirStrike =
 		featureEngineRunning =
 		featureNoVehFlip =
 		featureAutoToggleLights =
@@ -3995,6 +4075,7 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureTractionControl", &featureTractionControl});
 	results->push_back(FeatureEnabledLocalDefinition{"featureSticktoground", &featureSticktoground});
 	results->push_back(FeatureEnabledLocalDefinition{"featureDropSpikes", &featureDropSpikes});
+	results->push_back(FeatureEnabledLocalDefinition{"featureAirStrike", &featureAirStrike});
 	results->push_back(FeatureEnabledLocalDefinition{"featureEngineRunning", &featureEngineRunning});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoVehFlip", &featureNoVehFlip});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAutoToggleLights", &featureAutoToggleLights});
