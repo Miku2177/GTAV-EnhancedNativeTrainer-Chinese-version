@@ -821,7 +821,6 @@ void update_time_features(Player player){
 		int count_surr_v = worldGetAllVehicles(surr_vehicles, arrSize_punch);
 		for (int i = 0; i < count_surr_v; i++) {
 			if (CONTROLS::IS_CONTROL_PRESSED(2, 25) && ENTITY::DOES_ENTITY_EXIST(surr_vehicles[i]) && surr_vehicles[i] != PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false)) {
-				// vector code
 				if (ENTITY::GET_ENTITY_SPEED(surr_vehicles[i]) > 1 && VEHICLE::GET_PED_IN_VEHICLE_SEAT(surr_vehicles[i], -1) != 0) {
 					if (VEH_CURR.empty()) {
 						VEH_CURR.push_back(surr_vehicles[i]);
@@ -838,7 +837,6 @@ void update_time_features(Player player){
 						}
 					}
 				}
-				//
 				ENTITY::FREEZE_ENTITY_POSITION(surr_vehicles[i], true);
 				if (VEHICLE::GET_VEHICLE_CLASS(surr_vehicles[i]) == 15) {
 					VEHICLE::SET_HELI_BLADES_SPEED(surr_vehicles[i], 0.0f);
@@ -850,7 +848,6 @@ void update_time_features(Player player){
 				}
 			}
 			if (CONTROLS::IS_CONTROL_RELEASED(2, 25) && ENTITY::DOES_ENTITY_EXIST(surr_vehicles[i])) {
-				// vector code
 				if (!VEH_CURR.empty()) {
 					for (int j = 0; j < VEH_CURR.size(); j++) {
 						if (ENTITY::DOES_ENTITY_EXIST(VEH_CURR[j])) {
@@ -859,11 +856,8 @@ void update_time_features(Player player){
 						}
 					}
 					VEH_CURR.clear();
-					//VEH_CURR.shrink_to_fit();
 					VEH_S.clear();
-					//VEH_S.shrink_to_fit();
 				}
-				//
 				ENTITY::FREEZE_ENTITY_POSITION(surr_vehicles[i], false);
 				if (VEHICLE::GET_VEHICLE_CLASS(surr_vehicles[i]) == 15) {
 					VEHICLE::SET_HELI_BLADES_SPEED(surr_vehicles[i], 1.0f);
