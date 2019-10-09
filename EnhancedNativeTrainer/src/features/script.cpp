@@ -82,6 +82,8 @@ bool featureThermalVisionUpdated = false;
 bool featureWantedLevelFrozen = false;
 bool featureWantedLevelFrozenUpdated = false;
 bool featureLevitation = false;
+bool featureNoScubaGearMask = false;
+bool featureNoScubaSound = false;
 
 bool featureWantedLevelNoPHeli = false;
 bool featureWantedLevelNoPHeliUpdated = false;
@@ -1100,6 +1102,19 @@ void update_features(){
 	// Health Regeneration Rate
 	if (ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()) && REGEN_VALUES[current_regen_speed] != 1.0f) PLAYER::SET_PLAYER_HEALTH_RECHARGE_MULTIPLIER(PLAYER::PLAYER_ID(), REGEN_VALUES[current_regen_speed]);
 
+	// No Scuba Gear Mask
+	if (featureNoScubaGearMask && ENTITY::IS_ENTITY_IN_WATER(playerPed) == 1) {
+		PED::CLEAR_ALL_PED_PROPS(playerPed);
+	}
+
+	// No Scuba Breathing Sound
+	if (featureNoScubaSound) {
+		AUDIO::SET_AUDIO_FLAG("SuppressPlayerScubaBreathing", true);
+	}
+	else {
+		AUDIO::SET_AUDIO_FLAG("SuppressPlayerScubaBreathing", false);
+	}
+
 	// Player Invisible && Player Invisible In Vehicle
 	if ((!featurePlayerInvisible && !featurePlayerInvisibleInVehicle && p_invisible == true) || (featurePlayerInvisibleInVehicle && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && p_invisible == true)) {
 		ENTITY::SET_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID(), true);
@@ -1603,7 +1618,7 @@ bool onconfirm_player_menu(MenuItem<int> choice){
 }
 
 void process_player_menu(){
-	const int lineCount = 24;
+	const int lineCount = 26;
 
 	std::string caption = "Player Options";
 
@@ -1632,6 +1647,8 @@ void process_player_menu(){
 		{"No Whistling For Taxi", &NoTaxiWhistling, NULL, false},
 		{"Player Can Be Headshot", &featurePlayerCanBeHeadshot, NULL, false},
 		{"Instant Respawn On Death", &featureRespawnsWhereDied, NULL, false},
+		{"No Scuba Gear Mask", &featureNoScubaGearMask, NULL, true },
+		{"No Scuba Breathing Sound", &featureNoScubaSound, NULL, true },
 	};
 
 	draw_menu_from_struct_def(lines, lineCount, &activeLineIndexPlayer, caption, onconfirm_player_menu);
@@ -1835,7 +1852,7 @@ void reset_globals(){
 		activeLineIndexPlayer =
 		activeLineIndexWantedFreeze =
 		frozenWantedLevel = 0;
-		
+	
 	current_player_health = 6;
 	current_regen_speed = 4;
 	current_player_armor = 6;
@@ -1883,10 +1900,11 @@ void reset_globals(){
 		featurePlayerCanBeHeadshot =
 		featureRespawnsWhereDied =
 		featurePlayerInjuredMovement =
+		featureNoScubaSound =
+		featureNoScubaGearMask =
 
 		featureWantedLevelFrozen = false;
-
-	featurePlayerInvincibleUpdated =
+		featurePlayerInvincibleUpdated =
 		featurePlayerDrunkUpdated =
 		featureNightVisionUpdated =
 		featureThermalVisionUpdated =
@@ -2115,6 +2133,8 @@ void add_player_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featureWantedLevelNoPBoats", &featureWantedLevelNoPBoats});
 	results->push_back(FeatureEnabledLocalDefinition{"featureWantedLevelNoSWATVehicles", &featureWantedLevelNoSWATVehicles});
 	results->push_back(FeatureEnabledLocalDefinition{"NoTaxiWhistling", &NoTaxiWhistling});
+	results->push_back(FeatureEnabledLocalDefinition{"featureNoScubaGearMask", &featureNoScubaGearMask});
+	results->push_back(FeatureEnabledLocalDefinition{"featureNoScubaSound", &featureNoScubaSound});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerCanBeHeadshot", &featurePlayerCanBeHeadshot});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerInjuredMovement", &featurePlayerInjuredMovement});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRespawnsWhereDied", &featureRespawnsWhereDied});
