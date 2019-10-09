@@ -100,7 +100,6 @@ bool featureRealisticRadioVolume = false;
 bool featureWantedMusic = false;
 bool featureFlyingMusic = false;
 bool featurePoliceScanner = false;
-bool featureNoScubaSound = false;
 bool featureNoComleteMessage = false;
 bool featurePoliceRadio = false;
 bool police_radio_check = false;
@@ -748,13 +747,13 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 		case 11:
 			process_misc_filters_menu();
 			break;
-		case 23:
+		case 22:
 			process_phone_bill_menu();
 			break;
-		case 28:
+		case 27:
 			process_def_menutab_menu();
 			break;
-		case 29:
+		case 28:
 			process_airbrake_global_menu();
 			break;
 		default:
@@ -765,7 +764,7 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 }
 
 void process_misc_menu(){
-	const int lineCount = 31;
+	const int lineCount = 30;
 
 	std::string caption = "Miscellaneous Options";
 
@@ -785,7 +784,6 @@ void process_misc_menu(){
 		{"No Wanted Music", &featureWantedMusic, NULL, true}, 
 		{"No Flight Music", &featureFlyingMusic, NULL, true}, 
 		{"No Police Scanner", &featurePoliceScanner, NULL, true }, 
-		{"No Scuba Breathing Sound", &featureNoScubaSound, NULL, true }, 
 		{"No 'Mission Passed' Message", &featureNoComleteMessage, NULL, true },
 		{"Hide HUD", &featureMiscHideHud, &featureMiscHideHudUpdated},
 		{"Hide HUD If Menu Open", &featureMiscHideENTHud},
@@ -847,7 +845,6 @@ void reset_misc_globals(){
 		featureWantedMusic = 
 		featureFlyingMusic = 
 		featurePoliceScanner = 
-		featureNoScubaSound = 
 		featureNoComleteMessage =
 		featurePoliceRadio =
 		featureEnableMissingRadioStation =
@@ -940,14 +937,6 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	}
 	else {
 		AUDIO::SET_AUDIO_FLAG("PoliceScannerDisabled", false);
-	}
-
-	// No Scuba Breathing Sound
-	if (featureNoScubaSound) {
-		AUDIO::SET_AUDIO_FLAG("SuppressPlayerScubaBreathing", true);
-	}
-	else {
-		AUDIO::SET_AUDIO_FLAG("SuppressPlayerScubaBreathing", false);
 	}
 
 	// No 'Mission Passed' Message
@@ -1714,7 +1703,6 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 	results->push_back(FeatureEnabledLocalDefinition{"featureDisablePhone", &featureDisablePhone});
 	results->push_back(FeatureEnabledLocalDefinition{"featureFlyingMusic", &featureFlyingMusic}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePoliceScanner", &featurePoliceScanner}); 
-	results->push_back(FeatureEnabledLocalDefinition{"featureNoScubaSound", &featureNoScubaSound}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoComleteMessage", &featureNoComleteMessage}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePoliceRadio", &featurePoliceRadio}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureMiscLockRadio", &featureMiscLockRadio});

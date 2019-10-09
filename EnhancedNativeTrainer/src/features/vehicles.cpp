@@ -3440,7 +3440,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 	if (featureAirStrike) {
 		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && s_message == false) {
-			set_status_text("Press your ~g~ horn button ~w~ for airstrike");
+			set_status_text("Press your ~g~ horn button ~w~ for an airstrike");
 			s_message = true;
 		}
 		Vehicle playerVehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
