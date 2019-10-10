@@ -345,8 +345,6 @@ std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Martin Madrazo's House", 1396.58f, 1141.79f, 114.334f }, 
 	{ "Maze Bank Del Perro Office: Style 1", -1384.56400000f, -478.26990000f, 71.04205000f, { "ex_sm_15_office_01a" }, {}, {}, false },
 	{ "Mission Row Underground 'Winning' Garage", 400.09610000f, -956.67870000f, -100.00000000f},
-	{ "Nightclub (Glamorous)", -1569.2500f, -3017.3900f, -73.2200f, { "ba_int_placement_ba_interior_0_dlc_int_01_ba_milo_" }, {}, { IPL_PROPS_NIGHTCLUB_COMMON_PROPS }, false },
-	{ "Night Club Basement", -1509.3100f, -2990.4400f, -79.7400f, { "ba_int_placement_ba_interior_1_dlc_int_02_ba_milo_" }, {}, { IPL_PROPS_NIGHTCLUB_BASEMENT }, false },
 	{ "Online Character Creator Interior", 415.275f, -999.037f, -99.4041f, { "hw1_int_placement_interior_v_mugshot_milo_ " }, {}, {}, false },
 	{ "Penthouse: Style 1", -786.168f, 334.319f, 211.197f, { "apa_v_mp_h_01_a", "apa_v_mp_h_01_b", "apa_v_mp_h_01_c" }, {}, {}, false },
 	{ "Richards Majestic Apt 2", -915.811f, -379.432f, 113.675f, {}, {}, {}, false },
@@ -361,7 +359,6 @@ std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Stilthouse 9", -1286.362f, 431.7878f, 96.49426f, { "apa_ch2_12b_interior_0_v_mp_stilts_a_milo_" }, {}, {}, false },
 	{ "Studio Flat", 260.3297f, -997.4288f, -100.0f, { "hei_hw1_blimp_interior_v_studio_lo_milo_" }, {}, {}, false },
 	{ "Submarine", 514.266f, 4855.68f, -62.5621f, { "xm_x17dlc_int_placement_interior_8_x17dlc_int_sub_milo_" }, {}, {}, false },
-	{ "Terrorbyte Interior", -1421.0150f, -3012.5870f, -80.0000f, { "ba_int_placement_ba_interior_2_dlc_int_03_ba_milo_" }, {}, { IPL_PROPS_NIGHTCLUB_TERRORBYTE_INTERIOR }, false },
 	{ "Tinsel Towers Apt 42", -614.86f, 40.6783f, 97.6f, {}, {}, {}, false },
 	{ "Upgraded Base", 462.09f, 4820.42f, -59.0f, IPL_PROPS_DOOMSDAY_MAIN_BASE, {}, { IPL_PROPS_FACILITY }, false },
 }; 
