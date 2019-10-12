@@ -3476,26 +3476,26 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			Vector3 nuke1_coords = ENTITY::GET_ENTITY_COORDS(nuke1, true);
 			nuke1_coords.z = nuke1_coords.z - 1;
 			ENTITY::SET_ENTITY_COORDS(nuke1, nuke1_coords.x, nuke1_coords.y, nuke1_coords.z, 1, 0, 0, 1);
-			GRAPHICS::START_PARTICLE_FX_NON_LOOPED_AT_COORD("scr_agency3b_heli_expl", nuke1_coords.x, nuke1_coords.y, nuke1_coords.z, 0.0f, 0.0f, 0.0f, 0.5f, false, false, false); // 6.0f
+			GRAPHICS::START_PARTICLE_FX_NON_LOOPED_AT_COORD("scr_agency3b_heli_expl", nuke1_coords.x, nuke1_coords.y, nuke1_coords.z, 0.0f, 0.0f, 0.0f, 1.0f, false, false, false); // 0.5f 6.0f
 			if (nuke1_coords.z - nuke_h1_coord < 5) { // ENTITY::GET_LAST_MATERIAL_HIT_BY_ENTITY(Nuke) != 0
-				GRAPHICS::START_PARTICLE_FX_NON_LOOPED_AT_COORD("scr_agency3b_heli_expl", nuke1_coords.x, nuke1_coords.y, nuke1_coords.z, 0.0f, 0.0f, 0.0f, 8.0f, false, false, false); // 6.0f
-				FIRE::ADD_OWNED_EXPLOSION(playerPed, nuke1_coords.x, nuke1_coords.y, nuke1_coords.z, 29, 100.0f, true, false, 2.0f);
+				GRAPHICS::START_PARTICLE_FX_NON_LOOPED_AT_COORD("scr_agency3b_heli_expl", nuke1_coords.x, nuke1_coords.y, nuke1_coords.z, 0.0f, 0.0f, 0.0f, 25.0f, false, false, false); // 8.0f 6.0f
+				FIRE::ADD_OWNED_EXPLOSION(playerPed, nuke1_coords.x, nuke1_coords.y, nuke1_coords.z, 29, 1500.0f, true, false, 2.0f); // 100.0f
 			}
 			Vector3 nuke2_coords = ENTITY::GET_ENTITY_COORDS(nuke2, true);
 			nuke2_coords.z = nuke2_coords.z - 1;
 			ENTITY::SET_ENTITY_COORDS(nuke2, nuke2_coords.x, nuke2_coords.y, nuke2_coords.z, 1, 0, 0, 1);
-			GRAPHICS::START_PARTICLE_FX_NON_LOOPED_AT_COORD("scr_agency3b_heli_expl", nuke2_coords.x, nuke2_coords.y, nuke2_coords.z, 0.0f, 0.0f, 0.0f, 0.5f, false, false, false); // 6.0f
+			GRAPHICS::START_PARTICLE_FX_NON_LOOPED_AT_COORD("scr_agency3b_heli_expl", nuke2_coords.x, nuke2_coords.y, nuke2_coords.z, 0.0f, 0.0f, 0.0f, 1.0f, false, false, false); // 0.5f 6.0f
 			if (nuke2_coords.z - nuke_h2_coord < 5) { // ENTITY::GET_LAST_MATERIAL_HIT_BY_ENTITY(Nuke) != 0
-				GRAPHICS::START_PARTICLE_FX_NON_LOOPED_AT_COORD("scr_agency3b_heli_expl", nuke2_coords.x, nuke2_coords.y, nuke2_coords.z, 0.0f, 0.0f, 0.0f, 8.0f, false, false, false); // 6.0f
-				FIRE::ADD_OWNED_EXPLOSION(playerPed, nuke2_coords.x, nuke2_coords.y, nuke2_coords.z, 29, 100.0f, true, false, 2.0f);
+				GRAPHICS::START_PARTICLE_FX_NON_LOOPED_AT_COORD("scr_agency3b_heli_expl", nuke2_coords.x, nuke2_coords.y, nuke2_coords.z, 0.0f, 0.0f, 0.0f, 25.0f, false, false, false); // 8.0f 6.0f
+				FIRE::ADD_OWNED_EXPLOSION(playerPed, nuke2_coords.x, nuke2_coords.y, nuke2_coords.z, 29, 1500.0f, true, false, 2.0f); // 100.0f
 			}
 			Vector3 nuke3_coords = ENTITY::GET_ENTITY_COORDS(nuke3, true);
 			nuke3_coords.z = nuke3_coords.z - 1;
 			ENTITY::SET_ENTITY_COORDS(nuke3, nuke3_coords.x, nuke3_coords.y, nuke3_coords.z, 1, 0, 0, 1);
-			GRAPHICS::START_PARTICLE_FX_NON_LOOPED_AT_COORD("scr_agency3b_heli_expl", nuke3_coords.x, nuke3_coords.y, nuke3_coords.z, 0.0f, 0.0f, 0.0f, 0.5f, false, false, false); // 6.0f
+			GRAPHICS::START_PARTICLE_FX_NON_LOOPED_AT_COORD("scr_agency3b_heli_expl", nuke3_coords.x, nuke3_coords.y, nuke3_coords.z, 0.0f, 0.0f, 0.0f, 1.0f, false, false, false); // 0.5f 6.0f
 			if (nuke3_coords.z - nuke_h3_coord < 5) { // ENTITY::GET_LAST_MATERIAL_HIT_BY_ENTITY(Nuke) != 0
-				GRAPHICS::START_PARTICLE_FX_NON_LOOPED_AT_COORD("scr_agency3b_heli_expl", nuke3_coords.x, nuke3_coords.y, nuke3_coords.z, 0.0f, 0.0f, 0.0f, 8.0f, false, false, false); // 6.0f
-				FIRE::ADD_OWNED_EXPLOSION(playerPed, nuke3_coords.x, nuke3_coords.y, nuke3_coords.z, 29, 100.0f, true, false, 2.0f);
+				GRAPHICS::START_PARTICLE_FX_NON_LOOPED_AT_COORD("scr_agency3b_heli_expl", nuke3_coords.x, nuke3_coords.y, nuke3_coords.z, 0.0f, 0.0f, 0.0f, 25.0f, false, false, false); // 8.0f 6.0f
+				FIRE::ADD_OWNED_EXPLOSION(playerPed, nuke3_coords.x, nuke3_coords.y, nuke3_coords.z, 29, 1500.0f, true, false, 2.0f); // 100.0f
 				airstrike = false;
 			}
 		}
