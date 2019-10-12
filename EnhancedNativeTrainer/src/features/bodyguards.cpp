@@ -662,9 +662,9 @@ void maintain_bodyguards(){
 	if (!spawnedBodyguards.empty()) { 
 		for (int i = 0; i < spawnedBodyguards.size(); i++) {
 			// bodyguards swimming ability
-			if (ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID()) == 1) {
+			if (ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID()) == 1 && PED::IS_PED_SWIMMING(PLAYER::PLAYER_PED_ID())) {
 				Vector3 my_coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
-				if (ENTITY::IS_ENTITY_IN_WATER(spawnedBodyguards[i]) == 0) ENTITY::SET_ENTITY_COORDS(spawnedBodyguards[i], my_coords.x + 0.8, my_coords.y + 0.8, my_coords.z - 0.5, 1, 0, 0, 1); // 1.0
+				if (ENTITY::IS_ENTITY_IN_WATER(spawnedBodyguards[i]) == 1 && !PED::IS_PED_SWIMMING(spawnedBodyguards[i])) ENTITY::SET_ENTITY_COORDS(spawnedBodyguards[i], my_coords.x + 0.8, my_coords.y + 0.8, my_coords.z - 0.5, 1, 0, 0, 1); // 1.0
 			}
 			//
 			PED::SET_PED_KEEP_TASK(spawnedBodyguards[i], true);
