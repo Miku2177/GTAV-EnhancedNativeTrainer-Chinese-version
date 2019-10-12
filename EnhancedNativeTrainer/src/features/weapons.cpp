@@ -1770,8 +1770,9 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 
 	// Cops Take Your Weapons If You Die / Arrested
 	if (featureCopTakeWeapon) {
-		if ((PLAYER::GET_TIME_SINCE_LAST_DEATH() > 100 && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 5000) || (PLAYER::GET_TIME_SINCE_LAST_ARREST() > 100 && PLAYER::GET_TIME_SINCE_LAST_ARREST() < 5000)) {
+		if ((PLAYER::GET_TIME_SINCE_LAST_DEATH() > 100 && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 5000) || (PLAYER::GET_TIME_SINCE_LAST_ARREST() > 100 && PLAYER::GET_TIME_SINCE_LAST_ARREST() < 5000) || player_died == true) {
 			WEAPON::REMOVE_ALL_PED_WEAPONS(playerPed, false);
+			player_died = false;
 		}
 	}
 
