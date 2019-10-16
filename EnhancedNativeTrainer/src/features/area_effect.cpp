@@ -636,6 +636,10 @@ void update_area_effects(Ped playerPed){
 								v_collided.push_back(PED::GET_VEHICLE_PED_IS_IN(veh_agressive[i], false));
 							}
 						}
+						PED::SET_PED_AS_ENEMY(PLAYER::PLAYER_PED_ID(), true);
+						PED::REGISTER_TARGET(pursuer.back(), PLAYER::PLAYER_PED_ID());
+						AI::TASK_COMBAT_PED(pursuer.back(), PLAYER::PLAYER_PED_ID(), 0, 16);
+						AUDIO::_PLAY_AMBIENT_SPEECH1(pursuer.back(), "PROVOKE_GENERIC", "SPEECH_PARAMS_FORCE_SHOUTED");
 						ENTITY::SET_ENTITY_AS_MISSION_ENTITY(pursuer.back(), 1, 1);
 						ENTITY::SET_ENTITY_AS_MISSION_ENTITY(v_collided.back(), 1, 1);
 						AI::SET_DRIVE_TASK_CRUISE_SPEED(pursuer.back(), 300.0);
@@ -692,7 +696,7 @@ void update_area_effects(Ped playerPed){
 			v_collided.clear();
 			v_collided.shrink_to_fit();
 		}
-		if (!pursuer.empty() && pursuer.size() > 60) { // 10
+		if (!pursuer.empty() && pursuer.size() > 20) { // 10
 			ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&pursuer[0]);
 			PED::DELETE_PED(&pursuer[0]);
 			pursuer.erase(pursuer.begin());
