@@ -43,6 +43,7 @@ bool featureAngryMenOnly = false;
 bool featurePedsIncludeDrivers = false;
 bool featurePedsIncludePilots = false;
 bool featureAggressiveDrivers = false;
+bool featureLawAbidingCitizens = false;
 bool featureNPCNoLights = false;
 bool featureNPCNeonLights = false;
 bool featureNPCFullBeam = false;
@@ -63,6 +64,7 @@ std::set<Ped> releasedPeds;
 std::set<Vehicle> releasedVehicles;
 
 bool v_collision_check = false;
+bool time_to_chase = false;
 bool time_to_attack = true;
 std::vector<Ped> pursuer;
 std::vector<Vehicle> v_collided;
@@ -121,6 +123,7 @@ void add_areaeffect_feature_enablements(std::vector<FeatureEnabledLocalDefinitio
 	results->push_back(FeatureEnabledLocalDefinition{"featurePedsIncludeDrivers", &featurePedsIncludeDrivers});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePedsIncludePilots", &featurePedsIncludePilots});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAggressiveDrivers", &featureAggressiveDrivers});
+	results->push_back(FeatureEnabledLocalDefinition{"featureLawAbidingCitizens", &featureLawAbidingCitizens});
 	results->push_back(FeatureEnabledLocalDefinition{"featureShowDebugInfo", &featureShowDebugInfo}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureNPCNoLights", &featureNPCNoLights}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureNPCNeonLights", &featureNPCNeonLights}); 
@@ -146,6 +149,7 @@ void reset_areaeffect_globals(){
 	featurePedsIncludeDrivers = false;
 	featurePedsIncludePilots = false;
 	featureAggressiveDrivers = false;
+	featureLawAbidingCitizens = false;
 	featureShowDebugInfo = false;
 	featureNPCNoLights = false;
 	featureNPCNeonLights = false;
@@ -240,6 +244,12 @@ void process_areaeffect_peds_menu(){
 	togItem->caption = "Aggressive Drivers";
 	togItem->value = 1;
 	togItem->toggleValue = &featureAggressiveDrivers;
+	menuItems.push_back(togItem);
+
+	togItem = new ToggleMenuItem<int>();
+	togItem->caption = "Vigilante Citizens";
+	togItem->value = 1;
+	togItem->toggleValue = &featureLawAbidingCitizens;
 	menuItems.push_back(togItem);
 
 	draw_generic_menu<int>(menuItems, &areaeffect_ped_level_menu_index, "Ped Effects", onconfirm_areaeffect_ped_menu, NULL, NULL);
@@ -551,30 +561,26 @@ void update_area_effects(Ped playerPed){
 		show_debug_info_on_screen(featureShowDebugInfo);
 	}
 
-	// Aggressive Drivers
-	if (featureAggressiveDrivers) {
+	// Aggressive Drivers && Vigilante Citizens
+	if (featureAggressiveDrivers || featureLawAbidingCitizens) {
 		Vehicle veh_me = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		Vector3 veh_me_coords = ENTITY::GET_ENTITY_COORDS(veh_me, true);
 		float veh_me_speed = ENTITY::GET_ENTITY_SPEED(veh_me);
 		const int arrSize_laws = 1024;
 		Vehicle veh_agressive[arrSize_laws];
 		int count_veh = worldGetAllPeds(veh_agressive, arrSize_laws);
-		Vehicle veh_coll_with = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
-		Vector3 veh_coll_with_coords = ENTITY::GET_ENTITY_COORDS(veh_coll_with, true);
-		int vehcoll_with_dist_x = 100;
-		int vehcoll_with_dist_y = 100;
 		for (int i = 0; i < count_veh; i++) {
 			if (PED::GET_PED_TYPE(veh_agressive[i]) != 0 && PED::GET_PED_TYPE(veh_agressive[i]) != 1 && PED::GET_PED_TYPE(veh_agressive[i]) != 2 && PED::GET_PED_TYPE(veh_agressive[i]) != 3 &&
 				PED::GET_PED_TYPE(veh_agressive[i]) != 6 && PED::GET_PED_TYPE(veh_agressive[i]) != 27 && PED::GET_PED_TYPE(veh_agressive[i]) != 29) {
-				veh_coll_with = PED::GET_VEHICLE_PED_IS_IN(veh_agressive[i], false);
-				veh_coll_with_coords = ENTITY::GET_ENTITY_COORDS(veh_coll_with, true);
+				Vehicle veh_coll_with = PED::GET_VEHICLE_PED_IS_IN(veh_agressive[i], false);
+				Vector3 veh_coll_with_coords = ENTITY::GET_ENTITY_COORDS(veh_coll_with, true);
 
-				vehcoll_with_dist_x = (veh_me_coords.x - veh_coll_with_coords.x);
-				vehcoll_with_dist_y = (veh_me_coords.y - veh_coll_with_coords.y);
+				int vehcoll_with_dist_x = (veh_me_coords.x - veh_coll_with_coords.x);
+				int vehcoll_with_dist_y = (veh_me_coords.y - veh_coll_with_coords.y);
 				if (vehcoll_with_dist_x < 0) vehcoll_with_dist_x = (vehcoll_with_dist_x * -1);
 				if (vehcoll_with_dist_y < 0) vehcoll_with_dist_y = (vehcoll_with_dist_y * -1);
 
-				if (veh_coll_with != PED::GET_VEHICLE_PED_IS_IN(playerPed, false) && ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(veh_me) && ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(veh_coll_with) &&
+				if (featureAggressiveDrivers && veh_coll_with != PED::GET_VEHICLE_PED_IS_IN(playerPed, false) && ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(veh_me) && ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(veh_coll_with) &&
 					vehcoll_with_dist_x < 5 && vehcoll_with_dist_y < 5) {
 					v_collision_check = true;
 					if (ENTITY::DOES_ENTITY_EXIST(veh_agressive[i]) && !ENTITY::IS_ENTITY_DEAD(veh_agressive[i])) {
@@ -594,9 +600,56 @@ void update_area_effects(Ped playerPed){
 						ENTITY::SET_ENTITY_AS_MISSION_ENTITY(v_collided.back(), 1, 1);
 					}
 					s_seconds = 0;
-				}
+				} // aggressive drivers
+				
+				if (featureLawAbidingCitizens) {
+					Vector3 me_coords = ENTITY::GET_ENTITY_COORDS(playerPed, true);
+					Vector3 npc_abid_coords = ENTITY::GET_ENTITY_COORDS(veh_agressive[i], true);
+					int lawabidped_with_dist_x = (me_coords.x - npc_abid_coords.x);
+					int lawabidped_with_dist_y = (me_coords.y - npc_abid_coords.y);
+					if (lawabidped_with_dist_x < 0) lawabidped_with_dist_x = (lawabidped_with_dist_x * -1);
+					if (lawabidped_with_dist_y < 0) lawabidped_with_dist_y = (lawabidped_with_dist_y * -1);
+					if (((PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed) != 0 && VEHICLE::GET_PED_IN_VEHICLE_SEAT(PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed), -1) != 0) ||
+						(PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed) != 0 && VEHICLE::IS_VEHICLE_ALARM_ACTIVATED(PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed))))
+						&& ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(veh_agressive[i], playerPed, 17)) {
+						if (lawabidped_with_dist_x < 10 && lawabidped_with_dist_y < 10) {
+							if (!PED::IS_PED_IN_ANY_VEHICLE(veh_agressive[i], true)/* && VEHICLE::GET_PED_IN_VEHICLE_SEAT(PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed), -1) != veh_agressive[i]*/) {
+								PED::SET_PED_AS_ENEMY(PLAYER::PLAYER_PED_ID(), true);
+								PED::REGISTER_TARGET(veh_agressive[i], PLAYER::PLAYER_PED_ID());
+								AI::TASK_COMBAT_PED(veh_agressive[i], PLAYER::PLAYER_PED_ID(), 0, 16);
+								AUDIO::_PLAY_AMBIENT_SPEECH1(veh_agressive[i], "PROVOKE_GENERIC", "SPEECH_PARAMS_FORCE_SHOUTED");
+							}
+							time_to_chase = true;
+						}
+					}
+					if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) && PED::IS_PED_IN_ANY_VEHICLE(veh_agressive[i], true) &&
+						lawabidped_with_dist_x < 10 && lawabidped_with_dist_y < 10 && time_to_chase == true && veh_me_speed < 1) {
+						if (pursuer.empty()) pursuer.push_back(veh_agressive[i]);
+						if (v_collided.empty()) v_collided.push_back(PED::GET_VEHICLE_PED_IS_IN(veh_agressive[i], false));
+						if (!pursuer.empty()) {
+							bool found = false;
+							for (int k = 0; k < pursuer.size(); k++) {
+								if (pursuer[k] == veh_agressive[i]) found = true;
+							}
+							if (found == false) {
+								pursuer.push_back(veh_agressive[i]);
+								v_collided.push_back(PED::GET_VEHICLE_PED_IS_IN(veh_agressive[i], false));
+							}
+						}
+						ENTITY::SET_ENTITY_AS_MISSION_ENTITY(pursuer.back(), 1, 1);
+						ENTITY::SET_ENTITY_AS_MISSION_ENTITY(v_collided.back(), 1, 1);
+						AI::SET_DRIVE_TASK_CRUISE_SPEED(pursuer.back(), 300.0);
+						AI::TASK_VEHICLE_CHASE(pursuer.back(), playerPed);
+						AI::SET_TASK_VEHICLE_CHASE_IDEAL_PURSUIT_DISTANCE(pursuer.back(), 60.0f);
+						AI::SET_TASK_VEHICLE_CHASE_BEHAVIOR_FLAG(pursuer.back(), 32, true);
+						PED::SET_DRIVER_ABILITY(pursuer.back(), 0.9f);
+						AUDIO::_PLAY_AMBIENT_SPEECH1(pursuer.back(), "PROVOKE_GENERIC", "SPEECH_PARAMS_FORCE_SHOUTED");
+						time_to_attack = false;
+					}
+					if (veh_me_speed > 1/* || !PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)*/) time_to_chase = false; 
+				} // vigilante citizens
 			}
-		}
+		} // end of for
 		if (v_collision_check == true) {
 			AI::SET_DRIVE_TASK_CRUISE_SPEED(pursuer.back(), 300.0);
 			AI::TASK_VEHICLE_CHASE(pursuer.back(), playerPed);
@@ -619,7 +672,6 @@ void update_area_effects(Ped playerPed){
 			for (int j = 0; j < pursuer.size(); j++) {
 				if (ENTITY::DOES_ENTITY_EXIST(pursuer[j]) && !ENTITY::IS_ENTITY_DEAD(pursuer[j])) {
 					PED::SET_PED_AS_ENEMY(PLAYER::PLAYER_PED_ID(), true);
-					//PED::SET_PED_FLEE_ATTRIBUTES(pursuer[j], 0, 0);
 					PED::REGISTER_TARGET(pursuer[j], PLAYER::PLAYER_PED_ID());
 					AI::TASK_COMBAT_PED(pursuer[j], PLAYER::PLAYER_PED_ID(), 0, 16);
 				}
@@ -640,7 +692,7 @@ void update_area_effects(Ped playerPed){
 			v_collided.clear();
 			v_collided.shrink_to_fit();
 		}
-		if (!pursuer.empty() && pursuer.size() > 10) {
+		if (!pursuer.empty() && pursuer.size() > 60) { // 10
 			ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&pursuer[0]);
 			PED::DELETE_PED(&pursuer[0]);
 			pursuer.erase(pursuer.begin());
@@ -648,7 +700,7 @@ void update_area_effects(Ped playerPed){
 			VEHICLE::DELETE_VEHICLE(&v_collided[0]);
 			v_collided.erase(v_collided.begin());
 		}
-	} // end of aggressive drivers
+	} // end of aggressive drivers && vigilante citizens
 
 }
 
