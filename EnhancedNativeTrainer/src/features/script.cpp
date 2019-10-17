@@ -756,15 +756,16 @@ void update_features(){
 		if (curr_health < 90 || been_injured == true) PED::SET_PED_MOVEMENT_CLIPSET(playerPed, "move_m@injured", 1.0f); // @walk
 		if (curr_health < 50 || been_injured == true) CONTROLS::DISABLE_CONTROL_ACTION(2, 21, 1); // sprint
 		if (curr_health < 30/* || been_injured == true*/) CONTROLS::DISABLE_CONTROL_ACTION(2, 22, 1); // jump
-		if (curr_health > (PLAYER_HEALTH_VALUES[current_player_health] - 111) || (PLAYER::GET_TIME_SINCE_LAST_DEATH() > 100 && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 5000) || 
-			(PLAYER::GET_TIME_SINCE_LAST_ARREST() > 100 && PLAYER::GET_TIME_SINCE_LAST_ARREST() < 5000)) { // 99
+		if ((curr_health > (PLAYER_HEALTH_VALUES[current_player_health] - 111)) || (PLAYER::GET_TIME_SINCE_LAST_DEATH() > 100 && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 5000) || 
+			(PLAYER::GET_TIME_SINCE_LAST_ARREST() > 100 && PLAYER::GET_TIME_SINCE_LAST_ARREST() < 5000)/* || player_died == true*/) { // 99
 			PED::RESET_PED_MOVEMENT_CLIPSET(playerPed, 1.0f);
 			PED::CLEAR_PED_LAST_DAMAGE_BONE(playerPed);
 			ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(playerPed);
 			been_injured = false;
+			//player_died = false;
 		}
 	}
-
+	
 	// Can run in apartments
 	if (featurePlayerRunApartments && GAMEPLAY::GET_MISSION_FLAG() == 0 && !UI::IS_HELP_MESSAGE_BEING_DISPLAYED()) {
 		Vector3 coords_apprun_ped = ENTITY::GET_ENTITY_COORDS(playerPed, true);
@@ -896,9 +897,10 @@ void update_features(){
 	} 
 	
 	if (featurePlayerLife_Died) death_time2 = PLAYER::GET_TIME_SINCE_LAST_DEATH();
-	if (death_time2 > -1 && death_time2 < 2000 && featurePlayerLife_Died) {
+	if (((death_time2 > -1 && death_time2 < 2000) || player_died == true) && featurePlayerLife_Died) {
 		featurePlayerLifeUpdated = true;
 		featurePlayerStatsUpdated = true;
+		player_died = false;
 	}
 	
 	if (playerPed != oldplayerPed && featurePlayerLife_Changed) { // If You Switch Character Your Health & Armor Will Be Restored
