@@ -68,6 +68,9 @@ bool accel = false;
 bool p_exist = false;
 //
 
+//For onscreen debug info
+bool featureShowDebugInfo = false;
+
 bool radio_v_checked = false;
 
 bool no_phone, bill_no_phone = false;
@@ -334,6 +337,12 @@ void process_misc_trainerconfig_menu(){
 	toggleItem->caption = "Include Nkjellman's Extra Scenery";
 	toggleItem->toggleValue = &featureMiscJellmanScenery;
 	menuItems.push_back(toggleItem);
+
+	ToggleMenuItem<int> *togItem = new ToggleMenuItem<int>();
+	togItem->caption = "Show Area Effect Debug Info";
+	togItem->value = 1;
+	togItem->toggleValue = &featureShowDebugInfo;
+	menuItems.push_back(togItem);
 
 	stdItem = new MenuItem<int>();
 	stdItem->caption = "Menu Colors";
@@ -849,6 +858,7 @@ void reset_misc_globals(){
 		featurePoliceRadio =
 		featureEnableMissingRadioStation =
 		featureRadioAlwaysOff = false;
+		featureShowDebugInfo = false;
 
 	PhoneBillIndex = 2;
 	PhoneDefaultIndex = 0;
@@ -886,6 +896,15 @@ void reset_misc_globals(){
 	featureBoostRadio = true;
 
 	ENTColor::reset_colors();
+}
+
+void show_debug_info_on_screen(bool enabled) {
+	Vector3 coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 0);
+	std::ostringstream ss;
+	//ss << "Peds: " << trackedPeds.size() << "; Vehs: " << trackedVehicles.size() << "\nCalls Total: " << callsPerFrame << ", A: " << callsA << ", B: " << callsB << "\nWP: " << allWorldPedsThisFrame.size() << ", WV: " << allWorldVehiclesThisFrame.size();
+	ss << "\nX: " << coords.x << "\nY: " << coords.y << "\nZ: " << coords.z;
+	callsPerFrame = 0;
+	set_status_text_centre_screen(ss.str());
 }
 
 void update_misc_features(BOOL playerExists, Ped playerPed){
@@ -1004,6 +1023,10 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	}
 	else if (featureRadioFreezeUpdated) {
 		// Leave it empty for now.
+	}
+
+	if (featureShowDebugInfo) {
+		show_debug_info_on_screen(featureShowDebugInfo);
 	}
 
 	// hide hud

@@ -56,7 +56,7 @@ void onchange_world_headlights_blackout_index(int value, SelectFromListMenuItem*
 
 void onchange_world_train_speed_index(int value, SelectFromListMenuItem* source);
 
-void onchange_world_damaged_vehicles_index(int value, SelectFromListMenuItem* source);
+//void onchange_world_damaged_vehicles_index(int value, SelectFromListMenuItem* source);
 
 void onchange_world_no_peds_gravity_index(int value, SelectFromListMenuItem* source);
 

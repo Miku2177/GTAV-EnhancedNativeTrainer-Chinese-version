@@ -12,7 +12,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "script.h"
 #include "../../inc/nativeCaller.h"
 
-int areaeffect_top_level_menu_index = 0;
+//int areaeffect_top_level_menu_index = 0;
 int areaeffect_ped_level_menu_index = 0;
 int areaeffect_veh_level_menu_index = 0;
 int areaeffect_ped_advconfig_menu_index = 0;
@@ -79,10 +79,10 @@ int PedWeaponsSelectiveIndex = 0;
 bool PedWeaponsSelective1Changed = true;
 
 // NPC Damaged Vehicles
-const std::vector<std::string> WORLD_DAMAGED_VEHICLES_CAPTIONS{ "OFF", "5", "7", "10", "12", "15", "20", "30", "50", "100", "500", "1000" };
-const int WORLD_DAMAGED_VEHICLES_VALUES[] = { 0, 5, 7, 10, 12, 15, 20, 30, 50, 100, 500, 1000 };
-int DamagedVehiclesIndex = 0;
-bool DamagedVehiclesChanged = true;
+//const std::vector<std::string> WORLD_DAMAGED_VEHICLES_CAPTIONS{ "OFF", "5", "7", "10", "12", "15", "20", "30", "50", "100", "500", "1000" };
+//const int WORLD_DAMAGED_VEHICLES_VALUES[] = { 0, 5, 7, 10, 12, 15, 20, 30, 50, 100, 500, 1000 };
+//int DamagedVehiclesIndex = 0;
+//bool DamagedVehiclesChanged = true;
 
 // NPC Vehicle Speed
 const std::vector<std::string> WORLD_NPC_VEHICLESPEED_CAPTIONS{ "OFF", "1", "5", "10", "15", "30", "50", "70", "100" };
@@ -104,9 +104,6 @@ bool NoPedsGravityChanged = true;
 int featureNeverDirty = 0;
 bool NeverDirtyChanged = true;
 
-//For onscreen debug info
-bool featureShowDebugInfo = false;
-
 void add_areaeffect_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerIgnoredByAll", &featurePlayerIgnoredByAll}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureNPCShowHealth", &featureNPCShowHealth});
@@ -124,7 +121,7 @@ void add_areaeffect_feature_enablements(std::vector<FeatureEnabledLocalDefinitio
 	results->push_back(FeatureEnabledLocalDefinition{"featurePedsIncludePilots", &featurePedsIncludePilots});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAggressiveDrivers", &featureAggressiveDrivers});
 	results->push_back(FeatureEnabledLocalDefinition{"featureLawAbidingCitizens", &featureLawAbidingCitizens});
-	results->push_back(FeatureEnabledLocalDefinition{"featureShowDebugInfo", &featureShowDebugInfo}); 
+	//results->push_back(FeatureEnabledLocalDefinition{"featureShowDebugInfo", &featureShowDebugInfo}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureNPCNoLights", &featureNPCNoLights}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureNPCNeonLights", &featureNPCNeonLights}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureNPCFullBeam", &featureNPCFullBeam});
@@ -150,7 +147,6 @@ void reset_areaeffect_globals(){
 	featurePedsIncludePilots = false;
 	featureAggressiveDrivers = false;
 	featureLawAbidingCitizens = false;
-	featureShowDebugInfo = false;
 	featureNPCNoLights = false;
 	featureNPCNeonLights = false;
 	featureNPCFullBeam = false;
@@ -159,7 +155,7 @@ void reset_areaeffect_globals(){
 	featureNPCReducedGripVehicles = false;
 	featureBoostNPCRadio = false;
 
-	DamagedVehiclesIndex = 0;
+	//DamagedVehiclesIndex = 0;
 	NPCVehicleSpeedIndex = 0;
 	PedAccuracyIndex = 0;
 	pedWeaponSetIndex = 0;
@@ -302,11 +298,11 @@ void process_areaeffect_vehicle_menu(){
 	togItem->toggleValue = &featureDirtyVehicles;
 	menuItems.push_back(togItem);
 
-	listItem = new SelectFromListMenuItem(WORLD_DAMAGED_VEHICLES_CAPTIONS, onchange_world_damaged_vehicles_index);
-	listItem->wrap = false;
-	listItem->caption = "NPC Damaged Vehicles";
-	listItem->value = DamagedVehiclesIndex;
-	menuItems.push_back(listItem);
+	//listItem = new SelectFromListMenuItem(WORLD_DAMAGED_VEHICLES_CAPTIONS, onchange_world_damaged_vehicles_index);
+	//listItem->wrap = false;
+	//listItem->caption = "NPC Damaged Vehicles";
+	//listItem->value = DamagedVehiclesIndex;
+	//menuItems.push_back(listItem);
 
 	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "NPC No Gravity Vehicles";
@@ -403,41 +399,35 @@ bool onconfirm_areaeffect_ped_menu(MenuItem<int> choice){
 	return false;
 }
 
-bool onconfirm_areaeffect_menu(MenuItem<int> choice){
-	switch(choice.value){
-		case -1:
-			process_areaeffect_peds_menu();
-			break;
-		case -2:
-			process_areaeffect_vehicle_menu();
-			break;
-	}
-	return false;
-}
+//bool onconfirm_areaeffect_menu(MenuItem<int> choice){
+//	switch(choice.value){
+//		case -1:
+//			process_areaeffect_peds_menu();
+//			break;
+//		case -2:
+//			process_areaeffect_vehicle_menu();
+//			break;
+//	}
+//	return false;
+//}
 
-void process_areaeffect_menu(){
-	std::vector<MenuItem<int>*> menuItems;
-
-	MenuItem<int> *item = new MenuItem<int>();
-	item->caption = "People";
-	item->value = -1;
-	item->isLeaf = false;
-	menuItems.push_back(item);
-
-	item = new MenuItem<int>();
-	item->caption = "Vehicles";
-	item->value = -2;
-	item->isLeaf = false;
-	menuItems.push_back(item);
-
-	ToggleMenuItem<int> *togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Show Area Effect Debug Info";
-	togItem->value = 1;
-	togItem->toggleValue = &featureShowDebugInfo;
-	menuItems.push_back(togItem);
-
-	draw_generic_menu<int>(menuItems, &areaeffect_top_level_menu_index, "Area Effects", onconfirm_areaeffect_menu, NULL, NULL);
-}
+//void process_areaeffect_menu(){
+//	std::vector<MenuItem<int>*> menuItems;
+//
+//	MenuItem<int> *item = new MenuItem<int>();
+//	item->caption = "People";
+//	item->value = -1;
+//	item->isLeaf = false;
+//	menuItems.push_back(item);
+//
+//	item = new MenuItem<int>();
+//	item->caption = "Vehicles";
+//	item->value = -2;
+//	item->isLeaf = false;
+//	menuItems.push_back(item);
+//
+//	draw_generic_menu<int>(menuItems, &areaeffect_top_level_menu_index, "Area Effects", onconfirm_areaeffect_menu, NULL, NULL);
+//}
 
 void do_maintenance_on_tracked_entities(){
 	for each (ENTTrackedPedestrian* tped in trackedPeds){
@@ -555,10 +545,6 @@ void update_area_effects(Ped playerPed){
 			give_all_nearby_peds_a_weapon(PedWeaponsSelectiveIndex); //  != 0
 			PedWeaponsSelective1Changed = false;
 		}
-	}
-
-	if(featureShowDebugInfo){ 
-		show_debug_info_on_screen(featureShowDebugInfo);
 	}
 
 	// Aggressive Drivers && Vigilante Citizens
@@ -706,15 +692,6 @@ void update_area_effects(Ped playerPed){
 		}
 	} // end of aggressive drivers && vigilante citizens
 
-}
-
-void show_debug_info_on_screen(bool enabled){
-	Vector3 coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 0);
-	std::ostringstream ss;
-	ss << "Peds: " << trackedPeds.size() << "; Vehs: " << trackedVehicles.size() << "\nCalls Total: " << callsPerFrame << ", A: " << callsA << ", B: " << callsB << "\nWP: " << allWorldPedsThisFrame.size() << ", WV: " << allWorldVehiclesThisFrame.size();
-	ss << "\nX: " << coords.x << "\nY: " << coords.y << "\nZ: " << coords.z;
-	callsPerFrame = 0;
-	set_status_text_centre_screen(ss.str());
 }
 
 void set_all_nearby_peds_to_calm(){
@@ -1139,10 +1116,10 @@ void onchange_areaeffect_ped_weapons(int value, SelectFromListMenuItem* source){
 	pedWeaponSetIndex = value;
 }
 
-void onchange_world_damaged_vehicles_index(int value, SelectFromListMenuItem* source) {
-	DamagedVehiclesIndex = value;
-	DamagedVehiclesChanged = true;
-}
+//void onchange_world_damaged_vehicles_index(int value, SelectFromListMenuItem* source) {
+//	DamagedVehiclesIndex = value;
+//	DamagedVehiclesChanged = true;
+//}
 
 void onchange_world_npc_vehicles_speed_index(int value, SelectFromListMenuItem* source) {
 	NPCVehicleSpeedIndex = value;

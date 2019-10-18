@@ -352,12 +352,16 @@ bool onconfirm_world_menu(MenuItem<int> choice)
 	switch (choice.value)
 	{
 	case -1:
-		process_areaeffect_menu();
+		//process_areaeffect_menu();
+		process_areaeffect_peds_menu();
 		break;
 	case -2:
-		process_weather_menu();
+		process_areaeffect_vehicle_menu();
 		break;
 	case -3:
+		process_weather_menu();
+		break;
+	case -4:
 		process_clouds_menu();
 		break;
 	case 2:
@@ -377,22 +381,34 @@ void process_world_menu()
 
 	SelectFromListMenuItem *listItem;
 
+	//MenuItem<int> *areaItem = new MenuItem<int>();
+	//areaItem->isLeaf = false;
+	//areaItem->caption = "Area Effects";
+	//areaItem->value = -1;
+	//menuItems.push_back(areaItem);
+
 	MenuItem<int> *areaItem = new MenuItem<int>();
 	areaItem->isLeaf = false;
-	areaItem->caption = "Area Effects";
+	areaItem->caption = "People";
 	areaItem->value = -1;
+	menuItems.push_back(areaItem);
+
+	areaItem = new MenuItem<int>();
+	areaItem->isLeaf = false;
+	areaItem->caption = "Vehicles";
+	areaItem->value = -2;
 	menuItems.push_back(areaItem);
 
 	MenuItem<int> *weatherItem = new MenuItem<int>();
 	weatherItem->isLeaf = false;
 	weatherItem->caption = "Weather";
-	weatherItem->value = -2;
+	weatherItem->value = -3;
 	menuItems.push_back(weatherItem);
 
 	MenuItem<int> *cloudsItem = new MenuItem<int>();
 	cloudsItem->isLeaf = false;
 	cloudsItem->caption = "Clouds";
-	cloudsItem->value = -3;
+	cloudsItem->value = -4;
 	menuItems.push_back(cloudsItem);
 	
 	listItem = new SelectFromListMenuItem(WORLD_WIND_STRENGTH_CAPTIONS, onchange_world_wind_strength_index);
@@ -876,7 +892,7 @@ void update_world_features()
 
 	// Bus Interior Light On At Night && NPC No Lights && NPC Neon Lights && NPC Dirty Vehicles && NPC Damaged Vehicles && NPC No Gravity Vehicles && NPC Vehicles Reduced Grip && NPC Vehicle Speed && NPC Use Fullbeam && 
 	// Headlights During Blackout && Boost NPC Radio Volume && Slippery When Wet && Train Speed
-	if (featureBusLight || featureNPCNoLights || featureNPCNeonLights || featureDirtyVehicles || WORLD_DAMAGED_VEHICLES_VALUES[DamagedVehiclesIndex] > 0 || featureNPCNoGravityVehicles || featureNPCReducedGripVehicles ||
+	if (featureBusLight || featureNPCNoLights || featureNPCNeonLights || featureDirtyVehicles /*|| WORLD_DAMAGED_VEHICLES_VALUES[DamagedVehiclesIndex] > 0*/ || featureNPCNoGravityVehicles || featureNPCReducedGripVehicles ||
 		WORLD_NPC_VEHICLESPEED_VALUES[NPCVehicleSpeedIndex] > -1 || WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 || featureNPCFullBeam || WORLD_HEADLIGHTS_BLACKOUT_VALUES[featureLightsBlackoutIndex] > 1 ||
 		featureBoostNPCRadio || WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripRainingIndex] > 0 || WORLD_TRAIN_SPEED_VALUES[TrainSpeedIndex] != -1.0) {
 		Vehicle veh_mycurrveh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
@@ -988,11 +1004,11 @@ void update_world_features()
 					}
 				}
 			}
-			if (WORLD_DAMAGED_VEHICLES_VALUES[DamagedVehiclesIndex] > 0 && bus_veh[i] != veh_mycurrveh) {
+			/*if (WORLD_DAMAGED_VEHICLES_VALUES[DamagedVehiclesIndex] > 0 && bus_veh[i] != veh_mycurrveh) {
 				Vector3 coords_ped = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 				int temp_damage = rand() % WORLD_DAMAGED_VEHICLES_VALUES[DamagedVehiclesIndex] + 1;
 				if (!VEHICLE::_IS_VEHICLE_DAMAGED(bus_veh[i])) VEHICLE::SET_VEHICLE_DAMAGE(bus_veh[i], coords_ped.x, coords_ped.y, coords_ped.z, temp_damage, 1000, 1);
-			}
+			}*/
 			if (featureDirtyVehicles) {
 				int temp_dirty = rand() % 15 + 0;
 				if (VEHICLE::GET_VEHICLE_DIRT_LEVEL(bus_veh[i]) == 0 && bus_veh[i] != veh_mycurrveh) VEHICLE::SET_VEHICLE_DIRT_LEVEL(bus_veh[i], temp_dirty);
@@ -1578,7 +1594,7 @@ void add_world_feature_enablements2(std::vector<StringPairSettingDBRow>* results
 	results->push_back(StringPairSettingDBRow{ "featureLightIntensityIndex", std::to_string(featureLightIntensityIndex) });
 
 	results->push_back(StringPairSettingDBRow{ "WindStrengthIndex", std::to_string(WindStrengthIndex) });
-	results->push_back(StringPairSettingDBRow{ "DamagedVehiclesIndex", std::to_string(DamagedVehiclesIndex) });
+	//results->push_back(StringPairSettingDBRow{ "DamagedVehiclesIndex", std::to_string(DamagedVehiclesIndex) });
 	results->push_back(StringPairSettingDBRow{ "NPCVehicleSpeedIndex", std::to_string(NPCVehicleSpeedIndex) });
 	results->push_back(StringPairSettingDBRow{ "PedsHealthIndex", std::to_string(PedsHealthIndex) });
 	results->push_back(StringPairSettingDBRow{ "PedAccuracyIndex", std::to_string(PedAccuracyIndex) });
@@ -1622,9 +1638,9 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 		else if (setting.name.compare("WindStrengthIndex") == 0){
 			WindStrengthIndex = stoi(setting.value);
 		}
-		else if (setting.name.compare("DamagedVehiclesIndex") == 0) {
-			DamagedVehiclesIndex = stoi(setting.value);
-		}
+		//else if (setting.name.compare("DamagedVehiclesIndex") == 0) {
+		//	DamagedVehiclesIndex = stoi(setting.value);
+		//}
 		else if (setting.name.compare("NPCVehicleSpeedIndex") == 0) {
 			NPCVehicleSpeedIndex = stoi(setting.value);
 		}
