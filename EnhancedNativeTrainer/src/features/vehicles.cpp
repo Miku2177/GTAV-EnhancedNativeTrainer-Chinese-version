@@ -4452,6 +4452,14 @@ bool process_savedveh_menu(){
 
 		lastKnownSavedVehicleCount = savedVehs.size();
 
+		//std::vector<StringPairSettingDBRow> pairs = database->load_setting_pairs();
+		//for (int i = 0; i < pairs.size(); i++) {
+			//if (pairs[i] == "savedVehicleListSortMethod") savedVehicleListSortMethod = pairs[i];
+		//}
+		//for each (StringPairSettingDBRow sv1 in pairs) {
+		//	/*if (sv1 == "savedVehicleListSortMethod")*/ savedVehicleListSortMethod = sv1->SETTING_VALUE;
+		//}
+
 		std::vector<MenuItem<int>*> menuItems;
 
 		MenuItem<int> *item = new MenuItem<int>();
@@ -4548,6 +4556,9 @@ bool vehicle_save_slot_menu_interrupt(){
 void add_vehicle_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"lastCustomVehicleSpawn", lastCustomVehicleSpawn});
 	results->push_back(StringPairSettingDBRow{"speedBoostIndex", std::to_string(speedBoostIndex)});
+
+	//results->push_back(StringPairSettingDBRow{ "savedVehicleListSortMethod", std::to_string(savedVehicleListSortMethod) });
+
 	results->push_back(StringPairSettingDBRow{"featureNeverDirty", std::to_string(featureNeverDirty)});
 	results->push_back(StringPairSettingDBRow{"engPowMultIndex", std::to_string(engPowMultIndex)});
 	results->push_back(StringPairSettingDBRow{"VehMassMultIndex", std::to_string(VehMassMultIndex)});

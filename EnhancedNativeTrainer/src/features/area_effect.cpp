@@ -587,7 +587,7 @@ void update_area_effects(Ped playerPed){
 					}
 					s_seconds = 0;
 				} // aggressive drivers
-				
+
 				if (featureLawAbidingCitizens) {
 					Vector3 me_coords = ENTITY::GET_ENTITY_COORDS(playerPed, true);
 					Vector3 npc_abid_coords = ENTITY::GET_ENTITY_COORDS(veh_agressive[i], true);
@@ -607,6 +607,13 @@ void update_area_effects(Ped playerPed){
 							}
 							time_to_chase = true;
 						}
+					}
+					if (PED::IS_PED_ON_VEHICLE(PLAYER::PLAYER_PED_ID())) {
+						find_nearest_vehicle();
+						PED::SET_PED_AS_ENEMY(PLAYER::PLAYER_PED_ID(), true);
+						PED::REGISTER_TARGET(VEHICLE::GET_PED_IN_VEHICLE_SEAT(temp_vehicle, -1), PLAYER::PLAYER_PED_ID());
+						AI::TASK_COMBAT_PED(VEHICLE::GET_PED_IN_VEHICLE_SEAT(temp_vehicle, -1), PLAYER::PLAYER_PED_ID(), 0, 16);
+						AUDIO::_PLAY_AMBIENT_SPEECH1(VEHICLE::GET_PED_IN_VEHICLE_SEAT(temp_vehicle, -1), "PROVOKE_GENERIC", "SPEECH_PARAMS_FORCE_SHOUTED");
 					}
 					if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) && PED::IS_PED_IN_ANY_VEHICLE(veh_agressive[i], true) &&
 						lawabidped_with_dist_x < 10 && lawabidped_with_dist_y < 10 && time_to_chase == true && veh_me_speed < 1) {
