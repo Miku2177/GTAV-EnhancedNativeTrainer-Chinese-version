@@ -773,7 +773,7 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 }
 
 void process_misc_menu(){
-	const int lineCount = 30;
+	const int lineCount = 29;
 
 	std::string caption = "Miscellaneous Options";
 
@@ -808,7 +808,6 @@ void process_misc_menu(){
 		{"FPS Counter", &featureShowFPS, NULL }, 
 		{"Pause Menu Settings", NULL, NULL, false},
 		{"Airbrake Menu", NULL, NULL, false},
-		{"Manual Respawn", &featureNoAutoRespawn, NULL },
 	};
 	
 	draw_menu_from_struct_def(lines, lineCount, &activeLineIndexMisc, caption, onconfirm_misc_menu);

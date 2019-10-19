@@ -470,7 +470,7 @@ void update_features(){
 	}
 
 	if (featureNoAutoRespawn) {
-		if (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && player_died == false) {
+		if ((ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) || PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 1)) && player_died == false) {
 			GAMEPLAY::_DISABLE_AUTOMATIC_RESPAWN(true);
 			SCRIPT::SET_NO_LOADING_SCREEN(true);
 			if (CAM::IS_SCREEN_FADED_OUT()) CAM::DO_SCREEN_FADE_IN(100);
@@ -481,10 +481,27 @@ void update_features(){
 			SCRIPT::SET_NO_LOADING_SCREEN(false);
 			CAM::DO_SCREEN_FADE_OUT(4000);
 		}
+		if ((PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 1) || PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 0)) && (CONTROLS::IS_CONTROL_JUST_PRESSED(2, 176) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, 22))) {
+			CAM::DO_SCREEN_FADE_OUT(500);
+			WAIT(1000);
+			GAMEPLAY::_DISABLE_AUTOMATIC_RESPAWN(true);
+			GAMEPLAY::IGNORE_NEXT_RESTART(true);
+			GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("respawn_controller");
+			GAMEPLAY::_RESET_LOCALPLAYER_STATE();
+			Vector3 ped_me = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
+			BOOL onGround = false;
+			Vector3 CoordsWhereDied = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
+			PATHFIND::GET_SAFE_COORD_FOR_PED(ped_me.x, ped_me.y, ped_me.z, onGround, &CoordsWhereDied, 16);
+			NETWORK::NETWORK_RESURRECT_LOCAL_PLAYER(CoordsWhereDied.x, CoordsWhereDied.y, CoordsWhereDied.z, 0, false, false);
+			PLAYER::RESET_PLAYER_ARREST_STATE(PLAYER::PLAYER_PED_ID());
+			WAIT(1000);
+			CAM::DO_SCREEN_FADE_IN(500);
+		}
 		if (!ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) player_died = false;
 	}
 	if (featureFirstPersonDeathCamera && featureNoAutoRespawn) set_status_text("'Manual Respawn' and 'First Person Death Camera' options are not compatible. Disable one of them.");
-
+	if (featureRespawnsWhereDied && featureNoAutoRespawn) set_status_text("'Manual Respawn' and 'Instant Respawn On Death' options are not compatible. Disable one of them.");
+	
 	update_centre_screen_status_text();
 
 	update_vehicle_guns();
@@ -897,7 +914,7 @@ void update_features(){
 	} 
 	
 	if (featurePlayerLife_Died) death_time2 = PLAYER::GET_TIME_SINCE_LAST_DEATH();
-	if (((death_time2 > -1 && death_time2 < 2000) || player_died == true) && featurePlayerLife_Died) {
+	if (((death_time2 > -1 && death_time2 < 2000) || (player_died == true && !featureNoAutoRespawn)) && featurePlayerLife_Died) {
 		featurePlayerLifeUpdated = true;
 		featurePlayerStatsUpdated = true;
 		player_died = false;
@@ -932,9 +949,9 @@ void update_features(){
 	
 	most_wanted(); ///// <--- WANTED FUGITIVE /////
 
-	// Instant Respawn On Death
+	// Instant Respawn On Death/Arrest
 	if (featureRespawnsWhereDied && GAMEPLAY::GET_MISSION_FLAG() == 0) {
-		if (ENTITY::IS_ENTITY_DEAD(playerPed)) {
+		if (ENTITY::IS_ENTITY_DEAD(playerPed) || PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 0)) {
 			player_died = true;
 			CAM::DO_SCREEN_FADE_OUT(500);
 			WAIT(1000);
@@ -1620,7 +1637,7 @@ bool onconfirm_player_menu(MenuItem<int> choice){
 }
 
 void process_player_menu(){
-	const int lineCount = 26;
+	const int lineCount = 27;
 
 	std::string caption = "Player Options";
 
@@ -1648,7 +1665,8 @@ void process_player_menu(){
 		{"Jedi Powers", NULL, NULL, false},
 		{"No Whistling For Taxi", &NoTaxiWhistling, NULL, false},
 		{"Player Can Be Headshot", &featurePlayerCanBeHeadshot, NULL, false},
-		{"Instant Respawn On Death", &featureRespawnsWhereDied, NULL, false},
+		{"Manual Respawn", &featureNoAutoRespawn, NULL },
+		{"Instant Respawn On Death/Arrest", &featureRespawnsWhereDied, NULL, false},
 		{"No Scuba Gear Mask", &featureNoScubaGearMask, NULL, true },
 		{"No Scuba Breathing Sound", &featureNoScubaSound, NULL, true },
 	};
