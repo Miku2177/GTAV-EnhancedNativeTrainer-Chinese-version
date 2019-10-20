@@ -397,6 +397,11 @@ void engine_kill(){
 
 // Updates all features that can be turned off by the game, being called each game frame
 void update_features(){
+	// common variables
+	Player player = PLAYER::PLAYER_ID();
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(playerPed);
+
 	if(NETWORK::NETWORK_IS_GAME_IN_PROGRESS()){
 		if(!onlineWarningShown){
 			set_status_text("~HUD_COLOUR_MENU_YELLOW~ENT ~HUD_COLOUR_WHITE~is not for use online");
@@ -469,7 +474,8 @@ void update_features(){
 		setAirbrakeRelatedInputToBlocked(false);
 	}
 
-	if (featureNoAutoRespawn) {
+	// Manual Respawn
+	if (featureNoAutoRespawn && GAMEPLAY::GET_MISSION_FLAG() == 0) {
 		if ((ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) || PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 1)) && player_died == false) {
 			GAMEPLAY::_DISABLE_AUTOMATIC_RESPAWN(true);
 			SCRIPT::SET_NO_LOADING_SCREEN(true);
@@ -502,6 +508,27 @@ void update_features(){
 	if (featureFirstPersonDeathCamera && featureNoAutoRespawn) set_status_text("'Manual Respawn' and 'First Person Death Camera' options are not compatible. Disable one of them.");
 	if (featureRespawnsWhereDied && featureNoAutoRespawn) set_status_text("'Manual Respawn' and 'Instant Respawn On Death' options are not compatible. Disable one of them.");
 	
+	// Instant Respawn On Death/Arrest
+	if (featureRespawnsWhereDied && GAMEPLAY::GET_MISSION_FLAG() == 0) {
+		if (ENTITY::IS_ENTITY_DEAD(playerPed) || PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 0)) {
+			player_died = true;
+			CAM::DO_SCREEN_FADE_OUT(500);
+			WAIT(1000);
+			GAMEPLAY::_DISABLE_AUTOMATIC_RESPAWN(true);
+			GAMEPLAY::IGNORE_NEXT_RESTART(true);
+			GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("respawn_controller");
+			GAMEPLAY::_RESET_LOCALPLAYER_STATE();
+			Vector3 ped_me = ENTITY::GET_ENTITY_COORDS(playerPed, true);
+			BOOL onGround = false;
+			Vector3 CoordsWhereDied = ENTITY::GET_ENTITY_COORDS(playerPed, true);
+			PATHFIND::GET_SAFE_COORD_FOR_PED(ped_me.x, ped_me.y, ped_me.z, onGround, &CoordsWhereDied, 16);
+			NETWORK::NETWORK_RESURRECT_LOCAL_PLAYER(CoordsWhereDied.x, CoordsWhereDied.y, CoordsWhereDied.z, 0, false, false);
+			PLAYER::RESET_PLAYER_ARREST_STATE(playerPed);
+			WAIT(1000);
+			CAM::DO_SCREEN_FADE_IN(500);
+		}
+	}
+
 	update_centre_screen_status_text();
 
 	update_vehicle_guns();
@@ -519,11 +546,6 @@ void update_features(){
 	update_props_pending_dialogs();
 
 	debug_native_investigation();
-
-	// common variables
-	Player player = PLAYER::PLAYER_ID();
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
-	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(playerPed);
 
 	update_area_effects(playerPed);
 	update_vehicles(playerPed);
@@ -761,7 +783,7 @@ void update_features(){
 
 	// Injured Player Movement
 	if (featurePlayerInjuredMovement && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) {
-		if (!STREAMING::HAS_ANIM_DICT_LOADED("move_m@injured")) STREAMING::REQUEST_ANIM_DICT("move_m@injured");
+		if (!STREAMING::HAS_ANIM_DICT_LOADED("move_injured_generic")) STREAMING::REQUEST_ANIM_DICT("move_injured_generic"); // move_m@injured
 		float curr_health = ENTITY::GET_ENTITY_HEALTH(playerPed) - 100;
 		Vector3 coords_calf_l = PED::GET_PED_BONE_COORDS(playerPed, 63931, 0, 0, 0); // left calf
 		Vector3 coords_calf_r = PED::GET_PED_BONE_COORDS(playerPed, 36864, 0, 0, 0); // right calf
@@ -770,7 +792,7 @@ void update_features(){
 			GAMEPLAY::HAS_BULLET_IMPACTED_IN_AREA(coords_calf_r.x, coords_calf_r.y, coords_calf_r.z, 0.4, 0, 0) || GAMEPLAY::HAS_BULLET_IMPACTED_IN_AREA(coords_pelvis.x, coords_pelvis.y, coords_pelvis.z, 0.2, 0, 0))) {
 			been_injured = true;
 		}
-		if (curr_health < 90 || been_injured == true) PED::SET_PED_MOVEMENT_CLIPSET(playerPed, "move_m@injured", 1.0f); // @walk
+		if (curr_health < 90 || been_injured == true) PED::SET_PED_MOVEMENT_CLIPSET(playerPed, "move_injured_generic", 1.0f); // @walk
 		if (curr_health < 50 || been_injured == true) CONTROLS::DISABLE_CONTROL_ACTION(2, 21, 1); // sprint
 		if (curr_health < 30/* || been_injured == true*/) CONTROLS::DISABLE_CONTROL_ACTION(2, 22, 1); // jump
 		if ((curr_health > (PLAYER_HEALTH_VALUES[current_player_health] - 111)) || (PLAYER::GET_TIME_SINCE_LAST_DEATH() > 100 && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 5000) || 
@@ -948,27 +970,6 @@ void update_features(){
 	prison_break(); ///// <--- PRISON BREAK /////
 	
 	most_wanted(); ///// <--- WANTED FUGITIVE /////
-
-	// Instant Respawn On Death/Arrest
-	if (featureRespawnsWhereDied && GAMEPLAY::GET_MISSION_FLAG() == 0) {
-		if (ENTITY::IS_ENTITY_DEAD(playerPed) || PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 0)) {
-			player_died = true;
-			CAM::DO_SCREEN_FADE_OUT(500);
-			WAIT(1000);
-			GAMEPLAY::_DISABLE_AUTOMATIC_RESPAWN(true);
-			GAMEPLAY::IGNORE_NEXT_RESTART(true);
-			GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("respawn_controller");
-			GAMEPLAY::_RESET_LOCALPLAYER_STATE();
-			Vector3 ped_me = ENTITY::GET_ENTITY_COORDS(playerPed, true);
-			BOOL onGround = false;
-			Vector3 CoordsWhereDied = ENTITY::GET_ENTITY_COORDS(playerPed, true);
-			PATHFIND::GET_SAFE_COORD_FOR_PED(ped_me.x, ped_me.y, ped_me.z, onGround, &CoordsWhereDied, 16);
-			NETWORK::NETWORK_RESURRECT_LOCAL_PLAYER(CoordsWhereDied.x, CoordsWhereDied.y, CoordsWhereDied.z, 0, false, false);
-			PLAYER::RESET_PLAYER_ARREST_STATE(playerPed);
-			WAIT(1000);
-			CAM::DO_SCREEN_FADE_IN(500);
-		}
-	}
 
 	// police ignore player
 	if(featurePlayerIgnoredByPolice){
