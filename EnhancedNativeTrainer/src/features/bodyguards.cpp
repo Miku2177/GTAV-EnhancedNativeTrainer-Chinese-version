@@ -445,7 +445,7 @@ void do_spawn_bodyguard(){
 
 		myGroup = PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID());
 
-		Vector3 spawnCoords = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(PLAYER::PLAYER_PED_ID(), 2.5, 2.5, 0.0);
+		Vector3 spawnCoords = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(PLAYER::PLAYER_PED_ID(), 2.0, 2.0, 0.0); // 2.5 2.5
 		Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 		if (added_nearest_b == false) bodyGuard = PED::CREATE_PED(25, bodyGuardModel, spawnCoords.x, spawnCoords.y, spawnCoords.z, 0, 0, 0);
 		if (added_nearest_b == true) {
@@ -477,7 +477,13 @@ void do_spawn_bodyguard(){
 					if (spawnedBodyguards[i] == temp_bodyguard) exist_already = true;
 				}
 			}
-			if (exist_already == false) bodyGuard = temp_bodyguard;
+			if (exist_already == false) {
+				Hash temp_model = ENTITY::GET_ENTITY_MODEL(temp_bodyguard);
+				Vector3 coords_temp_ped = ENTITY::GET_ENTITY_COORDS(temp_bodyguard, true);
+				PED::DELETE_PED(&temp_bodyguard);
+				bodyGuard = PED::CREATE_PED(25, temp_model, coords_temp_ped.x, coords_temp_ped.y, coords_temp_ped.z, 0, 0, 0);
+				//bodyGuard = temp_bodyguard;
+			}
 		}
 
 		if (bodyGuard != -1) {
@@ -552,6 +558,7 @@ void do_spawn_bodyguard(){
 			//
 			if (bodyguard_animal == false) PED::SET_PED_CAN_SWITCH_WEAPON(bodyGuard, true);
 			PED::SET_GROUP_FORMATION(myGroup, 1); // 1
+			PED::SET_GROUP_FORMATION_SPACING(myGroup, 2.0, 2.0, 2.0);
 			PED::SET_CAN_ATTACK_FRIENDLY(bodyGuard, false, false);
 
 			AI::TASK_COMBAT_HATED_TARGETS_AROUND_PED(bodyGuard, 10000, 0);

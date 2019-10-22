@@ -42,7 +42,7 @@ bool clear_wanted_level = false;
 int populate_tick = 0;
 int pb_tick_secs_passed, pb_tick_secs_curr = 0;
 Hash JailGuard_Weapon2 = -1;
-Ped prisonPed, temp_ped, temp_ped2 = -1;
+Ped prisonPed, temp_ped1, temp_ped2 = -1;
 std::vector<Ped> ADDITIONAL_PRISONERS;
 int civilian_torso_drawable, civilian_torso_texture, civilian_legs_drawable, civilian_legs_texture = -1;
 bool alert_police_about_fugitive_close, alert_police_about_fugitive_distant = false;
@@ -211,13 +211,13 @@ void prison_break()
 						make_periodic_feature_call();
 						WAIT(0);
 					}
-					temp_ped = PED::CREATE_PED(25, prisonPed, randomize_peds_in_jail_x1 + 1701, randomize_peds_in_jail_y1 + 2484, my_position_in_prison.z, randomize_peds_in_jail_rot, 0, 0);
+					temp_ped1 = PED::CREATE_PED(25, prisonPed, randomize_peds_in_jail_x1 + 1701, randomize_peds_in_jail_y1 + 2484, my_position_in_prison.z, randomize_peds_in_jail_rot, 0, 0);
 					temp_ped2 = PED::CREATE_PED(25, prisonPed, randomize_peds_in_jail_x1 + 1654, randomize_peds_in_jail_y1 + 2626, my_position_in_prison.z, randomize_peds_in_jail_rot, 0, 0);
-					if (ADDITIONAL_PRISONERS.empty()) ADDITIONAL_PRISONERS.push_back(temp_ped);
-					ADDITIONAL_PRISONERS.push_back(temp_ped);
+					if (ADDITIONAL_PRISONERS.empty()) ADDITIONAL_PRISONERS.push_back(temp_ped1);
+					ADDITIONAL_PRISONERS.push_back(temp_ped1);
 					ADDITIONAL_PRISONERS.push_back(temp_ped2);
-					ENTITY::SET_ENTITY_AS_MISSION_ENTITY(temp_ped, 1, 1);
-					AI::TASK_WANDER_STANDARD(temp_ped, 10.0f, 10);
+					ENTITY::SET_ENTITY_AS_MISSION_ENTITY(temp_ped1, 1, 1);
+					AI::TASK_WANDER_STANDARD(temp_ped1, 10.0f, 10);
 					ENTITY::SET_ENTITY_AS_MISSION_ENTITY(temp_ped2, 1, 1);
 					AI::TASK_WANDER_STANDARD(temp_ped2, 10.0f, 10);
 				}

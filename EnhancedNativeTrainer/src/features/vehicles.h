@@ -137,6 +137,8 @@ void enter_damaged_vehicle();
 
 Vehicle find_nearest_vehicle();
 
+Ped find_nearest_ped();
+
 void toggle_tractioncontrol();
 
 bool process_spawn_menu_generic(int topMenuSelection);
