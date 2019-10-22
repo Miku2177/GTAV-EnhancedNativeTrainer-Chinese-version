@@ -55,6 +55,7 @@ int Accel_secs_passed, Accel_secs_curr, Accel_seconds = 0;
 
 Vehicle current_veh_e = -1;
 Vehicle temp_vehicle, playerVehicle_s = -1;
+Ped temp_ped = -1;
 
 std::vector<Object> SPIKES;
 bool s_message = false;
@@ -612,6 +613,24 @@ Vehicle find_nearest_vehicle() {
 		}
 	}
 	return temp_vehicle;
+}
+
+Ped find_nearest_ped() {
+	Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
+	const int arrSize33 = 1024;
+	Ped surr_peds[arrSize33];
+	int count_surr_vehs = worldGetAllPeds(surr_peds, arrSize33);
+	float dist_diff = -1.0;
+	float temp_dist = 20.0;
+	for (int i = 0; i < count_surr_vehs; i++) {
+		Vector3 coordsped = ENTITY::GET_ENTITY_COORDS(surr_peds[i], true);
+		dist_diff = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsped.x, coordsped.y, coordsped.z);
+		if (temp_dist > dist_diff) {
+			temp_dist = dist_diff;
+			temp_ped = surr_peds[i];
+		}
+	}
+	return temp_ped;
 }
 
 void eject_seat() { // eject seat
@@ -4548,7 +4567,7 @@ bool vehicle_save_slot_menu_interrupt(){
 void add_vehicle_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"lastCustomVehicleSpawn", lastCustomVehicleSpawn});
 	results->push_back(StringPairSettingDBRow{"speedBoostIndex", std::to_string(speedBoostIndex)});
-	results->push_back(StringPairSettingDBRow{ "savedVehicleListSortMethod", std::to_string(savedVehicleListSortMethod) });
+	results->push_back(StringPairSettingDBRow{"savedVehicleListSortMethod", std::to_string(savedVehicleListSortMethod)});
 	results->push_back(StringPairSettingDBRow{"featureNeverDirty", std::to_string(featureNeverDirty)});
 	results->push_back(StringPairSettingDBRow{"engPowMultIndex", std::to_string(engPowMultIndex)});
 	results->push_back(StringPairSettingDBRow{"VehMassMultIndex", std::to_string(VehMassMultIndex)});
