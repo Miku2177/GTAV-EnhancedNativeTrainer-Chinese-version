@@ -30,7 +30,7 @@ int activeLineIndexPowerPunchWeapons = 0;
 // give all weapons automatically variables
 bool featureGiveAllWeapons = false;
 bool featureAddAllWeaponsAttachments = false;
-int tick_allw = 0;
+int tick_allw, tick_firemode = 0;
 int w_tick_secs_passed, w_tick_secs_curr = 0;
 int tick_a_allw, w_a_tick_secs_curr = 0;
 Ped oldplayerPed_W, oldplayerPed_A = -1;
@@ -58,6 +58,8 @@ bool featureCopArmedWith = false;
 bool featurePlayerMelee = true;
 bool featureSwitchWeaponIfDanger = false;
 bool featureArmyMelee = false;
+
+int bullet_a = 0;
 
 bool featureGravityGun = false;
 bool featureFriendlyFire = false;
@@ -142,6 +144,12 @@ const std::vector<std::string> PEDS_POWERPUNCH_CAPTIONS{ "OFF", "Both You And Pe
 const int PEDS_POWERPUNCH_VALUES[] = { 0, 1, 2 };
 int PedsPowerPunchIndex = 0;
 bool PedsPowerPunchChanged = true;
+
+// Fire Mode
+const std::vector<std::string> WEAPONS_FIREMODE_CAPTIONS{ "OFF", "Single Fire", "Burst Semi", "Burst Auto" };
+const int WEAPONS_FIREMODE_VALUES[] = { 0, 1, 2, 3 };
+int WeaponsFireModeIndex = 0;
+bool WeaponsFireModeChanged = true;
 
 /* Begin Gravity Gun related code */
 
@@ -747,6 +755,11 @@ void onchange_peds_power_punch_index(int value, SelectFromListMenuItem* source) 
 	PedsPowerPunchChanged = true;
 }
 
+void onchange_weapons_firemode_modifier(int value, SelectFromListMenuItem* source) {
+	WeaponsFireModeIndex = value;
+	WeaponsFireModeChanged = true;
+}
+
 void onchange_vehicle_weapon_modifier(int value, SelectFromListMenuItem* source) {
 	VehCurrWeaponIndex = value;
 	VehCurrWeaponChanged = true;
@@ -1299,6 +1312,12 @@ bool process_weapon_menu(){
 	toggleItem->toggleValue = &featureRapidFire;
 	menuItems.push_back(toggleItem);
 
+	listItem = new SelectFromListMenuItem(WEAPONS_FIREMODE_CAPTIONS, onchange_weapons_firemode_modifier);
+	listItem->wrap = false;
+	listItem->caption = "Fire Mode";
+	listItem->value = WeaponsFireModeIndex;
+	menuItems.push_back(listItem);
+
 	return draw_generic_menu<int>(menuItems, &activeLineIndexWeapon, caption, onconfirm_weapon_menu, NULL, NULL);
 }
 
@@ -1316,6 +1335,7 @@ void reset_weapon_globals(){
 	SniperVisionIndex = 0;
 	PowerPunchIndex = 2;
 	PedsPowerPunchIndex = 0;
+	WeaponsFireModeIndex = 0;
 
 	activeLineIndexCopArmed = 0;
 	activeLineIndexPedAgainstWeapons = 0;
@@ -1875,7 +1895,40 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		}
 	}
 
-	//Gravity Gun
+	// Fire Mode
+	if (WEAPONS_FIREMODE_VALUES[WeaponsFireModeIndex] > 0) {
+		CONTROLS::DISABLE_CONTROL_ACTION(2, 24, 1); // attack
+		CONTROLS::DISABLE_CONTROL_ACTION(2, 257, 1); // attack2
+		CONTROLS::DISABLE_CONTROL_ACTION(2, 69, 1); // vehicle attack
+		CONTROLS::DISABLE_CONTROL_ACTION(2, 70, 1); // vehicle attack2
+		if (CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, 24)) {
+			if (WEAPONS_FIREMODE_VALUES[WeaponsFireModeIndex] == 3 && ((bullet_a - WEAPON::GET_AMMO_IN_PED_WEAPON(PLAYER::PLAYER_PED_ID(), WEAPON::GET_SELECTED_PED_WEAPON(playerPed))) > 4)) { // burst auto
+				w_tick_secs_passed = clock() / CLOCKS_PER_SEC;
+				if (((clock() / (CLOCKS_PER_SEC / 1000)) - w_tick_secs_curr) != 0) {
+					tick_firemode = tick_firemode + 1;
+					w_tick_secs_curr = w_tick_secs_passed;
+				}
+				if (tick_firemode > 50) { // 90
+					bullet_a = WEAPON::GET_AMMO_IN_PED_WEAPON(PLAYER::PLAYER_PED_ID(), WEAPON::GET_SELECTED_PED_WEAPON(playerPed));
+					tick_firemode = 0;
+				}
+			}
+			if ((WEAPONS_FIREMODE_VALUES[WeaponsFireModeIndex] == 1 && ((bullet_a - WEAPON::GET_AMMO_IN_PED_WEAPON(PLAYER::PLAYER_PED_ID(), WEAPON::GET_SELECTED_PED_WEAPON(playerPed))) < 1)) || // 1 - single fire
+				(WEAPONS_FIREMODE_VALUES[WeaponsFireModeIndex] == 2 && ((bullet_a - WEAPON::GET_AMMO_IN_PED_WEAPON(PLAYER::PLAYER_PED_ID(), WEAPON::GET_SELECTED_PED_WEAPON(playerPed))) < 5)) || // 2 - burst semi
+				(WEAPONS_FIREMODE_VALUES[WeaponsFireModeIndex] == 3 && ((bullet_a - WEAPON::GET_AMMO_IN_PED_WEAPON(PLAYER::PLAYER_PED_ID(), WEAPON::GET_SELECTED_PED_WEAPON(playerPed))) < 5))) { // 3 - burst auto
+				CONTROLS::ENABLE_CONTROL_ACTION(2, 24, 1); // attack
+				CONTROLS::ENABLE_CONTROL_ACTION(2, 257, 1); // attack2
+				CONTROLS::ENABLE_CONTROL_ACTION(2, 69, 1); // vehicle attack
+				CONTROLS::ENABLE_CONTROL_ACTION(2, 70, 1); // vehicle attack2
+			}
+		}
+		if (!CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, 24) && !PED::GET_PED_CONFIG_FLAG(PLAYER::PLAYER_PED_ID(), 58, 1)) {
+			bullet_a = WEAPON::GET_AMMO_IN_PED_WEAPON(PLAYER::PLAYER_PED_ID(), WEAPON::GET_SELECTED_PED_WEAPON(playerPed));
+			tick_firemode = 0;
+		}
+	}
+
+	// Gravity Gun
 	if(bPlayerExists && featureGravityGun && GAMEPLAY::GET_MISSION_FLAG() == 0){
 		Ped tempPed;
 		Hash tempWeap;
@@ -2333,6 +2386,7 @@ void add_weapon_feature_enablements2(std::vector<StringPairSettingDBRow>* result
 	results->push_back(StringPairSettingDBRow{ "SniperVisionIndex", std::to_string(SniperVisionIndex) });
 	results->push_back(StringPairSettingDBRow{ "PowerPunchIndex", std::to_string(PowerPunchIndex) });
 	results->push_back(StringPairSettingDBRow{ "PedsPowerPunchIndex", std::to_string(PedsPowerPunchIndex) });
+	results->push_back(StringPairSettingDBRow{ "WeaponsFireModeIndex", std::to_string(WeaponsFireModeIndex) });
 }
 
 void onchange_weap_dmg_modifier(int value, SelectFromListMenuItem* source){
@@ -2374,6 +2428,9 @@ void handle_generic_settings_weapons(std::vector<StringPairSettingDBRow>* settin
 		}
 		else if (setting.name.compare("PedsPowerPunchIndex") == 0) {
 			PedsPowerPunchIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("WeaponsFireModeIndex") == 0) {
+			WeaponsFireModeIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("lastCustomWeapon") == 0) {
 			lastCustomWeapon = setting.value;
