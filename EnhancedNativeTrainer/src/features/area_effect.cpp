@@ -608,8 +608,10 @@ void update_area_effects(Ped playerPed){
 							time_to_chase = true;
 						}
 					}
-					if (PED::IS_PED_ON_VEHICLE(PLAYER::PLAYER_PED_ID())) {
+					if (PED::IS_PED_ON_VEHICLE(PLAYER::PLAYER_PED_ID()) || ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(PED::GET_VEHICLE_PED_IS_IN(veh_agressive[i], false), PLAYER::PLAYER_PED_ID(), 1)) {
 						find_nearest_vehicle();
+						ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(PED::GET_VEHICLE_PED_IS_IN(veh_agressive[i], false));
+						ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(temp_vehicle);
 						PED::SET_PED_AS_ENEMY(PLAYER::PLAYER_PED_ID(), true);
 						PED::REGISTER_TARGET(VEHICLE::GET_PED_IN_VEHICLE_SEAT(temp_vehicle, -1), PLAYER::PLAYER_PED_ID());
 						AI::TASK_COMBAT_PED(VEHICLE::GET_PED_IN_VEHICLE_SEAT(temp_vehicle, -1), PLAYER::PLAYER_PED_ID(), 0, 16);
