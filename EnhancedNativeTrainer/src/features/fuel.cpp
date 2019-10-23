@@ -514,7 +514,7 @@ void fuel()
 						Car_Refuel = false;
 					}
 				}
-				else {
+				if (!stoprefillKey) {
 					if (outValue_station > 0 && FUEL[0] > (fuel_amount - 0.001)) {
 						FUEL[0] = fuel_amount;
 						VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, true, false);
@@ -523,7 +523,6 @@ void fuel()
 				}
 			}
 		}
-
 		if (PED::IS_PED_ON_FOOT(playerPed)) exiting_v = false;
 
 		// REFUEL USING JERRY CAN

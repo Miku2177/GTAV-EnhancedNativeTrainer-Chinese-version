@@ -249,6 +249,9 @@ void trigger_function_for_hotkey_onkeyup(int hotkey)
 	case HKEY_ENTER_DAMAGED_V:
 		enter_damaged_vehicle();
 		break;
+	case HKEY_FIRE_MODE:
+		fire_mode_hotkey();
+		break;
 	default:
 	{
 		std::ostringstream ss;

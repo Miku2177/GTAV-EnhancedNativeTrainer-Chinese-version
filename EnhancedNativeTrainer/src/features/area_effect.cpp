@@ -487,7 +487,7 @@ void update_area_effects(Ped playerPed){
 	Player player = PLAYER::PLAYER_ID();
 	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(playerPed);
 
-	clear_up_missionised_entitities();
+	//clear_up_missionised_entitities();
 
 	do_maintenance_on_tracked_entities();
 
@@ -608,7 +608,7 @@ void update_area_effects(Ped playerPed){
 							time_to_chase = true;
 						}
 					}
-					if (PED::IS_PED_ON_VEHICLE(PLAYER::PLAYER_PED_ID()) || ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(PED::GET_VEHICLE_PED_IS_IN(veh_agressive[i], false), PLAYER::PLAYER_PED_ID(), 1)) {
+					if (PED::IS_PED_ON_VEHICLE(PLAYER::PLAYER_PED_ID()) || (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(PED::GET_VEHICLE_PED_IS_IN(veh_agressive[i], false), PLAYER::PLAYER_PED_ID(), 1) && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, true))) {
 						find_nearest_vehicle();
 						ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(PED::GET_VEHICLE_PED_IS_IN(veh_agressive[i], false));
 						ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(temp_vehicle);

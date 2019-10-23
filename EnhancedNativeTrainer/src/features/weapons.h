@@ -310,3 +310,5 @@ void onchange_weap_dmg_modifier(int value, SelectFromListMenuItem* source);
 void add_weapons_generic_settings(std::vector<StringPairSettingDBRow>* results);
 
 void handle_generic_settings_weapons(std::vector<StringPairSettingDBRow>* settings);
+
+void fire_mode_hotkey();

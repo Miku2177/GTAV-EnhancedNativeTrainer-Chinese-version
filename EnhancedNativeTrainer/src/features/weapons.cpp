@@ -223,6 +223,16 @@ void RequestControlEntity(Entity entity) //needed so we can pick up props/Peds. 
 }
 /* End Gravity Gun related code */
 
+void fire_mode_hotkey() {
+	if (WeaponsFireModeIndex > 0) {
+		WeaponsFireModeIndex = WeaponsFireModeIndex + 1;
+		if (WeaponsFireModeIndex > 3) WeaponsFireModeIndex = 1;
+		if (WeaponsFireModeIndex == 1) set_status_text("Single Fire");
+		if (WeaponsFireModeIndex == 2) set_status_text("Burst Semi");
+		if (WeaponsFireModeIndex == 3) set_status_text("Burst Auto");
+	}
+}
+
 void onchange_knuckle_appearance(int value, SelectFromListMenuItem* source){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	int weapHash = GAMEPLAY::GET_HASH_KEY("WEAPON_KNUCKLE");
@@ -1886,7 +1896,9 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	if (featureRapidFire) {
 		if ((CONTROLS::IS_CONTROL_PRESSED(2, 24) || (CONTROLS::IS_CONTROL_PRESSED(2, 24) && CONTROLS::IS_CONTROL_PRESSED(2, 25))) && ENTITY::DOES_ENTITY_EXIST(playerPed) && !ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) &&
 			!PED::IS_PED_RELOADING(playerPed)) {
-			Vector3 myCoords = PED::GET_PED_BONE_COORDS(playerPed, 64016, 0, 0, 0); // right finger bone
+			//Vector3 myCoords = PED::GET_PED_BONE_COORDS(playerPed, 64016, 0, 0, 0); // right finger bone
+			Entity curr_w = WEAPON::GET_CURRENT_PED_WEAPON_ENTITY_INDEX(playerPed);
+			Vector3 myCoords = ENTITY::GET_ENTITY_COORDS(curr_w, 1);
 			float Coord[3];
 			Vector3 moveToPos = add(&myCoords, &DirectionOffsetFromCam(5.5f));
 			VectorToFloat(moveToPos, Coord);
