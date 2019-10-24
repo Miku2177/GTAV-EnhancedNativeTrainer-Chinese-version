@@ -763,7 +763,7 @@ void set_all_nearby_peds_to_angry(bool enabled){
 
 	for each (Ped xped in peds){
 		// Only apply to non-bodyguards
-		if(!PED::IS_PED_GROUP_MEMBER(xped, PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID()))){
+		if(!PED::IS_PED_GROUP_MEMBER(xped, PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID())) && PED::GET_PED_TYPE(xped) != 6 && PED::GET_PED_TYPE(xped) != 27 && PED::GET_PED_TYPE(xped) != 29){
 			ENTTrackedPedestrian* trackedPed = findOrCreateTrackedPed(xped);
 
 			if(enabled && !trackedPed->angryApplied){
@@ -1190,7 +1190,7 @@ void give_all_nearby_peds_a_weapon(bool enabled){
 		}
 		if (PED_WEAPON_TITLES[pedWeaponSetIndex] != "Custom Weapon")
 		{
-			if (!PED::IS_PED_GROUP_MEMBER(xped, PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID()))){
+			if (!PED::IS_PED_GROUP_MEMBER(xped, PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID())) && PED::GET_PED_TYPE(xped) != 6 && PED::GET_PED_TYPE(xped) != 27 && PED::GET_PED_TYPE(xped) != 29){
 				ENTTrackedPedestrian* trackedPed = findOrCreateTrackedPed(xped);
 
 				if (enabled && !trackedPed->weaponSetApplied != pedWeaponSetIndex){
@@ -1229,7 +1229,7 @@ void give_all_nearby_peds_a_weapon(bool enabled){
 		}
 		else
 		{
-			if (!PED::IS_PED_GROUP_MEMBER(xped, PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID()))) {
+			if (!PED::IS_PED_GROUP_MEMBER(xped, PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID())) && PED::GET_PED_TYPE(xped) != 6 && PED::GET_PED_TYPE(xped) != 27 && PED::GET_PED_TYPE(xped) != 29) {
 				char *currWeapon = new char[PED_WEAPONS_SELECTIVE_CAPTIONS[PedWeaponsSelectiveIndex].length() + 1];
 				strcpy(currWeapon, PED_WEAPONS_SELECTIVE_CAPTIONS[PedWeaponsSelectiveIndex].c_str());
 				Hash Ped_Selective_Weapon = GAMEPLAY::GET_HASH_KEY(currWeapon);
