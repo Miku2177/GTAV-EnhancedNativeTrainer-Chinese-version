@@ -156,8 +156,8 @@ int current_regen_speed = 4;
 bool current_regen_speed_changed = true;
 
 //Player Health
-const std::vector<std::string> PLAYER_HEALTH_CAPTIONS{ "OFF", "10", "20", "30", "40", "50", "100", "200", "300", "500", "1000", "5000", "10000", "20000", "30000" };
-const int PLAYER_HEALTH_VALUES[] = { 0, 110, 120, 130, 140, 150, 200, 300, 400, 600, 1100, 5100, 10100, 20100, 30100 };
+const std::vector<std::string> PLAYER_HEALTH_CAPTIONS{ "OFF", "1", "10", "20", "30", "50", "100", "200", "300", "500", "1000", "5000", "10000", "20000", "30000" };
+const int PLAYER_HEALTH_VALUES[] = { 0, 101, 110, 120, 130, 150, 200, 300, 400, 600, 1100, 5100, 10100, 20100, 30100 };
 int current_player_health = 6;
 bool current_player_health_Changed = true;
 int PedsHealthIndex = 0;
