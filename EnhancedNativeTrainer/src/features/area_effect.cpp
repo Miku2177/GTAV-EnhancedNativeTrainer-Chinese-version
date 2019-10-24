@@ -51,6 +51,7 @@ bool featureDirtyVehicles = false;
 bool featureNPCNoGravityVehicles = false;
 bool featureNPCReducedGripVehicles = false;
 bool featureBoostNPCRadio = false;
+bool featurePedsSwitchWeapons = true;
 
 int pedWeaponSetIndex = 0;
 
@@ -116,6 +117,7 @@ void add_areaeffect_feature_enablements(std::vector<FeatureEnabledLocalDefinitio
 	results->push_back(FeatureEnabledLocalDefinition{"featureAngryPedsUseCover", &featureAngryPedsUseCover});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAngryPedsTargetYou", &featureAngryPedsTargetYou});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePedsWeapons", &featurePedsWeapons});
+	results->push_back(FeatureEnabledLocalDefinition{"featurePedsSwitchWeapons", &featurePedsSwitchWeapons});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAngryMenOnly", &featureAngryMenOnly});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePedsIncludeDrivers", &featurePedsIncludeDrivers});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePedsIncludePilots", &featurePedsIncludePilots});
@@ -154,6 +156,7 @@ void reset_areaeffect_globals(){
 	featureNPCNoGravityVehicles = false;
 	featureNPCReducedGripVehicles = false;
 	featureBoostNPCRadio = false;
+	featurePedsSwitchWeapons = true;
 
 	//DamagedVehiclesIndex = 0;
 	NPCVehicleSpeedIndex = 0;
@@ -381,6 +384,12 @@ void process_areaeffect_peds_weapons_menu() {
 	listItem->caption = "Custom Weapon";
 	listItem->value = PedWeaponsSelectiveIndex;
 	menuItems.push_back(listItem);
+
+	togItem = new ToggleMenuItem<int>();
+	togItem->caption = "Peds Can Switch Weapons";
+	togItem->value = 1;
+	togItem->toggleValue = &featurePedsSwitchWeapons;
+	menuItems.push_back(togItem);
 
 	draw_generic_menu<int>(menuItems, &areaeffect_peds_weapons_menu_index, "Peds Weapons Options", NULL, NULL, NULL);
 }
@@ -1204,7 +1213,8 @@ void give_all_nearby_peds_a_weapon(bool enabled){
 						WEAPON::GIVE_WEAPON_TO_PED(xped, weapHash, 9999, FALSE, TRUE);
 						if (WEAPON::HAS_PED_GOT_WEAPON(xped, weapHash, 0) && !PED::IS_PED_IN_ANY_VEHICLE(xped, false) && !PED::IS_PED_INJURED(xped)) WEAPON::SET_CURRENT_PED_WEAPON(xped, weapHash, 0);
 						WEAPON::SET_PED_INFINITE_AMMO_CLIP(xped, true);
-						PED::SET_PED_CAN_SWITCH_WEAPON(xped, true);
+						if (featurePedsSwitchWeapons) PED::SET_PED_CAN_SWITCH_WEAPON(xped, true);
+						else PED::SET_PED_CAN_SWITCH_WEAPON(xped, false);
 						trackedPed->lastWeaponApplied = weapHash;
 					}
 
@@ -1228,7 +1238,8 @@ void give_all_nearby_peds_a_weapon(bool enabled){
 				if (!featurePedsIncludeDrivers && WEAPON::HAS_PED_GOT_WEAPON(xped, Ped_Selective_Weapon, 0) && !PED::IS_PED_IN_ANY_VEHICLE(xped, false)) WEAPON::SET_CURRENT_PED_WEAPON(xped, Ped_Selective_Weapon, 0);
 				if (featurePedsIncludeDrivers && WEAPON::HAS_PED_GOT_WEAPON(xped, Ped_Selective_Weapon, 0)) WEAPON::SET_CURRENT_PED_WEAPON(xped, Ped_Selective_Weapon, 0);
 				WEAPON::SET_PED_INFINITE_AMMO_CLIP(xped, true);
-				PED::SET_PED_CAN_SWITCH_WEAPON(xped, true);
+				if (featurePedsSwitchWeapons) PED::SET_PED_CAN_SWITCH_WEAPON(xped, true);
+				else PED::SET_PED_CAN_SWITCH_WEAPON(xped, false);
 			}
 		}
 	}
