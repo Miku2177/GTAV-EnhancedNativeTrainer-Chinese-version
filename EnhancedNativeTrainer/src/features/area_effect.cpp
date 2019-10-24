@@ -496,7 +496,7 @@ void update_area_effects(Ped playerPed){
 	Player player = PLAYER::PLAYER_ID();
 	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(playerPed);
 
-	//clear_up_missionised_entitities();
+	clear_up_missionised_entitities();
 
 	do_maintenance_on_tracked_entities();
 
@@ -884,7 +884,7 @@ void set_all_nearby_vehs_to_broken(bool enabled){
 	}
 }
 
-std::set<Ped> get_nearby_peds(Ped playerPed){
+std::set<Ped>get_nearby_peds(Ped playerPed){
 	if(allWorldPedsThisFrameFilled){
 		return allWorldPedsThisFrame;
 	}
@@ -1184,7 +1184,7 @@ void give_all_nearby_peds_a_weapon(bool enabled){
 	//callsPerFrame = 0;
 
 	for each (Ped xped in peds){
-		int chanceOfGettingWeapon = rand() % 5;
+		int chanceOfGettingWeapon = rand() % 2; // 5
 		if(chanceOfGettingWeapon != 1){
 			continue;
 		}
