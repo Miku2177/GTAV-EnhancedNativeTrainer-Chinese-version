@@ -610,12 +610,13 @@ void update_area_effects(Ped playerPed){
 					}
 					if (PED::IS_PED_ON_VEHICLE(PLAYER::PLAYER_PED_ID()) || (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(PED::GET_VEHICLE_PED_IS_IN(veh_agressive[i], false), PLAYER::PLAYER_PED_ID(), 1) && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, true))) {
 						find_nearest_vehicle();
-						ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(PED::GET_VEHICLE_PED_IS_IN(veh_agressive[i], false));
-						ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(temp_vehicle);
+						if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(PED::GET_VEHICLE_PED_IS_IN(veh_agressive[i], false), PLAYER::PLAYER_PED_ID(), 1)) temp_vehicle = PED::GET_VEHICLE_PED_IS_IN(veh_agressive[i], false);
 						PED::SET_PED_AS_ENEMY(PLAYER::PLAYER_PED_ID(), true);
 						PED::REGISTER_TARGET(VEHICLE::GET_PED_IN_VEHICLE_SEAT(temp_vehicle, -1), PLAYER::PLAYER_PED_ID());
 						AI::TASK_COMBAT_PED(VEHICLE::GET_PED_IN_VEHICLE_SEAT(temp_vehicle, -1), PLAYER::PLAYER_PED_ID(), 0, 16);
 						AUDIO::_PLAY_AMBIENT_SPEECH1(VEHICLE::GET_PED_IN_VEHICLE_SEAT(temp_vehicle, -1), "PROVOKE_GENERIC", "SPEECH_PARAMS_FORCE_SHOUTED");
+						ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(PED::GET_VEHICLE_PED_IS_IN(veh_agressive[i], false));
+						ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(temp_vehicle);
 					}
 					if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) && PED::IS_PED_IN_ANY_VEHICLE(veh_agressive[i], true) &&
 						lawabidped_with_dist_x < 10 && lawabidped_with_dist_y < 10 && time_to_chase == true && veh_me_speed < 1) {
