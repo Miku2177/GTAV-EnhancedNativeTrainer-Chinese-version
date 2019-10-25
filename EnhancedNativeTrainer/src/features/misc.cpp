@@ -125,6 +125,7 @@ bool featureNoStuntJumps = false;
 bool featureHidePlayerInfo = false;
 
 bool featureShowFPS = false;
+bool featurenowheelblurslow = false;
 
 bool featureShowVehiclePreviews = true;
 bool featureShowStatusMessage = true;
@@ -773,7 +774,7 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 }
 
 void process_misc_menu(){
-	const int lineCount = 29;
+	const int lineCount = 30;
 
 	std::string caption = "Miscellaneous Options";
 
@@ -808,6 +809,7 @@ void process_misc_menu(){
 		{"FPS Counter", &featureShowFPS, NULL }, 
 		{"Pause Menu Settings", NULL, NULL, false},
 		{"Airbrake Menu", NULL, NULL, false},
+		{"No Switch Wheel Blur&Slowdown", &featurenowheelblurslow, NULL },
 	};
 	
 	draw_menu_from_struct_def(lines, lineCount, &activeLineIndexMisc, caption, onconfirm_misc_menu);
@@ -885,6 +887,7 @@ void reset_misc_globals(){
 	featureNoStuntJumps = false;
 	featureHidePlayerInfo = false;
 	featureShowFPS = false;
+	featurenowheelblurslow = false;
 	featureNoAutoRespawn = false;
 	featureRealisticRadioVolume = false;
 
@@ -1304,6 +1307,12 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		} else AUDIO::SET_AUDIO_FLAG("PlayMenuMusic", false);
 	} 
 	
+	// No Weapon/Radio/Character Wheel Blur&Slowdown
+	if (featurenowheelblurslow && (CONTROLS::IS_CONTROL_PRESSED(2, 37) || CONTROLS::IS_CONTROL_PRESSED(2, 85) || CONTROLS::IS_CONTROL_PRESSED(2, 19))) { // Weapon/Radio/Character Wheels
+		GAMEPLAY::SET_TIME_SCALE(1.0f);
+		GRAPHICS::_STOP_ALL_SCREEN_EFFECTS();
+	}
+
 	// No Phone 
 	if (featureDisablePhone) {
 		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("cellphone_controller");
@@ -1697,8 +1706,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	// Hide player info in pause menu
 	if (featureHidePlayerInfo) UI::_SET_DIRECTOR_MODE(true);
 	else UI::_SET_DIRECTOR_MODE(false);
-
-	
+		
 	//Enable's 1.44's new radio station. Credit goes to Sjaak for finding this!
 	if (featureEnableMissingRadioStation)
 	{
@@ -1750,6 +1758,7 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 	results->push_back(FeatureEnabledLocalDefinition{"featureShowStatusMessage", &featureShowStatusMessage});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoAutoRespawn", &featureNoAutoRespawn});
 	results->push_back(FeatureEnabledLocalDefinition{"featureShowFPS", &featureShowFPS});
+	results->push_back(FeatureEnabledLocalDefinition{"featurenowheelblurslow", &featurenowheelblurslow});
 	results->push_back(FeatureEnabledLocalDefinition{"featureHiddenRadioStation", &featureEnableMissingRadioStation});
 	results->push_back(FeatureEnabledLocalDefinition{"featureFirstPersonDeathCamera", &featureFirstPersonDeathCamera});
 	results->push_back(FeatureEnabledLocalDefinition{"featureFirstPersonStuntJumpCamera", &featureFirstPersonStuntJumpCamera});
