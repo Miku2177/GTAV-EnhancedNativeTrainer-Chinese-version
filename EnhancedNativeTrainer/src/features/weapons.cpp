@@ -1690,8 +1690,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 					}
 					if (arrest_secs > 5 && arrest_secs < 10) { // 10 && 15
 						find_nearest_ped();
-						if (PED::GET_PED_TYPE(temp_ped) == 6 || PED::GET_PED_TYPE(temp_ped == 27)) {
-							AI::TASK_ARREST_PED(temp_ped, PLAYER::PLAYER_PED_ID());
+						if (PED::GET_PED_TYPE(temp_ped) == 6 || PED::GET_PED_TYPE(temp_ped) == 27) {
 							PLAYER::SET_MAX_WANTED_LEVEL(1);
 							PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 1, 0);
 							PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
