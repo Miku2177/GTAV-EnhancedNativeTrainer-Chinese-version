@@ -665,6 +665,11 @@ void update_area_effects(Ped playerPed){
 			AI::SET_TASK_VEHICLE_CHASE_IDEAL_PURSUIT_DISTANCE(pursuer.back(), 60.0f);
 			AI::SET_TASK_VEHICLE_CHASE_BEHAVIOR_FLAG(pursuer.back(), 32, true);
 			PED::SET_DRIVER_ABILITY(pursuer.back(), 0.9f);
+			if (featurePedsWeapons) {
+				int chanceOfGettingWeapon_a = rand() % 10;
+				if (chanceOfGettingWeapon_a == 9 && (WEAPON::GET_WEAPONTYPE_GROUP(WEAPON::GET_SELECTED_PED_WEAPON(pursuer.back())) != (416676503 || 3337201093))) 
+					WEAPON::GIVE_WEAPON_TO_PED(pursuer.back(), GAMEPLAY::GET_HASH_KEY("WEAPON_PISTOL"), 999, false, true);
+			}
 			AUDIO::_PLAY_AMBIENT_SPEECH1(pursuer.back(), "PROVOKE_GENERIC", "SPEECH_PARAMS_FORCE_SHOUTED");
 			time_to_attack = false;
 			v_collision_check = false;

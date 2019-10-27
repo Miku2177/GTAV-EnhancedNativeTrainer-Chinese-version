@@ -23,7 +23,6 @@ int lastSelectedWeapon = 0;
 int vision_toggle = 0;
 
 int arrest_secs = 0;
-Ped arrest_cop = -1;
 
 int weapDmgModIndex = 0;
 int activeLineIndexCopArmed = 0;
@@ -1696,14 +1695,13 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 							PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
 							AI::TASK_ARREST_PED(temp_ped, PLAYER::PLAYER_PED_ID());
 							arrest_secs = 18;
-							arrest_cop = temp_ped;
 						}
 					}
 				}
-				if (arrest_cop != -1) WEAPON::GIVE_WEAPON_TO_PED(arrest_cop, GAMEPLAY::GET_HASH_KEY("WEAPON_PISTOL"), 999, false, true);
+				if (temp_ped != -1) WEAPON::GIVE_WEAPON_TO_PED(temp_ped, GAMEPLAY::GET_HASH_KEY("WEAPON_PISTOL"), 999, false, true);
 				if (!AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID())) {
 					arrest_secs = 0; 
-					arrest_cop = -1;
+					temp_ped = -1;
 				} // end of arrest mode
 			} // end of for
 		} // end of if
