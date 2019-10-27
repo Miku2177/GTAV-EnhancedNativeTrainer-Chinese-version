@@ -22,6 +22,9 @@ int lastSelectedWeapon = 0;
 
 int vision_toggle = 0;
 
+int arrest_secs = 0;
+Ped arrest_cop = -1;
+
 int weapDmgModIndex = 0;
 int activeLineIndexCopArmed = 0;
 int activeLineIndexPedAgainstWeapons = 0;
@@ -1645,7 +1648,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			for (int i = 0; i < count_cops; i++) {
 				if (featurePedNoWeaponDrop/* ENTITY::GET_ENTITY_HEALTH(cops[i]) > 0 && WEAPON::IS_PED_ARMED(cops[i], 7) && PED::GET_PED_TYPE(cops[i]) == 6*/) WEAPON::SET_PED_DROPS_WEAPONS_WHEN_DEAD(cops[i], false);
 
-				if (featureCopArmedWith && (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) <= WEAPONS_COPALARM_VALUES[CopAlarmIndex] || WEAPONS_COPALARM_VALUES[CopAlarmIndex] > 5)/* && arrest_secs < 15*/) {
+				if (featureCopArmedWith && (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) <= WEAPONS_COPALARM_VALUES[CopAlarmIndex] || WEAPONS_COPALARM_VALUES[CopAlarmIndex] > 5)) {
 					if (featureSwitchWeaponIfDanger && (WEAPONS_COPARMED_CAPTIONS[CopCurrArmedIndex] == "\"WEAPON_UNARMED\"" || WEAPONS_COPARMED_CAPTIONS[CopCurrArmedIndex] == "\"WEAPON_NIGHTSTICK\"" ||
 						WEAPONS_COPARMED_CAPTIONS[CopCurrArmedIndex] == "\"WEAPON_FLASHLIGHT\"" || WEAPONS_COPARMED_CAPTIONS[CopCurrArmedIndex] == "\"WEAPON_KNIFE\"" || WEAPONS_COPARMED_CAPTIONS[CopCurrArmedIndex] == "\"WEAPON_DAGGER\"" ||
 						WEAPONS_COPARMED_CAPTIONS[CopCurrArmedIndex] == "\"WEAPON_HAMMER\"" || WEAPONS_COPARMED_CAPTIONS[CopCurrArmedIndex] == "\"WEAPON_BAT\"" || WEAPONS_COPARMED_CAPTIONS[CopCurrArmedIndex] == "\"WEAPON_GOLFCLUB\"" ||
@@ -1678,10 +1681,35 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 						if (featureArmyMelee && PED::GET_PED_TYPE(cops[i]) == 29 && WEAPON::GET_SELECTED_PED_WEAPON(cops[i]) != Cop_Weapon) WEAPON::GIVE_WEAPON_TO_PED(cops[i], Cop_Weapon, 999, false, true);
 					}
 				}
+				// arrest mode
+				if ((PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) == 1 || PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) == 2) && AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID())) {
+					s_vacuum_secs_passed = clock() / CLOCKS_PER_SEC;
+					if (((clock() / CLOCKS_PER_SEC) - s_vacuum_secs_curr) != 0) {
+						arrest_secs = arrest_secs + 1;
+						s_vacuum_secs_curr = s_vacuum_secs_passed;
+					}
+					if (arrest_secs > 5 && arrest_secs < 10) { // 10 && 15
+						find_nearest_ped();
+						if (PED::GET_PED_TYPE(temp_ped) == 6 || PED::GET_PED_TYPE(temp_ped == 27)) {
+							AI::TASK_ARREST_PED(temp_ped, PLAYER::PLAYER_PED_ID());
+							PLAYER::SET_MAX_WANTED_LEVEL(1);
+							PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 1, 0);
+							PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
+							AI::TASK_ARREST_PED(temp_ped, PLAYER::PLAYER_PED_ID());
+							arrest_secs = 18;
+							arrest_cop = temp_ped;
+						}
+					}
+				}
+				if (arrest_cop != -1) WEAPON::GIVE_WEAPON_TO_PED(arrest_cop, GAMEPLAY::GET_HASH_KEY("WEAPON_PISTOL"), 999, false, true);
+				if (!AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID())) {
+					arrest_secs = 0; 
+					arrest_cop = -1;
+				} // end of arrest mode
 			} // end of for
 		} // end of if
 	}
-	
+
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	peds_dont_like_weapons(); ///// <--- PEDS DON'T LIKE WEAPONS /////
