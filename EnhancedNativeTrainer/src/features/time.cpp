@@ -289,7 +289,7 @@ bool onconfirm_time_menu(MenuItem<int> choice){
 			movetime_day_backward();
 			break;
 		case 7:
-			set_data();
+			set_date();
 			break;
 		case 8:
 			set_time();
@@ -351,7 +351,7 @@ void process_time_menu(){
 	menuItems.push_back(item);
 	
 	item = new MenuItem<int>();
-	item->caption = "Set Date (MM/DD/YYYY)";
+	item->caption = "Set Date (DD/MM/YYYY)";
 	item->value = index++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
@@ -501,7 +501,7 @@ void movetime_day_backward(){
 	set_status_text(ss.str());
 }
 
-void set_data() {
+void set_date() {
 	std::string lastDateSpawn;
 	std::string tmp_Day, tmp_Mon, tmp_Year;
 	std::string result = show_keyboard(NULL, (char*)lastDateSpawn.c_str());
@@ -523,29 +523,29 @@ void set_data() {
 			}
 			for (int n = 0; n < 10; n++) {
 				char n_string = n + '0';
-				if (found_separator == 0 && a[i] == n_string) tmp_Mon = tmp_Mon + a[i];
-				if (found_separator == 1 && a[i] == n_string) tmp_Day = tmp_Day + a[i];
+				if (found_separator == 0 && a[i] == n_string) tmp_Day = tmp_Day + a[i];
+				if (found_separator == 1 && a[i] == n_string) tmp_Mon = tmp_Mon + a[i];
 				if (found_separator == 2 && a[i] == n_string) tmp_Year = tmp_Year + a[i];
 			}
 		}
 		std::string::size_type sz;
-		if (strlen(tmp_Mon.c_str()) > 2) tmp_Mon.resize(2);
-		if (std::stoi(tmp_Mon, &sz) > 12) tmp_Mon = "12";
 		if (strlen(tmp_Day.c_str()) > 2) tmp_Day.resize(2);
 		if (std::stoi(tmp_Day, &sz) > 31) tmp_Day = "31";
+		if (strlen(tmp_Mon.c_str()) > 2) tmp_Mon.resize(2);
+		if (std::stoi(tmp_Mon, &sz) > 12) tmp_Mon = "12";
 		if (strlen(tmp_Year.c_str()) > 4) tmp_Year.resize(4);
 		if (std::stoi(tmp_Year, &sz) > 9999) tmp_Year = "9999";
 
-		TIME::SET_CLOCK_DATE(std::stoi(tmp_Mon, &sz), std::stoi(tmp_Day, &sz), std::stoi(tmp_Year, &sz));
+		TIME::SET_CLOCK_DATE(std::stoi(tmp_Day, &sz), std::stoi(tmp_Mon, &sz), std::stoi(tmp_Year, &sz));
 	}
 
 	std::ostringstream ss;
-	ss << "Date is now: " << get_day_of_game_week() << " ";
-	ss << std::setfill('0') << std::setw(2) << TIME::GET_CLOCK_DAY_OF_MONTH();
+	ss << "Date is now " << get_day_of_game_week() << " ";
+	ss << std::setfill('0') << std::setw(2) << tmp_Day;
 	ss << ".";
-	ss << std::setfill('0') << std::setw(2) << TIME::GET_CLOCK_MONTH();
+	ss << std::setfill('0') << std::setw(2) << tmp_Mon;
 	ss << ".";
-	ss << TIME::GET_CLOCK_YEAR();
+	ss << tmp_Year;
 	set_status_text(ss.str());
 }
 
