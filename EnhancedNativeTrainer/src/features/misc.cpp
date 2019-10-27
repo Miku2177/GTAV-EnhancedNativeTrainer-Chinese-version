@@ -809,7 +809,7 @@ void process_misc_menu(){
 		{"FPS Counter", &featureShowFPS, NULL }, 
 		{"Pause Menu Settings", NULL, NULL, false},
 		{"Airbrake Menu", NULL, NULL, false},
-		{"No Switch Wheel Blur&Slowdown", &featurenowheelblurslow, NULL },
+		{"No Scripted Blur & Slowdown", &featurenowheelblurslow, NULL },
 	};
 	
 	draw_menu_from_struct_def(lines, lineCount, &activeLineIndexMisc, caption, onconfirm_misc_menu);
@@ -1307,7 +1307,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		} else AUDIO::SET_AUDIO_FLAG("PlayMenuMusic", false);
 	} 
 	
-	// No Weapon/Radio/Character Wheel Blur&Slowdown
+	// No Scripted Blur & Slowdown
 	if (featurenowheelblurslow && (CONTROLS::IS_CONTROL_PRESSED(2, 37) || CONTROLS::IS_CONTROL_PRESSED(2, 85) || CONTROLS::IS_CONTROL_PRESSED(2, 19))) { // Weapon/Radio/Character Wheels
 		GAMEPLAY::SET_TIME_SCALE(1.0f);
 		GRAPHICS::_STOP_ALL_SCREEN_EFFECTS();

@@ -623,11 +623,14 @@ Ped find_nearest_ped() {
 	float dist_diff = -1.0;
 	float temp_dist = 20.0;
 	for (int i = 0; i < count_surr_vehs; i++) {
-		Vector3 coordsped = ENTITY::GET_ENTITY_COORDS(surr_peds[i], true);
-		dist_diff = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsped.x, coordsped.y, coordsped.z);
-		if (temp_dist > dist_diff) {
-			temp_dist = dist_diff;
-			temp_ped = surr_peds[i];
+		if (PED::GET_PED_TYPE(surr_peds[i]) != 0 && PED::GET_PED_TYPE(surr_peds[i]) != 1 && PED::GET_PED_TYPE(surr_peds[i]) != 2 &&
+			PED::GET_PED_TYPE(surr_peds[i]) != 3) {
+			Vector3 coordsped = ENTITY::GET_ENTITY_COORDS(surr_peds[i], true);
+			dist_diff = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsped.x, coordsped.y, coordsped.z);
+			if (temp_dist > dist_diff) {
+				temp_dist = dist_diff;
+				temp_ped = surr_peds[i];
+			}
 		}
 	}
 	return temp_ped;
