@@ -37,7 +37,7 @@ void movetime_day_forward();
 
 void movetime_day_backward();
 
-void set_data();
+void set_date();
 
 void set_time();
 
