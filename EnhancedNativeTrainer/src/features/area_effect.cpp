@@ -617,7 +617,8 @@ void update_area_effects(Ped playerPed){
 							time_to_chase = true;
 						}
 					}
-					if (PED::IS_PED_ON_VEHICLE(PLAYER::PLAYER_PED_ID()) || (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(PED::GET_VEHICLE_PED_IS_IN(veh_agressive[i], false), PLAYER::PLAYER_PED_ID(), 1) && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, true))) {
+					if (PED::IS_PED_ON_VEHICLE(PLAYER::PLAYER_PED_ID()) || (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(PED::GET_VEHICLE_PED_IS_IN(veh_agressive[i], false), PLAYER::PLAYER_PED_ID(), 1) && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) &&
+						!WEAPON::IS_PED_ARMED(playerPed, 7))) {
 						find_nearest_vehicle();
 						if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(PED::GET_VEHICLE_PED_IS_IN(veh_agressive[i], false), PLAYER::PLAYER_PED_ID(), 1)) temp_vehicle = PED::GET_VEHICLE_PED_IS_IN(veh_agressive[i], false);
 						PED::SET_PED_AS_ENEMY(PLAYER::PLAYER_PED_ID(), true);

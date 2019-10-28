@@ -78,8 +78,6 @@ Ped shooting_criminal = -1;
 int s_vacuum_secs_passed, s_vacuum_secs_curr, vacuum_seconds = 0;
 
 Ped temp_nearest_ped = -1;
-Object temp_nearest_object = -1;
-Vehicle temp_nearest_vehicle = -1;
 bool force_nearest_ped = false;
 
 bool grav_target_locked = false;
@@ -1717,6 +1715,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		long long int p_force = -1; 
 		const int arrSize_punch = 1024;
 		Ped surr_p_peds[arrSize_punch];
+		int count_surr_p_peds = worldGetAllPeds(surr_p_peds, arrSize_punch);
 
 		if (WEAPONS_POWERPUNCH_VALUES[PowerPunchIndex] != 55) p_force = WEAPONS_POWERPUNCH_VALUES[PowerPunchIndex];
 		if (WEAPONS_POWERPUNCH_VALUES[PowerPunchIndex] == 55 && !lastPowerWeapon.empty()) {
@@ -1725,7 +1724,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		}
 		
 		if (CONTROLS::IS_CONTROL_PRESSED(2, 24) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, 140) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, 141)) force_nearest_ped = true;
-
+		
 		bool cur_weapon_e = false;
 		bool cur_weapon_peds = false;
 		bool cur_weapon_e_peds = false;
@@ -1776,38 +1775,35 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			PLAYER::SET_PLAYER_MELEE_WEAPON_DAMAGE_MODIFIER(player, 1000.0, 1);
 			PLAYER::SET_PLAYER_VEHICLE_DAMAGE_MODIFIER(playerPed, 1000.0);
 
-			int count_surr_p_peds = worldGetAllPeds(surr_p_peds, arrSize_punch);
 			for (int i = 0; i < count_surr_p_peds; i++) {
 				if (PED::GET_PED_TYPE(surr_p_peds[i]) != 0 && PED::GET_PED_TYPE(surr_p_peds[i]) != 1 && PED::GET_PED_TYPE(surr_p_peds[i]) != 2 && PED::GET_PED_TYPE(surr_p_peds[i]) != 3 && !PED::IS_PED_IN_MELEE_COMBAT(surr_p_peds[i])) {
+					if (!WEAPON::IS_PED_ARMED(playerPed, 7)) {
+						AI::CLEAR_PED_SECONDARY_TASK(surr_p_peds[i]);
+						AI::CLEAR_PED_TASKS(surr_p_peds[i]);
+					}
 					if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(surr_p_peds[i], playerPed, 1)) {
 						temp_nearest_ped = surr_p_peds[i];
 					}
-					PED::CLEAR_PED_LAST_DAMAGE_BONE(surr_p_peds[i]);
-					ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(surr_p_peds[i]);
 				}
 			} // end of int (peds)
 			Object surr_objects[arrSize_punch];
 			int count_surr_o = worldGetAllObjects(surr_objects, arrSize_punch);
 			for (int i = 0; i < count_surr_o; i++) {
 				if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(surr_objects[i], playerPed, 1)) {
-					temp_nearest_object = surr_objects[i];
-					ENTITY::APPLY_FORCE_TO_ENTITY(temp_nearest_object, 1, v_x, v_y, v_z, 0, 0, 0, true, false, true, true, true, true);
+					ENTITY::APPLY_FORCE_TO_ENTITY(surr_objects[i], 1, v_x, v_y, v_z, 0, 0, 0, true, false, true, true, true, true);
 					force_nearest_ped = false;
-					PED::CLEAR_PED_LAST_DAMAGE_BONE(temp_nearest_object);
-					ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(temp_nearest_object);
-					temp_nearest_object = -1;
+					PED::CLEAR_PED_LAST_DAMAGE_BONE(surr_objects[i]);
+					ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(surr_objects[i]);
 				}
 			} // end of int (objects)
 			Vehicle surr_vehicles[arrSize_punch];
 			int count_surr_v = worldGetAllVehicles(surr_vehicles, arrSize_punch);
 			for (int i = 0; i < count_surr_v; i++) {
 				if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(surr_vehicles[i], playerPed, 1)) {
-					temp_nearest_vehicle = surr_vehicles[i];
-					ENTITY::APPLY_FORCE_TO_ENTITY(temp_nearest_vehicle, 1, v_x, v_y, v_z, 0, 0, 0, true, false, true, true, true, true);
+					ENTITY::APPLY_FORCE_TO_ENTITY(surr_vehicles[i], 1, v_x, v_y, v_z, 0, 0, 0, true, false, true, true, true, true);
 					force_nearest_ped = false;
-					PED::CLEAR_PED_LAST_DAMAGE_BONE(temp_nearest_vehicle);
-					ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(temp_nearest_vehicle);
-					temp_nearest_vehicle = -1;
+					PED::CLEAR_PED_LAST_DAMAGE_BONE(surr_vehicles[i]);
+					ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(surr_vehicles[i]);
 				}
 			} // end of int (vehicles)
 		}
@@ -1825,6 +1821,10 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			PED::CLEAR_PED_LAST_DAMAGE_BONE(temp_nearest_ped);
 			ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(temp_nearest_ped);
 			temp_nearest_ped = -1;
+		}
+		for (int i = 0; i < count_surr_p_peds; i++) {
+			PED::CLEAR_PED_LAST_DAMAGE_BONE(surr_p_peds[i]);
+			ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(surr_p_peds[i]);
 		}
 	}
 
