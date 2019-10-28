@@ -1761,6 +1761,8 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 						}
 					}
 				}
+				PED::CLEAR_PED_LAST_DAMAGE_BONE(surr_p_peds[i]);
+				ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(surr_p_peds[i]);
 			}
 		}
 
@@ -1780,6 +1782,8 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 					if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(surr_p_peds[i], playerPed, 1)) {
 						temp_nearest_ped = surr_p_peds[i];
 					}
+					PED::CLEAR_PED_LAST_DAMAGE_BONE(surr_p_peds[i]);
+					ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(surr_p_peds[i]);
 				}
 			} // end of int (peds)
 			Object surr_objects[arrSize_punch];
@@ -1808,6 +1812,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			} // end of int (vehicles)
 		}
 		if (temp_nearest_ped != -1) {
+			PED::RESET_PED_MOVEMENT_CLIPSET(temp_nearest_ped, 0.0);
 			PED::SET_PED_CAN_RAGDOLL(temp_nearest_ped, true);
 			PED::SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(temp_nearest_ped, true);
 			PED::SET_PED_RAGDOLL_FORCE_FALL(temp_nearest_ped);
