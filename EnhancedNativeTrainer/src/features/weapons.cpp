@@ -875,92 +875,6 @@ void process_pedagainstweapons_menu(){
 	draw_generic_menu<int>(menuItems, &activeLineIndexPedAgainstWeapons, caption, onconfirm_pedagainstweapons_menu, NULL, NULL);
 }
 
-bool onconfirm_powerpunch_menu(MenuItem<int> choice)
-{
-	switch (activeLineIndexPowerPunchWeapons) {
-		case 5:
-		{
-			if (WEAPONS_POWERPUNCH_VALUES[PowerPunchIndex] != 55) {
-				std::ostringstream ss;
-				ss << "~r~Warning! Enable Manual Mode To Use It";
-				set_status_text(ss.str());
-			}
-			std::string::size_type sz;
-			std::string result_p = show_keyboard(nullptr, (char *)lastPowerWeapon.c_str());
-			if (!result_p.empty()) { 
-				if (strlen(result_p.c_str()) > 18) result_p = "9223372036854775807"; // result_p.resize(18);
-				lastPowerWeapon = result_p;
-			}
-			break;
-		}
-	default:
-		break;
-	}
-	return false;
-}
-
-void process_powerpunch_menu() {
-	std::string caption = "Power Punch Options";
-
-	std::vector<MenuItem<int>*> menuItems;
-
-	SelectFromListMenuItem *listItem;
-	ToggleMenuItem<int>* toggleItem;
-	MenuItem<int> *item = new MenuItem<int>();
-
-	int i = 0;
-
-	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Enable";
-	toggleItem->value = i++;
-	toggleItem->toggleValue = &featurePowerPunch;
-	menuItems.push_back(toggleItem);
-
-	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Fists Only";
-	toggleItem->value = i++;
-	toggleItem->toggleValue = &featurePunchFists;
-	menuItems.push_back(toggleItem);
-
-	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Melee Weapons";
-	toggleItem->value = i++;
-	toggleItem->toggleValue = &featurePunchMeleeWeapons;
-	menuItems.push_back(toggleItem);
-	
-	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Firearms";
-	toggleItem->value = i++;
-	toggleItem->toggleValue = &featurePunchFireWeapons;
-	menuItems.push_back(toggleItem);
-
-	listItem = new SelectFromListMenuItem(WEAPONS_POWERPUNCH_CAPTIONS, onchange_power_punch_index);
-	listItem->wrap = false;
-	listItem->caption = "Power Punch Strength";
-	listItem->value = PowerPunchIndex;
-	menuItems.push_back(listItem); 
-
-	item = new MenuItem<int>();
-	item->caption = "Enter Punch Strength";
-	item->value = i++;
-	item->isLeaf = true;
-	menuItems.push_back(item);
-
-	listItem = new SelectFromListMenuItem(PEDS_POWERPUNCH_CAPTIONS, onchange_peds_power_punch_index);
-	listItem->wrap = false;
-	listItem->caption = "Including Peds";
-	listItem->value = PedsPowerPunchIndex;
-	menuItems.push_back(listItem);
-
-	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Peds Can Power Punch Peds";
-	toggleItem->value = i++;
-	toggleItem->toggleValue = &featurepowerpunchpeds;
-	menuItems.push_back(toggleItem);
-
-	draw_generic_menu<int>(menuItems, &activeLineIndexPowerPunchWeapons, caption, onconfirm_powerpunch_menu, NULL, NULL);
-}
-
 bool onconfirm_weapon_menu(MenuItem<int> choice){
 	// common variables
 	Player player = PLAYER::PLAYER_ID();
@@ -1291,12 +1205,6 @@ bool process_weapon_menu(){
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureFriendlyFire;
 	menuItems.push_back(toggleItem);
-
-	item = new MenuItem<int>();
-	item->caption = "Power Punch";
-	item->value = i++;
-	item->isLeaf = false;
-	menuItems.push_back(item);
 
 	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Drop Weapon If Hand Shot";

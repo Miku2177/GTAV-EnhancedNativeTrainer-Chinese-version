@@ -235,6 +235,21 @@ const int MAX_MOD_SLOTS = 15;
 
 extern bool featureNightVision;
 extern bool featureThermalVision;
+extern int activeLineIndexPowerPunchWeapons;
+extern const std::vector<std::string> WEAPONS_POWERPUNCH_CAPTIONS;
+extern const int WEAPONS_POWERPUNCH_VALUES[];
+extern int PowerPunchIndex;
+extern bool PowerPunchChanged;
+extern const std::vector<std::string> PEDS_POWERPUNCH_CAPTIONS;
+extern const int PEDS_POWERPUNCH_VALUES[];
+extern int PedsPowerPunchIndex;
+extern bool PedsPowerPunchChanged;
+extern bool featurePunchFists;
+extern bool featurePunchMeleeWeapons;
+extern bool featurePunchFireWeapons;
+extern bool featurepowerpunchpeds;
+extern bool featurePowerPunch;
+extern std::string lastPowerWeapon;
 
 bool process_weapon_menu();
 
