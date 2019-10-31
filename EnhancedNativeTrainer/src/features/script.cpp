@@ -660,8 +660,9 @@ void update_features(){
 			if (tempgot_x < 0) tempgot_x = (tempgot_x * -1);
 			if (tempgot_y < 0) tempgot_y = (tempgot_y * -1);
 			if (tempgot_z < 0) tempgot_z = (tempgot_z * -1);
+			ROPE::ACTIVATE_PHYSICS(surr_p_peds[i]);
 			if (PED::GET_PED_TYPE(surr_p_peds[i]) != 0 && PED::GET_PED_TYPE(surr_p_peds[i]) != 1 && PED::GET_PED_TYPE(surr_p_peds[i]) != 2 && PED::GET_PED_TYPE(surr_p_peds[i]) != 3 && !PED::IS_PED_IN_ANY_VEHICLE(surr_p_peds[i], 0)) {
-				if (CONTROLS::IS_CONTROL_PRESSED(2, 22) && tempgot_x < 20 && tempgot_y < 20/* && tempgot_z < 20*/) {
+				if (CONTROLS::IS_CONTROL_PRESSED(2, 22) && tempgot_x < 20 && tempgot_y < 20) {
 					PED::SET_PED_CAN_RAGDOLL(surr_p_peds[i], true);
 					PED::SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(surr_p_peds[i], true);
 					PED::SET_PED_RAGDOLL_FORCE_FALL(surr_p_peds[i]);
@@ -671,9 +672,13 @@ void update_features(){
 						AI::TASK_PLAY_ANIM(surr_p_peds[i], "dead@fall", "dead_fall_down", 8.0, 0.0, -1, 9, 0, 0, 0, 0);
 						PED::SET_PED_TO_RAGDOLL(surr_p_peds[i], 1, 1, 1, 1, 1, 1);
 					}
-					if (tempgot_z < 20) ENTITY::APPLY_FORCE_TO_ENTITY(surr_p_peds[i], 1, 0, 0, 0.6, 0, 0, 0, true, false, true, true, true, true);
+					if (tempgot_z < 20) ENTITY::APPLY_FORCE_TO_ENTITY(surr_p_peds[i], 1, 0, 0, 0.6, 0, 0, 0, true, false, true, true, true, true); // 20
 				}
-				if (CONTROLS::IS_CONTROL_RELEASED(2, 22)) {
+				if (CONTROLS::IS_CONTROL_PRESSED(2, 22) && (tempgot_x > 19 || tempgot_y > 19) && tempgot_z > 5) {
+					Vector3 curPLocation = ENTITY::GET_ENTITY_COORDS(surr_p_peds[i], 0);
+					ENTITY::SET_ENTITY_COORDS_NO_OFFSET(surr_p_peds[i], curPLocation.x, curPLocation.y, curPLocation.z - 1, 1, 1, 1);
+				}
+				if (CONTROLS::IS_CONTROL_RELEASED(2, 22) || tempgot_x > 19 || tempgot_y > 19) {
 					if (ENTITY::IS_ENTITY_PLAYING_ANIM(surr_p_peds[i], "dead@fall", "dead_fall_down", 3)) {
 						Vector3 curPLocation = ENTITY::GET_ENTITY_COORDS(surr_p_peds[i], 0);
 						ENTITY::SET_ENTITY_COORDS_NO_OFFSET(surr_p_peds[i], curPLocation.x, curPLocation.y, curPLocation.z, 1, 1, 1);
