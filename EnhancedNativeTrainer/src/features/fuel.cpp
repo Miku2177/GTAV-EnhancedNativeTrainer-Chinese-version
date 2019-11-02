@@ -582,7 +582,7 @@ void fuel()
 		if (!VEHICLES.empty() && VEHICLES.size() > 60) {
 			ENTITY::SET_VEHICLE_AS_NO_LONGER_NEEDED(&VEHICLES[0]);
 			VEHICLE::DELETE_VEHICLE(&VEHICLES[0]);
-			VEHICLES.erase(VEHICLES.begin());
+			VEHICLES.erase(VEHICLES.end()); // begin
 		}
 
 	} // featureFuel
