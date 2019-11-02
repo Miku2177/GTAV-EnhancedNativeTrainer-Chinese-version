@@ -257,11 +257,12 @@ void fuel()
 			show_blips = false;
 		}
 
-		// CHECK IF ARRAY IS NOT EMPTY
+		// CHECK IF ARRAY IS EMPTY
 		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && VEHICLES.empty()) {
 			Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 			VEHICLES.push_back(veh);
 			FUEL.push_back(randomize / 100);
+			ENTITY::SET_ENTITY_AS_MISSION_ENTITY(veh, true, true);
 		}
 
 		// HOW MUCH MONEY HAVE YOU GOT? (GAS STATION REFUELING)
@@ -340,6 +341,7 @@ void fuel()
 					FUEL.push_back(randomize / 100);
 					std::swap(VEHICLES[0], VEHICLES.back());
 					std::swap(FUEL[0], FUEL.back());
+					ENTITY::SET_ENTITY_AS_MISSION_ENTITY(veh, true, true);
 				}
 			}
 
@@ -575,6 +577,12 @@ void fuel()
 				}
 				IdleConsume_seconds = (VEH_CARFUEL_VALUES[IdleConsumptionIndex] / 85000) + 1;
 			}
+		}
+
+		if (!VEHICLES.empty() && VEHICLES.size() > 60) {
+			ENTITY::SET_VEHICLE_AS_NO_LONGER_NEEDED(&VEHICLES[0]);
+			VEHICLE::DELETE_VEHICLE(&VEHICLES[0]);
+			VEHICLES.erase(VEHICLES.begin());
 		}
 
 	} // featureFuel
