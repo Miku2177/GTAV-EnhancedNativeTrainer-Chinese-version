@@ -1604,7 +1604,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 						}
 					}
 				}
-				if (temp_ped != -1) WEAPON::GIVE_WEAPON_TO_PED(temp_ped, GAMEPLAY::GET_HASH_KEY("WEAPON_PISTOL"), 999, false, true);
+				if (temp_ped != -1 && (PED::GET_PED_TYPE(temp_ped) == 6 || PED::GET_PED_TYPE(temp_ped) == 27)) WEAPON::GIVE_WEAPON_TO_PED(temp_ped, GAMEPLAY::GET_HASH_KEY("WEAPON_PISTOL"), 999, false, true);
 				if (!AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID())) {
 					arrest_secs = 0; 
 					temp_ped = -1;
