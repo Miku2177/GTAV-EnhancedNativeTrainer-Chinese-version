@@ -510,7 +510,6 @@ void set_date() {
 		result = trim(result);
 		lastDateSpawn = result;
 
-		//Entity e = PLAYER::PLAYER_PED_ID();
 		std::string a = (char*)result.c_str();
 		int found_separator = 0;
 		bool found_symbol = false;
@@ -558,7 +557,6 @@ void set_time() {
 		result = trim(result);
 		lastTimeSpawn = result;
 
-		//Entity e = PLAYER::PLAYER_PED_ID();
 		std::string a = (char*)result.c_str();
 		int found_separator = 0;
 		bool found_symbol = false;
@@ -581,15 +579,8 @@ void set_time() {
 		if (strlen(tmp_Min.c_str()) > 2) tmp_Min.resize(2);
 		if (std::stoi(tmp_Min, &sz) > 60) tmp_Min = "60";
 
-		TIME::SET_CLOCK_TIME(std::stoi(tmp_Hour, &sz), std::stoi(tmp_Min, &sz), 0);
+		movetime_set(std::stoi(tmp_Hour, &sz), std::stoi(tmp_Min, &sz));
 	}
-
-	std::ostringstream ss;
-	ss << "Time is now: ";
-	ss << std::setfill('0') << std::setw(2) << tmp_Hour;
-	ss << ":";
-	ss << std::setfill('0') << std::setw(2) << tmp_Min;
-	set_status_text(ss.str());
 }
 
 void movetime_hour_forward(){
