@@ -146,7 +146,7 @@ int PedsPowerPunchIndex = 0;
 bool PedsPowerPunchChanged = true;
 
 // Fire Mode
-const std::vector<std::string> WEAPONS_FIREMODE_CAPTIONS{ "OFF", "Single Fire", "Burst Semi", "Burst Auto" };
+const std::vector<std::string> WEAPONS_FIREMODE_CAPTIONS{ "Default", "Single Fire", "Burst Semi", "Burst Auto" };
 const int WEAPONS_FIREMODE_VALUES[] = { 0, 1, 2, 3 };
 int WeaponsFireModeIndex = 0;
 bool WeaponsFireModeChanged = true;
@@ -224,13 +224,14 @@ void RequestControlEntity(Entity entity) //needed so we can pick up props/Peds. 
 /* End Gravity Gun related code */
 
 void fire_mode_hotkey() {
-	if (WeaponsFireModeIndex > 0) {
+	//if (WeaponsFireModeIndex > 0) {
 		WeaponsFireModeIndex = WeaponsFireModeIndex + 1;
-		if (WeaponsFireModeIndex > 3) WeaponsFireModeIndex = 1;
+		if (WeaponsFireModeIndex > 3) WeaponsFireModeIndex = 0; // 1
+		if (WeaponsFireModeIndex == 0) set_status_text("Default");
 		if (WeaponsFireModeIndex == 1) set_status_text("Single Fire");
 		if (WeaponsFireModeIndex == 2) set_status_text("Burst Semi");
 		if (WeaponsFireModeIndex == 3) set_status_text("Burst Auto");
-	}
+	//}
 }
 
 void onchange_knuckle_appearance(int value, SelectFromListMenuItem* source){
