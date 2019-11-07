@@ -62,6 +62,7 @@ bool featureSwitchWeaponIfDanger = false;
 bool featureArmyMelee = false;
 
 int bullet_a = 0;
+int bullet_tick = 0;
 
 bool featureGravityGun = false;
 bool featureFriendlyFire = false;
@@ -1853,7 +1854,8 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		CONTROLS::DISABLE_CONTROL_ACTION(2, 69, 1); // vehicle attack
 		CONTROLS::DISABLE_CONTROL_ACTION(2, 70, 1); // vehicle attack2
 		if (CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, 24)) {
-			if (WEAPONS_FIREMODE_VALUES[WeaponsFireModeIndex] == 3 && ((bullet_a - WEAPON::GET_AMMO_IN_PED_WEAPON(PLAYER::PLAYER_PED_ID(), WEAPON::GET_SELECTED_PED_WEAPON(playerPed))) > 4)) { // burst auto
+			if (featureWeaponInfiniteAmmo && PED::IS_PED_SHOOTING(playerPed)) bullet_tick = bullet_tick + 1;
+			if (WEAPONS_FIREMODE_VALUES[WeaponsFireModeIndex] == 3 && (((bullet_a - WEAPON::GET_AMMO_IN_PED_WEAPON(PLAYER::PLAYER_PED_ID(), WEAPON::GET_SELECTED_PED_WEAPON(playerPed))) > 4) || bullet_tick > 4)) { // burst auto
 				w_tick_secs_passed = clock() / CLOCKS_PER_SEC;
 				if (((clock() / (CLOCKS_PER_SEC / 1000)) - w_tick_secs_curr) != 0) {
 					tick_firemode = tick_firemode + 1;
@@ -1862,11 +1864,12 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 				if (tick_firemode > 50) { // 90
 					bullet_a = WEAPON::GET_AMMO_IN_PED_WEAPON(PLAYER::PLAYER_PED_ID(), WEAPON::GET_SELECTED_PED_WEAPON(playerPed));
 					tick_firemode = 0;
+					bullet_tick = 0;
 				}
 			}
-			if ((WEAPONS_FIREMODE_VALUES[WeaponsFireModeIndex] == 1 && ((bullet_a - WEAPON::GET_AMMO_IN_PED_WEAPON(PLAYER::PLAYER_PED_ID(), WEAPON::GET_SELECTED_PED_WEAPON(playerPed))) < 1)) || // 1 - single fire
-				(WEAPONS_FIREMODE_VALUES[WeaponsFireModeIndex] == 2 && ((bullet_a - WEAPON::GET_AMMO_IN_PED_WEAPON(PLAYER::PLAYER_PED_ID(), WEAPON::GET_SELECTED_PED_WEAPON(playerPed))) < 5)) || // 2 - burst semi
-				(WEAPONS_FIREMODE_VALUES[WeaponsFireModeIndex] == 3 && ((bullet_a - WEAPON::GET_AMMO_IN_PED_WEAPON(PLAYER::PLAYER_PED_ID(), WEAPON::GET_SELECTED_PED_WEAPON(playerPed))) < 5))) { // 3 - burst auto
+			if ((WEAPONS_FIREMODE_VALUES[WeaponsFireModeIndex] == 1 && ((bullet_a - WEAPON::GET_AMMO_IN_PED_WEAPON(PLAYER::PLAYER_PED_ID(), WEAPON::GET_SELECTED_PED_WEAPON(playerPed))) < 1) && bullet_tick < 1) || // 1 - single fire
+				(WEAPONS_FIREMODE_VALUES[WeaponsFireModeIndex] == 2 && ((bullet_a - WEAPON::GET_AMMO_IN_PED_WEAPON(PLAYER::PLAYER_PED_ID(), WEAPON::GET_SELECTED_PED_WEAPON(playerPed))) < 5) && bullet_tick < 5) || // 2 - burst semi
+				(WEAPONS_FIREMODE_VALUES[WeaponsFireModeIndex] == 3 && ((bullet_a - WEAPON::GET_AMMO_IN_PED_WEAPON(PLAYER::PLAYER_PED_ID(), WEAPON::GET_SELECTED_PED_WEAPON(playerPed))) < 5) && bullet_tick < 5)) { // 3 - burst auto
 				CONTROLS::ENABLE_CONTROL_ACTION(2, 24, 1); // attack
 				CONTROLS::ENABLE_CONTROL_ACTION(2, 257, 1); // attack2
 				CONTROLS::ENABLE_CONTROL_ACTION(2, 69, 1); // vehicle attack
@@ -1876,9 +1879,10 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		if (!CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, 24) && !PED::GET_PED_CONFIG_FLAG(PLAYER::PLAYER_PED_ID(), 58, 1)) {
 			bullet_a = WEAPON::GET_AMMO_IN_PED_WEAPON(PLAYER::PLAYER_PED_ID(), WEAPON::GET_SELECTED_PED_WEAPON(playerPed));
 			tick_firemode = 0;
+			bullet_tick = 0;
 		}
 	}
-
+	
 	// Gravity Gun
 	if(bPlayerExists && featureGravityGun && GAMEPLAY::GET_MISSION_FLAG() == 0){
 		Ped tempPed;
