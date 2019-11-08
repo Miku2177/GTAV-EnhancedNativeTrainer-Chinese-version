@@ -68,6 +68,7 @@ static const int HKEY_DELETE_CHECKPOINT = 144;
 static const int HKEY_CLEAR_PROPS = 145;
 static const int HKEY_ENTER_DAMAGED_V = 146;
 static const int HKEY_FIRE_MODE = 147;
+static const int HKEY_MAP_SIZE = 148;
 
 const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "No Function", 0 },
@@ -112,6 +113,7 @@ const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "Clear Props", HKEY_CLEAR_PROPS },
 	{ "Enter Damaged Vehicle", HKEY_ENTER_DAMAGED_V },
 	{ "Fire Mode", HKEY_FIRE_MODE },
+	{ "Map Size", HKEY_MAP_SIZE },
 };
 
 void change_hotkey_function(int hotkey, int funcIndex);

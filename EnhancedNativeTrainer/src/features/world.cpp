@@ -147,6 +147,11 @@ const float WORLD_TRAIN_SPEED_VALUES[] = { -1.0, 0.0, 5.0, 30.0, 80.0, 130.0, 20
 int TrainSpeedIndex = 0;
 bool TrainSpeedChanged = true;
 
+void map_size_hotkey() {
+	RadarMapIndex = RadarMapIndex + 1;
+	if (RadarMapIndex > 2) RadarMapIndex = 0;
+}
+
 bool onconfirm_weather_menu(MenuItem<std::string> choice)
 {
 	std::stringstream ss; ss << "Weather Frozen at: " << lastWeatherName;

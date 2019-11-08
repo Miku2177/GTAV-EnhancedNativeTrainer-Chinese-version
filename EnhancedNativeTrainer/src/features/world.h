@@ -38,6 +38,8 @@ void process_weather_menu();
 
 void process_clouds_menu();
 
+void map_size_hotkey();
+
 void reset_world_globals();
 
 void update_world_features();
