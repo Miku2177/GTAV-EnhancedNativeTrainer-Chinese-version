@@ -14,6 +14,8 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "world.h"
 #include "vehicles.h"
 #include <Psapi.h>
+#include "../utils.h"
+#include <iterator>
 #include "..\ui_support\menu_functions.h"
 
 //==================
@@ -72,6 +74,7 @@ bool p_exist = false;
 bool featureShowDebugInfo = false;
 
 bool radio_v_checked = false;
+bool no_blur_initialized = false;
 
 bool no_phone, bill_no_phone = false;
 
@@ -815,6 +818,130 @@ void process_misc_menu(){
 	draw_menu_from_struct_def(lines, lineCount, &activeLineIndexMisc, caption, onconfirm_misc_menu);
 }
 
+// THE ORIGINAL CODE IS BY CAMXXCORE
+#define XOR_32_64 0x31 // logical exclsuive or
+#define RET 0xC3 // return
+
+template <typename T>
+class Pattern
+{
+public:
+	Pattern(const BYTE* bMask, const char* szMask) : bMask(bMask), szMask(szMask)
+	{
+		success = findPattern();
+	}
+
+	T get(int offset = 0)
+	{
+		return pResult + offset;
+	}
+	bool success = false;
+
+private:
+	bool findPattern()
+	{
+		MODULEINFO module = {};
+
+		GetModuleInformation(GetCurrentProcess(),
+			GetModuleHandle(nullptr), &module,
+			sizeof(MODULEINFO));
+
+		auto *address = reinterpret_cast<BYTE*>(module.lpBaseOfDll);
+
+		auto address_end = address + module.SizeOfImage;
+
+		for (; address < address_end; address++)
+		{
+			if (bCompare((BYTE*)address, bMask, szMask))
+			{
+				pResult = reinterpret_cast<T>(address);
+				return true;
+			}
+		}
+
+		pResult = NULL;
+
+		return false;
+	}
+
+	static bool bCompare(const BYTE* pData, const BYTE* bMask, const char* szMask)
+	{
+		for (; *szMask; ++szMask, ++pData, ++bMask)
+			if (*szMask == 'x' && *pData != *bMask)
+				return false;
+		return *szMask == NULL;
+	}
+
+	const BYTE *bMask; const char* szMask;
+	T pResult;
+};
+
+class BytePattern : public Pattern<BYTE*>
+{
+public:
+	BytePattern(const BYTE* bMask, const char* szMask) :
+		Pattern<BYTE*>(bMask, szMask) {}
+};
+
+template <typename T>
+struct patch
+{
+	patch() : place(nullptr), active(false)
+	{
+	}
+
+	patch(T * pPlace, std::vector<T> const& data) : active(false)
+	{
+		place = pPlace;
+		newData = data;
+		originalData = std::vector<T>(place, place + newData.size());
+	}
+
+	void install()
+	{
+		std::copy(newData.begin(), newData.end(), stdext::checked_array_iterator<T*>(place, newData.size()));
+
+		active = true;
+	}
+
+	void remove()
+	{
+		std::copy(originalData.begin(), originalData.end(), stdext::checked_array_iterator<T*>(place, originalData.size()));
+
+		active = false;
+	}
+
+	BYTE * place;
+	std::vector<T> newData, originalData;
+	bool active;
+};
+
+typedef patch<BYTE> bytepatch_t;
+bytepatch_t g_patches[3];
+
+bool setupPatches() {
+	auto result = BytePattern((BYTE*)"\x38\x51\x64\x74\x19", "xxxxx");
+	if (!result.success) {
+		return false;
+	}
+	auto address = result.get(26);
+	address = address + *(int32_t*)address + 4u;
+	g_patches[0] = bytepatch_t(address, std::vector<BYTE> { RET, 0x90, 0x90, 0x90, 0x90 }); // remove vignetting
+	g_patches[1] = bytepatch_t(result.get(8), std::vector<BYTE>(5, 0x90)); // vignetting call patch (NOP)
+	g_patches[2] = bytepatch_t(result.get(34), std::vector<BYTE> { XOR_32_64, 0xD2 }); // timescale override patch
+	return true;
+}
+
+void initialize() {
+	if (!setupPatches()) {
+		return;
+	}
+	g_patches[0].install();
+	g_patches[1].install();
+	g_patches[2].install();
+}
+//
+
 void onchange_misc_phone_bill_index(int value, SelectFromListMenuItem* source){
 	PhoneBillIndex = value;
 	PhoneBillChanged = true;
@@ -1308,7 +1435,12 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	} 
 	
 	// No Scripted Blur & Slowdown
+	if (!featurenowheelblurslow) no_blur_initialized = false;
 	if (featurenowheelblurslow && (CONTROLS::IS_CONTROL_PRESSED(2, 37) || CONTROLS::IS_CONTROL_PRESSED(2, 85) || CONTROLS::IS_CONTROL_PRESSED(2, 19))) { // Weapon/Radio/Character Wheels
+		if (no_blur_initialized == false) {
+			initialize();
+			no_blur_initialized = true;
+		}
 		GAMEPLAY::SET_TIME_SCALE(1.0f);
 		GRAPHICS::_STOP_ALL_SCREEN_EFFECTS();
 	}

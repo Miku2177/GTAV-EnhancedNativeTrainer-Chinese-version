@@ -252,6 +252,9 @@ void trigger_function_for_hotkey_onkeyup(int hotkey)
 	case HKEY_FIRE_MODE:
 		fire_mode_hotkey();
 		break;
+	case HKEY_MAP_SIZE:
+		map_size_hotkey();
+		break;
 	default:
 	{
 		std::ostringstream ss;
