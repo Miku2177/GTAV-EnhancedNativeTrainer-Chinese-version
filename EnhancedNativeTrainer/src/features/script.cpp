@@ -1103,7 +1103,7 @@ void update_features(){
 	}
 	 
 	// NPC Ragdoll If Shot
-	if (NPC_RAGDOLL_VALUES[current_npc_ragdoll] == 1 || NPC_RAGDOLL_VALUES[current_npc_ragdoll] == 2) {
+	if ((NPC_RAGDOLL_VALUES[current_npc_ragdoll] == 1 || NPC_RAGDOLL_VALUES[current_npc_ragdoll] == 2) && GAMEPLAY::GET_MISSION_FLAG() == 0) {
 		const int arrSize5 = 1024;
 		Ped NPCragdoll[arrSize5];
 		int count_NPC_ragdoll = worldGetAllPeds(NPCragdoll, arrSize5);
@@ -1122,8 +1122,10 @@ void update_features(){
 				int ScreamType = (rand() % 8 + 5);
 				AUDIO::PLAY_PAIN(ScreamType, 0, 0);
 				AUDIO::_PLAY_AMBIENT_SPEECH1(NPCragdoll[i], "GENERIC_SHOCKED_HIGH", "SPEECH_PARAMS_FORCE");
-				PED::_RESET_PED_RAGDOLL_BLOCKING_FLAGS(NPCragdoll[i], 1);
+				//PED::_RESET_PED_RAGDOLL_BLOCKING_FLAGS(NPCragdoll[i], 1);
 				PED::SET_PED_TO_RAGDOLL(NPCragdoll[i], time1, time2, ragdollType, true, true, false);
+				PED::CLEAR_PED_LAST_DAMAGE_BONE(NPCragdoll[i]);
+				ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(NPCragdoll[i]);
 			}
 		}
 	}
