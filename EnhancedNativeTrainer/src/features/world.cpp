@@ -142,8 +142,8 @@ int featureLightIntensityIndex = 0;
 bool featureLightIntensityChanged = true;
 
 // Train Speed
-const std::vector<std::string> WORLD_TRAIN_SPEED_CAPTIONS{ "OFF", "0.0", "5.0", "30.0", "80.0", "130.0", "200.0", "300.0" };
-const float WORLD_TRAIN_SPEED_VALUES[] = { -1.0, 0.0, 5.0, 30.0, 80.0, 130.0, 200.0, 300.0 };
+const std::vector<std::string> WORLD_TRAIN_SPEED_CAPTIONS{ "OFF", "0.0", "5.0", "15.0", "30.0", "60.0", "80.0", "130.0", "200.0", "300.0" };
+const float WORLD_TRAIN_SPEED_VALUES[] = { -1.0, 0.0, 5.0, 15.0, 30.0, 60.0, 80.0, 130.0, 200.0, 300.0 };
 int TrainSpeedIndex = 0;
 bool TrainSpeedChanged = true;
 
