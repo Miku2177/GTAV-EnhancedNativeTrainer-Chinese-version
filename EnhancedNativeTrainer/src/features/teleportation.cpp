@@ -22,6 +22,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 bool featureEnableMpMaps = false;
 bool feature3dmarker = false;
+bool featureTeleportAutomatically = false;
 bool teleported_in_ped = false;
 
 struct tele_location{
@@ -1421,12 +1422,21 @@ bool process_teleport_menu(int categoryIndex){
 		toggleItem->toggleValueUpdated = NULL;
 		menuItems.push_back(toggleItem);*/
 
+		int i = 0;
+
 		MenuItem<int> *markerItem = new MenuItem<int>();
-		markerItem->caption = "Go To Marker";
+		markerItem->caption = "Teleport To Marker";
 		markerItem->value = -2;
 		markerItem->isLeaf = true;
 		menuItems.push_back(markerItem);
 
+		ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
+		toggleItem->caption = "Teleport To Marker Automatically";
+		toggleItem->value = i++;
+		toggleItem->toggleValue = &featureTeleportAutomatically;
+		//toggleItem->toggleValueUpdated = NULL;
+		menuItems.push_back(toggleItem);
+		
 		markerItem = new MenuItem<int>();
 		markerItem->caption = "Go To Mission Marker";
 		markerItem->value = -6;
@@ -1505,6 +1515,7 @@ void reset_teleporter_globals()
 	}
 	featureEnableMpMaps = false;
 	feature3dmarker = false;
+	featureTeleportAutomatically = false;
 	featureStickToGround = false;
 	featureLandAtDestination = true;
 
@@ -1525,6 +1536,7 @@ void reset_teleporter_globals()
 void add_teleporter_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){
 	
 	results->push_back(FeatureEnabledLocalDefinition{"feature3dmarker", &feature3dmarker});
+	results->push_back(FeatureEnabledLocalDefinition{"featureTeleportAutomatically", &featureTeleportAutomatically});
 	results->push_back(FeatureEnabledLocalDefinition{"featureStickToGround", &featureStickToGround});
 	results->push_back(FeatureEnabledLocalDefinition{"featureLandAtDestination", &featureLandAtDestination});
 }
@@ -1723,5 +1735,23 @@ void update_teleport_features(){
 		altitude_reached = false;
 		planecurrspeed = 0;
 		AI::TASK_SMART_FLEE_PED(driver_to_marker_pilot, PLAYER::PLAYER_PED_ID(), 1000, -1, true, true);
+	}
+
+	// Teleport To Marker Automatically
+	if (featureTeleportAutomatically) {
+		Vector3 coords;
+		bool blipFound_m = false;
+		int blipIterator = UI::_GET_BLIP_INFO_ID_ITERATOR();
+		for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) {
+			if (UI::GET_BLIP_INFO_ID_TYPE(i) == 4) {
+				coords = UI::GET_BLIP_INFO_ID_COORD(i);
+				blipFound_m = true;
+				break;
+			}
+		}
+		if (blipFound_m == true) {
+			teleport_to_marker();
+			blipFound_m = false;
+		}
 	}
 }
