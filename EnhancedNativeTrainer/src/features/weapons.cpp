@@ -68,6 +68,7 @@ bool featureGravityGun = false;
 bool featureFriendlyFire = false;
 bool featureRapidFire = false;
 bool featureDropWeapon = false;
+bool featureDropWeaponOutAmmo = false;
 bool featureCanDisarmNPC = false;
 bool featurePedNoWeaponDrop = false;
 bool featurePowerPunch = false;
@@ -1238,6 +1239,12 @@ bool process_weapon_menu(){
 	listItem->value = WeaponsFireModeIndex;
 	menuItems.push_back(listItem);
 
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Drop Weapon When Empty";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureDropWeaponOutAmmo;
+	menuItems.push_back(toggleItem);
+
 	return draw_generic_menu<int>(menuItems, &activeLineIndexWeapon, caption, onconfirm_weapon_menu, NULL, NULL);
 }
 
@@ -1291,6 +1298,7 @@ void reset_weapon_globals(){
 		featureFriendlyFire =
 		featureRapidFire =
 		featureDropWeapon = 
+		featureDropWeaponOutAmmo =
 		featureCanDisarmNPC =
 		featurePedNoWeaponDrop =
 		featurePowerPunch =
@@ -1516,6 +1524,17 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			WEAPON::REMOVE_WEAPON_FROM_PED(playerPed, curr_w);
 			PED::CLEAR_PED_LAST_DAMAGE_BONE(playerPed);
 			ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(playerPed);
+		}
+	}
+
+	// Drop Weapon When Empty
+	if (featureDropWeaponOutAmmo && WEAPON::IS_PED_ARMED(playerPed, 7) && WEAPON::IS_PED_ARMED(playerPed, 6)) {
+		Hash curr_w = WEAPON::GET_SELECTED_PED_WEAPON(playerPed);
+		Vector3 p_coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(playerPed, 10.0f, 10.0f, 0.0f);
+		int curr_bullet = WEAPON::GET_AMMO_IN_PED_WEAPON(PLAYER::PLAYER_PED_ID(), curr_w);
+		if (curr_bullet < 3) {
+			WEAPON::SET_PED_DROPS_INVENTORY_WEAPON(playerPed, curr_w, p_coords.x, p_coords.y, p_coords.z, 1);
+			WEAPON::REMOVE_WEAPON_FROM_PED(playerPed, curr_w);
 		}
 	}
 
@@ -2310,6 +2329,7 @@ void add_weapon_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featureFriendlyFire", &featureFriendlyFire});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRapidFire", &featureRapidFire});
 	results->push_back(FeatureEnabledLocalDefinition{"featureDropWeapon", &featureDropWeapon});
+	results->push_back(FeatureEnabledLocalDefinition{"featureDropWeaponOutAmmo", &featureDropWeaponOutAmmo});
 	results->push_back(FeatureEnabledLocalDefinition{"featureCanDisarmNPC", &featureCanDisarmNPC});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePedNoWeaponDrop", &featurePedNoWeaponDrop});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePowerPunch", &featurePowerPunch});
