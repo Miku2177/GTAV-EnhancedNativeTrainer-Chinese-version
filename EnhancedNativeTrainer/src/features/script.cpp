@@ -1131,7 +1131,10 @@ void update_features(){
 	}
 		
 	// Player Movement Speed
-	if (PLAYER_MOVEMENT_VALUES[current_player_movement] > 0.00) PED::SET_PED_MOVE_RATE_OVERRIDE(playerPed, PLAYER_MOVEMENT_VALUES[current_player_movement]);
+	if (PLAYER_MOVEMENT_VALUES[current_player_movement] > 0.00) {
+		if (AI::IS_PED_SPRINTING(PLAYER::PLAYER_PED_ID())) PED::SET_PED_MOVE_RATE_OVERRIDE(playerPed, PLAYER_MOVEMENT_VALUES[current_player_movement]);
+		else PED::SET_PED_MOVE_RATE_OVERRIDE(playerPed, 1.00);
+	}
 		
 	// Health Regeneration Rate
 	if (ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()) && REGEN_VALUES[current_regen_speed] != 1.0f) PLAYER::SET_PLAYER_HEALTH_RECHARGE_MULTIPLIER(PLAYER::PLAYER_ID(), REGEN_VALUES[current_regen_speed]);
