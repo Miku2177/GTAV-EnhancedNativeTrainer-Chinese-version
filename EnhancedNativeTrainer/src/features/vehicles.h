@@ -75,6 +75,16 @@ extern Vehicle veh_l;
 extern bool featureLockVehicleDoors;
 extern bool featureLockVehicleDoorsUpdated;
 
+//Blip Colour
+const std::vector<std::string> VEH_BLIPCOLOUR_CAPTIONS{ "White", "Red", "Green", "Blue", "Orange", "Purple", "Grey", "Brown", "Pink", "Dark Green", "Dark Purple", "Dark Blue" };
+const std::vector<int> VEH_BLIPCOLOUR_VALUES{ 0, 1, 2, 3, 17, 19, 20, 21, 23, 25, 27, 29 };
+extern int VehBlipColourIndex;
+extern bool VehBlipColour_Changed;
+const std::vector<std::string> VEH_COLOUR_CAPTIONS{ "OFF", "White", "Red", "Green", "Blue", "Orange", "Purple", "Pink", "Yellow" };
+const std::vector<int> VEH_COLOUR_VALUES{ -1, 134, 27, 139, 64, 38, 145, 135, 88 };
+extern int VehColourIndex;
+extern bool VehColour_Changed;
+
 /***
 * METHODS
 */
@@ -260,6 +270,8 @@ void onchange_veh_remember_index(int value, SelectFromListMenuItem* source);
 void onchange_veh_blipsize_index(int value, SelectFromListMenuItem* source);
 
 void onchange_veh_blipcolour_index(int value, SelectFromListMenuItem* source);
+
+void onchange_world_npc_vehicles_colour_index(int value, SelectFromListMenuItem* source);
 
 void onchange_veh_blipsymbol_index(int value, SelectFromListMenuItem* source);
 

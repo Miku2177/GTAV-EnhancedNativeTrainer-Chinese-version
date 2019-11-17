@@ -331,6 +331,12 @@ void process_areaeffect_vehicle_menu(){
 	togItem->toggleValue = &featureBoostNPCRadio;
 	menuItems.push_back(togItem);
 
+	listItem = new SelectFromListMenuItem(VEH_COLOUR_CAPTIONS, onchange_world_npc_vehicles_colour_index);
+	listItem->wrap = false;
+	listItem->caption = "NPC Vehicles Colour";
+	listItem->value = VehColourIndex;
+	menuItems.push_back(listItem);
+
 	draw_generic_menu<int>(menuItems, &areaeffect_veh_level_menu_index, "Vehicle Effects", NULL, NULL, NULL);
 }
 
