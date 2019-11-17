@@ -260,10 +260,10 @@ int VehBlipSizeIndex = 2;
 bool VehBlipSize_Changed = true;
 
 //Blip Colour
-const std::vector<std::string> VEH_BLIPCOLOUR_CAPTIONS{ "White", "Red", "Green", "Blue", "Orange", "Purple", "Grey", "Brown", "Pink", "Dark Green", "Dark Purple", "Dark Blue" };
-const std::vector<int> VEH_BLIPCOLOUR_VALUES{ 0, 1, 2, 3, 17, 19, 20, 21, 23, 25, 27, 29 };
 int VehBlipColourIndex = 4;
 bool VehBlipColour_Changed = true;
+int VehColourIndex = 0;
+bool VehColour_Changed = true;
 
 //Blip Symbol
 const std::vector<std::string> VEH_BLIPSYMBOL_CAPTIONS{ "Standard", "Player", "North", "Waypoint", "BigCircleOutline", "ArrowUpOutlined", "ArrowDownOutlined", "ArrowUp", "ArrowDown", "PoliceHelicopterAnimated", "Jet" };
@@ -3767,6 +3767,7 @@ void reset_vehicle_globals() {
 	VehRememberIndex = 3;
 	VehBlipSizeIndex = 2;
 	VehBlipColourIndex = 4;
+	VehColourIndex = 0;
 	SpeedingCityIndex = 3;
 	DetectionRangeIndex = 3;
 	PirsuitRangeIndex = 4;
@@ -4594,6 +4595,7 @@ void add_vehicle_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"VehRememberIndex", std::to_string(VehRememberIndex)});
 	results->push_back(StringPairSettingDBRow{"VehBlipSizeIndex", std::to_string(VehBlipSizeIndex)});
 	results->push_back(StringPairSettingDBRow{"VehBlipColourIndex", std::to_string(VehBlipColourIndex)});
+	results->push_back(StringPairSettingDBRow{"VehColourIndex", std::to_string(VehColourIndex)});
 	results->push_back(StringPairSettingDBRow{"SpeedingCityIndex", std::to_string(SpeedingCityIndex)});
 	results->push_back(StringPairSettingDBRow{"DetectionRangeIndex", std::to_string(DetectionRangeIndex)});
 	results->push_back(StringPairSettingDBRow{"PirsuitRangeIndex", std::to_string(PirsuitRangeIndex)});
@@ -4714,6 +4716,9 @@ void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settin
 		}
 		else if (setting.name.compare("VehBlipColourIndex") == 0){
 			VehBlipColourIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("VehColourIndex") == 0) {
+			VehColourIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("SpeedingCityIndex") == 0){
 			SpeedingCityIndex = stoi(setting.value);
@@ -4963,6 +4968,10 @@ void onchange_veh_blipsize_index(int value, SelectFromListMenuItem* source){
 }
 void onchange_veh_blipcolour_index(int value, SelectFromListMenuItem* source){
 	VehBlipColourIndex = value;
+	PositionChanged = true;
+}
+void onchange_world_npc_vehicles_colour_index(int value, SelectFromListMenuItem* source) {
+	VehColourIndex = value;
 	PositionChanged = true;
 }
 void onchange_speeding_city_index(int value, SelectFromListMenuItem* source){
