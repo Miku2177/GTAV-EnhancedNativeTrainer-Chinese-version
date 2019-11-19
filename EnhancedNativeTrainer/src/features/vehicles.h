@@ -80,6 +80,8 @@ const std::vector<std::string> VEH_BLIPCOLOUR_CAPTIONS{ "White", "Red", "Green",
 const std::vector<int> VEH_BLIPCOLOUR_VALUES{ 0, 1, 2, 3, 17, 19, 20, 21, 23, 25, 27, 29 };
 extern int VehBlipColourIndex;
 extern bool VehBlipColour_Changed;
+
+// Vehicle Colour
 const std::vector<std::string> VEH_COLOUR_CAPTIONS{ "OFF", "White", "Red", "Green", "Blue", "Orange", "Purple", "Pink", "Yellow" };
 const std::vector<int> VEH_COLOUR_VALUES{ -1, 134, 27, 139, 64, 38, 145, 135, 88 };
 extern int VehColourIndex;
