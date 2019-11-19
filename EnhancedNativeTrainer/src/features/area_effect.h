@@ -36,6 +36,7 @@ extern bool featureBoostNPCRadio;
 extern const int WORLD_NPC_VEHICLESPEED_VALUES[];
 extern const std::vector<std::string> WORLD_REDUCEDGRIP_SNOWING_CAPTIONS;
 extern const int WORLD_REDUCEDGRIP_SNOWING_VALUES[];
+extern bool featureSnow;
 extern int PedsHealthIndex;
 extern bool PedsHealthChanged;
 extern int NPCVehicleSpeedIndex;
