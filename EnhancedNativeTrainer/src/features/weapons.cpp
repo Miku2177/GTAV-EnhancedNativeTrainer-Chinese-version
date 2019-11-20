@@ -1533,8 +1533,10 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		Vector3 p_coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(playerPed, 10.0f, 10.0f, 0.0f);
 		int curr_bullet = WEAPON::GET_AMMO_IN_PED_WEAPON(PLAYER::PLAYER_PED_ID(), curr_w);
 		if (curr_bullet < 3) {
-			WEAPON::SET_PED_DROPS_INVENTORY_WEAPON(playerPed, curr_w, p_coords.x, p_coords.y, p_coords.z, 1);
+			Object temp_w = WEAPON::GET_WEAPON_OBJECT_FROM_PED(playerPed, 1);
 			WEAPON::REMOVE_WEAPON_FROM_PED(playerPed, curr_w);
+			ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&temp_w);
+			OBJECT::DELETE_OBJECT(&temp_w);
 		}
 	}
 
