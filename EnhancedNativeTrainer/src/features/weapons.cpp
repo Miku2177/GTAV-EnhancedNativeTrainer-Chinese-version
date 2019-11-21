@@ -1222,7 +1222,7 @@ bool process_weapon_menu(){
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Peds Do Not Drop Weapons On Death";
+	toggleItem->caption = "Cannot Pickup Dropped Weapons";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featurePedNoWeaponDrop;
 	menuItems.push_back(toggleItem);
@@ -1520,8 +1520,11 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		if (WEAPON::HAS_ENTITY_BEEN_DAMAGED_BY_WEAPON(playerPed, 0, 2) && GAMEPLAY::HAS_BULLET_IMPACTED_IN_AREA(coords_myfinger_p.x, coords_myfinger_p.y, coords_myfinger_p.z, 0.25, 0, 0) && WEAPON::IS_PED_ARMED(playerPed, 7)) { // 0.2
 			Hash curr_w = WEAPON::GET_SELECTED_PED_WEAPON(playerPed);
 			Vector3 p_coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(playerPed, 10.0f, 10.0f, 0.0f);
-			WEAPON::SET_PED_DROPS_INVENTORY_WEAPON(playerPed, curr_w, p_coords.x, p_coords.y, p_coords.z, 1);
+			Object temp_w = WEAPON::GET_WEAPON_OBJECT_FROM_PED(playerPed, 1);
+			//WEAPON::SET_PED_DROPS_INVENTORY_WEAPON(playerPed, curr_w, p_coords.x, p_coords.y, p_coords.z, 1);
 			WEAPON::REMOVE_WEAPON_FROM_PED(playerPed, curr_w);
+			ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&temp_w);
+			OBJECT::DELETE_OBJECT(&temp_w);
 			PED::CLEAR_PED_LAST_DAMAGE_BONE(playerPed);
 			ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(playerPed);
 		}
@@ -1560,7 +1563,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		}
 	}
 
-	////////////////////////////////////////////// COPS WEAPON && PEDS DO NOT DROP WEAPONS ON DEATH ////////////////////////////////////////
+	////////////////////////////////////////////// COPS WEAPON && CANNOT PICKUP DROPPED WEAPONS ////////////////////////////////////////
 
 	if (featureCopArmedWith || featurePedNoWeaponDrop) {
 		const int arrSize3 = 1024;
@@ -1574,7 +1577,18 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		
 		if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) <= WEAPONS_COPALARM_VALUES[CopAlarmIndex] || WEAPONS_COPALARM_VALUES[CopAlarmIndex] > 5 || featurePedNoWeaponDrop) {
 			for (int i = 0; i < count_cops; i++) {
-				if (featurePedNoWeaponDrop/* ENTITY::GET_ENTITY_HEALTH(cops[i]) > 0 && WEAPON::IS_PED_ARMED(cops[i], 7) && PED::GET_PED_TYPE(cops[i]) == 6*/) WEAPON::SET_PED_DROPS_WEAPONS_WHEN_DEAD(cops[i], false);
+				if (featurePedNoWeaponDrop/* ENTITY::GET_ENTITY_HEALTH(cops[i]) > 0 && WEAPON::IS_PED_ARMED(cops[i], 7) && PED::GET_PED_TYPE(cops[i]) == 6*/) { // cannot pickup dropped weapons
+					if (ENTITY::GET_ENTITY_HEALTH(cops[i]) > 0) {
+						WEAPON::SET_PED_DROPS_WEAPONS_WHEN_DEAD(cops[i], false);
+					}
+					if (ENTITY::IS_ENTITY_DEAD(cops[i])) {
+						Hash curr_w = WEAPON::GET_SELECTED_PED_WEAPON(cops[i]);
+						Object temp_w = WEAPON::GET_WEAPON_OBJECT_FROM_PED(cops[i], 1);
+						WEAPON::REMOVE_WEAPON_FROM_PED(cops[i], curr_w);
+						ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&temp_w);
+						OBJECT::DELETE_OBJECT(&temp_w);
+					}
+				}
 
 				if (featureCopArmedWith && (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) <= WEAPONS_COPALARM_VALUES[CopAlarmIndex] || WEAPONS_COPALARM_VALUES[CopAlarmIndex] > 5)) {
 					if (featureSwitchWeaponIfDanger && (WEAPONS_COPARMED_CAPTIONS[CopCurrArmedIndex] == "\"WEAPON_UNARMED\"" || WEAPONS_COPARMED_CAPTIONS[CopCurrArmedIndex] == "\"WEAPON_NIGHTSTICK\"" ||
