@@ -63,6 +63,8 @@ void maintain_bodyguards();
 
 void onchange_body_blipsize_index(int value, SelectFromListMenuItem* source);
 
+void onchange_body_distance_index(int value, SelectFromListMenuItem* source);
+
 void onchange_body_blipcolour_index(int value, SelectFromListMenuItem* source);
 
 void onchange_body_blipsymbol_index(int value, SelectFromListMenuItem* source);

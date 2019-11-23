@@ -113,7 +113,7 @@ const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "Clear Props", HKEY_CLEAR_PROPS },
 	{ "Enter Damaged Vehicle", HKEY_ENTER_DAMAGED_V },
 	{ "Fire Mode", HKEY_FIRE_MODE },
-	{ "Map Size", HKEY_MAP_SIZE },
+	{ "Mini Map Size", HKEY_MAP_SIZE },
 };
 
 void change_hotkey_function(int hotkey, int funcIndex);
