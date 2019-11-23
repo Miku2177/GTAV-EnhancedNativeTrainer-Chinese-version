@@ -28,6 +28,8 @@ bool DEBUG_MODE_SKINS = false;
 bool featurenoblood = false;
 bool featureResetPlayerModelOnDeath = false;
 
+//bool auto_skin = false;
+
 int skinDetailMenuIndex = 0;
 int skinDetailMenuValue = 0;
 
@@ -228,6 +230,14 @@ void onexit_skinchanger_texture_menu(bool returnValue)
 
 void update_skin_features() {
 	if (featurenoblood) PED::CLEAR_PED_BLOOD_DAMAGE(PLAYER::PLAYER_PED_ID());
+
+	//if (CONTROLS::IS_CONTROL_JUST_PRESSED(2, 22) && auto_skin == false) {
+		//ENTDatabase* database = get_database();
+		//std::vector<SavedSkinDBRow*> savedSkins = database->get_saved_skins(savedSkins.size());
+		//spawn_saved_skin(savedSkins.size(), "Saved Skin 1");
+		//spawn_saved_skin(1, "Saved Skin 1");
+		//auto_skin = true;
+	//}
 }
 
 bool process_skinchanger_texture_menu(std::string caption)

@@ -59,6 +59,8 @@ const std::vector<std::string> BODY_BLIPSIZE_CAPTIONS{ "1", "2", "3", "4", "5", 
 const double BODY_BLIPSIZE_VALUES[] = { 0.3, 0.5, 0.8, 1.0, 1.2, 1.5, 1.7, 2.0, 2.5, 3.0 };
 int BodyBlipSizeIndex = 2;
 bool BodyBlipSize_Changed = true;
+int BodyDistanceIndex = 7;
+bool BodyDistance_Changed = true;
 
 //Blip Colour
 const std::vector<std::string> BODY_BLIPCOLOUR_CAPTIONS{ "White", "Red", "Green", "Blue", "Orange", "Purple", "Grey", "Brown", "Pink", "Dark Green", "Dark Purple", "Dark Blue" };
@@ -558,7 +560,7 @@ void do_spawn_bodyguard(){
 			//
 			if (bodyguard_animal == false) PED::SET_PED_CAN_SWITCH_WEAPON(bodyGuard, true);
 			PED::SET_GROUP_FORMATION(myGroup, 1); // 1
-			PED::SET_GROUP_FORMATION_SPACING(myGroup, 2.0, 2.0, 2.0);
+			PED::SET_GROUP_FORMATION_SPACING(myGroup, BODY_BLIPSIZE_VALUES[BodyDistanceIndex], BODY_BLIPSIZE_VALUES[BodyDistanceIndex], BODY_BLIPSIZE_VALUES[BodyDistanceIndex]); // 2.0, 2.0, 2.0
 			PED::SET_CAN_ATTACK_FRIENDLY(bodyGuard, false, false);
 
 			AI::TASK_COMBAT_HATED_TARGETS_AROUND_PED(bodyGuard, 10000, 0);
@@ -703,55 +705,64 @@ void maintain_bodyguards(){
 bool process_bodyguard_menu(){
 	do{
 		requireRefreshOfBodyguardMainMenu = false;
-		int i = 0;
-
+		
 		std::string caption = "Bodyguard Options";
 
 		std::vector<MenuItem<int>*> menuItems;
 		MenuItem<int> *item;
 		ToggleMenuItem<int>* toggleItem;
+		SelectFromListMenuItem *listItem;
+
+		int i = 0;
 
 		item = new MenuItem<int>();
 		std::ostringstream ss;
 		ss << "Spawn Bodyguard: " << get_current_model_name(); 
 		item->caption = ss.str();
-		item->value = i++;
+		//item->value = i++;
+		item->value = 0;
 		item->isLeaf = true;
 		menuItems.push_back(item);
 
 		item = new MenuItem<int>();
 		item->caption = "Add Nearest Ped As Bodyguard";
-		item->value = i++;
+		//item->value = i++;
+		item->value = 1;
 		item->isLeaf = true;
 		menuItems.push_back(item);
 
 		item = new MenuItem<int>();
 		item->caption = "Dismiss All Bodyguards";
-		item->value = i++;
+		//item->value = i++;
+		item->value = 2;
 		item->isLeaf = true;
 		menuItems.push_back(item);
 
 		item = new MenuItem<int>();
 		item->caption = "Toggle Bodyguards To Follow Player";
-		item->value = i++;
+		//item->value = i++;
+		item->value = 3;
 		item->isLeaf = true;
 		menuItems.push_back(item);
 
 		item = new MenuItem<int>();
 		item->caption = "Choose Model";
-		item->value = i++;
+		//item->value = i++;
+		item->value = 4;
 		item->isLeaf = false;
 		menuItems.push_back(item);
 
 		item = new MenuItem<int>();
 		item->caption = "Choose Weapons";
-		item->value = i++;
+		//item->value = i++;
+		item->value = 5;
 		item->isLeaf = false;
 		menuItems.push_back(item);
 
 		item = new MenuItem<int>();
 		item->caption = "Mark On Map";
-		item->value = i++;
+		//item->value = i++;
+		item->value = 6;
 		item->isLeaf = false;
 		menuItems.push_back(item);
 
@@ -790,6 +801,12 @@ bool process_bodyguard_menu(){
 		toggleItem->toggleValueUpdated = NULL;
 		menuItems.push_back(toggleItem);
 
+		listItem = new SelectFromListMenuItem(BODY_BLIPSIZE_CAPTIONS, onchange_body_distance_index);
+		listItem->wrap = false;
+		listItem->caption = "Spawning Distance";
+		listItem->value = BodyDistanceIndex;
+		menuItems.push_back(listItem);
+
 		if(!bodyguardWeaponsToggleInitialized){
 			for(int a = 0; a < MENU_WEAPON_CATEGORIES.size(); a++){
 				for(int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++){
@@ -811,7 +828,8 @@ bool onconfirm_bodyguard_menu(MenuItem<int> choice){
 	Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
-	switch(choice.value){
+	//switch(choice.value){
+	switch (activeLineIndexBodyguards) {
 		case 0:
 			do_spawn_bodyguard();
 			break;
@@ -862,6 +880,7 @@ void add_bodyguards_feature_enablements(std::vector<FeatureEnabledLocalDefinitio
 void add_bodyguards_feature_enablements2(std::vector<StringPairSettingDBRow>* results)
 {
 	results->push_back(StringPairSettingDBRow{ "BodyBlipSizeIndex", std::to_string(BodyBlipSizeIndex) });
+	results->push_back(StringPairSettingDBRow{ "BodyDistanceIndex", std::to_string(BodyDistanceIndex) });
 	results->push_back(StringPairSettingDBRow{ "BodyBlipColourIndex", std::to_string(BodyBlipColourIndex) });
 	results->push_back(StringPairSettingDBRow{ "BodyBlipSymbolIndex", std::to_string(BodyBlipSymbolIndex) });
 	results->push_back(StringPairSettingDBRow{ "BodyBlipFlashIndex", std::to_string(BodyBlipFlashIndex) });
@@ -891,6 +910,9 @@ void handle_generic_settings_bodyguards(std::vector<StringPairSettingDBRow>* set
 		}
 		else if (setting.name.compare("BodyBlipSizeIndex") == 0){
 			BodyBlipSizeIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("BodyDistanceIndex") == 0) {
+			BodyDistanceIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("BodyBlipColourIndex") == 0){
 			BodyBlipColourIndex = stoi(setting.value);
@@ -925,6 +947,7 @@ void reset_bodyguards_globals(){
 	featureBodyguardInfAmmo = false;
 	featureDifferentWeapons = false;
 	BodyBlipSizeIndex = 2;
+	BodyDistanceIndex = 7;
 	BodyBlipColourIndex = 0;
 	BodyBlipSymbolIndex = 0;
 	BodyBlipFlashIndex = 0;
@@ -933,6 +956,11 @@ void reset_bodyguards_globals(){
 void onchange_body_blipsize_index(int value, SelectFromListMenuItem* source){
 	BodyBlipSizeIndex = value;
 	BodyBlipSize_Changed = true;
+}
+
+void onchange_body_distance_index(int value, SelectFromListMenuItem* source) {
+	BodyDistanceIndex = value;
+	BodyDistance_Changed = true;
 }
 
 void onchange_body_blipcolour_index(int value, SelectFromListMenuItem* source){
