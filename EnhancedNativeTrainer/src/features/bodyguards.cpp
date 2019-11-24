@@ -803,7 +803,7 @@ bool process_bodyguard_menu(){
 
 		listItem = new SelectFromListMenuItem(BODY_BLIPSIZE_CAPTIONS, onchange_body_distance_index);
 		listItem->wrap = false;
-		listItem->caption = "Spawning Distance";
+		listItem->caption = "Spawn Distance";
 		listItem->value = BodyDistanceIndex;
 		menuItems.push_back(listItem);
 

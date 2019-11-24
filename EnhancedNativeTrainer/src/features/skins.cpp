@@ -28,9 +28,11 @@ bool DEBUG_MODE_SKINS = false;
 bool featurenoblood = false;
 bool featureResetPlayerModelOnDeath = false;
 
+// auto skin variables
 bool featureautoskin = false;
 bool auto_skin = false;
 int skin_tick, skin_tick_secs_passed, skin_tick_secs_curr = 0;
+Ped oldplayerSkin = -1;
 
 int skinDetailMenuIndex = 0;
 int skinDetailMenuValue = 0;
@@ -235,7 +237,7 @@ void update_skin_features() {
 	if (featurenoblood) PED::CLEAR_PED_BLOOD_DAMAGE(PLAYER::PLAYER_PED_ID());
 
 	if (featureautoskin) {
-		if (/*CONTROLS::IS_CONTROL_JUST_PRESSED(2, 22) &&*/ auto_skin == false) {
+		if (auto_skin == false) {
 			skin_tick_secs_passed = clock() / CLOCKS_PER_SEC;
 			if (((clock() / (CLOCKS_PER_SEC / 1000)) - skin_tick_secs_curr) != 0) {
 				skin_tick = skin_tick + 1;
@@ -244,12 +246,39 @@ void update_skin_features() {
 			if (skin_tick > 200) {
 				ENTDatabase* database = get_database();
 				std::vector<SavedSkinDBRow*> savedSkins = database->get_saved_skins();
-				spawn_saved_skin(savedSkins.size(), "Saved Skin"); // "Saved Skin 1"
-				//spawn_saved_skin(1, "Saved Skin 1");
+				//spawn_saved_skin(savedSkins.size(), "Saved Skin"); // "Saved Skin 1"
+				//
+				savedSkins = database->get_saved_skins(savedSkins.size());
+				SavedSkinDBRow* savedSkin = savedSkins.at(0);
+				database->populate_saved_skin(savedSkin);
+
+				if (savedSkin->model == ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID())) {
+					applyChosenSkin(savedSkin->model);
+
+					Ped ped = PLAYER::PLAYER_PED_ID();
+					for each (SavedSkinComponentDBRow *comp in savedSkin->components) {
+						PED::SET_PED_COMPONENT_VARIATION(ped, comp->slotID, comp->drawable, comp->texture, 0);
+					}
+					PED::CLEAR_ALL_PED_PROPS(ped);
+					for each (SavedSkinPropDBRow *prop in savedSkin->props) {
+						PED::SET_PED_PROP_INDEX(ped, prop->propID, prop->drawable, prop->texture, 0);
+					}
+					for (std::vector<SavedSkinDBRow*>::iterator it = savedSkins.begin(); it != savedSkins.end(); ++it) {
+						delete (*it);
+					}
+					savedSkins.clear();
+				}
+				//
+				oldplayerSkin = PLAYER::PLAYER_PED_ID();
+				skin_tick = 0;
 				auto_skin = true;
 			}
-		}
-	}
+		} // end of auto_skin
+
+		if (PLAYER::PLAYER_PED_ID() != oldplayerSkin) auto_skin = false;
+		if ((PLAYER::GET_TIME_SINCE_LAST_DEATH() > -1 && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 2000) || (player_died == true && !featureNoAutoRespawn)) auto_skin = false;
+
+	} // end of featureautoskin
 }
 
 bool process_skinchanger_texture_menu(std::string caption)
