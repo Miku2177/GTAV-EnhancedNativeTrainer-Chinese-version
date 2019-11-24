@@ -28,7 +28,9 @@ bool DEBUG_MODE_SKINS = false;
 bool featurenoblood = false;
 bool featureResetPlayerModelOnDeath = false;
 
-//bool auto_skin = false;
+bool featureautoskin = false;
+bool auto_skin = false;
+int skin_tick, skin_tick_secs_passed, skin_tick_secs_curr = 0;
 
 int skinDetailMenuIndex = 0;
 int skinDetailMenuValue = 0;
@@ -61,6 +63,7 @@ void reset_skin_globals()
 {
 	//chosenSkinName = "";
 	featurenoblood = false;
+	featureautoskin = false;
 	featureResetPlayerModelOnDeath = false;
 }
 
@@ -231,13 +234,22 @@ void onexit_skinchanger_texture_menu(bool returnValue)
 void update_skin_features() {
 	if (featurenoblood) PED::CLEAR_PED_BLOOD_DAMAGE(PLAYER::PLAYER_PED_ID());
 
-	//if (CONTROLS::IS_CONTROL_JUST_PRESSED(2, 22) && auto_skin == false) {
-		//ENTDatabase* database = get_database();
-		//std::vector<SavedSkinDBRow*> savedSkins = database->get_saved_skins(savedSkins.size());
-		//spawn_saved_skin(savedSkins.size(), "Saved Skin 1");
-		//spawn_saved_skin(1, "Saved Skin 1");
-		//auto_skin = true;
-	//}
+	if (featureautoskin) {
+		if (/*CONTROLS::IS_CONTROL_JUST_PRESSED(2, 22) &&*/ auto_skin == false) {
+			skin_tick_secs_passed = clock() / CLOCKS_PER_SEC;
+			if (((clock() / (CLOCKS_PER_SEC / 1000)) - skin_tick_secs_curr) != 0) {
+				skin_tick = skin_tick + 1;
+				skin_tick_secs_curr = skin_tick_secs_passed;
+			}
+			if (skin_tick > 200) {
+				ENTDatabase* database = get_database();
+				std::vector<SavedSkinDBRow*> savedSkins = database->get_saved_skins();
+				spawn_saved_skin(savedSkins.size(), "Saved Skin"); // "Saved Skin 1"
+				//spawn_saved_skin(1, "Saved Skin 1");
+				auto_skin = true;
+			}
+		}
+	}
 }
 
 bool process_skinchanger_texture_menu(std::string caption)
@@ -796,6 +808,12 @@ bool process_skinchanger_menu()
 	toggleItem->toggleValue = &featurenoblood;
 	menuItems.push_back(toggleItem);
 
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Auto Apply Last Saved Skin";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureautoskin;
+	menuItems.push_back(toggleItem);
+
 	return draw_generic_menu<int>(menuItems, &skinMainMenuPosition, "Player Skin Options", onconfirm_skinchanger_menu, NULL, NULL);
 }
 
@@ -1205,6 +1223,7 @@ void add_skin_generic_settings(std::vector<StringPairSettingDBRow>* results)
 
 void add_player_skin_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results) {
 	results->push_back(FeatureEnabledLocalDefinition{ "featurenoblood", &featurenoblood });
+	results->push_back(FeatureEnabledLocalDefinition{ "featureautoskin", &featureautoskin });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureResetPlayerModelOnDeath", &featureResetPlayerModelOnDeath });
 }
 
