@@ -581,8 +581,8 @@ void update_area_effects(Ped playerPed){
 				if (vehcoll_with_dist_x < 0) vehcoll_with_dist_x = (vehcoll_with_dist_x * -1);
 				if (vehcoll_with_dist_y < 0) vehcoll_with_dist_y = (vehcoll_with_dist_y * -1);
 
-				if (featureAggressiveDrivers && veh_coll_with != PED::GET_VEHICLE_PED_IS_IN(playerPed, false) && ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(veh_me) && ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(veh_coll_with) &&
-					vehcoll_with_dist_x < 5 && vehcoll_with_dist_y < 5) {
+				if (featureAggressiveDrivers && veh_coll_with != PED::GET_VEHICLE_PED_IS_IN(playerPed, false) && VEHICLE::GET_PED_IN_VEHICLE_SEAT(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), -1) == playerPed &&
+					ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(veh_me) && ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(veh_coll_with) && vehcoll_with_dist_x < 5 && vehcoll_with_dist_y < 5) {
 					v_collision_check = true;
 					if (ENTITY::DOES_ENTITY_EXIST(veh_agressive[i]) && !ENTITY::IS_ENTITY_DEAD(veh_agressive[i])) {
 						if (pursuer.empty()) pursuer.push_back(veh_agressive[i]);
@@ -610,9 +610,9 @@ void update_area_effects(Ped playerPed){
 					int lawabidped_with_dist_y = (me_coords.y - npc_abid_coords.y);
 					if (lawabidped_with_dist_x < 0) lawabidped_with_dist_x = (lawabidped_with_dist_x * -1);
 					if (lawabidped_with_dist_y < 0) lawabidped_with_dist_y = (lawabidped_with_dist_y * -1);
-					if (((PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed) != 0 && VEHICLE::GET_PED_IN_VEHICLE_SEAT(PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed), -1) != 0) ||
-						(PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed) != 0 && VEHICLE::IS_VEHICLE_ALARM_ACTIVATED(PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed))))
-						&& ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(veh_agressive[i], playerPed, 17)) {
+					if (((PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed) != 0 && VEHICLE::GET_PED_IN_VEHICLE_SEAT(PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed), -1) != 0 && 
+						!PED::IS_PED_IN_ANY_TAXI(VEHICLE::GET_PED_IN_VEHICLE_SEAT(PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed), -1))) ||
+						(PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed) != 0 && VEHICLE::IS_VEHICLE_ALARM_ACTIVATED(PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed)))) && ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(veh_agressive[i], playerPed, 17)) {
 						if (lawabidped_with_dist_x < 10 && lawabidped_with_dist_y < 10) {
 							if (!PED::IS_PED_IN_ANY_VEHICLE(veh_agressive[i], true)/* && VEHICLE::GET_PED_IN_VEHICLE_SEAT(PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed), -1) != veh_agressive[i]*/) {
 								PED::SET_PED_AS_ENEMY(PLAYER::PLAYER_PED_ID(), true);
@@ -634,8 +634,8 @@ void update_area_effects(Ped playerPed){
 						ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(PED::GET_VEHICLE_PED_IS_IN(veh_agressive[i], false));
 						ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(temp_vehicle);
 					}
-					if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) && PED::IS_PED_IN_ANY_VEHICLE(veh_agressive[i], true) &&
-						lawabidped_with_dist_x < 10 && lawabidped_with_dist_y < 10 && time_to_chase == true && veh_me_speed < 1) {
+					if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) && VEHICLE::GET_PED_IN_VEHICLE_SEAT(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), -1) == playerPed && PED::IS_PED_IN_ANY_VEHICLE(veh_agressive[i], true) &&
+						lawabidped_with_dist_x < 10 && lawabidped_with_dist_y < 10 && time_to_chase == true && veh_me_speed < 1) { // !PED::IS_PED_IN_ANY_TAXI(playerPed)
 						if (pursuer.empty()) pursuer.push_back(veh_agressive[i]);
 						if (v_collided.empty()) v_collided.push_back(PED::GET_VEHICLE_PED_IS_IN(veh_agressive[i], false));
 						if (!pursuer.empty()) {
