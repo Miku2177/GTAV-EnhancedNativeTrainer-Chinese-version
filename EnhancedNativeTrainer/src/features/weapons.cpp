@@ -1661,6 +1661,10 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		const int arrSize_punch = 1024;
 		Ped surr_p_peds[arrSize_punch];
 		int count_surr_p_peds = worldGetAllPeds(surr_p_peds, arrSize_punch);
+		Vehicle surr_vehicles[arrSize_punch];
+		int count_surr_v = worldGetAllVehicles(surr_vehicles, arrSize_punch);
+		Object surr_objects[arrSize_punch];
+		int count_surr_o = worldGetAllObjects(surr_objects, arrSize_punch);
 
 		if (WEAPONS_POWERPUNCH_VALUES[PowerPunchIndex] != 55) p_force = WEAPONS_POWERPUNCH_VALUES[PowerPunchIndex];
 		if (WEAPONS_POWERPUNCH_VALUES[PowerPunchIndex] == 55 && !lastPowerWeapon.empty()) {
@@ -1724,15 +1728,13 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 				if (PED::GET_PED_TYPE(surr_p_peds[i]) != 0 && PED::GET_PED_TYPE(surr_p_peds[i]) != 1 && PED::GET_PED_TYPE(surr_p_peds[i]) != 2 && PED::GET_PED_TYPE(surr_p_peds[i]) != 3 && !PED::IS_PED_IN_MELEE_COMBAT(surr_p_peds[i])) {
 					if (!WEAPON::IS_PED_ARMED(playerPed, 7)) {
 						AI::CLEAR_PED_SECONDARY_TASK(surr_p_peds[i]);
-						AI::CLEAR_PED_TASKS(surr_p_peds[i]);
+						//AI::CLEAR_PED_TASKS(surr_p_peds[i]);
 					}
 					if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(surr_p_peds[i], playerPed, 1)) {
 						temp_nearest_ped = surr_p_peds[i];
 					}
 				}
 			} // end of int (peds)
-			Object surr_objects[arrSize_punch];
-			int count_surr_o = worldGetAllObjects(surr_objects, arrSize_punch);
 			for (int i = 0; i < count_surr_o; i++) {
 				if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(surr_objects[i], playerPed, 1)) {
 					ENTITY::APPLY_FORCE_TO_ENTITY(surr_objects[i], 1, v_x, v_y, v_z, 0, 0, 0, true, false, true, true, true, true);
@@ -1741,8 +1743,6 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 					ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(surr_objects[i]);
 				}
 			} // end of int (objects)
-			Vehicle surr_vehicles[arrSize_punch];
-			int count_surr_v = worldGetAllVehicles(surr_vehicles, arrSize_punch);
 			for (int i = 0; i < count_surr_v; i++) {
 				if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(surr_vehicles[i], playerPed, 1)) {
 					ENTITY::APPLY_FORCE_TO_ENTITY(surr_vehicles[i], 1, v_x, v_y, v_z, 0, 0, 0, true, false, true, true, true, true);
@@ -1770,6 +1770,14 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		for (int i = 0; i < count_surr_p_peds; i++) {
 			PED::CLEAR_PED_LAST_DAMAGE_BONE(surr_p_peds[i]);
 			ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(surr_p_peds[i]);
+		}
+		for (int i = 0; i < count_surr_v; i++) {
+			PED::CLEAR_PED_LAST_DAMAGE_BONE(surr_vehicles[i]);
+			ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(surr_vehicles[i]);
+		}
+		for (int i = 0; i < count_surr_o; i++) {
+			PED::CLEAR_PED_LAST_DAMAGE_BONE(surr_objects[i]);
+			ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(surr_objects[i]);
 		}
 	}
 
