@@ -60,6 +60,7 @@ bool featureCopArmedWith = false;
 bool featurePlayerMelee = true;
 bool featureSwitchWeaponIfDanger = false;
 bool featureArmyMelee = false;
+bool featureDetainedIfNotMove = false;
 
 int bullet_a = 0;
 int bullet_tick = 0;
@@ -740,6 +741,12 @@ void process_copweapon_menu(){
 	listItem->value = CopAlarmIndex;
 	menuItems.push_back(listItem);
 	
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Detained If Do Not Move";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureDetainedIfNotMove;
+	menuItems.push_back(toggleItem);
+
 	draw_generic_menu<int>(menuItems, &activeLineIndexCopArmed, caption, onconfirm_coparmed_menu, NULL, NULL);
 }
 
@@ -1292,6 +1299,7 @@ void reset_weapon_globals(){
 		featureAddAllWeaponsAttachments =
 		featureCopArmedWith =
 		featureArmyMelee =
+		featureDetainedIfNotMove =
 		featurePedAgainstWeapons = 
 		featureAgainstMeleeWeapons =
 		featureAimAtDriver =
@@ -1624,13 +1632,13 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 					}
 				}
 				// arrest mode
-				if ((PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) == 1 || PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) == 2) && AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID())) {
+				if (featureDetainedIfNotMove && (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) == 1 || PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) == 2) && AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID())) {
 					s_vacuum_secs_passed = clock() / CLOCKS_PER_SEC;
 					if (((clock() / CLOCKS_PER_SEC) - s_vacuum_secs_curr) != 0) {
 						arrest_secs = arrest_secs + 1;
 						s_vacuum_secs_curr = s_vacuum_secs_passed;
 					}
-					if (arrest_secs > 5 && arrest_secs < 10) { // 10 && 15
+					if (arrest_secs > 7 && arrest_secs < 10) { // 10 && 15
 						find_nearest_ped();
 						if (PED::GET_PED_TYPE(temp_ped) == 6 || PED::GET_PED_TYPE(temp_ped) == 27) {
 							PLAYER::SET_MAX_WANTED_LEVEL(1);
@@ -2373,6 +2381,7 @@ void add_weapon_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerMelee", &featurePlayerMelee});
 	results->push_back(FeatureEnabledLocalDefinition{"featureSwitchWeaponIfDanger", &featureSwitchWeaponIfDanger});
 	results->push_back(FeatureEnabledLocalDefinition{"featureArmyMelee", &featureArmyMelee});
+	results->push_back(FeatureEnabledLocalDefinition{"featureDetainedIfNotMove", &featureDetainedIfNotMove});
 }
 
 void add_weapon_feature_enablements2(std::vector<StringPairSettingDBRow>* results)
