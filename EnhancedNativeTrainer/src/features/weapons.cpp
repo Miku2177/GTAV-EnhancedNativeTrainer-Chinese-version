@@ -1778,6 +1778,11 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		for (int i = 0; i < count_surr_p_peds; i++) {
 			PED::CLEAR_PED_LAST_DAMAGE_BONE(surr_p_peds[i]);
 			ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(surr_p_peds[i]);
+			if (surr_p_peds[i] != playerPed && PED::IS_PED_IN_MELEE_COMBAT(surr_p_peds[i])) {
+				WAIT(500);
+				AI::TASK_SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(surr_p_peds[i], true);
+				AI::CLEAR_PED_TASKS_IMMEDIATELY(surr_p_peds[i]);
+			}
 		}
 		for (int i = 0; i < count_surr_v; i++) {
 			PED::CLEAR_PED_LAST_DAMAGE_BONE(surr_vehicles[i]);
