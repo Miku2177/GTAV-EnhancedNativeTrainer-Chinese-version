@@ -1782,6 +1782,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 				WAIT(500);
 				AI::TASK_SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(surr_p_peds[i], true);
 				AI::CLEAR_PED_TASKS_IMMEDIATELY(surr_p_peds[i]);
+				AUDIO::PLAY_SOUND_FROM_ENTITY(-1, "FIB3A_LAND_FROM_HEIGHT_MASTER", PLAYER::PLAYER_PED_ID(), 0, 0, 0);
 			}
 		}
 		for (int i = 0; i < count_surr_v; i++) {
