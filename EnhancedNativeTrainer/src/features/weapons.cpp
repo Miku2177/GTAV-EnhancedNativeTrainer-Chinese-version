@@ -54,7 +54,7 @@ bool featureWeaponVehRockets = false;
 bool featurePunchFists = true;
 bool featurePunchMeleeWeapons = false;
 bool featurePunchFireWeapons = false;
-bool featurepowerpunchpeds = false;
+//bool featurepowerpunchpeds = false;
 
 bool featureCopArmedWith = false;
 bool featurePlayerMelee = true;
@@ -143,10 +143,10 @@ int PowerPunchIndex = 2;
 bool PowerPunchChanged = true;
 
 // Including Peds
-const std::vector<std::string> PEDS_POWERPUNCH_CAPTIONS{ "OFF", "Both You And Peds", "Peds Only" };
-const int PEDS_POWERPUNCH_VALUES[] = { 0, 1, 2 };
-int PedsPowerPunchIndex = 0;
-bool PedsPowerPunchChanged = true;
+//const std::vector<std::string> PEDS_POWERPUNCH_CAPTIONS{ "OFF", "Both You And Peds", "Peds Only" };
+//const int PEDS_POWERPUNCH_VALUES[] = { 0, 1, 2 };
+//int PedsPowerPunchIndex = 0;
+//bool PedsPowerPunchChanged = true;
 
 // Fire Mode
 const std::vector<std::string> WEAPONS_FIREMODE_CAPTIONS{ "Default", "Single Fire", "Burst Semi", "Burst Auto" };
@@ -770,10 +770,10 @@ void onchange_power_punch_index(int value, SelectFromListMenuItem* source) {
 	PowerPunchChanged = true;
 }
 
-void onchange_peds_power_punch_index(int value, SelectFromListMenuItem* source) {
-	PedsPowerPunchIndex = value;
-	PedsPowerPunchChanged = true;
-}
+//void onchange_peds_power_punch_index(int value, SelectFromListMenuItem* source) {
+//	PedsPowerPunchIndex = value;
+//	PedsPowerPunchChanged = true;
+//}
 
 void onchange_weapons_firemode_modifier(int value, SelectFromListMenuItem* source) {
 	WeaponsFireModeIndex = value;
@@ -1268,7 +1268,7 @@ void reset_weapon_globals(){
 	ChanceAttackingYouIndex = 1;
 	SniperVisionIndex = 0;
 	PowerPunchIndex = 2;
-	PedsPowerPunchIndex = 0;
+	//PedsPowerPunchIndex = 0;
 	WeaponsFireModeIndex = 0;
 
 	activeLineIndexCopArmed = 0;
@@ -1313,7 +1313,7 @@ void reset_weapon_globals(){
 		featureSwitchWeaponIfDanger =
 		featurePunchMeleeWeapons =
 		featurePunchFireWeapons =
-		featurepowerpunchpeds =
+		//featurepowerpunchpeds =
 		featureGravityGun = false;
 }
 
@@ -1690,7 +1690,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		if (featurePunchMeleeWeapons && !WEAPON::IS_PED_ARMED(playerPed, 6) && WEAPON::IS_PED_ARMED(playerPed, 7)) cur_weapon_e = true;
 		if (featurePunchFireWeapons && WEAPON::IS_PED_ARMED(playerPed, 7) && WEAPON::IS_PED_ARMED(playerPed, 6)) cur_weapon_e = true;
 
-		if (PEDS_POWERPUNCH_VALUES[PedsPowerPunchIndex] > 0) { // including peds
+		/*if (PEDS_POWERPUNCH_VALUES[PedsPowerPunchIndex] > 0) { // including peds
 			int count_surr_p_peds = worldGetAllPeds(surr_p_peds, arrSize_punch);
 			for (int i = 0; i < count_surr_p_peds; i++) {
 				if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(playerPed, surr_p_peds[i], 1)) {
@@ -1720,24 +1720,21 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 				PED::CLEAR_PED_LAST_DAMAGE_BONE(surr_p_peds[i]);
 				ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(surr_p_peds[i]);
 			}
-		}
+		}*/
 
 		float rad = 2 * 3.14 * (CamRot.z / 360);
 		float v_x = -(sin(rad) * p_force * 10);
 		float v_y = (cos(rad) * p_force * 10);
 		float v_z = p_force * (CamRot.x * 0.2);
 
-		if (force_nearest_ped == true && cur_weapon_e == true && PEDS_POWERPUNCH_VALUES[PedsPowerPunchIndex] < 2) {
+		if (force_nearest_ped == true && cur_weapon_e == true/* && PEDS_POWERPUNCH_VALUES[PedsPowerPunchIndex] < 2*/) {
 			PLAYER::SET_PLAYER_WEAPON_DAMAGE_MODIFIER(player, 1000.0);
 			PLAYER::SET_PLAYER_MELEE_WEAPON_DAMAGE_MODIFIER(player, 1000.0, 1);
 			PLAYER::SET_PLAYER_VEHICLE_DAMAGE_MODIFIER(playerPed, 1000.0);
 
 			for (int i = 0; i < count_surr_p_peds; i++) {
 				if (PED::GET_PED_TYPE(surr_p_peds[i]) != 0 && PED::GET_PED_TYPE(surr_p_peds[i]) != 1 && PED::GET_PED_TYPE(surr_p_peds[i]) != 2 && PED::GET_PED_TYPE(surr_p_peds[i]) != 3 && !PED::IS_PED_IN_MELEE_COMBAT(surr_p_peds[i])) {
-					if (!WEAPON::IS_PED_ARMED(playerPed, 7)) {
-						AI::CLEAR_PED_SECONDARY_TASK(surr_p_peds[i]);
-						//AI::CLEAR_PED_TASKS(surr_p_peds[i]);
-					}
+					if (!WEAPON::IS_PED_ARMED(playerPed, 7)) AI::CLEAR_PED_SECONDARY_TASK(surr_p_peds[i]);
 					if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(surr_p_peds[i], playerPed, 1)) {
 						temp_nearest_ped = surr_p_peds[i];
 					}
@@ -1761,6 +1758,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			} // end of int (vehicles)
 		}
 		if (temp_nearest_ped != -1) {
+			AUDIO::PLAY_SOUND_FROM_ENTITY(-1, "FIB3A_LAND_FROM_HEIGHT_MASTER", PLAYER::PLAYER_PED_ID(), 0, 0, 0);
 			PED::RESET_PED_MOVEMENT_CLIPSET(temp_nearest_ped, 0.0);
 			PED::SET_PED_CAN_RAGDOLL(temp_nearest_ped, true);
 			PED::SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(temp_nearest_ped, true);
@@ -1782,7 +1780,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 				WAIT(500);
 				AI::TASK_SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(surr_p_peds[i], true);
 				AI::CLEAR_PED_TASKS_IMMEDIATELY(surr_p_peds[i]);
-				AUDIO::PLAY_SOUND_FROM_ENTITY(-1, "FIB3A_LAND_FROM_HEIGHT_MASTER", PLAYER::PLAYER_PED_ID(), 0, 0, 0);
+				//AUDIO::PLAY_SOUND_FROM_ENTITY(-1, "FIB3A_LAND_FROM_HEIGHT_MASTER", PLAYER::PLAYER_PED_ID(), 0, 0, 0);
 			}
 		}
 		for (int i = 0; i < count_surr_v; i++) {
@@ -2380,7 +2378,7 @@ void add_weapon_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePunchFists", &featurePunchFists});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePunchMeleeWeapons", &featurePunchMeleeWeapons});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePunchFireWeapons", &featurePunchFireWeapons});
-	results->push_back(FeatureEnabledLocalDefinition{"featurepowerpunchpeds", &featurepowerpunchpeds});
+	//results->push_back(FeatureEnabledLocalDefinition{"featurepowerpunchpeds", &featurepowerpunchpeds});
 	results->push_back(FeatureEnabledLocalDefinition{"featureDriverAgainst", &featureDriverAgainst});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePoliceAgainst", &featurePoliceAgainst});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAimAtDriver", &featureAimAtDriver});
@@ -2399,7 +2397,7 @@ void add_weapon_feature_enablements2(std::vector<StringPairSettingDBRow>* result
 	results->push_back(StringPairSettingDBRow{ "ChanceAttackingYouIndex", std::to_string(ChanceAttackingYouIndex) });
 	results->push_back(StringPairSettingDBRow{ "SniperVisionIndex", std::to_string(SniperVisionIndex) });
 	results->push_back(StringPairSettingDBRow{ "PowerPunchIndex", std::to_string(PowerPunchIndex) });
-	results->push_back(StringPairSettingDBRow{ "PedsPowerPunchIndex", std::to_string(PedsPowerPunchIndex) });
+	//results->push_back(StringPairSettingDBRow{ "PedsPowerPunchIndex", std::to_string(PedsPowerPunchIndex) });
 	results->push_back(StringPairSettingDBRow{ "WeaponsFireModeIndex", std::to_string(WeaponsFireModeIndex) });
 }
 
@@ -2440,9 +2438,9 @@ void handle_generic_settings_weapons(std::vector<StringPairSettingDBRow>* settin
 		else if (setting.name.compare("PowerPunchIndex") == 0) {
 			PowerPunchIndex = stoi(setting.value);
 		}
-		else if (setting.name.compare("PedsPowerPunchIndex") == 0) {
-			PedsPowerPunchIndex = stoi(setting.value);
-		}
+		//else if (setting.name.compare("PedsPowerPunchIndex") == 0) {
+		//	PedsPowerPunchIndex = stoi(setting.value);
+		//}
 		else if (setting.name.compare("WeaponsFireModeIndex") == 0) {
 			WeaponsFireModeIndex = stoi(setting.value);
 		}
