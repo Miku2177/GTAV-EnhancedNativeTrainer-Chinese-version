@@ -1358,17 +1358,17 @@ void process_powerpunch_menu() {
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
-	listItem = new SelectFromListMenuItem(PEDS_POWERPUNCH_CAPTIONS, onchange_peds_power_punch_index);
-	listItem->wrap = false;
-	listItem->caption = "Including Peds";
-	listItem->value = PedsPowerPunchIndex;
-	menuItems.push_back(listItem);
+	//listItem = new SelectFromListMenuItem(PEDS_POWERPUNCH_CAPTIONS, onchange_peds_power_punch_index);
+	//listItem->wrap = false;
+	//listItem->caption = "Including Peds";
+	//listItem->value = PedsPowerPunchIndex;
+	//menuItems.push_back(listItem);
 
-	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Peds Can Power Punch Peds";
-	toggleItem->value = i++;
-	toggleItem->toggleValue = &featurepowerpunchpeds;
-	menuItems.push_back(toggleItem);
+	//toggleItem = new ToggleMenuItem<int>();
+	//toggleItem->caption = "Peds Can Power Punch Peds";
+	//toggleItem->value = i++;
+	//toggleItem->toggleValue = &featurepowerpunchpeds;
+	//menuItems.push_back(toggleItem);
 
 	draw_generic_menu<int>(menuItems, &activeLineIndexPowerPunchWeapons, caption, onconfirm_powerpunch_menu, NULL, NULL);
 }
