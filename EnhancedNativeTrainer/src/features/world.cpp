@@ -1271,21 +1271,29 @@ void update_world_features()
 				}
 				if (PED::GET_PED_ARMOUR(bus_ped[i]) > 0) {
 					if (!AUDIO::IS_AMBIENT_SPEECH_PLAYING(bus_ped[i])) AUDIO::_PLAY_AMBIENT_SPEECH1(bus_ped[i], "BLOCKED_GENERIC", "SPEECH_PARAMS_FORCE_SHOUTED");
-					if (bus_ped[i] != PLAYER::PLAYER_PED_ID() && acid_counter > 9) // PED::GET_PED_TYPE(bus_ped[i]) != 0 && PED::GET_PED_TYPE(bus_ped[i]) != 1 && PED::GET_PED_TYPE(bus_ped[i]) != 2 && PED::GET_PED_TYPE(bus_ped[i]) != 3
+					if (bus_ped[i] != PLAYER::PLAYER_PED_ID() && acid_counter > 9) {// PED::GET_PED_TYPE(bus_ped[i]) != 0 && PED::GET_PED_TYPE(bus_ped[i]) != 1 && PED::GET_PED_TYPE(bus_ped[i]) != 2 && PED::GET_PED_TYPE(bus_ped[i]) != 3
 						PED::SET_PED_ARMOUR(bus_ped[i], PED::GET_PED_ARMOUR(bus_ped[i]) - 1);
-					if (bus_ped[i] == PLAYER::PLAYER_PED_ID() && acid_counter_p > 10) // (PED::GET_PED_TYPE(bus_ped[i]) == 0 || PED::GET_PED_TYPE(bus_ped[i]) == 1 || PED::GET_PED_TYPE(bus_ped[i]) == 2 || PED::GET_PED_TYPE(bus_ped[i]) == 3)
+						acid_counter = 0;
+					}
+					if (bus_ped[i] == PLAYER::PLAYER_PED_ID() && acid_counter_p > 10) { // (PED::GET_PED_TYPE(bus_ped[i]) == 0 || PED::GET_PED_TYPE(bus_ped[i]) == 1 || PED::GET_PED_TYPE(bus_ped[i]) == 2 || PED::GET_PED_TYPE(bus_ped[i]) == 3)
 						PED::SET_PED_ARMOUR(bus_ped[i], PED::GET_PED_ARMOUR(bus_ped[i]) - 1);
-					if (bus_ped[i] != PLAYER::PLAYER_PED_ID() && acid_counter > 9) acid_counter = 0; // PED::GET_PED_TYPE(bus_ped[i]) != 0 && PED::GET_PED_TYPE(bus_ped[i]) != 1 && PED::GET_PED_TYPE(bus_ped[i]) != 2 && PED::GET_PED_TYPE(bus_ped[i]) != 3
-					if (bus_ped[i] == PLAYER::PLAYER_PED_ID() && acid_counter_p > 10) acid_counter_p = 0; // (PED::GET_PED_TYPE(bus_ped[i]) == 0 || PED::GET_PED_TYPE(bus_ped[i]) == 1 || PED::GET_PED_TYPE(bus_ped[i]) == 2 || PED::GET_PED_TYPE(bus_ped[i]) == 3)
+						acid_counter_p = 0;
+					}
+					//if (bus_ped[i] != PLAYER::PLAYER_PED_ID() && acid_counter > 9) acid_counter = 0; // PED::GET_PED_TYPE(bus_ped[i]) != 0 && PED::GET_PED_TYPE(bus_ped[i]) != 1 && PED::GET_PED_TYPE(bus_ped[i]) != 2 && PED::GET_PED_TYPE(bus_ped[i]) != 3
+					//if (bus_ped[i] == PLAYER::PLAYER_PED_ID() && acid_counter_p > 10) acid_counter_p = 0; // (PED::GET_PED_TYPE(bus_ped[i]) == 0 || PED::GET_PED_TYPE(bus_ped[i]) == 1 || PED::GET_PED_TYPE(bus_ped[i]) == 2 || PED::GET_PED_TYPE(bus_ped[i]) == 3)
 				}
 				if (ENTITY::GET_ENTITY_HEALTH(bus_ped[i]) > 0 && PED::GET_PED_ARMOUR(bus_ped[i]) < 1) {
 					if (!AUDIO::IS_AMBIENT_SPEECH_PLAYING(bus_ped[i])) AUDIO::_PLAY_AMBIENT_SPEECH1(bus_ped[i], "BLOCKED_GENERIC", "SPEECH_PARAMS_FORCE_SHOUTED");
-					if (bus_ped[i] != PLAYER::PLAYER_PED_ID() && acid_counter > 4) // PED::GET_PED_TYPE(bus_ped[i]) != 0 && PED::GET_PED_TYPE(bus_ped[i]) != 1 && PED::GET_PED_TYPE(bus_ped[i]) != 2 && PED::GET_PED_TYPE(bus_ped[i]) != 3
+					if (bus_ped[i] != PLAYER::PLAYER_PED_ID() && acid_counter > 4) { // PED::GET_PED_TYPE(bus_ped[i]) != 0 && PED::GET_PED_TYPE(bus_ped[i]) != 1 && PED::GET_PED_TYPE(bus_ped[i]) != 2 && PED::GET_PED_TYPE(bus_ped[i]) != 3
 						ENTITY::SET_ENTITY_HEALTH(bus_ped[i], ENTITY::GET_ENTITY_HEALTH(bus_ped[i]) - 1);
-					if (bus_ped[i] == PLAYER::PLAYER_PED_ID() && acid_counter_p > 5) // (PED::GET_PED_TYPE(bus_ped[i]) == 0 || PED::GET_PED_TYPE(bus_ped[i]) == 1 || PED::GET_PED_TYPE(bus_ped[i]) == 2 || PED::GET_PED_TYPE(bus_ped[i]) == 3)
+						acid_counter = 0;
+					}
+					if (bus_ped[i] == PLAYER::PLAYER_PED_ID() && acid_counter_p > 5) { // (PED::GET_PED_TYPE(bus_ped[i]) == 0 || PED::GET_PED_TYPE(bus_ped[i]) == 1 || PED::GET_PED_TYPE(bus_ped[i]) == 2 || PED::GET_PED_TYPE(bus_ped[i]) == 3)
 						ENTITY::SET_ENTITY_HEALTH(bus_ped[i], ENTITY::GET_ENTITY_HEALTH(bus_ped[i]) - 1);
-					if (bus_ped[i] != PLAYER::PLAYER_PED_ID() && acid_counter > 4) acid_counter = 0; // PED::GET_PED_TYPE(bus_ped[i]) != 0 && PED::GET_PED_TYPE(bus_ped[i]) != 1 && PED::GET_PED_TYPE(bus_ped[i]) != 2 && PED::GET_PED_TYPE(bus_ped[i]) != 3
-					if (bus_ped[i] == PLAYER::PLAYER_PED_ID() && acid_counter_p > 5) acid_counter_p = 0; // (PED::GET_PED_TYPE(bus_ped[i]) == 0 || PED::GET_PED_TYPE(bus_ped[i]) == 1 || PED::GET_PED_TYPE(bus_ped[i]) == 2 || PED::GET_PED_TYPE(bus_ped[i]) == 3)
+						acid_counter_p = 0;
+					}
+					//if (bus_ped[i] != PLAYER::PLAYER_PED_ID() && acid_counter > 4) acid_counter = 0; // PED::GET_PED_TYPE(bus_ped[i]) != 0 && PED::GET_PED_TYPE(bus_ped[i]) != 1 && PED::GET_PED_TYPE(bus_ped[i]) != 2 && PED::GET_PED_TYPE(bus_ped[i]) != 3
+					//if (bus_ped[i] == PLAYER::PLAYER_PED_ID() && acid_counter_p > 5) acid_counter_p = 0; // (PED::GET_PED_TYPE(bus_ped[i]) == 0 || PED::GET_PED_TYPE(bus_ped[i]) == 1 || PED::GET_PED_TYPE(bus_ped[i]) == 2 || PED::GET_PED_TYPE(bus_ped[i]) == 3)
 				}
 			}
 			if (featureAcidRain) {
@@ -1316,27 +1324,35 @@ void update_world_features()
 					}
 					if (PED::GET_PED_ARMOUR(bus_ped[i]) > 0) {
 						if (!AUDIO::IS_AMBIENT_SPEECH_PLAYING(bus_ped[i])) AUDIO::_PLAY_AMBIENT_SPEECH1(bus_ped[i], "BLOCKED_GENERIC", "SPEECH_PARAMS_FORCE_SHOUTED");
-						if (bus_ped[i] != PLAYER::PLAYER_PED_ID() && acid_counter > 15) // PED::GET_PED_TYPE(bus_ped[i]) != 0 && PED::GET_PED_TYPE(bus_ped[i]) != 1 && PED::GET_PED_TYPE(bus_ped[i]) != 2 && PED::GET_PED_TYPE(bus_ped[i]) != 3
+						if (bus_ped[i] != PLAYER::PLAYER_PED_ID() && acid_counter > 15) { // PED::GET_PED_TYPE(bus_ped[i]) != 0 && PED::GET_PED_TYPE(bus_ped[i]) != 1 && PED::GET_PED_TYPE(bus_ped[i]) != 2 && PED::GET_PED_TYPE(bus_ped[i]) != 3
 							PED::SET_PED_ARMOUR(bus_ped[i], PED::GET_PED_ARMOUR(bus_ped[i]) - 1);
-						if (bus_ped[i] == PLAYER::PLAYER_PED_ID() && acid_counter_p > 30) // (PED::GET_PED_TYPE(bus_ped[i]) == 0 || PED::GET_PED_TYPE(bus_ped[i]) == 1 || PED::GET_PED_TYPE(bus_ped[i]) == 2 || PED::GET_PED_TYPE(bus_ped[i]) == 3)
+							acid_counter = 0;
+						}
+						if (bus_ped[i] == PLAYER::PLAYER_PED_ID() && acid_counter_p > 30) { // (PED::GET_PED_TYPE(bus_ped[i]) == 0 || PED::GET_PED_TYPE(bus_ped[i]) == 1 || PED::GET_PED_TYPE(bus_ped[i]) == 2 || PED::GET_PED_TYPE(bus_ped[i]) == 3)
 							PED::SET_PED_ARMOUR(bus_ped[i], PED::GET_PED_ARMOUR(bus_ped[i]) - 1);
-						if (bus_ped[i] != PLAYER::PLAYER_PED_ID() && acid_counter > 15) acid_counter = 0; // PED::GET_PED_TYPE(bus_ped[i]) != 0 && PED::GET_PED_TYPE(bus_ped[i]) != 1 && PED::GET_PED_TYPE(bus_ped[i]) != 2 && PED::GET_PED_TYPE(bus_ped[i]) != 3
-						if (bus_ped[i] == PLAYER::PLAYER_PED_ID() && acid_counter_p > 30) acid_counter_p = 0; // (PED::GET_PED_TYPE(bus_ped[i]) == 0 || PED::GET_PED_TYPE(bus_ped[i]) == 1 || PED::GET_PED_TYPE(bus_ped[i]) == 2 || PED::GET_PED_TYPE(bus_ped[i]) == 3)
+							acid_counter_p = 0;
+						}
+						//if (bus_ped[i] != PLAYER::PLAYER_PED_ID() && acid_counter > 15) acid_counter = 0; // PED::GET_PED_TYPE(bus_ped[i]) != 0 && PED::GET_PED_TYPE(bus_ped[i]) != 1 && PED::GET_PED_TYPE(bus_ped[i]) != 2 && PED::GET_PED_TYPE(bus_ped[i]) != 3
+						//if (bus_ped[i] == PLAYER::PLAYER_PED_ID() && acid_counter_p > 30) acid_counter_p = 0; // (PED::GET_PED_TYPE(bus_ped[i]) == 0 || PED::GET_PED_TYPE(bus_ped[i]) == 1 || PED::GET_PED_TYPE(bus_ped[i]) == 2 || PED::GET_PED_TYPE(bus_ped[i]) == 3)
 					}
 					if (ENTITY::GET_ENTITY_HEALTH(bus_ped[i]) > 0 && PED::GET_PED_ARMOUR(bus_ped[i]) < 1) {
 						if (!AUDIO::IS_AMBIENT_SPEECH_PLAYING(bus_ped[i])) AUDIO::_PLAY_AMBIENT_SPEECH1(bus_ped[i], "BLOCKED_GENERIC", "SPEECH_PARAMS_FORCE_SHOUTED");
-						if (bus_ped[i] != PLAYER::PLAYER_PED_ID() && acid_counter > 6) // PED::GET_PED_TYPE(bus_ped[i]) != 0 && PED::GET_PED_TYPE(bus_ped[i]) != 1 && PED::GET_PED_TYPE(bus_ped[i]) != 2 && PED::GET_PED_TYPE(bus_ped[i]) != 3
+						if (bus_ped[i] != PLAYER::PLAYER_PED_ID() && acid_counter > 6) { // PED::GET_PED_TYPE(bus_ped[i]) != 0 && PED::GET_PED_TYPE(bus_ped[i]) != 1 && PED::GET_PED_TYPE(bus_ped[i]) != 2 && PED::GET_PED_TYPE(bus_ped[i]) != 3
 							ENTITY::SET_ENTITY_HEALTH(bus_ped[i], ENTITY::GET_ENTITY_HEALTH(bus_ped[i]) - 1);
-						if (bus_ped[i] == PLAYER::PLAYER_PED_ID() && acid_counter_p > 10) // (PED::GET_PED_TYPE(bus_ped[i]) == 0 || PED::GET_PED_TYPE(bus_ped[i]) == 1 || PED::GET_PED_TYPE(bus_ped[i]) == 2 || PED::GET_PED_TYPE(bus_ped[i]) == 3)
+							acid_counter = 0;
+						}
+						if (bus_ped[i] == PLAYER::PLAYER_PED_ID() && acid_counter_p > 10) { // (PED::GET_PED_TYPE(bus_ped[i]) == 0 || PED::GET_PED_TYPE(bus_ped[i]) == 1 || PED::GET_PED_TYPE(bus_ped[i]) == 2 || PED::GET_PED_TYPE(bus_ped[i]) == 3)
 							ENTITY::SET_ENTITY_HEALTH(bus_ped[i], ENTITY::GET_ENTITY_HEALTH(bus_ped[i]) - 1);
-						if (bus_ped[i] != PLAYER::PLAYER_PED_ID() && acid_counter > 6) acid_counter = 0; // PED::GET_PED_TYPE(bus_ped[i]) != 0 && PED::GET_PED_TYPE(bus_ped[i]) != 1 && PED::GET_PED_TYPE(bus_ped[i]) != 2 && PED::GET_PED_TYPE(bus_ped[i]) != 3
-						if (bus_ped[i] == PLAYER::PLAYER_PED_ID() && acid_counter_p > 10) acid_counter_p = 0; // (PED::GET_PED_TYPE(bus_ped[i]) == 0 || PED::GET_PED_TYPE(bus_ped[i]) == 1 || PED::GET_PED_TYPE(bus_ped[i]) == 2 || PED::GET_PED_TYPE(bus_ped[i]) == 3)
+							acid_counter_p = 0;
+						}
+						//if (bus_ped[i] != PLAYER::PLAYER_PED_ID() && acid_counter > 6) acid_counter = 0; // PED::GET_PED_TYPE(bus_ped[i]) != 0 && PED::GET_PED_TYPE(bus_ped[i]) != 1 && PED::GET_PED_TYPE(bus_ped[i]) != 2 && PED::GET_PED_TYPE(bus_ped[i]) != 3
+						//if (bus_ped[i] == PLAYER::PLAYER_PED_ID() && acid_counter_p > 10) acid_counter_p = 0; // (PED::GET_PED_TYPE(bus_ped[i]) == 0 || PED::GET_PED_TYPE(bus_ped[i]) == 1 || PED::GET_PED_TYPE(bus_ped[i]) == 2 || PED::GET_PED_TYPE(bus_ped[i]) == 3)
 					}
 				}
 			}
 		}
 	}
-
+	
 	// Wind Strength
 	if (windstrength_toggle == false) {
 		GAMEPLAY::SET_WIND(WORLD_WIND_STRENGTH_VALUES[WindStrengthIndex]);

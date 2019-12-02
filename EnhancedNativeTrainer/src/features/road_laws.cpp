@@ -335,7 +335,7 @@ void road_laws()
 		for (int i = 0; i < count_laws; i++) {
 			// Vehicle Collided
 			if (featureCarCollision) {
-				if (PED::GET_PED_TYPE(vehicles_laws[i]) != 0 && PED::GET_PED_TYPE(vehicles_laws[i]) != 1 && PED::GET_PED_TYPE(vehicles_laws[i]) != 2 && PED::GET_PED_TYPE(vehicles_laws[i]) != 3) {
+				if (vehicles_laws[i] != playerPed) { // PED::GET_PED_TYPE(vehicles_laws[i]) != 0 && PED::GET_PED_TYPE(vehicles_laws[i]) != 1 && PED::GET_PED_TYPE(vehicles_laws[i]) != 2 && PED::GET_PED_TYPE(vehicles_laws[i]) != 3
 					veh_collided_with = PED::GET_VEHICLE_PED_IS_IN(vehicles_laws[i], false);
 					veh_collided_with_coords = ENTITY::GET_ENTITY_COORDS(veh_collided_with, true);
 				}
