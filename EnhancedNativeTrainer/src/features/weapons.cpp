@@ -1733,7 +1733,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			PLAYER::SET_PLAYER_VEHICLE_DAMAGE_MODIFIER(playerPed, 1000.0);
 
 			for (int i = 0; i < count_surr_p_peds; i++) {
-				if (PED::GET_PED_TYPE(surr_p_peds[i]) != 0 && PED::GET_PED_TYPE(surr_p_peds[i]) != 1 && PED::GET_PED_TYPE(surr_p_peds[i]) != 2 && PED::GET_PED_TYPE(surr_p_peds[i]) != 3 && !PED::IS_PED_IN_MELEE_COMBAT(surr_p_peds[i])) {
+				if (surr_p_peds[i] != playerPed && !PED::IS_PED_IN_MELEE_COMBAT(surr_p_peds[i])) { // PED::GET_PED_TYPE(surr_p_peds[i]) != 0 && PED::GET_PED_TYPE(surr_p_peds[i]) != 1 && PED::GET_PED_TYPE(surr_p_peds[i]) != 2 && PED::GET_PED_TYPE(surr_p_peds[i]) != 3
 					if (!WEAPON::IS_PED_ARMED(playerPed, 7)) AI::CLEAR_PED_SECONDARY_TASK(surr_p_peds[i]);
 					if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(surr_p_peds[i], playerPed, 1)) {
 						temp_nearest_ped = surr_p_peds[i];
@@ -1776,7 +1776,8 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		for (int i = 0; i < count_surr_p_peds; i++) {
 			PED::CLEAR_PED_LAST_DAMAGE_BONE(surr_p_peds[i]);
 			ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(surr_p_peds[i]);
-			if (surr_p_peds[i] != playerPed && PED::GET_PED_TYPE(surr_p_peds[i]) != 6 && PED::GET_PED_TYPE(surr_p_peds[i]) != 27 && PED::GET_PED_TYPE(surr_p_peds[i]) != 29 && PED::IS_PED_IN_MELEE_COMBAT(surr_p_peds[i])) {
+			if (surr_p_peds[i] != playerPed && PED::GET_PED_TYPE(surr_p_peds[i]) != 6 && PED::GET_PED_TYPE(surr_p_peds[i]) != 27 && PED::GET_PED_TYPE(surr_p_peds[i]) != 29 && PED::IS_PED_IN_MELEE_COMBAT(surr_p_peds[i]) 
+				/*&& PED::IS_PED_IN_MELEE_COMBAT(playerPed) && force_nearest_ped == true*/) {
 				WAIT(500);
 				AI::TASK_SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(surr_p_peds[i], true);
 				AI::CLEAR_PED_TASKS_IMMEDIATELY(surr_p_peds[i]);

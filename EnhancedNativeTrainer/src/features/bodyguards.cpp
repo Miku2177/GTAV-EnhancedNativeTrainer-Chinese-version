@@ -457,8 +457,7 @@ void do_spawn_bodyguard(){
 			float dist_diff = -1.0;
 			float temp_dist = 20.0;
 			for (int i = 0; i < count_surr_peds; i++) {
-				if (PED::GET_PED_TYPE(surr_peds[i]) != 0 && PED::GET_PED_TYPE(surr_peds[i]) != 1 && PED::GET_PED_TYPE(surr_peds[i]) != 2 &&
-					PED::GET_PED_TYPE(surr_peds[i]) != 3) {
+				if (surr_peds[i] != PLAYER::PLAYER_PED_ID()) { // PED::GET_PED_TYPE(surr_peds[i]) != 0 && PED::GET_PED_TYPE(surr_peds[i]) != 1 && PED::GET_PED_TYPE(surr_peds[i]) != 2 && PED::GET_PED_TYPE(surr_peds[i]) != 3
 					Vector3 coordsped = ENTITY::GET_ENTITY_COORDS(surr_peds[i], true);
 					dist_diff = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsped.x, coordsped.y, coordsped.z);
 					exist_already = false;
