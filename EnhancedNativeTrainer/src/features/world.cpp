@@ -67,6 +67,7 @@ bool featureZancudoMapUpdated = false;
 bool featureBusLight = false;
 bool featureAcidWater = false;
 bool featureAcidRain = false;
+bool featureFreeroamActivities = false;
 bool featureReducedGripVehiclesIfSnow = false;
 
 bool police_blips_toogle = false;
@@ -619,6 +620,12 @@ void process_world_menu()
 	listItem->value = featureLightIntensityIndex;
 	menuItems.push_back(listItem);
 
+	togItem = new ToggleMenuItem<int>();
+	togItem->caption = "No Freeroam Activities";
+	togItem->value = 1;
+	togItem->toggleValue = &featureFreeroamActivities;
+	menuItems.push_back(togItem);
+
 	draw_generic_menu<int>(menuItems, &activeLineIndexWorld, caption, onconfirm_world_menu, NULL, NULL);
 }
 
@@ -663,6 +670,7 @@ void reset_world_globals()
 	featureBusLight = false;
 	featureAcidWater = false;
 	featureAcidRain = false;
+	featureFreeroamActivities = false;
 	featureReducedGripVehiclesIfSnow = false;
 	featureBlackout = false;
 	featureSnow = false;
@@ -1353,6 +1361,53 @@ void update_world_features()
 		}
 	}
 	
+	// No Freeroam Activities
+	if (featureFreeroamActivities) {
+		GAMEPLAY::SET_THIS_SCRIPT_CAN_REMOVE_BLIPS_CREATED_BY_ANY_SCRIPT(true);
+		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("launcher_BasejumpHeli");
+		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("launcher_BasejumpPack");
+		int blipIterator = BlipSpriteBaseJump;
+		for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) UI::REMOVE_BLIP(&i);
+		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("launcher_darts");
+		blipIterator = BlipSpriteDart;
+		for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) UI::REMOVE_BLIP(&i);
+		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("launcher_golf");
+		blipIterator = BlipSpriteGolf;
+		for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) UI::REMOVE_BLIP(&i);
+		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("launcher_Hunting_Ambient");
+		blipIterator = BlipSpriteHunting;
+		for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) UI::REMOVE_BLIP(&i);
+		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("launcher_pilotschool");
+		blipIterator = BlipSpriteAirport;
+		for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) UI::REMOVE_BLIP(&i);
+		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("launcher_rampage");
+		blipIterator = BlipSpriteRampage;
+		for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) UI::REMOVE_BLIP(&i);
+		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("launcher_range");
+		blipIterator = BlipSpriteYoga;
+		for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) UI::REMOVE_BLIP(&i);
+		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("launcher_tennis");
+		blipIterator = BlipSpriteTennis;
+		for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) UI::REMOVE_BLIP(&i);
+		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("launcher_Triathlon");
+		blipIterator = BlipSpriteTriathlon;
+		for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) UI::REMOVE_BLIP(&i);
+		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("launcher_Yoga");
+		blipIterator = BlipSpriteAmmuNationShootingRange;
+		for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) UI::REMOVE_BLIP(&i);
+		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("launcher_OffroadRacing");
+		blipIterator = BlipSpriteOffRoadRaceFinish;
+		for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) UI::REMOVE_BLIP(&i);
+		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("launcher_Racing");
+		blipIterator = BlipSpriteRace;
+		for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) UI::REMOVE_BLIP(&i);
+		blipIterator = BlipSpriteRaceSea;
+		for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) UI::REMOVE_BLIP(&i);
+		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("launcher_stunts");
+		blipIterator = BlipSpriteRaceAir;
+		for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) UI::REMOVE_BLIP(&i);
+	}
+
 	// Wind Strength
 	if (windstrength_toggle == false) {
 		GAMEPLAY::SET_WIND(WORLD_WIND_STRENGTH_VALUES[WindStrengthIndex]);
@@ -1596,6 +1651,7 @@ void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* r
 	results->push_back(FeatureEnabledLocalDefinition{ "featureBusLight", &featureBusLight }); 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureAcidWater", &featureAcidWater }); 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureAcidRain", &featureAcidRain }); 
+	results->push_back(FeatureEnabledLocalDefinition{ "featureFreeroamActivities", &featureFreeroamActivities });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureReducedGripVehiclesIfSnow", &featureReducedGripVehiclesIfSnow }); 
 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureSnow", &featureSnow, &featureSnowUpdated });
