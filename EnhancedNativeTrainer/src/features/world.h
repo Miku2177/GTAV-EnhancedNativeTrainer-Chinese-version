@@ -56,6 +56,8 @@ void onchange_world_reducedgrip_raining_index(int value, SelectFromListMenuItem*
 
 void onchange_world_headlights_blackout_index(int value, SelectFromListMenuItem* source);
 
+void onchange_freeroam_activities_index(int value, SelectFromListMenuItem* source);
+
 void onchange_world_train_speed_index(int value, SelectFromListMenuItem* source);
 
 //void onchange_world_damaged_vehicles_index(int value, SelectFromListMenuItem* source);

@@ -67,7 +67,7 @@ bool featureZancudoMapUpdated = false;
 bool featureBusLight = false;
 bool featureAcidWater = false;
 bool featureAcidRain = false;
-bool featureFreeroamActivities = false;
+//bool featureFreeroamActivities = false;
 bool featureReducedGripVehiclesIfSnow = false;
 
 bool police_blips_toogle = false;
@@ -147,6 +147,12 @@ const std::vector<std::string> WORLD_TRAIN_SPEED_CAPTIONS{ "OFF", "0.0", "5.0", 
 const float WORLD_TRAIN_SPEED_VALUES[] = { -1.0, 0.0, 5.0, 15.0, 30.0, 60.0, 80.0, 130.0, 200.0, 300.0 };
 int TrainSpeedIndex = 0;
 bool TrainSpeedChanged = true;
+
+// No Freeroam Activities
+const std::vector<std::string> WORLD_FREEROAM_ACTIVITIES_CAPTIONS{ "OFF", "Base Jumps", "Races", "Darts", "Golf", "Hunting", "Pilot School", "Shooting Range", "Tennis", "Triathlon", "Yoga", "ALL" };
+const int WORLD_FREEROAM_ACTIVITIES_VALUES[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
+int featureFreeroamActivitiesIndex = 0;
+bool featureFreeroamActivitiesChanged = true;
 
 void map_size_hotkey() {
 	RadarMapIndex = RadarMapIndex + 1;
@@ -346,6 +352,11 @@ void onchange_world_wind_strength_index(int value, SelectFromListMenuItem* sourc
 void onchange_world_headlights_blackout_index(int value, SelectFromListMenuItem* source) {
 	featureLightsBlackoutIndex = value;
 	featureLightsBlackoutChanged = true;
+}
+
+void onchange_freeroam_activities_index(int value, SelectFromListMenuItem* source) {
+	featureFreeroamActivitiesIndex = value;
+	featureFreeroamActivitiesChanged = true;
 }
 
 void onchange_world_train_speed_index(int value, SelectFromListMenuItem* source) {
@@ -620,11 +631,17 @@ void process_world_menu()
 	listItem->value = featureLightIntensityIndex;
 	menuItems.push_back(listItem);
 
-	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "No Freeroam Activities";
-	togItem->value = 1;
-	togItem->toggleValue = &featureFreeroamActivities;
-	menuItems.push_back(togItem);
+	//togItem = new ToggleMenuItem<int>();
+	//togItem->caption = "No Freeroam Activities";
+	//togItem->value = 1;
+	//togItem->toggleValue = &featureFreeroamActivities;
+	//menuItems.push_back(togItem);
+
+	listItem = new SelectFromListMenuItem(WORLD_FREEROAM_ACTIVITIES_CAPTIONS, onchange_freeroam_activities_index);
+	listItem->wrap = false;
+	listItem->caption = "No Freeroam Activities";
+	listItem->value = featureFreeroamActivitiesIndex;
+	menuItems.push_back(listItem);
 
 	draw_generic_menu<int>(menuItems, &activeLineIndexWorld, caption, onconfirm_world_menu, NULL, NULL);
 }
@@ -642,6 +659,7 @@ void reset_world_globals()
 	RadarReducedGripRainingIndex = 0;
 	NoPedsGravityIndex = 0;
 	featureLightsBlackoutIndex = 0;
+	featureFreeroamActivitiesIndex = 0;
 	TrainSpeedIndex = 0;
 	WindStrengthIndex = 0;
 	lastWeather.clear();
@@ -670,7 +688,7 @@ void reset_world_globals()
 	featureBusLight = false;
 	featureAcidWater = false;
 	featureAcidRain = false;
-	featureFreeroamActivities = false;
+	//featureFreeroamActivities = false;
 	featureReducedGripVehiclesIfSnow = false;
 	featureBlackout = false;
 	featureSnow = false;
@@ -1362,50 +1380,72 @@ void update_world_features()
 	}
 	
 	// No Freeroam Activities
-	if (featureFreeroamActivities) {
+	if (WORLD_FREEROAM_ACTIVITIES_VALUES[featureFreeroamActivitiesIndex] > 0) {
+	//if (featureFreeroamActivities) {
+		int blipIterator = -1;
 		GAMEPLAY::SET_THIS_SCRIPT_CAN_REMOVE_BLIPS_CREATED_BY_ANY_SCRIPT(true);
-		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("launcher_BasejumpHeli");
-		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("launcher_BasejumpPack");
-		int blipIterator = BlipSpriteBaseJump;
-		for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) UI::REMOVE_BLIP(&i);
-		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("launcher_darts");
-		blipIterator = BlipSpriteDart;
-		for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) UI::REMOVE_BLIP(&i);
-		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("launcher_golf");
-		blipIterator = BlipSpriteGolf;
-		for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) UI::REMOVE_BLIP(&i);
-		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("launcher_Hunting_Ambient");
-		blipIterator = BlipSpriteHunting;
-		for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) UI::REMOVE_BLIP(&i);
-		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("launcher_pilotschool");
-		blipIterator = BlipSpriteAirport;
-		for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) UI::REMOVE_BLIP(&i);
-		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("launcher_rampage");
-		blipIterator = BlipSpriteRampage;
-		for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) UI::REMOVE_BLIP(&i);
-		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("launcher_range");
-		blipIterator = BlipSpriteYoga;
-		for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) UI::REMOVE_BLIP(&i);
-		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("launcher_tennis");
-		blipIterator = BlipSpriteTennis;
-		for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) UI::REMOVE_BLIP(&i);
-		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("launcher_Triathlon");
-		blipIterator = BlipSpriteTriathlon;
-		for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) UI::REMOVE_BLIP(&i);
-		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("launcher_Yoga");
-		blipIterator = BlipSpriteAmmuNationShootingRange;
-		for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) UI::REMOVE_BLIP(&i);
-		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("launcher_OffroadRacing");
-		blipIterator = BlipSpriteOffRoadRaceFinish;
-		for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) UI::REMOVE_BLIP(&i);
-		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("launcher_Racing");
-		blipIterator = BlipSpriteRace;
-		for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) UI::REMOVE_BLIP(&i);
-		blipIterator = BlipSpriteRaceSea;
-		for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) UI::REMOVE_BLIP(&i);
-		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("launcher_stunts");
-		blipIterator = BlipSpriteRaceAir;
-		for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) UI::REMOVE_BLIP(&i);
+		if (WORLD_FREEROAM_ACTIVITIES_VALUES[featureFreeroamActivitiesIndex] == 1 || WORLD_FREEROAM_ACTIVITIES_VALUES[featureFreeroamActivitiesIndex] == 11) {
+			GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("launcher_BasejumpHeli");
+			GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("launcher_BasejumpPack");
+			blipIterator = BlipSpriteBaseJump;
+			for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) UI::REMOVE_BLIP(&i);
+		}
+		if (WORLD_FREEROAM_ACTIVITIES_VALUES[featureFreeroamActivitiesIndex] == 2 || WORLD_FREEROAM_ACTIVITIES_VALUES[featureFreeroamActivitiesIndex] == 11) {
+			GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("launcher_OffroadRacing");
+			blipIterator = BlipSpriteOffRoadRaceFinish;
+			for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) UI::REMOVE_BLIP(&i);
+			GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("launcher_Racing");
+			blipIterator = BlipSpriteRace;
+			for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) UI::REMOVE_BLIP(&i);
+			blipIterator = BlipSpriteRaceSea;
+			for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) UI::REMOVE_BLIP(&i);
+			GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("launcher_stunts");
+			blipIterator = BlipSpriteRaceAir;
+			for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) UI::REMOVE_BLIP(&i);
+		}
+		if (WORLD_FREEROAM_ACTIVITIES_VALUES[featureFreeroamActivitiesIndex] == 3 || WORLD_FREEROAM_ACTIVITIES_VALUES[featureFreeroamActivitiesIndex] == 11) {
+			GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("launcher_darts");
+			blipIterator = BlipSpriteDart;
+			for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) UI::REMOVE_BLIP(&i);
+		}
+		if (WORLD_FREEROAM_ACTIVITIES_VALUES[featureFreeroamActivitiesIndex] == 4 || WORLD_FREEROAM_ACTIVITIES_VALUES[featureFreeroamActivitiesIndex] == 11) {
+			GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("launcher_golf");
+			blipIterator = BlipSpriteGolf;
+			for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) UI::REMOVE_BLIP(&i);
+		}
+		if (WORLD_FREEROAM_ACTIVITIES_VALUES[featureFreeroamActivitiesIndex] == 5 || WORLD_FREEROAM_ACTIVITIES_VALUES[featureFreeroamActivitiesIndex] == 11) {
+			GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("launcher_Hunting_Ambient");
+			blipIterator = BlipSpriteHunting;
+			for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) UI::REMOVE_BLIP(&i);
+		}
+		if (WORLD_FREEROAM_ACTIVITIES_VALUES[featureFreeroamActivitiesIndex] == 6 || WORLD_FREEROAM_ACTIVITIES_VALUES[featureFreeroamActivitiesIndex] == 11) {
+			GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("launcher_pilotschool");
+			blipIterator = BlipSpriteAirport;
+			for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) UI::REMOVE_BLIP(&i);
+		}
+		//GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("launcher_rampage");
+		//blipIterator = BlipSpriteRampage;
+		//for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) UI::REMOVE_BLIP(&i);
+		if (WORLD_FREEROAM_ACTIVITIES_VALUES[featureFreeroamActivitiesIndex] == 7 || WORLD_FREEROAM_ACTIVITIES_VALUES[featureFreeroamActivitiesIndex] == 11) {
+			GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("launcher_range");
+			blipIterator = BlipSpriteAmmuNationShootingRange;
+			for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) UI::REMOVE_BLIP(&i);
+		}
+		if (WORLD_FREEROAM_ACTIVITIES_VALUES[featureFreeroamActivitiesIndex] == 8 || WORLD_FREEROAM_ACTIVITIES_VALUES[featureFreeroamActivitiesIndex] == 11) {
+			GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("launcher_tennis");
+			blipIterator = BlipSpriteTennis;
+			for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) UI::REMOVE_BLIP(&i);
+		}
+		if (WORLD_FREEROAM_ACTIVITIES_VALUES[featureFreeroamActivitiesIndex] == 9 || WORLD_FREEROAM_ACTIVITIES_VALUES[featureFreeroamActivitiesIndex] == 11) {
+			GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("launcher_Triathlon");
+			blipIterator = BlipSpriteTriathlon;
+			for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) UI::REMOVE_BLIP(&i);
+		}
+		if (WORLD_FREEROAM_ACTIVITIES_VALUES[featureFreeroamActivitiesIndex] == 10 || WORLD_FREEROAM_ACTIVITIES_VALUES[featureFreeroamActivitiesIndex] == 11) {
+			GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("launcher_Yoga");
+			blipIterator = BlipSpriteYoga;
+			for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) UI::REMOVE_BLIP(&i);
+		}
 	}
 
 	// Wind Strength
@@ -1651,7 +1691,7 @@ void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* r
 	results->push_back(FeatureEnabledLocalDefinition{ "featureBusLight", &featureBusLight }); 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureAcidWater", &featureAcidWater }); 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureAcidRain", &featureAcidRain }); 
-	results->push_back(FeatureEnabledLocalDefinition{ "featureFreeroamActivities", &featureFreeroamActivities });
+	//results->push_back(FeatureEnabledLocalDefinition{ "featureFreeroamActivities", &featureFreeroamActivities });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureReducedGripVehiclesIfSnow", &featureReducedGripVehiclesIfSnow }); 
 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureSnow", &featureSnow, &featureSnowUpdated });
@@ -1680,6 +1720,7 @@ void add_world_feature_enablements2(std::vector<StringPairSettingDBRow>* results
 	results->push_back(StringPairSettingDBRow{ "RadarReducedGripRainingIndex", std::to_string(RadarReducedGripRainingIndex) });
 	results->push_back(StringPairSettingDBRow{ "NoPedsGravityIndex", std::to_string(NoPedsGravityIndex) });
 	results->push_back(StringPairSettingDBRow{ "featureLightsBlackoutIndex", std::to_string(featureLightsBlackoutIndex) });
+	results->push_back(StringPairSettingDBRow{ "featureFreeroamActivitiesIndex", std::to_string(featureFreeroamActivitiesIndex) });
 	results->push_back(StringPairSettingDBRow{ "TrainSpeedIndex", std::to_string(TrainSpeedIndex) });
 }
 
@@ -1739,6 +1780,9 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 		}
 		else if (setting.name.compare("featureLightsBlackoutIndex") == 0) {
 			featureLightsBlackoutIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("featureFreeroamActivitiesIndex") == 0) {
+			featureFreeroamActivitiesIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("TrainSpeedIndex") == 0) {
 			TrainSpeedIndex = stoi(setting.value);
