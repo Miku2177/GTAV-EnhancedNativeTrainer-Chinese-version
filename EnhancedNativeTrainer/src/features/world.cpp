@@ -41,6 +41,8 @@ Ped temp_ped_s = -1;
 
 int slippery_s, slippery_r = 0;
 
+int winter_water_tick = 0;
+
 bool featureRestrictedZones = true;
 
 bool featureWorldMoonGravity = false;
@@ -899,7 +901,12 @@ void update_world_features()
 	}
 	
 	// Waves Intensity
-	if (featureSnow) GAMEPLAY::_0xC54A08C85AE4D410(3.0f);
+	if (featureSnow) {
+		winter_water_tick = winter_water_tick + 1;
+		if (winter_water_tick < 10000) GAMEPLAY::_0xC54A08C85AE4D410(3.0f);
+		if (winter_water_tick > 9999 && winter_water_tick < 10300) GAMEPLAY::_0xC54A08C85AE4D410(0.0f);
+		if (winter_water_tick > 10299) winter_water_tick = 0;
+	}
 	if (WORLD_WAVES_VALUES[WorldWavesIndex] != -400000 && !featureSnow) GAMEPLAY::_0xC54A08C85AE4D410(0.0f);
 	if (WORLD_WAVES_VALUES[WorldWavesIndex] == -1 && wavesstrength_toggle == false) {
 		WATER::_RESET_WAVES_INTENSITY();
