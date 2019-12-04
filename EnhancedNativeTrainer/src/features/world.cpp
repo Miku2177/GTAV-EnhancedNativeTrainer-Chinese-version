@@ -901,11 +901,13 @@ void update_world_features()
 	// Waves Intensity
 	if (WORLD_WAVES_VALUES[WorldWavesIndex] == -1 && wavesstrength_toggle == false) {
 		WATER::_RESET_WAVES_INTENSITY();
+		//GAMEPLAY::_0xC54A08C85AE4D410(0.0f);
 		wavesstrength_changed = WORLD_WAVES_VALUES[WorldWavesIndex];
 		wavesstrength_toggle = true; 
 	}
 	if (wavesstrength_changed != WORLD_WAVES_VALUES[WorldWavesIndex]) wavesstrength_toggle = false;
-	if (WORLD_WAVES_VALUES[WorldWavesIndex] != -1) WATER::_SET_WAVES_INTENSITY(WORLD_WAVES_VALUES[WorldWavesIndex]);
+	if (WORLD_WAVES_VALUES[WorldWavesIndex] != -1/* && WORLD_WAVES_VALUES[WorldWavesIndex] != -400000*/) WATER::_SET_WAVES_INTENSITY(WORLD_WAVES_VALUES[WorldWavesIndex]);
+	//if (WORLD_WAVES_VALUES[WorldWavesIndex] != -1 && WORLD_WAVES_VALUES[WorldWavesIndex] == -400000) GAMEPLAY::_0xC54A08C85AE4D410(1.0f);
 	
 	// Lightning Intensity
 	if (WORLD_LIGHTNING_INTENSITY_VALUES[featureLightIntensityIndex] > -2 && GAMEPLAY::GET_NEXT_WEATHER_TYPE_HASH_NAME() == 3061285535) {
@@ -1630,6 +1632,7 @@ void update_world_features()
 		{
 			EnableSnow(featureSnow);
 			EnableTracks(true, true, true, true);
+			GAMEPLAY::_0xC54A08C85AE4D410(3.0f);
 		}
 		else
 		{
