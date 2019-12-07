@@ -71,7 +71,7 @@ bool featurePlayerNoNoise = false;
 bool featurePlayerFastSwim = false;
 bool featurePlayerFastRun = false;
 bool featurePlayerRunApartments = false;
-bool featurePlayerSuperJump = false;
+//bool featurePlayerSuperJump = false;
 bool featurePlayerInvisible = false;
 bool featurePlayerInvisibleInVehicle = false;
 bool featurePlayerDrunk = false;
@@ -187,6 +187,8 @@ int current_player_movement = 0;
 bool current_player_movement_Changed = true; 
 int current_player_jumpfly = 0;
 bool current_player_jumpfly_Changed = true;
+int current_player_superjump = 0;
+bool current_player_superjump_Changed = true;
 
 /* Prop unblocker related code - will need to clean up later*/
 
@@ -248,6 +250,11 @@ void onchange_player_movement_mode(int value, SelectFromListMenuItem* source) {
 void onchange_player_jumpfly_mode(int value, SelectFromListMenuItem* source) {
 	current_player_jumpfly = value;
 	current_player_jumpfly_Changed = true;
+}
+
+void onchange_player_superjump_mode(int value, SelectFromListMenuItem* source) {
+	current_player_superjump = value;
+	current_player_superjump_Changed = true;
 }
 
 void onchange_NPC_ragdoll_mode(int value, SelectFromListMenuItem* source) {
@@ -1027,12 +1034,20 @@ void update_features(){
 	}
 
 	// player super jump
-	if(featurePlayerSuperJump){
+	if(PLAYER_MOVEMENT_VALUES[current_player_superjump] > 0.00) { // featurePlayerSuperJump
 		if(bPlayerExists){
+			float CamRot = ENTITY::_GET_ENTITY_PHYSICS_HEADING(playerPed);
+			int p_force = PLAYER_MOVEMENT_VALUES[current_player_superjump] / 2; // 5
+			float rad = 2 * 3.14 * (CamRot / 360); // CamRot.z / 360
+			float v_x = -(sin(rad) * p_force * 10);
+			float v_y = (cos(rad) * p_force * 10);
+			float v_z = p_force * (CamRot * 0.2); // CamRot.x * 0.2
 			GAMEPLAY::SET_SUPER_JUMP_THIS_FRAME(player);
+			if (PLAYER_MOVEMENT_VALUES[current_player_superjump] > 1.00 && CONTROLS::IS_CONTROL_JUST_PRESSED(2, 22) && ENTITY::GET_ENTITY_HEIGHT_ABOVE_GROUND(playerPed) < 1.5 && PED::IS_PED_ON_FOOT(playerPed) && !AI::IS_PED_STILL(playerPed))
+				ENTITY::APPLY_FORCE_TO_ENTITY(playerPed, 1, v_x, v_y, PLAYER_MOVEMENT_VALUES[current_player_superjump] * 20, 0, 0, 0, true, false, true, true, true, true); // 0.6 100.6
 		}
 	}
-
+	
 	// No Radgoll
 	if(featureNoRagdoll){
 		if(bPlayerExists){
@@ -1560,12 +1575,18 @@ bool player_movement_speed() {
 	toggleItem->toggleValue = &featurePlayerFastRun;
 	menuItems.push_back(toggleItem);
 	
-	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Super Jump";
-	toggleItem->value = i++;
-	toggleItem->toggleValue = &featurePlayerSuperJump;
-	menuItems.push_back(toggleItem);
+	//toggleItem = new ToggleMenuItem<int>();
+	//toggleItem->caption = "Super Jump";
+	//toggleItem->value = i++;
+	//toggleItem->toggleValue = &featurePlayerSuperJump;
+	//menuItems.push_back(toggleItem);
 	
+	listItem = new SelectFromListMenuItem(PLAYER_MOVEMENT_CAPTIONS, onchange_player_superjump_mode);
+	listItem->wrap = false;
+	listItem->caption = "Super Jump";
+	listItem->value = current_player_superjump;
+	menuItems.push_back(listItem);
+
 	listItem = new SelectFromListMenuItem(PLAYER_MOVEMENT_CAPTIONS, onchange_player_jumpfly_mode);
 	listItem->wrap = false;
 	listItem->caption = "Hancock Mode";
@@ -2014,7 +2035,7 @@ void reset_globals(){
 		featurePlayerFastSwim =
 		featurePlayerFastRun =
 		featurePlayerRunApartments =
-		featurePlayerSuperJump =
+		//featurePlayerSuperJump =
 		featurePlayerInvisible =
 		featurePlayerInvisibleInVehicle =
 		featureNightVision =
@@ -2282,7 +2303,7 @@ void add_player_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerNoSwitch", &featurePlayerNoSwitch});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerFastRun", &featurePlayerFastRun}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerRunApartments", &featurePlayerRunApartments});
-	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerSuperJump", &featurePlayerSuperJump});
+	//results->push_back(FeatureEnabledLocalDefinition{"featurePlayerSuperJump", &featurePlayerSuperJump});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoRagdoll", &featureNoRagdoll}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureRagdollIfInjured", &featureRagdollIfInjured}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerInvisible", &featurePlayerInvisible}); 
