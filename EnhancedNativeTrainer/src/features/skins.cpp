@@ -246,14 +246,19 @@ void update_skin_features() {
 			if (skin_tick > 200) {
 				ENTDatabase* database = get_database();
 				std::vector<SavedSkinDBRow*> savedSkins = database->get_saved_skins();
-				//spawn_saved_skin(savedSkins.size(), "Saved Skin"); // "Saved Skin 1"
 				//
 				if (!savedSkins.empty()) {
+					Hash model = -1;
+					if (PED::GET_PED_TYPE(PLAYER::PLAYER_PED_ID()) == 0) model = GAMEPLAY::GET_HASH_KEY("player_zero");
+					if (PED::GET_PED_TYPE(PLAYER::PLAYER_PED_ID()) == 1) model = GAMEPLAY::GET_HASH_KEY("player_one");
+					if (PED::GET_PED_TYPE(PLAYER::PLAYER_PED_ID()) == 2 || PED::GET_PED_TYPE(PLAYER::PLAYER_PED_ID()) == 3) model = GAMEPLAY::GET_HASH_KEY("player_two");
+					applyChosenSkin(model);
+					//WAIT(500);
 					savedSkins = database->get_saved_skins(savedSkins.size());
 					SavedSkinDBRow* savedSkin = savedSkins.at(0);
 					database->populate_saved_skin(savedSkin);
 
-					if (savedSkin->model == ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID())) {
+					//if (savedSkin->model == ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID())) {
 						applyChosenSkin(savedSkin->model);
 
 						Ped ped = PLAYER::PLAYER_PED_ID();
@@ -268,7 +273,7 @@ void update_skin_features() {
 							delete (*it);
 						}
 						savedSkins.clear();
-					}
+					//}
 				}
 				//
 				oldplayerSkin = PLAYER::PLAYER_PED_ID();
