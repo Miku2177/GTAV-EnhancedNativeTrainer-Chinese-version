@@ -1482,7 +1482,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		featureWeaponInfiniteParachutesUpdated = false;
 	}
 
-	if(bPlayerExists && featureWeaponInfiniteParachutes && detained == false && in_prison == false){
+	if(bPlayerExists && featureWeaponInfiniteParachutes && detained == false && in_prison == false && super_jump_no_parachute == false){
 		int pState = PED::GET_PED_PARACHUTE_STATE(playerPed);
 		//unarmed or falling - don't try and give p/chute to player already using one, crashes game
 		if(pState == -1 || pState == 3){
