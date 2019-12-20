@@ -86,6 +86,8 @@ bool featureLevitation = false;
 bool featureNoScubaGearMask = false;
 bool featureNoScubaSound = false;
 
+bool super_jump_no_parachute, super_jump_intheair = false;
+
 bool featureWantedLevelNoPHeli = false;
 bool featureWantedLevelNoPHeliUpdated = false;
 bool featureWantedNoPRoadB = false;
@@ -1043,11 +1045,21 @@ void update_features(){
 			float v_y = (cos(rad) * p_force * 10);
 			float v_z = p_force * (CamRot * 0.2);
 			GAMEPLAY::SET_SUPER_JUMP_THIS_FRAME(player);
-			if (PLAYER_MOVEMENT_VALUES[current_player_superjump] > 1.00 && CONTROLS::IS_CONTROL_JUST_PRESSED(2, 22) && ENTITY::GET_ENTITY_HEIGHT_ABOVE_GROUND(playerPed) < 1.5 && PED::IS_PED_ON_FOOT(playerPed) && !AI::IS_PED_STILL(playerPed))
+			if (PLAYER_MOVEMENT_VALUES[current_player_superjump] > 1.00 && CONTROLS::IS_CONTROL_JUST_PRESSED(2, 22) && ENTITY::GET_ENTITY_HEIGHT_ABOVE_GROUND(playerPed) < 1.5 && PED::IS_PED_ON_FOOT(playerPed) && !AI::IS_PED_STILL(playerPed)) {
+				super_jump_no_parachute = true;
 				ENTITY::APPLY_FORCE_TO_ENTITY(playerPed, 1, v_x, v_y, PLAYER_MOVEMENT_VALUES[current_player_superjump] * 10, 0, 0, 0, true, false, true, true, true, true); // * 20
+			}
+			if (super_jump_no_parachute == true && ENTITY::GET_ENTITY_HEIGHT_ABOVE_GROUND(playerPed) > 1.5) {
+				WEAPON::REMOVE_WEAPON_FROM_PED(playerPed, PARACHUTE_ID);
+				super_jump_intheair = true;
+			}
+			if (super_jump_no_parachute == true && ENTITY::GET_ENTITY_HEIGHT_ABOVE_GROUND(playerPed) < 1.5 && super_jump_intheair == true) {
+				super_jump_intheair = false;
+				super_jump_no_parachute = false;
+			}
 		}
 	}
-	
+
 	// No Radgoll
 	if(featureNoRagdoll){
 		if(bPlayerExists){
@@ -2018,6 +2030,7 @@ void reset_globals(){
 	current_npc_ragdoll = 0;
 	current_player_movement = 0;
 	current_player_jumpfly = 0;
+	current_player_superjump = 0;
 	current_player_mostwanted = 0;
 	mostwanted_level_enable = 0;
 	wanted_maxpossible_level = 3;
@@ -2331,6 +2344,7 @@ void add_world_feature_enablements3(std::vector<StringPairSettingDBRow>* results
 	results->push_back(StringPairSettingDBRow{"current_npc_ragdoll", std::to_string(current_npc_ragdoll)});
 	results->push_back(StringPairSettingDBRow{"current_player_movement", std::to_string(current_player_movement)});
 	results->push_back(StringPairSettingDBRow{"current_player_jumpfly", std::to_string(current_player_jumpfly)});
+	results->push_back(StringPairSettingDBRow{"current_player_superjump", std::to_string(current_player_superjump)});
 	results->push_back(StringPairSettingDBRow{"current_player_mostwanted", std::to_string(current_player_mostwanted)});
 	results->push_back(StringPairSettingDBRow{"mostwanted_level_enable", std::to_string(mostwanted_level_enable)});
 	results->push_back(StringPairSettingDBRow{"wanted_maxpossible_level", std::to_string(wanted_maxpossible_level)});
@@ -2425,6 +2439,9 @@ void handle_generic_settings(std::vector<StringPairSettingDBRow> settings){
 		}
 		else if (setting.name.compare("current_player_jumpfly") == 0) {
 			current_player_jumpfly = stoi(setting.value);
+		}
+		else if (setting.name.compare("current_player_superjump") == 0) {
+			current_player_superjump = stoi(setting.value);
 		}
 		else if (setting.name.compare("current_player_mostwanted") == 0) {
 			current_player_mostwanted = stoi(setting.value);
