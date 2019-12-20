@@ -31,6 +31,7 @@ bool featureResetPlayerModelOnDeath = false;
 // auto skin variables
 bool featureautoskin = false;
 bool auto_skin = false;
+bool reset_skin = false;
 int skin_tick, skin_tick_secs_passed, skin_tick_secs_curr = 0;
 Ped oldplayerSkin = -1;
 
@@ -246,19 +247,20 @@ void update_skin_features() {
 			if (skin_tick > 200) {
 				ENTDatabase* database = get_database();
 				std::vector<SavedSkinDBRow*> savedSkins = database->get_saved_skins();
-				//
+				
 				if (!savedSkins.empty()) {
 					Hash model = -1;
-					if (PED::GET_PED_TYPE(PLAYER::PLAYER_PED_ID()) == 0) model = GAMEPLAY::GET_HASH_KEY("player_zero");
-					if (PED::GET_PED_TYPE(PLAYER::PLAYER_PED_ID()) == 1) model = GAMEPLAY::GET_HASH_KEY("player_one");
-					if (PED::GET_PED_TYPE(PLAYER::PLAYER_PED_ID()) == 2 || PED::GET_PED_TYPE(PLAYER::PLAYER_PED_ID()) == 3) model = GAMEPLAY::GET_HASH_KEY("player_two");
-					applyChosenSkin(model);
-					//WAIT(500);
+					if (reset_skin == false) {
+						GAMEPLAY::_RESET_LOCALPLAYER_STATE();
+						reset_skin = true;
+						model = 1;
+					}
+					
 					savedSkins = database->get_saved_skins(savedSkins.size());
 					SavedSkinDBRow* savedSkin = savedSkins.at(0);
 					database->populate_saved_skin(savedSkin);
 
-					//if (savedSkin->model == ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID())) {
+					if (model != -1) { // if (model == ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID())) // if (savedSkin->model == ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID())) {
 						applyChosenSkin(savedSkin->model);
 
 						Ped ped = PLAYER::PLAYER_PED_ID();
@@ -273,13 +275,14 @@ void update_skin_features() {
 							delete (*it);
 						}
 						savedSkins.clear();
-					//}
-				}
-				//
-				oldplayerSkin = PLAYER::PLAYER_PED_ID();
-				skin_tick = 0;
-				auto_skin = true;
-			}
+						
+						oldplayerSkin = PLAYER::PLAYER_PED_ID();
+						skin_tick = 0;
+						auto_skin = true;
+						reset_skin = false;
+					}
+				} // end of !empty
+			} // end of skin_tick
 		} // end of auto_skin
 
 		if (PLAYER::PLAYER_PED_ID() != oldplayerSkin) auto_skin = false;
