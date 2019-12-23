@@ -1680,7 +1680,14 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			p_force = std::stoll(lastPowerWeapon, &sz);
 		}
 		
-		if (CONTROLS::IS_CONTROL_PRESSED(2, 24) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, 140) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, 141)) force_nearest_ped = true;
+		if (CONTROLS::IS_CONTROL_PRESSED(2, 24) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, 140) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, 141)) {
+			force_nearest_ped = true;
+			if (PED::IS_PED_IN_MELEE_COMBAT(PED::GET_MELEE_TARGET_FOR_PED(playerPed))) {
+				WAIT(500);
+				AI::TASK_SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(PED::GET_MELEE_TARGET_FOR_PED(playerPed), true);
+				AI::CLEAR_PED_TASKS_IMMEDIATELY(PED::GET_MELEE_TARGET_FOR_PED(playerPed));
+			}
+		}
 		
 		bool cur_weapon_e = false;
 		bool cur_weapon_peds = false;
@@ -1776,12 +1783,13 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		for (int i = 0; i < count_surr_p_peds; i++) {
 			PED::CLEAR_PED_LAST_DAMAGE_BONE(surr_p_peds[i]);
 			ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(surr_p_peds[i]);
-			if (surr_p_peds[i] != playerPed && PED::GET_PED_TYPE(surr_p_peds[i]) != 6 && PED::GET_PED_TYPE(surr_p_peds[i]) != 27 && PED::GET_PED_TYPE(surr_p_peds[i]) != 29 && PED::IS_PED_IN_MELEE_COMBAT(surr_p_peds[i]) 
-				/*&& PED::IS_PED_IN_MELEE_COMBAT(playerPed) && force_nearest_ped == true*/) {
-				WAIT(500);
-				AI::TASK_SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(surr_p_peds[i], true);
-				AI::CLEAR_PED_TASKS_IMMEDIATELY(surr_p_peds[i]);
-			}
+			//if (!PED::IS_PED_GROUP_MEMBER(surr_p_peds[i], myGroup) && surr_p_peds[i] != playerPed && PED::GET_PED_TYPE(surr_p_peds[i]) != 6 && PED::GET_PED_TYPE(surr_p_peds[i]) != 27 && PED::GET_PED_TYPE(surr_p_peds[i]) != 29 && 
+			//	PED::IS_PED_IN_MELEE_COMBAT(surr_p_peds[i])
+			//	/*&& PED::IS_PED_IN_MELEE_COMBAT(playerPed) && force_nearest_ped == true*/) {
+			//	WAIT(500);
+			//	AI::TASK_SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(surr_p_peds[i], true);
+			//	AI::CLEAR_PED_TASKS_IMMEDIATELY(surr_p_peds[i]);
+			//}
 		}
 		for (int i = 0; i < count_surr_v; i++) {
 			PED::CLEAR_PED_LAST_DAMAGE_BONE(surr_vehicles[i]);
