@@ -666,7 +666,7 @@ void update_area_effects(Ped playerPed){
 				} // vigilante citizens
 			}
 		} // end of for
-		if (v_collision_check == true) {
+		if (v_collision_check == true && !pursuer.empty()) {
 			AI::SET_DRIVE_TASK_CRUISE_SPEED(pursuer.back(), 300.0);
 			AI::TASK_VEHICLE_CHASE(pursuer.back(), playerPed);
 			AI::SET_TASK_VEHICLE_CHASE_IDEAL_PURSUIT_DISTANCE(pursuer.back(), 60.0f);
@@ -689,7 +689,7 @@ void update_area_effects(Ped playerPed){
 			}
 		}
 		if (veh_me_speed > 1) s_seconds = 0;
-		if ((!PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) || s_seconds > 3) && time_to_attack == false) {
+		if ((!PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) || s_seconds > 3) && time_to_attack == false && !pursuer.empty()) {
 			for (int j = 0; j < pursuer.size(); j++) {
 				if (ENTITY::DOES_ENTITY_EXIST(pursuer[j]) && !ENTITY::IS_ENTITY_DEAD(pursuer[j])) {
 					PED::SET_PED_AS_ENEMY(PLAYER::PLAYER_PED_ID(), true);

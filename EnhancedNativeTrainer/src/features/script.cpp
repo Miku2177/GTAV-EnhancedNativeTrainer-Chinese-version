@@ -2122,7 +2122,7 @@ void main(){
 	// tell cout to use our new locale.
 	std::cout.imbue(comma_locale);
 
-	if (featureShowStatusMessage) set_status_text("~HUD_COLOUR_MENU_YELLOW~ENT~HUD_COLOUR_WHITE~ ver. ~HUD_COLOUR_MENU_YELLOW~" + VERSION_STRING + "~HUD_COLOUR_WHITE~ is ready."); // ~HUD_COLOUR_WHITE~ is ready //  bugfix 5
+	if (featureShowStatusMessage) set_status_text("~HUD_COLOUR_MENU_YELLOW~ENT~HUD_COLOUR_WHITE~ ver. ~HUD_COLOUR_MENU_YELLOW~" + VERSION_STRING + "~HUD_COLOUR_WHITE~."); // ~HUD_COLOUR_WHITE~ is ready //  bugfix 5 //  is ready
 	
 	while(true){
 		if(trainer_switch_pressed()){
