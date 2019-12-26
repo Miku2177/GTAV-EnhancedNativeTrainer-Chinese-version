@@ -262,7 +262,7 @@ void fuel()
 			Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 			VEHICLES.push_back(veh);
 			FUEL.push_back(randomize / 100);
-			ENTITY::SET_ENTITY_AS_MISSION_ENTITY(veh, true, true);
+			//ENTITY::SET_ENTITY_AS_MISSION_ENTITY(veh, true, true);
 		}
 
 		// HOW MUCH MONEY HAVE YOU GOT? (GAS STATION REFUELING)
@@ -341,7 +341,7 @@ void fuel()
 					FUEL.push_back(randomize / 100);
 					std::swap(VEHICLES[0], VEHICLES.back());
 					std::swap(FUEL[0], FUEL.back());
-					ENTITY::SET_ENTITY_AS_MISSION_ENTITY(veh, true, true);
+					//ENTITY::SET_ENTITY_AS_MISSION_ENTITY(veh, true, true);
 				}
 			}
 
@@ -578,6 +578,15 @@ void fuel()
 				IdleConsume_seconds = (VEH_CARFUEL_VALUES[IdleConsumptionIndex] / 85000) + 1;
 			}
 		}
+
+		// save in garage
+		if (VEHICLE::IS_VEHICLE_IN_GARAGE_AREA("Michael - Beverly Hills", PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID())) || VEHICLE::IS_VEHICLE_IN_GARAGE_AREA("Franklin - Hills", PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID())) ||
+			VEHICLE::IS_VEHICLE_IN_GARAGE_AREA("Franklin - Aunt", PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID())) || VEHICLE::IS_VEHICLE_IN_GARAGE_AREA("Trevor - Countryside", PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()))) 
+		{
+			Vehicle my_c_v = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
+			ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&my_c_v);
+		}
+		else ENTITY::SET_ENTITY_AS_MISSION_ENTITY(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), true, true);
 
 		if (!VEHICLES.empty() && VEHICLES.size() > 60) {
 			ENTITY::SET_VEHICLE_AS_NO_LONGER_NEEDED(&VEHICLES[0]);

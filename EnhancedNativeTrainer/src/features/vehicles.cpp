@@ -3271,6 +3271,16 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && featureRememberVehicles) { 
 			Vehicle veh_rem = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 
+			// save in garage
+			if (VEHICLE::IS_VEHICLE_IN_GARAGE_AREA("Michael - Beverly Hills", PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID())) || VEHICLE::IS_VEHICLE_IN_GARAGE_AREA("Franklin - Hills", PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID())) ||
+				VEHICLE::IS_VEHICLE_IN_GARAGE_AREA("Franklin - Aunt", PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID())) || VEHICLE::IS_VEHICLE_IN_GARAGE_AREA("Trevor - Countryside", PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID())))
+			{
+				Vehicle my_c_v = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
+				ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&my_c_v);
+			}
+			else ENTITY::SET_ENTITY_AS_MISSION_ENTITY(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), true, true);
+			//
+
 			if (VEHICLES_REMEMBER.empty()) {
 				blip_veh[0] = UI::ADD_BLIP_FOR_ENTITY(veh_rem);
 				UI::SET_BLIP_AS_FRIENDLY(blip_veh[0], true);
@@ -3285,7 +3295,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				UI::SET_BLIP_AS_SHORT_RANGE(blip_veh[0], true);
 				BLIPTABLE_VEH.push_back(blip_veh[0]);
 				VEHICLES_REMEMBER.push_back(veh_rem);
-				ENTITY::SET_ENTITY_AS_MISSION_ENTITY(veh_rem, true, true);
+				//ENTITY::SET_ENTITY_AS_MISSION_ENTITY(veh_rem, true, true);
 				curr_veh_remember = veh_rem;
 				featureDeleteTrackedVehicles_Emptied = true;
 				old_playerPed_Tracking = playerPed;
@@ -3317,7 +3327,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				UI::SET_BLIP_AS_SHORT_RANGE(blip_veh[0], true);
 				BLIPTABLE_VEH.push_back(blip_veh[0]);
 				VEHICLES_REMEMBER.push_back(veh_rem);
-				ENTITY::SET_ENTITY_AS_MISSION_ENTITY(veh_rem, true, true);
+				//ENTITY::SET_ENTITY_AS_MISSION_ENTITY(veh_rem, true, true);
 
 				if (VEHICLES_REMEMBER.size() > VEH_VEHREMEMBER_VALUES[VehRememberIndex]) {
 					UI::REMOVE_BLIP(&BLIPTABLE_VEH[0]);
