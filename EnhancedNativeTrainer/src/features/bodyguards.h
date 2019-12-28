@@ -70,3 +70,5 @@ void onchange_body_blipcolour_index(int value, SelectFromListMenuItem* source);
 void onchange_body_blipsymbol_index(int value, SelectFromListMenuItem* source);
 
 void onchange_body_blipflash_index(int value, SelectFromListMenuItem* source);
+
+extern std::string get_current_model_name();
