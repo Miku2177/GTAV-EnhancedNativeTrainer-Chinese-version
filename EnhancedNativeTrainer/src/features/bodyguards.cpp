@@ -10,8 +10,8 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 #include "..\io\config_io.h"
 #include <string.h>
-
 #include "bodyguards.h"
+#include "script.h"
 
 int activeLineIndexBodyguards = 0;
 
@@ -20,6 +20,9 @@ int const BODYGUARD_LIMIT = 7;
 
 int pop, all_selected = -1;
 std::vector<Hash> WEAPONS;
+
+std::string lastCustomBodyguardSpawn;
+std::string value;
 
 bool stop_b = false;
 bool featureBodyguardInvincible = false;
@@ -105,6 +108,12 @@ bool process_bodyguard_skins_menu(){
 	item->isLeaf = false;
 	menuItems.push_back(item);
 
+	item = new MenuItem<int>();
+	item->caption = "Enter Name Manually";
+	item->value = 3;
+	item->isLeaf = false;
+	menuItems.push_back(item);
+
 	return draw_generic_menu<int>(menuItems, &skinTypesBodyguardMenuPositionMemory[0], "Bodyguard Skins", onconfirm_bodyguard_skins_menu, NULL, NULL);
 }
 
@@ -116,6 +125,31 @@ bool onconfirm_bodyguard_skins_menu(MenuItem<int> choice){
 			return process_npc_skins_menu();
 		case 2:
 			return process_animal_skins_menu();
+		case 3:
+		{
+			std::string result = show_keyboard(NULL, (char*)lastCustomBodyguardSpawn.c_str());
+			if (!result.empty())
+			{
+				result = trim(result);
+				lastCustomBodyguardSpawn = result;
+				Hash hash = GAMEPLAY::GET_HASH_KEY((char*)result.c_str());
+				if (!STREAMING::IS_MODEL_IN_CDIMAGE(hash) || !STREAMING::IS_MODEL_VALID(hash))
+				{
+					std::ostringstream ss;
+					ss << "Couldn't find model '" << result << "'";
+					set_status_text(ss.str());
+					lastCustomBodyguardSpawn = "";
+					return false;
+				}
+				else
+				{
+					get_current_model_name();
+					requireRefreshOfBodyguardMainMenu = true;
+				}
+				
+			}
+			return false;
+		}
 		default:
 			break;
 	}
@@ -123,8 +157,8 @@ bool onconfirm_bodyguard_skins_menu(MenuItem<int> choice){
 }
 
 std::string get_current_model_name(){
-	std::string value;
-	switch(skinTypesBodyguardMenuLastConfirmed[0]){
+	if (lastCustomBodyguardSpawn == "") {
+		switch (skinTypesBodyguardMenuLastConfirmed[0]) {
 		case 0:
 			value = SKINS_PLAYER_CAPTIONS[skinTypesBodyguardMenuLastConfirmed[1]];
 			break;
@@ -137,13 +171,15 @@ std::string get_current_model_name(){
 		default:
 			value = SKINS_GENERAL_CAPTIONS[0];
 			break;
+		}
 	}
+	else value = lastCustomBodyguardSpawn;
 	return value;
 }
 
 Hash get_current_model_hash(){
-	std::string value;
-	switch(skinTypesBodyguardMenuLastConfirmed[0]){
+	if (lastCustomBodyguardSpawn == "") {
+		switch (skinTypesBodyguardMenuLastConfirmed[0]) {
 		case 0:
 			value = SKINS_PLAYER_VALUES[skinTypesBodyguardMenuLastConfirmed[1]];
 			break;
@@ -156,7 +192,9 @@ Hash get_current_model_hash(){
 		default:
 			value = SKINS_GENERAL_VALUES[0];
 			break;
+		}
 	}
+	else value = lastCustomBodyguardSpawn;
 	return GAMEPLAY::GET_HASH_KEY((char*) value.c_str());
 }
 
@@ -194,6 +232,7 @@ bool onconfirm_bodyguards_skins_animals(MenuItem<std::string> choice){
 
 bool process_player_skins_menu(){
 	std::vector<MenuItem<std::string>*> menuItems;
+	lastCustomBodyguardSpawn = "";
 	for(int i = 0; i < SKINS_PLAYER_CAPTIONS.size(); i++){
 		MenuItem<std::string> *item = new MenuItem<std::string>();
 		item->caption = SKINS_PLAYER_CAPTIONS[i];
@@ -207,6 +246,7 @@ bool process_player_skins_menu(){
 
 bool process_npc_skins_menu(){
 	std::vector<MenuItem<std::string>*> menuItems;
+	lastCustomBodyguardSpawn = "";
 	for(int i = 0; i < SKINS_GENERAL_CAPTIONS.size(); i++){
 		MenuItem<std::string> *item = new MenuItem<std::string>();
 		item->caption = SKINS_GENERAL_CAPTIONS[i];
@@ -220,6 +260,7 @@ bool process_npc_skins_menu(){
 
 bool process_animal_skins_menu(){
 	std::vector<MenuItem<std::string>*> menuItems;
+	lastCustomBodyguardSpawn = "";
 	for (int i = 0; i < SKINS_ANIMALS_CAPTIONS.size(); i++){
 		MenuItem<std::string> *item = new MenuItem<std::string>();
 		item->caption = SKINS_ANIMALS_CAPTIONS[i];
@@ -890,6 +931,7 @@ void add_bodyguards_generic_settings(std::vector<StringPairSettingDBRow>* result
 	results->push_back(StringPairSettingDBRow{"skinTypesBodyguardMenuPositionMemory1", std::to_string(skinTypesBodyguardMenuPositionMemory[1])});
 	results->push_back(StringPairSettingDBRow{"skinTypesBodyguardMenuLastConfirmed0", std::to_string(skinTypesBodyguardMenuLastConfirmed[0])});
 	results->push_back(StringPairSettingDBRow{"skinTypesBodyguardMenuLastConfirmed1", std::to_string(skinTypesBodyguardMenuLastConfirmed[1])});
+	results->push_back(StringPairSettingDBRow{"lastCustomBodyguardSpawn", lastCustomBodyguardSpawn});
 }
 
 void handle_generic_settings_bodyguards(std::vector<StringPairSettingDBRow>* settings){
@@ -924,6 +966,9 @@ void handle_generic_settings_bodyguards(std::vector<StringPairSettingDBRow>* set
 		}
 		else if (setting.name.compare("BodyBlipFlashIndex") == 0){
 			BodyBlipFlashIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("lastCustomBodyguardSpawn") == 0) {
+			lastCustomBodyguardSpawn = setting.value;
 		}
 	}
 }
