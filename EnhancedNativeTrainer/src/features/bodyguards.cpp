@@ -30,6 +30,7 @@ bool featureBodyguardInvincibleUpdated = false;
 bool featureBodyguardHelmet = false;
 bool featureBodyguardDespawn = true;
 bool featureDifferentWeapons = false;
+bool featureRandomApp = false;
 bool featureBodyguardOnMap = false;
 bool featureBodyguardInfAmmo = false;
 
@@ -490,15 +491,17 @@ void do_spawn_bodyguard(){
 
 		Vector3 spawnCoords = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(PLAYER::PLAYER_PED_ID(), 2.0, 2.0, 0.0); // 2.5 2.5
 		Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
+		
+		// add nearest ped as bodyguard
 		if (added_nearest_b == false) bodyGuard = PED::CREATE_PED(25, bodyGuardModel, spawnCoords.x, spawnCoords.y, spawnCoords.z, 0, 0, 0);
-		if (added_nearest_b == true) {
+		if (added_nearest_b == true) { 
 			const int arrSize33 = 1024;
 			Ped surr_peds[arrSize33];
 			int count_surr_peds = worldGetAllPeds(surr_peds, arrSize33);
 			float dist_diff = -1.0;
 			float temp_dist = 20.0;
 			for (int i = 0; i < count_surr_peds; i++) {
-				if (surr_peds[i] != PLAYER::PLAYER_PED_ID()) { // PED::GET_PED_TYPE(surr_peds[i]) != 0 && PED::GET_PED_TYPE(surr_peds[i]) != 1 && PED::GET_PED_TYPE(surr_peds[i]) != 2 && PED::GET_PED_TYPE(surr_peds[i]) != 3
+				if (surr_peds[i] != PLAYER::PLAYER_PED_ID()) { 
 					Vector3 coordsped = ENTITY::GET_ENTITY_COORDS(surr_peds[i], true);
 					dist_diff = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsped.x, coordsped.y, coordsped.z);
 					exist_already = false;
@@ -524,10 +527,10 @@ void do_spawn_bodyguard(){
 				Vector3 coords_temp_ped = ENTITY::GET_ENTITY_COORDS(temp_bodyguard, true);
 				PED::DELETE_PED(&temp_bodyguard);
 				bodyGuard = PED::CREATE_PED(25, temp_model, coords_temp_ped.x, coords_temp_ped.y, coords_temp_ped.z, 0, 0, 0);
-				//bodyGuard = temp_bodyguard;
 			}
 		}
-
+		//
+		
 		if (bodyGuard != -1) {
 			for (int i = 0; i < SKINS_ANIMALS_VALUES.size(); i++) {
 				char *currAnimal = new char[SKINS_ANIMALS_VALUES[i].length() + 1];
@@ -581,12 +584,13 @@ void do_spawn_bodyguard(){
 				std::vector<int> emptyVec;
 				if (!BODY_BLIPSYMBOL_VALUES.empty()) std::vector<int>(BODY_BLIPSYMBOL_VALUES).swap(emptyVec);
 			}
-
+			
 			PED::SET_PED_COMBAT_ABILITY(bodyGuard, 2);
 			PED::SET_PED_COMBAT_RANGE(bodyGuard, 2);
 			PED::SET_PED_COMBAT_MOVEMENT(bodyGuard, 3);
 			PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 5, true);
-			//
+			
+			// animal
 			if (bodyguard_animal == true) {
 				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 46, true);
 				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 17, true);
@@ -598,6 +602,7 @@ void do_spawn_bodyguard(){
 				PED::SET_PED_CAN_BE_TARGETTED(bodyGuard, false);
 			}
 			//
+			
 			if (bodyguard_animal == false) PED::SET_PED_CAN_SWITCH_WEAPON(bodyGuard, true);
 			PED::SET_GROUP_FORMATION(myGroup, 1); // 1
 			PED::SET_GROUP_FORMATION_SPACING(myGroup, BODY_BLIPSIZE_VALUES[BodyDistanceIndex], BODY_BLIPSIZE_VALUES[BodyDistanceIndex], BODY_BLIPSIZE_VALUES[BodyDistanceIndex]); // 2.0, 2.0, 2.0
@@ -660,6 +665,15 @@ void do_spawn_bodyguard(){
 
 			if (added_nearest_b == false) PED::SET_PED_DEFAULT_COMPONENT_VARIATION(bodyGuard);
 			WAIT(0);
+
+			// randomize appearance
+			if (featureRandomApp) {
+				PED::CLEAR_ALL_PED_PROPS(bodyGuard);
+				PED::SET_PED_RANDOM_COMPONENT_VARIATION(bodyGuard, true);
+				PED::SET_PED_RANDOM_PROPS(bodyGuard);
+				WAIT(0);
+			}
+			//
 
 			if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) {
 				Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
@@ -847,6 +861,13 @@ bool process_bodyguard_menu(){
 		listItem->value = BodyDistanceIndex;
 		menuItems.push_back(listItem);
 
+		toggleItem = new ToggleMenuItem<int>();
+		toggleItem->caption = "Random Appearance";
+		toggleItem->value = i++;
+		toggleItem->toggleValue = &featureRandomApp;
+		toggleItem->toggleValueUpdated = NULL;
+		menuItems.push_back(toggleItem);
+
 		if(!bodyguardWeaponsToggleInitialized){
 			for(int a = 0; a < MENU_WEAPON_CATEGORIES.size(); a++){
 				for(int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++){
@@ -912,6 +933,7 @@ void add_bodyguards_feature_enablements(std::vector<FeatureEnabledLocalDefinitio
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardHelmet", &featureBodyguardHelmet});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardDespawn", &featureBodyguardDespawn});
 	results->push_back(FeatureEnabledLocalDefinition{"featureDifferentWeapons", &featureDifferentWeapons});
+	results->push_back(FeatureEnabledLocalDefinition{"featureRandomApp", &featureRandomApp});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardOnMap", &featureBodyguardOnMap});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyBlipNumber", &featureBodyBlipNumber});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardInfAmmo", &featureBodyguardInfAmmo});
@@ -990,6 +1012,7 @@ void reset_bodyguards_globals(){
 	featureBodyguardDespawn = true;
 	featureBodyguardInfAmmo = false;
 	featureDifferentWeapons = false;
+	featureRandomApp = false;
 	BodyBlipSizeIndex = 2;
 	BodyDistanceIndex = 7;
 	BodyBlipColourIndex = 0;
