@@ -61,8 +61,8 @@ extern bool massChanged;
 extern int current_player_forceshield;
 extern bool player_massChanged;
 
-const std::vector<std::string> VEH_SPEEDLIMITER_CAPTIONS{ "OFF", "10 (MPH)", "20 (MPH)", "30 (MPH)", "40 (MPH)", "50 (MPH)", "60 (MPH)", "70 (MPH)", "80 (MPH)", "90 (MPH)", "100 (MPH)", "110 (MPH)", "120 (MPH)", "130 (MPH)", "140 (MPH)", "150 (MPH)", "180 (MPH)", "200 (MPH)" };
-const std::vector<int> VEH_SPEEDLIMITER_VALUES{ 0, 4, 9, 13, 18, 22, 27, 31, 36, 40, 44, 48, 53, 57, 61, 66, 80, 89 };
+const std::vector<std::string> VEH_SPEEDLIMITER_CAPTIONS{ "OFF", "5 (MPH)", "10 (MPH)", "15 (MPH)", "20 (MPH)", "25 (MPH)", "30 (MPH)", "35 (MPH)", "40 (MPH)", "45 (MPH)", "50 (MPH)", "55 (MPH)", "60 (MPH)", "65 (MPH)", "70 (MPH)", "75 (MPH)", "80 (MPH)", "85 (MPH)", "90 (MPH)", "95 (MPH)", "100 (MPH)", "105 (MPH)", "110 (MPH)", "115 (MPH)", "120 (MPH)", "125 (MPH)", "130 (MPH)", "135 (MPH)", "140 (MPH)", "145 (MPH)", "150 (MPH)", "160 (MPH)", "170 (MPH)", "180 (MPH)", "190 (MPH)", "200 (MPH)" };
+const std::vector<int> VEH_SPEEDLIMITER_VALUES{ 0, 2, 4, 7, 9, 11, 13, 16, 18, 20, 22, 24, 27, 29, 31, 33, 36, 38, 40, 42, 44, 46, 48, 51, 53, 55, 57, 59, 61, 63, 66, 70, 75, 80, 85, 89 };
 extern int speedLimiterIndex;
 extern bool speedLimiterChanged;
 extern int DoorAutolockIndex;

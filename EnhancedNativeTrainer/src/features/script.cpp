@@ -725,7 +725,9 @@ void update_features(){
 	// Hancock Mode
 	if (PLAYER_MOVEMENT_VALUES[current_player_jumpfly] > 0.00 && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1)) {
 		Vector3 CamRot = CAM::GET_GAMEPLAY_CAM_ROT(2);
-		int p_force = PLAYER_MOVEMENT_VALUES[current_player_jumpfly]; //5;
+		float p_force = PLAYER_MOVEMENT_VALUES[current_player_jumpfly]; //5;
+		if (PLAYER_MOVEMENT_VALUES[current_player_jumpfly] == 0.50) p_force = 0.60;
+
 		float rad = 2 * 3.14 * (CamRot.z / 360);
 		float v_x = -(sin(rad) * p_force * 10);
 		float v_y = (cos(rad) * p_force * 10);
