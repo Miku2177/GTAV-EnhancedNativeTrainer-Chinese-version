@@ -23,6 +23,8 @@ int functionIDs[MAX_HOTKEYS] = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 bool hotkey_held_slow_mo = false;
 
+bool hotkey_boddyguard = false;
+
 bool hotkey_held_half_normal_speed = false;
 
 bool hotkey_held_normal_speed = false;
@@ -254,6 +256,17 @@ void trigger_function_for_hotkey_onkeyup(int hotkey)
 		break;
 	case HKEY_MAP_SIZE:
 		map_size_hotkey();
+		break;
+	case HKEY_SPAWN_BODYGUARD:
+		hotkey_boddyguard = true;
+		do_spawn_bodyguard();
+		break;
+	case HKEY_ADDNEAR_BODYGUARD:
+		hotkey_boddyguard = true;
+		do_add_near_bodyguard();
+		break;
+	case HKEY_DISMISS_BODYGUARD:
+		dismiss_bodyguards();
 		break;
 	default:
 	{

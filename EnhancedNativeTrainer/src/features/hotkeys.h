@@ -69,6 +69,9 @@ static const int HKEY_CLEAR_PROPS = 145;
 static const int HKEY_ENTER_DAMAGED_V = 146;
 static const int HKEY_FIRE_MODE = 147;
 static const int HKEY_MAP_SIZE = 148;
+static const int HKEY_SPAWN_BODYGUARD = 149;
+static const int HKEY_ADDNEAR_BODYGUARD = 150;
+static const int HKEY_DISMISS_BODYGUARD = 151;
 
 const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "No Function", 0 },
@@ -114,6 +117,9 @@ const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "Enter Damaged Vehicle", HKEY_ENTER_DAMAGED_V },
 	{ "Fire Mode", HKEY_FIRE_MODE },
 	{ "Mini Map Size", HKEY_MAP_SIZE },
+	{ "Spawn Bodyguard", HKEY_SPAWN_BODYGUARD },
+	{ "Add Nearest Ped As Bodyguard", HKEY_ADDNEAR_BODYGUARD },
+	{ "Dismiss All Bodyguards", HKEY_DISMISS_BODYGUARD },
 };
 
 void change_hotkey_function(int hotkey, int funcIndex);
@@ -129,3 +135,5 @@ void handle_generic_settings_hotkey(std::vector<StringPairSettingDBRow>* setting
 void trigger_function_for_hotkey_onkeyup(int i);
 
 void trigger_function_for_hotkey_onkeydown(int i);
+
+extern bool hotkey_boddyguard;

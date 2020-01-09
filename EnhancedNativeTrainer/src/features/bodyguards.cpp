@@ -12,6 +12,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include <string.h>
 #include "bodyguards.h"
 #include "script.h"
+#include "hotkeys.h"
 
 int activeLineIndexBodyguards = 0;
 
@@ -33,6 +34,8 @@ bool featureDifferentWeapons = false;
 bool featureRandomApp = false;
 bool featureBodyguardOnMap = false;
 bool featureBodyguardInfAmmo = false;
+
+bool hotkey_b = false;
 
 bool added_nearest_b = false;
 Ped bodyGuard, temp_bodyguard = -1;
@@ -472,13 +475,25 @@ void do_spawn_bodyguard(){
 	bool bodyguard_animal = false;
 	bodyGuard = -1;
 	bool exist_already = false;
+	DWORD bodyGuardModel = -1;
 
-	if(spawnedBodyguards.size() >= BODYGUARD_LIMIT){
+	if (hotkey_boddyguard == false) bodyGuardModel = get_current_model_hash();
+	if (hotkey_boddyguard == true) {
+		if (hotkey_b == false) {
+			hotkey_b = true;
+			process_bodyguard_menu();
+			process_main_menu();
+		}
+		if (skinTypesBodyguardMenuLastConfirmed[0] == 0) bodyGuardModel = GAMEPLAY::GET_HASH_KEY((char*)SKINS_PLAYER_VALUES[skinTypesBodyguardMenuLastConfirmed[1]].c_str());
+		if (skinTypesBodyguardMenuLastConfirmed[0] == 1) bodyGuardModel = GAMEPLAY::GET_HASH_KEY((char*)SKINS_GENERAL_VALUES[skinTypesBodyguardMenuLastConfirmed[1]].c_str());
+		if (skinTypesBodyguardMenuLastConfirmed[0] == 2) bodyGuardModel = GAMEPLAY::GET_HASH_KEY((char*)SKINS_ANIMALS_VALUES[skinTypesBodyguardMenuLastConfirmed[1]].c_str());
+		hotkey_boddyguard = false;
+	}
+
+	if (spawnedBodyguards.size() >= BODYGUARD_LIMIT) {
 		set_status_text("Cannot spawn any more bodyguards");
 		return;
 	}
-
-	DWORD bodyGuardModel = get_current_model_hash();
 
 	if((STREAMING::IS_MODEL_IN_CDIMAGE(bodyGuardModel) && STREAMING::IS_MODEL_VALID(bodyGuardModel)) || added_nearest_b == true){
 		STREAMING::REQUEST_MODEL(bodyGuardModel);
