@@ -35,6 +35,8 @@ bool hotkey_held_veh_burnout = false;
 
 bool hotkey_held_veh_extrapower = false;
 
+bool muffled_toggle = false;
+
 bool is_hotkey_held_slow_mo()
 {
 	return hotkey_held_slow_mo;
@@ -267,6 +269,10 @@ void trigger_function_for_hotkey_onkeyup(int hotkey)
 		break;
 	case HKEY_DISMISS_BODYGUARD:
 		dismiss_bodyguards();
+		break;
+	case HKEY_MUFFLED_RADIO:
+		AUDIO::SET_FRONTEND_RADIO_ACTIVE(muffled_toggle);
+		muffled_toggle = !muffled_toggle;
 		break;
 	default:
 	{
