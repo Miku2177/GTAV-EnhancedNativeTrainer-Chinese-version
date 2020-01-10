@@ -72,6 +72,7 @@ static const int HKEY_MAP_SIZE = 148;
 static const int HKEY_SPAWN_BODYGUARD = 149;
 static const int HKEY_ADDNEAR_BODYGUARD = 150;
 static const int HKEY_DISMISS_BODYGUARD = 151;
+static const int HKEY_MUFFLED_RADIO = 152;
 
 const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "No Function", 0 },
@@ -120,6 +121,7 @@ const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "Spawn Bodyguard", HKEY_SPAWN_BODYGUARD },
 	{ "Add Nearest Ped As Bodyguard", HKEY_ADDNEAR_BODYGUARD },
 	{ "Dismiss All Bodyguards", HKEY_DISMISS_BODYGUARD },
+	{ "Muffled Radio", HKEY_MUFFLED_RADIO },
 };
 
 void change_hotkey_function(int hotkey, int funcIndex);
