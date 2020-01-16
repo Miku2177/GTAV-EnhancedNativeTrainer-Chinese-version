@@ -184,7 +184,7 @@ bool current_npc_ragdoll_Changed = true;
 
 //Player Movement Speed && Hancock Mode
 const std::vector<std::string> PLAYER_MOVEMENT_CAPTIONS{ "Normal", "0.5x", "1x", "2x", "3x", "4x", "5x", "6x", "7x", "8x", "9x", "10x" };
-const double PLAYER_MOVEMENT_VALUES[] = { 0.00, 0.50, 1.00, 2.00, 3.00, 4.00, 5.00, 6.00, 7.00, 8.00, 9.00, 10.00 };
+const double PLAYER_MOVEMENT_VALUES[] = { 0.00, 0.60, 1.00, 2.00, 3.00, 4.00, 5.00, 6.00, 7.00, 8.00, 9.00, 10.00 };
 int current_player_movement = 0;
 bool current_player_movement_Changed = true; 
 int current_player_jumpfly = 0;
@@ -726,7 +726,7 @@ void update_features(){
 	if (PLAYER_MOVEMENT_VALUES[current_player_jumpfly] > 0.00 && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1)) {
 		Vector3 CamRot = CAM::GET_GAMEPLAY_CAM_ROT(2);
 		float p_force = PLAYER_MOVEMENT_VALUES[current_player_jumpfly]; //5;
-		if (PLAYER_MOVEMENT_VALUES[current_player_jumpfly] == 0.50) p_force = 0.60;
+		//if (PLAYER_MOVEMENT_VALUES[current_player_jumpfly] == 0.50) p_force = 0.60;
 
 		float rad = 2 * 3.14 * (CamRot.z / 360);
 		float v_x = -(sin(rad) * p_force * 10);
@@ -1046,18 +1046,19 @@ void update_features(){
 			float v_x = -(sin(rad) * p_force * 10);
 			float v_y = (cos(rad) * p_force * 10);
 			float v_z = p_force * (CamRot * 0.2);
-			if (PLAYER_MOVEMENT_VALUES[current_player_superjump] != 0.50) GAMEPLAY::SET_SUPER_JUMP_THIS_FRAME(player);
-			if ((PLAYER_MOVEMENT_VALUES[current_player_superjump] == 0.50 || PLAYER_MOVEMENT_VALUES[current_player_superjump] > 1.00) && CONTROLS::IS_CONTROL_JUST_PRESSED(2, 22) && ENTITY::GET_ENTITY_HEIGHT_ABOVE_GROUND(playerPed) < 1.5 && 
+			if (PLAYER_MOVEMENT_VALUES[current_player_superjump] != 0.60) GAMEPLAY::SET_SUPER_JUMP_THIS_FRAME(player);
+			if (PLAYER_MOVEMENT_VALUES[current_player_superjump] != 0.60 && CONTROLS::IS_CONTROL_JUST_PRESSED(2, 22) && ENTITY::GET_ENTITY_HEIGHT_ABOVE_GROUND(playerPed) < 1.5 && PED::IS_PED_ON_FOOT(playerPed) && !AI::IS_PED_STILL(playerPed)) super_jump_no_parachute = true;
+			if ((PLAYER_MOVEMENT_VALUES[current_player_superjump] == 0.60 || PLAYER_MOVEMENT_VALUES[current_player_superjump] > 1.00) && CONTROLS::IS_CONTROL_JUST_PRESSED(2, 22) && ENTITY::GET_ENTITY_HEIGHT_ABOVE_GROUND(playerPed) < 1.5 && 
 				PED::IS_PED_ON_FOOT(playerPed) && !AI::IS_PED_STILL(playerPed)) {
 				super_jump_no_parachute = true;
-				if (PLAYER_MOVEMENT_VALUES[current_player_superjump] != 0.50) ENTITY::APPLY_FORCE_TO_ENTITY(playerPed, 1, v_x, v_y, PLAYER_MOVEMENT_VALUES[current_player_superjump] * 10, 0, 0, 0, true, false, true, true, true, true); // * 20
-				if (PLAYER_MOVEMENT_VALUES[current_player_superjump] == 0.50) ENTITY::APPLY_FORCE_TO_ENTITY(playerPed, 1, v_x, v_y, PLAYER_MOVEMENT_VALUES[current_player_superjump] * 30, 0, 0, 0, true, false, true, true, true, true); // * 25
+				if (PLAYER_MOVEMENT_VALUES[current_player_superjump] != 0.60) ENTITY::APPLY_FORCE_TO_ENTITY(playerPed, 1, v_x, v_y, PLAYER_MOVEMENT_VALUES[current_player_superjump] * 10, 0, 0, 0, true, false, true, true, true, true); // * 20
+				if (PLAYER_MOVEMENT_VALUES[current_player_superjump] == 0.60) ENTITY::APPLY_FORCE_TO_ENTITY(playerPed, 1, v_x, v_y, PLAYER_MOVEMENT_VALUES[current_player_superjump] * 30, 0, 0, 0, true, false, true, true, true, true); // * 25
 			}
-			if (super_jump_no_parachute == true && ENTITY::GET_ENTITY_HEIGHT_ABOVE_GROUND(playerPed) > 0.5) {
+			if (super_jump_no_parachute == true && ENTITY::GET_ENTITY_HEIGHT_ABOVE_GROUND(playerPed) > 0.3) {
 				WEAPON::REMOVE_WEAPON_FROM_PED(playerPed, PARACHUTE_ID);
 				super_jump_intheair = true;
 			}
-			if (super_jump_no_parachute == true && ENTITY::GET_ENTITY_HEIGHT_ABOVE_GROUND(playerPed) < 0.5 && super_jump_intheair == true) {
+			if (super_jump_no_parachute == true && ENTITY::GET_ENTITY_HEIGHT_ABOVE_GROUND(playerPed) < 0.3 && super_jump_intheair == true) {
 				super_jump_intheair = false;
 				super_jump_no_parachute = false;
 			}
