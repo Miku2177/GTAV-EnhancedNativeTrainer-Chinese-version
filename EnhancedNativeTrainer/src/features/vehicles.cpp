@@ -4133,6 +4133,11 @@ Vehicle do_spawn_vehicle(DWORD model, std::string modelTitle, bool cleanup){
 			}
 		}
 
+		if (ENTITY::GET_ENTITY_MODEL(veh) == GAMEPLAY::GET_HASH_KEY("MINITANK") || ENTITY::GET_ENTITY_MODEL(veh) == GAMEPLAY::GET_HASH_KEY("RCBANDITO")) {
+			PED::SET_PED_INTO_VEHICLE(PLAYER::PLAYER_PED_ID(), veh, -1);
+			oldVehicleState = false;
+		}
+
 		VEHICLE::SET_VEHICLE_DIRT_LEVEL(veh, 0.0f);
 
 		WAIT(0);
