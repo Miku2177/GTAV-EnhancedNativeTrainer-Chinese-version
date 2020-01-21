@@ -792,7 +792,7 @@ void teleport_to_marker(){
 	teleport_to_coords(e, coords);
 }
 
-/////////////////////// TELEPORT TO A MISSION MARKER ///////////////////////////////
+/////////////////////// GO TO A MISSION MARKER ///////////////////////////////
 
 void teleport_to_mission_marker(){
 
@@ -800,59 +800,24 @@ void teleport_to_mission_marker(){
 	bool blip_mission = false;
 	int blipIterator = UI::IS_WAYPOINT_ACTIVE() ? BlipSpriteWaypoint : BlipSpriteStandard;
 	Blip myBlip;
-		
-	if (blipIterator != BlipSpriteStandard) {
-		myBlip = UI::GET_FIRST_BLIP_INFO_ID(blipIterator);
-		if (UI::DOES_BLIP_EXIST(myBlip) != 0) {
-			if (UI::GET_BLIP_INFO_ID_TYPE(myBlip) == 4) {
-				coords_mission = UI::GET_BLIP_INFO_ID_COORD(myBlip);
-				blip_mission = true;
-			}
-		}
-	}
-	else {
-		if (blipIterator){
-			for (myBlip = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(myBlip) != 0; myBlip = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) {
-				if (UI::GET_BLIP_INFO_ID_TYPE(myBlip) == 4 && UI::GET_BLIP_COLOUR(myBlip) != BlipColorBlue) {
-					coords_mission = UI::GET_BLIP_INFO_ID_COORD(myBlip);
-					blip_mission = true;
-					break;
-				}
-			}
-			if (!blip_mission) {
-				myBlip = UI::GET_FIRST_BLIP_INFO_ID(BlipSpriteRaceFinish);
-				if (UI::DOES_BLIP_EXIST(myBlip) != 0) {
-					coords_mission = UI::GET_BLIP_INFO_ID_COORD(myBlip);
-					blip_mission = true;
-				}
-			}
-		}
-	}
+	Entity e = PLAYER::PLAYER_PED_ID();
+	if (PED::IS_PED_IN_ANY_VEHICLE(e, 0)) e = PED::GET_VEHICLE_PED_IS_USING(e);
 
-	if(blip_mission == true) {
-		Entity e = PLAYER::PLAYER_PED_ID();
-		if (PED::IS_PED_IN_ANY_VEHICLE(e, 0)) e = PED::GET_VEHICLE_PED_IS_USING(e);
-		bool groundFound = false;
-	
-		teleport_to_coords(e, coords_mission);
-		blip_mission = false;
-		if (!ENTITY::IS_ENTITY_IN_WATER(e)) {
-			static float groundCheckHeight[] =
-			{ 100.0, 150.0, 50.0, 0.0, 200.0, 250.0, 300.0, 350.0, 400.0, 450.0, 500.0, 550.0, 600.0, 650.0, 700.0, 750.0, 800.0 };
-			for (int i = 0; i < sizeof(groundCheckHeight) / sizeof(float); i++) {
-				ENTITY::SET_ENTITY_COORDS_NO_OFFSET(e, coords_mission.x, coords_mission.y, groundCheckHeight[i], 0, 0, 1);
-				WAIT(100);
-				if (GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(coords_mission.x, coords_mission.y, groundCheckHeight[i], &coords_mission.z)){
-					groundFound = true;
-					coords_mission.z += 3.0;
-					teleport_to_coords(e, coords_mission);
-					break;
-				}
-			}
+	for (myBlip = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(myBlip) != 0; myBlip = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) {
+		if ((UI::GET_BLIP_INFO_ID_TYPE(myBlip) == 4 && UI::GET_BLIP_COLOUR(myBlip) == 66) || (UI::GET_BLIP_INFO_ID_TYPE(myBlip) == 4 && UI::GET_BLIP_COLOUR(myBlip) == 5) ||
+			(UI::GET_BLIP_INFO_ID_TYPE(myBlip) == 4 && UI::GET_BLIP_COLOUR(myBlip) == 2)) {
+			coords_mission = UI::GET_BLIP_INFO_ID_COORD(myBlip);
+			blip_mission = true;
+			ENTITY::SET_ENTITY_COORDS_NO_OFFSET(e, coords_mission.x, coords_mission.y, coords_mission.z + 2, 0, 0, 1);
+			break;
 		}
-		if (!groundFound) {
-			coords_mission.z = 1000.0;
-			WEAPON::GIVE_DELAYED_WEAPON_TO_PED(PLAYER::PLAYER_PED_ID(), 0xFBAB5776, 1, 0);
+	}
+	if (!blip_mission) {
+		myBlip = UI::GET_FIRST_BLIP_INFO_ID(BlipSpriteRaceFinish);
+		if (UI::DOES_BLIP_EXIST(myBlip) != 0) {
+			coords_mission = UI::GET_BLIP_INFO_ID_COORD(myBlip);
+			blip_mission = true;
+			ENTITY::SET_ENTITY_COORDS_NO_OFFSET(e, coords_mission.x, coords_mission.y, coords_mission.z + 2, 0, 0, 1);
 		}
 	}
 }
