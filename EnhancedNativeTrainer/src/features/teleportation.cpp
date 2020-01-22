@@ -39,6 +39,9 @@ struct tele_location{
 
 int interiorID_temp = -1;
 
+std::vector<Blip> MARATHON_BLIPS;
+bool is_marathon = false;
+
 // 3D Marker
 Vector3 coords_3Dblip, coords_3Dblip_old, temp_coords_3Dblip;
 Blip my3DBlip = -1;
@@ -802,13 +805,27 @@ void teleport_to_mission_marker(){
 	Blip myBlip;
 	Entity e = PLAYER::PLAYER_PED_ID();
 	if (PED::IS_PED_IN_ANY_VEHICLE(e, 0)) e = PED::GET_VEHICLE_PED_IS_USING(e);
+	bool blip_been_already = false;
+
+	if (GAMEPLAY::GET_MISSION_FLAG() == 1) is_marathon = true;
 
 	for (myBlip = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(myBlip) != 0; myBlip = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) {
 		if ((UI::GET_BLIP_INFO_ID_TYPE(myBlip) == 4 && UI::GET_BLIP_COLOUR(myBlip) == 66) || (UI::GET_BLIP_INFO_ID_TYPE(myBlip) == 4 && UI::GET_BLIP_COLOUR(myBlip) == 5) ||
 			(UI::GET_BLIP_INFO_ID_TYPE(myBlip) == 4 && UI::GET_BLIP_COLOUR(myBlip) == 2)) {
-			coords_mission = UI::GET_BLIP_INFO_ID_COORD(myBlip);
-			blip_mission = true;
-			ENTITY::SET_ENTITY_COORDS_NO_OFFSET(e, coords_mission.x, coords_mission.y, coords_mission.z + 2, 0, 0, 1);
+			//
+			if (!MARATHON_BLIPS.empty()) {
+				for (int i = 0; i < MARATHON_BLIPS.size(); i++) {
+					if (MARATHON_BLIPS[i] == myBlip) blip_been_already = true;
+				}
+				if (blip_been_already == false) MARATHON_BLIPS.push_back(myBlip);
+			}
+			if (MARATHON_BLIPS.empty()) MARATHON_BLIPS.push_back(myBlip);
+			//
+			if (blip_been_already == false) {
+				coords_mission = UI::GET_BLIP_INFO_ID_COORD(myBlip);
+				blip_mission = true;
+				ENTITY::SET_ENTITY_COORDS_NO_OFFSET(e, coords_mission.x, coords_mission.y, coords_mission.z + 2, 0, 0, 1);
+			}
 			break;
 		}
 	}
@@ -1718,5 +1735,11 @@ void update_teleport_features(){
 			teleport_to_marker();
 			blipFound_m = false;
 		}
+	}
+
+	if (GAMEPLAY::GET_MISSION_FLAG() == 0 && is_marathon == true) {
+		MARATHON_BLIPS.clear();
+		MARATHON_BLIPS.shrink_to_fit();
+		is_marathon = false;
 	}
 }
