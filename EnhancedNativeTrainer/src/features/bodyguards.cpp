@@ -745,12 +745,18 @@ void maintain_bodyguards(){
 				Vector3 my_coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 				Vector3 bod_coords = ENTITY::GET_ENTITY_COORDS(spawnedBodyguards[i], true);
 				WATER::GET_WATER_HEIGHT(my_coords.x, my_coords.y, my_coords.z, &height);
-				if (PED::IS_PED_SWIMMING(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_SWIMMING(spawnedBodyguards[i])) ENTITY::SET_ENTITY_COORDS(spawnedBodyguards[i], my_coords.x + (0.1 * (rand() % 30)), my_coords.y + (0.1 * (rand() % 30)), my_coords.z - 0.9, 1, 0, 0, 1); // 0.8 1.0
+				if (PED::IS_PED_SWIMMING(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_SWIMMING(spawnedBodyguards[i]) && !PED::IS_PED_JUMPING(spawnedBodyguards[i])) {
+					AI::TASK_TURN_PED_TO_FACE_COORD(spawnedBodyguards[i], my_coords.x, my_coords.y, my_coords.z, 10000);
+					WAIT(1000);
+					AI::TASK_JUMP(spawnedBodyguards[i], 1);
+					WAIT(10);
+				}
+				// ENTITY::SET_ENTITY_COORDS(spawnedBodyguards[i], my_coords.x + (0.1 * (rand() % 30)), my_coords.y + (0.1 * (rand() % 30)), my_coords.z - 0.9, 1, 0, 0, 1); // 0.8 1.0
 				if ((my_coords.z < height) && ((height - my_coords.z) > 2) && (bod_coords.z <= height) && ((height - bod_coords.z) < 1)) ENTITY::SET_ENTITY_COORDS(spawnedBodyguards[i], my_coords.x + (0.1 * (rand() % 30)), my_coords.y + (0.1 * (rand() % 30)), my_coords.z - 0.9, 1, 0, 0, 1); // 0.8 1.0
 			}
 			//
 			PED::SET_PED_KEEP_TASK(spawnedBodyguards[i], true);
-			if (animal_in_group == true && PED::IS_PED_FLEEING(spawnedBodyguards[i])) AI::TASK_STAND_STILL(spawnedBodyguards[i], 10000); //  || AI::IS_PED_RUNNING(*iter))
+			if (animal_in_group == true && PED::IS_PED_FLEEING(spawnedBodyguards[i])) AI::TASK_STAND_STILL(spawnedBodyguards[i], 10000); // || AI::IS_PED_RUNNING(*iter))
 			
 			if (stop_b == false) {
 				PED::SET_PED_AS_GROUP_MEMBER(spawnedBodyguards[i], PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID()));
