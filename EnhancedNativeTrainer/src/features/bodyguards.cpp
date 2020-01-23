@@ -751,8 +751,11 @@ void maintain_bodyguards(){
 					AI::TASK_JUMP(spawnedBodyguards[i], 1);
 					WAIT(10);
 				}
-				// ENTITY::SET_ENTITY_COORDS(spawnedBodyguards[i], my_coords.x + (0.1 * (rand() % 30)), my_coords.y + (0.1 * (rand() % 30)), my_coords.z - 0.9, 1, 0, 0, 1); // 0.8 1.0
-				if ((my_coords.z < height) && ((height - my_coords.z) > 2) && (bod_coords.z <= height) && ((height - bod_coords.z) < 1)) ENTITY::SET_ENTITY_COORDS(spawnedBodyguards[i], my_coords.x + (0.1 * (rand() % 30)), my_coords.y + (0.1 * (rand() % 30)), my_coords.z - 0.9, 1, 0, 0, 1); // 0.8 1.0
+				if ((my_coords.z < height) && ((height - my_coords.z) > 2)) {
+					if ((bod_coords.z - my_coords.z) > 1) ENTITY::APPLY_FORCE_TO_ENTITY(spawnedBodyguards[i], 1, 0, 0, -2.6, 0, 0, 0, true, false, true, true, true, true);
+					if ((bod_coords.z - my_coords.z) < 0) ENTITY::APPLY_FORCE_TO_ENTITY(spawnedBodyguards[i], 1, 0, 0, 2.6, 0, 0, 0, true, false, true, true, true, true);
+				}
+				if (((height - my_coords.z) < 1) && ((height - bod_coords.z) > 2) && ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID()) == 1) ENTITY::APPLY_FORCE_TO_ENTITY(spawnedBodyguards[i], 1, 0, 0, 2.6, 0, 0, 0, true, false, true, true, true, true);
 			}
 			//
 			PED::SET_PED_KEEP_TASK(spawnedBodyguards[i], true);
