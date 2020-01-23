@@ -745,7 +745,7 @@ void maintain_bodyguards(){
 				Vector3 my_coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 				Vector3 bod_coords = ENTITY::GET_ENTITY_COORDS(spawnedBodyguards[i], true);
 				WATER::GET_WATER_HEIGHT(my_coords.x, my_coords.y, my_coords.z, &height);
-				if (PED::IS_PED_SWIMMING(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_SWIMMING(spawnedBodyguards[i]) && !PED::IS_PED_JUMPING(spawnedBodyguards[i])) {
+				if (PED::IS_PED_SWIMMING(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_SWIMMING(spawnedBodyguards[i]) && !PED::IS_PED_JUMPING(spawnedBodyguards[i]) && AI::IS_PED_STILL(spawnedBodyguards[i])) {
 					AI::TASK_TURN_PED_TO_FACE_COORD(spawnedBodyguards[i], my_coords.x, my_coords.y, my_coords.z, 10000);
 					WAIT(1000);
 					AI::TASK_JUMP(spawnedBodyguards[i], 1);
