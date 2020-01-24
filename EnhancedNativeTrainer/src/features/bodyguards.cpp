@@ -757,9 +757,9 @@ void maintain_bodyguards(){
 					if ((bod_coords.z - my_coords.z) > 2) ENTITY::APPLY_FORCE_TO_ENTITY(spawnedBodyguards[i], 1, 0, 0, -2.6, 0, 0, 0, true, false, true, true, true, true); // 1
 					if ((bod_coords.z - my_coords.z) < -1) ENTITY::APPLY_FORCE_TO_ENTITY(spawnedBodyguards[i], 1, 0, 0, 2.6, 0, 0, 0, true, false, true, true, true, true); // 0
 					if ((bod_coords.x - my_coords.x) > 7 && (bod_coords.x > my_coords.x)) ENTITY::APPLY_FORCE_TO_ENTITY(spawnedBodyguards[i], 1, -2.6, 0, 0, 0, 0, 0, true, false, true, true, true, true);
-					if ((bod_coords.x - my_coords.x) > -7 && (bod_coords.x - my_coords.x) < 0 && (bod_coords.x < my_coords.x)) ENTITY::APPLY_FORCE_TO_ENTITY(spawnedBodyguards[i], 1, 2.6, 0, 0, 0, 0, 0, true, false, true, true, true, true);
+					if ((my_coords.x - bod_coords.x) > 7 && (bod_coords.x < my_coords.x)) ENTITY::APPLY_FORCE_TO_ENTITY(spawnedBodyguards[i], 1, 2.6, 0, 0, 0, 0, 0, true, false, true, true, true, true);
 					if ((bod_coords.y - my_coords.y) > 7 && (bod_coords.y > my_coords.y)) ENTITY::APPLY_FORCE_TO_ENTITY(spawnedBodyguards[i], 1, 0, -2.6, 0, 0, 0, 0, true, false, true, true, true, true);
-					if ((bod_coords.y - my_coords.y) > -7 && (bod_coords.y - my_coords.y) < 0 && (bod_coords.y < my_coords.y)) ENTITY::APPLY_FORCE_TO_ENTITY(spawnedBodyguards[i], 1, 0, 2.6, 0, 0, 0, 0, true, false, true, true, true, true);
+					if ((my_coords.y - bod_coords.y) > 7 && (bod_coords.y < my_coords.y)) ENTITY::APPLY_FORCE_TO_ENTITY(spawnedBodyguards[i], 1, 0, 2.6, 0, 0, 0, 0, true, false, true, true, true, true);
 				}
 				if (((height - my_coords.z) < 1) && ((height - bod_coords.z) > 2) && ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID()) == 1) ENTITY::APPLY_FORCE_TO_ENTITY(spawnedBodyguards[i], 1, 0, 0, 2.6, 0, 0, 0, true, false, true, true, true, true);
 			}
