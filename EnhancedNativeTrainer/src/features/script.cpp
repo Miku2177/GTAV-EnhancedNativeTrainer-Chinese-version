@@ -565,7 +565,8 @@ void update_features(){
 	// player invincible
 	if(featurePlayerInvincibleUpdated){
 		if(bPlayerExists && !featurePlayerInvincible){
-			PLAYER::SET_PLAYER_INVINCIBLE(player, FALSE);
+			//PLAYER::SET_PLAYER_INVINCIBLE(player, FALSE);
+			PLAYER::_0x733A643B5B0C53C1(player, FALSE);
 		}
 		WAIT(100);
 		featurePlayerInvincibleUpdated = false;
