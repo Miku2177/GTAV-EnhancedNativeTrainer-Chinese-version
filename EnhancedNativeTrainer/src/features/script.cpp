@@ -573,7 +573,8 @@ void update_features(){
 	}
 
 	if(featurePlayerInvincible && bPlayerExists){
-		PLAYER::SET_PLAYER_INVINCIBLE(player, TRUE);
+		//PLAYER::SET_PLAYER_INVINCIBLE(player, TRUE);
+		PLAYER::_0x733A643B5B0C53C1(player, TRUE);
 	}
 	
 	if (engine_switched) { 
