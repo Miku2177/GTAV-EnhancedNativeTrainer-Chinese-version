@@ -45,6 +45,7 @@ bool featureVehNoDamage = false;
 bool featureVehInvulnIncludesCosmetic = false;
 
 bool feature3rdpersonviewonly, featureDaytimeonly = false;
+bool featureHazards = true;
 
 bool window_up = true;
 bool high_speed = false;
@@ -1159,6 +1160,12 @@ void process_visualize_menu() {
 	listItem->caption = "Turn Indicators Off If Accelerated For (sec)";
 	listItem->value = turnSignalsAccelerationIndex;
 	menuItems.push_back(listItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Enable Hazard Lights On Damage";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureHazards;
+	menuItems.push_back(toggleItem);
 
 	listItem = new SelectFromListMenuItem(VEH_VISLIGHT_CAPTIONS, onchange_veh_vislight_index);
 	listItem->wrap = false;
@@ -2860,7 +2867,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			turn_check_right = false;
 		}
 
-		if (VEHICLE::IS_VEHICLE_DOOR_DAMAGED(vehturn, 0) || VEHICLE::IS_VEHICLE_DOOR_DAMAGED(vehturn, 1) || VEHICLE::IS_VEHICLE_DOOR_DAMAGED(vehturn, 2) || VEHICLE::IS_VEHICLE_DOOR_DAMAGED(vehturn, 3)) {
+		if (featureHazards && (VEHICLE::IS_VEHICLE_DOOR_DAMAGED(vehturn, 0) || VEHICLE::IS_VEHICLE_DOOR_DAMAGED(vehturn, 1) || VEHICLE::IS_VEHICLE_DOOR_DAMAGED(vehturn, 2) || VEHICLE::IS_VEHICLE_DOOR_DAMAGED(vehturn, 3))) {
 			turn_check_right = true;
 			turn_check_left = true;
 		}
@@ -3912,6 +3919,7 @@ void reset_vehicle_globals() {
 	featureLockVehicleDoorsUpdated = false;
 	featureDeleteTrackedVehicles_CharacterChanged = true;
 		featureBlipNumber = true;
+		featureHazards = true;
 		featureWearHelmetOffUpdated = true;
 		featureVehInvincibleUpdated = true;
 		//featureWearHelmetOffUpdated = true;
@@ -4201,6 +4209,7 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureKMH", &featureKMH});
 	results->push_back(FeatureEnabledLocalDefinition{"feature3rdpersonviewonly", &feature3rdpersonviewonly});
 	results->push_back(FeatureEnabledLocalDefinition{"featureDaytimeonly", &featureDaytimeonly});
+	results->push_back(FeatureEnabledLocalDefinition{"featureHazards", &featureHazards});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAltitude", &featureAltitude });
 	results->push_back(FeatureEnabledLocalDefinition{"featureSpeedOnGround", &featureSpeedOnGround });
 	results->push_back(FeatureEnabledLocalDefinition{"featureSpeedInAir", &featureSpeedInAir });
