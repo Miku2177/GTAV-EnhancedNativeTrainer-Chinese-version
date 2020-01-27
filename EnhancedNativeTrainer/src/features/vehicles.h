@@ -75,6 +75,12 @@ extern Vehicle veh_l;
 extern bool featureLockVehicleDoors;
 extern bool featureLockVehicleDoorsUpdated;
 
+// engine power stuff
+const std::vector<std::string> VEH_ENG_POW_CAPTIONS{ "OFF", "1x", "5x", "10x", "25x", "50x", "75x", "100x", "125x", "150x", "175x", "200x", "225x", "250x", "275x", "300x", "325x", "350x", "375x", "400x" };
+const std::vector<int> VEH_ENG_POW_VALUES{ -1, 0, 5, 10, 25, 50, 75, 100, 125, 150, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400 };
+extern int engPowMultIndex;
+extern bool powChanged;
+
 //Blip Colour
 const std::vector<std::string> VEH_BLIPCOLOUR_CAPTIONS{ "White", "Red", "Green", "Blue", "Orange", "Purple", "Grey", "Brown", "Pink", "Dark Green", "Dark Purple", "Dark Blue" };
 const std::vector<int> VEH_BLIPCOLOUR_VALUES{ 0, 1, 2, 3, 17, 19, 20, 21, 23, 25, 27, 29 };
