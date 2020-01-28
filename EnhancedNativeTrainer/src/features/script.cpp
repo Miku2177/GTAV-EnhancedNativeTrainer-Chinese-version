@@ -57,6 +57,7 @@ bool skydiving = false;
 bool everInitialised = false;
 
 ENTDatabase* database = NULL;
+Camera DeathCam = NULL;
 
 bool onlineWarningShown = false;
 
@@ -486,12 +487,46 @@ void update_features(){
 		setAirbrakeRelatedInputToBlocked(false);
 	}
 
+	// First Person Death Camera
+	if (featureFirstPersonDeathCamera) {
+		if ((PED::GET_PED_TYPE(PLAYER::PLAYER_PED_ID()) == 0 && ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == GAMEPLAY::GET_HASH_KEY("player_zero")) ||
+			(PED::GET_PED_TYPE(PLAYER::PLAYER_PED_ID()) == 1 && ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == GAMEPLAY::GET_HASH_KEY("player_one")) ||
+			((PED::GET_PED_TYPE(PLAYER::PLAYER_PED_ID()) == 2 || PED::GET_PED_TYPE(PLAYER::PLAYER_PED_ID()) == 3) && ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == GAMEPLAY::GET_HASH_KEY("player_two"))) {
+			if (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) {
+				Vector3 playerPosition = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
+				Vector3 curRotation = ENTITY::GET_ENTITY_ROTATION(PLAYER::PLAYER_PED_ID(), 2);
+
+				if (!CAM::DOES_CAM_EXIST(DeathCam)) {
+					DeathCam = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_FLY_CAMERA", playerPosition.x, playerPosition.y, playerPosition.z, curRotation.x, curRotation.y, curRotation.z, 50.0, true, 2);
+					CAM::ATTACH_CAM_TO_PED_BONE(DeathCam, PLAYER::PLAYER_PED_ID(), 31086, 0, -0.15, 0, 1);
+					CAM::POINT_CAM_AT_PED_BONE(DeathCam, PLAYER::PLAYER_PED_ID(), 31086, 0, 0.0, 0, 1);
+					CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE_BLEND_LEVEL(DeathCam, 1.0);
+					CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE(DeathCam, 1.0);
+					CAM::_SET_CAM_DOF_FOCUS_DISTANCE_BIAS(DeathCam, 1.0);
+					CAM::RENDER_SCRIPT_CAMS(true, false, 0, true, true);
+					CAM::SET_CAM_ACTIVE(DeathCam, true);
+					CAM::SET_CAM_NEAR_CLIP(DeathCam, .329); // 229 329
+					ENTITY::SET_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID(), false);
+				}
+			}
+
+			if (!ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) {
+				if (CAM::DOES_CAM_EXIST(DeathCam)) {
+					ENTITY::SET_ENTITY_COLLISION(PLAYER::PLAYER_PED_ID(), 1, 1);
+					CAM::RENDER_SCRIPT_CAMS(false, false, 0, false, false);
+					CAM::DETACH_CAM(DeathCam);
+					CAM::SET_CAM_ACTIVE(DeathCam, false);
+					CAM::DESTROY_CAM(DeathCam, true);
+					ENTITY::SET_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID(), true);
+				}
+			}
+		}
+	}
+
 	// Manual Respawn
 	if (featureNoAutoRespawn && GAMEPLAY::GET_MISSION_FLAG() == 0) {
 		if ((ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) || PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 1)) && player_died == false) {
-			//GAMEPLAY::_DISABLE_AUTOMATIC_RESPAWN(true);
 			SCRIPT::SET_NO_LOADING_SCREEN(true);
-			//if (CAM::IS_SCREEN_FADED_OUT()) CAM::DO_SCREEN_FADE_IN(100);
 			GAMEPLAY::SET_FADE_OUT_AFTER_DEATH(false);
 			GAMEPLAY::SET_FADE_OUT_AFTER_ARREST(false);
 			GAMEPLAY::_RESET_LOCALPLAYER_STATE();
@@ -523,7 +558,6 @@ void update_features(){
 		}
 		if (!ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) player_died = false;
 	}
-	if (featureFirstPersonDeathCamera && featureNoAutoRespawn) set_status_text("'Manual Respawn' and 'First Person Death Camera' options are not compatible. Disable one of them.");
 	if (featureRespawnsWhereDied && featureNoAutoRespawn) set_status_text("'Manual Respawn' and 'Instant Respawn On Death' options are not compatible. Disable one of them.");
 	
 	// Instant Respawn On Death/Arrest
