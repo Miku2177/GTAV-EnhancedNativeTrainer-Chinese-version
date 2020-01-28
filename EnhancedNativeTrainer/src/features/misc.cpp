@@ -78,8 +78,6 @@ bool no_blur_initialized = false;
 
 bool no_phone, bill_no_phone = false;
 
-Camera DeathCam = NULL;
-
 Vehicle playerVeh = -1;
 
 //Skip track
@@ -1577,43 +1575,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			CAM::DESTROY_CAM(StuntCam, true);
 		}
 	}
-
-	if (featureFirstPersonDeathCamera) {
-		if ((PED::GET_PED_TYPE(PLAYER::PLAYER_PED_ID()) == 0 && ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == GAMEPLAY::GET_HASH_KEY("player_zero")) ||
-			(PED::GET_PED_TYPE(PLAYER::PLAYER_PED_ID()) == 1 && ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == GAMEPLAY::GET_HASH_KEY("player_one")) ||
-			((PED::GET_PED_TYPE(PLAYER::PLAYER_PED_ID()) == 2 || PED::GET_PED_TYPE(PLAYER::PLAYER_PED_ID()) == 3) && ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == GAMEPLAY::GET_HASH_KEY("player_two"))) {
-			if (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) {
-				Vector3 playerPosition = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
-				Vector3 curRotation = ENTITY::GET_ENTITY_ROTATION(PLAYER::PLAYER_PED_ID(), 2);
-
-				if (!CAM::DOES_CAM_EXIST(DeathCam)) {
-					DeathCam = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_FLY_CAMERA", playerPosition.x, playerPosition.y, playerPosition.z, curRotation.x, curRotation.y, curRotation.z, 50.0, true, 2);
-					CAM::ATTACH_CAM_TO_PED_BONE(DeathCam, PLAYER::PLAYER_PED_ID(), 31086, 0, -0.15, 0, 1);
-					CAM::POINT_CAM_AT_PED_BONE(DeathCam, PLAYER::PLAYER_PED_ID(), 31086, 0, 0.0, 0, 1);
-					CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE_BLEND_LEVEL(DeathCam, 1.0);
-					CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE(DeathCam, 1.0);
-					CAM::_SET_CAM_DOF_FOCUS_DISTANCE_BIAS(DeathCam, 1.0);
-					CAM::RENDER_SCRIPT_CAMS(true, false, 0, true, true);
-					CAM::SET_CAM_ACTIVE(DeathCam, true);
-					CAM::SET_CAM_NEAR_CLIP(DeathCam, .229); // 329
-					ENTITY::SET_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID(), false);
-				}
-				while (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) WAIT(0);
-			}
-
-			if (!ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) {
-				if (CAM::DOES_CAM_EXIST(DeathCam)) {
-					ENTITY::SET_ENTITY_COLLISION(PLAYER::PLAYER_PED_ID(), 1, 1);
-					CAM::RENDER_SCRIPT_CAMS(false, false, 0, false, false);
-					CAM::DETACH_CAM(DeathCam);
-					CAM::SET_CAM_ACTIVE(DeathCam, false);
-					CAM::DESTROY_CAM(DeathCam, true);
-					ENTITY::SET_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID(), true);
-				}
-			}
-		}
-	}
-	
+		
 	// is a cutscene currently playing?
 	if (cutscene_is_playing == true) {
 		con_disabled = true;
