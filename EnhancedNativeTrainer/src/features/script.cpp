@@ -89,6 +89,8 @@ bool featureNoScubaSound = false;
 
 bool super_jump_no_parachute, super_jump_intheair = false;
 
+bool manual_instant = false;
+
 bool featureWantedLevelNoPHeli = false;
 bool featureWantedLevelNoPHeliUpdated = false;
 bool featureWantedNoPRoadB = false;
@@ -505,8 +507,7 @@ void update_features(){
 					CAM::_SET_CAM_DOF_FOCUS_DISTANCE_BIAS(DeathCam, 1.0);
 					CAM::RENDER_SCRIPT_CAMS(true, false, 0, true, true);
 					CAM::SET_CAM_ACTIVE(DeathCam, true);
-					CAM::SET_CAM_NEAR_CLIP(DeathCam, .329); // 229 329
-					ENTITY::SET_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID(), false);
+					ENTITY::SET_ENTITY_ALPHA(PLAYER::PLAYER_PED_ID(), 0, 0);
 				}
 			}
 
@@ -517,7 +518,7 @@ void update_features(){
 					CAM::DETACH_CAM(DeathCam);
 					CAM::SET_CAM_ACTIVE(DeathCam, false);
 					CAM::DESTROY_CAM(DeathCam, true);
-					ENTITY::SET_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID(), true);
+					ENTITY::SET_ENTITY_ALPHA(PLAYER::PLAYER_PED_ID(), 255, 0);
 				}
 			}
 		}
@@ -533,12 +534,14 @@ void update_features(){
 			GAMEPLAY::IGNORE_NEXT_RESTART(true);
 			GAMEPLAY::_DISABLE_AUTOMATIC_RESPAWN(true);
 			GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("respawn_controller");
+			manual_instant = true;
 		}
 		if (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && CONTROLS::IS_CONTROL_JUST_PRESSED(2, 22)) { // 23 // CONTROLS::IS_CONTROL_JUST_PRESSED(2, 176) || 
 			player_died = true;
 			GAMEPLAY::_DISABLE_AUTOMATIC_RESPAWN(false);
 			SCRIPT::SET_NO_LOADING_SCREEN(false);
 			CAM::DO_SCREEN_FADE_OUT(4000);
+			manual_instant = false;
 		}
 		if ((PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 1) || PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 0)) && CONTROLS::IS_CONTROL_JUST_PRESSED(2, 22)) { // CONTROLS::IS_CONTROL_JUST_PRESSED(2, 176) || 
 			CAM::DO_SCREEN_FADE_OUT(500);
@@ -555,13 +558,13 @@ void update_features(){
 			PLAYER::RESET_PLAYER_ARREST_STATE(PLAYER::PLAYER_PED_ID());
 			WAIT(1000);
 			CAM::DO_SCREEN_FADE_IN(500);
+			manual_instant = false;
 		}
 		if (!ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) player_died = false;
 	}
-	if (featureRespawnsWhereDied && featureNoAutoRespawn) set_status_text("'Manual Respawn' and 'Instant Respawn On Death' options are not compatible. Disable one of them.");
-	
+		
 	// Instant Respawn On Death/Arrest
-	if (featureRespawnsWhereDied && GAMEPLAY::GET_MISSION_FLAG() == 0) {
+	if (featureRespawnsWhereDied && GAMEPLAY::GET_MISSION_FLAG() == 0 && manual_instant == false) {
 		if (ENTITY::IS_ENTITY_DEAD(playerPed) || PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 0)) {
 			player_died = true;
 			CAM::DO_SCREEN_FADE_OUT(500);
