@@ -1542,34 +1542,27 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	
 	// First Person Stunt Jump Camera
 	if (featureFirstPersonStuntJumpCamera) {
-		if (GAMEPLAY::IS_STUNT_JUMP_IN_PROGRESS() && !CAM::DOES_CAM_EXIST(StuntCam)) {
+		if (GAMEPLAY::IS_STUNT_JUMP_IN_PROGRESS() ) {
 			Vector3 playerPosition = ENTITY::GET_ENTITY_COORDS(playerPed, true);
 			Vector3 curRotation = ENTITY::GET_ENTITY_ROTATION(PED::GET_VEHICLE_PED_IS_USING(playerPed), 2);
+			if (!CAM::DOES_CAM_EXIST(StuntCam)) {
+				StuntCam = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_FLY_CAMERA", playerPosition.x, playerPosition.y, playerPosition.z, curRotation.x, curRotation.y, curRotation.z, 50.0, true, 2);
 
-			StuntCam = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_FLY_CAMERA", playerPosition.x, playerPosition.y, playerPosition.z, curRotation.x, curRotation.y, curRotation.z, 50.0, true, 2);
-			
-			if (!PED::IS_PED_ON_ANY_BIKE(playerPed)) {
-				CAM::ATTACH_CAM_TO_PED_BONE(StuntCam, playerPed, 31086, 0, -0.15, 0.05, 1);
-				CAM::POINT_CAM_AT_PED_BONE(StuntCam, playerPed, 31086, 0, 0.0, 0.05, 1);
-			}
-			if (PED::IS_PED_ON_ANY_BIKE(playerPed)) {
-				CAM::ATTACH_CAM_TO_PED_BONE(StuntCam, playerPed, 31086, 0, -0.15, -0.10, 1);
-				CAM::POINT_CAM_AT_PED_BONE(StuntCam, playerPed, 31086, 0, 0.0, -0.10, 1);
+				if (!PED::IS_PED_ON_ANY_BIKE(playerPed)) CAM::ATTACH_CAM_TO_PED_BONE(StuntCam, playerPed, 31086, 0, -0.15, 0.05, 1); 
+				if (PED::IS_PED_ON_ANY_BIKE(playerPed)) CAM::ATTACH_CAM_TO_PED_BONE(StuntCam, playerPed, 31086, 0, -0.15, -0.10, 1); 
+				CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE_BLEND_LEVEL(StuntCam, 1.0);
+				CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE(StuntCam, 1.0);
+				CAM::_SET_CAM_DOF_FOCUS_DISTANCE_BIAS(StuntCam, 1.0);
+				CAM::RENDER_SCRIPT_CAMS(true, false, 0, true, true);
+				CAM::SET_CAM_ACTIVE(StuntCam, true);
+				CAM::SET_CAM_NEAR_CLIP(StuntCam, .329);
 			}
 			CAM::SET_CAM_ROT(StuntCam, curRotation.x, curRotation.y, curRotation.z, 2);
-
-			CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE_BLEND_LEVEL(StuntCam, 1.0);
-			CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE(StuntCam, 1.0);
-			CAM::_SET_CAM_DOF_FOCUS_DISTANCE_BIAS(StuntCam, 1.0);
-
-			CAM::RENDER_SCRIPT_CAMS(true, false, 1, true, true);
-			CAM::SET_CAM_ACTIVE(StuntCam, true);
-			CAM::SET_CAM_NEAR_CLIP(StuntCam, .329);
 		}
 
 		if (!GAMEPLAY::IS_STUNT_JUMP_IN_PROGRESS() && CAM::DOES_CAM_EXIST(StuntCam)) {
 			ENTITY::SET_ENTITY_COLLISION(PLAYER::PLAYER_PED_ID(), 1, 1);
-			CAM::RENDER_SCRIPT_CAMS(false, false, 1, false, false);
+			CAM::RENDER_SCRIPT_CAMS(false, false, 0, false, false);
 			CAM::DETACH_CAM(StuntCam);
 			CAM::SET_CAM_ACTIVE(StuntCam, false);
 			CAM::DESTROY_CAM(StuntCam, true);
