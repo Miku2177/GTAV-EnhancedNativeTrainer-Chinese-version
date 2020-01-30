@@ -804,7 +804,7 @@ void process_misc_menu(){
 		{"Dynamic Health Bar", &featureDynamicHealthBar }, 
 		//{"Reset Player Model On Death", &featureResetPlayerModelOnDeath, nullptr, true},
 		{"Phone Settings", NULL, NULL, false},
-		{"First Person Death Camera", &featureFirstPersonDeathCamera, NULL },
+		{"First Person Death/Arrest Camera", &featureFirstPersonDeathCamera, NULL },
 		{"First Person Stunt Jump Camera", &featureFirstPersonStuntJumpCamera, NULL },
 		{"No Stunt Jumps", &featureNoStuntJumps, NULL },
 		{"FPS Counter", &featureShowFPS, NULL }, 
