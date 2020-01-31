@@ -764,8 +764,20 @@ void maintain_bodyguards(){
 				if (((height - my_coords.z) < 1) && ((height - bod_coords.z) > 2) && ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID()) == 1) ENTITY::APPLY_FORCE_TO_ENTITY(spawnedBodyguards[i], 1, 0, 0, 2.6, 0, 0, 0, true, false, true, true, true, true);
 			}
 			//
+			// animals
+			if (animal_in_group == true) {
+				const int arrSize_animals = 1024;
+				Ped surr_animals[arrSize_animals];
+				int count_animals = worldGetAllPeds(surr_animals, arrSize_animals);
+				for (int k = 0; k < count_animals; k++) {
+					if (surr_animals[k] != PLAYER::PLAYER_PED_ID() && surr_animals[k] != spawnedBodyguards[i] && (PED::IS_PED_IN_MELEE_COMBAT(surr_animals[k]) || PED::IS_PED_SHOOTING(surr_animals[k]))) {
+						if (PED::GET_PED_TYPE(spawnedBodyguards[i]) == 28 /*&& !PED::IS_PED_IN_MELEE_COMBAT(spawnedBodyguards[i])*/) AI::TASK_COMBAT_PED_TIMED(spawnedBodyguards[i], surr_animals[k], 50000, 16); // 50000
+					}
+				}
+			}
+			//
 			PED::SET_PED_KEEP_TASK(spawnedBodyguards[i], true);
-			if (animal_in_group == true && PED::IS_PED_FLEEING(spawnedBodyguards[i])) AI::TASK_STAND_STILL(spawnedBodyguards[i], 10000); // || AI::IS_PED_RUNNING(*iter))
+			if (animal_in_group == true && PED::IS_PED_FLEEING(spawnedBodyguards[i])) AI::TASK_STAND_STILL(spawnedBodyguards[i], 10000);
 			
 			if (stop_b == false) {
 				PED::SET_PED_AS_GROUP_MEMBER(spawnedBodyguards[i], PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID()));
