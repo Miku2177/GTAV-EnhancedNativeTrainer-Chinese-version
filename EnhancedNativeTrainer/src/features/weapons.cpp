@@ -1697,38 +1697,6 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		if (featurePunchMeleeWeapons && !WEAPON::IS_PED_ARMED(playerPed, 6) && WEAPON::IS_PED_ARMED(playerPed, 7)) cur_weapon_e = true;
 		if (featurePunchFireWeapons && WEAPON::IS_PED_ARMED(playerPed, 7) && WEAPON::IS_PED_ARMED(playerPed, 6)) cur_weapon_e = true;
 
-		/*if (PEDS_POWERPUNCH_VALUES[PedsPowerPunchIndex] > 0) { // including peds
-			int count_surr_p_peds = worldGetAllPeds(surr_p_peds, arrSize_punch);
-			for (int i = 0; i < count_surr_p_peds; i++) {
-				if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(playerPed, surr_p_peds[i], 1)) {
-					if (featurePunchFists && !WEAPON::IS_PED_ARMED(surr_p_peds[i], 7)) cur_weapon_peds = true;
-					if (featurePunchMeleeWeapons && !WEAPON::IS_PED_ARMED(surr_p_peds[i], 6) && WEAPON::IS_PED_ARMED(surr_p_peds[i], 7)) cur_weapon_peds = true;
-					if (featurePunchFireWeapons && WEAPON::IS_PED_ARMED(surr_p_peds[i], 7) && WEAPON::IS_PED_ARMED(surr_p_peds[i], 6)) cur_weapon_peds = true;
-					if (cur_weapon_peds == true) {
-						temp_nearest_ped = playerPed;
-						CamRot = ENTITY::GET_ENTITY_ROTATION(surr_p_peds[i], 2);
-						force_nearest_ped = false;
-					}
-				}
-				if (featurepowerpunchpeds) {
-					for (int j = 0; j < count_surr_p_peds; j++) {
-						if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(surr_p_peds[i], surr_p_peds[j], 1)) {
-							if (featurePunchFists && !WEAPON::IS_PED_ARMED(surr_p_peds[j], 7)) cur_weapon_e_peds = true;
-							if (featurePunchMeleeWeapons && !WEAPON::IS_PED_ARMED(surr_p_peds[j], 6) && WEAPON::IS_PED_ARMED(surr_p_peds[j], 7)) cur_weapon_e_peds = true;
-							if (featurePunchFireWeapons && WEAPON::IS_PED_ARMED(surr_p_peds[j], 7) && WEAPON::IS_PED_ARMED(surr_p_peds[j], 6)) cur_weapon_e_peds = true;
-							if (cur_weapon_e_peds == true) {
-								temp_nearest_ped = surr_p_peds[i];
-								CamRot = ENTITY::GET_ENTITY_ROTATION(surr_p_peds[j], 2);
-								force_nearest_ped = false;
-							}
-						}
-					}
-				}
-				PED::CLEAR_PED_LAST_DAMAGE_BONE(surr_p_peds[i]);
-				ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(surr_p_peds[i]);
-			}
-		}*/
-
 		float rad = 2 * 3.14 * (CamRot.z / 360);
 		float v_x = -(sin(rad) * p_force * 10);
 		float v_y = (cos(rad) * p_force * 10);
@@ -1783,13 +1751,6 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		for (int i = 0; i < count_surr_p_peds; i++) {
 			PED::CLEAR_PED_LAST_DAMAGE_BONE(surr_p_peds[i]);
 			ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(surr_p_peds[i]);
-			//if (!PED::IS_PED_GROUP_MEMBER(surr_p_peds[i], myGroup) && surr_p_peds[i] != playerPed && PED::GET_PED_TYPE(surr_p_peds[i]) != 6 && PED::GET_PED_TYPE(surr_p_peds[i]) != 27 && PED::GET_PED_TYPE(surr_p_peds[i]) != 29 && 
-			//	PED::IS_PED_IN_MELEE_COMBAT(surr_p_peds[i])
-			//	/*&& PED::IS_PED_IN_MELEE_COMBAT(playerPed) && force_nearest_ped == true*/) {
-			//	WAIT(500);
-			//	AI::TASK_SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(surr_p_peds[i], true);
-			//	AI::CLEAR_PED_TASKS_IMMEDIATELY(surr_p_peds[i]);
-			//}
 		}
 		for (int i = 0; i < count_surr_v; i++) {
 			PED::CLEAR_PED_LAST_DAMAGE_BONE(surr_vehicles[i]);
