@@ -771,7 +771,11 @@ void maintain_bodyguards(){
 				int count_animals = worldGetAllPeds(surr_animals, arrSize_animals);
 				for (int k = 0; k < count_animals; k++) {
 					if (surr_animals[k] != PLAYER::PLAYER_PED_ID() && surr_animals[k] != spawnedBodyguards[i] && (PED::IS_PED_IN_MELEE_COMBAT(surr_animals[k]) || PED::IS_PED_SHOOTING(surr_animals[k]))) {
-						if (PED::GET_PED_TYPE(spawnedBodyguards[i]) == 28 /*&& !PED::IS_PED_IN_MELEE_COMBAT(spawnedBodyguards[i])*/) AI::TASK_COMBAT_PED_TIMED(spawnedBodyguards[i], surr_animals[k], 50000, 16); // 50000
+						if (PED::GET_PED_TYPE(spawnedBodyguards[i]) == 28 /*&& !PED::IS_PED_IN_MELEE_COMBAT(spawnedBodyguards[i])*/) {
+							PED::SET_PED_CAN_RAGDOLL(spawnedBodyguards[i], 0);
+							PED::SET_PED_AS_ENEMY(surr_animals[k], true);
+							AI::TASK_COMBAT_PED_TIMED(spawnedBodyguards[i], surr_animals[k], 50000, 16); // 50000
+						}
 					}
 				}
 			}
