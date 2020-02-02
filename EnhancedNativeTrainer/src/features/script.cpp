@@ -61,6 +61,8 @@ Camera DeathCam = NULL;
 
 bool onlineWarningShown = false;
 
+bool injured_drunk = false;
+
 //std::mutex db_mutex;
 
 // features
@@ -72,7 +74,6 @@ bool featurePlayerNoNoise = false;
 bool featurePlayerFastSwim = false;
 bool featurePlayerFastRun = false;
 bool featurePlayerRunApartments = false;
-//bool featurePlayerSuperJump = false;
 bool featurePlayerInvisible = false;
 bool featurePlayerInvisibleInVehicle = false;
 bool featurePlayerDrunk = false;
@@ -103,7 +104,6 @@ bool featureWantedLevelNoSWATVehiclesUpdated = false;
 
 bool NoTaxiWhistling = false;
 bool featurePlayerCanBeHeadshot = false;
-bool featurePlayerInjuredMovement = false;
 bool featureRespawnsWhereDied = false;
 
 bool lev_message = false;
@@ -186,6 +186,12 @@ const int NPC_RAGDOLL_VALUES[] = { 0, 1, 2 };
 int current_npc_ragdoll = 0;
 bool current_npc_ragdoll_Changed = true;
 
+//Limp If Injured
+const std::vector<std::string> LIMP_IF_INJURED_CAPTIONS{ "OFF", "Mode 1", "Mode 2" };
+const int LIMP_IF_INJURED_VALUES[] = { 0, 1, 2 };
+int current_limp_if_injured = 0;
+bool current_limp_if_injured_Changed = true;
+
 //Player Movement Speed && Hancock Mode
 const std::vector<std::string> PLAYER_MOVEMENT_CAPTIONS{ "Normal", "0.5x", "1x", "2x", "3x", "4x", "5x", "6x", "7x", "8x", "9x", "10x" };
 const double PLAYER_MOVEMENT_VALUES[] = { 0.00, 0.60, 1.00, 2.00, 3.00, 4.00, 5.00, 6.00, 7.00, 8.00, 9.00, 10.00 };
@@ -266,6 +272,11 @@ void onchange_player_superjump_mode(int value, SelectFromListMenuItem* source) {
 void onchange_NPC_ragdoll_mode(int value, SelectFromListMenuItem* source) {
 	current_npc_ragdoll = value;
 	current_npc_ragdoll_Changed = true;
+}
+
+void onchange_limp_if_injured_mode(int value, SelectFromListMenuItem* source) {
+	current_limp_if_injured = value;
+	current_limp_if_injured_Changed = true;
 }
 
 void onchange_player_escapemoney_mode(int value, SelectFromListMenuItem* source){
@@ -513,16 +524,19 @@ void update_features(){
 
 			if (CAM::DOES_CAM_EXIST(DeathCam)) { // camera rotation
 				Vector3 rot_cam = CAM::GET_CAM_ROT(DeathCam, 2);
-				if ((CONTROLS::IS_CONTROL_PRESSED(2, 34) || CONTROLS::IS_CONTROL_PRESSED(2, 35)) && first_person_rotate == false) {
+				if ((CONTROLS::IS_CONTROL_PRESSED(2, 34) || CONTROLS::IS_CONTROL_PRESSED(2, 35) || CONTROLS::IS_CONTROL_PRESSED(2, 32) || CONTROLS::IS_CONTROL_PRESSED(2, 33)) && first_person_rotate == false) {
 					CAM::DESTROY_CAM(DeathCam, true);
 					DeathCam = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_FLY_CAMERA", playerPosition.x, playerPosition.y, playerPosition.z, curRotation.x, curRotation.y, curRotation.z, 50.0, true, 2);
 					CAM::ATTACH_CAM_TO_PED_BONE(DeathCam, PLAYER::PLAYER_PED_ID(), 31086, 0, -0.15, 0, 1);
+					CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE_BLEND_LEVEL(DeathCam, 1.0);
+					CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE(DeathCam, 1.0);
+					CAM::_SET_CAM_DOF_FOCUS_DISTANCE_BIAS(DeathCam, 1.0);
 					first_person_rotate = true;
 				}
-				if (CONTROLS::IS_CONTROL_PRESSED(2, 34)) rot_cam.z = rot_cam.z - 1; // left only
-				if (CONTROLS::IS_CONTROL_PRESSED(2, 35)) rot_cam.z = rot_cam.z + 1; // right only
-				if (CONTROLS::IS_CONTROL_PRESSED(2, 32)) rot_cam.x = rot_cam.x - 1; // up only
-				if (CONTROLS::IS_CONTROL_PRESSED(2, 33)) rot_cam.x = rot_cam.x + 1; // down only
+				if (CONTROLS::IS_CONTROL_PRESSED(2, 34)) rot_cam.z = rot_cam.z + 1; // left only
+				if (CONTROLS::IS_CONTROL_PRESSED(2, 35)) rot_cam.z = rot_cam.z - 1; // right only
+				if (CONTROLS::IS_CONTROL_PRESSED(2, 32)) rot_cam.x = rot_cam.x + 1; // up only
+				if (CONTROLS::IS_CONTROL_PRESSED(2, 33)) rot_cam.x = rot_cam.x - 1; // down only
 				CAM::SET_CAM_ROT(DeathCam, rot_cam.x, rot_cam.y, rot_cam.z, 2);
 			}
 		}
@@ -556,6 +570,7 @@ void update_features(){
 			player_died = true;
 			GAMEPLAY::_DISABLE_AUTOMATIC_RESPAWN(false);
 			SCRIPT::SET_NO_LOADING_SCREEN(false);
+			PED::RESET_PED_MOVEMENT_CLIPSET(playerPed, 1.0f);
 			CAM::DO_SCREEN_FADE_OUT(4000);
 			manual_instant = false;
 		}
@@ -572,6 +587,7 @@ void update_features(){
 			PATHFIND::GET_SAFE_COORD_FOR_PED(ped_me.x, ped_me.y, ped_me.z, onGround, &CoordsWhereDied, 16);
 			NETWORK::NETWORK_RESURRECT_LOCAL_PLAYER(CoordsWhereDied.x, CoordsWhereDied.y, CoordsWhereDied.z, 0, false, false);
 			PLAYER::RESET_PLAYER_ARREST_STATE(PLAYER::PLAYER_PED_ID());
+			PED::RESET_PED_MOVEMENT_CLIPSET(playerPed, 1.0f);
 			WAIT(1000);
 			CAM::DO_SCREEN_FADE_IN(500);
 			manual_instant = false;
@@ -595,6 +611,7 @@ void update_features(){
 			PATHFIND::GET_SAFE_COORD_FOR_PED(ped_me.x, ped_me.y, ped_me.z, onGround, &CoordsWhereDied, 16);
 			NETWORK::NETWORK_RESURRECT_LOCAL_PLAYER(CoordsWhereDied.x, CoordsWhereDied.y, CoordsWhereDied.z, 0, false, false);
 			PLAYER::RESET_PLAYER_ARREST_STATE(playerPed);
+			PED::RESET_PED_MOVEMENT_CLIPSET(playerPed, 1.0f);
 			WAIT(1000);
 			CAM::DO_SCREEN_FADE_IN(500);
 		}
@@ -866,8 +883,8 @@ void update_features(){
 	}
 
 	// Injured Player Movement
-	if (featurePlayerInjuredMovement && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) {
-		if (!STREAMING::HAS_ANIM_DICT_LOADED("move_injured_generic")) STREAMING::REQUEST_ANIM_DICT("move_injured_generic"); // move_m@injured
+	if (LIMP_IF_INJURED_VALUES[current_limp_if_injured] > 0 && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) {
+		if (LIMP_IF_INJURED_VALUES[current_limp_if_injured] == 1 && !STREAMING::HAS_ANIM_DICT_LOADED("move_injured_generic")) STREAMING::REQUEST_ANIM_DICT("move_injured_generic"); // move_m@injured
 		float curr_health = ENTITY::GET_ENTITY_HEALTH(playerPed) - 100;
 		Vector3 coords_calf_l = PED::GET_PED_BONE_COORDS(playerPed, 63931, 0, 0, 0); // left calf
 		Vector3 coords_calf_r = PED::GET_PED_BONE_COORDS(playerPed, 36864, 0, 0, 0); // right calf
@@ -876,19 +893,26 @@ void update_features(){
 			GAMEPLAY::HAS_BULLET_IMPACTED_IN_AREA(coords_calf_r.x, coords_calf_r.y, coords_calf_r.z, 0.4, 0, 0) || GAMEPLAY::HAS_BULLET_IMPACTED_IN_AREA(coords_pelvis.x, coords_pelvis.y, coords_pelvis.z, 0.2, 0, 0))) {
 			been_injured = true;
 		}
-		if (curr_health < 90 || been_injured == true) PED::SET_PED_MOVEMENT_CLIPSET(playerPed, "move_injured_generic", 1.0f); // @walk
-		if (curr_health < 50 || been_injured == true) CONTROLS::DISABLE_CONTROL_ACTION(2, 21, 1); // sprint
-		if (curr_health < 30/* || been_injured == true*/) CONTROLS::DISABLE_CONTROL_ACTION(2, 22, 1); // jump
-		if ((curr_health > (PLAYER_HEALTH_VALUES[current_player_health] - 111)) || (PLAYER::GET_TIME_SINCE_LAST_DEATH() > 100 && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 5000) || 
-			(PLAYER::GET_TIME_SINCE_LAST_ARREST() > 100 && PLAYER::GET_TIME_SINCE_LAST_ARREST() < 5000)/* || player_died == true*/) { // 99
+		if (LIMP_IF_INJURED_VALUES[current_limp_if_injured] == 1 && (curr_health < 90 || been_injured == true)) PED::SET_PED_MOVEMENT_CLIPSET(playerPed, "move_injured_generic", 1.0f); // @walk
+		if (LIMP_IF_INJURED_VALUES[current_limp_if_injured] == 2 && (curr_health < 80 || been_injured == true) && injured_drunk == false) {
 			PED::RESET_PED_MOVEMENT_CLIPSET(playerPed, 1.0f);
+			STREAMING::REQUEST_ANIM_SET("move_m@drunk@verydrunk");
+			while (!STREAMING::HAS_ANIM_SET_LOADED("move_m@drunk@verydrunk")) WAIT(1);
+			PED::SET_PED_MOVEMENT_CLIPSET(playerPed, "move_m@drunk@verydrunk", 1.0f);
+			injured_drunk = true;
+		}
+		if (curr_health < 50 || been_injured == true) CONTROLS::DISABLE_CONTROL_ACTION(2, 21, 1); // sprint
+		if (curr_health < 30/* || been_injured == true*/ && !ENTITY::IS_ENTITY_DEAD(playerPed)) CONTROLS::DISABLE_CONTROL_ACTION(2, 22, 1); // jump
+		if ((curr_health > (PLAYER_HEALTH_VALUES[current_player_health] - 111)) || (PLAYER::GET_TIME_SINCE_LAST_DEATH() > 100 && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 5000) || 
+			(PLAYER::GET_TIME_SINCE_LAST_ARREST() > 100 && PLAYER::GET_TIME_SINCE_LAST_ARREST() < 5000) || (injured_drunk == true && LIMP_IF_INJURED_VALUES[current_limp_if_injured] != 2) || player_died == true) { // 99
 			PED::CLEAR_PED_LAST_DAMAGE_BONE(playerPed);
 			ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(playerPed);
 			been_injured = false;
-			//player_died = false;
+			injured_drunk = false;
+			PED::RESET_PED_MOVEMENT_CLIPSET(playerPed, 1.0f);
 		}
 	}
-	
+
 	// Can run in apartments
 	if (featurePlayerRunApartments && GAMEPLAY::GET_MISSION_FLAG() == 0 && !UI::IS_HELP_MESSAGE_BEING_DISPLAYED()) {
 		Vector3 coords_apprun_ped = ENTITY::GET_ENTITY_COORDS(playerPed, true);
@@ -1099,7 +1123,7 @@ void update_features(){
 	}
 
 	// player super jump
-	if(PLAYER_MOVEMENT_VALUES[current_player_superjump] > 0.00) { // featurePlayerSuperJump
+	if(PLAYER_MOVEMENT_VALUES[current_player_superjump] > 0.00) {
 		if(bPlayerExists){
 			float CamRot = ENTITY::_GET_ENTITY_PHYSICS_HEADING(playerPed);
 			int p_force = PLAYER_MOVEMENT_VALUES[current_player_superjump] / 3; // 2
@@ -1653,12 +1677,6 @@ bool player_movement_speed() {
 	toggleItem->toggleValue = &featurePlayerFastRun;
 	menuItems.push_back(toggleItem);
 	
-	//toggleItem = new ToggleMenuItem<int>();
-	//toggleItem->caption = "Super Jump";
-	//toggleItem->value = i++;
-	//toggleItem->toggleValue = &featurePlayerSuperJump;
-	//menuItems.push_back(toggleItem);
-	
 	listItem = new SelectFromListMenuItem(PLAYER_MOVEMENT_CAPTIONS, onchange_player_superjump_mode);
 	listItem->wrap = false;
 	listItem->caption = "Super Jump";
@@ -1709,11 +1727,11 @@ bool process_ragdoll_menu() {
 	listItem->value = current_npc_ragdoll;
 	menuItems.push_back(listItem);
 	
-	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Limp If Injured";
-	toggleItem->value = i++;
-	toggleItem->toggleValue = &featurePlayerInjuredMovement;
-	menuItems.push_back(toggleItem);
+	listItem = new SelectFromListMenuItem(LIMP_IF_INJURED_CAPTIONS, onchange_limp_if_injured_mode);
+	listItem->wrap = false;
+	listItem->caption = "Limp If Injured";
+	listItem->value = current_limp_if_injured;
+	menuItems.push_back(listItem);
 
 	return draw_generic_menu<int>(menuItems, &NPCragdollMenuIndex, caption, onconfirm_NPCragdoll_menu, NULL, NULL);
 }
@@ -2094,6 +2112,7 @@ void reset_globals(){
 	current_player_armor = 6;
 	current_player_stats = 6;
 	current_npc_ragdoll = 0;
+	current_limp_if_injured = 0;
 	current_player_movement = 0;
 	current_player_jumpfly = 0;
 	current_player_superjump = 0;
@@ -2114,7 +2133,6 @@ void reset_globals(){
 		featurePlayerFastSwim =
 		featurePlayerFastRun =
 		featurePlayerRunApartments =
-		//featurePlayerSuperJump =
 		featurePlayerInvisible =
 		featurePlayerInvisibleInVehicle =
 		featureNightVision =
@@ -2136,7 +2154,6 @@ void reset_globals(){
 		NoTaxiWhistling =
 		featurePlayerCanBeHeadshot =
 		featureRespawnsWhereDied =
-		featurePlayerInjuredMovement =
 		featureNoScubaSound =
 		featureNoScubaGearMask =
 
@@ -2373,7 +2390,6 @@ void add_player_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoScubaGearMask", &featureNoScubaGearMask});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoScubaSound", &featureNoScubaSound});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerCanBeHeadshot", &featurePlayerCanBeHeadshot});
-	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerInjuredMovement", &featurePlayerInjuredMovement});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRespawnsWhereDied", &featureRespawnsWhereDied});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerUnlimitedAbility", &featurePlayerUnlimitedAbility});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerNoNoise", &featurePlayerNoNoise}); 
@@ -2382,7 +2398,6 @@ void add_player_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerNoSwitch", &featurePlayerNoSwitch});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerFastRun", &featurePlayerFastRun}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerRunApartments", &featurePlayerRunApartments});
-	//results->push_back(FeatureEnabledLocalDefinition{"featurePlayerSuperJump", &featurePlayerSuperJump});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoRagdoll", &featureNoRagdoll}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureRagdollIfInjured", &featureRagdollIfInjured}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerInvisible", &featurePlayerInvisible}); 
@@ -2408,6 +2423,7 @@ void add_world_feature_enablements3(std::vector<StringPairSettingDBRow>* results
 	results->push_back(StringPairSettingDBRow{"current_player_armor", std::to_string(current_player_armor)});
 	results->push_back(StringPairSettingDBRow{"current_player_stats", std::to_string(current_player_stats)});
 	results->push_back(StringPairSettingDBRow{"current_npc_ragdoll", std::to_string(current_npc_ragdoll)});
+	results->push_back(StringPairSettingDBRow{"current_limp_if_injured", std::to_string(current_limp_if_injured)});
 	results->push_back(StringPairSettingDBRow{"current_player_movement", std::to_string(current_player_movement)});
 	results->push_back(StringPairSettingDBRow{"current_player_jumpfly", std::to_string(current_player_jumpfly)});
 	results->push_back(StringPairSettingDBRow{"current_player_superjump", std::to_string(current_player_superjump)});
@@ -2499,6 +2515,9 @@ void handle_generic_settings(std::vector<StringPairSettingDBRow> settings){
 		}
 		else if (setting.name.compare("current_npc_ragdoll") == 0) {
 			current_npc_ragdoll = stoi(setting.value);
+		}
+		else if (setting.name.compare("current_limp_if_injured") == 0) {
+			current_limp_if_injured = stoi(setting.value);
 		}
 		else if (setting.name.compare("current_player_movement") == 0) {
 			current_player_movement = stoi(setting.value);
