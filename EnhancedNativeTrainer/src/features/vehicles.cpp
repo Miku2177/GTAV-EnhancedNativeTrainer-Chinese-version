@@ -3653,9 +3653,9 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 	// 'Reduced Grip If Snowing' and 'Slippery When Wet' code for bikes
 	Vector3 coords_slip = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
-	if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 && featureSnow && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip.x, coords_slip.y, coords_slip.z)) {
+	if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 && featureSnow && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip.x, coords_slip.y, coords_slip.z) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) {
 		Vehicle myVehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
-		if (((ENTITY::GET_ENTITY_SPEED(myVehicle) * 3.6) < 1) && CONTROLS::IS_CONTROL_JUST_PRESSED(2, 71)) AI::TASK_VEHICLE_TEMP_ACTION(playerPed, myVehicle, 30, 800);
+		if (((ENTITY::GET_ENTITY_SPEED(myVehicle) * 3.6) < 1) && CONTROLS::IS_CONTROL_JUST_PRESSED(2, 71)) AI::TASK_VEHICLE_TEMP_ACTION(playerPed, myVehicle, 30, 500);
 		if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] == 1) { // arcade
 			if (VEHICLE::IS_VEHICLE_ON_ALL_WHEELS(myVehicle) && VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(myVehicle))) {
 				if (!featureWorldMoonGravity) ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.15f, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
@@ -3669,7 +3669,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			}
 		}
 	}
-	if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripRainingIndex] > 0 && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip.x, coords_slip.y, coords_slip.z)) {
+	if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripRainingIndex] > 0 && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip.x, coords_slip.y, coords_slip.z) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) {
 		Vehicle myVehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripRainingIndex] == 1) { // arcade
 			if (VEHICLE::IS_VEHICLE_ON_ALL_WHEELS(myVehicle) && VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(myVehicle))) {
@@ -3682,7 +3682,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 					if (!featureWorldMoonGravity) ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.10f, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
 					else ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.10f / 4, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
 				}
-
 			}
 		}
 		if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripRainingIndex] == 2) { // realistic

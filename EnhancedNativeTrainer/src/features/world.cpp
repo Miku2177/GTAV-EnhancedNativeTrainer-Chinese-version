@@ -1062,7 +1062,7 @@ void update_world_features()
 				}
 			}
 			if (featureNPCReducedGripVehicles && bus_veh[i] != veh_mycurrveh) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], true);
-			if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 && featureSnow) {
+			if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 && featureSnow) { // SNOW
 				float slippery_randomize = -1;
 				Vector3 coords_slip = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 				Vector3 coords_slip_ped = ENTITY::GET_ENTITY_COORDS(bus_veh[i], true);
@@ -1099,7 +1099,7 @@ void update_world_features()
 				if (VEH_ENG_POW_VALUES[engPowMultIndex] < 0 && VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 0))) && !INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(my_coords_s.x, my_coords_s.y, my_coords_s.z))
 					VEHICLE::_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 0), 1.0f);
 			}
-			if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripRainingIndex] > 0) {
+			if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripRainingIndex] > 0) { // RAIN
 				if (GAMEPLAY::GET_NEXT_WEATHER_TYPE_HASH_NAME() == 1420204096 || GAMEPLAY::GET_NEXT_WEATHER_TYPE_HASH_NAME() == 3061285535) { 
 					Vector3 coords_slip_r = ENTITY::GET_ENTITY_COORDS(bus_veh[i], true);
 					int slip_index = -1;
