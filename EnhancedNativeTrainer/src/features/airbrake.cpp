@@ -59,7 +59,7 @@ void process_airbrake_menu()
 	const float lineWidth = 250.0;
 	const int lineCount = 1;
 	bool loadedAnims = false;
-
+		
 	std::string caption = "Airbrake Mode";
 
 	//draw_menu_header_line(caption,350.0f,50.0f,15.0f,0.0f,15.0f,false);
@@ -87,7 +87,7 @@ void process_airbrake_menu()
 		in_airbrake_mode = true;
 
 		// draw menu
-		draw_menu_header_line(caption, 350.0f, 50.0f, 15.0f, 0.0f, 15.0f, false);
+		if (help_showing) draw_menu_header_line(caption, 270.0f, 50.0f, 15.0f, 0.0f, 15.0f, false);
 		//draw_menu_line(caption, lineWidth, 15.0, 18.0, 0.0, 5.0, false, true);
 
 		make_periodic_feature_call();
@@ -136,7 +136,7 @@ void process_airbrake_menu()
 
 void update_airbrake_text()
 {
-	if (GetTickCount() < airbrakeStatusTextDrawTicksMax)
+	if (GetTickCount() < airbrakeStatusTextDrawTicksMax/* && !help_showing*/)
 	{
 		int numLines = sizeof(airbrakeStatusLines) / sizeof(airbrakeStatusLines[0]);
 
@@ -182,7 +182,7 @@ void update_airbrake_text()
 
 		int screen_w, screen_h;
 		GRAPHICS::GET_SCREEN_RESOLUTION(&screen_w, &screen_h);
-		float rectWidthScaled = 350 / (float)screen_w;
+		float rectWidthScaled = 270 / (float)screen_w;
 		float rectHeightScaled = (20 + (numActualLines * 18)) / (float)screen_h;
 		float rectXScaled = 0 / (float)screen_h;
 		float rectYScaled = 65 / (float)screen_h;
@@ -238,7 +238,7 @@ void create_airbrake_help_text()
 	airbrakeStatusLines[index++] = " ";
 	airbrakeStatusLines[index++] = "Mouse / Camera Controls (change in XML):";
 	airbrakeStatusLines[index++] = "M - Toggle Mouse Control ON/OFF";
-	airbrakeStatusLines[index++] = "Hold Space To Enable 'Move By Camera' Mode";
+	airbrakeStatusLines[index++] = " "; // Hold Space To Enable 'Move By Camera' Mode
 	airbrakeStatusLines[index++] = " ";
 	airbrakeStatusLines[index++] = ss.str();
 
@@ -419,12 +419,18 @@ void airbrake(bool inVehicle)
 		}
 		if (CONTROLS::IS_CONTROL_RELEASED(2, 32) && CONTROLS::IS_CONTROL_RELEASED(2, 33)) ENTITY::FREEZE_ENTITY_POSITION(target, true);
 		if (moveUpKey) {
+			if (travelSpeed == 0) p_force = forwardPush * 9;
+			if (travelSpeed == 1) p_force = forwardPush * 18;
+			if (travelSpeed == 2) p_force = forwardPush * 23;
 			ENTITY::FREEZE_ENTITY_POSITION(target, false);
 			ENTITY::APPLY_FORCE_TO_ENTITY(target, 1, 0, 0, p_force, 0, 0, 0, true, false, true, true, true, true);
 			curLocation = CAM::GET_GAMEPLAY_CAM_COORD();
 			curHeading = CAM::GET_GAMEPLAY_CAM_RELATIVE_HEADING();
 		}
 		if (moveDownKey) {
+			if (travelSpeed == 0) p_force = forwardPush * 9;
+			if (travelSpeed == 1) p_force = forwardPush * 18;
+			if (travelSpeed == 2) p_force = forwardPush * 23;
 			ENTITY::FREEZE_ENTITY_POSITION(target, false);
 			ENTITY::APPLY_FORCE_TO_ENTITY(target, 1, 0, 0, -p_force, 0, 0, 0, true, false, true, true, true, true);
 			curLocation = CAM::GET_GAMEPLAY_CAM_COORD();
