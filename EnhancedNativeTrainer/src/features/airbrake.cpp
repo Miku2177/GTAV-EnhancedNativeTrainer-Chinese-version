@@ -405,20 +405,20 @@ void airbrake(bool inVehicle)
 		ENTITY::SET_ENTITY_COLLISION(target, 0, 1);
 		ENTITY::SET_ENTITY_ROTATION(target, CamRot.x, CamRot.y, CamRot.z, 1, true);
 
-		if (CONTROLS::IS_CONTROL_PRESSED(2, 32)) {
+		if (CONTROLS::IS_CONTROL_PRESSED(2, 32)) { // MoveUpOnly
 			ENTITY::FREEZE_ENTITY_POSITION(target, false);
 			ENTITY::APPLY_FORCE_TO_ENTITY(target, 1, v_x, v_y, v_z, 0, 0, 0, true, false, true, true, true, true);
 			curLocation = CAM::GET_GAMEPLAY_CAM_COORD();
 			curHeading = CAM::GET_GAMEPLAY_CAM_RELATIVE_HEADING();
 		}
-		if (CONTROLS::IS_CONTROL_PRESSED(2, 33)) {
+		if (CONTROLS::IS_CONTROL_PRESSED(2, 33)) { // MoveDownOnly
 			ENTITY::FREEZE_ENTITY_POSITION(target, false);
 			ENTITY::APPLY_FORCE_TO_ENTITY(target, 1, -v_x, -v_y, -v_z, 0, 0, 0, true, false, true, true, true, true);
 			curLocation = CAM::GET_GAMEPLAY_CAM_COORD();
 			curHeading = CAM::GET_GAMEPLAY_CAM_RELATIVE_HEADING();
 		}
 		if (CONTROLS::IS_CONTROL_RELEASED(2, 32) && CONTROLS::IS_CONTROL_RELEASED(2, 33)) ENTITY::FREEZE_ENTITY_POSITION(target, true);
-		if (moveUpKey) {
+		if (moveUpKey) { // Q
 			if (travelSpeed == 0) p_force = forwardPush * 9;
 			if (travelSpeed == 1) p_force = forwardPush * 18;
 			if (travelSpeed == 2) p_force = forwardPush * 23;
@@ -427,7 +427,7 @@ void airbrake(bool inVehicle)
 			curLocation = CAM::GET_GAMEPLAY_CAM_COORD();
 			curHeading = CAM::GET_GAMEPLAY_CAM_RELATIVE_HEADING();
 		}
-		if (moveDownKey) {
+		if (moveDownKey) { // Z
 			if (travelSpeed == 0) p_force = forwardPush * 9;
 			if (travelSpeed == 1) p_force = forwardPush * 18;
 			if (travelSpeed == 2) p_force = forwardPush * 23;
