@@ -353,50 +353,52 @@ void airbrake(bool inVehicle)
 	create_airbrake_help_text();
 	update_airbrake_text();
 
-	if (moveUpKey)
-	{
-		curLocation.z += (forwardPush / 1.1);
-	}
-	else if (moveDownKey)
-	{
-		curLocation.z -= (forwardPush / 1.1);
-	}
+	if (!mouse_view_control) {
+		if (moveUpKey)
+		{
+			curLocation.z += (forwardPush / 1.1);
+		}
+		else if (moveDownKey)
+		{
+			curLocation.z -= (forwardPush / 1.1);
+		}
 
-	if (moveForwardKey)
-	{
-		curLocation.x += xVect;
-		curLocation.y += yVect;
-	}
-	else if (moveBackKey)
-	{
-		curLocation.x -= xVect;
-		curLocation.y -= yVect;
-	}
+		if (moveForwardKey)
+		{
+			curLocation.x += xVect;
+			curLocation.y += yVect;
+		}
+		else if (moveBackKey)
+		{
+			curLocation.x -= xVect;
+			curLocation.y -= yVect;
+		}
 
-	if ((rotateLeftKey) && !(SpaceKey))
-	{
-		curHeading += rotationSpeed;
-	}
-	else if ((rotateRightKey) && !(SpaceKey))
-	{
-		curHeading -= rotationSpeed;
-	}
-	
-	if ((rotateLeftKey) && (SpaceKey))
-	{
-		curLocation.x += (forwardPush * sin(degToRad(curHeading + 90)) * -1.0f);
-		curLocation.y += (forwardPush * cos(degToRad(curHeading + 90)));
-	}
+		if ((rotateLeftKey) && !(SpaceKey))
+		{
+			curHeading += rotationSpeed;
+		}
+		else if ((rotateRightKey) && !(SpaceKey))
+		{
+			curHeading -= rotationSpeed;
+		}
 
-	if ((rotateRightKey) && (SpaceKey))
-	{
-		curLocation.x += (forwardPush * sin(degToRad(curHeading - 90)) * -1.0f);
-		curLocation.y += (forwardPush * cos(degToRad(curHeading - 90)));
+		if ((rotateLeftKey) && (SpaceKey))
+		{
+			curLocation.x += (forwardPush * sin(degToRad(curHeading + 90)) * -1.0f);
+			curLocation.y += (forwardPush * cos(degToRad(curHeading + 90)));
+		}
+
+		if ((rotateRightKey) && (SpaceKey))
+		{
+			curLocation.x += (forwardPush * sin(degToRad(curHeading - 90)) * -1.0f);
+			curLocation.y += (forwardPush * cos(degToRad(curHeading - 90)));
+		}
 	}
 	
 	if (mouse_view_control) {
 		Vector3 CamRot = CAM::GET_GAMEPLAY_CAM_ROT(2);
-		int p_force = forwardPush * 5; //5;
+		int p_force = forwardPush * 5; // 5;
 		float rad = 2 * 3.14 * (CamRot.z / 360);
 		float v_x = -(sin(rad) * p_force * 10);
 		float v_y = (cos(rad) * p_force * 10);
@@ -417,11 +419,21 @@ void airbrake(bool inVehicle)
 			curLocation = CAM::GET_GAMEPLAY_CAM_COORD();
 			curHeading = CAM::GET_GAMEPLAY_CAM_RELATIVE_HEADING();
 		}
+		if (CONTROLS::IS_CONTROL_PRESSED(2, 34)) { // MoveLeftOnly
+			curLocation.x += (forwardPush * sin(degToRad(CamRot.z + 90)) * -1.0f);
+			curLocation.y += (forwardPush * cos(degToRad(CamRot.z + 90)));
+			ENTITY::SET_ENTITY_COORDS_NO_OFFSET(target, curLocation.x, curLocation.y, curLocation.z - 0.6, xBoolParam, yBoolParam, zBoolParam);
+		}
+		if (CONTROLS::IS_CONTROL_PRESSED(2, 35)) { // MoveRightOnly
+			curLocation.x += (forwardPush * sin(degToRad(CamRot.z - 90)) * -1.0f);
+			curLocation.y += (forwardPush * cos(degToRad(CamRot.z - 90)));
+			ENTITY::SET_ENTITY_COORDS_NO_OFFSET(target, curLocation.x, curLocation.y, curLocation.z - 0.6, xBoolParam, yBoolParam, zBoolParam);
+		}
 		if (CONTROLS::IS_CONTROL_RELEASED(2, 32) && CONTROLS::IS_CONTROL_RELEASED(2, 33)) ENTITY::FREEZE_ENTITY_POSITION(target, true);
 		if (moveUpKey) { // Q
 			if (travelSpeed == 0) p_force = forwardPush * 9;
-			if (travelSpeed == 1) p_force = forwardPush * 18;
-			if (travelSpeed == 2) p_force = forwardPush * 23;
+			if (travelSpeed == 1) p_force = forwardPush * 19;
+			if (travelSpeed == 2) p_force = forwardPush * 24;
 			ENTITY::FREEZE_ENTITY_POSITION(target, false);
 			ENTITY::APPLY_FORCE_TO_ENTITY(target, 1, 0, 0, p_force, 0, 0, 0, true, false, true, true, true, true);
 			curLocation = CAM::GET_GAMEPLAY_CAM_COORD();
@@ -429,8 +441,8 @@ void airbrake(bool inVehicle)
 		}
 		if (moveDownKey) { // Z
 			if (travelSpeed == 0) p_force = forwardPush * 9;
-			if (travelSpeed == 1) p_force = forwardPush * 18;
-			if (travelSpeed == 2) p_force = forwardPush * 23;
+			if (travelSpeed == 1) p_force = forwardPush * 19;
+			if (travelSpeed == 2) p_force = forwardPush * 24;
 			ENTITY::FREEZE_ENTITY_POSITION(target, false);
 			ENTITY::APPLY_FORCE_TO_ENTITY(target, 1, 0, 0, -p_force, 0, 0, 0, true, false, true, true, true, true);
 			curLocation = CAM::GET_GAMEPLAY_CAM_COORD();
