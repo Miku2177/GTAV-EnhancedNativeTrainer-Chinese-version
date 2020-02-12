@@ -95,6 +95,7 @@ bool featureFirstPersonCutscene = false;
 
 bool featurePlayerRadio = false;
 bool featureDisablePhone = false;
+bool featureDisablePhoneMenu = false;
 bool featurePlayerRadioUpdated = false;
 bool featureRadioFreeze = false, featureRadioFreezeUpdated = false;
 bool featureRadioAlwaysOff = false;
@@ -731,6 +732,11 @@ void process_phone_bill_menu(){
 	toggleItem->toggleValue = &featureDisablePhone;
 	menuItems.push_back(toggleItem);
 
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Disable Phone If Menu Open";
+	toggleItem->toggleValue = &featureDisablePhoneMenu;
+	menuItems.push_back(toggleItem);
+
 	draw_generic_menu<int>(menuItems, &activeLineIndexPhoneBill, caption, onconfirm_phonebill_menu, NULL, NULL);
 }
 
@@ -974,6 +980,7 @@ void reset_misc_globals(){
 		featureDynamicHealthBar =
 		featurePlayerRadio =
 		featureDisablePhone =
+		featureDisablePhoneMenu =
 		featureMiscLockRadio =
 		featureMiscJellmanScenery =
 		featureRadioFreeze =
@@ -1443,12 +1450,13 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		GRAPHICS::_STOP_ALL_SCREEN_EFFECTS();
 	}
 
-	// No Phone 
-	if (featureDisablePhone) {
+	// No Phone && Disable Phone If Menu Open
+	if (featureDisablePhone || (featureDisablePhoneMenu && menu_showing == true)) {
+		if (PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed)) CONTROLS::_SET_CONTROL_NORMAL(0, 177, 1);
 		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("cellphone_controller");
 		no_phone = true;
 	}
-	else if (no_phone == true) {
+	if ((!featureDisablePhone && no_phone == true && !featureDisablePhoneMenu) || (featureDisablePhoneMenu && menu_showing == false && !featureDisablePhone && no_phone == true) || (!featureDisablePhoneMenu && no_phone == true && !featureDisablePhone)) {
 		SCRIPT::REQUEST_SCRIPT("cellphone_controller");
 		SYSTEM::START_NEW_SCRIPT("cellphone_controller", 1424);
 		no_phone = false;
@@ -1818,6 +1826,7 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 	results->push_back(FeatureEnabledLocalDefinition{"featureRealisticRadioVolume", &featureRealisticRadioVolume});
 	results->push_back(FeatureEnabledLocalDefinition{"featureWantedMUsic", &featureWantedMusic}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureDisablePhone", &featureDisablePhone});
+	results->push_back(FeatureEnabledLocalDefinition{"featureDisablePhoneMenu", &featureDisablePhoneMenu});
 	results->push_back(FeatureEnabledLocalDefinition{"featureFlyingMusic", &featureFlyingMusic}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePoliceScanner", &featurePoliceScanner}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoComleteMessage", &featureNoComleteMessage}); 

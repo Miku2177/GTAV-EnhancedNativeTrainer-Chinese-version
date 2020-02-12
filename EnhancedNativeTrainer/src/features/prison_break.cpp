@@ -233,9 +233,9 @@ void prison_break()
 			}
 
 			// No way you will call or switch your character
-			CONTROLS::DISABLE_CONTROL_ACTION(2, 19, true);
+			CONTROLS::DISABLE_CONTROL_ACTION(2, 19, true); // character wheel
 			MOBILE::DESTROY_MOBILE_PHONE();
-			CONTROLS::DISABLE_CONTROL_ACTION(2, 27, 1);
+			CONTROLS::DISABLE_CONTROL_ACTION(2, 27, 1); // phone
 			//GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("cellphone_controller");
 
 			// You don't need a parachute in prison

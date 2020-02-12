@@ -353,7 +353,7 @@ void airbrake(bool inVehicle)
 	create_airbrake_help_text();
 	update_airbrake_text();
 
-	if (!mouse_view_control) {
+	//if (!mouse_view_control) {
 		if (moveUpKey)
 		{
 			curLocation.z += (forwardPush / 1.1);
@@ -394,7 +394,7 @@ void airbrake(bool inVehicle)
 			curLocation.x += (forwardPush * sin(degToRad(curHeading - 90)) * -1.0f);
 			curLocation.y += (forwardPush * cos(degToRad(curHeading - 90)));
 		}
-	}
+	//}
 	
 	if (mouse_view_control) {
 		Vector3 CamRot = CAM::GET_GAMEPLAY_CAM_ROT(2);
@@ -429,9 +429,9 @@ void airbrake(bool inVehicle)
 			curLocation.y += (forwardPush * cos(degToRad(CamRot.z - 90)));
 			ENTITY::SET_ENTITY_COORDS_NO_OFFSET(target, curLocation.x, curLocation.y, curLocation.z - 0.6, xBoolParam, yBoolParam, zBoolParam);
 		}
-		if (CONTROLS::IS_CONTROL_RELEASED(2, 32) && CONTROLS::IS_CONTROL_RELEASED(2, 33)) ENTITY::FREEZE_ENTITY_POSITION(target, true);
+		if (CONTROLS::IS_CONTROL_RELEASED(2, 32) && CONTROLS::IS_CONTROL_RELEASED(2, 33) && CONTROLS::IS_CONTROL_RELEASED(2, 34) && CONTROLS::IS_CONTROL_RELEASED(2, 35) && !moveUpKey && !moveDownKey) ENTITY::FREEZE_ENTITY_POSITION(target, true);
 		if (moveUpKey) { // Q
-			if (travelSpeed == 0) p_force = forwardPush * 9;
+			if (travelSpeed == 0) p_force = forwardPush * 10;
 			if (travelSpeed == 1) p_force = forwardPush * 19;
 			if (travelSpeed == 2) p_force = forwardPush * 24;
 			ENTITY::FREEZE_ENTITY_POSITION(target, false);
@@ -440,7 +440,7 @@ void airbrake(bool inVehicle)
 			curHeading = CAM::GET_GAMEPLAY_CAM_RELATIVE_HEADING();
 		}
 		if (moveDownKey) { // Z
-			if (travelSpeed == 0) p_force = forwardPush * 9;
+			if (travelSpeed == 0) p_force = forwardPush * 10;
 			if (travelSpeed == 1) p_force = forwardPush * 19;
 			if (travelSpeed == 2) p_force = forwardPush * 24;
 			ENTITY::FREEZE_ENTITY_POSITION(target, false);
