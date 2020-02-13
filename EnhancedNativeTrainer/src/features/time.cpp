@@ -209,7 +209,7 @@ void all_time_flow_rate() {
 	menuItems.push_back(item);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Show Current Time";
+	togItem->caption = "Show Current In-game Time";
 	togItem->value = 0;
 	togItem->toggleValue = &featureShowtime;
 	togItem->toggleValueUpdated = NULL;

@@ -314,9 +314,9 @@ void airbrake(bool inVehicle)
 		target = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 	}
 
-	BOOL xBoolParam = 1;
+	/*BOOL xBoolParam = 1;
 	BOOL yBoolParam = 1;
-	BOOL zBoolParam = 1;
+	BOOL zBoolParam = 1;*/
 
 	ENTITY::SET_ENTITY_VELOCITY(target, 0.0f, 0.0f, 0.0f);
 	ENTITY::SET_ENTITY_ROTATION(target, 0, 0, 0, 0, false);
@@ -422,12 +422,12 @@ void airbrake(bool inVehicle)
 		if (CONTROLS::IS_CONTROL_PRESSED(2, 34)) { // MoveLeftOnly
 			curLocation.x += (forwardPush * sin(degToRad(CamRot.z + 90)) * -1.0f);
 			curLocation.y += (forwardPush * cos(degToRad(CamRot.z + 90)));
-			ENTITY::SET_ENTITY_COORDS_NO_OFFSET(target, curLocation.x, curLocation.y, curLocation.z - 0.6, xBoolParam, yBoolParam, zBoolParam);
+			ENTITY::SET_ENTITY_COORDS_NO_OFFSET(target, curLocation.x, curLocation.y, curLocation.z - 0.6, 1, 1, 1);
 		}
 		if (CONTROLS::IS_CONTROL_PRESSED(2, 35)) { // MoveRightOnly
 			curLocation.x += (forwardPush * sin(degToRad(CamRot.z - 90)) * -1.0f);
 			curLocation.y += (forwardPush * cos(degToRad(CamRot.z - 90)));
-			ENTITY::SET_ENTITY_COORDS_NO_OFFSET(target, curLocation.x, curLocation.y, curLocation.z - 0.6, xBoolParam, yBoolParam, zBoolParam);
+			ENTITY::SET_ENTITY_COORDS_NO_OFFSET(target, curLocation.x, curLocation.y, curLocation.z - 0.6, 1, 1, 1);
 		}
 		if (CONTROLS::IS_CONTROL_RELEASED(2, 32) && CONTROLS::IS_CONTROL_RELEASED(2, 33) && CONTROLS::IS_CONTROL_RELEASED(2, 34) && CONTROLS::IS_CONTROL_RELEASED(2, 35) && !moveUpKey && !moveDownKey) ENTITY::FREEZE_ENTITY_POSITION(target, true);
 		if (moveUpKey) { // Q
@@ -452,7 +452,7 @@ void airbrake(bool inVehicle)
 	else {
 		ENTITY::FREEZE_ENTITY_POSITION(target, false);
 		ENTITY::SET_ENTITY_COLLISION(target, 0, 1);
-		ENTITY::SET_ENTITY_COORDS_NO_OFFSET(target, curLocation.x, curLocation.y, curLocation.z, xBoolParam, yBoolParam, zBoolParam);
+		ENTITY::SET_ENTITY_COORDS_NO_OFFSET(target, curLocation.x, curLocation.y, curLocation.z, 1, 1, 1);
 		ENTITY::SET_ENTITY_HEADING(target, curHeading - rotationSpeed);
 	}
 }
