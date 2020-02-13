@@ -40,6 +40,7 @@ int HotkeyFlowRateIndex = DEFAULT_HOTKEY_FLOW_RATE;
 
 bool featureTimeSynced = false;
 bool featureMatrixMode = false;
+bool featureShowtime = false;
 bool timeFlowRateChanged = true, timeFlowRateLocked = true;
 bool HotkeyFlowRateChanged = true, HotkeyFlowRateLocked = true;
 
@@ -206,6 +207,13 @@ void all_time_flow_rate() {
 	item->value = 1;
 	item->isLeaf = true;
 	menuItems.push_back(item);
+
+	togItem = new ToggleMenuItem<int>();
+	togItem->caption = "Show Current Time";
+	togItem->value = 0;
+	togItem->toggleValue = &featureShowtime;
+	togItem->toggleValueUpdated = NULL;
+	menuItems.push_back(togItem);
 
 	draw_generic_menu<int>(menuItems, nullptr, "Time Flow Rate Options", onconfirm_time_flowrate_menu, nullptr, nullptr, nullptr);
 }
@@ -376,6 +384,7 @@ void reset_time_globals(){
 	timeFlowRateChanged = true;
 	HotkeyFlowRateChanged = true;
 	featureMatrixMode = false;
+	featureShowtime = false;
 
 	timeSpeedIndexWhileAiming = DEFAULT_TIME_SPEED;
 	timeSpeedIndex = DEFAULT_TIME_SPEED;
@@ -386,6 +395,7 @@ void reset_time_globals(){
 void add_time_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){
 	results->push_back(FeatureEnabledLocalDefinition{"featureTimeSynced", &featureTimeSynced});
 	results->push_back(FeatureEnabledLocalDefinition{"featureMatrixMode", &featureMatrixMode});
+	results->push_back(FeatureEnabledLocalDefinition{"featureShowtime", &featureShowtime});
 }
 
 void movetime_day_forward(){
@@ -895,4 +905,110 @@ void update_time_features(Player player){
 			}
 		}
 	} // end of matrix mode while aiming
+
+	// Show Current Time
+	if (featureShowtime && menu_showing == false) {
+		int currHours = TIME::GET_CLOCK_HOURS();
+		int currMins = TIME::GET_CLOCK_MINUTES();
+		int currSecs = TIME::GET_CLOCK_SECONDS();
+		char hours_to_show_char_modifiable[3];
+		char mins_to_show_char_modifiable[3];
+		char secs_to_show_char_modifiable[3];
+		sprintf(hours_to_show_char_modifiable, "%d", currHours);
+		sprintf(mins_to_show_char_modifiable, "%d", currMins);
+		sprintf(secs_to_show_char_modifiable, "%d", currSecs);
+		char* hours_to_show_char = "60";
+		char* minutes_to_show_char = "60";
+		char* seconds_to_show_char = "60";
+		if (currHours == 0 || currHours == 60) hours_to_show_char = "00";
+		if (currHours == 1) hours_to_show_char = "01";
+		if (currHours == 2) hours_to_show_char = "02";
+		if (currHours == 3) hours_to_show_char = "03";
+		if (currHours == 4) hours_to_show_char = "04";
+		if (currHours == 5) hours_to_show_char = "05";
+		if (currHours == 6) hours_to_show_char = "06";
+		if (currHours == 7) hours_to_show_char = "07";
+		if (currHours == 8) hours_to_show_char = "08";
+		if (currHours == 9) hours_to_show_char = "09";
+		if (currMins == 0 || currMins == 60) minutes_to_show_char = "00";
+		if (currMins == 1) minutes_to_show_char = "01";
+		if (currMins == 2) minutes_to_show_char = "02";
+		if (currMins == 3) minutes_to_show_char = "03";
+		if (currMins == 4) minutes_to_show_char = "04";
+		if (currMins == 5) minutes_to_show_char = "05";
+		if (currMins == 6) minutes_to_show_char = "06";
+		if (currMins == 7) minutes_to_show_char = "07";
+		if (currMins == 8) minutes_to_show_char = "08";
+		if (currMins == 9) minutes_to_show_char = "09";
+		if (currSecs == 0 || currSecs == 60) seconds_to_show_char = "00";
+		if (currSecs == 1) seconds_to_show_char = "01";
+		if (currSecs == 2) seconds_to_show_char = "02";
+		if (currSecs == 3) seconds_to_show_char = "03";
+		if (currSecs == 4) seconds_to_show_char = "04";
+		if (currSecs == 5) seconds_to_show_char = "05";
+		if (currSecs == 6) seconds_to_show_char = "06";
+		if (currSecs == 7) seconds_to_show_char = "07";
+		if (currSecs == 8) seconds_to_show_char = "08";
+		if (currSecs == 9) seconds_to_show_char = "09";
+		// hours
+		UI::SET_TEXT_FONT(4);
+		UI::SET_TEXT_SCALE(0.0, 0.45);
+		UI::SET_TEXT_PROPORTIONAL(1);
+		UI::SET_TEXT_COLOUR(255, 242, 0, 255);
+		UI::SET_TEXT_EDGE(3, 0, 0, 0, 255);
+		UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 255);
+		UI::SET_TEXT_OUTLINE();
+		UI::_SET_TEXT_ENTRY("STRING");
+		if (currHours > 9 && currHours < 60) UI::_ADD_TEXT_COMPONENT_SCALEFORM(hours_to_show_char_modifiable);
+		else UI::_ADD_TEXT_COMPONENT_SCALEFORM(hours_to_show_char);
+		UI::_DRAW_TEXT(0.003, 0.185);
+		// :
+		UI::SET_TEXT_FONT(4);
+		UI::SET_TEXT_SCALE(0.0, 0.45);
+		UI::SET_TEXT_PROPORTIONAL(1);
+		UI::SET_TEXT_COLOUR(255, 242, 0, 255);
+		UI::SET_TEXT_EDGE(3, 0, 0, 0, 255);
+		UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 255);
+		UI::SET_TEXT_OUTLINE();
+		UI::_SET_TEXT_ENTRY("STRING");
+		UI::_ADD_TEXT_COMPONENT_SCALEFORM(":");
+		UI::_DRAW_TEXT(0.013, 0.185);
+		// mins
+		UI::SET_TEXT_FONT(4);
+		UI::SET_TEXT_SCALE(0.0, 0.45);
+		UI::SET_TEXT_PROPORTIONAL(1);
+		UI::SET_TEXT_COLOUR(255, 242, 0, 255);
+		UI::SET_TEXT_EDGE(3, 0, 0, 0, 255);
+		UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 255);
+		UI::SET_TEXT_OUTLINE();
+		UI::_SET_TEXT_ENTRY("STRING");
+		if (currMins > 9 && currMins < 60) UI::_ADD_TEXT_COMPONENT_SCALEFORM(mins_to_show_char_modifiable);
+		else UI::_ADD_TEXT_COMPONENT_SCALEFORM(minutes_to_show_char);
+		UI::_DRAW_TEXT(0.017, 0.185);
+		// :
+		UI::SET_TEXT_FONT(4);
+		UI::SET_TEXT_SCALE(0.0, 0.45);
+		UI::SET_TEXT_PROPORTIONAL(1);
+		UI::SET_TEXT_COLOUR(255, 242, 0, 255);
+		UI::SET_TEXT_EDGE(3, 0, 0, 0, 255);
+		UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 255);
+		UI::SET_TEXT_OUTLINE();
+		UI::_SET_TEXT_ENTRY("STRING");
+		UI::_ADD_TEXT_COMPONENT_SCALEFORM(":");
+		UI::_DRAW_TEXT(0.027, 0.185);
+		// secs
+		UI::SET_TEXT_FONT(4);
+		UI::SET_TEXT_SCALE(0.0, 0.45);
+		UI::SET_TEXT_PROPORTIONAL(1);
+		UI::SET_TEXT_COLOUR(255, 242, 0, 255);
+		UI::SET_TEXT_EDGE(3, 0, 0, 0, 255);
+		UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 255);
+		UI::SET_TEXT_OUTLINE();
+		UI::_SET_TEXT_ENTRY("STRING");
+		if (currSecs > 9 && currSecs < 60) UI::_ADD_TEXT_COMPONENT_SCALEFORM(secs_to_show_char_modifiable);
+		else UI::_ADD_TEXT_COMPONENT_SCALEFORM(seconds_to_show_char);
+		UI::_DRAW_TEXT(0.031, 0.185);
+		GRAPHICS::DRAW_RECT(0.0, 0.20, 0.10, 0.03, 10, 10, 10, 100);
+	}
+	// end of show current time
 }
