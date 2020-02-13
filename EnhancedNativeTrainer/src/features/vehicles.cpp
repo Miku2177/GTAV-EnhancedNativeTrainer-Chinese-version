@@ -1143,7 +1143,7 @@ void process_visualize_menu() {
 
 	listItem = new SelectFromListMenuItem(VEH_TURN_SIGNALS_CAPTIONS, onchange_veh_turn_signals_index);
 	listItem->wrap = false;
-	listItem->caption = "Enable Indicators If Speed";
+	listItem->caption = "Enable Indicators";
 	listItem->value = turnSignalsIndex;
 	menuItems.push_back(listItem);
 
@@ -2817,7 +2817,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		viz_veh_ind_right = false;
 	}
 
-	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && (VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] > 0) || featureHazards) {
+	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] > 0 || featureHazards) {
 
 		Vehicle vehturn = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		int vehturnspeed = ENTITY::GET_ENTITY_SPEED(vehturn);
@@ -2827,7 +2827,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		bool rightKey = IsKeyDown(KeyConfig::KEY_VEH_RIGHTBLINK) || IsControllerButtonDown(KeyConfig::KEY_VEH_RIGHTBLINK); // Right Key
 		bool emergencyKey = IsKeyDown(KeyConfig::KEY_VEH_EMERGENCYBLINK) || IsControllerButtonDown(KeyConfig::KEY_VEH_EMERGENCYBLINK); // Emergency Signal Key
 
-		if (leftKey) { // Manual Left Turn Signal
+		if (leftKey && VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] > 0) { // Manual Left Turn Signal
 			turn_check_left = !turn_check_left;
 			turn_check_right = false;
 			controllightsenabled_l = turn_check_left;
@@ -2835,7 +2835,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			WAIT(100);
 		}
 
-		if (rightKey) { // Manual Right Turn Signal
+		if (rightKey && VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] > 0) { // Manual Right Turn Signal
 			turn_check_right = !turn_check_right;
 			turn_check_left = false;
 			controllightsenabled_r = turn_check_right;
@@ -2843,7 +2843,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			WAIT(100);
 		}
 
-		if (emergencyKey) {
+		if (emergencyKey && VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] > 0) {
 			if (turn_check_left == true && turn_check_right == true) {
 				turn_check_left = false;
 				turn_check_right = false;
@@ -2919,8 +2919,8 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			autocontrol = false;
 		}
 		
-		if (turn_angle > VEH_TURN_SIGNALS_ANGLE_VALUES[turnSignalsAngleIndex] || leftKey || rightKey || emergencyKey || vehturnspeed > (VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] + 10) || 
-			Accel_seconds > VEH_TURN_SIGNALS_ACCELERATION_VALUES[turnSignalsAccelerationIndex]) {
+		if (turn_angle > VEH_TURN_SIGNALS_ANGLE_VALUES[turnSignalsAngleIndex] || (leftKey && VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] > 0) || (rightKey && VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] > 0) || 
+			(emergencyKey && VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] > 0) || vehturnspeed > (VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] + 10) || Accel_seconds > VEH_TURN_SIGNALS_ACCELERATION_VALUES[turnSignalsAccelerationIndex]) {
 			if (turn_check_left) viz_veh_ind_left = true;
 			else viz_veh_ind_left = false;
 			if (turn_check_right) viz_veh_ind_right = true;
