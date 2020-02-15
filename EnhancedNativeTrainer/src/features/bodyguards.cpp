@@ -740,7 +740,7 @@ void maintain_bodyguards(){
 	if (!spawnedBodyguards.empty()) { 
 		for (int i = 0; i < spawnedBodyguards.size(); i++) {
 			// bodyguards swimming ability
-			if (ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID()) == 1 && !is_in_airbrake_mode() && PED::GET_PED_TYPE(spawnedBodyguards[i]) != 28) {
+			if (ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID()) == 1 && !is_in_airbrake_mode() && PED::GET_PED_TYPE(spawnedBodyguards[i]) != 28 && stop_b == false) {
 				float height = -1.0;
 				Vector3 my_coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 				Vector3 bod_coords = ENTITY::GET_ENTITY_COORDS(spawnedBodyguards[i], true);
