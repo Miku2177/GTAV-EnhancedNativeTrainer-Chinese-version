@@ -61,17 +61,17 @@ void update_speed_text(int speed, Vector3 player_coords)
 	int numLines = sizeof(speedometerStatusLines) / sizeof(speedometerStatusLines[0]);
 
 	if (featureKMH) {
-		ss << "Speed KPH: ";
+		ss << "KPH: ";
 
 		if (featureAltitude) {
-			ss << "\nAltitude ASL: ";
+			ss << "\nALT: ";
 		}
 	}
 	else {
-		ss << "Speed MPH: ";
+		ss << "MPH: ";
 
 		if (featureAltitude) {
-			ss << "\nAltitude ASL: ";
+			ss << "\nALT: ";
 		}
 	}
 

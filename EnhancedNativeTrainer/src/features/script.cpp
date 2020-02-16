@@ -58,6 +58,7 @@ bool everInitialised = false;
 
 ENTDatabase* database = NULL;
 Camera DeathCam = NULL;
+Camera DeathCamM = NULL;
 
 bool onlineWarningShown = false;
 
@@ -566,6 +567,39 @@ void update_features(){
 			GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("respawn_controller");
 			manual_instant = true;
 		}
+		// camera rotation
+		if ((ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) || PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 1)) && !featureFirstPersonDeathCamera) {
+			Vector3 playerPosition = CAM::_GET_GAMEPLAY_CAM_COORDS();
+			Vector3 curRotation = CAM::GET_GAMEPLAY_CAM_ROT(2);
+			if (!CAM::DOES_CAM_EXIST(DeathCamM) && (CONTROLS::IS_CONTROL_PRESSED(2, 34) || CONTROLS::IS_CONTROL_PRESSED(2, 35) || CONTROLS::IS_CONTROL_PRESSED(2, 32) || CONTROLS::IS_CONTROL_PRESSED(2, 33)) && first_person_rotate == false) {
+				DeathCamM = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_FLY_CAMERA", playerPosition.x, playerPosition.y, playerPosition.z, curRotation.x, curRotation.y, curRotation.z, 50.0, true, 2);
+				CAM::ATTACH_CAM_TO_PED_BONE(DeathCamM, PLAYER::PLAYER_PED_ID(), 31086, 0, -0.15, 4, 1);
+				CAM::POINT_CAM_AT_PED_BONE(DeathCamM, PLAYER::PLAYER_PED_ID(), 31086, 0, 0.0, 0, 1);
+				CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE_BLEND_LEVEL(DeathCamM, 1.0);
+				CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE(DeathCamM, 1.0);
+				CAM::_SET_CAM_DOF_FOCUS_DISTANCE_BIAS(DeathCamM, 1.0);
+				CAM::RENDER_SCRIPT_CAMS(true, false, 0, true, true);
+				CAM::SET_CAM_ACTIVE(DeathCamM, true);
+			}
+			if (CAM::DOES_CAM_EXIST(DeathCamM)) { // camera rotation
+				Vector3 rot_cam = CAM::GET_CAM_ROT(DeathCamM, 2);
+				if ((CONTROLS::IS_CONTROL_PRESSED(2, 34) || CONTROLS::IS_CONTROL_PRESSED(2, 35) || CONTROLS::IS_CONTROL_PRESSED(2, 32) || CONTROLS::IS_CONTROL_PRESSED(2, 33)) && first_person_rotate == false) {
+					CAM::DESTROY_CAM(DeathCamM, true);
+					DeathCamM = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_FLY_CAMERA", playerPosition.x, playerPosition.y, playerPosition.z, rot_cam.x, rot_cam.y, rot_cam.z, 50.0, true, 2);
+					CAM::ATTACH_CAM_TO_PED_BONE(DeathCamM, PLAYER::PLAYER_PED_ID(), 31086, 0, -0.15, 4, 1);
+					CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE_BLEND_LEVEL(DeathCamM, 1.0);
+					CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE(DeathCamM, 1.0);
+					CAM::_SET_CAM_DOF_FOCUS_DISTANCE_BIAS(DeathCamM, 1.0);
+					first_person_rotate = true;
+				}
+				if (CONTROLS::IS_CONTROL_PRESSED(2, 34)) rot_cam.z = rot_cam.z + 2; // left only
+				if (CONTROLS::IS_CONTROL_PRESSED(2, 35)) rot_cam.z = rot_cam.z - 2; // right only
+				if (CONTROLS::IS_CONTROL_PRESSED(2, 32)) rot_cam.x = rot_cam.x + 2; // up only
+				if (CONTROLS::IS_CONTROL_PRESSED(2, 33)) rot_cam.x = rot_cam.x - 2; // down only
+				CAM::SET_CAM_ROT(DeathCamM, rot_cam.x, rot_cam.y, rot_cam.z, 2);
+			}
+		}
+		//
 		if (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && CONTROLS::IS_CONTROL_JUST_PRESSED(2, 22)) { // 23 // CONTROLS::IS_CONTROL_JUST_PRESSED(2, 176) || 
 			player_died = true;
 			GAMEPLAY::_DISABLE_AUTOMATIC_RESPAWN(false);
@@ -592,7 +626,18 @@ void update_features(){
 			CAM::DO_SCREEN_FADE_IN(500);
 			manual_instant = false;
 		}
-		if (!ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) player_died = false;
+		if (!ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && !PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 1)) {
+			player_died = false;
+			if (CAM::DOES_CAM_EXIST(DeathCamM)) {
+				ENTITY::SET_ENTITY_COLLISION(PLAYER::PLAYER_PED_ID(), 1, 1);
+				CAM::RENDER_SCRIPT_CAMS(false, false, 0, false, false);
+				CAM::DETACH_CAM(DeathCamM);
+				CAM::SET_CAM_ACTIVE(DeathCamM, false);
+				CAM::DESTROY_CAM(DeathCamM, true);
+				ENTITY::SET_ENTITY_ALPHA(PLAYER::PLAYER_PED_ID(), 255, 0);
+				first_person_rotate = false;
+			}
+		}
 	}
 		
 	// Instant Respawn On Death/Arrest
