@@ -51,9 +51,6 @@ void update_speed_text(int speed, Vector3 player_coords)
 {
 	std::string speedometerStatusLines[1];
 	std::stringstream ss;
-	int col_R = ENTColor::colsMenu[3].rgba[0];
-	int col_G = ENTColor::colsMenu[3].rgba[1];
-	int col_B = ENTColor::colsMenu[3].rgba[2];
 	int col2_R = ENTColor::colsMenu[5].rgba[0];
 	int col2_G = ENTColor::colsMenu[5].rgba[1];
 	int col2_B = ENTColor::colsMenu[5].rgba[2];
@@ -61,17 +58,17 @@ void update_speed_text(int speed, Vector3 player_coords)
 	int numLines = sizeof(speedometerStatusLines) / sizeof(speedometerStatusLines[0]);
 
 	if (featureKMH) {
-		ss << "KPH: ";
+		ss << "KPH:   " << round((speed * 1.609344) * 2.3);
 
 		if (featureAltitude) {
-			ss << "\nALT: ";
+			ss << "\nALT:     " << floor(player_coords.z * 1) / 1;
 		}
 	}
 	else {
-		ss << "MPH: ";
+		ss << "MPH:   " << round(speed * 2.3);
 
 		if (featureAltitude) {
-			ss << "\nALT: ";
+			ss << "\nALT:     " << floor(player_coords.z * 1) / 1;
 		}
 	}
 
@@ -85,12 +82,10 @@ void update_speed_text(int speed, Vector3 player_coords)
 		textX = (97.4 - (size * 2.5)) / 100;
 		textY = (85 - (size * 1.2)) / 100;
 	}
-
 	if (SPEED_POSITION_VALUES[SpeedPositionIndex] == 2) { //Bottom Center
 		textX = (50 - (size * 1.1)) / 100;
 		textY = (95 - (size * 1.2)) / 100;
 	}
-
 	if (SPEED_POSITION_VALUES[SpeedPositionIndex] == 3) { //Top Right
 		textX = (97.4 - (size * 2.5)) / 100;
 		textY = (10.5 + (size * 0.0001)) / 100;
@@ -104,91 +99,32 @@ void update_speed_text(int speed, Vector3 player_coords)
 		UI::SET_TEXT_FONT(0);
 		UI::SET_TEXT_SCALE(size / 10, size / 10);
 		UI::SET_TEXT_WRAP(0.0, 1.0);
-		UI::SET_TEXT_COLOUR(col_R, col_G, col_B, 255);
-		UI::SET_TEXT_CENTRE(0);
-		UI::SET_TEXT_DROPSHADOW(20, 20, 20, 20, 20);
-		UI::SET_TEXT_EDGE(100, 100, 100, 100, 205);
-		UI::SET_TEXT_LEADING(1);
-		UI::END_TEXT_COMMAND_DISPLAY_TEXT(textX, textY);
-		textY += 0.025f;
-	}
-
-	//Values
-	std::string speedometerStatusLines2[1];
-	std::stringstream ss2;
-	numLines = sizeof(speedometerStatusLines2) / sizeof(speedometerStatusLines2[0]);
-
-	if (featureKMH) {
-		ss2 << round((speed * 1.609344) * 2.3);
-
-		if (featureAltitude) {
-			ss2 << "\n" << floor(player_coords.z * 1) / 1;
-		}
-	}
-	else {
-		ss2 << round(speed * 2.3);
-
-		if (featureAltitude) {
-			ss2 << "\n" << floor(player_coords.z * 1) / 1;
-		}
-	}
-
-	index = 0;
-	speedometerStatusLines2[index++] = ss2.str();
-	size = SPEED_SIZE_VALUES[SpeedSizeIndex];
-
-	if (SPEED_POSITION_VALUES[SpeedPositionIndex] == 1) { //Bottom Right
-		textX = ((97.4 - (size * 2.6)) / 100) + (size / 51);
-		textY = (85 - (size * 1.2)) / 100;
-	}
-
-	if (SPEED_POSITION_VALUES[SpeedPositionIndex] == 2) { //Bottom Center
-		textX = ((50 - (size * 1.1)) / 100) + (size / 51);
-		textY = (95 - (size * 1.2)) / 100;
-	}
-
-	if (SPEED_POSITION_VALUES[SpeedPositionIndex] == 3) { //Top Right
-		textX = ((97.4 - (size * 2.6)) / 100) + (size / 51);
-		textY = (10.5 + (size * 0.0001)) / 100;
-	}
-
-	numActualLines = 0;
-	for (int i = 0; i < numLines; i++) {
-		numActualLines++;
-		UI::BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
-		UI::_ADD_TEXT_COMPONENT_SCALEFORM((char *)speedometerStatusLines2[i].c_str());
-		UI::SET_TEXT_FONT(0);
-		UI::SET_TEXT_SCALE(size / 10, size / 10);
-		UI::SET_TEXT_WRAP(0.0, 1.0);
 		UI::SET_TEXT_COLOUR(col2_R, col2_G, col2_B, 255);
 		UI::SET_TEXT_CENTRE(0);
 		UI::SET_TEXT_DROPSHADOW(20, 20, 20, 20, 20);
 		UI::SET_TEXT_EDGE(100, 100, 100, 100, 205);
 		UI::SET_TEXT_LEADING(1);
+		UI::SET_TEXT_OUTLINE();
 		UI::END_TEXT_COMMAND_DISPLAY_TEXT(textX, textY);
 		textY += 0.025f;
 	}
-	//
 
-	if (size < 4) {
+	if (size < 4) { // draw background
 		if (SPEED_POSITION_VALUES[SpeedPositionIndex] == 1) { //Bottom Right
 			rectXScaled = 1 - ((300 / (float)screen_w) / 4);
 			rectYScaled = 0.95 - (((0 + (1 * 18)) / (float)screen_h) * 5);
 		}
-
 		if (SPEED_POSITION_VALUES[SpeedPositionIndex] == 2) { //Bottom Center
 			rectXScaled = 0.55 - ((230 / (float)screen_w) / 4);
 			rectYScaled = 1 - (((0 + (1 * 11)) / (float)screen_h) * 5);
 		}
-
 		if (SPEED_POSITION_VALUES[SpeedPositionIndex] == 3) { //Top Right
 			rectXScaled = 1 - ((300 / (float)screen_w) / 4);
 			rectYScaled = 0.24 - (((0 + (1 * 18)) / (float)screen_h) * 5);
 		}
-
 		float rectWidthScaled = (230 / (float)screen_w) / 2;
 		float rectHeightScaled = (0 + (1 * 18)) / (float)screen_h;
-		int rect_col[4] = { 128, 128, 128, 75 };
+		int rect_col[4] = { 0, 0, 0, 255 }; // 128, 128, 128, 75
 		GRAPHICS::DRAW_RECT(rectXScaled, rectYScaled, rectWidthScaled, rectHeightScaled, rect_col[0], rect_col[1], rect_col[2], rect_col[3]);
 
 		if (featureAltitude) {
@@ -196,20 +132,17 @@ void update_speed_text(int speed, Vector3 player_coords)
 				rectXScaled = 1 - ((300 / (float)screen_w) / 4);
 				rectYScaled = 0.95 - (((0 + (1 * 18)) / (float)screen_h) * 5) + ((0 + (1 * 18)) / (float)screen_h);
 			}
-
 			if (SPEED_POSITION_VALUES[SpeedPositionIndex] == 2) { //Bottom Center
 				rectXScaled = 0.55 - ((230 / (float)screen_w) / 4);
 				rectYScaled = 1 - (((0 + (1 * 11)) / (float)screen_h) * 5) + ((0 + (1 * 18)) / (float)screen_h);
 			}
-
 			if (SPEED_POSITION_VALUES[SpeedPositionIndex] == 3) { //Top Right
 				rectXScaled = 1 - ((300 / (float)screen_w) / 4);
 				rectYScaled = 0.24 - (((0 + (1 * 18)) / (float)screen_h) * 5) + ((0 + (1 * 18)) / (float)screen_h);
 			}
-
 			float rectWidthScaled = (230 / (float)screen_w) / 2;
 			float rectHeightScaled = (0 + (1 * 18)) / (float)screen_h;
-			int rect_col[4] = { 128, 128, 128, 75 };
+			int rect_col[4] = { 0, 0, 0, 255 }; // 128, 128, 128, 75
 			GRAPHICS::DRAW_RECT(rectXScaled, rectYScaled, rectWidthScaled, rectHeightScaled, rect_col[0], rect_col[1], rect_col[2], rect_col[3]);
 		}
 	}

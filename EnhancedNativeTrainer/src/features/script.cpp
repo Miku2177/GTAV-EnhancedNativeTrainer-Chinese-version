@@ -573,7 +573,7 @@ void update_features(){
 			Vector3 curRotation = CAM::GET_GAMEPLAY_CAM_ROT(2);
 			if (!CAM::DOES_CAM_EXIST(DeathCamM) && (CONTROLS::IS_CONTROL_PRESSED(2, 34) || CONTROLS::IS_CONTROL_PRESSED(2, 35) || CONTROLS::IS_CONTROL_PRESSED(2, 32) || CONTROLS::IS_CONTROL_PRESSED(2, 33)) && first_person_rotate == false) {
 				DeathCamM = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_FLY_CAMERA", playerPosition.x, playerPosition.y, playerPosition.z, curRotation.x, curRotation.y, curRotation.z, 50.0, true, 2);
-				CAM::ATTACH_CAM_TO_PED_BONE(DeathCamM, PLAYER::PLAYER_PED_ID(), 31086, 0, -0.15, 4, 1);
+				CAM::ATTACH_CAM_TO_PED_BONE(DeathCamM, PLAYER::PLAYER_PED_ID(), 31086, 0, -0.15, 3, 1); // 4
 				CAM::POINT_CAM_AT_PED_BONE(DeathCamM, PLAYER::PLAYER_PED_ID(), 31086, 0, 0.0, 0, 1);
 				CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE_BLEND_LEVEL(DeathCamM, 1.0);
 				CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE(DeathCamM, 1.0);
@@ -586,7 +586,7 @@ void update_features(){
 				if ((CONTROLS::IS_CONTROL_PRESSED(2, 34) || CONTROLS::IS_CONTROL_PRESSED(2, 35) || CONTROLS::IS_CONTROL_PRESSED(2, 32) || CONTROLS::IS_CONTROL_PRESSED(2, 33)) && first_person_rotate == false) {
 					CAM::DESTROY_CAM(DeathCamM, true);
 					DeathCamM = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_FLY_CAMERA", playerPosition.x, playerPosition.y, playerPosition.z, rot_cam.x, rot_cam.y, rot_cam.z, 50.0, true, 2);
-					CAM::ATTACH_CAM_TO_PED_BONE(DeathCamM, PLAYER::PLAYER_PED_ID(), 31086, 0, -0.15, 4, 1);
+					CAM::ATTACH_CAM_TO_PED_BONE(DeathCamM, PLAYER::PLAYER_PED_ID(), 31086, 0, -0.15, 3, 1); // 4
 					CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE_BLEND_LEVEL(DeathCamM, 1.0);
 					CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE(DeathCamM, 1.0);
 					CAM::_SET_CAM_DOF_FOCUS_DISTANCE_BIAS(DeathCamM, 1.0);
