@@ -95,6 +95,7 @@ bool featureAirStrike = false;
 bool featureEngineRunning = false;
 bool featureNoVehFlip = false;
 bool featureAutoToggleLights = false;
+bool featureNitro = false;
 bool featureMileage = false;
 bool featureSeasharkLights = false;
 bool featureVehMassMult = false;
@@ -1788,32 +1789,32 @@ bool onconfirm_veh_menu(MenuItem<int> choice){
 		//case 6: // Plane bombs -- incomplete so commenting out in mean time
 			//if (process_veh_weapons_menu()) return false;
 		//	break;
-		case 19: // door menu
+		case 20: // door menu
 			if(process_veh_door_menu()) return false;
 			break;
-		case 20: // seat menu
+		case 21: // seat menu
 			if (PED::IS_PED_SITTING_IN_ANY_VEHICLE(playerPed))
 				if(process_veh_seat_menu()) return false;
 			break;
-		case 21: // speed menu
+		case 22: // speed menu
 			process_speed_menu();
 			break;
-		case 22: // vehicle indicators menu
+		case 23: // vehicle indicators menu
 			process_visualize_menu();
 			break;
-		case 25: // vehicle indicators menu
+		case 26: // vehicle indicators menu
 			process_speedlimit_menu();
 			break;
-		case 28: // fuel menu
+		case 29: // fuel menu
 			process_fuel_menu();
 			break;
-		case 29: // remember vehicles menu
+		case 30: // remember vehicles menu
 			process_remember_vehicles_menu();
 			break;
-		case 30: // road laws menu
+		case 31: // road laws menu
 			process_road_laws_menu();
 			break;
-		case 35: // engine can degrade
+		case 36: // engine can degrade
 			process_engine_degrade_menu();
 			break;
 		default:
@@ -1941,6 +1942,12 @@ void process_veh_menu(){
 	listItem->caption = "Infinite Rocket Boost";
 	listItem->value = InfiniteBoostIndex;
 	menuItems.push_back(listItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Nitro";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureNitro;
+	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Disable Despawn Of DLC Cars";
@@ -2526,33 +2533,20 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 
 	// Nitro
-	/*if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && CONTROLS::IS_CONTROL_PRESSED(2, 61)) { // VehicleMoveUpOnly
+	if (featureNitro && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && CONTROLS::IS_CONTROL_PRESSED(2, 61)) { // VehicleMoveUpOnly
 		Vehicle my_veh = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
-		//Vector3 my_veh_c = ENTITY::GET_ENTITY_COORDS(my_veh, 1);
-		//int bone_i = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(my_veh, "exhaust");
-		
-		//int bone_i = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(my_veh, "taillight_l");
-		//Vector3 exhaust = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(my_veh, bone_i);
-		
 		STREAMING::HAS_NAMED_PTFX_ASSET_LOADED("veh_backfire");
 		STREAMING::REQUEST_NAMED_PTFX_ASSET("veh_backfire");
 		GRAPHICS::_SET_PTFX_ASSET_NEXT_CALL("veh_backfire");
 		STREAMING::HAS_NAMED_PTFX_ASSET_LOADED("core");
 		STREAMING::REQUEST_NAMED_PTFX_ASSET("core");
 		GRAPHICS::_SET_PTFX_ASSET_NEXT_CALL("core");
-		//DECORATOR::DECOR_EXIST_ON(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), "ikt_speedo_nos");
-
-		Vector3 exhaust = ENTITY::_GET_ENTITY_BONE_COORDS(my_veh, ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(my_veh, "exhaust")); // _GET_ENTITY_BONE_INDEX
-		//Vector3 exhaust = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(my_veh, boneCoord.x, boneCoord.y, boneCoord.z);
+		Vector3 exhaust = ENTITY::_GET_ENTITY_BONE_COORDS(my_veh, ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(my_veh, "exhaust"));
+		Vector3 exhaust_off = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(my_veh, exhaust.x, exhaust.y, exhaust.z);
+		GRAPHICS::START_PARTICLE_FX_NON_LOOPED_ON_ENTITY("veh_backfire", my_veh, exhaust_off.x, exhaust_off.y, exhaust_off.z, 0.0f, ENTITY::GET_ENTITY_PITCH(my_veh), 0.0f, 1.0f, false, false, false);
 		AUDIO::SET_VEHICLE_BOOST_ACTIVE(my_veh, true);
-		//GRAPHICS::_START_SCREEN_EFFECT("RaceTurbo", 0, 0);
 		VEHICLE::_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(my_veh, 10.0);
-		//GRAPHICS::_SET_PTFX_ASSET_NEXT_CALL("core");
-		GRAPHICS::START_PARTICLE_FX_NON_LOOPED_ON_ENTITY("veh_backfire", my_veh, exhaust.x, exhaust.y, exhaust.z, 0.0f, ENTITY::GET_ENTITY_PITCH(my_veh), 0.0f, 1.0f, false, false, false);
-		//GRAPHICS::_START_PARTICLE_FX_LOOPED_ON_ENTITY_BONE("veh_backfire", my_veh, my_veh_c.x, my_veh_c.y, my_veh_c.z, 0.0f, ENTITY::GET_ENTITY_PITCH(my_veh), 0.0f, bone_i, 2.0f, false, false, false);
-		//DECORATOR::DECOR_SET_INT(my_veh, "ikt_speedo_nos", 1);
-	}*/
-	//
+	}
 
 	// outside vehicle control
 	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
@@ -3928,6 +3922,7 @@ void reset_vehicle_globals() {
 		featureEngineRunning =
 		featureNoVehFlip =
 		featureAutoToggleLights =
+		featureNitro =
 		featureMileage = 
 		featureSeasharkLights =
 		featureRememberVehicles =
@@ -4212,6 +4207,7 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureEngineRunning", &featureEngineRunning});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoVehFlip", &featureNoVehFlip});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAutoToggleLights", &featureAutoToggleLights});
+	results->push_back(FeatureEnabledLocalDefinition{"featureNitro", &featureNitro});
 	results->push_back(FeatureEnabledLocalDefinition{"featureMileage", &featureMileage});
 	results->push_back(FeatureEnabledLocalDefinition{"featureSeasharkLights", &featureSeasharkLights});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRememberVehicles", &featureRememberVehicles});
