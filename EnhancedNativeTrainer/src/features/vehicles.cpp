@@ -1944,7 +1944,7 @@ void process_veh_menu(){
 	menuItems.push_back(listItem);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Nitro";
+	toggleItem->caption = "Nitrous";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureNitro;
 	menuItems.push_back(toggleItem);
@@ -2532,18 +2532,20 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		}
 	}
 
-	// Nitro
-	if (featureNitro && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && CONTROLS::IS_CONTROL_PRESSED(2, 61)) { // VehicleMoveUpOnly
+	// Nitrous
+	if (featureNitro && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && CONTROLS::IS_CONTROL_PRESSED(2, 61) && STREAMING::HAS_NAMED_PTFX_ASSET_LOADED("core")) { // VehicleMoveUpOnly
 		Vehicle my_veh = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
-		STREAMING::HAS_NAMED_PTFX_ASSET_LOADED("veh_backfire");
-		STREAMING::REQUEST_NAMED_PTFX_ASSET("veh_backfire");
-		GRAPHICS::_SET_PTFX_ASSET_NEXT_CALL("veh_backfire");
-		STREAMING::HAS_NAMED_PTFX_ASSET_LOADED("core");
 		STREAMING::REQUEST_NAMED_PTFX_ASSET("core");
-		GRAPHICS::_SET_PTFX_ASSET_NEXT_CALL("core");
-		Vector3 exhaust = ENTITY::_GET_ENTITY_BONE_COORDS(my_veh, ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(my_veh, "exhaust"));
-		Vector3 exhaust_off = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(my_veh, exhaust.x, exhaust.y, exhaust.z);
-		GRAPHICS::START_PARTICLE_FX_NON_LOOPED_ON_ENTITY("veh_backfire", my_veh, exhaust_off.x, exhaust_off.y, exhaust_off.z, 0.0f, ENTITY::GET_ENTITY_PITCH(my_veh), 0.0f, 1.0f, false, false, false);
+		while (!STREAMING::HAS_NAMED_PTFX_ASSET_LOADED("core")) WAIT(0);
+		char* Exhausts[] = { "exhaust", "exhaust_2", "exhaust_3", "exhaust_4", "exhaust_5", "exhaust_6", "exhaust_7", "exhaust_8", "exhaust_9", "exhaust_10", "exhaust_11", "exhaust_12", "exhaust_13", "exhaust_14", "exhaust_15", "exhaust_16" };
+		for (char* exhaust : Exhausts) {
+			Vector3 exhaust_p = ENTITY::_GET_ENTITY_BONE_COORDS(my_veh, ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(my_veh, exhaust)); // "exhaust"
+			if (ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(my_veh, exhaust) > -1) {
+				Vector3 exhaust_p_off = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(my_veh, exhaust_p.x, exhaust_p.y, exhaust_p.z);
+				GRAPHICS::_SET_PTFX_ASSET_NEXT_CALL("core");
+				GRAPHICS::START_PARTICLE_FX_NON_LOOPED_ON_ENTITY("veh_backfire", my_veh, exhaust_p_off.x, exhaust_p_off.y, exhaust_p_off.z, 0.0f, ENTITY::GET_ENTITY_PITCH(my_veh), 0.0f, 1.0f, false, false, false);
+			}
+		}
 		AUDIO::SET_VEHICLE_BOOST_ACTIVE(my_veh, true);
 		VEHICLE::_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(my_veh, 10.0);
 	}
