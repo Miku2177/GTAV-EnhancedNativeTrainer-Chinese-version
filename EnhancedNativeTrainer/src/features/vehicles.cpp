@@ -77,6 +77,8 @@ bool LightAlwaysOff = true;
 bool alarmischarged = false;
 bool alarm_enabled = false;
 
+bool nitro_e = false;
+
 int turn_angle = 0;
 
 int traction_tick = 0;
@@ -2533,7 +2535,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 
 	// Nitrous
-	if (featureNitro && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && CONTROLS::IS_CONTROL_PRESSED(2, 61)) { // VehicleMoveUpOnly
+	if (featureNitro && CONTROLS::IS_CONTROL_PRESSED(2, 61) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) { // VehicleMoveUpOnly
 		Vehicle my_veh = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		STREAMING::REQUEST_NAMED_PTFX_ASSET("core");
 		while (!STREAMING::HAS_NAMED_PTFX_ASSET_LOADED("core")) WAIT(0);
@@ -2548,6 +2550,11 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		}
 		AUDIO::SET_VEHICLE_BOOST_ACTIVE(my_veh, true);
 		VEHICLE::_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(my_veh, 10.0);
+		nitro_e = true;
+	}
+	if (featureNitro && CONTROLS::IS_CONTROL_RELEASED(2, 61) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && nitro_e == true) {
+		VEHICLE::_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 1.0);
+		nitro_e = false;
 	}
 
 	// outside vehicle control
