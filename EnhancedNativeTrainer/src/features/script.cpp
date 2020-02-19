@@ -522,7 +522,6 @@ void update_features(){
 					ENTITY::SET_ENTITY_ALPHA(PLAYER::PLAYER_PED_ID(), 0, 0);
 				}
 			}
-
 			if (CAM::DOES_CAM_EXIST(DeathCam)) { // camera rotation
 				Vector3 rot_cam = CAM::GET_CAM_ROT(DeathCam, 2);
 				if ((CONTROLS::IS_CONTROL_PRESSED(2, 34) || CONTROLS::IS_CONTROL_PRESSED(2, 35) || CONTROLS::IS_CONTROL_PRESSED(2, 32) || CONTROLS::IS_CONTROL_PRESSED(2, 33)) && first_person_rotate == false) {
