@@ -137,7 +137,7 @@ bool onconfirm_bodyguard_skins_menu(MenuItem<int> choice){
 				result = trim(result);
 				lastCustomBodyguardSpawn = result;
 				Hash hash = GAMEPLAY::GET_HASH_KEY((char*)result.c_str());
-				if (!STREAMING::IS_MODEL_IN_CDIMAGE(hash) || !STREAMING::IS_MODEL_VALID(hash))
+				if (lastCustomBodyguardSpawn != "random" && (!STREAMING::IS_MODEL_IN_CDIMAGE(hash) || !STREAMING::IS_MODEL_VALID(hash)))
 				{
 					std::ostringstream ss;
 					ss << "Couldn't find model '" << result << "'";
@@ -145,7 +145,7 @@ bool onconfirm_bodyguard_skins_menu(MenuItem<int> choice){
 					lastCustomBodyguardSpawn = "";
 					return false;
 				}
-				else
+				if ((STREAMING::IS_MODEL_IN_CDIMAGE(hash) && STREAMING::IS_MODEL_VALID(hash)) || lastCustomBodyguardSpawn == "random")
 				{
 					get_current_model_name();
 					requireRefreshOfBodyguardMainMenu = true;
@@ -476,8 +476,31 @@ void do_spawn_bodyguard(){
 	bodyGuard = -1;
 	bool exist_already = false;
 	DWORD bodyGuardModel = -1;
+	float random_category, random_bodyguard = -1;
 
-	if (hotkey_boddyguard == false) bodyGuardModel = get_current_model_hash();
+	// random bodyguard
+	if (lastCustomBodyguardSpawn == "random") {
+		random_category = (rand() % 2 + 0); // UP MARGIN + DOWN MARGIN
+		if (random_category == 0) random_bodyguard = (rand() % SKINS_PLAYER_VALUES.size() + 0);
+		if (random_category == 1) random_bodyguard = (rand() % SKINS_GENERAL_VALUES.size() + 0);
+		if (random_category == 2) random_bodyguard = (rand() % SKINS_ANIMALS_VALUES.size() + 0);
+		//get_current_model_name();
+		//requireRefreshOfBodyguardMainMenu = true;
+		if (random_category == 0) bodyGuardModel = GAMEPLAY::GET_HASH_KEY((char*)SKINS_PLAYER_VALUES[random_bodyguard].c_str());
+		if (random_category == 1) bodyGuardModel = GAMEPLAY::GET_HASH_KEY((char*)SKINS_GENERAL_VALUES[random_bodyguard].c_str());
+		if (random_category == 2) bodyGuardModel = GAMEPLAY::GET_HASH_KEY((char*)SKINS_ANIMALS_VALUES[random_bodyguard].c_str());
+	}
+	//
+
+	std::stringstream ss55;
+	ss55 << "\n lastCust: " << lastCustomBodyguardSpawn;
+	ss55 << "\n bodyGuardModel: " << bodyGuardModel;
+	//ss55 << "\n dist_diff: " << dist_diff;
+	//ss55 << "\n temp_dist: " << temp_dist;
+	callsPerFrame = 0;
+	set_status_text_centre_screen(ss55.str());
+
+	if (hotkey_boddyguard == false && lastCustomBodyguardSpawn != "random") bodyGuardModel = get_current_model_hash();
 	if (hotkey_boddyguard == true) {
 		if (hotkey_b == false) {
 			hotkey_b = true;
