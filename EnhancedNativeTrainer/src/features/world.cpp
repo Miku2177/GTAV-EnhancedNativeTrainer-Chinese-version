@@ -1513,28 +1513,33 @@ void update_world_features()
 	// No Waypoint
 	if (featureNoWaypoint) UI::CLEAR_GPS_PLAYER_WAYPOINT();
 
-	if (featureWorldNoTrafficUpdated)
-	{
-		VEHICLE::_DISPLAY_DISTANT_VEHICLES(!featureWorldNoTraffic);
-		GRAPHICS::DISABLE_VEHICLE_DISTANTLIGHTS(featureWorldNoTraffic);
+	//if (featureWorldNoTrafficUpdated)
+	//{
+	//	VEHICLE::_DISPLAY_DISTANT_VEHICLES(!featureWorldNoTraffic);
+	//	GRAPHICS::DISABLE_VEHICLE_DISTANTLIGHTS(featureWorldNoTraffic);
 
 		if (featureWorldNoTraffic)
 		{
 			Vector3 v3 = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 1);
 			GAMEPLAY::CLEAR_AREA_OF_VEHICLES(v3.x, v3.y, v3.z, 1000.0, 0, 0, 0, 0, 0);
-
 			STREAMING::SET_VEHICLE_POPULATION_BUDGET(0);
+			VEHICLE::_DISPLAY_DISTANT_VEHICLES(false);
+			GRAPHICS::DISABLE_VEHICLE_DISTANTLIGHTS(true);
+			featureWorldNoTrafficUpdated = true;
 		}
-		else
+		if (!featureWorldNoTraffic && featureWorldNoTrafficUpdated == true)
 		{
 			STREAMING::SET_VEHICLE_POPULATION_BUDGET(3);
 			VEHICLE::SET_ALL_VEHICLE_GENERATORS_ACTIVE();
 			VEHICLE::SET_ALL_LOW_PRIORITY_VEHICLE_GENERATORS_ACTIVE(true);
+			VEHICLE::_DISPLAY_DISTANT_VEHICLES(true);
+			GRAPHICS::DISABLE_VEHICLE_DISTANTLIGHTS(false);
+			featureWorldNoTrafficUpdated = false;
 		}
 
-		featureWorldNoTrafficUpdated = false;
-	}
-	if (featureWorldNoTraffic)
+	//	featureWorldNoTrafficUpdated = false;
+	//}
+	/*if (featureWorldNoTraffic)
 	{
 		if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0))
 		{
@@ -1542,7 +1547,7 @@ void update_world_features()
 			GAMEPLAY::CLEAR_AREA_OF_VEHICLES(v3.x, v3.y, v3.z, 1000.0, 0, 0, 0, 0, 0);
 		}
 		STREAMING::SET_VEHICLE_POPULATION_BUDGET(0);
-	}
+	}*/
 
 	if (featureNoPlanesHelis) {
 		AI::SET_SCENARIO_GROUP_ENABLED("ALAMO_PLANES", 0);
