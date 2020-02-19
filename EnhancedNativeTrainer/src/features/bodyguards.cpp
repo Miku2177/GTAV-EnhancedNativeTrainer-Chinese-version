@@ -484,21 +484,11 @@ void do_spawn_bodyguard(){
 		if (random_category == 0) random_bodyguard = (rand() % SKINS_PLAYER_VALUES.size() + 0);
 		if (random_category == 1) random_bodyguard = (rand() % SKINS_GENERAL_VALUES.size() + 0);
 		if (random_category == 2) random_bodyguard = (rand() % SKINS_ANIMALS_VALUES.size() + 0);
-		//get_current_model_name();
-		//requireRefreshOfBodyguardMainMenu = true;
 		if (random_category == 0) bodyGuardModel = GAMEPLAY::GET_HASH_KEY((char*)SKINS_PLAYER_VALUES[random_bodyguard].c_str());
 		if (random_category == 1) bodyGuardModel = GAMEPLAY::GET_HASH_KEY((char*)SKINS_GENERAL_VALUES[random_bodyguard].c_str());
 		if (random_category == 2) bodyGuardModel = GAMEPLAY::GET_HASH_KEY((char*)SKINS_ANIMALS_VALUES[random_bodyguard].c_str());
 	}
 	//
-
-	std::stringstream ss55;
-	ss55 << "\n lastCust: " << lastCustomBodyguardSpawn;
-	ss55 << "\n bodyGuardModel: " << bodyGuardModel;
-	//ss55 << "\n dist_diff: " << dist_diff;
-	//ss55 << "\n temp_dist: " << temp_dist;
-	callsPerFrame = 0;
-	set_status_text_centre_screen(ss55.str());
 
 	if (hotkey_boddyguard == false && lastCustomBodyguardSpawn != "random") bodyGuardModel = get_current_model_hash();
 	if (hotkey_boddyguard == true) {
