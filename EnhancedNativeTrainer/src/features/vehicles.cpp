@@ -4003,19 +4003,22 @@ bool onconfirm_carspawn_menu(MenuItem<int> choice){
 				// random vehicle
 				if (lastCustomVehicleSpawn == "random") {
 					int random_category, random_veh = -1;
-					random_category = (rand() % 8 + 0); // 20 // UP MARGIN + DOWN MARGIN
+					random_category = (rand() % 20 + 0); // UP MARGIN + DOWN MARGIN
+					if (random_category == 14) random_category = 13;
 					if (random_category < 9) {
 						random_veh = (rand() % VOV_CAR_VALUES[random_category].size() + 0);
 						result = VOV_CAR_VALUES[random_category][random_veh];
 					}
-					//if (random_category > 8 && random_category < 15) {
-					//	random_veh = (rand() % VOV_INDUS_VALUES[random_category].size() + 0);
-					//	result = VOV_INDUS_VALUES[random_category][random_veh];
-					//}
-					//if (random_category > 14 && random_category < 20) { // 21
-					//	random_veh = (rand() % VOV_SHALLOW_VALUES[random_category].size() + 0);
-					//	result = VOV_SHALLOW_VALUES[random_category][random_veh];
-					//}
+					if (random_category > 8 && random_category < 15) {
+						random_category = random_category - 9;
+						random_veh = (rand() % VOV_INDUS_VALUES[random_category].size() + 0);
+						result = VOV_INDUS_VALUES[random_category][random_veh];
+					}
+					if (random_category > 14 && random_category < 21) {
+						random_category = random_category - 15;
+						random_veh = (rand() % VOV_SHALLOW_VALUES[random_category].size() + 0);
+						result = VOV_SHALLOW_VALUES[random_category][random_veh];
+					}
 				}
 				//
 				do_spawn_vehicle(result, result);
