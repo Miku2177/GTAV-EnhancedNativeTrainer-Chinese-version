@@ -481,12 +481,18 @@ void do_spawn_bodyguard(){
 	// random bodyguard
 	if (lastCustomBodyguardSpawn == "random") {
 		random_category = (rand() % 10 + 0); // UP MARGIN + DOWN MARGIN
-		if (random_category == 0) random_bodyguard = (rand() % SKINS_PLAYER_VALUES.size() + 0);
-		if (random_category > 0 && random_category < 10) random_bodyguard = (rand() % SKINS_GENERAL_VALUES.size() + 0);
-		if (random_category == 10) random_bodyguard = (rand() % SKINS_ANIMALS_VALUES.size() + 0);
-		if (random_category == 0) bodyGuardModel = GAMEPLAY::GET_HASH_KEY((char*)SKINS_PLAYER_VALUES[random_bodyguard].c_str());
-		if (random_category > 0 && random_category < 10) bodyGuardModel = GAMEPLAY::GET_HASH_KEY((char*)SKINS_GENERAL_VALUES[random_bodyguard].c_str());
-		if (random_category == 10) bodyGuardModel = GAMEPLAY::GET_HASH_KEY((char*)SKINS_ANIMALS_VALUES[random_bodyguard].c_str());
+		if (random_category == 0) {
+			random_bodyguard = (rand() % SKINS_PLAYER_VALUES.size() + 0);
+			bodyGuardModel = GAMEPLAY::GET_HASH_KEY((char*)SKINS_PLAYER_VALUES[random_bodyguard].c_str());
+		}
+		if (random_category > 0 && random_category < 10) {
+			random_bodyguard = (rand() % SKINS_GENERAL_VALUES.size() + 0);
+			bodyGuardModel = GAMEPLAY::GET_HASH_KEY((char*)SKINS_GENERAL_VALUES[random_bodyguard].c_str());
+		}
+		if (random_category == 10) {
+			random_bodyguard = (rand() % SKINS_ANIMALS_VALUES.size() + 0);
+			bodyGuardModel = GAMEPLAY::GET_HASH_KEY((char*)SKINS_ANIMALS_VALUES[random_bodyguard].c_str());
+		}
 	}
 	
 	if (hotkey_boddyguard == false && lastCustomBodyguardSpawn != "random") bodyGuardModel = get_current_model_hash();

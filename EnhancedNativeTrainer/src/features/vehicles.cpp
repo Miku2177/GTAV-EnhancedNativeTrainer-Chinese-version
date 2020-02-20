@@ -4001,19 +4001,22 @@ bool onconfirm_carspawn_menu(MenuItem<int> choice){
 			}
 			if (lastCustomVehicleSpawn == "random" || (STREAMING::IS_MODEL_IN_CDIMAGE(hash) && STREAMING::IS_MODEL_A_VEHICLE(hash))) {
 				// random vehicle
-				//if (lastCustomVehicleSpawn == "random") {
-					//float random_category, random_veh = -1;
-					//random_category = (rand() % 20 + 0); // UP MARGIN + DOWN MARGIN
-					//const std::vector<std::string> VOV_CAR_VALUES[] = { VALUES_SUPERCARS, VALUES_SPORTS, VALUES_SPORTSCLASSICS, VALUES_COUPES, VALUES_MUSCLE, VALUES_OFFROAD, VALUES_SUVS, VALUES_SEDANS, VALUES_COMPACTS };
-					//const std::vector<std::string> VOV_INDUS_VALUES[] = { VALUES_INDUSTRIAL, VALUES_COMMERCIAL, VALUES_VANS, VALUES_SERVICES, VALUES_TRAILERS, VALUES_TRAINS };
-					//const std::vector<std::string> VOV_SHALLOW_VALUES[] = { VALUES_EMERGENCY, VALUES_MOTORCYCLES, VALUES_PLANES, VALUES_HELOS, VALUES_BOATS, VALUES_BICYCLES };
-					//if (random_category < 9) random_veh = (rand() % VOV_CAR_VALUES[9][random_category].size() + 0);
-					//if (random_category > 8 && random_category < 15) random_veh = (rand() % VOV_INDUS_VALUES[6][random_category].size() + 0);
-					//if (random_category > 14 && random_category < 21) random_veh = (rand() % VOV_SHALLOW_VALUES[6][random_category].size() + 0);
-					//if (random_category < 9) result = GAMEPLAY::GET_HASH_KEY((char* VOV_CAR_VALUES[9][random_category][random_veh].c_str());
-					//if (random_category > 8 && random_category < 15) result = GAMEPLAY::GET_HASH_KEY((char*)SKINS_GENERAL_VALUES[random_veh].c_str());
-					//if (random_category > 14 && random_category < 21) result = GAMEPLAY::GET_HASH_KEY((char*)SKINS_ANIMALS_VALUES[random_veh].c_str());
-				//}
+				if (lastCustomVehicleSpawn == "random") {
+					int random_category, random_veh = -1;
+					random_category = (rand() % 8 + 0); // 20 // UP MARGIN + DOWN MARGIN
+					if (random_category < 9) {
+						random_veh = (rand() % VOV_CAR_VALUES[random_category].size() + 0);
+						result = VOV_CAR_VALUES[random_category][random_veh];
+					}
+					//if (random_category > 8 && random_category < 15) {
+					//	random_veh = (rand() % VOV_INDUS_VALUES[random_category].size() + 0);
+					//	result = VOV_INDUS_VALUES[random_category][random_veh];
+					//}
+					//if (random_category > 14 && random_category < 20) { // 21
+					//	random_veh = (rand() % VOV_SHALLOW_VALUES[random_category].size() + 0);
+					//	result = VOV_SHALLOW_VALUES[random_category][random_veh];
+					//}
+				}
 				//
 				do_spawn_vehicle(result, result);
 			}
