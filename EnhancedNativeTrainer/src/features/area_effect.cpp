@@ -571,7 +571,7 @@ void update_area_effects(Ped playerPed){
 		Vehicle veh_agressive[arrSize_laws];
 		int count_veh = worldGetAllPeds(veh_agressive, arrSize_laws);
 		for (int i = 0; i < count_veh; i++) {
-			if (veh_agressive[i] != playerPed && !PED::IS_PED_GROUP_MEMBER(veh_agressive[i], myGroup) &&
+			if (veh_agressive[i] != playerPed && !PED::IS_PED_GROUP_MEMBER(veh_agressive[i], myENTGroup) &&
 				PED::GET_PED_TYPE(veh_agressive[i]) != 6 && PED::GET_PED_TYPE(veh_agressive[i]) != 27 && PED::GET_PED_TYPE(veh_agressive[i]) != 29) {
 				Vehicle veh_coll_with = PED::GET_VEHICLE_PED_IS_IN(veh_agressive[i], false);
 				Vector3 veh_coll_with_coords = ENTITY::GET_ENTITY_COORDS(veh_coll_with, true);
