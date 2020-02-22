@@ -16,7 +16,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 int activeLineIndexBodyguards = 0;
 
-int myGroup = -1;
+int myENTGroup = -1;
 int const BODYGUARD_LIMIT = 7;
 
 int pop, all_selected = -1;
@@ -520,7 +520,7 @@ void do_spawn_bodyguard(){
 			WAIT(0);
 		}
 
-		myGroup = PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID());
+		myENTGroup = PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID());
 
 		Vector3 spawnCoords = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(PLAYER::PLAYER_PED_ID(), 2.0, 2.0, 0.0); // 2.5 2.5
 		Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
@@ -578,9 +578,12 @@ void do_spawn_bodyguard(){
 
 			spawnedBodyguards.push_back(bodyGuard); // save the current bodyguard
 
-			PED::SET_PED_AS_GROUP_LEADER(PLAYER::PLAYER_PED_ID(), myGroup);
-			PED::SET_PED_AS_GROUP_MEMBER(bodyGuard, myGroup);
+			PED::SET_PED_AS_GROUP_LEADER(PLAYER::PLAYER_PED_ID(), myENTGroup);
+			PED::SET_PED_AS_GROUP_MEMBER(bodyGuard, myENTGroup);
 			PED::SET_PED_NEVER_LEAVES_GROUP(bodyGuard, true);
+			PED::SET_PED_DIES_IN_WATER(bodyGuard, false);
+			PED::SET_PED_DIES_INSTANTLY_IN_WATER(bodyGuard, false);
+			PED::SET_ENABLE_SCUBA(bodyGuard, true);
 
 			if (featureBodyguardInvincible) {
 				ENTITY::SET_ENTITY_INVINCIBLE(bodyGuard, true);
@@ -626,22 +629,25 @@ void do_spawn_bodyguard(){
 			// animal
 			if (bodyguard_animal == true) {
 				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 46, true);
+				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 5, true);
 				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 17, true);
 				PED::SET_PED_FLEE_ATTRIBUTES(bodyGuard, 0, false);
 				Hash temp_p = PED::GET_PED_RELATIONSHIP_GROUP_HASH(bodyGuard);
 				PED::ADD_RELATIONSHIP_GROUP("DogChop", &temp_p);
-				PED::SET_RELATIONSHIP_BETWEEN_GROUPS(2, myGroup, temp_p); // 0
-				PED::SET_RELATIONSHIP_BETWEEN_GROUPS(2, temp_p, myGroup);
-				PED::SET_PED_CAN_BE_TARGETTED(bodyGuard, false);
+				PED::SET_RELATIONSHIP_BETWEEN_GROUPS(2, myENTGroup, temp_p); // 0
+				PED::SET_RELATIONSHIP_BETWEEN_GROUPS(2, temp_p, myENTGroup);
+				PED::SET_PED_CAN_BE_TARGETTED(bodyGuard, true);
+				WEAPON::GIVE_WEAPON_TO_PED(bodyGuard, -1569615261, 1, false, true);
+				PED::SET_PED_CONFIG_FLAG(bodyGuard, 281, true);
 			}
 			//
 			
 			if (bodyguard_animal == false) PED::SET_PED_CAN_SWITCH_WEAPON(bodyGuard, true);
-			PED::SET_GROUP_FORMATION(myGroup, 1); // 1
-			PED::SET_GROUP_FORMATION_SPACING(myGroup, BODY_BLIPSIZE_VALUES[BodyDistanceIndex], BODY_BLIPSIZE_VALUES[BodyDistanceIndex], BODY_BLIPSIZE_VALUES[BodyDistanceIndex]); // 2.0, 2.0, 2.0
+			PED::SET_GROUP_FORMATION(myENTGroup, 1); // 1
+			PED::SET_GROUP_FORMATION_SPACING(myENTGroup, BODY_BLIPSIZE_VALUES[BodyDistanceIndex], BODY_BLIPSIZE_VALUES[BodyDistanceIndex], BODY_BLIPSIZE_VALUES[BodyDistanceIndex]); // 2.0, 2.0, 2.0
 			PED::SET_CAN_ATTACK_FRIENDLY(bodyGuard, false, false);
 
-			AI::TASK_COMBAT_HATED_TARGETS_AROUND_PED(bodyGuard, 10000, 0);
+			AI::TASK_COMBAT_HATED_TARGETS_AROUND_PED(bodyGuard, 100.0f, 0);
 			PED::SET_PED_KEEP_TASK(bodyGuard, true);
 
 			if (bodyguard_animal == false) PED::SET_PED_FIRING_PATTERN(bodyGuard, GAMEPLAY::GET_HASH_KEY("FIRING_PATTERN_FULL_AUTO")); // 0xC6EE6B4C
@@ -760,24 +766,20 @@ void maintain_bodyguards(){
 			// bodyguards swimming ability
 			if (ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID()) == 1 && !is_in_airbrake_mode() && PED::GET_PED_TYPE(spawnedBodyguards[i]) != 28 && stop_b == false) {
 				float height = -1.0;
+				Object taskSequence;
 				Vector3 my_coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 				Vector3 bod_coords = ENTITY::GET_ENTITY_COORDS(spawnedBodyguards[i], true);
 				WATER::GET_WATER_HEIGHT(my_coords.x, my_coords.y, my_coords.z, &height);
-				if (PED::IS_PED_SWIMMING(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_SWIMMING(spawnedBodyguards[i]) && !PED::IS_PED_JUMPING(spawnedBodyguards[i]) && AI::IS_PED_STILL(spawnedBodyguards[i])) {
-					AI::TASK_TURN_PED_TO_FACE_COORD(spawnedBodyguards[i], my_coords.x, my_coords.y, my_coords.z, 10000);
-					WAIT(1000);
-					AI::TASK_CLIMB(spawnedBodyguards[i], 1);
-					WAIT(10);
-					AI::TASK_JUMP(spawnedBodyguards[i], 1);
-					WAIT(10);
-				}
 				if ((my_coords.z < height) && ((height - my_coords.z) > 2)) {
 					if ((bod_coords.z - my_coords.z) > 2) ENTITY::APPLY_FORCE_TO_ENTITY(spawnedBodyguards[i], 1, 0, 0, -2.6, 0, 0, 0, true, false, true, true, true, true); // 1
 					if ((bod_coords.z - my_coords.z) < -1) ENTITY::APPLY_FORCE_TO_ENTITY(spawnedBodyguards[i], 1, 0, 0, 2.6, 0, 0, 0, true, false, true, true, true, true); // 0
-					if ((bod_coords.x - my_coords.x) > 7 && (bod_coords.x > my_coords.x)) ENTITY::APPLY_FORCE_TO_ENTITY(spawnedBodyguards[i], 1, -2.6, 0, 0, 0, 0, 0, true, false, true, true, true, true);
-					if ((my_coords.x - bod_coords.x) > 7 && (bod_coords.x < my_coords.x)) ENTITY::APPLY_FORCE_TO_ENTITY(spawnedBodyguards[i], 1, 2.6, 0, 0, 0, 0, 0, true, false, true, true, true, true);
-					if ((bod_coords.y - my_coords.y) > 7 && (bod_coords.y > my_coords.y)) ENTITY::APPLY_FORCE_TO_ENTITY(spawnedBodyguards[i], 1, 0, -2.6, 0, 0, 0, 0, true, false, true, true, true, true);
-					if ((my_coords.y - bod_coords.y) > 7 && (bod_coords.y < my_coords.y)) ENTITY::APPLY_FORCE_TO_ENTITY(spawnedBodyguards[i], 1, 0, 2.6, 0, 0, 0, 0, true, false, true, true, true, true);
+					if ((bod_coords.x - my_coords.x) > 6 || (my_coords.x - bod_coords.x) > 6 || (bod_coords.y - my_coords.y) > 6 || (my_coords.y - bod_coords.y) > 6) {
+						if (!PED::IS_PED_FACING_PED(spawnedBodyguards[i], PLAYER::PLAYER_PED_ID(), 50)) AI::TASK_TURN_PED_TO_FACE_COORD(spawnedBodyguards[i], my_coords.x, my_coords.y, my_coords.z, 10000);
+					}
+					if ((bod_coords.x - my_coords.x) > 6 && (bod_coords.x > my_coords.x)) ENTITY::APPLY_FORCE_TO_ENTITY(spawnedBodyguards[i], 1, -2.6, 0, 0, 0, 0, 0, true, false, true, true, true, true);
+					if ((my_coords.x - bod_coords.x) > 6 && (bod_coords.x < my_coords.x)) ENTITY::APPLY_FORCE_TO_ENTITY(spawnedBodyguards[i], 1, 2.6, 0, 0, 0, 0, 0, true, false, true, true, true, true);
+					if ((bod_coords.y - my_coords.y) > 6 && (bod_coords.y > my_coords.y)) ENTITY::APPLY_FORCE_TO_ENTITY(spawnedBodyguards[i], 1, 0, -2.6, 0, 0, 0, 0, true, false, true, true, true, true);
+					if ((my_coords.y - bod_coords.y) > 6 && (bod_coords.y < my_coords.y)) ENTITY::APPLY_FORCE_TO_ENTITY(spawnedBodyguards[i], 1, 0, 2.6, 0, 0, 0, 0, true, false, true, true, true, true);
 				}
 				if (((height - my_coords.z) < 1) && ((height - bod_coords.z) > 2) && ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID()) == 1) ENTITY::APPLY_FORCE_TO_ENTITY(spawnedBodyguards[i], 1, 0, 0, 2.6, 0, 0, 0, true, false, true, true, true, true);
 			}
@@ -789,7 +791,7 @@ void maintain_bodyguards(){
 				int count_animals = worldGetAllPeds(surr_animals, arrSize_animals);
 				for (int k = 0; k < count_animals; k++) {
 					if (surr_animals[k] != PLAYER::PLAYER_PED_ID() && surr_animals[k] != spawnedBodyguards[i] && (PED::IS_PED_IN_MELEE_COMBAT(surr_animals[k]) || PED::IS_PED_SHOOTING(surr_animals[k]))) {
-						if (PED::GET_PED_TYPE(spawnedBodyguards[i]) == 28 /*&& !PED::IS_PED_IN_MELEE_COMBAT(spawnedBodyguards[i])*/) {
+						if (PED::GET_PED_TYPE(spawnedBodyguards[i]) == 28) { // && !PED::IS_PED_IN_MELEE_COMBAT(spawnedBodyguards[i])
 							PED::SET_PED_CAN_RAGDOLL(spawnedBodyguards[i], 0);
 							PED::SET_PED_AS_ENEMY(surr_animals[k], true);
 							AI::TASK_COMBAT_PED_TIMED(spawnedBodyguards[i], surr_animals[k], 50000, 16); // 50000

@@ -217,4 +217,4 @@ extern const std::vector<std::string> PLAYER_HEALTH_CAPTIONS;
 extern const int PLAYER_HEALTH_VALUES[];
 extern bool in_prison;
 extern bool super_jump_no_parachute;
-extern int myGroup;
+extern int myENTGroup;
