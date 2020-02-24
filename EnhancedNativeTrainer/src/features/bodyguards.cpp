@@ -38,11 +38,24 @@ bool featureBodyguardInfAmmo = false;
 bool hotkey_b = false;
 
 bool added_nearest_b = false;
-Ped bodyGuard, temp_bodyguard/*, skin_bodyguard*/ = -1;
+Ped bodyGuard, temp_bodyguard = -1;
 
+// modify skin
 int skinBodDetailMenuIndex = 0;
 int skinBodDetailMenuValue = 0;
 float b_curr_num = -1;
+
+// save/load bodyguard
+int activeSavedBodSkinIndex = -1;
+std::string activeSavedBodSkinSlotName;
+int lastKnownSavedBodSkinCount = 0;
+bool bodskinSaveMenuInterrupt = false;
+bool bodskinSaveSlotMenuInterrupt = false;
+bool requireRefreshOfBodSkinSaveSlots = false;
+bool requireRefreshOfBodSkinSlotMenu = false;
+int bodskinDetailMenuIndex = 0;
+int bodskinDetailMenuValue = 0;
+bool load_saved_bodyguard = false;
 
 bool requireRefreshOfBodyguardMainMenu = false;
 int activeLineIndexBodyguardBlips = 0;
@@ -365,6 +378,313 @@ bool process_bod_skinchanger_detail_menu()
 }
 // end of 'modify skin'
 
+// save/load bodyguard
+bool applyChosenBodSkin(DWORD model)
+{
+	if (STREAMING::IS_MODEL_IN_CDIMAGE(model) && STREAMING::IS_MODEL_VALID(model))
+	{
+		STREAMING::REQUEST_MODEL(model);
+		while (!STREAMING::HAS_MODEL_LOADED(model))
+		{
+			make_periodic_feature_call();
+			WAIT(0);
+		}
+
+		//Vehicle veh = NULL;
+		//if (PED::IS_PED_IN_ANY_VEHICLE(model, 0))
+		//{
+		//	veh = PED::GET_VEHICLE_PED_IS_USING(model);
+		//}
+
+		//save_player_weapons();
+
+		load_saved_bodyguard = true;
+		temp_bodyguard = model;
+		do_spawn_bodyguard();
+
+		//PLAYER::SET_PLAYER_MODEL(model, model);
+		
+		//PED::SET_PED_DEFAULT_COMPONENT_VARIATION(model);
+		PED::SET_PED_DEFAULT_COMPONENT_VARIATION(bodyGuard);
+		WAIT(0);
+
+		//if (veh != NULL)
+		//{
+		//	PED::SET_PED_INTO_VEHICLE(model, veh, -1);
+		//}
+
+		//restore_player_weapons();
+
+		//reset the skin detail choice
+		bodskinDetailMenuIndex = 0;
+		bodskinDetailMenuValue = 0;
+
+		WAIT(100);
+		//STREAMING::SET_MODEL_AS_NO_LONGER_NEEDED(model);
+		STREAMING::SET_MODEL_AS_NO_LONGER_NEEDED(bodyGuard);
+
+		//chosenSkinName = skinName;
+
+		return true;
+	}
+	return false;
+}
+
+bool spawn_saved_bod_skin(int slot, std::string caption)
+{
+	ENTDatabase* database = get_database();
+
+	std::vector<SavedBodSkinDBRow*> savedBodSkins = database->get_saved_bod_skins(slot);
+
+	SavedBodSkinDBRow* savedBodSkin = savedBodSkins.at(0);
+	database->populate_saved_bod_skin(savedBodSkin);
+
+	applyChosenBodSkin(savedBodSkin->model);
+
+	//Ped ped = PLAYER::PLAYER_PED_ID();
+
+	for each (SavedBodSkinComponentDBRow *comp in savedBodSkin->components)
+	{
+		//PED::SET_PED_COMPONENT_VARIATION(savedBodSkin->model, comp->slotID, comp->drawable, comp->texture, 0);
+		PED::SET_PED_COMPONENT_VARIATION(bodyGuard, comp->slotID, comp->drawable, comp->texture, 0);
+	}
+
+	//PED::CLEAR_ALL_PED_PROPS(savedBodSkin->model);
+	PED::CLEAR_ALL_PED_PROPS(bodyGuard);
+	for each (SavedBodSkinPropDBRow *prop in savedBodSkin->props)
+	{
+		//PED::SET_PED_PROP_INDEX(savedBodSkin->model, prop->propID, prop->drawable, prop->texture, 0);
+		PED::SET_PED_PROP_INDEX(bodyGuard, prop->propID, prop->drawable, prop->texture, 0);
+	}
+
+	for (std::vector<SavedBodSkinDBRow*>::iterator it = savedBodSkins.begin(); it != savedBodSkins.end(); ++it)
+	{
+		delete (*it);
+	}
+	savedBodSkins.clear();
+
+	return false;
+}
+
+void save_current_bod_skin(int slot)
+{
+	//BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
+	//Player player = PLAYER::PLAYER_ID();
+	//Ped playerPed = PLAYER::PLAYER_PED_ID();
+
+	std::string result_b_s = show_keyboard(NULL, NULL);
+	if (!result_b_s.empty())
+	{
+		result_b_s = trim(result_b_s);
+		std::string::size_type sz;
+		b_curr_num = std::stof(result_b_s, &sz);
+		if (!spawnedBodyguards.empty() && b_curr_num > -1 && b_curr_num < spawnedBodyguards.size()) {
+			//if (bPlayerExists)
+	//{
+			std::ostringstream ss;
+			if (slot != -1)
+			{
+				ss << activeSavedBodSkinSlotName;
+			}
+			else
+			{
+				ss << "Saved Skin " << (lastKnownSavedBodSkinCount + 1);
+			}
+
+			auto existingText = ss.str();
+			std::string result = show_keyboard(NULL, (char*)existingText.c_str());
+			if (!result.empty())
+			{
+				ENTDatabase* database = get_database();
+
+				if (database->save_bod_skin(spawnedBodyguards[b_curr_num], result, slot))
+				{
+					activeSavedBodSkinSlotName = result;
+					set_status_text("Saved skin");
+				}
+				else
+				{
+					set_status_text("Save error");
+				}
+			}
+			//}
+		}
+		else {
+			if (spawnedBodyguards.empty()) {
+				std::ostringstream ss;
+				ss << "No bodyguards found";
+				set_status_text(ss.str());
+			}
+			if (b_curr_num < 0 || b_curr_num >= spawnedBodyguards.size()) {
+				std::ostringstream ss;
+				ss << "Wrong number";
+				set_status_text(ss.str());
+			}
+		}
+	}
+}
+
+bool bod_skin_save_menu_interrupt()
+{
+	if (bodskinSaveMenuInterrupt)
+	{
+		bodskinSaveMenuInterrupt = false;
+		return true;
+	}
+	return false;
+}
+
+bool bod_skin_save_slot_menu_interrupt()
+{
+	if (bodskinSaveSlotMenuInterrupt)
+	{
+		bodskinSaveSlotMenuInterrupt = false;
+		return true;
+	}
+	return false;
+}
+
+bool onconfirm_bod_savedskin_slot_menu(MenuItem<int> choice)
+{
+	switch (choice.value)
+	{
+	case 1: //spawn
+		spawn_saved_bod_skin(activeSavedBodSkinIndex, activeSavedBodSkinSlotName);
+		break;
+	case 2: //overwrite
+	{
+		save_current_bod_skin(activeSavedBodSkinIndex);
+		requireRefreshOfBodSkinSaveSlots = true;
+		requireRefreshOfBodSkinSlotMenu = true;
+		bodskinSaveSlotMenuInterrupt = true;
+		bodskinSaveMenuInterrupt = true;
+	}
+	break;
+	case 3: //rename
+	{
+		std::string result = show_keyboard(NULL, (char*)activeSavedBodSkinSlotName.c_str());
+		if (!result.empty())
+		{
+			ENTDatabase* database = get_database();
+			database->rename_saved_bod_skin(result, activeSavedBodSkinIndex);
+			activeSavedBodSkinSlotName = result;
+		}
+		requireRefreshOfBodSkinSaveSlots = true;
+		requireRefreshOfBodSkinSlotMenu = true;
+		bodskinSaveSlotMenuInterrupt = true;
+		bodskinSaveMenuInterrupt = true;
+	}
+	break;
+	case 4: //delete
+	{
+		ENTDatabase* database = get_database();
+		database->delete_saved_bod_skin(activeSavedBodSkinIndex);
+		requireRefreshOfBodSkinSlotMenu = false;
+		requireRefreshOfBodSkinSaveSlots = true;
+		bodskinSaveSlotMenuInterrupt = true;
+		bodskinSaveMenuInterrupt = true;
+	}
+	break;
+	}
+	return false;
+}
+
+bool onconfirm_bod_savedskin_menu(MenuItem<int> choice)
+{
+	if (choice.value == -1)
+	{
+		save_current_bod_skin(-1);
+		requireRefreshOfBodSkinSaveSlots = true;
+		bodskinSaveMenuInterrupt = true;
+		return false;
+	}
+
+	activeSavedBodSkinIndex = choice.value;
+	activeSavedBodSkinSlotName = choice.caption;
+	return process_bod_savedskin_slot_menu(choice.value);
+}
+
+bool process_bod_savedskin_menu()
+{
+	do
+	{
+		bodskinSaveMenuInterrupt = false;
+		requireRefreshOfBodSkinSlotMenu = false;
+		requireRefreshOfBodSkinSaveSlots = false;
+
+		ENTDatabase* database = get_database();
+		std::vector<SavedBodSkinDBRow*> savedBodSkins = database->get_saved_bod_skins();
+
+		lastKnownSavedBodSkinCount = savedBodSkins.size();
+
+		std::vector<MenuItem<int>*> menuItems;
+
+		MenuItem<int> *item = new MenuItem<int>();
+		item->isLeaf = true;
+		item->value = -1;
+		item->caption = "Create New Bodyguard Save";
+		menuItems.push_back(item);
+
+		for each (SavedBodSkinDBRow *sv in savedBodSkins)
+		{
+			MenuItem<int> *item = new MenuItem<int>();
+			item->isLeaf = false;
+			item->value = sv->rowID;
+			item->caption = sv->saveName;
+			menuItems.push_back(item);
+		}
+
+		draw_generic_menu<int>(menuItems, 0, "Saved Bodyguards", onconfirm_bod_savedskin_menu, NULL, NULL, bod_skin_save_menu_interrupt);
+
+		for (std::vector<SavedBodSkinDBRow*>::iterator it = savedBodSkins.begin(); it != savedBodSkins.end(); ++it)
+		{
+			delete (*it);
+		}
+		savedBodSkins.clear();
+	} while (requireRefreshOfBodSkinSaveSlots);
+
+	return false;
+}
+
+bool process_bod_savedskin_slot_menu(int slot)
+{
+	do
+	{
+		bodskinSaveSlotMenuInterrupt = false;
+		requireRefreshOfBodSkinSlotMenu = false;
+
+		std::vector<MenuItem<int>*> menuItems;
+
+		MenuItem<int> *item = new MenuItem<int>();
+		item->isLeaf = true;
+		item->value = 1;
+		item->caption = "Spawn";
+		menuItems.push_back(item);
+
+		item = new MenuItem<int>();
+		item->isLeaf = true;
+		item->value = 2;
+		item->caption = "Overwrite With Current";
+		menuItems.push_back(item);
+
+		item = new MenuItem<int>();
+		item->isLeaf = true;
+		item->value = 3;
+		item->caption = "Rename";
+		menuItems.push_back(item);
+
+		item = new MenuItem<int>();
+		item->isLeaf = true;
+		item->value = 4;
+		item->caption = "Delete";
+		menuItems.push_back(item);
+
+		draw_generic_menu<int>(menuItems, 0, activeSavedBodSkinSlotName, onconfirm_bod_savedskin_slot_menu, NULL, NULL, bod_skin_save_slot_menu_interrupt);
+	} while (requireRefreshOfBodSkinSlotMenu);
+	return false;
+}
+// end of save/load bodyguard
+
 bool process_bodyguard_skins_menu(){
 	std::vector<MenuItem<int>*> menuItems;
 	MenuItem<int> *item;
@@ -396,6 +716,12 @@ bool process_bodyguard_skins_menu(){
 	item = new MenuItem<int>();
 	item->caption = "Modify Skin";
 	item->value = 4;
+	item->isLeaf = false;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "Save/Load Bodyguard";
+	item->value = 5;
 	item->isLeaf = false;
 	menuItems.push_back(item);
 
@@ -458,6 +784,8 @@ bool onconfirm_bodyguard_skins_menu(MenuItem<int> choice){
 				}
 			}
 		}
+		case 5:
+			return process_bod_savedskin_menu();
 		default:
 			break;
 	}
@@ -810,6 +1138,11 @@ void do_spawn_bodyguard(){
 		if (skinTypesBodyguardMenuLastConfirmed[0] == 1) bodyGuardModel = GAMEPLAY::GET_HASH_KEY((char*)SKINS_GENERAL_VALUES[skinTypesBodyguardMenuLastConfirmed[1]].c_str());
 		if (skinTypesBodyguardMenuLastConfirmed[0] == 2) bodyGuardModel = GAMEPLAY::GET_HASH_KEY((char*)SKINS_ANIMALS_VALUES[skinTypesBodyguardMenuLastConfirmed[1]].c_str());
 		hotkey_boddyguard = false;
+	}
+
+	if (load_saved_bodyguard == true) {
+		bodyGuardModel = temp_bodyguard;
+		load_saved_bodyguard = false;
 	}
 
 	if (spawnedBodyguards.size() >= BODYGUARD_LIMIT) {
