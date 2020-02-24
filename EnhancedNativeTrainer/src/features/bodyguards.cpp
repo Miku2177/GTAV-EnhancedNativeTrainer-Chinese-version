@@ -443,14 +443,14 @@ bool onconfirm_bodyguard_skins_menu(MenuItem<int> choice){
 				result_b = trim(result_b);
 				std::string::size_type sz;
 				b_curr_num = std::stof(result_b, &sz);
-				if (!spawnedBodyguards.empty() && b_curr_num > -1 && b_curr_num < 7) return process_bod_skinchanger_detail_menu();
+				if (!spawnedBodyguards.empty() && b_curr_num > -1 && b_curr_num < spawnedBodyguards.size()) return process_bod_skinchanger_detail_menu();
 				else {
 					if (spawnedBodyguards.empty()) {
 						std::ostringstream ss;
 						ss << "No bodyguards found";
 						set_status_text(ss.str());
 					}
-					if (b_curr_num < 0 || b_curr_num > 6) {
+					if (b_curr_num < 0 || b_curr_num >= spawnedBodyguards.size()) {
 						std::ostringstream ss;
 						ss << "Wrong number";
 						set_status_text(ss.str());
