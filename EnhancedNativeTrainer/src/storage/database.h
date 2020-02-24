@@ -180,6 +180,58 @@ public:
 	int texture;
 };
 
+// save/load bodyguard
+class SavedBodSkinComponentDBRow
+{
+public:
+	int rowID;
+	int parentID;
+	int slotID;
+	int drawable;
+	int texture;
+};
+
+class SavedBodSkinPropDBRow
+{
+public:
+	int rowID;
+	int parentID;
+	int propID;
+	int drawable;
+	int texture;
+};
+
+class SavedBodSkinDBRow
+{
+public:
+
+	int rowID;
+	std::string saveName;
+	DWORD model;
+
+	std::vector<SavedBodSkinComponentDBRow*> components;
+	std::vector<SavedBodSkinPropDBRow*> props;
+
+	inline ~SavedBodSkinDBRow()
+	{
+		for (std::vector<SavedBodSkinComponentDBRow*>::iterator it = components.begin(); it != components.end(); ++it)
+		{
+			delete (*it);
+		}
+
+		for (std::vector<SavedBodSkinPropDBRow*>::iterator it = props.begin(); it != props.end(); ++it)
+		{
+			delete (*it);
+		}
+	}
+
+	inline SavedBodSkinDBRow()
+	{
+
+	}
+};
+//
+
 class SavedSkinDBRow
 {
 public:
@@ -251,6 +303,22 @@ public:
 
 	std::vector<SavedVehicleDBRow*> get_saved_vehicles(int index=-1);
 
+	std::vector<SavedBodSkinDBRow*> get_saved_bod_skins(int index = -1);
+
+	void ENTDatabase::delete_saved_bod_skin(sqlite3_int64 slot);
+
+	void ENTDatabase::rename_saved_bod_skin(std::string name, sqlite3_int64 slot);
+
+	bool ENTDatabase::save_bod_skin(Ped ped, std::string saveName, sqlite3_int64 slot);
+
+	void ENTDatabase::delete_saved_bod_skin_children(sqlite3_int64 slot);
+
+	void ENTDatabase::save_bod_skin_components(Ped ped, sqlite3_int64 rowID);
+
+	void ENTDatabase::save_bod_skin_props(Ped ped, sqlite3_int64 rowID);
+
+	void ENTDatabase::populate_saved_bod_skin(SavedBodSkinDBRow *entry);
+	
 	std::vector<SavedSkinDBRow*> get_saved_skins(int index = -1);
 
 	std::vector<SavedPropSet*> get_saved_prop_sets(int index = -1);

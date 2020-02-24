@@ -424,6 +424,71 @@ void ENTDatabase::handle_version(int oldVersion)
 		}
 	}
 
+	if (oldVersion < 12)
+	{
+		write_text_to_log_file("Main skin table not found, so creating it");
+
+		char* CREATE_BOD_SKIN_TABLE_QUERY = "CREATE TABLE ENT_SAVED_BOD_SKINS ( \
+			id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, \
+			saveName TEXT NOT NULL, \
+			model INTEGER NOT NULL \
+			)";
+
+		int rcSkin1 = sqlite3_exec(db, CREATE_BOD_SKIN_TABLE_QUERY, NULL, 0, &zErrMsg);
+		if (rcSkin1 != SQLITE_OK)
+		{
+			write_text_to_log_file("Main skin table creation problem");
+			sqlite3_free(zErrMsg);
+		}
+		else
+		{
+			write_text_to_log_file("Main skin table created");
+		}
+
+		write_text_to_log_file("Skin components table not found, so creating it");
+		char* CREATE_BOD_SKIN_COMPS_TABLE_QUERY = "CREATE TABLE ENT_BOD_SKIN_COMPONENTS ( \
+			id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, \
+			parentId INTEGER NOT NULL, \
+			slotId INTEGER NOT NULL, \
+			drawable INTEGER NOT NULL, \
+			texture INTEGER NOT NULL, \
+			UNIQUE(parentId, slotId), \
+			FOREIGN KEY (parentId) REFERENCES ENT_SAVED_BOD_SKINS(id) ON DELETE CASCADE \
+			)";
+
+		int rcSkin2 = sqlite3_exec(db, CREATE_BOD_SKIN_COMPS_TABLE_QUERY, NULL, 0, &zErrMsg);
+		if (rcSkin2 != SQLITE_OK)
+		{
+			write_text_to_log_file("Skin components table creation problem");
+			sqlite3_free(zErrMsg);
+		}
+		else
+		{
+			write_text_to_log_file("Skin components table created");
+		}
+
+		write_text_to_log_file("Skin props table not found, so creating it");
+		char* CREATE_BOD_SKIN_PROPS_TABLE_QUERY = "CREATE TABLE ENT_BOD_SKIN_PROPS ( \
+			id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, \
+			parentId INTEGER NOT NULL, \
+			propId INTEGER NOT NULL, \
+			drawable INTEGER NOT NULL, \
+			texture INTEGER NOT NULL, \
+			UNIQUE(parentId, propId), \
+			FOREIGN KEY (parentId) REFERENCES ENT_SAVED_BOD_SKINS(id) ON DELETE CASCADE \
+			)";
+
+		int rcSkin3 = sqlite3_exec(db, CREATE_BOD_SKIN_PROPS_TABLE_QUERY, NULL, 0, &zErrMsg);
+		if (rcSkin3 != SQLITE_OK)
+		{
+			write_text_to_log_file("Skin props table creation problem");
+			sqlite3_free(zErrMsg);
+		}
+		else
+		{
+			write_text_to_log_file("Skin props table created");
+		}
+	}
 }
 
 bool ENTDatabase::open()
@@ -1220,6 +1285,377 @@ bool ENTDatabase::save_vehicle(Vehicle veh, std::string saveName, sqlite3_int64 
 
 	return result;
 }
+
+// save/load bodyguard
+void ENTDatabase::populate_saved_bod_skin(SavedBodSkinDBRow *entry)
+{
+	mutex_lock();
+
+	sqlite3_stmt *stmt;
+	const char *pzTest;
+	auto qStr = "select * from ENT_BOD_SKIN_COMPONENTS WHERE parentId=?";
+	int rc = sqlite3_prepare_v2(db, qStr, strlen(qStr), &stmt, &pzTest);
+
+	if (rc == SQLITE_OK)
+	{
+		// bind the value
+		sqlite3_bind_int(stmt, 1, entry->rowID);
+
+		// commit
+		int r = sqlite3_step(stmt);
+		while (r == SQLITE_ROW)
+		{
+			SavedBodSkinComponentDBRow *comp = new SavedBodSkinComponentDBRow();
+			//0 and 1 are IDs
+			comp->slotID = sqlite3_column_int(stmt, 2);
+			comp->drawable = sqlite3_column_int(stmt, 3);
+			comp->texture = sqlite3_column_int(stmt, 4);
+			entry->components.push_back(comp);
+			r = sqlite3_step(stmt);
+		}
+
+		sqlite3_finalize(stmt);
+	}
+	else
+	{
+		write_text_to_log_file("Failed to fetch saved skin components");
+		write_text_to_log_file(sqlite3_errmsg(db));
+	}
+
+	sqlite3_stmt *stmt2;
+	const char *pzTest2;
+	auto qStr2 = "select * from ENT_BOD_SKIN_PROPS WHERE parentId=?";
+	int rc2 = sqlite3_prepare_v2(db, qStr2, strlen(qStr2), &stmt2, &pzTest2);
+
+	if (rc2 == SQLITE_OK)
+	{
+		// bind the value
+		sqlite3_bind_int(stmt2, 1, entry->rowID);
+
+		// commit
+		int r = sqlite3_step(stmt2);
+		while (r == SQLITE_ROW)
+		{
+			SavedBodSkinPropDBRow *prop = new SavedBodSkinPropDBRow();
+			//0 and 1 are IDs
+			prop->propID = sqlite3_column_int(stmt2, 2);
+			prop->drawable = sqlite3_column_int(stmt2, 3);
+			prop->texture = sqlite3_column_int(stmt2, 4);
+			entry->props.push_back(prop);
+			r = sqlite3_step(stmt2);
+		}
+
+		sqlite3_finalize(stmt2);
+	}
+	else
+	{
+		write_text_to_log_file("Failed to fetch saved skin props");
+		write_text_to_log_file(sqlite3_errmsg(db));
+	}
+
+	mutex_unlock();
+
+	write_text_to_log_file("Done loading saved skins");
+	return;
+}
+
+void ENTDatabase::save_bod_skin_components(Ped ped, sqlite3_int64 rowID)
+{
+	mutex_lock();
+
+	begin_transaction();
+
+	for (int i = 0; i < 12; i++)
+	{
+		std::stringstream ss;
+		ss << "INSERT OR REPLACE INTO ENT_BOD_SKIN_COMPONENTS VALUES (?, ?, ?, ?, ?)";
+
+		int drawable = PED::GET_PED_DRAWABLE_VARIATION(ped, i);
+		int texture = PED::GET_PED_TEXTURE_VARIATION(ped, i);
+
+		sqlite3_stmt *stmt;
+		const char *pzTest;
+		auto ssStr = ss.str();
+		int rc = sqlite3_prepare_v2(db, ssStr.c_str(), ssStr.length(), &stmt, &pzTest);
+
+		if (rc != SQLITE_OK)
+		{
+			write_text_to_log_file("Skin components save failed");
+			write_text_to_log_file(sqlite3_errmsg(db));
+		}
+		else
+		{
+			int index = 1;
+			sqlite3_bind_null(stmt, index++);
+			sqlite3_bind_int64(stmt, index++, rowID);
+			sqlite3_bind_int(stmt, index++, i); //slot id
+			sqlite3_bind_int(stmt, index++, drawable); //drawable id
+			sqlite3_bind_int(stmt, index++, texture); //texture id
+
+			sqlite3_step(stmt);
+			sqlite3_finalize(stmt);
+		}
+	}
+
+	end_transaction();
+
+	mutex_unlock();
+}
+
+void ENTDatabase::save_bod_skin_props(Ped ped, sqlite3_int64 rowID)
+{
+	mutex_lock();
+
+	begin_transaction();
+
+	for (int i = 0; i < 10; i++)
+	{
+		std::stringstream ss;
+		ss << "INSERT OR REPLACE INTO ENT_BOD_SKIN_PROPS VALUES (?, ?, ?, ?, ?)";
+
+		int drawable = PED::GET_PED_PROP_INDEX(ped, i);
+		int texture = PED::GET_PED_PROP_TEXTURE_INDEX(ped, i);
+
+		sqlite3_stmt *stmt;
+		const char *pzTest;
+		auto ssStr = ss.str();
+		int rc = sqlite3_prepare_v2(db, ssStr.c_str(), ssStr.length(), &stmt, &pzTest);
+
+		if (rc != SQLITE_OK)
+		{
+			write_text_to_log_file("Skin props save failed");
+			write_text_to_log_file(sqlite3_errmsg(db));
+		}
+		else
+		{
+			int index = 1;
+			sqlite3_bind_null(stmt, index++);
+			sqlite3_bind_int64(stmt, index++, rowID);
+			sqlite3_bind_int(stmt, index++, i); //slot id
+			sqlite3_bind_int(stmt, index++, drawable); //drawable id
+			sqlite3_bind_int(stmt, index++, texture); //texture id
+
+			sqlite3_step(stmt);
+			sqlite3_finalize(stmt);
+		}
+	}
+
+	end_transaction();
+
+	mutex_unlock();
+}
+
+void ENTDatabase::delete_saved_bod_skin_children(sqlite3_int64 slot)
+{
+	mutex_lock();
+
+	sqlite3_stmt *stmt;
+	const char *pzTest;
+	auto qStr = "DELETE FROM ENT_BOD_SKIN_COMPONENTS WHERE parentId=?";
+	int rc = sqlite3_prepare_v2(db, qStr, strlen(qStr), &stmt, &pzTest);
+
+	if (rc == SQLITE_OK)
+	{
+		// bind the value
+		sqlite3_bind_int64(stmt, 1, slot);
+
+		// commit
+		sqlite3_step(stmt);
+		sqlite3_finalize(stmt);
+	}
+	else
+	{
+		write_text_to_log_file("Failed to delete saved bodyguard components");
+		write_text_to_log_file(sqlite3_errmsg(db));
+	}
+
+	sqlite3_stmt *stmt2;
+	const char *pzTest2;
+	auto qStr2 = "DELETE FROM ENT_BOD_SKIN_PROPS WHERE id=?";
+	int rc2 = sqlite3_prepare_v2(db, qStr2, strlen(qStr2), &stmt2, &pzTest2);
+
+	if (rc2 == SQLITE_OK)
+	{
+		// bind the value
+		sqlite3_bind_int64(stmt2, 1, slot);
+
+		// commit
+		sqlite3_step(stmt2);
+		sqlite3_finalize(stmt2);
+	}
+	else
+	{
+		write_text_to_log_file("Failed to delete saved bodyguard props");
+		write_text_to_log_file(sqlite3_errmsg(db));
+	}
+
+	mutex_unlock();
+}
+
+bool ENTDatabase::save_bod_skin(Ped ped, std::string saveName, sqlite3_int64 slot)
+{
+	mutex_lock();
+
+	std::stringstream ss;
+	ss << "INSERT OR REPLACE INTO ENT_SAVED_BOD_SKINS VALUES (?, ?, ?);";
+
+	sqlite3_stmt *stmt;
+	const char *pzTest;
+	auto ssStr = ss.str();
+	int rc = sqlite3_prepare_v2(db, ssStr.c_str(), ssStr.length(), &stmt, &pzTest);
+	bool result = true;
+
+	if (rc != SQLITE_OK)
+	{
+		write_text_to_log_file("Bodyguard save failed");
+		write_text_to_log_file(sqlite3_errmsg(db));
+		result = false;
+	}
+
+	int index = 1;
+	if (slot == -1)
+	{
+		sqlite3_bind_null(stmt, index++);
+	}
+	else
+	{
+		sqlite3_bind_int64(stmt, index++, slot);
+	}
+	sqlite3_bind_text(stmt, index++, saveName.c_str(), saveName.length(), 0); //save name
+	sqlite3_bind_int(stmt, index++, ENTITY::GET_ENTITY_MODEL(ped)); //model
+
+	// commit
+	sqlite3_step(stmt);
+	sqlite3_finalize(stmt);
+
+	sqlite3_int64 newRowID = sqlite3_last_insert_rowid(db);
+
+	//if we're updating, delete any pre-existing children
+	if (slot != -1)
+	{
+		delete_saved_bod_skin_children(slot);
+	}
+
+	save_bod_skin_components(ped, newRowID);
+	save_bod_skin_props(ped, newRowID);
+
+	mutex_unlock();
+
+	return result;
+}
+
+void ENTDatabase::rename_saved_bod_skin(std::string name, sqlite3_int64 slot)
+{
+	mutex_lock();
+
+	sqlite3_stmt *stmt;
+	const char *pzTest;
+	auto qStr = "UPDATE ENT_SAVED_BOD_SKINS SET saveName=? WHERE id=?";
+	int rc = sqlite3_prepare_v2(db, qStr, strlen(qStr), &stmt, &pzTest);
+
+	if (rc == SQLITE_OK)
+	{
+		// bind the value
+		sqlite3_bind_text(stmt, 1, name.c_str(), name.length(), 0);
+		sqlite3_bind_int64(stmt, 2, slot);
+
+		// commit
+		sqlite3_step(stmt);
+		sqlite3_finalize(stmt);
+	}
+	else
+	{
+		write_text_to_log_file("Failed to rename saved bodyguard");
+		write_text_to_log_file(sqlite3_errmsg(db));
+	}
+
+	mutex_unlock();
+}
+
+void ENTDatabase::delete_saved_bod_skin(sqlite3_int64 slot)
+{
+	mutex_lock();
+
+	sqlite3_stmt *stmt;
+	const char *pzTest;
+	auto qStr = "DELETE FROM ENT_SAVED_BOD_SKINS WHERE id=?";
+	int rc = sqlite3_prepare_v2(db, qStr, strlen(qStr), &stmt, &pzTest);
+
+	if (rc == SQLITE_OK)
+	{
+		// bind the value
+		sqlite3_bind_int64(stmt, 1, slot);
+
+		// commit
+		sqlite3_step(stmt);
+		sqlite3_finalize(stmt);
+	}
+	else
+	{
+		write_text_to_log_file("Failed to delete saved bodyguard");
+		write_text_to_log_file(sqlite3_errmsg(db));
+	}
+
+	mutex_unlock();
+}
+
+std::vector<SavedBodSkinDBRow*> ENTDatabase::get_saved_bod_skins(int index)
+{
+	write_text_to_log_file("Asked to load saved bodyguards");
+
+	mutex_lock();
+
+	sqlite3_stmt *stmt;
+	const char *pzTest;
+
+	std::stringstream ss;
+	ss << "select * from ENT_SAVED_BOD_SKINS";
+	if (index != -1)
+	{
+		ss << " WHERE id = ?";
+	}
+	auto qStr = ss.str();
+	int rc = sqlite3_prepare_v2(db, qStr.c_str(), qStr.length(), &stmt, &pzTest);
+
+	std::vector<SavedBodSkinDBRow*> results;
+
+	if (rc == SQLITE_OK)
+	{
+		// bind the value
+		if (index != -1)
+		{
+			sqlite3_bind_int(stmt, 1, index);
+		}
+
+		int r = sqlite3_step(stmt);
+		while (r == SQLITE_ROW)
+		{
+			write_text_to_log_file("Skin row found");
+
+			SavedBodSkinDBRow *skin = new SavedBodSkinDBRow();
+
+			int index = 0;
+			skin->rowID = sqlite3_column_int(stmt, index++);
+			skin->saveName = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, index++)));
+			skin->model = sqlite3_column_int(stmt, index++);
+
+			results.push_back(skin);
+
+			r = sqlite3_step(stmt);
+		}
+		sqlite3_finalize(stmt);
+	}
+	else
+	{
+		write_text_to_log_file("Failed to fetch saved skins");
+		write_text_to_log_file(sqlite3_errmsg(db));
+	}
+
+	mutex_unlock();
+
+	return results;
+}
+//
 
 std::vector<SavedSkinDBRow*> ENTDatabase::get_saved_skins(int index)
 {

@@ -41,6 +41,8 @@ bool process_bodyguard_weapons_menu();
 
 bool process_bod_skinchanger_detail_menu();
 
+bool process_bod_savedskin_slot_menu(int slot);
+
 void dismiss_bodyguards();
 
 void reset_bodyguards_globals();
