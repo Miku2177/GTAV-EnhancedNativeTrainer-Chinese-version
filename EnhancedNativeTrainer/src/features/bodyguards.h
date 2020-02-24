@@ -39,6 +39,8 @@ bool process_animal_skins_menu();
 
 bool process_bodyguard_weapons_menu();
 
+bool process_bod_skinchanger_detail_menu();
+
 void dismiss_bodyguards();
 
 void reset_bodyguards_globals();
