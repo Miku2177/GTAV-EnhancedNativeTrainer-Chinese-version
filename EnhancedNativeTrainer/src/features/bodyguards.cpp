@@ -437,7 +437,7 @@ bool onconfirm_bodyguard_skins_menu(MenuItem<int> choice){
 		}
 		case 4:
 		{
-			std::string result_b = show_keyboard(NULL, (char*)lastCustomBodyguardSpawn.c_str());
+			std::string result_b = show_keyboard(NULL, NULL);
 			if (!result_b.empty())
 			{
 				result_b = trim(result_b);
