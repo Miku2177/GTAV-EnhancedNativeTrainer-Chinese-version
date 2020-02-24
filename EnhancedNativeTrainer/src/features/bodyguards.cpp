@@ -38,7 +38,11 @@ bool featureBodyguardInfAmmo = false;
 bool hotkey_b = false;
 
 bool added_nearest_b = false;
-Ped bodyGuard, temp_bodyguard = -1;
+Ped bodyGuard, temp_bodyguard/*, skin_bodyguard*/ = -1;
+
+int skinBodDetailMenuIndex = 0;
+int skinBodDetailMenuValue = 0;
+float b_curr_num = -1;
 
 bool requireRefreshOfBodyguardMainMenu = false;
 int activeLineIndexBodyguardBlips = 0;
@@ -90,6 +94,277 @@ bool BodyBlipFlash_Changed = true;
 const std::vector<std::string> SKINS_ANIMALS_CAPTIONS{ "Chop", "German Shepherd", "Husky", "Mountain Lion", "Retriever" };
 const std::vector<std::string> SKINS_ANIMALS_VALUES{ "a_c_chop", "a_c_shepherd", "a_c_husky", "a_c_mtlion", "a_c_retriever" };
 
+// Modify Skin
+std::string getBodSkinDetailAttribDescription(int i)
+{
+	switch (i)
+	{
+	case 0:
+		return "Head/Face";
+	case 1:
+		return "Beard/Mask";
+	case 2:
+		return "Hair/Hat";
+	case 3:
+		return "Top";
+	case 4:
+		return "Legs";
+	case 5:
+		return "Accessory/Gloves";
+	case 6:
+		return "Accessory/Shoes";
+	case 7:
+	case 8:
+	case 9:
+		return "Accessory";
+	case 10:
+		return "Badges";
+	case 11:
+		return "Shirt/Jacket";
+	default:
+		return std::to_string(i);
+	}
+}
+
+std::string getBodPropDetailAttribDescription(int i)
+{
+	switch (i)
+	{
+	case 0:
+		return "Hats/Masks/Helmets";
+	case 1:
+		return "Glasses";
+	case 2:
+		return "Earrings";
+	case 3:
+		return "??? 3";
+	case 4:
+		return "??? 4";
+	case 5:
+		return "??? 5";
+	case 6:
+		return "??? 6";
+	case 7:
+		return "??? 7";
+	case 8:
+		return "??? 8";
+	case 9:
+		return "??? 9";
+	case 10:
+		return "??? 10";
+	case 11:
+		return "??? 11";
+	default:
+		return std::to_string(i);
+	}
+}
+
+void onexit_bod_skinchanger_texture_menu(bool returnValue)
+{
+}
+
+void onhighlight_bod_skinchanger_texture_menu(MenuItem<int> choice)
+{
+	if (true)//PED::IS_PED_COMPONENT_VARIATION_VALID(PLAYER::PLAYER_PED_ID(), skinDetailMenuValue, skinDrawableMenuValue, value))
+	{
+		//int currentDrawable = PED::GET_PED_DRAWABLE_VARIATION(PLAYER::PLAYER_PED_ID(), skinBodDetailMenuValue);
+		//PED::SET_PED_COMPONENT_VARIATION(PLAYER::PLAYER_PED_ID(), skinBodDetailMenuValue, currentDrawable, choice.value, 0);
+		int currentDrawable = PED::GET_PED_DRAWABLE_VARIATION(spawnedBodyguards[b_curr_num], skinBodDetailMenuValue);
+		PED::SET_PED_COMPONENT_VARIATION(spawnedBodyguards[b_curr_num], skinBodDetailMenuValue, currentDrawable, choice.value, 0);
+	}
+	WAIT(100);
+}
+
+bool onconfirm_bod_skinchanger_texture_menu(MenuItem<int> choice)
+{
+	onhighlight_bod_skinchanger_texture_menu(choice);
+
+	return true;
+}
+
+bool process_bod_skinchanger_texture_menu(std::string caption)
+{
+	DWORD waitTime = 150;
+	int foundTextures = 0;
+	std::vector<MenuItem<int>*> menuItems;
+
+	//Ped playerPed = PLAYER::PLAYER_PED_ID();
+	//Hash model = ENTITY::GET_ENTITY_MODEL(playerPed);
+	Hash model = ENTITY::GET_ENTITY_MODEL(spawnedBodyguards[b_curr_num]);
+
+	if (STREAMING::IS_MODEL_IN_CDIMAGE(model) && STREAMING::IS_MODEL_VALID(model))
+	{
+		STREAMING::REQUEST_MODEL(model);
+		while (!STREAMING::HAS_MODEL_LOADED(model))
+		{
+			make_periodic_feature_call();
+			WAIT(0);
+		}
+
+		//int currentDrawable = PED::GET_PED_DRAWABLE_VARIATION(PLAYER::PLAYER_PED_ID(), skinBodDetailMenuValue);
+		//int textures = PED::GET_NUMBER_OF_PED_TEXTURE_VARIATIONS(PLAYER::PLAYER_PED_ID(), skinBodDetailMenuValue, currentDrawable);
+		int currentDrawable = PED::GET_PED_DRAWABLE_VARIATION(spawnedBodyguards[b_curr_num], skinBodDetailMenuValue);
+		int textures = PED::GET_NUMBER_OF_PED_TEXTURE_VARIATIONS(spawnedBodyguards[b_curr_num], skinBodDetailMenuValue, currentDrawable);
+
+		for (int i = 0; i < textures; i++)
+		{
+			std::ostringstream ss;
+			ss << "Texture #" << i;
+			MenuItem<int> *item = new MenuItem<int>();
+			item->caption = ss.str();
+			item->value = i;
+			menuItems.push_back(item);
+		}
+
+		STREAMING::SET_MODEL_AS_NO_LONGER_NEEDED(model);
+	}
+
+	std::ostringstream ss;
+	ss << "Available Textures";
+
+	//int currentTexture = PED::GET_PED_TEXTURE_VARIATION(PLAYER::PLAYER_PED_ID(), skinBodDetailMenuValue);
+	int currentTexture = PED::GET_PED_TEXTURE_VARIATION(spawnedBodyguards[b_curr_num], skinBodDetailMenuValue);
+	draw_generic_menu<int>(menuItems, &currentTexture, ss.str(), onconfirm_bod_skinchanger_texture_menu, onhighlight_bod_skinchanger_texture_menu, onexit_bod_skinchanger_texture_menu);
+	return false;
+}
+
+void onexit_bod_skinchanger_drawable_menu(bool returnValue)
+{
+}
+
+void onhighlight_bod_skinchanger_drawable_menu(MenuItem<int> choice)
+{
+	//int currentDrawable = PED::GET_PED_DRAWABLE_VARIATION(PLAYER::PLAYER_PED_ID(), skinBodDetailMenuValue);
+	int currentDrawable = PED::GET_PED_DRAWABLE_VARIATION(spawnedBodyguards[b_curr_num], skinBodDetailMenuValue);
+	if (choice.value != currentDrawable)
+	{
+		//PED::SET_PED_COMPONENT_VARIATION(PLAYER::PLAYER_PED_ID(), skinBodDetailMenuValue, choice.value, 0, 0);
+		PED::SET_PED_COMPONENT_VARIATION(spawnedBodyguards[b_curr_num], skinBodDetailMenuValue, choice.value, 0, 0);
+	}
+	WAIT(100);
+}
+
+bool onconfirm_bod_skinchanger_drawable_menu(MenuItem<int> choice)
+{
+	if (choice.isLeaf)
+	{
+		return false;
+	}
+	return process_bod_skinchanger_texture_menu(choice.caption);
+}
+
+bool process_bod_skinchanger_drawable_menu(std::string caption, int component)
+{
+	DWORD waitTime = 150;
+	int foundTextures = 0;
+	std::vector<MenuItem<int>*> menuItems;
+
+	//Ped playerPed = PLAYER::PLAYER_PED_ID();
+	//Hash model = ENTITY::GET_ENTITY_MODEL(playerPed);
+	Hash model = ENTITY::GET_ENTITY_MODEL(spawnedBodyguards[b_curr_num]);
+	
+	if (STREAMING::IS_MODEL_IN_CDIMAGE(model) && STREAMING::IS_MODEL_VALID(model))
+	{
+		STREAMING::REQUEST_MODEL(model);
+		while (!STREAMING::HAS_MODEL_LOADED(model))
+		{
+			make_periodic_feature_call();
+			WAIT(0);
+		}
+
+		//int drawables = PED::GET_NUMBER_OF_PED_DRAWABLE_VARIATIONS(PLAYER::PLAYER_PED_ID(), component);
+		int drawables = PED::GET_NUMBER_OF_PED_DRAWABLE_VARIATIONS(spawnedBodyguards[b_curr_num], component);
+		for (int i = 0; i < drawables; i++)
+		{
+			//int textures = PED::GET_NUMBER_OF_PED_TEXTURE_VARIATIONS(PLAYER::PLAYER_PED_ID(), component, i);
+			int textures = PED::GET_NUMBER_OF_PED_TEXTURE_VARIATIONS(spawnedBodyguards[b_curr_num], component, i);
+			std::ostringstream ss;
+			ss << "Drawable #" << i << " ~HUD_COLOUR_GREYLIGHT~(" << textures << ")";
+
+			MenuItem<int> *item = new MenuItem<int>();
+			item->caption = ss.str();
+			item->value = i;
+			item->isLeaf = (textures <= 1);
+			menuItems.push_back(item);
+		}
+
+		STREAMING::SET_MODEL_AS_NO_LONGER_NEEDED(model);
+	}
+
+	std::ostringstream ss;
+	ss << "Available Drawables";
+
+	//int currentDrawable = PED::GET_PED_DRAWABLE_VARIATION(PLAYER::PLAYER_PED_ID(), component);
+	int currentDrawable = PED::GET_PED_DRAWABLE_VARIATION(spawnedBodyguards[b_curr_num], component);
+	draw_generic_menu<int>(menuItems, &currentDrawable, ss.str(), onconfirm_bod_skinchanger_drawable_menu, onhighlight_bod_skinchanger_drawable_menu, onexit_bod_skinchanger_drawable_menu);
+	return false;
+}
+
+void onhighlight_bodskinchanger_detail_menu(MenuItem<int> choice)
+{
+	//do nothing
+}
+
+bool onconfirm_bodskinchanger_detail_menu(MenuItem<int> choice)
+{
+	skinBodDetailMenuIndex = choice.currentMenuIndex;
+	skinBodDetailMenuValue = choice.value;
+
+	return process_bod_skinchanger_drawable_menu(choice.caption, choice.value);
+}
+
+bool process_bod_skinchanger_detail_menu()
+{
+	DWORD waitTime = 150;
+	int foundTextures = 0;
+	std::vector<MenuItem<int>*> menuItems;
+	int fixedChoices = 0;
+	const int partVariations = 12;
+	int i = 0;
+	//Ped playerPed = PLAYER::PLAYER_PED_ID();
+	//Hash model = ENTITY::GET_ENTITY_MODEL(playerPed);
+	Hash model = ENTITY::GET_ENTITY_MODEL(spawnedBodyguards[b_curr_num]);
+
+	if (STREAMING::IS_MODEL_IN_CDIMAGE(model) && STREAMING::IS_MODEL_VALID(model))
+	{
+		STREAMING::REQUEST_MODEL(model);
+		while (!STREAMING::HAS_MODEL_LOADED(model))
+		{
+			make_periodic_feature_call();
+			WAIT(0);
+		}
+		for (; i < partVariations + fixedChoices; i++)
+		{
+			bool iFound = false;
+			int compIndex = i - fixedChoices;
+
+			//int drawables = PED::GET_NUMBER_OF_PED_DRAWABLE_VARIATIONS(PLAYER::PLAYER_PED_ID(), compIndex);
+			int drawables = PED::GET_NUMBER_OF_PED_DRAWABLE_VARIATIONS(spawnedBodyguards[b_curr_num], compIndex);
+			int textures = 0;
+			if (drawables == 1)
+			{
+				//textures = PED::GET_NUMBER_OF_PED_TEXTURE_VARIATIONS(PLAYER::PLAYER_PED_ID(), compIndex, 0);
+				textures = PED::GET_NUMBER_OF_PED_TEXTURE_VARIATIONS(spawnedBodyguards[b_curr_num], compIndex, 0);
+			}
+			if (drawables > 1 || textures != 0)
+			{
+				std::ostringstream ss;
+				std::string itemText = getBodSkinDetailAttribDescription(compIndex);
+				ss << "Slot " << (compIndex + 1) << ": " << itemText << " ~HUD_COLOUR_GREYLIGHT~(" << drawables << ")";
+
+				MenuItem<int> *item = new MenuItem<int>();
+				item->caption = ss.str();
+				item->value = compIndex;
+				item->isLeaf = false;
+				menuItems.push_back(item);
+			}
+		}
+		STREAMING::SET_MODEL_AS_NO_LONGER_NEEDED(model);
+	}
+	return draw_generic_menu<int>(menuItems, &skinBodDetailMenuIndex, "Skin Details", onconfirm_bodskinchanger_detail_menu, onhighlight_bodskinchanger_detail_menu, NULL);
+}
+// end of 'modify skin'
+
 bool process_bodyguard_skins_menu(){
 	std::vector<MenuItem<int>*> menuItems;
 	MenuItem<int> *item;
@@ -115,6 +390,12 @@ bool process_bodyguard_skins_menu(){
 	item = new MenuItem<int>();
 	item->caption = "Enter Name Manually";
 	item->value = 3;
+	item->isLeaf = false;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "Modify Skin";
+	item->value = 4;
 	item->isLeaf = false;
 	menuItems.push_back(item);
 
@@ -153,6 +434,29 @@ bool onconfirm_bodyguard_skins_menu(MenuItem<int> choice){
 				
 			}
 			return false;
+		}
+		case 4:
+		{
+			std::string result_b = show_keyboard(NULL, (char*)lastCustomBodyguardSpawn.c_str());
+			if (!result_b.empty())
+			{
+				result_b = trim(result_b);
+				std::string::size_type sz;
+				b_curr_num = std::stof(result_b, &sz);
+				if (!spawnedBodyguards.empty() && b_curr_num > -1 && b_curr_num < 7) return process_bod_skinchanger_detail_menu();
+				else {
+					if (spawnedBodyguards.empty()) {
+						std::ostringstream ss;
+						ss << "No bodyguards found";
+						set_status_text(ss.str());
+					}
+					if (b_curr_num < 0 || b_curr_num > 6) {
+						std::ostringstream ss;
+						ss << "Wrong number";
+						set_status_text(ss.str());
+					}
+				}
+			}
 		}
 		default:
 			break;
@@ -300,7 +604,7 @@ bool process_bodyguard_weapons_category_menu(int category){
 	int index = -1;
 
 	item = new MenuItem<int>();
-	item->caption = "Toggle All Weapons in Category";
+	item->caption = "Toggle All Weapons In Category";
 	item->value = index++;
 	item->isLeaf = true;
 	item->sortval = category;
@@ -770,7 +1074,7 @@ void maintain_bodyguards(){
 				Vector3 my_coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 				Vector3 bod_coords = ENTITY::GET_ENTITY_COORDS(spawnedBodyguards[i], true);
 				WATER::GET_WATER_HEIGHT(my_coords.x, my_coords.y, my_coords.z, &height);
-				if ((my_coords.z < height) && ((height - my_coords.z) > 2)) {
+				if ((my_coords.z < height) && ((height - my_coords.z) > 2) && ENTITY::IS_ENTITY_IN_WATER(spawnedBodyguards[i]) == 1) {
 					if ((bod_coords.z - my_coords.z) > 2) ENTITY::APPLY_FORCE_TO_ENTITY(spawnedBodyguards[i], 1, 0, 0, -2.6, 0, 0, 0, true, false, true, true, true, true); // 1
 					if ((bod_coords.z - my_coords.z) < -1) ENTITY::APPLY_FORCE_TO_ENTITY(spawnedBodyguards[i], 1, 0, 0, 2.6, 0, 0, 0, true, false, true, true, true, true); // 0
 					if ((bod_coords.x - my_coords.x) > 6 || (my_coords.x - bod_coords.x) > 6 || (bod_coords.y - my_coords.y) > 6 || (my_coords.y - bod_coords.y) > 6) {
@@ -781,7 +1085,8 @@ void maintain_bodyguards(){
 					if ((bod_coords.y - my_coords.y) > 6 && (bod_coords.y > my_coords.y)) ENTITY::APPLY_FORCE_TO_ENTITY(spawnedBodyguards[i], 1, 0, -2.6, 0, 0, 0, 0, true, false, true, true, true, true);
 					if ((my_coords.y - bod_coords.y) > 6 && (bod_coords.y < my_coords.y)) ENTITY::APPLY_FORCE_TO_ENTITY(spawnedBodyguards[i], 1, 0, 2.6, 0, 0, 0, 0, true, false, true, true, true, true);
 				}
-				if (((height - my_coords.z) < 1) && ((height - bod_coords.z) > 2) && ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID()) == 1) ENTITY::APPLY_FORCE_TO_ENTITY(spawnedBodyguards[i], 1, 0, 0, 2.6, 0, 0, 0, true, false, true, true, true, true);
+				if (((height - my_coords.z) < 1) && ((height - bod_coords.z) > 2) && ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID()) == 1 && ENTITY::IS_ENTITY_IN_WATER(spawnedBodyguards[i]) == 1) 
+					ENTITY::APPLY_FORCE_TO_ENTITY(spawnedBodyguards[i], 1, 0, 0, 2.6, 0, 0, 0, true, false, true, true, true, true);
 			}
 			//
 			// animals
@@ -798,6 +1103,25 @@ void maintain_bodyguards(){
 						}
 					}
 				}
+			}
+			//
+			// modify skin
+			if (menu_showing == true) {
+				Vector3 head_c = PED::GET_PED_BONE_COORDS(spawnedBodyguards[i], 31086, 0, 0, 0);
+				std::string curr_i = std::to_string(i);
+				GRAPHICS::SET_DRAW_ORIGIN(head_c.x, head_c.y, head_c.z + 0.5, 0);
+				UI::BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
+				UI::_ADD_TEXT_COMPONENT_SCALEFORM((char *)curr_i.c_str());
+				UI::SET_TEXT_FONT(0);
+				UI::SET_TEXT_SCALE(0.5, 0.5);
+				UI::SET_TEXT_WRAP(0.0, 1.0);
+				UI::SET_TEXT_COLOUR(255, 242, 0, 255);
+				UI::SET_TEXT_CENTRE(0);
+				UI::SET_TEXT_DROPSHADOW(20, 20, 20, 20, 20);
+				UI::SET_TEXT_EDGE(0, 0, 0, 0, 255);
+				UI::SET_TEXT_OUTLINE();
+				UI::SET_TEXT_LEADING(1);
+				UI::END_TEXT_COMMAND_DISPLAY_TEXT(0, 0);
 			}
 			//
 			PED::SET_PED_KEEP_TASK(spawnedBodyguards[i], true);
