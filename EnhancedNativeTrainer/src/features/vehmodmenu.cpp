@@ -1644,7 +1644,8 @@ bool process_vehmod_engine_sound_menu() {
 	item = new MenuItem<int>();
 	item->caption = "Enter Name";
 	item->isLeaf = true;
-	item->onConfirmFunction = set_engine_sound;
+	item->isLeaf = false;
+	//item->onConfirmFunction = set_engine_sound;
 	item->value = 1;
 	menuItems.push_back(item);
 
