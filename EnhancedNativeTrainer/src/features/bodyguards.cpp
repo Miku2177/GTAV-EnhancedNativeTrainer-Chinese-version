@@ -764,25 +764,37 @@ bool onconfirm_bodyguard_skins_menu(MenuItem<int> choice){
 		case 4:
 		{
 			std::string result_b = show_keyboard(NULL, NULL);
+			bool is_it_n = false;
+			char temp_n[10];
 			if (!result_b.empty())
 			{
 				result_b = trim(result_b);
 				std::string::size_type sz;
-				b_curr_num = std::stof(result_b, &sz);
+				for (int i = 0; i < 7; i++) {
+					sprintf(temp_n, "%i", i);
+					if (result_b == temp_n) is_it_n = true;
+				}
+				if (is_it_n == true) {
+					b_curr_num = std::stof(result_b, &sz);
+					is_it_n = false;
+				}
 				if (!spawnedBodyguards.empty() && b_curr_num > -1 && b_curr_num < spawnedBodyguards.size()) return process_bod_skinchanger_detail_menu();
 				else {
 					if (spawnedBodyguards.empty()) {
 						std::ostringstream ss;
 						ss << "No bodyguards found";
 						set_status_text(ss.str());
+						return false;
 					}
 					if (b_curr_num < 0 || b_curr_num >= spawnedBodyguards.size()) {
 						std::ostringstream ss;
 						ss << "Wrong number";
 						set_status_text(ss.str());
+						return false;
 					}
 				}
 			}
+			return false;
 		}
 		case 5:
 			return process_bod_savedskin_menu();
