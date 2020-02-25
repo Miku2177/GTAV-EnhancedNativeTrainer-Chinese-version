@@ -396,7 +396,7 @@ bool applyChosenBodSkin(DWORD model)
 		//	veh = PED::GET_VEHICLE_PED_IS_USING(model);
 		//}
 
-		//save_player_weapons();
+		save_player_weapons(model);
 
 		load_saved_bodyguard = true;
 		temp_bodyguard = model;
@@ -413,7 +413,7 @@ bool applyChosenBodSkin(DWORD model)
 		//	PED::SET_PED_INTO_VEHICLE(model, veh, -1);
 		//}
 
-		//restore_player_weapons();
+		restore_player_weapons(model);
 
 		//reset the skin detail choice
 		bodskinDetailMenuIndex = 0;
