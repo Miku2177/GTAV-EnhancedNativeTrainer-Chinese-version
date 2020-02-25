@@ -2019,9 +2019,9 @@ void update_vehicle_guns(){
 	}
 }
 
-void save_player_weapons(){
+void save_player_weapons(Ped playerPed){
 	Player player = PLAYER::PLAYER_ID();
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	//Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	int index = 0;
 	for(int a = 0; a < sizeof(VOV_WEAPON_VALUES) / sizeof(VOV_WEAPON_VALUES[0]); a++){
@@ -2062,9 +2062,9 @@ void save_player_weapons(){
 	saved_armour = PED::GET_PED_ARMOUR(playerPed);
 }
 
-void restore_player_weapons(){
+void restore_player_weapons(Ped playerPed){
 	Player player = PLAYER::PLAYER_ID();
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	//Ped playerPed = PLAYER::PLAYER_PED_ID();
 	WEAPON::REMOVE_ALL_PED_WEAPONS(playerPed, false);
 
 	int index = 0;

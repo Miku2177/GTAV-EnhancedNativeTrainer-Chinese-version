@@ -272,7 +272,7 @@ void onchange_chance_attacking_you_index(int value, SelectFromListMenuItem* sour
 
 void onchange_power_punch_index(int value, SelectFromListMenuItem* source);
 
-void onchange_peds_power_punch_index(int value, SelectFromListMenuItem* source);
+//void onchange_peds_power_punch_index(int value, SelectFromListMenuItem* source);
 
 void onchange_weapons_firemode_modifier(int value, SelectFromListMenuItem* source);
 
@@ -286,13 +286,13 @@ void add_weapon_feature_enablements2(std::vector<StringPairSettingDBRow>* result
 
 void update_vehicle_guns();
 
-void save_player_weapons();
+void save_player_weapons(Ped playerPed);
 
 void give_all_weapons_hotkey();
 
 void sniper_vision_toggle();
 
-void restore_player_weapons();
+void restore_player_weapons(Ped playerPed);
 
 bool is_weapon_equipped(std::vector<int> extras);
 
