@@ -208,6 +208,7 @@ public:
 	int rowID;
 	std::string saveName;
 	DWORD model;
+	DWORD weapon;
 
 	std::vector<SavedBodSkinComponentDBRow*> components;
 	std::vector<SavedBodSkinPropDBRow*> props;
