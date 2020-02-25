@@ -44,6 +44,8 @@ Ped bodyGuard, temp_bodyguard = -1;
 int skinBodDetailMenuIndex = 0;
 int skinBodDetailMenuValue = 0;
 float b_curr_num = -1;
+bool is_it_n = false;
+char temp_n[10];
 
 // save/load bodyguard
 int activeSavedBodSkinIndex = -1;
@@ -73,7 +75,7 @@ int skinTypesBodyguardMenuPositionMemory[2] = {0, 0};
 //first index is which category, second is position in that category
 int skinTypesBodyguardMenuLastConfirmed[2] = {0, 0};
 
-std::vector<Ped> spawnedBodyguards;
+std::vector<Ped> spawnedENTBodyguards;
 
 std::vector<bool *> bodyguardWeaponsToggle[8];
 bool bodyguardWeaponsToggleInitialized = false;
@@ -182,8 +184,8 @@ void onhighlight_bod_skinchanger_texture_menu(MenuItem<int> choice)
 	{
 		//int currentDrawable = PED::GET_PED_DRAWABLE_VARIATION(PLAYER::PLAYER_PED_ID(), skinBodDetailMenuValue);
 		//PED::SET_PED_COMPONENT_VARIATION(PLAYER::PLAYER_PED_ID(), skinBodDetailMenuValue, currentDrawable, choice.value, 0);
-		int currentDrawable = PED::GET_PED_DRAWABLE_VARIATION(spawnedBodyguards[b_curr_num], skinBodDetailMenuValue);
-		PED::SET_PED_COMPONENT_VARIATION(spawnedBodyguards[b_curr_num], skinBodDetailMenuValue, currentDrawable, choice.value, 0);
+		int currentDrawable = PED::GET_PED_DRAWABLE_VARIATION(spawnedENTBodyguards[b_curr_num], skinBodDetailMenuValue);
+		PED::SET_PED_COMPONENT_VARIATION(spawnedENTBodyguards[b_curr_num], skinBodDetailMenuValue, currentDrawable, choice.value, 0);
 	}
 	WAIT(100);
 }
@@ -203,7 +205,7 @@ bool process_bod_skinchanger_texture_menu(std::string caption)
 
 	//Ped playerPed = PLAYER::PLAYER_PED_ID();
 	//Hash model = ENTITY::GET_ENTITY_MODEL(playerPed);
-	Hash model = ENTITY::GET_ENTITY_MODEL(spawnedBodyguards[b_curr_num]);
+	Hash model = ENTITY::GET_ENTITY_MODEL(spawnedENTBodyguards[b_curr_num]);
 
 	if (STREAMING::IS_MODEL_IN_CDIMAGE(model) && STREAMING::IS_MODEL_VALID(model))
 	{
@@ -216,8 +218,8 @@ bool process_bod_skinchanger_texture_menu(std::string caption)
 
 		//int currentDrawable = PED::GET_PED_DRAWABLE_VARIATION(PLAYER::PLAYER_PED_ID(), skinBodDetailMenuValue);
 		//int textures = PED::GET_NUMBER_OF_PED_TEXTURE_VARIATIONS(PLAYER::PLAYER_PED_ID(), skinBodDetailMenuValue, currentDrawable);
-		int currentDrawable = PED::GET_PED_DRAWABLE_VARIATION(spawnedBodyguards[b_curr_num], skinBodDetailMenuValue);
-		int textures = PED::GET_NUMBER_OF_PED_TEXTURE_VARIATIONS(spawnedBodyguards[b_curr_num], skinBodDetailMenuValue, currentDrawable);
+		int currentDrawable = PED::GET_PED_DRAWABLE_VARIATION(spawnedENTBodyguards[b_curr_num], skinBodDetailMenuValue);
+		int textures = PED::GET_NUMBER_OF_PED_TEXTURE_VARIATIONS(spawnedENTBodyguards[b_curr_num], skinBodDetailMenuValue, currentDrawable);
 
 		for (int i = 0; i < textures; i++)
 		{
@@ -236,7 +238,7 @@ bool process_bod_skinchanger_texture_menu(std::string caption)
 	ss << "Available Textures";
 
 	//int currentTexture = PED::GET_PED_TEXTURE_VARIATION(PLAYER::PLAYER_PED_ID(), skinBodDetailMenuValue);
-	int currentTexture = PED::GET_PED_TEXTURE_VARIATION(spawnedBodyguards[b_curr_num], skinBodDetailMenuValue);
+	int currentTexture = PED::GET_PED_TEXTURE_VARIATION(spawnedENTBodyguards[b_curr_num], skinBodDetailMenuValue);
 	draw_generic_menu<int>(menuItems, &currentTexture, ss.str(), onconfirm_bod_skinchanger_texture_menu, onhighlight_bod_skinchanger_texture_menu, onexit_bod_skinchanger_texture_menu);
 	return false;
 }
@@ -248,11 +250,11 @@ void onexit_bod_skinchanger_drawable_menu(bool returnValue)
 void onhighlight_bod_skinchanger_drawable_menu(MenuItem<int> choice)
 {
 	//int currentDrawable = PED::GET_PED_DRAWABLE_VARIATION(PLAYER::PLAYER_PED_ID(), skinBodDetailMenuValue);
-	int currentDrawable = PED::GET_PED_DRAWABLE_VARIATION(spawnedBodyguards[b_curr_num], skinBodDetailMenuValue);
+	int currentDrawable = PED::GET_PED_DRAWABLE_VARIATION(spawnedENTBodyguards[b_curr_num], skinBodDetailMenuValue);
 	if (choice.value != currentDrawable)
 	{
 		//PED::SET_PED_COMPONENT_VARIATION(PLAYER::PLAYER_PED_ID(), skinBodDetailMenuValue, choice.value, 0, 0);
-		PED::SET_PED_COMPONENT_VARIATION(spawnedBodyguards[b_curr_num], skinBodDetailMenuValue, choice.value, 0, 0);
+		PED::SET_PED_COMPONENT_VARIATION(spawnedENTBodyguards[b_curr_num], skinBodDetailMenuValue, choice.value, 0, 0);
 	}
 	WAIT(100);
 }
@@ -274,7 +276,7 @@ bool process_bod_skinchanger_drawable_menu(std::string caption, int component)
 
 	//Ped playerPed = PLAYER::PLAYER_PED_ID();
 	//Hash model = ENTITY::GET_ENTITY_MODEL(playerPed);
-	Hash model = ENTITY::GET_ENTITY_MODEL(spawnedBodyguards[b_curr_num]);
+	Hash model = ENTITY::GET_ENTITY_MODEL(spawnedENTBodyguards[b_curr_num]);
 	
 	if (STREAMING::IS_MODEL_IN_CDIMAGE(model) && STREAMING::IS_MODEL_VALID(model))
 	{
@@ -286,11 +288,11 @@ bool process_bod_skinchanger_drawable_menu(std::string caption, int component)
 		}
 
 		//int drawables = PED::GET_NUMBER_OF_PED_DRAWABLE_VARIATIONS(PLAYER::PLAYER_PED_ID(), component);
-		int drawables = PED::GET_NUMBER_OF_PED_DRAWABLE_VARIATIONS(spawnedBodyguards[b_curr_num], component);
+		int drawables = PED::GET_NUMBER_OF_PED_DRAWABLE_VARIATIONS(spawnedENTBodyguards[b_curr_num], component);
 		for (int i = 0; i < drawables; i++)
 		{
 			//int textures = PED::GET_NUMBER_OF_PED_TEXTURE_VARIATIONS(PLAYER::PLAYER_PED_ID(), component, i);
-			int textures = PED::GET_NUMBER_OF_PED_TEXTURE_VARIATIONS(spawnedBodyguards[b_curr_num], component, i);
+			int textures = PED::GET_NUMBER_OF_PED_TEXTURE_VARIATIONS(spawnedENTBodyguards[b_curr_num], component, i);
 			std::ostringstream ss;
 			ss << "Drawable #" << i << " ~HUD_COLOUR_GREYLIGHT~(" << textures << ")";
 
@@ -308,7 +310,7 @@ bool process_bod_skinchanger_drawable_menu(std::string caption, int component)
 	ss << "Available Drawables";
 
 	//int currentDrawable = PED::GET_PED_DRAWABLE_VARIATION(PLAYER::PLAYER_PED_ID(), component);
-	int currentDrawable = PED::GET_PED_DRAWABLE_VARIATION(spawnedBodyguards[b_curr_num], component);
+	int currentDrawable = PED::GET_PED_DRAWABLE_VARIATION(spawnedENTBodyguards[b_curr_num], component);
 	draw_generic_menu<int>(menuItems, &currentDrawable, ss.str(), onconfirm_bod_skinchanger_drawable_menu, onhighlight_bod_skinchanger_drawable_menu, onexit_bod_skinchanger_drawable_menu);
 	return false;
 }
@@ -336,7 +338,7 @@ bool process_bod_skinchanger_detail_menu()
 	int i = 0;
 	//Ped playerPed = PLAYER::PLAYER_PED_ID();
 	//Hash model = ENTITY::GET_ENTITY_MODEL(playerPed);
-	Hash model = ENTITY::GET_ENTITY_MODEL(spawnedBodyguards[b_curr_num]);
+	Hash model = ENTITY::GET_ENTITY_MODEL(spawnedENTBodyguards[b_curr_num]);
 
 	if (STREAMING::IS_MODEL_IN_CDIMAGE(model) && STREAMING::IS_MODEL_VALID(model))
 	{
@@ -352,12 +354,12 @@ bool process_bod_skinchanger_detail_menu()
 			int compIndex = i - fixedChoices;
 
 			//int drawables = PED::GET_NUMBER_OF_PED_DRAWABLE_VARIATIONS(PLAYER::PLAYER_PED_ID(), compIndex);
-			int drawables = PED::GET_NUMBER_OF_PED_DRAWABLE_VARIATIONS(spawnedBodyguards[b_curr_num], compIndex);
+			int drawables = PED::GET_NUMBER_OF_PED_DRAWABLE_VARIATIONS(spawnedENTBodyguards[b_curr_num], compIndex);
 			int textures = 0;
 			if (drawables == 1)
 			{
 				//textures = PED::GET_NUMBER_OF_PED_TEXTURE_VARIATIONS(PLAYER::PLAYER_PED_ID(), compIndex, 0);
-				textures = PED::GET_NUMBER_OF_PED_TEXTURE_VARIATIONS(spawnedBodyguards[b_curr_num], compIndex, 0);
+				textures = PED::GET_NUMBER_OF_PED_TEXTURE_VARIATIONS(spawnedENTBodyguards[b_curr_num], compIndex, 0);
 			}
 			if (drawables > 1 || textures != 0)
 			{
@@ -477,8 +479,15 @@ void save_current_bod_skin(int slot)
 	{
 		result_b_s = trim(result_b_s);
 		std::string::size_type sz;
-		b_curr_num = std::stof(result_b_s, &sz);
-		if (!spawnedBodyguards.empty() && b_curr_num > -1 && b_curr_num < spawnedBodyguards.size()) {
+		for (int i = 0; i < 7; i++) {
+			sprintf(temp_n, "%i", i);
+			if (result_b_s == temp_n) is_it_n = true;
+		}
+		if (is_it_n == true) {
+			b_curr_num = std::stof(result_b_s, &sz);
+			is_it_n = false;
+		}
+		if (!spawnedENTBodyguards.empty() && b_curr_num > -1 && b_curr_num < spawnedENTBodyguards.size()) {
 			//if (bPlayerExists)
 	//{
 			std::ostringstream ss;
@@ -497,7 +506,7 @@ void save_current_bod_skin(int slot)
 			{
 				ENTDatabase* database = get_database();
 
-				if (database->save_bod_skin(spawnedBodyguards[b_curr_num], result, slot))
+				if (database->save_bod_skin(spawnedENTBodyguards[b_curr_num], result, slot))
 				{
 					activeSavedBodSkinSlotName = result;
 					set_status_text("Saved skin");
@@ -510,12 +519,12 @@ void save_current_bod_skin(int slot)
 			//}
 		}
 		else {
-			if (spawnedBodyguards.empty()) {
+			if (spawnedENTBodyguards.empty()) {
 				std::ostringstream ss;
 				ss << "No bodyguards found";
 				set_status_text(ss.str());
 			}
-			if (b_curr_num < 0 || b_curr_num >= spawnedBodyguards.size()) {
+			if (b_curr_num < 0 || b_curr_num >= spawnedENTBodyguards.size()) {
 				std::ostringstream ss;
 				ss << "Wrong number";
 				set_status_text(ss.str());
@@ -764,8 +773,6 @@ bool onconfirm_bodyguard_skins_menu(MenuItem<int> choice){
 		case 4:
 		{
 			std::string result_b = show_keyboard(NULL, NULL);
-			bool is_it_n = false;
-			char temp_n[10];
 			if (!result_b.empty())
 			{
 				result_b = trim(result_b);
@@ -778,15 +785,15 @@ bool onconfirm_bodyguard_skins_menu(MenuItem<int> choice){
 					b_curr_num = std::stof(result_b, &sz);
 					is_it_n = false;
 				}
-				if (!spawnedBodyguards.empty() && b_curr_num > -1 && b_curr_num < spawnedBodyguards.size()) return process_bod_skinchanger_detail_menu();
+				if (!spawnedENTBodyguards.empty() && b_curr_num > -1 && b_curr_num < spawnedENTBodyguards.size()) return process_bod_skinchanger_detail_menu();
 				else {
-					if (spawnedBodyguards.empty()) {
+					if (spawnedENTBodyguards.empty()) {
 						std::ostringstream ss;
 						ss << "No bodyguards found";
 						set_status_text(ss.str());
 						return false;
 					}
-					if (b_curr_num < 0 || b_curr_num >= spawnedBodyguards.size()) {
+					if (b_curr_num < 0 || b_curr_num >= spawnedENTBodyguards.size()) {
 						std::ostringstream ss;
 						ss << "Wrong number";
 						set_status_text(ss.str());
@@ -1083,25 +1090,25 @@ void dismiss_bodyguards(){
 		
 	animal_in_group = false;
 
-	if(spawnedBodyguards.size() == 0){
+	if(spawnedENTBodyguards.size() == 0){
 		set_status_text("You don't have any bodyguards");
-		spawnedBodyguards.clear();
-		spawnedBodyguards.shrink_to_fit();
+		spawnedENTBodyguards.clear();
+		spawnedENTBodyguards.shrink_to_fit();
 		return;
 	}
 
-	for(int i = 0; i < spawnedBodyguards.size(); i++){
-		ENTITY::SET_ENTITY_INVINCIBLE(spawnedBodyguards[i], false);
-		PED::SET_PED_NEVER_LEAVES_GROUP(spawnedBodyguards[i], false);
-		PED::REMOVE_PED_FROM_GROUP(spawnedBodyguards[i]);
+	for(int i = 0; i < spawnedENTBodyguards.size(); i++){
+		ENTITY::SET_ENTITY_INVINCIBLE(spawnedENTBodyguards[i], false);
+		PED::SET_PED_NEVER_LEAVES_GROUP(spawnedENTBodyguards[i], false);
+		PED::REMOVE_PED_FROM_GROUP(spawnedENTBodyguards[i]);
 		if (featureBodyguardDespawn) {
-			AI::CLEAR_PED_TASKS(spawnedBodyguards[i]);
-			ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&spawnedBodyguards[i]);
+			AI::CLEAR_PED_TASKS(spawnedENTBodyguards[i]);
+			ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&spawnedENTBodyguards[i]);
 		}
 	}
 
-	spawnedBodyguards.clear();
-	spawnedBodyguards.shrink_to_fit();
+	spawnedENTBodyguards.clear();
+	spawnedENTBodyguards.shrink_to_fit();
 	requireRefreshOfBodyguardMainMenu = true;
 
 	pop = -1;
@@ -1157,7 +1164,7 @@ void do_spawn_bodyguard(){
 		load_saved_bodyguard = false;
 	}
 
-	if (spawnedBodyguards.size() >= BODYGUARD_LIMIT) {
+	if (spawnedENTBodyguards.size() >= BODYGUARD_LIMIT) {
 		set_status_text("Cannot spawn any more bodyguards");
 		return;
 	}
@@ -1187,9 +1194,9 @@ void do_spawn_bodyguard(){
 					Vector3 coordsped = ENTITY::GET_ENTITY_COORDS(surr_peds[i], true);
 					dist_diff = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsped.x, coordsped.y, coordsped.z);
 					exist_already = false;
-					if (!spawnedBodyguards.empty()) {
-						for (int j = 0; j < spawnedBodyguards.size(); j++) {
-							if (spawnedBodyguards[j] == surr_peds[i]) exist_already = true;
+					if (!spawnedENTBodyguards.empty()) {
+						for (int j = 0; j < spawnedENTBodyguards.size(); j++) {
+							if (spawnedENTBodyguards[j] == surr_peds[i]) exist_already = true;
 						}
 					}
 					if (temp_dist > dist_diff && exist_already == false) {
@@ -1199,9 +1206,9 @@ void do_spawn_bodyguard(){
 				}
 			}
 			exist_already = false;
-			if (!spawnedBodyguards.empty()) {
-				for (int i = 0; i < spawnedBodyguards.size(); i++) {
-					if (spawnedBodyguards[i] == temp_bodyguard) exist_already = true;
+			if (!spawnedENTBodyguards.empty()) {
+				for (int i = 0; i < spawnedENTBodyguards.size(); i++) {
+					if (spawnedENTBodyguards[i] == temp_bodyguard) exist_already = true;
 				}
 			}
 			if (exist_already == false) {
@@ -1225,7 +1232,7 @@ void do_spawn_bodyguard(){
 				}
 			}
 
-			spawnedBodyguards.push_back(bodyGuard); // save the current bodyguard
+			spawnedENTBodyguards.push_back(bodyGuard); // save the current bodyguard
 
 			PED::SET_PED_AS_GROUP_LEADER(PLAYER::PLAYER_PED_ID(), myENTGroup);
 			PED::SET_PED_AS_GROUP_MEMBER(bodyGuard, myENTGroup);
@@ -1389,7 +1396,7 @@ void do_add_near_bodyguard() {
 }
 
 void maintain_bodyguards(){
-	if (spawnedBodyguards.size() == 0)
+	if (spawnedENTBodyguards.size() == 0)
 	{
 		if (!BLIPTABLE_BODYGUARD.empty()) {
 			for (int i = 0; i < BLIPTABLE_BODYGUARD.size(); i++) {
@@ -1410,28 +1417,28 @@ void maintain_bodyguards(){
 		}
 	}
 	
-	if (!spawnedBodyguards.empty()) { 
-		for (int i = 0; i < spawnedBodyguards.size(); i++) {
+	if (!spawnedENTBodyguards.empty()) { 
+		for (int i = 0; i < spawnedENTBodyguards.size(); i++) {
 			// bodyguards swimming ability
-			if (ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID()) == 1 && !is_in_airbrake_mode() && PED::GET_PED_TYPE(spawnedBodyguards[i]) != 28 && stop_b == false) {
+			if (ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID()) == 1 && !is_in_airbrake_mode() && PED::GET_PED_TYPE(spawnedENTBodyguards[i]) != 28 && stop_b == false) {
 				float height = -1.0;
 				Object taskSequence;
 				Vector3 my_coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
-				Vector3 bod_coords = ENTITY::GET_ENTITY_COORDS(spawnedBodyguards[i], true);
+				Vector3 bod_coords = ENTITY::GET_ENTITY_COORDS(spawnedENTBodyguards[i], true);
 				WATER::GET_WATER_HEIGHT(my_coords.x, my_coords.y, my_coords.z, &height);
-				if ((my_coords.z < height) && ((height - my_coords.z) > 2) && ENTITY::IS_ENTITY_IN_WATER(spawnedBodyguards[i]) == 1) {
-					if ((bod_coords.z - my_coords.z) > 2) ENTITY::APPLY_FORCE_TO_ENTITY(spawnedBodyguards[i], 1, 0, 0, -2.6, 0, 0, 0, true, false, true, true, true, true); // 1
-					if ((bod_coords.z - my_coords.z) < -1) ENTITY::APPLY_FORCE_TO_ENTITY(spawnedBodyguards[i], 1, 0, 0, 2.6, 0, 0, 0, true, false, true, true, true, true); // 0
+				if ((my_coords.z < height) && ((height - my_coords.z) > 2) && ENTITY::IS_ENTITY_IN_WATER(spawnedENTBodyguards[i]) == 1) {
+					if ((bod_coords.z - my_coords.z) > 2) ENTITY::APPLY_FORCE_TO_ENTITY(spawnedENTBodyguards[i], 1, 0, 0, -2.6, 0, 0, 0, true, false, true, true, true, true); // 1
+					if ((bod_coords.z - my_coords.z) < -1) ENTITY::APPLY_FORCE_TO_ENTITY(spawnedENTBodyguards[i], 1, 0, 0, 2.6, 0, 0, 0, true, false, true, true, true, true); // 0
 					if ((bod_coords.x - my_coords.x) > 6 || (my_coords.x - bod_coords.x) > 6 || (bod_coords.y - my_coords.y) > 6 || (my_coords.y - bod_coords.y) > 6) {
-						if (!PED::IS_PED_FACING_PED(spawnedBodyguards[i], PLAYER::PLAYER_PED_ID(), 50)) AI::TASK_TURN_PED_TO_FACE_COORD(spawnedBodyguards[i], my_coords.x, my_coords.y, my_coords.z, 10000);
+						if (!PED::IS_PED_FACING_PED(spawnedENTBodyguards[i], PLAYER::PLAYER_PED_ID(), 50)) AI::TASK_TURN_PED_TO_FACE_COORD(spawnedENTBodyguards[i], my_coords.x, my_coords.y, my_coords.z, 10000);
 					}
-					if ((bod_coords.x - my_coords.x) > 6 && (bod_coords.x > my_coords.x)) ENTITY::APPLY_FORCE_TO_ENTITY(spawnedBodyguards[i], 1, -2.6, 0, 0, 0, 0, 0, true, false, true, true, true, true);
-					if ((my_coords.x - bod_coords.x) > 6 && (bod_coords.x < my_coords.x)) ENTITY::APPLY_FORCE_TO_ENTITY(spawnedBodyguards[i], 1, 2.6, 0, 0, 0, 0, 0, true, false, true, true, true, true);
-					if ((bod_coords.y - my_coords.y) > 6 && (bod_coords.y > my_coords.y)) ENTITY::APPLY_FORCE_TO_ENTITY(spawnedBodyguards[i], 1, 0, -2.6, 0, 0, 0, 0, true, false, true, true, true, true);
-					if ((my_coords.y - bod_coords.y) > 6 && (bod_coords.y < my_coords.y)) ENTITY::APPLY_FORCE_TO_ENTITY(spawnedBodyguards[i], 1, 0, 2.6, 0, 0, 0, 0, true, false, true, true, true, true);
+					if ((bod_coords.x - my_coords.x) > 6 && (bod_coords.x > my_coords.x)) ENTITY::APPLY_FORCE_TO_ENTITY(spawnedENTBodyguards[i], 1, -2.6, 0, 0, 0, 0, 0, true, false, true, true, true, true);
+					if ((my_coords.x - bod_coords.x) > 6 && (bod_coords.x < my_coords.x)) ENTITY::APPLY_FORCE_TO_ENTITY(spawnedENTBodyguards[i], 1, 2.6, 0, 0, 0, 0, 0, true, false, true, true, true, true);
+					if ((bod_coords.y - my_coords.y) > 6 && (bod_coords.y > my_coords.y)) ENTITY::APPLY_FORCE_TO_ENTITY(spawnedENTBodyguards[i], 1, 0, -2.6, 0, 0, 0, 0, true, false, true, true, true, true);
+					if ((my_coords.y - bod_coords.y) > 6 && (bod_coords.y < my_coords.y)) ENTITY::APPLY_FORCE_TO_ENTITY(spawnedENTBodyguards[i], 1, 0, 2.6, 0, 0, 0, 0, true, false, true, true, true, true);
 				}
-				if (((height - my_coords.z) < 1) && ((height - bod_coords.z) > 2) && ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID()) == 1 && ENTITY::IS_ENTITY_IN_WATER(spawnedBodyguards[i]) == 1) 
-					ENTITY::APPLY_FORCE_TO_ENTITY(spawnedBodyguards[i], 1, 0, 0, 2.6, 0, 0, 0, true, false, true, true, true, true);
+				if (((height - my_coords.z) < 1) && ((height - bod_coords.z) > 2) && ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID()) == 1 && ENTITY::IS_ENTITY_IN_WATER(spawnedENTBodyguards[i]) == 1) 
+					ENTITY::APPLY_FORCE_TO_ENTITY(spawnedENTBodyguards[i], 1, 0, 0, 2.6, 0, 0, 0, true, false, true, true, true, true);
 			}
 			//
 			// animals
@@ -1440,11 +1447,11 @@ void maintain_bodyguards(){
 				Ped surr_animals[arrSize_animals];
 				int count_animals = worldGetAllPeds(surr_animals, arrSize_animals);
 				for (int k = 0; k < count_animals; k++) {
-					if (surr_animals[k] != PLAYER::PLAYER_PED_ID() && surr_animals[k] != spawnedBodyguards[i] && (PED::IS_PED_IN_MELEE_COMBAT(surr_animals[k]) || PED::IS_PED_SHOOTING(surr_animals[k]))) {
-						if (PED::GET_PED_TYPE(spawnedBodyguards[i]) == 28) { // && !PED::IS_PED_IN_MELEE_COMBAT(spawnedBodyguards[i])
-							PED::SET_PED_CAN_RAGDOLL(spawnedBodyguards[i], 0);
+					if (surr_animals[k] != PLAYER::PLAYER_PED_ID() && surr_animals[k] != spawnedENTBodyguards[i] && (PED::IS_PED_IN_MELEE_COMBAT(surr_animals[k]) || PED::IS_PED_SHOOTING(surr_animals[k]))) {
+						if (PED::GET_PED_TYPE(spawnedENTBodyguards[i]) == 28) { // && !PED::IS_PED_IN_MELEE_COMBAT(spawnedENTBodyguards[i])
+							PED::SET_PED_CAN_RAGDOLL(spawnedENTBodyguards[i], 0);
 							PED::SET_PED_AS_ENEMY(surr_animals[k], true);
-							AI::TASK_COMBAT_PED_TIMED(spawnedBodyguards[i], surr_animals[k], 50000, 16); // 50000
+							AI::TASK_COMBAT_PED_TIMED(spawnedENTBodyguards[i], surr_animals[k], 50000, 16); // 50000
 						}
 					}
 				}
@@ -1452,7 +1459,7 @@ void maintain_bodyguards(){
 			//
 			// modify skin
 			if (menu_showing == true) {
-				Vector3 head_c = PED::GET_PED_BONE_COORDS(spawnedBodyguards[i], 31086, 0, 0, 0);
+				Vector3 head_c = PED::GET_PED_BONE_COORDS(spawnedENTBodyguards[i], 31086, 0, 0, 0);
 				std::string curr_i = std::to_string(i);
 				GRAPHICS::SET_DRAW_ORIGIN(head_c.x, head_c.y, head_c.z + 0.5, 0);
 				UI::BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
@@ -1469,22 +1476,22 @@ void maintain_bodyguards(){
 				UI::END_TEXT_COMMAND_DISPLAY_TEXT(0, 0);
 			}
 			//
-			PED::SET_PED_KEEP_TASK(spawnedBodyguards[i], true);
-			if (animal_in_group == true && PED::IS_PED_FLEEING(spawnedBodyguards[i])) AI::TASK_STAND_STILL(spawnedBodyguards[i], 10000);
+			PED::SET_PED_KEEP_TASK(spawnedENTBodyguards[i], true);
+			if (animal_in_group == true && PED::IS_PED_FLEEING(spawnedENTBodyguards[i])) AI::TASK_STAND_STILL(spawnedENTBodyguards[i], 10000);
 			
 			if (stop_b == false) {
-				PED::SET_PED_AS_GROUP_MEMBER(spawnedBodyguards[i], PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID()));
-				PED::SET_PED_NEVER_LEAVES_GROUP(spawnedBodyguards[i], true);
+				PED::SET_PED_AS_GROUP_MEMBER(spawnedENTBodyguards[i], PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID()));
+				PED::SET_PED_NEVER_LEAVES_GROUP(spawnedENTBodyguards[i], true);
 			}
 			if (stop_b == true) {
-				PED::REMOVE_PED_FROM_GROUP(spawnedBodyguards[i]);
-				AI::CLEAR_PED_TASKS(spawnedBodyguards[i]);
+				PED::REMOVE_PED_FROM_GROUP(spawnedENTBodyguards[i]);
+				AI::CLEAR_PED_TASKS(spawnedENTBodyguards[i]);
 			}
-			if (PED::IS_PED_DEAD_OR_DYING(spawnedBodyguards[i], true)) {
-				PED::SET_PED_NEVER_LEAVES_GROUP(spawnedBodyguards[i], false);
-				PED::REMOVE_PED_FROM_GROUP(spawnedBodyguards[i]);
-				if (featureBodyguardDespawn) ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&spawnedBodyguards[i]);
-				spawnedBodyguards.erase(spawnedBodyguards.begin() + i);
+			if (PED::IS_PED_DEAD_OR_DYING(spawnedENTBodyguards[i], true)) {
+				PED::SET_PED_NEVER_LEAVES_GROUP(spawnedENTBodyguards[i], false);
+				PED::REMOVE_PED_FROM_GROUP(spawnedENTBodyguards[i]);
+				if (featureBodyguardDespawn) ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&spawnedENTBodyguards[i]);
+				spawnedENTBodyguards.erase(spawnedENTBodyguards.begin() + i);
 				requireRefreshOfBodyguardMainMenu = true;
 			}
 		}
@@ -1657,8 +1664,8 @@ bool onconfirm_bodyguard_menu(MenuItem<int> choice){
 
 void update_bodyguard_features(){
 	if(featureBodyguardInvincibleUpdated){
-		for(int i = 0; i < spawnedBodyguards.size(); i++){
-			ENTITY::SET_ENTITY_INVINCIBLE(spawnedBodyguards[i], featureBodyguardInvincible);
+		for(int i = 0; i < spawnedENTBodyguards.size(); i++){
+			ENTITY::SET_ENTITY_INVINCIBLE(spawnedENTBodyguards[i], featureBodyguardInvincible);
 		}
 	}
 }
