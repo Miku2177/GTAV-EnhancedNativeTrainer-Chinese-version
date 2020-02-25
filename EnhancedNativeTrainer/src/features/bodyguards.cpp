@@ -398,11 +398,12 @@ bool applyChosenBodSkin(DWORD model)
 		//	veh = PED::GET_VEHICLE_PED_IS_USING(model);
 		//}
 
-		save_player_weapons(model);
+		//save_player_weapons(model);
 
 		load_saved_bodyguard = true;
 		temp_bodyguard = model;
 		do_spawn_bodyguard();
+		load_saved_bodyguard = false;
 
 		//PLAYER::SET_PLAYER_MODEL(model, model);
 		
@@ -415,7 +416,7 @@ bool applyChosenBodSkin(DWORD model)
 		//	PED::SET_PED_INTO_VEHICLE(model, veh, -1);
 		//}
 
-		restore_player_weapons(model);
+		//restore_player_weapons(model);
 
 		//reset the skin detail choice
 		bodskinDetailMenuIndex = 0;
@@ -457,6 +458,12 @@ bool spawn_saved_bod_skin(int slot, std::string caption)
 	{
 		//PED::SET_PED_PROP_INDEX(savedBodSkin->model, prop->propID, prop->drawable, prop->texture, 0);
 		PED::SET_PED_PROP_INDEX(bodyGuard, prop->propID, prop->drawable, prop->texture, 0);
+	}
+
+	if (!featureDifferentWeapons) {
+		WEAPON::GIVE_WEAPON_TO_PED(bodyGuard, savedBodSkin->weapon, 999, false, true);
+		WEAPON::SET_CURRENT_PED_WEAPON(bodyGuard, savedBodSkin->weapon, 1);
+		WEAPON::SET_PED_CURRENT_WEAPON_VISIBLE(bodyGuard, true, false, 1, 1);
 	}
 
 	for (std::vector<SavedBodSkinDBRow*>::iterator it = savedBodSkins.begin(); it != savedBodSkins.end(); ++it)
@@ -1159,10 +1166,7 @@ void do_spawn_bodyguard(){
 		hotkey_boddyguard = false;
 	}
 
-	if (load_saved_bodyguard == true) {
-		bodyGuardModel = temp_bodyguard;
-		load_saved_bodyguard = false;
-	}
+	if (load_saved_bodyguard == true) bodyGuardModel = temp_bodyguard;
 
 	if (spawnedENTBodyguards.size() >= BODYGUARD_LIMIT) {
 		set_status_text("Cannot spawn any more bodyguards");
@@ -1309,7 +1313,7 @@ void do_spawn_bodyguard(){
 			if (bodyguard_animal == false) PED::SET_PED_FIRING_PATTERN(bodyGuard, GAMEPLAY::GET_HASH_KEY("FIRING_PATTERN_FULL_AUTO")); // 0xC6EE6B4C
 
 			// Different Weapons
-			if (featureDifferentWeapons) {
+			if (featureDifferentWeapons/* && load_saved_bodyguard == false*/) {
 				if (WEAPONS.empty()) {
 					for (int a = 0; a < MENU_WEAPON_CATEGORIES.size(); a++) {
 						for (int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++) {
@@ -1330,7 +1334,7 @@ void do_spawn_bodyguard(){
 				if (pop == all_selected) pop = -1;
 			}
 			
-			if (!featureDifferentWeapons) {
+			if (!featureDifferentWeapons && load_saved_bodyguard == false) {
 				if (bodyguard_animal == false) {
 					for (int a = 0; a < MENU_WEAPON_CATEGORIES.size(); a++) {
 						for (int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++) {

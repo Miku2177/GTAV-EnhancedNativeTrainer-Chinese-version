@@ -431,7 +431,8 @@ void ENTDatabase::handle_version(int oldVersion)
 		char* CREATE_BOD_SKIN_TABLE_QUERY = "CREATE TABLE ENT_SAVED_BOD_SKINS ( \
 			id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, \
 			saveName TEXT NOT NULL, \
-			model INTEGER NOT NULL \
+			model INTEGER NOT NULL, \
+			weapon INTEGER NOT NULL \
 			)";
 
 		int rcSkin1 = sqlite3_exec(db, CREATE_BOD_SKIN_TABLE_QUERY, NULL, 0, &zErrMsg);
@@ -1497,7 +1498,7 @@ bool ENTDatabase::save_bod_skin(Ped ped, std::string saveName, sqlite3_int64 slo
 	mutex_lock();
 
 	std::stringstream ss;
-	ss << "INSERT OR REPLACE INTO ENT_SAVED_BOD_SKINS VALUES (?, ?, ?);";
+	ss << "INSERT OR REPLACE INTO ENT_SAVED_BOD_SKINS VALUES (?, ?, ?, ?);";
 
 	sqlite3_stmt *stmt;
 	const char *pzTest;
@@ -1523,6 +1524,7 @@ bool ENTDatabase::save_bod_skin(Ped ped, std::string saveName, sqlite3_int64 slo
 	}
 	sqlite3_bind_text(stmt, index++, saveName.c_str(), saveName.length(), 0); //save name
 	sqlite3_bind_int(stmt, index++, ENTITY::GET_ENTITY_MODEL(ped)); //model
+	sqlite3_bind_int(stmt, index++, WEAPON::GET_SELECTED_PED_WEAPON(ped)); //weapon
 
 	// commit
 	sqlite3_step(stmt);
@@ -1638,6 +1640,7 @@ std::vector<SavedBodSkinDBRow*> ENTDatabase::get_saved_bod_skins(int index)
 			skin->rowID = sqlite3_column_int(stmt, index++);
 			skin->saveName = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, index++)));
 			skin->model = sqlite3_column_int(stmt, index++);
+			skin->weapon = sqlite3_column_int(stmt, index++);
 
 			results.push_back(skin);
 
