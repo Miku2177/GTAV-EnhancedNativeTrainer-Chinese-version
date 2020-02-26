@@ -63,7 +63,7 @@ void handle_generic_settings_bodyguards(std::vector<StringPairSettingDBRow>* set
 
 bool bodyguards_main_menu_interrupt();
 
-bool skin_menu_interrupt();
+bool b_skin_menu_interrupt();
 
 void maintain_bodyguards();
 

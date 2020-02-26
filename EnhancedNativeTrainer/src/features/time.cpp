@@ -46,6 +46,8 @@ bool HotkeyFlowRateChanged = true, HotkeyFlowRateLocked = true;
 
 float frozentimestate = -1;
 
+bool requireRefreshOfTime = false;
+
 int activeLineIndexTime = 0;
 
 float timeFactor = 1000.0f / TIME_FLOW_RATE_VALUES.at(timeFlowRateIndex);
@@ -145,7 +147,8 @@ bool onconfirm_time_flowrate_menu(MenuItem<int> choice) {
 			timeFlowRateIndex = 0;
 			timeFlowRateChanged = true;
 			set_status_text("Time is frozen");
-			all_time_flow_rate();
+			//all_time_flow_rate();
+			requireRefreshOfTime = true;
 		}
 		else
 		{
@@ -158,64 +161,76 @@ bool onconfirm_time_flowrate_menu(MenuItem<int> choice) {
 				timeFlowRateChanged = true;
 			}
 			set_status_text("Time is unfrozen");
-			all_time_flow_rate();
+			//all_time_flow_rate();
+			requireRefreshOfTime = true;
 		}
 	}
 	return false;
 }
 
+bool flowtime_menu_interrupt() {
+	if (requireRefreshOfTime) {
+		return true;
+	}
+	return false;
+}
+
 void all_time_flow_rate() {
-	std::vector<MenuItem<int> *> menuItems;
-	MenuItem<int> *item;
-	int index = 0;
+	do {
+		requireRefreshOfTime = false;
+		std::vector<MenuItem<int> *> menuItems;
+		MenuItem<int> *item;
+		int index = 0;
 
-	ToggleMenuItem<int> *togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Sync With System";
-	togItem->value = 0;
-	togItem->toggleValue = &featureTimeSynced;
-	togItem->toggleValueUpdated = NULL;
-	menuItems.push_back(togItem);
+		ToggleMenuItem<int> *togItem = new ToggleMenuItem<int>();
+		togItem->caption = "Sync With System";
+		togItem->value = 0;
+		togItem->toggleValue = &featureTimeSynced;
+		togItem->toggleValueUpdated = NULL;
+		menuItems.push_back(togItem);
 
-	SelectFromListMenuItem *listItem = new SelectFromListMenuItem(TIME_SPEED_CAPTIONS, onchange_hotkey_flow_rate_callback);
-	listItem->wrap = false;
-	listItem->caption = "Global Game Speed";
-	listItem->value = HotkeyFlowRateIndex;
-	menuItems.push_back(listItem);
+		SelectFromListMenuItem *listItem = new SelectFromListMenuItem(TIME_SPEED_CAPTIONS, onchange_hotkey_flow_rate_callback);
+		listItem->wrap = false;
+		listItem->caption = "Global Game Speed";
+		listItem->value = HotkeyFlowRateIndex;
+		menuItems.push_back(listItem);
 
-	listItem = new SelectFromListMenuItem(TIME_SPEED_CAPTIONS, onchange_aiming_speed_callback);
-	listItem->wrap = false;
-	listItem->caption = "Game Speed While Aiming";
-	listItem->value = timeSpeedIndexWhileAiming;
-	menuItems.push_back(listItem);
+		listItem = new SelectFromListMenuItem(TIME_SPEED_CAPTIONS, onchange_aiming_speed_callback);
+		listItem->wrap = false;
+		listItem->caption = "Game Speed While Aiming";
+		listItem->value = timeSpeedIndexWhileAiming;
+		menuItems.push_back(listItem);
 
-	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Matrix Mode While Aiming";
-	togItem->value = 0;
-	togItem->toggleValue = &featureMatrixMode;
-	togItem->toggleValueUpdated = NULL;
-	menuItems.push_back(togItem);
+		togItem = new ToggleMenuItem<int>();
+		togItem->caption = "Matrix Mode While Aiming";
+		togItem->value = 0;
+		togItem->toggleValue = &featureMatrixMode;
+		togItem->toggleValueUpdated = NULL;
+		menuItems.push_back(togItem);
 
-	listItem = new SelectFromListMenuItem(TIME_FLOW_RATE_CAPTIONS, onchange_time_flow_rate_callback);
-	listItem->caption = "Time Flow Rate";
-	listItem->value = timeFlowRateIndex;
-	listItem->wrap = false;
-	listItem->onConfirmFunction = onconfirm_time_flow_rate;
-	menuItems.push_back(listItem);
+		listItem = new SelectFromListMenuItem(TIME_FLOW_RATE_CAPTIONS, onchange_time_flow_rate_callback);
+		listItem->caption = "Time Flow Rate";
+		listItem->value = timeFlowRateIndex;
+		listItem->wrap = false;
+		listItem->onConfirmFunction = onconfirm_time_flow_rate;
+		menuItems.push_back(listItem);
 
-	item = new MenuItem<int>();
-	item->caption = "Toggle Frozen Time On/Off";
-	item->value = 1;
-	item->isLeaf = true;
-	menuItems.push_back(item);
+		item = new MenuItem<int>();
+		item->caption = "Toggle Frozen Time On/Off";
+		item->value = 1;
+		item->isLeaf = true;
+		menuItems.push_back(item);
 
-	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Show Current In-game Time";
-	togItem->value = 0;
-	togItem->toggleValue = &featureShowtime;
-	togItem->toggleValueUpdated = NULL;
-	menuItems.push_back(togItem);
+		togItem = new ToggleMenuItem<int>();
+		togItem->caption = "Show Current In-game Time";
+		togItem->value = 0;
+		togItem->toggleValue = &featureShowtime;
+		togItem->toggleValueUpdated = NULL;
+		menuItems.push_back(togItem);
 
-	draw_generic_menu<int>(menuItems, nullptr, "Time Flow Rate Options", onconfirm_time_flowrate_menu, nullptr, nullptr, nullptr);
+		draw_generic_menu<int>(menuItems, nullptr, "Time Flow Rate Options", onconfirm_time_flowrate_menu, nullptr, nullptr, flowtime_menu_interrupt);
+	}
+	while (requireRefreshOfTime);
 }
 
 void process_time_set_menu(){

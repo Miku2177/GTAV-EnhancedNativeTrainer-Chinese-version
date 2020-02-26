@@ -311,7 +311,7 @@ bool process_bod_skinchanger_drawable_menu(std::string caption, int component)
 
 	//int currentDrawable = PED::GET_PED_DRAWABLE_VARIATION(PLAYER::PLAYER_PED_ID(), component);
 	int currentDrawable = PED::GET_PED_DRAWABLE_VARIATION(spawnedENTBodyguards[b_curr_num], component);
-	draw_generic_menu<int>(menuItems, &currentDrawable, ss.str(), onconfirm_bod_skinchanger_drawable_menu, onhighlight_bod_skinchanger_drawable_menu, onexit_bod_skinchanger_drawable_menu, skin_menu_interrupt);
+	draw_generic_menu<int>(menuItems, &currentDrawable, ss.str(), onconfirm_bod_skinchanger_drawable_menu, onhighlight_bod_skinchanger_drawable_menu, onexit_bod_skinchanger_drawable_menu, b_skin_menu_interrupt);
 	return false;
 }
 
@@ -328,7 +328,7 @@ bool onconfirm_bodskinchanger_detail_menu(MenuItem<int> choice)
 	return process_bod_skinchanger_drawable_menu(choice.caption, choice.value);
 }
 
-bool skin_menu_interrupt() { // bodyguards_main_menu_interrupt
+bool b_skin_menu_interrupt() {
 	if (!ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID())) return true;
 
 	if (spawnedENTBodyguards.size() == 0) {
@@ -387,7 +387,7 @@ bool process_bod_skinchanger_detail_menu()
 		}
 		STREAMING::SET_MODEL_AS_NO_LONGER_NEEDED(model);
 	}
-	return draw_generic_menu<int>(menuItems, &skinBodDetailMenuIndex, "Skin Details", onconfirm_bodskinchanger_detail_menu, onhighlight_bodskinchanger_detail_menu, NULL, skin_menu_interrupt);
+	return draw_generic_menu<int>(menuItems, &skinBodDetailMenuIndex, "Skin Details", onconfirm_bodskinchanger_detail_menu, onhighlight_bodskinchanger_detail_menu, NULL, b_skin_menu_interrupt);
 }
 // end of 'modify skin'
 
