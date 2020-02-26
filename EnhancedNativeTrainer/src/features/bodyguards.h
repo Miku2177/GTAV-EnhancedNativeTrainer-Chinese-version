@@ -63,6 +63,8 @@ void handle_generic_settings_bodyguards(std::vector<StringPairSettingDBRow>* set
 
 bool bodyguards_main_menu_interrupt();
 
+bool skin_menu_interrupt();
+
 void maintain_bodyguards();
 
 void onchange_body_blipsize_index(int value, SelectFromListMenuItem* source);

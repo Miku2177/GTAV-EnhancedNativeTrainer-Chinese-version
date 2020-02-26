@@ -311,7 +311,7 @@ bool process_bod_skinchanger_drawable_menu(std::string caption, int component)
 
 	//int currentDrawable = PED::GET_PED_DRAWABLE_VARIATION(PLAYER::PLAYER_PED_ID(), component);
 	int currentDrawable = PED::GET_PED_DRAWABLE_VARIATION(spawnedENTBodyguards[b_curr_num], component);
-	draw_generic_menu<int>(menuItems, &currentDrawable, ss.str(), onconfirm_bod_skinchanger_drawable_menu, onhighlight_bod_skinchanger_drawable_menu, onexit_bod_skinchanger_drawable_menu);
+	draw_generic_menu<int>(menuItems, &currentDrawable, ss.str(), onconfirm_bod_skinchanger_drawable_menu, onhighlight_bod_skinchanger_drawable_menu, onexit_bod_skinchanger_drawable_menu, skin_menu_interrupt);
 	return false;
 }
 
@@ -326,6 +326,17 @@ bool onconfirm_bodskinchanger_detail_menu(MenuItem<int> choice)
 	skinBodDetailMenuValue = choice.value;
 
 	return process_bod_skinchanger_drawable_menu(choice.caption, choice.value);
+}
+
+bool skin_menu_interrupt() { // bodyguards_main_menu_interrupt
+	if (!ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID())) return true;
+
+	if (spawnedENTBodyguards.size() == 0) {
+		set_status_text("~r~All bodyguards are dead");
+		return true;
+	}
+
+	return false;
 }
 
 bool process_bod_skinchanger_detail_menu()
@@ -376,7 +387,7 @@ bool process_bod_skinchanger_detail_menu()
 		}
 		STREAMING::SET_MODEL_AS_NO_LONGER_NEEDED(model);
 	}
-	return draw_generic_menu<int>(menuItems, &skinBodDetailMenuIndex, "Skin Details", onconfirm_bodskinchanger_detail_menu, onhighlight_bodskinchanger_detail_menu, NULL);
+	return draw_generic_menu<int>(menuItems, &skinBodDetailMenuIndex, "Skin Details", onconfirm_bodskinchanger_detail_menu, onhighlight_bodskinchanger_detail_menu, NULL, skin_menu_interrupt);
 }
 // end of 'modify skin'
 
@@ -481,7 +492,7 @@ void save_current_bod_skin(int slot)
 	//Player player = PLAYER::PLAYER_ID();
 	//Ped playerPed = PLAYER::PLAYER_PED_ID();
 
-	std::string result_b_s = show_keyboard(NULL, NULL);
+	std::string result_b_s = show_keyboard("Number", NULL);
 	if (!result_b_s.empty())
 	{
 		result_b_s = trim(result_b_s);
@@ -779,7 +790,7 @@ bool onconfirm_bodyguard_skins_menu(MenuItem<int> choice){
 		}
 		case 4:
 		{
-			std::string result_b = show_keyboard(NULL, NULL);
+			std::string result_b = show_keyboard("Number", NULL);
 			if (!result_b.empty())
 			{
 				result_b = trim(result_b);
