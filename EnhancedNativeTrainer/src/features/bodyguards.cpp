@@ -19,6 +19,9 @@ int activeLineIndexBodyguards = 0;
 int myENTGroup = -1;
 int const BODYGUARD_LIMIT = 7;
 
+Ped cop_to_kill;
+float dist_diff = -1;
+
 int pop, all_selected = -1;
 std::vector<Hash> WEAPONS;
 
@@ -1118,6 +1121,7 @@ void dismiss_bodyguards(){
 	for(int i = 0; i < spawnedENTBodyguards.size(); i++){
 		ENTITY::SET_ENTITY_INVINCIBLE(spawnedENTBodyguards[i], false);
 		PED::SET_PED_NEVER_LEAVES_GROUP(spawnedENTBodyguards[i], false);
+		PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(spawnedENTBodyguards[i], false);
 		PED::REMOVE_PED_FROM_GROUP(spawnedENTBodyguards[i]);
 		if (featureBodyguardDespawn) {
 			AI::CLEAR_PED_TASKS(spawnedENTBodyguards[i]);
@@ -1135,6 +1139,8 @@ void dismiss_bodyguards(){
 		WEAPONS.clear();
 		WEAPONS.shrink_to_fit();
 	}
+	
+	dist_diff = -1;
 
 	set_status_text("Bodyguards dismissed");
 }
@@ -1303,19 +1309,15 @@ void do_spawn_bodyguard(){
 				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 5, true);
 				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 17, true);
 				PED::SET_PED_FLEE_ATTRIBUTES(bodyGuard, 0, false);
-				Hash temp_p = PED::GET_PED_RELATIONSHIP_GROUP_HASH(bodyGuard);
-				PED::ADD_RELATIONSHIP_GROUP("DogChop", &temp_p);
-				PED::SET_RELATIONSHIP_BETWEEN_GROUPS(2, myENTGroup, temp_p); // 0
-				PED::SET_RELATIONSHIP_BETWEEN_GROUPS(2, temp_p, myENTGroup);
 				PED::SET_PED_CAN_BE_TARGETTED(bodyGuard, true);
-				WEAPON::GIVE_WEAPON_TO_PED(bodyGuard, -1569615261, 1, false, true);
-				PED::SET_PED_CONFIG_FLAG(bodyGuard, 281, true);
 			}
 			//
 			
-			if (bodyguard_animal == false) PED::SET_PED_CAN_SWITCH_WEAPON(bodyGuard, true);
-			PED::SET_GROUP_FORMATION(myENTGroup, 1); // 1
-			PED::SET_GROUP_FORMATION_SPACING(myENTGroup, BODY_BLIPSIZE_VALUES[BodyDistanceIndex], BODY_BLIPSIZE_VALUES[BodyDistanceIndex], BODY_BLIPSIZE_VALUES[BodyDistanceIndex]); // 2.0, 2.0, 2.0
+			if (bodyguard_animal == false) {
+				PED::SET_PED_CAN_SWITCH_WEAPON(bodyGuard, true);
+				PED::SET_GROUP_FORMATION(myENTGroup, 1); // 1
+				PED::SET_GROUP_FORMATION_SPACING(myENTGroup, BODY_BLIPSIZE_VALUES[BodyDistanceIndex], BODY_BLIPSIZE_VALUES[BodyDistanceIndex], BODY_BLIPSIZE_VALUES[BodyDistanceIndex]); // 2.0, 2.0, 2.0
+			}
 			PED::SET_CAN_ATTACK_FRIENDLY(bodyGuard, false, false);
 
 			AI::TASK_COMBAT_HATED_TARGETS_AROUND_PED(bodyGuard, 100.0f, 0);
@@ -1430,15 +1432,16 @@ void maintain_bodyguards(){
 			WEAPONS.clear();
 			WEAPONS.shrink_to_fit();
 		}
+		dist_diff = -1;
 	}
 	
 	if (!spawnedENTBodyguards.empty()) { 
+		Vector3 my_coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 		for (int i = 0; i < spawnedENTBodyguards.size(); i++) {
 			// bodyguards swimming ability
 			if (ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID()) == 1 && !is_in_airbrake_mode() && PED::GET_PED_TYPE(spawnedENTBodyguards[i]) != 28 && stop_b == false) {
 				float height = -1.0;
 				Object taskSequence;
-				Vector3 my_coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 				Vector3 bod_coords = ENTITY::GET_ENTITY_COORDS(spawnedENTBodyguards[i], true);
 				WATER::GET_WATER_HEIGHT(my_coords.x, my_coords.y, my_coords.z, &height);
 				if ((my_coords.z < height) && ((height - my_coords.z) > 2) && ENTITY::IS_ENTITY_IN_WATER(spawnedENTBodyguards[i]) == 1) {
@@ -1458,18 +1461,44 @@ void maintain_bodyguards(){
 			//
 			// animals
 			if (animal_in_group == true) {
+				Vector3 cop_coords;
 				const int arrSize_animals = 1024;
 				Ped surr_animals[arrSize_animals];
 				int count_animals = worldGetAllPeds(surr_animals, arrSize_animals);
 				for (int k = 0; k < count_animals; k++) {
-					if (surr_animals[k] != PLAYER::PLAYER_PED_ID() && surr_animals[k] != spawnedENTBodyguards[i] && (PED::IS_PED_IN_MELEE_COMBAT(surr_animals[k]) || PED::IS_PED_SHOOTING(surr_animals[k]))) {
-						if (PED::GET_PED_TYPE(spawnedENTBodyguards[i]) == 28) { // && !PED::IS_PED_IN_MELEE_COMBAT(spawnedENTBodyguards[i])
-							PED::SET_PED_CAN_RAGDOLL(spawnedENTBodyguards[i], 0);
+					PED::SET_PED_CAN_RAGDOLL(spawnedENTBodyguards[i], 0);
+					if (dist_diff != -1) PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(spawnedENTBodyguards[i], true);
+					else PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(spawnedENTBodyguards[i], false);
+					if (surr_animals[k] != PLAYER::PLAYER_PED_ID() && surr_animals[k] != spawnedENTBodyguards[i] && PED::IS_PED_IN_MELEE_COMBAT(surr_animals[k])) {
+						if (PED::GET_PED_TYPE(spawnedENTBodyguards[i]) == 28) {
 							PED::SET_PED_AS_ENEMY(surr_animals[k], true);
 							AI::TASK_COMBAT_PED_TIMED(spawnedENTBodyguards[i], surr_animals[k], 50000, 16); // 50000
 						}
 					}
+					if (surr_animals[k] != PLAYER::PLAYER_PED_ID() && surr_animals[k] != spawnedENTBodyguards[i] && PED::IS_PED_SHOOTING(surr_animals[k])) {
+						if (PED::GET_PED_TYPE(spawnedENTBodyguards[i]) == 28) {
+							if (AI::IS_PED_STILL(spawnedENTBodyguards[i]) && dist_diff == -1) {
+								cop_to_kill = surr_animals[k];
+								cop_coords = ENTITY::GET_ENTITY_COORDS(cop_to_kill, true);
+								AI::TASK_GO_TO_COORD_ANY_MEANS(spawnedENTBodyguards[i], cop_coords.x, cop_coords.y, cop_coords.z, 3.0, 0, 0, 786603, 0xbf800000);
+							}
+							if (AI::IS_PED_STILL(spawnedENTBodyguards[i]) && dist_diff >= 2) {
+								cop_coords = ENTITY::GET_ENTITY_COORDS(cop_to_kill, true);
+								AI::TASK_GO_TO_COORD_ANY_MEANS(spawnedENTBodyguards[i], cop_coords.x, cop_coords.y, cop_coords.z, 3.0, 0, 0, 786603, 0xbf800000);
+							}
+							PED::SET_PED_AS_ENEMY(cop_to_kill, true);
+							Vector3 dog_coords = ENTITY::GET_ENTITY_COORDS(spawnedENTBodyguards[i], true);
+							cop_coords = ENTITY::GET_ENTITY_COORDS(cop_to_kill, true);
+							dist_diff = SYSTEM::VDIST(dog_coords.x, dog_coords.y, dog_coords.z, cop_coords.x, cop_coords.y, cop_coords.z);
+							if (/*AI::IS_PED_STILL(spawnedENTBodyguards[i]) && */dist_diff < 2) {
+								AI::TASK_COMBAT_PED_TIMED(spawnedENTBodyguards[i], cop_to_kill, 50000, 16); // AI::TASK_COMBAT_PED(spawnedENTBodyguards[i], cop_to_kill, 0, 16); // AI::TASK_COMBAT_HATED_TARGETS_AROUND_PED(spawnedENTBodyguards[i], 100.0, 0);
+								AI::TASK_WRITHE(cop_to_kill, spawnedENTBodyguards[i], 50000, 0);
+							}
+							if (ENTITY::IS_ENTITY_DEAD(cop_to_kill) || ENTITY::IS_ENTITY_DEAD(spawnedENTBodyguards[i]) || !ENTITY::DOES_ENTITY_EXIST(cop_to_kill)) dist_diff = -1;
+						} // end of is it animal
+					}
 				}
+				if (PED::IS_PED_FLEEING(spawnedENTBodyguards[i])) AI::TASK_STAND_STILL(spawnedENTBodyguards[i], 10000);
 			}
 			//
 			// modify skin
@@ -1491,8 +1520,6 @@ void maintain_bodyguards(){
 				UI::END_TEXT_COMMAND_DISPLAY_TEXT(0, 0);
 			}
 			//
-			PED::SET_PED_KEEP_TASK(spawnedENTBodyguards[i], true);
-			if (animal_in_group == true && PED::IS_PED_FLEEING(spawnedENTBodyguards[i])) AI::TASK_STAND_STILL(spawnedENTBodyguards[i], 10000);
 			
 			if (stop_b == false) {
 				PED::SET_PED_AS_GROUP_MEMBER(spawnedENTBodyguards[i], PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID()));
