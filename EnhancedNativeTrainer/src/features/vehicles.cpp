@@ -605,7 +605,7 @@ Vehicle find_nearest_vehicle() {
 	Ped surr_vehs[arrSize33];
 	int count_surr_vehs = worldGetAllVehicles(surr_vehs, arrSize33);
 	float dist_diff = -1.0;
-	float temp_dist = 20.0;
+	float temp_dist = 2000.0;
 	for (int i = 0; i < count_surr_vehs; i++) {
 		Vector3 coordsped = ENTITY::GET_ENTITY_COORDS(surr_vehs[i], true);
 		dist_diff = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsped.x, coordsped.y, coordsped.z);
@@ -623,7 +623,7 @@ Ped find_nearest_ped() {
 	Ped surr_peds[arrSize33];
 	int count_surr_vehs = worldGetAllPeds(surr_peds, arrSize33);
 	float dist_diff = -1.0;
-	float temp_dist = 20.0;
+	float temp_dist = 2000.0;
 	for (int i = 0; i < count_surr_vehs; i++) {
 		if (surr_peds[i] != PLAYER::PLAYER_PED_ID()) { // PED::GET_PED_TYPE(surr_peds[i]) != 0 && PED::GET_PED_TYPE(surr_peds[i]) != 1 && PED::GET_PED_TYPE(surr_peds[i]) != 2 && PED::GET_PED_TYPE(surr_peds[i]) != 3
 			Vector3 coordsped = ENTITY::GET_ENTITY_COORDS(surr_peds[i], true);
