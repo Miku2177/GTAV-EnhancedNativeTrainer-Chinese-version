@@ -1513,10 +1513,10 @@ void update_world_features()
 	// No Waypoint
 	if (featureNoWaypoint) UI::CLEAR_GPS_PLAYER_WAYPOINT();
 
-	//if (featureWorldNoTrafficUpdated)
-	//{
-	//	VEHICLE::_DISPLAY_DISTANT_VEHICLES(!featureWorldNoTraffic);
-	//	GRAPHICS::DISABLE_VEHICLE_DISTANTLIGHTS(featureWorldNoTraffic);
+	if (featureWorldNoTrafficUpdated)
+	{
+		VEHICLE::_DISPLAY_DISTANT_VEHICLES(!featureWorldNoTraffic);
+		GRAPHICS::DISABLE_VEHICLE_DISTANTLIGHTS(featureWorldNoTraffic);
 
 		if (featureWorldNoTraffic)
 		{
@@ -1537,9 +1537,9 @@ void update_world_features()
 			featureWorldNoTrafficUpdated = false;
 		}
 
-	//	featureWorldNoTrafficUpdated = false;
-	//}
-	/*if (featureWorldNoTraffic)
+		featureWorldNoTrafficUpdated = false;
+	}
+	if (featureWorldNoTraffic)
 	{
 		if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0))
 		{
@@ -1547,7 +1547,7 @@ void update_world_features()
 			GAMEPLAY::CLEAR_AREA_OF_VEHICLES(v3.x, v3.y, v3.z, 1000.0, 0, 0, 0, 0, 0);
 		}
 		STREAMING::SET_VEHICLE_POPULATION_BUDGET(0);
-	}*/
+	}
 
 	if (featureNoPlanesHelis) {
 		AI::SET_SCENARIO_GROUP_ENABLED("ALAMO_PLANES", 0);
