@@ -3474,18 +3474,24 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				VEHICLE::SET_VEHICLE_CAN_BREAK(vehnoflip, true);
 				VEHICLE::SET_VEHICLE_OUT_OF_CONTROL(vehnoflip, false, false);
 			}
-			if ((veh_flips_speed * 3.6) > 50 && (ENTITY::GET_ENTITY_ROLL(vehnoflip) > 50 || ENTITY::GET_ENTITY_ROLL(vehnoflip) < -50)) {
+			if ((veh_flips_speed * 2.3) > 50 && (ENTITY::GET_ENTITY_ROLL(vehnoflip) > 50 || ENTITY::GET_ENTITY_ROLL(vehnoflip) < -50)) { // (veh_flips_speed * 3.6) > 50
 				VEHICLE::SET_VEHICLE_CEILING_HEIGHT(vehnoflip, 0.0);
 				VEHICLE::SET_VEHICLE_DAMAGE(vehnoflip, veh_flip.x, veh_flip.y, veh_flip.z, 1000, 100, true);
 			}
-			if ((veh_flips_speed * 3.6) > 60 && ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(vehnoflip)) {
+			if (ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(vehnoflip)) {
 				VEHICLE::SET_VEHICLE_CAN_BREAK(vehnoflip, true);
-				VEHICLE::SET_VEHICLE_CEILING_HEIGHT(vehnoflip, 0.0);
-				VEHICLE::SET_VEHICLE_DAMAGE(vehnoflip, veh_flip.x, veh_flip.y, veh_flip.z, 1000, 100, true);
+				if ((veh_flips_speed * 2.3) > 70) {
+					VEHICLE::SET_VEHICLE_CEILING_HEIGHT(vehnoflip, 0.0);
+					VEHICLE::SET_VEHICLE_DAMAGE(vehnoflip, veh_flip.x, veh_flip.y, veh_flip.z, 500, 100, true);
+				}
+				if ((veh_flips_speed * 2.3) > 120) {
+					VEHICLE::SET_VEHICLE_CEILING_HEIGHT(vehnoflip, 0.0);
+					VEHICLE::SET_VEHICLE_DAMAGE(vehnoflip, veh_flip.x, veh_flip.y, veh_flip.z, 1000, 100, true);
+				}
 			}
 		}
 	}
-	
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////// REMEMBER STEERING ANGLE //////////////////////////// ORIGINAL CODE BY MRGTAMODSGERMAN 
