@@ -335,39 +335,40 @@ void check_player_model(){
 		}
 	}
 
-	if (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && !featureRespawnsWhereDied) { //  && is_player_reset_on_death()
-		if (!found) {
-			if (is_player_reset_on_death()) set_status_text("Resetting death state because a custom skin was used");
-			if (!is_player_reset_on_death()) {
-				Hash model_d = ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID());
-				if (model_d != GAMEPLAY::GET_HASH_KEY("a_c_dolphin") && model_d != GAMEPLAY::GET_HASH_KEY("a_c_sharkhammer") && model_d != GAMEPLAY::GET_HASH_KEY("a_c_humpback") &&
-					model_d != GAMEPLAY::GET_HASH_KEY("a_c_killerwhale") && model_d != GAMEPLAY::GET_HASH_KEY("a_c_stingray") && model_d != GAMEPLAY::GET_HASH_KEY("a_c_sharktiger") &&
-					model_d != GAMEPLAY::GET_HASH_KEY("a_c_fish") && model_d != GAMEPLAY::GET_HASH_KEY("a_c_whalegrey")) model_to_restore = model_d; // !ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && 
-			}
-			GAMEPLAY::_RESET_LOCALPLAYER_STATE();
-			//if (!is_player_reset_on_death()) WAIT(5500); // 8500
-			int spPlayerCount = sizeof(player_models) / sizeof(player_models[0]);
-			if (last_player_slot_seen < spPlayerCount) {
-				applyChosenSkin(player_models[last_player_slot_seen]);
-				if (!is_player_reset_on_death()) {
-					npc_player_died = true;
-					ENTITY::SET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID(), 0);
+	if (SKINS_RESET_SKIN_ONDEATH_VALUES[ResetSkinOnDeathIndex] != 2) {
+		if (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && !featureRespawnsWhereDied) {
+			if (!found) {
+				if (SKINS_RESET_SKIN_ONDEATH_VALUES[ResetSkinOnDeathIndex] == 0) set_status_text("Resetting death state because a custom skin was used"); // is_player_reset_on_death()
+				if (SKINS_RESET_SKIN_ONDEATH_VALUES[ResetSkinOnDeathIndex] == 1) { // !is_player_reset_on_death()
+					Hash model_d = ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID());
+					if (model_d != GAMEPLAY::GET_HASH_KEY("a_c_dolphin") && model_d != GAMEPLAY::GET_HASH_KEY("a_c_sharkhammer") && model_d != GAMEPLAY::GET_HASH_KEY("a_c_humpback") &&
+						model_d != GAMEPLAY::GET_HASH_KEY("a_c_killerwhale") && model_d != GAMEPLAY::GET_HASH_KEY("a_c_stingray") && model_d != GAMEPLAY::GET_HASH_KEY("a_c_sharktiger") &&
+						model_d != GAMEPLAY::GET_HASH_KEY("a_c_fish") && model_d != GAMEPLAY::GET_HASH_KEY("a_c_whalegrey")) model_to_restore = model_d; // !ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && 
 				}
-			}
-			else {
-				applyChosenSkin(mplayer_models[last_player_slot_seen - spPlayerCount]);
-				if (!is_player_reset_on_death()) {
-					npc_player_died = true;
-					ENTITY::SET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID(), 0);
+				GAMEPLAY::_RESET_LOCALPLAYER_STATE();
+				int spPlayerCount = sizeof(player_models) / sizeof(player_models[0]);
+				if (last_player_slot_seen < spPlayerCount) {
+					applyChosenSkin(player_models[last_player_slot_seen]);
+					if (SKINS_RESET_SKIN_ONDEATH_VALUES[ResetSkinOnDeathIndex] == 1) { // !is_player_reset_on_death()
+						npc_player_died = true;
+						ENTITY::SET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID(), 0);
+					}
 				}
+				else {
+					applyChosenSkin(mplayer_models[last_player_slot_seen - spPlayerCount]);
+					if (SKINS_RESET_SKIN_ONDEATH_VALUES[ResetSkinOnDeathIndex] == 1) { // !is_player_reset_on_death()
+						npc_player_died = true;
+						ENTITY::SET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID(), 0);
+					}
+				}
+				while (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) WAIT(0); // wait until player is resurrected
 			}
-			while (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) WAIT(0); // wait until player is resurrected
 		}
-	}
-
-	if (!featureRespawnsWhereDied && !is_player_reset_on_death() && npc_player_died == true && PLAYER::GET_TIME_SINCE_LAST_DEATH() > 100 && !ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID())) { //  && !ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID()) //  && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 10000 
-		npc_player_died = false;
-		if (npc_player_died == false && !ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID())) applyChosenSkin(model_to_restore);
+		if (!featureRespawnsWhereDied && SKINS_RESET_SKIN_ONDEATH_VALUES[ResetSkinOnDeathIndex] == 1 && npc_player_died == true && PLAYER::GET_TIME_SINCE_LAST_DEATH() > 100 && !ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && 
+			PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID())) { // !is_player_reset_on_death()
+			npc_player_died = false;
+			if (npc_player_died == false && !ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID())) applyChosenSkin(model_to_restore);
+		}
 	}
 }
 

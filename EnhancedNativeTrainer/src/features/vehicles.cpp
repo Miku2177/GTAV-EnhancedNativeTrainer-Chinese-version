@@ -3461,7 +3461,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-////////////////////////////////////////////////////// NO VEHICLE FLIP //////////////////////////////////////////////////////
+////////////////////////////////////////////////////// REALISTIC CRASHES //////////////////////////////////////////////////////
 
 	if (featureNoVehFlip) {
 		Vehicle vehnoflip = PED::GET_VEHICLE_PED_IS_IN(playerPed, 1);
@@ -3479,14 +3479,24 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				VEHICLE::SET_VEHICLE_DAMAGE(vehnoflip, veh_flip.x, veh_flip.y, veh_flip.z, 1000, 100, true);
 			}
 			if (ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(vehnoflip)) {
+				float t_coord = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
 				VEHICLE::SET_VEHICLE_CAN_BREAK(vehnoflip, true);
-				if ((veh_flips_speed * 2.3) > 70) {
+				if ((veh_flips_speed * 2.3) > 60) {
 					VEHICLE::SET_VEHICLE_CEILING_HEIGHT(vehnoflip, 0.0);
-					VEHICLE::SET_VEHICLE_DAMAGE(vehnoflip, veh_flip.x, veh_flip.y, veh_flip.z, 500, 100, true);
+					VEHICLE::SET_VEHICLE_DAMAGE(vehnoflip, veh_flip.x - t_coord, veh_flip.y - t_coord, veh_flip.z, 500, 100, true);
 				}
-				if ((veh_flips_speed * 2.3) > 120) {
+				if ((veh_flips_speed * 2.3) > 90) {
 					VEHICLE::SET_VEHICLE_CEILING_HEIGHT(vehnoflip, 0.0);
-					VEHICLE::SET_VEHICLE_DAMAGE(vehnoflip, veh_flip.x, veh_flip.y, veh_flip.z, 1000, 100, true);
+					VEHICLE::SET_VEHICLE_DAMAGE(vehnoflip, veh_flip.x - t_coord, veh_flip.y - t_coord, veh_flip.z, 1000, 100, true);
+					if (ENTITY::GET_ENTITY_HEALTH(vehnoflip) < 200) {
+						int randomize = rand() % 5 + 1;
+						VEHICLE::SET_VEHICLE_TYRE_BURST(vehnoflip, randomize, true, 1000.0);
+						VEHICLE::SET_VEHICLE_ENGINE_CAN_DEGRADE(vehnoflip, true);
+					}
+				}
+				if (ENTITY::GET_ENTITY_HEALTH(vehnoflip) < 1) {
+					VEHICLE::SET_VEHICLE_ENGINE_ON(vehnoflip, false, true);
+					VEHICLE::SET_VEHICLE_ENGINE_HEALTH(vehnoflip, -4000);
 				}
 			}
 		}
