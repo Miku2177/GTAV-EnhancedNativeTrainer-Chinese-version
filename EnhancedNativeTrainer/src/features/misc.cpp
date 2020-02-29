@@ -1897,14 +1897,13 @@ void handle_generic_settings_misc(std::vector<StringPairSettingDBRow>* settings)
 	}
 }
 
-bool is_player_reset_on_death(){
-	Hash dmHash = GAMEPLAY::GET_HASH_KEY("director_mode");
-	if(!featureResetPlayerModelOnDeath || SCRIPT::_GET_NUM_OF_INSTANCES_OF_SCRIPT_WITH_NAME_HASH(dmHash) > 0){
-		return false;
-	}
-
-	return true;
-}
+//bool is_player_reset_on_death(){
+//	Hash dmHash = GAMEPLAY::GET_HASH_KEY("director_mode");
+//	if(/*!featureResetPlayerModelOnDeath || */SCRIPT::_GET_NUM_OF_INSTANCES_OF_SCRIPT_WITH_NAME_HASH(dmHash) > 0){
+//		return false;
+//	}
+//	return true;
+//}
 
 bool is_vehicle_preview_enabled(){
 	return featureShowVehiclePreviews;

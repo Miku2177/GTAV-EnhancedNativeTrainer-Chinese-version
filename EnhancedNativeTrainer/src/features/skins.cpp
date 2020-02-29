@@ -26,7 +26,7 @@ DWORD model_to_restore = -1;
 bool DEBUG_MODE_SKINS = false;
 
 bool featurenoblood = false;
-bool featureResetPlayerModelOnDeath = false;
+//bool featureResetPlayerModelOnDeath = false;
 
 // auto skin variables
 bool featureautoskin = false;
@@ -47,6 +47,8 @@ int skinPropsCategoryValue = 0;
 int skinPropsDrawablePosition[10] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 int activeSavedSkinIndex = -1;
+int activeLineIndexSkinChanger = 0;
+
 std::string activeSavedSkinSlotName;
 int lastKnownSavedSkinCount = 0;
 bool skinSaveMenuInterrupt = false;
@@ -58,16 +60,27 @@ std::string lastCustomSkinSpawn;
 
 int skinTypesMenuPositionMemory[4] = { 0, 0, 0, 0 }; //player, animals, general, test
 
+// Reset Player Model On Death
+int ResetSkinOnDeathIndex = 0;
+bool ResetSkinOnDeathChanged = true;
+
 /***
 * METHODS
 */
 
+void onchange_skins_reset_skin_ondeath_index(int value, SelectFromListMenuItem* source) {
+	ResetSkinOnDeathIndex = value;
+	ResetSkinOnDeathChanged = true;
+}
+
 void reset_skin_globals()
 {
 	//chosenSkinName = "";
+	activeLineIndexSkinChanger = 0;
 	featurenoblood = false;
 	featureautoskin = false;
-	featureResetPlayerModelOnDeath = false;
+	ResetSkinOnDeathIndex = 0;
+	//featureResetPlayerModelOnDeath = false;
 }
 
 /*
@@ -678,13 +691,13 @@ bool onconfirm_skinchanger_category_menu(MenuItem<int> choice)
 
 bool onconfirm_skinchanger_menu(MenuItem<int> choice)
 {
-	skinMainMenuPosition = choice.currentMenuIndex;
+	//skinMainMenuPosition = choice.currentMenuIndex;
 
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	std::ostringstream ss;
 	int index = PED::GET_PED_PROP_INDEX(playerPed, 0);
 
-	switch (choice.value)
+	switch (activeLineIndexSkinChanger) // choice.value
 	{
 	case 0:
 		process_savedskin_menu();
@@ -775,6 +788,7 @@ bool process_skinchanger_category_menu()
 bool process_skinchanger_menu()
 {
 	std::vector<MenuItem<int>*> menuItems;
+	SelectFromListMenuItem *listItem;
 
 	MenuItem<int> *item;
 	int i = 0;
@@ -805,11 +819,17 @@ bool process_skinchanger_menu()
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
-	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Reset Player Model On Death";
-	toggleItem->value = i++;
-	toggleItem->toggleValue = &featureResetPlayerModelOnDeath;
-	menuItems.push_back(toggleItem);
+	//toggleItem = new ToggleMenuItem<int>();
+	//toggleItem->caption = "Reset Player Model On Death";
+	//toggleItem->value = i++;
+	//toggleItem->toggleValue = &featureResetPlayerModelOnDeath;
+	//menuItems.push_back(toggleItem);
+
+	listItem = new SelectFromListMenuItem(SKINS_RESET_SKIN_ONDEATH_CAPTIONS, onchange_skins_reset_skin_ondeath_index);
+	listItem->wrap = false;
+	listItem->caption = "Player Model";
+	listItem->value = ResetSkinOnDeathIndex;
+	menuItems.push_back(listItem);
 
 	item = new MenuItem<int>();
 	item->caption = "Modify Props";
@@ -853,7 +873,7 @@ bool process_skinchanger_menu()
 	toggleItem->toggleValue = &featureautoskin;
 	menuItems.push_back(toggleItem);
 
-	return draw_generic_menu<int>(menuItems, &skinMainMenuPosition, "Player Skin Options", onconfirm_skinchanger_menu, NULL, NULL);
+	return draw_generic_menu<int>(menuItems, &activeLineIndexSkinChanger, "Player Skin Options", onconfirm_skinchanger_menu, NULL, NULL); // skinMainMenuPosition
 }
 
 /**
@@ -1258,12 +1278,13 @@ void save_current_skin(int slot)
 void add_skin_generic_settings(std::vector<StringPairSettingDBRow>* results)
 {
 	results->push_back(StringPairSettingDBRow{ "lastCustomSkinSpawn", lastCustomSkinSpawn });
+	results->push_back(StringPairSettingDBRow{ "ResetSkinOnDeathIndex", std::to_string(ResetSkinOnDeathIndex) });
 }
 
 void add_player_skin_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results) {
 	results->push_back(FeatureEnabledLocalDefinition{ "featurenoblood", &featurenoblood });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureautoskin", &featureautoskin });
-	results->push_back(FeatureEnabledLocalDefinition{ "featureResetPlayerModelOnDeath", &featureResetPlayerModelOnDeath });
+	//results->push_back(FeatureEnabledLocalDefinition{ "featureResetPlayerModelOnDeath", &featureResetPlayerModelOnDeath });
 }
 
 void handle_generic_settings_skin(std::vector<StringPairSettingDBRow>* settings)
@@ -1274,6 +1295,9 @@ void handle_generic_settings_skin(std::vector<StringPairSettingDBRow>* settings)
 		if (setting.name.compare("lastCustomSkinSpawn") == 0)
 		{
 			lastCustomSkinSpawn = setting.value;
+		}
+		else if (setting.name.compare("ResetSkinOnDeathIndex") == 0) {
+			ResetSkinOnDeathIndex = stoi(setting.value);
 		}
 	}
 }
