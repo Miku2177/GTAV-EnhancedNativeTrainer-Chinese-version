@@ -1616,47 +1616,84 @@ void maintain_bodyguards(){
 					}
 				}
 				if (!B_VEHICLE.empty()) {
-					if (bod_pass == true && not_bodyguards_in_vehicle()) {
+					if (bod_pass == true/* && not_bodyguards_in_vehicle()*/) {
 						for (int n = 0; n < spawnedENTBodyguards.size(); n++) {
 							if (!PED::IS_PED_SITTING_IN_ANY_VEHICLE(spawnedENTBodyguards[n])) {
-								if (VEHICLE::GET_VEHICLE_MODEL_NUMBER_OF_SEATS(ENTITY::GET_ENTITY_MODEL(B_VEHICLE.back())) > 3 && VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE.back(), 2)) AI::TASK_ENTER_VEHICLE(spawnedENTBodyguards[n], B_VEHICLE.back(), 1000, 2, 2.0, 16, 0);
-								if (VEHICLE::GET_VEHICLE_MODEL_NUMBER_OF_SEATS(ENTITY::GET_ENTITY_MODEL(B_VEHICLE.back())) > 2 && VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE.back(), 1)) AI::TASK_ENTER_VEHICLE(spawnedENTBodyguards[n], B_VEHICLE.back(), 1000, 1, 2.0, 16, 0);
-								if (VEHICLE::GET_VEHICLE_MODEL_NUMBER_OF_SEATS(ENTITY::GET_ENTITY_MODEL(B_VEHICLE.back())) > 1 && VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE.back(), 0)) AI::TASK_ENTER_VEHICLE(spawnedENTBodyguards[n], B_VEHICLE.back(), 1000, 0, 2.0, 16, 0);
-								if (VEHICLE::GET_VEHICLE_MODEL_NUMBER_OF_SEATS(ENTITY::GET_ENTITY_MODEL(B_VEHICLE.back())) > 0 && VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE.back(), -1)) AI::TASK_ENTER_VEHICLE(spawnedENTBodyguards[n], B_VEHICLE.back(), 1000, -1, 2.0, 16, 0);
-								if (VEHICLE::GET_VEHICLE_MODEL_NUMBER_OF_SEATS(ENTITY::GET_ENTITY_MODEL(B_VEHICLE.back())) > 1 && !VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE.back(), 0)) {
+								for (int m = 0; m < B_VEHICLE.size(); m++) {
+									//if (VEHICLE::GET_VEHICLE_MODEL_NUMBER_OF_SEATS(ENTITY::GET_ENTITY_MODEL(B_VEHICLE.back())) > 3) {
 									bool added_already = false;
 									for (int tmp = 0; tmp < spawnedENTBodyguards.size(); tmp++) {
-										if (spawnedENTBodyguards[tmp] == VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE.back(), 0)) added_already = true;
+										if (spawnedENTBodyguards[tmp] == VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], 2)) added_already = true;
 									}
-									if (added_already == false) AI::TASK_ENTER_VEHICLE(spawnedENTBodyguards[n], B_VEHICLE.back(), 1000, 0, 2.0, 16, 0);
-								}
-								if (VEHICLE::GET_VEHICLE_MODEL_NUMBER_OF_SEATS(ENTITY::GET_ENTITY_MODEL(B_VEHICLE.back())) > 0 && !VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE.back(), -1)) {
-									bool added_already = false;
+									if (added_already == false) {
+										Ped temp_bodyguard_d = VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], 2);
+										PED::DELETE_PED(&temp_bodyguard_d);
+										AI::TASK_ENTER_VEHICLE(spawnedENTBodyguards[n], B_VEHICLE[m], 1000, 2, 2.0, 16, 0);
+									}
+									//}
+									//if (VEHICLE::GET_VEHICLE_MODEL_NUMBER_OF_SEATS(ENTITY::GET_ENTITY_MODEL(B_VEHICLE.back())) > 2) {
+									added_already = false;
 									for (int tmp = 0; tmp < spawnedENTBodyguards.size(); tmp++) {
-										if (spawnedENTBodyguards[tmp] == VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE.back(), -1)) added_already = true;
+										if (spawnedENTBodyguards[tmp] == VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], 1)) added_already = true;
 									}
-									if (added_already == false) AI::TASK_ENTER_VEHICLE(spawnedENTBodyguards[n], B_VEHICLE.back(), 1000, -1, 2.0, 16, 0);
+									if (added_already == false) {
+										Ped temp_bodyguard_d = VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], 1);
+										PED::DELETE_PED(&temp_bodyguard_d);
+										AI::TASK_ENTER_VEHICLE(spawnedENTBodyguards[n], B_VEHICLE[m], 1000, 1, 2.0, 16, 0);
+									}
+									//}
+									//if (VEHICLE::GET_VEHICLE_MODEL_NUMBER_OF_SEATS(ENTITY::GET_ENTITY_MODEL(B_VEHICLE.back())) > 1) {
+									added_already = false;
+									for (int tmp = 0; tmp < spawnedENTBodyguards.size(); tmp++) {
+										if (spawnedENTBodyguards[tmp] == VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], 0)) added_already = true;
+									}
+									if (added_already == false) {
+										Ped temp_bodyguard_d = VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], 0);
+										PED::DELETE_PED(&temp_bodyguard_d);
+										AI::TASK_ENTER_VEHICLE(spawnedENTBodyguards[n], B_VEHICLE[m], 1000, 0, 2.0, 16, 0);
+									}
+									//}
+									//if (VEHICLE::GET_VEHICLE_MODEL_NUMBER_OF_SEATS(ENTITY::GET_ENTITY_MODEL(B_VEHICLE.back())) > 0) {
+									added_already = false;
+									for (int tmp = 0; tmp < spawnedENTBodyguards.size(); tmp++) {
+										if (spawnedENTBodyguards[tmp] == VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], -1)) added_already = true;
+									}
+									if (added_already == false) {
+										Ped temp_bodyguard_d = VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], -1);
+										PED::DELETE_PED(&temp_bodyguard_d);
+										AI::TASK_ENTER_VEHICLE(spawnedENTBodyguards[n], B_VEHICLE[m], 1000, -1, 2.0, 16, 0);
+									}
+									//}
 								}
 							}
 						}
 					}
-					if ((VEHICLE::GET_VEHICLE_MODEL_NUMBER_OF_SEATS(ENTITY::GET_ENTITY_MODEL(B_VEHICLE.back())) == 4 && !VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE.back(), -1) && !VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE.back(), 0) &&
-						!VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE.back(), 1) && !VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE.back(), 2)) || (VEHICLE::GET_VEHICLE_MODEL_NUMBER_OF_SEATS(ENTITY::GET_ENTITY_MODEL(B_VEHICLE.back())) == 3 &&
-							!VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE.back(), -1) && !VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE.back(), 0) && !VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE.back(), 1)) ||
-							(VEHICLE::GET_VEHICLE_MODEL_NUMBER_OF_SEATS(ENTITY::GET_ENTITY_MODEL(B_VEHICLE.back())) == 2 && !VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE.back(), -1) && !VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE.back(), 0)) ||
-						(VEHICLE::GET_VEHICLE_MODEL_NUMBER_OF_SEATS(ENTITY::GET_ENTITY_MODEL(B_VEHICLE.back())) == 1 && !VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE.back(), -1)) && bod_pass == true) {
-						bod_pass = false;
-						me_to_follow = false;
+					if (not_bodyguards_in_vehicle()) {
+						for (int m = 0; m < B_VEHICLE.size(); m++) {
+							if ((VEHICLE::GET_VEHICLE_MODEL_NUMBER_OF_SEATS(ENTITY::GET_ENTITY_MODEL(B_VEHICLE[m])) == 4 && !VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE[m], -1) && !VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE[m], 0) &&
+								!VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE[m], 1) && !VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE[m], 2)) || (VEHICLE::GET_VEHICLE_MODEL_NUMBER_OF_SEATS(ENTITY::GET_ENTITY_MODEL(B_VEHICLE[m])) == 3 &&
+									!VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE[m], -1) && !VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE[m], 0) && !VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE[m], 1)) ||
+									(VEHICLE::GET_VEHICLE_MODEL_NUMBER_OF_SEATS(ENTITY::GET_ENTITY_MODEL(B_VEHICLE[m])) == 2 && !VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE[m], -1) && !VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE[m], 0)) ||
+								(VEHICLE::GET_VEHICLE_MODEL_NUMBER_OF_SEATS(ENTITY::GET_ENTITY_MODEL(B_VEHICLE[m])) == 1 && !VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE[m], -1)) && bod_pass == true) {
+								bod_pass = false;
+								me_to_follow = false;
+							}
+						}
 					}
-					if (me_to_follow == false && !VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE.back(), -1)) {
-						VEHICLE::SET_VEHICLE_ENGINE_ON(B_VEHICLE.back(), true, true);
-						PED::REGISTER_TARGET(VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE.back(), -1), PLAYER::PLAYER_PED_ID());
-						AI::SET_DRIVE_TASK_CRUISE_SPEED(VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE.back(), -1), 300.0);
-						AI::TASK_VEHICLE_CHASE(VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE.back(), -1), PLAYER::PLAYER_PED_ID());
-						AI::SET_TASK_VEHICLE_CHASE_IDEAL_PURSUIT_DISTANCE(VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE.back(), -1), 3.0f);
-						AI::SET_TASK_VEHICLE_CHASE_BEHAVIOR_FLAG(VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE.back(), -1), 32, true); // 786603
-						PED::SET_DRIVER_AGGRESSIVENESS(VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE.back(), -1), 0.0f);
-						PED::SET_DRIVER_ABILITY(VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE.back(), -1), 0.9f);
+					if (me_to_follow == false) {
+						for (int m = 0; m < B_VEHICLE.size(); m++) {
+							//if (!VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE[m], -1)) {
+								VEHICLE::SET_VEHICLE_ENGINE_ON(B_VEHICLE[m], true, true);
+								//PED::SET_PED_AS_ENEMY(PLAYER::PLAYER_PED_ID(), true);
+								//PED::REGISTER_TARGET(VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], -1), PLAYER::PLAYER_PED_ID());
+								AI::SET_DRIVE_TASK_CRUISE_SPEED(VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], -1), 300.0);
+								AI::TASK_VEHICLE_CHASE(VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], -1), PLAYER::PLAYER_PED_ID());
+								AI::SET_TASK_VEHICLE_CHASE_IDEAL_PURSUIT_DISTANCE(VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], -1), 60.0f);
+								AI::SET_TASK_VEHICLE_CHASE_BEHAVIOR_FLAG(VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], -1), 32, true); // 786603
+								//PED::SET_DRIVER_AGGRESSIVENESS(VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], -1), 0.0f);
+								PED::SET_DRIVER_ABILITY(VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], -1), 0.9f);
+							//}
+						}
 						me_to_follow = true;
 					}
 				}
@@ -1677,7 +1714,7 @@ void maintain_bodyguards(){
 				for (int n = 0; n < spawnedENTBodyguards.size(); n++) {
 					Vector3 coordsped = ENTITY::GET_ENTITY_COORDS(spawnedENTBodyguards[n], true);
 					dist_diff = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsped.x, coordsped.y, coordsped.z);
-					if (dist_diff > 250 && VEHICLE::GET_PED_IN_VEHICLE_SEAT(PED::GET_VEHICLE_PED_IS_USING(spawnedENTBodyguards[n]), -1) == spawnedENTBodyguards[n]) {
+					if (dist_diff > 250/* && VEHICLE::GET_PED_IN_VEHICLE_SEAT(PED::GET_VEHICLE_PED_IS_USING(spawnedENTBodyguards[n]), -1) == spawnedENTBodyguards[n]*/) { // 250
 						Vector3 closestRoad;
 						if (PATHFIND::GET_CLOSEST_ROAD(coordsme.x - 70, coordsme.y - 70, coordsme.z, 1.f, 1, &closestRoad, &closestRoad, 0, 0, 0, 0))
 						{
@@ -1685,19 +1722,32 @@ void maintain_bodyguards(){
 							me_to_follow = false;
 						}
 						//if (PED::IS_PED_SITTING_IN_ANY_VEHICLE(spawnedENTBodyguards[n]) && VEHICLE::GET_PED_IN_VEHICLE_SEAT(PED::GET_VEHICLE_PED_IS_USING(spawnedENTBodyguards[n]), -1) == spawnedENTBodyguards[n])
-						//	AI::TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE(spawnedENTBodyguards[n], PED::GET_VEHICLE_PED_IS_USING(spawnedENTBodyguards[n]), coordsme.x, coordsme.y, coordsme.z, 100.0f, 786468, 10.0f);
+						//	AI::TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE(spawnedENTBodyguards[n], PED::GET_VEHICLE_PED_IS_USING(spawnedENTBodyguards[n]), coordsme.x, coordsme.y, coordsme.z, 100.0f, 786468, 5.0f);
 					}
 					if (PED::IS_PED_SHOOTING(spawnedENTBodyguards[n])) me_to_follow = false;
 				}
-				for (int g = 0; g < B_VEHICLE.size(); g++) {
-					if (ENTITY::DOES_ENTITY_EXIST(B_VEHICLE[g]) && VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[g], -1) == 0) {
-						bod_pass = false;
-						me_to_follow = false;
-					}
+				//for (int g = 0; g < B_VEHICLE.size(); g++) {
+				//	if (ENTITY::DOES_ENTITY_EXIST(B_VEHICLE[g]) && VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[g], -1) == 0) {
+				//		bod_pass = false;
+				//		me_to_follow = false;
+				//	}
+				//}
+				if (not_bodyguards_in_vehicle()) {
+					bod_pass = false;
+					me_to_follow = false;
 				}
 			}
 		} // end of bodyguards follow you in vehicle
 	} // end of if (!spawnedENTBodyguards.empty())
+
+	std::stringstream ss55;
+	ss55 << "\n S: " << B_VEHICLE.size();
+	ss55 << "\n dist_diff: " << dist_diff;
+	//ss55 << "\n dist_diff: " << dist_diff;
+	//ss55 << "\n temp_dist: " << temp_dist;
+	callsPerFrame = 0;
+	set_status_text_centre_screen(ss55.str());
+
 } // end of void maintain_bodyguards()
 
 bool process_bodyguard_menu(){
