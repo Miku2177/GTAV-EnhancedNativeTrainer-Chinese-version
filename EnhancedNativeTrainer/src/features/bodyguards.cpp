@@ -38,7 +38,7 @@ bool featureBodyguardHelmet = false;
 bool featureBodyguardDespawn = true;
 bool featureDifferentWeapons = false;
 bool featureRandomApp = false;
-bool featureFollowInVehicle = false;
+//bool featureFollowInVehicle = false;
 bool featureBodyguardOnMap = false;
 bool featureBodyguardInfAmmo = false;
 
@@ -112,6 +112,8 @@ const std::vector<std::string> BODY_BLIPFLASH_CAPTIONS{ "OFF", "Mode One", "Mode
 const int BODY_BLIPFLASH_VALUES[] = { 0, 1, 2 };
 int BodyBlipFlashIndex = 0;
 bool BodyBlipFlash_Changed = true;
+int FollowInVehicleIndex = 0;
+bool FollowInVehicleChanged = true;
 
 const std::vector<std::string> SKINS_ANIMALS_CAPTIONS{ "Chop", "German Shepherd", "Husky", "Mountain Lion", "Retriever" };
 const std::vector<std::string> SKINS_ANIMALS_VALUES{ "a_c_chop", "a_c_shepherd", "a_c_husky", "a_c_mtlion", "a_c_retriever" };
@@ -1567,7 +1569,7 @@ void maintain_bodyguards(){
 		} // end of for (int i = 0; i < spawnedENTBodyguards.size(); i++)
 		
 		// bodyguards follow you in vehicle
-		if (featureFollowInVehicle) {
+		if (BODY_BLIPFLASH_VALUES[FollowInVehicleIndex] > 0) {
 			Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 			if (PED::IS_PED_SITTING_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID())) {
 				Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
@@ -1674,8 +1676,8 @@ void maintain_bodyguards(){
 						for (int m = 0; m < B_VEHICLE.size(); m++) {
 							VEHICLE::SET_VEHICLE_ENGINE_ON(B_VEHICLE[m], true, true);
 							AI::SET_DRIVE_TASK_CRUISE_SPEED(VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], -1), 300.0);
-							AI::TASK_VEHICLE_CHASE(VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], -1), PLAYER::PLAYER_PED_ID());
-							//AI::_TASK_VEHICLE_FOLLOW(VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], -1), B_VEHICLE[m], veh, 786468, 200.0, 5);
+							if (BODY_BLIPFLASH_VALUES[FollowInVehicleIndex] == 1) AI::TASK_VEHICLE_CHASE(VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], -1), PLAYER::PLAYER_PED_ID());
+							if (BODY_BLIPFLASH_VALUES[FollowInVehicleIndex] == 2) AI::TASK_VEHICLE_ESCORT(VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], -1), B_VEHICLE[m], veh, -1, 140.0f, 32, 10, 1, 1); // 786468
 							AI::SET_TASK_VEHICLE_CHASE_IDEAL_PURSUIT_DISTANCE(VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], -1), 60.0f);
 							AI::SET_TASK_VEHICLE_CHASE_BEHAVIOR_FLAG(VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], -1), 32, true); // 786603
 							PED::SET_DRIVER_AGGRESSIVENESS(VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], -1), 0.1f);
@@ -1832,12 +1834,18 @@ bool process_bodyguard_menu(){
 		toggleItem->toggleValueUpdated = NULL;
 		menuItems.push_back(toggleItem);
 
-		toggleItem = new ToggleMenuItem<int>();
+		/*toggleItem = new ToggleMenuItem<int>();
 		toggleItem->caption = "Follow In Vehicle";
 		toggleItem->value = i++;
 		toggleItem->toggleValue = &featureFollowInVehicle;
 		toggleItem->toggleValueUpdated = NULL;
-		menuItems.push_back(toggleItem);
+		menuItems.push_back(toggleItem);*/
+
+		listItem = new SelectFromListMenuItem(BODY_BLIPFLASH_CAPTIONS, onchange_follow_invehicle_index);
+		listItem->wrap = false;
+		listItem->caption = "Follow In Vehicle";
+		listItem->value = FollowInVehicleIndex;
+		menuItems.push_back(listItem);
 
 		if(!bodyguardWeaponsToggleInitialized){
 			for(int a = 0; a < MENU_WEAPON_CATEGORIES.size(); a++){
@@ -1905,7 +1913,7 @@ void add_bodyguards_feature_enablements(std::vector<FeatureEnabledLocalDefinitio
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardDespawn", &featureBodyguardDespawn});
 	results->push_back(FeatureEnabledLocalDefinition{"featureDifferentWeapons", &featureDifferentWeapons});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRandomApp", &featureRandomApp});
-	results->push_back(FeatureEnabledLocalDefinition{"featureFollowInVehicle", &featureFollowInVehicle});
+	//results->push_back(FeatureEnabledLocalDefinition{"featureFollowInVehicle", &featureFollowInVehicle});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardOnMap", &featureBodyguardOnMap});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyBlipNumber", &featureBodyBlipNumber});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardInfAmmo", &featureBodyguardInfAmmo});
@@ -1918,6 +1926,7 @@ void add_bodyguards_feature_enablements2(std::vector<StringPairSettingDBRow>* re
 	results->push_back(StringPairSettingDBRow{ "BodyBlipColourIndex", std::to_string(BodyBlipColourIndex) });
 	results->push_back(StringPairSettingDBRow{ "BodyBlipSymbolIndex", std::to_string(BodyBlipSymbolIndex) });
 	results->push_back(StringPairSettingDBRow{ "BodyBlipFlashIndex", std::to_string(BodyBlipFlashIndex) });
+	results->push_back(StringPairSettingDBRow{ "FollowInVehicleIndex", std::to_string(FollowInVehicleIndex) });
 }
 
 void add_bodyguards_generic_settings(std::vector<StringPairSettingDBRow>* results){
@@ -1961,6 +1970,9 @@ void handle_generic_settings_bodyguards(std::vector<StringPairSettingDBRow>* set
 		else if (setting.name.compare("BodyBlipFlashIndex") == 0){
 			BodyBlipFlashIndex = stoi(setting.value);
 		}
+		else if (setting.name.compare("FollowInVehicleIndex") == 0) {
+			FollowInVehicleIndex = stoi(setting.value);
+		}
 		else if (setting.name.compare("lastCustomBodyguardSpawn") == 0) {
 			lastCustomBodyguardSpawn = setting.value;
 		}
@@ -1985,12 +1997,13 @@ void reset_bodyguards_globals(){
 	featureBodyguardInfAmmo = false;
 	featureDifferentWeapons = false;
 	featureRandomApp = false;
-	featureFollowInVehicle = false;
+	//featureFollowInVehicle = false;
 	BodyBlipSizeIndex = 2;
 	BodyDistanceIndex = 7;
 	BodyBlipColourIndex = 0;
 	BodyBlipSymbolIndex = 0;
 	BodyBlipFlashIndex = 0;
+	FollowInVehicleIndex = 0;
 }
 
 void onchange_body_blipsize_index(int value, SelectFromListMenuItem* source){
@@ -2001,6 +2014,11 @@ void onchange_body_blipsize_index(int value, SelectFromListMenuItem* source){
 void onchange_body_distance_index(int value, SelectFromListMenuItem* source) {
 	BodyDistanceIndex = value;
 	BodyDistance_Changed = true;
+}
+
+void onchange_follow_invehicle_index(int value, SelectFromListMenuItem* source) {
+	FollowInVehicleIndex = value;
+	FollowInVehicleChanged = true;
 }
 
 void onchange_body_blipcolour_index(int value, SelectFromListMenuItem* source){
