@@ -2535,7 +2535,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 
 	// Nitrous
-	if (featureNitro && CONTROLS::IS_CONTROL_PRESSED(2, 61) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) { // VehicleMoveUpOnly
+	if (featureNitro && CONTROLS::IS_CONTROL_PRESSED(2, 131) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) { // VehicleMoveUpOnly 61 VehicleSubAscend 131
 		Vehicle my_veh = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		STREAMING::REQUEST_NAMED_PTFX_ASSET("core");
 		while (!STREAMING::HAS_NAMED_PTFX_ASSET_LOADED("core")) WAIT(0);
