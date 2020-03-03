@@ -108,12 +108,16 @@ int BodyBlipSymbolIndex = 0;
 bool BodyBlipSymbol_Changed = true;
 
 //Blip Flashing
-const std::vector<std::string> BODY_BLIPFLASH_CAPTIONS{ "OFF", "Mode One", "Mode Two" };
-const int BODY_BLIPFLASH_VALUES[] = { 0, 1, 2 };
+//const std::vector<std::string> BODY_BLIPFLASH_CAPTIONS{ "OFF", "Mode One", "Mode Two" };
+//const int BODY_BLIPFLASH_VALUES[] = { 0, 1, 2 };
 int BodyBlipFlashIndex = 0;
 bool BodyBlipFlash_Changed = true;
 int FollowInVehicleIndex = 0;
 bool FollowInVehicleChanged = true;
+
+//Bodyguard Health
+int BodyHealthIndex = 6;
+bool BodyHealthChanged = true;
 
 const std::vector<std::string> SKINS_ANIMALS_CAPTIONS{ "Chop", "German Shepherd", "Husky", "Mountain Lion", "Retriever" };
 const std::vector<std::string> SKINS_ANIMALS_VALUES{ "a_c_chop", "a_c_shepherd", "a_c_husky", "a_c_mtlion", "a_c_retriever" };
@@ -1088,7 +1092,7 @@ void process_bodyguard_blips_menu(){
 	listItem->value = BodyBlipSymbolIndex;
 	menuItems.push_back(listItem);
 
-	listItem = new SelectFromListMenuItem(BODY_BLIPFLASH_CAPTIONS, onchange_body_blipflash_index);
+	listItem = new SelectFromListMenuItem(LIMP_IF_INJURED_CAPTIONS, onchange_body_blipflash_index);
 	listItem->wrap = false;
 	listItem->caption = "Blip Flashing";
 	listItem->value = BodyBlipFlashIndex;
@@ -1292,8 +1296,8 @@ void do_spawn_bodyguard(){
 				else UI::SET_BLIP_SPRITE(blip_body[0], BODY_BLIPSYMBOL_VALUES[0]);
 				UI::SET_BLIP_CATEGORY(blip_body[0], 2);
 				if (featureBodyBlipNumber) UI::SHOW_NUMBER_ON_BLIP(blip_body[0], BLIPTABLE_BODYGUARD.size());
-				if (BODY_BLIPFLASH_VALUES[BodyBlipFlashIndex] == 1) UI::SET_BLIP_FLASHES(blip_body[0], true);
-				if (BODY_BLIPFLASH_VALUES[BodyBlipFlashIndex] == 2) UI::SET_BLIP_FLASHES_ALTERNATE(blip_body[0], true);
+				if (LIMP_IF_INJURED_VALUES[BodyBlipFlashIndex] == 1) UI::SET_BLIP_FLASHES(blip_body[0], true);
+				if (LIMP_IF_INJURED_VALUES[BodyBlipFlashIndex] == 2) UI::SET_BLIP_FLASHES_ALTERNATE(blip_body[0], true);
 				UI::SET_BLIP_SCALE(blip_body[0], BODY_BLIPSIZE_VALUES[BodyBlipSizeIndex]);
 				UI::SET_BLIP_COLOUR(blip_body[0], BODY_BLIPCOLOUR_VALUES[BodyBlipColourIndex]);
 				UI::SET_BLIP_AS_SHORT_RANGE(blip_body[0], true);
@@ -1399,6 +1403,13 @@ void do_spawn_bodyguard(){
 				PED::SET_PED_RANDOM_COMPONENT_VARIATION(bodyGuard, true);
 				PED::SET_PED_RANDOM_PROPS(bodyGuard);
 				WAIT(0);
+			}
+			//
+
+			// bodyguard health
+			if (PLAYER_HEALTH_VALUES[BodyHealthIndex] > 0) {
+				PED::SET_PED_MAX_HEALTH(bodyGuard, PLAYER_HEALTH_VALUES[BodyHealthIndex]);
+				ENTITY::SET_ENTITY_HEALTH(bodyGuard, PLAYER_HEALTH_VALUES[BodyHealthIndex]);
 			}
 			//
 
@@ -1569,7 +1580,7 @@ void maintain_bodyguards(){
 		} // end of for (int i = 0; i < spawnedENTBodyguards.size(); i++)
 		
 		// bodyguards follow you in vehicle
-		if (BODY_BLIPFLASH_VALUES[FollowInVehicleIndex] > 0) {
+		if (LIMP_IF_INJURED_VALUES[FollowInVehicleIndex] > 0) {
 			Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 			if (PED::IS_PED_SITTING_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID())) {
 				Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
@@ -1676,8 +1687,8 @@ void maintain_bodyguards(){
 						for (int m = 0; m < B_VEHICLE.size(); m++) {
 							VEHICLE::SET_VEHICLE_ENGINE_ON(B_VEHICLE[m], true, true);
 							AI::SET_DRIVE_TASK_CRUISE_SPEED(VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], -1), 300.0);
-							if (BODY_BLIPFLASH_VALUES[FollowInVehicleIndex] == 1) AI::TASK_VEHICLE_CHASE(VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], -1), PLAYER::PLAYER_PED_ID());
-							if (BODY_BLIPFLASH_VALUES[FollowInVehicleIndex] == 2) AI::TASK_VEHICLE_ESCORT(VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], -1), B_VEHICLE[m], veh, -1, 140.0f, 32, 10, 1, 1); // 786468
+							if (LIMP_IF_INJURED_VALUES[FollowInVehicleIndex] == 1) AI::TASK_VEHICLE_CHASE(VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], -1), PLAYER::PLAYER_PED_ID());
+							if (LIMP_IF_INJURED_VALUES[FollowInVehicleIndex] == 2) AI::TASK_VEHICLE_ESCORT(VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], -1), B_VEHICLE[m], veh, -1, 140.0f, 32, 10, 1, 1); // 786468 32
 							AI::SET_TASK_VEHICLE_CHASE_IDEAL_PURSUIT_DISTANCE(VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], -1), 60.0f);
 							AI::SET_TASK_VEHICLE_CHASE_BEHAVIOR_FLAG(VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], -1), 32, true); // 786603
 							PED::SET_DRIVER_AGGRESSIVENESS(VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], -1), 0.1f);
@@ -1841,10 +1852,16 @@ bool process_bodyguard_menu(){
 		toggleItem->toggleValueUpdated = NULL;
 		menuItems.push_back(toggleItem);*/
 
-		listItem = new SelectFromListMenuItem(BODY_BLIPFLASH_CAPTIONS, onchange_follow_invehicle_index);
+		listItem = new SelectFromListMenuItem(LIMP_IF_INJURED_CAPTIONS, onchange_follow_invehicle_index);
 		listItem->wrap = false;
 		listItem->caption = "Follow In Vehicle";
 		listItem->value = FollowInVehicleIndex;
+		menuItems.push_back(listItem);
+
+		listItem = new SelectFromListMenuItem(PLAYER_HEALTH_CAPTIONS, onchange_body_health_index);
+		listItem->wrap = false;
+		listItem->caption = "Bodyguard Health";
+		listItem->value = BodyHealthIndex;
 		menuItems.push_back(listItem);
 
 		if(!bodyguardWeaponsToggleInitialized){
@@ -1927,6 +1944,7 @@ void add_bodyguards_feature_enablements2(std::vector<StringPairSettingDBRow>* re
 	results->push_back(StringPairSettingDBRow{ "BodyBlipSymbolIndex", std::to_string(BodyBlipSymbolIndex) });
 	results->push_back(StringPairSettingDBRow{ "BodyBlipFlashIndex", std::to_string(BodyBlipFlashIndex) });
 	results->push_back(StringPairSettingDBRow{ "FollowInVehicleIndex", std::to_string(FollowInVehicleIndex) });
+	results->push_back(StringPairSettingDBRow{ "BodyHealthIndex", std::to_string(BodyHealthIndex) });
 }
 
 void add_bodyguards_generic_settings(std::vector<StringPairSettingDBRow>* results){
@@ -1973,6 +1991,9 @@ void handle_generic_settings_bodyguards(std::vector<StringPairSettingDBRow>* set
 		else if (setting.name.compare("FollowInVehicleIndex") == 0) {
 			FollowInVehicleIndex = stoi(setting.value);
 		}
+		else if (setting.name.compare("BodyHealthIndex") == 0) {
+			BodyHealthIndex = stoi(setting.value);
+		}
 		else if (setting.name.compare("lastCustomBodyguardSpawn") == 0) {
 			lastCustomBodyguardSpawn = setting.value;
 		}
@@ -2004,6 +2025,7 @@ void reset_bodyguards_globals(){
 	BodyBlipSymbolIndex = 0;
 	BodyBlipFlashIndex = 0;
 	FollowInVehicleIndex = 0;
+	BodyHealthIndex = 6;
 }
 
 void onchange_body_blipsize_index(int value, SelectFromListMenuItem* source){
@@ -2019,6 +2041,11 @@ void onchange_body_distance_index(int value, SelectFromListMenuItem* source) {
 void onchange_follow_invehicle_index(int value, SelectFromListMenuItem* source) {
 	FollowInVehicleIndex = value;
 	FollowInVehicleChanged = true;
+}
+
+void onchange_body_health_index(int value, SelectFromListMenuItem* source) {
+	BodyHealthIndex = value;
+	BodyHealthChanged = true;
 }
 
 void onchange_body_blipcolour_index(int value, SelectFromListMenuItem* source){

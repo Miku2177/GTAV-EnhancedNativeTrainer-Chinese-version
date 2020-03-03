@@ -1221,7 +1221,7 @@ void update_world_features()
 			}
 			if (PLAYER_HEALTH_VALUES[PedsHealthIndex] > 0) { // Peds Health
 				if (!ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(bus_ped[i], PLAYER::PLAYER_PED_ID(), 1)) {
-					if (bus_ped[i] != PLAYER::PLAYER_PED_ID()) {
+					if (bus_ped[i] != PLAYER::PLAYER_PED_ID() && !PED::IS_PED_GROUP_MEMBER(bus_ped[i], myENTGroup)) {
 						PED::SET_PED_MAX_HEALTH(bus_ped[i], PLAYER_HEALTH_VALUES[PedsHealthIndex]);
 						ENTITY::SET_ENTITY_HEALTH(bus_ped[i], PLAYER_HEALTH_VALUES[PedsHealthIndex]);
 						PED::SET_PED_SUFFERS_CRITICAL_HITS(bus_ped[i], false); // no headshots

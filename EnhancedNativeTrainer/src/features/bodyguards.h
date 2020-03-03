@@ -73,6 +73,8 @@ void onchange_body_distance_index(int value, SelectFromListMenuItem* source);
 
 void onchange_follow_invehicle_index(int value, SelectFromListMenuItem* source);
 
+void onchange_body_health_index(int value, SelectFromListMenuItem* source);
+
 void onchange_body_blipcolour_index(int value, SelectFromListMenuItem* source);
 
 void onchange_body_blipsymbol_index(int value, SelectFromListMenuItem* source);

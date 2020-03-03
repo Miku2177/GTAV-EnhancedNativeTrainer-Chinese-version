@@ -167,8 +167,6 @@ int current_regen_speed = 4;
 bool current_regen_speed_changed = true;
 
 //Player Health
-const std::vector<std::string> PLAYER_HEALTH_CAPTIONS{ "OFF", "1", "10", "20", "30", "50", "100", "200", "300", "500", "1000", "5000", "10000", "20000", "30000" };
-const int PLAYER_HEALTH_VALUES[] = { 0, 101, 110, 120, 130, 150, 200, 300, 400, 600, 1100, 5100, 10100, 20100, 30100 };
 int current_player_health = 6;
 bool current_player_health_Changed = true;
 int PedsHealthIndex = 0;
@@ -189,8 +187,6 @@ int current_npc_ragdoll = 0;
 bool current_npc_ragdoll_Changed = true;
 
 //Limp If Injured
-const std::vector<std::string> LIMP_IF_INJURED_CAPTIONS{ "OFF", "Mode 1", "Mode 2" };
-const int LIMP_IF_INJURED_VALUES[] = { 0, 1, 2 };
 int current_limp_if_injured = 0;
 bool current_limp_if_injured_Changed = true;
 
