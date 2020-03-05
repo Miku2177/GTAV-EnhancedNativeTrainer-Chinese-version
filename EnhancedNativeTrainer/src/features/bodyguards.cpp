@@ -107,6 +107,12 @@ const std::vector<int> BODY_BLIPSYMBOL_VALUES{ 1, 6, 7, 8, 10, 11, 12, 13, 14, 1
 int BodyBlipSymbolIndex = 0;
 bool BodyBlipSymbol_Changed = true;
 
+//Group Formation
+const std::vector<std::string> BODY_GROUPFORMATION_CAPTIONS{ "Default", "Circle Around Leader", "Line With Leader At Center" };
+const std::vector<int> BODY_GROUPFORMATION_VALUES{ 0, 1, 3 };
+int BodyGroupFormationIndex = 1;
+bool BodyGroupFormationChanged = true;
+
 //Blip Flashing
 //const std::vector<std::string> BODY_BLIPFLASH_CAPTIONS{ "OFF", "Mode One", "Mode Two" };
 //const int BODY_BLIPFLASH_VALUES[] = { 0, 1, 2 };
@@ -784,7 +790,7 @@ bool onconfirm_bodyguard_skins_menu(MenuItem<int> choice){
 				result = trim(result);
 				lastCustomBodyguardSpawn = result;
 				Hash hash = GAMEPLAY::GET_HASH_KEY((char*)result.c_str());
-				if (lastCustomBodyguardSpawn != "random" && (!STREAMING::IS_MODEL_IN_CDIMAGE(hash) || !STREAMING::IS_MODEL_VALID(hash)))
+				if (lastCustomBodyguardSpawn != "random" && lastCustomBodyguardSpawn != "Random" && lastCustomBodyguardSpawn != "RANDOM" && (!STREAMING::IS_MODEL_IN_CDIMAGE(hash) || !STREAMING::IS_MODEL_VALID(hash)))
 				{
 					std::ostringstream ss;
 					ss << "Couldn't find model '" << result << "'";
@@ -792,7 +798,7 @@ bool onconfirm_bodyguard_skins_menu(MenuItem<int> choice){
 					lastCustomBodyguardSpawn = "";
 					return false;
 				}
-				if ((STREAMING::IS_MODEL_IN_CDIMAGE(hash) && STREAMING::IS_MODEL_VALID(hash)) || lastCustomBodyguardSpawn == "random")
+				if ((STREAMING::IS_MODEL_IN_CDIMAGE(hash) && STREAMING::IS_MODEL_VALID(hash)) || lastCustomBodyguardSpawn == "random" || lastCustomBodyguardSpawn == "Random" || lastCustomBodyguardSpawn == "RANDOM")
 				{
 					get_current_model_name();
 					requireRefreshOfBodyguardMainMenu = true;
@@ -1173,7 +1179,7 @@ void do_spawn_bodyguard(){
 	float random_category, random_bodyguard = -1;
 
 	// random bodyguard
-	if (lastCustomBodyguardSpawn == "random") {
+	if (lastCustomBodyguardSpawn == "random" || lastCustomBodyguardSpawn == "Random" || lastCustomBodyguardSpawn == "RANDOM") {
 		random_category = (rand() % 10 + 0); // UP MARGIN + DOWN MARGIN
 		if (random_category == 0) {
 			random_bodyguard = (rand() % SKINS_PLAYER_VALUES.size() + 0);
@@ -1189,7 +1195,7 @@ void do_spawn_bodyguard(){
 		}
 	}
 	
-	if (hotkey_boddyguard == false && lastCustomBodyguardSpawn != "random") bodyGuardModel = get_current_model_hash();
+	if (hotkey_boddyguard == false && lastCustomBodyguardSpawn != "random" && lastCustomBodyguardSpawn != "Random" && lastCustomBodyguardSpawn != "RANDOM") bodyGuardModel = get_current_model_hash();
 	if (hotkey_boddyguard == true) {
 		if (hotkey_b == false) {
 			hotkey_b = true;
@@ -1334,7 +1340,7 @@ void do_spawn_bodyguard(){
 			
 			if (bodyguard_animal == false) {
 				PED::SET_PED_CAN_SWITCH_WEAPON(bodyGuard, true);
-				PED::SET_GROUP_FORMATION(myENTGroup, 1); // 1
+				PED::SET_GROUP_FORMATION(myENTGroup, BODY_GROUPFORMATION_VALUES[BodyGroupFormationIndex]); // 1 
 				PED::SET_GROUP_FORMATION_SPACING(myENTGroup, BODY_BLIPSIZE_VALUES[BodyDistanceIndex], BODY_BLIPSIZE_VALUES[BodyDistanceIndex], BODY_BLIPSIZE_VALUES[BodyDistanceIndex]); // 2.0, 2.0, 2.0
 			}
 			PED::SET_CAN_ATTACK_FRIENDLY(bodyGuard, false, false);
@@ -1838,6 +1844,12 @@ bool process_bodyguard_menu(){
 		listItem->value = BodyDistanceIndex;
 		menuItems.push_back(listItem);
 
+		listItem = new SelectFromListMenuItem(BODY_GROUPFORMATION_CAPTIONS, onchange_body_groupformation_index);
+		listItem->wrap = false;
+		listItem->caption = "Group Formation";
+		listItem->value = BodyGroupFormationIndex;
+		menuItems.push_back(listItem);
+
 		toggleItem = new ToggleMenuItem<int>();
 		toggleItem->caption = "Random Appearance";
 		toggleItem->value = i++;
@@ -1940,6 +1952,7 @@ void add_bodyguards_feature_enablements2(std::vector<StringPairSettingDBRow>* re
 {
 	results->push_back(StringPairSettingDBRow{ "BodyBlipSizeIndex", std::to_string(BodyBlipSizeIndex) });
 	results->push_back(StringPairSettingDBRow{ "BodyDistanceIndex", std::to_string(BodyDistanceIndex) });
+	results->push_back(StringPairSettingDBRow{ "BodyGroupFormationIndex", std::to_string(BodyGroupFormationIndex) });
 	results->push_back(StringPairSettingDBRow{ "BodyBlipColourIndex", std::to_string(BodyBlipColourIndex) });
 	results->push_back(StringPairSettingDBRow{ "BodyBlipSymbolIndex", std::to_string(BodyBlipSymbolIndex) });
 	results->push_back(StringPairSettingDBRow{ "BodyBlipFlashIndex", std::to_string(BodyBlipFlashIndex) });
@@ -1975,6 +1988,9 @@ void handle_generic_settings_bodyguards(std::vector<StringPairSettingDBRow>* set
 		}
 		else if (setting.name.compare("BodyDistanceIndex") == 0) {
 			BodyDistanceIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("BodyGroupFormationIndex") == 0) {
+			BodyGroupFormationIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("BodyBlipColourIndex") == 0){
 			BodyBlipColourIndex = stoi(setting.value);
@@ -2021,6 +2037,7 @@ void reset_bodyguards_globals(){
 	//featureFollowInVehicle = false;
 	BodyBlipSizeIndex = 2;
 	BodyDistanceIndex = 7;
+	BodyGroupFormationIndex = 1;
 	BodyBlipColourIndex = 0;
 	BodyBlipSymbolIndex = 0;
 	BodyBlipFlashIndex = 0;
@@ -2036,6 +2053,11 @@ void onchange_body_blipsize_index(int value, SelectFromListMenuItem* source){
 void onchange_body_distance_index(int value, SelectFromListMenuItem* source) {
 	BodyDistanceIndex = value;
 	BodyDistance_Changed = true;
+}
+
+void onchange_body_groupformation_index(int value, SelectFromListMenuItem* source) {
+	BodyGroupFormationIndex = value;
+	BodyGroupFormationChanged = true;
 }
 
 void onchange_follow_invehicle_index(int value, SelectFromListMenuItem* source) {

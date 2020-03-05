@@ -4006,22 +4006,22 @@ void reset_vehicle_globals() {
 }
 
 bool onconfirm_carspawn_menu(MenuItem<int> choice){
-	if(choice.value == MENU_VEHICLE_CATEGORIES.size() - 1){
+	if (choice.value == MENU_VEHICLE_CATEGORIES.size() - 1){
 		// custom spawn
 		std::string result = show_keyboard(NULL, (char*) lastCustomVehicleSpawn.c_str());
-		if(!result.empty()){
+		if (!result.empty()){
 			result = trim(result);
 			lastCustomVehicleSpawn = result;
 			Hash hash = GAMEPLAY::GET_HASH_KEY((char*) result.c_str());
-			if(lastCustomVehicleSpawn != "random" && (!STREAMING::IS_MODEL_IN_CDIMAGE(hash) || !STREAMING::IS_MODEL_A_VEHICLE(hash))){
+			if (lastCustomVehicleSpawn != "random" && lastCustomVehicleSpawn != "Random" && lastCustomVehicleSpawn != "RANDOM" && (!STREAMING::IS_MODEL_IN_CDIMAGE(hash) || !STREAMING::IS_MODEL_A_VEHICLE(hash))){
 				std::ostringstream ss;
 				ss << "~r~Error: Couldn't find model " << result;
 				set_status_text(ss.str());
 				return false;
 			}
-			if (lastCustomVehicleSpawn == "random" || (STREAMING::IS_MODEL_IN_CDIMAGE(hash) && STREAMING::IS_MODEL_A_VEHICLE(hash))) {
+			if (lastCustomVehicleSpawn == "random" || lastCustomVehicleSpawn == "Random" || lastCustomVehicleSpawn == "RANDOM" || (STREAMING::IS_MODEL_IN_CDIMAGE(hash) && STREAMING::IS_MODEL_A_VEHICLE(hash))) {
 				// random vehicle
-				if (lastCustomVehicleSpawn == "random") {
+				if (lastCustomVehicleSpawn == "random" || lastCustomVehicleSpawn == "Random" || lastCustomVehicleSpawn == "RANDOM") {
 					int random_category, random_veh = -1;
 					random_category = (rand() % 20 + 0); // UP MARGIN + DOWN MARGIN
 					if (random_category == 14) random_category = 13;
