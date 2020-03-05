@@ -97,7 +97,7 @@ bool featureAirStrike = false;
 bool featureEngineRunning = false;
 bool featureNoVehFlip = false;
 bool featureAutoToggleLights = false;
-bool featureNitro = false;
+//bool featureNitro = false;
 bool featureMileage = false;
 bool featureSeasharkLights = false;
 bool featureVehMassMult = false;
@@ -300,6 +300,10 @@ bool AutoShutEngineChanged = true;
 const std::vector<std::string> VEH_HYDRAULICS_CAPTIONS{ "OFF", "-0.20", "-0.10", "0.10", "0.20" };
 const std::vector<float> VEH_HYDRAULICS_VALUES{ 0.0f, -0.20f, -0.10f, 0.10f, 0.20f };
 int HydraulicsIndex = 0;
+
+// Nitrous
+int NitrousIndex = 0;
+bool NitrousChanged = true;
 
 // player in vehicle state... assume true initially since our quicksave might have us in a vehicle already, in which case we can't check if we just got into one
 bool oldVehicleState = true;
@@ -1945,11 +1949,17 @@ void process_veh_menu(){
 	listItem->value = InfiniteBoostIndex;
 	menuItems.push_back(listItem);
 
-	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Nitrous";
-	toggleItem->value = i++;
-	toggleItem->toggleValue = &featureNitro;
-	menuItems.push_back(toggleItem);
+	listItem = new SelectFromListMenuItem(LIMP_IF_INJURED_CAPTIONS, onchange_veh_nitrous_index);
+	listItem->wrap = false;
+	listItem->caption = "Nitrous";
+	listItem->value = NitrousIndex;
+	menuItems.push_back(listItem);
+
+	//toggleItem = new ToggleMenuItem<int>();
+	//toggleItem->caption = "Nitrous";
+	//toggleItem->value = i++;
+	//toggleItem->toggleValue = &featureNitro;
+	//menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Disable Despawn Of DLC Cars";
@@ -2535,7 +2545,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 
 	// Nitrous
-	if (featureNitro && CONTROLS::IS_CONTROL_PRESSED(2, 131) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) { // VehicleMoveUpOnly 61 VehicleSubAscend 131
+	if (LIMP_IF_INJURED_VALUES[NitrousIndex] > 0 && CONTROLS::IS_CONTROL_PRESSED(2, 131) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) { // VehicleMoveUpOnly 61 VehicleSubAscend 131
 		Vehicle my_veh = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		STREAMING::REQUEST_NAMED_PTFX_ASSET("core");
 		while (!STREAMING::HAS_NAMED_PTFX_ASSET_LOADED("core")) WAIT(0);
@@ -2548,11 +2558,11 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				GRAPHICS::START_PARTICLE_FX_NON_LOOPED_ON_ENTITY("veh_backfire", my_veh, exhaust_p_off.x, exhaust_p_off.y, exhaust_p_off.z, 0.0f, ENTITY::GET_ENTITY_PITCH(my_veh), 0.0f, 1.0f, false, false, false);
 			}
 		}
-		AUDIO::SET_VEHICLE_BOOST_ACTIVE(my_veh, true);
+		if (LIMP_IF_INJURED_VALUES[NitrousIndex] == 1) AUDIO::SET_VEHICLE_BOOST_ACTIVE(my_veh, true);
 		VEHICLE::_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(my_veh, 10.0);
 		nitro_e = true;
 	}
-	if (featureNitro && CONTROLS::IS_CONTROL_RELEASED(2, 61) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && nitro_e == true) {
+	if (LIMP_IF_INJURED_VALUES[NitrousIndex] > 0 && CONTROLS::IS_CONTROL_RELEASED(2, 61) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && nitro_e == true) {
 		VEHICLE::_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 1.0);
 		nitro_e = false;
 	}
@@ -3885,6 +3895,7 @@ void reset_vehicle_globals() {
 	VehMassMultIndex = 0;
 	current_player_forceshield = 0;
 	InfiniteBoostIndex = 0;
+	NitrousIndex = 0;
 	SpeedSizeIndex = 0;
 	SpeedPositionIndex = 0;
 
@@ -3951,7 +3962,7 @@ void reset_vehicle_globals() {
 		featureEngineRunning =
 		featureNoVehFlip =
 		featureAutoToggleLights =
-		featureNitro =
+		//featureNitro =
 		featureMileage = 
 		featureSeasharkLights =
 		featureRememberVehicles =
@@ -4257,7 +4268,7 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureEngineRunning", &featureEngineRunning});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoVehFlip", &featureNoVehFlip});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAutoToggleLights", &featureAutoToggleLights});
-	results->push_back(FeatureEnabledLocalDefinition{"featureNitro", &featureNitro});
+	//results->push_back(FeatureEnabledLocalDefinition{"featureNitro", &featureNitro});
 	results->push_back(FeatureEnabledLocalDefinition{"featureMileage", &featureMileage});
 	results->push_back(FeatureEnabledLocalDefinition{"featureSeasharkLights", &featureSeasharkLights});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRememberVehicles", &featureRememberVehicles});
@@ -4734,6 +4745,7 @@ void add_vehicle_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"VehMassMultIndex", std::to_string(VehMassMultIndex)});
 	results->push_back(StringPairSettingDBRow{"current_player_forceshield", std::to_string(current_player_forceshield)});
 	results->push_back(StringPairSettingDBRow{"InfiniteBoostIndex", std::to_string(InfiniteBoostIndex)});
+	results->push_back(StringPairSettingDBRow{"NitrousIndex", std::to_string(NitrousIndex)});
 	results->push_back(StringPairSettingDBRow{"TurnSignalsIndex", std::to_string(turnSignalsIndex)});
 	results->push_back(StringPairSettingDBRow{"turnSignalsAngleIndex", std::to_string(turnSignalsAngleIndex)});
 	results->push_back(StringPairSettingDBRow{"DoorAutolockIndex", std::to_string(DoorAutolockIndex)});
@@ -4819,6 +4831,9 @@ void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settin
 		}
 		else if (setting.name.compare("InfiniteBoostIndex") == 0) {
 			InfiniteBoostIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("NitrousIndex") == 0) {
+			NitrousIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("TurnSignalsIndex") == 0){
 			turnSignalsIndex = stoi(setting.value);
@@ -5049,6 +5064,11 @@ void onchange_player_forceshield_mode(int value, SelectFromListMenuItem* source)
 void onchange_veh_infiniteboost_index(int value, SelectFromListMenuItem* source) {
 	InfiniteBoostIndex = value;
 	InfiniteBoost_Changed = true;
+}
+
+void onchange_veh_nitrous_index(int value, SelectFromListMenuItem* source) {
+	NitrousIndex = value;
+	NitrousChanged = true;
 }
 
 void onchange_veh_turn_signals_index(int value, SelectFromListMenuItem* source){

@@ -261,6 +261,8 @@ void onchange_player_forceshield_mode(int value, SelectFromListMenuItem* source)
 
 void onchange_veh_infiniteboost_index(int value, SelectFromListMenuItem* source);
 
+void onchange_veh_nitrous_index(int value, SelectFromListMenuItem* source);
+
 void onchange_speed_size_index(int value, SelectFromListMenuItem* source);
 
 void onchange_speed_position_index(int value, SelectFromListMenuItem* source);
@@ -484,4 +486,4 @@ bool onconfirm_seat_menu(MenuItem<int> choice);
 
 bool process_veh_seat_menu();
 
-extern bool featureNitro;
+//extern bool featureNitro;
