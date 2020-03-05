@@ -96,6 +96,8 @@ void onchange_misc_phone_bill_index(int value, SelectFromListMenuItem* source);
 
 void onchange_misc_phone_default_index(int value, SelectFromListMenuItem* source);
 
+void onchange_misc_radio_off_index(int value, SelectFromListMenuItem* source);
+
 void onchange_misc_def_menutab_index(int value, SelectFromListMenuItem* source);
 
 void onchange_misc_phone_freeseconds_index(int value, SelectFromListMenuItem* source);

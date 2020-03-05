@@ -24,6 +24,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 int activeLineIndexTrainerConfig = 0;
 int activeLineIndexPhoneBill = 0;
+int activeLineIndexRadioSettings = 0;
 int activeLineIndexDefMenuTab = 0;
 int activeLineIndexBillSettings = 0;
 int activeLineIndexPhoneOnBike = 0;
@@ -98,8 +99,8 @@ bool featureDisablePhone = false;
 bool featureDisablePhoneMenu = false;
 bool featurePlayerRadioUpdated = false;
 bool featureRadioFreeze = false, featureRadioFreezeUpdated = false;
-bool featureRadioAlwaysOff = false;
-bool featureRadioAlwaysOffUpdated = false;
+//bool featureRadioAlwaysOff = false;
+//bool featureRadioAlwaysOffUpdated = false;
 bool featureBoostRadio = true;
 bool featureRealisticRadioVolume = false;
 bool featureWantedMusic = false;
@@ -192,6 +193,12 @@ const std::vector<std::string> MISC_PHONE_DEFAULT_CAPTIONS{ "OFF", "Michael's", 
 const int MISC_PHONE_DEFAULT_VALUES[] = { -1, 0, 1, 2, 3, 4 };
 int PhoneDefaultIndex = 0;
 bool PhoneDefaultChanged = true;
+
+// Radio Off
+const std::vector<std::string> MISC_RADIO_OFF_CAPTIONS{ "Default", "Always", "On Bike Only" };
+const int MISC_RADIO_OFF_VALUES[] = { 0, 1, 2 };
+int RadioOffIndex = 0;
+bool RadioOffChanged = true;
 
 void onchange_hotkey_function(int value, SelectFromListMenuItem* source){
 	change_hotkey_function(source->extras.at(0), value);
@@ -740,6 +747,77 @@ void process_phone_bill_menu(){
 	draw_generic_menu<int>(menuItems, &activeLineIndexPhoneBill, caption, onconfirm_phonebill_menu, NULL, NULL);
 }
 
+bool onconfirm_radiosettings_menu(MenuItem<int> choice) {
+	switch (activeLineIndexRadioSettings) {
+	case 1:
+		// next radio track
+		if (getGameVersion() > 41) SKIP_RADIO_FORWARD_CUSTOM();
+		else AUDIO::SKIP_RADIO_FORWARD();
+		break;
+	case 2:
+		process_misc_freezeradio_menu();
+		break;
+	default:
+		break;
+	}
+	return false;
+}
+
+void process_radio_settings_menu() {
+	std::string caption = "Radio Settings Options";
+
+	std::vector<MenuItem<int>*> menuItems;
+	SelectFromListMenuItem *listItem;
+	MenuItem<int> *item;
+
+	int i = 0;
+
+	ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Portable Radio";
+	toggleItem->toggleValue = &featurePlayerRadio;
+	menuItems.push_back(toggleItem);
+
+	item = new MenuItem<int>();
+	item->caption = "Next Radio Track";
+	item->value = i++;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "Freeze Radio To Station";
+	item->value = i++;
+	item->isLeaf = false;
+	menuItems.push_back(item);
+
+	listItem = new SelectFromListMenuItem(MISC_RADIO_OFF_CAPTIONS, onchange_misc_radio_off_index);
+	listItem->wrap = false;
+	listItem->caption = "Radio Off";
+	listItem->value = RadioOffIndex;
+	menuItems.push_back(listItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Boost Radio Volume";
+	toggleItem->toggleValue = &featureBoostRadio;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Consistent Radio Volume";
+	toggleItem->toggleValue = &featureRealisticRadioVolume;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Restore Missing Radio Station";
+	toggleItem->toggleValue = &featureEnableMissingRadioStation;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Radio In Police Vehicle";
+	toggleItem->toggleValue = &featurePoliceRadio;
+	menuItems.push_back(toggleItem);
+
+	draw_generic_menu<int>(menuItems, &activeLineIndexRadioSettings, caption, onconfirm_radiosettings_menu, NULL, NULL);
+}
+
 int activeLineIndexMisc = 0;
 
 bool onconfirm_misc_menu(MenuItem<int> choice){
@@ -747,30 +825,31 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 		case 0:
 			process_misc_trainerconfig_menu();
 			break;
-		case 2:
-			// next radio track
+		case 1:
+			/*// next radio track
 			if (getGameVersion() > 41) SKIP_RADIO_FORWARD_CUSTOM();
-			else AUDIO::SKIP_RADIO_FORWARD();
+			else AUDIO::SKIP_RADIO_FORWARD();*/
+			process_radio_settings_menu();
 			break;
-		case 3:
-			process_misc_freezeradio_menu();
-			break;
-		case 9:
+		//case 3:
+		//	process_misc_freezeradio_menu();
+		//	break;
+		case 2:
 			process_misc_musicevent_menu();
 			break;
-		case 10:
+		case 3:
 			process_misc_cutplayer_menu();
 			break;
-		case 11:
+		case 4:
 			process_misc_filters_menu();
 			break;
-		case 22:
+		case 15:
 			process_phone_bill_menu();
 			break;
-		case 27:
+		case 20:
 			process_def_menutab_menu();
 			break;
-		case 28:
+		case 21:
 			process_airbrake_global_menu();
 			break;
 		default:
@@ -781,20 +860,21 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 }
 
 void process_misc_menu(){
-	const int lineCount = 30;
+	const int lineCount = 23;
 
 	std::string caption = "Miscellaneous Options";
 
 	StandardOrToggleMenuDef lines[lineCount] = {
 		{"Trainer Options", NULL, NULL, false},
-		{"Portable Radio", &featurePlayerRadio, &featurePlayerRadioUpdated, true},
+		{"Radio Settings", NULL, NULL, false},
+		/*{"Portable Radio", &featurePlayerRadio, &featurePlayerRadioUpdated, true},
 		{"Next Radio Track", NULL, NULL, true},
 		{"Freeze Radio To Station", nullptr, nullptr, false},
 		{"Radio Always Off", &featureRadioAlwaysOff, &featureRadioAlwaysOffUpdated, true},
 		{"Boost Radio Volume", &featureBoostRadio, NULL, true}, 
 		{"Consistent Radio Volume", &featureRealisticRadioVolume, NULL, true},
 		{"Restore Missing Radio Station", &featureEnableMissingRadioStation, NULL, false },
-		{"Radio In Police Vehicle", &featurePoliceRadio, NULL, true}, 
+		{"Radio In Police Vehicle", &featurePoliceRadio, NULL, true},*/ 
 		{"Scripted Music", nullptr, nullptr, false},
 		{"Cutscene Viewer", nullptr, nullptr, false},
 		{"Screen Filters", nullptr, nullptr, false},
@@ -956,6 +1036,11 @@ void onchange_misc_phone_default_index(int value, SelectFromListMenuItem* source
 	PhoneDefaultChanged = true;
 }
 
+void onchange_misc_radio_off_index(int value, SelectFromListMenuItem* source) {
+	RadioOffIndex = value;
+	RadioOffChanged = true;
+}
+
 void onchange_misc_def_menutab_index(int value, SelectFromListMenuItem* source) {
 	DefMenuTabIndex = value;
 	DefMenuTabChanged = true;
@@ -990,11 +1075,12 @@ void reset_misc_globals(){
 		featureNoComleteMessage =
 		featurePoliceRadio =
 		featureEnableMissingRadioStation =
-		featureRadioAlwaysOff = false;
+		//featureRadioAlwaysOff = false;
 		featureShowDebugInfo = false;
 
 	PhoneBillIndex = 2;
 	PhoneDefaultIndex = 0;
+	RadioOffIndex = 0;
 	PhoneFreeSecondsIndex = 0;
 	PhoneBikeAnimationIndex = 0;
 
@@ -1024,7 +1110,7 @@ void reset_misc_globals(){
 	featureRealisticRadioVolume = false;
 
 	featureRadioFreezeUpdated =
-	featureRadioAlwaysOffUpdated =
+	//featureRadioAlwaysOffUpdated =
 	featureMiscHideHudUpdated =
 	//featureResetPlayerModelOnDeath =
 	featureBoostRadio = true;
@@ -1042,20 +1128,45 @@ void show_debug_info_on_screen(bool enabled) {
 }
 
 void update_misc_features(BOOL playerExists, Ped playerPed){
-	if (featureRadioAlwaysOff || featurePlayerRadioUpdated){
+	/*if (featureRadioAlwaysOff || featurePlayerRadioUpdated){
 		if (featureRadioAlwaysOff){
 			if (featurePlayerRadio){
 				featurePlayerRadio = false;
 				featurePlayerRadioUpdated = true;
 			}
 		}
-
 		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
 			Vehicle playerVeh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 			AUDIO::SET_VEHICLE_RADIO_ENABLED(playerVeh, !featureRadioAlwaysOff);
 		}
-
 		AUDIO::SET_USER_RADIO_CONTROL_ENABLED(!featureRadioAlwaysOff);
+	}*/
+	// radio off
+	if (MISC_RADIO_OFF_VALUES[RadioOffIndex] > 0) {
+		if (MISC_RADIO_OFF_VALUES[RadioOffIndex] == 1) {
+			if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
+				Vehicle playerVeh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+				AUDIO::SET_VEHICLE_RADIO_ENABLED(playerVeh, false);
+			}
+			AUDIO::SET_USER_RADIO_CONTROL_ENABLED(false);
+		}
+		if (MISC_RADIO_OFF_VALUES[RadioOffIndex] == 2) {
+			Vehicle cur_veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+			if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
+				if (VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(cur_veh)) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(cur_veh))) {
+					AUDIO::SET_VEHICLE_RADIO_ENABLED(cur_veh, false);
+					AUDIO::SET_USER_RADIO_CONTROL_ENABLED(false);
+				}
+			}
+			if ((PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && !VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(cur_veh)) && !VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(cur_veh))) || !PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
+				AUDIO::SET_VEHICLE_RADIO_ENABLED(cur_veh, true);
+				AUDIO::SET_USER_RADIO_CONTROL_ENABLED(true);
+			}
+		}
+	}
+	if (MISC_RADIO_OFF_VALUES[RadioOffIndex] == 0) {
+		AUDIO::SET_VEHICLE_RADIO_ENABLED(PED::GET_VEHICLE_PED_IS_USING(playerPed), true);
+		AUDIO::SET_USER_RADIO_CONTROL_ENABLED(true);
 	}
 
 	// Portable radio
@@ -1821,7 +1932,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerRadio", &featurePlayerRadio, &featurePlayerRadioUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{"featureRadioFreeze", &featureRadioFreeze, &featureRadioFreezeUpdated });
-	results->push_back(FeatureEnabledLocalDefinition{"featureRadioAlwaysOff", &featureRadioAlwaysOff, &featureRadioAlwaysOffUpdated });
+	//results->push_back(FeatureEnabledLocalDefinition{"featureRadioAlwaysOff", &featureRadioAlwaysOff, &featureRadioAlwaysOffUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{"featureBoostRadio", &featureBoostRadio }); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureRealisticRadioVolume", &featureRealisticRadioVolume});
 	results->push_back(FeatureEnabledLocalDefinition{"featureWantedMUsic", &featureWantedMusic}); 
@@ -1868,6 +1979,7 @@ void add_misc_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"radioStationIndex", std::to_string(radioStationIndex)});
 	results->push_back(StringPairSettingDBRow{"PhoneBillIndex", std::to_string(PhoneBillIndex)});
 	results->push_back(StringPairSettingDBRow{"PhoneDefaultIndex", std::to_string(PhoneDefaultIndex)});
+	results->push_back(StringPairSettingDBRow{"RadioOffIndex", std::to_string(RadioOffIndex)});
 	results->push_back(StringPairSettingDBRow{"PhoneFreeSecondsIndex", std::to_string(PhoneFreeSecondsIndex)});
 	results->push_back(StringPairSettingDBRow{"PhoneBikeAnimationIndex", std::to_string(PhoneBikeAnimationIndex)});
 	results->push_back(StringPairSettingDBRow{"DefMenuTabIndex", std::to_string(DefMenuTabIndex)});
@@ -1884,6 +1996,9 @@ void handle_generic_settings_misc(std::vector<StringPairSettingDBRow>* settings)
 		}
 		else if (setting.name.compare("PhoneDefaultIndex") == 0) {
 			PhoneDefaultIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("RadioOffIndex") == 0) {
+			RadioOffIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("PhoneFreeSecondsIndex") == 0){
 			PhoneFreeSecondsIndex = stoi(setting.value);
