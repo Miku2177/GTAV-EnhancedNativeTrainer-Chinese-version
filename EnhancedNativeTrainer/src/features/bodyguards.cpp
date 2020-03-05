@@ -510,6 +510,8 @@ void save_current_bod_skin(int slot)
 	//BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
 	//Player player = PLAYER::PLAYER_ID();
 	//Ped playerPed = PLAYER::PLAYER_PED_ID();
+	
+	CONTROLS::_SET_CONTROL_NORMAL(0, 37, 1);
 
 	std::string result_b_s = show_keyboard("Number", NULL);
 	if (!result_b_s.empty())
@@ -525,8 +527,7 @@ void save_current_bod_skin(int slot)
 			is_it_n = false;
 		}
 		if (!spawnedENTBodyguards.empty() && b_curr_num > -1 && b_curr_num < spawnedENTBodyguards.size()) {
-			//if (bPlayerExists)
-	//{
+			
 			std::ostringstream ss;
 			if (slot != -1)
 			{
@@ -553,7 +554,6 @@ void save_current_bod_skin(int slot)
 					set_status_text("Save error");
 				}
 			}
-			//}
 		}
 		else {
 			if (spawnedENTBodyguards.empty()) {
@@ -1385,7 +1385,6 @@ void do_spawn_bodyguard(){
 						}
 					}
 				}
-
 				if (added_nearest_b == true && !WEAPON::IS_PED_ARMED(bodyGuard, 7)) {
 					for (int a = 0; a < MENU_WEAPON_CATEGORIES.size(); a++) {
 						for (int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++) {
