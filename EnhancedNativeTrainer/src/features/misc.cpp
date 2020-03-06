@@ -200,6 +200,10 @@ const int MISC_RADIO_OFF_VALUES[] = { 0, 1, 2 };
 int RadioOffIndex = 0;
 bool RadioOffChanged = true;
 
+// Trainer Controls
+int TrainerControlIndex = 0;
+bool TrainerControlChanged = true;
+
 void onchange_hotkey_function(int value, SelectFromListMenuItem* source){
 	change_hotkey_function(source->extras.at(0), value);
 }
@@ -316,12 +320,19 @@ void process_misc_trainerconfig_menu(){
 	std::string caption = "Trainer Options";
 
 	std::vector<MenuItem<int>*> menuItems;
+	SelectFromListMenuItem *listItem;
 
 	MenuItem<int>* stdItem = new MenuItem<int>();
 	stdItem->caption = "Hotkey Setup";
 	stdItem->value = TRAINERCONFIG_HOTKEY_MENU;
 	stdItem->isLeaf = false;
 	menuItems.push_back(stdItem);
+
+	listItem = new SelectFromListMenuItem(MISC_TRAINERCONTROL_CAPTIONS, onchange_misc_trainercontrol_index);
+	listItem->wrap = false;
+	listItem->caption = "Control Navigation";
+	listItem->value = TrainerControlIndex;
+	menuItems.push_back(listItem);
 
 	ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Lock Controls While In Menu";
@@ -1041,6 +1052,11 @@ void onchange_misc_radio_off_index(int value, SelectFromListMenuItem* source) {
 	RadioOffChanged = true;
 }
 
+void onchange_misc_trainercontrol_index(int value, SelectFromListMenuItem* source) {
+	TrainerControlIndex = value;
+	TrainerControlChanged = true;
+}
+
 void onchange_misc_def_menutab_index(int value, SelectFromListMenuItem* source) {
 	DefMenuTabIndex = value;
 	DefMenuTabChanged = true;
@@ -1081,6 +1097,7 @@ void reset_misc_globals(){
 	PhoneBillIndex = 2;
 	PhoneDefaultIndex = 0;
 	RadioOffIndex = 0;
+	TrainerControlIndex = 0;
 	PhoneFreeSecondsIndex = 0;
 	PhoneBikeAnimationIndex = 0;
 
@@ -1464,7 +1481,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			p_exist = false;
 		} 
 	}
-
+	
 	//Lock player vehicle doors
 	if (featureLockVehicleDoors) {
 		if (featureLockVehicleDoorsUpdated == false) {
@@ -1980,6 +1997,7 @@ void add_misc_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"PhoneBillIndex", std::to_string(PhoneBillIndex)});
 	results->push_back(StringPairSettingDBRow{"PhoneDefaultIndex", std::to_string(PhoneDefaultIndex)});
 	results->push_back(StringPairSettingDBRow{"RadioOffIndex", std::to_string(RadioOffIndex)});
+	results->push_back(StringPairSettingDBRow{"TrainerControlIndex", std::to_string(TrainerControlIndex)});
 	results->push_back(StringPairSettingDBRow{"PhoneFreeSecondsIndex", std::to_string(PhoneFreeSecondsIndex)});
 	results->push_back(StringPairSettingDBRow{"PhoneBikeAnimationIndex", std::to_string(PhoneBikeAnimationIndex)});
 	results->push_back(StringPairSettingDBRow{"DefMenuTabIndex", std::to_string(DefMenuTabIndex)});
@@ -1999,6 +2017,9 @@ void handle_generic_settings_misc(std::vector<StringPairSettingDBRow>* settings)
 		}
 		else if (setting.name.compare("RadioOffIndex") == 0) {
 			RadioOffIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("TrainerControlIndex") == 0) {
+			TrainerControlIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("PhoneFreeSecondsIndex") == 0){
 			PhoneFreeSecondsIndex = stoi(setting.value);
