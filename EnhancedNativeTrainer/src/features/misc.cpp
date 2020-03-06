@@ -195,7 +195,7 @@ int PhoneDefaultIndex = 0;
 bool PhoneDefaultChanged = true;
 
 // Radio Off
-const std::vector<std::string> MISC_RADIO_OFF_CAPTIONS{ "Default", "Always", "On Bike Only" };
+const std::vector<std::string> MISC_RADIO_OFF_CAPTIONS{ "Default", "Always", "For Bikes Only" };
 const int MISC_RADIO_OFF_VALUES[] = { 0, 1, 2 };
 int RadioOffIndex = 0;
 bool RadioOffChanged = true;
