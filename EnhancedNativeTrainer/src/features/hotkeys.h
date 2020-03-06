@@ -27,6 +27,8 @@ bool is_hotkey_held_veh_burnout();
 
 bool is_hotkey_held_veh_extrapower();
 
+bool is_hotkey_held_veh_nitrous();
+
 static const int HKEY_FIX_CAR = 101;
 static const int HKEY_CLEAN_CAR = 102;
 static const int HKEY_HEAL_PLAYER = 103;
@@ -73,6 +75,7 @@ static const int HKEY_SPAWN_BODYGUARD = 149;
 static const int HKEY_ADDNEAR_BODYGUARD = 150;
 static const int HKEY_DISMISS_BODYGUARD = 151;
 static const int HKEY_MUFFLED_RADIO = 152;
+static const int HKEY_VEHICLE_NITROUS = 153;
 
 const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "No Function", 0 },
@@ -122,6 +125,7 @@ const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "Add Nearest Ped As Bodyguard", HKEY_ADDNEAR_BODYGUARD },
 	{ "Dismiss All Bodyguards", HKEY_DISMISS_BODYGUARD },
 	{ "Muffled Radio", HKEY_MUFFLED_RADIO },
+	{ "Nitrous (Hold Key)", HKEY_VEHICLE_NITROUS },
 };
 
 void change_hotkey_function(int hotkey, int funcIndex);

@@ -35,6 +35,8 @@ bool hotkey_held_veh_burnout = false;
 
 bool hotkey_held_veh_extrapower = false;
 
+bool hotkey_held_veh_nitrous = false;
+
 bool muffled_toggle = false;
 
 bool is_hotkey_held_slow_mo()
@@ -65,6 +67,11 @@ bool is_hotkey_held_veh_burnout()
 bool is_hotkey_held_veh_extrapower()
 {
 	return hotkey_held_veh_extrapower;
+}
+
+bool is_hotkey_held_veh_nitrous()
+{
+	return hotkey_held_veh_nitrous;
 }
 
 void check_for_hotkey_presses()
@@ -274,6 +281,9 @@ void trigger_function_for_hotkey_onkeyup(int hotkey)
 		AUDIO::SET_FRONTEND_RADIO_ACTIVE(muffled_toggle);
 		muffled_toggle = !muffled_toggle;
 		break;
+	case HKEY_VEHICLE_NITROUS:
+		hotkey_held_veh_nitrous = false;
+		break;
 	default:
 	{
 		std::ostringstream ss;
@@ -305,6 +315,9 @@ void trigger_function_for_hotkey_onkeydown(int hotkey)
 			break;
 		case HKEY_VEHICLE_POWER:
 			hotkey_held_veh_extrapower = true;
+			break;
+		case HKEY_VEHICLE_NITROUS:
+			hotkey_held_veh_nitrous = true;
 			break;
 		default:
 			break;

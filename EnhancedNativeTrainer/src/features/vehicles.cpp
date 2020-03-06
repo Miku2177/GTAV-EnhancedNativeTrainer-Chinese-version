@@ -2545,7 +2545,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 
 	// Nitrous
-	if (LIMP_IF_INJURED_VALUES[NitrousIndex] > 0 && CONTROLS::IS_CONTROL_PRESSED(2, 131) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) { // VehicleMoveUpOnly 61 VehicleSubAscend 131
+	if (LIMP_IF_INJURED_VALUES[NitrousIndex] > 0 && (CONTROLS::IS_CONTROL_PRESSED(2, 131) || is_hotkey_held_veh_nitrous()) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) { // VehicleMoveUpOnly 61 VehicleSubAscend 131
 		Vehicle my_veh = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		STREAMING::REQUEST_NAMED_PTFX_ASSET("core");
 		while (!STREAMING::HAS_NAMED_PTFX_ASSET_LOADED("core")) WAIT(0);
@@ -2562,7 +2562,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		VEHICLE::_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(my_veh, 10.0);
 		nitro_e = true;
 	}
-	if (LIMP_IF_INJURED_VALUES[NitrousIndex] > 0 && CONTROLS::IS_CONTROL_RELEASED(2, 61) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && nitro_e == true) {
+	if (LIMP_IF_INJURED_VALUES[NitrousIndex] > 0 && CONTROLS::IS_CONTROL_RELEASED(2, 61) && !is_hotkey_held_veh_nitrous() && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && nitro_e == true) {
 		VEHICLE::_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 1.0);
 		nitro_e = false;
 	}
