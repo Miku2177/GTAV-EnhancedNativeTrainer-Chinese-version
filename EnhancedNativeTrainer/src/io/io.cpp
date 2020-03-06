@@ -43,10 +43,18 @@ void get_button_state(bool *a, bool *b, bool *up, bool *down, bool *l, bool *r)
 	if (a) *a = IsKeyJustUp(KeyConfig::KEY_MENU_SELECT) || IsControllerButtonJustUp(KeyConfig::KEY_MENU_SELECT);
 	if (b) *b = IsKeyJustUp(KeyConfig::KEY_MENU_BACK) || IsControllerButtonJustUp(KeyConfig::KEY_MENU_BACK);
 
-	if (up) *up = IsKeyDown(KeyConfig::KEY_MENU_UP) || IsControllerButtonDown(KeyConfig::KEY_MENU_UP);
-	if (down) *down = IsKeyDown(KeyConfig::KEY_MENU_DOWN) || IsControllerButtonDown(KeyConfig::KEY_MENU_DOWN);
-	if (r) *r = IsKeyDown(KeyConfig::KEY_MENU_RIGHT) || IsControllerButtonDown(KeyConfig::KEY_MENU_RIGHT);
-	if (l) *l = IsKeyDown(KeyConfig::KEY_MENU_LEFT) || IsControllerButtonDown(KeyConfig::KEY_MENU_LEFT);
+	if (MISC_TRAINERCONTROL_VALUES[TrainerControlIndex] == 1) { // press
+		if (up) *up = IsKeyDown(KeyConfig::KEY_MENU_UP) || IsControllerButtonDown(KeyConfig::KEY_MENU_UP);
+		if (down) *down = IsKeyDown(KeyConfig::KEY_MENU_DOWN) || IsControllerButtonDown(KeyConfig::KEY_MENU_DOWN);
+		if (r) *r = IsKeyDown(KeyConfig::KEY_MENU_RIGHT) || IsControllerButtonDown(KeyConfig::KEY_MENU_RIGHT);
+		if (l) *l = IsKeyDown(KeyConfig::KEY_MENU_LEFT) || IsControllerButtonDown(KeyConfig::KEY_MENU_LEFT);
+	}
+	if (MISC_TRAINERCONTROL_VALUES[TrainerControlIndex] == 0) { // release
+		if (up) *up = IsKeyJustUp(KeyConfig::KEY_MENU_UP) || IsControllerButtonJustUp(KeyConfig::KEY_MENU_UP);
+		if (down) *down = IsKeyJustUp(KeyConfig::KEY_MENU_DOWN) || IsControllerButtonJustUp(KeyConfig::KEY_MENU_DOWN);
+		if (r) *r = IsKeyJustUp(KeyConfig::KEY_MENU_RIGHT) || IsControllerButtonJustUp(KeyConfig::KEY_MENU_RIGHT);
+		if (l) *l = IsKeyJustUp(KeyConfig::KEY_MENU_LEFT) || IsControllerButtonJustUp(KeyConfig::KEY_MENU_LEFT);
+	}
 }
 
 bool get_key_pressed(int nVirtKey)

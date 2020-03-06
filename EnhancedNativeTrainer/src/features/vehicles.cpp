@@ -2547,23 +2547,36 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	// Nitrous
 	if (LIMP_IF_INJURED_VALUES[NitrousIndex] > 0 && (CONTROLS::IS_CONTROL_PRESSED(2, 131) || is_hotkey_held_veh_nitrous()) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) { // VehicleMoveUpOnly 61 VehicleSubAscend 131
 		Vehicle my_veh = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
-		STREAMING::REQUEST_NAMED_PTFX_ASSET("core");
-		while (!STREAMING::HAS_NAMED_PTFX_ASSET_LOADED("core")) WAIT(0);
-		char* Exhausts[] = { "exhaust", "exhaust_2", "exhaust_3", "exhaust_4", "exhaust_5", "exhaust_6", "exhaust_7", "exhaust_8", "exhaust_9", "exhaust_10", "exhaust_11", "exhaust_12", "exhaust_13", "exhaust_14", "exhaust_15", "exhaust_16" };
-		for (char* exhaust : Exhausts) {
-			if (ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(my_veh, exhaust) > -1) {
-				Vector3 exhaust_p = ENTITY::_GET_ENTITY_BONE_COORDS(my_veh, ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(my_veh, exhaust)); // "exhaust"
-				Vector3 exhaust_p_off = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(my_veh, exhaust_p.x, exhaust_p.y, exhaust_p.z);
-				GRAPHICS::_SET_PTFX_ASSET_NEXT_CALL("core");
-				GRAPHICS::START_PARTICLE_FX_NON_LOOPED_ON_ENTITY("veh_backfire", my_veh, exhaust_p_off.x, exhaust_p_off.y, exhaust_p_off.z, 0.0f, ENTITY::GET_ENTITY_PITCH(my_veh), 0.0f, 1.0f, false, false, false);
+		if (VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(my_veh)) {
+			STREAMING::REQUEST_NAMED_PTFX_ASSET("core");
+			while (!STREAMING::HAS_NAMED_PTFX_ASSET_LOADED("core")) WAIT(0);
+			char* Exhausts[] = { "exhaust", "exhaust_2", "exhaust_3", "exhaust_4", "exhaust_5", "exhaust_6", "exhaust_7", "exhaust_8", "exhaust_9", "exhaust_10", "exhaust_11", "exhaust_12", "exhaust_13", "exhaust_14", "exhaust_15", "exhaust_16" };
+			for (char* exhaust : Exhausts) {
+				if (ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(my_veh, exhaust) > -1) {
+					Vector3 exhaust_p = ENTITY::_GET_ENTITY_BONE_COORDS(my_veh, ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(my_veh, exhaust)); // "exhaust"
+					Vector3 exhaust_p_off = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(my_veh, exhaust_p.x, exhaust_p.y, exhaust_p.z);
+					GRAPHICS::_SET_PTFX_ASSET_NEXT_CALL("core");
+					if (!is_this_a_heli_or_plane(my_veh)) GRAPHICS::START_PARTICLE_FX_NON_LOOPED_ON_ENTITY("veh_backfire", my_veh, exhaust_p_off.x, exhaust_p_off.y, exhaust_p_off.z, 0.0f, ENTITY::GET_ENTITY_PITCH(my_veh), 0.0f, 1.0f, false, false, false);
+					if (is_this_a_heli_or_plane(my_veh)) GRAPHICS::START_PARTICLE_FX_NON_LOOPED_ON_ENTITY("veh_backfire", my_veh, exhaust_p_off.x, exhaust_p_off.y, exhaust_p_off.z, 0.0f, ENTITY::GET_ENTITY_PITCH(my_veh), 0.0f, 4.0f, false, false, false);
+				}
 			}
+			if (LIMP_IF_INJURED_VALUES[NitrousIndex] == 1) AUDIO::SET_VEHICLE_BOOST_ACTIVE(my_veh, true);
+			if (!is_this_a_heli_or_plane(my_veh)) VEHICLE::_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(my_veh, 10.0);
+			if (is_this_a_heli_or_plane(my_veh) && CONTROLS::IS_CONTROL_PRESSED(2, 32)) {
+				Vector3 MyRot = ENTITY::GET_ENTITY_ROTATION(my_veh, 2);
+				float p_force = 5; //5;
+				float rad = 2 * 3.14 * (MyRot.z / 360);
+				float v_x = -(sin(rad) * p_force * 10);
+				float v_y = (cos(rad) * p_force * 10);
+				float v_z = p_force * (MyRot.x * 0.2);
+				ENTITY::APPLY_FORCE_TO_ENTITY(my_veh, 1, v_x / 35, v_y / 35, v_z / 35, 0, 0, 0, true, false, true, true, true, true);
+			}
+			nitro_e = true;
 		}
-		if (LIMP_IF_INJURED_VALUES[NitrousIndex] == 1) AUDIO::SET_VEHICLE_BOOST_ACTIVE(my_veh, true);
-		VEHICLE::_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(my_veh, 10.0);
-		nitro_e = true;
 	}
 	if (LIMP_IF_INJURED_VALUES[NitrousIndex] > 0 && CONTROLS::IS_CONTROL_RELEASED(2, 61) && !is_hotkey_held_veh_nitrous() && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && nitro_e == true) {
 		VEHICLE::_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 1.0);
+		VEHICLE::_SET_VEHICLE_ENGINE_POWER_MULTIPLIER(veh, 0.0f);
 		nitro_e = false;
 	}
 
@@ -2860,31 +2873,30 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 
 	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] > 0 || featureHazards) {
-
 		Vehicle vehturn = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		int vehturnspeed = ENTITY::GET_ENTITY_SPEED(vehturn);
 		int steer_turn = CONTROLS::GET_CONTROL_VALUE(0, 9);
-
-		bool leftKey = IsKeyDown(KeyConfig::KEY_VEH_LEFTBLINK) || IsControllerButtonDown(KeyConfig::KEY_VEH_LEFTBLINK); // Left Key
-		bool rightKey = IsKeyDown(KeyConfig::KEY_VEH_RIGHTBLINK) || IsControllerButtonDown(KeyConfig::KEY_VEH_RIGHTBLINK); // Right Key
-		bool emergencyKey = IsKeyDown(KeyConfig::KEY_VEH_EMERGENCYBLINK) || IsControllerButtonDown(KeyConfig::KEY_VEH_EMERGENCYBLINK); // Emergency Signal Key
+		//bool leftKey = IsKeyDown(KeyConfig::KEY_VEH_LEFTBLINK) || IsControllerButtonDown(KeyConfig::KEY_VEH_LEFTBLINK); // Left Key
+		//bool rightKey = IsKeyDown(KeyConfig::KEY_VEH_RIGHTBLINK) || IsControllerButtonDown(KeyConfig::KEY_VEH_RIGHTBLINK); // Right Key
+		//bool emergencyKey = IsKeyDown(KeyConfig::KEY_VEH_EMERGENCYBLINK) || IsControllerButtonDown(KeyConfig::KEY_VEH_EMERGENCYBLINK); // Emergency Signal Key
+		bool leftKey = IsKeyJustUp(KeyConfig::KEY_VEH_LEFTBLINK) || IsControllerButtonJustUp(KeyConfig::KEY_VEH_LEFTBLINK); // Left Key
+		bool rightKey = IsKeyJustUp(KeyConfig::KEY_VEH_RIGHTBLINK) || IsControllerButtonJustUp(KeyConfig::KEY_VEH_RIGHTBLINK); // Right Key
+		bool emergencyKey = IsKeyJustUp(KeyConfig::KEY_VEH_EMERGENCYBLINK) || IsControllerButtonJustUp(KeyConfig::KEY_VEH_EMERGENCYBLINK); // Emergency Signal Key
 
 		if (leftKey && VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] > 0) { // Manual Left Turn Signal
 			turn_check_left = !turn_check_left;
 			turn_check_right = false;
 			controllightsenabled_l = turn_check_left;
 			controllightsenabled_r = false;
-			WAIT(100);
+			//WAIT(100);
 		}
-
 		if (rightKey && VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] > 0) { // Manual Right Turn Signal
 			turn_check_right = !turn_check_right;
 			turn_check_left = false;
 			controllightsenabled_r = turn_check_right;
 			controllightsenabled_l = false;
-			WAIT(100);
+			//WAIT(100);
 		}
-
 		if (emergencyKey && VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] > 0) {
 			if (turn_check_left == true && turn_check_right == true) {
 				turn_check_left = false;
@@ -2896,27 +2908,23 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			}
 			controllightsenabled_l = turn_check_left;
 			controllightsenabled_r = turn_check_right;
-			WAIT(100);
+			//WAIT(100);
 		}
 
 		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && turn_check_left && !controllightsenabled_l) {
 			turn_check_left = false;
 		}
-
 		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && turn_check_right && !controllightsenabled_r) {
 			turn_check_right = false;
 		}
-
 		if (featureHazards && (VEHICLE::IS_VEHICLE_DOOR_DAMAGED(vehturn, 0) || VEHICLE::IS_VEHICLE_DOOR_DAMAGED(vehturn, 1) || VEHICLE::IS_VEHICLE_DOOR_DAMAGED(vehturn, 2) || VEHICLE::IS_VEHICLE_DOOR_DAMAGED(vehturn, 3))) {
 			turn_check_right = true;
 			turn_check_left = true;
 		}
-
 		if (PED::IS_PED_JUMPING_OUT_OF_VEHICLE(playerPed)) {
 			turn_check_right = true;
 			turn_check_left = true;
 		}
-
 		if (VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] != 1) { // Auto Blinkers
 			if (vehturnspeed < VEH_TURN_SIGNALS_VALUES[turnSignalsIndex]) {
 				if (steer_turn == 0 && !turn_check_left) { // Wheel Turned Left
@@ -2935,7 +2943,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				}
 			}
 		}
-
 		if (steer_turn == 254 || steer_turn == 0) {
 			engine_secs_passed = clock() / CLOCKS_PER_SEC;
 			if (((clock() / (CLOCKS_PER_SEC / 1000)) - engine_secs_curr) != 0) {
@@ -2944,7 +2951,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			}
 		}
 		else turn_angle = 0;
-		
 		if (CONTROLS::IS_CONTROL_PRESSED(2, 71) && VEH_TURN_SIGNALS_ACCELERATION_VALUES[turnSignalsAccelerationIndex] > 0 && turn_angle < 15) { 
 			Accel_secs_passed = clock() / CLOCKS_PER_SEC;
 			if (((clock() / CLOCKS_PER_SEC) - Accel_secs_curr) != 0) {
@@ -2960,7 +2966,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			turn_check_right = false;
 			autocontrol = false;
 		}
-		
 		if (turn_angle > VEH_TURN_SIGNALS_ANGLE_VALUES[turnSignalsAngleIndex] || (leftKey && VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] > 0) || (rightKey && VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] > 0) || 
 			(emergencyKey && VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] > 0) || vehturnspeed > (VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] + 10) || Accel_seconds > VEH_TURN_SIGNALS_ACCELERATION_VALUES[turnSignalsAccelerationIndex]) {
 			if (turn_check_left) viz_veh_ind_left = true;

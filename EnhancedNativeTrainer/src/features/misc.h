@@ -80,6 +80,12 @@ const std::vector<std::string> MISC_FILTERS_VALUES{	"DEFAULT", "AmbientPUSH", "B
 	"StuntFastDark", "switch_cam_2", "ufo", "ufo_deathray", "underwater_deep", "v_bahama", "V_FIB_stairs", "WATER_cove", "WATER_hills", "WATER_lab", "WATER_militaryPOOP", "WATER_muddy", "WATER_port",
 	"WATER_resevoir", "WATER_shore", "WATER_silverlake", "WhiteOut" };
 
+// Trainer Controls
+const std::vector<std::string> MISC_TRAINERCONTROL_CAPTIONS{ "On Release", "On Press" };
+const int MISC_TRAINERCONTROL_VALUES[] = { 0, 1 };
+extern int TrainerControlIndex;
+extern bool TrainerControlChanged;
+
 void process_misc_menu();
 
 void reset_misc_globals();
@@ -97,6 +103,8 @@ void onchange_misc_phone_bill_index(int value, SelectFromListMenuItem* source);
 void onchange_misc_phone_default_index(int value, SelectFromListMenuItem* source);
 
 void onchange_misc_radio_off_index(int value, SelectFromListMenuItem* source);
+
+void onchange_misc_trainercontrol_index(int value, SelectFromListMenuItem* source);
 
 void onchange_misc_def_menutab_index(int value, SelectFromListMenuItem* source);
 
