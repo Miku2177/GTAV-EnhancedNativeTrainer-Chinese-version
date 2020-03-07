@@ -1517,13 +1517,13 @@ void maintain_bodyguards(){
 					PED::SET_PED_CAN_RAGDOLL(spawnedENTBodyguards[i], 0);
 					if (dist_diff != -1) PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(spawnedENTBodyguards[i], true);
 					else PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(spawnedENTBodyguards[i], false);
-					if (surr_animals[k] != PLAYER::PLAYER_PED_ID() && surr_animals[k] != spawnedENTBodyguards[i] && PED::IS_PED_IN_MELEE_COMBAT(surr_animals[k])) {
+					if (surr_animals[k] != PLAYER::PLAYER_PED_ID() && surr_animals[k] != spawnedENTBodyguards[i] && !PED::IS_PED_GROUP_MEMBER(surr_animals[k], myENTGroup) && PED::IS_PED_IN_MELEE_COMBAT(surr_animals[k])) {
 						if (PED::GET_PED_TYPE(spawnedENTBodyguards[i]) == 28) {
 							PED::SET_PED_AS_ENEMY(surr_animals[k], true);
 							AI::TASK_COMBAT_PED_TIMED(spawnedENTBodyguards[i], surr_animals[k], 50000, 16); // 50000
 						}
 					}
-					if (surr_animals[k] != PLAYER::PLAYER_PED_ID() && surr_animals[k] != spawnedENTBodyguards[i] && PED::IS_PED_SHOOTING(surr_animals[k])) {
+					if (surr_animals[k] != PLAYER::PLAYER_PED_ID() && surr_animals[k] != spawnedENTBodyguards[i] && !PED::IS_PED_GROUP_MEMBER(surr_animals[k], myENTGroup) && PED::IS_PED_SHOOTING(surr_animals[k])) {
 						if (PED::GET_PED_TYPE(spawnedENTBodyguards[i]) == 28) {
 							if (AI::IS_PED_STILL(spawnedENTBodyguards[i]) && dist_diff == -1) {
 								cop_to_kill = surr_animals[k];
