@@ -687,8 +687,8 @@ void update_features(){
 	// player invincible
 	if(featurePlayerInvincibleUpdated){
 		if(bPlayerExists && !featurePlayerInvincible){
-			//PLAYER::SET_PLAYER_INVINCIBLE(player, FALSE);
-			PLAYER::_0x733A643B5B0C53C1(player, FALSE);
+			if (getGameVersion() < VER_1_0_678_1_STEAM || getGameVersion() < VER_1_0_678_1_NOSTEAM) PLAYER::SET_PLAYER_INVINCIBLE(player, FALSE);
+			if (getGameVersion() >= VER_1_0_678_1_STEAM || getGameVersion() >= VER_1_0_678_1_NOSTEAM) PLAYER::_0x733A643B5B0C53C1(player, FALSE);
 		}
 		WAIT(100);
 		featurePlayerInvincibleUpdated = false;
@@ -696,8 +696,8 @@ void update_features(){
 	}
 
 	if(featurePlayerInvincible && bPlayerExists){
-		//PLAYER::SET_PLAYER_INVINCIBLE(player, TRUE);
-		PLAYER::_0x733A643B5B0C53C1(player, TRUE);
+		if (getGameVersion() < VER_1_0_678_1_STEAM || getGameVersion() < VER_1_0_678_1_NOSTEAM) PLAYER::SET_PLAYER_INVINCIBLE(player, TRUE);
+		if (getGameVersion() >= VER_1_0_678_1_STEAM || getGameVersion() >= VER_1_0_678_1_NOSTEAM) PLAYER::_0x733A643B5B0C53C1(player, TRUE);
 	}
 	
 	if (engine_switched) { 
