@@ -952,6 +952,9 @@ void update_world_features()
 					BOOL highbeamsOn = -1;
 					VEHICLE::GET_VEHICLE_LIGHTS_STATE(bus_veh[i], &lightsOn, &highbeamsOn);
 					if (lightsOn || highbeamsOn) {
+						char* light_bones[] = { /*"window_lf", */"window_lf1", "window_lf2", "window_lf3", /*"window_rf", */"window_rf1", "window_rf2", "window_rf3", /*"window_lr", */"window_lr1", "window_lr2", "window_lr3", /*"window_rr", */"window_rr1", "window_rr2", 
+							"window_rr3", /*"seat_dside_f",*/ "seat_dside_r", "seat_dside_r1", "seat_dside_r2", "seat_dside_r3", "seat_dside_r4", "seat_dside_r5", "seat_dside_r6", "seat_dside_r7", "seat_pside_f", "seat_pside_r", "seat_pside_r1", "seat_pside_r2", 
+							"seat_pside_r3", "seat_pside_r4", "seat_pside_r5", "seat_pside_r6", "seat_pside_r7" };
 						int bone1_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(bus_veh[i], "window_lf");
 						Vector3 bone1_coord = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(bus_veh[i], bone1_index);
 						int bone2_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(bus_veh[i], "window_rf");
@@ -962,28 +965,6 @@ void update_world_features()
 						Vector3 bone4_coord = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(bus_veh[i], bone4_index);
 						int bone7_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(bus_veh[i], "seat_dside_f");
 						Vector3 bone7_coord = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(bus_veh[i], bone7_index);
-						int bone8_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(bus_veh[i], "seat_dside_r");
-						Vector3 bone8_coord = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(bus_veh[i], bone8_index);
-						int bone9_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(bus_veh[i], "seat_dside_r1");
-						Vector3 bone9_coord = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(bus_veh[i], bone9_index);
-						int bone10_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(bus_veh[i], "seat_dside_r2");
-						Vector3 bone10_coord = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(bus_veh[i], bone10_index);
-						int bone15_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(bus_veh[i], "seat_dside_r7");
-						Vector3 bone15_coord = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(bus_veh[i], bone15_index);
-						int bone16_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(bus_veh[i], "seat_pside_f");
-						Vector3 bone16_coord = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(bus_veh[i], bone16_index);
-						int bone17_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(bus_veh[i], "seat_pside_r");
-						Vector3 bone17_coord = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(bus_veh[i], bone17_index);
-						int bone18_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(bus_veh[i], "seat_pside_r1");
-						Vector3 bone18_coord = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(bus_veh[i], bone18_index);
-						int bone19_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(bus_veh[i], "seat_pside_r2");
-						Vector3 bone19_coord = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(bus_veh[i], bone19_index);
-						int bone22_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(bus_veh[i], "seat_pside_r5");
-						Vector3 bone22_coord = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(bus_veh[i], bone22_index);
-						int bone23_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(bus_veh[i], "seat_pside_r6");
-						Vector3 bone23_coord = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(bus_veh[i], bone23_index);
-						int bone24_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(bus_veh[i], "seat_pside_r7");
-						Vector3 bone24_coord = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(bus_veh[i], bone24_index);
 						float dirVector_lf_lr_x = bone3_coord.x - bone1_coord.x;
 						float dirVector_lf_lr_y = bone3_coord.y - bone1_coord.y;
 						float dirVector_lf_lr_z = bone3_coord.z - bone1_coord.z;
@@ -992,18 +973,12 @@ void update_world_features()
 						GRAPHICS::DRAW_SPOT_LIGHT(bone3_coord.x, bone3_coord.y, bone1_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 1.0, 400, 50, 930, 900);
 						GRAPHICS::DRAW_SPOT_LIGHT(bone4_coord.x, bone4_coord.y, bone4_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 1.0, 400, 50, 930, 900);
 						if (currVehModel != GAMEPLAY::GET_HASH_KEY("COACH")) GRAPHICS::DRAW_SPOT_LIGHT(bone7_coord.x, bone7_coord.y, bone7_coord.z + 1, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 2.0, 400, 50, 930, 900);
-						GRAPHICS::DRAW_SPOT_LIGHT(bone8_coord.x, bone8_coord.y, bone8_coord.z + 1, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 2.0, 400, 50, 930, 900);
-						GRAPHICS::DRAW_SPOT_LIGHT(bone9_coord.x, bone9_coord.y, bone9_coord.z + 1, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 2.0, 400, 50, 930, 900);
-						GRAPHICS::DRAW_SPOT_LIGHT(bone10_coord.x, bone10_coord.y, bone10_coord.z + 1, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 2.0, 400, 50, 930, 900);
-						GRAPHICS::DRAW_SPOT_LIGHT(bone15_coord.x, bone15_coord.y, bone15_coord.z + 1, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 2.0, 400, 50, 930, 900);
-						GRAPHICS::DRAW_SPOT_LIGHT(bone16_coord.x, bone16_coord.y, bone16_coord.z + 1, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 2.0, 400, 50, 930, 900);
-						GRAPHICS::DRAW_SPOT_LIGHT(bone17_coord.x, bone17_coord.y, bone17_coord.z + 1, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 2.0, 400, 50, 930, 900);
-						GRAPHICS::DRAW_SPOT_LIGHT(bone18_coord.x, bone18_coord.y, bone18_coord.z + 1, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 2.0, 400, 50, 930, 900);
-						GRAPHICS::DRAW_SPOT_LIGHT(bone19_coord.x, bone19_coord.y, bone19_coord.z + 1, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 2.0, 400, 50, 930, 900);
-						GRAPHICS::DRAW_SPOT_LIGHT(bone22_coord.x, bone22_coord.y, bone22_coord.z + 1, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 2.0, 400, 50, 930, 900);
-						GRAPHICS::DRAW_SPOT_LIGHT(bone23_coord.x, bone23_coord.y, bone23_coord.z + 1, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 2.0, 400, 50, 930, 900);
-						GRAPHICS::DRAW_SPOT_LIGHT(bone24_coord.x, bone24_coord.y, bone24_coord.z + 1, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 2.0, 400, 50, 930, 900);
-						VEHICLE::SET_VEHICLE_INTERIORLIGHT(bus_veh[i], true);
+						for (char* curr_b : light_bones) {
+							int bone_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(bus_veh[i], curr_b);
+							Vector3 bone_coord = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(bus_veh[i], bone_index);
+							GRAPHICS::DRAW_SPOT_LIGHT(bone_coord.x, bone_coord.y, bone_coord.z + 1, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 2.0, 400, 50, 930, 900);
+							VEHICLE::SET_VEHICLE_INTERIORLIGHT(bus_veh[i], true);
+						}
 					}
 				}
 			}
@@ -1559,66 +1534,21 @@ void update_world_features()
 		AI::SET_SCENARIO_GROUP_ENABLED("ng_planes", 0);
 		AI::SET_SCENARIO_TYPE_ENABLED("WORLD_VEHICLE_MILITARY_PLANES_SMALL", 0);
 		AI::SET_SCENARIO_TYPE_ENABLED("WORLD_VEHICLE_MILITARY_PLANES_BIG", 0);
-		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("SHAMAL"), 1);
-		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("LUXOR"), 1);
-		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("LUXOR2"), 1);
-		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("JET"), 1);
-		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("LAZER"), 1);
-		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("TITAN"), 1);
-		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("BARRACKS"), 1);
-		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("BARRACKS2"), 1);
-		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("CRUSADER"), 1);
-		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("RHINO"), 1);
-		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("AIRTUG"), 1);
-		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("RIPLEY"), 1);
-		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("POLMAV"), 1);
-		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("FROGGER2"), 1);
-		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("SWIFT"), 1);
-		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("BLIMP"), 1);
-		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("BLIMP2"), 1);
-		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("BLIMP3"), 1);
-		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("FROGGER"), 1);
-		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("CARGOBOB"), 1);
-		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("CARGOBOB2"), 1);
-		VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("CARGOBOB3"), 1);
+		char* aircrafts[] = { "SHAMAL", "LUXOR", "LUXOR2", "JET", "LAZER", "TITAN", "BARRACKS", "BARRACKS2", "CRUSADER", "RHINO", "AIRTUG", "RIPLEY", "POLMAV", "FROGGER2", "SWIFT", "BLIMP", "BLIMP2", "BLIMP3", "FROGGER", "CARGOBOB", "CARGOBOB2", "CARGOBOB3" };
+		for (char* cur_aircraft : aircrafts) {
+			VEHICLE::SET_VEHICLE_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY(cur_aircraft), 1);
+		}
 	}
 	
 	if (featureNoAnimals) {
 		AI::SET_SCENARIO_TYPE_ENABLED("WORLD_MOUNTAIN_LION_REST", 0);
 		AI::SET_SCENARIO_TYPE_ENABLED("WORLD_MOUNTAIN_LION_WANDER", 0);
 		AI::SET_SCENARIO_GROUP_ENABLED("ng_birds", 0);
-		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_boar"), 1);
-		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_cat_01"), 1);
-		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_chimp"), 1);
-		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_cormorant"), 1);
-		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_cow"), 1);
-		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_coyote"), 1);
-		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_crow"), 1);
-		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_deer"), 1);
-		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_dolphin"), 1);
-		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_fish"), 1);
-		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_shepherd"), 1);
-		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_whalegrey"), 1);
-		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_sharkhammer"), 1);
-		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_chickenhawk"), 1);
-		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_hen"), 1);
-		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_humpback"), 1);
-		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_husky"), 1);
-		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_killerwhale"), 1);
-		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_mtlion"), 1);
-		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_pig"), 1);
-		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_pigeon"), 1);
-		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_poodle"), 1);
-		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_pug"), 1);
-		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_rabbit_01"), 1);
-		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_rat"), 1);
-		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_retriever"), 1);
-		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_rhesus"), 1);
-		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_rottweiler"), 1);
-		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_seagull"), 1);
-		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_stingray"), 1);
-		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_sharktiger"), 1);
-		PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY("a_c_westy"), 1);
+		char* animals[] = { "a_c_boar", "a_c_cat_01", "a_c_chimp", "a_c_cormorant", "a_c_cow", "a_c_coyote", "a_c_crow", "a_c_deer", "a_c_dolphin", "a_c_fish", "a_c_shepherd", "a_c_whalegrey", "a_c_sharkhammer", "a_c_chickenhawk", "a_c_hen", "a_c_humpback", "a_c_husky", 
+			"a_c_killerwhale", "a_c_mtlion", "a_c_pig", "a_c_pigeon", "a_c_poodle", "a_c_pug", "a_c_rabbit_01", "a_c_rat", "a_c_retriever", "a_c_rhesus", "a_c_rottweiler", "a_c_seagull", "a_c_stingray", "a_c_sharktiger", "a_c_westy", "a_c_chop", };
+		for (char* cur_ainimal : animals) {
+			PED::SET_PED_MODEL_IS_SUPPRESSED(GAMEPLAY::GET_HASH_KEY(cur_ainimal), 1);
+		}
 		no_animals = true;
 	}
 	if (!featureNoAnimals && no_animals == true) {

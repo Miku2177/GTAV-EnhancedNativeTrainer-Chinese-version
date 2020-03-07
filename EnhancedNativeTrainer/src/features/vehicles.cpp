@@ -2482,9 +2482,9 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				float dirVector_lf_lr_y = bone_boat_coord.y - bone2_boat_coord.y;
 				float dirVector_lf_lr_z = bone_boat_coord.z - (bone2_boat_coord.z + 1);
 				if (VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(veh_boat)) {
-					if (CONTROLS::IS_CONTROL_PRESSED(2, 74)) {
+					if (CONTROLS::IS_CONTROL_JUST_PRESSED(2, 74)) {
 						sheshark_light_toogle = sheshark_light_toogle + 1;
-						WAIT(100);
+						//WAIT(100);
 					}
 					if (sheshark_light_toogle == 3) sheshark_light_toogle = 0;
 					if (sheshark_light_toogle == 1) GRAPHICS::_DRAW_SPOT_LIGHT_WITH_SHADOW(bone_boat_coord.x, bone_boat_coord.y, bone_boat_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 40.0, 1, 50, 31, 2.7, 5);
