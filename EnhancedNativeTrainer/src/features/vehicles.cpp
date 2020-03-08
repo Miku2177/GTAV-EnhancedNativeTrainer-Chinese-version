@@ -2545,33 +2545,39 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 
 	// Nitrous
-	if (LIMP_IF_INJURED_VALUES[NitrousIndex] > 0 && (CONTROLS::IS_CONTROL_PRESSED(2, 131) || is_hotkey_held_veh_nitrous()) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) { // VehicleMoveUpOnly 61 VehicleSubAscend 131
-		Vehicle my_veh = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
-		if (VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(my_veh)) {
-			STREAMING::REQUEST_NAMED_PTFX_ASSET("core");
-			while (!STREAMING::HAS_NAMED_PTFX_ASSET_LOADED("core")) WAIT(0);
-			char* Exhausts[] = { "exhaust", "exhaust_2", "exhaust_3", "exhaust_4", "exhaust_5", "exhaust_6", "exhaust_7", "exhaust_8", "exhaust_9", "exhaust_10", "exhaust_11", "exhaust_12", "exhaust_13", "exhaust_14", "exhaust_15", "exhaust_16" };
-			for (char* exhaust : Exhausts) {
-				if (ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(my_veh, exhaust) > -1) {
-					Vector3 exhaust_p = ENTITY::_GET_ENTITY_BONE_COORDS(my_veh, ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(my_veh, exhaust)); // "exhaust"
-					Vector3 exhaust_p_off = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(my_veh, exhaust_p.x, exhaust_p.y, exhaust_p.z);
-					GRAPHICS::_SET_PTFX_ASSET_NEXT_CALL("core");
-					if (!is_this_a_heli_or_plane(my_veh)) GRAPHICS::START_PARTICLE_FX_NON_LOOPED_ON_ENTITY("veh_backfire", my_veh, exhaust_p_off.x, exhaust_p_off.y, exhaust_p_off.z, 0.0f, ENTITY::GET_ENTITY_PITCH(my_veh), 0.0f, 1.0f, false, false, false);
-					if (is_this_a_heli_or_plane(my_veh)) GRAPHICS::START_PARTICLE_FX_NON_LOOPED_ON_ENTITY("veh_backfire", my_veh, exhaust_p_off.x, exhaust_p_off.y, exhaust_p_off.z, 0.0f, ENTITY::GET_ENTITY_PITCH(my_veh), 0.0f, 4.0f, false, false, false);
+	if (LIMP_IF_INJURED_VALUES[NitrousIndex] > 0) { // VehicleMoveUpOnly 61 VehicleSubAscend 131
+		bool assigned = false;
+		for (int i = 1; i < 10; i++) {
+			if (get_hotkey_function_index(i) == 47) assigned = true;
+		}
+		if (((CONTROLS::IS_CONTROL_PRESSED(2, 131) && assigned == false) || is_hotkey_held_veh_nitrous()) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
+			Vehicle my_veh = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
+			if (VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(my_veh)) {
+				STREAMING::REQUEST_NAMED_PTFX_ASSET("core");
+				while (!STREAMING::HAS_NAMED_PTFX_ASSET_LOADED("core")) WAIT(0);
+				char* Exhausts[] = { "exhaust", "exhaust_2", "exhaust_3", "exhaust_4", "exhaust_5", "exhaust_6", "exhaust_7", "exhaust_8", "exhaust_9", "exhaust_10", "exhaust_11", "exhaust_12", "exhaust_13", "exhaust_14", "exhaust_15", "exhaust_16" };
+				for (char* exhaust : Exhausts) {
+					if (ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(my_veh, exhaust) > -1) {
+						Vector3 exhaust_p = ENTITY::_GET_ENTITY_BONE_COORDS(my_veh, ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(my_veh, exhaust)); // "exhaust"
+						Vector3 exhaust_p_off = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(my_veh, exhaust_p.x, exhaust_p.y, exhaust_p.z);
+						GRAPHICS::_SET_PTFX_ASSET_NEXT_CALL("core");
+						if (!is_this_a_heli_or_plane(my_veh)) GRAPHICS::START_PARTICLE_FX_NON_LOOPED_ON_ENTITY("veh_backfire", my_veh, exhaust_p_off.x, exhaust_p_off.y, exhaust_p_off.z, 0.0f, ENTITY::GET_ENTITY_PITCH(my_veh), 0.0f, 1.0f, false, false, false);
+						if (is_this_a_heli_or_plane(my_veh)) GRAPHICS::START_PARTICLE_FX_NON_LOOPED_ON_ENTITY("veh_backfire", my_veh, exhaust_p_off.x, exhaust_p_off.y, exhaust_p_off.z, 0.0f, ENTITY::GET_ENTITY_PITCH(my_veh), 0.0f, 4.0f, false, false, false);
+					}
 				}
+				if (LIMP_IF_INJURED_VALUES[NitrousIndex] == 1) AUDIO::SET_VEHICLE_BOOST_ACTIVE(my_veh, true);
+				if (!is_this_a_heli_or_plane(my_veh)) VEHICLE::_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(my_veh, 10.0);
+				if (is_this_a_heli_or_plane(my_veh) && CONTROLS::IS_CONTROL_PRESSED(2, 32)) {
+					Vector3 MyRot = ENTITY::GET_ENTITY_ROTATION(my_veh, 2);
+					float p_force = 5; //5;
+					float rad = 2 * 3.14 * (MyRot.z / 360);
+					float v_x = -(sin(rad) * p_force * 10);
+					float v_y = (cos(rad) * p_force * 10);
+					float v_z = p_force * (MyRot.x * 0.2);
+					ENTITY::APPLY_FORCE_TO_ENTITY(my_veh, 1, v_x / 35, v_y / 35, v_z / 35, 0, 0, 0, true, false, true, true, true, true);
+				}
+				nitro_e = true;
 			}
-			if (LIMP_IF_INJURED_VALUES[NitrousIndex] == 1) AUDIO::SET_VEHICLE_BOOST_ACTIVE(my_veh, true);
-			if (!is_this_a_heli_or_plane(my_veh)) VEHICLE::_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(my_veh, 10.0);
-			if (is_this_a_heli_or_plane(my_veh) && CONTROLS::IS_CONTROL_PRESSED(2, 32)) {
-				Vector3 MyRot = ENTITY::GET_ENTITY_ROTATION(my_veh, 2);
-				float p_force = 5; //5;
-				float rad = 2 * 3.14 * (MyRot.z / 360);
-				float v_x = -(sin(rad) * p_force * 10);
-				float v_y = (cos(rad) * p_force * 10);
-				float v_z = p_force * (MyRot.x * 0.2);
-				ENTITY::APPLY_FORCE_TO_ENTITY(my_veh, 1, v_x / 35, v_y / 35, v_z / 35, 0, 0, 0, true, false, true, true, true, true);
-			}
-			nitro_e = true;
 		}
 	}
 	if (LIMP_IF_INJURED_VALUES[NitrousIndex] > 0 && CONTROLS::IS_CONTROL_RELEASED(2, 61) && !is_hotkey_held_veh_nitrous() && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && nitro_e == true) {
