@@ -1125,9 +1125,9 @@ void update_world_features()
 				float dirVector_rf_rr_x = bone3_cruiser_coord.x - bone4_cruiser_coord.x;
 				float dirVector_rf_rr_y = bone3_cruiser_coord.y - bone4_cruiser_coord.y;
 				float dirVector_rf_rr_z = bone3_cruiser_coord.z - (bone4_cruiser_coord.z + 1);
-				//int r = 43;
-				//int g = 47;
-				//int b = 48;
+				int r = 43;
+				int g = 47;
+				int b = 48;
 				if (VEHICLE::IS_TOGGLE_MOD_ON(bus_veh[i], 22)) {
 					r = 31;	g = 44; b = 54;
 					if (getGameVersion() > 45) {
