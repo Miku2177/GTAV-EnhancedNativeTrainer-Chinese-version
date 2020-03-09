@@ -231,7 +231,45 @@ public:
 
 	}
 };
-//
+// end of save/load bodyguard
+
+// save/load veh colours
+class SavedVehColourDBRow
+{
+public:
+
+	int rowID;
+	std::string saveName;
+	DWORD pcolour;
+	DWORD scolour;
+	DWORD pearl;
+	DWORD wheel;
+	DWORD pcustomr;
+	DWORD pcustomg;
+	DWORD pcustomb;
+	DWORD scustomr;
+	DWORD scustomg;
+	DWORD scustomb;
+
+	/*inline ~SavedVehColourDBRow()
+	{
+		for (std::vector<SavedBodSkinComponentDBRow*>::iterator it = components.begin(); it != components.end(); ++it)
+		{
+			delete (*it);
+		}
+
+		for (std::vector<SavedBodSkinPropDBRow*>::iterator it = props.begin(); it != props.end(); ++it)
+		{
+			delete (*it);
+		}
+	}
+
+	inline SavedVehColourDBRow()
+	{
+
+	}*/
+};
+// end of save/load veh colours
 
 class SavedSkinDBRow
 {
@@ -306,12 +344,20 @@ public:
 
 	std::vector<SavedBodSkinDBRow*> get_saved_bod_skins(int index = -1);
 
+	std::vector<SavedVehColourDBRow*> get_saved_veh_colours(int index = -1);
+	
 	void ENTDatabase::delete_saved_bod_skin(sqlite3_int64 slot);
+
+	void ENTDatabase::delete_saved_veh_colour(sqlite3_int64 slot);
 
 	void ENTDatabase::rename_saved_bod_skin(std::string name, sqlite3_int64 slot);
 
+	void ENTDatabase::rename_saved_veh_colour(std::string name, sqlite3_int64 slot);
+
 	bool ENTDatabase::save_bod_skin(Ped ped, std::string saveName, sqlite3_int64 slot);
 
+	bool ENTDatabase::save_veh_colour(Ped ped, std::string saveName, sqlite3_int64 slot);
+		
 	void ENTDatabase::delete_saved_bod_skin_children(sqlite3_int64 slot);
 
 	void ENTDatabase::save_bod_skin_components(Ped ped, sqlite3_int64 rowID);

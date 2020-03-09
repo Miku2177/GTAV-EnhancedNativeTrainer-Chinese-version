@@ -490,6 +490,37 @@ void ENTDatabase::handle_version(int oldVersion)
 			write_text_to_log_file("Skin props table created");
 		}
 	}
+
+	if (oldVersion < 13)
+	{
+		write_text_to_log_file("Main skin table not found, so creating it");
+
+		char* CREATE_VEH_COLOUR_TABLE_QUERY = "CREATE TABLE ENT_SAVED_VEH_COLOURS ( \
+			id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, \
+			saveName TEXT NOT NULL, \
+			pcolour INTEGER NOT NULL, \
+			scolour INTEGER NOT NULL, \
+			pearl INTEGER NOT NULL, \
+			wheel INTEGER NOT NULL, \
+			pcustomr INTEGER NOT NULL, \
+			pcustomg INTEGER NOT NULL, \
+			pcustomb INTEGER NOT NULL, \
+			scustomr INTEGER NOT NULL, \
+			scustomg INTEGER NOT NULL, \
+			scustomb INTEGER NOT NULL \
+			)";
+
+		int rcSkin1 = sqlite3_exec(db, CREATE_VEH_COLOUR_TABLE_QUERY, NULL, 0, &zErrMsg);
+		if (rcSkin1 != SQLITE_OK)
+		{
+			write_text_to_log_file("Main colour table creation problem");
+			sqlite3_free(zErrMsg);
+		}
+		else
+		{
+			write_text_to_log_file("Main colour table created");
+		}
+	}
 }
 
 bool ENTDatabase::open()
@@ -1659,6 +1690,196 @@ std::vector<SavedBodSkinDBRow*> ENTDatabase::get_saved_bod_skins(int index)
 	return results;
 }
 //
+
+// save/load veh colours
+void ENTDatabase::rename_saved_veh_colour(std::string name, sqlite3_int64 slot)
+{
+	mutex_lock();
+
+	sqlite3_stmt *stmt;
+	const char *pzTest;
+	auto qStr = "UPDATE ENT_SAVED_VEH_COLOURS SET saveName=? WHERE id=?";
+	int rc = sqlite3_prepare_v2(db, qStr, strlen(qStr), &stmt, &pzTest);
+
+	if (rc == SQLITE_OK)
+	{
+		// bind the value
+		sqlite3_bind_text(stmt, 1, name.c_str(), name.length(), 0);
+		sqlite3_bind_int64(stmt, 2, slot);
+
+		// commit
+		sqlite3_step(stmt);
+		sqlite3_finalize(stmt);
+	}
+	else
+	{
+		write_text_to_log_file("Failed to rename saved colours");
+		write_text_to_log_file(sqlite3_errmsg(db));
+	}
+
+	mutex_unlock();
+}
+
+void ENTDatabase::delete_saved_veh_colour(sqlite3_int64 slot)
+{
+	mutex_lock();
+
+	sqlite3_stmt *stmt;
+	const char *pzTest;
+	auto qStr = "DELETE FROM ENT_SAVED_VEH_COLOURS WHERE id=?";
+	int rc = sqlite3_prepare_v2(db, qStr, strlen(qStr), &stmt, &pzTest);
+
+	if (rc == SQLITE_OK)
+	{
+		// bind the value
+		sqlite3_bind_int64(stmt, 1, slot);
+
+		// commit
+		sqlite3_step(stmt);
+		sqlite3_finalize(stmt);
+	}
+	else
+	{
+		write_text_to_log_file("Failed to delete saved colours");
+		write_text_to_log_file(sqlite3_errmsg(db));
+	}
+
+	mutex_unlock();
+}
+
+std::vector<SavedVehColourDBRow*> ENTDatabase::get_saved_veh_colours(int index)
+{
+	write_text_to_log_file("Asked to load saved colours");
+
+	mutex_lock();
+
+	sqlite3_stmt *stmt;
+	const char *pzTest;
+
+	std::stringstream ss;
+	ss << "select * from ENT_SAVED_VEH_COLOURS";
+	if (index != -1)
+	{
+		ss << " WHERE id = ?";
+	}
+	auto qStr = ss.str();
+	int rc = sqlite3_prepare_v2(db, qStr.c_str(), qStr.length(), &stmt, &pzTest);
+
+	std::vector<SavedVehColourDBRow*> results;
+
+	if (rc == SQLITE_OK)
+	{
+		// bind the value
+		if (index != -1)
+		{
+			sqlite3_bind_int(stmt, 1, index);
+		}
+
+		int r = sqlite3_step(stmt);
+		while (r == SQLITE_ROW)
+		{
+			write_text_to_log_file("Skin row found");
+
+			SavedVehColourDBRow *skin = new SavedVehColourDBRow();
+
+			int index = 0;
+			skin->rowID = sqlite3_column_int(stmt, index++);
+			skin->saveName = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, index++)));
+			skin->pcolour = sqlite3_column_int(stmt, index++);
+			skin->scolour = sqlite3_column_int(stmt, index++);
+			skin->pearl = sqlite3_column_int(stmt, index++);
+			skin->wheel = sqlite3_column_int(stmt, index++);
+			skin->pcustomr = sqlite3_column_int(stmt, index++);
+			skin->pcustomg = sqlite3_column_int(stmt, index++);
+			skin->pcustomb = sqlite3_column_int(stmt, index++);
+			skin->scustomr = sqlite3_column_int(stmt, index++);
+			skin->scustomg = sqlite3_column_int(stmt, index++);
+			skin->scustomb = sqlite3_column_int(stmt, index++);
+
+			results.push_back(skin);
+
+			r = sqlite3_step(stmt);
+		}
+		sqlite3_finalize(stmt);
+	}
+	else
+	{
+		write_text_to_log_file("Failed to fetch saved colours");
+		write_text_to_log_file(sqlite3_errmsg(db));
+	}
+
+	mutex_unlock();
+
+	return results;
+}
+
+bool ENTDatabase::save_veh_colour(Ped ped, std::string saveName, sqlite3_int64 slot)
+{
+	mutex_lock();
+
+	std::stringstream ss;
+	ss << "INSERT OR REPLACE INTO ENT_SAVED_VEH_COLOURS VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+
+	sqlite3_stmt *stmt;
+	const char *pzTest;
+	auto ssStr = ss.str();
+	int rc = sqlite3_prepare_v2(db, ssStr.c_str(), ssStr.length(), &stmt, &pzTest);
+	bool result = true;
+
+	if (rc != SQLITE_OK)
+	{
+		write_text_to_log_file("Colour save failed");
+		write_text_to_log_file(sqlite3_errmsg(db));
+		result = false;
+	}
+
+	int index = 1;
+	if (slot == -1)
+	{
+		sqlite3_bind_null(stmt, index++);
+	}
+	else
+	{
+		sqlite3_bind_int64(stmt, index++, slot);
+	}
+	int primary, secondary, pearl, wheel, pcustomr, pcustomg, pcustomb, scustomr, scustomg, scustomb;
+	Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(ped, 1);
+	VEHICLE::GET_VEHICLE_COLOURS(veh, &primary, &secondary);
+	VEHICLE::GET_VEHICLE_EXTRA_COLOURS(veh, &pearl, &wheel);
+	VEHICLE::GET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, &pcustomr, &pcustomg, &pcustomb);
+	VEHICLE::GET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, &scustomr, &scustomg, &scustomb);
+	sqlite3_bind_text(stmt, index++, saveName.c_str(), saveName.length(), 0); //save name
+	sqlite3_bind_int(stmt, index++, primary); //primary colour
+	sqlite3_bind_int(stmt, index++, secondary); //secondary colour
+	sqlite3_bind_int(stmt, index++, pearl); //pearlescent colour
+	sqlite3_bind_int(stmt, index++, wheel); //wheel colour
+	sqlite3_bind_int(stmt, index++, pcustomr); //wheel colour
+	sqlite3_bind_int(stmt, index++, pcustomg); //wheel colour
+	sqlite3_bind_int(stmt, index++, pcustomb); //wheel colour
+	sqlite3_bind_int(stmt, index++, scustomr); //wheel colour
+	sqlite3_bind_int(stmt, index++, scustomg); //wheel colour
+	sqlite3_bind_int(stmt, index++, scustomb); //wheel colour
+
+	// commit
+	sqlite3_step(stmt);
+	sqlite3_finalize(stmt);
+
+	sqlite3_int64 newRowID = sqlite3_last_insert_rowid(db);
+
+	//if we're updating, delete any pre-existing children
+	//if (slot != -1)
+	//{
+	//	delete_saved_veh_colour_children(slot);
+	//}
+
+	//save_bod_skin_components(ped, newRowID);
+	//save_bod_skin_props(ped, newRowID);
+
+	mutex_unlock();
+
+	return result;
+}
+// end of save/load veh colours
 
 std::vector<SavedSkinDBRow*> ENTDatabase::get_saved_skins(int index)
 {

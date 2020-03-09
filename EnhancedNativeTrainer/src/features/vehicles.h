@@ -485,5 +485,3 @@ void vehicle_anchor();
 bool onconfirm_seat_menu(MenuItem<int> choice);
 
 bool process_veh_seat_menu();
-
-//extern bool featureNitro;
