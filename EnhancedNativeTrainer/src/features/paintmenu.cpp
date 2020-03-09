@@ -11,10 +11,20 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "vehicles.h"
 #include "..\ui_support\menu_functions.h"
 #include "..\io\config_io.h"
+#include "script.h"
 
 int whichpart = 0;
 int whichtype = 0;
 PaintIndexItem<int> *parentIndexItem = NULL;
+
+// save/load veh colours
+int activeSavedVehColourIndex = -1;
+std::string activeSavedVehColourSlotName;
+int lastKnownSavedVehColourCount = 0;
+bool vehcolourSaveMenuInterrupt = false;
+bool vehcolourSaveSlotMenuInterrupt = false;
+bool requireRefreshOfVehColourSaveSlots = false;
+bool requireRefreshOfVehColourSlotMenu = false;
 
 //Parts
 const std::vector<std::string> MENU_PAINT_WHAT{"Primary", "Secondary", "Primary & Secondary", "Pearlescent", "Wheels", "Interior", "Dash"};
@@ -423,19 +433,241 @@ bool process_paint_menu_liveries(){
 	return draw_generic_menu<int>(menuItems, &currentSelection, "Liveries", onconfirm_livery, onhighlight_livery, NULL, vehicle_menu_interrupt);
 }
 
+// save/load veh colours
+bool veh_colour_menu_interrupt() {
+	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) return true;
+	
+	if (vehcolourSaveMenuInterrupt)
+	{
+		vehcolourSaveMenuInterrupt = false;
+		return true;
+	}
+
+	return false;
+}
+
+bool veh_colour_save_slot_menu_interrupt()
+{
+	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) return true;
+
+	if (vehcolourSaveSlotMenuInterrupt)
+	{
+		vehcolourSaveSlotMenuInterrupt = false;
+		return true;
+	}
+	return false;
+}
+
+bool spawn_saved_veh_colour(int slot, std::string caption)
+{
+	ENTDatabase* database = get_database();
+
+	std::vector<SavedVehColourDBRow*> savedVehColours = database->get_saved_veh_colours(slot);
+
+	SavedVehColourDBRow* savedVehColour = savedVehColours.at(0);
+	//database->populate_saved_veh_colour(savedVehColour);
+	
+	VEHICLE::SET_VEHICLE_COLOURS(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 1), savedVehColour->pcolour, savedVehColour->scolour);
+	VEHICLE::SET_VEHICLE_EXTRA_COLOURS(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 1), savedVehColour->pearl, savedVehColour->wheel);
+	VEHICLE::SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 1), savedVehColour->pcustomr, savedVehColour->pcustomg, savedVehColour->pcustomb);
+	VEHICLE::SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 1), savedVehColour->scustomr, savedVehColour->scustomg, savedVehColour->scustomb);
+
+	for (std::vector<SavedVehColourDBRow*>::iterator it = savedVehColours.begin(); it != savedVehColours.end(); ++it)
+	{
+		delete (*it);
+	}
+	savedVehColours.clear();
+
+	return false;
+}
+
+void save_current_veh_colour(int slot)
+{
+	std::ostringstream ss;
+	if (slot != -1)
+	{
+		ss << activeSavedVehColourSlotName;
+	}
+	else
+	{
+		ss << "Saved Colour " << (lastKnownSavedVehColourCount + 1);
+	}
+
+	auto existingText = ss.str();
+	std::string result = show_keyboard(NULL, (char*)existingText.c_str());
+	if (!result.empty())
+	{
+		ENTDatabase* database = get_database();
+
+		if (database->save_veh_colour(PLAYER::PLAYER_PED_ID(), result, slot))
+		{
+			activeSavedVehColourSlotName = result;
+			set_status_text("Saved colour");
+		}
+		else
+		{
+			set_status_text("Save error");
+		}
+	}
+}
+
+bool onconfirm_veh_savedcolour_slot_menu(MenuItem<int> choice)
+{
+	switch (choice.value)
+	{
+	case 1: //spawn
+		spawn_saved_veh_colour(activeSavedVehColourIndex, activeSavedVehColourSlotName);
+		break;
+	case 2: //overwrite
+	{
+		save_current_veh_colour(activeSavedVehColourIndex);
+		requireRefreshOfVehColourSaveSlots = true;
+		requireRefreshOfVehColourSlotMenu = true;
+		vehcolourSaveSlotMenuInterrupt = true;
+		vehcolourSaveMenuInterrupt = true;
+	}
+	break;
+	case 3: //rename
+	{
+		std::string result = show_keyboard(NULL, (char*)activeSavedVehColourSlotName.c_str());
+		if (!result.empty())
+		{
+			ENTDatabase* database = get_database();
+			database->rename_saved_veh_colour(result, activeSavedVehColourIndex);
+			activeSavedVehColourSlotName = result;
+		}
+		requireRefreshOfVehColourSaveSlots = true;
+		requireRefreshOfVehColourSlotMenu = true;
+		vehcolourSaveSlotMenuInterrupt = true;
+		vehcolourSaveMenuInterrupt = true;
+	}
+	break;
+	case 4: //delete
+	{
+		ENTDatabase* database = get_database();
+		database->delete_saved_veh_colour(activeSavedVehColourIndex);
+		requireRefreshOfVehColourSlotMenu = false;
+		requireRefreshOfVehColourSaveSlots = true;
+		vehcolourSaveSlotMenuInterrupt = true;
+		vehcolourSaveMenuInterrupt = true;
+	}
+	break;
+	}
+	return false;
+}
+
+bool process_veh_savedcolour_slot_menu(int slot)
+{
+	do
+	{
+		vehcolourSaveSlotMenuInterrupt = false;
+		requireRefreshOfVehColourSlotMenu = false;
+
+		std::vector<MenuItem<int>*> menuItems;
+
+		MenuItem<int> *item = new MenuItem<int>();
+		item->isLeaf = true;
+		item->value = 1;
+		item->caption = "Apply";
+		menuItems.push_back(item);
+
+		item = new MenuItem<int>();
+		item->isLeaf = true;
+		item->value = 2;
+		item->caption = "Overwrite With Current";
+		menuItems.push_back(item);
+
+		item = new MenuItem<int>();
+		item->isLeaf = true;
+		item->value = 3;
+		item->caption = "Rename";
+		menuItems.push_back(item);
+
+		item = new MenuItem<int>();
+		item->isLeaf = true;
+		item->value = 4;
+		item->caption = "Delete";
+		menuItems.push_back(item);
+
+		draw_generic_menu<int>(menuItems, 0, activeSavedVehColourSlotName, onconfirm_veh_savedcolour_slot_menu, NULL, NULL, veh_colour_save_slot_menu_interrupt);
+	} while (requireRefreshOfVehColourSlotMenu);
+	return false;
+}
+
+bool onconfirm_veh_savedcolor_menu(MenuItem<int> choice)
+{
+	if (choice.value == -1)
+	{
+		save_current_veh_colour(-1);
+		requireRefreshOfVehColourSaveSlots = true;
+		vehcolourSaveMenuInterrupt = true;
+		return false;
+	}
+
+	activeSavedVehColourIndex = choice.value;
+	activeSavedVehColourSlotName = choice.caption;
+	return process_veh_savedcolour_slot_menu(choice.value);
+}
+
+bool process_veh_savedcolour_menu()
+{
+	do
+	{
+		vehcolourSaveMenuInterrupt = false;
+		requireRefreshOfVehColourSlotMenu = false;
+		requireRefreshOfVehColourSaveSlots = false;
+
+		ENTDatabase* database = get_database();
+		std::vector<SavedVehColourDBRow*> savedVehColours = database->get_saved_veh_colours();
+
+		lastKnownSavedVehColourCount = savedVehColours.size();
+
+		std::vector<MenuItem<int>*> menuItems;
+
+		MenuItem<int> *item = new MenuItem<int>();
+		item->isLeaf = true;
+		item->value = -1;
+		item->caption = "Create New Colour Set";
+		menuItems.push_back(item);
+
+		for each (SavedVehColourDBRow *sv in savedVehColours)
+		{
+			MenuItem<int> *item = new MenuItem<int>();
+			item->isLeaf = false;
+			item->value = sv->rowID;
+			item->caption = sv->saveName;
+			menuItems.push_back(item);
+		}
+
+		draw_generic_menu<int>(menuItems, 0, "Saved Colour Sets", onconfirm_veh_savedcolor_menu, NULL, NULL, veh_colour_menu_interrupt);
+
+		for (std::vector<SavedVehColourDBRow*>::iterator it = savedVehColours.begin(); it != savedVehColours.end(); ++it)
+		{
+			delete (*it);
+		}
+		savedVehColours.clear();
+	} while (requireRefreshOfVehColourSaveSlots);
+
+	return false;
+}
+// end of save/load veh colours
+
 bool onconfirm_paint_menu(MenuItem<int> choice){
 	whichpart = choice.value;
 	if(whichpart >= 0 && whichpart < 7){
 		process_paint_menu_type();
 	}
-	else if(whichpart == 7){
+	else if(whichpart == 8){
 		process_paint_menu_dirt();
 	}
-	else if(whichpart == 8){
+	else if(whichpart == 9){
 		process_paint_menu_fades();
 	}
-	else if(whichpart == 9){
+	else if(whichpart == 10){
 		process_paint_menu_liveries();
+	}
+	else if (whichpart == 163) {
+		process_veh_savedcolour_menu();
 	}
 
 	return false;
@@ -493,6 +725,12 @@ bool process_paint_menu(){
 		item->isLeaf = false;
 		menuItems.push_back(item);
 	}
+
+	item = new MenuItem<int>();
+	item->caption = "Saved Colours";
+	item->value = 163;
+	item->isLeaf = false;
+	menuItems.push_back(item);
 
 	return draw_generic_menu<int>(menuItems, 0, "Choose Which Part To Paint", onconfirm_paint_menu, NULL, NULL, vehicle_menu_interrupt);
 }
