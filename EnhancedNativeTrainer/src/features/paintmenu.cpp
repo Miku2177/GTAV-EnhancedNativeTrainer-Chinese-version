@@ -657,13 +657,13 @@ bool onconfirm_paint_menu(MenuItem<int> choice){
 	if(whichpart >= 0 && whichpart < 7){
 		process_paint_menu_type();
 	}
-	else if(whichpart == 8){
+	else if(whichpart == 7){
 		process_paint_menu_dirt();
 	}
-	else if(whichpart == 9){
+	else if(whichpart == 8){
 		process_paint_menu_fades();
 	}
-	else if(whichpart == 10){
+	else if(whichpart == 9){
 		process_paint_menu_liveries();
 	}
 	else if (whichpart == 163) {
