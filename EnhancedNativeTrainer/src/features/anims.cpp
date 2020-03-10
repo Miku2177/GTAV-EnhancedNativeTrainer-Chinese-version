@@ -12,11 +12,78 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include <sstream>
 #include <vector>
 
-const std::vector<std::string> SCENARIOS_ANIMAL_VALUES = { "PROP_BIRD_IN_TREE", "PROP_BIRD_TELEGRAPH_POLE", "WORLD_BOAR_GRAZING", "WORLD_CAT_SLEEPING_GROUND", "WORLD_CAT_SLEEPING_LEDGE", "WORLD_CHICKENHAWK_FEEDING", "WORLD_CHICKENHAWK_STANDING", "WORLD_CORMORANT_STANDING", "WORLD_COW_GRAZING", "WORLD_COYOTE_HOWL", "WORLD_COYOTE_REST", "WORLD_COYOTE_WANDER", "WORLD_CROW_FEEDING", "WORLD_CROW_STANDING", "WORLD_DEER_GRAZING", "WORLD_FISH_IDLE", "WORLD_DOG_BARKING_SHEPHERD", "WORLD_DOG_SITTING_SHEPHERD", "WORLD_GULL_FEEDING", "WORLD_GULL_STANDING", "WORLD_HEN_PECKING", "WORLD_HEN_STANDING", "WORLD_MOUNTAIN_LION_REST", "WORLD_MOUNTAIN_LION_WANDER", "WORLD_PIG_GRAZING", "WORLD_PIGEON_FEEDING", "WORLD_PIGEON_STANDING", "WORLD_RABBIT_EATING", "WORLD_RATS_EATING", "WORLD_DOG_BARKING_RETRIEVER", "WORLD_DOG_SITTING_RETRIEVER", "WORLD_DOG_BARKING_ROTTWEILER", "WORLD_DOG_SITTING_ROTTWEILER", "WORLD_SHARK_SWIM", "WORLD_DOG_BARKING_SMALL", "WORLD_DOG_SITTING_SMALL" };
-const std::vector<std::string> SCENARIOS_ANIMAL_CAPTIONS = { "Bird In Tree", "Bird On Telegraph Pole", "Boar Grazing", "Cat Sleeping On Ground", "Cat Sleeping On Ledge", "Chickenhawk Feeding", "Chickenhawk Standing", "Cormorant Standing", "Cow Grazing", "Coyote Howling", "Coyote Resting", "Coyote Wandering", "Crow Feeding", "Crow Standing", "Deer Grazing", "Fish Idle", "German Shepherd: Barking", "German Shepherd: Sitting", "Gull Feeding", "Gull Standing", "Hen Pecking", "Hen Standing", "Lion Resting", "Lion Wandering", "Pig Grazing", "Pigeon Feeding", "Pigeon Standing", "Rabbit Eating", "Rats Eating", "Retriever: Barking", "Retriever: Sitting", "Rottweiler: Barking", "Rottweiler: Sitting", "Shark Swimming", "Small Dog: Barking", "Small Dog: Sitting" };
+const std::vector<std::string> SCENARIOS_ANIMAL_VALUES = { "PROP_BIRD_IN_TREE", "PROP_BIRD_TELEGRAPH_POLE", "WORLD_BOAR_GRAZING", "WORLD_CAT_SLEEPING_GROUND", "WORLD_CAT_SLEEPING_LEDGE", "WORLD_CHICKENHAWK_FEEDING", "WORLD_CHICKENHAWK_STANDING", "WORLD_CORMORANT_STANDING", 
+"WORLD_COW_GRAZING", "WORLD_COYOTE_HOWL", "WORLD_COYOTE_REST", "WORLD_COYOTE_WANDER", "WORLD_CROW_FEEDING", "WORLD_CROW_STANDING", "WORLD_DEER_GRAZING", "WORLD_FISH_IDLE", "WORLD_DOG_BARKING_SHEPHERD", "WORLD_DOG_SITTING_SHEPHERD", "WORLD_GULL_FEEDING", "WORLD_GULL_STANDING", 
+"WORLD_HEN_PECKING", "WORLD_HEN_STANDING", "WORLD_MOUNTAIN_LION_REST", "WORLD_MOUNTAIN_LION_WANDER", "WORLD_PIG_GRAZING", "WORLD_PIGEON_FEEDING", "WORLD_PIGEON_STANDING", "WORLD_RABBIT_EATING", "WORLD_RATS_EATING", "WORLD_DOG_BARKING_RETRIEVER", "WORLD_DOG_SITTING_RETRIEVER", 
+"WORLD_DOG_BARKING_ROTTWEILER", "WORLD_DOG_SITTING_ROTTWEILER", "WORLD_SHARK_SWIM", "WORLD_DOG_BARKING_SMALL", "WORLD_DOG_SITTING_SMALL" };
+const std::vector<std::string> SCENARIOS_ANIMAL_CAPTIONS = { "Bird In Tree", "Bird On Telegraph Pole", "Boar Grazing", "Cat Sleeping On Ground", "Cat Sleeping On Ledge", "Chickenhawk Feeding", "Chickenhawk Standing", "Cormorant Standing", "Cow Grazing", "Coyote Howling", 
+"Coyote Resting", "Coyote Wandering", "Crow Feeding", "Crow Standing", "Deer Grazing", "Fish Idle", "German Shepherd: Barking", "German Shepherd: Sitting", "Gull Feeding", "Gull Standing", "Hen Pecking", "Hen Standing", "Lion Resting", "Lion Wandering", "Pig Grazing", 
+"Pigeon Feeding", "Pigeon Standing", "Rabbit Eating", "Rats Eating", "Retriever: Barking", "Retriever: Sitting", "Rottweiler: Barking", "Rottweiler: Sitting", "Shark Swimming", "Small Dog: Barking", "Small Dog: Sitting" };
 
-const std::vector<std::string> SCENARIOS_NORMAL_VALUES = { "PROP_HUMAN_BBQ", "PROP_HUMAN_BUM_BIN", "WORLD_HUMAN_BUM_FREEWAY", "PROP_HUMAN_BUM_SHOPPING_CART", "WORLD_HUMAN_BUM_SLUMPED", "WORLD_HUMAN_BUM_STANDING", "WORLD_HUMAN_BUM_WASH", "WORLD_HUMAN_CAR_PARK_ATTENDANT", "WORLD_HUMAN_CHEERING", "WORLD_HUMAN_MAID_CLEAN", "CODE_HUMAN_POLICE_CROWD_CONTROL", "WORLD_HUMAN_COP_IDLES", "CODE_HUMAN_POLICE_INVESTIGATE", "CODE_HUMAN_COWER", "CODE_HUMAN_STAND_COWER", "WORLD_HUMAN_CONST_DRILL", "WORLD_HUMAN_DRINKING", "WORLD_HUMAN_AA_COFFEE", "WORLD_HUMAN_DRUG_DEALER", "WORLD_HUMAN_DRUG_DEALER_HARD", "PROP_HUMAN_SEAT_MUSCLE_BENCH_PRESS", "PROP_HUMAN_SEAT_MUSCLE_BENCH_PRESS_PRISON", "PROP_HUMAN_MUSCLE_CHIN_UPS", "PROP_HUMAN_MUSCLE_CHIN_UPS_ARMY", "PROP_HUMAN_MUSCLE_CHIN_UPS_PRISON", "WORLD_HUMAN_MUSCLE_FLEX", "WORLD_HUMAN_MUSCLE_FREE_WEIGHTS", "WORLD_HUMAN_PUSH_UPS", "WORLD_HUMAN_SIT_UPS", "WORLD_HUMAN_MOBILE_FILM_SHOCKING", "WORLD_HUMAN_STAND_FISHING", "WORLD_HUMAN_GARDENER_LEAF_BLOWER", "WORLD_HUMAN_GARDENER_PLANT", "WORLD_HUMAN_GOLF_PLAYER", "WORLD_HUMAN_GUARD_PATROL", "WORLD_HUMAN_SECURITY_SHINE_TORCH", "WORLD_HUMAN_GUARD_STAND", "WORLD_HUMAN_GUARD_STAND_ARMY", "WORLD_HUMAN_HAMMERING", "WORLD_HUMAN_HANG_OUT_STREET", "WORLD_HUMAN_HIKER_STANDING", "WORLD_HUMAN_CLIPBOARD", "WORLD_HUMAN_HUMAN_STATUE", "WORLD_HUMAN_JANITOR", "WORLD_HUMAN_JOG_STANDING", "WORLD_HUMAN_LEANING", "WORLD_HUMAN_BINOCULARS", "CODE_HUMAN_MEDIC_TIME_OF_DEATH", "CODE_HUMAN_MEDIC_KNEEL", "CODE_HUMAN_MEDIC_TEND_TO_DEAD", "PROP_HUMAN_MOVIE_BULB", "PROP_HUMAN_MOVIE_STUDIO_LIGHT", "WORLD_HUMAN_MUSICIAN", "WORLD_HUMAN_PAPARAZZI", "CODE_HUMAN_PARK_CAR", "WORLD_HUMAN_PARTYING", "WORLD_HUMAN_PICNIC", "WORLD_HUMAN_PROSTITUTE_HIGH_CLASS", "WORLD_HUMAN_PROSTITUTE_LOW_CLASS", "PROP_HUMAN_SEAT_ARMCHAIR", "PROP_HUMAN_SEAT_BAR", "PROP_HUMAN_SEAT_COMPUTER", "PROP_HUMAN_SEAT_BENCH", "PROP_HUMAN_SEAT_BENCH_DRINK", "PROP_HUMAN_SEAT_BENCH_DRINK_BEER", "PROP_HUMAN_SEAT_BENCH_FOOD", "PROP_HUMAN_SEAT_CHAIR", "PROP_HUMAN_SEAT_CHAIR_DRINK", "PROP_HUMAN_SEAT_CHAIR_DRINK_BEER", "PROP_HUMAN_SEAT_CHAIR_FOOD", "PROP_HUMAN_SEAT_CHAIR_UPRIGHT", "PROP_HUMAN_SEAT_DECKCHAIR", "PROP_HUMAN_SEAT_DECKCHAIR_DRINK", "PROP_HUMAN_SEAT_CHAIR_MP_PLAYER", "WORLD_HUMAN_SEAT_LEDGE", "WORLD_HUMAN_SEAT_LEDGE_EATING", "WORLD_HUMAN_SEAT_STEPS", "WORLD_HUMAN_SEAT_WALL", "WORLD_HUMAN_SEAT_WALL_EATING", "WORLD_HUMAN_SEAT_WALL_TABLET", "PROP_HUMAN_SEAT_SEWING", "PROP_HUMAN_SEAT_SUNLOUNGER", "PROP_HUMAN_SEAT_STRIP_WATCH", "PROP_HUMAN_SEAT_BUS_STOP_WAIT", "WORLD_HUMAN_SMOKING", "WORLD_HUMAN_AA_SMOKE", "WORLD_HUMAN_SMOKING_POT", "WORLD_HUMAN_STAND_FIRE", "PROP_HUMAN_STAND_IMPATIENT", "WORLD_HUMAN_STAND_IMPATIENT", "WORLD_HUMAN_STAND_IMPATIENT_UPRIGHT", "WORLD_HUMAN_STAND_MOBILE", "WORLD_HUMAN_STAND_MOBILE_UPRIGHT", "WORLD_HUMAN_STRIP_WATCH_STAND", "WORLD_HUMAN_STUPOR", "WORLD_HUMAN_SUNBATHE", "WORLD_HUMAN_SUNBATHE_BACK", "WORLD_HUMAN_SUPERHERO", "WORLD_HUMAN_SWIMMING", "WORLD_HUMAN_TENNIS_PLAYER", "EAR_TO_TEXT", "EAR_TO_TEXT_FAT", "WORLD_HUMAN_TOURIST_MAP", "WORLD_HUMAN_TOURIST_MOBILE", "PROP_HUMAN_ATM", "PROP_HUMAN_PARKING_METER", "WORLD_HUMAN_VEHICLE_MECHANIC", "CODE_HUMAN_CROSS_ROAD_WAIT", "WORLD_HUMAN_WELDING", "WORLD_HUMAN_WINDOW_SHOP_BROWSE", "WORLD_HUMAN_YOGA" };
-const std::vector<std::string> SCENARIOS_NORMAL_CAPTIONS = { "BBQ", "Bum: Bin", "Bum: On Freeway", "Bum: Shopping Cart", "Bum: Slumped", "Bum: Standing", "Bum: Washing", "Car Park Attendant", "Cheering", "Cleaning Maid", "Cop: Crowd Control", "Cop: Idle", "Cop: Investigating", "Cowering", "Cowering (Standing)", "Drilling", "Drinking", "Drinking Coffee", "Drug Dealer", "Drug Dealer (Hard)", "Exercise: Bench Press", "Exercise: Bench Press (Prison)", "Exercise: Chin Ups", "Exercise: Chin Ups (Army)", "Exercise: Chin Ups (Prison)", "Exercise: Flexing Muscles", "Exercise: Lifting Weights", "Exercise: Push Ups", "Exercise: Sit Ups", "Filming Shocking Event", "Fishing (Standing)", "Gardener: Leaf Blower", "Gardener: Planting", "Golfer", "Guard: Patrolling", "Guard: Shining Torch", "Guard: Standing", "Guard: Standing, Army", "Hammering", "Hanging Out", "Hiker: Standing", "Holding Clipboard", "Human Statue", "Janitor", "Jogger: Standing", "Leaning", "Looking Through Binoculars", "Medic: Declaring Death", "Medic: Kneeling", "Medic: Tending To Injured", "Movie Bulb", "Movie Studio Lighting", "Musician", "Paparazzi", "Parking Car", "Partying", "Picnicking", "Prostitute: High Class", "Prostitute: Low Class", "Sitting: Armchair", "Sitting: At Bar", "Sitting: At Computer", "Sitting: Bench", "Sitting: Bench, Drinking", "Sitting: Bench, Drinking Beer", "Sitting: Bench, Eating", "Sitting: Chair", "Sitting: Chair, Drinking", "Sitting: Chair, Drinking Beer", "Sitting: Chair, Eating", "Sitting: Chair, Upright", "Sitting: Deckchair", "Sitting: Deckchair, Drinking", "Sitting: MP Player", "Sitting: On Ledge", "Sitting: On Ledge, Eating", "Sitting: On Steps", "Sitting: On Wall", "Sitting: On Wall, Eating", "Sitting: On Wall, Tablet", "Sitting: Sewing", "Sitting: Sun Lounger", "Sitting: Watching Stripper", "Sitting: At Bus Stop", "Smoking Cigarette 1", "Smoking Cigarette 2", "Smoking Pot", "Standing: By Fire", "Standing: Impatient 1", "Standing: Impatient 2", "Standing: Impatient, Upright", "Standing: On Mobile", "Standing: On Mobile, Upright", "Standing: Watching Stripper", "Stupor", "Sunbathing", "Sunbathing On Back", "Superhero", "Swimming", "Tennis Player", "Texting 1", "Texting 2", "Tourist: Looking At Map", "Tourist: On Mobile", "Using ATM", "Using Parking Meter", "Vehicle Mechanic", "Waiting To Cross Road", "Welding", "Window Shopping", "Yoga" };
+const std::vector<std::string> SCENARIOS_NORMAL_VALUES = { "PROP_HUMAN_BBQ", "PROP_HUMAN_BUM_BIN", "WORLD_HUMAN_BUM_FREEWAY", "PROP_HUMAN_BUM_SHOPPING_CART", "WORLD_HUMAN_BUM_SLUMPED", "WORLD_HUMAN_BUM_STANDING", "WORLD_HUMAN_BUM_WASH", "WORLD_HUMAN_CAR_PARK_ATTENDANT", 
+"WORLD_HUMAN_CHEERING", "WORLD_HUMAN_MAID_CLEAN", "CODE_HUMAN_POLICE_CROWD_CONTROL", "WORLD_HUMAN_COP_IDLES", "CODE_HUMAN_POLICE_INVESTIGATE", "CODE_HUMAN_COWER", "CODE_HUMAN_STAND_COWER", "WORLD_HUMAN_CONST_DRILL", "WORLD_HUMAN_DRINKING", "WORLD_HUMAN_AA_COFFEE", 
+"WORLD_HUMAN_DRUG_DEALER", "WORLD_HUMAN_DRUG_DEALER_HARD", "PROP_HUMAN_SEAT_MUSCLE_BENCH_PRESS", "PROP_HUMAN_SEAT_MUSCLE_BENCH_PRESS_PRISON", "PROP_HUMAN_MUSCLE_CHIN_UPS", "PROP_HUMAN_MUSCLE_CHIN_UPS_ARMY", "PROP_HUMAN_MUSCLE_CHIN_UPS_PRISON", "WORLD_HUMAN_MUSCLE_FLEX", 
+"WORLD_HUMAN_MUSCLE_FREE_WEIGHTS", "WORLD_HUMAN_PUSH_UPS", "WORLD_HUMAN_SIT_UPS", "WORLD_HUMAN_MOBILE_FILM_SHOCKING", "WORLD_HUMAN_STAND_FISHING", "WORLD_HUMAN_GARDENER_LEAF_BLOWER", "WORLD_HUMAN_GARDENER_PLANT", "WORLD_HUMAN_GOLF_PLAYER", "WORLD_HUMAN_GUARD_PATROL", 
+"WORLD_HUMAN_SECURITY_SHINE_TORCH", "WORLD_HUMAN_GUARD_STAND", "WORLD_HUMAN_GUARD_STAND_ARMY", "WORLD_HUMAN_HAMMERING", "WORLD_HUMAN_HANG_OUT_STREET", "WORLD_HUMAN_HIKER_STANDING", "WORLD_HUMAN_CLIPBOARD", "WORLD_HUMAN_HUMAN_STATUE", "WORLD_HUMAN_JANITOR", 
+"WORLD_HUMAN_JOG_STANDING", "WORLD_HUMAN_LEANING", "WORLD_HUMAN_BINOCULARS", "CODE_HUMAN_MEDIC_TIME_OF_DEATH", "CODE_HUMAN_MEDIC_KNEEL", "CODE_HUMAN_MEDIC_TEND_TO_DEAD", "PROP_HUMAN_MOVIE_BULB", "PROP_HUMAN_MOVIE_STUDIO_LIGHT", "WORLD_HUMAN_MUSICIAN", "WORLD_HUMAN_PAPARAZZI", 
+"CODE_HUMAN_PARK_CAR", "WORLD_HUMAN_PARTYING", "WORLD_HUMAN_PICNIC", "WORLD_HUMAN_PROSTITUTE_HIGH_CLASS", "WORLD_HUMAN_PROSTITUTE_LOW_CLASS", "PROP_HUMAN_SEAT_ARMCHAIR", "PROP_HUMAN_SEAT_BAR", "PROP_HUMAN_SEAT_COMPUTER", "PROP_HUMAN_SEAT_BENCH", "PROP_HUMAN_SEAT_BENCH_DRINK", 
+"PROP_HUMAN_SEAT_BENCH_DRINK_BEER", "PROP_HUMAN_SEAT_BENCH_FOOD", "PROP_HUMAN_SEAT_CHAIR", "PROP_HUMAN_SEAT_CHAIR_DRINK", "PROP_HUMAN_SEAT_CHAIR_DRINK_BEER", "PROP_HUMAN_SEAT_CHAIR_FOOD", "PROP_HUMAN_SEAT_CHAIR_UPRIGHT", "PROP_HUMAN_SEAT_DECKCHAIR", 
+"PROP_HUMAN_SEAT_DECKCHAIR_DRINK", "PROP_HUMAN_SEAT_CHAIR_MP_PLAYER", "WORLD_HUMAN_SEAT_LEDGE", "WORLD_HUMAN_SEAT_LEDGE_EATING", "WORLD_HUMAN_SEAT_STEPS", "WORLD_HUMAN_SEAT_WALL", "WORLD_HUMAN_SEAT_WALL_EATING", "WORLD_HUMAN_SEAT_WALL_TABLET", "PROP_HUMAN_SEAT_SEWING", 
+"PROP_HUMAN_SEAT_SUNLOUNGER", "PROP_HUMAN_SEAT_STRIP_WATCH", "PROP_HUMAN_SEAT_BUS_STOP_WAIT", "WORLD_HUMAN_SMOKING", "WORLD_HUMAN_AA_SMOKE", "WORLD_HUMAN_SMOKING_POT", "WORLD_HUMAN_STAND_FIRE", "PROP_HUMAN_STAND_IMPATIENT", "WORLD_HUMAN_STAND_IMPATIENT", 
+"WORLD_HUMAN_STAND_IMPATIENT_UPRIGHT", "WORLD_HUMAN_STAND_MOBILE", "WORLD_HUMAN_STAND_MOBILE_UPRIGHT", "WORLD_HUMAN_STRIP_WATCH_STAND", "WORLD_HUMAN_STUPOR", "WORLD_HUMAN_SUNBATHE", "WORLD_HUMAN_SUNBATHE_BACK", "WORLD_HUMAN_SUPERHERO", "WORLD_HUMAN_SWIMMING", 
+"WORLD_HUMAN_TENNIS_PLAYER", "EAR_TO_TEXT", "EAR_TO_TEXT_FAT", "WORLD_HUMAN_TOURIST_MAP", "WORLD_HUMAN_TOURIST_MOBILE", "PROP_HUMAN_ATM", "PROP_HUMAN_PARKING_METER", "WORLD_HUMAN_VEHICLE_MECHANIC", "CODE_HUMAN_CROSS_ROAD_WAIT", "WORLD_HUMAN_WELDING", 
+"WORLD_HUMAN_WINDOW_SHOP_BROWSE", "WORLD_HUMAN_YOGA" };
+const std::vector<std::string> SCENARIOS_NORMAL_CAPTIONS = { "BBQ", "Bum: Bin", "Bum: On Freeway", "Bum: Shopping Cart", "Bum: Slumped", "Bum: Standing", "Bum: Washing", "Car Park Attendant", "Cheering", "Cleaning Maid", "Cop: Crowd Control", "Cop: Idle", 
+"Cop: Investigating", "Cowering", "Cowering (Standing)", "Drilling", "Drinking", "Drinking Coffee", "Drug Dealer", "Drug Dealer (Hard)", "Exercise: Bench Press", "Exercise: Bench Press (Prison)", "Exercise: Chin Ups", "Exercise: Chin Ups (Army)", 
+"Exercise: Chin Ups (Prison)", "Exercise: Flexing Muscles", "Exercise: Lifting Weights", "Exercise: Push Ups", "Exercise: Sit Ups", "Filming Shocking Event", "Fishing (Standing)", "Gardener: Leaf Blower", "Gardener: Planting", "Golfer", "Guard: Patrolling", 
+"Guard: Shining Torch", "Guard: Standing", "Guard: Standing, Army", "Hammering", "Hanging Out", "Hiker: Standing", "Holding Clipboard", "Human Statue", "Janitor", "Jogger: Standing", "Leaning", "Looking Through Binoculars", "Medic: Declaring Death", "Medic: Kneeling", 
+"Medic: Tending To Injured", "Movie Bulb", "Movie Studio Lighting", "Musician", "Paparazzi", "Parking Car", "Partying", "Picnicking", "Prostitute: High Class", "Prostitute: Low Class", "Sitting: Armchair", "Sitting: At Bar", "Sitting: At Computer", "Sitting: Bench", 
+"Sitting: Bench, Drinking", "Sitting: Bench, Drinking Beer", "Sitting: Bench, Eating", "Sitting: Chair", "Sitting: Chair, Drinking", "Sitting: Chair, Drinking Beer", "Sitting: Chair, Eating", "Sitting: Chair, Upright", "Sitting: Deckchair", "Sitting: Deckchair, Drinking", 
+"Sitting: MP Player", "Sitting: On Ledge", "Sitting: On Ledge, Eating", "Sitting: On Steps", "Sitting: On Wall", "Sitting: On Wall, Eating", "Sitting: On Wall, Tablet", "Sitting: Sewing", "Sitting: Sun Lounger", "Sitting: Watching Stripper", "Sitting: At Bus Stop", 
+"Smoking Cigarette 1", "Smoking Cigarette 2", "Smoking Pot", "Standing: By Fire", "Standing: Impatient 1", "Standing: Impatient 2", "Standing: Impatient, Upright", "Standing: On Mobile", "Standing: On Mobile, Upright", "Standing: Watching Stripper", "Stupor", "Sunbathing", 
+"Sunbathing On Back", "Superhero", "Swimming", "Tennis Player", "Texting 1", "Texting 2", "Tourist: Looking At Map", "Tourist: On Mobile", "Using ATM", "Using Parking Meter", "Vehicle Mechanic", "Waiting To Cross Road", "Welding", "Window Shopping", "Yoga" };
+
+/*const std::vector<std::string> CLIPSETS_NORMAL_VALUES = { "move_action@generic@2h_melee_weapon@idles@high_energy@a", "move_action@generic@2h_melee_weapon@idles@high_energy@b", "move_action@generic@2h_melee_weapon@idles@low_energy@a",
+"move_action@generic@2h_melee_weapon@idles@low_energy@b", "move_action@generic@2h_melee_weapon@trans@p_m_one", "move_action@generic@2h_melee_weapon@trans@p_m_two", "move_action@generic@2h_melee_weapon@trans@p_m_zero", "move_action@generic@2h_melee_weapon@upper",
+"move_action@generic@ai_breakrun@1h", "move_action@generic@ai_breakrun@2h", "move_action@generic@core", "move_action@generic@idle@variations", "move_action@generic@mini_gun@idles@high_energy@a", "move_action@generic@mini_gun@idles@high_energy@b", 
+"move_action@generic@mini_gun@idles@low_energy@a", "move_action@generic@mini_gun@idles@low_energy@b", "move_action@generic@mini_gun@trans@mp_female", "move_action@generic@mini_gun@trans@p_m_one", "move_action@generic@mini_gun@trans@p_m_two", 
+"move_action@generic@mini_gun@trans@p_m_zero", "move_action@generic@mini_gun@upper", "move_action@generic@trans@1h", "move_action@generic@trans@2h", "move_action@generic@trans@2h_melee", "move_action@generic@trans@2h_short", "move_action@generic@trans@unarmed", 
+"move_action@mp_female@armed@1h@trans", "move_action@mp_female@armed@2h@trans", "move_action@mp_female@armed@2h@upper", "move_action@mp_female@armed@2h_melee@trans", "move_action@mp_female@armed@2h_short@trans", "move_action@mp_female@armed@2h_short@upper", 
+"move_action@mp_female@unarmed@core", "move_action@mp_female@unarmed@idle@variations", "move_action@mp_female@unarmed@trans@", "move_action@p_m_one@armed@1h@idle@high_energy@a", "move_action@p_m_one@armed@1h@idle@high_energy@b", "move_action@p_m_one@armed@1h@idle@high_energy@c",
+"move_action@p_m_one@armed@1h@idle@high_energy@d", "move_action@p_m_one@armed@1h@idle@low_energy@a", "move_action@p_m_one@armed@1h@idle@low_energy@b", "move_action@p_m_one@armed@1h@idle@low_energy@c", "move_action@p_m_one@armed@1h@idle@low_energy@d", 
+"move_action@p_m_one@armed@1h@trans@a", "move_action@p_m_one@armed@1h@upper", "move_action@p_m_one@armed@2h@idle@high_energy@a", "move_action@p_m_one@armed@2h@idle@high_energy@b", "move_action@p_m_one@armed@2h@idle@high_energy@c", 
+"move_action@p_m_one@armed@2h@idle@high_energy@d", "move_action@p_m_one@armed@2h@idle@low_energy@a", "move_action@p_m_one@armed@2h@idle@low_energy@b", "move_action@p_m_one@armed@2h@idle@low_energy@c", "move_action@p_m_one@armed@2h@idle@low_energy@d", 
+"move_action@p_m_one@armed@2h@trans@a", "move_action@p_m_one@armed@2h@upper", "move_action@p_m_one@armed@2h_short@idle@high_energy@a", "move_action@p_m_one@armed@2h_short@idle@high_energy@b", "move_action@p_m_one@armed@2h_short@idle@high_energy@c", 
+"move_action@p_m_one@armed@2h_short@idle@high_energy@d", "move_action@p_m_one@armed@2h_short@idle@low_energy@a", "move_action@p_m_one@armed@2h_short@idle@low_energy@b", "move_action@p_m_one@armed@2h_short@idle@low_energy@c", "move_action@p_m_one@armed@2h_short@idle@low_energy@d",
+"move_action@p_m_one@armed@2h_short@trans@a", "move_action@p_m_one@armed@2h_short@upper", "move_action@p_m_one@armed@core", "move_action@p_m_one@holster", "move_action@p_m_one@unarmed@core", "move_action@p_m_one@unarmed@idle@high_energy@a", 
+"move_action@p_m_one@unarmed@idle@high_energy@b", "move_action@p_m_one@unarmed@idle@high_energy@c", "move_action@p_m_one@unarmed@idle@high_energy@d", "move_action@p_m_one@unarmed@idle@low_energy@a", "move_action@p_m_one@unarmed@idle@low_energy@b", 
+"move_action@p_m_one@unarmed@idle@low_energy@c", "move_action@p_m_one@unarmed@idle@low_energy@d", "move_action@p_m_one@unarmed@idle@variations", "move_action@p_m_one@unarmed@trans@a", "move_action@p_m_two@armed@1h@idle@high_energy@a", 
+"move_action@p_m_two@armed@1h@idle@high_energy@b", "move_action@p_m_two@armed@1h@idle@high_energy@c", "move_action@p_m_two@armed@1h@idle@high_energy@d", "move_action@p_m_two@armed@1h@idle@low_energy@a", "move_action@p_m_two@armed@1h@idle@low_energy@b",
+"move_action@p_m_two@armed@1h@idle@low_energy@c", "move_action@p_m_two@armed@1h@idle@low_energy@d", "move_action@p_m_two@armed@1h@trans@a", "move_action@p_m_two@armed@1h@upper", "move_action@p_m_two@armed@2h@idle@high_energy@a", 
+"move_action@p_m_two@armed@2h@idle@high_energy@b", "move_action@p_m_two@armed@2h@idle@high_energy@c", "move_action@p_m_two@armed@2h@idle@high_energy@d", "move_action@p_m_two@armed@2h@idle@low_energy@a", "move_action@p_m_two@armed@2h@idle@low_energy@b", 
+"move_action@p_m_two@armed@2h@idle@low_energy@c", "move_action@p_m_two@armed@2h@idle@low_energy@d", "move_action@p_m_two@armed@2h@trans@a", "move_action@p_m_two@armed@2h@upper", "move_action@p_m_two@armed@2h_short@idle@high_energy@a", 
+"move_action@p_m_two@armed@2h_short@idle@high_energy@b", "move_action@p_m_two@armed@2h_short@idle@high_energy@c", "move_action@p_m_two@armed@2h_short@idle@high_energy@d", "move_action@p_m_two@armed@2h_short@idle@low_energy@a", 
+"move_action@p_m_two@armed@2h_short@idle@low_energy@b", "move_action@p_m_two@armed@2h_short@idle@low_energy@c", "move_action@p_m_two@armed@2h_short@idle@low_energy@d", "move_action@p_m_two@armed@2h_short@trans@a", "move_action@p_m_two@armed@2h_short@upper", 
+"move_action@p_m_two@armed@core", "move_action@p_m_two@holster", "move_action@p_m_two@unarmed@core", "move_action@p_m_two@unarmed@idle@high_energy@a", "move_action@p_m_two@unarmed@idle@high_energy@b", "move_action@p_m_two@unarmed@idle@high_energy@c", 
+"move_action@p_m_two@unarmed@idle@high_energy@d", "move_action@p_m_two@unarmed@idle@low_energy@a", "move_action@p_m_two@unarmed@idle@low_energy@b", "move_action@p_m_two@unarmed@idle@low_energy@c", "move_action@p_m_two@unarmed@idle@low_energy@d", 
+"move_action@p_m_two@unarmed@idle@variations", "move_action@p_m_two@unarmed@trans@a", "move_action@p_m_zero@armed@1h@idle@high_energy@a", "move_action@p_m_zero@armed@1h@idle@high_energy@b", "move_action@p_m_zero@armed@1h@idle@high_energy@c", 
+"move_action@p_m_zero@armed@1h@idle@high_energy@d", "move_action@p_m_zero@armed@1h@idle@low_energy@a", "move_action@p_m_zero@armed@1h@idle@low_energy@b", "move_action@p_m_zero@armed@1h@idle@low_energy@c", "move_action@p_m_zero@armed@1h@idle@low_energy@d", 
+"move_action@p_m_zero@armed@1h@trans@a", "move_action@p_m_zero@armed@1h@upper", "move_action@p_m_zero@armed@2h@idle@high_energy@a", "move_action@p_m_zero@armed@2h@idle@high_energy@b", "move_action@p_m_zero@armed@2h@idle@high_energy@c", 
+"move_action@p_m_zero@armed@2h@idle@high_energy@d", "move_action@p_m_zero@armed@2h@idle@low_energy@a", "move_action@p_m_zero@armed@2h@idle@low_energy@b", "move_action@p_m_zero@armed@2h@idle@low_energy@c", "move_action@p_m_zero@armed@2h@idle@low_energy@d", 
+"move_action@p_m_zero@armed@2h@trans@a", "move_action@p_m_zero@armed@2h@upper", "move_action@p_m_zero@armed@2h_short@idle@high_energy@a", "move_action@p_m_zero@armed@2h_short@idle@high_energy@b", "move_action@p_m_zero@armed@2h_short@idle@high_energy@c", 
+"move_action@p_m_zero@armed@2h_short@idle@high_energy@d", "move_action@p_m_zero@armed@2h_short@idle@low_energy@a", "move_action@p_m_zero@armed@2h_short@idle@low_energy@b", "move_action@p_m_zero@armed@2h_short@idle@low_energy@c", 
+"move_action@p_m_zero@armed@2h_short@idle@low_energy@d", "move_action@p_m_zero@armed@2h_short@trans@a", "move_action@p_m_zero@armed@2h_short@upper", "move_action@p_m_zero@armed@core", "move_action@p_m_zero@holster", "move_action@p_m_zero@unarmed@core", 
+"move_action@p_m_zero@unarmed@idle@high_energy@a", "move_action@p_m_zero@unarmed@idle@high_energy@b", "move_action@p_m_zero@unarmed@idle@high_energy@c", "move_action@p_m_zero@unarmed@idle@high_energy@d", "move_action@p_m_zero@unarmed@idle@low_energy@a", 
+"move_action@p_m_zero@unarmed@idle@low_energy@b", "move_action@p_m_zero@unarmed@idle@low_energy@c", "move_action@p_m_zero@unarmed@idle@low_energy@d", "move_action@p_m_zero@unarmed@idle@variations", "move_action@p_m_zero@unarmed@trans@a", "move_aim_strafe_crouch_2h", 
+"move_avoidance@generic_m", "move_ballistic", "move_ballistic_2h", "move_ballistic_minigun", "move_bucket", "move_bucket_arms", "move_characters@amanda@bag", "move_characters@ballas@core", "move_characters@ballas@flee", "move_characters@casey@nervous", 
+"move_characters@dave_n@core@", "move_characters@floyd@core@", "move_characters@franklin@fire", "move_characters@jimmy@core@", "move_characters@jimmy@nervous@", "move_characters@jimmy@slow@", "move_characters@lamar@core", "move_characters@lester@std", 
+"move_characters@lester@std_caneup", "move_characters@lester@waiting", "move_characters@lester@waiting_caneup", "move_characters@michael@fire", "move_characters@michael@gay", "move_characters@orleans@core@", "move_characters@patricia@core@", "move_characters@peter@core", 
+"move_characters@peter@waiting", "move_characters@ron@core@", "move_characters@sandy@core", "move_characters@sandy@texting", "move_characters@tracey@core@", "move_characters@trevor@cough_run", "move_characters@trevor@gay", "move_climb", "move_clown@generic", 
+"move_clown@generic_idles@", "move_clown@p_m_one", "move_clown@p_m_one_idles@", "move_clown@p_m_two", "move_clown@p_m_two_idles@", "move_clown@p_m_zero", "move_clown@p_m_zero_idles@", "move_cop@action", "move_crawl", "move_crawlprone2crawlback", 
+"move_crawlprone2crawlfront", "move_crouch_proto", "move_drop", "move_drunk_m", "move_duck_for_cover", "move_f@arrogant@a", "move_f@arrogant@b", "move_f@arrogant@c", "move_f@business@a", "move_f@chichi", "move_f@chubby@a", "move_f@depressed@a", "move_f@depressed@b", 
+"move_f@depressed@c", "move_f@drunk@a", "move_f@exhausted", "move_f@fat@a", "move_f@femme@", "move_f@film_reel", "move_f@film_reel_arms", "move_f@flee@a", "move_f@flee@b", "move_f@flee@c", "move_f@flee@generic", "move_f@gangster@ng", "move_f@generic", 
+"move_f@generic_idles@std", "" };
+const std::vector<std::string> CLIPSETS_NORMAL_CAPTIONS = { "" };*/
 
 int activeScenarioLineIndex[2]{ 0, 0 };
 
@@ -36,10 +103,10 @@ char* lastImmediatePlayDict = 0;
 char* lastImmediatePlayAnim = 0;
 int lastImmediateType = 0;
 
-const int CATEGORY_FACIAL_IDLE = 90;
-const int CATEGORY_MOVE_IDLE = 91;
-const int CATEGORY_MOVE_WALK = 92;
-const int CATEGORY_MOVE_RUN = 93;
+//const int CATEGORY_FACIAL_IDLE = 90;
+//const int CATEGORY_MOVE_IDLE = 91;
+//const int CATEGORY_MOVE_WALK = 92;
+//const int CATEGORY_MOVE_RUN = 93;
 const int CATEGORY_FACIAL_NOW = 94;
 const int CATEGORY_GENERAL_NOW = 95;
 const int CATEGORY_SCENARIOS = 96;
@@ -22107,18 +22174,18 @@ bool onconfirm_anim_menu(MenuItem<int> choice)
 		case CATEGORY_FACIAL_NOW:
 		case CATEGORY_GENERAL_NOW:
 			break;
-		case CATEGORY_FACIAL_IDLE:
-			PED::CLEAR_FACIAL_IDLE_ANIM_OVERRIDE(playerPed);
-			break;
-		case CATEGORY_MOVE_IDLE:
-			PED::CLEAR_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 0, true);
-			break;
-		case CATEGORY_MOVE_WALK:
-			PED::CLEAR_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 1, true);
-			break;
-		case CATEGORY_MOVE_RUN:
-			PED::CLEAR_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 2, true);
-			break;
+		//case CATEGORY_FACIAL_IDLE:
+		//	PED::CLEAR_FACIAL_IDLE_ANIM_OVERRIDE(playerPed);
+		//	break;
+		//case CATEGORY_MOVE_IDLE:
+		//	PED::CLEAR_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 0, true);
+		//	break;
+		//case CATEGORY_MOVE_WALK:
+		//	PED::CLEAR_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 1, true);
+		//	break;
+		//case CATEGORY_MOVE_RUN:
+		//	PED::CLEAR_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 2, true);
+		//	break;
 		case CATEGORY_MOVE_CLIPSET:
 			PED::RESET_PED_MOVEMENT_CLIPSET(playerPed, 1.0f);
 			break;
@@ -22144,11 +22211,11 @@ bool onconfirm_anim_menu(MenuItem<int> choice)
 		switch (currentAnimMenuMode)
 		{
 		case CATEGORY_FACIAL_NOW:
-		case CATEGORY_FACIAL_IDLE:
+		//case CATEGORY_FACIAL_IDLE:
 		case CATEGORY_GENERAL_NOW:
-		case CATEGORY_MOVE_IDLE:
-		case CATEGORY_MOVE_WALK:
-		case CATEGORY_MOVE_RUN:
+		//case CATEGORY_MOVE_IDLE:
+		//case CATEGORY_MOVE_WALK:
+		//case CATEGORY_MOVE_RUN:
 		{
 			if (STREAMING::DOES_ANIM_DICT_EXIST(dict))
 			{
@@ -22229,14 +22296,14 @@ bool process_anims_menu()
 		switch (currentAnimMenuMode)
 		{//facial immediate
 		case CATEGORY_FACIAL_NOW:
-		case CATEGORY_FACIAL_IDLE: //facial delay
+		//case CATEGORY_FACIAL_IDLE: //facial delay
 			currentMenuNode = facialsNode;
 			break;
-		case CATEGORY_MOVE_IDLE:
-		case CATEGORY_MOVE_WALK:
-		case CATEGORY_MOVE_RUN:
-			currentMenuNode = movementNode;
-			break;
+		//case CATEGORY_MOVE_IDLE:
+		//case CATEGORY_MOVE_WALK:
+		//case CATEGORY_MOVE_RUN:
+		//	currentMenuNode = movementNode;
+		//	break;
 		case CATEGORY_MOVE_CLIPSET:
 			currentMenuNode = movementClipsetNode;
 			break;
@@ -22254,10 +22321,10 @@ bool process_anims_menu()
 	{
 		switch (currentAnimMenuMode)
 		{
-		case CATEGORY_FACIAL_IDLE: //facial delay
-		case CATEGORY_MOVE_IDLE:
-		case CATEGORY_MOVE_WALK:
-		case CATEGORY_MOVE_RUN:
+		//case CATEGORY_FACIAL_IDLE: //facial delay
+		//case CATEGORY_MOVE_IDLE:
+		//case CATEGORY_MOVE_WALK:
+		//case CATEGORY_MOVE_RUN:
 		case CATEGORY_MOVE_CLIPSET:
 			addClearItem = true;
 			break;
@@ -22299,21 +22366,21 @@ bool process_anims_menu()
 	case CATEGORY_GENERAL_NOW:
 		caption = "Player Anims";
 		break;
-	case CATEGORY_FACIAL_IDLE: //facial delay
-		caption = "Facial Idle Anims";
-		break;
-	case CATEGORY_MOVE_IDLE:
-		caption = "Idle Anims";
-		break;
-	case CATEGORY_MOVE_WALK:
-		caption = "Walking Anims";
-		break;
+	//case CATEGORY_FACIAL_IDLE: //facial delay
+	//	caption = "Facial Idle Anims";
+	//	break;
+	//case CATEGORY_MOVE_IDLE:
+	//	caption = "Idle Anims";
+	//	break;
+	//case CATEGORY_MOVE_WALK:
+	//	caption = "Walking Anims";
+	//	break;
 	case CATEGORY_MOVE_CLIPSET:
 		caption = "Movement Clipsets";
 		break;
-	case CATEGORY_MOVE_RUN:
-		caption = "Running Anims";
-		break;
+	//case CATEGORY_MOVE_RUN:
+	//	caption = "Running Anims";
+	//	break;
 	}
 
 	std::stringstream caption_ss;
@@ -22432,31 +22499,31 @@ void do_play_anim(Ped playerPed, char* dict, char* anim, int mode)
 	PED::SET_PED_CAN_PLAY_AMBIENT_BASE_ANIMS(playerPed, true);
 	PED::SET_PED_CAN_PLAY_GESTURE_ANIMS(playerPed, true);
 
-	anim_p = true;
-
 	lastImmediatePlayDict = dict;
 	lastImmediatePlayAnim = anim;
 
 	switch (mode)
 	{
 	case CATEGORY_FACIAL_NOW:
+		anim_p = true;
 		PED::PLAY_FACIAL_ANIM(playerPed, anim, dict);
 		break;
-	case CATEGORY_FACIAL_IDLE:
-		PED::SET_FACIAL_IDLE_ANIM_OVERRIDE(playerPed, anim, dict);
-		break;
+	//case CATEGORY_FACIAL_IDLE:
+	//	PED::SET_FACIAL_IDLE_ANIM_OVERRIDE(playerPed, anim, dict);
+	//	break;
 	case CATEGORY_GENERAL_NOW:
+		anim_p = true;
 		AI::TASK_PLAY_ANIM(playerPed, dict, anim, 8, -8, -1, 0, 0, false, 0, true);
 		break;
-	case CATEGORY_MOVE_IDLE:
-		PED::SET_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 0, dict, anim, 0, true);
-		break;
-	case CATEGORY_MOVE_WALK:
-		PED::SET_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 1, dict, anim, 0, true);
-		break;
-	case CATEGORY_MOVE_RUN:
-		PED::SET_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 2, dict, anim, 0, true);
-		break;
+	//case CATEGORY_MOVE_IDLE:
+	//	PED::SET_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 0, dict, anim, 0, true);
+	//	break;
+	//case CATEGORY_MOVE_WALK:
+	//	PED::SET_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 1, dict, anim, 0, true);
+	//	break;
+	//case CATEGORY_MOVE_RUN:
+	//	PED::SET_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 2, dict, anim, 0, true);
+	//	break;
 	case CATEGORY_MOVE_CLIPSET:
 		PED::SET_PED_MOVEMENT_CLIPSET(playerPed, dict, 1.0f);
 		break;
