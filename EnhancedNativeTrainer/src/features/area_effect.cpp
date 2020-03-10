@@ -741,7 +741,6 @@ void update_area_effects(Ped playerPed){
 			v_collided.erase(v_collided.begin());
 		}
 	} // end of aggressive drivers && vigilante citizens
-
 }
 
 void set_all_nearby_peds_to_calm(){
