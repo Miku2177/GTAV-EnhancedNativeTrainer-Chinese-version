@@ -103,3 +103,5 @@ void cleanup_anims();
 void update_anims_features(BOOL bPlayerExists, Ped playerPed);
 
 bool process_scenarios_menu_l1();
+
+bool process_clipset_menu();
