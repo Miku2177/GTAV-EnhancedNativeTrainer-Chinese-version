@@ -43,49 +43,22 @@ const std::vector<std::string> SCENARIOS_NORMAL_CAPTIONS = { "BBQ", "Bum: Bin", 
 "Smoking Cigarette 1", "Smoking Cigarette 2", "Smoking Pot", "Standing: By Fire", "Standing: Impatient 1", "Standing: Impatient 2", "Standing: Impatient, Upright", "Standing: On Mobile", "Standing: On Mobile, Upright", "Standing: Watching Stripper", "Stupor", "Sunbathing", 
 "Sunbathing On Back", "Superhero", "Swimming", "Tennis Player", "Texting 1", "Texting 2", "Tourist: Looking At Map", "Tourist: On Mobile", "Using ATM", "Using Parking Meter", "Vehicle Mechanic", "Waiting To Cross Road", "Welding", "Window Shopping", "Yoga" };
 
-/*const std::vector<std::string> CLIPSETS_NORMAL_VALUES = { "move_action@generic@2h_melee_weapon@idles@high_energy@a", "move_action@generic@2h_melee_weapon@idles@high_energy@b", "move_action@generic@2h_melee_weapon@idles@low_energy@a",
-"move_action@generic@2h_melee_weapon@idles@low_energy@b", "move_action@generic@2h_melee_weapon@trans@p_m_one", "move_action@generic@2h_melee_weapon@trans@p_m_two", "move_action@generic@2h_melee_weapon@trans@p_m_zero", "move_action@generic@2h_melee_weapon@upper",
-"move_action@generic@ai_breakrun@1h", "move_action@generic@ai_breakrun@2h", "move_action@generic@core", "move_action@generic@idle@variations", "move_action@generic@mini_gun@idles@high_energy@a", "move_action@generic@mini_gun@idles@high_energy@b", 
-"move_action@generic@mini_gun@idles@low_energy@a", "move_action@generic@mini_gun@idles@low_energy@b", "move_action@generic@mini_gun@trans@mp_female", "move_action@generic@mini_gun@trans@p_m_one", "move_action@generic@mini_gun@trans@p_m_two", 
-"move_action@generic@mini_gun@trans@p_m_zero", "move_action@generic@mini_gun@upper", "move_action@generic@trans@1h", "move_action@generic@trans@2h", "move_action@generic@trans@2h_melee", "move_action@generic@trans@2h_short", "move_action@generic@trans@unarmed", 
-"move_action@mp_female@armed@1h@trans", "move_action@mp_female@armed@2h@trans", "move_action@mp_female@armed@2h@upper", "move_action@mp_female@armed@2h_melee@trans", "move_action@mp_female@armed@2h_short@trans", "move_action@mp_female@armed@2h_short@upper", 
-"move_action@mp_female@unarmed@core", "move_action@mp_female@unarmed@idle@variations", "move_action@mp_female@unarmed@trans@", "move_action@p_m_one@armed@1h@idle@high_energy@a", "move_action@p_m_one@armed@1h@idle@high_energy@b", "move_action@p_m_one@armed@1h@idle@high_energy@c",
-"move_action@p_m_one@armed@1h@idle@high_energy@d", "move_action@p_m_one@armed@1h@idle@low_energy@a", "move_action@p_m_one@armed@1h@idle@low_energy@b", "move_action@p_m_one@armed@1h@idle@low_energy@c", "move_action@p_m_one@armed@1h@idle@low_energy@d", 
-"move_action@p_m_one@armed@1h@trans@a", "move_action@p_m_one@armed@1h@upper", "move_action@p_m_one@armed@2h@idle@high_energy@a", "move_action@p_m_one@armed@2h@idle@high_energy@b", "move_action@p_m_one@armed@2h@idle@high_energy@c", 
-"move_action@p_m_one@armed@2h@idle@high_energy@d", "move_action@p_m_one@armed@2h@idle@low_energy@a", "move_action@p_m_one@armed@2h@idle@low_energy@b", "move_action@p_m_one@armed@2h@idle@low_energy@c", "move_action@p_m_one@armed@2h@idle@low_energy@d", 
-"move_action@p_m_one@armed@2h@trans@a", "move_action@p_m_one@armed@2h@upper", "move_action@p_m_one@armed@2h_short@idle@high_energy@a", "move_action@p_m_one@armed@2h_short@idle@high_energy@b", "move_action@p_m_one@armed@2h_short@idle@high_energy@c", 
-"move_action@p_m_one@armed@2h_short@idle@high_energy@d", "move_action@p_m_one@armed@2h_short@idle@low_energy@a", "move_action@p_m_one@armed@2h_short@idle@low_energy@b", "move_action@p_m_one@armed@2h_short@idle@low_energy@c", "move_action@p_m_one@armed@2h_short@idle@low_energy@d",
-"move_action@p_m_one@armed@2h_short@trans@a", "move_action@p_m_one@armed@2h_short@upper", "move_action@p_m_one@armed@core", "move_action@p_m_one@holster", "move_action@p_m_one@unarmed@core", "move_action@p_m_one@unarmed@idle@high_energy@a", 
-"move_action@p_m_one@unarmed@idle@high_energy@b", "move_action@p_m_one@unarmed@idle@high_energy@c", "move_action@p_m_one@unarmed@idle@high_energy@d", "move_action@p_m_one@unarmed@idle@low_energy@a", "move_action@p_m_one@unarmed@idle@low_energy@b", 
-"move_action@p_m_one@unarmed@idle@low_energy@c", "move_action@p_m_one@unarmed@idle@low_energy@d", "move_action@p_m_one@unarmed@idle@variations", "move_action@p_m_one@unarmed@trans@a", "move_action@p_m_two@armed@1h@idle@high_energy@a", 
-"move_action@p_m_two@armed@1h@idle@high_energy@b", "move_action@p_m_two@armed@1h@idle@high_energy@c", "move_action@p_m_two@armed@1h@idle@high_energy@d", "move_action@p_m_two@armed@1h@idle@low_energy@a", "move_action@p_m_two@armed@1h@idle@low_energy@b",
-"move_action@p_m_two@armed@1h@idle@low_energy@c", "move_action@p_m_two@armed@1h@idle@low_energy@d", "move_action@p_m_two@armed@1h@trans@a", "move_action@p_m_two@armed@1h@upper", "move_action@p_m_two@armed@2h@idle@high_energy@a", 
-"move_action@p_m_two@armed@2h@idle@high_energy@b", "move_action@p_m_two@armed@2h@idle@high_energy@c", "move_action@p_m_two@armed@2h@idle@high_energy@d", "move_action@p_m_two@armed@2h@idle@low_energy@a", "move_action@p_m_two@armed@2h@idle@low_energy@b", 
-"move_action@p_m_two@armed@2h@idle@low_energy@c", "move_action@p_m_two@armed@2h@idle@low_energy@d", "move_action@p_m_two@armed@2h@trans@a", "move_action@p_m_two@armed@2h@upper", "move_action@p_m_two@armed@2h_short@idle@high_energy@a", 
-"move_action@p_m_two@armed@2h_short@idle@high_energy@b", "move_action@p_m_two@armed@2h_short@idle@high_energy@c", "move_action@p_m_two@armed@2h_short@idle@high_energy@d", "move_action@p_m_two@armed@2h_short@idle@low_energy@a", 
-"move_action@p_m_two@armed@2h_short@idle@low_energy@b", "move_action@p_m_two@armed@2h_short@idle@low_energy@c", "move_action@p_m_two@armed@2h_short@idle@low_energy@d", "move_action@p_m_two@armed@2h_short@trans@a", "move_action@p_m_two@armed@2h_short@upper", 
-"move_action@p_m_two@armed@core", "move_action@p_m_two@holster", "move_action@p_m_two@unarmed@core", "move_action@p_m_two@unarmed@idle@high_energy@a", "move_action@p_m_two@unarmed@idle@high_energy@b", "move_action@p_m_two@unarmed@idle@high_energy@c", 
-"move_action@p_m_two@unarmed@idle@high_energy@d", "move_action@p_m_two@unarmed@idle@low_energy@a", "move_action@p_m_two@unarmed@idle@low_energy@b", "move_action@p_m_two@unarmed@idle@low_energy@c", "move_action@p_m_two@unarmed@idle@low_energy@d", 
-"move_action@p_m_two@unarmed@idle@variations", "move_action@p_m_two@unarmed@trans@a", "move_action@p_m_zero@armed@1h@idle@high_energy@a", "move_action@p_m_zero@armed@1h@idle@high_energy@b", "move_action@p_m_zero@armed@1h@idle@high_energy@c", 
-"move_action@p_m_zero@armed@1h@idle@high_energy@d", "move_action@p_m_zero@armed@1h@idle@low_energy@a", "move_action@p_m_zero@armed@1h@idle@low_energy@b", "move_action@p_m_zero@armed@1h@idle@low_energy@c", "move_action@p_m_zero@armed@1h@idle@low_energy@d", 
-"move_action@p_m_zero@armed@1h@trans@a", "move_action@p_m_zero@armed@1h@upper", "move_action@p_m_zero@armed@2h@idle@high_energy@a", "move_action@p_m_zero@armed@2h@idle@high_energy@b", "move_action@p_m_zero@armed@2h@idle@high_energy@c", 
-"move_action@p_m_zero@armed@2h@idle@high_energy@d", "move_action@p_m_zero@armed@2h@idle@low_energy@a", "move_action@p_m_zero@armed@2h@idle@low_energy@b", "move_action@p_m_zero@armed@2h@idle@low_energy@c", "move_action@p_m_zero@armed@2h@idle@low_energy@d", 
-"move_action@p_m_zero@armed@2h@trans@a", "move_action@p_m_zero@armed@2h@upper", "move_action@p_m_zero@armed@2h_short@idle@high_energy@a", "move_action@p_m_zero@armed@2h_short@idle@high_energy@b", "move_action@p_m_zero@armed@2h_short@idle@high_energy@c", 
-"move_action@p_m_zero@armed@2h_short@idle@high_energy@d", "move_action@p_m_zero@armed@2h_short@idle@low_energy@a", "move_action@p_m_zero@armed@2h_short@idle@low_energy@b", "move_action@p_m_zero@armed@2h_short@idle@low_energy@c", 
-"move_action@p_m_zero@armed@2h_short@idle@low_energy@d", "move_action@p_m_zero@armed@2h_short@trans@a", "move_action@p_m_zero@armed@2h_short@upper", "move_action@p_m_zero@armed@core", "move_action@p_m_zero@holster", "move_action@p_m_zero@unarmed@core", 
-"move_action@p_m_zero@unarmed@idle@high_energy@a", "move_action@p_m_zero@unarmed@idle@high_energy@b", "move_action@p_m_zero@unarmed@idle@high_energy@c", "move_action@p_m_zero@unarmed@idle@high_energy@d", "move_action@p_m_zero@unarmed@idle@low_energy@a", 
-"move_action@p_m_zero@unarmed@idle@low_energy@b", "move_action@p_m_zero@unarmed@idle@low_energy@c", "move_action@p_m_zero@unarmed@idle@low_energy@d", "move_action@p_m_zero@unarmed@idle@variations", "move_action@p_m_zero@unarmed@trans@a", "move_aim_strafe_crouch_2h", 
-"move_avoidance@generic_m", "move_ballistic", "move_ballistic_2h", "move_ballistic_minigun", "move_bucket", "move_bucket_arms", "move_characters@amanda@bag", "move_characters@ballas@core", "move_characters@ballas@flee", "move_characters@casey@nervous", 
-"move_characters@dave_n@core@", "move_characters@floyd@core@", "move_characters@franklin@fire", "move_characters@jimmy@core@", "move_characters@jimmy@nervous@", "move_characters@jimmy@slow@", "move_characters@lamar@core", "move_characters@lester@std", 
-"move_characters@lester@std_caneup", "move_characters@lester@waiting", "move_characters@lester@waiting_caneup", "move_characters@michael@fire", "move_characters@michael@gay", "move_characters@orleans@core@", "move_characters@patricia@core@", "move_characters@peter@core", 
-"move_characters@peter@waiting", "move_characters@ron@core@", "move_characters@sandy@core", "move_characters@sandy@texting", "move_characters@tracey@core@", "move_characters@trevor@cough_run", "move_characters@trevor@gay", "move_climb", "move_clown@generic", 
-"move_clown@generic_idles@", "move_clown@p_m_one", "move_clown@p_m_one_idles@", "move_clown@p_m_two", "move_clown@p_m_two_idles@", "move_clown@p_m_zero", "move_clown@p_m_zero_idles@", "move_cop@action", "move_crawl", "move_crawlprone2crawlback", 
-"move_crawlprone2crawlfront", "move_crouch_proto", "move_drop", "move_drunk_m", "move_duck_for_cover", "move_f@arrogant@a", "move_f@arrogant@b", "move_f@arrogant@c", "move_f@business@a", "move_f@chichi", "move_f@chubby@a", "move_f@depressed@a", "move_f@depressed@b", 
-"move_f@depressed@c", "move_f@drunk@a", "move_f@exhausted", "move_f@fat@a", "move_f@femme@", "move_f@film_reel", "move_f@film_reel_arms", "move_f@flee@a", "move_f@flee@b", "move_f@flee@c", "move_f@flee@generic", "move_f@gangster@ng", "move_f@generic", 
-"move_f@generic_idles@std", "" };
-const std::vector<std::string> CLIPSETS_NORMAL_CAPTIONS = { "" };*/
+const std::vector<std::string> CLIPSETS_NORMAL_VALUES = { "move_action@generic@2h_melee_weapon@upper", "move_action@generic@core", "move_action@generic@mini_gun@upper", "move_action@mp_female@armed@2h@upper", 
+"move_action@mp_female@unarmed@core", "move_action@p_m_one@armed@core", "move_action@p_m_one@unarmed@core", "move_action@p_m_two@armed@2h@upper", 
+"move_action@p_m_two@armed@core", "move_action@p_m_zero@armed@1h@upper", "move_action@p_m_zero@armed@2h@upper", "move_action@p_m_zero@armed@core", 
+"move_characters@amanda@bag", "move_characters@franklin@fire", "move_characters@jimmy@nervous@", "move_characters@jimmy@slow@", "move_characters@michael@fire", "move_characters@orleans@core@", "move_cop@action", "move_f@arrogant@a", 
+"move_f@chichi", "move_f@chubby@a", "move_f@depressed@a", "move_f@depressed@c", "move_f@fat@a", "move_f@femme@", "move_f@film_reel", "move_f@flee@a", "move_f@flee@generic", 
+"move_f@handbag", "move_f@heels@c", "move_f@hiking", "move_f@hurry@b", "move_f@injured", "move_f@maneater", "move_f@multiplayer", "move_f@posh@", "move_f@sad@a", "move_f@sad@b", "move_f@sassy", "move_f@sexy@a", "move_f@tool_belt@a", 
+"move_f@tough_guy@", "move_injured_generic", "move_m@alien", "move_m@brave", "move_m@brave@b", "move_m@brave@fallback", "move_m@business@a", "move_m@business@b", "move_m@business@c", "move_m@buzzed", 
+"move_m@casual@a", "move_m@casual@b", "move_m@casual@c", "move_m@casual@d", "move_m@casual@e", "move_m@casual@f", "move_m@clipboard", "move_m@confident", "move_m@coward", "move_m@depressed@a", "move_m@depressed@b", "move_m@drunk@a", "move_m@drunk@moderatedrunk", 
+"move_m@drunk@moderatedrunk_head_up", "move_m@drunk@slightlydrunk", "move_m@drunk@verydrunk", "move_m@fat@a", "move_m@femme@", "move_m@flee@generic", "move_m@gangster@generic", "move_m@gangster@ng", 
+"move_m@hiking", "move_m@hipster@a", "move_m@hobo@a", "move_m@hurry@a", "move_m@hurry@c", "move_m@injured", "move_m@intimidation@1h", 
+"move_m@intimidation@unarmed", "move_m@leaf_blower", "move_m@money", "move_m@muscle@a", "move_m@posh@", "move_m@quick", "move_m@sad@a", "move_m@sad@b", "move_m@sad@c", "move_m@sassy", "move_m@shadyped@a", 
+"move_m@shocked@a", "move_m@swagger", "move_m@swagger@b", "move_m@tool_belt@a", "move_m@tough_guy@", "move_p_m_one", "move_p_m_one_briefcase", "move_p_m_two", "move_p_m_zero", "move_p_m_zero_slow", "move_stealth@p_m_one@1h@upper", 
+"move_stealth@p_m_one@unarmed@core", "move_stealth@p_m_zero@1h@upper", "move_stealth@p_m_zero@2h_short@upper" };
 
 int activeScenarioLineIndex[2]{ 0, 0 };
+int activeClipsetLineIndex = 0;
 
 TreeNode *rootNode;
 
@@ -93,7 +66,7 @@ TreeNode *facialsNode;
 
 TreeNode *movementNode;
 
-TreeNode *movementClipsetNode;
+//TreeNode *movementClipsetNode;
 
 TreeNode *currentMenuNode;
 int currentAnimMenuDepth = 0;
@@ -12570,7 +12543,7 @@ const std::vector<std::string> ALL_ANIMS =
 	//"move_f@film_reel run",
 	//"move_f@film_reel_arms run",
 	/*W_F!!!*/"move_f@flee@a run",
-	/*W_F!!!*/"move_f@flee@b run",
+	//"move_f@flee@b run",
 	//"move_f@flee@c run",
 	//"move_f@flee@generic run_turn_l2",
 	//"move_f@flee@generic run_turn_r3",
@@ -12803,7 +12776,7 @@ const std::vector<std::string> ALL_ANIMS =
 	//"move_m@hobo@a run",
 	/*W_F!!!*/"move_m@hobo@b run",
 	/*W_F!!!*/"move_m@hurry@a walk",
-	/*W_F!!!*/"move_m@hurry@b walk",
+	//"move_m@hurry@b walk",
 	//"move_m@hurry@c walk",
 	//"move_m@hurry_butch@a walk",
 	//"move_m@hurry_butch@b walk",
@@ -22089,7 +22062,7 @@ DWORD WINAPI build_anim_tree_thread(LPVOID lpParameter)
 	rootNode = build_anim_tree(ALL_ANIMS);
 	facialsNode = build_anim_tree_with_suffix_filter("facial");
 	movementNode = build_anim_tree_with_prefix_filter("move");
-	movementClipsetNode = build_anim_tree_for_clipsets("move");
+	//movementClipsetNode = build_anim_tree_for_clipsets("move");
 	loaded = true;
 	return 0;
 }
@@ -22233,26 +22206,24 @@ bool onconfirm_anim_menu(MenuItem<int> choice)
 			}
 		}
 		break;
-		case CATEGORY_MOVE_CLIPSET:
-		{
-
-
-			DWORD ticks = GetTickCount();
-			STREAMING::REQUEST_ANIM_SET((char*)dict);
-			while (!STREAMING::HAS_ANIM_SET_LOADED(dict) && GetTickCount() < ticks + 5000)
-			{
-				make_periodic_feature_call();
-				WAIT(0);
-			}
-			if (!STREAMING::HAS_ANIM_SET_LOADED(dict))
-			{
-				std::stringstream ss;
-				ss << "Loading clipset " << dict << " failed";
-				set_status_text(ss.str());
-				return false;
-			}
-		}
-		break;
+		//case CATEGORY_MOVE_CLIPSET:
+		//{
+		//	DWORD ticks = GetTickCount();
+		//	STREAMING::REQUEST_ANIM_SET((char*)dict);
+		//	while (!STREAMING::HAS_ANIM_SET_LOADED(dict) && GetTickCount() < ticks + 5000)
+		//	{
+		//		make_periodic_feature_call();
+		//		WAIT(0);
+		//	}
+		//	if (!STREAMING::HAS_ANIM_SET_LOADED(dict))
+		//	{
+		//		std::stringstream ss;
+		//		ss << "Loading clipset " << dict << " failed";
+		//		set_status_text(ss.str());
+		//		return false;
+		//	}
+		//}
+		//break;
 		}
 
 		switch (currentAnimMenuMode)
@@ -22304,9 +22275,9 @@ bool process_anims_menu()
 		//case CATEGORY_MOVE_RUN:
 		//	currentMenuNode = movementNode;
 		//	break;
-		case CATEGORY_MOVE_CLIPSET:
-			currentMenuNode = movementClipsetNode;
-			break;
+		//case CATEGORY_MOVE_CLIPSET:
+		//	currentMenuNode = movementClipsetNode;
+		//	break;
 		case CATEGORY_GENERAL_NOW:
 		default:
 			currentMenuNode = rootNode;
@@ -22325,9 +22296,9 @@ bool process_anims_menu()
 		//case CATEGORY_MOVE_IDLE:
 		//case CATEGORY_MOVE_WALK:
 		//case CATEGORY_MOVE_RUN:
-		case CATEGORY_MOVE_CLIPSET:
-			addClearItem = true;
-			break;
+		//case CATEGORY_MOVE_CLIPSET:
+		//	addClearItem = true;
+		//	break;
 		}
 	}
 
@@ -22375,9 +22346,9 @@ bool process_anims_menu()
 	//case CATEGORY_MOVE_WALK:
 	//	caption = "Walking Anims";
 	//	break;
-	case CATEGORY_MOVE_CLIPSET:
-		caption = "Movement Clipsets";
-		break;
+	//case CATEGORY_MOVE_CLIPSET:
+	//	caption = "Movement Clipsets";
+	//	break;
 	//case CATEGORY_MOVE_RUN:
 	//	caption = "Running Anims";
 	//	break;
@@ -22397,6 +22368,10 @@ bool onconfirm_anim_top_menu(MenuItem<int> choice)
 	if (choice.value == CATEGORY_SCENARIOS)
 	{
 		process_scenarios_menu_l1();
+	}
+	else if (choice.value == CATEGORY_MOVE_CLIPSET)
+	{
+		process_clipset_menu();
 	}
 	else
 	{
@@ -22420,6 +22395,12 @@ bool process_anims_menu_top()
 
 	item = new MenuItem<int>();
 	item->isLeaf = false;
+	item->caption = "Movement Clipsets";
+	item->value = CATEGORY_MOVE_CLIPSET;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->isLeaf = false;
 	item->caption = "Facial Anims: Immediate Play";
 	item->value = CATEGORY_FACIAL_NOW;
 	menuItems.push_back(item);
@@ -22435,12 +22416,6 @@ bool process_anims_menu_top()
 	//item->caption = "Movement Anims";
 	//item->value = CATEGORY_MOVE_IDLE;
 	//menuItems.push_back(item);
-
-	item = new MenuItem<int>();
-	item->isLeaf = false;
-	item->caption = "Movement Clipsets";
-	item->value = CATEGORY_MOVE_CLIPSET;
-	menuItems.push_back(item);
 
 	//item = new MenuItem<int>();
 	//item->isLeaf = false;
@@ -22524,9 +22499,9 @@ void do_play_anim(Ped playerPed, char* dict, char* anim, int mode)
 	//case CATEGORY_MOVE_RUN:
 	//	PED::SET_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 2, dict, anim, 0, true);
 	//	break;
-	case CATEGORY_MOVE_CLIPSET:
-		PED::SET_PED_MOVEMENT_CLIPSET(playerPed, dict, 1.0f);
-		break;
+	//case CATEGORY_MOVE_CLIPSET:
+	//	PED::SET_PED_MOVEMENT_CLIPSET(playerPed, dict, 1.0f);
+	//	break;
 	}
 }
 
@@ -22547,10 +22522,10 @@ void cleanup_anims()
 		delete movementNode;
 	}
 
-	if (movementClipsetNode != 0)
-	{
-		delete movementClipsetNode;
-	}
+	//if (movementClipsetNode != 0)
+	//{
+	//	delete movementClipsetNode;
+	//}
 
 	if (currentMenuNode != 0)
 	{
@@ -22660,4 +22635,60 @@ bool process_scenarios_menu_l1()
 
 	bool result = draw_generic_menu<int>(menuItems, &activeScenarioLineIndex[0], "Scenarios", onconfirm_scenarios_menu_l1, NULL, NULL, NULL);
 	return false;
+}
+
+bool onconfirm_clipset_menu(MenuItem<int> choice)
+{
+	activeClipsetLineIndex = choice.value;
+
+	std::vector<MenuItem<int>*> menuItems;
+	std::string value;
+	std::string caption;
+	
+	value = CLIPSETS_NORMAL_VALUES[activeClipsetLineIndex];
+	caption = CLIPSETS_NORMAL_VALUES[activeClipsetLineIndex];
+	
+	DWORD ticks = GetTickCount();
+		STREAMING::REQUEST_ANIM_SET((char*)(char*)value.c_str());
+		while (!STREAMING::HAS_ANIM_SET_LOADED((char*)value.c_str()) && GetTickCount() < ticks + 5000)
+		{
+			make_periodic_feature_call();
+			WAIT(0);
+		}
+		if (!STREAMING::HAS_ANIM_SET_LOADED((char*)value.c_str()))
+		{
+			std::stringstream ss;
+			ss << "Loading clipset " << (char*)value.c_str() << " failed";
+			set_status_text(ss.str());
+			return false;
+		}
+
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	AI::CLEAR_PED_TASKS(playerPed);
+	//AI::TASK_START_SCENARIO_IN_PLACE(playerPed, (char*)value.c_str(), 0, true);
+	PED::SET_PED_MOVEMENT_CLIPSET(playerPed, (char*)value.c_str(), 1.0f);
+
+	return false;
+}
+
+bool process_clipset_menu()
+{
+	std::vector<MenuItem<int>*> menuItems;
+	std::vector<std::string> captions;
+	std::string menuCaption;
+	
+	menuCaption = "Movement Clipsets";
+	captions = CLIPSETS_NORMAL_VALUES;
+
+	int i = 0;
+	for each (std::string scenario in captions)
+	{
+		MenuItem<int> *item = new MenuItem<int>();
+		item->caption = scenario;
+		item->value = i++;
+		menuItems.push_back(item);
+	}
+
+	bool result = draw_generic_menu<int>(menuItems, &activeClipsetLineIndex, menuCaption, onconfirm_clipset_menu, NULL, NULL, NULL);
+	return result;
 }
