@@ -337,6 +337,12 @@ void process_areaeffect_vehicle_menu(){
 	listItem->value = VehColourIndex;
 	menuItems.push_back(listItem);
 
+	togItem = new ToggleMenuItem<int>();
+	togItem->caption = "Bus Interior Light On At Night";
+	togItem->value = 1;
+	togItem->toggleValue = &featureBusLight;
+	menuItems.push_back(togItem);
+
 	draw_generic_menu<int>(menuItems, &areaeffect_veh_level_menu_index, "Vehicle Effects", NULL, NULL, NULL);
 }
 
