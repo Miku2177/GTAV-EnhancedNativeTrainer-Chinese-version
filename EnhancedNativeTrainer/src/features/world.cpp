@@ -604,12 +604,6 @@ void process_world_menu()
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Bus Interior Light On At Night";
-	togItem->value = 1;
-	togItem->toggleValue = &featureBusLight;
-	menuItems.push_back(togItem);
-
-	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "Deadly Water";
 	togItem->value = 1;
 	togItem->toggleValue = &featureAcidWater;

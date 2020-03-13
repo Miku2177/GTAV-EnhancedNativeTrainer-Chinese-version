@@ -92,3 +92,5 @@ extern bool featureFirstPersonDeathCamera;
 void EnableTracks(bool tracksVehicle, bool tracksPeds, bool deepTracksVehicle, bool deepTracksPed);
 
 void EnableSnow(bool featureSnow);
+
+extern bool featureBusLight;
