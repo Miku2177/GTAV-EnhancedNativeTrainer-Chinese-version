@@ -6200,9 +6200,9 @@ void fix_vehicle(){
 
 			set_status_text("Vehicle repaired");
 		}
-		else{
-			set_status_text("Player isn't in a vehicle");
-		}
+		//else{
+		//	set_status_text("Player isn't in a vehicle");
+		//}
 	}
 }
 
@@ -6215,11 +6215,10 @@ void clean_vehicle(){
 			VEHICLE::SET_VEHICLE_DIRT_LEVEL(PED::GET_VEHICLE_PED_IS_USING(playerPed), 0);
 
 			set_status_text("Vehicle cleaned");
-
 		}
-		else{
-			set_status_text("Player isn't in a vehicle");
-		}
+		//else{
+		//	set_status_text("Player isn't in a vehicle");
+		//}
 	}
 }
 
