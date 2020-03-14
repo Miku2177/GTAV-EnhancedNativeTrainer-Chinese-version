@@ -1853,12 +1853,12 @@ bool ENTDatabase::save_veh_colour(Ped ped, std::string saveName, sqlite3_int64 s
 	sqlite3_bind_int(stmt, index++, secondary); //secondary colour
 	sqlite3_bind_int(stmt, index++, pearl); //pearlescent colour
 	sqlite3_bind_int(stmt, index++, wheel); //wheel colour
-	sqlite3_bind_int(stmt, index++, pcustomr); //wheel colour
-	sqlite3_bind_int(stmt, index++, pcustomg); //wheel colour
-	sqlite3_bind_int(stmt, index++, pcustomb); //wheel colour
-	sqlite3_bind_int(stmt, index++, scustomr); //wheel colour
-	sqlite3_bind_int(stmt, index++, scustomg); //wheel colour
-	sqlite3_bind_int(stmt, index++, scustomb); //wheel colour
+	sqlite3_bind_int(stmt, index++, pcustomr); //primary R colour
+	sqlite3_bind_int(stmt, index++, pcustomg); //primary G colour
+	sqlite3_bind_int(stmt, index++, pcustomb); //primary B colour
+	sqlite3_bind_int(stmt, index++, scustomr); //secondary R colour
+	sqlite3_bind_int(stmt, index++, scustomg); //secondary G colour
+	sqlite3_bind_int(stmt, index++, scustomb); //secondary B colour
 
 	// commit
 	sqlite3_step(stmt);

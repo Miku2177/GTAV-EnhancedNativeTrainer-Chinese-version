@@ -1877,7 +1877,7 @@ void process_veh_menu(){
 	menuItems.push_back(listItem);
 	
 	item = new MenuItem<int>();
-	item->caption = "Paint Menu";
+	item->caption = "Paint";
 	item->value = i++;
 	item->isLeaf = false;
 	menuItems.push_back(item);
