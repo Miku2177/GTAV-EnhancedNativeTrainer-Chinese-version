@@ -670,66 +670,35 @@ bool onconfirm_paint_menu(MenuItem<int> choice){
 		process_veh_savedcolour_menu();
 	}
 	else if (whichpart == 164) {
-		int rand_colour_1 = -1;
-		int rand_colour_2 = -1;
-		int rand_category_1 = (rand() % 5 + 0);
-		int rand_category_2 = (rand() % 5 + 0);
-		if (rand_category_1 == 0) rand_colour_1 = (rand() % (PAINTS_CLASSIC.size() - 1) + 0);
-		if (rand_category_1 == 1) rand_colour_1 = (rand() % (PAINTS_MATTE.size() - 1) + 0);
-		if (rand_category_1 == 2) rand_colour_1 = (rand() % (PAINTS_METALS.size() - 1) + 0);
-		if (rand_category_1 == 3) rand_colour_1 = (rand() % (PAINTS_UTIL.size() - 1) + 0);
-		if (rand_category_1 == 4) rand_colour_1 = (rand() % (PAINTS_WORN.size() - 1) + 0);
-		if (rand_category_1 == 5) rand_colour_1 = (rand() % (PAINTS_CHROME.size() - 1) + 0);
-		if (rand_category_2 == 0) rand_colour_2 = (rand() % (PAINTS_CLASSIC.size() - 1) + 0);
-		if (rand_category_2 == 1) rand_colour_2 = (rand() % (PAINTS_MATTE.size() - 1) + 0);
-		if (rand_category_2 == 2) rand_colour_2 = (rand() % (PAINTS_METALS.size() - 1) + 0);
-		if (rand_category_2 == 3) rand_colour_2 = (rand() % (PAINTS_UTIL.size() - 1) + 0);
-		if (rand_category_2 == 4) rand_colour_2 = (rand() % (PAINTS_WORN.size() - 1) + 0);
-		if (rand_category_2 == 5) rand_colour_2 = (rand() % (PAINTS_CHROME.size() - 1) + 0);
-		VEHICLE::SET_VEHICLE_COLOURS(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 1), rand_colour_1, rand_colour_2);
-		rand_colour_1 = -1;
-		rand_colour_2 = -1;
-		rand_category_1 = (rand() % 5 + 0);
-		rand_category_2 = (rand() % 5 + 0);
-		if (rand_category_1 == 0) rand_colour_1 = (rand() % (PAINTS_CLASSIC.size() - 1) + 0);
-		if (rand_category_1 == 1) rand_colour_1 = (rand() % (PAINTS_MATTE.size() - 1) + 0);
-		if (rand_category_1 == 2) rand_colour_1 = (rand() % (PAINTS_METALS.size() - 1) + 0);
-		if (rand_category_1 == 3) rand_colour_1 = (rand() % (PAINTS_UTIL.size() - 1) + 0);
-		if (rand_category_1 == 4) rand_colour_1 = (rand() % (PAINTS_WORN.size() - 1) + 0);
-		if (rand_category_1 == 5) rand_colour_1 = (rand() % (PAINTS_CHROME.size() - 1) + 0);
-		if (rand_category_2 == 0) rand_colour_2 = (rand() % (PAINTS_CLASSIC.size() - 1) + 0);
-		if (rand_category_2 == 1) rand_colour_2 = (rand() % (PAINTS_MATTE.size() - 1) + 0);
-		if (rand_category_2 == 2) rand_colour_2 = (rand() % (PAINTS_METALS.size() - 1) + 0);
-		if (rand_category_2 == 3) rand_colour_2 = (rand() % (PAINTS_UTIL.size() - 1) + 0);
-		if (rand_category_2 == 4) rand_colour_2 = (rand() % (PAINTS_WORN.size() - 1) + 0);
-		if (rand_category_2 == 5) rand_colour_2 = (rand() % (PAINTS_CHROME.size() - 1) + 0);
-		VEHICLE::SET_VEHICLE_EXTRA_COLOURS(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 1), rand_colour_1, rand_colour_2);
-		int rand_colour_r_1 = (rand() % 255 + 0);
-		int rand_colour_g_1 = (rand() % 255 + 0);
-		int rand_colour_b_1 = (rand() % 255 + 0);
-		int rand_colour_r_2 = (rand() % 255 + 0);
-		int rand_colour_g_2 = (rand() % 255 + 0);
-		int rand_colour_b_2 = (rand() % 255 + 0);
-		VEHICLE::SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 1), rand_colour_r_1, rand_colour_g_1, rand_colour_b_1);
-		VEHICLE::SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 1), rand_colour_r_2, rand_colour_g_2, rand_colour_b_2);
-		rand_colour_1 = -1;
-		rand_colour_2 = -1;
-		rand_category_1 = (rand() % 5 + 0);
-		rand_category_2 = (rand() % 5 + 0);
-		if (rand_category_1 == 0) rand_colour_1 = (rand() % (PAINTS_CLASSIC.size() - 1) + 0);
-		if (rand_category_1 == 1) rand_colour_1 = (rand() % (PAINTS_MATTE.size() - 1) + 0);
-		if (rand_category_1 == 2) rand_colour_1 = (rand() % (PAINTS_METALS.size() - 1) + 0);
-		if (rand_category_1 == 3) rand_colour_1 = (rand() % (PAINTS_UTIL.size() - 1) + 0);
-		if (rand_category_1 == 4) rand_colour_1 = (rand() % (PAINTS_WORN.size() - 1) + 0);
-		if (rand_category_1 == 5) rand_colour_1 = (rand() % (PAINTS_CHROME.size() - 1) + 0);
-		if (rand_category_2 == 0) rand_colour_2 = (rand() % (PAINTS_CLASSIC.size() - 1) + 0);
-		if (rand_category_2 == 1) rand_colour_2 = (rand() % (PAINTS_MATTE.size() - 1) + 0);
-		if (rand_category_2 == 2) rand_colour_2 = (rand() % (PAINTS_METALS.size() - 1) + 0);
-		if (rand_category_2 == 3) rand_colour_2 = (rand() % (PAINTS_UTIL.size() - 1) + 0);
-		if (rand_category_2 == 4) rand_colour_2 = (rand() % (PAINTS_WORN.size() - 1) + 0);
-		if (rand_category_2 == 5) rand_colour_2 = (rand() % (PAINTS_CHROME.size() - 1) + 0);
-		VEHICLE::_SET_VEHICLE_INTERIOR_COLOUR(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 1), rand_colour_1);
-		VEHICLE::_SET_VEHICLE_DASHBOARD_COLOUR(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 1), rand_colour_2);
+		for (int i = 0; i < 5; i++) {
+			int rand_colour_1 = -1;
+			int rand_colour_2 = -1;
+			int rand_category_1 = (rand() % 5 + 0);
+			int rand_category_2 = (rand() % 5 + 0);
+			if (rand_category_1 == 0) rand_colour_1 = (rand() % (PAINTS_CLASSIC.size() - 1) + 0);
+			if (rand_category_1 == 1) rand_colour_1 = (rand() % (PAINTS_MATTE.size() - 1) + 0);
+			if (rand_category_1 == 2) rand_colour_1 = (rand() % (PAINTS_METALS.size() - 1) + 0);
+			if (rand_category_1 == 3) rand_colour_1 = (rand() % (PAINTS_UTIL.size() - 1) + 0);
+			if (rand_category_1 == 4) rand_colour_1 = (rand() % (PAINTS_WORN.size() - 1) + 0);
+			if (rand_category_1 == 5) rand_colour_1 = (rand() % (PAINTS_CHROME.size() - 1) + 0);
+			if (rand_category_2 == 0) rand_colour_2 = (rand() % (PAINTS_CLASSIC.size() - 1) + 0);
+			if (rand_category_2 == 1) rand_colour_2 = (rand() % (PAINTS_MATTE.size() - 1) + 0);
+			if (rand_category_2 == 2) rand_colour_2 = (rand() % (PAINTS_METALS.size() - 1) + 0);
+			if (rand_category_2 == 3) rand_colour_2 = (rand() % (PAINTS_UTIL.size() - 1) + 0);
+			if (rand_category_2 == 4) rand_colour_2 = (rand() % (PAINTS_WORN.size() - 1) + 0);
+			if (rand_category_2 == 5) rand_colour_2 = (rand() % (PAINTS_CHROME.size() - 1) + 0);
+			int rand_colour_r = (rand() % 255 + 0);
+			int rand_colour_g = (rand() % 255 + 0);
+			int rand_colour_b = (rand() % 255 + 0);
+			if (i == 0) VEHICLE::SET_VEHICLE_COLOURS(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 1), rand_colour_1, rand_colour_2);
+			if (i == 1) VEHICLE::SET_VEHICLE_EXTRA_COLOURS(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 1), rand_colour_1, rand_colour_2);
+			if (i == 2) VEHICLE::SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 1), rand_colour_r, rand_colour_g, rand_colour_b);
+			if (i == 3) VEHICLE::SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 1), rand_colour_r, rand_colour_g, rand_colour_b);
+			if (i == 4) {
+				VEHICLE::_SET_VEHICLE_INTERIOR_COLOUR(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 1), rand_colour_1);
+				VEHICLE::_SET_VEHICLE_DASHBOARD_COLOUR(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 1), rand_colour_2);
+			}
+		}
 	}
 
 	return false;
