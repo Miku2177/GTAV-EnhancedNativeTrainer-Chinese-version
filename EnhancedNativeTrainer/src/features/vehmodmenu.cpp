@@ -1580,20 +1580,21 @@ void set_engine_sound(MenuItem<int> choice) { // pick engine sound via message b
 	{
 		Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 		bool correct_name = false;
-		char *keyboardInput;
 
 		std::string result = show_keyboard(NULL, (char*)lastEngineSound.c_str());
 		lastEngineSound = result;
 		if (lastEngineSound == "random" || lastEngineSound == "Random" || lastEngineSound == "RANDOM") {
 			int rand_sound = (rand() % (ENGINE_SOUND_COUNT - 1) + 0); // UP MARGIN + DOWN MARGIN
 			current_picked_engine_sound = ENGINE_SOUND_NUMBERS[rand_sound];
-			keyboardInput = (char*)ENGINE_SOUND[rand_sound].c_str();
-			correct_name = true;
+			char *keyboardInput = (char*)ENGINE_SOUND[rand_sound].c_str();
+			VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
+			AUDIO::_SET_VEHICLE_AUDIO(veh, keyboardInput);
+			set_status_text("Changed engine sound");
 		}
 		if (lastEngineSound != "random" && lastEngineSound != "Random" && lastEngineSound != "RANDOM") {
 			std::string amendedResult = "\"" + lastEngineSound + "\"";
 			std::transform(amendedResult.begin(), amendedResult.end(), amendedResult.begin(), ::toupper);
-			keyboardInput = &amendedResult[0u];
+			char *keyboardInput = &amendedResult[0u];
 
 			for (int i = 0; i < ENGINE_SOUND_COUNT; i++) {
 				if (ENGINE_SOUND[i] == amendedResult) {
@@ -1601,14 +1602,13 @@ void set_engine_sound(MenuItem<int> choice) { // pick engine sound via message b
 					current_picked_engine_sound = ENGINE_SOUND_NUMBERS[i];
 				}
 			}
+			if (correct_name == true) {
+				VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
+				AUDIO::_SET_VEHICLE_AUDIO(veh, keyboardInput);
+				set_status_text("Changed engine sound");
+			}
+			else set_status_text("Either the name is incorrect or vehicle doesn't exist");
 		}
-
-		if (correct_name == true) {
-			VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
-			AUDIO::_SET_VEHICLE_AUDIO(veh, keyboardInput);
-			set_status_text("Changed engine sound");
-		}
-		else set_status_text("Either the name is incorrect or vehicle doesn't exist");
 	}
 }
 
