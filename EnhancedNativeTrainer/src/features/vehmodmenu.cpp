@@ -1607,7 +1607,7 @@ void set_engine_sound(MenuItem<int> choice) { // pick engine sound via message b
 				AUDIO::_SET_VEHICLE_AUDIO(veh, keyboardInput);
 				set_status_text("Changed engine sound");
 			}
-			else set_status_text("Either the name is incorrect or vehicle doesn't exist");
+			//else set_status_text("Either the name is incorrect or vehicle doesn't exist");
 		}
 	}
 }
@@ -1654,7 +1654,7 @@ bool process_vehmod_engine_sound_menu() {
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Enter Name";
+	item->caption = "Enter Name Manually";
 	item->isLeaf = true;
 	item->isLeaf = false;
 	//item->onConfirmFunction = set_engine_sound;
