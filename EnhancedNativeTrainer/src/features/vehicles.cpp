@@ -4961,37 +4961,37 @@ void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settin
 			HeliConsumptionIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("CarEngineHealthIndex") == 0) {
-		CarEngineHealthIndex = stoi(setting.value);
+			CarEngineHealthIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("BikeEngineHealthIndex") == 0) {
-		BikeEngineHealthIndex = stoi(setting.value);
+			BikeEngineHealthIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("BoatEngineHealthIndex") == 0) {
-		BoatEngineHealthIndex = stoi(setting.value);
+			BoatEngineHealthIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("PlaneEngineHealthIndex") == 0) {
-		PlaneEngineHealthIndex = stoi(setting.value);
+			PlaneEngineHealthIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("HeliEngineHealthIndex") == 0) {
-		HeliEngineHealthIndex = stoi(setting.value);
+			HeliEngineHealthIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("CarEngineDegradeIndex") == 0) {
-		CarEngineDegradeIndex = stoi(setting.value);
+			CarEngineDegradeIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("BikeEngineDegradeIndex") == 0) {
-		BikeEngineDegradeIndex = stoi(setting.value);
+			BikeEngineDegradeIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("BoatEngineDegradeIndex") == 0) {
-		BoatEngineDegradeIndex = stoi(setting.value);
+			BoatEngineDegradeIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("PlaneEngineDegradeIndex") == 0) {
-		PlaneEngineDegradeIndex = stoi(setting.value);
+			PlaneEngineDegradeIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("HeliEngineDegradeIndex") == 0) {
-		HeliEngineDegradeIndex = stoi(setting.value);
+			HeliEngineDegradeIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("RestorationSpeedIndex") == 0) {
-		RestorationSpeedIndex = stoi(setting.value);
+			RestorationSpeedIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("RefuelingSpeedIndex") == 0){
 			RefuelingSpeedIndex = stoi(setting.value);

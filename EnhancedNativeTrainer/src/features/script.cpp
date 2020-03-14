@@ -2526,6 +2526,7 @@ std::vector<StringPairSettingDBRow> get_generic_settings(){
 	add_time_generic_settings(&settings);
 	add_world_generic_settings(&settings);
 	add_vehicle_generic_settings(&settings);
+	add_vehmodmenu_generic_settings(&settings);
 	handle_generic_settings_teleportation(&settings);
 	add_world_feature_enablements2(&settings);
 	add_world_feature_enablements3(&settings);
@@ -2615,6 +2616,8 @@ void handle_generic_settings(std::vector<StringPairSettingDBRow> settings){
 	handle_generic_settings_misc(&settings);
 
 	handle_generic_settings_vehicle(&settings);
+
+	handle_generic_settings_vehmodmenu(&settings);
 
 	handle_generic_settings_world(&settings);
 

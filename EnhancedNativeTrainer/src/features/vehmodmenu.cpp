@@ -23,6 +23,8 @@ int current_picked_engine_sound = -1;
 
 bool featureEngineSound = false;
 
+std::string lastEngineSound;
+
 const static int WHEEL_CATEGORY_COUNT = 10;
 
 const char* WHEEL_CATEGORY_NAMES[] = { "Sports", "Muscle", "Lowrider", "SUV", "Offroad", "Tuner", "Bike Wheels", "High End", "Benny's Originals", "Benny's Bespoke" };
@@ -1578,16 +1580,26 @@ void set_engine_sound(MenuItem<int> choice) { // pick engine sound via message b
 	{
 		Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 		bool correct_name = false;
+		char *keyboardInput;
 
-		std::string result = show_keyboard(NULL, NULL);
-		std::string amendedResult = "\"" + result + "\"";
-		std::transform(amendedResult.begin(), amendedResult.end(), amendedResult.begin(), ::toupper);
-		char *keyboardInput = &amendedResult[0u];
+		std::string result = show_keyboard(NULL, (char*)lastEngineSound.c_str());
+		lastEngineSound = result;
+		if (lastEngineSound == "random" || lastEngineSound == "Random" || lastEngineSound == "RANDOM") {
+			int rand_sound = (rand() % (ENGINE_SOUND_COUNT - 1) + 0); // UP MARGIN + DOWN MARGIN
+			current_picked_engine_sound = ENGINE_SOUND_NUMBERS[rand_sound];
+			keyboardInput = (char*)ENGINE_SOUND[rand_sound].c_str();
+			correct_name = true;
+		}
+		if (lastEngineSound != "random" && lastEngineSound != "Random" && lastEngineSound != "RANDOM") {
+			std::string amendedResult = "\"" + lastEngineSound + "\"";
+			std::transform(amendedResult.begin(), amendedResult.end(), amendedResult.begin(), ::toupper);
+			keyboardInput = &amendedResult[0u];
 
-		for (int i = 0; i < ENGINE_SOUND_COUNT; i++) {
-			if (ENGINE_SOUND[i] == amendedResult) {
-				correct_name = true;
-				current_picked_engine_sound = ENGINE_SOUND_NUMBERS[i];
+			for (int i = 0; i < ENGINE_SOUND_COUNT; i++) {
+				if (ENGINE_SOUND[i] == amendedResult) {
+					correct_name = true;
+					current_picked_engine_sound = ENGINE_SOUND_NUMBERS[i];
+				}
 			}
 		}
 
@@ -2289,9 +2301,21 @@ void add_vehmodmenu_feature_enablements(std::vector<FeatureEnabledLocalDefinitio
 	results->push_back(FeatureEnabledLocalDefinition{ "featureEngineSound", &featureEngineSound });
 }
 
+void add_vehmodmenu_generic_settings(std::vector<StringPairSettingDBRow>* results) {
+	results->push_back(StringPairSettingDBRow{ "lastEngineSound", lastEngineSound });
+}
+
+void handle_generic_settings_vehmodmenu(std::vector<StringPairSettingDBRow>* settings) {
+	for (int i = 0; i < settings->size(); i++) {
+		StringPairSettingDBRow setting = settings->at(i);
+		if (setting.name.compare("lastEngineSound") == 0) {
+			lastEngineSound = setting.value;
+		}
+	}
+}
+
 void update_vehmodmenu_features(BOOL bPlayerExists, Ped playerPed) {
 	if (!featureEngineSound) current_picked_engine_sound = -1;
 	
 	if (featureEngineSound && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) current_picked_engine_sound = -1;
-
 }

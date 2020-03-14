@@ -59,4 +59,8 @@ void reset_vehmodmenu_globals();
 
 void add_vehmodmenu_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results);
 
+void add_vehmodmenu_generic_settings(std::vector<StringPairSettingDBRow>* results);
+
+void handle_generic_settings_vehmodmenu(std::vector<StringPairSettingDBRow>* settings);
+
 void update_vehmodmenu_features(BOOL playerExists, Ped playerPed);
