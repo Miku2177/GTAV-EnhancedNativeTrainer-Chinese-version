@@ -1789,7 +1789,10 @@ bool onconfirm_vehmod_menu(MenuItem<int> choice){
 
 		set_status_text("Removed all upgrades");
 		break;
-	case -5: // Vehicle interior colors
+	case -5: //Randomize Vehicle Upgrades
+		randomize_vehicle_upgrades(veh);
+		break;
+	case -6: // Vehicle interior colors
 		process_interior_colour_menu();
 		break;
 	case  SPECIAL_ID_FOR_TOGGLE_VARIATIONS:
@@ -1863,12 +1866,18 @@ bool process_vehmod_menu(){
 		item4->isLeaf = true;
 		menuItems.push_back(item4);
 
+		MenuItem<int> *item5 = new MenuItem<int>();
+		item5->caption = "Randomize Upgrades";
+		item5->value = -5;
+		item5->isLeaf = true;
+		menuItems.push_back(item5);
+
 		if (!!isWeird && !isAircraft){
-			MenuItem<int> *item5 = new MenuItem<int>();
-			item5->caption = "Interior Colors";
-			item5->value = -5;
-			item5->isLeaf = false;
-			menuItems.push_back(item5);
+			MenuItem<int> *item6 = new MenuItem<int>();
+			item6->caption = "Interior Colors";
+			item6->value = -6;
+			item6->isLeaf = false;
+			menuItems.push_back(item6);
 		}
 		//Number of vehicle mods
 		for (int i = 0; i < 50; i++){ //(int i = 0; i < 49; i++)
@@ -2159,6 +2168,57 @@ bool vehicle_menu_interrupt(){
 	}
 
 	return false;
+}
+
+void randomize_vehicle_upgrades(Vehicle veh) {
+	for (int a = 0; a < MOD_MAX_COUNT; a++) {
+		if (a >= 17 && a <= 22) {
+			int rand_toggle = (rand() % 1 + 0);
+			VEHICLE::TOGGLE_VEHICLE_MOD(veh, a, rand_toggle);
+		}
+		else {
+			int rand_category = (rand() % (VEHICLE::GET_NUM_VEHICLE_MODS(veh, a) - 1) + 0);
+			VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
+			VEHICLE::SET_VEHICLE_MOD(veh, a, rand_category, 1);
+		}
+	}
+	int rand_tint = (rand() % 6 + 0);
+	VEHICLE::SET_VEHICLE_WINDOW_TINT(veh, rand_tint);
+	for (int a = 0; a < 4; a++) {
+		int rand_toggle = (rand() % 1 + 0);
+		VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(veh, a, rand_toggle);
+	}
+	const std::vector<NeonLightsColor> MY_NEON_COLORS = { { "Bright White", NEON_COLOR_WHITE }, { "Dim White", NEON_COLOR_BLACK }, { "Electric Blue", NEON_COLOR_ELECTRICBLUE }, { "Mint Green", NEON_COLOR_MINTGREEN }, { "Lime Green", NEON_COLOR_LIMEGREEN },
+						{ "Yellow", NEON_COLOR_YELLOW }, { "Gold", NEON_COLOR_GOLDENSHOWER }, { "Orange", NEON_COLOR_ORANGE }, { "Red", NEON_COLOR_RED }, { "Pink", NEON_COLOR_PONYPINK }, { "Hot Pink", NEON_COLOR_HOTPINK },
+						{ "Purple", NEON_COLOR_PURPLE }, { "Black Light", NEON_COLOR_BLACKLIGHT } };
+	int temp_colour = rand() % 12 + 0;
+	NeonLightsColor npc_whichcolor = MY_NEON_COLORS[temp_colour];
+	VEHICLE::_SET_VEHICLE_NEON_LIGHTS_COLOUR(veh, npc_whichcolor.rVal, npc_whichcolor.gVal, npc_whichcolor.bVal);
+	for (int loc = 0; loc <= 3; loc++) {
+		int rand_toggle = (rand() % 1 + 0);
+		VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(veh, loc, rand_toggle);
+	}
+
+	for (int a = 0; a < 16; a++) {
+		if (VEHICLE::DOES_EXTRA_EXIST(veh, a)) {
+			int rand_toggle = (rand() % 1 + 0);
+			if (rand_toggle == 0) VEHICLE::SET_VEHICLE_EXTRA(veh, a, false);
+			if (rand_toggle == 1) VEHICLE::SET_VEHICLE_EXTRA(veh, a, true);
+		}
+	}
+	int rand_plate = (rand() % 5 + 0);
+	VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT_INDEX(veh, rand_plate);
+
+	int rand_toggle = (rand() % 1 + 0);
+	if (rand_toggle == 1) set_xenon_headlights;
+	if (getGameVersion() > 45) {
+		const std::vector<XenonColour> XENON_COLOURS = {{ "White", 0 }, { "Blue", 1 }, { "Electric Blue", 2 }, { "Mint Green", 3 }, { "Lime Green", 4 }, { "Yellow", 5 }, { "Golden Shower", 6 }, { "Orange", 7 }, { "Red", 8 }, { "Pony Pink", 9 }, { "Hot Pink", 10 },
+	{ "Purple", 11 }, { "Blacklight", 12 }, { "Stock", 255 }};
+		int rand_xenon = (rand() % 13 + 0);
+		XenonColour whichcolor = XENON_COLOURS[rand_xenon];
+		VEHICLE::SET_VEHICLE_XENON_COLOUR(veh, whichcolor.colour);
+		VEHICLE::TOGGLE_VEHICLE_MOD(veh, 22, rand_toggle);
+	}
 }
 
 void fully_tune_vehicle(Vehicle veh, bool optics){

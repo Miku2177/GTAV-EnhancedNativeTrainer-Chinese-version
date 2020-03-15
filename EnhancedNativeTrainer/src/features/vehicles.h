@@ -480,6 +480,8 @@ void fully_tune_vehicle(Vehicle veh, bool optics = true);
 
 void reset_vehicle(Vehicle veh);
 
+void randomize_vehicle_upgrades(Vehicle veh);
+
 void vehicle_anchor();
 
 bool onconfirm_seat_menu(MenuItem<int> choice);
