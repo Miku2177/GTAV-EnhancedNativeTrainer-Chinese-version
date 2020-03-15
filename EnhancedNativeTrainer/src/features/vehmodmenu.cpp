@@ -2171,6 +2171,12 @@ bool vehicle_menu_interrupt(){
 }
 
 void randomize_vehicle_upgrades(Vehicle veh) {
+	set_custom_tyres;
+
+	int rand_wheel_type = (rand() % 7 + 0);
+	VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
+	VEHICLE::SET_VEHICLE_WHEEL_TYPE(veh, rand_wheel_type);
+	
 	for (int a = 0; a < MOD_MAX_COUNT; a++) {
 		if (a >= 17 && a <= 22) {
 			int rand_toggle = (rand() % 1 + 0);
@@ -2188,37 +2194,38 @@ void randomize_vehicle_upgrades(Vehicle veh) {
 		int rand_toggle = (rand() % 1 + 0);
 		VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(veh, a, rand_toggle);
 	}
-	const std::vector<NeonLightsColor> MY_NEON_COLORS = { { "Bright White", NEON_COLOR_WHITE }, { "Dim White", NEON_COLOR_BLACK }, { "Electric Blue", NEON_COLOR_ELECTRICBLUE }, { "Mint Green", NEON_COLOR_MINTGREEN }, { "Lime Green", NEON_COLOR_LIMEGREEN },
-						{ "Yellow", NEON_COLOR_YELLOW }, { "Gold", NEON_COLOR_GOLDENSHOWER }, { "Orange", NEON_COLOR_ORANGE }, { "Red", NEON_COLOR_RED }, { "Pink", NEON_COLOR_PONYPINK }, { "Hot Pink", NEON_COLOR_HOTPINK },
-						{ "Purple", NEON_COLOR_PURPLE }, { "Black Light", NEON_COLOR_BLACKLIGHT } };
 	int temp_colour = rand() % 12 + 0;
-	NeonLightsColor npc_whichcolor = MY_NEON_COLORS[temp_colour];
+	NeonLightsColor npc_whichcolor = NEON_COLORS[temp_colour];
+	set_neonLights;
 	VEHICLE::_SET_VEHICLE_NEON_LIGHTS_COLOUR(veh, npc_whichcolor.rVal, npc_whichcolor.gVal, npc_whichcolor.bVal);
 	for (int loc = 0; loc <= 3; loc++) {
-		int rand_toggle = (rand() % 1 + 0);
-		VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(veh, loc, rand_toggle);
+		VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(veh, loc, true); //int rand_toggle = (rand() % 1 + 0); // rand_toggle
 	}
 
+	set_extra_enabled;
 	for (int a = 0; a < 16; a++) {
 		if (VEHICLE::DOES_EXTRA_EXIST(veh, a)) {
 			int rand_toggle = (rand() % 1 + 0);
-			if (rand_toggle == 0) VEHICLE::SET_VEHICLE_EXTRA(veh, a, false);
-			if (rand_toggle == 1) VEHICLE::SET_VEHICLE_EXTRA(veh, a, true);
+			VEHICLE::SET_VEHICLE_EXTRA(veh, a, rand_toggle);
 		}
 	}
 	int rand_plate = (rand() % 5 + 0);
 	VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT_INDEX(veh, rand_plate);
 
 	int rand_toggle = (rand() % 1 + 0);
-	if (rand_toggle == 1) set_xenon_headlights;
+	set_xenon_headlights;
 	if (getGameVersion() > 45) {
-		const std::vector<XenonColour> XENON_COLOURS = {{ "White", 0 }, { "Blue", 1 }, { "Electric Blue", 2 }, { "Mint Green", 3 }, { "Lime Green", 4 }, { "Yellow", 5 }, { "Golden Shower", 6 }, { "Orange", 7 }, { "Red", 8 }, { "Pony Pink", 9 }, { "Hot Pink", 10 },
-	{ "Purple", 11 }, { "Blacklight", 12 }, { "Stock", 255 }};
 		int rand_xenon = (rand() % 13 + 0);
 		XenonColour whichcolor = XENON_COLOURS[rand_xenon];
 		VEHICLE::SET_VEHICLE_XENON_COLOUR(veh, whichcolor.colour);
-		VEHICLE::TOGGLE_VEHICLE_MOD(veh, 22, rand_toggle);
+		VEHICLE::TOGGLE_VEHICLE_MOD(veh, 22, true); // rand_toggle
 	}
+	VEHICLE::SET_VEHICLE_TYRES_CAN_BURST(veh, rand_toggle); //Bulletproof Tires
+	
+	int rand_snoke = (rand() % 10 + 0);
+	TireSmokeColor whichcolor = SMOKE_COLORS[rand_snoke];
+	VEHICLE::SET_VEHICLE_TYRE_SMOKE_COLOR(veh, whichcolor.rVal, whichcolor.gVal, whichcolor.bVal);
+	VEHICLE::TOGGLE_VEHICLE_MOD(veh, 20, 1);
 }
 
 void fully_tune_vehicle(Vehicle veh, bool optics){

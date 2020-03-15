@@ -996,11 +996,8 @@ void update_world_features()
 					!VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 3)) {
 					Hash currVehModel_neon = ENTITY::GET_ENTITY_MODEL(bus_veh[i]);
 					if (bus_veh[i] != veh_mycurrveh && VEHICLE::IS_THIS_MODEL_A_CAR(currVehModel_neon)) {
-						const std::vector<NeonLightsColor> NPC_NEON_COLORS = {{ "Bright White", NEON_COLOR_WHITE }, { "Dim White", NEON_COLOR_BLACK }, { "Electric Blue", NEON_COLOR_ELECTRICBLUE }, { "Mint Green", NEON_COLOR_MINTGREEN }, { "Lime Green", NEON_COLOR_LIMEGREEN },
-						{ "Yellow", NEON_COLOR_YELLOW }, { "Gold", NEON_COLOR_GOLDENSHOWER }, { "Orange", NEON_COLOR_ORANGE }, { "Red", NEON_COLOR_RED }, { "Pink", NEON_COLOR_PONYPINK }, { "Hot Pink", NEON_COLOR_HOTPINK },
-						{ "Purple", NEON_COLOR_PURPLE }, { "Black Light", NEON_COLOR_BLACKLIGHT }};
 						int temp_colour = rand() % 11 + 2;
-						NeonLightsColor npc_whichcolor = NPC_NEON_COLORS[temp_colour];
+						NeonLightsColor npc_whichcolor = NEON_COLORS[temp_colour];
 						VEHICLE::_SET_VEHICLE_NEON_LIGHTS_COLOUR(bus_veh[i], npc_whichcolor.rVal, npc_whichcolor.gVal, npc_whichcolor.bVal);
 						VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 0, true);
 						VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 1, true);
@@ -1522,7 +1519,7 @@ void update_world_features()
 		AI::SET_SCENARIO_GROUP_ENABLED("ALAMO_PLANES", 0);
 		AI::SET_SCENARIO_GROUP_ENABLED("ARMY_HELI", 0);
 		AI::SET_SCENARIO_GROUP_ENABLED("GRAPESEED_PLANES", 0);
-		AI::SET_SCENARIO_GROUP_ENABLED("Grapeseed_Planes", 0);
+		//AI::SET_SCENARIO_GROUP_ENABLED("Grapeseed_Planes", 0);
 		AI::SET_SCENARIO_GROUP_ENABLED("LSA_Planes", 0);
 		AI::SET_SCENARIO_GROUP_ENABLED("SANDY_PLANES", 0);
 		AI::SET_SCENARIO_GROUP_ENABLED("ng_planes", 0);

@@ -2,23 +2,6 @@
 #include "..\ui_support\menu_functions.h"
 #include "..\io\config_io.h"
 
-const std::vector<XenonColour> XENON_COLOURS = {
-	{ "White", 0 },
-	{ "Blue", 1 },
-	{ "Electric Blue", 2 },
-	{ "Mint Green", 3 },
-	{ "Lime Green", 4 },
-	{ "Yellow", 5 },
-	{ "Golden Shower", 6 },
-	{ "Orange", 7 },
-	{ "Red", 8 },
-	{ "Pony Pink", 9 },
-	{ "Hot Pink", 10 },
-	{ "Purple", 11 },
-	{ "Blacklight", 12 },
-	{ "Stock", 255 }
-};
-
 void apply_xenon_colors(int colorIndex) {
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()); // Get current vehicle
 	XenonColour whichcolor = XENON_COLOURS[colorIndex];
