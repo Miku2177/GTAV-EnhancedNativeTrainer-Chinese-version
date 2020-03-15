@@ -93,6 +93,52 @@ const std::vector<int> VEH_COLOUR_VALUES{ -1, 134, 27, 139, 64, 38, 145, 135, 88
 extern int VehColourIndex;
 extern bool VehColour_Changed;
 
+const std::vector<XenonColour> XENON_COLOURS = {
+	{ "White", 0 },
+	{ "Blue", 1 },
+	{ "Electric Blue", 2 },
+	{ "Mint Green", 3 },
+	{ "Lime Green", 4 },
+	{ "Yellow", 5 },
+	{ "Golden Shower", 6 },
+	{ "Orange", 7 },
+	{ "Red", 8 },
+	{ "Pony Pink", 9 },
+	{ "Hot Pink", 10 },
+	{ "Purple", 11 },
+	{ "Blacklight", 12 },
+	{ "Stock", 255 }
+};
+
+const std::vector<NeonLightsColor> NEON_COLORS = { 
+	{ "Bright White", NEON_COLOR_WHITE }, 
+	{ "Dim White", NEON_COLOR_BLACK }, 
+	{ "Electric Blue", NEON_COLOR_ELECTRICBLUE }, 
+	{ "Mint Green", NEON_COLOR_MINTGREEN }, 
+	{ "Lime Green", NEON_COLOR_LIMEGREEN },
+	{ "Yellow", NEON_COLOR_YELLOW }, 
+	{ "Gold", NEON_COLOR_GOLDENSHOWER }, 
+	{ "Orange", NEON_COLOR_ORANGE }, 
+	{ "Red", NEON_COLOR_RED }, 
+	{ "Pink", NEON_COLOR_PONYPINK }, 
+	{ "Hot Pink", NEON_COLOR_HOTPINK },
+	{ "Purple", NEON_COLOR_PURPLE }, 
+	{ "Black Light", NEON_COLOR_BLACKLIGHT } };
+
+const std::vector<TireSmokeColor> SMOKE_COLORS = {
+	{ "White", TIRESMOKE_COLOR_WHITE },
+	{ "Black", TIRESMOKE_COLOR_BLACK },
+	{ "Blue", TIRESMOKE_COLOR_BLUE },
+	{ "Yellow", TIRESMOKE_COLOR_YELLOW },
+	{ "Purple", TIRESMOKE_COLOR_PURPLE },
+	{ "Orange", TIRESMOKE_COLOR_ORANGE },
+	{ "Green", TIRESMOKE_COLOR_GREEN },
+	{ "Red", TIRESMOKE_COLOR_RED },
+	{ "Pink", TIRESMOKE_COLOR_PINK },
+	{ "Brown", TIRESMOKE_COLOR_BROWN },
+	{ "Patriot", TIRESMOKE_COLOR_PATRIOT }
+};
+
 /***
 * METHODS
 */

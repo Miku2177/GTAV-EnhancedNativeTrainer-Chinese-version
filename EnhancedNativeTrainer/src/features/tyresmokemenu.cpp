@@ -2,20 +2,6 @@
 #include "..\ui_support\menu_functions.h"
 #include "..\io\config_io.h"
 
-const std::vector<TireSmokeColor> SMOKE_COLORS = {
-	{ "White", TIRESMOKE_COLOR_WHITE },
-	{ "Black", TIRESMOKE_COLOR_BLACK },
-	{ "Blue", TIRESMOKE_COLOR_BLUE },
-	{ "Yellow", TIRESMOKE_COLOR_YELLOW },
-	{ "Purple", TIRESMOKE_COLOR_PURPLE },
-	{ "Orange", TIRESMOKE_COLOR_ORANGE },
-	{ "Green", TIRESMOKE_COLOR_GREEN },
-	{ "Red", TIRESMOKE_COLOR_RED },
-	{ "Pink", TIRESMOKE_COLOR_PINK },
-	{ "Brown", TIRESMOKE_COLOR_BROWN },
-	{ "Patriot", TIRESMOKE_COLOR_PATRIOT }
-};
-
 void apply_smoke_colors(int colorIndex){
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()); // Get current vehicle
 	TireSmokeColor whichcolor = SMOKE_COLORS[colorIndex];
