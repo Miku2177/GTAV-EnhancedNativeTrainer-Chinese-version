@@ -26,7 +26,6 @@ DWORD model_to_restore = -1;
 bool DEBUG_MODE_SKINS = false;
 
 bool featurenoblood = false;
-//bool featureResetPlayerModelOnDeath = false;
 
 // auto skin variables
 bool featureautoskin = false;
@@ -80,7 +79,6 @@ void reset_skin_globals()
 	featurenoblood = false;
 	featureautoskin = false;
 	ResetSkinOnDeathIndex = 0;
-	//featureResetPlayerModelOnDeath = false;
 }
 
 /*
@@ -273,7 +271,7 @@ void update_skin_features() {
 					SavedSkinDBRow* savedSkin = savedSkins.at(0);
 					database->populate_saved_skin(savedSkin);
 
-					if (model != -1) { // if (model == ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID())) // if (savedSkin->model == ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID())) {
+					if (model != -1) { 
 						applyChosenSkin(savedSkin->model);
 
 						Ped ped = PLAYER::PLAYER_PED_ID();
@@ -819,12 +817,6 @@ bool process_skinchanger_menu()
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
-	//toggleItem = new ToggleMenuItem<int>();
-	//toggleItem->caption = "Reset Player Model On Death";
-	//toggleItem->value = i++;
-	//toggleItem->toggleValue = &featureResetPlayerModelOnDeath;
-	//menuItems.push_back(toggleItem);
-
 	listItem = new SelectFromListMenuItem(SKINS_RESET_SKIN_ONDEATH_CAPTIONS, onchange_skins_reset_skin_ondeath_index);
 	listItem->wrap = false;
 	listItem->caption = "Player Model";
@@ -1284,7 +1276,6 @@ void add_skin_generic_settings(std::vector<StringPairSettingDBRow>* results)
 void add_player_skin_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results) {
 	results->push_back(FeatureEnabledLocalDefinition{ "featurenoblood", &featurenoblood });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureautoskin", &featureautoskin });
-	//results->push_back(FeatureEnabledLocalDefinition{ "featureResetPlayerModelOnDeath", &featureResetPlayerModelOnDeath });
 }
 
 void handle_generic_settings_skin(std::vector<StringPairSettingDBRow>* settings)

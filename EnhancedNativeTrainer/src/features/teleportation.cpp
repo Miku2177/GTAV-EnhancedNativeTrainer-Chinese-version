@@ -917,7 +917,6 @@ else
 DLC2::_LOAD_SP_DLC_MAPS();
 set_status_text("MP Maps disabled");
 }
-
 }*/
 
 std::string lastJumpSpawn;
@@ -1413,7 +1412,6 @@ bool process_teleport_menu(int categoryIndex){
 		toggleItem->caption = "Teleport To Marker Automatically";
 		toggleItem->value = i++;
 		toggleItem->toggleValue = &featureTeleportAutomatically;
-		//toggleItem->toggleValueUpdated = NULL;
 		menuItems.push_back(toggleItem);
 		
 		markerItem = new MenuItem<int>();

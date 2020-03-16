@@ -126,8 +126,7 @@ void plane_autopilot(bool enabled)
 			set_status_text("Waypoint not found. Please set a waypoint to use Autopilot!");
 			return;
 		}
-			
-
+		
 		Blip wayPointBlip = UI::GET_FIRST_BLIP_INFO_ID(8);
 		Vector3 wayPointCoord = UI::GET_BLIP_COORDS(wayPointBlip);
 		AI::TASK_VEHICLE_DRIVE_TO_COORD(PLAYER::PLAYER_PED_ID(), veh, wayPointCoord.x, wayPointCoord.y, wayPointCoord.z + 150, 40.0f, 1, veh, 262144, -1.0, -1.0);
@@ -372,11 +371,6 @@ void reset_veh_weapons_globals()
 
 void update_veh_weapons_features()
 {
-	// common variables
-	//BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
-	//Player player = PLAYER::PLAYER_ID();
-	//Ped playerPed = PLAYER::PLAYER_PED_ID();
-	
 	if (!featureBombDoorCamera)
 	{
 		toggle_bomb_bay_camera();

@@ -10,9 +10,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "time.h"
 #include "hotkeys.h"
 #include "propplacement.h"
-
 #include <iomanip>
-
 #include "..\ui_support\menu_functions.h"
 #include "script.h"
 
@@ -147,7 +145,6 @@ bool onconfirm_time_flowrate_menu(MenuItem<int> choice) {
 			timeFlowRateIndex = 0;
 			timeFlowRateChanged = true;
 			set_status_text("Time is frozen");
-			//all_time_flow_rate();
 			requireRefreshOfTime = true;
 		}
 		else
@@ -161,7 +158,6 @@ bool onconfirm_time_flowrate_menu(MenuItem<int> choice) {
 				timeFlowRateChanged = true;
 			}
 			set_status_text("Time is unfrozen");
-			//all_time_flow_rate();
 			requireRefreshOfTime = true;
 		}
 	}
@@ -899,24 +895,17 @@ void update_time_features(Player player){
 		for (int i = 0; i < count_surr_p_peds; i++) {
 			if (CONTROLS::IS_CONTROL_PRESSED(2, 25) && ENTITY::DOES_ENTITY_EXIST(surr_p_peds[i]) /*&& !PED::IS_PED_IN_ANY_VEHICLE(surr_p_peds[i], false)*/ && surr_p_peds[i] != PLAYER::PLAYER_PED_ID()) {
 				if (PED::GET_PED_TYPE(surr_p_peds[i]) == 6 || PED::GET_PED_TYPE(surr_p_peds[i]) == 27 || PED::GET_PED_TYPE(surr_p_peds[i]) == 29) {
-					//AI::CLEAR_PED_SECONDARY_TASK(surr_p_peds[i]);
-					//AI::CLEAR_PED_TASKS(surr_p_peds[i]);
 					AI::TASK_STAND_STILL(surr_p_peds[i], 500); // if (!PED::IS_PED_IN_ANY_VEHICLE(surr_p_peds[i], false))
 				}
-				//PED::RESET_PED_MOVEMENT_CLIPSET(surr_p_peds[i], 0.0);
 				AUDIO::STOP_CURRENT_PLAYING_AMBIENT_SPEECH(surr_p_peds[i]);
-				//ENTITY::FREEZE_ENTITY_POSITION(surr_p_peds[i], true);
 				PED::SET_PED_MOVE_RATE_OVERRIDE(surr_p_peds[i], 0.00);
 				PED::SET_PED_CAN_HEAD_IK(surr_p_peds[i], false);
 				PED::SET_PED_CAN_USE_AUTO_CONVERSATION_LOOKAT(surr_p_peds[i], false);
-				//PED::SET_PED_CONFIG_FLAG(surr_p_peds[i], 292, true);
 			}
 			if (CONTROLS::IS_CONTROL_RELEASED(2, 25) && ENTITY::DOES_ENTITY_EXIST(surr_p_peds[i])/* && !PED::IS_PED_IN_ANY_VEHICLE(surr_p_peds[i], false)*/) {
-				//ENTITY::FREEZE_ENTITY_POSITION(surr_p_peds[i], false);
 				PED::SET_PED_MOVE_RATE_OVERRIDE(surr_p_peds[i], 1.00);
 				PED::SET_PED_CAN_HEAD_IK(surr_p_peds[i], true);
 				PED::SET_PED_CAN_USE_AUTO_CONVERSATION_LOOKAT(surr_p_peds[i], true);
-				//PED::SET_PED_CONFIG_FLAG(surr_p_peds[i], 292, false);
 			}
 		}
 	} // end of matrix mode while aiming

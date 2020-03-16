@@ -67,7 +67,6 @@ void process_airbrake_menu()
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	bool inVehicle = PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) ? true : false;
 
-	//frozen_time = false;
 	if (!inVehicle)
 	{
 		STREAMING::REQUEST_ANIM_DICT(AIRBRAKE_ANIM_A);
@@ -276,8 +275,6 @@ void airbrake(bool inVehicle)
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(playerPed);
 
-	//float tmpHeading = curHeading += ;
-
 	switch (travelSpeed)
 	{
 	case 0:
@@ -313,11 +310,7 @@ void airbrake(bool inVehicle)
 	{
 		target = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 	}
-
-	/*BOOL xBoolParam = 1;
-	BOOL yBoolParam = 1;
-	BOOL zBoolParam = 1;*/
-
+	
 	ENTITY::SET_ENTITY_VELOCITY(target, 0.0f, 0.0f, 0.0f);
 	ENTITY::SET_ENTITY_ROTATION(target, 0, 0, 0, 0, false);
 
@@ -353,49 +346,47 @@ void airbrake(bool inVehicle)
 	create_airbrake_help_text();
 	update_airbrake_text();
 
-	//if (!mouse_view_control) {
-		if (moveUpKey)
-		{
-			curLocation.z += (forwardPush / 1.1);
-		}
-		else if (moveDownKey)
-		{
-			curLocation.z -= (forwardPush / 1.1);
-		}
+	if (moveUpKey)
+	{
+		curLocation.z += (forwardPush / 1.1);
+	}
+	else if (moveDownKey)
+	{
+		curLocation.z -= (forwardPush / 1.1);
+	}
 
-		if (moveForwardKey)
-		{
-			curLocation.x += xVect;
-			curLocation.y += yVect;
-		}
-		else if (moveBackKey)
-		{
-			curLocation.x -= xVect;
-			curLocation.y -= yVect;
-		}
+	if (moveForwardKey)
+	{
+		curLocation.x += xVect;
+		curLocation.y += yVect;
+	}
+	else if (moveBackKey)
+	{
+		curLocation.x -= xVect;
+		curLocation.y -= yVect;
+	}
 
-		if ((rotateLeftKey) && !(SpaceKey))
-		{
-			curHeading += rotationSpeed;
-		}
-		else if ((rotateRightKey) && !(SpaceKey))
-		{
-			curHeading -= rotationSpeed;
-		}
+	if ((rotateLeftKey) && !(SpaceKey))
+	{
+		curHeading += rotationSpeed;
+	}
+	else if ((rotateRightKey) && !(SpaceKey))
+	{
+		curHeading -= rotationSpeed;
+	}
 
-		if ((rotateLeftKey) && (SpaceKey))
-		{
-			curLocation.x += (forwardPush * sin(degToRad(curHeading + 90)) * -1.0f);
-			curLocation.y += (forwardPush * cos(degToRad(curHeading + 90)));
-		}
+	if ((rotateLeftKey) && (SpaceKey))
+	{
+		curLocation.x += (forwardPush * sin(degToRad(curHeading + 90)) * -1.0f);
+		curLocation.y += (forwardPush * cos(degToRad(curHeading + 90)));
+	}
 
-		if ((rotateRightKey) && (SpaceKey))
-		{
-			curLocation.x += (forwardPush * sin(degToRad(curHeading - 90)) * -1.0f);
-			curLocation.y += (forwardPush * cos(degToRad(curHeading - 90)));
-		}
-	//}
-	
+	if ((rotateRightKey) && (SpaceKey))
+	{
+		curLocation.x += (forwardPush * sin(degToRad(curHeading - 90)) * -1.0f);
+		curLocation.y += (forwardPush * cos(degToRad(curHeading - 90)));
+	}
+		
 	if (mouse_view_control) {
 		Vector3 CamRot = CAM::GET_GAMEPLAY_CAM_ROT(2);
 		int p_force = forwardPush * 5; // 5;

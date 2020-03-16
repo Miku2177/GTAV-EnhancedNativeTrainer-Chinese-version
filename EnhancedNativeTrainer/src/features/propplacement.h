@@ -9,11 +9,8 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\..\inc\natives.h"
 #include "..\..\inc\types.h"
 #include "..\..\inc\enums.h"
-
 #include "..\..\inc\main.h"
-
 #include "props.h"
-
 #include <string>
 
 void begin_prop_placement(SpawnedPropInstance prop);

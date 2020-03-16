@@ -4,11 +4,8 @@
 #include "..\..\inc\types.h"
 #include "..\..\inc\enums.h"
 #include "..\..\inc\main.h"
-
 #include "..\..\src\common\vectorHelper.h"
-
 #include "..\ui_support\menu_functions.h"
-
 #include "..\storage\database.h"
 
 // Grab worldGetAllPeds from the library, we use this to grab all the peds around us for ESP and aiming

@@ -10,7 +10,6 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 #include "vehicles.h"
 #include "fuel.h"
-
 #include "..\..\resource.h"
 #include "..\features\vehmodmenu.h"
 #include "hotkeys.h"
@@ -19,10 +18,8 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\io\config_io.h"
 #include "..\debug\debuglog.h"
 #include "area_effect.h"
-
 #include <fstream>
 #include "vehicle_weapons.h"
-
 #include <string>
 #include <iterator>
 #include <iostream>
@@ -139,8 +136,6 @@ void fuel()
 			int temp_rand = VEH_FUELRANDOM1_VALUES[Random1Index];
 			randomize = (rand() % temp_rand + VEH_FUELRANDOM1_VALUES[Random1Index]); // UP MARGIN + DOWN MARGIN
 		}
-
-		//Vector3 playerPosition = ENTITY::GET_ENTITY_COORDS(playerPed, false);
 
 		if (VEH_FUELBARPOSITION_VALUES[BarPositionIndex] == 1) {
 			fuel_bar_x = 0.015;
@@ -262,7 +257,6 @@ void fuel()
 			Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 			VEHICLES.push_back(veh);
 			FUEL.push_back(randomize / 100);
-			//ENTITY::SET_ENTITY_AS_MISSION_ENTITY(veh, true, true);
 		}
 
 		// HOW MUCH MONEY HAVE YOU GOT? (GAS STATION REFUELING)
@@ -341,7 +335,6 @@ void fuel()
 					FUEL.push_back(randomize / 100);
 					std::swap(VEHICLES[0], VEHICLES.back());
 					std::swap(FUEL[0], FUEL.back());
-					//ENTITY::SET_ENTITY_AS_MISSION_ENTITY(veh, true, true);
 				}
 			}
 
@@ -456,10 +449,6 @@ void fuel()
 				}
 			}
 		} // enf of entered vehicle
-		//else {
-		//	Car_Refuel = false;
-		//	Fuel_Low = false;
-		//}
 
 		// BARS
 		if (!VEHICLES.empty() && (Car_Refuel == true || PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) || 

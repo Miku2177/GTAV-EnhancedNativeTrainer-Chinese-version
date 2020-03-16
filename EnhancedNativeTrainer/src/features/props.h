@@ -6,7 +6,6 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 #include <string>
 #include <vector>
-
 #include "../ui_support/menu_functions.h"
 #include "../storage/database.h"
 #include "../ent-enums.h"
@@ -75,8 +74,7 @@ SimpleVector3 get_camera_coords(Vector3 entityCoords, float cameraDistance, floa
 
 void do_spawn_model_by_player(Hash propHash, char* model, std::string title, bool silent);
 
-void do_spawn_model(Hash propHash, char* model, std::string title, SimpleVector3* coords, float pitch, float roll, float heading,
-	bool invincible, bool immovable, bool gravity, float alpha, bool silent);
+void do_spawn_model(Hash propHash, char* model, std::string title, SimpleVector3* coords, float pitch, float roll, float heading, bool invincible, bool immovable, bool gravity, float alpha, bool silent);
 
 bool props_individual_slot_menu_interrupt();
 

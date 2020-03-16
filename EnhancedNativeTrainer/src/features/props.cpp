@@ -10,7 +10,6 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\datasets\data_props.h"
 #include "..\ui_support\file_dialog.h"
 #include "..\xml\xml_import_export.h"
-
 #include <set>
 
 const int PROP_LIMIT = 250;

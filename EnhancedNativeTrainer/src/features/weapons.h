@@ -14,9 +14,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\..\inc\types.h"
 #include "..\..\inc\enums.h"
 #include "..\..\inc\main.h"
-
 #include "..\ui_support\menu_functions.h"
-
 #include "..\storage\database.h"
 
 const std::vector<std::string> MENU_WEAPON_CATEGORIES{"Melee", "Handguns", "Submachine Guns", "Assault Rifles", "Shotguns", "Sniper Rifles", "Heavy Weapons", "Thrown Weapons"};
@@ -243,14 +241,9 @@ extern const std::vector<std::string> WEAPONS_POWERPUNCH_CAPTIONS;
 extern const int WEAPONS_POWERPUNCH_VALUES[];
 extern int PowerPunchIndex;
 extern bool PowerPunchChanged;
-//extern const std::vector<std::string> PEDS_POWERPUNCH_CAPTIONS;
-//extern const int PEDS_POWERPUNCH_VALUES[];
-//extern int PedsPowerPunchIndex;
-//extern bool PedsPowerPunchChanged;
 extern bool featurePunchFists;
 extern bool featurePunchMeleeWeapons;
 extern bool featurePunchFireWeapons;
-//extern bool featurepowerpunchpeds;
 extern bool featurePowerPunch;
 extern std::string lastPowerWeapon;
 
@@ -271,8 +264,6 @@ void onchange_chance_police_calling_index(int value, SelectFromListMenuItem* sou
 void onchange_chance_attacking_you_index(int value, SelectFromListMenuItem* source);
 
 void onchange_power_punch_index(int value, SelectFromListMenuItem* source);
-
-//void onchange_peds_power_punch_index(int value, SelectFromListMenuItem* source);
 
 void onchange_weapons_firemode_modifier(int value, SelectFromListMenuItem* source);
 
