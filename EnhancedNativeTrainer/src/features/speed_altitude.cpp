@@ -10,7 +10,6 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 #include "vehicles.h"
 #include "speed_altitude.h"
-
 #include "..\..\resource.h"
 #include "..\features\vehmodmenu.h"
 #include "hotkeys.h"
@@ -19,10 +18,8 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\io\config_io.h"
 #include "..\debug\debuglog.h"
 #include "area_effect.h"
-
 #include <fstream>
 #include "vehicle_weapons.h"
-
 #include <string>
 #include <iterator>
 #include <iostream>

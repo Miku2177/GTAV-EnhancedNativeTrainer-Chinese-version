@@ -13,18 +13,13 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\..\inc\natives.h"
 #include "..\..\inc\types.h"
 #include "..\..\inc\enums.h"
-
 #include "..\..\inc\main.h"
-
 #include <string>
-
 #include "..\ui_support\menu_functions.h"
 #include "..\storage\database.h"
-
 #include "..\ent-enums.h"
 #include "..\utils.h"
 #include "..\common\ENTUtil.h"
-
 #include <random>
 
 bool process_teleport_menu(int categoryIndex);

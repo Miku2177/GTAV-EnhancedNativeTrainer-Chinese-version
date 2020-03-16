@@ -112,8 +112,6 @@ void onchange_misc_phone_freeseconds_index(int value, SelectFromListMenuItem* so
 
 void onchange_misc_phone_bike_index(int value, SelectFromListMenuItem* source);
 
-//bool is_player_reset_on_death();
-
 bool is_input_blocked_in_menu();
 
 bool is_vehicle_preview_enabled();

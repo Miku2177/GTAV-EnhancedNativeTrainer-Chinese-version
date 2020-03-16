@@ -79,12 +79,6 @@ const std::vector<std::string> PED_WEAPONS_SELECTIVE_CAPTIONS{ "\"WEAPON_UNARMED
 int PedWeaponsSelectiveIndex = 0;
 bool PedWeaponsSelective1Changed = true;
 
-// NPC Damaged Vehicles
-//const std::vector<std::string> WORLD_DAMAGED_VEHICLES_CAPTIONS{ "OFF", "5", "7", "10", "12", "15", "20", "30", "50", "100", "500", "1000" };
-//const int WORLD_DAMAGED_VEHICLES_VALUES[] = { 0, 5, 7, 10, 12, 15, 20, 30, 50, 100, 500, 1000 };
-//int DamagedVehiclesIndex = 0;
-//bool DamagedVehiclesChanged = true;
-
 // NPC Vehicle Speed
 const std::vector<std::string> WORLD_NPC_VEHICLESPEED_CAPTIONS{ "OFF", "1", "5", "10", "15", "30", "50", "70", "100" };
 const int WORLD_NPC_VEHICLESPEED_VALUES[] = { -1, 1, 5, 10, 15, 30, 50, 70, 100 };
@@ -123,7 +117,6 @@ void add_areaeffect_feature_enablements(std::vector<FeatureEnabledLocalDefinitio
 	results->push_back(FeatureEnabledLocalDefinition{"featurePedsIncludePilots", &featurePedsIncludePilots});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAggressiveDrivers", &featureAggressiveDrivers});
 	results->push_back(FeatureEnabledLocalDefinition{"featureLawAbidingCitizens", &featureLawAbidingCitizens});
-	//results->push_back(FeatureEnabledLocalDefinition{"featureShowDebugInfo", &featureShowDebugInfo}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureNPCNoLights", &featureNPCNoLights}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureNPCNeonLights", &featureNPCNeonLights}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureNPCFullBeam", &featureNPCFullBeam});
@@ -158,7 +151,6 @@ void reset_areaeffect_globals(){
 	featureBoostNPCRadio = false;
 	featurePedsSwitchWeapons = true;
 
-	//DamagedVehiclesIndex = 0;
 	NPCVehicleSpeedIndex = 0;
 	PedAccuracyIndex = 0;
 	pedWeaponSetIndex = 0;
@@ -301,12 +293,6 @@ void process_areaeffect_vehicle_menu(){
 	togItem->toggleValue = &featureDirtyVehicles;
 	menuItems.push_back(togItem);
 
-	//listItem = new SelectFromListMenuItem(WORLD_DAMAGED_VEHICLES_CAPTIONS, onchange_world_damaged_vehicles_index);
-	//listItem->wrap = false;
-	//listItem->caption = "NPC Damaged Vehicles";
-	//listItem->value = DamagedVehiclesIndex;
-	//menuItems.push_back(listItem);
-
 	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "NPC No Gravity Vehicles";
 	togItem->value = 1;
@@ -419,36 +405,6 @@ bool onconfirm_areaeffect_ped_menu(MenuItem<int> choice){
 	}
 	return false;
 }
-
-//bool onconfirm_areaeffect_menu(MenuItem<int> choice){
-//	switch(choice.value){
-//		case -1:
-//			process_areaeffect_peds_menu();
-//			break;
-//		case -2:
-//			process_areaeffect_vehicle_menu();
-//			break;
-//	}
-//	return false;
-//}
-
-//void process_areaeffect_menu(){
-//	std::vector<MenuItem<int>*> menuItems;
-//
-//	MenuItem<int> *item = new MenuItem<int>();
-//	item->caption = "People";
-//	item->value = -1;
-//	item->isLeaf = false;
-//	menuItems.push_back(item);
-//
-//	item = new MenuItem<int>();
-//	item->caption = "Vehicles";
-//	item->value = -2;
-//	item->isLeaf = false;
-//	menuItems.push_back(item);
-//
-//	draw_generic_menu<int>(menuItems, &areaeffect_top_level_menu_index, "Area Effects", onconfirm_areaeffect_menu, NULL, NULL);
-//}
 
 void do_maintenance_on_tracked_entities(){
 	for each (ENTTrackedPedestrian* tped in trackedPeds){
@@ -582,11 +538,6 @@ void update_area_effects(Ped playerPed){
 				// vigilante citizens
 				if (featureLawAbidingCitizens) {  
 					Vector3 me_coords = ENTITY::GET_ENTITY_COORDS(playerPed, true);
-					//Vector3 npc_abid_coords = ENTITY::GET_ENTITY_COORDS(veh_agressive[i], true);
-					//int lawabidped_with_dist_x = (me_coords.x - npc_abid_coords.x);
-					//int lawabidped_with_dist_y = (me_coords.y - npc_abid_coords.y);
-					//if (lawabidped_with_dist_x < 0) lawabidped_with_dist_x = (lawabidped_with_dist_x * -1);
-					//if (lawabidped_with_dist_y < 0) lawabidped_with_dist_y = (lawabidped_with_dist_y * -1);
 					if ((PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed) != 0 && VEHICLE::GET_PED_IN_VEHICLE_SEAT(PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed), -1) != 0 &&
 						!PED::IS_PED_IN_ANY_TAXI(VEHICLE::GET_PED_IN_VEHICLE_SEAT(PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed), -1))) ||
 						(PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed) != 0 && VEHICLE::IS_VEHICLE_ALARM_ACTIVATED(PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed))) || ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(veh_agressive[i], playerPed, 1) ||
@@ -606,9 +557,6 @@ void update_area_effects(Ped playerPed){
 						ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(PED::GET_VEHICLE_PED_IS_IN(veh_agressive[i], false));
 						ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(temp_vehicle);
 					}
-					//if ((PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) && VEHICLE::GET_PED_IN_VEHICLE_SEAT(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), -1) == playerPed && PED::IS_PED_IN_ANY_VEHICLE(veh_agressive[i], true) &&
-					//	lawabidped_with_dist_x < 20 && lawabidped_with_dist_y < 20 && time_to_chase == true && veh_me_speed < 1) || ((ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(veh_agressive[i], playerPed, 1) ||
-					//		ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(veh_agressive[i], PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 1)) && time_to_chase == true)) { // !PED::IS_PED_IN_ANY_TAXI(playerPed)
 					if (time_to_chase == true && PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed) == 0) {
 						for (int vc = 0; vc < count_veh; vc++) {
 							if (veh_agressive[vc] != playerPed) {
@@ -635,7 +583,6 @@ void update_area_effects(Ped playerPed){
 										PED::REGISTER_TARGET(veh_agressive[vc], PLAYER::PLAYER_PED_ID());
 										AI::TASK_COMBAT_PED(veh_agressive[vc], PLAYER::PLAYER_PED_ID(), 0, 16);
 										AUDIO::_PLAY_AMBIENT_SPEECH1(veh_agressive[vc], "PROVOKE_GENERIC", "SPEECH_PARAMS_FORCE_SHOUTED");
-										//ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(veh_agressive[i]);
 									}
 									PED::SET_PED_AS_ENEMY(PLAYER::PLAYER_PED_ID(), true);
 									PED::REGISTER_TARGET(pursuer.back(), PLAYER::PLAYER_PED_ID());
@@ -750,17 +697,6 @@ void update_area_effects(Ped playerPed){
 }
 
 void set_all_nearby_peds_to_calm(){
-	//const int IGN_ARR_PED_SIZE = 1024;
-	//Ped ign_ped[IGN_ARR_PED_SIZE];
-	//int found_ign_ped = worldGetAllPeds(ign_ped, IGN_ARR_PED_SIZE);
-	//for (int i = 0; i < found_ign_ped; i++) {
-	//	if (ign_ped[i] != PLAYER::PLAYER_PED_ID()) {
-	//		if (!PED::IS_PED_GROUP_MEMBER(ign_ped[i], PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID()))) { // Only calm down peds if they're NOT in our group (keeps our bodyguards from chilling out and being lazy)
-	//			PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ign_ped[i], true);
-	//			PED::SET_PED_FLEE_ATTRIBUTES(ign_ped[i], 0, 0);
-	//		}
-	//	}
-	//}
 	std::set<Ped> peds = get_nearby_peds(PLAYER::PLAYER_PED_ID());
 	for each (Ped xped in peds) {
 		if (xped != PLAYER::PLAYER_PED_ID()) {
@@ -1170,11 +1106,6 @@ void clear_up_missionised_entitities(){
 void onchange_areaeffect_ped_weapons(int value, SelectFromListMenuItem* source){
 	pedWeaponSetIndex = value;
 }
-
-//void onchange_world_damaged_vehicles_index(int value, SelectFromListMenuItem* source) {
-//	DamagedVehiclesIndex = value;
-//	DamagedVehiclesChanged = true;
-//}
 
 void onchange_world_npc_vehicles_speed_index(int value, SelectFromListMenuItem* source) {
 	NPCVehicleSpeedIndex = value;

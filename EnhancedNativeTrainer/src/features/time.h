@@ -13,10 +13,8 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\..\inc\natives.h"
 #include "..\..\inc\types.h"
 #include "..\..\inc\enums.h"
-
 #include <string>
 #include <vector>
-
 #include "..\storage\database.h"
 
 void process_time_menu();

@@ -11,7 +11,6 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "vehicles.h"
 #include "road_laws.h"
 #include "fuel.h"
-
 #include "..\..\resource.h"
 #include "..\features\vehmodmenu.h"
 #include "hotkeys.h"
@@ -20,10 +19,8 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\io\config_io.h"
 #include "..\debug\debuglog.h"
 #include "area_effect.h"
-
 #include <fstream>
 #include "vehicle_weapons.h"
-
 #include <string>
 #include <iterator>
 #include <iostream>
@@ -128,7 +125,6 @@ void road_laws()
 		Ped playerPed = PLAYER::PLAYER_PED_ID();
 		Vehicle vehroadlaws = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		Vector3 vehroadlaws_coords = ENTITY::GET_ENTITY_COORDS(vehroadlaws, true);
-		//Vector3 vehroadlaws_ped_coords = ENTITY::GET_ENTITY_COORDS(playerPed, true);
 		Vehicle veh_collided_with = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		Vector3 veh_collided_with_coords = ENTITY::GET_ENTITY_COORDS(veh_collided_with, true);
 		Vehicle veh_stopped_red_light = -1;
@@ -299,7 +295,6 @@ void road_laws()
 					}
 				}
 			}
-			//Vehicle veh_stopped_red_light = VEHICLE::GET_CLOSEST_VEHICLE(vehroadlaws_coords.x, vehroadlaws_coords.y, vehroadlaws_coords.z, 10, 0, 70);
 			Vector3 veh_stopped_red_light_coords = ENTITY::GET_ENTITY_COORDS(veh_stopped_red_light, true);
 			float veh_stopped_red_light_heading = ENTITY::GET_ENTITY_HEADING(veh_stopped_red_light);
 			float my_vehicle_heading = ENTITY::GET_ENTITY_HEADING(vehroadlaws);
@@ -335,7 +330,7 @@ void road_laws()
 		for (int i = 0; i < count_laws; i++) {
 			// Vehicle Collided
 			if (featureCarCollision) {
-				if (vehicles_laws[i] != playerPed) { // PED::GET_PED_TYPE(vehicles_laws[i]) != 0 && PED::GET_PED_TYPE(vehicles_laws[i]) != 1 && PED::GET_PED_TYPE(vehicles_laws[i]) != 2 && PED::GET_PED_TYPE(vehicles_laws[i]) != 3
+				if (vehicles_laws[i] != playerPed) { 
 					veh_collided_with = PED::GET_VEHICLE_PED_IS_IN(vehicles_laws[i], false);
 					veh_collided_with_coords = ENTITY::GET_ENTITY_COORDS(veh_collided_with, true);
 				}
@@ -750,7 +745,6 @@ void road_laws()
 					SinceStop_secs_curr_final = r_tick_secs_passed;
 				}
 				Vector3 head_coords = PED::GET_PED_BONE_COORDS(playerPed, 31086, 0, 0, 0); // head bone
-				//AI::TASK_LOOK_AT_COORD(cop_that_fines_you, head_coords.x, head_coords.y, head_coords.z + 0.1, 10000, 0, 2); // p5 = 0, p6 = 2
 				if (!PED::IS_PED_FACING_PED(cop_that_fines_you, playerPed, 50) && AI::IS_PED_STILL(cop_that_fines_you) && Stop_seconds_final < 17) AI::TASK_TURN_PED_TO_FACE_COORD(cop_that_fines_you, head_coords.x, head_coords.y, head_coords.z, 10000);
 				if (Stop_seconds_final == 7) AI::TASK_TURN_PED_TO_FACE_COORD(cop_that_fines_you, head_coords.x, head_coords.y, head_coords.z, 10000);
 				if (Stop_seconds_final == 8) AI::TASK_TURN_PED_TO_FACE_COORD(cop_that_fines_you, head_coords.x, head_coords.y, head_coords.z, 10000);
@@ -778,18 +772,10 @@ void road_laws()
 					STREAMING::REQUEST_ANIM_DICT("misscommon@response");
 					while (!STREAMING::HAS_ANIM_DICT_LOADED("misscommon@response")) WAIT(0);
 					AI::TASK_PLAY_ANIM(cop_that_fines_you, "misscommon@response", "screw_you", 8.0, 0.0, -1, 9, 0, 0, 0, 0);
-					//Vector3 t_coords = ENTITY::GET_ENTITY_COORDS(cop_that_fines_you, true);
-					//Vector3 t_rot = ENTITY::GET_ENTITY_ROTATION(cop_that_fines_you, 2);
-					//STREAMING::REQUEST_ANIM_DICT("franklin_1_int-7");
-					//while (!STREAMING::HAS_ANIM_DICT_LOADED("franklin_1_int-7")) WAIT(0);
-					//if (!ENTITY::IS_ENTITY_PLAYING_ANIM(cop_that_fines_you, "franklin_1_int-7", "player_one_dual-7", 3))
-					//	AI::TASK_PLAY_ANIM_ADVANCED(cop_that_fines_you, "franklin_1_int-7", "player_one_dual-7", t_coords.x, t_coords.y, t_coords.z, t_rot.x, t_rot.y, t_rot.z + 20, 8.0, 0.0, -1, 9, 0.8, 0, 0); // 0.8
 				}
 				if (Stop_seconds_final == 22) { // 21
 					if (!AUDIO::IS_AMBIENT_SPEECH_PLAYING(cop_that_fines_you)) AUDIO::STOP_CURRENT_PLAYING_AMBIENT_SPEECH(cop_that_fines_you);
 					AI::STOP_ANIM_TASK(cop_that_fines_you, "misscommon@response", "screw_you", 1.0);
-					//AI::STOP_ANIM_TASK(cop_that_fines_you, "franklin_1_int-7", "player_one_dual-7", 1.0);
-					//if (!AUDIO::IS_AMBIENT_SPEECH_PLAYING(playerPed)) AUDIO::_PLAY_AMBIENT_SPEECH1(playerPed, "GENERIC_INSULT_MED", "SPEECH_PARAMS_FORCE_NORMAL"); // GENERIC_CURSE_MED
 				}
 			}
 

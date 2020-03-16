@@ -13,16 +13,10 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\..\inc\natives.h"
 #include "..\..\inc\types.h"
 #include "..\..\inc\enums.h"
-
 #include <string>
 #include <vector>
-
 #include "..\storage\database.h"
 #include <cstdint>
-
-
-
-
 #include "..\..\inc\main.h"
 #include "..\ui_support\menu_functions.h"
 #include "..\ent-enums.h"
@@ -59,8 +53,6 @@ void onchange_world_headlights_blackout_index(int value, SelectFromListMenuItem*
 void onchange_freeroam_activities_index(int value, SelectFromListMenuItem* source);
 
 void onchange_world_train_speed_index(int value, SelectFromListMenuItem* source);
-
-//void onchange_world_damaged_vehicles_index(int value, SelectFromListMenuItem* source);
 
 void onchange_world_no_peds_gravity_index(int value, SelectFromListMenuItem* source);
 

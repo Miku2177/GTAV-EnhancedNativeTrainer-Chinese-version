@@ -21,10 +21,8 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\io\config_io.h"
 #include "..\debug\debuglog.h"
 #include "area_effect.h"
-
 #include <fstream>
 #include "vehicle_weapons.h"
-
 #include <string>
 #include <iterator>
 #include <iostream>
@@ -97,7 +95,6 @@ bool featureAirStrike = false;
 bool featureEngineRunning = false;
 bool featureNoVehFlip = false;
 bool featureAutoToggleLights = false;
-//bool featureNitro = false;
 bool featureMileage = false;
 bool featureSeasharkLights = false;
 bool featureVehMassMult = false;
@@ -511,7 +508,6 @@ void vehicle_set_alarm() {
 
 void doorslocked_switching() {
 	featureLockVehicleDoors = !featureLockVehicleDoors;
-	//featureLockVehicleDoorsUpdated = true;
 	if (featureLockVehicleDoors) set_status_text("Doors Locked");
 	else set_status_text("Doors Unlocked");
 	WAIT(100);
@@ -629,7 +625,7 @@ Ped find_nearest_ped() {
 	float dist_diff = -1.0;
 	float temp_dist = 2000.0;
 	for (int i = 0; i < count_surr_vehs; i++) {
-		if (surr_peds[i] != PLAYER::PLAYER_PED_ID()) { // PED::GET_PED_TYPE(surr_peds[i]) != 0 && PED::GET_PED_TYPE(surr_peds[i]) != 1 && PED::GET_PED_TYPE(surr_peds[i]) != 2 && PED::GET_PED_TYPE(surr_peds[i]) != 3
+		if (surr_peds[i] != PLAYER::PLAYER_PED_ID()) { 
 			Vector3 coordsped = ENTITY::GET_ENTITY_COORDS(surr_peds[i], true);
 			dist_diff = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsped.x, coordsped.y, coordsped.z);
 			if (temp_dist > dist_diff) {
@@ -740,9 +736,6 @@ bool onconfirm_vehdoor_menu(MenuItem<int> choice){
 			VEHICLE::CLOSE_BOMB_BAY_DOORS(veh);
 		}
 	}
-	//else if(choice.value == -4)//lock doors
-	//{
-	//}
 	else if (choice.value == -5)//driver window roll
 	{
 		process_window_roll(); 
@@ -880,7 +873,6 @@ bool process_veh_door_menu(){
 	toggleItem->caption = "Lock Vehicle Doors";
 	toggleItem->value = -4;
 	toggleItem->toggleValue = &featureLockVehicleDoors;
-	//toggleItem->toggleValueUpdated = &featureLockVehicleDoorsUpdated;
 	menuItems.push_back(toggleItem);
 
 	std::vector<MenuItem<int>*> menuItemsRoll;
@@ -1019,9 +1011,6 @@ bool onconfirm_seat_menu(MenuItem<int> choice) {
 
 		PED::SET_PED_INTO_VEHICLE(playerPed, veh, value);
 	}
-	/*else {
-		set_status_text("Player isn't in a vehicle");
-	}*/
 	return false;
 }
 
@@ -1955,12 +1944,6 @@ void process_veh_menu(){
 	listItem->value = NitrousIndex;
 	menuItems.push_back(listItem);
 
-	//toggleItem = new ToggleMenuItem<int>();
-	//toggleItem->caption = "Nitrous";
-	//toggleItem->value = i++;
-	//toggleItem->toggleValue = &featureNitro;
-	//menuItems.push_back(toggleItem);
-
 	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Disable Despawn Of DLC Cars";
 	toggleItem->value = i++;
@@ -2263,7 +2246,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	else if (featureDespawnScriptDisabledWasLastOn == true) {
 		SCRIPT::REQUEST_SCRIPT("shop_controller");
 		SYSTEM::START_NEW_SCRIPT("shop_controller", 1424);
-		//set_status_text("~r~Note:~r~ the shops may still not work until you load a save or restart");
 		featureDespawnScriptDisabledWasLastOn = false;
 	}
 
@@ -2482,10 +2464,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				float dirVector_lf_lr_y = bone_boat_coord.y - bone2_boat_coord.y;
 				float dirVector_lf_lr_z = bone_boat_coord.z - (bone2_boat_coord.z + 1);
 				if (VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(veh_boat)) {
-					if (CONTROLS::IS_CONTROL_JUST_PRESSED(2, 74)) {
-						sheshark_light_toogle = sheshark_light_toogle + 1;
-						//WAIT(100);
-					}
+					if (CONTROLS::IS_CONTROL_JUST_PRESSED(2, 74)) sheshark_light_toogle = sheshark_light_toogle + 1;
 					if (sheshark_light_toogle == 3) sheshark_light_toogle = 0;
 					if (sheshark_light_toogle == 1) GRAPHICS::_DRAW_SPOT_LIGHT_WITH_SHADOW(bone_boat_coord.x, bone_boat_coord.y, bone_boat_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 40.0, 1, 50, 31, 2.7, 5);
 					if (sheshark_light_toogle == 2) GRAPHICS::_DRAW_SPOT_LIGHT_WITH_SHADOW(bone_boat_coord.x, bone_boat_coord.y, bone_boat_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, 255, 255, 255, 60.0, 1, 50, 41, 2.7, 10);
@@ -2882,9 +2861,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		Vehicle vehturn = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		int vehturnspeed = ENTITY::GET_ENTITY_SPEED(vehturn);
 		int steer_turn = CONTROLS::GET_CONTROL_VALUE(0, 9);
-		//bool leftKey = IsKeyDown(KeyConfig::KEY_VEH_LEFTBLINK) || IsControllerButtonDown(KeyConfig::KEY_VEH_LEFTBLINK); // Left Key
-		//bool rightKey = IsKeyDown(KeyConfig::KEY_VEH_RIGHTBLINK) || IsControllerButtonDown(KeyConfig::KEY_VEH_RIGHTBLINK); // Right Key
-		//bool emergencyKey = IsKeyDown(KeyConfig::KEY_VEH_EMERGENCYBLINK) || IsControllerButtonDown(KeyConfig::KEY_VEH_EMERGENCYBLINK); // Emergency Signal Key
 		bool leftKey = IsKeyJustUp(KeyConfig::KEY_VEH_LEFTBLINK) || IsControllerButtonJustUp(KeyConfig::KEY_VEH_LEFTBLINK); // Left Key
 		bool rightKey = IsKeyJustUp(KeyConfig::KEY_VEH_RIGHTBLINK) || IsControllerButtonJustUp(KeyConfig::KEY_VEH_RIGHTBLINK); // Right Key
 		bool emergencyKey = IsKeyJustUp(KeyConfig::KEY_VEH_EMERGENCYBLINK) || IsControllerButtonJustUp(KeyConfig::KEY_VEH_EMERGENCYBLINK); // Emergency Signal Key
@@ -2894,14 +2870,12 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			turn_check_right = false;
 			controllightsenabled_l = turn_check_left;
 			controllightsenabled_r = false;
-			//WAIT(100);
 		}
 		if (rightKey && VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] > 0) { // Manual Right Turn Signal
 			turn_check_right = !turn_check_right;
 			turn_check_left = false;
 			controllightsenabled_r = turn_check_right;
 			controllightsenabled_l = false;
-			//WAIT(100);
 		}
 		if (emergencyKey && VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] > 0) {
 			if (turn_check_left == true && turn_check_right == true) {
@@ -2914,7 +2888,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			}
 			controllightsenabled_l = turn_check_left;
 			controllightsenabled_r = turn_check_right;
-			//WAIT(100);
 		}
 
 		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && turn_check_left && !controllightsenabled_l) {
@@ -3353,7 +3326,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				UI::SET_BLIP_AS_SHORT_RANGE(blip_veh[0], true);
 				BLIPTABLE_VEH.push_back(blip_veh[0]);
 				VEHICLES_REMEMBER.push_back(veh_rem);
-				//ENTITY::SET_ENTITY_AS_MISSION_ENTITY(veh_rem, true, true);
 				curr_veh_remember = veh_rem;
 				featureDeleteTrackedVehicles_Emptied = true;
 				old_playerPed_Tracking = playerPed;
@@ -3385,7 +3357,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				UI::SET_BLIP_AS_SHORT_RANGE(blip_veh[0], true);
 				BLIPTABLE_VEH.push_back(blip_veh[0]);
 				VEHICLES_REMEMBER.push_back(veh_rem);
-				//ENTITY::SET_ENTITY_AS_MISSION_ENTITY(veh_rem, true, true);
 
 				if (VEHICLES_REMEMBER.size() > VEH_VEHREMEMBER_VALUES[VehRememberIndex]) {
 					UI::REMOVE_BLIP(&BLIPTABLE_VEH[0]);
@@ -3646,7 +3617,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			STREAMING::REQUEST_ANIM_DICT("p_ld_stinger_s");
 			while (!STREAMING::HAS_ANIM_DICT_LOADED("p_ld_stinger_s")) WAIT(0);
 			AI::TASK_PLAY_ANIM(stinger, "p_ld_stinger_s", "p_stinger_s_idle_deployed", 8.0, 0.0, -1, 9, 0, 1, 1, 1);
-			//WAIT(1000);
 			AI::STOP_ANIM_TASK(stinger, "p_ld_stinger_s", "p_stinger_s_idle_deployed", 1.0);
 		}
 		if (!SPIKES.empty() && SPIKES.size() > 20) {
@@ -3973,7 +3943,6 @@ void reset_vehicle_globals() {
 		featureEngineRunning =
 		featureNoVehFlip =
 		featureAutoToggleLights =
-		//featureNitro =
 		featureMileage = 
 		featureSeasharkLights =
 		featureRememberVehicles =
@@ -4001,7 +3970,6 @@ void reset_vehicle_globals() {
 		featureHazards = true;
 		featureWearHelmetOffUpdated = true;
 		featureVehInvincibleUpdated = true;
-		//featureWearHelmetOffUpdated = true;
 		featureDeleteTrackedVehicles = true;
 		featurePoliceVehicleBlip = true;
 		featurePoliceNoFlip = true;
@@ -4264,7 +4232,7 @@ Vehicle do_spawn_vehicle(DWORD model, std::string modelTitle, bool cleanup){
 }
 
 void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){
-	results->push_back(FeatureEnabledLocalDefinition{"featureNoVehFallOff", &featureNoVehFallOff}); // , &featureNoVehFallOffUpdated
+	results->push_back(FeatureEnabledLocalDefinition{"featureNoVehFallOff", &featureNoVehFallOff}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehicleDoorInstant", &featureVehicleDoorInstant});
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehInvincible", &featureVehInvincible, &featureVehInvincibleUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehNoDamage", &featureVehNoDamage, &featureVehInvincibleUpdated});
@@ -4279,7 +4247,6 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureEngineRunning", &featureEngineRunning});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoVehFlip", &featureNoVehFlip});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAutoToggleLights", &featureAutoToggleLights});
-	//results->push_back(FeatureEnabledLocalDefinition{"featureNitro", &featureNitro});
 	results->push_back(FeatureEnabledLocalDefinition{"featureMileage", &featureMileage});
 	results->push_back(FeatureEnabledLocalDefinition{"featureSeasharkLights", &featureSeasharkLights});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRememberVehicles", &featureRememberVehicles});
@@ -6200,9 +6167,6 @@ void fix_vehicle(){
 
 			set_status_text("Vehicle repaired");
 		}
-		//else{
-		//	set_status_text("Player isn't in a vehicle");
-		//}
 	}
 }
 
@@ -6216,9 +6180,6 @@ void clean_vehicle(){
 
 			set_status_text("Vehicle cleaned");
 		}
-		//else{
-		//	set_status_text("Player isn't in a vehicle");
-		//}
 	}
 }
 

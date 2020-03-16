@@ -13,10 +13,8 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\..\inc\natives.h"
 #include "..\..\inc\types.h"
 #include "..\..\inc\enums.h"
-
 #include "..\..\inc\main.h"
 #include "..\ui_support\menu_functions.h"
-
 #include <string>
 
 const std::vector<std::string> SKINS_PLAYER_CAPTIONS{ "Michael", "Franklin", "Trevor", "MP Female", "MP Male" };
@@ -84,5 +82,3 @@ void add_player_skin_feature_enablements(std::vector<FeatureEnabledLocalDefiniti
 void onchange_skins_reset_skin_ondeath_index(int value, SelectFromListMenuItem* source);
 
 extern DWORD model_to_restore;
-
-//extern bool featureResetPlayerModelOnDeath;

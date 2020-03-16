@@ -30,9 +30,6 @@ extern bool featureNPCNoGravityVehicles;
 extern bool featureNPCReducedGripVehicles;
 extern bool featureBoostNPCRadio;
 
-//extern const int WORLD_DAMAGED_VEHICLES_VALUES[];
-//extern int DamagedVehiclesIndex;
-//extern bool DamagedVehiclesChanged;
 extern const int WORLD_NPC_VEHICLESPEED_VALUES[];
 extern const std::vector<std::string> WORLD_REDUCEDGRIP_SNOWING_CAPTIONS;
 extern const int WORLD_REDUCEDGRIP_SNOWING_VALUES[];
@@ -163,8 +160,6 @@ const std::vector<std::vector<std::string>> VOV_PED_WEAPONS{ {}, PED_WEAPONS_MEL
 const std::vector<std::string> PED_WEAPON_TITLES{ "Custom Weapon", "Melee", "Small Arms", "Rifles", "Heavy", "Explosives", "Gangsta", "Countryside", "Random (all weapons)", "Random (w/o instant kill weapons)" };
 
 bool onconfirm_areaeffect_ped_menu(MenuItem<int> choice);
-
-//void process_areaeffect_menu();
 
 void process_areaeffect_peds_menu();
 

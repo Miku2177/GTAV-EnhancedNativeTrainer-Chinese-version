@@ -38,7 +38,6 @@ bool featureBodyguardHelmet = false;
 bool featureBodyguardDespawn = true;
 bool featureDifferentWeapons = false;
 bool featureRandomApp = false;
-//bool featureFollowInVehicle = false;
 bool featureBodyguardOnMap = false;
 bool featureBodyguardInfAmmo = false;
 
@@ -114,8 +113,6 @@ int BodyGroupFormationIndex = 1;
 bool BodyGroupFormationChanged = true;
 
 //Blip Flashing
-//const std::vector<std::string> BODY_BLIPFLASH_CAPTIONS{ "OFF", "Mode One", "Mode Two" };
-//const int BODY_BLIPFLASH_VALUES[] = { 0, 1, 2 };
 int BodyBlipFlashIndex = 0;
 bool BodyBlipFlash_Changed = true;
 int FollowInVehicleIndex = 0;
@@ -199,10 +196,8 @@ void onexit_bod_skinchanger_texture_menu(bool returnValue)
 
 void onhighlight_bod_skinchanger_texture_menu(MenuItem<int> choice)
 {
-	if (true)//PED::IS_PED_COMPONENT_VARIATION_VALID(PLAYER::PLAYER_PED_ID(), skinDetailMenuValue, skinDrawableMenuValue, value))
+	if (true)
 	{
-		//int currentDrawable = PED::GET_PED_DRAWABLE_VARIATION(PLAYER::PLAYER_PED_ID(), skinBodDetailMenuValue);
-		//PED::SET_PED_COMPONENT_VARIATION(PLAYER::PLAYER_PED_ID(), skinBodDetailMenuValue, currentDrawable, choice.value, 0);
 		int currentDrawable = PED::GET_PED_DRAWABLE_VARIATION(spawnedENTBodyguards[b_curr_num], skinBodDetailMenuValue);
 		PED::SET_PED_COMPONENT_VARIATION(spawnedENTBodyguards[b_curr_num], skinBodDetailMenuValue, currentDrawable, choice.value, 0);
 	}
@@ -222,8 +217,6 @@ bool process_bod_skinchanger_texture_menu(std::string caption)
 	int foundTextures = 0;
 	std::vector<MenuItem<int>*> menuItems;
 
-	//Ped playerPed = PLAYER::PLAYER_PED_ID();
-	//Hash model = ENTITY::GET_ENTITY_MODEL(playerPed);
 	Hash model = ENTITY::GET_ENTITY_MODEL(spawnedENTBodyguards[b_curr_num]);
 
 	if (STREAMING::IS_MODEL_IN_CDIMAGE(model) && STREAMING::IS_MODEL_VALID(model))
@@ -235,8 +228,6 @@ bool process_bod_skinchanger_texture_menu(std::string caption)
 			WAIT(0);
 		}
 
-		//int currentDrawable = PED::GET_PED_DRAWABLE_VARIATION(PLAYER::PLAYER_PED_ID(), skinBodDetailMenuValue);
-		//int textures = PED::GET_NUMBER_OF_PED_TEXTURE_VARIATIONS(PLAYER::PLAYER_PED_ID(), skinBodDetailMenuValue, currentDrawable);
 		int currentDrawable = PED::GET_PED_DRAWABLE_VARIATION(spawnedENTBodyguards[b_curr_num], skinBodDetailMenuValue);
 		int textures = PED::GET_NUMBER_OF_PED_TEXTURE_VARIATIONS(spawnedENTBodyguards[b_curr_num], skinBodDetailMenuValue, currentDrawable);
 
@@ -256,7 +247,6 @@ bool process_bod_skinchanger_texture_menu(std::string caption)
 	std::ostringstream ss;
 	ss << "Available Textures";
 
-	//int currentTexture = PED::GET_PED_TEXTURE_VARIATION(PLAYER::PLAYER_PED_ID(), skinBodDetailMenuValue);
 	int currentTexture = PED::GET_PED_TEXTURE_VARIATION(spawnedENTBodyguards[b_curr_num], skinBodDetailMenuValue);
 	draw_generic_menu<int>(menuItems, &currentTexture, ss.str(), onconfirm_bod_skinchanger_texture_menu, onhighlight_bod_skinchanger_texture_menu, onexit_bod_skinchanger_texture_menu);
 	return false;
@@ -268,11 +258,9 @@ void onexit_bod_skinchanger_drawable_menu(bool returnValue)
 
 void onhighlight_bod_skinchanger_drawable_menu(MenuItem<int> choice)
 {
-	//int currentDrawable = PED::GET_PED_DRAWABLE_VARIATION(PLAYER::PLAYER_PED_ID(), skinBodDetailMenuValue);
 	int currentDrawable = PED::GET_PED_DRAWABLE_VARIATION(spawnedENTBodyguards[b_curr_num], skinBodDetailMenuValue);
 	if (choice.value != currentDrawable)
 	{
-		//PED::SET_PED_COMPONENT_VARIATION(PLAYER::PLAYER_PED_ID(), skinBodDetailMenuValue, choice.value, 0, 0);
 		PED::SET_PED_COMPONENT_VARIATION(spawnedENTBodyguards[b_curr_num], skinBodDetailMenuValue, choice.value, 0, 0);
 	}
 	WAIT(100);
@@ -293,8 +281,6 @@ bool process_bod_skinchanger_drawable_menu(std::string caption, int component)
 	int foundTextures = 0;
 	std::vector<MenuItem<int>*> menuItems;
 
-	//Ped playerPed = PLAYER::PLAYER_PED_ID();
-	//Hash model = ENTITY::GET_ENTITY_MODEL(playerPed);
 	Hash model = ENTITY::GET_ENTITY_MODEL(spawnedENTBodyguards[b_curr_num]);
 	
 	if (STREAMING::IS_MODEL_IN_CDIMAGE(model) && STREAMING::IS_MODEL_VALID(model))
@@ -306,11 +292,9 @@ bool process_bod_skinchanger_drawable_menu(std::string caption, int component)
 			WAIT(0);
 		}
 
-		//int drawables = PED::GET_NUMBER_OF_PED_DRAWABLE_VARIATIONS(PLAYER::PLAYER_PED_ID(), component);
 		int drawables = PED::GET_NUMBER_OF_PED_DRAWABLE_VARIATIONS(spawnedENTBodyguards[b_curr_num], component);
 		for (int i = 0; i < drawables; i++)
 		{
-			//int textures = PED::GET_NUMBER_OF_PED_TEXTURE_VARIATIONS(PLAYER::PLAYER_PED_ID(), component, i);
 			int textures = PED::GET_NUMBER_OF_PED_TEXTURE_VARIATIONS(spawnedENTBodyguards[b_curr_num], component, i);
 			std::ostringstream ss;
 			ss << "Drawable #" << i << " ~HUD_COLOUR_GREYLIGHT~(" << textures << ")";
@@ -328,7 +312,6 @@ bool process_bod_skinchanger_drawable_menu(std::string caption, int component)
 	std::ostringstream ss;
 	ss << "Available Drawables";
 
-	//int currentDrawable = PED::GET_PED_DRAWABLE_VARIATION(PLAYER::PLAYER_PED_ID(), component);
 	int currentDrawable = PED::GET_PED_DRAWABLE_VARIATION(spawnedENTBodyguards[b_curr_num], component);
 	draw_generic_menu<int>(menuItems, &currentDrawable, ss.str(), onconfirm_bod_skinchanger_drawable_menu, onhighlight_bod_skinchanger_drawable_menu, onexit_bod_skinchanger_drawable_menu, b_skin_menu_interrupt);
 	return false;
@@ -366,8 +349,7 @@ bool process_bod_skinchanger_detail_menu()
 	int fixedChoices = 0;
 	const int partVariations = 12;
 	int i = 0;
-	//Ped playerPed = PLAYER::PLAYER_PED_ID();
-	//Hash model = ENTITY::GET_ENTITY_MODEL(playerPed);
+
 	Hash model = ENTITY::GET_ENTITY_MODEL(spawnedENTBodyguards[b_curr_num]);
 
 	if (STREAMING::IS_MODEL_IN_CDIMAGE(model) && STREAMING::IS_MODEL_VALID(model))
@@ -383,12 +365,10 @@ bool process_bod_skinchanger_detail_menu()
 			bool iFound = false;
 			int compIndex = i - fixedChoices;
 
-			//int drawables = PED::GET_NUMBER_OF_PED_DRAWABLE_VARIATIONS(PLAYER::PLAYER_PED_ID(), compIndex);
 			int drawables = PED::GET_NUMBER_OF_PED_DRAWABLE_VARIATIONS(spawnedENTBodyguards[b_curr_num], compIndex);
 			int textures = 0;
 			if (drawables == 1)
 			{
-				//textures = PED::GET_NUMBER_OF_PED_TEXTURE_VARIATIONS(PLAYER::PLAYER_PED_ID(), compIndex, 0);
 				textures = PED::GET_NUMBER_OF_PED_TEXTURE_VARIATIONS(spawnedENTBodyguards[b_curr_num], compIndex, 0);
 			}
 			if (drawables > 1 || textures != 0)
@@ -422,42 +402,21 @@ bool applyChosenBodSkin(DWORD model)
 			WAIT(0);
 		}
 
-		//Vehicle veh = NULL;
-		//if (PED::IS_PED_IN_ANY_VEHICLE(model, 0))
-		//{
-		//	veh = PED::GET_VEHICLE_PED_IS_USING(model);
-		//}
-
-		//save_player_weapons(model);
-
 		load_saved_bodyguard = true;
 		temp_bodyguard = model;
 		do_spawn_bodyguard();
 		load_saved_bodyguard = false;
 
-		//PLAYER::SET_PLAYER_MODEL(model, model);
-		
-		//PED::SET_PED_DEFAULT_COMPONENT_VARIATION(model);
 		PED::SET_PED_DEFAULT_COMPONENT_VARIATION(bodyGuard);
 		WAIT(0);
-
-		//if (veh != NULL)
-		//{
-		//	PED::SET_PED_INTO_VEHICLE(model, veh, -1);
-		//}
-
-		//restore_player_weapons(model);
-
+		
 		//reset the skin detail choice
 		bodskinDetailMenuIndex = 0;
 		bodskinDetailMenuValue = 0;
 
 		WAIT(100);
-		//STREAMING::SET_MODEL_AS_NO_LONGER_NEEDED(model);
 		STREAMING::SET_MODEL_AS_NO_LONGER_NEEDED(bodyGuard);
-
-		//chosenSkinName = skinName;
-
+		
 		return true;
 	}
 	return false;
@@ -474,19 +433,14 @@ bool spawn_saved_bod_skin(int slot, std::string caption)
 
 	applyChosenBodSkin(savedBodSkin->model);
 
-	//Ped ped = PLAYER::PLAYER_PED_ID();
-
 	for each (SavedBodSkinComponentDBRow *comp in savedBodSkin->components)
 	{
-		//PED::SET_PED_COMPONENT_VARIATION(savedBodSkin->model, comp->slotID, comp->drawable, comp->texture, 0);
 		PED::SET_PED_COMPONENT_VARIATION(bodyGuard, comp->slotID, comp->drawable, comp->texture, 0);
 	}
 
-	//PED::CLEAR_ALL_PED_PROPS(savedBodSkin->model);
 	PED::CLEAR_ALL_PED_PROPS(bodyGuard);
 	for each (SavedBodSkinPropDBRow *prop in savedBodSkin->props)
 	{
-		//PED::SET_PED_PROP_INDEX(savedBodSkin->model, prop->propID, prop->drawable, prop->texture, 0);
 		PED::SET_PED_PROP_INDEX(bodyGuard, prop->propID, prop->drawable, prop->texture, 0);
 	}
 
@@ -507,10 +461,6 @@ bool spawn_saved_bod_skin(int slot, std::string caption)
 
 void save_current_bod_skin(int slot)
 {
-	//BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
-	//Player player = PLAYER::PLAYER_ID();
-	//Ped playerPed = PLAYER::PLAYER_PED_ID();
-	
 	CONTROLS::_SET_CONTROL_NORMAL(0, 37, 1);
 
 	std::string result_b_s = show_keyboard("Number", NULL);
@@ -803,7 +753,6 @@ bool onconfirm_bodyguard_skins_menu(MenuItem<int> choice){
 					get_current_model_name();
 					requireRefreshOfBodyguardMainMenu = true;
 				}
-				
 			}
 			return false;
 		}
@@ -905,7 +854,6 @@ bool onconfirm_bodyguards_skins_npcs(MenuItem<std::string> choice){
 	skinTypesBodyguardMenuPositionMemory[1] = choice.currentMenuIndex;
 	skinTypesBodyguardMenuLastConfirmed[0] = 1;
 	skinTypesBodyguardMenuLastConfirmed[1] = choice.currentMenuIndex;
-
 	requireRefreshOfBodyguardMainMenu = true;
 
 	return true;
@@ -916,7 +864,6 @@ bool onconfirm_bodyguards_skins_animals(MenuItem<std::string> choice){
 	skinTypesBodyguardMenuPositionMemory[1] = choice.currentMenuIndex;
 	skinTypesBodyguardMenuLastConfirmed[0] = 2;
 	skinTypesBodyguardMenuLastConfirmed[1] = choice.currentMenuIndex;
-
 	requireRefreshOfBodyguardMainMenu = true;
 
 	return true;
@@ -1539,7 +1486,7 @@ void maintain_bodyguards(){
 							cop_coords = ENTITY::GET_ENTITY_COORDS(cop_to_kill, true);
 							dist_diff = SYSTEM::VDIST(dog_coords.x, dog_coords.y, dog_coords.z, cop_coords.x, cop_coords.y, cop_coords.z);
 							if (/*AI::IS_PED_STILL(spawnedENTBodyguards[i]) && */dist_diff < 2) {
-								AI::TASK_COMBAT_PED_TIMED(spawnedENTBodyguards[i], cop_to_kill, 50000, 16); // AI::TASK_COMBAT_PED(spawnedENTBodyguards[i], cop_to_kill, 0, 16); // AI::TASK_COMBAT_HATED_TARGETS_AROUND_PED(spawnedENTBodyguards[i], 100.0, 0);
+								AI::TASK_COMBAT_PED_TIMED(spawnedENTBodyguards[i], cop_to_kill, 50000, 16); 
 								AI::TASK_WRITHE(cop_to_kill, spawnedENTBodyguards[i], 50000, 0);
 							}
 							if (ENTITY::IS_ENTITY_DEAD(cop_to_kill) || ENTITY::IS_ENTITY_DEAD(spawnedENTBodyguards[i]) || !ENTITY::DOES_ENTITY_EXIST(cop_to_kill)) dist_diff = -1;
@@ -1755,49 +1702,42 @@ bool process_bodyguard_menu(){
 		std::ostringstream ss;
 		ss << "Spawn Bodyguard: " << get_current_model_name(); 
 		item->caption = ss.str();
-		//item->value = i++;
 		item->value = 0;
 		item->isLeaf = true;
 		menuItems.push_back(item);
 
 		item = new MenuItem<int>();
 		item->caption = "Add Nearest Ped As Bodyguard";
-		//item->value = i++;
 		item->value = 1;
 		item->isLeaf = true;
 		menuItems.push_back(item);
 
 		item = new MenuItem<int>();
 		item->caption = "Dismiss All Bodyguards";
-		//item->value = i++;
 		item->value = 2;
 		item->isLeaf = true;
 		menuItems.push_back(item);
 
 		item = new MenuItem<int>();
 		item->caption = "Toggle Bodyguards To Follow Player";
-		//item->value = i++;
 		item->value = 3;
 		item->isLeaf = true;
 		menuItems.push_back(item);
 
 		item = new MenuItem<int>();
 		item->caption = "Choose Model";
-		//item->value = i++;
 		item->value = 4;
 		item->isLeaf = false;
 		menuItems.push_back(item);
 
 		item = new MenuItem<int>();
 		item->caption = "Choose Weapons";
-		//item->value = i++;
 		item->value = 5;
 		item->isLeaf = false;
 		menuItems.push_back(item);
 
 		item = new MenuItem<int>();
 		item->caption = "Mark On Map";
-		//item->value = i++;
 		item->value = 6;
 		item->isLeaf = false;
 		menuItems.push_back(item);
@@ -1855,13 +1795,6 @@ bool process_bodyguard_menu(){
 		toggleItem->toggleValue = &featureRandomApp;
 		toggleItem->toggleValueUpdated = NULL;
 		menuItems.push_back(toggleItem);
-
-		/*toggleItem = new ToggleMenuItem<int>();
-		toggleItem->caption = "Follow In Vehicle";
-		toggleItem->value = i++;
-		toggleItem->toggleValue = &featureFollowInVehicle;
-		toggleItem->toggleValueUpdated = NULL;
-		menuItems.push_back(toggleItem);*/
 
 		listItem = new SelectFromListMenuItem(LIMP_IF_INJURED_CAPTIONS, onchange_follow_invehicle_index);
 		listItem->wrap = false;
@@ -1941,7 +1874,6 @@ void add_bodyguards_feature_enablements(std::vector<FeatureEnabledLocalDefinitio
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardDespawn", &featureBodyguardDespawn});
 	results->push_back(FeatureEnabledLocalDefinition{"featureDifferentWeapons", &featureDifferentWeapons});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRandomApp", &featureRandomApp});
-	//results->push_back(FeatureEnabledLocalDefinition{"featureFollowInVehicle", &featureFollowInVehicle});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardOnMap", &featureBodyguardOnMap});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyBlipNumber", &featureBodyBlipNumber});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardInfAmmo", &featureBodyguardInfAmmo});
@@ -2033,7 +1965,6 @@ void reset_bodyguards_globals(){
 	featureBodyguardInfAmmo = false;
 	featureDifferentWeapons = false;
 	featureRandomApp = false;
-	//featureFollowInVehicle = false;
 	BodyBlipSizeIndex = 2;
 	BodyDistanceIndex = 7;
 	BodyGroupFormationIndex = 1;

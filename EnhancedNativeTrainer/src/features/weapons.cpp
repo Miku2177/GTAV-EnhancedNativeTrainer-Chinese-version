@@ -54,7 +54,6 @@ bool featureWeaponVehRockets = false;
 bool featurePunchFists = true;
 bool featurePunchMeleeWeapons = false;
 bool featurePunchFireWeapons = false;
-//bool featurepowerpunchpeds = false;
 
 bool featureCopArmedWith = false;
 bool featurePlayerMelee = true;
@@ -142,12 +141,6 @@ const int WEAPONS_POWERPUNCH_VALUES[] = { 1, 3, 5, 10, 50, 55 };
 int PowerPunchIndex = 2;
 bool PowerPunchChanged = true;
 
-// Including Peds
-//const std::vector<std::string> PEDS_POWERPUNCH_CAPTIONS{ "OFF", "Both You And Peds", "Peds Only" };
-//const int PEDS_POWERPUNCH_VALUES[] = { 0, 1, 2 };
-//int PedsPowerPunchIndex = 0;
-//bool PedsPowerPunchChanged = true;
-
 // Fire Mode
 const std::vector<std::string> WEAPONS_FIREMODE_CAPTIONS{ "Default", "Single Fire", "Burst Semi", "Burst Auto" };
 const int WEAPONS_FIREMODE_VALUES[] = { 0, 1, 2, 3 };
@@ -227,14 +220,12 @@ void RequestControlEntity(Entity entity) //needed so we can pick up props/Peds. 
 /* End Gravity Gun related code */
 
 void fire_mode_hotkey() {
-	//if (WeaponsFireModeIndex > 0) {
-		WeaponsFireModeIndex = WeaponsFireModeIndex + 1;
-		if (WeaponsFireModeIndex > 3) WeaponsFireModeIndex = 0; // 1
-		if (WeaponsFireModeIndex == 0) set_status_text("Default");
-		if (WeaponsFireModeIndex == 1) set_status_text("Single Fire");
-		if (WeaponsFireModeIndex == 2) set_status_text("Burst Semi");
-		if (WeaponsFireModeIndex == 3) set_status_text("Burst Auto");
-	//}
+	WeaponsFireModeIndex = WeaponsFireModeIndex + 1;
+	if (WeaponsFireModeIndex > 3) WeaponsFireModeIndex = 0; // 1
+	if (WeaponsFireModeIndex == 0) set_status_text("Default");
+	if (WeaponsFireModeIndex == 1) set_status_text("Single Fire");
+	if (WeaponsFireModeIndex == 2) set_status_text("Burst Semi");
+	if (WeaponsFireModeIndex == 3) set_status_text("Burst Auto");
 }
 
 void onchange_knuckle_appearance(int value, SelectFromListMenuItem* source){
@@ -770,11 +761,6 @@ void onchange_power_punch_index(int value, SelectFromListMenuItem* source) {
 	PowerPunchChanged = true;
 }
 
-//void onchange_peds_power_punch_index(int value, SelectFromListMenuItem* source) {
-//	PedsPowerPunchIndex = value;
-//	PedsPowerPunchChanged = true;
-//}
-
 void onchange_weapons_firemode_modifier(int value, SelectFromListMenuItem* source) {
 	WeaponsFireModeIndex = value;
 	WeaponsFireModeChanged = true;
@@ -1268,7 +1254,6 @@ void reset_weapon_globals(){
 	ChanceAttackingYouIndex = 1;
 	SniperVisionIndex = 0;
 	PowerPunchIndex = 2;
-	//PedsPowerPunchIndex = 0;
 	WeaponsFireModeIndex = 0;
 
 	activeLineIndexCopArmed = 0;
@@ -1313,7 +1298,6 @@ void reset_weapon_globals(){
 		featureSwitchWeaponIfDanger =
 		featurePunchMeleeWeapons =
 		featurePunchFireWeapons =
-		//featurepowerpunchpeds =
 		featureGravityGun = false;
 }
 
@@ -1402,8 +1386,6 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 							float dist_center = GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(obj_cor.x, obj_cor.y, obj_cor.z, gr_cor.x, gr_cor.y, gr_cor.z, TRUE);
 							if (dist_center < 95) { // 10, 15, 55
 								ENTITY::SET_ENTITY_MAX_SPEED(surr_p_peds[j], 20); // 10
-								//ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&surr_p_peds[j]);
-								//OBJECT::DELETE_OBJECT(&surr_p_peds[j]);
 							}
 						}
 
@@ -1425,8 +1407,6 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 							float dist_center = GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(obj_cor.x, obj_cor.y, obj_cor.z, gr_cor.x, gr_cor.y, gr_cor.z, TRUE);
 							if (dist_center < 95) { // 10, 15, 55
 								ENTITY::SET_ENTITY_MAX_SPEED(surr_vehicles[j], 20); // 10
-								//ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&surr_vehicles[j]);
-								//OBJECT::DELETE_OBJECT(&surr_vehicles[j]);
 							}
 						}
 					}
@@ -1446,8 +1426,6 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 							float dist_center = GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(obj_cor.x, obj_cor.y, obj_cor.z, gr_cor.x, gr_cor.y, gr_cor.z, TRUE);
 							if (dist_center < 95) { // 10, 15, 55
 								ENTITY::SET_ENTITY_MAX_SPEED(surr_objects[j], 20); // 10
-								//ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&surr_objects[j]);
-								//OBJECT::DELETE_OBJECT(&surr_objects[j]);
 							}
 						}
 					}
@@ -1529,7 +1507,6 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			Hash curr_w = WEAPON::GET_SELECTED_PED_WEAPON(playerPed);
 			Vector3 p_coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(playerPed, 10.0f, 10.0f, 0.0f);
 			Object temp_w = WEAPON::GET_WEAPON_OBJECT_FROM_PED(playerPed, 1);
-			//WEAPON::SET_PED_DROPS_INVENTORY_WEAPON(playerPed, curr_w, p_coords.x, p_coords.y, p_coords.z, 1);
 			WEAPON::REMOVE_WEAPON_FROM_PED(playerPed, curr_w);
 			ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&temp_w);
 			OBJECT::DELETE_OBJECT(&temp_w);
@@ -1708,7 +1685,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			PLAYER::SET_PLAYER_VEHICLE_DAMAGE_MODIFIER(playerPed, 1000.0);
 
 			for (int i = 0; i < count_surr_p_peds; i++) {
-				if (surr_p_peds[i] != playerPed && !PED::IS_PED_IN_MELEE_COMBAT(surr_p_peds[i])) { // PED::GET_PED_TYPE(surr_p_peds[i]) != 0 && PED::GET_PED_TYPE(surr_p_peds[i]) != 1 && PED::GET_PED_TYPE(surr_p_peds[i]) != 2 && PED::GET_PED_TYPE(surr_p_peds[i]) != 3
+				if (surr_p_peds[i] != playerPed && !PED::IS_PED_IN_MELEE_COMBAT(surr_p_peds[i])) { 
 					if (!WEAPON::IS_PED_ARMED(playerPed, 7)) AI::CLEAR_PED_SECONDARY_TASK(surr_p_peds[i]);
 					if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(surr_p_peds[i], playerPed, 1)) {
 						temp_nearest_ped = surr_p_peds[i];
@@ -1860,7 +1837,6 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	if (featureRapidFire) {
 		if ((CONTROLS::IS_CONTROL_PRESSED(2, 24) || (CONTROLS::IS_CONTROL_PRESSED(2, 24) && CONTROLS::IS_CONTROL_PRESSED(2, 25))) && ENTITY::DOES_ENTITY_EXIST(playerPed) && !ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) &&
 			!PED::IS_PED_RELOADING(playerPed)) {
-			//Vector3 myCoords = PED::GET_PED_BONE_COORDS(playerPed, 64016, 0, 0, 0); // right finger bone
 			Entity curr_w = WEAPON::GET_CURRENT_PED_WEAPON_ENTITY_INDEX(playerPed);
 			Vector3 myCoords = ENTITY::GET_ENTITY_COORDS(curr_w, 1);
 			float Coord[3];
@@ -1979,8 +1955,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		GRAPHICS::REMOVE_PARTICLE_FX(grav_partfx, 0);
 		STREAMING::REMOVE_PTFX_ASSET();
 		}*/
-
-
+		
 		//featureGravityGunUpdated = false;
 
 		//set_status_text("Gravity gun: ~r~called");
@@ -2021,7 +1996,6 @@ void update_vehicle_guns(){
 
 void save_player_weapons(Ped playerPed){
 	Player player = PLAYER::PLAYER_ID();
-	//Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	int index = 0;
 	for(int a = 0; a < sizeof(VOV_WEAPON_VALUES) / sizeof(VOV_WEAPON_VALUES[0]); a++){
@@ -2064,7 +2038,6 @@ void save_player_weapons(Ped playerPed){
 
 void restore_player_weapons(Ped playerPed){
 	Player player = PLAYER::PLAYER_ID();
-	//Ped playerPed = PLAYER::PLAYER_PED_ID();
 	WEAPON::REMOVE_ALL_PED_WEAPONS(playerPed, false);
 
 	int index = 0;
@@ -2347,7 +2320,6 @@ void add_weapon_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePunchFists", &featurePunchFists});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePunchMeleeWeapons", &featurePunchMeleeWeapons});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePunchFireWeapons", &featurePunchFireWeapons});
-	//results->push_back(FeatureEnabledLocalDefinition{"featurepowerpunchpeds", &featurepowerpunchpeds});
 	results->push_back(FeatureEnabledLocalDefinition{"featureDriverAgainst", &featureDriverAgainst});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePoliceAgainst", &featurePoliceAgainst});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAimAtDriver", &featureAimAtDriver});
@@ -2366,7 +2338,6 @@ void add_weapon_feature_enablements2(std::vector<StringPairSettingDBRow>* result
 	results->push_back(StringPairSettingDBRow{ "ChanceAttackingYouIndex", std::to_string(ChanceAttackingYouIndex) });
 	results->push_back(StringPairSettingDBRow{ "SniperVisionIndex", std::to_string(SniperVisionIndex) });
 	results->push_back(StringPairSettingDBRow{ "PowerPunchIndex", std::to_string(PowerPunchIndex) });
-	//results->push_back(StringPairSettingDBRow{ "PedsPowerPunchIndex", std::to_string(PedsPowerPunchIndex) });
 	results->push_back(StringPairSettingDBRow{ "WeaponsFireModeIndex", std::to_string(WeaponsFireModeIndex) });
 }
 
@@ -2407,9 +2378,6 @@ void handle_generic_settings_weapons(std::vector<StringPairSettingDBRow>* settin
 		else if (setting.name.compare("PowerPunchIndex") == 0) {
 			PowerPunchIndex = stoi(setting.value);
 		}
-		//else if (setting.name.compare("PedsPowerPunchIndex") == 0) {
-		//	PedsPowerPunchIndex = stoi(setting.value);
-		//}
 		else if (setting.name.compare("WeaponsFireModeIndex") == 0) {
 			WeaponsFireModeIndex = stoi(setting.value);
 		}

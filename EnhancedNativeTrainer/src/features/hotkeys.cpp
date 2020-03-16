@@ -7,13 +7,11 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "hotkeys.h"
 #include "..\utils.h"
 #include "..\io\config_io.h"
-
 #include "anims.h"
 #include "vehicles.h"
 #include "script.h"
 #include "area_effect.h"
 #include "teleportation.h"
-
 #include <string>
 #include <sstream> 
 

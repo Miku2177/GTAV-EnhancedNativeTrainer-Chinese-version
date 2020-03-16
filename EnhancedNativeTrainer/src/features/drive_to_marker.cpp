@@ -10,7 +10,6 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 #include "teleportation.h"
 #include "drive_to_marker.h"
-
 #include "misc.h"
 #include "skins.h"
 #include "vehicles.h"

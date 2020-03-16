@@ -47,7 +47,6 @@ bool featureNoPhoneOnHUD = false;
 int secs_passed, secs_curr = -1;
 float temp_seconds, bill_seconds = 0;
 float bill_to_pay, mins = -1;
-
 //
 // Dynamic Health Bar variables
 bool featureDynamicHealthBar = false;
@@ -99,8 +98,6 @@ bool featureDisablePhone = false;
 bool featureDisablePhoneMenu = false;
 bool featurePlayerRadioUpdated = false;
 bool featureRadioFreeze = false, featureRadioFreezeUpdated = false;
-//bool featureRadioAlwaysOff = false;
-//bool featureRadioAlwaysOffUpdated = false;
 bool featureBoostRadio = true;
 bool featureRealisticRadioVolume = false;
 bool featureWantedMusic = false;
@@ -136,8 +133,6 @@ bool featureNoAutoRespawn = false;
 bool featureControllerIgnoreInTrainer = false;
 
 bool featureMiscJellmanScenery = false;
-
-//bool featureResetPlayerModelOnDeath = true;
 
 bool featureEnableMissingRadioStation = false;
 
@@ -399,7 +394,6 @@ bool onconfirm_misc_cutscene_menu(MenuItem<int> choice) {
 			CAM::DESTROY_CAM(CutCam, true);
 			CAM::DESTROY_ALL_CAMS(true);
 		}
-		//CAM::DESTROY_ALL_CAMS(true);
 		CAM::DO_SCREEN_FADE_IN(0);
 		CUTSCENE::STOP_CUTSCENE_IMMEDIATELY();
 		CUTSCENE::REMOVE_CUTSCENE();
@@ -837,14 +831,8 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 			process_misc_trainerconfig_menu();
 			break;
 		case 1:
-			/*// next radio track
-			if (getGameVersion() > 41) SKIP_RADIO_FORWARD_CUSTOM();
-			else AUDIO::SKIP_RADIO_FORWARD();*/
 			process_radio_settings_menu();
 			break;
-		//case 3:
-		//	process_misc_freezeradio_menu();
-		//	break;
 		case 2:
 			process_misc_musicevent_menu();
 			break;
@@ -878,14 +866,6 @@ void process_misc_menu(){
 	StandardOrToggleMenuDef lines[lineCount] = {
 		{"Trainer Options", NULL, NULL, false},
 		{"Radio Settings", NULL, NULL, false},
-		/*{"Portable Radio", &featurePlayerRadio, &featurePlayerRadioUpdated, true},
-		{"Next Radio Track", NULL, NULL, true},
-		{"Freeze Radio To Station", nullptr, nullptr, false},
-		{"Radio Always Off", &featureRadioAlwaysOff, &featureRadioAlwaysOffUpdated, true},
-		{"Boost Radio Volume", &featureBoostRadio, NULL, true}, 
-		{"Consistent Radio Volume", &featureRealisticRadioVolume, NULL, true},
-		{"Restore Missing Radio Station", &featureEnableMissingRadioStation, NULL, false },
-		{"Radio In Police Vehicle", &featurePoliceRadio, NULL, true},*/ 
 		{"Scripted Music", nullptr, nullptr, false},
 		{"Cutscene Viewer", nullptr, nullptr, false},
 		{"Screen Filters", nullptr, nullptr, false},
@@ -899,7 +879,6 @@ void process_misc_menu(){
 		{"Show HUD In Vehicle Only", &featureInVehicleNoHud, NULL }, 
 		{"Show HUD If Map Marker Set Only", &featureMarkerHud, NULL },
 		{"Dynamic Health Bar", &featureDynamicHealthBar }, 
-		//{"Reset Player Model On Death", &featureResetPlayerModelOnDeath, nullptr, true},
 		{"Phone Settings", NULL, NULL, false},
 		{"First Person Death/Arrest Camera", &featureFirstPersonDeathCamera, NULL },
 		{"First Person Stunt Jump Camera", &featureFirstPersonStuntJumpCamera, NULL },
@@ -1091,7 +1070,6 @@ void reset_misc_globals(){
 		featureNoComleteMessage =
 		featurePoliceRadio =
 		featureEnableMissingRadioStation =
-		//featureRadioAlwaysOff = false;
 		featureShowDebugInfo = false;
 
 	PhoneBillIndex = 2;
@@ -1127,9 +1105,7 @@ void reset_misc_globals(){
 	featureRealisticRadioVolume = false;
 
 	featureRadioFreezeUpdated =
-	//featureRadioAlwaysOffUpdated =
 	featureMiscHideHudUpdated =
-	//featureResetPlayerModelOnDeath =
 	featureBoostRadio = true;
 
 	ENTColor::reset_colors();
@@ -1138,26 +1114,12 @@ void reset_misc_globals(){
 void show_debug_info_on_screen(bool enabled) {
 	Vector3 coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 0);
 	std::ostringstream ss;
-	//ss << "Peds: " << trackedPeds.size() << "; Vehs: " << trackedVehicles.size() << "\nCalls Total: " << callsPerFrame << ", A: " << callsA << ", B: " << callsB << "\nWP: " << allWorldPedsThisFrame.size() << ", WV: " << allWorldVehiclesThisFrame.size();
 	ss << "\nX: " << coords.x << "\nY: " << coords.y << "\nZ: " << coords.z;
 	callsPerFrame = 0;
 	set_status_text_centre_screen(ss.str());
 }
 
 void update_misc_features(BOOL playerExists, Ped playerPed){
-	/*if (featureRadioAlwaysOff || featurePlayerRadioUpdated){
-		if (featureRadioAlwaysOff){
-			if (featurePlayerRadio){
-				featurePlayerRadio = false;
-				featurePlayerRadioUpdated = true;
-			}
-		}
-		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
-			Vehicle playerVeh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
-			AUDIO::SET_VEHICLE_RADIO_ENABLED(playerVeh, !featureRadioAlwaysOff);
-		}
-		AUDIO::SET_USER_RADIO_CONTROL_ENABLED(!featureRadioAlwaysOff);
-	}*/
 	// radio off
 	if (MISC_RADIO_OFF_VALUES[RadioOffIndex] > 0) {
 		if (MISC_RADIO_OFF_VALUES[RadioOffIndex] == 1) {
@@ -1371,7 +1333,6 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		int blipIterator = UI::_GET_BLIP_INFO_ID_ITERATOR(); // search for marker blip
 		for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) {
 			if (UI::GET_BLIP_INFO_ID_TYPE(i) == 4) {
-				//coords = UI::GET_BLIP_INFO_ID_COORD(i);
 				blipFound = true;
 				break;
 			}
@@ -1563,7 +1524,6 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		if (CONTROLS::IS_CONTROL_JUST_PRESSED(2, 199) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, 200)) {
 			UI::ACTIVATE_FRONTEND_MENU(GetHash, featureGamePause, MISC_DEF_MANUTAB_VALUES[DefMenuTabIndex]);
 			AUDIO::SET_AUDIO_FLAG("PlayMenuMusic", true);
-			//WAIT(100);
 		} else AUDIO::SET_AUDIO_FLAG("PlayMenuMusic", false);
 	} 
 	
@@ -1751,7 +1711,6 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			int PedHash = GAMEPLAY::GET_HASH_KEY("bot_01b_bit_03"); // prop_wardrobe_door_01
 			Vector3 Ped1Coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(curr_cut_ped, 0.0f, 1.0f, 0.0f);
 			Vector3 Ped2Coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(curr_cut_ped, 0.0f, 2.0f, 0.0f);
-			//float PedlookDir = ENTITY::GET_ENTITY_HEADING(curr_cut_ped);
 			
 			if (!CAM::DOES_CAM_EXIST(CutCam)) { 
 				const int US_ARR_PED_SIZE = 1024;
@@ -1767,7 +1726,6 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 						PlayerIndex = PED::GET_PED_BONE_INDEX(curr_cut_ped, 8433);
 						Ped1Coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(curr_cut_ped_me, 0.0f, 1.0f, 0.0f);
 						Ped2Coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(curr_cut_ped_me, 0.0f, 2.0f, 0.0f);
-						//PedlookDir = ENTITY::GET_ENTITY_HEADING(curr_cut_ped_me);
 						xaxis = OBJECT::CREATE_OBJECT(PedHash, Ped1Coords.x, Ped1Coords.y, Ped1Coords.z, 1, true, 1);
 						zaxis = OBJECT::CREATE_OBJECT(PedHash, Ped2Coords.x, Ped2Coords.y, Ped2Coords.z, 1, true, 1);
 						ENTITY::SET_ENTITY_VISIBLE(xaxis, false);
@@ -1793,7 +1751,6 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 						Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(my_first_coords, true);
 						Vector3 coordsPed_temp = ENTITY::GET_ENTITY_COORDS(us_ped[i], true);
 						float dist_t = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsPed_temp.x, coordsPed_temp.y, coordsPed_temp.z);
-						//float dist_t = GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(coordsme.x, coordsme.y, coordsme.z, coordsPed_temp.x, coordsPed_temp.y, coordsPed_temp.z, TRUE);
 						if (dist_t < 10) { // 20 
 							if (ENTITY::IS_ENTITY_ON_SCREEN(us_ped[i]) && found_ped_in_cutscene == false &&
 								ENTITY::IS_ENTITY_VISIBLE(us_ped[i]) && switched_c != us_ped[i] && PED::GET_PED_TYPE(us_ped[i]) != 28) { 
@@ -1811,7 +1768,6 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 								else PlayerIndex = PED::GET_PED_BONE_INDEX(curr_cut_ped, 31086); // 8433
 								Ped1Coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(curr_cut_ped, 0.0f, 1.0f, 0.0f);
 								Ped2Coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(curr_cut_ped, 0.0f, 2.0f, 0.0f);
-								//PedlookDir = ENTITY::GET_ENTITY_HEADING(curr_cut_ped);
 								xaxis = OBJECT::CREATE_OBJECT(PedHash, Ped1Coords.x, Ped1Coords.y, Ped1Coords.z, 1, true, 1);
 								zaxis = OBJECT::CREATE_OBJECT(PedHash, Ped2Coords.x, Ped2Coords.y, Ped2Coords.z, 1, true, 1);
 								ENTITY::SET_ENTITY_VISIBLE(xaxis, false);
@@ -1949,7 +1905,6 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerRadio", &featurePlayerRadio, &featurePlayerRadioUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{"featureRadioFreeze", &featureRadioFreeze, &featureRadioFreezeUpdated });
-	//results->push_back(FeatureEnabledLocalDefinition{"featureRadioAlwaysOff", &featureRadioAlwaysOff, &featureRadioAlwaysOffUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{"featureBoostRadio", &featureBoostRadio }); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureRealisticRadioVolume", &featureRealisticRadioVolume});
 	results->push_back(FeatureEnabledLocalDefinition{"featureWantedMUsic", &featureWantedMusic}); 
@@ -1989,7 +1944,6 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoStuntJumps", &featureNoStuntJumps});
 	results->push_back(FeatureEnabledLocalDefinition{"featureHidePlayerInfo", &featureHidePlayerInfo});
 	results->push_back(FeatureEnabledLocalDefinition{"featureMiscJellmanScenery", &featureMiscJellmanScenery});
-	//results->push_back(FeatureEnabledLocalDefinition{"featureResetPlayerModelOnDeath", &featureResetPlayerModelOnDeath});
 }
 
 void add_misc_generic_settings(std::vector<StringPairSettingDBRow>* results){
@@ -2032,14 +1986,6 @@ void handle_generic_settings_misc(std::vector<StringPairSettingDBRow>* settings)
 		}
 	}
 }
-
-//bool is_player_reset_on_death(){
-//	Hash dmHash = GAMEPLAY::GET_HASH_KEY("director_mode");
-//	if(/*!featureResetPlayerModelOnDeath || */SCRIPT::_GET_NUM_OF_INSTANCES_OF_SCRIPT_WITH_NAME_HASH(dmHash) > 0){
-//		return false;
-//	}
-//	return true;
-//}
 
 bool is_vehicle_preview_enabled(){
 	return featureShowVehiclePreviews;

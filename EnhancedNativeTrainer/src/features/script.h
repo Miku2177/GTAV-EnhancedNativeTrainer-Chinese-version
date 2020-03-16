@@ -13,16 +13,13 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\..\inc\natives.h"
 #include "..\..\inc\types.h"
 #include "..\..\inc\enums.h"
-
 #include "..\..\inc\main.h"
-
 #include "..\io\io.h"
 #include "..\io\config_io.h"
 #include "..\io\xinput.h"
 #include "..\ui_support\menu_functions.h"
 #include "..\storage\database.h"
 #include "..\debug\debuglog.h"
-
 #include "skins.h"
 #include "script.h"
 #include "vehicles.h"
@@ -37,26 +34,21 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "props.h"
 #include "bodyguards.h"
 #include "vehmodmenu.h"
-
 #include <DbgHelp.h>
 #include <ShlObj.h>
 #include <windows.h>
 #include <Shlwapi.h>
-
 #include <string>
 #include <sstream> 
 #include <fstream>
 #include <mutex>
 #include <thread>
-
 #include <ctime>
 #include <cctype>
 #include <vector>
-
 #include <locale>
 #include <iostream>
 #include <iomanip>
-
 #include <fstream>
 
 //Player Health
@@ -233,10 +225,6 @@ extern bool featureNoAutoRespawn;
 extern bool player_died;
 extern bool npc_player_died;
 extern bool featureWantedLevelFrozen;
-//extern const std::vector<std::string> PLAYER_HEALTH_CAPTIONS;
-//extern const int PLAYER_HEALTH_VALUES[];
-//extern const std::vector<std::string> LIMP_IF_INJURED_CAPTIONS;
-//extern const int LIMP_IF_INJURED_VALUES[];
 extern bool in_prison;
 extern bool super_jump_no_parachute;
 extern int myENTGroup;

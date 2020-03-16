@@ -28,12 +28,10 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "road_laws.h"
 #include "vehicles.h"
 #include "weapons.h"
-
 #include "../version.h"
 #include "../utils.h"
 #include "../ui_support/file_dialog.h"
 #include "..\ui_support\menu_functions.h"
-
 #include <set>
 #include <iostream>
 #include <vector>
@@ -299,10 +297,6 @@ void check_player_model(){
 	set_status_text_centre_screen(ss.str());
 	*/
 
-	// common variables
-	//Player player = PLAYER::PLAYER_ID(); 
-	//Ped playerPed = PLAYER::PLAYER_PED_ID();
-
 	if(!ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID())){
 		return;
 	}
@@ -504,43 +498,39 @@ void update_features(){
 
 	// First Person Death Camera
 	if (featureFirstPersonDeathCamera) {
-		//if ((PED::GET_PED_TYPE(PLAYER::PLAYER_PED_ID()) == 0 && ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == GAMEPLAY::GET_HASH_KEY("player_zero")) ||
-		//	(PED::GET_PED_TYPE(PLAYER::PLAYER_PED_ID()) == 1 && ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == GAMEPLAY::GET_HASH_KEY("player_one")) ||
-		//	((PED::GET_PED_TYPE(PLAYER::PLAYER_PED_ID()) == 2 || PED::GET_PED_TYPE(PLAYER::PLAYER_PED_ID()) == 3) && ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == GAMEPLAY::GET_HASH_KEY("player_two"))) {
-			Vector3 playerPosition = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
-			Vector3 curRotation = ENTITY::GET_ENTITY_ROTATION(PLAYER::PLAYER_PED_ID(), 2);
-			if (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) || PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 1)) {
-				if (!CAM::DOES_CAM_EXIST(DeathCam)) {
-					DeathCam = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_FLY_CAMERA", playerPosition.x, playerPosition.y, playerPosition.z, curRotation.x, curRotation.y, curRotation.z, 50.0, true, 2);
-					CAM::ATTACH_CAM_TO_PED_BONE(DeathCam, PLAYER::PLAYER_PED_ID(), 31086, 0, -0.15, 0, 1);
-					CAM::POINT_CAM_AT_PED_BONE(DeathCam, PLAYER::PLAYER_PED_ID(), 31086, 0, 0.0, 0, 1);
-					CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE_BLEND_LEVEL(DeathCam, 1.0);
-					CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE(DeathCam, 1.0);
-					CAM::_SET_CAM_DOF_FOCUS_DISTANCE_BIAS(DeathCam, 1.0);
-					CAM::RENDER_SCRIPT_CAMS(true, false, 0, true, true);
-					CAM::SET_CAM_ACTIVE(DeathCam, true);
-					ENTITY::SET_ENTITY_ALPHA(PLAYER::PLAYER_PED_ID(), 0, 0);
-					firstPersonDeathCameraEnabled = true;
-				}
+		Vector3 playerPosition = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
+		Vector3 curRotation = ENTITY::GET_ENTITY_ROTATION(PLAYER::PLAYER_PED_ID(), 2);
+		if (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) || PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 1)) {
+			if (!CAM::DOES_CAM_EXIST(DeathCam)) {
+				DeathCam = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_FLY_CAMERA", playerPosition.x, playerPosition.y, playerPosition.z, curRotation.x, curRotation.y, curRotation.z, 50.0, true, 2);
+				CAM::ATTACH_CAM_TO_PED_BONE(DeathCam, PLAYER::PLAYER_PED_ID(), 31086, 0, -0.15, 0, 1);
+				CAM::POINT_CAM_AT_PED_BONE(DeathCam, PLAYER::PLAYER_PED_ID(), 31086, 0, 0.0, 0, 1);
+				CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE_BLEND_LEVEL(DeathCam, 1.0);
+				CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE(DeathCam, 1.0);
+				CAM::_SET_CAM_DOF_FOCUS_DISTANCE_BIAS(DeathCam, 1.0);
+				CAM::RENDER_SCRIPT_CAMS(true, false, 0, true, true);
+				CAM::SET_CAM_ACTIVE(DeathCam, true);
+				ENTITY::SET_ENTITY_ALPHA(PLAYER::PLAYER_PED_ID(), 0, 0);
+				firstPersonDeathCameraEnabled = true;
 			}
-			if (CAM::DOES_CAM_EXIST(DeathCam)) { // camera rotation
-				Vector3 rot_cam = CAM::GET_CAM_ROT(DeathCam, 2);
-				if ((CONTROLS::IS_CONTROL_PRESSED(2, 34) || CONTROLS::IS_CONTROL_PRESSED(2, 35) || CONTROLS::IS_CONTROL_PRESSED(2, 32) || CONTROLS::IS_CONTROL_PRESSED(2, 33)) && first_person_rotate == false) {
-					CAM::DESTROY_CAM(DeathCam, true);
-					DeathCam = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_FLY_CAMERA", playerPosition.x, playerPosition.y, playerPosition.z, curRotation.x, curRotation.y, curRotation.z, 50.0, true, 2);
-					CAM::ATTACH_CAM_TO_PED_BONE(DeathCam, PLAYER::PLAYER_PED_ID(), 31086, 0, -0.15, 0, 1);
-					CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE_BLEND_LEVEL(DeathCam, 1.0);
-					CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE(DeathCam, 1.0);
-					CAM::_SET_CAM_DOF_FOCUS_DISTANCE_BIAS(DeathCam, 1.0);
-					first_person_rotate = true;
-				}
-				if (CONTROLS::IS_CONTROL_PRESSED(2, 34)) rot_cam.z = rot_cam.z + 2; // left only
-				if (CONTROLS::IS_CONTROL_PRESSED(2, 35)) rot_cam.z = rot_cam.z - 2; // right only
-				if (CONTROLS::IS_CONTROL_PRESSED(2, 32)) rot_cam.x = rot_cam.x + 2; // up only
-				if (CONTROLS::IS_CONTROL_PRESSED(2, 33)) rot_cam.x = rot_cam.x - 2; // down only
-				CAM::SET_CAM_ROT(DeathCam, rot_cam.x, rot_cam.y, rot_cam.z, 2);
+		}
+		if (CAM::DOES_CAM_EXIST(DeathCam)) { // camera rotation
+			Vector3 rot_cam = CAM::GET_CAM_ROT(DeathCam, 2);
+			if ((CONTROLS::IS_CONTROL_PRESSED(2, 34) || CONTROLS::IS_CONTROL_PRESSED(2, 35) || CONTROLS::IS_CONTROL_PRESSED(2, 32) || CONTROLS::IS_CONTROL_PRESSED(2, 33)) && first_person_rotate == false) {
+				CAM::DESTROY_CAM(DeathCam, true);
+				DeathCam = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_FLY_CAMERA", playerPosition.x, playerPosition.y, playerPosition.z, curRotation.x, curRotation.y, curRotation.z, 50.0, true, 2);
+				CAM::ATTACH_CAM_TO_PED_BONE(DeathCam, PLAYER::PLAYER_PED_ID(), 31086, 0, -0.15, 0, 1);
+				CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE_BLEND_LEVEL(DeathCam, 1.0);
+				CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE(DeathCam, 1.0);
+				CAM::_SET_CAM_DOF_FOCUS_DISTANCE_BIAS(DeathCam, 1.0);
+				first_person_rotate = true;
 			}
-		//}
+			if (CONTROLS::IS_CONTROL_PRESSED(2, 34)) rot_cam.z = rot_cam.z + 2; // left only
+			if (CONTROLS::IS_CONTROL_PRESSED(2, 35)) rot_cam.z = rot_cam.z - 2; // right only
+			if (CONTROLS::IS_CONTROL_PRESSED(2, 32)) rot_cam.x = rot_cam.x + 2; // up only
+			if (CONTROLS::IS_CONTROL_PRESSED(2, 33)) rot_cam.x = rot_cam.x - 2; // down only
+			CAM::SET_CAM_ROT(DeathCam, rot_cam.x, rot_cam.y, rot_cam.z, 2);
+		}
 	}
 	if ((featureFirstPersonDeathCamera && !ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && !PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 1)) || 
 		(!featureFirstPersonDeathCamera && (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) || PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 1)))) {
@@ -794,7 +784,7 @@ void update_features(){
 			if (tempgot_y < 0) tempgot_y = (tempgot_y * -1);
 			if (tempgot_z < 0) tempgot_z = (tempgot_z * -1);
 			ROPE::ACTIVATE_PHYSICS(surr_p_peds[i]);
-			if (surr_p_peds[i] != playerPed && !PED::IS_PED_IN_ANY_VEHICLE(surr_p_peds[i], 0)) { // PED::GET_PED_TYPE(surr_p_peds[i]) != 0 && PED::GET_PED_TYPE(surr_p_peds[i]) != 1 && PED::GET_PED_TYPE(surr_p_peds[i]) != 2 && PED::GET_PED_TYPE(surr_p_peds[i]) != 3
+			if (surr_p_peds[i] != playerPed && !PED::IS_PED_IN_ANY_VEHICLE(surr_p_peds[i], 0)) { 
 				if (CONTROLS::IS_CONTROL_PRESSED(2, 22) && tempgot_x < 20 && tempgot_y < 20) {
 					PED::SET_PED_CAN_RAGDOLL(surr_p_peds[i], true);
 					PED::SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(surr_p_peds[i], true);
@@ -971,17 +961,9 @@ void update_features(){
 	// Can run in apartments
 	if (featurePlayerRunApartments && GAMEPLAY::GET_MISSION_FLAG() == 0 && !UI::IS_HELP_MESSAGE_BEING_DISPLAYED()) {
 		Vector3 coords_apprun_ped = ENTITY::GET_ENTITY_COORDS(playerPed, true);
+		int curr_int = INTERIOR::GET_INTERIOR_AT_COORDS(coords_apprun_ped.x, coords_apprun_ped.y, coords_apprun_ped.z);
 		if (!INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_apprun_ped.x, coords_apprun_ped.y, coords_apprun_ped.z) && 
-			(INTERIOR::GET_INTERIOR_AT_COORDS(coords_apprun_ped.x, coords_apprun_ped.y, coords_apprun_ped.z) == 206849 ||
-			INTERIOR::GET_INTERIOR_AT_COORDS(coords_apprun_ped.x, coords_apprun_ped.y, coords_apprun_ped.z) == 166657 ||
-			INTERIOR::GET_INTERIOR_AT_COORDS(coords_apprun_ped.x, coords_apprun_ped.y, coords_apprun_ped.z) == 166401 ||
-			INTERIOR::GET_INTERIOR_AT_COORDS(coords_apprun_ped.x, coords_apprun_ped.y, coords_apprun_ped.z) == 115458 ||
-			INTERIOR::GET_INTERIOR_AT_COORDS(coords_apprun_ped.x, coords_apprun_ped.y, coords_apprun_ped.z) == 114946 ||
-			INTERIOR::GET_INTERIOR_AT_COORDS(coords_apprun_ped.x, coords_apprun_ped.y, coords_apprun_ped.z) == 171777 ||
-			INTERIOR::GET_INTERIOR_AT_COORDS(coords_apprun_ped.x, coords_apprun_ped.y, coords_apprun_ped.z) == 197121 ||
-			INTERIOR::GET_INTERIOR_AT_COORDS(coords_apprun_ped.x, coords_apprun_ped.y, coords_apprun_ped.z) == 197889 ||
-			INTERIOR::GET_INTERIOR_AT_COORDS(coords_apprun_ped.x, coords_apprun_ped.y, coords_apprun_ped.z) == 4866 ||
-			INTERIOR::GET_INTERIOR_AT_COORDS(coords_apprun_ped.x, coords_apprun_ped.y, coords_apprun_ped.z) == 36866)) {
+			(curr_int == 206849 || curr_int == 166657 || curr_int == 166401 || curr_int == 115458 || curr_int == 114946 || curr_int == 171777 || curr_int == 197121 || curr_int == 197889 || curr_int == 4866 || curr_int == 36866)) {
 			iaminside = true;
 			if (!ENTITY::IS_ENTITY_IN_AREA(playerPed, -802.346,	171.234, 70.8347, -799.234, 174.817, 74.8347, 1, 1, 1) &&
 				!ENTITY::IS_ENTITY_IN_AREA(playerPed, -810.195, 169.765, 74.7408, -808.39, 171.398, 78.7408, 1, 1, 1) &&
@@ -1294,7 +1276,6 @@ void update_features(){
 				int ScreamType = (rand() % 8 + 5);
 				AUDIO::PLAY_PAIN(ScreamType, 0, 0);
 				AUDIO::_PLAY_AMBIENT_SPEECH1(NPCragdoll[i], "GENERIC_SHOCKED_HIGH", "SPEECH_PARAMS_FORCE");
-				//PED::_RESET_PED_RAGDOLL_BLOCKING_FLAGS(NPCragdoll[i], 1);
 				PED::SET_PED_TO_RAGDOLL(NPCragdoll[i], time1, time2, ragdollType, true, true, false);
 				PED::CLEAR_PED_LAST_DAMAGE_BONE(NPCragdoll[i]);
 				ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(NPCragdoll[i]);
@@ -1416,10 +1397,6 @@ bool onconfirm_playerData_menu(MenuItem<int> choice){
 		featurePlayerStatsUpdated = true;
 		set_status_text("Settings are being applied");
 	}
-	//else if (choice.value == -2) {
-	//	featurePlayerStatsUpdated = true;
-	//	set_status_text("Stats were changed");
-	//}
 	return false;
 }
 
@@ -1529,18 +1506,6 @@ void process_powerpunch_menu() {
 	item->value = i++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
-
-	//listItem = new SelectFromListMenuItem(PEDS_POWERPUNCH_CAPTIONS, onchange_peds_power_punch_index);
-	//listItem->wrap = false;
-	//listItem->caption = "Including Peds";
-	//listItem->value = PedsPowerPunchIndex;
-	//menuItems.push_back(listItem);
-
-	//toggleItem = new ToggleMenuItem<int>();
-	//toggleItem->caption = "Peds Can Power Punch Peds";
-	//toggleItem->value = i++;
-	//toggleItem->toggleValue = &featurepowerpunchpeds;
-	//menuItems.push_back(toggleItem);
 
 	draw_generic_menu<int>(menuItems, &activeLineIndexPowerPunchWeapons, caption, onconfirm_powerpunch_menu, NULL, NULL);
 }
@@ -2158,9 +2123,9 @@ void reset_globals(){
 	reset_areaeffect_globals();
 
 	activeLineIndexMain =
-		activeLineIndexPlayer =
-		activeLineIndexWantedFreeze =
-		frozenWantedLevel = 0;
+	activeLineIndexPlayer =
+	activeLineIndexWantedFreeze =
+	frozenWantedLevel = 0;
 	
 	current_player_health = 6;
 	current_regen_speed = 4;
