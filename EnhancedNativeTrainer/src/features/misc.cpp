@@ -87,6 +87,7 @@ static uintptr_t* g_radioStationList;
 static int* g_radioStationCount;
 static void(*CRadioStation__Advance)(uintptr_t This, uint32_t a2);
 static uintptr_t* g_unkRadioStationData;
+bool skip_track_pressed = false;
 
 // Cutscene Viewer & First Person Cutscene Camera
 bool cutscene_is_playing, cutscene_being_watched, found_ped_in_cutscene = false;
@@ -197,7 +198,7 @@ const int MISC_RADIO_OFF_VALUES[] = { 0, 1, 2 };
 int RadioOffIndex = 0;
 bool RadioOffChanged = true;
 
-// Radio Station Switching
+// Radio Station Shuffle
 const std::vector<std::string> MISC_RADIO_SWITCHING_CAPTIONS{ "OFF", "Via 'Next Radio Track'", "Every 3 Min", "Every 5 Min", "Every 7 Min", "Every 10 Min", "Every 15 Min", "Every 30 Min" };
 const int MISC_RADIO_SWITCHING_VALUES[] = { 0, 1, 180, 300, 420, 600, 900, 1800 };
 int RadioSwitchingIndex = 0;
@@ -766,6 +767,7 @@ bool onconfirm_radiosettings_menu(MenuItem<int> choice) {
 		// next radio track
 		if (getGameVersion() > 41) SKIP_RADIO_FORWARD_CUSTOM();
 		else AUDIO::SKIP_RADIO_FORWARD();
+		skip_track_pressed = true;
 		break;
 	case 3:
 		process_misc_freezeradio_menu();
@@ -1243,21 +1245,22 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	}
 	
 	// Radio Station Shuffle
-	if (MISC_RADIO_SWITCHING_VALUES[RadioSwitchingIndex] > 0/* && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)*/) {
+	if (MISC_RADIO_SWITCHING_VALUES[RadioSwitchingIndex] > 0 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
 		r_secs_passed = clock() / CLOCKS_PER_SEC;
 		if (((clock() / CLOCKS_PER_SEC) - r_secs_curr) != 0) {
 			r_seconds = r_seconds + 1;
 			r_secs_curr = r_secs_passed;
 		}
-		if ((MISC_RADIO_SWITCHING_VALUES[RadioSwitchingIndex] == 1 && is_hotkey_held_veh_radio_skip()) || (MISC_RADIO_SWITCHING_VALUES[RadioSwitchingIndex] > 1 && r_seconds > MISC_RADIO_SWITCHING_VALUES[RadioSwitchingIndex])) {
+		if ((MISC_RADIO_SWITCHING_VALUES[RadioSwitchingIndex] == 1 && (is_hotkey_held_veh_radio_skip() || skip_track_pressed == true)) || (MISC_RADIO_SWITCHING_VALUES[RadioSwitchingIndex] > 1 && r_seconds > MISC_RADIO_SWITCHING_VALUES[RadioSwitchingIndex])) {
 			Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 			int const stations = AUDIO::_MAX_RADIO_STATION_INDEX();
 			int random_station = (rand() % stations + 0);
 			if (AUDIO::GET_RADIO_STATION_NAME(random_station) != AUDIO::GET_PLAYER_RADIO_STATION_NAME()) {
-				AUDIO::SET_VEH_RADIO_STATION(veh, AUDIO::GET_RADIO_STATION_NAME(random_station));
-				//AUDIO::SET_RADIO_TRACK(AUDIO::GET_RADIO_STATION_NAME(random_station), "ARM1_RADIO_STARTS");
+				/*if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0))*/ AUDIO::SET_VEH_RADIO_STATION(veh, AUDIO::GET_RADIO_STATION_NAME(random_station));
+				//else AUDIO::SET_RADIO_TRACK(AUDIO::GET_RADIO_STATION_NAME(random_station), "ARM1_RADIO_STARTS");
 			}
 			r_seconds = 0;
+			skip_track_pressed = false;
 		}
 	}
 
