@@ -35,6 +35,8 @@ bool hotkey_held_veh_extrapower = false;
 
 bool hotkey_held_veh_nitrous = false;
 
+bool hotkey_held_veh_radio_skip = false;
+
 bool muffled_toggle = false;
 
 bool is_hotkey_held_slow_mo()
@@ -70,6 +72,11 @@ bool is_hotkey_held_veh_extrapower()
 bool is_hotkey_held_veh_nitrous()
 {
 	return hotkey_held_veh_nitrous;
+}
+
+bool is_hotkey_held_veh_radio_skip()
+{
+	return hotkey_held_veh_radio_skip;
 }
 
 void check_for_hotkey_presses()
@@ -173,6 +180,7 @@ void trigger_function_for_hotkey_onkeyup(int hotkey)
 	case HKEY_MENU_NEXT_RADIO_TRACK: // next radio track
 		if (getGameVersion() > 41) SKIP_RADIO_FORWARD_CUSTOM();
 		else AUDIO::SKIP_RADIO_FORWARD();
+		hotkey_held_veh_radio_skip = false;
 		break;
 	case HKEY_TOGGLE_NIGHT_VIS:
 		toggle_night_vision();
@@ -316,6 +324,9 @@ void trigger_function_for_hotkey_onkeydown(int hotkey)
 			break;
 		case HKEY_VEHICLE_NITROUS:
 			hotkey_held_veh_nitrous = true;
+			break;
+		case HKEY_MENU_NEXT_RADIO_TRACK:
+			hotkey_held_veh_radio_skip = true;
 			break;
 		default:
 			break;
