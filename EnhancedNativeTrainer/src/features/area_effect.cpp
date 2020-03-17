@@ -559,7 +559,7 @@ void update_area_effects(Ped playerPed){
 					}
 					if (time_to_chase == true && PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed) == 0) {
 						for (int vc = 0; vc < count_veh; vc++) {
-							if (veh_agressive[vc] != playerPed) {
+							if (veh_agressive[vc] != playerPed && !PED::IS_PED_GROUP_MEMBER(veh_agressive[vc], myENTGroup) && PED::GET_PED_TYPE(veh_agressive[vc]) != 6 && PED::GET_PED_TYPE(veh_agressive[vc]) != 27 && PED::GET_PED_TYPE(veh_agressive[vc]) != 29) {
 								Vector3 npc_abid_coords = ENTITY::GET_ENTITY_COORDS(veh_agressive[vc], true);
 								int lawabidped_with_dist_x = (me_coords.x - npc_abid_coords.x);
 								int lawabidped_with_dist_y = (me_coords.y - npc_abid_coords.y);
