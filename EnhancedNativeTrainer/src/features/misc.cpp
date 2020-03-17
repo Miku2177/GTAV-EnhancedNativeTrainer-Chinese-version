@@ -70,6 +70,8 @@ bool accel = false;
 bool p_exist = false;
 //
 
+int r_secs_passed, r_secs_curr, r_seconds = -1;
+
 //For onscreen debug info
 bool featureShowDebugInfo = false;
 
@@ -194,6 +196,12 @@ const std::vector<std::string> MISC_RADIO_OFF_CAPTIONS{ "Default", "Always", "Fo
 const int MISC_RADIO_OFF_VALUES[] = { 0, 1, 2 };
 int RadioOffIndex = 0;
 bool RadioOffChanged = true;
+
+// Radio Station Switching
+const std::vector<std::string> MISC_RADIO_SWITCHING_CAPTIONS{ "OFF", "Via 'Next Radio Track'", "Every 3 Min", "Every 5 Min", "Every 7 Min", "Every 10 Min", "Every 15 Min", "Every 30 Min" };
+const int MISC_RADIO_SWITCHING_VALUES[] = { 0, 1, 180, 300, 420, 600, 900, 1800 };
+int RadioSwitchingIndex = 0;
+bool RadioSwitchingChanged = true;
 
 // Trainer Controls
 int TrainerControlIndex = 0;
@@ -759,7 +767,7 @@ bool onconfirm_radiosettings_menu(MenuItem<int> choice) {
 		if (getGameVersion() > 41) SKIP_RADIO_FORWARD_CUSTOM();
 		else AUDIO::SKIP_RADIO_FORWARD();
 		break;
-	case 2:
+	case 3:
 		process_misc_freezeradio_menu();
 		break;
 	default:
@@ -787,6 +795,12 @@ void process_radio_settings_menu() {
 	item->value = i++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
+
+	listItem = new SelectFromListMenuItem(MISC_RADIO_SWITCHING_CAPTIONS, onchange_misc_radio_switching_index);
+	listItem->wrap = false;
+	listItem->caption = "Radio Station Shuffle";
+	listItem->value = RadioSwitchingIndex;
+	menuItems.push_back(listItem);
 
 	item = new MenuItem<int>();
 	item->caption = "Freeze Radio To Station";
@@ -1031,6 +1045,11 @@ void onchange_misc_radio_off_index(int value, SelectFromListMenuItem* source) {
 	RadioOffChanged = true;
 }
 
+void onchange_misc_radio_switching_index(int value, SelectFromListMenuItem* source) {
+	RadioSwitchingIndex = value;
+	RadioSwitchingChanged = true;
+}
+
 void onchange_misc_trainercontrol_index(int value, SelectFromListMenuItem* source) {
 	TrainerControlIndex = value;
 	TrainerControlChanged = true;
@@ -1075,6 +1094,7 @@ void reset_misc_globals(){
 	PhoneBillIndex = 2;
 	PhoneDefaultIndex = 0;
 	RadioOffIndex = 0;
+	RadioSwitchingIndex = 0;
 	TrainerControlIndex = 0;
 	PhoneFreeSecondsIndex = 0;
 	PhoneBikeAnimationIndex = 0;
@@ -1222,6 +1242,25 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		radio_v_checked = false;
 	}
 	
+	// Radio Station Shuffle
+	if (MISC_RADIO_SWITCHING_VALUES[RadioSwitchingIndex] > 0/* && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)*/) {
+		r_secs_passed = clock() / CLOCKS_PER_SEC;
+		if (((clock() / CLOCKS_PER_SEC) - r_secs_curr) != 0) {
+			r_seconds = r_seconds + 1;
+			r_secs_curr = r_secs_passed;
+		}
+		if ((MISC_RADIO_SWITCHING_VALUES[RadioSwitchingIndex] == 1 && is_hotkey_held_veh_radio_skip()) || (MISC_RADIO_SWITCHING_VALUES[RadioSwitchingIndex] > 1 && r_seconds > MISC_RADIO_SWITCHING_VALUES[RadioSwitchingIndex])) {
+			Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+			int const stations = AUDIO::_MAX_RADIO_STATION_INDEX();
+			int random_station = (rand() % stations + 0);
+			if (AUDIO::GET_RADIO_STATION_NAME(random_station) != AUDIO::GET_PLAYER_RADIO_STATION_NAME()) {
+				AUDIO::SET_VEH_RADIO_STATION(veh, AUDIO::GET_RADIO_STATION_NAME(random_station));
+				//AUDIO::SET_RADIO_TRACK(AUDIO::GET_RADIO_STATION_NAME(random_station), "ARM1_RADIO_STARTS");
+			}
+			r_seconds = 0;
+		}
+	}
+
 	// Radio In Police Vehicles
 	if (featurePoliceRadio) {
 		Vehicle playerVeh = PED::GET_VEHICLE_PED_IS_IN(playerPed, 1);
@@ -1951,6 +1990,7 @@ void add_misc_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"PhoneBillIndex", std::to_string(PhoneBillIndex)});
 	results->push_back(StringPairSettingDBRow{"PhoneDefaultIndex", std::to_string(PhoneDefaultIndex)});
 	results->push_back(StringPairSettingDBRow{"RadioOffIndex", std::to_string(RadioOffIndex)});
+	results->push_back(StringPairSettingDBRow{"RadioSwitchingIndex", std::to_string(RadioSwitchingIndex)});
 	results->push_back(StringPairSettingDBRow{"TrainerControlIndex", std::to_string(TrainerControlIndex)});
 	results->push_back(StringPairSettingDBRow{"PhoneFreeSecondsIndex", std::to_string(PhoneFreeSecondsIndex)});
 	results->push_back(StringPairSettingDBRow{"PhoneBikeAnimationIndex", std::to_string(PhoneBikeAnimationIndex)});
@@ -1971,6 +2011,9 @@ void handle_generic_settings_misc(std::vector<StringPairSettingDBRow>* settings)
 		}
 		else if (setting.name.compare("RadioOffIndex") == 0) {
 			RadioOffIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("RadioSwitchingIndex") == 0) {
+			RadioSwitchingIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("TrainerControlIndex") == 0) {
 			TrainerControlIndex = stoi(setting.value);

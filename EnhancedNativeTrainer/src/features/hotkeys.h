@@ -29,6 +29,8 @@ bool is_hotkey_held_veh_extrapower();
 
 bool is_hotkey_held_veh_nitrous();
 
+bool is_hotkey_held_veh_radio_skip();
+
 static const int HKEY_FIX_CAR = 101;
 static const int HKEY_CLEAN_CAR = 102;
 static const int HKEY_HEAL_PLAYER = 103;
