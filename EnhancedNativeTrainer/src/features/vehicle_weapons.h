@@ -34,7 +34,3 @@ void play_explosion(Entity ent);
 bool process_veh_weapons_menu();
 
 bool onconfirm_veh_weapons_menu(MenuItem<int> choice);
-
-void reset_veh_weapons_globals();
-
-void update_veh_weapons_features();

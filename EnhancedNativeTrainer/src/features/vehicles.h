@@ -157,7 +157,11 @@ bool process_carspawn_menu();
 
 void update_vehicle_features(BOOL playerExists, Ped playerPed);
 
+void update_veh_weapons_features();
+
 void reset_vehicle_globals();
+
+void reset_veh_weapons_globals();
 
 bool process_spawn_menu_cars();
 
@@ -274,6 +278,8 @@ bool vehicle_save_sort_menu_interrupt();
 bool vehicle_save_slot_menu_interrupt();
 
 void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results);
+
+void add_vehicle_weapons_enablements(std::vector<FeatureEnabledLocalDefinition>* results);
 
 void add_teleporter_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results);
 

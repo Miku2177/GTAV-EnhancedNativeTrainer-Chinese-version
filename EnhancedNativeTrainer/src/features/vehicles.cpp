@@ -722,7 +722,7 @@ bool onconfirm_vehdoor_menu(MenuItem<int> choice){
 			set_status_text("Player isn't in a vehicle");
 		}
 	}
-	else if(choice.value == -2)//bomb bay open
+	/*else if(choice.value == -2)//bomb bay open
 	{
 		if(bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
 			Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
@@ -735,7 +735,7 @@ bool onconfirm_vehdoor_menu(MenuItem<int> choice){
 			Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 			VEHICLE::CLOSE_BOMB_BAY_DOORS(veh);
 		}
-	}
+	}*/
 	else if (choice.value == -5)//driver window roll
 	{
 		process_window_roll(); 
@@ -856,7 +856,7 @@ bool process_veh_door_menu(){
 		menuItems.push_back(toggleItem);
 	}
 
-	Hash currVehModel = ENTITY::GET_ENTITY_MODEL(veh);
+	/*Hash currVehModel = ENTITY::GET_ENTITY_MODEL(veh);
 	if(GAMEPLAY::GET_HASH_KEY("CUBAN800") == currVehModel){
 		MenuItem<int>* bombBayItem1 = new MenuItem<int>();
 		bombBayItem1->caption = "Open Bomb Bay";
@@ -867,7 +867,7 @@ bool process_veh_door_menu(){
 		bombBayItem2->caption = "Close Bomb Bay";
 		bombBayItem2->value = -3;
 		menuItems.push_back(bombBayItem2);
-	}
+	}*/
 
 	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Lock Vehicle Doors";
@@ -1781,9 +1781,6 @@ bool onconfirm_veh_menu(MenuItem<int> choice){
 		case 7: // mods
 			if(process_vehmod_menu()) return false;
 			break;
-		//case 6: // Plane bombs -- incomplete so commenting out in mean time
-			//if (process_veh_weapons_menu()) return false;
-		//	break;
 		case 20: // door menu
 			if(process_veh_door_menu()) return false;
 			break;
@@ -1811,6 +1808,9 @@ bool onconfirm_veh_menu(MenuItem<int> choice){
 			break;
 		case 36: // engine can degrade
 			process_engine_degrade_menu();
+			break;
+		case 47: // Plane bombs -- incomplete so commenting out in mean time
+			if (process_veh_weapons_menu()) return false;
 			break;
 		default:
 			break;
@@ -2113,6 +2113,12 @@ void process_veh_menu(){
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureAirStrike;
 	menuItems.push_back(toggleItem);
+
+	item = new MenuItem<int>();
+	item->caption = "Bombs";
+	item->value = i++;
+	item->isLeaf = false;
+	menuItems.push_back(item);
 
 	draw_generic_menu<int>(menuItems, &activeLineIndexVeh, caption, onconfirm_veh_menu, NULL, NULL);
 }
@@ -6205,20 +6211,5 @@ void set_convertible_roofdown(bool applied, std::vector<int> extras){
 	}
 	else{
 		VEHICLE::RAISE_CONVERTIBLE_ROOF(veh, featureVehicleDoorInstant);
-	}
-}
-
-bool is_bombbay_open(std::vector<int> extras){
-	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
-	return false;
-}
-
-void set_bombbay_open(bool applied, std::vector<int> extras){
-	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
-	if(applied){
-		VEHICLE::OPEN_BOMB_BAY_DOORS(veh);
-	}
-	else{
-		VEHICLE::CLOSE_BOMB_BAY_DOORS(veh);
 	}
 }
