@@ -1356,6 +1356,8 @@ void update_features(){
 
 	update_vehmodmenu_features(bPlayerExists, playerPed);
 
+	update_veh_weapons_features();
+
 	update_misc_features(bPlayerExists, playerPed);
 
 	update_time_features(player);
@@ -2100,6 +2102,8 @@ void reset_globals(){
 
 	reset_vehicle_globals();
 
+	reset_veh_weapons_globals();
+
 	reset_time_globals();
 
 	reset_vehmodmenu_globals();
@@ -2472,6 +2476,8 @@ std::vector<FeatureEnabledLocalDefinition> get_feature_enablements(){
 	add_props_feature_enablements(&results);
 
 	add_vehicle_feature_enablements(&results);
+
+	add_vehicle_weapons_enablements(&results);
 
 	add_vehmodmenu_feature_enablements(&results);
 

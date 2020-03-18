@@ -8,7 +8,6 @@
 //warning C4129 : 'D' : unrecognized character escape sequence - Attempting to properly "escape" the string breaks the sound library
 #pragma warning( disable : 4129 )
 
-
 Camera bombCam = NULL;
 
 bool bombDoorOpen;
@@ -25,7 +24,6 @@ std::vector<Object> vBomb;
 bool featureBombDoorCamera = false;
 bool featureAutoPilot = false;
 bool featureAutoPilotUpdated = false;
-
 
 Object create_bomb(Vector3 position, Vector3 rotation)
 {
@@ -53,48 +51,79 @@ Object create_bomb(Vector3 position, Vector3 rotation)
 void toggle_bomb_bay_camera()
 {
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
+	Vector3 vehPosition = ENTITY::GET_ENTITY_COORDS(veh, true);
+	Vector3 curRotation = ENTITY::GET_ENTITY_ROTATION(veh, 2);
 
-	if (bombCam == NULL)
+	if (bombDoorOpen == true && !CAM::DOES_CAM_EXIST(bombCam))
+	//if (bombCam == NULL)
 	{
 		/* Disable the weapon controls to prevent the player from breaking the bomb spawner */
 		CONTROLS::DISABLE_CONTROL_ACTION(0, INPUT_VEH_FLY_ATTACK2, 1);
 
 		/* Get the bone index for the bomb-bay door(s) for attaching the camera to */
-		int boneIndex = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(veh, "chassis_dummy");
+		//int boneIndex = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(veh, "chassis_dummy");
 
 		/* Get bone coord for attaching cam to */
-		Vector3 boneCoords = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(veh, boneIndex);
+		//Vector3 boneCoords = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(veh, boneIndex);
 
 		/* Get cam offset from world coords so the camera is a fixed distance (and facing the correct direction) from the bomb door */
-		Vector3 camOffset = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(veh, boneCoords.x, boneCoords.y, boneCoords.z - 1.3f);
+		//Vector3 camOffset = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(veh, boneCoords.x, boneCoords.y, boneCoords.z - 1.3f);
 
 		/* Create the camera to be attached to the bomb-bay doors - "0x19286a9" is from the scripts (launcher_basejumppack.c4) */
-		bombCam = CAM::CREATE_CAMERA_WITH_PARAMS(0x19286a9, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 65.0f, 0, 2);
-		CAM::ATTACH_CAM_TO_ENTITY(bombCam, veh, 0.0f, 1.3324f, -0.9f, 1);
-		CAM::POINT_CAM_AT_COORD(veh, camOffset.x, camOffset.y, camOffset.z);
+		bombCam = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_FLY_CAMERA", vehPosition.x, vehPosition.y, vehPosition.z, curRotation.x, curRotation.y, curRotation.z, 50.0, true, 2);
+		//bombCam = CAM::CREATE_CAMERA_WITH_PARAMS(0x19286a9, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 65.0f, 0, 2);
+		//CAM::ATTACH_CAM_TO_ENTITY(bombCam, veh, 0.0f, 1.3324f, 0.9f, 1);
+		CAM::ATTACH_CAM_TO_ENTITY(bombCam, veh, 0.0f, 0.0f, -0.5f, 1);
+		CAM::POINT_CAM_AT_COORD(bombCam, vehPosition.x, vehPosition.y, vehPosition.z - 2);
 
 		/* Not really necessary but gives it a gentle "turbulence" shake */
 		CAM::SHAKE_CAM(bombCam, "ROAD_VIBRATION_SHAKE", 0.4f);
 
 		/* Needed else it'll draw more than the bomb-bay doors which is not what we want */
-		CAM::SET_CAM_FOV(bombCam, 65.0f);
-
+		CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE_BLEND_LEVEL(bombCam, 1.0);
+		CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE(bombCam, 1.0);
+		CAM::_SET_CAM_DOF_FOCUS_DISTANCE_BIAS(bombCam, 1.0);
+		CAM::RENDER_SCRIPT_CAMS(true, false, 0, true, true);
 		CAM::SET_CAM_ACTIVE(bombCam, true);
-		CAM::RENDER_SCRIPT_CAMS(1, 0, 3000, 1, 0);
+		//CAM::SET_CAM_NEAR_CLIP(bombCam, .329);
+		//CAM::SET_CAM_FOV(bombCam, 65.0f);
+		//CAM::SET_CAM_ACTIVE(bombCam, true);
+		//CAM::RENDER_SCRIPT_CAMS(1, 0, 3000, 1, 0);
 		UI::DISPLAY_RADAR(false);
 		UI::DISPLAY_HUD(false);
 	}
-	else if (CAM::DOES_CAM_EXIST(bombCam))
+	if (CAM::DOES_CAM_EXIST(bombCam)) {
+		CAM::SET_CAM_ROT(bombCam, curRotation.x, curRotation.y, curRotation.z, 2);
+		CAM::POINT_CAM_AT_COORD(bombCam, vehPosition.x, vehPosition.y, vehPosition.z - 2);
+	}
+
+	if ((bombDoorOpen == false || !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) && CAM::DOES_CAM_EXIST(bombCam))
 	{
 		/* Cleanup routine */
+		CAM::RENDER_SCRIPT_CAMS(false, false, 0, false, false);
+		CAM::DETACH_CAM(bombCam);
 		CAM::SET_CAM_ACTIVE(bombCam, false);
 		CAM::DESTROY_CAM(bombCam, true);
-		bombCam = NULL;
 		UI::DISPLAY_RADAR(true);
 		UI::DISPLAY_HUD(true);
 		CONTROLS::ENABLE_CONTROL_ACTION(0, INPUT_VEH_FLY_ATTACK2, 1);
 	}
 }
+
+/*bool is_bombbay_open(std::vector<int> extras) {
+	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
+	return false;
+}
+
+void set_bombbay_open(bool applied, std::vector<int> extras) {
+	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
+	if (applied) {
+		VEHICLE::OPEN_BOMB_BAY_DOORS(veh);
+	}
+	else {
+		VEHICLE::CLOSE_BOMB_BAY_DOORS(veh);
+	}
+}*/
 
 void toggle_bomb_bay_doors()
 {
@@ -112,7 +141,8 @@ void toggle_bomb_bay_doors()
 	AUDIO::REQUEST_SCRIPT_AUDIO_BANK("SCRIPT\DRUG_TRAFFIC_AIR", 0);
 	AUDIO::PLAY_SOUND_FRONTEND(-1, "DRUG_TRAFFIC_AIR_BAY_DOOR_OPEN_MASTER", 0, 1);
 
-	bombDoorOpen ^= bombDoorOpen;
+	//bombDoorOpen ^= bombDoorOpen;
+	bombDoorOpen = !bombDoorOpen;
 }
 
 /* Needed to prevent the plane from crashing during bomb-cam since the control(s) are disabled */
@@ -159,8 +189,8 @@ void start_bombing_run()
 
 void add_bomb()
 {
-	Vector3 prev_rot;
-	Vector3 rot;
+	Vector3 prev_rot = {0, 0, 0};
+	Vector3 rot = { 0, 0, 0 };
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 
 	if (vBomb.size() < 1) //bomb_count < 1
@@ -172,7 +202,7 @@ void add_bomb()
 		Vector3 veh_coords = ENTITY::GET_ENTITY_COORDS(veh, true);
 
 		/* Create a bomb model */
-		oBomb = create_bomb(ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(veh, veh_coords.x, veh_coords.y, veh_coords.z), rot);
+		oBomb = create_bomb(ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(veh, veh_coords.x, veh_coords.y, veh_coords.z + 5), rot);
 
 		/* Store bomb in our vector so we can keep track of how many are there. Could also use it to "find" the previous bomb's coords/rotation to tweak other bombs but no idea how to do that at the moment */
 		vBomb.push_back(oBomb);
@@ -199,7 +229,7 @@ void add_bomb()
 		Vector3 veh_coords = ENTITY::GET_ENTITY_COORDS(veh, true);
 
 		/* Create a bomb model */
-		oBomb = create_bomb(ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(veh, veh_coords.x, veh_coords.y, veh_coords.z), rot);
+		oBomb = create_bomb(ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(veh, veh_coords.x, veh_coords.y, veh_coords.z + 5), rot);
 
 		/* Add new bomb into vector for later (may result in errors. If so, comment out and revert back to increment code below it) */
 		vBomb.push_back(oBomb);
@@ -322,17 +352,23 @@ bool onconfirm_veh_weapons_menu(MenuItem<int> choice){
 	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
 	Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
-
-
+	
 	if (!bPlayerExists){
 		return true;
 	}
-
-	
+		
 	if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0))
 	{
 		set_status_text("Player isn't in a vehicle");
 		return true;
+	}
+	if (choice.value == -1) {
+		toggle_bomb_bay_doors();
+	}
+	else if (choice.value == -2) {
+		update_bombs();
+		add_bomb();
+		start_bombing_run();
 	}
 	return false;
 }
@@ -340,23 +376,37 @@ bool onconfirm_veh_weapons_menu(MenuItem<int> choice){
 bool process_veh_weapons_menu()
 {
 	std::vector<MenuItem<int>*> menuItems;
-	
+	MenuItem<int> *item;
+	int i = 0;
+
 	ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Enable Bomb-Door Camera";
 	toggleItem->toggleValue = &featureBombDoorCamera;
 	menuItems.push_back(toggleItem);
 
-	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Enable Auto-Pilot";
-	toggleItem->toggleValue = &featureAutoPilot;
-	toggleItem->toggleValueUpdated = &featureAutoPilotUpdated;
-	menuItems.push_back(toggleItem);
+	//toggleItem = new ToggleMenuItem<int>();
+	//toggleItem->caption = "Enable Auto-Pilot";
+	//toggleItem->toggleValue = &featureAutoPilot;
+	//toggleItem->toggleValueUpdated = &featureAutoPilotUpdated;
+	//menuItems.push_back(toggleItem);
+	
+	item = new MenuItem<int>();
+	item->caption = "Open/Close Bomb Bay";
+	item->value = -1;
+	item->isLeaf = true;
+	menuItems.push_back(item);
 
-	MenuItem<int> *chooseTrimColor = new MenuItem<int>();
-	chooseTrimColor->caption = "Trim Color ~HUD_COLOUR_GREYLIGHT~(161)";
-	chooseTrimColor->value = -2;
-	chooseTrimColor->isLeaf = false;
-	menuItems.push_back(chooseTrimColor);
+	item = new MenuItem<int>();
+	item->caption = "Drop Bomb";
+	item->value = -2;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	//MenuItem<int> *chooseTrimColor = new MenuItem<int>();
+	//chooseTrimColor->caption = "Trim Color ~HUD_COLOUR_GREYLIGHT~(161)";
+	//chooseTrimColor->value = -2;
+	//chooseTrimColor->isLeaf = false;
+	//menuItems.push_back(chooseTrimColor);
 
 	return draw_generic_menu<int>(menuItems, 0, "Plane Bomb Options", onconfirm_veh_weapons_menu, NULL, NULL, vehicle_menu_interrupt);
 }
@@ -371,9 +421,20 @@ void reset_veh_weapons_globals()
 
 void update_veh_weapons_features()
 {
-	if (!featureBombDoorCamera)
+	if (featureBombDoorCamera) // if (!featureBombDoorCamera)
 	{
 		toggle_bomb_bay_camera();
+	}
+
+	if (!featureBombDoorCamera && CAM::DOES_CAM_EXIST(bombCam))
+	{
+		CAM::RENDER_SCRIPT_CAMS(false, false, 0, false, false);
+		CAM::DETACH_CAM(bombCam);
+		CAM::SET_CAM_ACTIVE(bombCam, false);
+		CAM::DESTROY_CAM(bombCam, true);
+		UI::DISPLAY_RADAR(true);
+		UI::DISPLAY_HUD(true);
+		CONTROLS::ENABLE_CONTROL_ACTION(0, INPUT_VEH_FLY_ATTACK2, 1);
 	}
 
 	if (featureAutoPilotUpdated)
@@ -388,7 +449,10 @@ void update_veh_weapons_features()
 		}
 		featureAutoPilotUpdated = false;
 	}
-	
+}
+
+void add_vehicle_weapons_enablements(std::vector<FeatureEnabledLocalDefinition>* results) {
+	results->push_back(FeatureEnabledLocalDefinition{ "featureBombDoorCamera", &featureBombDoorCamera });
 }
 
 //Main - https://github.com/CamxxCore/CarpetBomber/blob/master/GTAV_CarpetBomber/MainScript.cs
