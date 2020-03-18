@@ -301,7 +301,7 @@ void road_laws()
 			int temp_heading = veh_stopped_red_light_heading - my_vehicle_heading;
 			if (temp_heading < 0) temp_heading = (temp_heading * -1);
 
-			if (VEHICLE::IS_VEHICLE_STOPPED_AT_TRAFFIC_LIGHTS(veh_stopped_red_light) && temp_heading < 80) approached = true;
+			if (ENTITY::GET_ENTITY_SPEED(vehroadlaws) > 1 && VEHICLE::IS_VEHICLE_STOPPED_AT_TRAFFIC_LIGHTS(veh_stopped_red_light) && temp_heading < 80) approached = true;
 
 			if (approached == true && red_light_veh_detected == false) {
 				red_light_vehicle = veh_stopped_red_light;
@@ -317,6 +317,10 @@ void road_laws()
 
 				if (temp_heading < 80 && (veh_redlight_distance_x > 10 || veh_redlight_distance_y > 10)) runningredlight_check = true;
 
+				if (ENTITY::GET_ENTITY_SPEED(vehroadlaws) < 1 && been_seen_by_a_cop == false && veh_redlight_distance_x < 11 && veh_redlight_distance_y < 11) {
+					runningredlight_check = false;
+					approached = false;
+				}
 				if (veh_redlight_distance_x > 40 || veh_redlight_distance_y > 40) {
 					if (been_seen_by_a_cop == false) runningredlight_check = false;
 					red_light_veh_detected = false;

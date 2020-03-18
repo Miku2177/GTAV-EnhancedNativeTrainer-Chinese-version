@@ -1255,10 +1255,10 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 			int const stations = AUDIO::_MAX_RADIO_STATION_INDEX();
 			int random_station = (rand() % stations + 0);
-			if (AUDIO::GET_RADIO_STATION_NAME(random_station) != AUDIO::GET_PLAYER_RADIO_STATION_NAME()) {
+			//if (AUDIO::GET_RADIO_STATION_NAME(random_station) != AUDIO::GET_PLAYER_RADIO_STATION_NAME()) {
 				/*if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0))*/ AUDIO::SET_VEH_RADIO_STATION(veh, AUDIO::GET_RADIO_STATION_NAME(random_station));
 				//else AUDIO::SET_RADIO_TRACK(AUDIO::GET_RADIO_STATION_NAME(random_station), "ARM1_RADIO_STARTS");
-			}
+			//}
 			r_seconds = 0;
 			skip_track_pressed = false;
 		}

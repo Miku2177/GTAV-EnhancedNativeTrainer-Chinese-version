@@ -101,7 +101,7 @@ void prison_break()
 
 		// TRANSFERING YOU TO PRISON
 		if ((detained && time_before_get_to_prison > 0 && time_before_get_to_prison < 6000 && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID())) ||
-			(alert_level > 0 && time_before_get_to_prison > 0 && time_before_get_to_prison < 6000 && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID())))
+			(alert_level > 0 && time_before_get_to_prison > 0 && time_before_get_to_prison < 6000 && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID()))/* || (detained && ready_for_prison == true)*/)
 		{
 			ENTITY::SET_ENTITY_COORDS_NO_OFFSET(playerPed, 1691.334, 2545.26, 46, 0, 0, 1);
 			PLAYER::SET_MAX_WANTED_LEVEL(5);
@@ -173,6 +173,8 @@ void prison_break()
 				will_pay_money_for_escape = false;
 			}
 		}
+
+		//if (!ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) ready_for_prison = false;
 
 		// IMPRISONED
 		if (in_prison) {

@@ -89,6 +89,8 @@ bool featureNoScubaSound = false;
 
 bool super_jump_no_parachute, super_jump_intheair = false;
 
+bool ready_for_prison = false;
+
 bool manual_instant = false;
 bool first_person_rotate = false;
 bool firstPersonDeathCameraEnabled = false;
@@ -635,6 +637,7 @@ void update_features(){
 	if (featureRespawnsWhereDied && GAMEPLAY::GET_MISSION_FLAG() == 0 && manual_instant == false) {
 		if (ENTITY::IS_ENTITY_DEAD(playerPed) || PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 0)) {
 			player_died = true;
+			//ready_for_prison = true;
 			CAM::DO_SCREEN_FADE_OUT(500);
 			WAIT(1000);
 			GAMEPLAY::_DISABLE_AUTOMATIC_RESPAWN(true);
