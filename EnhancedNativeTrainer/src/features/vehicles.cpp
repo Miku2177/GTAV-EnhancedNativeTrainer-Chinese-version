@@ -1810,7 +1810,17 @@ bool onconfirm_veh_menu(MenuItem<int> choice){
 			process_engine_degrade_menu();
 			break;
 		case 47: // Plane bombs -- incomplete so commenting out in mean time
-			if (process_veh_weapons_menu()) return false;
+		{
+			if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
+				set_status_text("Player isn't in a vehicle");
+				return true;
+			}
+			Hash currVehModel = ENTITY::GET_ENTITY_MODEL(PED::GET_VEHICLE_PED_IS_USING(playerPed));
+			if (GAMEPLAY::GET_HASH_KEY("CUBAN800") == currVehModel) {
+				if (process_veh_weapons_menu()) return false;
+			}
+			else set_status_text("It only works for Cuban 800 plane");
+		}
 			break;
 		default:
 			break;
@@ -2115,7 +2125,7 @@ void process_veh_menu(){
 	menuItems.push_back(toggleItem);
 
 	item = new MenuItem<int>();
-	item->caption = "Bombs";
+	item->caption = "Drop Bombs";
 	item->value = i++;
 	item->isLeaf = false;
 	menuItems.push_back(item);
