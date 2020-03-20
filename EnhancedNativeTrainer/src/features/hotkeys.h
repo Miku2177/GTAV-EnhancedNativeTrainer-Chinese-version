@@ -78,6 +78,7 @@ static const int HKEY_ADDNEAR_BODYGUARD = 150;
 static const int HKEY_DISMISS_BODYGUARD = 151;
 static const int HKEY_MUFFLED_RADIO = 152;
 static const int HKEY_VEHICLE_NITROUS = 153;
+static const int HKEY_VEHICLE_BOMB = 154;
 
 const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "No Function", 0 },
@@ -128,6 +129,7 @@ const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "Dismiss All Bodyguards", HKEY_DISMISS_BODYGUARD },
 	{ "Muffled Radio", HKEY_MUFFLED_RADIO },
 	{ "Nitrous (Hold Key)", HKEY_VEHICLE_NITROUS },
+	{ "Drop Bomb", HKEY_VEHICLE_BOMB },
 };
 
 void change_hotkey_function(int hotkey, int funcIndex);

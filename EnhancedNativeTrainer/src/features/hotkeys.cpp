@@ -290,6 +290,9 @@ void trigger_function_for_hotkey_onkeyup(int hotkey)
 	case HKEY_VEHICLE_NITROUS:
 		hotkey_held_veh_nitrous = false;
 		break;
+	case HKEY_VEHICLE_BOMB:
+		start_bombing_run();
+		break;
 	default:
 	{
 		std::ostringstream ss;

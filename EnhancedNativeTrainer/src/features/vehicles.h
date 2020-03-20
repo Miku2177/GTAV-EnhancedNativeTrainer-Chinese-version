@@ -195,6 +195,8 @@ void interior_light();
 
 void search_light();
 
+void start_bombing_run();
+
 void damage_door();
 
 void enter_damaged_vehicle();
