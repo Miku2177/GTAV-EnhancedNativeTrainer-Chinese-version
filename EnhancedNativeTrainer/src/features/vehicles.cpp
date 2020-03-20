@@ -1813,7 +1813,7 @@ bool onconfirm_veh_menu(MenuItem<int> choice){
 		{
 			if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
 				set_status_text("Player isn't in a vehicle");
-				return true;
+				//return true;
 			}
 			Hash currVehModel = ENTITY::GET_ENTITY_MODEL(PED::GET_VEHICLE_PED_IS_USING(playerPed));
 			if (GAMEPLAY::GET_HASH_KEY("CUBAN800") == currVehModel) {

@@ -15,6 +15,8 @@ Vector3 curRotation;
 
 bool bombDoorOpen;
 
+bool tempbombDoor = false;
+
 Object oBomb;
 
 std::vector<Object> vBomb;
@@ -88,19 +90,25 @@ void toggle_bomb_bay_doors()
 
 void start_bombing_run()	
 {
-	Vehicle veh_b = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
-	
-	ENTITY::DETACH_ENTITY(oBomb, true, true);
-	ROPE::ACTIVATE_PHYSICS(oBomb);
+	Hash currVehModel = ENTITY::GET_ENTITY_MODEL(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()));
+	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) set_status_text("Player isn't in a vehicle");
+	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0) && GAMEPLAY::GET_HASH_KEY("CUBAN800") == currVehModel && bombDoorOpen == false) set_status_text("Bomb-Door is closed");
+		
+	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0) && GAMEPLAY::GET_HASH_KEY("CUBAN800") == currVehModel && bombDoorOpen == true) {
+		Vehicle veh_b = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 
-	if (!vBomb.empty()) vBomb.push_back(oBomb);
-	else vBomb.push_back(oBomb);
+		ENTITY::DETACH_ENTITY(oBomb, true, true);
+		ROPE::ACTIVATE_PHYSICS(oBomb);
 
-	oBomb = OBJECT::CREATE_OBJECT(GAMEPLAY::GET_HASH_KEY("prop_ld_bomb_01"), vehPosition.x, vehPosition.y, vehPosition.z - 0.5, false, false, false);
-	ENTITY::SET_ENTITY_ROTATION(oBomb, curRotation.x, curRotation.y, curRotation.z, 0, false);
-	if (!STREAMING::HAS_MODEL_LOADED(GAMEPLAY::GET_HASH_KEY("bodyshell"))) STREAMING::REQUEST_MODEL(GAMEPLAY::GET_HASH_KEY("bodyshell"));
-	int boneIndex1 = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(veh_b, "bodyshell");
-	ENTITY::ATTACH_ENTITY_TO_ENTITY(oBomb, veh_b, boneIndex1, 0.0, 0.0, -0.5, 0.0, 0.0, 0.0, false, false, false, true, 0, true);
+		if (!vBomb.empty()) vBomb.push_back(oBomb);
+		else vBomb.push_back(oBomb);
+
+		oBomb = OBJECT::CREATE_OBJECT(GAMEPLAY::GET_HASH_KEY("prop_ld_bomb_01"), vehPosition.x, vehPosition.y, vehPosition.z - 0.5, false, false, false);
+		ENTITY::SET_ENTITY_ROTATION(oBomb, curRotation.x, curRotation.y, curRotation.z, 0, false);
+		if (!STREAMING::HAS_MODEL_LOADED(GAMEPLAY::GET_HASH_KEY("bodyshell"))) STREAMING::REQUEST_MODEL(GAMEPLAY::GET_HASH_KEY("bodyshell"));
+		int boneIndex1 = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(veh_b, "bodyshell");
+		ENTITY::ATTACH_ENTITY_TO_ENTITY(oBomb, veh_b, boneIndex1, 0.0, 0.0, -0.5, 0.0, 0.0, 0.0, false, false, false, true, 0, true);
+	}
 }
 
 void update_bombs()
@@ -171,7 +179,7 @@ bool onconfirm_veh_weapons_menu(MenuItem<int> choice){
 	}
 	else if (choice.value == -2) {
 		if (bombDoorOpen == true) start_bombing_run();
-		else set_status_text("Bomb-Door Is Closed");
+		else set_status_text("Bomb-Door is closed");
 	}
 	return false;
 }
@@ -211,7 +219,7 @@ void update_veh_weapons_features()
 {
 	toggle_bomb_bay_camera();
 	update_bombs();
-
+	
 	if (!featureBombDoorCamera && CAM::DOES_CAM_EXIST(bombCam))	{
 		CAM::RENDER_SCRIPT_CAMS(false, false, 0, false, false);
 		CAM::DETACH_CAM(bombCam);
@@ -222,10 +230,15 @@ void update_veh_weapons_features()
 		CONTROLS::ENABLE_CONTROL_ACTION(0, INPUT_VEH_FLY_ATTACK2, 1);
 	}
 
-	//if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), true) && CONTROLS::IS_CONTROL_PRESSED(2, 75)) {
-	//	VEHICLE::CLOSE_BOMB_BAY_DOORS(veh_b);
-	//	bombDoorOpen = false;
-	//}
+	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0) && tempbombDoor == false) {
+		VEHICLE::CLOSE_BOMB_BAY_DOORS(veh_b);
+		tempbombDoor = true;
+		
+	}
+	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) {
+		tempbombDoor = false;
+		bombDoorOpen = false;
+	}
 }
 
 void add_vehicle_weapons_enablements(std::vector<FeatureEnabledLocalDefinition>* results) {
