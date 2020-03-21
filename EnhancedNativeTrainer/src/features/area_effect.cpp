@@ -413,18 +413,11 @@ void do_maintenance_on_tracked_entities(){
 		if(tped->angryApplied && randNum == 1){
 			findRandomTargetForPed(tped);
 		}
-		if (featureAreaPedsRioting && featureAngryPedsTargetYou) {
-			PED::SET_PED_AS_ENEMY(PLAYER::PLAYER_PED_ID(), true);
-			PED::REGISTER_TARGET(tped->ped, PLAYER::PLAYER_PED_ID());
-			AI::TASK_COMBAT_PED(tped->ped, PLAYER::PLAYER_PED_ID(), 0, 16);
-		}
 	}
 }
 
 void findRandomTargetForPed(ENTTrackedPedestrian* tped){
 	Ped otherPed = 0;
-
-	if (!featureAngryPedsTargetYou) PED::SET_PED_AS_ENEMY(PLAYER::PLAYER_PED_ID(), false); // if (trackedPeds.at(randIndex)->ped == PLAYER::PLAYER_PED_ID() && !featureAngryPedsTargetYou) 
 
 	if(tped->lastTarget == 0 || !ENTITY::DOES_ENTITY_EXIST(tped->lastTarget) || ENTITY::IS_ENTITY_DEAD(tped->lastTarget)){
 		tped->lastTarget = 0;
@@ -434,11 +427,9 @@ void findRandomTargetForPed(ENTTrackedPedestrian* tped){
 			if(randIndex < 0 || featureAngryPedsTargetYou) //chance of fighting the player
 			{
 				otherPed = PLAYER::PLAYER_PED_ID();
-				if (featureAngryPedsTargetYou) PED::SET_PED_AS_ENEMY(otherPed, true);
 			}
 			else{
 				otherPed = trackedPeds.at(randIndex)->ped;
-				if (!featureAngryPedsTargetYou && otherPed != PLAYER::PLAYER_PED_ID()) PED::SET_PED_AS_ENEMY(otherPed, true);
 			}
 
 			//if we've found ourselves
@@ -446,9 +437,16 @@ void findRandomTargetForPed(ENTTrackedPedestrian* tped){
 				continue;
 			}
 
-			PED::REGISTER_TARGET(tped->ped, otherPed);
-			AI::TASK_COMBAT_PED(tped->ped, otherPed, 0, 16);
-			tped->lastTarget = otherPed;
+			if (!featureAngryPedsTargetYou && otherPed == PLAYER::PLAYER_PED_ID()) {
+				PED::REGISTER_TARGET(tped->ped, tped->ped);
+				AI::TASK_COMBAT_PED(tped->ped, tped->ped, 0, 16);
+				tped->lastTarget = tped->ped;
+			}
+			if ((!featureAngryPedsTargetYou && otherPed != PLAYER::PLAYER_PED_ID()) || featureAngryPedsTargetYou) {
+				PED::REGISTER_TARGET(tped->ped, otherPed);
+				AI::TASK_COMBAT_PED(tped->ped, otherPed, 0, 16);
+				tped->lastTarget = otherPed;
+			}
 		}
 	}
 }
@@ -878,16 +876,16 @@ std::set<Ped>get_nearby_peds(Ped playerPed){
 		if(ENTITY::IS_ENTITY_DEAD(item)){
 			continue;
 		}
-		else if(playerPed == item){
+		if(playerPed == item){
 			continue;
 		}
-		else if(!PED::IS_PED_HUMAN(item)){
+		if(!PED::IS_PED_HUMAN(item)){
 			continue;
 		}
-		else if(ENTITY::IS_ENTITY_A_MISSION_ENTITY(item) && !ENTITY::DOES_ENTITY_BELONG_TO_THIS_SCRIPT(item, true)){
+		if(ENTITY::IS_ENTITY_A_MISSION_ENTITY(item) && !ENTITY::DOES_ENTITY_BELONG_TO_THIS_SCRIPT(item, true)){
 			continue;
 		}
-		else if (featureAngryMenOnly && PED::GET_PED_TYPE(item) == 5) {
+		if (featureAngryMenOnly && PED::GET_PED_TYPE(item) == 5) {
 			continue;
 		}
 
