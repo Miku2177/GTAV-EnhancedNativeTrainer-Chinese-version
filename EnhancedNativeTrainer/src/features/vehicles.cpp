@@ -1819,7 +1819,7 @@ bool onconfirm_veh_menu(MenuItem<int> choice){
 			if (GAMEPLAY::GET_HASH_KEY("CUBAN800") == currVehModel) {
 				if (process_veh_weapons_menu()) return false;
 			}
-			else set_status_text("It only works for Cuban 800 plane");
+			else set_status_text("Error: Bomb doors require Cuban 800");
 		}
 			break;
 		default:
