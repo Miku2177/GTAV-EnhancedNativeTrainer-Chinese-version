@@ -179,7 +179,7 @@ bool onconfirm_veh_weapons_menu(MenuItem<int> choice){
 	}
 	else if (choice.value == -2) {
 		if (bombDoorOpen == true) start_bombing_run();
-		else set_status_text("Bomb-Door is closed");
+		else set_status_text("Bomb door closed");
 	}
 	return false;
 }
