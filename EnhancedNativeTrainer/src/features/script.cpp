@@ -1294,9 +1294,10 @@ void update_features(){
 
 	// No Scuba Gear Mask
 	if (featureNoScubaGearMask && ENTITY::IS_ENTITY_IN_WATER(playerPed) == 1) {
-		PED::CLEAR_ALL_PED_PROPS(playerPed);
+		//PED::CLEAR_ALL_PED_PROPS(playerPed);
+		PED::CLEAR_PED_PROP(playerPed, 1);
 	}
-
+	
 	// No Scuba Breathing Sound
 	if (featureNoScubaSound) {
 		AUDIO::SET_AUDIO_FLAG("SuppressPlayerScubaBreathing", true);
