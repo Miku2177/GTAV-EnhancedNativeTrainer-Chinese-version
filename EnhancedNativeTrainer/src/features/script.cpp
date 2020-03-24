@@ -52,6 +52,9 @@ int game_frame_num = 0;
 int jumpfly_secs_passed, jumpfly_secs_curr, jumpfly_tick = 0;
 bool skydiving = false;
 
+bool dive_glasses = false;
+int ped_prop_idx = -1;
+
 bool everInitialised = false;
 
 ENTDatabase* database = NULL;
@@ -1294,8 +1297,15 @@ void update_features(){
 
 	// No Scuba Gear Mask
 	if (featureNoScubaGearMask && ENTITY::IS_ENTITY_IN_WATER(playerPed) == 1) {
-		//PED::CLEAR_ALL_PED_PROPS(playerPed);
+		if (dive_glasses == false) {
+			ped_prop_idx = PED::GET_PED_PROP_INDEX(playerPed, 1);
+			dive_glasses = true;
+		}
 		PED::CLEAR_PED_PROP(playerPed, 1);
+	}
+	if (featureNoScubaGearMask && ENTITY::IS_ENTITY_IN_WATER(playerPed) == 0 && dive_glasses == true) {
+		if (ped_prop_idx > 0) PED::SET_PED_PROP_INDEX(playerPed, 1, ped_prop_idx, 0, 0);
+		dive_glasses = false;
 	}
 	
 	// No Scuba Breathing Sound
