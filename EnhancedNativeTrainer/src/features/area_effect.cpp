@@ -438,9 +438,17 @@ void findRandomTargetForPed(ENTTrackedPedestrian* tped){
 			}
 
 			if (!featureAngryPedsTargetYou && otherPed == PLAYER::PLAYER_PED_ID()) {
-				PED::REGISTER_TARGET(tped->ped, tped->ped);
-				AI::TASK_COMBAT_PED(tped->ped, tped->ped, 0, 16);
-				tped->lastTarget = tped->ped;
+				int rand_ped = rand() % trackedPeds.size() + 0;
+				if (trackedPeds.at(rand_ped)->ped != PLAYER::PLAYER_PED_ID()) {
+					PED::REGISTER_TARGET(tped->ped, trackedPeds.at(rand_ped)->ped);
+					AI::TASK_COMBAT_PED(tped->ped, trackedPeds.at(rand_ped)->ped, 0, 16);
+					tped->lastTarget = trackedPeds.at(rand_ped)->ped;
+				}
+				else {
+					PED::REGISTER_TARGET(tped->ped, tped->ped);
+					AI::TASK_COMBAT_PED(tped->ped, tped->ped, 0, 16);
+					tped->lastTarget = tped->ped;
+				}
 			}
 			if ((!featureAngryPedsTargetYou && otherPed != PLAYER::PLAYER_PED_ID()) || featureAngryPedsTargetYou) {
 				PED::REGISTER_TARGET(tped->ped, otherPed);
