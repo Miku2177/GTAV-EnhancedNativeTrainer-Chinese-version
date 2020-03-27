@@ -464,6 +464,7 @@ struct StringStandardOrToggleMenuDef{
 	std::string value;
 	bool *pState;
 	bool *pUpdated;
+	bool isLeaf;
 };
 
 class MenuItemImage{

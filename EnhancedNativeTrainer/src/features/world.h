@@ -54,6 +54,10 @@ void onchange_freeroam_activities_index(int value, SelectFromListMenuItem* sourc
 
 void onchange_world_train_speed_index(int value, SelectFromListMenuItem* source);
 
+void onchange_weather_change_index(int value, SelectFromListMenuItem* source);
+
+void onchange_weather_method_index(int value, SelectFromListMenuItem* source);
+
 void onchange_world_no_peds_gravity_index(int value, SelectFromListMenuItem* source);
 
 void onchange_peds_health_index(int value, SelectFromListMenuItem* source);
