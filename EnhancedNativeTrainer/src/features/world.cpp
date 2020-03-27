@@ -27,6 +27,12 @@ bool IsSnow;
 int activeLineIndexWorld = 0;
 int activeLineIndexWeather = 0;
 int activeLineIndexClouds = 0;
+int activeLineIndexWeatherConfig = 0;
+
+char* mixed_w1 = "EXTRASUNNY";
+char* mixed_w2 = "CLEAR";
+
+int w_secs_passed, w_secs_curr, w_seconds = -1;
 
 int r, g, b = -1;
 
@@ -91,6 +97,7 @@ bool featureBlackout = false;
 bool featureBlackoutUpdated = false;
 
 bool featureWeatherFreeze = false;
+bool featureWeatherFreezeUpdated = false;
 
 bool featureCloudsFreeze = false;
 bool featureCloudsNo = false;
@@ -155,9 +162,50 @@ const int WORLD_FREEROAM_ACTIVITIES_VALUES[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 1
 int featureFreeroamActivitiesIndex = 0;
 bool featureFreeroamActivitiesChanged = true;
 
+// Change Weather
+const std::vector<std::string> MISC_WEATHER_CHANGE_CAPTIONS{ "Default", "Every 1 Min", "Every 3 Min", "Every 5 Min", "Every 7 Min", "Every 10 Min", "Every 15 Min", "Every 30 Min" };
+const int MISC_WEATHER_CHANGE_VALUES[] = { 0, 60, 180, 300, 420, 600, 900, 1800 };
+int WeatherChangeIndex = 0;
+bool WeatherChangeChanged = true;
+
+const std::vector<std::string> MISC_WEATHER_METHOD_CAPTIONS{ "Random Weather", "Mixed Weather" };
+const int MISC_WEATHER_METHOD_VALUES[] = { 1, 2 };
+int WeatherMethodIndex = 0;
+bool WeatherMethodChanged = true;
+
 void map_size_hotkey() {
 	RadarMapIndex = RadarMapIndex + 1;
 	if (RadarMapIndex > 2) RadarMapIndex = 0;
+}
+
+bool onconfirm_weathersettings_menu(MenuItem<int> choice) {
+	return false;
+}
+
+void process_world_weathersettings_menu() {
+	std::string caption = "Weather Settings";
+
+	std::vector<MenuItem<int>*> menuItems;
+	SelectFromListMenuItem *listItem;
+	
+	ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Freeze Weather";
+	toggleItem->toggleValue = &featureWeatherFreeze;
+	menuItems.push_back(toggleItem);
+
+	listItem = new SelectFromListMenuItem(MISC_WEATHER_CHANGE_CAPTIONS, onchange_weather_change_index);
+	listItem->wrap = false;
+	listItem->caption = "Change Weather";
+	listItem->value = WeatherChangeIndex;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(MISC_WEATHER_METHOD_CAPTIONS, onchange_weather_method_index);
+	listItem->wrap = false;
+	listItem->caption = "Method";
+	listItem->value = WeatherMethodIndex;
+	menuItems.push_back(listItem);
+
+	draw_generic_menu<int>(menuItems, &activeLineIndexWeatherConfig, caption, onconfirm_weathersettings_menu, NULL, NULL);
 }
 
 bool onconfirm_weather_menu(MenuItem<std::string> choice)
@@ -166,27 +214,7 @@ bool onconfirm_weather_menu(MenuItem<std::string> choice)
 	switch (choice.currentMenuIndex)
 	{
 	case 0:
-		// set weather
-		GAMEPLAY::CLEAR_OVERRIDE_WEATHER();
-		GAMEPLAY::CLEAR_WEATHER_TYPE_PERSIST();
-		GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
-
-		if (featureWeatherFreeze && !lastWeather.empty())
-		{
-			GRAPHICS::_CLEAR_CLOUD_HAT();
-			GAMEPLAY::SET_WEATHER_TYPE_NOW((char *)lastWeather.c_str());
-			std::stringstream ss; ss << "Weather frozen at: " << lastWeatherName;
-			set_status_text(ss.str());
-		}
-		else if (!featureWeatherFreeze)
-		{
-			set_status_text("Weather unfrozen");
-		}
-		else
-		{
-			set_status_text("Set a weather value first");
-			featureWeatherFreeze = false;
-		}
+		process_world_weathersettings_menu();
 		break;
 	case 1: 
 		// reset weather
@@ -229,23 +257,25 @@ void process_weather_menu()
 	std::string caption = "Weather Options";
 	
 	StringStandardOrToggleMenuDef lines[lineCount] = {
-		{ "Freeze Weather", "FREEZEWEATHER", &featureWeatherFreeze, NULL },
-		{ "Reset Weather", "RESETWEATHER", NULL, NULL },
-		{ "Extra Sunny", "EXTRASUNNY", NULL, NULL },
-		{ "Clear", "CLEAR", NULL, NULL },
-		{ "Cloudy", "CLOUDS", NULL, NULL },
-		{ "Smog", "SMOG", NULL, NULL },
-		{ "Foggy", "FOGGY", NULL, NULL },
-		{ "Overcast", "OVERCAST", NULL, NULL },
-		{ "Rain", "RAIN", NULL, NULL },
-		{ "Stormy", "THUNDER", NULL, NULL },
-		{ "Clearing", "CLEARING", NULL, NULL },
-		{ "Neutral", "NEUTRAL", NULL, NULL },
-		{ "Snow", "SNOW", NULL, NULL },
-		{ "Blizzard", "BLIZZARD", NULL, NULL },
-		{ "Light Snow", "SNOWLIGHT", NULL, NULL },
-		{ "Christmas", "XMAS", NULL, NULL },
-		{ "Halloween", "HALLOWEEN", NULL, NULL }
+	//StringStandardOrToggleMenuDef lines[lineCount] = {
+		//{ "Freeze Weather", "FREEZEWEATHER", &featureWeatherFreeze, NULL },
+		{ "Weather Settings", "FREEZEWEATHER", NULL, NULL, false },
+		{ "Reset Weather", "RESETWEATHER", NULL, NULL, true },
+		{ "Extra Sunny", "EXTRASUNNY", NULL, NULL, true },
+		{ "Clear", "CLEAR", NULL, NULL, true },
+		{ "Cloudy", "CLOUDS", NULL, NULL, true },
+		{ "Smog", "SMOG", NULL, NULL, true },
+		{ "Foggy", "FOGGY", NULL, NULL, true },
+		{ "Overcast", "OVERCAST", NULL, NULL, true },
+		{ "Rain", "RAIN", NULL, NULL, true },
+		{ "Stormy", "THUNDER", NULL, NULL, true },
+		{ "Clearing", "CLEARING", NULL, NULL, true },
+		{ "Neutral", "NEUTRAL", NULL, NULL, true },
+		{ "Snow", "SNOW", NULL, NULL, true },
+		{ "Blizzard", "BLIZZARD", NULL, NULL, true },
+		{ "Light Snow", "SNOWLIGHT", NULL, NULL, true },
+		{ "Christmas", "XMAS", NULL, NULL, true },
+		{ "Halloween", "HALLOWEEN", NULL, NULL, true }
 	};
 
 	draw_menu_from_struct_def(lines, lineCount, &activeLineIndexWeather, caption, onconfirm_weather_menu);
@@ -363,6 +393,16 @@ void onchange_freeroam_activities_index(int value, SelectFromListMenuItem* sourc
 void onchange_world_train_speed_index(int value, SelectFromListMenuItem* source) {
 	TrainSpeedIndex = value;
 	TrainSpeedChanged = true;
+}
+
+void onchange_weather_change_index(int value, SelectFromListMenuItem* source) {
+	WeatherChangeIndex = value;
+	WeatherChangeChanged = true;
+}
+
+void onchange_weather_method_index(int value, SelectFromListMenuItem* source) {
+	WeatherMethodIndex = value;
+	WeatherMethodChanged = true;
 }
 
 bool onconfirm_world_menu(MenuItem<int> choice)
@@ -644,6 +684,8 @@ void reset_world_globals()
 	featureLightsBlackoutIndex = 0;
 	featureFreeroamActivitiesIndex = 0;
 	TrainSpeedIndex = 0;
+	WeatherChangeIndex = 0;
+	WeatherMethodIndex = 0;
 	WindStrengthIndex = 0;
 	lastWeather.clear();
 	lastWeatherName.clear();
@@ -880,6 +922,102 @@ void update_world_features()
 		featureZancudoMapUpdated = true;
 	}
 	
+	// Change Weather
+	if (MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] > 0 && !featureWeatherFreeze) {
+		w_secs_passed = clock() / CLOCKS_PER_SEC;
+		if (((clock() / CLOCKS_PER_SEC) - w_secs_curr) != 0) {
+			w_seconds = w_seconds + 1;
+			w_secs_curr = w_secs_passed;
+		}
+		
+		int random_weather = (rand() % 14 + 0);
+		int random_weather2 = (rand() % 14 + 0);
+		char* cur_w;
+		//char* next_w;
+		char* rand_w;
+		char* rand_w2;
+		if (random_weather == 0) rand_w = "EXTRASUNNY";
+		if (random_weather2 == 0) rand_w2 = "EXTRASUNNY";
+		if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 2544503417) cur_w = "EXTRASUNNY";
+		//if (GAMEPLAY::GET_NEXT_WEATHER_TYPE_HASH_NAME() == 2544503417) next_w = "EXTRASUNNY";
+		if (random_weather == 1) rand_w = "CLEAR";
+		if (random_weather2 == 1) rand_w2 = "CLEAR";
+		if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 916995460) cur_w = "CLEAR";
+		//if (GAMEPLAY::GET_NEXT_WEATHER_TYPE_HASH_NAME() == 916995460) next_w = "CLEAR";
+		if (random_weather == 2) rand_w = "CLOUDS";
+		if (random_weather2 == 2) rand_w2 = "CLOUDS";
+		if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 821931868) cur_w = "CLOUDS";
+		//if (GAMEPLAY::GET_NEXT_WEATHER_TYPE_HASH_NAME() == 821931868) next_w = "CLOUDS";
+		if (random_weather == 3) rand_w = "SMOG";
+		if (random_weather2 == 3) rand_w2 = "SMOG";
+		if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 282916021) cur_w = "SMOG";
+		//if (GAMEPLAY::GET_NEXT_WEATHER_TYPE_HASH_NAME() == 282916021) next_w = "SMOG";
+		if (random_weather == 4) rand_w = "FOGGY";
+		if (random_weather2 == 4) rand_w2 = "FOGGY";
+		if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 2926802500) cur_w = "FOGGY";
+		//if (GAMEPLAY::GET_NEXT_WEATHER_TYPE_HASH_NAME() == 2926802500) next_w = "FOGGY";
+		if (random_weather == 5) rand_w = "OVERCAST";
+		if (random_weather2 == 5) rand_w2 = "OVERCAST";
+		if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3146353965) cur_w = "OVERCAST";
+		//if (GAMEPLAY::GET_NEXT_WEATHER_TYPE_HASH_NAME() == 3146353965) next_w = "OVERCAST";
+		if (random_weather == 6) rand_w = "RAIN";
+		if (random_weather2 == 6) rand_w2 = "RAIN";
+		if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 1420204096) cur_w = "RAIN";
+		//if (GAMEPLAY::GET_NEXT_WEATHER_TYPE_HASH_NAME() == 1420204096) next_w = "RAIN";
+		if (random_weather == 7) rand_w = "THUNDER";
+		if (random_weather2 == 7) rand_w2 = "THUNDER";
+		if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3061285535) cur_w = "THUNDER";
+		//if (GAMEPLAY::GET_NEXT_WEATHER_TYPE_HASH_NAME() == 3061285535) next_w = "THUNDER";
+		if (random_weather == 8) rand_w = "CLEARING";
+		if (random_weather2 == 8) rand_w2 = "CLEARING";
+		if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 1840358669) cur_w = "CLEARING";
+		//if (GAMEPLAY::GET_NEXT_WEATHER_TYPE_HASH_NAME() == 1840358669) next_w = "CLEARING";
+		if (random_weather == 9) rand_w = "NEUTRAL";
+		if (random_weather2 == 9) rand_w2 = "NEUTRAL";
+		if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 2764706598) cur_w = "NEUTRAL";
+		//if (GAMEPLAY::GET_NEXT_WEATHER_TYPE_HASH_NAME() == 2764706598) next_w = "NEUTRAL";
+		if (random_weather == 10) rand_w = "SNOW";
+		if (random_weather2 == 10) rand_w2 = "SNOW";
+		if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 4021743606) cur_w = "SNOW";
+		//if (GAMEPLAY::GET_NEXT_WEATHER_TYPE_HASH_NAME() == 4021743606) next_w = "SNOW";
+		if (random_weather == 11) rand_w = "BLIZZARD";
+		if (random_weather2 == 11) rand_w2 = "BLIZZARD";
+		if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 669657108) cur_w = "BLIZZARD";
+		//if (GAMEPLAY::GET_NEXT_WEATHER_TYPE_HASH_NAME() == 669657108) next_w = "BLIZZARD";
+		if (random_weather == 12) rand_w = "SNOWLIGHT";
+		if (random_weather2 == 12) rand_w2 = "SNOWLIGHT";
+		if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 603685163) cur_w = "SNOWLIGHT";
+		//if (GAMEPLAY::GET_NEXT_WEATHER_TYPE_HASH_NAME() == 603685163) next_w = "SNOWLIGHT";
+		if (random_weather == 13) rand_w = "XMAS";
+		if (random_weather2 == 13) rand_w2 = "XMAS";
+		if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 2865350805) cur_w = "XMAS";
+		//if (GAMEPLAY::GET_NEXT_WEATHER_TYPE_HASH_NAME() == 2865350805) next_w = "XMAS";
+		if (random_weather == 14) rand_w = "HALLOWEEN";
+		if (random_weather2 == 14) rand_w2 = "HALLOWEEN";
+		if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3373937154) cur_w = "HALLOWEEN";
+		//if (GAMEPLAY::GET_NEXT_WEATHER_TYPE_HASH_NAME() == 3373937154) next_w = "HALLOWEEN";
+		
+		if (w_seconds <= MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] && !lastWeather.empty() && MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 1) GAMEPLAY::SET_WEATHER_TYPE_NOW((char *)lastWeather.c_str());
+		if (w_seconds <= MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] && lastWeather.empty() && MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 1) GAMEPLAY::SET_WEATHER_TYPE_NOW(cur_w);
+		if (w_seconds <= MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] && MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 2) GAMEPLAY::_SET_WEATHER_TYPE_TRANSITION(GAMEPLAY::GET_HASH_KEY(mixed_w1), GAMEPLAY::GET_HASH_KEY(mixed_w2), 0.50f);
+		if (w_seconds > MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex]) {
+			if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 1 && rand_w != cur_w) lastWeather = rand_w;
+			//if (!featureWeatherRandom) lastWeather = next_w;
+			if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 2) {
+				mixed_w1 = rand_w;
+				mixed_w2 = rand_w2;
+			}
+			GAMEPLAY::CLEAR_OVERRIDE_WEATHER();
+			GAMEPLAY::CLEAR_WEATHER_TYPE_PERSIST();
+			GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
+			GRAPHICS::_CLEAR_CLOUD_HAT();
+			GAMEPLAY::_SET_WEATHER_TYPE_OVER_TIME((char *)lastWeather.c_str(), 1000);
+			//if (!featureWeatherRandom && !featureWeatherMixed) w_seconds = 0;
+			if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 1 && lastWeather == rand_w) w_seconds = 0;
+			if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 2) w_seconds = 0;
+		}
+	}
+
 	// Waves Intensity
 	if (featureSnow) {
 		winter_water_tick = winter_water_tick + 1;
@@ -1520,6 +1658,21 @@ void update_world_features()
 		VEHICLE::DELETE_ALL_TRAINS();
 	}
 
+	if (featureWeatherFreeze && featureWeatherFreezeUpdated == false) {
+		GAMEPLAY::CLEAR_OVERRIDE_WEATHER();
+		GAMEPLAY::CLEAR_WEATHER_TYPE_PERSIST();
+		GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
+
+		if (featureWeatherFreeze && !lastWeather.empty())
+		{
+			GRAPHICS::_CLEAR_CLOUD_HAT();
+			GAMEPLAY::SET_WEATHER_TYPE_NOW((char *)lastWeather.c_str());
+			std::stringstream ss; ss << "Weather frozen at: " << lastWeatherName;
+			set_status_text(ss.str());
+		}
+		featureWeatherFreezeUpdated = true;
+	}
+	if (!featureWeatherFreeze) featureWeatherFreezeUpdated = false;
 	if (featureWeatherFreeze && !lastWeather.empty())
 	{
 		GAMEPLAY::SET_WEATHER_TYPE_NOW((char *)lastWeather.c_str());
@@ -1629,6 +1782,8 @@ void add_world_feature_enablements2(std::vector<StringPairSettingDBRow>* results
 	results->push_back(StringPairSettingDBRow{ "featureLightsBlackoutIndex", std::to_string(featureLightsBlackoutIndex) });
 	results->push_back(StringPairSettingDBRow{ "featureFreeroamActivitiesIndex", std::to_string(featureFreeroamActivitiesIndex) });
 	results->push_back(StringPairSettingDBRow{ "TrainSpeedIndex", std::to_string(TrainSpeedIndex) });
+	results->push_back(StringPairSettingDBRow{ "WeatherChangeIndex", std::to_string(WeatherChangeIndex) });
+	results->push_back(StringPairSettingDBRow{ "WeatherMethodIndex", std::to_string(WeatherMethodIndex) });
 }
 
 void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings)
@@ -1690,6 +1845,12 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 		}
 		else if (setting.name.compare("TrainSpeedIndex") == 0) {
 			TrainSpeedIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("WeatherChangeIndex") == 0) {
+			WeatherChangeIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("WeatherMethodIndex") == 0) {
+			WeatherMethodIndex = stoi(setting.value);
 		}
 	}
 }

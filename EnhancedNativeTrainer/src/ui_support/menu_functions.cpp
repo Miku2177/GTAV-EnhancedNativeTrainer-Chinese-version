@@ -219,6 +219,7 @@ void draw_menu_from_struct_def(StringStandardOrToggleMenuDef defs[], int lineCou
 			item->toggleValue = defs[i].pState;
 			item->currentMenuIndex = i;
 			item->value = defs[i].value;
+			item->isLeaf = false;
 			if(defs[i].pUpdated != NULL){
 				item->toggleValueUpdated = defs[i].pUpdated;
 			}
@@ -229,6 +230,7 @@ void draw_menu_from_struct_def(StringStandardOrToggleMenuDef defs[], int lineCou
 			item->caption = defs[i].text;
 			item->value = defs[i].value;
 			item->currentMenuIndex = i;
+			item->isLeaf = defs[i].isLeaf;
 			menuItems.push_back(item);
 		}
 	}
