@@ -33,7 +33,6 @@ int activeLineIndexWeatherConfig = 0;
 char* mixed_w1 = "EXTRASUNNY";
 char* mixed_w2 = "CLEAR";
 float t_counter = 0.0;
-int cur_s = 0;
 int w_secs_passed, w_secs_curr, w_seconds = -1;
 
 int r, g, b = -1;
@@ -990,29 +989,23 @@ void update_world_features()
 			if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 1) {
 				if (rand_w1 != cur_w && t_counter == 0.0) {
 					lastWeather = rand_w1;
-					t_counter = t_counter + 0.02;
+					t_counter = t_counter + 0.01;
 				}
 				if (t_counter > 0.0) {
 					GAMEPLAY::_SET_WEATHER_TYPE_TRANSITION(GAMEPLAY::GET_HASH_KEY(cur_w), GAMEPLAY::GET_HASH_KEY((char *)lastWeather.c_str()), t_counter);
-					if (cur_s != w_seconds) {
-						cur_s = w_seconds;
-						t_counter = t_counter + 0.02;
-					}
+					t_counter = t_counter + 0.001;
 				}
 			}
 			if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 2) {
 				if (rand_w1 != rand_w2 && t_counter == 0.0) {
 					mixed_w1 = rand_w1;
 					mixed_w2 = rand_w2;
-					t_counter = t_counter + 0.02;
+					t_counter = 0.50;
 				}
 				if (t_counter > 0.0) {
-					GAMEPLAY::_SET_WEATHER_TYPE_TRANSITION(GAMEPLAY::GET_HASH_KEY(cur_w), GAMEPLAY::GET_HASH_KEY(mixed_w1), t_counter);
-					GAMEPLAY::_SET_WEATHER_TYPE_TRANSITION(GAMEPLAY::GET_HASH_KEY(cur_w), GAMEPLAY::GET_HASH_KEY(mixed_w2), t_counter);
-					if (cur_s != w_seconds) {
-						cur_s = w_seconds;
-						t_counter = t_counter + 0.02;
-					}
+					if (t_counter <= 1.0) GAMEPLAY::_SET_WEATHER_TYPE_TRANSITION(GAMEPLAY::GET_HASH_KEY(cur_w), GAMEPLAY::GET_HASH_KEY(cur_w), t_counter);
+					if (t_counter > 1.0) GAMEPLAY::_SET_WEATHER_TYPE_TRANSITION(GAMEPLAY::GET_HASH_KEY(cur_w), GAMEPLAY::GET_HASH_KEY(mixed_w2), t_counter - 1.0);
+					t_counter = t_counter + 0.05;
 				}
 			}
 
@@ -1021,13 +1014,13 @@ void update_world_features()
 			if (t_counter == 0.56) GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
 			if (t_counter == 0.58) GRAPHICS::_CLEAR_CLOUD_HAT();
 
-			if (t_counter > 1.0) {
+			if ((MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 1 && t_counter > 1.0) || (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 2 && t_counter > 1.5)) {
 				w_seconds = 0;
 				t_counter = 0.0;
 			}
 		}
 	}
-
+	
 	// Waves Intensity
 	if (featureSnow) {
 		winter_water_tick = winter_water_tick + 1;
