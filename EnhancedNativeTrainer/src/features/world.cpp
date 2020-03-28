@@ -1000,7 +1000,7 @@ void update_world_features()
 				if (rand_w1 != rand_w2 && t_counter == 0.0) {
 					mixed_w1 = rand_w1;
 					mixed_w2 = rand_w2;
-					t_counter = 0.50;
+					t_counter = 0.30;
 				}
 				if (t_counter > 0.0) {
 					if (t_counter <= 1.0) GAMEPLAY::_SET_WEATHER_TYPE_TRANSITION(GAMEPLAY::GET_HASH_KEY(cur_w), GAMEPLAY::GET_HASH_KEY(cur_w), t_counter);
@@ -1009,10 +1009,10 @@ void update_world_features()
 				}
 			}
 
-			if (t_counter == 0.44) GAMEPLAY::CLEAR_OVERRIDE_WEATHER();
-			if (t_counter == 0.48) GAMEPLAY::CLEAR_WEATHER_TYPE_PERSIST();
-			if (t_counter == 0.56) GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
-			if (t_counter == 0.58) GRAPHICS::_CLEAR_CLOUD_HAT();
+			if (t_counter == 0.35) GAMEPLAY::CLEAR_OVERRIDE_WEATHER();
+			if (t_counter == 0.40) GAMEPLAY::CLEAR_WEATHER_TYPE_PERSIST();
+			if (t_counter == 0.45) GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
+			if (t_counter == 0.50) GRAPHICS::_CLEAR_CLOUD_HAT();
 
 			if ((MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 1 && t_counter > 1.0) || (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 2 && t_counter > 1.5)) {
 				w_seconds = 0;
@@ -1020,7 +1020,7 @@ void update_world_features()
 			}
 		}
 	}
-	
+
 	// Waves Intensity
 	if (featureSnow) {
 		winter_water_tick = winter_water_tick + 1;
