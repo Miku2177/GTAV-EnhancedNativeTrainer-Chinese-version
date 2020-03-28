@@ -3725,8 +3725,8 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		Vehicle myVehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		if (((ENTITY::GET_ENTITY_SPEED(myVehicle) * 3.6) < 1) && CONTROLS::IS_CONTROL_JUST_PRESSED(2, 71) && !is_in_airbrake_mode()) {
 			AI::TASK_VEHICLE_TEMP_ACTION(playerPed, myVehicle, 30, 700); // 500
-			WAIT(400);
-			VEHICLE::SET_VEHICLE_FORWARD_SPEED(myVehicle, 2);
+			WAIT(800); // 400
+			VEHICLE::SET_VEHICLE_FORWARD_SPEED(myVehicle, 1); // 2
 		}
 		if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] == 1) { // arcade
 			if (VEHICLE::IS_VEHICLE_ON_ALL_WHEELS(myVehicle) && VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(myVehicle))) {
