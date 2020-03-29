@@ -43,6 +43,7 @@ bool snow_e = false;
 
 // peds chance to slip
 int s_tick_secs, s_tick_secs_passed, s_tick_secs_curr = 0;
+int l_tick_secs_curr, lightning_seconds = 0;
 bool slipped = false;
 Ped temp_ped_s = -1;
 
@@ -118,8 +119,6 @@ std::string lastCloudsName;
 
 BOOL lightsBAutoOn = -1;
 BOOL highbeamsBAutoOn = -1;
-
-int Lightning_seconds = 0; 
 
 // Radar Map Size
 const std::vector<std::string> WORLD_RADAR_MAP_CAPTIONS{ "Normal", "Big", "Full" };
@@ -204,6 +203,18 @@ void process_world_weathersettings_menu() {
 	listItem->wrap = false;
 	listItem->caption = "Method";
 	listItem->value = WeatherMethodIndex;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(WORLD_LIGHTNING_INTENSITY_CAPTIONS, onchange_lightning_intensity_index);
+	listItem->wrap = false;
+	listItem->caption = "Lightning Intensity";
+	listItem->value = featureLightIntensityIndex;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(WORLD_WAVES_CAPTIONS, onchange_world_waves_index);
+	listItem->wrap = false;
+	listItem->caption = "Waves Intensity";
+	listItem->value = WorldWavesIndex;
 	menuItems.push_back(listItem);
 
 	draw_generic_menu<int>(menuItems, &activeLineIndexWeatherConfig, caption, onconfirm_weathersettings_menu, NULL, NULL);
@@ -649,18 +660,6 @@ void process_world_menu()
 	togItem->toggleValue = &featureAcidRain;
 	menuItems.push_back(togItem);
 
-	listItem = new SelectFromListMenuItem(WORLD_WAVES_CAPTIONS, onchange_world_waves_index);
-	listItem->wrap = false;
-	listItem->caption = "Waves Intensity";
-	listItem->value = WorldWavesIndex;
-	menuItems.push_back(listItem);
-
-	listItem = new SelectFromListMenuItem(WORLD_LIGHTNING_INTENSITY_CAPTIONS, onchange_lightning_intensity_index);
-	listItem->wrap = false;
-	listItem->caption = "Lightning Intensity";
-	listItem->value = featureLightIntensityIndex;
-	menuItems.push_back(listItem);
-
 	listItem = new SelectFromListMenuItem(WORLD_FREEROAM_ACTIVITIES_CAPTIONS, onchange_freeroam_activities_index);
 	listItem->wrap = false;
 	listItem->caption = "No Freeroam Activities";
@@ -1000,11 +999,11 @@ void update_world_features()
 				if (rand_w1 != rand_w2 && t_counter == 0.0) {
 					mixed_w1 = rand_w1;
 					mixed_w2 = rand_w2;
-					t_counter = 0.30;
+					t_counter = t_counter + 0.05;
 				}
 				if (t_counter > 0.0) {
-					if (t_counter <= 1.0) GAMEPLAY::_SET_WEATHER_TYPE_TRANSITION(GAMEPLAY::GET_HASH_KEY(cur_w), GAMEPLAY::GET_HASH_KEY(cur_w), t_counter);
-					if (t_counter > 1.0) GAMEPLAY::_SET_WEATHER_TYPE_TRANSITION(GAMEPLAY::GET_HASH_KEY(cur_w), GAMEPLAY::GET_HASH_KEY(mixed_w2), t_counter - 1.0);
+					GAMEPLAY::_SET_WEATHER_TYPE_TRANSITION(GAMEPLAY::GET_HASH_KEY(cur_w), GAMEPLAY::GET_HASH_KEY(mixed_w1), t_counter);
+					GAMEPLAY::_SET_WEATHER_TYPE_TRANSITION(GAMEPLAY::GET_HASH_KEY(cur_w), GAMEPLAY::GET_HASH_KEY(mixed_w2), t_counter);
 					t_counter = t_counter + 0.05;
 				}
 			}
@@ -1014,7 +1013,7 @@ void update_world_features()
 			if (t_counter == 0.45) GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
 			if (t_counter == 0.50) GRAPHICS::_CLEAR_CLOUD_HAT();
 
-			if ((MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 1 && t_counter > 1.0) || (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 2 && t_counter > 1.5)) {
+			if ((MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 1 && t_counter > 1.0) || (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 2 && t_counter > 1.0)) { // 1.5
 				w_seconds = 0;
 				t_counter = 0.0;
 			}
@@ -1041,14 +1040,14 @@ void update_world_features()
 	// Lightning Intensity
 	if (WORLD_LIGHTNING_INTENSITY_VALUES[featureLightIntensityIndex] > -2 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3061285535) { // GET_NEXT_WEATHER_TYPE_HASH_NAME
 		s_tick_secs_passed = clock() / CLOCKS_PER_SEC;
-		if (((clock() / CLOCKS_PER_SEC) - s_tick_secs_curr) != 0) {
-			Lightning_seconds = Lightning_seconds + 1;
-			s_tick_secs_curr = s_tick_secs_passed;
+		if (((clock() / CLOCKS_PER_SEC) - l_tick_secs_curr) != 0) {
+			lightning_seconds = lightning_seconds + 1;
+			l_tick_secs_curr = s_tick_secs_passed;
 		}
 		
-		if (Lightning_seconds > WORLD_LIGHTNING_INTENSITY_VALUES[featureLightIntensityIndex]) {
+		if (lightning_seconds > WORLD_LIGHTNING_INTENSITY_VALUES[featureLightIntensityIndex]) {
 			GAMEPLAY::_CREATE_LIGHTNING_THUNDER();
-			Lightning_seconds = 0;
+			lightning_seconds = 0;
 		}
 	}
 
@@ -1666,21 +1665,18 @@ void update_world_features()
 		GAMEPLAY::CLEAR_WEATHER_TYPE_PERSIST();
 		GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
 
-		if (featureWeatherFreeze && !lastWeather.empty())
-		{
+		if (/*featureWeatherFreeze && */!lastWeather.empty()) {
 			GRAPHICS::_CLEAR_CLOUD_HAT();
 			GAMEPLAY::SET_WEATHER_TYPE_NOW((char *)lastWeather.c_str());
+			//GAMEPLAY::SET_WEATHER_TYPE_NOW_PERSIST((char *)lastWeather.c_str());
 			std::stringstream ss; ss << "Weather frozen at: " << lastWeatherName;
 			set_status_text(ss.str());
 		}
 		featureWeatherFreezeUpdated = true;
 	}
-	if (!featureWeatherFreeze) featureWeatherFreezeUpdated = false;
-	if (featureWeatherFreeze && !lastWeather.empty())
-	{
-		GAMEPLAY::SET_WEATHER_TYPE_NOW((char *)lastWeather.c_str());
-	}
-
+	if (!featureWeatherFreeze && featureWeatherFreezeUpdated == true) featureWeatherFreezeUpdated = false;
+	if (featureWeatherFreeze && !lastWeather.empty()) GAMEPLAY::SET_WEATHER_TYPE_NOW((char *)lastWeather.c_str());
+	
 	if (featureCloudsFreeze && !lastClouds.empty())
 	{
 		GRAPHICS::_SET_CLOUD_HAT_TRANSITION((char *)lastClouds.c_str(), 1.0);
