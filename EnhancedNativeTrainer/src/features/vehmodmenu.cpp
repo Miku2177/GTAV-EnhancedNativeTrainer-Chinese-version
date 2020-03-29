@@ -2180,11 +2180,17 @@ void randomize_vehicle_upgrades(Vehicle veh) {
 			VEHICLE::TOGGLE_VEHICLE_MOD(veh, a, rand_toggle);
 		}
 		else {
-			int rand_category = (rand() % (VEHICLE::GET_NUM_VEHICLE_MODS(veh, a) - 1) + 0);
-			VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
-			VEHICLE::SET_VEHICLE_MOD(veh, a, rand_category, 1);
+			int mods = VEHICLE::GET_NUM_VEHICLE_MODS(veh, a);
+			int rand_category = -1;
+			if (mods > 0) {
+				if (mods > 1) rand_category = (rand() % (mods - 1) + 0);
+				else rand_category = 0;
+				VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
+				VEHICLE::SET_VEHICLE_MOD(veh, a, rand_category, 1);
+			}
 		}
 	}
+
 	int rand_tint = (rand() % 6 + 0);
 	VEHICLE::SET_VEHICLE_WINDOW_TINT(veh, rand_tint);
 	for (int a = 0; a < 4; a++) {
