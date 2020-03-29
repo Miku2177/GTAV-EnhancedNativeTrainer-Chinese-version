@@ -35,6 +35,8 @@ char* mixed_w2 = "CLEAR";
 float t_counter = 0.0;
 int w_secs_passed, w_secs_curr, w_seconds = -1;
 
+float freeze_counter = 0.0;
+
 int r, g, b = -1;
 
 int acid_counter, acid_counter_p = -1;
@@ -250,7 +252,7 @@ bool onconfirm_weather_menu(MenuItem<std::string> choice)
 			GRAPHICS::_CLEAR_CLOUD_HAT();
 
 			GAMEPLAY::SET_WEATHER_TYPE_NOW((char *)lastWeather.c_str());
-			if (GAMEPLAY::GET_NEXT_WEATHER_TYPE_HASH_NAME() == 3061285535) GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 1.0);
+			if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3061285535) GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 1.0);
 			GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
 		}
 
@@ -1008,10 +1010,13 @@ void update_world_features()
 				}
 			}
 
-			if (t_counter == 0.35) GAMEPLAY::CLEAR_OVERRIDE_WEATHER();
-			if (t_counter == 0.40) GAMEPLAY::CLEAR_WEATHER_TYPE_PERSIST();
-			if (t_counter == 0.45) GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
-			if (t_counter == 0.50) GRAPHICS::_CLEAR_CLOUD_HAT();
+			if (t_counter > 0.40 && t_counter < 0.60) {
+				GAMEPLAY::CLEAR_OVERRIDE_WEATHER();
+				GAMEPLAY::CLEAR_WEATHER_TYPE_PERSIST();
+				GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
+				GRAPHICS::_CLEAR_CLOUD_HAT();
+				if (mixed_w1 == "THUNDER" || mixed_w2 == "THUNDER" || lastWeather == "THUNDER") GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 1.0);
+			}
 
 			if ((MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 1 && t_counter > 1.0) || (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 2 && t_counter > 1.0)) { // 1.5
 				w_seconds = 0;
@@ -1661,21 +1666,26 @@ void update_world_features()
 	}
 
 	if (featureWeatherFreeze && featureWeatherFreezeUpdated == false) {
+		freeze_counter = freeze_counter + 0.05;
 		GAMEPLAY::CLEAR_OVERRIDE_WEATHER();
 		GAMEPLAY::CLEAR_WEATHER_TYPE_PERSIST();
 		GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
 
 		if (/*featureWeatherFreeze && */!lastWeather.empty()) {
 			GRAPHICS::_CLEAR_CLOUD_HAT();
+			if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3061285535) GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 1.0);
 			GAMEPLAY::SET_WEATHER_TYPE_NOW((char *)lastWeather.c_str());
-			//GAMEPLAY::SET_WEATHER_TYPE_NOW_PERSIST((char *)lastWeather.c_str());
-			std::stringstream ss; ss << "Weather frozen at: " << lastWeatherName;
-			set_status_text(ss.str());
 		}
-		featureWeatherFreezeUpdated = true;
+		if (freeze_counter > 0.30) featureWeatherFreezeUpdated = true;
 	}
-	if (!featureWeatherFreeze && featureWeatherFreezeUpdated == true) featureWeatherFreezeUpdated = false;
-	if (featureWeatherFreeze && !lastWeather.empty()) GAMEPLAY::SET_WEATHER_TYPE_NOW((char *)lastWeather.c_str());
+	if (!featureWeatherFreeze && featureWeatherFreezeUpdated == true) {
+		featureWeatherFreezeUpdated = false;
+		freeze_counter = 0.0;
+	}
+	if (featureWeatherFreeze && !lastWeather.empty() && featureWeatherFreezeUpdated == true) {
+		GAMEPLAY::SET_WEATHER_TYPE_NOW((char *)lastWeather.c_str());
+		freeze_counter = 0.0;
+	}
 	
 	if (featureCloudsFreeze && !lastClouds.empty())
 	{
