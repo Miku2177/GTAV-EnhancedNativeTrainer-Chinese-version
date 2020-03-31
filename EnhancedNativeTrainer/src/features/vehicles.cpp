@@ -52,6 +52,9 @@ int veh_jumped_n = 0;
 
 int Accel_secs_passed, Accel_secs_curr, Accel_seconds = 0;
 
+bool reversing_c = false;
+bool accelerating_c = false; 
+
 Vehicle current_veh_e = -1;
 Vehicle temp_vehicle, playerVehicle_s = -1;
 Ped temp_ped = -1;
@@ -92,6 +95,7 @@ bool featureTractionControl = false;
 bool featureSticktoground = false;
 bool featureDropSpikes = false;
 bool featureAirStrike = false;
+bool featureReverseWhenBraking = false;
 bool featureEngineRunning = false;
 bool featureNoVehFlip = false;
 bool featureAutoToggleLights = false;
@@ -2130,6 +2134,12 @@ void process_veh_menu(){
 	item->isLeaf = false;
 	menuItems.push_back(item);
 
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Disable Reverse When Braking";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureReverseWhenBraking;
+	menuItems.push_back(toggleItem);
+
 	draw_generic_menu<int>(menuItems, &activeLineIndexVeh, caption, onconfirm_veh_menu, NULL, NULL);
 }
 
@@ -2535,6 +2545,26 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			if (VEH_INFINITEBOOST_VALUES[InfiniteBoostIndex] == 2) {
 				VEHICLE::_SET_VEHICLE_ROCKET_BOOST_REFILL_TIME(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 0.0f);
 				VEHICLE::_SET_VEHICLE_ROCKET_BOOST_PERCENTAGE(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 100.0f);
+			}
+		}
+	}
+
+	// Disable Reverse When Braking
+	if (featureReverseWhenBraking && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
+		Vehicle brakecar = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+		if (VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(brakecar)) || VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(brakecar)) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(brakecar)) ||
+			VEHICLE::IS_THIS_MODEL_A_BOAT(ENTITY::GET_ENTITY_MODEL(brakecar))) {
+			float veh_c_s = ENTITY::GET_ENTITY_SPEED(PED::GET_VEHICLE_PED_IS_USING(playerPed));
+				if (CONTROLS::IS_CONTROL_PRESSED(2, 71) && veh_c_s > 1.0) accelerating_c = true; // accelerating
+				if (CONTROLS::IS_CONTROL_PRESSED(2, 72) && veh_c_s < 0.9 && accelerating_c == true) { // reversing/braking
+					CONTROLS::DISABLE_CONTROL_ACTION(2, 72, 1);
+					VEHICLE::SET_VEHICLE_BRAKE_LIGHTS(PED::GET_VEHICLE_PED_IS_USING(playerPed), true);
+					reversing_c = true;
+				}
+			if (CONTROLS::IS_DISABLED_CONTROL_JUST_RELEASED(2, 72) /*&& veh_c_s > 0.4*/ && reversing_c == true) {
+				CONTROLS::ENABLE_CONTROL_ACTION(2, 72, 1);
+				accelerating_c = false;
+				reversing_c = false;
 			}
 		}
 	}
@@ -3965,6 +3995,7 @@ void reset_vehicle_globals() {
 		featureSticktoground =
 		featureDropSpikes =
 		featureAirStrike =
+		featureReverseWhenBraking =
 		featureEngineRunning =
 		featureNoVehFlip =
 		featureAutoToggleLights =
@@ -4269,6 +4300,7 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureSticktoground", &featureSticktoground});
 	results->push_back(FeatureEnabledLocalDefinition{"featureDropSpikes", &featureDropSpikes});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAirStrike", &featureAirStrike});
+	results->push_back(FeatureEnabledLocalDefinition{"featureReverseWhenBraking", &featureReverseWhenBraking});
 	results->push_back(FeatureEnabledLocalDefinition{"featureEngineRunning", &featureEngineRunning});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoVehFlip", &featureNoVehFlip});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAutoToggleLights", &featureAutoToggleLights});
