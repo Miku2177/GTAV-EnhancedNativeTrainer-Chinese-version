@@ -13,6 +13,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "bodyguards.h"
 #include "script.h"
 #include "hotkeys.h"
+#include "area_effect.h"
 
 int activeLineIndexBodyguards = 0;
 
@@ -40,6 +41,8 @@ bool featureDifferentWeapons = false;
 bool featureRandomApp = false;
 bool featureBodyguardOnMap = false;
 bool featureBodyguardInfAmmo = false;
+
+int BodyWeaponSetIndex = 0;
 
 bool hotkey_b = false;
 
@@ -485,7 +488,7 @@ void save_current_bod_skin(int slot)
 			}
 			else
 			{
-				ss << "Saved Skin " << (lastKnownSavedBodSkinCount + 1);
+				ss << "Saved Bodyguard " << (lastKnownSavedBodSkinCount + 1);
 			}
 
 			auto existingText = ss.str();
@@ -497,7 +500,7 @@ void save_current_bod_skin(int slot)
 				if (database->save_bod_skin(spawnedENTBodyguards[b_curr_num], result, slot))
 				{
 					activeSavedBodSkinSlotName = result;
-					set_status_text("Saved skin");
+					set_status_text("Saved bodyguard");
 				}
 				else
 				{
@@ -1298,7 +1301,7 @@ void do_spawn_bodyguard(){
 			if (bodyguard_animal == false) PED::SET_PED_FIRING_PATTERN(bodyGuard, GAMEPLAY::GET_HASH_KEY("FIRING_PATTERN_FULL_AUTO")); // 0xC6EE6B4C
 
 			// Different Weapons
-			if (featureDifferentWeapons/* && load_saved_bodyguard == false*/) {
+			if (featureDifferentWeapons && PED_WEAPON_TITLES[BodyWeaponSetIndex] == "Custom Weapon"/* && load_saved_bodyguard == false*/) {
 				if (WEAPONS.empty()) {
 					for (int a = 0; a < MENU_WEAPON_CATEGORIES.size(); a++) {
 						for (int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++) {
@@ -1317,6 +1320,19 @@ void do_spawn_bodyguard(){
 					WEAPON::SET_PED_CURRENT_WEAPON_VISIBLE(bodyGuard, true, false, 1, 1);
 				}
 				if (pop == all_selected) pop = -1;
+			}
+			if (featureDifferentWeapons && PED_WEAPON_TITLES[BodyWeaponSetIndex] != "Custom Weapon") {
+				std::vector<std::string> weaponBSet = VOV_PED_WEAPONS[BodyWeaponSetIndex];
+				int index = rand() % weaponBSet.size();
+				std::string weaponB = weaponBSet.at(index);
+				Hash weapBHash = GAMEPLAY::GET_HASH_KEY((char *)weaponB.c_str());
+
+				if (bodyguard_animal == false) WEAPON::GIVE_WEAPON_TO_PED(bodyGuard, weapBHash, 1000, false, true);
+				if (added_nearest_b == true && !WEAPON::IS_PED_ARMED(bodyGuard, 7)) {
+					WEAPON::GIVE_WEAPON_TO_PED(bodyGuard, weapBHash, 999, false, true);
+					WEAPON::SET_CURRENT_PED_WEAPON(bodyGuard, weapBHash, 1);
+					WEAPON::SET_PED_CURRENT_WEAPON_VISIBLE(bodyGuard, true, false, 1, 1);
+				}
 			}
 			
 			if (!featureDifferentWeapons && load_saved_bodyguard == false) {
@@ -1770,13 +1786,6 @@ bool process_bodyguard_menu(){
 		toggleItem->toggleValueUpdated = NULL;
 		menuItems.push_back(toggleItem);
 
-		toggleItem = new ToggleMenuItem<int>();
-		toggleItem->caption = "Different Weapons";
-		toggleItem->value = i++;
-		toggleItem->toggleValue = &featureDifferentWeapons;
-		toggleItem->toggleValueUpdated = NULL;
-		menuItems.push_back(toggleItem);
-
 		listItem = new SelectFromListMenuItem(BODY_BLIPSIZE_CAPTIONS, onchange_body_distance_index);
 		listItem->wrap = false;
 		listItem->caption = "Spawn Distance";
@@ -1806,6 +1815,19 @@ bool process_bodyguard_menu(){
 		listItem->wrap = false;
 		listItem->caption = "Bodyguard Health";
 		listItem->value = BodyHealthIndex;
+		menuItems.push_back(listItem);
+
+		toggleItem = new ToggleMenuItem<int>();
+		toggleItem->caption = "Different Weapons";
+		toggleItem->value = i++;
+		toggleItem->toggleValue = &featureDifferentWeapons;
+		toggleItem->toggleValueUpdated = NULL;
+		menuItems.push_back(toggleItem);
+
+		listItem = new SelectFromListMenuItem(PED_WEAPON_TITLES, onchange_bodyguards_body_weapons);
+		listItem->wrap = false;
+		listItem->caption = "Armed With...";
+		listItem->value = BodyWeaponSetIndex;
 		menuItems.push_back(listItem);
 
 		if(!bodyguardWeaponsToggleInitialized){
@@ -1888,6 +1910,7 @@ void add_bodyguards_feature_enablements2(std::vector<StringPairSettingDBRow>* re
 	results->push_back(StringPairSettingDBRow{ "BodyBlipSymbolIndex", std::to_string(BodyBlipSymbolIndex) });
 	results->push_back(StringPairSettingDBRow{ "BodyBlipFlashIndex", std::to_string(BodyBlipFlashIndex) });
 	results->push_back(StringPairSettingDBRow{ "FollowInVehicleIndex", std::to_string(FollowInVehicleIndex) });
+	results->push_back(StringPairSettingDBRow{ "BodyWeaponSetIndex", std::to_string(BodyWeaponSetIndex) });
 	results->push_back(StringPairSettingDBRow{ "BodyHealthIndex", std::to_string(BodyHealthIndex) });
 }
 
@@ -1938,6 +1961,9 @@ void handle_generic_settings_bodyguards(std::vector<StringPairSettingDBRow>* set
 		else if (setting.name.compare("FollowInVehicleIndex") == 0) {
 			FollowInVehicleIndex = stoi(setting.value);
 		}
+		else if (setting.name.compare("BodyWeaponSetIndex") == 0) {
+			BodyWeaponSetIndex = stoi(setting.value);
+		}
 		else if (setting.name.compare("BodyHealthIndex") == 0) {
 			BodyHealthIndex = stoi(setting.value);
 		}
@@ -1972,6 +1998,7 @@ void reset_bodyguards_globals(){
 	BodyBlipSymbolIndex = 0;
 	BodyBlipFlashIndex = 0;
 	FollowInVehicleIndex = 0;
+	BodyWeaponSetIndex = 0;
 	BodyHealthIndex = 6;
 }
 
@@ -1993,6 +2020,10 @@ void onchange_body_groupformation_index(int value, SelectFromListMenuItem* sourc
 void onchange_follow_invehicle_index(int value, SelectFromListMenuItem* source) {
 	FollowInVehicleIndex = value;
 	FollowInVehicleChanged = true;
+}
+
+void onchange_bodyguards_body_weapons(int value, SelectFromListMenuItem* source) {
+	BodyWeaponSetIndex = value;
 }
 
 void onchange_body_health_index(int value, SelectFromListMenuItem* source) {
