@@ -1505,7 +1505,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		featureLockVehicleDoorsUpdated = false;
 	}
 
-	// DYNAMIC HEALTH BAR
+	// Dynamic Health Bar
 	if (featureDynamicHealthBar && !CUTSCENE::IS_CUTSCENE_PLAYING()) {
 		if (!featureMiscHideHud && !featurePhoneShowHud && !featureInVehicleNoHud && !featureMarkerHud && !featureMiscHideENTHud) UI::DISPLAY_RADAR(false); // There is no need to hide HUD if it's already hidden
 		
