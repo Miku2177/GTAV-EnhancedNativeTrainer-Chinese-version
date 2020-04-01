@@ -240,10 +240,12 @@ bool onconfirm_weather_menu(MenuItem<std::string> choice)
 		GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
 		lastWeather = "EXTRASUNNY";
 		lastWeatherName = "Extra Sunny";
+		mixed_w1 = "EXTRASUNNY";
 		break;
 	default:
 		lastWeather = choice.value.c_str();
 		lastWeatherName = choice.caption;
+		mixed_w1 = (char *)lastWeather.c_str();
 
 		if (!lastWeather.empty()) {
 			GAMEPLAY::CLEAR_OVERRIDE_WEATHER();
