@@ -2556,13 +2556,13 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			VEHICLE::IS_THIS_MODEL_A_BOAT(ENTITY::GET_ENTITY_MODEL(brakecar))) {
 			float veh_c_s = ENTITY::GET_ENTITY_SPEED(PED::GET_VEHICLE_PED_IS_USING(playerPed));
 				if (CONTROLS::IS_CONTROL_PRESSED(2, 71) && veh_c_s > 1.0) accelerating_c = true; // accelerating
-				if (CONTROLS::IS_CONTROL_PRESSED(2, 72) && veh_c_s < 0.9 && accelerating_c == true) { // reversing/braking
-					CONTROLS::DISABLE_CONTROL_ACTION(2, 72, 1);
+				if (CONTROLS::IS_CONTROL_JUST_PRESSED(2, 72) && accelerating_c == true) CONTROLS::DISABLE_CONTROL_ACTION(2, 72, 1); 
+				if (CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, 72) && veh_c_s < 0.9 && accelerating_c == true) { // reversing/braking
+					AI::TASK_VEHICLE_TEMP_ACTION(playerPed, PED::GET_VEHICLE_PED_IS_USING(playerPed), 6, 100);
 					VEHICLE::SET_VEHICLE_BRAKE_LIGHTS(PED::GET_VEHICLE_PED_IS_USING(playerPed), true);
 					reversing_c = true;
 				}
-			if (CONTROLS::IS_DISABLED_CONTROL_JUST_RELEASED(2, 72) /*&& veh_c_s > 0.4*/ && reversing_c == true) {
-				CONTROLS::ENABLE_CONTROL_ACTION(2, 72, 1);
+			if (CONTROLS::IS_DISABLED_CONTROL_JUST_RELEASED(2, 72) && reversing_c == true) {
 				accelerating_c = false;
 				reversing_c = false;
 			}

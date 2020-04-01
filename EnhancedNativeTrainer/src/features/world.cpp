@@ -998,10 +998,11 @@ void update_world_features()
 				}
 			}
 			if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 2) {
-				if (rand_w1 != rand_w2 && t_counter == 0.0) {
+				if (rand_w1 != rand_w2 && mixed_w1 != rand_w1 && mixed_w2 != rand_w2 && mixed_w1 != rand_w2 && mixed_w2 != rand_w1 && t_counter == 0.0) {
 					mixed_w1 = rand_w1;
 					mixed_w2 = rand_w2;
-					t_counter = t_counter + 0.05;
+					//t_counter = t_counter + 0.05;
+					t_counter = 0.50;
 				}
 				if (t_counter > 0.0) {
 					GAMEPLAY::_SET_WEATHER_TYPE_TRANSITION(GAMEPLAY::GET_HASH_KEY(cur_w), GAMEPLAY::GET_HASH_KEY(mixed_w1), t_counter);
