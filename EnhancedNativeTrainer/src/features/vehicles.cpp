@@ -3521,6 +3521,10 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				VEHICLE::SET_VEHICLE_CAN_BREAK(vehnoflip, true);
 				VEHICLE::SET_VEHICLE_OUT_OF_CONTROL(vehnoflip, false, false);
 			}
+			float height_a_g = -1;
+			GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(veh_flip.x, veh_flip.y, veh_flip.z, &height_a_g);
+			if (veh_flip.z - height_a_g > 2.0) VEHICLE::SET_VEHICLE_OUT_OF_CONTROL(vehnoflip, false, false);
+
 			if ((veh_flips_speed * 2.3) > 50 && (ENTITY::GET_ENTITY_ROLL(vehnoflip) > 50 || ENTITY::GET_ENTITY_ROLL(vehnoflip) < -50)) { // (veh_flips_speed * 3.6) > 50
 				VEHICLE::SET_VEHICLE_CEILING_HEIGHT(vehnoflip, 0.0);
 				VEHICLE::SET_VEHICLE_DAMAGE(vehnoflip, veh_flip.x, veh_flip.y, veh_flip.z, 1000, 100, true);
