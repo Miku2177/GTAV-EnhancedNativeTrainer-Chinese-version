@@ -28,7 +28,6 @@ bool DEBUG_MODE_SKINS = false;
 bool featurenoblood = false;
 
 // auto skin variables
-bool featureautoskin = false;
 bool auto_skin = false;
 bool reset_skin = false;
 int skin_tick, skin_tick_secs_passed, skin_tick_secs_curr = 0;
@@ -63,6 +62,12 @@ int skinTypesMenuPositionMemory[4] = { 0, 0, 0, 0 }; //player, animals, general,
 int ResetSkinOnDeathIndex = 0;
 bool ResetSkinOnDeathChanged = true;
 
+// Auto Apply Last Saved Skin
+const std::vector<std::string> SKINS_AUTO_SKIN_SAVED_CAPTIONS{ "OFF", "Restore Character", "Saved Character Only", "Current Character" };
+const int SKINS_AUTO_SKIN_SAVED_VALUES[] = { 0, 1, 2, 3 };
+int AutoApplySkinSavedIndex = 0;
+bool AutoApplySkinSavedChanged = true;
+
 /***
 * METHODS
 */
@@ -72,13 +77,18 @@ void onchange_skins_reset_skin_ondeath_index(int value, SelectFromListMenuItem* 
 	ResetSkinOnDeathChanged = true;
 }
 
+void onchange_auto_apply_skin_saved_index(int value, SelectFromListMenuItem* source) {
+	AutoApplySkinSavedIndex = value;
+	AutoApplySkinSavedChanged = true;
+}
+
 void reset_skin_globals()
 {
 	//chosenSkinName = "";
 	activeLineIndexSkinChanger = 0;
 	featurenoblood = false;
-	featureautoskin = false;
 	ResetSkinOnDeathIndex = 0;
+	AutoApplySkinSavedIndex = 0;
 }
 
 /*
@@ -248,7 +258,7 @@ void onexit_skinchanger_texture_menu(bool returnValue)
 void update_skin_features() {
 	if (featurenoblood) PED::CLEAR_PED_BLOOD_DAMAGE(PLAYER::PLAYER_PED_ID());
 
-	if (featureautoskin) {
+	if (SKINS_AUTO_SKIN_SAVED_VALUES[AutoApplySkinSavedIndex] > 0) {
 		if (auto_skin == false) {
 			skin_tick_secs_passed = clock() / CLOCKS_PER_SEC;
 			if (((clock() / (CLOCKS_PER_SEC / 1000)) - skin_tick_secs_curr) != 0) {
@@ -271,22 +281,29 @@ void update_skin_features() {
 					SavedSkinDBRow* savedSkin = savedSkins.at(0);
 					database->populate_saved_skin(savedSkin);
 
-					if (model != -1) { 
-						applyChosenSkin(savedSkin->model);
+					bool right_model = false;
 
-						Ped ped = PLAYER::PLAYER_PED_ID();
-						for each (SavedSkinComponentDBRow *comp in savedSkin->components) {
-							PED::SET_PED_COMPONENT_VARIATION(ped, comp->slotID, comp->drawable, comp->texture, 0);
-						}
-						PED::CLEAR_ALL_PED_PROPS(ped);
-						for each (SavedSkinPropDBRow *prop in savedSkin->props) {
-							PED::SET_PED_PROP_INDEX(ped, prop->propID, prop->drawable, prop->texture, 0);
-						}
-						for (std::vector<SavedSkinDBRow*>::iterator it = savedSkins.begin(); it != savedSkins.end(); ++it) {
-							delete (*it);
-						}
-						savedSkins.clear();
+					if (model != -1) { 
+						if (SKINS_AUTO_SKIN_SAVED_VALUES[AutoApplySkinSavedIndex] == 1) applyChosenSkin(savedSkin->model);
+						if (SKINS_AUTO_SKIN_SAVED_VALUES[AutoApplySkinSavedIndex] == 2 && ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == savedSkin->model) applyChosenSkin(PLAYER::PLAYER_PED_ID()); // applyChosenSkin(savedSkin->model);
+						if (SKINS_AUTO_SKIN_SAVED_VALUES[AutoApplySkinSavedIndex] == 2 && ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) != savedSkin->model) right_model = true;
+						if (SKINS_AUTO_SKIN_SAVED_VALUES[AutoApplySkinSavedIndex] == 3) applyChosenSkin(PLAYER::PLAYER_PED_ID());
 						
+						if (right_model == false) {
+							Ped ped = PLAYER::PLAYER_PED_ID();
+							for each (SavedSkinComponentDBRow *comp in savedSkin->components) {
+								PED::SET_PED_COMPONENT_VARIATION(ped, comp->slotID, comp->drawable, comp->texture, 0);
+							}
+							PED::CLEAR_ALL_PED_PROPS(ped);
+							for each (SavedSkinPropDBRow *prop in savedSkin->props) {
+								PED::SET_PED_PROP_INDEX(ped, prop->propID, prop->drawable, prop->texture, 0);
+							}
+							for (std::vector<SavedSkinDBRow*>::iterator it = savedSkins.begin(); it != savedSkins.end(); ++it) {
+								delete (*it);
+							}
+							savedSkins.clear();
+						}
+
 						oldplayerSkin = PLAYER::PLAYER_PED_ID();
 						skin_tick = 0;
 						auto_skin = true;
@@ -859,11 +876,11 @@ bool process_skinchanger_menu()
 	toggleItem->toggleValue = &featurenoblood;
 	menuItems.push_back(toggleItem);
 
-	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Auto Apply Last Saved Skin";
-	toggleItem->value = i++;
-	toggleItem->toggleValue = &featureautoskin;
-	menuItems.push_back(toggleItem);
+	listItem = new SelectFromListMenuItem(SKINS_AUTO_SKIN_SAVED_CAPTIONS, onchange_auto_apply_skin_saved_index);
+	listItem->wrap = false;
+	listItem->caption = "Auto Apply Last Saved Skin";
+	listItem->value = AutoApplySkinSavedIndex;
+	menuItems.push_back(listItem);
 
 	return draw_generic_menu<int>(menuItems, &activeLineIndexSkinChanger, "Player Skin Options", onconfirm_skinchanger_menu, NULL, NULL); // skinMainMenuPosition
 }
@@ -1271,11 +1288,11 @@ void add_skin_generic_settings(std::vector<StringPairSettingDBRow>* results)
 {
 	results->push_back(StringPairSettingDBRow{ "lastCustomSkinSpawn", lastCustomSkinSpawn });
 	results->push_back(StringPairSettingDBRow{ "ResetSkinOnDeathIndex", std::to_string(ResetSkinOnDeathIndex) });
+	results->push_back(StringPairSettingDBRow{ "AutoApplySkinSavedIndex", std::to_string(AutoApplySkinSavedIndex) });
 }
 
 void add_player_skin_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results) {
 	results->push_back(FeatureEnabledLocalDefinition{ "featurenoblood", &featurenoblood });
-	results->push_back(FeatureEnabledLocalDefinition{ "featureautoskin", &featureautoskin });
 }
 
 void handle_generic_settings_skin(std::vector<StringPairSettingDBRow>* settings)
@@ -1289,6 +1306,9 @@ void handle_generic_settings_skin(std::vector<StringPairSettingDBRow>* settings)
 		}
 		else if (setting.name.compare("ResetSkinOnDeathIndex") == 0) {
 			ResetSkinOnDeathIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("AutoApplySkinSavedIndex") == 0) {
+			AutoApplySkinSavedIndex = stoi(setting.value);
 		}
 	}
 }
