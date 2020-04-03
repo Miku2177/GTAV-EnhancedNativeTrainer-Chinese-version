@@ -26,6 +26,7 @@ DWORD model_to_restore = -1;
 bool DEBUG_MODE_SKINS = false;
 
 bool featurenoblood = false;
+bool featurepersprops = false;
 
 // auto skin variables
 bool auto_skin = false;
@@ -87,6 +88,7 @@ void reset_skin_globals()
 	//chosenSkinName = "";
 	activeLineIndexSkinChanger = 0;
 	featurenoblood = false;
+	featurepersprops = false;
 	ResetSkinOnDeathIndex = 0;
 	AutoApplySkinSavedIndex = 0;
 }
@@ -723,26 +725,26 @@ bool onconfirm_skinchanger_menu(MenuItem<int> choice)
 	case 2: //Detail
 		process_skinchanger_detail_menu();
 		break;
-	case 3: //Reset
+	case 3:
+		process_prop_menu();
+		break;
+	case 4: //Reset
 		PED::SET_PED_DEFAULT_COMPONENT_VARIATION(playerPed);
 		set_status_text("Using default model skin");
 		break;
 	case 5:
-		process_prop_menu();
-		break;
-	case 6:
 		PED::CLEAR_ALL_PED_PROPS(playerPed);
 		break;
-	case 7:
+	case 6:
 		PED::CLEAR_ALL_PED_PROPS(playerPed);
 		PED::SET_PED_RANDOM_COMPONENT_VARIATION(playerPed, true);
 		PED::SET_PED_RANDOM_PROPS(playerPed);
 		break;
-	case 8:
+	case 7:
 		PED::CLEAR_ALL_PED_PROPS(playerPed);
 		PED::SET_PED_RANDOM_PROPS(playerPed);
 		break;
-	case 9:
+	case 8:
 		if (helmet_on == false) {
 			Hash model = -1;
 			if (PED::GET_PED_TYPE(playerPed) == 0) model = GAMEPLAY::GET_HASH_KEY("player_zero");
@@ -829,21 +831,15 @@ bool process_skinchanger_menu()
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Reset Current Skin";
-	item->value = i++;
-	item->isLeaf = true;
-	menuItems.push_back(item);
-
-	listItem = new SelectFromListMenuItem(SKINS_RESET_SKIN_ONDEATH_CAPTIONS, onchange_skins_reset_skin_ondeath_index);
-	listItem->wrap = false;
-	listItem->caption = "Player Model";
-	listItem->value = ResetSkinOnDeathIndex;
-	menuItems.push_back(listItem);
-
-	item = new MenuItem<int>();
 	item->caption = "Modify Props";
 	item->value = i++;
 	item->isLeaf = false;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "Reset Current Skin";
+	item->value = i++;
+	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
@@ -851,7 +847,7 @@ bool process_skinchanger_menu()
 	item->value = i++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
-
+	
 	item = new MenuItem<int>();
 	item->caption = "Randomize Appearance";
 	item->value = i++;
@@ -870,8 +866,20 @@ bool process_skinchanger_menu()
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
+	//toggleItem = new ToggleMenuItem<int>();
+	//toggleItem->caption = "Persistent Props";
+	//toggleItem->value = i++;
+	//toggleItem->toggleValue = &featurepersprops;
+	//menuItems.push_back(toggleItem);
+
+	listItem = new SelectFromListMenuItem(SKINS_RESET_SKIN_ONDEATH_CAPTIONS, onchange_skins_reset_skin_ondeath_index);
+	listItem->wrap = false;
+	listItem->caption = "Player Model";
+	listItem->value = ResetSkinOnDeathIndex;
+	menuItems.push_back(listItem);
+
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "No Blood And Bullet Holes If Shot";
+	toggleItem->caption = "No Blood And Bullet Holes";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featurenoblood;
 	menuItems.push_back(toggleItem);
@@ -1293,6 +1301,7 @@ void add_skin_generic_settings(std::vector<StringPairSettingDBRow>* results)
 
 void add_player_skin_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results) {
 	results->push_back(FeatureEnabledLocalDefinition{ "featurenoblood", &featurenoblood });
+	results->push_back(FeatureEnabledLocalDefinition{ "featurepersprops", &featurepersprops });
 }
 
 void handle_generic_settings_skin(std::vector<StringPairSettingDBRow>* settings)
