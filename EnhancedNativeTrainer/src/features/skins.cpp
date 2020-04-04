@@ -59,6 +59,9 @@ std::string lastCustomSkinSpawn;
 
 int skinTypesMenuPositionMemory[4] = { 0, 0, 0, 0 }; //player, animals, general, test
 
+int ped_prop_idx_0 = -1;
+int ped_prop_idx_1 = -1;
+
 // Reset Player Model On Death
 int ResetSkinOnDeathIndex = 0;
 bool ResetSkinOnDeathChanged = true;
@@ -258,9 +261,22 @@ void onexit_skinchanger_texture_menu(bool returnValue)
 }
 
 void update_skin_features() {
-	if (featurenoblood) PED::CLEAR_PED_BLOOD_DAMAGE(PLAYER::PLAYER_PED_ID());
+	if (featurenoblood) PED::CLEAR_PED_BLOOD_DAMAGE(PLAYER::PLAYER_PED_ID()); // No Blood And No Wounds
 
-	if (SKINS_AUTO_SKIN_SAVED_VALUES[AutoApplySkinSavedIndex] > 0) {
+	// Persistent Props
+	if (featurepersprops && ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID()) == 0/* && (PED::GET_PED_PROP_INDEX(PLAYER::PLAYER_PED_ID(), 0) > -1 || PED::GET_PED_PROP_INDEX(PLAYER::PLAYER_PED_ID(), 1) > -1)*/) {
+		if ((ped_prop_idx_0 > -1 && PED::GET_PED_PROP_INDEX(PLAYER::PLAYER_PED_ID(), 0) == -1) || (ped_prop_idx_1 > -1 && PED::GET_PED_PROP_INDEX(PLAYER::PLAYER_PED_ID(), 1) == -1)) {
+			Vector3 me_c = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
+			GAMEPLAY::CLEAR_AREA_OF_OBJECTS(me_c.x, me_c.y, me_c.z, 1.0, 0);
+		}
+		if (PED::GET_PED_PROP_INDEX(PLAYER::PLAYER_PED_ID(), 0) > -1) ped_prop_idx_0 = PED::GET_PED_PROP_INDEX(PLAYER::PLAYER_PED_ID(), 0);
+		if (PED::GET_PED_PROP_INDEX(PLAYER::PLAYER_PED_ID(), 1) > -1) ped_prop_idx_1 = PED::GET_PED_PROP_INDEX(PLAYER::PLAYER_PED_ID(), 1);
+		if (ped_prop_idx_0 > -1 && PED::GET_PED_PROP_INDEX(PLAYER::PLAYER_PED_ID(), 0) == -1) PED::SET_PED_PROP_INDEX(PLAYER::PLAYER_PED_ID(), 0, ped_prop_idx_0, 0, 0);
+		if (ped_prop_idx_1 > -1 && PED::GET_PED_PROP_INDEX(PLAYER::PLAYER_PED_ID(), 1) == -1) PED::SET_PED_PROP_INDEX(PLAYER::PLAYER_PED_ID(), 1, ped_prop_idx_1, 0, 0);
+	}
+
+	// Auto Apply Last Saved Skin
+	if (SKINS_AUTO_SKIN_SAVED_VALUES[AutoApplySkinSavedIndex] > 0) { 
 		if (auto_skin == false) {
 			skin_tick_secs_passed = clock() / CLOCKS_PER_SEC;
 			if (((clock() / (CLOCKS_PER_SEC / 1000)) - skin_tick_secs_curr) != 0) {
@@ -866,11 +882,11 @@ bool process_skinchanger_menu()
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
-	//toggleItem = new ToggleMenuItem<int>();
-	//toggleItem->caption = "Persistent Props";
-	//toggleItem->value = i++;
-	//toggleItem->toggleValue = &featurepersprops;
-	//menuItems.push_back(toggleItem);
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Persistent Props";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featurepersprops;
+	menuItems.push_back(toggleItem);
 
 	listItem = new SelectFromListMenuItem(SKINS_RESET_SKIN_ONDEATH_CAPTIONS, onchange_skins_reset_skin_ondeath_index);
 	listItem->wrap = false;
