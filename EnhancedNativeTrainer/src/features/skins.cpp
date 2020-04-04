@@ -61,6 +61,8 @@ int skinTypesMenuPositionMemory[4] = { 0, 0, 0, 0 }; //player, animals, general,
 
 int ped_prop_idx_0 = -1;
 int ped_prop_idx_1 = -1;
+int choicevalue = -2;
+int skinPropsCategoryValueC = -2;
 
 // Reset Player Model On Death
 int ResetSkinOnDeathIndex = 0;
@@ -273,6 +275,15 @@ void update_skin_features() {
 		if (PED::GET_PED_PROP_INDEX(PLAYER::PLAYER_PED_ID(), 1) > -1) ped_prop_idx_1 = PED::GET_PED_PROP_INDEX(PLAYER::PLAYER_PED_ID(), 1);
 		if (ped_prop_idx_0 > -1 && PED::GET_PED_PROP_INDEX(PLAYER::PLAYER_PED_ID(), 0) == -1) PED::SET_PED_PROP_INDEX(PLAYER::PLAYER_PED_ID(), 0, ped_prop_idx_0, 0, 0);
 		if (ped_prop_idx_1 > -1 && PED::GET_PED_PROP_INDEX(PLAYER::PLAYER_PED_ID(), 1) == -1) PED::SET_PED_PROP_INDEX(PLAYER::PLAYER_PED_ID(), 1, ped_prop_idx_1, 0, 0);
+		
+		if (choicevalue == -1 && skinPropsCategoryValueC == 0) {
+			ped_prop_idx_0 = -1;
+			if (PED::GET_PED_PROP_INDEX(PLAYER::PLAYER_PED_ID(), 0) != -1) PED::CLEAR_PED_PROP(PLAYER::PLAYER_PED_ID(), 0);
+		}
+		if (choicevalue == -1 && skinPropsCategoryValueC == 1) {
+			ped_prop_idx_1 = -1;
+			if (PED::GET_PED_PROP_INDEX(PLAYER::PLAYER_PED_ID(), 1) != -1) PED::CLEAR_PED_PROP(PLAYER::PLAYER_PED_ID(), 1);
+		}
 	}
 
 	// Auto Apply Last Saved Skin
@@ -983,6 +994,9 @@ void onhighlight_props_drawable_menu(MenuItem<int> choice)
 			PED::SET_PED_PROP_INDEX(playerPed, skinPropsCategoryValue, choice.value, 0, 0);
 		}
 	}
+
+	choicevalue = choice.value;
+	skinPropsCategoryValueC = skinPropsCategoryValue;
 }
 
 bool process_prop_drawable_menu()
