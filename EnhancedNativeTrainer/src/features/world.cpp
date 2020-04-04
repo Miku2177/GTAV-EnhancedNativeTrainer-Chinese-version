@@ -37,6 +37,8 @@ int w_secs_passed, w_secs_curr, w_seconds = -1;
 
 float freeze_counter = 0.0;
 
+Vehicle veh_i_last_used = -1;
+
 int r, g, b = -1;
 
 int acid_counter, acid_counter_p = -1;
@@ -1162,9 +1164,13 @@ void update_world_features()
 				if (VEHICLE::GET_VEHICLE_DIRT_LEVEL(bus_veh[i]) == 0 && bus_veh[i] != veh_mycurrveh) VEHICLE::SET_VEHICLE_DIRT_LEVEL(bus_veh[i], temp_dirty);
 			} 
 			if (featureNPCNoGravityVehicles) {
-				if (bus_veh[i] != veh_mycurrveh) {
+				if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_i_last_used = veh_mycurrveh;
+				if (bus_veh[i] != veh_mycurrveh && bus_veh[i] != veh_i_last_used) {
 					VEHICLE::SET_VEHICLE_GRAVITY(bus_veh[i], false);
-					if (ENTITY::GET_ENTITY_HEIGHT_ABOVE_GROUND(bus_veh[i]) < 2 && (ENTITY::GET_ENTITY_SPEED(bus_veh[i]) * 3.6) < 20) ENTITY::APPLY_FORCE_TO_ENTITY(bus_veh[i], 1, 0, 0, 5, 0, 0, 0, 1, true, true, false, true, true);
+					Vector3 veh_no_gr = ENTITY::GET_ENTITY_COORDS(bus_veh[i], true);
+					float height_n_g = -1;
+					GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(veh_no_gr.x, veh_no_gr.y, veh_no_gr.z, &height_n_g);
+					if ((veh_no_gr.z - height_n_g) < 2.0) ENTITY::APPLY_FORCE_TO_ENTITY(bus_veh[i], 1, 0, 0, 40, 0, 0, 0, 1, true, true, false, true, true); // 50 // 30 /* && (ENTITY::GET_ENTITY_SPEED(bus_veh[i]) * 3.6) < 20*/
 				}
 			}
 			if (featureNPCReducedGripVehicles && bus_veh[i] != veh_mycurrveh) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], true);
