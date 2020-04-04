@@ -1301,15 +1301,12 @@ void update_features(){
 
 	// No Scuba Gear Mask
 	if (featureNoScubaGearMask && ENTITY::IS_ENTITY_IN_WATER(playerPed) == 1) {
-		//if (dive_glasses == false) {
-		//	ped_prop_idx = PED::GET_PED_PROP_INDEX(playerPed, 1);
-			dive_glasses = true;
-		//}
+		dive_glasses = true;
 		PED::CLEAR_PED_PROP(playerPed, 1);
 	}
-	if (featureNoScubaGearMask && ENTITY::IS_ENTITY_IN_WATER(playerPed) == 0 && PED::GET_PED_PROP_INDEX(playerPed, 1) > 0) ped_prop_idx = PED::GET_PED_PROP_INDEX(playerPed, 1);
+	if (featureNoScubaGearMask && ENTITY::IS_ENTITY_IN_WATER(playerPed) == 0 && PED::GET_PED_PROP_INDEX(playerPed, 1) > -1) ped_prop_idx = PED::GET_PED_PROP_INDEX(playerPed, 1);
 	if (featureNoScubaGearMask && ENTITY::IS_ENTITY_IN_WATER(playerPed) == 0 && dive_glasses == true) {
-		if (ped_prop_idx > 0) PED::SET_PED_PROP_INDEX(playerPed, 1, ped_prop_idx, 0, 0);
+		if (ped_prop_idx > -1) PED::SET_PED_PROP_INDEX(playerPed, 1, ped_prop_idx, 0, 0);
 		dive_glasses = false;
 	}
 	
