@@ -421,7 +421,7 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FloatingPointModel>Fast</FloatingPointModel>
       <ExceptionHandling>false</ExceptionHandling>
-      <DisableSpecificWarnings>4530; 4996</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4530; 4996; 4267</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

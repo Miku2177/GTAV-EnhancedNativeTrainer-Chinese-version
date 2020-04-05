@@ -5670,6 +5670,8 @@ bool process_anims_menu()
 	{
 		switch (currentAnimMenuMode)
 		{
+		case 0: //placeholder to supress warning. To be removed!
+			break;
 		}
 	}
 
