@@ -1170,10 +1170,16 @@ void update_world_features()
 					Vector3 veh_no_gr = ENTITY::GET_ENTITY_COORDS(bus_veh[i], true);
 					float height_n_g = -1;
 					GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(veh_no_gr.x, veh_no_gr.y, veh_no_gr.z, &height_n_g);
-					if ((veh_no_gr.z - height_n_g) < 2.0) ENTITY::APPLY_FORCE_TO_ENTITY(bus_veh[i], 1, 0, 0, 40, 0, 0, 0, 1, true, true, false, true, true); // 50 // 30 /* && (ENTITY::GET_ENTITY_SPEED(bus_veh[i]) * 3.6) < 20*/
+					if ((veh_no_gr.z - height_n_g) < 2.0 && ENTITY::GET_ENTITY_ROLL(bus_veh[i]) < 90 && ENTITY::GET_ENTITY_ROLL(bus_veh[i]) > -90) ENTITY::APPLY_FORCE_TO_ENTITY(bus_veh[i], 1, 0, 0, 40, 0, 0, 0, 1, true, true, false, true, true); // 50 // 30 /* && (ENTITY::GET_ENTITY_SPEED(bus_veh[i]) * 3.6) < 20*/
 				}
 			}
-			if (featureNPCReducedGripVehicles && bus_veh[i] != veh_mycurrveh) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], true);
+			if (featureNPCReducedGripVehicles) {
+				if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
+					veh_i_last_used = veh_mycurrveh;
+					VEHICLE::SET_VEHICLE_REDUCE_GRIP(veh_mycurrveh, false);
+				}
+				if (bus_veh[i] != veh_mycurrveh && bus_veh[i] != veh_i_last_used) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], true);
+			}
 			if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 && featureSnow) { // SNOW
 				float slippery_randomize = -1;
 				Vector3 coords_slip = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
