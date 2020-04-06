@@ -2168,7 +2168,6 @@ bool vehicle_menu_interrupt(){
 }
 
 void randomize_vehicle_upgrades(Vehicle veh) {
-	set_custom_tyres;
 
 	int rand_wheel_type = (rand() % 7 + 0);
 	VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
@@ -2199,13 +2198,12 @@ void randomize_vehicle_upgrades(Vehicle veh) {
 	}
 	int temp_colour = rand() % 12 + 0;
 	NeonLightsColor npc_whichcolor = NEON_COLORS[temp_colour];
-	set_neonLights;
+	
 	VEHICLE::_SET_VEHICLE_NEON_LIGHTS_COLOUR(veh, npc_whichcolor.rVal, npc_whichcolor.gVal, npc_whichcolor.bVal);
 	for (int loc = 0; loc <= 3; loc++) {
 		VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(veh, loc, true); //int rand_toggle = (rand() % 1 + 0); // rand_toggle
 	}
 
-	set_extra_enabled;
 	for (int a = 0; a < 16; a++) {
 		if (VEHICLE::DOES_EXTRA_EXIST(veh, a)) {
 			int rand_toggle = (rand() % 1 + 0);
@@ -2216,7 +2214,6 @@ void randomize_vehicle_upgrades(Vehicle veh) {
 	VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT_INDEX(veh, rand_plate);
 
 	int rand_toggle = (rand() % 1 + 0);
-	set_xenon_headlights;
 	if (getGameVersion() > 45) {
 		int rand_xenon = (rand() % 13 + 0);
 		XenonColour whichcolor = XENON_COLOURS[rand_xenon];

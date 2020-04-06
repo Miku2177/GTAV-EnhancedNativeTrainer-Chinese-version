@@ -1461,7 +1461,6 @@ bool onconfirm_powerpunch_menu(MenuItem<int> choice)
 			ss << "~r~Warning! Enable Manual Mode To Use It";
 			set_status_text(ss.str());
 		}
-		std::string::size_type sz;
 		std::string result_p = show_keyboard(nullptr, (char *)lastPowerWeapon.c_str());
 		if (!result_p.empty()) {
 			if (strlen(result_p.c_str()) > 18) result_p = "9223372036854775807"; // result_p.resize(18);

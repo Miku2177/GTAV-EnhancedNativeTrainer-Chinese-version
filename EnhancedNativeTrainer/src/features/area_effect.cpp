@@ -652,7 +652,7 @@ void update_area_effects(Ped playerPed){
 			PED::SET_DRIVER_ABILITY(pursuer.back(), 0.9f);
 			if (featurePedsWeapons) {
 				int chanceOfGettingWeapon_a = rand() % 10;
-				if (chanceOfGettingWeapon_a == 9 && (WEAPON::GET_WEAPONTYPE_GROUP(WEAPON::GET_SELECTED_PED_WEAPON(pursuer.back())) != (416676503 || 3337201093))) 
+				if (chanceOfGettingWeapon_a == 9 && (WEAPON::GET_WEAPONTYPE_GROUP(WEAPON::GET_SELECTED_PED_WEAPON(pursuer.back())) != Hash((416676503) || Hash(3337201093))))
 					WEAPON::GIVE_WEAPON_TO_PED(pursuer.back(), GAMEPLAY::GET_HASH_KEY("WEAPON_PISTOL"), 999, false, true);
 			}
 			AUDIO::_PLAY_AMBIENT_SPEECH1(pursuer.back(), "PROVOKE_GENERIC", "SPEECH_PARAMS_FORCE_SHOUTED");
