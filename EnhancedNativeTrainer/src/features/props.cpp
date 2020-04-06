@@ -1371,11 +1371,9 @@ bool onconfirm_savedprops_slot_menu(MenuItem<int> choice)
 		break;
 	}
 	default:
-	{
 		break;
 	}
 	return false;
-	}
 }
 
 bool process_savedprops_slot_menu(int slot)

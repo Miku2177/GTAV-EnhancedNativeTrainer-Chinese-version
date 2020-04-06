@@ -1452,7 +1452,6 @@ void maintain_bodyguards(){
 			// bodyguards swimming ability
 			if (ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID()) == 1 && !is_in_airbrake_mode() && PED::GET_PED_TYPE(spawnedENTBodyguards[i]) != 28 && stop_b == false) {
 				float height = -1.0;
-				Object taskSequence;
 				Vector3 bod_coords = ENTITY::GET_ENTITY_COORDS(spawnedENTBodyguards[i], true);
 				WATER::GET_WATER_HEIGHT(my_coords.x, my_coords.y, my_coords.z, &height);
 				if ((my_coords.z < height) && ((height - my_coords.z) > 2) && ENTITY::IS_ENTITY_IN_WATER(spawnedENTBodyguards[i]) == 1) {
