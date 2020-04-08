@@ -1676,6 +1676,11 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 				}
 			}
 		}
+		if (!featureZeroBalance && bill_no_phone == true) {
+			SCRIPT::REQUEST_SCRIPT("cellphone_controller");
+			SYSTEM::START_NEW_SCRIPT("cellphone_controller", 1424);
+			bill_no_phone = false;
+		}
 	}
 	
 	// First Person Stunt Jump Camera
