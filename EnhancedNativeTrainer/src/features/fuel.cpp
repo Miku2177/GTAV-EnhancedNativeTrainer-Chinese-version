@@ -506,7 +506,7 @@ void fuel()
 					}
 				}
 				if (!stoprefillKey) {
-					if (outValue_station > 0 && FUEL[0] > (fuel_amount - 0.001)) {
+					if ((outValue_station > 0 || VEH_FUELPRICE_VALUES[FuelPriceIndex] == 0) && FUEL[0] > (fuel_amount - 0.001)) {
 						FUEL[0] = fuel_amount;
 						VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, true, false);
 						Car_Refuel = false;
