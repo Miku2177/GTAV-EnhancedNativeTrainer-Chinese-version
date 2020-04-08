@@ -539,7 +539,8 @@ void update_area_effects(Ped playerPed){
 		Vehicle veh_agressive[arrSize_laws];
 		int count_veh = worldGetAllPeds(veh_agressive, arrSize_laws);
 		for (int i = 0; i < count_veh; i++) {
-			if (veh_agressive[i] != playerPed && !PED::IS_PED_GROUP_MEMBER(veh_agressive[i], myENTGroup) &&	PED::GET_PED_TYPE(veh_agressive[i]) != 6 && PED::GET_PED_TYPE(veh_agressive[i]) != 27 && PED::GET_PED_TYPE(veh_agressive[i]) != 29) {
+			if (veh_agressive[i] != playerPed && !PED::IS_PED_GROUP_MEMBER(veh_agressive[i], myENTGroup) &&	PED::GET_PED_TYPE(veh_agressive[i]) != 6 && PED::GET_PED_TYPE(veh_agressive[i]) != 27 && PED::GET_PED_TYPE(veh_agressive[i]) != 29 && 
+				!ENTITY::IS_ENTITY_A_MISSION_ENTITY(veh_agressive[i])) {
 				
 				// vigilante citizens
 				if (featureLawAbidingCitizens) {  

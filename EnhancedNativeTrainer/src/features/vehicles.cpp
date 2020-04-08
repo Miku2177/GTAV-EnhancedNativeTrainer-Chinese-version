@@ -2557,20 +2557,20 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		if (VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(brakecar)) || VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(brakecar)) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(brakecar)) ||
 			VEHICLE::IS_THIS_MODEL_A_BOAT(ENTITY::GET_ENTITY_MODEL(brakecar))) {
 			float veh_c_s = ENTITY::GET_ENTITY_SPEED(PED::GET_VEHICLE_PED_IS_USING(playerPed));
-				if (CONTROLS::IS_CONTROL_PRESSED(2, 71) && veh_c_s > 1.0) accelerating_c = true; // accelerating
-				if (CONTROLS::IS_CONTROL_JUST_PRESSED(2, 72) && accelerating_c == true) CONTROLS::DISABLE_CONTROL_ACTION(2, 72, 1); 
-				if (CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, 72) && veh_c_s < 0.9 && accelerating_c == true) { // reversing/braking
-					AI::TASK_VEHICLE_TEMP_ACTION(playerPed, PED::GET_VEHICLE_PED_IS_USING(playerPed), 6, 100);
-					VEHICLE::SET_VEHICLE_BRAKE_LIGHTS(PED::GET_VEHICLE_PED_IS_USING(playerPed), true);
-					reversing_c = true;
-				}
-			if (CONTROLS::IS_DISABLED_CONTROL_JUST_RELEASED(2, 72) && reversing_c == true) {
+			if (CONTROLS::IS_CONTROL_PRESSED(2, 71) && veh_c_s > 2.0) accelerating_c = true; // accelerating
+			if (veh_c_s < 2.1) accelerating_c = false;
+			if (CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, 72) && veh_c_s > 2.0 && accelerating_c == true) reversing_c = true; // reversing/braking
+			if (veh_c_s < 2.1 && reversing_c == true) {
+				AI::TASK_VEHICLE_TEMP_ACTION(playerPed, PED::GET_VEHICLE_PED_IS_USING(playerPed), 6, 100);
+				VEHICLE::SET_VEHICLE_BRAKE_LIGHTS(PED::GET_VEHICLE_PED_IS_USING(playerPed), true);
+			}
+			if (CONTROLS::IS_DISABLED_CONTROL_JUST_RELEASED(2, 72)) {
 				accelerating_c = false;
 				reversing_c = false;
 			}
 		}
 	}
-
+	
 	// Nitrous
 	if (LIMP_IF_INJURED_VALUES[NitrousIndex] > 0) { // VehicleMoveUpOnly 61 VehicleSubAscend 131
 		bool assigned = false;
