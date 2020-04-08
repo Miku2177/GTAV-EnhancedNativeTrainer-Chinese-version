@@ -929,6 +929,7 @@ void road_laws()
 			
 			if (being_arrested == true) {
 				AI::TASK_ARREST_PED(cop_that_fines_you, PLAYER::PLAYER_PED_ID());
+				set_status_text("You're being arrested because you have no money to pay the fine");
 				being_arrested = false;
 			}
 
