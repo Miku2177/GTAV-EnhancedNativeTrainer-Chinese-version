@@ -987,17 +987,20 @@ void update_world_features()
 		if (random_weather2 == 14) rand_w2 = "HALLOWEEN";
 		if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3373937154) cur_w = "HALLOWEEN";
 		
-		if (w_seconds <= (MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] - 10) && !lastWeather.empty() && MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 1) GAMEPLAY::SET_WEATHER_TYPE_NOW((char *)lastWeather.c_str());
-		if (w_seconds <= (MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] - 10) && lastWeather.empty() && MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 1) GAMEPLAY::SET_WEATHER_TYPE_NOW(cur_w);
+		if (w_seconds <= (MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] - 10) && !lastWeather.empty() && MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 1) 
+			GAMEPLAY::_SET_WEATHER_TYPE_TRANSITION(GAMEPLAY::GET_HASH_KEY(mixed_w1), GAMEPLAY::GET_HASH_KEY((char *)lastWeather.c_str()), 1.0f); // GAMEPLAY::SET_WEATHER_TYPE_NOW((char *)lastWeather.c_str());
+		if (w_seconds <= (MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] - 10) && lastWeather.empty() && MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 1) 
+			GAMEPLAY::_SET_WEATHER_TYPE_TRANSITION(GAMEPLAY::GET_HASH_KEY(mixed_w1), GAMEPLAY::GET_HASH_KEY(cur_w), 1.0f); // GAMEPLAY::SET_WEATHER_TYPE_NOW(cur_w);
 		if (w_seconds <= (MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] - 10) && MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 2) GAMEPLAY::_SET_WEATHER_TYPE_TRANSITION(GAMEPLAY::GET_HASH_KEY(mixed_w1), GAMEPLAY::GET_HASH_KEY(mixed_w2), 0.50f);
 		if (w_seconds > (MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] - 10)) {
 			if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 1) {
 				if (rand_w1 != cur_w && t_counter == 0.000) {
+					mixed_w1 = cur_w;
 					lastWeather = rand_w1;
 					t_counter = t_counter + 0.001;
 				}
 				if (t_counter > 0.000) {
-					GAMEPLAY::_SET_WEATHER_TYPE_TRANSITION(GAMEPLAY::GET_HASH_KEY(cur_w), GAMEPLAY::GET_HASH_KEY((char *)lastWeather.c_str()), t_counter);
+					GAMEPLAY::_SET_WEATHER_TYPE_TRANSITION(GAMEPLAY::GET_HASH_KEY(mixed_w1), GAMEPLAY::GET_HASH_KEY((char *)lastWeather.c_str()), t_counter);
 					t_counter = t_counter + 0.001;
 				}
 			}
@@ -1005,7 +1008,6 @@ void update_world_features()
 				if (rand_w1 != rand_w2 && mixed_w1 != rand_w1 && mixed_w2 != rand_w2 && mixed_w1 != rand_w2 && mixed_w2 != rand_w1 && t_counter == 0.0) {
 					mixed_w1 = rand_w1;
 					mixed_w2 = rand_w2;
-					//t_counter = t_counter + 0.05;
 					t_counter = 0.50;
 				}
 				if (t_counter > 0.0) {
