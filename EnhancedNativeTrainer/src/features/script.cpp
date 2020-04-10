@@ -1381,18 +1381,6 @@ void update_features(){
 	if(ENTITY::IS_ENTITY_DEAD(playerPed)){
 		exit_airbrake_menu_if_showing();
 	}
-
-	//----Hotkeys----
-
-	//Move through door (use '-key)
-	//Pushes player through solid door objects.
-	if(bPlayerExists){
-		bool throughDoorPressed = IsKeyJustUp(KeyConfig::KEY_HOT_AIRBRAKE_THROUGH_DOOR) || IsControllerButtonJustUp(KeyConfig::KEY_HOT_AIRBRAKE_THROUGH_DOOR);
-		//bool disablePolicePressed = IsKeyJustUp(VK_OEM_6);
-		if(throughDoorPressed){
-			moveThroughDoor();
-		}
-	}
 }
 
 int activeLineIndexWantedFreeze = 0;
