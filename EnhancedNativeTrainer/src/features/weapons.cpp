@@ -147,7 +147,7 @@ int WeaponsFireModeIndex = 0;
 bool WeaponsFireModeChanged = true;
 
 // No Reticle
-const std::vector<std::string> WEAPONS_NORETICLE_CAPTIONS{ "Default", "Always", "For First Person Mode Only" };
+const std::vector<std::string> WEAPONS_NORETICLE_CAPTIONS{ "OFF", "Always", "For First Person Mode Only" };
 const int WEAPONS_NORETICLE_VALUES[] = { 0, 1, 2 };
 int WeaponsNoReticle = 0;
 bool WeaponsNoReticleChanged = true;

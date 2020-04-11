@@ -1023,7 +1023,7 @@ void update_world_features()
 				}
 			}
 
-			if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 1 && t_counter > 0.05 && t_counter < 0.60) {
+			if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 1 && t_counter > 0.050 && t_counter < 0.600) {
 				if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 1 && t_counter == 0.065) {
 					GAMEPLAY::CLEAR_OVERRIDE_WEATHER();
 					GAMEPLAY::CLEAR_WEATHER_TYPE_PERSIST();
