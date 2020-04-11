@@ -48,6 +48,8 @@ int BodyWeaponSetIndex = 0;
 
 bool hotkey_b = false;
 
+int b_follow_m = -2;
+
 bool added_nearest_b = false;
 Ped bodyGuard, temp_bodyguard = -1;
 
@@ -1455,6 +1457,17 @@ void maintain_bodyguards(){
 		}
 	}
 	
+	// 'follow in vehicle' messages
+	if (b_follow_m == -2) b_follow_m = FollowInVehicleIndex;
+	if (FollowInVehicleIndex == 0 && b_follow_m != 0) b_follow_m = FollowInVehicleIndex;
+	if (LIMP_IF_INJURED_VALUES[FollowInVehicleIndex] > 0) {
+		if (b_follow_m != FollowInVehicleIndex) {
+			if (FollowInVehicleIndex == 1) set_status_text("Aggressive driving");
+			if (FollowInVehicleIndex == 2) set_status_text("Careful driving");
+			b_follow_m = FollowInVehicleIndex;
+		}
+	}
+
 	if (!spawnedENTBodyguards.empty()) { 
 		Vector3 my_coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 		for (int i = 0; i < spawnedENTBodyguards.size(); i++) {

@@ -64,12 +64,6 @@ extern bool BodyHealthChanged;
 //Limp If Injured
 const std::vector<std::string> LIMP_IF_INJURED_CAPTIONS{ "OFF", "Mode 1", "Mode 2" };
 const int LIMP_IF_INJURED_VALUES[] = { 0, 1, 2 };
-extern int current_limp_if_injured;
-extern bool current_limp_if_injured_Changed;
-extern int BodyBlipFlashIndex;
-extern bool BodyBlipFlash_Changed;
-extern int FollowInVehicleIndex;
-extern bool FollowInVehicleChanged;
 
 //Ensures numbers are formatted with commas, not the locale option
 class comma_numpunct: public std::numpunct<char>{
