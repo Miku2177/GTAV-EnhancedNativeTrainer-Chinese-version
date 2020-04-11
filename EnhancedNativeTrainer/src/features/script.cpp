@@ -55,6 +55,8 @@ bool skydiving = false;
 bool dive_glasses = false;
 int ped_prop_idx = -1;
 
+int injured_m = -2;
+
 bool everInitialised = false;
 
 ENTDatabase* database = NULL;
@@ -935,7 +937,16 @@ void update_features(){
 	}
 
 	// Injured Player Movement
+	if (injured_m == -2) injured_m = current_limp_if_injured;
+	if (current_limp_if_injured == 0 && injured_m != 0) injured_m = current_limp_if_injured;
+
 	if (LIMP_IF_INJURED_VALUES[current_limp_if_injured] > 0 && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) {
+		if (injured_m != current_limp_if_injured) {
+			if (current_limp_if_injured == 1) set_status_text("Walking Style 1");
+			if (current_limp_if_injured == 2) set_status_text("Walking Style 2");
+			injured_m = current_limp_if_injured;
+		}
+
 		if (LIMP_IF_INJURED_VALUES[current_limp_if_injured] == 1 && !STREAMING::HAS_ANIM_DICT_LOADED("move_injured_generic")) STREAMING::REQUEST_ANIM_DICT("move_injured_generic"); // move_m@injured
 		float curr_health = ENTITY::GET_ENTITY_HEALTH(playerPed) - 100;
 		Vector3 coords_calf_l = PED::GET_PED_BONE_COORDS(playerPed, 63931, 0, 0, 0); // left calf
