@@ -153,6 +153,8 @@ int a_counter_tick = 0;
 
 int Shut_seconds = -1; 
 
+int nitrous_m = -2;
+
 int sheshark_light_toogle = 1;
 
 Vehicle ped_temp_veh = -1;
@@ -275,8 +277,6 @@ int VehBlipSymbolIndex = 0;
 bool VehBlipSymbol_Changed = true;
 
 //Blip Flashing
-const std::vector<std::string> VEH_BLIPFLASH_CAPTIONS{ "OFF", "Mode One", "Mode Two" };
-const std::vector<int> VEH_BLIPFLASHandENGINERUNNING_VALUES{ 0, 1, 2 };
 int VehBlipFlashIndex = 0;
 bool VehBlipFlash_Changed = true;
 
@@ -1589,7 +1589,7 @@ void process_remember_vehicles_menu() {
 	listItem->value = VehBlipSymbolIndex;
 	menuItems.push_back(listItem);
 
-	listItem = new SelectFromListMenuItem(VEH_BLIPFLASH_CAPTIONS, onchange_veh_blipflash_index);
+	listItem = new SelectFromListMenuItem(LIMP_IF_INJURED_CAPTIONS, onchange_veh_blipflash_index);
 	listItem->wrap = false;
 	listItem->caption = "Blip Flashing";
 	listItem->value = VehBlipFlashIndex;
@@ -2572,11 +2572,21 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 	
 	// Nitrous
+	if (nitrous_m == -2) nitrous_m = NitrousIndex;
+	if (NitrousIndex == 0 && nitrous_m != 0) nitrous_m = NitrousIndex;
+
 	if (LIMP_IF_INJURED_VALUES[NitrousIndex] > 0) { // VehicleMoveUpOnly 61 VehicleSubAscend 131
 		bool assigned = false;
 		for (int i = 1; i < 10; i++) {
 			if (get_hotkey_function_index(i) == 47) assigned = true;
 		}
+
+		if (nitrous_m != NitrousIndex) {
+			if (NitrousIndex == 1) set_status_text("Sound ON");
+			if (NitrousIndex == 2) set_status_text("Sound OFF");
+			nitrous_m = NitrousIndex;
+		}
+
 		if (((CONTROLS::IS_CONTROL_PRESSED(2, 131) && assigned == false) || is_hotkey_held_veh_nitrous()) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
 			Vehicle my_veh = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 			if (VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(my_veh)) {
@@ -3075,10 +3085,10 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 	///////////////////////////////////// KEEP THE ENGINE RUNNING ///////////////////////////////////////////////////////////////
 
-	if (bPlayerExists && VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] > 0 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
+	if (bPlayerExists && LIMP_IF_INJURED_VALUES[EngineRunningIndex] > 0 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
 		Vehicle playerVehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
-		if (CONTROLS::IS_CONTROL_PRESSED(2, 75) && VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] == 1) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(playerVehicle, true);
-		if (CONTROLS::IS_CONTROL_PRESSED(2, 75) && VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] == 2) {
+		if (CONTROLS::IS_CONTROL_PRESSED(2, 75) && LIMP_IF_INJURED_VALUES[EngineRunningIndex] == 1) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(playerVehicle, true);
+		if (CONTROLS::IS_CONTROL_PRESSED(2, 75) && LIMP_IF_INJURED_VALUES[EngineRunningIndex] == 2) {
 			engine_secs_passed = clock() / CLOCKS_PER_SEC;
 			if (((clock() / (CLOCKS_PER_SEC / 1000)) - engine_secs_curr) != 0) {
 				engine_tick = engine_tick + 1;
@@ -3088,29 +3098,29 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		if (CONTROLS::IS_CONTROL_PRESSED(2, 75) && (VEHICLE::IS_THIS_MODEL_A_HELI(ENTITY::GET_ENTITY_MODEL(playerVehicle)) || VEHICLE::IS_THIS_MODEL_A_PLANE(ENTITY::GET_ENTITY_MODEL(playerVehicle)))) current_veh_e = playerVehicle;
 	}
 	
-	if (engine_tick < 11 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] == 2 && (!featureVehSteerAngle /*|| PED::IS_PED_ON_ANY_BIKE(playerPed)*/)) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), true);
-	if (engine_tick > 10 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] == 2 && (!featureVehSteerAngle /*|| PED::IS_PED_ON_ANY_BIKE(playerPed)*/)) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), false);
+	if (engine_tick < 11 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && LIMP_IF_INJURED_VALUES[EngineRunningIndex] == 2 && (!featureVehSteerAngle /*|| PED::IS_PED_ON_ANY_BIKE(playerPed)*/)) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), true);
+	if (engine_tick > 10 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && LIMP_IF_INJURED_VALUES[EngineRunningIndex] == 2 && (!featureVehSteerAngle /*|| PED::IS_PED_ON_ANY_BIKE(playerPed)*/)) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), false);
 	// Remember Wheel Angle feature compatibility lines
-	if (engine_tick < 3 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] == 2 && featureVehSteerAngle /*&& !PED::IS_PED_ON_ANY_BIKE(playerPed)*/) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), true);
-	if (engine_tick > 2 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] == 2 && featureVehSteerAngle /*&& !PED::IS_PED_ON_ANY_BIKE(playerPed)*/) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), false);
+	if (engine_tick < 3 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && LIMP_IF_INJURED_VALUES[EngineRunningIndex] == 2 && featureVehSteerAngle /*&& !PED::IS_PED_ON_ANY_BIKE(playerPed)*/) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), true);
+	if (engine_tick > 2 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && LIMP_IF_INJURED_VALUES[EngineRunningIndex] == 2 && featureVehSteerAngle /*&& !PED::IS_PED_ON_ANY_BIKE(playerPed)*/) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), false);
 	//
-	if (bPlayerExists && VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] == 2 && CONTROLS::IS_CONTROL_RELEASED(2, 75)) engine_tick = 0;
+	if (bPlayerExists && LIMP_IF_INJURED_VALUES[EngineRunningIndex] == 2 && CONTROLS::IS_CONTROL_RELEASED(2, 75)) engine_tick = 0;
 
-	if (bPlayerExists && VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] == 0 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
+	if (bPlayerExists && LIMP_IF_INJURED_VALUES[EngineRunningIndex] == 0 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
 		Vehicle playerVehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		if (CONTROLS::IS_CONTROL_PRESSED(2, 75)) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(playerVehicle, false);
 	}
 	// Helicopter's lines
-	if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && current_veh_e != -1 && VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] > 0) {
-		if (VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] == 1) {
+	if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && current_veh_e != -1 && LIMP_IF_INJURED_VALUES[EngineRunningIndex] > 0) {
+		if (LIMP_IF_INJURED_VALUES[EngineRunningIndex] == 1) {
 			VEHICLE::SET_HELI_BLADES_SPEED(current_veh_e, 1.0f);
 			VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(current_veh_e, true);
 		}
-		if (VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] == 2 && engine_tick < 3) {
+		if (LIMP_IF_INJURED_VALUES[EngineRunningIndex] == 2 && engine_tick < 3) {
 			VEHICLE::SET_HELI_BLADES_SPEED(current_veh_e, 1.0f);
 			VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(current_veh_e, true);
 		}
-		if (VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] == 2 && engine_tick > 2) current_veh_e = -1;
+		if (LIMP_IF_INJURED_VALUES[EngineRunningIndex] == 2 && engine_tick > 2) current_veh_e = -1;
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3325,8 +3335,8 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				else UI::SET_BLIP_SPRITE(blip_veh[0], VEH_BLIPSYMBOL_VALUES[0]);
 				UI::SET_BLIP_CATEGORY(blip_veh[0], 2);
 				if (featureBlipNumber) UI::SHOW_NUMBER_ON_BLIP(blip_veh[0], BLIPTABLE_VEH.size());
-				if (VEH_BLIPFLASHandENGINERUNNING_VALUES[VehBlipFlashIndex] == 1) UI::SET_BLIP_FLASHES(blip_veh[0], true);
-				if (VEH_BLIPFLASHandENGINERUNNING_VALUES[VehBlipFlashIndex] == 2) UI::SET_BLIP_FLASHES_ALTERNATE(blip_veh[0], true);
+				if (LIMP_IF_INJURED_VALUES[VehBlipFlashIndex] == 1) UI::SET_BLIP_FLASHES(blip_veh[0], true);
+				if (LIMP_IF_INJURED_VALUES[VehBlipFlashIndex] == 2) UI::SET_BLIP_FLASHES_ALTERNATE(blip_veh[0], true);
 				UI::SET_BLIP_SCALE(blip_veh[0], VEH_BLIPSIZE_VALUES[VehBlipSizeIndex]);
 				UI::SET_BLIP_COLOUR(blip_veh[0], VEH_BLIPCOLOUR_VALUES[VehBlipColourIndex]);
 				UI::SET_BLIP_AS_SHORT_RANGE(blip_veh[0], true);
@@ -3376,8 +3386,8 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				else UI::SET_BLIP_SPRITE(blip_veh[0], VEH_BLIPSYMBOL_VALUES[0]);
 				UI::SET_BLIP_CATEGORY(blip_veh[0], 2);
 				if (featureBlipNumber) UI::SHOW_NUMBER_ON_BLIP(blip_veh[0], BLIPTABLE_VEH.size());
-				if (VEH_BLIPFLASHandENGINERUNNING_VALUES[VehBlipFlashIndex] == 1) UI::SET_BLIP_FLASHES(blip_veh[0], true);
-				if (VEH_BLIPFLASHandENGINERUNNING_VALUES[VehBlipFlashIndex] == 2) UI::SET_BLIP_FLASHES_ALTERNATE(blip_veh[0], true);
+				if (LIMP_IF_INJURED_VALUES[VehBlipFlashIndex] == 1) UI::SET_BLIP_FLASHES(blip_veh[0], true);
+				if (LIMP_IF_INJURED_VALUES[VehBlipFlashIndex] == 2) UI::SET_BLIP_FLASHES_ALTERNATE(blip_veh[0], true);
 				UI::SET_BLIP_SCALE(blip_veh[0], VEH_BLIPSIZE_VALUES[VehBlipSizeIndex]);
 				UI::SET_BLIP_COLOUR(blip_veh[0], VEH_BLIPCOLOUR_VALUES[VehBlipColourIndex]);
 				UI::SET_BLIP_AS_SHORT_RANGE(blip_veh[0], true);
@@ -3407,8 +3417,8 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				else UI::SET_BLIP_SPRITE(blip_veh[0], VEH_BLIPSYMBOL_VALUES[0]);
 				UI::SET_BLIP_CATEGORY(blip_veh[0], 2);
 				if (featureBlipNumber) UI::SHOW_NUMBER_ON_BLIP(blip_veh[0], BLIPTABLE_VEH.size());
-				if (VEH_BLIPFLASHandENGINERUNNING_VALUES[VehBlipFlashIndex] == 1) UI::SET_BLIP_FLASHES(blip_veh[0], true);
-				if (VEH_BLIPFLASHandENGINERUNNING_VALUES[VehBlipFlashIndex] == 2) UI::SET_BLIP_FLASHES_ALTERNATE(blip_veh[0], true);
+				if (LIMP_IF_INJURED_VALUES[VehBlipFlashIndex] == 1) UI::SET_BLIP_FLASHES(blip_veh[0], true);
+				if (LIMP_IF_INJURED_VALUES[VehBlipFlashIndex] == 2) UI::SET_BLIP_FLASHES_ALTERNATE(blip_veh[0], true);
 				UI::SET_BLIP_SCALE(blip_veh[0], VEH_BLIPSIZE_VALUES[VehBlipSizeIndex]);
 				UI::SET_BLIP_COLOUR(blip_veh[0], VEH_BLIPCOLOUR_VALUES[VehBlipColourIndex]);
 				UI::SET_BLIP_AS_SHORT_RANGE(blip_veh[0], true);
@@ -3571,8 +3581,8 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		ENTITY::ATTACH_ENTITY_TO_ENTITY_PHYSICALLY(/*ENTITY_1*/myVehicle, /*ENTITY_2*/temp_object, /*BONE_INDEX_1*/0, /*BONE_INDEX_2*/0.0, /*XPOS_1*/50.0, /*YPOS_1*/50.0, /*ZPOS_1*/+10.0,
 			/*XPOS_2*/0.0, /*YPOS_2*/0.0, /*ZPOS_2*/0.0, /*XROT*/0.0, /*YROT*/0.0, /*ZROT*/0.0, /*BREAKFORCE*/1.0, /*FIXEDROT*/true, /*P15*/false, /*COLLISION*/false, /*P17*/1, /*P18*/true);
 		ENTITY::SET_ENTITY_ALPHA(temp_object, 0, 0);
-		if (VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] < 2) WAIT(1000);
-		if (VEH_BLIPFLASHandENGINERUNNING_VALUES[EngineRunningIndex] == 2) WAIT(100); // Keep Engine Running feature compatibility line 
+		if (LIMP_IF_INJURED_VALUES[EngineRunningIndex] < 2) WAIT(1000);
+		if (LIMP_IF_INJURED_VALUES[EngineRunningIndex] == 2) WAIT(100); // Keep Engine Running feature compatibility line 
 
 		ENTITY::DETACH_ENTITY(myVehicle, true, true);
 		VEHICLE::DELETE_VEHICLE(&temp_object);

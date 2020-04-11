@@ -42,7 +42,6 @@ bool featureWeaponInfiniteAmmo = false;
 bool featureWeaponInfiniteParachutes = false, featureWeaponInfiniteParachutesUpdated = false;
 bool featureWeaponNoParachutes = false, featureWeaponNoParachutesUpdated = false;
 bool featureWeaponNoReload = false;
-bool featureNoReticle = false;
 bool featureCopTakeWeapon = false;
 bool featureWeaponFireAmmo = false;
 bool featureWeaponExplosiveAmmo = false;
@@ -146,6 +145,12 @@ const std::vector<std::string> WEAPONS_FIREMODE_CAPTIONS{ "Default", "Single Fir
 const int WEAPONS_FIREMODE_VALUES[] = { 0, 1, 2, 3 };
 int WeaponsFireModeIndex = 0;
 bool WeaponsFireModeChanged = true;
+
+// No Reticle
+const std::vector<std::string> WEAPONS_NORETICLE_CAPTIONS{ "Default", "Always", "For First Person Mode Only" };
+const int WEAPONS_NORETICLE_VALUES[] = { 0, 1, 2 };
+int WeaponsNoReticle = 0;
+bool WeaponsNoReticleChanged = true;
 
 /* Begin Gravity Gun related code */
 
@@ -771,6 +776,11 @@ void onchange_vehicle_weapon_modifier(int value, SelectFromListMenuItem* source)
 	VehCurrWeaponChanged = true;
 }
 
+void onchange_weapon_no_reticle_modifier(int value, SelectFromListMenuItem* source) {
+	WeaponsNoReticle = value;
+	WeaponsNoReticleChanged = true;
+}
+
 ///////////////////////////////// TOGGLE VISION FOR SNIPER RIFLES /////////////////////////////////
 
 void sniper_vision_toggle()
@@ -1102,13 +1112,12 @@ bool process_weapon_menu(){
 	toggleItem->toggleValueUpdated = NULL;
 	menuItems.push_back(toggleItem);
 
-	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "No Reticle";
-	toggleItem->value = i++;
-	toggleItem->toggleValue = &featureNoReticle;
-	toggleItem->toggleValueUpdated = NULL;
-	menuItems.push_back(toggleItem);
-
+	listItem = new SelectFromListMenuItem(WEAPONS_NORETICLE_CAPTIONS, onchange_weapon_no_reticle_modifier);
+	listItem->wrap = false;
+	listItem->caption = "No Reticle";
+	listItem->value = WeaponsNoReticle;
+	menuItems.push_back(listItem);
+	
 	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Lose Weapons On Arrest/Death";
 	toggleItem->value = i++;
@@ -1250,6 +1259,8 @@ void reset_weapon_globals(){
 	VehCurrWeaponIndex = 0;
 	CopAlarmIndex = 1;
 
+	WeaponsNoReticle = 0;
+
 	ChancePoliceCallingIndex = 5;
 	ChanceAttackingYouIndex = 1;
 	SniperVisionIndex = 0;
@@ -1272,7 +1283,6 @@ void reset_weapon_globals(){
 		featureWeaponNoParachutes =
 		featureWeaponNoParachutesUpdated =
 		featureWeaponNoReload =
-		featureNoReticle =
 		featureCopTakeWeapon =
 		featureWeaponFireAmmo =
 		featureWeaponExplosiveAmmo =
@@ -1487,17 +1497,19 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	if(bPlayerExists){
 		WEAPON::SET_PED_INFINITE_AMMO_CLIP(playerPed, featureWeaponNoReload);
 	}
-
+	
 	// No reticle
-	if (featureNoReticle) {
-		bool sniper_rifle = false;
-		if (WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_SNIPERRIFLE")) sniper_rifle = true;
-		if (WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_HEAVYSNIPER")) sniper_rifle = true;
-		if (WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_REMOTESNIPER")) sniper_rifle = true;
-		if (WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_HEAVYSNIPER_MK2")) sniper_rifle = true;
-		if (WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_MARKSMANRIFLE")) sniper_rifle = true;
-		if (WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_MARKSMANRIFLE_MK2")) sniper_rifle = true;
-		if (!sniper_rifle) UI::HIDE_HUD_COMPONENT_THIS_FRAME(14);
+	if (WEAPONS_NORETICLE_VALUES[WeaponsNoReticle] > 0) {
+		if (WEAPONS_NORETICLE_VALUES[WeaponsNoReticle] == 1 || (WEAPONS_NORETICLE_VALUES[WeaponsNoReticle] == 2 && CAM::_0xEE778F8C7E1142E2(0) == 4)) {
+			bool sniper_rifle = false;
+			if (WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_SNIPERRIFLE")) sniper_rifle = true;
+			if (WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_HEAVYSNIPER")) sniper_rifle = true;
+			if (WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_REMOTESNIPER")) sniper_rifle = true;
+			if (WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_HEAVYSNIPER_MK2")) sniper_rifle = true;
+			if (WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_MARKSMANRIFLE")) sniper_rifle = true;
+			if (WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_MARKSMANRIFLE_MK2")) sniper_rifle = true;
+			if (!sniper_rifle) UI::HIDE_HUD_COMPONENT_THIS_FRAME(14);
+		}
 	}
 	
 	// Drop Weapon If Hand Shot
@@ -2300,7 +2312,6 @@ void add_weapon_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponInfiniteParachutes", &featureWeaponInfiniteParachutes, &featureWeaponInfiniteParachutesUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponNoParachutes", &featureWeaponNoParachutes, &featureWeaponNoParachutesUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponNoReload", &featureWeaponNoReload});
-	results->push_back(FeatureEnabledLocalDefinition{"featureNoReticle", &featureNoReticle});
 	results->push_back(FeatureEnabledLocalDefinition{"featureCopTakeWeapon", &featureCopTakeWeapon });
 	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponVehRockets", &featureWeaponVehRockets});
 	results->push_back(FeatureEnabledLocalDefinition{"featureGravityGun", &featureGravityGun});
@@ -2333,6 +2344,7 @@ void add_weapon_feature_enablements2(std::vector<StringPairSettingDBRow>* result
 {
 	results->push_back(StringPairSettingDBRow{ "CopCurrArmedIndex", std::to_string(CopCurrArmedIndex) });
 	results->push_back(StringPairSettingDBRow{ "VehCurrWeaponIndex", std::to_string(VehCurrWeaponIndex) });
+	results->push_back(StringPairSettingDBRow{ "WeaponsNoReticle", std::to_string(WeaponsNoReticle) });
 	results->push_back(StringPairSettingDBRow{ "CopAlarmIndex", std::to_string(CopAlarmIndex) });
 	results->push_back(StringPairSettingDBRow{ "ChancePoliceCallingIndex", std::to_string(ChancePoliceCallingIndex) });
 	results->push_back(StringPairSettingDBRow{ "ChanceAttackingYouIndex", std::to_string(ChanceAttackingYouIndex) });
@@ -2362,6 +2374,9 @@ void handle_generic_settings_weapons(std::vector<StringPairSettingDBRow>* settin
 		}
 		else if (setting.name.compare("VehCurrWeaponIndex") == 0) {
 			VehCurrWeaponIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("WeaponsNoReticle") == 0) {
+			WeaponsNoReticle = stoi(setting.value);
 		}
 		else if (setting.name.compare("CopAlarmIndex") == 0){
 			CopAlarmIndex = stoi(setting.value);
