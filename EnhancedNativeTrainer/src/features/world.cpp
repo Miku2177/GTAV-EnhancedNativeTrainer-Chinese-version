@@ -940,11 +940,15 @@ void update_world_features()
 		}
 		
 		int random_weather = (rand() % 16 + 0);
-		int random_weather2 = (rand() % 16 + 0);
-		if (random_weather == 0) random_weather = 1;
-		if (random_weather == 16) random_weather = 15; // 10
-		if (random_weather2 == 0) random_weather2 = 1;
-		if (random_weather2 == 16) random_weather2 = 15; // 10
+		int random_weather2 = (rand() % 18 + 0);
+		if (random_weather == 0) random_weather = 10; // 1 // 2
+		if (random_weather == 16) random_weather = 10; // 15// 10
+		if (random_weather == 17) random_weather = 1; // 15// 10
+		if (random_weather == 18) random_weather = 2; // 15// 10
+		if (random_weather2 == 0) random_weather2 = 10; // 1 // 2
+		if (random_weather2 == 16) random_weather2 = 10; // 15 // 10
+		if (random_weather2 == 17) random_weather2 = 1; // 15// 10
+		if (random_weather2 == 18) random_weather2 = 2; // 15// 10
 		char* cur_w;
 		char* rand_w1;
 		char* rand_w2;
@@ -1202,7 +1206,7 @@ void update_world_features()
 				}
 				if (bus_veh[i] != veh_mycurrveh && bus_veh[i] != veh_i_last_used) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], true);
 			}
-			if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 && featureSnow) { // SNOW
+			if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 && featureSnow) { // Reduced Grip When Snowing
 				float slippery_randomize = -1;
 				Vector3 coords_slip = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 				Vector3 coords_slip_ped = ENTITY::GET_ENTITY_COORDS(bus_veh[i], true);
@@ -1239,24 +1243,29 @@ void update_world_features()
 				if (VEH_ENG_POW_VALUES[engPowMultIndex] < 0 && VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 0))) && !INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(my_coords_s.x, my_coords_s.y, my_coords_s.z) &&
 					CONTROLS::IS_CONTROL_RELEASED(2, 61)) VEHICLE::_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 0), 1.0f);
 			}
-			if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripRainingIndex] > 0) { // RAIN
+			if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripRainingIndex] > 0) { // Slippery When Wet
 				if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 1420204096 || GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3061285535 || GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 1840358669 ||
 					GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3373937154) { // GET_NEXT_WEATHER_TYPE_HASH_NAME
 					Vector3 coords_slip_r = ENTITY::GET_ENTITY_COORDS(bus_veh[i], true);
 					int slip_index = -1;
 					if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripRainingIndex] == 1) { // arcade
-						if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 1420204096 || GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 1840358669) slip_index = 3;
-						if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3061285535 || GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3373937154) slip_index = 4;
+						if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 1420204096) slip_index = 3; // rain
+						if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3061285535) slip_index = 4; // stormy
+						if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 1840358669) slip_index = 2; // clearing
+						if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3373937154) slip_index = 4; // halloween
 					}
 					if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripRainingIndex] == 2) { // realistic
-						if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 1420204096 || GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 1840358669) slip_index = 5;
-						if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3061285535 || GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3373937154) slip_index = 6;
+						if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 1420204096) slip_index = 5; // rain
+						if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3061285535) slip_index = 6; // stormy
+						if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 1840358669) slip_index = 4; // clearing
+						if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3373937154) slip_index = 6; // halloween
 					}
 					slippery_r = slippery_r + 1;
 					if (slippery_r < slip_index && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip_r.x, coords_slip_r.y, coords_slip_r.z)) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], true);
 					if (slippery_r > slip_index - 1 && slippery_r < 20) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], false); 
 					if (slippery_r > 19) slippery_r = 0; 
-					if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() != 1420204096 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() != 3061285535) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], false);
+					if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() != 1420204096 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() != 3061285535 &&
+						GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() != 1840358669 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() != 3373937154) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], false);
 					// normalize speed
 					Vector3 my_coords_sl = ENTITY::GET_ENTITY_COORDS(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 0), true);
 					if (VEH_ENG_POW_VALUES[engPowMultIndex] < 0 && VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 0))) && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(my_coords_sl.x, my_coords_sl.y, my_coords_sl.z) &&
