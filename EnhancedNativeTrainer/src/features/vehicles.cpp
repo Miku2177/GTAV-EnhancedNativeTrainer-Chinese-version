@@ -62,6 +62,8 @@ Ped temp_ped = -1;
 std::vector<Object> SPIKES;
 bool s_message = false;
 
+bool speed_limit_e = false;
+
 bool airstrike = false;
 Object nuke1, nuke2, nuke3 = -1;
 float nuke_h1_coord, nuke_h2_coord, nuke_h3_coord = -1;
@@ -2470,7 +2472,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		VEHICLE::_SET_VEHICLE_ENGINE_POWER_MULTIPLIER(veh, 250.0f);
 		powChanged = true;
 	}
-	else if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && VEH_ENG_POW_VALUES[engPowMultIndex] >= 0) { 
+	else if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && VEH_ENG_POW_VALUES[engPowMultIndex] >= 0) { // engine power multiplier
 		VEHICLE::_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(veh, 1.0f);
 		VEHICLE::_SET_VEHICLE_ENGINE_POWER_MULTIPLIER(veh, VEH_ENG_POW_VALUES[engPowMultIndex]);
 		powChanged = true;
@@ -3106,10 +3108,8 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	//
 	if (bPlayerExists && LIMP_IF_INJURED_VALUES[EngineRunningIndex] == 2 && CONTROLS::IS_CONTROL_RELEASED(2, 75)) engine_tick = 0;
 
-	if (bPlayerExists && LIMP_IF_INJURED_VALUES[EngineRunningIndex] == 0 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
-		Vehicle playerVehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
-		if (CONTROLS::IS_CONTROL_PRESSED(2, 75)) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(playerVehicle, false);
-	}
+	if (bPlayerExists && LIMP_IF_INJURED_VALUES[EngineRunningIndex] == 0 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && CONTROLS::IS_CONTROL_PRESSED(2, 75)) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), false);
+	
 	// Helicopter's lines
 	if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && current_veh_e != -1 && LIMP_IF_INJURED_VALUES[EngineRunningIndex] > 0) {
 		if (LIMP_IF_INJURED_VALUES[EngineRunningIndex] == 1) {
@@ -3130,6 +3130,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && (VEH_SPEEDLIMITER_VALUES[speedLimiterIndex] > 0) && speedlimiter_switch && !PED::IS_PED_IN_ANY_PLANE(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_HELI(PLAYER::PLAYER_PED_ID())) {
 		Vehicle vehlimit = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		ENTITY::SET_ENTITY_MAX_SPEED(vehlimit, VEH_SPEEDLIMITER_VALUES[speedLimiterIndex]);
+		speed_limit_e = true;
 	}
 	 
 	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && ((VEH_SPEEDLIMITER_VALUES[speedCityLimiterIndex] > 0) || (VEH_SPEEDLIMITER_VALUES[speedCountryLimiterIndex] > 0)) && 
@@ -3173,16 +3174,18 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		if ((VEH_SPEEDLIMITER_VALUES[speedCityLimiterIndex] > 0) && being_in_city == true) ENTITY::SET_ENTITY_MAX_SPEED(vehlimit, VEH_SPEEDLIMITER_VALUES[speedCityLimiterIndex]);
 		if ((VEH_SPEEDLIMITER_VALUES[speedCountryLimiterIndex] > 0) && being_on_motorway == true) ENTITY::SET_ENTITY_MAX_SPEED(vehlimit, VEH_SPEEDLIMITER_VALUES[speedCountryLimiterIndex]);
 		if (being_in_city == false && being_on_motorway == false) ENTITY::SET_ENTITY_MAX_SPEED(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 15000.0);
+		speed_limit_e = true;
 	}
 
-	if ((((VEH_SPEEDLIMITER_VALUES[speedCityLimiterIndex] == 0 && being_in_city == true && VEH_SPEEDLIMITER_VALUES[speedCountryLimiterIndex] > 0 && being_on_motorway == false) || 
+	if (((((VEH_SPEEDLIMITER_VALUES[speedCityLimiterIndex] == 0 && being_in_city == true && VEH_SPEEDLIMITER_VALUES[speedCountryLimiterIndex] > 0 && being_on_motorway == false) || 
 		(VEH_SPEEDLIMITER_VALUES[speedCityLimiterIndex] > 0 && being_in_city == false && VEH_SPEEDLIMITER_VALUES[speedCountryLimiterIndex] == 0 && being_on_motorway == true)) &&
 		((VEH_SPEEDLIMITER_VALUES[speedLimiterIndex] > 0 && !speedlimiter_switch) || VEH_SPEEDLIMITER_VALUES[speedLimiterIndex] == 0)) ||
 		(VEH_SPEEDLIMITER_VALUES[speedCityLimiterIndex] == 0 && VEH_SPEEDLIMITER_VALUES[speedCountryLimiterIndex] == 0 && VEH_SPEEDLIMITER_VALUES[speedLimiterIndex] == 0) ||
-		(VEH_SPEEDLIMITER_VALUES[speedLimiterIndex] > 0 && !speedlimiter_switch && VEH_SPEEDLIMITER_VALUES[speedCityLimiterIndex] == 0 && VEH_SPEEDLIMITER_VALUES[speedCountryLimiterIndex] == 0)) {
+		(VEH_SPEEDLIMITER_VALUES[speedLimiterIndex] > 0 && !speedlimiter_switch && VEH_SPEEDLIMITER_VALUES[speedCityLimiterIndex] == 0 && VEH_SPEEDLIMITER_VALUES[speedCountryLimiterIndex] == 0)) && speed_limit_e == true) {
 		ENTITY::SET_ENTITY_MAX_SPEED(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 15000.0);
 		std::vector<int> emptyVec;
 		if (!VEH_SPEEDLIMITER_VALUES.empty()) std::vector<int>(VEH_SPEEDLIMITER_VALUES).swap(emptyVec);
+		speed_limit_e = false;
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
