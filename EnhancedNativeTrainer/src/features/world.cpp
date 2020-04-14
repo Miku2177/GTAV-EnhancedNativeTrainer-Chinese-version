@@ -1058,11 +1058,11 @@ void update_world_features()
 					GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
 					GRAPHICS::_CLEAR_CLOUD_HAT();
 				}
-				if (lastWeather == "EXTRASUNNY" || lastWeather == "NEUTRAL") GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Snowy 01", 9.0);
-				if (lastWeather == "CLOUDS" && weather_counter == 1) GRAPHICS::_SET_CLOUD_HAT_TRANSITION("shower", 9.0);
-				if (lastWeather == "CLOUDS" && weather_counter == 2) GRAPHICS::_SET_CLOUD_HAT_TRANSITION("stratoscumulus", 9.0);
-				if (lastWeather == "THUNDER") GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 9.0);
-				if (WORLD_LIGHTNING_INTENSITY_VALUES[featureLightIntensityIndex] > -2 && lastWeather == "HALLOWEEN") GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 9.0);
+				if (lastWeather == "EXTRASUNNY" || lastWeather == "NEUTRAL") GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Snowy 01", 1.0); // 9.0
+				if (lastWeather == "CLOUDS" && weather_counter == 1) GRAPHICS::_SET_CLOUD_HAT_TRANSITION("shower", 1.0); // 9.0
+				if (lastWeather == "CLOUDS" && weather_counter == 2) GRAPHICS::_SET_CLOUD_HAT_TRANSITION("stratoscumulus", 1.0); // 9.0
+				if (lastWeather == "THUNDER") GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 1.0); // 9.0
+				if (WORLD_LIGHTNING_INTENSITY_VALUES[featureLightIntensityIndex] > -2 && lastWeather == "HALLOWEEN") GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 1.0); // 9.0
 			}
 			if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 2 && t_counter > 0.40 && t_counter < 0.60) {
 				if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 2) {
@@ -1309,6 +1309,7 @@ void update_world_features()
 				for (int b = 0; b < found; b++) {
 					VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[b], false);
 				}
+				VEHICLE::_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 0), 1.0f);
 				no_grip_snowing_e = false;
 				no_grip_when_wet_e = false;
 				reduced_grip_e = false;
@@ -1700,6 +1701,7 @@ void update_world_features()
 	// No Waypoint
 	if (featureNoWaypoint) UI::CLEAR_GPS_PLAYER_WAYPOINT();
 
+	// No Traffic
 	if (featureWorldNoTrafficUpdated)
 	{
 		VEHICLE::_DISPLAY_DISTANT_VEHICLES(!featureWorldNoTraffic);
@@ -1709,24 +1711,19 @@ void update_world_features()
 		{
 			Vector3 v3 = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 1);
 			GAMEPLAY::CLEAR_AREA_OF_VEHICLES(v3.x, v3.y, v3.z, 1000.0, 0, 0, 0, 0, 0);
+
 			STREAMING::SET_VEHICLE_POPULATION_BUDGET(0);
-			VEHICLE::_DISPLAY_DISTANT_VEHICLES(false);
-			GRAPHICS::DISABLE_VEHICLE_DISTANTLIGHTS(true);
-			featureWorldNoTrafficUpdated = true;
 		}
-		if (!featureWorldNoTraffic && featureWorldNoTrafficUpdated == true)
+		else
 		{
 			STREAMING::SET_VEHICLE_POPULATION_BUDGET(3);
 			VEHICLE::SET_ALL_VEHICLE_GENERATORS_ACTIVE();
 			VEHICLE::SET_ALL_LOW_PRIORITY_VEHICLE_GENERATORS_ACTIVE(true);
-			VEHICLE::_DISPLAY_DISTANT_VEHICLES(true);
-			GRAPHICS::DISABLE_VEHICLE_DISTANTLIGHTS(false);
-			featureWorldNoTrafficUpdated = false;
 		}
 
 		featureWorldNoTrafficUpdated = false;
 	}
-	if (featureWorldNoTraffic)
+	else if (featureWorldNoTraffic)// && get_frame_number() % 100 == 0)
 	{
 		if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0))
 		{
@@ -1734,6 +1731,8 @@ void update_world_features()
 			GAMEPLAY::CLEAR_AREA_OF_VEHICLES(v3.x, v3.y, v3.z, 1000.0, 0, 0, 0, 0, 0);
 		}
 		STREAMING::SET_VEHICLE_POPULATION_BUDGET(0);
+		GRAPHICS::DISABLE_VEHICLE_DISTANTLIGHTS(true);
+		VEHICLE::_DISPLAY_DISTANT_VEHICLES(false);
 	}
 
 	if (featureNoPlanesHelis) {
