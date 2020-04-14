@@ -70,8 +70,8 @@ int ResetSkinOnDeathIndex = 0;
 bool ResetSkinOnDeathChanged = true;
 
 // Auto Apply Last Saved Skin
-const std::vector<std::string> SKINS_AUTO_SKIN_SAVED_CAPTIONS{ "OFF", "Restore Character", "Saved Character Only", "Current Character" };
-const int SKINS_AUTO_SKIN_SAVED_VALUES[] = { 0, 1, 2, 3 };
+const std::vector<std::string> SKINS_AUTO_SKIN_SAVED_CAPTIONS{ "OFF", "Restore Character", "Saved Character Only"/*, "Current Character"*/ };
+const int SKINS_AUTO_SKIN_SAVED_VALUES[] = { 0, 1, 2/*, 3*/ };
 int AutoApplySkinSavedIndex = 0;
 bool AutoApplySkinSavedChanged = true;
 
@@ -324,7 +324,7 @@ void update_skin_features() {
 						if (SKINS_AUTO_SKIN_SAVED_VALUES[AutoApplySkinSavedIndex] == 1) applyChosenSkin(savedSkin->model);
 						if (SKINS_AUTO_SKIN_SAVED_VALUES[AutoApplySkinSavedIndex] == 2 && ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == savedSkin->model) applyChosenSkin(PLAYER::PLAYER_PED_ID()); // applyChosenSkin(savedSkin->model);
 						if (SKINS_AUTO_SKIN_SAVED_VALUES[AutoApplySkinSavedIndex] == 2 && ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) != savedSkin->model) right_model = true;
-						if (SKINS_AUTO_SKIN_SAVED_VALUES[AutoApplySkinSavedIndex] == 3) applyChosenSkin(PLAYER::PLAYER_PED_ID());
+						//if (SKINS_AUTO_SKIN_SAVED_VALUES[AutoApplySkinSavedIndex] == 3) applyChosenSkin(PLAYER::PLAYER_PED_ID());
 						
 						if (right_model == false) {
 							Ped ped = PLAYER::PLAYER_PED_ID();
