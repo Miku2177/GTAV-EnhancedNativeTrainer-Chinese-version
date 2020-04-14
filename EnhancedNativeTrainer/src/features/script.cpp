@@ -502,7 +502,8 @@ void update_features(){
 	}
 
 	// First Person Death Camera
-	if (featureFirstPersonDeathCamera) {
+	if ((featureFirstPersonDeathCamera && PED::GET_PED_TYPE(playerPed) != 0 && PED::GET_PED_TYPE(playerPed) != 1 && PED::GET_PED_TYPE(playerPed) != 2 && PED::GET_PED_TYPE(playerPed) != 3 && SKINS_RESET_SKIN_ONDEATH_VALUES[ResetSkinOnDeathIndex] == 2) ||
+		(featureFirstPersonDeathCamera && (PED::GET_PED_TYPE(playerPed) == 0 || PED::GET_PED_TYPE(playerPed) == 1 || PED::GET_PED_TYPE(playerPed) == 2 || PED::GET_PED_TYPE(playerPed) == 3))) { // && SKINS_RESET_SKIN_ONDEATH_VALUES[ResetSkinOnDeathIndex] != 0
 		Vector3 playerPosition = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 		Vector3 curRotation = ENTITY::GET_ENTITY_ROTATION(PLAYER::PLAYER_PED_ID(), 2);
 		if (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) || PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 1)) {
