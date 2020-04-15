@@ -1685,7 +1685,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	
 	// First Person Stunt Jump Camera
 	if (featureFirstPersonStuntJumpCamera) {
-		if (GAMEPLAY::IS_STUNT_JUMP_IN_PROGRESS() ) {
+		if (GAMEPLAY::IS_STUNT_JUMP_IN_PROGRESS()) {
 			Vector3 playerPosition = ENTITY::GET_ENTITY_COORDS(playerPed, true);
 			Vector3 curRotation = ENTITY::GET_ENTITY_ROTATION(PED::GET_VEHICLE_PED_IS_USING(playerPed), 2);
 			if (!CAM::DOES_CAM_EXIST(StuntCam)) {

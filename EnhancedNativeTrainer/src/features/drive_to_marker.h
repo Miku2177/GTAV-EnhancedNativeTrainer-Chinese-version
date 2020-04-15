@@ -3,7 +3,7 @@
 extern Blip myChauffeurBlip;
 extern bool marker_been_set, blipDriveFound;
 extern float planecurrspeed;
-extern bool featureStickToGround, landing, landing_gear_off;
+extern bool landing, landing_gear_off;
 extern bool blipFound, reverse_check, altitude_reached;
 extern Ped driver_to_marker_pilot;
 extern Vehicle curr_veh;
