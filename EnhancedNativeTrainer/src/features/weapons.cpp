@@ -1398,7 +1398,6 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 								ENTITY::SET_ENTITY_MAX_SPEED(surr_p_peds[j], 20); // 10
 							}
 						}
-
 					}
 					Vehicle surr_vehicles[arrSize_bl];
 					int count_surr_v = worldGetAllVehicles(surr_vehicles, arrSize_bl);
