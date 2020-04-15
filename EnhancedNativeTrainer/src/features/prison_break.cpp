@@ -47,8 +47,8 @@ int civilian_torso_drawable, civilian_torso_texture, civilian_legs_drawable, civ
 bool alert_police_about_fugitive_close, alert_police_about_fugitive_distant = false;
 
 bool featurePrison_Hardcore = false;
-bool featurePrison_Robe = true;
-bool featurePedPrison_Robe = true;
+bool featurePrison_Robe = false;
+bool featurePedPrison_Robe = false;
 bool featurePrison_Yard = true;
 
 int current_player_prison = 0;
@@ -609,7 +609,9 @@ void prison_break()
 		}
 
 		// YOU'D BETTER CHANGE AS SOON AS POSSIBLE. POLICE WILL NOTICE YOUR INTERESTING CLOTHES
-		if (featurePrison_Robe && in_prison == false && (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 5)) {
+		if (featurePrison_Robe && in_prison == false && (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 5) && ((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 12) ||
+			(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 1) || (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 5))) {
+
 			for (int i = 0; i < count_prison_guards; i++) {
 				Vector3 police_position = ENTITY::GET_ENTITY_COORDS(guards[i], true);
 				int distance_from_police_x = my_position_in_prison.x - police_position.x;
@@ -620,10 +622,7 @@ void prison_break()
 				if (distance_from_police_z < 0) distance_from_police_z = distance_from_police_z * -1;
 
 				// Your escape is not over yet so you still can't use mobile or switch character unless you change your clothes. And you don't need a parachute either
-				if (((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 12) ||
-					(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 1) ||
-					(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 5)) &&
-					guards[i] == playerPed) 
+				if (guards[i] == playerPed) 
 				{
 					CONTROLS::DISABLE_CONTROL_ACTION(2, 19, true);
 					MOBILE::DESTROY_MOBILE_PHONE();
@@ -678,7 +677,9 @@ void prison_break()
 		}
 
 		// YOU'D BETTER CHANGE AS SOON AS POSSIBLE. PEDS WILL NOTICE YOUR INTERESTING CLOTHES
-		if (featurePedPrison_Robe && in_prison == false && (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 5)) {
+		if (featurePedPrison_Robe && in_prison == false && (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 5) && ((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 12) ||
+			(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 1) || (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 5))) {
+
 			for (int i = 0; i < count_prison_guards; i++) {
 				Vector3 ped_position = ENTITY::GET_ENTITY_COORDS(guards[i], true);
 				int distance_from_ped_x = my_position_in_prison.x - ped_position.x;
@@ -689,10 +690,7 @@ void prison_break()
 				if (distance_from_ped_z < 0) distance_from_ped_z = distance_from_ped_z * -1;
 
 				// Your escape is not over yet so you still can't use mobile or switch character unless you change your clothes. And you don't need a parachute either
-				if (((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 12) ||
-					(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 1) ||
-					(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 5)) &&
-					guards[i] == playerPed) 
+				if (guards[i] == playerPed) 
 				{
 					CONTROLS::DISABLE_CONTROL_ACTION(2, 19, true);
 					MOBILE::DESTROY_MOBILE_PHONE();

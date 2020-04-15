@@ -2173,7 +2173,6 @@ void reset_globals(){
 		featurePlayerInvisibleInVehicle =
 		featureNightVision =
 		featureThermalVision =
-
 		featurePlayerLife =
 		featurePlayerLife_Died = 
 		featurePlayerStatsEnable =
@@ -2182,7 +2181,6 @@ void reset_globals(){
 		featureNoRagdoll =
 		featureRagdollIfInjured =
 		featureLevitation =
-
 		featureWantedLevelNoPHeli =
 		featureWantedNoPRoadB =
 		featureWantedLevelNoPBoats =
@@ -2192,18 +2190,17 @@ void reset_globals(){
 		featureRespawnsWhereDied =
 		featureNoScubaSound =
 		featureNoScubaGearMask =
-
+		featurePrison_Robe =
+		featurePedPrison_Robe =
 		featureWantedLevelFrozen = false;
+
 		featurePlayerInvincibleUpdated =
 		featurePlayerDrunkUpdated =
 		featureNightVisionUpdated =
 		featureThermalVisionUpdated =
 		featurePlayerLifeUpdated =
-		featurePrison_Robe =
-		featurePedPrison_Robe =
 		featurePrison_Yard = 
 		featurePlayerStatsUpdated =
-
 		featurePlayerNoSwitch = true;
 		featureWantedLevelFrozenUpdated = true;
 
