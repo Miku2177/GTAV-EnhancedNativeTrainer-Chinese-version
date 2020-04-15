@@ -295,7 +295,7 @@ void road_laws()
 					}
 				}
 			}
-			Vector3 veh_stopped_red_light_coords = ENTITY::GET_ENTITY_COORDS(veh_stopped_red_light, true);
+			//Vector3 veh_stopped_red_light_coords = ENTITY::GET_ENTITY_COORDS(veh_stopped_red_light, true);
 			float veh_stopped_red_light_heading = ENTITY::GET_ENTITY_HEADING(veh_stopped_red_light);
 			float my_vehicle_heading = ENTITY::GET_ENTITY_HEADING(vehroadlaws);
 			int temp_heading = veh_stopped_red_light_heading - my_vehicle_heading;

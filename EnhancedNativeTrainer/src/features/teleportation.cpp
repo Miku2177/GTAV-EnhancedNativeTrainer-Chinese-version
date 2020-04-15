@@ -1135,12 +1135,6 @@ void getTelChauffeurIndex(){
 	menuItems.push_back(item);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Stick Vehicle To Ground";
-	toggleItem->value = i++;
-	toggleItem->toggleValue = &featureStickToGround;
-	menuItems.push_back(toggleItem);
-
-	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Land At Destination";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureLandAtDestination;
@@ -1493,7 +1487,6 @@ void reset_teleporter_globals()
 	featureEnableMpMaps = false;
 	feature3dmarker = false;
 	featureTeleportAutomatically = false;
-	featureStickToGround = false;
 	featureLandAtDestination = true;
 
 	lastChosenCategory = 0;
@@ -1514,7 +1507,6 @@ void add_teleporter_feature_enablements(std::vector<FeatureEnabledLocalDefinitio
 	
 	results->push_back(FeatureEnabledLocalDefinition{"feature3dmarker", &feature3dmarker});
 	results->push_back(FeatureEnabledLocalDefinition{"featureTeleportAutomatically", &featureTeleportAutomatically});
-	results->push_back(FeatureEnabledLocalDefinition{"featureStickToGround", &featureStickToGround});
 	results->push_back(FeatureEnabledLocalDefinition{"featureLandAtDestination", &featureLandAtDestination});
 }
 
