@@ -693,7 +693,8 @@ void update_area_effects(Ped playerPed){
 			v_collided.clear();
 			v_collided.shrink_to_fit();
 		}
-		if (!pursuer.empty() && pursuer.size() > 15) { // 10
+		if (!pursuer.empty() && pursuer.size() > 12) { // 15
+			AI::CLEAR_PED_TASKS_IMMEDIATELY(pursuer[0]);
 			ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&pursuer[0]);
 			PED::DELETE_PED(&pursuer[0]);
 			pursuer.erase(pursuer.begin());
