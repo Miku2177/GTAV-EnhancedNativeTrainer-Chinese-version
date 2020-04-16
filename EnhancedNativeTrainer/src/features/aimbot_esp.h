@@ -21,8 +21,8 @@ const float AIMBOT_TOLERANCE[] = { 0.025f, 0.05f, 0.10f, 0.20f, 0.30f, 0.40f, 0.
 const std::vector<std::string> AIMBOT_VEH_OFFSET_CAPTIONS{"-6.0", "-5.5", "-5.0", "-4.5", "-4.0", "-3.5", "-3.0", "-2.5", "-2.0", "-1.5", "-1.0", "-0.5", "0.0", "0.5", "1.0", "1.5", "2.0", "2.5", "3.0", "3.5", "4.0", "4.5", "5.0", "5.5", "6.0" };
 const float AIMBOT_VEH_OFFSET[] = { -6.0f, -5.5f, -5.0f, -4.5f, -4.0f, -3.5f, -3.0f, -2.5f, -2.0f, -1.5f, -1.0f, -0.5f, 0.0f, 0.5f, 1.0f, 1.5f, 2.0f, 2.5f, 3.0f, 3.5f, 4.0f, 4.5f, 5.0f, 5.5f, 6.0f };
 
-const std::vector<std::string> AIMBOT_BONE_CAPTION{ "Pelvis", "Neck", "Center Brow", "Head" };
-const int AIMBOT_BONE[] = { 0x2E28, 0x9995, 0x9149, 0x796E, };
+const std::vector<std::string> AIMBOT_BONE_CAPTION{ "Pelvis", "Neck", /*"Center Brow",*/ "Head" };
+const int AIMBOT_BONE[] = { 0x2E28, 0x9995, /*0x9149,*/ 0x796E, };
 
 void draw_ESP_box(Ped ped, int red, int green, int blue, int alpha);
 

@@ -531,7 +531,7 @@ void update_area_effects(Ped playerPed){
 	}
 	
 	// Aggressive Drivers && Vigilante Citizens
-	if (featureAggressiveDrivers || featureLawAbidingCitizens) {
+	if ((featureAggressiveDrivers || featureLawAbidingCitizens) && !featurePlayerIgnoredByAll) {
 		Vehicle veh_me = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		Vector3 veh_me_coords = ENTITY::GET_ENTITY_COORDS(veh_me, true);
 		float veh_me_speed = ENTITY::GET_ENTITY_SPEED(veh_me);
