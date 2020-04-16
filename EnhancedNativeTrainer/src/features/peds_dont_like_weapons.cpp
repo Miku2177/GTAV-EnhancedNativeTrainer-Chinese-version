@@ -35,7 +35,6 @@ int ChanceAttackingYouIndex = 1;
 bool ChanceAttackingYouChanged = true;
 
 /////////////////////////////////// PEDS DON'T LIKE WEAPONS /////////////////////////////////////////////
-
 void peds_dont_like_weapons() {
 	if (featurePedAgainstWeapons && !featurePlayerInvisible && !featurePlayerIgnoredByAll && GAMEPLAY::GET_MISSION_FLAG() == 0) {
 		Player player = PLAYER::PLAYER_ID();
@@ -219,5 +218,4 @@ void peds_dont_like_weapons() {
 		}
 	}
 }
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////

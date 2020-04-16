@@ -61,7 +61,6 @@ int current_escape_stars = 2;
 bool current_escape_stars_Changed = true;
 
 ////////////////////////////////////////// PRISON BREAK //////////////////////////////////////////
-
 void prison_break()
 {
 	if (PLAYER_PRISON_VALUES[current_player_prison] > 0 && GAMEPLAY::GET_MISSION_FLAG() == 0) {
@@ -608,173 +607,160 @@ void prison_break()
 			}
 		}
 
-		// YOU'D BETTER CHANGE AS SOON AS POSSIBLE. POLICE WILL NOTICE YOUR INTERESTING CLOTHES
-		if (featurePrison_Robe && in_prison == false && (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 5) && ((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 12) ||
+		if ((featurePrison_Robe || featurePedPrison_Robe) && in_prison == false && (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 5) && ((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 12) ||
 			(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 1) || (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 5))) {
-
 			for (int i = 0; i < count_prison_guards; i++) {
-				Vector3 police_position = ENTITY::GET_ENTITY_COORDS(guards[i], true);
-				int distance_from_police_x = my_position_in_prison.x - police_position.x;
-				int distance_from_police_y = my_position_in_prison.y - police_position.y;
-				int distance_from_police_z = my_position_in_prison.z - police_position.z;
-				if (distance_from_police_x < 0) distance_from_police_x = distance_from_police_x * -1;
-				if (distance_from_police_y < 0) distance_from_police_y = distance_from_police_y * -1;
-				if (distance_from_police_z < 0) distance_from_police_z = distance_from_police_z * -1;
+				
+				if (featurePrison_Robe) { // YOU'D BETTER CHANGE AS SOON AS POSSIBLE. POLICE WILL NOTICE YOUR INTERESTING CLOTHES
+					Vector3 police_position = ENTITY::GET_ENTITY_COORDS(guards[i], true);
+					int distance_from_police_x = my_position_in_prison.x - police_position.x;
+					int distance_from_police_y = my_position_in_prison.y - police_position.y;
+					int distance_from_police_z = my_position_in_prison.z - police_position.z;
+					if (distance_from_police_x < 0) distance_from_police_x = distance_from_police_x * -1;
+					if (distance_from_police_y < 0) distance_from_police_y = distance_from_police_y * -1;
+					if (distance_from_police_z < 0) distance_from_police_z = distance_from_police_z * -1;
 
-				// Your escape is not over yet so you still can't use mobile or switch character unless you change your clothes. And you don't need a parachute either
-				if (guards[i] == playerPed) 
-				{
-					CONTROLS::DISABLE_CONTROL_ACTION(2, 19, true);
-					MOBILE::DESTROY_MOBILE_PHONE();
-					CONTROLS::DISABLE_CONTROL_ACTION(2, 27, 1);
-					if (WEAPON::HAS_PED_GOT_WEAPON(playerPed, PARACHUTE_ID, FALSE)) WEAPON::REMOVE_WEAPON_FROM_PED(playerPed, PARACHUTE_ID);
-				}
-
-				// Met a cop at a distance
-				if (distance_from_police_x < 100 && distance_from_police_y < 100 && distance_from_police_z < 10 && PED::IS_PED_FACING_PED(guards[i], playerPed, 100) &&
-					(PED::GET_PED_TYPE(guards[i]) == 6 || PED::GET_PED_TYPE(guards[i]) == 27) && ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(guards[i], playerPed, 17))
-				{
-					if (((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 12) ||
-						(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 1) ||
-						(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 5)) &&
-						(!PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) || PED::IS_PED_ON_ANY_BIKE(playerPed)))
+					// Your escape is not over yet so you still can't use mobile or switch character unless you change your clothes. And you don't need a parachute either
+					if (guards[i] == playerPed) {
+						CONTROLS::DISABLE_CONTROL_ACTION(2, 19, true);
+						MOBILE::DESTROY_MOBILE_PHONE();
+						CONTROLS::DISABLE_CONTROL_ACTION(2, 27, 1);
+						if (WEAPON::HAS_PED_GOT_WEAPON(playerPed, PARACHUTE_ID, FALSE)) WEAPON::REMOVE_WEAPON_FROM_PED(playerPed, PARACHUTE_ID);
+					}
+					// Met a cop at a distance
+					if (distance_from_police_x < 100 && distance_from_police_y < 100 && distance_from_police_z < 10 && PED::IS_PED_FACING_PED(guards[i], playerPed, 100) &&
+						(PED::GET_PED_TYPE(guards[i]) == 6 || PED::GET_PED_TYPE(guards[i]) == 27) && ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(guards[i], playerPed, 17))
 					{
-						if ((PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 2)) {
-							PLAYER::SET_MAX_WANTED_LEVEL(5);
-							PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 1, 0);
-							PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
-							alert_level = 1;
-						}
-						// Met a cop right in front of you
-						if (distance_from_police_x < 10 && distance_from_police_y < 10 && distance_from_police_z < 1 && (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 4))
+						if (((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 12) ||
+							(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 1) ||
+							(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 5)) &&
+							(!PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) || PED::IS_PED_ON_ANY_BIKE(playerPed)))
 						{
-							PLAYER::SET_MAX_WANTED_LEVEL(5);
-							PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 3, 0);
-							PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
-							alert_level = 1;
+							if ((PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 2)) {
+								PLAYER::SET_MAX_WANTED_LEVEL(5);
+								PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 1, 0);
+								PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
+								alert_level = 1;
+							}
+							// Met a cop right in front of you
+							if (distance_from_police_x < 10 && distance_from_police_y < 10 && distance_from_police_z < 1 && (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 4)) {
+								PLAYER::SET_MAX_WANTED_LEVEL(5);
+								PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 3, 0);
+								PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
+								alert_level = 1;
+							}
 						}
 					}
-				}
-
-				// Prisoner driver met a cop
-				if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && !PED::IS_PED_ON_ANY_BIKE(playerPed))
-				{
-					if (((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 12) ||
-						(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 1) ||
-						(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 5)))
+					// Prisoner driver met a cop
+					if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && !PED::IS_PED_ON_ANY_BIKE(playerPed))
 					{
-						if ((distance_from_police_x < 4 && distance_from_police_y < 4 && distance_from_police_z < 1) && (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 4) && PED::IS_PED_FACING_PED(guards[i], playerPed, 100) &&
-							(PED::GET_PED_TYPE(guards[i]) == 6 || PED::GET_PED_TYPE(guards[i]) == 27) && ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(guards[i], playerPed, 17))
+						if (((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 12) ||
+							(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 1) ||
+							(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 5)))
 						{
-							PLAYER::SET_MAX_WANTED_LEVEL(5);
-							PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 3, 0);
-							PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
-							alert_level = 1;
+							if ((distance_from_police_x < 4 && distance_from_police_y < 4 && distance_from_police_z < 1) && (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 4) && PED::IS_PED_FACING_PED(guards[i], playerPed, 100) &&
+								(PED::GET_PED_TYPE(guards[i]) == 6 || PED::GET_PED_TYPE(guards[i]) == 27) && ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(guards[i], playerPed, 17))
+							{
+								PLAYER::SET_MAX_WANTED_LEVEL(5);
+								PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 3, 0);
+								PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
+								alert_level = 1;
+							}
 						}
 					}
-				}
-			}
-		}
+				} // end of prison robe
 
-		// YOU'D BETTER CHANGE AS SOON AS POSSIBLE. PEDS WILL NOTICE YOUR INTERESTING CLOTHES
-		if (featurePedPrison_Robe && in_prison == false && (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 5) && ((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 12) ||
-			(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 1) || (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 5))) {
+				if (featurePedPrison_Robe) { // YOU'D BETTER CHANGE AS SOON AS POSSIBLE. PEDS WILL NOTICE YOUR INTERESTING CLOTHES
+					Vector3 ped_position = ENTITY::GET_ENTITY_COORDS(guards[i], true);
+					int distance_from_ped_x = my_position_in_prison.x - ped_position.x;
+					int distance_from_ped_y = my_position_in_prison.y - ped_position.y;
+					int distance_from_ped_z = my_position_in_prison.z - ped_position.z;
+					if (distance_from_ped_x < 0) distance_from_ped_x = distance_from_ped_x * -1;
+					if (distance_from_ped_y < 0) distance_from_ped_y = distance_from_ped_y * -1;
+					if (distance_from_ped_z < 0) distance_from_ped_z = distance_from_ped_z * -1;
 
-			for (int i = 0; i < count_prison_guards; i++) {
-				Vector3 ped_position = ENTITY::GET_ENTITY_COORDS(guards[i], true);
-				int distance_from_ped_x = my_position_in_prison.x - ped_position.x;
-				int distance_from_ped_y = my_position_in_prison.y - ped_position.y;
-				int distance_from_ped_z = my_position_in_prison.z - ped_position.z;
-				if (distance_from_ped_x < 0) distance_from_ped_x = distance_from_ped_x * -1;
-				if (distance_from_ped_y < 0) distance_from_ped_y = distance_from_ped_y * -1;
-				if (distance_from_ped_z < 0) distance_from_ped_z = distance_from_ped_z * -1;
-
-				// Your escape is not over yet so you still can't use mobile or switch character unless you change your clothes. And you don't need a parachute either
-				if (guards[i] == playerPed) 
-				{
-					CONTROLS::DISABLE_CONTROL_ACTION(2, 19, true);
-					MOBILE::DESTROY_MOBILE_PHONE();
-					CONTROLS::DISABLE_CONTROL_ACTION(2, 27, 1);
-					if (WEAPON::HAS_PED_GOT_WEAPON(playerPed, PARACHUTE_ID, FALSE)) WEAPON::REMOVE_WEAPON_FROM_PED(playerPed, PARACHUTE_ID);
-				}
-
-				// You've been seen.
-				if (alert_police_about_fugitive_close == true || alert_police_about_fugitive_distant == true) {
-					pb_tick_secs_passed = clock() / CLOCKS_PER_SEC;
-					if (((clock() / (CLOCKS_PER_SEC / 1000)) - pb_tick_secs_curr) != 0) {
-						tick_callpoliceaboutfugitive = tick_callpoliceaboutfugitive + 1;
-						pb_tick_secs_curr = pb_tick_secs_passed;
+					// Your escape is not over yet so you still can't use mobile or switch character unless you change your clothes. And you don't need a parachute either
+					if (guards[i] == playerPed) {
+						CONTROLS::DISABLE_CONTROL_ACTION(2, 19, true);
+						MOBILE::DESTROY_MOBILE_PHONE();
+						CONTROLS::DISABLE_CONTROL_ACTION(2, 27, 1);
+						if (WEAPON::HAS_PED_GOT_WEAPON(playerPed, PARACHUTE_ID, FALSE)) WEAPON::REMOVE_WEAPON_FROM_PED(playerPed, PARACHUTE_ID);
 					}
-
-					if (tick_callpoliceaboutfugitive > 60000) {
-						if (alert_police_about_fugitive_distant == true && (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 2) && alert_police_about_fugitive_close == false) {
-							PLAYER::SET_MAX_WANTED_LEVEL(5);
-							PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 1, 0);
-							PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
-							alert_level = 1;
-						}
-						if (alert_police_about_fugitive_close == true) {
-							PLAYER::SET_MAX_WANTED_LEVEL(5);
-							PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 3, 0);
-							PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
-							alert_level = 1;
+					// You've been seen.
+					if (alert_police_about_fugitive_close == true || alert_police_about_fugitive_distant == true) {
+						pb_tick_secs_passed = clock() / CLOCKS_PER_SEC;
+						if (((clock() / (CLOCKS_PER_SEC / 1000)) - pb_tick_secs_curr) != 0) {
+							tick_callpoliceaboutfugitive = tick_callpoliceaboutfugitive + 1;
+							pb_tick_secs_curr = pb_tick_secs_passed;
 						}
 
-						tick_callpoliceaboutfugitive = 0;
-						alert_police_about_fugitive_distant = false;
-						alert_police_about_fugitive_close = false;
-					}
-				}
+						if (tick_callpoliceaboutfugitive > 60000) {
+							if (alert_police_about_fugitive_distant == true && (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 2) && alert_police_about_fugitive_close == false) {
+								PLAYER::SET_MAX_WANTED_LEVEL(5);
+								PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 1, 0);
+								PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
+								alert_level = 1;
+							}
+							if (alert_police_about_fugitive_close == true) {
+								PLAYER::SET_MAX_WANTED_LEVEL(5);
+								PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 3, 0);
+								PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
+								alert_level = 1;
+							}
 
-				// Met a ped at a distance
-				if (distance_from_ped_x < 20 && distance_from_ped_y < 20 && distance_from_ped_z < 10 && PED::IS_PED_FACING_PED(guards[i], playerPed, 100) &&
-					(PED::GET_PED_TYPE(guards[i]) == 4 || PED::GET_PED_TYPE(guards[i]) == 5) && PED::GET_PED_TYPE(guards[i]) != 6 && PED::GET_PED_TYPE(guards[i]) != 27 && 
-					ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(guards[i], playerPed, 17))
-				{
-					if (((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 12) ||
-						(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 1) ||
-						(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 5)) &&
-						(!PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) || PED::IS_PED_ON_ANY_BIKE(playerPed)))
+							tick_callpoliceaboutfugitive = 0;
+							alert_police_about_fugitive_distant = false;
+							alert_police_about_fugitive_close = false;
+						}
+					}
+					// Met a ped at a distance
+					if (distance_from_ped_x < 20 && distance_from_ped_y < 20 && distance_from_ped_z < 10 && PED::IS_PED_FACING_PED(guards[i], playerPed, 100) &&
+						(PED::GET_PED_TYPE(guards[i]) == 4 || PED::GET_PED_TYPE(guards[i]) == 5) && PED::GET_PED_TYPE(guards[i]) != 6 && PED::GET_PED_TYPE(guards[i]) != 27 &&
+						ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(guards[i], playerPed, 17))
 					{
-						if (!PED::IS_PED_FLEEING(guards[i]) && !AI::IS_PED_RUNNING(guards[i]) && !PED::IS_PED_IN_COMBAT(guards[i], playerPed))
+						if (((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 12) ||
+							(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 1) ||
+							(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 5)) &&
+							(!PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) || PED::IS_PED_ON_ANY_BIKE(playerPed)))
 						{
-							AUDIO::_PLAY_AMBIENT_SPEECH1(guards[i], "GENERIC_FRIGHTENED_HIGH", "SPEECH_PARAMS_FORCE_SHOUTED");
-							if (guards[i] != playerPed) AI::TASK_SMART_FLEE_PED(guards[i], playerPed, 1000, -1, true, true); 
-							AI::TASK_USE_MOBILE_PHONE_TIMED(guards[i], 10000);
-							alert_police_about_fugitive_distant = true;
-						}
-
-						// Met a ped right in front of you
-						if (distance_from_ped_x < 7 && distance_from_ped_y < 7 && distance_from_ped_z < 1 && (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 4) &&
-							!PED::IS_PED_FLEEING(guards[i]) && !AI::IS_PED_RUNNING(guards[i]) && !PED::IS_PED_IN_COMBAT(guards[i], playerPed))
-						{
-							AUDIO::_PLAY_AMBIENT_SPEECH1(guards[i], "GENERIC_FRIGHTENED_HIGH", "SPEECH_PARAMS_FORCE_SHOUTED");
-							if (guards[i] != playerPed) AI::TASK_SMART_FLEE_PED(guards[i], playerPed, 1000, -1, true, true); 
-							AI::TASK_USE_MOBILE_PHONE_TIMED(guards[i], 10000);
-							alert_police_about_fugitive_close = true;
+							if (!PED::IS_PED_FLEEING(guards[i]) && !AI::IS_PED_RUNNING(guards[i]) && !PED::IS_PED_IN_COMBAT(guards[i], playerPed))
+							{
+								AUDIO::_PLAY_AMBIENT_SPEECH1(guards[i], "GENERIC_FRIGHTENED_HIGH", "SPEECH_PARAMS_FORCE_SHOUTED");
+								if (guards[i] != playerPed) AI::TASK_SMART_FLEE_PED(guards[i], playerPed, 1000, -1, true, true);
+								AI::TASK_USE_MOBILE_PHONE_TIMED(guards[i], 10000);
+								alert_police_about_fugitive_distant = true;
+							}
+							// Met a ped right in front of you
+							if (distance_from_ped_x < 7 && distance_from_ped_y < 7 && distance_from_ped_z < 1 && (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 4) &&
+								!PED::IS_PED_FLEEING(guards[i]) && !AI::IS_PED_RUNNING(guards[i]) && !PED::IS_PED_IN_COMBAT(guards[i], playerPed))
+							{
+								AUDIO::_PLAY_AMBIENT_SPEECH1(guards[i], "GENERIC_FRIGHTENED_HIGH", "SPEECH_PARAMS_FORCE_SHOUTED");
+								if (guards[i] != playerPed) AI::TASK_SMART_FLEE_PED(guards[i], playerPed, 1000, -1, true, true);
+								AI::TASK_USE_MOBILE_PHONE_TIMED(guards[i], 10000);
+								alert_police_about_fugitive_close = true;
+							}
 						}
 					}
-				}
-
-				// Prisoner driver met a ped
-				if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && !PED::IS_PED_ON_ANY_BIKE(playerPed))
-				{
-					if (((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 12) ||
-						(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 1) ||
-						(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 5)))
+					// Prisoner driver met a ped
+					if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && !PED::IS_PED_ON_ANY_BIKE(playerPed))
 					{
-						if ((distance_from_ped_x < 2 && distance_from_ped_y < 2 && distance_from_ped_z < 2) && (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 4) && PED::IS_PED_FACING_PED(guards[i], playerPed, 100) &&
-							(PED::GET_PED_TYPE(guards[i]) == 4 || PED::GET_PED_TYPE(guards[i]) == 5) && PED::GET_PED_TYPE(guards[i]) != 6 && PED::GET_PED_TYPE(guards[i]) != 27 &&
-							!PED::IS_PED_FLEEING(guards[i]) && !AI::IS_PED_RUNNING(guards[i]) && !PED::IS_PED_IN_COMBAT(guards[i], playerPed) && ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(guards[i], playerPed, 17))
+						if (((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 12) ||
+							(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 1) ||
+							(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 5)))
 						{
-							AUDIO::_PLAY_AMBIENT_SPEECH1(guards[i], "GENERIC_FRIGHTENED_HIGH", "SPEECH_PARAMS_FORCE_SHOUTED");
-							if (guards[i] != playerPed) AI::TASK_SMART_FLEE_PED(guards[i], playerPed, 1000, -1, true, true); 
-							alert_police_about_fugitive_close = true;
+							if ((distance_from_ped_x < 2 && distance_from_ped_y < 2 && distance_from_ped_z < 2) && (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 4) && PED::IS_PED_FACING_PED(guards[i], playerPed, 100) &&
+								(PED::GET_PED_TYPE(guards[i]) == 4 || PED::GET_PED_TYPE(guards[i]) == 5) && PED::GET_PED_TYPE(guards[i]) != 6 && PED::GET_PED_TYPE(guards[i]) != 27 &&
+								!PED::IS_PED_FLEEING(guards[i]) && !AI::IS_PED_RUNNING(guards[i]) && !PED::IS_PED_IN_COMBAT(guards[i], playerPed) && ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(guards[i], playerPed, 17))
+							{
+								AUDIO::_PLAY_AMBIENT_SPEECH1(guards[i], "GENERIC_FRIGHTENED_HIGH", "SPEECH_PARAMS_FORCE_SHOUTED");
+								if (guards[i] != playerPed) AI::TASK_SMART_FLEE_PED(guards[i], playerPed, 1000, -1, true, true);
+								alert_police_about_fugitive_close = true;
+							}
 						}
 					}
-				}
-			}
-		}
+				} // end of ped prison robe
+			} // end of for
+		} // end of both 'prison robe' and 'ped prison robe'
 
 		if (alert_level > 0 && riot_attempt == false && detained == false) {
 			will_pay_money_for_escape = true;
@@ -791,5 +777,4 @@ void prison_break()
 		if (detained == false && alert_level == 0/* && in_prison == false*/) will_pay_money_for_escape = false;
 	}
 }
-
 //////////////////////////////////////////////////////////////////////////////////////////////////

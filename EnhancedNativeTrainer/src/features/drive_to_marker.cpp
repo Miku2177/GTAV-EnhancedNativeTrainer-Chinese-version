@@ -51,7 +51,6 @@ int TelChauffeur_drivingstyles_Index = 0;
 bool TelChauffeur_drivingstyles_Changed = true;
 
 ////////////////////////////////// DRIVE TO MARKER ////////////////////////////////////
-
 Vector3 get_blip_marker() {
 	static Vector3 zero;
 	Vector3 coords;
@@ -274,5 +273,4 @@ void drive_to_marker()
 		marker_been_set = true;
 	}
 }
-
 ///////////////////////////////////////////////////////////////////////////////////////
