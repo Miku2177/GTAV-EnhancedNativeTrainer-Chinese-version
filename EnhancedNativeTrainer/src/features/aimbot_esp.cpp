@@ -311,7 +311,7 @@ bool process_aimbot_esp_menu()
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Show ESP Grid";
+	toggleItem->caption = "Ped ESP";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &pedESP;
 	toggleItem->toggleValueUpdated = NULL;

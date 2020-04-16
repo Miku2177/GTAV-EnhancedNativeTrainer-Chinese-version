@@ -795,7 +795,6 @@ void teleport_to_marker(){
 }
 
 /////////////////////// GO TO A MISSION MARKER ///////////////////////////////
-
 void teleport_to_mission_marker(){
 
 	Vector3 coords_mission;
@@ -835,11 +834,9 @@ void teleport_to_mission_marker(){
 		}
 	}
 }
-
 ////////////////////////////////////////////////////////////////////////////////////
 
 /////////////////////// TELEPORT TO A VEHICLE AS A PASSENGER ///////////////////////////////
-
 void teleport_to_vehicle_as_passenger() {
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	const int numElements = 10;
@@ -864,7 +861,6 @@ void teleport_to_vehicle_as_passenger() {
 		}
 	}
 }
-
 ////////////////////////////////////////////////////////////////////////////////////
 
 void teleport_to_last_vehicle(){
@@ -1005,7 +1001,6 @@ void handle_generic_settings_teleportation(std::vector<StringPairSettingDBRow>* 
 }
 
 //////////////////////// JUMP TO COORDS ////////////////////////////////
-
 bool onconfirm_jump_category(MenuItem<int> choice)
 {
 	if (choice.value == -5) {
@@ -1054,7 +1049,6 @@ bool onconfirm_jump_category(MenuItem<int> choice)
 	}
 	return false;
 }
-
 ///////////////////////////////////////////////////////////////////////////////////////
 
 bool onconfirm_3dmarker_menu(MenuItem<int> choice)
@@ -1584,7 +1578,6 @@ void update_teleport_features(){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	/////////////////////////////////////// 3D MARKER /////////////////////////////////////////
-
 	if (feature3dmarker) {
 		int blip3DIterator = UI::IS_WAYPOINT_ACTIVE() ? BlipSpriteWaypoint : BlipSpriteStandard;
 		Vector3 playerPosition = ENTITY::GET_ENTITY_COORDS(playerPed, false);
@@ -1665,7 +1658,6 @@ void update_teleport_features(){
 			col2_R/*int red*/, col2_G/*int green*/, col2_B/*int blue*/, 110/*int alpha*/,
 			50/*BOOL bobUpAndDown*/, 1/*BOOL faceCamera*/, 1/*int p19*/, 0/*BOOL rotate*/, 0/*char* textureDict*/, 0/*char* textureName*/, 0/*BOOL drawOnEnts*/);
 	}
-	
 	///////////////////////////////////////////////////////////////////////////////////////
 
 	int blipMarkerIterator = UI::IS_WAYPOINT_ACTIVE() ? BlipSpriteWaypoint : BlipSpriteStandard;

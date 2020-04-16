@@ -1033,7 +1033,6 @@ void update_features(){
 	}
 
 	////////////////////////////////////// PLAYER DATA ////////////////////////////////////////////////
-	
 	if ((bPlayerExists && featurePlayerLife && featurePlayerLifeUpdated) || (bPlayerExists && featurePlayerLife_Died && featurePlayerLifeUpdated) ||
 		(bPlayerExists && featurePlayerLife_Changed && featurePlayerLifeUpdated) || (featurePlayerStatsEnable && featurePlayerStatsUpdated)) {
 		
@@ -1128,12 +1127,13 @@ void update_features(){
 		}
 		SYSTEM::START_NEW_SCRIPT("stats_controller", 1424);
 	}
-
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 
-	prison_break(); ///// <--- PRISON BREAK /////
+	///// <--- PRISON BREAK /////
+	prison_break(); 
 	
-	most_wanted(); ///// <--- WANTED FUGITIVE /////
+	///// <--- WANTED FUGITIVE /////
+	most_wanted(); 
 
 	// police ignore player
 	if(featurePlayerIgnoredByPolice){
