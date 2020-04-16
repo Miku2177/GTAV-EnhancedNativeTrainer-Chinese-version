@@ -266,17 +266,16 @@ bool process_aimbot_esp_menu()
 
 	int i = 0;
 
-	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Ped ESP";
-	toggleItem->value = i++;
-	toggleItem->toggleValue = &pedESP;
-	toggleItem->toggleValueUpdated = NULL;
-	menuItems.push_back(toggleItem);
-
 	listItem = new SelectFromListMenuItem(AIMBOT_TARGETS, onchange_aimbot);
 	listItem->wrap = false;
 	listItem->caption = "Aimbot";
 	listItem->value = aimbotIndex;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(AIMBOT_BONE_CAPTION, onchange_aimbot_bone);
+	listItem->wrap = false;
+	listItem->caption = "Aim Bone";
+	listItem->value = aimbotBoneIndex;
 	menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(AIMBOT_TARGET_METHOD, onchange_target_method);
@@ -290,6 +289,13 @@ bool process_aimbot_esp_menu()
 	listItem->caption = "Target Lock Radius";
 	listItem->value = aimbotToleranceIndex;
 	menuItems.push_back(listItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Target Peds in Vehicles";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &aimAtVehicles;
+	toggleItem->toggleValueUpdated = NULL;
+	menuItems.push_back(toggleItem);
 
 	listItem = new SelectFromListMenuItem(AIMBOT_VEH_OFFSET_CAPTIONS, onchange_aimbot_veh_offset);
 	listItem->wrap = false;
@@ -305,17 +311,11 @@ bool process_aimbot_esp_menu()
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Target Peds in Vehicles";
+	toggleItem->caption = "Show ESP Grid";
 	toggleItem->value = i++;
-	toggleItem->toggleValue = &aimAtVehicles;
+	toggleItem->toggleValue = &pedESP;
 	toggleItem->toggleValueUpdated = NULL;
 	menuItems.push_back(toggleItem);
-
-	listItem = new SelectFromListMenuItem(AIMBOT_BONE_CAPTION, onchange_aimbot_bone);
-	listItem->wrap = false;
-	listItem->caption = "Aim Bone";
-	listItem->value = aimbotBoneIndex;
-	menuItems.push_back(listItem);
 
 	return draw_generic_menu<int>(menuItems, &aimbotESPLineIndex, caption, onconfirm_aimbot_esp_menu, NULL, NULL);
 }
@@ -406,61 +406,64 @@ Entity get_ped_nearest_to_crosshair() {
 
 void update_aimbot_esp_features() {
 	// common variables
-	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
-	Player player = PLAYER::PLAYER_ID();
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	
+	if (aimbotIndex > 0) {
+		BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
+		Player player = PLAYER::PLAYER_ID();
+		Ped playerPed = PLAYER::PLAYER_PED_ID();
 
-	Vector3D playerCam3D(CAM::GET_GAMEPLAY_CAM_COORD());
+		Vector3D playerCam3D(CAM::GET_GAMEPLAY_CAM_COORD());
 
-	Vector3D playerCoords(ENTITY::GET_ENTITY_COORDS(playerPed, true));
-	Vector3D entityCoords(ENTITY::GET_ENTITY_COORDS(ENTITY::GET_ENTITY_ATTACHED_TO(playerPed), true));
-	float pHeight = ENTITY::GET_ENTITY_HEIGHT_ABOVE_GROUND(playerPed);
-	float eHeight = ENTITY::GET_ENTITY_HEIGHT_ABOVE_GROUND(ENTITY::GET_ENTITY_ATTACHED_TO(playerPed));
+		Vector3D playerCoords(ENTITY::GET_ENTITY_COORDS(playerPed, true));
+		Vector3D entityCoords(ENTITY::GET_ENTITY_COORDS(ENTITY::GET_ENTITY_ATTACHED_TO(playerPed), true));
+		float pHeight = ENTITY::GET_ENTITY_HEIGHT_ABOVE_GROUND(playerPed);
+		float eHeight = ENTITY::GET_ENTITY_HEIGHT_ABOVE_GROUND(ENTITY::GET_ENTITY_ATTACHED_TO(playerPed));
 
-	if (bPlayerExists && pedESP) {
-		doESP();
-	}
+		if (bPlayerExists && pedESP) {
+			doESP();
+		}
 
-	if (bPlayerExists && aimbotIndex) {
-		if (PLAYER::IS_PLAYER_FREE_AIMING(player)) {
+		if (bPlayerExists && aimbotIndex) {
+			if (PLAYER::IS_PLAYER_FREE_AIMING(player)) {
 
-			if (isTargetLocked == false) {
-				// acquire a new target
+				if (isTargetLocked == false) {
+					// acquire a new target
 
-				if (aimbotIndex == 1) { // Target NPCs
-					if (targetMethod == 0) {
-						// target whatever GTA thinks the player is free aiming at
-						aimedAt = get_ped_in_freeaim();
+					if (aimbotIndex == 1) { // Target NPCs
+						if (targetMethod == 0) {
+							// target whatever GTA thinks the player is free aiming at
+							aimedAt = get_ped_in_freeaim();
+						}
+						else if (targetMethod == 1) {
+							// get the ped nearest to the crosshair
+							aimedAt = get_ped_nearest_to_crosshair();
+						}
+
+						if (!ENTITY::IS_ENTITY_DEAD(aimedAt) && !PED::IS_PED_A_PLAYER(aimedAt) && (!ENTITY::IS_ENTITY_ATTACHED_TO_ANY_VEHICLE(aimedAt) || (ENTITY::IS_ENTITY_ATTACHED_TO_ANY_VEHICLE(aimedAt) && aimAtVehicles))) {
+							isTargetLocked = true;
+						}
+						else {
+							isTargetLocked = false;
+						}
 					}
-					else if (targetMethod == 1) {
-						// get the ped nearest to the crosshair
-						aimedAt = get_ped_nearest_to_crosshair();
-					}
-
-					if (!ENTITY::IS_ENTITY_DEAD(aimedAt) && !PED::IS_PED_A_PLAYER(aimedAt) && (!ENTITY::IS_ENTITY_ATTACHED_TO_ANY_VEHICLE(aimedAt) || (ENTITY::IS_ENTITY_ATTACHED_TO_ANY_VEHICLE(aimedAt) && aimAtVehicles))) {
-						isTargetLocked = true;
-					}
-					else {
+					// Removed a bunch of code for aiming only at vehicles, objects, etc...
+				}
+				else { // Target is locked
+					if (!ENTITY::DOES_ENTITY_EXIST(aimedAt) || ENTITY::IS_ENTITY_DEAD(aimedAt)) { // Do a sanity check to make sure we're not constantly locking onto something that we shouldn't be 
 						isTargetLocked = false;
 					}
-				}
-				// Removed a bunch of code for aiming only at vehicles, objects, etc...
-			}
-			else { // Target is locked
-				if (!ENTITY::DOES_ENTITY_EXIST(aimedAt) || ENTITY::IS_ENTITY_DEAD(aimedAt)) { // Do a sanity check to make sure we're not constantly locking onto something that we shouldn't be 
-					isTargetLocked = false;
-				}
 
-				if (!ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(playerPed, aimedAt, 17) && !aimThroughWalls) { // Drop target if wallhack is off and we lose vision of him
-					isTargetLocked = false;
-				}
-				else {
-					doAimbot(aimedAt);
+					if (!ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(playerPed, aimedAt, 17) && !aimThroughWalls) { // Drop target if wallhack is off and we lose vision of him
+						isTargetLocked = false;
+					}
+					else {
+						doAimbot(aimedAt);
+					}
 				}
 			}
-		}
-		else {
-			isTargetLocked = false; // no longer free aiming, so unlock the target
-		}
+			else {
+				isTargetLocked = false; // no longer free aiming, so unlock the target
+			}
+		} // end of if (bPlayerExists && aimbotIndex)
 	}
 }

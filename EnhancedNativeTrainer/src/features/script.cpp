@@ -2093,14 +2093,6 @@ void process_main_menu(){
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
-	if(AIMBOT_INCLUDED){
-		item = new MenuItem<int>();
-		item->caption = "Aimbot ESP";
-		item->value = i++;
-		item->isLeaf = false;
-		menuItems.push_back(item);
-	}
-
 	MenuParameters<int> params(menuItems, captionSS.str());
 	params.menuSelectionPtr = &activeLineIndexMain;
 	params.onConfirmation = onconfirm_main_menu;

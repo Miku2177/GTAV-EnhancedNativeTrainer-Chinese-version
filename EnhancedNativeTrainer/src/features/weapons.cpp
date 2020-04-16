@@ -1003,8 +1003,9 @@ bool onconfirm_weapon_menu(MenuItem<int> choice){
 		case 26:
 			process_pedagainstweapons_menu();
 			break;
-		case 30:
-			process_powerpunch_menu();
+		case 36: // 30
+			//process_powerpunch_menu();
+			process_aimbot_esp_menu();
 			break;
 	default:
 		break;
@@ -1246,6 +1247,14 @@ bool process_weapon_menu(){
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureDropWeaponOutAmmo;
 	menuItems.push_back(toggleItem);
+
+	if (AIMBOT_INCLUDED) {
+		item = new MenuItem<int>();
+		item->caption = "Aimbot ESP";
+		item->value = i++;
+		item->isLeaf = false;
+		menuItems.push_back(item);
+	}
 
 	return draw_generic_menu<int>(menuItems, &activeLineIndexWeapon, caption, onconfirm_weapon_menu, NULL, NULL);
 }
