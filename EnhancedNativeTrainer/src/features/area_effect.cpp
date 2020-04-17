@@ -24,6 +24,8 @@ int callsC = 0;
 int callsD = 0;
 int callsE = 0;
 
+Entity aimedAt = 0;
+
 std::deque<ENTTrackedPedestrian*> trackedPeds;
 std::deque<ENTTrackedVehicle*> trackedVehicles;
 
@@ -368,7 +370,7 @@ void process_areaeffect_advanced_ped_menu(){
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Make Peds Angry Manually";
+	togItem->caption = "Targeted Angry Peds";
 	togItem->value = 1;
 	togItem->toggleValue = &featureAngryMenManually;
 	menuItems.push_back(togItem);
@@ -544,21 +546,20 @@ void update_area_effects(Ped playerPed){
 		}
 	}
 	
-	// Make Peds Angry Manually
+	// Targeted Angry Peds
 	if (!featureAngryMenManually) sa_message = false;
 	if (featureAngryMenManually && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) {
 		if (sa_message == false) {
-		set_status_text("Equip a pistol. Then aim a ped. Then aim another ped.");
+		set_status_text("Equip the Stungun. Aim a ped. Stop aiming. Aim another ped.");
 		sa_message = true;
 		}
-		Entity aimedAt = 0;
+		Hash tempWeap;
+		WEAPON::GET_CURRENT_PED_WEAPON(PLAYER::PLAYER_PED_ID(), &tempWeap, 1);
 
-		if (PLAYER::IS_PLAYER_FREE_AIMING(player)) {
+		if (PLAYER::IS_PLAYER_FREE_AIMING(player) && tempWeap == GAMEPLAY::GET_HASH_KEY("weapon_stungun")) {
 			PLAYER::GET_ENTITY_PLAYER_IS_FREE_AIMING_AT(player, &aimedAt);
 			Ped targetPed = ENTITY::GET_PED_INDEX_FROM_ENTITY_INDEX(aimedAt);
 			bool inSameCar = ENTITY::IS_ENTITY_ATTACHED_TO_ANY_VEHICLE(aimedAt) && (ENTITY::GET_ENTITY_ATTACHED_TO(playerPed) == ENTITY::GET_ENTITY_ATTACHED_TO(aimedAt));
-
-			if (CONTROLS::IS_CONTROL_JUST_PRESSED(2, 25)) aim_p_n = aim_p_n + 1;
 
 			// Make sure we're aiming at a ped that's NOT a vehicle, that's ALIVE, and is NOT friendly to the player
 			if (!inSameCar && !PED::IS_PED_DEAD_OR_DYING(aimedAt, true) && PED::IS_PED_HUMAN(aimedAt) && (PED::GET_RELATIONSHIP_BETWEEN_PEDS(playerPed, aimedAt) >= 3) && !PED::IS_PED_GROUP_MEMBER(aimedAt, myENTGroup)) {
@@ -566,32 +567,19 @@ void update_area_effects(Ped playerPed){
 				PLAYER::SET_IGNORE_LOW_PRIORITY_SHOCKING_EVENTS(aimedAt, true);
 				set_all_nearby_peds_to_calm();
 
-				Vector3 pedPosition = ENTITY::GET_ENTITY_COORDS(aimedAt, FALSE);
-				int screenResX, screenResY;
-				float screenX, screenY;
-				GRAPHICS::_GET_SCREEN_ACTIVE_RESOLUTION(&screenResX, &screenResY); // use this to correct for screen ratio
-				if (GRAPHICS::_WORLD3D_TO_SCREEN2D(pedPosition.x, pedPosition.y, pedPosition.z, &screenX, &screenY) == TRUE) {
-					GRAPHICS::DRAW_RECT(screenX, screenY, 5.0f / (float)screenResX, 5.0f / (float)screenResY, 237, 28, 36, 255);
-				}
-				UI::SET_TEXT_OUTLINE();
-				GRAPHICS::DRAW_LINE(pedPosition.x + 0.5, pedPosition.y + 0.5, pedPosition.z + 0.75, pedPosition.x + 0.5, pedPosition.y - 0.5, pedPosition.z + 0.75, 237, 28, 36, 255);
-				GRAPHICS::DRAW_LINE(pedPosition.x + 0.5, pedPosition.y - 0.5, pedPosition.z + 0.75, pedPosition.x - 0.5, pedPosition.y - 0.5, pedPosition.z + 0.75, 237, 28, 36, 255);
-				GRAPHICS::DRAW_LINE(pedPosition.x - 0.5, pedPosition.y - 0.5, pedPosition.z + 0.75, pedPosition.x - 0.5, pedPosition.y + 0.5, pedPosition.z + 0.75, 237, 28, 36, 255);
-				GRAPHICS::DRAW_LINE(pedPosition.x - 0.5, pedPosition.y + 0.5, pedPosition.z + 0.75, pedPosition.x + 0.5, pedPosition.y + 0.5, pedPosition.z + 0.75, 237, 28, 36, 255);
-				GRAPHICS::DRAW_LINE(pedPosition.x + 0.5, pedPosition.y + 0.5, pedPosition.z - 0.75, pedPosition.x + 0.5, pedPosition.y - 0.5, pedPosition.z - 0.75, 237, 28, 36, 255);
-				GRAPHICS::DRAW_LINE(pedPosition.x + 0.5, pedPosition.y - 0.5, pedPosition.z - 0.75, pedPosition.x - 0.5, pedPosition.y - 0.5, pedPosition.z - 0.75, 237, 28, 36, 255);
-				GRAPHICS::DRAW_LINE(pedPosition.x - 0.5, pedPosition.y - 0.5, pedPosition.z - 0.75, pedPosition.x - 0.5, pedPosition.y + 0.5, pedPosition.z - 0.75, 237, 28, 36, 255);
-				GRAPHICS::DRAW_LINE(pedPosition.x - 0.5, pedPosition.y + 0.5, pedPosition.z - 0.75, pedPosition.x + 0.5, pedPosition.y + 0.5, pedPosition.z - 0.75, 237, 28, 36, 255);
-				GRAPHICS::DRAW_LINE(pedPosition.x + 0.5, pedPosition.y + 0.5, pedPosition.z - 0.75, pedPosition.x + 0.5, pedPosition.y + 0.5, pedPosition.z + 0.75, 237, 28, 36, 255);
-				GRAPHICS::DRAW_LINE(pedPosition.x + 0.5, pedPosition.y - 0.5, pedPosition.z - 0.75, pedPosition.x + 0.5, pedPosition.y - 0.5, pedPosition.z + 0.75, 237, 28, 36, 255);
-				GRAPHICS::DRAW_LINE(pedPosition.x - 0.5, pedPosition.y - 0.5, pedPosition.z - 0.75, pedPosition.x - 0.5, pedPosition.y - 0.5, pedPosition.z + 0.75, 237, 28, 36, 255);
-				GRAPHICS::DRAW_LINE(pedPosition.x - 0.5, pedPosition.y + 0.5, pedPosition.z - 0.75, pedPosition.x - 0.5, pedPosition.y + 0.5, pedPosition.z + 0.75, 237, 28, 36, 255);
-
-				if (aimedAt != 0 && aim_p_n == 1) s_ped1 = aimedAt;
-				if (aimedAt != 0 && aim_p_n == 2) s_ped2 = aimedAt;
+				draw_box(aimedAt, 237, 28, 36, 255);
 			}
 		} // end of aiming
+		
+		if (CONTROLS::IS_CONTROL_JUST_RELEASED(2, 25) && aimedAt != 0) aim_p_n = aim_p_n + 1;
+		
+		if (!PLAYER::IS_PLAYER_FREE_AIMING(player) && aimedAt != 0 && aim_p_n == 1) s_ped1 = aimedAt;
+		if (!PLAYER::IS_PLAYER_FREE_AIMING(player) && aimedAt != 0 && aim_p_n == 2) s_ped2 = aimedAt;
 
+		if (s_ped1 != -1) draw_box(s_ped1, 237, 28, 36, 255);
+		if (s_ped2 != -1) draw_box(s_ped2, 237, 28, 36, 255);
+
+		if (!PLAYER::IS_PLAYER_FREE_AIMING(player)) aimedAt = 0;
 		if (!PLAYER::IS_PLAYER_FREE_AIMING(player) && aim_p_n > 1) {
 			if (s_ped1 != -1 && s_ped2 != -1) {
 				AI::CLEAR_PED_TASKS_IMMEDIATELY(s_ped1);
@@ -611,10 +599,12 @@ void update_area_effects(Ped playerPed){
 				AI::TASK_COMBAT_PED(s_ped2, s_ped1, 0, 16);
 				AUDIO::_PLAY_AMBIENT_SPEECH1(s_ped2, "PROVOKE_GENERIC", "SPEECH_PARAMS_FORCE_SHOUTED");
 
+				PLAYER::SET_EVERYONE_IGNORE_PLAYER(player, false);
+
 				s_ped1 = -1;
 				s_ped2 = -1;
+				aim_p_n = 0;
 			}
-			aim_p_n = 0;
 		} // end of not aiming
 	}
 
@@ -791,6 +781,33 @@ void update_area_effects(Ped playerPed){
 			v_collided.erase(v_collided.begin());
 		}
 	} // end of aggressive drivers && vigilante citizens
+}
+
+void draw_box(Ped ped, int red, int green, int blue, int alpha) {
+	Vector3 pedPosition = ENTITY::GET_ENTITY_COORDS(ped, FALSE);
+
+	int screenResX, screenResY;
+	float screenX, screenY;
+
+	GRAPHICS::_GET_SCREEN_ACTIVE_RESOLUTION(&screenResX, &screenResY); // use this to correct for screen ratio
+
+	if (GRAPHICS::_WORLD3D_TO_SCREEN2D(pedPosition.x, pedPosition.y, pedPosition.z, &screenX, &screenY) == TRUE) {
+		GRAPHICS::DRAW_RECT(screenX, screenY, 5.0f / (float)screenResX, 5.0f / (float)screenResY, red, green, blue, alpha);
+	}
+
+	UI::SET_TEXT_OUTLINE();
+	GRAPHICS::DRAW_LINE(pedPosition.x + 0.5, pedPosition.y + 0.5, pedPosition.z + 0.75, pedPosition.x + 0.5, pedPosition.y - 0.5, pedPosition.z + 0.75, red, green, blue, alpha);
+	GRAPHICS::DRAW_LINE(pedPosition.x + 0.5, pedPosition.y - 0.5, pedPosition.z + 0.75, pedPosition.x - 0.5, pedPosition.y - 0.5, pedPosition.z + 0.75, red, green, blue, alpha);
+	GRAPHICS::DRAW_LINE(pedPosition.x - 0.5, pedPosition.y - 0.5, pedPosition.z + 0.75, pedPosition.x - 0.5, pedPosition.y + 0.5, pedPosition.z + 0.75, red, green, blue, alpha);
+	GRAPHICS::DRAW_LINE(pedPosition.x - 0.5, pedPosition.y + 0.5, pedPosition.z + 0.75, pedPosition.x + 0.5, pedPosition.y + 0.5, pedPosition.z + 0.75, red, green, blue, alpha);
+	GRAPHICS::DRAW_LINE(pedPosition.x + 0.5, pedPosition.y + 0.5, pedPosition.z - 0.75, pedPosition.x + 0.5, pedPosition.y - 0.5, pedPosition.z - 0.75, red, green, blue, alpha);
+	GRAPHICS::DRAW_LINE(pedPosition.x + 0.5, pedPosition.y - 0.5, pedPosition.z - 0.75, pedPosition.x - 0.5, pedPosition.y - 0.5, pedPosition.z - 0.75, red, green, blue, alpha);
+	GRAPHICS::DRAW_LINE(pedPosition.x - 0.5, pedPosition.y - 0.5, pedPosition.z - 0.75, pedPosition.x - 0.5, pedPosition.y + 0.5, pedPosition.z - 0.75, red, green, blue, alpha);
+	GRAPHICS::DRAW_LINE(pedPosition.x - 0.5, pedPosition.y + 0.5, pedPosition.z - 0.75, pedPosition.x + 0.5, pedPosition.y + 0.5, pedPosition.z - 0.75, red, green, blue, alpha);
+	GRAPHICS::DRAW_LINE(pedPosition.x + 0.5, pedPosition.y + 0.5, pedPosition.z - 0.75, pedPosition.x + 0.5, pedPosition.y + 0.5, pedPosition.z + 0.75, red, green, blue, alpha);
+	GRAPHICS::DRAW_LINE(pedPosition.x + 0.5, pedPosition.y - 0.5, pedPosition.z - 0.75, pedPosition.x + 0.5, pedPosition.y - 0.5, pedPosition.z + 0.75, red, green, blue, alpha);
+	GRAPHICS::DRAW_LINE(pedPosition.x - 0.5, pedPosition.y - 0.5, pedPosition.z - 0.75, pedPosition.x - 0.5, pedPosition.y - 0.5, pedPosition.z + 0.75, red, green, blue, alpha);
+	GRAPHICS::DRAW_LINE(pedPosition.x - 0.5, pedPosition.y + 0.5, pedPosition.z - 0.75, pedPosition.x - 0.5, pedPosition.y + 0.5, pedPosition.z + 0.75, red, green, blue, alpha);
 }
 
 void set_all_nearby_peds_to_calm(){

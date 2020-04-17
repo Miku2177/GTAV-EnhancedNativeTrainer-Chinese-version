@@ -191,6 +191,8 @@ void set_all_nearby_peds_to_invincible(bool enabled);
 
 void set_all_nearby_peds_to_calm();
 
+void draw_box(Ped ped, int red, int green, int blue, int alpha);
+
 void set_all_nearby_peds_to_angry(bool enabled);
 
 void give_all_nearby_peds_a_weapon(bool enabled);
