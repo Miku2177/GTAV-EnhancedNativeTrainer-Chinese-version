@@ -40,6 +40,7 @@ bool featureAngryPedsUseCover = false;
 bool featureAngryPedsTargetYou = false;
 bool featurePedsWeapons = false;
 bool featureAngryMenOnly = false;
+bool featureAngryMenManually = false;
 bool featurePedsIncludeDrivers = false;
 bool featurePedsIncludePilots = false;
 bool featureAggressiveDrivers = false;
@@ -54,6 +55,11 @@ bool featureBoostNPCRadio = false;
 bool featurePedsSwitchWeapons = true;
 
 int pedWeaponSetIndex = 0;
+
+Ped s_ped1 = -1;
+Ped s_ped2 = -1;
+int aim_p_n = 0;
+bool sa_message = false;
 
 std::set<Ped> allWorldPedsThisFrame;
 bool allWorldPedsThisFrameFilled = false;
@@ -113,6 +119,7 @@ void add_areaeffect_feature_enablements(std::vector<FeatureEnabledLocalDefinitio
 	results->push_back(FeatureEnabledLocalDefinition{"featurePedsWeapons", &featurePedsWeapons});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePedsSwitchWeapons", &featurePedsSwitchWeapons});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAngryMenOnly", &featureAngryMenOnly});
+	results->push_back(FeatureEnabledLocalDefinition{"featureAngryMenManually", &featureAngryMenManually});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePedsIncludeDrivers", &featurePedsIncludeDrivers});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePedsIncludePilots", &featurePedsIncludePilots});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAggressiveDrivers", &featureAggressiveDrivers});
@@ -137,6 +144,7 @@ void reset_areaeffect_globals(){
 	featureAngryPedsTargetYou = false;
 	featurePedsWeapons = false;
 	featureAngryMenOnly = false;
+	featureAngryMenManually = false;
 	featureAngryPedsUseCover = false;
 	featurePedsIncludeDrivers = false;
 	featurePedsIncludePilots = false;
@@ -359,6 +367,12 @@ void process_areaeffect_advanced_ped_menu(){
 	togItem->toggleValue = &featureAngryMenOnly;
 	menuItems.push_back(togItem);
 
+	togItem = new ToggleMenuItem<int>();
+	togItem->caption = "Make Peds Angry Manually";
+	togItem->value = 1;
+	togItem->toggleValue = &featureAngryMenManually;
+	menuItems.push_back(togItem);
+
 	draw_generic_menu<int>(menuItems, &areaeffect_ped_advconfig_menu_index, "Peds Angry Options", NULL, NULL, NULL);
 }
 
@@ -530,6 +544,80 @@ void update_area_effects(Ped playerPed){
 		}
 	}
 	
+	// Make Peds Angry Manually
+	if (!featureAngryMenManually) sa_message = false;
+	if (featureAngryMenManually && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) {
+		if (sa_message == false) {
+		set_status_text("Equip a pistol. Then aim a ped. Then aim another ped.");
+		sa_message = true;
+		}
+		Entity aimedAt = 0;
+
+		if (PLAYER::IS_PLAYER_FREE_AIMING(player)) {
+			PLAYER::GET_ENTITY_PLAYER_IS_FREE_AIMING_AT(player, &aimedAt);
+			Ped targetPed = ENTITY::GET_PED_INDEX_FROM_ENTITY_INDEX(aimedAt);
+			bool inSameCar = ENTITY::IS_ENTITY_ATTACHED_TO_ANY_VEHICLE(aimedAt) && (ENTITY::GET_ENTITY_ATTACHED_TO(playerPed) == ENTITY::GET_ENTITY_ATTACHED_TO(aimedAt));
+
+			if (CONTROLS::IS_CONTROL_JUST_PRESSED(2, 25)) aim_p_n = aim_p_n + 1;
+
+			// Make sure we're aiming at a ped that's NOT a vehicle, that's ALIVE, and is NOT friendly to the player
+			if (!inSameCar && !PED::IS_PED_DEAD_OR_DYING(aimedAt, true) && PED::IS_PED_HUMAN(aimedAt) && (PED::GET_RELATIONSHIP_BETWEEN_PEDS(playerPed, aimedAt) >= 3) && !PED::IS_PED_GROUP_MEMBER(aimedAt, myENTGroup)) {
+				PLAYER::SET_EVERYONE_IGNORE_PLAYER(player, true);
+				PLAYER::SET_IGNORE_LOW_PRIORITY_SHOCKING_EVENTS(aimedAt, true);
+				set_all_nearby_peds_to_calm();
+
+				Vector3 pedPosition = ENTITY::GET_ENTITY_COORDS(aimedAt, FALSE);
+				int screenResX, screenResY;
+				float screenX, screenY;
+				GRAPHICS::_GET_SCREEN_ACTIVE_RESOLUTION(&screenResX, &screenResY); // use this to correct for screen ratio
+				if (GRAPHICS::_WORLD3D_TO_SCREEN2D(pedPosition.x, pedPosition.y, pedPosition.z, &screenX, &screenY) == TRUE) {
+					GRAPHICS::DRAW_RECT(screenX, screenY, 5.0f / (float)screenResX, 5.0f / (float)screenResY, 237, 28, 36, 255);
+				}
+				UI::SET_TEXT_OUTLINE();
+				GRAPHICS::DRAW_LINE(pedPosition.x + 0.5, pedPosition.y + 0.5, pedPosition.z + 0.75, pedPosition.x + 0.5, pedPosition.y - 0.5, pedPosition.z + 0.75, 237, 28, 36, 255);
+				GRAPHICS::DRAW_LINE(pedPosition.x + 0.5, pedPosition.y - 0.5, pedPosition.z + 0.75, pedPosition.x - 0.5, pedPosition.y - 0.5, pedPosition.z + 0.75, 237, 28, 36, 255);
+				GRAPHICS::DRAW_LINE(pedPosition.x - 0.5, pedPosition.y - 0.5, pedPosition.z + 0.75, pedPosition.x - 0.5, pedPosition.y + 0.5, pedPosition.z + 0.75, 237, 28, 36, 255);
+				GRAPHICS::DRAW_LINE(pedPosition.x - 0.5, pedPosition.y + 0.5, pedPosition.z + 0.75, pedPosition.x + 0.5, pedPosition.y + 0.5, pedPosition.z + 0.75, 237, 28, 36, 255);
+				GRAPHICS::DRAW_LINE(pedPosition.x + 0.5, pedPosition.y + 0.5, pedPosition.z - 0.75, pedPosition.x + 0.5, pedPosition.y - 0.5, pedPosition.z - 0.75, 237, 28, 36, 255);
+				GRAPHICS::DRAW_LINE(pedPosition.x + 0.5, pedPosition.y - 0.5, pedPosition.z - 0.75, pedPosition.x - 0.5, pedPosition.y - 0.5, pedPosition.z - 0.75, 237, 28, 36, 255);
+				GRAPHICS::DRAW_LINE(pedPosition.x - 0.5, pedPosition.y - 0.5, pedPosition.z - 0.75, pedPosition.x - 0.5, pedPosition.y + 0.5, pedPosition.z - 0.75, 237, 28, 36, 255);
+				GRAPHICS::DRAW_LINE(pedPosition.x - 0.5, pedPosition.y + 0.5, pedPosition.z - 0.75, pedPosition.x + 0.5, pedPosition.y + 0.5, pedPosition.z - 0.75, 237, 28, 36, 255);
+				GRAPHICS::DRAW_LINE(pedPosition.x + 0.5, pedPosition.y + 0.5, pedPosition.z - 0.75, pedPosition.x + 0.5, pedPosition.y + 0.5, pedPosition.z + 0.75, 237, 28, 36, 255);
+				GRAPHICS::DRAW_LINE(pedPosition.x + 0.5, pedPosition.y - 0.5, pedPosition.z - 0.75, pedPosition.x + 0.5, pedPosition.y - 0.5, pedPosition.z + 0.75, 237, 28, 36, 255);
+				GRAPHICS::DRAW_LINE(pedPosition.x - 0.5, pedPosition.y - 0.5, pedPosition.z - 0.75, pedPosition.x - 0.5, pedPosition.y - 0.5, pedPosition.z + 0.75, 237, 28, 36, 255);
+				GRAPHICS::DRAW_LINE(pedPosition.x - 0.5, pedPosition.y + 0.5, pedPosition.z - 0.75, pedPosition.x - 0.5, pedPosition.y + 0.5, pedPosition.z + 0.75, 237, 28, 36, 255);
+
+				if (aimedAt != 0 && aim_p_n == 1) s_ped1 = aimedAt;
+				if (aimedAt != 0 && aim_p_n == 2) s_ped2 = aimedAt;
+			}
+		} // end of aiming
+
+		if (!PLAYER::IS_PLAYER_FREE_AIMING(player) && aim_p_n > 1) {
+			if (s_ped1 != -1 && s_ped2 != -1) {
+				AI::CLEAR_PED_TASKS_IMMEDIATELY(s_ped1);
+				AI::CLEAR_PED_TASKS_IMMEDIATELY(s_ped2);
+				
+				PED::SET_PED_COMBAT_ATTRIBUTES(s_ped1, 46, 1); //always fight
+				PED::SET_PED_COMBAT_ATTRIBUTES(s_ped1, 5, 1); //fight armed peds when unarmed
+				PED::SET_PED_FLEE_ATTRIBUTES(s_ped1, 0, 0);
+				PED::REGISTER_TARGET(s_ped1, s_ped2);
+				AI::TASK_COMBAT_PED(s_ped1, s_ped2, 0, 16);
+				AUDIO::_PLAY_AMBIENT_SPEECH1(s_ped1, "PROVOKE_GENERIC", "SPEECH_PARAMS_FORCE_SHOUTED");
+				
+				PED::SET_PED_COMBAT_ATTRIBUTES(s_ped2, 46, 1); //always fight
+				PED::SET_PED_COMBAT_ATTRIBUTES(s_ped2, 5, 1); //fight armed peds when unarmed
+				PED::SET_PED_FLEE_ATTRIBUTES(s_ped2, 0, 0);
+				PED::REGISTER_TARGET(s_ped2, s_ped1);
+				AI::TASK_COMBAT_PED(s_ped2, s_ped1, 0, 16);
+				AUDIO::_PLAY_AMBIENT_SPEECH1(s_ped2, "PROVOKE_GENERIC", "SPEECH_PARAMS_FORCE_SHOUTED");
+
+				s_ped1 = -1;
+				s_ped2 = -1;
+			}
+			aim_p_n = 0;
+		} // end of not aiming
+	}
+
 	// Aggressive Drivers && Vigilante Citizens
 	if ((featureAggressiveDrivers || featureLawAbidingCitizens) && !featurePlayerIgnoredByAll) {
 		Vehicle veh_me = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
