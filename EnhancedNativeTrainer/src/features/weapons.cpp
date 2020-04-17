@@ -1001,10 +1001,9 @@ bool onconfirm_weapon_menu(MenuItem<int> choice){
 		case 26:
 			process_pedagainstweapons_menu();
 			break;
-		case 36: // 30
-			//process_powerpunch_menu();
-			process_aimbot_esp_menu();
-			break;
+		//case 36:
+		//	if (AIMBOT_INCLUDED) process_aimbot_esp_menu();
+		//	break;
 	default:
 		break;
 	}
@@ -1246,13 +1245,13 @@ bool process_weapon_menu(){
 	toggleItem->toggleValue = &featureDropWeaponOutAmmo;
 	menuItems.push_back(toggleItem);
 
-	if (AIMBOT_INCLUDED) {
-		item = new MenuItem<int>();
-		item->caption = "Aimbot ESP";
-		item->value = i++;
-		item->isLeaf = false;
-		menuItems.push_back(item);
-	}
+	//if (AIMBOT_INCLUDED) {
+	//	item = new MenuItem<int>();
+	//	item->caption = "Aimbot ESP";
+	//	item->value = i++;
+	//	item->isLeaf = false;
+	//	menuItems.push_back(item);
+	//}
 
 	return draw_generic_menu<int>(menuItems, &activeLineIndexWeapon, caption, onconfirm_weapon_menu, NULL, NULL);
 }
@@ -1357,8 +1356,10 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 					Vector3 gr_cor = ENTITY::GET_ENTITY_COORDS(objects_g[i], TRUE);
 					Vector3 me_cor = ENTITY::GET_ENTITY_COORDS(playerPed, TRUE);
 					float dist = GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(me_cor.x, me_cor.y, me_cor.z, gr_cor.x, gr_cor.y, gr_cor.z, TRUE);
-					if (ENTITY::IS_ENTITY_IN_AIR(objects_g[i]) && dist > 10.0) FIRE::ADD_EXPLOSION(gr_cor.x, gr_cor.y, gr_cor.z, ExplosionTypeGrenadeL, 3.0, rand() % 15 == 0, false, 0.0); // rand() % 3 == 0
-					if (!ENTITY::IS_ENTITY_IN_AIR(objects_g[i]) && dist > 10.0 && dist < 90.0) FIRE::ADD_EXPLOSION(gr_cor.x, gr_cor.y, gr_cor.z, ExplosionTypeGrenadeL, 5.0, rand() % 15 == 0, false, 0.0);
+					if (ENTITY::IS_ENTITY_IN_AIR(objects_g[i]) && dist > 10.0 && dist < 16.0) FIRE::ADD_EXPLOSION(gr_cor.x, gr_cor.y, gr_cor.z, ExplosionTypeGrenadeL, 3.0, rand() % 15 == 0, false, 0.0); // rand() % 3 == 0
+					if (ENTITY::IS_ENTITY_IN_AIR(objects_g[i]) && dist > 15.0 && dist < 99.0) FIRE::ADD_EXPLOSION(gr_cor.x, gr_cor.y, gr_cor.z, ExplosionTypeGrenadeL, 35.0, rand() % 15 == 0, false, 0.0); // dist < 159.0 // 15.0 
+					if (!ENTITY::IS_ENTITY_IN_AIR(objects_g[i]) && dist > 10.0 && dist < 16.0) FIRE::ADD_EXPLOSION(gr_cor.x, gr_cor.y, gr_cor.z, ExplosionTypeGrenadeL, 5.0, rand() % 15 == 0, false, 0.0);
+					if (!ENTITY::IS_ENTITY_IN_AIR(objects_g[i]) && dist > 15.0 && dist < 99.0) FIRE::ADD_EXPLOSION(gr_cor.x, gr_cor.y, gr_cor.z, ExplosionTypeGrenadeL, 35.0, rand() % 15 == 0, false, 0.0);
 				}
 			}
 			// Sucking Grenades

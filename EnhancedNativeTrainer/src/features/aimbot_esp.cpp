@@ -1,3 +1,4 @@
+/*
 #include "aimbot_esp.h"
 
 int aimbotESPLineIndex = 0;
@@ -466,4 +467,5 @@ void update_aimbot_esp_features() {
 			}
 		} // end of if (bPlayerExists && aimbotIndex)
 	}
-}
+} 
+*/

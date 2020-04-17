@@ -40,7 +40,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 #pragma warning(disable : 4244 4305) // double <-> float conversions
 
-bool AIMBOT_INCLUDED = false;
+//bool AIMBOT_INCLUDED = true;
 
 bool player_died = false;
 bool npc_player_died = false;
@@ -1371,9 +1371,9 @@ void update_features(){
 
 	update_weapon_features(bPlayerExists, player);
 
-	if(AIMBOT_INCLUDED){
-		update_aimbot_esp_features();
-	}
+	//if(AIMBOT_INCLUDED){
+	//	update_aimbot_esp_features();
+	//}
 
 	update_vehicle_features(bPlayerExists, playerPed);
 
@@ -2016,9 +2016,6 @@ bool onconfirm_main_menu(MenuItem<int> choice){
 		case 9:
 			process_reset_menu();
 			break;
-		case 10:
-			process_aimbot_esp_menu();
-			break;
 	}
 	return false;
 }
@@ -2118,9 +2115,9 @@ void reset_globals(){
 
 	reset_weapon_globals();
 
-	if(AIMBOT_INCLUDED){
-		reset_aimbot_globals();
-	}
+	//if(AIMBOT_INCLUDED){
+	//	reset_aimbot_globals();
+	//}
 
 	reset_world_globals();
 
@@ -2511,9 +2508,9 @@ std::vector<StringPairSettingDBRow> get_generic_settings(){
 	add_weapons_generic_settings(&settings);
 	add_areaeffect_generic_settings(&settings);
 
-	if(AIMBOT_INCLUDED){
-		add_aimbot_esp_generic_settings(&settings);
-	}
+	//if(AIMBOT_INCLUDED){
+	//	add_aimbot_esp_generic_settings(&settings);
+	//}
 
 	add_bodyguards_generic_settings(&settings);
 	add_skin_generic_settings(&settings);
@@ -2601,9 +2598,9 @@ void handle_generic_settings(std::vector<StringPairSettingDBRow> settings){
 
 	handle_generic_settings_areaeffect(&settings);
 
-	if(AIMBOT_INCLUDED){
-		handle_generic_settings_aimbot_esp(&settings);
-	}
+	//if(AIMBOT_INCLUDED){
+	//	handle_generic_settings_aimbot_esp(&settings);
+	//}
 
 	handle_generic_settings_bodyguards(&settings);
 
