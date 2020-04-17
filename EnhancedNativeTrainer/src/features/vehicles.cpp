@@ -3572,7 +3572,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	
 ///////////////////////////////////// AIRSTRIKE ///////////////////////////////////
 	if (featureAirStrike && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) s_message = false;
-
 	if (featureAirStrike) {
 		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && s_message == false) {
 			set_status_text("Press your ~g~ horn button ~w~ for an airstrike");
