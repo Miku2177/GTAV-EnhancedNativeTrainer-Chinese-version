@@ -301,6 +301,12 @@ void fill_weapon_ammo(MenuItem<int> choice);
 
 void onconfirm_open_tint_menu(MenuItem<int> choice);
 
+Vector3 DirectionOffsetFromCam(float distance);
+
+void VectorToFloat(Vector3 unk, float *Out);
+
+Vector3 add(Vector3* vectorA, Vector3* vectorB);
+
 //Weapon mod menu
 
 bool onconfirm_weapon_mod_menu_tint(MenuItem<int> choice);

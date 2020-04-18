@@ -550,7 +550,7 @@ void update_area_effects(Ped playerPed){
 	if (!featureAngryMenManually) sa_message = false;
 	if (featureAngryMenManually && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) {
 		if (sa_message == false) {
-		set_status_text("Equip the Stungun. Aim a ped. Stop aiming. Aim another ped.");
+		set_status_text("Equip the Stungun. Aim at a ped and at another ped to start a fight.");
 		sa_message = true;
 		}
 		Hash tempWeap;
