@@ -48,7 +48,7 @@ bool featureWeaponExplosiveAmmo = false;
 bool featureWeaponExplosiveMelee = false;
 bool featureWeaponExplosiveGrenades = false;
 bool featureWeaponVacuumGrenades = false;
-bool featureWeaponVehRockets = false;
+//bool featureWeaponVehRockets = false;
 
 bool featurePunchFists = true;
 bool featurePunchMeleeWeapons = false;
@@ -65,13 +65,14 @@ int bullet_tick = 0;
 
 bool featureGravityGun = false;
 bool featureFriendlyFire = false;
+bool featureFriendlyFireUpdated = false;
 bool featureRapidFire = false;
 bool featureDropWeapon = false;
 bool featureDropWeaponOutAmmo = false;
 bool featureCanDisarmNPC = false;
 bool featurePedNoWeaponDrop = false;
 bool featurePowerPunch = false;
-// Cop Weapons
+// cop weapons
 bool someonehasgunandshooting = false;
 Ped shooting_criminal = -1;
 //
@@ -87,6 +88,7 @@ DWORD grav_partfx = 0;
 
 DWORD featureWeaponVehShootLastTime = 0;
 
+// power punch 
 std::string result_p;
 std::string lastPowerWeapon;
 std::string lastCustomWeapon;
@@ -101,8 +103,8 @@ bool saved_weapon_mods[SAVED_WEAPONS_COUNT][MAX_MOD_SLOTS];
 bool saved_parachute = false;
 int saved_parachute_tint = 0;
 int saved_armour = 0;
-bool cops_took_weapons = false;
-bool cops_on = false;
+//bool cops_took_weapons = false;
+//bool cops_on = false;
 
 bool redrawWeaponMenuAfterEquipChange = false;
 
@@ -662,19 +664,19 @@ bool process_weaponlist_menu(){
 	return draw_generic_menu<int>(menuItems, &weaponSelectionIndex, "Weapon Categories", onconfirm_weaponlist_menu, NULL, NULL);
 }
 
-bool do_give_weapon(std::string modelName){
+//bool do_give_weapon(std::string modelName){
 	// common variables
-	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
-	Player player = PLAYER::PLAYER_ID();
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
+//	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
+//	Player player = PLAYER::PLAYER_ID();
+//	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
-	if(bPlayerExists){
-		WEAPON::GIVE_DELAYED_WEAPON_TO_PED(playerPed, GAMEPLAY::GET_HASH_KEY((char *) modelName.c_str()), 1000, 0); return true;
-	}
-	else{
-		return false;
-	}
-}
+//	if(bPlayerExists){
+//		WEAPON::GIVE_DELAYED_WEAPON_TO_PED(playerPed, GAMEPLAY::GET_HASH_KEY((char *) modelName.c_str()), 1000, 0); return true;
+//	}
+//	else{
+//		return false;
+//	}
+//}
 
 void onchange_cop_armed_index(int value, SelectFromListMenuItem* source){ 
 	CopCurrArmedIndex = value;
@@ -784,7 +786,7 @@ void onchange_weapon_no_reticle_modifier(int value, SelectFromListMenuItem* sour
 ///////////////////////////////// TOGGLE VISION FOR SNIPER RIFLES /////////////////////////////////
 void sniper_vision_toggle()
 {
-	Player player = PLAYER::PLAYER_ID();
+	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if ((WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_SNIPERRIFLE") || WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_HEAVYSNIPER") ||
@@ -883,7 +885,7 @@ bool onconfirm_weapon_menu(MenuItem<int> choice){
 	// common variables
 	Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
-	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(playerPed);
+	//BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(playerPed);
 
 	switch(activeLineIndexWeapon){
 		case 0:
@@ -1295,7 +1297,7 @@ void reset_weapon_globals(){
 		featureWeaponExplosiveMelee =
 		featureWeaponExplosiveGrenades =
 		featureWeaponVacuumGrenades =
-		featureWeaponVehRockets =
+		//featureWeaponVehRockets =
 		featureGiveAllWeapons =
 		featureAddAllWeaponsAttachments =
 		featureCopArmedWith =
@@ -1319,7 +1321,7 @@ void reset_weapon_globals(){
 
 void update_weapon_features(BOOL bPlayerExists, Player player){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
-	// weapon damage modifier
+	// Weapon Damage Modifier
 	if(bPlayerExists){
 		// Don't need to set this per-frame if it's at the default
 		PLAYER::SET_PLAYER_WEAPON_DAMAGE_MODIFIER(player, WEAP_DMG_FLOAT[weapDmgModIndex]);
@@ -1327,7 +1329,38 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		PLAYER::SET_PLAYER_VEHICLE_DAMAGE_MODIFIER(player, WEAP_DMG_FLOAT[weapDmgModIndex]);
 	}
 
-	// weapon
+	// Vehicle Weapon
+	if (WEAPONS_VEHICLE_VALUES[VehCurrWeaponIndex] > 0 && PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) {
+		Player player = PLAYER::PLAYER_ID();
+		Ped playerPed = PLAYER::PLAYER_PED_ID();
+
+		bool bSelect = IsKeyDown(KeyConfig::KEY_VEH_ROCKETS) || IsControllerButtonDown(KeyConfig::KEY_VEH_ROCKETS) || (CONTROLS::IS_CONTROL_PRESSED(2, 69) && !CONTROLS::IS_CONTROL_PRESSED(2, 70));
+
+		if (bSelect && featureWeaponVehShootLastTime + 150 < GetTickCount() && PLAYER::IS_PLAYER_CONTROL_ON(player)) {
+			Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+			Vector3 v0, v1;
+			GAMEPLAY::GET_MODEL_DIMENSIONS(ENTITY::GET_ENTITY_MODEL(veh), &v0, &v1);
+
+			char *currWeapon_v = new char[WEAPONS_VEHICLE_CAPTIONS[VehCurrWeaponIndex].length() + 1];
+			strcpy(currWeapon_v, WEAPONS_VEHICLE_CAPTIONS[VehCurrWeaponIndex].c_str());
+			Hash weaponAssetRocket = GAMEPLAY::GET_HASH_KEY(currWeapon_v);
+			if (!WEAPON::HAS_WEAPON_ASSET_LOADED(weaponAssetRocket)) {
+				WEAPON::REQUEST_WEAPON_ASSET(weaponAssetRocket, 31, 0);
+				while (!WEAPON::HAS_WEAPON_ASSET_LOADED(weaponAssetRocket)) {
+					WAIT(0);
+				}
+			}
+			Vector3 coords0from = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(veh, -(v1.x + 0.25f), v1.y + 1.25f, 0.1);
+			Vector3 coords1from = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(veh, (v1.x + 0.25f), v1.y + 1.25f, 0.1);
+			Vector3 coords0to = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(veh, -v1.x, v1.y + 100.0f, 0.1f);
+			Vector3 coords1to = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(veh, v1.x, v1.y + 100.0f, 0.1f);
+			GAMEPLAY::SHOOT_SINGLE_BULLET_BETWEEN_COORDS(coords0from.x, coords0from.y, coords0from.z, coords0to.x, coords0to.y, coords0to.z, 250, 1, weaponAssetRocket, playerPed, 1, 0, -1.0);
+			GAMEPLAY::SHOOT_SINGLE_BULLET_BETWEEN_COORDS(coords1from.x, coords1from.y, coords1from.z, coords1to.x, coords1to.y, coords1to.z, 250, 1, weaponAssetRocket, playerPed, 1, 0, -1.0);
+			featureWeaponVehShootLastTime = GetTickCount();
+		}
+	}
+
+	// Weapon
 	if(featureWeaponFireAmmo){
 		if(bPlayerExists){
 			GAMEPLAY::SET_FIRE_AMMO_THIS_FRAME(player);
@@ -1449,7 +1482,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		}
 	}
 
-	// infinite ammo
+	// Infinite Ammo
 	if(bPlayerExists && featureWeaponInfiniteAmmo){
 		for(int i = 0; i < sizeof(VOV_WEAPON_VALUES) / sizeof(VOV_WEAPON_VALUES[0]); i++){
 			for(int j = 0; j < VOV_WEAPON_VALUES[i].size(); j++){
@@ -1467,14 +1500,13 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		}
 	}
 
-	// infinite parachutes
+	// Infinite Parachutes
 	if(featureWeaponInfiniteParachutesUpdated){
 		if(featureWeaponInfiniteParachutes){
 			featureWeaponNoParachutes = false;
 		}
 		featureWeaponInfiniteParachutesUpdated = false;
 	}
-
 	if(bPlayerExists && featureWeaponInfiniteParachutes && detained == false && in_prison == false && super_jump_no_parachute == false){
 		int pState = PED::GET_PED_PARACHUTE_STATE(playerPed);
 		//unarmed or falling - don't try and give p/chute to player already using one, crashes game
@@ -1483,14 +1515,13 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		}
 	}
 
-	// no parachutes
+	// No Parachutes
 	if(featureWeaponNoParachutesUpdated){
 		if(featureWeaponNoParachutes){
 			featureWeaponInfiniteParachutes = false;
 		}
 		featureWeaponNoParachutesUpdated = false;
 	}
-
 	if(bPlayerExists && featureWeaponNoParachutes){
 		int pState = PED::GET_PED_PARACHUTE_STATE(playerPed);
 		if((pState == -1 || pState == 3) && WEAPON::HAS_PED_GOT_WEAPON(playerPed, PARACHUTE_ID, FALSE)){
@@ -1498,7 +1529,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		}
 	}
 
-	// weapon no reload
+	// Weapon No Reload
 	if(bPlayerExists){
 		WEAPON::SET_PED_INFINITE_AMMO_CLIP(playerPed, featureWeaponNoReload);
 	}
@@ -1841,13 +1872,15 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	}
 
 	// Friendly Fire
-	if (featureFriendlyFire) {
+	if (featureFriendlyFire && featureFriendlyFireUpdated == false) {
 		NETWORK::NETWORK_SET_FRIENDLY_FIRE_OPTION(true);
 		PED::SET_CAN_ATTACK_FRIENDLY(playerPed, true, false);
+		featureFriendlyFireUpdated = true;
 	}
-	else {
+	if (!featureFriendlyFire && featureFriendlyFireUpdated == true) {
 		NETWORK::NETWORK_SET_FRIENDLY_FIRE_OPTION(false);
 		PED::SET_CAN_ATTACK_FRIENDLY(playerPed, false, false);
+		featureFriendlyFireUpdated = false;
 	}
 
 	// Rapid Fire
@@ -1901,7 +1934,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	}
 	
 	// Gravity Gun
-	if(bPlayerExists && featureGravityGun && GAMEPLAY::GET_MISSION_FLAG() == 0){
+	if(bPlayerExists && featureGravityGun && GAMEPLAY::GET_MISSION_FLAG() == 0) {
 		Ped tempPed;
 		Hash tempWeap;
 
@@ -1976,38 +2009,6 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		//featureGravityGunUpdated = false;
 
 		//set_status_text("Gravity gun: ~r~called");
-	}
-}
-
-void update_vehicle_guns(){
-	if (WEAPONS_VEHICLE_VALUES[VehCurrWeaponIndex] > 0 && PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) {
-		Player player = PLAYER::PLAYER_ID();
-		Ped playerPed = PLAYER::PLAYER_PED_ID();
-		
-		bool bSelect = IsKeyDown(KeyConfig::KEY_VEH_ROCKETS) || IsControllerButtonDown(KeyConfig::KEY_VEH_ROCKETS) || (CONTROLS::IS_CONTROL_PRESSED(2, 69) && !CONTROLS::IS_CONTROL_PRESSED(2, 70));
-
-		if (bSelect && featureWeaponVehShootLastTime + 150 < GetTickCount() && PLAYER::IS_PLAYER_CONTROL_ON(player)) {
-			Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
-			Vector3 v0, v1;
-			GAMEPLAY::GET_MODEL_DIMENSIONS(ENTITY::GET_ENTITY_MODEL(veh), &v0, &v1);
-
-			char *currWeapon_v = new char[WEAPONS_VEHICLE_CAPTIONS[VehCurrWeaponIndex].length() + 1];
-			strcpy(currWeapon_v, WEAPONS_VEHICLE_CAPTIONS[VehCurrWeaponIndex].c_str());
-			Hash weaponAssetRocket = GAMEPLAY::GET_HASH_KEY(currWeapon_v);
-			if (!WEAPON::HAS_WEAPON_ASSET_LOADED(weaponAssetRocket)) {
-				WEAPON::REQUEST_WEAPON_ASSET(weaponAssetRocket, 31, 0);
-				while (!WEAPON::HAS_WEAPON_ASSET_LOADED(weaponAssetRocket)) {
-					WAIT(0);
-				}
-			}
-			Vector3 coords0from = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(veh, -(v1.x + 0.25f), v1.y + 1.25f, 0.1);
-			Vector3 coords1from = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(veh, (v1.x + 0.25f), v1.y + 1.25f, 0.1);
-			Vector3 coords0to = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(veh, -v1.x, v1.y + 100.0f, 0.1f);
-			Vector3 coords1to = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(veh, v1.x, v1.y + 100.0f, 0.1f);
-			GAMEPLAY::SHOOT_SINGLE_BULLET_BETWEEN_COORDS(coords0from.x, coords0from.y, coords0from.z, coords0to.x, coords0to.y, coords0to.z, 250, 1, weaponAssetRocket, playerPed, 1, 0, -1.0);
-			GAMEPLAY::SHOOT_SINGLE_BULLET_BETWEEN_COORDS(coords1from.x, coords1from.y, coords1from.z, coords1to.x, coords1to.y, coords1to.z, 250, 1, weaponAssetRocket, playerPed, 1, 0, -1.0);
-			featureWeaponVehShootLastTime = GetTickCount();
-		}
 	}
 }
 
@@ -2223,7 +2224,7 @@ bool onconfirm_weapon_mod_menu_tint(MenuItem<int> choice){
 }
 
 void onconfirm_open_tint_menu(MenuItem<int> choice) {
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	//Ped playerPed = PLAYER::PLAYER_PED_ID();
 	int tintSelection = 0;
 
 	std::string weaponValue = VOV_WEAPON_VALUES[lastSelectedWeaponCategory].at(lastSelectedWeapon);
@@ -2318,7 +2319,7 @@ void add_weapon_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponNoParachutes", &featureWeaponNoParachutes, &featureWeaponNoParachutesUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponNoReload", &featureWeaponNoReload});
 	results->push_back(FeatureEnabledLocalDefinition{"featureCopTakeWeapon", &featureCopTakeWeapon });
-	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponVehRockets", &featureWeaponVehRockets});
+	//results->push_back(FeatureEnabledLocalDefinition{"featureWeaponVehRockets", &featureWeaponVehRockets});
 	results->push_back(FeatureEnabledLocalDefinition{"featureGravityGun", &featureGravityGun});
 	results->push_back(FeatureEnabledLocalDefinition{"featureFriendlyFire", &featureFriendlyFire});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRapidFire", &featureRapidFire});

@@ -249,7 +249,7 @@ extern std::string lastPowerWeapon;
 
 bool process_weapon_menu();
 
-bool do_give_weapon(std::string modelName);
+//bool do_give_weapon(std::string modelName);
 
 bool process_weaponlist_menu();
 
@@ -276,8 +276,6 @@ void onchange_weapon_no_reticle_modifier(int value, SelectFromListMenuItem* sour
 void onchange_cop_alarm_index(int value, SelectFromListMenuItem* source);
 
 void add_weapon_feature_enablements2(std::vector<StringPairSettingDBRow>* results);
-
-void update_vehicle_guns();
 
 void save_player_weapons(Ped playerPed);
 

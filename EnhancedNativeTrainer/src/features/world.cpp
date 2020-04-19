@@ -39,8 +39,6 @@ float freeze_counter = 0.0;
 
 Vehicle veh_i_last_used = -1;
 
-int r, g, b = -1;
-
 int acid_counter, acid_counter_p = -1;
 
 bool snow_e = false;
@@ -112,7 +110,7 @@ bool featureWeatherFreeze = false;
 bool featureWeatherFreezeUpdated = false;
 
 bool featureCloudsFreeze = false;
-bool featureCloudsNo = false;
+//bool featureCloudsNo = false;
 
 bool featureSnow = false;
 bool featureSnowUpdated = false;
@@ -693,7 +691,7 @@ void reset_world_globals()
 	lastCloudsName.clear();
 
 	featureWeatherFreeze =
-	featureCloudsNo =
+	//featureCloudsNo =
 	featureCloudsFreeze =
 	featureWorldMoonGravity = false;
 	featureWorldNoPeds = false;
@@ -1831,7 +1829,7 @@ void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* r
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldRandomBoats", &featureWorldRandomBoats, &featureWorldRandomBoatsUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldGarbageTrucks", &featureWorldGarbageTrucks, &featureWorldGarbageTrucksUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWeatherFreeze", &featureWeatherFreeze });
-	results->push_back(FeatureEnabledLocalDefinition{ "featureCloudsNo", &featureCloudsNo });
+	//results->push_back(FeatureEnabledLocalDefinition{ "featureCloudsNo", &featureCloudsNo });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureCloudsFreeze", &featureCloudsFreeze });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureBlackout", &featureBlackout, &featureBlackoutUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureHeadlightsBlackout", &featureHeadlightsBlackout });
