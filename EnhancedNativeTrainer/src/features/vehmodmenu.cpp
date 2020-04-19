@@ -13,7 +13,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 #include "..\debug\debuglog.h"
 
-int activeLineIndexVehMod = 0;
+//int activeLineIndexVehMod = 0;
 
 int lastSelectedModValue = 0;
 
@@ -35,7 +35,7 @@ const char* TINT_NAMES[] = { "No Tint", "Dark", "Medium", "Light", "Very Light",
 
 const char* PLATE_NAMES[] = { "Blue on White", "Yellow/Black", "Gold/Blue", "Blue/White SA Caps", "Blue/White SA Exempt", "Blue/White Yankton" };
 
-const static int ENGINE_SOUND_COUNT = 366; // 346
+const static int ENGINE_SOUND_COUNT = 366;
 
 const static int SPECIAL_ID_START = 90;
 
@@ -1390,7 +1390,7 @@ bool onconfirm_vehmod_category_menu(MenuItem<int> choice){
 		return false;
 	}
 
-	Player player = PLAYER::PLAYER_ID();
+	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
@@ -1458,7 +1458,7 @@ bool onconfirm_vehmod_category_menu(MenuItem<int> choice){
 }
 
 bool process_vehmod_category_special_menu(int category){
-	Player player = PLAYER::PLAYER_ID();
+	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 
@@ -1536,7 +1536,7 @@ bool process_vehmod_engine_sound() {
 		return false;
 	}
 
-	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+	//Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 
 	int modChoiceMenuIndex = 0;
 
@@ -1546,7 +1546,7 @@ bool process_vehmod_engine_sound() {
 		values.push_back(e);
 	}
 
-	Player player = PLAYER::PLAYER_ID();
+	//Player player = PLAYER::PLAYER_ID();
 
 	std::vector<MenuItem<int>*> menuItems;
 	for (int i = 0; i < values.size(); i++) {
@@ -1632,7 +1632,7 @@ bool process_vehmod_engine_sound_menu() {
 		return false;
 	}
 
-	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+	//Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 
 	std::vector<MenuItem<int> *> menuItems;
 	MenuItem<int> *item;
@@ -1683,7 +1683,7 @@ bool process_vehmod_category_menu(int category){
 		return false;
 	}
 
-	Player player = PLAYER::PLAYER_ID();
+	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
@@ -1753,7 +1753,7 @@ bool onconfirm_vehmod_menu(MenuItem<int> choice){
 		return false;
 	}
 
-	Player player = PLAYER::PLAYER_ID();
+	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
@@ -1823,7 +1823,7 @@ bool process_vehmod_menu(){
 	}
 
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
-	eGameVersion version = getGameVersion();
+	//eGameVersion version = getGameVersion();
 
 	VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
 
@@ -2157,7 +2157,7 @@ bool vehicle_menu_interrupt(){
 		return true;
 	}
 
-	Player player = PLAYER::PLAYER_ID();
+	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){

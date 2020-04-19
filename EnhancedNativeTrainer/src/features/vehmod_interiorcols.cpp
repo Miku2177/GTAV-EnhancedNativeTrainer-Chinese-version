@@ -259,7 +259,7 @@ bool process_trim_colour_menu(){
 }
 
 bool onconfirm_trim_colour_menu(MenuItem<int> choice){
-	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
+	//Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 
 	if(choice.value == -1){
 		process_dash_colour_menu();

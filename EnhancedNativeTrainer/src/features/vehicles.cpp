@@ -114,14 +114,14 @@ bool featureWearHelmetOff = false;
 bool featureWearHelmetOffUpdated = false;
 bool featureVehLightsOn = false, featureVehLightsOnUpdated = false;
 bool window_roll, interior_lights, veh_searching, veh_alarm, veh_brake_toggle, vehicle_burnout_toggle = false;
-int lights = -1, highbeams = -1;
+int lights = -1; // , highbeams = -1
 
 Vehicle vehicle_been_used = -1;
 Vehicle veh_l = -1;
 
-bool steered_left, steered_right = false;
-Vehicle veh_steering;
-std::vector<Vehicle> STEERING;
+//bool steered_left, steered_right = false;
+//Vehicle veh_steering;
+//std::vector<Vehicle> STEERING;
 
 int currseat = -1;
 
@@ -159,7 +159,7 @@ int nitrous_m = -2;
 
 int sheshark_light_toogle = 1;
 
-Vehicle ped_temp_veh = -1;
+//Vehicle ped_temp_veh = -1;
 
 bool featureDespawnScriptDisabled = false;
 bool featureDespawnScriptDisabledUpdated = false;
@@ -187,7 +187,7 @@ Object b_rope = -1;
 Vehicle veh_anchor = -1;
 bool anchor_dropped = false;
 
-const int PED_FLAG_THROUGH_WINDSCREEN = 32;
+//const int PED_FLAG_THROUGH_WINDSCREEN = 32;
 
 const std::vector<std::string> VEH_INVINC_MODE_CAPTIONS{"OFF", "Mech. Only", "Mech. + Visual", "Mech. + Vis. + Cosmetic"};
 
@@ -491,7 +491,6 @@ void vehicle_alarm() {
 		find_nearest_vehicle();
 		veh_alarming = temp_vehicle;
 	}
-	
 	if (!VEHICLE::IS_VEHICLE_ALARM_ACTIVATED(veh_alarming)) veh_alarm = false;
 	veh_alarm = !veh_alarm;
 	VEHICLE::SET_VEHICLE_ALARM(veh_alarming, veh_alarm);
@@ -500,9 +499,8 @@ void vehicle_alarm() {
 }
 
 void vehicle_set_alarm() {
-	Player playerPed = PLAYER::PLAYER_PED_ID();
 	if (!featureAutoalarm) {
-		if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) alarmed_veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+		if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) alarmed_veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 		if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
 			find_nearest_vehicle();
 			alarmed_veh = temp_vehicle;
@@ -527,7 +525,6 @@ void vehicle_brake() {
 		find_nearest_vehicle();
 		veh_brake = temp_vehicle;
 	}
-
 	veh_brake_toggle = !veh_brake_toggle;
 	VEHICLE::SET_VEHICLE_HANDBRAKE(veh_brake, veh_brake_toggle);
 	WAIT(100);
@@ -541,10 +538,8 @@ void vehicle_burnout() {
 		find_nearest_vehicle();
 		veh_burnout = temp_vehicle;
 	}
-
 	vehicle_burnout_toggle = !vehicle_burnout_toggle;
 	VEHICLE::SET_VEHICLE_BURNOUT(veh_burnout, vehicle_burnout_toggle);
-
 	WAIT(100);
 }
 
@@ -556,7 +551,6 @@ void damage_door() {
 		find_nearest_vehicle();
 		veh_damage = temp_vehicle;
 	}
-
 	std::string::size_type sz;
 	std::string result_damage = show_keyboard(NULL, NULL);
 	if (!result_damage.empty()) {
@@ -702,7 +696,7 @@ bool onconfirm_vehdoor_menu(MenuItem<int> choice){
 	}
 
 	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
-	Player player = PLAYER::PLAYER_ID();
+	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if(choice.value >= 0){
@@ -988,7 +982,7 @@ bool process_veh_door_menu(){
 void seat_change_hotkey()
 {
 	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
-	Player player = PLAYER::PLAYER_ID();
+	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
@@ -1008,7 +1002,7 @@ void seat_change_hotkey()
 
 bool onconfirm_seat_menu(MenuItem<int> choice) {
 	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
-	Player player = PLAYER::PLAYER_ID();
+	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 		
 	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
@@ -1137,7 +1131,6 @@ void process_visualize_menu() {
 	std::string caption = "Vehicle Indicators Options";
 
 	std::vector<MenuItem<int>*> menuItems;
-
 	SelectFromListMenuItem *listItem;
 	ToggleMenuItem<int>* toggleItem;
 
@@ -1203,7 +1196,6 @@ void process_speedlimit_menu() {
 	std::string caption = "Speed Limit Options";
 
 	std::vector<MenuItem<int>*> menuItems;
-
 	SelectFromListMenuItem *listItem;
 	int i = 0;
 
@@ -1239,7 +1231,6 @@ bool process_fuel_colour_menu(){
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
 
-
 	int i = 0;
 
 	listItem = new SelectFromListMenuItem(FUEL_COLOURS_R_CAPTIONS, onchange_fuel_colours_r_index);
@@ -1272,7 +1263,6 @@ void process_engine_degrade_menu() {
 	std::string caption = "Engine Damage Options";
 
 	std::vector<MenuItem<int>*> menuItems;
-
 	SelectFromListMenuItem *listItem;
 	ToggleMenuItem<int>* toggleItem;
 
@@ -1386,7 +1376,6 @@ void process_fuel_menu(){
 	std::string caption = "Fuel Consumption Options";
 
 	std::vector<MenuItem<int>*> menuItems;
-
 	MenuItem<int> *item;
 	SelectFromListMenuItem *listItem;
 	ToggleMenuItem<int>* toggleItem;
@@ -1522,7 +1511,7 @@ void del_sel_blip() {
 				}
 			}
 		}
-		else set_status_text("Not A Valid Number");
+		else set_status_text("Not a valid number");
 	}
 }
 
@@ -1542,7 +1531,6 @@ void process_remember_vehicles_menu() {
 	std::string caption = "Vehicle Tracking Options";
 
 	std::vector<MenuItem<int>*> menuItems;
-
 	MenuItem<int> *item;
 	SelectFromListMenuItem *listItem;
 	ToggleMenuItem<int>* toggleItem;
@@ -1627,7 +1615,6 @@ void process_road_laws_menu(){
 	std::string caption = "Road Laws Options";
 
 	std::vector<MenuItem<int>*> menuItems;
-
 	SelectFromListMenuItem *listItem;
 	ToggleMenuItem<int>* toggleItem;
 
@@ -1764,8 +1751,8 @@ void process_road_laws_menu(){
 
 bool onconfirm_veh_menu(MenuItem<int> choice){
 	// common variables
-	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
-	Player player = PLAYER::PLAYER_ID();
+	//BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
+	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	switch(activeLineIndexVeh){
@@ -1838,7 +1825,6 @@ void process_veh_menu(){
 	std::string caption = "Vehicle Options";
 
 	std::vector<MenuItem<int>*> menuItems;
-
 	MenuItem<int> *item;
 	SelectFromListMenuItem *listItem;
 	ToggleMenuItem<int>* toggleItem;
@@ -2154,7 +2140,7 @@ void speedlimiter_switching(){
 
 void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
-	int globalindex = 0;
+	//int globalindex = 0;
 
 	eGameVersion version = getGameVersion();
 
@@ -2355,6 +2341,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		}
 	}
 
+	// Invincible Vehicle
 	if (featureVehInvincible){
 		if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
 			if (FIRE::IS_ENTITY_ON_FIRE(veh)){
@@ -2395,21 +2382,21 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		}
 	}
 
-	// fall off
+	// No Fall Off
 	if (bPlayerExists && !featureNoVehFallOff && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
-		PED::SET_PED_CONFIG_FLAG(playerPed, PED_FLAG_THROUGH_WINDSCREEN, TRUE);
+		PED::SET_PED_CONFIG_FLAG(playerPed, 32, TRUE); //const int PED_FLAG_THROUGH_WINDSCREEN = 32;
 		PED::SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE(playerPed, 0); // can
 	}
 	if (bPlayerExists && featureNoVehFallOff && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
 		for (int i = -1; i < 3; i++) {
 			if (VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh, i) != 0) {
-				PED::SET_PED_CONFIG_FLAG(VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh, i), PED_FLAG_THROUGH_WINDSCREEN, FALSE);
+				PED::SET_PED_CONFIG_FLAG(VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh, i), 32, FALSE);
 				PED::SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE(VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh, i), 1); // can't
 			}
 		}
 	}
 
-	// player's vehicle boost
+	// Player's Vehicle Boost
 	if (bPlayerExists && featureVehSpeedBoost && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
 		bool bUp = IsKeyDown(KeyConfig::KEY_VEH_BOOST) || IsControllerButtonDown(KeyConfig::KEY_VEH_BOOST);
 		bool bDown = IsKeyDown(KeyConfig::KEY_VEH_STOP) || IsControllerButtonDown(KeyConfig::KEY_VEH_STOP);
@@ -2446,18 +2433,18 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	// Hotkey for Seats
 	if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) currseat = -1;
 
-	//Prevents player from wearing a helmet
+	// No Helmet 
 	if (bPlayerExists){
 		if (featureWearHelmetOffUpdated || did_player_just_enter_vehicle(playerPed)){
-			PED::SET_PED_HELMET(playerPed, !featureWearHelmetOff);
+			PED::SET_PED_HELMET(playerPed, !featureWearHelmetOff); // Prevents player from wearing a helmet
 			featureWearHelmetOffUpdated = false;
 		}
 	}
 
-	if (bPlayerExists && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)){
-		oldVehicleState = false; // player is NOT in a vehicle, set state to false
-	}
-
+	// player is NOT in a vehicle, set state to false
+	if (bPlayerExists && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) oldVehicleState = false; 
+	
+	// burnout hotkey
 	if (is_hotkey_held_veh_burnout() && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
 		VEHICLE::SET_VEHICLE_BURNOUT(veh, true);
 		burnoutApplied = true;
@@ -2467,6 +2454,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		burnoutApplied = false;
 	}
 
+	// engine extra power hotkey
 	if (is_hotkey_held_veh_extrapower() && bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
 		VEHICLE::_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(veh, 1.8f);
 		VEHICLE::_SET_VEHICLE_ENGINE_POWER_MULTIPLIER(veh, 250.0f);
@@ -2540,8 +2528,8 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 
 	// Infinite Rocket Boost
-	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && getGameVersion() > 36) {
-		if (VEHICLE::_HAS_VEHICLE_ROCKET_BOOST(PED::GET_VEHICLE_PED_IS_IN(playerPed, false))) {
+	if (VEH_INFINITEBOOST_VALUES[InfiniteBoostIndex] > 0 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
+		if (getGameVersion() > 36 && VEHICLE::_HAS_VEHICLE_ROCKET_BOOST(PED::GET_VEHICLE_PED_IS_IN(playerPed, false))) {
 			if (VEH_INFINITEBOOST_VALUES[InfiniteBoostIndex] == 1 && CONTROLS::IS_CONTROL_PRESSED(2, 103)) {
 				VEHICLE::_SET_VEHICLE_ROCKET_BOOST_REFILL_TIME(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 0.0f);
 				VEHICLE::_SET_VEHICLE_ROCKET_BOOST_PERCENTAGE(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 100.0f);
@@ -2711,7 +2699,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 					if (VEH_MASS_VALUES[current_player_forceshield] == 50000) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyObj[i], 4, (ENTITY::GET_ENTITY_SPEED(my_shield) * VEH_MASS_VALUES[current_player_forceshield]), 0, 0, 0, 0, 0, 1, true, true, true, true, true);
 				}
 			}
-		} // end of for
+		} // end of for vehicles
 		
 		int count_p = worldGetAllPeds(nearbyObj, OBJ_ARR_SIZE); // pedestrians
 		for (int i = 0; i < count_p; i++) {
@@ -2742,7 +2730,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 					if (VEH_MASS_VALUES[current_player_forceshield] == 50000) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyObj[i], 4, (ENTITY::GET_ENTITY_SPEED(my_shield) * VEH_MASS_VALUES[current_player_forceshield]), 0, 0, 0, 0, 0, 1, true, true, true, true, true);
 				}
 			}
-		} // end of for
+		} // end of for peds
 		
 		int count_o = worldGetAllObjects(nearbyObj, OBJ_ARR_SIZE); // objects
 		for (int i = 0; i < count_o; i++) {
@@ -2767,7 +2755,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 					if (VEH_MASS_VALUES[current_player_forceshield] == 50000) ENTITY::APPLY_FORCE_TO_ENTITY(nearbyObj[i], 4, (ENTITY::GET_ENTITY_SPEED(my_shield) * VEH_MASS_VALUES[current_player_forceshield]), 0, 0, 0, 0, 0, 1, true, true, true, true, true);
 				}
 			}
-		} // end of for
+		} // end of for objects
 	}
 	else {
 		std::vector<int> emptyVec;
@@ -2822,7 +2810,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 					v_behind = false;
 				}
 			}
-		} // end of for
+		} // end of for vehicles
 
 		int count_p = worldGetAllPeds(nearbyObj, OBJ_ARR_SIZE); // pedestrians
 		for (int i = 0; i < count_p; i++) {
@@ -2864,7 +2852,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 					v_behind = false;
 				}
 			}
-		} // end of for
+		} // end of for peds
 
 		int count_o = worldGetAllObjects(nearbyObj, OBJ_ARR_SIZE); // objects
 		for (int i = 0; i < count_o; i++) {
@@ -2900,12 +2888,12 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 					v_behind = false;
 				}
 			}
-		} // end of for
+		} // end of for objects
 	}
 	////////////////////////////////////////////////////
 		
 	//////////////////////////////////////////////////// TURN SIGNALS ///////////////////////////////////////////////////////////
-	if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1)) {
+	if ((VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] > 0 || featureHazards) && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1)) {
 		controllightsenabled_l = false;
 		controllightsenabled_r = false;
 		viz_veh_ind_left = false;
@@ -3029,26 +3017,21 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 	///////////////////////////////////// VISUALIZE VEHICLE INDICATORS //////////////////////////////////////////////////////////
 	if (bPlayerExists && (VEH_VISLIGHT_VALUES[VisLightIndex] > 0 || VEH_VISLIGHT_VALUES[VisLight3dIndex] > 0) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
-		Vehicle playerVehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
-		Vector3 veh_indicators = ENTITY::GET_ENTITY_COORDS(playerVehicle, true);
+		Vector3 veh_indicators = ENTITY::GET_ENTITY_COORDS(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), true);
 		int time_indicators = TIME::GET_CLOCK_HOURS();
 
 		if (viz_veh_ind_left) {
 			if (!featureDaytimeonly) {
 				if (!feature3rdpersonviewonly && VEH_VISLIGHT_VALUES[VisLightIndex] > 0) DrawSprite("commonmenu", "arrowleft", 0.4500, 0.95, VEH_VISLIGHT_VALUES[VisLightIndex], VEH_VISLIGHT_VALUES[VisLightIndex], 1, 44, 255, 32, 255);
 				if (feature3rdpersonviewonly && CAM::GET_FOLLOW_VEHICLE_CAM_VIEW_MODE() != 4 && VEH_VISLIGHT_VALUES[VisLightIndex] > 0) DrawSprite("commonmenu", "arrowleft", 0.4500, 0.95, VEH_VISLIGHT_VALUES[VisLightIndex], VEH_VISLIGHT_VALUES[VisLightIndex], 1, 44, 255, 32, 255);
-				if (VEH_VISLIGHT_VALUES[VisLight3dIndex] > 0) GRAPHICS::DRAW_MARKER(2/*int type*/, veh_indicators.x + 0.5/*float posX*/, veh_indicators.y + 0.5/*float posY*/, veh_indicators.z + 3/*float posZ*/, 20/*float dirX*/, 20/*float dirY*/, 20/*float dirZ*/, 0/*float rotX*/, 270/*float rotY*/,
-					0/*float rotZ*/, VEH_VISLIGHT_VALUES[VisLight3dIndex] * 10/*float scaleX*/, VEH_VISLIGHT_VALUES[VisLight3dIndex] * 10/*float scaleY*/, VEH_VISLIGHT_VALUES[VisLight3dIndex] * 10/*float scaleZ*/,
-					44/*int red*/, 255/*int green*/, 32/*int blue*/, 155/*int alpha*/,
-					50/*BOOL bobUpAndDown*/, 1/*BOOL faceCamera*/, 1/*int p19*/, 0/*BOOL rotate*/, 0/*char* textureDict*/, 0/*char* textureName*/, 0/*BOOL drawOnEnts*/);
+				if (VEH_VISLIGHT_VALUES[VisLight3dIndex] > 0) GRAPHICS::DRAW_MARKER(2, veh_indicators.x + 0.5, veh_indicators.y + 0.5, veh_indicators.z + 3, 20, 20, 20, 0, 270, 0, VEH_VISLIGHT_VALUES[VisLight3dIndex] * 10, VEH_VISLIGHT_VALUES[VisLight3dIndex] * 10, 
+					VEH_VISLIGHT_VALUES[VisLight3dIndex] * 10, 44, 255, 32, 155, 50, 1, 1, 0, 0, 0, 0);
 			}
 			if (featureDaytimeonly && time_indicators > 6 && time_indicators < 20) {
 				if (!feature3rdpersonviewonly && VEH_VISLIGHT_VALUES[VisLightIndex] > 0) DrawSprite("commonmenu", "arrowleft", 0.4500, 0.95, VEH_VISLIGHT_VALUES[VisLightIndex], VEH_VISLIGHT_VALUES[VisLightIndex], 1, 44, 255, 32, 255);
 				if (feature3rdpersonviewonly && CAM::GET_FOLLOW_VEHICLE_CAM_VIEW_MODE() != 4 && VEH_VISLIGHT_VALUES[VisLightIndex] > 0) DrawSprite("commonmenu", "arrowleft", 0.4500, 0.95, VEH_VISLIGHT_VALUES[VisLightIndex], VEH_VISLIGHT_VALUES[VisLightIndex], 1, 44, 255, 32, 255);
-				if (VEH_VISLIGHT_VALUES[VisLight3dIndex] > 0) GRAPHICS::DRAW_MARKER(2/*int type*/, veh_indicators.x + 0.5/*float posX*/, veh_indicators.y + 0.5/*float posY*/, veh_indicators.z + 3/*float posZ*/, 20/*float dirX*/, 20/*float dirY*/, 20/*float dirZ*/, 0/*float rotX*/, 270/*float rotY*/,
-					0/*float rotZ*/, VEH_VISLIGHT_VALUES[VisLight3dIndex] * 10/*float scaleX*/, VEH_VISLIGHT_VALUES[VisLight3dIndex] * 10/*float scaleY*/, VEH_VISLIGHT_VALUES[VisLight3dIndex] * 10/*float scaleZ*/,
-					44/*int red*/, 255/*int green*/, 32/*int blue*/, 155/*int alpha*/,
-					50/*BOOL bobUpAndDown*/, 1/*BOOL faceCamera*/, 1/*int p19*/, 0/*BOOL rotate*/, 0/*char* textureDict*/, 0/*char* textureName*/, 0/*BOOL drawOnEnts*/);
+				if (VEH_VISLIGHT_VALUES[VisLight3dIndex] > 0) GRAPHICS::DRAW_MARKER(2, veh_indicators.x + 0.5, veh_indicators.y + 0.5, veh_indicators.z + 3, 20, 20, 20, 0, 270, 0, VEH_VISLIGHT_VALUES[VisLight3dIndex] * 10, VEH_VISLIGHT_VALUES[VisLight3dIndex] * 10, 
+					VEH_VISLIGHT_VALUES[VisLight3dIndex] * 10, 44, 255, 32, 155, 50, 1, 1, 0, 0, 0, 0);
 			}
 		}
 		
@@ -3056,18 +3039,14 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			if (!featureDaytimeonly) {
 				if (!feature3rdpersonviewonly && VEH_VISLIGHT_VALUES[VisLightIndex] > 0) DrawSprite("commonmenu", "arrowright", 0.5500, 0.95, VEH_VISLIGHT_VALUES[VisLightIndex], VEH_VISLIGHT_VALUES[VisLightIndex], 1, 44, 255, 32, 255);
 				if (feature3rdpersonviewonly && CAM::GET_FOLLOW_VEHICLE_CAM_VIEW_MODE() != 4 && VEH_VISLIGHT_VALUES[VisLightIndex] > 0) DrawSprite("commonmenu", "arrowright", 0.5500, 0.95, VEH_VISLIGHT_VALUES[VisLightIndex], VEH_VISLIGHT_VALUES[VisLightIndex], 1, 44, 255, 32, 255);
-				if (VEH_VISLIGHT_VALUES[VisLight3dIndex] > 0) GRAPHICS::DRAW_MARKER(2/*int type*/, veh_indicators.x - 0.5/*float posX*/, veh_indicators.y - 0.5/*float posY*/, veh_indicators.z + 3/*float posZ*/, 20/*float dirX*/, 20/*float dirY*/, 20/*float dirZ*/, 0/*float rotX*/, 90/*float rotY*/,
-					0/*float rotZ*/, VEH_VISLIGHT_VALUES[VisLight3dIndex] * 10/*float scaleX*/, VEH_VISLIGHT_VALUES[VisLight3dIndex] * 10/*float scaleY*/, VEH_VISLIGHT_VALUES[VisLight3dIndex] * 10/*float scaleZ*/,
-					44/*int red*/, 255/*int green*/, 32/*int blue*/, 155/*int alpha*/,
-					50/*BOOL bobUpAndDown*/, 1/*BOOL faceCamera*/, 1/*int p19*/, 0/*BOOL rotate*/, 0/*char* textureDict*/, 0/*char* textureName*/, 0/*BOOL drawOnEnts*/);
+				if (VEH_VISLIGHT_VALUES[VisLight3dIndex] > 0) GRAPHICS::DRAW_MARKER(2, veh_indicators.x - 0.5, veh_indicators.y - 0.5, veh_indicators.z + 3, 20, 20, 20, 0, 90, 0, VEH_VISLIGHT_VALUES[VisLight3dIndex] * 10, VEH_VISLIGHT_VALUES[VisLight3dIndex] * 10, 
+					VEH_VISLIGHT_VALUES[VisLight3dIndex] * 10, 44, 255, 32, 155, 50, 1, 1, 0, 0, 0, 0);
 			}
 			if (featureDaytimeonly && time_indicators > 6 && time_indicators < 20) {
 				if (!feature3rdpersonviewonly && VEH_VISLIGHT_VALUES[VisLightIndex] > 0) DrawSprite("commonmenu", "arrowright", 0.5500, 0.95, VEH_VISLIGHT_VALUES[VisLightIndex], VEH_VISLIGHT_VALUES[VisLightIndex], 1, 44, 255, 32, 255);
 				if (feature3rdpersonviewonly && CAM::GET_FOLLOW_VEHICLE_CAM_VIEW_MODE() != 4 && VEH_VISLIGHT_VALUES[VisLightIndex] > 0) DrawSprite("commonmenu", "arrowright", 0.5500, 0.95, VEH_VISLIGHT_VALUES[VisLightIndex], VEH_VISLIGHT_VALUES[VisLightIndex], 1, 44, 255, 32, 255);
-				if (VEH_VISLIGHT_VALUES[VisLight3dIndex] > 0) GRAPHICS::DRAW_MARKER(2/*int type*/, veh_indicators.x - 0.5/*float posX*/, veh_indicators.y - 0.5/*float posY*/, veh_indicators.z + 3/*float posZ*/, 20/*float dirX*/, 20/*float dirY*/, 20/*float dirZ*/, 0/*float rotX*/, 90/*float rotY*/,
-					0/*float rotZ*/, VEH_VISLIGHT_VALUES[VisLight3dIndex] * 10/*float scaleX*/, VEH_VISLIGHT_VALUES[VisLight3dIndex] * 10/*float scaleY*/, VEH_VISLIGHT_VALUES[VisLight3dIndex] * 10/*float scaleZ*/,
-					44/*int red*/, 255/*int green*/, 32/*int blue*/, 155/*int alpha*/,
-					50/*BOOL bobUpAndDown*/, 1/*BOOL faceCamera*/, 1/*int p19*/, 0/*BOOL rotate*/, 0/*char* textureDict*/, 0/*char* textureName*/, 0/*BOOL drawOnEnts*/);
+				if (VEH_VISLIGHT_VALUES[VisLight3dIndex] > 0) GRAPHICS::DRAW_MARKER(2, veh_indicators.x - 0.5, veh_indicators.y - 0.5, veh_indicators.z + 3, 20, 20, 20, 0, 90, 0, VEH_VISLIGHT_VALUES[VisLight3dIndex] * 10, VEH_VISLIGHT_VALUES[VisLight3dIndex] * 10, 
+					VEH_VISLIGHT_VALUES[VisLight3dIndex] * 10, 44, 255, 32, 155, 50, 1, 1, 0, 0, 0, 0);
 			}
 		}
 	}
@@ -3191,7 +3170,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 	///////////////////////////////////////////////// LIGHTS OFF BY DEFAULT ///////////////////////////////////////////////////////
 	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && (VEH_LIGHTSOFF_VALUES[lightsOffIndex] > 0)) {
-
 		Vehicle vehlights = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		int time = TIME::GET_CLOCK_HOURS();
 
@@ -3201,7 +3179,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 					VEHICLE::SET_VEHICLE_LIGHTS(vehlights, 1);
 					LightAlwaysOff = false;
 				}
-
 				if (CONTROLS::IS_CONTROL_JUST_PRESSED(2, 74)) {
 					WAIT(100);
 					if (LightAlwaysOff)	{
@@ -3239,7 +3216,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 					VEHICLE::SET_VEHICLE_LIGHTS(vehlights, 1);
 					LightAlwaysOff = false;
 				}
-
 				if (CONTROLS::IS_CONTROL_JUST_PRESSED(2, 74)) {
 					WAIT(100);
 					if (LightAlwaysOff) {
@@ -3295,7 +3271,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	///// <--- ENGINE CAN DAMAGE /////
 	engine_can_degrade(); 
 
-/////////////////////////////////////////////  REMEMBER VEHICLES /////////////////////////////////////////////////////////////
+///////////////////////////////////////////// REMEMBER VEHICLES /////////////////////////////////////////////////////////////
 	if (featureRememberVehicles && GAMEPLAY::GET_MISSION_FLAG() == 1) {
 		if (!BLIPTABLE_VEH.empty()) {
 			for (int i = 0; i < BLIPTABLE_VEH.size(); i++) {
@@ -3310,8 +3286,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 
 	if (GAMEPLAY::GET_MISSION_FLAG() == 0) {
-		Ped playerPed = PLAYER::PLAYER_PED_ID();
-
 		if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && been_already == true) been_already = false;
 
 		if (!VEHICLES_REMEMBER.empty() && !featureDeleteTrackedVehicles && featureDeleteTrackedVehicles_Emptied == false) {
@@ -3343,7 +3317,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				BLIPTABLE_VEH.shrink_to_fit();
 				featureDeleteTrackedVehicles_Emptied = false;
 			}
-
 			if (!VEHICLES_REMEMBER.empty()) {
 				for (int i = 0; i < VEHICLES_REMEMBER.size(); i++) {
 					VEHICLE::DELETE_VEHICLE(&VEHICLES_REMEMBER[i]);
@@ -3463,8 +3436,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 ////////////////////////////////////////////////////// MILEAGE OPTION ///////////////////////////////////////////////////////
 	if (featureMileage && PED::IS_PED_IN_ANY_VEHICLE(playerPed, true))
 	{
-		Vehicle vehmileage = PED::GET_VEHICLE_PED_IS_IN(playerPed, 1);
-		float veh_mileage_speed = ENTITY::GET_ENTITY_SPEED(vehmileage);
+		float veh_mileage_speed = ENTITY::GET_ENTITY_SPEED(PED::GET_VEHICLE_PED_IS_IN(playerPed, 1));
 		int screen_w, screen_h;
 		GRAPHICS::GET_SCREEN_RESOLUTION(&screen_w, &screen_h);
 
@@ -3508,10 +3480,9 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	if (featureNoVehFlip) {
 		Vehicle vehnoflip = PED::GET_VEHICLE_PED_IS_IN(playerPed, 1);
 		Vector3 veh_flip = ENTITY::GET_ENTITY_COORDS(vehnoflip, true);
-		Hash currVehModel_noflip = ENTITY::GET_ENTITY_MODEL(vehnoflip);
 		float veh_flips_speed = ENTITY::GET_ENTITY_SPEED(vehnoflip);
 		
-		if (VEHICLE::IS_THIS_MODEL_A_CAR(currVehModel_noflip)) {
+		if (VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(vehnoflip))) {
 			if (ENTITY::GET_ENTITY_ROLL(vehnoflip) > 90 || ENTITY::GET_ENTITY_ROLL(vehnoflip) < -90) {
 				VEHICLE::SET_VEHICLE_CAN_BREAK(vehnoflip, true);
 				VEHICLE::SET_VEHICLE_OUT_OF_CONTROL(vehnoflip, false, false);
@@ -3736,56 +3707,57 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 ///////////////////////////////////////////////////////////////////////////////////
 
 	// 'Reduced Grip If Snowing' and 'Slippery When Wet' code for bikes (mostly)
-	Vector3 coords_slip = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
-	if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 && featureSnow && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip.x, coords_slip.y, coords_slip.z) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) {
+	if ((WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 && featureSnow) || WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripRainingIndex] > 0) {
+		Vector3 coords_slip = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 		Vehicle myVehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
-		if (((ENTITY::GET_ENTITY_SPEED(myVehicle) * 3.6) < 1) && CONTROLS::IS_CONTROL_JUST_PRESSED(2, 71) && !is_in_airbrake_mode()) {
-			AI::TASK_VEHICLE_TEMP_ACTION(playerPed, myVehicle, 30, 700); // 500
-			WAIT(800); // 400
-			VEHICLE::SET_VEHICLE_FORWARD_SPEED(myVehicle, 1); // 2
-		}
-		if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] == 1) { // arcade
-			if (VEHICLE::IS_VEHICLE_ON_ALL_WHEELS(myVehicle) && VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(myVehicle))) {
-				if (!featureWorldMoonGravity) ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.15f, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
-				else ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.15f / 4, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
+		if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 && featureSnow && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip.x, coords_slip.y, coords_slip.z) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) {
+			if (((ENTITY::GET_ENTITY_SPEED(myVehicle) * 3.6) < 1) && CONTROLS::IS_CONTROL_JUST_PRESSED(2, 71) && !is_in_airbrake_mode()) {
+				AI::TASK_VEHICLE_TEMP_ACTION(playerPed, myVehicle, 30, 700); // 500
+				WAIT(800); // 400
+				VEHICLE::SET_VEHICLE_FORWARD_SPEED(myVehicle, 1); // 2
 			}
-		}
-		if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] == 2) { // realistic
-			if (VEHICLE::IS_VEHICLE_ON_ALL_WHEELS(myVehicle) && VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(myVehicle))) {
-				if (!featureWorldMoonGravity) ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.18f, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
-				else ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.18f / 4, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
-			}
-		}
-	}
-	if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripRainingIndex] > 0 && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip.x, coords_slip.y, coords_slip.z) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) {
-		Vehicle myVehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
-		if (((ENTITY::GET_ENTITY_SPEED(myVehicle) * 3.6) < 1) && CONTROLS::IS_CONTROL_JUST_PRESSED(2, 71) && !is_in_airbrake_mode() && (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 1420204096 || GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3061285535 || 
-			GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 1840358669 || GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3373937154)) {
-			AI::TASK_VEHICLE_TEMP_ACTION(playerPed, myVehicle, 30, 400);
-			WAIT(400);
-			VEHICLE::SET_VEHICLE_FORWARD_SPEED(myVehicle, 1);
-		}
-		if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripRainingIndex] == 1) { // arcade
-			if (VEHICLE::IS_VEHICLE_ON_ALL_WHEELS(myVehicle) && VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(myVehicle))) {
-				if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 1420204096) {
-					if (!featureWorldMoonGravity) ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.09f, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
-					else ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.09f / 4, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
+			if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] == 1) { // arcade
+				if (VEHICLE::IS_VEHICLE_ON_ALL_WHEELS(myVehicle) && VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(myVehicle))) {
+					if (!featureWorldMoonGravity) ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.15f, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
+					else ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.15f / 4, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
 				}
-				if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3061285535) {
-					if (!featureWorldMoonGravity) ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.10f, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
-					else ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.10f / 4, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
+			}
+			if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] == 2) { // realistic
+				if (VEHICLE::IS_VEHICLE_ON_ALL_WHEELS(myVehicle) && VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(myVehicle))) {
+					if (!featureWorldMoonGravity) ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.18f, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
+					else ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.18f / 4, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
 				}
 			}
 		}
-		if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripRainingIndex] == 2) { // realistic
-			if (VEHICLE::IS_VEHICLE_ON_ALL_WHEELS(myVehicle) && VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(myVehicle))) {
-				if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 1420204096) {
-					if (!featureWorldMoonGravity) ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.11f, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
-					else ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.11f / 4, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
+		if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripRainingIndex] > 0 && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip.x, coords_slip.y, coords_slip.z) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) {
+			if (((ENTITY::GET_ENTITY_SPEED(myVehicle) * 3.6) < 1) && CONTROLS::IS_CONTROL_JUST_PRESSED(2, 71) && !is_in_airbrake_mode() && (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 1420204096 || GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3061285535 ||
+				GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 1840358669 || GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3373937154)) {
+				AI::TASK_VEHICLE_TEMP_ACTION(playerPed, myVehicle, 30, 400);
+				WAIT(400);
+				VEHICLE::SET_VEHICLE_FORWARD_SPEED(myVehicle, 1);
+			}
+			if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripRainingIndex] == 1) { // arcade
+				if (VEHICLE::IS_VEHICLE_ON_ALL_WHEELS(myVehicle) && VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(myVehicle))) {
+					if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 1420204096) {
+						if (!featureWorldMoonGravity) ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.09f, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
+						else ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.09f / 4, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
+					}
+					if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3061285535) {
+						if (!featureWorldMoonGravity) ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.10f, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
+						else ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.10f / 4, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
+					}
 				}
-				if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3061285535) {
-					if (!featureWorldMoonGravity) ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.12f, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
-					else ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.12f / 4, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
+			}
+			if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripRainingIndex] == 2) { // realistic
+				if (VEHICLE::IS_VEHICLE_ON_ALL_WHEELS(myVehicle) && VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(myVehicle))) {
+					if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 1420204096) {
+						if (!featureWorldMoonGravity) ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.11f, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
+						else ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.11f / 4, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
+					}
+					if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3061285535) {
+						if (!featureWorldMoonGravity) ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.12f, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
+						else ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.12f / 4, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
+					}
 				}
 			}
 		}
@@ -3807,6 +3779,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 ///////////////////////////////////////////////////////////////////////////////////
 
+	// Force Vehicle Lights On
 	if(bPlayerExists) {
 		if(featureVehLightsOnUpdated || did_player_just_enter_vehicle(playerPed)){
 			if(featureVehLightsOn){
@@ -4107,8 +4080,8 @@ bool process_carspawn_menu() {
 
 bool onconfirm_spawn_menu_cars(MenuItem<int> choice){
 	std::string category = choice.caption;
-
 	std::vector<MenuItem<std::string>*> menuItems;
+
 	for(int i = 0; i < VOV_CAR_VALUES[choice.value].size(); i++){
 		MenuItem<std::string> *item = new MenuItem<std::string>();
 		item->caption = VOV_CAR_CAPTIONS[choice.value][i];
@@ -4152,6 +4125,7 @@ bool onconfirm_spawn_menu_indus(MenuItem<int> choice){
 	}
 
 	std::vector<MenuItem<std::string>*> menuItems;
+
 	for(int i = 0; i < VOV_INDUS_CAPTIONS[selection].size(); i++){
 		MenuItem<std::string> *item = new MenuItem<std::string>();
 		item->caption = VOV_INDUS_CAPTIONS[selection][i];
@@ -4169,6 +4143,7 @@ bool onconfirm_spawn_menu_indus(MenuItem<int> choice){
 
 bool process_spawn_menu_indus(){
 	std::vector<MenuItem<int>*> menuItems;
+
 	for(int i = 0; i < MENU_INDUS_CATEGORIES.size(); i++){
 		MenuItem<int> *item = new MenuItem<int>();
 		item->caption = MENU_INDUS_CATEGORIES[i];
@@ -4431,7 +4406,7 @@ bool spawn_saved_car(int slot, std::string caption){
 			VEHICLE::_SET_VEHICLE_INTERIOR_COLOUR(veh, savedVeh->interiorColour);
 		}
 
-		// Loading of an engine sound
+		// loading of an engine sound
 		if (savedVeh->engineSound > -1 && featureEngineSound) {
 			bool correct_name_to_load = false;
 			for (int i = 0; i < ENGINE_SOUND_COUNT_VEHICLES; i++)
@@ -4592,7 +4567,7 @@ bool process_savedveh_sort_menu(){
 
 void save_current_vehicle(int slot){
 	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
-	Player player = PLAYER::PLAYER_ID();
+	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if(bPlayerExists){
@@ -6138,7 +6113,6 @@ void init_vehicle_feature(){
 	unpack_veh_preview("UTILLITRUCK2", VP_UTILLITRUCK2, "VP_UTILLITRUCK2");
 	unpack_veh_preview("UTILLITRUCK3", VP_UTILLITRUCK3, "VP_UTILLITRUCK3");
 	unpack_veh_preview("VOODOO2", VP_VOODOO, "VP_VOODOO");
-
 	unpack_veh_preview("BALLER5", VP_BALLER5, "VP_BALLER5");
 	unpack_veh_preview("BALLER6", VP_BALLER6, "VP_BALLER6");
 	unpack_veh_preview("SCHAFTER2", VP_SCHAFTER2, "VP_SCHAFTER2");
@@ -6149,16 +6123,13 @@ void init_vehicle_feature(){
 	unpack_veh_preview("MOONBEAM", VP_MOONBEAM, "VP_MOONBEAM");
 	unpack_veh_preview("COGNOSCENTI2", VP_COGNOSCENTI2, "VP_COGNOSCENTI2");
 	unpack_veh_preview("COG552", VP_COG552, "VP_COG552");
-
 	unpack_veh_preview("VIRGO3", VP_VIRGO3, "VP_VIRGO3");
 	unpack_veh_preview("FACTION", VP_FACTION, "VP_FACTION");
-
 	unpack_veh_preview("HAULER2", VP_HAULER2, "VP_HAULER2");
 	unpack_veh_preview("INSURGENT3", VP_INSURGENT3, "VP_INSURGENT3");
 	unpack_veh_preview("PHANTOM3", VP_PHANTOM3, "VP_PHANTOM3");
 	unpack_veh_preview("TECHNICAL3", VP_TECHNICAL3, "VP_TECHNICAL3");
 	unpack_veh_preview("CLIFFHANGER", VP_CLIFFHANGER, "VP_CLIFFHANGER");
-	
 	unpack_veh_preview("ISSI4", VP_ISSI1, "VP_ISSI4");
 	unpack_veh_preview("ISSI5", VP_ISSI2, "VP_ISSI5");
 	unpack_veh_preview("ISSI6", VP_ISSI3, "VP_ISSI6");
@@ -6194,17 +6165,13 @@ void fix_vehicle(){
 			VEHICLE::SET_VEHICLE_DEFORMATION_FIXED(veh);
 			VEHICLE::SET_VEHICLE_NEEDS_TO_BE_HOTWIRED(veh, false);
 
-			if(FIRE::IS_ENTITY_ON_FIRE(veh)){
-				FIRE::STOP_ENTITY_FIRE(veh);
-			}
+			if (FIRE::IS_ENTITY_ON_FIRE(veh)) FIRE::STOP_ENTITY_FIRE(veh);
 
 			VEHICLE::SET_VEHICLE_ENGINE_HEALTH(veh, 1000.0f);
 			VEHICLE::SET_VEHICLE_PETROL_TANK_HEALTH(veh, 1000.0f);
 			VEHICLE::SET_VEHICLE_BODY_HEALTH(veh, 1000.f);
-
 			VEHICLE::SET_VEHICLE_UNDRIVEABLE(veh, false);
 			VEHICLE::SET_VEHICLE_ENGINE_CAN_DEGRADE(veh, false);
-
 			VEHICLE::SET_VEHICLE_ENGINE_ON(veh, true, true);
 
 			set_status_text("Vehicle repaired");
