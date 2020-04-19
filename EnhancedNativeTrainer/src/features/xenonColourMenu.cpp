@@ -16,7 +16,7 @@ void onhighlight_xenon_selection(MenuItem<int> choice) {
 bool onconfirm_xenon_selection(MenuItem<int> choice) {
 	// common variables
 	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
-	Player player = PLAYER::PLAYER_ID();
+	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if (!bPlayerExists) 
@@ -36,7 +36,7 @@ bool process_xenon_colour_menu() {
 	std::vector<MenuItem<int>*> menuItems;
 
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
-	int curColour = VEHICLE::GET_VEHICLE_XENON_COLOUR(veh);
+	//int curColour = VEHICLE::GET_VEHICLE_XENON_COLOUR(veh);
 
 	for (int i = 0; i < XENON_COLOURS.size(); i++) {
 		XenonColour thisCol = XENON_COLOURS[i];
