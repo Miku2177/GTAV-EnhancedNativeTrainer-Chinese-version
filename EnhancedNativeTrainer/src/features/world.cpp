@@ -89,7 +89,6 @@ bool featureAcidWater = false;
 bool featureAcidRain = false;
 bool featureReducedGripVehiclesIfSnow = false;
 
-bool police_blips_toogle = false;
 bool windstrength_toggle = false;
 bool wavesstrength_toggle = false;
 int windstrength_changed = -1;
@@ -107,6 +106,7 @@ bool featureWorldGarbageTrucksUpdated = false;
 
 bool featureBlackout = false;
 bool featureBlackoutUpdated = false;
+bool featureHeadlightsBlackout = false;
 
 bool featureWeatherFreeze = false;
 bool featureWeatherFreezeUpdated = false;
@@ -149,12 +149,6 @@ const std::vector<std::string> WORLD_WAVES_CAPTIONS{ "Default", "No Waves", "0.1
 const int WORLD_WAVES_VALUES[] = { -1, -400000, 0, 5, 10, 20, 30, 50 };
 int WorldWavesIndex = 0;
 bool WorldWavesChanged = true;
-
-// Headlights During Blackout
-const std::vector<std::string> WORLD_HEADLIGHTS_BLACKOUT_CAPTIONS{ "OFF", "No Shadows", "With Shadows" };
-const int WORLD_HEADLIGHTS_BLACKOUT_VALUES[] = { 1, 2, 3 };
-int featureLightsBlackoutIndex = 0;
-bool featureLightsBlackoutChanged = true;
 
 // Lightning Intensity
 const std::vector<std::string> WORLD_LIGHTNING_INTENSITY_CAPTIONS{ "OFF", "Often", "Very Often" };
@@ -284,8 +278,6 @@ void process_weather_menu()
 	std::string caption = "Weather Options";
 	
 	StringStandardOrToggleMenuDef lines[lineCount] = {
-	//StringStandardOrToggleMenuDef lines[lineCount] = {
-		//{ "Freeze Weather", "FREEZEWEATHER", &featureWeatherFreeze, NULL },
 		{ "Weather Settings", "FREEZEWEATHER", NULL, NULL, false },
 		{ "Reset Weather", "RESETWEATHER", NULL, NULL, true },
 		{ "Extra Sunny", "EXTRASUNNY", NULL, NULL, true },
@@ -404,11 +396,6 @@ void onchange_lightning_intensity_index(int value, SelectFromListMenuItem* sourc
 void onchange_world_wind_strength_index(int value, SelectFromListMenuItem* source){
 	WindStrengthIndex = value;
 	WindStrengthChanged = true;
-}
-
-void onchange_world_headlights_blackout_index(int value, SelectFromListMenuItem* source) {
-	featureLightsBlackoutIndex = value;
-	featureLightsBlackoutChanged = true;
 }
 
 void onchange_freeroam_activities_index(int value, SelectFromListMenuItem* source) {
@@ -592,12 +579,12 @@ void process_world_menu()
 	togItem->toggleValueUpdated = &featureBlackoutUpdated;
 	menuItems.push_back(togItem);
 
-	listItem = new SelectFromListMenuItem(WORLD_HEADLIGHTS_BLACKOUT_CAPTIONS, onchange_world_headlights_blackout_index);
-	listItem->wrap = false;
-	listItem->caption = "Headlights During Blackout";
-	listItem->value = featureLightsBlackoutIndex;
-	menuItems.push_back(listItem);
-	
+	togItem = new ToggleMenuItem<int>();
+	togItem->caption = "Headlights During Blackout";
+	togItem->value = 6;
+	togItem->toggleValue = &featureHeadlightsBlackout;
+	menuItems.push_back(togItem);
+
 	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "Heavy Snow";
 	togItem->value = 7;
@@ -695,7 +682,6 @@ void reset_world_globals()
 	RadarReducedGripSnowingIndex = 0;
 	RadarReducedGripRainingIndex = 0;
 	NoPedsGravityIndex = 0;
-	featureLightsBlackoutIndex = 0;
 	featureFreeroamActivitiesIndex = 0;
 	TrainSpeedIndex = 0;
 	WeatherChangeIndex = 0;
@@ -729,6 +715,7 @@ void reset_world_globals()
 	featureAcidRain = false;
 	featureReducedGripVehiclesIfSnow = false;
 	featureBlackout = false;
+	featureHeadlightsBlackout = false;
 	featureSnow = false;
 	featureMPMap = false;
 
@@ -1123,7 +1110,7 @@ void update_world_features()
 	// Bus Interior Light On At Night && NPC No Lights && NPC Neon Lights && NPC Dirty Vehicles && NPC No Gravity Vehicles && NPC Vehicles Reduced Grip && NPC Vehicle Speed && NPC Use Fullbeam && 
 	// Headlights During Blackout && Boost NPC Radio Volume && Slippery When Wet && Train Speed && NPC Vehicles Colour && Reduced Grip If Snowing
 	if (featureBusLight || featureNPCNoLights || featureNPCNeonLights || featureDirtyVehicles /*|| WORLD_DAMAGED_VEHICLES_VALUES[DamagedVehiclesIndex] > 0*/ || featureNPCNoGravityVehicles || featureNPCReducedGripVehicles ||
-		WORLD_NPC_VEHICLESPEED_VALUES[NPCVehicleSpeedIndex] > -1 || WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 || featureNPCFullBeam || WORLD_HEADLIGHTS_BLACKOUT_VALUES[featureLightsBlackoutIndex] > 1 ||
+		WORLD_NPC_VEHICLESPEED_VALUES[NPCVehicleSpeedIndex] > -1 || WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 || featureNPCFullBeam || featureHeadlightsBlackout ||
 		featureBoostNPCRadio || WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripRainingIndex] > 0 || WORLD_TRAIN_SPEED_VALUES[TrainSpeedIndex] != -1.0 || VEH_COLOUR_VALUES[VehColourIndex] > -1) {
 		Vehicle veh_mycurrveh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 		const int BUS_ARR_SIZE = 1024;
@@ -1188,15 +1175,15 @@ void update_world_features()
 				VEHICLE::SET_VEHICLE_INDICATOR_LIGHTS(bus_veh[i], 1, false);
 				VEHICLE::SET_VEHICLE_INDICATOR_LIGHTS(bus_veh[i], 0, false);
 				if (lightsOn || highbeamsOn) VEHICLE::SET_VEHICLE_LIGHTS(bus_veh[i], 1);
-			} else GRAPHICS::DISABLE_VEHICLE_DISTANTLIGHTS(false);
+			} // else GRAPHICS::DISABLE_VEHICLE_DISTANTLIGHTS(false);
 			// Boost NPC Radio Volume
 			if (featureBoostNPCRadio) AUDIO::SET_VEHICLE_RADIO_LOUD(bus_veh[i], 1);
 			// NPC Neon Lights
 			if (featureNPCNeonLights) {
-				if (ENTITY::DOES_ENTITY_EXIST(bus_veh[i]) && !VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 0) && !VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 1) && !VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 2) &&
+				if (ENTITY::DOES_ENTITY_EXIST(bus_veh[i]) && bus_veh[i] != veh_mycurrveh && !VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 0) && !VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 1) && !VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 2) &&
 					!VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 3)) {
 					Hash currVehModel_neon = ENTITY::GET_ENTITY_MODEL(bus_veh[i]);
-					if (bus_veh[i] != veh_mycurrveh && VEHICLE::IS_THIS_MODEL_A_CAR(currVehModel_neon)) {
+					if (VEHICLE::IS_THIS_MODEL_A_CAR(currVehModel_neon)) {
 						int temp_colour = rand() % 11 + 2;
 						NeonLightsColor npc_whichcolor = NEON_COLORS[temp_colour];
 						VEHICLE::_SET_VEHICLE_NEON_LIGHTS_COLOUR(bus_veh[i], npc_whichcolor.rVal, npc_whichcolor.gVal, npc_whichcolor.bVal);
@@ -1330,10 +1317,10 @@ void update_world_features()
 				BOOL lightsAutoOn = -1;
 				BOOL highbeamsAutoOn = -1;
 				bool npclights_state = VEHICLE::GET_VEHICLE_LIGHTS_STATE(bus_veh[i], &lightsAutoOn, &highbeamsAutoOn);
-				if (lightsAutoOn && !highbeamsAutoOn && bus_veh[i] != PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false)) VEHICLE::SET_VEHICLE_FULLBEAM(bus_veh[i], 1);
+				if (lightsAutoOn && !highbeamsAutoOn && bus_veh[i] != veh_mycurrveh) VEHICLE::SET_VEHICLE_FULLBEAM(bus_veh[i], 1);
 			}
 			// Headlights During Blackout
-			if (WORLD_HEADLIGHTS_BLACKOUT_VALUES[featureLightsBlackoutIndex] > 1 && featureBlackout && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(bus_veh[i])) {
+			if (featureHeadlightsBlackout && featureBlackout && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(bus_veh[i])) {
 				Vehicle vehpolicelights = bus_veh[i];
 				bool autolights_state = VEHICLE::GET_VEHICLE_LIGHTS_STATE(vehpolicelights, &lightsBAutoOn, &highbeamsBAutoOn);
 				int bone_cruiser_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(vehpolicelights, "headlight_l");
@@ -1378,28 +1365,16 @@ void update_world_features()
 				ENTITY::SET_ENTITY_CAN_BE_DAMAGED(vehpolicelights, false);
 				VEHICLE::SET_VEHICLE_CAN_BE_VISIBLY_DAMAGED(vehpolicelights, false);
 				if (lightsBAutoOn) {
-					if (WORLD_HEADLIGHTS_BLACKOUT_VALUES[featureLightsBlackoutIndex] == 3) { // with shadows
-						GRAPHICS::_DRAW_SPOT_LIGHT_WITH_SHADOW(bone_cruiser_coord.x, bone_cruiser_coord.y, bone_cruiser_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, r, g, b, 40.0, 1, 50, 31, 2.7, 5);
-						GRAPHICS::_DRAW_SPOT_LIGHT_WITH_SHADOW(bone3_cruiser_coord.x, bone3_cruiser_coord.y, bone3_cruiser_coord.z, dirVector_rf_rr_x, dirVector_rf_rr_y, dirVector_rf_rr_z, r, g, b, 40.0, 1, 50, 31, 2.7, 5);
-					}
-					if (WORLD_HEADLIGHTS_BLACKOUT_VALUES[featureLightsBlackoutIndex] == 2) { // no shadows
-						GRAPHICS::DRAW_SPOT_LIGHT(bone_cruiser_coord.x, bone_cruiser_coord.y, bone_cruiser_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, r, g, b, 40.0, 1, 50, 31, 2.7);
-						GRAPHICS::DRAW_SPOT_LIGHT(bone3_cruiser_coord.x, bone3_cruiser_coord.y, bone3_cruiser_coord.z, dirVector_rf_rr_x, dirVector_rf_rr_y, dirVector_rf_rr_z, r, g, b, 40.0, 1, 50, 31, 2.7);
-					}
+					GRAPHICS::DRAW_SPOT_LIGHT(bone_cruiser_coord.x, bone_cruiser_coord.y, bone_cruiser_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, r, g, b, 40.0, 1, 50, 31, 2.7);
+					GRAPHICS::DRAW_SPOT_LIGHT(bone3_cruiser_coord.x, bone3_cruiser_coord.y, bone3_cruiser_coord.z, dirVector_rf_rr_x, dirVector_rf_rr_y, dirVector_rf_rr_z, r, g, b, 40.0, 1, 50, 31, 2.7);
 					GRAPHICS::DRAW_LIGHT_WITH_RANGE(bone_cruiser_coord.x, bone_cruiser_coord.y, bone_cruiser_coord.z, 255, 255, 255, 1, 15);
 					GRAPHICS::DRAW_LIGHT_WITH_RANGE(bone3_cruiser_coord.x, bone3_cruiser_coord.y, bone3_cruiser_coord.z, 255, 255, 255, 1, 15);
 					GRAPHICS::DRAW_LIGHT_WITH_RANGE(bone2_cruiser_coord.x, bone2_cruiser_coord.y, bone2_cruiser_coord.z, 255, 0, 0, 0.7, 15);
 					GRAPHICS::DRAW_LIGHT_WITH_RANGE(bone4_cruiser_coord.x, bone4_cruiser_coord.y, bone4_cruiser_coord.z, 255, 0, 0, 0.7, 15);
 				}
 				if (highbeamsBAutoOn) {
-					if (WORLD_HEADLIGHTS_BLACKOUT_VALUES[featureLightsBlackoutIndex] == 3) { // with shadows
-						GRAPHICS::_DRAW_SPOT_LIGHT_WITH_SHADOW(bone_cruiser_coord.x, bone_cruiser_coord.y, bone_cruiser_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, r, g, b, 60.0, 1, 50, 41, 2.7, 10);
-						GRAPHICS::_DRAW_SPOT_LIGHT_WITH_SHADOW(bone3_cruiser_coord.x, bone3_cruiser_coord.y, bone3_cruiser_coord.z, dirVector_rf_rr_x, dirVector_rf_rr_y, dirVector_rf_rr_z, r, g, b, 60.0, 1, 50, 41, 2.7, 10);
-					}
-					if (WORLD_HEADLIGHTS_BLACKOUT_VALUES[featureLightsBlackoutIndex] == 2) { // no shadows
-						GRAPHICS::DRAW_SPOT_LIGHT(bone_cruiser_coord.x, bone_cruiser_coord.y, bone_cruiser_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, r, g, b, 60.0, 1, 50, 41, 2.7);
-						GRAPHICS::DRAW_SPOT_LIGHT(bone3_cruiser_coord.x, bone3_cruiser_coord.y, bone3_cruiser_coord.z, dirVector_rf_rr_x, dirVector_rf_rr_y, dirVector_rf_rr_z, r, g, b, 60.0, 1, 50, 41, 2.7);
-					}
+					GRAPHICS::DRAW_SPOT_LIGHT(bone_cruiser_coord.x, bone_cruiser_coord.y, bone_cruiser_coord.z, dirVector_lf_lr_x, dirVector_lf_lr_y, dirVector_lf_lr_z, r, g, b, 60.0, 1, 50, 41, 2.7);
+					GRAPHICS::DRAW_SPOT_LIGHT(bone3_cruiser_coord.x, bone3_cruiser_coord.y, bone3_cruiser_coord.z, dirVector_rf_rr_x, dirVector_rf_rr_y, dirVector_rf_rr_z, r, g, b, 60.0, 1, 50, 41, 2.7);
 					GRAPHICS::DRAW_LIGHT_WITH_RANGE(bone_cruiser_coord.x, bone_cruiser_coord.y, bone_cruiser_coord.z, 255, 255, 255, 1, 15);
 					GRAPHICS::DRAW_LIGHT_WITH_RANGE(bone3_cruiser_coord.x, bone3_cruiser_coord.y, bone3_cruiser_coord.z, 255, 255, 255, 1, 15);
 					GRAPHICS::DRAW_LIGHT_WITH_RANGE(bone2_cruiser_coord.x, bone2_cruiser_coord.y, bone2_cruiser_coord.z, 255, 0, 0, 0.7, 15);
@@ -1417,9 +1392,7 @@ void update_world_features()
 		int found_ped = worldGetAllPeds(bus_ped, BUS_ARR_PED_SIZE);
 		for (int i = 0; i < found_ped; i++) {
 			// Peds Accuracy
-			if (WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex] > -1) { 
-				PED::SET_PED_ACCURACY(bus_ped[i], WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex]);
-			}
+			if (WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex] > -1) PED::SET_PED_ACCURACY(bus_ped[i], WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex]);
 			// Peds Health
 			if (PLAYER_HEALTH_VALUES[PedsHealthIndex] > 0) { 
 				if (!ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(bus_ped[i], PLAYER::PLAYER_PED_ID(), 1)) {
@@ -1433,8 +1406,8 @@ void update_world_features()
 				}
 			}
 			// NPC Show Current Health
-			if (featureNPCShowHealth && ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_PED(bus_ped[i])/*ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(bus_ped[i], PLAYER::PLAYER_PED_ID(), 1)*/ && !ENTITY::IS_ENTITY_DEAD(bus_ped[i]) &&
-				ENTITY::DOES_ENTITY_EXIST(bus_ped[i]) && bus_ped[i] != PLAYER::PLAYER_PED_ID()) { 
+			if (featureNPCShowHealth && ENTITY::DOES_ENTITY_EXIST(bus_ped[i]) && !ENTITY::IS_ENTITY_DEAD(bus_ped[i]) && ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_PED(bus_ped[i])/*ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(bus_ped[i], PLAYER::PLAYER_PED_ID(), 1)*/ &&
+				bus_ped[i] != PLAYER::PLAYER_PED_ID()) { 
 				Vector3 head_c = PED::GET_PED_BONE_COORDS(bus_ped[i], 31086, 0, 0, 0);
 				std::string curr_h_t = std::to_string(ENTITY::GET_ENTITY_HEALTH(bus_ped[i]) - 100);
 				GRAPHICS::SET_DRAW_ORIGIN(head_c.x, head_c.y, head_c.z + 0.5, 0);
@@ -1738,10 +1711,11 @@ void update_world_features()
 			GAMEPLAY::CLEAR_AREA_OF_VEHICLES(v3.x, v3.y, v3.z, 1000.0, 0, 0, 0, 0, 0);
 		}
 		STREAMING::SET_VEHICLE_POPULATION_BUDGET(0);
-		GRAPHICS::DISABLE_VEHICLE_DISTANTLIGHTS(true);
+		//GRAPHICS::DISABLE_VEHICLE_DISTANTLIGHTS(true);
 		VEHICLE::_DISPLAY_DISTANT_VEHICLES(false);
 	}
 
+	// No Planes / Helicopters
 	if (featureNoPlanesHelis) {
 		AI::SET_SCENARIO_GROUP_ENABLED("ALAMO_PLANES", 0);
 		AI::SET_SCENARIO_GROUP_ENABLED("ARMY_HELI", 0);
@@ -1757,6 +1731,7 @@ void update_world_features()
 		}
 	}
 	
+	// No Animals
 	if (featureNoAnimals) {
 		AI::SET_SCENARIO_TYPE_ENABLED("WORLD_MOUNTAIN_LION_REST", 0);
 		AI::SET_SCENARIO_TYPE_ENABLED("WORLD_MOUNTAIN_LION_WANDER", 0);
@@ -1773,11 +1748,10 @@ void update_world_features()
 		no_animals = false;
 	}
 
-	if (!featureWorldRandomTrains)
-	{
-		VEHICLE::DELETE_ALL_TRAINS();
-	}
-
+	// Random Trains
+	if (!featureWorldRandomTrains) VEHICLE::DELETE_ALL_TRAINS();
+	
+	// Freeze Weather
 	if (featureWeatherFreeze && featureWeatherFreezeUpdated == false) {
 		freeze_counter = freeze_counter + 0.05;
 		GAMEPLAY::CLEAR_OVERRIDE_WEATHER();
@@ -1801,11 +1775,10 @@ void update_world_features()
 		freeze_counter = 0.0;
 	}
 	
-	if (featureCloudsFreeze && !lastClouds.empty())
-	{
-		GRAPHICS::_SET_CLOUD_HAT_TRANSITION((char *)lastClouds.c_str(), 1.0);
-	}
-
+	// Freeze Clouds
+	if (featureCloudsFreeze && !lastClouds.empty()) GRAPHICS::_SET_CLOUD_HAT_TRANSITION((char *)lastClouds.c_str(), 1.0);
+	
+	// Restricted Zones
 	if (!featureRestrictedZones)
 	{
 		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("am_armybase");
@@ -1816,6 +1789,7 @@ void update_world_features()
 		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("re_prisonvanbreak");
 	}
 
+	// Heavy Snow
 	if (featureSnowUpdated)
 	{
 		if (featureSnow)
@@ -1828,7 +1802,6 @@ void update_world_features()
 			EnableSnow(featureSnow);
 			EnableTracks(false, false, false, false);
 		}
-		
 		featureSnowUpdated = false;
 	}
 
@@ -1846,7 +1819,6 @@ void update_world_features()
 			DLC2::_LOAD_SP_DLC_MAPS();
 			set_status_text("MP Maps disabled");
 		}
-
 		featureMPMapUpdated = false;
 	}
 }
@@ -1862,6 +1834,7 @@ void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* r
 	results->push_back(FeatureEnabledLocalDefinition{ "featureCloudsNo", &featureCloudsNo });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureCloudsFreeze", &featureCloudsFreeze });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureBlackout", &featureBlackout, &featureBlackoutUpdated });
+	results->push_back(FeatureEnabledLocalDefinition{ "featureHeadlightsBlackout", &featureHeadlightsBlackout });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureRestrictedZones", &featureRestrictedZones });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoPeds", &featureWorldNoPeds }); 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldNoFireTruck", &featureWorldNoFireTruck });
@@ -1902,7 +1875,6 @@ void add_world_feature_enablements2(std::vector<StringPairSettingDBRow>* results
 	results->push_back(StringPairSettingDBRow{ "RadarReducedGripSnowingIndex", std::to_string(RadarReducedGripSnowingIndex) });
 	results->push_back(StringPairSettingDBRow{ "RadarReducedGripRainingIndex", std::to_string(RadarReducedGripRainingIndex) });
 	results->push_back(StringPairSettingDBRow{ "NoPedsGravityIndex", std::to_string(NoPedsGravityIndex) });
-	results->push_back(StringPairSettingDBRow{ "featureLightsBlackoutIndex", std::to_string(featureLightsBlackoutIndex) });
 	results->push_back(StringPairSettingDBRow{ "featureFreeroamActivitiesIndex", std::to_string(featureFreeroamActivitiesIndex) });
 	results->push_back(StringPairSettingDBRow{ "TrainSpeedIndex", std::to_string(TrainSpeedIndex) });
 	results->push_back(StringPairSettingDBRow{ "WeatherChangeIndex", std::to_string(WeatherChangeIndex) });
@@ -1959,9 +1931,6 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 		}
 		else if (setting.name.compare("NoPedsGravityIndex") == 0) {
 			NoPedsGravityIndex = stoi(setting.value);
-		}
-		else if (setting.name.compare("featureLightsBlackoutIndex") == 0) {
-			featureLightsBlackoutIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("featureFreeroamActivitiesIndex") == 0) {
 			featureFreeroamActivitiesIndex = stoi(setting.value);
@@ -2062,18 +2031,16 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 	}
 
 	// Snow
-	void EnableSnow(bool featureSnow)
-	{
+	void EnableSnow(bool featureSnow) {
+		
 		if (featureSnow)
 			EnableTracks(VehicleTracks, PedTracks, VehicleTrackDepth, PedTrackDepth);
 		else
 			EnableTracks();
 
 		// Addresses
-
 		static auto addr1 = FindSnowPattern("\x80\x3D\x00\x00\x00\x00\x00\x74\x27\x84\xC0", "xx?????xxxx");
 		static auto addr2 = FindSnowPattern("\x44\x38\x3D\x00\x00\x00\x00\x74\x0F", "xxx????xx");
-
 
 		// Outdated
 		// In future the patterns might change
@@ -2180,4 +2147,4 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 				snow_e = false;
 			}
 		}
-}
+	}
