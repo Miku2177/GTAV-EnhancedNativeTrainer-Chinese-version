@@ -664,9 +664,7 @@ void update_features(){
 	}
 
 	update_centre_screen_status_text();
-
-	update_vehicle_guns();
-
+	
 	update_world_features();
 
 	update_skin_features();
