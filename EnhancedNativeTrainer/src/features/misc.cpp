@@ -1908,7 +1908,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 
 		frames++;
 		
-		if (FPStime - starttime > 0.25 && frames > 10) {
+		if (FPStime - starttime > 0.10 && frames > 10) { // 0.25
 			fps = (double)frames / (FPStime - starttime);
 			if ((FPStime - starttime) >= 0) starttime = FPStime;
 			frames = 0;
