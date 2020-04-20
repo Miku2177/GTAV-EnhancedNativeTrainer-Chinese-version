@@ -364,7 +364,7 @@ void process_misc_trainerconfig_menu(){
 	menuItems.push_back(toggleItem);
 
 	ToggleMenuItem<int> *togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Show Area Effect Debug Info";
+	togItem->caption = "Show Coordinates";
 	togItem->value = 1;
 	togItem->toggleValue = &featureShowDebugInfo;
 	menuItems.push_back(togItem);

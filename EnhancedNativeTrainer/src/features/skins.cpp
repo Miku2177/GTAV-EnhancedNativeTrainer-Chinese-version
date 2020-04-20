@@ -23,7 +23,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 DWORD model_to_restore = -1;
 
-bool DEBUG_MODE_SKINS = false;
+//bool DEBUG_MODE_SKINS = false;
 
 bool featurenoblood = false;
 bool featurepersprops = false;
@@ -264,7 +264,8 @@ void onexit_skinchanger_texture_menu(bool returnValue)
 }
 
 void update_skin_features() {
-	if (featurenoblood) PED::CLEAR_PED_BLOOD_DAMAGE(PLAYER::PLAYER_PED_ID()); // No Blood And No Wounds
+	// No Blood And No Wounds
+	if (featurenoblood) PED::CLEAR_PED_BLOOD_DAMAGE(PLAYER::PLAYER_PED_ID()); 
 
 	// Persistent Props
 	if (featurepersprops && ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID()) == 0/* && (PED::GET_PED_PROP_INDEX(PLAYER::PLAYER_PED_ID(), 0) > -1 || PED::GET_PED_PROP_INDEX(PLAYER::PLAYER_PED_ID(), 1) > -1)*/) {
@@ -561,6 +562,7 @@ bool onconfirm_skinchanger_choices_players(MenuItem<std::string> choice)
 bool process_skinchanger_choices_players()
 {
 	std::vector<MenuItem<std::string>*> menuItems;
+
 	for (int i = 0; i < SKINS_PLAYER_CAPTIONS.size(); i++)
 	{
 		MenuItem<std::string> *item = new MenuItem<std::string>();
@@ -589,6 +591,7 @@ bool onconfirm_skinchanger_choices_online_npc(MenuItem<std::string> choice)
 bool process_skinchanger_choices_online_npc()
 {
 	std::vector<MenuItem<std::string>*> menuItems;
+
 	for (int i = 0; i < SKINS_ONLINE_CAPTIONS.size(); i++)
 	{
 		MenuItem<std::string> *item = new MenuItem<std::string>();
@@ -614,6 +617,7 @@ bool onconfirm_skinchanger_choices_animals(MenuItem<std::string> choice)
 	
 	Vector3 coords_me = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 	float height = -1.0;
+
 	if (choice.value != "a_c_dolphin" && choice.value != "a_c_sharkhammer" && choice.value != "a_c_humpback" &&
 		choice.value != "a_c_killerwhale" && choice.value != "a_c_stingray" &&
 		choice.value != "a_c_sharktiger" && choice.value != "a_c_fish" && choice.value != "a_c_whalegrey") {
@@ -631,6 +635,7 @@ bool onconfirm_skinchanger_choices_animals(MenuItem<std::string> choice)
 bool process_skinchanger_choices_animals()
 {
 	std::vector<MenuItem<std::string>*> menuItems;
+
 	for (int i = 0; i < SKINS_ANIMAL_CAPTIONS.size(); i++)
 	{
 		MenuItem<std::string> *item = new MenuItem<std::string>();
@@ -659,6 +664,7 @@ bool onconfirm_skinchanger_choices_misc(MenuItem<std::string> choice)
 bool process_skinchanger_choices_misc()
 {
 	std::vector<MenuItem<std::string>*> menuItems;
+
 	for (int i = 0; i < SKINS_GENERAL_CAPTIONS.size(); i++)
 	{
 		MenuItem<std::string> *item = new MenuItem<std::string>();
@@ -681,6 +687,7 @@ bool onconfirm_skinchanger_choices_test(MenuItem<std::string> choice)
 bool process_skinchanger_choices_test()
 {
 	std::vector<MenuItem<std::string>*> menuItems;
+
 	for (int i = 0; i < SKINS_TEST_VALUES.size(); i++)
 	{
 		MenuItem<std::string> *item = new MenuItem<std::string>();
@@ -701,42 +708,41 @@ bool process_skinchanger_choices_test()
 
 bool onconfirm_skinchanger_category_menu(MenuItem<int> choice)
 {
-	switch (choice.value)
-	{
-	case 0: //Players
-		process_skinchanger_choices_players();
-		break;
-	case 1: //Animals
-		process_skinchanger_choices_animals();
-		break;
-	case 2: //Misc
-		process_skinchanger_choices_misc();
-		break;
-	case 3: //Online NPCs
-		process_skinchanger_choices_online_npc();
-		break;
-	case 4: //Custom entry
-	{
-		std::string result = show_keyboard(NULL, (char*)lastCustomSkinSpawn.c_str());
-		if (!result.empty())
+	switch (choice.value) {
+		case 0: //Players
+			process_skinchanger_choices_players();
+			break;
+		case 1: //Animals
+			process_skinchanger_choices_animals();
+			break;
+		case 2: //Misc
+			process_skinchanger_choices_misc();
+			break;
+		case 3: //Online NPCs
+			process_skinchanger_choices_online_npc();
+			break;
+		case 4: //Custom entry
 		{
-			result = trim(result);
-			lastCustomSkinSpawn = result;
-			Hash hash = GAMEPLAY::GET_HASH_KEY((char*)result.c_str());
-			if (!STREAMING::IS_MODEL_IN_CDIMAGE(hash) || !STREAMING::IS_MODEL_VALID(hash))
+			std::string result = show_keyboard(NULL, (char*)lastCustomSkinSpawn.c_str());
+			if (!result.empty())
 			{
-				std::ostringstream ss;
-				ss << "Couldn't find model '" << result << "'";
-				set_status_text(ss.str());
-				return false;
+				result = trim(result);
+				lastCustomSkinSpawn = result;
+				Hash hash = GAMEPLAY::GET_HASH_KEY((char*)result.c_str());
+				if (!STREAMING::IS_MODEL_IN_CDIMAGE(hash) || !STREAMING::IS_MODEL_VALID(hash))
+				{
+					std::ostringstream ss;
+					ss << "Couldn't find model '" << result << "'";
+					set_status_text(ss.str());
+					return false;
+				}
+				else
+				{
+					return applyChosenSkin(hash);
+				}
 			}
-			else
-			{
-				return applyChosenSkin(hash);
-			}
+			return false;
 		}
-		return false;
-	}
 	}
 	return false;
 }
@@ -749,49 +755,48 @@ bool onconfirm_skinchanger_menu(MenuItem<int> choice)
 	std::ostringstream ss;
 	int index = PED::GET_PED_PROP_INDEX(playerPed, 0);
 
-	switch (activeLineIndexSkinChanger) // choice.value
-	{
-	case 0:
-		process_savedskin_menu();
-		break;
-	case 1: //Change skin
-		process_skinchanger_category_menu();
-		break;
-	case 2: //Detail
-		process_skinchanger_detail_menu();
-		break;
-	case 3:
-		process_prop_menu();
-		break;
-	case 4: //Reset
-		PED::SET_PED_DEFAULT_COMPONENT_VARIATION(playerPed);
-		set_status_text("Using default model skin");
-		break;
-	case 5:
-		PED::CLEAR_ALL_PED_PROPS(playerPed);
-		clear_props_m = -1;
-		break;
-	case 6:
-		PED::CLEAR_ALL_PED_PROPS(playerPed);
-		PED::SET_PED_RANDOM_COMPONENT_VARIATION(playerPed, true);
-		PED::SET_PED_RANDOM_PROPS(playerPed);
-		break;
-	case 7:
-		PED::CLEAR_ALL_PED_PROPS(playerPed);
-		PED::SET_PED_RANDOM_PROPS(playerPed);
-		break;
-	case 8:
-		if (helmet_on == false) {
-			Hash model = -1;
-			if (PED::GET_PED_TYPE(playerPed) == 0) model = GAMEPLAY::GET_HASH_KEY("player_zero");
-			if (PED::GET_PED_TYPE(playerPed) == 1) model = GAMEPLAY::GET_HASH_KEY("player_one");
-			if (PED::GET_PED_TYPE(playerPed) == 2 || PED::GET_PED_TYPE(playerPed) == 3) model = GAMEPLAY::GET_HASH_KEY("player_two");
-			applyChosenSkin(model);
-			helmet_on = true;
-		}
-		int temp_choice = rand() % 15 + 0;
-		PED::GIVE_PED_HELMET(playerPed, 1, 4096, temp_choice);
-		break;
+	switch (activeLineIndexSkinChanger) { // choice.value
+		case 0:
+			process_savedskin_menu();
+			break;
+		case 1: //Change skin
+			process_skinchanger_category_menu();
+			break;
+		case 2: //Detail
+			process_skinchanger_detail_menu();
+			break;
+		case 3:
+			process_prop_menu();
+			break;
+		case 4: //Reset
+			PED::SET_PED_DEFAULT_COMPONENT_VARIATION(playerPed);
+			set_status_text("Using default model skin");
+			break;
+		case 5:
+			PED::CLEAR_ALL_PED_PROPS(playerPed);
+			clear_props_m = -1;
+			break;
+		case 6:
+			PED::CLEAR_ALL_PED_PROPS(playerPed);
+			PED::SET_PED_RANDOM_COMPONENT_VARIATION(playerPed, true);
+			PED::SET_PED_RANDOM_PROPS(playerPed);
+			break;
+		case 7:
+			PED::CLEAR_ALL_PED_PROPS(playerPed);
+			PED::SET_PED_RANDOM_PROPS(playerPed);
+			break;
+		case 8:
+			if (helmet_on == false) {
+				Hash model = -1;
+				if (PED::GET_PED_TYPE(playerPed) == 0) model = GAMEPLAY::GET_HASH_KEY("player_zero");
+				if (PED::GET_PED_TYPE(playerPed) == 1) model = GAMEPLAY::GET_HASH_KEY("player_one");
+				if (PED::GET_PED_TYPE(playerPed) == 2 || PED::GET_PED_TYPE(playerPed) == 3) model = GAMEPLAY::GET_HASH_KEY("player_two");
+				applyChosenSkin(model);
+				helmet_on = true;
+			}
+			int temp_choice = rand() % 15 + 0;
+			PED::GIVE_PED_HELMET(playerPed, 1, 4096, temp_choice);
+			break;
 	}
 	return false;
 }
@@ -842,11 +847,10 @@ bool process_skinchanger_menu()
 {
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
-
-	MenuItem<int> *item;
-	int i = 0;
-
 	ToggleMenuItem<int>* toggleItem;
+	MenuItem<int> *item;
+	
+	int i = 0;
 
 	item = new MenuItem<int>();
 	item->caption = "Saved Appearances";
@@ -1298,7 +1302,7 @@ bool spawn_saved_skin(int slot, std::string caption)
 void save_current_skin(int slot)
 {
 	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
-	Player player = PLAYER::PLAYER_ID();
+	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if (bPlayerExists)

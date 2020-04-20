@@ -817,7 +817,7 @@ bool onconfirm_vehdoor_menu(MenuItem<int> choice){
 }
 
 bool process_veh_door_menu(){
-	std::string caption = "Vehicle Options";
+	std::string caption = "Vehicle Control Options";
 
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 
