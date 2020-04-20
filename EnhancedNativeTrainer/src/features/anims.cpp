@@ -5557,7 +5557,7 @@ TreeNode* build_anim_tree(std::vector<std::string> input, bool includeAnim)
 
 bool onconfirm_anim_menu(MenuItem<int> choice)
 {
-	Player player = PLAYER::PLAYER_ID();
+	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	switch (choice.value)
@@ -5726,6 +5726,7 @@ bool onconfirm_anim_top_menu(MenuItem<int> choice)
 	if (choice.value == CATEGORY_SCENARIOS)
 	{
 		process_scenarios_menu_l1();
+		//build_anim_tree();
 	}
 	else if (choice.value == CATEGORY_MOVE_CLIPSET)
 	{
@@ -5853,7 +5854,7 @@ bool onconfirm_scenarios_menu_l2(MenuItem<int> choice)
 
 	activeScenarioLineIndex[1] = choice.value;
 
-	std::vector<MenuItem<int>*> menuItems;
+	//std::vector<MenuItem<int>*> menuItems;
 	std::string value;
 	std::string caption;
 	if (activeScenarioLineIndex[0] == 0)
@@ -5955,7 +5956,7 @@ bool onconfirm_clipset_menu(MenuItem<int> choice)
 {
 	activeClipsetLineIndex = choice.value;
 
-	std::vector<MenuItem<int>*> menuItems;
+	//std::vector<MenuItem<int>*> menuItems;
 	std::string value;
 	std::string caption;
 	
