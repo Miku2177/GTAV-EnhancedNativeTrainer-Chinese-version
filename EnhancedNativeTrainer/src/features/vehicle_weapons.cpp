@@ -125,10 +125,7 @@ void update_bombs()
 			float v_y = (cos(rad) * p_force);
 			ENTITY::APPLY_FORCE_TO_ENTITY(vBomb[i], 1, v_x, v_y, -(cur_s * 100), 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1); // oBomb
 
-			if (!ENTITY::HAS_COLLISION_LOADED_AROUND_ENTITY(vBomb[i]))
-			{
-				STREAMING::REQUEST_COLLISION_AT_COORD(bomb_coords.x, bomb_coords.y, bomb_coords.z);
-			}
+			if (!ENTITY::HAS_COLLISION_LOADED_AROUND_ENTITY(vBomb[i])) STREAMING::REQUEST_COLLISION_AT_COORD(bomb_coords.x, bomb_coords.y, bomb_coords.z);
 
 			if (ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(vBomb[i]))
 			{
@@ -144,7 +141,7 @@ void update_bombs()
 
 void play_explosion(Entity ent)
 {
-	//https://github.com/CamxxCore/CarpetBomber/blob/master/GTAV_CarpetBomber/CarpetBomb.cs#L167
+	// https://github.com/CamxxCore/CarpetBomber/blob/master/GTAV_CarpetBomber/CarpetBomb.cs#L167
 	Vector3 ent_pos = ENTITY::GET_ENTITY_COORDS(ent, true);
 
 	if (!STREAMING::HAS_NAMED_PTFX_ASSET_LOADED("scr_oddjobtraffickingair"))
@@ -162,7 +159,7 @@ void play_explosion(Entity ent)
 
 bool onconfirm_veh_weapons_menu(MenuItem<int> choice){
 	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
-	Player player = PLAYER::PLAYER_ID();
+	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	
 	if (!bPlayerExists){

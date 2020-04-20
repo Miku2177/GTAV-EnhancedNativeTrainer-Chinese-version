@@ -1013,6 +1013,5 @@ void update_time_features(Player player){
 		else UI::_ADD_TEXT_COMPONENT_SCALEFORM(seconds_to_show_char);
 		UI::_DRAW_TEXT(0.031, 0.185);
 		GRAPHICS::DRAW_RECT(0.0, 0.20, 0.10, 0.03, 10, 10, 10, 100);
-	}
-	// end of show current time
+	} // end of show current time
 }

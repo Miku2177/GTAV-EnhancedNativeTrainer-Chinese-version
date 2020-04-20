@@ -149,10 +149,7 @@ void update_vehicles(Ped playerPed) {
 	// On Foot
 	if (featureSpeedOnFoot) {
 		if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
-			int speed = ENTITY::GET_ENTITY_SPEED(playerPed);
-			Vector3 player_coords = ENTITY::GET_ENTITY_COORDS(playerPed, true);
-
-			update_speed_text(speed, player_coords);
+			update_speed_text(ENTITY::GET_ENTITY_SPEED(playerPed), ENTITY::GET_ENTITY_COORDS(playerPed, true));
 		}
 	}
 
@@ -161,10 +158,7 @@ void update_vehicles(Ped playerPed) {
 		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
 			Entity veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 			if (!is_this_a_heli_or_plane(veh)) {
-				int speed = ENTITY::GET_ENTITY_SPEED(veh);
-				Vector3 player_coords = ENTITY::GET_ENTITY_COORDS(playerPed, true);
-
-				update_speed_text(speed, player_coords);
+				update_speed_text(ENTITY::GET_ENTITY_SPEED(veh), ENTITY::GET_ENTITY_COORDS(playerPed, true));
 			}
 		}
 	}
@@ -174,10 +168,7 @@ void update_vehicles(Ped playerPed) {
 		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
 			Entity veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 			if (is_this_a_heli_or_plane(veh)) {
-				int speed = ENTITY::GET_ENTITY_SPEED(veh);
-				Vector3 player_coords = ENTITY::GET_ENTITY_COORDS(playerPed, true);
-
-				update_speed_text(speed, player_coords);
+				update_speed_text(ENTITY::GET_ENTITY_SPEED(veh), ENTITY::GET_ENTITY_COORDS(playerPed, true));
 			}
 		}
 	}

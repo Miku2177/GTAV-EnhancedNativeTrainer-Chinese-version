@@ -145,9 +145,6 @@ int PlayerMostWantedMenuIndex = 0;
 int PlayerWantedMaxPossibleLevelMenuIndex = 0;
 int death_time2 = -1;
 
-int wanted_maxpossible_level = 3;
-bool wanted_maxpossible_level_Changed;
-
 int frozenWantedLevel = 0;
 
 std::vector<Vehicle> VEHICLE_ENGINE;
@@ -169,13 +166,17 @@ const std::vector<float> REGEN_VALUES{0.0f, 0.1f, 0.25f, 0.5f, 1.0f, 2.0f, 5.0f,
 int current_regen_speed = 4;
 bool current_regen_speed_changed = true;
 
-//Player Health
+// Player Health
 int current_player_health = 6;
 bool current_player_health_Changed = true;
 int PedsHealthIndex = 0;
 bool PedsHealthChanged = true;
 
-//Player Armor
+// Max Wanted Level
+int wanted_maxpossible_level = 3;
+bool wanted_maxpossible_level_Changed = true;
+
+// Player Armor
 const std::vector<std::string> PLAYER_ARMOR_CAPTIONS{ "0", "15", "20", "30", "40", "50", "100" };
 const int PLAYER_ARMOR_VALUES[] = { 0, 15, 20, 30, 40, 50, 100 };
 int current_player_armor = 6;
@@ -183,17 +184,17 @@ bool current_player_armor_Changed = true;
 int current_player_stats = 6;
 bool current_player_stats_Changed = true;
 
-//NPC Ragdoll If Shot
+// NPC Ragdoll If Shot
 const std::vector<std::string> NPC_RAGDOLL_CAPTIONS{ "OFF", "Never", "Always" };
 const int NPC_RAGDOLL_VALUES[] = { 0, 1, 2 };
 int current_npc_ragdoll = 0;
 bool current_npc_ragdoll_Changed = true;
 
-//Limp If Injured
+// Limp If Injured
 int current_limp_if_injured = 0;
 bool current_limp_if_injured_Changed = true;
 
-//Player Movement Speed && Hancock Mode
+// Player Movement Speed && Hancock Mode
 const std::vector<std::string> PLAYER_MOVEMENT_CAPTIONS{ "Normal", "0.5x", "1x", "2x", "3x", "4x", "5x", "6x", "7x", "8x", "9x", "10x" };
 const double PLAYER_MOVEMENT_VALUES[] = { 0.00, 0.60, 1.00, 2.00, 3.00, 4.00, 5.00, 6.00, 7.00, 8.00, 9.00, 10.00 };
 int current_player_movement = 0;
@@ -680,7 +681,28 @@ void update_features(){
 	debug_native_investigation();
 
 	update_area_effects(playerPed);
+	
 	update_vehicles(playerPed);
+
+	update_weapon_features(bPlayerExists, player);
+
+	//if(AIMBOT_INCLUDED){
+	//	update_aimbot_esp_features();
+	//}
+
+	update_vehicle_features(bPlayerExists, playerPed);
+
+	update_anims_features(bPlayerExists, playerPed);
+
+	update_vehmodmenu_features(bPlayerExists, playerPed);
+
+	update_veh_weapons_features();
+
+	update_misc_features(bPlayerExists, playerPed);
+
+	update_time_features(player);
+
+	update_bodyguard_features();
 
 	// player invincible
 	if(featurePlayerInvincibleUpdated){
@@ -1314,12 +1336,12 @@ void update_features(){
 		dive_glasses = true;
 		PED::CLEAR_PED_PROP(playerPed, 1);
 	}
-	if (featureNoScubaGearMask && ENTITY::IS_ENTITY_IN_WATER(playerPed) == 0 && PED::GET_PED_PROP_INDEX(playerPed, 1) > -1) ped_prop_idx = PED::GET_PED_PROP_INDEX(playerPed, 1);
+	if (featureNoScubaGearMask && ENTITY::IS_ENTITY_IN_WATER(playerPed) == 0 && PED::GET_PED_PROP_INDEX(playerPed, 1) > 0) ped_prop_idx = PED::GET_PED_PROP_INDEX(playerPed, 1); // PED::GET_PED_PROP_INDEX(playerPed, 1) > -1
 	if (featureNoScubaGearMask && ENTITY::IS_ENTITY_IN_WATER(playerPed) == 0 && dive_glasses == true) {
-		if (ped_prop_idx > -1) PED::SET_PED_PROP_INDEX(playerPed, 1, ped_prop_idx, 0, 0);
+		if (ped_prop_idx > 0) PED::SET_PED_PROP_INDEX(playerPed, 1, ped_prop_idx, 0, 0); // ped_prop_idx > -1
 		dive_glasses = false;
 	}
-	
+
 	// No Scuba Breathing Sound
 	if (featureNoScubaSound) {
 		AUDIO::SET_AUDIO_FLAG("SuppressPlayerScubaBreathing", true);
@@ -1366,26 +1388,6 @@ void update_features(){
 		GRAPHICS::SET_SEETHROUGH(featureThermalVision);
 		featureThermalVisionUpdated = false;
 	}
-
-	update_weapon_features(bPlayerExists, player);
-
-	//if(AIMBOT_INCLUDED){
-	//	update_aimbot_esp_features();
-	//}
-
-	update_vehicle_features(bPlayerExists, playerPed);
-
-	update_anims_features(bPlayerExists, playerPed);
-
-	update_vehmodmenu_features(bPlayerExists, playerPed);
-
-	update_veh_weapons_features();
-
-	update_misc_features(bPlayerExists, playerPed);
-
-	update_time_features(player);
-
-	update_bodyguard_features();
 
 	//Disable airbrake on death
 	if(ENTITY::IS_ENTITY_DEAD(playerPed)){

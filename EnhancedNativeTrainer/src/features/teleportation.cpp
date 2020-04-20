@@ -23,7 +23,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 bool featureEnableMpMaps = false;
 bool feature3dmarker = false;
 bool featureTeleportAutomatically = false;
-bool teleported_in_ped = false;
+//bool teleported_in_ped = false;
 
 struct tele_location{
 	std::string text;
@@ -59,11 +59,11 @@ int lastMenuChoiceInCategories[] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 int activeLineIndexChauffeur = 0;
 int activeLineIndex3dmarker = 0;
 
-Vehicle waitingToRetakeSeat = -1;
+//Vehicle waitingToRetakeSeat = -1;
 
-float chauffTolerance = 25.0;
+//float chauffTolerance = 25.0;
 
-Vector3 blipCoords = { 0, 0, 0 };
+//Vector3 blipCoords = { 0, 0, 0 };
 
 std::vector<tele_location> LOCATIONS_SAFE = {
 	{ "Franklin's Safehouse", -18.0355f, -1456.94f, 30.4548f },
@@ -754,12 +754,12 @@ void teleport_to_coords(Entity e, Vector3 coords){
 	set_status_text("Teleported");
 }
 
-void output_current_location(Entity e){
-	Vector3 coords = ENTITY::GET_ENTITY_COORDS(e, 0);
-	std::ostringstream ss;
-	ss << "X: " << coords.x << "\nY: " << coords.y << "\nZ: " << coords.z;
-	set_status_text_centre_screen(ss.str(), 4000UL);
-}
+//void output_current_location(Entity e){
+//	Vector3 coords = ENTITY::GET_ENTITY_COORDS(e, 0);
+//	std::ostringstream ss;
+//	ss << "X: " << coords.x << "\nY: " << coords.y << "\nZ: " << coords.z;
+//	set_status_text_centre_screen(ss.str(), 4000UL);
+//}
 
 void teleport_to_marker(){
 	Vector3 coords = get_blip_marker();
@@ -876,26 +876,26 @@ void teleport_to_last_vehicle(){
 	}
 }
 
-bool is_player_at_blip(Vector3 currentCords, Vector3 destCords, float tolerance){
-	float eucDistance;
+//bool is_player_at_blip(Vector3 currentCords, Vector3 destCords, float tolerance){
+//	float eucDistance;
 
-	float xDiff = destCords.x - currentCords.x;
-	float yDiff = destCords.y - currentCords.y;
+//	float xDiff = destCords.x - currentCords.x;
+//	float yDiff = destCords.y - currentCords.y;
 
-	eucDistance = sqrt(pow(xDiff, 2) + pow(yDiff, 2));
+//	eucDistance = sqrt(pow(xDiff, 2) + pow(yDiff, 2));
 
-	return (eucDistance <= tolerance);
-}
+//	return (eucDistance <= tolerance);
+//}
 
-float get_euc_distance(Vector3 currentCords, Vector3 destCords){
-	float xDiff = destCords.x - currentCords.x;
-	float yDiff = destCords.y - currentCords.y;
-	float zDiff = destCords.y - currentCords.y;
+//float get_euc_distance(Vector3 currentCords, Vector3 destCords){
+//	float xDiff = destCords.x - currentCords.x;
+//	float yDiff = destCords.y - currentCords.y;
+//	float zDiff = destCords.y - currentCords.y;
 
-	float eucDistance = sqrt(pow(xDiff, 2) + pow(yDiff, 2) + pow(zDiff, 2));
+//	float eucDistance = sqrt(pow(xDiff, 2) + pow(yDiff, 2) + pow(zDiff, 2));
 
-	return eucDistance;
-}
+//	return eucDistance;
+//}
 
 /*
 void enableMpMapsinSP()
@@ -1060,7 +1060,6 @@ void set_3d_marker(){
 	std::string caption = "3D Marker Options";
 
 	std::vector<MenuItem<int>*> menuItems;
-
 	SelectFromListMenuItem *listItem;
 	ToggleMenuItem<int>* toggleItem;
 
@@ -1115,7 +1114,6 @@ void getTelChauffeurIndex(){
 	std::string caption = "Chauffeur To Marker Options";
 
 	std::vector<MenuItem<int>*> menuItems;
-
 	MenuItem<int> *item;
 	SelectFromListMenuItem *listItem;
 	ToggleMenuItem<int>* toggleItem;
@@ -1162,7 +1160,7 @@ void getTelChauffeurIndex(){
 }
 
 bool onconfirm_teleport_category(MenuItem<int> choice){
-	Entity e = PLAYER::PLAYER_PED_ID();
+	
 	if (choice.value == -2){
 		teleport_to_marker();
 		return false;
@@ -1171,10 +1169,10 @@ bool onconfirm_teleport_category(MenuItem<int> choice){
 		teleport_to_last_vehicle();
 		return false;
 	}
-	else if (choice.value == -1){
-		output_current_location(e);
-		return false;
-	}
+	//else if (choice.value == -1){
+	//	output_current_location(PLAYER::PLAYER_PED_ID());
+	//	return false;
+	//}
 	else if (choice.value == -5){
 		onconfirm_jump_category(choice);
 		return false;
@@ -1432,11 +1430,11 @@ bool process_teleport_menu(int categoryIndex){
 		markerItem->isLeaf = true;
 		menuItems.push_back(markerItem);
 		
-		MenuItem<int> *dialogItem = new MenuItem<int>();
-		dialogItem->caption = "Show Coordinates";
-		dialogItem->value = -1;
-		dialogItem->isLeaf = true;
-		menuItems.push_back(dialogItem);
+		//MenuItem<int> *dialogItem = new MenuItem<int>();
+		//dialogItem->caption = "Show Coordinates";
+		//dialogItem->value = -1;
+		//dialogItem->isLeaf = true;
+		//menuItems.push_back(dialogItem);
 		
 		markerItem = new MenuItem<int>();
 		markerItem->caption = "3D Marker";
@@ -1556,23 +1554,23 @@ void set_ipl_active(bool applied, std::vector<std::string> extras){
 	}
 }
 
-int toggleIndex = 0;
+//int toggleIndex = 0;
 
-void process_toggles_menu(){
-	std::vector<MenuItem<std::string>*> menuItems;
-	for (int i = 0; i < TOGGLE_IPLS.size(); i++){
-		std::string item = TOGGLE_IPLS.at(i);
-		FunctionDrivenToggleMenuItem<std::string>* toggleItem = new FunctionDrivenToggleMenuItem<std::string>();
-		toggleItem->caption = item;
-		toggleItem->getter_call = is_ipl_active;
-		toggleItem->setter_call = set_ipl_active;
-		toggleItem->value = item;
-		toggleItem->extra_arguments.push_back(item);
-		menuItems.push_back(toggleItem);
-	}
+//void process_toggles_menu(){
+//	std::vector<MenuItem<std::string>*> menuItems;
+//	for (int i = 0; i < TOGGLE_IPLS.size(); i++){
+//		std::string item = TOGGLE_IPLS.at(i);
+//		FunctionDrivenToggleMenuItem<std::string>* toggleItem = new FunctionDrivenToggleMenuItem<std::string>();
+//		toggleItem->caption = item;
+//		toggleItem->getter_call = is_ipl_active;
+//		toggleItem->setter_call = set_ipl_active;
+//		toggleItem->value = item;
+//		toggleItem->extra_arguments.push_back(item);
+//		menuItems.push_back(toggleItem);
+//	}
 
-	draw_generic_menu<std::string>(menuItems, &toggleIndex, "Test Toggles", NULL, NULL, NULL);
-}
+//	draw_generic_menu<std::string>(menuItems, &toggleIndex, "Test Toggles", NULL, NULL, NULL);
+//}
 
 void update_teleport_features(){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
@@ -1586,23 +1584,23 @@ void update_teleport_features(){
 		int col2_G = ENTColor::colsMenu[5].rgba[1];
 		int col2_B = ENTColor::colsMenu[5].rgba[2];
 		
-		// Check if marker set
+		// check if marker set
 		if (blip3DIterator != BlipSpriteStandard) {
 			my3DBlip = UI::GET_FIRST_BLIP_INFO_ID(blip3DIterator);
 			if (UI::DOES_BLIP_EXIST(my3DBlip) != 0) {
-				// Player's marker?
+				// player's marker?
 				if (UI::GET_BLIP_INFO_ID_TYPE(my3DBlip) == 4) {
 					coords_3Dblip = UI::GET_BLIP_INFO_ID_COORD(my3DBlip);
 					if (blip_3d_exists_already == false) blip_3d_found = true;
 				}
 			}
 		}
-		// No marker or coords changed
+		// no marker or coords changed
 		if (blip_3d_exists_already == true && (UI::DOES_BLIP_EXIST(my3DBlip) == 0 || coords_3Dblip.x != coords_3Dblip_old.x || coords_3Dblip.y != coords_3Dblip_old.y)) {
 			blip_3d_exists_already = false;
 			close_distance = false;
 		}
-		// Marker has been set
+		// marker has been set
 		if (blip_3d_found == true) {
 			coords_3Dblip_old.x = coords_3Dblip.x;
 			coords_3Dblip_old.y = coords_3Dblip.y;
@@ -1611,7 +1609,7 @@ void update_teleport_features(){
 			blip_3d_found = false;
 			blip_3d_exists_already = true;
 		}
-		// Get distance between player and marker
+		// get distance between player and marker
 		int dist_diff_x = (playerPosition.x - coords_3Dblip.x);
 		int dist_diff_y = (playerPosition.y - coords_3Dblip.y);
 		if (dist_diff_x < 0) dist_diff_x = (dist_diff_x * -1);
@@ -1626,10 +1624,9 @@ void update_teleport_features(){
 		if (marker_3d_height < TEL_3DMARKER_MSIZE_VALUES[Tel3dmarker_msize_Index] && marker_3d_size > 20) marker_3d_size = marker_3d_height - (marker_3d_height * 0.3);
 		if (dist_diff_x > 100 || dist_diff_y > 100) close_distance = false;
 
-		// Get Z coord
+		// get Z coord
 		if (dist_diff_x < 100 && dist_diff_y < 100 && close_distance == false) {
-			static float groundCheckHeight[] =
-			{ 100.0, 150.0, 50.0, 0.0, 200.0, 250.0, 300.0, 350.0, 400.0, 450.0, 500.0, 550.0, 600.0, 650.0, 700.0, 750.0, 800.0 };
+			static float groundCheckHeight[] = { 100.0, 150.0, 50.0, 0.0, 200.0, 250.0, 300.0, 350.0, 400.0, 450.0, 500.0, 550.0, 600.0, 650.0, 700.0, 750.0, 800.0 };
 			
 			for (int i = 0; i < sizeof(groundCheckHeight) / sizeof(float); i++) {
 				if (GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(coords_3Dblip.x, coords_3Dblip.y, groundCheckHeight[i], &coords_3Dblip.z) > 0) {

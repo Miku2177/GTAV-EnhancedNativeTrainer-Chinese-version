@@ -26,7 +26,7 @@ bool process_teleport_menu(int categoryIndex);
 
 void reset_teleporter_globals();
 
-void process_toggles_menu();
+//void process_toggles_menu();
 
 void teleport_to_marker();
 
@@ -56,9 +56,9 @@ void onchange_tel_3dmarker_martype_index(int value, SelectFromListMenuItem *sour
 
 void onchange_tel_3dmarker_skypos_index(int value, SelectFromListMenuItem *source);
 
-void onchange_tel_3dmarker_alpha_index(int value, SelectFromListMenuItem *source);
+//void onchange_tel_3dmarker_alpha_index(int value, SelectFromListMenuItem *source);
 
-float get_euc_distance(Vector3 playerCoords, Vector3 blipCoords);
+//float get_euc_distance(Vector3 playerCoords, Vector3 blipCoords);
 
 Vector3 get_blip_marker();
 
