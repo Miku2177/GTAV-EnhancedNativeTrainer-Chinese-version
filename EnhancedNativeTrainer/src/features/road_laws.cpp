@@ -120,7 +120,7 @@ void road_laws()
 		VEHICLE::GET_PED_IN_VEHICLE_SEAT(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false), 1) != PLAYER::PLAYER_PED_ID() &&
 		VEHICLE::GET_PED_IN_VEHICLE_SEAT(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false), 2) != PLAYER::PLAYER_PED_ID()) {
 		
-		Player player = PLAYER::PLAYER_ID();
+		//Player player = PLAYER::PLAYER_ID();
 		Ped playerPed = PLAYER::PLAYER_PED_ID();
 		Vehicle vehroadlaws = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		Vector3 vehroadlaws_coords = ENTITY::GET_ENTITY_COORDS(vehroadlaws, true);

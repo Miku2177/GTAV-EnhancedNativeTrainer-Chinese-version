@@ -121,7 +121,7 @@ bool phone_toggle = false;
 bool phone_toggle_vehicle = false;
 bool phone_toggle_defaultphone = false;
 
-bool despawnPointerDisabledMessage = true;
+//bool despawnPointerDisabledMessage = true;
 bool featureFirstPersonDeathCamera = false;
 bool featureFirstPersonStuntJumpCamera = false;
 bool featureNoStuntJumps = false;
@@ -139,16 +139,16 @@ bool featureMiscJellmanScenery = false;
 
 bool featureEnableMissingRadioStation = false;
 
-bool slipperywhenwet = false;
+//bool slipperywhenwet = false;
 
 const int TRAINERCONFIG_HOTKEY_MENU = 99;
 int radioStationIndex = -1;
 
 ScriptTable* scriptTable;
 GlobalTable globalTable;
-ScriptHeader* shopController;
-HINSTANCE _hinstDLL;
-bool enabledDespawnPointer = false;
+//ScriptHeader* shopController;
+//HINSTANCE _hinstDLL;
+//bool enabledDespawnPointer = false;
 
 Camera StuntCam = NULL;
 
@@ -445,10 +445,10 @@ bool onconfirm_misc_cutscene_menu(MenuItem<int> choice) {
 void process_misc_cutplayer_menu() {
 	std::vector<MenuItem<int>*> menuItems;
 	std::vector<std::string> captions;
-	std::string menuCaption;
+	//std::string menuCaption;
 	captions = MISC_CUTSCENE_VALUES;
-
 	ToggleMenuItem<int>* toggleItem;
+	
 	int i = -1;
 
 	MenuItem<int> *item = new MenuItem<int>();
@@ -493,7 +493,7 @@ bool onconfirm_misc_filters_menu(MenuItem<int> choice) {
 void process_misc_filters_menu() {
 	std::vector<MenuItem<int>*> menuItems;
 	std::vector<std::string> captions;
-	std::string menuCaption;
+	//std::string menuCaption;
 	captions = MISC_FILTERS_VALUES;
 	MenuItem<int> *item = new MenuItem<int>();
 	
@@ -526,7 +526,7 @@ bool onconfirm_misc_musicevent_menu(MenuItem<int> choice) {
 void process_misc_musicevent_menu() {
 	std::vector<MenuItem<int>*> menuItems;
 	std::vector<std::string> captions;
-	std::string menuCaption;
+	//std::string menuCaption;
 	captions = MISC_MUSICEVENT_VALUES;
 	
 	MenuItem<int> *item = new MenuItem<int>();
@@ -1142,7 +1142,7 @@ void show_debug_info_on_screen(bool enabled) {
 }
 
 void update_misc_features(BOOL playerExists, Ped playerPed){
-	// radio off
+	// Radio Off
 	if (MISC_RADIO_OFF_VALUES[RadioOffIndex] > 0) {
 		if (MISC_RADIO_OFF_VALUES[RadioOffIndex] == 1) {
 			if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
@@ -1170,7 +1170,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		AUDIO::SET_USER_RADIO_CONTROL_ENABLED(true);
 	}
 
-	// Portable radio
+	// Portable Radio
 	if (featurePlayerRadio || featurePlayerRadioUpdated) {
 		if (featurePlayerRadio) {
 			AUDIO::SET_MOBILE_RADIO_ENABLED_DURING_GAMEPLAY(true);
@@ -1281,7 +1281,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1)) if (!PED::IS_PED_IN_ANY_POLICE_VEHICLE(playerPed)) police_radio_check = false;
 	}
 	
-	// Freeze radio to station
+	// Freeze Radio To Station
 	if (featureRadioFreeze) {
 		if (AUDIO::GET_PLAYER_RADIO_STATION_INDEX() != radioStationIndex) {
 			AUDIO::SET_RADIO_TO_STATION_INDEX(radioStationIndex);
@@ -1295,7 +1295,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		show_debug_info_on_screen(featureShowDebugInfo);
 	}
 
-	// hide hud
+	// Hide Hud
 	if (featureMiscHideHud || (featureMiscHideENTHud && menu_showing == true)) {
 		for (int i = 0; i < 21; i++) {
 			//at least in theory...
@@ -1320,7 +1320,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		featureMiscHideHudUpdated = false;
 	}
 	
-	// show hud if phone in hand
+	// Show Hud If Phone In Hand
 	if (featurePhoneShowHud) {
 		if (!phone_toggle) {
 			UI::DISPLAY_RADAR(false);
@@ -1342,7 +1342,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		phone_toggle = false;
 	}
 	
-	// show hud in vehicle only
+	// Show Hud In Vehicle Only
 	if (featureInVehicleNoHud) {
 		if (!phone_toggle_vehicle && !featurePhoneShowHud) {
 			UI::DISPLAY_RADAR(false);
@@ -1364,13 +1364,12 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		phone_toggle_vehicle = false;
 	}
 	
-	// show hud if marker set only
+	// Show Hud If Marker Set Only
 	if (featureMarkerHud) {
 		if (!phone_toggle_vehicle && !featurePhoneShowHud && !featureInVehicleNoHud) {
 			UI::DISPLAY_RADAR(false);
 			featureMiscHideHudUpdated = false;
 		}
-		//Vector3 coords;
 		bool blipFound = false;
 		int blipIterator = UI::_GET_BLIP_INFO_ID_ITERATOR(); // search for marker blip
 		for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) {
@@ -1485,7 +1484,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		} 
 	}
 	
-	//Lock player vehicle doors
+	// Lock player vehicle doors
 	if (featureLockVehicleDoors) {
 		if (featureLockVehicleDoorsUpdated == false) {
 			if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_l = PED::GET_VEHICLE_PED_IS_USING(playerPed);
@@ -1540,7 +1539,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 				healthbar_seconds = -1;
 			}
 
-			// Health
+			// health
 			if (health < 20) {
 				GRAPHICS::DRAW_RECT(health_bar_x + 0.035, health_bar_y + 0.01, 0.070, 0.017, 41, 86, 40, 110);
 				GRAPHICS::DRAW_RECT(health_bar_x + 0.035, health_bar_y + 0.01, 0.070, 0.009, 220, 20, 20, 55);
@@ -1552,7 +1551,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 				if ((health / 1399) < 0.070) GRAPHICS::DRAW_RECT(health_bar_x + 0.00 + (health / 2799), health_bar_y + 0.01, (health / 1399), 0.009, 78, 150, 77, 255);
 				else GRAPHICS::DRAW_RECT(health_bar_x + 0.035, health_bar_y + 0.01, 0.070, 0.009, 78, 150, 77, 255);
 			}
-			// Armor
+			// armor
 			GRAPHICS::DRAW_RECT(health_bar_x + 0.0880, health_bar_y + 0.01, 0.036, 0.017, 38, 85, 87, 110);
 			GRAPHICS::DRAW_RECT(health_bar_x + 0.0885, health_bar_y + 0.01, 0.034, 0.009, 39, 55, 56, 90);
 			if ((playerArmour / 2935) < 0.035) GRAPHICS::DRAW_RECT(health_bar_x + 0.0715 + (playerArmour / 5871), health_bar_y + 0.01, (playerArmour / 2935), 0.009, 62, 129, 164, 255);
@@ -1929,7 +1928,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		GRAPHICS::DRAW_RECT(0.0, 0.15, 0.05, 0.03, 10, 10, 10, 100);
 	}
 	
-	// Hide player info in pause menu
+	// Hide Player Info In Pause Menu
 	if (featureHidePlayerInfo) UI::_SET_DIRECTOR_MODE(true);
 	else UI::_SET_DIRECTOR_MODE(false);
 		

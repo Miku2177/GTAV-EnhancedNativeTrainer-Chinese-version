@@ -235,7 +235,7 @@ void onhighlight_paintdirt(MenuItem<float> choice){
 		return;
 	}
 
-	Player player = PLAYER::PLAYER_ID();
+	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if(!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
@@ -259,7 +259,7 @@ void onhighlight_paintfade(MenuItem<float> choice){
 		return;
 	}
 
-	Player player = PLAYER::PLAYER_ID();
+	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if(!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
@@ -272,7 +272,7 @@ void onhighlight_paintfade(MenuItem<float> choice){
 }
 
 bool process_paint_menu_fades(){
-	Player player = PLAYER::PLAYER_ID();
+	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if(!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
@@ -310,7 +310,7 @@ bool process_paint_menu_fades(){
 }
 
 bool process_paint_menu_dirt(){
-	Player player = PLAYER::PLAYER_ID();
+	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if(!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
@@ -353,7 +353,7 @@ void onhighlight_livery(MenuItem<int> choice){
 		return;
 	}
 
-	Player player = PLAYER::PLAYER_ID();
+	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if(!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
@@ -379,7 +379,7 @@ bool process_paint_menu_liveries(){
 		return false;
 	}
 
-	Player player = PLAYER::PLAYER_ID();
+	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if(!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
@@ -712,7 +712,7 @@ bool process_paint_menu(){
 		return false;
 	}
 
-	Player player = PLAYER::PLAYER_ID();
+	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if(!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
@@ -957,7 +957,7 @@ bool onconfirm_color_menu_selection(MenuItem<int> choice){
 }
 
 void apply_paint(PaintColor whichpaint){
-	Player player = PLAYER::PLAYER_ID();
+	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(playerPed);
 

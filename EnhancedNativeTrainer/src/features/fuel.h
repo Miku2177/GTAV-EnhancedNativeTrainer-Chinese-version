@@ -1,8 +1,8 @@
 #pragma once
 
 extern bool featureFuel;
-extern bool featureBlips;
-extern bool featureBlipsPhone;
+//extern bool featureBlips;
+//extern bool featureBlipsPhone;
 
 extern const Hash PLAYER_ZERO;
 extern const Hash PLAYER_ONE;

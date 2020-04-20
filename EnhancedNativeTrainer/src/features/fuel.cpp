@@ -43,8 +43,8 @@ std::vector<float> FUEL;
 std::vector<Blip> BLIPTABLE;
 
 bool featureFuel = false;
-bool featureBlips = false;
-bool featureBlipsPhone = false;
+//bool featureBlips = false;
+//bool featureBlipsPhone = false;
 
 const Hash PLAYER_ZERO = 0xD7114C9;
 const Hash PLAYER_ONE = 0x9B22DBAF;
@@ -100,7 +100,7 @@ void fuel()
 {
 	if (featureFuel && !CUTSCENE::IS_CUTSCENE_PLAYING()) {
 
-		Player player = PLAYER::PLAYER_ID();
+		//Player player = PLAYER::PLAYER_ID();
 		Ped playerPed = PLAYER::PLAYER_PED_ID();
 		
 		bool refill_button = IsKeyDown(VK_LBUTTON); // REFUEL KEY FOR JERRY CAN
@@ -179,7 +179,7 @@ void fuel()
 
 		// BLIPS EVERYWHERE
 		if (VEH_FUELBLIPS_VALUES[FuelBlipsIndex] > 0 && VEH_FUELBLIPS_VALUES[FuelBlipsIndex] < 2 && show_blips) {
-			// SHOW BLIPS
+			// show blips
 			for (int i = 0; i < 32; i++) {
 				blip[i] = UI::ADD_BLIP_FOR_COORD(gasStations[i][0], gasStations[i][1], gasStations[i][2]);
 				UI::SET_BLIP_SPRITE(blip[i], 361);
@@ -192,7 +192,7 @@ void fuel()
 
 		// BLIPS ON RADAR ONLY
 		if (VEH_FUELBLIPS_VALUES[FuelBlipsIndex] > 1 && VEH_FUELBLIPS_VALUES[FuelBlipsIndex] < 3 && show_blips) {
-			// SHOW BLIPS
+			// show blips
 			for (int i = 0; i < 32; i++) {
 				blip[i] = UI::ADD_BLIP_FOR_COORD(gasStations[i][0], gasStations[i][1], gasStations[i][2]);
 				UI::SET_BLIP_SPRITE(blip[i], 361);
@@ -215,7 +215,7 @@ void fuel()
 
 		// BLIPS IF PHONE IN HAND ONLY
 		if (VEH_FUELBLIPS_VALUES[FuelBlipsIndex] > 2) {
-			// SHOW BLIPS
+			// show blips
 			show_blips = true;
 			if (PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed) && phone_blips == false) {
 				for (int i = 0; i < 32; i++) {
@@ -227,7 +227,7 @@ void fuel()
 				}
 				phone_blips = true;
 			}
-			// HIDE BLIPS
+			// hide blips
 			if (!PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed) && phone_blips == true && !BLIPTABLE.empty()) {
 				for (int i = 0; i < BLIPTABLE.size(); i++) {
 					if (UI::DOES_BLIP_EXIST(BLIPTABLE[i])) {
@@ -240,7 +240,7 @@ void fuel()
 
 		// BLIPS OFF
 		if (VEH_FUELBLIPS_VALUES[FuelBlipsIndex] < 1 && show_blips == true) {
-			// HIDE BLIPS
+			// hide blips
 			if (!BLIPTABLE.empty()) {
 				for (int i = 0; i < BLIPTABLE.size(); i++) {
 					if (UI::DOES_BLIP_EXIST(BLIPTABLE[i])) {
@@ -258,7 +258,7 @@ void fuel()
 			FUEL.push_back(randomize / 100);
 		}
 
-		// HOW MUCH MONEY HAVE YOU GOT? (GAS STATION REFUELING)
+		// HOW MUCH MONEY HAVE YOU GOT? (gas station refueling)
 		int outValue_station = -1;
 		int statHash_station = -1;
 
@@ -284,7 +284,7 @@ void fuel()
 			underbar_b = 86;
 		}
 
-		// HOW MUCH MONEY HAVE YOU GOT? (JERRY CAN REFUELING)
+		// HOW MUCH MONEY HAVE YOU GOT? (jerry can refueling)
 		int outValue_jerrycan = -1;
 		int statHash_jerrycan = -1;
 
@@ -338,7 +338,7 @@ void fuel()
 			}
 
 			if (!VEHICLE::IS_THIS_MODEL_A_BICYCLE(ENTITY::GET_ENTITY_MODEL(veh))) {
-				// TYPES OF VEHICLES USING FUEL
+				// types of vehicles using fuel
 				if (VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(veh)) || VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(veh)) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(veh)) ||
 					VEHICLE::IS_THIS_MODEL_A_PLANE(ENTITY::GET_ENTITY_MODEL(veh)) || VEHICLE::IS_THIS_MODEL_A_BOAT(ENTITY::GET_ENTITY_MODEL(veh)) || VEHICLE::IS_THIS_MODEL_A_HELI(ENTITY::GET_ENTITY_MODEL(veh)) ||
 					ENTITY::GET_ENTITY_MODEL(veh) == GAMEPLAY::GET_HASH_KEY("SUBMERSIBLE") || ENTITY::GET_ENTITY_MODEL(veh) == GAMEPLAY::GET_HASH_KEY("SUBMERSIBLE2")) {
@@ -547,7 +547,7 @@ void fuel()
 			}
 		} // refuel jerry can
 
-		// idle consumption
+		// IDLE CONSUMPTION
 		if (VEH_CARFUEL_VALUES[IdleConsumptionIndex] > 0 && !VEHICLES.empty()) {
 			IdleConsume_secs_passed = clock() / CLOCKS_PER_SEC;
 			if (((clock() / CLOCKS_PER_SEC) - IdleConsume_secs_curr) != 0) {
@@ -578,6 +578,7 @@ void fuel()
 			else ENTITY::SET_ENTITY_AS_MISSION_ENTITY(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), true, true);
 		}
 
+		// maximum array size
 		if (!VEHICLES.empty() && VEHICLES.size() > 60) {
 			ENTITY::SET_VEHICLE_AS_NO_LONGER_NEEDED(&VEHICLES[0]);
 			VEHICLE::DELETE_VEHICLE(&VEHICLES[0]);

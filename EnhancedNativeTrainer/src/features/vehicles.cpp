@@ -822,7 +822,7 @@ bool process_veh_door_menu(){
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 
 	std::vector<MenuItem<int>*> menuItems;
-	std::vector<int>menuIndexes;
+	//std::vector<int>menuIndexes;
 
 	std::vector<std::string> DOOR_NAMES = {
 		"Front Left Door",
@@ -3962,8 +3962,8 @@ void reset_vehicle_globals() {
 		featureRememberVehicles =
 		featureRoadLaws =
 		featureFuel = 
-		featureBlips =
-		featureBlipsPhone =
+		//featureBlips =
+		//featureBlipsPhone =
 		featureVehMassMult =
 		featureVehicleDoorInstant =
 		featureLockVehicleDoors =
@@ -4287,8 +4287,8 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureBlipNumber", &featureBlipNumber});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAutoalarm", &featureAutoalarm});
 	results->push_back(FeatureEnabledLocalDefinition{"featureFuel", &featureFuel});
-	results->push_back(FeatureEnabledLocalDefinition{"featureBlips", &featureBlips});
-	results->push_back(FeatureEnabledLocalDefinition{"featureBlipsPhone", &featureBlipsPhone});
+	//results->push_back(FeatureEnabledLocalDefinition{"featureBlips", &featureBlips});
+	//results->push_back(FeatureEnabledLocalDefinition{"featureBlipsPhone", &featureBlipsPhone});
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehMassMult", &featureVehMassMult});
 	results->push_back(FeatureEnabledLocalDefinition{"featureSpeedOnFoot", &featureSpeedOnFoot});
 	results->push_back(FeatureEnabledLocalDefinition{"featureKMH", &featureKMH});

@@ -101,8 +101,8 @@ void begin_prop_placement(SpawnedPropInstance prop)
 	CAM::SET_CAM_COORD(propCamera, worldCamCoords.x, worldCamCoords.y, worldCamCoords.z);
 	CAM::POINT_CAM_AT_ENTITY(propCamera, currentProp.instance, 0.0f, 0.0f, 0.0f, 1);
 	
-	Vector3 camRot = CAM::GET_CAM_ROT(propCamera, 2);
-	Vector3 camCoords = CAM::GET_CAM_COORD(propCamera);
+	//Vector3 camRot = CAM::GET_CAM_ROT(propCamera, 2);
+	//Vector3 camCoords = CAM::GET_CAM_COORD(propCamera);
 	CAM::SET_GAMEPLAY_CAM_RELATIVE_PITCH(20.0f, 0x3f800000);
 	CAM::SET_CAM_ACTIVE(propCamera, 1);
 	CAM::RENDER_SCRIPT_CAMS(1, 0, 3000, 1, 0);

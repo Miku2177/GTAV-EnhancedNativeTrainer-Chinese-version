@@ -697,7 +697,6 @@ void process_copweapon_menu(){
 	std::string caption = "Cop Weapons Options";
 
 	std::vector<MenuItem<int>*> menuItems;
-
 	SelectFromListMenuItem *listItem;
 	ToggleMenuItem<int>* toggleItem;
 
@@ -824,7 +823,6 @@ void process_pedagainstweapons_menu(){
 	std::string caption = "Peds Don't Like Weapons Options";
 
 	std::vector<MenuItem<int>*> menuItems;
-
 	SelectFromListMenuItem *listItem;
 	ToggleMenuItem<int>* toggleItem;
 
@@ -1016,6 +1014,7 @@ bool process_weapon_menu(){
 	int i = 0;
 
 	std::string caption = "Weapon Options";
+	
 	std::vector<MenuItem<int>*> menuItems;
 
 	MenuItem<int> *item = new MenuItem<int>();

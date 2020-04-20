@@ -806,8 +806,8 @@ int skinCategoryPosition = 0;
 bool process_skinchanger_category_menu()
 {
 	std::vector<MenuItem<int>*> menuItems;
-
 	MenuItem<int> *item;
+
 	int i = 0;
 
 	item = new MenuItem<int>();
