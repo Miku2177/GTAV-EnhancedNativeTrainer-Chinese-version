@@ -1234,8 +1234,8 @@ bool spawn_saved_props(int slot, std::string caption)
 void save_current_props(int slot)
 {
 	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
-	Player player = PLAYER::PLAYER_ID();
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	//Player player = PLAYER::PLAYER_ID();
+	//Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if (bPlayerExists)
 	{

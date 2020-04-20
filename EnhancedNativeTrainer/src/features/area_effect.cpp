@@ -20,9 +20,11 @@ int areaeffect_peds_weapons_menu_index = 0;
 
 int callsA = 0;
 int callsB = 0;
-int callsC = 0;
-int callsD = 0;
-int callsE = 0;
+//int callsC = 0;
+//int callsD = 0;
+//int callsE = 0;
+
+bool e_ignores = false;
 
 Entity aimedAt = 0;
 
@@ -258,7 +260,6 @@ void process_areaeffect_peds_menu(){
 
 void process_areaeffect_vehicle_menu(){
 	std::vector<MenuItem<int>*> menuItems;
-
 	SelectFromListMenuItem *listItem;
 
 	ToggleMenuItem<int> *togItem = new ToggleMenuItem<int>();
@@ -490,8 +491,8 @@ void update_area_effects(Ped playerPed){
 
 	do_maintenance_on_tracked_entities();
 
-	// everyone ignores player
-	if(featurePlayerIgnoredByAll || featurePlayerInvisible || (featurePlayerInvisibleInVehicle && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1))){
+	// Everyone Permanently Calm
+	if(featurePlayerIgnoredByAll || featurePlayerInvisible || (featurePlayerInvisibleInVehicle && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1))) {
 		if(bPlayerExists){
 			PLAYER::SET_POLICE_IGNORE_PLAYER(player, true);
 			PLAYER::SET_EVERYONE_IGNORE_PLAYER(player, true);
@@ -499,14 +500,17 @@ void update_area_effects(Ped playerPed){
 			PLAYER::SET_IGNORE_LOW_PRIORITY_SHOCKING_EVENTS(player, true);
 
 			set_all_nearby_peds_to_calm();
+
+			e_ignores = true;
 		}
 	}
-	if(!featurePlayerIgnoredByAll && !featurePlayerInvisible && !featurePlayerInvisibleInVehicle){
+	if(!featurePlayerIgnoredByAll && !featurePlayerInvisible && !featurePlayerInvisibleInVehicle && e_ignores == true){
 		if(bPlayerExists){
 			PLAYER::SET_POLICE_IGNORE_PLAYER(player, is_player_ignored_by_police());
 			PLAYER::SET_EVERYONE_IGNORE_PLAYER(player, false);
 			PLAYER::SET_PLAYER_CAN_BE_HASSLED_BY_GANGS(player, true);
 			PLAYER::SET_IGNORE_LOW_PRIORITY_SHOCKING_EVENTS(player, false);
+			e_ignores = false;
 		}
 	}
 
@@ -1160,7 +1164,7 @@ void kill_all_nearby_vehicles_continuous(){
 
 void clear_up_missionised_entitities(){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
-	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(playerPed);
+	//BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(playerPed);
 
 	std::deque<ENTTrackedVehicle*>::iterator vit;
 	for(vit = trackedVehicles.begin(); vit != trackedVehicles.end();){

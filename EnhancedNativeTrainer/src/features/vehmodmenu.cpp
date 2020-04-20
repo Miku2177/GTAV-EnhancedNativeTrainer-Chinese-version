@@ -2383,6 +2383,5 @@ void handle_generic_settings_vehmodmenu(std::vector<StringPairSettingDBRow>* set
 
 void update_vehmodmenu_features(BOOL bPlayerExists, Ped playerPed) {
 	if (!featureEngineSound) current_picked_engine_sound = -1;
-	
 	if (featureEngineSound && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) current_picked_engine_sound = -1;
 }

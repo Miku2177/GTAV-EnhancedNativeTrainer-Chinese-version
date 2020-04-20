@@ -36,7 +36,7 @@ bool spawning_a_ped = false;
 
 bool stop_b = false;
 bool featureBodyguardInvincible = false;
-bool featureBodyguardInvincibleUpdated = false;
+//bool featureBodyguardInvincibleUpdated = false;
 bool featureBodyguardHelmet = false;
 bool featureBodyguardDespawn = true;
 bool featureDifferentWeapons = false;
@@ -1022,7 +1022,6 @@ void process_bodyguard_blips_menu(){
 	std::string caption = "Mark On Map Options";
 
 	std::vector<MenuItem<int>*> menuItems;
-
 	SelectFromListMenuItem *listItem;
 	ToggleMenuItem<int>* toggleItem;
 
@@ -1147,7 +1146,7 @@ void do_spawn_bodyguard(){
 			random_bodyguard = (rand() % SKINS_ANIMALS_VALUES.size() + 0);
 			bodyGuardModel = GAMEPLAY::GET_HASH_KEY((char*)SKINS_ANIMALS_VALUES[random_bodyguard].c_str());
 		}
-	}
+	} // end of random bodyguard
 	
 	if (hotkey_boddyguard == false && lastCustomBodyguardSpawn != "random" && lastCustomBodyguardSpawn != "Random" && lastCustomBodyguardSpawn != "RANDOM") bodyGuardModel = get_current_model_hash();
 	if (hotkey_boddyguard == true) {
@@ -1217,8 +1216,7 @@ void do_spawn_bodyguard(){
 				PED::DELETE_PED(&temp_bodyguard);
 				bodyGuard = PED::CREATE_PED(25, temp_model, coords_temp_ped.x, coords_temp_ped.y, coords_temp_ped.z, 0, 0, 0);
 			}
-		}
-		// enf of nearest bodyguards
+		} // end of nearest bodyguards
 		
 		if (bodyGuard != -1) {
 			for (int i = 0; i < SKINS_ANIMALS_VALUES.size(); i++) {
@@ -1292,8 +1290,7 @@ void do_spawn_bodyguard(){
 					PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 17, true);
 					PED::SET_PED_FLEE_ATTRIBUTES(bodyGuard, 0, false);
 					PED::SET_PED_CAN_BE_TARGETTED(bodyGuard, true);
-				}
-				// end of animal
+				} // end of animal
 
 				if (bodyguard_animal == false) {
 					PED::SET_PED_CAN_SWITCH_WEAPON(bodyGuard, true);
@@ -1308,7 +1305,7 @@ void do_spawn_bodyguard(){
 
 			if (bodyguard_animal == false) PED::SET_PED_FIRING_PATTERN(bodyGuard, GAMEPLAY::GET_HASH_KEY("FIRING_PATTERN_FULL_AUTO")); // 0xC6EE6B4C
 
-			// Different Weapons
+			// different weapons
 			if (featureDifferentWeapons && PED_WEAPON_TITLES[BodyWeaponSetIndex] == "Custom Weapon"/* && load_saved_bodyguard == false*/) {
 				if (WEAPONS.empty()) {
 					for (int a = 0; a < MENU_WEAPON_CATEGORIES.size(); a++) {
@@ -1341,7 +1338,7 @@ void do_spawn_bodyguard(){
 					WEAPON::SET_CURRENT_PED_WEAPON(bodyGuard, weapBHash, 1);
 					WEAPON::SET_PED_CURRENT_WEAPON_VISIBLE(bodyGuard, true, false, 1, 1);
 				}
-			}
+			} // end of different weapons
 			
 			if (spawning_a_ped == false) {
 				if (!featureDifferentWeapons && load_saved_bodyguard == false) {
@@ -1381,15 +1378,13 @@ void do_spawn_bodyguard(){
 				PED::SET_PED_RANDOM_COMPONENT_VARIATION(bodyGuard, true);
 				PED::SET_PED_RANDOM_PROPS(bodyGuard);
 				WAIT(0);
-			}
-			//
+			} // end of randomize appearance
 
 			// bodyguard health
 			if (PLAYER_HEALTH_VALUES[BodyHealthIndex] > 0) {
 				PED::SET_PED_MAX_HEALTH(bodyGuard, PLAYER_HEALTH_VALUES[BodyHealthIndex]);
 				ENTITY::SET_ENTITY_HEALTH(bodyGuard, PLAYER_HEALTH_VALUES[BodyHealthIndex]);
-			}
-			//
+			} // end of bodyguard health
 
 			if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) {
 				Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
@@ -1468,9 +1463,11 @@ void maintain_bodyguards(){
 		}
 	}
 
-	if (!spawnedENTBodyguards.empty()) { 
+	if (!spawnedENTBodyguards.empty()) {
 		Vector3 my_coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 		for (int i = 0; i < spawnedENTBodyguards.size(); i++) {
+			// bodyguards invincible
+			if (featureBodyguardInvincible) ENTITY::SET_ENTITY_INVINCIBLE(spawnedENTBodyguards[i], featureBodyguardInvincible);
 			// bodyguards swimming ability
 			if (ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID()) == 1 && !is_in_airbrake_mode() && PED::GET_PED_TYPE(spawnedENTBodyguards[i]) != 28 && stop_b == false) {
 				float height = -1.0;
@@ -1489,8 +1486,7 @@ void maintain_bodyguards(){
 				}
 				if (((height - my_coords.z) < 1) && ((height - bod_coords.z) > 2) && ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID()) == 1 && ENTITY::IS_ENTITY_IN_WATER(spawnedENTBodyguards[i]) == 1) 
 					ENTITY::APPLY_FORCE_TO_ENTITY(spawnedENTBodyguards[i], 1, 0, 0, 2.6, 0, 0, 0, true, false, true, true, true, true);
-			}
-			//
+			} //
 			// animals
 			if (animal_in_group == true) {
 				Vector3 cop_coords;
@@ -1791,7 +1787,7 @@ bool process_bodyguard_menu(){
 		toggleItem->caption = "Invincible";
 		toggleItem->value = i++;
 		toggleItem->toggleValue = &featureBodyguardInvincible;
-		toggleItem->toggleValueUpdated = &featureBodyguardInvincibleUpdated;
+		//toggleItem->toggleValueUpdated = &featureBodyguardInvincibleUpdated;
 		menuItems.push_back(toggleItem);
 
 		toggleItem = new ToggleMenuItem<int>();
@@ -1876,9 +1872,9 @@ bool process_bodyguard_menu(){
 
 bool onconfirm_bodyguard_menu(MenuItem<int> choice){
 	// common variables
-	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
-	Player player = PLAYER::PLAYER_ID();
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	//BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
+	//Player player = PLAYER::PLAYER_ID();
+	//Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	//switch(choice.value){
 	switch (activeLineIndexBodyguards) {
@@ -1913,14 +1909,6 @@ bool onconfirm_bodyguard_menu(MenuItem<int> choice){
 			break;
 	}
 	return false;
-}
-
-void update_bodyguard_features(){
-	if(featureBodyguardInvincibleUpdated){
-		for(int i = 0; i < spawnedENTBodyguards.size(); i++){
-			ENTITY::SET_ENTITY_INVINCIBLE(spawnedENTBodyguards[i], featureBodyguardInvincible);
-		}
-	}
 }
 
 void add_bodyguards_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){
@@ -2018,7 +2006,7 @@ void reset_bodyguards_globals(){
 	featureBodyBlipNumber = false;
 	featureBodyguardOnMap = false;
 	featureBodyguardInvincible = false;
-	featureBodyguardInvincibleUpdated = false;
+	//featureBodyguardInvincibleUpdated = false;
 	featureBodyguardHelmet = false;
 	featureBodyguardDespawn = true;
 	featureBodyguardInfAmmo = false;

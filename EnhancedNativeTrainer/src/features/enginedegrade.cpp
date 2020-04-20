@@ -72,7 +72,7 @@ void engine_can_degrade()
 {
 	if (featureEngineDegrade && GAMEPLAY::GET_MISSION_FLAG() == 0) {
 
-		Player player = PLAYER::PLAYER_ID();
+		//Player player = PLAYER::PLAYER_ID();
 		Ped playerPed = PLAYER::PLAYER_PED_ID();
 		
 		// CHECK IF ARRAY IS NOT EMPTY
@@ -81,7 +81,7 @@ void engine_can_degrade()
 
 			if (!VEHICLE::IS_THIS_MODEL_A_BICYCLE(ENTITY::GET_ENTITY_MODEL(veh)) && !PED::IS_PED_IN_ANY_TRAIN(playerPed)) { // Bikes do not have engine
 				E_VEHICLES.push_back(veh);
-				// UP MARGIN + DOWN MARGIN
+				
 				if (VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(veh)) && VEH_ENGINEHEALTH_VALUES[CarEngineHealthIndex] < 100) e_randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[CarEngineHealthIndex]);
 				if (VEH_ENGINEHEALTH_VALUES[CarEngineHealthIndex] == 100) e_randomize = 100;
 				if ((PED::IS_PED_ON_ANY_BIKE(playerPed) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(veh))) && VEH_ENGINEHEALTH_VALUES[BikeEngineHealthIndex] < 100) e_randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[BikeEngineHealthIndex]);;
@@ -246,7 +246,7 @@ void engine_can_degrade()
 				}
 				//else if (VEH_SPEEDLIMITER_VALUES[speedLimiterIndex] == 0 && VEH_SPEEDLIMITER_VALUES[speedCityLimiterIndex] == 0 && VEH_SPEEDLIMITER_VALUES[speedCountryLimiterIndex] == 0) ENTITY::SET_ENTITY_MAX_SPEED(veh, 15000.0);
 			}
-		} // in vehicle
+		} // end of in vehicle
 		
 		// ENGINE RECOVERY
 		if (VEH_ENGINEHEALTH_VALUES[RestorationSpeedIndex] > 0 && !E_VEHICLES.empty()) {

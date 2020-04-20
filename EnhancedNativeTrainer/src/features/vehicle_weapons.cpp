@@ -9,7 +9,6 @@
 #pragma warning( disable : 4129 )
 
 Camera bombCam = NULL;
-Vehicle veh_b;
 Vector3 vehPosition;
 Vector3 curRotation;
 
@@ -25,9 +24,8 @@ bool featureBombDoorCamera = false;
 
 void toggle_bomb_bay_camera()
 {
-	veh_b = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
-	vehPosition = ENTITY::GET_ENTITY_COORDS(veh_b, true);
-	curRotation = ENTITY::GET_ENTITY_ROTATION(veh_b, 2);
+	vehPosition = ENTITY::GET_ENTITY_COORDS(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), true);
+	curRotation = ENTITY::GET_ENTITY_ROTATION(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), 2);
 		
 	if (!STREAMING::HAS_MODEL_LOADED(GAMEPLAY::GET_HASH_KEY("prop_ld_bomb_01"))) STREAMING::REQUEST_MODEL(GAMEPLAY::GET_HASH_KEY("prop_ld_bomb_01"));
 	
@@ -36,7 +34,7 @@ void toggle_bomb_bay_camera()
 		if (bombDoorOpen == true && !CAM::DOES_CAM_EXIST(bombCam)) {
 			CONTROLS::DISABLE_CONTROL_ACTION(0, INPUT_VEH_FLY_ATTACK2, 1);
 			bombCam = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_FLY_CAMERA", vehPosition.x, vehPosition.y, vehPosition.z, curRotation.x, curRotation.y, curRotation.z, 50.0, true, 2);
-			CAM::ATTACH_CAM_TO_ENTITY(bombCam, veh_b, 0.0f, 0.0f, -0.5f, 1);
+			CAM::ATTACH_CAM_TO_ENTITY(bombCam, PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), 0.0f, 0.0f, -0.5f, 1);
 			CAM::POINT_CAM_AT_COORD(bombCam, vehPosition.x, vehPosition.y, vehPosition.z - 2);
 			CAM::SHAKE_CAM(bombCam, "ROAD_VIBRATION_SHAKE", 0.4f);
 			CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE_BLEND_LEVEL(bombCam, 1.0);
@@ -107,7 +105,7 @@ void start_bombing_run()
 		ENTITY::SET_ENTITY_ROTATION(oBomb, curRotation.x, curRotation.y, curRotation.z, 0, false);
 		if (!STREAMING::HAS_MODEL_LOADED(GAMEPLAY::GET_HASH_KEY("bodyshell"))) STREAMING::REQUEST_MODEL(GAMEPLAY::GET_HASH_KEY("bodyshell"));
 		int boneIndex1 = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(veh_b, "bodyshell");
-		ENTITY::ATTACH_ENTITY_TO_ENTITY(oBomb, veh_b, boneIndex1, 0.0, 0.0, -0.5, 0.0, 0.0, 0.0, false, false, false, true, 0, true);
+		ENTITY::ATTACH_ENTITY_TO_ENTITY(oBomb, PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), boneIndex1, 0.0, 0.0, -0.5, 0.0, 0.0, 0.0, false, false, false, true, 0, true);
 	}
 }
 
@@ -117,8 +115,8 @@ void update_bombs()
 		for (int i = 0; i < vBomb.size(); i++) {
 			Vector3 bomb_coords = ENTITY::GET_ENTITY_COORDS(vBomb[i], 1);
 
-			Vector3 CamRot = ENTITY::GET_ENTITY_ROTATION(veh_b, 2);
-			float cur_s = ENTITY::GET_ENTITY_SPEED(veh_b);
+			Vector3 CamRot = ENTITY::GET_ENTITY_ROTATION(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), 2);
+			float cur_s = ENTITY::GET_ENTITY_SPEED(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()));
 			int p_force = 1 * cur_s; // 50
 			float rad = 2 * 3.14 * (CamRot.z / 360);
 			float v_x = -(sin(rad) * p_force);
@@ -228,7 +226,7 @@ void update_veh_weapons_features()
 	}
 
 	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0) && tempbombDoor == false) {
-		VEHICLE::CLOSE_BOMB_BAY_DOORS(veh_b);
+		VEHICLE::CLOSE_BOMB_BAY_DOORS(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()));
 		tempbombDoor = true;
 		
 	}

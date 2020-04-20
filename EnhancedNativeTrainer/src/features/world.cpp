@@ -447,7 +447,6 @@ void process_world_menu()
 	std::string caption = "World Options";
 
 	std::vector<MenuItem<int>*> menuItems;
-
 	SelectFromListMenuItem *listItem;
 
 	MenuItem<int> *areaItem = new MenuItem<int>();

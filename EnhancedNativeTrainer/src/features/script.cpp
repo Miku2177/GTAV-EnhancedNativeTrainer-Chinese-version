@@ -682,7 +682,7 @@ void update_features(){
 
 	update_area_effects(playerPed);
 	
-	update_vehicles(playerPed);
+	update_vehicles(playerPed); // speed / altitude
 
 	update_weapon_features(bPlayerExists, player);
 
@@ -701,8 +701,6 @@ void update_features(){
 	update_misc_features(bPlayerExists, playerPed);
 
 	update_time_features(player);
-
-	update_bodyguard_features();
 
 	// player invincible
 	if(featurePlayerInvincibleUpdated){
@@ -731,7 +729,7 @@ void update_features(){
 		}
 	}
 
-	if(featureWantedLevelFrozen){
+	if (featureWantedLevelFrozen){
 		if(featureWantedLevelFrozenUpdated){
 			frozenWantedLevel = PLAYER::GET_PLAYER_WANTED_LEVEL(player);
 			featureWantedLevelFrozenUpdated = false;
@@ -740,7 +738,6 @@ void update_features(){
 		PLAYER::SET_PLAYER_WANTED_LEVEL(player, frozenWantedLevel, 0);
 		PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(player, 0);
 	}
-
 	if(featureWantedLevelFrozenUpdated && !featureWantedLevelFrozen){
 		PLAYER::SET_MAX_WANTED_LEVEL(5);
 		featureWantedLevelFrozenUpdated = false;
@@ -790,10 +787,8 @@ void update_features(){
 	}
 
 	// No Whistling For Taxi
-	if (NoTaxiWhistling && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID()) && !UI::IS_HELP_MESSAGE_BEING_DISPLAYED()) {
-		CONTROLS::DISABLE_CONTROL_ACTION(2, 51, 1);
-	}
-	
+	if (NoTaxiWhistling && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID()) && !UI::IS_HELP_MESSAGE_BEING_DISPLAYED()) CONTROLS::DISABLE_CONTROL_ACTION(2, 51, 1);
+		
 	// Levitation
 	if (!featureLevitation) lev_message = false;
 	if (featureLevitation) {
@@ -869,7 +864,7 @@ void update_features(){
 	// Hancock Mode
 	if (PLAYER_MOVEMENT_VALUES[current_player_jumpfly] > 0.00 && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1)) {
 		Vector3 CamRot = CAM::GET_GAMEPLAY_CAM_ROT(2);
-		float p_force = PLAYER_MOVEMENT_VALUES[current_player_jumpfly]; //5;
+		float p_force = PLAYER_MOVEMENT_VALUES[current_player_jumpfly];
 		float rad = 2 * 3.14 * (CamRot.z / 360);
 		float v_x = -(sin(rad) * p_force * 10);
 		float v_y = (cos(rad) * p_force * 10);
@@ -947,7 +942,7 @@ void update_features(){
 		if (ENTITY::IS_ENTITY_PLAYING_ANIM(PLAYER::PLAYER_PED_ID(), "move_strafe@roll_fps", "combatroll_fwd_p1_00", 3)) skydiving = false;
 	}
 
-	// Player can be headshot
+	// Player Can Be Headshot
 	if (featurePlayerCanBeHeadshot && !featurePlayerInvincible) {
 		Vector3 coords_bullet_p = PED::GET_PED_BONE_COORDS(playerPed, 31086, 0, 0, 0); // head bone
 		if (WEAPON::HAS_ENTITY_BEEN_DAMAGED_BY_WEAPON(playerPed, 0, 2) && GAMEPLAY::HAS_BULLET_IMPACTED_IN_AREA(coords_bullet_p.x, coords_bullet_p.y, coords_bullet_p.z, 0.1, 0, 0)) {
@@ -997,11 +992,11 @@ void update_features(){
 		}
 	}
 
-	// Can run in apartments
+	// Can Run In Apartments
 	if (featurePlayerRunApartments && GAMEPLAY::GET_MISSION_FLAG() == 0 && !UI::IS_HELP_MESSAGE_BEING_DISPLAYED()) {
-		Vector3 coords_apprun_ped = ENTITY::GET_ENTITY_COORDS(playerPed, true);
-		int curr_int = INTERIOR::GET_INTERIOR_AT_COORDS(coords_apprun_ped.x, coords_apprun_ped.y, coords_apprun_ped.z);
-		if (!INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_apprun_ped.x, coords_apprun_ped.y, coords_apprun_ped.z) && 
+		
+		int curr_int = INTERIOR::GET_INTERIOR_AT_COORDS(ENTITY::GET_ENTITY_COORDS(playerPed, true).x, ENTITY::GET_ENTITY_COORDS(playerPed, true).y, ENTITY::GET_ENTITY_COORDS(playerPed, true).z);
+		if (!INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(ENTITY::GET_ENTITY_COORDS(playerPed, true).x, ENTITY::GET_ENTITY_COORDS(playerPed, true).y, ENTITY::GET_ENTITY_COORDS(playerPed, true).z) &&
 			(curr_int == 206849 || curr_int == 166657 || curr_int == 166401 || curr_int == 115458 || curr_int == 114946 || curr_int == 171777 || curr_int == 197121 || curr_int == 197889 || curr_int == 4866 || curr_int == 36866)) {
 			iaminside = true;
 			if (!ENTITY::IS_ENTITY_IN_AREA(playerPed, -802.346,	171.234, 70.8347, -799.234, 174.817, 74.8347, 1, 1, 1) &&
@@ -1020,7 +1015,7 @@ void update_features(){
 				if (PED::IS_PED_SHOOTING(playerPed)) we_have_troubles = true;
 
 				if (we_have_troubles == false) {
-					GAMEPLAY::CLEAR_AREA_OF_COPS(coords_apprun_ped.x, coords_apprun_ped.y, coords_apprun_ped.z, 20, 0);
+					GAMEPLAY::CLEAR_AREA_OF_COPS(ENTITY::GET_ENTITY_COORDS(playerPed, true).x, ENTITY::GET_ENTITY_COORDS(playerPed, true).y, ENTITY::GET_ENTITY_COORDS(playerPed, true).z, 20, 0);
 					PLAYER::SET_POLICE_IGNORE_PLAYER(PLAYER::PLAYER_ID(), true);
 					UI::HIDE_HUD_COMPONENT_THIS_FRAME(1);
 				}
@@ -1045,7 +1040,7 @@ void update_features(){
 		}
 	}
 	
-	// max wanted level
+	// Max Wanted Level
 	if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) > VEH_STARSPUNISH_VALUES[wanted_maxpossible_level]) {
 		PLAYER::SET_MAX_WANTED_LEVEL(5);
 		PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), VEH_STARSPUNISH_VALUES[wanted_maxpossible_level], 0);
@@ -1155,7 +1150,7 @@ void update_features(){
 	///// <--- WANTED FUGITIVE /////
 	most_wanted(); 
 
-	// police ignore player
+	// Police Ignore Player
 	if(featurePlayerIgnoredByPolice){
 		if(bPlayerExists){
 			PLAYER::SET_POLICE_IGNORE_PLAYER(player, true);
@@ -1167,14 +1162,14 @@ void update_features(){
 		}
 	}
 
-	// player special ability
+	// Player Special Ability
 	if(featurePlayerUnlimitedAbility){
 		if(bPlayerExists){
 			PLAYER::SPECIAL_ABILITY_FILL_METER(player, 1);
 		}
 	}
 
-	// player no noise
+	// Player No Noise
 	if(bPlayerExists && !featurePlayerNoNoise){
 		PLAYER::SET_PLAYER_NOISE_MULTIPLIER(player, 1.0);
 	}
@@ -1182,7 +1177,7 @@ void update_features(){
 		PLAYER::SET_PLAYER_NOISE_MULTIPLIER(player, 0.0);
 	}
 
-	// player fast swim
+	// Player Fast Swim
 	if(bPlayerExists && !featurePlayerFastSwim){
 		PLAYER::SET_SWIM_MULTIPLIER_FOR_PLAYER(player, 1.0);
 	}
@@ -1190,15 +1185,15 @@ void update_features(){
 		PLAYER::SET_SWIM_MULTIPLIER_FOR_PLAYER(player, 1.49);
 	}
 
-	// player fast run 
+	// Player Fast Run 
 	if(bPlayerExists && !featurePlayerFastRun){
-		PLAYER::SET_RUN_SPRINT_MULTIPLIER_FOR_PLAYER(player, 1.0);
+		if (AI::IS_PED_SPRINTING(PLAYER::PLAYER_PED_ID())) PLAYER::SET_RUN_SPRINT_MULTIPLIER_FOR_PLAYER(player, 1.0);
 	}
 	if(featurePlayerFastRun){
-		PLAYER::SET_RUN_SPRINT_MULTIPLIER_FOR_PLAYER(player, 1.49);
+		if (AI::IS_PED_SPRINTING(PLAYER::PLAYER_PED_ID())) PLAYER::SET_RUN_SPRINT_MULTIPLIER_FOR_PLAYER(player, 1.49);
 	}
 
-	// player super jump
+	// Player Super Jump
 	if(PLAYER_MOVEMENT_VALUES[current_player_superjump] > 0.00) {
 		if(bPlayerExists){
 			float CamRot = ENTITY::_GET_ENTITY_PHYSICS_HEADING(playerPed);
@@ -1355,13 +1350,13 @@ void update_features(){
 		ENTITY::SET_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID(), true);
 		p_invisible = false;
 	}
-
 	if(featurePlayerInvisible || (featurePlayerInvisibleInVehicle && PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1))) {
 		ENTITY::SET_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID(), false);
 		p_invisible = true;
 	}
 	
-	if(featurePlayerDrunkUpdated){
+	// Player Drunk
+	if(featurePlayerDrunkUpdated) {
 		featurePlayerDrunkUpdated = false;
 		if(featurePlayerDrunk){
 			STREAMING::REQUEST_ANIM_SET((char*) CLIPSET_DRUNK);
@@ -1379,17 +1374,19 @@ void update_features(){
 		AUDIO::SET_PED_IS_DRUNK(playerPed, featurePlayerDrunk);
 	}
 
+	// Night Vision
 	if(featureNightVisionUpdated){
 		GRAPHICS::SET_NIGHTVISION(featureNightVision);
 		featureNightVisionUpdated = false;
 	}
 
+	// Thermal Vision
 	if(featureThermalVisionUpdated){
 		GRAPHICS::SET_SEETHROUGH(featureThermalVision);
 		featureThermalVisionUpdated = false;
 	}
 
-	//Disable airbrake on death
+	// Disable airbrake on death
 	if(ENTITY::IS_ENTITY_DEAD(playerPed)){
 		exit_airbrake_menu_if_showing();
 	}
@@ -1478,7 +1475,6 @@ void process_powerpunch_menu() {
 	std::string caption = "Power Punch Options";
 
 	std::vector<MenuItem<int>*> menuItems;
-
 	SelectFromListMenuItem *listItem;
 	ToggleMenuItem<int>* toggleItem;
 	MenuItem<int> *item = new MenuItem<int>();
@@ -1525,11 +1521,10 @@ void process_powerpunch_menu() {
 }
 
 bool process_player_life_menu(){
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	//Ped playerPed = PLAYER::PLAYER_PED_ID();
+	std::string caption = "Player Data";
 
 	std::vector<MenuItem<int> *> menuItems;
-	std::string caption = "Player Data";
-	
 	MenuItem<int> *item;
 	SelectFromListMenuItem *listItem;
 	ToggleMenuItem<int>* toggleItem;
@@ -1595,11 +1590,10 @@ bool process_player_life_menu(){
 }
 
 bool maxwantedlevel_menu() {
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
-
-	std::vector<MenuItem<int> *> menuItems;
+	//Ped playerPed = PLAYER::PLAYER_PED_ID();
 	std::string caption = "Wanted Level Options";
 
+	std::vector<MenuItem<int> *> menuItems;
 	SelectFromListMenuItem *listItem;
 	ToggleMenuItem<int>* toggleItem;
 
@@ -1651,11 +1645,10 @@ bool maxwantedlevel_menu() {
 }
 
 bool mostwanted_menu() {
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
-
-	std::vector<MenuItem<int> *> menuItems;
+	//Ped playerPed = PLAYER::PLAYER_PED_ID();
 	std::string caption = "Wanted Fugitive Options";
 
+	std::vector<MenuItem<int> *> menuItems;
 	SelectFromListMenuItem *listItem;
 	ToggleMenuItem<int>* toggleItem;
 
@@ -1689,11 +1682,10 @@ bool mostwanted_menu() {
 }
 
 bool player_movement_speed() {
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
-
-	std::vector<MenuItem<int> *> menuItems;
+	//Ped playerPed = PLAYER::PLAYER_PED_ID();
 	std::string caption = "Player Movement Speed Options";
 
+	std::vector<MenuItem<int> *> menuItems;
 	SelectFromListMenuItem *listItem;
 	ToggleMenuItem<int>* toggleItem;
 
@@ -1733,11 +1725,10 @@ bool player_movement_speed() {
 }
 
 bool process_ragdoll_menu() {
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
-
-	std::vector<MenuItem<int> *> menuItems;
+	//Ped playerPed = PLAYER::PLAYER_PED_ID();
 	std::string caption = "Ragdoll Options";
 
+	std::vector<MenuItem<int> *> menuItems;
 	SelectFromListMenuItem *listItem;
 	ToggleMenuItem<int>* toggleItem;
 
@@ -1771,15 +1762,15 @@ bool process_ragdoll_menu() {
 }
 
 bool process_player_prison_menu(){
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
-
-	std::vector<MenuItem<int> *> menuItems;
+	//Ped playerPed = PLAYER::PLAYER_PED_ID();
 	std::string caption = "Prison Break Options";
 
+	std::vector<MenuItem<int> *> menuItems;
 	SelectFromListMenuItem *listItem;
 	ToggleMenuItem<int>* toggleItem;
 
 	int i = 0;
+
 	listItem = new SelectFromListMenuItem(PLAYER_PRISON_CAPTIONS, onchange_player_prison_mode);
 	listItem->wrap = false;
 	listItem->caption = "Player Imprisoned If";
@@ -1832,16 +1823,16 @@ bool process_player_prison_menu(){
 }
 
 bool process_player_forceshield_menu() {
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
-
-	std::vector<MenuItem<int> *> menuItems;
+	//Ped playerPed = PLAYER::PLAYER_PED_ID();
 	std::string caption = "Jedi Powers Options";
 
+	std::vector<MenuItem<int> *> menuItems;
 	SelectFromListMenuItem *listItem;
 	ToggleMenuItem<int>* toggleItem;
 	MenuItem<int> *item;
 
 	int i = 0;
+
 	item = new MenuItem<int>();
 	item->caption = "Power Punch";
 	item->value = i++;
@@ -2204,6 +2195,7 @@ void main(){
 	//reset_globals();
 	
 	setGameInputToEnabled(true, true);
+
 	setAirbrakeRelatedInputToBlocked(false, true);
 
 	write_text_to_log_file("Setting up calls");
@@ -2874,7 +2866,6 @@ void process_test_menu(){
 	}
 
 	draw_generic_menu<int>(menuItems, 0, "Test Funcs", onconfirm_testmenu, NULL, NULL, skin_save_menu_interrupt);
-
 }
 
 void debug_native_investigation(){
