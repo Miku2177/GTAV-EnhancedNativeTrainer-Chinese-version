@@ -13,6 +13,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 #include <vector>
 #include <map>
+#include <string>
 
 #pragma once
 
