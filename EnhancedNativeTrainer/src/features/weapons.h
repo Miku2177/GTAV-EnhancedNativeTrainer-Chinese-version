@@ -287,6 +287,8 @@ void restore_player_weapons(Ped playerPed);
 
 bool is_weapon_equipped(std::vector<int> extras);
 
+bool process_weapon_save_slot_menu(int slot);
+
 void set_weapon_equipped(bool equipped, std::vector<int> extras);
 
 bool is_weaponmod_equipped(std::vector<int> extras);

@@ -493,7 +493,7 @@ void ENTDatabase::handle_version(int oldVersion)
 
 	if (oldVersion < 13)
 	{
-		write_text_to_log_file("Main skin table not found, so creating it");
+		write_text_to_log_file("Main veh colour table not found, so creating it");
 
 		char* CREATE_VEH_COLOUR_TABLE_QUERY = "CREATE TABLE ENT_SAVED_VEH_COLOURS ( \
 			id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, \
@@ -519,6 +519,35 @@ void ENTDatabase::handle_version(int oldVersion)
 		else
 		{
 			write_text_to_log_file("Main colour table created");
+		}
+	}
+
+	if (oldVersion < 14)
+	{
+		write_text_to_log_file("Main weapon table not found, so creating it");
+
+		char* CREATE_VEH_COLOUR_TABLE_QUERY = "CREATE TABLE ENT_SAVED_WEAPON ( \
+			id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, \
+			saveName TEXT NOT NULL, \
+			weapon INTEGER NOT NULL, \
+			comp0 INTEGER NOT NULL, \
+			comp1 INTEGER NOT NULL, \
+			comp2 INTEGER NOT NULL, \
+			comp3 INTEGER NOT NULL, \
+			comp4 INTEGER NOT NULL, \
+			comp5 INTEGER NOT NULL, \
+			comp6 INTEGER NOT NULL \
+			)";
+		
+		int rcSkin1 = sqlite3_exec(db, CREATE_VEH_COLOUR_TABLE_QUERY, NULL, 0, &zErrMsg);
+		if (rcSkin1 != SQLITE_OK)
+		{
+			write_text_to_log_file("Main weapon table creation problem");
+			sqlite3_free(zErrMsg);
+		}
+		else
+		{
+			write_text_to_log_file("Main weapon table created");
 		}
 	}
 }
@@ -1689,7 +1718,241 @@ std::vector<SavedBodSkinDBRow*> ENTDatabase::get_saved_bod_skins(int index)
 
 	return results;
 }
-//
+// end of save/load bodyguard
+
+// saved weapons
+bool ENTDatabase::save_weapon(Ped ped, std::string saveName, sqlite3_int64 slot)
+{
+	mutex_lock();
+
+	std::stringstream ss;
+	ss << "INSERT OR REPLACE INTO ENT_SAVED_WEAPON VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+
+	Hash comp0 = -1;
+	Hash comp1 = -1;
+	Hash comp2 = -1;
+	Hash comp3 = -1;
+	Hash comp4 = -1;
+	Hash comp5 = -1;
+	Hash comp6 = -1;
+	int comp_s = 0;
+
+	sqlite3_stmt* stmt;
+	const char* pzTest;
+	auto ssStr = ss.str();
+	int rc = sqlite3_prepare_v2(db, ssStr.c_str(), ssStr.length(), &stmt, &pzTest);
+	bool result = true;
+
+	if (rc != SQLITE_OK)
+	{
+		write_text_to_log_file("Weapon save failed");
+		write_text_to_log_file(sqlite3_errmsg(db));
+		result = false;
+	}
+
+	for (int a = 0; a < WEAPONTYPES_MOD.size(); a++) {
+		for (int b = 0; b < VOV_WEAPONMOD_VALUES[a].size(); b++) {
+			char* weaponName = (char*)WEAPONTYPES_MOD.at(a).c_str(), * compName = (char*)VOV_WEAPONMOD_VALUES[a].at(b).c_str();
+			Hash weaponHash = GAMEPLAY::GET_HASH_KEY(weaponName), compHash = GAMEPLAY::GET_HASH_KEY(compName);
+
+			if (strcmp(weaponName, "WEAPON_SMG") == 0 && b == 0) {
+				continue;
+			}
+			if (strcmp(weaponName, "WEAPON_ASSAULTRIFLE") == 0 && b == 0) {
+				continue;
+			}
+			if (strcmp(weaponName, "WEAPON_CARBINERIFLE") == 0 && b == 0) {
+				continue;
+			}
+			if (strcmp(weaponName, "WEAPON_HEAVYSNIPER") == 0) {
+				break;
+			}
+			if (strcmp(weaponName, "WEAPON_COMBATPDW") == 0 && b == 0) {
+				continue;
+			}
+			if (strcmp(weaponName, "WEAPON_COMPACTRIFLE") == 0 && b == 0) {
+				continue;
+			}
+			if (strcmp(weaponName, "WEAPON_HEAVYSHOTGUN") == 0 && b == 0) {
+				continue;
+			}
+			if (strcmp(weaponName, "WEAPON_MACHINEPISTOL") == 0 && b == 0) {
+				continue;
+			}
+			if (strcmp(weaponName, "WEAPON_REVOLVER") == 0) {
+				break;
+			}
+			if (strcmp(weaponName, "WEAPON_SPECIALCARBINE") == 0 && b == 0) {
+				continue;
+			}
+			if (strcmp(weaponName, "WEAPON_SWITCHBLADE") == 0) {
+				break;
+			}
+
+			if (weaponHash == WEAPON::GET_SELECTED_PED_WEAPON(PLAYER::PLAYER_PED_ID())) {
+				if (WEAPON::HAS_PED_GOT_WEAPON_COMPONENT(PLAYER::PLAYER_PED_ID(), weaponHash, compHash)) {
+					if (comp_s == 0) comp0 = compHash;
+					if (comp_s == 1) comp1 = compHash;
+					if (comp_s == 2) comp2 = compHash;
+					if (comp_s == 3) comp3 = compHash;
+					if (comp_s == 4) comp4 = compHash;
+					if (comp_s == 5) comp5 = compHash;
+					if (comp_s == 6) comp6 = compHash;
+					comp_s = comp_s + 1;
+				}
+			}
+		}
+	}
+
+	int index = 1;
+	if (slot == -1)
+	{
+		sqlite3_bind_null(stmt, index++);
+	}
+	else
+	{
+		sqlite3_bind_int64(stmt, index++, slot);
+	}
+	sqlite3_bind_text(stmt, index++, saveName.c_str(), saveName.length(), 0); // save name
+	sqlite3_bind_int(stmt, index++, WEAPON::GET_SELECTED_PED_WEAPON(ped)); // weapon
+	sqlite3_bind_int(stmt, index++, comp0); // weapon component
+	sqlite3_bind_int(stmt, index++, comp1); // weapon component
+	sqlite3_bind_int(stmt, index++, comp2); // weapon component
+	sqlite3_bind_int(stmt, index++, comp3); // weapon component
+	sqlite3_bind_int(stmt, index++, comp4); // weapon component
+	sqlite3_bind_int(stmt, index++, comp5); // weapon component
+	sqlite3_bind_int(stmt, index++, comp6); // weapon component
+	
+	// commit
+	sqlite3_step(stmt);
+	sqlite3_finalize(stmt);
+
+	sqlite3_int64 newRowID = sqlite3_last_insert_rowid(db);
+
+	mutex_unlock();
+
+	return result;
+}
+
+void ENTDatabase::rename_saved_weapon(std::string name, sqlite3_int64 slot)
+{
+	mutex_lock();
+
+	sqlite3_stmt* stmt;
+	const char* pzTest;
+	auto qStr = "UPDATE ENT_SAVED_WEAPON SET saveName=? WHERE id=?";
+	int rc = sqlite3_prepare_v2(db, qStr, strlen(qStr), &stmt, &pzTest);
+
+	if (rc == SQLITE_OK)
+	{
+		// bind the value
+		sqlite3_bind_text(stmt, 1, name.c_str(), name.length(), 0);
+		sqlite3_bind_int64(stmt, 2, slot);
+
+		// commit
+		sqlite3_step(stmt);
+		sqlite3_finalize(stmt);
+	}
+	else
+	{
+		write_text_to_log_file("Failed to rename saved weapon");
+		write_text_to_log_file(sqlite3_errmsg(db));
+	}
+
+	mutex_unlock();
+}
+
+void ENTDatabase::delete_saved_weapon(sqlite3_int64 slot)
+{
+	mutex_lock();
+
+	sqlite3_stmt* stmt;
+	const char* pzTest;
+	auto qStr = "DELETE FROM ENT_SAVED_WEAPON WHERE id=?";
+	int rc = sqlite3_prepare_v2(db, qStr, strlen(qStr), &stmt, &pzTest);
+
+	if (rc == SQLITE_OK)
+	{
+		// bind the value
+		sqlite3_bind_int64(stmt, 1, slot);
+
+		// commit
+		sqlite3_step(stmt);
+		sqlite3_finalize(stmt);
+	}
+	else
+	{
+		write_text_to_log_file("Failed to delete saved weapon");
+		write_text_to_log_file(sqlite3_errmsg(db));
+	}
+
+	mutex_unlock();
+}
+
+std::vector<SavedWeaponDBRow*> ENTDatabase::get_saved_weapon(int index)
+{
+	write_text_to_log_file("Asked to load saved weapon");
+
+	mutex_lock();
+
+	sqlite3_stmt* stmt;
+	const char* pzTest;
+
+	std::stringstream ss;
+	ss << "select * from ENT_SAVED_WEAPON";
+	if (index != -1)
+	{
+		ss << " WHERE id = ?";
+	}
+	auto qStr = ss.str();
+	int rc = sqlite3_prepare_v2(db, qStr.c_str(), qStr.length(), &stmt, &pzTest);
+
+	std::vector<SavedWeaponDBRow*> results;
+
+	if (rc == SQLITE_OK)
+	{
+		// bind the value
+		if (index != -1)
+		{
+			sqlite3_bind_int(stmt, 1, index);
+		}
+
+		int r = sqlite3_step(stmt);
+		while (r == SQLITE_ROW)
+		{
+			write_text_to_log_file("Weapon row found");
+
+			SavedWeaponDBRow* skin = new SavedWeaponDBRow();
+
+			int index = 0;
+			skin->rowID = sqlite3_column_int(stmt, index++);
+			skin->saveName = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, index++)));
+			skin->weapon = sqlite3_column_int(stmt, index++);
+			skin->comp0 = sqlite3_column_int(stmt, index++);
+			skin->comp1 = sqlite3_column_int(stmt, index++);
+			skin->comp2 = sqlite3_column_int(stmt, index++);
+			skin->comp3 = sqlite3_column_int(stmt, index++);
+			skin->comp4 = sqlite3_column_int(stmt, index++);
+			skin->comp5 = sqlite3_column_int(stmt, index++);
+			skin->comp6 = sqlite3_column_int(stmt, index++);
+
+			results.push_back(skin);
+
+			r = sqlite3_step(stmt);
+		}
+		sqlite3_finalize(stmt);
+	}
+	else
+	{
+		write_text_to_log_file("Failed to fetch saved weapon");
+		write_text_to_log_file(sqlite3_errmsg(db));
+	}
+
+	mutex_unlock();
+
+	return results;
+}
+// end of saved weapons
 
 // save/load veh colours
 void ENTDatabase::rename_saved_veh_colour(std::string name, sqlite3_int64 slot)

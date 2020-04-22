@@ -468,7 +468,7 @@ bool spawn_saved_bod_skin(int slot, std::string caption)
 
 void save_current_bod_skin(int slot)
 {
-	CONTROLS::_SET_CONTROL_NORMAL(0, 37, 1);
+	if (!WEAPON::IS_PED_ARMED(PLAYER::PLAYER_PED_ID(), 7)) CONTROLS::_SET_CONTROL_NORMAL(0, 37, 1);
 
 	std::string result_b_s = show_keyboard("Number", NULL);
 	if (!result_b_s.empty())

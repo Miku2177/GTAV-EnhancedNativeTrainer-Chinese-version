@@ -29,6 +29,16 @@ int activeLineIndexCopArmed = 0;
 int activeLineIndexPedAgainstWeapons = 0;
 int activeLineIndexPowerPunchWeapons = 0;
 
+// saved weapons variables
+bool requireRefreshOfWeaponSaveSlotMenu = false;
+std::string activeSavedWeaponSlotName;
+bool WeaponSaveSlotMenuInterrupt = false;
+bool requireRefreshOfWeaponSaveSlots = false;
+int lastKnownSavedWeaponCount = 0;
+bool WeaponSaveMenuInterrupt = false;
+int activeSavedWeaponIndex = -1;
+bool requireRefreshOfWeaponSlotMenu = false;
+
 // give all weapons automatically variables
 bool featureGiveAllWeapons = false;
 bool featureAddAllWeaponsAttachments = false;
@@ -879,6 +889,239 @@ void process_pedagainstweapons_menu(){
 	draw_generic_menu<int>(menuItems, &activeLineIndexPedAgainstWeapons, caption, onconfirm_pedagainstweapons_menu, NULL, NULL);
 }
 
+// Saved Weapons
+bool spawn_saved_weapon(int slot, std::string caption)
+{
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+
+	ENTDatabase* database = get_database();
+	std::vector<SavedWeaponDBRow*> savedWeapons = database->get_saved_weapon(slot);
+	SavedWeaponDBRow* savedWeapon = savedWeapons.at(0);
+	
+	if (WEAPON::HAS_PED_GOT_WEAPON(playerPed, savedWeapon->weapon, 0)) {
+		WEAPON::REMOVE_WEAPON_FROM_PED(playerPed, savedWeapon->weapon);
+		WEAPON::GIVE_WEAPON_TO_PED(playerPed, savedWeapon->weapon, 999, false, true);
+	} else WEAPON::GIVE_WEAPON_TO_PED(playerPed, savedWeapon->weapon, 999, false, true);
+		
+	if (savedWeapon->comp0 != -1) WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, savedWeapon->weapon, savedWeapon->comp0);
+	if (savedWeapon->comp1 != -1) WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, savedWeapon->weapon, savedWeapon->comp1);
+	if (savedWeapon->comp2 != -1) WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, savedWeapon->weapon, savedWeapon->comp2);
+	if (savedWeapon->comp3 != -1) WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, savedWeapon->weapon, savedWeapon->comp3);
+	if (savedWeapon->comp4 != -1) WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, savedWeapon->weapon, savedWeapon->comp4);
+	if (savedWeapon->comp5 != -1) WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, savedWeapon->weapon, savedWeapon->comp5);
+	if (savedWeapon->comp6 != -1) WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, savedWeapon->weapon, savedWeapon->comp6);
+
+	WEAPON::SET_CURRENT_PED_WEAPON(playerPed, savedWeapon->weapon, 1);
+	WEAPON::SET_PED_CURRENT_WEAPON_VISIBLE(playerPed, true, false, 1, 1);
+	
+	for (std::vector<SavedWeaponDBRow*>::iterator it = savedWeapons.begin(); it != savedWeapons.end(); ++it)
+	{
+		delete (*it);
+	}
+	savedWeapons.clear();
+
+	return false;
+}
+
+void save_current_weapon(int slot)
+{
+	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+
+	if (!WEAPON::IS_PED_ARMED(playerPed, 7)) CONTROLS::_SET_CONTROL_NORMAL(0, 37, 1);
+
+	if (bPlayerExists)
+	{
+		std::ostringstream ss;
+		if (slot != -1)
+		{
+			ss << activeSavedWeaponSlotName;
+		}
+		else
+		{
+			ss << "Saved Weapon " << (lastKnownSavedWeaponCount + 1);
+		}
+
+		auto existingText = ss.str();
+		std::string result = show_keyboard(NULL, (char*)existingText.c_str());
+		if (!result.empty())
+		{
+			ENTDatabase* database = get_database();
+
+			if (database->save_weapon(playerPed, result, slot))
+			{
+				activeSavedWeaponSlotName = result;
+				set_status_text("Saved weapon");
+			}
+			else
+			{
+				set_status_text("Save error");
+			}
+		}
+	}
+}
+
+bool weapon_save_menu_interrupt()
+{
+	if (WeaponSaveMenuInterrupt)
+	{
+		WeaponSaveMenuInterrupt = false;
+		return true;
+	}
+	return false;
+}
+
+bool weapon_save_slot_menu_interrupt()
+{
+	if (WeaponSaveSlotMenuInterrupt)
+	{
+		WeaponSaveSlotMenuInterrupt = false;
+		return true;
+	}
+	return false;
+}
+
+bool onconfirm_weapon_save_slot_menu(MenuItem<int> choice)
+{
+	switch (choice.value)
+	{
+	case 1: //spawn
+		spawn_saved_weapon(activeSavedWeaponIndex, activeSavedWeaponSlotName);
+		break;
+	case 2: //overwrite
+	{
+		save_current_weapon(activeSavedWeaponIndex);
+		requireRefreshOfWeaponSaveSlots = true;
+		requireRefreshOfWeaponSlotMenu = true;
+		WeaponSaveSlotMenuInterrupt = true;
+		WeaponSaveMenuInterrupt = true;
+	}
+	break;
+	case 3: //rename
+	{
+		std::string result = show_keyboard(NULL, (char*)activeSavedWeaponSlotName.c_str());
+		if (!result.empty())
+		{
+			ENTDatabase* database = get_database();
+			database->rename_saved_weapon(result, activeSavedWeaponIndex);
+			activeSavedWeaponSlotName = result;
+		}
+		requireRefreshOfWeaponSaveSlots = true;
+		requireRefreshOfWeaponSlotMenu = true;
+		WeaponSaveSlotMenuInterrupt = true;
+		WeaponSaveMenuInterrupt = true;
+	}
+	break;
+	case 4: //delete
+	{
+		ENTDatabase* database = get_database();
+		database->delete_saved_weapon(activeSavedWeaponIndex);
+		requireRefreshOfWeaponSaveSlotMenu = false;
+		requireRefreshOfWeaponSaveSlots = true;
+		WeaponSaveSlotMenuInterrupt = true;
+		WeaponSaveMenuInterrupt = true;
+	}
+	break;
+	}
+	return false;
+}
+
+bool onconfirm_weapon_save_menu(MenuItem<int> choice)
+{
+	if (choice.value == -1)
+	{
+		save_current_weapon(-1);
+		requireRefreshOfWeaponSaveSlots = true;
+		WeaponSaveMenuInterrupt = true;
+		return false;
+	}
+
+	activeSavedWeaponIndex = choice.value;
+	activeSavedWeaponSlotName = choice.caption;
+	return process_weapon_save_slot_menu(choice.value);
+}
+
+bool process_saveweapon_menu()
+{
+	do
+	{
+		WeaponSaveMenuInterrupt = false;
+		requireRefreshOfWeaponSaveSlotMenu = false;
+		requireRefreshOfWeaponSaveSlots = false;
+
+		ENTDatabase* database = get_database();
+		std::vector<SavedWeaponDBRow*> savedWeapon = database->get_saved_weapon();
+
+		lastKnownSavedWeaponCount = savedWeapon.size();
+
+		std::vector<MenuItem<int>*> menuItems;
+
+		MenuItem<int>* item = new MenuItem<int>();
+		item->isLeaf = true;
+		item->value = -1;
+		item->caption = "Create New Weapon Save";
+		menuItems.push_back(item);
+
+		for each (SavedWeaponDBRow * sv in savedWeapon)
+		{
+			MenuItem<int>* item = new MenuItem<int>();
+			item->isLeaf = false;
+			item->value = sv->rowID;
+			item->caption = sv->saveName;
+			menuItems.push_back(item);
+		}
+
+		draw_generic_menu<int>(menuItems, 0, "Saved Weapons", onconfirm_weapon_save_menu, NULL, NULL, weapon_save_menu_interrupt);
+
+		for (std::vector<SavedWeaponDBRow*>::iterator it = savedWeapon.begin(); it != savedWeapon.end(); ++it)
+		{
+			delete (*it);
+		}
+		savedWeapon.clear();
+	} while (requireRefreshOfWeaponSaveSlots);
+
+	return false;
+}
+
+bool process_weapon_save_slot_menu(int slot)
+{
+	do
+	{
+		WeaponSaveSlotMenuInterrupt = false;
+		requireRefreshOfWeaponSaveSlotMenu = false;
+
+		std::vector<MenuItem<int>*> menuItems;
+
+		MenuItem<int>* item = new MenuItem<int>();
+		item->isLeaf = true;
+		item->value = 1;
+		item->caption = "Equip";
+		menuItems.push_back(item);
+
+		item = new MenuItem<int>();
+		item->isLeaf = true;
+		item->value = 2;
+		item->caption = "Overwrite With Current";
+		menuItems.push_back(item);
+
+		item = new MenuItem<int>();
+		item->isLeaf = true;
+		item->value = 3;
+		item->caption = "Rename";
+		menuItems.push_back(item);
+
+		item = new MenuItem<int>();
+		item->isLeaf = true;
+		item->value = 4;
+		item->caption = "Delete";
+		menuItems.push_back(item);
+
+		draw_generic_menu<int>(menuItems, 0, activeSavedWeaponSlotName, onconfirm_weapon_save_slot_menu, NULL, NULL, weapon_save_slot_menu_interrupt);
+	} while (requireRefreshOfWeaponSaveSlotMenu);
+	return false;
+}
+// end of save weapon
+
 bool onconfirm_weapon_menu(MenuItem<int> choice){
 	// common variables
 	Player player = PLAYER::PLAYER_ID();
@@ -933,6 +1176,9 @@ bool onconfirm_weapon_menu(MenuItem<int> choice){
 			set_status_text("All weapon attachments and tints removed from existing weapons");
 			break;
 		case 6:
+			if (process_saveweapon_menu()) return false;
+			break;
+		case 7:
 			for(int a = 0; a < sizeof(VOV_WEAPON_VALUES) / sizeof(VOV_WEAPON_VALUES[0]); a++){
 				for(int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++){
 					char *weaponName = (char*) VOV_WEAPON_VALUES[a].at(b).c_str();
@@ -949,7 +1195,7 @@ bool onconfirm_weapon_menu(MenuItem<int> choice){
 
 			set_status_text("All ammo filled");
 			break;
-		case 7:
+		case 8:
 			for(int a = 0; a < sizeof(VOV_WEAPON_VALUES) / sizeof(VOV_WEAPON_VALUES[0]); a++){
 				for(int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++){
 					char *weaponName = (char *) VOV_WEAPON_VALUES[a].at(b).c_str();
@@ -962,21 +1208,10 @@ bool onconfirm_weapon_menu(MenuItem<int> choice){
 
 			set_status_text("All ammo removed");
 			break;
-		case 8:
-			WEAPON::GIVE_WEAPON_TO_PED(playerPed, PARACHUTE_ID, 1, false, false);
-			PLAYER::SET_PLAYER_HAS_RESERVE_PARACHUTE(player);
-
-			set_status_text("Parachute added");
-			break;
 		case 9:
-			WEAPON::REMOVE_WEAPON_FROM_PED(playerPed, PARACHUTE_ID);
-
-			set_status_text("Parachute removed");
-			break;
-		case 10:
 			process_weaponlist_menu();
 			break;
-		case 11:
+		case 10:
 		{
 			std::string result = show_keyboard(nullptr, (char *) lastCustomWeapon.c_str());
 			if(!result.empty()){
@@ -995,10 +1230,21 @@ bool onconfirm_weapon_menu(MenuItem<int> choice){
 			}
 			break;
 		}
-		case 25:
-			process_copweapon_menu();
+		case 16:
+			WEAPON::GIVE_WEAPON_TO_PED(playerPed, PARACHUTE_ID, 1, false, false);
+			PLAYER::SET_PLAYER_HAS_RESERVE_PARACHUTE(player);
+
+			set_status_text("Parachute added");
+			break;
+		case 17:
+			WEAPON::REMOVE_WEAPON_FROM_PED(playerPed, PARACHUTE_ID);
+
+			set_status_text("Parachute removed");
 			break;
 		case 26:
+			process_copweapon_menu();
+			break;
+		case 27:
 			process_pedagainstweapons_menu();
 			break;
 		//case 36:
@@ -1056,6 +1302,12 @@ bool process_weapon_menu(){
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
+	item->caption = "Saved Weapons";
+	item->value = i++;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
 	item->caption = "Fill All Ammo";
 	item->value = i++;
 	item->isLeaf = true;
@@ -1063,18 +1315,6 @@ bool process_weapon_menu(){
 
 	item = new MenuItem<int>();
 	item->caption = "Remove All Ammo";
-	item->value = i++;
-	item->isLeaf = true;
-	menuItems.push_back(item);
-
-	item = new MenuItem<int>();
-	item->caption = "Add Parachute";
-	item->value = i++;
-	item->isLeaf = true;
-	menuItems.push_back(item);
-
-	item = new MenuItem<int>();
-	item->caption = "Remove Parachute";
 	item->value = i++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
@@ -1123,6 +1363,18 @@ bool process_weapon_menu(){
 	toggleItem->toggleValue = &featureCopTakeWeapon;
 	toggleItem->toggleValueUpdated = NULL;
 	menuItems.push_back(toggleItem);
+
+	item = new MenuItem<int>();
+	item->caption = "Add Parachute";
+	item->value = i++;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "Remove Parachute";
+	item->value = i++;
+	item->isLeaf = true;
+	menuItems.push_back(item);
 
 	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Infinite Parachutes";
