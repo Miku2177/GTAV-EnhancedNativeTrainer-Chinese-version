@@ -47,6 +47,9 @@ int w_tick_secs_passed, w_tick_secs_curr = 0;
 int tick_a_allw, w_a_tick_secs_curr = 0;
 Ped oldplayerPed_W, oldplayerPed_A = -1;
 bool PlayerUpdated_w, PlayerUpdated_a = true;
+int tick_s_allw, ss_tick_secs_curr = 0;
+Ped oldplayerPed_s = -1;
+bool PlayerUpdated_s = true;
 //
 bool featureWeaponInfiniteAmmo = false;
 bool featureWeaponInfiniteParachutes = false, featureWeaponInfiniteParachutesUpdated = false;
@@ -163,6 +166,12 @@ const std::vector<std::string> WEAPONS_NORETICLE_CAPTIONS{ "OFF", "Always", "For
 const int WEAPONS_NORETICLE_VALUES[] = { 0, 1, 2 };
 int WeaponsNoReticle = 0;
 bool WeaponsNoReticleChanged = true;
+
+// Load Saved Weapons Automatically
+const std::vector<std::string> WEAPONS_SAVED_LOAD_CAPTIONS{ "OFF", "Add To Inventory", "Saved Weapons Only" };
+const int WEAPONS_SAVED_LOAD_VALUES[] = { 0, 1, 2 };
+int WeaponsSavedLoad = 0;
+bool WeaponsSavedLoadChanged = true;
 
 /* Begin Gravity Gun related code */
 
@@ -431,6 +440,38 @@ void add_all_weapons_attachments() {
 	}
 
 	set_status_text("All weapon attachments added to existing weapons");
+}
+
+void load_saved_weapons() {
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+
+	ENTDatabase* database = get_database();
+	std::vector<SavedWeaponDBRow*> savedWeapon = database->get_saved_weapon();
+
+	if (WEAPONS_SAVED_LOAD_VALUES[WeaponsSavedLoad] == 2) WEAPON::REMOVE_ALL_PED_WEAPONS(playerPed, false);
+
+	for each (SavedWeaponDBRow * sv in savedWeapon)
+	{
+		if (WEAPON::HAS_PED_GOT_WEAPON(playerPed, sv->weapon, 0)) {
+			WEAPON::REMOVE_WEAPON_FROM_PED(playerPed, sv->weapon);
+			WEAPON::GIVE_WEAPON_TO_PED(playerPed, sv->weapon, 999, false, true);
+		}
+		else WEAPON::GIVE_WEAPON_TO_PED(playerPed, sv->weapon, 999, false, true);
+
+		if (sv->comp0 != -1) WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, sv->weapon, sv->comp0);
+		if (sv->comp1 != -1) WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, sv->weapon, sv->comp1);
+		if (sv->comp2 != -1) WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, sv->weapon, sv->comp2);
+		if (sv->comp3 != -1) WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, sv->weapon, sv->comp3);
+		if (sv->comp4 != -1) WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, sv->weapon, sv->comp4);
+		if (sv->comp5 != -1) WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, sv->weapon, sv->comp5);
+		if (sv->comp6 != -1) WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, sv->weapon, sv->comp6);
+	}
+
+	for (std::vector<SavedWeaponDBRow*>::iterator it = savedWeapon.begin(); it != savedWeapon.end(); ++it)
+	{
+		delete (*it);
+	}
+	savedWeapon.clear();
 }
 
 int get_current_revolver_appearance(){
@@ -790,6 +831,11 @@ void onchange_vehicle_weapon_modifier(int value, SelectFromListMenuItem* source)
 void onchange_weapon_no_reticle_modifier(int value, SelectFromListMenuItem* source) {
 	WeaponsNoReticle = value;
 	WeaponsNoReticleChanged = true;
+}
+
+void onchange_weapon_load_saved_modifier(int value, SelectFromListMenuItem* source) {
+	WeaponsSavedLoad = value;
+	WeaponsSavedLoadChanged = true;
 }
 
 ///////////////////////////////// TOGGLE VISION FOR SNIPER RIFLES /////////////////////////////////
@@ -1178,7 +1224,7 @@ bool onconfirm_weapon_menu(MenuItem<int> choice){
 		case 6:
 			if (process_saveweapon_menu()) return false;
 			break;
-		case 7:
+		case 8:
 			for(int a = 0; a < sizeof(VOV_WEAPON_VALUES) / sizeof(VOV_WEAPON_VALUES[0]); a++){
 				for(int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++){
 					char *weaponName = (char*) VOV_WEAPON_VALUES[a].at(b).c_str();
@@ -1195,7 +1241,7 @@ bool onconfirm_weapon_menu(MenuItem<int> choice){
 
 			set_status_text("All ammo filled");
 			break;
-		case 8:
+		case 9:
 			for(int a = 0; a < sizeof(VOV_WEAPON_VALUES) / sizeof(VOV_WEAPON_VALUES[0]); a++){
 				for(int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++){
 					char *weaponName = (char *) VOV_WEAPON_VALUES[a].at(b).c_str();
@@ -1208,10 +1254,10 @@ bool onconfirm_weapon_menu(MenuItem<int> choice){
 
 			set_status_text("All ammo removed");
 			break;
-		case 9:
+		case 10:
 			process_weaponlist_menu();
 			break;
-		case 10:
+		case 11:
 		{
 			std::string result = show_keyboard(nullptr, (char *) lastCustomWeapon.c_str());
 			if(!result.empty()){
@@ -1230,21 +1276,21 @@ bool onconfirm_weapon_menu(MenuItem<int> choice){
 			}
 			break;
 		}
-		case 16:
+		case 17:
 			WEAPON::GIVE_WEAPON_TO_PED(playerPed, PARACHUTE_ID, 1, false, false);
 			PLAYER::SET_PLAYER_HAS_RESERVE_PARACHUTE(player);
 
 			set_status_text("Parachute added");
 			break;
-		case 17:
+		case 18:
 			WEAPON::REMOVE_WEAPON_FROM_PED(playerPed, PARACHUTE_ID);
 
 			set_status_text("Parachute removed");
 			break;
-		case 26:
+		case 27:
 			process_copweapon_menu();
 			break;
-		case 27:
+		case 28:
 			process_pedagainstweapons_menu();
 			break;
 		//case 36:
@@ -1262,6 +1308,7 @@ bool process_weapon_menu(){
 	std::string caption = "Weapon Options";
 	
 	std::vector<MenuItem<int>*> menuItems;
+	SelectFromListMenuItem* listItem;
 
 	MenuItem<int> *item = new MenuItem<int>();
 	item->caption = "Give All Weapons";
@@ -1304,8 +1351,14 @@ bool process_weapon_menu(){
 	item = new MenuItem<int>();
 	item->caption = "Saved Weapons";
 	item->value = i++;
-	item->isLeaf = true;
+	item->isLeaf = false;
 	menuItems.push_back(item);
+
+	listItem = new SelectFromListMenuItem(WEAPONS_SAVED_LOAD_CAPTIONS, onchange_weapon_load_saved_modifier);
+	listItem->wrap = false;
+	listItem->caption = "Equip Saved Weapons";
+	listItem->value = WeaponsSavedLoad;
+	menuItems.push_back(listItem);
 
 	item = new MenuItem<int>();
 	item->caption = "Fill All Ammo";
@@ -1331,7 +1384,7 @@ bool process_weapon_menu(){
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
-	SelectFromListMenuItem *listItem = new SelectFromListMenuItem(WEAP_DMG_CAPTIONS, onchange_weap_dmg_modifier);
+	listItem = new SelectFromListMenuItem(WEAP_DMG_CAPTIONS, onchange_weap_dmg_modifier);
 	listItem->wrap = false;
 	listItem->caption = "Weapon Damage Modifier";
 	listItem->value = weapDmgModIndex;
@@ -1519,6 +1572,7 @@ void reset_weapon_globals(){
 	CopAlarmIndex = 1;
 
 	WeaponsNoReticle = 0;
+	WeaponsSavedLoad = 0;
 
 	ChancePoliceCallingIndex = 5;
 	ChanceAttackingYouIndex = 1;
@@ -2059,10 +2113,8 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			tick_allw = 0;
 			PlayerUpdated_w = false; 
 		}
-
 		int death_time2 = PLAYER::GET_TIME_SINCE_LAST_DEATH();
 		if (death_time2 > -1 && death_time2 < 2000) PlayerUpdated_w = true; 
-		
 		if (playerPed != oldplayerPed_W) PlayerUpdated_w = true;
 	}
 	
@@ -2079,11 +2131,31 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			tick_a_allw = 0;
 			PlayerUpdated_a = false;
 		}
-
 		int death_time2 = PLAYER::GET_TIME_SINCE_LAST_DEATH();
 		if (death_time2 > -1 && death_time2 < 2000) PlayerUpdated_a = true;
-
 		if (playerPed != oldplayerPed_A) PlayerUpdated_a = true;
+	}
+
+	// Load Saved Weapons Automatically
+	if (WEAPONS_SAVED_LOAD_VALUES[WeaponsSavedLoad] > 0 && detained == false && in_prison == false) {
+		w_tick_secs_passed = clock() / CLOCKS_PER_SEC;
+		if (((clock() / (CLOCKS_PER_SEC / 1000)) - ss_tick_secs_curr) != 0) {
+			tick_s_allw = tick_s_allw + 1;
+			ss_tick_secs_curr = w_tick_secs_passed;
+		}
+		if (tick_s_allw > 200 && PlayerUpdated_s) {
+			load_saved_weapons();
+
+			//if (WEAPON::IS_PED_ARMED(playerPed, 7)) CONTROLS::_SET_CONTROL_NORMAL(0, 37, 1);
+			CONTROLS::_SET_CONTROL_NORMAL(0, 157, 1);
+
+			oldplayerPed_s = playerPed;
+			tick_s_allw = 0;
+			PlayerUpdated_s = false;
+		}
+		int death_time2 = PLAYER::GET_TIME_SINCE_LAST_DEATH();
+		if (death_time2 > -1 && death_time2 < 2000) PlayerUpdated_s = true;
+		if (playerPed != oldplayerPed_s) PlayerUpdated_s = true;
 	}
 
 	// Disables visions if not aiming
@@ -2602,6 +2674,7 @@ void add_weapon_feature_enablements2(std::vector<StringPairSettingDBRow>* result
 	results->push_back(StringPairSettingDBRow{ "CopCurrArmedIndex", std::to_string(CopCurrArmedIndex) });
 	results->push_back(StringPairSettingDBRow{ "VehCurrWeaponIndex", std::to_string(VehCurrWeaponIndex) });
 	results->push_back(StringPairSettingDBRow{ "WeaponsNoReticle", std::to_string(WeaponsNoReticle) });
+	results->push_back(StringPairSettingDBRow{ "WeaponsSavedLoad", std::to_string(WeaponsSavedLoad) });
 	results->push_back(StringPairSettingDBRow{ "CopAlarmIndex", std::to_string(CopAlarmIndex) });
 	results->push_back(StringPairSettingDBRow{ "ChancePoliceCallingIndex", std::to_string(ChancePoliceCallingIndex) });
 	results->push_back(StringPairSettingDBRow{ "ChanceAttackingYouIndex", std::to_string(ChanceAttackingYouIndex) });
@@ -2634,6 +2707,9 @@ void handle_generic_settings_weapons(std::vector<StringPairSettingDBRow>* settin
 		}
 		else if (setting.name.compare("WeaponsNoReticle") == 0) {
 			WeaponsNoReticle = stoi(setting.value);
+		}
+		else if (setting.name.compare("WeaponsSavedLoad") == 0) {
+			WeaponsSavedLoad = stoi(setting.value);
 		}
 		else if (setting.name.compare("CopAlarmIndex") == 0){
 			CopAlarmIndex = stoi(setting.value);

@@ -273,6 +273,8 @@ void onchange_vehicle_weapon_modifier(int value, SelectFromListMenuItem* source)
 
 void onchange_weapon_no_reticle_modifier(int value, SelectFromListMenuItem* source);
 
+void onchange_weapon_load_saved_modifier(int value, SelectFromListMenuItem* source);
+
 void onchange_cop_alarm_index(int value, SelectFromListMenuItem* source);
 
 void add_weapon_feature_enablements2(std::vector<StringPairSettingDBRow>* results);
