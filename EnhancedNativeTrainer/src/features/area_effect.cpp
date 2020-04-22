@@ -43,7 +43,6 @@ bool featureAreaPedsHeadExplode = false;
 bool featureAngryPedsUseCover = false;
 bool featureAngryPedsTargetYou = false;
 bool featurePedsWeapons = false;
-bool featureAngryMenOnly = false;
 bool featureAngryMenManually = false;
 bool featurePedsIncludeDrivers = false;
 bool featurePedsIncludePilots = false;
@@ -97,6 +96,12 @@ bool NPCVehicleSpeedChanged = true;
 int PedAccuracyIndex = 0;
 bool PedAccuracyChanged = true;
 
+// Selective Angry Peds
+const std::vector<std::string> WORLD_SELECTIVE_PEDS_ANGRY_CAPTIONS{ "OFF", "Only Men Are Angry", "Only Women Are Angry" };
+const int WORLD_SELECTIVE_PEDS_ANGRY_VALUES[] = { 0, 1, 2 };
+int WorldSelectivePedsIndex = 0;
+bool WorldSelectivePedsChanged = true;
+
 // Reduced Grip If Heavy Snow && Slippery When Wet && No Peds Gravity
 const std::vector<std::string> WORLD_REDUCEDGRIP_SNOWING_CAPTIONS{ "OFF", "Simple", "Advanced" };
 const int WORLD_REDUCEDGRIP_SNOWING_VALUES[] = { 0, 1, 2 };
@@ -122,7 +127,6 @@ void add_areaeffect_feature_enablements(std::vector<FeatureEnabledLocalDefinitio
 	results->push_back(FeatureEnabledLocalDefinition{"featureAngryPedsTargetYou", &featureAngryPedsTargetYou});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePedsWeapons", &featurePedsWeapons});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePedsSwitchWeapons", &featurePedsSwitchWeapons});
-	results->push_back(FeatureEnabledLocalDefinition{"featureAngryMenOnly", &featureAngryMenOnly});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAngryMenManually", &featureAngryMenManually});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePedsIncludeDrivers", &featurePedsIncludeDrivers});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePedsIncludePilots", &featurePedsIncludePilots});
@@ -147,7 +151,6 @@ void reset_areaeffect_globals(){
 	featureAreaPedsRioting = false;
 	featureAngryPedsTargetYou = false;
 	featurePedsWeapons = false;
-	featureAngryMenOnly = false;
 	featureAngryMenManually = false;
 	featureAngryPedsUseCover = false;
 	featurePedsIncludeDrivers = false;
@@ -164,6 +167,7 @@ void reset_areaeffect_globals(){
 	featurePedsSwitchWeapons = true;
 
 	NPCVehicleSpeedIndex = 0;
+	WorldSelectivePedsIndex = 0;
 	PedAccuracyIndex = 0;
 	pedWeaponSetIndex = 0;
 	
@@ -345,6 +349,7 @@ void process_areaeffect_vehicle_menu(){
 
 void process_areaeffect_advanced_ped_menu(){
 	std::vector<MenuItem<int>*> menuItems;
+	SelectFromListMenuItem* listItem;
 	
 	ToggleMenuItem<int> *togItem = new ToggleMenuItem<int>();
 	togItem->caption = "Peds Angry";
@@ -364,11 +369,11 @@ void process_areaeffect_advanced_ped_menu(){
 	togItem->toggleValue = &featureAngryPedsTargetYou;
 	menuItems.push_back(togItem);
 
-	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Only Men Are Angry";
-	togItem->value = 1;
-	togItem->toggleValue = &featureAngryMenOnly;
-	menuItems.push_back(togItem);
+	listItem = new SelectFromListMenuItem(WORLD_SELECTIVE_PEDS_ANGRY_CAPTIONS, onchange_world_selective_peds_angry_index);
+	listItem->wrap = false;
+	listItem->caption = "Ped Type";
+	listItem->value = WorldSelectivePedsIndex;
+	menuItems.push_back(listItem);
 
 	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "Targeted Angry Peds";
@@ -1005,10 +1010,13 @@ std::set<Ped>get_nearby_peds(Ped playerPed){
 		if(ENTITY::IS_ENTITY_A_MISSION_ENTITY(item) && !ENTITY::DOES_ENTITY_BELONG_TO_THIS_SCRIPT(item, true)){
 			continue;
 		}
-		if (featureAngryMenOnly && PED::GET_PED_TYPE(item) == 5) {
+		if (WORLD_SELECTIVE_PEDS_ANGRY_VALUES[WorldSelectivePedsIndex] == 2 && PED::GET_PED_TYPE(item) == 4) { // men
 			continue;
 		}
-
+		if (WORLD_SELECTIVE_PEDS_ANGRY_VALUES[WorldSelectivePedsIndex] == 1 && PED::GET_PED_TYPE(item) == 5) { // women
+			continue;
+		}
+		
 		//filter out drivers/pilots if necessary
 		if((!featurePedsIncludePilots || !featurePedsIncludeDrivers) && PED::IS_PED_IN_ANY_VEHICLE(item, false)){
 			Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(item, false);
@@ -1230,6 +1238,11 @@ void onchange_world_npc_vehicles_speed_index(int value, SelectFromListMenuItem* 
 	NPCVehicleSpeedChanged = true;
 }
 
+void onchange_world_selective_peds_angry_index(int value, SelectFromListMenuItem* source) {
+	WorldSelectivePedsIndex = value;
+	WorldSelectivePedsChanged = true;
+}
+
 void onchange_world_reducedgrip_snowing_index(int value, SelectFromListMenuItem* source) {
 	RadarReducedGripSnowingIndex = value;
 	RadarReducedGripSnowingChanged = true;
@@ -1333,6 +1346,7 @@ void give_all_nearby_peds_a_weapon(bool enabled){
 void add_areaeffect_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"pedWeaponSetIndex", std::to_string(pedWeaponSetIndex)});
 	results->push_back(StringPairSettingDBRow{"PedWeaponsSelectiveIndex", std::to_string(PedWeaponsSelectiveIndex)});
+	results->push_back(StringPairSettingDBRow{"WorldSelectivePedsIndex", std::to_string(WorldSelectivePedsIndex)});
 }
 
 void handle_generic_settings_areaeffect(std::vector<StringPairSettingDBRow>* settings){
@@ -1343,6 +1357,10 @@ void handle_generic_settings_areaeffect(std::vector<StringPairSettingDBRow>* set
 		}
 		else if (setting.name.compare("PedWeaponsSelectiveIndex") == 0){
 			PedWeaponsSelectiveIndex = stoi(setting.value);
+			PedWeaponsSelective1Changed = true;
+		}
+		else if (setting.name.compare("WorldSelectivePedsIndex") == 0) {
+			WorldSelectivePedsIndex = stoi(setting.value);
 			PedWeaponsSelective1Changed = true;
 		}
 	}

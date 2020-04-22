@@ -8,4 +8,4 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 #include <string>
 
-const std::string VERSION_STRING = "42 Bfix 6";
+const std::string VERSION_STRING = "42 Bfix 7";

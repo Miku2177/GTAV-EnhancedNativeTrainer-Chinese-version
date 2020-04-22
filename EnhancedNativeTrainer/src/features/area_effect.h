@@ -213,6 +213,8 @@ void clear_up_missionised_entitities();
 
 void onchange_areaeffect_ped_weapons(int value, SelectFromListMenuItem* source);
 
+void onchange_world_selective_peds_angry_index(int value, SelectFromListMenuItem* source);
+
 void onchange_ped_weapons_selective_index(int value, SelectFromListMenuItem* source);
 
 ENTTrackedPedestrian* findOrCreateTrackedPed(Ped ped);
