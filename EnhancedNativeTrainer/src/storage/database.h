@@ -234,6 +234,34 @@ public:
 };
 // end of save/load bodyguard
 
+// saved weapon
+class SavedWeaponDBRow
+{
+public:
+
+	int rowID;
+	std::string saveName;
+	DWORD weapon;
+	DWORD comp0;
+	DWORD comp1;
+	DWORD comp2;
+	DWORD comp3;
+	DWORD comp4;
+	DWORD comp5;
+	DWORD comp6;
+
+	inline ~SavedWeaponDBRow()
+	{
+		
+	}
+
+	inline SavedWeaponDBRow()
+	{
+
+	}
+};
+// end of saved weapon
+
 // save/load veh colours
 class SavedVehColourDBRow
 {
@@ -367,6 +395,14 @@ public:
 
 	void ENTDatabase::populate_saved_bod_skin(SavedBodSkinDBRow *entry);
 	
+	bool ENTDatabase::save_weapon(Ped ped, std::string saveName, sqlite3_int64 slot);
+
+	void ENTDatabase::delete_saved_weapon(sqlite3_int64 slot);
+
+	void ENTDatabase::rename_saved_weapon(std::string name, sqlite3_int64 slot);
+	
+	std::vector<SavedWeaponDBRow*> ENTDatabase::get_saved_weapon(int index = -1);
+
 	std::vector<SavedSkinDBRow*> get_saved_skins(int index = -1);
 
 	std::vector<SavedPropSet*> get_saved_prop_sets(int index = -1);
