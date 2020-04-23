@@ -2112,10 +2112,12 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			oldplayerPed_W = playerPed;
 			tick_allw = 0;
 			PlayerUpdated_w = false; 
+			player_died = false;
 		}
 		int death_time2 = PLAYER::GET_TIME_SINCE_LAST_DEATH();
 		if (death_time2 > -1 && death_time2 < 2000) PlayerUpdated_w = true; 
 		if (playerPed != oldplayerPed_W) PlayerUpdated_w = true;
+		if (player_died == true) PlayerUpdated_w = true;
 	}
 	
 	// Add All Weapons Attachments Automatically
@@ -2130,13 +2132,15 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			oldplayerPed_A = playerPed;
 			tick_a_allw = 0;
 			PlayerUpdated_a = false;
+			player_died = false;
 		}
 		int death_time2 = PLAYER::GET_TIME_SINCE_LAST_DEATH();
 		if (death_time2 > -1 && death_time2 < 2000) PlayerUpdated_a = true;
 		if (playerPed != oldplayerPed_A) PlayerUpdated_a = true;
+		if (player_died == true) PlayerUpdated_a = true;
 	}
 
-	// Load Saved Weapons Automatically
+	// Equip Saved Weapons
 	if (WEAPONS_SAVED_LOAD_VALUES[WeaponsSavedLoad] > 0 && detained == false && in_prison == false) {
 		w_tick_secs_passed = clock() / CLOCKS_PER_SEC;
 		if (((clock() / (CLOCKS_PER_SEC / 1000)) - ss_tick_secs_curr) != 0) {
@@ -2145,17 +2149,18 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		}
 		if (tick_s_allw > 200 && PlayerUpdated_s) {
 			load_saved_weapons();
-
 			//if (WEAPON::IS_PED_ARMED(playerPed, 7)) CONTROLS::_SET_CONTROL_NORMAL(0, 37, 1);
 			CONTROLS::_SET_CONTROL_NORMAL(0, 157, 1);
 
 			oldplayerPed_s = playerPed;
 			tick_s_allw = 0;
 			PlayerUpdated_s = false;
+			player_died = false;
 		}
 		int death_time2 = PLAYER::GET_TIME_SINCE_LAST_DEATH();
 		if (death_time2 > -1 && death_time2 < 2000) PlayerUpdated_s = true;
 		if (playerPed != oldplayerPed_s) PlayerUpdated_s = true;
+		if (player_died == true) PlayerUpdated_s = true;
 	}
 
 	// Disables visions if not aiming
