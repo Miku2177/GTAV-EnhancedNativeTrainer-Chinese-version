@@ -465,6 +465,7 @@ void load_saved_weapons() {
 		if (sv->comp4 != -1) WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, sv->weapon, sv->comp4);
 		if (sv->comp5 != -1) WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, sv->weapon, sv->comp5);
 		if (sv->comp6 != -1) WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, sv->weapon, sv->comp6);
+		if (sv->w_tint != -1) WEAPON::SET_PED_WEAPON_TINT_INDEX(playerPed, sv->weapon, sv->w_tint);
 	}
 
 	for (std::vector<SavedWeaponDBRow*>::iterator it = savedWeapon.begin(); it != savedWeapon.end(); ++it)
@@ -956,6 +957,7 @@ bool spawn_saved_weapon(int slot, std::string caption)
 	if (savedWeapon->comp4 != -1) WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, savedWeapon->weapon, savedWeapon->comp4);
 	if (savedWeapon->comp5 != -1) WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, savedWeapon->weapon, savedWeapon->comp5);
 	if (savedWeapon->comp6 != -1) WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, savedWeapon->weapon, savedWeapon->comp6);
+	if (savedWeapon->w_tint != -1) WEAPON::SET_PED_WEAPON_TINT_INDEX(playerPed, savedWeapon->weapon, savedWeapon->w_tint);
 
 	WEAPON::SET_CURRENT_PED_WEAPON(playerPed, savedWeapon->weapon, 1);
 	WEAPON::SET_PED_CURRENT_WEAPON_VISIBLE(playerPed, true, false, 1, 1);

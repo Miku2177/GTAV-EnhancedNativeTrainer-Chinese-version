@@ -536,7 +536,8 @@ void ENTDatabase::handle_version(int oldVersion)
 			comp3 INTEGER NOT NULL, \
 			comp4 INTEGER NOT NULL, \
 			comp5 INTEGER NOT NULL, \
-			comp6 INTEGER NOT NULL \
+			comp6 INTEGER NOT NULL, \
+			w_tint INTEGER NOT NULL \
 			)";
 		
 		int rcSkin1 = sqlite3_exec(db, CREATE_VEH_COLOUR_TABLE_QUERY, NULL, 0, &zErrMsg);
@@ -1726,7 +1727,7 @@ bool ENTDatabase::save_weapon(Ped ped, std::string saveName, sqlite3_int64 slot)
 	mutex_lock();
 
 	std::stringstream ss;
-	ss << "INSERT OR REPLACE INTO ENT_SAVED_WEAPON VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+	ss << "INSERT OR REPLACE INTO ENT_SAVED_WEAPON VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
 	Hash comp0 = -1;
 	Hash comp1 = -1;
@@ -1736,6 +1737,7 @@ bool ENTDatabase::save_weapon(Ped ped, std::string saveName, sqlite3_int64 slot)
 	Hash comp5 = -1;
 	Hash comp6 = -1;
 	int comp_s = 0;
+	int w_tint = -1;
 
 	sqlite3_stmt* stmt;
 	const char* pzTest;
@@ -1804,6 +1806,8 @@ bool ENTDatabase::save_weapon(Ped ped, std::string saveName, sqlite3_int64 slot)
 		}
 	}
 
+	w_tint = WEAPON::GET_PED_WEAPON_TINT_INDEX(PLAYER::PLAYER_PED_ID(), WEAPON::GET_SELECTED_PED_WEAPON(PLAYER::PLAYER_PED_ID()));
+
 	int index = 1;
 	if (slot == -1)
 	{
@@ -1822,6 +1826,7 @@ bool ENTDatabase::save_weapon(Ped ped, std::string saveName, sqlite3_int64 slot)
 	sqlite3_bind_int(stmt, index++, comp4); // weapon component
 	sqlite3_bind_int(stmt, index++, comp5); // weapon component
 	sqlite3_bind_int(stmt, index++, comp6); // weapon component
+	sqlite3_bind_int(stmt, index++, w_tint); // weapon tint
 	
 	// commit
 	sqlite3_step(stmt);
@@ -1935,6 +1940,7 @@ std::vector<SavedWeaponDBRow*> ENTDatabase::get_saved_weapon(int index)
 			skin->comp4 = sqlite3_column_int(stmt, index++);
 			skin->comp5 = sqlite3_column_int(stmt, index++);
 			skin->comp6 = sqlite3_column_int(stmt, index++);
+			skin->w_tint = sqlite3_column_int(stmt, index++);
 
 			results.push_back(skin);
 

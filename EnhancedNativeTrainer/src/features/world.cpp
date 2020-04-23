@@ -526,7 +526,6 @@ void process_world_menu()
 	togItem->caption = "No Police Blips";
 	togItem->value = 1;
 	togItem->toggleValue = &featureNoPoliceBlips;
-
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
