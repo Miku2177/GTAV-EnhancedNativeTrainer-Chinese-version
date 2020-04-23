@@ -4583,7 +4583,7 @@ void save_current_vehicle(int slot){
 				std::string displayName = UI::_GET_LABEL_TEXT(name);
 				ss << displayName;
 			}
-			if (slot == -1 && !STREAMING::IS_MODEL_IN_CDIMAGE(currVehModelS)) { //  && !STREAMING::IS_MODEL_A_VEHICLE(currVehModelS) && !STREAMING::IS_MODEL_VALID(currVehModelS)
+			if (slot == -1 && !STREAMING::IS_MODEL_IN_CDIMAGE(currVehModelS)) { // && !STREAMING::IS_MODEL_A_VEHICLE(currVehModelS) && !STREAMING::IS_MODEL_VALID(currVehModelS)
 				ss << "Saved Vehicle " << (lastKnownSavedVehicleCount + 1);
 			}
 			if(slot != -1){

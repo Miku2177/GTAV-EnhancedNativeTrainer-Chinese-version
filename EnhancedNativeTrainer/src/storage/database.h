@@ -249,6 +249,7 @@ public:
 	DWORD comp4;
 	DWORD comp5;
 	DWORD comp6;
+	DWORD w_tint;
 
 	inline ~SavedWeaponDBRow()
 	{
