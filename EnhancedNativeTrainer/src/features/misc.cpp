@@ -1507,11 +1507,9 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	// Dynamic Health Bar
 	if (featureDynamicHealthBar && !CUTSCENE::IS_CUTSCENE_PLAYING()) {
 		if (!featureMiscHideHud && !featurePhoneShowHud && !featureInVehicleNoHud && !featureMarkerHud && !featureMiscHideENTHud) UI::DISPLAY_RADAR(false); // There is no need to hide HUD if it's already hidden
-		
 		//auto addr = getScriptHandleBaseAddress(playerPed);
 		//float health = (*(float *)(addr + 0x280)) - 100;
 		float health = ENTITY::GET_ENTITY_HEALTH(playerPed) - 100;
-
 		float playerArmour = PED::GET_PED_ARMOUR(playerPed);
 
 		if (!ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_OBJECT(playerPed) && !ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_PED(playerPed) && !ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_VEHICLE(playerPed)) {
@@ -1519,26 +1517,22 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			float health = ENTITY::GET_ENTITY_HEALTH(playerPed) - 100;
 			curr_damaged_armor = PED::GET_PED_ARMOUR(playerPed);
 		}
-		
 		if (curr_damaged_health != health || curr_damaged_armor != playerArmour) {
 			healthbar_seconds = -1;
 			been_damaged = true;
 			curr_damaged_health = health;
 			curr_damaged_armor = playerArmour;
 		}
-		
 		if (been_damaged == true) {
 			secs_passed = clock() / CLOCKS_PER_SEC;
 			if (((clock() / CLOCKS_PER_SEC) - healthbar_secs_curr) != 0) {
 				healthbar_seconds = healthbar_seconds + 1;
 				healthbar_secs_curr = secs_passed;
 			}
-
 			if (healthbar_seconds == 15) {
 				been_damaged = false;
 				healthbar_seconds = -1;
 			}
-
 			// health
 			if (health < 20) {
 				GRAPHICS::DRAW_RECT(health_bar_x + 0.035, health_bar_y + 0.01, 0.070, 0.017, 41, 86, 40, 110);
