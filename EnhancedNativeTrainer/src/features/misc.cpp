@@ -1511,6 +1511,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		//float health = (*(float *)(addr + 0x280)) - 100;
 		float health = ENTITY::GET_ENTITY_HEALTH(playerPed) - 100;
 		float playerArmour = PED::GET_PED_ARMOUR(playerPed);
+		int temp_h, temp_h_d = -1;
 
 		if (!ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_OBJECT(playerPed) && !ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_PED(playerPed) && !ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_VEHICLE(playerPed)) {
 			//curr_damaged_health = (*(float *)(addr + 0x280)) - 100;
@@ -1534,15 +1535,19 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 				healthbar_seconds = -1;
 			}
 			// health
-			if (health < 20) {
+			if (PLAYER_HEALTH_VALUES[current_player_health] > 0) temp_h = PLAYER_HEALTH_VALUES[current_player_health] - 100;
+			else temp_h = 100;
+			if (PLAYER_HEALTH_VALUES[current_player_health] > 200) temp_h_d = floor(PLAYER_HEALTH_VALUES[current_player_health] / 100);
+			else temp_h_d = 1;
+			if (health < (temp_h / 5)) {
 				GRAPHICS::DRAW_RECT(health_bar_x + 0.035, health_bar_y + 0.01, 0.070, 0.017, 41, 86, 40, 110);
 				GRAPHICS::DRAW_RECT(health_bar_x + 0.035, health_bar_y + 0.01, 0.070, 0.009, 220, 20, 20, 55);
-				if ((health_bar_x + (health / 1399)) > 0.015) GRAPHICS::DRAW_RECT(health_bar_x + 0.00 + (health / 2799), health_bar_y + 0.01, (health / 1399), 0.009, 220, 20, 20, 255);
+				if ((health_bar_x + ((health / temp_h_d) / 1399)) > 0.015) GRAPHICS::DRAW_RECT(health_bar_x + 0.00 + ((health / temp_h_d) / 2799), health_bar_y + 0.01, ((health / temp_h_d) / 1399), 0.009, 220, 20, 20, 255);
 			}
 			else {
 				GRAPHICS::DRAW_RECT(health_bar_x + 0.035, health_bar_y + 0.01, 0.070, 0.017, 41, 86, 40, 110);
 				GRAPHICS::DRAW_RECT(health_bar_x + 0.035, health_bar_y + 0.01, 0.070, 0.009, 41, 56, 40, 75);
-				if ((health / 1399) < 0.070) GRAPHICS::DRAW_RECT(health_bar_x + 0.00 + (health / 2799), health_bar_y + 0.01, (health / 1399), 0.009, 78, 150, 77, 255);
+				if (((health / temp_h_d) / 1399) < 0.070) GRAPHICS::DRAW_RECT(health_bar_x + 0.00 + ((health / temp_h_d) / 2799), health_bar_y + 0.01, ((health / temp_h_d) / 1399), 0.009, 78, 150, 77, 255);
 				else GRAPHICS::DRAW_RECT(health_bar_x + 0.035, health_bar_y + 0.01, 0.070, 0.009, 78, 150, 77, 255);
 			}
 			// armor
@@ -1552,7 +1557,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			else GRAPHICS::DRAW_RECT(health_bar_x + 0.0885, health_bar_y + 0.01, 0.034, 0.009, 62, 129, 164, 255);
 		}
 	}
-	
+
 	// Default Menu Tab
 	if (MISC_DEF_MANUTAB_VALUES[DefMenuTabIndex] > -2) {
 		int GetHash = GAMEPLAY::GET_HASH_KEY("FE_MENU_VERSION_SP_PAUSE");
