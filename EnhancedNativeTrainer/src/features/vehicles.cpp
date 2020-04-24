@@ -2633,15 +2633,8 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	if (featureSticktoground) {
 		Vehicle groundcar = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 		if (VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(groundcar)) && ENTITY::GET_ENTITY_MODEL(groundcar) != GAMEPLAY::GET_HASH_KEY("DELUXO") && ENTITY::GET_ENTITY_MODEL(groundcar) != GAMEPLAY::GET_HASH_KEY("SCRAMJET")) {
-			Vector3 vehstickspeed = ENTITY::GET_ENTITY_VELOCITY(PED::GET_VEHICLE_PED_IS_USING(playerPed));
 			Vector3 ground_rot = ENTITY::GET_ENTITY_ROTATION(groundcar, 2);
-			Vector3 veh_coords = ENTITY::GET_ENTITY_COORDS(groundcar, true);
-			float height_a_g = -1;
-			GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(veh_coords.x, veh_coords.y, veh_coords.z, &height_a_g);
-			if (veh_coords.z - height_a_g > 2.0 && (vehstickspeed.x > 1 || vehstickspeed.y > 1 || vehstickspeed.z > 1) && (ground_rot.y > 20 || ground_rot.y < -20 || ground_rot.x > 40 || ground_rot.x < -40)) {
-				if (ground_rot.y > 20 || ground_rot.y < -20) ENTITY::SET_ENTITY_ROTATION(groundcar, ground_rot.x, 0, ground_rot.z, 2, true);
-				if (ground_rot.x > 40 || ground_rot.x < -40) ENTITY::SET_ENTITY_ROTATION(groundcar, 0, ground_rot.y, ground_rot.z, 2, true);
-			}
+			if (ground_rot.x > 70 || ground_rot.x < -70 || ground_rot.y > 70 || ground_rot.y < -70) ENTITY::SET_ENTITY_ROTATION(groundcar, 0, 0, ground_rot.z, 2, true);
 		}
 	}
 

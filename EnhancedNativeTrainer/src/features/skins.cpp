@@ -837,7 +837,7 @@ bool process_skinchanger_category_menu()
 	item = new MenuItem<int>();
 	item->caption = "Enter Name Manually";
 	item->value = i++;
-	item->isLeaf = false;
+	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	return draw_generic_menu<int>(menuItems, &skinCategoryPosition, "Skin Categories", onconfirm_skinchanger_category_menu, NULL, NULL);

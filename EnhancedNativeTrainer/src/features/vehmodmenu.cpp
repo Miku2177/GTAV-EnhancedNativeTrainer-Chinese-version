@@ -1653,9 +1653,8 @@ bool process_vehmod_engine_sound_menu() {
 
 	item = new MenuItem<int>();
 	item->caption = "Enter Name Manually";
-	item->isLeaf = true;
-	item->isLeaf = false;
 	item->value = 1;
+	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	ss.str(""), ss.clear();
