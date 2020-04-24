@@ -437,7 +437,7 @@ void process_props_spawn_menu()
 	MenuItem<int>* item = new MenuItem<int>();
 	item->value = -1;
 	item->caption = "Enter Name Manually";
-	item->isLeaf = false;
+	item->isLeaf = true;
 	menuItems.push_back(item);
 	i++;
 

@@ -713,7 +713,7 @@ bool process_bodyguard_skins_menu(){
 	item = new MenuItem<int>();
 	item->caption = "Enter Name Manually";
 	item->value = 3;
-	item->isLeaf = false;
+	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
