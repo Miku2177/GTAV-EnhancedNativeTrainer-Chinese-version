@@ -722,12 +722,6 @@ bool process_bodyguard_skins_menu(){
 	item->isLeaf = false;
 	menuItems.push_back(item);
 
-	item = new MenuItem<int>();
-	item->caption = "Save/Load Bodyguard";
-	item->value = 5;
-	item->isLeaf = false;
-	menuItems.push_back(item);
-
 	return draw_generic_menu<int>(menuItems, &skinTypesBodyguardMenuPositionMemory[0], "Bodyguard Skins", onconfirm_bodyguard_skins_menu, NULL, NULL);
 }
 
@@ -796,8 +790,6 @@ bool onconfirm_bodyguard_skins_menu(MenuItem<int> choice){
 			}
 			return false;
 		}
-		case 5:
-			return process_bod_savedskin_menu();
 		default:
 			break;
 	}
@@ -1760,26 +1752,32 @@ bool process_bodyguard_menu(){
 		menuItems.push_back(item);
 		
 		item = new MenuItem<int>();
-		item->caption = "Toggle Bodyguards To Follow Player";
+		item->caption = "Saved Bodyguards";
 		item->value = 4;
+		item->isLeaf = false;
+		menuItems.push_back(item);
+
+		item = new MenuItem<int>();
+		item->caption = "Toggle Bodyguards To Follow Player";
+		item->value = 5;
 		item->isLeaf = true;
 		menuItems.push_back(item);
 
 		item = new MenuItem<int>();
 		item->caption = "Choose Model";
-		item->value = 5;
-		item->isLeaf = false;
-		menuItems.push_back(item);
-
-		item = new MenuItem<int>();
-		item->caption = "Choose Weapons";
 		item->value = 6;
 		item->isLeaf = false;
 		menuItems.push_back(item);
 
 		item = new MenuItem<int>();
-		item->caption = "Mark On Map";
+		item->caption = "Choose Weapons";
 		item->value = 7;
+		item->isLeaf = false;
+		menuItems.push_back(item);
+
+		item = new MenuItem<int>();
+		item->caption = "Mark On Map";
+		item->value = 8;
 		item->isLeaf = false;
 		menuItems.push_back(item);
 
@@ -1892,17 +1890,20 @@ bool onconfirm_bodyguard_menu(MenuItem<int> choice){
 			do_spawn_bodyguard();
 			break;
 		case 4:
+			process_bod_savedskin_menu();
+			break;
+		case 5:
 			stop_b = !stop_b;
 			if (stop_b) set_status_text("Stay Put");
 			else set_status_text("Follow");
 			break;
-		case 5:
+		case 6:
 			process_bodyguard_skins_menu();
 			break;
-		case 6:
+		case 7:
 			process_bodyguard_weapons_menu();
 			break;
-		case 7:
+		case 8:
 			process_bodyguard_blips_menu();
 			break;
 		default:
