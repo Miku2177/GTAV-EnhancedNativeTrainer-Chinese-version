@@ -2629,13 +2629,19 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		if (Shut_seconds == VEH_AUTO_SHUT_ENGINE_VALUES[AutoShutEngineIndex]) VEHICLE::SET_VEHICLE_ENGINE_ON(vehicle_been_used, false, true);
 	}
 
-	// Stick vehicle to ground
+	// Stick Vehicle To Ground
 	if (featureSticktoground) {
 		Vehicle groundcar = PED::GET_VEHICLE_PED_IS_USING(playerPed);
-		if (VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(groundcar))/* || VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(groundcar)) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(groundcar)) ||
-			VEHICLE::IS_THIS_MODEL_A_BOAT(ENTITY::GET_ENTITY_MODEL(groundcar))*/) {
+		if (VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(groundcar)) && ENTITY::GET_ENTITY_MODEL(groundcar) != GAMEPLAY::GET_HASH_KEY("DELUXO") && ENTITY::GET_ENTITY_MODEL(groundcar) != GAMEPLAY::GET_HASH_KEY("SCRAMJET")) {
 			Vector3 vehstickspeed = ENTITY::GET_ENTITY_VELOCITY(PED::GET_VEHICLE_PED_IS_USING(playerPed));
-			if (((vehstickspeed.x > 1) || (vehstickspeed.y > 1) || (vehstickspeed.z > 1)) && (ENTITY::GET_ENTITY_ROLL(groundcar) > 20 || ENTITY::GET_ENTITY_ROLL(groundcar) < -20)) VEHICLE::SET_VEHICLE_ON_GROUND_PROPERLY(groundcar);
+			Vector3 ground_rot = ENTITY::GET_ENTITY_ROTATION(groundcar, 2);
+			Vector3 veh_coords = ENTITY::GET_ENTITY_COORDS(groundcar, true);
+			float height_a_g = -1;
+			GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(veh_coords.x, veh_coords.y, veh_coords.z, &height_a_g);
+			if (veh_coords.z - height_a_g > 2.0 && (vehstickspeed.x > 1 || vehstickspeed.y > 1 || vehstickspeed.z > 1) && (ground_rot.y > 20 || ground_rot.y < -20 || ground_rot.x > 40 || ground_rot.x < -40)) {
+				if (ground_rot.y > 20 || ground_rot.y < -20) ENTITY::SET_ENTITY_ROTATION(groundcar, ground_rot.x, 0, ground_rot.z, 2, true);
+				if (ground_rot.x > 40 || ground_rot.x < -40) ENTITY::SET_ENTITY_ROTATION(groundcar, 0, ground_rot.y, ground_rot.z, 2, true);
+			}
 		}
 	}
 
@@ -3487,13 +3493,15 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				VEHICLE::SET_VEHICLE_CAN_BREAK(vehnoflip, true);
 				VEHICLE::SET_VEHICLE_OUT_OF_CONTROL(vehnoflip, false, false);
 			}
-			float height_a_g = -1;
-			GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(veh_flip.x, veh_flip.y, veh_flip.z, &height_a_g);
-			if (veh_flip.z - height_a_g > 2.0) VEHICLE::SET_VEHICLE_OUT_OF_CONTROL(vehnoflip, false, false);
+			if (ENTITY::GET_ENTITY_MODEL(vehnoflip) != GAMEPLAY::GET_HASH_KEY("DELUXO") && ENTITY::GET_ENTITY_MODEL(vehnoflip) != GAMEPLAY::GET_HASH_KEY("SCRAMJET")) {
+				float height_a_g = -1;
+				GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(veh_flip.x, veh_flip.y, veh_flip.z, &height_a_g);
+				if (veh_flip.z - height_a_g > 2.0) VEHICLE::SET_VEHICLE_OUT_OF_CONTROL(vehnoflip, false, false);
 
-			if ((veh_flips_speed * 2.3) > 50 && (ENTITY::GET_ENTITY_ROLL(vehnoflip) > 50 || ENTITY::GET_ENTITY_ROLL(vehnoflip) < -50)) { // (veh_flips_speed * 3.6) > 50
-				VEHICLE::SET_VEHICLE_CEILING_HEIGHT(vehnoflip, 0.0);
-				VEHICLE::SET_VEHICLE_DAMAGE(vehnoflip, veh_flip.x, veh_flip.y, veh_flip.z, 1000, 100, true);
+				if ((veh_flips_speed * 2.3) > 50 && (ENTITY::GET_ENTITY_ROLL(vehnoflip) > 50 || ENTITY::GET_ENTITY_ROLL(vehnoflip) < -50)) { // (veh_flips_speed * 3.6) > 50
+					VEHICLE::SET_VEHICLE_CEILING_HEIGHT(vehnoflip, 0.0);
+					VEHICLE::SET_VEHICLE_DAMAGE(vehnoflip, veh_flip.x, veh_flip.y, veh_flip.z, 1000, 100, true);
+				}
 			}
 			if (ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(vehnoflip)) {
 				float t_coord = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
