@@ -90,7 +90,6 @@ int Time_tick_mileage = 0;
 float mileage, signal_meters = 0;
 
 bool featureNoVehFallOff = false;
-bool featureVehSpeedBoost = false;
 bool featureVehSteerAngle = false;
 bool featureRollWhenShoot = false;
 bool featureTractionControl = false;
@@ -191,7 +190,7 @@ bool anchor_dropped = false;
 
 const std::vector<std::string> VEH_INVINC_MODE_CAPTIONS{"OFF", "Mech. Only", "Mech. + Visual", "Mech. + Vis. + Cosmetic"};
 
-const std::vector<std::string> VEH_SPEED_BOOST_CAPTIONS{"Only When Already Moving", "Nothing Can Stop Me", "Fastest In The World"};
+const std::vector<std::string> VEH_SPEED_BOOST_CAPTIONS{"OFF", "Only When Already Moving", "Nothing Can Stop Me", "Fastest In The World"};
 int speedBoostIndex = 0;
 
 // engine power stuff
@@ -1774,35 +1773,35 @@ bool onconfirm_veh_menu(MenuItem<int> choice){
 		case 7: // mods
 			if(process_vehmod_menu()) return false;
 			break;
-		case 20: // door menu
+		case 19: // door menu
 			if(process_veh_door_menu()) return false;
 			break;
-		case 21: // seat menu
+		case 20: // seat menu
 			if (PED::IS_PED_SITTING_IN_ANY_VEHICLE(playerPed))
 				if(process_veh_seat_menu()) return false;
 			break;
-		case 22: // speed menu
+		case 21: // speed and altitude menu
 			process_speed_menu();
 			break;
-		case 23: // vehicle indicators menu
+		case 22: // vehicle indicators menu
 			process_visualize_menu();
 			break;
-		case 26: // vehicle indicators menu
+		case 25: // speed limit
 			process_speedlimit_menu();
 			break;
-		case 29: // fuel menu
+		case 28: // fuel menu
 			process_fuel_menu();
 			break;
-		case 30: // remember vehicles menu
+		case 29: // remember vehicles menu
 			process_remember_vehicles_menu();
 			break;
-		case 31: // road laws menu
+		case 30: // road laws menu
 			process_road_laws_menu();
 			break;
-		case 36: // engine can degrade
+		case 35: // engine can degrade
 			process_engine_degrade_menu();
 			break;
-		case 47: // Plane bombs -- incomplete so commenting out in mean time
+		case 46: // plane bombs
 		{
 			if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
 				set_status_text("Player isn't in a vehicle");
@@ -1910,15 +1909,9 @@ void process_veh_menu(){
 	toggleItem->toggleValue = &featureVehSpawnOptic;
 	menuItems.push_back(toggleItem);
 
-	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Speed Boost";
-	toggleItem->value = i++;
-	toggleItem->toggleValue = &featureVehSpeedBoost;
-	menuItems.push_back(toggleItem);
-
 	listItem = new SelectFromListMenuItem(VEH_SPEED_BOOST_CAPTIONS, onchange_veh_speed_boost_index);
 	listItem->wrap = false;
-	listItem->caption = "Speed Boost Mode";
+	listItem->caption = "Speed Boost";
 	listItem->value = speedBoostIndex;
 	menuItems.push_back(listItem);
 
@@ -2397,7 +2390,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 
 	// Speed Boost
-	if (bPlayerExists && featureVehSpeedBoost && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
+	if (bPlayerExists && speedBoostIndex > 0 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
 		bool bUp = IsKeyDown(KeyConfig::KEY_VEH_BOOST) || IsControllerButtonDown(KeyConfig::KEY_VEH_BOOST);
 		bool bDown = IsKeyDown(KeyConfig::KEY_VEH_STOP) || IsControllerButtonDown(KeyConfig::KEY_VEH_STOP);
 
@@ -2405,17 +2398,16 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			if (bUp){
 				float speed = ENTITY::GET_ENTITY_SPEED(veh);
 				switch (speedBoostIndex){
-				case 0:
+				case 1:
 					speed = speed * 1.02f; // 1.05
 					break;
-				case 1:
-					ENTITY::SET_ENTITY_MAX_SPEED(veh, 1000.0);
-					speed = speed * 1.02f + 4.0f;
-					break;
 				case 2:
-					ENTITY::SET_ENTITY_MAX_SPEED(veh, 55000.0);
+					ENTITY::SET_ENTITY_MAX_SPEED(veh, 1000.0);
+					speed = speed * 1.02f + 2.0f;
+					break;
+				case 3:
+					ENTITY::SET_ENTITY_MAX_SPEED(veh, 50000.0);
 					speed = speed * 1.02f + 4.0f;
-					//speed = 200.0f;
 					break;
 				default:
 					std::ostringstream ss;
@@ -2583,7 +2575,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		if (((CONTROLS::IS_CONTROL_PRESSED(2, 131) && assigned == false) || is_hotkey_held_veh_nitrous()) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
 			Vehicle my_veh = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 			if (VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(my_veh)) {
-				ENTITY::SET_ENTITY_MAX_SPEED(my_veh, 55000.0);
+				ENTITY::SET_ENTITY_MAX_SPEED(my_veh, 50000.0);
 				STREAMING::REQUEST_NAMED_PTFX_ASSET("core");
 				while (!STREAMING::HAS_NAMED_PTFX_ASSET_LOADED("core")) WAIT(0);
 				char* Exhausts[] = { "exhaust", "exhaust_2", "exhaust_3", "exhaust_4", "exhaust_5", "exhaust_6", "exhaust_7", "exhaust_8", "exhaust_9", "exhaust_10", "exhaust_11", "exhaust_12", "exhaust_13", "exhaust_14", "exhaust_15", "exhaust_16" };
@@ -3951,7 +3943,6 @@ void reset_vehicle_globals() {
 	featureSpeedInAir =
 	
 	featureVehInvincible =
-		featureVehSpeedBoost =
 		featureVehSteerAngle = 
 		featureRollWhenShoot =
 		featureTractionControl =
@@ -4258,7 +4249,6 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehInvincible", &featureVehInvincible, &featureVehInvincibleUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehNoDamage", &featureVehNoDamage, &featureVehInvincibleUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehSpawnInto", &featureVehSpawnInto});
-	results->push_back(FeatureEnabledLocalDefinition{"featureVehSpeedBoost", &featureVehSpeedBoost});
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehSteerAngle", &featureVehSteerAngle});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRollWhenShoot", &featureRollWhenShoot});
 	results->push_back(FeatureEnabledLocalDefinition{"featureTractionControl", &featureTractionControl});
