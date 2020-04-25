@@ -65,7 +65,8 @@ void peds_dont_like_weapons() {
 				Vehicle aim_veh = PED::GET_VEHICLE_PED_IS_IN(weaponhaters[i], true);
 				Vector3 aim_veh_speed = ENTITY::GET_ENTITY_VELOCITY(aim_veh);
 				if (PLAYER::IS_PLAYER_FREE_AIMING_AT_ENTITY(PLAYER::PLAYER_ID(), weaponhaters[i]) && PED::IS_PED_FACING_PED(weaponhaters[i], playerPed, 100) && ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(weaponhaters[i], playerPed, 17)
-					&& PED::IS_PED_IN_ANY_VEHICLE(weaponhaters[i], false) && WEAPON::IS_PED_ARMED(playerPed, 6) && weaponhaters[i] != playerPed && !PLAYER::IS_PLAYER_CONTROL_ON(weaponhaters[i]) && ped_distance_x < 4 && ped_distance_y < 4 && ped_distance_z < 2 && aim_veh_speed.x < 20 && aim_veh_speed.y < 20)
+					&& PED::IS_PED_IN_ANY_VEHICLE(weaponhaters[i], false) && WEAPON::IS_PED_ARMED(playerPed, 6) && weaponhaters[i] != playerPed && !PLAYER::IS_PLAYER_CONTROL_ON(weaponhaters[i]) && ped_distance_x < 4 && ped_distance_y < 4 && 
+					ped_distance_z < 2 && aim_veh_speed.x < 20 && aim_veh_speed.y < 20)
 				{ 
 					AI::TASK_LEAVE_VEHICLE(weaponhaters[i], aim_veh, 4160);
 					if (!featureAgainstMeleeWeapons && WEAPON::IS_PED_ARMED(playerPed, 7) && WEAPON::IS_PED_ARMED(playerPed, 6)) {

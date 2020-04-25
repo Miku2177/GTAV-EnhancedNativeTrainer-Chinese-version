@@ -1577,7 +1577,8 @@ void maintain_bodyguards(){
 									(VEHICLE::GET_VEHICLE_MODEL_NUMBER_OF_SEATS(ENTITY::GET_ENTITY_MODEL(surr_vehs[t])) == 2 && (VEHICLE::IS_VEHICLE_SEAT_FREE(surr_vehs[t], -1) || VEHICLE::IS_VEHICLE_SEAT_FREE(surr_vehs[t], 0))) ||
 								(VEHICLE::GET_VEHICLE_MODEL_NUMBER_OF_SEATS(ENTITY::GET_ENTITY_MODEL(surr_vehs[t])) == 1 && VEHICLE::IS_VEHICLE_SEAT_FREE(surr_vehs[t], -1))) {
 								if (surr_vehs[t] != veh &&
-									(VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(surr_vehs[t])) || VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(surr_vehs[t])) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(surr_vehs[t])))) {
+									(VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(surr_vehs[t])) || VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(surr_vehs[t])) || 
+										VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(surr_vehs[t])))) {
 									Vector3 coordsped = ENTITY::GET_ENTITY_COORDS(surr_vehs[t], true);
 									dist_diff = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsped.x, coordsped.y, coordsped.z);
 									if (temp_dist > dist_diff) {

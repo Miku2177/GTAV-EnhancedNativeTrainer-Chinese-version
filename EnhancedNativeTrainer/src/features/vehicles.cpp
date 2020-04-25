@@ -191,7 +191,7 @@ bool anchor_dropped = false;
 
 const std::vector<std::string> VEH_INVINC_MODE_CAPTIONS{"OFF", "Mech. Only", "Mech. + Visual", "Mech. + Vis. + Cosmetic"};
 
-const std::vector<std::string> VEH_SPEED_BOOST_CAPTIONS{"Only When Already Moving", "Nothing Can Stop Me", "Fastest in the World"};
+const std::vector<std::string> VEH_SPEED_BOOST_CAPTIONS{"Only When Already Moving", "Nothing Can Stop Me", "Fastest In The World"};
 int speedBoostIndex = 0;
 
 // engine power stuff
@@ -2396,7 +2396,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		}
 	}
 
-	// Player's Vehicle Boost
+	// Speed Boost
 	if (bPlayerExists && featureVehSpeedBoost && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
 		bool bUp = IsKeyDown(KeyConfig::KEY_VEH_BOOST) || IsControllerButtonDown(KeyConfig::KEY_VEH_BOOST);
 		bool bDown = IsKeyDown(KeyConfig::KEY_VEH_STOP) || IsControllerButtonDown(KeyConfig::KEY_VEH_STOP);
@@ -2406,13 +2406,16 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				float speed = ENTITY::GET_ENTITY_SPEED(veh);
 				switch (speedBoostIndex){
 				case 0:
-					speed = speed * 1.05f;
+					speed = speed * 1.02f; // 1.05
 					break;
 				case 1:
+					ENTITY::SET_ENTITY_MAX_SPEED(veh, 1000.0);
 					speed = speed * 1.02f + 4.0f;
 					break;
 				case 2:
-					speed = 200.0f;
+					ENTITY::SET_ENTITY_MAX_SPEED(veh, 55000.0);
+					speed = speed * 1.02f + 4.0f;
+					//speed = 200.0f;
 					break;
 				default:
 					std::ostringstream ss;
@@ -2580,6 +2583,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		if (((CONTROLS::IS_CONTROL_PRESSED(2, 131) && assigned == false) || is_hotkey_held_veh_nitrous()) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
 			Vehicle my_veh = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 			if (VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(my_veh)) {
+				ENTITY::SET_ENTITY_MAX_SPEED(my_veh, 55000.0);
 				STREAMING::REQUEST_NAMED_PTFX_ASSET("core");
 				while (!STREAMING::HAS_NAMED_PTFX_ASSET_LOADED("core")) WAIT(0);
 				char* Exhausts[] = { "exhaust", "exhaust_2", "exhaust_3", "exhaust_4", "exhaust_5", "exhaust_6", "exhaust_7", "exhaust_8", "exhaust_9", "exhaust_10", "exhaust_11", "exhaust_12", "exhaust_13", "exhaust_14", "exhaust_15", "exhaust_16" };
@@ -3100,7 +3104,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		speed_limit_e = true;
 	}
 	 
-	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && ((VEH_SPEEDLIMITER_VALUES[speedCityLimiterIndex] > 0) || (VEH_SPEEDLIMITER_VALUES[speedCountryLimiterIndex] > 0)) && 
+	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && (VEH_SPEEDLIMITER_VALUES[speedCityLimiterIndex] > 0 || VEH_SPEEDLIMITER_VALUES[speedCountryLimiterIndex] > 0) && 
 		!PED::IS_PED_IN_ANY_PLANE(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_HELI(PLAYER::PLAYER_PED_ID())) {
 		Vehicle vehlimit = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		Vector3 vehme_coords = ENTITY::GET_ENTITY_COORDS(vehlimit, true);

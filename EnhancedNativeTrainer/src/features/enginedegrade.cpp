@@ -84,11 +84,13 @@ void engine_can_degrade()
 				
 				if (VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(veh)) && VEH_ENGINEHEALTH_VALUES[CarEngineHealthIndex] < 100) e_randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[CarEngineHealthIndex]);
 				if (VEH_ENGINEHEALTH_VALUES[CarEngineHealthIndex] == 100) e_randomize = 100;
-				if ((PED::IS_PED_ON_ANY_BIKE(playerPed) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(veh))) && VEH_ENGINEHEALTH_VALUES[BikeEngineHealthIndex] < 100) e_randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[BikeEngineHealthIndex]);;
+				if ((PED::IS_PED_ON_ANY_BIKE(playerPed) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(veh))) && VEH_ENGINEHEALTH_VALUES[BikeEngineHealthIndex] < 100) 
+					e_randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[BikeEngineHealthIndex]);;
 				if (VEH_ENGINEHEALTH_VALUES[BikeEngineHealthIndex] == 100) e_randomize = 100;
 				if (VEHICLE::IS_THIS_MODEL_A_PLANE(ENTITY::GET_ENTITY_MODEL(veh)) && VEH_ENGINEHEALTH_VALUES[PlaneEngineHealthIndex] < 100) e_randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[PlaneEngineHealthIndex]);
 				if (VEH_ENGINEHEALTH_VALUES[PlaneEngineHealthIndex] == 100) e_randomize = 100;
-				if ((VEHICLE::IS_THIS_MODEL_A_BOAT(ENTITY::GET_ENTITY_MODEL(veh)) || PED::IS_PED_IN_ANY_SUB(playerPed)) && VEH_ENGINEHEALTH_VALUES[BoatEngineHealthIndex] < 100) e_randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[BoatEngineHealthIndex]);
+				if ((VEHICLE::IS_THIS_MODEL_A_BOAT(ENTITY::GET_ENTITY_MODEL(veh)) || PED::IS_PED_IN_ANY_SUB(playerPed)) && VEH_ENGINEHEALTH_VALUES[BoatEngineHealthIndex] < 100) 
+					e_randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[BoatEngineHealthIndex]);
 				if (VEH_ENGINEHEALTH_VALUES[BoatEngineHealthIndex] == 100) e_randomize = 100;
 				if (VEHICLE::IS_THIS_MODEL_A_HELI(ENTITY::GET_ENTITY_MODEL(veh)) && VEH_ENGINEHEALTH_VALUES[HeliEngineHealthIndex] < 100) e_randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[HeliEngineHealthIndex]);
 				if (VEH_ENGINEHEALTH_VALUES[HeliEngineHealthIndex] == 100) e_randomize = 100;
@@ -123,11 +125,13 @@ void engine_can_degrade()
 						E_VEHICLES.push_back(veh);
 						if (VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(veh)) && VEH_ENGINEHEALTH_VALUES[CarEngineHealthIndex] < 100) e_randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[CarEngineHealthIndex]);
 						if (VEH_ENGINEHEALTH_VALUES[CarEngineHealthIndex] == 100) e_randomize = 100;
-						if ((PED::IS_PED_ON_ANY_BIKE(playerPed) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(veh))) && VEH_ENGINEHEALTH_VALUES[BikeEngineHealthIndex] < 100) e_randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[BikeEngineHealthIndex]);;
+						if ((PED::IS_PED_ON_ANY_BIKE(playerPed) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(veh))) && VEH_ENGINEHEALTH_VALUES[BikeEngineHealthIndex] < 100) 
+							e_randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[BikeEngineHealthIndex]);
 						if (VEH_ENGINEHEALTH_VALUES[BikeEngineHealthIndex] == 100) e_randomize = 100;
 						if (VEHICLE::IS_THIS_MODEL_A_PLANE(ENTITY::GET_ENTITY_MODEL(veh)) && VEH_ENGINEHEALTH_VALUES[PlaneEngineHealthIndex] < 100) e_randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[PlaneEngineHealthIndex]);
 						if (VEH_ENGINEHEALTH_VALUES[PlaneEngineHealthIndex] == 100) e_randomize = 100;
-						if ((VEHICLE::IS_THIS_MODEL_A_BOAT(ENTITY::GET_ENTITY_MODEL(veh)) || PED::IS_PED_IN_ANY_SUB(playerPed)) && VEH_ENGINEHEALTH_VALUES[BoatEngineHealthIndex] < 100) e_randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[BoatEngineHealthIndex]);
+						if ((VEHICLE::IS_THIS_MODEL_A_BOAT(ENTITY::GET_ENTITY_MODEL(veh)) || PED::IS_PED_IN_ANY_SUB(playerPed)) && VEH_ENGINEHEALTH_VALUES[BoatEngineHealthIndex] < 100) 
+							e_randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[BoatEngineHealthIndex]);
 						if (VEH_ENGINEHEALTH_VALUES[BoatEngineHealthIndex] == 100) e_randomize = 100;
 						if (VEHICLE::IS_THIS_MODEL_A_HELI(ENTITY::GET_ENTITY_MODEL(veh)) && VEH_ENGINEHEALTH_VALUES[HeliEngineHealthIndex] < 100) e_randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[HeliEngineHealthIndex]);
 						if (VEH_ENGINEHEALTH_VALUES[HeliEngineHealthIndex] == 100) e_randomize = 100;
