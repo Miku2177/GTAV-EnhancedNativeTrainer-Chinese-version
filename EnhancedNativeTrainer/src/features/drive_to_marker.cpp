@@ -189,10 +189,12 @@ void drive_to_marker()
 		}
 
 		if (!PED::IS_PED_IN_ANY_HELI(playerPed) && !PED::IS_PED_IN_ANY_PLANE(playerPed))
-			AI::TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE(driver_to_marker_pilot, curr_veh, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, TEL_CHAUFFEUR_SPEED_VALUES[TelChauffeur_speed_Index], driving_style, 5.0f); // 4 // 156 // 40.0f
+			AI::TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE(driver_to_marker_pilot, curr_veh, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, TEL_CHAUFFEUR_SPEED_VALUES[TelChauffeur_speed_Index], 
+				driving_style, 5.0f); // 4 // 156 // 40.0f
 
 		if (PED::IS_PED_IN_ANY_HELI(playerPed))
-			AI::TASK_HELI_MISSION(driver_to_marker_pilot, curr_veh, 0, 0, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, 4, TEL_CHAUFFEUR_SPEED_VALUES[TelChauffeur_speed_Index], -1.0, -1.0, 0, TEL_CHAUFFEUR_ALTITUDE_VALUES[TelChauffeur_altitude_Index], -1.0, 32);
+			AI::TASK_HELI_MISSION(driver_to_marker_pilot, curr_veh, 0, 0, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, 4, TEL_CHAUFFEUR_SPEED_VALUES[TelChauffeur_speed_Index], -1.0, -1.0, 0, 
+				TEL_CHAUFFEUR_ALTITUDE_VALUES[TelChauffeur_altitude_Index], -1.0, 32);
 
 		if (PED::IS_PED_IN_ANY_PLANE(playerPed)) {
 			planecurrspeed = ENTITY::GET_ENTITY_SPEED(curr_veh);
@@ -228,7 +230,8 @@ void drive_to_marker()
 				AI::TASK_PLANE_MISSION(driver_to_marker_pilot, curr_veh, 0, 0, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, 4, TEL_CHAUFFEUR_SPEED_VALUES[TelChauffeur_speed_Index], 0, 90, 2600, 300);
 
 			if (altitude_reached == true && !featureLandAtDestination)
-				AI::TASK_PLANE_MISSION(driver_to_marker_pilot, curr_veh, 0, 0, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, 4, TEL_CHAUFFEUR_SPEED_VALUES[TelChauffeur_speed_Index], 0, 90, 0, TEL_CHAUFFEUR_ALTITUDE_VALUES[TelChauffeur_altitude_Index]);
+				AI::TASK_PLANE_MISSION(driver_to_marker_pilot, curr_veh, 0, 0, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, 4, TEL_CHAUFFEUR_SPEED_VALUES[TelChauffeur_speed_Index], 0, 90, 0, 
+					TEL_CHAUFFEUR_ALTITUDE_VALUES[TelChauffeur_altitude_Index]);
 		}
 
 		if (featureLandAtDestination) {
