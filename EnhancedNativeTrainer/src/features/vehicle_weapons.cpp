@@ -22,7 +22,7 @@ Object oBomb;
 std::vector<Object> vBomb;
 
 bool featureBombDoorCamera = false;
-bool featureAutoalignInAir = true;
+bool featureAutoalignInAir = false;
 
 void toggle_bomb_bay_camera()
 {
@@ -50,8 +50,8 @@ void toggle_bomb_bay_camera()
 			UI::DISPLAY_HUD(false);
 		}
 		if (CAM::DOES_CAM_EXIST(bombCam)) {
-			CAM::SET_CAM_ROT(bombCam, curRotation.x, curRotation.y, curRotation.z, 2);
-			CAM::POINT_CAM_AT_COORD(bombCam, vehPosition.x, vehPosition.y, vehPosition.z - 2);
+			Vector3 tail_p = ENTITY::_GET_ENTITY_BONE_COORDS(veh_b, ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(veh_b, "exhaust")); // exhaust_2
+			CAM::POINT_CAM_AT_COORD(bombCam, tail_p.x, tail_p.y, vehPosition.z - 2000);
 		}
 
 		if ((bombDoorOpen == false || !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) && CAM::DOES_CAM_EXIST(bombCam))
@@ -211,7 +211,7 @@ bool process_veh_weapons_menu()
 void reset_veh_weapons_globals()
 {
 	featureBombDoorCamera = false;
-	featureAutoalignInAir = true;
+	featureAutoalignInAir = false;
 }
 
 void update_veh_weapons_features()
@@ -227,9 +227,7 @@ void update_veh_weapons_features()
 			Vector3 ground_rot = ENTITY::GET_ENTITY_ROTATION(veh_b, 2);
 			float height_a_g = -1;
 			GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(veh_coords.x, veh_coords.y, veh_coords.z, &height_a_g);
-
-			if (CONTROLS::IS_CONTROL_PRESSED(2, 112/*UP*/) && CAM::DOES_CAM_EXIST(bombCam)) ENTITY::SET_ENTITY_ROTATION(veh_b, 0, 0, ground_rot.z, 2, true);
-
+						
 			if (veh_coords.z - height_a_g > 8.0 && CONTROLS::IS_CONTROL_RELEASED(2, 108/*LEFT*/) && CONTROLS::IS_CONTROL_RELEASED(2, 109/*RIGHT*/) &&
 				CONTROLS::IS_CONTROL_RELEASED(2, 111/*DOWN*/) && CONTROLS::IS_CONTROL_RELEASED(2, 112/*UP*/) && CONTROLS::IS_CONTROL_RELEASED(2, 34) && CONTROLS::IS_CONTROL_RELEASED(2, 35)) {
 				if (ground_rot.x < 0) ground_rot.x = ground_rot.x + 0.7;
