@@ -22,6 +22,7 @@ Object oBomb;
 std::vector<Object> vBomb;
 
 bool featureBombDoorCamera = false;
+bool featureAutoalignInAir = true;
 
 void toggle_bomb_bay_camera()
 {
@@ -149,7 +150,7 @@ void play_explosion(Entity ent)
 		GRAPHICS::START_PARTICLE_FX_NON_LOOPED_AT_COORD("scr_drug_grd_train_exp", ent_pos.x, ent_pos.y, ent_pos.z, 0.0, 0.0, 0.0, 35.0, 0, 0, 0); // 5.0
 	}
 
-	FIRE::ADD_EXPLOSION(ent_pos.x, ent_pos.y, ent_pos.z, ExplosionTypeTrain, 3500.0f, 1, 0, 0.5);
+	FIRE::ADD_EXPLOSION(ent_pos.x, ent_pos.y, ent_pos.z, ExplosionTypeTrain, 13500.0f, 1, 0, 0.5);
 }
 
 bool onconfirm_veh_weapons_menu(MenuItem<int> choice){
@@ -167,11 +168,11 @@ bool onconfirm_veh_weapons_menu(MenuItem<int> choice){
 	}
 
 	if (choice.value == -1) {
-		toggle_bomb_bay_doors();
-	}
-	else if (choice.value == -2) {
 		if (bombDoorOpen == true) start_bombing_run();
 		else set_status_text("Bomb door closed");
+	}
+	else if (choice.value == -2) {
+		toggle_bomb_bay_doors();
 	}
 	return false;
 }
@@ -182,22 +183,27 @@ bool process_veh_weapons_menu()
 	MenuItem<int> *item;
 	int i = 0;
 
-	ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Enable Bomb-Door Camera";
-	toggleItem->toggleValue = &featureBombDoorCamera;
-	menuItems.push_back(toggleItem);
-
 	item = new MenuItem<int>();
-	item->caption = "Open/Close Bomb Bay";
+	item->caption = "Drop Bomb";
 	item->value = -1;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Drop Bomb";
+	item->caption = "Open/Close Bomb Bay";
 	item->value = -2;
 	item->isLeaf = true;
 	menuItems.push_back(item);
+
+	ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Enable Bomb-Door Camera";
+	toggleItem->toggleValue = &featureBombDoorCamera;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Auto-Level In Air";
+	toggleItem->toggleValue = &featureAutoalignInAir;
+	menuItems.push_back(toggleItem);
 
 	return draw_generic_menu<int>(menuItems, 0, "Plane Bomb Options", onconfirm_veh_weapons_menu, NULL, NULL, vehicle_menu_interrupt);
 }
@@ -205,12 +211,36 @@ bool process_veh_weapons_menu()
 void reset_veh_weapons_globals()
 {
 	featureBombDoorCamera = false;
+	featureAutoalignInAir = true;
 }
 
 void update_veh_weapons_features()
 {
 	toggle_bomb_bay_camera();
-	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0) && GAMEPLAY::GET_HASH_KEY("CUBAN800") == ENTITY::GET_ENTITY_MODEL(veh_b)) update_bombs();
+	
+	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0) && GAMEPLAY::GET_HASH_KEY("CUBAN800") == ENTITY::GET_ENTITY_MODEL(veh_b)) {
+		update_bombs();
+
+		// auto level in the air
+		if (featureAutoalignInAir) {
+			Vector3 veh_coords = ENTITY::GET_ENTITY_COORDS(veh_b, true);
+			Vector3 ground_rot = ENTITY::GET_ENTITY_ROTATION(veh_b, 2);
+			float height_a_g = -1;
+			GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(veh_coords.x, veh_coords.y, veh_coords.z, &height_a_g);
+
+			if (CONTROLS::IS_CONTROL_PRESSED(2, 112/*UP*/) && CAM::DOES_CAM_EXIST(bombCam)) ENTITY::SET_ENTITY_ROTATION(veh_b, 0, 0, ground_rot.z, 2, true);
+
+			if (veh_coords.z - height_a_g > 8.0 && CONTROLS::IS_CONTROL_RELEASED(2, 108/*LEFT*/) && CONTROLS::IS_CONTROL_RELEASED(2, 109/*RIGHT*/) &&
+				CONTROLS::IS_CONTROL_RELEASED(2, 111/*DOWN*/) && CONTROLS::IS_CONTROL_RELEASED(2, 112/*UP*/) && CONTROLS::IS_CONTROL_RELEASED(2, 34) && CONTROLS::IS_CONTROL_RELEASED(2, 35)) {
+				if (ground_rot.x < 0) ground_rot.x = ground_rot.x + 0.7;
+				if (ground_rot.x > 0) ground_rot.x = ground_rot.x - 0.7;
+				if (ground_rot.y < 0) ground_rot.y = ground_rot.y + 0.7;
+				if (ground_rot.y > 0) ground_rot.y = ground_rot.y - 0.7;
+				if (ground_rot.x != 0 || ground_rot.y != 0) ENTITY::SET_ENTITY_ROTATION(veh_b, ground_rot.x, ground_rot.y, ground_rot.z, 2, true);
+				if (ground_rot.x == 0 && ground_rot.y == 0) ENTITY::SET_ENTITY_ROTATION(veh_b, 0, 0, ground_rot.z, 2, true);
+			}
+		}
+	}
 	
 	if (!featureBombDoorCamera && CAM::DOES_CAM_EXIST(bombCam))	{
 		CAM::RENDER_SCRIPT_CAMS(false, false, 0, false, false);
@@ -235,6 +265,7 @@ void update_veh_weapons_features()
 
 void add_vehicle_weapons_enablements(std::vector<FeatureEnabledLocalDefinition>* results) {
 	results->push_back(FeatureEnabledLocalDefinition{ "featureBombDoorCamera", &featureBombDoorCamera });
+	results->push_back(FeatureEnabledLocalDefinition{ "featureAutoalignInAir", &featureAutoalignInAir });
 }
 
 //Main - https://github.com/CamxxCore/CarpetBomber/blob/master/GTAV_CarpetBomber/MainScript.cs
