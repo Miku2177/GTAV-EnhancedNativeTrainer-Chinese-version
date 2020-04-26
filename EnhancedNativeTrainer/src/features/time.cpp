@@ -37,7 +37,7 @@ int timeFlowRateIndex = DEFAULT_TIME_FLOW_RATE;
 int HotkeyFlowRateIndex = DEFAULT_HOTKEY_FLOW_RATE;
 
 bool featureTimeSynced = false;
-bool featureMatrixMode = false;
+//bool featureMatrixMode = false;
 bool featureShowtime = false;
 bool timeFlowRateChanged = true, timeFlowRateLocked = true;
 bool HotkeyFlowRateChanged = true, HotkeyFlowRateLocked = true;
@@ -49,6 +49,10 @@ bool requireRefreshOfTime = false;
 int activeLineIndexTime = 0;
 
 float timeFactor = 1000.0f / TIME_FLOW_RATE_VALUES.at(timeFlowRateIndex);
+
+//bool matrix_v = false;
+//bool matrix_o = false;
+//bool matrix_p = false;
 
 int timeSinceAimingBegan = 0;
 
@@ -197,12 +201,12 @@ void all_time_flow_rate() {
 		listItem->value = timeSpeedIndexWhileAiming;
 		menuItems.push_back(listItem);
 
-		togItem = new ToggleMenuItem<int>();
-		togItem->caption = "Matrix Mode While Aiming";
-		togItem->value = 0;
-		togItem->toggleValue = &featureMatrixMode;
-		togItem->toggleValueUpdated = NULL;
-		menuItems.push_back(togItem);
+		//togItem = new ToggleMenuItem<int>();
+		//togItem->caption = "Matrix Mode While Aiming";
+		//togItem->value = 0;
+		//togItem->toggleValue = &featureMatrixMode;
+		//togItem->toggleValueUpdated = NULL;
+		//menuItems.push_back(togItem);
 
 		listItem = new SelectFromListMenuItem(TIME_FLOW_RATE_CAPTIONS, onchange_time_flow_rate_callback);
 		listItem->caption = "Time Flow Rate";
@@ -394,7 +398,7 @@ void reset_time_globals(){
 	featureTimeSynced = false;
 	timeFlowRateChanged = true;
 	HotkeyFlowRateChanged = true;
-	featureMatrixMode = false;
+	//featureMatrixMode = false;
 	featureShowtime = false;
 
 	timeSpeedIndexWhileAiming = DEFAULT_TIME_SPEED;
@@ -405,7 +409,7 @@ void reset_time_globals(){
 
 void add_time_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){
 	results->push_back(FeatureEnabledLocalDefinition{"featureTimeSynced", &featureTimeSynced});
-	results->push_back(FeatureEnabledLocalDefinition{"featureMatrixMode", &featureMatrixMode});
+	//results->push_back(FeatureEnabledLocalDefinition{"featureMatrixMode", &featureMatrixMode});
 	results->push_back(FeatureEnabledLocalDefinition{"featureShowtime", &featureShowtime});
 }
 
@@ -826,89 +830,113 @@ void update_time_features(Player player){
 		timeSinceAimingBegan = 0;
 	}
 
-	// Matrix Mode While Aiming
+	/*// Matrix Mode While Aiming
 	if (featureMatrixMode) {
 		const int arrSize_punch = 1024;
 		Vehicle surr_vehicles[arrSize_punch];
 		int count_surr_v = worldGetAllVehicles(surr_vehicles, arrSize_punch);
-		for (int i = 0; i < count_surr_v; i++) {
-			if (CONTROLS::IS_CONTROL_PRESSED(2, 25) && ENTITY::DOES_ENTITY_EXIST(surr_vehicles[i]) && surr_vehicles[i] != PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false)) {
-				if (ENTITY::GET_ENTITY_SPEED(surr_vehicles[i]) > 1 && VEHICLE::GET_PED_IN_VEHICLE_SEAT(surr_vehicles[i], -1) != 0) {
-					if (VEH_CURR.empty()) {
-						VEH_CURR.push_back(surr_vehicles[i]);
-						VEH_S.push_back(ENTITY::GET_ENTITY_SPEED(surr_vehicles[i]));
-					}
-					if (!VEH_CURR.empty()) {
-						bool v_exists = false;
-						for (int j = 0; j < VEH_CURR.size(); j++) {
-							if (ENTITY::DOES_ENTITY_EXIST(VEH_CURR[j]) && VEH_CURR[j] == surr_vehicles[i]) v_exists = true;
-						}
-						if (v_exists == false) {
+		if (CONTROLS::IS_CONTROL_PRESSED(2, 25)) {
+			for (int i = 0; i < count_surr_v; i++) {
+				if (ENTITY::DOES_ENTITY_EXIST(surr_vehicles[i]) && surr_vehicles[i] != PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false)) {
+					if (ENTITY::GET_ENTITY_SPEED(surr_vehicles[i]) > 1 && VEHICLE::GET_PED_IN_VEHICLE_SEAT(surr_vehicles[i], -1) != 0) {
+						if (VEH_CURR.empty()) {
 							VEH_CURR.push_back(surr_vehicles[i]);
-							VEH_S.push_back(ENTITY::GET_ENTITY_SPEED(surr_vehicles[i]));
+								VEH_S.push_back(ENTITY::GET_ENTITY_SPEED(surr_vehicles[i]));
+						}
+						if (!VEH_CURR.empty()) {
+							bool v_exists = false;
+								for (int j = 0; j < VEH_CURR.size(); j++) {
+									if (ENTITY::DOES_ENTITY_EXIST(VEH_CURR[j]) && VEH_CURR[j] == surr_vehicles[i]) v_exists = true;
+								}
+							if (v_exists == false) {
+								VEH_CURR.push_back(surr_vehicles[i]);
+								VEH_S.push_back(ENTITY::GET_ENTITY_SPEED(surr_vehicles[i]));
+							}
 						}
 					}
-				}
-				ENTITY::FREEZE_ENTITY_POSITION(surr_vehicles[i], true);
-				if (VEHICLE::GET_VEHICLE_CLASS(surr_vehicles[i]) == 15) {
-					VEHICLE::SET_HELI_BLADES_SPEED(surr_vehicles[i], 0.0f);
-					VEHICLE::SET_VEHICLE_ENGINE_ON(surr_vehicles[i], false, true);
-				}
-				if (VEHICLE::GET_VEHICLE_CLASS(surr_vehicles[i]) == 21) {
-					VEHICLE::SET_TRAIN_SPEED(surr_vehicles[i], 0.0f);
-					VEHICLE::SET_TRAIN_CRUISE_SPEED(surr_vehicles[i], 0.0f);
-				}
-			}
-			if (CONTROLS::IS_CONTROL_RELEASED(2, 25) && ENTITY::DOES_ENTITY_EXIST(surr_vehicles[i])) {
-				if (!VEH_CURR.empty()) {
-					for (int j = 0; j < VEH_CURR.size(); j++) {
-						if (ENTITY::DOES_ENTITY_EXIST(VEH_CURR[j])) {
-							ENTITY::FREEZE_ENTITY_POSITION(VEH_CURR[j], false);
-							VEHICLE::SET_VEHICLE_FORWARD_SPEED(VEH_CURR[j], VEH_S[j]);
-						}
+					ENTITY::FREEZE_ENTITY_POSITION(surr_vehicles[i], true);
+					if (VEHICLE::GET_VEHICLE_CLASS(surr_vehicles[i]) == 15) {
+						VEHICLE::SET_HELI_BLADES_SPEED(surr_vehicles[i], 0.0f);
+						VEHICLE::SET_VEHICLE_ENGINE_ON(surr_vehicles[i], false, true);
 					}
-					VEH_CURR.clear();
-					VEH_S.clear();
-				}
-				ENTITY::FREEZE_ENTITY_POSITION(surr_vehicles[i], false);
-				if (VEHICLE::GET_VEHICLE_CLASS(surr_vehicles[i]) == 15) {
-					VEHICLE::SET_HELI_BLADES_SPEED(surr_vehicles[i], 1.0f);
-					VEHICLE::SET_VEHICLE_ENGINE_ON(surr_vehicles[i], true, true);
-				}
-				if (VEHICLE::GET_VEHICLE_CLASS(surr_vehicles[i]) == 21) {
-					VEHICLE::SET_TRAIN_SPEED(surr_vehicles[i], 50.0f);
-					VEHICLE::SET_TRAIN_CRUISE_SPEED(surr_vehicles[i], 50.0f);
+					if (VEHICLE::GET_VEHICLE_CLASS(surr_vehicles[i]) == 21) {
+						VEHICLE::SET_TRAIN_SPEED(surr_vehicles[i], 0.0f);
+						VEHICLE::SET_TRAIN_CRUISE_SPEED(surr_vehicles[i], 0.0f);
+					}
 				}
 			}
+			matrix_v = true;
+		}
+		if (CONTROLS::IS_CONTROL_RELEASED(2, 25) && matrix_v == true) {
+			if (!VEH_CURR.empty()) {
+				for (int j = 0; j < VEH_CURR.size(); j++) {
+					if (ENTITY::DOES_ENTITY_EXIST(VEH_CURR[j])) {
+						ENTITY::FREEZE_ENTITY_POSITION(VEH_CURR[j], false);
+						VEHICLE::SET_VEHICLE_FORWARD_SPEED(VEH_CURR[j], VEH_S[j]);
+					}
+				}
+				VEH_CURR.clear();
+				VEH_S.clear();
+			}
+			for (int i = 0; i < count_surr_v; i++) {
+				if (ENTITY::DOES_ENTITY_EXIST(surr_vehicles[i])) {
+					ENTITY::FREEZE_ENTITY_POSITION(surr_vehicles[i], false);
+					if (VEHICLE::GET_VEHICLE_CLASS(surr_vehicles[i]) == 15) {
+						VEHICLE::SET_HELI_BLADES_SPEED(surr_vehicles[i], 1.0f);
+						VEHICLE::SET_VEHICLE_ENGINE_ON(surr_vehicles[i], true, true);
+					}
+					if (VEHICLE::GET_VEHICLE_CLASS(surr_vehicles[i]) == 21) {
+						VEHICLE::SET_TRAIN_SPEED(surr_vehicles[i], 50.0f);
+						VEHICLE::SET_TRAIN_CRUISE_SPEED(surr_vehicles[i], 50.0f);
+					}
+				}
+			}
+			matrix_v = false;
 		}
 		Object surr_objects[arrSize_punch];
 		int count_surr_o = worldGetAllObjects(surr_objects, arrSize_punch);
-		for (int i = 0; i < count_surr_o; i++) {
-			if (CONTROLS::IS_CONTROL_PRESSED(2, 25) && ENTITY::DOES_ENTITY_EXIST(surr_objects[i])) ENTITY::FREEZE_ENTITY_POSITION(surr_objects[i], true);
-			if (CONTROLS::IS_CONTROL_RELEASED(2, 25) && ENTITY::DOES_ENTITY_EXIST(surr_objects[i])) {
-				ENTITY::FREEZE_ENTITY_POSITION(surr_objects[i], false);
-				ROPE::ACTIVATE_PHYSICS(surr_objects[i]);
+		if (CONTROLS::IS_CONTROL_PRESSED(2, 25)) {
+			for (int i = 0; i < count_surr_o; i++) {
+				if (ENTITY::DOES_ENTITY_EXIST(surr_objects[i])) ENTITY::FREEZE_ENTITY_POSITION(surr_objects[i], true);
 			}
+			matrix_o = true;
+		}
+		if (CONTROLS::IS_CONTROL_RELEASED(2, 25) && matrix_o == true) {
+			for (int i = 0; i < count_surr_o; i++) {
+				if (ENTITY::DOES_ENTITY_EXIST(surr_objects[i])) {
+					ENTITY::FREEZE_ENTITY_POSITION(surr_objects[i], false);
+					ROPE::ACTIVATE_PHYSICS(surr_objects[i]);
+				}
+			}
+			matrix_o = false;
 		}
 		Ped surr_p_peds[arrSize_punch];
 		int count_surr_p_peds = worldGetAllPeds(surr_p_peds, arrSize_punch);
-		for (int i = 0; i < count_surr_p_peds; i++) {
-			if (CONTROLS::IS_CONTROL_PRESSED(2, 25) && ENTITY::DOES_ENTITY_EXIST(surr_p_peds[i]) /*&& !PED::IS_PED_IN_ANY_VEHICLE(surr_p_peds[i], false)*/ && surr_p_peds[i] != PLAYER::PLAYER_PED_ID()) {
-				if (PED::GET_PED_TYPE(surr_p_peds[i]) == 6 || PED::GET_PED_TYPE(surr_p_peds[i]) == 27 || PED::GET_PED_TYPE(surr_p_peds[i]) == 29) {
-					AI::TASK_STAND_STILL(surr_p_peds[i], 500); // if (!PED::IS_PED_IN_ANY_VEHICLE(surr_p_peds[i], false))
+		if (CONTROLS::IS_CONTROL_PRESSED(2, 25)) {
+			for (int i = 0; i < count_surr_p_peds; i++) {
+				if (ENTITY::DOES_ENTITY_EXIST(surr_p_peds[i]) && surr_p_peds[i] != PLAYER::PLAYER_PED_ID()) {
+					if (PED::GET_PED_TYPE(surr_p_peds[i]) == 6 || PED::GET_PED_TYPE(surr_p_peds[i]) == 27 || PED::GET_PED_TYPE(surr_p_peds[i]) == 29) {
+						AI::TASK_STAND_STILL(surr_p_peds[i], 500); // if (!PED::IS_PED_IN_ANY_VEHICLE(surr_p_peds[i], false))
+					}
+					AUDIO::STOP_CURRENT_PLAYING_AMBIENT_SPEECH(surr_p_peds[i]);
+					PED::SET_PED_MOVE_RATE_OVERRIDE(surr_p_peds[i], 0.00);
+					PED::SET_PED_CAN_HEAD_IK(surr_p_peds[i], false);
+					PED::SET_PED_CAN_USE_AUTO_CONVERSATION_LOOKAT(surr_p_peds[i], false);
 				}
-				AUDIO::STOP_CURRENT_PLAYING_AMBIENT_SPEECH(surr_p_peds[i]);
-				PED::SET_PED_MOVE_RATE_OVERRIDE(surr_p_peds[i], 0.00);
-				PED::SET_PED_CAN_HEAD_IK(surr_p_peds[i], false);
-				PED::SET_PED_CAN_USE_AUTO_CONVERSATION_LOOKAT(surr_p_peds[i], false);
 			}
-			if (CONTROLS::IS_CONTROL_RELEASED(2, 25) && ENTITY::DOES_ENTITY_EXIST(surr_p_peds[i])/* && !PED::IS_PED_IN_ANY_VEHICLE(surr_p_peds[i], false)*/) {
-				PED::SET_PED_MOVE_RATE_OVERRIDE(surr_p_peds[i], 1.00);
-				PED::SET_PED_CAN_HEAD_IK(surr_p_peds[i], true);
-				PED::SET_PED_CAN_USE_AUTO_CONVERSATION_LOOKAT(surr_p_peds[i], true);
-			}
+			matrix_p = true;
 		}
-	} // end of matrix mode while aiming
+		if (CONTROLS::IS_CONTROL_RELEASED(2, 25) && matrix_p == true) {
+			for (int i = 0; i < count_surr_p_peds; i++) {
+				if (ENTITY::DOES_ENTITY_EXIST(surr_p_peds[i])) {
+					PED::SET_PED_MOVE_RATE_OVERRIDE(surr_p_peds[i], 1.00);
+					PED::SET_PED_CAN_HEAD_IK(surr_p_peds[i], true);
+					PED::SET_PED_CAN_USE_AUTO_CONVERSATION_LOOKAT(surr_p_peds[i], true);
+				}
+			}
+			matrix_p = false;
+		}
+	} // end of matrix mode while aiming*/
 
 	// Show Current Time
 	if (featureShowtime && menu_showing == false) {
