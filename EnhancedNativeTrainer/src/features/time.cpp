@@ -222,7 +222,7 @@ void all_time_flow_rate() {
 		menuItems.push_back(item);
 
 		togItem = new ToggleMenuItem<int>();
-		togItem->caption = "Show Current In-game Time";
+		togItem->caption = "Show Current In-Game Time";
 		togItem->value = 0;
 		togItem->toggleValue = &featureShowtime;
 		togItem->toggleValueUpdated = NULL;
@@ -943,6 +943,11 @@ void update_time_features(Player player){
 		int currHours = TIME::GET_CLOCK_HOURS();
 		int currMins = TIME::GET_CLOCK_MINUTES();
 		int currSecs = TIME::GET_CLOCK_SECONDS();
+		int calDay = TIME::GET_CLOCK_DAY_OF_MONTH();
+		int calMon = TIME::GET_CLOCK_MONTH();
+		int calYear = TIME::GET_CLOCK_YEAR();
+		int day = TIME::GET_CLOCK_DAY_OF_WEEK();
+
 		char hours_to_show_char_modifiable[3];
 		char mins_to_show_char_modifiable[3];
 		char secs_to_show_char_modifiable[3];
@@ -952,16 +957,16 @@ void update_time_features(Player player){
 		char* hours_to_show_char = "60";
 		char* minutes_to_show_char = "60";
 		char* seconds_to_show_char = "60";
-		if (currHours == 0 || currHours == 60) hours_to_show_char = "00";
-		if (currHours == 1) hours_to_show_char = "01";
-		if (currHours == 2) hours_to_show_char = "02";
-		if (currHours == 3) hours_to_show_char = "03";
-		if (currHours == 4) hours_to_show_char = "04";
-		if (currHours == 5) hours_to_show_char = "05";
-		if (currHours == 6) hours_to_show_char = "06";
-		if (currHours == 7) hours_to_show_char = "07";
-		if (currHours == 8) hours_to_show_char = "08";
-		if (currHours == 9) hours_to_show_char = "09";
+		if (currHours == 0 || currHours == 60 || calDay == 0) hours_to_show_char = "00";
+		if (currHours == 1 || calDay == 1) hours_to_show_char = "01";
+		if (currHours == 2 || calDay == 2) hours_to_show_char = "02";
+		if (currHours == 3 || calDay == 3) hours_to_show_char = "03";
+		if (currHours == 4 || calDay == 4) hours_to_show_char = "04";
+		if (currHours == 5 || calDay == 5) hours_to_show_char = "05";
+		if (currHours == 6 || calDay == 6) hours_to_show_char = "06";
+		if (currHours == 7 || calDay == 7) hours_to_show_char = "07";
+		if (currHours == 8 || calDay == 8) hours_to_show_char = "08";
+		if (currHours == 9 || calDay == 9) hours_to_show_char = "09";
 		if (currMins == 0 || currMins == 60) minutes_to_show_char = "00";
 		if (currMins == 1) minutes_to_show_char = "01";
 		if (currMins == 2) minutes_to_show_char = "02";
@@ -1041,5 +1046,77 @@ void update_time_features(Player player){
 		else UI::_ADD_TEXT_COMPONENT_SCALEFORM(seconds_to_show_char);
 		UI::_DRAW_TEXT(0.031, 0.185);
 		GRAPHICS::DRAW_RECT(0.0, 0.20, 0.10, 0.03, 10, 10, 10, 100);
+				
+		char day_to_show_char_modifiable[10];
+		char year_to_show_char_modifiable[10];
+		sprintf(day_to_show_char_modifiable, "%d", calDay);
+		sprintf(year_to_show_char_modifiable, "%d", calYear);
+		char* month_to_show_char = "0";
+		if (calMon == 1) month_to_show_char = "January";
+		if (calMon == 2) month_to_show_char = "February";
+		if (calMon == 3) month_to_show_char = "March";
+		if (calMon == 4) month_to_show_char = "April";
+		if (calMon == 5) month_to_show_char = "May";
+		if (calMon == 6) month_to_show_char = "June";
+		if (calMon == 7) month_to_show_char = "July";
+		if (calMon == 8) month_to_show_char = "August";
+		if (calMon == 9) month_to_show_char = "September";
+		if (calMon == 10) month_to_show_char = "October";
+		if (calMon == 11) month_to_show_char = "November";
+		if (calMon == 12) month_to_show_char = "December";
+		char* week_to_show_char = "0";
+		if (day == 0) week_to_show_char = "Sunday";
+		if (day == 1) week_to_show_char = "Monday";
+		if (day == 2) week_to_show_char = "Tuesday";
+		if (day == 3) week_to_show_char = "Wednesday";
+		if (day == 4) week_to_show_char = "Thursday";
+		if (day == 5) week_to_show_char = "Friday";
+		if (day == 6) week_to_show_char = "Saturday";
+
+		// day of the week
+		UI::SET_TEXT_FONT(4);
+		UI::SET_TEXT_SCALE(0.0, 0.45);
+		UI::SET_TEXT_PROPORTIONAL(1);
+		UI::SET_TEXT_COLOUR(255, 242, 0, 100);
+		UI::SET_TEXT_EDGE(3, 0, 0, 0, 255);
+		UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 100);
+		UI::SET_TEXT_OUTLINE();
+		UI::_SET_TEXT_ENTRY("STRING");
+		UI::_ADD_TEXT_COMPONENT_SCALEFORM(week_to_show_char);
+		UI::_DRAW_TEXT(0.003, 0.210);
+		// day of the month
+		UI::SET_TEXT_FONT(4);
+		UI::SET_TEXT_SCALE(0.0, 0.45);
+		UI::SET_TEXT_PROPORTIONAL(1);
+		UI::SET_TEXT_COLOUR(255, 242, 0, 100);
+		UI::SET_TEXT_EDGE(3, 0, 0, 0, 255);
+		UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 100);
+		UI::SET_TEXT_OUTLINE();
+		UI::_SET_TEXT_ENTRY("STRING");
+		if (calDay > 9 && calDay < 32) UI::_ADD_TEXT_COMPONENT_SCALEFORM(day_to_show_char_modifiable);
+		else UI::_ADD_TEXT_COMPONENT_SCALEFORM(hours_to_show_char);
+		UI::_DRAW_TEXT(0.003, 0.230);
+		// month of the year
+		UI::SET_TEXT_FONT(4);
+		UI::SET_TEXT_SCALE(0.0, 0.45);
+		UI::SET_TEXT_PROPORTIONAL(1);
+		UI::SET_TEXT_COLOUR(255, 242, 0, 100);
+		UI::SET_TEXT_EDGE(3, 0, 0, 0, 255);
+		UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 100);
+		UI::SET_TEXT_OUTLINE();
+		UI::_SET_TEXT_ENTRY("STRING");
+		UI::_ADD_TEXT_COMPONENT_SCALEFORM(month_to_show_char);
+		UI::_DRAW_TEXT(0.003, 0.250);
+		// year of the century
+		UI::SET_TEXT_FONT(4);
+		UI::SET_TEXT_SCALE(0.0, 0.45);
+		UI::SET_TEXT_PROPORTIONAL(1);
+		UI::SET_TEXT_COLOUR(255, 242, 0, 100);
+		UI::SET_TEXT_EDGE(3, 0, 0, 0, 255);
+		UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 100);
+		UI::SET_TEXT_OUTLINE();
+		UI::_SET_TEXT_ENTRY("STRING");
+		UI::_ADD_TEXT_COMPONENT_SCALEFORM(year_to_show_char_modifiable);
+		UI::_DRAW_TEXT(0.003, 0.270);
 	} // end of show current time
 }
