@@ -13,7 +13,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 const std::vector<std::string> SCENARIOS_ANIMAL_VALUES = { /*"PROP_BIRD_IN_TREE", "PROP_BIRD_TELEGRAPH_POLE",*/ "WORLD_BOAR_GRAZING", "WORLD_CAT_SLEEPING_GROUND", "WORLD_CAT_SLEEPING_LEDGE", /*"WORLD_CHICKENHAWK_FEEDING", 
 "WORLD_CHICKENHAWK_STANDING", "WORLD_CORMORANT_STANDING",*/ "WORLD_COW_GRAZING", "WORLD_COYOTE_HOWL", "WORLD_COYOTE_REST", /*"WORLD_COYOTE_WANDER",*/ "WORLD_CROW_FEEDING", /*"WORLD_CROW_STANDING",*/ "WORLD_DEER_GRAZING", /*"WORLD_FISH_IDLE",*/
-"WORLD_DOG_BARKING_SHEPHERD", "WORLD_DOG_SITTING_SHEPHERD", "WORLD_GULL_FEEDING", /*"WORLD_GULL_STANDING",*/ "WORLD_HEN_PECKING", /*"WORLD_HEN_STANDING",*/ "WORLD_MOUNTAIN_LION_REST", /*"WORLD_MOUNTAIN_LION_WANDER",*/ "WORLD_PIG_GRAZING", 
+"WORLD_DOG_BARKING_SHEPHERD", "WORLD_DOG_SITTING_SHEPHERD", /*"WORLD_GULL_FEEDING", "WORLD_GULL_STANDING",*/ "WORLD_HEN_PECKING", /*"WORLD_HEN_STANDING",*/ "WORLD_MOUNTAIN_LION_REST", /*"WORLD_MOUNTAIN_LION_WANDER",*/ "WORLD_PIG_GRAZING", 
 "WORLD_PIGEON_FEEDING", /*"WORLD_PIGEON_STANDING", "WORLD_RABBIT_EATING", "WORLD_RATS_EATING",*/ "WORLD_DOG_BARKING_RETRIEVER", "WORLD_DOG_SITTING_RETRIEVER", "WORLD_DOG_BARKING_ROTTWEILER", "WORLD_DOG_SITTING_ROTTWEILER", /*"WORLD_SHARK_SWIM",*/
 "WORLD_DOG_BARKING_SMALL", "WORLD_DOG_SITTING_SMALL" };
 
@@ -2090,7 +2090,7 @@ const std::vector<std::string> ALL_ANIMS =
 	/*W_F!!!*/"mini@golfreactions@franklin@clubs react_lose_club_02_franklin",
 	/*W_F!!!*/"mini@golfreactions@franklin@clubs react_lose_club_03_franklin",
 	/*W_F!!!*/"mini@golfreactions@franklin@clubs react_win_club_01_franklin",
-	/*W_F!!!*/"mini@golfreactions@franklin@clubs react_win_club_02_franklin_facial",
+	/*W_F!!!*///"mini@golfreactions@franklin@clubs react_win_club_02_franklin_facial",
 	/*W_F!!!*/"mini@golfreactions@franklin@clubs react_win_club_02_franklin",
 	/*W_F!!!*/"mini@golfreactions@franklin@clubs react_win_club_03_franklin",
 	/*W_F!!!*/"mini@golfreactions@franklin@putter react_lose_putter_01_franklin_frank",
@@ -2768,7 +2768,7 @@ const std::vector<std::string> ALL_ANIMS =
 	/*W_F!!!*/"missexile3 ex03_train_roof_idle",
 	/*W_F!!!*/"missexile3 reaction_forward_big_intro_a",
 	/*W_F!!!*/"missexile3@train_ ex03_attack_driver_outro_driver",
-	/*W_F!!!*/"missexile3@train_ ex03_train_bike_scene_facial",
+	/*W_F!!!*///"missexile3@train_ ex03_train_bike_scene_facial",
 	/*W_F!!!*/"missexile3_rpg reload",
 	/*W_F!!!*/"missexile3_rpg sweep_blocked",
 	/*W_F!!!*/"missexile3_rpg sweep_low",
@@ -2928,7 +2928,7 @@ const std::vector<std::string> ALL_ANIMS =
 	/*W_F!!!*/"missfbi1 fbi_1_ig_1_b_clipb",
 	/*W_F!!!*/"missfbi1 fbi_1_ig_2_a",
 	/*W_F!!!*/"missfbi1 idle_inside_cuboard_malehostage01",
-	/*W_F!!!*/"missfbi1 ledge_jump_facial",
+	/*W_F!!!*///"missfbi1 ledge_jump_facial",
 	/*W_F!!!*/"missfbi1 ledge_jump",
 	/*W_F!!!*/"missfbi1 ledge_look",
 	/*W_F!!!*/"missfbi1ig_1_alt_1 conversation1_peda",
@@ -2992,7 +2992,7 @@ const std::vector<std::string> ALL_ANIMS =
 	/*W_F!!!*/"missfbi3_electrocute electrocute_both_loop_victim",
 	/*W_F!!!*/"missfbi3_electrocute electrocute_both_outro_player",
 	/*W_F!!!*/"missfbi3_electrocute electrocute_both_outro_victim",
-	/*W_F!!!*/"missfbi3_electrocute electrocute_right_intro_player_facial",
+	/*W_F!!!*///"missfbi3_electrocute electrocute_right_intro_player_facial",
 	/*W_F!!!*/"missfbi3_electrocute electrocute_spark_player_facial",
 	/*W_F!!!*/"missfbi3_electrocute electrocute_spark_player",
 	/*W_F!!!*/"missfbi3_party shot_reaction_female",
@@ -4532,7 +4532,7 @@ const std::vector<std::string> ALL_ANIMS =
 	/*W_F!!!*/"safe@franklin@ig_9 exit_2_facial",
 	/*W_F!!!*/"safe@franklin@ig_9 exit_4",
 	/*W_F!!!*/"safe@michael@ig_1 exit_drunk",
-	/*W_F!!!*/"safe@michael@ig_1 fifth_shot_base_facial",
+	/*W_F!!!*///"safe@michael@ig_1 fifth_shot_base_facial",
 	/*W_F!!!*/"safe@michael@ig_1 fifth_shot",
 	/*W_F!!!*/"safe@michael@ig_1 first_shot",
 	/*W_F!!!*/"safe@michael@ig_1 third_shot_facial",
@@ -4754,7 +4754,7 @@ const std::vector<std::string> ALL_ANIMS =
 	/*W_F!!!*/"switch@franklin@gang_taunt_p5 fras_ig_6_p5_exit_g1",
 	/*W_F!!!*/"switch@franklin@gang_taunt_p5 fras_ig_6_p5_exit_lamar",
 	/*W_F!!!*/"switch@franklin@garbage garbage_toss_plyr",
-	/*W_F!!!*/"switch@franklin@getting_ready 002334_02_fras_v2_11_getting_dressed_exit_facial",
+	/*W_F!!!*///"switch@franklin@getting_ready 002334_02_fras_v2_11_getting_dressed_exit_facial",
 	/*W_F!!!*/"switch@franklin@getting_ready 002334_02_fras_v2_11_getting_dressed_exit",
 	/*W_F!!!*/"switch@franklin@gym 001942_02_gc_fras_ig_5_base",
 	/*W_F!!!*/"switch@franklin@gym 001942_02_gc_fras_ig_5_exit_facial",
@@ -5404,9 +5404,9 @@ const std::vector<std::string> ALL_ANIMS =
 	/*W_F!!!*/"weapons@submg@advanced_rifle_str reload_aim",
 	/*W_F!!!*/"mini@tennisexit@trevor tennis_outro_trevor_facial",
 	/*W_F!!!*/"switch@michael@parkbench_smoke_ranger parkbench_smoke_ranger_exit_ranger_facial",
-	/*W_F!!!*/"switch@michael@tracy_exits_car 001840_01_mics3_ig_21_tracy_exits_car_tra_facial",
-	/*W_F!!!*/"switch@michael@tv_w_kids 001520_02_mics3_14_tv_w_kids_exit_trc_facial",
-	/*W_F!!!*/"switch@trevor@rude_at_cafe 001218_03_trvs_23_rude_at_cafe_exit_female_facial",
+	/*W_F!!!*///"switch@michael@tracy_exits_car 001840_01_mics3_ig_21_tracy_exits_car_tra_facial",
+	/*W_F!!!*///"switch@michael@tv_w_kids 001520_02_mics3_14_tv_w_kids_exit_trc_facial",
+	/*W_F!!!*///"switch@trevor@rude_at_cafe 001218_03_trvs_23_rude_at_cafe_exit_female_facial",
 };
 
 std::vector<std::string> find_all_anims_with_suffix(std::string suffix)
