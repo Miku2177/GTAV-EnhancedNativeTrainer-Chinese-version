@@ -769,9 +769,9 @@ void update_area_effects(Ped playerPed){
 		}
 		if (((PLAYER::GET_TIME_SINCE_LAST_DEATH() > 100 && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 5000) || (PLAYER::GET_TIME_SINCE_LAST_ARREST() > 100 && PLAYER::GET_TIME_SINCE_LAST_ARREST() < 5000) || player_died == true) && !pursuer.empty()) {
 			for (int j = 0; j < pursuer.size(); j++) {
-				ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&pursuer[j]);
+				if (ENTITY::DOES_ENTITY_EXIST(pursuer[j])) ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&pursuer[j]);
 				if (ENTITY::DOES_ENTITY_EXIST(pursuer[j])) PED::DELETE_PED(&pursuer[j]);
-				ENTITY::SET_VEHICLE_AS_NO_LONGER_NEEDED(&v_collided[j]);
+				if (ENTITY::DOES_ENTITY_EXIST(v_collided[j])) ENTITY::SET_VEHICLE_AS_NO_LONGER_NEEDED(&v_collided[j]);
 				if (ENTITY::DOES_ENTITY_EXIST(v_collided[j])) VEHICLE::DELETE_VEHICLE(&v_collided[j]);
 				player_died = false;
 			}
@@ -780,13 +780,13 @@ void update_area_effects(Ped playerPed){
 			v_collided.clear();
 			v_collided.shrink_to_fit();
 		}
-		if (!pursuer.empty() && pursuer.size() > 12) { // 15
-			AI::CLEAR_PED_TASKS_IMMEDIATELY(pursuer[0]);
-			ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&pursuer[0]);
-			PED::DELETE_PED(&pursuer[0]);
+		if (!pursuer.empty() && pursuer.size() > 10) { // 15
+			if (ENTITY::DOES_ENTITY_EXIST(pursuer[0])) AI::CLEAR_PED_TASKS_IMMEDIATELY(pursuer[0]);
+			if (ENTITY::DOES_ENTITY_EXIST(pursuer[0])) ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&pursuer[0]);
+			if (ENTITY::DOES_ENTITY_EXIST(pursuer[0])) PED::DELETE_PED(&pursuer[0]);
 			pursuer.erase(pursuer.begin());
-			ENTITY::SET_VEHICLE_AS_NO_LONGER_NEEDED(&v_collided[0]);
-			VEHICLE::DELETE_VEHICLE(&v_collided[0]);
+			if (ENTITY::DOES_ENTITY_EXIST(v_collided[0])) ENTITY::SET_VEHICLE_AS_NO_LONGER_NEEDED(&v_collided[0]);
+			if (ENTITY::DOES_ENTITY_EXIST(v_collided[0])) VEHICLE::DELETE_VEHICLE(&v_collided[0]);
 			v_collided.erase(v_collided.begin());
 		}
 	} // end of aggressive drivers && vigilante citizens
