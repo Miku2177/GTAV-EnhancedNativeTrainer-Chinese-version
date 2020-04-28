@@ -59,6 +59,8 @@ int injured_m = -2;
 
 bool everInitialised = false;
 
+bool falling_down = false;
+
 ENTDatabase* database = NULL;
 Camera DeathCam = NULL;
 Camera DeathCamM = NULL;
@@ -72,6 +74,7 @@ bool injured_drunk = false;
 // features
 bool featurePlayerInvincible = false;
 bool featurePlayerInvincibleUpdated = false;
+bool featureNoFallDamage = false;
 bool featurePlayerIgnoredByPolice = false;
 bool featurePlayerUnlimitedAbility = false;
 bool featurePlayerNoNoise = false;
@@ -702,7 +705,7 @@ void update_features(){
 
 	update_time_features(player);
 
-	// player invincible
+	// Invincible
 	if(featurePlayerInvincibleUpdated){
 		if(bPlayerExists && !featurePlayerInvincible){
 			if (getGameVersion() < VER_1_0_678_1_STEAM || getGameVersion() < VER_1_0_678_1_NOSTEAM) PLAYER::SET_PLAYER_INVINCIBLE(player, FALSE);
@@ -712,12 +715,25 @@ void update_features(){
 		featurePlayerInvincibleUpdated = false;
 		WAIT(100);
 	}
-
 	if(featurePlayerInvincible && bPlayerExists){
 		if (getGameVersion() < VER_1_0_678_1_STEAM || getGameVersion() < VER_1_0_678_1_NOSTEAM) PLAYER::SET_PLAYER_INVINCIBLE(player, TRUE);
 		if (getGameVersion() >= VER_1_0_678_1_STEAM || getGameVersion() >= VER_1_0_678_1_NOSTEAM) PLAYER::_0x733A643B5B0C53C1(player, TRUE);
 	}
 	
+	// No Fall Damage
+	if (featureNoFallDamage && !featurePlayerInvincible) {
+		if (PED::IS_PED_FALLING(playerPed) || PED::IS_PED_IN_PARACHUTE_FREE_FALL(playerPed)) {
+			PLAYER::SET_PLAYER_INVINCIBLE(player, TRUE);
+			falling_down = true;
+		}
+		if (!PED::IS_PED_FALLING(playerPed) && !PED::IS_PED_IN_PARACHUTE_FREE_FALL(playerPed) && falling_down) {
+			if (!PED::IS_PED_RAGDOLL(playerPed)) {
+				PLAYER::SET_PLAYER_INVINCIBLE(player, FALSE);
+				falling_down = false;
+			}
+		}
+	}
+
 	if (engine_switched) { 
 		if (!VEHICLE_ENGINE.empty()) VEHICLE::SET_VEHICLE_ENGINE_ON(VEHICLE_ENGINE[0], engine_running, true);
 	}
@@ -1590,7 +1606,7 @@ bool process_player_life_menu(){
 
 bool maxwantedlevel_menu() {
 	//Ped playerPed = PLAYER::PLAYER_PED_ID();
-	std::string caption = "Wanted Level Options";
+	std::string caption = "Wanted Level Settings Options";
 
 	std::vector<MenuItem<int> *> menuItems;
 	SelectFromListMenuItem *listItem;
@@ -1863,28 +1879,28 @@ bool onconfirm_player_menu(MenuItem<int> choice){
 		case 1:
 			heal_player();
 			break;
-		case 5:
+		case 6:
 			maxwantedlevel_menu();
 			break;
-		case 6:
+		case 7:
 			mostwanted_menu();
 			break;
-		case 10:
+		case 11:
 			player_movement_speed();
 			break;
-		case 11:
+		case 12:
 			process_ragdoll_menu();
 			break;
-		case 17:
+		case 18:
 			process_anims_menu_top();
 			break;
-		case 18:
+		case 19:
 			process_player_life_menu();
 			break;
-		case 19:
+		case 20:
 			process_player_prison_menu();
 			break;
-		case 20:
+		case 21:
 			process_player_forceshield_menu();
 			break;
 		default:
@@ -1895,7 +1911,7 @@ bool onconfirm_player_menu(MenuItem<int> choice){
 }
 
 void process_player_menu(){
-	const int lineCount = 27;
+	const int lineCount = 28;
 
 	std::string caption = "Player Options";
 
@@ -1903,6 +1919,7 @@ void process_player_menu(){
 		{"Player Appearance", NULL, NULL, false},
 		{"Heal Player", NULL, NULL, true},
 		{"Invincible", &featurePlayerInvincible, &featurePlayerInvincibleUpdated, true},
+		{"No Fall Damage", &featureNoFallDamage, NULL, true},
 		{"Add or Remove Cash", NULL, NULL, true, CASH},
 		{"Wanted Level", NULL, NULL, true, WANTED},
 		{"Wanted Level Settings", NULL, NULL, false},
@@ -2140,6 +2157,7 @@ void reset_globals(){
 
 	featurePlayerDrunk =
 		featurePlayerInvincible =
+		featureNoFallDamage =
 		featurePlayerIgnoredByPolice =
 		featurePlayerUnlimitedAbility =
 		featurePlayerNoNoise =
@@ -2179,7 +2197,7 @@ void reset_globals(){
 		featurePlayerLifeUpdated =
 		featurePrison_Yard = 
 		featurePlayerStatsUpdated =
-		featurePlayerNoSwitch = true;
+		featurePlayerNoSwitch =
 		featureWantedLevelFrozenUpdated = true;
 
 	set_status_text("All settings reset to defaults");
@@ -2392,6 +2410,7 @@ void ScriptTidyUp(){
 
 void add_player_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerInvincible", &featurePlayerInvincible, &featurePlayerInvincibleUpdated});
+	results->push_back(FeatureEnabledLocalDefinition{"featureNoFallDamage", &featureNoFallDamage});
 	results->push_back(FeatureEnabledLocalDefinition{"featureWantedLevelFrozen", &featureWantedLevelFrozen, &featureWantedLevelFrozenUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerIgnoredByPolice", &featurePlayerIgnoredByPolice}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureWantedLevelNoPHeli", &featureWantedLevelNoPHeli});
