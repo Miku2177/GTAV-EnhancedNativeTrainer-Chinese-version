@@ -684,7 +684,7 @@ bool onconfirm_skinchanger_choices_test(MenuItem<std::string> choice)
 	return false;
 }
 
-bool process_skinchanger_choices_test()
+/*bool process_skinchanger_choices_test()
 {
 	std::vector<MenuItem<std::string>*> menuItems;
 
@@ -698,7 +698,7 @@ bool process_skinchanger_choices_test()
 	}
 
 	return draw_generic_menu<std::string>(menuItems, &skinTypesMenuPositionMemory[3], "Test Skins", onconfirm_skinchanger_choices_test, NULL, NULL);
-}
+}*/
 
 /*
 * ===============

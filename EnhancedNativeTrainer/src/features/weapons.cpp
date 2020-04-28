@@ -2112,7 +2112,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	}
 
 	// Give All Weapons Automatically
-	if (featureGiveAllWeapons && detained == false && in_prison == false) {
+	if (featureGiveAllWeapons && detained == false && in_prison == false && PED::IS_PED_HUMAN(playerPed)) {
 		w_tick_secs_passed = clock() / CLOCKS_PER_SEC;
 		if (((clock() / (CLOCKS_PER_SEC / 1000)) - w_tick_secs_curr) != 0) {
 			tick_allw = tick_allw + 1;
@@ -2133,7 +2133,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	}
 	
 	// Add All Weapons Attachments Automatically
-	if (featureAddAllWeaponsAttachments && detained == false && in_prison == false) {
+	if (featureAddAllWeaponsAttachments && detained == false && in_prison == false && PED::IS_PED_HUMAN(playerPed)) {
 		w_tick_secs_passed = clock() / CLOCKS_PER_SEC;
 		if (((clock() / (CLOCKS_PER_SEC / 1000)) - w_a_tick_secs_curr) != 0) {
 			tick_a_allw = tick_a_allw + 1;
@@ -2154,7 +2154,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	}
 
 	// Equip Saved Weapons
-	if (WEAPONS_SAVED_LOAD_VALUES[WeaponsSavedLoad] > 0 && detained == false && in_prison == false) {
+	if (WEAPONS_SAVED_LOAD_VALUES[WeaponsSavedLoad] > 0 && detained == false && in_prison == false && PED::IS_PED_HUMAN(playerPed)) {
 		w_tick_secs_passed = clock() / CLOCKS_PER_SEC;
 		if (((clock() / (CLOCKS_PER_SEC / 1000)) - ss_tick_secs_curr) != 0) {
 			tick_s_allw = tick_s_allw + 1;

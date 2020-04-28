@@ -59,8 +59,8 @@ void process_airbrake_menu()
 {
 	exitFlag = false;
 
-	const float lineWidth = 250.0;
-	const int lineCount = 1;
+	//const float lineWidth = 250.0;
+	//const int lineCount = 1;
 	bool loadedAnims = false;
 		
 	std::string caption = "Airbrake Mode";
@@ -257,7 +257,7 @@ void airbrake(bool inVehicle)
 {
 	// common variables
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
-	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(playerPed);
+	//BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(playerPed);
 
 	switch (travelSpeed)
 	{

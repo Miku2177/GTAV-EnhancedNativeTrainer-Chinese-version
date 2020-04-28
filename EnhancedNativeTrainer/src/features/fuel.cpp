@@ -46,14 +46,6 @@ bool featureFuel = false;
 //bool featureBlips = false;
 //bool featureBlipsPhone = false;
 
-const Hash PLAYER_ZERO = 0xD7114C9;
-const Hash PLAYER_ONE = 0x9B22DBAF;
-const Hash PLAYER_TWO = 0x9B810FA2;
-
-const Hash SP0_TOTAL_CASH = 0x324C31D;
-const Hash SP1_TOTAL_CASH = 0x44BD6982;
-const Hash SP2_TOTAL_CASH = 0x8D75047D;
-
 int IdleConsume_secs_passed, IdleConsume_secs_curr, IdleConsume_seconds = -1;
 
 Vehicle veh_being_refueled;

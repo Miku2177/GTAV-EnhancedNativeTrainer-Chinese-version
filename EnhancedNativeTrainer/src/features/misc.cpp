@@ -37,7 +37,7 @@ bool mouse_view_control = false;
 bool help_showing = true;
 bool frozen_time = false;
 
-// Phone Bill variables
+// phone bill variables
 bool featureBlockInputInMenu = false;
 bool featurePhoneBillEnabled = false;
 bool featureGamePause = false;
@@ -48,7 +48,7 @@ int secs_passed, secs_curr = -1;
 float temp_seconds, bill_seconds = 0;
 float bill_to_pay, mins = -1;
 //
-// Dynamic Health Bar variables
+// dynamic health bar variables
 bool featureDynamicHealthBar = false;
 bool been_damaged = false;
 float curr_damaged_health, curr_damaged_armor = -1;
@@ -56,13 +56,13 @@ int healthbar_secs_curr, healthbar_seconds = -1;
 float health_bar_x = 0.015;
 float health_bar_y = 0.966;
 //
-// Show FPS
+// show fps
 static int frames = 0;
 static double FPStime, FPStime_passed, FPStime_curr, starttime = 0;
 int fps = 0; 
 char fps_to_show_char_modifiable[15];
 //
-// Use Phone While On Bike
+// use phone while on bike
 Object temp_obj = -1;
 char* anim_dict = "anim@cellphone@in_car@ps";
 char* animation_of_d = "cellphone_text_read_base";
@@ -155,7 +155,6 @@ Camera StuntCam = NULL;
 // First Person Cutscene Camera Variables
 Cam CutCam = NULL;
 Object xaxis, zaxis = -1;
-//
 
 // Main characters
 const Hash PLAYER_ZERO = 0xD7114C9;

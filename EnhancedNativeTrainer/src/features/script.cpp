@@ -682,7 +682,7 @@ void update_features(){
 
 	update_area_effects(playerPed);
 	
-	update_vehicles(playerPed); // speed / altitude
+	update_speedaltitude(playerPed);
 
 	update_weapon_features(bPlayerExists, player);
 
@@ -1965,7 +1965,6 @@ void process_reset_menu(){
 	};
 	
 	draw_menu_from_struct_def(lines, lineCount, &activeLineIndexPlayer, caption, onconfirm_reset_menu);
-
 }
 
 //==================

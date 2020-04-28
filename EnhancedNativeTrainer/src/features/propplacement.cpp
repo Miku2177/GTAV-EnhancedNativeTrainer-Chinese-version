@@ -51,8 +51,8 @@ void begin_prop_placement(SpawnedPropInstance prop)
 	pp_exit_flag = false;
 	currentProp = prop;
 
-	const float lineWidth = 250.0;
-	const int lineCount = 1;
+	//const float lineWidth = 250.0;
+	//const int lineCount = 1;
 	
 	std::string caption = "Object Placement";
 

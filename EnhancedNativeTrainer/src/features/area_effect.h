@@ -171,7 +171,7 @@ void process_areaeffect_peds_weapons_menu();
 
 void update_area_effects(Ped playerPed);
 
-void update_vehicles(Ped playerPed);
+void update_speedaltitude(Ped playerPed);
 
 std::set<Ped> get_nearby_peds(Ped playerPed);
 

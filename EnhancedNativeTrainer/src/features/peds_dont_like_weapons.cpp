@@ -17,7 +17,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\io\config_io.h"
 #include <ctime>
 
-// Peds Don't Like Weapons variables
+// peds don't like Weapons variables
 int tick_pedagainstweapons = 0;
 int pw_tick_secs_passed, pw_tick_secs_curr = 0;
 bool featurePedAgainstWeapons = false;
