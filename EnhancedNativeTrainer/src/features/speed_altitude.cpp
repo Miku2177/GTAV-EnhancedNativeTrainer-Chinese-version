@@ -144,7 +144,7 @@ void update_speed_text(int speed, Vector3 player_coords)
 	}
 }
 
-void update_vehicles(Ped playerPed) {
+void update_speedaltitude(Ped playerPed) {
 
 	// On Foot
 	if (featureSpeedOnFoot) {

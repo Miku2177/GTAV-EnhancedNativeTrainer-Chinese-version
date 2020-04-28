@@ -80,15 +80,7 @@ void prison_break()
 		float prison_x = 1689.69;
 		float prison_y = 2589.49;
 		float prison_z = 46;
-		// Main characters
-		const Hash PLAYER_ZERO = 0xD7114C9;
-		const Hash PLAYER_ONE = 0x9B22DBAF;
-		const Hash PLAYER_TWO = 0x9B810FA2;
-		// Main characters cash
-		const Hash SP0_TOTAL_CASH = 0x324C31D;
-		const Hash SP1_TOTAL_CASH = 0x44BD6982;
-		const Hash SP2_TOTAL_CASH = 0x8D75047D;
-
+		
 		// Got wanted level? You'd better not die
 		if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) > PLAYER_PRISON_VALUES[current_player_prison] && !in_prison) detained = true;
 			

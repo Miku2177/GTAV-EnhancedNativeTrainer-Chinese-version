@@ -1003,7 +1003,7 @@ void handle_generic_settings_teleportation(std::vector<StringPairSettingDBRow>* 
 //////////////////////// JUMP TO COORDS ////////////////////////////////
 bool onconfirm_jump_category(MenuItem<int> choice)
 {
-	if (choice.value == -5) {
+	if (choice.value == -6) {
 		std::string result = show_keyboard(NULL, (char*)lastJumpSpawn.c_str());
 		if (!result.empty())
 		{
@@ -1161,35 +1161,31 @@ void getTelChauffeurIndex(){
 
 bool onconfirm_teleport_category(MenuItem<int> choice){
 	
-	if (choice.value == -2){
+	if (choice.value == -1){
 		teleport_to_marker();
+		return false;
+	}
+	else if (choice.value == -2){
+		teleport_to_mission_marker();
+		return false;
+	}
+	else if (choice.value == -3){
+		getTelChauffeurIndex();
 		return false;
 	}
 	else if (choice.value == -4){
 		teleport_to_last_vehicle();
 		return false;
 	}
-	//else if (choice.value == -1){
-	//	output_current_location(PLAYER::PLAYER_PED_ID());
-	//	return false;
-	//}
 	else if (choice.value == -5){
-		onconfirm_jump_category(choice);
-		return false;
-	}
-	else if (choice.value == -6){
-		teleport_to_mission_marker();
-		return false;
-	}
-	else if (choice.value == -8){
 		teleport_to_vehicle_as_passenger();
 		return false;
 	}
-	else if (choice.value == -9){
-		getTelChauffeurIndex();
+	else if (choice.value == -6){
+		onconfirm_jump_category(choice);
 		return false;
 	}
-	else if (choice.value == -11){
+	else if (choice.value == -7){
 		set_3d_marker();
 		return false;
 	}
@@ -1377,20 +1373,12 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 bool process_teleport_menu(int categoryIndex){
 	if (categoryIndex == -1){
 		std::vector<MenuItem<int>*> menuItems;
-		//SelectFromListMenuItem *listItem;
-		/*
-		ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
-		toggleItem->caption = "Enable MP DLC Maps";
-		toggleItem->value = -6;
-		toggleItem->toggleValue = &featureEnableMpMaps;
-		toggleItem->toggleValueUpdated = NULL;
-		menuItems.push_back(toggleItem);*/
-
+		
 		int i = 0;
 
 		MenuItem<int> *markerItem = new MenuItem<int>();
 		markerItem->caption = "Teleport To Marker";
-		markerItem->value = -2;
+		markerItem->value = -1;
 		markerItem->isLeaf = true;
 		menuItems.push_back(markerItem);
 
@@ -1402,13 +1390,13 @@ bool process_teleport_menu(int categoryIndex){
 		
 		markerItem = new MenuItem<int>();
 		markerItem->caption = "Go To Mission Marker";
-		markerItem->value = -6;
+		markerItem->value = -2;
 		markerItem->isLeaf = true;
 		menuItems.push_back(markerItem);
 
 		markerItem = new MenuItem<int>();
 		markerItem->caption = "Chauffeur To Marker";
-		markerItem->value = -9;
+		markerItem->value = -3;
 		markerItem->isLeaf = false;
 		menuItems.push_back(markerItem);
 
@@ -1420,27 +1408,28 @@ bool process_teleport_menu(int categoryIndex){
 
 		markerItem = new MenuItem<int>();
 		markerItem->caption = "Go To Nearest Vehicle As Passenger";
-		markerItem->value = -8;
+		markerItem->value = -5;
 		markerItem->isLeaf = true;
 		menuItems.push_back(markerItem);
 
 		markerItem = new MenuItem<int>();
 		markerItem->caption = "Jump To Coordinates";
-		markerItem->value = -5;
+		markerItem->value = -6;
 		markerItem->isLeaf = true;
 		menuItems.push_back(markerItem);
-		
-		//MenuItem<int> *dialogItem = new MenuItem<int>();
-		//dialogItem->caption = "Show Coordinates";
-		//dialogItem->value = -1;
-		//dialogItem->isLeaf = true;
-		//menuItems.push_back(dialogItem);
-		
+				
 		markerItem = new MenuItem<int>();
 		markerItem->caption = "3D Marker";
-		markerItem->value = -11;
+		markerItem->value = -7;
 		markerItem->isLeaf = false;
 		menuItems.push_back(markerItem);
+
+		/*ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
+		toggleItem->caption = "Enable MP DLC Maps";
+		toggleItem->value = -6;
+		toggleItem->toggleValue = &featureEnableMpMaps;
+		toggleItem->toggleValueUpdated = NULL;
+		menuItems.push_back(toggleItem);*/
 
 		for (int i = 0; i < MENU_LOCATION_CATEGORIES.size(); i++){
 			if (MENU_LOCATION_CATEGORIES[i].compare(JELLMAN_CAPTION) == 0 && !is_jellman_scenery_enabled()){
@@ -1502,7 +1491,7 @@ void add_teleporter_feature_enablements(std::vector<FeatureEnabledLocalDefinitio
 	results->push_back(FeatureEnabledLocalDefinition{"featureLandAtDestination", &featureLandAtDestination});
 }
 
-const std::vector<std::string> TOGGLE_IPLS
+/*const std::vector<std::string> TOGGLE_IPLS
 {
 	"vb_30_crimetape",
 	"sheriff_cap",
@@ -1534,13 +1523,13 @@ const std::vector<std::string> TOGGLE_IPLS
 	"FIB_heist_dmg",
 	"FIB_heist_lights",
 	"DT1_05_rubble" //rubble outside FBI HQ
-};
+};*/
 
-bool is_ipl_active(std::vector<std::string> extras){
+/*bool is_ipl_active(std::vector<std::string> extras){
 	return STREAMING::IS_IPL_ACTIVE(extras.at(0).c_str()) == 1;
-}
+}*/
 
-void set_ipl_active(bool applied, std::vector<std::string> extras){
+/*void set_ipl_active(bool applied, std::vector<std::string> extras){
 	char* scenery = (char*)extras.at(0).c_str();
 	if (applied){
 		if (!STREAMING::IS_IPL_ACTIVE(scenery)){
@@ -1552,7 +1541,7 @@ void set_ipl_active(bool applied, std::vector<std::string> extras){
 			STREAMING::REMOVE_IPL(scenery);
 		}
 	}
-}
+}*/
 
 //int toggleIndex = 0;
 

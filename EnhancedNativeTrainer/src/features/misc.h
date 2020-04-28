@@ -86,6 +86,14 @@ const int MISC_TRAINERCONTROL_VALUES[] = { 0, 1 };
 extern int TrainerControlIndex;
 extern bool TrainerControlChanged;
 
+extern const Hash PLAYER_ZERO;
+extern const Hash PLAYER_ONE;
+extern const Hash PLAYER_TWO;
+
+extern const Hash SP0_TOTAL_CASH;
+extern const Hash SP1_TOTAL_CASH;
+extern const Hash SP2_TOTAL_CASH;
+
 void process_misc_menu();
 
 void reset_misc_globals();
