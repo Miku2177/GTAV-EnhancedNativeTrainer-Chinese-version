@@ -722,14 +722,12 @@ void update_features(){
 	
 	// No Fall Damage
 	if (featureNoFallDamage && !featurePlayerInvincible) {
-		if (PED::IS_PED_FALLING(playerPed) || PED::IS_PED_IN_PARACHUTE_FREE_FALL(playerPed)) {
-			PLAYER::SET_PLAYER_INVINCIBLE(player, TRUE);
-			falling_down = true;
-		}
+		if (PED::IS_PED_FALLING(playerPed) || PED::IS_PED_IN_PARACHUTE_FREE_FALL(playerPed)) falling_down = true;
+		if (falling_down) PLAYER::SET_PLAYER_INVINCIBLE(player, TRUE);
 		if (!PED::IS_PED_FALLING(playerPed) && !PED::IS_PED_IN_PARACHUTE_FREE_FALL(playerPed) && falling_down) {
-			if (!PED::IS_PED_RAGDOLL(playerPed)) {
-				PLAYER::SET_PLAYER_INVINCIBLE(player, FALSE);
+			if (!PED::IS_PED_RAGDOLL(playerPed) && (CONTROLS::IS_CONTROL_PRESSED(2, 32) || CONTROLS::IS_CONTROL_PRESSED(2, 33) || CONTROLS::IS_CONTROL_PRESSED(2, 34) || CONTROLS::IS_CONTROL_PRESSED(2, 35))) {
 				falling_down = false;
+				PLAYER::SET_PLAYER_INVINCIBLE(player, FALSE);
 			}
 		}
 	}
