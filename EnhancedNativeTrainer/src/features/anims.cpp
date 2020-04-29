@@ -46,15 +46,14 @@ const std::vector<std::string> SCENARIOS_NORMAL_VALUES = { "PROP_HUMAN_BBQ", "PR
 //"Smoking Cigarette 1", "Smoking Cigarette 2", "Smoking Pot", "Standing: By Fire", "Standing: Impatient 1", "Standing: Impatient 2", "Standing: Impatient, Upright", "Standing: On Mobile", "Standing: On Mobile, Upright", "Standing: Watching Stripper", "Stupor", "Sunbathing", 
 //"Sunbathing On Back", "Superhero", "Swimming", "Tennis Player", "Texting 1", "Texting 2", "Tourist: Looking At Map", "Tourist: On Mobile", "Using ATM", "Using Parking Meter", "Vehicle Mechanic", "Waiting To Cross Road", "Welding", "Window Shopping", "Yoga" };
 
-const std::vector<std::string> CLIPSETS_NORMAL_VALUES = { "move_action@generic@2h_melee_weapon@upper", "move_action@generic@core", "move_action@mp_female@unarmed@core", "move_action@p_m_one@unarmed@core", "move_stealth@p_m_one@unarmed@core", 
-"move_action@p_m_one@armed@core", "move_action@p_m_two@armed@core", "move_action@p_m_zero@armed@core", "move_characters@amanda@bag", "move_characters@franklin@fire", "move_characters@jimmy@nervous@", "move_characters@jimmy@slow@", 
-"move_characters@michael@fire", "move_characters@orleans@core@", "move_cop@action", "move_f@arrogant@a", "move_f@chichi", "move_f@depressed@a", "move_f@depressed@c", "move_m@depressed@a", "move_m@depressed@b", "move_f@fat@a", 
-"move_m@fat@a", "move_f@femme@", "move_m@femme@", "move_f@film_reel", "move_f@flee@a", "move_m@flee@generic", "move_f@heels@c", "move_f@hiking", "move_m@hiking", "move_f@hurry@b", "move_m@hurry@a", "move_f@injured", 
-"move_m@injured", "move_f@maneater", "move_f@multiplayer", "move_m@posh@", "move_f@sad@a", "move_f@sad@b", "move_m@sad@a", "move_m@sad@b", "move_m@sad@c", "move_f@sassy", "move_m@sassy", "move_f@sexy@a", "move_f@tool_belt@a", 
-"move_m@tool_belt@a", "move_f@tough_guy@", "move_m@tough_guy@", "move_m@alien", "move_m@brave", "move_m@brave@b", "move_m@brave@fallback", "move_m@business@a", "move_m@buzzed", "move_m@casual@a", "move_m@casual@b", 
-"move_m@casual@c", "move_m@casual@d", "move_m@casual@e", "move_m@casual@f", "move_m@clipboard", "move_m@confident", "move_m@drunk@a", "move_m@drunk@moderatedrunk", "move_m@drunk@slightlydrunk", "move_m@drunk@verydrunk", "move_m@gangster@generic", 
-"move_m@gangster@ng", "move_m@hipster@a", "move_m@hobo@a", "move_m@intimidation@1h", "move_m@leaf_blower", "move_m@money", "move_m@muscle@a", "move_m@quick", "move_m@shadyped@a", "move_m@shocked@a", "move_m@swagger", 
-"move_m@swagger@b", "move_p_m_one", "move_p_m_two", "move_p_m_zero", "move_p_m_zero_slow", "move_stealth@p_m_zero@1h@upper", "move_stealth@p_m_zero@2h_short@upper" };
+const std::vector<std::string> CLIPSETS_NORMAL_VALUES = { "move_action@generic@2h_melee_weapon@upper", "move_stealth@p_m_zero@1h@upper", "move_action@p_m_one@armed@core", "move_action@p_m_two@armed@core", "move_action@p_m_zero@armed@core", 
+"move_stealth@p_m_zero@2h_short@upper", "move_cop@action", "move_action@mp_female@unarmed@core", "move_action@p_m_one@unarmed@core", "move_stealth@p_m_one@unarmed@core", "move_characters@franklin@fire", "move_characters@jimmy@nervous@",
+"move_characters@jimmy@slow@", "move_p_m_one", "move_p_m_two", "move_p_m_zero", "move_p_m_zero_slow", "move_characters@michael@fire", "move_characters@amanda@bag", "move_f@arrogant@a", "move_f@chichi", "move_f@maneater", "move_f@sassy",
+"move_m@sassy", "move_f@sexy@a", "move_f@tool_belt@a", "move_f@tough_guy@", "move_f@femme@", "move_m@femme@", "move_f@film_reel", "move_f@flee@a", "move_m@flee@generic", "move_f@heels@c", "move_m@quick", "move_f@hurry@b", "move_m@hurry@a", 
+"move_f@hiking", "move_m@hiking", "move_f@injured", "move_m@injured", "move_m@posh@", "move_f@sad@a", "move_f@sad@b", "move_m@sad@b", "move_m@sad@c", "move_f@depressed@a", "move_f@depressed@c", "move_m@depressed@a", "move_m@depressed@b", 
+"move_m@tool_belt@a", "move_m@intimidation@1h", "move_m@muscle@a", "move_characters@orleans@core@", "move_m@gangster@generic", "move_m@fat@a", "move_m@alien", "move_m@brave", "move_m@brave@b", "move_m@business@a", "move_m@casual@b",
+"move_m@casual@c", "move_m@casual@d", "move_m@casual@e", "move_m@casual@f", "move_m@hipster@a", "move_m@leaf_blower", "move_m@money", "move_m@shadyped@a", "move_m@swagger", "move_m@swagger@b", "move_action@generic@core", "move_m@hobo@a", 
+"move_m@buzzed", "move_m@drunk@a", "move_m@drunk@moderatedrunk", "move_m@drunk@slightlydrunk", "move_m@drunk@verydrunk" };
 
 int activeScenarioLineIndex[2]{ 0, 0 };
 int activeClipsetLineIndex = 0;
