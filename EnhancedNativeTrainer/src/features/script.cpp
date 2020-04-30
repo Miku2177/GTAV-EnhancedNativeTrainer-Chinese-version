@@ -1734,6 +1734,13 @@ bool player_movement_speed() {
 	listItem->value = current_player_movement; 
 	menuItems.push_back(listItem);
 
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Drunk";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featurePlayerDrunk;
+	toggleItem->toggleValueUpdated = &featurePlayerDrunkUpdated;
+	menuItems.push_back(toggleItem);
+	
 	return draw_generic_menu<int>(menuItems, &PlayerMovementMenuIndex, caption, onconfirm_PlayerMovement_menu, NULL, NULL);
 }
 
@@ -1889,16 +1896,16 @@ bool onconfirm_player_menu(MenuItem<int> choice){
 		case 12:
 			process_ragdoll_menu();
 			break;
-		case 18:
+		case 17:
 			process_anims_menu_top();
 			break;
-		case 19:
+		case 18:
 			process_player_life_menu();
 			break;
-		case 20:
+		case 19:
 			process_player_prison_menu();
 			break;
-		case 21:
+		case 20:
 			process_player_forceshield_menu();
 			break;
 		default:
@@ -1909,7 +1916,7 @@ bool onconfirm_player_menu(MenuItem<int> choice){
 }
 
 void process_player_menu(){
-	const int lineCount = 28;
+	const int lineCount = 27;
 
 	std::string caption = "Player Options";
 
@@ -1929,7 +1936,7 @@ void process_player_menu(){
 		{"Ragdoll", NULL, NULL, false},
 		{"Invisibility", &featurePlayerInvisible, NULL, true}, 
 		{"Invisibility In Vehicle", &featurePlayerInvisibleInVehicle, NULL, true }, 
-		{"Drunk", &featurePlayerDrunk, &featurePlayerDrunkUpdated, true},
+		//{"Drunk", &featurePlayerDrunk, &featurePlayerDrunkUpdated, true},
 		{"Night Vision", &featureNightVision, &featureNightVisionUpdated, true},
 		{"Thermal Vision", &featureThermalVision, &featureThermalVisionUpdated, true},
 		{"Animations", NULL, NULL, false},

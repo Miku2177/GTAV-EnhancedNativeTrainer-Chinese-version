@@ -3682,10 +3682,11 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 ///////////////////////////// AUTOROLL DRIVER WINDOW WHEN SHOOT /////////////////////
 	if (featureRollWhenShoot && PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) && VEHICLE::GET_PED_IN_VEHICLE_SEAT(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), -1) == playerPed) {
 		if (CONTROLS::IS_CONTROL_PRESSED(2, 70) && VEHICLE::IS_VEHICLE_WINDOW_INTACT(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 0)) {
+			AI::CLEAR_PED_TASKS(playerPed);
 			VEHICLE::ROLL_DOWN_WINDOW(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 0);
 			window_up = false;
 		}
-		if (!CONTROLS::IS_CONTROL_PRESSED(2, 70) && window_up == false) {
+		if (CONTROLS::IS_CONTROL_RELEASED(2, 70) && window_up == false) {
 			VEHICLE::ROLL_UP_WINDOW(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 0);
 			window_up = true;
 		}
