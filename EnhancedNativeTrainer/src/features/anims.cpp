@@ -68,8 +68,8 @@ TreeNode *currentMenuNode;
 int currentAnimMenuDepth = 0;
 int currentAnimMenuMode = -1;
 
-char* lastImmediatePlayDict = 0;
-char* lastImmediatePlayAnim = 0;
+std::string lastImmediatePlayDict;
+std::string lastImmediatePlayAnim;
 int lastImmediateType = 0;
 
 const int CATEGORY_FACIAL_NOW = 94;
@@ -79,6 +79,7 @@ const int CATEGORY_MOVE_CLIPSET = 97;
 
 bool loaded = false;
 bool anim_p = false;
+
 const std::vector<std::string> ALL_ANIMS =
 {
 	/*W_F!!!*/"amb@bagels@male@walking@ static",
@@ -5614,12 +5615,10 @@ bool onconfirm_anim_menu(MenuItem<int> choice)
 		{
 		case CATEGORY_FACIAL_NOW:
 		case CATEGORY_GENERAL_NOW:
-			lastImmediatePlayDict = dict;
-			lastImmediatePlayAnim = anim;
 			lastImmediateType = currentAnimMenuMode;
 			break;
 		}
-
+		
 		do_play_anim(playerPed, dict, anim, currentAnimMenuMode);
 
 		set_status_text("Animation applied");
@@ -5774,43 +5773,29 @@ bool process_anims_menu_top()
 
 void replay_last_anim()
 {
-	if (lastImmediatePlayAnim == 0 || lastImmediatePlayDict == 0)
+	if (lastImmediatePlayAnim.empty() || lastImmediatePlayDict.empty()) set_status_text("No animation to play");
+	
+	if (!lastImmediatePlayAnim.empty() && !lastImmediatePlayDict.empty())
 	{
-		set_status_text("No animation to play");
-	}
-	else
-	{
-		do_play_anim(PLAYER::PLAYER_PED_ID(), lastImmediatePlayDict, lastImmediatePlayAnim, lastImmediateType);
+		do_play_anim(PLAYER::PLAYER_PED_ID(), (char*)lastImmediatePlayDict.c_str(), (char*)lastImmediatePlayAnim.c_str(), lastImmediateType);
 	}
 }
 
 void update_anims_features(BOOL bPlayerExists, Ped playerPed) {
-	if ((IsKeyDown(KeyConfig::KEY_MENU_BACK) || IsControllerButtonDown(KeyConfig::KEY_MENU_BACK)) && anim_p == true) {
-		AI::STOP_ANIM_TASK(PLAYER::PLAYER_PED_ID(), lastImmediatePlayDict, lastImmediatePlayAnim, 1.0);
-		PED::CLEAR_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 0, 0);
-		PED::CLEAR_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 1, 0);
-		PED::CLEAR_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 2, 0);
+	if ((IsKeyDown(KeyConfig::KEY_MENU_BACK) || IsControllerButtonDown(KeyConfig::KEY_MENU_BACK) || CONTROLS::IS_CONTROL_PRESSED(2, 32) || CONTROLS::IS_CONTROL_PRESSED(2, 33) || CONTROLS::IS_CONTROL_PRESSED(2, 34) || 
+		CONTROLS::IS_CONTROL_PRESSED(2, 35)) && anim_p == true) {
+		AI::STOP_ANIM_TASK(PLAYER::PLAYER_PED_ID(), (char*)lastImmediatePlayDict.c_str(), (char*)lastImmediatePlayAnim.c_str(), 1.0);
 		PED::RESET_PED_MOVEMENT_CLIPSET(playerPed, 1.0f);
+		AI::CLEAR_PED_TASKS(playerPed);
 		PED::CLEAR_FACIAL_IDLE_ANIM_OVERRIDE(playerPed);
-		STREAMING::REMOVE_ANIM_DICT(lastImmediatePlayDict);
-		STREAMING::REMOVE_ANIM_SET(lastImmediatePlayAnim);
-		AI::CLEAR_PED_TASKS_IMMEDIATELY(PLAYER::PLAYER_PED_ID());
+		STREAMING::REMOVE_ANIM_DICT((char*)lastImmediatePlayDict.c_str());
+		STREAMING::REMOVE_ANIM_SET((char*)lastImmediatePlayAnim.c_str());
 		anim_p = false;
 	}
-	/*if (lastImmediatePlayAnim != 0 && lastImmediatePlayDict != 0 && lastImmediateType != 0) {
-		std::stringstream ss55;
-		ss55 << "\n lastImmediatePlayAnim: " << lastImmediatePlayAnim;
-		ss55 << "\n lastImmediateType: " << lastImmediateType;
-		//ss55 << "\n dist_diff: " << dist_diff;
-		//ss55 << "\n temp_dist: " << temp_dist;
-		callsPerFrame = 0;
-		set_status_text_centre_screen(ss55.str());
-	}*/
 }
 
 void do_play_anim(Ped playerPed, char* dict, char* anim, int mode)
 {
-	AI::CLEAR_PED_TASKS_IMMEDIATELY(PLAYER::PLAYER_PED_ID());
 	PED::SET_PED_CAN_PLAY_AMBIENT_ANIMS(playerPed, true);
 	PED::SET_PED_CAN_PLAY_AMBIENT_BASE_ANIMS(playerPed, true);
 	PED::SET_PED_CAN_PLAY_GESTURE_ANIMS(playerPed, true);
@@ -5818,20 +5803,27 @@ void do_play_anim(Ped playerPed, char* dict, char* anim, int mode)
 	lastImmediatePlayDict = dict;
 	lastImmediatePlayAnim = anim;
 
-	switch (mode)
-	{
-	case CATEGORY_FACIAL_NOW:
+	if (mode == 94) { // CATEGORY_FACIAL_NOW:
 		anim_p = true;
 		PED::PLAY_FACIAL_ANIM(playerPed, anim, dict);
-		break;
-	case CATEGORY_GENERAL_NOW:
+	}
+	if (mode == 95) { // CATEGORY_GENERAL_NOW:
 		anim_p = true;
 		AI::TASK_PLAY_ANIM(playerPed, dict, anim, 8, -8, -1, 0, 0, false, 0, true);
-		break;
 	}
-	if (mode == -5) { // CATEGORY_SCENARIOS:
+	if (mode == 3) { // CATEGORY_SCENARIOS:
 		anim_p = true;
-		AI::TASK_START_SCENARIO_IN_PLACE(playerPed, anim, 0, true);
+		bool sitting_scenario = false;
+		std::string sentence = lastImmediatePlayAnim;
+		std::string wordToFind = "_SEAT_"; // std::string wordToFind = "Sitting:";
+		size_t word = sentence.find(wordToFind);
+		if (word != std::string::npos) sitting_scenario = true; //If we don't reach end of the sentence - we found it!
+		if (sitting_scenario == false) AI::TASK_START_SCENARIO_IN_PLACE(playerPed, anim, 0, true);
+		else AI::TASK_START_SCENARIO_AT_POSITION(playerPed, anim, ENTITY::GET_ENTITY_COORDS(playerPed, true).x, ENTITY::GET_ENTITY_COORDS(playerPed, true).y, ENTITY::GET_ENTITY_COORDS(playerPed, true).z - 1, ENTITY::GET_ENTITY_HEADING(playerPed), 0, 0, 1);
+		//AI::TASK_START_SCENARIO_IN_PLACE(playerPed, anim, 0, true);
+	}
+	if (mode == 4) { // CATEGORY_CLIPSET:
+		PED::SET_PED_MOVEMENT_CLIPSET(playerPed, anim, 1.0f);
 	}
 }
 
@@ -5871,17 +5863,17 @@ bool onconfirm_scenarios_menu_l2(MenuItem<int> choice)
 	{
 		value = SCENARIOS_NORMAL_VALUES[activeScenarioLineIndex[1]];
 		caption = SCENARIOS_NORMAL_VALUES[activeScenarioLineIndex[1]];
-		lastImmediatePlayAnim = (char*)SCENARIOS_NORMAL_VALUES[activeScenarioLineIndex[1]].c_str();
-		lastImmediatePlayDict = (char*)SCENARIOS_NORMAL_VALUES[activeScenarioLineIndex[1]].c_str();
-		lastImmediateType = -5;
+		lastImmediatePlayAnim = SCENARIOS_NORMAL_VALUES[activeScenarioLineIndex[1]];
+		lastImmediatePlayDict = SCENARIOS_NORMAL_VALUES[activeScenarioLineIndex[1]];
+		lastImmediateType = 3;
 	}
 	else
 	{
 		value = SCENARIOS_ANIMAL_VALUES[activeScenarioLineIndex[1]];
 		caption = SCENARIOS_ANIMAL_VALUES[activeScenarioLineIndex[1]];
-		lastImmediatePlayAnim = (char*)SCENARIOS_ANIMAL_VALUES[activeScenarioLineIndex[1]].c_str();
-		lastImmediatePlayDict = (char*)SCENARIOS_ANIMAL_VALUES[activeScenarioLineIndex[1]].c_str();
-		lastImmediateType = -5;
+		lastImmediatePlayAnim = SCENARIOS_ANIMAL_VALUES[activeScenarioLineIndex[1]];
+		lastImmediatePlayDict = SCENARIOS_ANIMAL_VALUES[activeScenarioLineIndex[1]];
+		lastImmediateType = 3;
 	}
 
 	std::string sentence = caption;
@@ -5980,19 +5972,23 @@ bool onconfirm_clipset_menu(MenuItem<int> choice)
 	caption = CLIPSETS_NORMAL_VALUES[activeClipsetLineIndex];
 	
 	DWORD ticks = GetTickCount();
-		STREAMING::REQUEST_ANIM_SET((char*)(char*)value.c_str());
-		while (!STREAMING::HAS_ANIM_SET_LOADED((char*)value.c_str()) && GetTickCount() < ticks + 5000)
-		{
-			make_periodic_feature_call();
-			WAIT(0);
-		}
-		if (!STREAMING::HAS_ANIM_SET_LOADED((char*)value.c_str()))
-		{
-			std::stringstream ss;
-			ss << "Loading clipset " << (char*)value.c_str() << " failed";
-			set_status_text(ss.str());
-			return false;
-		}
+	STREAMING::REQUEST_ANIM_SET((char*)(char*)value.c_str());
+	while (!STREAMING::HAS_ANIM_SET_LOADED((char*)value.c_str()) && GetTickCount() < ticks + 5000)
+	{
+		make_periodic_feature_call();
+		WAIT(0);
+	}
+	if (!STREAMING::HAS_ANIM_SET_LOADED((char*)value.c_str()))
+	{
+		std::stringstream ss;
+		ss << "Loading clipset " << (char*)value.c_str() << " failed";
+		set_status_text(ss.str());
+		return false;
+	}
+
+	lastImmediatePlayAnim = value;
+	lastImmediatePlayDict = value;
+	lastImmediateType = 4;
 
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	AI::CLEAR_PED_TASKS(playerPed);
