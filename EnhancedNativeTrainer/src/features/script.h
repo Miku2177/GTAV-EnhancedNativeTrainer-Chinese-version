@@ -61,6 +61,20 @@ extern bool PedsHealthChanged;
 extern int BodyHealthIndex;
 extern bool BodyHealthChanged;
 
+extern Vehicle temp_vehicle;
+extern Ped temp_ped;
+extern bool featurePlayerInvisible;
+extern bool featurePlayerInvisibleInVehicle;
+extern bool featureShowStatusMessage;
+extern bool featureNoAutoRespawn;
+extern bool player_died;
+extern bool npc_player_died;
+extern bool featureWantedLevelFrozen;
+extern bool in_prison;
+extern bool super_jump_no_parachute;
+extern int myENTGroup;
+//extern bool AIMBOT_INCLUDED;
+
 //Limp If Injured
 const std::vector<std::string> LIMP_IF_INJURED_CAPTIONS{ "OFF", "Mode 1", "Mode 2" };
 const int LIMP_IF_INJURED_VALUES[] = { 0, 1, 2 };
@@ -209,17 +223,3 @@ void set_graphics_test(bool applied, std::vector<int> extras);
 void cleanup_script();
 
 bool is_player_ignored_by_police();
-
-extern Vehicle temp_vehicle;
-extern Ped temp_ped;
-extern bool featurePlayerInvisible;
-extern bool featurePlayerInvisibleInVehicle;
-extern bool featureShowStatusMessage;
-extern bool featureNoAutoRespawn;
-extern bool player_died;
-extern bool npc_player_died;
-extern bool featureWantedLevelFrozen;
-extern bool in_prison;
-extern bool super_jump_no_parachute;
-extern int myENTGroup;
-//extern bool AIMBOT_INCLUDED;

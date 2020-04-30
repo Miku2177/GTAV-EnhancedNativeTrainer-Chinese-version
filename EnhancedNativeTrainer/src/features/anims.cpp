@@ -5797,6 +5797,15 @@ void update_anims_features(BOOL bPlayerExists, Ped playerPed) {
 		AI::CLEAR_PED_TASKS_IMMEDIATELY(PLAYER::PLAYER_PED_ID());
 		anim_p = false;
 	}
+	/*if (lastImmediatePlayAnim != 0 && lastImmediatePlayDict != 0 && lastImmediateType != 0) {
+		std::stringstream ss55;
+		ss55 << "\n lastImmediatePlayAnim: " << lastImmediatePlayAnim;
+		ss55 << "\n lastImmediateType: " << lastImmediateType;
+		//ss55 << "\n dist_diff: " << dist_diff;
+		//ss55 << "\n temp_dist: " << temp_dist;
+		callsPerFrame = 0;
+		set_status_text_centre_screen(ss55.str());
+	}*/
 }
 
 void do_play_anim(Ped playerPed, char* dict, char* anim, int mode)
@@ -5819,6 +5828,10 @@ void do_play_anim(Ped playerPed, char* dict, char* anim, int mode)
 		anim_p = true;
 		AI::TASK_PLAY_ANIM(playerPed, dict, anim, 8, -8, -1, 0, 0, false, 0, true);
 		break;
+	}
+	if (mode == -5) { // CATEGORY_SCENARIOS:
+		anim_p = true;
+		AI::TASK_START_SCENARIO_IN_PLACE(playerPed, anim, 0, true);
 	}
 }
 
@@ -5858,11 +5871,17 @@ bool onconfirm_scenarios_menu_l2(MenuItem<int> choice)
 	{
 		value = SCENARIOS_NORMAL_VALUES[activeScenarioLineIndex[1]];
 		caption = SCENARIOS_NORMAL_VALUES[activeScenarioLineIndex[1]];
+		lastImmediatePlayAnim = (char*)SCENARIOS_NORMAL_VALUES[activeScenarioLineIndex[1]].c_str();
+		lastImmediatePlayDict = (char*)SCENARIOS_NORMAL_VALUES[activeScenarioLineIndex[1]].c_str();
+		lastImmediateType = -5;
 	}
 	else
 	{
 		value = SCENARIOS_ANIMAL_VALUES[activeScenarioLineIndex[1]];
 		caption = SCENARIOS_ANIMAL_VALUES[activeScenarioLineIndex[1]];
+		lastImmediatePlayAnim = (char*)SCENARIOS_ANIMAL_VALUES[activeScenarioLineIndex[1]].c_str();
+		lastImmediatePlayDict = (char*)SCENARIOS_ANIMAL_VALUES[activeScenarioLineIndex[1]].c_str();
+		lastImmediateType = -5;
 	}
 
 	std::string sentence = caption;
