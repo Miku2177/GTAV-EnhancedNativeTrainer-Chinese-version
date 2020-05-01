@@ -785,12 +785,16 @@ void teleport_to_marker(){
 			break;
 		}
 	}
+	// marker in water area
+	float height = -1.0;
+	WATER::GET_WATER_HEIGHT(coords.x, coords.y, coords.z, &height);
+	if (coords.z < height) coords.z = height;
 	// if ground not found then set Z in air and give player a parachute
 	if (!groundFound){
 		coords.z = 1000.0;
 		WEAPON::GIVE_DELAYED_WEAPON_TO_PED(PLAYER::PLAYER_PED_ID(), 0xFBAB5776, 1, 0);
 	}
-	//do it
+	// do it
 	teleport_to_coords(e, coords);
 }
 
