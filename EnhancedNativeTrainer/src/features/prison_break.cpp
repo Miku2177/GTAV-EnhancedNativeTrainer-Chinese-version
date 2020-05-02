@@ -686,7 +686,7 @@ void prison_break()
 							pb_tick_secs_curr = pb_tick_secs_passed;
 						}
 
-						if (tick_callpoliceaboutfugitive > 60000) {
+						if (tick_callpoliceaboutfugitive > 500) { // 60000
 							if (alert_police_about_fugitive_distant == true && (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 2) && alert_police_about_fugitive_close == false) {
 								PLAYER::SET_MAX_WANTED_LEVEL(5);
 								PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 1, 0);

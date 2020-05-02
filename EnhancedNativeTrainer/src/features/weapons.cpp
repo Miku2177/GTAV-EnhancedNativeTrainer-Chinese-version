@@ -920,12 +920,6 @@ void process_pedagainstweapons_menu(){
 	toggleItem->toggleValue = &featurePoliceAgainst;
 	menuItems.push_back(toggleItem);
 
-	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Aim At Driver To Make Him Leave";
-	toggleItem->value = i++;
-	toggleItem->toggleValue = &featureAimAtDriver;
-	menuItems.push_back(toggleItem);
-
 	listItem = new SelectFromListMenuItem(WEAPONS_CHANCEPOLICECALLING_CAPTIONS, onchange_chance_police_calling_index);
 	listItem->wrap = false;
 	listItem->caption = "Chance Of Calling The Police";
@@ -1621,7 +1615,6 @@ void reset_weapon_globals(){
 		featureDetainedIfNotMove =
 		featurePedAgainstWeapons = 
 		featureAgainstMeleeWeapons =
-		featureAimAtDriver =
 		featureFriendlyFire =
 		featureRapidFire =
 		featureDropWeapon = 
@@ -2658,7 +2651,6 @@ void add_weapon_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponNoParachutes", &featureWeaponNoParachutes, &featureWeaponNoParachutesUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{"featureWeaponNoReload", &featureWeaponNoReload});
 	results->push_back(FeatureEnabledLocalDefinition{"featureCopTakeWeapon", &featureCopTakeWeapon });
-	//results->push_back(FeatureEnabledLocalDefinition{"featureWeaponVehRockets", &featureWeaponVehRockets});
 	results->push_back(FeatureEnabledLocalDefinition{"featureGravityGun", &featureGravityGun});
 	results->push_back(FeatureEnabledLocalDefinition{"featureFriendlyFire", &featureFriendlyFire});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRapidFire", &featureRapidFire});
@@ -2678,7 +2670,6 @@ void add_weapon_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePunchFireWeapons", &featurePunchFireWeapons});
 	results->push_back(FeatureEnabledLocalDefinition{"featureDriverAgainst", &featureDriverAgainst});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePoliceAgainst", &featurePoliceAgainst});
-	results->push_back(FeatureEnabledLocalDefinition{"featureAimAtDriver", &featureAimAtDriver});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerMelee", &featurePlayerMelee});
 	results->push_back(FeatureEnabledLocalDefinition{"featureSwitchWeaponIfDanger", &featureSwitchWeaponIfDanger});
 	results->push_back(FeatureEnabledLocalDefinition{"featureArmyMelee", &featureArmyMelee});

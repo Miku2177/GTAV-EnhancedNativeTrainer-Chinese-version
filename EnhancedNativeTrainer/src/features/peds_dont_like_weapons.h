@@ -5,7 +5,6 @@ extern bool featureAgainstMeleeWeapons;
 extern bool featurePedAgainst;
 extern bool featureDriverAgainst;
 extern bool featurePoliceAgainst;
-extern bool featureAimAtDriver;
 
 // Chance Of Police Calling
 const std::vector<std::string> WEAPONS_CHANCEPOLICECALLING_CAPTIONS{ "Zero", "Tiny", "Some", "50/50", "Good", "Great" };
