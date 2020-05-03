@@ -581,6 +581,7 @@ void update_features(){
 				CAM::_SET_CAM_DOF_FOCUS_DISTANCE_BIAS(DeathCamM, 1.0);
 				CAM::RENDER_SCRIPT_CAMS(true, false, 0, true, true);
 				CAM::SET_CAM_ACTIVE(DeathCamM, true);
+				GAMEPLAY::SET_TIME_SCALE(1.0f);
 			}
 			if (CAM::DOES_CAM_EXIST(DeathCamM)) { // camera rotation
 				Vector3 rot_cam = CAM::GET_CAM_ROT(DeathCamM, 2);
@@ -610,6 +611,7 @@ void update_features(){
 			WAIT(1000);
 			GRAPHICS::_STOP_ALL_SCREEN_EFFECTS();
 			CONTROLS::_SET_CONTROL_NORMAL(0, 22, 1);
+			GAMEPLAY::SET_TIME_SCALE(1.0f);
 			manual_instant = false;
 		}
 		if ((PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 1) || PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 0)) && CONTROLS::IS_CONTROL_JUST_PRESSED(2, 22)) { // CONTROLS::IS_CONTROL_JUST_PRESSED(2, 176) || 
@@ -629,6 +631,7 @@ void update_features(){
 			PED::RESET_PED_MOVEMENT_CLIPSET(playerPed, 1.0f);
 			WAIT(1000);
 			CAM::DO_SCREEN_FADE_IN(500);
+			GAMEPLAY::SET_TIME_SCALE(1.0f);
 			manual_instant = false;
 		}
 		if (!ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && !PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 1)) {
@@ -641,6 +644,7 @@ void update_features(){
 				CAM::DESTROY_CAM(DeathCamM, true);
 				ENTITY::SET_ENTITY_ALPHA(PLAYER::PLAYER_PED_ID(), 255, 0);
 				first_person_rotate = false;
+				GAMEPLAY::SET_TIME_SCALE(1.0f);
 			}
 		}
 	}
@@ -664,6 +668,7 @@ void update_features(){
 			PED::RESET_PED_MOVEMENT_CLIPSET(playerPed, 1.0f);
 			WAIT(1000);
 			CAM::DO_SCREEN_FADE_IN(500);
+			GAMEPLAY::SET_TIME_SCALE(1.0f);
 		}
 	}
 
