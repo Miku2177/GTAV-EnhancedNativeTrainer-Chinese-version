@@ -47,7 +47,7 @@ void peds_dont_like_weapons() {
 		Vector3 coords_weapon_me = ENTITY::GET_ENTITY_COORDS(playerPed, true);
 		Vector3 coords_ped = ENTITY::GET_ENTITY_COORDS(weaponhaters[0], true);
 
-		if (WEAPON::IS_PED_ARMED(playerPed, 7)) {
+		if (WEAPON::IS_PED_ARMED(playerPed, 7) && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
 			for (int i = 0; i < count_weapon_haters; i++) {
 				coords_weapon_me = ENTITY::GET_ENTITY_COORDS(playerPed, true);
 				coords_ped = ENTITY::GET_ENTITY_COORDS(weaponhaters[i], true);
