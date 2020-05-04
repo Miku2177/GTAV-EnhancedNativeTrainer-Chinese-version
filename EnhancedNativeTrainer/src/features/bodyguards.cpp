@@ -36,7 +36,6 @@ bool spawning_a_ped = false;
 
 bool stop_b = false;
 bool featureBodyguardInvincible = false;
-//bool featureBodyguardInvincibleUpdated = false;
 bool featureBodyguardHelmet = false;
 bool featureBodyguardDespawn = true;
 bool featureDifferentWeapons = false;
@@ -1223,7 +1222,7 @@ void do_spawn_bodyguard(){
 			}
 
 			if (spawning_a_ped == false) {
-				spawnedENTBodyguards.push_back(bodyGuard); // save the current bodyguard
+				spawnedENTBodyguards.push_back(bodyGuard); // save current bodyguard
 
 				PED::SET_PED_AS_GROUP_LEADER(PLAYER::PLAYER_PED_ID(), myENTGroup);
 				PED::SET_PED_AS_GROUP_MEMBER(bodyGuard, myENTGroup);
@@ -1274,6 +1273,12 @@ void do_spawn_bodyguard(){
 				PED::SET_PED_COMBAT_RANGE(bodyGuard, 2);
 				PED::SET_PED_COMBAT_MOVEMENT(bodyGuard, 3);
 				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 5, true);
+				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 1, true);
+				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 2, true);
+				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 46, true);
+				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 20, true);
+				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 0, true);
+				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 1424, true);
 
 				// animal
 				if (bodyguard_animal == true) {
@@ -1556,7 +1561,7 @@ void maintain_bodyguards(){
 			}
 		} // end of for (int i = 0; i < spawnedENTBodyguards.size(); i++)
 		
-		// bodyguards follow you in vehicle
+		// follow in vehicle
 		if (LIMP_IF_INJURED_VALUES[FollowInVehicleIndex] > 0) {
 			Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 			if (PED::IS_PED_SITTING_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID())) {
@@ -1786,7 +1791,6 @@ bool process_bodyguard_menu(){
 		toggleItem->caption = "Invincible";
 		toggleItem->value = i++;
 		toggleItem->toggleValue = &featureBodyguardInvincible;
-		//toggleItem->toggleValueUpdated = &featureBodyguardInvincibleUpdated;
 		menuItems.push_back(toggleItem);
 
 		toggleItem = new ToggleMenuItem<int>();
@@ -1870,12 +1874,6 @@ bool process_bodyguard_menu(){
 }
 
 bool onconfirm_bodyguard_menu(MenuItem<int> choice){
-	// common variables
-	//BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
-	//Player player = PLAYER::PLAYER_ID();
-	//Ped playerPed = PLAYER::PLAYER_PED_ID();
-
-	//switch(choice.value){
 	switch (activeLineIndexBodyguards) {
 		case 0:
 			do_spawn_bodyguard();
@@ -2008,7 +2006,6 @@ void reset_bodyguards_globals(){
 	featureBodyBlipNumber = false;
 	featureBodyguardOnMap = false;
 	featureBodyguardInvincible = false;
-	//featureBodyguardInvincibleUpdated = false;
 	featureBodyguardHelmet = false;
 	featureBodyguardDespawn = true;
 	featureBodyguardInfAmmo = false;

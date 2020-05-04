@@ -10,10 +10,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 #include "vehicles.h"
 #include "..\features\vehmodmenu.h"
-
 #include "..\debug\debuglog.h"
-
-//int activeLineIndexVehMod = 0;
 
 int lastSelectedModValue = 0;
 
@@ -1390,7 +1387,6 @@ bool onconfirm_vehmod_category_menu(MenuItem<int> choice){
 		return false;
 	}
 
-	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
@@ -1458,7 +1454,6 @@ bool onconfirm_vehmod_category_menu(MenuItem<int> choice){
 }
 
 bool process_vehmod_category_special_menu(int category){
-	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 
@@ -1536,8 +1531,6 @@ bool process_vehmod_engine_sound() {
 		return false;
 	}
 
-	//Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
-
 	int modChoiceMenuIndex = 0;
 
 	std::vector<int> values;
@@ -1545,8 +1538,6 @@ bool process_vehmod_engine_sound() {
 	for (int e = 0; e < ENGINE_SOUND_COUNT; e++) {
 		values.push_back(e);
 	}
-
-	//Player player = PLAYER::PLAYER_ID();
 
 	std::vector<MenuItem<int>*> menuItems;
 	for (int i = 0; i < values.size(); i++) {
@@ -1632,8 +1623,6 @@ bool process_vehmod_engine_sound_menu() {
 		return false;
 	}
 
-	//Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
-
 	std::vector<MenuItem<int> *> menuItems;
 	MenuItem<int> *item;
 	std::ostringstream ss;
@@ -1682,7 +1671,6 @@ bool process_vehmod_category_menu(int category){
 		return false;
 	}
 
-	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
@@ -1752,7 +1740,6 @@ bool onconfirm_vehmod_menu(MenuItem<int> choice){
 		return false;
 	}
 
-	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
@@ -1822,8 +1809,7 @@ bool process_vehmod_menu(){
 	}
 
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
-	//eGameVersion version = getGameVersion();
-
+	
 	VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
 
 	BOOL isCar = is_this_a_car(veh);
@@ -1876,7 +1862,7 @@ bool process_vehmod_menu(){
 			menuItems.push_back(item6);
 		}
 		//Number of vehicle mods
-		for (int i = 0; i < 50; i++){ //(int i = 0; i < 49; i++)
+		for (int i = 0; i < 50; i++){ 
 			if (i == 23 || i == 24 || i == 21){
 				continue;
 			}
@@ -2156,7 +2142,6 @@ bool vehicle_menu_interrupt(){
 		return true;
 	}
 
-	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){

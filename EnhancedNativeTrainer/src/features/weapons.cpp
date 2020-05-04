@@ -61,7 +61,6 @@ bool featureWeaponExplosiveAmmo = false;
 bool featureWeaponExplosiveMelee = false;
 bool featureWeaponExplosiveGrenades = false;
 bool featureWeaponVacuumGrenades = false;
-//bool featureWeaponVehRockets = false;
 
 bool featurePunchFists = true;
 bool featurePunchMeleeWeapons = false;
@@ -116,8 +115,8 @@ bool saved_weapon_mods[SAVED_WEAPONS_COUNT][MAX_MOD_SLOTS];
 bool saved_parachute = false;
 int saved_parachute_tint = 0;
 int saved_armour = 0;
-//bool cops_took_weapons = false;
-//bool cops_on = false;
+
+//bool do_give_weapon(std::string modelName);
 
 bool redrawWeaponMenuAfterEquipChange = false;
 
@@ -847,7 +846,6 @@ void onchange_weapon_load_saved_modifier(int value, SelectFromListMenuItem* sour
 ///////////////////////////////// TOGGLE VISION FOR SNIPER RIFLES /////////////////////////////////
 void sniper_vision_toggle()
 {
-	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if ((WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_SNIPERRIFLE") || WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_HEAVYSNIPER") ||
@@ -1177,8 +1175,7 @@ bool onconfirm_weapon_menu(MenuItem<int> choice){
 	// common variables
 	Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
-	//BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(playerPed);
-
+	
 	switch(activeLineIndexWeapon){
 		case 0:
 			give_all_weapons_hotkey();
@@ -1607,7 +1604,6 @@ void reset_weapon_globals(){
 		featureWeaponExplosiveMelee =
 		featureWeaponExplosiveGrenades =
 		featureWeaponVacuumGrenades =
-		//featureWeaponVehRockets =
 		featureGiveAllWeapons =
 		featureAddAllWeaponsAttachments =
 		featureCopArmedWith =
@@ -2556,7 +2552,6 @@ bool onconfirm_weapon_mod_menu_tint(MenuItem<int> choice){
 }
 
 void onconfirm_open_tint_menu(MenuItem<int> choice) {
-	//Ped playerPed = PLAYER::PLAYER_PED_ID();
 	int tintSelection = 0;
 
 	std::string weaponValue = VOV_WEAPON_VALUES[lastSelectedWeaponCategory].at(lastSelectedWeapon);

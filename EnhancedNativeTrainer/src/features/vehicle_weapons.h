@@ -13,19 +13,9 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include <sstream>
 #include <vector>
 
-//Object create_bomb(Vector3 position, Vector3 rotation);
-
 void toggle_bomb_bay_camera();
 
-//void plane_autopilot(bool enabled);
-
 void start_bombing_run();
-
-//void add_bomb();
-
-//void cleanup_active_bomb();
-
-//void cleanup_active_sounds();
 
 void update_bombs();
 

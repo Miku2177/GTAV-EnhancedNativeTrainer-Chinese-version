@@ -33,7 +33,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 using namespace std;
 
-const static int ENGINE_SOUND_COUNT_VEHICLES = 367; // 366
+const static int ENGINE_SOUND_COUNT_VEHICLES = 367;
 
 bool featureVehInvincible = false;
 bool featureVehInvincibleUpdated = false;
@@ -113,14 +113,10 @@ bool featureWearHelmetOff = false;
 bool featureWearHelmetOffUpdated = false;
 bool featureVehLightsOn = false, featureVehLightsOnUpdated = false;
 bool window_roll, interior_lights, veh_searching, veh_alarm, veh_brake_toggle, vehicle_burnout_toggle = false;
-int lights = -1; // , highbeams = -1
+int lights = -1;
 
 Vehicle vehicle_been_used = -1;
 Vehicle veh_l = -1;
-
-//bool steered_left, steered_right = false;
-//Vehicle veh_steering;
-//std::vector<Vehicle> STEERING;
 
 int currseat = -1;
 
@@ -158,8 +154,6 @@ int nitrous_m = -2;
 
 int sheshark_light_toogle = 1;
 
-//Vehicle ped_temp_veh = -1;
-
 bool featureDespawnScriptDisabled = false;
 bool featureDespawnScriptDisabledUpdated = false;
 bool featureDespawnScriptDisabledWasLastOn = false; //do not persist this particular var in the DB - it is local only
@@ -185,8 +179,6 @@ Vector3 coords_b;
 Object b_rope = -1;
 Vehicle veh_anchor = -1;
 bool anchor_dropped = false;
-
-//const int PED_FLAG_THROUGH_WINDSCREEN = 32;
 
 const std::vector<std::string> VEH_INVINC_MODE_CAPTIONS{"OFF", "Mech. Only", "Mech. + Visual", "Mech. + Vis. + Cosmetic"};
 
@@ -695,7 +687,6 @@ bool onconfirm_vehdoor_menu(MenuItem<int> choice){
 	}
 
 	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
-	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if(choice.value >= 0){
@@ -721,20 +712,6 @@ bool onconfirm_vehdoor_menu(MenuItem<int> choice){
 			set_status_text("Player isn't in a vehicle");
 		}
 	}
-	/*else if(choice.value == -2)//bomb bay open
-	{
-		if(bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
-			Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
-			VEHICLE::OPEN_BOMB_BAY_DOORS(veh);
-		}
-	}
-	else if(choice.value == -3)//bomb bay close
-	{
-		if(bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
-			Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
-			VEHICLE::CLOSE_BOMB_BAY_DOORS(veh);
-		}
-	}*/
 	else if (choice.value == -5)//driver window roll
 	{
 		process_window_roll(); 
@@ -821,8 +798,7 @@ bool process_veh_door_menu(){
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 
 	std::vector<MenuItem<int>*> menuItems;
-	//std::vector<int>menuIndexes;
-
+	
 	std::vector<std::string> DOOR_NAMES = {
 		"Front Left Door",
 		"Front Right Door",
@@ -854,19 +830,6 @@ bool process_veh_door_menu(){
 		toggleItem->value = -1;
 		menuItems.push_back(toggleItem);
 	}
-
-	/*Hash currVehModel = ENTITY::GET_ENTITY_MODEL(veh);
-	if(GAMEPLAY::GET_HASH_KEY("CUBAN800") == currVehModel){
-		MenuItem<int>* bombBayItem1 = new MenuItem<int>();
-		bombBayItem1->caption = "Open Bomb Bay";
-		bombBayItem1->value = -2;
-		menuItems.push_back(bombBayItem1);
-
-		MenuItem<int>* bombBayItem2 = new MenuItem<int>();
-		bombBayItem2->caption = "Close Bomb Bay";
-		bombBayItem2->value = -3;
-		menuItems.push_back(bombBayItem2);
-	}*/
 
 	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Lock Vehicle Doors";
@@ -981,7 +944,6 @@ bool process_veh_door_menu(){
 void seat_change_hotkey()
 {
 	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
-	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
@@ -1001,7 +963,6 @@ void seat_change_hotkey()
 
 bool onconfirm_seat_menu(MenuItem<int> choice) {
 	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
-	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 		
 	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
@@ -1750,8 +1711,6 @@ void process_road_laws_menu(){
 
 bool onconfirm_veh_menu(MenuItem<int> choice){
 	// common variables
-	//BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
-	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	switch(activeLineIndexVeh){
@@ -2133,7 +2092,6 @@ void speedlimiter_switching(){
 
 void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
-	//int globalindex = 0;
 
 	eGameVersion version = getGameVersion();
 
@@ -3959,8 +3917,6 @@ void reset_vehicle_globals() {
 		featureRememberVehicles =
 		featureRoadLaws =
 		featureFuel = 
-		//featureBlips =
-		//featureBlipsPhone =
 		featureVehMassMult =
 		featureVehicleDoorInstant =
 		featureLockVehicleDoors =
@@ -4283,8 +4239,6 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureBlipNumber", &featureBlipNumber});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAutoalarm", &featureAutoalarm});
 	results->push_back(FeatureEnabledLocalDefinition{"featureFuel", &featureFuel});
-	//results->push_back(FeatureEnabledLocalDefinition{"featureBlips", &featureBlips});
-	//results->push_back(FeatureEnabledLocalDefinition{"featureBlipsPhone", &featureBlipsPhone});
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehMassMult", &featureVehMassMult});
 	results->push_back(FeatureEnabledLocalDefinition{"featureSpeedOnFoot", &featureSpeedOnFoot});
 	results->push_back(FeatureEnabledLocalDefinition{"featureKMH", &featureKMH});
@@ -4563,7 +4517,6 @@ bool process_savedveh_sort_menu(){
 
 void save_current_vehicle(int slot){
 	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
-	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if(bPlayerExists){
@@ -4574,7 +4527,7 @@ void save_current_vehicle(int slot){
 			
 			Hash currVehModelS = ENTITY::GET_ENTITY_MODEL(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()));
 			if (slot == -1 && STREAMING::IS_MODEL_IN_CDIMAGE(currVehModelS) && STREAMING::IS_MODEL_A_VEHICLE(currVehModelS) && STREAMING::IS_MODEL_VALID(currVehModelS)) {
-				//Hash vehVal = GAMEPLAY::GET_HASH_KEY(currVehModel);
+				
 				char *name = VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(currVehModelS);
 				std::string displayName = UI::_GET_LABEL_TEXT(name);
 				ss << displayName;

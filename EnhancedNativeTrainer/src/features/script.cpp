@@ -1539,7 +1539,6 @@ void process_powerpunch_menu() {
 }
 
 bool process_player_life_menu(){
-	//Ped playerPed = PLAYER::PLAYER_PED_ID();
 	std::string caption = "Player Data";
 
 	std::vector<MenuItem<int> *> menuItems;
@@ -1608,7 +1607,6 @@ bool process_player_life_menu(){
 }
 
 bool maxwantedlevel_menu() {
-	//Ped playerPed = PLAYER::PLAYER_PED_ID();
 	std::string caption = "Wanted Level Settings Options";
 
 	std::vector<MenuItem<int> *> menuItems;
@@ -1663,7 +1661,6 @@ bool maxwantedlevel_menu() {
 }
 
 bool mostwanted_menu() {
-	//Ped playerPed = PLAYER::PLAYER_PED_ID();
 	std::string caption = "Wanted Fugitive Options";
 
 	std::vector<MenuItem<int> *> menuItems;
@@ -1700,7 +1697,6 @@ bool mostwanted_menu() {
 }
 
 bool player_movement_speed() {
-	//Ped playerPed = PLAYER::PLAYER_PED_ID();
 	std::string caption = "Player Movement Speed Options";
 
 	std::vector<MenuItem<int> *> menuItems;
@@ -1750,7 +1746,6 @@ bool player_movement_speed() {
 }
 
 bool process_ragdoll_menu() {
-	//Ped playerPed = PLAYER::PLAYER_PED_ID();
 	std::string caption = "Ragdoll Options";
 
 	std::vector<MenuItem<int> *> menuItems;
@@ -1787,7 +1782,6 @@ bool process_ragdoll_menu() {
 }
 
 bool process_player_prison_menu(){
-	//Ped playerPed = PLAYER::PLAYER_PED_ID();
 	std::string caption = "Prison Break Options";
 
 	std::vector<MenuItem<int> *> menuItems;
@@ -1848,7 +1842,6 @@ bool process_player_prison_menu(){
 }
 
 bool process_player_forceshield_menu() {
-	//Ped playerPed = PLAYER::PLAYER_PED_ID();
 	std::string caption = "Jedi Powers Options";
 
 	std::vector<MenuItem<int> *> menuItems;
@@ -1941,7 +1934,6 @@ void process_player_menu(){
 		{"Ragdoll", NULL, NULL, false},
 		{"Invisibility", &featurePlayerInvisible, NULL, true}, 
 		{"Invisibility In Vehicle", &featurePlayerInvisibleInVehicle, NULL, true }, 
-		//{"Drunk", &featurePlayerDrunk, &featurePlayerDrunkUpdated, true},
 		{"Night Vision", &featureNightVision, &featureNightVisionUpdated, true},
 		{"Thermal Vision", &featureThermalVision, &featureThermalVisionUpdated, true},
 		{"Animations", NULL, NULL, false},

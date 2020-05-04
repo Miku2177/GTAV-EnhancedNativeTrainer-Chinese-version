@@ -23,7 +23,6 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 bool featureEnableMpMaps = false;
 bool feature3dmarker = false;
 bool featureTeleportAutomatically = false;
-//bool teleported_in_ped = false;
 
 struct tele_location{
 	std::string text;
@@ -33,7 +32,6 @@ struct tele_location{
 	std::vector<const char*> scenery_required;
 	std::vector<const char*> scenery_toremove;
 	std::vector<char*> scenery_props;
-	//char* scenery_props[200];
 	bool isLoaded;
 };
 
@@ -58,12 +56,6 @@ int lastMenuChoiceInCategories[] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
 int activeLineIndexChauffeur = 0;
 int activeLineIndex3dmarker = 0;
-
-//Vehicle waitingToRetakeSeat = -1;
-
-//float chauffTolerance = 25.0;
-
-//Vector3 blipCoords = { 0, 0, 0 };
 
 std::vector<tele_location> LOCATIONS_SAFE = {
 	{ "Franklin's Safehouse", -18.0355f, -1456.94f, 30.4548f },
@@ -754,13 +746,6 @@ void teleport_to_coords(Entity e, Vector3 coords){
 	set_status_text("Teleported");
 }
 
-//void output_current_location(Entity e){
-//	Vector3 coords = ENTITY::GET_ENTITY_COORDS(e, 0);
-//	std::ostringstream ss;
-//	ss << "X: " << coords.x << "\nY: " << coords.y << "\nZ: " << coords.z;
-//	set_status_text_centre_screen(ss.str(), 4000UL);
-//}
-
 void teleport_to_marker(){
 	Vector3 coords = get_blip_marker();
 
@@ -879,45 +864,6 @@ void teleport_to_last_vehicle(){
 		set_status_text("No vehicle found");
 	}
 }
-
-//bool is_player_at_blip(Vector3 currentCords, Vector3 destCords, float tolerance){
-//	float eucDistance;
-
-//	float xDiff = destCords.x - currentCords.x;
-//	float yDiff = destCords.y - currentCords.y;
-
-//	eucDistance = sqrt(pow(xDiff, 2) + pow(yDiff, 2));
-
-//	return (eucDistance <= tolerance);
-//}
-
-//float get_euc_distance(Vector3 currentCords, Vector3 destCords){
-//	float xDiff = destCords.x - currentCords.x;
-//	float yDiff = destCords.y - currentCords.y;
-//	float zDiff = destCords.y - currentCords.y;
-
-//	float eucDistance = sqrt(pow(xDiff, 2) + pow(yDiff, 2) + pow(zDiff, 2));
-
-//	return eucDistance;
-//}
-
-/*
-void enableMpMapsinSP()
-{
-featureEnableMpMaps = true;
-
-if (featureEnableMpMaps)
-{
-DLC2::_LOAD_MP_DLC_MAPS();
-set_status_text("MP Maps enabled");
-featureEnableMpMaps = false;
-}
-else
-{
-DLC2::_LOAD_SP_DLC_MAPS();
-set_status_text("MP Maps disabled");
-}
-}*/
 
 std::string lastJumpSpawn;
 
@@ -1427,13 +1373,6 @@ bool process_teleport_menu(int categoryIndex){
 		markerItem->value = -7;
 		markerItem->isLeaf = false;
 		menuItems.push_back(markerItem);
-
-		/*ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
-		toggleItem->caption = "Enable MP DLC Maps";
-		toggleItem->value = -6;
-		toggleItem->toggleValue = &featureEnableMpMaps;
-		toggleItem->toggleValueUpdated = NULL;
-		menuItems.push_back(toggleItem);*/
 
 		for (int i = 0; i < MENU_LOCATION_CATEGORIES.size(); i++){
 			if (MENU_LOCATION_CATEGORIES[i].compare(JELLMAN_CAPTION) == 0 && !is_jellman_scenery_enabled()){

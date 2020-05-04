@@ -41,13 +41,10 @@ void exit_airbrake_menu_if_showing()
 	ENTITY::SET_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID(), true);
 	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)){
 		ENTITY::SET_ENTITY_COLLISION(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), 1, 1);
-		//if (exitFlag == false) ENTITY::SET_ENTITY_ALPHA(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), 255, 0);
-		//if (exitFlag == false) ENTITY::SET_ENTITY_ALPHA(PLAYER::PLAYER_PED_ID(), 255, 0);
 	}
 	else
 	{
 		ENTITY::SET_ENTITY_COLLISION(PLAYER::PLAYER_PED_ID(), 1, 1);
-		//if (exitFlag == false) ENTITY::SET_ENTITY_ALPHA(PLAYER::PLAYER_PED_ID(), 255, 0);
 	}
 	ENTITY::FREEZE_ENTITY_POSITION(PLAYER::PLAYER_PED_ID(), false);
 	ENTITY::FREEZE_ENTITY_POSITION(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), false);
@@ -59,13 +56,9 @@ void process_airbrake_menu()
 {
 	exitFlag = false;
 
-	//const float lineWidth = 250.0;
-	//const int lineCount = 1;
 	bool loadedAnims = false;
 		
 	std::string caption = "Airbrake Mode";
-
-	//draw_menu_header_line(caption,350.0f,50.0f,15.0f,0.0f,15.0f,false);
 
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	bool inVehicle = PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) ? true : false;
@@ -90,7 +83,6 @@ void process_airbrake_menu()
 
 		// draw menu
 		if (help_showing) draw_menu_header_line(caption, 270.0f, 50.0f, 15.0f, 0.0f, 15.0f, false);
-		//draw_menu_line(caption, lineWidth, 15.0, 18.0, 0.0, 5.0, false, true);
 
 		make_periodic_feature_call();
 
@@ -257,8 +249,7 @@ void airbrake(bool inVehicle)
 {
 	// common variables
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
-	//BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(playerPed);
-
+	
 	switch (travelSpeed)
 	{
 	case 0:

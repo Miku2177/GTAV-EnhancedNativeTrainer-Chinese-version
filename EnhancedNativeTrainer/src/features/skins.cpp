@@ -19,11 +19,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 * VARS
 */
 
-//std::string chosenSkinName = "";
-
 DWORD model_to_restore = -1;
-
-//bool DEBUG_MODE_SKINS = false;
 
 bool featurenoblood = false;
 bool featurepersprops = false;
@@ -91,7 +87,6 @@ void onchange_auto_apply_skin_saved_index(int value, SelectFromListMenuItem* sou
 
 void reset_skin_globals()
 {
-	//chosenSkinName = "";
 	activeLineIndexSkinChanger = 0;
 	featurenoblood = false;
 	featurepersprops = false;
@@ -147,8 +142,6 @@ bool applyChosenSkin(DWORD model)
 
 		WAIT(100);
 		STREAMING::SET_MODEL_AS_NO_LONGER_NEEDED(model);
-
-		//chosenSkinName = skinName;
 
 		return true;
 	}
@@ -325,7 +318,6 @@ void update_skin_features() {
 						if (SKINS_AUTO_SKIN_SAVED_VALUES[AutoApplySkinSavedIndex] == 1) applyChosenSkin(savedSkin->model);
 						if (SKINS_AUTO_SKIN_SAVED_VALUES[AutoApplySkinSavedIndex] == 2 && ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == savedSkin->model) applyChosenSkin(PLAYER::PLAYER_PED_ID()); // applyChosenSkin(savedSkin->model);
 						if (SKINS_AUTO_SKIN_SAVED_VALUES[AutoApplySkinSavedIndex] == 2 && ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) != savedSkin->model) right_model = true;
-						//if (SKINS_AUTO_SKIN_SAVED_VALUES[AutoApplySkinSavedIndex] == 3) applyChosenSkin(PLAYER::PLAYER_PED_ID());
 						
 						if (right_model == false) {
 							Ped ped = PLAYER::PLAYER_PED_ID();
@@ -749,8 +741,6 @@ bool onconfirm_skinchanger_category_menu(MenuItem<int> choice)
 
 bool onconfirm_skinchanger_menu(MenuItem<int> choice)
 {
-	//skinMainMenuPosition = choice.currentMenuIndex;
-
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	std::ostringstream ss;
 	int index = PED::GET_PED_PROP_INDEX(playerPed, 0);
@@ -1302,7 +1292,6 @@ bool spawn_saved_skin(int slot, std::string caption)
 void save_current_skin(int slot)
 {
 	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
-	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if (bPlayerExists)

@@ -110,7 +110,6 @@ bool featureWeatherFreeze = false;
 bool featureWeatherFreezeUpdated = false;
 
 bool featureCloudsFreeze = false;
-//bool featureCloudsNo = false;
 
 bool featureSnow = false;
 bool featureSnowUpdated = false;
@@ -421,7 +420,6 @@ bool onconfirm_world_menu(MenuItem<int> choice)
 	switch (choice.value)
 	{
 	case -1:
-		//process_areaeffect_menu();
 		process_areaeffect_peds_menu();
 		break;
 	case -2:
@@ -689,7 +687,6 @@ void reset_world_globals()
 	lastCloudsName.clear();
 
 	featureWeatherFreeze =
-	//featureCloudsNo =
 	featureCloudsFreeze =
 	featureWorldMoonGravity = false;
 	featureWorldNoPeds = false;
@@ -716,9 +713,9 @@ void reset_world_globals()
 	featureMPMap = false;
 
 	featureWorldRandomCops =
-		featureWorldRandomTrains =
-		featureWorldRandomBoats =
-		featureWorldGarbageTrucks =
+	featureWorldRandomTrains =
+	featureWorldRandomBoats =
+	featureWorldGarbageTrucks =
 	featureWorldNoTrafficUpdated = 
 	featureZancudoMapUpdated =
 	featureWorldGarbageTrucksUpdated =
@@ -1827,7 +1824,6 @@ void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* r
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldRandomBoats", &featureWorldRandomBoats, &featureWorldRandomBoatsUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldGarbageTrucks", &featureWorldGarbageTrucks, &featureWorldGarbageTrucksUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWeatherFreeze", &featureWeatherFreeze });
-	//results->push_back(FeatureEnabledLocalDefinition{ "featureCloudsNo", &featureCloudsNo });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureCloudsFreeze", &featureCloudsFreeze });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureBlackout", &featureBlackout, &featureBlackoutUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureHeadlightsBlackout", &featureHeadlightsBlackout });

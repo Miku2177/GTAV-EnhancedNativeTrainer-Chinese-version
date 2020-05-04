@@ -21,7 +21,6 @@ bool onconfirm_smoke_selection(MenuItem<int> choice){
 		return true;
 	}
 
-	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if(!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){

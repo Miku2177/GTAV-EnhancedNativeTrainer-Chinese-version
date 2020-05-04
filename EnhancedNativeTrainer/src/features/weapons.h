@@ -249,8 +249,6 @@ extern std::string lastPowerWeapon;
 
 bool process_weapon_menu();
 
-//bool do_give_weapon(std::string modelName);
-
 bool process_weaponlist_menu();
 
 void reset_weapon_globals();
@@ -310,7 +308,6 @@ void VectorToFloat(Vector3 unk, float *Out);
 Vector3 add(Vector3* vectorA, Vector3* vectorB);
 
 //Weapon mod menu
-
 bool onconfirm_weapon_mod_menu_tint(MenuItem<int> choice);
 
 void add_weapon_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results);

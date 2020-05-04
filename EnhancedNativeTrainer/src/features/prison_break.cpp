@@ -43,7 +43,6 @@ int pb_tick_secs_passed, pb_tick_secs_curr = 0;
 Hash JailGuard_Weapon2 = -1;
 Ped prisonPed, temp_ped1, temp_ped2 = -1;
 std::vector<Ped> ADDITIONAL_PRISONERS;
-//int civilian_torso_drawable, civilian_torso_texture, civilian_legs_drawable, civilian_legs_texture = -1;
 bool alert_police_about_fugitive_close, alert_police_about_fugitive_distant = false;
 
 bool featurePrison_Hardcore = false;
