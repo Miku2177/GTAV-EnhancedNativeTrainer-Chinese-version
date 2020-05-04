@@ -114,14 +114,13 @@ bool featureMiscLockRadio = false;
 bool featureMiscHideHud = false;
 bool featureMiscHideHudUpdated = false;
 bool featurePhoneShowHud = false;
-bool featureMiscHideENTHud = false;
+//bool featureMiscHideENTHud = false;
 bool featureInVehicleNoHud = false;
 bool featureMarkerHud = false;
 bool phone_toggle = false;
 bool phone_toggle_vehicle = false;
 bool phone_toggle_defaultphone = false;
 
-//bool despawnPointerDisabledMessage = true;
 bool featureFirstPersonDeathCamera = false;
 bool featureFirstPersonStuntJumpCamera = false;
 bool featureNoStuntJumps = false;
@@ -139,16 +138,11 @@ bool featureMiscJellmanScenery = false;
 
 bool featureEnableMissingRadioStation = false;
 
-//bool slipperywhenwet = false;
-
 const int TRAINERCONFIG_HOTKEY_MENU = 99;
 int radioStationIndex = -1;
 
 ScriptTable* scriptTable;
 GlobalTable globalTable;
-//ScriptHeader* shopController;
-//HINSTANCE _hinstDLL;
-//bool enabledDespawnPointer = false;
 
 Camera StuntCam = NULL;
 
@@ -444,7 +438,7 @@ bool onconfirm_misc_cutscene_menu(MenuItem<int> choice) {
 void process_misc_cutplayer_menu() {
 	std::vector<MenuItem<int>*> menuItems;
 	std::vector<std::string> captions;
-	//std::string menuCaption;
+	
 	captions = MISC_CUTSCENE_VALUES;
 	ToggleMenuItem<int>* toggleItem;
 	
@@ -492,7 +486,7 @@ bool onconfirm_misc_filters_menu(MenuItem<int> choice) {
 void process_misc_filters_menu() {
 	std::vector<MenuItem<int>*> menuItems;
 	std::vector<std::string> captions;
-	//std::string menuCaption;
+	
 	captions = MISC_FILTERS_VALUES;
 	MenuItem<int> *item = new MenuItem<int>();
 	
@@ -525,7 +519,7 @@ bool onconfirm_misc_musicevent_menu(MenuItem<int> choice) {
 void process_misc_musicevent_menu() {
 	std::vector<MenuItem<int>*> menuItems;
 	std::vector<std::string> captions;
-	//std::string menuCaption;
+	
 	captions = MISC_MUSICEVENT_VALUES;
 	
 	MenuItem<int> *item = new MenuItem<int>();
@@ -857,13 +851,13 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 		case 4:
 			process_misc_filters_menu();
 			break;
-		case 15:
+		case 14:
 			process_phone_bill_menu();
 			break;
-		case 20:
+		case 19:
 			process_def_menutab_menu();
 			break;
-		case 21:
+		case 20:
 			process_airbrake_global_menu();
 			break;
 		default:
@@ -874,7 +868,7 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 }
 
 void process_misc_menu(){
-	const int lineCount = 23;
+	const int lineCount = 22;
 
 	std::string caption = "Miscellaneous Options";
 
@@ -889,7 +883,7 @@ void process_misc_menu(){
 		{"No Police Scanner", &featurePoliceScanner, NULL, true }, 
 		{"No 'Mission Passed' Message", &featureNoComleteMessage, NULL, true },
 		{"Hide HUD", &featureMiscHideHud, &featureMiscHideHudUpdated},
-		{"Hide HUD If Menu Open", &featureMiscHideENTHud},
+		//{"Hide HUD If Menu Open", &featureMiscHideENTHud},
 		{"Show HUD If Phone In Hand Only", &featurePhoneShowHud, NULL }, 
 		{"Show HUD In Vehicle Only", &featureInVehicleNoHud, NULL }, 
 		{"Show HUD If Map Marker Set Only", &featureMarkerHud, NULL },
@@ -1074,7 +1068,7 @@ void onchange_misc_phone_bike_index(int value, SelectFromListMenuItem* source) {
 void reset_misc_globals(){
 	featureMiscHideHud =
 		featurePhoneShowHud = 
-		featureMiscHideENTHud =
+		//featureMiscHideENTHud =
 		featureInVehicleNoHud =
 		featureMarkerHud =
 		featureDynamicHealthBar =
@@ -1295,7 +1289,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	}
 
 	// Hide Hud
-	if (featureMiscHideHud || (featureMiscHideENTHud && menu_showing == true)) {
+	if (featureMiscHideHud/* || (featureMiscHideENTHud && menu_showing == true)*/) {
 		for (int i = 0; i < 21; i++) {
 			//at least in theory...
 			switch (i){
@@ -1314,7 +1308,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		UI::DISPLAY_RADAR(false);
 		featureMiscHideHudUpdated = false;
 	}
-	else if ((featureMiscHideHudUpdated && !featureMiscHideENTHud) || (featureMiscHideENTHud && menu_showing == false)){
+	else if (/*(*/featureMiscHideHudUpdated/* && !featureMiscHideENTHud) || (featureMiscHideENTHud && menu_showing == false)*/){
 		UI::DISPLAY_RADAR(true);
 		featureMiscHideHudUpdated = false;
 	}
@@ -1336,7 +1330,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			phone_toggle = false;
 		}
 	}
-	else if (!featureMiscHideHud && !featureInVehicleNoHud && !featureMarkerHud && !featureMiscHideENTHud) {
+	else if (!featureMiscHideHud && !featureInVehicleNoHud && !featureMarkerHud/* && !featureMiscHideENTHud*/) {
 		UI::DISPLAY_RADAR(true);
 		phone_toggle = false;
 	}
@@ -1358,7 +1352,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			phone_toggle_vehicle = false;
 		}
 	}
-	else if (!featureMiscHideHud && !featurePhoneShowHud && !featureMarkerHud && !featureMiscHideENTHud) {
+	else if (!featureMiscHideHud && !featurePhoneShowHud && !featureMarkerHud/* && !featureMiscHideENTHud*/) {
 		UI::DISPLAY_RADAR(true);
 		phone_toggle_vehicle = false;
 	}
@@ -1386,7 +1380,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			phone_toggle_vehicle = false;
 		}
 	}
-	else if (!featureMiscHideHud && !featurePhoneShowHud && !featureInVehicleNoHud && !featureMiscHideENTHud) {
+	else if (!featureMiscHideHud && !featurePhoneShowHud && !featureInVehicleNoHud/* && !featureMiscHideENTHud*/) {
 		UI::DISPLAY_RADAR(true);
 		phone_toggle_vehicle = false;
 	}
@@ -1505,7 +1499,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 
 	// Dynamic Health Bar
 	if (featureDynamicHealthBar && !CUTSCENE::IS_CUTSCENE_PLAYING()) {
-		if (!featureMiscHideHud && !featurePhoneShowHud && !featureInVehicleNoHud && !featureMarkerHud && !featureMiscHideENTHud) UI::DISPLAY_RADAR(false); // There is no need to hide HUD if it's already hidden
+		if (!featureMiscHideHud && !featurePhoneShowHud && !featureInVehicleNoHud && !featureMarkerHud/* && !featureMiscHideENTHud*/) UI::DISPLAY_RADAR(false); // There is no need to hide HUD if it's already hidden
 		//auto addr = getScriptHandleBaseAddress(playerPed);
 		//float health = (*(float *)(addr + 0x280)) - 100;
 		float health = ENTITY::GET_ENTITY_HEALTH(playerPed) - 100;
@@ -1961,7 +1955,7 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 	results->push_back(FeatureEnabledLocalDefinition{"featureMiscLockRadio", &featureMiscLockRadio});
 	results->push_back(FeatureEnabledLocalDefinition{"featureMiscHideHud", &featureMiscHideHud, &featureMiscHideHudUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePhoneShowHud", &featurePhoneShowHud}); 
-	results->push_back(FeatureEnabledLocalDefinition{"featureMiscHideENTHud", &featureMiscHideENTHud});
+	//results->push_back(FeatureEnabledLocalDefinition{"featureMiscHideENTHud", &featureMiscHideENTHud});
 	results->push_back(FeatureEnabledLocalDefinition{"featureInVehicleNoHud", &featureInVehicleNoHud});
 	results->push_back(FeatureEnabledLocalDefinition{"featureMarkerHud", &featureMarkerHud});
 	results->push_back(FeatureEnabledLocalDefinition{"featureDynamicHealthBar", &featureDynamicHealthBar}); 

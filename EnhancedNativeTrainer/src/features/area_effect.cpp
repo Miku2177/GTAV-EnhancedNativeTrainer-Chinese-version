@@ -20,9 +20,6 @@ int areaeffect_peds_weapons_menu_index = 0;
 
 int callsA = 0;
 int callsB = 0;
-//int callsC = 0;
-//int callsD = 0;
-//int callsE = 0;
 
 bool e_ignores = false;
 
@@ -484,8 +481,7 @@ void findRandomTargetForPed(ENTTrackedPedestrian* tped){
 }
 
 void update_area_effects(Ped playerPed){
-	//callsPerFrame = 0;
-
+	
 	allWorldVehiclesThisFrameFilled = false;
 	allWorldPedsThisFrameFilled = false;
 	allWorldVehiclesThisFrame.clear();
@@ -1180,8 +1176,7 @@ void kill_all_nearby_vehicles_continuous(){
 
 void clear_up_missionised_entitities(){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
-	//BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(playerPed);
-
+	
 	std::deque<ENTTrackedVehicle*>::iterator vit;
 	for(vit = trackedVehicles.begin(); vit != trackedVehicles.end();){
 		Vehicle actualVeh = (*vit)->vehicle;
@@ -1282,12 +1277,7 @@ void onchange_ped_weapons_selective_index(int value, SelectFromListMenuItem* sou
 }
 
 void give_all_nearby_peds_a_weapon(bool enabled){ 
-	//callsPerFrame = 0;
-
 	std::set<Ped> peds = get_nearby_peds(PLAYER::PLAYER_PED_ID());
-
-	//callsA = callsPerFrame;
-	//callsPerFrame = 0;
 
 	for each (Ped xped in peds){
 		int chanceOfGettingWeapon = rand() % 2; // 5

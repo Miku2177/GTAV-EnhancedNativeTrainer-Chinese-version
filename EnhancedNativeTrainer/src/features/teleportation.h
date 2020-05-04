@@ -56,10 +56,6 @@ void onchange_tel_3dmarker_martype_index(int value, SelectFromListMenuItem *sour
 
 void onchange_tel_3dmarker_skypos_index(int value, SelectFromListMenuItem *source);
 
-//void onchange_tel_3dmarker_alpha_index(int value, SelectFromListMenuItem *source);
-
-//float get_euc_distance(Vector3 playerCoords, Vector3 blipCoords);
-
 Vector3 get_blip_marker();
 
 void update_teleport_features();

@@ -164,8 +164,6 @@ void process_main_menu();
 
 void process_powerpunch_menu();
 
-//void set_all_nearby_peds_to_calm();
-
 //DB persistent stuff
 
 std::vector<FeatureEnabledLocalDefinition> get_feature_enablements();

@@ -235,7 +235,6 @@ void onhighlight_paintdirt(MenuItem<float> choice){
 		return;
 	}
 
-	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if(!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
@@ -259,7 +258,6 @@ void onhighlight_paintfade(MenuItem<float> choice){
 		return;
 	}
 
-	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if(!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
@@ -272,7 +270,6 @@ void onhighlight_paintfade(MenuItem<float> choice){
 }
 
 bool process_paint_menu_fades(){
-	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if(!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
@@ -310,7 +307,6 @@ bool process_paint_menu_fades(){
 }
 
 bool process_paint_menu_dirt(){
-	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if(!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
@@ -353,7 +349,6 @@ void onhighlight_livery(MenuItem<int> choice){
 		return;
 	}
 
-	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if(!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
@@ -379,7 +374,6 @@ bool process_paint_menu_liveries(){
 		return false;
 	}
 
-	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if(!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
@@ -465,7 +459,6 @@ bool spawn_saved_veh_colour(int slot, std::string caption)
 	std::vector<SavedVehColourDBRow*> savedVehColours = database->get_saved_veh_colours(slot);
 
 	SavedVehColourDBRow* savedVehColour = savedVehColours.at(0);
-	//database->populate_saved_veh_colour(savedVehColour);
 	
 	VEHICLE::SET_VEHICLE_COLOURS(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 1), savedVehColour->pcolour, savedVehColour->scolour);
 	VEHICLE::SET_VEHICLE_EXTRA_COLOURS(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 1), savedVehColour->pearl, savedVehColour->wheel);
@@ -712,7 +705,6 @@ bool process_paint_menu(){
 		return false;
 	}
 
-	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if(!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
@@ -957,7 +949,6 @@ bool onconfirm_color_menu_selection(MenuItem<int> choice){
 }
 
 void apply_paint(PaintColor whichpaint){
-	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(playerPed);
 

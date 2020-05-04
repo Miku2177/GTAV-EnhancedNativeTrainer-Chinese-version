@@ -43,8 +43,6 @@ std::vector<float> FUEL;
 std::vector<Blip> BLIPTABLE;
 
 bool featureFuel = false;
-//bool featureBlips = false;
-//bool featureBlipsPhone = false;
 
 int IdleConsume_secs_passed, IdleConsume_secs_curr, IdleConsume_seconds = -1;
 
@@ -85,14 +83,11 @@ int IdleConsumptionIndex = 7;
 bool IdleConsumptionChanged = true;
 int FuelBackground_Opacity_Index = 5;
 bool FuelBackgound_Opacity_Changed = true;
-//
 
 //////////////////////////////////////////////// FUEL OPTION /////////////////////////////////////////////////////////////////
 void fuel()
 {
 	if (featureFuel && !CUTSCENE::IS_CUTSCENE_PLAYING()) {
-
-		//Player player = PLAYER::PLAYER_ID();
 		Ped playerPed = PLAYER::PLAYER_PED_ID();
 		
 		bool refill_button = IsKeyDown(VK_LBUTTON); // REFUEL KEY FOR JERRY CAN

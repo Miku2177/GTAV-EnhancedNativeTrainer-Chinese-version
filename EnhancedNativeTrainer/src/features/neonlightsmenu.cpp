@@ -32,7 +32,6 @@ bool onconfirm_neon_lights_selection(MenuItem<int> choice){
 		return true;
 	}
 
-	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if(!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
@@ -170,7 +169,6 @@ bool process_neon_lights_menu(){
 		return false;
 	}
 
-	//Player player = PLAYER::PLAYER_ID();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if(!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
