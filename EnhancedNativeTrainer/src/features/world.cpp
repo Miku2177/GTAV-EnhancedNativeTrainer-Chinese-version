@@ -1122,7 +1122,7 @@ void update_world_features()
 					BOOL lightsOn = -1;
 					BOOL highbeamsOn = -1;
 					VEHICLE::GET_VEHICLE_LIGHTS_STATE(bus_veh[i], &lightsOn, &highbeamsOn);
-					if (lightsOn || highbeamsOn) {
+					if ((lightsOn || highbeamsOn) && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(bus_veh[i])) {
 						char* light_bones[] = { /*"window_lf", */"window_lf1", "window_lf2", "window_lf3", /*"window_rf", */"window_rf1", "window_rf2", "window_rf3", /*"window_lr", */"window_lr1", "window_lr2", "window_lr3", /*"window_rr", */"window_rr1", "window_rr2", 
 							"window_rr3", /*"seat_dside_f",*/ "seat_dside_r", "seat_dside_r1", "seat_dside_r2", "seat_dside_r3", "seat_dside_r4", "seat_dside_r5", "seat_dside_r6", "seat_dside_r7", "seat_pside_f", "seat_pside_r", "seat_pside_r1", "seat_pside_r2", 
 							"seat_pside_r3", "seat_pside_r4", "seat_pside_r5", "seat_pside_r6", "seat_pside_r7" };
