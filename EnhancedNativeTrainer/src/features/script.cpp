@@ -854,30 +854,32 @@ void update_features(){
 				}
 			}
 		} // end of int (peds)
-		Object surr_objects[arrSize_punch];
-		int count_surr_o = worldGetAllObjects(surr_objects, arrSize_punch);
-		for (int i = 0; i < count_surr_o; i++) {
-			Vector3 obj_coords = ENTITY::GET_ENTITY_COORDS(surr_objects[i], true);
-			int tempgot_x = (my_coords.x - obj_coords.x);
-			int tempgot_y = (my_coords.y - obj_coords.y);
-			int tempgot_z = (my_coords.z - obj_coords.z);
-			if (tempgot_x < 0) tempgot_x = (tempgot_x * -1);
-			if (tempgot_y < 0) tempgot_y = (tempgot_y * -1);
-			if (tempgot_z < 0) tempgot_z = (tempgot_z * -1);
-			if (CONTROLS::IS_CONTROL_PRESSED(2, 22) && tempgot_x < 20 && tempgot_y < 20 && tempgot_z < 20) ENTITY::APPLY_FORCE_TO_ENTITY(surr_objects[i], 1, 0, 0, 0.6, 0, 0, 0, true, false, true, true, true, true);
-		} // end of int (objects)
-		Vehicle surr_vehicles[arrSize_punch];
-		int count_surr_v = worldGetAllVehicles(surr_vehicles, arrSize_punch);
-		for (int i = 0; i < count_surr_v; i++) {
-			Vector3 obj_coords = ENTITY::GET_ENTITY_COORDS(surr_vehicles[i], true);
-			int tempgot_x = (my_coords.x - obj_coords.x);
-			int tempgot_y = (my_coords.y - obj_coords.y);
-			int tempgot_z = (my_coords.z - obj_coords.z);
-			if (tempgot_x < 0) tempgot_x = (tempgot_x * -1);
-			if (tempgot_y < 0) tempgot_y = (tempgot_y * -1);
-			if (tempgot_z < 0) tempgot_z = (tempgot_z * -1);
-			if (CONTROLS::IS_CONTROL_PRESSED(2, 22) && tempgot_x < 20 && tempgot_y < 20 && tempgot_z < 20) ENTITY::APPLY_FORCE_TO_ENTITY(surr_vehicles[i], 1, 0, 0, 0.6, 0, 0, 0, true, false, true, true, true, true);
-		} // end of int (vehicles)
+		if (CONTROLS::IS_CONTROL_PRESSED(2, 22)) {
+			Object surr_objects[arrSize_punch];
+			int count_surr_o = worldGetAllObjects(surr_objects, arrSize_punch);
+			for (int i = 0; i < count_surr_o; i++) {
+				Vector3 obj_coords = ENTITY::GET_ENTITY_COORDS(surr_objects[i], true);
+				int tempgot_x = (my_coords.x - obj_coords.x);
+				int tempgot_y = (my_coords.y - obj_coords.y);
+				int tempgot_z = (my_coords.z - obj_coords.z);
+				if (tempgot_x < 0) tempgot_x = (tempgot_x * -1);
+				if (tempgot_y < 0) tempgot_y = (tempgot_y * -1);
+				if (tempgot_z < 0) tempgot_z = (tempgot_z * -1);
+				if (tempgot_x < 20 && tempgot_y < 20 && tempgot_z < 20) ENTITY::APPLY_FORCE_TO_ENTITY(surr_objects[i], 1, 0, 0, 0.6, 0, 0, 0, true, false, true, true, true, true);
+			} // end of int (objects)
+			Vehicle surr_vehicles[arrSize_punch];
+			int count_surr_v = worldGetAllVehicles(surr_vehicles, arrSize_punch);
+			for (int i = 0; i < count_surr_v; i++) {
+				Vector3 obj_coords = ENTITY::GET_ENTITY_COORDS(surr_vehicles[i], true);
+				int tempgot_x = (my_coords.x - obj_coords.x);
+				int tempgot_y = (my_coords.y - obj_coords.y);
+				int tempgot_z = (my_coords.z - obj_coords.z);
+				if (tempgot_x < 0) tempgot_x = (tempgot_x * -1);
+				if (tempgot_y < 0) tempgot_y = (tempgot_y * -1);
+				if (tempgot_z < 0) tempgot_z = (tempgot_z * -1);
+				if (tempgot_x < 20 && tempgot_y < 20 && tempgot_z < 20) ENTITY::APPLY_FORCE_TO_ENTITY(surr_vehicles[i], 1, 0, 0, 0.6, 0, 0, 0, true, false, true, true, true, true);
+			} // end of int (vehicles)
+		}
 	}
 
 	// Hancock Mode
