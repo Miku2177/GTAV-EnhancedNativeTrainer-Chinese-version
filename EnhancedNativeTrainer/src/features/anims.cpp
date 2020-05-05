@@ -39,12 +39,10 @@ int activeScenarioLineIndex[2]{ 0, 0 };
 int activeClipsetLineIndex = 0;
 
 TreeNode *rootNode;
-
 TreeNode *facialsNode;
-
 TreeNode *movementNode;
-
 TreeNode *currentMenuNode;
+
 int currentAnimMenuDepth = 0;
 int currentAnimMenuMode = -1;
 
