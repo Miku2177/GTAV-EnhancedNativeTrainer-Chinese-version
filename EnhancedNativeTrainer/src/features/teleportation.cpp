@@ -24,6 +24,9 @@ bool featureEnableMpMaps = false;
 bool feature3dmarker = false;
 bool featureTeleportAutomatically = false;
 
+//For onscreen debug info
+bool featureShowDebugInfo = false;
+
 struct tele_location{
 	std::string text;
 	float x;
@@ -1367,7 +1370,13 @@ bool process_teleport_menu(int categoryIndex){
 		markerItem->value = -6;
 		markerItem->isLeaf = true;
 		menuItems.push_back(markerItem);
-				
+			
+		ToggleMenuItem<int>* togItem = new ToggleMenuItem<int>();
+		togItem->caption = "Show Coordinates";
+		togItem->value = 1;
+		togItem->toggleValue = &featureShowDebugInfo;
+		menuItems.push_back(togItem);
+
 		markerItem = new MenuItem<int>();
 		markerItem->caption = "3D Marker";
 		markerItem->value = -7;
@@ -1412,6 +1421,8 @@ void reset_teleporter_globals()
 	feature3dmarker = false;
 	featureTeleportAutomatically = false;
 	featureLandAtDestination = true;
+
+	featureShowDebugInfo = false;
 
 	lastChosenCategory = 0;
 	TelChauffeurIndex = 3;
@@ -1504,8 +1515,20 @@ void add_teleporter_feature_enablements(std::vector<FeatureEnabledLocalDefinitio
 //	draw_generic_menu<std::string>(menuItems, &toggleIndex, "Test Toggles", NULL, NULL, NULL);
 //}
 
+void show_debug_info_on_screen(bool enabled) {
+	Vector3 coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 0);
+	std::ostringstream ss;
+	ss << "\nX: " << coords.x << "\nY: " << coords.y << "\nZ: " << coords.z;
+	callsPerFrame = 0;
+	set_status_text_centre_screen(ss.str());
+}
+
 void update_teleport_features(){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
+
+	if (featureShowDebugInfo) {
+		show_debug_info_on_screen(featureShowDebugInfo);
+	}
 
 	/////////////////////////////////////// 3D MARKER /////////////////////////////////////////
 	if (feature3dmarker) {
