@@ -214,6 +214,12 @@ void process_world_weathersettings_menu() {
 	listItem->value = featureLightIntensityIndex;
 	menuItems.push_back(listItem);
 
+	listItem = new SelectFromListMenuItem(WORLD_WIND_STRENGTH_CAPTIONS, onchange_world_wind_strength_index);
+	listItem->wrap = false;
+	listItem->caption = "Wind Strength";
+	listItem->value = WindStrengthIndex;
+	menuItems.push_back(listItem);
+
 	listItem = new SelectFromListMenuItem(WORLD_WAVES_CAPTIONS, onchange_world_waves_index);
 	listItem->wrap = false;
 	listItem->caption = "Waves Intensity";
@@ -471,12 +477,6 @@ void process_world_menu()
 	cloudsItem->value = -4;
 	menuItems.push_back(cloudsItem);
 	
-	listItem = new SelectFromListMenuItem(WORLD_WIND_STRENGTH_CAPTIONS, onchange_world_wind_strength_index);
-	listItem->wrap = false;
-	listItem->caption = "Wind Strength";
-	listItem->value = WindStrengthIndex;
-	menuItems.push_back(listItem);
-
 	ToggleMenuItem<int> *togItem = new ToggleMenuItem<int>();
 	togItem->caption = "Moon Gravity";
 	togItem->value = 1;
