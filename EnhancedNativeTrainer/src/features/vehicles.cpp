@@ -83,6 +83,8 @@ bool alarm_enabled = false;
 bool nitro_e = false;
 
 int turn_angle = 0;
+int temp_angle = 0;
+bool turning_started = false;
 
 int traction_tick = 0;
 int Time_tick_mileage = 0;
@@ -205,14 +207,14 @@ bool turnSignalsChanged = true;
 
 //Turn Signals Angle
 const std::vector<std::string> VEH_TURN_SIGNALS_ANGLE_CAPTIONS{ "0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100" };
-const std::vector<int> VEH_TURN_SIGNALS_ANGLE_VALUES{ 0, 1, 5, 10, 15, 17, 20, 25, 30, 40, 50 };
-int turnSignalsAngleIndex = 5;
+const std::vector<int> VEH_TURN_SIGNALS_ANGLE_VALUES{ 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
+int turnSignalsAngleIndex = 3;
 bool turnSignalsAngleChanged = true;
 
 //Turn Signals Off Acceleration
 const std::vector<std::string> VEH_TURN_SIGNALS_ACCELERATION_CAPTIONS{ "OFF", "1", "2", "3", "4", "5", "7", "10" };
 const std::vector<int> VEH_TURN_SIGNALS_ACCELERATION_VALUES{ 0, 1, 2, 3, 4, 5, 7, 10 };
-int turnSignalsAccelerationIndex = 4;
+int turnSignalsAccelerationIndex = 3;
 bool turnSignalsAccelerationChanged = true;
 int JumpyVehIndex = 0;
 bool JumpyVehChanged = true;
@@ -2923,16 +2925,20 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 			// enable indicators if vehicle's turn angle is more than
 			if (steer_turn == 254 || steer_turn == 0) {
-				engine_secs_passed = clock() / CLOCKS_PER_SEC;
-				if (((clock() / (CLOCKS_PER_SEC / 1000)) - engine_secs_curr) != 0) {
-					turn_angle = turn_angle + 1;
-					engine_secs_curr = engine_secs_passed;
+				if (turning_started == false) {
+					temp_angle = ENTITY::GET_ENTITY_HEADING(vehturn);
+					turning_started = true;
 				}
+				turn_angle = std::abs(temp_angle - ENTITY::GET_ENTITY_HEADING(vehturn));
 			}
-			else turn_angle = 0;
+			if (steer_turn != 254 && steer_turn != 0) {
+				turn_angle = 0;
+				turning_started = false;
+				temp_angle = ENTITY::GET_ENTITY_HEADING(vehturn);
+			}
 
 			// disable indicators after some amount of time passed
-			if (CONTROLS::IS_CONTROL_PRESSED(2, 71) && VEH_TURN_SIGNALS_ACCELERATION_VALUES[turnSignalsAccelerationIndex] > 0 && turn_angle < 15) {
+			if (CONTROLS::IS_CONTROL_PRESSED(2, 71) && VEH_TURN_SIGNALS_ACCELERATION_VALUES[turnSignalsAccelerationIndex] > 0 && turn_angle < VEH_TURN_SIGNALS_ANGLE_VALUES[turnSignalsAngleIndex]) { // turn_angle < 15
 				Accel_secs_passed = clock() / CLOCKS_PER_SEC;
 				if (((clock() / CLOCKS_PER_SEC) - Accel_secs_curr) != 0) {
 					Accel_seconds = Accel_seconds + 1;
@@ -2942,7 +2948,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			else Accel_seconds = 0;
 
 			// disable indicators after some amount of metres passed
-			if (VEH_TURN_SIGNALS_ACCELERATION_VALUES[turnSignalsAccelerationIndex] > 0 && turn_angle < 15 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
+			if (VEH_TURN_SIGNALS_ACCELERATION_VALUES[turnSignalsAccelerationIndex] > 0 && turn_angle < VEH_TURN_SIGNALS_ANGLE_VALUES[turnSignalsAngleIndex] && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) { // turn_angle < 15
 				if ((GAMEPLAY::GET_GAME_TIMER() - Time_tick_mileage) > 200) {
 					signal_meters = signal_meters + ((ENTITY::GET_ENTITY_SPEED(PED::GET_VEHICLE_PED_IS_IN(playerPed, 1)) * (1.60934 * 0.02)) * 6.6);
 					Time_tick_mileage = GAMEPLAY::GET_GAME_TIMER();
