@@ -1272,14 +1272,15 @@ void do_spawn_bodyguard(){
 				PED::SET_PED_COMBAT_ABILITY(bodyGuard, 2);
 				PED::SET_PED_COMBAT_RANGE(bodyGuard, 2);
 				PED::SET_PED_COMBAT_MOVEMENT(bodyGuard, 3);
-				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 5, true);
-				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 1, true);
-				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 2, true);
-				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 46, true);
-				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 20, true);
-				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 0, true);
-				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 1424, true);
-
+				//PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 0, true); // BF_CanUseCover 
+				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 1, true); // BF_CanUseVehicles 
+				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 2, true); // BF_CanDoDrivebys 
+				//PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 3, true); // BF_CanLeaveVehicle 
+				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 5, true); // BF_CanFightArmedPedsWhenNotArmed
+				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 20, true); // BF_CanTauntInVehicle 
+				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 46, true); // BF_AlwaysFight 
+				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 1424, true); // BF_PlayerCanUseFiringWeapons 
+				
 				// animal
 				if (bodyguard_animal == true) {
 					PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 46, true);
@@ -1581,7 +1582,7 @@ void maintain_bodyguards(){
 								(VEHICLE::IS_VEHICLE_SEAT_FREE(surr_vehs[t], -1) || VEHICLE::IS_VEHICLE_SEAT_FREE(surr_vehs[t], 0) || VEHICLE::IS_VEHICLE_SEAT_FREE(surr_vehs[t], 1))) ||
 									(VEHICLE::GET_VEHICLE_MODEL_NUMBER_OF_SEATS(ENTITY::GET_ENTITY_MODEL(surr_vehs[t])) == 2 && (VEHICLE::IS_VEHICLE_SEAT_FREE(surr_vehs[t], -1) || VEHICLE::IS_VEHICLE_SEAT_FREE(surr_vehs[t], 0))) ||
 								(VEHICLE::GET_VEHICLE_MODEL_NUMBER_OF_SEATS(ENTITY::GET_ENTITY_MODEL(surr_vehs[t])) == 1 && VEHICLE::IS_VEHICLE_SEAT_FREE(surr_vehs[t], -1))) {
-								if (surr_vehs[t] != veh &&
+								if (ENTITY::DOES_ENTITY_EXIST(surr_vehs[t]) && surr_vehs[t] != veh && VEHICLE::GET_VEHICLE_ENGINE_HEALTH(surr_vehs[t]) > 299 &&
 									(VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(surr_vehs[t])) || VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(surr_vehs[t])) || 
 										VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(surr_vehs[t])))) {
 									Vector3 coordsped = ENTITY::GET_ENTITY_COORDS(surr_vehs[t], true);
@@ -1687,7 +1688,7 @@ void maintain_bodyguards(){
 				if (!B_VEHICLE.empty()) {
 					for (int g = 0; g < B_VEHICLE.size(); g++) {
 						if (ENTITY::DOES_ENTITY_EXIST(B_VEHICLE[g]) && VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[g], -1) != 0) AI::TASK_LEAVE_VEHICLE(VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[g], -1), B_VEHICLE[g], 1);
-						ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&B_VEHICLE[g]);
+						ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&B_VEHICLE[g]);
 					}
 					B_VEHICLE.clear();
 					B_VEHICLE.shrink_to_fit();
@@ -1697,7 +1698,7 @@ void maintain_bodyguards(){
 				for (int n = 0; n < spawnedENTBodyguards.size(); n++) {
 					Vector3 coordsped = ENTITY::GET_ENTITY_COORDS(spawnedENTBodyguards[n], true);
 					dist_diff = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsped.x, coordsped.y, coordsped.z);
-					if (dist_diff > 450) { // 250
+					if (dist_diff > 350) { // 450 250
 						Vector3 closestRoad;
 						if (PATHFIND::GET_CLOSEST_ROAD(coordsme.x - 70, coordsme.y - 70, coordsme.z, 1.f, 1, &closestRoad, &closestRoad, 0, 0, 0, 0))
 						{
@@ -1706,6 +1707,17 @@ void maintain_bodyguards(){
 						}
 					}
 					if (PED::IS_PED_SHOOTING(spawnedENTBodyguards[n])) me_to_follow = false;
+					if (PED::IS_PED_SITTING_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID())) {
+						PED::SET_PED_COMBAT_ATTRIBUTES(spawnedENTBodyguards[n], 292, true); // BF_FreezeMovement 
+						PED::SET_PED_COMBAT_MOVEMENT(spawnedENTBodyguards[n], 0); // Stationary (Will just stand in place) 
+					}
+					if (!PED::IS_PED_SITTING_IN_ANY_VEHICLE(spawnedENTBodyguards[n])) PED::SET_PED_COMBAT_MOVEMENT(spawnedENTBodyguards[n], 3); // Suicidal Offensive (Will try to flank enemy in a suicidal attack)
+					if (ENTITY::DOES_ENTITY_EXIST(PED::GET_VEHICLE_PED_IS_USING(spawnedENTBodyguards[n])) && VEHICLE::GET_VEHICLE_ENGINE_HEALTH(PED::GET_VEHICLE_PED_IS_USING(spawnedENTBodyguards[n])) < 300) {
+						AI::TASK_LEAVE_VEHICLE(VEHICLE::GET_PED_IN_VEHICLE_SEAT(PED::GET_VEHICLE_PED_IS_USING(spawnedENTBodyguards[n]), -1), PED::GET_VEHICLE_PED_IS_USING(spawnedENTBodyguards[n]), 1);
+						Vehicle tmp_v = PED::GET_VEHICLE_PED_IS_USING(spawnedENTBodyguards[n]);
+						ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&tmp_v);
+						me_to_follow = false;
+					}
 				}
 				if (not_bodyguards_in_vehicle()) {
 					bod_pass = false;
