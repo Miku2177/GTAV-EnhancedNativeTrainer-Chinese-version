@@ -979,6 +979,7 @@ namespace VEHICLE
 	static void _GET_VEHICLE_DASHBOARD_COLOUR(Vehicle vehicle, int *color) { invoke<Void>(0xB7635E80A5C31BFF, vehicle, color); }
 	static BOOL _HAS_VEHICLE_ROCKET_BOOST(Vehicle vehicle) { return invoke<BOOL>(0x36D782F68B309BDA, vehicle); }
 	static BOOL _IS_VEHICLE_ROCKET_BOOST_ACTIVE(Vehicle vehicle) { return invoke<BOOL>(0x3D34E80EED4AE3BE, vehicle); }
+	static BOOL ARE_ANY_VEHICLE_SEATS_FREE(Vehicle vehicle) { return invoke<BOOL>(0x2D34FC3BC4ADB780, vehicle); } // 0x2D34FC3BC4ADB780 0x648E685A
 	static void _SET_VEHICLE_ROCKET_BOOST_ACTIVE(Vehicle vehicle, BOOL active) { invoke<Void>(0x81E1552E35DC3839, vehicle, active); }
 	static void _SET_VEHICLE_ROCKET_BOOST_REFILL_TIME(Vehicle vehicle, float time) { invoke<Void>(0xE00F2AB100B76E89, vehicle, time); }
 	static void _SET_VEHICLE_ROCKET_BOOST_PERCENTAGE(Vehicle vehicle, float percentage) { invoke<Void>(0xFEB2DDED3509562E, vehicle, percentage); } // 0xFEB2DDED3509562E

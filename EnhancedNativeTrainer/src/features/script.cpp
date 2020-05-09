@@ -1206,11 +1206,15 @@ void update_features(){
 	}
 
 	// Player Fast Run 
-	if(bPlayerExists && !featurePlayerFastRun){
-		if (AI::IS_PED_SPRINTING(PLAYER::PLAYER_PED_ID())) PLAYER::SET_RUN_SPRINT_MULTIPLIER_FOR_PLAYER(player, 1.0);
-	}
 	if(featurePlayerFastRun){
 		if (AI::IS_PED_SPRINTING(PLAYER::PLAYER_PED_ID())) PLAYER::SET_RUN_SPRINT_MULTIPLIER_FOR_PLAYER(player, 1.49);
+		else PLAYER::SET_RUN_SPRINT_MULTIPLIER_FOR_PLAYER(player, 1.0);
+	}
+
+	// Player Movement Speed
+	if (PLAYER_MOVEMENT_VALUES[current_player_movement] > 0.00) {
+		if (AI::IS_PED_SPRINTING(PLAYER::PLAYER_PED_ID())) PED::SET_PED_MOVE_RATE_OVERRIDE(playerPed, PLAYER_MOVEMENT_VALUES[current_player_movement]);
+		else PED::SET_PED_MOVE_RATE_OVERRIDE(playerPed, 1.00);
 	}
 
 	// Player Super Jump
@@ -1335,12 +1339,6 @@ void update_features(){
 				ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(NPCragdoll[i]);
 			}
 		}
-	}
-		
-	// Player Movement Speed
-	if (PLAYER_MOVEMENT_VALUES[current_player_movement] > 0.00) {
-		if (AI::IS_PED_SPRINTING(PLAYER::PLAYER_PED_ID())) PED::SET_PED_MOVE_RATE_OVERRIDE(playerPed, PLAYER_MOVEMENT_VALUES[current_player_movement]);
-		else PED::SET_PED_MOVE_RATE_OVERRIDE(playerPed, 1.00);
 	}
 		
 	// Health Regeneration Rate
