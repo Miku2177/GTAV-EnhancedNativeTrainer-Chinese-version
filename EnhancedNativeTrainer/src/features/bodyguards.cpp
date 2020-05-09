@@ -1279,7 +1279,9 @@ void do_spawn_bodyguard(){
 				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 5, true); // BF_CanFightArmedPedsWhenNotArmed
 				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 20, true); // BF_CanTauntInVehicle 
 				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 46, true); // BF_AlwaysFight 
-				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 1424, true); // BF_PlayerCanUseFiringWeapons 
+				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 1424, true); // BF_PlayerCanUseFiringWeapons
+				PED::SET_PED_ALERTNESS(bodyGuard, 3);
+				PED::SET_PED_SEEING_RANGE(bodyGuard, 1000);
 				
 				// animal
 				if (bodyguard_animal == true) {
@@ -1577,13 +1579,8 @@ void maintain_bodyguards(){
 						float dist_diff = -1.0;
 						float temp_dist = 2000.0;
 						for (int t = 0; t < count_surr_vehs; t++) {
-							if ((VEHICLE::GET_VEHICLE_MODEL_NUMBER_OF_SEATS(ENTITY::GET_ENTITY_MODEL(surr_vehs[t])) == 4 && (VEHICLE::IS_VEHICLE_SEAT_FREE(surr_vehs[t], -1) || VEHICLE::IS_VEHICLE_SEAT_FREE(surr_vehs[t], 0) ||
-								VEHICLE::IS_VEHICLE_SEAT_FREE(surr_vehs[t], 1) || VEHICLE::IS_VEHICLE_SEAT_FREE(surr_vehs[t], 2))) || (VEHICLE::GET_VEHICLE_MODEL_NUMBER_OF_SEATS(ENTITY::GET_ENTITY_MODEL(surr_vehs[t])) == 3 &&
-								(VEHICLE::IS_VEHICLE_SEAT_FREE(surr_vehs[t], -1) || VEHICLE::IS_VEHICLE_SEAT_FREE(surr_vehs[t], 0) || VEHICLE::IS_VEHICLE_SEAT_FREE(surr_vehs[t], 1))) ||
-									(VEHICLE::GET_VEHICLE_MODEL_NUMBER_OF_SEATS(ENTITY::GET_ENTITY_MODEL(surr_vehs[t])) == 2 && (VEHICLE::IS_VEHICLE_SEAT_FREE(surr_vehs[t], -1) || VEHICLE::IS_VEHICLE_SEAT_FREE(surr_vehs[t], 0))) ||
-								(VEHICLE::GET_VEHICLE_MODEL_NUMBER_OF_SEATS(ENTITY::GET_ENTITY_MODEL(surr_vehs[t])) == 1 && VEHICLE::IS_VEHICLE_SEAT_FREE(surr_vehs[t], -1))) {
-								if (ENTITY::DOES_ENTITY_EXIST(surr_vehs[t]) && surr_vehs[t] != veh && VEHICLE::GET_VEHICLE_ENGINE_HEALTH(surr_vehs[t]) > 299 &&
-									(VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(surr_vehs[t])) || VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(surr_vehs[t])) || 
+							if (ENTITY::DOES_ENTITY_EXIST(surr_vehs[t]) && VEHICLE::ARE_ANY_VEHICLE_SEATS_FREE(surr_vehs[t])) {
+								if ((VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(surr_vehs[t])) || VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(surr_vehs[t])) || 
 										VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(surr_vehs[t])))) {
 									Vector3 coordsped = ENTITY::GET_ENTITY_COORDS(surr_vehs[t], true);
 									dist_diff = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsped.x, coordsped.y, coordsped.z);
@@ -1611,7 +1608,7 @@ void maintain_bodyguards(){
 					}
 				}
 				if (!B_VEHICLE.empty()) {
-					if (bod_pass == true/* && not_bodyguards_in_vehicle()*/) {
+					if (bod_pass == true) {
 						for (int n = 0; n < spawnedENTBodyguards.size(); n++) {
 							if (!PED::IS_PED_SITTING_IN_ANY_VEHICLE(spawnedENTBodyguards[n])) {
 								for (int m = 0; m < B_VEHICLE.size(); m++) {
@@ -1657,11 +1654,7 @@ void maintain_bodyguards(){
 					}
 					if (not_bodyguards_in_vehicle()) {
 						for (int m = 0; m < B_VEHICLE.size(); m++) {
-							if ((VEHICLE::GET_VEHICLE_MODEL_NUMBER_OF_SEATS(ENTITY::GET_ENTITY_MODEL(B_VEHICLE[m])) == 4 && !VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE[m], -1) && !VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE[m], 0) &&
-								!VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE[m], 1) && !VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE[m], 2)) || (VEHICLE::GET_VEHICLE_MODEL_NUMBER_OF_SEATS(ENTITY::GET_ENTITY_MODEL(B_VEHICLE[m])) == 3 &&
-									!VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE[m], -1) && !VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE[m], 0) && !VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE[m], 1)) ||
-									(VEHICLE::GET_VEHICLE_MODEL_NUMBER_OF_SEATS(ENTITY::GET_ENTITY_MODEL(B_VEHICLE[m])) == 2 && !VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE[m], -1) && !VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE[m], 0)) ||
-								(VEHICLE::GET_VEHICLE_MODEL_NUMBER_OF_SEATS(ENTITY::GET_ENTITY_MODEL(B_VEHICLE[m])) == 1 && !VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE[m], -1)) && bod_pass == true) {
+							if (ENTITY::DOES_ENTITY_EXIST(B_VEHICLE[m]) && !VEHICLE::ARE_ANY_VEHICLE_SEATS_FREE(B_VEHICLE[m]) && bod_pass == true) {
 								bod_pass = false;
 								me_to_follow = false;
 							}
@@ -1709,7 +1702,7 @@ void maintain_bodyguards(){
 					if (PED::IS_PED_SHOOTING(spawnedENTBodyguards[n])) me_to_follow = false;
 					if (PED::IS_PED_SITTING_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID())) {
 						PED::SET_PED_COMBAT_ATTRIBUTES(spawnedENTBodyguards[n], 292, true); // BF_FreezeMovement 
-						PED::SET_PED_COMBAT_MOVEMENT(spawnedENTBodyguards[n], 0); // Stationary (Will just stand in place) 
+						PED::SET_PED_COMBAT_MOVEMENT(spawnedENTBodyguards[n], 0); // Stationary (Will just stand in place)
 					}
 					if (!PED::IS_PED_SITTING_IN_ANY_VEHICLE(spawnedENTBodyguards[n])) PED::SET_PED_COMBAT_MOVEMENT(spawnedENTBodyguards[n], 3); // Suicidal Offensive (Will try to flank enemy in a suicidal attack)
 					if (ENTITY::DOES_ENTITY_EXIST(PED::GET_VEHICLE_PED_IS_USING(spawnedENTBodyguards[n])) && VEHICLE::GET_VEHICLE_ENGINE_HEALTH(PED::GET_VEHICLE_PED_IS_USING(spawnedENTBodyguards[n])) < 300) {
@@ -1724,7 +1717,7 @@ void maintain_bodyguards(){
 					me_to_follow = false;
 				}
 			}
-		} // end of bodyguards follow you in vehicle
+		} // end of follow in vehicle
 	} // end of if (!spawnedENTBodyguards.empty())
 } // end of void maintain_bodyguards()
 
