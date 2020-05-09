@@ -1713,9 +1713,9 @@ void maintain_bodyguards(){
 					}
 				}
 				if (PED::IS_PED_SHOOTING(spawnedENTBodyguards[n])) me_to_follow = false;
-				if (!PED::IS_PED_SITTING_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_SITTING_IN_ANY_VEHICLE(spawnedENTBodyguards[n]) && dist_diff > 100) { //  && AI::IS_PED_STILL(spawnedENTBodyguards[n])
+				if (!PED::IS_PED_SITTING_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_SITTING_IN_ANY_VEHICLE(spawnedENTBodyguards[n]) && dist_diff > 50) { //  && AI::IS_PED_STILL(spawnedENTBodyguards[n])
 					Vector3 closestRoad;
-					if (PATHFIND::GET_CLOSEST_ROAD(coordsme.x - 90, coordsme.y - 90, coordsme.z, 1.f, 1, &closestRoad, &closestRoad, 0, 0, 0, 0)) 
+					if (PATHFIND::GET_CLOSEST_ROAD(coordsme.x - 40, coordsme.y - 40, coordsme.z, 1.f, 1, &closestRoad, &closestRoad, 0, 0, 0, 0)) 
 						ENTITY::SET_ENTITY_COORDS(spawnedENTBodyguards[n], closestRoad.x, closestRoad.y, closestRoad.z, 1, 0, 0, 1);
 				}
 			}
