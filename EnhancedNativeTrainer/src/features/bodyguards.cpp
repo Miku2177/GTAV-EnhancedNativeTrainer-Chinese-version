@@ -34,6 +34,8 @@ std::string value;
 
 bool spawning_a_ped = false;
 
+int someone_shooting = 0;
+
 bool stop_b = false;
 bool featureBodyguardInvincible = false;
 bool featureBodyguardHelmet = false;
@@ -1280,7 +1282,7 @@ void do_spawn_bodyguard(){
 				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 20, true); // BF_CanTauntInVehicle 
 				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 46, true); // BF_AlwaysFight 
 				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 1424, true); // BF_PlayerCanUseFiringWeapons
-				PED::SET_PED_ALERTNESS(bodyGuard, 3);
+				//PED::SET_PED_ALERTNESS(bodyGuard, 3);
 				PED::SET_PED_SEEING_RANGE(bodyGuard, 1000);
 				
 				// animal
@@ -1572,7 +1574,7 @@ void maintain_bodyguards(){
 				Hash currVehModel = ENTITY::GET_ENTITY_MODEL(veh);
 				int maxSeats = VEHICLE::GET_VEHICLE_MODEL_NUMBER_OF_SEATS(currVehModel);
 				if (VEHICLE::GET_VEHICLE_NUMBER_OF_PASSENGERS(veh) == (maxSeats - 1) && bod_pass == false) {
-					if (not_bodyguards_in_vehicle()) {
+					if (not_bodyguards_in_vehicle() && someone_shooting > 200) { // 100
 						const int arrSize33 = 1024;
 						Ped surr_vehs[arrSize33];
 						int count_surr_vehs = worldGetAllVehicles(surr_vehs, arrSize33);
@@ -1618,8 +1620,10 @@ void maintain_bodyguards(){
 									}
 									if (added_already == false) {
 										Ped temp_bodyguard_d = VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], 2);
-										PED::DELETE_PED(&temp_bodyguard_d);
-										AI::TASK_ENTER_VEHICLE(spawnedENTBodyguards[n], B_VEHICLE[m], 1000, 2, 2.0, 16, 0);
+										AI::TASK_LEAVE_VEHICLE(temp_bodyguard_d, B_VEHICLE[m], 16);
+										WAIT(0);
+										if (!PED::IS_PED_FLEEING(temp_bodyguard_d) && !AI::IS_PED_RUNNING(temp_bodyguard_d)) AI::TASK_SMART_FLEE_PED(temp_bodyguard_d, PLAYER::PLAYER_PED_ID(), 1000, -1, true, true);
+										PED::SET_PED_INTO_VEHICLE(spawnedENTBodyguards[n], B_VEHICLE[m], 2);
 									}
 									added_already = false;
 									for (int tmp = 0; tmp < spawnedENTBodyguards.size(); tmp++) {
@@ -1627,8 +1631,10 @@ void maintain_bodyguards(){
 									}
 									if (added_already == false) {
 										Ped temp_bodyguard_d = VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], 1);
-										PED::DELETE_PED(&temp_bodyguard_d);
-										AI::TASK_ENTER_VEHICLE(spawnedENTBodyguards[n], B_VEHICLE[m], 1000, 1, 2.0, 16, 0);
+										AI::TASK_LEAVE_VEHICLE(temp_bodyguard_d, B_VEHICLE[m], 16);
+										WAIT(0);
+										if (!PED::IS_PED_FLEEING(temp_bodyguard_d) && !AI::IS_PED_RUNNING(temp_bodyguard_d)) AI::TASK_SMART_FLEE_PED(temp_bodyguard_d, PLAYER::PLAYER_PED_ID(), 1000, -1, true, true);
+										PED::SET_PED_INTO_VEHICLE(spawnedENTBodyguards[n], B_VEHICLE[m], 1);
 									}
 									added_already = false;
 									for (int tmp = 0; tmp < spawnedENTBodyguards.size(); tmp++) {
@@ -1636,8 +1642,10 @@ void maintain_bodyguards(){
 									}
 									if (added_already == false) {
 										Ped temp_bodyguard_d = VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], 0);
-										PED::DELETE_PED(&temp_bodyguard_d);
-										AI::TASK_ENTER_VEHICLE(spawnedENTBodyguards[n], B_VEHICLE[m], 1000, 0, 2.0, 16, 0);
+										AI::TASK_LEAVE_VEHICLE(temp_bodyguard_d, B_VEHICLE[m], 16);
+										WAIT(0);
+										if (!PED::IS_PED_FLEEING(temp_bodyguard_d) && !AI::IS_PED_RUNNING(temp_bodyguard_d)) AI::TASK_SMART_FLEE_PED(temp_bodyguard_d, PLAYER::PLAYER_PED_ID(), 1000, -1, true, true);
+										PED::SET_PED_INTO_VEHICLE(spawnedENTBodyguards[n], B_VEHICLE[m], 0);
 									}
 									added_already = false;
 									for (int tmp = 0; tmp < spawnedENTBodyguards.size(); tmp++) {
@@ -1645,8 +1653,10 @@ void maintain_bodyguards(){
 									}
 									if (added_already == false) {
 										Ped temp_bodyguard_d = VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], -1);
-										PED::DELETE_PED(&temp_bodyguard_d);
-										AI::TASK_ENTER_VEHICLE(spawnedENTBodyguards[n], B_VEHICLE[m], 1000, -1, 2.0, 16, 0);
+										AI::TASK_LEAVE_VEHICLE(temp_bodyguard_d, B_VEHICLE[m], 16);
+										WAIT(0);
+										if (!PED::IS_PED_FLEEING(temp_bodyguard_d) && !AI::IS_PED_RUNNING(temp_bodyguard_d)) AI::TASK_SMART_FLEE_PED(temp_bodyguard_d, PLAYER::PLAYER_PED_ID(), 1000, -1, true, true);
+										PED::SET_PED_INTO_VEHICLE(spawnedENTBodyguards[n], B_VEHICLE[m], -1);
 									}
 								}
 							}
@@ -1687,35 +1697,39 @@ void maintain_bodyguards(){
 					B_VEHICLE.shrink_to_fit();
 				}
 			}
-			if (!B_VEHICLE.empty()) {
-				for (int n = 0; n < spawnedENTBodyguards.size(); n++) {
-					Vector3 coordsped = ENTITY::GET_ENTITY_COORDS(spawnedENTBodyguards[n], true);
-					dist_diff = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsped.x, coordsped.y, coordsped.z);
-					if (dist_diff > 350) { // 450 250
-						Vector3 closestRoad;
-						if (PATHFIND::GET_CLOSEST_ROAD(coordsme.x - 70, coordsme.y - 70, coordsme.z, 1.f, 1, &closestRoad, &closestRoad, 0, 0, 0, 0))
-						{
-							ENTITY::SET_ENTITY_COORDS(PED::GET_VEHICLE_PED_IS_USING(spawnedENTBodyguards[n]), closestRoad.x, closestRoad.y, closestRoad.z, 0, 0, 0, 1);
-							me_to_follow = false;
-						}
-					}
-					if (PED::IS_PED_SHOOTING(spawnedENTBodyguards[n])) me_to_follow = false;
-					if (PED::IS_PED_SITTING_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID())) {
-						PED::SET_PED_COMBAT_ATTRIBUTES(spawnedENTBodyguards[n], 292, true); // BF_FreezeMovement 
-						PED::SET_PED_COMBAT_MOVEMENT(spawnedENTBodyguards[n], 0); // Stationary (Will just stand in place)
-					}
-					if (!PED::IS_PED_SITTING_IN_ANY_VEHICLE(spawnedENTBodyguards[n])) PED::SET_PED_COMBAT_MOVEMENT(spawnedENTBodyguards[n], 3); // Suicidal Offensive (Will try to flank enemy in a suicidal attack)
-					if (ENTITY::DOES_ENTITY_EXIST(PED::GET_VEHICLE_PED_IS_USING(spawnedENTBodyguards[n])) && VEHICLE::GET_VEHICLE_ENGINE_HEALTH(PED::GET_VEHICLE_PED_IS_USING(spawnedENTBodyguards[n])) < 300) {
-						AI::TASK_LEAVE_VEHICLE(VEHICLE::GET_PED_IN_VEHICLE_SEAT(PED::GET_VEHICLE_PED_IS_USING(spawnedENTBodyguards[n]), -1), PED::GET_VEHICLE_PED_IS_USING(spawnedENTBodyguards[n]), 1);
-						Vehicle tmp_v = PED::GET_VEHICLE_PED_IS_USING(spawnedENTBodyguards[n]);
-						ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&tmp_v);
+			if (PED::IS_PED_SITTING_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID())) {
+				someone_shooting = someone_shooting + 1;
+				if (PED::IS_ANY_PED_SHOOTING_IN_AREA(coordsme.x - 200, coordsme.y - 200, coordsme.z - 200, coordsme.x + 200, coordsme.y + 200, coordsme.z + 200, true, true)) someone_shooting = 0;
+			}
+			for (int n = 0; n < spawnedENTBodyguards.size(); n++) {
+				Vector3 coordsped = ENTITY::GET_ENTITY_COORDS(spawnedENTBodyguards[n], true);
+				dist_diff = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsped.x, coordsped.y, coordsped.z);
+				if (dist_diff > 350) { // 450 250
+					Vector3 closestRoad;
+					if (PATHFIND::GET_CLOSEST_ROAD(coordsme.x - 70, coordsme.y - 70, coordsme.z, 1.f, 1, &closestRoad, &closestRoad, 0, 0, 0, 0))
+					{
+						ENTITY::SET_ENTITY_COORDS(PED::GET_VEHICLE_PED_IS_USING(spawnedENTBodyguards[n]), closestRoad.x, closestRoad.y, closestRoad.z, 0, 0, 0, 1);
 						me_to_follow = false;
 					}
 				}
-				if (not_bodyguards_in_vehicle()) {
-					bod_pass = false;
-					me_to_follow = false;
+				if (PED::IS_PED_SHOOTING(spawnedENTBodyguards[n])) me_to_follow = false;
+				if (!PED::IS_PED_SITTING_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_SITTING_IN_ANY_VEHICLE(spawnedENTBodyguards[n]) && dist_diff > 100) { //  && AI::IS_PED_STILL(spawnedENTBodyguards[n])
+					Vector3 closestRoad;
+					if (PATHFIND::GET_CLOSEST_ROAD(coordsme.x - 90, coordsme.y - 90, coordsme.z, 1.f, 1, &closestRoad, &closestRoad, 0, 0, 0, 0)) 
+						ENTITY::SET_ENTITY_COORDS(spawnedENTBodyguards[n], closestRoad.x, closestRoad.y, closestRoad.z, 1, 0, 0, 1);
 				}
+			}
+			if (!B_VEHICLE.empty()) {
+				for (int m = 0; m < B_VEHICLE.size(); m++) {
+					if (VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], -1) == 0) {
+						bod_pass = false;
+						me_to_follow = false;
+					}
+				}
+			}
+			if (not_bodyguards_in_vehicle()) {
+				bod_pass = false;
+				me_to_follow = false;
 			}
 		} // end of follow in vehicle
 	} // end of if (!spawnedENTBodyguards.empty())
