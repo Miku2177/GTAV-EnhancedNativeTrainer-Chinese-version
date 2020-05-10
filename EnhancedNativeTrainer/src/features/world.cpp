@@ -1388,7 +1388,8 @@ void update_world_features()
 			if (WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex] > -1) PED::SET_PED_ACCURACY(bus_ped[i], WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex]);
 			// Peds Health
 			if (PLAYER_HEALTH_VALUES[PedsHealthIndex] > 0) { 
-				if (!ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(bus_ped[i], PLAYER::PLAYER_PED_ID(), 1)) {
+				if (!ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_OBJECT(bus_ped[i]) && !ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_PED(bus_ped[i]) &&
+					!ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_VEHICLE(bus_ped[i])) { // if (!ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(bus_ped[i], PLAYER::PLAYER_PED_ID(), 1)) {
 					if (bus_ped[i] != PLAYER::PLAYER_PED_ID() && !PED::IS_PED_GROUP_MEMBER(bus_ped[i], myENTGroup)) {
 						PED::SET_PED_MAX_HEALTH(bus_ped[i], PLAYER_HEALTH_VALUES[PedsHealthIndex]);
 						ENTITY::SET_ENTITY_HEALTH(bus_ped[i], PLAYER_HEALTH_VALUES[PedsHealthIndex]);
