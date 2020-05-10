@@ -1283,7 +1283,7 @@ void do_spawn_bodyguard(){
 				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 46, true); // BF_AlwaysFight 
 				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 1424, true); // BF_PlayerCanUseFiringWeapons
 				//PED::SET_PED_ALERTNESS(bodyGuard, 3);
-				PED::SET_PED_SEEING_RANGE(bodyGuard, 1000);
+				//PED::SET_PED_SEEING_RANGE(bodyGuard, 1000);
 				
 				// animal
 				if (bodyguard_animal == true) {
@@ -1417,7 +1417,7 @@ void do_add_near_bodyguard() {
 bool not_bodyguards_in_vehicle()
 {
 	for (int n = 0; n < spawnedENTBodyguards.size(); n++) {
-		if (!PED::IS_PED_SITTING_IN_ANY_VEHICLE(spawnedENTBodyguards[n]) && PED::GET_PED_TYPE(spawnedENTBodyguards[n]) != 28) return true;
+		if (!PED::IS_PED_IN_ANY_VEHICLE(spawnedENTBodyguards[n], false) && PED::GET_PED_TYPE(spawnedENTBodyguards[n]) != 28) return true; // !PED::IS_PED_SITTING_IN_ANY_VEHICLE(spawnedENTBodyguards[n])
 	}
 	return false;
 }
@@ -1573,6 +1573,7 @@ void maintain_bodyguards(){
 				Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 				Hash currVehModel = ENTITY::GET_ENTITY_MODEL(veh);
 				int maxSeats = VEHICLE::GET_VEHICLE_MODEL_NUMBER_OF_SEATS(currVehModel);
+
 				if (VEHICLE::GET_VEHICLE_NUMBER_OF_PASSENGERS(veh) == (maxSeats - 1) && bod_pass == false) {
 					if (not_bodyguards_in_vehicle() && someone_shooting > 200) { // 100
 						const int arrSize33 = 1024;
@@ -1610,7 +1611,7 @@ void maintain_bodyguards(){
 					}
 				}
 				if (!B_VEHICLE.empty()) {
-					if (bod_pass == true) {
+					if (bod_pass == true && someone_shooting > 200) {
 						for (int n = 0; n < spawnedENTBodyguards.size(); n++) {
 							if (!PED::IS_PED_SITTING_IN_ANY_VEHICLE(spawnedENTBodyguards[n])) {
 								for (int m = 0; m < B_VEHICLE.size(); m++) {
@@ -1662,15 +1663,9 @@ void maintain_bodyguards(){
 							}
 						}
 					}
-					if (not_bodyguards_in_vehicle()) {
+					if (not_bodyguards_in_vehicle() && someone_shooting > 200) {
 						for (int m = 0; m < B_VEHICLE.size(); m++) {
-							//if (ENTITY::DOES_ENTITY_EXIST(B_VEHICLE[m]) && !VEHICLE::ARE_ANY_VEHICLE_SEATS_FREE(B_VEHICLE[m]) && bod_pass == true) {
-							if (ENTITY::DOES_ENTITY_EXIST(B_VEHICLE[m]) && ((VEHICLE::GET_VEHICLE_MODEL_NUMBER_OF_SEATS(ENTITY::GET_ENTITY_MODEL(B_VEHICLE[m])) == 4 && !VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE[m], -1) && 
-								!VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE[m], 0) && !VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE[m], 1) && !VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE[m], 2)) || 
-								(VEHICLE::GET_VEHICLE_MODEL_NUMBER_OF_SEATS(ENTITY::GET_ENTITY_MODEL(B_VEHICLE[m])) == 3 && !VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE[m], -1) && !VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE[m], 0) && 
-									!VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE[m], 1)) || (VEHICLE::GET_VEHICLE_MODEL_NUMBER_OF_SEATS(ENTITY::GET_ENTITY_MODEL(B_VEHICLE[m])) == 2 && !VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE[m], -1) && 
-										!VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE[m], 0)) || (VEHICLE::GET_VEHICLE_MODEL_NUMBER_OF_SEATS(ENTITY::GET_ENTITY_MODEL(B_VEHICLE[m])) == 1 && !VEHICLE::IS_VEHICLE_SEAT_FREE(B_VEHICLE[m], -1))) && 
-								bod_pass == true) {
+							if (ENTITY::DOES_ENTITY_EXIST(B_VEHICLE[m]) && !VEHICLE::ARE_ANY_VEHICLE_SEATS_FREE(B_VEHICLE[m]) && bod_pass == true) {
 								bod_pass = false;
 								me_to_follow = false;
 							}
@@ -1721,19 +1716,22 @@ void maintain_bodyguards(){
 				if (PED::IS_PED_SHOOTING(spawnedENTBodyguards[n])) me_to_follow = false;
 				if (!PED::IS_PED_SITTING_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_SITTING_IN_ANY_VEHICLE(spawnedENTBodyguards[n]) && dist_diff > 50) { //  && AI::IS_PED_STILL(spawnedENTBodyguards[n])
 					Vector3 closestRoad;
-					if (PATHFIND::GET_CLOSEST_ROAD(coordsme.x - 40, coordsme.y - 40, coordsme.z, 1.f, 1, &closestRoad, &closestRoad, 0, 0, 0, 0)) 
+					if (PATHFIND::GET_CLOSEST_ROAD(coordsme.x - 30, coordsme.y - 30, coordsme.z, 1.f, 1, &closestRoad, &closestRoad, 0, 0, 0, 0)) 
 						ENTITY::SET_ENTITY_COORDS(spawnedENTBodyguards[n], closestRoad.x, closestRoad.y, closestRoad.z, 1, 0, 0, 1);
 				}
 			}
-			if (!B_VEHICLE.empty()) {
+			if (!B_VEHICLE.empty() && someone_shooting > 200) {
 				for (int m = 0; m < B_VEHICLE.size(); m++) {
 					if (VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], -1) == 0) {
+						AI::TASK_LEAVE_VEHICLE(VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], 0), B_VEHICLE[m], 16);
+						AI::TASK_LEAVE_VEHICLE(VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], 1), B_VEHICLE[m], 16);
+						AI::TASK_LEAVE_VEHICLE(VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], 2), B_VEHICLE[m], 16);
 						bod_pass = false;
 						me_to_follow = false;
 					}
 				}
 			}
-			if (not_bodyguards_in_vehicle()) {
+			if (not_bodyguards_in_vehicle() && someone_shooting > 200) {
 				bod_pass = false;
 				me_to_follow = false;
 			}
@@ -1775,23 +1773,23 @@ bool process_bodyguard_menu(){
 		menuItems.push_back(item);
 
 		item = new MenuItem<int>();
+		item->caption = "Toggle Bodyguards To Follow Player";
+		item->value = 3;
+		item->isLeaf = true;
+		menuItems.push_back(item);
+
+		item = new MenuItem<int>();
 		std::ostringstream ss3;
 		ss3 << "Spawn Ped: " << get_current_model_name();
 		item->caption = ss3.str();
-		item->value = 3;
+		item->value = 4;
 		item->isLeaf = true;
 		menuItems.push_back(item);
 		
 		item = new MenuItem<int>();
 		item->caption = "Saved Bodyguards";
-		item->value = 4;
-		item->isLeaf = false;
-		menuItems.push_back(item);
-
-		item = new MenuItem<int>();
-		item->caption = "Toggle Bodyguards To Follow Player";
 		item->value = 5;
-		item->isLeaf = true;
+		item->isLeaf = false;
 		menuItems.push_back(item);
 
 		item = new MenuItem<int>();
@@ -1910,16 +1908,16 @@ bool onconfirm_bodyguard_menu(MenuItem<int> choice){
 			dismiss_bodyguards();
 			break;
 		case 3:
-			spawning_a_ped = true;
-			do_spawn_bodyguard();
-			break;
-		case 4:
-			process_bod_savedskin_menu();
-			break;
-		case 5:
 			stop_b = !stop_b;
 			if (stop_b) set_status_text("Stay Put");
 			else set_status_text("Follow");
+			break;
+		case 4:
+			spawning_a_ped = true;
+			do_spawn_bodyguard();
+			break;
+		case 5:
+			process_bod_savedskin_menu();
 			break;
 		case 6:
 			process_bodyguard_skins_menu();
