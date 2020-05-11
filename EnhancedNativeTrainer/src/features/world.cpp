@@ -1388,8 +1388,7 @@ void update_world_features()
 			if (WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex] > -1) PED::SET_PED_ACCURACY(bus_ped[i], WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex]);
 			// Peds Health
 			if (PLAYER_HEALTH_VALUES[PedsHealthIndex] > 0) { 
-				if (!ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_OBJECT(bus_ped[i]) && !ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_PED(bus_ped[i]) &&
-					!ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_VEHICLE(bus_ped[i])) { // if (!ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(bus_ped[i], PLAYER::PLAYER_PED_ID(), 1)) {
+				if (ENTITY::GET_ENTITY_HEALTH(bus_ped[i]) == ENTITY::GET_ENTITY_MAX_HEALTH(bus_ped[i])) {
 					if (bus_ped[i] != PLAYER::PLAYER_PED_ID() && !PED::IS_PED_GROUP_MEMBER(bus_ped[i], myENTGroup)) {
 						PED::SET_PED_MAX_HEALTH(bus_ped[i], PLAYER_HEALTH_VALUES[PedsHealthIndex]);
 						ENTITY::SET_ENTITY_HEALTH(bus_ped[i], PLAYER_HEALTH_VALUES[PedsHealthIndex]);
@@ -1400,8 +1399,8 @@ void update_world_features()
 				}
 			}
 			// NPC Show Current Health
-			if (featureNPCShowHealth && ENTITY::DOES_ENTITY_EXIST(bus_ped[i]) && !ENTITY::IS_ENTITY_DEAD(bus_ped[i]) && ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_PED(bus_ped[i])/*ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(bus_ped[i], PLAYER::PLAYER_PED_ID(), 1)*/ &&
-				bus_ped[i] != PLAYER::PLAYER_PED_ID()) { 
+			if (featureNPCShowHealth && ENTITY::DOES_ENTITY_EXIST(bus_ped[i]) && !ENTITY::IS_ENTITY_DEAD(bus_ped[i]) && ENTITY::GET_ENTITY_HEALTH(bus_ped[i]) != ENTITY::GET_ENTITY_MAX_HEALTH(bus_ped[i]) &&
+				ENTITY::GET_ENTITY_HEALTH(bus_ped[i]) != PLAYER_HEALTH_VALUES[PedsHealthIndex] && bus_ped[i] != PLAYER::PLAYER_PED_ID()) {
 				Vector3 head_c = PED::GET_PED_BONE_COORDS(bus_ped[i], 31086, 0, 0, 0);
 				std::string curr_h_t = std::to_string(ENTITY::GET_ENTITY_HEALTH(bus_ped[i]) - 100);
 				GRAPHICS::SET_DRAW_ORIGIN(head_c.x, head_c.y, head_c.z + 0.5, 0);
