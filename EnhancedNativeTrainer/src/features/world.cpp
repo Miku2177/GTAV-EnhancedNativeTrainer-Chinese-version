@@ -999,17 +999,17 @@ void update_world_features()
 
 		if (startup_w == true) {
 			if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() != 669657108 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() != 603685163 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() != 4021743606) {
-				if (w_seconds <= (MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] - 10) && !lastWeather.empty() && MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 1)
+				if (w_seconds <= (MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] - 5) && !lastWeather.empty() && MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 1)
 					GAMEPLAY::_SET_WEATHER_TYPE_TRANSITION(GAMEPLAY::GET_HASH_KEY((char *)lastWeather.c_str()), GAMEPLAY::GET_HASH_KEY((char *)lastWeather.c_str()), 1.0f); // GAMEPLAY::SET_WEATHER_TYPE_NOW((char *)lastWeather.c_str());
-				if (w_seconds <= (MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] - 10) && lastWeather.empty() && MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 1)
+				if (w_seconds <= (MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] - 5) && lastWeather.empty() && MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 1)
 					GAMEPLAY::_SET_WEATHER_TYPE_TRANSITION(GAMEPLAY::GET_HASH_KEY((char *)lastWeather.c_str()), GAMEPLAY::GET_HASH_KEY(cur_w), 1.0f); // GAMEPLAY::SET_WEATHER_TYPE_NOW(cur_w);
 			}
 			if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 669657108 || GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 603685163 || GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 4021743606) {
-				if (w_seconds <= (MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] - 10) && !lastWeather.empty() && MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 1) GAMEPLAY::SET_WEATHER_TYPE_NOW((char *)lastWeather.c_str());
-				if (w_seconds <= (MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] - 10) && lastWeather.empty() && MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 1) GAMEPLAY::SET_WEATHER_TYPE_NOW(cur_w);
+				if (w_seconds <= (MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] - 5) && !lastWeather.empty() && MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 1) GAMEPLAY::SET_WEATHER_TYPE_NOW((char *)lastWeather.c_str());
+				if (w_seconds <= (MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] - 5) && lastWeather.empty() && MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 1) GAMEPLAY::SET_WEATHER_TYPE_NOW(cur_w);
 			}
-			if (w_seconds <= (MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] - 10) && MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 2) GAMEPLAY::_SET_WEATHER_TYPE_TRANSITION(GAMEPLAY::GET_HASH_KEY(mixed_w1), GAMEPLAY::GET_HASH_KEY(mixed_w2), 0.50f);
-			if (w_seconds > (MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] - 10)) {
+			if (w_seconds <= (MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] - 5) && MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 2) GAMEPLAY::_SET_WEATHER_TYPE_TRANSITION(GAMEPLAY::GET_HASH_KEY(mixed_w1), GAMEPLAY::GET_HASH_KEY(mixed_w2), 0.50f);
+			if (w_seconds > (MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] - 5)) {
 				if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 1) {
 					if (rand_w1 != cur_w && rand_w1 != lastWeather && rand_w1 != lastWeather_2 && t_counter == 0.000) {
 						mixed_w1 = cur_w;
@@ -1021,7 +1021,7 @@ void update_world_features()
 					}
 					if (t_counter > 0.000) {
 						GAMEPLAY::_SET_WEATHER_TYPE_TRANSITION(GAMEPLAY::GET_HASH_KEY(mixed_w1), GAMEPLAY::GET_HASH_KEY((char *)lastWeather.c_str()), t_counter);
-						t_counter = t_counter + 0.001;
+						t_counter = t_counter + 0.002;
 					}
 				}
 				if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 2) {
@@ -1037,26 +1037,24 @@ void update_world_features()
 					}
 				}
 
-				if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 1 && t_counter > 0.050 && t_counter < 0.600) {
-					if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 1 && t_counter == 0.065) {
-						GAMEPLAY::CLEAR_OVERRIDE_WEATHER();
-						GAMEPLAY::CLEAR_WEATHER_TYPE_PERSIST();
-						GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
-						GRAPHICS::_CLEAR_CLOUD_HAT();
-					}
+				if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 1 && t_counter == 0.055) {
+					GAMEPLAY::CLEAR_OVERRIDE_WEATHER();
+					GAMEPLAY::CLEAR_WEATHER_TYPE_PERSIST();
+					GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
+					GRAPHICS::_CLEAR_CLOUD_HAT();
+					WAIT(0);
 					if (lastWeather == "EXTRASUNNY" || lastWeather == "NEUTRAL") GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Snowy 01", 1.0); // 9.0
 					if (lastWeather == "CLOUDS" && weather_counter == 1) GRAPHICS::_SET_CLOUD_HAT_TRANSITION("shower", 1.0); // 9.0
 					if (lastWeather == "CLOUDS" && weather_counter == 2) GRAPHICS::_SET_CLOUD_HAT_TRANSITION("stratoscumulus", 1.0); // 9.0
 					if (lastWeather == "THUNDER") GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 1.0); // 9.0
 					if (WORLD_LIGHTNING_INTENSITY_VALUES[featureLightIntensityIndex] > -2 && lastWeather == "HALLOWEEN") GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 1.0); // 9.0
 				}
-				if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 2 && t_counter > 0.40 && t_counter < 0.60) {
-					if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 2) {
-						GAMEPLAY::CLEAR_OVERRIDE_WEATHER();
-						GAMEPLAY::CLEAR_WEATHER_TYPE_PERSIST();
-						GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
-						GRAPHICS::_CLEAR_CLOUD_HAT();
-					}
+				if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 2 && t_counter == 0.45) {
+					GAMEPLAY::CLEAR_OVERRIDE_WEATHER();
+					GAMEPLAY::CLEAR_WEATHER_TYPE_PERSIST();
+					GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
+					GRAPHICS::_CLEAR_CLOUD_HAT();
+					WAIT(0);
 					if (mixed_w1 == "EXTRASUNNY" || mixed_w2 == "EXTRASUNNY" || mixed_w1 == "NEUTRAL" || mixed_w2 == "NEUTRAL") GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Snowy 01", 1.0);
 					if (mixed_w1 == "THUNDER" || mixed_w2 == "THUNDER") GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 1.0);
 					if (WORLD_LIGHTNING_INTENSITY_VALUES[featureLightIntensityIndex] > -2 && (mixed_w1 == "HALLOWEEN" || mixed_w2 == "HALLOWEEN")) GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 1.0);
