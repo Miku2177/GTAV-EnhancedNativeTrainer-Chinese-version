@@ -1024,7 +1024,9 @@ std::string getModCategoryName(int i){
 std::string geSpecialItemTitle(int category, int index){
 	switch (category){
 	case SPECIAL_ID_FOR_LICENSE_PLATES:
-		return PLATE_NAMES[index];
+		//return PLATE_NAMES[index];
+		if (index <= 5) return PLATE_NAMES[index];
+		else return ("Modded Plate " + std::to_string(index - 5));
 
 	case SPECIAL_ID_FOR_ENGINE_SOUND:
 		return ENGINE_SOUND[index];
