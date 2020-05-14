@@ -150,8 +150,8 @@ int death_time2 = -1;
 
 int frozenWantedLevel = 0;
 
-std::vector<Vehicle> VEHICLE_ENGINE;
-std::vector<Vehicle> VEHICLE_KILLED;
+Vehicle veh_engine;
+Vehicle veh_killed;
 
 // player model control, switching on normal ped model when needed
 
@@ -384,16 +384,13 @@ void invincibility_switching(){
 
 void engineonoff_switching() {
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
-	Vehicle veh = -1;
-	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_engine = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
 		find_nearest_vehicle();
-		veh = temp_vehicle;
+		veh_engine = temp_vehicle;
 	}
 
-	if (!VEHICLE_ENGINE.empty() && VEHICLE_ENGINE[0] != veh) VEHICLE_ENGINE[0] = veh;
-	if (VEHICLE_ENGINE.empty()) VEHICLE_ENGINE.push_back(veh);
-	if (VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(veh)) engine_running = true;
+	if (VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(veh_engine)) engine_running = true;
 	engine_running = !engine_running;
 	engine_switched = true;
 	WAIT(100);
@@ -413,15 +410,12 @@ void engine_damage() {
 
 void engine_kill(){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
-	Vehicle veh2 = -1;
-	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh2 = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_killed = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
 		find_nearest_vehicle();
-		veh2 = temp_vehicle;
+		veh_killed = temp_vehicle;
 	}
-
-	if (VEHICLE_KILLED.empty()) VEHICLE_KILLED.push_back(veh2);
-	if (!VEHICLE_KILLED.empty()) VEHICLE_KILLED[0] = veh2;
+		
 	engine_killed = true;
 	set_status_text("You have destroyed this vehicle's engine for some reason");
 }
@@ -738,14 +732,12 @@ void update_features(){
 	}
 
 	if (engine_switched) { 
-		if (!VEHICLE_ENGINE.empty()) VEHICLE::SET_VEHICLE_ENGINE_ON(VEHICLE_ENGINE[0], engine_running, true);
+		VEHICLE::SET_VEHICLE_ENGINE_ON(veh_engine, engine_running, true);
 	}
 	
 	if (engine_killed) {
-		if (!VEHICLE_KILLED.empty()) {
-			VEHICLE::SET_VEHICLE_ENGINE_ON(VEHICLE_KILLED[0], false, true);
-			VEHICLE::SET_VEHICLE_ENGINE_HEALTH(VEHICLE_KILLED[0], -4000);
-		}
+		VEHICLE::SET_VEHICLE_ENGINE_ON(veh_killed, false, true);
+		VEHICLE::SET_VEHICLE_ENGINE_HEALTH(veh_killed, -4000);
 	}
 
 	if (featureWantedLevelFrozen){

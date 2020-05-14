@@ -293,6 +293,9 @@ void trigger_function_for_hotkey_onkeyup(int hotkey)
 	case HKEY_VEHICLE_BOMB:
 		start_bombing_run();
 		break;
+	case HKEY_VEHICLE_POLICE:
+		police_light();
+		break;
 	default:
 	{
 		std::ostringstream ss;
