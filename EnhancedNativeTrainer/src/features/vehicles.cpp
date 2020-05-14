@@ -115,6 +115,7 @@ bool featureWearHelmetOff = false;
 bool featureWearHelmetOffUpdated = false;
 bool featureVehLightsOn = false, featureVehLightsOnUpdated = false;
 bool window_roll, interior_lights, veh_searching, veh_alarm, veh_brake_toggle, vehicle_burnout_toggle = false;
+bool police_light_t = false;
 int lights = -1;
 
 Vehicle vehicle_been_used = -1;
@@ -552,6 +553,20 @@ void damage_door() {
 	}
 }
 
+void police_light() {
+	Player playerPed = PLAYER::PLAYER_PED_ID();
+	Vehicle veh_police = -1;
+	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_police = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
+		find_nearest_vehicle();
+		veh_police = temp_vehicle;
+	}
+	police_light_t = !police_light_t;
+	VEHICLE::DISABLE_VEHICLE_IMPACT_EXPLOSION_ACTIVATION(veh_police, police_light_t);
+	VEHICLE::SET_VEHICLE_SIREN(veh_police, police_light_t); // true
+	WAIT(100);
+}
+
 void toggle_tractioncontrol() {
 	featureTractionControl = !featureTractionControl;
 	if (featureTractionControl) {
@@ -737,43 +752,47 @@ bool onconfirm_vehdoor_menu(MenuItem<int> choice){
 	{
 		search_light();
 	}
-	else if (choice.value == -9)//engine on/off 
+	else if (choice.value == -9)//search light on/off
+	{
+		police_light();
+	}
+	else if (choice.value == -10)//engine on/off 
 	{
 		engineonoff_switching(); 
 	}
-	else if (choice.value == -10)//damage the engine
+	else if (choice.value == -11)//damage the engine
 	{
 		engine_damage(); 
 	}
-	else if (choice.value == -11)//kill the engine
+	else if (choice.value == -12)//kill the engine
 	{
 		engine_kill(); 
 	}
-	else if (choice.value == -12)//vehicle alarm
+	else if (choice.value == -13)//vehicle alarm
 	{
 		vehicle_alarm();
 	}
-	else if (choice.value == -13)//vehicle set alarm
+	else if (choice.value == -14)//vehicle set alarm
 	{
 		vehicle_set_alarm();
 	}
-	else if (choice.value == -14)//vehicle brake
+	else if (choice.value == -15)//vehicle brake
 	{
 		vehicle_brake();
 	}
-	else if (choice.value == -15)//vehicle burnout
+	else if (choice.value == -16)//vehicle burnout
 	{
 		vehicle_burnout();
 	}
-	else if (choice.value == -16)//damage door 
+	else if (choice.value == -17)//damage door 
 	{
 		damage_door();
 	}
-	else if (choice.value == -17)//eject seat
+	else if (choice.value == -18)//eject seat
 	{
 		eject_seat();
 	}
-	else if (choice.value == -18)//detach windscreen
+	else if (choice.value == -19)//detach windscreen
 	{
 		Vehicle veh_detach = -1;
 		if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_detach = PED::GET_VEHICLE_PED_IS_USING(playerPed);
@@ -783,11 +802,11 @@ bool onconfirm_vehdoor_menu(MenuItem<int> choice){
 		}
 		VEHICLE::_DETACH_VEHICLE_WINDSCREEN(veh_detach);
 	}
-	else if (choice.value == -19)//enter damaged vehicle
+	else if (choice.value == -20)//enter damaged vehicle
 	{
 	enter_damaged_vehicle();
 	}
-	else if (choice.value == -20)//drop anchor
+	else if (choice.value == -21)//drop anchor
 	{
 	vehicle_anchor();
 	}
@@ -869,74 +888,80 @@ bool process_veh_door_menu(){
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Engine Start/Stop";
+	item->caption = "Police Light On/Off";
 	item->value = -9;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Damage The Engine";
+	item->caption = "Engine Start/Stop";
 	item->value = -10;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Kill The Engine";
+	item->caption = "Damage The Engine";
 	item->value = -11;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Set Alarm On/Off";
+	item->caption = "Kill The Engine";
 	item->value = -12;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Toggle Vehicle Alarm";
+	item->caption = "Set Alarm On/Off";
 	item->value = -13;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Handbrake On/Off";
+	item->caption = "Toggle Vehicle Alarm";
 	item->value = -14;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Burnout On/Off";
+	item->caption = "Handbrake On/Off";
 	item->value = -15;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Damage Door (0-5)";
+	item->caption = "Burnout On/Off";
 	item->value = -16;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Eject Driver Seat";
+	item->caption = "Damage Door (0-5)";
 	item->value = -17;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "Eject Driver Seat";
+	item->value = -18;
 	item->isLeaf = true;
 	menuItems.push_back(item); 
 
 	item = new MenuItem<int>();
 	item->caption = "Detach Windscreen";
-	item->value = -18;
-	item->isLeaf = true;
-	menuItems.push_back(item);
-
-	item = new MenuItem<int>();
-	item->caption = "Enter Damaged Vehicle";
 	item->value = -19;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Drop Anchor";
+	item->caption = "Enter Damaged Vehicle";
 	item->value = -20;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "Drop Anchor";
+	item->value = -21;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 

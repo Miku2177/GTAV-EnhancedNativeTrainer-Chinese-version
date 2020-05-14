@@ -193,6 +193,8 @@ void process_window_roll();
 
 void interior_light();
 
+void police_light();
+
 void search_light();
 
 void start_bombing_run();
