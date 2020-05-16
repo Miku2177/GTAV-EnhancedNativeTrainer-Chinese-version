@@ -211,6 +211,8 @@ const std::vector<std::string> VEH_TURN_SIGNALS_ANGLE_CAPTIONS{ "0", "10", "20",
 const std::vector<int> VEH_TURN_SIGNALS_ANGLE_VALUES{ 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
 int turnSignalsAngleIndex = 3;
 bool turnSignalsAngleChanged = true;
+int NitrousPowerIndex = 1;
+bool NitrousPowerChanged = true;
 
 //Turn Signals Off Acceleration
 const std::vector<std::string> VEH_TURN_SIGNALS_ACCELERATION_CAPTIONS{ "OFF", "1", "2", "3", "4", "5", "7", "10" };
@@ -1759,35 +1761,35 @@ bool onconfirm_veh_menu(MenuItem<int> choice){
 		case 7: // mods
 			if(process_vehmod_menu()) return false;
 			break;
-		case 19: // door menu
+		case 20: // speed and altitude menu
+			process_speed_menu();
+			break;
+		case 21: // speed limit
+			process_speedlimit_menu();
+			break;
+		case 22: // door menu
 			if(process_veh_door_menu()) return false;
 			break;
-		case 20: // seat menu
+		case 23: // seat menu
 			if (PED::IS_PED_SITTING_IN_ANY_VEHICLE(playerPed))
 				if(process_veh_seat_menu()) return false;
 			break;
-		case 21: // speed and altitude menu
-			process_speed_menu();
-			break;
-		case 22: // vehicle indicators menu
+		case 24: // vehicle indicators menu
 			process_visualize_menu();
 			break;
-		case 25: // speed limit
-			process_speedlimit_menu();
-			break;
-		case 28: // fuel menu
+		case 27: // fuel menu
 			process_fuel_menu();
 			break;
-		case 29: // remember vehicles menu
+		case 28: // remember vehicles menu
 			process_remember_vehicles_menu();
 			break;
-		case 30: // road laws menu
+		case 29: // road laws menu
 			process_road_laws_menu();
 			break;
-		case 35: // engine can degrade
+		case 30: // engine can degrade
 			process_engine_degrade_menu();
 			break;
-		case 46: // plane bombs
+		case 47: // plane bombs
 		{
 			if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
 				set_status_text("Player isn't in a vehicle");
@@ -1895,6 +1897,19 @@ void process_veh_menu(){
 	toggleItem->toggleValue = &featureVehSpawnOptic;
 	menuItems.push_back(toggleItem);
 
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Disable Despawn Of DLC Vehicles";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureDespawnScriptDisabled;
+	toggleItem->toggleValueUpdated = &featureDespawnScriptDisabledUpdated;
+	menuItems.push_back(toggleItem);
+
+	listItem = new SelectFromListMenuItem(VEH_MASS_CAPTIONS, onchange_veh_mass_index);
+	listItem->wrap = false;
+	listItem->caption = "Vehicle Force Shield";
+	listItem->value = VehMassMultIndex;
+	menuItems.push_back(listItem);
+
 	listItem = new SelectFromListMenuItem(VEH_SPEED_BOOST_CAPTIONS, onchange_veh_speed_boost_index);
 	listItem->wrap = false;
 	listItem->caption = "Speed Boost";
@@ -1905,12 +1920,6 @@ void process_veh_menu(){
 	listItem->wrap = false;
 	listItem->caption = "Engine Power Multiplier";
 	listItem->value = engPowMultIndex;
-	menuItems.push_back(listItem);
-
-	listItem = new SelectFromListMenuItem(VEH_MASS_CAPTIONS, onchange_veh_mass_index);
-	listItem->wrap = false;
-	listItem->caption = "Vehicle Force Shield";
-	listItem->value = VehMassMultIndex;
 	menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(VEH_INFINITEBOOST_CAPTIONS, onchange_veh_infiniteboost_index);
@@ -1925,12 +1934,23 @@ void process_veh_menu(){
 	listItem->value = NitrousIndex;
 	menuItems.push_back(listItem);
 
-	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Disable Despawn Of DLC Cars";
-	toggleItem->value = i++;
-	toggleItem->toggleValue = &featureDespawnScriptDisabled;
-	toggleItem->toggleValueUpdated = &featureDespawnScriptDisabledUpdated;
-	menuItems.push_back(toggleItem);
+	listItem = new SelectFromListMenuItem(VEH_TURN_SIGNALS_ANGLE_CAPTIONS, onchange_veh_nitrous_power_index);
+	listItem->wrap = false;
+	listItem->caption = "Nitrous Power";
+	listItem->value = NitrousPowerIndex;
+	menuItems.push_back(listItem);
+
+	item = new MenuItem<int>();
+	item->caption = "Show Speed / Altitude";
+	item->value = i++;
+	item->isLeaf = false;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "Speed Limiter";
+	item->value = i++;
+	item->isLeaf = false;
+	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
 	item->caption = "Vehicle Control";
@@ -1944,12 +1964,6 @@ void process_veh_menu(){
 	item->isLeaf = false;
 	menuItems.push_back(item);
 
-	item = new MenuItem<int>();
-	item->caption = "Show Speed / Altitude";
-	item->value = i++;
-	item->isLeaf = false;
-	menuItems.push_back(item);
-	
 	item = new MenuItem<int>();
 	item->caption = "Vehicle Indicators";
 	item->value = i++;
@@ -1969,24 +1983,6 @@ void process_veh_menu(){
 	menuItems.push_back(listItem);
 
 	item = new MenuItem<int>();
-	item->caption = "Speed Limiter";
-	item->value = i++;
-	item->isLeaf = false;
-	menuItems.push_back(item);
-
-	listItem = new SelectFromListMenuItem(VEH_LIGHTSOFF_CAPTIONS, onchange_veh_lightsOff_index);
-	listItem->wrap = false;
-	listItem->caption = "Vehicle Lights Off By Default";
-	listItem->value = lightsOffIndex;
-	menuItems.push_back(listItem);
-
-	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "No Headlights In The Evening";
-	toggleItem->value = i++;
-	toggleItem->toggleValue = &featureAutoToggleLights;
-	menuItems.push_back(toggleItem);
-
-	item = new MenuItem<int>();
 	item->caption = "Fuel Consumption";
 	item->value = i++;
 	item->isLeaf = false;
@@ -2004,10 +2000,28 @@ void process_veh_menu(){
 	item->isLeaf = false;
 	menuItems.push_back(item);
 
+	item = new MenuItem<int>();
+	item->caption = "Engine Damage";
+	item->value = i++;
+	item->isLeaf = false;
+	menuItems.push_back(item);
+
 	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Realistic Crashes";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureNoVehFlip;
+	menuItems.push_back(toggleItem);
+
+	listItem = new SelectFromListMenuItem(VEH_LIGHTSOFF_CAPTIONS, onchange_veh_lightsOff_index);
+	listItem->wrap = false;
+	listItem->caption = "Vehicle Lights Off By Default";
+	listItem->value = lightsOffIndex;
+	menuItems.push_back(listItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "No Headlights In The Evening";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureAutoToggleLights;
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
@@ -2015,6 +2029,12 @@ void process_veh_menu(){
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureVehLightsOn;
 	toggleItem->toggleValueUpdated = &featureVehLightsOnUpdated;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Seashark Spotlight";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureSeasharkLights;
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
@@ -2027,18 +2047,6 @@ void process_veh_menu(){
 	toggleItem->caption = "Show Current Mileage";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureMileage;
-	menuItems.push_back(toggleItem);
-
-	item = new MenuItem<int>();
-	item->caption = "Engine Damage";
-	item->value = i++;
-	item->isLeaf = false;
-	menuItems.push_back(item);
-	
-	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Seashark Spotlight";
-	toggleItem->value = i++;
-	toggleItem->toggleValue = &featureSeasharkLights;
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
@@ -2559,6 +2567,12 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 		if (((CONTROLS::IS_CONTROL_PRESSED(2, 131) && assigned == false) || is_hotkey_held_veh_nitrous()) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
 			Vehicle my_veh = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
+			Vector3 MyRot = ENTITY::GET_ENTITY_ROTATION(my_veh, 2);
+			float p_force = VEH_TURN_SIGNALS_ANGLE_VALUES[NitrousPowerIndex]; //5;
+			float rad = 2 * 3.14 * (MyRot.z / 360);
+			float v_x = -(sin(rad) * p_force * 10);
+			float v_y = (cos(rad) * p_force * 10);
+			float v_z = p_force * (MyRot.x * 0.2);
 			if (VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(my_veh)) {
 				ENTITY::SET_ENTITY_MAX_SPEED(my_veh, 50000.0);
 				STREAMING::REQUEST_NAMED_PTFX_ASSET("core");
@@ -2574,16 +2588,13 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 					}
 				}
 				if (LIMP_IF_INJURED_VALUES[NitrousIndex] == 1) AUDIO::SET_VEHICLE_BOOST_ACTIVE(my_veh, true);
-				if (!is_this_a_heli_or_plane(my_veh)) VEHICLE::_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(my_veh, 10.0);
-				if (is_this_a_heli_or_plane(my_veh) && CONTROLS::IS_CONTROL_PRESSED(2, 32)) {
-					Vector3 MyRot = ENTITY::GET_ENTITY_ROTATION(my_veh, 2);
-					float p_force = 5; //5;
-					float rad = 2 * 3.14 * (MyRot.z / 360);
-					float v_x = -(sin(rad) * p_force * 10);
-					float v_y = (cos(rad) * p_force * 10);
-					float v_z = p_force * (MyRot.x * 0.2);
-					ENTITY::APPLY_FORCE_TO_ENTITY(my_veh, 1, v_x / 35, v_y / 35, v_z / 35, 0, 0, 0, true, false, true, true, true, true);
+				if (!is_this_a_heli_or_plane(my_veh)) {
+					if (VEH_TURN_SIGNALS_ANGLE_VALUES[NitrousPowerIndex] > 0) VEHICLE::_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(my_veh, VEH_TURN_SIGNALS_ANGLE_VALUES[NitrousPowerIndex]); // 10.0
+					else VEHICLE::_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(my_veh, 1.0);
+					if (VEH_TURN_SIGNALS_ANGLE_VALUES[NitrousPowerIndex] > 20 && ENTITY::GET_ENTITY_SPEED(my_veh) > 1) ENTITY::APPLY_FORCE_TO_ENTITY(my_veh, 1, v_x / 1205, v_y / 1205, v_z / 1205, 0, 0, 0, true, false, true, true, true, true);
 				}
+				if (is_this_a_heli_or_plane(my_veh) && CONTROLS::IS_CONTROL_PRESSED(2, 32) && VEH_TURN_SIGNALS_ANGLE_VALUES[NitrousPowerIndex] > 0 && ENTITY::GET_ENTITY_SPEED(my_veh) > 1)
+					ENTITY::APPLY_FORCE_TO_ENTITY(my_veh, 1, v_x / 70, v_y / 70, v_z / 70, 0, 0, 0, true, false, true, true, true, true);
 				nitro_e = true;
 			}
 		}
@@ -3885,6 +3896,7 @@ void reset_vehicle_globals() {
 	FuelColours_B_Index = 12;
 	turnSignalsIndex = 0;
 	turnSignalsAngleIndex = 5;
+	NitrousPowerIndex = 1;
 	DoorAutolockIndex = 0;
 	turnSignalsAccelerationIndex = 4;
 	JumpyVehIndex = 0;
@@ -4746,6 +4758,7 @@ void add_vehicle_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"NitrousIndex", std::to_string(NitrousIndex)});
 	results->push_back(StringPairSettingDBRow{"TurnSignalsIndex", std::to_string(turnSignalsIndex)});
 	results->push_back(StringPairSettingDBRow{"turnSignalsAngleIndex", std::to_string(turnSignalsAngleIndex)});
+	results->push_back(StringPairSettingDBRow{"NitrousPowerIndex", std::to_string(NitrousPowerIndex)});
 	results->push_back(StringPairSettingDBRow{"DoorAutolockIndex", std::to_string(DoorAutolockIndex)});
 	results->push_back(StringPairSettingDBRow{"turnSignalsAccelerationIndex", std::to_string(turnSignalsAccelerationIndex)});
 	results->push_back(StringPairSettingDBRow{"JumpyVehIndex", std::to_string(JumpyVehIndex)});
@@ -4838,6 +4851,9 @@ void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settin
 		}
 		else if (setting.name.compare("turnSignalsAngleIndex") == 0) {
 			turnSignalsAngleIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("NitrousPowerIndex") == 0) {
+			NitrousPowerIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("DoorAutolockIndex") == 0) {
 			DoorAutolockIndex = stoi(setting.value);
@@ -5077,6 +5093,11 @@ void onchange_veh_turn_signals_index(int value, SelectFromListMenuItem* source){
 void onchange_veh_turn_signals_angle_index(int value, SelectFromListMenuItem* source) {
 	turnSignalsAngleIndex = value;
 	turnSignalsAngleChanged = true;
+}
+
+void onchange_veh_nitrous_power_index(int value, SelectFromListMenuItem* source) {
+	NitrousPowerIndex = value;
+	NitrousPowerChanged = true;
 }
 
 void onchange_veh_turn_signals_acceleration_index(int value, SelectFromListMenuItem* source) {
