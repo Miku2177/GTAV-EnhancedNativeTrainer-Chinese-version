@@ -38,8 +38,11 @@ int HotkeyFlowRateIndex = DEFAULT_HOTKEY_FLOW_RATE;
 
 bool featureTimeSynced = false;
 bool featureShowtime = false;
+bool featureSpeedAimInVeh = false;
 bool timeFlowRateChanged = true, timeFlowRateLocked = true;
 bool HotkeyFlowRateChanged = true, HotkeyFlowRateLocked = true;
+
+bool slow_aim = false;
 
 float frozentimestate = -1;
 
@@ -195,6 +198,13 @@ void all_time_flow_rate() {
 		listItem->caption = "Game Speed While Aiming";
 		listItem->value = timeSpeedIndexWhileAiming;
 		menuItems.push_back(listItem);
+
+		togItem = new ToggleMenuItem<int>();
+		togItem->caption = "Game Speed While Aiming In Vehicle Only";
+		togItem->value = 0;
+		togItem->toggleValue = &featureSpeedAimInVeh;
+		togItem->toggleValueUpdated = NULL;
+		menuItems.push_back(togItem);
 
 		listItem = new SelectFromListMenuItem(TIME_FLOW_RATE_CAPTIONS, onchange_time_flow_rate_callback);
 		listItem->caption = "Time Flow Rate";
@@ -387,6 +397,7 @@ void reset_time_globals(){
 	timeFlowRateChanged = true;
 	HotkeyFlowRateChanged = true;
 	featureShowtime = false;
+	featureSpeedAimInVeh = false;
 
 	timeSpeedIndexWhileAiming = DEFAULT_TIME_SPEED;
 	timeSpeedIndex = DEFAULT_TIME_SPEED;
@@ -397,6 +408,7 @@ void reset_time_globals(){
 void add_time_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){
 	results->push_back(FeatureEnabledLocalDefinition{"featureTimeSynced", &featureTimeSynced});
 	results->push_back(FeatureEnabledLocalDefinition{"featureShowtime", &featureShowtime});
+	results->push_back(FeatureEnabledLocalDefinition{"featureSpeedAimInVeh", &featureSpeedAimInVeh});
 }
 
 void movetime_day_forward(){
@@ -736,7 +748,10 @@ void update_time_features(Player player){
 		localtime_s(&t, &now);
 		TIME::SET_CLOCK_TIME(t.tm_hour, t.tm_min, t.tm_sec);
 	}
-		
+	
+	if ((PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0) && featureSpeedAimInVeh) || !featureSpeedAimInVeh) slow_aim = true;
+	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0) && featureSpeedAimInVeh) slow_aim = false;
+
 	// time flow rate
 	if(timeFlowRateChanged){
 		timeFlowRateChanged = false;
@@ -784,7 +799,7 @@ void update_time_features(Player player){
 		GAMEPLAY::SET_TIME_SCALE(HOTKEY_FLOW_RATE_VALUES.at(HotkeyFlowRateIndex));
 		weHaveChangedTimeScale = true;
 	}
-	else if(PLAYER::IS_PLAYER_FREE_AIMING(player) && PLAYER::IS_PLAYER_CONTROL_ON(player)){
+	else if(PLAYER::IS_PLAYER_FREE_AIMING(player) && PLAYER::IS_PLAYER_CONTROL_ON(player) && slow_aim == true){
 		if(timeSinceAimingBegan == 0){
 			timeSinceAimingBegan = GetTickCount();
 		} else{ // this must fix a bug when the game stayed slow even when not aiming

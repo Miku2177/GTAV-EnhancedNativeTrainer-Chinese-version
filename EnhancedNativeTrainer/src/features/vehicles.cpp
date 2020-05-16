@@ -752,7 +752,7 @@ bool onconfirm_vehdoor_menu(MenuItem<int> choice){
 	{
 		search_light();
 	}
-	else if (choice.value == -9)//search light on/off
+	else if (choice.value == -9)//police lights on/off
 	{
 		police_light();
 	}
@@ -888,7 +888,7 @@ bool process_veh_door_menu(){
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Police Light On/Off";
+	item->caption = "Police Lights On/Off";
 	item->value = -9;
 	item->isLeaf = true;
 	menuItems.push_back(item);
