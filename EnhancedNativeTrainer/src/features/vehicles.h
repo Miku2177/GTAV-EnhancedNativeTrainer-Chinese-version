@@ -401,6 +401,8 @@ void onchange_veh_turn_signals_index(int value, SelectFromListMenuItem* source);
 
 void onchange_veh_turn_signals_angle_index(int value, SelectFromListMenuItem* source);
 
+void onchange_veh_nitrous_power_index(int value, SelectFromListMenuItem* source);
+
 void onchange_veh_turn_signals_acceleration_index(int value, SelectFromListMenuItem* source);
 
 void onchange_veh_speedlimiter_index(int value, SelectFromListMenuItem* source);
