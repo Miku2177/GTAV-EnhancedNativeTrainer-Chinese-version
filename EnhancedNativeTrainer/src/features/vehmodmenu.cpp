@@ -1292,21 +1292,29 @@ bool process_vehmod_wheel_selection(){
 	item->value = -1;
 	menuItems.push_back(item);
 
-	int wheelType = VEHICLE::GET_VEHICLE_WHEEL_TYPE(veh), wheel = VEHICLE::GET_VEHICLE_MOD(veh, wheelpart == 2 ? 24 : 23), modChoiceMenuIndex = 0;
+	int wheelType = VEHICLE::GET_VEHICLE_WHEEL_TYPE(veh);
+	int wheel = VEHICLE::GET_VEHICLE_MOD(veh, wheelpart == 2 ? 24 : 23);
+	int modChoiceMenuIndex = 0;
 
-	for (int a = 0; a < WHEEL_CATEGORY_COUNTS[wheelType]; a++){
+	for (int a = 0; a < VEHICLE::GET_NUM_VEHICLE_MODS(veh, 23); a++) { // WHEEL_CATEGORY_COUNTS[wheelType]
 		item = new MenuItem<int>();
-		item->caption = WHEELS_BY_TYPE[wheelType].at(a).name;
-		item->value = WHEELS_BY_TYPE[wheelType].at(a).wheelIndex;
+		if (a < WHEEL_CATEGORY_COUNTS[wheelType]) {
+			item->caption = WHEELS_BY_TYPE[wheelType].at(a).name;
+			item->value = WHEELS_BY_TYPE[wheelType].at(a).wheelIndex;
+		}
+		else {
+			item->caption = "Custom Wheel " + std::to_string(a - WHEEL_CATEGORY_COUNTS[wheelType]);
+			item->value = a; // a - WHEEL_CATEGORY_COUNTS[wheelType]
+		}
 		menuItems.push_back(item);
 	}
 
-	for (int a = 0; a < WHEEL_CATEGORY_COUNTS[wheelType]; a++){
-		if (WHEELS_BY_TYPE[wheelType].at(a).wheelIndex == wheel){
-			modChoiceMenuIndex = a + 1;
-			break;
-		}
-	}
+	//for (int a = 0; a < VEHICLE::GET_NUM_VEHICLE_MODS(veh, 23); a++) { // WHEEL_CATEGORY_COUNTS[wheelType]
+	//	if (a < WHEEL_CATEGORY_COUNTS[wheelType] && WHEELS_BY_TYPE[wheelType].at(a).wheelIndex == wheel){
+	//		modChoiceMenuIndex = a + 1;
+	//		break;
+	//	}
+	//}
 
 	std::string caption = "All Wheels";
 	if (wheelpart == 1){
@@ -1336,7 +1344,7 @@ bool process_vehmod_wheel_selection_menu(){
 
 	std::vector<MenuItem<int> *> menuItems;
 	MenuItem<int> *item;
-	int count = WHEEL_CATEGORY_COUNTS[VEHICLE::GET_VEHICLE_WHEEL_TYPE(veh)];
+	int count = VEHICLE::GET_NUM_VEHICLE_MODS(veh, 23); // WHEEL_CATEGORY_COUNTS[VEHICLE::GET_VEHICLE_WHEEL_TYPE(veh)];
 	std::ostringstream ss;
 
 	if (is_this_a_motorcycle(veh)){
