@@ -2588,12 +2588,12 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 					}
 				}
 				if (LIMP_IF_INJURED_VALUES[NitrousIndex] == 1) AUDIO::SET_VEHICLE_BOOST_ACTIVE(my_veh, true);
-				if (!is_this_a_heli_or_plane(my_veh)) {
+				if (!is_this_a_heli_or_plane(my_veh) && CONTROLS::IS_CONTROL_PRESSED(2, 71)) {
 					if (VEH_TURN_SIGNALS_ANGLE_VALUES[NitrousPowerIndex] > 0) VEHICLE::_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(my_veh, VEH_TURN_SIGNALS_ANGLE_VALUES[NitrousPowerIndex]); // 10.0
 					else VEHICLE::_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(my_veh, 1.0);
-					if (VEH_TURN_SIGNALS_ANGLE_VALUES[NitrousPowerIndex] > 20 && ENTITY::GET_ENTITY_SPEED(my_veh) > 1) ENTITY::APPLY_FORCE_TO_ENTITY(my_veh, 1, v_x / 1205, v_y / 1205, v_z / 1205, 0, 0, 0, true, false, true, true, true, true);
+					if (VEH_TURN_SIGNALS_ANGLE_VALUES[NitrousPowerIndex] > 20 && ENTITY::GET_ENTITY_SPEED(my_veh) > 0) ENTITY::APPLY_FORCE_TO_ENTITY(my_veh, 1, v_x / 1205, v_y / 1205, 0, 0, 0, 0, true, false, true, true, true, true);
 				}
-				if (is_this_a_heli_or_plane(my_veh) && CONTROLS::IS_CONTROL_PRESSED(2, 32) && VEH_TURN_SIGNALS_ANGLE_VALUES[NitrousPowerIndex] > 0 && ENTITY::GET_ENTITY_SPEED(my_veh) > 1)
+				if (is_this_a_heli_or_plane(my_veh) && CONTROLS::IS_CONTROL_PRESSED(2, 71) && VEH_TURN_SIGNALS_ANGLE_VALUES[NitrousPowerIndex] > 0 && ENTITY::GET_ENTITY_SPEED(my_veh) > 0) // CONTROLS::IS_CONTROL_PRESSED(2, 32)
 					ENTITY::APPLY_FORCE_TO_ENTITY(my_veh, 1, v_x / 70, v_y / 70, v_z / 70, 0, 0, 0, true, false, true, true, true, true);
 				nitro_e = true;
 			}
