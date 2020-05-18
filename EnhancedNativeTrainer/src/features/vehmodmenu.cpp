@@ -1024,7 +1024,6 @@ std::string getModCategoryName(int i){
 std::string geSpecialItemTitle(int category, int index){
 	switch (category){
 	case SPECIAL_ID_FOR_LICENSE_PLATES:
-		//return PLATE_NAMES[index];
 		if (index <= 5) return PLATE_NAMES[index];
 		else return ("Modded Plate " + std::to_string(index - 5));
 
@@ -1303,7 +1302,8 @@ bool process_vehmod_wheel_selection(){
 			item->value = WHEELS_BY_TYPE[wheelType].at(a).wheelIndex;
 		}
 		else {
-			item->caption = "Custom Wheel " + std::to_string(a - WHEEL_CATEGORY_COUNTS[wheelType]);
+			// item->caption = "Custom Wheel " + std::to_string(a - WHEEL_CATEGORY_COUNTS[wheelType]);
+			item->caption = VEHICLE::GET_MOD_TEXT_LABEL(veh, 23, a);
 			item->value = a; // a - WHEEL_CATEGORY_COUNTS[wheelType]
 		}
 		menuItems.push_back(item);
