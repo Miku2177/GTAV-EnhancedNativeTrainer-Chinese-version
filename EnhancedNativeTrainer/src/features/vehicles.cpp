@@ -4047,7 +4047,7 @@ bool onconfirm_carspawn_menu(MenuItem<int> choice){
 				if (lastCustomVehicleSpawn == "random" || lastCustomVehicleSpawn == "Random" || lastCustomVehicleSpawn == "RANDOM") {
 					int random_category, random_veh = -1;
 					random_category = (rand() % 20 + 0); // UP MARGIN + DOWN MARGIN
-					if (random_category == 14) random_category = 13;
+					if (random_category == 13 || random_category == 14) random_category = 12;
 					if (random_category < 9) {
 						random_veh = (rand() % VOV_CAR_VALUES[random_category].size() + 0);
 						result = VOV_CAR_VALUES[random_category][random_veh];
