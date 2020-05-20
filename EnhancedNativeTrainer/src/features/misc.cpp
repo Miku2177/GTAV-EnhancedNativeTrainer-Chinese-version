@@ -863,6 +863,11 @@ void process_hud_settings_menu() {
 	toggleItem->caption = "Dynamic Health Bar";
 	toggleItem->toggleValue = &featureDynamicHealthBar;
 	menuItems.push_back(toggleItem);
+	
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "No Scripted Blur & Slowdown";
+	toggleItem->toggleValue = &featurenowheelblurslow;
+	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Disable Recording";
@@ -911,7 +916,7 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 }
 
 void process_misc_menu(){
-	const int lineCount = 18;
+	const int lineCount = 17;
 
 	std::string caption = "Miscellaneous Options";
 
@@ -933,7 +938,6 @@ void process_misc_menu(){
 		{"No Stunt Jumps", &featureNoStuntJumps, NULL },
 		{"FPS Counter", &featureShowFPS, NULL }, 
 		{"Airbrake Menu", NULL, NULL, false},
-		{"No Scripted Blur & Slowdown", &featurenowheelblurslow, NULL },
 	};
 	
 	draw_menu_from_struct_def(lines, lineCount, &activeLineIndexMisc, caption, onconfirm_misc_menu);
