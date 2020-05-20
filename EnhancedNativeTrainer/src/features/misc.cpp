@@ -25,6 +25,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 int activeLineIndexTrainerConfig = 0;
 int activeLineIndexPhoneBill = 0;
 int activeLineIndexRadioSettings = 0;
+int activeLineIndexHudSettings = 0;
 int activeLineIndexDefMenuTab = 0;
 int activeLineIndexBillSettings = 0;
 int activeLineIndexPhoneOnBike = 0;
@@ -48,6 +49,7 @@ int secs_passed, secs_curr = -1;
 float temp_seconds, bill_seconds = 0;
 float bill_to_pay, mins = -1;
 //
+bool featureDisableRecording = false;
 // dynamic health bar variables
 bool featureDynamicHealthBar = false;
 bool been_damaged = false;
@@ -747,13 +749,13 @@ void process_phone_bill_menu(){
 
 bool onconfirm_radiosettings_menu(MenuItem<int> choice) {
 	switch (activeLineIndexRadioSettings) {
-	case 1:
+	case 2:
 		// next radio track
 		if (getGameVersion() > 41) SKIP_RADIO_FORWARD_CUSTOM();
 		else AUDIO::SKIP_RADIO_FORWARD();
 		skip_track_pressed = true;
 		break;
-	case 3:
+	case 4:
 		process_misc_freezeradio_menu();
 		break;
 	default:
@@ -770,6 +772,12 @@ void process_radio_settings_menu() {
 	MenuItem<int> *item;
 
 	int i = 0;
+
+	listItem = new SelectFromListMenuItem(MISC_RADIO_OFF_CAPTIONS, onchange_misc_radio_off_index);
+	listItem->wrap = false;
+	listItem->caption = "Radio Off";
+	listItem->value = RadioOffIndex;
+	menuItems.push_back(listItem);
 
 	ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Portable Radio";
@@ -794,12 +802,6 @@ void process_radio_settings_menu() {
 	item->isLeaf = false;
 	menuItems.push_back(item);
 
-	listItem = new SelectFromListMenuItem(MISC_RADIO_OFF_CAPTIONS, onchange_misc_radio_off_index);
-	listItem->wrap = false;
-	listItem->caption = "Radio Off";
-	listItem->value = RadioOffIndex;
-	menuItems.push_back(listItem);
-
 	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Boost Radio Volume";
 	toggleItem->toggleValue = &featureBoostRadio;
@@ -823,6 +825,53 @@ void process_radio_settings_menu() {
 	draw_generic_menu<int>(menuItems, &activeLineIndexRadioSettings, caption, onconfirm_radiosettings_menu, NULL, NULL);
 }
 
+bool onconfirm_hudsettings_menu(MenuItem<int> choice) {
+	return false;
+}
+
+void process_hud_settings_menu() {
+	std::string caption = "HUD Settings Options";
+
+	std::vector<MenuItem<int>*> menuItems;
+	SelectFromListMenuItem* listItem;
+	MenuItem<int>* item;
+
+	int i = 0;
+	
+	ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Hide HUD";
+	toggleItem->toggleValue = &featureMiscHideHud;
+	toggleItem->toggleValueUpdated = &featureMiscHideHudUpdated;
+	menuItems.push_back(toggleItem);
+	
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Show HUD If Phone In Hand Only";
+	toggleItem->toggleValue = &featurePhoneShowHud;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Show HUD In Vehicle Only";
+	toggleItem->toggleValue = &featureInVehicleNoHud;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Show HUD If Map Marker Set Only";
+	toggleItem->toggleValue = &featureMarkerHud;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Dynamic Health Bar";
+	toggleItem->toggleValue = &featureDynamicHealthBar;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Disable Recording";
+	toggleItem->toggleValue = &featureDisableRecording;
+	menuItems.push_back(toggleItem);
+
+	draw_generic_menu<int>(menuItems, &activeLineIndexHudSettings, caption, onconfirm_hudsettings_menu, NULL, NULL);
+}
+
 int activeLineIndexMisc = 0;
 
 bool onconfirm_misc_menu(MenuItem<int> choice){
@@ -834,21 +883,24 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 			process_radio_settings_menu();
 			break;
 		case 2:
-			process_misc_musicevent_menu();
+			process_hud_settings_menu();
 			break;
 		case 3:
-			process_misc_cutplayer_menu();
-			break;
-		case 4:
-			process_misc_filters_menu();
-			break;
-		case 14:
 			process_phone_bill_menu();
 			break;
-		case 19:
+		case 4:
 			process_def_menutab_menu();
 			break;
-		case 20:
+		case 5:
+			process_misc_musicevent_menu();
+			break;
+		case 6:
+			process_misc_cutplayer_menu();
+			break;
+		case 7:
+			process_misc_filters_menu();
+			break;
+		case 16:
 			process_airbrake_global_menu();
 			break;
 		default:
@@ -859,13 +911,16 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 }
 
 void process_misc_menu(){
-	const int lineCount = 22;
+	const int lineCount = 18;
 
 	std::string caption = "Miscellaneous Options";
 
 	StandardOrToggleMenuDef lines[lineCount] = {
 		{"Trainer Options", NULL, NULL, false},
 		{"Radio Settings", NULL, NULL, false},
+		{"HUD Settings", NULL, NULL, false},
+		{"Phone Settings", NULL, NULL, false},
+		{"Pause Menu Settings", NULL, NULL, false},
 		{"Scripted Music", nullptr, nullptr, false},
 		{"Cutscene Viewer", nullptr, nullptr, false},
 		{"Screen Filters", nullptr, nullptr, false},
@@ -873,18 +928,10 @@ void process_misc_menu(){
 		{"No Flight Music", &featureFlyingMusic, NULL, true}, 
 		{"No Police Scanner", &featurePoliceScanner, NULL, true }, 
 		{"No 'Mission Passed' Message", &featureNoComleteMessage, NULL, true },
-		{"Hide HUD", &featureMiscHideHud, &featureMiscHideHudUpdated},
-		//{"Hide HUD If Menu Open", &featureMiscHideENTHud},
-		{"Show HUD If Phone In Hand Only", &featurePhoneShowHud, NULL }, 
-		{"Show HUD In Vehicle Only", &featureInVehicleNoHud, NULL }, 
-		{"Show HUD If Map Marker Set Only", &featureMarkerHud, NULL },
-		{"Dynamic Health Bar", &featureDynamicHealthBar }, 
-		{"Phone Settings", NULL, NULL, false},
 		{"First Person Death/Arrest Camera", &featureFirstPersonDeathCamera, NULL },
 		{"First Person Stunt Jump Camera", &featureFirstPersonStuntJumpCamera, NULL },
 		{"No Stunt Jumps", &featureNoStuntJumps, NULL },
 		{"FPS Counter", &featureShowFPS, NULL }, 
-		{"Pause Menu Settings", NULL, NULL, false},
 		{"Airbrake Menu", NULL, NULL, false},
 		{"No Scripted Blur & Slowdown", &featurenowheelblurslow, NULL },
 	};
@@ -1063,6 +1110,7 @@ void reset_misc_globals(){
 		featureInVehicleNoHud =
 		featureMarkerHud =
 		featureDynamicHealthBar =
+		featureDisableRecording =
 		featurePlayerRadio =
 		featureDisablePhone =
 		featureDisablePhoneMenu =
@@ -1361,6 +1409,14 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	else if (!featureMiscHideHud && !featurePhoneShowHud && !featureInVehicleNoHud/* && !featureMiscHideENTHud*/) {
 		UI::DISPLAY_RADAR(true);
 		phone_toggle_vehicle = false;
+	}
+
+	// Disable Recording
+	if (featureDisableRecording) {
+		CONTROLS::DISABLE_CONTROL_ACTION(2, 170, 1); // SaveReplayClip
+		CONTROLS::DISABLE_CONTROL_ACTION(2, 288, 1); // ReplayStartStopRecording
+		CONTROLS::DISABLE_CONTROL_ACTION(2, 289, 1); // ReplayStartStopRecordingSecondary
+		CONTROLS::DISABLE_CONTROL_ACTION(2, 302, 1); // ReplayRecord
 	}
 
 	// Default Phone
@@ -1936,7 +1992,8 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 	//results->push_back(FeatureEnabledLocalDefinition{"featureMiscHideENTHud", &featureMiscHideENTHud});
 	results->push_back(FeatureEnabledLocalDefinition{"featureInVehicleNoHud", &featureInVehicleNoHud});
 	results->push_back(FeatureEnabledLocalDefinition{"featureMarkerHud", &featureMarkerHud});
-	results->push_back(FeatureEnabledLocalDefinition{"featureDynamicHealthBar", &featureDynamicHealthBar}); 
+	results->push_back(FeatureEnabledLocalDefinition{"featureDynamicHealthBar", &featureDynamicHealthBar});
+	results->push_back(FeatureEnabledLocalDefinition{"featureDisableRecording", &featureDisableRecording});
 	results->push_back(FeatureEnabledLocalDefinition{"featureControllerIgnoreInTrainer", &featureControllerIgnoreInTrainer});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBlockInputInMenu", &featureBlockInputInMenu});
 	results->push_back(FeatureEnabledLocalDefinition{"mouse_view_control", &mouse_view_control});
