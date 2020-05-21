@@ -526,7 +526,7 @@ void movetime_day_backward(){
 
 void set_date() {
 	keyboard_on_screen_already = true;
-	curr_message = "Enter new date (DD/MM/YYYY):";
+	curr_message = "Enter new date (DD/MM/YYYY):"; // set date
 	std::string lastDateSpawn;
 	std::string tmp_Day, tmp_Mon, tmp_Year;
 	std::string result = show_keyboard("Enter Name Manually", (char*)lastDateSpawn.c_str());
@@ -575,7 +575,7 @@ void set_date() {
 
 void set_time() {
 	keyboard_on_screen_already = true;
-	curr_message = "Enter new time (HH:MM):";
+	curr_message = "Enter new time (HH:MM):"; // set time
 	std::string lastTimeSpawn;
 	std::string tmp_Hour, tmp_Min;
 	std::string result = show_keyboard("Enter Name Manually", (char*)lastTimeSpawn.c_str());

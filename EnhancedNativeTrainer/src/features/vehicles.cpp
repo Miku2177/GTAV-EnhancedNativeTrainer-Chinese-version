@@ -552,7 +552,7 @@ void damage_door() {
 	}
 	std::string::size_type sz;
 	keyboard_on_screen_already = true;
-	curr_message = "Enter a number: 0 = Front Right Door; 1 = Front Left Door; 2 = Back Right Door; 3 = Back Left Door; 4 = Hood; 5 = Trunk";
+	curr_message = "Enter a number: 0 = f_r door; 1 = f_l door; 2 = b_r door; 3 = b_l door; 4 = hood; 5 = trunk";  // damage door
 	std::string result_damage = show_keyboard("Enter Name Manually", NULL);
 	if (!result_damage.empty()) {
 		int dec_result = std::stoi(result_damage, &sz);
@@ -1484,7 +1484,7 @@ void blip_delete_generic_settings(std::vector<StringPairSettingDBRow>* results)
 
 void del_sel_blip() {
 	keyboard_on_screen_already = true;
-	curr_message = "Enter a number of a vehicle:";
+	curr_message = "Enter the number of a blip:"; // delete a tracked vehicle
 	std::string result = show_keyboard("Enter Name Manually", (char*)blipDelete.c_str());
 	if (!result.empty()) {
 		result = trim(result);
@@ -4061,7 +4061,7 @@ bool onconfirm_carspawn_menu(MenuItem<int> choice){
 	if (choice.value == MENU_VEHICLE_CATEGORIES.size() - 1){
 		// custom spawn
 		keyboard_on_screen_already = true;
-		curr_message = "Enter vehicle model name (e.g. adder or random):";
+		curr_message = "Enter vehicle model name (e.g. adder or random):"; // spawn a vehicle
 		std::string result = show_keyboard("Enter Name Manually", (char*) lastCustomVehicleSpawn.c_str());
 
 		if (!result.empty()){
@@ -4505,7 +4505,7 @@ bool onconfirm_savedveh_slot_menu(MenuItem<int> choice){
 		case 3: //rename
 		{
 			keyboard_on_screen_already = true;
-			curr_message = "Enter a new name:";
+			curr_message = "Enter a new name:"; // rename a saved vehicle
 			std::string result = show_keyboard("Enter Name Manually", (char*) activeSavedVehicleSlotName.c_str());
 			if(!result.empty()){
 				ENTDatabase* database = get_database();
@@ -4641,7 +4641,7 @@ void save_current_vehicle(int slot){
 						
 			auto existingText = ss.str();
 			keyboard_on_screen_already = true;
-			curr_message = "Enter a save name:";
+			curr_message = "Enter a save name:"; // save a vehicle
 			std::string result = show_keyboard("Enter Name Manually", (char*) existingText.c_str());
 			if(!result.empty()){
 				ENTDatabase* database = get_database();

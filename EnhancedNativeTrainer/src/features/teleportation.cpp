@@ -958,7 +958,7 @@ bool onconfirm_jump_category(MenuItem<int> choice)
 {
 	if (choice.value == -6) {
 		keyboard_on_screen_already = true;
-		curr_message = "Enter X, Y, Z coordinates. Use space or comma as a separator";
+		curr_message = "Enter X, Y, Z coordinates. Use space or comma as a separator"; // jump to coordinates
 		std::string result = show_keyboard("Enter Name Manually", (char*)lastJumpSpawn.c_str());
 		if (!result.empty())
 		{

@@ -716,7 +716,7 @@ bool onconfirm_skinchanger_category_menu(MenuItem<int> choice)
 		case 4: //Custom entry
 		{
 			keyboard_on_screen_already = true;
-			curr_message = "Enter model skin name (e.g. csb_agent):";
+			curr_message = "Enter model skin name (e.g. csb_agent):"; // change your skin
 			std::string result = show_keyboard("Enter Name Manually", (char*)lastCustomSkinSpawn.c_str());
 			if (!result.empty())
 			{
@@ -1152,7 +1152,7 @@ bool onconfirm_savedskin_slot_menu(MenuItem<int> choice)
 	case 3: //rename
 	{
 		keyboard_on_screen_already = true;
-		curr_message = "Enter a new name:";
+		curr_message = "Enter a new name:"; // rename a saved skin
 		std::string result = show_keyboard("Enter Name Manually", (char*)activeSavedSkinSlotName.c_str());
 		if (!result.empty())
 		{
@@ -1311,7 +1311,7 @@ void save_current_skin(int slot)
 		}
 
 		keyboard_on_screen_already = true;
-		curr_message = "Enter a save name:";
+		curr_message = "Enter a save name:"; // save a skin
 		auto existingText = ss.str();
 		std::string result = show_keyboard("Enter Name Manually", (char*)existingText.c_str());
 		if (!result.empty())
