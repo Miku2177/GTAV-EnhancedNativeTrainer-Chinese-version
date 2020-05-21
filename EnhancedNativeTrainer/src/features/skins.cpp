@@ -715,7 +715,9 @@ bool onconfirm_skinchanger_category_menu(MenuItem<int> choice)
 			break;
 		case 4: //Custom entry
 		{
-			std::string result = show_keyboard(NULL, (char*)lastCustomSkinSpawn.c_str());
+			keyboard_on_screen_already = true;
+			curr_message = "Enter model skin name (e.g. csb_agent):";
+			std::string result = show_keyboard("Enter Name Manually", (char*)lastCustomSkinSpawn.c_str());
 			if (!result.empty())
 			{
 				result = trim(result);
@@ -1149,7 +1151,9 @@ bool onconfirm_savedskin_slot_menu(MenuItem<int> choice)
 	break;
 	case 3: //rename
 	{
-		std::string result = show_keyboard(NULL, (char*)activeSavedSkinSlotName.c_str());
+		keyboard_on_screen_already = true;
+		curr_message = "Enter a new name:";
+		std::string result = show_keyboard("Enter Name Manually", (char*)activeSavedSkinSlotName.c_str());
 		if (!result.empty())
 		{
 			ENTDatabase* database = get_database();
@@ -1306,8 +1310,10 @@ void save_current_skin(int slot)
 			ss << "Saved Skin " << (lastKnownSavedSkinCount + 1);
 		}
 
+		keyboard_on_screen_already = true;
+		curr_message = "Enter a save name:";
 		auto existingText = ss.str();
-		std::string result = show_keyboard(NULL, (char*)existingText.c_str());
+		std::string result = show_keyboard("Enter Name Manually", (char*)existingText.c_str());
 		if (!result.empty())
 		{
 			ENTDatabase* database = get_database();

@@ -991,8 +991,10 @@ void save_current_weapon(int slot)
 			ss << "Saved Weapon " << (lastKnownSavedWeaponCount + 1);
 		}
 
+		keyboard_on_screen_already = true;
+		curr_message = "Enter a save name:";
 		auto existingText = ss.str();
-		std::string result = show_keyboard(NULL, (char*)existingText.c_str());
+		std::string result = show_keyboard("Enter Name Manually", (char*)existingText.c_str());
 		if (!result.empty())
 		{
 			ENTDatabase* database = get_database();
@@ -1048,7 +1050,9 @@ bool onconfirm_weapon_save_slot_menu(MenuItem<int> choice)
 	break;
 	case 3: //rename
 	{
-		std::string result = show_keyboard(NULL, (char*)activeSavedWeaponSlotName.c_str());
+		keyboard_on_screen_already = true;
+		curr_message = "Enter a new name:";
+		std::string result = show_keyboard("Enter Name Manually", (char*)activeSavedWeaponSlotName.c_str());
 		if (!result.empty())
 		{
 			ENTDatabase* database = get_database();
@@ -1261,7 +1265,9 @@ bool onconfirm_weapon_menu(MenuItem<int> choice){
 			break;
 		case 11:
 		{
-			std::string result = show_keyboard(nullptr, (char *) lastCustomWeapon.c_str());
+			keyboard_on_screen_already = true;
+			curr_message = "Enter weapon model name (e.g. weapon_microsmg):";
+			std::string result = show_keyboard("Enter Name Manually", (char *) lastCustomWeapon.c_str());
 			if(!result.empty()){
 				result = trim(result);
 				lastCustomWeapon = result;
