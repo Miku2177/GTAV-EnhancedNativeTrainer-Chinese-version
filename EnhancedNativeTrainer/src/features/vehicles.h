@@ -173,6 +173,8 @@ void speedlimiter_switching();
 
 void invincibility_switching();
 
+void keyboard_tip_message(char* curr_message);
+
 void doorslocked_switching();
 
 void seat_change_hotkey();
@@ -537,3 +539,6 @@ void vehicle_anchor();
 bool onconfirm_seat_menu(MenuItem<int> choice);
 
 bool process_veh_seat_menu();
+
+extern char* curr_message;
+extern bool keyboard_on_screen_already;

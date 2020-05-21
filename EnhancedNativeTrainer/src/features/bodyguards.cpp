@@ -471,7 +471,9 @@ void save_current_bod_skin(int slot)
 {
 	if (!WEAPON::IS_PED_ARMED(PLAYER::PLAYER_PED_ID(), 7)) CONTROLS::_SET_CONTROL_NORMAL(0, 37, 1);
 
-	std::string result_b_s = show_keyboard("Number", NULL);
+	keyboard_on_screen_already = true;
+	curr_message = "Enter a number of the bodyguard (that is above his head) you want to save:";
+	std::string result_b_s = show_keyboard("Enter Name Manually", NULL);
 	if (!result_b_s.empty())
 	{
 		result_b_s = trim(result_b_s);
@@ -496,8 +498,10 @@ void save_current_bod_skin(int slot)
 				ss << "Saved Bodyguard " << (lastKnownSavedBodSkinCount + 1);
 			}
 
+			keyboard_on_screen_already = true;
+			curr_message = "Enter a save name:";
 			auto existingText = ss.str();
-			std::string result = show_keyboard(NULL, (char*)existingText.c_str());
+			std::string result = show_keyboard("Enter Name Manually", (char*)existingText.c_str());
 			if (!result.empty())
 			{
 				ENTDatabase* database = get_database();
@@ -566,7 +570,9 @@ bool onconfirm_bod_savedskin_slot_menu(MenuItem<int> choice)
 	break;
 	case 3: //rename
 	{
-		std::string result = show_keyboard(NULL, (char*)activeSavedBodSkinSlotName.c_str());
+		keyboard_on_screen_already = true;
+		curr_message = "Enter a new name:";
+		std::string result = show_keyboard("Enter Name Manually", (char*)activeSavedBodSkinSlotName.c_str());
 		if (!result.empty())
 		{
 			ENTDatabase* database = get_database();
@@ -736,7 +742,9 @@ bool onconfirm_bodyguard_skins_menu(MenuItem<int> choice){
 			return process_animal_skins_menu();
 		case 3:
 		{
-			std::string result = show_keyboard(NULL, (char*)lastCustomBodyguardSpawn.c_str());
+			keyboard_on_screen_already = true;
+			curr_message = "Enter bodyguard model name (e.g. cs_amandatownley or random):";
+			std::string result = show_keyboard("Enter Name Manually", (char*)lastCustomBodyguardSpawn.c_str());
 			if (!result.empty())
 			{
 				result = trim(result);
@@ -760,7 +768,9 @@ bool onconfirm_bodyguard_skins_menu(MenuItem<int> choice){
 		}
 		case 4:
 		{
-			std::string result_b = show_keyboard("Number", NULL);
+			keyboard_on_screen_already = true;
+			curr_message = "Enter a number of the bodyguard (that is above his head) you want to modify the skin of:";
+			std::string result_b = show_keyboard("Enter Name Manually", NULL);
 			if (!result_b.empty())
 			{
 				result_b = trim(result_b);

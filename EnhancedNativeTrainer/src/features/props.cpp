@@ -364,7 +364,9 @@ bool onconfirm_prop_category(MenuItem<int> choice)
 {
 	if (choice.value == -1)
 	{
-		std::string result = show_keyboard(NULL, (char*)lastCustomPropSpawn.c_str());
+		keyboard_on_screen_already = true;
+		curr_message = "Enter prop name (e.g. prop_fruit_basket):";
+		std::string result = show_keyboard("Enter Name Manually", (char*)lastCustomPropSpawn.c_str());
 		if (!result.empty())
 		{
 			result = trim(result);
@@ -384,7 +386,7 @@ bool onconfirm_prop_category(MenuItem<int> choice)
 		}
 		return false;
 	}
-	else if (choice.value == -2)
+	/*else if (choice.value == -2)
 	{
 		std::string result = show_keyboard(NULL, (char*)lastCustomPropSpawn.c_str());
 		if (!result.empty())
@@ -408,7 +410,7 @@ bool onconfirm_prop_category(MenuItem<int> choice)
 			}
 		}
 		return false;
-	}
+	}*/
 
 	if (choice.value != lastSelectedCategoryIndex)
 	{
@@ -1249,8 +1251,10 @@ void save_current_props(int slot)
 			ss << "Saved Object Set " << (lastKnownSavedPropSetCount + 1);
 		}
 
+		keyboard_on_screen_already = true;
+		curr_message = "Enter a save name:";
 		auto existingText = ss.str();
-		std::string result = show_keyboard(NULL, (char*)existingText.c_str());
+		std::string result = show_keyboard("Enter Name Manually", (char*)existingText.c_str());
 		if (!result.empty())
 		{
 			std::vector<SavedPropDBRow*> dbProps;
@@ -1328,7 +1332,9 @@ bool onconfirm_savedprops_slot_menu(MenuItem<int> choice)
 	}
 	case 3: //rename
 	{
-		std::string result = show_keyboard(NULL, (char*)activeSavedPropSlotName.c_str());
+		keyboard_on_screen_already = true;
+		curr_message = "Enter a new name:";
+		std::string result = show_keyboard("Enter Name Manually", (char*)activeSavedPropSlotName.c_str());
 		if (!result.empty())
 		{
 			ENTDatabase* database = get_database();
@@ -1577,8 +1583,10 @@ void update_props_pending_dialogs()
 				{
 					std::ostringstream ss;
 					ss << set->saveName;
+					keyboard_on_screen_already = true;
+					curr_message = "Enter an oject list name:";
 					auto existingText = ss.str();
-					std::string result = show_keyboard(NULL, (char*)existingText.c_str());
+					std::string result = show_keyboard("Enter Name Manually", (char*)existingText.c_str());
 					if (!result.empty())
 					{
 						ENTDatabase* database = get_database();

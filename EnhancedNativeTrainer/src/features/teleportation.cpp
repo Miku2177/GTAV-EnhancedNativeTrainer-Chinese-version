@@ -957,7 +957,9 @@ void handle_generic_settings_teleportation(std::vector<StringPairSettingDBRow>* 
 bool onconfirm_jump_category(MenuItem<int> choice)
 {
 	if (choice.value == -6) {
-		std::string result = show_keyboard(NULL, (char*)lastJumpSpawn.c_str());
+		keyboard_on_screen_already = true;
+		curr_message = "Enter X, Y, Z coordinates. Use space or comma as a separator";
+		std::string result = show_keyboard("Enter Name Manually", (char*)lastJumpSpawn.c_str());
 		if (!result.empty())
 		{
 			result = trim(result);

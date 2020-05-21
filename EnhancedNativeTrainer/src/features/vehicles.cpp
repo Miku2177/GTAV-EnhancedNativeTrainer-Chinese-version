@@ -64,6 +64,9 @@ bool s_message = false;
 
 bool speed_limit_e = false;
 
+char* curr_message = "";
+bool keyboard_on_screen_already = false;
+
 bool airstrike = false;
 Object nuke1, nuke2, nuke3 = -1;
 float nuke_h1_coord, nuke_h2_coord, nuke_h3_coord = -1;
@@ -548,7 +551,9 @@ void damage_door() {
 		veh_damage = temp_vehicle;
 	}
 	std::string::size_type sz;
-	std::string result_damage = show_keyboard(NULL, NULL);
+	keyboard_on_screen_already = true;
+	curr_message = "Enter a number: 0 = Front Right Door; 1 = Front Left Door; 2 = Back Right Door; 3 = Back Left Door; 4 = Hood; 5 = Trunk";
+	std::string result_damage = show_keyboard("Enter Name Manually", NULL);
 	if (!result_damage.empty()) {
 		int dec_result = std::stoi(result_damage, &sz);
 		VEHICLE::SET_VEHICLE_DOOR_BROKEN(veh_damage, dec_result, false);
@@ -1477,8 +1482,10 @@ void blip_delete_generic_settings(std::vector<StringPairSettingDBRow>* results)
 	results->push_back(StringPairSettingDBRow{ "blipDelete", blipDelete });
 }
 
-void del_sel_blip() { 
-	std::string result = show_keyboard(NULL, (char*)blipDelete.c_str());
+void del_sel_blip() {
+	keyboard_on_screen_already = true;
+	curr_message = "Enter a number of a vehicle:";
+	std::string result = show_keyboard("Enter Name Manually", (char*)blipDelete.c_str());
 	if (!result.empty()) {
 		result = trim(result);
 		blipDelete = result;
@@ -3814,6 +3821,13 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		}
 	}
 
+	// show a tip message above a message box
+	if (GAMEPLAY::UPDATE_ONSCREEN_KEYBOARD() == 0 && curr_message != "") {
+		keyboard_tip_message(curr_message);
+		keyboard_on_screen_already = false;
+	}
+	if ((GAMEPLAY::UPDATE_ONSCREEN_KEYBOARD() == 1 || GAMEPLAY::UPDATE_ONSCREEN_KEYBOARD() == 2) && curr_message != "" && keyboard_on_screen_already == false) curr_message = "";
+	
 	// testing code; DO NOT DELETE
 	//if(bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && IsKeyJustUp(KeyConfig::KEY_VEH_STOP)){
 		//std::ofstream ofs("_colors.txt", std::ios::app | std::ios::out);
@@ -4028,10 +4042,28 @@ void reset_vehicle_globals() {
 	featureVehInvulnIncludesCosmetic = false;
 }
 
+void keyboard_tip_message(char* curr_message_s) {
+	UI::SET_TEXT_FONT(0);
+	UI::SET_TEXT_SCALE(0.34f, 0.34f);
+	UI::SET_TEXT_COLOUR(255, 255, 255, 255);
+	UI::SET_TEXT_WRAP(0.0f, 1.0f);
+	UI::SET_TEXT_RIGHT_JUSTIFY(FALSE);
+	UI::SET_TEXT_CENTRE(TRUE);
+	UI::SET_TEXT_DROPSHADOW(0, 0, 0, 0, 0);
+	UI::SET_TEXT_EDGE(0, 0, 0, 0, 0);
+	UI::SET_TEXT_OUTLINE();
+	UI::BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
+	UI::_ADD_TEXT_COMPONENT_STRING(curr_message_s);
+	UI::_DRAW_TEXT(0.5f, 0.37f);
+}
+
 bool onconfirm_carspawn_menu(MenuItem<int> choice){
 	if (choice.value == MENU_VEHICLE_CATEGORIES.size() - 1){
 		// custom spawn
-		std::string result = show_keyboard(NULL, (char*) lastCustomVehicleSpawn.c_str());
+		keyboard_on_screen_already = true;
+		curr_message = "Enter vehicle model name (e.g. adder or random):";
+		std::string result = show_keyboard("Enter Name Manually", (char*) lastCustomVehicleSpawn.c_str());
+
 		if (!result.empty()){
 			result = trim(result);
 			lastCustomVehicleSpawn = result;
@@ -4472,7 +4504,9 @@ bool onconfirm_savedveh_slot_menu(MenuItem<int> choice){
 		break;
 		case 3: //rename
 		{
-			std::string result = show_keyboard(NULL, (char*) activeSavedVehicleSlotName.c_str());
+			keyboard_on_screen_already = true;
+			curr_message = "Enter a new name:";
+			std::string result = show_keyboard("Enter Name Manually", (char*) activeSavedVehicleSlotName.c_str());
 			if(!result.empty()){
 				ENTDatabase* database = get_database();
 				database->rename_saved_vehicle(result, activeSavedVehicleIndex);
@@ -4606,7 +4640,9 @@ void save_current_vehicle(int slot){
 			}
 						
 			auto existingText = ss.str();
-			std::string result = show_keyboard(NULL, (char*) existingText.c_str());
+			keyboard_on_screen_already = true;
+			curr_message = "Enter a save name:";
+			std::string result = show_keyboard("Enter Name Manually", (char*) existingText.c_str());
 			if(!result.empty()){
 				ENTDatabase* database = get_database();
 				if(database->save_vehicle(veh, result, slot)){
