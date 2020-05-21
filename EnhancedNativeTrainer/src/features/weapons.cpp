@@ -992,7 +992,7 @@ void save_current_weapon(int slot)
 		}
 
 		keyboard_on_screen_already = true;
-		curr_message = "Enter a save name:";
+		curr_message = "Enter a save name:"; // save current weapon
 		auto existingText = ss.str();
 		std::string result = show_keyboard("Enter Name Manually", (char*)existingText.c_str());
 		if (!result.empty())
@@ -1051,7 +1051,7 @@ bool onconfirm_weapon_save_slot_menu(MenuItem<int> choice)
 	case 3: //rename
 	{
 		keyboard_on_screen_already = true;
-		curr_message = "Enter a new name:";
+		curr_message = "Enter a new name:"; // rename saved weapon
 		std::string result = show_keyboard("Enter Name Manually", (char*)activeSavedWeaponSlotName.c_str());
 		if (!result.empty())
 		{
@@ -1266,7 +1266,7 @@ bool onconfirm_weapon_menu(MenuItem<int> choice){
 		case 11:
 		{
 			keyboard_on_screen_already = true;
-			curr_message = "Enter weapon model name (e.g. weapon_microsmg):";
+			curr_message = "Enter weapon model name (e.g. weapon_microsmg):"; // equip a weapon
 			std::string result = show_keyboard("Enter Name Manually", (char *) lastCustomWeapon.c_str());
 			if(!result.empty()){
 				result = trim(result);

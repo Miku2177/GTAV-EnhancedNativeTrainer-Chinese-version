@@ -1583,7 +1583,7 @@ void set_engine_sound(MenuItem<int> choice) { // pick engine sound via message b
 		bool correct_name = false;
 
 		keyboard_on_screen_already = true;
-		curr_message = "Enter engine sound name (e.g. adder or random):";
+		curr_message = "Enter engine sound name (e.g. adder or random):"; // set an engine sound
 		std::string result = show_keyboard("Enter Name Manually", (char*)lastEngineSound.c_str());
 		lastEngineSound = result;
 		if (lastEngineSound == "random" || lastEngineSound == "Random" || lastEngineSound == "RANDOM") {
@@ -2079,9 +2079,9 @@ bool process_vehmod_menu(){
 void set_plate_text(MenuItem<int> choice){
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 	keyboard_on_screen_already = true;
-	curr_message = "Enter plate text:";
+	curr_message = "Enter plate text:"; // set plate text
 	char* existingText = VEHICLE::GET_VEHICLE_NUMBER_PLATE_TEXT(veh);
-	std::string result = show_keyboard("CMOD_MOD_18_D", existingText);
+	std::string result = show_keyboard("Enter Name Manually", existingText); // CMOD_MOD_18_D
 	if (!result.empty()){
 		VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT(veh, (char*)result.c_str());
 	}

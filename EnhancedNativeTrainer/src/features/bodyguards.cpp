@@ -472,7 +472,7 @@ void save_current_bod_skin(int slot)
 	if (!WEAPON::IS_PED_ARMED(PLAYER::PLAYER_PED_ID(), 7)) CONTROLS::_SET_CONTROL_NORMAL(0, 37, 1);
 
 	keyboard_on_screen_already = true;
-	curr_message = "Enter a number of the bodyguard (that is above his head) you want to save:";
+	curr_message = "Enter a number of the bodyguard (that is above his head) you want to save:"; // select a bodyguard you want to save
 	std::string result_b_s = show_keyboard("Enter Name Manually", NULL);
 	if (!result_b_s.empty())
 	{
@@ -499,7 +499,7 @@ void save_current_bod_skin(int slot)
 			}
 
 			keyboard_on_screen_already = true;
-			curr_message = "Enter a save name:";
+			curr_message = "Enter a save name:"; // enter a savename for the selected bodyguard
 			auto existingText = ss.str();
 			std::string result = show_keyboard("Enter Name Manually", (char*)existingText.c_str());
 			if (!result.empty())
@@ -571,7 +571,7 @@ bool onconfirm_bod_savedskin_slot_menu(MenuItem<int> choice)
 	case 3: //rename
 	{
 		keyboard_on_screen_already = true;
-		curr_message = "Enter a new name:";
+		curr_message = "Enter a new name:"; // rename a saved bodyguard
 		std::string result = show_keyboard("Enter Name Manually", (char*)activeSavedBodSkinSlotName.c_str());
 		if (!result.empty())
 		{
@@ -743,7 +743,7 @@ bool onconfirm_bodyguard_skins_menu(MenuItem<int> choice){
 		case 3:
 		{
 			keyboard_on_screen_already = true;
-			curr_message = "Enter bodyguard model name (e.g. cs_amandatownley or random):";
+			curr_message = "Enter bodyguard model name (e.g. cs_amandatownley or random):"; // spawn a bodyguard
 			std::string result = show_keyboard("Enter Name Manually", (char*)lastCustomBodyguardSpawn.c_str());
 			if (!result.empty())
 			{
@@ -769,7 +769,7 @@ bool onconfirm_bodyguard_skins_menu(MenuItem<int> choice){
 		case 4:
 		{
 			keyboard_on_screen_already = true;
-			curr_message = "Enter a number of the bodyguard (that is above his head) you want to modify the skin of:";
+			curr_message = "Enter a number of the bodyguard (that is above his head) you want to modify the skin of:"; // modify skin of a bodyguard
 			std::string result_b = show_keyboard("Enter Name Manually", NULL);
 			if (!result_b.empty())
 			{
@@ -1541,7 +1541,7 @@ void maintain_bodyguards(){
 				if (PED::IS_PED_FLEEING(spawnedENTBodyguards[i])) AI::TASK_STAND_STILL(spawnedENTBodyguards[i], 10000);
 			}
 			// modify skin
-			if (menu_showing == true) {
+			if (menu_showing == true && GAMEPLAY::UPDATE_ONSCREEN_KEYBOARD() != 0) {
 				Vector3 head_c = PED::GET_PED_BONE_COORDS(spawnedENTBodyguards[i], 31086, 0, 0, 0);
 				std::string curr_i = std::to_string(i);
 				GRAPHICS::SET_DRAW_ORIGIN(head_c.x, head_c.y, head_c.z + 0.5, 0);

@@ -365,7 +365,7 @@ bool onconfirm_prop_category(MenuItem<int> choice)
 	if (choice.value == -1)
 	{
 		keyboard_on_screen_already = true;
-		curr_message = "Enter prop name (e.g. prop_fruit_basket):";
+		curr_message = "Enter prop name (e.g. prop_fruit_basket):"; // spawn a prop
 		std::string result = show_keyboard("Enter Name Manually", (char*)lastCustomPropSpawn.c_str());
 		if (!result.empty())
 		{
@@ -1252,7 +1252,7 @@ void save_current_props(int slot)
 		}
 
 		keyboard_on_screen_already = true;
-		curr_message = "Enter a save name:";
+		curr_message = "Enter a save name:"; // save a prop
 		auto existingText = ss.str();
 		std::string result = show_keyboard("Enter Name Manually", (char*)existingText.c_str());
 		if (!result.empty())
@@ -1333,7 +1333,7 @@ bool onconfirm_savedprops_slot_menu(MenuItem<int> choice)
 	case 3: //rename
 	{
 		keyboard_on_screen_already = true;
-		curr_message = "Enter a new name:";
+		curr_message = "Enter a new name:"; // rename a saved prop
 		std::string result = show_keyboard("Enter Name Manually", (char*)activeSavedPropSlotName.c_str());
 		if (!result.empty())
 		{
@@ -1584,7 +1584,7 @@ void update_props_pending_dialogs()
 					std::ostringstream ss;
 					ss << set->saveName;
 					keyboard_on_screen_already = true;
-					curr_message = "Enter an oject list name:";
+					curr_message = "Enter a name:"; // import objects
 					auto existingText = ss.str();
 					std::string result = show_keyboard("Enter Name Manually", (char*)existingText.c_str());
 					if (!result.empty())

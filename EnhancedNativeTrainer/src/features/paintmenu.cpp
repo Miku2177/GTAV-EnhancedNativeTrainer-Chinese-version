@@ -487,7 +487,7 @@ void save_current_veh_colour(int slot)
 	}
 
 	keyboard_on_screen_already = true;
-	curr_message = "Enter vehicle colour name:";
+	curr_message = "Enter vehicle colours save name:"; // save vehicle colours
 	auto existingText = ss.str();
 	std::string result = show_keyboard("Enter Name Manually", (char*)existingText.c_str());
 	if (!result.empty())
@@ -525,7 +525,7 @@ bool onconfirm_veh_savedcolour_slot_menu(MenuItem<int> choice)
 	case 3: //rename
 	{
 		keyboard_on_screen_already = true;
-		curr_message = "Enter a new name:";
+		curr_message = "Enter a new name:"; // rename saved vehicle colours
 		std::string result = show_keyboard("Enter Name Manually", (char*)activeSavedVehColourSlotName.c_str());
 		if (!result.empty())
 		{
