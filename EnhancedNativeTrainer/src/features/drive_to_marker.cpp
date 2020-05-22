@@ -254,13 +254,17 @@ void drive_to_marker()
 
 				if (ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(curr_veh) && marker_been_set == true) {
 					AI::CLEAR_PED_TASKS(driver_to_marker_pilot);
-					VEHICLE::SET_VEHICLE_ENGINE_ON(curr_veh, false, true);
+					//VEHICLE::SET_VEHICLE_ENGINE_ON(curr_veh, false, true);
 					PED::DELETE_PED(&driver_to_marker_pilot);
-					marker_been_set = false;
 					blipDriveFound = false;
 					landing = false;
 					planecurrspeed = 0;
 					altitude_reached = false;
+					temp_dist = -1;
+					dist_to_land_diff = -1;
+					WAIT(10); // 1000
+					PED::SET_PED_INTO_VEHICLE(VEHICLE::GET_PED_IN_VEHICLE_SEAT(curr_veh, 0), curr_veh, -1);
+					marker_been_set = false;
 				}
 			}
 		}
