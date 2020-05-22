@@ -1929,16 +1929,16 @@ bool process_vehmod_menu(){
 		ss.str(""), ss.clear();
 
 		item = new MenuItem<int>();
-		item->caption = getModCategoryName(SPECIAL_ID_FOR_ENGINE_SOUND);
-		item->value = SPECIAL_ID_FOR_ENGINE_SOUND;
+		item->caption = getModCategoryName(SPECIAL_ID_FOR_WHEEL_SELECTION);
+		item->value = SPECIAL_ID_FOR_WHEEL_SELECTION;
 		item->isLeaf = false;
 		menuItems.push_back(item);
 
 		ss.str(""), ss.clear();
 		
 		item = new MenuItem<int>();
-		item->caption = getModCategoryName(SPECIAL_ID_FOR_WHEEL_SELECTION);
-		item->value = SPECIAL_ID_FOR_WHEEL_SELECTION;
+		item->caption = getModCategoryName(SPECIAL_ID_FOR_ENGINE_SOUND);
+		item->value = SPECIAL_ID_FOR_ENGINE_SOUND;
 		item->isLeaf = false;
 		menuItems.push_back(item);
 	}
