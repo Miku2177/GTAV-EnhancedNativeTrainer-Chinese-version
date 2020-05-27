@@ -2504,6 +2504,7 @@ std::vector<StringPairSettingDBRow> get_generic_settings(){
 	handle_generic_settings_teleportation(&settings);
 	add_world_feature_enablements2(&settings);
 	add_world_feature_enablements3(&settings);
+	add_anims_feature_enablements(&settings);
 	add_weapon_feature_enablements2(&settings);
 	add_bodyguards_feature_enablements2(&settings);
 	add_coords_generic_settings(&settings);
@@ -2519,6 +2520,7 @@ std::vector<StringPairSettingDBRow> get_generic_settings(){
 
 	add_bodyguards_generic_settings(&settings);
 	add_skin_generic_settings(&settings);
+	add_anims_generic_settings(&settings);
 
 	settings.push_back(StringPairSettingDBRow{"frozenWantedLevel", std::to_string(frozenWantedLevel)});
 
@@ -2594,6 +2596,8 @@ void handle_generic_settings(std::vector<StringPairSettingDBRow> settings){
 	handle_generic_settings_vehmodmenu(&settings);
 
 	handle_generic_settings_world(&settings);
+
+	handle_generic_settings_anims(&settings);
 
 	handle_generic_settings_hotkey(&settings);
 
