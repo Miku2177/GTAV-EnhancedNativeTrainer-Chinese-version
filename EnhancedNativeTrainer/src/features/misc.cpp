@@ -72,6 +72,8 @@ bool accel = false;
 bool p_exist = false;
 //
 
+bool radio_pressed = false;
+
 int r_secs_passed, r_secs_curr, r_seconds = -1;
 
 bool radio_v_checked = false;
@@ -1170,7 +1172,13 @@ void reset_misc_globals(){
 
 void update_misc_features(BOOL playerExists, Ped playerPed){
 	// Radio Off
-	if (MISC_RADIO_OFF_VALUES[RadioOffIndex] > 0) {
+	if (MISC_RADIO_OFF_VALUES[RadioOffIndex] > 0 && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) radio_pressed = false;
+	if (MISC_RADIO_OFF_VALUES[RadioOffIndex] > 0 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && CONTROLS::IS_CONTROL_PRESSED(2, 85)) {
+		radio_pressed = true;
+		AUDIO::SET_VEHICLE_RADIO_ENABLED(PED::GET_VEHICLE_PED_IS_USING(playerPed), true);
+		AUDIO::SET_USER_RADIO_CONTROL_ENABLED(true);
+	}
+	if (MISC_RADIO_OFF_VALUES[RadioOffIndex] > 0 && radio_pressed == false) {
 		if (MISC_RADIO_OFF_VALUES[RadioOffIndex] == 1) {
 			if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
 				Vehicle playerVeh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
@@ -1195,6 +1203,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	if (MISC_RADIO_OFF_VALUES[RadioOffIndex] == 0) {
 		AUDIO::SET_VEHICLE_RADIO_ENABLED(PED::GET_VEHICLE_PED_IS_USING(playerPed), true);
 		AUDIO::SET_USER_RADIO_CONTROL_ENABLED(true);
+		radio_pressed = false;
 	}
 
 	// Portable Radio

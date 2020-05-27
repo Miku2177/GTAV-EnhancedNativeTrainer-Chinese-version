@@ -1593,14 +1593,11 @@ void maintain_bodyguards(){
 						float temp_dist = 2000.0;
 						for (int t = 0; t < count_surr_vehs; t++) {
 							if (ENTITY::DOES_ENTITY_EXIST(surr_vehs[t]) && VEHICLE::ARE_ANY_VEHICLE_SEATS_FREE(surr_vehs[t])) {
-								if ((VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(surr_vehs[t])) || VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(surr_vehs[t])) || 
-										VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(surr_vehs[t])))) {
-									Vector3 coordsped = ENTITY::GET_ENTITY_COORDS(surr_vehs[t], true);
-									dist_diff = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsped.x, coordsped.y, coordsped.z);
-									if (temp_dist > dist_diff) {
-										temp_dist = dist_diff;
-										temp_vehicle = surr_vehs[t];
-									}
+								Vector3 coordsped = ENTITY::GET_ENTITY_COORDS(surr_vehs[t], true);
+								dist_diff = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsped.x, coordsped.y, coordsped.z);
+								if (temp_dist > dist_diff) {
+									temp_dist = dist_diff;
+									temp_vehicle = surr_vehs[t];
 								}
 							}
 						}
