@@ -10,6 +10,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\utils.h"
 #include <sstream>
 #include <vector>
+#include "script.h"
 
 const std::vector<std::string> SCENARIOS_ANIMAL_VALUES = { "WORLD_BOAR_GRAZING", "WORLD_CAT_SLEEPING_GROUND", "WORLD_CAT_SLEEPING_LEDGE", "WORLD_COW_GRAZING", "WORLD_COYOTE_HOWL", "WORLD_COYOTE_REST", "WORLD_CROW_FEEDING", "WORLD_DEER_GRAZING", 
 "WORLD_DOG_BARKING_SHEPHERD", "WORLD_DOG_SITTING_SHEPHERD", "WORLD_HEN_PECKING", "WORLD_MOUNTAIN_LION_REST", "WORLD_PIG_GRAZING", "WORLD_PIGEON_FEEDING", "WORLD_DOG_BARKING_RETRIEVER", "WORLD_DOG_SITTING_RETRIEVER", "WORLD_DOG_BARKING_ROTTWEILER", 
@@ -5982,4 +5983,35 @@ bool process_clipset_menu()
 
 	bool result = draw_generic_menu<int>(menuItems, &activeClipsetLineIndex, menuCaption, onconfirm_clipset_menu, NULL, NULL, NULL);
 	return result;
+}
+
+void add_anims_generic_settings(std::vector<StringPairSettingDBRow>* settings)
+{
+	settings->push_back(StringPairSettingDBRow{ "lastImmediatePlayDict", lastImmediatePlayDict });
+	settings->push_back(StringPairSettingDBRow{ "lastImmediatePlayAnim", lastImmediatePlayAnim });
+}
+
+void handle_generic_settings_anims(std::vector<StringPairSettingDBRow>* settings)
+{
+	for (int i = 0; i < settings->size(); i++)
+	{
+		StringPairSettingDBRow setting = settings->at(i);
+		if (setting.name.compare("lastImmediatePlayDict") == 0)
+		{
+			lastImmediatePlayDict = setting.value;
+		}
+		else if (setting.name.compare("lastImmediatePlayAnim") == 0)
+		{
+			lastImmediatePlayAnim = setting.value;
+		}
+		else if (setting.name.compare("lastImmediateType") == 0)
+		{
+			lastImmediateType = stoi(setting.value);
+		}
+	}
+}
+
+void add_anims_feature_enablements(std::vector<StringPairSettingDBRow>* results)
+{
+	results->push_back(StringPairSettingDBRow{ "lastImmediateType", std::to_string(lastImmediateType) });
 }
