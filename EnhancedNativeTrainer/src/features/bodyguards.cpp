@@ -1711,13 +1711,14 @@ void maintain_bodyguards(){
 			}
 			for (int n = 0; n < spawnedENTBodyguards.size(); n++) {
 				Vector3 coordsped = ENTITY::GET_ENTITY_COORDS(spawnedENTBodyguards[n], true);
-				float height_b_g = -1;
+				//float height_b_g = -1;
 				//GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(coordsped.x, coordsped.y, coordsped.z, &height_b_g);
 				//float height_a_g = -1;
 				//GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(coordsme.x, coordsme.y, coordsme.z, &height_a_g);
 				dist_diff = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsped.x, coordsped.y, coordsped.z);
 				if ((VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(veh)) || VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(veh)) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(veh)))) {
 					if (dist_diff > 350) { // 450 250
+						AI::TASK_SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(spawnedENTBodyguards[n], true);
 						Vector3 closestRoad;
 						if (PATHFIND::GET_CLOSEST_ROAD(coordsme.x - 70, coordsme.y - 70, coordsme.z, 1.f, 1, &closestRoad, &closestRoad, 0, 0, 0, 0))
 						{
@@ -1728,9 +1729,12 @@ void maintain_bodyguards(){
 				}
 				if (PED::IS_PED_SHOOTING(spawnedENTBodyguards[n])) me_to_follow = false;
 				if (!PED::IS_PED_SITTING_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_SITTING_IN_ANY_VEHICLE(spawnedENTBodyguards[n]) && dist_diff > 50) { //  && AI::IS_PED_STILL(spawnedENTBodyguards[n])
+					AI::TASK_SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(spawnedENTBodyguards[n], true);
 					Vector3 closestRoad;
-					if (ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID()) == 0 && PATHFIND::GET_CLOSEST_ROAD(coordsme.x - 30, coordsme.y - 30, coordsme.z, 1.f, 1, &closestRoad, &closestRoad, 0, 0, 0, 0))
+					if (ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID()) == 0) {
+						PATHFIND::GET_CLOSEST_ROAD(coordsme.x - 30, coordsme.y - 30, coordsme.z, 1.f, 1, &closestRoad, &closestRoad, 0, 0, 0, 0);
 						ENTITY::SET_ENTITY_COORDS(spawnedENTBodyguards[n], closestRoad.x, closestRoad.y, closestRoad.z, 1, 0, 0, 1);
+					}
 					if (ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID()) == 1) ENTITY::SET_ENTITY_COORDS(spawnedENTBodyguards[n], coordsme.x - 30, coordsme.y - 30, coordsme.z, 1, 0, 0, 1);
 				}
 			}
