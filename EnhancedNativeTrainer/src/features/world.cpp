@@ -903,8 +903,11 @@ void update_world_features()
 	
 	// Show Bolingbroke Penitentiary On Map
 	if (featurePenitentiaryMap) {
-		UI::SET_RADAR_AS_INTERIOR_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("V_FakePrison"), 1700, 2580, 0, 0);
-		UI::SET_RADAR_AS_EXTERIOR_THIS_FRAME();
+		Vector3 coords_me = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
+		if (INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_me.x, coords_me.y, coords_me.z)) {
+			UI::SET_RADAR_AS_INTERIOR_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("V_FakePrison"), 1700, 2580, 0, 0);
+			UI::SET_RADAR_AS_EXTERIOR_THIS_FRAME();
+		}
 	}
 
 	// Show Fort Zancudo On Map
