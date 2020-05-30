@@ -1731,7 +1731,7 @@ void maintain_bodyguards(){
 					PED::GET_VEHICLE_PED_IS_IN(spawnedENTBodyguards[n], false) != PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false)) {
 					if (coordsme.z - height_a_g < 2 && coordsped.z - height_b_g > 7 && coordsped.z - height_b_g < 15)
 						ENTITY::APPLY_FORCE_TO_ENTITY(PED::GET_VEHICLE_PED_IS_IN(spawnedENTBodyguards[n], false), 1, 0, 0, -0.1, 0, 0, 0, true, false, true, true, true, true);
-					if (coordsme.z - height_a_g < 2 && coordsped.z - height_b_g < 7/* && coordsped.z - height_b_g < 5*/)
+					if (coordsme.z - height_a_g < 2 && coordsped.z - height_b_g < 8/* && coordsped.z - height_b_g < 5*/)
 						VEHICLE::SET_VEHICLE_ENGINE_ON(PED::GET_VEHICLE_PED_IS_IN(spawnedENTBodyguards[n], false), false, false);
 				}
 				if (VEHICLE::IS_THIS_MODEL_A_PLANE(ENTITY::GET_ENTITY_MODEL(veh)) && VEHICLE::GET_PED_IN_VEHICLE_SEAT(PED::GET_VEHICLE_PED_IS_IN(spawnedENTBodyguards[n], false), -1) == spawnedENTBodyguards[n] &&
@@ -1741,9 +1741,17 @@ void maintain_bodyguards(){
 						float curr_roll = ENTITY::GET_ENTITY_ROLL(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()));
 						float curr_pitch = ENTITY::GET_ENTITY_PITCH(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()));
 						float curr_yaw = ENTITY::GET_ENTITY_HEADING(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()));
-						if (planecurrspeed > 10) {
-							if (coordsped.z - height_b_g < ((coordsme.z - height_a_g) + 5)) ENTITY::APPLY_FORCE_TO_ENTITY(PED::GET_VEHICLE_PED_IS_IN(spawnedENTBodyguards[n], false), 1, 0, 0, 0.2, 0, 0, 0, true, false, true, true, true, true);
+						if (planecurrspeed > 10 && coordsped.z - height_b_g < 10) {
+							ENTITY::APPLY_FORCE_TO_ENTITY(PED::GET_VEHICLE_PED_IS_IN(spawnedENTBodyguards[n], false), 1, 0, 0, 0.2, 0, 0, 0, true, false, true, true, true, true);
 							ENTITY::SET_ENTITY_ROTATION(PED::GET_VEHICLE_PED_IS_USING(spawnedENTBodyguards[n]), curr_pitch + 0.2, curr_roll, curr_yaw, 1, true);
+						}
+						if (coordsped.z - height_b_g > 9) {
+							AI::TASK_PLANE_MISSION(spawnedENTBodyguards[n], PED::GET_VEHICLE_PED_IS_USING(spawnedENTBodyguards[n]), 0, 0, coordsme.x, coordsme.y, coordsme.z, 4, 2000, 0, 90, 2600, 300);
+							ENTITY::SET_ENTITY_ROTATION(PED::GET_VEHICLE_PED_IS_USING(spawnedENTBodyguards[n]), curr_pitch, curr_roll, curr_yaw, 1, true);
+						}
+						if (coordsme.z - height_a_g < 6 && coordsped.z - height_b_g < 10) {
+							AI::TASK_PLANE_LAND(spawnedENTBodyguards[n], PED::GET_VEHICLE_PED_IS_USING(spawnedENTBodyguards[n]), coordsme.x, coordsme.y, coordsme.z, coordsme.x, coordsme.y, coordsme.z);
+							Vehicle temp_v = PED::GET_VEHICLE_PED_IS_USING(spawnedENTBodyguards[n]);
 						}
 					}
 				}
