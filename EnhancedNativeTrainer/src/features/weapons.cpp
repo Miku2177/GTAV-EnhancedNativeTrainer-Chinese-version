@@ -77,7 +77,6 @@ int bullet_tick = 0;
 
 bool featureGravityGun = false;
 bool featureFriendlyFire = false;
-bool featureFriendlyFireUpdated = false;
 bool featureRapidFire = false;
 bool featureDropWeapon = false;
 bool featureDropWeaponOutAmmo = false;
@@ -2211,15 +2210,13 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	}
 
 	// Friendly Fire
-	if (featureFriendlyFire && featureFriendlyFireUpdated == false) {
+	if (featureFriendlyFire) {
 		NETWORK::NETWORK_SET_FRIENDLY_FIRE_OPTION(true);
 		PED::SET_CAN_ATTACK_FRIENDLY(playerPed, true, false);
-		featureFriendlyFireUpdated = true;
 	}
-	if (!featureFriendlyFire && featureFriendlyFireUpdated == true) {
+	if (!featureFriendlyFire) {
 		NETWORK::NETWORK_SET_FRIENDLY_FIRE_OPTION(false);
 		PED::SET_CAN_ATTACK_FRIENDLY(playerPed, false, false);
-		featureFriendlyFireUpdated = false;
 	}
 
 	// Rapid Fire

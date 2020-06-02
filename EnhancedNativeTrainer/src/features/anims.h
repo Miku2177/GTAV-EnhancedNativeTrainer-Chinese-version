@@ -12,6 +12,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\..\inc\main.h"
 #include <sstream>
 #include <vector>
+#include "script.h"
 
 class TreeNode
 {
@@ -98,6 +99,12 @@ void do_play_anim(Ped playerPed, char* dict, char* anim, int mode);
 void cleanup_anims();
 
 void update_anims_features(BOOL bPlayerExists, Ped playerPed);
+
+void add_anims_generic_settings(std::vector<StringPairSettingDBRow>* results);
+
+void add_anims_feature_enablements(std::vector<StringPairSettingDBRow>* results);
+
+void handle_generic_settings_anims(std::vector<StringPairSettingDBRow>* settings);
 
 bool process_scenarios_menu_l1();
 
