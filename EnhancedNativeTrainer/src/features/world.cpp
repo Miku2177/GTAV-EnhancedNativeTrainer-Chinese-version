@@ -903,8 +903,11 @@ void update_world_features()
 	
 	// Show Bolingbroke Penitentiary On Map
 	if (featurePenitentiaryMap) {
-		UI::SET_RADAR_AS_INTERIOR_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("V_FakePrison"), 1700, 2580, 0, 0);
-		UI::SET_RADAR_AS_EXTERIOR_THIS_FRAME();
+		Vector3 coords_me = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
+		if (INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_me.x, coords_me.y, coords_me.z)) {
+			UI::SET_RADAR_AS_INTERIOR_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("V_FakePrison"), 1700, 2580, 0, 0);
+			UI::SET_RADAR_AS_EXTERIOR_THIS_FRAME();
+		}
 	}
 
 	// Show Fort Zancudo On Map
@@ -1886,7 +1889,7 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 		{
 			lastWeatherName = setting.value;
 		}
-		if (setting.name.compare("lastClouds") == 0)
+		else if (setting.name.compare("lastClouds") == 0)
 		{
 			lastClouds = setting.value;
 		}
@@ -1894,46 +1897,60 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 		{
 			lastCloudsName = setting.value;
 		}
-		else if (setting.name.compare("RadarMapIndex") == 0){
+		else if (setting.name.compare("RadarMapIndex") == 0)
+		{
 			RadarMapIndex = stoi(setting.value);
 		}
-		else if (setting.name.compare("WorldWavesIndex") == 0) {
+		else if (setting.name.compare("WorldWavesIndex") == 0) 
+		{
 			WorldWavesIndex = stoi(setting.value);
 		}
-		else if (setting.name.compare("featureLightIntensityIndex") == 0) {
+		else if (setting.name.compare("featureLightIntensityIndex") == 0)
+		{
 			featureLightIntensityIndex = stoi(setting.value);
 		}
-		else if (setting.name.compare("WindStrengthIndex") == 0){
+		else if (setting.name.compare("WindStrengthIndex") == 0)
+		{
 			WindStrengthIndex = stoi(setting.value);
 		}
-		else if (setting.name.compare("NPCVehicleSpeedIndex") == 0) {
+		else if (setting.name.compare("NPCVehicleSpeedIndex") == 0) 
+		{
 			NPCVehicleSpeedIndex = stoi(setting.value);
 		}
-		else if (setting.name.compare("PedsHealthIndex") == 0) {
+		else if (setting.name.compare("PedsHealthIndex") == 0) 
+		{
 			PedsHealthIndex = stoi(setting.value);
 		}
-		else if (setting.name.compare("PedAccuracyIndex") == 0) {
+		else if (setting.name.compare("PedAccuracyIndex") == 0) 
+		{
 			PedAccuracyIndex = stoi(setting.value);
 		}
-		else if (setting.name.compare("RadarReducedGripSnowingIndex") == 0) {
+		else if (setting.name.compare("RadarReducedGripSnowingIndex") == 0) 
+		{
 			RadarReducedGripSnowingIndex = stoi(setting.value);
 		}
-		else if (setting.name.compare("RadarReducedGripRainingIndex") == 0) {
+		else if (setting.name.compare("RadarReducedGripRainingIndex") == 0) 
+		{
 			RadarReducedGripRainingIndex = stoi(setting.value);
 		}
-		else if (setting.name.compare("NoPedsGravityIndex") == 0) {
+		else if (setting.name.compare("NoPedsGravityIndex") == 0) 
+		{
 			NoPedsGravityIndex = stoi(setting.value);
 		}
-		else if (setting.name.compare("featureFreeroamActivitiesIndex") == 0) {
+		else if (setting.name.compare("featureFreeroamActivitiesIndex") == 0) 
+		{
 			featureFreeroamActivitiesIndex = stoi(setting.value);
 		}
-		else if (setting.name.compare("TrainSpeedIndex") == 0) {
+		else if (setting.name.compare("TrainSpeedIndex") == 0) 
+		{
 			TrainSpeedIndex = stoi(setting.value);
 		}
-		else if (setting.name.compare("WeatherChangeIndex") == 0) {
+		else if (setting.name.compare("WeatherChangeIndex") == 0) 
+		{
 			WeatherChangeIndex = stoi(setting.value);
 		}
-		else if (setting.name.compare("WeatherMethodIndex") == 0) {
+		else if (setting.name.compare("WeatherMethodIndex") == 0) 
+		{
 			WeatherMethodIndex = stoi(setting.value);
 		}
 	}
