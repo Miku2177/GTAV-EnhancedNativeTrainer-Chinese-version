@@ -976,7 +976,7 @@ void save_current_weapon(int slot)
 	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
-	if (!WEAPON::IS_PED_ARMED(playerPed, 7)) CONTROLS::_SET_CONTROL_NORMAL(0, 37, 1);
+	if (!WEAPON::IS_PED_ARMED(playerPed, 7) && WEAPON::GET_SELECTED_PED_WEAPON(playerPed) != GAMEPLAY::GET_HASH_KEY("WEAPON_PETROLCAN")) CONTROLS::_SET_CONTROL_NORMAL(0, 37, 1);
 
 	if (bPlayerExists)
 	{
