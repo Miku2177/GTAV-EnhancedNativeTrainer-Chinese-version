@@ -39,9 +39,7 @@ class KeyConfig{
 	static const std::string KEY_VEH_EMERGENCYBLINK;
 	static const std::string KEY_VEH_STARTREFUELING;
 	static const std::string KEY_VEH_STOPREFUELING;
-	//static const std::string KEY_VEH_WINDOWROLL;
-	//static const std::string KEY_VEH_INTERIORLIGHT;
-
+	
 	static const std::string KEY_AIRBRAKE_UP;
 	static const std::string KEY_AIRBRAKE_DOWN;
 	static const std::string KEY_AIRBRAKE_ROTATE_LEFT;
@@ -67,8 +65,6 @@ class KeyConfig{
 	static const std::string KEY_OBJECTPLACER_FREEZE_POSITION;
 	static const std::string KEY_OBJECTPLACER_HELP;
 	static const std::string KeyConfig::KEY_OBJECTPLACER_ALT_MOVE;
-
-	static const std::string KEY_HOT_AIRBRAKE_THROUGH_DOOR;
 
 	static const std::string KEY_HOT_1;
 	static const std::string KEY_HOT_2;

@@ -384,13 +384,8 @@ KeyInputConfig::KeyInputConfig(){
 	this->keyConfigs[KeyConfig::KEY_VEH_EMERGENCYBLINK] = new KeyConfig(VK_DECIMAL);
 	this->keyConfigs[KeyConfig::KEY_VEH_STARTREFUELING] = new KeyConfig(VK_KEY_E);
 	this->keyConfigs[KeyConfig::KEY_VEH_STOPREFUELING] = new KeyConfig(VK_KEY_S);
-	//this->keyConfigs[KeyConfig::KEY_VEH_WINDOWROLL] = new KeyConfig(VK_KEY_Z);
-	//this->keyConfigs[KeyConfig::KEY_VEH_INTERIORLIGHT] = new KeyConfig(VK_KEY_I);
-
+	
 	this->keyConfigs[KeyConfig::KEY_TOGGLE_AIRBRAKE] = new KeyConfig(VK_F6);
-
-	this->keyConfigs[KeyConfig::KEY_HOT_AIRBRAKE_THROUGH_DOOR] = new KeyConfig(VK_DIVIDE);
-	this->keyConfigs[KeyConfig::KEY_HOT_AIRBRAKE_THROUGH_DOOR]->modCtrl = true;
 
 	this->keyConfigs[KeyConfig::KEY_AIRBRAKE_UP] = new KeyConfig(VK_KEY_Q);
 	this->keyConfigs[KeyConfig::KEY_AIRBRAKE_DOWN] = new KeyConfig(VK_KEY_Z);
@@ -469,13 +464,7 @@ KeyInputConfig::KeyInputConfig(){
 
 	this->controllerConfigs[KeyConfig::KEY_VEH_STARTREFUELING] = new ControllerButtonConfig();
 	this->controllerConfigs[KeyConfig::KEY_VEH_STARTREFUELING]->add_button(ControllerButtonConfig::CONTROLLER_BTN_A);
-
-	//this->controllerConfigs[KeyConfig::KEY_VEH_WINDOWROLL] = new ControllerButtonConfig();
-	//this->controllerConfigs[KeyConfig::KEY_VEH_WINDOWROLL]->add_button(ControllerButtonConfig::CONTROLLER_BTN_A);
-
-	//this->controllerConfigs[KeyConfig::KEY_VEH_INTERIORLIGHT] = new ControllerButtonConfig();
-	//this->controllerConfigs[KeyConfig::KEY_VEH_INTERIORLIGHT]->add_button(ControllerButtonConfig::CONTROLLER_BTN_B);
-
+	
 	this->controllerConfigs[KeyConfig::KEY_VEH_STOPREFUELING] = new ControllerButtonConfig();
 	this->controllerConfigs[KeyConfig::KEY_VEH_STOPREFUELING]->add_button(ControllerButtonConfig::CONTROLLER_BTN_B);
 
@@ -581,8 +570,6 @@ const std::string KeyConfig::KEY_VEH_RIGHTBLINK = std::string("veh_rightblink");
 const std::string KeyConfig::KEY_VEH_EMERGENCYBLINK = std::string("veh_emergencyblink");
 const std::string KeyConfig::KEY_VEH_STARTREFUELING = std::string("veh_startrefueling");
 const std::string KeyConfig::KEY_VEH_STOPREFUELING = std::string("veh_stoprefueling");
-//const std::string KeyConfig::KEY_VEH_WINDOWROLL = std::string("veh_windowroll");
-//const std::string KeyConfig::KEY_VEH_INTERIORLIGHT = std::string("veh_interiorlight");
 
 const std::string KeyConfig::KEY_AIRBRAKE_UP = std::string("airbrake_up");
 const std::string KeyConfig::KEY_AIRBRAKE_DOWN = std::string("airbrake_down");
@@ -609,8 +596,6 @@ const std::string KeyConfig::KEY_OBJECTPLACER_FREEZE_TIME = std::string("objectp
 const std::string KeyConfig::KEY_OBJECTPLACER_FREEZE_POSITION = std::string("objectplacer_freeze_position");
 const std::string KeyConfig::KEY_OBJECTPLACER_HELP = std::string("objectplacer_help");
 const std::string KeyConfig::KEY_OBJECTPLACER_ALT_MOVE = std::string("objectplacer_alt_move");
-
-const std::string KeyConfig::KEY_HOT_AIRBRAKE_THROUGH_DOOR = std::string("hotkey_throughdoor");
 
 const std::string KeyConfig::KEY_HOT_1 = std::string("hotkey_1");
 const std::string KeyConfig::KEY_HOT_2 = std::string("hotkey_2");
