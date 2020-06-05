@@ -2243,6 +2243,13 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 	//if (version > 38) *getGlobalPtr(2606794) = 1; //2606794*/
 
+	// Disable Despawn Of DLC Vehicles
+	if (featureDespawnScriptDisabledUpdated) {
+		featureDespawnScriptDisabledUpdated = false;
+		if (featureDespawnScriptDisabled){
+			set_status_text("~r~Note:~r~ in-game shops will not work until you turn off the 'disable despawn' option");
+		}
+	}
 	if (featureDespawnScriptDisabled){
 		Vector3 coords_me = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 		if (INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_me.x, coords_me.y, coords_me.z)) {
