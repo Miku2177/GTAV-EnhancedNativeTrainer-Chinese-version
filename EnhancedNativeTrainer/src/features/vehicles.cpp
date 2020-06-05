@@ -162,7 +162,7 @@ int sheshark_light_toogle = 1;
 
 bool featureDespawnScriptDisabled = false;
 bool featureDespawnScriptDisabledUpdated = false;
-bool featureDespawnScriptDisabledWasLastOn = false; //do not persist this particular var in the DB - it is local only
+bool featureDespawnScriptDisabledWasLastOn = false; // do not persist this particular var in the DB - it is local only
 
 int activeLineIndexVeh = 0;
 int activeSavedVehicleIndex = -1;
@@ -2243,20 +2243,21 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 	//if (version > 38) *getGlobalPtr(2606794) = 1; //2606794*/
 
-	if (featureDespawnScriptDisabledUpdated){
-		featureDespawnScriptDisabledUpdated = false;
-		if (featureDespawnScriptDisabled){
-			set_status_text("~r~Note:~r~ in-game shops will not work until you turn off the 'disable despawn' option");
+	if (featureDespawnScriptDisabled){
+		Vector3 coords_me = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
+		if (INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_me.x, coords_me.y, coords_me.z)) {
+			if (featureDespawnScriptDisabledWasLastOn == false) WAIT(1000);
+			GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("shop_controller");
+			featureDespawnScriptDisabledWasLastOn = true;
 		}
 	}
-	if (featureDespawnScriptDisabled){
-		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("shop_controller");
-		featureDespawnScriptDisabledWasLastOn = true;
-	}
-	else if (featureDespawnScriptDisabledWasLastOn == true) {
-		SCRIPT::REQUEST_SCRIPT("shop_controller");
-		SYSTEM::START_NEW_SCRIPT("shop_controller", 1424);
-		featureDespawnScriptDisabledWasLastOn = false;
+	if (featureDespawnScriptDisabledWasLastOn == true) {
+		Vector3 coords_me = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
+		if (!featureDespawnScriptDisabled || !INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_me.x, coords_me.y, coords_me.z)) {
+			SCRIPT::REQUEST_SCRIPT("shop_controller");
+			SYSTEM::START_NEW_SCRIPT("shop_controller", 1424);
+			featureDespawnScriptDisabledWasLastOn = false;
+		}
 	}
 
 	// Toggle Vehicle Alarm Check
