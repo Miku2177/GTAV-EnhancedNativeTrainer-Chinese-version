@@ -28,12 +28,11 @@
     <key function="veh_emergencyblink" value="VK_DECIMAL"/>
     <key function="veh_startrefueling" value="VK_KEY_E"/>
     <key function="veh_stoprefueling" value="VK_KEY_S"/>
-  
+
     <!--The following are for the feature that lets you move around beyond normal limits, e.g. noclip-->
     
     <key function="toggle_airbrake" value="VK_F6"/>
-    <key function="hotkey_throughdoor" value="VK_DIVIDE" modCtrl="true" modAlt="false" modShift="false"/>
-
+    
     <key function="airbrake_up" value="VK_KEY_Q"/>
     <key function="airbrake_down" value="VK_KEY_Z"/>
     <key function="airbrake_forward" value="VK_KEY_W"/>
@@ -155,14 +154,12 @@
     <controller function="veh_stoprefueling">
       <button value="BUTTON_B"/>
     </controller>
-     
+    
     <controller function="toggle_airbrake">
       <button value="R_SHOULDER"/>
       <button value="BUTTON_A"/>
     </controller>
     
-    <controller function="hotkey_throughdoor"></controller> <!--i.e. no controller combo-->
-
     <controller function="airbrake_up">
       <button value="L_TRIGGER"/>
     </controller>
@@ -215,6 +212,23 @@
     <controller function="objectplacer_freeze_position">
       <button value="BUTTON_Y"/>
     </controller>
+
+	<!--Weather Order-->
+	<key function="WEATHER_1" value="EXTRASUNNY"/>
+    <key function="WEATHER_2" value="CLEAR"/>
+    <key function="WEATHER_3" value="CLOUDS"/>
+    <key function="WEATHER_4" value="SMOG"/>
+    <key function="WEATHER_5" value="FOGGY"/>
+    <key function="WEATHER_6" value="OVERCAST"/>
+    <key function="WEATHER_7" value="RAIN"/>
+    <key function="WEATHER_8" value="THUNDER"/>
+    <key function="WEATHER_9" value="CLEARING"/>
+    <key function="WEATHER_10" value="NEUTRAL"/>
+    <key function="WEATHER_11" value="SNOW"/>
+    <key function="WEATHER_12" value="BLIZZARD"/>
+    <key function="WEATHER_13" value="SNOWLIGHT"/>
+    <key function="WEATHER_14" value="XMAS"/>
+    <key function="WEATHER_15" value="HALLOWEEN"/>
 
     -->
   </keys>

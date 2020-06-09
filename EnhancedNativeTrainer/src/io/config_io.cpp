@@ -10,6 +10,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\debug\debuglog.h"
 #include "..\ui_support\entcolor.h"
 #include <sstream>
+#include "..\features\script.h"
 
 // A global Windows "basic string". Actual memory is allocated by the
 // COM methods used by MSXML which take &keyconf_bstr. We must use SysFreeString() 
@@ -65,6 +66,22 @@ void read_config_file(){
 				VariantInit(&var);
 				attribNode->get_nodeValue(&var);
 				attrib_key_value = _com_util::ConvertBSTRToString(V_BSTR(&var));
+				// weather order
+				if (i == 47) C_WEATHER_1 = _com_util::ConvertBSTRToString(V_BSTR(&var));
+				if (i == 48) C_WEATHER_2 = _com_util::ConvertBSTRToString(V_BSTR(&var));
+				if (i == 49) C_WEATHER_3 = _com_util::ConvertBSTRToString(V_BSTR(&var));
+				if (i == 50) C_WEATHER_4 = _com_util::ConvertBSTRToString(V_BSTR(&var));
+				if (i == 51) C_WEATHER_5 = _com_util::ConvertBSTRToString(V_BSTR(&var));
+				if (i == 52) C_WEATHER_6 = _com_util::ConvertBSTRToString(V_BSTR(&var));
+				if (i == 53) C_WEATHER_7 = _com_util::ConvertBSTRToString(V_BSTR(&var));
+				if (i == 54) C_WEATHER_8 = _com_util::ConvertBSTRToString(V_BSTR(&var));
+				if (i == 55) C_WEATHER_9 = _com_util::ConvertBSTRToString(V_BSTR(&var));
+				if (i == 56) C_WEATHER_10 = _com_util::ConvertBSTRToString(V_BSTR(&var));
+				if (i == 57) C_WEATHER_11 = _com_util::ConvertBSTRToString(V_BSTR(&var));
+				if (i == 58) C_WEATHER_12 = _com_util::ConvertBSTRToString(V_BSTR(&var));
+				if (i == 59) C_WEATHER_13 = _com_util::ConvertBSTRToString(V_BSTR(&var));
+				if (i == 60) C_WEATHER_14 = _com_util::ConvertBSTRToString(V_BSTR(&var));
+				if (i == 61) C_WEATHER_15 = _com_util::ConvertBSTRToString(V_BSTR(&var));
 			}
 			else if(wcscmp(keyconf_bstr, L"modCtrl") == 0){
 				VARIANT var;
