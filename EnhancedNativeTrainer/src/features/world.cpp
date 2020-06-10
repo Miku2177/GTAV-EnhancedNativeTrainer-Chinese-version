@@ -37,6 +37,13 @@ int w_secs_passed, w_secs_curr, w_seconds = -1;
 
 float freeze_counter = 0.0;
 
+Blip blip_cops = -1;
+std::vector<Blip> BLIPTABLE_COP;
+std::vector<Ped> COP_VECTOR;
+int CopBlipPermIndex = 0;
+bool CopBlipPermChanged = true;
+int cop_blip_perm = -2;
+
 Vehicle veh_i_last_used = -1;
 
 int acid_counter, acid_counter_p = -1;
@@ -413,6 +420,11 @@ void onchange_world_train_speed_index(int value, SelectFromListMenuItem* source)
 	TrainSpeedChanged = true;
 }
 
+void onchange_cop_blips_perm_index(int value, SelectFromListMenuItem* source) {
+	CopBlipPermIndex = value;
+	CopBlipPermChanged = true;
+}
+
 void onchange_weather_change_index(int value, SelectFromListMenuItem* source) {
 	WeatherChangeIndex = value;
 	WeatherChangeChanged = true;
@@ -527,6 +539,12 @@ void process_world_menu()
 	togItem->value = 1;
 	togItem->toggleValue = &featureNoPoliceBlips;
 	menuItems.push_back(togItem);
+
+	listItem = new SelectFromListMenuItem(LIMP_IF_INJURED_CAPTIONS, onchange_cop_blips_perm_index);
+	listItem->wrap = false;
+	listItem->caption = "Show Police Blips Permanently";
+	listItem->value = CopBlipPermIndex;
+	menuItems.push_back(listItem);
 
 	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "Random Cops";
@@ -680,6 +698,7 @@ void reset_world_globals()
 	NoPedsGravityIndex = 0;
 	featureFreeroamActivitiesIndex = 0;
 	TrainSpeedIndex = 0;
+	CopBlipPermIndex = 0;
 	WeatherChangeIndex = 0;
 	WeatherMethodIndex = 0;
 	WindStrengthIndex = 0;
@@ -1437,12 +1456,12 @@ void update_world_features()
 					GRAPHICS::DRAW_LIGHT_WITH_RANGE(bone4_cruiser_coord.x, bone4_cruiser_coord.y, bone4_cruiser_coord.z, 255, 0, 0, 0.7, 15);
 				}
 			}
-		} // for
+		} // end of for vehicles
 	}
 
-	// NPC No Gravity Peds && Acid Water && Acid Rain && Peds Health && Peds Accuracy && NPC Show Current Health
+	// NPC No Gravity Peds && Acid Water && Acid Rain && Peds Health && Peds Accuracy && NPC Show Current Health && Show Police Blips Permanently
 	if (WORLD_REDUCEDGRIP_SNOWING_VALUES[NoPedsGravityIndex] > 0 || featureAcidWater || featureAcidRain || (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 && featureSnow) || PLAYER_HEALTH_VALUES[PedsHealthIndex] > 0 ||
-		WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex] > -1 || featureNPCShowHealth) {
+		WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex] > -1 || featureNPCShowHealth || LIMP_IF_INJURED_VALUES[CopBlipPermIndex] > 0) {
 		const int BUS_ARR_PED_SIZE = 1024;
 		Ped bus_ped[BUS_ARR_PED_SIZE];
 		int found_ped = worldGetAllPeds(bus_ped, BUS_ARR_PED_SIZE);
@@ -1626,9 +1645,49 @@ void update_world_features()
 					}
 				}
 			}
-		} // end of for
+			// Show Police Blips Permanently
+			if (LIMP_IF_INJURED_VALUES[CopBlipPermIndex] > 0 && (PED::GET_PED_TYPE(bus_ped[i]) == 6 || PED::GET_PED_TYPE(bus_ped[i]) == 27)) { // ENTITY::DOES_ENTITY_EXIST(bus_ped[i])
+				if (!COP_VECTOR.empty()) {
+					bool exists_already = false;
+					for (int j = 0; j < COP_VECTOR.size(); j++) {
+						if (COP_VECTOR[j] == bus_ped[i]) exists_already = true;
+						if (!ENTITY::DOES_ENTITY_EXIST(COP_VECTOR[j])) { // && UI::DOES_BLIP_EXIST(BLIPTABLE_COP[i])
+							UI::REMOVE_BLIP(&BLIPTABLE_COP[j]);
+							COP_VECTOR.erase(COP_VECTOR.begin() + j);
+							BLIPTABLE_COP.erase(BLIPTABLE_COP.begin() + j);
+						}
+					}
+					if (exists_already == false) {
+						blip_cops = UI::ADD_BLIP_FOR_ENTITY(bus_ped[i]);
+						UI::SET_BLIP_SPRITE(blip_cops, 41); // 42
+						UI::SET_BLIP_SCALE(blip_cops, 0.5);
+						if (LIMP_IF_INJURED_VALUES[CopBlipPermIndex] == 1) UI::SET_BLIP_AS_SHORT_RANGE(blip_cops, true);
+						BLIPTABLE_COP.push_back(blip_cops);
+						COP_VECTOR.push_back(bus_ped[i]);
+					}
+				}
+				else {
+					blip_cops = UI::ADD_BLIP_FOR_ENTITY(bus_ped[i]);
+					UI::SET_BLIP_SPRITE(blip_cops, 41); // 42
+					UI::SET_BLIP_SCALE(blip_cops, 0.5);
+					if (LIMP_IF_INJURED_VALUES[CopBlipPermIndex] == 1) UI::SET_BLIP_AS_SHORT_RANGE(blip_cops, true);
+					BLIPTABLE_COP.push_back(blip_cops);
+					COP_VECTOR.push_back(bus_ped[i]);
+				}
+			}
+		} // end of for peds
 	}
 	
+	// show police blips permanently status message
+	if (cop_blip_perm == -2) cop_blip_perm = CopBlipPermIndex;
+	if (CopBlipPermIndex == 0 && cop_blip_perm != 0) cop_blip_perm = CopBlipPermIndex;
+
+	if (cop_blip_perm != CopBlipPermIndex) {
+		if (CopBlipPermIndex == 1) set_status_text("Short Range");
+		if (CopBlipPermIndex == 2) set_status_text("No Range Limit");
+		cop_blip_perm = CopBlipPermIndex;
+	}
+
 	// No Freeroam Activities
 	if (WORLD_FREEROAM_ACTIVITIES_VALUES[featureFreeroamActivitiesIndex] > 0) {
 		int blipIterator = -1;
@@ -1932,6 +1991,7 @@ void add_world_feature_enablements2(std::vector<StringPairSettingDBRow>* results
 	results->push_back(StringPairSettingDBRow{ "NoPedsGravityIndex", std::to_string(NoPedsGravityIndex) });
 	results->push_back(StringPairSettingDBRow{ "featureFreeroamActivitiesIndex", std::to_string(featureFreeroamActivitiesIndex) });
 	results->push_back(StringPairSettingDBRow{ "TrainSpeedIndex", std::to_string(TrainSpeedIndex) });
+	results->push_back(StringPairSettingDBRow{ "CopBlipPermIndex", std::to_string(CopBlipPermIndex) });
 	results->push_back(StringPairSettingDBRow{ "WeatherChangeIndex", std::to_string(WeatherChangeIndex) });
 	results->push_back(StringPairSettingDBRow{ "WeatherMethodIndex", std::to_string(WeatherMethodIndex) });
 }
@@ -2004,6 +2064,10 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 		else if (setting.name.compare("TrainSpeedIndex") == 0) 
 		{
 			TrainSpeedIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("CopBlipPermIndex") == 0)
+		{
+			CopBlipPermIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("WeatherChangeIndex") == 0) 
 		{
