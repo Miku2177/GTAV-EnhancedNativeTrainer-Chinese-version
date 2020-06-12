@@ -2916,21 +2916,21 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		bool emergencyKey = IsKeyJustUp(KeyConfig::KEY_VEH_EMERGENCYBLINK) || IsControllerButtonJustUp(KeyConfig::KEY_VEH_EMERGENCYBLINK); // emergency signal key
 
 		if (VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] > 0) {
-			if (leftKey && VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] > 0) { // manual left turn signal
+			if (leftKey) { // manual left turn signal
 				turn_check_left = !turn_check_left;
 				turn_check_right = false;
 				controllightsenabled_l = turn_check_left;
 				controllightsenabled_r = false;
 			}
 
-			if (rightKey && VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] > 0) { // manual right turn signal
+			if (rightKey) { // manual right turn signal
 				turn_check_right = !turn_check_right;
 				turn_check_left = false;
 				controllightsenabled_r = turn_check_right;
 				controllightsenabled_l = false;
 			}
 
-			if (emergencyKey && VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] > 0) {
+			if (emergencyKey) {
 				if (turn_check_left == true && turn_check_right == true) {
 					turn_check_left = false;
 					turn_check_right = false;
@@ -2941,14 +2941,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				}
 				controllightsenabled_l = turn_check_left;
 				controllightsenabled_r = turn_check_right;
-			}
-
-			if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && turn_check_left && !controllightsenabled_l) {
-				turn_check_left = false;
-			}
-
-			if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && turn_check_right && !controllightsenabled_r) {
-				turn_check_right = false;
 			}
 
 			if (PED::IS_PED_JUMPING_OUT_OF_VEHICLE(playerPed)) {
@@ -3009,12 +3001,19 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			else signal_meters = 0;
 			if (ENTITY::GET_ENTITY_SPEED(PED::GET_VEHICLE_PED_IS_IN(playerPed, 1)) < 1) signal_meters = 0;
 
-			if ((vehturnspeed > (VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] + 10) || Accel_seconds > VEH_TURN_SIGNALS_ACCELERATION_VALUES[turnSignalsAccelerationIndex] || signal_meters > (VEH_TURN_SIGNALS_ACCELERATION_VALUES[turnSignalsAccelerationIndex] * 22)) && autocontrol &&
-				VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] != 1) {
+			if ((vehturnspeed > (VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] + 10) || Accel_seconds > VEH_TURN_SIGNALS_ACCELERATION_VALUES[turnSignalsAccelerationIndex] || 
+				signal_meters > (VEH_TURN_SIGNALS_ACCELERATION_VALUES[turnSignalsAccelerationIndex] * 22)) && autocontrol && VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] != 1) {
 				turn_check_left = false;
 				turn_check_right = false;
 				autocontrol = false;
 			}
+		}
+
+		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && turn_check_left && !controllightsenabled_l) {
+			turn_check_left = false;
+		}
+		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && turn_check_right && !controllightsenabled_r) {
+			turn_check_right = false;
 		}
 
 		if (featureHazards && (VEHICLE::IS_VEHICLE_DOOR_DAMAGED(vehturn, 0) || VEHICLE::IS_VEHICLE_DOOR_DAMAGED(vehturn, 1) || VEHICLE::IS_VEHICLE_DOOR_DAMAGED(vehturn, 2) || VEHICLE::IS_VEHICLE_DOOR_DAMAGED(vehturn, 3))) {
