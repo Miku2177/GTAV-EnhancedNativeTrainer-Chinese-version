@@ -209,7 +209,7 @@ void read_config_file(){
 
 void read_config_ini_file(){
 	int tmpv[12][4];
-	const char *sectionMenuColor = "MenuColor", *file = ".Enhanced Native Trainer/ent_customization.ini";
+	const char *sectionMenuColor = "MenuColor", *file = "Enhanced Native Trainer/ent_customization.ini";
 	const std::string tmpk[] = {"r", "g", "b", "a"};
 	std::ifstream tmp(file);
 	bool notexist = !((bool) tmp);
@@ -235,7 +235,7 @@ void read_config_ini_file(){
 }
 
 void write_config_ini_file(){
-	const char *sectionMenuColor = "MenuColor", *file = "./ent_customization.ini";
+	const char *sectionMenuColor = "MenuColor", *file = ".Enhanced Native Trainer/ent_customization.ini";
 	const std::string tmpk[] = {"r", "g", "b", "a"};
 	std::ofstream ini;
 	std::ifstream tmp(file);
