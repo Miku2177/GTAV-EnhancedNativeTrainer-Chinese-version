@@ -370,37 +370,39 @@ void airbrake(bool inVehicle)
 		float v_y = (cos(rad) * p_force * 10);
 		float v_z = p_force * (CamRot.x * 0.2);
 
-		ENTITY::SET_ENTITY_COLLISION(target, 0, 1);
+		//ENTITY::SET_ENTITY_COLLISION(target, 0, 1);
+		ENTITY::SET_ENTITY_COLLISION(PLAYER::PLAYER_PED_ID(), 0, 1);
+		if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) ENTITY::SET_ENTITY_COLLISION(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), 0, 1);
 		ENTITY::SET_ENTITY_ALPHA(PLAYER::PLAYER_PED_ID(), 120, 0);
 		if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) ENTITY::SET_ENTITY_ALPHA(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), 120, 0);
 
 		ENTITY::SET_ENTITY_HEADING(target, curHeading);
 		ENTITY::SET_ENTITY_ROTATION(target, 0, 0, CamRot.z, 1, true);
 
-		if (moveForwardKey) { // MoveUpOnly CONTROLS::IS_CONTROL_PRESSED(2, 32)
+		if (moveForwardKey) { // MoveUpOnly
 			ENTITY::FREEZE_ENTITY_POSITION(target, false);
 			ENTITY::APPLY_FORCE_TO_ENTITY(target, 1, v_x, v_y, 0, 0, 0, 0, true, false, true, true, true, true);
 			curLocation = ENTITY::GET_ENTITY_COORDS(target, 0);
 			curHeading = ENTITY::GET_ENTITY_HEADING(target);
 		}
-		if (moveBackKey) { // MoveDownOnly CONTROLS::IS_CONTROL_PRESSED(2, 33)
+		if (moveBackKey) { // MoveDownOnly
 			ENTITY::FREEZE_ENTITY_POSITION(target, false);
 			ENTITY::APPLY_FORCE_TO_ENTITY(target, 1, -v_x, -v_y, 0, 0, 0, 0, true, false, true, true, true, true);
 			curLocation = ENTITY::GET_ENTITY_COORDS(target, 0);
 			curHeading = ENTITY::GET_ENTITY_HEADING(target);
 		}
 		
-		if (rotateLeftKey) { // MoveLeftOnly CONTROLS::IS_CONTROL_PRESSED(2, 34)
+		if (rotateLeftKey) { // MoveLeftOnly
 			curHeading = ENTITY::GET_ENTITY_HEADING(target);
 			curHeading = curHeading + 3;
 			ENTITY::SET_ENTITY_HEADING(target, curHeading);
 		}
-		if (rotateRightKey) { // MoveRightOnly CONTROLS::IS_CONTROL_PRESSED(2, 35)
+		if (rotateRightKey) { // MoveRightOnly
 			curHeading = ENTITY::GET_ENTITY_HEADING(target);
 			curHeading = curHeading - 3;
 			ENTITY::SET_ENTITY_HEADING(target, curHeading);
 		}
-		//if (CONTROLS::IS_CONTROL_RELEASED(2, 32) && CONTROLS::IS_CONTROL_RELEASED(2, 33) && CONTROLS::IS_CONTROL_RELEASED(2, 34) && CONTROLS::IS_CONTROL_RELEASED(2, 35) && !moveUpKey && !moveDownKey) ENTITY::FREEZE_ENTITY_POSITION(target, true);
+		
 		if (!moveForwardKey && !moveBackKey && !rotateLeftKey && !rotateRightKey && !moveUpKey && !moveDownKey) ENTITY::FREEZE_ENTITY_POSITION(target, true);
 		if (moveUpKey) { // Q
 			if (travelSpeed == 0) p_force = forwardPush * 10;
@@ -430,7 +432,9 @@ void airbrake(bool inVehicle)
 		float v_y = (cos(rad) * p_force * 10);
 		float v_z = p_force * (CamRot.x * 0.2);
 		
-		ENTITY::SET_ENTITY_COLLISION(target, 0, 1);
+		//ENTITY::SET_ENTITY_COLLISION(target, 0, 1);
+		ENTITY::SET_ENTITY_COLLISION(PLAYER::PLAYER_PED_ID(), 0, 1);
+		if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) ENTITY::SET_ENTITY_COLLISION(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), 0, 1);
 		ENTITY::SET_ENTITY_ROTATION(target, CamRot.x, CamRot.y, CamRot.z, 1, true);
 		ENTITY::SET_ENTITY_ALPHA(PLAYER::PLAYER_PED_ID(), 120, 0);
 		if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) ENTITY::SET_ENTITY_ALPHA(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), 120, 0);
