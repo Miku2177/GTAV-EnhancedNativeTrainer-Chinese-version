@@ -10,7 +10,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 #include "vehicles.h"
 #include "enginedegrade.h"
-#include "..\..\resource.h"
+
 #include "..\features\vehmodmenu.h"
 #include "hotkeys.h"
 #include "script.h"

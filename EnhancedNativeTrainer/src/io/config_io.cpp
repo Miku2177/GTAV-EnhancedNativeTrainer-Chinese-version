@@ -28,7 +28,7 @@ void read_config_file(){
 	//read XML
 	MSXML2::IXMLDOMDocumentPtr spXMLDoc;
 	spXMLDoc.CreateInstance(__uuidof(MSXML2::DOMDocument60));
-	if(!spXMLDoc->load("ent-config.xml")){
+	if(!spXMLDoc->load("Enhanced Native Trainer/ent-config.xml")){
 		write_text_to_log_file("No config found, using defaults");
 		config = result; //the default config
 	}
@@ -209,7 +209,7 @@ void read_config_file(){
 
 void read_config_ini_file(){
 	int tmpv[12][4];
-	const char *sectionMenuColor = "MenuColor", *file = "./ent_customization.ini";
+	const char *sectionMenuColor = "MenuColor", *file = ".Enhanced Native Trainer/ent_customization.ini";
 	const std::string tmpk[] = {"r", "g", "b", "a"};
 	std::ifstream tmp(file);
 	bool notexist = !((bool) tmp);

@@ -214,10 +214,6 @@ WCHAR* get_temp_dir_path(char* file);
 
 ENTDatabase* get_database();
 
-void process_test_menu();
-
-void debug_native_investigation();
-
 void heal_player();
 
 void toggle_invisibility();
@@ -229,10 +225,6 @@ void reset_wanted_level();
 void toggle_thermal_vision();
 
 void toggle_night_vision();
-
-bool get_graphics_test(std::vector<int> extras);
-
-void set_graphics_test(bool applied, std::vector<int> extras);
 
 void cleanup_script();
 

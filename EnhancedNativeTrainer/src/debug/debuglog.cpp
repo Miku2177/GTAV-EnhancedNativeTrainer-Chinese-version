@@ -26,12 +26,12 @@ static char *getDtTm(char *buff){
 }
 
 void write_text_to_log_file(const std::string &text){
-	if(!DEBUG_LOG_ENABLED){
-		return;
-	}
+	//if(!DEBUG_LOG_ENABLED){
+	//	return;
+	//}
 
 	char tbuff[DTTMSZ];
-	std::ofstream log_file(LOG_FILE_NAME, std::ios_base::out | std::ios_base::app);
+	std::ofstream log_file("Enhanced Native Trainer/ent - log.txt", std::ios_base::out | std::ios_base::app);
 	log_file << getDtTm(tbuff) << text << std::endl;
 	log_file.close();
 }
