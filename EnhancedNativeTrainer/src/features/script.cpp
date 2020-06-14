@@ -2324,9 +2324,14 @@ void ScriptMain(){
 	#ifdef _DEBUG
 	__try{
 		#endif
-
+		
 		set_status_text("~HUD_COLOUR_MENU_YELLOW~ENT~HUD_COLOUR_WHITE~ is initializing...");
 
+		//If the folder does not exist - this will attempt to make it. This should not fail hence no else.
+		std::string folder_path = GetCurrentModulePath() + "Enhanced Native Trainer";
+		if (CreateDirectory(folder_path.c_str(), NULL) || ERROR_ALREADY_EXISTS == GetLastError())
+			write_text_to_log_file("ENT folder exists. Continuing!");
+	
 		clear_log_file();
 
 		write_text_to_log_file("Trying to init storage");
@@ -2367,7 +2372,7 @@ void ScriptMain(){
 		SInit();
 
 		const std::string name = "ENT_vehicle_previews.ytd"; 
-		std::string fullPath = GetCurrentModulePath() + "Enhanced Native Trainer/" + name;
+		std::string fullPath = GetCurrentModulePath() + "Enhanced Native Trainer\\" + name;
 		int textureID = 0;
 
 		if (does_file_exist(fullPath.c_str()))
