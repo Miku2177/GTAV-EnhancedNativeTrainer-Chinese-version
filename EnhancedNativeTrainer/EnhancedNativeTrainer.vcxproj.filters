@@ -243,9 +243,6 @@
     <ClInclude Include="inc\types.h">
       <Filter>inc</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>inc</Filter>
-    </ClInclude>
     <ClInclude Include="src\ent-enums.h">
       <Filter>inc</Filter>
     </ClInclude>
@@ -277,9 +274,6 @@
       <Filter>inc\features</Filter>
     </ClInclude>
     <ClInclude Include="src\features\enginedegrade.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Resource.rc" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="ent-config.xml" />

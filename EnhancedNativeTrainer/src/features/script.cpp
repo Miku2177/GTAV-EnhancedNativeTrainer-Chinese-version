@@ -696,8 +696,6 @@ void update_features(){
 
 	update_props_pending_dialogs();
 
-	debug_native_investigation();
-
 	update_area_effects(playerPed);
 	
 	update_speedaltitude(playerPed);
@@ -2365,9 +2363,23 @@ void ScriptMain(){
 
 		//UnlockAllObjects();
 
-		//Find the radio skip patterns
+		//Find the radio skip & file register patterns
 		SInit();
 
+		const std::string name = "ENT_vehicle_previews.ytd"; 
+		std::string fullPath = GetCurrentModulePath() + "Enhanced Native Trainer/" + name;
+		int textureID = 0;
+
+		if (does_file_exist(fullPath.c_str()))
+		{
+			if (textureID = RegisterFile(fullPath, name))
+				write_text_to_log_file("Registered texture file: " + fullPath + " with texture ID " + std::to_string(textureID));
+			else
+				write_text_to_log_file("Failed to Register texture file: " + fullPath);
+		}
+		else
+			write_text_to_log_file("Failed to Register texture file: " + fullPath + " as it does not exist!");
+		
 		main();
 
 		write_text_to_log_file("ScriptMain ended");
@@ -2770,285 +2782,6 @@ WCHAR* get_storage_dir_path(char* file){
 
 ENTDatabase* get_database(){
 	return database;
-}
-
-struct GraphicsTest{
-	void(*function)(BOOL);
-	bool state;
-};
-
-bool allGraphicsOn = false;
-
-std::vector<GraphicsTest> graphicsTests = {
-	{ GRAPHICS::_0x1BBC135A4D25EDDE, false },
-	{ GRAPHICS::_0x23BA6B0C2AD7B0D3, false },
-	{ GRAPHICS::_0x22A249A53034450A, false },
-	{ GRAPHICS::_0xDC459CFA0CCE245B, false },
-	{ GRAPHICS::_0xC6372ECD45D73BCD, false },
-	//{ GRAPHICS::_0x61BB1D9B3A95D802, false },
-	{ GRAPHICS::_0xEF398BEEE4EF45F9, false },
-	//{ GRAPHICS::_0x80ECBC0C856D3B0B, false }, //off = far shadows
-
-	{ GRAPHICS::_0x25FC3E33A31AD0C9, false },
-	{ GRAPHICS::_0x6DDBF9DFFC4AC080, false },
-	//{ GRAPHICS::_0xD39D13C9FEBF0511, false }, //off = detailed shadows
-
-	{ GRAPHICS::_0x0AE73D8DF3A762B2, false },
-	{ GRAPHICS::_0xA51C4B86B71652AE, false },
-	{ GRAPHICS::_0xC0416B061F2B7E5E, false },
-
-	{ GRAPHICS::_0x06F761EA47C1D3ED, false },
-	{ GRAPHICS::_0xE63D7C6EECECB66B, false },
-	//{ GRAPHICS::_0x7AC24EAB6D74118D, false },
-	{ GRAPHICS::_0x8CDE909A0370BB3A, false },
-	{ GRAPHICS::_0x8CDE909A0370BB3A, false },
-
-	{ GRAPHICS::ENABLE_ALIEN_BLOOD_VFX, false },
-	{ GRAPHICS::_0xCA4AE345A153D573, false },
-	{ GRAPHICS::_0x9B079E5221D984D3, false },
-	{ GRAPHICS::_0xA46B73FAA3460AE1, false },
-
-	{ GRAPHICS::_0x0E4299C549F0D1F1, false },
-	{ GRAPHICS::_0x02369D5C8A51FDCF, false },
-	{ GRAPHICS::_0x03300B57FCAC6DDB, false },
-	{ GRAPHICS::_SET_FORCE_PED_FOOTSTEPS_TRACKS, false },
-	{ GRAPHICS::_SET_FORCE_VEHICLE_TRAILS, false },
-
-	{ GRAPHICS::_0x74C180030FDE4B69, false },
-	//{ GRAPHICS::_0xD1C55B110E4DF534, false },
-	{ GRAPHICS::_0x108BE26959A9D9BB, false },
-	{ GRAPHICS::_0xA356990E161C9E65, false },
-	//{ GRAPHICS::_SET_BLACKOUT, false }
-};
-
-bool get_graphics_test(std::vector<int> extras){
-	int choice = extras.at(0);
-	GraphicsTest* gt = &graphicsTests.at(choice);
-	return gt->state;
-}
-
-void set_graphics_test(bool applied, std::vector<int> extras){
-	int choice = extras.at(0);
-
-	GraphicsTest* gt = &graphicsTests.at(choice);
-	gt->state = !gt->state;
-	gt->function(gt->state);
-
-	//std::ostringstream ss;
-	//ss << "Item " << choice << " set to " << gt->state << " using " << gt->function;
-	//set_status_text_centre_screen(ss.str());
-}
-
-void set_all_graphics_test(bool applied, std::vector<int> extras){
-	allGraphicsOn = applied;
-	for(int i = 0; i < graphicsTests.size(); i++){
-		GraphicsTest* gt = &graphicsTests.at(i);
-		gt->state = applied;
-		gt->function(gt->state);
-	}
-}
-
-bool get_all_graphics_test(std::vector<int> extras){
-	return allGraphicsOn;
-}
-
-bool onconfirm_testmenu(MenuItem<int> choice){
-	Ped ped = PLAYER::PLAYER_PED_ID();
-	Hash hash = GAMEPLAY::GET_HASH_KEY("WEAPON_NIGHTSTICK");
-	DWORD start = GetTickCount();
-	for(int i = 0; i < 100000; i++){
-		Hash hash;
-		WEAPON::GET_CURRENT_PED_WEAPON(ped, &hash, true);
-	}
-	DWORD end = GetTickCount();
-	std::ostringstream ss;
-	ss << "1000 weapon calls took " << (end - start) << "msec";
-	set_status_text_centre_screen(ss.str());
-	return false;
-}
-
-void process_test_menu(){
-	std::vector<MenuItem<int>*> menuItems;
-
-	MenuItem<int> *mitem = new MenuItem<int>();
-	mitem->caption = "SCPW Performance Test";
-	mitem->isLeaf = false;
-	mitem->value = -2;
-	menuItems.push_back(mitem);
-
-	FunctionDrivenToggleMenuItem<int> *item = new FunctionDrivenToggleMenuItem<int>();
-	item->getter_call = get_all_graphics_test;
-	item->setter_call = set_all_graphics_test;
-	item->caption = "All Options";
-	item->isLeaf = false;
-	item->value = -1;
-	menuItems.push_back(item);
-
-	for(int i = 0; i < graphicsTests.size(); i++){
-		FunctionDrivenToggleMenuItem<int> *item = new FunctionDrivenToggleMenuItem<int>();
-		item->getter_call = get_graphics_test;
-		item->setter_call = set_graphics_test;
-		item->extra_arguments.push_back(i);
-		item->isLeaf = false;
-		item->value = i;
-
-		std::ostringstream ss;
-		ss << "Test #" << i;
-
-		item->caption = ss.str();
-		menuItems.push_back(item);
-	}
-
-	draw_generic_menu<int>(menuItems, 0, "Test Funcs", onconfirm_testmenu, NULL, NULL, skin_save_menu_interrupt);
-}
-
-void debug_native_investigation(){
-	/*BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
-
-	if (bPlayerExists)
-	{
-		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0))
-		{
-			Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
-			bool bbay = VEHICLE::_0x1033371FC8E842A7(veh);
-			std::ostringstream ss;
-			ss << "B/Bay: " << (bbay ? "Yes" : "No");
-			set_status_text_centre_screen(ss.str());
-		}
-	}*/
-
-	/*
-	bool online = NETWORK::NETWORK_IS_GAME_IN_PROGRESS() == 1;
-
-	std::ostringstream ss;
-	ss << "Online: " << (online ? "Yes" : "No");
-	set_status_text_centre_screen(ss.str());*/
-	/*
-	for (int i = 0; i < graphicsTests.size(); i++)
-	{
-		GraphicsTest* gt = &graphicsTests.at(i);
-		//gt->state = applied;
-		gt->function(gt->state);
-	}
-	*/
-
-	/*
-	if (!PED::_0x784002A632822099(PLAYER::PLAYER_PED_ID())) //putting on helmet?
-	{
-		set_status_text_centre_screen("0x784... false");
-	}
-
-	if (!PED::_0x66680A92700F43DF(PLAYER::PLAYER_PED_ID())) //getting in plane?
-	{
-		set_status_text_centre_screen("0x666... false");
-	}
-
-	if (PED::_0x0525A2C2562F3CD4(PLAYER::PLAYER_PED_ID()))
-	{
-		set_status_text_centre_screen("0x0525... true");
-	}
-	if (PED::_0xE0D36E5D9E99CC21(PLAYER::PLAYER_PED_ID()))
-	{
-		set_status_text_centre_screen("0xE0D... true");
-	}
-	if (PED::_0x604E810189EE3A59(PLAYER::PLAYER_PED_ID()))
-	{
-		set_status_text_centre_screen("0x604... true");
-	}
-
-	if (PED::_0x3E802F11FBE27674(PLAYER::PLAYER_PED_ID()))
-	{
-		set_status_text_centre_screen("0x3e80... true");
-	}
-	if (PED::_0xF41B5D290C99A3D6(PLAYER::PLAYER_PED_ID()))
-	{
-		set_status_text_centre_screen("0x3e80... true");
-	}
-
-	if (PED::_0x604E810189EE3A59(PLAYER::PLAYER_PED_ID()))
-	{
-		set_status_text_centre_screen("0x604... true");
-	}
-	*/
-
-	/*
-	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), true))
-	{
-		Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
-
-		int primary, secondary;
-		VEHICLE::GET_VEHICLE_COLOURS(veh, &primary, &secondary);
-
-		std::ostringstream ss;
-		ss << "Primary: " << primary << ", sec: " << secondary;
-		set_status_text_centre_screen(ss.str());*/
-
-		/*if (!VEHICLE::_0x8D474C8FAEFF6CDE(veh))
-		{
-			set_status_text_centre_screen("0x8D474... false");
-		}
-		else if (VEHICLE::_0xAE3FEE8709B39DCB(veh))
-		{
-			set_status_text_centre_screen("0xAE3F... true");
-		}
-		else if (VEHICLE::_0x26C10ECBDA5D043B(veh))
-		{
-			set_status_text_centre_screen("0x26C10... true");
-		}
-		else if (VEHICLE::_0xB5CC40FBCB586380(veh)) //possibly is_vehicle_strong
-		{
-			set_status_text_centre_screen("0xB5CCC... true");
-		}
-		else if (VEHICLE::_0x62CA17B74C435651(veh))
-		{
-			set_status_text_centre_screen("0x62CA1... true");
-		}
-		else if (VEHICLE::_0x634148744F385576(veh))
-		{
-			set_status_text_centre_screen("0x634... true");
-		}
-		else if (VEHICLE::_0x1033371FC8E842A7(veh))
-		{
-			set_status_text_centre_screen("0x10333... true");
-		}
-		else if (!VEHICLE::_0x9A83F5F9963775EF(veh))
-		{
-			set_status_text_centre_screen("0x9a8... false");
-		}
-		else if (VEHICLE::_0xAE3FEE8709B39DCB(veh))
-		{
-			set_status_text_centre_screen("0xAE3Fee... true");
-		}
-		else if (VEHICLE::_0x291E373D483E7EE7(veh))
-		{
-			set_status_text_centre_screen("0x291... true");
-		}
-		else if (VEHICLE::_0x4198AB0022B15F87(veh))
-		{
-			set_status_text_centre_screen("0x419... true");
-		}
-		else if (VEHICLE::_0x755D6D5267CBBD7E(veh))
-		{
-			set_status_text_centre_screen("0x755... true");
-		}
-		else if (VEHICLE::_0x5991A01434CE9677(veh))
-		{
-			set_status_text_centre_screen("0x599... true");
-		}
-		else if (VEHICLE::_0x1821D91AD4B56108(veh))
-		{
-			set_status_text_centre_screen("0x182... true");
-		}
-		else if (VEHICLE::_0x6E08BF5B3722BAC9(veh))
-		{
-			set_status_text_centre_screen("0x6E0... true");
-		}
-		else if (VEHICLE::_0xD4C4642CB7F50B5D(veh))
-		{
-			set_status_text_centre_screen("0xD4C... true");
-		}
-	}*/
 }
 
 void heal_player(){

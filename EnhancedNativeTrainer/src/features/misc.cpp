@@ -835,8 +835,6 @@ void process_hud_settings_menu() {
 	std::string caption = "HUD Settings Options";
 
 	std::vector<MenuItem<int>*> menuItems;
-	SelectFromListMenuItem* listItem;
-	MenuItem<int>* item;
 
 	int i = 0;
 	
@@ -2202,5 +2200,4 @@ void SInit()
 
 	address = FindPatternJACCO("\x48\x8D\x1D\x00\x00\x00\x00\xBF\x00\x00\x00\x00\x48\x83\x3B\x00", "xxx????x????xxxx");
 	g_unkRadioStationData = (uintptr_t*)(address + *(int*)(address + 3) + 7);
-
 }

@@ -94,7 +94,6 @@
     <ClInclude Include="src\io\keyboard.h" />
     <ClInclude Include="src\ui_support\entcolor.h" />
     <ClInclude Include="src\ui_support\menu_functions.h" />
-    <ClInclude Include="resource.h" />
     <ClInclude Include="src\features\script.h" />
     <ClInclude Include="src\features\skins.h" />
     <ClInclude Include="src\features\teleportation.h" />
@@ -110,9 +109,6 @@
     <Xml Include="ent-config.xml">
       <DeploymentContent>true</DeploymentContent>
     </Xml>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Resource.rc" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\..\..\Desktop\1.46 vehicle previews\Converted\BRUISER1.png" />
@@ -421,7 +417,7 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FloatingPointModel>Fast</FloatingPointModel>
       <ExceptionHandling>false</ExceptionHandling>
-      <DisableSpecificWarnings>4530; 4996</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4530;4996;4267</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
