@@ -216,9 +216,7 @@ void read_config_ini_file(){
 	tmp.close();
 
 	if(notexist){
-		write_text_to_log_file("INI file does not exist.");
-		write_text_to_log_file("Using default settings.");
-		write_text_to_log_file("INI file will be created upon saving in-game.");
+		write_text_to_log_file("INI file does not exist.\nUsing default settings.\nINI file will be created upon saving in-game.");
 		return;
 	}
 
@@ -235,7 +233,7 @@ void read_config_ini_file(){
 }
 
 void write_config_ini_file(){
-	const char *sectionMenuColor = "MenuColor", *file = ".Enhanced Native Trainer/ent_customization.ini";
+	const char *sectionMenuColor = "MenuColor", *file = "Enhanced Native Trainer/ent_customization.ini";
 	const std::string tmpk[] = {"r", "g", "b", "a"};
 	std::ofstream ini;
 	std::ifstream tmp(file);
