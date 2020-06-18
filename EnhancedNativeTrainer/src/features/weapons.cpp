@@ -1916,7 +1916,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			if (featurePedNoWeaponDrop) {
 				if (ENTITY::GET_ENTITY_HEALTH(a_npcs[i]) > 0) WEAPON::SET_PED_DROPS_WEAPONS_WHEN_DEAD(a_npcs[i], false);
 				
-				if (ENTITY::IS_ENTITY_DEAD(a_npcs[i])) {
+				if (ENTITY::IS_ENTITY_DEAD(a_npcs[i]) && a_npcs[i] != playerPed) {
 					Hash curr_w = WEAPON::GET_SELECTED_PED_WEAPON(a_npcs[i]);
 					Object temp_w = WEAPON::GET_WEAPON_OBJECT_FROM_PED(a_npcs[i], 1);
 					WEAPON::REMOVE_WEAPON_FROM_PED(a_npcs[i], curr_w);
