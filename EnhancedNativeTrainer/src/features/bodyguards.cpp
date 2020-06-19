@@ -1849,15 +1849,28 @@ bool process_bodyguard_menu(){
 		item->isLeaf = false;
 		menuItems.push_back(item);
 
+		toggleItem = new ToggleMenuItem<int>();
+		toggleItem->caption = "Different Weapons";
+		toggleItem->value = i++;
+		toggleItem->toggleValue = &featureDifferentWeapons;
+		toggleItem->toggleValueUpdated = NULL;
+		menuItems.push_back(toggleItem);
+
+		listItem = new SelectFromListMenuItem(PED_WEAPON_TITLES, onchange_bodyguards_body_weapons);
+		listItem->wrap = false;
+		listItem->caption = "Armed With...";
+		listItem->value = BodyWeaponSetIndex;
+		menuItems.push_back(listItem);
+
 		item = new MenuItem<int>();
 		item->caption = "Choose Weapons";
-		item->value = 7;
+		item->value = 9;
 		item->isLeaf = false;
 		menuItems.push_back(item);
 
 		item = new MenuItem<int>();
 		item->caption = "Mark On Map";
-		item->value = 8;
+		item->value = 10;
 		item->isLeaf = false;
 		menuItems.push_back(item);
 
@@ -1919,19 +1932,6 @@ bool process_bodyguard_menu(){
 		listItem->value = BodyHealthIndex;
 		menuItems.push_back(listItem);
 
-		toggleItem = new ToggleMenuItem<int>();
-		toggleItem->caption = "Different Weapons";
-		toggleItem->value = i++;
-		toggleItem->toggleValue = &featureDifferentWeapons;
-		toggleItem->toggleValueUpdated = NULL;
-		menuItems.push_back(toggleItem);
-
-		listItem = new SelectFromListMenuItem(PED_WEAPON_TITLES, onchange_bodyguards_body_weapons);
-		listItem->wrap = false;
-		listItem->caption = "Armed With...";
-		listItem->value = BodyWeaponSetIndex;
-		menuItems.push_back(listItem);
-
 		if(!bodyguardWeaponsToggleInitialized){
 			for(int a = 0; a < MENU_WEAPON_CATEGORIES.size(); a++){
 				for(int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++){
@@ -1973,10 +1973,10 @@ bool onconfirm_bodyguard_menu(MenuItem<int> choice){
 		case 6:
 			process_bodyguard_skins_menu();
 			break;
-		case 7:
+		case 9:
 			process_bodyguard_weapons_menu();
 			break;
-		case 8:
+		case 10:
 			process_bodyguard_blips_menu();
 			break;
 		default:
