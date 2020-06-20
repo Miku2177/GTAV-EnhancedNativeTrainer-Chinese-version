@@ -1849,6 +1849,12 @@ bool process_bodyguard_menu(){
 		item->isLeaf = false;
 		menuItems.push_back(item);
 
+		item = new MenuItem<int>();
+		item->caption = "Choose Weapons";
+		item->value = 7;
+		item->isLeaf = false;
+		menuItems.push_back(item);
+
 		toggleItem = new ToggleMenuItem<int>();
 		toggleItem->caption = "Different Weapons";
 		toggleItem->value = i++;
@@ -1861,12 +1867,6 @@ bool process_bodyguard_menu(){
 		listItem->caption = "Armed With...";
 		listItem->value = BodyWeaponSetIndex;
 		menuItems.push_back(listItem);
-
-		item = new MenuItem<int>();
-		item->caption = "Choose Weapons";
-		item->value = 9;
-		item->isLeaf = false;
-		menuItems.push_back(item);
 
 		item = new MenuItem<int>();
 		item->caption = "Mark On Map";
@@ -1973,7 +1973,7 @@ bool onconfirm_bodyguard_menu(MenuItem<int> choice){
 		case 6:
 			process_bodyguard_skins_menu();
 			break;
-		case 9:
+		case 7:
 			process_bodyguard_weapons_menu();
 			break;
 		case 10:
