@@ -51,6 +51,8 @@ int tick_s_allw, ss_tick_secs_curr = 0;
 Ped oldplayerPed_s = -1;
 bool PlayerUpdated_s = true;
 //
+Hash temp_weapon = -1;
+
 bool featureWeaponInfiniteAmmo = false;
 bool featureWeaponInfiniteParachutes = false, featureWeaponInfiniteParachutesUpdated = false;
 bool featureWeaponNoParachutes = false, featureWeaponNoParachutesUpdated = false;
@@ -1881,15 +1883,23 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 
 	// Drop Weapon When Empty
 	if (featureDropWeaponOutAmmo && WEAPON::IS_PED_ARMED(playerPed, 7) && WEAPON::IS_PED_ARMED(playerPed, 6)) {
-		Hash curr_w = WEAPON::GET_SELECTED_PED_WEAPON(playerPed);
-		Vector3 p_coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(playerPed, 10.0f, 10.0f, 0.0f);
-		int curr_bullet = WEAPON::GET_AMMO_IN_PED_WEAPON(PLAYER::PLAYER_PED_ID(), curr_w);
-		if (curr_bullet < 3) {
+		if (WEAPON::GET_AMMO_IN_PED_WEAPON(PLAYER::PLAYER_PED_ID(), WEAPON::GET_SELECTED_PED_WEAPON(playerPed)) == 1) temp_weapon = WEAPON::GET_SELECTED_PED_WEAPON(playerPed);
+		if (WEAPON::GET_AMMO_IN_PED_WEAPON(PLAYER::PLAYER_PED_ID(), WEAPON::GET_SELECTED_PED_WEAPON(playerPed)) < 1) {
+			WEAPON::SET_CURRENT_PED_WEAPON(playerPed, WEAPON::GET_SELECTED_PED_WEAPON(playerPed), true);
 			Object temp_w = WEAPON::GET_WEAPON_OBJECT_FROM_PED(playerPed, 1);
-			WEAPON::REMOVE_WEAPON_FROM_PED(playerPed, curr_w);
+			WEAPON::SET_PED_DROPS_WEAPON(playerPed);
+			WEAPON::REMOVE_WEAPON_FROM_PED(playerPed, WEAPON::GET_SELECTED_PED_WEAPON(playerPed));
 			ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&temp_w);
 			OBJECT::DELETE_OBJECT(&temp_w);
 		}
+	}
+	if (featureDropWeaponOutAmmo && WEAPON::HAS_PED_GOT_WEAPON(playerPed, temp_weapon, false) && WEAPON::GET_AMMO_IN_PED_WEAPON(PLAYER::PLAYER_PED_ID(), temp_weapon) < 1) {
+		WEAPON::SET_CURRENT_PED_WEAPON(playerPed, temp_weapon, true);
+		Object temp_w = WEAPON::GET_WEAPON_OBJECT_FROM_PED(playerPed, 1);
+		WEAPON::SET_PED_DROPS_WEAPON(playerPed);
+		WEAPON::REMOVE_WEAPON_FROM_PED(playerPed, temp_weapon);
+		ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&temp_w);
+		OBJECT::DELETE_OBJECT(&temp_w);
 	}
 
 	// Shoot To Disarm NPCs && Cannot Pickup Dropped Weapons
