@@ -9,4 +9,6 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include <string>
 
 //Version string should now be: major version number . minor version number . hotfix number
-const std::string VERSION_STRING = "43." + std::to_string(1) + "." + std::to_string(0);
+
+const std::string VERSION_STRING = "43." + std::to_string(1);
+
