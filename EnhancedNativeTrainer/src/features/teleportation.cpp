@@ -261,6 +261,7 @@ std::vector<tele_location> LOCATIONS_INTERIORS = {
 	{ "FIB Building Lobby", 110.4f, -744.2f, 45.7f, { "FIBlobby" }, { "FIBlobbyfake" }, {}, false },
 	{ "FIB Building Top Floor", 135.733f, -749.216f, 258.152f },
 	{ "Garment Factory", 718.162f, -974.51f, 25.9142f, { "id2_14_during1" }, {}, {}, false },
+	{ "Garment Factory (empty)", 718.162f, -974.51f, 25.9142f, { "id2_14_during2" }, {}, {}, false },
 	{ "Hospital (Destroyed)", 302.651f, -586.293f, 43.3129f, { "RC12B_Destroyed", "RC12B_HospitalInterior" }, { "RC12B_Default", "RC12B_Fixed" }, {}, false },
 	{ "Howitzer's The Motor Motel Room", 152.2943f, -1004.391f, -100.0f, { "hei_hw1_blimp_interior_v_motel_mp_milo_" }, {}, {}, false },
 	{ "Humane Labs Lower Level", 3525.495f, 3705.301f, 20.992f },
