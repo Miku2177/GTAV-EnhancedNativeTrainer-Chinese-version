@@ -2970,7 +2970,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			if (VEH_TURN_SIGNALS_ACCELERATION_VALUES[turnSignalsAccelerationIndex] > 0 && turn_angle < VEH_TURN_SIGNALS_ANGLE_VALUES[turnSignalsAngleIndex] && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) { // turn_angle < 15
 				if ((GAMEPLAY::GET_GAME_TIMER() - Time_tick_mileage) > 200) {
 					signal_meters = signal_meters + ((ENTITY::GET_ENTITY_SPEED(PED::GET_VEHICLE_PED_IS_IN(playerPed, 1)) * (1.60934 * 0.02)) * 6.6);
-					Time_tick_mileage = GAMEPLAY::GET_GAME_TIMER();
+					 if (!featureMileage) Time_tick_mileage = GAMEPLAY::GET_GAME_TIMER();
 				}
 			}
 			else signal_meters = 0;
