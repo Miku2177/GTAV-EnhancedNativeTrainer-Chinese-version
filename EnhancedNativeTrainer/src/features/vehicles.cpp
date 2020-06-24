@@ -3293,7 +3293,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		}
 	}
 
-	if (GAMEPLAY::GET_MISSION_FLAG() == 0) {
+	if (GAMEPLAY::GET_MISSION_FLAG() == 0 && !SCRIPT::HAS_SCRIPT_LOADED("fbi4_prep3amb")) {
 		if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && been_already == true) been_already = false;
 
 		if (!VEHICLES_REMEMBER.empty() && !featureDeleteTrackedVehicles && featureDeleteTrackedVehicles_Emptied == false) {
@@ -3334,7 +3334,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			}
 		}
 
-		if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && featureRememberVehicles) { 
+		if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && featureRememberVehicles) {
 			Vehicle veh_rem = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 
 			// save in garage
