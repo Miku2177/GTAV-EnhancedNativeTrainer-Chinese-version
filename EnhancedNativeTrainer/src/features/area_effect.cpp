@@ -629,7 +629,7 @@ void update_area_effects(Ped playerPed){
 				veh_agressive[i] != VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh_me, 0) && veh_agressive[i] != VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh_me, 1) && veh_agressive[i] != VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh_me, 2)) {
 				
 				// vigilante citizens
-				if (featureLawAbidingCitizens && !SCRIPT::HAS_SCRIPT_LOADED("fbi4_prep3amb")) {
+				if (featureLawAbidingCitizens && GAMEPLAY::GET_MISSION_FLAG() == 0) {
 					if ((PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed) != 0 && VEHICLE::GET_PED_IN_VEHICLE_SEAT(PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed), -1) != 0 &&
 						!PED::IS_PED_IN_ANY_TAXI(VEHICLE::GET_PED_IN_VEHICLE_SEAT(PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed), -1))) ||
 						(PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed) != 0 && VEHICLE::IS_VEHICLE_ALARM_ACTIVATED(PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed))) || 
