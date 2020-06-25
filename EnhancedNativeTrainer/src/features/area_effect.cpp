@@ -616,7 +616,7 @@ void update_area_effects(Ped playerPed){
 	}
 
 	// Aggressive Drivers && Vigilante Citizens
-	if ((featureAggressiveDrivers || featureLawAbidingCitizens) && !featurePlayerIgnoredByAll && !featurePlayerInvisible) {
+	if ((featureAggressiveDrivers || featureLawAbidingCitizens) && !featurePlayerIgnoredByAll && !featurePlayerInvisible && !SCRIPT::HAS_SCRIPT_LOADED("wardrobe_sp")) {
 		Vehicle veh_me = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		Vector3 veh_me_coords = ENTITY::GET_ENTITY_COORDS(veh_me, true);
 		Vector3 me_coords = ENTITY::GET_ENTITY_COORDS(playerPed, true);
@@ -690,7 +690,7 @@ void update_area_effects(Ped playerPed){
 			} // end of if
 		} // end of for
 
-		if (time_to_chase == true && PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed) == 0) {
+		if (time_to_chase == true && PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed) == 0 && GAMEPLAY::GET_MISSION_FLAG() == 0) {
 			for (int vc = 0; vc < count_veh; vc++) {
 				if (veh_agressive[vc] != playerPed && !PED::IS_PED_GROUP_MEMBER(veh_agressive[vc], myENTGroup) && PED::GET_PED_TYPE(veh_agressive[vc]) != 6 && PED::GET_PED_TYPE(veh_agressive[vc]) != 27 && PED::GET_PED_TYPE(veh_agressive[vc]) != 29 &&
 					veh_agressive[vc] != VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh_me, 0) && veh_agressive[vc] != VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh_me, 1) && veh_agressive[vc] != VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh_me, 2)) {
@@ -735,7 +735,7 @@ void update_area_effects(Ped playerPed){
 			}
 			time_to_attack = false;
 			time_to_chase = false;
-		}
+		} //end of time to chase
 
 		if (v_collision_check == true && !pursuer.empty()) {
 			AI::SET_DRIVE_TASK_CRUISE_SPEED(pursuer.back(), 300.0);
