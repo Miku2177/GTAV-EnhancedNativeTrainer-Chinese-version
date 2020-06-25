@@ -4433,13 +4433,6 @@ bool onconfirm_carspawn_menu(MenuItem<int> choice){
 //Creates category submenu and hands over to the sub-sub menu related to the category
 bool process_carspawn_menu() {
 	std::vector<MenuItem<int>*> menuItems;
-	/*for(int i = 0; i < MENU_VEHICLE_CATEGORIES.size(); i++){
-		MenuItem<int> *item = new MenuItem<int>();
-		item->caption = MENU_VEHICLE_CATEGORIES[i];
-		item->value = i;
-		item->isLeaf = (i == MENU_VEHICLE_CATEGORIES.size() - 1);
-		menuItems.push_back(item);
-	}*/
 
 	for (int i = 1; i < vHashLists.size(); i++)
 	{
@@ -4479,96 +4472,29 @@ bool onconfirm_vehlist_menu(MenuItem<int> choice) {
 }
 
 bool onconfirm_spawn_menu_cars(MenuItem<int> choice){
-	std::string caption = "Vehicles";
-
-	std::string category = choice.caption;
-	//std::vector<MenuItem<std::string>*> menuItems;
+	std::string caption = get_class_label(choice.value);
 	std::vector<MenuItem<int>*> menuItems;
-	std::stringstream ss;
 	std::vector<Hash> selectedCat = get_vehicles_from_category(choice.value);
-	
+	int itemIndex = 0;
+
 	for (Hash hash : selectedCat)
 	{
-		//This is returning the array but the choice.value int is the category ID!
-		//MenuItem<std::string>* item = new MenuItem<std::string>();
-		//item->caption = get_vehicle_make_and_model(hash);
-		//item->value = hash;
-		//menuItems.push_back(item);
-
+		itemIndex++;
 		MenuItem<int>* item = new MenuItem<int>();
-		item->caption = get_vehicle_make_and_model(hash);
+		
+		if (get_vehicle_make_and_model(hash).compare("NULL") == 0 || get_vehicle_make_and_model(hash).compare("") == 0)
+			item->caption = "Item " + std::to_string(itemIndex);
+		else
+			item->caption = get_vehicle_make_and_model(hash);
 		item->value = hash;
 		menuItems.push_back(item);
-
-		std::stringstream ss55;
-		ss55 << "\n hash: " << hash;
-		//ss55 << "\n temp_bodyguard: " << temp_bodyguard;
-		//ss55 << "\n dist_diff: " << dist_diff;
-		//ss55 << "\n temp_dist: " << temp_dist;
-		callsPerFrame = 0;
-		set_status_text_centre_screen(ss55.str());
-
-		//ss << "item value: " << hash << " | item caption: " << item->caption << endl;
-		//write_text_to_log_file(ss.str());
-	}
-	
-	if (choice.value)
-	{
-		write_text_to_log_file("Selected vehicle with category ID: " + std::to_string(choice.value));
 	}
 
-	/*
-	for(int i = 0; i < VOV_CAR_VALUES[choice.value].size(); i++){
-		MenuItem<std::string> *item = new MenuItem<std::string>();
-		item->caption = VOV_CAR_CAPTIONS[choice.value][i];
-		item->value = VOV_CAR_VALUES[choice.value][i];
-		menuItems.push_back(item);
-	}*/
-
-	//This part is causing the crashes. It cannot handle the vehicle value (?) It expects a string and yet gets a hash
-	//MenuParameters<std::string> params(menuItems, category);
-	//MenuParameters<int> params(menuItems, category);
-	//params.menuSelectionPtr = 0;
-	//params.onConfirmation = onconfirm_spawn_menu_vehicle_selection;
-	//params.lineImageProvider = vehicle_image_preview_finder;
-
-	//return draw_generic_menu<std::string>(params);
 	return draw_generic_menu<int>(menuItems, &activeLineIndexVehList, caption, onconfirm_vehlist_menu, NULL, NULL);
-	//return draw_generic_menu<int>(menuItems, 0, "Vehicle Categories", onconfirm_spawn_menu_cars, NULL, NULL); //Does not work
 }
-
-//bool onconfirm_spawn_menu_vehicle_selection(MenuItem<std::string> choice){
-	//std::stringstream ss;
-	//ss << "onconfirm_spawn_menu_vehicle_selection called with value " << stoi(choice.value);
-	//write_text_to_log_file(ss.str());
-	//do_spawn_vehicle(stoi(choice.value), "", true);
-	//do_spawn_vehicle_hash(choice.value, choice.caption);
-	//return false;
-//}
-
-/*bool do_spawn_vehicle(std::string modelName, std::string modelTitle){
-	DWORD model = GAMEPLAY::GET_HASH_KEY((char *) modelName.c_str());
-	Vehicle veh = do_spawn_vehicle(model, modelTitle, true);
-
-	std::string debugString = get_vehicle_make_and_model(model);
-	write_text_to_log_file("[DEBUG] Vehicle name: " + debugString);
-
-	if(veh != -1){
-		return true;
-	}
-	return false;
-}*/
-
 bool do_spawn_vehicle_hash(int modelName, std::string modelTitle) {
 	DWORD model = modelName;
 	Vehicle veh = do_spawn_vehicle(model, modelTitle, true);
-
-	//std::string debugString = get_vehicle_make_and_model(model);
-	//write_text_to_log_file("[DEBUG] Vehicle name: " + debugString);
-
-	//if (veh != -1) {
-	//	return true;
-	//}
 	return false;
 }
 
