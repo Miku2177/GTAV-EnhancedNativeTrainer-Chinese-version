@@ -13,6 +13,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\features\script.h"
 #include <string>
 #include <sstream>
+#include "../io/controller.h"
 
 DWORD trainerResetTime = 0;
 
@@ -21,7 +22,7 @@ bool gameInputBlockedByUs = false;
 
 bool trainer_switch_pressed()
 {
-	bool result = IsKeyJustUp(KeyConfig::KEY_TOGGLE_MAIN_MENU) || IsControllerButtonJustUp(KeyConfig::KEY_TOGGLE_MAIN_MENU);
+	bool result = IsKeyJustUp(KeyConfig::KEY_TOGGLE_MAIN_MENU) || (CONTROLS::IS_CONTROL_PRESSED(2, INPUT_FRONTEND_RB) && CONTROLS::IS_CONTROL_JUST_PRESSED(2, INPUT_ENTER)); //INPUT_FRONTEND_RB + INPUT_ENTER (Y)
 	if (result)
 	{
 		//avoid repeat of key press
@@ -40,14 +41,14 @@ void get_button_state(bool *a, bool *b, bool *up, bool *down, bool *l, bool *r)
 {
 	KeyInputConfig *keyConf = config->get_key_config();
 
-	if (a) *a = IsKeyJustUp(KeyConfig::KEY_MENU_SELECT) || IsControllerButtonJustUp(KeyConfig::KEY_MENU_SELECT);
-	if (b) *b = IsKeyJustUp(KeyConfig::KEY_MENU_BACK) || IsControllerButtonJustUp(KeyConfig::KEY_MENU_BACK);
+	if (a) *a = IsKeyJustUp(KeyConfig::KEY_MENU_SELECT) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, INPUT_SPRINT); //A
+	if (b) *b = IsKeyJustUp(KeyConfig::KEY_MENU_BACK) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, INPUT_RELOAD); //B
 
 	if (MISC_TRAINERCONTROL_VALUES[TrainerControlIndex] == 1) { // press
-		if (up) *up = IsKeyDown(KeyConfig::KEY_MENU_UP) || IsControllerButtonDown(KeyConfig::KEY_MENU_UP);
-		if (down) *down = IsKeyDown(KeyConfig::KEY_MENU_DOWN) || IsControllerButtonDown(KeyConfig::KEY_MENU_DOWN);
-		if (r) *r = IsKeyDown(KeyConfig::KEY_MENU_RIGHT) || IsControllerButtonDown(KeyConfig::KEY_MENU_RIGHT);
-		if (l) *l = IsKeyDown(KeyConfig::KEY_MENU_LEFT) || IsControllerButtonDown(KeyConfig::KEY_MENU_LEFT);
+		if (up) *up = IsKeyDown(KeyConfig::KEY_MENU_UP) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, INPUT_SNIPER_ZOOM_IN_SECONDARY); //Dpad up
+		if (down) *down = IsKeyDown(KeyConfig::KEY_MENU_DOWN) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, INPUT_SNIPER_ZOOM_OUT_SECONDARY); //Dpad down
+		if (r) *r = IsKeyDown(KeyConfig::KEY_MENU_RIGHT) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, INPUT_TALK); //Dpad right
+		if (l) *l = IsKeyDown(KeyConfig::KEY_MENU_LEFT) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, INPUT_DETONATE); //Dpad left
 	}
 	if (MISC_TRAINERCONTROL_VALUES[TrainerControlIndex] == 0) { // release
 		if (up) *up = IsKeyJustUp(KeyConfig::KEY_MENU_UP) || IsControllerButtonJustUp(KeyConfig::KEY_MENU_UP);

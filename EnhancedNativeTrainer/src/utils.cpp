@@ -155,3 +155,8 @@ int RegisterFile(const std::string& fullPath, const std::string& fileName)
 	write_text_to_log_file("Failed to register " + path);
 	return 0;
 }
+
+bool bittest(int data, unsigned char index)
+{
+	return (data & (1 << index)) != 0;
+}
