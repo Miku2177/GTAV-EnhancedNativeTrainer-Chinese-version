@@ -2235,6 +2235,9 @@ void main(){
 
 	init_vehicle_feature();
 
+	//Go through the vehicle pool and make the vehicle arrays
+	PopulateVehicleModelsArray();
+
 	write_text_to_log_file("Loaded settings OK");
 
 	// this creates a new locale based on the current application default
@@ -2246,7 +2249,7 @@ void main(){
 	// tell cout to use our new locale.
 	std::cout.imbue(comma_locale);
 
-	if (featureShowStatusMessage) set_status_text("~HUD_COLOUR_MENU_YELLOW~ENT~HUD_COLOUR_WHITE~ ver. ~HUD_COLOUR_MENU_YELLOW~" + VERSION_STRING + "~HUD_COLOUR_WHITE~."); // ~HUD_COLOUR_WHITE~ is ready //  bugfix 5 //  is ready
+	if (featureShowStatusMessage) set_status_text("~HUD_COLOUR_MENU_YELLOW~ENT~HUD_COLOUR_WHITE~ ver. ~HUD_COLOUR_MENU_YELLOW~" + VERSION_STRING + "~HUD_COLOUR_WHITE~");
 	
 	while(true){
 		if(trainer_switch_pressed()){

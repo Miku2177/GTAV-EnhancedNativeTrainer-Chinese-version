@@ -440,8 +440,8 @@ KeyInputConfig::KeyInputConfig(){
 //Default XInput controls
 
 	this->controllerConfigs[KeyConfig::KEY_TOGGLE_MAIN_MENU] = new ControllerButtonConfig();
-	this->controllerConfigs[KeyConfig::KEY_TOGGLE_MAIN_MENU]->add_button(ControllerButtonConfig::CONTROLLER_BTN_Y);
-	this->controllerConfigs[KeyConfig::KEY_TOGGLE_MAIN_MENU]->add_button(ControllerButtonConfig::CONTROLLER_BTN_SHOULDER_R);
+	//this->controllerConfigs[KeyConfig::KEY_TOGGLE_MAIN_MENU]->add_button(ControllerButtonConfig::CONTROLLER_BTN_Y);
+	//this->controllerConfigs[KeyConfig::KEY_TOGGLE_MAIN_MENU]->add_button(ControllerButtonConfig::CONTROLLER_BTN_SHOULDER_R);
 
 	this->controllerConfigs[KeyConfig::KEY_MENU_UP] = new ControllerButtonConfig();
 	this->controllerConfigs[KeyConfig::KEY_MENU_UP]->add_button(ControllerButtonConfig::CONTROLLER_BTN_DPAD_U);

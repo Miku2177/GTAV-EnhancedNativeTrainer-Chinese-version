@@ -856,6 +856,8 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 * METHODS
 */
 
+std::string get_vehicle_make_and_model(int modelHash);
+
 void process_veh_menu();
 
 void process_speed_menu();
@@ -881,6 +883,8 @@ void reset_vehicle_globals();
 void reset_veh_weapons_globals();
 
 bool process_spawn_menu_cars();
+
+bool onconfirm_spawn_menu_cars(MenuItem<int> choice);
 
 bool process_spawn_menu_indus();
 
@@ -937,6 +941,8 @@ void save_current_vehicle(int slot);
 bool onconfirm_spawn_menu_vehicle_selection(MenuItem<std::string> choice);
 
 bool do_spawn_vehicle(std::string modelName, std::string modelTitle);
+
+bool do_spawn_vehicle_hash(Hash modelName, std::string modelTitle);
 
 Vehicle do_spawn_vehicle(DWORD modelHash, std::string modelTitle, bool cleanup);
 
@@ -1259,3 +1265,6 @@ bool process_veh_seat_menu();
 
 extern char* curr_message;
 extern bool keyboard_on_screen_already;
+
+void GenerateVehicleModelList();
+void PopulateVehicleModelsArray();

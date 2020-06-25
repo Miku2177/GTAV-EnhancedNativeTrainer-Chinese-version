@@ -30,6 +30,8 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include <array>
 #include <vector>
 #include <cstdlib>
+#include <unordered_map>
+#include "../utils.h"
 
 using namespace std;
 
@@ -316,10 +318,23 @@ struct struct_door_options{
 	bool *pState;
 };
 
+struct HashNode
+{
+	int hash;
+	UINT16 data;
+	UINT16 padding;
+	HashNode* next;
+};
+
+std::array<std::vector<unsigned int>, 0x20> vehicleModels;
+
 int doorOptionsMenuIndex, vehSeatIndexMenuIndex = 0;
 
 int savedVehicleListSortMethod = 0;
 bool vehSaveSortMenuInterrupt = false;
+
+typedef __int64(*GetModelInfo_t)(unsigned int modelHash, int* index);
+GetModelInfo_t GetModelInfo = (GetModelInfo_t)FindPatternJACCO("\x0F\xB7\x05\x00\x00\x00\x00\x45\x33\xC9\x4C\x8B\xDA\x66\x85\xC0\x0F\x84\x00\x00\x00\x00\x44\x0F\xB7\xC0\x33\xD2\x8B\xC1\x41\xF7\xF0\x48\x8B\x05\x00\x00\x00\x00\x4C\x8B\x14\xD0\xEB\x09\x41\x3B\x0A\x74\x54", "xxx????xxxxxxxxxxx????xxxxxxxxxxxxxx????xxxxxxxxxxx");
 
 //Top Level
 
@@ -427,6 +442,67 @@ const std::vector<std::string> VALUES_BOATS{ "TUG", "MARQUIS", "SUBMERSIBLE2", "
 
 const std::vector<std::string> VALUES_BICYCLES{ "BMX", "CRUISER", "TRIBIKE2", "FIXTER", "SCORCHER", "TRIBIKE3", "TRIBIKE" };
 
+std::vector<Hash> g_vehHashes;
+std::vector<Hash> g_vehHashes_SUPER;
+std::vector<Hash> g_vehHashes_SPORT;
+std::vector<Hash> g_vehHashes_SPORTSCLASSIC;
+std::vector<Hash> g_vehHashes_COUPE;
+std::vector<Hash> g_vehHashes_MUSCLE;
+std::vector<Hash> g_vehHashes_OFFROAD;
+std::vector<Hash> g_vehHashes_SUV;
+std::vector<Hash> g_vehHashes_SEDAN;
+std::vector<Hash> g_vehHashes_COMPACT;
+std::vector<Hash> g_vehHashes_PICKUP;
+std::vector<Hash> g_vehHashes_VAN;
+std::vector<Hash> g_vehHashes_TRUCK;
+std::vector<Hash> g_vehHashes_SERVICE;
+std::vector<Hash> g_vehHashes_INDUSTRIAL;
+std::vector<Hash> g_vehHashes_MILITARY;
+std::vector<Hash> g_vehHashes_COMMERCIAL;
+std::vector<Hash> g_vehHashes_UTILITY;
+std::vector<Hash> g_vehHashes_TRAILER;
+std::vector<Hash> g_vehHashes_TRAIN;
+std::vector<Hash> g_vehHashes_EMERGENCY;
+std::vector<Hash> g_vehHashes_MOTORCYCLE;
+std::vector<Hash> g_vehHashes_BICYCLE;
+std::vector<Hash> g_vehHashes_PLANE;
+std::vector<Hash> g_vehHashes_HELICOPTER;
+std::vector<Hash> g_vehHashes_BOAT;
+std::vector<Hash> g_vehHashes_OPENWHEEL;
+std::vector<Hash> g_vehHashes_OTHER;
+
+//The "master" category list. These will be used to create the vehicle spawn options
+std::vector<std::vector<Hash>*> vHashLists
+{
+	{ &g_vehHashes },
+	{ &g_vehHashes_SUPER },
+	{ &g_vehHashes_SPORT },
+	{ &g_vehHashes_SPORTSCLASSIC },
+	{ &g_vehHashes_COUPE },
+	{ &g_vehHashes_MUSCLE },
+	{ &g_vehHashes_OFFROAD },
+	{ &g_vehHashes_SUV },
+	{ &g_vehHashes_SEDAN },
+	{ &g_vehHashes_COMPACT },
+	{ &g_vehHashes_PICKUP },
+	{ &g_vehHashes_VAN },
+	{ &g_vehHashes_TRUCK },
+	{ &g_vehHashes_SERVICE },
+	{ &g_vehHashes_TRAILER },
+	{ &g_vehHashes_TRAIN },
+	{ &g_vehHashes_EMERGENCY },
+	{ &g_vehHashes_MOTORCYCLE },
+	{ &g_vehHashes_BICYCLE },
+	{ &g_vehHashes_PLANE },
+	{ &g_vehHashes_HELICOPTER },
+	{ &g_vehHashes_BOAT },
+	{ &g_vehHashes_OPENWHEEL },
+	{ &g_vehHashes_OTHER }
+};
+
+//TODO: replace existing vehicle type vector system with this! Key - vehicle category -> Value (category name, hash vector of that category)
+std::map<int, std::pair<std::string, std::vector<Hash>>> veh_category;
+
 const std::vector<std::string> VOV_SHALLOW_CAPTIONS[] = { CAPTIONS_EMERGENCY, CAPTIONS_MOTORCYCLES, CAPTIONS_PLANES, CAPTIONS_HELOS, CAPTIONS_BOATS, CAPTIONS_BICYCLES };
 
 const std::vector<std::string> VOV_SHALLOW_VALUES[] = { VALUES_EMERGENCY, VALUES_MOTORCYCLES, VALUES_PLANES, VALUES_HELOS, VALUES_BOATS, VALUES_BICYCLES };
@@ -443,6 +519,256 @@ Vector3 RotationToDirection2(Vector3* rot)
 	dir.y = (float)((double)((float)std::cos((double)radiansZ)) * (double)num);
 	dir.z = (float)std::sin((double)radiansX);
 	return dir;
+}
+
+void GenerateVehicleModelList()
+{
+	unsigned short modelHashEntries;
+	int modelNum1;
+	UINT64 modelHashTable, modelNum2, modelNum3,modelNum4;
+
+	uintptr_t address = FindPatternJACCO("\x66\x81\xF9\x00\x00\x74\x10\x4D\x85\xC0", "xxx??xxxxx");
+	if (address)
+	{
+		address = address - 0x21;
+		UINT64 baseFuncAddr = address + *reinterpret_cast<int*>(address) + 0x4;
+		int classOffset = *reinterpret_cast<int*>(address + 0x31);
+		modelHashEntries = *reinterpret_cast<UINT16*>(baseFuncAddr + *reinterpret_cast<int*>(baseFuncAddr + 3) + 7);
+		modelNum1 = *reinterpret_cast<int*>(*reinterpret_cast<int*>(baseFuncAddr + 0x52) + baseFuncAddr + 0x56); //cmp
+		modelNum2 = *reinterpret_cast<PUINT64>(*reinterpret_cast<int*>(baseFuncAddr + 0x63) + baseFuncAddr + 0x67); //mov
+		modelNum3 = *reinterpret_cast<PUINT64>(*reinterpret_cast<int*>(baseFuncAddr + 0x7A) + baseFuncAddr + 0x7E); //mul
+		modelNum4 = *reinterpret_cast<PUINT64>(*reinterpret_cast<int*>(baseFuncAddr + 0x81) + baseFuncAddr + 0x85); //add
+
+		modelHashTable = *reinterpret_cast<PUINT64>(*reinterpret_cast<int*>(baseFuncAddr + 0x24) + baseFuncAddr + 0x28);
+		HashNode** HashMap = reinterpret_cast<HashNode**>(modelHashTable);
+
+		auto& hashes = vehicleModels;
+
+		for (auto& vec : hashes)
+			vec.clear();
+
+		//Begin going through the pool and getting the vehicles
+		for (int i = 0; i < modelHashEntries; i++)
+		{
+			for (HashNode* cur = HashMap[i]; cur; cur = cur->next)
+			{
+				UINT16 data = cur->data;
+				if ((int)data < modelNum1 && bittest(*reinterpret_cast<int*>(modelNum2 + (4 * data >> 5)), data & 0x1F))
+				{
+					UINT64 addr1 = modelNum4 + modelNum3 * data;
+					if (addr1)
+					{
+						UINT64 addr2 = *reinterpret_cast<PUINT64>(addr1);
+						if (addr2)
+						{
+							if ((*reinterpret_cast<PBYTE>(addr2 + 157) & 0x1F) == 5)
+							{
+								hashes[*reinterpret_cast<PBYTE>(addr2 + classOffset) & 0x1F].push_back((unsigned int)cur->hash);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+void PopulateVehicleModelsArray()
+{
+	write_text_to_log_file("Emptying model arrays");
+
+	g_vehHashes.clear();
+	g_vehHashes_SUPER.clear();
+	g_vehHashes_SPORT.clear();
+	g_vehHashes_SPORTSCLASSIC.clear();
+	g_vehHashes_COUPE.clear();
+	g_vehHashes_MUSCLE.clear();
+	g_vehHashes_OFFROAD.clear();
+	g_vehHashes_SUV.clear();
+	g_vehHashes_SEDAN.clear();
+	g_vehHashes_COMPACT.clear();
+	g_vehHashes_PICKUP.clear();
+	g_vehHashes_VAN.clear();
+	g_vehHashes_TRUCK.clear();
+	g_vehHashes_SERVICE.clear();
+	g_vehHashes_INDUSTRIAL.clear();
+	g_vehHashes_MILITARY.clear();
+	g_vehHashes_COMMERCIAL.clear();
+	g_vehHashes_UTILITY.clear();
+	g_vehHashes_TRAILER.clear();
+	g_vehHashes_TRAIN.clear();
+	g_vehHashes_EMERGENCY.clear();
+	g_vehHashes_MOTORCYCLE.clear();
+	g_vehHashes_BICYCLE.clear();
+	g_vehHashes_PLANE.clear();
+	g_vehHashes_HELICOPTER.clear();
+	g_vehHashes_BOAT.clear();
+	g_vehHashes_OPENWHEEL.clear();
+	g_vehHashes_OTHER.clear();
+
+	//Set up the vector category names.
+	/*for (auto& cta : std::vector<std::pair<std::string, std::vector<Hash>*>>
+		{
+			{ "Super", &g_vehHashes_SUPER },
+			{ "Sport", &g_vehHashes_SPORT },
+			{ "SportsClassic", &g_vehHashes_SPORTSCLASSIC },
+			{ "Coupe", &g_vehHashes_COUPE },
+			{ "Muscle", &g_vehHashes_MUSCLE },
+			{ "Offroad", &g_vehHashes_OFFROAD },
+			{ "SUV", &g_vehHashes_SUV },
+			{ "Sedan", &g_vehHashes_SEDAN },
+			{ "Compact", &g_vehHashes_COMPACT },
+			{ "Pickup", &g_vehHashes_PICKUP },
+			{ "Van", &g_vehHashes_VAN },
+			{ "Truck", &g_vehHashes_TRUCK },
+			{ "Service", &g_vehHashes_SERVICE },
+			{ "Trailer", &g_vehHashes_TRAILER },
+			{ "Train", &g_vehHashes_TRAIN },
+			{ "Emergency", &g_vehHashes_EMERGENCY },
+			{ "Motorcycle", &g_vehHashes_MOTORCYCLE },
+			{ "Bicycle", &g_vehHashes_BICYCLE },
+			{ "Plane", &g_vehHashes_PLANE },
+			{ "Helicopter", &g_vehHashes_HELICOPTER },
+			{ "Boat", &g_vehHashes_BOAT },
+			{ "Other", &g_vehHashes_OTHER },
+		})*/
+		
+	GenerateVehicleModelList();
+	auto& hashes = vehicleModels;
+
+	write_text_to_log_file("Creating vehicle model arrays");
+	std::unordered_map<VehicleClass, std::vector<Hash>*> vDestMap
+	{
+		{ VehicleClass::Super, &g_vehHashes_SUPER },{ VehicleClass::Sport, &g_vehHashes_SPORT },{ VehicleClass::SportsClassic, &g_vehHashes_SPORTSCLASSIC },
+		{ VehicleClass::Coupe, &g_vehHashes_COUPE },{ VehicleClass::Muscle, &g_vehHashes_MUSCLE },{ VehicleClass::Offroad, &g_vehHashes_OFFROAD },
+		{ VehicleClass::SUV, &g_vehHashes_SUV },{ VehicleClass::Sedan, &g_vehHashes_SEDAN },{ VehicleClass::Compact, &g_vehHashes_COMPACT },
+		{ VehicleClass::Van, &g_vehHashes_VAN },{ VehicleClass::Service, &g_vehHashes_SERVICE },{ VehicleClass::Industrial, &g_vehHashes_INDUSTRIAL },
+		{ VehicleClass::Military, &g_vehHashes_MILITARY },{ VehicleClass::Commercial, &g_vehHashes_COMMERCIAL },{ VehicleClass::Utility, &g_vehHashes_UTILITY },
+		//{ VehicleClass::Trailer, &g_vehHashes_TRAILER }, //{VehicleClass::Truck, &g_vehHashes_TRUCK }, //{VehicleClass::Pickup, &g_vehHashes_PICKUP },
+		{ VehicleClass::Train, &g_vehHashes_TRAIN },{ VehicleClass::Emergency, &g_vehHashes_EMERGENCY },{ VehicleClass::Motorcycle, &g_vehHashes_MOTORCYCLE },
+		{ VehicleClass::Cycle, &g_vehHashes_BICYCLE },{ VehicleClass::Plane, &g_vehHashes_PLANE },{ VehicleClass::Helicopter, &g_vehHashes_HELICOPTER },
+		{ VehicleClass::Boat, &g_vehHashes_BOAT }, { VehicleClass::Openwheel, &g_vehHashes_OPENWHEEL }
+	};
+
+	
+	//Go through the giant list of model hashes and sort them into their respective categories
+	for (int d = 0x0; d < 0x20; d++)
+	{
+		for (auto& dd : hashes[d])
+		{
+			if (std::find(g_vehHashes.begin(), g_vehHashes.end(), Hash(dd)) == g_vehHashes.end())
+			{
+				auto dit = vDestMap.find(VehicleClass(d));
+				if (dit != vDestMap.end())
+					dit->second->push_back(dd);
+				else g_vehHashes_OTHER.push_back(dd);
+				g_vehHashes.push_back(dd);
+			}
+		}
+	}
+	
+	//Go through the hash lists and sort them
+	for (auto& hlist : vHashLists)
+	{
+		std::sort(hlist->begin(), hlist->end(), [](const Hash& a, const Hash& b) -> bool { return (get_vehicle_make_and_model(a)) < get_vehicle_make_and_model(b); });
+	}
+
+	std::stringstream ss;
+	ss << "g_vehHashes size: " << g_vehHashes.size() << " g_vehHashes_SUPER size: " << g_vehHashes_SUPER.size() << " g_vehHashes_SPORT size: " << g_vehHashes_SPORT.size() << " g_vehHashes_SPORTSCLASSIC size: " << g_vehHashes_SPORTSCLASSIC.size() << "g_vehHashes_COUPE size: " << g_vehHashes_COUPE.size() << " g_vehHashes_MUSCLE size: " << g_vehHashes_MUSCLE.size() << " g_vehHashes_OFFROAD size: " << g_vehHashes_OFFROAD.size() << " g_vehHashes_SUV size: " << g_vehHashes_SUV.size() << " g_vehHashes_SEDAN size: " << g_vehHashes_SEDAN.size() << " g_vehHashes_COMPACT size: " << g_vehHashes_COMPACT.size() << " g_vehHashes_PICKUP size: " << g_vehHashes_PICKUP.size() << " g_vehHashes_VAN size: " << g_vehHashes_VAN.size() << " g_vehHashes_TRUCK size: " << g_vehHashes_TRUCK.size() << " g_vehHashes_INDUSTRIAL size: " << g_vehHashes_INDUSTRIAL.size() << " g_vehHashes_MILITARY size: " << g_vehHashes_MILITARY.size() << " g_vehHashes_COMMERCIAL size: " << g_vehHashes_COMMERCIAL.size() << " g_vehHashes_UTIITY size: " << g_vehHashes_UTILITY.size() << " g_vehHashes_SERVICE size: " << g_vehHashes_SERVICE.size() << " g_vehHashes_TRAILER size: " << g_vehHashes_TRAILER.size() << " g_vehHashes_TRAIN size: " << g_vehHashes_TRAIN.size() << " g_vehHashes_EMERGENCY size: " << g_vehHashes_EMERGENCY.size() << " g_vehHashes_MOTORCYCLE size: " << g_vehHashes_MOTORCYCLE.size() << " g_vehHashes_BICYCLE size: " << g_vehHashes_BICYCLE.size() << " g_vehHashes_PLANE size: " << g_vehHashes_PLANE.size() << " g_vehHashes_HELICOPTER size: " << g_vehHashes_HELICOPTER.size() << " g_vehHashes_BOAT size: " << g_vehHashes_BOAT.size() << " g_vehHashes_OPENWHEEL size: " << g_vehHashes_OPENWHEEL.size() << " g_vehHashes_OTHER size: " << g_vehHashes_OTHER.size() << endl;
+	write_text_to_log_file("sorted model arrays");
+	write_text_to_log_file(ss.str());
+}
+
+char* GetVehicleModelName(int modelHash)
+{
+	int index = 0xFFFF;
+	uint64_t modelInfo = GetModelInfo(modelHash, &index);
+	return (char*)(modelInfo + 0x298);
+}
+
+char* GetVehicleMakeName(int modelHash)
+{
+	int index = 0xFFFF;
+	uint64_t modelInfo = GetModelInfo(modelHash, &index);
+	return (char*)(modelInfo + 0x2A4);
+}
+
+char* get_class_label(int vehicle_class)
+{
+	std::string label = "VEH_CLASS_" + std::to_string(vehicle_class);
+	return UI::_GET_LABEL_TEXT((char*)label.c_str());
+}
+
+std::vector<Hash> get_vehicles_from_category(int category)
+{
+	switch (category)
+	{
+	case 0:
+		return g_vehHashes_COMPACT;
+	case 1:
+		return g_vehHashes_SEDAN;
+	case 2:
+		return g_vehHashes_SUV;
+	case 3:
+		return g_vehHashes_COUPE;
+	case 4:
+		return g_vehHashes_MUSCLE;
+	case 5:
+		return g_vehHashes_SPORTSCLASSIC;
+	case 6:
+		return g_vehHashes_SPORT;
+	case 7:
+		return g_vehHashes_SUPER;
+	case 8:
+		return g_vehHashes_MOTORCYCLE;
+	case 9:
+		return g_vehHashes_OFFROAD;
+	case 10:
+		return g_vehHashes_INDUSTRIAL;
+	case 11:
+		return g_vehHashes_UTILITY;
+	case 12:
+		return g_vehHashes_VAN;
+	case 13:
+		return g_vehHashes_BICYCLE;
+	case 14:
+		return g_vehHashes_BOAT;
+	case 15:
+		return g_vehHashes_HELICOPTER;
+	case 16:
+		return g_vehHashes_PLANE;
+	case 17:
+		return g_vehHashes_SERVICE;
+	case 18:
+		return g_vehHashes_EMERGENCY;
+	case 19:
+		return g_vehHashes_MILITARY;
+	case 20:
+		return g_vehHashes_COMMERCIAL;
+	case 21:
+		return g_vehHashes_TRAIN;
+	case 22:
+		return g_vehHashes_OPENWHEEL;
+	default:
+		return g_vehHashes_OTHER;
+	}
+}
+
+std::string get_vehicle_make_and_model(int modelHash)
+{
+	std::stringstream ss;
+	std::string make = std::string(UI::_GET_LABEL_TEXT(GetVehicleMakeName(modelHash)));
+	std::string model = std::string(UI::_GET_LABEL_TEXT(GetVehicleModelName(modelHash)));
+	//write_text_to_log_file("[DEBUG] Combined name: " + make + " " + model);
+
+	if (make == "NULL")
+		return model;
+	else
+	{
+		ss << make << " " << model;
+		return ss.str();
+	}
+	return model;
 }
 
 void process_window_roll() {
@@ -4040,8 +4366,11 @@ void keyboard_tip_message(char* curr_message_s) {
 	UI::_DRAW_TEXT(0.5f, 0.37f);
 }
 
+//Depends on the category - calls on cars, industrial or generic sub-sub-sub categories
+//No longer needed
+/*
 bool onconfirm_carspawn_menu(MenuItem<int> choice){
-	if (choice.value == MENU_VEHICLE_CATEGORIES.size() - 1){
+	if (choice.value == 26){
 		// custom spawn
 		keyboard_on_screen_already = true;
 		curr_message = "Enter vehicle model name (e.g. adder or random):"; // spawn a vehicle
@@ -4098,39 +4427,93 @@ bool onconfirm_carspawn_menu(MenuItem<int> choice){
 	}
 	return false;
 }
-
+*/
+//Creates category submenu and hands over to the sub-sub menu related to the category
 bool process_carspawn_menu() {
 	std::vector<MenuItem<int>*> menuItems;
-	for(int i = 0; i < MENU_VEHICLE_CATEGORIES.size(); i++){
+	/*for(int i = 0; i < MENU_VEHICLE_CATEGORIES.size(); i++){
 		MenuItem<int> *item = new MenuItem<int>();
 		item->caption = MENU_VEHICLE_CATEGORIES[i];
 		item->value = i;
 		item->isLeaf = (i == MENU_VEHICLE_CATEGORIES.size() - 1);
 		menuItems.push_back(item);
+	}*/
+
+	for (int i = 1; i < vHashLists.size(); i++)
+	{
+		if (!strcmp(get_class_label(i), "NULL") && i != 23) //Other category
+			continue;
+		if (vHashLists[i]->size() == 0)
+			continue;
+
+		if (i == vHashLists.size() - 1)
+		{
+			MenuItem<int>* item = new MenuItem<int>();
+			item->caption = "Other";
+			item->value = i;
+			item->isLeaf = (i == vHashLists.size() - 1);
+			menuItems.push_back(item);
+		}
+
+		MenuItem<int>* item = new MenuItem<int>();
+		item->caption = get_class_label(i);
+		item->value = i;
+		item->isLeaf = (i == vHashLists.size() - 1);
+		menuItems.push_back(item);
 	}
 
-	return draw_generic_menu<int>(menuItems, 0, "Vehicle Categories", onconfirm_carspawn_menu, NULL, NULL);
+	MenuItem<int>* item = new MenuItem<int>();
+	item->caption = "Enter name manually";
+	item->value = 26;
+	menuItems.push_back(item);
+
+	return draw_generic_menu<int>(menuItems, 0, "Vehicle Categories", onconfirm_spawn_menu_cars, NULL, NULL);
 }
 
+//Gets the user's selection and requests it to be spawned
 bool onconfirm_spawn_menu_cars(MenuItem<int> choice){
 	std::string category = choice.caption;
 	std::vector<MenuItem<std::string>*> menuItems;
+	std::stringstream ss;
+	std::vector<Hash> selectedCat = get_vehicles_from_category(choice.value);
+	
+	for (Hash hash : selectedCat)
+	{
+		//This is returning the array but the choice.value int is the category ID!
+		MenuItem<std::string>* item = new MenuItem<std::string>();
+		item->caption = get_vehicle_make_and_model(hash);
+		item->value = hash;
+		menuItems.push_back(item);
 
+		ss << "item value: " << hash << " | item caption: " << item->caption << endl;
+		write_text_to_log_file(ss.str());
+	}
+	
+	if (choice.value)
+	{
+		write_text_to_log_file("Selected vehicle with category ID: " + std::to_string(choice.value));
+	}
+
+	/*
 	for(int i = 0; i < VOV_CAR_VALUES[choice.value].size(); i++){
 		MenuItem<std::string> *item = new MenuItem<std::string>();
 		item->caption = VOV_CAR_CAPTIONS[choice.value][i];
 		item->value = VOV_CAR_VALUES[choice.value][i];
 		menuItems.push_back(item);
-	}
+	}*/
 
+	//This part is causing the crashes. It cannot handle the vehicle value (?) It expects a string and yet gets a hash
 	MenuParameters<std::string> params(menuItems, category);
 	params.menuSelectionPtr = 0;
 	params.onConfirmation = onconfirm_spawn_menu_vehicle_selection;
 	params.lineImageProvider = vehicle_image_preview_finder;
 
 	return draw_generic_menu<std::string>(params);
+	//return draw_generic_menu<int>(menuItems, 0, "Vehicle Categories", onconfirm_spawn_menu_cars, NULL, NULL); //Does not work
 }
 
+//No longer needed
+/*
 bool process_spawn_menu_cars(){
 	std::vector<MenuItem<int>*> menuItems;
 	for(int i = 0; i < MENU_CAR_CATEGORIES.size(); i++){
@@ -4143,7 +4526,7 @@ bool process_spawn_menu_cars(){
 
 	return draw_generic_menu<int>(menuItems, 0, "Car Categories", onconfirm_spawn_menu_cars, NULL, NULL);
 }
-
+*/
 bool onconfirm_spawn_menu_indus(MenuItem<int> choice){
 	int selection = choice.value;
 
@@ -4190,7 +4573,11 @@ bool process_spawn_menu_indus(){
 }
 
 bool onconfirm_spawn_menu_vehicle_selection(MenuItem<std::string> choice){
-	do_spawn_vehicle(choice.value, choice.caption);
+	std::stringstream ss;
+	ss << "onconfirm_spawn_menu_vehicle_selection called with value " << stoi(choice.value);
+	write_text_to_log_file(ss.str());
+	do_spawn_vehicle(stoi(choice.value), "", true);
+	//do_spawn_vehicle_hash(stoi(choice.value), choice.caption);
 	return false;
 }
 
@@ -4218,7 +4605,23 @@ bool process_spawn_menu_generic(int topMenuSelection){
 bool do_spawn_vehicle(std::string modelName, std::string modelTitle){
 	DWORD model = GAMEPLAY::GET_HASH_KEY((char *) modelName.c_str());
 	Vehicle veh = do_spawn_vehicle(model, modelTitle, true);
+
+	std::string debugString = get_vehicle_make_and_model(model);
+	write_text_to_log_file("[DEBUG] Vehicle name: " + debugString);
+
 	if(veh != -1){
+		return true;
+	}
+	return false;
+}
+
+bool do_spawn_vehicle_hash(Hash modelName, std::string modelTitle) {
+	Vehicle veh = do_spawn_vehicle(modelName, modelTitle, true);
+
+	std::string debugString = get_vehicle_make_and_model(modelName);
+	write_text_to_log_file("[DEBUG] Vehicle name: " + debugString);
+
+	if (veh != -1) {
 		return true;
 	}
 	return false;
@@ -4272,9 +4675,7 @@ Vehicle do_spawn_vehicle(DWORD model, std::string modelTitle, bool cleanup){
 			ENTITY::SET_VEHICLE_AS_NO_LONGER_NEEDED(&veh);
 		}
 
-		std::ostringstream ss;
-		ss << modelTitle << " spawned";
-		set_status_text(ss.str());
+		set_status_text(get_vehicle_make_and_model(model) + " spawned!");
 
 		return veh;
 	}

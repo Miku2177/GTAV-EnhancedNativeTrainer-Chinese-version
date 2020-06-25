@@ -38,3 +38,5 @@ uintptr_t FindPattern(const char *pattern, const char *mask);
 bool CompareMemory(const uint8_t* pData, const uint8_t* bMask, const char* sMask);
 
 int RegisterFile(const std::string& fullPath, const std::string& fileName);
+
+bool bittest(int data, unsigned char index);
