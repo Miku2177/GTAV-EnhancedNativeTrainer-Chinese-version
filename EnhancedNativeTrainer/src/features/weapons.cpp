@@ -1882,7 +1882,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	}
 
 	// Drop Weapon When Empty
-	if (featureDropWeaponOutAmmo && WEAPON::IS_PED_ARMED(playerPed, 7) && WEAPON::IS_PED_ARMED(playerPed, 6)) {
+	if (featureDropWeaponOutAmmo && WEAPON::IS_PED_ARMED(playerPed, 7) && WEAPON::IS_PED_ARMED(playerPed, 6) && WEAPON::GET_SELECTED_PED_WEAPON(playerPed) != GAMEPLAY::GET_HASH_KEY("WEAPON_STUNGUN")) {
 		if (WEAPON::GET_AMMO_IN_PED_WEAPON(PLAYER::PLAYER_PED_ID(), WEAPON::GET_SELECTED_PED_WEAPON(playerPed)) == 1) temp_weapon = WEAPON::GET_SELECTED_PED_WEAPON(playerPed);
 		if (WEAPON::GET_AMMO_IN_PED_WEAPON(PLAYER::PLAYER_PED_ID(), WEAPON::GET_SELECTED_PED_WEAPON(playerPed)) < 1) {
 			WEAPON::SET_CURRENT_PED_WEAPON(playerPed, WEAPON::GET_SELECTED_PED_WEAPON(playerPed), true);
