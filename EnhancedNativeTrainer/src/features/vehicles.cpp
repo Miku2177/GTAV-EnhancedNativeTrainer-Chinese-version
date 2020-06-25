@@ -44,6 +44,8 @@ bool featureVehNoDamage = false;
 
 bool featureVehInvulnIncludesCosmetic = false;
 
+int activeLineIndexVehList = 0;
+
 bool feature3rdpersonviewonly, featureDaytimeonly = false;
 bool featureHazards = true;
 
@@ -4471,22 +4473,43 @@ bool process_carspawn_menu() {
 }
 
 //Gets the user's selection and requests it to be spawned
+bool onconfirm_vehlist_menu(MenuItem<int> choice) {
+	do_spawn_vehicle_hash(choice.value, choice.caption);
+	return false;
+}
+
 bool onconfirm_spawn_menu_cars(MenuItem<int> choice){
+	std::string caption = "Vehicles";
+
 	std::string category = choice.caption;
-	std::vector<MenuItem<std::string>*> menuItems;
+	//std::vector<MenuItem<std::string>*> menuItems;
+	std::vector<MenuItem<int>*> menuItems;
 	std::stringstream ss;
 	std::vector<Hash> selectedCat = get_vehicles_from_category(choice.value);
 	
 	for (Hash hash : selectedCat)
 	{
 		//This is returning the array but the choice.value int is the category ID!
-		MenuItem<std::string>* item = new MenuItem<std::string>();
+		//MenuItem<std::string>* item = new MenuItem<std::string>();
+		//item->caption = get_vehicle_make_and_model(hash);
+		//item->value = hash;
+		//menuItems.push_back(item);
+
+		MenuItem<int>* item = new MenuItem<int>();
 		item->caption = get_vehicle_make_and_model(hash);
 		item->value = hash;
 		menuItems.push_back(item);
 
-		ss << "item value: " << hash << " | item caption: " << item->caption << endl;
-		write_text_to_log_file(ss.str());
+		std::stringstream ss55;
+		ss55 << "\n hash: " << hash;
+		//ss55 << "\n temp_bodyguard: " << temp_bodyguard;
+		//ss55 << "\n dist_diff: " << dist_diff;
+		//ss55 << "\n temp_dist: " << temp_dist;
+		callsPerFrame = 0;
+		set_status_text_centre_screen(ss55.str());
+
+		//ss << "item value: " << hash << " | item caption: " << item->caption << endl;
+		//write_text_to_log_file(ss.str());
 	}
 	
 	if (choice.value)
@@ -4503,106 +4526,27 @@ bool onconfirm_spawn_menu_cars(MenuItem<int> choice){
 	}*/
 
 	//This part is causing the crashes. It cannot handle the vehicle value (?) It expects a string and yet gets a hash
-	MenuParameters<std::string> params(menuItems, category);
-	params.menuSelectionPtr = 0;
-	params.onConfirmation = onconfirm_spawn_menu_vehicle_selection;
-	params.lineImageProvider = vehicle_image_preview_finder;
+	//MenuParameters<std::string> params(menuItems, category);
+	//MenuParameters<int> params(menuItems, category);
+	//params.menuSelectionPtr = 0;
+	//params.onConfirmation = onconfirm_spawn_menu_vehicle_selection;
+	//params.lineImageProvider = vehicle_image_preview_finder;
 
-	return draw_generic_menu<std::string>(params);
+	//return draw_generic_menu<std::string>(params);
+	return draw_generic_menu<int>(menuItems, &activeLineIndexVehList, caption, onconfirm_vehlist_menu, NULL, NULL);
 	//return draw_generic_menu<int>(menuItems, 0, "Vehicle Categories", onconfirm_spawn_menu_cars, NULL, NULL); //Does not work
 }
 
-//No longer needed
-/*
-bool process_spawn_menu_cars(){
-	std::vector<MenuItem<int>*> menuItems;
-	for(int i = 0; i < MENU_CAR_CATEGORIES.size(); i++){
-		MenuItem<int> *item = new MenuItem<int>();
-		item->caption = MENU_CAR_CATEGORIES[i];
-		item->value = i;
-		item->isLeaf = false;
-		menuItems.push_back(item);
-	}
+//bool onconfirm_spawn_menu_vehicle_selection(MenuItem<std::string> choice){
+	//std::stringstream ss;
+	//ss << "onconfirm_spawn_menu_vehicle_selection called with value " << stoi(choice.value);
+	//write_text_to_log_file(ss.str());
+	//do_spawn_vehicle(stoi(choice.value), "", true);
+	//do_spawn_vehicle_hash(choice.value, choice.caption);
+	//return false;
+//}
 
-	return draw_generic_menu<int>(menuItems, 0, "Car Categories", onconfirm_spawn_menu_cars, NULL, NULL);
-}
-*/
-bool onconfirm_spawn_menu_indus(MenuItem<int> choice){
-	int selection = choice.value;
-
-	std::string category;
-	if(choice.value == 3){
-		category = "Service And Utility";
-	}
-	else if(choice.value == 5){
-		category = "Trains";
-	}
-	else{
-		category = choice.caption;
-	}
-
-	std::vector<MenuItem<std::string>*> menuItems;
-
-	for(int i = 0; i < VOV_INDUS_CAPTIONS[selection].size(); i++){
-		MenuItem<std::string> *item = new MenuItem<std::string>();
-		item->caption = VOV_INDUS_CAPTIONS[selection][i];
-		item->value = VOV_INDUS_VALUES[selection][i];
-		menuItems.push_back(item);
-	}
-
-	MenuParameters<std::string> params(menuItems, category);
-	params.menuSelectionPtr = 0;
-	params.onConfirmation = onconfirm_spawn_menu_vehicle_selection;
-	params.lineImageProvider = vehicle_image_preview_finder;
-
-	return draw_generic_menu<std::string>(params);
-}
-
-bool process_spawn_menu_indus(){
-	std::vector<MenuItem<int>*> menuItems;
-
-	for(int i = 0; i < MENU_INDUS_CATEGORIES.size(); i++){
-		MenuItem<int> *item = new MenuItem<int>();
-		item->caption = MENU_INDUS_CATEGORIES[i];
-		item->value = i;
-		item->isLeaf = false;
-		menuItems.push_back(item);
-	}
-
-	return draw_generic_menu<int>(menuItems, 0, "Industrial Categories", onconfirm_spawn_menu_indus, NULL, NULL);
-}
-
-bool onconfirm_spawn_menu_vehicle_selection(MenuItem<std::string> choice){
-	std::stringstream ss;
-	ss << "onconfirm_spawn_menu_vehicle_selection called with value " << stoi(choice.value);
-	write_text_to_log_file(ss.str());
-	do_spawn_vehicle(stoi(choice.value), "", true);
-	//do_spawn_vehicle_hash(stoi(choice.value), choice.caption);
-	return false;
-}
-
-bool process_spawn_menu_generic(int topMenuSelection){
-	int selection = topMenuSelection - 2;
-
-	std::string category = MENU_VEHICLE_CATEGORIES[topMenuSelection];
-
-	std::vector<MenuItem<std::string>*> menuItems;
-	for(int i = 0; i < VOV_SHALLOW_CAPTIONS[selection].size(); i++){
-		MenuItem<std::string> *item = new MenuItem<std::string>();
-		item->caption = VOV_SHALLOW_CAPTIONS[selection][i];
-		item->value = VOV_SHALLOW_VALUES[selection][i];
-		menuItems.push_back(item);
-	}
-
-	MenuParameters<std::string> params(menuItems, category);
-	params.menuSelectionPtr = 0;
-	params.onConfirmation = onconfirm_spawn_menu_vehicle_selection;
-	params.lineImageProvider = vehicle_image_preview_finder;
-
-	return draw_generic_menu<std::string>(params);
-}
-
-bool do_spawn_vehicle(std::string modelName, std::string modelTitle){
+/*bool do_spawn_vehicle(std::string modelName, std::string modelTitle){
 	DWORD model = GAMEPLAY::GET_HASH_KEY((char *) modelName.c_str());
 	Vehicle veh = do_spawn_vehicle(model, modelTitle, true);
 
@@ -4613,17 +4557,18 @@ bool do_spawn_vehicle(std::string modelName, std::string modelTitle){
 		return true;
 	}
 	return false;
-}
+}*/
 
-bool do_spawn_vehicle_hash(Hash modelName, std::string modelTitle) {
-	Vehicle veh = do_spawn_vehicle(modelName, modelTitle, true);
+bool do_spawn_vehicle_hash(int modelName, std::string modelTitle) {
+	DWORD model = modelName;
+	Vehicle veh = do_spawn_vehicle(model, modelTitle, true);
 
-	std::string debugString = get_vehicle_make_and_model(modelName);
-	write_text_to_log_file("[DEBUG] Vehicle name: " + debugString);
+	//std::string debugString = get_vehicle_make_and_model(model);
+	//write_text_to_log_file("[DEBUG] Vehicle name: " + debugString);
 
-	if (veh != -1) {
-		return true;
-	}
+	//if (veh != -1) {
+	//	return true;
+	//}
 	return false;
 }
 

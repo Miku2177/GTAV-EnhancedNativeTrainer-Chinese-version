@@ -942,7 +942,7 @@ bool onconfirm_spawn_menu_vehicle_selection(MenuItem<std::string> choice);
 
 bool do_spawn_vehicle(std::string modelName, std::string modelTitle);
 
-bool do_spawn_vehicle_hash(Hash modelName, std::string modelTitle);
+bool do_spawn_vehicle_hash(int modelName, std::string modelTitle);
 
 Vehicle do_spawn_vehicle(DWORD modelHash, std::string modelTitle, bool cleanup);
 
