@@ -124,7 +124,7 @@ bool featureSnow = false;
 bool featureSnowUpdated = false;
 
 bool featureMPMap = false;
-bool featureMPMapUpdated = false;
+bool featureMPMapUpdated = true;
 bool radar_map_toogle_1, radar_map_toogle_2, radar_map_toogle_3 = false;
 
 std::string lastWeather;
@@ -1920,22 +1920,23 @@ void update_world_features()
 		featureSnowUpdated = false;
 	}
 
-	if (featureMPMapUpdated)
-	{
-		if (featureMPMap)
+	//if (featureMPMapUpdated)
+	//{
+		if (featureMPMap && featureMPMapUpdated == true)
 		{
 			//GAMEPLAY::_USE_FREEMODE_MAP_BEHAVIOR(true);
 			DLC2::_LOAD_MP_DLC_MAPS();
 			set_status_text("MP Maps enabled");
+			featureMPMapUpdated = false;
 		}
-		else
+		if (!featureMPMap && featureMPMapUpdated == false)
 		{
 			//GAMEPLAY::_USE_FREEMODE_MAP_BEHAVIOR(true);
 			DLC2::_LOAD_SP_DLC_MAPS();
 			set_status_text("MP Maps disabled");
+			featureMPMapUpdated = true;
 		}
-		featureMPMapUpdated = false;
-	}
+	//}
 }
 
 void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results)
@@ -1967,6 +1968,7 @@ void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* r
 	results->push_back(FeatureEnabledLocalDefinition{ "featureAcidRain", &featureAcidRain }); 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureReducedGripVehiclesIfSnow", &featureReducedGripVehiclesIfSnow }); 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureSnow", &featureSnow, &featureSnowUpdated });
+	results->push_back(FeatureEnabledLocalDefinition{ "featureMPMap", &featureMPMap });
 }
 
 void add_world_generic_settings(std::vector<StringPairSettingDBRow>* settings)
