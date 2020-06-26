@@ -125,6 +125,8 @@ bool featureSnowUpdated = false;
 
 bool featureMPMap = false;
 bool featureMPMapUpdated = true;
+int MPMapCounter = 0;
+
 bool radar_map_toogle_1, radar_map_toogle_2, radar_map_toogle_3 = false;
 
 std::string lastWeather;
@@ -1920,23 +1922,23 @@ void update_world_features()
 		featureSnowUpdated = false;
 	}
 
-	//if (featureMPMapUpdated)
-	//{
-		if (featureMPMap && featureMPMapUpdated == true)
-		{
-			//GAMEPLAY::_USE_FREEMODE_MAP_BEHAVIOR(true);
-			DLC2::_LOAD_MP_DLC_MAPS();
-			set_status_text("MP Maps enabled");
-			featureMPMapUpdated = false;
+	if (featureMPMap) {
+		if (featureMPMapUpdated == true && GAMEPLAY::GET_MISSION_FLAG() == 0) {
+			MPMapCounter = MPMapCounter + 1;
+			if (MPMapCounter > 200) {
+				DLC2::_LOAD_MP_DLC_MAPS();
+				set_status_text("MP Maps enabled");
+				featureMPMapUpdated = false;
+				MPMapCounter = 0;
+			}
 		}
-		if (!featureMPMap && featureMPMapUpdated == false)
-		{
-			//GAMEPLAY::_USE_FREEMODE_MAP_BEHAVIOR(true);
-			DLC2::_LOAD_SP_DLC_MAPS();
-			set_status_text("MP Maps disabled");
-			featureMPMapUpdated = true;
-		}
-	//}
+		if (featureMPMapUpdated == false && GAMEPLAY::GET_MISSION_FLAG() == 1) featureMPMapUpdated = true;
+	}
+	if (!featureMPMap && featureMPMapUpdated == false) {
+		DLC2::_LOAD_SP_DLC_MAPS();
+		featureMPMapUpdated = true;
+		MPMapCounter = 0;
+	}
 }
 
 void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results)
