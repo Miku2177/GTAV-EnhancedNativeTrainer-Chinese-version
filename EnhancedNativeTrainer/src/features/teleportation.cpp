@@ -279,6 +279,7 @@ std::vector<tele_location> LOCATIONS_INTERIORS = {
 	{ "Pacific Standard Bank Vault", 255.851f, 217.030f, 101.683f },
 	{ "Paleto Bay Sheriff", -446.135f, 6012.91f, 31.7164f },
 	{ "Raven Slaughterhouse", 967.357f, -2184.71f, 30.0613f },
+	{ "Rogers Salvage & Scrap", -609.484f, -1611.63f, 27.0105f, { "sp1_03_interior_v_recycle_milo_" }, {}, { IPL_PROPS_SCRAP }, false },
 	{ "Sandy Shores Sheriff", 1853.18f, 3686.63f, 34.2671f },
 	{ "Solomon's Office", -1002.89f, -478.003f, 50.0271f },
 	{ "Spaceship Interior", 41.64376000f, -779.93910000f, 832.40240000f, { "spaceinterior" }, {}, {}, false },
@@ -1208,6 +1209,8 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 					INTERIOR::_LOAD_INTERIOR(interiorID); //It looks like it does the same as the native above 
 					STREAMING::SET_INTERIOR_ACTIVE(interiorID, true);
 					INTERIOR::DISABLE_INTERIOR(interiorID, false);
+
+					/*if (INTERIOR::IS_INTERIOR_CAPPED(interiorID_temp))*/ INTERIOR::CAP_INTERIOR(interiorID, 0);
 
 					if (!INTERIOR::_IS_INTERIOR_PROP_ENABLED(interiorID, prop))
 					{
