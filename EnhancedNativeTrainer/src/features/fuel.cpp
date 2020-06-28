@@ -42,6 +42,10 @@ std::vector<Vehicle> VEHICLES;
 std::vector<float> FUEL;
 std::vector<Blip> BLIPTABLE;
 
+std::vector<int> GAS_X;
+std::vector<int> GAS_Y;
+std::vector<int> GAS_Z;
+
 bool featureFuel = false;
 
 int IdleConsume_secs_passed, IdleConsume_secs_curr, IdleConsume_seconds = -1;
@@ -93,13 +97,6 @@ void fuel()
 		bool refill_button = IsKeyDown(VK_LBUTTON); // REFUEL KEY FOR JERRY CAN
 		bool startrefillKey = IsKeyDown(KeyConfig::KEY_VEH_STARTREFUELING) || IsControllerButtonDown(KeyConfig::KEY_VEH_STARTREFUELING); // REFUEL KEY GAS STATION 
 		bool stoprefillKey = IsKeyDown(KeyConfig::KEY_VEH_STOPREFUELING) || IsControllerButtonDown(KeyConfig::KEY_VEH_STOPREFUELING); // STOP REFUELING GAS STATION
-
-		int gasStations[32][3] = { { -71, -1762, 30 },{ -90, 6415, 30 },{ 180, 6603, 30 },{ 819, -1027, 30 },{ 1039, 2669, 39 },
-		{ -2555, 2334, 30 },{ 2581, 362, 30 },{ 2683, 3264, 30 },{ -853, -1374, 0 },{ 265, -1261, 30 },
-		{ -1799, 803, 30 },{ -724, -935, 30 },{ 264, 2609, 30 },{ 50, 2776, 30 },{ 1702, 6418, 30 },{ 1212, 2657, 30 },
-		{ 2537, 2593, 30 },{ 1182, -330, 30 },{ -526, -1212, 30 },{ 1209, -1402, 30 },{ 2005, 3775, 30 },
-		{ 621, 269, 30 },{ -2097, -320, 30 },{ -1434, -274, 30 },{ 1687, 4929, 30 },{ 1785, 3330, 41 },{ -1603, 5260, 0 },
-		{ -724, -1444, 5 },{ 1770, 3240, 42 },{ -1272, -3381, 14 },{ 174, -1561, 29 },{ -67, -2532, 6 } };
 
 		float fuel_bar_x = -1;
 		float fuel_bar_y = -1;
@@ -167,8 +164,8 @@ void fuel()
 		// BLIPS EVERYWHERE
 		if (VEH_FUELBLIPS_VALUES[FuelBlipsIndex] > 0 && VEH_FUELBLIPS_VALUES[FuelBlipsIndex] < 2 && show_blips) {
 			// show blips
-			for (int i = 0; i < 32; i++) {
-				blip[i] = UI::ADD_BLIP_FOR_COORD(gasStations[i][0], gasStations[i][1], gasStations[i][2]);
+			for (int i = 0; i < GAS_X.size(); i++) {
+				blip[i] = UI::ADD_BLIP_FOR_COORD(GAS_X[i], GAS_Y[i], GAS_Z[i]);
 				UI::SET_BLIP_SPRITE(blip[i], 361);
 				UI::SET_BLIP_SCALE(blip[i], 0.8);
 				UI::SET_BLIP_AS_SHORT_RANGE(blip[i], true);
@@ -180,8 +177,8 @@ void fuel()
 		// BLIPS ON RADAR ONLY
 		if (VEH_FUELBLIPS_VALUES[FuelBlipsIndex] > 1 && VEH_FUELBLIPS_VALUES[FuelBlipsIndex] < 3 && show_blips) {
 			// show blips
-			for (int i = 0; i < 32; i++) {
-				blip[i] = UI::ADD_BLIP_FOR_COORD(gasStations[i][0], gasStations[i][1], gasStations[i][2]);
+			for (int i = 0; i < GAS_X.size(); i++) {
+				blip[i] = UI::ADD_BLIP_FOR_COORD(GAS_X[i], GAS_Y[i], GAS_Z[i]);
 				UI::SET_BLIP_SPRITE(blip[i], 361);
 				UI::SET_BLIP_SCALE(blip[i], 0.8);
 				UI::SET_BLIP_AS_SHORT_RANGE(blip[i], true);
@@ -205,8 +202,8 @@ void fuel()
 			// show blips
 			show_blips = true;
 			if (PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed) && phone_blips == false) {
-				for (int i = 0; i < 32; i++) {
-					blip[i] = UI::ADD_BLIP_FOR_COORD(gasStations[i][0], gasStations[i][1], gasStations[i][2]);
+				for (int i = 0; i < GAS_X.size(); i++) {
+					blip[i] = UI::ADD_BLIP_FOR_COORD(GAS_X[i], GAS_Y[i], GAS_Z[i]);
 					UI::SET_BLIP_SPRITE(blip[i], 361);
 					UI::SET_BLIP_SCALE(blip[i], 0.8);
 					UI::SET_BLIP_AS_SHORT_RANGE(blip[i], true);
@@ -402,8 +399,8 @@ void fuel()
 				// GAS STATION MESSAGE
 				if (vehspeed < 1 && Car_Refuel == false) {
 					Vector3 coords = ENTITY::GET_ENTITY_COORDS(playerPed, 1);
-					for (int i = 0; i < 32; i++) {
-						if (GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(coords.x, coords.y, coords.z, gasStations[i][0], gasStations[i][1], coords.z, false) < 12) {
+					for (int i = 0; i < GAS_X.size(); i++) {
+						if (GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(coords.x, coords.y, coords.z, GAS_X[i], GAS_Y[i], coords.z, false) < 12) {
 
 							UI::SET_TEXT_FONT(4);
 							UI::SET_TEXT_SCALE(0.0, 0.45);
