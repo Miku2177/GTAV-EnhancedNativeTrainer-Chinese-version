@@ -11,6 +11,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\ui_support\entcolor.h"
 #include <sstream>
 #include "..\features\script.h"
+#include "..\features\fuel.h"
 
 // A global Windows "basic string". Actual memory is allocated by the
 // COM methods used by MSXML which take &keyconf_bstr. We must use SysFreeString() 
@@ -33,6 +34,7 @@ void read_config_file(){
 		config = result; //the default config
 	}
 
+	// keyboard binds
 	IXMLDOMNodeListPtr nodes = spXMLDoc->selectNodes(L"//ent-config/keys/key");
 	long length;
 	nodes->get_length(&length);
@@ -66,22 +68,6 @@ void read_config_file(){
 				VariantInit(&var);
 				attribNode->get_nodeValue(&var);
 				attrib_key_value = _com_util::ConvertBSTRToString(V_BSTR(&var));
-				// weather order
-				if (i == 47) C_WEATHER_1 = _com_util::ConvertBSTRToString(V_BSTR(&var));
-				if (i == 48) C_WEATHER_2 = _com_util::ConvertBSTRToString(V_BSTR(&var));
-				if (i == 49) C_WEATHER_3 = _com_util::ConvertBSTRToString(V_BSTR(&var));
-				if (i == 50) C_WEATHER_4 = _com_util::ConvertBSTRToString(V_BSTR(&var));
-				if (i == 51) C_WEATHER_5 = _com_util::ConvertBSTRToString(V_BSTR(&var));
-				if (i == 52) C_WEATHER_6 = _com_util::ConvertBSTRToString(V_BSTR(&var));
-				if (i == 53) C_WEATHER_7 = _com_util::ConvertBSTRToString(V_BSTR(&var));
-				if (i == 54) C_WEATHER_8 = _com_util::ConvertBSTRToString(V_BSTR(&var));
-				if (i == 55) C_WEATHER_9 = _com_util::ConvertBSTRToString(V_BSTR(&var));
-				if (i == 56) C_WEATHER_10 = _com_util::ConvertBSTRToString(V_BSTR(&var));
-				if (i == 57) C_WEATHER_11 = _com_util::ConvertBSTRToString(V_BSTR(&var));
-				if (i == 58) C_WEATHER_12 = _com_util::ConvertBSTRToString(V_BSTR(&var));
-				if (i == 59) C_WEATHER_13 = _com_util::ConvertBSTRToString(V_BSTR(&var));
-				if (i == 60) C_WEATHER_14 = _com_util::ConvertBSTRToString(V_BSTR(&var));
-				if (i == 61) C_WEATHER_15 = _com_util::ConvertBSTRToString(V_BSTR(&var));
 			}
 			else if(wcscmp(keyconf_bstr, L"modCtrl") == 0){
 				VARIANT var;
@@ -126,6 +112,7 @@ void read_config_file(){
 		node->Release();
 	}
 
+	// controller binds
 	nodes = spXMLDoc->selectNodes(L"//ent-config/keys/controller");
 	nodes->get_length(&length);
 	for(int i = 0; i < length; i++){
@@ -195,6 +182,110 @@ void read_config_file(){
 		}
 
 		delete attrib_control_func;
+
+		attribs->Release();
+		node->Release();
+	}
+
+	// weather list
+	nodes = spXMLDoc->selectNodes(L"//ent-config/weather_list/weather");
+	nodes->get_length(&length);
+	for (int i = 0; i < length; i++) {
+		IXMLDOMNode* node;
+		nodes->get_item(i, &node);
+		IXMLDOMNamedNodeMap* attribs;
+		node->get_attributes(&attribs);
+
+		long length_attribs;
+		attribs->get_length(&length_attribs);
+
+		char* attrib_weather = NULL;
+
+		for (long j = 0; j < length_attribs; j++) {
+			IXMLDOMNode* attribNode;
+			attribs->get_item(j, &attribNode);
+			attribNode->get_nodeName(&keyconf_bstr);
+			if (wcscmp(keyconf_bstr, L"name") == 0) {
+				VARIANT var;
+				VariantInit(&var);
+				attribNode->get_nodeValue(&var);
+				attrib_weather = _com_util::ConvertBSTRToString(V_BSTR(&var));
+				if (i == 0) C_WEATHER_1 = _com_util::ConvertBSTRToString(V_BSTR(&var));
+				if (i == 1) C_WEATHER_2 = _com_util::ConvertBSTRToString(V_BSTR(&var));
+				if (i == 2) C_WEATHER_3 = _com_util::ConvertBSTRToString(V_BSTR(&var));
+				if (i == 3) C_WEATHER_4 = _com_util::ConvertBSTRToString(V_BSTR(&var));
+				if (i == 4) C_WEATHER_5 = _com_util::ConvertBSTRToString(V_BSTR(&var));
+				if (i == 5) C_WEATHER_6 = _com_util::ConvertBSTRToString(V_BSTR(&var));
+				if (i == 6) C_WEATHER_7 = _com_util::ConvertBSTRToString(V_BSTR(&var));
+				if (i == 7) C_WEATHER_8 = _com_util::ConvertBSTRToString(V_BSTR(&var));
+				if (i == 8) C_WEATHER_9 = _com_util::ConvertBSTRToString(V_BSTR(&var));
+				if (i == 9) C_WEATHER_10 = _com_util::ConvertBSTRToString(V_BSTR(&var));
+				if (i == 10) C_WEATHER_11 = _com_util::ConvertBSTRToString(V_BSTR(&var));
+				if (i == 11) C_WEATHER_12 = _com_util::ConvertBSTRToString(V_BSTR(&var));
+				if (i == 12) C_WEATHER_13 = _com_util::ConvertBSTRToString(V_BSTR(&var));
+				if (i == 13) C_WEATHER_14 = _com_util::ConvertBSTRToString(V_BSTR(&var));
+				if (i == 14) C_WEATHER_15 = _com_util::ConvertBSTRToString(V_BSTR(&var));
+			}
+
+			SysFreeString(keyconf_bstr);
+			attribNode->Release();
+		}
+
+		delete attrib_weather;
+
+		attribs->Release();
+		node->Release();
+	}
+
+	// gas stations
+	nodes = spXMLDoc->selectNodes(L"//ent-config/gas_stations/station");
+	nodes->get_length(&length);
+	for (int i = 0; i < length; i++) {
+		IXMLDOMNode* node;
+		nodes->get_item(i, &node);
+		IXMLDOMNamedNodeMap* attribs;
+		node->get_attributes(&attribs);
+
+		long length_attribs;
+		attribs->get_length(&length_attribs);
+
+		char* attrib_station_x_coord = NULL;
+		char* attrib_station_y_coord = NULL;
+		char* attrib_station_z_coord = NULL;
+
+		for (long j = 0; j < length_attribs; j++) {
+			IXMLDOMNode* attribNode;
+			attribs->get_item(j, &attribNode);
+			attribNode->get_nodeName(&keyconf_bstr);
+			if (wcscmp(keyconf_bstr, L"x_coord") == 0) {
+				VARIANT var;
+				VariantInit(&var);
+				attribNode->get_nodeValue(&var);
+				attrib_station_x_coord = _com_util::ConvertBSTRToString(V_BSTR(&var));
+				GAS_X.push_back(std::stoi(attrib_station_x_coord));
+			}
+			else if (wcscmp(keyconf_bstr, L"y_coord") == 0) {
+				VARIANT var;
+				VariantInit(&var);
+				attribNode->get_nodeValue(&var);
+				attrib_station_y_coord = _com_util::ConvertBSTRToString(V_BSTR(&var));
+				GAS_Y.push_back(std::stoi(attrib_station_y_coord));
+			}
+			else if (wcscmp(keyconf_bstr, L"z_coord") == 0) {
+				VARIANT var;
+				VariantInit(&var);
+				attribNode->get_nodeValue(&var);
+				attrib_station_z_coord = _com_util::ConvertBSTRToString(V_BSTR(&var));
+				GAS_Z.push_back(std::stoi(attrib_station_z_coord));
+			}
+
+			SysFreeString(keyconf_bstr);
+			attribNode->Release();
+		}
+
+		delete attrib_station_x_coord;
+		delete attrib_station_y_coord;
+		delete attrib_station_z_coord;
 
 		attribs->Release();
 		node->Release();
