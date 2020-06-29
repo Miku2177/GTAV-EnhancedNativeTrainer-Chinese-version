@@ -1653,7 +1653,7 @@ void update_world_features()
 					bool exists_already = false;
 					for (int j = 0; j < COP_VECTOR.size(); j++) {
 						if (COP_VECTOR[j] == bus_ped[i]) exists_already = true;
-						if (!ENTITY::DOES_ENTITY_EXIST(COP_VECTOR[j])) { // && UI::DOES_BLIP_EXIST(BLIPTABLE_COP[i])
+						if (!ENTITY::DOES_ENTITY_EXIST(COP_VECTOR[j]) || PED::IS_PED_DEAD_OR_DYING(COP_VECTOR[j], true)) { // && UI::DOES_BLIP_EXIST(BLIPTABLE_COP[i])
 							UI::REMOVE_BLIP(&BLIPTABLE_COP[j]);
 							COP_VECTOR.erase(COP_VECTOR.begin() + j);
 							BLIPTABLE_COP.erase(BLIPTABLE_COP.begin() + j);
