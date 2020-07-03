@@ -4286,8 +4286,7 @@ bool onconfirm_spawn_menu_cars(MenuItem<int> choice){
 		menuItems.push_back(item);
 	}
 
-	if (choice.value == -3) {
-		// custom spawn
+	if (choice.value == -3) { // enter name manually
 		keyboard_on_screen_already = true;
 		curr_message = "Enter vehicle model name (e.g. adder or random):"; // spawn a vehicle
 		std::string result = show_keyboard("Enter Name Manually", (char*)lastCustomVehicleSpawn.c_str());
@@ -4304,14 +4303,17 @@ bool onconfirm_spawn_menu_cars(MenuItem<int> choice){
 			}
 			if (lastCustomVehicleSpawn == "random" || lastCustomVehicleSpawn == "Random" || lastCustomVehicleSpawn == "RANDOM" || (STREAMING::IS_MODEL_IN_CDIMAGE(hash) && STREAMING::IS_MODEL_A_VEHICLE(hash))) {
 				// random vehicle
-				//if (lastCustomVehicleSpawn == "random" || lastCustomVehicleSpawn == "Random" || lastCustomVehicleSpawn == "RANDOM") {
-				//	int random_category, random_veh = -1;
-				//	random_category = (rand() % (vHashLists.size() - 1) + 0); // UP MARGIN + DOWN MARGIN
-				//	random_veh = (rand() % VOV_SHALLOW_VALUES[random_category].size() + 0);
-				//	result = VOV_SHALLOW_VALUES[random_category][random_veh];
-				//}
+				int random_category = -1;
+				int	random_veh = -1;
+				std::vector<Hash> tmp_amount;
+				if (lastCustomVehicleSpawn == "random" || lastCustomVehicleSpawn == "Random" || lastCustomVehicleSpawn == "RANDOM") {
+					random_category = (rand() % (vHashLists.size() - 2) + 1); // UP MARGIN + DOWN MARGIN
+					tmp_amount = get_vehicles_from_category(random_category);
+					random_veh = (rand() % tmp_amount.size() + 0);
+				}
 				//
-				do_spawn_vehicle_hash(GAMEPLAY::GET_HASH_KEY((char*)result.c_str()), result);
+				if (lastCustomVehicleSpawn == "random" || lastCustomVehicleSpawn == "Random" || lastCustomVehicleSpawn == "RANDOM") do_spawn_vehicle_hash(tmp_amount[random_veh], get_vehicle_make_and_model(tmp_amount[random_veh]));
+				if (STREAMING::IS_MODEL_IN_CDIMAGE(hash) && STREAMING::IS_MODEL_A_VEHICLE(hash)) do_spawn_vehicle_hash(GAMEPLAY::GET_HASH_KEY((char*)result.c_str()), result);
 			}
 		}
 		return false;
