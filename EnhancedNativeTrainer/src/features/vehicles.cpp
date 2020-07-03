@@ -4226,68 +4226,6 @@ void keyboard_tip_message(char* curr_message_s) {
 	UI::_DRAW_TEXT(0.5f, 0.37f);
 }
 
-//Depends on the category - calls on cars, industrial or generic sub-sub-sub categories
-//No longer needed
-/*
-bool onconfirm_carspawn_menu(MenuItem<int> choice){
-	if (choice.value == 26){
-		// custom spawn
-		keyboard_on_screen_already = true;
-		curr_message = "Enter vehicle model name (e.g. adder or random):"; // spawn a vehicle
-		std::string result = show_keyboard("Enter Name Manually", (char*) lastCustomVehicleSpawn.c_str());
-
-		if (!result.empty()){
-			result = trim(result);
-			lastCustomVehicleSpawn = result;
-			Hash hash = GAMEPLAY::GET_HASH_KEY((char*) result.c_str());
-			if (lastCustomVehicleSpawn != "random" && lastCustomVehicleSpawn != "Random" && lastCustomVehicleSpawn != "RANDOM" && (!STREAMING::IS_MODEL_IN_CDIMAGE(hash) || !STREAMING::IS_MODEL_A_VEHICLE(hash))){
-				std::ostringstream ss;
-				ss << "~r~Error: Couldn't find model " << result;
-				set_status_text(ss.str());
-				return false;
-			}
-			if (lastCustomVehicleSpawn == "random" || lastCustomVehicleSpawn == "Random" || lastCustomVehicleSpawn == "RANDOM" || (STREAMING::IS_MODEL_IN_CDIMAGE(hash) && STREAMING::IS_MODEL_A_VEHICLE(hash))) {
-				// random vehicle
-				if (lastCustomVehicleSpawn == "random" || lastCustomVehicleSpawn == "Random" || lastCustomVehicleSpawn == "RANDOM") {
-					int random_category, random_veh = -1;
-					random_category = (rand() % 20 + 0); // UP MARGIN + DOWN MARGIN
-					if (random_category == 13 || random_category == 14) random_category = 12;
-					if (random_category < 9) {
-						random_veh = (rand() % VOV_CAR_VALUES[random_category].size() + 0);
-						result = VOV_CAR_VALUES[random_category][random_veh];
-					}
-					if (random_category > 8 && random_category < 15) {
-						random_category = random_category - 9;
-						random_veh = (rand() % VOV_INDUS_VALUES[random_category].size() + 0);
-						result = VOV_INDUS_VALUES[random_category][random_veh];
-					}
-					if (random_category > 14 && random_category < 21) {
-						random_category = random_category - 15;
-						random_veh = (rand() % VOV_SHALLOW_VALUES[random_category].size() + 0);
-						result = VOV_SHALLOW_VALUES[random_category][random_veh];
-					}
-				}
-				//
-				do_spawn_vehicle(result, result);
-			}
-		}
-		return false;
-	}
-
-	switch(choice.value){
-		case 0:
-			process_spawn_menu_cars();
-			break;
-		case 1:
-			process_spawn_menu_indus();
-			break;
-		default:
-			process_spawn_menu_generic(choice.value);
-			break;
-	}
-	return false;
-}
-*/
 //Creates category submenu and hands over to the sub-sub menu related to the category
 bool process_carspawn_menu() {
 	std::vector<MenuItem<int>*> menuItems;
@@ -4317,7 +4255,7 @@ bool process_carspawn_menu() {
 
 	MenuItem<int>* item = new MenuItem<int>();
 	item->caption = "Enter name manually";
-	item->value = 26;
+	item->value = -3;
 	menuItems.push_back(item);
 
 	return draw_generic_menu<int>(menuItems, 0, "Vehicle Categories", onconfirm_spawn_menu_cars, NULL, NULL);
@@ -4348,8 +4286,40 @@ bool onconfirm_spawn_menu_cars(MenuItem<int> choice){
 		menuItems.push_back(item);
 	}
 
+	if (choice.value == -3) {
+		// custom spawn
+		keyboard_on_screen_already = true;
+		curr_message = "Enter vehicle model name (e.g. adder or random):"; // spawn a vehicle
+		std::string result = show_keyboard("Enter Name Manually", (char*)lastCustomVehicleSpawn.c_str());
+
+		if (!result.empty()) {
+			result = trim(result);
+			lastCustomVehicleSpawn = result;
+			Hash hash = GAMEPLAY::GET_HASH_KEY((char*)result.c_str());
+			if (lastCustomVehicleSpawn != "random" && lastCustomVehicleSpawn != "Random" && lastCustomVehicleSpawn != "RANDOM" && (!STREAMING::IS_MODEL_IN_CDIMAGE(hash) || !STREAMING::IS_MODEL_A_VEHICLE(hash))) {
+				std::ostringstream ss;
+				ss << "~r~Error: Couldn't find model " << result;
+				set_status_text(ss.str());
+				return false;
+			}
+			if (lastCustomVehicleSpawn == "random" || lastCustomVehicleSpawn == "Random" || lastCustomVehicleSpawn == "RANDOM" || (STREAMING::IS_MODEL_IN_CDIMAGE(hash) && STREAMING::IS_MODEL_A_VEHICLE(hash))) {
+				// random vehicle
+				//if (lastCustomVehicleSpawn == "random" || lastCustomVehicleSpawn == "Random" || lastCustomVehicleSpawn == "RANDOM") {
+				//	int random_category, random_veh = -1;
+				//	random_category = (rand() % (vHashLists.size() - 1) + 0); // UP MARGIN + DOWN MARGIN
+				//	random_veh = (rand() % VOV_SHALLOW_VALUES[random_category].size() + 0);
+				//	result = VOV_SHALLOW_VALUES[random_category][random_veh];
+				//}
+				//
+				do_spawn_vehicle_hash(GAMEPLAY::GET_HASH_KEY((char*)result.c_str()), result);
+			}
+		}
+		return false;
+	}
+
 	return draw_generic_menu<int>(menuItems, &activeLineIndexVehList, caption, onconfirm_vehlist_menu, NULL, NULL);
 }
+
 bool do_spawn_vehicle_hash(int modelName, std::string modelTitle) {
 	DWORD model = modelName;
 	Vehicle veh = do_spawn_vehicle(model, modelTitle, true);
