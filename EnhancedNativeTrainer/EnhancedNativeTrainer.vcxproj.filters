@@ -22,14 +22,8 @@
     <ClCompile Include="src\io\keyboard.cpp">
       <Filter>src\io</Filter>
     </ClCompile>
-    <ClCompile Include="src\io\xinput.cpp">
-      <Filter>src\io</Filter>
-    </ClCompile>
     <ClCompile Include="src\debug\debuglog.cpp">
       <Filter>src\debug</Filter>
-    </ClCompile>
-    <ClCompile Include="inc\xinput\CXBOXController.cpp">
-      <Filter>src\xinput</Filter>
     </ClCompile>
     <ClCompile Include="inc\sqlite3\sqlite3.c">
       <Filter>inc\sqlite3</Filter>
@@ -136,7 +130,9 @@
     <ClCompile Include="src\features\xenonColourMenu.cpp">
       <Filter>src\features</Filter>
     </ClCompile>
-    <ClCompile Include="src\io\controller.cpp" />
+    <ClCompile Include="src\io\controller.cpp">
+      <Filter>src\io</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\features\aimbot_esp.h">
@@ -174,12 +170,6 @@
     </ClInclude>
     <ClInclude Include="src\features\world.h">
       <Filter>inc\features</Filter>
-    </ClInclude>
-    <ClInclude Include="inc\xinput\CXBOXController.h">
-      <Filter>inc\xinput</Filter>
-    </ClInclude>
-    <ClInclude Include="src\io\xinput.h">
-      <Filter>inc\xinput</Filter>
     </ClInclude>
     <ClInclude Include="src\io\config_io.h">
       <Filter>inc\io</Filter>
@@ -275,8 +265,12 @@
       <Filter>inc\features</Filter>
     </ClInclude>
     <ClInclude Include="src\features\enginedegrade.h" />
-    <ClInclude Include="src\io\controller.h" />
-    <ClInclude Include="src\joaat.hpp" />
+    <ClInclude Include="src\io\controller.h">
+      <Filter>inc\io</Filter>
+    </ClInclude>
+    <ClInclude Include="src\joaat.hpp">
+      <Filter>inc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="ent-config.xml" />
@@ -1001,9 +995,6 @@
     <Filter Include="src\debug">
       <UniqueIdentifier>{42597fe4-d0cb-4d6b-ab1a-06fa92e9d09d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\xinput">
-      <UniqueIdentifier>{aa78e79f-08b0-48bd-a7cc-cda81854c446}</UniqueIdentifier>
-    </Filter>
     <Filter Include="inc">
       <UniqueIdentifier>{f4cb23d0-2f74-4fe8-991a-64e2d777319d}</UniqueIdentifier>
     </Filter>
@@ -1012,9 +1003,6 @@
     </Filter>
     <Filter Include="src\features">
       <UniqueIdentifier>{f045131a-cadc-4fec-b1d0-80db6698ec18}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="inc\xinput">
-      <UniqueIdentifier>{a3ba00fa-ea24-440e-8ff1-1353b1fbc5a2}</UniqueIdentifier>
     </Filter>
     <Filter Include="inc\io">
       <UniqueIdentifier>{1b7627a2-03af-4091-870b-50ef4016bc02}</UniqueIdentifier>

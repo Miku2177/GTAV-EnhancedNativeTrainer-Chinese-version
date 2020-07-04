@@ -395,7 +395,7 @@ void prop_placement()
 	bool rotateLeftKey = IsKeyDown(KeyConfig::KEY_OBJECTPLACER_ROTATE_LEFT) || CONTROLS::IS_CONTROL_PRESSED(2, INPUT_FRONTEND_LB);
 	bool rotateRightKey = IsKeyDown(KeyConfig::KEY_OBJECTPLACER_ROTATE_RIGHT) || CONTROLS::IS_CONTROL_PRESSED(2, INPUT_FRONTEND_RB);
 
-	bool secondaryMove = IsKeyDown(KeyConfig::KEY_OBJECTPLACER_ALT_MOVE) || IsControllerButtonDown(KeyConfig::KEY_OBJECTPLACER_ALT_MOVE); //Doesn't have a controller bind?
+	bool secondaryMove = IsKeyDown(KeyConfig::KEY_OBJECTPLACER_ALT_MOVE);
 
 	BOOL xBoolParam = 1;
 	BOOL yBoolParam = 1;
