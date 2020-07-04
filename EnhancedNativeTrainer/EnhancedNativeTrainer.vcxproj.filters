@@ -280,6 +280,9 @@
     <ClInclude Include="src\io\controller.h">
       <Filter>inc\io</Filter>
     </ClInclude>
+    <ClInclude Include="src\joaat.hpp">
+      <Filter>inc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="ent-config.xml" />

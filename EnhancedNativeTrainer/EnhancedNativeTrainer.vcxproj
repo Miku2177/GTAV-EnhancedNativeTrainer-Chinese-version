@@ -85,6 +85,7 @@
     <ClInclude Include="src\io\controller.h" />
     <ClInclude Include="src\io\xinput.h" />
     <ClInclude Include="src\features\misc.h" />
+    <ClInclude Include="src\joaat.hpp" />
     <ClInclude Include="src\storage\database.h" />
     <ClInclude Include="src\debug\debuglog.h" />
     <ClInclude Include="inc\main.h" />
@@ -362,7 +363,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -420,6 +421,7 @@
       <FloatingPointModel>Fast</FloatingPointModel>
       <ExceptionHandling>false</ExceptionHandling>
       <DisableSpecificWarnings>4530;4996;4267</DisableSpecificWarnings>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

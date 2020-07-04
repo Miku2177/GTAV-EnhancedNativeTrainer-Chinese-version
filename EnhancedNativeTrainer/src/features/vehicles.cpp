@@ -5513,7 +5513,9 @@ MenuItemImage* vehicle_image_preview_finder(MenuItem<std::string> choice){
 
 	//TODO: Change modelName to a hash (i.e RAGE_JOAAT()) so it compares 2 hashes and not a string -> hash
 	for each (VehicleImage vimg in ALL_VEH_IMAGES){
-		if(strcmp(vimg.modelName, choice.value.c_str()) == 0){
+		write_text_to_log_file("Choice: " + choice.value);
+
+		if(vimg.modelName == stoi(choice.value)){
 			MenuItemImage* image = new MenuItemImage();
 			image->dict = vimg.dict;
 			if(image->is_local()){
