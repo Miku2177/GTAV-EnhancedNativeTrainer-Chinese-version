@@ -4327,7 +4327,12 @@ bool onconfirm_spawn_menu_cars(MenuItem<int> choice){
 		return false;
 	}
 
-	return draw_generic_menu<int>(menuItems, &activeLineIndexVehList, caption, onconfirm_vehlist_menu, nullptr, nullptr, nullptr);
+	MenuParameters<int> params(menuItems, caption);
+	params.menuSelectionPtr = 0;
+	params.onConfirmation = onconfirm_vehlist_menu;
+	params.lineImageProvider = vehicle_image_preview_finder;
+
+	return draw_generic_menu<int>(params);
 }
 
 bool do_spawn_vehicle_hash(int modelName, std::string modelTitle) {
@@ -5486,16 +5491,16 @@ void onchange_fuel_colours_b_index(int value, SelectFromListMenuItem* source){
 	FuelColours_B_Changed = true;
 }
 
-MenuItemImage* vehicle_image_preview_finder(MenuItem<std::string> choice){
+MenuItemImage* vehicle_image_preview_finder(MenuItem<int> choice){
 	if(!is_vehicle_preview_enabled()){
 		return NULL;
 	}
 
 	//TODO: Change modelName to a hash (i.e RAGE_JOAAT()) so it compares 2 hashes and not a string -> hash
 	for each (VehicleImage vimg in ALL_VEH_IMAGES){
-		write_text_to_log_file("Choice: " + choice.value);
+		write_text_to_log_file("Choice: " + std::to_string(choice.value));
 
-		if(vimg.modelName == stoi(choice.value)){
+		if(vimg.modelName == choice.value){
 			MenuItemImage* image = new MenuItemImage();
 			image->dict = vimg.dict;
 			if(image->is_local()){
