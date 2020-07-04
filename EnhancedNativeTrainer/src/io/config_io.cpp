@@ -6,7 +6,6 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 #include "config_io.h"
 #include "keyboard.h"
-#include "xinput.h"
 #include "..\debug\debuglog.h"
 #include "..\ui_support\entcolor.h"
 #include <sstream>
@@ -140,8 +139,6 @@ void read_config_file(){
 			attribNode->Release();
 		}
 
-		ControllerButtonConfig* buttonConfig = new ControllerButtonConfig();
-
 		IXMLDOMNodeListPtr children;
 		HRESULT hr = node->get_childNodes(&children);
 		if(hr == S_OK){
@@ -168,17 +165,12 @@ void read_config_file(){
 						VariantInit(&var);
 						attribNode->get_nodeValue(&var);
 						attrib_control_button = _com_util::ConvertBSTRToString(V_BSTR(&var));
-						buttonConfig->add_button(attrib_control_button);
 					}
 					attribNode->Release();
 				}
 				child->Release();
 				childAttribs->Release();
 			}
-		}
-
-		if(attrib_control_func != NULL){
-			result->get_key_config()->set_control(attrib_control_func, buttonConfig);
 		}
 
 		delete attrib_control_func;
@@ -403,30 +395,6 @@ void KeyInputConfig::set_key(char* function, char* keyName, bool modCtrl, bool m
 	}
 };
 
-void KeyInputConfig::set_control(char* function, ControllerButtonConfig* config){
-	std::ostringstream ss;
-	ss << "Controller function " << function << " being set, has " << config->buttonCodes.size() << " buttons within";
-	write_text_to_log_file(ss.str());
-
-	for each (ButtonsWithNames btn in config->buttonCodes){
-		std::ostringstream ss;
-		ss << "\tIncluded button " << btn.name << " and value " << btn.buttonCode;
-		write_text_to_log_file(ss.str());
-	}
-
-	auto match = controllerConfigs.find(function);
-	if(match != controllerConfigs.end()){
-		ControllerButtonConfig* oldConfig = match->second;
-		match->second = config;
-		delete oldConfig;
-	}
-	else{
-		ss.str(""); ss.clear();
-		ss << "Controller function " << function << " didn't correspond to a known function";
-		write_text_to_log_file(ss.str());
-	}
-}
-
 bool KeyInputConfig::is_hotkey_assigned(int i){
 	std::string target;
 	switch(i){
@@ -528,101 +496,6 @@ KeyInputConfig::KeyInputConfig(){
 	this->keyConfigs[KeyConfig::KEY_HOT_8] = new KeyConfig(0);
 	this->keyConfigs[KeyConfig::KEY_HOT_9] = new KeyConfig(0);
 
-//Default XInput controls
-
-	this->controllerConfigs[KeyConfig::KEY_TOGGLE_MAIN_MENU] = new ControllerButtonConfig();
-	//this->controllerConfigs[KeyConfig::KEY_TOGGLE_MAIN_MENU]->add_button(ControllerButtonConfig::CONTROLLER_BTN_Y);
-	//this->controllerConfigs[KeyConfig::KEY_TOGGLE_MAIN_MENU]->add_button(ControllerButtonConfig::CONTROLLER_BTN_SHOULDER_R);
-
-	this->controllerConfigs[KeyConfig::KEY_MENU_UP] = new ControllerButtonConfig();
-	this->controllerConfigs[KeyConfig::KEY_MENU_UP]->add_button(ControllerButtonConfig::CONTROLLER_BTN_DPAD_U);
-	this->controllerConfigs[KeyConfig::KEY_MENU_DOWN] = new ControllerButtonConfig();
-	this->controllerConfigs[KeyConfig::KEY_MENU_DOWN]->add_button(ControllerButtonConfig::CONTROLLER_BTN_DPAD_D);
-	this->controllerConfigs[KeyConfig::KEY_MENU_LEFT] = new ControllerButtonConfig();
-	this->controllerConfigs[KeyConfig::KEY_MENU_LEFT]->add_button(ControllerButtonConfig::CONTROLLER_BTN_DPAD_L);
-	this->controllerConfigs[KeyConfig::KEY_MENU_RIGHT] = new ControllerButtonConfig();
-	this->controllerConfigs[KeyConfig::KEY_MENU_RIGHT]->add_button(ControllerButtonConfig::CONTROLLER_BTN_DPAD_R);
-	this->controllerConfigs[KeyConfig::KEY_MENU_SELECT] = new ControllerButtonConfig();
-	this->controllerConfigs[KeyConfig::KEY_MENU_SELECT]->add_button(ControllerButtonConfig::CONTROLLER_BTN_X);
-	this->controllerConfigs[KeyConfig::KEY_MENU_BACK] = new ControllerButtonConfig();
-	this->controllerConfigs[KeyConfig::KEY_MENU_BACK]->add_button(ControllerButtonConfig::CONTROLLER_BTN_Y);
-
-	this->controllerConfigs[KeyConfig::KEY_VEH_BOOST] = new ControllerButtonConfig();
-	this->controllerConfigs[KeyConfig::KEY_VEH_BOOST]->add_button(ControllerButtonConfig::CONTROLLER_BTN_TRIGGER_R);
-	this->controllerConfigs[KeyConfig::KEY_VEH_BOOST]->add_button(ControllerButtonConfig::CONTROLLER_BTN_SHOULDER_R);
-
-	this->controllerConfigs[KeyConfig::KEY_VEH_STOP] = new ControllerButtonConfig();
-	this->controllerConfigs[KeyConfig::KEY_VEH_STOP]->add_button(ControllerButtonConfig::CONTROLLER_BTN_TRIGGER_L);
-	this->controllerConfigs[KeyConfig::KEY_VEH_STOP]->add_button(ControllerButtonConfig::CONTROLLER_BTN_SHOULDER_L);
-
-	this->controllerConfigs[KeyConfig::KEY_VEH_ROCKETS] = new ControllerButtonConfig();
-	this->controllerConfigs[KeyConfig::KEY_VEH_ROCKETS]->add_button(ControllerButtonConfig::CONTROLLER_BTN_SHOULDER_L);
-	this->controllerConfigs[KeyConfig::KEY_VEH_ROCKETS]->add_button(ControllerButtonConfig::CONTROLLER_BTN_SHOULDER_R);
-
-	this->controllerConfigs[KeyConfig::KEY_VEH_LEFTBLINK] = new ControllerButtonConfig();
-	this->controllerConfigs[KeyConfig::KEY_VEH_LEFTBLINK]->add_button(ControllerButtonConfig::CONTROLLER_BTN_TRIGGER_L);
-	
-	this->controllerConfigs[KeyConfig::KEY_VEH_RIGHTBLINK] = new ControllerButtonConfig();
-	this->controllerConfigs[KeyConfig::KEY_VEH_RIGHTBLINK]->add_button(ControllerButtonConfig::CONTROLLER_BTN_TRIGGER_R);
-	
-	this->controllerConfigs[KeyConfig::KEY_VEH_EMERGENCYBLINK] = new ControllerButtonConfig();
-	this->controllerConfigs[KeyConfig::KEY_VEH_EMERGENCYBLINK]->add_button(ControllerButtonConfig::CONTROLLER_BTN_B);
-
-	this->controllerConfigs[KeyConfig::KEY_VEH_STARTREFUELING] = new ControllerButtonConfig();
-	this->controllerConfigs[KeyConfig::KEY_VEH_STARTREFUELING]->add_button(ControllerButtonConfig::CONTROLLER_BTN_A);
-	
-	this->controllerConfigs[KeyConfig::KEY_VEH_STOPREFUELING] = new ControllerButtonConfig();
-	this->controllerConfigs[KeyConfig::KEY_VEH_STOPREFUELING]->add_button(ControllerButtonConfig::CONTROLLER_BTN_B);
-
-	this->controllerConfigs[KeyConfig::KEY_TOGGLE_AIRBRAKE] = new ControllerButtonConfig();
-	this->controllerConfigs[KeyConfig::KEY_TOGGLE_AIRBRAKE]->add_button(ControllerButtonConfig::CONTROLLER_BTN_A);
-	this->controllerConfigs[KeyConfig::KEY_TOGGLE_AIRBRAKE]->add_button(ControllerButtonConfig::CONTROLLER_BTN_SHOULDER_R);
-
-	this->controllerConfigs[KeyConfig::KEY_AIRBRAKE_UP] = new ControllerButtonConfig();
-	this->controllerConfigs[KeyConfig::KEY_AIRBRAKE_UP]->add_button(ControllerButtonConfig::CONTROLLER_BTN_TRIGGER_L);
-	this->controllerConfigs[KeyConfig::KEY_AIRBRAKE_DOWN] = new ControllerButtonConfig();
-	this->controllerConfigs[KeyConfig::KEY_AIRBRAKE_DOWN]->add_button(ControllerButtonConfig::CONTROLLER_BTN_TRIGGER_R);
-
-	this->controllerConfigs[KeyConfig::KEY_AIRBRAKE_FORWARD] = new ControllerButtonConfig();
-	this->controllerConfigs[KeyConfig::KEY_AIRBRAKE_FORWARD]->add_button(ControllerButtonConfig::CONTROLLER_LSTICK_U);
-	this->controllerConfigs[KeyConfig::KEY_AIRBRAKE_BACK] = new ControllerButtonConfig();
-	this->controllerConfigs[KeyConfig::KEY_AIRBRAKE_BACK]->add_button(ControllerButtonConfig::CONTROLLER_LSTICK_D);
-
-	this->controllerConfigs[KeyConfig::KEY_AIRBRAKE_ROTATE_LEFT] = new ControllerButtonConfig();
-	this->controllerConfigs[KeyConfig::KEY_AIRBRAKE_ROTATE_LEFT]->add_button(ControllerButtonConfig::CONTROLLER_LSTICK_L);
-	this->controllerConfigs[KeyConfig::KEY_AIRBRAKE_ROTATE_RIGHT] = new ControllerButtonConfig();
-	this->controllerConfigs[KeyConfig::KEY_AIRBRAKE_ROTATE_RIGHT]->add_button(ControllerButtonConfig::CONTROLLER_LSTICK_R);
-
-	this->controllerConfigs[KeyConfig::KEY_AIRBRAKE_SPEED] = new ControllerButtonConfig();
-	this->controllerConfigs[KeyConfig::KEY_AIRBRAKE_SPEED]->add_button(ControllerButtonConfig::CONTROLLER_BTN_A);
-	this->controllerConfigs[KeyConfig::KEY_AIRBRAKE_FREEZE_TIME] = new ControllerButtonConfig();
-	this->controllerConfigs[KeyConfig::KEY_AIRBRAKE_FREEZE_TIME]->add_button(ControllerButtonConfig::CONTROLLER_BTN_B);
-
-	this->controllerConfigs[KeyConfig::KEY_OBJECTPLACER_UP] = new ControllerButtonConfig();
-	this->controllerConfigs[KeyConfig::KEY_OBJECTPLACER_UP]->add_button(ControllerButtonConfig::CONTROLLER_BTN_TRIGGER_L);
-	this->controllerConfigs[KeyConfig::KEY_OBJECTPLACER_DOWN] = new ControllerButtonConfig();
-	this->controllerConfigs[KeyConfig::KEY_OBJECTPLACER_DOWN]->add_button(ControllerButtonConfig::CONTROLLER_BTN_TRIGGER_R);
-
-	this->controllerConfigs[KeyConfig::KEY_OBJECTPLACER_FORWARD] = new ControllerButtonConfig();
-	this->controllerConfigs[KeyConfig::KEY_OBJECTPLACER_FORWARD]->add_button(ControllerButtonConfig::CONTROLLER_LSTICK_U);
-	this->controllerConfigs[KeyConfig::KEY_OBJECTPLACER_BACK] = new ControllerButtonConfig();
-	this->controllerConfigs[KeyConfig::KEY_OBJECTPLACER_BACK]->add_button(ControllerButtonConfig::CONTROLLER_LSTICK_D);
-
-	this->controllerConfigs[KeyConfig::KEY_OBJECTPLACER_ROTATE_LEFT] = new ControllerButtonConfig();
-	this->controllerConfigs[KeyConfig::KEY_OBJECTPLACER_ROTATE_LEFT]->add_button(ControllerButtonConfig::CONTROLLER_LSTICK_L);
-	this->controllerConfigs[KeyConfig::KEY_OBJECTPLACER_ROTATE_RIGHT] = new ControllerButtonConfig();
-	this->controllerConfigs[KeyConfig::KEY_OBJECTPLACER_ROTATE_RIGHT]->add_button(ControllerButtonConfig::CONTROLLER_LSTICK_R);
-
-	this->controllerConfigs[KeyConfig::KEY_OBJECTPLACER_SPEED_CYCLE] = new ControllerButtonConfig();
-	this->controllerConfigs[KeyConfig::KEY_OBJECTPLACER_SPEED_CYCLE]->add_button(ControllerButtonConfig::CONTROLLER_BTN_A);
-	this->controllerConfigs[KeyConfig::KEY_OBJECTPLACER_FREEZE_TIME] = new ControllerButtonConfig();
-	this->controllerConfigs[KeyConfig::KEY_OBJECTPLACER_FREEZE_TIME]->add_button(ControllerButtonConfig::CONTROLLER_BTN_B);
-	this->controllerConfigs[KeyConfig::KEY_OBJECTPLACER_FREEZE_POSITION] = new ControllerButtonConfig();
-	this->controllerConfigs[KeyConfig::KEY_OBJECTPLACER_FREEZE_POSITION]->add_button(ControllerButtonConfig::CONTROLLER_BTN_Y);
-
-	this->controllerConfigs[KeyConfig::KEY_AIRBRAKE_SPACE] = new ControllerButtonConfig();
-	this->controllerConfigs[KeyConfig::KEY_AIRBRAKE_SPACE]->add_button(ControllerButtonConfig::CONTROLLER_BTN_A);
-	
 }
 
 KeyInputConfig::~KeyInputConfig(){
@@ -638,24 +511,6 @@ KeyConfig* KeyInputConfig::get_key(std::string function){
 		return match->second;
 	}
 	return NULL;
-}
-
-ControllerButtonConfig* KeyInputConfig::get_controller_button(std::string function){
-	auto match = controllerConfigs.find(function);
-	if(match != controllerConfigs.end()){
-		return match->second;
-	}
-	return NULL;
-}
-
-void ControllerButtonConfig::add_button(char* name){
-	ButtonsWithNames btn = buttonNameToVal(name);
-	this->buttonCodes.push_back(btn);
-}
-
-void ControllerButtonConfig::add_button(std::string name){
-	ButtonsWithNames btn = buttonNameToVal((char*) name.c_str());
-	this->buttonCodes.push_back(btn);
 }
 
 const std::string KeyConfig::KEY_TOGGLE_MAIN_MENU = std::string("toggle_main_menu");
@@ -712,29 +567,3 @@ const std::string KeyConfig::KEY_HOT_6 = std::string("hotkey_6");
 const std::string KeyConfig::KEY_HOT_7 = std::string("hotkey_7");
 const std::string KeyConfig::KEY_HOT_8 = std::string("hotkey_8");
 const std::string KeyConfig::KEY_HOT_9 = std::string("hotkey_9");
-
-const std::string ControllerButtonConfig::CONTROLLER_BTN_X = std::string("BUTTON_X");
-const std::string ControllerButtonConfig::CONTROLLER_BTN_Y = std::string("BUTTON_Y");
-const std::string ControllerButtonConfig::CONTROLLER_BTN_A = std::string("BUTTON_A");
-const std::string ControllerButtonConfig::CONTROLLER_BTN_B = std::string("BUTTON_B");
-const std::string ControllerButtonConfig::CONTROLLER_BTN_DPAD_L = std::string("DPAD_LEFT");
-const std::string ControllerButtonConfig::CONTROLLER_BTN_DPAD_R = std::string("DPAD_RIGHT");
-const std::string ControllerButtonConfig::CONTROLLER_BTN_DPAD_U = std::string("DPAD_UP");
-const std::string ControllerButtonConfig::CONTROLLER_BTN_DPAD_D = std::string("DPAD_DOWN");
-const std::string ControllerButtonConfig::CONTROLLER_BTN_SHOULDER_L = std::string("L_SHOULDER");
-const std::string ControllerButtonConfig::CONTROLLER_BTN_SHOULDER_R = std::string("R_SHOULDER");
-const std::string ControllerButtonConfig::CONTROLLER_BTN_TRIGGER_L = std::string("L_TRIGGER");
-const std::string ControllerButtonConfig::CONTROLLER_BTN_TRIGGER_R = std::string("R_TRIGGER");
-const std::string ControllerButtonConfig::CONTROLLER_BTN_BACK = std::string("BACK");
-const std::string ControllerButtonConfig::CONTROLLER_BTN_START = std::string("START");
-const std::string ControllerButtonConfig::CONTROLLER_LSTICK_L = std::string("L_STICK_LEFT");
-const std::string ControllerButtonConfig::CONTROLLER_LSTICK_R = std::string("L_STICK_RIGHT");
-const std::string ControllerButtonConfig::CONTROLLER_LSTICK_U = std::string("L_STICK_UP");
-const std::string ControllerButtonConfig::CONTROLLER_LSTICK_D = std::string("L_STICK_DOWN");
-const std::string ControllerButtonConfig::CONTROLLER_RSTICK_L = std::string("R_STICK_LEFT");
-const std::string ControllerButtonConfig::CONTROLLER_RSTICK_R = std::string("R_STICK_RIGHT");
-const std::string ControllerButtonConfig::CONTROLLER_RSTICK_U = std::string("R_STICK_UP");
-const std::string ControllerButtonConfig::CONTROLLER_RSTICK_D = std::string("R_STICK_DOWN");
-const std::string ControllerButtonConfig::CONTROLLER_LSTICK_CLICK = std::string("L_STICK_CLICK");
-const std::string ControllerButtonConfig::CONTROLLER_RSTICK_CLICK = std::string("R_STICK_CLICK");
-const std::string ControllerButtonConfig::CONTROLLER_NOT_BOUND = std::string("NOT_BOUND");

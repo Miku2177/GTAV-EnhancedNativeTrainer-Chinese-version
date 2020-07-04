@@ -16,7 +16,6 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\..\inc\main.h"
 #include "..\io\io.h"
 #include "..\io\config_io.h"
-#include "..\io\xinput.h"
 #include "..\ui_support\menu_functions.h"
 #include "..\storage\database.h"
 #include "..\debug\debuglog.h"

@@ -86,50 +86,6 @@ class KeyConfig{
 	bool modShift = false;
 };
 
-struct ButtonsWithNames{
-	std::string name;
-	WORD buttonCode;
-	bool isAnalog;
-};
-
-class ControllerButtonConfig{
-	public:
-	static const std::string CONTROLLER_BTN_X;
-	static const std::string CONTROLLER_BTN_Y;
-	static const std::string CONTROLLER_BTN_A;
-	static const std::string CONTROLLER_BTN_B;
-	static const std::string CONTROLLER_BTN_DPAD_L;
-	static const std::string CONTROLLER_BTN_DPAD_R;
-	static const std::string CONTROLLER_BTN_DPAD_U;
-	static const std::string CONTROLLER_BTN_DPAD_D;
-	static const std::string CONTROLLER_BTN_SHOULDER_L;
-	static const std::string CONTROLLER_BTN_SHOULDER_R;
-	static const std::string CONTROLLER_BTN_TRIGGER_L;
-	static const std::string CONTROLLER_BTN_TRIGGER_R;
-	static const std::string CONTROLLER_BTN_BACK;
-	static const std::string CONTROLLER_BTN_START;
-	static const std::string CONTROLLER_LSTICK_L;
-	static const std::string CONTROLLER_LSTICK_R;
-	static const std::string CONTROLLER_LSTICK_U;
-	static const std::string CONTROLLER_LSTICK_D;
-	static const std::string CONTROLLER_RSTICK_L;
-	static const std::string CONTROLLER_RSTICK_R;
-	static const std::string CONTROLLER_RSTICK_U;
-	static const std::string CONTROLLER_RSTICK_D;
-	static const std::string CONTROLLER_LSTICK_CLICK;
-	static const std::string CONTROLLER_RSTICK_CLICK;
-	static const std::string CONTROLLER_NOT_BOUND;
-
-	inline ControllerButtonConfig(){
-	};
-
-	void add_button(char* name);
-
-	void add_button(std::string name);
-
-	std::vector<ButtonsWithNames> buttonCodes;
-};
-
 /**A class to hold the current key bindings.*/
 class KeyInputConfig{
 	public:
@@ -139,17 +95,10 @@ class KeyInputConfig{
 
 	std::map<std::string, KeyConfig*> keyConfigs;
 
-	std::map<std::string, ControllerButtonConfig*> controllerConfigs;
-
 	KeyConfig* get_key(std::string function);
-
-	ControllerButtonConfig* get_controller_button(std::string function);
 
 	/**Change the key binding using a function string and key string.*/
 	void set_key(char* function, char* keyName, bool modCtrl = false, bool modAlt = false, bool modShift = false);
-
-	/**Change the key binding using a function string and key string.*/
-	void set_control(char* function, ControllerButtonConfig* config);
 
 	bool is_hotkey_assigned(int i);
 };
