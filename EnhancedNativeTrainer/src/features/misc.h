@@ -122,11 +122,11 @@ void onchange_misc_phone_freeseconds_index(int value, SelectFromListMenuItem* so
 
 void onchange_misc_phone_bike_index(int value, SelectFromListMenuItem* source);
 
-bool is_input_blocked_in_menu();
+//bool is_input_blocked_in_menu();
 
 bool is_vehicle_preview_enabled();
 
-bool is_controller_ignored_in_trainer();
+//bool is_controller_ignored_in_trainer();
 
 bool is_hud_hidden();
 

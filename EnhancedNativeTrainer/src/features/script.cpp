@@ -495,9 +495,11 @@ void update_features(){
 
 	check_for_hotkey_presses();
 
+	if (is_menu_showing() && IsKeyDown(VK_ESCAPE)) set_menu_showing(false);
+
 	if(is_menu_showing() || is_in_airbrake_mode() || is_in_prop_placement_mode()){
 		disableControls();
-		if(is_input_blocked_in_menu() || is_in_airbrake_mode() || is_in_prop_placement_mode()){
+		if(/*is_input_blocked_in_menu() || */is_in_airbrake_mode() || is_in_prop_placement_mode()){
 			setGameInputToEnabled(false);
 		}
 		else{
