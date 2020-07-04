@@ -227,9 +227,9 @@ void create_airbrake_help_text()
 	airbrakeStatusLines[index++] = "T - Toggle Frozen Time";
 	airbrakeStatusLines[index++] = "H - Toggle This Help";
 	airbrakeStatusLines[index++] = " ";
-	airbrakeStatusLines[index++] = "Default Controller Input (change in XML):";
+	airbrakeStatusLines[index++] = "Default Controller Input:";
 	airbrakeStatusLines[index++] = "Triggers - Move Up/Down";
-	airbrakeStatusLines[index++] = "Left Stick - Rotate, Move Forward/Back";
+	airbrakeStatusLines[index++] = "Left/Right Bumper - Rotate";
 	airbrakeStatusLines[index++] = "A - Toggle Move Speed";
 	airbrakeStatusLines[index++] = "B - Toggle Frozen Time";
 	airbrakeStatusLines[index++] = " ";
@@ -271,13 +271,13 @@ void airbrake(bool inVehicle)
 
 	KeyInputConfig* keyConfig = get_config()->get_key_config();
 
-	bool moveUpKey = IsKeyDown(KeyConfig::KEY_AIRBRAKE_UP) || IsControllerButtonDown(KeyConfig::KEY_AIRBRAKE_UP);
-	bool moveDownKey = IsKeyDown(KeyConfig::KEY_AIRBRAKE_DOWN) || IsControllerButtonDown(KeyConfig::KEY_AIRBRAKE_DOWN);
-	bool moveForwardKey = IsKeyDown(KeyConfig::KEY_AIRBRAKE_FORWARD) || IsControllerButtonDown(KeyConfig::KEY_AIRBRAKE_FORWARD);
-	bool moveBackKey = IsKeyDown(KeyConfig::KEY_AIRBRAKE_BACK) || IsControllerButtonDown(KeyConfig::KEY_AIRBRAKE_BACK);
-	bool rotateLeftKey = IsKeyDown(KeyConfig::KEY_AIRBRAKE_ROTATE_LEFT) || IsControllerButtonDown(KeyConfig::KEY_AIRBRAKE_ROTATE_LEFT);
-	bool rotateRightKey = IsKeyDown(KeyConfig::KEY_AIRBRAKE_ROTATE_RIGHT) || IsControllerButtonDown(KeyConfig::KEY_AIRBRAKE_ROTATE_RIGHT);
-	bool SpaceKey = IsKeyDown(KeyConfig::KEY_AIRBRAKE_SPACE) || IsControllerButtonDown(KeyConfig::KEY_AIRBRAKE_SPACE);
+	bool moveUpKey = IsKeyDown(KeyConfig::KEY_AIRBRAKE_UP) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, INPUT_AIM); //CONTROLLER_BTN_TRIGGER_L
+	bool moveDownKey = IsKeyDown(KeyConfig::KEY_AIRBRAKE_DOWN) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, INPUT_ATTACK); //CONTROLLER_BTN_TRIGGER_R
+	bool moveForwardKey = IsKeyDown(KeyConfig::KEY_AIRBRAKE_FORWARD) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, INPUT_MOVE_UP_ONLY); //CONTROLLER_LSTICK_U
+	bool moveBackKey = IsKeyDown(KeyConfig::KEY_AIRBRAKE_BACK) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, INPUT_MOVE_DOWN_ONLY); //CONTROLLER_LSTICK_D
+	bool rotateLeftKey = IsKeyDown(KeyConfig::KEY_AIRBRAKE_ROTATE_LEFT) || CONTROLS::IS_CONTROL_PRESSED(2, INPUT_FRONTEND_LB); //CONTROLLER_LSTICK_L
+	bool rotateRightKey = IsKeyDown(KeyConfig::KEY_AIRBRAKE_ROTATE_RIGHT) || CONTROLS::IS_CONTROL_PRESSED(2, INPUT_FRONTEND_RB); //CONTROLLER_LSTICK_R
+	bool SpaceKey = IsKeyDown(KeyConfig::KEY_AIRBRAKE_SPACE) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, INPUT_FRONTEND_ACCEPT); //CONTROLLER_BTN_A
 
 	//Airbrake controls vehicle if occupied
 	Entity target = playerPed;
@@ -292,8 +292,8 @@ void airbrake(bool inVehicle)
 	{
 		AI::TASK_PLAY_ANIM(PLAYER::PLAYER_PED_ID(), AIRBRAKE_ANIM_A, AIRBRAKE_ANIM_B, 8.0f, 0.0f, -1, 9, 0, 0, 0, 0);
 	}
-
-	if (IsKeyJustUp(KeyConfig::KEY_AIRBRAKE_SPEED) || IsControllerButtonJustUp(KeyConfig::KEY_AIRBRAKE_SPEED))
+	
+	if (IsKeyJustUp(KeyConfig::KEY_AIRBRAKE_SPEED) || CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(2, INPUT_FRONTEND_ACCEPT)); //CONTROLLER_BTN_A
 	{
 		travelSpeed++;
 		if (travelSpeed > 2)
@@ -302,17 +302,17 @@ void airbrake(bool inVehicle)
 		}
 	}
 
-	if (IsKeyJustUp(KeyConfig::KEY_AIRBRAKE_FREEZE_TIME) || IsControllerButtonJustUp(KeyConfig::KEY_AIRBRAKE_FREEZE_TIME))
+	if (IsKeyJustUp(KeyConfig::KEY_AIRBRAKE_FREEZE_TIME) || CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(2, INPUT_FRONTEND_CANCEL)) //CONTROLLER_BTN_B
 	{
 		frozen_time = !frozen_time;
 	}
 
-	if (IsKeyJustUp(KeyConfig::KEY_AIRBRAKE_HELP) || IsControllerButtonJustUp(KeyConfig::KEY_AIRBRAKE_HELP))
+	if (IsKeyJustUp(KeyConfig::KEY_AIRBRAKE_HELP) || CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(2, INPUT_FRONTEND_SELECT))
 	{
 		help_showing = !help_showing;
 	}
 
-	if (IsKeyJustUp(KeyConfig::KEY_AIRBRAKE_MOUSE_CONTROL) || IsControllerButtonJustUp(KeyConfig::KEY_AIRBRAKE_MOUSE_CONTROL))
+	if (IsKeyJustUp(KeyConfig::KEY_AIRBRAKE_MOUSE_CONTROL))
 	{
 		mouse_view_control = !mouse_view_control;
 	}

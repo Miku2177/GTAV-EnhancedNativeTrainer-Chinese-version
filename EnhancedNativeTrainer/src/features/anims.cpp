@@ -5751,7 +5751,7 @@ void replay_last_anim()
 }
 
 void update_anims_features(BOOL bPlayerExists, Ped playerPed) {
-	if ((IsKeyDown(KeyConfig::KEY_MENU_BACK) || IsControllerButtonDown(KeyConfig::KEY_MENU_BACK) || CONTROLS::IS_CONTROL_PRESSED(2, 32) || CONTROLS::IS_CONTROL_PRESSED(2, 33) || CONTROLS::IS_CONTROL_PRESSED(2, 34) || 
+	if ((IsKeyDown(KeyConfig::KEY_MENU_BACK) || CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(2, INPUT_FRONTEND_CANCEL) || CONTROLS::IS_CONTROL_PRESSED(2, 32) || CONTROLS::IS_CONTROL_PRESSED(2, 33) || CONTROLS::IS_CONTROL_PRESSED(2, 34) ||
 		CONTROLS::IS_CONTROL_PRESSED(2, 35)) && anim_p == true) {
 		AI::STOP_ANIM_TASK(PLAYER::PLAYER_PED_ID(), (char*)lastImmediatePlayDict.c_str(), (char*)lastImmediatePlayAnim.c_str(), 1.0);
 		PED::RESET_PED_MOVEMENT_CLIPSET(playerPed, 1.0f);
@@ -5856,7 +5856,7 @@ bool onconfirm_scenarios_menu_l2(MenuItem<int> choice)
 
 	while (true)
 	{
-		if (IsKeyJustUp(KeyConfig::KEY_MENU_BACK) || IsControllerButtonJustUp(KeyConfig::KEY_MENU_BACK))
+		if (IsKeyJustUp(KeyConfig::KEY_MENU_BACK) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, INPUT_FRONTEND_CANCEL))
 		{
 			break;
 		}
