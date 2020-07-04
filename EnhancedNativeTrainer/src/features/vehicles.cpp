@@ -166,6 +166,8 @@ bool featureDespawnScriptDisabled = false;
 bool featureDespawnScriptDisabledUpdated = false;
 bool featureDespawnScriptDisabledWasLastOn = false; // do not persist this particular var in the DB - it is local only
 
+int tmp_menuindex = -1;
+
 int activeLineIndexVehList = 0;
 int activeLineIndexVeh = 0;
 int activeSavedVehicleIndex = -1;
@@ -4274,7 +4276,10 @@ bool onconfirm_spawn_menu_cars(MenuItem<int> choice){
 	std::vector<MenuItem<int>*> menuItems;
 	std::vector<Hash> selectedCat = get_vehicles_from_category(choice.value);
 	int itemIndex = 0;
-	activeLineIndexVehList = 0;
+	if (choice.value != tmp_menuindex) {
+		tmp_menuindex = choice.value;
+		activeLineIndexVehList = 0;
+	}
 
 	for (Hash hash : selectedCat)
 	{
