@@ -329,9 +329,9 @@ void create_prop_placement_help_text()
 	propPlacerStatusLines.push_back("H - Toggle This Help");
 
 	propPlacerStatusLines.push_back(" ");
-	propPlacerStatusLines.push_back("Default Controller Input (change in XML):");
+	propPlacerStatusLines.push_back("Default Controller Input:");
 	propPlacerStatusLines.push_back("Triggers - Move Up/Down");
-	propPlacerStatusLines.push_back("Left Stick - Rotate, Move Forward/Back");
+	propPlacerStatusLines.push_back("Left/Right Bumper - Rotate");
 	propPlacerStatusLines.push_back("A - Cycle Move Speeds");
 	propPlacerStatusLines.push_back("B - Toggle Frozen Time");
 	propPlacerStatusLines.push_back("Y - Toggle Object Frozen On Exit");
@@ -388,14 +388,14 @@ void prop_placement()
 
 	KeyInputConfig* keyConfig = get_config()->get_key_config();
 
-	bool moveUpKey = IsKeyDown(KeyConfig::KEY_OBJECTPLACER_UP) || IsControllerButtonDown(KeyConfig::KEY_OBJECTPLACER_UP);
-	bool moveDownKey = IsKeyDown(KeyConfig::KEY_OBJECTPLACER_DOWN) || IsControllerButtonDown(KeyConfig::KEY_OBJECTPLACER_DOWN);
-	bool moveForwardKey = IsKeyDown(KeyConfig::KEY_OBJECTPLACER_FORWARD) || IsControllerButtonDown(KeyConfig::KEY_OBJECTPLACER_FORWARD);
-	bool moveBackKey = IsKeyDown(KeyConfig::KEY_OBJECTPLACER_BACK) || IsControllerButtonDown(KeyConfig::KEY_OBJECTPLACER_BACK);
-	bool rotateLeftKey = IsKeyDown(KeyConfig::KEY_OBJECTPLACER_ROTATE_LEFT) || IsControllerButtonDown(KeyConfig::KEY_OBJECTPLACER_ROTATE_LEFT);
-	bool rotateRightKey = IsKeyDown(KeyConfig::KEY_OBJECTPLACER_ROTATE_RIGHT) || IsControllerButtonDown(KeyConfig::KEY_OBJECTPLACER_ROTATE_RIGHT);
+	bool moveUpKey = IsKeyDown(KeyConfig::KEY_OBJECTPLACER_UP) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, INPUT_AIM);
+	bool moveDownKey = IsKeyDown(KeyConfig::KEY_OBJECTPLACER_DOWN) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, INPUT_ATTACK);
+	bool moveForwardKey = IsKeyDown(KeyConfig::KEY_OBJECTPLACER_FORWARD) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, INPUT_MOVE_UP_ONLY);
+	bool moveBackKey = IsKeyDown(KeyConfig::KEY_OBJECTPLACER_BACK) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, INPUT_MOVE_DOWN_ONLY);
+	bool rotateLeftKey = IsKeyDown(KeyConfig::KEY_OBJECTPLACER_ROTATE_LEFT) || CONTROLS::IS_CONTROL_PRESSED(2, INPUT_FRONTEND_LB);
+	bool rotateRightKey = IsKeyDown(KeyConfig::KEY_OBJECTPLACER_ROTATE_RIGHT) || CONTROLS::IS_CONTROL_PRESSED(2, INPUT_FRONTEND_RB);
 
-	bool secondaryMove = IsKeyDown(KeyConfig::KEY_OBJECTPLACER_ALT_MOVE) || IsControllerButtonDown(KeyConfig::KEY_OBJECTPLACER_ALT_MOVE);
+	bool secondaryMove = IsKeyDown(KeyConfig::KEY_OBJECTPLACER_ALT_MOVE) || IsControllerButtonDown(KeyConfig::KEY_OBJECTPLACER_ALT_MOVE); //Doesn't have a controller bind?
 
 	BOOL xBoolParam = 1;
 	BOOL yBoolParam = 1;
@@ -403,7 +403,7 @@ void prop_placement()
 
 	ENTITY::SET_ENTITY_VELOCITY(currentProp.instance, 0.0f, 0.0f, 0.0f);
 
-	if (IsControllerButtonJustUp(KeyConfig::KEY_OBJECTPLACER_SPEED_CYCLE))
+	if (CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(2, INPUT_FRONTEND_ACCEPT))
 	{
 		pp_travel_speed++;
 		if (pp_travel_speed >= MOVE_SPEED_COUNTS)
@@ -427,17 +427,17 @@ void prop_placement()
 		}
 	}
 
-	if (IsKeyJustUp(KeyConfig::KEY_OBJECTPLACER_FREEZE_TIME) || IsControllerButtonJustUp(KeyConfig::KEY_OBJECTPLACER_FREEZE_TIME))
+	if (IsKeyJustUp(KeyConfig::KEY_OBJECTPLACER_FREEZE_TIME) || CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(2, INPUT_FRONTEND_CANCEL))
 	{
 		pp_frozen_time = !pp_frozen_time;
 	}
 
-	if (IsKeyJustUp(KeyConfig::KEY_OBJECTPLACER_FREEZE_POSITION) || IsControllerButtonJustUp(KeyConfig::KEY_OBJECTPLACER_FREEZE_POSITION))
+	if (IsKeyJustUp(KeyConfig::KEY_OBJECTPLACER_FREEZE_POSITION) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, INPUT_FRONTEND_RUP))
 	{
 		currentProp.isImmovable = !currentProp.isImmovable;
 	}
 
-	if (IsKeyJustUp(KeyConfig::KEY_OBJECTPLACER_HELP) || IsControllerButtonJustUp(KeyConfig::KEY_OBJECTPLACER_HELP))
+	if (IsKeyJustUp(KeyConfig::KEY_OBJECTPLACER_HELP) || CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(2, INPUT_FRONTEND_SELECT))
 	{
 		pp_help_showing = !pp_help_showing;
 	}

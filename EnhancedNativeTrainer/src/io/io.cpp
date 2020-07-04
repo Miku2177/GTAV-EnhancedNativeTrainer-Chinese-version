@@ -64,7 +64,7 @@ bool get_key_pressed(int nVirtKey)
 
 bool airbrake_switch_pressed()
 {
-	bool result = IsKeyJustUp(KeyConfig::KEY_TOGGLE_AIRBRAKE) || (CONTROLS::IS_CONTROL_PRESSED(2, INPUT_FRONTEND_ACCEPT) && CONTROLS::IS_CONTROL_JUST_PRESSED(2, INPUT_FRONTEND_RB));
+	bool result = IsKeyJustUp(KeyConfig::KEY_TOGGLE_AIRBRAKE) || (CONTROLS::IS_CONTROL_PRESSED(2, INPUT_FRONTEND_ACCEPT) && CONTROLS::IS_CONTROL_JUST_PRESSED(2, INPUT_FRONTEND_RB)); //INPUT_FRONTEND_ACCEPT (A) + INPUT_FRONTEND_RB (RB)
 	if (result)
 	{
 		//avoid repeat of key press
