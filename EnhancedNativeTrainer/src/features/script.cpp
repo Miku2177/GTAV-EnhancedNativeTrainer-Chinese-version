@@ -37,6 +37,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include <vector>
 #include <psapi.h>
 #include <ctime>
+#include "../io/controller.h"
 
 #pragma warning(disable : 4244 4305) // double <-> float conversions
 
@@ -492,11 +493,12 @@ void update_features(){
 		CloseHandle(myHandle);
 	}
 
-	UpdateXInputControlState();
+	//UpdateXInputControlState();
 
 	check_for_hotkey_presses();
 
 	if(is_menu_showing() || is_in_airbrake_mode() || is_in_prop_placement_mode()){
+		disableControls();
 		if(is_input_blocked_in_menu() || is_in_airbrake_mode() || is_in_prop_placement_mode()){
 			setGameInputToEnabled(false);
 		}

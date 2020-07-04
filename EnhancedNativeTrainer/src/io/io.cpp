@@ -29,7 +29,6 @@ bool trainer_switch_pressed()
 		DWORD maxTickCount = GetTickCount() + 200;
 		do
 		{
-			UpdateXInputControlState();
 			make_periodic_feature_call();
 			WAIT(0);
 		} while (GetTickCount() < maxTickCount);
@@ -40,23 +39,20 @@ bool trainer_switch_pressed()
 void get_button_state(bool *a, bool *b, bool *up, bool *down, bool *l, bool *r)
 {
 	KeyInputConfig *keyConf = config->get_key_config();
-
-	//if (isUsingController) disableControls();
-
-	if (a) *a = IsKeyJustUp(KeyConfig::KEY_MENU_SELECT) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, INPUT_FRONTEND_ACCEPT); //A //IS_DISABLED_CONTROL_PRESSED
-	if (b) *b = IsKeyJustUp(KeyConfig::KEY_MENU_BACK) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, INPUT_FRONTEND_CANCEL); //B
+	if (a) *a = IsKeyJustUp(KeyConfig::KEY_MENU_SELECT) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, INPUT_FRONTEND_ACCEPT); //A //IS_DISABLED_CONTROL_PRESSED
+	if (b) *b = IsKeyJustUp(KeyConfig::KEY_MENU_BACK) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, INPUT_FRONTEND_CANCEL); //B
 
 	if (MISC_TRAINERCONTROL_VALUES[TrainerControlIndex] == 1) { // press
-		if (up) *up = IsKeyDown(KeyConfig::KEY_MENU_UP) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, INPUT_FRONTEND_UP); //Dpad up
-		if (down) *down = IsKeyDown(KeyConfig::KEY_MENU_DOWN) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, INPUT_FRONTEND_DOWN); //Dpad down
-		if (r) *r = IsKeyDown(KeyConfig::KEY_MENU_RIGHT) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, INPUT_FRONTEND_RIGHT); //Dpad right
-		if (l) *l = IsKeyDown(KeyConfig::KEY_MENU_LEFT) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, INPUT_FRONTEND_LEFT); //Dpad left
+		if (up) *up = IsKeyDown(KeyConfig::KEY_MENU_UP) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, INPUT_FRONTEND_UP); //Dpad up
+		if (down) *down = IsKeyDown(KeyConfig::KEY_MENU_DOWN) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, INPUT_FRONTEND_DOWN); //Dpad down
+		if (r) *r = IsKeyDown(KeyConfig::KEY_MENU_RIGHT) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, INPUT_FRONTEND_RIGHT); //Dpad right
+		if (l) *l = IsKeyDown(KeyConfig::KEY_MENU_LEFT) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, INPUT_FRONTEND_LEFT); //Dpad left
 	}
 	if (MISC_TRAINERCONTROL_VALUES[TrainerControlIndex] == 0) { // release
-		if (up) *up = IsKeyJustUp(KeyConfig::KEY_MENU_UP) || CONTROLS::IS_CONTROL_JUST_RELEASED(2, INPUT_FRONTEND_UP);
-		if (down) *down = IsKeyJustUp(KeyConfig::KEY_MENU_DOWN) || CONTROLS::IS_CONTROL_JUST_RELEASED(2, INPUT_FRONTEND_DOWN);
-		if (r) *r = IsKeyJustUp(KeyConfig::KEY_MENU_RIGHT) || CONTROLS::IS_CONTROL_JUST_RELEASED(2, INPUT_FRONTEND_RIGHT);
-		if (l) *l = IsKeyJustUp(KeyConfig::KEY_MENU_LEFT) || CONTROLS::IS_CONTROL_JUST_RELEASED(2, INPUT_FRONTEND_LEFT);
+		if (up) *up = IsKeyJustUp(KeyConfig::KEY_MENU_UP) || CONTROLS::IS_DISABLED_CONTROL_JUST_RELEASED(2, INPUT_FRONTEND_UP);
+		if (down) *down = IsKeyJustUp(KeyConfig::KEY_MENU_DOWN) || CONTROLS::IS_DISABLED_CONTROL_JUST_RELEASED(2, INPUT_FRONTEND_DOWN);
+		if (r) *r = IsKeyJustUp(KeyConfig::KEY_MENU_RIGHT) || CONTROLS::IS_DISABLED_CONTROL_JUST_RELEASED(2, INPUT_FRONTEND_RIGHT);
+		if (l) *l = IsKeyJustUp(KeyConfig::KEY_MENU_LEFT) || CONTROLS::IS_DISABLED_CONTROL_JUST_RELEASED(2, INPUT_FRONTEND_LEFT);
 	}
 }
 
@@ -75,7 +71,6 @@ bool airbrake_switch_pressed()
 		DWORD maxTickCount = GetTickCount() + 200;
 		do
 		{
-			UpdateXInputControlState();
 			make_periodic_feature_call();
 			WAIT(0);
 		} while (GetTickCount() < maxTickCount);
