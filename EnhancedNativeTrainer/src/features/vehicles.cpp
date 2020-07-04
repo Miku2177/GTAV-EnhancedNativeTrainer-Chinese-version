@@ -44,8 +44,6 @@ bool featureVehNoDamage = false;
 
 bool featureVehInvulnIncludesCosmetic = false;
 
-int activeLineIndexVehList = 0;
-
 bool feature3rdpersonviewonly, featureDaytimeonly = false;
 bool featureHazards = true;
 
@@ -168,6 +166,7 @@ bool featureDespawnScriptDisabled = false;
 bool featureDespawnScriptDisabledUpdated = false;
 bool featureDespawnScriptDisabledWasLastOn = false; // do not persist this particular var in the DB - it is local only
 
+int activeLineIndexVehList = 0;
 int activeLineIndexVeh = 0;
 int activeSavedVehicleIndex = -1;
 int activeLineIndexSpeed = 0;
@@ -176,6 +175,7 @@ int activeLineIndexSpeedlimit = 0;
 int activeLineIndexFuel = 0;
 int activeLineIndexEngineDegrade = 0;
 int activeLineIndexRemember = 0;
+int activeLineIndexCarSpawnMenu = 0;
 int activeLineIndexRoadLaws = 0;
 std::string activeSavedVehicleSlotName;
 int lastKnownSavedVehicleCount = 0;
@@ -4072,6 +4072,8 @@ void reset_vehicle_globals() {
 	activeLineIndexFuel = 0;
 	activeLineIndexEngineDegrade = 0;
 	activeLineIndexRemember = 0;
+	activeLineIndexVehList = 0;
+	activeLineIndexCarSpawnMenu = 0;
 	activeLineIndexRoadLaws = 0;
 
 	FuelColours_R_Index = 26;
@@ -4258,7 +4260,7 @@ bool process_carspawn_menu() {
 	item->value = -3;
 	menuItems.push_back(item);
 
-	return draw_generic_menu<int>(menuItems, 0, "Vehicle Categories", onconfirm_spawn_menu_cars, NULL, NULL);
+	return draw_generic_menu<int>(menuItems, &activeLineIndexCarSpawnMenu, "Vehicle Categories", onconfirm_spawn_menu_cars, nullptr, nullptr, nullptr);
 }
 
 //Gets the user's selection and requests it to be spawned
@@ -4272,6 +4274,7 @@ bool onconfirm_spawn_menu_cars(MenuItem<int> choice){
 	std::vector<MenuItem<int>*> menuItems;
 	std::vector<Hash> selectedCat = get_vehicles_from_category(choice.value);
 	int itemIndex = 0;
+	activeLineIndexVehList = 0;
 
 	for (Hash hash : selectedCat)
 	{
@@ -4319,7 +4322,7 @@ bool onconfirm_spawn_menu_cars(MenuItem<int> choice){
 		return false;
 	}
 
-	return draw_generic_menu<int>(menuItems, &activeLineIndexVehList, caption, onconfirm_vehlist_menu, NULL, NULL);
+	return draw_generic_menu<int>(menuItems, &activeLineIndexVehList, caption, onconfirm_vehlist_menu, nullptr, nullptr, nullptr);
 }
 
 bool do_spawn_vehicle_hash(int modelName, std::string modelTitle) {
