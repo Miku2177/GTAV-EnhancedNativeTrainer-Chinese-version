@@ -6,3 +6,7 @@
 bool IsControllerButtonDown(int inputGroup, int buttonIndex);
 
 bool IsControllerButtonJustUp(int inputGroup, int buttonIndex);
+
+bool isUsingController();
+
+void disableControls();

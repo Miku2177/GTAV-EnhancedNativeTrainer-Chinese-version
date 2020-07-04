@@ -1155,7 +1155,7 @@ void onchange_veh_vislight3d_index(int value, SelectFromListMenuItem* source);
 
 void set_old_vehicle_state(bool updatedState);
 
-MenuItemImage* vehicle_image_preview_finder(MenuItem<std::string> choice);
+MenuItemImage* vehicle_image_preview_finder(MenuItem<int> choice);
 
 void init_vehicle_feature();
 
