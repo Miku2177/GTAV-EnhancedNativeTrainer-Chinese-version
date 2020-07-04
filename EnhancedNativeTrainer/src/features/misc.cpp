@@ -39,7 +39,7 @@ bool help_showing = true;
 bool frozen_time = false;
 
 // phone bill variables
-bool featureBlockInputInMenu = false;
+//bool featureBlockInputInMenu = false;
 bool featurePhoneBillEnabled = false;
 bool featureGamePause = false;
 bool featureZeroBalance = false;
@@ -133,7 +133,7 @@ bool featurenowheelblurslow = false;
 bool featureShowVehiclePreviews = true;
 bool featureShowStatusMessage = true;
 bool featureNoAutoRespawn = false;
-bool featureControllerIgnoreInTrainer = false;
+//bool featureControllerIgnoreInTrainer = false;
 
 bool featureMiscJellmanScenery = false;
 
@@ -332,17 +332,17 @@ void process_misc_trainerconfig_menu(){
 	listItem->value = TrainerControlIndex;
 	menuItems.push_back(listItem);
 
+	//ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
+	//toggleItem->caption = "Lock Controls While In Menu";
+	//toggleItem->toggleValue = &featureBlockInputInMenu;
+	//menuItems.push_back(toggleItem);
+
+	//toggleItem = new ToggleMenuItem<int>();
+	//toggleItem->caption = "Turn Off All Controller Input In Trainer";
+	//toggleItem->toggleValue = &featureControllerIgnoreInTrainer;
+	//menuItems.push_back(toggleItem);
+
 	ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Lock Controls While In Menu";
-	toggleItem->toggleValue = &featureBlockInputInMenu;
-	menuItems.push_back(toggleItem);
-
-	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Turn Off All Controller Input In Trainer";
-	toggleItem->toggleValue = &featureControllerIgnoreInTrainer;
-	menuItems.push_back(toggleItem);
-
-	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Show Vehicle Previews";
 	toggleItem->toggleValue = &featureShowVehiclePreviews;
 	menuItems.push_back(toggleItem);
@@ -1142,8 +1142,8 @@ void reset_misc_globals(){
 	featureShowStatusMessage = true;
 	airbrake_enable = true;
 	featureFirstPersonCutscene = false;
-	featureControllerIgnoreInTrainer = false;
-	featureBlockInputInMenu = false;
+	//featureControllerIgnoreInTrainer = false;
+	//featureBlockInputInMenu = false;
 	mouse_view_control = false;
 	help_showing = true;
 	frozen_time = false;
@@ -2005,8 +2005,8 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 	results->push_back(FeatureEnabledLocalDefinition{"featureMarkerHud", &featureMarkerHud});
 	results->push_back(FeatureEnabledLocalDefinition{"featureDynamicHealthBar", &featureDynamicHealthBar});
 	results->push_back(FeatureEnabledLocalDefinition{"featureDisableRecording", &featureDisableRecording});
-	results->push_back(FeatureEnabledLocalDefinition{"featureControllerIgnoreInTrainer", &featureControllerIgnoreInTrainer});
-	results->push_back(FeatureEnabledLocalDefinition{"featureBlockInputInMenu", &featureBlockInputInMenu});
+	//results->push_back(FeatureEnabledLocalDefinition{"featureControllerIgnoreInTrainer", &featureControllerIgnoreInTrainer});
+	//results->push_back(FeatureEnabledLocalDefinition{"featureBlockInputInMenu", &featureBlockInputInMenu});
 	results->push_back(FeatureEnabledLocalDefinition{"mouse_view_control", &mouse_view_control});
 	results->push_back(FeatureEnabledLocalDefinition{"airbrake_enable", &airbrake_enable});
 	results->push_back(FeatureEnabledLocalDefinition{"featureFirstPersonCutscene", &featureFirstPersonCutscene});
@@ -2079,13 +2079,13 @@ bool is_vehicle_preview_enabled(){
 	return featureShowVehiclePreviews;
 }
 
-bool is_input_blocked_in_menu(){
-	return featureBlockInputInMenu;
-}
+//bool is_input_blocked_in_menu(){
+//	return featureBlockInputInMenu;
+//}
 
-bool is_controller_ignored_in_trainer(){
-	return featureControllerIgnoreInTrainer;
-}
+//bool is_controller_ignored_in_trainer(){
+//	return featureControllerIgnoreInTrainer;
+//}
 
 bool is_hud_hidden(){
 	return featureMiscHideHud;
