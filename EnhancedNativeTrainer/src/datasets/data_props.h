@@ -2847,7 +2847,6 @@ const std::vector<PropInfo> ALL_PROPS =
 	{ "p_secret_weapon_02", "Secret Weapon Crate", "Military" },
 	{ "prop_sam_01", "Surface To Air Missile", "Military" },
 	{ "prop_flag_us", "American Flag", "Misc" },
-	{ "prop_flag_usboat", "American Flag (boat)", "Misc" },
 	{ "prop_artifact_01", "Artifact", "Misc" },
 	{ "v_res_msonbed_s", "Bed", "Misc" },
 	{ "prop_big_shit_01", "Big Shit #1", "Misc" },

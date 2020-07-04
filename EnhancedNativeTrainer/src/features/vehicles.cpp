@@ -163,9 +163,6 @@ bool featureDespawnScriptDisabled = false;
 bool featureDespawnScriptDisabledUpdated = false;
 bool featureDespawnScriptDisabledWasLastOn = false; // do not persist this particular var in the DB - it is local only
 
-int tmp_menuindex = -1;
-
-int activeLineIndexVehList = 0;
 int activeLineIndexVeh = 0;
 int activeSavedVehicleIndex = -1;
 int activeLineIndexSpeed = 0;
@@ -4004,7 +4001,6 @@ void reset_vehicle_globals() {
 	activeLineIndexFuel = 0;
 	activeLineIndexEngineDegrade = 0;
 	activeLineIndexRemember = 0;
-	activeLineIndexVehList = 0;
 	activeLineIndexCarSpawnMenu = 0;
 	activeLineIndexRoadLaws = 0;
 
@@ -4196,6 +4192,7 @@ bool process_carspawn_menu() {
 //Gets the user's selection and requests it to be spawned
 bool onconfirm_vehlist_menu(MenuItem<int> choice) {
 	do_spawn_vehicle_hash(choice.value, choice.caption);
+
 	return false;
 }
 
@@ -4204,11 +4201,7 @@ bool onconfirm_spawn_menu_cars(MenuItem<int> choice){
 	std::vector<MenuItem<int>*> menuItems;
 	std::vector<Hash> selectedCat = get_vehicles_from_category(choice.value);
 	int itemIndex = 0;
-	if (choice.value != tmp_menuindex) {
-		tmp_menuindex = choice.value;
-		activeLineIndexVehList = 0;
-	}
-
+	
 	for (Hash hash : selectedCat)
 	{
 		itemIndex++;
