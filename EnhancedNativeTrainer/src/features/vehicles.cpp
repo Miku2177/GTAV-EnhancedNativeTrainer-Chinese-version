@@ -5498,8 +5498,6 @@ MenuItemImage* vehicle_image_preview_finder(MenuItem<int> choice){
 
 	//TODO: Change modelName to a hash (i.e RAGE_JOAAT()) so it compares 2 hashes and not a string -> hash
 	for each (VehicleImage vimg in ALL_VEH_IMAGES){
-		write_text_to_log_file("Choice: " + std::to_string(choice.value));
-
 		if(vimg.modelName == choice.value){
 			MenuItemImage* image = new MenuItemImage();
 			image->dict = vimg.dict;
