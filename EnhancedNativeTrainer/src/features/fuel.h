@@ -69,3 +69,7 @@ extern int FuelBackground_Opacity_Index;
 extern bool FuelBackgound_Opacity_Changed;
 
 void fuel();
+
+extern std::vector<int> GAS_X;
+extern std::vector<int> GAS_Y;
+extern std::vector<int> GAS_Z;

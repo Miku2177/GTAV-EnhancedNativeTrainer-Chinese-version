@@ -28,7 +28,7 @@
     <key function="veh_emergencyblink" value="VK_DECIMAL"/>
     <key function="veh_startrefueling" value="VK_KEY_E"/>
     <key function="veh_stoprefueling" value="VK_KEY_S"/>
-
+		
     <!--The following are for the feature that lets you move around beyond normal limits, e.g. noclip-->
     
     <key function="toggle_airbrake" value="VK_F6"/>
@@ -44,7 +44,7 @@
     <key function="airbrake_speed" value="VK_SHIFT"/>
     <key function="airbrake_freeze_time" value="VK_KEY_T"/>
     <key function="airbrake_help" value="VK_KEY_H"/>
-
+	
     <key function="objectplacer_up" value="VK_KEY_Q"/>
     <key function="objectplacer_down" value="VK_KEY_Z"/>
     <key function="objectplacer_forward" value="VK_KEY_W"/>
@@ -138,23 +138,25 @@
       <button value="L_SHOULDER"/>
       <button value="R_SHOULDER"/>
     </controller>
-    <controller function="veh_leftblink">
-      <button value="L_TRIGGER"/>
-    </controller>
-    <controller function="veh_rightblink">
-      <button value="R_TRIGGER"/>
-    </controller>
-    <controller function="veh_emergencyblink">
+	<controller function="veh_leftblink">
       <button value="L_SHOULDER"/>
       <button value="R_SHOULDER"/>
     </controller>
-    <controller function="veh_startrefueling">
+    <controller function="veh_rightblink">
+      <button value="L_SHOULDER"/>
+      <button value="R_SHOULDER"/>
+    </controller>
+	<controller function="veh_emergencyblink">
+      <button value="L_SHOULDER"/>
+      <button value="R_SHOULDER"/>
+    </controller>
+	<controller function="veh_startrefueling">
       <button value="BUTTON_A"/>
     </controller>
-    <controller function="veh_stoprefueling">
+	<controller function="veh_stoprefueling">
       <button value="BUTTON_B"/>
     </controller>
-    
+	
     <controller function="toggle_airbrake">
       <button value="R_SHOULDER"/>
       <button value="BUTTON_A"/>
@@ -213,23 +215,62 @@
       <button value="BUTTON_Y"/>
     </controller>
 
-	<!--Weather Order-->
-	<key function="WEATHER_1" value="EXTRASUNNY"/>
-    <key function="WEATHER_2" value="CLEAR"/>
-    <key function="WEATHER_3" value="CLOUDS"/>
-    <key function="WEATHER_4" value="SMOG"/>
-    <key function="WEATHER_5" value="FOGGY"/>
-    <key function="WEATHER_6" value="OVERCAST"/>
-    <key function="WEATHER_7" value="RAIN"/>
-    <key function="WEATHER_8" value="THUNDER"/>
-    <key function="WEATHER_9" value="CLEARING"/>
-    <key function="WEATHER_10" value="NEUTRAL"/>
-    <key function="WEATHER_11" value="SNOW"/>
-    <key function="WEATHER_12" value="BLIZZARD"/>
-    <key function="WEATHER_13" value="SNOWLIGHT"/>
-    <key function="WEATHER_14" value="XMAS"/>
-    <key function="WEATHER_15" value="HALLOWEEN"/>
-
     -->
   </keys>
+
+ <!--Weather Order-->
+ <weather_list>
+    <weather position="WEATHER_1" name="EXTRASUNNY"/>
+    <weather position="WEATHER_2" name="CLEAR"/>
+    <weather position="WEATHER_3" name="CLOUDS"/>
+    <weather position="WEATHER_4" name="SMOG"/>
+    <weather position="WEATHER_5" name="FOGGY"/>
+    <weather position="WEATHER_6" name="OVERCAST"/>
+    <weather position="WEATHER_7" name="RAIN"/>
+    <weather position="WEATHER_8" name="THUNDER"/>
+    <weather position="WEATHER_9" name="CLEARING"/>
+    <weather position="WEATHER_10" name="NEUTRAL"/>
+    <weather position="WEATHER_11" name="SNOW"/>
+    <weather position="WEATHER_12" name="BLIZZARD"/>
+    <weather position="WEATHER_13" name="SNOWLIGHT"/>
+    <weather position="WEATHER_14" name="XMAS"/>
+    <weather position="WEATHER_15" name="HALLOWEEN"/>
+ </weather_list>
+  
+  <!--Gas Stations-->
+  <gas_stations>
+    <station x_coord="-71" y_coord="-1762" z_coord="30"/>
+    <station x_coord="-90" y_coord="6415" z_coord="30"/>
+    <station x_coord="180" y_coord="6603" z_coord="30"/>
+	<station x_coord="819" y_coord="-1027" z_coord="30"/>
+    <station x_coord="1039" y_coord="2669" z_coord="39"/>
+    <station x_coord="-2555" y_coord="2334" z_coord="30"/>
+	<station x_coord="2581" y_coord="362" z_coord="30"/>
+	<station x_coord="2683" y_coord="3264" z_coord="30"/>
+    <station x_coord="-853" y_coord="-1374" z_coord="30"/>
+	<station x_coord="265" y_coord="-1261" z_coord="30"/>
+	<station x_coord="-1799" y_coord="803" z_coord="30"/>
+    <station x_coord="-724" y_coord="-935" z_coord="30"/>
+    <station x_coord="264" y_coord="2609" z_coord="30"/>
+	<station x_coord="50" y_coord="2776" z_coord="30"/>
+	<station x_coord="1702" y_coord="6418" z_coord="30"/>
+	<station x_coord="1212" y_coord="2657" z_coord="30"/>
+	<station x_coord="2537" y_coord="2593" z_coord="30"/>
+    <station x_coord="1182" y_coord="-330" z_coord="30"/>
+	<station x_coord="-526" y_coord="-1212" z_coord="30"/>
+	<station x_coord="1209" y_coord="-1402" z_coord="30"/>
+    <station x_coord="2005" y_coord="3775" z_coord="30"/>
+	<station x_coord="621" y_coord="269" z_coord="30"/>
+	<station x_coord="-2097" y_coord="-320" z_coord="30"/>
+	<station x_coord="-1434" y_coord="-274" z_coord="30"/>
+	<station x_coord="1687" y_coord="4929" z_coord="30"/>
+	<station x_coord="1785" y_coord="3330" z_coord="41"/>
+    <station x_coord="-1603" y_coord="5260" z_coord="30"/>
+    <station x_coord="-724" y_coord="-1444" z_coord="5"/>
+    <station x_coord="1770" y_coord="3240" z_coord="42"/>
+    <station x_coord="-1272" y_coord="-3381" z_coord="14"/>
+	<station x_coord="174" y_coord="-1561" z_coord="29"/>
+    <station x_coord="-67" y_coord="-2532" z_coord="6"/>
+</gas_stations>
+
 </ent-config>
