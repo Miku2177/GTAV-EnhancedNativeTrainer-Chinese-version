@@ -136,6 +136,7 @@
     <ClCompile Include="src\features\xenonColourMenu.cpp">
       <Filter>src\features</Filter>
     </ClCompile>
+    <ClCompile Include="src\io\controller.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\features\aimbot_esp.h">
@@ -274,6 +275,8 @@
       <Filter>inc\features</Filter>
     </ClInclude>
     <ClInclude Include="src\features\enginedegrade.h" />
+    <ClInclude Include="src\io\controller.h" />
+    <ClInclude Include="src\joaat.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="ent-config.xml" />
