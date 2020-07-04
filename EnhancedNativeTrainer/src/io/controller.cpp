@@ -5,8 +5,8 @@
 
 bool IsControllerButtonDown(int inputGroup, int buttonIndex)
 {
-	if (is_controller_ignored_in_trainer())
-		return false;
+	//if (is_controller_ignored_in_trainer())
+	//	return false;
 
 	if (CONTROLS::IS_CONTROL_JUST_PRESSED(inputGroup, buttonIndex))
 	{
@@ -19,8 +19,8 @@ bool IsControllerButtonDown(int inputGroup, int buttonIndex)
 
 bool IsControllerButtonJustUp(int inputGroup, int buttonIndex)
 {
-	if (is_controller_ignored_in_trainer())
-		return false;
+	//if (is_controller_ignored_in_trainer())
+	//	return false;
 
 	if (CONTROLS::IS_CONTROL_JUST_RELEASED(inputGroup, buttonIndex))
 	{
