@@ -359,6 +359,12 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("TORO"), "dock_default", "toro" },
 	//Missing preview images
 	{ RAGE_JOAAT("AIRTUG"), "ENT_vehicle_previews", "VP_AIRTUG" },
+	{ RAGE_JOAAT("AVENGER2"), "ENT_vehicle_previews", "VP_AVENGER" },
+	{ RAGE_JOAAT("BARRACKS3"), "ENT_vehicle_previews", "VP_BARRACKS" },
+	{ RAGE_JOAAT("CARGOBOB4"), "ENT_vehicle_previews", "VP_CARGOBOB" },
+	{ RAGE_JOAAT("TRAILERS4"), "ENT_vehicle_previews", "VP_TRAILER" },
+	{ RAGE_JOAAT("VALKYRIE2"), "ENT_vehicle_previews", "VP_VALKYRIEMOD0" },
+	{ RAGE_JOAAT("RUINER3"), "ENT_vehicle_previews", "VP_RUINER2" },
 	{ RAGE_JOAAT("AMBULANCE"), "ENT_vehicle_previews", "VP_AMBULANCE" },
 	{ RAGE_JOAAT("ARMYTANKER"), "ENT_vehicle_previews", "VP_ARMYTANKER" },
 	{ RAGE_JOAAT("ARMYTRAILER"), "ENT_vehicle_previews", "VP_ARMYTANKER" },
