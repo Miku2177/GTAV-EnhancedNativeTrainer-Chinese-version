@@ -3075,7 +3075,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				controllightsenabled_l = false;
 			}
 
-			if (emergencyKey) {
+			if (emergencyKey && !IsKeyDown(VK_ESCAPE)) {
 				if (turn_check_left == true && turn_check_right == true) {
 					turn_check_left = false;
 					turn_check_right = false;
@@ -3170,7 +3170,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			if (turn_angle > VEH_TURN_SIGNALS_ANGLE_VALUES[turnSignalsAngleIndex] ||
 				(leftKey && VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] > 0) ||
 				(rightKey && VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] > 0) ||
-				(emergencyKey && VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] > 0) ||
+				(emergencyKey && VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] > 0 && !IsKeyDown(VK_ESCAPE)) ||
 				vehturnspeed > (VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] + 10) ||
 				signal_meters > (VEH_TURN_SIGNALS_ACCELERATION_VALUES[turnSignalsAccelerationIndex] * 22) ||
 				Accel_seconds > VEH_TURN_SIGNALS_ACCELERATION_VALUES[turnSignalsAccelerationIndex] ||
