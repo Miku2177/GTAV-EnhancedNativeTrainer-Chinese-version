@@ -77,6 +77,7 @@ int injured_m = -2;
 bool everInitialised = false;
 
 bool falling_down = false;
+bool looking_behind = false;
 
 ENTDatabase* database = NULL;
 Camera DeathCam = NULL;
@@ -499,6 +500,15 @@ void update_features(){
 		set_menu_showing(false);
 		WAIT(200);
 		set_menu_showing(true);
+	}
+
+	if (CONTROLS::IS_DISABLED_CONTROL_PRESSED(26, 0) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, INPUT_LOOK_BEHIND)) {
+		set_menu_showing(false);
+		looking_behind = true;
+	}
+	if (!CONTROLS::IS_DISABLED_CONTROL_PRESSED(26, 0) && !CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, INPUT_LOOK_BEHIND) && looking_behind == true) {
+		set_menu_showing(true);
+		looking_behind = false;
 	}
 
 	if (is_menu_showing() && (IsKeyDown(VK_ESCAPE) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, INPUT_FRONTEND_PAUSE))) {
