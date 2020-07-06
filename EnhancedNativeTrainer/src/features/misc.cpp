@@ -175,8 +175,6 @@ int PhoneBikeAnimationIndex = 0;
 bool PhoneBikeAnimationChanged = true;
 
 // Default Menu Tab
-const std::vector<std::string> MISC_DEF_MENUTAB_CAPTIONS{ "OFF", "Map", "Brief", "Friends", "Gallery", "Game", "Settings", "Stats", "Store", "Online" };
-const int MISC_DEF_MANUTAB_VALUES[] = { -2, -1, 1, 2, 3, 5, 6, 10, 18, 42 };
 int DefMenuTabIndex = 0;
 bool DefMenuTabChanged = true;
 

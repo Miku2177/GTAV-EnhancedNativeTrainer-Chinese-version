@@ -503,6 +503,10 @@ void update_features(){
 
 	if (is_menu_showing() && (IsKeyDown(VK_ESCAPE) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, INPUT_FRONTEND_PAUSE))) {
 		set_menu_showing(false);
+		if (MISC_DEF_MANUTAB_VALUES[DefMenuTabIndex] > -2) {
+			UI::ACTIVATE_FRONTEND_MENU(GAMEPLAY::GET_HASH_KEY("FE_MENU_VERSION_SP_PAUSE"), featureGamePause, MISC_DEF_MANUTAB_VALUES[DefMenuTabIndex]);
+			AUDIO::SET_AUDIO_FLAG("PlayMenuMusic", true);
+		} else AUDIO::SET_AUDIO_FLAG("PlayMenuMusic", false);
 		WAIT(200);
 		set_menu_showing(true);
 	}
