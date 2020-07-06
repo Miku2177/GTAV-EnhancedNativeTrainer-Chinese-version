@@ -502,7 +502,7 @@ void update_features(){
 		set_menu_showing(true);
 	}
 
-	if (CONTROLS::IS_DISABLED_CONTROL_PRESSED(26, 0) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, INPUT_LOOK_BEHIND)) {
+	if (is_menu_showing() && (CONTROLS::IS_DISABLED_CONTROL_PRESSED(26, 0) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, INPUT_LOOK_BEHIND))) {
 		set_menu_showing(false);
 		looking_behind = true;
 	}
