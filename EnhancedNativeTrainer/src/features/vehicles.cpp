@@ -50,6 +50,9 @@ bool featureHazards = true;
 bool window_up = true;
 bool high_speed = false;
 
+int tmp_menuindex = -1;
+int curr_c_pos = -1;
+
 int veh_jumped_n = 0;
 
 int Accel_secs_passed, Accel_secs_curr, Accel_seconds = 0;
@@ -4252,6 +4255,13 @@ bool onconfirm_spawn_menu_cars(MenuItem<int> choice){
 	params.menuSelectionPtr = 0;
 	params.onConfirmation = onconfirm_vehlist_menu;
 	params.lineImageProvider = vehicle_image_preview_finder;
+
+	if (choice.value == tmp_menuindex) params.menuSelectionPtr = &curr_c_pos;
+	if (choice.value != tmp_menuindex) {
+		tmp_menuindex = choice.value;
+		curr_c_pos = -1;
+		params.menuSelectionPtr = &curr_c_pos;
+	}
 
 	return draw_generic_menu<int>(params);
 }
