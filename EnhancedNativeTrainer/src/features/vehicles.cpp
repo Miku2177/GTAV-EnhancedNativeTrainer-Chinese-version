@@ -4217,7 +4217,7 @@ bool onconfirm_spawn_menu_cars(MenuItem<int> choice){
 
 	if (choice.value == -3) { // enter name manually
 		keyboard_on_screen_already = true;
-		curr_message = "Enter vehicle model name (e.g. adder or random):"; // spawn a vehicle
+		curr_message = "Enter vehicle model name (e.g. adder or random):";
 		std::string result = show_keyboard("Enter Name Manually", (char*)lastCustomVehicleSpawn.c_str());
 
 		if (!result.empty()) {

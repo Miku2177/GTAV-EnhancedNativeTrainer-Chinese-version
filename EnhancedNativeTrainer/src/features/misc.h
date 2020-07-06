@@ -94,6 +94,13 @@ extern const Hash SP0_TOTAL_CASH;
 extern const Hash SP1_TOTAL_CASH;
 extern const Hash SP2_TOTAL_CASH;
 
+const std::vector<std::string> MISC_DEF_MENUTAB_CAPTIONS{ "OFF", "Map", "Brief", "Friends", "Gallery", "Game", "Settings", "Stats", "Store", "Online" };
+const int MISC_DEF_MANUTAB_VALUES[] = { -2, -1, 1, 2, 3, 5, 6, 10, 18, 42 };
+extern int DefMenuTabIndex;
+extern bool DefMenuTabChanged;
+
+extern bool featureGamePause;
+
 void process_misc_menu();
 
 void reset_misc_globals();

@@ -1246,10 +1246,6 @@ void do_spawn_bodyguard(){
 				PED::SET_ENABLE_SCUBA(bodyGuard, true);
 			}
 
-			if (featureBodyguardInvincible) {
-				ENTITY::SET_ENTITY_INVINCIBLE(bodyGuard, true);
-			}
-
 			if (featureBodyguardHelmet && bodyguard_animal == false) {
 				PED::GIVE_PED_HELMET(bodyGuard, 1, 4096, -1);
 			}
@@ -1491,7 +1487,8 @@ void maintain_bodyguards(){
 		Vector3 my_coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 		for (int i = 0; i < spawnedENTBodyguards.size(); i++) {
 			// bodyguards invincible
-			if (featureBodyguardInvincible) ENTITY::SET_ENTITY_INVINCIBLE(spawnedENTBodyguards[i], featureBodyguardInvincible);
+			if (featureBodyguardInvincible) ENTITY::SET_ENTITY_INVINCIBLE(spawnedENTBodyguards[i], true);
+			else ENTITY::SET_ENTITY_INVINCIBLE(spawnedENTBodyguards[i], false);
 			// give weapon in vehicle
 			if (!spawnedBodyguardsSecWeap.empty()) {
 				if (PED::IS_PED_IN_ANY_VEHICLE(spawnedENTBodyguards[i], 1) && !WEAPON::HAS_PED_GOT_WEAPON(spawnedENTBodyguards[i], GAMEPLAY::GET_HASH_KEY("WEAPON_MICROSMG"), 0)) {
