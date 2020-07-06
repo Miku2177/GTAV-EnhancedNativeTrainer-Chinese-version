@@ -497,13 +497,13 @@ void update_features(){
 
 	if (is_menu_showing() && (CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, 0) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, INPUT_NEXT_CAMERA))) {
 		set_menu_showing(false);
-		WAIT(100);
+		WAIT(200);
 		set_menu_showing(true);
 	}
 
 	if (is_menu_showing() && (IsKeyDown(VK_ESCAPE) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, INPUT_FRONTEND_PAUSE))) {
 		set_menu_showing(false);
-		WAIT(100);
+		WAIT(200);
 		set_menu_showing(true);
 	}
 
