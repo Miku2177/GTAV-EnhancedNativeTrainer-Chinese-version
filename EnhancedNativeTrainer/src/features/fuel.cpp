@@ -483,7 +483,7 @@ void fuel()
 				else VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, false, true);
 				UI::DISPLAY_CASH(true);
 				STATS::STAT_SET_INT(statHash_station, outValue_station - VEH_FUELPRICE_VALUES[FuelPriceIndex], true);
-				if (stoprefillKey && !IsKeyDown(VK_ESCAPE) && exiting_v == false) {
+				if (stoprefillKey && !IsKeyDown(VK_ESCAPE) && CONTROLS::IS_CONTROL_RELEASED(2, INPUT_FRONTEND_PAUSE) && exiting_v == false) {
 					if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
 						VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, true, false);
 						Car_Refuel = false;
