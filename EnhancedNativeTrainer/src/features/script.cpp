@@ -502,6 +502,12 @@ void update_features(){
 		set_menu_showing(true);
 	}
 
+	if (is_in_airbrake_mode() && (CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, 0) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, INPUT_NEXT_CAMERA))) {
+		exit_airbrake_menu_if_showing();
+		WAIT(200);
+		process_airbrake_menu();
+	}
+
 	if (is_menu_showing() && (CONTROLS::IS_DISABLED_CONTROL_PRESSED(26, 0) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, INPUT_LOOK_BEHIND))) {
 		set_menu_showing(false);
 		looking_behind = true;
