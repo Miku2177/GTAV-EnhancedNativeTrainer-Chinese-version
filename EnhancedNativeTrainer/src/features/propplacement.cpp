@@ -471,7 +471,7 @@ void prop_placement()
 			pp_cur_pitch += rotationSpeed;
 		}
 
-		if (rotateLeftKey)
+		if (rotateLeftKey && !(moveUpKey))
 		{
 			pp_cur_roll -= rotationSpeed;
 		}
@@ -504,7 +504,7 @@ void prop_placement()
 			pp_cur_location.y -= yVect;
 		}
 
-		if (rotateLeftKey)
+		if (rotateLeftKey && !(moveUpKey))
 		{
 			pp_cur_heading += rotationSpeed;
 		}
