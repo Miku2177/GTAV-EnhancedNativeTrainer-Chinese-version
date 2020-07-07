@@ -360,8 +360,8 @@ void airbrake(bool inVehicle)
 	}
 
 	if (!mouse_view_control && !frozen_time) {
-		Vector3 CamRot = ENTITY::GET_ENTITY_ROTATION(target, 2);
-		curHeading = ENTITY::GET_ENTITY_HEADING(target);
+		Vector3 CamRot = ENTITY::GET_ENTITY_ROTATION(playerPed, 2);
+		curHeading = ENTITY::GET_ENTITY_HEADING(playerPed);
 		int p_force = forwardPush * 5; // 5;
 		float rad = 2 * 3.14 * (CamRot.z / 360);
 		float v_x = -(sin(rad) * p_force * 10);
