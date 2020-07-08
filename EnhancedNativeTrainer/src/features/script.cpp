@@ -20,6 +20,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #pragma comment(lib, "Shlwapi.lib")
 
 #include "script.h"
+#include "misc.h"
 #include "skins.h"
 #include "hotkeys.h"
 #include "propplacement.h"
@@ -497,6 +498,7 @@ void update_features(){
 	check_for_hotkey_presses();
 
 	if (is_menu_showing() && (CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, 0) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, INPUT_NEXT_CAMERA))) {
+		if (featureRealisticRadioVolume && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) radio_v_checked = false;
 		set_menu_showing(false);
 		WAIT(200);
 		set_menu_showing(true);

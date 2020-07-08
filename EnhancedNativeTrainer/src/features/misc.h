@@ -141,6 +141,9 @@ void set_hud_hidden(bool hidden);
 
 bool is_jellman_scenery_enabled();
 
+extern bool radio_v_checked;
+extern bool featureRealisticRadioVolume;
+
 struct ScriptHeader
 {
 	char padding1[16];					//0x0
