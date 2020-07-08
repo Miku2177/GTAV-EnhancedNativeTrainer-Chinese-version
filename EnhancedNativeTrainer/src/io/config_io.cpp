@@ -112,68 +112,53 @@ void read_config_file(){
 	}
 
 	// controller binds
-	nodes = spXMLDoc->selectNodes(L"//ent-config/keys/controller");
+	nodes = spXMLDoc->selectNodes(L"//ent-config/controller_keys/controller");
 	nodes->get_length(&length);
-	for(int i = 0; i < length; i++){
-		IXMLDOMNode *node;
+	for (int i = 0; i < length; i++) {
+		IXMLDOMNode* node;
 		nodes->get_item(i, &node);
-		IXMLDOMNamedNodeMap *attribs;
+		IXMLDOMNamedNodeMap* attribs;
 		node->get_attributes(&attribs);
 
 		long length_attribs;
 		attribs->get_length(&length_attribs);
 
-		char *attrib_control_func = NULL;
+		char* attrib_controller_func = NULL;
+		char* attrib_button1_v = NULL;
+		char* attrib_button2_v = NULL;
 
-		for(long j = 0; j < length_attribs; j++){
-			IXMLDOMNode *attribNode;
+		for (long j = 0; j < length_attribs; j++) {
+			IXMLDOMNode* attribNode;
 			attribs->get_item(j, &attribNode);
 			attribNode->get_nodeName(&keyconf_bstr);
-			if(wcscmp(keyconf_bstr, L"function") == 0){
+			if (wcscmp(keyconf_bstr, L"function") == 0) {
 				VARIANT var;
 				VariantInit(&var);
 				attribNode->get_nodeValue(&var);
-				attrib_control_func = _com_util::ConvertBSTRToString(V_BSTR(&var));
+				attrib_controller_func = _com_util::ConvertBSTRToString(V_BSTR(&var));
+			}
+			else if (wcscmp(keyconf_bstr, L"button1") == 0) {
+				VARIANT var;
+				VariantInit(&var);
+				attribNode->get_nodeValue(&var);
+				attrib_button1_v = _com_util::ConvertBSTRToString(V_BSTR(&var));
+			}
+			else if (wcscmp(keyconf_bstr, L"button2") == 0) {
+				VARIANT var;
+				VariantInit(&var);
+				attribNode->get_nodeValue(&var);
+				attrib_button2_v = _com_util::ConvertBSTRToString(V_BSTR(&var));
 			}
 
+			SysFreeString(keyconf_bstr);
 			attribNode->Release();
 		}
 
-		IXMLDOMNodeListPtr children;
-		HRESULT hr = node->get_childNodes(&children);
-		if(hr == S_OK){
-			long childLength;
-			children->get_length(&childLength);
+		// here must be a code to store keybinds somewhere.
 
-			for(long j = 0; j < childLength; j++){
-				IXMLDOMNode *child;
-				children->get_item(j, &child);
-				IXMLDOMNamedNodeMap *childAttribs;
-				child->get_attributes(&childAttribs);
-
-				long length_attribs;
-				childAttribs->get_length(&length_attribs);
-
-				char *attrib_control_button = NULL;
-
-				for(long k = 0; k < length_attribs; k++){
-					IXMLDOMNode *attribNode;
-					childAttribs->get_item(k, &attribNode);
-					attribNode->get_nodeName(&keyconf_bstr);
-					if(wcscmp(keyconf_bstr, L"value") == 0){
-						VARIANT var;
-						VariantInit(&var);
-						attribNode->get_nodeValue(&var);
-						attrib_control_button = _com_util::ConvertBSTRToString(V_BSTR(&var));
-					}
-					attribNode->Release();
-				}
-				child->Release();
-				childAttribs->Release();
-			}
-		}
-
-		delete attrib_control_func;
+		delete attrib_controller_func;
+		delete attrib_button1_v;
+		delete attrib_button2_v;
 
 		attribs->Release();
 		node->Release();
