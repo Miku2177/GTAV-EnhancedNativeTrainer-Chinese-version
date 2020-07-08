@@ -536,6 +536,10 @@ void PopulateVehicleModelsArray()
 	{
 		std::sort(hlist->begin(), hlist->end(), [](const Hash& a, const Hash& b) -> bool { return (get_vehicle_make_and_model(a)) < get_vehicle_make_and_model(b); });
 	}
+
+	std::stringstream ss;
+	ss << "vHashLists size: " << vHashLists.size() << " g_vehHashes size: " << g_vehHashes.size() << " g_vehHashes_SUPER size: " << g_vehHashes_SUPER.size() << " g_vehHashes_SPORT size: " << g_vehHashes_SPORT.size() << " g_vehHashes_SPORTSCLASSIC size: " << g_vehHashes_SPORTSCLASSIC.size() << "g_vehHashes_COUPE size: " << g_vehHashes_COUPE.size() << " g_vehHashes_MUSCLE size: " << g_vehHashes_MUSCLE.size() << " g_vehHashes_OFFROAD size: " << g_vehHashes_OFFROAD.size() << " g_vehHashes_SUV size: " << g_vehHashes_SUV.size() << " g_vehHashes_SEDAN size: " << g_vehHashes_SEDAN.size() << " g_vehHashes_COMPACT size: " << g_vehHashes_COMPACT.size() << " g_vehHashes_PICKUP size: " << g_vehHashes_PICKUP.size() << " g_vehHashes_VAN size: " << g_vehHashes_VAN.size() << " g_vehHashes_TRUCK size: " << g_vehHashes_TRUCK.size() << " g_vehHashes_INDUSTRIAL size: " << g_vehHashes_INDUSTRIAL.size() << " g_vehHashes_MILITARY size: " << g_vehHashes_MILITARY.size() << " g_vehHashes_COMMERCIAL size: " << g_vehHashes_COMMERCIAL.size() << " g_vehHashes_UTIITY size: " << g_vehHashes_UTILITY.size() << " g_vehHashes_SERVICE size: " << g_vehHashes_SERVICE.size() << " g_vehHashes_TRAILER size: " << g_vehHashes_TRAILER.size() << " g_vehHashes_TRAIN size: " << g_vehHashes_TRAIN.size() << " g_vehHashes_EMERGENCY size: " << g_vehHashes_EMERGENCY.size() << " g_vehHashes_MOTORCYCLE size: " << g_vehHashes_MOTORCYCLE.size() << " g_vehHashes_BICYCLE size: " << g_vehHashes_BICYCLE.size() << " g_vehHashes_PLANE size: " << g_vehHashes_PLANE.size() << " g_vehHashes_HELICOPTER size: " << g_vehHashes_HELICOPTER.size() << " g_vehHashes_BOAT size: " << g_vehHashes_BOAT.size() << " g_vehHashes_OPENWHEEL size: " << g_vehHashes_OPENWHEEL.size() << " g_vehHashes_OTHER size: " << g_vehHashes_OTHER.size() << std::endl;
+	write_text_to_log_file(ss.str());
 }
 
 char* GetVehicleModelName(int modelHash)
@@ -4163,24 +4167,23 @@ bool process_carspawn_menu() {
 
 	for (int i = 1; i < vHashLists.size(); i++)
 	{
-		if (!strcmp(get_class_label(i), "NULL") && i != 23) //Other category
-			continue;
-		if (vHashLists[i]->size() == 0)
-			continue;
-
-		if (i == vHashLists.size() - 1)
+		//if (!strcmp(get_class_label(i), "NULL") && i != 23) //Other category
+		//	continue;
+		//if(vHashLists.at(i)->empty())
+		//	continue;
+	
+		if (i == 23)
 		{
 			MenuItem<int>* item = new MenuItem<int>();
 			item->caption = "Other";
 			item->value = i;
-			item->isLeaf = (i == vHashLists.size() - 1);
 			menuItems.push_back(item);
+			break;
 		}
 
 		MenuItem<int>* item = new MenuItem<int>();
 		item->caption = get_class_label(i);
 		item->value = i;
-		item->isLeaf = (i == vHashLists.size() - 1);
 		menuItems.push_back(item);
 	}
 
