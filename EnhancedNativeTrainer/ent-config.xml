@@ -57,7 +57,7 @@
     <key function="objectplacer_freeze_position" value="VK_KEY_G"/>
     <key function="objectplacer_help" value="VK_KEY_H"/>
 
-    <!-- To enable your hotkeys, change VK_NOTHING to a real key, and optionally alter the other attributes. This does not work well with controllers -->
+  <!-- To enable your hotkeys, change VK_NOTHING to a real key, and optionally alter the other attributes. This does not work well with controllers -->
     <key function="hotkey_1" value="VK_NOTHING" modCtrl="false" modAlt="false" modShift="false"/>
     <key function="hotkey_2" value="VK_NOTHING" modCtrl="false" modAlt="false" modShift="false"/>
     <key function="hotkey_3" value="VK_NOTHING" modCtrl="false" modAlt="false" modShift="false"/>
@@ -68,6 +68,47 @@
     <key function="hotkey_8" value="VK_NOTHING" modCtrl="false" modAlt="false" modShift="false"/>
     <key function="hotkey_9" value="VK_NOTHING" modCtrl="false" modAlt="false" modShift="false"/>
   </keys>
+
+<!--Controller Keys-->
+  <controller_keys>
+    <controller function="toggle_main_menu" button1="81" button2="81"/>
+    
+	<controller function="menu_up" button1="31" button2="81"/>
+    <controller function="menu_down" button1="30" button2="81"/>
+	<controller function="menu_left" button1="20" button2="81"/>
+    <controller function="menu_right" button1="39" button2="81"/>
+    <controller function="menu_select" button1="50" button2="81"/>
+	<controller function="menu_back" button1="33" button2="81"/>
+	
+	<controller function="veh_boost" button1="33" button2="81"/>
+	<controller function="veh_stop" button1="33" button2="81"/>
+	<controller function="veh_rockets" button1="33" button2="81"/>
+	<controller function="veh_leftblink" button1="33" button2="81"/>
+	<controller function="veh_rightblink" button1="33" button2="81"/>
+	<controller function="veh_emergencyblink" button1="33" button2="81"/>
+	<controller function="veh_startrefueling" button1="33" button2="81"/>
+	<controller function="veh_stoprefueling" button1="33" button2="81"/>
+	
+	<controller function="toggle_airbrake" button1="33" button2="81"/>
+	<controller function="airbrake_up" button1="33" button2="81"/>
+	<controller function="airbrake_down" button1="33" button2="81"/>
+	<controller function="airbrake_forward" button1="33" button2="81"/>
+	<controller function="airbrake_back" button1="33" button2="81"/>
+	<controller function="airbrake_rotate_left" button1="33" button2="81"/>
+	<controller function="airbrake_rotate_right" button1="33" button2="81"/>
+	<controller function="airbrake_speed" button1="33" button2="81"/>
+	<controller function="airbrake_freeze_time" button1="33" button2="81"/>
+	
+	<controller function="objectplacer_up" button1="33" button2="81"/>
+	<controller function="objectplacer_down" button1="33" button2="81"/>
+	<controller function="objectplacer_forward" button1="33" button2="81"/>
+	<controller function="objectplacer_back" button1="33" button2="81"/>
+	<controller function="objectplacer_rotate_left" button1="33" button2="81"/>
+	<controller function="objectplacer_rotate_right" button1="33" button2="81"/>
+	<controller function="objectplacer_speed" button1="33" button2="81"/>
+	<controller function="objectplacer_freeze_time" button1="33" button2="81"/>
+	<controller function="objectplacer_freeze_position" button1="33" button2="81"/>
+</controller_keys>
 
  <!--Weather Order-->
  <weather_list>
