@@ -3051,7 +3051,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 	////////////////////////////////////////////////////
 		
-	//////////////////////////////////////////////////// TURN SIGNALS ///////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////// VEHICLE INDICATORS ///////////////////////////////////////////////////////////
 	if ((VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] > 0 || featureHazards) && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1)) {
 		controllightsenabled_l = false;
 		controllightsenabled_r = false;
@@ -3067,15 +3067,18 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		bool rightKey = IsKeyJustUp(KeyConfig::KEY_VEH_RIGHTBLINK) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, INPUT_ATTACK); // right key - CONTROLLER_BTN_TRIGGER_R
 		bool emergencyKey = IsKeyJustUp(KeyConfig::KEY_VEH_EMERGENCYBLINK) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, INPUT_FRONTEND_CANCEL); // emergency signal key - CONTROLLER_BTN_B
 
+		bool b_pressed = false;
+		if (IsKeyDown(VK_LBUTTON) || IsKeyDown(VK_RBUTTON)) b_pressed = true;
+
 		if (VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] > 0) {
-			if (leftKey) { // manual left turn signal
+			if (leftKey && b_pressed == false) { // manual left turn signal
 				turn_check_left = !turn_check_left;
 				turn_check_right = false;
 				controllightsenabled_l = turn_check_left;
 				controllightsenabled_r = false;
 			}
 
-			if (rightKey) { // manual right turn signal
+			if (rightKey && b_pressed == false) { // manual right turn signal
 				turn_check_right = !turn_check_right;
 				turn_check_left = false;
 				controllightsenabled_r = turn_check_right;
@@ -3102,14 +3105,14 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 			if (VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] != 1) { // auto blinkers
 				if (vehturnspeed < VEH_TURN_SIGNALS_VALUES[turnSignalsIndex]) {
-					if (steer_turn == 0 && !turn_check_left) { // wheel turned left
+					if (steer_turn == 0 && !turn_check_left && b_pressed == false) { // wheel turned left
 						turn_check_left = true;
 						turn_check_right = false;
 						controllightsenabled_l = turn_check_left;
 						controllightsenabled_r = false;
 						autocontrol = true;
 					}
-					if (steer_turn == 254 && !turn_check_right) { // wheel turned right
+					if (steer_turn == 254 && !turn_check_right && b_pressed == false) { // wheel turned right
 						turn_check_right = true;
 						turn_check_left = false;
 						controllightsenabled_r = turn_check_right;
@@ -3173,7 +3176,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			turn_check_left = true;
 		}
 
-		if (VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] > 0 || (featureHazards && turn_check_right == true && turn_check_left == true)) {
+		if ((VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] > 0 || (featureHazards && turn_check_right == true && turn_check_left == true)) && b_pressed == false) {
 			if (turn_angle > VEH_TURN_SIGNALS_ANGLE_VALUES[turnSignalsAngleIndex] ||
 				(leftKey && VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] > 0) ||
 				(rightKey && VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] > 0) ||
