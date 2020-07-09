@@ -504,11 +504,14 @@ void update_features(){
 		set_menu_showing(true);
 	}
 
-	//if (is_in_airbrake_mode() && !airbrake_switch_pressed() && (CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(2, 0) || CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(2, INPUT_NEXT_CAMERA))) {
-	//	exit_airbrake_menu_if_showing();
-	//	WAIT(200);
-	//	process_airbrake_menu();
-	//}
+	if (CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(2, 0) || CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(2, INPUT_NEXT_CAMERA)) {
+		if (is_in_airbrake_mode() && !airbrake_switch_pressed()) {
+			KeyConfig* key = get_config()->get_key_config()->get_key(KeyConfig::KEY_TOGGLE_AIRBRAKE);
+			CONTROLS::_SET_CONTROL_NORMAL(0, key->keyCode, 1);
+			WAIT(200);
+			CONTROLS::_SET_CONTROL_NORMAL(0, key->keyCode, 1);
+		}
+	}
 	
 	if (is_menu_showing() && (CONTROLS::IS_DISABLED_CONTROL_PRESSED(26, 0) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, INPUT_LOOK_BEHIND))) {
 		set_menu_showing(false);
