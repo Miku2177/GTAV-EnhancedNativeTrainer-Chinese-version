@@ -1294,6 +1294,14 @@ void update_features(){
 		if(bPlayerExists){
 			PED::SET_PED_CAN_RAGDOLL(playerPed, 0);
 			PED::SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(playerPed, 0);
+			FIRE::STOP_ENTITY_FIRE(playerPed);
+			PED::_SET_PED_RAGDOLL_BLOCKING_FLAGS(playerPed, 1);
+			PED::_SET_PED_RAGDOLL_BLOCKING_FLAGS(playerPed, 2);
+			PED::_SET_PED_RAGDOLL_BLOCKING_FLAGS(playerPed, 4);
+			PED::SET_PED_CONFIG_FLAG(playerPed, 104, true);
+			PED::SET_PED_CONFIG_FLAG(playerPed, 33, false);
+			PED::SET_PED_RAGDOLL_ON_COLLISION(playerPed, false);
+			if (PED::IS_PED_FALLING(playerPed) || PED::IS_PED_IN_PARACHUTE_FREE_FALL(playerPed)) AI::CLEAR_PED_TASKS_IMMEDIATELY(playerPed);
 		}
 	}
 	if(!featureNoRagdoll){
