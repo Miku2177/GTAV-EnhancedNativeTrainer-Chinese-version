@@ -1277,20 +1277,19 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	}
 	
 	// Radio Station Shuffle
-	if (MISC_RADIO_SWITCHING_VALUES[RadioSwitchingIndex] > 0 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
-		r_secs_passed = clock() / CLOCKS_PER_SEC;
-		if (((clock() / CLOCKS_PER_SEC) - r_secs_curr) != 0) {
-			r_seconds = r_seconds + 1;
-			r_secs_curr = r_secs_passed;
+	if (MISC_RADIO_SWITCHING_VALUES[RadioSwitchingIndex] > 0 && (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) || featurePlayerRadio || featurePlayerRadioUpdated)) {
+		if (MISC_RADIO_SWITCHING_VALUES[RadioSwitchingIndex] > 1) {
+			r_secs_passed = clock() / CLOCKS_PER_SEC;
+			if (((clock() / CLOCKS_PER_SEC) - r_secs_curr) != 0) {
+				r_seconds = r_seconds + 1;
+				r_secs_curr = r_secs_passed;
+			}
 		}
 		if ((MISC_RADIO_SWITCHING_VALUES[RadioSwitchingIndex] == 1 && (is_hotkey_held_veh_radio_skip() || skip_track_pressed == true)) || (MISC_RADIO_SWITCHING_VALUES[RadioSwitchingIndex] > 1 && r_seconds > MISC_RADIO_SWITCHING_VALUES[RadioSwitchingIndex])) {
 			Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 			int const stations = AUDIO::_MAX_RADIO_STATION_INDEX();
 			int random_station = (rand() % stations + 0);
-			//if (AUDIO::GET_RADIO_STATION_NAME(random_station) != AUDIO::GET_PLAYER_RADIO_STATION_NAME()) {
-				/*if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0))*/ AUDIO::SET_VEH_RADIO_STATION(veh, AUDIO::GET_RADIO_STATION_NAME(random_station));
-				//else AUDIO::SET_RADIO_TRACK(AUDIO::GET_RADIO_STATION_NAME(random_station), "ARM1_RADIO_STARTS");
-			//}
+			AUDIO::SET_RADIO_TO_STATION_INDEX(random_station); //AUDIO::SET_VEH_RADIO_STATION(veh, AUDIO::GET_RADIO_STATION_NAME(random_station));
 			r_seconds = 0;
 			skip_track_pressed = false;
 		}
@@ -1315,7 +1314,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	
 	// Freeze Radio To Station
 	if (featureRadioFreeze) {
-		if (AUDIO::GET_PLAYER_RADIO_STATION_INDEX() != radioStationIndex) {
+		if (AUDIO::GET_PLAYER_RADIO_STATION_INDEX() != radioStationIndex && AUDIO::GET_PLAYER_RADIO_STATION_INDEX() != 255) {
 			AUDIO::SET_RADIO_TO_STATION_INDEX(radioStationIndex);
 		}
 	}
