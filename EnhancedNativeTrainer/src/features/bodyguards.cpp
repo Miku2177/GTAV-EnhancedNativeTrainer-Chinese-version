@@ -441,6 +441,8 @@ bool spawn_saved_bod_skin(int slot, std::string caption)
 
 	applyChosenBodSkin(savedBodSkin->model);
 
+	PED::CLEAR_ALL_PED_PROPS(savedBodSkin->model);
+
 	for each (SavedBodSkinComponentDBRow *comp in savedBodSkin->components)
 	{
 		PED::SET_PED_COMPONENT_VARIATION(bodyGuard, comp->slotID, comp->drawable, comp->texture, 0);
@@ -1369,8 +1371,8 @@ void do_spawn_bodyguard(){
 									tmp_w = GAMEPLAY::GET_HASH_KEY((char *)VOV_WEAPON_VALUES[a].at(b).c_str());
 									if (!WEAPON::HAS_PED_GOT_WEAPON(bodyGuard, tmp_w, false)) {
 										WEAPON::GIVE_WEAPON_TO_PED(bodyGuard, tmp_w, 1000, false, true);
-										WEAPON::SET_CURRENT_PED_WEAPON(bodyGuard, tmp_w, 1);
-										WEAPON::SET_PED_CURRENT_WEAPON_VISIBLE(bodyGuard, true, false, 1, 1);
+										//WEAPON::SET_CURRENT_PED_WEAPON(bodyGuard, tmp_w, 1);
+										//WEAPON::SET_PED_CURRENT_WEAPON_VISIBLE(bodyGuard, true, false, 1, 1);
 									}
 								}
 							}
