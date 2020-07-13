@@ -5,6 +5,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 */
 
 #include "hotkeys.h"
+#include "bodyguards.h"
 #include "..\utils.h"
 #include "..\io\config_io.h"
 #include "anims.h"
@@ -295,6 +296,11 @@ void trigger_function_for_hotkey_onkeyup(int hotkey)
 		break;
 	case HKEY_VEHICLE_POLICE:
 		police_light();
+		break;
+	case HKEY_BODYGUARD_DIS_ARMED:
+		c_armed = !c_armed;
+		if (c_armed) set_status_text("Armed");
+		else set_status_text("Disarmed");
 		break;
 	default:
 	{
