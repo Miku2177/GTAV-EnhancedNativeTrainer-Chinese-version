@@ -165,6 +165,8 @@ void onchange_player_movement_mode(int value, SelectFromListMenuItem* source);
 
 void onchange_NPC_ragdoll_mode(int value, SelectFromListMenuItem* source);
 
+void onchange_no_ragdoll_mode(int value, SelectFromListMenuItem* source);
+
 void onchange_limp_if_injured_mode(int value, SelectFromListMenuItem* source);
 
 void onchange_player_escapemoney_mode(int value, SelectFromListMenuItem* source);

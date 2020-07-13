@@ -74,6 +74,7 @@ bool dive_glasses = false;
 int ped_prop_idx = -1;
 
 int injured_m = -2;
+int noragdoll_m = -2;
 
 bool everInitialised = false;
 
@@ -150,7 +151,7 @@ bool featurePlayerLife_Died = false;
 bool featurePlayerStatsEnable = false;
 bool featurePlayerLife_Changed = false;
 
-bool featureNoRagdoll = false;
+//bool featureNoRagdoll = false;
 bool featureRagdollIfInjured = false;
 
 // ragdoll if injured variables
@@ -211,6 +212,10 @@ const std::vector<std::string> NPC_RAGDOLL_CAPTIONS{ "OFF", "Never", "Always" };
 const int NPC_RAGDOLL_VALUES[] = { 0, 1, 2 };
 int current_npc_ragdoll = 0;
 bool current_npc_ragdoll_Changed = true;
+
+// No Ragdoll
+int current_no_ragdoll = 0;
+bool current_no_ragdoll_Changed = true;
 
 // Limp If Injured
 int current_limp_if_injured = 0;
@@ -296,6 +301,11 @@ void onchange_player_superjump_mode(int value, SelectFromListMenuItem* source) {
 void onchange_NPC_ragdoll_mode(int value, SelectFromListMenuItem* source) {
 	current_npc_ragdoll = value;
 	current_npc_ragdoll_Changed = true;
+}
+
+void onchange_no_ragdoll_mode(int value, SelectFromListMenuItem* source) {
+	current_no_ragdoll = value;
+	current_no_ragdoll_Changed = true;
 }
 
 void onchange_limp_if_injured_mode(int value, SelectFromListMenuItem* source) {
@@ -1290,7 +1300,15 @@ void update_features(){
 	}
 
 	// No Radgoll
-	if(featureNoRagdoll){
+	if (noragdoll_m == -2) noragdoll_m = current_no_ragdoll;
+	if (current_no_ragdoll == 0 && noragdoll_m != 0) noragdoll_m = current_no_ragdoll;
+
+	if (LIMP_IF_INJURED_VALUES[current_no_ragdoll] > 0 && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) {
+		if (noragdoll_m != current_no_ragdoll) {
+			if (current_no_ragdoll == 1) set_status_text("Falling animation is enabled");
+			if (current_no_ragdoll == 2) set_status_text("Falling animation is disabled");
+			noragdoll_m = current_no_ragdoll;
+		}
 		if(bPlayerExists){
 			PED::SET_PED_CAN_RAGDOLL(playerPed, 0);
 			PED::SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(playerPed, 0);
@@ -1301,10 +1319,10 @@ void update_features(){
 			PED::SET_PED_CONFIG_FLAG(playerPed, 104, true);
 			PED::SET_PED_CONFIG_FLAG(playerPed, 33, false);
 			PED::SET_PED_RAGDOLL_ON_COLLISION(playerPed, false);
-			if (PED::IS_PED_FALLING(playerPed) || PED::IS_PED_IN_PARACHUTE_FREE_FALL(playerPed)) AI::CLEAR_PED_TASKS_IMMEDIATELY(playerPed);
+			if (LIMP_IF_INJURED_VALUES[current_no_ragdoll] == 2 && (PED::IS_PED_FALLING(playerPed) || PED::IS_PED_IN_PARACHUTE_FREE_FALL(playerPed))) AI::CLEAR_PED_TASKS_IMMEDIATELY(playerPed);
 		}
 	}
-	if(!featureNoRagdoll){
+	if (LIMP_IF_INJURED_VALUES[current_no_ragdoll] == 0) {
 		if(bPlayerExists){
 			PED::SET_PED_CAN_RAGDOLL(playerPed, 1);
 			PED::SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(playerPed, 1);
@@ -1808,11 +1826,11 @@ bool process_ragdoll_menu() {
 
 	int i = 0;
 
-	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "No Ragdoll";
-	toggleItem->value = i++;
-	toggleItem->toggleValue = &featureNoRagdoll;
-	menuItems.push_back(toggleItem);
+	listItem = new SelectFromListMenuItem(LIMP_IF_INJURED_CAPTIONS, onchange_no_ragdoll_mode);
+	listItem->wrap = false;
+	listItem->caption = "No Ragdoll";
+	listItem->value = current_no_ragdoll;
+	menuItems.push_back(listItem);
 
 	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Ragdoll If Shot";
@@ -2200,6 +2218,7 @@ void reset_globals(){
 	current_player_stats = 6;
 	current_npc_ragdoll = 0;
 	current_limp_if_injured = 0;
+	current_no_ragdoll = 0;
 	current_player_movement = 0;
 	current_player_jumpfly = 0;
 	current_player_superjump = 0;
@@ -2230,7 +2249,7 @@ void reset_globals(){
 		featurePlayerStatsEnable =
 		featurePlayerLife_Changed =
 		featurePrison_Hardcore =
-		featureNoRagdoll =
+		//featureNoRagdoll =
 		featureRagdollIfInjured =
 		featureLevitation =
 		featureWantedLevelNoPHeli =
@@ -2496,7 +2515,7 @@ void add_player_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerNoSwitch", &featurePlayerNoSwitch});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerFastRun", &featurePlayerFastRun}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerRunApartments", &featurePlayerRunApartments});
-	results->push_back(FeatureEnabledLocalDefinition{"featureNoRagdoll", &featureNoRagdoll}); 
+	//results->push_back(FeatureEnabledLocalDefinition{"featureNoRagdoll", &featureNoRagdoll}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureRagdollIfInjured", &featureRagdollIfInjured}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerInvisible", &featurePlayerInvisible}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerInvisibleInVehicle", &featurePlayerInvisibleInVehicle}); 
@@ -2521,6 +2540,7 @@ void add_world_feature_enablements3(std::vector<StringPairSettingDBRow>* results
 	results->push_back(StringPairSettingDBRow{"current_player_armor", std::to_string(current_player_armor)});
 	results->push_back(StringPairSettingDBRow{"current_player_stats", std::to_string(current_player_stats)});
 	results->push_back(StringPairSettingDBRow{"current_npc_ragdoll", std::to_string(current_npc_ragdoll)});
+	results->push_back(StringPairSettingDBRow{"current_no_ragdoll", std::to_string(current_no_ragdoll)});
 	results->push_back(StringPairSettingDBRow{"current_limp_if_injured", std::to_string(current_limp_if_injured)});
 	results->push_back(StringPairSettingDBRow{"current_player_movement", std::to_string(current_player_movement)});
 	results->push_back(StringPairSettingDBRow{"current_player_jumpfly", std::to_string(current_player_jumpfly)});
@@ -2621,6 +2641,9 @@ void handle_generic_settings(std::vector<StringPairSettingDBRow> settings){
 		}
 		else if (setting.name.compare("current_limp_if_injured") == 0) {
 			current_limp_if_injured = stoi(setting.value);
+		}
+		else if (setting.name.compare("current_no_ragdoll") == 0) {
+			current_no_ragdoll = stoi(setting.value);
 		}
 		else if (setting.name.compare("current_player_movement") == 0) {
 			current_player_movement = stoi(setting.value);
