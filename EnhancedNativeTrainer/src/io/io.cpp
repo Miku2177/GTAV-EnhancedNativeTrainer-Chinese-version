@@ -40,7 +40,7 @@ void get_button_state(bool *a, bool *b, bool *up, bool *down, bool *l, bool *r)
 {
 	KeyInputConfig *keyConf = config->get_key_config();
 	if (a) *a = IsKeyJustUp(KeyConfig::KEY_MENU_SELECT) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, INPUT_FRONTEND_ACCEPT); //A //IS_DISABLED_CONTROL_PRESSED
-	if (b) *b = (is_menu_showing() && !IsKeyJustUp(VK_ESCAPE) && IsKeyJustUp(KeyConfig::KEY_MENU_BACK)) || (is_menu_showing() && !CONTROLS::IS_DISABLED_CONTROL_JUST_RELEASED(2, INPUT_FRONTEND_CANCEL) && CONTROLS::IS_DISABLED_CONTROL_JUST_RELEASED(2, INPUT_FRONTEND_PAUSE)); //B
+	if (b) *b = (is_menu_showing() && !IsKeyJustUp(VK_ESCAPE) && IsKeyJustUp(KeyConfig::KEY_MENU_BACK)) || (is_menu_showing() && (CONTROLS::IS_DISABLED_CONTROL_JUST_RELEASED(2, INPUT_FRONTEND_CANCEL) || CONTROLS::IS_DISABLED_CONTROL_JUST_RELEASED(2, INPUT_FRONTEND_PAUSE))); //B
 
 	if (MISC_TRAINERCONTROL_VALUES[TrainerControlIndex] == 1) { // press
 		if (up) *up = IsKeyDown(KeyConfig::KEY_MENU_UP) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, INPUT_FRONTEND_UP); //Dpad up
