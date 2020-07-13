@@ -2131,6 +2131,8 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		}
 		if (tick_allw > 200 && PlayerUpdated_w) {
 			give_all_weapons_hotkey();
+			CONTROLS::_SET_CONTROL_NORMAL(0, 159, 1); // 160
+			WAIT(10);
 			CONTROLS::_SET_CONTROL_NORMAL(0, 157, 1);
 			oldplayerPed_W = playerPed;
 			tick_allw = 0;
@@ -2152,6 +2154,8 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		}
 		if (tick_a_allw > 400 && PlayerUpdated_a) {
 			add_all_weapons_attachments();
+			CONTROLS::_SET_CONTROL_NORMAL(0, 159, 1); // 160
+			WAIT(10);
 			CONTROLS::_SET_CONTROL_NORMAL(0, 157, 1);
 			oldplayerPed_A = playerPed;
 			tick_a_allw = 0;
@@ -2173,6 +2177,8 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		}
 		if (tick_s_allw > 200 && PlayerUpdated_s) {
 			load_saved_weapons();
+			CONTROLS::_SET_CONTROL_NORMAL(0, 159, 1); // 160
+			WAIT(10);
 			CONTROLS::_SET_CONTROL_NORMAL(0, 157, 1);
 			oldplayerPed_s = playerPed;
 			tick_s_allw = 0;

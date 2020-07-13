@@ -85,6 +85,8 @@ ENTDatabase* database = NULL;
 Camera DeathCam = NULL;
 Camera DeathCamM = NULL;
 
+bool def_w = false;
+
 bool onlineWarningShown = false;
 
 bool injured_drunk = false;
@@ -790,6 +792,14 @@ void update_features(){
 				PLAYER::SET_PLAYER_INVINCIBLE(player, FALSE);
 			}
 		}
+	}
+
+	// enable default weapon
+	if (def_w == false) {
+		CONTROLS::_SET_CONTROL_NORMAL(0, 159, 1); // 160
+		WAIT(10);
+		CONTROLS::_SET_CONTROL_NORMAL(0, 157, 1);
+		def_w = true;
 	}
 
 	if (engine_switched) { 
