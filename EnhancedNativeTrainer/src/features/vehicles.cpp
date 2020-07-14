@@ -134,6 +134,8 @@ int currseat = -1;
 int engine_tick = 0;
 int engine_secs_passed, engine_secs_curr = 0;
 
+bool manual_veh_tr = false;
+
 BOOL lightsAutoOn = -1;
 BOOL highbeamsAutoOn = -1;
 bool no_autotoggle = false;
@@ -257,8 +259,8 @@ int lightsOffIndex = 0;
 bool lightsOffChanged = true;
 
 //Number Of Vehicles To Remember
-const std::vector<std::string> VEH_VEHREMEMBER_CAPTIONS{ "3", "5", "7", "10", "15", "20", "30", "40", "50"/*, "60"*/ };
-const std::vector<int> VEH_VEHREMEMBER_VALUES{ 3, 5, 7, 10, 15, 20, 30, 40, 50/*, 60*/ };
+const std::vector<std::string> VEH_VEHREMEMBER_CAPTIONS{ "3", "5", "7", "10", "15", "20", "30", "40", "50", "Manually" };
+const std::vector<int> VEH_VEHREMEMBER_VALUES{ 3, 5, 7, 10, 15, 20, 30, 40, 50, 666 };
 int VehRememberIndex = 3;
 bool VehRemember_Changed = true;
 
@@ -1703,7 +1705,12 @@ void del_sel_blip() {
 bool onconfirm_vehicle_remember_menu(MenuItem<int> choice)
 {
 	switch (activeLineIndexRemember){
-	case 7:
+	case 2:
+		if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) set_status_text("~r~Error: ~w~ Player not in vehicle");
+		if (VEH_VEHREMEMBER_VALUES[VehRememberIndex] != 666) set_status_text("The 'manual' mode must be enabled");
+		if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0) && VEH_VEHREMEMBER_VALUES[VehRememberIndex] == 666) manual_veh_tr = true;
+		break;
+	case 8:
 		del_sel_blip();
 		break;
 	default:
@@ -1733,6 +1740,12 @@ void process_remember_vehicles_menu() {
 	listItem->caption = "Number Of Vehicles To Track";
 	listItem->value = VehRememberIndex;
 	menuItems.push_back(listItem);
+
+	item = new MenuItem<int>();
+	item->caption = "Track Vehicle";
+	item->value = i++;
+	item->isLeaf = true;
+	menuItems.push_back(item);
 
 	listItem = new SelectFromListMenuItem(VEH_BLIPSIZE_CAPTIONS, onchange_veh_blipsize_index);
 	listItem->wrap = false;
@@ -3488,7 +3501,8 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	if (GAMEPLAY::GET_MISSION_FLAG() == 0 && !SCRIPT::HAS_SCRIPT_LOADED("fbi4_prep3amb") && !SCRIPT::HAS_SCRIPT_LOADED("finale_heist_prepeamb") && !SCRIPT::HAS_SCRIPT_LOADED("agency_prep2amb")) {
 		if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && been_already == true) been_already = false;
 
-		if (featureRememberVehicles && bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
+		if ((featureRememberVehicles && bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && VEH_VEHREMEMBER_VALUES[VehRememberIndex] != 666) ||
+			(featureRememberVehicles && bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && VEH_VEHREMEMBER_VALUES[VehRememberIndex] == 666 && manual_veh_tr == true)) {
 			Vehicle veh_rem = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 
 			// save in garage
@@ -3545,7 +3559,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				BLIPTABLE_VEH.push_back(blip_veh);
 				VEHICLES_REMEMBER.push_back(veh_rem);
 
-				if (VEHICLES_REMEMBER.size() > VEH_VEHREMEMBER_VALUES[VehRememberIndex]) {
+				if (VEH_VEHREMEMBER_VALUES[VehRememberIndex] != 666 && VEHICLES_REMEMBER.size() > VEH_VEHREMEMBER_VALUES[VehRememberIndex]) {
 					UI::REMOVE_BLIP(&BLIPTABLE_VEH[0]);
 					VEHICLE::DELETE_VEHICLE(&VEHICLES_REMEMBER[0]);
 					BLIPTABLE_VEH.erase(BLIPTABLE_VEH.begin());
@@ -3557,6 +3571,9 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 					}
 				}
 			}
+
+			manual_veh_tr = false;
+
 		} // end of the main body
 
 		if (featureAutoalarm) {
