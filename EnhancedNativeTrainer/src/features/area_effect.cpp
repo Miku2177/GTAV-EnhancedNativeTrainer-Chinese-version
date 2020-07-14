@@ -52,6 +52,7 @@ bool featureDirtyVehicles = false;
 bool featureNPCNoGravityVehicles = false;
 bool featureNPCReducedGripVehicles = false;
 bool featureBoostNPCRadio = false;
+bool featurePedsExplosiveMelee = false;
 bool featurePedsSwitchWeapons = true;
 
 int pedWeaponSetIndex = 0;
@@ -125,6 +126,7 @@ void add_areaeffect_feature_enablements(std::vector<FeatureEnabledLocalDefinitio
 	results->push_back(FeatureEnabledLocalDefinition{"featureAngryPedsUseCover", &featureAngryPedsUseCover});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAngryPedsTargetYou", &featureAngryPedsTargetYou});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePedsWeapons", &featurePedsWeapons});
+	results->push_back(FeatureEnabledLocalDefinition{"featurePedsExplosiveMelee", &featurePedsExplosiveMelee});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePedsSwitchWeapons", &featurePedsSwitchWeapons});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAngryMenManually", &featureAngryMenManually});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePedsIncludeDrivers", &featurePedsIncludeDrivers});
@@ -410,6 +412,12 @@ void process_areaeffect_peds_weapons_menu() {
 	togItem->toggleValue = &featurePedsSwitchWeapons;
 	menuItems.push_back(togItem);
 
+	togItem = new ToggleMenuItem<int>();
+	togItem->caption = "Explosive Melee";
+	togItem->value = 1;
+	togItem->toggleValue = &featurePedsExplosiveMelee;
+	menuItems.push_back(togItem);
+
 	draw_generic_menu<int>(menuItems, &areaeffect_peds_weapons_menu_index, "Peds Weapons Options", NULL, NULL, NULL);
 }
 
@@ -553,6 +561,30 @@ void update_area_effects(Ped playerPed){
 		}
 	}
 	
+	if (featurePedsWeapons && featurePedsExplosiveMelee) {
+		const int arrSize_npc = 1024;
+		Ped surr_weapon_peds[arrSize_npc];
+		int count_surr_em_peds = worldGetAllPeds(surr_weapon_peds, arrSize_npc);
+
+		for (int i = 0; i < count_surr_em_peds; i++) {
+			if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(surr_weapon_peds[i], playerPed, 1)) {
+				/*if (!featureLawAbidingCitizens)*/ PED::CLEAR_PED_LAST_DAMAGE_BONE(surr_weapon_peds[i]);
+				/*if (!featureLawAbidingCitizens)*/ ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(surr_weapon_peds[i]);
+				PED::CLEAR_PED_LAST_DAMAGE_BONE(playerPed);
+				ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(playerPed);
+			}
+			if (WEAPON::HAS_ENTITY_BEEN_DAMAGED_BY_WEAPON(surr_weapon_peds[i], 0, 1) && PED::IS_PED_IN_MELEE_COMBAT(PED::GET_MELEE_TARGET_FOR_PED(surr_weapon_peds[i]))) {
+				Vector3 coords_explosive_p = PED::GET_PED_BONE_COORDS(surr_weapon_peds[i], 64016, 0, 0, 0); // right finger bone
+				GRAPHICS::START_PARTICLE_FX_NON_LOOPED_AT_COORD("scr_agency3b_heli_expl", coords_explosive_p.x, coords_explosive_p.y, coords_explosive_p.z + 1.8, 0.0f, 0.0f, 0.0f, 0.3f, false, false, false); // 8.0f 6.0f
+				FIRE::ADD_OWNED_EXPLOSION(surr_weapon_peds[i], coords_explosive_p.x, coords_explosive_p.y, coords_explosive_p.z + 1.8, 1, 1.0f, true, false, 2.0f); // 29
+				PED::CLEAR_PED_LAST_DAMAGE_BONE(surr_weapon_peds[i]);
+				ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(surr_weapon_peds[i]);
+				PED::CLEAR_PED_LAST_DAMAGE_BONE(PED::GET_MELEE_TARGET_FOR_PED(surr_weapon_peds[i]));
+				ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(PED::GET_MELEE_TARGET_FOR_PED(surr_weapon_peds[i]));
+			}
+		} // end of int (peds)
+	}
+
 	// Targeted Angry Peds
 	if (!featureAngryMenManually) sa_message = false;
 	if (featureAngryMenManually && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) {
@@ -1306,7 +1338,7 @@ void give_all_nearby_peds_a_weapon(bool enabled){
 					}
 
 					if (!foundWeapon){
-						WEAPON::GIVE_WEAPON_TO_PED(xped, weapHash, 9999, FALSE, TRUE);
+						WEAPON::GIVE_WEAPON_TO_PED(xped, weapHash, 999, FALSE, TRUE);
 						if (WEAPON::HAS_PED_GOT_WEAPON(xped, weapHash, 0) && !PED::IS_PED_IN_ANY_VEHICLE(xped, false) && !PED::IS_PED_INJURED(xped)) WEAPON::SET_CURRENT_PED_WEAPON(xped, weapHash, 0);
 						WEAPON::SET_PED_INFINITE_AMMO_CLIP(xped, true);
 						if (featurePedsSwitchWeapons) PED::SET_PED_CAN_SWITCH_WEAPON(xped, true);
