@@ -2430,7 +2430,7 @@ namespace AUDIO
 	static void STOP_ALL_ALARMS(BOOL stop) { invoke<Void>(0x2F794A877ADD4C92, stop); } // 0x2F794A877ADD4C92 0xC3CB9DC6
 	static BOOL IS_ALARM_PLAYING(char* alarmName) { return invoke<BOOL>(0x226435CB96CCFC8C, alarmName); } // 0x226435CB96CCFC8C 0x9D8E1D23
 	static Hash GET_VEHICLE_DEFAULT_HORN(Vehicle vehicle) { return invoke<Hash>(0x02165D55000219AC, vehicle); } // 0x02165D55000219AC 0xE84ABC19
-	static Any _0xACB5DCCA1EC76840(Any p0) { return invoke<Any>(0xACB5DCCA1EC76840, p0); } // 0xACB5DCCA1EC76840 0xFD4B5B3B
+	static Hash _GET_VEHICLE_HORN_HASH(Vehicle vehicle) { return invoke<Any>(0xACB5DCCA1EC76840, vehicle); } // 0xACB5DCCA1EC76840 0xFD4B5B3B
 	static void RESET_PED_AUDIO_FLAGS(Any p0) { invoke<Void>(0xF54BB7B61036F335, p0); } // 0xF54BB7B61036F335 0xDF720C86
 	static void _0xD2CC78CD3D0B50F9(Any p0, BOOL p1) { invoke<Void>(0xD2CC78CD3D0B50F9, p0, p1); } // 0xD2CC78CD3D0B50F9 0xC307D531
 	static void _0xBF4DC1784BE94DFA(Any p0, BOOL p1, Any p2) { invoke<Void>(0xBF4DC1784BE94DFA, p0, p1, p2); } // 0xBF4DC1784BE94DFA
