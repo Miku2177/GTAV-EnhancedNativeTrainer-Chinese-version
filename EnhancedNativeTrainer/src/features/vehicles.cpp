@@ -3635,12 +3635,23 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		if (VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(vehnoflip))) {
 			if (ENTITY::GET_ENTITY_ROLL(vehnoflip) > 90 || ENTITY::GET_ENTITY_ROLL(vehnoflip) < -90) {
 				VEHICLE::SET_VEHICLE_CAN_BREAK(vehnoflip, true);
-				VEHICLE::SET_VEHICLE_OUT_OF_CONTROL(vehnoflip, false, false);
+				CONTROLS::DISABLE_CONTROL_ACTION(2, 59, true);
+				CONTROLS::DISABLE_CONTROL_ACTION(2, 63, true);
+				CONTROLS::DISABLE_CONTROL_ACTION(2, 64, true);
+				CONTROLS::DISABLE_CONTROL_ACTION(2, 278, true);
+				CONTROLS::DISABLE_CONTROL_ACTION(2, 279, true);
 			}
 			if (ENTITY::GET_ENTITY_MODEL(vehnoflip) != GAMEPLAY::GET_HASH_KEY("DELUXO") && ENTITY::GET_ENTITY_MODEL(vehnoflip) != GAMEPLAY::GET_HASH_KEY("SCRAMJET")) {
 				float height_a_g = -1;
 				GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(veh_flip.x, veh_flip.y, veh_flip.z, &height_a_g);
-				if (veh_flip.z - height_a_g > 2.0) VEHICLE::SET_VEHICLE_OUT_OF_CONTROL(vehnoflip, false, false);
+				if (veh_flip.z - height_a_g > 2.0) {
+					CONTROLS::DISABLE_CONTROL_ACTION(2, 71, true);
+					CONTROLS::DISABLE_CONTROL_ACTION(2, 278, true);
+					CONTROLS::DISABLE_CONTROL_ACTION(2, 279, true);
+					for (int i = 59; i < 65; i++) CONTROLS::DISABLE_CONTROL_ACTION(2, i, true);
+					for (int i = 87; i < 91; i++) CONTROLS::DISABLE_CONTROL_ACTION(2, i, true);
+					for (int i = 107; i < 115; i++) CONTROLS::DISABLE_CONTROL_ACTION(2, i, true);
+				}
 
 				if ((veh_flips_speed * 2.3) > 50 && (ENTITY::GET_ENTITY_ROLL(vehnoflip) > 50 || ENTITY::GET_ENTITY_ROLL(vehnoflip) < -50)) { // (veh_flips_speed * 3.6) > 50
 					VEHICLE::SET_VEHICLE_CEILING_HEIGHT(vehnoflip, 0.0);
