@@ -1989,14 +1989,14 @@ bool onconfirm_veh_menu(MenuItem<int> choice){
 		case 47: // plane bombs
 		{
 			if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
-				set_status_text("Player isn't in a vehicle");
+				set_status_text("Player not in vehicle");
 				//return true;
 			}
 			Hash currVehModel = ENTITY::GET_ENTITY_MODEL(PED::GET_VEHICLE_PED_IS_USING(playerPed));
 			if (GAMEPLAY::GET_HASH_KEY("CUBAN800") == currVehModel) {
 				if (process_veh_weapons_menu()) return false;
 			}
-			else set_status_text("Error: Bomb doors require Cuban 800");
+			else set_status_text("~r~Error: ~w~ Bomb doors require Cuban 800");
 		}
 			break;
 		default:
