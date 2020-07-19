@@ -1669,6 +1669,12 @@ void process_fuel_menu(){
 	toggleItem->toggleValue = &featureFuelGauge;
 	menuItems.push_back(toggleItem);
 
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Hide Fuel Bar In First Person Mode";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureHideFuelBar;
+	menuItems.push_back(toggleItem);
+
 	draw_generic_menu<int>(menuItems, &activeLineIndexFuel, caption, onconfirm_fuel_menu, NULL, NULL);
 }
 
@@ -4150,6 +4156,7 @@ void reset_vehicle_globals() {
 		featureEngineHealthBar = 
 		featureLimpMode = 
 		featureVehSpawnTuned =
+		featureHideFuelBar =
 		featureVehSpawnOptic =
 		featureAutoalarm =
 		featureVehLightsOn = false;
@@ -4406,6 +4413,7 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureAutoalarm", &featureAutoalarm});
 	results->push_back(FeatureEnabledLocalDefinition{"featureFuel", &featureFuel});
 	results->push_back(FeatureEnabledLocalDefinition{"featureFuelGauge", &featureFuelGauge});
+	results->push_back(FeatureEnabledLocalDefinition{"featureHideFuelBar", &featureHideFuelBar});
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehMassMult", &featureVehMassMult});
 	results->push_back(FeatureEnabledLocalDefinition{"featureSpeedOnFoot", &featureSpeedOnFoot});
 	results->push_back(FeatureEnabledLocalDefinition{"featureKMH", &featureKMH});
