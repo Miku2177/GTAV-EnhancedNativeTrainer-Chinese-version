@@ -47,8 +47,12 @@ std::vector<int> GAS_Y;
 std::vector<int> GAS_Z;
 
 bool featureFuel = false;
+bool featureFuelGauge = true;
 
 int IdleConsume_secs_passed, IdleConsume_secs_curr, IdleConsume_seconds = -1;
+int f_secs_passed, f_secs_curr, f_seconds = -1;
+
+float curr_fuel_a = -1.0f;
 
 Vehicle veh_being_refueled;
 Vehicle veh;
@@ -87,6 +91,31 @@ int IdleConsumptionIndex = 7;
 bool IdleConsumptionChanged = true;
 int FuelBackground_Opacity_Index = 5;
 bool FuelBackgound_Opacity_Changed = true;
+
+// THE ORIGINAL CODE IS BY IKT
+typedef uintptr_t(*getEntityAddress_t)(std::int32_t Entity);
+getEntityAddress_t getEntityAddress = (getEntityAddress_t)FindPatternJACCO("\x83\xF9\xFF\x74\x31\x4C\x8B\x0D\x00\x00\x00\x00\x44\x8B\xC1\x49\x8B\x41\x08", "xxxxxxxx????xxxxxxx");
+
+BYTE* GetAddress(Vehicle handle) {
+	return reinterpret_cast<BYTE*>(getEntityAddress(handle));
+}
+
+//float get_vehicle_fuel_level(Vehicle vehicle)
+//{
+//	auto vehAddr = GetAddress(vehicle);
+//	int fuelLevelOffset = get_fuel_level_offset();
+//	float fuelLevel = *(float*)(vehAddr + fuelLevelOffset);
+	//ss << " - Fuel Level: " << fuelLevel;
+	//write_text_to_log_file(ss.str());
+//	return fuelLevel;
+//}
+
+void set_vehicle_fuel_level(Vehicle vehicle, int fuelOffset, float fuelValue)
+{
+	auto vehAddr = GetAddress(vehicle);
+	*(float*)(vehAddr + fuelOffset) = fuelValue;
+}
+//
 
 //////////////////////////////////////////////// FUEL OPTION /////////////////////////////////////////////////////////////////
 void fuel()
@@ -295,6 +324,8 @@ void fuel()
 			underbar_b = 86;
 		}
 
+		if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) f_secs_curr = -1;
+
 		// ENTERED VEHICLE
 		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
 			if (PED::GET_VEHICLE_PED_IS_IN(playerPed, false) != veh) Car_Refuel = false;
@@ -318,6 +349,23 @@ void fuel()
 					FUEL.push_back(randomize / 100);
 					std::swap(VEHICLES[0], VEHICLES.back());
 					std::swap(FUEL[0], FUEL.back());
+				}
+			}
+
+			// fuel gauge
+			if (featureFuelGauge && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()))) {
+				curr_fuel_a = ((FUEL[0] * 1000) / 2) + 5;
+				if (curr_fuel_a < 5.0) curr_fuel_a = 5.0;
+				if (f_secs_curr == -1) set_vehicle_fuel_level(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), fuelLevelOffset, curr_fuel_a);
+
+				f_secs_passed = clock() / CLOCKS_PER_SEC;
+				if (((clock() / CLOCKS_PER_SEC) - f_secs_curr) != 0) {
+					f_seconds = f_seconds + 1;
+					f_secs_curr = f_secs_passed;
+				}
+				if (f_seconds > 5) {
+					set_vehicle_fuel_level(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), fuelLevelOffset, curr_fuel_a);
+					f_seconds = 0;
 				}
 			}
 
@@ -487,6 +535,7 @@ void fuel()
 					if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
 						VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, true, false);
 						Car_Refuel = false;
+						f_secs_curr = -1;
 					}
 				}
 				if (!stoprefillKey) {
@@ -494,6 +543,7 @@ void fuel()
 						FUEL[0] = fuel_amount;
 						VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, true, false);
 						Car_Refuel = false;
+						f_secs_curr = -1;
 					}
 				}
 			}

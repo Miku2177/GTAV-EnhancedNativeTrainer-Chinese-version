@@ -1663,6 +1663,12 @@ void process_fuel_menu(){
 	item->isLeaf = false;
 	menuItems.push_back(item);
 
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Fuel Gauge";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureFuelGauge;
+	menuItems.push_back(toggleItem);
+
 	draw_generic_menu<int>(menuItems, &activeLineIndexFuel, caption, onconfirm_fuel_menu, NULL, NULL);
 }
 
@@ -4151,6 +4157,7 @@ void reset_vehicle_globals() {
 	featureLockVehicleDoorsUpdated = false;
 		featureBlipNumber = true;
 		featureHazards = true;
+		featureFuelGauge = true;
 		featureWearHelmetOffUpdated = true;
 		featureVehInvincibleUpdated = true;
 		featurePoliceVehicleBlip = true;
@@ -4398,6 +4405,7 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureBlipNumber", &featureBlipNumber});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAutoalarm", &featureAutoalarm});
 	results->push_back(FeatureEnabledLocalDefinition{"featureFuel", &featureFuel});
+	results->push_back(FeatureEnabledLocalDefinition{"featureFuelGauge", &featureFuelGauge});
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehMassMult", &featureVehMassMult});
 	results->push_back(FeatureEnabledLocalDefinition{"featureSpeedOnFoot", &featureSpeedOnFoot});
 	results->push_back(FeatureEnabledLocalDefinition{"featureKMH", &featureKMH});
