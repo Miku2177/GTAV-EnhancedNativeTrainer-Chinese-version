@@ -71,6 +71,7 @@ int game_frame_num = 0;
 int jumpfly_secs_passed, jumpfly_secs_curr, jumpfly_tick = 0;
 
 int fuelLevelOffset = -1;
+int fuelTankOffset = -1;
 
 bool skydiving = false;
 
@@ -345,6 +346,18 @@ int get_fuel_level_offset()
 		return 0;
 	}
 	return fuelLevelOffset;
+}
+
+int get_fuel_tank_offset()
+{
+	auto addr = FindPatternJACCO("\x3C\x03\x0F\x85\x00\x00\x00\x00\x48\x8B\x41\x20\x48\x8B\x88", "xxxx????xxxxxxx");
+	auto fuelTankOffset = addr == 0 ? 0 : *(int*)(addr + 0x16);
+
+	if (fuelTankOffset == 0) {
+		write_text_to_log_file("Tank offset not found");
+		return 0;
+	}
+	return fuelTankOffset;
 }
 //
 
@@ -2343,7 +2356,10 @@ void main(){
 
 	if (featureShowStatusMessage) set_status_text("~HUD_COLOUR_MENU_YELLOW~ENT~HUD_COLOUR_WHITE~ ver. ~HUD_COLOUR_MENU_YELLOW~" + VERSION_STRING + "~HUD_COLOUR_WHITE~");
 	
-	if (featureFuel && featureFuelGauge) fuelLevelOffset = get_fuel_level_offset();
+	if (featureFuel && featureFuelGauge) {
+		fuelLevelOffset = get_fuel_level_offset();
+		fuelTankOffset = get_fuel_tank_offset();
+	}
 
 	while(true){
 		if(trainer_switch_pressed()){
