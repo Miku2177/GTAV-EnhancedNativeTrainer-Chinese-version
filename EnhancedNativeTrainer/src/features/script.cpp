@@ -20,6 +20,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #pragma comment(lib, "Shlwapi.lib")
 
 #include "script.h"
+#include "fuel.h"
 #include "misc.h"
 #include "skins.h"
 #include "hotkeys.h"
@@ -68,6 +69,9 @@ int last_player_slot_seen = 0;
 int game_frame_num = 0;
 
 int jumpfly_secs_passed, jumpfly_secs_curr, jumpfly_tick = 0;
+
+int fuelLevelOffset = -1;
+
 bool skydiving = false;
 
 bool dive_glasses = false;
@@ -329,6 +333,20 @@ void onchange_player_escapestars_mode(int value, SelectFromListMenuItem* source)
 	current_escape_stars = value;
 	current_escape_stars_Changed = true;
 }
+
+// THE ORIGINAL CODE IS BY IKT
+int get_fuel_level_offset()
+{
+	auto addr = FindPatternJACCO("\x74\x26\x0F\x57\xC9", "xxxxx");
+	auto fuelLevelOffset = addr == 0 ? 0 : *(int*)(addr + 8);
+
+	if (fuelLevelOffset == 0) {
+		write_text_to_log_file("Fuel offset not found");
+		return 0;
+	}
+	return fuelLevelOffset;
+}
+//
 
 void check_player_model(){
 	/*
@@ -2325,6 +2343,8 @@ void main(){
 
 	if (featureShowStatusMessage) set_status_text("~HUD_COLOUR_MENU_YELLOW~ENT~HUD_COLOUR_WHITE~ ver. ~HUD_COLOUR_MENU_YELLOW~" + VERSION_STRING + "~HUD_COLOUR_WHITE~");
 	
+	if (featureFuel && featureFuelGauge) fuelLevelOffset = get_fuel_level_offset();
+
 	while(true){
 		if(trainer_switch_pressed()){
 			menu_beep();
