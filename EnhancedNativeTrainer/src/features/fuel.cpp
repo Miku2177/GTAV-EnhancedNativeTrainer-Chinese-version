@@ -52,7 +52,9 @@ bool featureFuelGauge = true;
 int IdleConsume_secs_passed, IdleConsume_secs_curr, IdleConsume_seconds = -1;
 int f_secs_passed, f_secs_curr, f_seconds = -1;
 
+float curr_fuel_perc = -1.0f;
 float curr_fuel_a = -1.0f;
+float total_tank_vol = -1.0f;
 
 Vehicle veh_being_refueled;
 Vehicle veh;
@@ -114,6 +116,17 @@ void set_vehicle_fuel_level(Vehicle vehicle, int fuelOffset, float fuelValue)
 {
 	auto vehAddr = GetAddress(vehicle);
 	*(float*)(vehAddr + fuelOffset) = fuelValue;
+}
+
+uint64_t GetHandlingPtr(Vehicle vehicle, int fuelTankOffset) {
+	auto vehAddr = GetAddress(vehicle);
+	return vehAddr == nullptr ? 0 : *reinterpret_cast<uint64_t*>(vehAddr + fuelTankOffset);
+}
+
+float get_petrol_tank_volume(Vehicle vehicle) {
+	auto vehAddr = GetHandlingPtr(vehicle, fuelTankOffset);
+	float tankvolume = *(float*)(vehAddr + 0x0100);
+	return tankvolume;
 }
 //
 
@@ -354,9 +367,16 @@ void fuel()
 
 			// fuel gauge
 			if (featureFuelGauge && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()))) {
-				curr_fuel_a = ((FUEL[0] * 1000) / 2) + 5;
-				if (curr_fuel_a < 5.0) curr_fuel_a = 5.0;
-				if (f_secs_curr == -1) set_vehicle_fuel_level(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), fuelLevelOffset, curr_fuel_a);
+				curr_fuel_perc = ((FUEL[0] * 1000) / 140) * 100;
+				if (curr_fuel_perc < 9.0) {
+					curr_fuel_perc = 9.0;
+					f_seconds = 6;
+				}
+				if (f_secs_curr == -1) {
+					total_tank_vol = get_petrol_tank_volume(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()));
+					curr_fuel_a = (curr_fuel_perc / 100) * total_tank_vol;
+					set_vehicle_fuel_level(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), fuelLevelOffset, curr_fuel_a);
+				}
 
 				f_secs_passed = clock() / CLOCKS_PER_SEC;
 				if (((clock() / CLOCKS_PER_SEC) - f_secs_curr) != 0) {
@@ -364,6 +384,7 @@ void fuel()
 					f_secs_curr = f_secs_passed;
 				}
 				if (f_seconds > 5) {
+					curr_fuel_a = ((curr_fuel_perc / 100) * total_tank_vol);
 					set_vehicle_fuel_level(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), fuelLevelOffset, curr_fuel_a);
 					f_seconds = 0;
 				}
