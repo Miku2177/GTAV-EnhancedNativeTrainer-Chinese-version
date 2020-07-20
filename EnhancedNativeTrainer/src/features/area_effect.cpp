@@ -1330,7 +1330,7 @@ void give_all_nearby_peds_a_weapon(bool enabled){
 			if (!PED::IS_PED_GROUP_MEMBER(xped, PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID())) && PED::GET_PED_TYPE(xped) != 6 && PED::GET_PED_TYPE(xped) != 27 && PED::GET_PED_TYPE(xped) != 29){
 				ENTTrackedPedestrian* trackedPed = findOrCreateTrackedPed(xped);
 
-				if (enabled && !trackedPed->weaponSetApplied != pedWeaponSetIndex){
+				if (enabled/* && !trackedPed->weaponSetApplied != pedWeaponSetIndex*/){
 					std::vector<std::string> weaponSet = VOV_PED_WEAPONS[pedWeaponSetIndex];
 
 					int index = rand() % weaponSet.size();
