@@ -47,8 +47,15 @@ std::vector<int> GAS_Y;
 std::vector<int> GAS_Z;
 
 bool featureFuel = false;
+bool featureFuelGauge = true;
+bool featureHideFuelBar = false;
 
 int IdleConsume_secs_passed, IdleConsume_secs_curr, IdleConsume_seconds = -1;
+int f_secs_passed, f_secs_curr, f_seconds = -1;
+
+float curr_fuel_perc = -1.0f;
+float curr_fuel_a = -1.0f;
+float total_tank_vol = -1.0f;
 
 Vehicle veh_being_refueled;
 Vehicle veh;
@@ -87,6 +94,42 @@ int IdleConsumptionIndex = 7;
 bool IdleConsumptionChanged = true;
 int FuelBackground_Opacity_Index = 5;
 bool FuelBackgound_Opacity_Changed = true;
+
+// THE ORIGINAL CODE IS BY IKT
+typedef uintptr_t(*getEntityAddress_t)(std::int32_t Entity);
+getEntityAddress_t getEntityAddress = (getEntityAddress_t)FindPatternJACCO("\x83\xF9\xFF\x74\x31\x4C\x8B\x0D\x00\x00\x00\x00\x44\x8B\xC1\x49\x8B\x41\x08", "xxxxxxxx????xxxxxxx");
+
+BYTE* GetAddress(Vehicle handle) {
+	return reinterpret_cast<BYTE*>(getEntityAddress(handle));
+}
+
+//float get_vehicle_fuel_level(Vehicle vehicle)
+//{
+//	auto vehAddr = GetAddress(vehicle);
+//	int fuelLevelOffset = get_fuel_level_offset();
+//	float fuelLevel = *(float*)(vehAddr + fuelLevelOffset);
+	//ss << " - Fuel Level: " << fuelLevel;
+	//write_text_to_log_file(ss.str());
+//	return fuelLevel;
+//}
+
+void set_vehicle_fuel_level(Vehicle vehicle, int fuelOffset, float fuelValue)
+{
+	auto vehAddr = GetAddress(vehicle);
+	*(float*)(vehAddr + fuelOffset) = fuelValue;
+}
+
+uint64_t GetHandlingPtr(Vehicle vehicle, int fuelTankOffset) {
+	auto vehAddr = GetAddress(vehicle);
+	return vehAddr == nullptr ? 0 : *reinterpret_cast<uint64_t*>(vehAddr + fuelTankOffset);
+}
+
+float get_petrol_tank_volume(Vehicle vehicle) {
+	auto vehAddr = GetHandlingPtr(vehicle, fuelTankOffset);
+	float tankvolume = *(float*)(vehAddr + 0x0100);
+	return tankvolume;
+}
+//
 
 //////////////////////////////////////////////// FUEL OPTION /////////////////////////////////////////////////////////////////
 void fuel()
@@ -295,6 +338,8 @@ void fuel()
 			underbar_b = 86;
 		}
 
+		if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) f_secs_curr = -1;
+
 		// ENTERED VEHICLE
 		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
 			if (PED::GET_VEHICLE_PED_IS_IN(playerPed, false) != veh) Car_Refuel = false;
@@ -318,6 +363,31 @@ void fuel()
 					FUEL.push_back(randomize / 100);
 					std::swap(VEHICLES[0], VEHICLES.back());
 					std::swap(FUEL[0], FUEL.back());
+				}
+			}
+
+			// fuel gauge
+			if (featureFuelGauge && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()))) {
+				curr_fuel_perc = ((FUEL[0] * 1000) / 140) * 100;
+				if (curr_fuel_perc < 10.0) {
+					curr_fuel_perc = 10.0;
+					f_seconds = 6;
+				}
+				if (f_secs_curr == -1) {
+					total_tank_vol = get_petrol_tank_volume(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()));
+					curr_fuel_a = (curr_fuel_perc / 100) * total_tank_vol;
+					set_vehicle_fuel_level(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), fuelLevelOffset, curr_fuel_a);
+				}
+
+				f_secs_passed = clock() / CLOCKS_PER_SEC;
+				if (((clock() / CLOCKS_PER_SEC) - f_secs_curr) != 0) {
+					f_seconds = f_seconds + 1;
+					f_secs_curr = f_secs_passed;
+				}
+				if (f_seconds > 5) {
+					curr_fuel_a = ((curr_fuel_perc / 100) * total_tank_vol);
+					set_vehicle_fuel_level(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), fuelLevelOffset, curr_fuel_a);
+					f_seconds = 0;
 				}
 			}
 
@@ -441,7 +511,13 @@ void fuel()
 				if (ENTITY::DOES_ENTITY_EXIST(VEHICLES[i])/* && FUEL[i] < fuel_amount*/) {
 					Vector3 coords = ENTITY::GET_ENTITY_COORDS(VEHICLES[i], 1);
 					Vector3 coords2 = ENTITY::GET_ENTITY_COORDS(playerPed, 1);
-					if (GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(coords.x, coords.y, coords.z, coords2.x, coords2.y, coords2.z, false) < 3) {
+					Vehicle cur_v = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+					if (GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(coords.x, coords.y, coords.z, coords2.x, coords2.y, coords2.z, false) < 3 && (!featureHideFuelBar || 
+						(featureHideFuelBar && ((VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(cur_v)) && CAM::_0xEE778F8C7E1142E2(1) != 4) || 
+							(VEHICLE::IS_THIS_MODEL_A_BOAT(ENTITY::GET_ENTITY_MODEL(cur_v)) && CAM::_0xEE778F8C7E1142E2(3) != 4) || 
+							(VEHICLE::IS_THIS_MODEL_A_PLANE(ENTITY::GET_ENTITY_MODEL(cur_v)) && CAM::_0xEE778F8C7E1142E2(4) != 4) || 
+							(ENTITY::GET_ENTITY_MODEL(cur_v) == GAMEPLAY::GET_HASH_KEY("SUBMERSIBLE") || ENTITY::GET_ENTITY_MODEL(cur_v) == GAMEPLAY::GET_HASH_KEY("SUBMERSIBLE2")) && CAM::_0xEE778F8C7E1142E2(5) != 4) ||
+							(VEHICLE::IS_THIS_MODEL_A_HELI(ENTITY::GET_ENTITY_MODEL(cur_v)) && CAM::_0xEE778F8C7E1142E2(6) != 4)))) {
 						if (!FUEL.empty() && VEH_FUELBARPOSITION_VALUES[BarPositionIndex] < 3) {
 							GRAPHICS::DRAW_RECT(fuel_bar_x + 0.07, fuel_bar_y, fuel_amount, fuel_bar_h + 0.01, 0, 0, 0, fuelbar_edge_opacity);
 							GRAPHICS::DRAW_RECT(fuel_bar_x + 0.07, fuel_bar_y, fuel_amount, fuel_bar_h, underbar_r, underbar_g, underbar_b, FUEL_COLOURS_R_VALUES[FuelBackground_Opacity_Index]);
@@ -487,6 +563,7 @@ void fuel()
 					if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
 						VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, true, false);
 						Car_Refuel = false;
+						f_secs_curr = -1;
 					}
 				}
 				if (!stoprefillKey) {
@@ -494,6 +571,7 @@ void fuel()
 						FUEL[0] = fuel_amount;
 						VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, true, false);
 						Car_Refuel = false;
+						f_secs_curr = -1;
 					}
 				}
 			}

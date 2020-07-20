@@ -1,6 +1,12 @@
 #pragma once
 
+//static float get_vehicle_fuel_level(Vehicle vehicle);
+static void set_vehicle_fuel_level(Vehicle vehicle, int fuelOffset, float fuelValue);
+static BYTE* GetAddress(Vehicle handle);
+
 extern bool featureFuel;
+extern bool featureFuelGauge;
+extern bool featureHideFuelBar;
 
 //Car Fuel
 const std::vector<std::string> VEH_CARFUEL_CAPTIONS{ "NO", "0.1", "0.5", "1.0", "1.4", "1.8", "2.2", "2.6", "2.8", "3.0", "3.3", "3.6", "5.0", "6.0", "8.0", "10.0" }; // , "13.0", "15.0", "18.0", "20.0", "23.0", "25.0"
