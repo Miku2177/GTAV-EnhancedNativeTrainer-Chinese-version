@@ -512,7 +512,7 @@ void fuel()
 					Vector3 coords = ENTITY::GET_ENTITY_COORDS(VEHICLES[i], 1);
 					Vector3 coords2 = ENTITY::GET_ENTITY_COORDS(playerPed, 1);
 					Vehicle cur_v = PED::GET_VEHICLE_PED_IS_USING(playerPed);
-					if (GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(coords.x, coords.y, coords.z, coords2.x, coords2.y, coords2.z, false) < 3 && (!featureHideFuelBar || 
+					if (GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(coords.x, coords.y, coords.z, coords2.x, coords2.y, coords2.z, false) < 3 && (!featureHideFuelBar || (featureHideFuelBar && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) ||
 						(featureHideFuelBar && ((VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(cur_v)) && CAM::_0xEE778F8C7E1142E2(1) != 4) || 
 							(VEHICLE::IS_THIS_MODEL_A_BOAT(ENTITY::GET_ENTITY_MODEL(cur_v)) && CAM::_0xEE778F8C7E1142E2(3) != 4) || 
 							(VEHICLE::IS_THIS_MODEL_A_PLANE(ENTITY::GET_ENTITY_MODEL(cur_v)) && CAM::_0xEE778F8C7E1142E2(4) != 4) || 
