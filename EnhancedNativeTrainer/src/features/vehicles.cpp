@@ -4210,7 +4210,7 @@ void keyboard_tip_message(char* curr_message_s) {
 bool process_carspawn_menu() {
 	std::vector<MenuItem<int>*> menuItems;
 
-	for (int i = 1; i < vHashLists.size(); i++)
+	for (int i = 0; i < vHashLists.size(); i++)
 	{
 		//if (!strcmp(get_class_label(i), "NULL") && i != 23) //Other category
 		//	continue;
@@ -4243,7 +4243,6 @@ bool process_carspawn_menu() {
 //Gets the user's selection and requests it to be spawned
 bool onconfirm_vehlist_menu(MenuItem<int> choice) {
 	do_spawn_vehicle_hash(choice.value, choice.caption);
-
 	return false;
 }
 
