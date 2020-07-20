@@ -369,14 +369,16 @@ void fuel()
 			// fuel gauge
 			if (featureFuelGauge && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()))) {
 				curr_fuel_perc = ((FUEL[0] * 1000) / 140) * 100;
-				if (curr_fuel_perc < 10.0) {
-					curr_fuel_perc = 10.0;
-					f_seconds = 6;
-				}
+				
 				if (f_secs_curr == -1) {
 					total_tank_vol = get_petrol_tank_volume(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()));
 					curr_fuel_a = (curr_fuel_perc / 100) * total_tank_vol;
 					set_vehicle_fuel_level(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), fuelLevelOffset, curr_fuel_a);
+				}
+
+				if (curr_fuel_perc < total_tank_vol / 8) { // 10.0
+					curr_fuel_perc = total_tank_vol / 8; // 10.0
+					f_seconds = 6;
 				}
 
 				f_secs_passed = clock() / CLOCKS_PER_SEC;
@@ -384,6 +386,7 @@ void fuel()
 					f_seconds = f_seconds + 1;
 					f_secs_curr = f_secs_passed;
 				}
+
 				if (f_seconds > 5) {
 					curr_fuel_a = ((curr_fuel_perc / 100) * total_tank_vol);
 					set_vehicle_fuel_level(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), fuelLevelOffset, curr_fuel_a);
@@ -522,7 +525,7 @@ void fuel()
 							GRAPHICS::DRAW_RECT(fuel_bar_x + 0.07, fuel_bar_y, fuel_amount, fuel_bar_h + 0.01, 0, 0, 0, fuelbar_edge_opacity);
 							GRAPHICS::DRAW_RECT(fuel_bar_x + 0.07, fuel_bar_y, fuel_amount, fuel_bar_h, underbar_r, underbar_g, underbar_b, FUEL_COLOURS_R_VALUES[FuelBackground_Opacity_Index]);
 
-							if (FUEL[0] < 0.010) {
+							if (FUEL[0] < 0.015) {
 								GRAPHICS::DRAW_RECT(fuel_bar_x + (FUEL[0] / 2), fuel_bar_y, FUEL[0], fuel_bar_h, 220, 20, 20, 255);
 								Fuel_Low = true;
 							}
@@ -535,7 +538,7 @@ void fuel()
 							GRAPHICS::DRAW_RECT(fuel_bar_x, fuel_bar_y + 0.07, 0.009, fuel_amount, 0, 0, 0, fuelbar_edge_opacity);
 							GRAPHICS::DRAW_RECT(fuel_bar_x, fuel_bar_y + 0.07, 0.0055, fuel_amount, underbar_r, underbar_g, underbar_b, FUEL_COLOURS_R_VALUES[FuelBackground_Opacity_Index]);
 
-							if (FUEL[0] < 0.010) {
+							if (FUEL[0] < 0.015) {
 								GRAPHICS::DRAW_RECT(fuel_bar_x, (fuel_bar_y + fuel_amount - 0.01) - (FUEL[0] / 2), fuel_bar_h, FUEL[0], 220, 20, 20, 255);
 								Fuel_Low = true;
 							}
