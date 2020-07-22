@@ -659,7 +659,9 @@ void update_features(){
 			manual_instant = true;
 		}
 		// camera rotation
-		if ((ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) || PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 1)) && !featureFirstPersonDeathCamera) {
+		if ((ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) || PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 1)) && (!featureFirstPersonDeathCamera || 
+			(featureFirstPersonDeathCamera && PED::GET_PED_TYPE(playerPed) != 0 && PED::GET_PED_TYPE(playerPed) != 1 && PED::GET_PED_TYPE(playerPed) != 2 && PED::GET_PED_TYPE(playerPed) != 3 
+				&& SKINS_RESET_SKIN_ONDEATH_VALUES[ResetSkinOnDeathIndex] != 2))) {
 			Vector3 playerPosition = CAM::_GET_GAMEPLAY_CAM_COORDS();
 			Vector3 curRotation = CAM::GET_GAMEPLAY_CAM_ROT(2);
 			if (!CAM::DOES_CAM_EXIST(DeathCamM) && (CONTROLS::IS_CONTROL_PRESSED(2, 34) || CONTROLS::IS_CONTROL_PRESSED(2, 35) || CONTROLS::IS_CONTROL_PRESSED(2, 32) || CONTROLS::IS_CONTROL_PRESSED(2, 33)) && first_person_rotate == false) {
