@@ -247,6 +247,8 @@ extern bool featurePunchFireWeapons;
 extern bool featurePowerPunch;
 extern std::string lastPowerWeapon;
 
+extern int tick_allw;
+
 bool process_weapon_menu();
 
 bool process_weaponlist_menu();
