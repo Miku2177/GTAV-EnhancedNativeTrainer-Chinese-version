@@ -86,6 +86,9 @@ bool everInitialised = false;
 bool falling_down = false;
 bool looking_behind = false;
 
+bool manual_pressed = true;
+Vector3 CoordsWhereDied;
+
 ENTDatabase* database = NULL;
 Camera DeathCam = NULL;
 Camera DeathCamM = NULL;
@@ -126,7 +129,6 @@ bool super_jump_no_parachute, super_jump_intheair = false;
 
 bool manual_instant = false;
 bool first_person_rotate = false;
-bool firstPersonDeathCameraEnabled = false;
 
 bool featureWantedLevelNoPHeli = false;
 bool featureWantedLevelNoPHeliUpdated = false;
@@ -397,40 +399,69 @@ void check_player_model(){
 		}
 	}
 
-	if (SKINS_RESET_SKIN_ONDEATH_VALUES[ResetSkinOnDeathIndex] != 2) {
-		if (/*manual_instant == false && */firstPersonDeathCameraEnabled == false) {
-			if (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && !featureRespawnsWhereDied) {
-				if (!found) {
-					if (SKINS_RESET_SKIN_ONDEATH_VALUES[ResetSkinOnDeathIndex] == 0) set_status_text("Resetting death state because a custom skin was used"); // is_player_reset_on_death()
-					if (SKINS_RESET_SKIN_ONDEATH_VALUES[ResetSkinOnDeathIndex] == 1) { // !is_player_reset_on_death()
-						Hash model_d = ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID());
-						if (model_d != GAMEPLAY::GET_HASH_KEY("a_c_dolphin") && model_d != GAMEPLAY::GET_HASH_KEY("a_c_sharkhammer") && model_d != GAMEPLAY::GET_HASH_KEY("a_c_humpback") &&
-							model_d != GAMEPLAY::GET_HASH_KEY("a_c_killerwhale") && model_d != GAMEPLAY::GET_HASH_KEY("a_c_stingray") && model_d != GAMEPLAY::GET_HASH_KEY("a_c_sharktiger") &&
-							model_d != GAMEPLAY::GET_HASH_KEY("a_c_fish") && model_d != GAMEPLAY::GET_HASH_KEY("a_c_whalegrey")) model_to_restore = model_d; // !ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && 
-					}
-					GAMEPLAY::_RESET_LOCALPLAYER_STATE();
-					int spPlayerCount = sizeof(player_models) / sizeof(player_models[0]);
-					if (last_player_slot_seen < spPlayerCount) {
-						applyChosenSkin(player_models[last_player_slot_seen]);
-						if (SKINS_RESET_SKIN_ONDEATH_VALUES[ResetSkinOnDeathIndex] == 1) { // !is_player_reset_on_death()
-							npc_player_died = true;
-							ENTITY::SET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID(), 0);
-						}
-					}
-					else {
-						applyChosenSkin(mplayer_models[last_player_slot_seen - spPlayerCount]);
-						if (SKINS_RESET_SKIN_ONDEATH_VALUES[ResetSkinOnDeathIndex] == 1) { // !is_player_reset_on_death()
-							npc_player_died = true;
-							ENTITY::SET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID(), 0);
-						}
-					}
-					while (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) WAIT(0); // wait until player is resurrected
+	if (!ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) CoordsWhereDied = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
+
+	if (SKINS_RESET_SKIN_ONDEATH_VALUES[ResetSkinOnDeathIdx] == 0 && manual_pressed == true) {
+		if (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && !featureRespawnsWhereDied) {
+			if (!found) {
+				float temp_dist = 20000.0;
+				float d_temp1 = SYSTEM::VDIST(CoordsWhereDied.x, CoordsWhereDied.y, CoordsWhereDied.z, 338.409, -1396.54, 32.5092);
+				float d_temp2 = SYSTEM::VDIST(CoordsWhereDied.x, CoordsWhereDied.y, CoordsWhereDied.z, 363.229, -583.42, 28.6848);
+				float d_temp3 = SYSTEM::VDIST(CoordsWhereDied.x, CoordsWhereDied.y, CoordsWhereDied.z, -451.687, -345.756, 34.5016);
+				float d_temp4 = SYSTEM::VDIST(CoordsWhereDied.x, CoordsWhereDied.y, CoordsWhereDied.z, 1105.7, -1533.99, 34.8937);
+				float d_temp5 = SYSTEM::VDIST(CoordsWhereDied.x, CoordsWhereDied.y, CoordsWhereDied.z, 1841.54, 3669.09, 33.68);
+				float d_temp6 = SYSTEM::VDIST(CoordsWhereDied.x, CoordsWhereDied.y, CoordsWhereDied.z, -240.879, 6324.1, 32.4261);
+
+				if (temp_dist > d_temp1) {
+					temp_dist = d_temp1;
+					CoordsWhereDied.x = 338.409;
+					CoordsWhereDied.y = -1396.54;
+					CoordsWhereDied.z = 32.5092;
 				}
-			}
-			if (!featureRespawnsWhereDied && SKINS_RESET_SKIN_ONDEATH_VALUES[ResetSkinOnDeathIndex] == 1 && npc_player_died == true && PLAYER::GET_TIME_SINCE_LAST_DEATH() > 100 && !ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) &&
-				PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID())) { // !is_player_reset_on_death()
-				npc_player_died = false;
-				if (npc_player_died == false && !ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID())) applyChosenSkin(model_to_restore);
+				if (temp_dist > d_temp2) {
+					temp_dist = d_temp2;
+					CoordsWhereDied.x = 363.229;
+					CoordsWhereDied.y = -583.42;
+					CoordsWhereDied.z = 28.6848;
+				}
+				if (temp_dist > d_temp3) {
+					temp_dist = d_temp3;
+					CoordsWhereDied.x = -451.687;
+					CoordsWhereDied.y = -345.756;
+					CoordsWhereDied.z = 34.5016;
+				}
+				if (temp_dist > d_temp4) {
+					temp_dist = d_temp4;
+					CoordsWhereDied.x = 1105.7;
+					CoordsWhereDied.y = -1533.99;
+					CoordsWhereDied.z = 34.8937;
+				}
+				if (temp_dist > d_temp5) {
+					temp_dist = d_temp5;
+					CoordsWhereDied.x = 1841.54;
+					CoordsWhereDied.y = 3669.09;
+					CoordsWhereDied.z = 33.68;
+				}
+				if (temp_dist > d_temp6) {
+					temp_dist = d_temp6;
+					CoordsWhereDied.x = -240.879;
+					CoordsWhereDied.y = 6324.1;
+					CoordsWhereDied.z = 32.4261;
+				}
+
+				player_died = true;
+				CAM::DO_SCREEN_FADE_OUT(500);
+				WAIT(1000);
+				GAMEPLAY::_DISABLE_AUTOMATIC_RESPAWN(true);
+				GAMEPLAY::IGNORE_NEXT_RESTART(true);
+				GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("respawn_controller");
+				GAMEPLAY::_RESET_LOCALPLAYER_STATE();
+				NETWORK::NETWORK_RESURRECT_LOCAL_PLAYER(CoordsWhereDied.x, CoordsWhereDied.y, CoordsWhereDied.z, 0, false, false);
+				PLAYER::RESET_PLAYER_ARREST_STATE(PLAYER::PLAYER_PED_ID());
+				PED::RESET_PED_MOVEMENT_CLIPSET(PLAYER::PLAYER_PED_ID(), 1.0f);
+				WAIT(1000);
+				CAM::DO_SCREEN_FADE_IN(500);
+				GAMEPLAY::SET_TIME_SCALE(1.0f);
 			}
 		}
 	}
@@ -596,8 +627,7 @@ void update_features(){
 	}
 
 	// First Person Death Camera
-	if ((featureFirstPersonDeathCamera && PED::GET_PED_TYPE(playerPed) != 0 && PED::GET_PED_TYPE(playerPed) != 1 && PED::GET_PED_TYPE(playerPed) != 2 && PED::GET_PED_TYPE(playerPed) != 3 && SKINS_RESET_SKIN_ONDEATH_VALUES[ResetSkinOnDeathIndex] == 2) ||
-		(featureFirstPersonDeathCamera && (PED::GET_PED_TYPE(playerPed) == 0 || PED::GET_PED_TYPE(playerPed) == 1 || PED::GET_PED_TYPE(playerPed) == 2 || PED::GET_PED_TYPE(playerPed) == 3))) { // && SKINS_RESET_SKIN_ONDEATH_VALUES[ResetSkinOnDeathIndex] != 0
+	if (featureFirstPersonDeathCamera) {
 		Vector3 playerPosition = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 		Vector3 curRotation = ENTITY::GET_ENTITY_ROTATION(PLAYER::PLAYER_PED_ID(), 2);
 		if (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) || PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 1)) {
@@ -611,7 +641,6 @@ void update_features(){
 				CAM::RENDER_SCRIPT_CAMS(true, false, 0, true, true);
 				CAM::SET_CAM_ACTIVE(DeathCam, true);
 				ENTITY::SET_ENTITY_ALPHA(PLAYER::PLAYER_PED_ID(), 0, 0);
-				firstPersonDeathCameraEnabled = true;
 			}
 		}
 		if (CAM::DOES_CAM_EXIST(DeathCam)) { // camera rotation
@@ -642,13 +671,13 @@ void update_features(){
 			CAM::DESTROY_CAM(DeathCam, true);
 			ENTITY::SET_ENTITY_ALPHA(PLAYER::PLAYER_PED_ID(), 255, 0);
 			first_person_rotate = false;
-			firstPersonDeathCameraEnabled = false;
 		}
 	}
 
 	// Manual Respawn
 	if (featureNoAutoRespawn && GAMEPLAY::GET_MISSION_FLAG() == 0) {
 		if ((ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) || PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 1)) && player_died == false) {
+			manual_pressed = false;
 			SCRIPT::SET_NO_LOADING_SCREEN(true);
 			GAMEPLAY::SET_FADE_OUT_AFTER_DEATH(false);
 			GAMEPLAY::SET_FADE_OUT_AFTER_ARREST(false);
@@ -659,9 +688,7 @@ void update_features(){
 			manual_instant = true;
 		}
 		// camera rotation
-		if ((ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) || PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 1)) && (!featureFirstPersonDeathCamera || 
-			(featureFirstPersonDeathCamera && PED::GET_PED_TYPE(playerPed) != 0 && PED::GET_PED_TYPE(playerPed) != 1 && PED::GET_PED_TYPE(playerPed) != 2 && PED::GET_PED_TYPE(playerPed) != 3 
-				&& SKINS_RESET_SKIN_ONDEATH_VALUES[ResetSkinOnDeathIndex] != 2))) {
+		if (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) || PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 1)) {
 			Vector3 playerPosition = CAM::_GET_GAMEPLAY_CAM_COORDS();
 			Vector3 curRotation = CAM::GET_GAMEPLAY_CAM_ROT(2);
 			if (!CAM::DOES_CAM_EXIST(DeathCamM) && (CONTROLS::IS_CONTROL_PRESSED(2, 34) || CONTROLS::IS_CONTROL_PRESSED(2, 35) || CONTROLS::IS_CONTROL_PRESSED(2, 32) || CONTROLS::IS_CONTROL_PRESSED(2, 33)) && first_person_rotate == false) {
@@ -695,6 +722,7 @@ void update_features(){
 		}
 		//
 		if (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && CONTROLS::IS_CONTROL_JUST_PRESSED(2, 22)) { // 23 // CONTROLS::IS_CONTROL_JUST_PRESSED(2, 176) ||
+			manual_pressed = true;
 			tick_allw = 0;
 			player_died = true;
 			GAMEPLAY::_DISABLE_AUTOMATIC_RESPAWN(false);
@@ -708,6 +736,7 @@ void update_features(){
 			manual_instant = false;
 		}
 		if ((PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 1) || PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 0)) && CONTROLS::IS_CONTROL_JUST_PRESSED(2, 22)) { // CONTROLS::IS_CONTROL_JUST_PRESSED(2, 176) || 
+			manual_pressed = true;
 			tick_allw = 0;
 			CAM::DO_SCREEN_FADE_OUT(500);
 			WAIT(1000);
