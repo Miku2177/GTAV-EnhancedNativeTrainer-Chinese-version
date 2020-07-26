@@ -3485,7 +3485,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	engine_can_degrade(); 
 
 ///////////////////////////////////////////// VEHICLE TRACKING /////////////////////////////////////////////////////////////
-	if ((featureRememberVehicles && (GAMEPLAY::GET_MISSION_FLAG() == 1 || playerPed != old_playerPed_Tracking)) || !featureRememberVehicles) {
+	if (/*(featureRememberVehicles && (GAMEPLAY::GET_MISSION_FLAG() == 1 || playerPed != old_playerPed_Tracking)) || */!featureRememberVehicles) {
 		if (!BLIPTABLE_VEH.empty()) {
 			for (int i = 0; i < BLIPTABLE_VEH.size(); i++) {
 				if (UI::DOES_BLIP_EXIST(BLIPTABLE_VEH[i])) {
