@@ -81,6 +81,7 @@ bool viz_veh_ind_left, viz_veh_ind_right = false;
 bool char_wheel = false;
 char* last_used;
 Vector3 veh_last_c;
+int curr_array_veh = -1;
 
 bool turn_check_left, turn_check_right = false;
 bool controllightsenabled_l = false;
@@ -3528,24 +3529,24 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		if (!VEH_BLIPSYMBOL_VALUES.empty()) std::vector<int>(VEH_BLIPSYMBOL_VALUES).swap(emptyVec);
 	}
 
-	if (featureRememberVehicles && !VEHICLES_REMEMBER.empty() && !STREAMING::IS_PLAYER_SWITCH_IN_PROGRESS() && char_wheel == true) {
-		//Vector3 veh_c = ENTITY::GET_ENTITY_COORDS(VEHICLES_REMEMBER[VEHICLES_REMEMBER.size() - 1], true);
-		//if (veh_c.x == 0 && veh_c.y == 0 && veh_c.z == 0) {
+	if (featureRememberVehicles && !VEHICLES_REMEMBER.empty() && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID()) && !STREAMING::IS_PLAYER_SWITCH_IN_PROGRESS() && char_wheel == true) {
+		WAIT(1000);
+		if (!ENTITY::DOES_ENTITY_EXIST(VEHICLES_REMEMBER[curr_array_veh])) {
 			Vehicle new_veh = VEHICLE::CREATE_VEHICLE(GAMEPLAY::GET_HASH_KEY(last_used), veh_last_c.x, veh_last_c.y, veh_last_c.z, 0, 1, 0);
 			ENTITY::SET_ENTITY_AS_MISSION_ENTITY(new_veh, true, true);
 			add_blip(new_veh);
-			BLIPTABLE_VEH[VEHICLES_REMEMBER.size() - 1] = blip_veh;
-			VEHICLES_REMEMBER[VEHICLES_REMEMBER.size() - 1] = new_veh;
+			BLIPTABLE_VEH[curr_array_veh] = blip_veh;
+			VEHICLES_REMEMBER[curr_array_veh] = new_veh;
 			if (featureBlipNumber) {
 				for (int i = 0; i < BLIPTABLE_VEH.size(); i++) UI::SHOW_NUMBER_ON_BLIP(BLIPTABLE_VEH[i], i);
 			}
-		//}
+		}
 		char_wheel = false;
 	}
 	if (featureRememberVehicles && !VEHICLES_REMEMBER.empty() && STREAMING::IS_PLAYER_SWITCH_IN_PROGRESS() && char_wheel == false) {
-		Hash currvehmodell = ENTITY::GET_ENTITY_MODEL(VEHICLES_REMEMBER[VEHICLES_REMEMBER.size() - 1]);
+		Hash currvehmodell = ENTITY::GET_ENTITY_MODEL(VEHICLES_REMEMBER[curr_array_veh]);
 		last_used = VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(currvehmodell);
-		Vector3 veh_c = ENTITY::GET_ENTITY_COORDS(VEHICLES_REMEMBER[VEHICLES_REMEMBER.size() - 1], true);
+		Vector3 veh_c = ENTITY::GET_ENTITY_COORDS(VEHICLES_REMEMBER[curr_array_veh], true);
 		veh_last_c.x = veh_c.x;
 		veh_last_c.y = veh_c.y;
 		veh_last_c.z = veh_c.z;
@@ -3579,6 +3580,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			for (int i = 0; i < VEHICLES_REMEMBER.size(); i++) {
 				if (VEHICLES_REMEMBER[i] == veh_rem) {
 					been_already = true;
+					curr_array_veh = i;
 					curr_veh_remember = veh_rem;
 				}
 			}
