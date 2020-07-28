@@ -82,7 +82,6 @@ bool char_wheel = false;
 Vehicle last_used;
 int curr_array_veh = -1;
 Vehicle veh_tmp;
-Vector3 me_c;
 
 bool turn_check_left, turn_check_right = false;
 bool controllightsenabled_l = false;
@@ -3530,25 +3529,23 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		if (!VEH_BLIPSYMBOL_VALUES.empty()) std::vector<int>(VEH_BLIPSYMBOL_VALUES).swap(emptyVec);
 	}
 
-	if (featureRememberVehicles && !VEHICLES_REMEMBER.empty() && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID()) && !STREAMING::IS_PLAYER_SWITCH_IN_PROGRESS() && char_wheel == true) {
-		char_wheel = false;
-	}
-	if (featureRememberVehicles && !VEHICLES_REMEMBER.empty() && STREAMING::IS_PLAYER_SWITCH_IN_PROGRESS() && char_wheel == false) {
+	if (featureRememberVehicles && !VEHICLES_REMEMBER.empty() && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID()) && !STREAMING::IS_PLAYER_SWITCH_IN_PROGRESS() && char_wheel == true) char_wheel = false;
+	
+	if (featureRememberVehicles && GAMEPLAY::GET_MISSION_FLAG() == 0 && !VEHICLES_REMEMBER.empty() && STREAMING::IS_PLAYER_SWITCH_IN_PROGRESS() && char_wheel == false) {
 		if (ENTITY::DOES_ENTITY_EXIST(last_used)) VEHICLE::DELETE_VEHICLE(&last_used);
 		last_used = VEHICLE::CREATE_VEHICLE(GAMEPLAY::GET_HASH_KEY("ZENTORNO"), 100.0, 100.0, 100.0, 0, 1, 0);
 		ENTITY::SET_ENTITY_AS_MISSION_ENTITY(last_used, true, true);
-		bool in_veh = false;
 		if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) {
 			veh_tmp = VEHICLES_REMEMBER[curr_array_veh];
-			in_veh = true;
+			AI::TASK_LEAVE_VEHICLE(PLAYER::PLAYER_PED_ID(), veh_tmp, 16);
+			WAIT(10);
 		}
-		else {
-			me_c = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
-		}
+		Vector3 me_c = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 		PED::SET_PED_INTO_VEHICLE(playerPed, last_used, -1);
-		WAIT(100);
-		if (in_veh == true) PED::SET_PED_INTO_VEHICLE(playerPed, veh_tmp, -1);
-		else ENTITY::SET_ENTITY_COORDS(playerPed, me_c.x, me_c.y, me_c.z, 1, 0, 0, 1);
+		WAIT(10);
+		AI::TASK_LEAVE_VEHICLE(PLAYER::PLAYER_PED_ID(), last_used, 16);
+		WAIT(10);
+		ENTITY::SET_ENTITY_COORDS(playerPed, me_c.x, me_c.y, me_c.z, 1, 0, 0, 1);
 		char_wheel = true;
 	}
 
