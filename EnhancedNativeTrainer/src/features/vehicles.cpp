@@ -79,9 +79,10 @@ float nuke_h1_coord, nuke_h2_coord, nuke_h3_coord = -1;
 bool viz_veh_ind_left, viz_veh_ind_right = false;
 
 bool char_wheel = false;
-char* last_used;
-Vector3 veh_last_c;
+Vehicle last_used;
 int curr_array_veh = -1;
+Vehicle veh_tmp;
+Vector3 me_c;
 
 bool turn_check_left, turn_check_right = false;
 bool controllightsenabled_l = false;
@@ -3530,26 +3531,24 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 
 	if (featureRememberVehicles && !VEHICLES_REMEMBER.empty() && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID()) && !STREAMING::IS_PLAYER_SWITCH_IN_PROGRESS() && char_wheel == true) {
-		WAIT(1000);
-		if (!ENTITY::DOES_ENTITY_EXIST(VEHICLES_REMEMBER[curr_array_veh])) {
-			Vehicle new_veh = VEHICLE::CREATE_VEHICLE(GAMEPLAY::GET_HASH_KEY(last_used), veh_last_c.x, veh_last_c.y, veh_last_c.z, 0, 1, 0);
-			ENTITY::SET_ENTITY_AS_MISSION_ENTITY(new_veh, true, true);
-			add_blip(new_veh);
-			BLIPTABLE_VEH[curr_array_veh] = blip_veh;
-			VEHICLES_REMEMBER[curr_array_veh] = new_veh;
-			if (featureBlipNumber) {
-				for (int i = 0; i < BLIPTABLE_VEH.size(); i++) UI::SHOW_NUMBER_ON_BLIP(BLIPTABLE_VEH[i], i);
-			}
-		}
 		char_wheel = false;
 	}
 	if (featureRememberVehicles && !VEHICLES_REMEMBER.empty() && STREAMING::IS_PLAYER_SWITCH_IN_PROGRESS() && char_wheel == false) {
-		Hash currvehmodell = ENTITY::GET_ENTITY_MODEL(VEHICLES_REMEMBER[curr_array_veh]);
-		last_used = VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(currvehmodell);
-		Vector3 veh_c = ENTITY::GET_ENTITY_COORDS(VEHICLES_REMEMBER[curr_array_veh], true);
-		veh_last_c.x = veh_c.x;
-		veh_last_c.y = veh_c.y;
-		veh_last_c.z = veh_c.z;
+		if (ENTITY::DOES_ENTITY_EXIST(last_used)) VEHICLE::DELETE_VEHICLE(&last_used);
+		last_used = VEHICLE::CREATE_VEHICLE(GAMEPLAY::GET_HASH_KEY("ZENTORNO"), 100.0, 100.0, 100.0, 0, 1, 0);
+		ENTITY::SET_ENTITY_AS_MISSION_ENTITY(last_used, true, true);
+		bool in_veh = false;
+		if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) {
+			veh_tmp = VEHICLES_REMEMBER[curr_array_veh];
+			in_veh = true;
+		}
+		else {
+			me_c = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
+		}
+		PED::SET_PED_INTO_VEHICLE(playerPed, last_used, -1);
+		WAIT(100);
+		if (in_veh == true) PED::SET_PED_INTO_VEHICLE(playerPed, veh_tmp, -1);
+		else ENTITY::SET_ENTITY_COORDS(playerPed, me_c.x, me_c.y, me_c.z, 1, 0, 0, 1);
 		char_wheel = true;
 	}
 
