@@ -255,7 +255,6 @@ std::vector<tele_location> LOCATIONS_INTERIORS = {
 	{ "Clucking Bell Farms Warehouse", -70.0624f, 6263.53f, 31.0909f, { "CS1_02_cf_onmission1", "CS1_02_cf_onmission2", "CS1_02_cf_onmission3", "CS1_02_cf_onmission4" }, { "CS1_02_cf_offmission" }, {}, false },
 	{ "Devin's Garage", 482.027f, -1317.96f, 29.2021f },
 	{ "Dr. Friedlander's Office", -1902.39f, -572.832f, 19.0972f },
-	{ "Eclipse Towers Apt 40", -773.023f, 341.627f, 211.397f },
 	{ "FIB Building Burnt", 159.553f, -738.851f, 246.152f },
 	{ "FIB Building Floor 47", 134.573f, -766.486f, 234.152f },
 	{ "FIB Building Floor 49", 134.635f, -765.831f, 242.152f },
@@ -310,12 +309,15 @@ std::vector<tele_location> LOCATIONS_REQSCEN = {
 /* Name, coords, IPL name, scenary (props) required, scenary to remove, bool isloaded*/
 std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "2 Car Garage", 173.1176f, -1003.279f, -99.000f, { "hw1_blimp_interior_v_garages_milo_" }, {}, {}, false },
+	{ "4 Car Garage", 199.9716f, -1018.954f, -99.4041f, { "hei_hw1_blimp_interior_v_garagem_sp_milo_" }, {}, {}, false },
 	{ "4 Integrity Way Apt 10", -32.17249000f, -579.01830000f, 82.90740000f, { "hei_hw1_blimp_interior_10_dlc_apart_high_new_milo_" }, {}, {}, false },
 	{ "4 Integrity Way Apt 28", -14.7964f, -581.709f, 79.4307f, {}, {}, {}, false },
 	{ "6 Car Garage", 199.9716f, -999.6678f, -99.000f, { "hw1_blimp_interior_v_garagem_milo_" }, {}, {}, false },
+	{ "7302 San Andreas Avenue Apt 6", -460.61330000f, -691.55620000f, 69.87947000f, { "hw1_blimp_interior_v_apartment_high_milo__6" }, {}, {}, false },
 	{ "10 Car Garage Back Room", 223.193f, -967.322f, -99.000f, { "hw1_blimp_interior_v_garagel_milo_" }, {}, {}, false },
 	{ "10 Car Garage Bay", 228.135f, -995.350f, -99.000f, { "hw1_blimp_interior_v_garagel_milo_" }, {}, {}, false },
 	{ "Arcadius Business Center Office: Style 1", -139.53950000f, -629.07570000f, 167.82040000f, { "ex_dt1_02_office_01a" }, {}, {}, false },
+	{ "Avenger Interior", 520.0f, 4750.0f, -70.0f, IPL_PROPS_DOOMSDAY_MAIN_BASE, {}, { "SHELL_TINT" }, false },
 	{ "Benny's Garage", -209.759f, -1319.617f, 30.08367f }, 
 	{ "Biker Club Garage 1", 1005.861f, -3156.162f, -39.90727f, { "bkr_biker_interior_placement_interior_1_biker_dlc_int_02_milo_" }, {}, {}, false },
 	{ "Biker Club Garage 2", 1102.477f, -3156.162f, -37.77361f, { "bkr_biker_interior_placement_interior_0_biker_dlc_int_01_milo_" }, {}, {}, false },
@@ -327,10 +329,20 @@ std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Biker Warehouse: Weed Farm", 1059.028f, -3201.89f, -39.99353f, { "bkr_biker_interior_placement_interior_3_biker_dlc_int_ware02_milo_" }, {}, {}, false },
 	{ "CEO Garage Modshop", 730.0f, -2990.0f, -40.0f, { "imp_impexp_interior_placement_interior_2_imptexp_mod_int_01_milo_" }, {}, {}, false },//No ceiling, floor, walls textures.
 	{ "Cinema", -1435.8f, -256.866f, 18.7795f, { "hei_hw1_02_interior_v_cinema_milo_" }, {}, {}, false },
-	{ "Del Perro Heights Apt 26", -1468.02100000f, -529.94370000f, 62.34918000f, { "hei_hw1_blimp_interior_26_dlc_apart_high_new_milo_" }, {}, {}, false },
 	{ "Del Perro Heights Apt 27", -1468.02100000f, -529.94370000f, 49.72156000f, { "hei_hw1_blimp_interior_27_dlc_apart_high_new_milo_" }, {}, {}, false },
 	{ "Del Perro Heights Apt 28", -1468.14f, -541.815f, 73.4442f, {}, {}, {}, false },
+	{ "Eclipse Towers Apt 12", -791.29410000f, 338.07100000f, 200.41350000f, { "hw1_blimp_interior_v_apartment_high_milo__12" }, {}, {}, false },
+	{ "Eclipse Towers Apt 13", -764.81310000f, 319.18510000f, 216.05030000f, { "hw1_blimp_interior_v_apartment_high_milo__13" }, {}, {}, false },
+	{ "Eclipse Towers Apt 40", -773.023f, 341.627f, 211.397f },
 	{ "Executive CEO Office: Style 1", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_01a" }, {}, {}, false }, //ex_dt1_11_office_01a[b, c....]
+	{ "Executive CEO Office: Style 2", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_01b" }, {}, {}, false },
+	{ "Executive CEO Office: Style 3", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_01c" }, {}, {}, false },
+	{ "Executive CEO Office: Style 4", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_02a" }, {}, {}, false },
+	{ "Executive CEO Office: Style 5", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_02b" }, {}, {}, false },
+	{ "Executive CEO Office: Style 6", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_02c" }, {}, {}, false },
+	{ "Executive CEO Office: Style 7", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_03a" }, {}, {}, false },
+	{ "Executive CEO Office: Style 8", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_03b" }, {}, {}, false },
+	{ "Executive CEO Office: Style 9", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_03c" }, {}, {}, false },
 	{ "Executive CEO Office: Style 2 (Messy)", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_01b" }, {}, { IPL_PROPS_CEO_OFFICE }, false },
 	{ "Executive Warehouse (Small)", 1095.0f, -3100.0f, -40.0f, { "ex_exec_warehouse_placement_interior_1_int_warehouse_s_dlc_milo_" }, {}, {}, false },
 	{ "Executive Warehouse (Medium)", 1060.0f, -3100.0f, -40.0f, { "ex_exec_warehouse_placement_interior_0_int_warehouse_m_dlc_milo_" }, {}, {}, false },
@@ -341,7 +353,6 @@ std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Heist Police Station", 445.488f, -983.779f, 30.6896f, { "" }, {}, {}, false },
 	{ "IAA Server Hub", 2168.08900000f, 2920.89000000f, -85.80049000f, { "xm_x17dlc_int_placement_interior_5_x17dlc_int_facility2_milo_" }, {}, {}, false },
 	{ "IAA Underground Facility", 2047.0f, 2942.0f, -62.90245f, { "xm_x17dlc_int_placement_interior_4_x17dlc_int_facility_milo_" }, {}, {}, false },
-	{ "Import-Export Garage", 975.0f, -3000.0f, -40.0f, IPLS_IMPORT_EXPORT_WAREHOUSES, {}, {}, false },
 	{ "Jetsam Interior", 795.00000000f, -3000.00000000f, -40.00000000f, { "imp_impexp_interior_placement_interior_0_impexp_int_01_milo_" }, {}, {}, false },
 	{ "Lombank Office: Style 1", -1573.84900000f, -571.02540000f, 107.52290000f, { "ex_sm_13_office_01a" }, {}, {}, false },
 	{ "Martin Madrazo's House", 1396.58f, 1141.79f, 114.334f }, 
@@ -349,20 +360,29 @@ std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Mission Row Underground 'Winning' Garage", 400.09610000f, -956.67870000f, -100.00000000f},
 	{ "Online Character Creator Interior", 415.275f, -999.037f, -99.4041f, { "hw1_int_placement_interior_v_mugshot_milo_ " }, {}, {}, false },
 	{ "Penthouse: Style 1", -786.168f, 334.319f, 211.197f, { "apa_v_mp_h_01_a", "apa_v_mp_h_01_b", "apa_v_mp_h_01_c" }, {}, {}, false },
+	{ "Penthouse: Style 2", -787.7805f, 334.9232f, 215.8384f, { "apa_v_mp_h_02_a", "apa_v_mp_h_02_b", "apa_v_mp_h_02_c" }, {}, {}, false },
+	{ "Penthouse: Style 3", -787.7805f, 334.9232f, 215.8384f, { "apa_v_mp_h_03_a", "apa_v_mp_h_03_b", "apa_v_mp_h_03_c" }, {}, {}, false },
+	{ "Penthouse: Style 4", -787.7805f, 334.9232f, 215.8384f, { "apa_v_mp_h_04_a", "apa_v_mp_h_04_b", "apa_v_mp_h_04_c" }, {}, {}, false },
+	{ "Penthouse: Style 5", -787.7805f, 334.9232f, 215.8384f, { "apa_v_mp_h_05_a", "apa_v_mp_h_05_b", "apa_v_mp_h_05_c" }, {}, {}, false },
+	{ "Penthouse: Style 6", -787.7805f, 334.9232f, 215.8384f, { "apa_v_mp_h_06_a", "apa_v_mp_h_06_b", "apa_v_mp_h_06_c" }, {}, {}, false },
+	{ "Penthouse: Style 7", -787.7805f, 334.9232f, 215.8384f, { "apa_v_mp_h_07_a", "apa_v_mp_h_07_b", "apa_v_mp_h_07_c" }, {}, {}, false },
+	{ "Penthouse: Style 8", -787.7805f, 334.9232f, 215.8384f, { "apa_v_mp_h_08_a", "apa_v_mp_h_08_b", "apa_v_mp_h_08_c" }, {}, {}, false },
 	{ "Richards Majestic Apt 2", -915.811f, -379.432f, 113.675f, {}, {}, {}, false },
+	{ "Richards Majestic Apt 10", -925.54970000f, -374.22030000f, 102.23290000f, { "hw1_blimp_interior_v_apartment_high_milo__10" }, {}, {}, false },
 	{ "Stilthouse 1", 328.5579f, 425.9027f, 147.9707f, { "apa_ch2_04_interior_0_v_mp_stilts_b_milo_" }, {}, {}, false },
-	{ "Stilthouse 2", 372.6725f, 405.5155f, 144.4997f, { "apa_ch2_04_interior_1_v_mp_stilts_a_milo_" }, {}, {}, false },
 	{ "Stilthouse 3", 122.5349f, 542.5076f, 182.8967f, { "apa_ch2_05c_interior_1_v_mp_stilts_a_milo_" }, {}, {}, false },
 	{ "Stilthouse 4", -166.4324f, 481.537f, 136.2436f, { "apa_ch2_05e_interior_0_v_mp_stilts_b_milo_" }, {}, {}, false },
-	{ "Stilthouse 5", -855.0377f, 673.7045f, 151.4361f, { "apa_ch2_09b_interior_0_v_mp_stilts_a_milo_" }, {}, {}, false },
-	{ "Stilthouse 6", -773.3615f, 609.1497f, 142.7305f, { "apa_ch2_09b_interior_1_v_mp_stilts_b_milo_" }, {}, {}, false },
 	{ "Stilthouse 7", -573.0324f, 643.7613f, 144.4316f, { "apa_ch2_09c_interior_0_v_mp_stilts_a_milo_" }, {}, {}, false },
 	{ "Stilthouse 8", -667.5856f, 582.3726f, 143.9697f, { "apa_ch2_09c_interior_2_v_mp_stilts_b_milo_" }, {}, {}, false },
-	{ "Stilthouse 9", -1286.362f, 431.7878f, 96.49426f, { "apa_ch2_12b_interior_0_v_mp_stilts_a_milo_" }, {}, {}, false },
 	{ "Studio Flat", 260.3297f, -997.4288f, -100.0f, { "hei_hw1_blimp_interior_v_studio_lo_milo_" }, {}, {}, false },
 	{ "Submarine", 514.266f, 4855.68f, -62.5621f, { "xm_x17dlc_int_placement_interior_8_x17dlc_int_sub_milo_" }, {}, {}, false },
+	{ "Tinsel Towers Apt 16", -613.54040000f, 63.04870000f, 100.81960000f, { "hw1_blimp_interior_v_apartment_high_milo__16" }, {}, {}, false },
+	{ "Tinsel Towers Apt 17", -587.82590000f, 44.26880000f, 86.41870000f, { "hw1_blimp_interior_v_apartment_high_milo__17" }, {}, {}, false },
 	{ "Tinsel Towers Apt 42", -614.86f, 40.6783f, 97.6f, {}, {}, {}, false },
 	{ "Upgraded Base", 462.09f, 4820.42f, -59.0f, IPL_PROPS_DOOMSDAY_MAIN_BASE, {}, { IPL_PROPS_FACILITY }, false },
+	{ "Vespucci Boulevard Studio Flat", 342.8157f, -997.4288f, -99.4041f, { "hei_hw1_blimp_interior_v_apart_midspaz_milo_" }, {}, {}, false },
+	{ "Weazel Plaza Apt 9", -909.10170000f, -438.19030000f, 114.39970000f, { "hw1_blimp_interior_v_apartment_high_milo__9" }, {}, {}, false },
+	{ "Weazel Plaza Apt 11", -889.30300000f, -451.77510000f, 119.32700000f, { "hw1_blimp_interior_v_apartment_high_milo__11" }, {}, {}, false },
 }; 
 
 std::vector<tele_location> LOCATIONS_ACTORS = {
@@ -1175,6 +1195,62 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 	coords.y = value->y;
 	coords.z = value->z;
 
+	bool unloadedAnything = false;
+	DWORD time = GetTickCount() + 1000;
+
+	for (int x = 0; x < MENU_LOCATION_CATEGORIES.size(); x++) {
+		/*
+		//Added to avoid showing debug toggle menu.
+		if (x == MENU_LOCATION_CATEGORIES.size() - 1)
+		{
+		continue;
+		}
+		*/
+
+		for (int y = 0; y < VOV_LOCATIONS[x].size(); y++) {
+			//don't unload our newly loaded scenery
+			if (x == lastChosenCategory && y == choice.value) {
+				continue;
+			}
+
+			tele_location* loc = &VOV_LOCATIONS[x][y];
+
+			//don't unload something using same loader
+			if (loc->scenery_required == value->scenery_required && loc->scenery_toremove == value->scenery_toremove) {
+				continue;
+			}
+
+			if (loc->isLoaded && loc->scenery_required.size() > 0) {
+				if (!unloadedAnything) {
+					set_status_text("Unloading old scenery...");
+					time = GetTickCount() + 1000;
+					while (GetTickCount() < time) {
+						make_periodic_feature_call();
+						WAIT(0);
+					}
+				}
+
+				if (ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()))// && STREAMING::IS_IPL_ACTIVE("plg_01") == 1)
+				{
+					for each (const char* scenery in loc->scenery_required) {
+						if (STREAMING::IS_IPL_ACTIVE(scenery))
+						{
+							STREAMING::REMOVE_IPL(scenery);
+						}
+					}
+					for each (const char* scenery in loc->scenery_toremove) {
+						if (!STREAMING::IS_IPL_ACTIVE(scenery))
+						{
+							STREAMING::REQUEST_IPL(scenery);
+						}
+					}
+				}
+				unloadedAnything = true;
+				loc->isLoaded = false;
+			}
+		}
+	}
+
 	if ((value->scenery_required.size() > 0 || value->scenery_toremove.size() > 0) && !value->isLoaded){
 		set_status_text("Loading new scenery...");
 
@@ -1262,62 +1338,6 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 	coords.z = value->z;*/
 	teleport_to_coords(e, coords);
 
-	bool unloadedAnything = false;
-	DWORD time = GetTickCount() + 1000;
-
-	for (int x = 0; x < MENU_LOCATION_CATEGORIES.size(); x++){
-		/*
-		//Added to avoid showing debug toggle menu.
-		if (x == MENU_LOCATION_CATEGORIES.size() - 1)
-		{
-		continue;
-		}
-		*/
-
-		for (int y = 0; y < VOV_LOCATIONS[x].size(); y++){
-			//don't unload our newly loaded scenery
-			if (x == lastChosenCategory && y == choice.value){
-				continue;
-			}
-
-			tele_location* loc = &VOV_LOCATIONS[x][y];
-
-			//don't unload something using same loader
-			if (loc->scenery_required == value->scenery_required && loc->scenery_toremove == value->scenery_toremove){
-				continue;
-			}
-
-			if (loc->isLoaded && loc->scenery_required.size() > 0){
-				if (!unloadedAnything){
-					set_status_text("Unloading old scenery...");
-					time = GetTickCount() + 1000;
-					while (GetTickCount() < time){
-						make_periodic_feature_call();
-						WAIT(0);
-					}
-				}
-
-				if (ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()))// && STREAMING::IS_IPL_ACTIVE("plg_01") == 1)
-				{
-					for each (const char* scenery in loc->scenery_required){
-						if (STREAMING::IS_IPL_ACTIVE(scenery))
-						{
-							STREAMING::REMOVE_IPL(scenery);
-						}
-					}
-					for each (const char* scenery in loc->scenery_toremove){
-						if (!STREAMING::IS_IPL_ACTIVE(scenery))
-						{
-							STREAMING::REQUEST_IPL(scenery);
-						}
-					}
-				}
-				unloadedAnything = true;
-				loc->isLoaded = false;
-			}
-		}
-	}
-
 	if (unloadedAnything){
 		set_status_text("Old scenery unloaded");
 
@@ -1327,6 +1347,12 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 			WAIT(0);
 		}
 	}
+
+	//
+	for each (char* prop in value->scenery_props) {
+		INTERIOR::REFRESH_INTERIOR(interiorID_temp);
+	}
+	//
 
 	return false;
 }
