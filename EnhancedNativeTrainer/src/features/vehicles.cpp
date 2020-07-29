@@ -81,7 +81,6 @@ bool viz_veh_ind_left, viz_veh_ind_right = false;
 bool char_wheel = false;
 Vehicle last_used;
 int curr_array_veh = -1;
-Vehicle veh_tmp;
 
 bool turn_check_left, turn_check_right = false;
 bool controllightsenabled_l = false;
@@ -2524,7 +2523,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		}
 	}
 
-	// player's vehicle invincible
+	// Invincible Vehicle
 	if (featureVehInvincibleUpdated){
 		if (bPlayerExists && !featureVehInvincible && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
 			ENTITY::SET_ENTITY_INVINCIBLE(veh, FALSE);
@@ -2538,8 +2537,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			featureVehInvincibleUpdated = false;
 		}
 	}
-
-	// Invincible Vehicle
+		
 	if (featureVehInvincible){
 		if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
 			if (FIRE::IS_ENTITY_ON_FIRE(veh)){
@@ -2565,14 +2563,9 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 			if (featureVehNoDamage){
 				ENTITY::SET_ENTITY_ONLY_DAMAGED_BY_PLAYER(veh, 1);
-
 				VEHICLE::SET_VEHICLE_BODY_HEALTH(veh, 10000.0f);
-
-				/*
-				* This API seems to be a damage check - don't just continually repair the
-				* vehicle as it causes glitches.
-				*/
-
+				
+				// This API seems to be a damage check - don't just continually repair the vehicle as it causes glitches.
 				if (VEHICLE::_IS_VEHICLE_DAMAGED(veh) && featureVehNoDamage && featureVehInvulnIncludesCosmetic){
 					VEHICLE::SET_VEHICLE_FIXED(veh);
 				}
@@ -3536,7 +3529,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		last_used = VEHICLE::CREATE_VEHICLE(GAMEPLAY::GET_HASH_KEY("ZENTORNO"), 100.0, 100.0, 100.0, 0, 1, 0);
 		ENTITY::SET_ENTITY_AS_MISSION_ENTITY(last_used, true, true);
 		if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) {
-			veh_tmp = VEHICLES_REMEMBER[curr_array_veh];
+			Vehicle veh_tmp = VEHICLES_REMEMBER[curr_array_veh];
 			AI::TASK_LEAVE_VEHICLE(PLAYER::PLAYER_PED_ID(), veh_tmp, 16);
 			WAIT(10);
 		}
