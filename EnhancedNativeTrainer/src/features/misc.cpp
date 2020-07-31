@@ -167,8 +167,6 @@ int PhoneBillIndex = 2;
 bool PhoneBillChanged = true;
 
 // Phone Bill Free Seconds
-const std::vector<std::string> MISC_PHONE_FREESECONDS_CAPTIONS{ "0", "3", "5", "10", "15" };
-const int MISC_PHONE_FREESECONDS_VALUES[] = { 0, 3, 5, 10, 15 };
 int PhoneFreeSecondsIndex = 0;
 bool PhoneFreeSecondsChanged = true;
 int PhoneBikeAnimationIndex = 0;
