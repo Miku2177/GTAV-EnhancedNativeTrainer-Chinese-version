@@ -927,6 +927,9 @@ void add_blip(Vehicle vehicle) {
 void save_tracked_veh() {
 	if (!VEHICLES_REMEMBER.empty()) {
 		ENTDatabase* database = get_database();
+		std::vector<TrackedVehicleDBRow*> savedCTVehs = database->get_tracked_vehicles();
+		int lastKnownTrackedVehicleCount = savedCTVehs.size();
+		for (int i = 0; i < lastKnownTrackedVehicleCount; i++) database->delete_tracked_vehicle(i);
 		for (int i = 0; i < VEHICLES_REMEMBER.size(); i++) {
 			char str[3];
 			sprintf(str, "%d", i);
@@ -1750,6 +1753,7 @@ void del_sel_blip() {
 					UI::SHOW_NUMBER_ON_BLIP(BLIPTABLE_VEH[i], i);
 				}
 			}
+			save_tracked_veh();
 		}
 		else set_status_text("Not a valid number");
 	}
@@ -1853,7 +1857,7 @@ void process_remember_vehicles_menu() {
 
 	listItem = new SelectFromListMenuItem(MISC_PHONE_FREESECONDS_CAPTIONS, onchange_veh_trackedautosave_index);
 	listItem->wrap = false;
-	listItem->caption = "Autosave Tracked Vehicles (m)";
+	listItem->caption = "Autosave Tracked Vehicles (min)";
 	listItem->value = VehTrackedAutoSaveIndex;
 	menuItems.push_back(listItem);
 
