@@ -99,6 +99,9 @@ const int MISC_DEF_MANUTAB_VALUES[] = { -2, -1, 1, 2, 3, 5, 6, 10, 18, 42 };
 extern int DefMenuTabIndex;
 extern bool DefMenuTabChanged;
 
+const std::vector<std::string> MISC_PHONE_FREESECONDS_CAPTIONS{ "0", "3", "5", "10", "15" };
+const int MISC_PHONE_FREESECONDS_VALUES[] = { 0, 3, 5, 10, 15 };
+
 extern bool featureGamePause;
 
 void process_misc_menu();

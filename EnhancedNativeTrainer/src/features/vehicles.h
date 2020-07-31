@@ -1076,6 +1076,8 @@ void onchange_veh_blipsymbol_index(int value, SelectFromListMenuItem* source);
 
 void onchange_veh_blipflash_index(int value, SelectFromListMenuItem* source);
 
+void onchange_veh_trackedautosave_index(int value, SelectFromListMenuItem* source);
+
 void onchange_speeding_city_index(int value, SelectFromListMenuItem* source);
 
 void onchange_detection_range_index(int value, SelectFromListMenuItem* source);
