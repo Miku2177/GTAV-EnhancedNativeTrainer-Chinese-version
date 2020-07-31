@@ -17,7 +17,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 /**This value should be increased whenever you change the schema and a release is made.
 However you must also put in code to upgrade from older versions, in ENTDatabase::handle_version,
 as they will be deployed in the wild already.*/
-const int DATABASE_VERSION = 14; // 11
+const int DATABASE_VERSION = 11;
 
 static int singleIntResultCallback(void *data, int count, char **rows, char **azColName)
 {
