@@ -76,6 +76,9 @@ extern bool FuelBackgound_Opacity_Changed;
 
 void fuel();
 
+extern std::vector<Vehicle> VEHICLES;
+extern std::vector<float> FUEL;
+
 extern std::vector<int> GAS_X;
 extern std::vector<int> GAS_Y;
 extern std::vector<int> GAS_Z;
