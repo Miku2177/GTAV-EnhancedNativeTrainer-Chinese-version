@@ -636,10 +636,10 @@ void fuel()
 		}
 
 		// maximum array size
-		if (!VEHICLES.empty() && VEHICLES.size() > 60) {
-			VEHICLE::DELETE_VEHICLE(&VEHICLES[0]);
-			VEHICLES.erase(VEHICLES.end()); // begin
-		}
+		//if (!featureRememberVehicles && !VEHICLES.empty() && VEHICLES.size() > 60) {
+		//	VEHICLE::DELETE_VEHICLE(&VEHICLES[0]);
+		//	VEHICLES.erase(VEHICLES.end()); // begin
+		//}
 
 	} // featureFuel
 }
