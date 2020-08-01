@@ -156,9 +156,7 @@ bool being_on_motorway = false;
 Blip blip_veh = -1;
 std::vector<Blip> BLIPTABLE_VEH;
 std::vector<Vehicle> VEHICLES_REMEMBER;
-bool been_already = false;
-Vehicle curr_veh_remember;
-Ped old_playerPed_Tracking = -1;
+
 bool featureRememberVehicles = false;
 bool featureBlipNumber = true;
 bool featureAutoalarm = false;
@@ -3545,7 +3543,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	engine_can_degrade(); 
 
 ///////////////////////////////////////////// VEHICLE TRACKING /////////////////////////////////////////////////////////////
-	if (/*(featureRememberVehicles && (GAMEPLAY::GET_MISSION_FLAG() == 1 || playerPed != old_playerPed_Tracking)) || */!featureRememberVehicles) {
+	if (!featureRememberVehicles) {
 		if (!BLIPTABLE_VEH.empty()) {
 			for (int i = 0; i < BLIPTABLE_VEH.size(); i++) {
 				if (UI::DOES_BLIP_EXIST(BLIPTABLE_VEH[i])) {
@@ -3579,6 +3577,8 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	
 	if (featureRememberVehicles && GAMEPLAY::GET_MISSION_FLAG() == 0 && !VEHICLES_REMEMBER.empty() && STREAMING::IS_PLAYER_SWITCH_IN_PROGRESS() && char_wheel == false) {
 		if (ENTITY::DOES_ENTITY_EXIST(last_used)) VEHICLE::DELETE_VEHICLE(&last_used);
+		if (!STREAMING::HAS_MODEL_LOADED(GAMEPLAY::GET_HASH_KEY("ZENTORNO"))) STREAMING::REQUEST_MODEL(GAMEPLAY::GET_HASH_KEY("ZENTORNO"));
+		while (!STREAMING::HAS_MODEL_LOADED(GAMEPLAY::GET_HASH_KEY("ZENTORNO"))) WAIT(0);
 		last_used = VEHICLE::CREATE_VEHICLE(GAMEPLAY::GET_HASH_KEY("ZENTORNO"), 100.0, 100.0, 100.0, 0, 1, 0);
 		ENTITY::SET_ENTITY_AS_MISSION_ENTITY(last_used, true, true);
 		if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) {
@@ -3596,8 +3596,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 
 	if (GAMEPLAY::GET_MISSION_FLAG() == 0 && !SCRIPT::HAS_SCRIPT_LOADED("fbi4_prep3amb") && !SCRIPT::HAS_SCRIPT_LOADED("finale_heist_prepeamb") && !SCRIPT::HAS_SCRIPT_LOADED("agency_prep2amb")) {
-		if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && been_already == true) been_already = false;
-
+		
 		// auto load tracked vehicles
 		if (featureRestoreTracked && restored_v == false) {
 			trck_secs_passed = clock() / CLOCKS_PER_SEC;
@@ -3605,7 +3604,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				trck_seconds = trck_seconds + 1;
 				trck_secs_curr = trck_secs_passed;
 			}
-			if (trck_seconds > 5) { // 10
+			if (trck_seconds > 2) { // 5 10
 				tracked_being_restored = true;
 				ENTDatabase* database = get_database();
 				std::vector<TrackedVehicleDBRow*> savedCTVehs = database->get_tracked_vehicles();
@@ -3643,21 +3642,14 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				add_blip(veh_rem);
 				BLIPTABLE_VEH.push_back(blip_veh);
 				VEHICLES_REMEMBER.push_back(veh_rem);
-				curr_veh_remember = veh_rem;
-				old_playerPed_Tracking = playerPed;
 			}
 
+			bool been_already = false;
 			for (int i = 0; i < VEHICLES_REMEMBER.size(); i++) {
 				if (VEHICLES_REMEMBER[i] == veh_rem) {
 					been_already = true;
 					curr_array_veh = i;
-					curr_veh_remember = veh_rem;
 				}
-			}
-
-			if (curr_veh_remember != veh_rem) {
-				been_already = false;
-				curr_veh_remember = veh_rem;
 			}
 
 			if (been_already == false) {
@@ -3666,7 +3658,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				VEHICLES_REMEMBER.push_back(veh_rem);
 
 				if (VEH_VEHREMEMBER_VALUES[VehRememberIndex] != 666 && VEHICLES_REMEMBER.size() > VEH_VEHREMEMBER_VALUES[VehRememberIndex]) {
-					UI::REMOVE_BLIP(&BLIPTABLE_VEH[0]);
+					if (UI::DOES_BLIP_EXIST(BLIPTABLE_VEH[0])) UI::REMOVE_BLIP(&BLIPTABLE_VEH[0]);
 					VEHICLE::DELETE_VEHICLE(&VEHICLES_REMEMBER[0]);
 					BLIPTABLE_VEH.erase(BLIPTABLE_VEH.begin());
 					VEHICLES_REMEMBER.erase(VEHICLES_REMEMBER.begin());
@@ -3687,7 +3679,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				trck_seconds = trck_seconds + 1;
 				trck_secs_curr = trck_secs_passed;
 			}
-
 			if (!VEHICLES_REMEMBER.empty() && trck_seconds > MISC_PHONE_FREESECONDS_VALUES[VehTrackedAutoSaveIndex] * 60) {
 				save_tracked_veh();
 				trck_seconds = 0;
@@ -4673,8 +4664,6 @@ bool spawn_tracked_car(int slot, std::string caption) {
 		add_blip(veh);
 		BLIPTABLE_VEH.push_back(blip_veh);
 		VEHICLES_REMEMBER.push_back(veh);
-		curr_veh_remember = veh;
-		old_playerPed_Tracking = PLAYER::PLAYER_PED_ID();
 	}
 
 	for (std::vector<TrackedVehicleDBRow*>::iterator it = savedTVehs.begin(); it != savedTVehs.end(); ++it) {

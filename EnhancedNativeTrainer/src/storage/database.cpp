@@ -3660,7 +3660,7 @@ bool ENTDatabase::save_tracked_vehicle(Vehicle veh, std::string saveName, sqlite
 		sqlite3_bind_int(stmt, index++, VEHICLE::IS_VEHICLE_A_CONVERTIBLE(veh, 0) && VEHICLE::GET_CONVERTIBLE_ROOF_STATE(veh));
 
 		/*dashColour INTEGER,
-			interiorColour INTEGER*/
+		interiorColour INTEGER*/
 		int dashCol, interiorCol;
 		VEHICLE::_GET_VEHICLE_DASHBOARD_COLOUR(veh, &dashCol);
 		VEHICLE::_GET_VEHICLE_INTERIOR_COLOUR(veh, &interiorCol);
