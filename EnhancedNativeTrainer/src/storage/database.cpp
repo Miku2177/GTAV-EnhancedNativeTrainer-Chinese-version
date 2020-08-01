@@ -3304,6 +3304,77 @@ void ENTDatabase::delete_tracked_vehicle(sqlite3_int64 slot)
 	mutex_unlock();
 }
 
+void ENTDatabase::populate_tracked_vehicle(TrackedVehicleDBRow* entry)
+{
+	mutex_lock();
+
+	sqlite3_stmt* stmt;
+	const char* pzTest;
+	auto qStr = "select * from ENT_TRACKED_EXTRAS WHERE parentId=?";
+	int rc = sqlite3_prepare_v2(db, qStr, strlen(qStr), &stmt, &pzTest);
+
+	if (rc == SQLITE_OK)
+	{
+		// bind the value
+		sqlite3_bind_int(stmt, 1, entry->rowID);
+
+		// commit
+		int r = sqlite3_step(stmt);
+		while (r == SQLITE_ROW)
+		{
+			TrackedVehicleExtraDBRow* extra = new TrackedVehicleExtraDBRow();
+			//0 and 1 are IDs
+			extra->extraID = sqlite3_column_int(stmt, 2);
+			extra->extraState = sqlite3_column_int(stmt, 3);
+			entry->extras.push_back(extra);
+			r = sqlite3_step(stmt);
+		}
+
+		sqlite3_finalize(stmt);
+	}
+	else
+	{
+		write_text_to_log_file("Failed to fetch tracked vehicle extras");
+		write_text_to_log_file(sqlite3_errmsg(db));
+	}
+
+	sqlite3_stmt* stmt2;
+	const char* pzTest2;
+	auto qStr2 = "select * from ENT_TRACKED_MODS WHERE parentId=?";
+	int rc2 = sqlite3_prepare_v2(db, qStr2, strlen(qStr2), &stmt2, &pzTest2);
+
+	if (rc2 == SQLITE_OK)
+	{
+		// bind the value
+		sqlite3_bind_int(stmt2, 1, entry->rowID);
+
+		// commit
+		int r = sqlite3_step(stmt2);
+		while (r == SQLITE_ROW)
+		{
+			TrackedVehicleModDBRow* mod = new TrackedVehicleModDBRow();
+			//0 and 1 are IDs
+			mod->modID = sqlite3_column_int(stmt2, 2);
+			mod->modState = sqlite3_column_int(stmt2, 3);
+			mod->isToggle = (sqlite3_column_int(stmt2, 4) == 1) ? true : false;
+			entry->mods.push_back(mod);
+			r = sqlite3_step(stmt2);
+		}
+
+		sqlite3_finalize(stmt2);
+	}
+	else
+	{
+		write_text_to_log_file("Failed to fetch tracked vehicle mods");
+		write_text_to_log_file(sqlite3_errmsg(db));
+	}
+
+	mutex_unlock();
+
+	write_text_to_log_file("Done loading tracked vehicles");
+	return;
+}
+
 std::vector<TrackedVehicleDBRow*> ENTDatabase::get_tracked_vehicles(int index)
 {
 	write_text_to_log_file("Asked to load tracked vehicles");

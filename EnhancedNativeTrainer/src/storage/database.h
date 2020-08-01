@@ -500,6 +500,8 @@ public:
 
 	void populate_saved_vehicle(SavedVehicleDBRow *entry);
 
+	void populate_tracked_vehicle(TrackedVehicleDBRow* entry);
+
 	void populate_saved_skin(SavedSkinDBRow *entry);
 
 	void delete_saved_vehicle(sqlite3_int64 slot);

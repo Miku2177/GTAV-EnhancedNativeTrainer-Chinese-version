@@ -4547,6 +4547,7 @@ bool spawn_tracked_car(int slot, std::string caption) {
 	ENTDatabase* database = get_database();
 	std::vector<TrackedVehicleDBRow*> savedTVehs = database->get_tracked_vehicles(slot);
 	TrackedVehicleDBRow* savedTVeh = savedTVehs.at(0);
+	database->populate_tracked_vehicle(savedTVeh);
 
 	Vehicle veh = do_spawn_vehicle(savedTVeh->model, caption, false);
 	if (veh == -1) {
