@@ -932,7 +932,7 @@ void save_tracked_veh() {
 			char str[3];
 			sprintf(str, "%d", i);
 			database->save_tracked_vehicle(VEHICLES_REMEMBER[i], str, i);
-			set_status_text("Saved");
+			set_status_text("Tracked Vehicles Saved");
 		}
 	}
 }
@@ -1751,7 +1751,7 @@ void del_sel_blip() {
 					UI::SHOW_NUMBER_ON_BLIP(BLIPTABLE_VEH[i], i);
 				}
 			}
-			save_tracked_veh();
+			if (featureRestoreTracked) save_tracked_veh();
 		}
 		else set_status_text("Not a valid number");
 	}
@@ -1766,10 +1766,10 @@ bool onconfirm_vehicle_remember_menu(MenuItem<int> choice)
 		if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0) && VEH_VEHREMEMBER_VALUES[VehRememberIndex] == 666) manual_veh_tr = true;
 		break;
 	case 8:
-		del_sel_blip();
+		if (featureRememberVehicles) del_sel_blip();
 		break;
 	case 12:
-		save_tracked_veh();
+		if (featureRememberVehicles && featureRestoreTracked) save_tracked_veh();
 		break;
 	default:
 		break;
@@ -3598,7 +3598,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	if (GAMEPLAY::GET_MISSION_FLAG() == 0 && !SCRIPT::HAS_SCRIPT_LOADED("fbi4_prep3amb") && !SCRIPT::HAS_SCRIPT_LOADED("finale_heist_prepeamb") && !SCRIPT::HAS_SCRIPT_LOADED("agency_prep2amb")) {
 		
 		// auto load tracked vehicles
-		if (featureRestoreTracked && restored_v == false) {
+		if (featureRememberVehicles && featureRestoreTracked && restored_v == false) {
 			trck_secs_passed = clock() / CLOCKS_PER_SEC;
 			if (((clock() / CLOCKS_PER_SEC) - trck_secs_curr) != 0) {
 				trck_seconds = trck_seconds + 1;
@@ -3673,7 +3673,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		} // end of the main body
 
 		// auto save tracked vehicles
-		if (featureRestoreTracked && restored_v == true && MISC_PHONE_FREESECONDS_VALUES[VehTrackedAutoSaveIndex] > 0) {
+		if (featureRememberVehicles && featureRestoreTracked && restored_v == true && MISC_PHONE_FREESECONDS_VALUES[VehTrackedAutoSaveIndex] > 0) {
 			trck_secs_passed = clock() / CLOCKS_PER_SEC;
 			if (((clock() / CLOCKS_PER_SEC) - trck_secs_curr) != 0) {
 				trck_seconds = trck_seconds + 1;
