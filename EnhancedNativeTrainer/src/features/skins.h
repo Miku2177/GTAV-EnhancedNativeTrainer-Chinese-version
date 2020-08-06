@@ -32,9 +32,9 @@ const std::vector<std::string> SKINS_ONLINE_CAPTIONS{ "Club Bartender Female", "
 const std::vector<std::string> SKINS_ONLINE_VALUES{ "S_F_Y_ClubBar_01", "S_M_Y_ClubBar_01", "A_F_Y_ClubCust_01", "A_F_Y_ClubCust_02", "A_F_Y_ClubCust_03", "A_M_Y_ClubCust_01", "A_M_Y_ClubCust_02", "A_M_Y_ClubCust_03", "U_F_Y_DanceBurl_01", "U_M_Y_DanceBurl_01", "U_F_Y_DanceLthr_01", "U_M_Y_DanceLthr_01", "U_F_Y_DanceRave_01", "U_M_Y_DanceRave_01", "CSB_DJBlaMadon", "IG_DJBlaMadon", "IG_DJBlamRyanS", "IG_DJBlamRupert", "IG_DJDixManager", "IG_DJSolFotios", "IG_DJSolJakob", "IG_DJSolMike", "IG_DJSolRobT", "IG_DJTalAurelia", "IG_DJTalIgnazio", "CSB_Dix" ,"IG_Dix" , "CSB_EnglishDave" , "IG_EnglishDave", "IG_DJGeneric_01", "IG_JimmyBoston_02", "IG_KerryMcIntosh_02", "IG_Lacey_Jones_02", "CS_Lazlow_2", "IG_Lazlow_2", "U_F_M_Miranda_02", "U_F_Y_PoppyMich_02", "CSB_Sol", "IG_Sol", "IG_DJSolManager", "CSB_TalCC", "IG_TalCC", "CSB_TalMM", "IG_TalMM", "IG_TylerDix_02", "CSB_TonyPrince", "IG_TonyPrince", "S_M_Y_WareTech_01", "CS_LesterCrest_3", "IG_LesterCrest_3", "CSB_Huang", "IG_Huang", "CSB_GeorginaCheng", "IG_GeorginaCheng", "CSB_Wendy", "IG_Wendy", "CS_JimmyDiSanto2", "IG_JimmyDiSanto2", "CSB_Vincent_2", "IG_Vincent_2", "A_F_Y_Bevhills_05", "S_M_M_HighSec_03", "CSB_Celeb_01", "IG_Celeb_01", "S_M_Y_WestSec_02" };
 
 // Reset Player Model On Death
-const std::vector<std::string> SKINS_RESET_SKIN_ONDEATH_CAPTIONS{ "Reset On Death", "Restore On Respawn", "Compatibility Mode" };
-const int SKINS_RESET_SKIN_ONDEATH_VALUES[] = { 0, 1, 2 };
-extern int ResetSkinOnDeathIndex;
+const std::vector<std::string> SKINS_RESET_SKIN_ONDEATH_CAPTIONS{ "Restore On Respawn", "Compatibility Mode" }; // "Reset On Death", 
+const int SKINS_RESET_SKIN_ONDEATH_VALUES[] = { 0, 1 };
+extern int ResetSkinOnDeathIdx;
 extern bool ResetSkinOnDeathChanged;
 
 /***

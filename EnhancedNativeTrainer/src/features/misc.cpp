@@ -167,8 +167,6 @@ int PhoneBillIndex = 2;
 bool PhoneBillChanged = true;
 
 // Phone Bill Free Seconds
-const std::vector<std::string> MISC_PHONE_FREESECONDS_CAPTIONS{ "0", "3", "5", "10", "15" };
-const int MISC_PHONE_FREESECONDS_VALUES[] = { 0, 3, 5, 10, 15 };
 int PhoneFreeSecondsIndex = 0;
 bool PhoneFreeSecondsChanged = true;
 int PhoneBikeAnimationIndex = 0;
@@ -1617,7 +1615,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 				}
 			}
 		}
-		if (!featureZeroBalance && bill_no_phone == true) {
+		if ((!featureZeroBalance && bill_no_phone == true) || (featureZeroBalance && SCRIPT::HAS_SCRIPT_LOADED("prologue1") && bill_no_phone == true)) {
 			SCRIPT::REQUEST_SCRIPT("cellphone_controller");
 			SYSTEM::START_NEW_SCRIPT("cellphone_controller", 1424);
 			bill_no_phone = false;

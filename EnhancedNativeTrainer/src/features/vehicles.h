@@ -946,15 +946,17 @@ Ped find_nearest_ped();
 
 void toggle_tractioncontrol();
 
-bool process_spawn_menu_generic(int topMenuSelection);
+//bool process_spawn_menu_generic(int topMenuSelection);
+
+bool spawn_tracked_car(int slot, std::string caption);
 
 bool spawn_saved_car(int slot, std::string caption);
 
 void save_current_vehicle(int slot);
 
-bool onconfirm_spawn_menu_vehicle_selection(MenuItem<std::string> choice);
+//bool onconfirm_spawn_menu_vehicle_selection(MenuItem<std::string> choice);
 
-bool do_spawn_vehicle(std::string modelName, std::string modelTitle);
+//bool do_spawn_vehicle(std::string modelName, std::string modelTitle);
 
 bool do_spawn_vehicle_hash(int modelName, std::string modelTitle);
 
@@ -1073,6 +1075,8 @@ void onchange_world_npc_vehicles_colour_index(int value, SelectFromListMenuItem*
 void onchange_veh_blipsymbol_index(int value, SelectFromListMenuItem* source);
 
 void onchange_veh_blipflash_index(int value, SelectFromListMenuItem* source);
+
+void onchange_veh_trackedautosave_index(int value, SelectFromListMenuItem* source);
 
 void onchange_speeding_city_index(int value, SelectFromListMenuItem* source);
 

@@ -78,6 +78,10 @@ float nuke_h1_coord, nuke_h2_coord, nuke_h3_coord = -1;
 
 bool viz_veh_ind_left, viz_veh_ind_right = false;
 
+bool char_wheel = false;
+Vehicle last_used;
+int curr_array_veh = -1;
+
 bool turn_check_left, turn_check_right = false;
 bool controllightsenabled_l = false;
 bool controllightsenabled_r = false;
@@ -96,6 +100,8 @@ bool turning_started = false;
 
 int traction_tick = 0;
 int Time_tick_mileage = 0;
+
+int trck_secs_passed, trck_secs_curr, trck_seconds = -1;
 
 float mileage, signal_meters = 0;
 
@@ -141,6 +147,8 @@ BOOL highbeamsAutoOn = -1;
 bool no_autotoggle = false;
 bool autotoggle_temp = false;
 
+bool restored_v = false;
+
 bool being_in_city = false;
 bool being_on_motorway = false;
 
@@ -148,17 +156,18 @@ bool being_on_motorway = false;
 Blip blip_veh = -1;
 std::vector<Blip> BLIPTABLE_VEH;
 std::vector<Vehicle> VEHICLES_REMEMBER;
-bool been_already = false;
-Vehicle curr_veh_remember;
-Ped old_playerPed_Tracking = -1;
+
 bool featureRememberVehicles = false;
 bool featureBlipNumber = true;
 bool featureAutoalarm = false;
+bool featureRestoreTracked = false;
 Vehicle alarmed_veh = -1;
 bool near_enough = false;
 int a_counter_tick = 0;
 
 int Shut_seconds = -1; 
+
+bool tracked_being_restored = false;
 
 int nitrous_m = -2;
 
@@ -285,6 +294,10 @@ bool VehBlipSymbol_Changed = true;
 //Blip Flashing
 int VehBlipFlashIndex = 0;
 bool VehBlipFlash_Changed = true;
+
+//Restore Tracked Vehicles On Game Restart
+int VehTrackedAutoSaveIndex = 0;
+bool VehTrackedAutoSaveChanged = true;
 
 //Keep The Engine Running
 const std::vector<std::string> VEH_ENGINERUNNING_CAPTIONS{ "Never", "Always", "Hold Exit To Kill Engine" };
@@ -893,6 +906,35 @@ void eject_seat() { // eject seat
 
 	WAIT(5000); // 4000
 	VEHICLE::DELETE_VEHICLE(&veh);
+}
+
+void add_blip(Vehicle vehicle) {
+	blip_veh = UI::ADD_BLIP_FOR_ENTITY(vehicle);
+	UI::SET_BLIP_AS_FRIENDLY(blip_veh, true);
+	if (VEH_BLIPSYMBOL_VALUES[VehBlipSymbolIndex] != NULL) UI::SET_BLIP_SPRITE(blip_veh, VEH_BLIPSYMBOL_VALUES[VehBlipSymbolIndex]);
+	else UI::SET_BLIP_SPRITE(blip_veh, VEH_BLIPSYMBOL_VALUES[0]);
+	UI::SET_BLIP_CATEGORY(blip_veh, 2);
+	if (featureBlipNumber) UI::SHOW_NUMBER_ON_BLIP(blip_veh, BLIPTABLE_VEH.size());
+	if (LIMP_IF_INJURED_VALUES[VehBlipFlashIndex] == 1) UI::SET_BLIP_FLASHES(blip_veh, true);
+	if (LIMP_IF_INJURED_VALUES[VehBlipFlashIndex] == 2) UI::SET_BLIP_FLASHES_ALTERNATE(blip_veh, true);
+	UI::SET_BLIP_SCALE(blip_veh, VEH_BLIPSIZE_VALUES[VehBlipSizeIndex]);
+	UI::SET_BLIP_COLOUR(blip_veh, VEH_BLIPCOLOUR_VALUES[VehBlipColourIndex]);
+	UI::SET_BLIP_AS_SHORT_RANGE(blip_veh, true);
+}
+
+void save_tracked_veh() {
+	if (!VEHICLES_REMEMBER.empty()) {
+		ENTDatabase* database = get_database();
+		std::vector<TrackedVehicleDBRow*> savedCTVehs = database->get_tracked_vehicles();
+		int lastKnownTrackedVehicleCount = savedCTVehs.size();
+		for (int i = 0; i < lastKnownTrackedVehicleCount; i++) database->delete_tracked_vehicle(i);
+		for (int i = 0; i < VEHICLES_REMEMBER.size(); i++) {
+			char str[3];
+			sprintf(str, "%d", i);
+			database->save_tracked_vehicle(VEHICLES_REMEMBER[i], str, i);
+			set_status_text("Tracked Vehicles Saved");
+		}
+	}
 }
 
 bool onconfirm_vehdoor_menu(MenuItem<int> choice){
@@ -1709,6 +1751,7 @@ void del_sel_blip() {
 					UI::SHOW_NUMBER_ON_BLIP(BLIPTABLE_VEH[i], i);
 				}
 			}
+			if (featureRestoreTracked) save_tracked_veh();
 		}
 		else set_status_text("Not a valid number");
 	}
@@ -1723,7 +1766,10 @@ bool onconfirm_vehicle_remember_menu(MenuItem<int> choice)
 		if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0) && VEH_VEHREMEMBER_VALUES[VehRememberIndex] == 666) manual_veh_tr = true;
 		break;
 	case 8:
-		del_sel_blip();
+		if (featureRememberVehicles) del_sel_blip();
+		break;
+	case 12:
+		if (featureRememberVehicles && featureRestoreTracked) save_tracked_veh();
 		break;
 	default:
 		break;
@@ -1800,6 +1846,24 @@ void process_remember_vehicles_menu() {
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureAutoalarm;
 	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Restore Tracked Vehicles On Game Restart";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureRestoreTracked;
+	menuItems.push_back(toggleItem);
+
+	listItem = new SelectFromListMenuItem(MISC_PHONE_FREESECONDS_CAPTIONS, onchange_veh_trackedautosave_index);
+	listItem->wrap = false;
+	listItem->caption = "Autosave Tracked Vehicles (min)";
+	listItem->value = VehTrackedAutoSaveIndex;
+	menuItems.push_back(listItem);
+
+	item = new MenuItem<int>();
+	item->caption = "Save Tracked Vehicles";
+	item->value = i++;
+	item->isLeaf = true;
+	menuItems.push_back(item);
 
 	draw_generic_menu<int>(menuItems, &activeLineIndexRemember, caption, onconfirm_vehicle_remember_menu, NULL, NULL);
 }
@@ -2505,7 +2569,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		}
 	}
 
-	// player's vehicle invincible
+	// Invincible Vehicle
 	if (featureVehInvincibleUpdated){
 		if (bPlayerExists && !featureVehInvincible && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
 			ENTITY::SET_ENTITY_INVINCIBLE(veh, FALSE);
@@ -2519,8 +2583,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			featureVehInvincibleUpdated = false;
 		}
 	}
-
-	// Invincible Vehicle
+		
 	if (featureVehInvincible){
 		if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
 			if (FIRE::IS_ENTITY_ON_FIRE(veh)){
@@ -2546,14 +2609,9 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 			if (featureVehNoDamage){
 				ENTITY::SET_ENTITY_ONLY_DAMAGED_BY_PLAYER(veh, 1);
-
 				VEHICLE::SET_VEHICLE_BODY_HEALTH(veh, 10000.0f);
-
-				/*
-				* This API seems to be a damage check - don't just continually repair the
-				* vehicle as it causes glitches.
-				*/
-
+				
+				// This API seems to be a damage check - don't just continually repair the vehicle as it causes glitches.
 				if (VEHICLE::_IS_VEHICLE_DAMAGED(veh) && featureVehNoDamage && featureVehInvulnIncludesCosmetic){
 					VEHICLE::SET_VEHICLE_FIXED(veh);
 				}
@@ -3485,7 +3543,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	engine_can_degrade(); 
 
 ///////////////////////////////////////////// VEHICLE TRACKING /////////////////////////////////////////////////////////////
-	if ((featureRememberVehicles && (GAMEPLAY::GET_MISSION_FLAG() == 1 || playerPed != old_playerPed_Tracking)) || !featureRememberVehicles) {
+	if (!featureRememberVehicles) {
 		if (!BLIPTABLE_VEH.empty()) {
 			for (int i = 0; i < BLIPTABLE_VEH.size(); i++) {
 				if (UI::DOES_BLIP_EXIST(BLIPTABLE_VEH[i])) {
@@ -3502,6 +3560,11 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			VEHICLES_REMEMBER.clear();
 			VEHICLES_REMEMBER.shrink_to_fit();
 		}
+		
+		tracked_being_restored = false;
+		restored_v = false;
+		trck_seconds = 0;
+
 		std::vector<int> emptyVec;
 		std::vector<double> emptyVec_d;
 		if (!VEH_VEHREMEMBER_VALUES.empty()) std::vector<int>(VEH_VEHREMEMBER_VALUES).swap(emptyVec);
@@ -3510,13 +3573,62 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		if (!VEH_BLIPSYMBOL_VALUES.empty()) std::vector<int>(VEH_BLIPSYMBOL_VALUES).swap(emptyVec);
 	}
 
+	if (featureRememberVehicles && !VEHICLES_REMEMBER.empty() && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID()) && !STREAMING::IS_PLAYER_SWITCH_IN_PROGRESS() && char_wheel == true) char_wheel = false;
+	
+	if (featureRememberVehicles && GAMEPLAY::GET_MISSION_FLAG() == 0 && !VEHICLES_REMEMBER.empty() && STREAMING::IS_PLAYER_SWITCH_IN_PROGRESS() && char_wheel == false) {
+		if (ENTITY::DOES_ENTITY_EXIST(last_used)) VEHICLE::DELETE_VEHICLE(&last_used);
+		if (!STREAMING::HAS_MODEL_LOADED(GAMEPLAY::GET_HASH_KEY("ZENTORNO"))) STREAMING::REQUEST_MODEL(GAMEPLAY::GET_HASH_KEY("ZENTORNO"));
+		while (!STREAMING::HAS_MODEL_LOADED(GAMEPLAY::GET_HASH_KEY("ZENTORNO"))) WAIT(0);
+		last_used = VEHICLE::CREATE_VEHICLE(GAMEPLAY::GET_HASH_KEY("ZENTORNO"), 100.0, 100.0, 100.0, 0, 1, 0);
+		ENTITY::SET_ENTITY_AS_MISSION_ENTITY(last_used, true, true);
+		if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) {
+			Vehicle veh_tmp = VEHICLES_REMEMBER[curr_array_veh];
+			AI::TASK_LEAVE_VEHICLE(PLAYER::PLAYER_PED_ID(), veh_tmp, 16);
+			WAIT(10);
+		}
+		Vector3 me_c = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
+		PED::SET_PED_INTO_VEHICLE(playerPed, last_used, -1);
+		WAIT(10);
+		AI::TASK_LEAVE_VEHICLE(PLAYER::PLAYER_PED_ID(), last_used, 16);
+		WAIT(10);
+		ENTITY::SET_ENTITY_COORDS(playerPed, me_c.x, me_c.y, me_c.z, 1, 0, 0, 1);
+		char_wheel = true;
+	}
+
 	if (GAMEPLAY::GET_MISSION_FLAG() == 0 && !SCRIPT::HAS_SCRIPT_LOADED("fbi4_prep3amb") && !SCRIPT::HAS_SCRIPT_LOADED("finale_heist_prepeamb") && !SCRIPT::HAS_SCRIPT_LOADED("agency_prep2amb")) {
-		if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && been_already == true) been_already = false;
+		
+		// auto load tracked vehicles
+		if (featureRememberVehicles && featureRestoreTracked && restored_v == false) {
+			trck_secs_passed = clock() / CLOCKS_PER_SEC;
+			if (((clock() / CLOCKS_PER_SEC) - trck_secs_curr) != 0) {
+				trck_seconds = trck_seconds + 1;
+				trck_secs_curr = trck_secs_passed;
+			}
+			if (trck_seconds > 2) { // 5 10
+				tracked_being_restored = true;
+				ENTDatabase* database = get_database();
+				std::vector<TrackedVehicleDBRow*> savedCTVehs = database->get_tracked_vehicles();
+				int lastKnownTrackedVehicleCount = savedCTVehs.size();
+
+				for (int i = 0; i < lastKnownTrackedVehicleCount; i++) {
+					std::vector<TrackedVehicleDBRow*> savedTempVehs = database->get_tracked_vehicles(i);
+					TrackedVehicleDBRow* savedTempVeh = savedTempVehs.at(0);
+					if (!STREAMING::HAS_MODEL_LOADED(savedTempVeh->model)) STREAMING::REQUEST_MODEL(savedTempVeh->model);
+					while (!STREAMING::HAS_MODEL_LOADED(savedTempVeh->model)) WAIT(0);
+					spawn_tracked_car(i, savedTempVeh->saveName);
+				}
+
+				tracked_being_restored = false;
+				trck_seconds = 0;
+				restored_v = true;
+			}
+		}
+		//
 
 		if ((featureRememberVehicles && bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && VEH_VEHREMEMBER_VALUES[VehRememberIndex] != 666) ||
 			(featureRememberVehicles && bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && VEH_VEHREMEMBER_VALUES[VehRememberIndex] == 666 && manual_veh_tr == true)) {
 			Vehicle veh_rem = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
-
+			
 			// save in garage
 			if (VEHICLE::IS_VEHICLE_IN_GARAGE_AREA("Michael - Beverly Hills", PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID())) || VEHICLE::IS_VEHICLE_IN_GARAGE_AREA("Franklin - Hills", PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID())) ||
 				VEHICLE::IS_VEHICLE_IN_GARAGE_AREA("Franklin - Aunt", PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID())) || VEHICLE::IS_VEHICLE_IN_GARAGE_AREA("Trevor - Countryside", PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID())))
@@ -3527,59 +3639,31 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			else ENTITY::SET_ENTITY_AS_MISSION_ENTITY(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), true, true);
 
 			if (VEHICLES_REMEMBER.empty()) {
-				blip_veh = UI::ADD_BLIP_FOR_ENTITY(veh_rem);
-				UI::SET_BLIP_AS_FRIENDLY(blip_veh, true);
-				if (VEH_BLIPSYMBOL_VALUES[VehBlipSymbolIndex] != NULL) UI::SET_BLIP_SPRITE(blip_veh, VEH_BLIPSYMBOL_VALUES[VehBlipSymbolIndex]);
-				else UI::SET_BLIP_SPRITE(blip_veh, VEH_BLIPSYMBOL_VALUES[0]);
-				UI::SET_BLIP_CATEGORY(blip_veh, 2);
-				if (featureBlipNumber) UI::SHOW_NUMBER_ON_BLIP(blip_veh, BLIPTABLE_VEH.size());
-				if (LIMP_IF_INJURED_VALUES[VehBlipFlashIndex] == 1) UI::SET_BLIP_FLASHES(blip_veh, true);
-				if (LIMP_IF_INJURED_VALUES[VehBlipFlashIndex] == 2) UI::SET_BLIP_FLASHES_ALTERNATE(blip_veh, true);
-				UI::SET_BLIP_SCALE(blip_veh, VEH_BLIPSIZE_VALUES[VehBlipSizeIndex]);
-				UI::SET_BLIP_COLOUR(blip_veh, VEH_BLIPCOLOUR_VALUES[VehBlipColourIndex]);
-				UI::SET_BLIP_AS_SHORT_RANGE(blip_veh, true);
+				add_blip(veh_rem);
 				BLIPTABLE_VEH.push_back(blip_veh);
 				VEHICLES_REMEMBER.push_back(veh_rem);
-				curr_veh_remember = veh_rem;
-				old_playerPed_Tracking = playerPed;
 			}
 
+			bool been_already = false;
 			for (int i = 0; i < VEHICLES_REMEMBER.size(); i++) {
 				if (VEHICLES_REMEMBER[i] == veh_rem) {
 					been_already = true;
-					curr_veh_remember = veh_rem;
+					curr_array_veh = i;
 				}
 			}
 
-			if (curr_veh_remember != veh_rem) {
-				been_already = false;
-				curr_veh_remember = veh_rem;
-			}
-
 			if (been_already == false) {
-				blip_veh = UI::ADD_BLIP_FOR_ENTITY(veh_rem);
-				UI::SET_BLIP_AS_FRIENDLY(blip_veh, true);
-				if (VEH_BLIPSYMBOL_VALUES[VehBlipSymbolIndex] != NULL) UI::SET_BLIP_SPRITE(blip_veh, VEH_BLIPSYMBOL_VALUES[VehBlipSymbolIndex]);
-				else UI::SET_BLIP_SPRITE(blip_veh, VEH_BLIPSYMBOL_VALUES[0]);
-				UI::SET_BLIP_CATEGORY(blip_veh, 2);
-				if (featureBlipNumber) UI::SHOW_NUMBER_ON_BLIP(blip_veh, BLIPTABLE_VEH.size());
-				if (LIMP_IF_INJURED_VALUES[VehBlipFlashIndex] == 1) UI::SET_BLIP_FLASHES(blip_veh, true);
-				if (LIMP_IF_INJURED_VALUES[VehBlipFlashIndex] == 2) UI::SET_BLIP_FLASHES_ALTERNATE(blip_veh, true);
-				UI::SET_BLIP_SCALE(blip_veh, VEH_BLIPSIZE_VALUES[VehBlipSizeIndex]);
-				UI::SET_BLIP_COLOUR(blip_veh, VEH_BLIPCOLOUR_VALUES[VehBlipColourIndex]);
-				UI::SET_BLIP_AS_SHORT_RANGE(blip_veh, true);
+				add_blip(veh_rem);
 				BLIPTABLE_VEH.push_back(blip_veh);
 				VEHICLES_REMEMBER.push_back(veh_rem);
 
 				if (VEH_VEHREMEMBER_VALUES[VehRememberIndex] != 666 && VEHICLES_REMEMBER.size() > VEH_VEHREMEMBER_VALUES[VehRememberIndex]) {
-					UI::REMOVE_BLIP(&BLIPTABLE_VEH[0]);
+					if (UI::DOES_BLIP_EXIST(BLIPTABLE_VEH[0])) UI::REMOVE_BLIP(&BLIPTABLE_VEH[0]);
 					VEHICLE::DELETE_VEHICLE(&VEHICLES_REMEMBER[0]);
 					BLIPTABLE_VEH.erase(BLIPTABLE_VEH.begin());
 					VEHICLES_REMEMBER.erase(VEHICLES_REMEMBER.begin());
 					if (featureBlipNumber) {
-						for (int i = 0; i < BLIPTABLE_VEH.size(); i++) {
-							UI::SHOW_NUMBER_ON_BLIP(BLIPTABLE_VEH[i], i);
-						}
+						for (int i = 0; i < BLIPTABLE_VEH.size(); i++) UI::SHOW_NUMBER_ON_BLIP(BLIPTABLE_VEH[i], i);
 					}
 				}
 			}
@@ -3587,6 +3671,20 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			manual_veh_tr = false;
 
 		} // end of the main body
+
+		// auto save tracked vehicles
+		if (featureRememberVehicles && featureRestoreTracked && restored_v == true && MISC_PHONE_FREESECONDS_VALUES[VehTrackedAutoSaveIndex] > 0) {
+			trck_secs_passed = clock() / CLOCKS_PER_SEC;
+			if (((clock() / CLOCKS_PER_SEC) - trck_secs_curr) != 0) {
+				trck_seconds = trck_seconds + 1;
+				trck_secs_curr = trck_secs_passed;
+			}
+			if (!VEHICLES_REMEMBER.empty() && trck_seconds > MISC_PHONE_FREESECONDS_VALUES[VehTrackedAutoSaveIndex] * 60) {
+				save_tracked_veh();
+				trck_seconds = 0;
+			}
+		}
+		//
 
 		if (featureAutoalarm) {
 			alarmischarged = true;
@@ -4098,6 +4196,7 @@ void reset_vehicle_globals() {
 	FineSizeIndex = 1;
 	VehBlipSymbolIndex = 0;
 	VehBlipFlashIndex = 0;
+	VehTrackedAutoSaveIndex = 0;
 	CarConsumptionIndex = 11;
 	BikeConsumptionIndex = 12;
 	BoatConsumptionIndex = 5;
@@ -4159,6 +4258,7 @@ void reset_vehicle_globals() {
 		featureHideFuelBar =
 		featureVehSpawnOptic =
 		featureAutoalarm =
+		featureRestoreTracked =
 		featureVehLightsOn = false;
 
 	featureLockVehicleDoorsUpdated = false;
@@ -4341,11 +4441,11 @@ Vehicle do_spawn_vehicle(DWORD model, std::string modelTitle, bool cleanup){
 			VEHICLE::SET_VEHICLE_ON_GROUND_PROPERLY(veh);
 		}
 
-		if(featureVehSpawnTuned){
+		if(featureVehSpawnTuned && tracked_being_restored == false){
 			fully_tune_vehicle(veh, featureVehSpawnOptic);
 		}
 
-		if(featureVehSpawnInto){
+		if(featureVehSpawnInto && tracked_being_restored == false){
 			PED::SET_PED_INTO_VEHICLE(PLAYER::PLAYER_PED_ID(), veh, -1);
 			oldVehicleState = false; // set old vehicle state to false since we changed cars but didn't actually exit the last one
 
@@ -4354,7 +4454,7 @@ Vehicle do_spawn_vehicle(DWORD model, std::string modelTitle, bool cleanup){
 			}
 		}
 
-		if (!featureVehSpawnInto && (ENTITY::GET_ENTITY_MODEL(veh) == GAMEPLAY::GET_HASH_KEY("MINITANK") || ENTITY::GET_ENTITY_MODEL(veh) == GAMEPLAY::GET_HASH_KEY("RCBANDITO"))) {
+		if (!featureVehSpawnInto && (ENTITY::GET_ENTITY_MODEL(veh) == GAMEPLAY::GET_HASH_KEY("MINITANK") || ENTITY::GET_ENTITY_MODEL(veh) == GAMEPLAY::GET_HASH_KEY("RCBANDITO")) && tracked_being_restored == false) {
 			PED::SET_PED_INTO_VEHICLE(PLAYER::PLAYER_PED_ID(), veh, -1);
 			oldVehicleState = false;
 		}
@@ -4410,6 +4510,7 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureEscapingPolice", &featureEscapingPolice});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBlipNumber", &featureBlipNumber});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAutoalarm", &featureAutoalarm});
+	results->push_back(FeatureEnabledLocalDefinition{"featureRestoreTracked", &featureRestoreTracked});
 	results->push_back(FeatureEnabledLocalDefinition{"featureFuel", &featureFuel});
 	results->push_back(FeatureEnabledLocalDefinition{"featureFuelGauge", &featureFuelGauge});
 	results->push_back(FeatureEnabledLocalDefinition{"featureHideFuelBar", &featureHideFuelBar});
@@ -4431,6 +4532,146 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureEngineDegrade", &featureEngineDegrade});
 	results->push_back(FeatureEnabledLocalDefinition{"featureEngineHealthBar", &featureEngineHealthBar});
 	results->push_back(FeatureEnabledLocalDefinition{"featureLimpMode", &featureLimpMode});
+}
+
+bool spawn_tracked_car(int slot, std::string caption) {
+	ENTDatabase* database = get_database();
+	std::vector<TrackedVehicleDBRow*> savedTVehs = database->get_tracked_vehicles(slot);
+	TrackedVehicleDBRow* savedTVeh = savedTVehs.at(0);
+	database->populate_tracked_vehicle(savedTVeh);
+
+	Vehicle veh = do_spawn_vehicle(savedTVeh->model, caption, false);
+	if (veh == -1) {
+		set_status_text("Spawn failed");
+	}
+	else {
+		ENTITY::SET_ENTITY_AS_MISSION_ENTITY(veh, true, true);
+
+		VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
+
+		VEHICLE::SET_VEHICLE_TYRES_CAN_BURST(veh, (savedTVeh->burstableTyres == 1) ? TRUE : FALSE);
+
+		VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT_INDEX(veh, savedTVeh->plateType);
+		VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT(veh, (char*)savedTVeh->plateText.c_str());
+
+		VEHICLE::SET_VEHICLE_WINDOW_TINT(veh, savedTVeh->windowTint);
+
+		VEHICLE::SET_VEHICLE_WHEEL_TYPE(veh, savedTVeh->wheelType);
+
+		for each (TrackedVehicleExtraDBRow * extra in savedTVeh->extras) {
+			VEHICLE::SET_VEHICLE_EXTRA(veh, extra->extraID, (extra->extraState == 1) ? 0 : -1);
+		}
+
+		for each (TrackedVehicleModDBRow * mod in savedTVeh->mods) {
+			if (mod->isToggle) {
+				VEHICLE::TOGGLE_VEHICLE_MOD(veh, mod->modID, mod->modState);
+			}
+			else {
+				VEHICLE::SET_VEHICLE_MOD(veh, mod->modID, mod->modState, 0);
+			}
+		}
+
+		int currmod = VEHICLE::GET_VEHICLE_MOD(veh, 23);
+		VEHICLE::SET_VEHICLE_MOD(veh, 23, currmod, savedTVeh->customTyres);
+		VEHICLE::SET_VEHICLE_MOD(veh, 24, currmod, savedTVeh->customTyres);
+
+		if (savedTVeh->livery != -1) {
+			VEHICLE::SET_VEHICLE_LIVERY(veh, savedTVeh->livery);
+		}
+
+		VEHICLE::SET_VEHICLE_MOD_COLOR_1(veh, savedTVeh->colourMod1Type, savedTVeh->colourMod1Colour, savedTVeh->colourMod1P3);
+		VEHICLE::SET_VEHICLE_MOD_COLOR_2(veh, savedTVeh->colourMod2Type, savedTVeh->colourMod2Colour);
+		VEHICLE::SET_VEHICLE_COLOURS(veh, savedTVeh->colourPrimary, savedTVeh->colourSecondary);
+		VEHICLE::SET_VEHICLE_EXTRA_COLOURS(veh, savedTVeh->colourExtraPearl, savedTVeh->colourExtraWheel);
+
+		if (savedTVeh->colourCustom1RGB[0] != -1 &&
+			savedTVeh->colourCustom1RGB[1] != -1 &&
+			savedTVeh->colourCustom1RGB[2] != -1) {
+			VEHICLE::SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, savedTVeh->colourCustom1RGB[0], savedTVeh->colourCustom1RGB[1], savedTVeh->colourCustom1RGB[2]);
+		}
+
+		if (savedTVeh->colourCustom2RGB[0] != -1 &&
+			savedTVeh->colourCustom2RGB[1] != -1 &&
+			savedTVeh->colourCustom2RGB[2] != -1) {
+			VEHICLE::SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, savedTVeh->colourCustom2RGB[0], savedTVeh->colourCustom2RGB[1], savedTVeh->colourCustom2RGB[2]);
+		}
+
+		VEHICLE::SET_VEHICLE_ENVEFF_SCALE(veh, savedTVeh->fadeLevel);
+
+		VEHICLE::SET_VEHICLE_DIRT_LEVEL(veh, savedTVeh->dirtLevel);
+
+		VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(veh, 0, savedTVeh->neonEnablement[0] == 1);
+		VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(veh, 1, savedTVeh->neonEnablement[1] == 1);
+		VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(veh, 2, savedTVeh->neonEnablement[2] == 1);
+		VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(veh, 3, savedTVeh->neonEnablement[3] == 1);
+
+		VEHICLE::_SET_VEHICLE_NEON_LIGHTS_COLOUR(veh, savedTVeh->neonRGB[0], savedTVeh->neonRGB[1], savedTVeh->neonRGB[2]);
+
+		if (savedTVeh->tyreSmokeRGB[0] != -1 &&
+			savedTVeh->tyreSmokeRGB[1] != -1 &&
+			savedTVeh->tyreSmokeRGB[2] != -1) {
+			VEHICLE::SET_VEHICLE_TYRE_SMOKE_COLOR(veh, savedTVeh->tyreSmokeRGB[0], savedTVeh->tyreSmokeRGB[1], savedTVeh->tyreSmokeRGB[2]);
+		}
+
+		if (VEHICLE::IS_VEHICLE_A_CONVERTIBLE(veh, 0)) {
+			if (savedTVeh->convertibleRoofUp) {
+				VEHICLE::SET_CONVERTIBLE_ROOF(veh, 1);
+			}
+			else {
+				VEHICLE::SET_CONVERTIBLE_ROOF(veh, 0);
+			}
+		}
+
+		if (savedTVeh->dashboardColour != -1) {
+			VEHICLE::_SET_VEHICLE_DASHBOARD_COLOUR(veh, savedTVeh->dashboardColour);
+		}
+		if (savedTVeh->interiorColour != -1) {
+			VEHICLE::_SET_VEHICLE_INTERIOR_COLOUR(veh, savedTVeh->interiorColour);
+		}
+
+		// loading of an engine sound
+		if (savedTVeh->engineSound > -1 && featureEngineSound) {
+			bool correct_name_to_load = false;
+			for (int i = 0; i < ENGINE_SOUND_COUNT_VEHICLES; i++)
+			{
+				if (ENGINE_SOUND_NUMBERS[i] == savedTVeh->engineSound) {
+					correct_name_to_load = true;
+					current_picked_engine_sound = i;
+				}
+			}
+			if (correct_name_to_load == true) {
+				char* currSound = new char[ENGINE_SOUND[current_picked_engine_sound].length() + 1];
+				strcpy(currSound, ENGINE_SOUND[current_picked_engine_sound].c_str());
+				VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
+				AUDIO::_SET_VEHICLE_AUDIO(veh, currSound);
+				current_picked_engine_sound = -1;
+			}
+		}
+		//
+		if (savedTVeh->xenonColour > -1) {
+			VEHICLE::SET_VEHICLE_XENON_COLOUR(veh, savedTVeh->xenonColour);
+		}
+
+		ENTITY::SET_ENTITY_COORDS(veh, savedTVeh->cor_x, savedTVeh->cor_y, savedTVeh->cor_z, 1, 0, 0, 1);
+
+		ENTITY::SET_ENTITY_HEADING(veh, savedTVeh->crotation);
+
+		if (featureFuel) {
+			VEHICLES.push_back(veh);
+			FUEL.push_back(savedTVeh->lfuel);
+		}
+
+		add_blip(veh);
+		BLIPTABLE_VEH.push_back(blip_veh);
+		VEHICLES_REMEMBER.push_back(veh);
+	}
+
+	for (std::vector<TrackedVehicleDBRow*>::iterator it = savedTVehs.begin(); it != savedTVehs.end(); ++it) {
+		delete (*it);
+	}
+	savedTVehs.clear();
+
+	return false;
 }
 
 bool spawn_saved_car(int slot, std::string caption){
@@ -4901,6 +5142,7 @@ void add_vehicle_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"FineSizeIndex", std::to_string(FineSizeIndex)});
 	results->push_back(StringPairSettingDBRow{"VehBlipSymbolIndex", std::to_string(VehBlipSymbolIndex)});
 	results->push_back(StringPairSettingDBRow{"VehBlipFlashIndex", std::to_string(VehBlipFlashIndex)});
+	results->push_back(StringPairSettingDBRow{"VehTrackedAutoSaveIndex", std::to_string(VehTrackedAutoSaveIndex)});
 	results->push_back(StringPairSettingDBRow{"CarConsumptionIndex", std::to_string(CarConsumptionIndex)});
 	results->push_back(StringPairSettingDBRow{"BikeConsumptionIndex", std::to_string(BikeConsumptionIndex)});
 	results->push_back(StringPairSettingDBRow{"BoatConsumptionIndex", std::to_string(BoatConsumptionIndex)});
@@ -5059,6 +5301,9 @@ void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settin
 		}
 		else if (setting.name.compare("VehBlipFlashIndex") == 0){
 			VehBlipFlashIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("VehTrackedAutoSaveIndex") == 0) {
+			VehTrackedAutoSaveIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("CarConsumptionIndex") == 0){
 			CarConsumptionIndex = stoi(setting.value);
@@ -5266,74 +5511,97 @@ void onchange_fuel_background_opacity_index(int value, SelectFromListMenuItem* s
 	FuelBackground_Opacity_Index = value;
 	PositionChanged = true;
 }
+
 void onchange_veh_remember_index(int value, SelectFromListMenuItem* source){
 	VehRememberIndex = value;
 	PositionChanged = true;
 }
+
 void onchange_veh_blipsize_index(int value, SelectFromListMenuItem* source){
 	VehBlipSizeIndex = value;
 	PositionChanged = true;
 }
+
 void onchange_veh_blipcolour_index(int value, SelectFromListMenuItem* source){
 	VehBlipColourIndex = value;
 	PositionChanged = true;
 }
+
 void onchange_world_npc_vehicles_colour_index(int value, SelectFromListMenuItem* source) {
 	VehColourIndex = value;
 	PositionChanged = true;
 }
+
 void onchange_speeding_city_index(int value, SelectFromListMenuItem* source){
 	SpeedingCityIndex = value;
 	PositionChanged = true;
 }
+
 void onchange_detection_range_index(int value, SelectFromListMenuItem* source){
 	DetectionRangeIndex = value;
 	PositionChanged = true;
 }
+
 void onchange_pirsuit_range_index(int value, SelectFromListMenuItem* source){
 	PirsuitRangeIndex = value;
 	PositionChanged = true;
 }
+
 void onchange_stars_punish_index(int value, SelectFromListMenuItem* source){
 	StarsPunishIndex = value;
 	PositionChanged = true;
 }
+
 void onchange_veh_enginerunning_index(int value, SelectFromListMenuItem* source){
 	EngineRunningIndex = value;
 	PositionChanged = true;
 }
+
 void onchange_veh_autoshutengine_index(int value, SelectFromListMenuItem* source) {
 	AutoShutEngineIndex = value;
 	PositionChanged = true;
 }
+
 void onchange_veh_hydraulics_index(int value, SelectFromListMenuItem* source) {
 	HydraulicsIndex = value;
 	PositionChanged = true;
 }
+
 void onchange_veh_vislight_index(int value, SelectFromListMenuItem* source) {
 	VisLightIndex = value;
 	PositionChanged = true;
 }
+
 void onchange_veh_vislight3d_index(int value, SelectFromListMenuItem* source) {
 	VisLight3dIndex = value;
 	PositionChanged = true;
 }
+
 void onchange_speeding_speedway_index(int value, SelectFromListMenuItem* source){
 	SpeedingSpeedwayIndex = value;
 	PositionChanged = true;
 }
+
 void onchange_fine_size_index(int value, SelectFromListMenuItem* source){
 	FineSizeIndex = value;
 	PositionChanged = true;
 }
+
 void onchange_veh_blipsymbol_index(int value, SelectFromListMenuItem* source){
 	VehBlipSymbolIndex = value;
 	PositionChanged = true;
 }
+
 void onchange_veh_blipflash_index(int value, SelectFromListMenuItem* source){
 	VehBlipFlashIndex = value;
 	PositionChanged = true;
 }
+
+void onchange_veh_trackedautosave_index(int value, SelectFromListMenuItem* source) {
+	VehTrackedAutoSaveIndex = value;
+	VehTrackedAutoSaveChanged = true;
+}
+
 void onchange_fuel_blips_index(int value, SelectFromListMenuItem* source){
 	FuelBlipsIndex = value;
 	PositionChanged = true;
