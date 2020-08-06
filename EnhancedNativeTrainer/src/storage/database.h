@@ -138,7 +138,7 @@ public:
 	int interiorColour;
 	int engineSound;
 	int xenonColour;
-
+	
 	std::vector<SavedVehicleExtraDBRow*> extras;
 	std::vector<SavedVehicleModDBRow*> mods;
 
@@ -156,6 +156,88 @@ public:
 	}
 
 	inline SavedVehicleDBRow()
+	{
+
+	}
+};
+
+class TrackedVehicleModDBRow
+{
+public:
+	int rowID;
+	int parentID;
+	int modID;
+	int modState;
+	bool isToggle;
+};
+
+class TrackedVehicleExtraDBRow
+{
+public:
+	int rowID;
+	int parentID;
+	int extraID;
+	int extraState;
+};
+
+class TrackedVehicleDBRow
+{
+public:
+
+	int rowID;
+	std::string saveName;
+	DWORD model;
+	int colourPrimary;
+	int colourSecondary;
+	int colourExtraPearl;
+	int colourExtraWheel;
+	int colourMod1Type;
+	int colourMod1Colour;
+	int colourMod1P3;
+	int colourMod2Type;
+	int colourMod2Colour;
+	int colourCustom1RGB[3];
+	int colourCustom2RGB[3];
+	int livery;
+	std::string plateText;
+	int plateType;
+	int wheelType;
+	int windowTint;
+	bool burstableTyres;
+	bool customTyres;
+	float dirtLevel;
+	float fadeLevel;
+	int neonRGB[3];
+	int neonEnablement[4];
+	int tyreSmokeRGB[3];
+	bool convertibleRoofUp = false;
+	int dashboardColour;
+	int interiorColour;
+	int engineSound;
+	int xenonColour;
+	int cor_x;
+	int cor_y;
+	int cor_z;
+	int crotation;
+	float lfuel;
+
+	std::vector<TrackedVehicleExtraDBRow*> extras;
+	std::vector<TrackedVehicleModDBRow*> mods;
+
+	inline ~TrackedVehicleDBRow()
+	{
+		for (std::vector<TrackedVehicleExtraDBRow*>::iterator it = extras.begin(); it != extras.end(); ++it)
+		{
+			delete (*it);
+		}
+
+		for (std::vector<TrackedVehicleModDBRow*>::iterator it = mods.begin(); it != mods.end(); ++it)
+		{
+			delete (*it);
+		}
+	}
+
+	inline TrackedVehicleDBRow()
 	{
 
 	}
@@ -366,11 +448,15 @@ public:
 
 	bool save_vehicle(Vehicle veh, std::string saveName, sqlite3_int64 slot = -1);
 
+	bool save_tracked_vehicle(Vehicle veh, std::string saveName, sqlite3_int64 slot = -1);
+
 	bool save_props(std::vector<SavedPropDBRow*> props, std::string saveName, sqlite3_int64 slot = -1);
 
 	bool save_skin(Ped ped, std::string saveName, sqlite3_int64 slot = -1);
 
 	std::vector<SavedVehicleDBRow*> get_saved_vehicles(int index=-1);
+
+	std::vector<TrackedVehicleDBRow*> get_tracked_vehicles(int index = -1);
 
 	std::vector<SavedBodSkinDBRow*> get_saved_bod_skins(int index = -1);
 
@@ -414,11 +500,17 @@ public:
 
 	void populate_saved_vehicle(SavedVehicleDBRow *entry);
 
+	void populate_tracked_vehicle(TrackedVehicleDBRow* entry);
+
 	void populate_saved_skin(SavedSkinDBRow *entry);
 
 	void delete_saved_vehicle(sqlite3_int64 slot);
 
 	void delete_saved_vehicle_children(sqlite3_int64 slot);
+
+	void delete_tracked_vehicle(sqlite3_int64 slot);
+
+	void delete_tracked_vehicle_children(sqlite3_int64 slot);
 
 	void delete_saved_skin(sqlite3_int64 slot);
 
@@ -439,6 +531,10 @@ private:
 	void save_vehicle_extras(Vehicle veh, sqlite3_int64 rowID);
 
 	void save_vehicle_mods(Vehicle veh, sqlite3_int64 rowID);
+
+	void save_tracked_extras(Vehicle veh, sqlite3_int64 rowID);
+
+	void save_tracked_mods(Vehicle veh, sqlite3_int64 rowID);
 
 	void save_skin_components(Ped ped, sqlite3_int64 rowID);
 
