@@ -950,16 +950,19 @@ bool setupPatches() {
 	if (!result) {
 		return false;
 	}
+
 	auto address = result + 26;
 	address = address + *(int32_t*)address + 4u;
-	std::vector<BYTE> vigNetPatch = { RET, 0x90, 0x90, 0x90, 0x90 }; // remove vignetting
-	std::vector<BYTE> vigNetCall = { 0x90, 0x90, 0x90, 0x90, 0x90 }; // vignetting call patch (NOP)
-	std::vector<BYTE> timeScaleOverride = { XOR_32_64, 0xD2 }; // timescale override patch
+	auto vigNetCallPtr = result + 8;
+	auto timescalePtr = result + 34;
+	
+	unsigned char vigNetPatch[] = { RET, 0x90, 0x90, 0x90, 0x90 }; // remove vignetting
+	unsigned char vigNetCall[] = { 0x90, 0x90, 0x90, 0x90, 0x90 }; // vignetting call patch (NOP)
+	unsigned char timeScaleOverride[] = { XOR_32_64, 0xD2 }; // timescale override patch
 
-	std::copy(vigNetPatch.begin(), vigNetPatch.end(), &address);
-	std::copy(vigNetCall.begin(), vigNetCall.end(), &result + 8);
-	std::copy(timeScaleOverride.begin(), timeScaleOverride.end(), &result + 34);
-
+	memcpy((void*)address, vigNetPatch, sizeof(vigNetPatch) / sizeof(vigNetPatch[0]));
+	memcpy((void*)vigNetCallPtr, vigNetCall, sizeof(vigNetCall) / sizeof(vigNetCall[0]));
+	memcpy((void*)timescalePtr, timeScaleOverride, sizeof(timeScaleOverride) / sizeof(timeScaleOverride[0]));
 	return true;
 }
 
