@@ -715,20 +715,26 @@ bool process_bodyguard_skins_menu(){
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Animals";
+	item->caption = "Online";
 	item->value = 2;
 	item->isLeaf = false;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Enter Name Manually";
+	item->caption = "Animals";
 	item->value = 3;
+	item->isLeaf = false;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "Enter Name Manually";
+	item->value = 4;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
 	item->caption = "Modify Skin";
-	item->value = 4;
+	item->value = 5;
 	item->isLeaf = false;
 	menuItems.push_back(item);
 
@@ -742,8 +748,10 @@ bool onconfirm_bodyguard_skins_menu(MenuItem<int> choice){
 		case 1:
 			return process_npc_skins_menu();
 		case 2:
-			return process_animal_skins_menu();
+			return process_online_skins_menu();
 		case 3:
+			return process_animal_skins_menu();
+		case 4:
 		{
 			keyboard_on_screen_already = true;
 			curr_message = "Enter bodyguard model name (e.g. cs_amandatownley or random):"; // spawn a bodyguard
@@ -769,7 +777,7 @@ bool onconfirm_bodyguard_skins_menu(MenuItem<int> choice){
 			}
 			return false;
 		}
-		case 4:
+		case 5:
 		{
 			keyboard_on_screen_already = true;
 			curr_message = "Enter a number of the bodyguard (that is above his head) you want to modify the skin of:"; // modify skin of a bodyguard
@@ -820,6 +828,9 @@ std::string get_current_model_name(){
 			value = SKINS_GENERAL_CAPTIONS[skinTypesBodyguardMenuLastConfirmed[1]];
 			break;
 		case 2:
+			value = SKINS_ONLINE_CAPTIONS[skinTypesBodyguardMenuLastConfirmed[1]];
+			break;
+		case 3:
 			value = SKINS_ANIMALS_CAPTIONS[skinTypesBodyguardMenuLastConfirmed[1]];
 			break;
 		default:
@@ -841,6 +852,9 @@ Hash get_current_model_hash(){
 			value = SKINS_GENERAL_VALUES[skinTypesBodyguardMenuLastConfirmed[1]];
 			break;
 		case 2:
+			value = SKINS_ONLINE_VALUES[skinTypesBodyguardMenuLastConfirmed[1]];
+			break;
+		case 3:
 			value = SKINS_ANIMALS_VALUES[skinTypesBodyguardMenuLastConfirmed[1]];
 			break;
 		default:
@@ -872,10 +886,20 @@ bool onconfirm_bodyguards_skins_npcs(MenuItem<std::string> choice){
 	return true;
 }
 
-bool onconfirm_bodyguards_skins_animals(MenuItem<std::string> choice){ 
+bool onconfirm_bodyguards_skins_online(MenuItem<std::string> choice) {
 	skinTypesBodyguardMenuPositionMemory[0] = 2;
 	skinTypesBodyguardMenuPositionMemory[1] = choice.currentMenuIndex;
 	skinTypesBodyguardMenuLastConfirmed[0] = 2;
+	skinTypesBodyguardMenuLastConfirmed[1] = choice.currentMenuIndex;
+	requireRefreshOfBodyguardMainMenu = true;
+
+	return true;
+}
+
+bool onconfirm_bodyguards_skins_animals(MenuItem<std::string> choice){ 
+	skinTypesBodyguardMenuPositionMemory[0] = 3;
+	skinTypesBodyguardMenuPositionMemory[1] = choice.currentMenuIndex;
+	skinTypesBodyguardMenuLastConfirmed[0] = 3;
 	skinTypesBodyguardMenuLastConfirmed[1] = choice.currentMenuIndex;
 	requireRefreshOfBodyguardMainMenu = true;
 
@@ -908,6 +932,20 @@ bool process_npc_skins_menu(){
 	}
 
 	return draw_generic_menu<std::string>(menuItems, &skinTypesBodyguardMenuPositionMemory[1], "NPC Skins", onconfirm_bodyguards_skins_npcs, NULL, NULL);
+}
+
+bool process_online_skins_menu() {
+	std::vector<MenuItem<std::string>*> menuItems;
+	lastCustomBodyguardSpawn = "";
+	for (int i = 0; i < SKINS_ONLINE_CAPTIONS.size(); i++) {
+		MenuItem<std::string>* item = new MenuItem<std::string>();
+		item->caption = SKINS_ONLINE_CAPTIONS[i];
+		item->value = SKINS_ONLINE_VALUES[i];
+		item->isLeaf = true;
+		menuItems.push_back(item);
+	}
+
+	return draw_generic_menu<std::string>(menuItems, &skinTypesBodyguardMenuPositionMemory[1], "Online Skins", onconfirm_bodyguards_skins_online, NULL, NULL);
 }
 
 bool process_animal_skins_menu(){
@@ -1995,7 +2033,10 @@ bool onconfirm_bodyguard_menu(MenuItem<int> choice){
 			do_spawn_bodyguard();
 			break;
 		case 1:
-			do_add_near_bodyguard();
+			//do_add_near_bodyguard();
+			//
+			AUDIO::_PLAY_AMBIENT_SPEECH1(spawnedENTBodyguards[0], "PROVOKE_GENERIC", "SPEECH_PARAMS_FORCE_SHOUTED");
+			//
 			break;
 		case 2:
 			dismiss_bodyguards();
