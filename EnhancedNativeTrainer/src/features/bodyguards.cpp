@@ -2033,10 +2033,7 @@ bool onconfirm_bodyguard_menu(MenuItem<int> choice){
 			do_spawn_bodyguard();
 			break;
 		case 1:
-			//do_add_near_bodyguard();
-			//
-			AUDIO::_PLAY_AMBIENT_SPEECH1(spawnedENTBodyguards[0], "PROVOKE_GENERIC", "SPEECH_PARAMS_FORCE_SHOUTED");
-			//
+			do_add_near_bodyguard();
 			break;
 		case 2:
 			dismiss_bodyguards();
