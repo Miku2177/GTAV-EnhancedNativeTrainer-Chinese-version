@@ -1450,6 +1450,7 @@ bool onconfirm_vehmod_category_menu(MenuItem<int> choice){
 		current_picked_engine_sound = ENGINE_SOUND_NUMBERS[choice.value]; 
 		VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
 		AUDIO::_SET_VEHICLE_AUDIO(veh, currSound);
+		if (featureRememberVehicles && featureRestoreTracked) add_engine_sound(veh);
 		set_status_text("Changed engine sound");
 	}
 	else if (lastSelectedModValue == SPECIAL_ID_FOR_WHEEL_CATEGORY){
@@ -1592,6 +1593,7 @@ void set_engine_sound(MenuItem<int> choice) { // pick engine sound via message b
 			char *keyboardInput = (char*)ENGINE_SOUND[rand_sound].c_str();
 			VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
 			AUDIO::_SET_VEHICLE_AUDIO(veh, keyboardInput);
+			if (featureRememberVehicles && featureRestoreTracked) add_engine_sound(veh);
 			set_status_text("Changed engine sound");
 		}
 		if (lastEngineSound != "random" && lastEngineSound != "Random" && lastEngineSound != "RANDOM") {
@@ -1608,6 +1610,7 @@ void set_engine_sound(MenuItem<int> choice) { // pick engine sound via message b
 			if (correct_name == true) {
 				VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
 				AUDIO::_SET_VEHICLE_AUDIO(veh, keyboardInput);
+				if (featureRememberVehicles && featureRestoreTracked) add_engine_sound(veh);
 				set_status_text("Changed engine sound");
 			}
 		}
@@ -1716,6 +1719,26 @@ bool process_vehmod_category_menu(int category){
 	std::string caption = getModCategoryName(lastSelectedModValue);
 
 	return draw_generic_menu<int>(menuItems, &modChoiceMenuIndex, caption, onconfirm_vehmod_category_menu, NULL, NULL, vehicle_menu_interrupt);
+}
+
+void add_engine_sound(Vehicle veh) {
+	if (VEHICLES_HAVE_SOUND.empty()) {
+		VEHICLES_HAVE_SOUND.push_back(veh);
+		VEHICLES_SOUND_NUMBER.push_back(current_picked_engine_sound);
+	}
+	if (!VEHICLES_HAVE_SOUND.empty()) {
+		bool been_already = false;
+		for (int i = 0; i < VEHICLES_HAVE_SOUND.size(); i++) {
+			if (veh == VEHICLES_HAVE_SOUND[i]) {
+				VEHICLES_SOUND_NUMBER[i] = current_picked_engine_sound;
+				been_already = true;
+			}
+		}
+		if (been_already == false) {
+			VEHICLES_HAVE_SOUND.push_back(veh);
+			VEHICLES_SOUND_NUMBER.push_back(current_picked_engine_sound);
+		}
+	}
 }
 
 int find_menu_index_to_restore(int category, int actualCategory, Vehicle veh){

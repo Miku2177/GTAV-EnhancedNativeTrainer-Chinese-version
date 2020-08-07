@@ -64,3 +64,5 @@ void add_vehmodmenu_generic_settings(std::vector<StringPairSettingDBRow>* result
 void handle_generic_settings_vehmodmenu(std::vector<StringPairSettingDBRow>* settings);
 
 void update_vehmodmenu_features(BOOL playerExists, Ped playerPed);
+
+void add_engine_sound(Vehicle veh);

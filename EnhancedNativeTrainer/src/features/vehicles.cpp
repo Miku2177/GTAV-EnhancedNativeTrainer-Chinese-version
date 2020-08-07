@@ -157,6 +157,9 @@ Blip blip_veh = -1;
 std::vector<Blip> BLIPTABLE_VEH;
 std::vector<Vehicle> VEHICLES_REMEMBER;
 
+std::vector<Vehicle> VEHICLES_HAVE_SOUND;
+std::vector<int> VEHICLES_SOUND_NUMBER;
+
 bool featureRememberVehicles = false;
 bool featureBlipNumber = true;
 bool featureAutoalarm = false;
@@ -932,7 +935,7 @@ void save_tracked_veh() {
 			char str[3];
 			sprintf(str, "%d", i);
 			database->save_tracked_vehicle(VEHICLES_REMEMBER[i], str, i);
-			set_status_text("Tracked Vehicles Saved");
+			set_status_text("Tracked vehicles saved");
 		}
 	}
 }
@@ -3561,6 +3564,11 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			VEHICLES_REMEMBER.shrink_to_fit();
 		}
 		
+		VEHICLES_HAVE_SOUND.clear();
+		VEHICLES_HAVE_SOUND.shrink_to_fit();
+		VEHICLES_SOUND_NUMBER.clear();
+		VEHICLES_SOUND_NUMBER.shrink_to_fit();
+
 		tracked_being_restored = false;
 		restored_v = false;
 		trck_seconds = 0;
@@ -4632,11 +4640,13 @@ bool spawn_tracked_car(int slot, std::string caption) {
 		// loading of an engine sound
 		if (savedTVeh->engineSound > -1 && featureEngineSound) {
 			bool correct_name_to_load = false;
+			int tmp_picked_sound = -1;
 			for (int i = 0; i < ENGINE_SOUND_COUNT_VEHICLES; i++)
 			{
 				if (ENGINE_SOUND_NUMBERS[i] == savedTVeh->engineSound) {
 					correct_name_to_load = true;
 					current_picked_engine_sound = i;
+					tmp_picked_sound = ENGINE_SOUND_NUMBERS[i];
 				}
 			}
 			if (correct_name_to_load == true) {
@@ -4644,6 +4654,8 @@ bool spawn_tracked_car(int slot, std::string caption) {
 				strcpy(currSound, ENGINE_SOUND[current_picked_engine_sound].c_str());
 				VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
 				AUDIO::_SET_VEHICLE_AUDIO(veh, currSound);
+				VEHICLES_HAVE_SOUND.push_back(veh);
+				VEHICLES_SOUND_NUMBER.push_back(tmp_picked_sound);
 				current_picked_engine_sound = -1;
 			}
 		}
@@ -4774,11 +4786,13 @@ bool spawn_saved_car(int slot, std::string caption){
 		// loading of an engine sound
 		if (savedVeh->engineSound > -1 && featureEngineSound) {
 			bool correct_name_to_load = false;
+			int tmp_picked_sound = -1;
 			for (int i = 0; i < ENGINE_SOUND_COUNT_VEHICLES; i++)
 			{
 				if (ENGINE_SOUND_NUMBERS[i] == savedVeh->engineSound) {
 					correct_name_to_load = true;
 					current_picked_engine_sound = i;
+					tmp_picked_sound = ENGINE_SOUND_NUMBERS[i];
 				}
 			}
 			if (correct_name_to_load == true) {
@@ -4786,6 +4800,10 @@ bool spawn_saved_car(int slot, std::string caption){
 				strcpy(currSound, ENGINE_SOUND[current_picked_engine_sound].c_str());
 				VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
 				AUDIO::_SET_VEHICLE_AUDIO(veh, currSound);
+				if (featureRememberVehicles && featureRestoreTracked) {
+					VEHICLES_HAVE_SOUND.push_back(veh);
+					VEHICLES_SOUND_NUMBER.push_back(tmp_picked_sound);
+				}
 				current_picked_engine_sound = -1;
 			}
 		}
