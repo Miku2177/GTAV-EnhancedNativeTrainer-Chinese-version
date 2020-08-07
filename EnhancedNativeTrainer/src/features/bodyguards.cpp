@@ -1501,14 +1501,14 @@ void maintain_bodyguards(){
 					if (PED::IS_PED_IN_ANY_VEHICLE(spawnedENTBodyguards[i], 1) && WEAPON::GET_SELECTED_PED_WEAPON(spawnedENTBodyguards[i]) != GAMEPLAY::GET_HASH_KEY("WEAPON_MICROSMG")) { // !WEAPON::HAS_PED_GOT_WEAPON(spawnedENTBodyguards[i], GAMEPLAY::GET_HASH_KEY("WEAPON_MICROSMG"), 0)
 						WEAPON::REMOVE_ALL_PED_WEAPONS(spawnedENTBodyguards[i], false);
 						WEAPON::GIVE_WEAPON_TO_PED(spawnedENTBodyguards[i], GAMEPLAY::GET_HASH_KEY("WEAPON_MICROSMG"), 999, false, true);
-						WEAPON::SET_CURRENT_PED_WEAPON(spawnedENTBodyguards[i], GAMEPLAY::GET_HASH_KEY("WEAPON_MICROSMG"), 1);
-						WEAPON::SET_PED_CURRENT_WEAPON_VISIBLE(spawnedENTBodyguards[i], true, false, 1, 1);
+						//WEAPON::SET_CURRENT_PED_WEAPON(spawnedENTBodyguards[i], GAMEPLAY::GET_HASH_KEY("WEAPON_MICROSMG"), 1);
+						//WEAPON::SET_PED_CURRENT_WEAPON_VISIBLE(spawnedENTBodyguards[i], true, false, 1, 1);
 					}
 					if (!PED::IS_PED_IN_ANY_VEHICLE(spawnedENTBodyguards[i], 1) && WEAPON::GET_SELECTED_PED_WEAPON(spawnedENTBodyguards[i]) != spawnedBodyguardsSecWeap[i]) { // !WEAPON::HAS_PED_GOT_WEAPON(spawnedENTBodyguards[i], spawnedBodyguardsSecWeap[i], 0)
 						WEAPON::REMOVE_ALL_PED_WEAPONS(spawnedENTBodyguards[i], false);
 						WEAPON::GIVE_WEAPON_TO_PED(spawnedENTBodyguards[i], spawnedBodyguardsSecWeap[i], 999, false, true);
-						WEAPON::SET_CURRENT_PED_WEAPON(spawnedENTBodyguards[i], spawnedBodyguardsSecWeap[i], 1);
-						WEAPON::SET_PED_CURRENT_WEAPON_VISIBLE(spawnedENTBodyguards[i], true, false, 1, 1);
+						//WEAPON::SET_CURRENT_PED_WEAPON(spawnedENTBodyguards[i], spawnedBodyguardsSecWeap[i], 1);
+						//WEAPON::SET_PED_CURRENT_WEAPON_VISIBLE(spawnedENTBodyguards[i], true, false, 1, 1);
 					}
 				}
 				// add/remove weapons
