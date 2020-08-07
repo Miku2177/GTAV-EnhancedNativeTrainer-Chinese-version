@@ -3667,6 +3667,12 @@ bool ENTDatabase::save_tracked_vehicle(Vehicle veh, std::string saveName, sqlite
 		sqlite3_bind_int(stmt, index++, dashCol);
 		sqlite3_bind_int(stmt, index++, interiorCol);
 
+		current_picked_engine_sound = -1;
+		if (!VEHICLES_HAVE_SOUND.empty()) {
+			for (int i = 0; i < VEHICLES_HAVE_SOUND.size(); i++) {
+				if (veh == VEHICLES_HAVE_SOUND[i]) current_picked_engine_sound = VEHICLES_SOUND_NUMBER[i];
+			}
+		}
 		sqlite3_bind_int(stmt, index++, current_picked_engine_sound);
 		current_picked_engine_sound = -1;
 
