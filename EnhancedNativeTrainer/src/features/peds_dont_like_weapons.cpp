@@ -62,8 +62,9 @@ void peds_dont_like_weapons() {
 				
 				// Peds Against
 				if (featurePedAgainst && !PED::IS_PED_IN_ANY_VEHICLE(weaponhaters[i], false) && PED::GET_PED_TYPE(weaponhaters[i]) != 6 && PED::GET_PED_TYPE(weaponhaters[i]) != 27 && PED::GET_PED_TYPE(weaponhaters[i]) != 28 &&
-					PED::GET_PED_TYPE(weaponhaters[i]) != 29 && !ENTITY::IS_ENTITY_A_MISSION_ENTITY(weaponhaters[i])) {
-					if (ped_distance_x < 9 && ped_distance_y < 9 && ped_distance_z < 3 && PED::IS_PED_FACING_PED(weaponhaters[i], playerPed, 100) && ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(weaponhaters[i], playerPed, 17)
+					PED::GET_PED_TYPE(weaponhaters[i]) != 29 && PED::GET_PED_TYPE(weaponhaters[i]) != 0 && PED::GET_PED_TYPE(weaponhaters[i]) != 1 && PED::GET_PED_TYPE(weaponhaters[i]) != 2 &&
+					PED::GET_PED_TYPE(weaponhaters[i]) != 3 && !PED::IS_PED_GROUP_MEMBER(weaponhaters[i], myENTGroup)/* && !ENTITY::IS_ENTITY_A_MISSION_ENTITY(weaponhaters[i])*/) {
+					if (ped_distance_x < 11 && ped_distance_y < 11 && ped_distance_z < 3 && PED::IS_PED_FACING_PED(weaponhaters[i], playerPed, 100) && ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(weaponhaters[i], playerPed, 17)
 						&& !PLAYER::IS_PLAYER_FREE_AIMING_AT_ENTITY(playerPed, weaponhaters[i]) && weaponhaters[i] != playerPed && !PLAYER::IS_PLAYER_CONTROL_ON(weaponhaters[i]))
 					{
 						if (featureAgainstMeleeWeapons && WEAPON::IS_PED_ARMED(playerPed, 7) && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) &&
@@ -74,11 +75,14 @@ void peds_dont_like_weapons() {
 								AI::TASK_COMBAT_PED(weaponhaters[i], playerPed, 0, 16);
 								if (!WEAPON::IS_PED_ARMED(weaponhaters[i], 7)) WEAPON::GIVE_WEAPON_TO_PED(weaponhaters[i], WEAPON::GET_SELECTED_PED_WEAPON(playerPed), 999, false, true);
 							}
-							if (!PED::IS_PED_FLEEING(weaponhaters[i]) && !AI::IS_PED_RUNNING(weaponhaters[i]) && !PED::IS_PED_IN_COMBAT(weaponhaters[i], playerPed)
+							if (!PED::IS_PED_FLEEING(weaponhaters[i]) && !AI::IS_PED_RUNNING(weaponhaters[i]) /*&& !PED::IS_PED_IN_COMBAT(weaponhaters[i], playerPed)*/
 								&& !WEAPON::IS_PED_ARMED(weaponhaters[i], 7))
 							{
-								AUDIO::_PLAY_AMBIENT_SPEECH1(weaponhaters[i], "GENERIC_FRIGHTENED_HIGH", "SPEECH_PARAMS_FORCE_SHOUTED");
-								if (weaponhaters[i] != playerPed) AI::TASK_SMART_FLEE_PED(weaponhaters[i], playerPed, 1000, -1, true, true);
+								if (weaponhaters[i] != playerPed) {
+									AI::CLEAR_PED_TASKS(weaponhaters[i]);
+									AUDIO::_PLAY_AMBIENT_SPEECH1(weaponhaters[i], "GENERIC_FRIGHTENED_HIGH", "SPEECH_PARAMS_FORCE_SHOUTED");
+									AI::TASK_SMART_FLEE_PED(weaponhaters[i], playerPed, 1000, -1, true, true);
+								}
 							}
 							if (callpolice_randomize < WEAPONS_CHANCEPOLICECALLING_VALUES[ChancePoliceCallingIndex] && !PED::IS_PED_IN_COMBAT(weaponhaters[i], playerPed) && !WEAPON::IS_PED_ARMED(weaponhaters[i], 7)) {
 								AI::TASK_USE_MOBILE_PHONE_TIMED(weaponhaters[i], 10000);
@@ -93,11 +97,14 @@ void peds_dont_like_weapons() {
 								AI::TASK_COMBAT_PED(weaponhaters[i], playerPed, 0, 16);
 								if (!WEAPON::IS_PED_ARMED(weaponhaters[i], 7)) WEAPON::GIVE_WEAPON_TO_PED(weaponhaters[i], WEAPON::GET_SELECTED_PED_WEAPON(playerPed), 999, false, true);
 							}
-							if (!PED::IS_PED_FLEEING(weaponhaters[i]) && !AI::IS_PED_RUNNING(weaponhaters[i]) && !PED::IS_PED_IN_COMBAT(weaponhaters[i], playerPed)
+							if (!PED::IS_PED_FLEEING(weaponhaters[i]) && !AI::IS_PED_RUNNING(weaponhaters[i]) /*&& !PED::IS_PED_IN_COMBAT(weaponhaters[i], playerPed)*/
 								&& !WEAPON::IS_PED_ARMED(weaponhaters[i], 7))
 							{
-								AUDIO::_PLAY_AMBIENT_SPEECH1(weaponhaters[i], "GENERIC_FRIGHTENED_HIGH", "SPEECH_PARAMS_FORCE_SHOUTED");
-								if (weaponhaters[i] != playerPed) AI::TASK_SMART_FLEE_PED(weaponhaters[i], playerPed, 1000, -1, true, true);
+								if (weaponhaters[i] != playerPed) {
+									AI::CLEAR_PED_TASKS(weaponhaters[i]);
+									AUDIO::_PLAY_AMBIENT_SPEECH1(weaponhaters[i], "GENERIC_FRIGHTENED_HIGH", "SPEECH_PARAMS_FORCE_SHOUTED");
+									AI::TASK_SMART_FLEE_PED(weaponhaters[i], playerPed, 1000, -1, true, true);
+								}
 							}
 							if (callpolice_randomize < WEAPONS_CHANCEPOLICECALLING_VALUES[ChancePoliceCallingIndex] && !PED::IS_PED_IN_COMBAT(weaponhaters[i], playerPed) && !WEAPON::IS_PED_ARMED(weaponhaters[i], 7)) {
 								AI::TASK_USE_MOBILE_PHONE_TIMED(weaponhaters[i], 10000);
@@ -108,8 +115,9 @@ void peds_dont_like_weapons() {
 				}
 				// Drivers Against						
 				if (featureDriverAgainst && PED::IS_PED_IN_ANY_VEHICLE(weaponhaters[i], false) && PED::GET_PED_TYPE(weaponhaters[i]) != 6 && PED::GET_PED_TYPE(weaponhaters[i]) != 27 && PED::GET_PED_TYPE(weaponhaters[i]) != 28 &&
-					PED::GET_PED_TYPE(weaponhaters[i]) != 29 && !ENTITY::IS_ENTITY_A_MISSION_ENTITY(weaponhaters[i])) {
-					if (ped_distance_x < 9 && ped_distance_y < 9 && ped_distance_z < 3 && PED::IS_PED_FACING_PED(weaponhaters[i], playerPed, 100) && ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(weaponhaters[i], playerPed, 17)
+					PED::GET_PED_TYPE(weaponhaters[i]) != 29 && PED::GET_PED_TYPE(weaponhaters[i]) != 0 && PED::GET_PED_TYPE(weaponhaters[i]) != 1 && PED::GET_PED_TYPE(weaponhaters[i]) != 2 &&
+					PED::GET_PED_TYPE(weaponhaters[i]) != 3 && !PED::IS_PED_GROUP_MEMBER(weaponhaters[i], myENTGroup)/* && !ENTITY::IS_ENTITY_A_MISSION_ENTITY(weaponhaters[i])*/) {
+					if (ped_distance_x < 11 && ped_distance_y < 11 && ped_distance_z < 3 && PED::IS_PED_FACING_PED(weaponhaters[i], playerPed, 100) && ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(weaponhaters[i], playerPed, 17)
 						&& !PLAYER::IS_PLAYER_FREE_AIMING_AT_ENTITY(playerPed, weaponhaters[i]) && weaponhaters[i] != playerPed && !PLAYER::IS_PLAYER_CONTROL_ON(weaponhaters[i]))
 					{
 						if (featureAgainstMeleeWeapons && WEAPON::IS_PED_ARMED(playerPed, 7) && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) &&
@@ -120,11 +128,14 @@ void peds_dont_like_weapons() {
 								AI::TASK_COMBAT_PED(weaponhaters[i], playerPed, 0, 16);
 								if (!WEAPON::IS_PED_ARMED(weaponhaters[i], 7)) WEAPON::GIVE_WEAPON_TO_PED(weaponhaters[i], WEAPON::GET_SELECTED_PED_WEAPON(playerPed), 999, false, true);
 							}
-							if (!PED::IS_PED_FLEEING(weaponhaters[i]) && !AI::IS_PED_RUNNING(weaponhaters[i]) && !PED::IS_PED_IN_COMBAT(weaponhaters[i], playerPed)
+							if (!PED::IS_PED_FLEEING(weaponhaters[i]) && !AI::IS_PED_RUNNING(weaponhaters[i]) /*&& !PED::IS_PED_IN_COMBAT(weaponhaters[i], playerPed)*/
 								&& !WEAPON::IS_PED_ARMED(weaponhaters[i], 7))
 							{
-								AUDIO::_PLAY_AMBIENT_SPEECH1(weaponhaters[i], "GENERIC_FRIGHTENED_HIGH", "SPEECH_PARAMS_FORCE_SHOUTED");
-								if (weaponhaters[i] != playerPed) AI::TASK_SMART_FLEE_PED(weaponhaters[i], playerPed, 1000, -1, true, true);
+								if (weaponhaters[i] != playerPed) {
+									AI::CLEAR_PED_TASKS(weaponhaters[i]);
+									AUDIO::_PLAY_AMBIENT_SPEECH1(weaponhaters[i], "GENERIC_FRIGHTENED_HIGH", "SPEECH_PARAMS_FORCE_SHOUTED");
+									AI::TASK_SMART_FLEE_PED(weaponhaters[i], playerPed, 1000, -1, true, true);
+								}
 							}
 							if (callpolice_randomize < WEAPONS_CHANCEPOLICECALLING_VALUES[ChancePoliceCallingIndex] && !PED::IS_PED_IN_COMBAT(weaponhaters[i], playerPed) && !WEAPON::IS_PED_ARMED(weaponhaters[i], 7)) {
 								AI::TASK_USE_MOBILE_PHONE_TIMED(weaponhaters[i], 10000);
@@ -139,11 +150,14 @@ void peds_dont_like_weapons() {
 								AI::TASK_COMBAT_PED(weaponhaters[i], playerPed, 0, 16);
 								if (!WEAPON::IS_PED_ARMED(weaponhaters[i], 7)) WEAPON::GIVE_WEAPON_TO_PED(weaponhaters[i], WEAPON::GET_SELECTED_PED_WEAPON(playerPed), 999, false, true);
 							}
-							if (!PED::IS_PED_FLEEING(weaponhaters[i]) && !AI::IS_PED_RUNNING(weaponhaters[i]) && !PED::IS_PED_IN_COMBAT(weaponhaters[i], playerPed)
+							if (!PED::IS_PED_FLEEING(weaponhaters[i]) && !AI::IS_PED_RUNNING(weaponhaters[i]) /*&& !PED::IS_PED_IN_COMBAT(weaponhaters[i], playerPed)*/
 								&& !WEAPON::IS_PED_ARMED(weaponhaters[i], 7))
 							{
-								AUDIO::_PLAY_AMBIENT_SPEECH1(weaponhaters[i], "GENERIC_FRIGHTENED_HIGH", "SPEECH_PARAMS_FORCE_SHOUTED");
-								if (weaponhaters[i] != playerPed) AI::TASK_SMART_FLEE_PED(weaponhaters[i], playerPed, 1000, -1, true, true);
+								if (weaponhaters[i] != playerPed) {
+									AI::CLEAR_PED_TASKS(weaponhaters[i]);
+									AUDIO::_PLAY_AMBIENT_SPEECH1(weaponhaters[i], "GENERIC_FRIGHTENED_HIGH", "SPEECH_PARAMS_FORCE_SHOUTED");
+									AI::TASK_SMART_FLEE_PED(weaponhaters[i], playerPed, 1000, -1, true, true);
+								}
 							}
 							if (callpolice_randomize < WEAPONS_CHANCEPOLICECALLING_VALUES[ChancePoliceCallingIndex] && !PED::IS_PED_IN_COMBAT(weaponhaters[i], playerPed) && !WEAPON::IS_PED_ARMED(weaponhaters[i], 7)) {
 								AI::TASK_USE_MOBILE_PHONE_TIMED(weaponhaters[i], 10000);
@@ -155,12 +169,12 @@ void peds_dont_like_weapons() {
 				// Police Against
 				if (featurePoliceAgainst && (PED::GET_PED_TYPE(weaponhaters[i]) == 6 || PED::GET_PED_TYPE(weaponhaters[i]) == 27 || PED::GET_PED_TYPE(weaponhaters[i]) == 29) &&
 					weaponhaters[i] != playerPed && !ENTITY::IS_ENTITY_A_MISSION_ENTITY(weaponhaters[i])) {
-					if (ped_distance_x < 9 && ped_distance_y < 9 && ped_distance_z < 3 && PED::IS_PED_FACING_PED(weaponhaters[i], playerPed, 100) && ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(weaponhaters[i], playerPed, 17))
+					if (ped_distance_x < 11 && ped_distance_y < 11 && ped_distance_z < 3 && PED::IS_PED_FACING_PED(weaponhaters[i], playerPed, 100) && ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(weaponhaters[i], playerPed, 17))
 					{
 						Vehicle veh_police = PED::GET_VEHICLE_PED_IS_IN(weaponhaters[i], true);
 						Vector3 veh_police_speed = ENTITY::GET_ENTITY_VELOCITY(veh_police);
 						if ((PED::IS_PED_IN_VEHICLE(weaponhaters[i], veh_police, false) && veh_police_speed.x < 20 && veh_police_speed.y < 20 && ped_distance_x < 7 && ped_distance_y < 7 && ped_distance_z < 3) ||
-							(!PED::IS_PED_IN_ANY_VEHICLE(weaponhaters[i], false) && ped_distance_x < 9 && ped_distance_y < 9 && ped_distance_z < 3))
+							(!PED::IS_PED_IN_ANY_VEHICLE(weaponhaters[i], false) && ped_distance_x < 11 && ped_distance_y < 11 && ped_distance_z < 3))
 						{
 							if (featureAgainstMeleeWeapons && WEAPON::IS_PED_ARMED(playerPed, 7) && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) &&
 								WEAPON::GET_SELECTED_PED_WEAPON(playerPed) != GAMEPLAY::GET_HASH_KEY("WEAPON_SNOWBALL") && WEAPON::GET_SELECTED_PED_WEAPON(playerPed) != GAMEPLAY::GET_HASH_KEY("WEAPON_BALL")) {
