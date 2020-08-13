@@ -576,8 +576,8 @@ void update_area_effects(Ped playerPed){
 
 		for (int i = 0; i < count_surr_em_peds; i++) {
 			if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(surr_weapon_peds[i], playerPed, 1)) {
-				/*if (!featureLawAbidingCitizens)*/ PED::CLEAR_PED_LAST_DAMAGE_BONE(surr_weapon_peds[i]);
-				/*if (!featureLawAbidingCitizens)*/ ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(surr_weapon_peds[i]);
+				PED::CLEAR_PED_LAST_DAMAGE_BONE(surr_weapon_peds[i]);
+				ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(surr_weapon_peds[i]);
 				PED::CLEAR_PED_LAST_DAMAGE_BONE(playerPed);
 				ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(playerPed);
 			}
