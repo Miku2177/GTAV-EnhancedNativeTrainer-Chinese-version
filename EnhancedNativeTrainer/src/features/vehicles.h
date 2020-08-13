@@ -446,7 +446,6 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("JET"), "ENT_vehicle_previews", "VP_JET" },
 	{ RAGE_JOAAT("LAZER"), "ENT_vehicle_previews", "VP_LAZER" },
 	{ RAGE_JOAAT("LECTRO"), "ENT_vehicle_previews", "VP_LECTRO" },
-	{ RAGE_JOAAT("MANANA"), "ENT_vehicle_previews", "VP_MANANA" },
 	{ RAGE_JOAAT("MESA2"), "ENT_vehicle_previews", "VP_MESA_SNOW" },
 	{ RAGE_JOAAT("METROTRAIN"), "ENT_vehicle_previews", "VP_METROTRAIN" },
 	{ RAGE_JOAAT("MIXER"), "ENT_vehicle_previews", "VP_MIXER" },
@@ -456,7 +455,6 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("ORACLE2"), "ENT_vehicle_previews", "VP_ORACLE2" },
 	{ RAGE_JOAAT("PACKER"), "ENT_vehicle_previews", "VP_PACKER" },
 	{ RAGE_JOAAT("PATRIOT"), "ENT_vehicle_previews", "VP_PATRIOT" },
-	{ RAGE_JOAAT("PEYOTE"), "ENT_vehicle_previews", "VP_PEYOTE" },
 	{ RAGE_JOAAT("PHANTOM"), "ENT_vehicle_previews", "VP_PHANTOM" },
 	{ RAGE_JOAAT("PHOENIX"), "ENT_vehicle_previews", "VP_PHOENIX" },
 	{ RAGE_JOAAT("POLICE"), "ENT_vehicle_previews", "VP_POLICE" },
@@ -691,14 +689,10 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("CHEETAH2"), "lgm_dlc_gunrunning", "cheetah2" },
 	{ RAGE_JOAAT("DUNE3"), "candc_gunrunning", "dune3" },
 	{ RAGE_JOAAT("HALFTRACK"), "candc_gunrunning", "halftrack" },
-	//{ RAGE_JOAAT("HAULER2"), "candc_truck", "cab_1" }, //no image yet
-	//{ RAGE_JOAAT("INSURGENT3"), "lgm_dlc_specialraces", "gp1" }, //no image yet
-	{ RAGE_JOAAT("TRAILERLARGE"), "candc_truck", "thumbnail" }, //no image yet - could also be TRAILERS4
+	{ RAGE_JOAAT("TRAILERLARGE"), "candc_truck", "thumbnail" },
 	{ RAGE_JOAAT("NIGHTSHARK"), "candc_gunrunning", "nightshark" },
 	{ RAGE_JOAAT("OPPRESSOR"), "candc_gunrunning", "oppressor" },
-	//{ RAGE_JOAAT("PHANTOM3"), "lgm_dlc_specialraces", "gp1" }, //no image yet
 	{ RAGE_JOAAT("TAMPA3"), "candc_gunrunning", "tampa3" },
-	//{ RAGE_JOAAT("TECHNICAL3"), "lgm_dlc_specialraces", "gp1" }, //no image yet
 	{ RAGE_JOAAT("TORERO"), "lgm_dlc_gunrunning", "torero" },
 	{ RAGE_JOAAT("TRAILERSMALL2"), "candc_gunrunning", "trsmall2" },
 	{ RAGE_JOAAT("VAGNER"), "lgm_dlc_gunrunning", "vagner" },
@@ -863,7 +857,19 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("LGUARD"), "candc_casinoheist", "lguard" },
 	{ RAGE_JOAAT("MINITANK"), "candc_casinoheist", "minitank" },
 	{ RAGE_JOAAT("ZHABA"), "candc_casinoheist", "zhaba" },
-	{ RAGE_JOAAT("STOCKADE"), "candc_casinoheist", "stockade" }
+	{ RAGE_JOAAT("STOCKADE"), "candc_casinoheist", "stockade" },
+	//Summer 2020 update
+	{ RAGE_JOAAT("MANANA"), "lsc_dlc_summer2020", "manana" },
+	{ RAGE_JOAAT("PEYOTE"), "lsc_dlc_summer2020", "peyote" },
+	{ RAGE_JOAAT("CLUB"), "sssa_dlc_summer2020", "CLUB" },
+	{ RAGE_JOAAT("DUKES3"), "sssa_dlc_summer2020", "dukes3" },
+	{ RAGE_JOAAT("LANDSTALKER2"), "sssa_dlc_summer2020", "landstlkr2" },
+	{ RAGE_JOAAT("PENUMBRA2"), "sssa_dlc_summer2020", "penumbra2" },
+	{ RAGE_JOAAT("SEMIOLE2"), "sssa_dlc_summer2020", "seminole2" },
+	{ RAGE_JOAAT("COQUETTE4"), "lgm_dlc_summer2020", "coquette4" },
+	{ RAGE_JOAAT("OPENWHEEL1"), "lgm_dlc_summer2020", "openwheel1" },
+	{ RAGE_JOAAT("OPENWHEEL2"), "lgm_dlc_summer2020", "openwheel2" },
+	{ RAGE_JOAAT("TIGON"), "lgm_dlc_summer2020", "tigon" }
 };
 
 /***
