@@ -1659,7 +1659,7 @@ void update_world_features()
 							BLIPTABLE_COP.erase(BLIPTABLE_COP.begin() + j);
 						}
 					}
-					if (exists_already == false) {
+					if (exists_already == false && !PED::IS_PED_DEAD_OR_DYING(bus_ped[i], true)) {
 						blip_cops = UI::ADD_BLIP_FOR_ENTITY(bus_ped[i]);
 						UI::SET_BLIP_SPRITE(blip_cops, 41); // 42
 						UI::SET_BLIP_SCALE(blip_cops, 0.5);
@@ -1668,7 +1668,7 @@ void update_world_features()
 						COP_VECTOR.push_back(bus_ped[i]);
 					}
 				}
-				else {
+				if (COP_VECTOR.empty() && !PED::IS_PED_DEAD_OR_DYING(bus_ped[i], true)) {
 					blip_cops = UI::ADD_BLIP_FOR_ENTITY(bus_ped[i]);
 					UI::SET_BLIP_SPRITE(blip_cops, 41); // 42
 					UI::SET_BLIP_SCALE(blip_cops, 0.5);
