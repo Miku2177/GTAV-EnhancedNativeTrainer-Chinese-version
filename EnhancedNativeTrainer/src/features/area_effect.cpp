@@ -842,6 +842,13 @@ void update_area_effects(Ped playerPed){
 		}
 		// vigilante blips
 		if (LIMP_IF_INJURED_VALUES[VigilanteBlipIndex] > 0) {
+			if (pursuer.empty() && !BLIPTABLE_VIGILANTE.empty()) {
+				for (int j = 0; j < BLIPTABLE_VIGILANTE.size(); j++) UI::REMOVE_BLIP(&BLIPTABLE_VIGILANTE[j]);
+				BLIPTABLE_VIGILANTE.clear();
+				BLIPTABLE_VIGILANTE.shrink_to_fit();
+				pursuer.clear();
+				pursuer.shrink_to_fit();
+			}
 			if (!pursuer.empty()) {
 				for (int j = 0; j < pursuer.size(); j++) {
 					if (ENTITY::DOES_ENTITY_EXIST(pursuer[j]) && PED::IS_PED_DEAD_OR_DYING(pursuer[j], true)) {
@@ -850,8 +857,8 @@ void update_area_effects(Ped playerPed){
 						pursuer.erase(pursuer.begin() + j);
 					}
 				}
-				if (!BLIPTABLE_VIGILANTE.empty() && BLIPTABLE_VIGILANTE.size() != pursuer.size()) b_not_equal = true;
-				if (b_not_equal == true) {
+				if (!pursuer.empty() && !BLIPTABLE_VIGILANTE.empty() && BLIPTABLE_VIGILANTE.size() != pursuer.size()) b_not_equal = true;
+				if (!pursuer.empty() && !BLIPTABLE_VIGILANTE.empty() && b_not_equal == true) {
 					for (int j = 0; j < BLIPTABLE_VIGILANTE.size(); j++) UI::REMOVE_BLIP(&BLIPTABLE_VIGILANTE[j]);
 					BLIPTABLE_VIGILANTE.clear();
 					BLIPTABLE_VIGILANTE.shrink_to_fit();
@@ -867,7 +874,7 @@ void update_area_effects(Ped playerPed){
 					}
 					b_not_equal = false;
 				}
-				if (BLIPTABLE_VIGILANTE.empty() && !PED::IS_PED_DEAD_OR_DYING(pursuer[0], true)) {
+				if (!pursuer.empty() && BLIPTABLE_VIGILANTE.empty() && !PED::IS_PED_DEAD_OR_DYING(pursuer[0], true)) {
 					blip_vigilante = UI::ADD_BLIP_FOR_ENTITY(pursuer[0]);
 					UI::SET_BLIP_SPRITE(blip_vigilante, 1);
 					UI::SET_BLIP_SCALE(blip_vigilante, 0.5);
