@@ -79,6 +79,12 @@ std::vector<Ped> pursuer;
 std::vector<Vehicle> v_collided;
 int s_secs_passed, s_secs_curr, s_seconds = 0;
 
+Blip blip_vigilante = -1;
+std::vector<Blip> BLIPTABLE_VIGILANTE;
+int VigilanteBlipIndex = 0;
+bool VigilanteBlipChanged = true;
+bool b_not_equal = false;
+
 bool on_feet = false;
 
 const std::vector<std::string> PED_WEAPONS_SELECTIVE_CAPTIONS{ "\"WEAPON_UNARMED\"", "\"WEAPON_NIGHTSTICK\"", "\"WEAPON_FLASHLIGHT\"", "\"WEAPON_KNIFE\"", "\"WEAPON_DAGGER\"", "\"WEAPON_HAMMER\"", "\"WEAPON_BAT\"", "\"WEAPON_GOLFCLUB\"",
@@ -177,6 +183,7 @@ void reset_areaeffect_globals(){
 	RadarReducedGripSnowingIndex = 0;
 	RadarReducedGripRainingIndex = 0;
 	NoPedsGravityIndex = 0;
+	VigilanteBlipIndex = 0;
 	PedsHealthIndex = 0;
 }
 
@@ -261,6 +268,12 @@ void process_areaeffect_peds_menu(){
 	togItem->value = 1;
 	togItem->toggleValue = &featureLawAbidingCitizens;
 	menuItems.push_back(togItem);
+
+	listItem = new SelectFromListMenuItem(LIMP_IF_INJURED_CAPTIONS, onchange_vigilante_blips_index);
+	listItem->wrap = false;
+	listItem->caption = "Show Vigilante Blips";
+	listItem->value = VigilanteBlipIndex;
+	menuItems.push_back(listItem);
 
 	draw_generic_menu<int>(menuItems, &areaeffect_ped_level_menu_index, "Ped Effects", onconfirm_areaeffect_ped_menu, NULL, NULL);
 }
@@ -666,8 +679,9 @@ void update_area_effects(Ped playerPed){
 		Vehicle veh_agressive[arrSize_laws];
 		int count_veh = worldGetAllPeds(veh_agressive, arrSize_laws);
 		for (int i = 0; i < count_veh; i++) {
-			if (veh_agressive[i] != playerPed && !PED::IS_PED_GROUP_MEMBER(veh_agressive[i], myENTGroup) &&	PED::GET_PED_TYPE(veh_agressive[i]) != 6 && PED::GET_PED_TYPE(veh_agressive[i]) != 27 && PED::GET_PED_TYPE(veh_agressive[i]) != 29 && 
-				veh_agressive[i] != VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh_me, 0) && veh_agressive[i] != VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh_me, 1) && veh_agressive[i] != VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh_me, 2)) {
+			if (veh_agressive[i] != playerPed && PED::IS_PED_HUMAN(veh_agressive[i]) && !PED::IS_PED_GROUP_MEMBER(veh_agressive[i], myENTGroup) &&	PED::GET_PED_TYPE(veh_agressive[i]) != 6 && PED::GET_PED_TYPE(veh_agressive[i]) != 27 && 
+				PED::GET_PED_TYPE(veh_agressive[i]) != 29 && veh_agressive[i] != VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh_me, 0) && veh_agressive[i] != VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh_me, 1) && 
+				veh_agressive[i] != VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh_me, 2)) {
 				
 				// vigilante citizens
 				if (featureLawAbidingCitizens && GAMEPLAY::GET_MISSION_FLAG() == 0) {
@@ -733,8 +747,9 @@ void update_area_effects(Ped playerPed){
 
 		if (time_to_chase == true && PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed) == 0 && GAMEPLAY::GET_MISSION_FLAG() == 0) {
 			for (int vc = 0; vc < count_veh; vc++) {
-				if (veh_agressive[vc] != playerPed && !PED::IS_PED_GROUP_MEMBER(veh_agressive[vc], myENTGroup) && PED::GET_PED_TYPE(veh_agressive[vc]) != 6 && PED::GET_PED_TYPE(veh_agressive[vc]) != 27 && PED::GET_PED_TYPE(veh_agressive[vc]) != 29 &&
-					veh_agressive[vc] != VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh_me, 0) && veh_agressive[vc] != VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh_me, 1) && veh_agressive[vc] != VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh_me, 2)) {
+				if (veh_agressive[vc] != playerPed && PED::IS_PED_HUMAN(veh_agressive[vc]) && !PED::IS_PED_GROUP_MEMBER(veh_agressive[vc], myENTGroup) && PED::GET_PED_TYPE(veh_agressive[vc]) != 6 && PED::GET_PED_TYPE(veh_agressive[vc]) != 27 && 
+					PED::GET_PED_TYPE(veh_agressive[vc]) != 29 && veh_agressive[vc] != VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh_me, 0) && veh_agressive[vc] != VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh_me, 1) && 
+					veh_agressive[vc] != VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh_me, 2)) {
 					Vector3 npc_abid_coords = ENTITY::GET_ENTITY_COORDS(veh_agressive[vc], true);
 					int lawabidped_with_dist_x = (me_coords.x - npc_abid_coords.x);
 					int lawabidped_with_dist_y = (me_coords.y - npc_abid_coords.y);
@@ -825,14 +840,55 @@ void update_area_effects(Ped playerPed){
 			v_collided.clear();
 			v_collided.shrink_to_fit();
 		}
+		// vigilante blips
+		if (LIMP_IF_INJURED_VALUES[VigilanteBlipIndex] > 0) {
+			if (!pursuer.empty()) {
+				for (int j = 0; j < pursuer.size(); j++) {
+					if (ENTITY::DOES_ENTITY_EXIST(pursuer[j]) && PED::IS_PED_DEAD_OR_DYING(pursuer[j], true)) {
+						ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&pursuer[j]);
+						PED::DELETE_PED(&pursuer[j]);
+						pursuer.erase(pursuer.begin() + j);
+					}
+				}
+				if (!BLIPTABLE_VIGILANTE.empty() && BLIPTABLE_VIGILANTE.size() != pursuer.size()) b_not_equal = true;
+				if (b_not_equal == true) {
+					for (int j = 0; j < BLIPTABLE_VIGILANTE.size(); j++) UI::REMOVE_BLIP(&BLIPTABLE_VIGILANTE[j]);
+					BLIPTABLE_VIGILANTE.clear();
+					BLIPTABLE_VIGILANTE.shrink_to_fit();
+					for (int j = 0; j < pursuer.size(); j++) {
+						if (ENTITY::DOES_ENTITY_EXIST(pursuer[j]) && !PED::IS_PED_DEAD_OR_DYING(pursuer[j], true)) {
+							blip_vigilante = UI::ADD_BLIP_FOR_ENTITY(pursuer[j]);
+							UI::SET_BLIP_SPRITE(blip_vigilante, 1);
+							UI::SET_BLIP_SCALE(blip_vigilante, 0.5);
+							UI::SET_BLIP_COLOUR(blip_vigilante, 1);
+							if (LIMP_IF_INJURED_VALUES[VigilanteBlipIndex] == 1) UI::SET_BLIP_AS_SHORT_RANGE(blip_vigilante, true);
+							BLIPTABLE_VIGILANTE.push_back(blip_vigilante);
+						}
+					}
+					b_not_equal = false;
+				}
+				if (BLIPTABLE_VIGILANTE.empty() && !PED::IS_PED_DEAD_OR_DYING(pursuer[0], true)) {
+					blip_vigilante = UI::ADD_BLIP_FOR_ENTITY(pursuer[0]);
+					UI::SET_BLIP_SPRITE(blip_vigilante, 1);
+					UI::SET_BLIP_SCALE(blip_vigilante, 0.5);
+					UI::SET_BLIP_COLOUR(blip_vigilante, 1);
+					if (LIMP_IF_INJURED_VALUES[VigilanteBlipIndex] == 1) UI::SET_BLIP_AS_SHORT_RANGE(blip_vigilante, true);
+					BLIPTABLE_VIGILANTE.push_back(blip_vigilante);
+				}
+			}
+		}
+		//
 		if (!pursuer.empty() && pursuer.size() > 10) { // 15
-			if (ENTITY::DOES_ENTITY_EXIST(pursuer[0])) AI::CLEAR_PED_TASKS_IMMEDIATELY(pursuer[0]);
 			if (ENTITY::DOES_ENTITY_EXIST(pursuer[0])) ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&pursuer[0]);
 			if (ENTITY::DOES_ENTITY_EXIST(pursuer[0])) PED::DELETE_PED(&pursuer[0]);
 			pursuer.erase(pursuer.begin());
 			if (ENTITY::DOES_ENTITY_EXIST(v_collided[0])) ENTITY::SET_VEHICLE_AS_NO_LONGER_NEEDED(&v_collided[0]);
 			if (ENTITY::DOES_ENTITY_EXIST(v_collided[0])) VEHICLE::DELETE_VEHICLE(&v_collided[0]);
 			v_collided.erase(v_collided.begin());
+			if (!BLIPTABLE_VIGILANTE.empty() && UI::DOES_BLIP_EXIST(BLIPTABLE_VIGILANTE[0])) {
+				UI::REMOVE_BLIP(&BLIPTABLE_VIGILANTE[0]);
+				BLIPTABLE_VIGILANTE.erase(BLIPTABLE_VIGILANTE.begin());
+			}
 		}
 	} // end of aggressive drivers && vigilante citizens
 }
@@ -1307,6 +1363,11 @@ void onchange_world_no_peds_gravity_index(int value, SelectFromListMenuItem* sou
 	NoPedsGravityChanged = true;
 }
 
+void onchange_vigilante_blips_index(int value, SelectFromListMenuItem* source) {
+	VigilanteBlipIndex = value;
+	VigilanteBlipChanged = true;
+}
+
 void onchange_ped_accuracy_index(int value, SelectFromListMenuItem* source) {
 	PedAccuracyIndex = value;
 	PedAccuracyChanged = true;
@@ -1384,6 +1445,7 @@ void give_all_nearby_peds_a_weapon(bool enabled){
 
 void add_areaeffect_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"pedWeaponSetIndex", std::to_string(pedWeaponSetIndex)});
+	results->push_back(StringPairSettingDBRow{"VigilanteBlipIndex", std::to_string(VigilanteBlipIndex)});
 	results->push_back(StringPairSettingDBRow{"PedWeaponsSelectiveIndex", std::to_string(PedWeaponsSelectiveIndex)});
 	results->push_back(StringPairSettingDBRow{"WorldSelectivePedsIndex", std::to_string(WorldSelectivePedsIndex)});
 }
@@ -1397,6 +1459,10 @@ void handle_generic_settings_areaeffect(std::vector<StringPairSettingDBRow>* set
 		else if (setting.name.compare("PedWeaponsSelectiveIndex") == 0){
 			PedWeaponsSelectiveIndex = stoi(setting.value);
 			PedWeaponsSelective1Changed = true;
+		}
+		else if (setting.name.compare("VigilanteBlipIndex") == 0) {
+			VigilanteBlipIndex = stoi(setting.value);
+			VigilanteBlipChanged = true;
 		}
 		else if (setting.name.compare("WorldSelectivePedsIndex") == 0) {
 			WorldSelectivePedsIndex = stoi(setting.value);
