@@ -60,6 +60,8 @@ void onchange_weather_method_index(int value, SelectFromListMenuItem* source);
 
 void onchange_world_no_peds_gravity_index(int value, SelectFromListMenuItem* source);
 
+void onchange_vigilante_blips_index(int value, SelectFromListMenuItem* source);
+
 void onchange_peds_health_index(int value, SelectFromListMenuItem* source);
 
 void onchange_world_npc_vehicles_speed_index(int value, SelectFromListMenuItem* source);
