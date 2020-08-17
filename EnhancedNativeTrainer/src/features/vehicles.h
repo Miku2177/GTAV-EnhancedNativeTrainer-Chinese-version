@@ -859,17 +859,23 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("ZHABA"), "candc_casinoheist", "zhaba" },
 	{ RAGE_JOAAT("STOCKADE"), "candc_casinoheist", "stockade" },
 	//Summer 2020 update
-	{ RAGE_JOAAT("MANANA"), "lsc_dlc_summer2020", "manana" },
-	{ RAGE_JOAAT("PEYOTE"), "lsc_dlc_summer2020", "peyote" },
-	{ RAGE_JOAAT("CLUB"), "sssa_dlc_summer2020", "CLUB" },
+	{ RAGE_JOAAT("GAUNTLET3"), "lsc_dlc_summer2020", "gauntlet3" },
+	{ RAGE_JOAAT("PEYOTE3"), "sssa_dlc_vinewood", "peyote2" },
+	{ RAGE_JOAAT("GLENDALE2"), "sssa_dlc_hipster", "glendale" },
+	{ RAGE_JOAAT("MANANA"), "lsc_dlc_summer2020", "manana_a" },
+	{ RAGE_JOAAT("MANANA2"), "lsc_dlc_summer2020", "manana_a" },
+	{ RAGE_JOAAT("PEYOTE"), "lsc_dlc_summer2020", "peyote_a" },
+	{ RAGE_JOAAT("YOUGA3"), "lsc_dlc_summer2020", "youga2_a" },
+	{ RAGE_JOAAT("CLUB"), "sssa_dlc_summer2020", "club" },
 	{ RAGE_JOAAT("DUKES3"), "sssa_dlc_summer2020", "dukes3" },
 	{ RAGE_JOAAT("LANDSTALKER2"), "sssa_dlc_summer2020", "landstlkr2" },
 	{ RAGE_JOAAT("PENUMBRA2"), "sssa_dlc_summer2020", "penumbra2" },
-	{ RAGE_JOAAT("SEMIOLE2"), "sssa_dlc_summer2020", "seminole2" },
+	{ RAGE_JOAAT("SEMINOLE2"), "sssa_dlc_summer2020", "seminole2" },
 	{ RAGE_JOAAT("COQUETTE4"), "lgm_dlc_summer2020", "coquette4" },
 	{ RAGE_JOAAT("OPENWHEEL1"), "lgm_dlc_summer2020", "openwheel1" },
 	{ RAGE_JOAAT("OPENWHEEL2"), "lgm_dlc_summer2020", "openwheel2" },
-	{ RAGE_JOAAT("TIGON"), "lgm_dlc_summer2020", "tigon" }
+	{ RAGE_JOAAT("TIGON"), "lgm_dlc_summer2020", "tigon" },
+	{ RAGE_JOAAT("GAUNTLET5"), "sssa_default", "gauntlet" }	
 };
 
 /***
