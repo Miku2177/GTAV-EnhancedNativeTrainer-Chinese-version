@@ -2190,7 +2190,7 @@ bool vehicle_menu_interrupt(){
 
 void randomize_vehicle_upgrades(Vehicle veh) {
 
-	int rand_wheel_type = (rand() % 7 + 0);
+	int rand_wheel_type = (rand() % 9 + 0);
 	VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
 	VEHICLE::SET_VEHICLE_WHEEL_TYPE(veh, rand_wheel_type);
 	
@@ -2203,10 +2203,9 @@ void randomize_vehicle_upgrades(Vehicle veh) {
 			int mods = VEHICLE::GET_NUM_VEHICLE_MODS(veh, a);
 			int rand_category = -1;
 			if (mods > 0) {
-				if (mods > 1) rand_category = (rand() % (mods - 1) + 0);
-				else rand_category = 0;
-				VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
-				VEHICLE::SET_VEHICLE_MOD(veh, a, rand_category, 1);
+				rand_category = (rand() % mods + 0); // -1
+				if (rand_category == mods) rand_category = rand_category - 1;
+				VEHICLE::SET_VEHICLE_MOD(veh, a, rand_category, true);
 			}
 		}
 	}
@@ -2231,7 +2230,8 @@ void randomize_vehicle_upgrades(Vehicle veh) {
 			VEHICLE::SET_VEHICLE_EXTRA(veh, a, rand_toggle);
 		}
 	}
-	int rand_plate = (rand() % 5 + 0);
+	int plateCount = VEHICLE::GET_NUMBER_OF_VEHICLE_NUMBER_PLATES();
+	int rand_plate = (rand() % (plateCount - 1) + 0);
 	VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT_INDEX(veh, rand_plate);
 
 	int rand_toggle = (rand() % 1 + 0);
