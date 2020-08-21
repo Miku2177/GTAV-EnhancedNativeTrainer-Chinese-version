@@ -247,6 +247,7 @@ bool HeavyVehChanged = true;
 //Vehicle Invisibility
 int VehInvisIndex = 0;
 bool VehInvisChanged = true;
+bool is_invisible = false;
 
 //Visualize Vehicle Indicators (Sprite)
 const std::vector<std::string> VEH_VISLIGHT_CAPTIONS{ "OFF", "1x", "3x", "5x", "7x", "10x", "12x" };
@@ -2781,6 +2782,11 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	// Vehicle Invisibility
 	if (FUEL_COLOURS_R_VALUES[VehInvisIndex] > 0 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
 		ENTITY::SET_ENTITY_ALPHA(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), FUEL_COLOURS_R_VALUES[VehInvisIndex] - 10, 0);
+		is_invisible = true;
+	}
+	if (FUEL_COLOURS_R_VALUES[VehInvisIndex] == 0 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && is_invisible == true) {
+		ENTITY::RESET_ENTITY_ALPHA(PED::GET_VEHICLE_PED_IS_IN(playerPed, false));
+		is_invisible = false;
 	}
 
 	// Vehicle Never Gets Dirty
