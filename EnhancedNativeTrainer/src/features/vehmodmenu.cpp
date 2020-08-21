@@ -2203,8 +2203,8 @@ void randomize_vehicle_upgrades(Vehicle veh) {
 			int mods = VEHICLE::GET_NUM_VEHICLE_MODS(veh, a);
 			int rand_category = -1;
 			if (mods > 0) {
-				rand_category = (rand() % mods + 0); // -1
-				if (rand_category == mods) rand_category = rand_category - 1;
+				rand_category = (rand() % (mods + 1) + 0);
+				if (rand_category == (mods + 1)) rand_category = - 1;
 				VEHICLE::SET_VEHICLE_MOD(veh, a, rand_category, true);
 			}
 		}
