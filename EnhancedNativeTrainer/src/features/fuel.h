@@ -57,7 +57,7 @@ extern int BarPositionIndex;
 extern bool BarPositionChanged;
 
 //Fuel colours_R
-const std::vector<std::string> FUEL_COLOURS_R_CAPTIONS{ "0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "210", "220", "230", "240", "250", "255" };
+const std::vector<std::string> FUEL_COLOURS_R_CAPTIONS{ "OFF", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "210", "220", "230", "240", "250", "255" };
 const int FUEL_COLOURS_R_VALUES[] = { 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 255 };
 extern int FuelColours_R_Index;
 extern bool FuelColours_R_Changed;

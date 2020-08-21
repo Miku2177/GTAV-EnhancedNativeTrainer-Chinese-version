@@ -244,6 +244,10 @@ bool JumpyVehChanged = true;
 int HeavyVehIndex = 0;
 bool HeavyVehChanged = true;
 
+//Vehicle Invisibility
+int VehInvisIndex = 0;
+bool VehInvisChanged = true;
+
 //Visualize Vehicle Indicators (Sprite)
 const std::vector<std::string> VEH_VISLIGHT_CAPTIONS{ "OFF", "1x", "3x", "5x", "7x", "10x", "12x" };
 const std::vector<double> VEH_VISLIGHT_VALUES{ 0, 0.01, 0.03, 0.05, 0.07, 0.1, 0.2 };
@@ -2391,6 +2395,12 @@ void process_veh_menu(){
 	toggleItem->toggleValue = &featureReverseWhenBraking;
 	menuItems.push_back(toggleItem);
 
+	listItem = new SelectFromListMenuItem(FUEL_COLOURS_R_CAPTIONS, onchange_veh_invisibility_index);
+	listItem->wrap = false;
+	listItem->caption = "Vehicle Invisibility";
+	listItem->value = VehInvisIndex;
+	menuItems.push_back(listItem);
+
 	draw_generic_menu<int>(menuItems, &activeLineIndexVeh, caption, onconfirm_veh_menu, NULL, NULL);
 }
 
@@ -2768,6 +2778,11 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		}
 	}
 	
+	// Vehicle Invisibility
+	if (FUEL_COLOURS_R_VALUES[VehInvisIndex] > 0 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
+		ENTITY::SET_ENTITY_ALPHA(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), FUEL_COLOURS_R_VALUES[VehInvisIndex] - 10, 0);
+	}
+
 	// Vehicle Never Gets Dirty
 	if (WORLD_REDUCEDGRIP_SNOWING_VALUES[featureNeverDirty] > 0 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
 		VEHICLE::SET_VEHICLE_DIRT_LEVEL(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 0.0);
@@ -4175,6 +4190,7 @@ void reset_vehicle_globals() {
 	turnSignalsAccelerationIndex = 4;
 	JumpyVehIndex = 0;
 	HeavyVehIndex = 0;
+	VehInvisIndex = 0;
 	speedLimiterIndex = 0;
 	speedCityLimiterIndex = 0;
 	speedCountryLimiterIndex = 0;
@@ -5139,6 +5155,7 @@ void add_vehicle_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"turnSignalsAccelerationIndex", std::to_string(turnSignalsAccelerationIndex)});
 	results->push_back(StringPairSettingDBRow{"JumpyVehIndex", std::to_string(JumpyVehIndex)});
 	results->push_back(StringPairSettingDBRow{"HeavyVehIndex", std::to_string(HeavyVehIndex)});
+	results->push_back(StringPairSettingDBRow{"VehInvisIndex", std::to_string(VehInvisIndex)});
 	results->push_back(StringPairSettingDBRow{"speedLimiterIndex", std::to_string(speedLimiterIndex)});
 	results->push_back(StringPairSettingDBRow{"speedCityLimiterIndex", std::to_string(speedCityLimiterIndex)});
 	results->push_back(StringPairSettingDBRow{"speedCountryLimiterIndex", std::to_string(speedCountryLimiterIndex)});
@@ -5243,6 +5260,9 @@ void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settin
 		}
 		else if (setting.name.compare("HeavyVehIndex") == 0) {
 			HeavyVehIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("VehInvisIndex") == 0) {
+			VehInvisIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("speedLimiterIndex") == 0){
 			speedLimiterIndex = stoi(setting.value);
@@ -5493,6 +5513,11 @@ void onchange_veh_jumpy_index(int value, SelectFromListMenuItem* source) {
 void onchange_heavy_veh_index(int value, SelectFromListMenuItem* source) {
 	HeavyVehIndex = value;
 	HeavyVehChanged = true;
+}
+
+void onchange_veh_invisibility_index(int value, SelectFromListMenuItem* source) {
+	VehInvisIndex = value;
+	VehInvisChanged = true;
 }
 
 void onchange_veh_lightsOff_index(int value, SelectFromListMenuItem* source){
