@@ -505,7 +505,7 @@ int get_current_revolver_appearance(){
 bool process_individual_weapon_menu(int weaponIndex){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
-	int originalWeapon = WEAPON::GET_SELECTED_PED_WEAPON(playerPed);
+	//int originalWeapon = WEAPON::GET_SELECTED_PED_WEAPON(playerPed);
 
 	lastSelectedWeapon = weaponIndex;
 
@@ -635,15 +635,15 @@ bool process_individual_weapon_menu(int weaponIndex){
 
 	draw_generic_menu<int>(menuItems, 0, caption, NULL, NULL, NULL, weapon_reequip_interrupt);
 
-	int unarmed = GAMEPLAY::GET_HASH_KEY("WEAPON_UNARMED");
-	if(WEAPON::HAS_PED_GOT_WEAPON(playerPed, originalWeapon, 0)){
-		if(originalWeapon != unarmed){
-			WEAPON::SET_CURRENT_PED_WEAPON(playerPed, originalWeapon, true);
-		}
-	}
-	else{
-		WEAPON::SET_CURRENT_PED_WEAPON(playerPed, unarmed, true);
-	}
+	//int unarmed = GAMEPLAY::GET_HASH_KEY("WEAPON_UNARMED");
+	//if(WEAPON::HAS_PED_GOT_WEAPON(playerPed, originalWeapon, 0)){
+	//	if(originalWeapon != unarmed){
+	//		WEAPON::SET_CURRENT_PED_WEAPON(playerPed, originalWeapon, true);
+	//	}
+	//}
+	//else{
+	//	WEAPON::SET_CURRENT_PED_WEAPON(playerPed, unarmed, true);
+	//}
 
 	return false;
 }
