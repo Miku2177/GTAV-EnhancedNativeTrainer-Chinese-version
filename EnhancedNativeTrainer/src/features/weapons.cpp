@@ -452,11 +452,12 @@ void load_saved_weapons() {
 
 	for each (SavedWeaponDBRow * sv in savedWeapon)
 	{
+		int clipMax = WEAPON::GET_MAX_AMMO_IN_CLIP(playerPed, sv->weapon, true); clipMax = min(clipMax, 250);
 		if (WEAPON::HAS_PED_GOT_WEAPON(playerPed, sv->weapon, 0)) {
 			WEAPON::REMOVE_WEAPON_FROM_PED(playerPed, sv->weapon);
-			WEAPON::GIVE_WEAPON_TO_PED(playerPed, sv->weapon, 999, false, true);
+			WEAPON::GIVE_WEAPON_TO_PED(playerPed, sv->weapon, clipMax * 2, false, true);
 		}
-		else WEAPON::GIVE_WEAPON_TO_PED(playerPed, sv->weapon, 999, false, true);
+		else WEAPON::GIVE_WEAPON_TO_PED(playerPed, sv->weapon, clipMax * 2, false, true);
 
 		if (sv->comp0 != -1) WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, sv->weapon, sv->comp0);
 		if (sv->comp1 != -1) WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, sv->weapon, sv->comp1);
@@ -469,8 +470,12 @@ void load_saved_weapons() {
 
 		WEAPON::SET_CURRENT_PED_WEAPON(playerPed, sv->weapon, 1);
 
-		WEAPON::SET_AMMO_IN_CLIP(playerPed, sv->weapon, 999);
-		WEAPON::SET_PED_AMMO(playerPed, sv->weapon, 999);
+		int maxAmmo = 0;
+		WEAPON::GET_MAX_AMMO(playerPed, sv->weapon, &maxAmmo);
+		int maxClipAmmo = WEAPON::GET_MAX_AMMO_IN_CLIP(playerPed, sv->weapon, false);
+
+		WEAPON::SET_AMMO_IN_CLIP(playerPed, sv->weapon, maxClipAmmo);
+		WEAPON::SET_PED_AMMO(playerPed, sv->weapon, maxAmmo);
 	}
 
 	for (std::vector<SavedWeaponDBRow*>::iterator it = savedWeapon.begin(); it != savedWeapon.end(); ++it)
@@ -943,10 +948,11 @@ bool spawn_saved_weapon(int slot, std::string caption)
 	std::vector<SavedWeaponDBRow*> savedWeapons = database->get_saved_weapon(slot);
 	SavedWeaponDBRow* savedWeapon = savedWeapons.at(0);
 	
+	int clipMax = WEAPON::GET_MAX_AMMO_IN_CLIP(playerPed, savedWeapon->weapon, true); clipMax = min(clipMax, 250);
 	if (WEAPON::HAS_PED_GOT_WEAPON(playerPed, savedWeapon->weapon, 0)) {
 		WEAPON::REMOVE_WEAPON_FROM_PED(playerPed, savedWeapon->weapon);
-		WEAPON::GIVE_WEAPON_TO_PED(playerPed, savedWeapon->weapon, 999, false, true);
-	} else WEAPON::GIVE_WEAPON_TO_PED(playerPed, savedWeapon->weapon, 999, false, true);
+		WEAPON::GIVE_WEAPON_TO_PED(playerPed, savedWeapon->weapon, clipMax * 2, false, true);
+	} else WEAPON::GIVE_WEAPON_TO_PED(playerPed, savedWeapon->weapon, clipMax * 2, false, true);
 		
 	if (savedWeapon->comp0 != -1) WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, savedWeapon->weapon, savedWeapon->comp0);
 	if (savedWeapon->comp1 != -1) WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, savedWeapon->weapon, savedWeapon->comp1);
@@ -959,8 +965,12 @@ bool spawn_saved_weapon(int slot, std::string caption)
 
 	WEAPON::SET_CURRENT_PED_WEAPON(playerPed, savedWeapon->weapon, 1);
 	
-	WEAPON::SET_AMMO_IN_CLIP(playerPed, savedWeapon->weapon, 999);
-	WEAPON::SET_PED_AMMO(playerPed, savedWeapon->weapon, 999);
+	int maxAmmo = 0;
+	WEAPON::GET_MAX_AMMO(playerPed, savedWeapon->weapon, &maxAmmo);
+	int maxClipAmmo = WEAPON::GET_MAX_AMMO_IN_CLIP(playerPed, savedWeapon->weapon, false);
+
+	WEAPON::SET_AMMO_IN_CLIP(playerPed, savedWeapon->weapon, maxClipAmmo);
+	WEAPON::SET_PED_AMMO(playerPed, savedWeapon->weapon, maxAmmo);
 
 	WEAPON::SET_PED_CURRENT_WEAPON_VISIBLE(playerPed, true, false, 1, 1);
 	
