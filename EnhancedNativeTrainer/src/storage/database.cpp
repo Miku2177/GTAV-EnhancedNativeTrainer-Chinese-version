@@ -1864,40 +1864,6 @@ bool ENTDatabase::save_weapon(Ped ped, std::string saveName, sqlite3_int64 slot)
 			char* weaponName = (char*)WEAPONTYPES_MOD.at(a).c_str(), * compName = (char*)VOV_WEAPONMOD_VALUES[a].at(b).c_str();
 			Hash weaponHash = GAMEPLAY::GET_HASH_KEY(weaponName), compHash = GAMEPLAY::GET_HASH_KEY(compName);
 
-			if (strcmp(weaponName, "WEAPON_SMG") == 0 && b == 0) {
-				continue;
-			}
-			if (strcmp(weaponName, "WEAPON_ASSAULTRIFLE") == 0 && b == 0) {
-				continue;
-			}
-			if (strcmp(weaponName, "WEAPON_CARBINERIFLE") == 0 && b == 0) {
-				continue;
-			}
-			if (strcmp(weaponName, "WEAPON_HEAVYSNIPER") == 0) {
-				break;
-			}
-			if (strcmp(weaponName, "WEAPON_COMBATPDW") == 0 && b == 0) {
-				continue;
-			}
-			if (strcmp(weaponName, "WEAPON_COMPACTRIFLE") == 0 && b == 0) {
-				continue;
-			}
-			if (strcmp(weaponName, "WEAPON_HEAVYSHOTGUN") == 0 && b == 0) {
-				continue;
-			}
-			if (strcmp(weaponName, "WEAPON_MACHINEPISTOL") == 0 && b == 0) {
-				continue;
-			}
-			if (strcmp(weaponName, "WEAPON_REVOLVER") == 0) {
-				break;
-			}
-			if (strcmp(weaponName, "WEAPON_SPECIALCARBINE") == 0 && b == 0) {
-				continue;
-			}
-			if (strcmp(weaponName, "WEAPON_SWITCHBLADE") == 0) {
-				break;
-			}
-
 			if (weaponHash == WEAPON::GET_SELECTED_PED_WEAPON(PLAYER::PLAYER_PED_ID())) {
 				if (WEAPON::HAS_PED_GOT_WEAPON_COMPONENT(PLAYER::PLAYER_PED_ID(), weaponHash, compHash)) {
 					if (comp_s == 0) comp0 = compHash;
