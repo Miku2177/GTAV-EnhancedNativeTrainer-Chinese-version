@@ -965,6 +965,17 @@ bool spawn_saved_weapon(int slot, std::string caption)
 
 	WEAPON::SET_CURRENT_PED_WEAPON(playerPed, savedWeapon->weapon, 1);
 	
+	// give all equipped ammo
+	for (int a = 0; a < sizeof(VOV_WEAPON_VALUES) / sizeof(VOV_WEAPON_VALUES[0]); a++) {
+		for (int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++) {
+			char* weaponName = (char*)VOV_WEAPON_VALUES[a].at(b).c_str();
+			Hash weaponHash = GAMEPLAY::GET_HASH_KEY(weaponName);
+			if (WEAPON::HAS_PED_GOT_WEAPON(playerPed, weaponHash, FALSE)) {
+				WEAPON::GIVE_WEAPON_TO_PED(playerPed, weaponHash, 10000, false, false);
+			}
+		}
+	}
+	
 	int maxAmmo = 0;
 	WEAPON::GET_MAX_AMMO(playerPed, savedWeapon->weapon, &maxAmmo);
 	int maxClipAmmo = WEAPON::GET_MAX_AMMO_IN_CLIP(playerPed, savedWeapon->weapon, false);
@@ -2187,6 +2198,17 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		}
 		if (tick_s_allw > 200 && PlayerUpdated_s) {
 			load_saved_weapons();
+			// give all equipped ammo
+			for (int a = 0; a < sizeof(VOV_WEAPON_VALUES) / sizeof(VOV_WEAPON_VALUES[0]); a++) {
+				for (int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++) {
+					char* weaponName = (char*)VOV_WEAPON_VALUES[a].at(b).c_str();
+					Hash weaponHash = GAMEPLAY::GET_HASH_KEY(weaponName);
+					if (WEAPON::HAS_PED_GOT_WEAPON(playerPed, weaponHash, FALSE)) {
+						WEAPON::GIVE_WEAPON_TO_PED(playerPed, weaponHash, 10000, false, false);
+					}
+				}
+			}
+			//
 			CONTROLS::_SET_CONTROL_NORMAL(0, 159, 1); // 160
 			WAIT(10);
 			CONTROLS::_SET_CONTROL_NORMAL(0, 157, 1);
