@@ -975,7 +975,7 @@ bool spawn_saved_weapon(int slot, std::string caption)
 			}
 		}
 	}
-	
+	//
 	int maxAmmo = 0;
 	WEAPON::GET_MAX_AMMO(playerPed, savedWeapon->weapon, &maxAmmo);
 	int maxClipAmmo = WEAPON::GET_MAX_AMMO_IN_CLIP(playerPed, savedWeapon->weapon, false);
