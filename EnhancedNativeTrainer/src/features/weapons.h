@@ -20,28 +20,28 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 const std::vector<std::string> MENU_WEAPON_CATEGORIES{"Melee", "Handguns", "Submachine Guns", "Assault Rifles", "Shotguns", "Sniper Rifles", "Heavy Weapons", "Thrown Weapons"};
 
 // Count: 19
-const std::vector<std::string> CAPTIONS_MELEE{ "Knife", "Nightstick", "Hammer", "Baseball Bat", "Chop's Ball", "Digiscanner", "Golf Club", "Crowbar", "Bottle", "Antique Dagger", "Hatchet", "Knuckle Duster", "Machete", "Flashlight", "Switchblade", "Battleaxe", "Pipe Wrench", "Poolcue", "Stone Hatchet" };
+const std::vector<std::string> CAPTIONS_MELEE{ "WT_KNIFE", "WT_NGTSTK", "WT_HAMMER", "WT_BAT Bat", "WT_BALL", "WT_DIGI", "WT_GOLFCLUB", "WT_CROWBAR", "WT_BOTTLE", "WT_DAGGER", "WT_HATCHET", "WT_KNUCKLE", "WT_MACHETE", "WT_FLASHLIGHT", "WT_SWBLADE", "WT_BATTLEAXE", "WT_WRENCH", "WT_POOLCUE", "WT_SHATCHET" };
 const std::vector<std::string> VALUES_MELEE{ "WEAPON_KNIFE", "WEAPON_NIGHTSTICK", "WEAPON_HAMMER", "WEAPON_BAT", "WEAPON_BALL", "WEAPON_DIGISCANNER", "WEAPON_GOLFCLUB", "WEAPON_CROWBAR", "WEAPON_BOTTLE", "WEAPON_DAGGER", "WEAPON_HATCHET", "WEAPON_KNUCKLE", "WEAPON_MACHETE", "WEAPON_FLASHLIGHT", "WEAPON_SWITCHBLADE", "WEAPON_BATTLEAXE", "WEAPON_WRENCH", "WEAPON_POOLCUE", "WEAPON_STONE_HATCHET" };
 // Count: 17
-const std::vector<std::string> CAPTIONS_HANDGUN{ "Pistol", "Pistol MK2", "Combat Pistol", "AP Pistol", "Pistol .50", "SNS Pistol", "SNS Pistol MK2", "Heavy Pistol", "Vintage Pistol", "Stun Gun", "Flare Gun", "Marksman Pistol", "Revolver", "Revolver MK2", "Double Action Revolver", "Up-n-Atomizer", "Ceramic Pistol", "Navy Revolver" };
+const std::vector<std::string> CAPTIONS_HANDGUN{ "WT_PIST", "WT_PIST2", "WT_PIST_CBT", "WT_PIST_AP", "WT_PIST_50", "WT_SNSPISTOL", "WT_SNSPISTOL2", "WT_HEAVYPSTL", "WT_VPISTOL", "WT_STUN", "WT_FLARE", "WT_MKPISTOL", "WT_REVOLVER", "WT_REVOLVER2", "Double Action Revolver", "Up-n-Atomizer", "Ceramic Pistol", "Navy Revolver" };
 const std::vector<std::string> VALUES_HANDGUN{ "WEAPON_PISTOL", "WEAPON_PISTOL_MK2", "WEAPON_COMBATPISTOL", "WEAPON_APPISTOL", "WEAPON_PISTOL50", "WEAPON_SNSPISTOL", "WEAPON_SNSPISTOL_MK2", "WEAPON_HEAVYPISTOL", "WEAPON_VINTAGEPISTOL", "WEAPON_STUNGUN", "WEAPON_FLAREGUN", "WEAPON_MARKSMANPISTOL", "WEAPON_REVOLVER", "WEAPON_REVOLVER_MK2", "WEAPON_DOUBLEACTION", "WEAPON_RAYPISTOL", "WEAPON_CERAMICPISTOL", "WEAPON_NAVYREVOLVER" };
 // Count: 10
-const std::vector<std::string> CAPTIONS_SUBMACHINE{ "Micro SMG", "SMG", "SMG MK2", "Assault SMG", "MG", "Combat MG", "Combat MG MK2", "Gusenberg Sweeper", "Combat PDW", "Machine Pistol", "Mini SMG" };
+const std::vector<std::string> CAPTIONS_SUBMACHINE{ "WT_SMG_MCR", "WT_SMG", "WT_SMG2", "WT_SMG_ASL", "WT_MG", "WT_MG_CBT", "WT_MG_CBT2", "WT_GUSENBERG", "WT_COMBATPDW", "WT_MCHPIST", "WT_MINISMG" };
 const std::vector<std::string> VALUES_SUBMACHINE{ "WEAPON_MICROSMG", "WEAPON_SMG", "WEAPON_SMG_MK2", "WEAPON_ASSAULTSMG", "WEAPON_MG", "WEAPON_COMBATMG", "WEAPON_COMBATMG_MK2", "WEAPON_GUSENBERG", "WEAPON_COMBATPDW", "WEAPON_MACHINEPISTOL", "WEAPON_MINISMG" };
 // Count: 8
-const std::vector<std::string> CAPTIONS_ASSAULT{ "Assault Rifle", "Assault Rifle MK2", "Bullpup Rifle MK2", "Carbine Rifle", "Carbine Rifle MK2", "Advanced Rifle", "Special Carbine", "Special Carbine MK2", "Bullpup Rifle", "Compact Rifle", "Unholy Hellbringer" };
+const std::vector<std::string> CAPTIONS_ASSAULT{ "WT_RIFLE_ASL", "WT_RIFLE_ASL2", "WT_BULLRIFLE2", "WT_RIFLE_CBN", "WT_RIFLE_CBN2", "WT_RIFLE_ADV", "WT_RIFLE_SCBN", "WT_SPCARBINE2", "WT_BULLRIFLE", "WT_CMPRIFLE", "Unholy Hellbringer" };
 const std::vector<std::string> VALUES_ASSAULT{ "WEAPON_ASSAULTRIFLE", "WEAPON_ASSAULTRIFLE_MK2", "WEAPON_BULLPUPRIFLE_MK2", "WEAPON_CARBINERIFLE", "WEAPON_CARBINERIFLE_MK2", "WEAPON_ADVANCEDRIFLE", "WEAPON_SPECIALCARBINE", "WEAPON_SPECIALCARBINE_MK2", "WEAPON_BULLPUPRIFLE", "WEAPON_COMPACTRIFLE", "WEAPON_RAYCARBINE" };
 // Count: 9
-const std::vector<std::string> CAPTIONS_SHOTGUN{ "Pump Shotgun", "Pump Shotgun MK2", "Sawed-Off Shotgun", "Bullpup Shotgun", "Assault Shotgun", "Musket", "Heavy Shotgun", "Double Barrel Shotgun", "Sweeper Shotgun" };
+const std::vector<std::string> CAPTIONS_SHOTGUN{ "WT_SG_PMP", "WT_SG_PMP2", "WT_SG_SOF", "WT_SG_BLP", "WT_SG_ASL", "WT_MUSKET", "WT_HVYSHOT", "WT_DBSHGN", "WT_HVYSHOT" };
 const std::vector<std::string> VALUES_SHOTGUN{ "WEAPON_PUMPSHOTGUN", "WEAPON_PUMPSHOTGUN_MK2", "WEAPON_SAWNOFFSHOTGUN", "WEAPON_BULLPUPSHOTGUN", "WEAPON_ASSAULTSHOTGUN", "WEAPON_MUSKET", "WEAPON_HEAVYSHOTGUN", "WEAPON_DBSHOTGUN", "WEAPON_AUTOSHOTGUN" };
 // Count: 3
-const std::vector<std::string> CAPTIONS_SNIPER{ "Sniper Rifle", "Heavy Sniper", "Heavy Sniper MK2", "Marksman Rifle", "Marksman Rifle MK2" };
+const std::vector<std::string> CAPTIONS_SNIPER{ "WT_SNIP_RIF", "WT_SNIP_HVY", "WT_SNIP_HVY2", "WT_MKRIFLE", "WT_MKRIFLE2" };
 const std::vector<std::string> VALUES_SNIPER{ "WEAPON_SNIPERRIFLE", "WEAPON_HEAVYSNIPER", "WEAPON_HEAVYSNIPER_MK2", "WEAPON_MARKSMANRIFLE", "WEAPON_MARKSMANRIFLE_MK2" };
 // Count: 7
-const std::vector<std::string> CAPTIONS_HEAVY{ "Grenade Launcher", "RPG", "Minigun", "Fireworks Launcher", "Railgun", "Homing Launcher", "Compact Grenade Launcher", "Widowmaker" };
+const std::vector<std::string> CAPTIONS_HEAVY{ "WT_GL", "WT_RPG", "WT_MINIGUN", "Fireworks Launcher", "WT_RAILGUN", "WT_HOMLNCH", "WT_CMPGL", "Widowmaker" };
 const std::vector<std::string> VALUES_HEAVY{ "WEAPON_GRENADELAUNCHER", "WEAPON_RPG", "WEAPON_MINIGUN", "WEAPON_FIREWORK", "WEAPON_RAILGUN", "WEAPON_HOMINGLAUNCHER", "WEAPON_COMPACTLAUNCHER", "WEAPON_RAYMINIGUN" };
 // Count: 10
-const std::vector<std::string> CAPTIONS_THROWN{ "Grenade", "Sticky Bomb", "Proximity Mine", "Teargas", "Molotov", "Fire Extinguisher", "Jerry Can", "Snowball", "Flare", "Pipebomb"/*, "BZ Gas"*/, "Hazard Can" };
+const std::vector<std::string> CAPTIONS_THROWN{ "WT_GNADE", "WT_GNADE_STK", "WT_PRXMINE", "WT_BZGAS", "WT_MOLOTOV", "WT_FIRE", "WT_PETROL", "WT_SNWBALL", "WT_FLARE", "WT_PIPEBOMB"/*, "BZ Gas"*/, "Hazard Can" };
 const std::vector<std::string> VALUES_THROWN{ "WEAPON_GRENADE", "WEAPON_STICKYBOMB", "WEAPON_PROXMINE", "WEAPON_SMOKEGRENADE", "WEAPON_MOLOTOV", "WEAPON_FIREEXTINGUISHER", "WEAPON_PETROLCAN", "WEAPON_SNOWBALL", "WEAPON_FLARE", "WEAPON_PIPEBOMB"/*, "WEAPON_BZGAS"*/, "WEAPON_HAZARDCAN" };
 
 
