@@ -578,6 +578,7 @@ enum WindowTints //m8 do you even int tint?
 #define TIRESMOKE_COLOR_RED 226, 6, 6
 #define TIRESMOKE_COLOR_PINK 203, 54, 148
 #define TIRESMOKE_COLOR_BROWN 180, 130, 97
+#define TIRESMOKE_COLOR_CYAN 0, 255, 255
 #define TIRESMOKE_COLOR_PATRIOT 0, 0, 0
 
 enum VehicleHashes{

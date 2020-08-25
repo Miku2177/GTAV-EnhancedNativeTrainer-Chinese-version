@@ -203,6 +203,7 @@ bool process_neon_lights_menu(){
 	}
 
 	MenuItem<int> *chooseColourAll = new MenuItem<int>();
+	//chooseColourAll->caption = UI::_GET_LABEL_TEXT("CMOD_NEON_1");
 	chooseColourAll->caption = "Choose Colour";
 	chooseColourAll->value = -2;
 	chooseColourAll->isLeaf = false;

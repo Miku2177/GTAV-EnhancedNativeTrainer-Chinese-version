@@ -514,9 +514,11 @@ bool process_individual_weapon_menu(int weaponIndex){
 
 	lastSelectedWeapon = weaponIndex;
 
-	std::string caption = VOV_WEAPON_CAPTIONS[lastSelectedWeaponCategory].at(weaponIndex);
-	if(caption.compare("Pistol .50") == 0){
-		caption = "Pistol 50"; //menu title can't handle symbols
+	std::string label_caption = VOV_WEAPON_CAPTIONS[lastSelectedWeaponCategory].at(weaponIndex);
+	//std::string label_caption = UI::_GET_LABEL_TEXT((char*)label.c_str());
+
+	if(label_caption.compare("Pistol .50") == 0){
+		label_caption = "Pistol 50"; //menu title can't handle symbols
 	}
 
 	std::string value = VOV_WEAPON_VALUES[lastSelectedWeaponCategory].at(weaponIndex);
@@ -531,7 +533,7 @@ bool process_individual_weapon_menu(int weaponIndex){
 
 	FunctionDrivenToggleMenuItem<int> *equipItem = new FunctionDrivenToggleMenuItem<int>();
 	std::stringstream ss;
-	ss << "Equip " << caption << "?";
+	ss << "Equip " << label_caption << "?";
 	equipItem->caption = ss.str();
 	equipItem->value = 1;
 	equipItem->getter_call = is_weapon_equipped;
@@ -638,7 +640,7 @@ bool process_individual_weapon_menu(int weaponIndex){
 		}
 	}
 
-	draw_generic_menu<int>(menuItems, 0, caption, NULL, NULL, NULL, weapon_reequip_interrupt);
+	draw_generic_menu<int>(menuItems, 0, label_caption, NULL, NULL, NULL, weapon_reequip_interrupt);
 
 	//int unarmed = GAMEPLAY::GET_HASH_KEY("WEAPON_UNARMED");
 	//if(WEAPON::HAS_PED_GOT_WEAPON(playerPed, originalWeapon, 0)){
@@ -725,20 +727,6 @@ bool process_weaponlist_menu(){
 
 	return draw_generic_menu<int>(menuItems, &weaponSelectionIndex, "Weapon Categories", onconfirm_weaponlist_menu, NULL, NULL);
 }
-
-//bool do_give_weapon(std::string modelName){
-	// common variables
-//	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
-//	Player player = PLAYER::PLAYER_ID();
-//	Ped playerPed = PLAYER::PLAYER_PED_ID();
-
-//	if(bPlayerExists){
-//		WEAPON::GIVE_DELAYED_WEAPON_TO_PED(playerPed, GAMEPLAY::GET_HASH_KEY((char *) modelName.c_str()), 1000, 0); return true;
-//	}
-//	else{
-//		return false;
-//	}
-//}
 
 void onchange_cop_armed_index(int value, SelectFromListMenuItem* source){ 
 	CopCurrArmedIndex = value;
@@ -1879,13 +1867,22 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 				((ENTITY::GET_ENTITY_MODEL(cur_v) == GAMEPLAY::GET_HASH_KEY("SUBMERSIBLE") || ENTITY::GET_ENTITY_MODEL(cur_v) == GAMEPLAY::GET_HASH_KEY("SUBMERSIBLE2")) && CAM::_0xEE778F8C7E1142E2(5) == 4) || 
 				(VEHICLE::IS_THIS_MODEL_A_HELI(ENTITY::GET_ENTITY_MODEL(cur_v)) && CAM::_0xEE778F8C7E1142E2(6) == 4)))) {
 			bool sniper_rifle = false;
-			if (WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_SNIPERRIFLE")) sniper_rifle = true;
-			if (WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_HEAVYSNIPER")) sniper_rifle = true;
-			if (WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_REMOTESNIPER")) sniper_rifle = true;
-			if (WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_HEAVYSNIPER_MK2")) sniper_rifle = true;
-			if (WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_MARKSMANRIFLE")) sniper_rifle = true;
-			if (WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_MARKSMANRIFLE_MK2")) sniper_rifle = true;
-			if (!sniper_rifle) UI::HIDE_HUD_COMPONENT_THIS_FRAME(14);
+
+			switch (WEAPON::GET_SELECTED_PED_WEAPON(playerPed))
+			{
+				case RAGE_JOAAT("WEAPON_SNIPERRIFLE"):
+				case RAGE_JOAAT("WEAPON_HEAVYSNIPER"):
+				case RAGE_JOAAT("WEAPON_REMOTESNIPER"):
+				case RAGE_JOAAT("WEAPON_HEAVYSNIPER_MK2"):
+				case RAGE_JOAAT("WEAPON_MARKSMANRIFLE"):
+				case RAGE_JOAAT("WEAPON_MARKSMANRIFLE_MK2"):
+					sniper_rifle = true;
+				default:
+					sniper_rifle = false;
+					UI::HIDE_HUD_COMPONENT_THIS_FRAME(14);
+			}
+		
+			//if (!sniper_rifle) UI::HIDE_HUD_COMPONENT_THIS_FRAME(14);
 		}
 	}
 	
