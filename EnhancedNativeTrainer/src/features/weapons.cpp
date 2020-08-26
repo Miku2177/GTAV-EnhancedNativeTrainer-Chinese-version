@@ -578,7 +578,8 @@ bool process_individual_weapon_menu(int weaponIndex){
 			std::vector<std::string> modCaptions = VOV_WEAPONMOD_CAPTIONS[moddableIndex];
 			for(int i = 0; i < modCaptions.size(); i++){
 				FunctionDrivenToggleMenuItem<int> *item = new FunctionDrivenToggleMenuItem<int>();
-				item->caption = modCaptions.at(i);
+				std::string label_caption = modCaptions.at(i);
+				item->caption = UI::_GET_LABEL_TEXT(&label_caption[0]);
 				item->getter_call = is_weaponmod_equipped;
 				item->setter_call = set_weaponmod_equipped;
 				item->extra_arguments.push_back(lastSelectedWeaponCategory);
