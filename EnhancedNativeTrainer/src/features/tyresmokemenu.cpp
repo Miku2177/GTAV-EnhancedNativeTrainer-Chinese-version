@@ -75,7 +75,8 @@ bool process_smoke_colour_menu(){
 		}
 
 		MenuItem<int> *item = new MenuItem<int>();
-		item->caption = SMOKE_COLORS[i].colorString;
+		std::string smoke_label = SMOKE_COLORS[i].colorString;
+		item->caption = UI::_GET_LABEL_TEXT(&smoke_label[0]);
 		item->isLeaf = true;
 		item->value = i;
 		menuItems.push_back(item);
