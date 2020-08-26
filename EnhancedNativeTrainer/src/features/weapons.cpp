@@ -514,8 +514,8 @@ bool process_individual_weapon_menu(int weaponIndex){
 
 	lastSelectedWeapon = weaponIndex;
 
-	std::string label_caption = VOV_WEAPON_CAPTIONS[lastSelectedWeaponCategory].at(weaponIndex);
-	//std::string label_caption = UI::_GET_LABEL_TEXT((char*)label.c_str());
+	std::string label = VOV_WEAPON_CAPTIONS[lastSelectedWeaponCategory].at(weaponIndex);
+	std::string label_caption = UI::_GET_LABEL_TEXT(&label[0]);
 
 	if(label_caption.compare("Pistol .50") == 0){
 		label_caption = "Pistol 50"; //menu title can't handle symbols
@@ -680,7 +680,9 @@ bool process_weapons_in_category_menu(int category){
 
 	for(int i = 0; i < VOV_WEAPON_CAPTIONS[category].size(); i++){
 		MenuItem<int> *item = new MenuItem<int>();
-		item->caption = VOV_WEAPON_CAPTIONS[category].at(i);
+		std::string label = VOV_WEAPON_CAPTIONS[category].at(i);
+		std::string label_caption = UI::_GET_LABEL_TEXT(&label[0]);
+		item->caption = label_caption;
 
 		const char* value = VOV_WEAPON_VALUES[category].at(i).c_str();
 		if(weaponSelectionIndex == 0 && GAMEPLAY::GET_HASH_KEY((char*) value) == current){

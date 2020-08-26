@@ -116,6 +116,7 @@ const std::vector<XenonColour> XENON_COLOURS = {
 	{ "Stock", 255 }
 };
 
+
 const std::vector<NeonLightsColor> NEON_COLORS = { 
 	{ "Bright White", NEON_COLOR_WHITE }, 
 	{ "Dim White", NEON_COLOR_BLACK }, 
@@ -131,7 +132,7 @@ const std::vector<NeonLightsColor> NEON_COLORS = {
 	{ "Purple", NEON_COLOR_PURPLE }, 
 	{ "Black Light", NEON_COLOR_BLACKLIGHT } };
 
-/*
+
 const std::vector<TireSmokeColor> SMOKE_COLORS = {
 	{ UI::_GET_LABEL_TEXT("CMOD_SMOKE_3"), TIRESMOKE_COLOR_WHITE },
 	{ UI::_GET_LABEL_TEXT("CMOD_SMOKE_4"), TIRESMOKE_COLOR_BLACK },
@@ -145,7 +146,8 @@ const std::vector<TireSmokeColor> SMOKE_COLORS = {
 	{ UI::_GET_LABEL_TEXT("CMOD_SMOKE_13"), TIRESMOKE_COLOR_CYAN },
 	{ UI::_GET_LABEL_TEXT("CMOD_SMOKE_PAT"), TIRESMOKE_COLOR_PATRIOT } //Missing Crew. No label for Brown.
 };
-*/
+
+/*
 const std::vector<TireSmokeColor> SMOKE_COLORS = {
 	{ "White", TIRESMOKE_COLOR_WHITE },
 	{ "Black", TIRESMOKE_COLOR_BLACK },
@@ -159,7 +161,7 @@ const std::vector<TireSmokeColor> SMOKE_COLORS = {
 	{ "Brown", TIRESMOKE_COLOR_BROWN },
 	{ "Patriot", TIRESMOKE_COLOR_PATRIOT }
 };
-
+*/
 //car name, DLC name for texture (scaleform_web.rpf > the name of the ytd file), name of car in file - no need for extracting files!
 const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 {
