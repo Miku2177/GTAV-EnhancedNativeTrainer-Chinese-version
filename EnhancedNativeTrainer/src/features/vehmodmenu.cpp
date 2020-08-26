@@ -639,7 +639,7 @@ bool onconfirm_vehmod_category_menu(MenuItem<int> choice){
 bool process_vehmod_category_special_menu(int category){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
-	std::string caption;
+	std::string caption = getLocalisedModCategory(category);;
 
 	std::vector<int> values;
 
@@ -700,11 +700,6 @@ bool process_vehmod_category_special_menu(int category){
 
 	//Find menu index to return to
 	int modChoiceMenuIndex = find_menu_index_to_restore(category, category, veh);
-
-	if(category <= 50)
-		caption = mod_slots[category];
-	else
-		caption = getLocalisedModCategory(category);
 
 	draw_generic_menu<int>(menuItems, &modChoiceMenuIndex, caption, onconfirm_vehmod_category_menu, NULL, NULL, vehicle_menu_interrupt);
 
@@ -892,7 +887,7 @@ bool process_vehmod_category_menu(int category){
 	//Find menu index to return to
 	int modChoiceMenuIndex = find_menu_index_to_restore(category, actualCategory, veh);
 
-	std::string caption = mod_slots[lastSelectedModValue];
+	std::string caption = getLocalisedModCategory(lastSelectedModValue);
 
 	return draw_generic_menu<int>(menuItems, &modChoiceMenuIndex, caption, onconfirm_vehmod_category_menu, NULL, NULL, vehicle_menu_interrupt);
 }
@@ -1300,11 +1295,6 @@ bool is_extra_enabled(std::vector<int> extras){
 void set_extra_enabled(bool applied, std::vector<int> extras){
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 	int extraIndex = extras.at(0);
-
-	/*std::ostringstream ss;
-	ss << "Asked for extra at " << extraIndex << " and state " << (applied? "true" : "false");
-	set_status_text(ss.str());*/
-
 	VEHICLE::SET_VEHICLE_EXTRA(veh, extraIndex, !applied);
 }
 
