@@ -1326,7 +1326,7 @@ bool vehicle_menu_interrupt(){
 
 void randomize_vehicle_upgrades(Vehicle veh) {
 
-	int rand_wheel_type = (rand() % 9 + 0);
+	int rand_wheel_type = (rand() % 11 + 0);
 	VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
 	VEHICLE::SET_VEHICLE_WHEEL_TYPE(veh, rand_wheel_type);
 	
