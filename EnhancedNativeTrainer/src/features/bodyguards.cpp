@@ -1293,18 +1293,7 @@ void do_spawn_bodyguard(){
 			}
 
 			if (featureBodyguardOnMap && spawning_a_ped == false) {
-				blip_body[0] = UI::ADD_BLIP_FOR_ENTITY(bodyGuard);
-				UI::SET_BLIP_AS_FRIENDLY(blip_body[0], true);
-				if (BODY_BLIPSYMBOL_VALUES[BodyBlipSymbolIndex] != NULL) UI::SET_BLIP_SPRITE(blip_body[0], BODY_BLIPSYMBOL_VALUES[BodyBlipSymbolIndex]);
-				else UI::SET_BLIP_SPRITE(blip_body[0], BODY_BLIPSYMBOL_VALUES[0]);
-				UI::SET_BLIP_CATEGORY(blip_body[0], 2);
-				if (featureBodyBlipNumber) UI::SHOW_NUMBER_ON_BLIP(blip_body[0], BLIPTABLE_BODYGUARD.size());
-				if (LIMP_IF_INJURED_VALUES[BodyBlipFlashIndex] == 1) UI::SET_BLIP_FLASHES(blip_body[0], true);
-				if (LIMP_IF_INJURED_VALUES[BodyBlipFlashIndex] == 2) UI::SET_BLIP_FLASHES_ALTERNATE(blip_body[0], true);
-				UI::SET_BLIP_SCALE(blip_body[0], BODY_BLIPSIZE_VALUES[BodyBlipSizeIndex]);
-				UI::SET_BLIP_COLOUR(blip_body[0], BODY_BLIPCOLOUR_VALUES[BodyBlipColourIndex]);
-				UI::SET_BLIP_AS_SHORT_RANGE(blip_body[0], true);
-				BLIPTABLE_BODYGUARD.push_back(blip_body[0]);
+				add_body_blip();
 			}
 			if (!featureBodyguardOnMap) {
 				if (!BLIPTABLE_BODYGUARD.empty()) {
@@ -1474,6 +1463,27 @@ void do_add_near_bodyguard() {
 	added_nearest_b = true;
 	do_spawn_bodyguard();
 	return;
+}
+
+void add_body_blip() {
+	if (!BLIPTABLE_BODYGUARD.empty()) {
+		for (int j = 0; j < BLIPTABLE_BODYGUARD.size(); j++) UI::REMOVE_BLIP(&BLIPTABLE_BODYGUARD[j]);
+	}
+	BLIPTABLE_BODYGUARD.clear();
+	BLIPTABLE_BODYGUARD.shrink_to_fit();
+	for (int j = 0; j < spawnedENTBodyguards.size(); j++) {
+		blip_body[0] = UI::ADD_BLIP_FOR_ENTITY(spawnedENTBodyguards[j]);
+		UI::SET_BLIP_AS_FRIENDLY(blip_body[0], true);
+		if (BODY_BLIPSYMBOL_VALUES[BodyBlipSymbolIndex] != NULL) UI::SET_BLIP_SPRITE(blip_body[0], BODY_BLIPSYMBOL_VALUES[BodyBlipSymbolIndex]);
+		else UI::SET_BLIP_SPRITE(blip_body[0], BODY_BLIPSYMBOL_VALUES[0]);
+		UI::SET_BLIP_CATEGORY(blip_body[0], 2);
+		if (featureBodyBlipNumber) UI::SHOW_NUMBER_ON_BLIP(blip_body[0], BLIPTABLE_BODYGUARD.size());
+		if (LIMP_IF_INJURED_VALUES[BodyBlipFlashIndex] == 1) UI::SET_BLIP_FLASHES(blip_body[0], true);
+		if (LIMP_IF_INJURED_VALUES[BodyBlipFlashIndex] == 2) UI::SET_BLIP_FLASHES_ALTERNATE(blip_body[0], true);
+		UI::SET_BLIP_SCALE(blip_body[0], BODY_BLIPSIZE_VALUES[BodyBlipSizeIndex]);
+		UI::SET_BLIP_COLOUR(blip_body[0], BODY_BLIPCOLOUR_VALUES[BodyBlipColourIndex]);
+		BLIPTABLE_BODYGUARD.push_back(blip_body[0]);
+	}
 }
 
 bool not_bodyguards_in_vehicle()
@@ -1646,6 +1656,7 @@ void maintain_bodyguards(){
 				if (featureBodyguardDespawn) ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&spawnedENTBodyguards[i]);
 				spawnedENTBodyguards.erase(spawnedENTBodyguards.begin() + i);
 				spawnedBodyguardsSecWeap.erase(spawnedBodyguardsSecWeap.begin() + i);
+				add_body_blip();
 				requireRefreshOfBodyguardMainMenu = true;
 			}
 		} // end of for (int i = 0; i < spawnedENTBodyguards.size(); i++)
@@ -1898,8 +1909,14 @@ bool process_bodyguard_menu(){
 		menuItems.push_back(item);
 
 		item = new MenuItem<int>();
-		item->caption = "Toggle Bodyguards To Follow Player";
+		item->caption = "Dismiss Bodyguard";
 		item->value = 3;
+		item->isLeaf = true;
+		menuItems.push_back(item);
+
+		item = new MenuItem<int>();
+		item->caption = "Toggle Bodyguards To Follow Player";
+		item->value = 4;
 		item->isLeaf = true;
 		menuItems.push_back(item);
 
@@ -1907,25 +1924,25 @@ bool process_bodyguard_menu(){
 		std::ostringstream ss3;
 		ss3 << "Spawn Ped: " << get_current_model_name();
 		item->caption = ss3.str();
-		item->value = 4;
+		item->value = 5;
 		item->isLeaf = true;
 		menuItems.push_back(item);
 		
 		item = new MenuItem<int>();
 		item->caption = "Saved Bodyguards";
-		item->value = 5;
-		item->isLeaf = false;
-		menuItems.push_back(item);
-
-		item = new MenuItem<int>();
-		item->caption = "Choose Model";
 		item->value = 6;
 		item->isLeaf = false;
 		menuItems.push_back(item);
 
 		item = new MenuItem<int>();
-		item->caption = "Choose Weapons";
+		item->caption = "Choose Model";
 		item->value = 7;
+		item->isLeaf = false;
+		menuItems.push_back(item);
+
+		item = new MenuItem<int>();
+		item->caption = "Choose Weapons";
+		item->value = 8;
 		item->isLeaf = false;
 		menuItems.push_back(item);
 
@@ -1944,7 +1961,7 @@ bool process_bodyguard_menu(){
 
 		item = new MenuItem<int>();
 		item->caption = "Mark On Map";
-		item->value = 10;
+		item->value = 11;
 		item->isLeaf = false;
 		menuItems.push_back(item);
 
@@ -2008,7 +2025,7 @@ bool process_bodyguard_menu(){
 
 		item = new MenuItem<int>();
 		item->caption = "Add/Remove Weapons";
-		item->value = 20;
+		item->value = 21;
 		item->isLeaf = true;
 		menuItems.push_back(item);
 
@@ -2039,27 +2056,77 @@ bool onconfirm_bodyguard_menu(MenuItem<int> choice){
 			dismiss_bodyguards();
 			break;
 		case 3:
+		{
+			keyboard_on_screen_already = true;
+			curr_message = "Enter a number of the bodyguard (that is above his head) you want to dismiss:";
+			std::string result_bod = show_keyboard("Enter Name Manually", NULL);
+			if (!result_bod.empty())
+			{
+				result_bod = trim(result_bod);
+				std::string::size_type sz;
+				for (int i = 0; i < 7; i++) {
+					sprintf(temp_n, "%i", i);
+					if (result_bod == temp_n) is_it_n = true;
+				}
+				if (is_it_n == true) {
+					b_curr_num = std::stof(result_bod, &sz);
+					is_it_n = false;
+				}
+				if (!spawnedENTBodyguards.empty() && b_curr_num > -1 && b_curr_num < spawnedENTBodyguards.size()) {
+					ENTITY::SET_ENTITY_INVINCIBLE(spawnedENTBodyguards[b_curr_num], false);
+					PED::SET_PED_NEVER_LEAVES_GROUP(spawnedENTBodyguards[b_curr_num], false);
+					PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(spawnedENTBodyguards[b_curr_num], false);
+					PED::REMOVE_PED_FROM_GROUP(spawnedENTBodyguards[b_curr_num]);
+					if (featureBodyguardDespawn) {
+						AI::CLEAR_PED_TASKS(spawnedENTBodyguards[b_curr_num]);
+						ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&spawnedENTBodyguards[b_curr_num]);
+					}
+					spawnedENTBodyguards.erase(spawnedENTBodyguards.begin() + b_curr_num);
+					if (featureBodyguardOnMap && !BLIPTABLE_BODYGUARD.empty()) {
+						add_body_blip();
+					}
+					return false;
+				}
+				else {
+					if (spawnedENTBodyguards.empty()) {
+						std::ostringstream ss;
+						ss << "No bodyguards found";
+						set_status_text(ss.str());
+						return false;
+					}
+					if (b_curr_num < 0 || b_curr_num >= spawnedENTBodyguards.size()) {
+						std::ostringstream ss;
+						ss << "Wrong number";
+						set_status_text(ss.str());
+						return false;
+					}
+				}
+			}
+			return false;
+			//break;
+		}
+		case 4:
 			stop_b = !stop_b;
 			if (stop_b) set_status_text("Stay Put");
 			else set_status_text("Follow");
 			break;
-		case 4:
+		case 5:
 			spawning_a_ped = true;
 			do_spawn_bodyguard();
 			break;
-		case 5:
+		case 6:
 			process_bod_savedskin_menu();
 			break;
-		case 6:
+		case 7:
 			process_bodyguard_skins_menu();
 			break;
-		case 7:
+		case 8:
 			process_bodyguard_weapons_menu();
 			break;
-		case 10:
+		case 11:
 			process_bodyguard_blips_menu();
 			break;
-		case 20:
+		case 21:
 			c_armed = !c_armed;
 			if (c_armed) set_status_text("Armed");
 			else set_status_text("Disarmed");

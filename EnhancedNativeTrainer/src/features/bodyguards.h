@@ -50,6 +50,8 @@ void do_spawn_bodyguard();
 
 void do_add_near_bodyguard();
 
+void add_body_blip();
+
 void add_bodyguards_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results);
 
 void add_bodyguards_generic_settings(std::vector<StringPairSettingDBRow>* results);
