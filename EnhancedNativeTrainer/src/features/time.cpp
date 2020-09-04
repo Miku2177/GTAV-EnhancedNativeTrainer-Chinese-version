@@ -141,7 +141,7 @@ bool onconfirm_time_flowrate_menu(MenuItem<int> choice) {
 			set_status_text("Time synced with system");
 		}
 	}
-	else if (choice.value == 1) {
+	else if (choice.value == 666) {
 		if (timeFlowRateIndex != 0) {
 			frozentimestate = timeFlowRateIndex;
 			timeFlowRateIndex = 0;
@@ -215,7 +215,7 @@ void all_time_flow_rate() {
 
 		item = new MenuItem<int>();
 		item->caption = "Toggle Frozen Time On/Off";
-		item->value = 1;
+		item->value = 666;
 		item->isLeaf = true;
 		menuItems.push_back(item);
 
@@ -780,7 +780,7 @@ void update_time_features(Player player){
 		}
 	}
 
-	if((is_in_airbrake_mode() && is_airbrake_frozen_time()) || is_in_prop_placement_mode() && is_prop_placement_frozen_time()){
+	if((is_in_airbrake_mode() && is_airbrake_frozen_time()) || (is_in_prop_placement_mode() && is_prop_placement_frozen_time())){
 		GAMEPLAY::SET_TIME_SCALE(0.0f);
 		weHaveChangedTimeScale = true;
 	}
