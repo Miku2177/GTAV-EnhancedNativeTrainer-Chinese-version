@@ -36,6 +36,9 @@ Hash tmp_w = -1;
 std::string lastCustomBodyguardSpawn;
 std::string value;
 
+std::string selBodyWeapons;
+bool under_weapon_menu = false;
+
 bool spawning_a_ped = false;
 
 int someone_shooting = 0;
@@ -964,7 +967,7 @@ bool process_animal_skins_menu(){
 
 bool onconfirm_bodyguard_weapons_category_menu(MenuItem<int> choice){
 	int category = choice.sortval;
-
+	
 	switch(choice.value){
 		case -1:
 			for(int a = 0; a < bodyguardWeaponsToggle[category].size(); a++){
@@ -984,6 +987,7 @@ bool process_bodyguard_weapons_category_menu(int category){
 	MenuItem<int> *item;
 	ToggleMenuItem<int> *toggleItem;
 	int index = -1;
+	under_weapon_menu = true;
 
 	item = new MenuItem<int>();
 	item->caption = "Toggle All Weapons In Category";
@@ -1033,6 +1037,7 @@ bool process_bodyguard_weapons_menu(){
 	std::vector<MenuItem<int> *> menuItems;
 	MenuItem<int> *item;
 	int index = 0;
+	under_weapon_menu = true;
 
 	for(auto a : MENU_WEAPON_CATEGORIES){
 		item = new MenuItem<int>();
@@ -1526,6 +1531,18 @@ void maintain_bodyguards(){
 		}
 	}
 	
+	// weapons selection
+	if (under_weapon_menu == true && (IsKeyDown(KeyConfig::KEY_MENU_SELECT) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, INPUT_FRONTEND_ACCEPT) || IsKeyDown(KeyConfig::KEY_MENU_BACK) || IsKeyDown(KeyConfig::KEY_TOGGLE_MAIN_MENU))) {
+		selBodyWeapons = "";
+		for (int a = 0; a < MENU_WEAPON_CATEGORIES.size(); a++) {
+			for (int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++) {
+				if (*bodyguardWeaponsToggle[a].at(b) == true) {
+					selBodyWeapons = selBodyWeapons + std::to_string(a) + "," + std::to_string(b) + " ";
+				};
+			}
+		}
+	}
+
 	// 'follow in vehicle' messages
 	if (b_follow_m == -2) b_follow_m = FollowInVehicleIndex;
 	if (FollowInVehicleIndex == 0 && b_follow_m != 0) b_follow_m = FollowInVehicleIndex;
@@ -2035,6 +2052,43 @@ bool process_bodyguard_menu(){
 					bodyguardWeaponsToggle[a].push_back(new bool(true));
 				}
 			}
+
+			if (selBodyWeapons != "") {
+				std::string tmp_a_row, tmp_b_row;
+				int found_separator = 0;
+
+				for (int a = 0; a < MENU_WEAPON_CATEGORIES.size(); a++) {
+					for (int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++) {
+						*bodyguardWeaponsToggle[a].at(b) = false;
+					}
+				}
+
+				for (int k = 0; k < selBodyWeapons.size(); k++) {
+					if (found_separator == 0 && selBodyWeapons[k] != *"," && selBodyWeapons[k] != *" ") {
+						tmp_a_row = tmp_a_row + selBodyWeapons[k];
+					}
+					if (found_separator == 0 && selBodyWeapons[k] == *",") {
+						found_separator = 1;
+					}
+					if (found_separator == 1 && selBodyWeapons[k] != *" " && selBodyWeapons[k] != *",") {
+						tmp_b_row = tmp_b_row + selBodyWeapons[k];
+					}
+					if (found_separator == 1 && (selBodyWeapons[k] == *" " || (k == (selBodyWeapons.size() - 1)))) {
+						std::string::size_type sz;
+						for (int a = 0; a < MENU_WEAPON_CATEGORIES.size(); a++) {
+							for (int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++) {
+								if (a == std::stoi(tmp_a_row, &sz) && b == std::stoi(tmp_b_row, &sz)) {
+									*bodyguardWeaponsToggle[a].at(b) = true;
+								};
+							}
+						}
+
+						found_separator = 0;
+						tmp_a_row = "";
+						tmp_b_row = "";
+					}
+				}
+			}
 			bodyguardWeaponsToggleInitialized = true;
 		}
 
@@ -2045,6 +2099,8 @@ bool process_bodyguard_menu(){
 }
 
 bool onconfirm_bodyguard_menu(MenuItem<int> choice){
+	under_weapon_menu = false;
+
 	switch (activeLineIndexBodyguards) {
 		case 0:
 			do_spawn_bodyguard();
@@ -2167,6 +2223,7 @@ void add_bodyguards_generic_settings(std::vector<StringPairSettingDBRow>* result
 	results->push_back(StringPairSettingDBRow{"skinTypesBodyguardMenuLastConfirmed0", std::to_string(skinTypesBodyguardMenuLastConfirmed[0])});
 	results->push_back(StringPairSettingDBRow{"skinTypesBodyguardMenuLastConfirmed1", std::to_string(skinTypesBodyguardMenuLastConfirmed[1])});
 	results->push_back(StringPairSettingDBRow{"lastCustomBodyguardSpawn", lastCustomBodyguardSpawn});
+	results->push_back(StringPairSettingDBRow{"selBodyWeapons", selBodyWeapons});
 }
 
 void handle_generic_settings_bodyguards(std::vector<StringPairSettingDBRow>* settings){
@@ -2216,6 +2273,9 @@ void handle_generic_settings_bodyguards(std::vector<StringPairSettingDBRow>* set
 		}
 		else if (setting.name.compare("lastCustomBodyguardSpawn") == 0) {
 			lastCustomBodyguardSpawn = setting.value;
+		}
+		else if (setting.name.compare("selBodyWeapons") == 0) {
+			selBodyWeapons = setting.value;
 		}
 	}
 }
