@@ -45,21 +45,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 //bool AIMBOT_INCLUDED = true;
 
-char* C_WEATHER_1 = "";
-char* C_WEATHER_2 = "";
-char* C_WEATHER_3 = "";
-char* C_WEATHER_4 = "";
-char* C_WEATHER_5 = "";
-char* C_WEATHER_6 = "";
-char* C_WEATHER_7 = "";
-char* C_WEATHER_8 = "";
-char* C_WEATHER_9 = "";
-char* C_WEATHER_10 = "";
-char* C_WEATHER_11 = "";
-char* C_WEATHER_12 = "";
-char* C_WEATHER_13 = "";
-char* C_WEATHER_14 = "";
-char* C_WEATHER_15 = "";
+std::string C_WEATHER_C;
 
 bool player_died = false;
 bool npc_player_died = false;

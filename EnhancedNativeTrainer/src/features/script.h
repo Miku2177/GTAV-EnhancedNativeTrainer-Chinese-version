@@ -74,21 +74,7 @@ extern bool super_jump_no_parachute;
 extern int myENTGroup;
 //extern bool AIMBOT_INCLUDED;
 
-extern char* C_WEATHER_1;
-extern char* C_WEATHER_2;
-extern char* C_WEATHER_3;
-extern char* C_WEATHER_4;
-extern char* C_WEATHER_5;
-extern char* C_WEATHER_6;
-extern char* C_WEATHER_7;
-extern char* C_WEATHER_8;
-extern char* C_WEATHER_9;
-extern char* C_WEATHER_10;
-extern char* C_WEATHER_11;
-extern char* C_WEATHER_12;
-extern char* C_WEATHER_13;
-extern char* C_WEATHER_14;
-extern char* C_WEATHER_15;
+extern std::string C_WEATHER_C;
 
 //Limp If Injured
 const std::vector<std::string> LIMP_IF_INJURED_CAPTIONS{ "OFF", "Mode 1", "Mode 2" };
