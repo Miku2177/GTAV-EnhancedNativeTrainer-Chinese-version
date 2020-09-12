@@ -187,21 +187,21 @@ void read_config_file(){
 				VariantInit(&var);
 				attribNode->get_nodeValue(&var);
 				attrib_weather = _com_util::ConvertBSTRToString(V_BSTR(&var));
-				if (i == 0) C_WEATHER_1 = _com_util::ConvertBSTRToString(V_BSTR(&var));
-				if (i == 1) C_WEATHER_2 = _com_util::ConvertBSTRToString(V_BSTR(&var));
-				if (i == 2) C_WEATHER_3 = _com_util::ConvertBSTRToString(V_BSTR(&var));
-				if (i == 3) C_WEATHER_4 = _com_util::ConvertBSTRToString(V_BSTR(&var));
-				if (i == 4) C_WEATHER_5 = _com_util::ConvertBSTRToString(V_BSTR(&var));
-				if (i == 5) C_WEATHER_6 = _com_util::ConvertBSTRToString(V_BSTR(&var));
-				if (i == 6) C_WEATHER_7 = _com_util::ConvertBSTRToString(V_BSTR(&var));
-				if (i == 7) C_WEATHER_8 = _com_util::ConvertBSTRToString(V_BSTR(&var));
-				if (i == 8) C_WEATHER_9 = _com_util::ConvertBSTRToString(V_BSTR(&var));
-				if (i == 9) C_WEATHER_10 = _com_util::ConvertBSTRToString(V_BSTR(&var));
-				if (i == 10) C_WEATHER_11 = _com_util::ConvertBSTRToString(V_BSTR(&var));
-				if (i == 11) C_WEATHER_12 = _com_util::ConvertBSTRToString(V_BSTR(&var));
-				if (i == 12) C_WEATHER_13 = _com_util::ConvertBSTRToString(V_BSTR(&var));
-				if (i == 13) C_WEATHER_14 = _com_util::ConvertBSTRToString(V_BSTR(&var));
-				if (i == 14) C_WEATHER_15 = _com_util::ConvertBSTRToString(V_BSTR(&var));
+				if (i == 0) C_WEATHER_C = C_WEATHER_C + _com_util::ConvertBSTRToString(V_BSTR(&var)) + " ";
+				if (i == 1) C_WEATHER_C = C_WEATHER_C + _com_util::ConvertBSTRToString(V_BSTR(&var)) + " ";
+				if (i == 2) C_WEATHER_C = C_WEATHER_C + _com_util::ConvertBSTRToString(V_BSTR(&var)) + " ";
+				if (i == 3) C_WEATHER_C = C_WEATHER_C + _com_util::ConvertBSTRToString(V_BSTR(&var)) + " ";
+				if (i == 4) C_WEATHER_C = C_WEATHER_C + _com_util::ConvertBSTRToString(V_BSTR(&var)) + " ";
+				if (i == 5) C_WEATHER_C = C_WEATHER_C + _com_util::ConvertBSTRToString(V_BSTR(&var)) + " ";
+				if (i == 6) C_WEATHER_C = C_WEATHER_C + _com_util::ConvertBSTRToString(V_BSTR(&var)) + " ";
+				if (i == 7) C_WEATHER_C = C_WEATHER_C + _com_util::ConvertBSTRToString(V_BSTR(&var)) + " ";
+				if (i == 8) C_WEATHER_C = C_WEATHER_C + _com_util::ConvertBSTRToString(V_BSTR(&var)) + " ";
+				if (i == 9) C_WEATHER_C = C_WEATHER_C + _com_util::ConvertBSTRToString(V_BSTR(&var)) + " ";
+				if (i == 10) C_WEATHER_C = C_WEATHER_C + _com_util::ConvertBSTRToString(V_BSTR(&var)) + " ";
+				if (i == 11) C_WEATHER_C = C_WEATHER_C + _com_util::ConvertBSTRToString(V_BSTR(&var)) + " ";
+				if (i == 12) C_WEATHER_C = C_WEATHER_C + _com_util::ConvertBSTRToString(V_BSTR(&var)) + " ";
+				if (i == 13) C_WEATHER_C = C_WEATHER_C + _com_util::ConvertBSTRToString(V_BSTR(&var)) + " ";
+				if (i == 14) C_WEATHER_C = C_WEATHER_C + _com_util::ConvertBSTRToString(V_BSTR(&var));
 			}
 
 			SysFreeString(keyconf_bstr);
