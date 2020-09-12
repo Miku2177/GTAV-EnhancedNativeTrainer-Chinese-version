@@ -481,7 +481,9 @@ bool process_vehmod_wheel_selection(){
 
 	for (int a = 0; a < VEHICLE::GET_NUM_VEHICLE_MODS(veh, 23); a++) {
 		item = new MenuItem<int>();
-		item->caption = UI::_GET_LABEL_TEXT(VEHICLE::GET_MOD_TEXT_LABEL(veh, MOD_FRONTWHEELS, a));
+		//item->caption = UI::_GET_LABEL_TEXT(VEHICLE::GET_MOD_TEXT_LABEL(veh, MOD_FRONTWHEELS, a));
+		if (UI::DOES_TEXT_LABEL_EXIST(VEHICLE::GET_MOD_TEXT_LABEL(veh, MOD_FRONTWHEELS, a))) item->caption = UI::_GET_LABEL_TEXT(VEHICLE::GET_MOD_TEXT_LABEL(veh, MOD_FRONTWHEELS, a));
+		else item->caption = VEHICLE::GET_MOD_TEXT_LABEL(veh, MOD_FRONTWHEELS, a);
 		item->value = a;
 
 		/*
