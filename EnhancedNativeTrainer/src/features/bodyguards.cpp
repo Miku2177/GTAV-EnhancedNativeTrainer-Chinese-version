@@ -1642,7 +1642,7 @@ void maintain_bodyguards(){
 				}
 				if (PED::IS_PED_FLEEING(spawnedENTBodyguards[i])) AI::TASK_STAND_STILL(spawnedENTBodyguards[i], 10000);
 			}
-			// modify skin
+			// show numbers above heads
 			if (menu_showing == true && GAMEPLAY::UPDATE_ONSCREEN_KEYBOARD() != 0) {
 				Vector3 head_c = PED::GET_PED_BONE_COORDS(spawnedENTBodyguards[i], 31086, 0, 0, 0);
 				std::string curr_i = std::to_string(i);

@@ -1880,12 +1880,12 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 				case RAGE_JOAAT("WEAPON_MARKSMANRIFLE"):
 				case RAGE_JOAAT("WEAPON_MARKSMANRIFLE_MK2"):
 					sniper_rifle = true;
-				default:
-					sniper_rifle = false;
-					UI::HIDE_HUD_COMPONENT_THIS_FRAME(14);
+				//default:
+				//	sniper_rifle = false;
+				//	UI::HIDE_HUD_COMPONENT_THIS_FRAME(14);
 			}
 		
-			//if (!sniper_rifle) UI::HIDE_HUD_COMPONENT_THIS_FRAME(14);
+			if (sniper_rifle == false) UI::HIDE_HUD_COMPONENT_THIS_FRAME(14);
 		}
 	}
 	
