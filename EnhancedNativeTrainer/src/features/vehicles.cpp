@@ -4393,7 +4393,8 @@ bool onconfirm_spawn_menu_cars(MenuItem<int> choice){
 		MenuItem<int>* item = new MenuItem<int>();
 		
 		if (get_vehicle_make_and_model(hash).compare("NULL") == 0 || get_vehicle_make_and_model(hash).compare("") == 0)
-			item->caption = "Item " + std::to_string(itemIndex);
+			//item->caption = "Item " + std::to_string(itemIndex);
+			item->caption = GetVehicleModelName(hash);
 		else
 			item->caption = get_vehicle_make_and_model(hash);
 		item->value = hash;

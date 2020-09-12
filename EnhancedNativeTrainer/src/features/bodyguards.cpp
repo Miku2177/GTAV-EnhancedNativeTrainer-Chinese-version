@@ -998,7 +998,9 @@ bool process_bodyguard_weapons_category_menu(int category){
 
 	for(auto a : VOV_WEAPON_CAPTIONS[category]){
 		toggleItem = new ToggleMenuItem<int>();
-		toggleItem->caption = UI::_GET_LABEL_TEXT((char*)a.c_str()); // a;
+		//toggleItem->caption = UI::_GET_LABEL_TEXT((char*)a.c_str()); // a;
+		if (UI::DOES_TEXT_LABEL_EXIST((char*)a.c_str())) toggleItem->caption = UI::_GET_LABEL_TEXT((char*)a.c_str());
+		else toggleItem->caption = a;
 		toggleItem->value = index;
 		toggleItem->toggleValue = bodyguardWeaponsToggle[category].at(index++);
 		toggleItem->toggleValueUpdated = nullptr;
