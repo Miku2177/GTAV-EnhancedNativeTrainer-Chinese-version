@@ -670,7 +670,6 @@ bool onconfirm_weapon_in_category(MenuItem<int> choice){
 	return false;
 }
 
-
 bool process_weapons_in_category_menu(int category){
 	lastSelectedWeaponCategory = category;
 	std::vector<MenuItem<int>*> menuItems;
@@ -2538,6 +2537,8 @@ void set_weaponmod_equipped(bool equipped, std::vector<int> extras){
 	}
 	else{
 		WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, weapHash, componentHash);
+		int maxClipAmmo = WEAPON::GET_MAX_AMMO_IN_CLIP(playerPed, weapHash, false);
+		WEAPON::SET_AMMO_IN_CLIP(playerPed, weapHash, maxClipAmmo);
 	}
 }
 
