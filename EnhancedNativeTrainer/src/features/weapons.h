@@ -231,7 +231,7 @@ const std::vector<float> WEAP_DMG_FLOAT{1.0, 1.5, 2.0, 3.0, 5.0, 10.0, 50.0, 100
 const int PARACHUTE_ID = 0xFBAB5776;
 
 const int TOTAL_WEAPONS_COUNT = 86;
-const int TOTAL_WEAPONS_SLOTS = 81;
+//const int TOTAL_WEAPONS_SLOTS = 81;
 const int MAX_MOD_SLOTS = 15; 
 
 extern bool featureNightVision;
