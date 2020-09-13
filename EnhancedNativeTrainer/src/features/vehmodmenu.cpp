@@ -407,7 +407,7 @@ std::string getNormalItemTitle(Vehicle veh, int category, int index){
 
 		if (!foundName){
 			std::ostringstream ss;
-			if(category <= 50)
+			if(category <= 50 || mod_slots[lastSelectedModValue] != "")
 				ss << mod_slots[lastSelectedModValue] << " Item " << (index + 1);
 			else
 				ss <<getLocalisedModCategory(category) << " Item " << (index + 1);
@@ -1094,7 +1094,10 @@ bool process_vehmod_menu(){
 				int mods = VEHICLE::GET_NUM_VEHICLE_MODS(veh, i);
 				if (mods > 0) {
 					ss.str(""), ss.clear();
-					ss << mod_slots[i] << " ~HUD_COLOUR_GREYLIGHT~(" << (mods + 1) << ")";
+					if(mod_slots[i] != "")
+						ss << mod_slots[i] << " ~HUD_COLOUR_GREYLIGHT~(" << (mods + 1) << ")";
+					else 
+						ss << getLocalisedModCategory(i) << " ~HUD_COLOUR_GREYLIGHT~(" << (mods + 1) << ")";
 
 					MenuItem<int>* item = new MenuItem<int>();
 					item->caption = ss.str();
