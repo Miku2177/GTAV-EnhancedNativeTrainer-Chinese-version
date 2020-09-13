@@ -1171,9 +1171,9 @@ void update_world_features()
 	// Waves Intensity
 	if (featureSnow) {
 		winter_water_tick = winter_water_tick + 1;
-		if (winter_water_tick < 9000) GAMEPLAY::_0xC54A08C85AE4D410(3.0f); // 10000
-		if (winter_water_tick > 8999 && winter_water_tick < 9300) GAMEPLAY::_0xC54A08C85AE4D410(0.0f); // 9999 10300
-		if (winter_water_tick > 9299) winter_water_tick = 0; // 10299
+		if (winter_water_tick < 7000) GAMEPLAY::_0xC54A08C85AE4D410(3.0f); // 10000
+		if (winter_water_tick > 6999 && winter_water_tick < 7300) GAMEPLAY::_0xC54A08C85AE4D410(0.0f); // 9999 10300
+		if (winter_water_tick > 7299) winter_water_tick = 0; // 10299
 	}
 	if (WORLD_WAVES_VALUES[WorldWavesIndex] != -400000 && !featureSnow) GAMEPLAY::_0xC54A08C85AE4D410(0.0f);
 	if (WORLD_WAVES_VALUES[WorldWavesIndex] == -1 && wavesstrength_toggle == false) {
