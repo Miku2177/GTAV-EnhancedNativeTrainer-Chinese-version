@@ -2099,6 +2099,12 @@ void process_veh_menu(){
 
 	int i = 0;
 
+	if (!UI::HAS_THIS_ADDITIONAL_TEXT_LOADED("MOD_MNU", 10)) {
+		UI::CLEAR_ADDITIONAL_TEXT(10, true);
+		UI::REQUEST_ADDITIONAL_TEXT("MOD_MNU", 10);
+		WAIT(0);
+	}
+
 	item = new MenuItem<int>();
 	item->caption = "Vehicle Spawner";
 	item->value = i++;
