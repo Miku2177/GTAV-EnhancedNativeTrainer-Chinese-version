@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ent-config>
+  <keys>
+    <!--
+    A listing of available key values is available at http://www.garybeene.com/code/gbsnippets_gbs_00292.htm 
+    Most if not all of those are supported, at least in theory.
+    For now, if you want controller input, you need to map it to a key first using some utility.
+    If you cock up this file and enter an invalid key, the default will be used instead.
+    If you manage to assign the same key to multiple functions, who knows?
+    
+    Use VK_NOTHING to signify no assignment.
+    
+    -->
+    <key function="toggle_main_menu" value="VK_F4"/>
+
+    <key function="menu_up" value="VK_NUMPAD8"/>
+    <key function="menu_down" value="VK_NUMPAD2"/>
+    <key function="menu_left" value="VK_NUMPAD4"/>
+    <key function="menu_right" value="VK_NUMPAD6"/>
+    <key function="menu_select" value="VK_NUMPAD5"/>
+    <key function="menu_back" value="VK_NUMPAD0"/>
+
+    <key function="veh_boost" value="VK_NUMPAD9"/> <!--this is what speeds up a vehicle-->
+    <key function="veh_stop" value="VK_NUMPAD3"/> <!--this is what stops a vehicle immediately-->
+    <key function="veh_rockets" value="VK_ADD"/>
+    <key function="veh_leftblink" value="VK_LEFT"/>
+    <key function="veh_rightblink" value="VK_RIGHT"/>
+    <key function="veh_emergencyblink" value="VK_DECIMAL"/>
+    <key function="veh_startrefueling" value="VK_KEY_E"/>
+    <key function="veh_stoprefueling" value="VK_KEY_S"/>
+		
+    <!--The following are for the feature that lets you move around beyond normal limits, e.g. noclip-->
+    
+    <key function="toggle_airbrake" value="VK_F6"/>
+    
+    <key function="airbrake_up" value="VK_KEY_Q"/>
+    <key function="airbrake_down" value="VK_KEY_Z"/>
+    <key function="airbrake_forward" value="VK_KEY_W"/>
+    <key function="airbrake_back" value="VK_KEY_S"/>
+    <key function="airbrake_rotate_left" value="VK_KEY_A"/>
+    <key function="airbrake_rotate_right" value="VK_KEY_D"/>
+    <key function="airbrake_move_aside" value="VK_SPACE"/>
+    <key function="airbrake_mouse_control" value="VK_KEY_M"/>
+    <key function="airbrake_speed" value="VK_SHIFT"/>
+    <key function="airbrake_freeze_time" value="VK_KEY_T"/>
+    <key function="airbrake_help" value="VK_KEY_H"/>
+	
+    <key function="objectplacer_up" value="VK_KEY_Q"/>
+    <key function="objectplacer_down" value="VK_KEY_Z"/>
+    <key function="objectplacer_forward" value="VK_KEY_W"/>
+    <key function="objectplacer_back" value="VK_KEY_S"/>
+    <key function="objectplacer_rotate_left" value="VK_KEY_A"/>
+    <key function="objectplacer_rotate_right" value="VK_KEY_D"/>
+    <key function="objectplacer_speed_up" value="VK_OEM_6"/>
+    <key function="objectplacer_speed_down" value="VK_OEM_4"/>
+    <key function="objectplacer_freeze_time" value="VK_KEY_T"/>
+    <key function="objectplacer_freeze_position" value="VK_KEY_G"/>
+    <key function="objectplacer_help" value="VK_KEY_H"/>
+
+  <!-- To enable your hotkeys, change VK_NOTHING to a real key, and optionally alter the other attributes. This does not work well with controllers -->
+    <key function="hotkey_1" value="VK_NOTHING" modCtrl="false" modAlt="false" modShift="false"/>
+    <key function="hotkey_2" value="VK_NOTHING" modCtrl="false" modAlt="false" modShift="false"/>
+    <key function="hotkey_3" value="VK_NOTHING" modCtrl="false" modAlt="false" modShift="false"/>
+    <key function="hotkey_4" value="VK_NOTHING" modCtrl="false" modAlt="false" modShift="false"/>
+    <key function="hotkey_5" value="VK_NOTHING" modCtrl="false" modAlt="false" modShift="false"/>
+    <key function="hotkey_6" value="VK_NOTHING" modCtrl="false" modAlt="false" modShift="false"/>
+    <key function="hotkey_7" value="VK_NOTHING" modCtrl="false" modAlt="false" modShift="false"/>
+    <key function="hotkey_8" value="VK_NOTHING" modCtrl="false" modAlt="false" modShift="false"/>
+    <key function="hotkey_9" value="VK_NOTHING" modCtrl="false" modAlt="false" modShift="false"/>
+  </keys>
+
+<!--Controller Keys-->
+  <controller_keys>
+    <controller function="toggle_main_menu" button1="81" button2="81"/>
+    
+	<controller function="menu_up" button1="31" button2="81"/>
+    <controller function="menu_down" button1="30" button2="81"/>
+	<controller function="menu_left" button1="20" button2="81"/>
+    <controller function="menu_right" button1="39" button2="81"/>
+    <controller function="menu_select" button1="50" button2="81"/>
+	<controller function="menu_back" button1="33" button2="81"/>
+	
+	<controller function="veh_boost" button1="33" button2="81"/>
+	<controller function="veh_stop" button1="33" button2="81"/>
+	<controller function="veh_rockets" button1="33" button2="81"/>
+	<controller function="veh_leftblink" button1="33" button2="81"/>
+	<controller function="veh_rightblink" button1="33" button2="81"/>
+	<controller function="veh_emergencyblink" button1="33" button2="81"/>
+	<controller function="veh_startrefueling" button1="33" button2="81"/>
+	<controller function="veh_stoprefueling" button1="33" button2="81"/>
+	
+	<controller function="toggle_airbrake" button1="33" button2="81"/>
+	<controller function="airbrake_up" button1="33" button2="81"/>
+	<controller function="airbrake_down" button1="33" button2="81"/>
+	<controller function="airbrake_forward" button1="33" button2="81"/>
+	<controller function="airbrake_back" button1="33" button2="81"/>
+	<controller function="airbrake_rotate_left" button1="33" button2="81"/>
+	<controller function="airbrake_rotate_right" button1="33" button2="81"/>
+	<controller function="airbrake_speed" button1="33" button2="81"/>
+	<controller function="airbrake_freeze_time" button1="33" button2="81"/>
+	
+	<controller function="objectplacer_up" button1="33" button2="81"/>
+	<controller function="objectplacer_down" button1="33" button2="81"/>
+	<controller function="objectplacer_forward" button1="33" button2="81"/>
+	<controller function="objectplacer_back" button1="33" button2="81"/>
+	<controller function="objectplacer_rotate_left" button1="33" button2="81"/>
+	<controller function="objectplacer_rotate_right" button1="33" button2="81"/>
+	<controller function="objectplacer_speed" button1="33" button2="81"/>
+	<controller function="objectplacer_freeze_time" button1="33" button2="81"/>
+	<controller function="objectplacer_freeze_position" button1="33" button2="81"/>
+</controller_keys>
+
+ <!--Weather Order-->
+ <weather_list>
+    <weather position="WEATHER_1" name="EXTRASUNNY"/>
+    <weather position="WEATHER_2" name="CLEAR"/>
+    <weather position="WEATHER_3" name="CLOUDS"/>
+    <weather position="WEATHER_4" name="SMOG"/>
+    <weather position="WEATHER_5" name="FOGGY"/>
+    <weather position="WEATHER_6" name="OVERCAST"/>
+    <weather position="WEATHER_7" name="RAIN"/>
+    <weather position="WEATHER_8" name="THUNDER"/>
+    <weather position="WEATHER_9" name="CLEARING"/>
+    <weather position="WEATHER_10" name="NEUTRAL"/>
+    <weather position="WEATHER_11" name="SNOW"/>
+    <weather position="WEATHER_12" name="BLIZZARD"/>
+    <weather position="WEATHER_13" name="SNOWLIGHT"/>
+    <weather position="WEATHER_14" name="XMAS"/>
+    <weather position="WEATHER_15" name="HALLOWEEN"/>
+ </weather_list>
+  
+  <!--Gas Stations-->
+  <gas_stations>
+    <station x_coord="-71" y_coord="-1762" z_coord="30"/>
+    <station x_coord="-90" y_coord="6415" z_coord="30"/>
+    <station x_coord="180" y_coord="6603" z_coord="30"/>
+	<station x_coord="819" y_coord="-1027" z_coord="30"/>
+    <station x_coord="1039" y_coord="2669" z_coord="39"/>
+    <station x_coord="-2555" y_coord="2334" z_coord="30"/>
+	<station x_coord="2581" y_coord="362" z_coord="30"/>
+	<station x_coord="2683" y_coord="3264" z_coord="30"/>
+    <station x_coord="-853" y_coord="-1374" z_coord="30"/>
+	<station x_coord="265" y_coord="-1261" z_coord="30"/>
+	<station x_coord="-1799" y_coord="803" z_coord="30"/>
+    <station x_coord="-724" y_coord="-935" z_coord="30"/>
+    <station x_coord="264" y_coord="2609" z_coord="30"/>
+	<station x_coord="50" y_coord="2776" z_coord="30"/>
+	<station x_coord="1702" y_coord="6418" z_coord="30"/>
+	<station x_coord="1212" y_coord="2657" z_coord="30"/>
+	<station x_coord="2537" y_coord="2593" z_coord="30"/>
+    <station x_coord="1182" y_coord="-330" z_coord="30"/>
+	<station x_coord="-526" y_coord="-1212" z_coord="30"/>
+	<station x_coord="1209" y_coord="-1402" z_coord="30"/>
+    <station x_coord="2005" y_coord="3775" z_coord="30"/>
+	<station x_coord="621" y_coord="269" z_coord="30"/>
+	<station x_coord="-2097" y_coord="-320" z_coord="30"/>
+	<station x_coord="-1434" y_coord="-274" z_coord="30"/>
+	<station x_coord="1687" y_coord="4929" z_coord="30"/>
+	<station x_coord="1785" y_coord="3330" z_coord="41"/>
+    <station x_coord="-1603" y_coord="5260" z_coord="30"/>
+    <station x_coord="-724" y_coord="-1444" z_coord="5"/>
+    <station x_coord="1770" y_coord="3240" z_coord="42"/>
+    <station x_coord="-1272" y_coord="-3381" z_coord="14"/>
+	<station x_coord="174" y_coord="-1561" z_coord="29"/>
+    <station x_coord="-67" y_coord="-2532" z_coord="6"/>
+</gas_stations>
+
+</ent-config>
