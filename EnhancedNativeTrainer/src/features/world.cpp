@@ -1890,22 +1890,28 @@ void update_world_features()
 		GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
 		GRAPHICS::_CLEAR_CLOUD_HAT();
 
-		if (/*featureWeatherFreeze && */!lastWeather.empty()) {
+		if (!lastWeather.empty()) {
 			if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3061285535) GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 1.0);
 			if (WORLD_LIGHTNING_INTENSITY_VALUES[featureLightIntensityIndex] > -2 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3373937154) GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 1.0);
-			GAMEPLAY::SET_WEATHER_TYPE_NOW((char *)lastWeather.c_str());
+			//GAMEPLAY::SET_WEATHER_TYPE_NOW((char *)lastWeather.c_str());
+			GAMEPLAY::SET_WEATHER_TYPE_NOW_PERSIST((char*)lastWeather.c_str());
 		}
 		if (freeze_counter > 0.30) featureWeatherFreezeUpdated = true;
 	}
+	if (featureWeatherFreeze && !lastWeather.empty() && featureWeatherFreezeUpdated == true) {
+		//GAMEPLAY::SET_WEATHER_TYPE_NOW((char*)lastWeather.c_str());
+		GAMEPLAY::SET_WEATHER_TYPE_NOW_PERSIST((char*)lastWeather.c_str());
+		freeze_counter = 0.0;
+	}
 	if (!featureWeatherFreeze && featureWeatherFreezeUpdated == true) {
+		GAMEPLAY::CLEAR_OVERRIDE_WEATHER();
+		GAMEPLAY::CLEAR_WEATHER_TYPE_PERSIST();
+		GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
+		GRAPHICS::_CLEAR_CLOUD_HAT();
 		featureWeatherFreezeUpdated = false;
 		freeze_counter = 0.0;
 	}
-	if (featureWeatherFreeze && !lastWeather.empty() && featureWeatherFreezeUpdated == true) {
-		GAMEPLAY::SET_WEATHER_TYPE_NOW((char *)lastWeather.c_str());
-		freeze_counter = 0.0;
-	}
-	
+		
 	// Freeze Clouds
 	if (featureCloudsFreeze && !lastClouds.empty()) GRAPHICS::_SET_CLOUD_HAT_TRANSITION((char *)lastClouds.c_str(), 1.0);
 	
