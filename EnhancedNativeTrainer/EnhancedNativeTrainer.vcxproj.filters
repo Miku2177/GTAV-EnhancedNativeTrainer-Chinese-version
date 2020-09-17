@@ -273,9 +273,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="ent-config.xml" />
-  </ItemGroup>
-  <ItemGroup>
     <Image Include="Documents\veh-previews\airtug.png">
       <Filter>Documents\veh-previews</Filter>
     </Image>
@@ -1022,5 +1019,10 @@
     <Filter Include="inc\features">
       <UniqueIdentifier>{0b445460-2dc6-4b62-9682-8c503860bc7b}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="Documents\ent-config.xml">
+      <Filter>Documents</Filter>
+    </Xml>
   </ItemGroup>
 </Project>

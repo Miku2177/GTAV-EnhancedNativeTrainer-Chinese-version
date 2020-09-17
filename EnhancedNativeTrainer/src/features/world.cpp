@@ -38,6 +38,7 @@ std::string lastWeather;
 std::string lastWeather_2;
 int weather_counter = 0;
 std::string lastWeatherName;
+bool change_w_e = false;
 
 float freeze_counter = 0.0;
 
@@ -943,7 +944,17 @@ void update_world_features()
 	}
 	
 	// Change Weather
+	if (MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] == 0 && change_w_e == true) {
+		GAMEPLAY::CLEAR_OVERRIDE_WEATHER();
+		GAMEPLAY::CLEAR_WEATHER_TYPE_PERSIST();
+		GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
+		GRAPHICS::_CLEAR_CLOUD_HAT();
+		GAMEPLAY::SET_WEATHER_TYPE_NOW("CLEAR");
+		change_w_e = false;
+	}
 	if (MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] > 0 && !featureWeatherFreeze) {
+		change_w_e = true;
+
 		w_secs_passed = clock() / CLOCKS_PER_SEC;
 		if (((clock() / CLOCKS_PER_SEC) - w_secs_curr) != 0) {
 			w_seconds = w_seconds + 1;
@@ -1070,20 +1081,12 @@ void update_world_features()
 		}
 
 		if (startup_w == true) {
-			if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() != 669657108 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() != 603685163 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() != 4021743606) {
-				if (w_seconds <= (MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] - 5) && !lastWeather.empty() && MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 1)
-					GAMEPLAY::_SET_WEATHER_TYPE_TRANSITION(GAMEPLAY::GET_HASH_KEY((char*)lastWeather.c_str()), GAMEPLAY::GET_HASH_KEY((char*)lastWeather.c_str()), 1.0f); // GAMEPLAY::SET_WEATHER_TYPE_NOW((char *)lastWeather.c_str());
-				if (w_seconds <= (MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] - 5) && lastWeather.empty() && MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 1)
-					GAMEPLAY::_SET_WEATHER_TYPE_TRANSITION(GAMEPLAY::GET_HASH_KEY((char*)cur_w.c_str()), GAMEPLAY::GET_HASH_KEY((char*)cur_w.c_str()), 1.0f); // GAMEPLAY::SET_WEATHER_TYPE_NOW(cur_w);
-				if (w_seconds <= (MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] - 5) && MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 3)
-					GAMEPLAY::_SET_WEATHER_TYPE_TRANSITION(GAMEPLAY::GET_HASH_KEY((char*)cur_w.c_str()), GAMEPLAY::GET_HASH_KEY((char*)cur_w.c_str()), 1.0f);
-			}
-			if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 669657108 || GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 603685163 || GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 4021743606) {
-				if (w_seconds <= (MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] - 5) && !lastWeather.empty() && MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 1) GAMEPLAY::SET_WEATHER_TYPE_NOW((char*)lastWeather.c_str());
-				if (w_seconds <= (MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] - 5) && lastWeather.empty() && MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 1) GAMEPLAY::SET_WEATHER_TYPE_NOW((char*)cur_w.c_str());
-				if (w_seconds <= (MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] - 5) && MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 3) GAMEPLAY::SET_WEATHER_TYPE_NOW((char*)cur_w.c_str());
-			}
-			if (w_seconds <= (MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] - 5) && MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 2) GAMEPLAY::_SET_WEATHER_TYPE_TRANSITION(GAMEPLAY::GET_HASH_KEY((char*)mixed_w1.c_str()), GAMEPLAY::GET_HASH_KEY((char*)mixed_w2.c_str()), 0.50f);
+			if (w_seconds <= (MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] - 5) && !lastWeather.empty() && MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 1) GAMEPLAY::SET_WEATHER_TYPE_NOW_PERSIST((char*)lastWeather.c_str());
+			if (w_seconds <= (MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] - 5) && lastWeather.empty() && MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 1) GAMEPLAY::SET_WEATHER_TYPE_NOW_PERSIST((char*)cur_w.c_str());
+			if (w_seconds <= (MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] - 5) && MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 3) GAMEPLAY::SET_WEATHER_TYPE_NOW_PERSIST((char*)cur_w.c_str()); ((char*)cur_w.c_str());
+			if (w_seconds <= (MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] - 5) && MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 2)
+				GAMEPLAY::_SET_WEATHER_TYPE_TRANSITION(GAMEPLAY::GET_HASH_KEY((char*)mixed_w1.c_str()), GAMEPLAY::GET_HASH_KEY((char*)mixed_w2.c_str()), 0.50f);
+
 			if (w_seconds > (MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] - 5)) {
 				if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 1) {
 					if (rand_w1 != cur_w && rand_w1 != lastWeather && rand_w1 != lastWeather_2 && t_counter == 0.000) {
@@ -1148,8 +1151,8 @@ void update_world_features()
 					if (mixed_w1 == "THUNDER" || mixed_w2 == "THUNDER") GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 1.0);
 					if (WORLD_LIGHTNING_INTENSITY_VALUES[featureLightIntensityIndex] > -2 && (mixed_w1 == "HALLOWEEN" || mixed_w2 == "HALLOWEEN")) GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 1.0);
 				}
-				if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 3 && t_counter > 0.050 && t_counter < 0.600) {
-					if (t_counter == 0.065) {
+				if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 3 && t_counter > 0.065 && t_counter < 0.075) {
+					if (t_counter == 0.070) {
 						GAMEPLAY::CLEAR_OVERRIDE_WEATHER();
 						GAMEPLAY::CLEAR_WEATHER_TYPE_PERSIST();
 						GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
@@ -1893,13 +1896,11 @@ void update_world_features()
 		if (!lastWeather.empty()) {
 			if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3061285535) GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 1.0);
 			if (WORLD_LIGHTNING_INTENSITY_VALUES[featureLightIntensityIndex] > -2 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3373937154) GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 1.0);
-			//GAMEPLAY::SET_WEATHER_TYPE_NOW((char *)lastWeather.c_str());
 			GAMEPLAY::SET_WEATHER_TYPE_NOW_PERSIST((char*)lastWeather.c_str());
 		}
 		if (freeze_counter > 0.30) featureWeatherFreezeUpdated = true;
 	}
 	if (featureWeatherFreeze && !lastWeather.empty() && featureWeatherFreezeUpdated == true) {
-		//GAMEPLAY::SET_WEATHER_TYPE_NOW((char*)lastWeather.c_str());
 		GAMEPLAY::SET_WEATHER_TYPE_NOW_PERSIST((char*)lastWeather.c_str());
 		freeze_counter = 0.0;
 	}
@@ -1908,6 +1909,7 @@ void update_world_features()
 		GAMEPLAY::CLEAR_WEATHER_TYPE_PERSIST();
 		GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
 		GRAPHICS::_CLEAR_CLOUD_HAT();
+		GAMEPLAY::SET_WEATHER_TYPE_NOW("CLEAR");
 		featureWeatherFreezeUpdated = false;
 		freeze_counter = 0.0;
 	}
