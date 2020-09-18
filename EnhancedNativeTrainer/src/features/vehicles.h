@@ -1306,3 +1306,5 @@ extern std::vector<Vehicle> VEHICLES_HAVE_SOUND;
 extern std::vector<int> VEHICLES_SOUND_NUMBER;
 extern bool featureRememberVehicles;
 extern bool featureRestoreTracked;
+extern bool featureDisableIgnition;
+extern int EngineRunningIndex;

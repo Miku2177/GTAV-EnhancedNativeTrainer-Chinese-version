@@ -113,6 +113,7 @@ bool featureSticktoground = false;
 bool featureDropSpikes = false;
 bool featureAirStrike = false;
 bool featureReverseWhenBraking = false;
+bool featureDisableIgnition = false;
 bool featureEngineRunning = false;
 bool featureNoVehFlip = false;
 bool featureAutoToggleLights = false;
@@ -2408,6 +2409,12 @@ void process_veh_menu(){
 	listItem->value = VehInvisIndex;
 	menuItems.push_back(listItem);
 
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Disable Ignition";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureDisableIgnition;
+	menuItems.push_back(toggleItem);
+
 	draw_generic_menu<int>(menuItems, &activeLineIndexVeh, caption, onconfirm_veh_menu, NULL, NULL);
 }
 
@@ -2560,7 +2567,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				engine_secs_curr = engine_secs_passed;
 			}
 			for (int j = 0; j < 6; j++) VEHICLE::SET_VEHICLE_DOOR_SHUT(alarmed_veh, j, true);
-			VEHICLE::SET_VEHICLE_ENGINE_ON(alarmed_veh, false, true);
+			VEHICLE::SET_VEHICLE_ENGINE_ON(alarmed_veh, false, true, false);
 			if (a_counter_tick > 71) {
 				VEHICLE::SET_VEHICLE_DOORS_LOCKED(alarmed_veh, 4);
 				VEHICLE::SET_VEHICLE_ALARM(alarmed_veh, true);
@@ -2572,7 +2579,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		}
 		if (alarmed_veh != -1 && near_enough == false && alarm_enabled == false) { // disable the alarm
 			a_counter_tick = a_counter_tick + 1;
-			VEHICLE::SET_VEHICLE_ENGINE_ON(alarmed_veh, true, true);
+			VEHICLE::SET_VEHICLE_ENGINE_ON(alarmed_veh, true, true, false);
 			if (a_counter_tick > 71) {
 				VEHICLE::SET_VEHICLE_DOORS_LOCKED(alarmed_veh, 0);
 				VEHICLE::SET_VEHICLE_ALARM(alarmed_veh, false);
@@ -2907,7 +2914,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			Shut_seconds = Shut_seconds + 1;
 			engine_secs_curr = engine_secs_passed;
 		}
-		if (Shut_seconds == VEH_AUTO_SHUT_ENGINE_VALUES[AutoShutEngineIndex]) VEHICLE::SET_VEHICLE_ENGINE_ON(vehicle_been_used, false, true);
+		if (Shut_seconds == VEH_AUTO_SHUT_ENGINE_VALUES[AutoShutEngineIndex]) VEHICLE::SET_VEHICLE_ENGINE_ON(vehicle_been_used, false, true, false);
 	}
 
 	// Stick Vehicle To Ground
@@ -3375,15 +3382,16 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				engine_tick = engine_tick + 1;
 				engine_secs_curr = engine_secs_passed;
 			}
+			engine_switched = false;
 		}
 		if (CONTROLS::IS_CONTROL_PRESSED(2, 75) && (VEHICLE::IS_THIS_MODEL_A_HELI(ENTITY::GET_ENTITY_MODEL(playerVehicle)) || VEHICLE::IS_THIS_MODEL_A_PLANE(ENTITY::GET_ENTITY_MODEL(playerVehicle)))) current_veh_e = playerVehicle;
 	}
 	
-	if (engine_tick < 11 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && LIMP_IF_INJURED_VALUES[EngineRunningIndex] == 2 && (!featureVehSteerAngle /*|| PED::IS_PED_ON_ANY_BIKE(playerPed)*/)) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), true);
-	if (engine_tick > 10 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && LIMP_IF_INJURED_VALUES[EngineRunningIndex] == 2 && (!featureVehSteerAngle /*|| PED::IS_PED_ON_ANY_BIKE(playerPed)*/)) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), false);
+	if (engine_tick < 11 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && LIMP_IF_INJURED_VALUES[EngineRunningIndex] == 2 && (!featureVehSteerAngle)) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), true);
+	if (engine_tick > 10 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && LIMP_IF_INJURED_VALUES[EngineRunningIndex] == 2 && (!featureVehSteerAngle)) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), false);
 	// Remember Wheel Angle feature compatibility lines
-	if (engine_tick < 3 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && LIMP_IF_INJURED_VALUES[EngineRunningIndex] == 2 && featureVehSteerAngle /*&& !PED::IS_PED_ON_ANY_BIKE(playerPed)*/) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), true);
-	if (engine_tick > 2 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && LIMP_IF_INJURED_VALUES[EngineRunningIndex] == 2 && featureVehSteerAngle /*&& !PED::IS_PED_ON_ANY_BIKE(playerPed)*/) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), false);
+	if (engine_tick < 3 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && LIMP_IF_INJURED_VALUES[EngineRunningIndex] == 2 && featureVehSteerAngle) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), true);
+	if (engine_tick > 2 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && LIMP_IF_INJURED_VALUES[EngineRunningIndex] == 2 && featureVehSteerAngle) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), false);
 	//
 	if (bPlayerExists && LIMP_IF_INJURED_VALUES[EngineRunningIndex] == 2 && CONTROLS::IS_CONTROL_RELEASED(2, 75)) engine_tick = 0;
 
@@ -3828,7 +3836,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 					}
 				}
 				if (ENTITY::GET_ENTITY_HEALTH(vehnoflip) < 1) {
-					VEHICLE::SET_VEHICLE_ENGINE_ON(vehnoflip, false, true);
+					VEHICLE::SET_VEHICLE_ENGINE_ON(vehnoflip, false, true, false);
 					VEHICLE::SET_VEHICLE_ENGINE_HEALTH(vehnoflip, -4000);
 				}
 			}
@@ -4281,6 +4289,7 @@ void reset_vehicle_globals() {
 		featureDropSpikes =
 		featureAirStrike =
 		featureReverseWhenBraking =
+		featureDisableIgnition =
 		featureEngineRunning =
 		featureNoVehFlip =
 		featureAutoToggleLights =
@@ -4302,13 +4311,13 @@ void reset_vehicle_globals() {
 		featureHideFuelBar =
 		featureVehSpawnOptic =
 		featureAutoalarm =
+		featureFuelGauge =
 		featureRestoreTracked =
 		featureVehLightsOn = false;
 
 	featureLockVehicleDoorsUpdated = false;
 		featureBlipNumber = true;
 		featureHazards = true;
-		featureFuelGauge = true;
 		featureWearHelmetOffUpdated = true;
 		featureVehInvincibleUpdated = true;
 		featurePoliceVehicleBlip = true;
@@ -4532,6 +4541,7 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureDropSpikes", &featureDropSpikes});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAirStrike", &featureAirStrike});
 	results->push_back(FeatureEnabledLocalDefinition{"featureReverseWhenBraking", &featureReverseWhenBraking});
+	results->push_back(FeatureEnabledLocalDefinition{"featureDisableIgnition", &featureDisableIgnition});
 	results->push_back(FeatureEnabledLocalDefinition{"featureEngineRunning", &featureEngineRunning});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoVehFlip", &featureNoVehFlip});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAutoToggleLights", &featureAutoToggleLights});
@@ -5916,7 +5926,7 @@ void fix_vehicle(){
 			VEHICLE::SET_VEHICLE_BODY_HEALTH(veh, 1000.f);
 			VEHICLE::SET_VEHICLE_UNDRIVEABLE(veh, false);
 			VEHICLE::SET_VEHICLE_ENGINE_CAN_DEGRADE(veh, false);
-			VEHICLE::SET_VEHICLE_ENGINE_ON(veh, true, true);
+			VEHICLE::SET_VEHICLE_ENGINE_ON(veh, true, true, false);
 
 			set_status_text("Vehicle repaired");
 		}

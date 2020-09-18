@@ -1784,7 +1784,7 @@ void maintain_bodyguards(){
 					}
 					if (me_to_follow == false) {
 						for (int m = 0; m < B_VEHICLE.size(); m++) {
-							VEHICLE::SET_VEHICLE_ENGINE_ON(B_VEHICLE[m], true, true);
+							VEHICLE::SET_VEHICLE_ENGINE_ON(B_VEHICLE[m], true, true, false);
 							AI::SET_DRIVE_TASK_CRUISE_SPEED(VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], -1), 300.0);
 							if (LIMP_IF_INJURED_VALUES[FollowInVehicleIndex] == 1) AI::TASK_VEHICLE_CHASE(VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], -1), PLAYER::PLAYER_PED_ID());
 							if (LIMP_IF_INJURED_VALUES[FollowInVehicleIndex] == 2) AI::TASK_VEHICLE_ESCORT(VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], -1), B_VEHICLE[m], veh, -1, 140.0f, 32, 10, 1, 1); // 786468 32
@@ -1839,7 +1839,7 @@ void maintain_bodyguards(){
 					if (coordsme.z - height_a_g < 2 && coordsped.z - height_b_g > 7 && coordsped.z - height_b_g < 15)
 						ENTITY::APPLY_FORCE_TO_ENTITY(PED::GET_VEHICLE_PED_IS_IN(spawnedENTBodyguards[n], false), 1, 0, 0, -0.1, 0, 0, 0, true, false, true, true, true, true);
 					if (coordsme.z - height_a_g < 2 && coordsped.z - height_b_g < 8 && VEHICLE::IS_THIS_MODEL_A_HELI(ENTITY::GET_ENTITY_MODEL(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false))))
-						VEHICLE::SET_VEHICLE_ENGINE_ON(PED::GET_VEHICLE_PED_IS_IN(spawnedENTBodyguards[n], false), false, false);
+						VEHICLE::SET_VEHICLE_ENGINE_ON(PED::GET_VEHICLE_PED_IS_IN(spawnedENTBodyguards[n], false), false, false, false);
 				}
 				if (VEHICLE::IS_THIS_MODEL_A_PLANE(ENTITY::GET_ENTITY_MODEL(veh)) && VEHICLE::GET_PED_IN_VEHICLE_SEAT(PED::GET_VEHICLE_PED_IS_IN(spawnedENTBodyguards[n], false), -1) == spawnedENTBodyguards[n] &&
 					PED::GET_VEHICLE_PED_IS_IN(spawnedENTBodyguards[n], false) != PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false)) {

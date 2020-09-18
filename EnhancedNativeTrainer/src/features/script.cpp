@@ -72,6 +72,8 @@ bool everInitialised = false;
 bool falling_down = false;
 bool looking_behind = false;
 
+bool veh_engine_t = false;
+
 bool manual_pressed = true;
 Vector3 CoordsWhereDied;
 
@@ -322,32 +324,6 @@ void onchange_player_escapestars_mode(int value, SelectFromListMenuItem* source)
 	current_escape_stars = value;
 	current_escape_stars_Changed = true;
 }
-
-// THE ORIGINAL CODE IS BY IKT
-int get_fuel_level_offset()
-{
-	auto addr = FindPatternJACCO("\x74\x26\x0F\x57\xC9", "xxxxx");
-	auto fuelLevelOffset = addr == 0 ? 0 : *(int*)(addr + 8);
-
-	if (fuelLevelOffset == 0) {
-		write_text_to_log_file("Fuel offset not found");
-		return 0;
-	}
-	return fuelLevelOffset;
-}
-
-int get_fuel_tank_offset()
-{
-	auto addr = FindPatternJACCO("\x3C\x03\x0F\x85\x00\x00\x00\x00\x48\x8B\x41\x20\x48\x8B\x88", "xxxx????xxxxxxx");
-	auto fuelTankOffset = addr == 0 ? 0 : *(int*)(addr + 0x16);
-
-	if (fuelTankOffset == 0) {
-		write_text_to_log_file("Tank offset not found");
-		return 0;
-	}
-	return fuelTankOffset;
-}
-//
 
 void check_player_model(){
 	/*
@@ -852,12 +828,30 @@ void update_features(){
 		def_w = true;
 	}
 
-	if (engine_switched) { 
-		VEHICLE::SET_VEHICLE_ENGINE_ON(veh_engine, engine_running, true);
+	if (engine_switched) {
+		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) VEHICLE::SET_VEHICLE_ENGINE_ON(veh_engine, engine_running, false, veh_engine_t);
+		else VEHICLE::SET_VEHICLE_ENGINE_ON(veh_engine, engine_running, true, veh_engine_t);
 	}
 	
+	// Disable Ignition
+	if ((!featureDisableIgnition || (featureDisableIgnition && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0))) && veh_engine_t == true) {
+		if (LIMP_IF_INJURED_VALUES[EngineRunningIndex] == 0) VEHICLE::SET_VEHICLE_ENGINE_ON(veh_engine, false, true, false);
+		engine_switched = false;
+		veh_engine_t = false;
+	}
+	if (featureDisableIgnition) {
+		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && veh_engine_t == false) {
+			veh_engine = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+			if (!VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(veh_engine)) {
+				engine_switched = true;
+				engine_running = false;
+			}
+			veh_engine_t = true;
+		}
+	}
+
 	if (engine_killed) {
-		VEHICLE::SET_VEHICLE_ENGINE_ON(veh_killed, false, true);
+		VEHICLE::SET_VEHICLE_ENGINE_ON(veh_killed, false, true, false);
 		VEHICLE::SET_VEHICLE_ENGINE_HEALTH(veh_killed, -4000);
 	}
 
@@ -2375,11 +2369,6 @@ void main(){
 
 	if (featureShowStatusMessage) set_status_text("~HUD_COLOUR_MENU_YELLOW~ENT~HUD_COLOUR_WHITE~ ver. ~HUD_COLOUR_MENU_YELLOW~" + VERSION_STRING + "~HUD_COLOUR_WHITE~");
 	
-	if (featureFuel && featureFuelGauge) {
-		fuelLevelOffset = get_fuel_level_offset();
-		fuelTankOffset = get_fuel_tank_offset();
-	}
-
 	while(true){
 		if(trainer_switch_pressed()){
 			menu_beep();
