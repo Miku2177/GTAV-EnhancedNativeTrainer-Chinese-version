@@ -466,6 +466,7 @@ void fuel()
 
 				// OUT OF GAS
 				if (FUEL[0] <= 0) {
+					engine_switched = false;
 					//if (featureFuelGauge) set_vehicle_fuel_level(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), fuelLevelOffset, 0.0);
 					VEHICLE::SET_VEHICLE_ENGINE_ON(veh, false, true);
 				}
@@ -559,6 +560,8 @@ void fuel()
 			if (CONTROLS::IS_CONTROL_JUST_PRESSED(2, 75) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) exiting_v = true;
 			if (FUEL[0] < fuel_amount && (outValue_station > 0 || VEH_FUELPRICE_VALUES[FuelPriceIndex] == 0)) {
 				FUEL[0] = FUEL[0] + VEH_REFUELSPEED_VALUES[RefuelingSpeedIndex];
+
+				engine_switched = false;
 
 				if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, false, false);
 				else VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, false, true);
