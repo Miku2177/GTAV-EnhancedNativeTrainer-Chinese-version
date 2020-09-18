@@ -231,7 +231,7 @@ void drive_to_marker()
 				AI::TASK_HELI_MISSION(driver_to_marker_pilot, curr_veh, 0, 0, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, 20, TEL_CHAUFFEUR_SPEED_VALUES[TelChauffeur_speed_Index], -1.0, -1.0, 0, 0, -1.0, 32);
 				if (ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(curr_veh) && marker_been_set == true) {
 					AI::CLEAR_PED_TASKS(driver_to_marker_pilot);
-					VEHICLE::SET_VEHICLE_ENGINE_ON(curr_veh, false, true);
+					VEHICLE::SET_VEHICLE_ENGINE_ON(curr_veh, false, true, false);
 					AI::TASK_LEAVE_VEHICLE(driver_to_marker_pilot, curr_veh, 4160);
 					marker_been_set = false;
 					blipDriveFound = false;

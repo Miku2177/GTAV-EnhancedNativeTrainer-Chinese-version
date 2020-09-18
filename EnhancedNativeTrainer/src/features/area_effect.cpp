@@ -1059,7 +1059,7 @@ void set_all_nearby_vehs_to_broken(bool enabled){
 		}
 
 		if(enabled){
-			VEHICLE::SET_VEHICLE_ENGINE_ON(veh, false, true);
+			VEHICLE::SET_VEHICLE_ENGINE_ON(veh, false, true, false);
 			VEHICLE::SET_VEHICLE_UNDRIVEABLE(veh, true);
 
 			Object taskHdl;

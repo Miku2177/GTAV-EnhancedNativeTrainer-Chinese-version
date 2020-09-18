@@ -47,8 +47,10 @@ std::vector<int> GAS_Y;
 std::vector<int> GAS_Z;
 
 bool featureFuel = false;
-bool featureFuelGauge = true;
+bool featureFuelGauge = false;
 bool featureHideFuelBar = false;
+
+bool gauge_ini = false;
 
 int IdleConsume_secs_passed, IdleConsume_secs_curr, IdleConsume_seconds = -1;
 int f_secs_passed, f_secs_curr, f_seconds = -1;
@@ -129,12 +131,42 @@ float get_petrol_tank_volume(Vehicle vehicle) {
 	float tankvolume = *(float*)(vehAddr + 0x0100);
 	return tankvolume;
 }
+
+int get_fuel_level_offset()
+{
+	auto addr = FindPatternJACCO("\x74\x26\x0F\x57\xC9", "xxxxx");
+	auto fuelLevelOffset = addr == 0 ? 0 : *(int*)(addr + 8);
+
+	if (fuelLevelOffset == 0) {
+		write_text_to_log_file("Fuel offset not found");
+		return 0;
+	}
+	return fuelLevelOffset;
+}
+
+int get_fuel_tank_offset()
+{
+	auto addr = FindPatternJACCO("\x3C\x03\x0F\x85\x00\x00\x00\x00\x48\x8B\x41\x20\x48\x8B\x88", "xxxx????xxxxxxx");
+	auto fuelTankOffset = addr == 0 ? 0 : *(int*)(addr + 0x16);
+
+	if (fuelTankOffset == 0) {
+		write_text_to_log_file("Tank offset not found");
+		return 0;
+	}
+	return fuelTankOffset;
+}
 //
 
 //////////////////////////////////////////////// FUEL OPTION /////////////////////////////////////////////////////////////////
 void fuel()
 {
 	if (featureFuel && !CUTSCENE::IS_CUTSCENE_PLAYING()) {
+		if (featureFuelGauge && gauge_ini == false) { // featureFuel && 
+			fuelLevelOffset = get_fuel_level_offset();
+			fuelTankOffset = get_fuel_tank_offset();
+			gauge_ini = true;
+		}
+
 		Ped playerPed = PLAYER::PLAYER_PED_ID();
 		
 		bool refill_button = IsKeyDown(VK_LBUTTON); // REFUEL KEY FOR JERRY CAN
@@ -468,7 +500,7 @@ void fuel()
 				if (FUEL[0] <= 0) {
 					engine_switched = false;
 					//if (featureFuelGauge) set_vehicle_fuel_level(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), fuelLevelOffset, 0.0);
-					VEHICLE::SET_VEHICLE_ENGINE_ON(veh, false, true);
+					VEHICLE::SET_VEHICLE_ENGINE_ON(veh, false, true, false);
 				}
 
 				// GAS STATION MESSAGE
@@ -563,13 +595,13 @@ void fuel()
 
 				engine_switched = false;
 
-				if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, false, false);
-				else VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, false, true);
+				if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, false, false, false);
+				else VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, false, true, false);
 				UI::DISPLAY_CASH(true);
 				STATS::STAT_SET_INT(statHash_station, outValue_station - VEH_FUELPRICE_VALUES[FuelPriceIndex], true);
 				if (stoprefillKey && !IsKeyDown(VK_ESCAPE) && CONTROLS::IS_CONTROL_RELEASED(2, INPUT_FRONTEND_PAUSE) && exiting_v == false) {
 					if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
-						VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, true, false);
+						VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, true, false, false);
 						Car_Refuel = false;
 						f_secs_curr = -1;
 					}
@@ -577,7 +609,7 @@ void fuel()
 				if (!stoprefillKey) {
 					if ((outValue_station > 0 || VEH_FUELPRICE_VALUES[FuelPriceIndex] == 0) && FUEL[0] > (fuel_amount - 0.001)) {
 						FUEL[0] = fuel_amount;
-						VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, true, false);
+						VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, true, false, false);
 						Car_Refuel = false;
 						f_secs_curr = -1;
 					}
@@ -632,7 +664,7 @@ void fuel()
 				for (int i = 0; i < VEHICLES.size(); i++) {
 					Vector3 curr_s = ENTITY::GET_ENTITY_VELOCITY(VEHICLES[i]);
 					if (curr_s.x < 1 && curr_s.y < 1 && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(VEHICLES[i]) && FUEL[i] > 0) FUEL[i] = FUEL[i] - 0.001;
-					if (VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(VEHICLES[i]) && FUEL[i] <= 0) VEHICLE::SET_VEHICLE_ENGINE_ON(VEHICLES[i], false, true);
+					if (VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(VEHICLES[i]) && FUEL[i] <= 0) VEHICLE::SET_VEHICLE_ENGINE_ON(VEHICLES[i], false, true, false);
 				}
 				IdleConsume_seconds = (VEH_CARFUEL_VALUES[IdleConsumptionIndex] / 85000) + 1;
 			}

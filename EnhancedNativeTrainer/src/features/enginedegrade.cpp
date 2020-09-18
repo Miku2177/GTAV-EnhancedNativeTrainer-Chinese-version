@@ -237,7 +237,7 @@ void engine_can_degrade()
 
 				// ENGINE HEALTH LEVEL
 				VEHICLE::SET_VEHICLE_ENGINE_HEALTH(E_VEHICLES[0], E_HEALTH[0] * 10);
-				if (E_HEALTH[0] == 0) VEHICLE::SET_VEHICLE_ENGINE_ON(E_VEHICLES[0], false, true);
+				if (E_HEALTH[0] == 0) VEHICLE::SET_VEHICLE_ENGINE_ON(E_VEHICLES[0], false, true, false);
 
 				// LIMP MODE
 				if (featureLimpMode && VEH_SPEEDLIMITER_VALUES[speedLimiterIndex] == 0 && VEH_SPEEDLIMITER_VALUES[speedCityLimiterIndex] == 0 && VEH_SPEEDLIMITER_VALUES[speedCountryLimiterIndex] == 0) {
