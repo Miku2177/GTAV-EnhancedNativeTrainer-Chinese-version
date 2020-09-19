@@ -3382,7 +3382,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				engine_tick = engine_tick + 1;
 				engine_secs_curr = engine_secs_passed;
 			}
-			engine_switched = false;
 		}
 		if (CONTROLS::IS_CONTROL_PRESSED(2, 75) && (VEHICLE::IS_THIS_MODEL_A_HELI(ENTITY::GET_ENTITY_MODEL(playerVehicle)) || VEHICLE::IS_THIS_MODEL_A_PLANE(ENTITY::GET_ENTITY_MODEL(playerVehicle)))) current_veh_e = playerVehicle;
 	}
