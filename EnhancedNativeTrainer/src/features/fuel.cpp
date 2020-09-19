@@ -36,6 +36,7 @@ bool show_blips = true;
 bool phone_blips = false;
 
 bool exiting_v = false;
+bool restart_engine = false;
 
 Blip blip[32];
 std::vector<Vehicle> VEHICLES;
@@ -499,7 +500,12 @@ void fuel()
 				// OUT OF GAS
 				if (FUEL[0] <= 0) {
 					//if (featureFuelGauge) set_vehicle_fuel_level(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), fuelLevelOffset, 0.0);
-					VEHICLE::SET_VEHICLE_ENGINE_ON(veh, false, true, false);
+					VEHICLE::SET_VEHICLE_ENGINE_ON(veh, false, true, true);
+					restart_engine = true;
+				}
+				if (FUEL[0] > 0 && restart_engine == true && Car_Refuel == false) {
+					VEHICLE::SET_VEHICLE_ENGINE_ON(veh, true, false, false);
+					restart_engine = false;
 				}
 
 				// GAS STATION MESSAGE
@@ -661,7 +667,7 @@ void fuel()
 				for (int i = 0; i < VEHICLES.size(); i++) {
 					Vector3 curr_s = ENTITY::GET_ENTITY_VELOCITY(VEHICLES[i]);
 					if (curr_s.x < 1 && curr_s.y < 1 && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(VEHICLES[i]) && FUEL[i] > 0) FUEL[i] = FUEL[i] - 0.001;
-					if (VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(VEHICLES[i]) && FUEL[i] <= 0) VEHICLE::SET_VEHICLE_ENGINE_ON(VEHICLES[i], false, true, false);
+					if (VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(VEHICLES[i]) && FUEL[i] <= 0) VEHICLE::SET_VEHICLE_ENGINE_ON(VEHICLES[i], false, true, true);
 				}
 				IdleConsume_seconds = (VEH_CARFUEL_VALUES[IdleConsumptionIndex] / 85000) + 1;
 			}
