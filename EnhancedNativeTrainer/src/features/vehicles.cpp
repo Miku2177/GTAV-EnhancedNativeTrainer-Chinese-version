@@ -2567,7 +2567,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				engine_secs_curr = engine_secs_passed;
 			}
 			for (int j = 0; j < 6; j++) VEHICLE::SET_VEHICLE_DOOR_SHUT(alarmed_veh, j, true);
-			VEHICLE::SET_VEHICLE_ENGINE_ON(alarmed_veh, false, true, false);
+			VEHICLE::SET_VEHICLE_ENGINE_ON(alarmed_veh, false, true, true);
 			if (a_counter_tick > 71) {
 				VEHICLE::SET_VEHICLE_DOORS_LOCKED(alarmed_veh, 4);
 				VEHICLE::SET_VEHICLE_ALARM(alarmed_veh, true);
@@ -3835,7 +3835,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 					}
 				}
 				if (ENTITY::GET_ENTITY_HEALTH(vehnoflip) < 1) {
-					VEHICLE::SET_VEHICLE_ENGINE_ON(vehnoflip, false, true, false);
+					VEHICLE::SET_VEHICLE_ENGINE_ON(vehnoflip, false, true, true);
 					VEHICLE::SET_VEHICLE_ENGINE_HEALTH(vehnoflip, -4000);
 				}
 			}

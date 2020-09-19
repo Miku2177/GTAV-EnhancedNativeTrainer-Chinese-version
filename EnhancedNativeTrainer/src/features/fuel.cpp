@@ -499,7 +499,7 @@ void fuel()
 				// OUT OF GAS
 				if (FUEL[0] <= 0) {
 					//if (featureFuelGauge) set_vehicle_fuel_level(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), fuelLevelOffset, 0.0);
-					VEHICLE::SET_VEHICLE_ENGINE_ON(veh, false, true, true);
+					VEHICLE::SET_VEHICLE_ENGINE_ON(veh, false, true, false);
 				}
 
 				// GAS STATION MESSAGE
