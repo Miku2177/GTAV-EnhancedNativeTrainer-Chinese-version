@@ -134,7 +134,6 @@ bool featureRespawnsWhereDied = false;
 bool lev_message = false;
 
 bool engine_running = true;
-bool engine_switched = false;
 bool engine_killed = false;
 bool we_have_troubles, iaminside = false;
 
@@ -447,8 +446,9 @@ void engineonoff_switching() {
 
 	if (VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(veh_engine)) engine_running = true;
 	engine_running = !engine_running;
-	engine_switched = true;
 	WAIT(100);
+	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) VEHICLE::SET_VEHICLE_ENGINE_ON(veh_engine, engine_running, false, !engine_running);
+		else VEHICLE::SET_VEHICLE_ENGINE_ON(veh_engine, engine_running, true, !engine_running);
 }
 
 void engine_damage() {
@@ -828,23 +828,17 @@ void update_features(){
 		def_w = true;
 	}
 
-	if (engine_switched) {
-		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) VEHICLE::SET_VEHICLE_ENGINE_ON(veh_engine, engine_running, false, veh_engine_t);
-		else VEHICLE::SET_VEHICLE_ENGINE_ON(veh_engine, engine_running, true, veh_engine_t);
-	}
-	
 	// Disable Ignition
 	if ((!featureDisableIgnition || (featureDisableIgnition && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0))) && veh_engine_t == true) {
 		if (LIMP_IF_INJURED_VALUES[EngineRunningIndex] == 0) VEHICLE::SET_VEHICLE_ENGINE_ON(veh_engine, false, true, false);
-		engine_switched = false;
 		veh_engine_t = false;
 	}
 	if (featureDisableIgnition) {
 		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && veh_engine_t == false) {
 			veh_engine = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 			if (!VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(veh_engine)) {
-				engine_switched = true;
-				engine_running = false;
+				engine_running = true;
+				engineonoff_switching();
 			}
 			veh_engine_t = true;
 		}

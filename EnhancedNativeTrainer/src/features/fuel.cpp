@@ -498,9 +498,8 @@ void fuel()
 
 				// OUT OF GAS
 				if (FUEL[0] <= 0) {
-					engine_switched = false;
 					//if (featureFuelGauge) set_vehicle_fuel_level(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), fuelLevelOffset, 0.0);
-					VEHICLE::SET_VEHICLE_ENGINE_ON(veh, false, true, false);
+					VEHICLE::SET_VEHICLE_ENGINE_ON(veh, false, true, true);
 				}
 
 				// GAS STATION MESSAGE
@@ -593,10 +592,8 @@ void fuel()
 			if (FUEL[0] < fuel_amount && (outValue_station > 0 || VEH_FUELPRICE_VALUES[FuelPriceIndex] == 0)) {
 				FUEL[0] = FUEL[0] + VEH_REFUELSPEED_VALUES[RefuelingSpeedIndex];
 
-				engine_switched = false;
-
-				if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, false, false, false);
-				else VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, false, true, false);
+				if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, false, false, true);
+				else VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, false, true, true);
 				UI::DISPLAY_CASH(true);
 				STATS::STAT_SET_INT(statHash_station, outValue_station - VEH_FUELPRICE_VALUES[FuelPriceIndex], true);
 				if (stoprefillKey && !IsKeyDown(VK_ESCAPE) && CONTROLS::IS_CONTROL_RELEASED(2, INPUT_FRONTEND_PAUSE) && exiting_v == false) {
