@@ -134,7 +134,6 @@ bool featureRespawnsWhereDied = false;
 bool lev_message = false;
 
 bool engine_running = true;
-bool engine_killed = false;
 bool we_have_troubles, iaminside = false;
 
 bool been_injured = false;
@@ -471,7 +470,9 @@ void engine_kill(){
 		veh_killed = temp_vehicle;
 	}
 		
-	engine_killed = true;
+	VEHICLE::SET_VEHICLE_ENGINE_ON(veh_killed, false, true, true);
+	VEHICLE::SET_VEHICLE_ENGINE_HEALTH(veh_killed, -4000);
+
 	set_status_text("You have destroyed this vehicle's engine for some reason");
 }
 
@@ -842,11 +843,6 @@ void update_features(){
 			}
 			veh_engine_t = true;
 		}
-	}
-
-	if (engine_killed) {
-		VEHICLE::SET_VEHICLE_ENGINE_ON(veh_killed, false, true, false);
-		VEHICLE::SET_VEHICLE_ENGINE_HEALTH(veh_killed, -4000);
 	}
 
 	if (featureWantedLevelFrozen){

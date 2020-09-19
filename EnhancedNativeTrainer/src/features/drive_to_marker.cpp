@@ -253,7 +253,6 @@ void drive_to_marker()
 
 				if (ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(curr_veh) && marker_been_set == true) {
 					AI::CLEAR_PED_TASKS(driver_to_marker_pilot);
-					//VEHICLE::SET_VEHICLE_ENGINE_ON(curr_veh, false, true);
 					PED::DELETE_PED(&driver_to_marker_pilot);
 					blipDriveFound = false;
 					landing = false;
