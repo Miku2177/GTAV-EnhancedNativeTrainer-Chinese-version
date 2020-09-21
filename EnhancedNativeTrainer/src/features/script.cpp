@@ -67,6 +67,10 @@ int ped_prop_idx = -1;
 int injured_m = -2;
 int noragdoll_m = -2;
 
+char* i_anim_dict = "oddjobs@towing";
+char* animation_of_i = "start_engine";
+bool entered_first_time = false;
+
 bool everInitialised = false;
 
 bool falling_down = false;
@@ -435,6 +439,32 @@ void invincibility_switching(){
 	WAIT(100);
 }
 
+void ingnition_anim() {
+	i_anim_dict = "oddjobs@towing";
+	animation_of_i = "start_engine";
+	Vehicle veh_ignition = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
+	if ((VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(veh_ignition)) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(veh_ignition)))) {
+		i_anim_dict = "veh@bike@sport@front@base";
+		animation_of_i = "start_engine";
+	}
+	if (VEHICLE::IS_THIS_MODEL_A_PLANE(ENTITY::GET_ENTITY_MODEL(veh_ignition)) || VEHICLE::IS_THIS_MODEL_A_HELI(ENTITY::GET_ENTITY_MODEL(veh_ignition))) {
+		i_anim_dict = "anim@veh@savage@front@ds@base";
+		animation_of_i = "pov_start_engine";
+	}
+	if (!STREAMING::HAS_ANIM_DICT_LOADED(i_anim_dict)) {
+		STREAMING::REQUEST_ANIM_DICT(i_anim_dict);
+		while (!STREAMING::HAS_ANIM_DICT_LOADED(i_anim_dict)) WAIT(0);
+	}
+	if (STREAMING::HAS_ANIM_DICT_LOADED(i_anim_dict)) {
+		float anim_tmp = ENTITY::_GET_ENTITY_ANIM_DURATION(i_anim_dict, animation_of_i);
+		AI::TASK_PLAY_ANIM(PLAYER::PLAYER_PED_ID(), i_anim_dict, animation_of_i, 8.0, 0.0, -1, 0, 0, 0, 0, 0);
+		WAIT(anim_tmp * 499); // 499
+		AI::STOP_ANIM_TASK(PLAYER::PLAYER_PED_ID(), i_anim_dict, animation_of_i, 1.0);
+		AI::STOP_ANIM_PLAYBACK(PLAYER::PLAYER_PED_ID(), 1, 1);
+		ENTITY::STOP_ENTITY_ANIM(PLAYER::PLAYER_PED_ID(), i_anim_dict, animation_of_i, 1);
+	}
+}
+
 void engineonoff_switching() {
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_engine = PED::GET_VEHICLE_PED_IS_USING(playerPed);
@@ -442,6 +472,9 @@ void engineonoff_switching() {
 		find_nearest_vehicle();
 		veh_engine = temp_vehicle;
 	}
+
+	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0) && entered_first_time == false) ingnition_anim();
+	entered_first_time = false;
 
 	if (VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(veh_engine)) engine_running = true;
 	engine_running = !engine_running;
@@ -835,10 +868,11 @@ void update_features(){
 		veh_engine_t = false;
 	}
 	if (featureDisableIgnition) {
-		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && veh_engine_t == false) {
+		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && veh_engine_t == false) {
 			veh_engine = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 			if (!VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(veh_engine)) {
 				engine_running = true;
+				entered_first_time = true;
 				engineonoff_switching();
 			}
 			veh_engine_t = true;
