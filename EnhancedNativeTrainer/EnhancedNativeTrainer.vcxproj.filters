@@ -1021,8 +1021,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="Documents\ent-config.xml">
-      <Filter>Documents</Filter>
-    </Xml>
+    <Xml Include="Documents\ent-config.xml" />
   </ItemGroup>
 </Project>

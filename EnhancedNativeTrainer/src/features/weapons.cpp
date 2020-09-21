@@ -439,6 +439,16 @@ void add_all_weapons_attachments() {
 		}
 	}
 
+	for (int a = 0; a < sizeof(VOV_WEAPON_VALUES) / sizeof(VOV_WEAPON_VALUES[0]); a++) {
+		for (int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++) {
+			char* weaponName = (char*)VOV_WEAPON_VALUES[a].at(b).c_str();
+			Hash weaponHash = GAMEPLAY::GET_HASH_KEY(weaponName);
+			if (WEAPON::HAS_PED_GOT_WEAPON(playerPed, weaponHash, FALSE)) {
+				WEAPON::GIVE_WEAPON_TO_PED(playerPed, weaponHash, 10000, false, false);
+			}
+		}
+	}
+
 	set_status_text("All weapon attachments added to existing weapons");
 }
 
