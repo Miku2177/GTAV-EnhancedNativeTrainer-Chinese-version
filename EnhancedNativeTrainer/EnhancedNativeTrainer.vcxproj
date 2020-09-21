@@ -105,11 +105,6 @@
     <ClInclude Include="src\xml\xml_import_export.h" />
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="ent-config.xml">
-      <DeploymentContent>true</DeploymentContent>
-    </Xml>
-  </ItemGroup>
-  <ItemGroup>
     <Image Include="..\..\..\..\Desktop\1.46 vehicle previews\Converted\BRUISER1.png" />
     <Image Include="..\..\..\..\Desktop\1.46 vehicle previews\Converted\BRUISER2.png" />
     <Image Include="..\..\..\..\Desktop\1.46 vehicle previews\Converted\BRUISER3.png" />
@@ -342,6 +337,9 @@
     <Image Include="Documents\veh-previews\virgo3.png" />
     <Image Include="Documents\veh-previews\voodoo.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Xml Include="Documents\ent-config.xml" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8D82F34A-1D64-465B-84B1-37F89AD3D20B}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
@@ -396,6 +394,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;NativeTrainer_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <ExceptionHandling>false</ExceptionHandling>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
