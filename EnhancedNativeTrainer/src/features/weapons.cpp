@@ -9,6 +9,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 */
 
 #include "script.h"
+#include "fuel.h"
 #include "peds_dont_like_weapons.h"
 #include "prison_break.h"
 #include "..\ui_support\menu_functions.h"
@@ -52,6 +53,13 @@ Ped oldplayerPed_s = -1;
 bool PlayerUpdated_s = true;
 //
 Hash temp_weapon = -1;
+
+//Flashlight strobe
+int WeapStrobeIndex = 0;
+bool WeapStrobeChanged = true;
+bool f_strobe = false;
+int strb_c = 0;
+float strobe_tick = 0.0;
 
 bool featureWeaponInfiniteAmmo = false;
 bool featureWeaponInfiniteParachutes = false, featureWeaponInfiniteParachutesUpdated = false;
@@ -834,6 +842,11 @@ void onchange_weapons_firemode_modifier(int value, SelectFromListMenuItem* sourc
 	WeaponsFireModeChanged = true;
 }
 
+void onchange_weap_strobe_index(int value, SelectFromListMenuItem* source) {
+	WeapStrobeIndex = value;
+	WeapStrobeChanged = true;
+}
+
 void onchange_vehicle_weapon_modifier(int value, SelectFromListMenuItem* source) {
 	VehCurrWeaponIndex = value;
 	VehCurrWeaponChanged = true;
@@ -1581,6 +1594,12 @@ bool process_weapon_menu(){
 	toggleItem->toggleValue = &featureDropWeaponOutAmmo;
 	menuItems.push_back(toggleItem);
 
+	listItem = new SelectFromListMenuItem(FUEL_COLOURS_R_CAPTIONS, onchange_weap_strobe_index);
+	listItem->wrap = false;
+	listItem->caption = "Flashlight Strobe";
+	listItem->value = WeapStrobeIndex;
+	menuItems.push_back(listItem);
+
 	//if (AIMBOT_INCLUDED) {
 	//	item = new MenuItem<int>();
 	//	item->caption = "Aimbot ESP";
@@ -1609,6 +1628,7 @@ void reset_weapon_globals(){
 	SniperVisionIndex = 0;
 	PowerPunchIndex = 2;
 	WeaponsFireModeIndex = 0;
+	WeapStrobeIndex = 0;
 
 	activeLineIndexCopArmed = 0;
 	activeLineIndexPedAgainstWeapons = 0;
@@ -1709,6 +1729,27 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	if(featureWeaponExplosiveMelee){
 		if(bPlayerExists)
 			GAMEPLAY::SET_EXPLOSIVE_MELEE_THIS_FRAME(player);
+	}
+
+	// Flashlight Strobe
+	if (FUEL_COLOURS_R_VALUES[WeapStrobeIndex] > 0) {
+		float tmp_s = FUEL_COLOURS_R_VALUES[WeapStrobeIndex];
+		if (CONTROLS::IS_CONTROL_JUST_PRESSED(2, 54) && WEAPON::SET_WEAPON_SMOKEGRENADE_ASSIGNED(playerPed) && strb_c < 6) {
+			f_strobe = true;
+		}
+		if (f_strobe == true) {
+			strobe_tick = strobe_tick + 0.1;
+			if (strobe_tick > (tmp_s / 100)) { // 0.9
+				CONTROLS::_SET_CONTROL_NORMAL(0, 54, 1);
+				strobe_tick = 0.0;
+			}
+		}
+		if (CONTROLS::IS_CONTROL_PRESSED(2, 54)) strb_c = strb_c + 1;
+		else strb_c = 0;
+		if (strb_c > 5) {
+			f_strobe = false;
+			strobe_tick = 0.0;
+		}
 	}
 
 	// Super Explosive Grenades && Sucking Grenades
@@ -2752,6 +2793,7 @@ void add_weapon_feature_enablements2(std::vector<StringPairSettingDBRow>* result
 	results->push_back(StringPairSettingDBRow{ "SniperVisionIndex", std::to_string(SniperVisionIndex) });
 	results->push_back(StringPairSettingDBRow{ "PowerPunchIndex", std::to_string(PowerPunchIndex) });
 	results->push_back(StringPairSettingDBRow{ "WeaponsFireModeIndex", std::to_string(WeaponsFireModeIndex) });
+	results->push_back(StringPairSettingDBRow{ "WeapStrobeIndex", std::to_string(WeapStrobeIndex) });
 }
 
 void onchange_weap_dmg_modifier(int value, SelectFromListMenuItem* source){
@@ -2799,6 +2841,9 @@ void handle_generic_settings_weapons(std::vector<StringPairSettingDBRow>* settin
 		}
 		else if (setting.name.compare("WeaponsFireModeIndex") == 0) {
 			WeaponsFireModeIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("WeapStrobeIndex") == 0) {
+			WeapStrobeIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("lastCustomWeapon") == 0) {
 			lastCustomWeapon = setting.value;
