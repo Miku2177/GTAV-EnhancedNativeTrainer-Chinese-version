@@ -35,6 +35,8 @@ bool Fuel_Low = false;
 bool show_blips = true;
 bool phone_blips = false;
 
+bool ign_anim_e = false;
+
 bool exiting_v = false;
 bool restart_engine = false;
 
@@ -598,12 +600,20 @@ void fuel()
 			if (FUEL[0] < fuel_amount && (outValue_station > 0 || VEH_FUELPRICE_VALUES[FuelPriceIndex] == 0)) {
 				FUEL[0] = FUEL[0] + VEH_REFUELSPEED_VALUES[RefuelingSpeedIndex];
 
-				if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, false, false, true);
+				if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
+					if (ign_anim_e == false) {
+						ingnition_anim();
+						ign_anim_e = true;
+					}
+					VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, false, false, true);
+				}
 				else VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, false, true, true);
 				UI::DISPLAY_CASH(true);
 				STATS::STAT_SET_INT(statHash_station, outValue_station - VEH_FUELPRICE_VALUES[FuelPriceIndex], true);
 				if (stoprefillKey && !IsKeyDown(VK_ESCAPE) && CONTROLS::IS_CONTROL_RELEASED(2, INPUT_FRONTEND_PAUSE) && exiting_v == false) {
 					if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
+						if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) ingnition_anim();
+						ign_anim_e = false;
 						VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, true, false, false);
 						Car_Refuel = false;
 						f_secs_curr = -1;
@@ -612,6 +622,8 @@ void fuel()
 				if (!stoprefillKey) {
 					if ((outValue_station > 0 || VEH_FUELPRICE_VALUES[FuelPriceIndex] == 0) && FUEL[0] > (fuel_amount - 0.001)) {
 						FUEL[0] = fuel_amount;
+						if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) ingnition_anim();
+						ign_anim_e = false;
 						VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, true, false, false);
 						Car_Refuel = false;
 						f_secs_curr = -1;
@@ -619,7 +631,10 @@ void fuel()
 				}
 			}
 		}
-		if (PED::IS_PED_ON_FOOT(playerPed)) exiting_v = false;
+		if (PED::IS_PED_ON_FOOT(playerPed)) {
+			exiting_v = false;
+			ign_anim_e = false;
+		}
 
 		// REFUEL USING JERRY CAN
 		if (!VEHICLES.empty() && WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_PETROLCAN") && !VEHICLE::IS_THIS_MODEL_A_BICYCLE(ENTITY::GET_ENTITY_MODEL(VEHICLES[0]))) {
