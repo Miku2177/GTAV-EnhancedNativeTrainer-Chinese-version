@@ -61,6 +61,10 @@ bool f_strobe = false;
 int strb_c = 0;
 float strobe_tick = 0.0;
 
+//Flashlight Intensity
+int WeapFlashDistIndex = 0;
+bool WeapFlashDistChanged = true;
+
 bool featureWeaponInfiniteAmmo = false;
 bool featureWeaponInfiniteParachutes = false, featureWeaponInfiniteParachutesUpdated = false;
 bool featureWeaponNoParachutes = false, featureWeaponNoParachutesUpdated = false;
@@ -847,6 +851,11 @@ void onchange_weap_strobe_index(int value, SelectFromListMenuItem* source) {
 	WeapStrobeChanged = true;
 }
 
+void onchange_weap_flashdist_index(int value, SelectFromListMenuItem* source) {
+	WeapFlashDistIndex = value;
+	WeapFlashDistChanged = true;
+}
+
 void onchange_vehicle_weapon_modifier(int value, SelectFromListMenuItem* source) {
 	VehCurrWeaponIndex = value;
 	VehCurrWeaponChanged = true;
@@ -1600,6 +1609,12 @@ bool process_weapon_menu(){
 	listItem->value = WeapStrobeIndex;
 	menuItems.push_back(listItem);
 
+	listItem = new SelectFromListMenuItem(WEAP_DMG_CAPTIONS, onchange_weap_flashdist_index);
+	listItem->wrap = false;
+	listItem->caption = "Flashlight Intensity";
+	listItem->value = WeapFlashDistIndex;
+	menuItems.push_back(listItem);
+
 	//if (AIMBOT_INCLUDED) {
 	//	item = new MenuItem<int>();
 	//	item->caption = "Aimbot ESP";
@@ -1629,6 +1644,7 @@ void reset_weapon_globals(){
 	PowerPunchIndex = 2;
 	WeaponsFireModeIndex = 0;
 	WeapStrobeIndex = 0;
+	WeapFlashDistIndex = 0;
 
 	activeLineIndexCopArmed = 0;
 	activeLineIndexPedAgainstWeapons = 0;
@@ -1729,27 +1745,6 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	if(featureWeaponExplosiveMelee){
 		if(bPlayerExists)
 			GAMEPLAY::SET_EXPLOSIVE_MELEE_THIS_FRAME(player);
-	}
-
-	// Flashlight Strobe
-	if (FUEL_COLOURS_R_VALUES[WeapStrobeIndex] > 0) {
-		float tmp_s = FUEL_COLOURS_R_VALUES[WeapStrobeIndex];
-		if (CONTROLS::IS_CONTROL_JUST_PRESSED(2, 54) && WEAPON::SET_WEAPON_SMOKEGRENADE_ASSIGNED(playerPed) && strb_c < 6) {
-			f_strobe = true;
-		}
-		if (f_strobe == true) {
-			strobe_tick = strobe_tick + 0.1;
-			if (strobe_tick > (tmp_s / 100)) { // 0.9
-				CONTROLS::_SET_CONTROL_NORMAL(0, 54, 1);
-				strobe_tick = 0.0;
-			}
-		}
-		if (CONTROLS::IS_CONTROL_PRESSED(2, 54)) strb_c = strb_c + 1;
-		else strb_c = 0;
-		if (strb_c > 5) {
-			f_strobe = false;
-			strobe_tick = 0.0;
-		}
 	}
 
 	// Super Explosive Grenades && Sucking Grenades
@@ -2333,6 +2328,48 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		}
 	}
 
+	// Flashlight Strobe
+	if (FUEL_COLOURS_R_VALUES[WeapStrobeIndex] > 0) {
+		float tmp_s = FUEL_COLOURS_R_VALUES[WeapStrobeIndex];
+		if (CONTROLS::IS_CONTROL_JUST_PRESSED(2, 54) && WEAPON::SET_WEAPON_SMOKEGRENADE_ASSIGNED(playerPed) && strb_c < 6) {
+			f_strobe = true;
+		}
+		if (f_strobe == true) {
+			strobe_tick = strobe_tick + 0.1;
+			if (strobe_tick > (tmp_s / 100)) { // 0.9
+				CONTROLS::_SET_CONTROL_NORMAL(0, 54, 1);
+				strobe_tick = 0.0;
+			}
+		}
+		if (CONTROLS::IS_CONTROL_PRESSED(2, 54)) strb_c = strb_c + 1;
+		else strb_c = 0;
+		if (strb_c > 5) {
+			f_strobe = false;
+			strobe_tick = 0.0;
+		}
+	}
+
+	// Flashlight Intensity
+	if (WEAP_DMG_FLOAT[WeapFlashDistIndex] > 1.0) {
+		if (!PED::IS_PED_RELOADING(playerPed) && WEAPON::SET_WEAPON_SMOKEGRENADE_ASSIGNED(playerPed)) {
+			Entity curr_w = WEAPON::GET_CURRENT_PED_WEAPON_ENTITY_INDEX(playerPed);
+			Vector3 myCoords = ENTITY::GET_ENTITY_COORDS(curr_w, 1);
+				
+			float Coord1[3];
+			Vector3 moveToPos1 = add(&myCoords, &DirectionOffsetFromCam(1.0f));
+			VectorToFloat(moveToPos1, Coord1);
+		
+			float Coord2[3];
+			Vector3 moveToPos2 = add(&myCoords, &DirectionOffsetFromCam(5.5f));
+			VectorToFloat(moveToPos2, Coord2);
+
+			float dirVector_lr_x = Coord2[0] - Coord1[0];
+			float dirVector_lr_y = Coord2[1] - Coord1[1];
+			float dirVector_lr_z = Coord2[2] - Coord1[2];
+			GRAPHICS::_DRAW_SPOT_LIGHT_WITH_SHADOW(Coord1[0], Coord1[1], Coord1[2], dirVector_lr_x, dirVector_lr_y, dirVector_lr_z, 255, 255, 255, WEAP_DMG_FLOAT[WeapFlashDistIndex] * 40.0, 1, 50, 19, 2.7, 10); // 21
+		}
+	}
+
 	// Fire Mode
 	if (WEAPONS_FIREMODE_VALUES[WeaponsFireModeIndex] > 0) {
 		CONTROLS::DISABLE_CONTROL_ACTION(2, 24, 1); // attack
@@ -2794,6 +2831,7 @@ void add_weapon_feature_enablements2(std::vector<StringPairSettingDBRow>* result
 	results->push_back(StringPairSettingDBRow{ "PowerPunchIndex", std::to_string(PowerPunchIndex) });
 	results->push_back(StringPairSettingDBRow{ "WeaponsFireModeIndex", std::to_string(WeaponsFireModeIndex) });
 	results->push_back(StringPairSettingDBRow{ "WeapStrobeIndex", std::to_string(WeapStrobeIndex) });
+	results->push_back(StringPairSettingDBRow{ "WeapFlashDistIndex", std::to_string(WeapFlashDistIndex) });
 }
 
 void onchange_weap_dmg_modifier(int value, SelectFromListMenuItem* source){
@@ -2844,6 +2882,9 @@ void handle_generic_settings_weapons(std::vector<StringPairSettingDBRow>* settin
 		}
 		else if (setting.name.compare("WeapStrobeIndex") == 0) {
 			WeapStrobeIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("WeapFlashDistIndex") == 0) {
+			WeapFlashDistIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("lastCustomWeapon") == 0) {
 			lastCustomWeapon = setting.value;

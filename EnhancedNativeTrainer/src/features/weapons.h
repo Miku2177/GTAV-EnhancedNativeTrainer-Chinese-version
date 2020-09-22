@@ -269,6 +269,8 @@ void onchange_weapons_firemode_modifier(int value, SelectFromListMenuItem* sourc
 
 void onchange_weap_strobe_index(int value, SelectFromListMenuItem* source);
 
+void onchange_weap_flashdist_index(int value, SelectFromListMenuItem* source);
+
 void onchange_sniper_vision_modifier(int value, SelectFromListMenuItem* source);
 
 void onchange_vehicle_weapon_modifier(int value, SelectFromListMenuItem* source);
