@@ -227,3 +227,4 @@ static int get_fuel_tank_offset();
 
 extern int fuelLevelOffset;
 extern int fuelTankOffset;
+extern bool engine_running;
