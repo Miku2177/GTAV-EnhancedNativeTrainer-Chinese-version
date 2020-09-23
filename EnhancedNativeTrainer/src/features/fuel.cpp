@@ -602,7 +602,7 @@ void fuel()
 
 				if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
 					if (ign_anim_e == false) {
-						ingnition_anim();
+						if (VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(PED::GET_VEHICLE_PED_IS_IN(playerPed, false))) ingnition_anim();
 						ign_anim_e = true;
 					}
 					VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, false, false, true);
@@ -615,6 +615,7 @@ void fuel()
 						if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) ingnition_anim();
 						ign_anim_e = false;
 						VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, true, false, false);
+						engine_running = true;
 						Car_Refuel = false;
 						f_secs_curr = -1;
 					}
@@ -625,6 +626,7 @@ void fuel()
 						if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) ingnition_anim();
 						ign_anim_e = false;
 						VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, true, false, false);
+						engine_running = true;
 						Car_Refuel = false;
 						f_secs_curr = -1;
 					}

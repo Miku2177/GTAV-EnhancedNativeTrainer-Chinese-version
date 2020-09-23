@@ -868,7 +868,7 @@ void update_features(){
 		veh_engine_t = false;
 	}
 	if (featureDisableIgnition) {
-		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && veh_engine_t == false) {
+		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && veh_engine_t == false) { // PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1)
 			veh_engine = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 			if (!VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(veh_engine)) {
 				engine_running = true;
@@ -878,6 +878,9 @@ void update_features(){
 			veh_engine_t = true;
 		}
 	}
+
+	// disable engine
+	if (engine_running == false && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) VEHICLE::SET_VEHICLE_ENGINE_ON(veh_engine, engine_running, false, true);
 
 	if (featureWantedLevelFrozen){
 		if(featureWantedLevelFrozenUpdated){
