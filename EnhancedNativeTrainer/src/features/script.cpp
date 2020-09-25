@@ -457,11 +457,9 @@ void ingnition_anim() {
 	}
 	if (STREAMING::HAS_ANIM_DICT_LOADED(i_anim_dict)) {
 		float anim_tmp = ENTITY::_GET_ENTITY_ANIM_DURATION(i_anim_dict, animation_of_i);
-		AI::TASK_PLAY_ANIM(PLAYER::PLAYER_PED_ID(), i_anim_dict, animation_of_i, 8.0, 0.0, -1, 0, 0, 0, 0, 0);
+		AI::TASK_PLAY_ANIM(PLAYER::PLAYER_PED_ID(), i_anim_dict, animation_of_i, 8.0, 1.5, -1, 0, 0, 0, 0, 0);
 		WAIT(anim_tmp * 499); // 499
 		AI::STOP_ANIM_TASK(PLAYER::PLAYER_PED_ID(), i_anim_dict, animation_of_i, 1.0);
-		AI::STOP_ANIM_PLAYBACK(PLAYER::PLAYER_PED_ID(), 1, 1);
-		ENTITY::STOP_ENTITY_ANIM(PLAYER::PLAYER_PED_ID(), i_anim_dict, animation_of_i, 1);
 	}
 }
 
