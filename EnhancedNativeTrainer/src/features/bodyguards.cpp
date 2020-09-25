@@ -18,6 +18,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 int activeLineIndexBodyguards = 0;
 
 int myENTGroup = -1;
+int groupID = -1;
 int const BODYGUARD_LIMIT = 7;
 
 Ped cop_to_kill;
@@ -1557,6 +1558,24 @@ void maintain_bodyguards(){
 	}
 
 	if (!spawnedENTBodyguards.empty()) {
+		// there is no need for bodyguards to attack companions on missions
+		if (GAMEPLAY::GET_MISSION_FLAG() == 1) {
+			groupID = PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID());
+			PED::SET_RELATIONSHIP_BETWEEN_GROUPS(2, groupID, myENTGroup);
+			PED::SET_RELATIONSHIP_BETWEEN_GROUPS(2, myENTGroup, groupID);
+
+			const int arrSize_coop = 1024;
+			Ped surr_coop[arrSize_coop];
+			int count_coop = worldGetAllPeds(surr_coop, arrSize_coop);
+			for (int k = 0; k < count_coop; k++) {
+				if (UI::GET_BLIP_INFO_ID_TYPE(UI::GET_BLIP_FROM_ENTITY(surr_coop[k])) == 2 && UI::GET_BLIP_COLOUR(UI::GET_BLIP_FROM_ENTITY(surr_coop[k])) == 49 && PED::GET_PED_TYPE(surr_coop[k]) != 6 &&
+					PED::GET_PED_TYPE(surr_coop[k]) != 21 && PED::GET_PED_TYPE(surr_coop[k]) != 27 && PED::GET_PED_TYPE(surr_coop[k]) != 29 && !PED::IS_PED_GROUP_MEMBER(surr_coop[k], groupID)) {
+					PED::SET_PED_AS_GROUP_MEMBER(surr_coop[k], groupID);
+					//spawnedENTBodyguards.push_back(surr_coop[k]);
+				}
+			}
+		}
+
 		Vector3 my_coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 		for (int i = 0; i < spawnedENTBodyguards.size(); i++) {
 			// bodyguards invincible
