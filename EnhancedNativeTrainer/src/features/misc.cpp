@@ -1478,22 +1478,26 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			// health
 			if (PLAYER_HEALTH_VALUES[current_player_health] > 0) temp_h = PLAYER_HEALTH_VALUES[current_player_health] - 100;
 			else temp_h = 100;
-			if (PLAYER_HEALTH_VALUES[current_player_health] > 200) temp_h_d = floor(PLAYER_HEALTH_VALUES[current_player_health] / 100);
-			else temp_h_d = 1;
+			
+			temp_h_d = floor(PLAYER_HEALTH_VALUES[current_player_health] / 100);
+
 			if (health < (temp_h / 5)) {
 				GRAPHICS::DRAW_RECT(health_bar_x + 0.035, health_bar_y + 0.01, 0.070, 0.017, 41, 86, 40, 110);
-				GRAPHICS::DRAW_RECT(health_bar_x + 0.035, health_bar_y + 0.01, 0.070, 0.009, 220, 20, 20, 55);
-				if ((health_bar_x + ((health / temp_h_d) / 1399)) > 0.015) GRAPHICS::DRAW_RECT(health_bar_x + 0.00 + ((health / temp_h_d) / 2799), health_bar_y + 0.01, ((health / temp_h_d) / 1399), 0.009, 220, 20, 20, 255);
+				GRAPHICS::DRAW_RECT(health_bar_x + 0.035, health_bar_y + 0.01, 0.070, 0.009, 41, 56, 40, 245); // 220, 20, 20, 245 // 55
+				if ((health_bar_x + ((health / temp_h_d) / ((PLAYER_HEALTH_VALUES[current_player_health] - 100) / temp_h_d / 0.070))) > 0.015) 
+					GRAPHICS::DRAW_RECT(health_bar_x + 0.00 + ((health / temp_h_d) / ((PLAYER_HEALTH_VALUES[current_player_health] - 100) / temp_h_d / 0.035)), health_bar_y + 0.01, ((health / temp_h_d) / ((PLAYER_HEALTH_VALUES[current_player_health] - 100) / temp_h_d / 0.070)), 0.009, 220, 20, 20, 255);
 			}
 			else {
 				GRAPHICS::DRAW_RECT(health_bar_x + 0.035, health_bar_y + 0.01, 0.070, 0.017, 41, 86, 40, 110);
-				GRAPHICS::DRAW_RECT(health_bar_x + 0.035, health_bar_y + 0.01, 0.070, 0.009, 41, 56, 40, 75);
-				if (((health / temp_h_d) / 1399) < 0.070) GRAPHICS::DRAW_RECT(health_bar_x + 0.00 + ((health / temp_h_d) / 2799), health_bar_y + 0.01, ((health / temp_h_d) / 1399), 0.009, 78, 150, 77, 255);
+				GRAPHICS::DRAW_RECT(health_bar_x + 0.035, health_bar_y + 0.01, 0.070, 0.009, 41, 56, 40, 245); // 75
+				if (((health / temp_h_d) / ((PLAYER_HEALTH_VALUES[current_player_health] - 100) / temp_h_d / 0.070)) < 0.070) 
+					GRAPHICS::DRAW_RECT(health_bar_x + 0.00 + ((health / temp_h_d) / ((PLAYER_HEALTH_VALUES[current_player_health] - 100) / temp_h_d / 0.035)), health_bar_y + 0.01, ((health / temp_h_d) / ((PLAYER_HEALTH_VALUES[current_player_health] - 100) / temp_h_d / 0.070)), 0.009, 78, 150, 77, 255);
 				else GRAPHICS::DRAW_RECT(health_bar_x + 0.035, health_bar_y + 0.01, 0.070, 0.009, 78, 150, 77, 255);
 			}
+
 			// armor
 			GRAPHICS::DRAW_RECT(health_bar_x + 0.0880, health_bar_y + 0.01, 0.036, 0.017, 38, 85, 87, 110);
-			GRAPHICS::DRAW_RECT(health_bar_x + 0.0885, health_bar_y + 0.01, 0.034, 0.009, 39, 55, 56, 90);
+			GRAPHICS::DRAW_RECT(health_bar_x + 0.0885, health_bar_y + 0.01, 0.034, 0.009, 39, 55, 56, 245); // 90
 			if ((playerArmour / 2935) < 0.035) GRAPHICS::DRAW_RECT(health_bar_x + 0.0715 + (playerArmour / 5871), health_bar_y + 0.01, (playerArmour / 2935), 0.009, 62, 129, 164, 255);
 			else GRAPHICS::DRAW_RECT(health_bar_x + 0.0885, health_bar_y + 0.01, 0.034, 0.009, 62, 129, 164, 255);
 		}
