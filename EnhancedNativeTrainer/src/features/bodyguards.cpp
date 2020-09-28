@@ -1558,6 +1558,29 @@ void maintain_bodyguards(){
 	}
 
 	if (!spawnedENTBodyguards.empty()) {
+		// there is no need for bodyguards to attack companions on missions
+		if (GAMEPLAY::GET_MISSION_FLAG() == 1) {
+			groupID = PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID());
+			PED::SET_RELATIONSHIP_BETWEEN_GROUPS(2, groupID, myENTGroup);
+			PED::SET_RELATIONSHIP_BETWEEN_GROUPS(2, myENTGroup, groupID);
+
+			const int arrSize_coop = 1024;
+			Ped surr_coop[arrSize_coop];
+			int count_coop = worldGetAllPeds(surr_coop, arrSize_coop);
+			for (int k = 0; k < count_coop; k++) {
+				if ((PED::GET_PED_TYPE(surr_coop[k]) == 0 || PED::GET_PED_TYPE(surr_coop[k]) == 1 || PED::GET_PED_TYPE(surr_coop[k]) == 2 || PED::GET_PED_TYPE(surr_coop[k]) == 3 ||
+					ENTITY::GET_ENTITY_MODEL(surr_coop[k]) == GAMEPLAY::GET_HASH_KEY("ig_stretch") || ENTITY::GET_ENTITY_MODEL(surr_coop[k]) == GAMEPLAY::GET_HASH_KEY("ig_lamardavis") ||
+					ENTITY::GET_ENTITY_MODEL(surr_coop[k]) == GAMEPLAY::GET_HASH_KEY("u_m_m_edtoh") || ENTITY::GET_ENTITY_MODEL(surr_coop[k]) == GAMEPLAY::GET_HASH_KEY("ig_chef2") ||
+					ENTITY::GET_ENTITY_MODEL(surr_coop[k]) == GAMEPLAY::GET_HASH_KEY("ig_talina") || ENTITY::GET_ENTITY_MODEL(surr_coop[k]) == GAMEPLAY::GET_HASH_KEY("ig_wade") ||
+					ENTITY::GET_ENTITY_MODEL(surr_coop[k]) == GAMEPLAY::GET_HASH_KEY("ig_brad") || ENTITY::GET_ENTITY_MODEL(surr_coop[k]) == GAMEPLAY::GET_HASH_KEY("ig_davenorton") ||
+					ENTITY::GET_ENTITY_MODEL(surr_coop[k]) == GAMEPLAY::GET_HASH_KEY("hc_driver") || ENTITY::GET_ENTITY_MODEL(surr_coop[k]) == GAMEPLAY::GET_HASH_KEY("hc_gunman")) &&
+					!PED::IS_PED_GROUP_MEMBER(surr_coop[k], groupID)) {
+					PED::SET_PED_AS_GROUP_MEMBER(surr_coop[k], groupID);
+					ENTITY::SET_ENTITY_INVINCIBLE(surr_coop[k], false);
+				}
+			}
+		}
+		
 		Vector3 my_coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 		for (int i = 0; i < spawnedENTBodyguards.size(); i++) {
 			// bodyguards invincible
