@@ -385,7 +385,7 @@ bool onconfirm_misc_cutscene_menu(MenuItem<int> choice) {
 		if (CAM::DOES_CAM_EXIST(CutCam)) {
 			CAM::RENDER_SCRIPT_CAMS(false, false, 1, false, false);
 			CAM::DESTROY_CAM(CutCam, true);
-			CAM::DESTROY_ALL_CAMS(true);
+			//CAM::DESTROY_ALL_CAMS(true);
 		}
 		CAM::DO_SCREEN_FADE_IN(0);
 		CUTSCENE::STOP_CUTSCENE_IMMEDIATELY();
@@ -1671,7 +1671,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		if (CAM::DOES_CAM_EXIST(CutCam)) {
 			CAM::RENDER_SCRIPT_CAMS(false, false, 1, false, false);
 			CAM::DESTROY_CAM(CutCam, true);
-			CAM::DESTROY_ALL_CAMS(true);
+			//CAM::DESTROY_ALL_CAMS(true);
 		}
 		curr_cut_ped_me = -1;
 		my_first_coords = -1;
@@ -1751,7 +1751,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 
 								CAM::RENDER_SCRIPT_CAMS(false, false, 1, false, false);
 								CAM::DESTROY_CAM(CutCam, true);
-								CAM::DESTROY_ALL_CAMS(true);
+								//CAM::DESTROY_ALL_CAMS(true);
 
 								if (ENTITY::GET_ENTITY_MODEL(us_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_zero") || ENTITY::GET_ENTITY_MODEL(us_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_one") ||
 									ENTITY::GET_ENTITY_MODEL(us_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_two")) PlayerIndex = PED::GET_PED_BONE_INDEX(curr_cut_ped, 8433);
@@ -1792,7 +1792,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 						CAM::RENDER_SCRIPT_CAMS(false, false, 1, false, false);
 						CAM::DESTROY_CAM(CutCam, true);
 					}
-					CAM::DESTROY_ALL_CAMS(true);
+					//CAM::DESTROY_ALL_CAMS(true);
 					found_ped_in_cutscene = false;
 					switched_c = -1;
 				}
@@ -1821,7 +1821,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			if (CAM::DOES_CAM_EXIST(CutCam)) {
 				CAM::RENDER_SCRIPT_CAMS(false, false, 1, false, false);
 				CAM::DESTROY_CAM(CutCam, true);
-				CAM::DESTROY_ALL_CAMS(true);
+				//CAM::DESTROY_ALL_CAMS(true);
 			}
 			found_ped_in_cutscene = false;
 			switched_c = -1;
@@ -1833,7 +1833,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		if (CAM::DOES_CAM_EXIST(CutCam)) {
 			CAM::RENDER_SCRIPT_CAMS(false, false, 1, false, false);
 			CAM::DESTROY_CAM(CutCam, true);
-			CAM::DESTROY_ALL_CAMS(true);
+			//CAM::DESTROY_ALL_CAMS(true);
 		}
 		found_ped_in_cutscene = false;
 		switched_c = -1;
