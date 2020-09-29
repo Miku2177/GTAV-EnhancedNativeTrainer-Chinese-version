@@ -1809,7 +1809,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 					CAM::SET_CAM_ROT(CutCam, Ped1rotation.x, Pedrotation.y, Ped2rotation.z, 2);
 				}
 			}
-		}
+		} // end of if (CUTSCENE::IS_CUTSCENE_PLAYING())
 		else if (cutscene_is_playing == false) {
 			if (con_disabled == true && manual_cutscene == true) {
 				for (int i = 0; i <= 33; i++) CONTROLS::ENABLE_ALL_CONTROL_ACTIONS(i);
@@ -1826,7 +1826,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			found_ped_in_cutscene = false;
 			switched_c = -1;
 		}
-	}
+	} // end of if (featureFirstPersonCutscene)
 	else {
 		OBJECT::DELETE_OBJECT(&xaxis);
 		OBJECT::DELETE_OBJECT(&zaxis);

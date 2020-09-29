@@ -1574,7 +1574,7 @@ void maintain_bodyguards(){
 					ENTITY::GET_ENTITY_MODEL(surr_coop[k]) == GAMEPLAY::GET_HASH_KEY("ig_talina") || ENTITY::GET_ENTITY_MODEL(surr_coop[k]) == GAMEPLAY::GET_HASH_KEY("ig_wade") ||
 					ENTITY::GET_ENTITY_MODEL(surr_coop[k]) == GAMEPLAY::GET_HASH_KEY("ig_brad") || ENTITY::GET_ENTITY_MODEL(surr_coop[k]) == GAMEPLAY::GET_HASH_KEY("ig_davenorton") ||
 					ENTITY::GET_ENTITY_MODEL(surr_coop[k]) == GAMEPLAY::GET_HASH_KEY("hc_driver") || ENTITY::GET_ENTITY_MODEL(surr_coop[k]) == GAMEPLAY::GET_HASH_KEY("hc_gunman")) &&
-					!PED::IS_PED_GROUP_MEMBER(surr_coop[k], groupID)) {
+					!PED::IS_PED_GROUP_MEMBER(surr_coop[k], groupID) && !PED::IS_PED_IN_ANY_VEHICLE(surr_coop[k], 0)) {
 					PED::SET_PED_AS_GROUP_MEMBER(surr_coop[k], groupID);
 					ENTITY::SET_ENTITY_INVINCIBLE(surr_coop[k], false);
 				}
