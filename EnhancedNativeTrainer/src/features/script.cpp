@@ -1273,7 +1273,7 @@ void update_features(){
 		player_died = false;
 	}
 	
-	if (playerPed != oldplayerPed && featurePlayerLife_Changed) { // If You Switch Character Your Health & Armor Will Be Restored
+	if ((playerPed != oldplayerPed && featurePlayerLife_Changed) || DLC2::GET_IS_LOADING_SCREEN_ACTIVE()) { // If You Switch Character Your Health & Armor Will Be Restored
 		featurePlayerLifeUpdated = true;
 		featurePlayerStatsUpdated = true;
 	}
