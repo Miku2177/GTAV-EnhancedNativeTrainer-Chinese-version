@@ -2353,7 +2353,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 
 	// Flashlight Intensity
 	if (WEAP_DMG_FLOAT[WeapFlashDistIndex] > 1.0) {
-		if (!PED::IS_PED_RELOADING(playerPed) && WEAPON::SET_WEAPON_SMOKEGRENADE_ASSIGNED(playerPed)) {
+		if ((!PED::IS_PED_RELOADING(playerPed) && WEAPON::SET_WEAPON_SMOKEGRENADE_ASSIGNED(playerPed)) || (WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_FLASHLIGHT") && CONTROLS::IS_CONTROL_PRESSED(2, 25))) {
 			Entity curr_w = WEAPON::GET_CURRENT_PED_WEAPON_ENTITY_INDEX(playerPed);
 			Vector3 myCoords = ENTITY::GET_ENTITY_COORDS(curr_w, 1);
 				
