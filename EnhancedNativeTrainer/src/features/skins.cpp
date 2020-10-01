@@ -345,6 +345,7 @@ void update_skin_features() {
 
 		if (PLAYER::PLAYER_PED_ID() != oldplayerSkin) auto_skin = false;
 		if ((PLAYER::GET_TIME_SINCE_LAST_DEATH() > -1 && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 2000) || (player_died == true && !featureNoAutoRespawn)) auto_skin = false;
+		if (DLC2::GET_IS_LOADING_SCREEN_ACTIVE()) auto_skin = false;
 
 	} // end of featureautoskin
 }

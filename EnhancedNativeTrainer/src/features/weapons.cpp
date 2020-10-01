@@ -51,7 +51,7 @@ bool PlayerUpdated_w, PlayerUpdated_a = true;
 int tick_s_allw, ss_tick_secs_curr = 0;
 Ped oldplayerPed_s = -1;
 bool PlayerUpdated_s = true;
-//
+
 Hash temp_weapon = -1;
 
 //Flashlight strobe
@@ -97,10 +97,10 @@ bool featureDropWeaponOutAmmo = false;
 bool featureCanDisarmNPC = false;
 bool featurePedNoWeaponDrop = false;
 bool featurePowerPunch = false;
+
 // cop weapons
 bool someonehasgunandshooting = false;
 Ped shooting_criminal = -1;
-//
 
 int s_vacuum_secs_passed, s_vacuum_secs_curr, vacuum_seconds = 0;
 
@@ -2209,6 +2209,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		if (death_time2 > -1 && death_time2 < 2000) PlayerUpdated_w = true; 
 		if (playerPed != oldplayerPed_W) PlayerUpdated_w = true;
 		if (player_died == true) PlayerUpdated_w = true;
+		if (DLC2::GET_IS_LOADING_SCREEN_ACTIVE()) PlayerUpdated_w = true;
 	}
 	
 	// Add All Weapons Attachments Automatically
@@ -2266,6 +2267,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		if (death_time2 > -1 && death_time2 < 2000) PlayerUpdated_s = true;
 		if (playerPed != oldplayerPed_s) PlayerUpdated_s = true;
 		if (player_died == true) PlayerUpdated_s = true;
+		if (DLC2::GET_IS_LOADING_SCREEN_ACTIVE()) PlayerUpdated_s = true;
 	}
 
 	// Disables visions if not aiming
