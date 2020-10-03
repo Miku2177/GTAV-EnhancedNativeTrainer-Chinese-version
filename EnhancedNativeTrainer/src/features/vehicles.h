@@ -90,6 +90,10 @@ const std::vector<int> VEH_COLOUR_VALUES{ -1, 134, 27, 139, 64, 38, 145, 135, 88
 extern int VehColourIndex;
 extern bool VehColour_Changed;
 
+//Turn Signals Off Acceleration
+const std::vector<std::string> VEH_TURN_SIGNALS_ACCELERATION_CAPTIONS{ "OFF", "1", "2", "3", "4", "5", "7", "10" };
+const std::vector<int> VEH_TURN_SIGNALS_ACCELERATION_VALUES{ 0, 1, 2, 3, 4, 5, 7, 10 };
+
 struct VehicleImage {
 	Hash modelName;
 	char* dict;
