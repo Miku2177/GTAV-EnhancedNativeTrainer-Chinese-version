@@ -212,6 +212,10 @@ const int NPC_RAGDOLL_VALUES[] = { 0, 1, 2 };
 int current_npc_ragdoll = 0;
 bool current_npc_ragdoll_Changed = true;
 
+// Shake Camera If Shot
+int feature_shake_ragdoll = 0;
+bool feature_shake_ragdoll_Changed = true;
+
 // No Ragdoll
 int current_no_ragdoll = 0;
 bool current_no_ragdoll_Changed = true;
@@ -305,6 +309,11 @@ void onchange_NPC_ragdoll_mode(int value, SelectFromListMenuItem* source) {
 void onchange_no_ragdoll_mode(int value, SelectFromListMenuItem* source) {
 	current_no_ragdoll = value;
 	current_no_ragdoll_Changed = true;
+}
+
+void onchange_shake_ragdoll_mode(int value, SelectFromListMenuItem* source) {
+	feature_shake_ragdoll = value;
+	feature_shake_ragdoll_Changed = true;
 }
 
 void onchange_limp_if_injured_mode(int value, SelectFromListMenuItem* source) {
@@ -1409,7 +1418,7 @@ void update_features(){
 	}
 
 	// Ragdoll If Shot
-	if (featureRagdollIfInjured) {
+	if (featureRagdollIfInjured || VEH_TURN_SIGNALS_ACCELERATION_VALUES[feature_shake_ragdoll] > 0) {
 		//auto addr = getScriptHandleBaseAddress(playerPed);
 		//float curr_health = (*(float *)(addr + 0x280)) - 100;
 		float curr_health = ENTITY::GET_ENTITY_HEALTH(playerPed) - 100;
@@ -1437,16 +1446,25 @@ void update_features(){
 		}
 		
 		if (been_damaged_by_weapon == true) {
-			int time1 = (rand() % 3000 + 0); // UP MARGIN + DOWN MARGIN
-			int time2 = (rand() % 3000 + 0); 
-			int ragdollType = (rand() % 3 + 0); 
-			int ScreamType = (rand() % 8 + 5);
-			AUDIO::PLAY_PAIN(ScreamType, 0, 0);
-			AUDIO::_PLAY_AMBIENT_SPEECH1(PLAYER::PLAYER_ID(), "GENERIC_SHOCKED_HIGH", "SPEECH_PARAMS_FORCE");
-			if (PED::GET_PED_ARMOUR(playerPed) > 4 && (ragdollType == 2 || ragdollType == 3)) PED::SET_PED_TO_RAGDOLL(playerPed, time1, time2, ragdollType, true, true, false);
-			if (PED::GET_PED_ARMOUR(playerPed) < 5 || featurePlayerInvincible) PED::SET_PED_TO_RAGDOLL(playerPed, time1, time2, ragdollType, true, true, false);
-			been_damaged_by_weapon = false;
-			ragdoll_task = true;
+			if (featureRagdollIfInjured) {
+				int time1 = (rand() % 3000 + 0); // UP MARGIN + DOWN MARGIN
+				int time2 = (rand() % 3000 + 0);
+				int ragdollType = (rand() % 3 + 0);
+				int ScreamType = (rand() % 8 + 5);
+				AUDIO::PLAY_PAIN(ScreamType, 0, 0);
+				AUDIO::_PLAY_AMBIENT_SPEECH1(PLAYER::PLAYER_ID(), "GENERIC_SHOCKED_HIGH", "SPEECH_PARAMS_FORCE");
+				if (PED::GET_PED_ARMOUR(playerPed) > 4 && (ragdollType == 2 || ragdollType == 3)) PED::SET_PED_TO_RAGDOLL(playerPed, time1, time2, ragdollType, true, true, false);
+				if (PED::GET_PED_ARMOUR(playerPed) < 5 || featurePlayerInvincible) PED::SET_PED_TO_RAGDOLL(playerPed, time1, time2, ragdollType, true, true, false);
+				been_damaged_by_weapon = false;
+				ragdoll_task = true;
+			}
+			if (VEH_TURN_SIGNALS_ACCELERATION_VALUES[feature_shake_ragdoll] > 0) {
+				Vector3 coords_me = ENTITY::GET_ENTITY_COORDS(playerPed, true);
+				FIRE::ADD_OWNED_EXPLOSION(playerPed, coords_me.x, coords_me.y, coords_me.z, 29, 0.0f, false, true, VEH_TURN_SIGNALS_ACCELERATION_VALUES[feature_shake_ragdoll]);
+				been_damaged_by_weapon = false;
+				ragdoll_task = false;
+				ragdoll_seconds = 0;
+			}
 		}
 		
 		if (ragdoll_task == true) {
@@ -1917,6 +1935,12 @@ bool process_ragdoll_menu() {
 	toggleItem->toggleValue = &featureRagdollIfInjured;
 	menuItems.push_back(toggleItem);
 
+	listItem = new SelectFromListMenuItem(VEH_TURN_SIGNALS_ACCELERATION_CAPTIONS, onchange_shake_ragdoll_mode);
+	listItem->wrap = false;
+	listItem->caption = "Shake Camera If Shot";
+	listItem->value = feature_shake_ragdoll;
+	menuItems.push_back(listItem);
+
 	listItem = new SelectFromListMenuItem(NPC_RAGDOLL_CAPTIONS, onchange_NPC_ragdoll_mode);
 	listItem->wrap = false;
 	listItem->caption = "NPC Ragdoll If Shot";
@@ -2298,6 +2322,7 @@ void reset_globals(){
 	current_npc_ragdoll = 0;
 	current_limp_if_injured = 0;
 	current_no_ragdoll = 0;
+	feature_shake_ragdoll = 0;
 	current_player_movement = 0;
 	current_player_jumpfly = 0;
 	current_player_superjump = 0;
@@ -2620,6 +2645,7 @@ void add_world_feature_enablements3(std::vector<StringPairSettingDBRow>* results
 	results->push_back(StringPairSettingDBRow{"current_player_stats", std::to_string(current_player_stats)});
 	results->push_back(StringPairSettingDBRow{"current_npc_ragdoll", std::to_string(current_npc_ragdoll)});
 	results->push_back(StringPairSettingDBRow{"current_no_ragdoll", std::to_string(current_no_ragdoll)});
+	results->push_back(StringPairSettingDBRow{"feature_shake_ragdoll", std::to_string(feature_shake_ragdoll)});
 	results->push_back(StringPairSettingDBRow{"current_limp_if_injured", std::to_string(current_limp_if_injured)});
 	results->push_back(StringPairSettingDBRow{"current_player_movement", std::to_string(current_player_movement)});
 	results->push_back(StringPairSettingDBRow{"current_player_jumpfly", std::to_string(current_player_jumpfly)});
@@ -2723,6 +2749,9 @@ void handle_generic_settings(std::vector<StringPairSettingDBRow> settings){
 		}
 		else if (setting.name.compare("current_no_ragdoll") == 0) {
 			current_no_ragdoll = stoi(setting.value);
+		}
+		else if (setting.name.compare("feature_shake_ragdoll") == 0) {
+			feature_shake_ragdoll = stoi(setting.value);
 		}
 		else if (setting.name.compare("current_player_movement") == 0) {
 			current_player_movement = stoi(setting.value);

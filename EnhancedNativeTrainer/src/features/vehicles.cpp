@@ -236,8 +236,6 @@ int NitrousPowerIndex = 1;
 bool NitrousPowerChanged = true;
 
 //Turn Signals Off Acceleration
-const std::vector<std::string> VEH_TURN_SIGNALS_ACCELERATION_CAPTIONS{ "OFF", "1", "2", "3", "4", "5", "7", "10" };
-const std::vector<int> VEH_TURN_SIGNALS_ACCELERATION_VALUES{ 0, 1, 2, 3, 4, 5, 7, 10 };
 int turnSignalsAccelerationIndex = 3;
 bool turnSignalsAccelerationChanged = true;
 int JumpyVehIndex = 0;
