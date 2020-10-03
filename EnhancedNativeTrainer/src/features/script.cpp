@@ -1460,7 +1460,9 @@ void update_features(){
 			}
 			if (VEH_TURN_SIGNALS_ACCELERATION_VALUES[feature_shake_ragdoll] > 0) {
 				Vector3 coords_me = ENTITY::GET_ENTITY_COORDS(playerPed, true);
-				FIRE::ADD_OWNED_EXPLOSION(playerPed, coords_me.x, coords_me.y, coords_me.z, 29, 0.0f, false, true, VEH_TURN_SIGNALS_ACCELERATION_VALUES[feature_shake_ragdoll]);
+				float tmp_v = VEH_TURN_SIGNALS_ACCELERATION_VALUES[feature_shake_ragdoll];
+				//FIRE::ADD_OWNED_EXPLOSION(playerPed, coords_me.x, coords_me.y, coords_me.z, 29, 0.0f, false, true, VEH_TURN_SIGNALS_ACCELERATION_VALUES[feature_shake_ragdoll]);
+				CAM::SHAKE_GAMEPLAY_CAM("SMALL_EXPLOSION_SHAKE", tmp_v / 5); // JOLT_SHAKE
 				been_damaged_by_weapon = false;
 				ragdoll_task = false;
 				ragdoll_seconds = 0;
