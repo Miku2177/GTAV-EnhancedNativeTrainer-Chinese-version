@@ -140,7 +140,7 @@ bool lev_message = false;
 bool engine_running = true;
 bool we_have_troubles, iaminside = false;
 
-bool been_injured = false;
+bool been_injured = true;
 
 bool p_invisible = false;
 bool featurePlayerLife = false;
@@ -223,6 +223,13 @@ bool current_no_ragdoll_Changed = true;
 // Limp If Injured
 int current_limp_if_injured = 0;
 bool current_limp_if_injured_Changed = true;
+
+// Shake Camera If Injured
+int feature_shake_injured = 0;
+bool feature_shake_injured_Changed = true;
+bool enable_camera_injured = false;
+int curr_cam = -1;
+int curr_hlth = -1;
 
 // Player Movement Speed && Hancock Mode
 const std::vector<std::string> PLAYER_MOVEMENT_CAPTIONS{ "Normal", "0.5x", "1x", "2x", "3x", "4x", "5x", "6x", "7x", "8x", "9x", "10x" };
@@ -314,6 +321,11 @@ void onchange_no_ragdoll_mode(int value, SelectFromListMenuItem* source) {
 void onchange_shake_ragdoll_mode(int value, SelectFromListMenuItem* source) {
 	feature_shake_ragdoll = value;
 	feature_shake_ragdoll_Changed = true;
+}
+
+void onchange_shake_injured_mode(int value, SelectFromListMenuItem* source) {
+	feature_shake_injured = value;
+	feature_shake_injured_Changed = true;
 }
 
 void onchange_limp_if_injured_mode(int value, SelectFromListMenuItem* source) {
@@ -1118,39 +1130,53 @@ void update_features(){
 	if (injured_m == -2) injured_m = current_limp_if_injured;
 	if (current_limp_if_injured == 0 && injured_m != 0) injured_m = current_limp_if_injured;
 
-	if (LIMP_IF_INJURED_VALUES[current_limp_if_injured] > 0 && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) {
-		if (injured_m != current_limp_if_injured) {
-			if (current_limp_if_injured == 1) set_status_text("Walking Style 1");
-			if (current_limp_if_injured == 2) set_status_text("Walking Style 2");
-			injured_m = current_limp_if_injured;
-		}
-
-		if (LIMP_IF_INJURED_VALUES[current_limp_if_injured] == 1 && !STREAMING::HAS_ANIM_DICT_LOADED("move_injured_generic")) STREAMING::REQUEST_ANIM_DICT("move_injured_generic"); // move_m@injured
+	if ((LIMP_IF_INJURED_VALUES[current_limp_if_injured] > 0 && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) || VEH_TURN_SIGNALS_ACCELERATION_VALUES[feature_shake_injured] > 0) {
 		float curr_health = ENTITY::GET_ENTITY_HEALTH(playerPed) - 100;
-		Vector3 coords_calf_l = PED::GET_PED_BONE_COORDS(playerPed, 63931, 0, 0, 0); // left calf
-		Vector3 coords_calf_r = PED::GET_PED_BONE_COORDS(playerPed, 36864, 0, 0, 0); // right calf
-		Vector3 coords_pelvis = PED::GET_PED_BONE_COORDS(playerPed, 11816, 0, 0, 0); // pelvis
-		if (WEAPON::HAS_ENTITY_BEEN_DAMAGED_BY_WEAPON(playerPed, 0, 2) && (GAMEPLAY::HAS_BULLET_IMPACTED_IN_AREA(coords_calf_l.x, coords_calf_l.y, coords_calf_l.z, 0.4, 0, 0) || 
-			GAMEPLAY::HAS_BULLET_IMPACTED_IN_AREA(coords_calf_r.x, coords_calf_r.y, coords_calf_r.z, 0.4, 0, 0) || GAMEPLAY::HAS_BULLET_IMPACTED_IN_AREA(coords_pelvis.x, coords_pelvis.y, coords_pelvis.z, 0.2, 0, 0))) {
-			been_injured = true;
+		if (LIMP_IF_INJURED_VALUES[current_limp_if_injured] > 0 && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) {
+			if (injured_m != current_limp_if_injured) {
+				if (current_limp_if_injured == 1) set_status_text("Walking Style 1");
+					if (current_limp_if_injured == 2) set_status_text("Walking Style 2");
+					injured_m = current_limp_if_injured;
+					enable_camera_injured = false;
+			}
+
+			if (LIMP_IF_INJURED_VALUES[current_limp_if_injured] == 1 && !STREAMING::HAS_ANIM_DICT_LOADED("move_injured_generic")) STREAMING::REQUEST_ANIM_DICT("move_injured_generic"); // move_m@injured
+				Vector3 coords_calf_l = PED::GET_PED_BONE_COORDS(playerPed, 63931, 0, 0, 0); // left calf
+				Vector3 coords_calf_r = PED::GET_PED_BONE_COORDS(playerPed, 36864, 0, 0, 0); // right calf
+			Vector3 coords_pelvis = PED::GET_PED_BONE_COORDS(playerPed, 11816, 0, 0, 0); // pelvis
+			if (WEAPON::HAS_ENTITY_BEEN_DAMAGED_BY_WEAPON(playerPed, 0, 2) && (GAMEPLAY::HAS_BULLET_IMPACTED_IN_AREA(coords_calf_l.x, coords_calf_l.y, coords_calf_l.z, 0.4, 0, 0) ||
+				GAMEPLAY::HAS_BULLET_IMPACTED_IN_AREA(coords_calf_r.x, coords_calf_r.y, coords_calf_r.z, 0.4, 0, 0) || GAMEPLAY::HAS_BULLET_IMPACTED_IN_AREA(coords_pelvis.x, coords_pelvis.y, coords_pelvis.z, 0.2, 0, 0))) {
+				been_injured = true;
+			}
+			if (LIMP_IF_INJURED_VALUES[current_limp_if_injured] == 1 && (curr_health < 80 || been_injured == true)) PED::SET_PED_MOVEMENT_CLIPSET(playerPed, "move_injured_generic", 1.0f); // @walk // 90
+			if (LIMP_IF_INJURED_VALUES[current_limp_if_injured] == 2 && (curr_health < 80 || been_injured == true) && injured_drunk == false) {
+				PED::RESET_PED_MOVEMENT_CLIPSET(playerPed, 1.0f);
+				STREAMING::REQUEST_ANIM_SET("move_m@drunk@verydrunk");
+				while (!STREAMING::HAS_ANIM_SET_LOADED("move_m@drunk@verydrunk")) WAIT(1);
+				PED::SET_PED_MOVEMENT_CLIPSET(playerPed, "move_m@drunk@verydrunk", 1.0f);
+				injured_drunk = true;
+			}
+			if (curr_health < 50 || been_injured == true) CONTROLS::DISABLE_CONTROL_ACTION(2, 21, 1); // sprint
+			if (curr_health < 30/* || been_injured == true*/ && !ENTITY::IS_ENTITY_DEAD(playerPed)) CONTROLS::DISABLE_CONTROL_ACTION(2, 22, 1); // jump
+			if ((curr_health > 79) || (PLAYER::GET_TIME_SINCE_LAST_DEATH() > 100 && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 5000) ||
+				(PLAYER::GET_TIME_SINCE_LAST_ARREST() > 100 && PLAYER::GET_TIME_SINCE_LAST_ARREST() < 5000) || (injured_drunk == true && LIMP_IF_INJURED_VALUES[current_limp_if_injured] != 2) || player_died == true) { // (PLAYER_HEALTH_VALUES[current_player_health] - 111)
+				PED::CLEAR_PED_LAST_DAMAGE_BONE(playerPed);
+				ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(playerPed);
+				been_injured = false;
+				injured_drunk = false;
+				PED::RESET_PED_MOVEMENT_CLIPSET(playerPed, 1.0f);
+			}
 		}
-		if (LIMP_IF_INJURED_VALUES[current_limp_if_injured] == 1 && (curr_health < 90 || been_injured == true)) PED::SET_PED_MOVEMENT_CLIPSET(playerPed, "move_injured_generic", 1.0f); // @walk
-		if (LIMP_IF_INJURED_VALUES[current_limp_if_injured] == 2 && (curr_health < 80 || been_injured == true) && injured_drunk == false) {
-			PED::RESET_PED_MOVEMENT_CLIPSET(playerPed, 1.0f);
-			STREAMING::REQUEST_ANIM_SET("move_m@drunk@verydrunk");
-			while (!STREAMING::HAS_ANIM_SET_LOADED("move_m@drunk@verydrunk")) WAIT(1);
-			PED::SET_PED_MOVEMENT_CLIPSET(playerPed, "move_m@drunk@verydrunk", 1.0f);
-			injured_drunk = true;
-		}
-		if (curr_health < 50 || been_injured == true) CONTROLS::DISABLE_CONTROL_ACTION(2, 21, 1); // sprint
-		if (curr_health < 30/* || been_injured == true*/ && !ENTITY::IS_ENTITY_DEAD(playerPed)) CONTROLS::DISABLE_CONTROL_ACTION(2, 22, 1); // jump
-		if ((curr_health > (PLAYER_HEALTH_VALUES[current_player_health] - 111)) || (PLAYER::GET_TIME_SINCE_LAST_DEATH() > 100 && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 5000) || 
-			(PLAYER::GET_TIME_SINCE_LAST_ARREST() > 100 && PLAYER::GET_TIME_SINCE_LAST_ARREST() < 5000) || (injured_drunk == true && LIMP_IF_INJURED_VALUES[current_limp_if_injured] != 2) || player_died == true) { // 99
-			PED::CLEAR_PED_LAST_DAMAGE_BONE(playerPed);
-			ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(playerPed);
-			been_injured = false;
-			injured_drunk = false;
-			PED::RESET_PED_MOVEMENT_CLIPSET(playerPed, 1.0f);
+		if (curr_cam != VEH_TURN_SIGNALS_ACCELERATION_VALUES[feature_shake_injured] || curr_hlth != curr_health) enable_camera_injured = false;
+		if (VEH_TURN_SIGNALS_ACCELERATION_VALUES[feature_shake_injured] > 0 && enable_camera_injured == false) {
+			if (curr_health < 80) {
+				float tmp_v = VEH_TURN_SIGNALS_ACCELERATION_VALUES[feature_shake_injured];
+				CAM::SHAKE_GAMEPLAY_CAM("DRUNK_SHAKE", tmp_v / 3);
+			}
+			if (curr_health > 79) CAM::SHAKE_GAMEPLAY_CAM("DRUNK_SHAKE", 0.0f);
+			enable_camera_injured = true;
+			curr_cam = VEH_TURN_SIGNALS_ACCELERATION_VALUES[feature_shake_injured];
+			curr_hlth = curr_health;
 		}
 	}
 
@@ -1955,6 +1981,12 @@ bool process_ragdoll_menu() {
 	listItem->value = current_limp_if_injured;
 	menuItems.push_back(listItem);
 
+	listItem = new SelectFromListMenuItem(VEH_TURN_SIGNALS_ACCELERATION_CAPTIONS, onchange_shake_injured_mode);
+	listItem->wrap = false;
+	listItem->caption = "Shake Camera If Injured";
+	listItem->value = feature_shake_injured;
+	menuItems.push_back(listItem);
+
 	return draw_generic_menu<int>(menuItems, &NPCragdollMenuIndex, caption, onconfirm_NPCragdoll_menu, NULL, NULL);
 }
 
@@ -2325,6 +2357,7 @@ void reset_globals(){
 	current_limp_if_injured = 0;
 	current_no_ragdoll = 0;
 	feature_shake_ragdoll = 0;
+	feature_shake_injured = 0;
 	current_player_movement = 0;
 	current_player_jumpfly = 0;
 	current_player_superjump = 0;
@@ -2648,6 +2681,7 @@ void add_world_feature_enablements3(std::vector<StringPairSettingDBRow>* results
 	results->push_back(StringPairSettingDBRow{"current_npc_ragdoll", std::to_string(current_npc_ragdoll)});
 	results->push_back(StringPairSettingDBRow{"current_no_ragdoll", std::to_string(current_no_ragdoll)});
 	results->push_back(StringPairSettingDBRow{"feature_shake_ragdoll", std::to_string(feature_shake_ragdoll)});
+	results->push_back(StringPairSettingDBRow{"feature_shake_injured", std::to_string(feature_shake_injured)});
 	results->push_back(StringPairSettingDBRow{"current_limp_if_injured", std::to_string(current_limp_if_injured)});
 	results->push_back(StringPairSettingDBRow{"current_player_movement", std::to_string(current_player_movement)});
 	results->push_back(StringPairSettingDBRow{"current_player_jumpfly", std::to_string(current_player_jumpfly)});
@@ -2754,6 +2788,9 @@ void handle_generic_settings(std::vector<StringPairSettingDBRow> settings){
 		}
 		else if (setting.name.compare("feature_shake_ragdoll") == 0) {
 			feature_shake_ragdoll = stoi(setting.value);
+		}
+		else if (setting.name.compare("feature_shake_injured") == 0) {
+			feature_shake_injured = stoi(setting.value);
 		}
 		else if (setting.name.compare("current_player_movement") == 0) {
 			current_player_movement = stoi(setting.value);
