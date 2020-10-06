@@ -1132,6 +1132,7 @@ void update_features(){
 
 	if ((LIMP_IF_INJURED_VALUES[current_limp_if_injured] > 0 && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) || VEH_TURN_SIGNALS_ACCELERATION_VALUES[feature_shake_injured] > 0) {
 		float curr_health = ENTITY::GET_ENTITY_HEALTH(playerPed) - 100;
+		float curr_set_h = PLAYER_HEALTH_VALUES[current_player_health] - 100;
 		if (LIMP_IF_INJURED_VALUES[current_limp_if_injured] > 0 && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) {
 			if (injured_m != current_limp_if_injured) {
 				if (current_limp_if_injured == 1) set_status_text("Walking Style 1");
@@ -1148,18 +1149,20 @@ void update_features(){
 				GAMEPLAY::HAS_BULLET_IMPACTED_IN_AREA(coords_calf_r.x, coords_calf_r.y, coords_calf_r.z, 0.4, 0, 0) || GAMEPLAY::HAS_BULLET_IMPACTED_IN_AREA(coords_pelvis.x, coords_pelvis.y, coords_pelvis.z, 0.2, 0, 0))) {
 				been_injured = true;
 			}
-			if (LIMP_IF_INJURED_VALUES[current_limp_if_injured] == 1 && (curr_health < 80 || been_injured == true)) PED::SET_PED_MOVEMENT_CLIPSET(playerPed, "move_injured_generic", 1.0f); // @walk // 90
-			if (LIMP_IF_INJURED_VALUES[current_limp_if_injured] == 2 && (curr_health < 80 || been_injured == true) && injured_drunk == false) {
+			if (LIMP_IF_INJURED_VALUES[current_limp_if_injured] == 1 && ((!featurePlayerLife && curr_health < 80) || (featurePlayerLife && curr_health < ((80.0 / 100.0) * curr_set_h)) ||
+				been_injured == true)) PED::SET_PED_MOVEMENT_CLIPSET(playerPed, "move_injured_generic", 1.0f); // @walk // 90
+			if (LIMP_IF_INJURED_VALUES[current_limp_if_injured] == 2 && ((!featurePlayerLife && curr_health < 80) || (featurePlayerLife && curr_health < ((80.0 / 100.0) * curr_set_h)) || been_injured == true) && injured_drunk == false) {
 				PED::RESET_PED_MOVEMENT_CLIPSET(playerPed, 1.0f);
 				STREAMING::REQUEST_ANIM_SET("move_m@drunk@verydrunk");
 				while (!STREAMING::HAS_ANIM_SET_LOADED("move_m@drunk@verydrunk")) WAIT(1);
 				PED::SET_PED_MOVEMENT_CLIPSET(playerPed, "move_m@drunk@verydrunk", 1.0f);
 				injured_drunk = true;
 			}
-			if (curr_health < 50 || been_injured == true) CONTROLS::DISABLE_CONTROL_ACTION(2, 21, 1); // sprint
-			if (curr_health < 30/* || been_injured == true*/ && !ENTITY::IS_ENTITY_DEAD(playerPed)) CONTROLS::DISABLE_CONTROL_ACTION(2, 22, 1); // jump
-			if ((curr_health > 79) || (PLAYER::GET_TIME_SINCE_LAST_DEATH() > 100 && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 5000) ||
-				(PLAYER::GET_TIME_SINCE_LAST_ARREST() > 100 && PLAYER::GET_TIME_SINCE_LAST_ARREST() < 5000) || (injured_drunk == true && LIMP_IF_INJURED_VALUES[current_limp_if_injured] != 2) || player_died == true) { // (PLAYER_HEALTH_VALUES[current_player_health] - 111)
+			if (((!featurePlayerLife && curr_health < 30) ||
+				(featurePlayerLife && curr_health < ((30.0 / 100.0) * curr_set_h))) && !ENTITY::IS_ENTITY_DEAD(playerPed)) CONTROLS::DISABLE_CONTROL_ACTION(2, 22, 1); // jump
+			if ((!featurePlayerLife && curr_health < 50) || (featurePlayerLife && curr_health < ((50.0 / 100.0) * curr_set_h)) || been_injured == true) CONTROLS::DISABLE_CONTROL_ACTION(2, 21, 1); // sprint
+			if ((!featurePlayerLife && curr_health > 79) || (featurePlayerLife && curr_health > ((80.0 / 100.0) * curr_set_h) - 1) || (PLAYER::GET_TIME_SINCE_LAST_DEATH() > 100 && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 5000) ||
+				(PLAYER::GET_TIME_SINCE_LAST_ARREST() > 100 && PLAYER::GET_TIME_SINCE_LAST_ARREST() < 5000) || (injured_drunk == true && LIMP_IF_INJURED_VALUES[current_limp_if_injured] != 2) || player_died == true) {
 				PED::CLEAR_PED_LAST_DAMAGE_BONE(playerPed);
 				ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(playerPed);
 				been_injured = false;
@@ -1169,11 +1172,11 @@ void update_features(){
 		}
 		if (curr_cam != VEH_TURN_SIGNALS_ACCELERATION_VALUES[feature_shake_injured] || curr_hlth != curr_health) enable_camera_injured = false;
 		if (VEH_TURN_SIGNALS_ACCELERATION_VALUES[feature_shake_injured] > 0 && enable_camera_injured == false) {
-			if (curr_health < 80) {
+			if ((!featurePlayerLife && curr_health < 80) || (featurePlayerLife && curr_health < ((80.0 / 100.0) * curr_set_h))) {
 				float tmp_v = VEH_TURN_SIGNALS_ACCELERATION_VALUES[feature_shake_injured];
 				CAM::SHAKE_GAMEPLAY_CAM("DRUNK_SHAKE", tmp_v / 3);
 			}
-			if (curr_health > 79) CAM::SHAKE_GAMEPLAY_CAM("DRUNK_SHAKE", 0.0f);
+			if ((!featurePlayerLife && curr_health > 79) || (featurePlayerLife && curr_health > ((80.0 / 100.0) * curr_set_h) - 1)) CAM::SHAKE_GAMEPLAY_CAM("DRUNK_SHAKE", 0.0f);
 			enable_camera_injured = true;
 			curr_cam = VEH_TURN_SIGNALS_ACCELERATION_VALUES[feature_shake_injured];
 			curr_hlth = curr_health;
