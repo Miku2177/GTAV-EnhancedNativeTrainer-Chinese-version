@@ -2377,7 +2377,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		CONTROLS::DISABLE_CONTROL_ACTION(2, 24, 1); // attack
 		CONTROLS::DISABLE_CONTROL_ACTION(2, 257, 1); // attack2
 		CONTROLS::DISABLE_CONTROL_ACTION(2, 69, 1); // vehicle attack
-		CONTROLS::DISABLE_CONTROL_ACTION(2, 70, 1); // vehicle attack2
+		//CONTROLS::DISABLE_CONTROL_ACTION(2, 70, 1); // vehicle attack2
 		if (CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, 24)) {
 			if (featureWeaponInfiniteAmmo && PED::IS_PED_SHOOTING(playerPed)) bullet_tick = bullet_tick + 1;
 			if (WEAPONS_FIREMODE_VALUES[WeaponsFireModeIndex] == 3 && (((bullet_a - WEAPON::GET_AMMO_IN_PED_WEAPON(PLAYER::PLAYER_PED_ID(), WEAPON::GET_SELECTED_PED_WEAPON(playerPed))) > 4) || bullet_tick > 4)) { // burst auto
@@ -2398,7 +2398,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 				CONTROLS::ENABLE_CONTROL_ACTION(2, 24, 1); // attack
 				CONTROLS::ENABLE_CONTROL_ACTION(2, 257, 1); // attack2
 				CONTROLS::ENABLE_CONTROL_ACTION(2, 69, 1); // vehicle attack
-				CONTROLS::ENABLE_CONTROL_ACTION(2, 70, 1); // vehicle attack2
+				//CONTROLS::ENABLE_CONTROL_ACTION(2, 70, 1); // vehicle attack2
 			}
 		}
 		if (!CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, 24) && !PED::GET_PED_CONFIG_FLAG(PLAYER::PLAYER_PED_ID(), 58, 1)) {

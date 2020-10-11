@@ -4003,7 +4003,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 /////////////////////////////////////////////////////////////////////////////////////
 
-///////////////////////////// AUTOROLL DRIVER WINDOW WHEN SHOOT /////////////////////
+///////////////////////////// ROLL DRIVER WINDOW WHEN SHOOT /////////////////////
 	if (featureRollWhenShoot && PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) && VEHICLE::GET_PED_IN_VEHICLE_SEAT(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), -1) == playerPed) {
 		if (CONTROLS::IS_CONTROL_PRESSED(2, 70) && VEHICLE::IS_VEHICLE_WINDOW_INTACT(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 0)) {
 			AI::CLEAR_PED_TASKS(playerPed);
