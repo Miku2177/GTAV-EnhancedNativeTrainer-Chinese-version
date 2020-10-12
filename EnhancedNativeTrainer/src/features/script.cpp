@@ -741,7 +741,7 @@ void update_features(){
 		}
 		//
 		if (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && CONTROLS::IS_CONTROL_JUST_PRESSED(2, 22)) { // 23 // CONTROLS::IS_CONTROL_JUST_PRESSED(2, 176) ||
-			VEHICLE::DELETE_VEHICLE(&temp_c_object);
+			OBJECT::DELETE_OBJECT(&temp_c_object);
 			manual_pressed = true;
 			tick_allw = 0;
 			player_died = true;
@@ -756,7 +756,7 @@ void update_features(){
 			manual_instant = false;
 		}
 		if ((PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 1) || PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 0)) && CONTROLS::IS_CONTROL_JUST_PRESSED(2, 22)) { // CONTROLS::IS_CONTROL_JUST_PRESSED(2, 176) || 
-			VEHICLE::DELETE_VEHICLE(&temp_c_object);
+			OBJECT::DELETE_OBJECT(&temp_c_object);
 			manual_pressed = true;
 			tick_allw = 0;
 			CAM::DO_SCREEN_FADE_OUT(500);
