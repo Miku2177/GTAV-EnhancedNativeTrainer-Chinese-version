@@ -51,6 +51,7 @@ bool featureBodyguardHelmet = false;
 bool featureBodyguardDespawn = true;
 bool featureDifferentWeapons = false;
 bool featureRandomApp = false;
+bool featureBodyguardYourWeapon = false;
 bool featureBodyguardOnMap = false;
 bool featureBodyguardInfAmmo = false;
 
@@ -1586,20 +1587,23 @@ void maintain_bodyguards(){
 			// bodyguards invincible
 			if (featureBodyguardInvincible) ENTITY::SET_ENTITY_INVINCIBLE(spawnedENTBodyguards[i], true);
 			else ENTITY::SET_ENTITY_INVINCIBLE(spawnedENTBodyguards[i], false);
+			// your current weapon for bodyguards
+			if (featureBodyguardYourWeapon && WEAPON::GET_SELECTED_PED_WEAPON(spawnedENTBodyguards[i]) != WEAPON::GET_SELECTED_PED_WEAPON(PLAYER::PLAYER_PED_ID())) {
+				WEAPON::REMOVE_ALL_PED_WEAPONS(spawnedENTBodyguards[i], false);
+				WEAPON::GIVE_WEAPON_TO_PED(spawnedENTBodyguards[i], WEAPON::GET_SELECTED_PED_WEAPON(PLAYER::PLAYER_PED_ID()), 999, false, true);
+				if (featureBodyguardInfAmmo) WEAPON::SET_PED_INFINITE_AMMO_CLIP(spawnedENTBodyguards[i], true);
+			}
+			// arm/unarm
 			if (!spawnedBodyguardsSecWeap.empty()) {
-				// give weapon in vehicle & arm/unarm
+				// give weapon in vehicle
 				if (c_armed == true) {
-					if (PED::IS_PED_IN_ANY_VEHICLE(spawnedENTBodyguards[i], 1) && WEAPON::GET_SELECTED_PED_WEAPON(spawnedENTBodyguards[i]) != GAMEPLAY::GET_HASH_KEY("WEAPON_MICROSMG")) { // !WEAPON::HAS_PED_GOT_WEAPON(spawnedENTBodyguards[i], GAMEPLAY::GET_HASH_KEY("WEAPON_MICROSMG"), 0)
+					if (PED::IS_PED_IN_ANY_VEHICLE(spawnedENTBodyguards[i], 1) && WEAPON::GET_SELECTED_PED_WEAPON(spawnedENTBodyguards[i]) != GAMEPLAY::GET_HASH_KEY("WEAPON_MICROSMG")) { 
 						WEAPON::REMOVE_ALL_PED_WEAPONS(spawnedENTBodyguards[i], false);
 						WEAPON::GIVE_WEAPON_TO_PED(spawnedENTBodyguards[i], GAMEPLAY::GET_HASH_KEY("WEAPON_MICROSMG"), 999, false, true);
-						//WEAPON::SET_CURRENT_PED_WEAPON(spawnedENTBodyguards[i], GAMEPLAY::GET_HASH_KEY("WEAPON_MICROSMG"), 1);
-						//WEAPON::SET_PED_CURRENT_WEAPON_VISIBLE(spawnedENTBodyguards[i], true, false, 1, 1);
 					}
-					if (!PED::IS_PED_IN_ANY_VEHICLE(spawnedENTBodyguards[i], 1) && WEAPON::GET_SELECTED_PED_WEAPON(spawnedENTBodyguards[i]) != spawnedBodyguardsSecWeap[i]) { // !WEAPON::HAS_PED_GOT_WEAPON(spawnedENTBodyguards[i], spawnedBodyguardsSecWeap[i], 0)
+					if (!featureBodyguardYourWeapon && !PED::IS_PED_IN_ANY_VEHICLE(spawnedENTBodyguards[i], 1) && WEAPON::GET_SELECTED_PED_WEAPON(spawnedENTBodyguards[i]) != spawnedBodyguardsSecWeap[i]) {
 						WEAPON::REMOVE_ALL_PED_WEAPONS(spawnedENTBodyguards[i], false);
 						WEAPON::GIVE_WEAPON_TO_PED(spawnedENTBodyguards[i], spawnedBodyguardsSecWeap[i], 999, false, true);
-						//WEAPON::SET_CURRENT_PED_WEAPON(spawnedENTBodyguards[i], spawnedBodyguardsSecWeap[i], 1);
-						//WEAPON::SET_PED_CURRENT_WEAPON_VISIBLE(spawnedENTBodyguards[i], true, false, 1, 1);
 					}
 				}
 				// add/remove weapons
@@ -2072,6 +2076,12 @@ bool process_bodyguard_menu(){
 		item->isLeaf = true;
 		menuItems.push_back(item);
 
+		toggleItem = new ToggleMenuItem<int>();
+		toggleItem->caption = "Your Weapon";
+		toggleItem->value = i++;
+		toggleItem->toggleValue = &featureBodyguardYourWeapon;
+		menuItems.push_back(toggleItem);
+
 		if(!bodyguardWeaponsToggleInitialized){
 			for(int a = 0; a < MENU_WEAPON_CATEGORIES.size(); a++){
 				for(int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++){
@@ -2225,6 +2235,7 @@ void add_bodyguards_feature_enablements(std::vector<FeatureEnabledLocalDefinitio
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardDespawn", &featureBodyguardDespawn});
 	results->push_back(FeatureEnabledLocalDefinition{"featureDifferentWeapons", &featureDifferentWeapons});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRandomApp", &featureRandomApp});
+	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardYourWeapon", &featureBodyguardYourWeapon});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardOnMap", &featureBodyguardOnMap});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyBlipNumber", &featureBodyBlipNumber});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardInfAmmo", &featureBodyguardInfAmmo});
@@ -2323,6 +2334,7 @@ void reset_bodyguards_globals(){
 	featureBodyguardInfAmmo = false;
 	featureDifferentWeapons = false;
 	featureRandomApp = false;
+	featureBodyguardYourWeapon = false;
 	BodyBlipSizeIndex = 2;
 	BodyDistanceIndex = 7;
 	BodyGroupFormationIndex = 1;

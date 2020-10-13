@@ -709,10 +709,10 @@ void update_features(){
 		if (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) || PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 1)) {
 			Vector3 playerPosition = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 			if (!CAM::DOES_CAM_EXIST(DeathCamM) && (CONTROLS::IS_CONTROL_PRESSED(2, 34) || CONTROLS::IS_CONTROL_PRESSED(2, 35) || CONTROLS::IS_CONTROL_PRESSED(2, 32) || CONTROLS::IS_CONTROL_PRESSED(2, 33)) && first_person_rotate == false) {
-				temp_c_object = OBJECT::CREATE_OBJECT(GAMEPLAY::GET_HASH_KEY("bot_01b_bit_03"), playerPosition.x, playerPosition.y, playerPosition.z + 1, 1, true, 1);
+				temp_c_object = OBJECT::CREATE_OBJECT(GAMEPLAY::GET_HASH_KEY("bot_01b_bit_03"), playerPosition.x + 1, playerPosition.y + 1, playerPosition.z + 1.5, 1, true, 1);
 				ENTITY::SET_ENTITY_ALPHA(temp_c_object, 0, 0);
 				ENTITY::FREEZE_ENTITY_POSITION(temp_c_object, true);
-				DeathCamM = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_FLY_CAMERA", playerPosition.x, playerPosition.y, playerPosition.z + 1, 0, 0, 0, 60.0, true, 2);
+				DeathCamM = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_FLY_CAMERA", playerPosition.x + 1, playerPosition.y + 1, playerPosition.z + 1.5, 0, 0, 0, 60.0, true, 2);
 				CAM::ATTACH_CAM_TO_ENTITY(DeathCamM, temp_c_object, 0, 0.0, 0.0, 1);
 				CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE_BLEND_LEVEL(DeathCamM, 1.0);
 				CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE(DeathCamM, 1.0);
@@ -726,7 +726,7 @@ void update_features(){
 				ENTITY::FREEZE_ENTITY_POSITION(temp_c_object, true);
 				if ((CONTROLS::IS_CONTROL_PRESSED(2, 34) || CONTROLS::IS_CONTROL_PRESSED(2, 35) || CONTROLS::IS_CONTROL_PRESSED(2, 32) || CONTROLS::IS_CONTROL_PRESSED(2, 33)) && first_person_rotate == false) {
 					CAM::DESTROY_CAM(DeathCamM, true);
-					DeathCamM = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_FLY_CAMERA", playerPosition.x, playerPosition.y, playerPosition.z + 1, rot_cam.x, rot_cam.y, rot_cam.z, 60.0, true, 2);
+					DeathCamM = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_FLY_CAMERA", playerPosition.x + 1, playerPosition.y + 1, playerPosition.z + 1.5, rot_cam.x, rot_cam.y, rot_cam.z, 60.0, true, 2);
 					CAM::ATTACH_CAM_TO_ENTITY(DeathCamM, temp_c_object, 0, 0.0, 0.0, 1);
 					CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE(DeathCamM, 1.0);
 					CAM::_SET_CAM_DOF_FOCUS_DISTANCE_BIAS(DeathCamM, 1.0);
