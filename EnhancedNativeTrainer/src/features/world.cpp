@@ -1202,10 +1202,11 @@ void update_world_features()
 	}
 
 	// Bus Interior Light On At Night && NPC No Lights && NPC Neon Lights && NPC Dirty Vehicles && NPC No Gravity Vehicles && NPC Vehicles Reduced Grip && NPC Vehicle Speed && NPC Use Fullbeam && 
-	// Headlights During Blackout && Boost NPC Radio Volume && Slippery When Wet && Train Speed && NPC Vehicles Colour && Reduced Grip If Snowing
-	if (featureBusLight || featureNPCNoLights || featureNPCNeonLights || featureDirtyVehicles /*|| WORLD_DAMAGED_VEHICLES_VALUES[DamagedVehiclesIndex] > 0*/ || featureNPCNoGravityVehicles || featureNPCReducedGripVehicles ||
+	// Headlights During Blackout && Boost NPC Radio Volume && Slippery When Wet && Train Speed && NPC Vehicles Colour && Reduced Grip If Snowing && Damage On Collision With You
+	if (featureBusLight || featureNPCNoLights || featureNPCNeonLights || featureDirtyVehicles || featureNPCNoGravityVehicles || featureNPCReducedGripVehicles ||
 		WORLD_NPC_VEHICLESPEED_VALUES[NPCVehicleSpeedIndex] > -1 || WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 || featureNPCFullBeam || featureHeadlightsBlackout ||
-		featureBoostNPCRadio || WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripRainingIndex] > 0 || WORLD_TRAIN_SPEED_VALUES[TrainSpeedIndex] != -1.0 || VEH_COLOUR_VALUES[VehColourIndex] > -1) {
+		featureBoostNPCRadio || WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripRainingIndex] > 0 || WORLD_TRAIN_SPEED_VALUES[TrainSpeedIndex] != -1.0 || VEH_COLOUR_VALUES[VehColourIndex] > -1 ||
+		LIMP_IF_INJURED_VALUES[NPCVehicleDamageOnCollIndex] > 0) {
 		Vehicle veh_mycurrveh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 		const int BUS_ARR_SIZE = 1024;
 		Vehicle bus_veh[BUS_ARR_SIZE];
@@ -1473,6 +1474,29 @@ void update_world_features()
 					GRAPHICS::DRAW_LIGHT_WITH_RANGE(bone3_cruiser_coord.x, bone3_cruiser_coord.y, bone3_cruiser_coord.z, 255, 255, 255, 1, 15);
 					GRAPHICS::DRAW_LIGHT_WITH_RANGE(bone2_cruiser_coord.x, bone2_cruiser_coord.y, bone2_cruiser_coord.z, 255, 0, 0, 0.7, 15);
 					GRAPHICS::DRAW_LIGHT_WITH_RANGE(bone4_cruiser_coord.x, bone4_cruiser_coord.y, bone4_cruiser_coord.z, 255, 0, 0, 0.7, 15);
+				}
+			}
+			// Damage On Collision With You
+			if (LIMP_IF_INJURED_VALUES[NPCVehicleDamageOnCollIndex] > 0 && PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) {
+				Vector3 veh_me_crds = ENTITY::GET_ENTITY_COORDS(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false), true);
+				Vector3 veh_coll_with_crds = ENTITY::GET_ENTITY_COORDS(bus_veh[i], true);
+				int vehcoll_with_dist_x = (veh_me_crds.x - veh_coll_with_crds.x);
+				int vehcoll_with_dist_y = (veh_me_crds.y - veh_coll_with_crds.y);
+				if (vehcoll_with_dist_x < 0) vehcoll_with_dist_x = (vehcoll_with_dist_x * -1);
+				if (vehcoll_with_dist_y < 0) vehcoll_with_dist_y = (vehcoll_with_dist_y * -1);
+				if (bus_veh[i] != PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false) && VEHICLE::GET_PED_IN_VEHICLE_SEAT(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false), -1) == PLAYER::PLAYER_PED_ID() &&
+					ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false)) && ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(bus_veh[i]) && vehcoll_with_dist_x < 5 && vehcoll_with_dist_y < 5) {
+					if (LIMP_IF_INJURED_VALUES[NPCVehicleDamageOnCollIndex] == 1) {
+						VEHICLE::SET_VEHICLE_ENGINE_ON(bus_veh[i], false, true, true);
+						VEHICLE::SET_VEHICLE_ENGINE_HEALTH(bus_veh[i], -4000);
+					}
+					if (LIMP_IF_INJURED_VALUES[NPCVehicleDamageOnCollIndex] == 2) {
+						if (!FIRE::IS_ENTITY_ON_FIRE(VEHICLE::GET_PED_IN_VEHICLE_SEAT(bus_veh[i], -1))) {
+							FIRE::START_ENTITY_FIRE(VEHICLE::GET_PED_IN_VEHICLE_SEAT(bus_veh[i], -1));
+							FIRE::START_SCRIPT_FIRE(veh_coll_with_crds.x, veh_coll_with_crds.y, veh_coll_with_crds.z, 15, 1);
+						}
+					}
+					ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(bus_veh[i]);
 				}
 			}
 		} // end of for vehicles

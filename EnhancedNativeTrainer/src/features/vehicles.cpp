@@ -335,6 +335,8 @@ bool NitrousChanged = true;
 // player in vehicle state... assume true initially since our quicksave might have us in a vehicle already, in which case we can't check if we just got into one
 bool oldVehicleState = true;
 
+int NPCVehicleDamageOnCollIndex = 0;
+
 //Door Options list + struct
 struct struct_door_options{
 	std::string text;
@@ -4232,6 +4234,7 @@ void reset_vehicle_globals() {
 	VehBlipSizeIndex = 2;
 	VehBlipColourIndex = 4;
 	VehColourIndex = 0;
+	NPCVehicleDamageOnCollIndex = 0;
 	SpeedingCityIndex = 3;
 	DetectionRangeIndex = 3;
 	PirsuitRangeIndex = 4;
@@ -5192,6 +5195,7 @@ void add_vehicle_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"VehBlipSizeIndex", std::to_string(VehBlipSizeIndex)});
 	results->push_back(StringPairSettingDBRow{"VehBlipColourIndex", std::to_string(VehBlipColourIndex)});
 	results->push_back(StringPairSettingDBRow{"VehColourIndex", std::to_string(VehColourIndex)});
+	results->push_back(StringPairSettingDBRow{"NPCVehicleDamageOnCollIndex", std::to_string(NPCVehicleDamageOnCollIndex)});
 	results->push_back(StringPairSettingDBRow{"SpeedingCityIndex", std::to_string(SpeedingCityIndex)});
 	results->push_back(StringPairSettingDBRow{"DetectionRangeIndex", std::to_string(DetectionRangeIndex)});
 	results->push_back(StringPairSettingDBRow{"PirsuitRangeIndex", std::to_string(PirsuitRangeIndex)});
@@ -5325,6 +5329,9 @@ void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settin
 		}
 		else if (setting.name.compare("VehColourIndex") == 0) {
 			VehColourIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("NPCVehicleDamageOnCollIndex") == 0) {
+			NPCVehicleDamageOnCollIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("SpeedingCityIndex") == 0){
 			SpeedingCityIndex = stoi(setting.value);
@@ -5600,6 +5607,11 @@ void onchange_veh_blipcolour_index(int value, SelectFromListMenuItem* source){
 
 void onchange_world_npc_vehicles_colour_index(int value, SelectFromListMenuItem* source) {
 	VehColourIndex = value;
+	PositionChanged = true;
+}
+
+void onchange_world_npc_veh_damageoncoll_index(int value, SelectFromListMenuItem* source) {
+	NPCVehicleDamageOnCollIndex = value;
 	PositionChanged = true;
 }
 

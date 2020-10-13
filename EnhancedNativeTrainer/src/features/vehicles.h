@@ -94,6 +94,8 @@ extern bool VehColour_Changed;
 const std::vector<std::string> VEH_TURN_SIGNALS_ACCELERATION_CAPTIONS{ "OFF", "1", "2", "3", "4", "5", "7", "10" };
 const std::vector<int> VEH_TURN_SIGNALS_ACCELERATION_VALUES{ 0, 1, 2, 3, 4, 5, 7, 10 };
 
+extern int NPCVehicleDamageOnCollIndex;
+
 struct VehicleImage {
 	Hash modelName;
 	char* dict;
@@ -1088,6 +1090,8 @@ void onchange_veh_blipsize_index(int value, SelectFromListMenuItem* source);
 void onchange_veh_blipcolour_index(int value, SelectFromListMenuItem* source);
 
 void onchange_world_npc_vehicles_colour_index(int value, SelectFromListMenuItem* source);
+
+void onchange_world_npc_veh_damageoncoll_index(int value, SelectFromListMenuItem* source);
 
 void onchange_veh_blipsymbol_index(int value, SelectFromListMenuItem* source);
 
