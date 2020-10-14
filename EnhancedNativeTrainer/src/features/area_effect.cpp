@@ -363,7 +363,7 @@ void process_areaeffect_vehicle_menu(){
 
 	listItem = new SelectFromListMenuItem(LIMP_IF_INJURED_CAPTIONS, onchange_world_npc_veh_damageoncoll_index);
 	listItem->wrap = false;
-	listItem->caption = "Damage On Collision With You";
+	listItem->caption = "Destroy Car On Collision";
 	listItem->value = NPCVehicleDamageOnCollIndex;
 	menuItems.push_back(listItem);
 

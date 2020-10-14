@@ -2077,7 +2077,7 @@ bool process_bodyguard_menu(){
 		menuItems.push_back(item);
 
 		toggleItem = new ToggleMenuItem<int>();
-		toggleItem->caption = "Your Weapon";
+		toggleItem->caption = "Share Weapon With Bodyguards";
 		toggleItem->value = i++;
 		toggleItem->toggleValue = &featureBodyguardYourWeapon;
 		menuItems.push_back(toggleItem);
