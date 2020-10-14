@@ -1928,6 +1928,7 @@ void update_world_features()
 		GAMEPLAY::SET_WEATHER_TYPE_NOW_PERSIST((char*)lastWeather.c_str());
 		freeze_counter = 0.0;
 	}
+	if (featureWeatherFreeze && (DLC2::GET_IS_LOADING_SCREEN_ACTIVE() || (PLAYER::GET_TIME_SINCE_LAST_DEATH() > -1 && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 2000))) featureWeatherFreezeUpdated = false;
 	if (!featureWeatherFreeze && featureWeatherFreezeUpdated == true) {
 		GAMEPLAY::CLEAR_OVERRIDE_WEATHER();
 		GAMEPLAY::CLEAR_WEATHER_TYPE_PERSIST();
@@ -1937,7 +1938,7 @@ void update_world_features()
 		featureWeatherFreezeUpdated = false;
 		freeze_counter = 0.0;
 	}
-		
+
 	// Freeze Clouds
 	if (featureCloudsFreeze && !lastClouds.empty()) GRAPHICS::_SET_CLOUD_HAT_TRANSITION((char *)lastClouds.c_str(), 1.0);
 	
