@@ -1446,7 +1446,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	}
 
 	// Dynamic Health Bar
-	if (featureDynamicHealthBar && !CUTSCENE::IS_CUTSCENE_PLAYING()) {
+	if (featureDynamicHealthBar && !CUTSCENE::IS_CUTSCENE_PLAYING() && PLAYER_HEALTH_VALUES[current_player_health] > 0) {
 		if (!featureMiscHideHud && !featurePhoneShowHud && !featureInVehicleNoHud && !featureMarkerHud/* && !featureMiscHideENTHud*/) UI::DISPLAY_RADAR(false); // There is no need to hide HUD if it's already hidden
 		//auto addr = getScriptHandleBaseAddress(playerPed);
 		//float health = (*(float *)(addr + 0x280)) - 100;
@@ -1476,9 +1476,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 				healthbar_seconds = -1;
 			}
 			// health
-			if (PLAYER_HEALTH_VALUES[current_player_health] > 0) temp_h = PLAYER_HEALTH_VALUES[current_player_health] - 100;
-			else temp_h = 100;
-			
+			temp_h = PLAYER_HEALTH_VALUES[current_player_health] - 100;
 			temp_h_d = floor(PLAYER_HEALTH_VALUES[current_player_health] / 100);
 
 			if (health < (temp_h / 5)) {
