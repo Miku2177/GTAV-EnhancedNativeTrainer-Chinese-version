@@ -503,6 +503,7 @@ void road_laws()
 				AI::SET_DRIVE_TASK_DRIVING_STYLE(cop_that_fines_you, 262144);
 				AI::SET_DRIVE_TASK_DRIVING_STYLE(cop_that_fines_you, 4);
 				AI::SET_DRIVE_TASK_DRIVING_STYLE(cop_that_fines_you, 512);
+				AI::SET_DRIVE_TASK_DRIVING_STYLE(cop_that_fines_you, 786468);
 				AI::SET_DRIVE_TASK_CRUISE_SPEED(cop_that_fines_you, 300.0);
 				AI::SET_TASK_VEHICLE_CHASE_IDEAL_PURSUIT_DISTANCE(cop_that_fines_you, 40);
 				AI::SET_TASK_VEHICLE_CHASE_BEHAVIOR_FLAG(cop_that_fines_you, 32, true);
