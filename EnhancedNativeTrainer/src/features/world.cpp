@@ -237,6 +237,18 @@ void process_world_weathersettings_menu() {
 	listItem->value = WorldWavesIndex;
 	menuItems.push_back(listItem);
 
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Deadly Water";
+	toggleItem->value = 1;
+	toggleItem->toggleValue = &featureAcidWater;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Deadly Rain";
+	toggleItem->value = 1;
+	toggleItem->toggleValue = &featureAcidRain;
+	menuItems.push_back(toggleItem);
+
 	draw_generic_menu<int>(menuItems, &activeLineIndexWeatherConfig, caption, onconfirm_weathersettings_menu, NULL, NULL);
 }
 
@@ -663,18 +675,6 @@ void process_world_menu()
 	togItem->value = 8;
 	togItem->toggleValue = &featureMPMap;
 	togItem->toggleValueUpdated = &featureMPMapUpdated;
-	menuItems.push_back(togItem);
-
-	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Deadly Water";
-	togItem->value = 1;
-	togItem->toggleValue = &featureAcidWater;
-	menuItems.push_back(togItem);
-
-	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Deadly Rain";
-	togItem->value = 1;
-	togItem->toggleValue = &featureAcidRain;
 	menuItems.push_back(togItem);
 
 	listItem = new SelectFromListMenuItem(WORLD_FREEROAM_ACTIVITIES_CAPTIONS, onchange_freeroam_activities_index);
