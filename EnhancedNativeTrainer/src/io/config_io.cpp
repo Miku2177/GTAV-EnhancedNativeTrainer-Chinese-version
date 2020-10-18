@@ -552,3 +552,48 @@ const std::string KeyConfig::KEY_HOT_6 = std::string("hotkey_6");
 const std::string KeyConfig::KEY_HOT_7 = std::string("hotkey_7");
 const std::string KeyConfig::KEY_HOT_8 = std::string("hotkey_8");
 const std::string KeyConfig::KEY_HOT_9 = std::string("hotkey_9");
+
+//Bind name -> button ID 1 and button ID 2. For keys with only 1 button ID - use -1 as a "no bind" value.
+std::map<std::string, std::pair<int, int>> controller_binds =
+{
+	{ "KEY_TOGGLE_MAIN_MENU", {1, 1} },
+	{ "KEY_TOGGLE_AIRBRAKE", {1, 1} },
+	{ "KEY_MENU_UP", {1, -1} },
+	{ "KEY_MENU_DOWN", {1, -1} },
+	{ "KEY_MENU_LEFT", {1, -1} },
+	{ "KEY_MENU_RIGHT", {1, -1} },
+	{ "KEY_MENU_SELECT", {1, 1} },
+	{ "KEY_MENU_BACK", {1, 1} },
+	{ "KEY_VEH_BOOST", {1, 1} },
+	{ "KEY_VEH_STOP", {1, 1} },
+	{ "KEY_VEH_ROCKETS", {1, 1} },
+	{ "KEY_VEH_LEFTBLINK", {1, 1} },
+	{ "KEY_VEH_RIGHTBLINK", {1, 1} },
+	{ "KEY_VEH_EMERGENCYBLINK", {1, 1} },
+	{ "KEY_VEH_STARTREFUELING", {1, 1} },
+	{ "KEY_VEH_STOPREFUELING", {1, 1} },
+	{ "KEY_AIRBRAKE_UP", {1, 1} },
+	{ "KEY_AIRBRAKE_DOWN", {1, 1} },
+	{ "KEY_AIRBRAKE_FORWARD", {1, 1} },
+	{ "KEY_AIRBRAKE_BACK", {1, 1} },
+	{ "KEY_AIRBRAKE_ROTATE_LEFT", {1, 1} },
+	{ "KEY_AIRBRAKE_ROTATE_RIGHT", {1, 1} },
+	{ "KEY_AIRBRAKE_SPEED", {1, 1} },
+	{ "KEY_AIRBRAKE_FREEZE_TIME", {1, 1} },
+	{ "KEY_AIRBRAKE_HELP", {1, 1} },
+	{ "KEY_AIRBRAKE_SPACE", {1, 1} },
+	{ "KEY_AIRBRAKE_MOUSE_CONTROL", {1, 1} },
+	{ "KEY_OBJECTPLACER_UP", {1, 1} },
+	{ "KEY_OBJECTPLACER_DOWN", {1, 1} },
+	{ "KEY_OBJECTPLACER_FORWARD", {1, 1} },
+	{ "KEY_OBJECTPLACER_BACK", {1, 1} },
+	{ "KEY_OBJECTPLACER_ROTATE_LEFT", {1, 1} },
+	{ "KEY_OBJECTPLACER_ROTATE_RIGHT", {1, 1} },
+	{ "KEY_OBJECTPLACER_SPEED_CYCLE", {1, 1} },
+	{ "KEY_OBJECTPLACER_SPEED_UP", {1, 1} },
+	{ "KEY_OBJECTPLACER_SPEED_DOWN", {1, 1} },
+	{ "KEY_OBJECTPLACER_FREEZE_TIME", {1, 1} },
+	{ "KEY_OBJECTPLACER_FREEZE_POSITION", {1, 1} },
+	{ "KEY_OBJECTPLACER_HELP", {1, 1} },
+	{ "KEY_OBJECTPLACER_ALT_MOVE", {1, 1} },
+};
