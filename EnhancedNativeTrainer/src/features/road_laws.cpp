@@ -398,7 +398,7 @@ void road_laws()
 									AI::TASK_VEHICLE_CHASE(cop_that_fines_you, playerPed);
 									AI::SET_TASK_VEHICLE_CHASE_IDEAL_PURSUIT_DISTANCE(cop_that_fines_you, 60.0f);
 									AI::SET_TASK_VEHICLE_CHASE_BEHAVIOR_FLAG(cop_that_fines_you, 32, true);
-									PED::SET_DRIVER_ABILITY(cop_that_fines_you, 0.9f);
+									PED::SET_DRIVER_ABILITY(cop_that_fines_you, 10.0f);
 
 									if (featurePoliceNoDamage) {
 										ENTITY::SET_ENTITY_INVINCIBLE(cop_that_fines_you, true);
@@ -460,7 +460,7 @@ void road_laws()
 								AI::TASK_VEHICLE_CHASE(cop_that_fines_you, playerPed);
 								AI::SET_TASK_VEHICLE_CHASE_IDEAL_PURSUIT_DISTANCE(cop_that_fines_you, 60.0f);
 								AI::SET_TASK_VEHICLE_CHASE_BEHAVIOR_FLAG(cop_that_fines_you, 32, true);
-								PED::SET_DRIVER_ABILITY(cop_that_fines_you, 0.9f);
+								PED::SET_DRIVER_ABILITY(cop_that_fines_you, 10.0f);
 
 								if (featurePoliceNoDamage) {
 									ENTITY::SET_ENTITY_INVINCIBLE(cop_that_fines_you, true);
@@ -507,7 +507,7 @@ void road_laws()
 				AI::SET_DRIVE_TASK_CRUISE_SPEED(cop_that_fines_you, 300.0);
 				AI::SET_TASK_VEHICLE_CHASE_IDEAL_PURSUIT_DISTANCE(cop_that_fines_you, 40);
 				AI::SET_TASK_VEHICLE_CHASE_BEHAVIOR_FLAG(cop_that_fines_you, 32, true);
-				PED::SET_DRIVER_ABILITY(cop_that_fines_you, 0.9);
+				PED::SET_DRIVER_ABILITY(cop_that_fines_you, 10.0f);
 				no_agressive = true;
 			}
 			else if (vehroadlaws_speed > 9 && no_agressive == true) {
@@ -515,7 +515,7 @@ void road_laws()
 				AI::TASK_VEHICLE_CHASE(cop_that_fines_you, playerPed);
 				AI::SET_TASK_VEHICLE_CHASE_IDEAL_PURSUIT_DISTANCE(cop_that_fines_you, 60.0f);
 				AI::SET_TASK_VEHICLE_CHASE_BEHAVIOR_FLAG(cop_that_fines_you, 32, true);
-				PED::SET_DRIVER_ABILITY(cop_that_fines_you, 0.9f);
+				PED::SET_DRIVER_ABILITY(cop_that_fines_you, 10.0f);
 				no_agressive = false;
 			}
 
@@ -555,7 +555,7 @@ void road_laws()
 					AI::TASK_VEHICLE_CHASE(cop_that_fines_you, playerPed);
 					AI::SET_TASK_VEHICLE_CHASE_IDEAL_PURSUIT_DISTANCE(cop_that_fines_you, 60.0f);
 					AI::SET_TASK_VEHICLE_CHASE_BEHAVIOR_FLAG(cop_that_fines_you, 32, true);
-					PED::SET_DRIVER_ABILITY(cop_that_fines_you, 0.9f);
+					PED::SET_DRIVER_ABILITY(cop_that_fines_you, 10.0f);
 
 					Stuck_seconds = 0;
 					stuck_completely = stuck_completely + 1;

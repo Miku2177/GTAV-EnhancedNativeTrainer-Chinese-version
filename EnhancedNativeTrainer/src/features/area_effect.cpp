@@ -792,7 +792,8 @@ void update_area_effects(Ped playerPed){
 						AI::SET_TASK_VEHICLE_CHASE_IDEAL_PURSUIT_DISTANCE(pursuer.back(), 60.0f);
 						AI::SET_TASK_VEHICLE_CHASE_BEHAVIOR_FLAG(pursuer.back(), 32, true);
 						AI::SET_DRIVE_TASK_DRIVING_STYLE(pursuer.back(), 786468);
-						PED::SET_DRIVER_ABILITY(pursuer.back(), 0.9f);
+						PED::SET_DRIVER_AGGRESSIVENESS(pursuer.back(), 0.9f);
+						PED::SET_DRIVER_ABILITY(pursuer.back(), 10.0f);
 						AUDIO::_PLAY_AMBIENT_SPEECH1(pursuer.back(), "PROVOKE_GENERIC", "SPEECH_PARAMS_FORCE_SHOUTED");
 					}
 				}
@@ -807,7 +808,8 @@ void update_area_effects(Ped playerPed){
 			AI::SET_TASK_VEHICLE_CHASE_IDEAL_PURSUIT_DISTANCE(pursuer.back(), 60.0f);
 			AI::SET_TASK_VEHICLE_CHASE_BEHAVIOR_FLAG(pursuer.back(), 32, true);
 			AI::SET_DRIVE_TASK_DRIVING_STYLE(pursuer.back(), 786468);
-			PED::SET_DRIVER_ABILITY(pursuer.back(), 0.9f);
+			PED::SET_DRIVER_AGGRESSIVENESS(pursuer.back(), 0.9f);
+			PED::SET_DRIVER_ABILITY(pursuer.back(), 10.0f);
 			if (featurePedsWeapons) {
 				int chanceOfGettingWeapon_a = rand() % 10;
 				if (chanceOfGettingWeapon_a == 9 && (WEAPON::GET_WEAPONTYPE_GROUP(WEAPON::GET_SELECTED_PED_WEAPON(pursuer.back())) != Hash((416676503) || Hash(3337201093))))
