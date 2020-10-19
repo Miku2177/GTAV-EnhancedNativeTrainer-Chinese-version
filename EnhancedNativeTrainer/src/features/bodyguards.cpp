@@ -12,6 +12,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include <string.h>
 #include "bodyguards.h"
 #include "script.h"
+#include "weapons.h"
 #include "hotkeys.h"
 #include "area_effect.h"
 
@@ -2297,6 +2298,12 @@ bool process_bodyguard_menu(){
 		toggleItem->toggleValue = &featureBodyguardYourWeapon;
 		menuItems.push_back(toggleItem);
 
+		item = new MenuItem<int>();
+		item->caption = "Add All Weapon Attachments";
+		item->value = 23;
+		item->isLeaf = true;
+		menuItems.push_back(item);
+
 		if(!bodyguardWeaponsToggleInitialized){
 			for(int a = 0; a < MENU_WEAPON_CATEGORIES.size(); a++){
 				for(int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++){
@@ -2437,6 +2444,12 @@ bool onconfirm_bodyguard_menu(MenuItem<int> choice){
 			c_armed = !c_armed;
 			if (c_armed) set_status_text("Armed");
 			else set_status_text("Disarmed");
+			break;
+		case 23:
+			for (int k = 0; k < spawnedENTBodyguards.size(); k++) {
+				CONTROLS::_SET_CONTROL_NORMAL(0, 157, 1);
+				add_all_weapons_attachments(spawnedENTBodyguards[k]);
+			}
 			break;
 		default:
 			break;
