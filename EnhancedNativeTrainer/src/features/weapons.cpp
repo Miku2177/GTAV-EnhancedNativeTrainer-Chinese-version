@@ -399,13 +399,13 @@ void give_all_weapons_hotkey() {
 	set_status_text("All weapons added");
 }
 
-void add_all_weapons_attachments() {
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
+void add_all_weapons_attachments(Ped choice) {
+	//Ped playerPed = PLAYER::PLAYER_PED_ID();
 	for (int a = 0; a < WEAPONTYPES_MOD.size(); a++) {
 		for (int b = 0; b < VOV_WEAPONMOD_VALUES[a].size(); b++) {
 			char *weaponName = (char *)WEAPONTYPES_MOD.at(a).c_str(), *compName = (char *)VOV_WEAPONMOD_VALUES[a].at(b).c_str();
 			Hash weaponHash = GAMEPLAY::GET_HASH_KEY(weaponName), compHash = GAMEPLAY::GET_HASH_KEY(compName);
-			if (!WEAPON::HAS_PED_GOT_WEAPON(playerPed, weaponHash, 0)) {
+			if (!WEAPON::HAS_PED_GOT_WEAPON(choice, weaponHash, 0)) {
 				break;
 			}
 
@@ -443,11 +443,11 @@ void add_all_weapons_attachments() {
 				break;
 			}
 
-			if (WEAPON::HAS_PED_GOT_WEAPON_COMPONENT(playerPed, weaponHash, compHash)) {
+			if (WEAPON::HAS_PED_GOT_WEAPON_COMPONENT(choice, weaponHash, compHash)) {
 				continue;
 			}
 
-			WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, weaponHash, compHash);
+			WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(choice, weaponHash, compHash);
 		}
 	}
 
@@ -455,8 +455,8 @@ void add_all_weapons_attachments() {
 		for (int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++) {
 			char* weaponName = (char*)VOV_WEAPON_VALUES[a].at(b).c_str();
 			Hash weaponHash = GAMEPLAY::GET_HASH_KEY(weaponName);
-			if (WEAPON::HAS_PED_GOT_WEAPON(playerPed, weaponHash, FALSE)) {
-				WEAPON::GIVE_WEAPON_TO_PED(playerPed, weaponHash, 10000, false, false);
+			if (WEAPON::HAS_PED_GOT_WEAPON(choice, weaponHash, FALSE)) {
+				WEAPON::GIVE_WEAPON_TO_PED(choice, weaponHash, 10000, false, false);
 			}
 		}
 	}
@@ -1233,7 +1233,7 @@ bool onconfirm_weapon_menu(MenuItem<int> choice){
 			set_status_text("All weapons removed");
 			break;
 		case 3:
-			add_all_weapons_attachments();
+			add_all_weapons_attachments(playerPed);
 			break;
 		case 5:
 			for(int a = 0; a < WEAPONTYPES_MOD.size(); a++){
@@ -2220,7 +2220,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			w_a_tick_secs_curr = w_tick_secs_passed;
 		}
 		if (tick_a_allw > 400 && PlayerUpdated_a) {
-			add_all_weapons_attachments();
+			add_all_weapons_attachments(playerPed);
 			CONTROLS::_SET_CONTROL_NORMAL(0, 159, 1); // 160
 			WAIT(10);
 			CONTROLS::_SET_CONTROL_NORMAL(0, 157, 1);
