@@ -44,6 +44,13 @@ bool spawning_a_ped = false;
 
 int someone_shooting = 0;
 
+int skinBodPropsMenuPosition = 0;
+int skinBodPropsCategoryValue = 0;
+int skinBodPropsDrawablePosition[10] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+int choicebvalue = -2;
+int skinBodPropsCategoryValueC = -2;
+int clear_bod_props_m = -2;
+
 bool stop_b = false;
 bool c_armed = true;
 bool featureBodyguardInvincible = false;
@@ -403,6 +410,173 @@ bool process_bod_skinchanger_detail_menu()
 }
 // end of 'modify skin'
 
+void onhighlight_bod_props_texture_menu(MenuItem<int> choice)
+{
+	PED::SET_PED_PROP_INDEX(spawnedENTBodyguards[b_curr_num], skinBodPropsCategoryValue, skinBodPropsDrawablePosition[skinBodPropsCategoryValue] - 1, choice.value, 0);
+}
+
+bool onconfirm_bod_props_texture_menu(MenuItem<int> choice)
+{
+	onhighlight_bod_props_texture_menu(choice);
+	return true;
+}
+
+bool process_bod_prop_texture_menu()
+{
+	DWORD waitTime = 150;
+	int foundTextures = 0;
+	std::vector<MenuItem<int>*> menuItems;
+
+	int thisDrawable = skinBodPropsDrawablePosition[skinBodPropsCategoryValue] - 1;
+	int textures = PED::GET_NUMBER_OF_PED_PROP_TEXTURE_VARIATIONS(spawnedENTBodyguards[b_curr_num], skinBodPropsCategoryValue, thisDrawable);
+
+	for (int i = 0; i < textures; i++)
+	{
+		bool iFound = false;
+		int compIndex = i;
+
+		MenuItem<int>* item = new MenuItem<int>();
+
+		std::ostringstream ss;
+		ss << "Texture #" << (i + 1);
+		item->caption = ss.str();
+
+		item->value = i;
+		item->isLeaf = true;
+		menuItems.push_back(item);
+	}
+
+	int lastTexturePosition = PED::GET_PED_PROP_TEXTURE_INDEX(spawnedENTBodyguards[b_curr_num], skinBodPropsCategoryValue);
+	return draw_generic_menu<int>(menuItems, &lastTexturePosition, "Available Textures", onconfirm_bod_props_texture_menu, onhighlight_bod_props_texture_menu, NULL);
+}
+
+bool onconfirm_bod_props_drawable_menu(MenuItem<int> choice)
+{
+	skinBodPropsDrawablePosition[skinBodPropsCategoryValue] = choice.currentMenuIndex;
+	if (choice.value != -1)
+	{
+		int textures = PED::GET_NUMBER_OF_PED_PROP_TEXTURE_VARIATIONS(spawnedENTBodyguards[b_curr_num], skinBodPropsCategoryValue, choice.value);
+		if (textures > 1)
+		{
+			process_bod_prop_texture_menu();
+		}
+	}
+	return false;
+}
+
+void onhighlight_bod_props_drawable_menu(MenuItem<int> choice)
+{
+	skinBodPropsDrawablePosition[skinBodPropsCategoryValue] = choice.currentMenuIndex;
+
+	int currentBodProp = PED::GET_PED_PROP_INDEX(spawnedENTBodyguards[b_curr_num], skinBodPropsCategoryValue);
+	if (currentBodProp != choice.value) //if the selected drawable is not what we have now
+	{
+		PED::CLEAR_PED_PROP(spawnedENTBodyguards[b_curr_num], skinBodPropsCategoryValue);
+		if (choice.value != -1)
+		{
+			PED::SET_PED_PROP_INDEX(spawnedENTBodyguards[b_curr_num], skinBodPropsCategoryValue, choice.value, 0, 0);
+		}
+	}
+
+	choicebvalue = choice.value;
+	clear_bod_props_m = -2;
+	skinBodPropsCategoryValueC = skinBodPropsCategoryValue;
+}
+
+bool process_bod_prop_drawable_menu()
+{
+	DWORD waitTime = 150;
+	int foundTextures = 0;
+	std::vector<MenuItem<int>*> menuItems;
+
+	int drawables = PED::GET_NUMBER_OF_PED_PROP_DRAWABLE_VARIATIONS(spawnedENTBodyguards[b_curr_num], skinBodPropsCategoryValue);
+
+	int i = -1;
+
+	for (; i < drawables; i++)
+	{
+		bool iFound = false;
+		int compIndex = i;
+
+		int textures = 0;
+		//if (drawables > 1 || textures != 0)
+		{
+			MenuItem<int>* item = new MenuItem<int>();
+
+			if (i == -1)
+			{
+				item->caption = "Nothing";
+				item->isLeaf = true;
+			}
+			else
+			{
+				std::ostringstream ss;
+				ss << "Prop Item #" << (i + 1);
+				item->caption = ss.str();
+				int textures = PED::GET_NUMBER_OF_PED_PROP_TEXTURE_VARIATIONS(spawnedENTBodyguards[b_curr_num], skinBodPropsCategoryValue, i);
+				item->isLeaf = (textures <= 1);
+			}
+
+			item->value = i;
+			menuItems.push_back(item);
+		}
+	}
+
+	return draw_generic_menu<int>(menuItems, &skinBodPropsDrawablePosition[skinBodPropsCategoryValue], "Available Props", onconfirm_bod_props_drawable_menu, onhighlight_bod_props_drawable_menu, NULL);
+}
+
+bool onconfirm_bod_props_menu(MenuItem<int> choice)
+{
+	skinBodPropsCategoryValue = choice.value;
+	process_bod_prop_drawable_menu();
+	return false;
+}
+
+bool process_bod_prop_menu()
+{
+	DWORD waitTime = 150;
+	int foundTextures = 0;
+	std::vector<MenuItem<int>*> menuItems;
+
+	int fixedChoices = 0;
+	const int partVariations = 10;
+
+	int i = 0;
+	int count = 0;
+
+	for (; i < partVariations + fixedChoices; i++)
+	{
+		bool iFound = false;
+		int compIndex = i - fixedChoices;
+
+		int drawables = PED::GET_NUMBER_OF_PED_PROP_DRAWABLE_VARIATIONS(spawnedENTBodyguards[b_curr_num], compIndex);
+		if (drawables > 0)
+		{
+			MenuItem<int>* item = new MenuItem<int>();
+
+			std::ostringstream ss;
+
+			std::string itemText = getBodPropDetailAttribDescription(compIndex);
+			ss << "Slot " << (compIndex + 1) << ": " << itemText << " ~HUD_COLOUR_GREYLIGHT~(" << drawables << ")";
+			item->caption = ss.str();
+
+			item->value = compIndex;
+			item->isLeaf = false;
+			menuItems.push_back(item);
+			count++;
+		}
+	}
+
+	if (count == 0)
+	{
+		set_status_text("Nothing available for this model");
+		return false;
+	}
+
+	return draw_generic_menu<int>(menuItems, &skinBodPropsMenuPosition, "Prop Categories", onconfirm_bod_props_menu, NULL, NULL);
+}
+// end of 'props'
+
 // save/load bodyguard
 bool applyChosenBodSkin(DWORD model)
 {
@@ -742,6 +916,12 @@ bool process_bodyguard_skins_menu(){
 	item->value = 5;
 	item->isLeaf = false;
 	menuItems.push_back(item);
+	
+	item = new MenuItem<int>();
+	item->caption = "Modify Props";
+	item->value = 6;
+	item->isLeaf = false;
+	menuItems.push_back(item);
 
 	return draw_generic_menu<int>(menuItems, &skinTypesBodyguardMenuPositionMemory[0], "Bodyguard Skins", onconfirm_bodyguard_skins_menu, NULL, NULL);
 }
@@ -800,6 +980,41 @@ bool onconfirm_bodyguard_skins_menu(MenuItem<int> choice){
 					is_it_n = false;
 				}
 				if (!spawnedENTBodyguards.empty() && b_curr_num > -1 && b_curr_num < spawnedENTBodyguards.size()) return process_bod_skinchanger_detail_menu();
+				else {
+					if (spawnedENTBodyguards.empty()) {
+						std::ostringstream ss;
+						ss << "No bodyguards found";
+						set_status_text(ss.str());
+						return false;
+					}
+					if (b_curr_num < 0 || b_curr_num >= spawnedENTBodyguards.size()) {
+						std::ostringstream ss;
+						ss << "Wrong number";
+						set_status_text(ss.str());
+						return false;
+					}
+				}
+			}
+			return false;
+		}
+		case 6:
+		{
+			keyboard_on_screen_already = true;
+			curr_message = "Enter a number of the bodyguard (that is above his head) you want to modify the skin of:"; // modify skin of a bodyguard
+			std::string result_b = show_keyboard("Enter Name Manually", NULL);
+			if (!result_b.empty())
+			{
+				result_b = trim(result_b);
+				std::string::size_type sz;
+				for (int i = 0; i < 7; i++) {
+					sprintf(temp_n, "%i", i);
+					if (result_b == temp_n) is_it_n = true;
+				}
+				if (is_it_n == true) {
+					b_curr_num = std::stof(result_b, &sz);
+					is_it_n = false;
+				}
+				if (!spawnedENTBodyguards.empty() && b_curr_num > -1 && b_curr_num < spawnedENTBodyguards.size()) return process_bod_prop_menu();
 				else {
 					if (spawnedENTBodyguards.empty()) {
 						std::ostringstream ss;
