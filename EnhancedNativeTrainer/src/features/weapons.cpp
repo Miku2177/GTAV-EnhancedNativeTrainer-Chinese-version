@@ -2184,7 +2184,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	if (featureCopTakeWeapon) {
 		if ((PLAYER::GET_TIME_SINCE_LAST_DEATH() > 100 && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 5000) || (PLAYER::GET_TIME_SINCE_LAST_ARREST() > 100 && PLAYER::GET_TIME_SINCE_LAST_ARREST() < 5000) || player_died == true) {
 			WEAPON::REMOVE_ALL_PED_WEAPONS(playerPed, false);
-			if (!ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && !PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 1)) player_died = false;
+			if (!ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && !PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 1) && detained == false) player_died = false;
 		}
 	}
 
@@ -2203,7 +2203,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			oldplayerPed_W = playerPed;
 			tick_allw = 0;
 			PlayerUpdated_w = false; 
-			player_died = false;
+			if (detained == false && alert_level == 0) player_died = false;
 		}
 		int death_time2 = PLAYER::GET_TIME_SINCE_LAST_DEATH();
 		if (death_time2 > -1 && death_time2 < 2000) PlayerUpdated_w = true; 
@@ -2227,7 +2227,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			oldplayerPed_A = playerPed;
 			tick_a_allw = 0;
 			PlayerUpdated_a = false;
-			player_died = false;
+			if (detained == false && alert_level == 0) player_died = false;
 		}
 		int death_time2 = PLAYER::GET_TIME_SINCE_LAST_DEATH();
 		if (death_time2 > -1 && death_time2 < 2000) PlayerUpdated_a = true;
@@ -2261,7 +2261,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			oldplayerPed_s = playerPed;
 			tick_s_allw = 0;
 			PlayerUpdated_s = false;
-			player_died = false;
+			if (detained == false && alert_level == 0) player_died = false;
 		}
 		int death_time2 = PLAYER::GET_TIME_SINCE_LAST_DEATH();
 		if (death_time2 > -1 && death_time2 < 2000) PlayerUpdated_s = true;
