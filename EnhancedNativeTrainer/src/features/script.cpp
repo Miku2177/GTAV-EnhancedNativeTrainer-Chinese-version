@@ -389,7 +389,7 @@ void check_player_model(){
 	if (!ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) CoordsWhereDied = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 
 	if (SKINS_RESET_SKIN_ONDEATH_VALUES[ResetSkinOnDeathIdx] == 0 && manual_pressed == true) {
-		if ((ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && !featureRespawnsWhereDied) || PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 1)) {
+		if ((ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && (!featureRespawnsWhereDied || detained == true || alert_level > 0)) || PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 1)) {
 			if (!found) {
 				float temp_dist = 20000.0;
 				float d_temp1 = SYSTEM::VDIST(CoordsWhereDied.x, CoordsWhereDied.y, CoordsWhereDied.z, 338.409, -1396.54, 32.5092);
@@ -450,7 +450,6 @@ void check_player_model(){
 				CAM::DO_SCREEN_FADE_IN(500);
 				GAMEPLAY::SET_TIME_SCALE(1.0f);
 			}
-			if (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && found) player_died = true; //  && detained == true
 		}
 	}
 }
@@ -802,7 +801,7 @@ void update_features(){
 	}
 		
 	// Instant Respawn On Death/Arrest
-	if (featureRespawnsWhereDied && GAMEPLAY::GET_MISSION_FLAG() == 0 && manual_instant == false/* && in_prison == false*/) {
+	if (featureRespawnsWhereDied && GAMEPLAY::GET_MISSION_FLAG() == 0 && manual_instant == false && detained == false && alert_level == 0) {
 		if (ENTITY::IS_ENTITY_DEAD(playerPed) || PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 0)) {
 			player_died = true;
 			CAM::DO_SCREEN_FADE_OUT(500);
