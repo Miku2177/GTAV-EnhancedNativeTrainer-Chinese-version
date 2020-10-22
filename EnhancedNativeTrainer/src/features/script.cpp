@@ -450,7 +450,7 @@ void check_player_model(){
 				CAM::DO_SCREEN_FADE_IN(500);
 				GAMEPLAY::SET_TIME_SCALE(1.0f);
 			}
-			//player_died = true;
+			if (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && found) player_died = true; //  && detained == true
 		}
 	}
 }
@@ -802,7 +802,7 @@ void update_features(){
 	}
 		
 	// Instant Respawn On Death/Arrest
-	if (featureRespawnsWhereDied && GAMEPLAY::GET_MISSION_FLAG() == 0 && manual_instant == false) {
+	if (featureRespawnsWhereDied && GAMEPLAY::GET_MISSION_FLAG() == 0 && manual_instant == false/* && in_prison == false*/) {
 		if (ENTITY::IS_ENTITY_DEAD(playerPed) || PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 0)) {
 			player_died = true;
 			CAM::DO_SCREEN_FADE_OUT(500);
