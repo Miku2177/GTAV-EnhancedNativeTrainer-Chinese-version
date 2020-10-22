@@ -91,8 +91,8 @@ extern int VehColourIndex;
 extern bool VehColour_Changed;
 
 //Turn Signals Off Acceleration
-const std::vector<std::string> VEH_TURN_SIGNALS_ACCELERATION_CAPTIONS{ "OFF", "1", "2", "3", "4", "5", "7", "10" };
-const std::vector<int> VEH_TURN_SIGNALS_ACCELERATION_VALUES{ 0, 1, 2, 3, 4, 5, 7, 10 };
+const std::vector<std::string> VEH_TURN_SIGNALS_ACCELERATION_CAPTIONS{ "OFF", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
+const std::vector<int> VEH_TURN_SIGNALS_ACCELERATION_VALUES{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
 
 extern int NPCVehicleDamageOnCollIndex;
 
