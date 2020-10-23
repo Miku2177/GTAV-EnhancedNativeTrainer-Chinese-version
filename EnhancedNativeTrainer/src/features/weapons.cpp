@@ -399,13 +399,13 @@ void give_all_weapons_hotkey() {
 	set_status_text("All weapons added");
 }
 
-void add_all_weapons_attachments() {
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
+void add_all_weapons_attachments(Ped choice) {
+	//Ped playerPed = PLAYER::PLAYER_PED_ID();
 	for (int a = 0; a < WEAPONTYPES_MOD.size(); a++) {
 		for (int b = 0; b < VOV_WEAPONMOD_VALUES[a].size(); b++) {
 			char *weaponName = (char *)WEAPONTYPES_MOD.at(a).c_str(), *compName = (char *)VOV_WEAPONMOD_VALUES[a].at(b).c_str();
 			Hash weaponHash = GAMEPLAY::GET_HASH_KEY(weaponName), compHash = GAMEPLAY::GET_HASH_KEY(compName);
-			if (!WEAPON::HAS_PED_GOT_WEAPON(playerPed, weaponHash, 0)) {
+			if (!WEAPON::HAS_PED_GOT_WEAPON(choice, weaponHash, 0)) {
 				break;
 			}
 
@@ -443,11 +443,11 @@ void add_all_weapons_attachments() {
 				break;
 			}
 
-			if (WEAPON::HAS_PED_GOT_WEAPON_COMPONENT(playerPed, weaponHash, compHash)) {
+			if (WEAPON::HAS_PED_GOT_WEAPON_COMPONENT(choice, weaponHash, compHash)) {
 				continue;
 			}
 
-			WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, weaponHash, compHash);
+			WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(choice, weaponHash, compHash);
 		}
 	}
 
@@ -455,8 +455,8 @@ void add_all_weapons_attachments() {
 		for (int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++) {
 			char* weaponName = (char*)VOV_WEAPON_VALUES[a].at(b).c_str();
 			Hash weaponHash = GAMEPLAY::GET_HASH_KEY(weaponName);
-			if (WEAPON::HAS_PED_GOT_WEAPON(playerPed, weaponHash, FALSE)) {
-				WEAPON::GIVE_WEAPON_TO_PED(playerPed, weaponHash, 10000, false, false);
+			if (WEAPON::HAS_PED_GOT_WEAPON(choice, weaponHash, FALSE)) {
+				WEAPON::GIVE_WEAPON_TO_PED(choice, weaponHash, 10000, false, false);
 			}
 		}
 	}
@@ -1233,7 +1233,7 @@ bool onconfirm_weapon_menu(MenuItem<int> choice){
 			set_status_text("All weapons removed");
 			break;
 		case 3:
-			add_all_weapons_attachments();
+			add_all_weapons_attachments(playerPed);
 			break;
 		case 5:
 			for(int a = 0; a < WEAPONTYPES_MOD.size(); a++){
@@ -2017,7 +2017,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			Ped a_npcs[arrSize2];
 			int count_npcs = worldGetAllPeds(a_npcs, arrSize2);
 			for (int i = 0; i < count_npcs; i++) {
-				if (a_npcs[i] != PLAYER::PLAYER_PED_ID() && (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) <= WEAPONS_COPALARM_VALUES[CopAlarmIndex] || WEAPONS_COPALARM_VALUES[CopAlarmIndex] > 5)) {
+				if (temp_ped == -1 && a_npcs[i] != PLAYER::PLAYER_PED_ID() && (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) <= WEAPONS_COPALARM_VALUES[CopAlarmIndex] || WEAPONS_COPALARM_VALUES[CopAlarmIndex] > 5)) {
 					if (featureSwitchWeaponIfDanger && (WEAPONS_COPARMED_CAPTIONS[CopCurrArmedIndex] == "\"WEAPON_UNARMED\"" || WEAPONS_COPARMED_CAPTIONS[CopCurrArmedIndex] == "\"WEAPON_NIGHTSTICK\"" ||
 						WEAPONS_COPARMED_CAPTIONS[CopCurrArmedIndex] == "\"WEAPON_FLASHLIGHT\"" || WEAPONS_COPARMED_CAPTIONS[CopCurrArmedIndex] == "\"WEAPON_KNIFE\"" || WEAPONS_COPARMED_CAPTIONS[CopCurrArmedIndex] == "\"WEAPON_DAGGER\"" ||
 						WEAPONS_COPARMED_CAPTIONS[CopCurrArmedIndex] == "\"WEAPON_HAMMER\"" || WEAPONS_COPARMED_CAPTIONS[CopCurrArmedIndex] == "\"WEAPON_BAT\"" || WEAPONS_COPARMED_CAPTIONS[CopCurrArmedIndex] == "\"WEAPON_GOLFCLUB\"" ||
@@ -2057,19 +2057,20 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 						arrest_secs = arrest_secs + 1;
 						s_vacuum_secs_curr = s_vacuum_secs_passed;
 					}
-					if (arrest_secs > 7 && arrest_secs < 10) { // 10 && 15
+					if (arrest_secs > 5 && arrest_secs < 100) { // 10 && 15
 						find_nearest_ped();
 						if (PED::GET_PED_TYPE(temp_ped) == 6 || PED::GET_PED_TYPE(temp_ped) == 27) {
-							PLAYER::SET_MAX_WANTED_LEVEL(1);
+							PLAYER::SET_MAX_WANTED_LEVEL(5);
 							PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 1, 0);
 							PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
+							WEAPON::REMOVE_ALL_PED_WEAPONS(temp_ped, false);
+							WEAPON::GIVE_WEAPON_TO_PED(temp_ped, GAMEPLAY::GET_HASH_KEY("WEAPON_PISTOL"), 999, false, true);
 							AI::TASK_ARREST_PED(temp_ped, PLAYER::PLAYER_PED_ID());
-							arrest_secs = 18;
+							arrest_secs = 500;
 						}
 					}
 				}
-				if (temp_ped != -1 && a_npcs[i] != PLAYER::PLAYER_PED_ID() && (PED::GET_PED_TYPE(temp_ped) == 6 || PED::GET_PED_TYPE(temp_ped) == 27)) WEAPON::GIVE_WEAPON_TO_PED(temp_ped, GAMEPLAY::GET_HASH_KEY("WEAPON_PISTOL"), 999, false, true);
-				if (!AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID())) {
+				if (featureDetainedIfNotMove && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID())) {
 					arrest_secs = 0;
 					temp_ped = -1;
 				}
@@ -2184,7 +2185,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	if (featureCopTakeWeapon) {
 		if ((PLAYER::GET_TIME_SINCE_LAST_DEATH() > 100 && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 5000) || (PLAYER::GET_TIME_SINCE_LAST_ARREST() > 100 && PLAYER::GET_TIME_SINCE_LAST_ARREST() < 5000) || player_died == true) {
 			WEAPON::REMOVE_ALL_PED_WEAPONS(playerPed, false);
-			if (!ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && !PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 1)) player_died = false;
+			if (!ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && !PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 1) && detained == false) player_died = false;
 		}
 	}
 
@@ -2203,7 +2204,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			oldplayerPed_W = playerPed;
 			tick_allw = 0;
 			PlayerUpdated_w = false; 
-			player_died = false;
+			if (detained == false && alert_level == 0) player_died = false;
 		}
 		int death_time2 = PLAYER::GET_TIME_SINCE_LAST_DEATH();
 		if (death_time2 > -1 && death_time2 < 2000) PlayerUpdated_w = true; 
@@ -2220,14 +2221,14 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			w_a_tick_secs_curr = w_tick_secs_passed;
 		}
 		if (tick_a_allw > 400 && PlayerUpdated_a) {
-			add_all_weapons_attachments();
+			add_all_weapons_attachments(playerPed);
 			CONTROLS::_SET_CONTROL_NORMAL(0, 159, 1); // 160
 			WAIT(10);
 			CONTROLS::_SET_CONTROL_NORMAL(0, 157, 1);
 			oldplayerPed_A = playerPed;
 			tick_a_allw = 0;
 			PlayerUpdated_a = false;
-			player_died = false;
+			if (detained == false && alert_level == 0) player_died = false;
 		}
 		int death_time2 = PLAYER::GET_TIME_SINCE_LAST_DEATH();
 		if (death_time2 > -1 && death_time2 < 2000) PlayerUpdated_a = true;
@@ -2261,7 +2262,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			oldplayerPed_s = playerPed;
 			tick_s_allw = 0;
 			PlayerUpdated_s = false;
-			player_died = false;
+			if (detained == false && alert_level == 0) player_died = false;
 		}
 		int death_time2 = PLAYER::GET_TIME_SINCE_LAST_DEATH();
 		if (death_time2 > -1 && death_time2 < 2000) PlayerUpdated_s = true;

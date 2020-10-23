@@ -389,7 +389,7 @@ void check_player_model(){
 	if (!ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) CoordsWhereDied = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 
 	if (SKINS_RESET_SKIN_ONDEATH_VALUES[ResetSkinOnDeathIdx] == 0 && manual_pressed == true) {
-		if ((ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && !featureRespawnsWhereDied) || PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 1)) {
+		if ((ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && (!featureRespawnsWhereDied || detained == true || alert_level > 0)) || PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 1)) {
 			if (!found) {
 				float temp_dist = 20000.0;
 				float d_temp1 = SYSTEM::VDIST(CoordsWhereDied.x, CoordsWhereDied.y, CoordsWhereDied.z, 338.409, -1396.54, 32.5092);
@@ -435,7 +435,7 @@ void check_player_model(){
 					CoordsWhereDied.y = 6324.1;
 					CoordsWhereDied.z = 32.4261;
 				}
-
+				
 				player_died = true;
 				CAM::DO_SCREEN_FADE_OUT(500);
 				WAIT(1000);
@@ -650,8 +650,14 @@ void update_features(){
 		if (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) || PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 1)) {
 			if (!CAM::DOES_CAM_EXIST(DeathCam)) {
 				DeathCam = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_FLY_CAMERA", playerPosition.x, playerPosition.y, playerPosition.z + 0.07, curRotation.x, curRotation.y, curRotation.z, 50.0, true, 2);
-				CAM::ATTACH_CAM_TO_ENTITY(DeathCam, PLAYER::PLAYER_PED_ID(), 0, 0.0, 0.07, 1);
-				CAM::POINT_CAM_AT_PED_BONE(DeathCam, PLAYER::PLAYER_PED_ID(), 11816, 0, 0.0, 0.05, 1);
+				if (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) {
+					CAM::ATTACH_CAM_TO_ENTITY(DeathCam, PLAYER::PLAYER_PED_ID(), 0, 0.0, 0.07, 1);
+					CAM::POINT_CAM_AT_PED_BONE(DeathCam, PLAYER::PLAYER_PED_ID(), 11816, 0, 0.0, 0.05, 1);
+				}
+				if (PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 1)) {
+					CAM::ATTACH_CAM_TO_PED_BONE(DeathCam, PLAYER::PLAYER_PED_ID(), 31086, 0, -0.15, 0, 1);
+					CAM::POINT_CAM_AT_PED_BONE(DeathCam, PLAYER::PLAYER_PED_ID(), 31086, 0, 0.0, 0, 1);
+				}
 				CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE_BLEND_LEVEL(DeathCam, 1.0);
 				CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE(DeathCam, 1.0);
 				CAM::_SET_CAM_DOF_FOCUS_DISTANCE_BIAS(DeathCam, 1.0);
@@ -665,7 +671,8 @@ void update_features(){
 			if ((CONTROLS::IS_CONTROL_PRESSED(2, 34) || CONTROLS::IS_CONTROL_PRESSED(2, 35) || CONTROLS::IS_CONTROL_PRESSED(2, 32) || CONTROLS::IS_CONTROL_PRESSED(2, 33)) && first_person_rotate == false) {
 				CAM::DESTROY_CAM(DeathCam, true);
 				DeathCam = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_FLY_CAMERA", playerPosition.x, playerPosition.y, playerPosition.z + 0.07, curRotation.x, curRotation.y, curRotation.z, 50.0, true, 2);
-				CAM::ATTACH_CAM_TO_ENTITY(DeathCam, PLAYER::PLAYER_PED_ID(), 0, 0.0, 0.07, 1);
+				if (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) CAM::ATTACH_CAM_TO_ENTITY(DeathCam, PLAYER::PLAYER_PED_ID(), 0, 0.0, 0.07, 1);
+				if (PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 1)) CAM::ATTACH_CAM_TO_PED_BONE(DeathCam, PLAYER::PLAYER_PED_ID(), 31086, 0, -0.15, 0, 1);
 				CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE_BLEND_LEVEL(DeathCam, 1.0);
 				CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE(DeathCam, 1.0);
 				CAM::_SET_CAM_DOF_FOCUS_DISTANCE_BIAS(DeathCam, 1.0);
@@ -779,7 +786,7 @@ void update_features(){
 			manual_instant = false;
 		}
 		if (!ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && !PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 1)) {
-			player_died = false;
+			if (detained == false && alert_level == 0) player_died = false;
 			if (CAM::DOES_CAM_EXIST(DeathCamM)) {
 				ENTITY::SET_ENTITY_COLLISION(PLAYER::PLAYER_PED_ID(), 1, 1);
 				CAM::RENDER_SCRIPT_CAMS(false, false, 0, false, false);
@@ -794,7 +801,7 @@ void update_features(){
 	}
 		
 	// Instant Respawn On Death/Arrest
-	if (featureRespawnsWhereDied && GAMEPLAY::GET_MISSION_FLAG() == 0 && manual_instant == false) {
+	if (featureRespawnsWhereDied && GAMEPLAY::GET_MISSION_FLAG() == 0 && manual_instant == false && detained == false && alert_level == 0) {
 		if (ENTITY::IS_ENTITY_DEAD(playerPed) || PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 0)) {
 			player_died = true;
 			CAM::DO_SCREEN_FADE_OUT(500);
@@ -1314,7 +1321,7 @@ void update_features(){
 	if (((death_time2 > -1 && death_time2 < 2000) || (player_died == true && !featureNoAutoRespawn)) && featurePlayerLife_Died) {
 		featurePlayerLifeUpdated = true;
 		featurePlayerStatsUpdated = true;
-		player_died = false;
+		if (detained == false && alert_level == 0) player_died = false;
 	}
 	
 	if ((playerPed != oldplayerPed && featurePlayerLife_Changed) || DLC2::GET_IS_LOADING_SCREEN_ACTIVE()) { // If You Switch Character Your Health & Armor Will Be Restored

@@ -284,8 +284,8 @@ bool onconfirm_weather_menu(MenuItem<std::string> choice)
 			GRAPHICS::_CLEAR_CLOUD_HAT();
 
 			GAMEPLAY::SET_WEATHER_TYPE_NOW((char *)lastWeather.c_str());
-			if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3061285535) GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 1.0);
-			if (WORLD_LIGHTNING_INTENSITY_VALUES[featureLightIntensityIndex] > -2 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3373937154) GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 1.0);
+			if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3061285535) GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 0.3);
+			if (WORLD_LIGHTNING_INTENSITY_VALUES[featureLightIntensityIndex] > -2 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3373937154) GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 0.3);
 			GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
 		}
 
@@ -352,12 +352,15 @@ bool onconfirm_clouds_menu(MenuItem<std::string> choice)
 	case 1:
 		// No Clouds
 		GRAPHICS::_CLEAR_CLOUD_HAT();
+		lastClouds = "";
+		lastCloudsName = "";
 		break;
 	default:
 		lastClouds = choice.value.c_str();
 		lastCloudsName = choice.caption;
 
-		GRAPHICS::_SET_CLOUD_HAT_TRANSITION((char *)lastClouds.c_str(), 1.0);
+		GRAPHICS::_CLEAR_CLOUD_HAT();
+		GRAPHICS::_SET_CLOUD_HAT_TRANSITION((char *)lastClouds.c_str(), 0.3);
 				
 		std::ostringstream ss2;
 		ss2 << "Clouds: " << choice.caption;
@@ -1056,9 +1059,9 @@ void update_world_features()
 			GAMEPLAY::CLEAR_WEATHER_TYPE_PERSIST();
 			GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
 			GRAPHICS::_CLEAR_CLOUD_HAT();
-			if (!lastWeather.empty() && (lastWeather == "THUNDER" || GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == GAMEPLAY::GET_HASH_KEY("THUNDER"))) GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 1.0);
+			if (!lastWeather.empty() && (lastWeather == "THUNDER" || GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == GAMEPLAY::GET_HASH_KEY("THUNDER"))) GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 0.3);
 			if (WORLD_LIGHTNING_INTENSITY_VALUES[featureLightIntensityIndex] > -2 && !lastWeather.empty() && (lastWeather == "HALLOWEEN" || GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == GAMEPLAY::GET_HASH_KEY("THUNDER")))
-				GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 1.0);
+				GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 0.3);
 			lastWeather = cur_w;
 			lastWeather_2 = cur_w;
 			if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == GAMEPLAY::GET_HASH_KEY("EXTRASUNNY")) alphabetical_w = 1;
@@ -1134,11 +1137,11 @@ void update_world_features()
 					GRAPHICS::_CLEAR_CLOUD_HAT();
 				}
 				if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 1 && t_counter > 0.065 && t_counter < 0.075) {
-					if (lastWeather == "EXTRASUNNY" || lastWeather == "NEUTRAL") GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Snowy 01", 1.0); // 9.0
-					if (lastWeather == "CLOUDS" && weather_counter == 1) GRAPHICS::_SET_CLOUD_HAT_TRANSITION("shower", 1.0); // 9.0
-					if (lastWeather == "CLOUDS" && weather_counter == 2) GRAPHICS::_SET_CLOUD_HAT_TRANSITION("stratoscumulus", 1.0); // 9.0
-					if (lastWeather == "THUNDER") GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 1.0); // 9.0
-					if (WORLD_LIGHTNING_INTENSITY_VALUES[featureLightIntensityIndex] > -2 && lastWeather == "HALLOWEEN") GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 1.0); // 9.0
+					if (lastWeather == "EXTRASUNNY" || lastWeather == "NEUTRAL") GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Snowy 01", 0.3); // 9.0
+					if (lastWeather == "CLOUDS" && weather_counter == 1) GRAPHICS::_SET_CLOUD_HAT_TRANSITION("shower", 0.3); // 9.0
+					if (lastWeather == "CLOUDS" && weather_counter == 2) GRAPHICS::_SET_CLOUD_HAT_TRANSITION("stratoscumulus", 0.3); // 9.0
+					if (lastWeather == "THUNDER") GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 0.3); // 9.0
+					if (WORLD_LIGHTNING_INTENSITY_VALUES[featureLightIntensityIndex] > -2 && lastWeather == "HALLOWEEN") GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 0.3); // 9.0
 				}
 				if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 2 && t_counter == 0.45) {
 					GAMEPLAY::CLEAR_OVERRIDE_WEATHER();
@@ -1147,9 +1150,9 @@ void update_world_features()
 					GRAPHICS::_CLEAR_CLOUD_HAT();
 				}
 				if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 2 && t_counter > 0.55 && t_counter < 0.65) {
-					if (mixed_w1 == "EXTRASUNNY" || mixed_w2 == "EXTRASUNNY" || mixed_w1 == "NEUTRAL" || mixed_w2 == "NEUTRAL") GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Snowy 01", 1.0);
-					if (mixed_w1 == "THUNDER" || mixed_w2 == "THUNDER") GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 1.0);
-					if (WORLD_LIGHTNING_INTENSITY_VALUES[featureLightIntensityIndex] > -2 && (mixed_w1 == "HALLOWEEN" || mixed_w2 == "HALLOWEEN")) GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 1.0);
+					if (mixed_w1 == "EXTRASUNNY" || mixed_w2 == "EXTRASUNNY" || mixed_w1 == "NEUTRAL" || mixed_w2 == "NEUTRAL") GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Snowy 01", 0.3);
+					if (mixed_w1 == "THUNDER" || mixed_w2 == "THUNDER") GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 0.3);
+					if (WORLD_LIGHTNING_INTENSITY_VALUES[featureLightIntensityIndex] > -2 && (mixed_w1 == "HALLOWEEN" || mixed_w2 == "HALLOWEEN")) GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 0.3);
 				}
 				if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 3 && t_counter > 0.065 && t_counter < 0.075) {
 					if (t_counter == 0.070) {
@@ -1158,9 +1161,9 @@ void update_world_features()
 						GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
 						GRAPHICS::_CLEAR_CLOUD_HAT();
 					}
-					if (cur_w == "EXTRASUNNY" || cur_w == "NEUTRAL") GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Snowy 01", 1.0); // 9.0
-					if (cur_w == "THUNDER") GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 1.0); // 9.0
-					if (WORLD_LIGHTNING_INTENSITY_VALUES[featureLightIntensityIndex] > -2 && cur_w == "HALLOWEEN") GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 1.0); // 9.0
+					if (cur_w == "EXTRASUNNY" || cur_w == "NEUTRAL") GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Snowy 01", 0.3); // 9.0
+					if (cur_w == "THUNDER") GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 0.3); // 9.0
+					if (WORLD_LIGHTNING_INTENSITY_VALUES[featureLightIntensityIndex] > -2 && cur_w == "HALLOWEEN") GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 0.3); // 9.0
 				}
 
 				if ((MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 1 && t_counter > 0.999) || (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 2 && t_counter > 1.0) || (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 3 && t_counter > 1.0)) {
@@ -1918,8 +1921,8 @@ void update_world_features()
 		GRAPHICS::_CLEAR_CLOUD_HAT();
 
 		if (!lastWeather.empty()) {
-			if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3061285535) GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 1.0);
-			if (WORLD_LIGHTNING_INTENSITY_VALUES[featureLightIntensityIndex] > -2 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3373937154) GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 1.0);
+			if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3061285535) GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 0.3);
+			if (WORLD_LIGHTNING_INTENSITY_VALUES[featureLightIntensityIndex] > -2 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3373937154) GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 0.3);
 			GAMEPLAY::SET_WEATHER_TYPE_NOW_PERSIST((char*)lastWeather.c_str());
 		}
 		if (freeze_counter > 0.30) featureWeatherFreezeUpdated = true;
@@ -1940,7 +1943,7 @@ void update_world_features()
 	}
 
 	// Freeze Clouds
-	if (featureCloudsFreeze && !lastClouds.empty()) GRAPHICS::_SET_CLOUD_HAT_TRANSITION((char *)lastClouds.c_str(), 1.0);
+	if (featureCloudsFreeze && !lastClouds.empty()) GRAPHICS::_SET_CLOUD_HAT_TRANSITION((char *)lastClouds.c_str(), 0.3);
 	
 	// Restricted Zones
 	if (!featureRestrictedZones)
