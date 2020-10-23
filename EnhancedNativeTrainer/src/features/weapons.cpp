@@ -2017,7 +2017,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			Ped a_npcs[arrSize2];
 			int count_npcs = worldGetAllPeds(a_npcs, arrSize2);
 			for (int i = 0; i < count_npcs; i++) {
-				if (a_npcs[i] != PLAYER::PLAYER_PED_ID() && (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) <= WEAPONS_COPALARM_VALUES[CopAlarmIndex] || WEAPONS_COPALARM_VALUES[CopAlarmIndex] > 5)) {
+				if (temp_ped == -1 && a_npcs[i] != PLAYER::PLAYER_PED_ID() && (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) <= WEAPONS_COPALARM_VALUES[CopAlarmIndex] || WEAPONS_COPALARM_VALUES[CopAlarmIndex] > 5)) {
 					if (featureSwitchWeaponIfDanger && (WEAPONS_COPARMED_CAPTIONS[CopCurrArmedIndex] == "\"WEAPON_UNARMED\"" || WEAPONS_COPARMED_CAPTIONS[CopCurrArmedIndex] == "\"WEAPON_NIGHTSTICK\"" ||
 						WEAPONS_COPARMED_CAPTIONS[CopCurrArmedIndex] == "\"WEAPON_FLASHLIGHT\"" || WEAPONS_COPARMED_CAPTIONS[CopCurrArmedIndex] == "\"WEAPON_KNIFE\"" || WEAPONS_COPARMED_CAPTIONS[CopCurrArmedIndex] == "\"WEAPON_DAGGER\"" ||
 						WEAPONS_COPARMED_CAPTIONS[CopCurrArmedIndex] == "\"WEAPON_HAMMER\"" || WEAPONS_COPARMED_CAPTIONS[CopCurrArmedIndex] == "\"WEAPON_BAT\"" || WEAPONS_COPARMED_CAPTIONS[CopCurrArmedIndex] == "\"WEAPON_GOLFCLUB\"" ||
@@ -2057,19 +2057,20 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 						arrest_secs = arrest_secs + 1;
 						s_vacuum_secs_curr = s_vacuum_secs_passed;
 					}
-					if (arrest_secs > 7 && arrest_secs < 10) { // 10 && 15
+					if (arrest_secs > 5 && arrest_secs < 100) { // 10 && 15
 						find_nearest_ped();
 						if (PED::GET_PED_TYPE(temp_ped) == 6 || PED::GET_PED_TYPE(temp_ped) == 27) {
-							PLAYER::SET_MAX_WANTED_LEVEL(1);
+							PLAYER::SET_MAX_WANTED_LEVEL(5);
 							PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 1, 0);
 							PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
+							WEAPON::REMOVE_ALL_PED_WEAPONS(temp_ped, false);
+							WEAPON::GIVE_WEAPON_TO_PED(temp_ped, GAMEPLAY::GET_HASH_KEY("WEAPON_PISTOL"), 999, false, true);
 							AI::TASK_ARREST_PED(temp_ped, PLAYER::PLAYER_PED_ID());
-							arrest_secs = 18;
+							arrest_secs = 500;
 						}
 					}
 				}
-				if (temp_ped != -1 && a_npcs[i] != PLAYER::PLAYER_PED_ID() && (PED::GET_PED_TYPE(temp_ped) == 6 || PED::GET_PED_TYPE(temp_ped) == 27)) WEAPON::GIVE_WEAPON_TO_PED(temp_ped, GAMEPLAY::GET_HASH_KEY("WEAPON_PISTOL"), 999, false, true);
-				if (!AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID())) {
+				if (featureDetainedIfNotMove && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID())) {
 					arrest_secs = 0;
 					temp_ped = -1;
 				}
