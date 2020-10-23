@@ -11,6 +11,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "area_effect.h"
 #include "script.h"
 #include "../../inc/nativeCaller.h"
+#include "prison_break.h"
 
 //int areaeffect_top_level_menu_index = 0;
 int areaeffect_ped_level_menu_index = 0;
@@ -691,7 +692,7 @@ void update_area_effects(Ped playerPed){
 				veh_agressive[i] != VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh_me, 2)) {
 				
 				// vigilante citizens
-				if (featureLawAbidingCitizens && GAMEPLAY::GET_MISSION_FLAG() == 0) {
+				if (featureLawAbidingCitizens && GAMEPLAY::GET_MISSION_FLAG() == 0 && in_prison == false) {
 					if ((PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed) != 0 && VEHICLE::GET_PED_IN_VEHICLE_SEAT(PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed), -1) != 0 &&
 						!PED::IS_PED_IN_ANY_TAXI(VEHICLE::GET_PED_IN_VEHICLE_SEAT(PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed), -1))) ||
 						(PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed) != 0 && VEHICLE::IS_VEHICLE_ALARM_ACTIVATED(PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed))) || 
@@ -793,7 +794,7 @@ void update_area_effects(Ped playerPed){
 						AI::SET_TASK_VEHICLE_CHASE_BEHAVIOR_FLAG(pursuer.back(), 32, true);
 						AI::SET_DRIVE_TASK_DRIVING_STYLE(pursuer.back(), 786468);
 						PED::SET_DRIVER_AGGRESSIVENESS(pursuer.back(), 0.9f);
-						PED::SET_DRIVER_ABILITY(pursuer.back(), 10.0f);
+						PED::SET_DRIVER_ABILITY(pursuer.back(), 0.9f);
 						AUDIO::_PLAY_AMBIENT_SPEECH1(pursuer.back(), "PROVOKE_GENERIC", "SPEECH_PARAMS_FORCE_SHOUTED");
 					}
 				}
@@ -809,7 +810,7 @@ void update_area_effects(Ped playerPed){
 			AI::SET_TASK_VEHICLE_CHASE_BEHAVIOR_FLAG(pursuer.back(), 32, true);
 			AI::SET_DRIVE_TASK_DRIVING_STYLE(pursuer.back(), 786468);
 			PED::SET_DRIVER_AGGRESSIVENESS(pursuer.back(), 0.9f);
-			PED::SET_DRIVER_ABILITY(pursuer.back(), 10.0f);
+			PED::SET_DRIVER_ABILITY(pursuer.back(), 0.9f);
 			if (featurePedsWeapons) {
 				int chanceOfGettingWeapon_a = rand() % 10;
 				if (chanceOfGettingWeapon_a == 9 && (WEAPON::GET_WEAPONTYPE_GROUP(WEAPON::GET_SELECTED_PED_WEAPON(pursuer.back())) != Hash((416676503) || Hash(3337201093))))
@@ -844,7 +845,7 @@ void update_area_effects(Ped playerPed){
 				if (ENTITY::DOES_ENTITY_EXIST(pursuer[j])) PED::DELETE_PED(&pursuer[j]);
 				if (ENTITY::DOES_ENTITY_EXIST(v_collided[j])) ENTITY::SET_VEHICLE_AS_NO_LONGER_NEEDED(&v_collided[j]);
 				if (ENTITY::DOES_ENTITY_EXIST(v_collided[j])) VEHICLE::DELETE_VEHICLE(&v_collided[j]);
-				player_died = false;
+				if (detained == false && alert_level == 0) player_died = false;
 			}
 			pursuer.clear();
 			pursuer.shrink_to_fit();

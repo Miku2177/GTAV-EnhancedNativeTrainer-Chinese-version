@@ -334,3 +334,5 @@ void add_weapons_generic_settings(std::vector<StringPairSettingDBRow>* results);
 void handle_generic_settings_weapons(std::vector<StringPairSettingDBRow>* settings);
 
 void fire_mode_hotkey();
+
+void add_all_weapons_attachments(Ped choice);
