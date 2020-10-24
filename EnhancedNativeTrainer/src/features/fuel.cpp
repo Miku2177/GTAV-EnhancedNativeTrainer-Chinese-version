@@ -163,8 +163,12 @@ int get_fuel_tank_offset()
 //////////////////////////////////////////////// FUEL OPTION /////////////////////////////////////////////////////////////////
 void fuel()
 {
+	if (featureFuelGauge && (getGameVersion() < VER_1_0_2060_0_STEAM || getGameVersion() < VER_1_0_2060_0_NOSTEAM || getGameVersion() < VER_1_0_2060_0_EGS)) {
+		set_status_text("Version 2060.0 or higher is required");
+		featureFuelGauge = false;
+	}
 	if (featureFuel && !CUTSCENE::IS_CUTSCENE_PLAYING()) {
-		if (featureFuelGauge && gauge_ini == false) { // featureFuel && 
+		if (featureFuelGauge && gauge_ini == false) {
 			fuelLevelOffset = get_fuel_level_offset();
 			fuelTankOffset = get_fuel_tank_offset();
 			gauge_ini = true;
