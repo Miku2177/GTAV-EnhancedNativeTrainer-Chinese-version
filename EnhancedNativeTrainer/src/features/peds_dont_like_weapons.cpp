@@ -81,7 +81,8 @@ void peds_dont_like_weapons() {
 								if (weaponhaters[i] != playerPed) {
 									if (PED::IS_PED_IN_COMBAT(weaponhaters[i], playerPed)) AI::CLEAR_PED_TASKS(weaponhaters[i]);
 									if (ENTITY::GET_ENTITY_MODEL(weaponhaters[i]) != GAMEPLAY::GET_HASH_KEY("ig_tracydisanto") && ENTITY::GET_ENTITY_MODEL(weaponhaters[i]) != GAMEPLAY::GET_HASH_KEY("ig_amandatownley") &&
-										ENTITY::GET_ENTITY_MODEL(weaponhaters[i]) != GAMEPLAY::GET_HASH_KEY("ig_jimmydisanto")) {
+										ENTITY::GET_ENTITY_MODEL(weaponhaters[i]) != GAMEPLAY::GET_HASH_KEY("ig_jimmydisanto") && ENTITY::GET_ENTITY_MODEL(weaponhaters[i]) != GAMEPLAY::GET_HASH_KEY("ig_denise") &&
+										ENTITY::GET_ENTITY_MODEL(weaponhaters[i]) != GAMEPLAY::GET_HASH_KEY("ig_nervousron")) {
 										AUDIO::_PLAY_AMBIENT_SPEECH1(weaponhaters[i], "GENERIC_FRIGHTENED_HIGH", "SPEECH_PARAMS_FORCE_SHOUTED");
 										AI::TASK_SMART_FLEE_PED(weaponhaters[i], playerPed, 1000, -1, true, true);
 									}
@@ -106,7 +107,8 @@ void peds_dont_like_weapons() {
 								if (weaponhaters[i] != playerPed) {
 									if (PED::IS_PED_IN_COMBAT(weaponhaters[i], playerPed)) AI::CLEAR_PED_TASKS(weaponhaters[i]);
 									if (ENTITY::GET_ENTITY_MODEL(weaponhaters[i]) != GAMEPLAY::GET_HASH_KEY("ig_tracydisanto") && ENTITY::GET_ENTITY_MODEL(weaponhaters[i]) != GAMEPLAY::GET_HASH_KEY("ig_amandatownley") &&
-										ENTITY::GET_ENTITY_MODEL(weaponhaters[i]) != GAMEPLAY::GET_HASH_KEY("ig_jimmydisanto")) {
+										ENTITY::GET_ENTITY_MODEL(weaponhaters[i]) != GAMEPLAY::GET_HASH_KEY("ig_jimmydisanto") && ENTITY::GET_ENTITY_MODEL(weaponhaters[i]) != GAMEPLAY::GET_HASH_KEY("ig_denise") &&
+										ENTITY::GET_ENTITY_MODEL(weaponhaters[i]) != GAMEPLAY::GET_HASH_KEY("ig_nervousron")) {
 										AUDIO::_PLAY_AMBIENT_SPEECH1(weaponhaters[i], "GENERIC_FRIGHTENED_HIGH", "SPEECH_PARAMS_FORCE_SHOUTED");
 										AI::TASK_SMART_FLEE_PED(weaponhaters[i], playerPed, 1000, -1, true, true);
 									}
