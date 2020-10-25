@@ -168,7 +168,7 @@ void fuel()
 		featureFuelGauge = false;
 	}
 	if (featureFuel && !CUTSCENE::IS_CUTSCENE_PLAYING()) {
-		if (featureFuelGauge && gauge_ini == false) {
+		if (featureFuelGauge && gauge_ini == false && (getGameVersion() >= VER_1_0_2060_0_STEAM || getGameVersion() >= VER_1_0_2060_0_NOSTEAM || getGameVersion() >= VER_1_0_2060_0_EGS)) {
 			fuelLevelOffset = get_fuel_level_offset();
 			fuelTankOffset = get_fuel_tank_offset();
 			gauge_ini = true;
