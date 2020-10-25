@@ -135,3 +135,5 @@ void write_config_ini_file();
 inline TrainerConfig* get_config(){
 	return config;
 }
+
+extern std::map<std::string, std::pair<int, int>> controller_binds;
