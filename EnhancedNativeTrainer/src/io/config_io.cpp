@@ -124,8 +124,8 @@ void read_config_file(){
 		attribs->get_length(&length_attribs);
 
 		char* attrib_controller_func = NULL;
-		char* attrib_button1_v = NULL;
-		char* attrib_button2_v = NULL;
+		int attrib_button1_v = NULL;
+		int attrib_button2_v = NULL;
 
 		for (long j = 0; j < length_attribs; j++) {
 			IXMLDOMNode* attribNode;
@@ -141,13 +141,13 @@ void read_config_file(){
 				VARIANT var;
 				VariantInit(&var);
 				attribNode->get_nodeValue(&var);
-				attrib_button1_v = _com_util::ConvertBSTRToString(V_BSTR(&var));
+				attrib_button1_v = std::stoi(_com_util::ConvertBSTRToString(V_BSTR(&var)));
 			}
 			else if (wcscmp(keyconf_bstr, L"button2") == 0) {
 				VARIANT var;
 				VariantInit(&var);
 				attribNode->get_nodeValue(&var);
-				attrib_button2_v = _com_util::ConvertBSTRToString(V_BSTR(&var));
+				attrib_button2_v = std::stoi(_com_util::ConvertBSTRToString(V_BSTR(&var)));
 			}
 
 			SysFreeString(keyconf_bstr);
@@ -155,11 +155,15 @@ void read_config_file(){
 		}
 
 		// here must be a code to store keybinds somewhere.
+		if (attrib_controller_func != NULL && attrib_button1_v != NULL) {
+			if (controller_binds.find(attrib_controller_func) != controller_binds.end())
+			{
+				controller_binds.at(attrib_controller_func) = std::pair(attrib_button1_v, attrib_button2_v);
+			}
+		}
 
 		delete attrib_controller_func;
-		delete attrib_button1_v;
-		delete attrib_button2_v;
-
+	
 		attribs->Release();
 		node->Release();
 	}
