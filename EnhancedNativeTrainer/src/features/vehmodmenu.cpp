@@ -786,6 +786,11 @@ void set_engine_sound(MenuItem<int> choice) { // pick engine sound via message b
 				if (featureRememberVehicles && featureRestoreTracked) add_engine_sound(veh);
 				set_status_text("Changed engine sound");
 			}
+			else {
+				VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
+				AUDIO::_SET_VEHICLE_AUDIO(veh, keyboardInput);
+				set_status_text("Changed engine sound but the name is either incorrect or it's an add-on sound");
+			}
 		}
 	}
 }
