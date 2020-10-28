@@ -35,7 +35,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 using namespace std;
 
-const static int ENGINE_SOUND_COUNT_VEHICLES = 367;
+//const static int ENGINE_SOUND_COUNT_VEHICLES = 367;
 
 bool featureVehInvincible = false;
 bool featureVehInvincibleUpdated = false;
@@ -159,7 +159,7 @@ std::vector<Blip> BLIPTABLE_VEH;
 std::vector<Vehicle> VEHICLES_REMEMBER;
 
 std::vector<Vehicle> VEHICLES_HAVE_SOUND;
-std::vector<int> VEHICLES_SOUND_NUMBER;
+std::vector<std::string> VEHICLES_SOUND_NUMBER;
 
 bool featureRememberVehicles = false;
 bool featureBlipNumber = true;
@@ -4684,27 +4684,15 @@ bool spawn_tracked_car(int slot, std::string caption) {
 			VEHICLE::_SET_VEHICLE_INTERIOR_COLOUR(veh, savedTVeh->interiorColour);
 		}
 
-		// loading of an engine sound
-		if (savedTVeh->engineSound > -1 && featureEngineSound) {
-			bool correct_name_to_load = false;
-			int tmp_picked_sound = -1;
-			for (int i = 0; i < ENGINE_SOUND_COUNT_VEHICLES; i++)
-			{
-				if (ENGINE_SOUND_NUMBERS[i] == savedTVeh->engineSound) {
-					correct_name_to_load = true;
-					current_picked_engine_sound = i;
-					tmp_picked_sound = ENGINE_SOUND_NUMBERS[i];
-				}
-			}
-			if (correct_name_to_load == true) {
-				char* currSound = new char[ENGINE_SOUND[current_picked_engine_sound].length() + 1];
-				strcpy(currSound, ENGINE_SOUND[current_picked_engine_sound].c_str());
-				VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
-				AUDIO::_SET_VEHICLE_AUDIO(veh, currSound);
-				VEHICLES_HAVE_SOUND.push_back(veh);
-				VEHICLES_SOUND_NUMBER.push_back(tmp_picked_sound);
-				current_picked_engine_sound = -1;
-			}
+		// loading of a tracked engine sound
+		if (featureEngineSound) {
+			char* currSound = new char[savedTVeh->engineSound.length() + 1];
+			strcpy(currSound, savedTVeh->engineSound.c_str());
+			VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
+			AUDIO::_SET_VEHICLE_AUDIO(veh, currSound);
+			VEHICLES_HAVE_SOUND.push_back(veh);
+			VEHICLES_SOUND_NUMBER.push_back(savedTVeh->engineSound);
+			current_picked_engine_sound = "";
 		}
 		//
 		if (savedTVeh->xenonColour > -1) {
@@ -4831,28 +4819,16 @@ bool spawn_saved_car(int slot, std::string caption){
 		}
 
 		// loading of an engine sound
-		if (savedVeh->engineSound > -1 && featureEngineSound) {
-			bool correct_name_to_load = false;
-			int tmp_picked_sound = -1;
-			for (int i = 0; i < ENGINE_SOUND_COUNT_VEHICLES; i++)
-			{
-				if (ENGINE_SOUND_NUMBERS[i] == savedVeh->engineSound) {
-					correct_name_to_load = true;
-					current_picked_engine_sound = i;
-					tmp_picked_sound = ENGINE_SOUND_NUMBERS[i];
-				}
+		if (featureEngineSound) {
+			char *currSound = new char[savedVeh->engineSound.length() + 1];
+			strcpy(currSound, savedVeh->engineSound.c_str());
+			VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
+			AUDIO::_SET_VEHICLE_AUDIO(veh, currSound);
+			if (featureRememberVehicles && featureRestoreTracked) {
+				VEHICLES_HAVE_SOUND.push_back(veh);
+				VEHICLES_SOUND_NUMBER.push_back(currSound);
 			}
-			if (correct_name_to_load == true) {
-				char *currSound = new char[ENGINE_SOUND[current_picked_engine_sound].length() + 1];
-				strcpy(currSound, ENGINE_SOUND[current_picked_engine_sound].c_str());
-				VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
-				AUDIO::_SET_VEHICLE_AUDIO(veh, currSound);
-				if (featureRememberVehicles && featureRestoreTracked) {
-					VEHICLES_HAVE_SOUND.push_back(veh);
-					VEHICLES_SOUND_NUMBER.push_back(tmp_picked_sound);
-				}
-				current_picked_engine_sound = -1;
-			}
+			current_picked_engine_sound = savedVeh->engineSound;
 		}
 		//
 		if (savedVeh->xenonColour > -1) {
