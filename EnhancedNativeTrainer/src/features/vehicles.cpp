@@ -936,13 +936,14 @@ void save_tracked_veh() {
 		ENTDatabase* database = get_database();
 		std::vector<TrackedVehicleDBRow*> savedCTVehs = database->get_tracked_vehicles();
 		int lastKnownTrackedVehicleCount = savedCTVehs.size();
-		for (int i = 0; i < lastKnownTrackedVehicleCount; i++) database->delete_tracked_vehicle(i);
+		if (savedCTVehs.size() > 0) for (int i = 0; i < lastKnownTrackedVehicleCount; i++) database->delete_tracked_vehicle(i);
 		for (int i = 0; i < VEHICLES_REMEMBER.size(); i++) {
 			char str[3];
 			sprintf(str, "%d", i);
 			database->save_tracked_vehicle(VEHICLES_REMEMBER[i], str, i);
-			set_status_text("Tracked vehicles saved");
 		}
+		set_status_text("Tracked vehicles saved");
+		restored_v = true;
 	}
 }
 
