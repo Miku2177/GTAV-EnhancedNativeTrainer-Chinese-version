@@ -83,7 +83,6 @@ void reset_trainer_switch()
 	trainerResetTime = GetTickCount();
 }
 
-
 void setGameInputToEnabled(bool enabled, bool force)
 {
 	if (enabled && (gameInputDisabledByUs || force))
