@@ -900,7 +900,7 @@ void update_features(){
 		veh_engine_t = false;
 	}
 	if (featureDisableIgnition) {
-		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && veh_engine_t == false) { // PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1)
+		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && veh_engine_t == false) {
 			veh_engine = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 			if (!VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(veh_engine)) {
 				engine_running = true;
@@ -908,6 +908,10 @@ void update_features(){
 				engineonoff_switching();
 			}
 			veh_engine_t = true;
+		}
+		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && !VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(PED::GET_VEHICLE_PED_IS_USING(playerPed)) && CONTROLS::IS_CONTROL_JUST_PRESSED(2, 71)) {
+			engine_running = false;
+			engineonoff_switching();
 		}
 	}
 

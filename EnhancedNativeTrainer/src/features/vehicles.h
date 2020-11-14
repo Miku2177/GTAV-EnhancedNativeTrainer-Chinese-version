@@ -1311,7 +1311,7 @@ void GenerateVehicleModelList();
 void PopulateVehicleModelsArray();
 
 extern std::vector<Vehicle> VEHICLES_HAVE_SOUND;
-extern std::vector<int> VEHICLES_SOUND_NUMBER;
+extern std::vector<std::string> VEHICLES_SOUND_NUMBER;
 extern bool featureRememberVehicles;
 extern bool featureRestoreTracked;
 extern bool featureDisableIgnition;

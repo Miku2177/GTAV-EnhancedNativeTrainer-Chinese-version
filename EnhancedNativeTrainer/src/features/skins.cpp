@@ -308,36 +308,37 @@ void update_skin_features() {
 						model = 1;
 					}
 					
-					savedSkins = database->get_saved_skins(savedSkins.size());
-					SavedSkinDBRow* savedSkin = savedSkins.at(0);
-					database->populate_saved_skin(savedSkin);
+					if (savedSkins.at(savedSkins.size() - 1) != NULL) {
+						SavedSkinDBRow* savedSkin = savedSkins.at(savedSkins.size() - 1);
+						database->populate_saved_skin(savedSkin);
 
-					bool right_model = false;
+						bool right_model = false;
 
-					if (model != -1) { 
-						if (SKINS_AUTO_SKIN_SAVED_VALUES[AutoApplySkinSavedIndex] == 1) applyChosenSkin(savedSkin->model);
-						if (SKINS_AUTO_SKIN_SAVED_VALUES[AutoApplySkinSavedIndex] == 2 && ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == savedSkin->model) applyChosenSkin(PLAYER::PLAYER_PED_ID()); // applyChosenSkin(savedSkin->model);
-						if (SKINS_AUTO_SKIN_SAVED_VALUES[AutoApplySkinSavedIndex] == 2 && ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) != savedSkin->model) right_model = true;
-						
-						if (right_model == false) {
-							Ped ped = PLAYER::PLAYER_PED_ID();
-							for each (SavedSkinComponentDBRow *comp in savedSkin->components) {
-								PED::SET_PED_COMPONENT_VARIATION(ped, comp->slotID, comp->drawable, comp->texture, 0);
+						if (model != -1) {
+							if (SKINS_AUTO_SKIN_SAVED_VALUES[AutoApplySkinSavedIndex] == 1) applyChosenSkin(savedSkin->model);
+							if (SKINS_AUTO_SKIN_SAVED_VALUES[AutoApplySkinSavedIndex] == 2 && ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == savedSkin->model) applyChosenSkin(PLAYER::PLAYER_PED_ID()); // applyChosenSkin(savedSkin->model);
+							if (SKINS_AUTO_SKIN_SAVED_VALUES[AutoApplySkinSavedIndex] == 2 && ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) != savedSkin->model) right_model = true;
+
+							if (right_model == false) {
+								Ped ped = PLAYER::PLAYER_PED_ID();
+								for each (SavedSkinComponentDBRow * comp in savedSkin->components) {
+									PED::SET_PED_COMPONENT_VARIATION(ped, comp->slotID, comp->drawable, comp->texture, 0);
+								}
+								PED::CLEAR_ALL_PED_PROPS(ped);
+								for each (SavedSkinPropDBRow * prop in savedSkin->props) {
+									PED::SET_PED_PROP_INDEX(ped, prop->propID, prop->drawable, prop->texture, 0);
+								}
+								for (std::vector<SavedSkinDBRow*>::iterator it = savedSkins.begin(); it != savedSkins.end(); ++it) {
+									delete (*it);
+								}
+								savedSkins.clear();
 							}
-							PED::CLEAR_ALL_PED_PROPS(ped);
-							for each (SavedSkinPropDBRow *prop in savedSkin->props) {
-								PED::SET_PED_PROP_INDEX(ped, prop->propID, prop->drawable, prop->texture, 0);
-							}
-							for (std::vector<SavedSkinDBRow*>::iterator it = savedSkins.begin(); it != savedSkins.end(); ++it) {
-								delete (*it);
-							}
-							savedSkins.clear();
+
+							oldplayerSkin = PLAYER::PLAYER_PED_ID();
+							skin_tick = 0;
+							auto_skin = true;
+							reset_skin = false;
 						}
-
-						oldplayerSkin = PLAYER::PLAYER_PED_ID();
-						skin_tick = 0;
-						auto_skin = true;
-						reset_skin = false;
 					}
 				} // end of !empty
 			} // end of skin_tick

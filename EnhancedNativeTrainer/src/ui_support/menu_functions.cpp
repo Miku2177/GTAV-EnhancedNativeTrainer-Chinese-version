@@ -333,30 +333,31 @@ void WantedSymbolItem::handleRightPress(){
 
 template<class T>
 bool CashItem<T>::onConfirm(){
-	for(int i = 0; i < 3; i++){
-		char statNameFull[32];
-		sprintf_s(statNameFull, "SP%d_TOTAL_CASH", i);
-		Hash hash = GAMEPLAY::GET_HASH_KEY(statNameFull);
-		int newAmount;
-		STATS::STAT_GET_INT(hash, &newAmount, -1);
-		if(cash > 0){
-			if(cash < INT_MAX - newAmount){
-				newAmount += cash;
-			}
-			else{
-				newAmount = INT_MAX;
-			}
+	Hash hash = -1;
+	if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO) hash = SP0_TOTAL_CASH;
+	if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE) hash = SP1_TOTAL_CASH;
+	if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO) hash = SP2_TOTAL_CASH;
+
+	int newAmount;
+	STATS::STAT_GET_INT(hash, &newAmount, -1);
+	if(cash > 0){
+		if(cash < INT_MAX - newAmount){
+			newAmount += cash;
 		}
 		else{
-			if(newAmount + cash > 0){
-				newAmount += cash;
-			}
-			else{
-				newAmount = 0;
-			}
+			newAmount = INT_MAX;
 		}
-		STATS::STAT_SET_INT(hash, newAmount, 1);
 	}
+	else{
+		if(newAmount + cash > 0){
+			newAmount += cash;
+		}
+		else{
+			newAmount = 0;
+		}
+	}
+	STATS::STAT_SET_INT(hash, newAmount, 1);
+	
 	cash >= 0 ? set_status_text("Cash added") : set_status_text("Cash removed");
 
 	return true;
