@@ -147,7 +147,7 @@ void ENTDatabase::handle_version(int oldVersion)
 			convertibleRoofUp INTEGER DEFAULT 0, \
 			dashColour INTEGER DEFAULT -1, \
 			interiorColour INTEGER DEFAULT -1, \
-			engineSound INTEGER DEFAULT -1, \
+			engineSound STRING DEFAULT -1, \
 			xenonColour INTEGER DEFAULT -1 \
 			)";
 		int rcVeh1 = sqlite3_exec(db, CREATE_VEHICLE_TABLE_QUERY, NULL, 0, &zErrMsg);
@@ -403,7 +403,7 @@ void ENTDatabase::handle_version(int oldVersion)
 
 	if (oldVersion < 10)
 	{
-		char* ADD_ENGINESOUND_COL = "ALTER TABLE ENT_SAVED_VEHICLES ADD engineSound INTEGER DEFAULT -1";
+		char* ADD_ENGINESOUND_COL = "ALTER TABLE ENT_SAVED_VEHICLES ADD engineSound STRING DEFAULT -1";
 
 		int custTyresAddition = sqlite3_exec(db, ADD_ENGINESOUND_COL, NULL, 0, &zErrMsg);
 		if (custTyresAddition != SQLITE_OK)
@@ -597,7 +597,7 @@ void ENTDatabase::handle_version(int oldVersion)
 			convertibleRoofUp INTEGER DEFAULT 0, \
 			dashColour INTEGER DEFAULT -1, \
 			interiorColour INTEGER DEFAULT -1, \
-			engineSound INTEGER DEFAULT -1, \
+			engineSound STRING DEFAULT -1, \
 			xenonColour INTEGER DEFAULT -1, \
 			cor_x INTEGER DEFAULT -1, \
 			cor_y INTEGER DEFAULT -1, \
@@ -1369,7 +1369,7 @@ bool ENTDatabase::save_vehicle(Vehicle veh, std::string saveName, sqlite3_int64 
 		wheelType INTEGER, \ 22
 		windowTint INTEGER, \ 23
 		burstableTyres INTEGER \ 24
-		engineSound INTEGER, \ 25
+		engineSound STRING, \ 25
 		xenonColour INTEGER, \ 26
 		*/
 
@@ -1418,20 +1418,20 @@ bool ENTDatabase::save_vehicle(Vehicle veh, std::string saveName, sqlite3_int64 
 
 		sqlite3_bind_int(stmt, index++, VEHICLE::IS_VEHICLE_A_CONVERTIBLE(veh, 0) && VEHICLE::GET_CONVERTIBLE_ROOF_STATE(veh));
 
-		/*dashColour INTEGER,
-			interiorColour INTEGER*/
+		//dashColour INTEGER,
+		//interiorColour INTEGER
 		int dashCol, interiorCol;
 		VEHICLE::_GET_VEHICLE_DASHBOARD_COLOUR(veh, &dashCol);
 		VEHICLE::_GET_VEHICLE_INTERIOR_COLOUR(veh, &interiorCol);
 		sqlite3_bind_int(stmt, index++, dashCol);
 		sqlite3_bind_int(stmt, index++, interiorCol);
 
-		sqlite3_bind_int(stmt, index++, current_picked_engine_sound);
-		current_picked_engine_sound = -1;
+		char* tmp_i = (char*)current_picked_engine_sound.c_str();
+		sqlite3_bind_text(stmt, index++, tmp_i, strlen(tmp_i), 0);
+		current_picked_engine_sound = "";
 
 		int xenonColour = -1;
 		if (getGameVersion() > 45) xenonColour = VEHICLE::GET_VEHICLE_XENON_COLOUR(veh);
-		//if (getGameVersion() < 46) xenonColour = -1;
 		sqlite3_bind_int(stmt, index++, xenonColour); 
 
 		// commit
@@ -2364,7 +2364,7 @@ std::vector<SavedVehicleDBRow*> ENTDatabase::get_saved_vehicles(int index)
 			veh->dashboardColour = sqlite3_column_int(stmt, index++);
 			veh->interiorColour = sqlite3_column_int(stmt, index++);
 
-			veh->engineSound = sqlite3_column_int(stmt, index++);
+			veh->engineSound = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, index++)));
 
 			veh->xenonColour = sqlite3_column_int(stmt, index++);
 
@@ -3425,7 +3425,7 @@ std::vector<TrackedVehicleDBRow*> ENTDatabase::get_tracked_vehicles(int index)
 			veh->dashboardColour = sqlite3_column_int(stmt, index++);
 			veh->interiorColour = sqlite3_column_int(stmt, index++);
 
-			veh->engineSound = sqlite3_column_int(stmt, index++);
+			veh->engineSound = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, index++)));
 
 			veh->xenonColour = sqlite3_column_int(stmt, index++);
 
@@ -3576,7 +3576,7 @@ bool ENTDatabase::save_tracked_vehicle(Vehicle veh, std::string saveName, sqlite
 		wheelType INTEGER, \ 22
 		windowTint INTEGER, \ 23
 		burstableTyres INTEGER \ 24
-		engineSound INTEGER, \ 25
+		engineSound STRING, \ 25
 		xenonColour INTEGER, \ 26
 		*/
 
@@ -3633,18 +3633,18 @@ bool ENTDatabase::save_tracked_vehicle(Vehicle veh, std::string saveName, sqlite
 		sqlite3_bind_int(stmt, index++, dashCol);
 		sqlite3_bind_int(stmt, index++, interiorCol);
 
-		current_picked_engine_sound = -1;
+		current_picked_engine_sound = "";
 		if (!VEHICLES_HAVE_SOUND.empty()) {
 			for (int i = 0; i < VEHICLES_HAVE_SOUND.size(); i++) {
 				if (veh == VEHICLES_HAVE_SOUND[i]) current_picked_engine_sound = VEHICLES_SOUND_NUMBER[i];
 			}
 		}
-		sqlite3_bind_int(stmt, index++, current_picked_engine_sound);
-		current_picked_engine_sound = -1;
+		char* tmp_i = (char*)current_picked_engine_sound.c_str();
+		sqlite3_bind_text(stmt, index++, tmp_i, strlen(tmp_i), 0);
+		current_picked_engine_sound = "";
 
 		int xenonColour = -1;
 		if (getGameVersion() > 45) xenonColour = VEHICLE::GET_VEHICLE_XENON_COLOUR(veh);
-		//if (getGameVersion() < 46) xenonColour = -1;
 		sqlite3_bind_int(stmt, index++, xenonColour);
 
 		int cor_x, cor_y, cor_z;

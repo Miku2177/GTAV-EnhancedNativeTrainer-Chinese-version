@@ -35,7 +35,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 using namespace std;
 
-const static int ENGINE_SOUND_COUNT_VEHICLES = 367;
+//const static int ENGINE_SOUND_COUNT_VEHICLES = 367;
 
 bool featureVehInvincible = false;
 bool featureVehInvincibleUpdated = false;
@@ -159,7 +159,7 @@ std::vector<Blip> BLIPTABLE_VEH;
 std::vector<Vehicle> VEHICLES_REMEMBER;
 
 std::vector<Vehicle> VEHICLES_HAVE_SOUND;
-std::vector<int> VEHICLES_SOUND_NUMBER;
+std::vector<std::string> VEHICLES_SOUND_NUMBER;
 
 bool featureRememberVehicles = false;
 bool featureBlipNumber = true;
@@ -936,13 +936,14 @@ void save_tracked_veh() {
 		ENTDatabase* database = get_database();
 		std::vector<TrackedVehicleDBRow*> savedCTVehs = database->get_tracked_vehicles();
 		int lastKnownTrackedVehicleCount = savedCTVehs.size();
-		for (int i = 0; i < lastKnownTrackedVehicleCount; i++) database->delete_tracked_vehicle(i);
+		if (savedCTVehs.size() > 0) for (int i = 0; i < lastKnownTrackedVehicleCount; i++) database->delete_tracked_vehicle(i);
 		for (int i = 0; i < VEHICLES_REMEMBER.size(); i++) {
 			char str[3];
 			sprintf(str, "%d", i);
 			database->save_tracked_vehicle(VEHICLES_REMEMBER[i], str, i);
-			set_status_text("Tracked vehicles saved");
 		}
+		set_status_text("Tracked vehicles saved");
+		restored_v = true;
 	}
 }
 
@@ -3588,32 +3589,33 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	engine_can_degrade(); 
 
 ///////////////////////////////////////////// VEHICLE TRACKING /////////////////////////////////////////////////////////////
-	if (!featureRememberVehicles) {
-		if (!BLIPTABLE_VEH.empty()) {
-			for (int i = 0; i < BLIPTABLE_VEH.size(); i++) {
-				if (UI::DOES_BLIP_EXIST(BLIPTABLE_VEH[i])) {
-					UI::REMOVE_BLIP(&BLIPTABLE_VEH[i]);
-				}
-			}
-			BLIPTABLE_VEH.clear();
-			BLIPTABLE_VEH.shrink_to_fit();
-		}
+	if (!featureRememberVehicles || DLC2::GET_IS_LOADING_SCREEN_ACTIVE()) {
 		if (!VEHICLES_REMEMBER.empty()) {
+			if (!BLIPTABLE_VEH.empty()) {
+				for (int i = 0; i < BLIPTABLE_VEH.size(); i++) {
+					if (UI::DOES_BLIP_EXIST(BLIPTABLE_VEH[i])) {
+						UI::REMOVE_BLIP(&BLIPTABLE_VEH[i]);
+					}
+				}
+				BLIPTABLE_VEH.clear();
+				BLIPTABLE_VEH.shrink_to_fit();
+			}
+
 			for (int i = 0; i < VEHICLES_REMEMBER.size(); i++) {
 				VEHICLE::DELETE_VEHICLE(&VEHICLES_REMEMBER[i]);
 			}
 			VEHICLES_REMEMBER.clear();
 			VEHICLES_REMEMBER.shrink_to_fit();
-		}
-		
-		VEHICLES_HAVE_SOUND.clear();
-		VEHICLES_HAVE_SOUND.shrink_to_fit();
-		VEHICLES_SOUND_NUMBER.clear();
-		VEHICLES_SOUND_NUMBER.shrink_to_fit();
 
-		tracked_being_restored = false;
-		restored_v = false;
-		trck_seconds = 0;
+			VEHICLES_HAVE_SOUND.clear();
+			VEHICLES_HAVE_SOUND.shrink_to_fit();
+			VEHICLES_SOUND_NUMBER.clear();
+			VEHICLES_SOUND_NUMBER.shrink_to_fit();
+
+			tracked_being_restored = false;
+			restored_v = false;
+			trck_seconds = 0;
+		}
 
 		std::vector<int> emptyVec;
 		std::vector<double> emptyVec_d;
@@ -3624,7 +3626,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 
 	if (featureRememberVehicles && !VEHICLES_REMEMBER.empty() && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID()) && !STREAMING::IS_PLAYER_SWITCH_IN_PROGRESS() && char_wheel == true) char_wheel = false;
-	
+
 	if (featureRememberVehicles && GAMEPLAY::GET_MISSION_FLAG() == 0 && !VEHICLES_REMEMBER.empty() && STREAMING::IS_PLAYER_SWITCH_IN_PROGRESS() && char_wheel == false) {
 		if (ENTITY::DOES_ENTITY_EXIST(last_used)) VEHICLE::DELETE_VEHICLE(&last_used);
 		if (!STREAMING::HAS_MODEL_LOADED(GAMEPLAY::GET_HASH_KEY("ZENTORNO"))) STREAMING::REQUEST_MODEL(GAMEPLAY::GET_HASH_KEY("ZENTORNO"));
@@ -4594,8 +4596,12 @@ bool spawn_tracked_car(int slot, std::string caption) {
 	std::vector<TrackedVehicleDBRow*> savedTVehs = database->get_tracked_vehicles(slot);
 	TrackedVehicleDBRow* savedTVeh = savedTVehs.at(0);
 	database->populate_tracked_vehicle(savedTVeh);
+	Vehicle veh = -1;
 
-	Vehicle veh = do_spawn_vehicle(savedTVeh->model, caption, false);
+	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) veh = do_spawn_vehicle(savedTVeh->model, caption, false);
+	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0) && ENTITY::GET_ENTITY_MODEL(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID())) != savedTVeh->model) veh = do_spawn_vehicle(savedTVeh->model, caption, false);
+	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0) && ENTITY::GET_ENTITY_MODEL(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID())) == savedTVeh->model) veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
+	
 	if (veh == -1) {
 		set_status_text("Spawn failed");
 	}
@@ -4684,27 +4690,15 @@ bool spawn_tracked_car(int slot, std::string caption) {
 			VEHICLE::_SET_VEHICLE_INTERIOR_COLOUR(veh, savedTVeh->interiorColour);
 		}
 
-		// loading of an engine sound
-		if (savedTVeh->engineSound > -1 && featureEngineSound) {
-			bool correct_name_to_load = false;
-			int tmp_picked_sound = -1;
-			for (int i = 0; i < ENGINE_SOUND_COUNT_VEHICLES; i++)
-			{
-				if (ENGINE_SOUND_NUMBERS[i] == savedTVeh->engineSound) {
-					correct_name_to_load = true;
-					current_picked_engine_sound = i;
-					tmp_picked_sound = ENGINE_SOUND_NUMBERS[i];
-				}
-			}
-			if (correct_name_to_load == true) {
-				char* currSound = new char[ENGINE_SOUND[current_picked_engine_sound].length() + 1];
-				strcpy(currSound, ENGINE_SOUND[current_picked_engine_sound].c_str());
-				VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
-				AUDIO::_SET_VEHICLE_AUDIO(veh, currSound);
-				VEHICLES_HAVE_SOUND.push_back(veh);
-				VEHICLES_SOUND_NUMBER.push_back(tmp_picked_sound);
-				current_picked_engine_sound = -1;
-			}
+		// loading of a tracked engine sound
+		if (featureEngineSound) {
+			char* currSound = new char[savedTVeh->engineSound.length() + 1];
+			strcpy(currSound, savedTVeh->engineSound.c_str());
+			VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
+			AUDIO::_SET_VEHICLE_AUDIO(veh, currSound);
+			VEHICLES_HAVE_SOUND.push_back(veh);
+			VEHICLES_SOUND_NUMBER.push_back(savedTVeh->engineSound);
+			current_picked_engine_sound = "";
 		}
 		//
 		if (savedTVeh->xenonColour > -1) {
@@ -4831,28 +4825,16 @@ bool spawn_saved_car(int slot, std::string caption){
 		}
 
 		// loading of an engine sound
-		if (savedVeh->engineSound > -1 && featureEngineSound) {
-			bool correct_name_to_load = false;
-			int tmp_picked_sound = -1;
-			for (int i = 0; i < ENGINE_SOUND_COUNT_VEHICLES; i++)
-			{
-				if (ENGINE_SOUND_NUMBERS[i] == savedVeh->engineSound) {
-					correct_name_to_load = true;
-					current_picked_engine_sound = i;
-					tmp_picked_sound = ENGINE_SOUND_NUMBERS[i];
-				}
+		if (featureEngineSound) {
+			char *currSound = new char[savedVeh->engineSound.length() + 1];
+			strcpy(currSound, savedVeh->engineSound.c_str());
+			VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
+			AUDIO::_SET_VEHICLE_AUDIO(veh, currSound);
+			if (featureRememberVehicles && featureRestoreTracked) {
+				VEHICLES_HAVE_SOUND.push_back(veh);
+				VEHICLES_SOUND_NUMBER.push_back(currSound);
 			}
-			if (correct_name_to_load == true) {
-				char *currSound = new char[ENGINE_SOUND[current_picked_engine_sound].length() + 1];
-				strcpy(currSound, ENGINE_SOUND[current_picked_engine_sound].c_str());
-				VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
-				AUDIO::_SET_VEHICLE_AUDIO(veh, currSound);
-				if (featureRememberVehicles && featureRestoreTracked) {
-					VEHICLES_HAVE_SOUND.push_back(veh);
-					VEHICLES_SOUND_NUMBER.push_back(tmp_picked_sound);
-				}
-				current_picked_engine_sound = -1;
-			}
+			current_picked_engine_sound = savedVeh->engineSound;
 		}
 		//
 		if (savedVeh->xenonColour > -1) {

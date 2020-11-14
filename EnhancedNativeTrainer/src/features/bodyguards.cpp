@@ -60,6 +60,7 @@ bool featureBodyguardDespawn = true;
 bool featureDifferentWeapons = false;
 bool featureRandomApp = false;
 bool featureBodyguardYourWeapon = false;
+bool featureAddRemoveWeapon = false;
 bool featureBodyguardOnMap = false;
 bool featureBodyguardInfAmmo = false;
 
@@ -1812,18 +1813,20 @@ void maintain_bodyguards(){
 			// arm/unarm
 			if (!spawnedBodyguardsSecWeap.empty()) {
 				// give weapon in vehicle
-				if (c_armed == true) {
-					if (PED::IS_PED_IN_ANY_VEHICLE(spawnedENTBodyguards[i], 1) && WEAPON::GET_SELECTED_PED_WEAPON(spawnedENTBodyguards[i]) != GAMEPLAY::GET_HASH_KEY("WEAPON_MICROSMG")) { 
-						WEAPON::REMOVE_ALL_PED_WEAPONS(spawnedENTBodyguards[i], false);
-						WEAPON::GIVE_WEAPON_TO_PED(spawnedENTBodyguards[i], GAMEPLAY::GET_HASH_KEY("WEAPON_MICROSMG"), 999, false, true);
+				if (featureAddRemoveWeapon) {
+					if (c_armed == true) {
+						if (PED::IS_PED_IN_ANY_VEHICLE(spawnedENTBodyguards[i], 1) && WEAPON::GET_SELECTED_PED_WEAPON(spawnedENTBodyguards[i]) != GAMEPLAY::GET_HASH_KEY("WEAPON_MICROSMG")) {
+							WEAPON::REMOVE_ALL_PED_WEAPONS(spawnedENTBodyguards[i], false);
+							WEAPON::GIVE_WEAPON_TO_PED(spawnedENTBodyguards[i], GAMEPLAY::GET_HASH_KEY("WEAPON_MICROSMG"), 999, false, true);
+						}
+						if (!featureBodyguardYourWeapon && !PED::IS_PED_IN_ANY_VEHICLE(spawnedENTBodyguards[i], 1) && WEAPON::GET_SELECTED_PED_WEAPON(spawnedENTBodyguards[i]) != spawnedBodyguardsSecWeap[i]) {
+							WEAPON::REMOVE_ALL_PED_WEAPONS(spawnedENTBodyguards[i], false);
+							WEAPON::GIVE_WEAPON_TO_PED(spawnedENTBodyguards[i], spawnedBodyguardsSecWeap[i], 999, false, true);
+						}
 					}
-					if (!featureBodyguardYourWeapon && !PED::IS_PED_IN_ANY_VEHICLE(spawnedENTBodyguards[i], 1) && WEAPON::GET_SELECTED_PED_WEAPON(spawnedENTBodyguards[i]) != spawnedBodyguardsSecWeap[i]) {
-						WEAPON::REMOVE_ALL_PED_WEAPONS(spawnedENTBodyguards[i], false);
-						WEAPON::GIVE_WEAPON_TO_PED(spawnedENTBodyguards[i], spawnedBodyguardsSecWeap[i], 999, false, true);
-					}
+					// add/remove weapons
+					if (c_armed == false) WEAPON::REMOVE_ALL_PED_WEAPONS(spawnedENTBodyguards[i], false);
 				}
-				// add/remove weapons
-				if (c_armed == false) WEAPON::REMOVE_ALL_PED_WEAPONS(spawnedENTBodyguards[i], false);
 			}
 			
 			// bodyguards swimming ability
@@ -2286,9 +2289,15 @@ bool process_bodyguard_menu(){
 		listItem->value = BodyHealthIndex;
 		menuItems.push_back(listItem);
 
+		toggleItem = new ToggleMenuItem<int>();
+		toggleItem->caption = "Enable Add/Remove Weapons Option";
+		toggleItem->value = i++;
+		toggleItem->toggleValue = &featureAddRemoveWeapon;
+		menuItems.push_back(toggleItem);
+
 		item = new MenuItem<int>();
 		item->caption = "Add/Remove Weapons";
-		item->value = 21;
+		item->value = 22;
 		item->isLeaf = true;
 		menuItems.push_back(item);
 
@@ -2300,7 +2309,7 @@ bool process_bodyguard_menu(){
 
 		item = new MenuItem<int>();
 		item->caption = "Add All Weapon Attachments";
-		item->value = 23;
+		item->value = 24;
 		item->isLeaf = true;
 		menuItems.push_back(item);
 
@@ -2440,12 +2449,14 @@ bool onconfirm_bodyguard_menu(MenuItem<int> choice){
 		case 11:
 			process_bodyguard_blips_menu();
 			break;
-		case 21:
-			c_armed = !c_armed;
-			if (c_armed) set_status_text("Armed");
-			else set_status_text("Disarmed");
+		case 22:
+			if (featureAddRemoveWeapon) {
+				c_armed = !c_armed;
+				if (c_armed) set_status_text("Armed");
+				else set_status_text("Disarmed");
+			}
 			break;
-		case 23:
+		case 24:
 			for (int k = 0; k < spawnedENTBodyguards.size(); k++) {
 				CONTROLS::_SET_CONTROL_NORMAL(0, 157, 1);
 				add_all_weapons_attachments(spawnedENTBodyguards[k]);
@@ -2464,6 +2475,7 @@ void add_bodyguards_feature_enablements(std::vector<FeatureEnabledLocalDefinitio
 	results->push_back(FeatureEnabledLocalDefinition{"featureDifferentWeapons", &featureDifferentWeapons});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRandomApp", &featureRandomApp});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardYourWeapon", &featureBodyguardYourWeapon});
+	results->push_back(FeatureEnabledLocalDefinition{"featureAddRemoveWeapon", &featureAddRemoveWeapon});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardOnMap", &featureBodyguardOnMap});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyBlipNumber", &featureBodyBlipNumber});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardInfAmmo", &featureBodyguardInfAmmo});
@@ -2563,6 +2575,7 @@ void reset_bodyguards_globals(){
 	featureDifferentWeapons = false;
 	featureRandomApp = false;
 	featureBodyguardYourWeapon = false;
+	featureAddRemoveWeapon = false;
 	BodyBlipSizeIndex = 2;
 	BodyDistanceIndex = 7;
 	BodyGroupFormationIndex = 1;

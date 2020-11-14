@@ -16,7 +16,7 @@ int lastSelectedModValue = 0;
 
 int wheelpart = 0;
 
-int current_picked_engine_sound = -1;
+std::string current_picked_engine_sound = "";
 
 bool featureEngineSound = false;
 
@@ -620,7 +620,7 @@ bool onconfirm_vehmod_category_menu(MenuItem<int> choice){
 	else if (lastSelectedModValue == SPECIAL_ID_FOR_ENGINE_SOUND && featureEngineSound) { // pick engine sound through the menu/list
 		char *currSound = new char[ENGINE_SOUND[choice.value].length() + 1];
 		strcpy(currSound, ENGINE_SOUND[choice.value].c_str());
-		current_picked_engine_sound = ENGINE_SOUND_NUMBERS[choice.value]; 
+		current_picked_engine_sound = ENGINE_SOUND[choice.value];
 		VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
 		AUDIO::_SET_VEHICLE_AUDIO(veh, currSound);
 		if (featureRememberVehicles && featureRestoreTracked) add_engine_sound(veh);
@@ -754,7 +754,6 @@ void set_engine_sound(MenuItem<int> choice) { // pick engine sound via message b
 	if (ENTITY::DOES_ENTITY_EXIST(playerPed) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && featureEngineSound)
 	{
 		Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
-		bool correct_name = false;
 
 		keyboard_on_screen_already = true;
 		curr_message = "Enter engine sound name (e.g. adder or random):"; // set an engine sound
@@ -762,30 +761,20 @@ void set_engine_sound(MenuItem<int> choice) { // pick engine sound via message b
 		lastEngineSound = result;
 		if (lastEngineSound == "random" || lastEngineSound == "Random" || lastEngineSound == "RANDOM") {
 			int rand_sound = (rand() % (ENGINE_SOUND_COUNT - 1) + 0); // UP MARGIN + DOWN MARGIN
-			current_picked_engine_sound = ENGINE_SOUND_NUMBERS[rand_sound];
-			char *keyboardInput = (char*)ENGINE_SOUND[rand_sound].c_str();
+			current_picked_engine_sound = ENGINE_SOUND[rand_sound];
+			char *keyboardInput = (char*)current_picked_engine_sound.c_str();
 			VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
 			AUDIO::_SET_VEHICLE_AUDIO(veh, keyboardInput);
 			if (featureRememberVehicles && featureRestoreTracked) add_engine_sound(veh);
 			set_status_text("Changed engine sound");
 		}
 		if (lastEngineSound != "random" && lastEngineSound != "Random" && lastEngineSound != "RANDOM") {
-			std::string amendedResult = "\"" + lastEngineSound + "\"";
-			std::transform(amendedResult.begin(), amendedResult.end(), amendedResult.begin(), ::toupper);
-			char *keyboardInput = &amendedResult[0u];
-
-			for (int i = 0; i < ENGINE_SOUND_COUNT; i++) {
-				if (ENGINE_SOUND[i] == amendedResult) {
-					correct_name = true;
-					current_picked_engine_sound = ENGINE_SOUND_NUMBERS[i];
-				}
-			}
-			if (correct_name == true) {
-				VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
-				AUDIO::_SET_VEHICLE_AUDIO(veh, keyboardInput);
-				if (featureRememberVehicles && featureRestoreTracked) add_engine_sound(veh);
-				set_status_text("Changed engine sound");
-			}
+			current_picked_engine_sound = result;
+			char* keyboardInput = (char*)result.c_str();
+			VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
+			AUDIO::_SET_VEHICLE_AUDIO(veh, keyboardInput);
+			if (featureRememberVehicles && featureRestoreTracked) add_engine_sound(veh);
+			set_status_text("Changed engine sound");
 		}
 	}
 }
@@ -1544,6 +1533,6 @@ void handle_generic_settings_vehmodmenu(std::vector<StringPairSettingDBRow>* set
 }
 
 void update_vehmodmenu_features(BOOL bPlayerExists, Ped playerPed) {
-	if (!featureEngineSound) current_picked_engine_sound = -1;
-	if (featureEngineSound && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) current_picked_engine_sound = -1;
+	if (!featureEngineSound) current_picked_engine_sound = "";
+	if (featureEngineSound && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) current_picked_engine_sound = "";
 }
