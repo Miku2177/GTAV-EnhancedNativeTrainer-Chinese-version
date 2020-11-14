@@ -22,7 +22,7 @@ bool gameInputBlockedByUs = false;
 
 bool trainer_switch_pressed()
 {
-	bool result = IsKeyJustUp(KeyConfig::KEY_TOGGLE_MAIN_MENU) || (CONTROLS::IS_CONTROL_PRESSED(2, INPUT_FRONTEND_RB) && CONTROLS::IS_CONTROL_JUST_PRESSED(2, INPUT_FRONTEND_RUP)); //INPUT_FRONTEND_RB + INPUT_ENTER (Y)
+	bool result = IsKeyJustUp(KeyConfig::KEY_TOGGLE_MAIN_MENU) || (CONTROLS::IS_CONTROL_PRESSED(2, controller_binds["KEY_TOGGLE_MAIN_MENU"].first) && CONTROLS::IS_CONTROL_JUST_PRESSED(2, controller_binds["KEY_TOGGLE_MAIN_MENU"].second)); //INPUT_FRONTEND_RB + INPUT_ENTER (Y)
 	if (result)
 	{
 		//avoid repeat of key press
