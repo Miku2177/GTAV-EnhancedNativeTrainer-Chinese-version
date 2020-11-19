@@ -71,43 +71,43 @@
 
 <!--Controller Keys-->
   <controller_keys>
-    <controller function="toggle_main_menu" button1="81" button2="81"/>
+    <controller function="toggle_main_menu" button1="206" button2="192"/>
     
-	<controller function="menu_up" button1="31" button2="81"/>
-    <controller function="menu_down" button1="30" button2="81"/>
-	<controller function="menu_left" button1="20" button2="81"/>
-    <controller function="menu_right" button1="39" button2="81"/>
-    <controller function="menu_select" button1="50" button2="81"/>
-	<controller function="menu_back" button1="33" button2="81"/>
+	<controller function="menu_up" button1="188" button2="-1"/>
+    <controller function="menu_down" button1="187" button2="-1"/>
+	<controller function="menu_left" button1="189" button2="-1"/>
+    <controller function="menu_right" button1="190" button2="-1"/>
+    <controller function="menu_select" button1="201" button2="-1"/>
+	<controller function="menu_back" button1="202" button2="-1"/>
 	
-	<controller function="veh_boost" button1="33" button2="81"/>
-	<controller function="veh_stop" button1="33" button2="81"/>
-	<controller function="veh_rockets" button1="33" button2="81"/>
-	<controller function="veh_leftblink" button1="33" button2="81"/>
-	<controller function="veh_rightblink" button1="33" button2="81"/>
-	<controller function="veh_emergencyblink" button1="33" button2="81"/>
-	<controller function="veh_startrefueling" button1="33" button2="81"/>
-	<controller function="veh_stoprefueling" button1="33" button2="81"/>
+	<controller function="veh_boost" button1="206" button2="24"/>
+	<controller function="veh_stop" button1="205" button2="25"/>
+	<controller function="veh_rockets" button1="205" button2="206"/>
+	<controller function="veh_leftblink" button1="25" button2="-1"/>
+	<controller function="veh_rightblink" button1="24" button2="-1"/>
+	<controller function="veh_emergencyblink" button1="202" button2="-1"/>
+	<controller function="veh_startrefueling" button1="201" button2="-1"/>
+	<controller function="veh_stoprefueling" button1="202" button2="-1"/>
 	
-	<controller function="toggle_airbrake" button1="33" button2="81"/>
-	<controller function="airbrake_up" button1="33" button2="81"/>
-	<controller function="airbrake_down" button1="33" button2="81"/>
-	<controller function="airbrake_forward" button1="33" button2="81"/>
-	<controller function="airbrake_back" button1="33" button2="81"/>
-	<controller function="airbrake_rotate_left" button1="33" button2="81"/>
-	<controller function="airbrake_rotate_right" button1="33" button2="81"/>
-	<controller function="airbrake_speed" button1="33" button2="81"/>
-	<controller function="airbrake_freeze_time" button1="33" button2="81"/>
+	<controller function="toggle_airbrake" button1="201" button2="206"/>
+	<controller function="airbrake_up" button1="25" button2="-1"/>
+	<controller function="airbrake_down" button1="24" button2="-1"/>
+	<controller function="airbrake_forward" button1="32" button2="-1"/>
+	<controller function="airbrake_back" button1="33" button2="-1"/>
+	<controller function="airbrake_rotate_left" button1="205" button2="-1"/>
+	<controller function="airbrake_rotate_right" button1="206" button2="-1"/>
+	<controller function="airbrake_speed" button1="201" button2="-1"/>
+	<controller function="airbrake_freeze_time" button1="202" button2="-1"/>
 	
-	<controller function="objectplacer_up" button1="33" button2="81"/>
-	<controller function="objectplacer_down" button1="33" button2="81"/>
-	<controller function="objectplacer_forward" button1="33" button2="81"/>
-	<controller function="objectplacer_back" button1="33" button2="81"/>
-	<controller function="objectplacer_rotate_left" button1="33" button2="81"/>
-	<controller function="objectplacer_rotate_right" button1="33" button2="81"/>
-	<controller function="objectplacer_speed" button1="33" button2="81"/>
-	<controller function="objectplacer_freeze_time" button1="33" button2="81"/>
-	<controller function="objectplacer_freeze_position" button1="33" button2="81"/>
+	<controller function="objectplacer_up" button1="25" button2="-1"/>
+	<controller function="objectplacer_down" button1="24" button2="-1"/>
+	<controller function="objectplacer_forward" button1="32" button2="-1"/>
+	<controller function="objectplacer_back" button1="33" button2="-1"/>
+	<controller function="objectplacer_rotate_left" button1="205" button2="-1"/>
+	<controller function="objectplacer_rotate_right" button1="206" button2="-1"/>
+	<controller function="objectplacer_speed" button1="201" button2="-1"/>
+	<controller function="objectplacer_freeze_time" button1="202" button2="-1"/>
+	<controller function="objectplacer_freeze_position" button1="192" button2="-1"/>
 </controller_keys>
 
  <!--Weather Order-->
