@@ -9,10 +9,5 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include <string>
 
 //Version string should now be: major version number . minor version number
-
-<<<<<<< Updated upstream
-const std::string VERSION_STRING = "46." + std::to_string(0);
-=======
 const std::string VERSION_STRING = "46." + std::to_string(1);
->>>>>>> Stashed changes
 
