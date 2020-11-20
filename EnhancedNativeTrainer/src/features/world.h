@@ -24,8 +24,6 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\common\ENTUtil.h"
 #include <random>
 
-extern bool featureWorldMoonGravity;
-
 void process_world_menu();
 
 void process_weather_menu();
@@ -53,6 +51,8 @@ void onchange_freeroam_activities_index(int value, SelectFromListMenuItem* sourc
 void onchange_world_train_speed_index(int value, SelectFromListMenuItem* source);
 
 void onchange_cop_blips_perm_index(int value, SelectFromListMenuItem* source);
+
+void onchange_gravity_level_index(int value, SelectFromListMenuItem* source);
 
 void onchange_weather_change_index(int value, SelectFromListMenuItem* source);
 
@@ -92,3 +92,9 @@ void EnableTracks(bool tracksVehicle, bool tracksPeds, bool deepTracksVehicle, b
 void EnableSnow(bool featureSnow);
 
 extern bool featureBusLight;
+
+// Gravity Level
+extern const std::vector<std::string> WORLD_GRAVITY_LEVEL_CAPTIONS;
+extern const int WORLD_GRAVITY_LEVEL_VALUES[];
+extern int featureGravityLevelIndex;
+extern bool featureGravityLevelChanged;
