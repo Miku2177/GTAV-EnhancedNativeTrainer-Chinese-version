@@ -699,7 +699,7 @@ void process_world_menu()
 	menuItems.push_back(listItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "No Gameplay Hint Camera Locking";
+	togItem->caption = "Disable Freeroam Event Camera";
 	togItem->value = 8;
 	togItem->toggleValue = &featureNoGameHintCameraLocking;
 	menuItems.push_back(togItem);
@@ -1818,7 +1818,7 @@ void update_world_features()
 		}
 	}
 
-	// No Gameplay Hint Camera Locking
+	// Disable Freeroam Event Camera
 	if (featureNoGameHintCameraLocking && CAM::IS_GAMEPLAY_HINT_ACTIVE()) CAM::STOP_GAMEPLAY_HINT(true);
 
 	// Wind Strength
