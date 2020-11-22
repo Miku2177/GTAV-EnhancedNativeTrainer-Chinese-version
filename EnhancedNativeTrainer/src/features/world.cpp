@@ -90,6 +90,7 @@ bool featureWorldNoTrafficUpdated = false;
 bool featureNoMinimapRot = false;
 bool featureNoMinimapRotUpdated = false;
 bool featureNoWaypoint = false;
+bool featureNoGameHintCameraLocking = false;
 bool featureNoPoliceBlips = false;
 bool featureFullMap = false;
 bool featurePenitentiaryMap = false;
@@ -697,6 +698,12 @@ void process_world_menu()
 	listItem->value = featureFreeroamActivitiesIndex;
 	menuItems.push_back(listItem);
 
+	togItem = new ToggleMenuItem<int>();
+	togItem->caption = "No Gameplay Hint Camera Locking";
+	togItem->value = 8;
+	togItem->toggleValue = &featureNoGameHintCameraLocking;
+	menuItems.push_back(togItem);
+
 	draw_generic_menu<int>(menuItems, &activeLineIndexWorld, caption, onconfirm_world_menu, NULL, NULL);
 }
 
@@ -736,6 +743,7 @@ void reset_world_globals()
 
 	featureNoMinimapRot = false;
 	featureNoWaypoint = false;
+	featureNoGameHintCameraLocking = false;
 	featureNoPoliceBlips = false;
 	featureFullMap = false;
 	featurePenitentiaryMap = false;
@@ -1810,6 +1818,9 @@ void update_world_features()
 		}
 	}
 
+	// No Gameplay Hint Camera Locking
+	if (featureNoGameHintCameraLocking && CAM::IS_GAMEPLAY_HINT_ACTIVE()) CAM::STOP_GAMEPLAY_HINT(true);
+
 	// Wind Strength
 	if (windstrength_toggle == false) {
 		GAMEPLAY::SET_WIND(WORLD_WIND_STRENGTH_VALUES[WindStrengthIndex]);
@@ -2021,6 +2032,7 @@ void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* r
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNoAnimals", &featureNoAnimals });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNoMinimapRot", &featureNoMinimapRot });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNoWaypoint", &featureNoWaypoint });
+	results->push_back(FeatureEnabledLocalDefinition{ "featureNoGameHintCameraLocking", &featureNoGameHintCameraLocking });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNoPoliceBlips", &featureNoPoliceBlips }); 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureFullMap", &featureFullMap }); 
 	results->push_back(FeatureEnabledLocalDefinition{ "featurePenitentiaryMap", &featurePenitentiaryMap }); 
