@@ -147,12 +147,9 @@ bool been_injured = true;
 bool p_invisible = false;
 bool featurePlayerLife = false;
 bool featurePlayerLifeUpdated = true;
-bool featurePlayerStatsUpdated = true;
-bool featurePlayerLife_Died = false;
-bool featurePlayerStatsEnable = false;
 bool featurePlayerLife_Changed = false;
-
-//bool featureNoRagdoll = false;
+bool featurePlayerStatsUpdated = true;
+bool apply_pressed = false;
 bool featureRagdollIfInjured = false;
 
 // ragdoll if injured variables
@@ -161,13 +158,12 @@ float been_damaged_health, been_damaged_armor = -1;
 int ragdoll_seconds = 0; 
 //
 Ped oldplayerPed = -1;
-int tick, playerDataMenuIndex, playerPrisonMenuIndex, playerForceshieldMenuIndex = 0;
+int playerDataMenuIndex, playerPrisonMenuIndex, playerForceshieldMenuIndex = 0; // tick, 
 int scr_tick_secs_passed, scr_tick_secs_curr = 0;
 int NPCragdollMenuIndex = 0;
 int PlayerMovementMenuIndex = 0;
 int PlayerMostWantedMenuIndex = 0;
 int PlayerWantedMaxPossibleLevelMenuIndex = 0;
-int death_time2 = -1;
 
 int frozenWantedLevel = 0;
 
@@ -201,11 +197,11 @@ int wanted_maxpossible_level = 3;
 bool wanted_maxpossible_level_Changed = true;
 
 // Player Armor
-const std::vector<std::string> PLAYER_ARMOR_CAPTIONS{ "0", "15", "20", "30", "40", "50", "100" };
-const int PLAYER_ARMOR_VALUES[] = { 0, 15, 20, 30, 40, 50, 100 };
-int current_player_armor = 6;
+const std::vector<std::string> PLAYER_ARMOR_CAPTIONS{ "OFF", "0", "15", "20", "30", "40", "50", "100" };
+const int PLAYER_ARMOR_VALUES[] = { -1, 0, 15, 20, 30, 40, 50, 100 };
+int current_player_armor = 7;
 bool current_player_armor_Changed = true;
-int current_player_stats = 6;
+int current_player_stats = 0;
 bool current_player_stats_Changed = true;
 
 // NPC Ragdoll If Shot
@@ -761,6 +757,7 @@ void update_features(){
 			CONTROLS::_SET_CONTROL_NORMAL(0, 22, 1);
 			GAMEPLAY::SET_TIME_SCALE(1.0f);
 			manual_instant = false;
+			dynamic_loading = true;
 		}
 		if ((PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 1) || PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 0)) && CONTROLS::IS_CONTROL_JUST_PRESSED(2, 22)) { // CONTROLS::IS_CONTROL_JUST_PRESSED(2, 176) || 
 			OBJECT::DELETE_OBJECT(&temp_c_object);
@@ -919,7 +916,7 @@ void update_features(){
 	if (engine_running == false && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) VEHICLE::SET_VEHICLE_ENGINE_ON(veh_engine, engine_running, false, true);
 
 	if (featureWantedLevelFrozen){
-		if(featureWantedLevelFrozenUpdated){
+		if (featureWantedLevelFrozenUpdated){
 			frozenWantedLevel = PLAYER::GET_PLAYER_WANTED_LEVEL(player);
 			featureWantedLevelFrozenUpdated = false;
 		}
@@ -927,7 +924,7 @@ void update_features(){
 		PLAYER::SET_PLAYER_WANTED_LEVEL(player, frozenWantedLevel, 0);
 		PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(player, 0);
 	}
-	if(featureWantedLevelFrozenUpdated && !featureWantedLevelFrozen){
+	if (featureWantedLevelFrozenUpdated && !featureWantedLevelFrozen){
 		PLAYER::SET_MAX_WANTED_LEVEL(5);
 		featureWantedLevelFrozenUpdated = false;
 	}
@@ -1256,33 +1253,23 @@ void update_features(){
 	}
 
 	////////////////////////////////////// PLAYER DATA ////////////////////////////////////////////////
-	if ((bPlayerExists && featurePlayerLife && featurePlayerLifeUpdated) || (bPlayerExists && featurePlayerLife_Died && featurePlayerLifeUpdated) ||
-		(bPlayerExists && featurePlayerLife_Changed && featurePlayerLifeUpdated) || (featurePlayerStatsEnable && featurePlayerStatsUpdated)) {
-		
-		scr_tick_secs_passed = clock() / CLOCKS_PER_SEC;
-		if (((clock() / (CLOCKS_PER_SEC / 1000)) - scr_tick_secs_curr) != 0) {
-			tick = tick + 1;
-			scr_tick_secs_curr = scr_tick_secs_passed;
-		}
-		if (tick > 200) {
-			if (PLAYER_HEALTH_VALUES[current_player_health] > 0) {
-				PED::SET_PED_MAX_HEALTH(playerPed, PLAYER_HEALTH_VALUES[current_player_health]);
-				ENTITY::SET_ENTITY_HEALTH(playerPed, PLAYER_HEALTH_VALUES[current_player_health]);
-			}
-			else {
-				PED::SET_PED_MAX_HEALTH(playerPed, 200);
-				ENTITY::SET_ENTITY_HEALTH(playerPed, 200);
-			}
-			if (detained == false && in_prison == false) {
-				PLAYER::SET_PLAYER_MAX_ARMOUR(playerPed, PLAYER_ARMOR_VALUES[current_player_armor]);
-				PED::SET_PED_ARMOUR(playerPed, PLAYER_ARMOR_VALUES[current_player_armor]);
+	if (featurePlayerLife_Changed && !featurePlayerLife) featurePlayerLife = true;
+	if ((bPlayerExists && featurePlayerLife && featurePlayerLifeUpdated) || (bPlayerExists && featurePlayerLife && PLAYER_ARMOR_VALUES[current_player_stats] > -1 && featurePlayerStatsUpdated) || apply_pressed == true) {
+		if (!STREAMING::IS_PLAYER_SWITCH_IN_PROGRESS()) { 
+			if (featurePlayerLifeUpdated) {
+				if (PLAYER_HEALTH_VALUES[current_player_health] > 0) {
+					PED::SET_PED_MAX_HEALTH(playerPed, PLAYER_HEALTH_VALUES[current_player_health]);
+					ENTITY::SET_ENTITY_HEALTH(playerPed, PLAYER_HEALTH_VALUES[current_player_health]);
+				}
+				if (detained == false && in_prison == false && PLAYER_ARMOR_VALUES[current_player_armor] > -1) {
+					PLAYER::SET_PLAYER_MAX_ARMOUR(playerPed, PLAYER_ARMOR_VALUES[current_player_armor]);
+					PED::SET_PED_ARMOUR(playerPed, PLAYER_ARMOR_VALUES[current_player_armor]);
+				}
 			}
 			oldplayerPed = playerPed;
-			tick = 0;
 			featurePlayerLifeUpdated = false;
 
-			if (featurePlayerStatsEnable && featurePlayerStatsUpdated && GAMEPLAY::GET_MISSION_FLAG() == 0) {
-
+			if (PLAYER_ARMOR_VALUES[current_player_stats] > -1 && featurePlayerStatsUpdated && GAMEPLAY::GET_MISSION_FLAG() == 0) {
 				if (PED::GET_PED_TYPE(playerPed) == 0) {
 					STATS::STAT_SET_INT(GAMEPLAY::GET_HASH_KEY("SP0_SPECIAL_ABILITY_UNLOCKED"), PLAYER_ARMOR_VALUES[current_player_stats], true);
 					STATS::STAT_SET_INT(GAMEPLAY::GET_HASH_KEY("SP0_STAMINA"), PLAYER_ARMOR_VALUES[current_player_stats], true);
@@ -1313,27 +1300,30 @@ void update_features(){
 					STATS::STAT_SET_INT(GAMEPLAY::GET_HASH_KEY("SP2_SHOOTING_ABILITY"), PLAYER_ARMOR_VALUES[current_player_stats], true);
 					STATS::STAT_SET_INT(GAMEPLAY::GET_HASH_KEY("SP2_STEALTH_ABILITY"), PLAYER_ARMOR_VALUES[current_player_stats], true);
 				}
-
 				GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("stats_controller");
 
 				featurePlayerStatsUpdated = false;
 			}
-		} // end of tick
+			apply_pressed = false;
+		} // end of IS_PLAYER_SWITCH_IN_PROGRESS
 	} 
 	
-	if (featurePlayerLife_Died) death_time2 = PLAYER::GET_TIME_SINCE_LAST_DEATH();
-	if (((death_time2 > -1 && death_time2 < 2000) || (player_died == true && !featureNoAutoRespawn)) && featurePlayerLife_Died) {
+	if ((PLAYER::GET_TIME_SINCE_LAST_DEATH() > -1 && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 2000) || (player_died == true && !featureNoAutoRespawn)) {
 		featurePlayerLifeUpdated = true;
 		featurePlayerStatsUpdated = true;
+		dynamic_loading = true;
 		if (detained == false && alert_level == 0) player_died = false;
 	}
 	
-	if ((playerPed != oldplayerPed && featurePlayerLife_Changed) || DLC2::GET_IS_LOADING_SCREEN_ACTIVE()) { // If You Switch Character Your Health & Armor Will Be Restored
-		featurePlayerLifeUpdated = true;
-		featurePlayerStatsUpdated = true;
+	if ((playerPed != oldplayerPed) || DLC2::GET_IS_LOADING_SCREEN_ACTIVE()) { // If You Switch Character Your Health & Armor Will Be Restored
+		if (((playerPed != oldplayerPed) && featurePlayerLife_Changed) || DLC2::GET_IS_LOADING_SCREEN_ACTIVE()) {
+			featurePlayerLifeUpdated = true;
+			featurePlayerStatsUpdated = true;
+		}
+		dynamic_loading = true;
 	}
 
-	if (featurePlayerStatsEnable && GAMEPLAY::GET_MISSION_FLAG() == 1 && !SCRIPT::HAS_SCRIPT_LOADED("stats_controller")) {
+	if (PLAYER_ARMOR_VALUES[current_player_stats] > -1 && GAMEPLAY::GET_MISSION_FLAG() == 1 && !SCRIPT::HAS_SCRIPT_LOADED("stats_controller")) {
 		while (!SCRIPT::HAS_SCRIPT_LOADED("stats_controller")) {
 			SCRIPT::REQUEST_SCRIPT("stats_controller");
 			SYSTEM::WAIT(0);
@@ -1640,6 +1630,8 @@ bool onconfirm_playerData_menu(MenuItem<int> choice){
 	if (choice.value == -1) {
 		featurePlayerLifeUpdated = true;
 		featurePlayerStatsUpdated = true;
+		dynamic_loading = true;
+		apply_pressed = true;
 		set_status_text("Settings are being applied");
 	}
 	return false;
@@ -1773,12 +1765,6 @@ bool process_player_life_menu(){
 	menuItems.push_back(toggleItem);
 	
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Re-apply On Respawn";
-	toggleItem->value = i++;
-	toggleItem->toggleValue = &featurePlayerLife_Died;
-	menuItems.push_back(toggleItem);
-
-	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Apply On Character Change";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featurePlayerLife_Changed;
@@ -1807,12 +1793,6 @@ bool process_player_life_menu(){
 	listItem->caption = "Health Regeneration Rate";
 	listItem->value = current_regen_speed;
 	menuItems.push_back(listItem);
-
-	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Toggle Modified Stats";
-	toggleItem->value = i++;
-	toggleItem->toggleValue = &featurePlayerStatsEnable;
-	menuItems.push_back(toggleItem);
 
 	listItem = new SelectFromListMenuItem(PLAYER_ARMOR_CAPTIONS, onchange_player_stats_mode);
 	listItem->wrap = false;
@@ -2404,11 +2384,8 @@ void reset_globals(){
 		featureNightVision =
 		featureThermalVision =
 		featurePlayerLife =
-		featurePlayerLife_Died = 
-		featurePlayerStatsEnable =
 		featurePlayerLife_Changed =
 		featurePrison_Hardcore =
-		//featureNoRagdoll =
 		featureRagdollIfInjured =
 		featureLevitation =
 		featureWantedLevelNoPHeli =
@@ -2674,7 +2651,6 @@ void add_player_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerNoSwitch", &featurePlayerNoSwitch});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerFastRun", &featurePlayerFastRun}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerRunApartments", &featurePlayerRunApartments});
-	//results->push_back(FeatureEnabledLocalDefinition{"featureNoRagdoll", &featureNoRagdoll}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureRagdollIfInjured", &featureRagdollIfInjured}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerInvisible", &featurePlayerInvisible}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerInvisibleInVehicle", &featurePlayerInvisibleInVehicle}); 
@@ -2682,8 +2658,6 @@ void add_player_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featureNightVision", &featureNightVision, &featureNightVisionUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureThermalVision", &featureThermalVision, &featureThermalVisionUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerLife", &featurePlayerLife, &featurePlayerLifeUpdated});
-	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerLife_Died", &featurePlayerLife_Died});
-	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerStatsEnable", &featurePlayerStatsEnable});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerLife_Changed", &featurePlayerLife_Changed});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePrison_Hardcore", &featurePrison_Hardcore});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePrison_Robe", &featurePrison_Robe});
