@@ -1754,7 +1754,7 @@ bool process_player_life_menu(){
 	int i = 0;
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Apply On Game Load/Character Respawn/Character Change";
+	toggleItem->caption = "Apply On Load/Respawn/Change";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featurePlayerLife;
 	toggleItem->toggleValueUpdated = &featurePlayerLifeUpdated;
