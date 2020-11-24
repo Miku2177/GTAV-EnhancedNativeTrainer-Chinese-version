@@ -147,7 +147,6 @@ bool been_injured = true;
 bool p_invisible = false;
 bool featurePlayerLife = false;
 bool featurePlayerLifeUpdated = true;
-bool featurePlayerLife_Changed = false;
 bool featurePlayerStatsUpdated = true;
 bool apply_pressed = false;
 bool featureRagdollIfInjured = false;
@@ -1253,7 +1252,6 @@ void update_features(){
 	}
 
 	////////////////////////////////////// PLAYER DATA ////////////////////////////////////////////////
-	if (featurePlayerLife_Changed && !featurePlayerLife) featurePlayerLife = true;
 	if ((bPlayerExists && featurePlayerLife && featurePlayerLifeUpdated) || (bPlayerExists && featurePlayerLife && PLAYER_ARMOR_VALUES[current_player_stats] > -1 && featurePlayerStatsUpdated) || apply_pressed == true) {
 		if (!STREAMING::IS_PLAYER_SWITCH_IN_PROGRESS()) { 
 			if (featurePlayerLifeUpdated) {
@@ -1304,6 +1302,7 @@ void update_features(){
 
 				featurePlayerStatsUpdated = false;
 			}
+			dynamic_loading = true;
 			apply_pressed = false;
 		} // end of IS_PLAYER_SWITCH_IN_PROGRESS
 	} 
@@ -1311,16 +1310,14 @@ void update_features(){
 	if ((PLAYER::GET_TIME_SINCE_LAST_DEATH() > -1 && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 2000) || (player_died == true && !featureNoAutoRespawn)) {
 		featurePlayerLifeUpdated = true;
 		featurePlayerStatsUpdated = true;
-		dynamic_loading = true;
+		if (!featurePlayerLife) dynamic_loading = true;
 		if (detained == false && alert_level == 0) player_died = false;
 	}
 	
 	if ((playerPed != oldplayerPed) || DLC2::GET_IS_LOADING_SCREEN_ACTIVE()) { // If You Switch Character Your Health & Armor Will Be Restored
-		if (((playerPed != oldplayerPed) && featurePlayerLife_Changed) || DLC2::GET_IS_LOADING_SCREEN_ACTIVE()) {
-			featurePlayerLifeUpdated = true;
-			featurePlayerStatsUpdated = true;
-		}
-		dynamic_loading = true;
+		featurePlayerLifeUpdated = true;
+		featurePlayerStatsUpdated = true;
+		if (!featurePlayerLife) dynamic_loading = true;
 	}
 
 	if (PLAYER_ARMOR_VALUES[current_player_stats] > -1 && GAMEPLAY::GET_MISSION_FLAG() == 1 && !SCRIPT::HAS_SCRIPT_LOADED("stats_controller")) {
@@ -1630,9 +1627,8 @@ bool onconfirm_playerData_menu(MenuItem<int> choice){
 	if (choice.value == -1) {
 		featurePlayerLifeUpdated = true;
 		featurePlayerStatsUpdated = true;
-		dynamic_loading = true;
 		apply_pressed = true;
-		set_status_text("Settings are being applied");
+		set_status_text("Settings were applied");
 	}
 	return false;
 }
@@ -1758,18 +1754,12 @@ bool process_player_life_menu(){
 	int i = 0;
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Apply On Game Load";
+	toggleItem->caption = "Apply On Game Load/Character Respawn/Character Change";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featurePlayerLife;
 	toggleItem->toggleValueUpdated = &featurePlayerLifeUpdated;
 	menuItems.push_back(toggleItem);
 	
-	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Apply On Character Change";
-	toggleItem->value = i++;
-	toggleItem->toggleValue = &featurePlayerLife_Changed;
-	menuItems.push_back(toggleItem);
-
 	item = new MenuItem<int>();
 	item->caption = "Apply Now";
 	item->value = -1;
@@ -2384,7 +2374,6 @@ void reset_globals(){
 		featureNightVision =
 		featureThermalVision =
 		featurePlayerLife =
-		featurePlayerLife_Changed =
 		featurePrison_Hardcore =
 		featureRagdollIfInjured =
 		featureLevitation =
@@ -2658,7 +2647,6 @@ void add_player_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featureNightVision", &featureNightVision, &featureNightVisionUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureThermalVision", &featureThermalVision, &featureThermalVisionUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerLife", &featurePlayerLife, &featurePlayerLifeUpdated});
-	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerLife_Changed", &featurePlayerLife_Changed});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePrison_Hardcore", &featurePrison_Hardcore});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePrison_Robe", &featurePrison_Robe});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePedPrison_Robe", &featurePedPrison_Robe});

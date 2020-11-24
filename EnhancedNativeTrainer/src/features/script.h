@@ -232,9 +232,6 @@ extern int fuelLevelOffset;
 extern int fuelTankOffset;
 extern bool engine_running;
 
-extern bool featurePlayerLife;
-extern bool featurePlayerLife_Changed;
-
 extern Ped oldplayerPed;
 
 extern bool apply_pressed;

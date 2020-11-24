@@ -1483,11 +1483,6 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 				healthbar_seconds = -1;
 			}
 			// health
-			if (featurePlayerLife && PLAYER_HEALTH_VALUES[current_player_health] > 0) {
-				temp_h = PLAYER_HEALTH_VALUES[current_player_health] - 100;
-				temp_h_d = floor(PLAYER_HEALTH_VALUES[current_player_health] / 100);
-			}
-
 			if (health < (temp_h / 5)) {
 				GRAPHICS::DRAW_RECT(health_bar_x + 0.035, health_bar_y + 0.01, 0.070, 0.017, 41, 86, 40, 110);
 				GRAPHICS::DRAW_RECT(health_bar_x + 0.035, health_bar_y + 0.01, 0.070, 0.009, 41, 56, 40, 245); // 220, 20, 20, 245 // 55
