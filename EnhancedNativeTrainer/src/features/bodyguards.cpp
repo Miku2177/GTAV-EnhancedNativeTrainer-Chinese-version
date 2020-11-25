@@ -2204,7 +2204,7 @@ bool process_bodyguard_menu(){
 		menuItems.push_back(item);
 
 		item = new MenuItem<int>();
-		item->caption = "Choose Model";
+		item->caption = "Change Model";
 		item->value = 7;
 		item->isLeaf = false;
 		menuItems.push_back(item);

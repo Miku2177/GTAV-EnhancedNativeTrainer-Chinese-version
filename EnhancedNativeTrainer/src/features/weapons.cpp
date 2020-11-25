@@ -531,7 +531,7 @@ int get_current_revolver_appearance(){
 
 bool process_individual_weapon_menu(int weaponIndex){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
-
+	
 	//int originalWeapon = WEAPON::GET_SELECTED_PED_WEAPON(playerPed);
 
 	lastSelectedWeapon = weaponIndex;
@@ -2716,7 +2716,7 @@ void onconfirm_open_tint_menu(MenuItem<int> choice) {
 		
 	for (int i = 0; i < WEAPON::GET_WEAPON_TINT_COUNT(weapHash); i++) {
 		MenuItem<int> *item = new MenuItem<int>();
-		item->caption = UI::_GET_LABEL_TEXT((char*)("WCT_C_TINT_" + std::to_string(i)).c_str()); //  CAPTIONS_TINT_MK2[i];
+		item->caption = UI::_GET_LABEL_TEXT((char*)("WCT_C_TINT_" + std::to_string(i)).c_str()); // CAPTIONS_TINT_MK2[i];
 		item->value = i;
 		menuItems.push_back(item);
 	}
@@ -2738,7 +2738,8 @@ void onconfirm_open_tint_menu(MenuItem<int> choice) {
 			}
 		}
 		*/
-		draw_generic_menu<int>(menuItems, &tintSelection, "Select Weapon Tint", onconfirm_weapon_mod_menu_tint, onhighlight_weapon_mod_menu_tint, NULL);
+
+	draw_generic_menu<int>(menuItems, &tintSelection, "Select Weapon Tint", onconfirm_weapon_mod_menu_tint, onhighlight_weapon_mod_menu_tint, NULL);
 }
 
 void onhighlight_weapon_mod_menu_tint_colour(MenuItem<int> choice) {

@@ -75,8 +75,10 @@ void peds_dont_like_weapons() {
 								AI::TASK_COMBAT_PED(weaponhaters[i], playerPed, 0, 16);
 								if (!WEAPON::IS_PED_ARMED(weaponhaters[i], 7)) WEAPON::GIVE_WEAPON_TO_PED(weaponhaters[i], WEAPON::GET_SELECTED_PED_WEAPON(playerPed), 999, false, true);
 							}
-							if (!PED::IS_PED_FLEEING(weaponhaters[i]) && !AI::IS_PED_RUNNING(weaponhaters[i]) /*&& !PED::IS_PED_IN_COMBAT(weaponhaters[i], playerPed)*/
-								&& !WEAPON::IS_PED_ARMED(weaponhaters[i], 7))
+							if (!PED::IS_PED_FLEEING(weaponhaters[i]) && !AI::IS_PED_RUNNING(weaponhaters[i]) /*&& !PED::IS_PED_IN_COMBAT(weaponhaters[i], playerPed)*/ && !WEAPON::IS_PED_ARMED(weaponhaters[i], 7) &&
+								PED::GET_RELATIONSHIP_BETWEEN_PEDS(playerPed, weaponhaters[i]) != 0 && PED::GET_RELATIONSHIP_BETWEEN_PEDS(weaponhaters[i], playerPed) != 0 &&
+								PED::GET_RELATIONSHIP_BETWEEN_PEDS(playerPed, weaponhaters[i]) != 1 && PED::GET_RELATIONSHIP_BETWEEN_PEDS(weaponhaters[i], playerPed) != 1 &&
+								PED::GET_RELATIONSHIP_BETWEEN_PEDS(playerPed, weaponhaters[i]) != 2 && PED::GET_RELATIONSHIP_BETWEEN_PEDS(weaponhaters[i], playerPed) != 2)
 							{
 								if (weaponhaters[i] != playerPed) {
 									if (PED::IS_PED_IN_COMBAT(weaponhaters[i], playerPed)) AI::CLEAR_PED_TASKS(weaponhaters[i]);
@@ -101,8 +103,10 @@ void peds_dont_like_weapons() {
 								AI::TASK_COMBAT_PED(weaponhaters[i], playerPed, 0, 16);
 								if (!WEAPON::IS_PED_ARMED(weaponhaters[i], 7)) WEAPON::GIVE_WEAPON_TO_PED(weaponhaters[i], WEAPON::GET_SELECTED_PED_WEAPON(playerPed), 999, false, true);
 							}
-							if (!PED::IS_PED_FLEEING(weaponhaters[i]) && !AI::IS_PED_RUNNING(weaponhaters[i]) /*&& !PED::IS_PED_IN_COMBAT(weaponhaters[i], playerPed)*/
-								&& !WEAPON::IS_PED_ARMED(weaponhaters[i], 7))
+							if (!PED::IS_PED_FLEEING(weaponhaters[i]) && !AI::IS_PED_RUNNING(weaponhaters[i]) /*&& !PED::IS_PED_IN_COMBAT(weaponhaters[i], playerPed)*/ && !WEAPON::IS_PED_ARMED(weaponhaters[i], 7) &&
+								PED::GET_RELATIONSHIP_BETWEEN_PEDS(playerPed, weaponhaters[i]) != 0 && PED::GET_RELATIONSHIP_BETWEEN_PEDS(weaponhaters[i], playerPed) != 0 &&
+								PED::GET_RELATIONSHIP_BETWEEN_PEDS(playerPed, weaponhaters[i]) != 1 && PED::GET_RELATIONSHIP_BETWEEN_PEDS(weaponhaters[i], playerPed) != 1 &&
+								PED::GET_RELATIONSHIP_BETWEEN_PEDS(playerPed, weaponhaters[i]) != 2 && PED::GET_RELATIONSHIP_BETWEEN_PEDS(weaponhaters[i], playerPed) != 2)
 							{
 								if (weaponhaters[i] != playerPed) {
 									if (PED::IS_PED_IN_COMBAT(weaponhaters[i], playerPed)) AI::CLEAR_PED_TASKS(weaponhaters[i]);
@@ -136,8 +140,10 @@ void peds_dont_like_weapons() {
 								AI::TASK_COMBAT_PED(weaponhaters[i], playerPed, 0, 16);
 								if (!WEAPON::IS_PED_ARMED(weaponhaters[i], 7)) WEAPON::GIVE_WEAPON_TO_PED(weaponhaters[i], WEAPON::GET_SELECTED_PED_WEAPON(playerPed), 999, false, true);
 							}
-							if (!PED::IS_PED_FLEEING(weaponhaters[i]) && !AI::IS_PED_RUNNING(weaponhaters[i]) /*&& !PED::IS_PED_IN_COMBAT(weaponhaters[i], playerPed)*/
-								&& !WEAPON::IS_PED_ARMED(weaponhaters[i], 7))
+							if (!PED::IS_PED_FLEEING(weaponhaters[i]) && !AI::IS_PED_RUNNING(weaponhaters[i]) /*&& !PED::IS_PED_IN_COMBAT(weaponhaters[i], playerPed)*/ && !WEAPON::IS_PED_ARMED(weaponhaters[i], 7) &&
+								PED::GET_RELATIONSHIP_BETWEEN_PEDS(playerPed, weaponhaters[i]) != 0 && PED::GET_RELATIONSHIP_BETWEEN_PEDS(weaponhaters[i], playerPed) != 0 &&
+								PED::GET_RELATIONSHIP_BETWEEN_PEDS(playerPed, weaponhaters[i]) != 1 && PED::GET_RELATIONSHIP_BETWEEN_PEDS(weaponhaters[i], playerPed) != 1 &&
+								PED::GET_RELATIONSHIP_BETWEEN_PEDS(playerPed, weaponhaters[i]) != 2 && PED::GET_RELATIONSHIP_BETWEEN_PEDS(weaponhaters[i], playerPed) != 2)
 							{
 								if (weaponhaters[i] != playerPed) {
 									AI::CLEAR_PED_TASKS(weaponhaters[i]);
@@ -158,8 +164,10 @@ void peds_dont_like_weapons() {
 								AI::TASK_COMBAT_PED(weaponhaters[i], playerPed, 0, 16);
 								if (!WEAPON::IS_PED_ARMED(weaponhaters[i], 7)) WEAPON::GIVE_WEAPON_TO_PED(weaponhaters[i], WEAPON::GET_SELECTED_PED_WEAPON(playerPed), 999, false, true);
 							}
-							if (!PED::IS_PED_FLEEING(weaponhaters[i]) && !AI::IS_PED_RUNNING(weaponhaters[i]) /*&& !PED::IS_PED_IN_COMBAT(weaponhaters[i], playerPed)*/
-								&& !WEAPON::IS_PED_ARMED(weaponhaters[i], 7))
+							if (!PED::IS_PED_FLEEING(weaponhaters[i]) && !AI::IS_PED_RUNNING(weaponhaters[i]) /*&& !PED::IS_PED_IN_COMBAT(weaponhaters[i], playerPed)*/ && !WEAPON::IS_PED_ARMED(weaponhaters[i], 7) &&
+								PED::GET_RELATIONSHIP_BETWEEN_PEDS(playerPed, weaponhaters[i]) != 0 && PED::GET_RELATIONSHIP_BETWEEN_PEDS(weaponhaters[i], playerPed) != 0 &&
+								PED::GET_RELATIONSHIP_BETWEEN_PEDS(playerPed, weaponhaters[i]) != 1 && PED::GET_RELATIONSHIP_BETWEEN_PEDS(weaponhaters[i], playerPed) != 1 &&
+								PED::GET_RELATIONSHIP_BETWEEN_PEDS(playerPed, weaponhaters[i]) != 2 && PED::GET_RELATIONSHIP_BETWEEN_PEDS(weaponhaters[i], playerPed) != 2)
 							{
 								if (weaponhaters[i] != playerPed) {
 									AI::CLEAR_PED_TASKS(weaponhaters[i]);
