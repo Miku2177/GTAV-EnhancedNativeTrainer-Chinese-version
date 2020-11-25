@@ -15,6 +15,8 @@ bool pp_exit_flag = false;
 
 int pp_travel_speed = 2;
 
+bool first_cam = false;
+
 bool in_placement_mode = false;
 
 bool pp_frozen_time = false;
@@ -85,7 +87,7 @@ void begin_prop_placement(SpawnedPropInstance prop)
 	float tempFloat = CAM::GET_GAMEPLAY_CAM_RELATIVE_PITCH();
 	CAM::SET_GAMEPLAY_CAM_RELATIVE_HEADING(0.0f);
 	CAM::SET_GAMEPLAY_CAM_RELATIVE_PITCH(tempFloat, 0.0f);
-
+	
 	//work out a view distance
 	ENTITY::SET_ENTITY_ROTATION(currentProp.instance, 0, 0, 0, 0, false);
 	Hash modelHash = ENTITY::GET_ENTITY_MODEL(currentProp.instance);
@@ -106,6 +108,11 @@ void begin_prop_placement(SpawnedPropInstance prop)
 	CAM::SET_GAMEPLAY_CAM_RELATIVE_PITCH(20.0f, 0x3f800000);
 	CAM::SET_CAM_ACTIVE(propCamera, 1);
 	CAM::RENDER_SCRIPT_CAMS(1, 0, 3000, 1, 0);
+
+	if (CAM::GET_FOLLOW_PED_CAM_VIEW_MODE() == 4) {
+		first_cam = true;
+		CAM::SET_FOLLOW_PED_CAM_VIEW_MODE(0);
+	}
 
 	//check it worked
 	if (!CAM::DOES_CAM_EXIST(propCamera))
@@ -207,6 +214,11 @@ void begin_prop_placement(SpawnedPropInstance prop)
 		ENTITY::SET_ENTITY_CAN_BE_DAMAGED(currentProp.instance, false);
 		ENTITY::APPLY_FORCE_TO_ENTITY(currentProp.instance, 3, 0, 0, 0.1, 0, 0, 0, 0, 1, 1, 0, 0, 1);
 		ENTITY::SET_ENTITY_CAN_BE_DAMAGED(currentProp.instance, !currentProp.isInvincible);
+	}
+
+	if (first_cam == true) {
+		first_cam = false;
+		CAM::SET_FOLLOW_PED_CAM_VIEW_MODE(4);
 	}
 
 	pp_exit_flag = false;
