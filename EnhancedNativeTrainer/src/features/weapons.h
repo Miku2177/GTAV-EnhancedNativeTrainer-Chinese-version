@@ -336,3 +336,5 @@ void handle_generic_settings_weapons(std::vector<StringPairSettingDBRow>* settin
 void fire_mode_hotkey();
 
 void add_all_weapons_attachments(Ped choice);
+
+extern Ped equip_ped;

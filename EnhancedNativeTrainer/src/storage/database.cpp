@@ -18,7 +18,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 /**This value should be increased whenever you change the schema and a release is made.
 However you must also put in code to upgrade from older versions, in ENTDatabase::handle_version,
 as they will be deployed in the wild already.*/
-const int DATABASE_VERSION = 15; // 14
+const int DATABASE_VERSION = 16;
 
 static int singleIntResultCallback(void *data, int count, char **rows, char **azColName)
 {
@@ -433,7 +433,15 @@ void ENTDatabase::handle_version(int oldVersion)
 			id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, \
 			saveName TEXT NOT NULL, \
 			model INTEGER NOT NULL, \
-			weapon INTEGER NOT NULL \
+			weapon INTEGER NOT NULL, \
+			bcomp0 INTEGER NOT NULL, \
+			bcomp1 INTEGER NOT NULL, \
+			bcomp2 INTEGER NOT NULL, \
+			bcomp3 INTEGER NOT NULL, \
+			bcomp4 INTEGER NOT NULL, \
+			bcomp5 INTEGER NOT NULL, \
+			bcomp6 INTEGER NOT NULL, \
+			bw_tint INTEGER NOT NULL \
 			)";
 
 		int rcSkin1 = sqlite3_exec(db, CREATE_BOD_SKIN_TABLE_QUERY, NULL, 0, &zErrMsg);
@@ -656,6 +664,30 @@ void ENTDatabase::handle_version(int oldVersion)
 		else
 		{
 			write_text_to_log_file("Vehicle mods table created");
+		}
+	}
+	if (oldVersion < 16)
+	{
+		char* queries[]
+		{
+			"ALTER TABLE ENT_SAVED_BOD_SKINS ADD bcomp0 INTEGER DEFAULT -1",
+			"ALTER TABLE ENT_SAVED_BOD_SKINS ADD bcomp1 INTEGER DEFAULT -1",
+			"ALTER TABLE ENT_SAVED_BOD_SKINS ADD bcomp2 INTEGER DEFAULT -1",
+			"ALTER TABLE ENT_SAVED_BOD_SKINS ADD bcomp3 INTEGER DEFAULT -1",
+			"ALTER TABLE ENT_SAVED_BOD_SKINS ADD bcomp4 INTEGER DEFAULT -1",
+			"ALTER TABLE ENT_SAVED_BOD_SKINS ADD bcomp5 INTEGER DEFAULT -1",
+			"ALTER TABLE ENT_SAVED_BOD_SKINS ADD bcomp6 INTEGER DEFAULT -1",
+			"ALTER TABLE ENT_SAVED_BOD_SKINS ADD bw_tint INTEGER DEFAULT -1"
+		};
+
+		for each (char* q in queries)
+		{
+			int extraColsAddition = sqlite3_exec(db, q, NULL, 0, &zErrMsg);
+			if (extraColsAddition != SQLITE_OK)
+			{
+				write_text_to_log_file("Couldn't add bodyguard skins columns");
+				sqlite3_free(zErrMsg);
+			}
 		}
 	}
 }
@@ -1666,7 +1698,17 @@ bool ENTDatabase::save_bod_skin(Ped ped, std::string saveName, sqlite3_int64 slo
 	mutex_lock();
 
 	std::stringstream ss;
-	ss << "INSERT OR REPLACE INTO ENT_SAVED_BOD_SKINS VALUES (?, ?, ?, ?);";
+	ss << "INSERT OR REPLACE INTO ENT_SAVED_BOD_SKINS VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+
+	Hash bcomp0 = -1;
+	Hash bcomp1 = -1;
+	Hash bcomp2 = -1;
+	Hash bcomp3 = -1;
+	Hash bcomp4 = -1;
+	Hash bcomp5 = -1;
+	Hash bcomp6 = -1;
+	int bcomp_s = 0;
+	int bw_tint = -1;
 
 	sqlite3_stmt *stmt;
 	const char *pzTest;
@@ -1681,6 +1723,27 @@ bool ENTDatabase::save_bod_skin(Ped ped, std::string saveName, sqlite3_int64 slo
 		result = false;
 	}
 
+	for (int a = 0; a < WEAPONTYPES_MOD.size(); a++) {
+		for (int b = 0; b < VOV_WEAPONMOD_VALUES[a].size(); b++) {
+			char* weaponName = (char*)WEAPONTYPES_MOD.at(a).c_str(), * compName = (char*)VOV_WEAPONMOD_VALUES[a].at(b).c_str();
+			Hash weaponHash = GAMEPLAY::GET_HASH_KEY(weaponName), compHash = GAMEPLAY::GET_HASH_KEY(compName);
+
+			if (weaponHash == WEAPON::GET_SELECTED_PED_WEAPON(ped)) {
+				if (WEAPON::HAS_PED_GOT_WEAPON_COMPONENT(ped, weaponHash, compHash)) {
+					if (bcomp_s == 0) bcomp0 = compHash;
+					if (bcomp_s == 1) bcomp1 = compHash;
+					if (bcomp_s == 2) bcomp2 = compHash;
+					if (bcomp_s == 3) bcomp3 = compHash;
+					if (bcomp_s == 4) bcomp4 = compHash;
+					if (bcomp_s == 5) bcomp5 = compHash;
+					if (bcomp_s == 6) bcomp6 = compHash;
+					bcomp_s = bcomp_s + 1;
+				}
+			}
+		}
+	}
+	bw_tint = WEAPON::GET_PED_WEAPON_TINT_INDEX(ped, WEAPON::GET_SELECTED_PED_WEAPON(ped));
+
 	int index = 1;
 	if (slot == -1)
 	{
@@ -1692,7 +1755,15 @@ bool ENTDatabase::save_bod_skin(Ped ped, std::string saveName, sqlite3_int64 slo
 	}
 	sqlite3_bind_text(stmt, index++, saveName.c_str(), saveName.length(), 0); //save name
 	sqlite3_bind_int(stmt, index++, ENTITY::GET_ENTITY_MODEL(ped)); //model
-	sqlite3_bind_int(stmt, index++, WEAPON::GET_SELECTED_PED_WEAPON(ped)); //weapon
+	sqlite3_bind_int(stmt, index++, WEAPON::GET_SELECTED_PED_WEAPON(ped)); // weapon
+	sqlite3_bind_int(stmt, index++, bcomp0); // weapon component
+	sqlite3_bind_int(stmt, index++, bcomp1); // weapon component
+	sqlite3_bind_int(stmt, index++, bcomp2); // weapon component
+	sqlite3_bind_int(stmt, index++, bcomp3); // weapon component
+	sqlite3_bind_int(stmt, index++, bcomp4); // weapon component
+	sqlite3_bind_int(stmt, index++, bcomp5); // weapon component
+	sqlite3_bind_int(stmt, index++, bcomp6); // weapon component
+	sqlite3_bind_int(stmt, index++, bw_tint); // weapon tint
 
 	// commit
 	sqlite3_step(stmt);
@@ -1809,6 +1880,14 @@ std::vector<SavedBodSkinDBRow*> ENTDatabase::get_saved_bod_skins(int index)
 			skin->saveName = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, index++)));
 			skin->model = sqlite3_column_int(stmt, index++);
 			skin->weapon = sqlite3_column_int(stmt, index++);
+			skin->bcomp0 = sqlite3_column_int(stmt, index++);
+			skin->bcomp1 = sqlite3_column_int(stmt, index++);
+			skin->bcomp2 = sqlite3_column_int(stmt, index++);
+			skin->bcomp3 = sqlite3_column_int(stmt, index++);
+			skin->bcomp4 = sqlite3_column_int(stmt, index++);
+			skin->bcomp5 = sqlite3_column_int(stmt, index++);
+			skin->bcomp6 = sqlite3_column_int(stmt, index++);
+			skin->bw_tint = sqlite3_column_int(stmt, index++);
 
 			results.push_back(skin);
 
@@ -1878,7 +1957,6 @@ bool ENTDatabase::save_weapon(Ped ped, std::string saveName, sqlite3_int64 slot)
 			}
 		}
 	}
-
 	w_tint = WEAPON::GET_PED_WEAPON_TINT_INDEX(PLAYER::PLAYER_PED_ID(), WEAPON::GET_SELECTED_PED_WEAPON(PLAYER::PLAYER_PED_ID()));
 
 	int index = 1;

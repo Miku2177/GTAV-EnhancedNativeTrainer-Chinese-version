@@ -292,6 +292,14 @@ public:
 	std::string saveName;
 	DWORD model;
 	DWORD weapon;
+	DWORD bcomp0;
+	DWORD bcomp1;
+	DWORD bcomp2;
+	DWORD bcomp3;
+	DWORD bcomp4;
+	DWORD bcomp5;
+	DWORD bcomp6;
+	DWORD bw_tint;
 
 	std::vector<SavedBodSkinComponentDBRow*> components;
 	std::vector<SavedBodSkinPropDBRow*> props;
