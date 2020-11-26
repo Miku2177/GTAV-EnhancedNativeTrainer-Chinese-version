@@ -18,6 +18,9 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 int activeLineIndexBodyguards = 0;
 
+int lastSelectedBodWeaponCategory = 0;
+int lastSelectedBodWeapon = 0;
+
 int myENTGroup = -1;
 int groupID = -1;
 int const BODYGUARD_LIMIT = 7;
@@ -580,6 +583,74 @@ bool process_bod_prop_menu()
 }
 // end of 'props'
 
+bool process_bod_individual_weapon_menu() {
+	Ped playerPed = equip_ped;
+
+	for (int a = 0; a < 8; a++) { // VOV_WEAPON_VALUES.size()
+		for (int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++) {
+			tmp_w = GAMEPLAY::GET_HASH_KEY((char*)VOV_WEAPON_VALUES[a].at(b).c_str());
+			if (WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == tmp_w) {
+				lastSelectedBodWeaponCategory = a;
+				lastSelectedBodWeapon = b;
+			}
+		}
+	}
+
+	std::string label = VOV_WEAPON_CAPTIONS[lastSelectedBodWeaponCategory].at(lastSelectedBodWeapon); // weaponIndex
+	std::string label_caption = UI::_GET_LABEL_TEXT(&label[0]);
+
+	if (label_caption.compare("Pistol .50") == 0) {
+		label_caption = "Pistol 50"; //menu title can't handle symbols
+	}
+
+	std::vector<MenuItem<int>*> menuItems;
+			
+	int moddableIndex = -1;
+	for (int i = 0; i < WEAPONTYPES_MOD.size(); i++) {
+		if (WEAPON::GET_SELECTED_PED_WEAPON(equip_ped) == GAMEPLAY::GET_HASH_KEY((char*)WEAPONTYPES_MOD.at(i).c_str())) {
+			moddableIndex = i;
+			break;
+		}
+	}
+
+	if (moddableIndex != -1) {
+		std::vector<std::string> modCaptions = VOV_WEAPONMOD_CAPTIONS[moddableIndex];
+		for (int i = 0; i < modCaptions.size(); i++) {
+			FunctionDrivenToggleMenuItem<int>* item = new FunctionDrivenToggleMenuItem<int>();
+			std::string label_caption = modCaptions.at(i);
+			item->caption = UI::_GET_LABEL_TEXT(&label_caption[0]);
+			item->getter_call = is_weaponmod_equipped;
+			item->setter_call = set_weaponmod_equipped;
+			item->extra_arguments.push_back(lastSelectedBodWeaponCategory);
+			item->extra_arguments.push_back(lastSelectedBodWeapon); // weaponIndex
+			item->extra_arguments.push_back(moddableIndex);
+			item->extra_arguments.push_back(i);
+			menuItems.push_back(item);
+		}
+	}
+
+	int tintableIndex = -1;
+	for (int i = 0; i < WEAPONTYPES_TINT.size(); i++) {
+		if (WEAPON::GET_SELECTED_PED_WEAPON(equip_ped) == GAMEPLAY::GET_HASH_KEY((char*)WEAPONTYPES_TINT.at(i).c_str())) {
+			tintableIndex = i;
+			break;
+		}
+	}
+
+	if (tintableIndex != -1) {
+		MenuItem<int>* tintItem = new MenuItem<int>();
+		tintItem->caption = "Weapon Tints";
+		tintItem->value = 4;
+		tintItem->isLeaf = false;
+		tintItem->onConfirmFunction = onconfirm_open_tint_menu;
+		menuItems.push_back(tintItem);
+	}
+
+	draw_generic_menu<int>(menuItems, 0, label_caption, NULL, NULL, NULL, weapon_reequip_interrupt);
+
+	return false;
+}
+
 // save/load bodyguard
 bool applyChosenBodSkin(DWORD model)
 {
@@ -637,8 +708,30 @@ bool spawn_saved_bod_skin(int slot, std::string caption)
 	}
 
 	if (!featureDifferentWeapons) {
-		WEAPON::GIVE_WEAPON_TO_PED(bodyGuard, savedBodSkin->weapon, 999, false, true);
+		int clipMax = WEAPON::GET_MAX_AMMO_IN_CLIP(bodyGuard, savedBodSkin->weapon, true); clipMax = min(clipMax, 250);
+		if (WEAPON::HAS_PED_GOT_WEAPON(bodyGuard, savedBodSkin->weapon, 0)) {
+			WEAPON::REMOVE_WEAPON_FROM_PED(bodyGuard, savedBodSkin->weapon);
+			WEAPON::GIVE_WEAPON_TO_PED(bodyGuard, savedBodSkin->weapon, clipMax * 2, false, true);
+		}
+		else WEAPON::GIVE_WEAPON_TO_PED(bodyGuard, savedBodSkin->weapon, clipMax * 2, false, true);
+
+		if (savedBodSkin->bcomp0 != -1) WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(bodyGuard, savedBodSkin->weapon, savedBodSkin->bcomp0);
+		if (savedBodSkin->bcomp1 != -1) WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(bodyGuard, savedBodSkin->weapon, savedBodSkin->bcomp1);
+		if (savedBodSkin->bcomp2 != -1) WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(bodyGuard, savedBodSkin->weapon, savedBodSkin->bcomp2);
+		if (savedBodSkin->bcomp3 != -1) WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(bodyGuard, savedBodSkin->weapon, savedBodSkin->bcomp3);
+		if (savedBodSkin->bcomp4 != -1) WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(bodyGuard, savedBodSkin->weapon, savedBodSkin->bcomp4);
+		if (savedBodSkin->bcomp5 != -1) WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(bodyGuard, savedBodSkin->weapon, savedBodSkin->bcomp5);
+		if (savedBodSkin->bcomp6 != -1) WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(bodyGuard, savedBodSkin->weapon, savedBodSkin->bcomp6);
+		if (savedBodSkin->bw_tint != -1) WEAPON::SET_PED_WEAPON_TINT_INDEX(bodyGuard, savedBodSkin->weapon, savedBodSkin->bw_tint);
+
 		WEAPON::SET_CURRENT_PED_WEAPON(bodyGuard, savedBodSkin->weapon, 1);
+		int maxAmmo = 0;
+		WEAPON::GET_MAX_AMMO(bodyGuard, savedBodSkin->weapon, &maxAmmo);
+		int maxClipAmmo = WEAPON::GET_MAX_AMMO_IN_CLIP(bodyGuard, savedBodSkin->weapon, false);
+
+		WEAPON::SET_AMMO_IN_CLIP(bodyGuard, savedBodSkin->weapon, maxClipAmmo);
+		WEAPON::SET_PED_AMMO(bodyGuard, savedBodSkin->weapon, maxAmmo);
+
 		WEAPON::SET_PED_CURRENT_WEAPON_VISIBLE(bodyGuard, true, false, 1, 1);
 		spawnedBodyguardsSecWeap.push_back(savedBodSkin->weapon);
 	}
@@ -926,6 +1019,12 @@ bool process_bodyguard_skins_menu(){
 	item->isLeaf = false;
 	menuItems.push_back(item);
 
+	item = new MenuItem<int>();
+	item->caption = "Modify Weapon";
+	item->value = 7;
+	item->isLeaf = false;
+	menuItems.push_back(item);
+
 	return draw_generic_menu<int>(menuItems, &skinTypesBodyguardMenuPositionMemory[0], "Bodyguard Skins", onconfirm_bodyguard_skins_menu, NULL, NULL);
 }
 
@@ -1018,6 +1117,46 @@ bool onconfirm_bodyguard_skins_menu(MenuItem<int> choice){
 					is_it_n = false;
 				}
 				if (!spawnedENTBodyguards.empty() && b_curr_num > -1 && b_curr_num < spawnedENTBodyguards.size()) return process_bod_prop_menu();
+				else {
+					if (spawnedENTBodyguards.empty()) {
+						std::ostringstream ss;
+						ss << "No bodyguards found";
+						set_status_text(ss.str());
+						return false;
+					}
+					if (b_curr_num < 0 || b_curr_num >= spawnedENTBodyguards.size()) {
+						std::ostringstream ss;
+						ss << "Wrong number";
+						set_status_text(ss.str());
+						return false;
+					}
+				}
+			}
+			return false;
+		}
+		case 7:
+		{
+			if (!WEAPON::IS_PED_ARMED(PLAYER::PLAYER_PED_ID(), 7)) CONTROLS::_SET_CONTROL_NORMAL(0, 37, 1);
+			keyboard_on_screen_already = true;
+			curr_message = "Enter a number of the bodyguard (that is above his head) you want to modify the weapon of:"; // modify weapon of a bodyguard
+			std::string result_b = show_keyboard("Enter Name Manually", NULL);
+			if (!result_b.empty())
+			{
+				result_b = trim(result_b);
+				std::string::size_type sz;
+				for (int i = 0; i < 7; i++) {
+					sprintf(temp_n, "%i", i);
+					if (result_b == temp_n) is_it_n = true;
+				}
+				if (is_it_n == true) {
+					b_curr_num = std::stof(result_b, &sz);
+					is_it_n = false;
+				}
+				if (!spawnedENTBodyguards.empty() && b_curr_num > -1 && b_curr_num < spawnedENTBodyguards.size()) {
+					equip_ped = spawnedENTBodyguards[b_curr_num];
+					if (!WEAPON::IS_PED_ARMED(equip_ped, 7)) CONTROLS::_SET_CONTROL_NORMAL(0, 37, 1);
+					return process_bod_individual_weapon_menu();
+				}
 				else {
 					if (spawnedENTBodyguards.empty()) {
 						std::ostringstream ss;
