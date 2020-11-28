@@ -52,6 +52,8 @@ float bill_to_pay, mins = -1;
 bool featureDisableRecording = false;
 // dynamic health bar variables
 bool featureDynamicHealthBar = false;
+int temp_h, temp_h_d = -1;
+bool dynamic_loading = true;
 bool been_damaged = false;
 float curr_damaged_health, curr_damaged_armor = -1;
 int healthbar_secs_curr, healthbar_seconds = -1; 
@@ -1446,13 +1448,18 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	}
 
 	// Dynamic Health Bar
-	if (featureDynamicHealthBar && !CUTSCENE::IS_CUTSCENE_PLAYING() && PLAYER_HEALTH_VALUES[current_player_health] > 0) {
+	if (featureDynamicHealthBar && ENTITY::DOES_ENTITY_EXIST(playerPed) && !DLC2::GET_IS_LOADING_SCREEN_ACTIVE() && !STREAMING::IS_PLAYER_SWITCH_IN_PROGRESS() && dynamic_loading == true && apply_pressed == false) {
+		temp_h = ENTITY::GET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID()) - 100;
+		temp_h_d = floor(ENTITY::GET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID()) / 100);
+		oldplayerPed = playerPed;
+		dynamic_loading = false;
+	}
+	if (featureDynamicHealthBar && !CUTSCENE::IS_CUTSCENE_PLAYING() && ENTITY::DOES_ENTITY_EXIST(playerPed) && !DLC2::GET_IS_LOADING_SCREEN_ACTIVE() && !STREAMING::IS_PLAYER_SWITCH_IN_PROGRESS()) {
 		if (!featureMiscHideHud && !featurePhoneShowHud && !featureInVehicleNoHud && !featureMarkerHud/* && !featureMiscHideENTHud*/) UI::DISPLAY_RADAR(false); // There is no need to hide HUD if it's already hidden
 		//auto addr = getScriptHandleBaseAddress(playerPed);
 		//float health = (*(float *)(addr + 0x280)) - 100;
 		float health = ENTITY::GET_ENTITY_HEALTH(playerPed) - 100;
 		float playerArmour = PED::GET_PED_ARMOUR(playerPed);
-		int temp_h, temp_h_d = -1;
 
 		if (!ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_OBJECT(playerPed) && !ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_PED(playerPed) && !ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_VEHICLE(playerPed)) {
 			//curr_damaged_health = (*(float *)(addr + 0x280)) - 100;
@@ -1476,20 +1483,17 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 				healthbar_seconds = -1;
 			}
 			// health
-			temp_h = PLAYER_HEALTH_VALUES[current_player_health] - 100;
-			temp_h_d = floor(PLAYER_HEALTH_VALUES[current_player_health] / 100);
-
 			if (health < (temp_h / 5)) {
 				GRAPHICS::DRAW_RECT(health_bar_x + 0.035, health_bar_y + 0.01, 0.070, 0.017, 41, 86, 40, 110);
 				GRAPHICS::DRAW_RECT(health_bar_x + 0.035, health_bar_y + 0.01, 0.070, 0.009, 41, 56, 40, 245); // 220, 20, 20, 245 // 55
-				if ((health_bar_x + ((health / temp_h_d) / ((PLAYER_HEALTH_VALUES[current_player_health] - 100) / temp_h_d / 0.070))) > 0.015) 
-					GRAPHICS::DRAW_RECT(health_bar_x + 0.00 + ((health / temp_h_d) / ((PLAYER_HEALTH_VALUES[current_player_health] - 100) / temp_h_d / 0.035)), health_bar_y + 0.01, ((health / temp_h_d) / ((PLAYER_HEALTH_VALUES[current_player_health] - 100) / temp_h_d / 0.070)), 0.009, 220, 20, 20, 255);
+				if ((health_bar_x + ((health / temp_h_d) / (temp_h / temp_h_d / 0.070))) > 0.015)
+					GRAPHICS::DRAW_RECT(health_bar_x + 0.00 + ((health / temp_h_d) / (temp_h / temp_h_d / 0.035)), health_bar_y + 0.01, ((health / temp_h_d) / (temp_h / temp_h_d / 0.070)), 0.009, 220, 20, 20, 255);
 			}
 			else {
 				GRAPHICS::DRAW_RECT(health_bar_x + 0.035, health_bar_y + 0.01, 0.070, 0.017, 41, 86, 40, 110);
 				GRAPHICS::DRAW_RECT(health_bar_x + 0.035, health_bar_y + 0.01, 0.070, 0.009, 41, 56, 40, 245); // 75
-				if (((health / temp_h_d) / ((PLAYER_HEALTH_VALUES[current_player_health] - 100) / temp_h_d / 0.070)) < 0.070) 
-					GRAPHICS::DRAW_RECT(health_bar_x + 0.00 + ((health / temp_h_d) / ((PLAYER_HEALTH_VALUES[current_player_health] - 100) / temp_h_d / 0.035)), health_bar_y + 0.01, ((health / temp_h_d) / ((PLAYER_HEALTH_VALUES[current_player_health] - 100) / temp_h_d / 0.070)), 0.009, 78, 150, 77, 255);
+				if (((health / temp_h_d) / (temp_h / temp_h_d / 0.070)) < 0.070)
+					GRAPHICS::DRAW_RECT(health_bar_x + 0.00 + ((health / temp_h_d) / (temp_h / temp_h_d / 0.035)), health_bar_y + 0.01, ((health / temp_h_d) / (temp_h / temp_h_d / 0.070)), 0.009, 78, 150, 77, 255);
 				else GRAPHICS::DRAW_RECT(health_bar_x + 0.035, health_bar_y + 0.01, 0.070, 0.009, 78, 150, 77, 255);
 			}
 
@@ -1502,7 +1506,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	}
 
 	// Default Menu Tab
-	if (MISC_DEF_MANUTAB_VALUES[DefMenuTabIndex] > -2) {
+	if (MISC_DEF_MANUTAB_VALUES[DefMenuTabIndex] > -2 && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID()) == 1) {
 		int GetHash = GAMEPLAY::GET_HASH_KEY("FE_MENU_VERSION_SP_PAUSE");
 		if (IsKeyDown(VK_ESCAPE) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, INPUT_FRONTEND_PAUSE)/* || CONTROLS::IS_CONTROL_JUST_PRESSED(2, 199) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, 200)*/) {
 			UI::ACTIVATE_FRONTEND_MENU(GetHash, featureGamePause, MISC_DEF_MANUTAB_VALUES[DefMenuTabIndex]);

@@ -75,7 +75,6 @@ bool startup_w = false;
 
 bool featureRestrictedZones = true;
 
-bool featureWorldMoonGravity = false;
 bool featureWorldNoPeds = false;
 bool featureWorldNoTraffic = false;
 bool featureNoPlanesHelis = false;
@@ -91,6 +90,7 @@ bool featureWorldNoTrafficUpdated = false;
 bool featureNoMinimapRot = false;
 bool featureNoMinimapRotUpdated = false;
 bool featureNoWaypoint = false;
+bool featureNoGameHintCameraLocking = false;
 bool featureNoPoliceBlips = false;
 bool featureFullMap = false;
 bool featurePenitentiaryMap = false;
@@ -186,6 +186,12 @@ const std::vector<std::string> MISC_WEATHER_METHOD_CAPTIONS{ "Random Weather", "
 const int MISC_WEATHER_METHOD_VALUES[] = { 1, 2, 3 };
 int WeatherMethodIndex = 0;
 bool WeatherMethodChanged = true;
+
+// Gravity Level
+const std::vector<std::string> WORLD_GRAVITY_LEVEL_CAPTIONS{ "Earth", "Moon", "Pluto", "Near Zero" };
+const int WORLD_GRAVITY_LEVEL_VALUES[] = { 0, 1, 2, 3 };
+int featureGravityLevelIndex = 0;
+bool featureGravityLevelChanged = true;
 
 void map_size_hotkey() {
 	RadarMapIndex = RadarMapIndex + 1;
@@ -442,6 +448,11 @@ void onchange_cop_blips_perm_index(int value, SelectFromListMenuItem* source) {
 	CopBlipPermChanged = true;
 }
 
+void onchange_gravity_level_index(int value, SelectFromListMenuItem* source) {
+	featureGravityLevelIndex = value;
+	featureGravityLevelChanged = true;
+}
+
 void onchange_weather_change_index(int value, SelectFromListMenuItem* source) {
 	WeatherChangeIndex = value;
 	WeatherChangeChanged = true;
@@ -483,6 +494,7 @@ void process_world_menu()
 
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
+	ToggleMenuItem<int>* togItem;
 
 	MenuItem<int> *areaItem = new MenuItem<int>();
 	areaItem->isLeaf = false;
@@ -508,11 +520,11 @@ void process_world_menu()
 	cloudsItem->value = -4;
 	menuItems.push_back(cloudsItem);
 	
-	ToggleMenuItem<int> *togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Moon Gravity";
-	togItem->value = 1;
-	togItem->toggleValue = &featureWorldMoonGravity;
-	menuItems.push_back(togItem);
+	listItem = new SelectFromListMenuItem(WORLD_GRAVITY_LEVEL_CAPTIONS, onchange_gravity_level_index);
+	listItem->wrap = false;
+	listItem->caption = "Gravity Level";
+	listItem->value = featureGravityLevelIndex;
+	menuItems.push_back(listItem);
 
 	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "No Pedestrians";
@@ -686,6 +698,12 @@ void process_world_menu()
 	listItem->value = featureFreeroamActivitiesIndex;
 	menuItems.push_back(listItem);
 
+	togItem = new ToggleMenuItem<int>();
+	togItem->caption = "Disable Freeroam Event Camera";
+	togItem->value = 8;
+	togItem->toggleValue = &featureNoGameHintCameraLocking;
+	menuItems.push_back(togItem);
+
 	draw_generic_menu<int>(menuItems, &activeLineIndexWorld, caption, onconfirm_world_menu, NULL, NULL);
 }
 
@@ -704,6 +722,7 @@ void reset_world_globals()
 	featureFreeroamActivitiesIndex = 0;
 	TrainSpeedIndex = 0;
 	CopBlipPermIndex = 0;
+	featureGravityLevelIndex = 0;
 	WeatherChangeIndex = 0;
 	WeatherMethodIndex = 0;
 	WindStrengthIndex = 0;
@@ -714,7 +733,6 @@ void reset_world_globals()
 
 	featureWeatherFreeze =
 	featureCloudsFreeze =
-	featureWorldMoonGravity = false;
 	featureWorldNoPeds = false;
 	featureWorldNoTraffic = false;
 	featureNoPlanesHelis = false;
@@ -725,6 +743,7 @@ void reset_world_globals()
 
 	featureNoMinimapRot = false;
 	featureNoWaypoint = false;
+	featureNoGameHintCameraLocking = false;
 	featureNoPoliceBlips = false;
 	featureFullMap = false;
 	featurePenitentiaryMap = false;
@@ -756,11 +775,11 @@ void reset_world_globals()
 
 void update_world_features()
 {
-	if (featureWorldMoonGravity)
+	if (WORLD_GRAVITY_LEVEL_VALUES[featureGravityLevelIndex] > 0)
 	{
-		GAMEPLAY::SET_GRAVITY_LEVEL(1);
+		GAMEPLAY::SET_GRAVITY_LEVEL(WORLD_GRAVITY_LEVEL_VALUES[featureGravityLevelIndex]);
 	}
-	else 
+	if (WORLD_GRAVITY_LEVEL_VALUES[featureGravityLevelIndex] == 0)
 	{
 		GAMEPLAY::SET_GRAVITY_LEVEL(0);
 	}
@@ -1799,6 +1818,9 @@ void update_world_features()
 		}
 	}
 
+	// Disable Freeroam Event Camera
+	if (featureNoGameHintCameraLocking && CAM::IS_GAMEPLAY_HINT_ACTIVE()) CAM::STOP_GAMEPLAY_HINT(true);
+
 	// Wind Strength
 	if (windstrength_toggle == false) {
 		GAMEPLAY::SET_WIND(WORLD_WIND_STRENGTH_VALUES[WindStrengthIndex]);
@@ -1993,7 +2015,6 @@ void update_world_features()
 
 void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results)
 {
-	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldMoonGravity", &featureWorldMoonGravity });  
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldRandomCops", &featureWorldRandomCops, &featureWorldRandomCopsUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldRandomTrains", &featureWorldRandomTrains, &featureWorldRandomTrainsUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureWorldRandomBoats", &featureWorldRandomBoats, &featureWorldRandomBoatsUpdated });
@@ -2011,6 +2032,7 @@ void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* r
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNoAnimals", &featureNoAnimals });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNoMinimapRot", &featureNoMinimapRot });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNoWaypoint", &featureNoWaypoint });
+	results->push_back(FeatureEnabledLocalDefinition{ "featureNoGameHintCameraLocking", &featureNoGameHintCameraLocking });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNoPoliceBlips", &featureNoPoliceBlips }); 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureFullMap", &featureFullMap }); 
 	results->push_back(FeatureEnabledLocalDefinition{ "featurePenitentiaryMap", &featurePenitentiaryMap }); 
@@ -2046,6 +2068,7 @@ void add_world_feature_enablements2(std::vector<StringPairSettingDBRow>* results
 	results->push_back(StringPairSettingDBRow{ "featureFreeroamActivitiesIndex", std::to_string(featureFreeroamActivitiesIndex) });
 	results->push_back(StringPairSettingDBRow{ "TrainSpeedIndex", std::to_string(TrainSpeedIndex) });
 	results->push_back(StringPairSettingDBRow{ "CopBlipPermIndex", std::to_string(CopBlipPermIndex) });
+	results->push_back(StringPairSettingDBRow{ "featureGravityLevelIndex", std::to_string(featureGravityLevelIndex) });
 	results->push_back(StringPairSettingDBRow{ "WeatherChangeIndex", std::to_string(WeatherChangeIndex) });
 	results->push_back(StringPairSettingDBRow{ "WeatherMethodIndex", std::to_string(WeatherMethodIndex) });
 }
@@ -2122,6 +2145,10 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 		else if (setting.name.compare("CopBlipPermIndex") == 0)
 		{
 			CopBlipPermIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("featureGravityLevelIndex") == 0)
+		{
+			featureGravityLevelIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("WeatherChangeIndex") == 0) 
 		{

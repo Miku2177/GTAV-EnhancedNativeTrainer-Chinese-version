@@ -225,10 +225,13 @@ bool is_player_ignored_by_police();
 
 // THE ORIGINAL CODE IS BY IKT
 static int get_fuel_level_offset();
-
 static int get_fuel_tank_offset();
 //
 
 extern int fuelLevelOffset;
 extern int fuelTankOffset;
 extern bool engine_running;
+
+extern Ped oldplayerPed;
+
+extern bool apply_pressed;

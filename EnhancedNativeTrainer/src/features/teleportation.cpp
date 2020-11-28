@@ -397,6 +397,7 @@ std::vector<tele_location> LOCATIONS_ACTORS = {
 	{ "Jesco White", 709.213f, 4177.99f, 40.7092f },
 	{ "Jesse", -1602.29f, -956.401f, 13.0174f },
 	{ "Mani", 396.974f, -364.562f, 46.8187f },
+	{ "Mime", -1235.37f, -774.254f, 18.5544f },
 	{ "Pamela Drake", 399.92f, 140.066f, 102.247f },
 	{ "Zombie", 183.262f, 182.957f, 105.538f },
 };

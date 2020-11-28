@@ -21,6 +21,9 @@ int activeLineIndexWeapon = 0;
 int lastSelectedWeaponCategory = 0;
 int lastSelectedWeapon = 0;
 
+Ped equip_ped = -1;
+bool refresh_w = false;
+
 int vision_toggle = 0;
 
 int arrest_secs = 0;
@@ -531,7 +534,7 @@ int get_current_revolver_appearance(){
 
 bool process_individual_weapon_menu(int weaponIndex){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
-
+	
 	//int originalWeapon = WEAPON::GET_SELECTED_PED_WEAPON(playerPed);
 
 	lastSelectedWeapon = weaponIndex;
@@ -727,9 +730,9 @@ bool onconfirm_weaponlist_menu(MenuItem<int> choice){
 bool process_weaponlist_menu(){
 	std::vector<MenuItem<int>*> menuItems;
 
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	equip_ped = PLAYER::PLAYER_PED_ID();
 	int weaponSelectionIndex = 0;
-	int current = WEAPON::GET_SELECTED_PED_WEAPON(playerPed);
+	int current = WEAPON::GET_SELECTED_PED_WEAPON(equip_ped);
 
 	for(int i = 0; i < MENU_WEAPON_CATEGORIES.size(); i++){
 		MenuItem<int> *item = new MenuItem<int>();
@@ -2606,8 +2609,14 @@ void set_weapon_equipped(bool equipped, std::vector<int> extras){
 }
 
 bool is_weaponmod_equipped(std::vector<int> extras){
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	Ped playerPed = equip_ped;
 	std::string weaponValue = VOV_WEAPON_VALUES[extras.at(0)].at(extras.at(1));
+	
+	if (!WEAPON::IS_PED_ARMED(PLAYER::PLAYER_PED_ID(), 7) && refresh_w == true) { // playerPed != PLAYER::PLAYER_PED_ID() && 
+		WAIT(300);
+		CONTROLS::_SET_CONTROL_NORMAL(0, 37, 1);
+		refresh_w = false;
+	}
 
 	char *weaponChar = (char*) weaponValue.c_str();
 	int weapHash = GAMEPLAY::GET_HASH_KEY(weaponChar);
@@ -2620,8 +2629,14 @@ bool is_weaponmod_equipped(std::vector<int> extras){
 }
 
 void set_weaponmod_equipped(bool equipped, std::vector<int> extras){
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	Ped playerPed = equip_ped;
 	std::string weaponValue = VOV_WEAPON_VALUES[extras.at(0)].at(extras.at(1));
+	
+	if (playerPed != PLAYER::PLAYER_PED_ID()) {
+		CONTROLS::_SET_CONTROL_NORMAL(0, 37, 1);
+		refresh_w = true;
+	}
+	
 	char *weaponChar = (char*) weaponValue.c_str();
 	int weapHash = GAMEPLAY::GET_HASH_KEY(weaponChar);
 
@@ -2697,8 +2712,10 @@ void onhighlight_weapon_mod_menu_tint(MenuItem<int> choice){
 }
 
 bool onconfirm_weapon_mod_menu_tint(MenuItem<int> choice){
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
-	std::string weaponName = VOV_WEAPON_VALUES[lastSelectedWeaponCategory].at(lastSelectedWeapon);
+	Ped playerPed = equip_ped; // PLAYER::PLAYER_PED_ID();
+	std::string weaponName = "";
+	if (equip_ped == PLAYER::PLAYER_PED_ID()) weaponName = VOV_WEAPON_VALUES[lastSelectedWeaponCategory].at(lastSelectedWeapon);
+	if (equip_ped != PLAYER::PLAYER_PED_ID()) weaponName = VOV_WEAPON_VALUES[lastSelectedBodWeaponCategory].at(lastSelectedBodWeapon);
 	int weapHash = GAMEPLAY::GET_HASH_KEY((char*) weaponName.c_str());
 
 	WEAPON::SET_PED_WEAPON_TINT_INDEX(playerPed, weapHash, choice.value);
@@ -2709,14 +2726,16 @@ bool onconfirm_weapon_mod_menu_tint(MenuItem<int> choice){
 void onconfirm_open_tint_menu(MenuItem<int> choice) {
 	int tintSelection = 0;
 
-	std::string weaponValue = VOV_WEAPON_VALUES[lastSelectedWeaponCategory].at(lastSelectedWeapon);
+	std::string weaponValue = "";
+	if (equip_ped == PLAYER::PLAYER_PED_ID()) weaponValue = VOV_WEAPON_VALUES[lastSelectedWeaponCategory].at(lastSelectedWeapon);
+	if (equip_ped != PLAYER::PLAYER_PED_ID()) weaponValue = VOV_WEAPON_VALUES[lastSelectedBodWeaponCategory].at(lastSelectedBodWeapon);
 	char *weaponChar = (char*)weaponValue.c_str();
 	int weapHash = GAMEPLAY::GET_HASH_KEY(weaponChar);
 	std::vector<MenuItem<int>*> menuItems;
 		
 	for (int i = 0; i < WEAPON::GET_WEAPON_TINT_COUNT(weapHash); i++) {
 		MenuItem<int> *item = new MenuItem<int>();
-		item->caption = UI::_GET_LABEL_TEXT((char*)("WCT_C_TINT_" + std::to_string(i)).c_str()); //  CAPTIONS_TINT_MK2[i];
+		item->caption = UI::_GET_LABEL_TEXT((char*)("WCT_C_TINT_" + std::to_string(i)).c_str()); // CAPTIONS_TINT_MK2[i];
 		item->value = i;
 		menuItems.push_back(item);
 	}
@@ -2738,7 +2757,8 @@ void onconfirm_open_tint_menu(MenuItem<int> choice) {
 			}
 		}
 		*/
-		draw_generic_menu<int>(menuItems, &tintSelection, "Select Weapon Tint", onconfirm_weapon_mod_menu_tint, onhighlight_weapon_mod_menu_tint, NULL);
+
+	draw_generic_menu<int>(menuItems, &tintSelection, "Select Weapon Tint", onconfirm_weapon_mod_menu_tint, onhighlight_weapon_mod_menu_tint, NULL);
 }
 
 void onhighlight_weapon_mod_menu_tint_colour(MenuItem<int> choice) {
@@ -2746,8 +2766,10 @@ void onhighlight_weapon_mod_menu_tint_colour(MenuItem<int> choice) {
 }
 
 bool onconfirm_weapon_mod_menu_tint_colour(MenuItem<int> choice) {
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
-	std::string weaponName = VOV_WEAPON_VALUES[lastSelectedWeaponCategory].at(lastSelectedWeapon);
+	Ped playerPed = equip_ped; 
+	std::string weaponName = "";
+	if (equip_ped == PLAYER::PLAYER_PED_ID()) weaponName = VOV_WEAPON_VALUES[lastSelectedWeaponCategory].at(lastSelectedWeapon);
+	if (equip_ped != PLAYER::PLAYER_PED_ID()) weaponName = VOV_WEAPON_VALUES[lastSelectedBodWeaponCategory].at(lastSelectedBodWeapon);
 	int weapHash = GAMEPLAY::GET_HASH_KEY((char*)weaponName.c_str());
 
 	WEAPON::SET_WEAPON_LIVERY_COLOR(playerPed, weapHash, GAMEPLAY::GET_HASH_KEY(currWeaponCompHash), choice.value);
@@ -2756,11 +2778,13 @@ bool onconfirm_weapon_mod_menu_tint_colour(MenuItem<int> choice) {
 }
 
 void onconfirm_open_tint_menu_colour(MenuItem<int> choice) {
-	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	Ped playerPed = equip_ped;
 	int tintColourSelection = 0;
 	std::vector<MenuItem<int>*> menuItems;
 
-	std::string weaponName = VOV_WEAPON_VALUES[lastSelectedWeaponCategory].at(lastSelectedWeapon);
+	std::string weaponName = "";
+	if (equip_ped == PLAYER::PLAYER_PED_ID()) weaponName = VOV_WEAPON_VALUES[lastSelectedWeaponCategory].at(lastSelectedWeapon);
+	if (equip_ped != PLAYER::PLAYER_PED_ID()) weaponName = VOV_WEAPON_VALUES[lastSelectedBodWeaponCategory].at(lastSelectedBodWeapon);
 	int weapHash = GAMEPLAY::GET_HASH_KEY((char*)weaponName.c_str());
 
 	for each(char* MK2_wep in MK2_WEAPONS)
