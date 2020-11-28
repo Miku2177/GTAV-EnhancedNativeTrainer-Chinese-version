@@ -4026,7 +4026,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		VEH_HYDRAULICS_VALUES[HydraulicsIndex] != 0.0f) {
 		Vehicle myVehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		if (VEHICLE::IS_VEHICLE_ON_ALL_WHEELS(myVehicle)) {
-			if (!featureWorldMoonGravity) ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, VEH_HYDRAULICS_VALUES[HydraulicsIndex], 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
+			if (WORLD_GRAVITY_LEVEL_VALUES[featureGravityLevelIndex] == 0) ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, VEH_HYDRAULICS_VALUES[HydraulicsIndex], 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
 			else ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, VEH_HYDRAULICS_VALUES[HydraulicsIndex] / 4, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
 		}
 	}
@@ -4044,13 +4044,13 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			//}
 			if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] == 1) { // arcade
 				if (VEHICLE::IS_VEHICLE_ON_ALL_WHEELS(myVehicle) && VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(myVehicle))) {
-					if (!featureWorldMoonGravity) ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.15f, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
+					if (WORLD_GRAVITY_LEVEL_VALUES[featureGravityLevelIndex] == 0) ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.15f, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
 					else ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.15f / 4, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
 				}
 			}
 			if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] == 2) { // realistic
 				if (VEHICLE::IS_VEHICLE_ON_ALL_WHEELS(myVehicle) && VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(myVehicle))) {
-					if (!featureWorldMoonGravity) ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.18f, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
+					if (WORLD_GRAVITY_LEVEL_VALUES[featureGravityLevelIndex] == 0) ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.18f, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
 					else ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.18f / 4, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
 				}
 			}
@@ -4065,11 +4065,11 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripRainingIndex] == 1) { // arcade
 				if (VEHICLE::IS_VEHICLE_ON_ALL_WHEELS(myVehicle) && VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(myVehicle))) {
 					if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 1420204096) {
-						if (!featureWorldMoonGravity) ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.09f, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
+						if (WORLD_GRAVITY_LEVEL_VALUES[featureGravityLevelIndex] == 0) ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.09f, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
 						else ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.09f / 4, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
 					}
 					if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3061285535) {
-						if (!featureWorldMoonGravity) ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.10f, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
+						if (WORLD_GRAVITY_LEVEL_VALUES[featureGravityLevelIndex] == 0) ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.10f, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
 						else ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.10f / 4, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
 					}
 				}
@@ -4077,11 +4077,11 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripRainingIndex] == 2) { // realistic
 				if (VEHICLE::IS_VEHICLE_ON_ALL_WHEELS(myVehicle) && VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(myVehicle))) {
 					if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 1420204096) {
-						if (!featureWorldMoonGravity) ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.11f, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
+						if (WORLD_GRAVITY_LEVEL_VALUES[featureGravityLevelIndex] == 0) ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.11f, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
 						else ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.11f / 4, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
 					}
 					if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3061285535) {
-						if (!featureWorldMoonGravity) ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.12f, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
+						if (WORLD_GRAVITY_LEVEL_VALUES[featureGravityLevelIndex] == 0) ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.12f, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
 						else ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.12f / 4, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
 					}
 				}

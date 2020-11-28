@@ -147,6 +147,8 @@ bool is_jellman_scenery_enabled();
 extern bool radio_v_checked;
 extern bool featureRealisticRadioVolume;
 
+extern bool dynamic_loading;
+
 struct ScriptHeader
 {
 	char padding1[16];					//0x0

@@ -687,9 +687,11 @@ void update_area_effects(Ped playerPed){
 		Vehicle veh_agressive[arrSize_laws];
 		int count_veh = worldGetAllPeds(veh_agressive, arrSize_laws);
 		for (int i = 0; i < count_veh; i++) {
-			if (veh_agressive[i] != playerPed && PED::IS_PED_HUMAN(veh_agressive[i]) && !PED::IS_PED_GROUP_MEMBER(veh_agressive[i], myENTGroup) &&	PED::GET_PED_TYPE(veh_agressive[i]) != 6 && PED::GET_PED_TYPE(veh_agressive[i]) != 27 && 
+			if (veh_agressive[i] != playerPed && PED::IS_PED_HUMAN(veh_agressive[i]) && !PED::IS_PED_GROUP_MEMBER(veh_agressive[i], myENTGroup) && PED::GET_PED_TYPE(veh_agressive[i]) != 6 && PED::GET_PED_TYPE(veh_agressive[i]) != 27 && 
 				PED::GET_PED_TYPE(veh_agressive[i]) != 29 && veh_agressive[i] != VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh_me, 0) && veh_agressive[i] != VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh_me, 1) && 
-				veh_agressive[i] != VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh_me, 2)) {
+				veh_agressive[i] != VEHICLE::GET_PED_IN_VEHICLE_SEAT(veh_me, 2) && PED::GET_RELATIONSHIP_BETWEEN_PEDS(playerPed, veh_agressive[i]) != 0 && PED::GET_RELATIONSHIP_BETWEEN_PEDS(veh_agressive[i], playerPed) != 0 &&
+				PED::GET_RELATIONSHIP_BETWEEN_PEDS(playerPed, veh_agressive[i]) != 1 && PED::GET_RELATIONSHIP_BETWEEN_PEDS(veh_agressive[i], playerPed) != 1 &&
+				PED::GET_RELATIONSHIP_BETWEEN_PEDS(playerPed, veh_agressive[i]) != 2 && PED::GET_RELATIONSHIP_BETWEEN_PEDS(veh_agressive[i], playerPed) != 2) {
 				
 				// vigilante citizens
 				if (featureLawAbidingCitizens && GAMEPLAY::GET_MISSION_FLAG() == 0 && in_prison == false) {
