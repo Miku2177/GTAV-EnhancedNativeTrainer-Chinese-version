@@ -84,7 +84,7 @@ const std::vector<std::string> MISC_FILTERS_VALUES{	"DEFAULT", "AmbientPUSH", "B
 const std::vector<std::string> MISC_TRAINERCONTROL_CAPTIONS{ "On Release", "On Press" };
 const int MISC_TRAINERCONTROL_VALUES[] = { 0, 1 };
 extern int TrainerControlIndex;
-extern bool TrainerControlChanged;
+//extern bool TrainerControlChanged;
 
 extern const Hash PLAYER_ZERO;
 extern const Hash PLAYER_ONE;
@@ -97,7 +97,7 @@ extern const Hash SP2_TOTAL_CASH;
 const std::vector<std::string> MISC_DEF_MENUTAB_CAPTIONS{ "OFF", "Map", "Brief", "Friends", "Gallery", "Game", "Settings", "Stats", "Store", "Online" };
 const int MISC_DEF_MANUTAB_VALUES[] = { -2, -1, 1, 2, 3, 5, 6, 10, 18, 42 };
 extern int DefMenuTabIndex;
-extern bool DefMenuTabChanged;
+//extern bool DefMenuTabChanged;
 
 const std::vector<std::string> MISC_PHONE_FREESECONDS_CAPTIONS{ "0", "3", "5", "10", "15" };
 const int MISC_PHONE_FREESECONDS_VALUES[] = { 0, 3, 5, 10, 15 };

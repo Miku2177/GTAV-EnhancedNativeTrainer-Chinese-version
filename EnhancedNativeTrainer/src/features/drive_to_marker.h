@@ -1,10 +1,14 @@
 #pragma once
 
 extern Blip myChauffeurBlip;
-extern bool marker_been_set, blipDriveFound;
+extern bool marker_been_set; 
+extern bool blipDriveFound;
 extern float planecurrspeed;
-extern bool landing, landing_gear_off;
-extern bool blipFound, reverse_check, altitude_reached;
+extern bool landing;
+//extern bool landing_gear_off;
+//extern bool blipFound; 
+//extern bool reverse_check; 
+extern bool altitude_reached;
 extern Ped driver_to_marker_pilot;
 extern Vehicle curr_veh;
 extern bool featureLandAtDestination;

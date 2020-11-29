@@ -240,7 +240,7 @@ extern int activeLineIndexPowerPunchWeapons;
 extern const std::vector<std::string> WEAPONS_POWERPUNCH_CAPTIONS;
 extern const int WEAPONS_POWERPUNCH_VALUES[];
 extern int PowerPunchIndex;
-extern bool PowerPunchChanged;
+//extern bool PowerPunchChanged;
 extern bool featurePunchFists;
 extern bool featurePunchMeleeWeapons;
 extern bool featurePunchFireWeapons;

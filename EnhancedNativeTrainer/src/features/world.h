@@ -97,7 +97,7 @@ extern bool featureBusLight;
 //extern const std::vector<std::string> WORLD_GRAVITY_LEVEL_CAPTIONS;
 //extern const int WORLD_GRAVITY_LEVEL_VALUES[];
 extern int featureGravityLevelIndex;
-extern bool featureGravityLevelChanged;
+//extern bool featureGravityLevelChanged;
 
 const std::vector<std::string> WORLD_GRAVITY_LEVEL_CAPTIONS{ "Earth", "Moon", "Pluto", "Near Zero" };
 const int WORLD_GRAVITY_LEVEL_VALUES[] = { 0, 1, 2, 3 };
