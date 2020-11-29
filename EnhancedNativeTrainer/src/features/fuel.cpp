@@ -85,19 +85,19 @@ int Random1Index = 1;
 bool Random1Changed = true;
 int Random2Index = 1;
 bool Random2Changed = true;
-int BarPositionIndex = 0;
+int BarPositionIndexN = 0;
 bool BarPositionChanged = true;
-int FuelColours_R_Index = 26;
+int FuelColours_R_IndexN = 14;
 bool FuelColours_R_Changed = true;
-int FuelColours_G_Index = 26;
+int FuelColours_G_IndexN = 9;
 bool FuelColours_G_Changed = true;
-int FuelColours_B_Index = 0;
+int FuelColours_B_IndexN = 6;
 bool FuelColours_B_Changed = true;
 int FuelBlipsIndex = 0;
 bool FuelBlipsChanged = true;
 int IdleConsumptionIndex = 7;
 bool IdleConsumptionChanged = true;
-int FuelBackground_Opacity_Index = 5;
+int FuelBackground_Opacity_IndexN = 3;
 bool FuelBackgound_Opacity_Changed = true;
 
 // THE ORIGINAL CODE IS BY IKT
@@ -190,47 +190,47 @@ void fuel()
 		int underbar_b = -1;
 		int fuelbar_edge_opacity = 20;
 
-		int bar_colour_r = FUEL_COLOURS_R_VALUES[FuelColours_R_Index];
-		int bar_colour_g = FUEL_COLOURS_R_VALUES[FuelColours_G_Index];
-		int bar_colour_b = FUEL_COLOURS_R_VALUES[FuelColours_B_Index];
+		int bar_colour_r = FUEL_COLOURS_R_VALUES[FuelColours_R_IndexN];
+		int bar_colour_g = FUEL_COLOURS_R_VALUES[FuelColours_G_IndexN];
+		int bar_colour_b = FUEL_COLOURS_R_VALUES[FuelColours_B_IndexN];
 
-		if (VEH_FUELRANDOM2_VALUES[Random2Index] >= VEH_FUELRANDOM1_VALUES[Random1Index]) {
-			randomize = (rand() % VEH_FUELRANDOM2_VALUES[Random2Index] + VEH_FUELRANDOM1_VALUES[Random1Index]); // UP MARGIN + DOWN MARGIN
+		if (VEH_FUELRANDOM_VALUES[Random2Index] >= VEH_FUELRANDOM_VALUES[Random1Index]) {
+			randomize = (rand() % VEH_FUELRANDOM_VALUES[Random2Index] + VEH_FUELRANDOM_VALUES[Random1Index]); // UP MARGIN + DOWN MARGIN
 		}
 		else {
-			int temp_rand = VEH_FUELRANDOM1_VALUES[Random1Index];
-			randomize = (rand() % temp_rand + VEH_FUELRANDOM1_VALUES[Random1Index]); // UP MARGIN + DOWN MARGIN
+			int temp_rand = VEH_FUELRANDOM_VALUES[Random1Index];
+			randomize = (rand() % temp_rand + VEH_FUELRANDOM_VALUES[Random1Index]); // UP MARGIN + DOWN MARGIN
 		}
 
-		if (VEH_FUELBARPOSITION_VALUES[BarPositionIndex] == 1) {
+		if (WORLD_GRAVITY_LEVEL_VALUES[BarPositionIndexN] == 0) {
 			fuel_bar_x = 0.015;
 			fuel_bar_y = 0.990;
 			fuel_bar_h = 0.009;
 			fuel_amount = 0.14;
 		}
 
-		if (VEH_FUELBARPOSITION_VALUES[BarPositionIndex] == 2) {
+		if (WORLD_GRAVITY_LEVEL_VALUES[BarPositionIndexN] == 1) {
 			fuel_bar_x = 0.015;
 			fuel_bar_y = 0.8;
 			fuel_bar_h = 0.009;
 			fuel_amount = 0.14;
 		}
 
-		if (VEH_FUELBARPOSITION_VALUES[BarPositionIndex] == 3) {
+		if (WORLD_GRAVITY_LEVEL_VALUES[BarPositionIndexN] == 2) {
 			fuel_bar_x = 0.010;
 			fuel_bar_y = 0.82;
 			fuel_bar_h = 0.005;
 			fuel_amount = 0.16;
 		}
 
-		if (VEH_FUELBARPOSITION_VALUES[BarPositionIndex] == 4) {
+		if (WORLD_GRAVITY_LEVEL_VALUES[BarPositionIndexN] == 3) {
 			fuel_bar_x = 0.162;
 			fuel_bar_y = 0.82;
 			fuel_bar_h = 0.005;
 			fuel_amount = 0.16;
 		}
 
-		if (FUEL_COLOURS_R_VALUES[FuelBackground_Opacity_Index] < 2) fuelbar_edge_opacity = 0;
+		if (FUEL_COLOURS_R_VALUES[FuelBackground_Opacity_IndexN] < 2) fuelbar_edge_opacity = 0;
 
 		if (IsKeyDown(KeyConfig::KEY_MENU_LEFT) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, INPUT_FRONTEND_LEFT) || IsKeyDown(KeyConfig::KEY_MENU_RIGHT) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, INPUT_FRONTEND_RIGHT)) {
 			if (!BLIPTABLE.empty()) {
@@ -244,7 +244,7 @@ void fuel()
 		}
 
 		// BLIPS EVERYWHERE
-		if (VEH_FUELBLIPS_VALUES[FuelBlipsIndex] > 0 && VEH_FUELBLIPS_VALUES[FuelBlipsIndex] < 2 && show_blips) {
+		if (WORLD_GRAVITY_LEVEL_VALUES[FuelBlipsIndex] > 0 && WORLD_GRAVITY_LEVEL_VALUES[FuelBlipsIndex] < 2 && show_blips) {
 			// show blips
 			for (int i = 0; i < GAS_X.size(); i++) {
 				blip[i] = UI::ADD_BLIP_FOR_COORD(GAS_X[i], GAS_Y[i], GAS_Z[i]);
@@ -257,7 +257,7 @@ void fuel()
 		}
 
 		// BLIPS ON RADAR ONLY
-		if (VEH_FUELBLIPS_VALUES[FuelBlipsIndex] > 1 && VEH_FUELBLIPS_VALUES[FuelBlipsIndex] < 3 && show_blips) {
+		if (WORLD_GRAVITY_LEVEL_VALUES[FuelBlipsIndex] > 1 && WORLD_GRAVITY_LEVEL_VALUES[FuelBlipsIndex] < 3 && show_blips) {
 			// show blips
 			for (int i = 0; i < GAS_X.size(); i++) {
 				blip[i] = UI::ADD_BLIP_FOR_COORD(GAS_X[i], GAS_Y[i], GAS_Z[i]);
@@ -268,7 +268,7 @@ void fuel()
 			}
 			show_blips = false;
 		}
-		if (VEH_FUELBLIPS_VALUES[FuelBlipsIndex] > 1 && VEH_FUELBLIPS_VALUES[FuelBlipsIndex] < 3) {
+		if (WORLD_GRAVITY_LEVEL_VALUES[FuelBlipsIndex] > 1 && WORLD_GRAVITY_LEVEL_VALUES[FuelBlipsIndex] < 3) {
 			if ((IsKeyDown(VK_ESCAPE) || CONTROLS::IS_CONTROL_PRESSED(2, 156)) && !BLIPTABLE.empty()) {
 				for (int i = 0; i < BLIPTABLE.size(); i++) {
 					if (UI::DOES_BLIP_EXIST(BLIPTABLE[i])) {
@@ -280,7 +280,7 @@ void fuel()
 		}
 
 		// BLIPS IF PHONE IN HAND ONLY
-		if (VEH_FUELBLIPS_VALUES[FuelBlipsIndex] > 2) {
+		if (WORLD_GRAVITY_LEVEL_VALUES[FuelBlipsIndex] > 2) {
 			// show blips
 			show_blips = true;
 			if (PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed) && phone_blips == false) {
@@ -305,7 +305,7 @@ void fuel()
 		}
 
 		// BLIPS OFF
-		if (VEH_FUELBLIPS_VALUES[FuelBlipsIndex] < 1 && show_blips == true) {
+		if (WORLD_GRAVITY_LEVEL_VALUES[FuelBlipsIndex] < 1 && show_blips == true) {
 			// hide blips
 			if (!BLIPTABLE.empty()) {
 				for (int i = 0; i < BLIPTABLE.size(); i++) {
@@ -567,9 +567,9 @@ void fuel()
 							(VEHICLE::IS_THIS_MODEL_A_PLANE(ENTITY::GET_ENTITY_MODEL(cur_v)) && CAM::_0xEE778F8C7E1142E2(4) != 4) || 
 							(ENTITY::GET_ENTITY_MODEL(cur_v) == GAMEPLAY::GET_HASH_KEY("SUBMERSIBLE") || ENTITY::GET_ENTITY_MODEL(cur_v) == GAMEPLAY::GET_HASH_KEY("SUBMERSIBLE2")) && CAM::_0xEE778F8C7E1142E2(5) != 4) ||
 							(VEHICLE::IS_THIS_MODEL_A_HELI(ENTITY::GET_ENTITY_MODEL(cur_v)) && CAM::_0xEE778F8C7E1142E2(6) != 4)))) {
-						if (!FUEL.empty() && VEH_FUELBARPOSITION_VALUES[BarPositionIndex] < 3) {
+						if (!FUEL.empty() && WORLD_GRAVITY_LEVEL_VALUES[BarPositionIndexN] < 2) {
 							GRAPHICS::DRAW_RECT(fuel_bar_x + 0.07, fuel_bar_y, fuel_amount, fuel_bar_h + 0.01, 0, 0, 0, fuelbar_edge_opacity);
-							GRAPHICS::DRAW_RECT(fuel_bar_x + 0.07, fuel_bar_y, fuel_amount, fuel_bar_h, underbar_r, underbar_g, underbar_b, FUEL_COLOURS_R_VALUES[FuelBackground_Opacity_Index]);
+							GRAPHICS::DRAW_RECT(fuel_bar_x + 0.07, fuel_bar_y, fuel_amount, fuel_bar_h, underbar_r, underbar_g, underbar_b, FUEL_COLOURS_R_VALUES[FuelBackground_Opacity_IndexN]);
 
 							if (FUEL[0] < 0.015) {
 								GRAPHICS::DRAW_RECT(fuel_bar_x + (FUEL[0] / 2), fuel_bar_y, FUEL[0], fuel_bar_h, 220, 20, 20, 255);
@@ -582,7 +582,7 @@ void fuel()
 						}
 						else if (!FUEL.empty()) {
 							GRAPHICS::DRAW_RECT(fuel_bar_x, fuel_bar_y + 0.07, 0.009, fuel_amount, 0, 0, 0, fuelbar_edge_opacity);
-							GRAPHICS::DRAW_RECT(fuel_bar_x, fuel_bar_y + 0.07, 0.0055, fuel_amount, underbar_r, underbar_g, underbar_b, FUEL_COLOURS_R_VALUES[FuelBackground_Opacity_Index]);
+							GRAPHICS::DRAW_RECT(fuel_bar_x, fuel_bar_y + 0.07, 0.0055, fuel_amount, underbar_r, underbar_g, underbar_b, FUEL_COLOURS_R_VALUES[FuelBackground_Opacity_IndexN]);
 
 							if (FUEL[0] < 0.015) {
 								GRAPHICS::DRAW_RECT(fuel_bar_x, (fuel_bar_y + fuel_amount - 0.01) - (FUEL[0] / 2), fuel_bar_h, FUEL[0], 220, 20, 20, 255);

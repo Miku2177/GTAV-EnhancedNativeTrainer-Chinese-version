@@ -745,9 +745,9 @@ static std::vector<std::string> MENU_LOCATION_CATEGORIES{ "Safehouses", "Landmar
 static std::vector<tele_location> VOV_LOCATIONS[] = { LOCATIONS_SAFE, LOCATIONS_LANDMARKS, LOCATIONS_HIGH, LOCATIONS_UNDERWATER, LOCATIONS_INTERIORS, LOCATIONS_REQSCEN, LOCATIONS_ONLINE, LOCATIONS_ACTORS, LOCATIONS_COLLECTIBLES, LOCATIONS_STUNTS/*, LOCATIONS_BROKEN, LOCATIONS_JELLMAN*/ };
 
 //3D Marker Symbol
-const std::vector<std::string> TEL_3DMARKER_CAPTIONS{ "0", "1", "2", "3", "4", "5", "6", "7", "8" };
-const int TEL_3DMARKER_VALUES[] = { 0, 1, 2, 3, 4, 5, 6, 21, 22 };
-int Tel3dmarkerIndex = 2;
+const std::vector<std::string> TEL_3DMARKER_CAPTIONS{ "1", "2", "3", "4", "5" }; // "0", // "4", "6", , "8"
+const int TEL_3DMARKER_VALUES[] = { 1, 2, 3, 5, 21 }; // 0, 4, 6, , 22
+int Tel3dmarkerIndexN = 1;
 bool Tel3dmarker_Changed = true;
 
 //3D Marker Max Size
@@ -757,9 +757,9 @@ int Tel3dmarker_msize_Index = 2;
 bool Tel3dmarker_msize_Changed = true;
 
 //Position In The Sky
-const std::vector<std::string> TEL_3DMARKER_SKYPOS_CAPTIONS{ "1000m", "1500m", "2000m", "2500m" };
-const int TEL_3DMARKER_SKYPOS_VALUES[] = { 1000, 1500, 2000, 2500 };
-int Tel3dmarker_skypos_Index = 0;
+//const std::vector<std::string> TEL_3DMARKER_SKYPOS_CAPTIONS{ "1000m", "1500m", "2000m", "2500m" };
+//const int TEL_3DMARKER_SKYPOS_VALUES[] = { 1000, 1500, 2000, 2500 };
+int Tel3dmarker_skypos_IndexN = 7;
 bool Tel3dmarker_skypos_Changed = true;
 
 //Marker Type
@@ -899,11 +899,11 @@ void add_coords_generic_settings(std::vector<StringPairSettingDBRow>* results)
 {
 	results->push_back(StringPairSettingDBRow{"lastJumpSpawn", lastJumpSpawn});
 	results->push_back(StringPairSettingDBRow{"TelChauffeurIndex", std::to_string(TelChauffeurIndex)});
-	results->push_back(StringPairSettingDBRow{"Tel3dmarkerIndex", std::to_string(Tel3dmarkerIndex)});
+	results->push_back(StringPairSettingDBRow{"Tel3dmarkerIndexN", std::to_string(Tel3dmarkerIndexN)});
 	results->push_back(StringPairSettingDBRow{"Tel3dmarker_msize_Index", std::to_string(Tel3dmarker_msize_Index)});
 	results->push_back(StringPairSettingDBRow{"Tel3dmarker_martype_Index", std::to_string(Tel3dmarker_martype_Index)});
-	results->push_back(StringPairSettingDBRow{"Tel3dmarker_skypos_Index", std::to_string(Tel3dmarker_skypos_Index)});
-	results->push_back(StringPairSettingDBRow{"TelChauffeur_speed_Index", std::to_string(TelChauffeur_speed_Index)});
+	results->push_back(StringPairSettingDBRow{"Tel3dmarker_skypos_IndexN", std::to_string(Tel3dmarker_skypos_IndexN)});
+	results->push_back(StringPairSettingDBRow{"TelChauffeur_speed_IndexN", std::to_string(TelChauffeur_speed_IndexN)});
 	results->push_back(StringPairSettingDBRow{"TelChauffeur_altitude_Index", std::to_string(TelChauffeur_altitude_Index)});
 	results->push_back(StringPairSettingDBRow{"TelChauffeur_drivingstyles_Index", std::to_string(TelChauffeur_drivingstyles_Index)});
 }
@@ -914,7 +914,7 @@ void onchange_tel_chauffeur_index(int value, SelectFromListMenuItem *source){
 }
 
 void onchange_tel_3dmarker_index(int value, SelectFromListMenuItem *source){
-	Tel3dmarkerIndex = value;
+	Tel3dmarkerIndexN = value;
 	Tel3dmarker_Changed = true;
 }
 
@@ -929,12 +929,12 @@ void onchange_tel_3dmarker_martype_index(int value, SelectFromListMenuItem *sour
 }
 
 void onchange_tel_3dmarker_skypos_index(int value, SelectFromListMenuItem *source){
-	Tel3dmarker_skypos_Index = value;
+	Tel3dmarker_skypos_IndexN = value;
 	Tel3dmarker_skypos_Changed = true;
 }
 
 void onchange_tel_chauffeur_speed_index(int value, SelectFromListMenuItem *source){
-	TelChauffeur_speed_Index = value;
+	TelChauffeur_speed_IndexN = value;
 	TelChauffeur_speed_Changed = true;
 }
 
@@ -954,8 +954,8 @@ void handle_generic_settings_teleportation(std::vector<StringPairSettingDBRow>* 
 		if (setting.name.compare("TelChauffeurIndex") == 0){
 			TelChauffeurIndex = stoi(setting.value);
 		}
-		else if(setting.name.compare("Tel3dmarkerIndex") == 0){
-			Tel3dmarkerIndex = stoi(setting.value);
+		else if(setting.name.compare("Tel3dmarkerIndexN") == 0){
+			Tel3dmarkerIndexN = stoi(setting.value);
 		}
 		else if (setting.name.compare("Tel3dmarker_msize_Index") == 0){
 			Tel3dmarker_msize_Index = stoi(setting.value);
@@ -963,11 +963,11 @@ void handle_generic_settings_teleportation(std::vector<StringPairSettingDBRow>* 
 		else if (setting.name.compare("Tel3dmarker_martype_Index") == 0){
 			Tel3dmarker_martype_Index = stoi(setting.value);
 		}
-		else if (setting.name.compare("Tel3dmarker_skypos_Index") == 0){
-			Tel3dmarker_skypos_Index = stoi(setting.value);
+		else if (setting.name.compare("Tel3dmarker_skypos_IndexN") == 0){
+			Tel3dmarker_skypos_IndexN = stoi(setting.value);
 		}
-		else if (setting.name.compare("TelChauffeur_speed_Index") == 0){
-			TelChauffeur_speed_Index = stoi(setting.value);
+		else if (setting.name.compare("TelChauffeur_speed_IndexN") == 0){
+			TelChauffeur_speed_IndexN = stoi(setting.value);
 		}
 		else if (setting.name.compare("TelChauffeur_altitude_Index") == 0){
 			TelChauffeur_altitude_Index = stoi(setting.value);
@@ -1060,7 +1060,7 @@ void set_3d_marker(){
 	listItem = new SelectFromListMenuItem(TEL_3DMARKER_CAPTIONS, onchange_tel_3dmarker_index);
 	listItem->wrap = false;
 	listItem->caption = "Marker Symbol";
-	listItem->value = Tel3dmarkerIndex;
+	listItem->value = Tel3dmarkerIndexN;
 	menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(TEL_3DMARKER_MSIZE_CAPTIONS, onchange_tel_3dmarker_msize_index);
@@ -1069,10 +1069,10 @@ void set_3d_marker(){
 	listItem->value = Tel3dmarker_msize_Index;
 	menuItems.push_back(listItem);
 
-	listItem = new SelectFromListMenuItem(TEL_3DMARKER_SKYPOS_CAPTIONS, onchange_tel_3dmarker_skypos_index);
+	listItem = new SelectFromListMenuItem(TEL_CHAUFFEUR_ALTITUDE_CAPTIONS, onchange_tel_3dmarker_skypos_index);
 	listItem->wrap = false;
 	listItem->caption = "Marker Symbol Altitude";
-	listItem->value = Tel3dmarker_skypos_Index;
+	listItem->value = Tel3dmarker_skypos_IndexN;
 	menuItems.push_back(listItem);
 
 	draw_generic_menu<int>(menuItems, &activeLineIndex3dmarker, caption, onconfirm_3dmarker_menu, NULL, NULL);
@@ -1115,7 +1115,7 @@ void getTelChauffeurIndex(){
 	listItem = new SelectFromListMenuItem(TEL_CHAUFFEUR_SPEED_CAPTIONS, onchange_tel_chauffeur_speed_index);
 	listItem->wrap = false;
 	listItem->caption = "Max Speed (MPH):";
-	listItem->value = TelChauffeur_speed_Index;
+	listItem->value = TelChauffeur_speed_IndexN;
 	menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(TEL_CHAUFFEUR_ALTITUDE_CAPTIONS, onchange_tel_chauffeur_altitude_index);
@@ -1461,11 +1461,11 @@ void reset_teleporter_globals()
 
 	lastChosenCategory = 0;
 	TelChauffeurIndex = 3;
-	Tel3dmarkerIndex = 2;
+	Tel3dmarkerIndexN = 1;
 	Tel3dmarker_msize_Index = 2;
 	Tel3dmarker_martype_Index = 0;
-	Tel3dmarker_skypos_Index = 0;
-	TelChauffeur_speed_Index = 2;
+	Tel3dmarker_skypos_IndexN = 7;
+	TelChauffeur_speed_IndexN = 1;
 	TelChauffeur_altitude_Index = 5;
 	TelChauffeur_drivingstyles_Index = 0;
 
@@ -1594,7 +1594,7 @@ void update_teleport_features(){
 		if (blip_3d_found == true) {
 			coords_3Dblip_old.x = coords_3Dblip.x;
 			coords_3Dblip_old.y = coords_3Dblip.y;
-			marker_3d_height = TEL_3DMARKER_SKYPOS_VALUES[Tel3dmarker_skypos_Index];
+			marker_3d_height = TEL_CHAUFFEUR_ALTITUDE_VALUES[Tel3dmarker_skypos_IndexN];
 			marker_3d_size = TEL_3DMARKER_MSIZE_VALUES[Tel3dmarker_msize_Index];
 			blip_3d_found = false;
 			blip_3d_exists_already = true;
@@ -1606,8 +1606,8 @@ void update_teleport_features(){
 		if (dist_diff_y < 0) dist_diff_y = (dist_diff_y * -1);
 		char* temp_zone_name = ZONE::GET_NAME_OF_ZONE(coords_3Dblip.x, coords_3Dblip.y, coords_3Dblip.z);
 		float dist_diff = SYSTEM::VDIST(playerPosition.x, playerPosition.y, playerPosition.z, coords_3Dblip.x, coords_3Dblip.y, coords_3Dblip.z);
-		if (dist_diff > TEL_3DMARKER_SKYPOS_VALUES[Tel3dmarker_skypos_Index]) marker_3d_height = TEL_3DMARKER_SKYPOS_VALUES[Tel3dmarker_skypos_Index];
-		if (dist_diff < TEL_3DMARKER_SKYPOS_VALUES[Tel3dmarker_skypos_Index] && strcmp(temp_zone_name, "MTCHIL") != 0 && strcmp(temp_zone_name, "MTGORDO") != 0 && strcmp(temp_zone_name, "MTJOSE") != 0 &&
+		if (dist_diff > TEL_CHAUFFEUR_ALTITUDE_VALUES[Tel3dmarker_skypos_IndexN]) marker_3d_height = TEL_CHAUFFEUR_ALTITUDE_VALUES[Tel3dmarker_skypos_IndexN];
+		if (dist_diff < TEL_CHAUFFEUR_ALTITUDE_VALUES[Tel3dmarker_skypos_IndexN] && strcmp(temp_zone_name, "MTCHIL") != 0 && strcmp(temp_zone_name, "MTGORDO") != 0 && strcmp(temp_zone_name, "MTJOSE") != 0 &&
 			strcmp(temp_zone_name, "SANCHIA") != 0 && strcmp(temp_zone_name, "TATAMO") != 0 && strcmp(temp_zone_name, "CHIL") != 0 && strcmp(temp_zone_name, "BHAMCA") != 0)
 			marker_3d_height = dist_diff - (dist_diff * 0.5);
 		if (marker_3d_height > TEL_3DMARKER_MSIZE_VALUES[Tel3dmarker_msize_Index] - 1) marker_3d_size = TEL_3DMARKER_MSIZE_VALUES[Tel3dmarker_msize_Index];
@@ -1628,13 +1628,13 @@ void update_teleport_features(){
 			}
 		}
 
-		if (TEL_3DMARKER_MARTYPE_VALUES[Tel3dmarker_martype_Index] == 1 && close_distance == true && blip_3d_exists_already == true) GRAPHICS::DRAW_MARKER(TEL_3DMARKER_VALUES[Tel3dmarkerIndex]/*int type*/, coords_3Dblip.x/*float posX*/, 
+		if (TEL_3DMARKER_MARTYPE_VALUES[Tel3dmarker_martype_Index] == 1 && close_distance == true && blip_3d_exists_already == true) GRAPHICS::DRAW_MARKER(TEL_3DMARKER_VALUES[Tel3dmarkerIndexN]/*int type*/, coords_3Dblip.x/*float posX*/,
 			coords_3Dblip.y/*float posY*/, temp_coords_3Dblip.z + 5/*float posZ*/, 20/*float dirX*/, 20/*float dirY*/, 20/*float dirZ*/, 90/*float rotX*/, 90/*float rotY*/, 90/*float rotZ*/, 10/*float scaleX*/, 10/*float scaleY*/, 10/*float scaleZ*/,
 			col2_R/*int red*/, col2_G/*int green*/, col2_B/*int blue*/, 90/*int alpha*/,
 			50/*BOOL bobUpAndDown*/, 1/*BOOL faceCamera*/, 1/*int p19*/, 1/*BOOL rotate*/, 0/*char* textureDict*/, 0/*char* textureName*/, 0/*BOOL drawOnEnts*/); // MARKER3D_ALPHA_VALUES[Marker3d_Alpha_Index]
 
 		if ((dist_diff_x > 100 || dist_diff_y > 100) && close_distance == false) {
-			if (TEL_3DMARKER_MARTYPE_VALUES[Tel3dmarker_martype_Index] == 1 && blip_3d_exists_already == true) GRAPHICS::DRAW_MARKER(TEL_3DMARKER_VALUES[Tel3dmarkerIndex]/*int type*/, coords_3Dblip.x/*float posX*/, coords_3Dblip.y/*float posY*/, 
+			if (TEL_3DMARKER_MARTYPE_VALUES[Tel3dmarker_martype_Index] == 1 && blip_3d_exists_already == true) GRAPHICS::DRAW_MARKER(TEL_3DMARKER_VALUES[Tel3dmarkerIndexN]/*int type*/, coords_3Dblip.x/*float posX*/, coords_3Dblip.y/*float posY*/,
 				marker_3d_height/*float posZ*/,	20/*float dirX*/, 20/*float dirY*/, 20/*float dirZ*/, 90/*float rotX*/, 90/*float rotY*/, 90/*float rotZ*/, marker_3d_size/*float scaleX*/, marker_3d_size/*float scaleY*/, marker_3d_size/*float scaleZ*/,
 				col2_R/*int red*/, col2_G/*int green*/, col2_B/*int blue*/, 90/*int alpha*/,
 				50/*BOOL bobUpAndDown*/, 1/*BOOL faceCamera*/, 1/*int p19*/, 1/*BOOL rotate*/, 0/*char* textureDict*/, 0/*char* textureName*/, 0/*BOOL drawOnEnts*/);

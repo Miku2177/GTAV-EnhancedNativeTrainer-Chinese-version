@@ -204,8 +204,6 @@ int current_player_stats = 0;
 bool current_player_stats_Changed = true;
 
 // NPC Ragdoll If Shot
-const std::vector<std::string> NPC_RAGDOLL_CAPTIONS{ "OFF", "Never", "Always" };
-const int NPC_RAGDOLL_VALUES[] = { 0, 1, 2 };
 int current_npc_ragdoll = 0;
 bool current_npc_ragdoll_Changed = true;
 
@@ -892,7 +890,7 @@ void update_features(){
 
 	// Disable Ignition
 	if ((!featureDisableIgnition || (featureDisableIgnition && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0))) && veh_engine_t == true) {
-		if (LIMP_IF_INJURED_VALUES[EngineRunningIndex] == 0) VEHICLE::SET_VEHICLE_ENGINE_ON(veh_engine, false, true, false);
+		if (NPC_RAGDOLL_VALUES[EngineRunningIndex] == 0) VEHICLE::SET_VEHICLE_ENGINE_ON(veh_engine, false, true, false);
 		veh_engine_t = false;
 	}
 	if (featureDisableIgnition) {
@@ -1143,10 +1141,10 @@ void update_features(){
 	if (injured_m == -2) injured_m = current_limp_if_injured;
 	if (current_limp_if_injured == 0 && injured_m != 0) injured_m = current_limp_if_injured;
 
-	if ((LIMP_IF_INJURED_VALUES[current_limp_if_injured] > 0 && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) || VEH_TURN_SIGNALS_ACCELERATION_VALUES[feature_shake_injured] > 0) {
+	if ((NPC_RAGDOLL_VALUES[current_limp_if_injured] > 0 && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) || VEH_TURN_SIGNALS_ACCELERATION_VALUES[feature_shake_injured] > 0) {
 		float curr_health = ENTITY::GET_ENTITY_HEALTH(playerPed) - 100;
 		float curr_set_h = PLAYER_HEALTH_VALUES[current_player_health] - 100;
-		if (LIMP_IF_INJURED_VALUES[current_limp_if_injured] > 0 && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) {
+		if (NPC_RAGDOLL_VALUES[current_limp_if_injured] > 0 && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) {
 			if (injured_m != current_limp_if_injured) {
 				if (current_limp_if_injured == 1) set_status_text("Walking Style 1");
 					if (current_limp_if_injured == 2) set_status_text("Walking Style 2");
@@ -1154,7 +1152,7 @@ void update_features(){
 					enable_camera_injured = false;
 			}
 
-			if (LIMP_IF_INJURED_VALUES[current_limp_if_injured] == 1 && !STREAMING::HAS_ANIM_DICT_LOADED("move_injured_generic")) STREAMING::REQUEST_ANIM_DICT("move_injured_generic"); // move_m@injured
+			if (NPC_RAGDOLL_VALUES[current_limp_if_injured] == 1 && !STREAMING::HAS_ANIM_DICT_LOADED("move_injured_generic")) STREAMING::REQUEST_ANIM_DICT("move_injured_generic"); // move_m@injured
 				Vector3 coords_calf_l = PED::GET_PED_BONE_COORDS(playerPed, 63931, 0, 0, 0); // left calf
 				Vector3 coords_calf_r = PED::GET_PED_BONE_COORDS(playerPed, 36864, 0, 0, 0); // right calf
 			Vector3 coords_pelvis = PED::GET_PED_BONE_COORDS(playerPed, 11816, 0, 0, 0); // pelvis
@@ -1162,9 +1160,9 @@ void update_features(){
 				GAMEPLAY::HAS_BULLET_IMPACTED_IN_AREA(coords_calf_r.x, coords_calf_r.y, coords_calf_r.z, 0.4, 0, 0) || GAMEPLAY::HAS_BULLET_IMPACTED_IN_AREA(coords_pelvis.x, coords_pelvis.y, coords_pelvis.z, 0.2, 0, 0))) {
 				been_injured = true;
 			}
-			if (LIMP_IF_INJURED_VALUES[current_limp_if_injured] == 1 && ((!featurePlayerLife && curr_health < 80) || (featurePlayerLife && curr_health < ((80.0 / 100.0) * curr_set_h)) ||
+			if (NPC_RAGDOLL_VALUES[current_limp_if_injured] == 1 && ((!featurePlayerLife && curr_health < 80) || (featurePlayerLife && curr_health < ((80.0 / 100.0) * curr_set_h)) ||
 				been_injured == true)) PED::SET_PED_MOVEMENT_CLIPSET(playerPed, "move_injured_generic", 1.0f); // @walk // 90
-			if (LIMP_IF_INJURED_VALUES[current_limp_if_injured] == 2 && ((!featurePlayerLife && curr_health < 80) || (featurePlayerLife && curr_health < ((80.0 / 100.0) * curr_set_h)) || been_injured == true) && injured_drunk == false) {
+			if (NPC_RAGDOLL_VALUES[current_limp_if_injured] == 2 && ((!featurePlayerLife && curr_health < 80) || (featurePlayerLife && curr_health < ((80.0 / 100.0) * curr_set_h)) || been_injured == true) && injured_drunk == false) {
 				PED::RESET_PED_MOVEMENT_CLIPSET(playerPed, 1.0f);
 				STREAMING::REQUEST_ANIM_SET("move_m@drunk@verydrunk");
 				while (!STREAMING::HAS_ANIM_SET_LOADED("move_m@drunk@verydrunk")) WAIT(1);
@@ -1175,7 +1173,7 @@ void update_features(){
 				(featurePlayerLife && curr_health < ((30.0 / 100.0) * curr_set_h))) && !ENTITY::IS_ENTITY_DEAD(playerPed)) CONTROLS::DISABLE_CONTROL_ACTION(2, 22, 1); // jump
 			if ((!featurePlayerLife && curr_health < 50) || (featurePlayerLife && curr_health < ((50.0 / 100.0) * curr_set_h)) || been_injured == true) CONTROLS::DISABLE_CONTROL_ACTION(2, 21, 1); // sprint
 			if ((!featurePlayerLife && curr_health > 79) || (featurePlayerLife && curr_health > ((80.0 / 100.0) * curr_set_h) - 1) || (PLAYER::GET_TIME_SINCE_LAST_DEATH() > 100 && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 5000) ||
-				(PLAYER::GET_TIME_SINCE_LAST_ARREST() > 100 && PLAYER::GET_TIME_SINCE_LAST_ARREST() < 5000) || (injured_drunk == true && LIMP_IF_INJURED_VALUES[current_limp_if_injured] != 2) || player_died == true) {
+				(PLAYER::GET_TIME_SINCE_LAST_ARREST() > 100 && PLAYER::GET_TIME_SINCE_LAST_ARREST() < 5000) || (injured_drunk == true && NPC_RAGDOLL_VALUES[current_limp_if_injured] != 2) || player_died == true) {
 				PED::CLEAR_PED_LAST_DAMAGE_BONE(playerPed);
 				ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(playerPed);
 				been_injured = false;
@@ -1424,7 +1422,7 @@ void update_features(){
 	if (noragdoll_m == -2) noragdoll_m = current_no_ragdoll;
 	if (current_no_ragdoll == 0 && noragdoll_m != 0) noragdoll_m = current_no_ragdoll;
 
-	if (LIMP_IF_INJURED_VALUES[current_no_ragdoll] > 0 && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) {
+	if (NPC_RAGDOLL_VALUES[current_no_ragdoll] > 0 && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) {
 		if (noragdoll_m != current_no_ragdoll) {
 			if (current_no_ragdoll == 1) set_status_text("Falling animation is enabled");
 			if (current_no_ragdoll == 2) set_status_text("Falling animation is disabled");
@@ -1440,10 +1438,10 @@ void update_features(){
 			PED::SET_PED_CONFIG_FLAG(playerPed, 104, true);
 			PED::SET_PED_CONFIG_FLAG(playerPed, 33, false);
 			PED::SET_PED_RAGDOLL_ON_COLLISION(playerPed, false);
-			if (LIMP_IF_INJURED_VALUES[current_no_ragdoll] == 2 && (PED::IS_PED_FALLING(playerPed) || PED::IS_PED_IN_PARACHUTE_FREE_FALL(playerPed))) AI::CLEAR_PED_TASKS_IMMEDIATELY(playerPed);
+			if (NPC_RAGDOLL_VALUES[current_no_ragdoll] == 2 && (PED::IS_PED_FALLING(playerPed) || PED::IS_PED_IN_PARACHUTE_FREE_FALL(playerPed))) AI::CLEAR_PED_TASKS_IMMEDIATELY(playerPed);
 		}
 	}
-	if (LIMP_IF_INJURED_VALUES[current_no_ragdoll] == 0) {
+	if (NPC_RAGDOLL_VALUES[current_no_ragdoll] == 0) {
 		if(bPlayerExists){
 			PED::SET_PED_CAN_RAGDOLL(playerPed, 1);
 			PED::SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(playerPed, 1);
@@ -2001,7 +1999,7 @@ bool process_player_prison_menu(){
 	listItem->value = current_player_escapemoney;
 	menuItems.push_back(listItem);
 
-	listItem = new SelectFromListMenuItem(PLAYER_ESCAPESTARS_CAPTIONS, onchange_player_escapestars_mode);
+	listItem = new SelectFromListMenuItem(VEH_STARSPUNISH_CAPTIONS, onchange_player_escapestars_mode);
 	listItem->wrap = false;
 	listItem->caption = "Number Of Stars After Escaping";
 	listItem->value = current_escape_stars;
@@ -2059,7 +2057,7 @@ bool process_player_forceshield_menu() {
 	listItem = new SelectFromListMenuItem(VEH_MASS_CAPTIONS, onchange_player_forceshield_mode);
 	listItem->wrap = false;
 	listItem->caption = "Player Force Shield";
-	listItem->value = current_player_forceshield;
+	listItem->value = current_player_forceshieldN;
 	menuItems.push_back(listItem);
 
 	toggleItem = new ToggleMenuItem<int>();
@@ -2072,6 +2070,7 @@ bool process_player_forceshield_menu() {
 }
 
 int activeLineIndexPlayer = 0;
+int activeLineIndexReset = 0;
 
 bool onconfirm_player_menu(MenuItem<int> choice){
 	switch(activeLineIndexPlayer){
@@ -2152,17 +2151,19 @@ void process_player_menu(){
 
 // Reset all settings
 bool onconfirm_reset_menu(MenuItem<int> choice){
-	switch (activeLineIndexPlayer){
+	switch (activeLineIndexReset){
 	case 0:
 		menu_beep();
 		set_menu_showing(true);
 		WAIT(200);
 		process_main_menu();
+		activeLineIndexReset = 0;
 		set_menu_showing(false);
 		break;
 	case 1:
 		reset_globals();
 		process_main_menu();
+		activeLineIndexReset = 0;
 		set_menu_showing(false);
 		break;
 	default:
@@ -2182,7 +2183,7 @@ void process_reset_menu(){
 		{ "YES", NULL, NULL, true},
 	};
 	
-	draw_menu_from_struct_def(lines, lineCount, &activeLineIndexPlayer, caption, onconfirm_reset_menu);
+	draw_menu_from_struct_def(lines, lineCount, &activeLineIndexReset, caption, onconfirm_reset_menu);
 }
 
 //==================
@@ -2341,8 +2342,8 @@ void reset_globals(){
 	
 	current_player_health = 6;
 	current_regen_speed = 4;
-	current_player_armor = 6;
-	current_player_stats = 6;
+	current_player_armor = 7;
+	current_player_stats = 0;
 	current_npc_ragdoll = 0;
 	current_limp_if_injured = 0;
 	current_no_ragdoll = 0;
@@ -2357,7 +2358,7 @@ void reset_globals(){
 	current_player_prison = 0;
 	current_player_escapemoney = 4;
 	current_player_discharge = 3;
-	current_escape_stars = 2;
+	current_escape_stars = 3;
 
 	featurePlayerDrunk =
 		featurePlayerInvincible =

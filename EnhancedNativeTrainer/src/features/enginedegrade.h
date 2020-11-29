@@ -5,19 +5,19 @@ extern bool featureEngineHealthBar;
 extern bool featureLimpMode;
 
 // Engine Health Percentage (Min Margin)
-const std::vector<std::string> VEH_ENGINEHEALTH_CAPTIONS{ "OFF", "2", "5", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100" };
-const int VEH_ENGINEHEALTH_VALUES[] = { 0, 2, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
-extern int CarEngineHealthIndex;
+const std::vector<std::string> VEH_ENGINEHEALTH_CAPTIONS{ "OFF", "2", "5", "10", "30", "50", "70", "90", "100" }; // "20", "40", "60", "80", 
+const int VEH_ENGINEHEALTH_VALUES[] = { 0, 2, 5, 10, 30, 50, 70, 90, 100 }; // 20, 40, 60, 80,  
+extern int CarEngineHealthIndexN;
 extern bool CarEngineHealthChanged;
-extern int BikeEngineHealthIndex;
+extern int BikeEngineHealthIndexN;
 extern bool BikeEngineHealthChanged;
-extern int PlaneEngineHealthIndex;
+extern int PlaneEngineHealthIndexN;
 extern bool PlaneEngineHealthChanged;
-extern int HeliEngineHealthIndex;
+extern int HeliEngineHealthIndexN;
 extern bool HeliEngineHealthChanged;
-extern int BoatEngineHealthIndex;
+extern int BoatEngineHealthIndexN;
 extern bool BoatEngineHealthChanged;
-extern int RestorationSpeedIndex;
+extern int RestorationSpeedIndexN;
 extern bool RestorationSpeedChanged;
 
 // Engine Damage Speed (% Per Mile)

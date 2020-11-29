@@ -43,7 +43,7 @@ int temp_dist = -1;
 
 int TelChauffeurIndex = 3;
 bool TelChauffeur_Changed = true;
-int TelChauffeur_speed_Index = 2;
+int TelChauffeur_speed_IndexN = 1;
 bool TelChauffeur_speed_Changed = true;
 int TelChauffeur_altitude_Index = 5;
 bool TelChauffeur_altitude_Changed = true;
@@ -181,11 +181,11 @@ void drive_to_marker()
 		}
 
 		if (!PED::IS_PED_IN_ANY_HELI(playerPed) && !PED::IS_PED_IN_ANY_PLANE(playerPed))
-			AI::TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE(driver_to_marker_pilot, curr_veh, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, TEL_CHAUFFEUR_SPEED_VALUES[TelChauffeur_speed_Index], 
+			AI::TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE(driver_to_marker_pilot, curr_veh, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, TEL_CHAUFFEUR_SPEED_VALUES[TelChauffeur_speed_IndexN],
 				driving_style, 5.0f); // 4 // 156 // 40.0f
 
 		if (PED::IS_PED_IN_ANY_HELI(playerPed))
-			AI::TASK_HELI_MISSION(driver_to_marker_pilot, curr_veh, 0, 0, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, 4, TEL_CHAUFFEUR_SPEED_VALUES[TelChauffeur_speed_Index], -1.0, -1.0, 0, 
+			AI::TASK_HELI_MISSION(driver_to_marker_pilot, curr_veh, 0, 0, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, 4, TEL_CHAUFFEUR_SPEED_VALUES[TelChauffeur_speed_IndexN], -1.0, -1.0, 0,
 				TEL_CHAUFFEUR_ALTITUDE_VALUES[TelChauffeur_altitude_Index], -1.0, 32);
 
 		if (PED::IS_PED_IN_ANY_PLANE(playerPed)) {
@@ -219,16 +219,16 @@ void drive_to_marker()
 			}
 
 			if (altitude_reached == true && dist_to_land_diff > temp_dist - 1 && featureLandAtDestination)
-				AI::TASK_PLANE_MISSION(driver_to_marker_pilot, curr_veh, 0, 0, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, 4, TEL_CHAUFFEUR_SPEED_VALUES[TelChauffeur_speed_Index], 0, 90, 2600, 300);
+				AI::TASK_PLANE_MISSION(driver_to_marker_pilot, curr_veh, 0, 0, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, 4, TEL_CHAUFFEUR_SPEED_VALUES[TelChauffeur_speed_IndexN], 0, 90, 2600, 300);
 
 			if (altitude_reached == true && !featureLandAtDestination)
-				AI::TASK_PLANE_MISSION(driver_to_marker_pilot, curr_veh, 0, 0, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, 4, TEL_CHAUFFEUR_SPEED_VALUES[TelChauffeur_speed_Index], 0, 90, 0, 
+				AI::TASK_PLANE_MISSION(driver_to_marker_pilot, curr_veh, 0, 0, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, 4, TEL_CHAUFFEUR_SPEED_VALUES[TelChauffeur_speed_IndexN], 0, 90, 0,
 					TEL_CHAUFFEUR_ALTITUDE_VALUES[TelChauffeur_altitude_Index]);
 		}
 
 		if (featureLandAtDestination) {
 			if (PED::IS_PED_IN_ANY_HELI(playerPed) && tempdistance_x < 20 && tempdistance_y < 20) {
-				AI::TASK_HELI_MISSION(driver_to_marker_pilot, curr_veh, 0, 0, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, 20, TEL_CHAUFFEUR_SPEED_VALUES[TelChauffeur_speed_Index], -1.0, -1.0, 0, 0, -1.0, 32);
+				AI::TASK_HELI_MISSION(driver_to_marker_pilot, curr_veh, 0, 0, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, 20, TEL_CHAUFFEUR_SPEED_VALUES[TelChauffeur_speed_IndexN], -1.0, -1.0, 0, 0, -1.0, 32);
 				if (ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(curr_veh) && marker_been_set == true) {
 					AI::CLEAR_PED_TASKS(driver_to_marker_pilot);
 					VEHICLE::SET_VEHICLE_ENGINE_ON(curr_veh, false, true, false);

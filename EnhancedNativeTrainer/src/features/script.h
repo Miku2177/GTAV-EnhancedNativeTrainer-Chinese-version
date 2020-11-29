@@ -78,7 +78,7 @@ extern std::string C_WEATHER_C;
 
 //Limp If Injured
 const std::vector<std::string> LIMP_IF_INJURED_CAPTIONS{ "OFF", "Mode 1", "Mode 2" };
-const int LIMP_IF_INJURED_VALUES[] = { 0, 1, 2 };
+//const int LIMP_IF_INJURED_VALUES[] = { 0, 1, 2 };
 
 //Ensures numbers are formatted with commas, not the locale option
 class comma_numpunct: public std::numpunct<char>{
@@ -235,3 +235,7 @@ extern bool engine_running;
 extern Ped oldplayerPed;
 
 extern bool apply_pressed;
+
+// NPC Ragdoll If Shot
+const std::vector<std::string> NPC_RAGDOLL_CAPTIONS{ "OFF", "Never", "Always" };
+const int NPC_RAGDOLL_VALUES[] = { 0, 1, 2 };

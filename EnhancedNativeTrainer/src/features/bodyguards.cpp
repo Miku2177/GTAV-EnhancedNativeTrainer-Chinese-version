@@ -13,6 +13,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "bodyguards.h"
 #include "script.h"
 #include "weapons.h"
+#include "vehicles.h"
 #include "hotkeys.h"
 #include "area_effect.h"
 
@@ -113,8 +114,8 @@ int skinTypesBodyguardMenuPositionMemory[2] = {0, 0};
 int skinTypesBodyguardMenuLastConfirmed[2] = {0, 0};
 
 //Blip Size
-const std::vector<std::string> BODY_BLIPSIZE_CAPTIONS{ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
-const double BODY_BLIPSIZE_VALUES[] = { 0.3, 0.5, 0.8, 1.0, 1.2, 1.5, 1.7, 2.0, 2.5, 3.0 };
+//const std::vector<std::string> BODY_BLIPSIZE_CAPTIONS{ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
+//const double BODY_BLIPSIZE_VALUES[] = { 0.3, 0.5, 0.8, 1.0, 1.2, 1.5, 1.7, 2.0, 2.5, 3.0 };
 int BodyBlipSizeIndex = 2;
 bool BodyBlipSize_Changed = true;
 int BodyDistanceIndex = 7;
@@ -127,9 +128,9 @@ int BodyBlipColourIndex = 0;
 bool BodyBlipColour_Changed = true;
 
 //Blip Symbol
-const std::vector<std::string> BODY_BLIPSYMBOL_CAPTIONS{ "Standard", "Player", "North", "Waypoint", "BigCircleOutline", "ArrowUpOutlined", "ArrowDownOutlined", "ArrowUp", "ArrowDown", "PoliceHelicopterAnimated", "Jet" }; 
-const std::vector<int> BODY_BLIPSYMBOL_VALUES{ 1, 6, 7, 8, 10, 11, 12, 13, 14, 15, 16 }; 
-int BodyBlipSymbolIndex = 0;
+//const std::vector<std::string> BODY_BLIPSYMBOL_CAPTIONS{ "Standard", "Player", /*"North",*/ "Waypoint", /*"BigCircleOutline",*/ "ArrowUpOutlined", /*"ArrowDownOutlined", "ArrowUp", "ArrowDown",*/ "PoliceHelicopterAnimated"/*, "Jet"*/ };
+//const std::vector<int> BODY_BLIPSYMBOL_VALUES{ 1, 6, /*7,*/ 8, /*10,*/ 11, /*12, 13, 14,*/ 15/*, 16*/ };
+int BodyBlipSymbolIndexN = 0;
 bool BodyBlipSymbol_Changed = true;
 
 //Group Formation
@@ -1443,7 +1444,7 @@ void process_bodyguard_blips_menu(){
 	toggleItem->toggleValue = &featureBodyguardOnMap;
 	menuItems.push_back(toggleItem);
 
-	listItem = new SelectFromListMenuItem(BODY_BLIPSIZE_CAPTIONS, onchange_body_blipsize_index);
+	listItem = new SelectFromListMenuItem(VEH_BLIPSIZE_CAPTIONS, onchange_body_blipsize_index);
 	listItem->wrap = false;
 	listItem->caption = "Blip Size";
 	listItem->value = BodyBlipSizeIndex;
@@ -1455,10 +1456,10 @@ void process_bodyguard_blips_menu(){
 	listItem->value = BodyBlipColourIndex;
 	menuItems.push_back(listItem);
 
-	listItem = new SelectFromListMenuItem(BODY_BLIPSYMBOL_CAPTIONS, onchange_body_blipsymbol_index);
+	listItem = new SelectFromListMenuItem(VEH_BLIPSYMBOL_CAPTIONS, onchange_body_blipsymbol_index);
 	listItem->wrap = false;
 	listItem->caption = "Blip Symbol";
-	listItem->value = BodyBlipSymbolIndex;
+	listItem->value = BodyBlipSymbolIndexN;
 	menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(LIMP_IF_INJURED_CAPTIONS, onchange_body_blipflash_index);
@@ -1671,8 +1672,8 @@ void do_spawn_bodyguard(){
 					BLIPTABLE_BODYGUARD.clear();
 					BLIPTABLE_BODYGUARD.shrink_to_fit();
 				}
-				std::vector<int> emptyVec;
-				if (!BODY_BLIPSYMBOL_VALUES.empty()) std::vector<int>(BODY_BLIPSYMBOL_VALUES).swap(emptyVec);
+				//std::vector<int> emptyVec;
+				//if (!VEH_BLIPSYMBOL_VALUES.empty()) std::vector<int>(VEH_BLIPSYMBOL_VALUES).swap(emptyVec);
 			}
 			
 			if (spawning_a_ped == false) {
@@ -1702,7 +1703,7 @@ void do_spawn_bodyguard(){
 				if (bodyguard_animal == false) {
 					PED::SET_PED_CAN_SWITCH_WEAPON(bodyGuard, true);
 					PED::SET_GROUP_FORMATION(myENTGroup, BODY_GROUPFORMATION_VALUES[BodyGroupFormationIndex]); // 1 
-					PED::SET_GROUP_FORMATION_SPACING(myENTGroup, BODY_BLIPSIZE_VALUES[BodyDistanceIndex], BODY_BLIPSIZE_VALUES[BodyDistanceIndex], BODY_BLIPSIZE_VALUES[BodyDistanceIndex]); // 2.0, 2.0, 2.0
+					PED::SET_GROUP_FORMATION_SPACING(myENTGroup, VEH_BLIPSIZE_VALUES[BodyDistanceIndex], VEH_BLIPSIZE_VALUES[BodyDistanceIndex], VEH_BLIPSIZE_VALUES[BodyDistanceIndex]); // 2.0, 2.0, 2.0
 				}
 				PED::SET_CAN_ATTACK_FRIENDLY(bodyGuard, false, false);
 			}
@@ -1840,13 +1841,13 @@ void add_body_blip() {
 	for (int j = 0; j < spawnedENTBodyguards.size(); j++) {
 		blip_body[0] = UI::ADD_BLIP_FOR_ENTITY(spawnedENTBodyguards[j]);
 		UI::SET_BLIP_AS_FRIENDLY(blip_body[0], true);
-		if (BODY_BLIPSYMBOL_VALUES[BodyBlipSymbolIndex] != NULL) UI::SET_BLIP_SPRITE(blip_body[0], BODY_BLIPSYMBOL_VALUES[BodyBlipSymbolIndex]);
-		else UI::SET_BLIP_SPRITE(blip_body[0], BODY_BLIPSYMBOL_VALUES[0]);
+		if (VEH_BLIPSYMBOL_VALUES[BodyBlipSymbolIndexN] != NULL) UI::SET_BLIP_SPRITE(blip_body[0], VEH_BLIPSYMBOL_VALUES[BodyBlipSymbolIndexN]);
+		else UI::SET_BLIP_SPRITE(blip_body[0], VEH_BLIPSYMBOL_VALUES[0]);
 		UI::SET_BLIP_CATEGORY(blip_body[0], 2);
 		if (featureBodyBlipNumber) UI::SHOW_NUMBER_ON_BLIP(blip_body[0], BLIPTABLE_BODYGUARD.size());
-		if (LIMP_IF_INJURED_VALUES[BodyBlipFlashIndex] == 1) UI::SET_BLIP_FLASHES(blip_body[0], true);
-		if (LIMP_IF_INJURED_VALUES[BodyBlipFlashIndex] == 2) UI::SET_BLIP_FLASHES_ALTERNATE(blip_body[0], true);
-		UI::SET_BLIP_SCALE(blip_body[0], BODY_BLIPSIZE_VALUES[BodyBlipSizeIndex]);
+		if (NPC_RAGDOLL_VALUES[BodyBlipFlashIndex] == 1) UI::SET_BLIP_FLASHES(blip_body[0], true);
+		if (NPC_RAGDOLL_VALUES[BodyBlipFlashIndex] == 2) UI::SET_BLIP_FLASHES_ALTERNATE(blip_body[0], true);
+		UI::SET_BLIP_SCALE(blip_body[0], VEH_BLIPSIZE_VALUES[BodyBlipSizeIndex]);
 		UI::SET_BLIP_COLOUR(blip_body[0], BODY_BLIPCOLOUR_VALUES[BodyBlipColourIndex]);
 		BLIPTABLE_BODYGUARD.push_back(blip_body[0]);
 	}
@@ -1907,7 +1908,7 @@ void maintain_bodyguards(){
 	// 'follow in vehicle' messages
 	if (b_follow_m == -2) b_follow_m = FollowInVehicleIndex;
 	if (FollowInVehicleIndex == 0 && b_follow_m != 0) b_follow_m = FollowInVehicleIndex;
-	if (LIMP_IF_INJURED_VALUES[FollowInVehicleIndex] > 0) {
+	if (NPC_RAGDOLL_VALUES[FollowInVehicleIndex] > 0) {
 		if (b_follow_m != FollowInVehicleIndex) {
 			if (FollowInVehicleIndex == 1) set_status_text("Aggressive driving");
 			if (FollowInVehicleIndex == 2) set_status_text("Careful driving");
@@ -2081,7 +2082,7 @@ void maintain_bodyguards(){
 		} // end of for (int i = 0; i < spawnedENTBodyguards.size(); i++)
 		
 		// follow in vehicle
-		if (LIMP_IF_INJURED_VALUES[FollowInVehicleIndex] > 0) {
+		if (NPC_RAGDOLL_VALUES[FollowInVehicleIndex] > 0) {
 			Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 			Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 			if (PED::IS_PED_SITTING_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID())) {
@@ -2186,8 +2187,8 @@ void maintain_bodyguards(){
 						for (int m = 0; m < B_VEHICLE.size(); m++) {
 							VEHICLE::SET_VEHICLE_ENGINE_ON(B_VEHICLE[m], true, true, false);
 							AI::SET_DRIVE_TASK_CRUISE_SPEED(VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], -1), 300.0);
-							if (LIMP_IF_INJURED_VALUES[FollowInVehicleIndex] == 1) AI::TASK_VEHICLE_CHASE(VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], -1), PLAYER::PLAYER_PED_ID());
-							if (LIMP_IF_INJURED_VALUES[FollowInVehicleIndex] == 2) AI::TASK_VEHICLE_ESCORT(VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], -1), B_VEHICLE[m], veh, -1, 140.0f, 32, 10, 1, 1); // 786468 32
+							if (NPC_RAGDOLL_VALUES[FollowInVehicleIndex] == 1) AI::TASK_VEHICLE_CHASE(VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], -1), PLAYER::PLAYER_PED_ID());
+							if (NPC_RAGDOLL_VALUES[FollowInVehicleIndex] == 2) AI::TASK_VEHICLE_ESCORT(VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], -1), B_VEHICLE[m], veh, -1, 140.0f, 32, 10, 1, 1); // 786468 32
 							AI::SET_TASK_VEHICLE_CHASE_IDEAL_PURSUIT_DISTANCE(VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], -1), 60.0f);
 							AI::SET_TASK_VEHICLE_CHASE_BEHAVIOR_FLAG(VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], -1), 32, true); // 786603
 							PED::SET_DRIVER_AGGRESSIVENESS(VEHICLE::GET_PED_IN_VEHICLE_SEAT(B_VEHICLE[m], -1), 0.1f);
@@ -2411,7 +2412,7 @@ bool process_bodyguard_menu(){
 		toggleItem->toggleValueUpdated = NULL;
 		menuItems.push_back(toggleItem);
 
-		listItem = new SelectFromListMenuItem(BODY_BLIPSIZE_CAPTIONS, onchange_body_distance_index);
+		listItem = new SelectFromListMenuItem(VEH_BLIPSIZE_CAPTIONS, onchange_body_distance_index);
 		listItem->wrap = false;
 		listItem->caption = "Spawn Distance";
 		listItem->value = BodyDistanceIndex;
@@ -2635,7 +2636,7 @@ void add_bodyguards_feature_enablements2(std::vector<StringPairSettingDBRow>* re
 	results->push_back(StringPairSettingDBRow{ "BodyDistanceIndex", std::to_string(BodyDistanceIndex) });
 	results->push_back(StringPairSettingDBRow{ "BodyGroupFormationIndex", std::to_string(BodyGroupFormationIndex) });
 	results->push_back(StringPairSettingDBRow{ "BodyBlipColourIndex", std::to_string(BodyBlipColourIndex) });
-	results->push_back(StringPairSettingDBRow{ "BodyBlipSymbolIndex", std::to_string(BodyBlipSymbolIndex) });
+	results->push_back(StringPairSettingDBRow{ "BodyBlipSymbolIndexN", std::to_string(BodyBlipSymbolIndexN) });
 	results->push_back(StringPairSettingDBRow{ "BodyBlipFlashIndex", std::to_string(BodyBlipFlashIndex) });
 	results->push_back(StringPairSettingDBRow{ "FollowInVehicleIndex", std::to_string(FollowInVehicleIndex) });
 	results->push_back(StringPairSettingDBRow{ "BodyWeaponSetIndex", std::to_string(BodyWeaponSetIndex) });
@@ -2678,11 +2679,11 @@ void handle_generic_settings_bodyguards(std::vector<StringPairSettingDBRow>* set
 		else if (setting.name.compare("BodyBlipColourIndex") == 0){
 			BodyBlipColourIndex = stoi(setting.value);
 		}
-		else if (setting.name.compare("BodyBlipSymbolIndex") == 0 && BODY_BLIPSYMBOL_VALUES.size() > 0 && BodyBlipSymbolIndex < BODY_BLIPSYMBOL_VALUES.size()){
-			BodyBlipSymbolIndex = stoi(setting.value);
+		else if (setting.name.compare("BodyBlipSymbolIndexN") == 0 && VEH_BLIPSYMBOL_VALUES.size() > 0 && BodyBlipSymbolIndexN < VEH_BLIPSYMBOL_VALUES.size()){
+			BodyBlipSymbolIndexN = stoi(setting.value);
 		}
-		else if (BODY_BLIPSYMBOL_VALUES.size() > 0 && BodyBlipSymbolIndex >= BODY_BLIPSYMBOL_VALUES.size()) { // setting.name.compare("BodyBlipSymbolIndex") == 0 && 
-			BodyBlipSymbolIndex = 0;
+		else if (VEH_BLIPSYMBOL_VALUES.size() > 0 && BodyBlipSymbolIndexN >= VEH_BLIPSYMBOL_VALUES.size()) { // setting.name.compare("BodyBlipSymbolIndex") == 0 && 
+			BodyBlipSymbolIndexN = 0;
 		}
 		else if (setting.name.compare("BodyBlipFlashIndex") == 0){
 			BodyBlipFlashIndex = stoi(setting.value);
@@ -2729,7 +2730,7 @@ void reset_bodyguards_globals(){
 	BodyDistanceIndex = 7;
 	BodyGroupFormationIndex = 1;
 	BodyBlipColourIndex = 0;
-	BodyBlipSymbolIndex = 0;
+	BodyBlipSymbolIndexN = 0;
 	BodyBlipFlashIndex = 0;
 	FollowInVehicleIndex = 0;
 	BodyWeaponSetIndex = 0;
@@ -2771,7 +2772,7 @@ void onchange_body_blipcolour_index(int value, SelectFromListMenuItem* source){
 }
 
 void onchange_body_blipsymbol_index(int value, SelectFromListMenuItem* source){
-	BodyBlipSymbolIndex = value;
+	BodyBlipSymbolIndexN = value;
 	BodyBlipSymbol_Changed = true;
 }
 

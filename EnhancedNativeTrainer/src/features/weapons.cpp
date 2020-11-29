@@ -58,7 +58,7 @@ bool PlayerUpdated_s = true;
 Hash temp_weapon = -1;
 
 //Flashlight strobe
-int WeapStrobeIndex = 0;
+int WeapStrobeIndexN = 0;
 bool WeapStrobeChanged = true;
 bool f_strobe = false;
 int strb_c = 0;
@@ -160,7 +160,7 @@ bool CopAlarmChanged = true;
 
 // Toggle Vision For Sniper Rifles
 const std::vector<std::string> WEAPONS_SNIPERVISION_CAPTIONS{ "OFF", "Via Hotkey", "Night Vision", "Thermal Vision" };
-const int WEAPONS_SNIPERVISION_VALUES[] = { 0, 1, 2, 3 };
+//const int WEAPONS_SNIPERVISION_VALUES[] = { 0, 1, 2, 3 };
 int SniperVisionIndex = 0;
 bool SniperVisionChanged = true;
 
@@ -172,19 +172,19 @@ bool PowerPunchChanged = true;
 
 // Fire Mode
 const std::vector<std::string> WEAPONS_FIREMODE_CAPTIONS{ "Default", "Single Fire", "Burst Semi", "Burst Auto" };
-const int WEAPONS_FIREMODE_VALUES[] = { 0, 1, 2, 3 };
+//const int WEAPONS_FIREMODE_VALUES[] = { 0, 1, 2, 3 };
 int WeaponsFireModeIndex = 0;
 bool WeaponsFireModeChanged = true;
 
 // No Reticle
 const std::vector<std::string> WEAPONS_NORETICLE_CAPTIONS{ "OFF", "Always", "For First Person Mode Only" };
-const int WEAPONS_NORETICLE_VALUES[] = { 0, 1, 2 };
+//const int WEAPONS_NORETICLE_VALUES[] = { 0, 1, 2 };
 int WeaponsNoReticle = 0;
 bool WeaponsNoReticleChanged = true;
 
 // Load Saved Weapons Automatically
 const std::vector<std::string> WEAPONS_SAVED_LOAD_CAPTIONS{ "OFF", "Add To Inventory", "Saved Weapons Only" };
-const int WEAPONS_SAVED_LOAD_VALUES[] = { 0, 1, 2 };
+//const int WEAPONS_SAVED_LOAD_VALUES[] = { 0, 1, 2 };
 int WeaponsSavedLoad = 0;
 bool WeaponsSavedLoadChanged = true;
 
@@ -473,7 +473,7 @@ void load_saved_weapons() {
 	ENTDatabase* database = get_database();
 	std::vector<SavedWeaponDBRow*> savedWeapon = database->get_saved_weapon();
 
-	if (WEAPONS_SAVED_LOAD_VALUES[WeaponsSavedLoad] == 2) WEAPON::REMOVE_ALL_PED_WEAPONS(playerPed, false);
+	if (NPC_RAGDOLL_VALUES[WeaponsSavedLoad] == 2) WEAPON::REMOVE_ALL_PED_WEAPONS(playerPed, false);
 
 	for each (SavedWeaponDBRow * sv in savedWeapon)
 	{
@@ -850,7 +850,7 @@ void onchange_weapons_firemode_modifier(int value, SelectFromListMenuItem* sourc
 }
 
 void onchange_weap_strobe_index(int value, SelectFromListMenuItem* source) {
-	WeapStrobeIndex = value;
+	WeapStrobeIndexN = value;
 	WeapStrobeChanged = true;
 }
 
@@ -884,7 +884,7 @@ void sniper_vision_toggle()
 		WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_MARKSMANRIFLE") || WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_MARKSMANRIFLE_MK2")) &&
 		PED::GET_PED_CONFIG_FLAG(playerPed, 78, 1) && !PED::GET_PED_CONFIG_FLAG(playerPed, 58, 1) && !SCRIPT::HAS_SCRIPT_LOADED("carsteal2"))
 	{
-		if (WEAPONS_SNIPERVISION_VALUES[SniperVisionIndex] == 1) {
+		if (WORLD_GRAVITY_LEVEL_VALUES[SniperVisionIndex] == 1) {
 			vision_toggle = vision_toggle + 1;
 			if (vision_toggle == 3) vision_toggle = 0;
 
@@ -1609,7 +1609,7 @@ bool process_weapon_menu(){
 	listItem = new SelectFromListMenuItem(FUEL_COLOURS_R_CAPTIONS, onchange_weap_strobe_index);
 	listItem->wrap = false;
 	listItem->caption = "Flashlight Strobe";
-	listItem->value = WeapStrobeIndex;
+	listItem->value = WeapStrobeIndexN;
 	menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(WEAP_DMG_CAPTIONS, onchange_weap_flashdist_index);
@@ -1646,7 +1646,7 @@ void reset_weapon_globals(){
 	SniperVisionIndex = 0;
 	PowerPunchIndex = 2;
 	WeaponsFireModeIndex = 0;
-	WeapStrobeIndex = 0;
+	WeapStrobeIndexN = 0;
 	WeapFlashDistIndex = 0;
 
 	activeLineIndexCopArmed = 0;
@@ -1909,10 +1909,10 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	}
 	
 	// No Reticle
-	if (WEAPONS_NORETICLE_VALUES[WeaponsNoReticle] > 0) {
+	if (NPC_RAGDOLL_VALUES[WeaponsNoReticle] > 0) {
 		Vehicle cur_v = PED::GET_VEHICLE_PED_IS_USING(playerPed);
-		if (WEAPONS_NORETICLE_VALUES[WeaponsNoReticle] == 1 || (WEAPONS_NORETICLE_VALUES[WeaponsNoReticle] == 2 && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) && CAM::_0xEE778F8C7E1142E2(0) == 4) || 
-			(WEAPONS_NORETICLE_VALUES[WeaponsNoReticle] == 2 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) && ((VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(cur_v)) && CAM::_0xEE778F8C7E1142E2(1) == 4) || 
+		if (NPC_RAGDOLL_VALUES[WeaponsNoReticle] == 1 || (NPC_RAGDOLL_VALUES[WeaponsNoReticle] == 2 && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) && CAM::_0xEE778F8C7E1142E2(0) == 4) ||
+			(NPC_RAGDOLL_VALUES[WeaponsNoReticle] == 2 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) && ((VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(cur_v)) && CAM::_0xEE778F8C7E1142E2(1) == 4) ||
 				(VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(cur_v)) && CAM::_0xEE778F8C7E1142E2(2) == 4) || (VEHICLE::IS_THIS_MODEL_A_BOAT(ENTITY::GET_ENTITY_MODEL(cur_v)) && CAM::_0xEE778F8C7E1142E2(3) == 4) ||
 			(VEHICLE::IS_THIS_MODEL_A_PLANE(ENTITY::GET_ENTITY_MODEL(cur_v)) && CAM::_0xEE778F8C7E1142E2(4) == 4) || 
 				((ENTITY::GET_ENTITY_MODEL(cur_v) == GAMEPLAY::GET_HASH_KEY("SUBMERSIBLE") || ENTITY::GET_ENTITY_MODEL(cur_v) == GAMEPLAY::GET_HASH_KEY("SUBMERSIBLE2")) && CAM::_0xEE778F8C7E1142E2(5) == 4) || 
@@ -2245,7 +2245,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	}
 
 	// Equip Saved Weapons
-	if (WEAPONS_SAVED_LOAD_VALUES[WeaponsSavedLoad] > 0 && detained == false && in_prison == false && PED::IS_PED_HUMAN(playerPed) && !CUTSCENE::IS_CUTSCENE_PLAYING() && GAMEPLAY::GET_MISSION_FLAG() == 0) {
+	if (NPC_RAGDOLL_VALUES[WeaponsSavedLoad] > 0 && detained == false && in_prison == false && PED::IS_PED_HUMAN(playerPed) && !CUTSCENE::IS_CUTSCENE_PLAYING() && GAMEPLAY::GET_MISSION_FLAG() == 0) {
 		w_tick_secs_passed = clock() / CLOCKS_PER_SEC;
 		if (((clock() / (CLOCKS_PER_SEC / 1000)) - ss_tick_secs_curr) != 0) {
 			tick_s_allw = tick_s_allw + 1;
@@ -2280,7 +2280,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	}
 
 	// Disables visions if not aiming
-	if (WEAPONS_SNIPERVISION_VALUES[SniperVisionIndex] != 0 && !SCRIPT::HAS_SCRIPT_LOADED("carsteal2"))
+	if (WORLD_GRAVITY_LEVEL_VALUES[SniperVisionIndex] != 0 && !SCRIPT::HAS_SCRIPT_LOADED("carsteal2"))
 	{
 		if (!PED::GET_PED_CONFIG_FLAG(playerPed, 78, 1)) { 
 			if (!featureNightVision && !featureThermalVision) {
@@ -2304,11 +2304,11 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		if (WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_SNIPERRIFLE") || WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_HEAVYSNIPER") ||
 			WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_REMOTESNIPER") || WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_HEAVYSNIPER_MK2") ||
 			WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_MARKSMANRIFLE") || WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_MARKSMANRIFLE_MK2")) {
-			if (WEAPONS_SNIPERVISION_VALUES[SniperVisionIndex] == 2 && !PED::GET_PED_CONFIG_FLAG(playerPed, 58, 1) && PED::GET_PED_CONFIG_FLAG(playerPed, 78, 1)) {
+			if (WORLD_GRAVITY_LEVEL_VALUES[SniperVisionIndex] == 2 && !PED::GET_PED_CONFIG_FLAG(playerPed, 58, 1) && PED::GET_PED_CONFIG_FLAG(playerPed, 78, 1)) {
 				GRAPHICS::SET_NIGHTVISION(true);
 				GRAPHICS::SET_SEETHROUGH(false);
 			}
-			if (WEAPONS_SNIPERVISION_VALUES[SniperVisionIndex] == 3 && !PED::GET_PED_CONFIG_FLAG(playerPed, 58, 1) && PED::GET_PED_CONFIG_FLAG(playerPed, 78, 1)) {
+			if (WORLD_GRAVITY_LEVEL_VALUES[SniperVisionIndex] == 3 && !PED::GET_PED_CONFIG_FLAG(playerPed, 58, 1) && PED::GET_PED_CONFIG_FLAG(playerPed, 78, 1)) {
 				GRAPHICS::SET_NIGHTVISION(false);
 				GRAPHICS::SET_SEETHROUGH(true);
 			}
@@ -2340,8 +2340,8 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	}
 
 	// Flashlight Strobe
-	if (FUEL_COLOURS_R_VALUES[WeapStrobeIndex] > 0) {
-		float tmp_s = FUEL_COLOURS_R_VALUES[WeapStrobeIndex];
+	if (FUEL_COLOURS_R_VALUES[WeapStrobeIndexN] > 0) {
+		float tmp_s = FUEL_COLOURS_R_VALUES[WeapStrobeIndexN];
 		if (CONTROLS::IS_CONTROL_JUST_PRESSED(2, 54) && WEAPON::SET_WEAPON_SMOKEGRENADE_ASSIGNED(playerPed) && strb_c < 6) {
 			f_strobe = true;
 		}
@@ -2382,14 +2382,14 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	}
 
 	// Fire Mode
-	if (WEAPONS_FIREMODE_VALUES[WeaponsFireModeIndex] > 0) {
+	if (WORLD_GRAVITY_LEVEL_VALUES[WeaponsFireModeIndex] > 0) {
 		CONTROLS::DISABLE_CONTROL_ACTION(2, 24, 1); // attack
 		CONTROLS::DISABLE_CONTROL_ACTION(2, 257, 1); // attack2
 		CONTROLS::DISABLE_CONTROL_ACTION(2, 69, 1); // vehicle attack
 		//CONTROLS::DISABLE_CONTROL_ACTION(2, 70, 1); // vehicle attack2
 		if (CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, 24)) {
 			if (featureWeaponInfiniteAmmo && PED::IS_PED_SHOOTING(playerPed)) bullet_tick = bullet_tick + 1;
-			if (WEAPONS_FIREMODE_VALUES[WeaponsFireModeIndex] == 3 && (((bullet_a - WEAPON::GET_AMMO_IN_PED_WEAPON(PLAYER::PLAYER_PED_ID(), WEAPON::GET_SELECTED_PED_WEAPON(playerPed))) > 4) || bullet_tick > 4)) { // burst auto
+			if (WORLD_GRAVITY_LEVEL_VALUES[WeaponsFireModeIndex] == 3 && (((bullet_a - WEAPON::GET_AMMO_IN_PED_WEAPON(PLAYER::PLAYER_PED_ID(), WEAPON::GET_SELECTED_PED_WEAPON(playerPed))) > 4) || bullet_tick > 4)) { // burst auto
 				w_tick_secs_passed = clock() / CLOCKS_PER_SEC;
 				if (((clock() / (CLOCKS_PER_SEC / 1000)) - w_tick_secs_curr) != 0) {
 					tick_firemode = tick_firemode + 1;
@@ -2401,9 +2401,9 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 					bullet_tick = 0;
 				}
 			}
-			if ((WEAPONS_FIREMODE_VALUES[WeaponsFireModeIndex] == 1 && ((bullet_a - WEAPON::GET_AMMO_IN_PED_WEAPON(PLAYER::PLAYER_PED_ID(), WEAPON::GET_SELECTED_PED_WEAPON(playerPed))) < 1) && bullet_tick < 1) || // 1 - single fire
-				(WEAPONS_FIREMODE_VALUES[WeaponsFireModeIndex] == 2 && ((bullet_a - WEAPON::GET_AMMO_IN_PED_WEAPON(PLAYER::PLAYER_PED_ID(), WEAPON::GET_SELECTED_PED_WEAPON(playerPed))) < 5) && bullet_tick < 5) || // 2 - burst semi
-				(WEAPONS_FIREMODE_VALUES[WeaponsFireModeIndex] == 3 && ((bullet_a - WEAPON::GET_AMMO_IN_PED_WEAPON(PLAYER::PLAYER_PED_ID(), WEAPON::GET_SELECTED_PED_WEAPON(playerPed))) < 5) && bullet_tick < 5)) { // 3 - burst auto
+			if ((WORLD_GRAVITY_LEVEL_VALUES[WeaponsFireModeIndex] == 1 && ((bullet_a - WEAPON::GET_AMMO_IN_PED_WEAPON(PLAYER::PLAYER_PED_ID(), WEAPON::GET_SELECTED_PED_WEAPON(playerPed))) < 1) && bullet_tick < 1) || // 1 - single fire
+				(WORLD_GRAVITY_LEVEL_VALUES[WeaponsFireModeIndex] == 2 && ((bullet_a - WEAPON::GET_AMMO_IN_PED_WEAPON(PLAYER::PLAYER_PED_ID(), WEAPON::GET_SELECTED_PED_WEAPON(playerPed))) < 5) && bullet_tick < 5) || // 2 - burst semi
+				(WORLD_GRAVITY_LEVEL_VALUES[WeaponsFireModeIndex] == 3 && ((bullet_a - WEAPON::GET_AMMO_IN_PED_WEAPON(PLAYER::PLAYER_PED_ID(), WEAPON::GET_SELECTED_PED_WEAPON(playerPed))) < 5) && bullet_tick < 5)) { // 3 - burst auto
 				CONTROLS::ENABLE_CONTROL_ACTION(2, 24, 1); // attack
 				CONTROLS::ENABLE_CONTROL_ACTION(2, 257, 1); // attack2
 				CONTROLS::ENABLE_CONTROL_ACTION(2, 69, 1); // vehicle attack
@@ -2862,7 +2862,7 @@ void add_weapon_feature_enablements2(std::vector<StringPairSettingDBRow>* result
 	results->push_back(StringPairSettingDBRow{ "SniperVisionIndex", std::to_string(SniperVisionIndex) });
 	results->push_back(StringPairSettingDBRow{ "PowerPunchIndex", std::to_string(PowerPunchIndex) });
 	results->push_back(StringPairSettingDBRow{ "WeaponsFireModeIndex", std::to_string(WeaponsFireModeIndex) });
-	results->push_back(StringPairSettingDBRow{ "WeapStrobeIndex", std::to_string(WeapStrobeIndex) });
+	results->push_back(StringPairSettingDBRow{ "WeapStrobeIndexN", std::to_string(WeapStrobeIndexN) });
 	results->push_back(StringPairSettingDBRow{ "WeapFlashDistIndex", std::to_string(WeapFlashDistIndex) });
 }
 
@@ -2912,8 +2912,8 @@ void handle_generic_settings_weapons(std::vector<StringPairSettingDBRow>* settin
 		else if (setting.name.compare("WeaponsFireModeIndex") == 0) {
 			WeaponsFireModeIndex = stoi(setting.value);
 		}
-		else if (setting.name.compare("WeapStrobeIndex") == 0) {
-			WeapStrobeIndex = stoi(setting.value);
+		else if (setting.name.compare("WeapStrobeIndexN") == 0) {
+			WeapStrobeIndexN = stoi(setting.value);
 		}
 		else if (setting.name.compare("WeapFlashDistIndex") == 0) {
 			WeapFlashDistIndex = stoi(setting.value);

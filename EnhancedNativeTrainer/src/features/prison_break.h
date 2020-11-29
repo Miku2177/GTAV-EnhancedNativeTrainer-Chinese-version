@@ -26,8 +26,8 @@ extern int current_player_discharge;
 extern bool current_player_discharge_Changed;
 
 //Number of stars when escaping
-const std::vector<std::string> PLAYER_ESCAPESTARS_CAPTIONS{ "3 Stars", "4 Stars", "5 Stars" };
-const int PLAYER_ESCAPESTARS_VALUES[] = { 3, 4, 5 };
+//const std::vector<std::string> PLAYER_ESCAPESTARS_CAPTIONS{ "3 Stars", "4 Stars", "5 Stars" };
+//const int PLAYER_ESCAPESTARS_VALUES[] = { 3, 4, 5 };
 extern int current_escape_stars;
 extern bool current_escape_stars_Changed;
 

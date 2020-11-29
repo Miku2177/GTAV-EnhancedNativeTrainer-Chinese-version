@@ -92,7 +92,7 @@ int FineSizeIndex = 1;
 bool FineSize_Changed = true;
 int DetectionRangeIndex = 3;
 bool DetectionRange_Changed = true;
-int PirsuitRangeIndex = 4;
+int PirsuitRangeIndexN = 4;
 bool PirsuitRange_Changed = true;
 int StarsPunishIndex = 0;
 bool StarsPunish_Changed = true;
@@ -802,7 +802,7 @@ void road_laws()
 		}
 
 		// Been fined or escaped
-		if (Stop_seconds_final > 21 || tempgotcha_x > VEH_PIRSUITRANGE_VALUES[PirsuitRangeIndex] || tempgotcha_y > VEH_PIRSUITRANGE_VALUES[PirsuitRangeIndex] ||
+		if (Stop_seconds_final > 21 || tempgotcha_x > VEH_PIRSUITRANGE_VALUES[PirsuitRangeIndexN] || tempgotcha_y > VEH_PIRSUITRANGE_VALUES[PirsuitRangeIndexN] ||
 			(PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) > 1 && !featureCopsUseRadio) || (vehroadlaws_speed > 20 && Stop_seconds > -1 && wanted_level_on == true && !featureCopsUseRadio) || stuck_completely > 6 ||
 			PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) > 0)
 		{

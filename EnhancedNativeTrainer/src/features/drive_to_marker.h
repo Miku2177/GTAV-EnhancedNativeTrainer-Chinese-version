@@ -13,9 +13,9 @@ extern int TelChauffeurIndex;
 extern bool TelChauffeur_Changed;
 
 //Chauffeur Speed
-const std::vector<std::string> TEL_CHAUFFEUR_SPEED_CAPTIONS{ "20", "30", "40", "50", "70", "100", "120", "150", "200" };
-const int TEL_CHAUFFEUR_SPEED_VALUES[] = { 20, 30, 40, 50, 70, 100, 120, 150, 200 };
-extern int TelChauffeur_speed_Index;
+const std::vector<std::string> TEL_CHAUFFEUR_SPEED_CAPTIONS{ "20", "40", "70", "100", "120", "150", "200" }; // "30", "50", 
+const int TEL_CHAUFFEUR_SPEED_VALUES[] = { 20, 40, 70, 100, 120, 150, 200 }; // 30, 50, 
+extern int TelChauffeur_speed_IndexN;
 extern bool TelChauffeur_speed_Changed;
 
 //Chauffeur Altitude

@@ -42,9 +42,9 @@ extern int DetectionRangeIndex;
 extern bool DetectionRange_Changed;
 
 //Pirsuit Range
-const std::vector<std::string> VEH_PIRSUITRANGE_CAPTIONS{ "300m", "400m", "500m", "600m", "700m", "800m", "900m", "1000m", "1200m", "1500m", "2000m" };
-const int VEH_PIRSUITRANGE_VALUES[] = { 300, 400, 500, 600, 700, 800, 900, 1000, 1200, 1500, 2000 };
-extern int PirsuitRangeIndex;
+const std::vector<std::string> VEH_PIRSUITRANGE_CAPTIONS{ "300m", "400m", "500m", "600m", "700m", "800m"/*, "900m", "1000m", "1200m", "1500m", "2000m"*/ };
+const int VEH_PIRSUITRANGE_VALUES[] = { 300, 400, 500, 600, 700, 800/*, 900, 1000, 1200, 1500, 2000*/ };
+extern int PirsuitRangeIndexN;
 extern bool PirsuitRange_Changed;
 
 //Stars If Try To Escape

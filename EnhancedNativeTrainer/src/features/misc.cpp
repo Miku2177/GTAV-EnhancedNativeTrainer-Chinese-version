@@ -186,7 +186,7 @@ bool PhoneDefaultChanged = true;
 
 // Radio Off
 const std::vector<std::string> MISC_RADIO_OFF_CAPTIONS{ "Default", "Always", "For Bikes Only" };
-const int MISC_RADIO_OFF_VALUES[] = { 0, 1, 2 };
+//const int MISC_RADIO_OFF_VALUES[] = { 0, 1, 2 };
 int RadioOffIndex = 0;
 bool RadioOffChanged = true;
 
@@ -1076,21 +1076,21 @@ void reset_misc_globals(){
 
 void update_misc_features(BOOL playerExists, Ped playerPed){
 	// Radio Off
-	if (MISC_RADIO_OFF_VALUES[RadioOffIndex] > 0 && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) radio_pressed = false;
-	if (MISC_RADIO_OFF_VALUES[RadioOffIndex] > 0 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && CONTROLS::IS_CONTROL_PRESSED(2, 85)) {
+	if (NPC_RAGDOLL_VALUES[RadioOffIndex] > 0 && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) radio_pressed = false;
+	if (NPC_RAGDOLL_VALUES[RadioOffIndex] > 0 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && CONTROLS::IS_CONTROL_PRESSED(2, 85)) {
 		radio_pressed = true;
 		AUDIO::SET_VEHICLE_RADIO_ENABLED(PED::GET_VEHICLE_PED_IS_USING(playerPed), true);
 		AUDIO::SET_USER_RADIO_CONTROL_ENABLED(true);
 	}
-	if (MISC_RADIO_OFF_VALUES[RadioOffIndex] > 0 && radio_pressed == false) {
-		if (MISC_RADIO_OFF_VALUES[RadioOffIndex] == 1) {
+	if (NPC_RAGDOLL_VALUES[RadioOffIndex] > 0 && radio_pressed == false) {
+		if (NPC_RAGDOLL_VALUES[RadioOffIndex] == 1) {
 			if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
 				Vehicle playerVeh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 				AUDIO::SET_VEHICLE_RADIO_ENABLED(playerVeh, false);
 			}
 			AUDIO::SET_USER_RADIO_CONTROL_ENABLED(false);
 		}
-		if (MISC_RADIO_OFF_VALUES[RadioOffIndex] == 2) {
+		if (NPC_RAGDOLL_VALUES[RadioOffIndex] == 2) {
 			Vehicle cur_veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 			if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
 				if (VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(cur_veh)) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(cur_veh))) {
@@ -1104,7 +1104,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			}
 		}
 	}
-	if (MISC_RADIO_OFF_VALUES[RadioOffIndex] == 0) {
+	if (NPC_RAGDOLL_VALUES[RadioOffIndex] == 0) {
 		AUDIO::SET_VEHICLE_RADIO_ENABLED(PED::GET_VEHICLE_PED_IS_USING(playerPed), true);
 		AUDIO::SET_USER_RADIO_CONTROL_ENABLED(true);
 		radio_pressed = false;
