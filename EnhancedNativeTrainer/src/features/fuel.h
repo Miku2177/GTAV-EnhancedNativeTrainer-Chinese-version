@@ -40,38 +40,38 @@ extern bool JerrycanChanged;
 
 //Min Fuel Random Number
 const std::vector<std::string> VEH_FUELRANDOM1_CAPTIONS{ "10", "20", "30", "40", "50", "60", "70" };
-const int VEH_FUELRANDOM1_VALUES[] = { 1, 2, 3, 4, 5, 6, 7 };
+const int VEH_FUELRANDOM_VALUES[] = { 1, 2, 3, 4, 5, 6, 7 };
 extern int Random1Index;
 extern bool Random1Changed;
 
-//Min Fuel Random Number 2
+//Max Fuel Random Number 2
 const std::vector<std::string> VEH_FUELRANDOM2_CAPTIONS{ "20", "30", "40", "50", "60", "70", "80" };
-const int VEH_FUELRANDOM2_VALUES[] = { 1, 2, 3, 4, 5, 6, 7 };
+//const int VEH_FUELRANDOM2_VALUES[] = { 1, 2, 3, 4, 5, 6, 7 };
 extern int Random2Index;
 extern bool Random2Changed;
 
 //Fuel Bar Position
 const std::vector<std::string> VEH_FUELBARPOSITION_CAPTIONS{ "Below Radar", "Above Radar", "On The Left Of Radar", "On The Right Of Radar" };
-const int VEH_FUELBARPOSITION_VALUES[] = { 1, 2, 3, 4 };
-extern int BarPositionIndex;
+//const int VEH_FUELBARPOSITION_VALUES[] = { 1, 2, 3, 4 };
+extern int BarPositionIndexN;
 extern bool BarPositionChanged;
 
 //Fuel colours_R
-const std::vector<std::string> FUEL_COLOURS_R_CAPTIONS{ "OFF", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "210", "220", "230", "240", "250", "255" };
-const int FUEL_COLOURS_R_VALUES[] = { 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 255 };
-extern int FuelColours_R_Index;
+const std::vector<std::string> FUEL_COLOURS_R_CAPTIONS{ "OFF", "10", "30", "50", "70", "90", "110", "130", "150", "170", "190", "210", "230", "250", "255" }; // "20", "40", "60", "80", "100", "120",  "140", "160", "180", "200", "220", "240",
+const int FUEL_COLOURS_R_VALUES[] = { 0, 10, 30, 50, 70, 90, 110, 130, 150, 170, 190, 210, 230, 250, 255 }; // 20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240,
+extern int FuelColours_R_IndexN;
 extern bool FuelColours_R_Changed;
-extern int FuelColours_G_Index;
+extern int FuelColours_G_IndexN;
 extern bool FuelColours_G_Changed;
-extern int FuelColours_B_Index;
+extern int FuelColours_B_IndexN;
 extern bool FuelColours_B_Changed;
 
 //Show Blips
 const std::vector<std::string> VEH_FUELBLIPS_CAPTIONS{ "OFF", "Everywhere", "On Radar Only", "If Phone In Hand Only" };
-const int VEH_FUELBLIPS_VALUES[] = { 0, 1, 2, 3 };
+//const int VEH_FUELBLIPS_VALUES[] = { 0, 1, 2, 3 };
 extern int FuelBlipsIndex;
 extern bool FuelBlipsChanged;
-extern int FuelBackground_Opacity_Index;
+extern int FuelBackground_Opacity_IndexN;
 extern bool FuelBackgound_Opacity_Changed;
 
 void fuel();

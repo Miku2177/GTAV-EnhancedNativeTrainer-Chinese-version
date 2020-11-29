@@ -35,7 +35,7 @@ bool featureSpeedInAir = false;
 
 int SpeedSizeIndex = 0;
 bool SizeChanged = true;
-int SpeedPositionIndex = 0;
+int SpeedPositionIndexN = 0;
 bool PositionChanged = true;
 
 float textX, textY = -1;
@@ -73,15 +73,15 @@ void update_speed_text(int speed, Vector3 player_coords)
 	int screen_w, screen_h;
 	GRAPHICS::GET_SCREEN_RESOLUTION(&screen_w, &screen_h);
 
-	if (SPEED_POSITION_VALUES[SpeedPositionIndex] == 1) { //Bottom Right
+	if (NPC_RAGDOLL_VALUES[SpeedPositionIndexN] == 0) { //Bottom Right
 		textX = (97.4 - (size * 2.5)) / 100;
 		textY = (85 - (size * 1.2)) / 100;
 	}
-	if (SPEED_POSITION_VALUES[SpeedPositionIndex] == 2) { //Bottom Center
+	if (NPC_RAGDOLL_VALUES[SpeedPositionIndexN] == 1) { //Bottom Center
 		textX = (50 - (size * 1.1)) / 100;
 		textY = (95 - (size * 1.2)) / 100;
 	}
-	if (SPEED_POSITION_VALUES[SpeedPositionIndex] == 3) { //Top Right
+	if (NPC_RAGDOLL_VALUES[SpeedPositionIndexN] == 2) { //Top Right
 		textX = (97.4 - (size * 2.5)) / 100;
 		textY = (10.5 + (size * 0.0001)) / 100;
 	}
@@ -105,15 +105,15 @@ void update_speed_text(int speed, Vector3 player_coords)
 	}
 
 	if (size < 4) { // draw background
-		if (SPEED_POSITION_VALUES[SpeedPositionIndex] == 1) { //Bottom Right
+		if (NPC_RAGDOLL_VALUES[SpeedPositionIndexN] == 0) { //Bottom Right
 			rectXScaled = 1 - ((300 / (float)screen_w) / 4);
 			rectYScaled = 0.95 - (((0 + (1 * 18)) / (float)screen_h) * 5);
 		}
-		if (SPEED_POSITION_VALUES[SpeedPositionIndex] == 2) { //Bottom Center
+		if (NPC_RAGDOLL_VALUES[SpeedPositionIndexN] == 1) { //Bottom Center
 			rectXScaled = 0.55 - ((230 / (float)screen_w) / 4);
 			rectYScaled = 1 - (((0 + (1 * 11)) / (float)screen_h) * 5);
 		}
-		if (SPEED_POSITION_VALUES[SpeedPositionIndex] == 3) { //Top Right
+		if (NPC_RAGDOLL_VALUES[SpeedPositionIndexN] == 2) { //Top Right
 			rectXScaled = 1 - ((300 / (float)screen_w) / 4);
 			rectYScaled = 0.24 - (((0 + (1 * 18)) / (float)screen_h) * 5);
 		}
@@ -123,15 +123,15 @@ void update_speed_text(int speed, Vector3 player_coords)
 		GRAPHICS::DRAW_RECT(rectXScaled, rectYScaled, rectWidthScaled, rectHeightScaled, rect_col[0], rect_col[1], rect_col[2], rect_col[3]);
 
 		if (featureAltitude) {
-			if (SPEED_POSITION_VALUES[SpeedPositionIndex] == 1) { //Bottom Right
+			if (NPC_RAGDOLL_VALUES[SpeedPositionIndexN] == 0) { //Bottom Right
 				rectXScaled = 1 - ((300 / (float)screen_w) / 4);
 				rectYScaled = 0.95 - (((0 + (1 * 18)) / (float)screen_h) * 5) + ((0 + (1 * 18)) / (float)screen_h);
 			}
-			if (SPEED_POSITION_VALUES[SpeedPositionIndex] == 2) { //Bottom Center
+			if (NPC_RAGDOLL_VALUES[SpeedPositionIndexN] == 1) { //Bottom Center
 				rectXScaled = 0.55 - ((230 / (float)screen_w) / 4);
 				rectYScaled = 1 - (((0 + (1 * 11)) / (float)screen_h) * 5) + ((0 + (1 * 18)) / (float)screen_h);
 			}
-			if (SPEED_POSITION_VALUES[SpeedPositionIndex] == 3) { //Top Right
+			if (NPC_RAGDOLL_VALUES[SpeedPositionIndexN] == 2) { //Top Right
 				rectXScaled = 1 - ((300 / (float)screen_w) / 4);
 				rectYScaled = 0.24 - (((0 + (1 * 18)) / (float)screen_h) * 5) + ((0 + (1 * 18)) / (float)screen_h);
 			}

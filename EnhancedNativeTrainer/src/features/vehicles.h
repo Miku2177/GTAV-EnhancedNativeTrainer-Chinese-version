@@ -55,15 +55,15 @@ const std::vector<std::string> VEH_MASS_CAPTIONS{ "OFF", "3x", "5x", "10x", "30x
 const std::vector<int> VEH_MASS_VALUES{ 0, 5, 10, 30, 50, 100, 50000 };
 extern int VehMassMultIndex;
 extern bool massChanged;
-extern int current_player_forceshield;
+extern int current_player_forceshieldN;
 extern bool player_massChanged;
 
 const std::vector<std::string> VEH_SPEEDLIMITER_CAPTIONS{ "OFF", "5 (MPH)", "10 (MPH)", "15 (MPH)", "20 (MPH)", "25 (MPH)", "30 (MPH)", "35 (MPH)", "40 (MPH)", "45 (MPH)", "50 (MPH)", "55 (MPH)", "60 (MPH)", "65 (MPH)", "70 (MPH)", "75 (MPH)", "80 (MPH)", "85 (MPH)", "90 (MPH)", "95 (MPH)", "100 (MPH)", "105 (MPH)", "110 (MPH)", "115 (MPH)", "120 (MPH)", "125 (MPH)", "130 (MPH)", "135 (MPH)", "140 (MPH)", "145 (MPH)", "150 (MPH)", "160 (MPH)", "170 (MPH)", "180 (MPH)", "190 (MPH)", "200 (MPH)" };
 const std::vector<int> VEH_SPEEDLIMITER_VALUES{ 0, 2, 4, 7, 9, 11, 13, 16, 18, 20, 22, 24, 27, 29, 31, 33, 36, 38, 40, 42, 44, 46, 48, 51, 53, 55, 57, 59, 61, 63, 66, 70, 75, 80, 85, 89 };
 extern int speedLimiterIndex;
 extern bool speedLimiterChanged;
-extern int DoorAutolockIndex;
-extern bool DoorAutolockChanged;
+//extern int DoorAutolockIndex;
+//extern bool DoorAutolockChanged;
 extern int speedCityLimiterIndex;
 extern bool speedCityLimiterChanged;
 extern int speedCountryLimiterIndex;
@@ -93,6 +93,13 @@ extern bool VehColour_Changed;
 //Turn Signals Off Acceleration
 const std::vector<std::string> VEH_TURN_SIGNALS_ACCELERATION_CAPTIONS{ "OFF", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
 const std::vector<int> VEH_TURN_SIGNALS_ACCELERATION_VALUES{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+
+//Blip Size
+const std::vector<std::string> VEH_BLIPSIZE_CAPTIONS{ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
+const std::vector<double> VEH_BLIPSIZE_VALUES{ 0.3, 0.5, 0.8, 1.0, 1.2, 1.5, 1.7, 2.0, 2.5, 3.0 };
+
+const std::vector<std::string> VEH_BLIPSYMBOL_CAPTIONS{ "Standard", "Player", /*"North",*/ "Waypoint", /*"BigCircleOutline",*/ "ArrowUpOutlined", /*"ArrowDownOutlined", "ArrowUp", "ArrowDown", "PoliceHelicopterAnimated", "Jet"*/ };
+const std::vector<int> VEH_BLIPSYMBOL_VALUES{ 1, 6, /*7,*/ 8, /*10,*/ 11, /*12, 13, 14, 15, 16*/ };
 
 extern int NPCVehicleDamageOnCollIndex;
 

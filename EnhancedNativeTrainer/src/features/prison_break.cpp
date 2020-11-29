@@ -13,6 +13,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "script.h"
 #include "area_effect.h"
 #include "prison_break.h"
+#include "road_laws.h"
 #include <set>
 #include <iostream>
 #include <vector>
@@ -57,7 +58,7 @@ int current_player_escapemoney = 4;
 bool current_player_escapemoney_Changed = true;
 int current_player_discharge = 3;
 bool current_player_discharge_Changed = true;
-int current_escape_stars = 2;
+int current_escape_stars = 3;
 bool current_escape_stars_Changed = true;
 
 ////////////////////////////////////////// PRISON BREAK //////////////////////////////////////////
@@ -496,7 +497,7 @@ void prison_break()
 				}
 				
 				PLAYER::SET_MAX_WANTED_LEVEL(5);
-				if (!featurePrison_Hardcore) PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), PLAYER_ESCAPESTARS_VALUES[current_escape_stars], 0);
+				if (!featurePrison_Hardcore) PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), VEH_STARSPUNISH_VALUES[current_escape_stars], 0);
 				if (featurePrison_Hardcore) PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 5, 0);
 				PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
 				PLAYER::SET_POLICE_IGNORE_PLAYER(PLAYER::PLAYER_ID(), false);
