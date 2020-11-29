@@ -53,12 +53,12 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 //Player Health
 const std::vector<std::string> PLAYER_HEALTH_CAPTIONS{ "OFF", "1", "10", "20", "30", "50", "100", "200", "300", "500", "1000", "5000", "10000", "20000", "30000" };
 const int PLAYER_HEALTH_VALUES[] = { 0, 101, 110, 120, 130, 150, 200, 300, 400, 600, 1100, 5100, 10100, 20100, 30100 };
-extern int current_player_health;
-extern bool current_player_health_Changed;
+//extern int current_player_health;
+//extern bool current_player_health_Changed;
 extern int PedsHealthIndex;
 extern bool PedsHealthChanged;
-extern int BodyHealthIndex;
-extern bool BodyHealthChanged;
+//extern int BodyHealthIndex;
+//extern bool BodyHealthChanged;
 
 extern Vehicle temp_vehicle;
 extern Ped temp_ped;
@@ -67,7 +67,7 @@ extern bool featurePlayerInvisibleInVehicle;
 extern bool featureShowStatusMessage;
 extern bool featureNoAutoRespawn;
 extern bool player_died;
-extern bool npc_player_died;
+//extern bool npc_player_died;
 extern bool featureWantedLevelFrozen;
 extern bool in_prison;
 extern bool super_jump_no_parachute;
