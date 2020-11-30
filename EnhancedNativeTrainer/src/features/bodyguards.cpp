@@ -135,7 +135,8 @@ bool BodyBlipSymbol_Changed = true;
 
 //Group Formation
 const std::vector<std::string> BODY_GROUPFORMATION_CAPTIONS{ "Default", "Circle Around Leader", "Line With Leader At Center" };
-const std::vector<int> BODY_GROUPFORMATION_VALUES{ 0, 1, 3 };
+//const std::vector<int> BODY_GROUPFORMATION_VALUES{ 0, 1, 3 };
+const int BODY_GROUPFORMATION_VALUES[] = { 0, 1, 3 };
 int BodyGroupFormationIndex = 1;
 bool BodyGroupFormationChanged = true;
 

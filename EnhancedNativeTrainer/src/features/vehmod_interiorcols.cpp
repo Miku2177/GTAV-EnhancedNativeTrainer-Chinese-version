@@ -2,7 +2,7 @@
 #include "..\ui_support\menu_functions.h"
 #include "..\io\config_io.h"
 
-std::vector<PaintColor> PAINTS_ALL{
+const std::vector<PaintColor> PAINTS_ALL{
 	{0, "Black"},
 	{1, "Graphite"},
 	{2, "Black Steel"},
