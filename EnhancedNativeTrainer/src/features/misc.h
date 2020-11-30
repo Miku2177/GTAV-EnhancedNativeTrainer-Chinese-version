@@ -86,6 +86,9 @@ const int MISC_TRAINERCONTROL_VALUES[] = { 0, 1 };
 extern int TrainerControlIndex;
 //extern bool TrainerControlChanged;
 
+const std::vector<std::string> MISC_PHONE_BILL_CAPTIONS{ "10$", "50$", "100$", "500$", "1000$", "5000$", "10000$", "50000$", "100000$", "500000$", "1000000$" };
+const float MISC_PHONE_BILL_VALUES[] = { 10.0, 50.0, 100.0, 500.0, 1000.0, 5000.0, 10000.0, 50000.0, 100000.0, 500000.0, 1000000.0 };
+
 extern const Hash PLAYER_ZERO;
 extern const Hash PLAYER_ONE;
 extern const Hash PLAYER_TWO;

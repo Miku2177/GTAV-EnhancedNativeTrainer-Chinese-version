@@ -1914,7 +1914,7 @@ void process_road_laws_menu(){
 	listItem->value = StarsPunishIndex;
 	menuItems.push_back(listItem);
 
-	listItem = new SelectFromListMenuItem(VEH_FINESIZE_CAPTIONS, onchange_fine_size_index);
+	listItem = new SelectFromListMenuItem(MISC_PHONE_BILL_CAPTIONS, onchange_fine_size_index);
 	listItem->wrap = false;
 	listItem->caption = "Fine Amount";
 	listItem->value = FineSizeIndex;

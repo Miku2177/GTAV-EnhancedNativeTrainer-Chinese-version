@@ -30,8 +30,8 @@ extern int SpeedingSpeedwayIndex;
 //extern bool SpeedingSpeedway_Changed;
 
 //Fine Size
-const std::vector<std::string> VEH_FINESIZE_CAPTIONS{ "$10", "$50", "$100", "$500", "$1000", "$10000", "$50000", "$100000", "$500000", "$1000000" };
-const int VEH_FINESIZE_VALUES[] = { 10, 50, 100, 500, 1000, 10000, 50000, 100000, 500000, 1000000 };
+//const std::vector<std::string> VEH_FINESIZE_CAPTIONS{ "$10", "$50", "$100", "$500", "$1000", "$10000", "$50000", "$100000", "$500000", "$1000000" };
+//const int VEH_FINESIZE_VALUES[] = { 10, 50, 100, 500, 1000, 10000, 50000, 100000, 500000, 1000000 };
 extern int FineSizeIndex;
 //extern bool FineSize_Changed;
 

@@ -122,8 +122,8 @@ int BodyDistanceIndex = 7;
 bool BodyDistance_Changed = true;
 
 //Blip Colour
-const std::vector<std::string> BODY_BLIPCOLOUR_CAPTIONS{ "White", "Red", "Green", "Blue", "Orange", "Purple", "Grey", "Brown", "Pink", "Dark Green", "Dark Purple", "Dark Blue" };
-const int BODY_BLIPCOLOUR_VALUES[] = { 0, 1, 2, 3, 17, 19, 20, 21, 23, 25, 27, 29 };
+//const std::vector<std::string> BODY_BLIPCOLOUR_CAPTIONS{ "White", "Red", "Green", "Blue", "Orange", "Purple", "Grey", "Brown", "Pink", "Dark Green", "Dark Purple", "Dark Blue" };
+//const int BODY_BLIPCOLOUR_VALUES[] = { 0, 1, 2, 3, 17, 19, 20, 21, 23, 25, 27, 29 };
 int BodyBlipColourIndex = 0;
 bool BodyBlipColour_Changed = true;
 
@@ -1450,7 +1450,7 @@ void process_bodyguard_blips_menu(){
 	listItem->value = BodyBlipSizeIndex;
 	menuItems.push_back(listItem);
 
-	listItem = new SelectFromListMenuItem(BODY_BLIPCOLOUR_CAPTIONS, onchange_body_blipcolour_index);
+	listItem = new SelectFromListMenuItem(VEH_BLIPCOLOUR_CAPTIONS, onchange_body_blipcolour_index);
 	listItem->wrap = false;
 	listItem->caption = "Blip Colour";
 	listItem->value = BodyBlipColourIndex;
@@ -1848,7 +1848,7 @@ void add_body_blip() {
 		if (NPC_RAGDOLL_VALUES[BodyBlipFlashIndex] == 1) UI::SET_BLIP_FLASHES(blip_body[0], true);
 		if (NPC_RAGDOLL_VALUES[BodyBlipFlashIndex] == 2) UI::SET_BLIP_FLASHES_ALTERNATE(blip_body[0], true);
 		UI::SET_BLIP_SCALE(blip_body[0], VEH_BLIPSIZE_VALUES[BodyBlipSizeIndex]);
-		UI::SET_BLIP_COLOUR(blip_body[0], BODY_BLIPCOLOUR_VALUES[BodyBlipColourIndex]);
+		UI::SET_BLIP_COLOUR(blip_body[0], VEH_BLIPCOLOUR_VALUES[BodyBlipColourIndex]);
 		BLIPTABLE_BODYGUARD.push_back(blip_body[0]);
 	}
 }

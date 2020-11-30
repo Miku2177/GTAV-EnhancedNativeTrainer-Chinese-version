@@ -831,20 +831,20 @@ void road_laws()
 					if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO) {
 						STATS::STAT_GET_INT(SP0_TOTAL_CASH, &outValue_beingfined, -1);
 						statHash_beingfined = SP0_TOTAL_CASH;
-						STATS::STAT_SET_INT(statHash_beingfined, outValue_beingfined - VEH_FINESIZE_VALUES[FineSizeIndex], true);
-						if (outValue_beingfined < VEH_FINESIZE_VALUES[FineSizeIndex]) being_arrested = true;
+						STATS::STAT_SET_INT(statHash_beingfined, outValue_beingfined - MISC_PHONE_BILL_VALUES[FineSizeIndex], true);
+						if (outValue_beingfined < MISC_PHONE_BILL_VALUES[FineSizeIndex]) being_arrested = true;
 					}
 					if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE) {
 						STATS::STAT_GET_INT(SP1_TOTAL_CASH, &outValue_beingfined, -1);
 						statHash_beingfined = SP1_TOTAL_CASH;
-						STATS::STAT_SET_INT(statHash_beingfined, outValue_beingfined - VEH_FINESIZE_VALUES[FineSizeIndex], true);
-						if (outValue_beingfined < VEH_FINESIZE_VALUES[FineSizeIndex]) being_arrested = true;
+						STATS::STAT_SET_INT(statHash_beingfined, outValue_beingfined - MISC_PHONE_BILL_VALUES[FineSizeIndex], true);
+						if (outValue_beingfined < MISC_PHONE_BILL_VALUES[FineSizeIndex]) being_arrested = true;
 					}
 					if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO) {
 						STATS::STAT_GET_INT(SP2_TOTAL_CASH, &outValue_beingfined, -1);
 						statHash_beingfined = SP2_TOTAL_CASH;
-						STATS::STAT_SET_INT(statHash_beingfined, outValue_beingfined - VEH_FINESIZE_VALUES[FineSizeIndex], true);
-						if (outValue_beingfined < VEH_FINESIZE_VALUES[FineSizeIndex]) being_arrested = true;
+						STATS::STAT_SET_INT(statHash_beingfined, outValue_beingfined - MISC_PHONE_BILL_VALUES[FineSizeIndex], true);
+						if (outValue_beingfined < MISC_PHONE_BILL_VALUES[FineSizeIndex]) being_arrested = true;
 					}
 				}
 

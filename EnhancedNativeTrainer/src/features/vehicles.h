@@ -923,11 +923,11 @@ void reset_vehicle_globals();
 
 void reset_veh_weapons_globals();
 
-bool process_spawn_menu_cars();
+//bool process_spawn_menu_cars();
 
 bool onconfirm_spawn_menu_cars(MenuItem<int> choice);
 
-bool process_spawn_menu_indus();
+//bool process_spawn_menu_indus();
 
 void vehicle_flip();
 
