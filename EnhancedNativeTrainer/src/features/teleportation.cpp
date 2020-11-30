@@ -60,7 +60,7 @@ int lastMenuChoiceInCategories[] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 int activeLineIndexChauffeur = 0;
 int activeLineIndex3dmarker = 0;
 
-std::vector<tele_location> LOCATIONS_SAFE = {
+const std::vector<tele_location> LOCATIONS_SAFE = {
 	{ "Franklin's Safehouse", -18.0355f, -1456.94f, 30.4548f },
 	{ "Franklin's Safehouse Inside", -14.3803f, -1438.51f, 31.1073f },
 	{ "Franklin's Safehouse 2", 10.8766f, 545.654f, 175.419f },
@@ -75,7 +75,7 @@ std::vector<tele_location> LOCATIONS_SAFE = {
 	{ "Trevor's Safehouse 3 Inside", 96.1536f, -1290.73f, 29.2664f },
 };
 
-std::vector<tele_location> LOCATIONS_LANDMARKS = {
+const std::vector<tele_location> LOCATIONS_LANDMARKS = {
 	{ "Abandoned Motel", 1567.35f, 3566.76f, 35.4367f },
 	{ "Aerial Tramway", -740.235f, 5594.81f, 41.6546f },
 	{ "Airport Field", -1336.0f, -3044.0f, 13.9f },
@@ -157,7 +157,7 @@ std::vector<tele_location> LOCATIONS_LANDMARKS = {
 
 // Extra locations coordinates source: "PulseR_HD" @ http://gtaforums.com/topic/789786-vrelwip-simple-trainer-enhancements-skin-detail-chooser-menu-architecture/?p=1067398379
 
-std::vector<tele_location> LOCATIONS_HIGH = {
+const std::vector<tele_location> LOCATIONS_HIGH = {
 	{ "1 Interstate Guide-Board", 1430.13f, 716.454f, 85.0183f },
 	{ "Airplane Graveyard Airplane Tail ", 2395.096f, 3049.616f, 60.053f },
 	{ "Airport Entrance Tower Roof", -912.523f, -2529.81f, 41.96f },
@@ -204,7 +204,7 @@ std::vector<tele_location> LOCATIONS_HIGH = {
 	{ "Windmill Top", 2026.677f, 1842.684f, 136.213f },
 };
 
-std::vector<tele_location> LOCATIONS_UNDERWATER = {
+const std::vector<tele_location> LOCATIONS_UNDERWATER = {
 	{ "Dead Sea Monster", -3373.726f, 504.714f, -24.656f },
 	{ "Dead Sea Monster 2", -3515.15f, 3809.09f, -77.9381f },
 	{ "Dead Sea Monster 3", 3985.13f, 4858.07f, -32.9598f },
@@ -243,7 +243,7 @@ std::vector<tele_location> LOCATIONS_UNDERWATER = {
 	{ "Underwater Tank For Liquids", -2857.01f, -490.801f, -16.9937f },
 };
 
-std::vector<tele_location> LOCATIONS_INTERIORS = {
+const std::vector<tele_location> LOCATIONS_INTERIORS = {
 	{ "Airport Facility Interior", -1588.56f, -3228.38f, 26.3362f, {}, {}, {}, false },
 	{ "Airport Facility Interior 2", -1144.38f, -2803.47f, 34.4773f, {}, {}, {}, false },
 	{ "Airport Facility Interior 3", -1042.93f, -2865.61f, 35.4773f, {}, {}, {}, false },
@@ -293,7 +293,7 @@ std::vector<tele_location> LOCATIONS_INTERIORS = {
 };
 
 /* Name, coords, IPL name, scenary (props) required, scenary to remove, bool isloaded*/
-std::vector<tele_location> LOCATIONS_REQSCEN = {
+const std::vector<tele_location> LOCATIONS_REQSCEN = {
 	{ "Aircraft Carrier", 3069.330f, -4632.4f, 15.043f, IPLS_CARRIER, {}, {}, false },
 	{ "Caida Libre (no plane)", 2814.7000f, 4758.5000f, 48.000f, { "Plane_crash_trench" }, {}, {}, false },
 	{ "Fort Zancudo UFO", -2052.000f, 3237.000f, 1456.973f, { "ufo", "ufo_lod", "ufo_eye" }, {}, {}, false },
@@ -307,7 +307,7 @@ std::vector<tele_location> LOCATIONS_REQSCEN = {
 };
 
 /* Name, coords, IPL name, scenary (props) required, scenary to remove, bool isloaded*/
-std::vector<tele_location> LOCATIONS_ONLINE = {
+const std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "2 Car Garage", 173.1176f, -1003.279f, -99.000f, { "hw1_blimp_interior_v_garages_milo_" }, {}, {}, false },
 	{ "4 Car Garage", 199.9716f, -1018.954f, -99.4041f, { "hei_hw1_blimp_interior_v_garagem_sp_milo_" }, {}, {}, false },
 	{ "4 Integrity Way Apt 10", -32.17249000f, -579.01830000f, 82.90740000f, { "hei_hw1_blimp_interior_10_dlc_apart_high_new_milo_" }, {}, {}, false },
@@ -385,7 +385,7 @@ std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Weazel Plaza Apt 11", -889.30300000f, -451.77510000f, 119.32700000f, { "hw1_blimp_interior_v_apartment_high_milo__11" }, {}, {}, false },
 }; 
 
-std::vector<tele_location> LOCATIONS_ACTORS = {
+const std::vector<tele_location> LOCATIONS_ACTORS = {
 	{ "Andy Moon", -1279.93f, -1214.07f, 4.55132f },
 	{ "Baygor", -672.901f, -230.656f, 36.9835f },
 	{ "Bill Binder", -43.2164f, 6514.1f, 31.4909f },
@@ -402,7 +402,7 @@ std::vector<tele_location> LOCATIONS_ACTORS = {
 	{ "Zombie", 183.262f, 182.957f, 105.538f },
 };
 
-std::vector<tele_location> LOCATIONS_COLLECTIBLES = {
+const std::vector<tele_location> LOCATIONS_COLLECTIBLES = {
 	{ "Epsilon Tract 1", 498.686f, 5605.52f, 797.91f },
 	{ "Epsilon Tract 2", 2659.01f, -1359.13f, -17.1146f },
 	{ "Epsilon Tract 3", 25.7736f, 7645.39f, 18.8348f },
@@ -685,7 +685,7 @@ std::vector<tele_location> LOCATIONS_COLLECTIBLES = {
 	{ "Submarine Piece 30", -3401.02f, 3718.91f, -81.7285f },
 };
 
-std::vector<tele_location> LOCATIONS_STUNTS = {
+const std::vector<tele_location> LOCATIONS_STUNTS = {
 	{ "Stunt Jump 1", 46.212f, 6535.91f, 31.4471f },
 	{ "Stunt Jump 2", -183.874f, 6557.14f, 11.0973f },
 	{ "Stunt Jump 3", 486.981f, 4311.28f, 55.6758f },
@@ -738,7 +738,7 @@ std::vector<tele_location> LOCATIONS_STUNTS = {
 	{ "Stunt Jump 50", 3343.38f, 5151.73f, 18.7621f },
 };
 
-std::string JELLMAN_CAPTION = "Heist Map Updates In SP";
+const std::string JELLMAN_CAPTION = "Heist Map Updates In SP";
 
 static std::vector<std::string> MENU_LOCATION_CATEGORIES{ "Safehouses", "Landmarks", "Roof/High Up", "Underwater", "Interiors", "Extra Exterior Scenery", "Online Maps", "Special Actors/Freaks Locations", "Collectibles", "Stunts" };// <-- not sure what went wrong here, but it don't look right.
 

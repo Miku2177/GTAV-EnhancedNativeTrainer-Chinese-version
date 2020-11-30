@@ -47,7 +47,7 @@ bool featurePhone3DOnBike = false;
 bool featureNoPhoneOnHUD = false;
 int secs_passed, secs_curr = -1;
 float temp_seconds, bill_seconds = 0;
-float bill_to_pay, mins = -1;
+float bill_to_pay = -1;
 //
 bool featureDisableRecording = false;
 // dynamic health bar variables
@@ -1537,6 +1537,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 
 	// Phone Bill
 	if (featurePhoneBillEnabled) {
+		float mins = -1;
 		if (PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed) && AUDIO::IS_MOBILE_PHONE_CALL_ONGOING()) {
 			secs_passed = clock() / CLOCKS_PER_SEC;
 			if (((clock() / CLOCKS_PER_SEC) - secs_curr) != 0) {

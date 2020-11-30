@@ -54,7 +54,7 @@ const static int SPECIAL_ID_FOR_ENGINE_SOUND = 101;
 
 const static int SPECIAL_ID_FOR_XENON_COLOUR = 102;
 
-std::vector<std::string> wheel_names { "Sport", "Muscle", "Lowrider", "SUV", "Offroad", "Tuner", "Bike", "High-End", "Benny's Originals", "Benny's Bespoke", "Formula", "Street" };
+const std::vector<std::string> wheel_names { "Sport", "Muscle", "Lowrider", "SUV", "Offroad", "Tuner", "Bike", "High-End", "Benny's Originals", "Benny's Bespoke", "Formula", "Street" };
 
 std::map<int, std::string> mod_slots;
 
