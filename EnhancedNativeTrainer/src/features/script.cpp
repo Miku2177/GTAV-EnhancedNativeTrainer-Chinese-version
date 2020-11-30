@@ -171,9 +171,9 @@ Vehicle veh_killed;
 
 // player model control, switching on normal ped model when needed
 
-char* player_models[] = {"player_zero", "player_one", "player_two"};
+char* player_models[] = { "player_zero", "player_one", "player_two" };
 
-char* mplayer_models[] = {"mp_f_freemode_01", "mp_m_freemode_01"};
+char* mplayer_models[] = { "mp_f_freemode_01", "mp_m_freemode_01" };
 
 const char* CLIPSET_DRUNK = "move_m@drunk@verydrunk";
 
@@ -1694,7 +1694,7 @@ bool onconfirm_powerpunch_menu(MenuItem<int> choice)
 }
 
 void process_powerpunch_menu() {
-	std::string caption = "Power Punch Options";
+	const std::string caption = "Power Punch Options";
 
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
@@ -1743,7 +1743,7 @@ void process_powerpunch_menu() {
 }
 
 bool process_player_life_menu(){
-	std::string caption = "Player Data";
+	const std::string caption = "Player Data";
 
 	std::vector<MenuItem<int> *> menuItems;
 	MenuItem<int> *item;
@@ -1793,7 +1793,7 @@ bool process_player_life_menu(){
 }
 
 bool maxwantedlevel_menu() {
-	std::string caption = "Wanted Level Settings Options";
+	const std::string caption = "Wanted Level Settings Options";
 
 	std::vector<MenuItem<int> *> menuItems;
 	SelectFromListMenuItem *listItem;
@@ -1847,7 +1847,7 @@ bool maxwantedlevel_menu() {
 }
 
 bool mostwanted_menu() {
-	std::string caption = "Wanted Fugitive Options";
+	const std::string caption = "Wanted Fugitive Options";
 
 	std::vector<MenuItem<int> *> menuItems;
 	SelectFromListMenuItem *listItem;
@@ -1883,7 +1883,7 @@ bool mostwanted_menu() {
 }
 
 bool player_movement_speed() {
-	std::string caption = "Player Movement Speed Options";
+	const std::string caption = "Player Movement Speed Options";
 
 	std::vector<MenuItem<int> *> menuItems;
 	SelectFromListMenuItem *listItem;
@@ -1932,7 +1932,7 @@ bool player_movement_speed() {
 }
 
 bool process_ragdoll_menu() {
-	std::string caption = "Ragdoll Options";
+	const std::string caption = "Ragdoll Options";
 
 	std::vector<MenuItem<int> *> menuItems;
 	SelectFromListMenuItem *listItem;
@@ -1980,7 +1980,7 @@ bool process_ragdoll_menu() {
 }
 
 bool process_player_prison_menu(){
-	std::string caption = "Prison Break Options";
+	const std::string caption = "Prison Break Options";
 
 	std::vector<MenuItem<int> *> menuItems;
 	SelectFromListMenuItem *listItem;
@@ -2040,7 +2040,7 @@ bool process_player_prison_menu(){
 }
 
 bool process_player_forceshield_menu() {
-	std::string caption = "Jedi Powers Options";
+	const std::string caption = "Jedi Powers Options";
 
 	std::vector<MenuItem<int> *> menuItems;
 	SelectFromListMenuItem *listItem;
@@ -2115,7 +2115,7 @@ bool onconfirm_player_menu(MenuItem<int> choice){
 void process_player_menu(){
 	const int lineCount = 27;
 
-	std::string caption = "Player Options";
+	const std::string caption = "Player Options";
 
 	StandardOrToggleMenuDef lines[lineCount] = {
 		{"Player Appearance", NULL, NULL, false},
@@ -2177,7 +2177,7 @@ bool onconfirm_reset_menu(MenuItem<int> choice){
 void process_reset_menu(){
 	const int lineCount = 2;
 	
-	std::string caption = "Reset All Settings";
+	const std::string caption = "Reset All Settings";
 	
 	StandardOrToggleMenuDef lines[lineCount] = {
 		{ "NO", NULL, NULL, true},

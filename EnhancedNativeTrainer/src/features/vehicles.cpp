@@ -8,7 +8,6 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 (C) Rob Pridham and fellow contributors 2015
 */
 
-
 #include "vehicles.h"
 #include "fuel.h"
 #include "enginedegrade.h"
@@ -1068,13 +1067,13 @@ bool onconfirm_vehdoor_menu(MenuItem<int> choice){
 }
 
 bool process_veh_door_menu(){
-	std::string caption = "Vehicle Control Options";
+	const std::string caption = "Vehicle Control Options";
 
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 
 	std::vector<MenuItem<int>*> menuItems;
 	
-	std::vector<std::string> DOOR_NAMES = {
+	const std::vector<std::string> DOOR_NAMES = {
 		"Front Left Door",
 		"Front Right Door",
 		"Rear Left Door",
@@ -1309,7 +1308,7 @@ bool onconfirm_speed_menu(MenuItem<int> choice)
 }
 
 void process_speed_menu(){
-	std::string caption = "Speed And Altitude Options";
+	const std::string caption = "Speed And Altitude Options";
 
 	std::vector<MenuItem<int>*> menuItems;
 
@@ -1369,7 +1368,7 @@ bool onconfirm_visualize_menu(MenuItem<int> choice)
 }
 
 void process_visualize_menu() {
-	std::string caption = "Vehicle Indicators Options";
+	const std::string caption = "Vehicle Indicators Options";
 
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
@@ -1434,7 +1433,7 @@ bool onconfirm_speedlimit_menu(MenuItem<int> choice)
 }
 
 void process_speedlimit_menu() {
-	std::string caption = "Speed Limit Options";
+	const std::string caption = "Speed Limit Options";
 
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
@@ -1467,7 +1466,7 @@ bool onconfirm_fuel_colour_menu(MenuItem<int> choice)
 }
 
 bool process_fuel_colour_menu(){
-	std::string caption = "RGB Settings";
+	const std::string caption = "RGB Settings";
 
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
@@ -1501,7 +1500,7 @@ bool onconfirm_enginedegrade_menu(MenuItem<int> choice)
 }
 
 void process_engine_degrade_menu() {
-	std::string caption = "Engine Damage Options";
+	const std::string caption = "Engine Damage Options";
 
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
@@ -1614,7 +1613,7 @@ void DrawSprite(char * Streamedtexture, char * textureName, float x, float y, fl
 }
 
 void process_fuel_menu(){
-	std::string caption = "Fuel Consumption Options";
+	const std::string caption = "Fuel Consumption Options";
 
 	std::vector<MenuItem<int>*> menuItems;
 	MenuItem<int> *item;
@@ -1792,7 +1791,7 @@ bool onconfirm_vehicle_remember_menu(MenuItem<int> choice)
 }
 
 void process_remember_vehicles_menu() {
-	std::string caption = "Vehicle Tracking Options";
+	const std::string caption = "Vehicle Tracking Options";
 
 	std::vector<MenuItem<int>*> menuItems;
 	MenuItem<int> *item;
@@ -1888,7 +1887,7 @@ bool onconfirm_road_laws_menu(MenuItem<int> choice)
 }
 
 void process_road_laws_menu(){
-	std::string caption = "Road Laws Options";
+	const std::string caption = "Road Laws Options";
 
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
@@ -2096,7 +2095,7 @@ bool onconfirm_veh_menu(MenuItem<int> choice){
 }
 
 void process_veh_menu(){
-	std::string caption = "Vehicle Options";
+	const std::string caption = "Vehicle Options";
 
 	std::vector<MenuItem<int>*> menuItems;
 	MenuItem<int> *item;

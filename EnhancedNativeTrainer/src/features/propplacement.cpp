@@ -56,7 +56,7 @@ void begin_prop_placement(SpawnedPropInstance prop)
 	//const float lineWidth = 250.0;
 	//const int lineCount = 1;
 	
-	std::string caption = "Object Placement";
+	const std::string caption = "Object Placement";
 
 	//draw_menu_header_line(caption,350.0f,50.0f,15.0f,0.0f,15.0f,false);
 
