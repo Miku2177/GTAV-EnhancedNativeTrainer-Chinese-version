@@ -22,7 +22,7 @@ const std::vector<std::string> TIME_FLOW_RATE_CAPTIONS{"Frozen Time (0s/s)", "Ha
 const std::vector<float> TIME_FLOW_RATE_VALUES{0.0f, 0.5f, 1.0f, 2.0f, 3.0f, 5.0f, 6.0f, 10.0f, 12.0f, 15.0f, 30.0f, 60.0f, 120.0f, 180.0f, 300.0f, 360.0f, 600.0f, 720.0f, 900.0f, 1800.0f, 3600.0f, 10800.0f, 21600.0f, 43200.0f, 86400.0f};
 const int DEFAULT_TIME_FLOW_RATE = 10;
 
-const std::vector<float> HOTKEY_FLOW_RATE_VALUES{ 0.0f, 0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f, 1.0f };
+//const std::vector<float> HOTKEY_FLOW_RATE_VALUES{ 0.0f, 0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f, 1.0f };
 const int DEFAULT_HOTKEY_FLOW_RATE = 10;
 
 const int TIME_TO_SLOW_AIM = 2000;
@@ -800,7 +800,7 @@ void update_time_features(Player player){
 		weHaveChangedTimeScale = true;
 	}
 	else if (!HotkeyFlowRateLocked && HotkeyFlowRateIndex != DEFAULT_HOTKEY_FLOW_RATE && PLAYER::IS_PLAYER_CONTROL_ON(player) && !PLAYER::IS_PLAYER_DEAD(PLAYER::PLAYER_ID())) { // toggle game speed via hotkey
-		GAMEPLAY::SET_TIME_SCALE(HOTKEY_FLOW_RATE_VALUES.at(HotkeyFlowRateIndex));
+		GAMEPLAY::SET_TIME_SCALE(TIME_SPEED_VALUES.at(HotkeyFlowRateIndex));
 		weHaveChangedTimeScale = true;
 	}
 	else if(PLAYER::IS_PLAYER_FREE_AIMING(player) && PLAYER::IS_PLAYER_CONTROL_ON(player) && slow_aim == true){

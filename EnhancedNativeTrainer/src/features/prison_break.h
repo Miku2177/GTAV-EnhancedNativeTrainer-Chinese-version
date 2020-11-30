@@ -14,8 +14,8 @@ extern int current_player_prison;
 extern bool current_player_prison_Changed;
 
 //Money For escape attempt
-const std::vector<std::string> PLAYER_ESCAPEMONEY_CAPTIONS{ "OFF", "10 000$", "30 000$", "50 000$", "100 000$", "500 000$", "1 000 000$", "5 000 000$", "10 000 000$", "50 000 000$", "100 000 000$" };
-const int PLAYER_ESCAPEMONEY_VALUES[] = { 0, 10000, 30000, 50000, 100000, 500000, 1000000, 5000000, 10000000, 50000000, 100000000 };
+//const std::vector<std::string> PLAYER_ESCAPEMONEY_CAPTIONS{ "OFF", "10 000$", "30 000$", "50 000$", "100 000$", "500 000$", "1 000 000$", "5 000 000$", "10 000 000$", "50 000 000$", "100 000 000$" };
+//const int PLAYER_ESCAPEMONEY_VALUES[] = { 0, 10000, 30000, 50000, 100000, 500000, 1000000, 5000000, 10000000, 50000000, 100000000 };
 extern int current_player_escapemoney;
 extern bool current_player_escapemoney_Changed;
 

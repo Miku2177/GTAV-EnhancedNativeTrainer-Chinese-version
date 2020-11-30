@@ -163,8 +163,6 @@ const Hash SP1_TOTAL_CASH = 0x44BD6982;
 const Hash SP2_TOTAL_CASH = 0x8D75047D;
 
 // Phone Bill Amount
-const std::vector<std::string> MISC_PHONE_BILL_CAPTIONS{ "10$", "50$", "100$", "500$", "1000$", "5000$", "10000$", "50000$", "100000$", "500000$", "1000000$" };
-const float MISC_PHONE_BILL_VALUES[] = { 10.0, 50.0, 100.0, 500.0, 1000.0, 5000.0, 10000.0, 50000.0, 100000.0, 500000.0, 1000000.0 };
 int PhoneBillIndex = 2;
 bool PhoneBillChanged = true;
 

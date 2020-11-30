@@ -11,6 +11,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #pragma comment(lib, "Shlwapi.lib")
 
 #include "script.h"
+#include "misc.h"
 #include "area_effect.h"
 #include "prison_break.h"
 #include "road_laws.h"
@@ -153,19 +154,19 @@ void prison_break()
 				if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO) {
 					STATS::STAT_GET_INT(SP0_TOTAL_CASH, &outValue_your_current_amount, -1);
 					statHash_your_purse = SP0_TOTAL_CASH;
-					if (PLAYER_ESCAPEMONEY_VALUES[current_player_escapemoney] > 0) STATS::STAT_SET_INT(statHash_your_purse, outValue_your_current_amount - PLAYER_ESCAPEMONEY_VALUES[current_player_escapemoney], true);
+					if (MISC_PHONE_BILL_VALUES[current_player_escapemoney] > 0) STATS::STAT_SET_INT(statHash_your_purse, outValue_your_current_amount - MISC_PHONE_BILL_VALUES[current_player_escapemoney], true);
 				}
 				// Franklin
 				if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE) {
 					STATS::STAT_GET_INT(SP1_TOTAL_CASH, &outValue_your_current_amount, -1);
 					statHash_your_purse = SP1_TOTAL_CASH;
-					if (PLAYER_ESCAPEMONEY_VALUES[current_player_escapemoney] > 0) STATS::STAT_SET_INT(statHash_your_purse, outValue_your_current_amount - PLAYER_ESCAPEMONEY_VALUES[current_player_escapemoney], true);
+					if (MISC_PHONE_BILL_VALUES[current_player_escapemoney] > 0) STATS::STAT_SET_INT(statHash_your_purse, outValue_your_current_amount - MISC_PHONE_BILL_VALUES[current_player_escapemoney], true);
 				}
 				// Trevor
 				if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO) {
 					STATS::STAT_GET_INT(SP2_TOTAL_CASH, &outValue_your_current_amount, -1);
 					statHash_your_purse = SP2_TOTAL_CASH;
-					if (PLAYER_ESCAPEMONEY_VALUES[current_player_escapemoney] > 0) STATS::STAT_SET_INT(statHash_your_purse, outValue_your_current_amount - PLAYER_ESCAPEMONEY_VALUES[current_player_escapemoney], true);
+					if (MISC_PHONE_BILL_VALUES[current_player_escapemoney] > 0) STATS::STAT_SET_INT(statHash_your_purse, outValue_your_current_amount - MISC_PHONE_BILL_VALUES[current_player_escapemoney], true);
 				}
 				will_pay_money_for_escape = false;
 			}
