@@ -311,7 +311,7 @@ bool onconfirm_trainerconfig_menu(MenuItem<int> choice){
 }
 
 void process_misc_trainerconfig_menu(){
-	std::string caption = "Trainer Options";
+	const std::string caption = "Trainer Options";
 
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
@@ -561,7 +561,7 @@ bool onconfirm_airbrake_menu(MenuItem<int> choice) {
 }
  
 void process_airbrake_global_menu() {
-	std::string caption = "Airbrake Menu Options";
+	const std::string caption = "Airbrake Menu Options";
 
 	std::vector<MenuItem<int>*> menuItems;
 	MenuItem<int> *item;
@@ -601,7 +601,7 @@ bool onconfirm_defmenutab_menu(MenuItem<int> choice) {
 }
 
 void process_def_menutab_menu() {
-	std::string caption = "Pause Menu Settings Options";
+	const std::string caption = "Pause Menu Settings Options";
 
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
@@ -631,7 +631,7 @@ bool onconfirm_billsettings_menu(MenuItem<int> choice) {
 }
 
 void process_billsettings_menu() {
-	std::string caption = "Phone Bill Options";
+	const std::string caption = "Phone Bill Options";
 
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
@@ -667,7 +667,7 @@ bool onconfirm_phoneonbike_menu(MenuItem<int> choice) {
 }
 
 void process_phoneonbike_menu() {
-	std::string caption = "Use Phone While On Bike Options";
+	const std::string caption = "Use Phone While On Bike Options";
 
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
@@ -706,7 +706,7 @@ bool onconfirm_phonebill_menu(MenuItem<int> choice){
 }
 
 void process_phone_bill_menu(){
-	std::string caption = "Phone Settings Options";
+	const std::string caption = "Phone Settings Options";
 
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
@@ -763,7 +763,7 @@ bool onconfirm_radiosettings_menu(MenuItem<int> choice) {
 }
 
 void process_radio_settings_menu() {
-	std::string caption = "Radio Settings Options";
+	const std::string caption = "Radio Settings Options";
 
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
@@ -828,7 +828,7 @@ bool onconfirm_hudsettings_menu(MenuItem<int> choice) {
 }
 
 void process_hud_settings_menu() {
-	std::string caption = "HUD Settings Options";
+	const std::string caption = "HUD Settings Options";
 
 	std::vector<MenuItem<int>*> menuItems;
 
@@ -914,7 +914,7 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 void process_misc_menu(){
 	const int lineCount = 17;
 
-	std::string caption = "Miscellaneous Options";
+	const std::string caption = "Miscellaneous Options";
 
 	StandardOrToggleMenuDef lines[lineCount] = {
 		{"Trainer Options", NULL, NULL, false},
@@ -1446,12 +1446,12 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	}
 
 	// Dynamic Health Bar
-	if (featureDynamicHealthBar && ENTITY::DOES_ENTITY_EXIST(playerPed) && !DLC2::GET_IS_LOADING_SCREEN_ACTIVE() && !STREAMING::IS_PLAYER_SWITCH_IN_PROGRESS() && dynamic_loading == true && apply_pressed == false) {
-		temp_h = ENTITY::GET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID()) - 100;
-		temp_h_d = floor(ENTITY::GET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID()) / 100);
-		oldplayerPed = playerPed;
-		dynamic_loading = false;
-	}
+	//if (featureDynamicHealthBar && ENTITY::DOES_ENTITY_EXIST(playerPed) && !DLC2::GET_IS_LOADING_SCREEN_ACTIVE() && !STREAMING::IS_PLAYER_SWITCH_IN_PROGRESS() && dynamic_loading == true && apply_pressed == false) {
+	//	temp_h = ENTITY::GET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID()) - 100;
+	//	temp_h_d = floor(ENTITY::GET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID()) / 100);
+	//	oldplayerPed = playerPed;
+	//	dynamic_loading = false;
+	//}
 	if (featureDynamicHealthBar && !CUTSCENE::IS_CUTSCENE_PLAYING() && ENTITY::DOES_ENTITY_EXIST(playerPed) && !DLC2::GET_IS_LOADING_SCREEN_ACTIVE() && !STREAMING::IS_PLAYER_SWITCH_IN_PROGRESS()) {
 		if (!featureMiscHideHud && !featurePhoneShowHud && !featureInVehicleNoHud && !featureMarkerHud/* && !featureMiscHideENTHud*/) UI::DISPLAY_RADAR(false); // There is no need to hide HUD if it's already hidden
 		//auto addr = getScriptHandleBaseAddress(playerPed);

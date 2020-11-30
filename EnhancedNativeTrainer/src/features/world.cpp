@@ -201,7 +201,7 @@ bool onconfirm_weathersettings_menu(MenuItem<int> choice) {
 }
 
 void process_world_weathersettings_menu() {
-	std::string caption = "Weather Settings";
+	const std::string caption = "Weather Settings";
 
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
@@ -305,7 +305,7 @@ void process_weather_menu()
 {
 	const int lineCount = 17;
 
-	std::string caption = "Weather Options";
+	const std::string caption = "Weather Options";
 	
 	StringStandardOrToggleMenuDef lines[lineCount] = {
 		{ "Weather Settings", "FREEZEWEATHER", NULL, NULL, false },
@@ -378,7 +378,7 @@ void process_clouds_menu()
 {
 	const int lineCount = 22; // 22
 
-	std::string caption = "Clouds Options";
+	const std::string caption = "Clouds Options";
 
 	StringStandardOrToggleMenuDef lines[lineCount] = {
 		{ "Freeze Clouds", "FREEZECLOUDS", &featureCloudsFreeze, NULL },
@@ -488,7 +488,7 @@ void process_world_menu()
 {
 	const int lineCount = 8; // Amount of cases +1
 
-	std::string caption = "World Options";
+	const std::string caption = "World Options";
 
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;

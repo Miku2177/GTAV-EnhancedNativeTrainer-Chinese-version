@@ -24,7 +24,7 @@ int lastSelectedBodWeapon = 0;
 
 int myENTGroup = -1;
 int groupID = -1;
-int const BODYGUARD_LIMIT = 7;
+const int BODYGUARD_LIMIT = 7;
 
 Ped cop_to_kill;
 float dist_diff = -1;
@@ -1431,7 +1431,7 @@ bool onconfirm_bodyguard_blips_menu(MenuItem<int> choice)
 }
 
 void process_bodyguard_blips_menu(){
-	std::string caption = "Mark On Map Options";
+	const std::string caption = "Mark On Map Options";
 
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
@@ -2300,7 +2300,7 @@ bool process_bodyguard_menu(){
 	do{
 		requireRefreshOfBodyguardMainMenu = false;
 		
-		std::string caption = "Bodyguard Options";
+		const std::string caption = "Bodyguard Options";
 
 		std::vector<MenuItem<int>*> menuItems;
 		MenuItem<int> *item;

@@ -323,7 +323,7 @@ bool onconfirm_time_menu(MenuItem<int> choice){
 }
 
 void process_time_menu(){
-	std::string caption = "Time Options";
+	const std::string caption = "Time Options";
 
 	std::vector<MenuItem<int>*> menuItems;
 

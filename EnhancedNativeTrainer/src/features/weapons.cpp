@@ -771,7 +771,7 @@ bool onconfirm_coparmed_menu(MenuItem<int> choice)
 }
 
 void process_copweapon_menu(){
-	std::string caption = "Cop Weapons Options";
+	const std::string caption = "Cop Weapons Options";
 
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
@@ -911,7 +911,7 @@ bool onconfirm_pedagainstweapons_menu(MenuItem<int> choice)
 }
 
 void process_pedagainstweapons_menu(){
-	std::string caption = "Peds Don't Like Weapons Options";
+	const std::string caption = "Peds Don't Like Weapons Options";
 
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
@@ -1360,7 +1360,7 @@ bool onconfirm_weapon_menu(MenuItem<int> choice){
 bool process_weapon_menu(){
 	int i = 0;
 
-	std::string caption = "Weapon Options";
+	const std::string caption = "Weapon Options";
 	
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem* listItem;

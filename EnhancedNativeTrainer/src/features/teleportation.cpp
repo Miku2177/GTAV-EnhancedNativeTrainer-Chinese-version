@@ -740,7 +740,7 @@ const std::vector<tele_location> LOCATIONS_STUNTS = {
 
 const std::string JELLMAN_CAPTION = "Heist Map Updates In SP";
 
-static std::vector<std::string> MENU_LOCATION_CATEGORIES{ "Safehouses", "Landmarks", "Roof/High Up", "Underwater", "Interiors", "Extra Exterior Scenery", "Online Maps", "Special Actors/Freaks Locations", "Collectibles", "Stunts" };// <-- not sure what went wrong here, but it don't look right.
+const static std::vector<std::string> MENU_LOCATION_CATEGORIES{ "Safehouses", "Landmarks", "Roof/High Up", "Underwater", "Interiors", "Extra Exterior Scenery", "Online Maps", "Special Actors/Freaks Locations", "Collectibles", "Stunts" };// <-- not sure what went wrong here, but it don't look right.
 
 static std::vector<tele_location> VOV_LOCATIONS[] = { LOCATIONS_SAFE, LOCATIONS_LANDMARKS, LOCATIONS_HIGH, LOCATIONS_UNDERWATER, LOCATIONS_INTERIORS, LOCATIONS_REQSCEN, LOCATIONS_ONLINE, LOCATIONS_ACTORS, LOCATIONS_COLLECTIBLES, LOCATIONS_STUNTS/*, LOCATIONS_BROKEN, LOCATIONS_JELLMAN*/ };
 
@@ -1037,7 +1037,7 @@ bool onconfirm_3dmarker_menu(MenuItem<int> choice)
 }
 
 void set_3d_marker(){
-	std::string caption = "3D Marker Options";
+	const std::string caption = "3D Marker Options";
 
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
@@ -1091,7 +1091,7 @@ bool onconfirm_chauffeur_menu(MenuItem<int> choice)
 }
 
 void getTelChauffeurIndex(){
-	std::string caption = "Chauffeur To Marker Options";
+	const std::string caption = "Chauffeur To Marker Options";
 
 	std::vector<MenuItem<int>*> menuItems;
 	MenuItem<int> *item;
