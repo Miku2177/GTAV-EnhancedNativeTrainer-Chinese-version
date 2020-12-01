@@ -1253,13 +1253,12 @@ void update_features(){
 	////////////////////////////////////// PLAYER DATA ////////////////////////////////////////////////
 	if ((bPlayerExists && featurePlayerLife && featurePlayerLifeUpdated) || (bPlayerExists && featurePlayerLife && PLAYER_ARMOR_VALUES[current_player_stats] > -1 && featurePlayerStatsUpdated) || apply_pressed == true) {
 		if (!STREAMING::IS_PLAYER_SWITCH_IN_PROGRESS()) { 
-			if (featurePlayerLifeUpdated) {
+			if (featurePlayerLifeUpdated && !ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) {
 				if (PLAYER_HEALTH_VALUES[current_player_health] > 0) {
 					PED::SET_PED_MAX_HEALTH(playerPed, PLAYER_HEALTH_VALUES[current_player_health]);
 					ENTITY::SET_ENTITY_HEALTH(playerPed, PLAYER_HEALTH_VALUES[current_player_health]);
 				}
 				if (detained == false && in_prison == false && PLAYER_ARMOR_VALUES[current_player_armor] > -1) {
-					WAIT(200);
 					PLAYER::SET_PLAYER_MAX_ARMOUR(playerPed, PLAYER_ARMOR_VALUES[current_player_armor]);
 					PED::SET_PED_ARMOUR(playerPed, PLAYER_ARMOR_VALUES[current_player_armor]);
 				}
@@ -1307,7 +1306,7 @@ void update_features(){
 		} // end of IS_PLAYER_SWITCH_IN_PROGRESS
 	} 
 	
-	if ((PLAYER::GET_TIME_SINCE_LAST_DEATH() > -1 && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 2000) || (player_died == true/* && !featureNoAutoRespawn*/)) {
+	if ((PLAYER::GET_TIME_SINCE_LAST_DEATH() > -1 && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 2000) || (player_died == true && !featureNoAutoRespawn)) {
 		featurePlayerLifeUpdated = true;
 		featurePlayerStatsUpdated = true;
 		if (!featurePlayerLife) dynamic_loading = true;
