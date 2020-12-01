@@ -1770,10 +1770,12 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			}
 			// Sucking Grenades
 			if (featureWeaponVacuumGrenades) {
-				s_vacuum_secs_passed = clock() / CLOCKS_PER_SEC;
-				if (((clock() / CLOCKS_PER_SEC) - s_vacuum_secs_curr) != 0) {
-					vacuum_seconds = vacuum_seconds + 1;
-					s_vacuum_secs_curr = s_vacuum_secs_passed;
+				if (vacuum_seconds < 30) {
+					s_vacuum_secs_passed = clock() / CLOCKS_PER_SEC;
+					if (((clock() / CLOCKS_PER_SEC) - s_vacuum_secs_curr) != 0) {
+						vacuum_seconds = vacuum_seconds + 1;
+						s_vacuum_secs_curr = s_vacuum_secs_passed;
+					}
 				}
 				if (vacuum_seconds < 16 && WEAPON::GET_SELECTED_PED_WEAPON(playerPed) != GAMEPLAY::GET_HASH_KEY("WEAPON_GRENADELAUNCHER")) set_status_text("Equip the ~g~ Grenade Launcher");
 				Vector3 obj_cor = ENTITY::GET_ENTITY_COORDS(playerPed, TRUE);
@@ -2198,10 +2200,12 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 
 	// Give All Weapons Automatically
 	if (featureGiveAllWeapons && detained == false && in_prison == false && PED::IS_PED_HUMAN(playerPed) && !STREAMING::IS_PLAYER_SWITCH_IN_PROGRESS()) {
-		w_tick_secs_passed = clock() / CLOCKS_PER_SEC;
-		if (((clock() / (CLOCKS_PER_SEC / 1000)) - w_tick_secs_curr) != 0) {
-			tick_allw = tick_allw + 1;
-			w_tick_secs_curr = w_tick_secs_passed;
+		if (tick_allw < 100) {
+			w_tick_secs_passed = clock() / CLOCKS_PER_SEC;
+			if (((clock() / (CLOCKS_PER_SEC / 1000)) - w_tick_secs_curr) != 0) {
+				tick_allw = tick_allw + 1;
+				w_tick_secs_curr = w_tick_secs_passed;
+			}
 		}
 		if (tick_allw > 50 && PlayerUpdated_w && !ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) {
 			WAIT(200);
@@ -2220,10 +2224,12 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	
 	// Add All Weapons Attachments Automatically
 	if (featureAddAllWeaponsAttachments && detained == false && in_prison == false && PED::IS_PED_HUMAN(playerPed) && !STREAMING::IS_PLAYER_SWITCH_IN_PROGRESS()) {
-		w_tick_secs_passed = clock() / CLOCKS_PER_SEC;
-		if (((clock() / (CLOCKS_PER_SEC / 1000)) - w_a_tick_secs_curr) != 0) {
-			tick_a_allw = tick_a_allw + 1;
-			w_a_tick_secs_curr = w_tick_secs_passed;
+		if (tick_a_allw < 150) {
+			w_tick_secs_passed = clock() / CLOCKS_PER_SEC;
+			if (((clock() / (CLOCKS_PER_SEC / 1000)) - w_a_tick_secs_curr) != 0) {
+				tick_a_allw = tick_a_allw + 1;
+				w_a_tick_secs_curr = w_tick_secs_passed;
+			}
 		}
 		if (tick_a_allw > 100 && PlayerUpdated_a && !ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) {
 			WAIT(200);
@@ -2242,10 +2248,12 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 
 	// Equip Saved Weapons
 	if (NPC_RAGDOLL_VALUES[WeaponsSavedLoad] > 0 && detained == false && in_prison == false && PED::IS_PED_HUMAN(playerPed) && !CUTSCENE::IS_CUTSCENE_PLAYING() && GAMEPLAY::GET_MISSION_FLAG() == 0 && !STREAMING::IS_PLAYER_SWITCH_IN_PROGRESS()) {
-		w_tick_secs_passed = clock() / CLOCKS_PER_SEC;
-		if (((clock() / (CLOCKS_PER_SEC / 1000)) - ss_tick_secs_curr) != 0) {
-			tick_s_allw = tick_s_allw + 1;
-			ss_tick_secs_curr = w_tick_secs_passed;
+		if (tick_s_allw < 100) {
+			w_tick_secs_passed = clock() / CLOCKS_PER_SEC;
+			if (((clock() / (CLOCKS_PER_SEC / 1000)) - ss_tick_secs_curr) != 0) {
+				tick_s_allw = tick_s_allw + 1;
+				ss_tick_secs_curr = w_tick_secs_passed;
+			}
 		}
 		if (tick_s_allw > 50 && PlayerUpdated_s && !ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) {
 			WAIT(200);
