@@ -480,9 +480,9 @@ void load_saved_weapons() {
 		int clipMax = WEAPON::GET_MAX_AMMO_IN_CLIP(playerPed, sv->weapon, true); clipMax = min(clipMax, 250);
 		if (WEAPON::HAS_PED_GOT_WEAPON(playerPed, sv->weapon, 0)) {
 			WEAPON::REMOVE_WEAPON_FROM_PED(playerPed, sv->weapon);
-			WEAPON::GIVE_WEAPON_TO_PED(playerPed, sv->weapon, clipMax * 2, false, true);
+			WEAPON::GIVE_WEAPON_TO_PED(playerPed, sv->weapon, clipMax * 2, false, false);
 		}
-		else WEAPON::GIVE_WEAPON_TO_PED(playerPed, sv->weapon, clipMax * 2, false, true);
+		else WEAPON::GIVE_WEAPON_TO_PED(playerPed, sv->weapon, clipMax * 2, false, false);
 
 		if (sv->comp0 != -1) WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, sv->weapon, sv->comp0);
 		if (sv->comp1 != -1) WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, sv->weapon, sv->comp1);
@@ -2198,85 +2198,78 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	}
 
 	// Give All Weapons Automatically
-	if (featureGiveAllWeapons && detained == false && in_prison == false && PED::IS_PED_HUMAN(playerPed)) {
+	if (featureGiveAllWeapons && detained == false && in_prison == false && PED::IS_PED_HUMAN(playerPed) && !STREAMING::IS_PLAYER_SWITCH_IN_PROGRESS()) {
 		w_tick_secs_passed = clock() / CLOCKS_PER_SEC;
 		if (((clock() / (CLOCKS_PER_SEC / 1000)) - w_tick_secs_curr) != 0) {
 			tick_allw = tick_allw + 1;
 			w_tick_secs_curr = w_tick_secs_passed;
 		}
-		if (tick_allw > 200 && PlayerUpdated_w) {
+		if (tick_allw > 50 && PlayerUpdated_w) {
 			give_all_weapons_hotkey();
-			CONTROLS::_SET_CONTROL_NORMAL(0, 159, 1); // 160
-			WAIT(10);
-			CONTROLS::_SET_CONTROL_NORMAL(0, 157, 1);
 			oldplayerPed_W = playerPed;
 			tick_allw = 0;
 			PlayerUpdated_w = false; 
 			if (detained == false && alert_level == 0) player_died = false;
 		}
 		int death_time2 = PLAYER::GET_TIME_SINCE_LAST_DEATH();
-		if (death_time2 > -1 && death_time2 < 2000) PlayerUpdated_w = true; 
-		if (playerPed != oldplayerPed_W) PlayerUpdated_w = true;
-		if (player_died == true) PlayerUpdated_w = true;
-		if (DLC2::GET_IS_LOADING_SCREEN_ACTIVE()) PlayerUpdated_w = true;
+		if (((death_time2 > -1 && death_time2 < 2000) || playerPed != oldplayerPed_W || player_died == true || DLC2::GET_IS_LOADING_SCREEN_ACTIVE()) && PlayerUpdated_w == false) {
+			PlayerUpdated_w = true;
+			tick_allw = 0;
+		}
 	}
 	
 	// Add All Weapons Attachments Automatically
-	if (featureAddAllWeaponsAttachments && detained == false && in_prison == false && PED::IS_PED_HUMAN(playerPed)) {
+	if (featureAddAllWeaponsAttachments && detained == false && in_prison == false && PED::IS_PED_HUMAN(playerPed) && !STREAMING::IS_PLAYER_SWITCH_IN_PROGRESS()) {
 		w_tick_secs_passed = clock() / CLOCKS_PER_SEC;
 		if (((clock() / (CLOCKS_PER_SEC / 1000)) - w_a_tick_secs_curr) != 0) {
 			tick_a_allw = tick_a_allw + 1;
 			w_a_tick_secs_curr = w_tick_secs_passed;
 		}
-		if (tick_a_allw > 400 && PlayerUpdated_a) {
+		if (tick_a_allw > 100 && PlayerUpdated_a) {
 			add_all_weapons_attachments(playerPed);
-			CONTROLS::_SET_CONTROL_NORMAL(0, 159, 1); // 160
-			WAIT(10);
-			CONTROLS::_SET_CONTROL_NORMAL(0, 157, 1);
 			oldplayerPed_A = playerPed;
 			tick_a_allw = 0;
 			PlayerUpdated_a = false;
 			if (detained == false && alert_level == 0) player_died = false;
 		}
 		int death_time2 = PLAYER::GET_TIME_SINCE_LAST_DEATH();
-		if (death_time2 > -1 && death_time2 < 2000) PlayerUpdated_a = true;
-		if (playerPed != oldplayerPed_A) PlayerUpdated_a = true;
-		if (player_died == true) PlayerUpdated_a = true;
+		if (((death_time2 > -1 && death_time2 < 2000) || playerPed != oldplayerPed_A || player_died == true || DLC2::GET_IS_LOADING_SCREEN_ACTIVE()) && PlayerUpdated_a == false) {
+			PlayerUpdated_a = true;
+			tick_a_allw = 0;
+		}
 	}
 
 	// Equip Saved Weapons
-	if (NPC_RAGDOLL_VALUES[WeaponsSavedLoad] > 0 && detained == false && in_prison == false && PED::IS_PED_HUMAN(playerPed) && !CUTSCENE::IS_CUTSCENE_PLAYING() && GAMEPLAY::GET_MISSION_FLAG() == 0) {
+	if (NPC_RAGDOLL_VALUES[WeaponsSavedLoad] > 0 && detained == false && in_prison == false && PED::IS_PED_HUMAN(playerPed) && !CUTSCENE::IS_CUTSCENE_PLAYING() && GAMEPLAY::GET_MISSION_FLAG() == 0 && !STREAMING::IS_PLAYER_SWITCH_IN_PROGRESS()) {
 		w_tick_secs_passed = clock() / CLOCKS_PER_SEC;
 		if (((clock() / (CLOCKS_PER_SEC / 1000)) - ss_tick_secs_curr) != 0) {
 			tick_s_allw = tick_s_allw + 1;
 			ss_tick_secs_curr = w_tick_secs_passed;
 		}
-		if (tick_s_allw > 200 && PlayerUpdated_s) {
+		if (tick_s_allw > 50 && PlayerUpdated_s) {
 			load_saved_weapons();
-			// give all equipped ammo
-			for (int a = 0; a < sizeof(VOV_WEAPON_VALUES) / sizeof(VOV_WEAPON_VALUES[0]); a++) {
+			for (int a = 0; a < sizeof(VOV_WEAPON_VALUES) / sizeof(VOV_WEAPON_VALUES[0]); a++) { // give all equipped ammo
 				for (int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++) {
 					char* weaponName = (char*)VOV_WEAPON_VALUES[a].at(b).c_str();
 					Hash weaponHash = GAMEPLAY::GET_HASH_KEY(weaponName);
-					if (WEAPON::HAS_PED_GOT_WEAPON(playerPed, weaponHash, FALSE)) {
-						WEAPON::GIVE_WEAPON_TO_PED(playerPed, weaponHash, 10000, false, false);
-					}
+					if (WEAPON::HAS_PED_GOT_WEAPON(playerPed, weaponHash, FALSE)) WEAPON::GIVE_WEAPON_TO_PED(playerPed, weaponHash, 10000, false, false);
 				}
 			}
-			//
-			CONTROLS::_SET_CONTROL_NORMAL(0, 159, 1); // 160
-			WAIT(10);
-			CONTROLS::_SET_CONTROL_NORMAL(0, 157, 1);
+			if (WEAPON::IS_PED_ARMED(playerPed, 7)) {
+				CONTROLS::_SET_CONTROL_NORMAL(0, 159, 1); // 160
+				WAIT(10);
+				CONTROLS::_SET_CONTROL_NORMAL(0, 157, 1);
+			}
 			oldplayerPed_s = playerPed;
 			tick_s_allw = 0;
 			PlayerUpdated_s = false;
 			if (detained == false && alert_level == 0) player_died = false;
 		}
 		int death_time2 = PLAYER::GET_TIME_SINCE_LAST_DEATH();
-		if (death_time2 > -1 && death_time2 < 2000) PlayerUpdated_s = true;
-		if (playerPed != oldplayerPed_s) PlayerUpdated_s = true;
-		if (player_died == true) PlayerUpdated_s = true;
-		if (DLC2::GET_IS_LOADING_SCREEN_ACTIVE()) PlayerUpdated_s = true;
+		if (((death_time2 > -1 && death_time2 < 2000) || playerPed != oldplayerPed_s || player_died == true || DLC2::GET_IS_LOADING_SCREEN_ACTIVE()) && PlayerUpdated_s == false) {
+			PlayerUpdated_s = true;
+			tick_s_allw = 0;
+		}
 	}
 
 	// Disables visions if not aiming
