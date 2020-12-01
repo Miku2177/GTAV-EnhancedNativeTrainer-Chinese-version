@@ -493,14 +493,13 @@ void load_saved_weapons() {
 		if (sv->comp6 != -1) WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, sv->weapon, sv->comp6);
 		if (sv->w_tint != -1) WEAPON::SET_PED_WEAPON_TINT_INDEX(playerPed, sv->weapon, sv->w_tint);
 
-		WEAPON::SET_CURRENT_PED_WEAPON(playerPed, sv->weapon, 1);
-
 		int maxAmmo = 0;
 		WEAPON::GET_MAX_AMMO(playerPed, sv->weapon, &maxAmmo);
 		int maxClipAmmo = WEAPON::GET_MAX_AMMO_IN_CLIP(playerPed, sv->weapon, false);
-
 		WEAPON::SET_AMMO_IN_CLIP(playerPed, sv->weapon, maxClipAmmo);
 		WEAPON::SET_PED_AMMO(playerPed, sv->weapon, maxAmmo);
+
+		set_status_text("Saved weapons equipped");
 	}
 
 	for (std::vector<SavedWeaponDBRow*>::iterator it = savedWeapon.begin(); it != savedWeapon.end(); ++it)
@@ -2204,7 +2203,8 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			tick_allw = tick_allw + 1;
 			w_tick_secs_curr = w_tick_secs_passed;
 		}
-		if (tick_allw > 50 && PlayerUpdated_w) {
+		if (tick_allw > 50 && PlayerUpdated_w && !ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) {
+			WAIT(200);
 			give_all_weapons_hotkey();
 			oldplayerPed_W = playerPed;
 			tick_allw = 0;
@@ -2225,7 +2225,8 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			tick_a_allw = tick_a_allw + 1;
 			w_a_tick_secs_curr = w_tick_secs_passed;
 		}
-		if (tick_a_allw > 100 && PlayerUpdated_a) {
+		if (tick_a_allw > 100 && PlayerUpdated_a && !ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) {
+			WAIT(200);
 			add_all_weapons_attachments(playerPed);
 			oldplayerPed_A = playerPed;
 			tick_a_allw = 0;
@@ -2246,7 +2247,8 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			tick_s_allw = tick_s_allw + 1;
 			ss_tick_secs_curr = w_tick_secs_passed;
 		}
-		if (tick_s_allw > 50 && PlayerUpdated_s) {
+		if (tick_s_allw > 50 && PlayerUpdated_s && !ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) {
+			WAIT(200);
 			load_saved_weapons();
 			for (int a = 0; a < sizeof(VOV_WEAPON_VALUES) / sizeof(VOV_WEAPON_VALUES[0]); a++) { // give all equipped ammo
 				for (int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++) {
@@ -2254,11 +2256,6 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 					Hash weaponHash = GAMEPLAY::GET_HASH_KEY(weaponName);
 					if (WEAPON::HAS_PED_GOT_WEAPON(playerPed, weaponHash, FALSE)) WEAPON::GIVE_WEAPON_TO_PED(playerPed, weaponHash, 10000, false, false);
 				}
-			}
-			if (WEAPON::IS_PED_ARMED(playerPed, 7)) {
-				CONTROLS::_SET_CONTROL_NORMAL(0, 159, 1); // 160
-				WAIT(10);
-				CONTROLS::_SET_CONTROL_NORMAL(0, 157, 1);
 			}
 			oldplayerPed_s = playerPed;
 			tick_s_allw = 0;
