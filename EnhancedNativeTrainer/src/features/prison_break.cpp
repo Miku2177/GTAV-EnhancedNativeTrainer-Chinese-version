@@ -551,13 +551,13 @@ void prison_break()
 		if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) == 0 && in_prison == false && ((time_before_get_to_prison > 5999 && npc_skin == true) || npc_skin == true) && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID())) {
 			alert_level = 0;
 			npc_skin = false;
-			if (!featurePrison_Hardcore && !featurePrison_Robe && !featurePedPrison_Robe) detained = false;
+			if (!featurePrison_Robe && !featurePedPrison_Robe) detained = false; // !featurePrison_Hardcore && 
 			if ((featurePrison_Robe || featurePedPrison_Robe || featurePrison_Hardcore) && ((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) != 12) ||
 				(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) != 1) ||
 				(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) != 5))) detained = false;
 		}
 
-		if ((featurePrison_Robe || featurePedPrison_Robe || featurePrison_Hardcore) && in_prison == false && ((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 12) ||
+		if ((featurePrison_Robe || featurePedPrison_Robe) && in_prison == false && ((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 12) || //  || featurePrison_Hardcore
 			(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 1) ||
 			(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 5))) detained = true;
 
