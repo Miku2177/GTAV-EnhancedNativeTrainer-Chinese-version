@@ -420,10 +420,12 @@ void fuel()
 					f_seconds = 6;
 				}
 
-				f_secs_passed = clock() / CLOCKS_PER_SEC;
-				if (((clock() / CLOCKS_PER_SEC) - f_secs_curr) != 0) {
-					f_seconds = f_seconds + 1;
-					f_secs_curr = f_secs_passed;
+				if (f_seconds < 50) {
+					f_secs_passed = clock() / CLOCKS_PER_SEC;
+					if (((clock() / CLOCKS_PER_SEC) - f_secs_curr) != 0) {
+						f_seconds = f_seconds + 1;
+						f_secs_curr = f_secs_passed;
+					}
 				}
 
 				if (f_seconds > 5) {

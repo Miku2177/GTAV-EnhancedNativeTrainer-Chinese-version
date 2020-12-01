@@ -688,10 +688,12 @@ void prison_break()
 					}
 					// You've been seen.
 					if (alert_police_about_fugitive_close == true || alert_police_about_fugitive_distant == true) {
-						pb_tick_secs_passed = clock() / CLOCKS_PER_SEC;
-						if (((clock() / (CLOCKS_PER_SEC / 1000)) - pb_tick_secs_curr) != 0) {
-							tick_callpoliceaboutfugitive = tick_callpoliceaboutfugitive + 1;
-							pb_tick_secs_curr = pb_tick_secs_passed;
+						if (tick_callpoliceaboutfugitive < 1000) {
+							pb_tick_secs_passed = clock() / CLOCKS_PER_SEC;
+							if (((clock() / (CLOCKS_PER_SEC / 1000)) - pb_tick_secs_curr) != 0) {
+								tick_callpoliceaboutfugitive = tick_callpoliceaboutfugitive + 1;
+								pb_tick_secs_curr = pb_tick_secs_passed;
+							}
 						}
 
 						if (tick_callpoliceaboutfugitive > 500) { // 60000
