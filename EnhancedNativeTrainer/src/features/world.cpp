@@ -1951,7 +1951,7 @@ void update_world_features()
 		GAMEPLAY::SET_WEATHER_TYPE_NOW_PERSIST((char*)lastWeather.c_str());
 		freeze_counter = 0.0;
 	}
-	if (featureWeatherFreeze && (DLC2::GET_IS_LOADING_SCREEN_ACTIVE() || (PLAYER::GET_TIME_SINCE_LAST_DEATH() > -1 && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 2000))) featureWeatherFreezeUpdated = false;
+	if (featureWeatherFreeze && (DLC2::GET_IS_LOADING_SCREEN_ACTIVE() || (time_since_d > -1 && time_since_d < 2000))) featureWeatherFreezeUpdated = false;
 	if (!featureWeatherFreeze && featureWeatherFreezeUpdated == true) {
 		GAMEPLAY::CLEAR_OVERRIDE_WEATHER();
 		GAMEPLAY::CLEAR_WEATHER_TYPE_PERSIST();

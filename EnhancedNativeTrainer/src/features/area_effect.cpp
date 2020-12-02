@@ -841,7 +841,7 @@ void update_area_effects(Ped playerPed){
 			s_seconds = 0;
 			time_to_attack = true;
 		}
-		if (((PLAYER::GET_TIME_SINCE_LAST_DEATH() > 100 && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 5000) || (PLAYER::GET_TIME_SINCE_LAST_ARREST() > 100 && PLAYER::GET_TIME_SINCE_LAST_ARREST() < 5000) || player_died == true) && !pursuer.empty()) {
+		if (((time_since_d > 100 && time_since_d < 5000) || (time_since_a > 100 && time_since_a < 5000) || player_died == true) && !pursuer.empty()) {
 			for (int j = 0; j < pursuer.size(); j++) {
 				if (ENTITY::DOES_ENTITY_EXIST(pursuer[j])) ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&pursuer[j]);
 				if (ENTITY::DOES_ENTITY_EXIST(pursuer[j])) PED::DELETE_PED(&pursuer[j]);
