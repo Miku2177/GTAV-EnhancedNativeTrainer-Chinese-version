@@ -69,6 +69,9 @@ int ped_prop_idx = -1;
 int injured_m = -2;
 int noragdoll_m = -2;
 
+int time_since_d = -1;
+int time_since_a = -1;
+
 char* i_anim_dict = "oddjobs@towing";
 char* animation_of_i = "start_engine";
 bool entered_first_time = false;
@@ -888,6 +891,12 @@ void update_features(){
 		CONTROLS::_SET_CONTROL_NORMAL(0, 157, 1);
 		def_w = true;
 	}
+
+	// Get time since last death/arrest
+	if (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) time_since_d = -1;
+	if (PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 0)) time_since_a = -1;
+	if (time_since_d < 7000 && !ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) time_since_d = PLAYER::GET_TIME_SINCE_LAST_DEATH();
+	if (time_since_a < 7000 && !PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 0)) time_since_a = PLAYER::GET_TIME_SINCE_LAST_ARREST();
 
 	// Disable Ignition
 	if ((!featureDisableIgnition || (featureDisableIgnition && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0))) && veh_engine_t == true) {

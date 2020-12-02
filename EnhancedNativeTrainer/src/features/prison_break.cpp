@@ -29,7 +29,6 @@ int tick_callpoliceaboutfugitive = 0;
 bool detained, in_prison = false;
 bool will_pay_money_for_escape = false;
 int alert_level = 0;
-int time_before_get_to_prison = -1;
 bool npc_skin = false;
 int time_in_prison_tick = -1;
 bool out_of_prison = true;
@@ -68,8 +67,7 @@ void prison_break()
 	if (PLAYER_PRISON_VALUES[current_player_prison] > 0 && GAMEPLAY::GET_MISSION_FLAG() == 0) {
 		Ped playerPed = PLAYER::PLAYER_PED_ID();
 		Vector3 my_position_in_prison = ENTITY::GET_ENTITY_COORDS(playerPed, true);
-		time_before_get_to_prison = PLAYER::GET_TIME_SINCE_LAST_DEATH();
-
+		
 		const int arrSize3 = 1024;
 		Ped guards[arrSize3];
 		int count_prison_guards = worldGetAllPeds(guards, arrSize3);
@@ -88,13 +86,13 @@ void prison_break()
 			
 		// You won't be detained if you escape the police
 		if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) > -1 && current_player_prison < 4 && PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < PLAYER_PRISON_VALUES[current_player_prison + 1] &&
-			(time_before_get_to_prison > 6000 || time_before_get_to_prison == -1) && ((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) != 12) ||
+			(time_since_d > 6000 || time_since_d == -1) && ((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) != 12) ||
 			(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) != 1) ||
 				(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) != 5))) detained = false;
 
 		// TRANSFERING YOU TO PRISON
-		if ((detained && time_before_get_to_prison > 0 && time_before_get_to_prison < 6000 && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID())) || (detained && player_died == true && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID())) ||
-			(alert_level > 0 && ((time_before_get_to_prison > 0 && time_before_get_to_prison < 6000) || player_died == true) && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID())))
+		if ((detained && time_since_d > 0 && time_since_d < 6000 && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID())) || (detained && player_died == true && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID())) ||
+			(alert_level > 0 && ((time_since_d > 0 && time_since_d < 6000) || player_died == true) && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID())))
 		{
 			npc_skin = false;
 			ENTITY::SET_ENTITY_COORDS_NO_OFFSET(playerPed, 1691.334, 2545.26, 46, 0, 0, 1);
@@ -146,7 +144,7 @@ void prison_break()
 			}
 
 			// Money for escape attempt
-			if (will_pay_money_for_escape == true && time_before_get_to_prison > 0 && time_before_get_to_prison < 6000) {
+			if (will_pay_money_for_escape == true && time_since_d > 0 && time_since_d < 6000) {
 				// How much money have you got?
 				int outValue_your_current_amount = -1;
 				int statHash_your_purse = -1;
@@ -548,7 +546,7 @@ void prison_break()
 		} // END OF IMPRISONED
 		
 		// You still wear prison clothes. If you die you'll get back to prison unless you disabled corresponding options.
-		if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) == 0 && in_prison == false && ((time_before_get_to_prison > 5999 && npc_skin == true) || npc_skin == true) && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID())) {
+		if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) == 0 && in_prison == false && ((time_since_d > 5999 && npc_skin == true) || npc_skin == true) && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID())) {
 			alert_level = 0;
 			npc_skin = false;
 			if (!featurePrison_Robe && !featurePedPrison_Robe) detained = false; // !featurePrison_Hardcore && 
@@ -774,7 +772,7 @@ void prison_break()
 		if (((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 12) ||
 			(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 1) ||
 			(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 5)) && detained == true &&
-			time_before_get_to_prison > 6000) will_pay_money_for_escape = true; 
+			time_since_d > 6000) will_pay_money_for_escape = true;
 		
 		if (detained == false && alert_level == 0) will_pay_money_for_escape = false;
 	}
