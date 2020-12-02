@@ -345,7 +345,7 @@ void update_skin_features() {
 		} // end of auto_skin
 
 		if (PLAYER::PLAYER_PED_ID() != oldplayerSkin) auto_skin = false;
-		if ((PLAYER::GET_TIME_SINCE_LAST_DEATH() > -1 && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 2000) || (player_died == true && !featureNoAutoRespawn)) auto_skin = false;
+		if ((time_since_d > -1 && time_since_d < 2000) || (player_died == true && !featureNoAutoRespawn)) auto_skin = false;
 		if (DLC2::GET_IS_LOADING_SCREEN_ACTIVE()) auto_skin = false;
 
 	} // end of featureautoskin

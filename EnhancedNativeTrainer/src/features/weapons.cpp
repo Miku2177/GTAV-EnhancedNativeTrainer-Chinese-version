@@ -2190,9 +2190,9 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		}
 	}
 
-	// Cops Take Your Weapons If You Die / Arrested
+	// Lose Weapons On Death/Arrest
 	if (featureCopTakeWeapon) {
-		if ((PLAYER::GET_TIME_SINCE_LAST_DEATH() > 100 && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 5000) || (PLAYER::GET_TIME_SINCE_LAST_ARREST() > 100 && PLAYER::GET_TIME_SINCE_LAST_ARREST() < 5000) || player_died == true) {
+		if ((time_since_d > 100 && time_since_d < 5000) || (time_since_a > 100 && time_since_a < 5000) || player_died == true) {
 			WEAPON::REMOVE_ALL_PED_WEAPONS(playerPed, false);
 			if (!ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && !PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 1) && detained == false) player_died = false;
 		}
@@ -2215,8 +2215,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			PlayerUpdated_w = false; 
 			if (detained == false && alert_level == 0) player_died = false;
 		}
-		int death_time2 = PLAYER::GET_TIME_SINCE_LAST_DEATH();
-		if (((death_time2 > -1 && death_time2 < 2000) || playerPed != oldplayerPed_W || player_died == true || DLC2::GET_IS_LOADING_SCREEN_ACTIVE()) && PlayerUpdated_w == false) {
+		if (((time_since_d > -1 && time_since_d < 2000) || playerPed != oldplayerPed_W || player_died == true || DLC2::GET_IS_LOADING_SCREEN_ACTIVE()) && PlayerUpdated_w == false) {
 			PlayerUpdated_w = true;
 			tick_allw = 0;
 		}
@@ -2239,8 +2238,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			PlayerUpdated_a = false;
 			if (detained == false && alert_level == 0) player_died = false;
 		}
-		int death_time2 = PLAYER::GET_TIME_SINCE_LAST_DEATH();
-		if (((death_time2 > -1 && death_time2 < 2000) || playerPed != oldplayerPed_A || player_died == true || DLC2::GET_IS_LOADING_SCREEN_ACTIVE()) && PlayerUpdated_a == false) {
+		if (((time_since_d > -1 && time_since_d < 2000) || playerPed != oldplayerPed_A || player_died == true || DLC2::GET_IS_LOADING_SCREEN_ACTIVE()) && PlayerUpdated_a == false) {
 			PlayerUpdated_a = true;
 			tick_a_allw = 0;
 		}
@@ -2270,8 +2268,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			PlayerUpdated_s = false;
 			if (detained == false && alert_level == 0) player_died = false;
 		}
-		int death_time2 = PLAYER::GET_TIME_SINCE_LAST_DEATH();
-		if (((death_time2 > -1 && death_time2 < 2000) || playerPed != oldplayerPed_s || player_died == true || DLC2::GET_IS_LOADING_SCREEN_ACTIVE()) && PlayerUpdated_s == false) {
+		if (((time_since_d > -1 && time_since_d < 2000) || playerPed != oldplayerPed_s || player_died == true || DLC2::GET_IS_LOADING_SCREEN_ACTIVE()) && PlayerUpdated_s == false) {
 			PlayerUpdated_s = true;
 			tick_s_allw = 0;
 		}
