@@ -69,6 +69,8 @@ int ped_prop_idx = -1;
 int injured_m = -2;
 int noragdoll_m = -2;
 
+bool player_d_armour = false;
+
 int time_since_d = -1;
 int time_since_a = -1;
 
@@ -434,6 +436,7 @@ void check_player_model(){
 				}
 				
 				player_died = true;
+				player_d_armour = true;
 				CAM::DO_SCREEN_FADE_OUT(500);
 				WAIT(1000);
 				GAMEPLAY::_DISABLE_AUTOMATIC_RESPAWN(true);
@@ -749,6 +752,7 @@ void update_features(){
 			manual_pressed = true;
 			tick_allw = 0;
 			player_died = true;
+			player_d_armour = true;
 			GAMEPLAY::_DISABLE_AUTOMATIC_RESPAWN(false);
 			SCRIPT::SET_NO_LOADING_SCREEN(false);
 			PED::RESET_PED_MOVEMENT_CLIPSET(playerPed, 1.0f);
@@ -802,6 +806,7 @@ void update_features(){
 	if (featureRespawnsWhereDied && GAMEPLAY::GET_MISSION_FLAG() == 0 && manual_instant == false && detained == false && alert_level == 0) {
 		if (ENTITY::IS_ENTITY_DEAD(playerPed) || PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 0)) {
 			player_died = true;
+			player_d_armour = true;
 			CAM::DO_SCREEN_FADE_OUT(500);
 			WAIT(1000);
 			GAMEPLAY::_DISABLE_AUTOMATIC_RESPAWN(true);
@@ -1260,9 +1265,9 @@ void update_features(){
 	}
 
 	////////////////////////////////////// PLAYER DATA ////////////////////////////////////////////////
-	if ((bPlayerExists && featurePlayerLife && featurePlayerLifeUpdated) || (bPlayerExists && featurePlayerLife && PLAYER_ARMOR_VALUES[current_player_stats] > -1 && featurePlayerStatsUpdated) || apply_pressed == true) {
+	if ((bPlayerExists && featurePlayerLife && featurePlayerLifeUpdated) || (bPlayerExists && featurePlayerLife && PLAYER_ARMOR_VALUES[current_player_stats] > -1 && featurePlayerStatsUpdated) || apply_pressed == true || player_d_armour == true) {
 		if (!STREAMING::IS_PLAYER_SWITCH_IN_PROGRESS()) { 
-			if (featurePlayerLifeUpdated && !ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) {
+			if ((featurePlayerLifeUpdated && !ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) || (player_d_armour == true && !ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()))) {
 				if (PLAYER_HEALTH_VALUES[current_player_health] > 0) {
 					PED::SET_PED_MAX_HEALTH(playerPed, PLAYER_HEALTH_VALUES[current_player_health]);
 					ENTITY::SET_ENTITY_HEALTH(playerPed, PLAYER_HEALTH_VALUES[current_player_health]);
@@ -1271,6 +1276,7 @@ void update_features(){
 					PLAYER::SET_PLAYER_MAX_ARMOUR(playerPed, PLAYER_ARMOR_VALUES[current_player_armor]);
 					PED::SET_PED_ARMOUR(playerPed, PLAYER_ARMOR_VALUES[current_player_armor]);
 				}
+				player_d_armour = false;
 			}
 			oldplayerPed = playerPed;
 			featurePlayerLifeUpdated = false;
