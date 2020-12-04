@@ -27,9 +27,11 @@ extern bool featureNPCNoGravityVehicles;
 extern bool featureNPCReducedGripVehicles;
 extern bool featureBoostNPCRadio;
 
-extern const int WORLD_NPC_VEHICLESPEED_VALUES[];
-extern const std::vector<std::string> WORLD_REDUCEDGRIP_SNOWING_CAPTIONS;
-//extern const int WORLD_REDUCEDGRIP_SNOWING_VALUES[];
+const std::vector<std::string> WORLD_NPC_VEHICLESPEED_CAPTIONS{ "OFF", "1", "5", "10", "15", "30", "50", "70", "100" };
+const int WORLD_NPC_VEHICLESPEED_VALUES[] = { -1, 1, 5, 10, 15, 30, 50, 70, 100 };
+
+const std::vector<std::string> WORLD_REDUCEDGRIP_SNOWING_CAPTIONS{ "OFF", "Simple", "Advanced" };
+//const int WORLD_REDUCEDGRIP_SNOWING_VALUES[] = { 0, 1, 2 };
 extern bool featureSnow;
 //extern int PedsHealthIndex;
 //extern bool PedsHealthChanged;
