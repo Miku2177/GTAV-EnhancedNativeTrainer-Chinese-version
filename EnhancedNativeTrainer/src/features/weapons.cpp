@@ -165,8 +165,6 @@ int SniperVisionIndex = 0;
 bool SniperVisionChanged = true;
 
 // Power Punch Strength
-const std::vector<std::string> WEAPONS_POWERPUNCH_CAPTIONS{ "1", "3", "5", "10", "50", "Manual" };
-const int WEAPONS_POWERPUNCH_VALUES[] = { 1, 3, 5, 10, 50, 55 };
 int PowerPunchIndex = 2;
 bool PowerPunchChanged = true;
 

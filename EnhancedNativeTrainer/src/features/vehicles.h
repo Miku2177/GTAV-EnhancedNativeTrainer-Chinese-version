@@ -50,7 +50,7 @@ struct XenonColour {
 	int colour;
 };
 
-extern const std::vector<std::string> VALUES_SUPERCARS;
+//extern const std::vector<std::string> VALUES_SUPERCARS;
 
 const std::vector<std::string> VEH_MASS_CAPTIONS{ "OFF", "3x", "5x", "10x", "30x", "50x", "Mayhem" };
 //const std::vector<int> VEH_MASS_VALUES{ 0, 5, 10, 30, 50, 100, 50000 };

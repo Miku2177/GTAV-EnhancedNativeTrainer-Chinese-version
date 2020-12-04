@@ -98,8 +98,6 @@ int PedWeaponsSelectiveIndex = 0;
 bool PedWeaponsSelective1Changed = true;
 
 // NPC Vehicle Speed
-const std::vector<std::string> WORLD_NPC_VEHICLESPEED_CAPTIONS{ "OFF", "1", "5", "10", "15", "30", "50", "70", "100" };
-const int WORLD_NPC_VEHICLESPEED_VALUES[] = { -1, 1, 5, 10, 15, 30, 50, 70, 100 };
 int NPCVehicleSpeedIndex = 0;
 bool NPCVehicleSpeedChanged = true;
 int PedAccuracyIndex = 0;
@@ -112,8 +110,6 @@ int WorldSelectivePedsIndex = 0;
 bool WorldSelectivePedsChanged = true;
 
 // Reduced Grip If Heavy Snow && Slippery When Wet && No Peds Gravity
-const std::vector<std::string> WORLD_REDUCEDGRIP_SNOWING_CAPTIONS{ "OFF", "Simple", "Advanced" };
-//const int WORLD_REDUCEDGRIP_SNOWING_VALUES[] = { 0, 1, 2 };
 int RadarReducedGripSnowingIndex = 0;
 bool RadarReducedGripSnowingChanged = true;
 int RadarReducedGripRainingIndex = 0;
