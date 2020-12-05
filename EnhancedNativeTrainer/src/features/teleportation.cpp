@@ -755,7 +755,7 @@ bool Tel3dmarker_Changed = true;
 
 //Marker Type
 const std::vector<std::string> TEL_3DMARKER_MARTYPE_CAPTIONS{ "Symbol", "Column" };
-const int TEL_3DMARKER_MARTYPE_VALUES[] = { 1, 2 };
+//const int TEL_3DMARKER_MARTYPE_VALUES[] = { 1, 2 };
 int Tel3dmarker_martype_Index = 0;
 bool Tel3dmarker_martype_Changed = true;
 
@@ -1580,7 +1580,7 @@ void update_teleport_features(){
 		if (blipFound) {
 			float dist_diff = SYSTEM::VDIST(playerPosition.x, playerPosition.y, playerPosition.z, coords_3Dblip.x, coords_3Dblip.y, coords_3Dblip.z);
 
-			if (TEL_3DMARKER_MARTYPE_VALUES[Tel3dmarker_martype_Index] == 1) {
+			if (MISC_TRAINERCONTROL_VALUES[Tel3dmarker_martype_Index] == 0) {
 				for (int jk = 0; jk < 10000; jk++) {
 					GRAPHICS::DRAW_MARKER(TEL_3DMARKER_VALUES[Tel3dmarkerIndexN]/*int type*/, coords_3Dblip.x/*float posX*/, coords_3Dblip.y/*float posY*/,	jk/*float posZ*/, 20/*float dirX*/, 20/*float dirY*/, 20/*float dirZ*/, 90/*float rotX*/, 90/*float rotY*/, 
 						90/*float rotZ*/, dist_diff / 10/*float scaleX*/, dist_diff / 10/*float scaleY*/, dist_diff / 10/*float scaleZ*/, col2_R/*int red*/, col2_G/*int green*/, col2_B/*int blue*/, 90/*int alpha*/, 50/*BOOL bobUpAndDown*/, 1/*BOOL faceCamera*/, 
@@ -1589,7 +1589,7 @@ void update_teleport_features(){
 				}
 			}
 
-			if (TEL_3DMARKER_MARTYPE_VALUES[Tel3dmarker_martype_Index] == 2) GRAPHICS::DRAW_MARKER(1/*int type*/, coords_3Dblip.x/*float posX*/, coords_3Dblip.y/*float posY*/, 0/*float posZ*/, 0/*float dirX*/, 0/*float dirY*/, 0/*float dirZ*/, 0/*float rotX*/, 
+			if (MISC_TRAINERCONTROL_VALUES[Tel3dmarker_martype_Index] == 1) GRAPHICS::DRAW_MARKER(1/*int type*/, coords_3Dblip.x/*float posX*/, coords_3Dblip.y/*float posY*/, 0/*float posZ*/, 0/*float dirX*/, 0/*float dirY*/, 0/*float dirZ*/, 0/*float rotX*/,
 				0/*float rotY*/, 0/*float rotZ*/, dist_diff / 40/*float scaleX*/, dist_diff / 40/*float scaleY*/, 10000.0f/*float scaleZ*/, col2_R/*int red*/, col2_G/*int green*/, col2_B/*int blue*/, 110/*int alpha*/, 50/*BOOL bobUpAndDown*/, 1/*BOOL faceCamera*/, 
 				1/*int p19*/, 0/*BOOL rotate*/, 0/*char* textureDict*/, 0/*char* textureName*/, 0/*BOOL drawOnEnts*/);
 		}

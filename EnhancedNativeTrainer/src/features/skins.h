@@ -33,7 +33,7 @@ const std::vector<std::string> SKINS_ONLINE_VALUES{ "ig_benny", "A_F_Y_Bevhills_
 
 // Reset Player Model On Death
 const std::vector<std::string> SKINS_RESET_SKIN_ONDEATH_CAPTIONS{ "Restore On Respawn", "Compatibility Mode" }; // "Reset On Death", 
-const int SKINS_RESET_SKIN_ONDEATH_VALUES[] = { 0, 1 };
+//const int SKINS_RESET_SKIN_ONDEATH_VALUES[] = { 0, 1 };
 extern int ResetSkinOnDeathIdx;
 //extern bool ResetSkinOnDeathChanged;
 

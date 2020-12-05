@@ -80,7 +80,7 @@ const std::vector<std::string> MISC_FILTERS_VALUES{	"DEFAULT", "AmbientPUSH", "B
 
 // Trainer Controls
 const std::vector<std::string> MISC_TRAINERCONTROL_CAPTIONS{ "On Release", "On Press" };
-const int MISC_TRAINERCONTROL_VALUES[] = { 0, 1 };
+//const int MISC_TRAINERCONTROL_VALUES[] = { 0, 1 };
 extern int TrainerControlIndex;
 //extern bool TrainerControlChanged;
 
