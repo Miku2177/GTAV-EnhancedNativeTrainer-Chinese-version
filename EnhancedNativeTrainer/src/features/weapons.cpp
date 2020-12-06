@@ -58,7 +58,7 @@ bool PlayerUpdated_s = true;
 Hash temp_weapon = -1;
 
 //Flashlight strobe
-int WeapStrobeIndex = 0;
+int WeapStrobeIndexN = 0;
 bool WeapStrobeChanged = true;
 bool f_strobe = false;
 int strb_c = 0;
@@ -160,31 +160,29 @@ bool CopAlarmChanged = true;
 
 // Toggle Vision For Sniper Rifles
 const std::vector<std::string> WEAPONS_SNIPERVISION_CAPTIONS{ "OFF", "Via Hotkey", "Night Vision", "Thermal Vision" };
-const int WEAPONS_SNIPERVISION_VALUES[] = { 0, 1, 2, 3 };
+//const int WEAPONS_SNIPERVISION_VALUES[] = { 0, 1, 2, 3 };
 int SniperVisionIndex = 0;
 bool SniperVisionChanged = true;
 
 // Power Punch Strength
-const std::vector<std::string> WEAPONS_POWERPUNCH_CAPTIONS{ "1", "3", "5", "10", "50", "Manual" };
-const int WEAPONS_POWERPUNCH_VALUES[] = { 1, 3, 5, 10, 50, 55 };
 int PowerPunchIndex = 2;
 bool PowerPunchChanged = true;
 
 // Fire Mode
 const std::vector<std::string> WEAPONS_FIREMODE_CAPTIONS{ "Default", "Single Fire", "Burst Semi", "Burst Auto" };
-const int WEAPONS_FIREMODE_VALUES[] = { 0, 1, 2, 3 };
+//const int WEAPONS_FIREMODE_VALUES[] = { 0, 1, 2, 3 };
 int WeaponsFireModeIndex = 0;
 bool WeaponsFireModeChanged = true;
 
 // No Reticle
 const std::vector<std::string> WEAPONS_NORETICLE_CAPTIONS{ "OFF", "Always", "For First Person Mode Only" };
-const int WEAPONS_NORETICLE_VALUES[] = { 0, 1, 2 };
+//const int WEAPONS_NORETICLE_VALUES[] = { 0, 1, 2 };
 int WeaponsNoReticle = 0;
 bool WeaponsNoReticleChanged = true;
 
 // Load Saved Weapons Automatically
 const std::vector<std::string> WEAPONS_SAVED_LOAD_CAPTIONS{ "OFF", "Add To Inventory", "Saved Weapons Only" };
-const int WEAPONS_SAVED_LOAD_VALUES[] = { 0, 1, 2 };
+//const int WEAPONS_SAVED_LOAD_VALUES[] = { 0, 1, 2 };
 int WeaponsSavedLoad = 0;
 bool WeaponsSavedLoadChanged = true;
 
@@ -473,16 +471,16 @@ void load_saved_weapons() {
 	ENTDatabase* database = get_database();
 	std::vector<SavedWeaponDBRow*> savedWeapon = database->get_saved_weapon();
 
-	if (WEAPONS_SAVED_LOAD_VALUES[WeaponsSavedLoad] == 2) WEAPON::REMOVE_ALL_PED_WEAPONS(playerPed, false);
+	if (NPC_RAGDOLL_VALUES[WeaponsSavedLoad] == 2) WEAPON::REMOVE_ALL_PED_WEAPONS(playerPed, false);
 
 	for each (SavedWeaponDBRow * sv in savedWeapon)
 	{
 		int clipMax = WEAPON::GET_MAX_AMMO_IN_CLIP(playerPed, sv->weapon, true); clipMax = min(clipMax, 250);
 		if (WEAPON::HAS_PED_GOT_WEAPON(playerPed, sv->weapon, 0)) {
 			WEAPON::REMOVE_WEAPON_FROM_PED(playerPed, sv->weapon);
-			WEAPON::GIVE_WEAPON_TO_PED(playerPed, sv->weapon, clipMax * 2, false, true);
+			WEAPON::GIVE_WEAPON_TO_PED(playerPed, sv->weapon, clipMax * 2, false, false);
 		}
-		else WEAPON::GIVE_WEAPON_TO_PED(playerPed, sv->weapon, clipMax * 2, false, true);
+		else WEAPON::GIVE_WEAPON_TO_PED(playerPed, sv->weapon, clipMax * 2, false, false);
 
 		if (sv->comp0 != -1) WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, sv->weapon, sv->comp0);
 		if (sv->comp1 != -1) WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, sv->weapon, sv->comp1);
@@ -493,14 +491,13 @@ void load_saved_weapons() {
 		if (sv->comp6 != -1) WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(playerPed, sv->weapon, sv->comp6);
 		if (sv->w_tint != -1) WEAPON::SET_PED_WEAPON_TINT_INDEX(playerPed, sv->weapon, sv->w_tint);
 
-		WEAPON::SET_CURRENT_PED_WEAPON(playerPed, sv->weapon, 1);
-
 		int maxAmmo = 0;
 		WEAPON::GET_MAX_AMMO(playerPed, sv->weapon, &maxAmmo);
 		int maxClipAmmo = WEAPON::GET_MAX_AMMO_IN_CLIP(playerPed, sv->weapon, false);
-
 		WEAPON::SET_AMMO_IN_CLIP(playerPed, sv->weapon, maxClipAmmo);
 		WEAPON::SET_PED_AMMO(playerPed, sv->weapon, maxAmmo);
+
+		set_status_text("Saved weapons equipped");
 	}
 
 	for (std::vector<SavedWeaponDBRow*>::iterator it = savedWeapon.begin(); it != savedWeapon.end(); ++it)
@@ -771,7 +768,7 @@ bool onconfirm_coparmed_menu(MenuItem<int> choice)
 }
 
 void process_copweapon_menu(){
-	std::string caption = "Cop Weapons Options";
+	const std::string caption = "Cop Weapons Options";
 
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
@@ -850,7 +847,7 @@ void onchange_weapons_firemode_modifier(int value, SelectFromListMenuItem* sourc
 }
 
 void onchange_weap_strobe_index(int value, SelectFromListMenuItem* source) {
-	WeapStrobeIndex = value;
+	WeapStrobeIndexN = value;
 	WeapStrobeChanged = true;
 }
 
@@ -884,7 +881,7 @@ void sniper_vision_toggle()
 		WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_MARKSMANRIFLE") || WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_MARKSMANRIFLE_MK2")) &&
 		PED::GET_PED_CONFIG_FLAG(playerPed, 78, 1) && !PED::GET_PED_CONFIG_FLAG(playerPed, 58, 1) && !SCRIPT::HAS_SCRIPT_LOADED("carsteal2"))
 	{
-		if (WEAPONS_SNIPERVISION_VALUES[SniperVisionIndex] == 1) {
+		if (WORLD_GRAVITY_LEVEL_VALUES[SniperVisionIndex] == 1) {
 			vision_toggle = vision_toggle + 1;
 			if (vision_toggle == 3) vision_toggle = 0;
 
@@ -911,7 +908,7 @@ bool onconfirm_pedagainstweapons_menu(MenuItem<int> choice)
 }
 
 void process_pedagainstweapons_menu(){
-	std::string caption = "Peds Don't Like Weapons Options";
+	const std::string caption = "Peds Don't Like Weapons Options";
 
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
@@ -1360,7 +1357,7 @@ bool onconfirm_weapon_menu(MenuItem<int> choice){
 bool process_weapon_menu(){
 	int i = 0;
 
-	std::string caption = "Weapon Options";
+	const std::string caption = "Weapon Options";
 	
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem* listItem;
@@ -1609,7 +1606,7 @@ bool process_weapon_menu(){
 	listItem = new SelectFromListMenuItem(FUEL_COLOURS_R_CAPTIONS, onchange_weap_strobe_index);
 	listItem->wrap = false;
 	listItem->caption = "Flashlight Strobe";
-	listItem->value = WeapStrobeIndex;
+	listItem->value = WeapStrobeIndexN;
 	menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(WEAP_DMG_CAPTIONS, onchange_weap_flashdist_index);
@@ -1646,7 +1643,7 @@ void reset_weapon_globals(){
 	SniperVisionIndex = 0;
 	PowerPunchIndex = 2;
 	WeaponsFireModeIndex = 0;
-	WeapStrobeIndex = 0;
+	WeapStrobeIndexN = 0;
 	WeapFlashDistIndex = 0;
 
 	activeLineIndexCopArmed = 0;
@@ -1771,10 +1768,12 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			}
 			// Sucking Grenades
 			if (featureWeaponVacuumGrenades) {
-				s_vacuum_secs_passed = clock() / CLOCKS_PER_SEC;
-				if (((clock() / CLOCKS_PER_SEC) - s_vacuum_secs_curr) != 0) {
-					vacuum_seconds = vacuum_seconds + 1;
-					s_vacuum_secs_curr = s_vacuum_secs_passed;
+				if (vacuum_seconds < 30) {
+					s_vacuum_secs_passed = clock() / CLOCKS_PER_SEC;
+					if (((clock() / CLOCKS_PER_SEC) - s_vacuum_secs_curr) != 0) {
+						vacuum_seconds = vacuum_seconds + 1;
+						s_vacuum_secs_curr = s_vacuum_secs_passed;
+					}
 				}
 				if (vacuum_seconds < 16 && WEAPON::GET_SELECTED_PED_WEAPON(playerPed) != GAMEPLAY::GET_HASH_KEY("WEAPON_GRENADELAUNCHER")) set_status_text("Equip the ~g~ Grenade Launcher");
 				Vector3 obj_cor = ENTITY::GET_ENTITY_COORDS(playerPed, TRUE);
@@ -1909,10 +1908,10 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	}
 	
 	// No Reticle
-	if (WEAPONS_NORETICLE_VALUES[WeaponsNoReticle] > 0) {
+	if (NPC_RAGDOLL_VALUES[WeaponsNoReticle] > 0) {
 		Vehicle cur_v = PED::GET_VEHICLE_PED_IS_USING(playerPed);
-		if (WEAPONS_NORETICLE_VALUES[WeaponsNoReticle] == 1 || (WEAPONS_NORETICLE_VALUES[WeaponsNoReticle] == 2 && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) && CAM::_0xEE778F8C7E1142E2(0) == 4) || 
-			(WEAPONS_NORETICLE_VALUES[WeaponsNoReticle] == 2 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) && ((VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(cur_v)) && CAM::_0xEE778F8C7E1142E2(1) == 4) || 
+		if (NPC_RAGDOLL_VALUES[WeaponsNoReticle] == 1 || (NPC_RAGDOLL_VALUES[WeaponsNoReticle] == 2 && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) && CAM::_0xEE778F8C7E1142E2(0) == 4) ||
+			(NPC_RAGDOLL_VALUES[WeaponsNoReticle] == 2 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) && ((VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(cur_v)) && CAM::_0xEE778F8C7E1142E2(1) == 4) ||
 				(VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(cur_v)) && CAM::_0xEE778F8C7E1142E2(2) == 4) || (VEHICLE::IS_THIS_MODEL_A_BOAT(ENTITY::GET_ENTITY_MODEL(cur_v)) && CAM::_0xEE778F8C7E1142E2(3) == 4) ||
 			(VEHICLE::IS_THIS_MODEL_A_PLANE(ENTITY::GET_ENTITY_MODEL(cur_v)) && CAM::_0xEE778F8C7E1142E2(4) == 4) || 
 				((ENTITY::GET_ENTITY_MODEL(cur_v) == GAMEPLAY::GET_HASH_KEY("SUBMERSIBLE") || ENTITY::GET_ENTITY_MODEL(cur_v) == GAMEPLAY::GET_HASH_KEY("SUBMERSIBLE2")) && CAM::_0xEE778F8C7E1142E2(5) == 4) || 
@@ -2189,98 +2188,92 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		}
 	}
 
-	// Cops Take Your Weapons If You Die / Arrested
+	// Lose Weapons On Death/Arrest
 	if (featureCopTakeWeapon) {
-		if ((PLAYER::GET_TIME_SINCE_LAST_DEATH() > 100 && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 5000) || (PLAYER::GET_TIME_SINCE_LAST_ARREST() > 100 && PLAYER::GET_TIME_SINCE_LAST_ARREST() < 5000) || player_died == true) {
+		if ((time_since_d > 100 && time_since_d < 5000) || (time_since_a > 100 && time_since_a < 5000) || PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 1) || player_died == true) {
 			WEAPON::REMOVE_ALL_PED_WEAPONS(playerPed, false);
 			if (!ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && !PLAYER::IS_PLAYER_BEING_ARRESTED(PLAYER::PLAYER_ID(), 1) && detained == false) player_died = false;
 		}
 	}
 
 	// Give All Weapons Automatically
-	if (featureGiveAllWeapons && detained == false && in_prison == false && PED::IS_PED_HUMAN(playerPed)) {
-		w_tick_secs_passed = clock() / CLOCKS_PER_SEC;
-		if (((clock() / (CLOCKS_PER_SEC / 1000)) - w_tick_secs_curr) != 0) {
-			tick_allw = tick_allw + 1;
-			w_tick_secs_curr = w_tick_secs_passed;
+	if (featureGiveAllWeapons && detained == false && in_prison == false && PED::IS_PED_HUMAN(playerPed) && !STREAMING::IS_PLAYER_SWITCH_IN_PROGRESS()) {
+		if (tick_allw < 100) {
+			w_tick_secs_passed = clock() / CLOCKS_PER_SEC;
+			if (((clock() / (CLOCKS_PER_SEC / 1000)) - w_tick_secs_curr) != 0) {
+				tick_allw = tick_allw + 1;
+				w_tick_secs_curr = w_tick_secs_passed;
+			}
 		}
-		if (tick_allw > 200 && PlayerUpdated_w) {
+		if (tick_allw > 50 && PlayerUpdated_w && !ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) {
+			WAIT(200);
 			give_all_weapons_hotkey();
-			CONTROLS::_SET_CONTROL_NORMAL(0, 159, 1); // 160
-			WAIT(10);
-			CONTROLS::_SET_CONTROL_NORMAL(0, 157, 1);
 			oldplayerPed_W = playerPed;
 			tick_allw = 0;
 			PlayerUpdated_w = false; 
 			if (detained == false && alert_level == 0) player_died = false;
 		}
-		int death_time2 = PLAYER::GET_TIME_SINCE_LAST_DEATH();
-		if (death_time2 > -1 && death_time2 < 2000) PlayerUpdated_w = true; 
-		if (playerPed != oldplayerPed_W) PlayerUpdated_w = true;
-		if (player_died == true) PlayerUpdated_w = true;
-		if (DLC2::GET_IS_LOADING_SCREEN_ACTIVE()) PlayerUpdated_w = true;
+		if (((time_since_d > -1 && time_since_d < 2000) || playerPed != oldplayerPed_W || player_died == true || DLC2::GET_IS_LOADING_SCREEN_ACTIVE()) && PlayerUpdated_w == false) {
+			PlayerUpdated_w = true;
+			tick_allw = 0;
+		}
 	}
 	
 	// Add All Weapons Attachments Automatically
-	if (featureAddAllWeaponsAttachments && detained == false && in_prison == false && PED::IS_PED_HUMAN(playerPed)) {
-		w_tick_secs_passed = clock() / CLOCKS_PER_SEC;
-		if (((clock() / (CLOCKS_PER_SEC / 1000)) - w_a_tick_secs_curr) != 0) {
-			tick_a_allw = tick_a_allw + 1;
-			w_a_tick_secs_curr = w_tick_secs_passed;
+	if (featureAddAllWeaponsAttachments && detained == false && in_prison == false && PED::IS_PED_HUMAN(playerPed) && !STREAMING::IS_PLAYER_SWITCH_IN_PROGRESS()) {
+		if (tick_a_allw < 150) {
+			w_tick_secs_passed = clock() / CLOCKS_PER_SEC;
+			if (((clock() / (CLOCKS_PER_SEC / 1000)) - w_a_tick_secs_curr) != 0) {
+				tick_a_allw = tick_a_allw + 1;
+				w_a_tick_secs_curr = w_tick_secs_passed;
+			}
 		}
-		if (tick_a_allw > 400 && PlayerUpdated_a) {
+		if (tick_a_allw > 100 && PlayerUpdated_a && !ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) {
+			WAIT(200);
 			add_all_weapons_attachments(playerPed);
-			CONTROLS::_SET_CONTROL_NORMAL(0, 159, 1); // 160
-			WAIT(10);
-			CONTROLS::_SET_CONTROL_NORMAL(0, 157, 1);
 			oldplayerPed_A = playerPed;
 			tick_a_allw = 0;
 			PlayerUpdated_a = false;
 			if (detained == false && alert_level == 0) player_died = false;
 		}
-		int death_time2 = PLAYER::GET_TIME_SINCE_LAST_DEATH();
-		if (death_time2 > -1 && death_time2 < 2000) PlayerUpdated_a = true;
-		if (playerPed != oldplayerPed_A) PlayerUpdated_a = true;
-		if (player_died == true) PlayerUpdated_a = true;
+		if (((time_since_d > -1 && time_since_d < 2000) || playerPed != oldplayerPed_A || player_died == true || DLC2::GET_IS_LOADING_SCREEN_ACTIVE()) && PlayerUpdated_a == false) {
+			PlayerUpdated_a = true;
+			tick_a_allw = 0;
+		}
 	}
 
 	// Equip Saved Weapons
-	if (WEAPONS_SAVED_LOAD_VALUES[WeaponsSavedLoad] > 0 && detained == false && in_prison == false && PED::IS_PED_HUMAN(playerPed) && !CUTSCENE::IS_CUTSCENE_PLAYING() && GAMEPLAY::GET_MISSION_FLAG() == 0) {
-		w_tick_secs_passed = clock() / CLOCKS_PER_SEC;
-		if (((clock() / (CLOCKS_PER_SEC / 1000)) - ss_tick_secs_curr) != 0) {
-			tick_s_allw = tick_s_allw + 1;
-			ss_tick_secs_curr = w_tick_secs_passed;
+	if (NPC_RAGDOLL_VALUES[WeaponsSavedLoad] > 0 && detained == false && in_prison == false && PED::IS_PED_HUMAN(playerPed) && !CUTSCENE::IS_CUTSCENE_PLAYING() && GAMEPLAY::GET_MISSION_FLAG() == 0 && !STREAMING::IS_PLAYER_SWITCH_IN_PROGRESS()) {
+		if (tick_s_allw < 100) {
+			w_tick_secs_passed = clock() / CLOCKS_PER_SEC;
+			if (((clock() / (CLOCKS_PER_SEC / 1000)) - ss_tick_secs_curr) != 0) {
+				tick_s_allw = tick_s_allw + 1;
+				ss_tick_secs_curr = w_tick_secs_passed;
+			}
 		}
-		if (tick_s_allw > 200 && PlayerUpdated_s) {
+		if (tick_s_allw > 50 && PlayerUpdated_s && !ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) {
+			WAIT(200);
 			load_saved_weapons();
-			// give all equipped ammo
-			for (int a = 0; a < sizeof(VOV_WEAPON_VALUES) / sizeof(VOV_WEAPON_VALUES[0]); a++) {
+			for (int a = 0; a < sizeof(VOV_WEAPON_VALUES) / sizeof(VOV_WEAPON_VALUES[0]); a++) { // give all equipped ammo
 				for (int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++) {
 					char* weaponName = (char*)VOV_WEAPON_VALUES[a].at(b).c_str();
 					Hash weaponHash = GAMEPLAY::GET_HASH_KEY(weaponName);
-					if (WEAPON::HAS_PED_GOT_WEAPON(playerPed, weaponHash, FALSE)) {
-						WEAPON::GIVE_WEAPON_TO_PED(playerPed, weaponHash, 10000, false, false);
-					}
+					if (WEAPON::HAS_PED_GOT_WEAPON(playerPed, weaponHash, FALSE)) WEAPON::GIVE_WEAPON_TO_PED(playerPed, weaponHash, 10000, false, false);
 				}
 			}
-			//
-			CONTROLS::_SET_CONTROL_NORMAL(0, 159, 1); // 160
-			WAIT(10);
-			CONTROLS::_SET_CONTROL_NORMAL(0, 157, 1);
 			oldplayerPed_s = playerPed;
 			tick_s_allw = 0;
 			PlayerUpdated_s = false;
 			if (detained == false && alert_level == 0) player_died = false;
 		}
-		int death_time2 = PLAYER::GET_TIME_SINCE_LAST_DEATH();
-		if (death_time2 > -1 && death_time2 < 2000) PlayerUpdated_s = true;
-		if (playerPed != oldplayerPed_s) PlayerUpdated_s = true;
-		if (player_died == true) PlayerUpdated_s = true;
-		if (DLC2::GET_IS_LOADING_SCREEN_ACTIVE()) PlayerUpdated_s = true;
+		if (((time_since_d > -1 && time_since_d < 2000) || playerPed != oldplayerPed_s || player_died == true || DLC2::GET_IS_LOADING_SCREEN_ACTIVE()) && PlayerUpdated_s == false) {
+			PlayerUpdated_s = true;
+			tick_s_allw = 0;
+		}
 	}
 
 	// Disables visions if not aiming
-	if (WEAPONS_SNIPERVISION_VALUES[SniperVisionIndex] != 0 && !SCRIPT::HAS_SCRIPT_LOADED("carsteal2"))
+	if (WORLD_GRAVITY_LEVEL_VALUES[SniperVisionIndex] != 0 && !SCRIPT::HAS_SCRIPT_LOADED("carsteal2"))
 	{
 		if (!PED::GET_PED_CONFIG_FLAG(playerPed, 78, 1)) { 
 			if (!featureNightVision && !featureThermalVision) {
@@ -2304,11 +2297,11 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		if (WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_SNIPERRIFLE") || WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_HEAVYSNIPER") ||
 			WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_REMOTESNIPER") || WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_HEAVYSNIPER_MK2") ||
 			WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_MARKSMANRIFLE") || WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_MARKSMANRIFLE_MK2")) {
-			if (WEAPONS_SNIPERVISION_VALUES[SniperVisionIndex] == 2 && !PED::GET_PED_CONFIG_FLAG(playerPed, 58, 1) && PED::GET_PED_CONFIG_FLAG(playerPed, 78, 1)) {
+			if (WORLD_GRAVITY_LEVEL_VALUES[SniperVisionIndex] == 2 && !PED::GET_PED_CONFIG_FLAG(playerPed, 58, 1) && PED::GET_PED_CONFIG_FLAG(playerPed, 78, 1)) {
 				GRAPHICS::SET_NIGHTVISION(true);
 				GRAPHICS::SET_SEETHROUGH(false);
 			}
-			if (WEAPONS_SNIPERVISION_VALUES[SniperVisionIndex] == 3 && !PED::GET_PED_CONFIG_FLAG(playerPed, 58, 1) && PED::GET_PED_CONFIG_FLAG(playerPed, 78, 1)) {
+			if (WORLD_GRAVITY_LEVEL_VALUES[SniperVisionIndex] == 3 && !PED::GET_PED_CONFIG_FLAG(playerPed, 58, 1) && PED::GET_PED_CONFIG_FLAG(playerPed, 78, 1)) {
 				GRAPHICS::SET_NIGHTVISION(false);
 				GRAPHICS::SET_SEETHROUGH(true);
 			}
@@ -2340,8 +2333,8 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	}
 
 	// Flashlight Strobe
-	if (FUEL_COLOURS_R_VALUES[WeapStrobeIndex] > 0) {
-		float tmp_s = FUEL_COLOURS_R_VALUES[WeapStrobeIndex];
+	if (FUEL_COLOURS_R_VALUES[WeapStrobeIndexN] > 0) {
+		float tmp_s = FUEL_COLOURS_R_VALUES[WeapStrobeIndexN];
 		if (CONTROLS::IS_CONTROL_JUST_PRESSED(2, 54) && WEAPON::SET_WEAPON_SMOKEGRENADE_ASSIGNED(playerPed) && strb_c < 6) {
 			f_strobe = true;
 		}
@@ -2382,14 +2375,14 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	}
 
 	// Fire Mode
-	if (WEAPONS_FIREMODE_VALUES[WeaponsFireModeIndex] > 0) {
+	if (WORLD_GRAVITY_LEVEL_VALUES[WeaponsFireModeIndex] > 0) {
 		CONTROLS::DISABLE_CONTROL_ACTION(2, 24, 1); // attack
 		CONTROLS::DISABLE_CONTROL_ACTION(2, 257, 1); // attack2
 		CONTROLS::DISABLE_CONTROL_ACTION(2, 69, 1); // vehicle attack
 		//CONTROLS::DISABLE_CONTROL_ACTION(2, 70, 1); // vehicle attack2
 		if (CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, 24)) {
 			if (featureWeaponInfiniteAmmo && PED::IS_PED_SHOOTING(playerPed)) bullet_tick = bullet_tick + 1;
-			if (WEAPONS_FIREMODE_VALUES[WeaponsFireModeIndex] == 3 && (((bullet_a - WEAPON::GET_AMMO_IN_PED_WEAPON(PLAYER::PLAYER_PED_ID(), WEAPON::GET_SELECTED_PED_WEAPON(playerPed))) > 4) || bullet_tick > 4)) { // burst auto
+			if (WORLD_GRAVITY_LEVEL_VALUES[WeaponsFireModeIndex] == 3 && (((bullet_a - WEAPON::GET_AMMO_IN_PED_WEAPON(PLAYER::PLAYER_PED_ID(), WEAPON::GET_SELECTED_PED_WEAPON(playerPed))) > 4) || bullet_tick > 4)) { // burst auto
 				w_tick_secs_passed = clock() / CLOCKS_PER_SEC;
 				if (((clock() / (CLOCKS_PER_SEC / 1000)) - w_tick_secs_curr) != 0) {
 					tick_firemode = tick_firemode + 1;
@@ -2401,9 +2394,9 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 					bullet_tick = 0;
 				}
 			}
-			if ((WEAPONS_FIREMODE_VALUES[WeaponsFireModeIndex] == 1 && ((bullet_a - WEAPON::GET_AMMO_IN_PED_WEAPON(PLAYER::PLAYER_PED_ID(), WEAPON::GET_SELECTED_PED_WEAPON(playerPed))) < 1) && bullet_tick < 1) || // 1 - single fire
-				(WEAPONS_FIREMODE_VALUES[WeaponsFireModeIndex] == 2 && ((bullet_a - WEAPON::GET_AMMO_IN_PED_WEAPON(PLAYER::PLAYER_PED_ID(), WEAPON::GET_SELECTED_PED_WEAPON(playerPed))) < 5) && bullet_tick < 5) || // 2 - burst semi
-				(WEAPONS_FIREMODE_VALUES[WeaponsFireModeIndex] == 3 && ((bullet_a - WEAPON::GET_AMMO_IN_PED_WEAPON(PLAYER::PLAYER_PED_ID(), WEAPON::GET_SELECTED_PED_WEAPON(playerPed))) < 5) && bullet_tick < 5)) { // 3 - burst auto
+			if ((WORLD_GRAVITY_LEVEL_VALUES[WeaponsFireModeIndex] == 1 && ((bullet_a - WEAPON::GET_AMMO_IN_PED_WEAPON(PLAYER::PLAYER_PED_ID(), WEAPON::GET_SELECTED_PED_WEAPON(playerPed))) < 1) && bullet_tick < 1) || // 1 - single fire
+				(WORLD_GRAVITY_LEVEL_VALUES[WeaponsFireModeIndex] == 2 && ((bullet_a - WEAPON::GET_AMMO_IN_PED_WEAPON(PLAYER::PLAYER_PED_ID(), WEAPON::GET_SELECTED_PED_WEAPON(playerPed))) < 5) && bullet_tick < 5) || // 2 - burst semi
+				(WORLD_GRAVITY_LEVEL_VALUES[WeaponsFireModeIndex] == 3 && ((bullet_a - WEAPON::GET_AMMO_IN_PED_WEAPON(PLAYER::PLAYER_PED_ID(), WEAPON::GET_SELECTED_PED_WEAPON(playerPed))) < 5) && bullet_tick < 5)) { // 3 - burst auto
 				CONTROLS::ENABLE_CONTROL_ACTION(2, 24, 1); // attack
 				CONTROLS::ENABLE_CONTROL_ACTION(2, 257, 1); // attack2
 				CONTROLS::ENABLE_CONTROL_ACTION(2, 69, 1); // vehicle attack
@@ -2862,7 +2855,7 @@ void add_weapon_feature_enablements2(std::vector<StringPairSettingDBRow>* result
 	results->push_back(StringPairSettingDBRow{ "SniperVisionIndex", std::to_string(SniperVisionIndex) });
 	results->push_back(StringPairSettingDBRow{ "PowerPunchIndex", std::to_string(PowerPunchIndex) });
 	results->push_back(StringPairSettingDBRow{ "WeaponsFireModeIndex", std::to_string(WeaponsFireModeIndex) });
-	results->push_back(StringPairSettingDBRow{ "WeapStrobeIndex", std::to_string(WeapStrobeIndex) });
+	results->push_back(StringPairSettingDBRow{ "WeapStrobeIndexN", std::to_string(WeapStrobeIndexN) });
 	results->push_back(StringPairSettingDBRow{ "WeapFlashDistIndex", std::to_string(WeapFlashDistIndex) });
 }
 
@@ -2912,8 +2905,8 @@ void handle_generic_settings_weapons(std::vector<StringPairSettingDBRow>* settin
 		else if (setting.name.compare("WeaponsFireModeIndex") == 0) {
 			WeaponsFireModeIndex = stoi(setting.value);
 		}
-		else if (setting.name.compare("WeapStrobeIndex") == 0) {
-			WeapStrobeIndex = stoi(setting.value);
+		else if (setting.name.compare("WeapStrobeIndexN") == 0) {
+			WeapStrobeIndexN = stoi(setting.value);
 		}
 		else if (setting.name.compare("WeapFlashDistIndex") == 0) {
 			WeapFlashDistIndex = stoi(setting.value);

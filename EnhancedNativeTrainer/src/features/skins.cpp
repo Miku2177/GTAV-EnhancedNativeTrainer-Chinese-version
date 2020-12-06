@@ -66,8 +66,8 @@ int ResetSkinOnDeathIdx = 0;
 bool ResetSkinOnDeathChanged = true;
 
 // Auto Apply Last Saved Skin
-const std::vector<std::string> SKINS_AUTO_SKIN_SAVED_CAPTIONS{ "OFF", "Restore Character", "Saved Character Only"/*, "Current Character"*/ };
-const int SKINS_AUTO_SKIN_SAVED_VALUES[] = { 0, 1, 2/*, 3*/ };
+const std::vector<std::string> SKINS_AUTO_SKIN_SAVED_CAPTIONS{ "OFF", "Restore Character", "Saved Character Only" };
+//const int SKINS_AUTO_SKIN_SAVED_VALUES[] = { 0, 1, 2 };
 int AutoApplySkinSavedIndex = 0;
 bool AutoApplySkinSavedChanged = true;
 
@@ -289,7 +289,7 @@ void update_skin_features() {
 	}
 
 	// Auto Apply Last Saved Skin
-	if (SKINS_AUTO_SKIN_SAVED_VALUES[AutoApplySkinSavedIndex] > 0) { 
+	if (NPC_RAGDOLL_VALUES[AutoApplySkinSavedIndex] > 0) {
 		if (auto_skin == false) {
 			skin_tick_secs_passed = clock() / CLOCKS_PER_SEC;
 			if (((clock() / (CLOCKS_PER_SEC / 1000)) - skin_tick_secs_curr) != 0) {
@@ -315,9 +315,9 @@ void update_skin_features() {
 						bool right_model = false;
 
 						if (model != -1) {
-							if (SKINS_AUTO_SKIN_SAVED_VALUES[AutoApplySkinSavedIndex] == 1) applyChosenSkin(savedSkin->model);
-							if (SKINS_AUTO_SKIN_SAVED_VALUES[AutoApplySkinSavedIndex] == 2 && ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == savedSkin->model) applyChosenSkin(PLAYER::PLAYER_PED_ID()); // applyChosenSkin(savedSkin->model);
-							if (SKINS_AUTO_SKIN_SAVED_VALUES[AutoApplySkinSavedIndex] == 2 && ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) != savedSkin->model) right_model = true;
+							if (NPC_RAGDOLL_VALUES[AutoApplySkinSavedIndex] == 1) applyChosenSkin(savedSkin->model);
+							if (NPC_RAGDOLL_VALUES[AutoApplySkinSavedIndex] == 2 && ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == savedSkin->model) applyChosenSkin(PLAYER::PLAYER_PED_ID()); // applyChosenSkin(savedSkin->model);
+							if (NPC_RAGDOLL_VALUES[AutoApplySkinSavedIndex] == 2 && ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) != savedSkin->model) right_model = true;
 
 							if (right_model == false) {
 								Ped ped = PLAYER::PLAYER_PED_ID();
@@ -345,7 +345,7 @@ void update_skin_features() {
 		} // end of auto_skin
 
 		if (PLAYER::PLAYER_PED_ID() != oldplayerSkin) auto_skin = false;
-		if ((PLAYER::GET_TIME_SINCE_LAST_DEATH() > -1 && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 2000) || (player_died == true && !featureNoAutoRespawn)) auto_skin = false;
+		if ((time_since_d > -1 && time_since_d < 2000) || (player_died == true && !featureNoAutoRespawn)) auto_skin = false;
 		if (DLC2::GET_IS_LOADING_SCREEN_ACTIVE()) auto_skin = false;
 
 	} // end of featureautoskin

@@ -27,12 +27,12 @@ bool requireRefreshOfVehColourSaveSlots = false;
 bool requireRefreshOfVehColourSlotMenu = false;
 
 //Parts
-const std::vector<std::string> MENU_PAINT_WHAT{"Primary", "Secondary", "Primary & Secondary", "Pearlescent", "Wheels", "Interior", "Dash"};
+const std::vector<std::string> MENU_PAINT_WHAT{ "Primary", "Secondary", "Primary & Secondary", "Pearlescent", "Wheels", "Interior", "Dash" };
 
 //Paint Names
-const std::vector<std::string> MENU_PAINT_TYPE{"Classic", "Metallic", "Matte", "Metals", "Util", "Worn", "Chrome"};
-const std::string MENU_PAINT_INDEX_TYPE("Index");
-const std::string MENU_CUSTOM_PAINT_TYPE("Custom");
+const std::vector<std::string> MENU_PAINT_TYPE{ "Classic", "Metallic", "Matte", "Metals", "Util", "Worn", "Chrome" };
+const std::string MENU_PAINT_INDEX_TYPE( "Index" );
+const std::string MENU_CUSTOM_PAINT_TYPE( "Custom" );
 
 const std::vector<PaintColor> PAINTS_CLASSIC{
 	{0, "Black"},

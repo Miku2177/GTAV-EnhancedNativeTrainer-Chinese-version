@@ -54,7 +54,7 @@ const static int SPECIAL_ID_FOR_ENGINE_SOUND = 101;
 
 const static int SPECIAL_ID_FOR_XENON_COLOUR = 102;
 
-std::vector<std::string> wheel_names { "Sport", "Muscle", "Lowrider", "SUV", "Offroad", "Tuner", "Bike", "High-End", "Benny's Originals", "Benny's Bespoke", "Formula", "Street" };
+const std::vector<std::string> wheel_names { "Sport", "Muscle", "Lowrider", "SUV", "Offroad", "Tuner", "Bike", "High-End", "Benny's Originals", "Benny's Bespoke", "Formula", "Street" };
 
 std::map<int, std::string> mod_slots;
 
@@ -222,7 +222,7 @@ std::string getHornTitle(int index){
 	case -1: v_3 = "CMOD_HRN_0"; break;
 	case 0: v_3 = "CMOD_HRN_TRK"; break;
 	case 1: v_3 = "CMOD_HRN_COP"; break;
-	case 2:  v_3 = "CMOD_HRN_CLO";  break;
+	case 2: v_3 = "CMOD_HRN_CLO"; break;
 	case 3: v_3 = "CMOD_HRN_MUS1"; break;
 	case 4: v_3 = "CMOD_HRN_MUS2"; break;
 	case 5: v_3 = "CMOD_HRN_MUS3"; break;
@@ -1022,7 +1022,7 @@ bool process_vehmod_menu(){
 	BOOL isAircraft = is_this_a_heli_or_plane(veh);
 	BOOL isWeird = is_this_a_bicycle(veh) || is_this_a_boat_or_sub(veh) || is_this_a_train(veh);
 
-	std::string caption = "Vehicle Mod Options";
+	const std::string caption = "Vehicle Mod Options";
 
 	std::ostringstream ss;
 

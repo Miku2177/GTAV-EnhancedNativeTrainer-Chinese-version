@@ -92,7 +92,7 @@ int FineSizeIndex = 1;
 bool FineSize_Changed = true;
 int DetectionRangeIndex = 3;
 bool DetectionRange_Changed = true;
-int PirsuitRangeIndex = 4;
+int PirsuitRangeIndexN = 4;
 bool PirsuitRange_Changed = true;
 int StarsPunishIndex = 0;
 bool StarsPunish_Changed = true;
@@ -802,7 +802,7 @@ void road_laws()
 		}
 
 		// Been fined or escaped
-		if (Stop_seconds_final > 21 || tempgotcha_x > VEH_PIRSUITRANGE_VALUES[PirsuitRangeIndex] || tempgotcha_y > VEH_PIRSUITRANGE_VALUES[PirsuitRangeIndex] ||
+		if (Stop_seconds_final > 21 || tempgotcha_x > VEH_PIRSUITRANGE_VALUES[PirsuitRangeIndexN] || tempgotcha_y > VEH_PIRSUITRANGE_VALUES[PirsuitRangeIndexN] ||
 			(PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) > 1 && !featureCopsUseRadio) || (vehroadlaws_speed > 20 && Stop_seconds > -1 && wanted_level_on == true && !featureCopsUseRadio) || stuck_completely > 6 ||
 			PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) > 0)
 		{
@@ -831,20 +831,20 @@ void road_laws()
 					if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO) {
 						STATS::STAT_GET_INT(SP0_TOTAL_CASH, &outValue_beingfined, -1);
 						statHash_beingfined = SP0_TOTAL_CASH;
-						STATS::STAT_SET_INT(statHash_beingfined, outValue_beingfined - VEH_FINESIZE_VALUES[FineSizeIndex], true);
-						if (outValue_beingfined < VEH_FINESIZE_VALUES[FineSizeIndex]) being_arrested = true;
+						STATS::STAT_SET_INT(statHash_beingfined, outValue_beingfined - MISC_PHONE_BILL_VALUES[FineSizeIndex], true);
+						if (outValue_beingfined < MISC_PHONE_BILL_VALUES[FineSizeIndex]) being_arrested = true;
 					}
 					if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE) {
 						STATS::STAT_GET_INT(SP1_TOTAL_CASH, &outValue_beingfined, -1);
 						statHash_beingfined = SP1_TOTAL_CASH;
-						STATS::STAT_SET_INT(statHash_beingfined, outValue_beingfined - VEH_FINESIZE_VALUES[FineSizeIndex], true);
-						if (outValue_beingfined < VEH_FINESIZE_VALUES[FineSizeIndex]) being_arrested = true;
+						STATS::STAT_SET_INT(statHash_beingfined, outValue_beingfined - MISC_PHONE_BILL_VALUES[FineSizeIndex], true);
+						if (outValue_beingfined < MISC_PHONE_BILL_VALUES[FineSizeIndex]) being_arrested = true;
 					}
 					if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO) {
 						STATS::STAT_GET_INT(SP2_TOTAL_CASH, &outValue_beingfined, -1);
 						statHash_beingfined = SP2_TOTAL_CASH;
-						STATS::STAT_SET_INT(statHash_beingfined, outValue_beingfined - VEH_FINESIZE_VALUES[FineSizeIndex], true);
-						if (outValue_beingfined < VEH_FINESIZE_VALUES[FineSizeIndex]) being_arrested = true;
+						STATS::STAT_SET_INT(statHash_beingfined, outValue_beingfined - MISC_PHONE_BILL_VALUES[FineSizeIndex], true);
+						if (outValue_beingfined < MISC_PHONE_BILL_VALUES[FineSizeIndex]) being_arrested = true;
 					}
 				}
 
@@ -941,7 +941,7 @@ void road_laws()
 			being_arrested = false;
 		}
 
-		if (PLAYER::GET_TIME_SINCE_LAST_ARREST() > 2 && PLAYER::GET_TIME_SINCE_LAST_ARREST() < 100) {
+		if (time_since_a > 2 && time_since_a < 100) {
 			VEHICLE::SET_VEHICLE_SIREN(fine_cop_car, false);
 			ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&cop_that_fines_you);
 			ENTITY::SET_VEHICLE_AS_NO_LONGER_NEEDED(&fine_cop_car);
@@ -963,7 +963,7 @@ void road_laws()
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-////////////////////////////////////////////////// MOST WANTED ////////////////////////////////////////////////////
+////////////////////////////////////////////////// WANTED FUGITIVE ////////////////////////////////////////////////////
 void most_wanted() 
 {
 	if (featurePlayerMostWanted) {
@@ -993,7 +993,7 @@ void most_wanted()
 				if (CLOTHES_BODY_CRIME.empty()) CLOTHES_BODY_CRIME.push_back(PED::GET_PED_DRAWABLE_VARIATION(Bad_ass, 3));
 			}
 		}
-		// NO wanted level
+		// no wanted level
 		if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < VEH_STARSPUNISH_VALUES[mostwanted_level_enable] && (!VEH_CRIME.empty() || !CLOTHES_BODY_CRIME.empty())) {
 			const int arrSize36 = 1024;
 			Ped cops_nearby[arrSize36];
@@ -1042,7 +1042,7 @@ void most_wanted()
 			}
 		}
 
-		if ((PLAYER::GET_TIME_SINCE_LAST_DEATH() > 0 && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 5000) || (PLAYER::GET_TIME_SINCE_LAST_ARREST() > 0 && PLAYER::GET_TIME_SINCE_LAST_ARREST() < 5000) || (Bad_ass != temp) || in_prison == true) {
+		if ((time_since_d > 0 && time_since_d < 5000) || (time_since_a > 0 && time_since_a < 5000) || (Bad_ass != temp) || in_prison == true) {
 			VEH_CRIME.clear();
 			VEH_CRIME.shrink_to_fit();
 			CLOTHES_BODY_CRIME.clear();

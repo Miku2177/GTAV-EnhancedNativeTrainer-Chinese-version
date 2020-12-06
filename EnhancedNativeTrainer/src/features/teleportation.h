@@ -50,11 +50,11 @@ void onchange_tel_chauffeur_drivingstyles_index(int value, SelectFromListMenuIte
 
 void onchange_tel_3dmarker_index(int value, SelectFromListMenuItem *source);
 
-void onchange_tel_3dmarker_msize_index(int value, SelectFromListMenuItem *source);
+//void onchange_tel_3dmarker_msize_index(int value, SelectFromListMenuItem *source);
 
 void onchange_tel_3dmarker_martype_index(int value, SelectFromListMenuItem *source);
 
-void onchange_tel_3dmarker_skypos_index(int value, SelectFromListMenuItem *source);
+//void onchange_tel_3dmarker_skypos_index(int value, SelectFromListMenuItem *source);
 
 Vector3 get_blip_marker();
 

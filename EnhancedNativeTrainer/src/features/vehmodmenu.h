@@ -3,14 +3,10 @@
 #include "..\..\inc\natives.h"
 #include "..\..\inc\types.h"
 #include "..\..\inc\enums.h"
-
 #include "..\..\inc\main.h"
 #include "..\ui_support\menu_functions.h"
-
 #include <string>
-
 #include "vehicles.h"
-
 #include "..\debug\debuglog.h"
 
 extern std::string current_picked_engine_sound;
