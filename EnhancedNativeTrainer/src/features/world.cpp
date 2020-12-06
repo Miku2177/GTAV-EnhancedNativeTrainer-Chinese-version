@@ -142,8 +142,8 @@ BOOL highbeamsBAutoOn = -1;
 
 // Radar Map Size
 const std::vector<std::string> WORLD_RADAR_MAP_CAPTIONS{ "Normal", "Big", "Full" };
-const int WORLD_RADAR_MAP_VALUES[] = { 1, 2, 3 };
-int RadarMapIndex = 0;
+//const int WORLD_RADAR_MAP_VALUES[] = { 1, 2, 3 };
+int RadarMapIndexN = 0;
 bool RadarMapChanged = true;
 
 // Wind Strength
@@ -183,19 +183,17 @@ int WeatherChangeIndex = 0;
 bool WeatherChangeChanged = true;
 
 const std::vector<std::string> MISC_WEATHER_METHOD_CAPTIONS{ "Random Weather", "Mixed Weather", "Custom Order" };
-const int MISC_WEATHER_METHOD_VALUES[] = { 1, 2, 3 };
-int WeatherMethodIndex = 0;
+//const int MISC_WEATHER_METHOD_VALUES[] = { 1, 2, 3 };
+int WeatherMethodIndexN = 0;
 bool WeatherMethodChanged = true;
 
 // Gravity Level
-const std::vector<std::string> WORLD_GRAVITY_LEVEL_CAPTIONS{ "Earth", "Moon", "Pluto", "Near Zero" };
-const int WORLD_GRAVITY_LEVEL_VALUES[] = { 0, 1, 2, 3 };
 int featureGravityLevelIndex = 0;
 bool featureGravityLevelChanged = true;
 
 void map_size_hotkey() {
-	RadarMapIndex = RadarMapIndex + 1;
-	if (RadarMapIndex > 2) RadarMapIndex = 0;
+	RadarMapIndexN = RadarMapIndexN + 1;
+	if (RadarMapIndexN > 2) RadarMapIndexN = 0;
 }
 
 bool onconfirm_weathersettings_menu(MenuItem<int> choice) {
@@ -203,7 +201,7 @@ bool onconfirm_weathersettings_menu(MenuItem<int> choice) {
 }
 
 void process_world_weathersettings_menu() {
-	std::string caption = "Weather Settings";
+	const std::string caption = "Weather Settings";
 
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
@@ -222,7 +220,7 @@ void process_world_weathersettings_menu() {
 	listItem = new SelectFromListMenuItem(MISC_WEATHER_METHOD_CAPTIONS, onchange_weather_method_index);
 	listItem->wrap = false;
 	listItem->caption = "Method";
-	listItem->value = WeatherMethodIndex;
+	listItem->value = WeatherMethodIndexN;
 	menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(WORLD_LIGHTNING_INTENSITY_CAPTIONS, onchange_lightning_intensity_index);
@@ -307,7 +305,7 @@ void process_weather_menu()
 {
 	const int lineCount = 17;
 
-	std::string caption = "Weather Options";
+	const std::string caption = "Weather Options";
 	
 	StringStandardOrToggleMenuDef lines[lineCount] = {
 		{ "Weather Settings", "FREEZEWEATHER", NULL, NULL, false },
@@ -380,7 +378,7 @@ void process_clouds_menu()
 {
 	const int lineCount = 22; // 22
 
-	std::string caption = "Clouds Options";
+	const std::string caption = "Clouds Options";
 
 	StringStandardOrToggleMenuDef lines[lineCount] = {
 		{ "Freeze Clouds", "FREEZECLOUDS", &featureCloudsFreeze, NULL },
@@ -414,7 +412,7 @@ void process_clouds_menu()
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void onchange_world_radar_map_index(int value, SelectFromListMenuItem* source){
-	RadarMapIndex = value;
+	RadarMapIndexN = value;
 	RadarMapChanged = true;
 }
 
@@ -459,7 +457,7 @@ void onchange_weather_change_index(int value, SelectFromListMenuItem* source) {
 }
 
 void onchange_weather_method_index(int value, SelectFromListMenuItem* source) {
-	WeatherMethodIndex = value;
+	WeatherMethodIndexN = value;
 	WeatherMethodChanged = true;
 }
 
@@ -490,7 +488,7 @@ void process_world_menu()
 {
 	const int lineCount = 8; // Amount of cases +1
 
-	std::string caption = "World Options";
+	const std::string caption = "World Options";
 
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
@@ -669,7 +667,7 @@ void process_world_menu()
 	listItem = new SelectFromListMenuItem(WORLD_RADAR_MAP_CAPTIONS, onchange_world_radar_map_index);
 	listItem->wrap = false;
 	listItem->caption = "Radar Map Size";
-	listItem->value = RadarMapIndex;
+	listItem->value = RadarMapIndexN;
 	menuItems.push_back(listItem); 
 
 	togItem = new ToggleMenuItem<int>();
@@ -712,7 +710,7 @@ void reset_world_globals()
 	activeLineIndexWorld = 0;
 	activeLineIndexWeather = 0;
 	activeLineIndexClouds = 0;
-	RadarMapIndex = 0;
+	RadarMapIndexN = 0;
 	WorldWavesIndex = 0;
 	featureLightIntensityIndex = 0;
 	
@@ -724,7 +722,7 @@ void reset_world_globals()
 	CopBlipPermIndex = 0;
 	featureGravityLevelIndex = 0;
 	WeatherChangeIndex = 0;
-	WeatherMethodIndex = 0;
+	WeatherMethodIndexN = 0;
 	WindStrengthIndex = 0;
 	lastWeather.clear();
 	lastWeatherName.clear();
@@ -925,21 +923,21 @@ void update_world_features()
 	if (!featureFullMap) UI::_SET_MINIMAP_REVEALED(false);
 	
 	// Radar Map Size
-	if (WORLD_RADAR_MAP_VALUES[RadarMapIndex] == 1 && radar_map_toogle_1 == false) {
+	if (NPC_RAGDOLL_VALUES[RadarMapIndexN] == 0 && radar_map_toogle_1 == false) {
 		UI::_SET_RADAR_BIGMAP_ENABLED(false, false);
 		radar_map_toogle_1 = true;
 		radar_map_toogle_2 = false;
 		radar_map_toogle_3 = false;
 	}
 
-	if (WORLD_RADAR_MAP_VALUES[RadarMapIndex] == 2 && radar_map_toogle_2 == false) {
+	if (NPC_RAGDOLL_VALUES[RadarMapIndexN] == 1 && radar_map_toogle_2 == false) {
 		UI::_SET_RADAR_BIGMAP_ENABLED(true, false);
 		radar_map_toogle_1 = false;
 		radar_map_toogle_2 = true;
 		radar_map_toogle_3 = false;
 	}
 
-	if (WORLD_RADAR_MAP_VALUES[RadarMapIndex] == 3 && radar_map_toogle_3 == false) {
+	if (NPC_RAGDOLL_VALUES[RadarMapIndexN] == 2 && radar_map_toogle_3 == false) {
 		UI::_SET_RADAR_BIGMAP_ENABLED(true, true);
 		radar_map_toogle_1 = false;
 		radar_map_toogle_2 = false;
@@ -998,50 +996,50 @@ void update_world_features()
 		std::string rand_w2;
 		if (random_weather == 1) rand_w1 = "EXTRASUNNY";
 		if (random_weather2 == 1) rand_w2 = "EXTRASUNNY";
-		if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] != 3 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 2544503417) cur_w = "EXTRASUNNY";
+		if (NPC_RAGDOLL_VALUES[WeatherMethodIndexN] != 2 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 2544503417) cur_w = "EXTRASUNNY";
 		if (random_weather == 2) rand_w1 = "CLEAR";
 		if (random_weather2 == 2) rand_w2 = "CLEAR";
-		if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] != 3 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 916995460) cur_w = "CLEAR";
+		if (NPC_RAGDOLL_VALUES[WeatherMethodIndexN] != 2 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 916995460) cur_w = "CLEAR";
 		if (random_weather == 3) rand_w1 = "CLOUDS";
 		if (random_weather2 == 3) rand_w2 = "CLOUDS";
-		if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] != 3 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 821931868) cur_w = "CLOUDS";
+		if (NPC_RAGDOLL_VALUES[WeatherMethodIndexN] != 2 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 821931868) cur_w = "CLOUDS";
 		if (random_weather == 4) rand_w1 = "SMOG";
 		if (random_weather2 == 4) rand_w2 = "SMOG";
-		if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] != 3 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 282916021) cur_w = "SMOG";
+		if (NPC_RAGDOLL_VALUES[WeatherMethodIndexN] != 2 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 282916021) cur_w = "SMOG";
 		if (random_weather == 5) rand_w1 = "FOGGY";
 		if (random_weather2 == 5) rand_w2 = "FOGGY";
-		if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] != 3 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 2926802500) cur_w = "FOGGY";
+		if (NPC_RAGDOLL_VALUES[WeatherMethodIndexN] != 2 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 2926802500) cur_w = "FOGGY";
 		if (random_weather == 6) rand_w1 = "OVERCAST";
 		if (random_weather2 == 6) rand_w2 = "OVERCAST";
-		if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] != 3 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3146353965) cur_w = "OVERCAST";
+		if (NPC_RAGDOLL_VALUES[WeatherMethodIndexN] != 2 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3146353965) cur_w = "OVERCAST";
 		if (random_weather == 7) rand_w1 = "RAIN";
 		if (random_weather2 == 7) rand_w2 = "RAIN";
-		if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] != 3 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 1420204096) cur_w = "RAIN";
+		if (NPC_RAGDOLL_VALUES[WeatherMethodIndexN] != 2 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 1420204096) cur_w = "RAIN";
 		if (random_weather == 8) rand_w1 = "THUNDER";
 		if (random_weather2 == 8) rand_w2 = "THUNDER";
-		if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] != 3 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3061285535) cur_w = "THUNDER";
+		if (NPC_RAGDOLL_VALUES[WeatherMethodIndexN] != 2 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3061285535) cur_w = "THUNDER";
 		if (random_weather == 9) rand_w1 = "CLEARING";
 		if (random_weather2 == 9) rand_w2 = "CLEARING";
-		if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] != 3 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 1840358669) cur_w = "CLEARING";
+		if (NPC_RAGDOLL_VALUES[WeatherMethodIndexN] != 2 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 1840358669) cur_w = "CLEARING";
 		if (random_weather == 10) rand_w1 = "NEUTRAL";
 		if (random_weather2 == 10) rand_w2 = "NEUTRAL";
-		if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] != 3 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 2764706598) cur_w = "NEUTRAL";
+		if (NPC_RAGDOLL_VALUES[WeatherMethodIndexN] != 2 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 2764706598) cur_w = "NEUTRAL";
 		if (random_weather == 11) rand_w1 = "SNOW";
 		if (random_weather2 == 11) rand_w2 = "SNOW";
-		if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] != 3 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 4021743606) cur_w = "SNOW";
+		if (NPC_RAGDOLL_VALUES[WeatherMethodIndexN] != 2 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 4021743606) cur_w = "SNOW";
 		if (random_weather == 12) rand_w1 = "BLIZZARD";
 		if (random_weather2 == 12) rand_w2 = "BLIZZARD";
-		if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] != 3 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 669657108) cur_w = "BLIZZARD";
+		if (NPC_RAGDOLL_VALUES[WeatherMethodIndexN] != 2 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 669657108) cur_w = "BLIZZARD";
 		if (random_weather == 13) rand_w1 = "SNOWLIGHT";
 		if (random_weather2 == 13) rand_w2 = "SNOWLIGHT";
-		if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] != 3 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 603685163) cur_w = "SNOWLIGHT";
+		if (NPC_RAGDOLL_VALUES[WeatherMethodIndexN] != 2 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 603685163) cur_w = "SNOWLIGHT";
 		if (random_weather == 14) rand_w1 = "XMAS";
 		if (random_weather2 == 14) rand_w2 = "XMAS";
-		if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] != 3 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 2865350805) cur_w = "XMAS";
+		if (NPC_RAGDOLL_VALUES[WeatherMethodIndexN] != 2 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 2865350805) cur_w = "XMAS";
 		if (random_weather == 15) rand_w1 = "HALLOWEEN";
 		if (random_weather2 == 15) rand_w2 = "HALLOWEEN";
-		if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] != 3 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3373937154) cur_w = "HALLOWEEN";
-		if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 3) {
+		if (NPC_RAGDOLL_VALUES[WeatherMethodIndexN] != 2 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3373937154) cur_w = "HALLOWEEN";
+		if (NPC_RAGDOLL_VALUES[WeatherMethodIndexN] == 2) {
 			std::string tmp_w_row;
 			int tmp_w_counter = 0;
 			for (int k = 0; k < C_WEATHER_C.size(); k++) {
@@ -1103,14 +1101,14 @@ void update_world_features()
 		}
 
 		if (startup_w == true) {
-			if (w_seconds <= (MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] - 5) && !lastWeather.empty() && MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 1) GAMEPLAY::SET_WEATHER_TYPE_NOW_PERSIST((char*)lastWeather.c_str());
-			if (w_seconds <= (MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] - 5) && lastWeather.empty() && MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 1) GAMEPLAY::SET_WEATHER_TYPE_NOW_PERSIST((char*)cur_w.c_str());
-			if (w_seconds <= (MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] - 5) && MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 3) GAMEPLAY::SET_WEATHER_TYPE_NOW_PERSIST((char*)cur_w.c_str()); ((char*)cur_w.c_str());
-			if (w_seconds <= (MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] - 5) && MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 2)
+			if (w_seconds <= (MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] - 5) && !lastWeather.empty() && NPC_RAGDOLL_VALUES[WeatherMethodIndexN] == 0) GAMEPLAY::SET_WEATHER_TYPE_NOW_PERSIST((char*)lastWeather.c_str());
+			if (w_seconds <= (MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] - 5) && lastWeather.empty() && NPC_RAGDOLL_VALUES[WeatherMethodIndexN] == 0) GAMEPLAY::SET_WEATHER_TYPE_NOW_PERSIST((char*)cur_w.c_str());
+			if (w_seconds <= (MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] - 5) && NPC_RAGDOLL_VALUES[WeatherMethodIndexN] == 2) GAMEPLAY::SET_WEATHER_TYPE_NOW_PERSIST((char*)cur_w.c_str()); ((char*)cur_w.c_str());
+			if (w_seconds <= (MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] - 5) && NPC_RAGDOLL_VALUES[WeatherMethodIndexN] == 1)
 				GAMEPLAY::_SET_WEATHER_TYPE_TRANSITION(GAMEPLAY::GET_HASH_KEY((char*)mixed_w1.c_str()), GAMEPLAY::GET_HASH_KEY((char*)mixed_w2.c_str()), 0.50f);
 
 			if (w_seconds > (MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] - 5)) {
-				if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 1) {
+				if (NPC_RAGDOLL_VALUES[WeatherMethodIndexN] == 0) {
 					if (rand_w1 != cur_w && rand_w1 != lastWeather && rand_w1 != lastWeather_2 && t_counter == 0.000) {
 						mixed_w1 = cur_w;
 						t_counter = t_counter + 0.001;
@@ -1124,7 +1122,7 @@ void update_world_features()
 						t_counter = t_counter + 0.002;
 					}
 				}
-				if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 2) {
+				if (NPC_RAGDOLL_VALUES[WeatherMethodIndexN] == 1) {
 					if (rand_w1 != rand_w2 && mixed_w1 != rand_w1 && mixed_w2 != rand_w2 && mixed_w1 != rand_w2 && mixed_w2 != rand_w1 && t_counter == 0.0) {
 						mixed_w1 = rand_w1;
 						mixed_w2 = rand_w2;
@@ -1136,7 +1134,7 @@ void update_world_features()
 						t_counter = t_counter + 0.05;
 					}
 				}
-				if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 3) {
+				if (NPC_RAGDOLL_VALUES[WeatherMethodIndexN] == 2) {
 					if (t_counter == 0.000) {
 						lastWeather = cur_w;
 						alphabetical_w = alphabetical_w + 1;
@@ -1149,31 +1147,31 @@ void update_world_features()
 					}
 				}
 
-				if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 1 && t_counter == 0.055) {
+				if (NPC_RAGDOLL_VALUES[WeatherMethodIndexN] == 0 && t_counter == 0.055) {
 					GAMEPLAY::CLEAR_OVERRIDE_WEATHER();
 					GAMEPLAY::CLEAR_WEATHER_TYPE_PERSIST();
 					GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
 					GRAPHICS::_CLEAR_CLOUD_HAT();
 				}
-				if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 1 && t_counter > 0.065 && t_counter < 0.075) {
+				if (NPC_RAGDOLL_VALUES[WeatherMethodIndexN] == 0 && t_counter > 0.065 && t_counter < 0.075) {
 					if (lastWeather == "EXTRASUNNY" || lastWeather == "NEUTRAL") GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Snowy 01", 0.3); // 9.0
 					if (lastWeather == "CLOUDS" && weather_counter == 1) GRAPHICS::_SET_CLOUD_HAT_TRANSITION("shower", 0.3); // 9.0
 					if (lastWeather == "CLOUDS" && weather_counter == 2) GRAPHICS::_SET_CLOUD_HAT_TRANSITION("stratoscumulus", 0.3); // 9.0
 					if (lastWeather == "THUNDER") GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 0.3); // 9.0
 					if (WORLD_LIGHTNING_INTENSITY_VALUES[featureLightIntensityIndex] > -2 && lastWeather == "HALLOWEEN") GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 0.3); // 9.0
 				}
-				if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 2 && t_counter == 0.45) {
+				if (NPC_RAGDOLL_VALUES[WeatherMethodIndexN] == 1 && t_counter == 0.45) {
 					GAMEPLAY::CLEAR_OVERRIDE_WEATHER();
 					GAMEPLAY::CLEAR_WEATHER_TYPE_PERSIST();
 					GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
 					GRAPHICS::_CLEAR_CLOUD_HAT();
 				}
-				if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 2 && t_counter > 0.55 && t_counter < 0.65) {
+				if (NPC_RAGDOLL_VALUES[WeatherMethodIndexN] == 1 && t_counter > 0.55 && t_counter < 0.65) {
 					if (mixed_w1 == "EXTRASUNNY" || mixed_w2 == "EXTRASUNNY" || mixed_w1 == "NEUTRAL" || mixed_w2 == "NEUTRAL") GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Snowy 01", 0.3);
 					if (mixed_w1 == "THUNDER" || mixed_w2 == "THUNDER") GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 0.3);
 					if (WORLD_LIGHTNING_INTENSITY_VALUES[featureLightIntensityIndex] > -2 && (mixed_w1 == "HALLOWEEN" || mixed_w2 == "HALLOWEEN")) GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 0.3);
 				}
-				if (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 3 && t_counter > 0.065 && t_counter < 0.075) {
+				if (NPC_RAGDOLL_VALUES[WeatherMethodIndexN] == 2 && t_counter > 0.065 && t_counter < 0.075) {
 					if (t_counter == 0.070) {
 						GAMEPLAY::CLEAR_OVERRIDE_WEATHER();
 						GAMEPLAY::CLEAR_WEATHER_TYPE_PERSIST();
@@ -1185,7 +1183,7 @@ void update_world_features()
 					if (WORLD_LIGHTNING_INTENSITY_VALUES[featureLightIntensityIndex] > -2 && cur_w == "HALLOWEEN") GRAPHICS::_SET_CLOUD_HAT_TRANSITION("Stormy 01", 0.3); // 9.0
 				}
 
-				if ((MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 1 && t_counter > 0.999) || (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 2 && t_counter > 1.0) || (MISC_WEATHER_METHOD_VALUES[WeatherMethodIndex] == 3 && t_counter > 1.0)) {
+				if ((NPC_RAGDOLL_VALUES[WeatherMethodIndexN] == 0 && t_counter > 0.999) || (NPC_RAGDOLL_VALUES[WeatherMethodIndexN] == 1 && t_counter > 1.0) || (NPC_RAGDOLL_VALUES[WeatherMethodIndexN] == 2 && t_counter > 1.0)) {
 					w_seconds = 0;
 					t_counter = 0.000;
 				}
@@ -1226,9 +1224,9 @@ void update_world_features()
 	// Bus Interior Light On At Night && NPC No Lights && NPC Neon Lights && NPC Dirty Vehicles && NPC No Gravity Vehicles && NPC Vehicles Reduced Grip && NPC Vehicle Speed && NPC Use Fullbeam && 
 	// Headlights During Blackout && Boost NPC Radio Volume && Slippery When Wet && Train Speed && NPC Vehicles Colour && Reduced Grip If Snowing && Damage On Collision With You
 	if (featureBusLight || featureNPCNoLights || featureNPCNeonLights || featureDirtyVehicles || featureNPCNoGravityVehicles || featureNPCReducedGripVehicles ||
-		WORLD_NPC_VEHICLESPEED_VALUES[NPCVehicleSpeedIndex] > -1 || WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 || featureNPCFullBeam || featureHeadlightsBlackout ||
-		featureBoostNPCRadio || WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripRainingIndex] > 0 || WORLD_TRAIN_SPEED_VALUES[TrainSpeedIndex] != -1.0 || VEH_COLOUR_VALUES[VehColourIndex] > -1 ||
-		LIMP_IF_INJURED_VALUES[NPCVehicleDamageOnCollIndex] > 0) {
+		WORLD_NPC_VEHICLESPEED_VALUES[NPCVehicleSpeedIndex] > -1 || NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] > 0 || featureNPCFullBeam || featureHeadlightsBlackout ||
+		featureBoostNPCRadio || NPC_RAGDOLL_VALUES[RadarReducedGripRainingIndex] > 0 || WORLD_TRAIN_SPEED_VALUES[TrainSpeedIndex] != -1.0 || VEH_COLOUR_VALUES[VehColourIndex] > -1 ||
+		NPC_RAGDOLL_VALUES[NPCVehicleDamageOnCollIndex] > 0) {
 		Vehicle veh_mycurrveh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 		const int BUS_ARR_SIZE = 1024;
 		Vehicle bus_veh[BUS_ARR_SIZE];
@@ -1343,13 +1341,13 @@ void update_world_features()
 				reduced_grip_e = true;
 			}
 			// Reduced Grip If Snowing (Vehicles & Protagonist)
-			if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 && featureSnow) {
+			if (NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] > 0 && featureSnow) {
 				float slippery_randomize = -1;
 				Vector3 coords_slip = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 				Vector3 coords_slip_ped = ENTITY::GET_ENTITY_COORDS(bus_veh[i], true);
 				int slip_index_s = -1;
-				if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] == 1) slip_index_s = 11; // arcade
-				if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] == 2) slip_index_s = 16; // realistic
+				if (NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] == 1) slip_index_s = 11; // arcade
+				if (NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] == 2) slip_index_s = 16; // realistic
 				slippery_s = slippery_s + 1;
 				if (slippery_s < slip_index_s && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip_ped.x, coords_slip_ped.y, coords_slip_ped.z)) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], true);
 				if (slippery_s > slip_index_s - 1 && slippery_s < 20) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], false); // slip_index * 2
@@ -1360,17 +1358,17 @@ void update_world_features()
 				int r_Type = (rand() % 3 + 2);
 				slippery_randomize = (rand() % 1000 + 1);
 				// arcade
-				if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] == 1 && slippery_randomize > 990 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
+				if (NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] == 1 && slippery_randomize > 990 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
 					AI::IS_PED_RUNNING(PLAYER::PLAYER_PED_ID()) && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip.x, coords_slip.y, coords_slip.z) && !ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID()))
 					PED::SET_PED_TO_RAGDOLL(PLAYER::PLAYER_PED_ID(), time11, time12, r_Type, true, true, false);
-				if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] == 1 && slippery_randomize > 920 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
+				if (NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] == 1 && slippery_randomize > 920 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
 					AI::IS_PED_SPRINTING(PLAYER::PLAYER_PED_ID()) && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip.x, coords_slip.y, coords_slip.z) && !ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID())) 
 					PED::SET_PED_TO_RAGDOLL(PLAYER::PLAYER_PED_ID(), time11, time12, r_Type, true, true, false);
 				// realistic
-				if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] == 2 && slippery_randomize > 970 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
+				if (NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] == 2 && slippery_randomize > 970 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
 					AI::IS_PED_RUNNING(PLAYER::PLAYER_PED_ID()) && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip.x, coords_slip.y, coords_slip.z) && !ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID())) 
 					PED::SET_PED_TO_RAGDOLL(PLAYER::PLAYER_PED_ID(), time11, time12, r_Type, true, true, false);
-				if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] == 2 && slippery_randomize > 880 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
+				if (NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] == 2 && slippery_randomize > 880 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
 					AI::IS_PED_SPRINTING(PLAYER::PLAYER_PED_ID()) && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip.x, coords_slip.y, coords_slip.z) && !ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID())) 
 					PED::SET_PED_TO_RAGDOLL(PLAYER::PLAYER_PED_ID(), time11, time12, r_Type, true, true, false);
 				// normalize speed
@@ -1382,18 +1380,18 @@ void update_world_features()
 				no_grip_snowing_e = true;
 			}
 			// Slippery When Wet
-			if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripRainingIndex] > 0) { 
+			if (NPC_RAGDOLL_VALUES[RadarReducedGripRainingIndex] > 0) {
 				if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 1420204096 || GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3061285535 || GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 1840358669 ||
 					GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3373937154) { // GET_NEXT_WEATHER_TYPE_HASH_NAME
 					Vector3 coords_slip_r = ENTITY::GET_ENTITY_COORDS(bus_veh[i], true);
 					int slip_index = -1;
-					if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripRainingIndex] == 1) { // arcade
+					if (NPC_RAGDOLL_VALUES[RadarReducedGripRainingIndex] == 1) { // arcade
 						if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 1420204096) slip_index = 3; // rain
 						if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3061285535) slip_index = 4; // stormy
 						if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 1840358669) slip_index = 2; // clearing
 						if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3373937154) slip_index = 4; // halloween
 					}
-					if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripRainingIndex] == 2) { // realistic
+					if (NPC_RAGDOLL_VALUES[RadarReducedGripRainingIndex] == 2) { // realistic
 						if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 1420204096) slip_index = 5; // rain
 						if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3061285535) slip_index = 6; // stormy
 						if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 1840358669) slip_index = 4; // clearing
@@ -1413,10 +1411,10 @@ void update_world_features()
 				}
 			}
 			// DISABLED Reduced Grip If Snowing || DISABLED Slippery When Wet || DISABLED NPC Vehicles Reduced Grip
-			if ((WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 && !featureSnow && no_grip_snowing_e == true) || (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] == 0 && featureSnow && no_grip_snowing_e == true) ||
-				(WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripRainingIndex] > 0 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() != 1420204096 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() != 3061285535 &&
+			if ((NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] > 0 && !featureSnow && no_grip_snowing_e == true) || (NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] == 0 && featureSnow && no_grip_snowing_e == true) ||
+				(NPC_RAGDOLL_VALUES[RadarReducedGripRainingIndex] > 0 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() != 1420204096 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() != 3061285535 &&
 				GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() != 1840358669 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() != 3373937154 && no_grip_when_wet_e == true) || 
-				(WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripRainingIndex] == 0 && no_grip_when_wet_e == true) || (!featureNPCReducedGripVehicles && reduced_grip_e == true)) {
+				(NPC_RAGDOLL_VALUES[RadarReducedGripRainingIndex] == 0 && no_grip_when_wet_e == true) || (!featureNPCReducedGripVehicles && reduced_grip_e == true)) {
 				for (int b = 0; b < found; b++) {
 					VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[b], false);
 				}
@@ -1499,7 +1497,7 @@ void update_world_features()
 				}
 			}
 			// Damage On Collision With You
-			if (LIMP_IF_INJURED_VALUES[NPCVehicleDamageOnCollIndex] > 0 && PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) {
+			if (NPC_RAGDOLL_VALUES[NPCVehicleDamageOnCollIndex] > 0 && PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) {
 				Vector3 veh_me_crds = ENTITY::GET_ENTITY_COORDS(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false), true);
 				Vector3 veh_coll_with_crds = ENTITY::GET_ENTITY_COORDS(bus_veh[i], true);
 				int vehcoll_with_dist_x = (veh_me_crds.x - veh_coll_with_crds.x);
@@ -1508,11 +1506,11 @@ void update_world_features()
 				if (vehcoll_with_dist_y < 0) vehcoll_with_dist_y = (vehcoll_with_dist_y * -1);
 				if (bus_veh[i] != PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false) && VEHICLE::GET_PED_IN_VEHICLE_SEAT(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false), -1) == PLAYER::PLAYER_PED_ID() &&
 					ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false)) && ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(bus_veh[i]) && vehcoll_with_dist_x < 5 && vehcoll_with_dist_y < 5) {
-					if (LIMP_IF_INJURED_VALUES[NPCVehicleDamageOnCollIndex] == 1) {
+					if (NPC_RAGDOLL_VALUES[NPCVehicleDamageOnCollIndex] == 1) {
 						VEHICLE::SET_VEHICLE_ENGINE_ON(bus_veh[i], false, true, true);
 						VEHICLE::SET_VEHICLE_ENGINE_HEALTH(bus_veh[i], -4000);
 					}
-					if (LIMP_IF_INJURED_VALUES[NPCVehicleDamageOnCollIndex] == 2) {
+					if (NPC_RAGDOLL_VALUES[NPCVehicleDamageOnCollIndex] == 2) {
 						if (!FIRE::IS_ENTITY_ON_FIRE(VEHICLE::GET_PED_IN_VEHICLE_SEAT(bus_veh[i], -1))) {
 							FIRE::START_ENTITY_FIRE(VEHICLE::GET_PED_IN_VEHICLE_SEAT(bus_veh[i], -1));
 							FIRE::START_SCRIPT_FIRE(veh_coll_with_crds.x, veh_coll_with_crds.y, veh_coll_with_crds.z, 15, 1);
@@ -1525,8 +1523,8 @@ void update_world_features()
 	}
 
 	// NPC No Gravity Peds && Acid Water && Acid Rain && Peds Health && Peds Accuracy && NPC Show Current Health && Show Police Blips Permanently
-	if (WORLD_REDUCEDGRIP_SNOWING_VALUES[NoPedsGravityIndex] > 0 || featureAcidWater || featureAcidRain || (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 && featureSnow) || PLAYER_HEALTH_VALUES[PedsHealthIndex] > 0 ||
-		WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex] > -1 || featureNPCShowHealth || LIMP_IF_INJURED_VALUES[CopBlipPermIndex] > 0) {
+	if (NPC_RAGDOLL_VALUES[NoPedsGravityIndex] > 0 || featureAcidWater || featureAcidRain || (NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] > 0 && featureSnow) || PLAYER_HEALTH_VALUES[PedsHealthIndex] > 0 ||
+		WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex] > -1 || featureNPCShowHealth || NPC_RAGDOLL_VALUES[CopBlipPermIndex] > 0) {
 		const int BUS_ARR_PED_SIZE = 1024;
 		Ped bus_ped[BUS_ARR_PED_SIZE];
 		int found_ped = worldGetAllPeds(bus_ped, BUS_ARR_PED_SIZE);
@@ -1565,9 +1563,9 @@ void update_world_features()
 				UI::END_TEXT_COMMAND_DISPLAY_TEXT(0, 0);
 			}
 			// Reduced Grip If Snowing (Peds)
-			if (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] > 0 && featureSnow && bus_ped[i] != PLAYER::PLAYER_PED_ID()) {
+			if (NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] > 0 && featureSnow && bus_ped[i] != PLAYER::PLAYER_PED_ID()) {
 				int slippery_randomize2 = (rand() % 1000 + 1);
-				if (((WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] == 1 && slippery_randomize2 > 995) || (WORLD_REDUCEDGRIP_SNOWING_VALUES[RadarReducedGripSnowingIndex] == 2 && slippery_randomize2 > 985)) &&
+				if (((NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] == 1 && slippery_randomize2 > 995) || (NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] == 2 && slippery_randomize2 > 985)) &&
 					(AI::IS_PED_RUNNING(bus_ped[i]) || AI::IS_PED_SPRINTING(bus_ped[i])) && slipped == false && PED::GET_PED_TYPE(bus_ped[i]) != 6) {
 					temp_ped_s = bus_ped[i];
 					slipped = true;
@@ -1595,14 +1593,14 @@ void update_world_features()
 				}
 			}
 			// NPC No Gravity Peds
-			if (WORLD_REDUCEDGRIP_SNOWING_VALUES[NoPedsGravityIndex] > 0 && bus_ped[i] != PLAYER::PLAYER_PED_ID() && !PED::IS_PED_IN_ANY_VEHICLE(bus_ped[i], false)) {
+			if (NPC_RAGDOLL_VALUES[NoPedsGravityIndex] > 0 && bus_ped[i] != PLAYER::PLAYER_PED_ID() && !PED::IS_PED_IN_ANY_VEHICLE(bus_ped[i], false)) {
 				Vector3 CamRot = CAM::GET_GAMEPLAY_CAM_ROT(2);
 				int p_force = 5;
 				float rad = 2 * 3.14 * (CamRot.z / 360);
 				float v_x = -(sin(rad) * p_force * 10);
 				float v_y = (cos(rad) * p_force * 10);
 				float v_z = p_force * (CamRot.x * 0.2);
-				if (WORLD_REDUCEDGRIP_SNOWING_VALUES[NoPedsGravityIndex] == 2) {
+				if (NPC_RAGDOLL_VALUES[NoPedsGravityIndex] == 2) {
 					PED::SET_PED_CAN_RAGDOLL(bus_ped[i], true);
 					PED::SET_PED_RAGDOLL_FORCE_FALL(bus_ped[i]);
 					PED::SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(bus_ped[i], true);
@@ -1711,7 +1709,7 @@ void update_world_features()
 				}
 			}
 			// Show Police Blips Permanently
-			if (LIMP_IF_INJURED_VALUES[CopBlipPermIndex] > 0 && (PED::GET_PED_TYPE(bus_ped[i]) == 6 || PED::GET_PED_TYPE(bus_ped[i]) == 27)) { // ENTITY::DOES_ENTITY_EXIST(bus_ped[i])
+			if (NPC_RAGDOLL_VALUES[CopBlipPermIndex] > 0 && (PED::GET_PED_TYPE(bus_ped[i]) == 6 || PED::GET_PED_TYPE(bus_ped[i]) == 27)) { // ENTITY::DOES_ENTITY_EXIST(bus_ped[i])
 				if (!COP_VECTOR.empty()) {
 					bool exists_already = false;
 					for (int j = 0; j < COP_VECTOR.size(); j++) {
@@ -1726,7 +1724,7 @@ void update_world_features()
 						blip_cops = UI::ADD_BLIP_FOR_ENTITY(bus_ped[i]);
 						UI::SET_BLIP_SPRITE(blip_cops, 41); // 42
 						UI::SET_BLIP_SCALE(blip_cops, 0.5);
-						if (LIMP_IF_INJURED_VALUES[CopBlipPermIndex] == 1) UI::SET_BLIP_AS_SHORT_RANGE(blip_cops, true);
+						if (NPC_RAGDOLL_VALUES[CopBlipPermIndex] == 1) UI::SET_BLIP_AS_SHORT_RANGE(blip_cops, true);
 						BLIPTABLE_COP.push_back(blip_cops);
 						COP_VECTOR.push_back(bus_ped[i]);
 					}
@@ -1735,7 +1733,7 @@ void update_world_features()
 					blip_cops = UI::ADD_BLIP_FOR_ENTITY(bus_ped[i]);
 					UI::SET_BLIP_SPRITE(blip_cops, 41); // 42
 					UI::SET_BLIP_SCALE(blip_cops, 0.5);
-					if (LIMP_IF_INJURED_VALUES[CopBlipPermIndex] == 1) UI::SET_BLIP_AS_SHORT_RANGE(blip_cops, true);
+					if (NPC_RAGDOLL_VALUES[CopBlipPermIndex] == 1) UI::SET_BLIP_AS_SHORT_RANGE(blip_cops, true);
 					BLIPTABLE_COP.push_back(blip_cops);
 					COP_VECTOR.push_back(bus_ped[i]);
 				}
@@ -1818,7 +1816,7 @@ void update_world_features()
 		}
 	}
 
-	// Disable Freeroam Event Camera
+	// Disable Freeroam Event Camera. THANKS TO LEE R. CAWLEY FOR THE IDEA AND THE CODE
 	if (featureNoGameHintCameraLocking && CAM::IS_GAMEPLAY_HINT_ACTIVE()) CAM::STOP_GAMEPLAY_HINT(true);
 
 	// Wind Strength
@@ -1953,7 +1951,7 @@ void update_world_features()
 		GAMEPLAY::SET_WEATHER_TYPE_NOW_PERSIST((char*)lastWeather.c_str());
 		freeze_counter = 0.0;
 	}
-	if (featureWeatherFreeze && (DLC2::GET_IS_LOADING_SCREEN_ACTIVE() || (PLAYER::GET_TIME_SINCE_LAST_DEATH() > -1 && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 2000))) featureWeatherFreezeUpdated = false;
+	if (featureWeatherFreeze && (DLC2::GET_IS_LOADING_SCREEN_ACTIVE() || (time_since_d > -1 && time_since_d < 2000))) featureWeatherFreezeUpdated = false;
 	if (!featureWeatherFreeze && featureWeatherFreezeUpdated == true) {
 		GAMEPLAY::CLEAR_OVERRIDE_WEATHER();
 		GAMEPLAY::CLEAR_WEATHER_TYPE_PERSIST();
@@ -2055,7 +2053,7 @@ void add_world_generic_settings(std::vector<StringPairSettingDBRow>* settings)
 
 void add_world_feature_enablements2(std::vector<StringPairSettingDBRow>* results)
 {
-	results->push_back(StringPairSettingDBRow{ "RadarMapIndex", std::to_string(RadarMapIndex) });
+	results->push_back(StringPairSettingDBRow{ "RadarMapIndexN", std::to_string(RadarMapIndexN) });
 	results->push_back(StringPairSettingDBRow{ "WorldWavesIndex", std::to_string(WorldWavesIndex) });
 	results->push_back(StringPairSettingDBRow{ "featureLightIntensityIndex", std::to_string(featureLightIntensityIndex) });
 	results->push_back(StringPairSettingDBRow{ "WindStrengthIndex", std::to_string(WindStrengthIndex) });
@@ -2070,7 +2068,7 @@ void add_world_feature_enablements2(std::vector<StringPairSettingDBRow>* results
 	results->push_back(StringPairSettingDBRow{ "CopBlipPermIndex", std::to_string(CopBlipPermIndex) });
 	results->push_back(StringPairSettingDBRow{ "featureGravityLevelIndex", std::to_string(featureGravityLevelIndex) });
 	results->push_back(StringPairSettingDBRow{ "WeatherChangeIndex", std::to_string(WeatherChangeIndex) });
-	results->push_back(StringPairSettingDBRow{ "WeatherMethodIndex", std::to_string(WeatherMethodIndex) });
+	results->push_back(StringPairSettingDBRow{ "WeatherMethodIndexN", std::to_string(WeatherMethodIndexN) });
 }
 
 void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings)
@@ -2094,9 +2092,9 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 		{
 			lastCloudsName = setting.value;
 		}
-		else if (setting.name.compare("RadarMapIndex") == 0)
+		else if (setting.name.compare("RadarMapIndexN") == 0)
 		{
-			RadarMapIndex = stoi(setting.value);
+			RadarMapIndexN = stoi(setting.value);
 		}
 		else if (setting.name.compare("WorldWavesIndex") == 0) 
 		{
@@ -2154,9 +2152,9 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 		{
 			WeatherChangeIndex = stoi(setting.value);
 		}
-		else if (setting.name.compare("WeatherMethodIndex") == 0) 
+		else if (setting.name.compare("WeatherMethodIndexN") == 0) 
 		{
-			WeatherMethodIndex = stoi(setting.value);
+			WeatherMethodIndexN = stoi(setting.value);
 		}
 	}
 }

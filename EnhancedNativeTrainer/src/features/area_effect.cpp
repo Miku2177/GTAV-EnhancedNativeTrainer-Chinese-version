@@ -98,8 +98,6 @@ int PedWeaponsSelectiveIndex = 0;
 bool PedWeaponsSelective1Changed = true;
 
 // NPC Vehicle Speed
-const std::vector<std::string> WORLD_NPC_VEHICLESPEED_CAPTIONS{ "OFF", "1", "5", "10", "15", "30", "50", "70", "100" };
-const int WORLD_NPC_VEHICLESPEED_VALUES[] = { -1, 1, 5, 10, 15, 30, 50, 70, 100 };
 int NPCVehicleSpeedIndex = 0;
 bool NPCVehicleSpeedChanged = true;
 int PedAccuracyIndex = 0;
@@ -107,13 +105,11 @@ bool PedAccuracyChanged = true;
 
 // Selective Angry Peds
 const std::vector<std::string> WORLD_SELECTIVE_PEDS_ANGRY_CAPTIONS{ "OFF", "Only Men Are Angry", "Only Women Are Angry" };
-const int WORLD_SELECTIVE_PEDS_ANGRY_VALUES[] = { 0, 1, 2 };
+//const int WORLD_SELECTIVE_PEDS_ANGRY_VALUES[] = { 0, 1, 2 };
 int WorldSelectivePedsIndex = 0;
 bool WorldSelectivePedsChanged = true;
 
 // Reduced Grip If Heavy Snow && Slippery When Wet && No Peds Gravity
-const std::vector<std::string> WORLD_REDUCEDGRIP_SNOWING_CAPTIONS{ "OFF", "Simple", "Advanced" };
-const int WORLD_REDUCEDGRIP_SNOWING_VALUES[] = { 0, 1, 2 };
 int RadarReducedGripSnowingIndex = 0;
 bool RadarReducedGripSnowingChanged = true;
 int RadarReducedGripRainingIndex = 0;
@@ -841,7 +837,7 @@ void update_area_effects(Ped playerPed){
 			s_seconds = 0;
 			time_to_attack = true;
 		}
-		if (((PLAYER::GET_TIME_SINCE_LAST_DEATH() > 100 && PLAYER::GET_TIME_SINCE_LAST_DEATH() < 5000) || (PLAYER::GET_TIME_SINCE_LAST_ARREST() > 100 && PLAYER::GET_TIME_SINCE_LAST_ARREST() < 5000) || player_died == true) && !pursuer.empty()) {
+		if (((time_since_d > 100 && time_since_d < 5000) || (time_since_a > 100 && time_since_a < 5000) || player_died == true) && !pursuer.empty()) {
 			for (int j = 0; j < pursuer.size(); j++) {
 				if (ENTITY::DOES_ENTITY_EXIST(pursuer[j])) ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&pursuer[j]);
 				if (ENTITY::DOES_ENTITY_EXIST(pursuer[j])) PED::DELETE_PED(&pursuer[j]);
@@ -855,7 +851,7 @@ void update_area_effects(Ped playerPed){
 			v_collided.shrink_to_fit();
 		}
 		// vigilante blips
-		if (LIMP_IF_INJURED_VALUES[VigilanteBlipIndex] > 0) {
+		if (NPC_RAGDOLL_VALUES[VigilanteBlipIndex] > 0) {
 			if (pursuer.empty() && !BLIPTABLE_VIGILANTE.empty()) {
 				for (int j = 0; j < BLIPTABLE_VIGILANTE.size(); j++) UI::REMOVE_BLIP(&BLIPTABLE_VIGILANTE[j]);
 				BLIPTABLE_VIGILANTE.clear();
@@ -882,7 +878,7 @@ void update_area_effects(Ped playerPed){
 							UI::SET_BLIP_SPRITE(blip_vigilante, 1);
 							UI::SET_BLIP_SCALE(blip_vigilante, 0.5);
 							UI::SET_BLIP_COLOUR(blip_vigilante, 1);
-							if (LIMP_IF_INJURED_VALUES[VigilanteBlipIndex] == 1) UI::SET_BLIP_AS_SHORT_RANGE(blip_vigilante, true);
+							if (NPC_RAGDOLL_VALUES[VigilanteBlipIndex] == 1) UI::SET_BLIP_AS_SHORT_RANGE(blip_vigilante, true);
 							BLIPTABLE_VIGILANTE.push_back(blip_vigilante);
 						}
 					}
@@ -893,7 +889,7 @@ void update_area_effects(Ped playerPed){
 					UI::SET_BLIP_SPRITE(blip_vigilante, 1);
 					UI::SET_BLIP_SCALE(blip_vigilante, 0.5);
 					UI::SET_BLIP_COLOUR(blip_vigilante, 1);
-					if (LIMP_IF_INJURED_VALUES[VigilanteBlipIndex] == 1) UI::SET_BLIP_AS_SHORT_RANGE(blip_vigilante, true);
+					if (NPC_RAGDOLL_VALUES[VigilanteBlipIndex] == 1) UI::SET_BLIP_AS_SHORT_RANGE(blip_vigilante, true);
 					BLIPTABLE_VIGILANTE.push_back(blip_vigilante);
 				}
 			}
@@ -1132,10 +1128,10 @@ std::set<Ped>get_nearby_peds(Ped playerPed){
 		if(ENTITY::IS_ENTITY_A_MISSION_ENTITY(item) && !ENTITY::DOES_ENTITY_BELONG_TO_THIS_SCRIPT(item, true)){
 			continue;
 		}
-		if (WORLD_SELECTIVE_PEDS_ANGRY_VALUES[WorldSelectivePedsIndex] == 2 && PED::GET_PED_TYPE(item) == 4) { // men
+		if (NPC_RAGDOLL_VALUES[WorldSelectivePedsIndex] == 2 && PED::GET_PED_TYPE(item) == 4) { // men
 			continue;
 		}
-		if (WORLD_SELECTIVE_PEDS_ANGRY_VALUES[WorldSelectivePedsIndex] == 1 && PED::GET_PED_TYPE(item) == 5) { // women
+		if (NPC_RAGDOLL_VALUES[WorldSelectivePedsIndex] == 1 && PED::GET_PED_TYPE(item) == 5) { // women
 			continue;
 		}
 		

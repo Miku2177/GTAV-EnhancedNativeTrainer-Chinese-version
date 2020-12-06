@@ -1,6 +1,6 @@
 #pragma once
 
-std::vector<char*> IPL_PROPS_SCRAP = {
+const std::vector<char*> IPL_PROPS_SCRAP = {
 	"v_int_13",
 	"v_recycle",
 	"sp1_03",
@@ -137,7 +137,7 @@ std::vector<char*> IPL_PROPS_SCRAP = {
 	"v_ilev_rc_door1",//
 };
 
-std::vector<const char*> IPLS_BIKER_TUNNEL = {
+const std::vector<const char*> IPLS_BIKER_TUNNEL = {
 	"bkr_id1_11_interior_id1_11_tunnel1_int",
 	"bkr_id1_11_interior_id1_11_tunnel2_int",
 	"bkr_id1_11_interior_id1_11_tunnel3_int",
@@ -148,14 +148,14 @@ std::vector<const char*> IPLS_BIKER_TUNNEL = {
 	"bkr_id1_11_interior_id1_11_tunnel8_int"
 };
 
-std::vector<const char*> IPLS_IMPORT_EXPORT_WAREHOUSES = {
+/*const std::vector<const char*> IPLS_IMPORT_EXPORT_WAREHOUSES = {
 	"imp_impexp_interior_placement_interior_0_impexp_int_01_milo_",
 	"imp_impexp_interior_placement_interior_1_impexp_intwaremed_milo_",
 	"imp_impexp_interior_placement_interior_2_imptexp_mod_int_01_milo_",
 	"imp_impexp_interior_placement_interior_3_impexp_int_02_milo_"
-};
+};*/
 
-std::vector<const char*> IPLS_NORTH_YANKTON = {
+const std::vector<const char*> IPLS_NORTH_YANKTON = {
 	"plg_01",
 	"prologue01",
 	"prologue01_lod",
@@ -227,7 +227,7 @@ std::vector<const char*> IPLS_NORTH_YANKTON = {
 	"prologuerd_lod"
 };
 
-std::vector<const char*> IPLS_CARRIER = {
+const std::vector<const char*> IPLS_CARRIER = {
 	"hei_carrier",
 	"hei_carrier_DistantLights",
 	"hei_Carrier_int1",
@@ -239,7 +239,7 @@ std::vector<const char*> IPLS_CARRIER = {
 	"hei_carrier_LODLights"
 };
 
-std::vector<char*> IPL_PROPS_CEO_OFFICE = {
+const std::vector<char*> IPL_PROPS_CEO_OFFICE = {
 	"office_chairs",
 	"office_booze",
 	"cash_set_01",
@@ -310,7 +310,7 @@ std::vector<char*> IPL_PROPS_CEO_OFFICE = {
 	"swag_guns3",
 };
 
-std::vector<const char*> IPL_PROPS_DOOMSDAY_MAIN_BASE = {
+const std::vector<const char*> IPL_PROPS_DOOMSDAY_MAIN_BASE = {
 	"xm_x17dlc_int_placement_interior_33_x17dlc_int_02_milo_",
 	"xm_x17dlc_int_placement_interior_4_x17dlc_int_facility_milo_",
 	"xm_x17dlc_int_placement_interior_5_x17dlc_int_facility2_milo_",
@@ -413,7 +413,7 @@ std::vector<const char*> IPL_PROPS_DOOMSDAY_MAIN_BASE = {
 	"xm_prop_xm17_wayfinding",
 };
 
-std::vector<char*> IPL_PROPS_HANGAR = {
+const std::vector<char*> IPL_PROPS_HANGAR = {
 	"set_bedroom_blinds_open",
 	"set_bedroom_traditional",
 	"set_crane_tint",
@@ -427,7 +427,7 @@ std::vector<char*> IPL_PROPS_HANGAR = {
 	"set_office_traditional",
 };
 
-std::vector<char*> IPL_PROPS_FACILITY = {
+const std::vector<char*> IPL_PROPS_FACILITY = {
 	"set_int_02_shell",
 	"set_int_02_lounge3",
 	"set_int_02_no_sleep",

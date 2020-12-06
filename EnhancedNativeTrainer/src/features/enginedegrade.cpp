@@ -43,17 +43,17 @@ bool featureEngineDegrade = false;
 bool featureEngineHealthBar = false;
 bool featureLimpMode = false;
 
-int CarEngineHealthIndex = 11;
+int CarEngineHealthIndexN = 7;
 bool CarEngineHealthChanged = true;
-int BikeEngineHealthIndex = 11;
+int BikeEngineHealthIndexN = 7;
 bool BikeEngineHealthChanged = true;
-int PlaneEngineHealthIndex = 11;
+int PlaneEngineHealthIndexN = 7;
 bool PlaneEngineHealthChanged = true;
-int HeliEngineHealthIndex = 11;
+int HeliEngineHealthIndexN = 7;
 bool HeliEngineHealthChanged = true;
-int BoatEngineHealthIndex = 11;
+int BoatEngineHealthIndexN = 7;
 bool BoatEngineHealthChanged = true;
-int RestorationSpeedIndex = 2;
+int RestorationSpeedIndexN = 2;
 bool RestorationSpeedChanged = true;
 int CarEngineDegradeIndex = 5;
 bool CarEngineDegradeChanged = true;
@@ -79,18 +79,18 @@ void engine_can_degrade()
 			if (!VEHICLE::IS_THIS_MODEL_A_BICYCLE(ENTITY::GET_ENTITY_MODEL(veh)) && !PED::IS_PED_IN_ANY_TRAIN(playerPed)) { // Bikes do not have engine
 				E_VEHICLES.push_back(veh);
 				
-				if (VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(veh)) && VEH_ENGINEHEALTH_VALUES[CarEngineHealthIndex] < 100) e_randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[CarEngineHealthIndex]);
-				if (VEH_ENGINEHEALTH_VALUES[CarEngineHealthIndex] == 100) e_randomize = 100;
-				if ((PED::IS_PED_ON_ANY_BIKE(playerPed) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(veh))) && VEH_ENGINEHEALTH_VALUES[BikeEngineHealthIndex] < 100) 
-					e_randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[BikeEngineHealthIndex]);;
-				if (VEH_ENGINEHEALTH_VALUES[BikeEngineHealthIndex] == 100) e_randomize = 100;
-				if (VEHICLE::IS_THIS_MODEL_A_PLANE(ENTITY::GET_ENTITY_MODEL(veh)) && VEH_ENGINEHEALTH_VALUES[PlaneEngineHealthIndex] < 100) e_randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[PlaneEngineHealthIndex]);
-				if (VEH_ENGINEHEALTH_VALUES[PlaneEngineHealthIndex] == 100) e_randomize = 100;
-				if ((VEHICLE::IS_THIS_MODEL_A_BOAT(ENTITY::GET_ENTITY_MODEL(veh)) || PED::IS_PED_IN_ANY_SUB(playerPed)) && VEH_ENGINEHEALTH_VALUES[BoatEngineHealthIndex] < 100) 
-					e_randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[BoatEngineHealthIndex]);
-				if (VEH_ENGINEHEALTH_VALUES[BoatEngineHealthIndex] == 100) e_randomize = 100;
-				if (VEHICLE::IS_THIS_MODEL_A_HELI(ENTITY::GET_ENTITY_MODEL(veh)) && VEH_ENGINEHEALTH_VALUES[HeliEngineHealthIndex] < 100) e_randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[HeliEngineHealthIndex]);
-				if (VEH_ENGINEHEALTH_VALUES[HeliEngineHealthIndex] == 100) e_randomize = 100;
+				if (VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(veh)) && VEH_ENGINEHEALTH_VALUES[CarEngineHealthIndexN] < 100) e_randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[CarEngineHealthIndexN]);
+				if (VEH_ENGINEHEALTH_VALUES[CarEngineHealthIndexN] == 100) e_randomize = 100;
+				if ((PED::IS_PED_ON_ANY_BIKE(playerPed) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(veh))) && VEH_ENGINEHEALTH_VALUES[BikeEngineHealthIndexN] < 100) 
+					e_randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[BikeEngineHealthIndexN]);;
+				if (VEH_ENGINEHEALTH_VALUES[BikeEngineHealthIndexN] == 100) e_randomize = 100;
+				if (VEHICLE::IS_THIS_MODEL_A_PLANE(ENTITY::GET_ENTITY_MODEL(veh)) && VEH_ENGINEHEALTH_VALUES[PlaneEngineHealthIndexN] < 100) e_randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[PlaneEngineHealthIndexN]);
+				if (VEH_ENGINEHEALTH_VALUES[PlaneEngineHealthIndexN] == 100) e_randomize = 100;
+				if ((VEHICLE::IS_THIS_MODEL_A_BOAT(ENTITY::GET_ENTITY_MODEL(veh)) || PED::IS_PED_IN_ANY_SUB(playerPed)) && VEH_ENGINEHEALTH_VALUES[BoatEngineHealthIndexN] < 100) 
+					e_randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[BoatEngineHealthIndexN]);
+				if (VEH_ENGINEHEALTH_VALUES[BoatEngineHealthIndexN] == 100) e_randomize = 100;
+				if (VEHICLE::IS_THIS_MODEL_A_HELI(ENTITY::GET_ENTITY_MODEL(veh)) && VEH_ENGINEHEALTH_VALUES[HeliEngineHealthIndexN] < 100) e_randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[HeliEngineHealthIndexN]);
+				if (VEH_ENGINEHEALTH_VALUES[HeliEngineHealthIndexN] == 100) e_randomize = 100;
 				if (e_randomize > 100) e_randomize = 100;
 				E_HEALTH.push_back(e_randomize);
 			}
@@ -120,18 +120,18 @@ void engine_can_degrade()
 
 					if (!been_used_before) {
 						E_VEHICLES.push_back(veh);
-						if (VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(veh)) && VEH_ENGINEHEALTH_VALUES[CarEngineHealthIndex] < 100) e_randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[CarEngineHealthIndex]);
-						if (VEH_ENGINEHEALTH_VALUES[CarEngineHealthIndex] == 100) e_randomize = 100;
-						if ((PED::IS_PED_ON_ANY_BIKE(playerPed) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(veh))) && VEH_ENGINEHEALTH_VALUES[BikeEngineHealthIndex] < 100) 
-							e_randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[BikeEngineHealthIndex]);
-						if (VEH_ENGINEHEALTH_VALUES[BikeEngineHealthIndex] == 100) e_randomize = 100;
-						if (VEHICLE::IS_THIS_MODEL_A_PLANE(ENTITY::GET_ENTITY_MODEL(veh)) && VEH_ENGINEHEALTH_VALUES[PlaneEngineHealthIndex] < 100) e_randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[PlaneEngineHealthIndex]);
-						if (VEH_ENGINEHEALTH_VALUES[PlaneEngineHealthIndex] == 100) e_randomize = 100;
-						if ((VEHICLE::IS_THIS_MODEL_A_BOAT(ENTITY::GET_ENTITY_MODEL(veh)) || PED::IS_PED_IN_ANY_SUB(playerPed)) && VEH_ENGINEHEALTH_VALUES[BoatEngineHealthIndex] < 100) 
-							e_randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[BoatEngineHealthIndex]);
-						if (VEH_ENGINEHEALTH_VALUES[BoatEngineHealthIndex] == 100) e_randomize = 100;
-						if (VEHICLE::IS_THIS_MODEL_A_HELI(ENTITY::GET_ENTITY_MODEL(veh)) && VEH_ENGINEHEALTH_VALUES[HeliEngineHealthIndex] < 100) e_randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[HeliEngineHealthIndex]);
-						if (VEH_ENGINEHEALTH_VALUES[HeliEngineHealthIndex] == 100) e_randomize = 100;
+						if (VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(veh)) && VEH_ENGINEHEALTH_VALUES[CarEngineHealthIndexN] < 100) e_randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[CarEngineHealthIndexN]);
+						if (VEH_ENGINEHEALTH_VALUES[CarEngineHealthIndexN] == 100) e_randomize = 100;
+						if ((PED::IS_PED_ON_ANY_BIKE(playerPed) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(veh))) && VEH_ENGINEHEALTH_VALUES[BikeEngineHealthIndexN] < 100) 
+							e_randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[BikeEngineHealthIndexN]);
+						if (VEH_ENGINEHEALTH_VALUES[BikeEngineHealthIndexN] == 100) e_randomize = 100;
+						if (VEHICLE::IS_THIS_MODEL_A_PLANE(ENTITY::GET_ENTITY_MODEL(veh)) && VEH_ENGINEHEALTH_VALUES[PlaneEngineHealthIndexN] < 100) e_randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[PlaneEngineHealthIndexN]);
+						if (VEH_ENGINEHEALTH_VALUES[PlaneEngineHealthIndexN] == 100) e_randomize = 100;
+						if ((VEHICLE::IS_THIS_MODEL_A_BOAT(ENTITY::GET_ENTITY_MODEL(veh)) || PED::IS_PED_IN_ANY_SUB(playerPed)) && VEH_ENGINEHEALTH_VALUES[BoatEngineHealthIndexN] < 100) 
+							e_randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[BoatEngineHealthIndexN]);
+						if (VEH_ENGINEHEALTH_VALUES[BoatEngineHealthIndexN] == 100) e_randomize = 100;
+						if (VEHICLE::IS_THIS_MODEL_A_HELI(ENTITY::GET_ENTITY_MODEL(veh)) && VEH_ENGINEHEALTH_VALUES[HeliEngineHealthIndexN] < 100) e_randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[HeliEngineHealthIndexN]);
+						if (VEH_ENGINEHEALTH_VALUES[HeliEngineHealthIndexN] == 100) e_randomize = 100;
 						if (e_randomize > 100) e_randomize = 100;
 						E_HEALTH.push_back(e_randomize);
 						std::swap(E_VEHICLES[0], E_VEHICLES.back());
@@ -148,7 +148,7 @@ void engine_can_degrade()
 
 				// ENGINE HEALTH DEGRADATION
 				// CAR
-				if (VEH_ENGINEHEALTH_VALUES[CarEngineHealthIndex] > 0 && vehspeed > 0) {
+				if (VEH_ENGINEHEALTH_VALUES[CarEngineHealthIndexN] > 0 && vehspeed > 0) {
 					VEHICLE::SET_VEHICLE_ENGINE_CAN_DEGRADE(E_VEHICLES[0], true);
 					if ((GAMEPLAY::GET_GAME_TIMER() - E_Time_tick) > 200 && VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(veh))) {
 						if (E_HEALTH[0] > 0 && E_VEHICLES[0] == veh) {
@@ -164,7 +164,7 @@ void engine_can_degrade()
 					}
 				}
 				// BIKE
-				if (VEH_ENGINEHEALTH_VALUES[BikeEngineHealthIndex] > 0 && vehspeed > 0) {
+				if (VEH_ENGINEHEALTH_VALUES[BikeEngineHealthIndexN] > 0 && vehspeed > 0) {
 					VEHICLE::SET_VEHICLE_ENGINE_CAN_DEGRADE(E_VEHICLES[0], true);
 					if ((GAMEPLAY::GET_GAME_TIMER() - E_Time_tick) > 200 && (VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(veh)) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(veh)))) {
 						if (E_HEALTH[0] > 0 && E_VEHICLES[0] == veh) {
@@ -180,7 +180,7 @@ void engine_can_degrade()
 					}
 				}
 				// BOAT
-				if (VEH_ENGINEHEALTH_VALUES[BoatEngineHealthIndex] > 0 && vehspeed > 0) {
+				if (VEH_ENGINEHEALTH_VALUES[BoatEngineHealthIndexN] > 0 && vehspeed > 0) {
 					VEHICLE::SET_VEHICLE_ENGINE_CAN_DEGRADE(E_VEHICLES[0], true);
 					if ((GAMEPLAY::GET_GAME_TIMER() - E_Time_tick) > 200 && VEHICLE::IS_THIS_MODEL_A_BOAT(ENTITY::GET_ENTITY_MODEL(veh))) {
 						if (E_HEALTH[0] > 0 && E_VEHICLES[0] == veh) {
@@ -196,7 +196,7 @@ void engine_can_degrade()
 					}
 				}
 				// PLANE
-				if (VEH_ENGINEHEALTH_VALUES[PlaneEngineHealthIndex] > 0 && vehspeed > 0) {
+				if (VEH_ENGINEHEALTH_VALUES[PlaneEngineHealthIndexN] > 0 && vehspeed > 0) {
 					VEHICLE::SET_VEHICLE_ENGINE_CAN_DEGRADE(E_VEHICLES[0], true);
 					if ((GAMEPLAY::GET_GAME_TIMER() - E_Time_tick) > 200 && VEHICLE::IS_THIS_MODEL_A_PLANE(ENTITY::GET_ENTITY_MODEL(veh))) {
 						if (E_HEALTH[0] > 0 && E_VEHICLES[0] == veh) {
@@ -212,7 +212,7 @@ void engine_can_degrade()
 					}
 				}
 				// HELI
-				if (VEH_ENGINEHEALTH_VALUES[HeliEngineHealthIndex] > 0 && vehspeed > 0) {
+				if (VEH_ENGINEHEALTH_VALUES[HeliEngineHealthIndexN] > 0 && vehspeed > 0) {
 					VEHICLE::SET_VEHICLE_ENGINE_CAN_DEGRADE(E_VEHICLES[0], true);
 					if ((GAMEPLAY::GET_GAME_TIMER() - E_Time_tick) > 200 && VEHICLE::IS_THIS_MODEL_A_HELI(ENTITY::GET_ENTITY_MODEL(veh))) {
 						if (E_HEALTH[0] > 0 && E_VEHICLES[0] == veh) {
@@ -250,7 +250,7 @@ void engine_can_degrade()
 		} // end of in vehicle
 		
 		// ENGINE RECOVERY
-		if (VEH_ENGINEHEALTH_VALUES[RestorationSpeedIndex] > 0 && !E_VEHICLES.empty()) {
+		if (VEH_ENGINEHEALTH_VALUES[RestorationSpeedIndexN] > 0 && !E_VEHICLES.empty()) {
 			EngineCooling_secs_passed = clock() / CLOCKS_PER_SEC;
 			if (((clock() / CLOCKS_PER_SEC) - EngineCooling_secs_curr) != 0) {
 				EngineCooling_seconds = EngineCooling_seconds + 1;
@@ -262,9 +262,9 @@ void engine_can_degrade()
 			if (EngineCooling_seconds == 6 && (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) || ENTITY::GET_ENTITY_SPEED(PED::GET_VEHICLE_PED_IS_IN(playerPed, false)) < 1)) {
 				for (int i = 0; i < E_VEHICLES.size(); i++) {
 					if (E_HEALTH[i] < 100) {
-						if (VEH_ENGINEHEALTH_VALUES[RestorationSpeedIndex] != 5 && VEH_ENGINEHEALTH_VALUES[RestorationSpeedIndex] != 2) E_HEALTH[i] = E_HEALTH[i] + (VEH_ENGINEHEALTH_VALUES[RestorationSpeedIndex] / 10);
-						if (VEH_ENGINEHEALTH_VALUES[RestorationSpeedIndex] == 5) E_HEALTH[i] = E_HEALTH[i] + 0.5;
-						if (VEH_ENGINEHEALTH_VALUES[RestorationSpeedIndex] == 2) E_HEALTH[i] = E_HEALTH[i] + 0.2;
+						if (VEH_ENGINEHEALTH_VALUES[RestorationSpeedIndexN] != 4 && VEH_ENGINEHEALTH_VALUES[RestorationSpeedIndexN] != 2) E_HEALTH[i] = E_HEALTH[i] + (VEH_ENGINEHEALTH_VALUES[RestorationSpeedIndexN] / 10);
+						if (VEH_ENGINEHEALTH_VALUES[RestorationSpeedIndexN] == 4) E_HEALTH[i] = E_HEALTH[i] + 0.5;
+						if (VEH_ENGINEHEALTH_VALUES[RestorationSpeedIndexN] == 2) E_HEALTH[i] = E_HEALTH[i] + 0.2;
 						VEHICLE::SET_VEHICLE_ENGINE_HEALTH(E_VEHICLES[i], E_HEALTH[i] * 10);
 					}
 				}

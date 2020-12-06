@@ -47,7 +47,7 @@ bool featurePhone3DOnBike = false;
 bool featureNoPhoneOnHUD = false;
 int secs_passed, secs_curr = -1;
 float temp_seconds, bill_seconds = 0;
-float bill_to_pay, mins = -1;
+float bill_to_pay = -1;
 //
 bool featureDisableRecording = false;
 // dynamic health bar variables
@@ -163,8 +163,6 @@ const Hash SP1_TOTAL_CASH = 0x44BD6982;
 const Hash SP2_TOTAL_CASH = 0x8D75047D;
 
 // Phone Bill Amount
-const std::vector<std::string> MISC_PHONE_BILL_CAPTIONS{ "10$", "50$", "100$", "500$", "1000$", "5000$", "10000$", "50000$", "100000$", "500000$", "1000000$" };
-const float MISC_PHONE_BILL_VALUES[] = { 10.0, 50.0, 100.0, 500.0, 1000.0, 5000.0, 10000.0, 50000.0, 100000.0, 500000.0, 1000000.0 };
 int PhoneBillIndex = 2;
 bool PhoneBillChanged = true;
 
@@ -186,7 +184,7 @@ bool PhoneDefaultChanged = true;
 
 // Radio Off
 const std::vector<std::string> MISC_RADIO_OFF_CAPTIONS{ "Default", "Always", "For Bikes Only" };
-const int MISC_RADIO_OFF_VALUES[] = { 0, 1, 2 };
+//const int MISC_RADIO_OFF_VALUES[] = { 0, 1, 2 };
 int RadioOffIndex = 0;
 bool RadioOffChanged = true;
 
@@ -313,7 +311,7 @@ bool onconfirm_trainerconfig_menu(MenuItem<int> choice){
 }
 
 void process_misc_trainerconfig_menu(){
-	std::string caption = "Trainer Options";
+	const std::string caption = "Trainer Options";
 
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
@@ -563,7 +561,7 @@ bool onconfirm_airbrake_menu(MenuItem<int> choice) {
 }
  
 void process_airbrake_global_menu() {
-	std::string caption = "Airbrake Menu Options";
+	const std::string caption = "Airbrake Menu Options";
 
 	std::vector<MenuItem<int>*> menuItems;
 	MenuItem<int> *item;
@@ -603,7 +601,7 @@ bool onconfirm_defmenutab_menu(MenuItem<int> choice) {
 }
 
 void process_def_menutab_menu() {
-	std::string caption = "Pause Menu Settings Options";
+	const std::string caption = "Pause Menu Settings Options";
 
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
@@ -633,7 +631,7 @@ bool onconfirm_billsettings_menu(MenuItem<int> choice) {
 }
 
 void process_billsettings_menu() {
-	std::string caption = "Phone Bill Options";
+	const std::string caption = "Phone Bill Options";
 
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
@@ -669,7 +667,7 @@ bool onconfirm_phoneonbike_menu(MenuItem<int> choice) {
 }
 
 void process_phoneonbike_menu() {
-	std::string caption = "Use Phone While On Bike Options";
+	const std::string caption = "Use Phone While On Bike Options";
 
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
@@ -708,7 +706,7 @@ bool onconfirm_phonebill_menu(MenuItem<int> choice){
 }
 
 void process_phone_bill_menu(){
-	std::string caption = "Phone Settings Options";
+	const std::string caption = "Phone Settings Options";
 
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
@@ -765,7 +763,7 @@ bool onconfirm_radiosettings_menu(MenuItem<int> choice) {
 }
 
 void process_radio_settings_menu() {
-	std::string caption = "Radio Settings Options";
+	const std::string caption = "Radio Settings Options";
 
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
@@ -830,7 +828,7 @@ bool onconfirm_hudsettings_menu(MenuItem<int> choice) {
 }
 
 void process_hud_settings_menu() {
-	std::string caption = "HUD Settings Options";
+	const std::string caption = "HUD Settings Options";
 
 	std::vector<MenuItem<int>*> menuItems;
 
@@ -916,7 +914,7 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 void process_misc_menu(){
 	const int lineCount = 17;
 
-	std::string caption = "Miscellaneous Options";
+	const std::string caption = "Miscellaneous Options";
 
 	StandardOrToggleMenuDef lines[lineCount] = {
 		{"Trainer Options", NULL, NULL, false},
@@ -1076,21 +1074,21 @@ void reset_misc_globals(){
 
 void update_misc_features(BOOL playerExists, Ped playerPed){
 	// Radio Off
-	if (MISC_RADIO_OFF_VALUES[RadioOffIndex] > 0 && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) radio_pressed = false;
-	if (MISC_RADIO_OFF_VALUES[RadioOffIndex] > 0 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && CONTROLS::IS_CONTROL_PRESSED(2, 85)) {
+	if (NPC_RAGDOLL_VALUES[RadioOffIndex] > 0 && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) radio_pressed = false;
+	if (NPC_RAGDOLL_VALUES[RadioOffIndex] > 0 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && CONTROLS::IS_CONTROL_PRESSED(2, 85)) {
 		radio_pressed = true;
 		AUDIO::SET_VEHICLE_RADIO_ENABLED(PED::GET_VEHICLE_PED_IS_USING(playerPed), true);
 		AUDIO::SET_USER_RADIO_CONTROL_ENABLED(true);
 	}
-	if (MISC_RADIO_OFF_VALUES[RadioOffIndex] > 0 && radio_pressed == false) {
-		if (MISC_RADIO_OFF_VALUES[RadioOffIndex] == 1) {
+	if (NPC_RAGDOLL_VALUES[RadioOffIndex] > 0 && radio_pressed == false) {
+		if (NPC_RAGDOLL_VALUES[RadioOffIndex] == 1) {
 			if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
 				Vehicle playerVeh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 				AUDIO::SET_VEHICLE_RADIO_ENABLED(playerVeh, false);
 			}
 			AUDIO::SET_USER_RADIO_CONTROL_ENABLED(false);
 		}
-		if (MISC_RADIO_OFF_VALUES[RadioOffIndex] == 2) {
+		if (NPC_RAGDOLL_VALUES[RadioOffIndex] == 2) {
 			Vehicle cur_veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 			if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
 				if (VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(cur_veh)) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(cur_veh))) {
@@ -1104,7 +1102,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			}
 		}
 	}
-	if (MISC_RADIO_OFF_VALUES[RadioOffIndex] == 0) {
+	if (NPC_RAGDOLL_VALUES[RadioOffIndex] == 0) {
 		AUDIO::SET_VEHICLE_RADIO_ENABLED(PED::GET_VEHICLE_PED_IS_USING(playerPed), true);
 		AUDIO::SET_USER_RADIO_CONTROL_ENABLED(true);
 		radio_pressed = false;
@@ -1448,7 +1446,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	}
 
 	// Dynamic Health Bar
-	if (featureDynamicHealthBar && ENTITY::DOES_ENTITY_EXIST(playerPed) && !DLC2::GET_IS_LOADING_SCREEN_ACTIVE() && !STREAMING::IS_PLAYER_SWITCH_IN_PROGRESS() && dynamic_loading == true && apply_pressed == false) {
+	if (featureDynamicHealthBar && ENTITY::DOES_ENTITY_EXIST(playerPed) && !ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && !DLC2::GET_IS_LOADING_SCREEN_ACTIVE() && !STREAMING::IS_PLAYER_SWITCH_IN_PROGRESS() && dynamic_loading == true && apply_pressed == false) {
 		temp_h = ENTITY::GET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID()) - 100;
 		temp_h_d = floor(ENTITY::GET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID()) / 100);
 		oldplayerPed = playerPed;
@@ -1539,6 +1537,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 
 	// Phone Bill
 	if (featurePhoneBillEnabled) {
+		float mins = -1;
 		if (PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed) && AUDIO::IS_MOBILE_PHONE_CALL_ONGOING()) {
 			secs_passed = clock() / CLOCKS_PER_SEC;
 			if (((clock() / CLOCKS_PER_SEC) - secs_curr) != 0) {
