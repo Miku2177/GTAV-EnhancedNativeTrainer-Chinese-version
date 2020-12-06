@@ -2674,8 +2674,8 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 	// Speed Boost
 	if (bPlayerExists && speedBoostIndex > 0 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
-		bool bUp = IsKeyDown(KeyConfig::KEY_VEH_BOOST) || (CONTROLS::IS_CONTROL_PRESSED(2, INPUT_FRONTEND_RB) && CONTROLS::IS_CONTROL_PRESSED(2, INPUT_ATTACK));
-		bool bDown = IsKeyDown(KeyConfig::KEY_VEH_STOP) || (CONTROLS::IS_CONTROL_PRESSED(2, INPUT_FRONTEND_LB) && CONTROLS::IS_CONTROL_PRESSED(2, INPUT_AIM));
+		bool bUp = IsKeyDown(KeyConfig::KEY_VEH_BOOST) || (CONTROLS::IS_CONTROL_PRESSED(2, controller_binds["KEY_VEH_BOOST"].first) && CONTROLS::IS_CONTROL_PRESSED(2, controller_binds["KEY_VEH_BOOST"].second));
+		bool bDown = IsKeyDown(KeyConfig::KEY_VEH_STOP) || (CONTROLS::IS_CONTROL_PRESSED(2, controller_binds["KEY_VEH_STOP"].first) && CONTROLS::IS_CONTROL_PRESSED(2, controller_binds["KEY_VEH_STOP"].second));
 
 		if (bUp || bDown){
 			if (bUp){
@@ -3195,9 +3195,9 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		Vehicle vehturn = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		int vehturnspeed = ENTITY::GET_ENTITY_SPEED(vehturn);
 		int steer_turn = CONTROLS::GET_CONTROL_VALUE(0, 9);
-		bool leftKey = IsKeyJustUp(KeyConfig::KEY_VEH_LEFTBLINK) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, INPUT_AIM); // left key - CONTROLLER_BTN_TRIGGER_L
-		bool rightKey = IsKeyJustUp(KeyConfig::KEY_VEH_RIGHTBLINK) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, INPUT_ATTACK); // right key - CONTROLLER_BTN_TRIGGER_R
-		bool emergencyKey = IsKeyJustUp(KeyConfig::KEY_VEH_EMERGENCYBLINK) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, INPUT_FRONTEND_CANCEL); // emergency signal key - CONTROLLER_BTN_B
+		bool leftKey = IsKeyJustUp(KeyConfig::KEY_VEH_LEFTBLINK) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, controller_binds["KEY_VEH_LEFTBLINK"].first); // left key - CONTROLLER_BTN_TRIGGER_L
+		bool rightKey = IsKeyJustUp(KeyConfig::KEY_VEH_RIGHTBLINK) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, controller_binds["KEY_VEH_RIGHTBLINK"].first); // right key - CONTROLLER_BTN_TRIGGER_R
+		bool emergencyKey = IsKeyJustUp(KeyConfig::KEY_VEH_EMERGENCYBLINK) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, controller_binds["KEY_VEH_EMERGENCYBLINK"].first); // emergency signal key - CONTROLLER_BTN_B
 
 		bool b_pressed = false;
 		if (IsKeyDown(VK_LBUTTON) || IsKeyDown(VK_RBUTTON)) b_pressed = true;
