@@ -49,21 +49,17 @@ const std::vector<std::string> MISC_CUTSCENE_VALUES{ "abigail_mcs_1_concat", "ab
 "fra_2_ig_4_alt1_concat", "fra_2_int", "hao_mcs_1", "hun_2_mcs_1", "jh2_fina_mcs4_a1a2", "jh_1_ig_3", "jh_1_int", "jh_1_mcs_4p2", "jh_1_mcs_4_p1_alt1", "jh_2a_intp4", "jh_2a_mcs_1", "jh_2b_int", "jh_2b_mcs_1", "jh_2_arrest_fail_c", "jh_2_celeb", 
 "josh_1_int_concat", "josh_2_intp1_t4", "josh_3_intp1", "josh_4_int_concat", "lamar_1_int", "lam_1_mcs_1_concat", "lam_1_mcs_2", "lam_1_mcs_3", "lester_1_int", "les_1a_mcs_0", "les_1a_mcs_1", "les_1a_mcs_2", "les_1a_mcs_3", "les_1a_mcs_4", "les_1b_mcs_1",
 "lsdhs_mcs_2", "lsdhs_mcs_3_p1_concat", "lsdhs_mcs_3_p2", "lsdh_2a_ext", "lsdh_2a_int", "lsdh_2b_int", "lsdh_2b_mcs_1", "lsdh_int", "martin_1_ext", "martin_1_int", "martin_1_mcs_1", "maude_mcs_1", "maude_mcs_2", "maude_mcs_3", "maude_mcs_4", "maude_mcs_5", 
-"mic_1_int", "mic_1_mcs_1", "mic_1_mcs_2", "mic_1_mcs_3", "mic_2_int", "mic_2_mcs_1", "mic_2_mcs_3_concat", "mic_3_ext", "mic_3_int", "mic_3_mcs_1_p1_a2", "mic_4_int", "mmb_1_rcm", "mmb_2_rcm", "mmb_3_rcm", "mph_fin_cel_tre", "mp_intro_mcs_10_a1", 
-"mp_intro_mcs_10_a3", "mp_intro_mcs_10_a5", "mp_intro_mcs_12_a1", "mp_intro_mcs_12_a2", "mp_intro_mcs_12_a3", "mp_intro_mcs_13", 
-"mp_intro_mcs_14_b", "mp_intro_mcs_16_a1", "mp_intro_mcs_16_a2", "mp_intro_mcs_17_a8", "mp_intro_mcs_17_a9", "mp_intro_mcs_8_a1", "mp_intro_mcs_8_a1_cc", "mp_int_mcs_12_a3_3", "mp_int_mcs_12_a3_4", "mp_int_mcs_15_a1_b", "mp_int_mcs_15_a2b", "mp_int_mcs_17_a1", 
-"mp_int_mcs_17_a2", "mp_int_mcs_5_alt1", "mp_int_mcs_5_alt2", "nmt_1_rcm", "nmt_2_mcs_2", "nmt_2_rcm", "nmt_3_rcm", "oscar_mcs_1", "paper_1_rcm_alt1", "pap_1_mcs_1", "pap_1_rcm", "pap_2_mcs_1", "pap_2_rcm_p2", "pap_3_rcm", "pap_4_rcm", "pro_mcs_1",  "pro_mcs_2", 
-"pro_mcs_3_pt1", "pro_mcs_5", "pro_mcs_7_concat", "rbhs_int", "rbhs_mcs_1", "rbhs_mcs_3", "rbhs_msc_3_p3", "rbh_2ab_mcs_6", "rbh_2a_ext_1", "rbh_2a_int", "rbh_2a_mcs_2_p3", "rbh_2a_mcs_2_p7", "rbh_2a_mcs_4", "rbh_2a_mcs_5", "sas_1_rcm_concat", "sas_2_rcm_t7", 
-"scrap_1_rcm", "scrap_2_rcm", "sdrm_mcs_2", "sil_int", "sil_pred_mcs1", "silj_ext", "silj_int", "smun_intro", "smun_intro2", "sol_1_ext", "sol_1_int_alt", "sol_1_mcs_1_concat",  "sol_1_mcs_2", "sol_1_mcs_3",  "sol_2_ext_concat", "sol_2_int_alt1", "sol_3_int", 
-"sol_5_mcs_1", "sol_5_mcs_2", "sol_5_mcs_2_p5", "sub_int", "subj_ext", "subj_mcs0", "subj_mcs1", "tale_intro","tmom_1_rcm", "tmom_2_rcm", "tonya_mcs_1", "tonya_mcs_2", "tonya_mcs_3", "trevor_1_int", "trevor_2_int", "trevor_drive_int", "trv2_mcs_8", "trvram_1", 
-"trvram_2_concat", "trvram_3", "trvram_4", "trvram_5_con", "trv_1_mcs_1_p1", "trv_1_mcs_3_concat", "trv_1_mcs_4", "trv_2_mcs_4_concat", "trv_2_mcs_6", "trv_5_ext", "trv_5_int", "trv_dri_ext", "trv_dri_mcs_concat" };
+"mic_1_int", "mic_1_mcs_1", "mic_1_mcs_2", "mic_1_mcs_3", "mic_2_int", "mic_2_mcs_1", "mic_2_mcs_3_concat", "mic_3_ext", "mic_3_int", "mic_3_mcs_1_p1_a2", "mic_4_int", "mmb_1_rcm", "mmb_2_rcm", "mmb_3_rcm", "nmt_1_rcm", "nmt_2_mcs_2", "nmt_2_rcm", "nmt_3_rcm", 
+"oscar_mcs_1", "paper_1_rcm_alt1", "pap_1_mcs_1", "pap_1_rcm", "pap_2_mcs_1", "pap_2_rcm_p2", "pap_3_rcm", "pap_4_rcm", "pro_mcs_1",  "pro_mcs_2", "pro_mcs_3_pt1", "pro_mcs_5", "pro_mcs_7_concat", "rbhs_int", "rbhs_mcs_1", "rbhs_mcs_3", "rbhs_msc_3_p3", 
+"rbh_2ab_mcs_6", "rbh_2a_ext_1", "rbh_2a_int", "rbh_2a_mcs_2_p3", "rbh_2a_mcs_2_p7", "rbh_2a_mcs_4", "rbh_2a_mcs_5", "sas_1_rcm_concat", "sas_2_rcm_t7", "scrap_1_rcm", "scrap_2_rcm", "sdrm_mcs_2", "sol_1_ext", "sol_1_int_alt", "sol_1_mcs_1_concat",  
+"sol_1_mcs_2", "sol_1_mcs_3",  "sol_2_ext_concat", "sol_2_int_alt1", "sol_3_int", "sol_5_mcs_1", "sol_5_mcs_2", "sol_5_mcs_2_p5", "tmom_1_rcm", "tmom_2_rcm", "tonya_mcs_1", "tonya_mcs_2", "tonya_mcs_3", "trevor_1_int", "trevor_2_int", "trevor_drive_int", 
+"trv2_mcs_8", "trvram_1", "trvram_2_concat", "trvram_3", "trvram_4", "trvram_5_con", "trv_1_mcs_1_p1", "trv_1_mcs_3_concat", "trv_1_mcs_4", "trv_2_mcs_4_concat", "trv_2_mcs_6", "trv_5_ext", "trv_5_int", "trv_dri_ext", "trv_dri_mcs_concat" };
 
-const std::vector<std::string> MISC_FILTERS_VALUES{	"DEFAULT", "AmbientPUSH", "BeastIntro01", "CAMERA_secuirity_FUZZ", "DeadlineNeon01", "glasses_black", "glasses_Darkblue", "glasses_green", "glasses_orange",
-	"glasses_pink", "glasses_purple", /*"glasses_red",*/ "glasses_yellow", "graveyard_shootout", "hud_def_desatcrunch", "hud_def_flash", "lab_none_dark_OVR", "LostTimeDark", "LostTimeFlash", "METRO_Tunnels", "michealspliff", "mp_bkr_int01_garage",
-	"MP_corona_heist_DOF", "mp_gr_int01_black", "MP_heli_cam", "mugShot_lineup", "New_sewers", "NEW_station_unfinished", "NG_filmic04", "NG_filmic11", "NG_filmic12", "NG_filmic16",
-	"NG_filmic17", "NG_filmic18", "NG_filmic19", "plane_inside_mode", "prologue_ending_fog", "prologue_shootout", "rply_brightness_neg", "rply_contrast_neg", "rply_saturation", "SALTONSEA", "secret_camera", "shades_pink",
-	"StuntFastDark", "switch_cam_2", "ufo", "ufo_deathray", "underwater_deep", "v_bahama", "V_FIB_stairs", "WATER_cove", "WATER_hills", "WATER_lab", "WATER_militaryPOOP", "WATER_muddy", "WATER_port",
-	"WATER_resevoir", "WATER_shore", "WATER_silverlake", "WhiteOut" };
+const std::vector<std::string> MISC_FILTERS_VALUES{	"DEFAULT", "AmbientPUSH", "BeastIntro01", "CAMERA_secuirity_FUZZ", "DeadlineNeon01", "glasses_black", "glasses_Darkblue", "glasses_green", "glasses_orange", "glasses_pink", "glasses_purple", "glasses_yellow", 
+"graveyard_shootout", "hud_def_desatcrunch", "hud_def_flash", "lab_none_dark_OVR", "LostTimeDark", "LostTimeFlash", "METRO_Tunnels", "michealspliff", "mp_bkr_int01_garage", "MP_corona_heist_DOF", "mp_gr_int01_black", "MP_heli_cam", "mugShot_lineup", "New_sewers", 
+"NEW_station_unfinished", "NG_filmic04", "NG_filmic11", "NG_filmic12", "NG_filmic16", "NG_filmic17", "NG_filmic18", "NG_filmic19", "plane_inside_mode", "prologue_ending_fog", "prologue_shootout", "rply_brightness_neg", "rply_contrast_neg", "rply_saturation", 
+"SALTONSEA", "secret_camera", "shades_pink", "StuntFastDark", "switch_cam_2", "ufo", "ufo_deathray", "underwater_deep", "v_bahama", "V_FIB_stairs", "WATER_cove", "WATER_hills", "WATER_lab", "WATER_militaryPOOP", "WATER_muddy", "WATER_port", "WATER_resevoir", 
+"WATER_shore", "WATER_silverlake", "WhiteOut" };
 
 // Trainer Controls
 const std::vector<std::string> MISC_TRAINERCONTROL_CAPTIONS{ "On Release", "On Press" };
