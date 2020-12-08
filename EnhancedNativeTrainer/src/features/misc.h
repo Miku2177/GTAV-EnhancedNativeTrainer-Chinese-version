@@ -22,16 +22,14 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 /* From Zorg93's "EnableMPCars" code */
 #include <cstddef>
 
-const std::vector<std::string> MISC_MUSICEVENT_VALUES{ "AH1_HOLE_RESTART", "AH2A_FIRST_FLOOR_RESTART", "AH3A_ABSEIL_RT", "AH3A_FIB_DOCS_RT", "AH3A_RUBBLE_RT", "AH3B_BURNTOUT_RT", "AH3B_BURNTOUT_TWO_RT", "AH3B_DOWNLOADING_RT",
- "AH3B_EVADE_COPS_RT", "AH3B_GET_TO_VAN_RT", "AH3B_HACK_RT", "AH3B_HELI_LIFT_OFF", "AH3B_STAIRWELL", "APT_COUNTDOWN_30S", "APT_SUDDEN_DEATH_START_MUSIC", "ARM3_CS", "ARM3_RESTART_4", "BG_SIGHTSEER_START_ATTACK", "BST_START",
- "CAR1_COPS_RESTART", "CAR4_TRUCK_RESTART", "CHN1_AFTER_GRENADE_RT", "DH1_START", "DH2A_1ST_BOMB_RT", "DH2A_WAY_OUT_RT", "DH2B_DROP_SUB_RT", "DH2B_FLY_AWAY_RT", "EPS6_START", "EXL2_SNIPE_RT", "EXL3_SWITCH_1", "EXTREME1_BIKE",
- "EXTREME1_RESTART1", "EXTREME2_RESTART2", "FAM1_DO_CHASE_RT", "FAM2_NECK_GRAB", "FAM3_CHASE_RESTART", "FAM4_CHASE_RESTART", "FAM5_YOGA_MUSIC_RESTART", "FBI1_OUTSIDE_CORONERS_RT", "FBI1_SHOOTOUT_HALFWAY_RT", "FBI3_TORTURE_START",
- "FBI4_COVER_RESTART", "FBI5A_FORKLIFT_RESTART", "FBI5A_HELI_RESTART", "FH2A_BANK_MID_RESTART", "FH2A_CARS", "FH2A_FIGHT_RESTART", "FH2A_VAN_RESTART", "FH2B_BOMBS_RESTART", "FH2B_DROP_GOLD_RESTART", "FH2B_FIGHT_1_RESTART",
- "FH2B_HELI_CHASE_RESTART", "FH2B_LEAVE_BANK", "FH2B_NOOSE_FIGHT_RESTART", "FH2B_SWITCH_3", "FIN1_SO_2_RT", "FINA_RESTART_CHASE", "FINB_RESTART_ARRIVE", "FM_COUNTDOWN_30S", "FM_INTRO_START", "FRA1_FIGHT_RESTART", "FRA1_SPEED",
- "FRA2_CUT_LAMAR_RT", "GA_KILL_ALERTED_RS", "GA_KILL_HALF_RS", "HALLOWEEN_START_MUSIC", "JH2A_EXIT_TUNNEL_RESTART", "JH2A_GAS_SHOP_RESTART", "KILL_LIST_START_MUSIC", "LM1_TERMINADOR_ENTER_WAREHOUSE_RESTART", "LM1_TERMINADOR_GAMEPLAY_BEGINS",
- "MGPS_START", "MIC1_ARGUE_CS_SKIP", "MIC1_DRIVE_TO_GRAVEYARD", "MIC2_HANGING_RT", "MIC3_DAVE_ESCAPES_RESTART", "MIC3_ESCAPE_RESTART", "MM2_RESTART1", "MM3_RESTART1", "MP_DM_START_ALL", "OJDA5_START", "OJDG2_START", "PAP2_CAR_RESTART",
- "PENNED_IN_START_MUSIC", "PEYOTE_TRIPS_START", "PROLOGUE_TEST_GETAWAY_RT", "PTP_START", "RC18B_START", "RH1_START", "RH2A_BANK_RESTART", "RH2A_RESCUE_RESTART", "SOL1_CHASE_PLANE_RT", "SOL1_FIGHT_RT", "SOL1_GET_SOL_RT",
- "SOL1_SHOOT_PLANE_RT", "SOL2_RESTART1", "SOL5_FIGHT_BAD_RT", "TRV1_CHASE_BIKERS_RT", "TRV1_DRIVE_TRAILER_RT", "TRV2_RACE", "TRV2_WING_RESTART", "TRV4_EVADE_RT", "TRV4_FOOT_CHASE_RT", "TRV4_START_CS_SKIP" };
+const std::vector<std::string> MISC_MUSICEVENT_VALUES{ /*"AH1_HOLE_RESTART",*/ /*"AH2A_FIRST_FLOOR_RESTART",*/ /*"AH3A_ABSEIL_RT",*/ "AH3A_FIB_DOCS_RT", "AH3A_RUBBLE_RT", "AH3B_BURNTOUT_TWO_RT", "AH3B_DOWNLOADING_RT", "AH3B_GET_TO_VAN_RT", 
+/*"AH3B_HACK_RT",*/ /*"AH3B_HELI_LIFT_OFF",*/ /*"AH3B_STAIRWELL",*/ /*"APT_SUDDEN_DEATH_START_MUSIC",*/ /*"ARM3_CS",*/ "ARM3_RESTART_4", "BG_SIGHTSEER_START_ATTACK", /*"BST_START",*/ /*"CAR4_TRUCK_RESTART",*/ /*"CHN1_AFTER_GRENADE_RT",*/ /*"DH1_START",*/ 
+/*"DH2A_1ST_BOMB_RT",*/ /*"DH2A_WAY_OUT_RT",*/ /*"DH2B_FLY_AWAY_RT",*/ "EPS6_START", /*"EXL2_SNIPE_RT",*/ /*"EXL3_SWITCH_1",*/ "EXTREME1_BIKE", /*"EXTREME1_RESTART1",*/ /*"EXTREME2_RESTART2",*/ /*"FAM1_DO_CHASE_RT",*/ "FAM3_CHASE_RESTART", 
+/*"FAM5_YOGA_MUSIC_RESTART",*/ "FBI1_OUTSIDE_CORONERS_RT", /*"FBI1_SHOOTOUT_HALFWAY_RT",*/ /*"FBI3_TORTURE_START",*/ /*"FBI4_COVER_RESTART",*/ /*"FBI5A_FORKLIFT_RESTART",*/ /*"FBI5A_HELI_RESTART",*/ /*"FH2A_BANK_MID_RESTART",*/ /*"FH2A_CARS",*/ 
+"FH2A_FIGHT_RESTART", /*"FH2A_VAN_RESTART",*/ /*"FH2B_BOMBS_RESTART",*/ /*"FH2B_FIGHT_1_RESTART",*/ "FH2B_HELI_CHASE_RESTART", "FH2B_LEAVE_BANK", /*"FIN1_SO_2_RT",*/ "FINA_RESTART_CHASE", /*"FINB_RESTART_ARRIVE",*/ 
+"FRA2_CUT_LAMAR_RT", "JH2A_EXIT_TUNNEL_RESTART", /*"JH2A_GAS_SHOP_RESTART",*/ "KILL_LIST_START_MUSIC", "LM1_TERMINADOR_ENTER_WAREHOUSE_RESTART", "MGPS_START", "MIC1_DRIVE_TO_GRAVEYARD", "MIC2_HANGING_RT", /*"MIC3_ESCAPE_RESTART",*/ "MP_DM_START_ALL", 
+/*"OJDA5_START",*/ "PAP2_CAR_RESTART", /*"PENNED_IN_START_MUSIC",*/ /*"PROLOGUE_TEST_GETAWAY_RT",*/ /*"PTP_START",*/ "RH1_START", /*"RH2A_BANK_RESTART",*/ /*"SOL1_CHASE_PLANE_RT",*/ /*"SOL1_FIGHT_RT",*/ /*"SOL1_GET_SOL_RT",*/ /*"SOL1_SHOOT_PLANE_RT",*/ 
+"SOL2_RESTART1", "SOL5_FIGHT_BAD_RT", /*"TRV1_CHASE_BIKERS_RT",*/ "TRV1_DRIVE_TRAILER_RT", /*"TRV2_RACE",*/ "TRV2_WING_RESTART" };
 
 const std::vector<std::string> MISC_CUTSCENE_VALUES{ "abigail_mcs_1_concat", "abigail_mcs_2", "ac_ig_3_p3_b", "ah_1_ext_t6", "ah_1_int", "ah_1_mcs_1", "ah_2_ext_alt", "ah_2_ext_p4", "ah_3a_ext", "ah_3a_int", "ah_3a_mcs_3", "ah_3a_mcs_6", "ah_3b_ext", 
 "ah_3b_int", "ah_3b_mcs_1", "ah_3b_mcs_2", "ah_3b_mcs_3", "ah_3b_mcs_4", "ah_3b_mcs_5", "ah_3b_mcs_7", "armenian_1_int", "armenian_1_mcs_1", "armenian_2_int", "armenian_2_mcs_6", "armenian_3_int", "armenian_3_mcs_3", "armenian_3_mcs_4", 
@@ -55,7 +53,7 @@ const std::vector<std::string> MISC_CUTSCENE_VALUES{ "abigail_mcs_1_concat", "ab
 "sol_1_mcs_2", "sol_1_mcs_3",  "sol_2_ext_concat", "sol_2_int_alt1", "sol_3_int", "sol_5_mcs_1", "sol_5_mcs_2", "sol_5_mcs_2_p5", "tmom_1_rcm", "tmom_2_rcm", "tonya_mcs_1", "tonya_mcs_2", "tonya_mcs_3", "trevor_1_int", "trevor_2_int", "trevor_drive_int", 
 "trv2_mcs_8", "trvram_1", "trvram_2_concat", "trvram_3", "trvram_4", "trvram_5_con", "trv_1_mcs_1_p1", "trv_1_mcs_3_concat", "trv_1_mcs_4", "trv_2_mcs_4_concat", "trv_2_mcs_6", "trv_5_ext", "trv_5_int", "trv_dri_ext", "trv_dri_mcs_concat" };
 
-const std::vector<std::string> MISC_FILTERS_VALUES{	"DEFAULT", "AmbientPUSH", "BeastIntro01", "CAMERA_secuirity_FUZZ", "DeadlineNeon01", "glasses_black", "glasses_Darkblue", "glasses_green", "glasses_orange", "glasses_pink", "glasses_purple", "glasses_yellow", 
+const std::vector<std::string> MISC_FILTERS_VALUES{ "DEFAULT", "AmbientPUSH", "BeastIntro01", "CAMERA_secuirity_FUZZ", "DeadlineNeon01", "glasses_black", "glasses_Darkblue", "glasses_green", "glasses_orange", "glasses_pink", "glasses_purple", "glasses_yellow", 
 "graveyard_shootout", "hud_def_desatcrunch", "hud_def_flash", "lab_none_dark_OVR", "LostTimeDark", "LostTimeFlash", "METRO_Tunnels", "michealspliff", "mp_bkr_int01_garage", "MP_corona_heist_DOF", "mp_gr_int01_black", "MP_heli_cam", "mugShot_lineup", "New_sewers", 
 "NEW_station_unfinished", "NG_filmic04", "NG_filmic11", "NG_filmic12", "NG_filmic16", "NG_filmic17", "NG_filmic18", "NG_filmic19", "plane_inside_mode", "prologue_ending_fog", "prologue_shootout", "rply_brightness_neg", "rply_contrast_neg", "rply_saturation", 
 "SALTONSEA", "secret_camera", "shades_pink", "StuntFastDark", "switch_cam_2", "ufo", "ufo_deathray", "underwater_deep", "v_bahama", "V_FIB_stairs", "WATER_cove", "WATER_hills", "WATER_lab", "WATER_militaryPOOP", "WATER_muddy", "WATER_port", "WATER_resevoir", 
