@@ -203,7 +203,6 @@ void onchange_hotkey_function(int value, SelectFromListMenuItem* source){
 }
 
 bool process_misc_hotkey_menu(){
-	write_text_to_log_file("inside process_misc_hotkey");
 	std::vector<MenuItem<int>*> menuItems;
 
 	for(int i = 1; i < 10; i++){

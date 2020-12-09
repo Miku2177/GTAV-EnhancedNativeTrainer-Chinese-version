@@ -17,7 +17,6 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include <fstream>
 
 #include "keyboard.h"
-#include "../debug/debuglog.h"
 
 class KeyConfig{
 	public:
@@ -109,7 +108,6 @@ class TrainerConfig{
 	public:
 	TrainerConfig();
 	KeyInputConfig* get_key_config(){
-		write_text_to_log_file("Attempting to get key config");
 		return keyConfig;
 	}
 
@@ -135,7 +133,6 @@ void write_config_ini_file();
 
 /**Get the current config object.*/
 inline TrainerConfig* get_config(){
-	write_text_to_log_file("attempting to get config");
 	return config;
 }
 
