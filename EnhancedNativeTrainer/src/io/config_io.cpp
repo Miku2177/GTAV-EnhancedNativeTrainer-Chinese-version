@@ -409,6 +409,9 @@ void KeyInputConfig::set_key(char* function, char* keyName, bool modCtrl, bool m
 };
 
 bool KeyInputConfig::is_hotkey_assigned(int i){
+
+	write_text_to_log_file("checking if hotkey assigned");
+
 	std::string target;
 	switch(i){
 		case 1:
