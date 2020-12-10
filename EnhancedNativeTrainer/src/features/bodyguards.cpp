@@ -59,6 +59,7 @@ int clear_bod_props_m = -2;
 bool stop_b = false;
 bool c_armed = true;
 bool featureBodyguardInvincible = false;
+bool featureNoBodBlood = false;
 bool featureBodyguardHelmet = false;
 bool featureBodyguardDespawn = true;
 bool featureDifferentWeapons = false;
@@ -1946,6 +1947,8 @@ void maintain_bodyguards(){
 			// bodyguards invincible
 			if (featureBodyguardInvincible) ENTITY::SET_ENTITY_INVINCIBLE(spawnedENTBodyguards[i], true);
 			else ENTITY::SET_ENTITY_INVINCIBLE(spawnedENTBodyguards[i], false);
+			// no blood and no bullet holes
+			if (featureNoBodBlood) PED::CLEAR_PED_BLOOD_DAMAGE(spawnedENTBodyguards[i]);
 			// share weapon with bodyguards
 			if (featureBodyguardYourWeapon && WEAPON::GET_SELECTED_PED_WEAPON(spawnedENTBodyguards[i]) != WEAPON::GET_SELECTED_PED_WEAPON(PLAYER::PLAYER_PED_ID())) {
 				if (WEAPON::IS_PED_ARMED(PLAYER::PLAYER_PED_ID(), 7)) WEAPON::REMOVE_ALL_PED_WEAPONS(spawnedENTBodyguards[i], false);
@@ -2468,6 +2471,12 @@ bool process_bodyguard_menu(){
 		toggleItem->toggleValue = &featureBodyguardWeaponAttach;
 		menuItems.push_back(toggleItem);
 
+		toggleItem = new ToggleMenuItem<int>();
+		toggleItem->caption = "No Blood And Bullet Holes";
+		toggleItem->value = i++;
+		toggleItem->toggleValue = &featureNoBodBlood;
+		menuItems.push_back(toggleItem);
+
 		if(!bodyguardWeaponsToggleInitialized){
 			for(int a = 0; a < MENU_WEAPON_CATEGORIES.size(); a++){
 				for(int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++){
@@ -2619,6 +2628,7 @@ bool onconfirm_bodyguard_menu(MenuItem<int> choice){
 
 void add_bodyguards_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardInvincible", &featureBodyguardInvincible});
+	results->push_back(FeatureEnabledLocalDefinition{"featureNoBodBlood", &featureNoBodBlood});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardHelmet", &featureBodyguardHelmet});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardDespawn", &featureBodyguardDespawn});
 	results->push_back(FeatureEnabledLocalDefinition{"featureDifferentWeapons", &featureDifferentWeapons});
@@ -2719,6 +2729,7 @@ void reset_bodyguards_globals(){
 	featureBodyBlipNumber = false;
 	featureBodyguardOnMap = false;
 	featureBodyguardInvincible = false;
+	featureNoBodBlood = false;
 	featureBodyguardHelmet = false;
 	featureBodyguardDespawn = true;
 	featureBodyguardInfAmmo = false;
