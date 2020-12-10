@@ -377,51 +377,67 @@ bool onconfirm_misc_freezeradio_menu(MenuItem<int> choice){
 	return false;
 }
 
+void play_cutscene(std::string curr_c) {
+	char* cstr = new char[curr_c.length() + 1];
+	strcpy(cstr, curr_c.c_str());
+
+	CUTSCENE::REQUEST_CUTSCENE(cstr, 8);
+	while (!CUTSCENE::HAS_CUTSCENE_LOADED() && !CONTROLS::IS_CONTROL_PRESSED(2, 22)) {
+		make_periodic_feature_call();
+		WAIT(0);
+	}
+	if (CUTSCENE::HAS_CUTSCENE_LOADED()) {
+		cutscene_is_playing = true;
+		manual_cutscene = true;
+		CUTSCENE::SET_CUTSCENE_FADE_VALUES(0, 0, 0, 0);
+		CUTSCENE::START_CUTSCENE(0);
+		CAM::SET_WIDESCREEN_BORDERS(0, 0);
+		delete[] cstr;
+	}
+}
+
+void stop_cutscene() {
+	//if (GAMEPLAY::GET_MISSION_FLAG() == 0) for (int i = 0; i <= 33; i++) CONTROLS::ENABLE_ALL_CONTROL_ACTIONS(i);
+	OBJECT::DELETE_OBJECT(&xaxis);
+	OBJECT::DELETE_OBJECT(&zaxis);
+	if (CAM::DOES_CAM_EXIST(CutCam)) {
+		CAM::RENDER_SCRIPT_CAMS(false, false, 1, false, false);
+		CAM::DESTROY_CAM(CutCam, true);
+	}
+	CAM::DO_SCREEN_FADE_IN(0);
+	CUTSCENE::STOP_CUTSCENE_IMMEDIATELY();
+	CUTSCENE::REMOVE_CUTSCENE();
+	CAM::DO_SCREEN_FADE_IN(0);
+	curr_cut_ped_me = -1;
+	my_first_coords = -1;
+	curr_cut_ped = -1;
+	cutscene_is_playing = false;
+	cutscene_being_watched = false;
+	switched_c = -1;
+	found_ped_in_cutscene = false;
+	con_disabled = false;
+	manual_cutscene = false;
+}
+
 bool onconfirm_misc_cutscene_menu(MenuItem<int> choice) {
 	if (choice.value == -1) {
-		if (GAMEPLAY::GET_MISSION_FLAG() == 0) for (int i = 0; i <= 33; i++) CONTROLS::ENABLE_ALL_CONTROL_ACTIONS(i);
-		OBJECT::DELETE_OBJECT(&xaxis);
-		OBJECT::DELETE_OBJECT(&zaxis);
-		if (CAM::DOES_CAM_EXIST(CutCam)) {
-			CAM::RENDER_SCRIPT_CAMS(false, false, 1, false, false);
-			CAM::DESTROY_CAM(CutCam, true);
-			//CAM::DESTROY_ALL_CAMS(true);
-		}
-		CAM::DO_SCREEN_FADE_IN(0);
-		CUTSCENE::STOP_CUTSCENE_IMMEDIATELY();
-		CUTSCENE::REMOVE_CUTSCENE();
-		CAM::DO_SCREEN_FADE_IN(0);
-		curr_cut_ped_me = -1;
-		my_first_coords = -1;
-		curr_cut_ped = -1;
-		cutscene_is_playing = false;
-		cutscene_being_watched = false;
-		switched_c = -1;
-		found_ped_in_cutscene = false;
-		con_disabled = false;
-		manual_cutscene = false;
+		stop_cutscene();
 	} 
 	else if(choice.value == -2) {
 		found_ped_in_cutscene = false;
 	}
+	else if (choice.value == -3) {
+		keyboard_on_screen_already = true;
+		curr_message = "Enter cutscene name (e.g. bmad_intro):";
+		std::string result = show_keyboard("Enter Name Manually", NULL);
+		if (!result.empty()) {
+			result = trim(result);
+			play_cutscene(result);
+		}
+	}
 	else {
 		std::string value_m = MISC_CUTSCENE_VALUES[choice.value];
-		char *cstr = new char[value_m.length() + 1];
-		strcpy(cstr, value_m.c_str());
-
-		CUTSCENE::REQUEST_CUTSCENE(cstr, 8);
-		while (!CUTSCENE::HAS_CUTSCENE_LOADED()) {
-			make_periodic_feature_call();
-			WAIT(0);
-		}
-		if (CUTSCENE::HAS_CUTSCENE_LOADED()) {
-			cutscene_is_playing = true;
-			manual_cutscene = true;
-			CUTSCENE::SET_CUTSCENE_FADE_VALUES(0, 0, 0, 0); 
-			CUTSCENE::START_CUTSCENE(0);
-			CAM::SET_WIDESCREEN_BORDERS(0, 0);
-			delete[] cstr;
-		}
+		play_cutscene(value_m);
 	}
 	return false;
 }
@@ -450,6 +466,12 @@ void process_misc_cutplayer_menu() {
 	item = new MenuItem<int>();
 	item->caption = "Switch Camera";
 	item->value = -2;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "Enter Name Manually";
+	item->value = -3;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
@@ -1504,7 +1526,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	}
 
 	// Default Menu Tab
-	if (MISC_DEF_MANUTAB_VALUES[DefMenuTabIndex] > -2 && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID()) == 1) {
+	if (MISC_DEF_MANUTAB_VALUES[DefMenuTabIndex] > -2 && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID()) == 1 && !CUTSCENE::IS_CUTSCENE_PLAYING()) {
 		int GetHash = GAMEPLAY::GET_HASH_KEY("FE_MENU_VERSION_SP_PAUSE");
 		if (IsKeyDown(VK_ESCAPE) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, INPUT_FRONTEND_PAUSE)/* || CONTROLS::IS_CONTROL_JUST_PRESSED(2, 199) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, 200)*/) {
 			UI::ACTIVATE_FRONTEND_MENU(GetHash, featureGamePause, MISC_DEF_MANUTAB_VALUES[DefMenuTabIndex]);
@@ -1659,11 +1681,11 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	// is a cutscene currently playing?
 	if (cutscene_is_playing == true) {
 		con_disabled = true;
-		if (manual_cutscene == true && GAMEPLAY::GET_MISSION_FLAG() == 0) CONTROLS::DISABLE_ALL_CONTROL_ACTIONS(0);
+		//if (manual_cutscene == true && GAMEPLAY::GET_MISSION_FLAG() == 0) CONTROLS::DISABLE_ALL_CONTROL_ACTIONS(0);
 	}
 	else { 
 		if (con_disabled == true && manual_cutscene == true && GAMEPLAY::GET_MISSION_FLAG() == 0) {
-			for (int i = 0; i <= 33; i++) CONTROLS::ENABLE_ALL_CONTROL_ACTIONS(i);
+			//for (int i = 0; i <= 33; i++) CONTROLS::ENABLE_ALL_CONTROL_ACTIONS(i);
 			con_disabled = false;
 			manual_cutscene = false;
 		}
@@ -1672,7 +1694,6 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		if (CAM::DOES_CAM_EXIST(CutCam)) {
 			CAM::RENDER_SCRIPT_CAMS(false, false, 1, false, false);
 			CAM::DESTROY_CAM(CutCam, true);
-			//CAM::DESTROY_ALL_CAMS(true);
 		}
 		curr_cut_ped_me = -1;
 		my_first_coords = -1;
@@ -1693,7 +1714,8 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		cutscene_being_watched = false;
 	}
 	if (CUTSCENE::IS_CUTSCENE_PLAYING()) cutscene_is_playing = true;
-	
+	if (CUTSCENE::IS_CUTSCENE_PLAYING() && manual_cutscene == true && CONTROLS::IS_CONTROL_JUST_PRESSED(2, 22)) stop_cutscene();
+
 	// First Person Cutscene Camera 
 	if (featureFirstPersonCutscene) {
 		if (CUTSCENE::IS_CUTSCENE_PLAYING()) {
@@ -1813,7 +1835,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		} // end of if (CUTSCENE::IS_CUTSCENE_PLAYING())
 		else if (cutscene_is_playing == false) {
 			if (con_disabled == true && manual_cutscene == true) {
-				for (int i = 0; i <= 33; i++) CONTROLS::ENABLE_ALL_CONTROL_ACTIONS(i);
+				//for (int i = 0; i <= 33; i++) CONTROLS::ENABLE_ALL_CONTROL_ACTIONS(i);
 				con_disabled = false;
 				manual_cutscene = false;
 			}
