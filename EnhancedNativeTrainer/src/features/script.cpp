@@ -2046,7 +2046,7 @@ bool process_player_prison_menu(){
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "More Prisoners At The Yard";
+	toggleItem->caption = "More Prisoners At Yard";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featurePrison_Yard;
 	menuItems.push_back(toggleItem);
