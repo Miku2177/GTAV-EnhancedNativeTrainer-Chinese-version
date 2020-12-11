@@ -752,9 +752,14 @@ void save_current_bod_skin(int slot)
 {
 	if (!WEAPON::IS_PED_ARMED(PLAYER::PLAYER_PED_ID(), 7)) CONTROLS::_SET_CONTROL_NORMAL(0, 37, 1);
 
-	keyboard_on_screen_already = true;
-	curr_message = "Enter a number of the bodyguard (that is above his head) you want to save:"; // select a bodyguard you want to save
-	std::string result_b_s = show_keyboard("Enter Name Manually", NULL);
+	std::string result_b_s = "";
+
+	if (spawnedENTBodyguards.size() > 1) {
+		keyboard_on_screen_already = true;
+		curr_message = "Enter a number of the bodyguard (that is above his head) you want to save:"; // select a bodyguard you want to save
+		result_b_s = show_keyboard("Enter Name Manually", NULL);
+	}
+	if (spawnedENTBodyguards.size() == 1) result_b_s = "0";
 	if (!result_b_s.empty())
 	{
 		result_b_s = trim(result_b_s);
@@ -1069,9 +1074,14 @@ bool onconfirm_bodyguard_skins_menu(MenuItem<int> choice){
 		}
 		case 5:
 		{
-			keyboard_on_screen_already = true;
-			curr_message = "Enter a number of the bodyguard (that is above his head) you want to modify the skin of:"; // modify skin of a bodyguard
-			std::string result_b = show_keyboard("Enter Name Manually", NULL);
+			std::string result_b = "";
+
+			if (spawnedENTBodyguards.size() > 1) {
+				keyboard_on_screen_already = true;
+				curr_message = "Enter a number of the bodyguard (that is above his head) you want to modify the skin of:"; // modify skin of a bodyguard
+				result_b = show_keyboard("Enter Name Manually", NULL);
+			}
+			if (spawnedENTBodyguards.size() == 1) result_b = "0";
 			if (!result_b.empty())
 			{
 				result_b = trim(result_b);
@@ -1104,9 +1114,14 @@ bool onconfirm_bodyguard_skins_menu(MenuItem<int> choice){
 		}
 		case 6:
 		{
-			keyboard_on_screen_already = true;
-			curr_message = "Enter a number of the bodyguard (that is above his head) you want to modify the skin of:"; // modify skin of a bodyguard
-			std::string result_b = show_keyboard("Enter Name Manually", NULL);
+			std::string result_b = "";
+
+			if (spawnedENTBodyguards.size() > 1) {
+				keyboard_on_screen_already = true;
+				curr_message = "Enter a number of the bodyguard (that is above his head) you want to modify the skin of:"; // modify skin of a bodyguard
+				result_b = show_keyboard("Enter Name Manually", NULL);
+			}
+			if (spawnedENTBodyguards.size() == 1) result_b = "0";
 			if (!result_b.empty())
 			{
 				result_b = trim(result_b);
@@ -1140,9 +1155,14 @@ bool onconfirm_bodyguard_skins_menu(MenuItem<int> choice){
 		case 7:
 		{
 			if (!WEAPON::IS_PED_ARMED(PLAYER::PLAYER_PED_ID(), 7)) CONTROLS::_SET_CONTROL_NORMAL(0, 37, 1);
-			keyboard_on_screen_already = true;
-			curr_message = "Enter a number of the bodyguard (that is above his head) you want to modify the weapon of:"; // modify weapon of a bodyguard
-			std::string result_b = show_keyboard("Enter Name Manually", NULL);
+			std::string result_b = "";
+
+			if (spawnedENTBodyguards.size() > 1) {
+				keyboard_on_screen_already = true;
+				curr_message = "Enter a number of the bodyguard (that is above his head) you want to modify the weapon of:"; // modify weapon of a bodyguard
+				result_b = show_keyboard("Enter Name Manually", NULL);
+			}
+			if (spawnedENTBodyguards.size() == 1) result_b = "0";
 			if (!result_b.empty())
 			{
 				result_b = trim(result_b);

@@ -948,7 +948,7 @@ void process_pedagainstweapons_menu(){
 
 	listItem = new SelectFromListMenuItem(WEAPONS_CHANCEPOLICECALLING_CAPTIONS, onchange_chance_police_calling_index);
 	listItem->wrap = false;
-	listItem->caption = "Chance Of Calling The Police";
+	listItem->caption = "Chance Of Calling Police";
 	listItem->value = ChancePoliceCallingIndex;
 	menuItems.push_back(listItem);
 
