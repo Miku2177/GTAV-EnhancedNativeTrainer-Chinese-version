@@ -18,7 +18,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 /**This value should be increased whenever you change the schema and a release is made.
 However you must also put in code to upgrade from older versions, in ENTDatabase::handle_version,
 as they will be deployed in the wild already.*/
-const int DATABASE_VERSION = 16;
+const int DATABASE_VERSION = 17;
 
 static int singleIntResultCallback(void *data, int count, char **rows, char **azColName)
 {
@@ -148,7 +148,8 @@ void ENTDatabase::handle_version(int oldVersion)
 			dashColour INTEGER DEFAULT -1, \
 			interiorColour INTEGER DEFAULT -1, \
 			engineSound STRING DEFAULT -1, \
-			xenonColour INTEGER DEFAULT -1 \
+			xenonColour INTEGER DEFAULT -1, \
+			powerMultiplier INTEGER DEFAULT -1 \
 			)";
 		int rcVeh1 = sqlite3_exec(db, CREATE_VEHICLE_TABLE_QUERY, NULL, 0, &zErrMsg);
 		if (rcVeh1 != SQLITE_OK)
@@ -287,18 +288,18 @@ void ENTDatabase::handle_version(int oldVersion)
 		char* queries[]
 		{
 			"ALTER TABLE ENT_SAVED_VEHICLES ADD dirtLevel REAL DEFAULT 0",
-				"ALTER TABLE ENT_SAVED_VEHICLES ADD fadeLevel REAL DEFAULT 0",
-				"ALTER TABLE ENT_SAVED_VEHICLES ADD neonR INTEGER DEFAULT -1",
-				"ALTER TABLE ENT_SAVED_VEHICLES ADD neonG INTEGER DEFAULT -1",
-				"ALTER TABLE ENT_SAVED_VEHICLES ADD neonB INTEGER DEFAULT -1",
-				"ALTER TABLE ENT_SAVED_VEHICLES ADD neon0Enabled INTEGER DEFAULT 0",
-				"ALTER TABLE ENT_SAVED_VEHICLES ADD neon1Enabled INTEGER DEFAULT 0",
-				"ALTER TABLE ENT_SAVED_VEHICLES ADD neon2Enabled INTEGER DEFAULT 0",
-				"ALTER TABLE ENT_SAVED_VEHICLES ADD neon3Enabled INTEGER DEFAULT 0",
-				"ALTER TABLE ENT_SAVED_VEHICLES ADD tyreSmokeR INTEGER DEFAULT -1",
-				"ALTER TABLE ENT_SAVED_VEHICLES ADD tyreSmokeG INTEGER DEFAULT -1",
-				"ALTER TABLE ENT_SAVED_VEHICLES ADD tyreSmokeB INTEGER DEFAULT -1",
-				"ALTER TABLE ENT_SAVED_VEHICLES ADD convertibleRoofUp INTEGER DEFAULT 0"
+			"ALTER TABLE ENT_SAVED_VEHICLES ADD fadeLevel REAL DEFAULT 0",
+			"ALTER TABLE ENT_SAVED_VEHICLES ADD neonR INTEGER DEFAULT -1",
+			"ALTER TABLE ENT_SAVED_VEHICLES ADD neonG INTEGER DEFAULT -1",
+			"ALTER TABLE ENT_SAVED_VEHICLES ADD neonB INTEGER DEFAULT -1",
+			"ALTER TABLE ENT_SAVED_VEHICLES ADD neon0Enabled INTEGER DEFAULT 0",
+			"ALTER TABLE ENT_SAVED_VEHICLES ADD neon1Enabled INTEGER DEFAULT 0",
+			"ALTER TABLE ENT_SAVED_VEHICLES ADD neon2Enabled INTEGER DEFAULT 0",
+			"ALTER TABLE ENT_SAVED_VEHICLES ADD neon3Enabled INTEGER DEFAULT 0",
+			"ALTER TABLE ENT_SAVED_VEHICLES ADD tyreSmokeR INTEGER DEFAULT -1",
+			"ALTER TABLE ENT_SAVED_VEHICLES ADD tyreSmokeG INTEGER DEFAULT -1",
+			"ALTER TABLE ENT_SAVED_VEHICLES ADD tyreSmokeB INTEGER DEFAULT -1",
+			"ALTER TABLE ENT_SAVED_VEHICLES ADD convertibleRoofUp INTEGER DEFAULT 0"
 		};
 
 		for each (char* q in queries)
@@ -387,7 +388,7 @@ void ENTDatabase::handle_version(int oldVersion)
 		char* queries[]
 		{
 			"ALTER TABLE ENT_SAVED_VEHICLES ADD dashColour INTEGER DEFAULT -1",
-				"ALTER TABLE ENT_SAVED_VEHICLES ADD interiorColour INTEGER DEFAULT -1"
+			"ALTER TABLE ENT_SAVED_VEHICLES ADD interiorColour INTEGER DEFAULT -1"
 		};
 
 		for each (char* q in queries)
@@ -666,6 +667,7 @@ void ENTDatabase::handle_version(int oldVersion)
 			write_text_to_log_file("Vehicle mods table created");
 		}
 	}
+
 	if (oldVersion < 16)
 	{
 		char* queries[]
@@ -688,6 +690,27 @@ void ENTDatabase::handle_version(int oldVersion)
 				write_text_to_log_file("Couldn't add bodyguard skins columns");
 				sqlite3_free(zErrMsg);
 			}
+		}
+	}
+
+	if (oldVersion < 17)
+	{
+		char* ADD_POWERMULTIPLIER_COL = "ALTER TABLE ENT_SAVED_VEHICLES ADD powerMultiplier INTEGER DEFAULT -1";
+
+		int custEnginePow = sqlite3_exec(db, ADD_POWERMULTIPLIER_COL, NULL, 0, &zErrMsg);
+		if (custEnginePow != SQLITE_OK)
+		{
+			write_text_to_log_file("Couldn't add engine power multiplier column");
+			sqlite3_free(zErrMsg);
+		}
+
+		char* ADD_TRACKEDPOWERMULTIPLIER_COL = "ALTER TABLE ENT_TRACKED_VEHICLES ADD powerMultiplier INTEGER DEFAULT -1";
+
+		int custTrEnginePow = sqlite3_exec(db, ADD_TRACKEDPOWERMULTIPLIER_COL, NULL, 0, &zErrMsg);
+		if (custTrEnginePow != SQLITE_OK)
+		{
+			write_text_to_log_file("Couldn't add engine power multiplier column");
+			sqlite3_free(zErrMsg);
 		}
 	}
 }
@@ -1285,7 +1308,7 @@ bool ENTDatabase::save_vehicle(Vehicle veh, std::string saveName, sqlite3_int64 
 
 	std::stringstream ss;
 	ss << "INSERT OR REPLACE INTO ENT_SAVED_VEHICLES VALUES (";
-	for (int i = 0; i < 42; i++)
+	for (int i = 0; i < 43; i++)
 	{
 		if (i > 0)
 		{
@@ -1465,6 +1488,14 @@ bool ENTDatabase::save_vehicle(Vehicle veh, std::string saveName, sqlite3_int64 
 		int xenonColour = -1;
 		if (getGameVersion() > 45) xenonColour = VEHICLE::GET_VEHICLE_XENON_COLOUR(veh);
 		sqlite3_bind_int(stmt, index++, xenonColour); 
+
+		int powerMultiplier = -1;
+		for (int kl = 0; kl < C_ENGINE_M.size(); kl++) {
+			if (C_ENGINE_VEHICLE[kl] == veh) {
+				powerMultiplier = C_ENGINE_M[kl];
+			}
+		}
+		sqlite3_bind_int(stmt, index++, powerMultiplier);
 
 		// commit
 		sqlite3_step(stmt);
@@ -2445,6 +2476,8 @@ std::vector<SavedVehicleDBRow*> ENTDatabase::get_saved_vehicles(int index)
 			veh->engineSound = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, index++)));
 
 			veh->xenonColour = sqlite3_column_int(stmt, index++);
+
+			veh->powerMultiplier = sqlite3_column_int(stmt, index++);
 
 			results.push_back(veh);
 
@@ -3515,6 +3548,8 @@ std::vector<TrackedVehicleDBRow*> ENTDatabase::get_tracked_vehicles(int index)
 			
 			veh->lfuel = sqlite3_column_double(stmt, index++);
 
+			veh->powerMultiplier = sqlite3_column_int(stmt, index++);
+
 			results.push_back(veh);
 
 			r = sqlite3_step(stmt);
@@ -3538,7 +3573,7 @@ bool ENTDatabase::save_tracked_vehicle(Vehicle veh, std::string saveName, sqlite
 
 	std::stringstream ss;
 	ss << "INSERT OR REPLACE INTO ENT_TRACKED_VEHICLES VALUES (";
-	for (int i = 0; i < 47; i++)
+	for (int i = 0; i < 48; i++)
 	{
 		if (i > 0)
 		{
@@ -3746,6 +3781,14 @@ bool ENTDatabase::save_tracked_vehicle(Vehicle veh, std::string saveName, sqlite
 			}
 		}
 		sqlite3_bind_double(stmt, index++, lfuel);
+
+		int powerMultiplier = -1;
+		for (int kl = 0; kl < C_ENGINE_M.size(); kl++) {
+			if (C_ENGINE_VEHICLE[kl] == veh) {
+				powerMultiplier = C_ENGINE_M[kl];
+			}
+		}
+		sqlite3_bind_int(stmt, index++, powerMultiplier);
 
 		// commit
 		sqlite3_step(stmt);

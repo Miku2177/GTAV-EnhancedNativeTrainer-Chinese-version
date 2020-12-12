@@ -138,6 +138,7 @@ public:
 	int interiorColour;
 	std::string engineSound;
 	int xenonColour;
+	int powerMultiplier;
 	
 	std::vector<SavedVehicleExtraDBRow*> extras;
 	std::vector<SavedVehicleModDBRow*> mods;
@@ -220,6 +221,7 @@ public:
 	int cor_z;
 	int crotation;
 	float lfuel;
+	int powerMultiplier;
 
 	std::vector<TrackedVehicleExtraDBRow*> extras;
 	std::vector<TrackedVehicleModDBRow*> mods;
