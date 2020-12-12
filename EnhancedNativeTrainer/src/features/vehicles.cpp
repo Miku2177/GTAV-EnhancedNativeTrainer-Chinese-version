@@ -244,6 +244,11 @@ bool JumpyVehChanged = true;
 int HeavyVehIndex = 0;
 bool HeavyVehChanged = true;
 
+//Custom Engine Power Multiplier
+int engCustomPowMultIndex = 0;
+bool engCustomPowMultChanged = true;
+int old_c_engine_index = 0;
+
 //Vehicle Invisibility
 int VehInvisIndexN = 0;
 bool VehInvisChanged = true;
@@ -339,6 +344,9 @@ bool NitrousChanged = true;
 bool oldVehicleState = true;
 
 int NPCVehicleDamageOnCollIndex = 0;
+
+std::vector<int> C_ENGINE_M;
+std::vector<Vehicle> C_ENGINE_VEHICLE;
 
 //Door Options list + struct
 struct struct_door_options{
@@ -2744,6 +2752,39 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		powChanged = true;
 	}
 	
+	// custom engine power multiplier
+	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
+		if (engCustomPowMultIndex != old_c_engine_index) {
+			if (C_ENGINE_M.empty()) {
+				C_ENGINE_M.push_back(VEH_ENG_POW_VALUES[engCustomPowMultIndex]);
+				C_ENGINE_VEHICLE.push_back(PED::GET_VEHICLE_PED_IS_IN(playerPed, false));
+			}
+			if (!C_ENGINE_M.empty()) {
+				bool tmp_found = false;
+				for (int kl = 0; kl < C_ENGINE_M.size(); kl++) {
+					if (C_ENGINE_VEHICLE[kl] == PED::GET_VEHICLE_PED_IS_IN(playerPed, false)) {
+						C_ENGINE_M[kl] = VEH_ENG_POW_VALUES[engCustomPowMultIndex];
+						tmp_found = true;
+					}
+				}
+				if (tmp_found == false) {
+					C_ENGINE_M.push_back(VEH_ENG_POW_VALUES[engCustomPowMultIndex]);
+					C_ENGINE_VEHICLE.push_back(PED::GET_VEHICLE_PED_IS_IN(playerPed, false));
+				}
+			}
+			old_c_engine_index = engCustomPowMultIndex;
+		}
+		if (!C_ENGINE_M.empty()) {// apply multiplier
+			for (int kl = 0; kl < C_ENGINE_M.size(); kl++) {
+				if (C_ENGINE_VEHICLE[kl] == PED::GET_VEHICLE_PED_IS_IN(playerPed, false)) VEHICLE::_SET_VEHICLE_ENGINE_POWER_MULTIPLIER(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), C_ENGINE_M[kl]);
+			}
+		}
+	}
+	else {
+		engCustomPowMultIndex = 0;
+		old_c_engine_index = 0;
+	}
+
 	// Seashark has head lights
 	if (featureSeasharkLights) {
 		int time = TIME::GET_CLOCK_HOURS();
@@ -4717,6 +4758,11 @@ bool spawn_tracked_car(int slot, std::string caption) {
 			FUEL.push_back(savedTVeh->lfuel);
 		}
 
+		if (savedTVeh->powerMultiplier != -1) {
+			C_ENGINE_M.push_back(savedTVeh->powerMultiplier);
+			C_ENGINE_VEHICLE.push_back(veh);
+		}
+
 		add_blip(veh);
 		BLIPTABLE_VEH.push_back(blip_veh);
 		VEHICLES_REMEMBER.push_back(veh);
@@ -4843,7 +4889,12 @@ bool spawn_saved_car(int slot, std::string caption){
 		if (savedVeh->xenonColour > -1) {
 			VEHICLE::SET_VEHICLE_XENON_COLOUR(veh, savedVeh->xenonColour); 
 		}
-	
+
+		if (savedVeh->powerMultiplier != -1) {
+			C_ENGINE_M.push_back(savedVeh->powerMultiplier);
+			C_ENGINE_VEHICLE.push_back(veh);
+		}
+
 		ENTITY::SET_VEHICLE_AS_NO_LONGER_NEEDED(&veh);
 	}
 
@@ -5528,6 +5579,11 @@ void onchange_veh_jumpy_index(int value, SelectFromListMenuItem* source) {
 void onchange_heavy_veh_index(int value, SelectFromListMenuItem* source) {
 	HeavyVehIndex = value;
 	HeavyVehChanged = true;
+}
+
+void onchange_custom_eng_pow_index(int value, SelectFromListMenuItem* source) {
+	engCustomPowMultIndex = value;
+	engCustomPowMultChanged = true;
 }
 
 void onchange_veh_invisibility_index(int value, SelectFromListMenuItem* source) {

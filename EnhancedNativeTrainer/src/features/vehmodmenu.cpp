@@ -54,6 +54,8 @@ const static int SPECIAL_ID_FOR_ENGINE_SOUND = 101;
 
 const static int SPECIAL_ID_FOR_XENON_COLOUR = 102;
 
+const static int SPECIAL_ID_FOR_CUSTOM_MULTIPLIER = 103;
+
 const std::vector<std::string> wheel_names { "Sport", "Muscle", "Lowrider", "SUV", "Offroad", "Tuner", "Bike", "High-End", "Benny's Originals", "Benny's Bespoke", "Formula", "Street" };
 
 std::map<int, std::string> mod_slots;
@@ -748,6 +750,21 @@ bool process_vehmod_engine_sound() {
 	return false;
 }
 
+bool process_custom_engine_multiplier() {
+	std::vector<MenuItem<int>*> menuItems;
+	SelectFromListMenuItem* listItem;
+
+	listItem = new SelectFromListMenuItem(VEH_ENG_POW_CAPTIONS, onchange_custom_eng_pow_index);
+	listItem->wrap = false;
+	listItem->caption = "Custom Engine Power Multiplier";
+	listItem->value = engCustomPowMultIndex;
+	menuItems.push_back(listItem);
+
+	draw_generic_menu<int>(menuItems, NULL, "Custom Engine Power Multiplier", onconfirm_vehmod_category_menu, NULL, NULL, vehicle_menu_interrupt);
+
+	return false;
+}
+
 void set_engine_sound(MenuItem<int> choice) { // pick engine sound via message box
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
@@ -950,24 +967,20 @@ bool onconfirm_vehmod_menu(MenuItem<int> choice){
 	switch (choice.value){
 	case -1: //Upgrade Performance
 		fully_tune_vehicle(veh, false);
-
 		set_status_text("Added all performance upgrades");
 		break;
 	case -2: //Upgrade Armor and Tires
 		VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
 		VEHICLE::SET_VEHICLE_MOD(veh, MOD_ARMOR, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_ARMOR) - 1, 1); //Armor
 		VEHICLE::SET_VEHICLE_TYRES_CAN_BURST(veh, 0); //Bulletproof Tires
-
 		set_status_text("Added all armor upgrades and bulletproof tires");
 		break;
 	case -3: //Add All Mods Pimp My Ride
 		fully_tune_vehicle(veh);
-
 		set_status_text("Added all available upgrades");
 		break;
 	case -4: //Remove All Mods
 		reset_vehicle(veh);
-
 		set_status_text("Removed all upgrades");
 		break;
 	case -5: //Randomize Vehicle Upgrades
@@ -976,7 +989,7 @@ bool onconfirm_vehmod_menu(MenuItem<int> choice){
 	case -6: // Vehicle interior colors
 		process_interior_colour_menu();
 		break;
-	case  SPECIAL_ID_FOR_TOGGLE_VARIATIONS:
+	case SPECIAL_ID_FOR_TOGGLE_VARIATIONS:
 		//these are toggles, do nothing
 		break;
 	case SPECIAL_ID_FOR_NEON_LIGHTS:
@@ -991,6 +1004,9 @@ bool onconfirm_vehmod_menu(MenuItem<int> choice){
 			if (!VEHICLE::IS_TOGGLE_MOD_ON(veh, 22)) set_status_text("~r~Xenon lights are not enabled");
 			if (getGameVersion() < 46) set_status_text("~r~Your game version does not support Xenon colours");
 		}
+		break;
+	case SPECIAL_ID_FOR_CUSTOM_MULTIPLIER:
+		process_custom_engine_multiplier();
 		break;
 	default:
 		process_vehmod_category_menu(choice.value);
@@ -1027,7 +1043,7 @@ bool process_vehmod_menu(){
 	std::ostringstream ss;
 
 	std::vector<MenuItem<int>*> menuItems;
-
+	
 	if (!isWeird) { //!isWeird && !isAircraft
 		MenuItem<int> *item1 = new MenuItem<int>();
 		item1->caption = "Add All Performance Upgrades";
@@ -1166,6 +1182,12 @@ bool process_vehmod_menu(){
 	item->isLeaf = false;
 	menuItems.push_back(item);
 	
+	item = new MenuItem<int>();
+	item->caption = "Custom Engine Power Multiplier";
+	item->value = SPECIAL_ID_FOR_CUSTOM_MULTIPLIER;
+	item->isLeaf = false;
+	menuItems.push_back(item);
+
 	FunctionDrivenToggleMenuItem<int> *toggleItem;
 
 	if (!isWeird){ //if(!isWeird && !isAircraft){
