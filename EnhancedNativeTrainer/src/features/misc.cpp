@@ -452,7 +452,7 @@ void process_misc_cutplayer_menu() {
 	int i = -1;
 
 	MenuItem<int> *item = new MenuItem<int>();
-	item->caption = "Stop";
+	item->caption = "Stop [Press Jump To Stop]";
 	item->value = -1;
 	item->isLeaf = true;
 	menuItems.push_back(item);

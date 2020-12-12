@@ -4391,7 +4391,7 @@ bool process_carspawn_menu() {
 	}
 
 	MenuItem<int>* item = new MenuItem<int>();
-	item->caption = "Enter name manually";
+	item->caption = "Enter Name Manually";
 	item->value = -3;
 	menuItems.push_back(item);
 
