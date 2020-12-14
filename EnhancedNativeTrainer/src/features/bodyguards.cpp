@@ -2002,7 +2002,6 @@ void maintain_bodyguards(){
 							if (featureBodyguardWeaponAttach) add_all_weapons_attachments(spawnedENTBodyguards[i]);
 						}
 					}
-					// add/remove weapons
 					if (c_armed == false) WEAPON::REMOVE_ALL_PED_WEAPONS(spawnedENTBodyguards[i], false);
 				}
 			}
