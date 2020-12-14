@@ -1543,8 +1543,9 @@ void add_teleporter_feature_enablements(std::vector<FeatureEnabledLocalDefinitio
 
 void show_debug_info_on_screen(bool enabled) {
 	Vector3 coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 0);
+	float me_rot = ENTITY::GET_ENTITY_HEADING(PLAYER::PLAYER_PED_ID());
 	std::ostringstream ss;
-	ss << "\nX: " << coords.x << "\nY: " << coords.y << "\nZ: " << coords.z;
+	ss << "\nX: " << coords.x << "\nY: " << coords.y << "\nZ: " << coords.z << "\nRot: " << me_rot;
 	callsPerFrame = 0;
 	set_status_text_centre_screen(ss.str());
 }

@@ -428,7 +428,7 @@ bool onconfirm_misc_cutscene_menu(MenuItem<int> choice) {
 	}
 	else if (choice.value == -3) {
 		keyboard_on_screen_already = true;
-		curr_message = "Enter cutscene name (e.g. bmad_intro):";
+		curr_message = "Enter cutscene name (e.g. mph_nar_fin_ext or bmad_intro):";
 		std::string result = show_keyboard("Enter Name Manually", NULL);
 		if (!result.empty()) {
 			result = trim(result);
