@@ -948,7 +948,7 @@ void process_pedagainstweapons_menu(){
 
 	listItem = new SelectFromListMenuItem(WEAPONS_CHANCEPOLICECALLING_CAPTIONS, onchange_chance_police_calling_index);
 	listItem->wrap = false;
-	listItem->caption = "Chance Of Calling The Police";
+	listItem->caption = "Chance Of Calling Police";
 	listItem->value = ChancePoliceCallingIndex;
 	menuItems.push_back(listItem);
 
@@ -2606,7 +2606,7 @@ bool is_weaponmod_equipped(std::vector<int> extras){
 	std::string weaponValue = VOV_WEAPON_VALUES[extras.at(0)].at(extras.at(1));
 	
 	if (!WEAPON::IS_PED_ARMED(PLAYER::PLAYER_PED_ID(), 7) && refresh_w == true) { // playerPed != PLAYER::PLAYER_PED_ID() && 
-		WAIT(300);
+		WAIT(500);
 		CONTROLS::_SET_CONTROL_NORMAL(0, 37, 1);
 		refresh_w = false;
 	}
@@ -2626,6 +2626,7 @@ void set_weaponmod_equipped(bool equipped, std::vector<int> extras){
 	std::string weaponValue = VOV_WEAPON_VALUES[extras.at(0)].at(extras.at(1));
 	
 	if (playerPed != PLAYER::PLAYER_PED_ID()) {
+		WAIT(500);
 		CONTROLS::_SET_CONTROL_NORMAL(0, 37, 1);
 		refresh_w = true;
 	}

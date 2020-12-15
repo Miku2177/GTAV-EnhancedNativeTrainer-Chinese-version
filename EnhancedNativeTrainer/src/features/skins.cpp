@@ -257,7 +257,7 @@ void onexit_skinchanger_texture_menu(bool returnValue)
 }
 
 void update_skin_features() {
-	// No Blood And No Wounds
+	// No Blood And No Bullet Holes
 	if (featurenoblood) PED::CLEAR_PED_BLOOD_DAMAGE(PLAYER::PLAYER_PED_ID()); 
 
 	// Persistent Props
