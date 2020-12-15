@@ -82,6 +82,11 @@ const int VEH_ENG_POW_VALUES[] = { -1, 0, 5, 10, 25, 50, 75, 100, 125, 150, 175,
 extern int engPowMultIndex;
 //extern bool powChanged;
 
+extern int engCustomPowMultIndex;
+//extern bool engCustomPowMultChanged;
+extern std::vector<int> C_ENGINE_M;
+extern std::vector<Vehicle> C_ENGINE_VEHICLE;
+
 //Blip Colour
 const std::vector<std::string> VEH_BLIPCOLOUR_CAPTIONS{ "White", "Red", "Green", "Blue", "Orange", "Purple", "Grey", "Brown", "Pink", "Dark Green", "Dark Purple", "Dark Blue" };
 //const std::vector<int> VEH_BLIPCOLOUR_VALUES{ 0, 1, 2, 3, 17, 19, 20, 21, 23, 25, 27, 29 };
@@ -1199,6 +1204,8 @@ void onchange_veh_lightsOff_index(int value, SelectFromListMenuItem* source);
 void onchange_veh_jumpy_index(int value, SelectFromListMenuItem* source);
 
 void onchange_heavy_veh_index(int value, SelectFromListMenuItem* source);
+
+void onchange_custom_eng_pow_index(int value, SelectFromListMenuItem* source);
 
 void onchange_veh_invisibility_index(int value, SelectFromListMenuItem* source);
 
