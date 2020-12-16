@@ -674,7 +674,7 @@ void update_area_effects(Ped playerPed){
 	}
 
 	// Aggressive Drivers && Vigilante Citizens
-	if ((featureAggressiveDrivers || featureLawAbidingCitizens) && !featurePlayerIgnoredByAll && !featurePlayerInvisible && !SCRIPT::HAS_SCRIPT_LOADED("wardrobe_sp")) {
+	if ((featureAggressiveDrivers || featureLawAbidingCitizens) && !featurePlayerIgnoredByAll && !featurePlayerInvisible && GAMEPLAY::GET_MISSION_FLAG() == 0) { // !SCRIPT::HAS_SCRIPT_LOADED("wardrobe_sp")
 		Vehicle veh_me = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		Vector3 veh_me_coords = ENTITY::GET_ENTITY_COORDS(veh_me, true);
 		Vector3 me_coords = ENTITY::GET_ENTITY_COORDS(playerPed, true);
