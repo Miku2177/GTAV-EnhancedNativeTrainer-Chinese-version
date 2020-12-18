@@ -2529,6 +2529,11 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		case VER_1_0_2060_1_NOSTEAM:
 		case VER_1_0_2060_1_EGS:
 			*getGlobalPtr(4268340) = 1;
+
+		case VER_1_0_2189_0_STEAM:
+		case VER_1_0_2189_0_NOSTEAM:
+		case VER_1_0_2189_0_EGS:
+			*getGlobalPtr(4269479) = 1;
 	}
 
 	// Disable Despawn Of DLC Vehicles

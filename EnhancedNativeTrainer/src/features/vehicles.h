@@ -902,7 +902,29 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("OPENWHEEL2"), "lgm_dlc_summer2020", "openwheel2" },
 	{ RAGE_JOAAT("TIGON"), "lgm_dlc_summer2020", "tigon" },
 	{ RAGE_JOAAT("GAUNTLET5"), "lsc_dlc_summer2020", "gauntlet3_b" },
-	{ RAGE_JOAAT("YOSEMITE3"), "lsc_dlc_summer2020", "yosemite_b" }
+	{ RAGE_JOAAT("YOSEMITE3"), "lsc_dlc_summer2020", "yosemite_b" },
+	//Cayo Perio Heist
+	{ RAGE_JOAAT("ALKONOST"), "candc_heist4", "alkonost" },
+	{ RAGE_JOAAT("ANNIHILATOR2"), "candc_heist4", "annihlator2" },
+	{ RAGE_JOAAT("AVISA"), "candc_heist4", "avisa" },
+	{ RAGE_JOAAT("DINGHY5"), "candc_heist4", "dinghy5" },
+	{ RAGE_JOAAT("MANCHEZ2"), "candc_heist4", "manchez2" },
+	{ RAGE_JOAAT("PATROLBOAT"), "candc_heist4", "patrolboat" },
+	{ RAGE_JOAAT("SEASPARROW3"), "candc_heist4", "sparrow3" },
+	{ RAGE_JOAAT("SQUADDIE"), "candc_heist4", "squaddie" },
+	{ RAGE_JOAAT("TOREADOR"), "candc_heist4", "toreador" },
+	{ RAGE_JOAAT("VERUS"), "candc_heist4", "verus" },
+	{ RAGE_JOAAT("VETIR"), "candc_heist4", "vetir" },
+	{ RAGE_JOAAT("VETO"), "candc_heist4", "veto" },
+	{ RAGE_JOAAT("VETO2"), "candc_heist4", "veto2" },
+	{ RAGE_JOAAT("WINKY"), "candc_heist4", "winky" },
+	{ RAGE_JOAAT("KOSATKA"), "candc_sub", "banner3" },
+	{ RAGE_JOAAT("BRIOSO2"), "sssa_dlc_heist4", "brioso2" },
+	{ RAGE_JOAAT("SLAMTRUCK"), "sssa_dlc_heist4", "slamtruck" },
+	{ RAGE_JOAAT("WEEVIL"), "sssa_dlc_heist4", "weevil" },
+	{ RAGE_JOAAT("ITALIRSX"), "lgm_dlc_heist4", "italirsx" },
+	{ RAGE_JOAAT("LONGFIN"), "dock_dlc_heist4", "longfin" },
+	{ RAGE_JOAAT("SEASPARROW2"), "elt_dlc_assault", "sparrow" },
 };
 
 /***
