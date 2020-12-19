@@ -27,6 +27,11 @@ bool featureTeleportAutomatically = false;
 //For onscreen debug info
 bool featureShowDebugInfo = false;
 
+//Load 'Cayo Perico' Island Automatically
+bool featureCayoPerico = false;
+int cayo_tick = 0;
+bool perico_init = false;
+
 struct tele_location{
 	std::string text;
 	float x;
@@ -1417,6 +1422,12 @@ bool process_teleport_menu(int categoryIndex){
 		togItem->toggleValueUpdated = &featureMPMapUpdated;
 		menuItems.push_back(togItem);
 
+		togItem = new ToggleMenuItem<int>();
+		togItem->caption = "Load 'Cayo Perico' Island Automatically";
+		togItem->value = 8;
+		togItem->toggleValue = &featureCayoPerico;
+		menuItems.push_back(togItem);
+
 		for (int i = 0; i < MENU_LOCATION_CATEGORIES.size(); i++){
 			if (MENU_LOCATION_CATEGORIES[i].compare(JELLMAN_CAPTION) == 0 && !is_jellman_scenery_enabled()){
 				continue;
@@ -1457,7 +1468,7 @@ void reset_teleporter_globals()
 	featureLandAtDestination = true;
 
 	featureShowDebugInfo = false;
-
+	featureCayoPerico = false;
 	lastChosenCategory = 0;
 	TelChauffeurIndex = 3;
 	Tel3dmarkerIndexN = 1;
@@ -1477,6 +1488,7 @@ void add_teleporter_feature_enablements(std::vector<FeatureEnabledLocalDefinitio
 	results->push_back(FeatureEnabledLocalDefinition{"feature3dmarker", &feature3dmarker});
 	results->push_back(FeatureEnabledLocalDefinition{"featureTeleportAutomatically", &featureTeleportAutomatically});
 	results->push_back(FeatureEnabledLocalDefinition{"featureLandAtDestination", &featureLandAtDestination});
+	results->push_back(FeatureEnabledLocalDefinition{"featureCayoPerico", &featureCayoPerico});
 }
 
 /*const std::vector<std::string> TOGGLE_IPLS
@@ -1665,4 +1677,24 @@ void update_teleport_features(){
 		MARATHON_BLIPS.clear();
 		MARATHON_BLIPS.shrink_to_fit();
 	}
+
+	// Load 'Cayo Perico' Island Automatically
+	if (featureCayoPerico && ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()) && perico_init == false)
+	{
+		cayo_tick = cayo_tick + 1;
+		if (cayo_tick > 1000) {
+			for (int i = 0; i < IPLS_CAYO_PERICO.size(); i++) {
+				if (!STREAMING::IS_IPL_ACTIVE(IPLS_CAYO_PERICO[i]))
+				{
+					STREAMING::REQUEST_IPL(IPLS_CAYO_PERICO[i]);
+				}
+			}
+			perico_init = true;
+		}
+	}
+	if ((!featureCayoPerico && cayo_tick > 0) || DLC2::GET_IS_LOADING_SCREEN_ACTIVE()) {
+		perico_init = false;
+		cayo_tick = 0;
+	}
+
 } // end of loop
