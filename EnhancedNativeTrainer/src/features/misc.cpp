@@ -934,7 +934,7 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 }
 
 void process_misc_menu(){
-	const int lineCount = 17;
+	const int lineCount = 16;
 
 	const std::string caption = "Miscellaneous Options";
 
@@ -951,7 +951,6 @@ void process_misc_menu(){
 		{"No Flight Music", &featureFlyingMusic, NULL, true}, 
 		{"No Police Scanner", &featurePoliceScanner, NULL, true }, 
 		{"No 'Mission Passed' Message", &featureNoComleteMessage, NULL, true },
-		{"First Person Death/Arrest Camera", &featureFirstPersonDeathCamera, NULL },
 		{"First Person Stunt Jump Camera", &featureFirstPersonStuntJumpCamera, NULL },
 		{"No Stunt Jumps", &featureNoStuntJumps, NULL },
 		{"FPS Counter", &featureShowFPS, NULL }, 
