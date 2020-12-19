@@ -1665,4 +1665,4 @@ void update_teleport_features(){
 		MARATHON_BLIPS.clear();
 		MARATHON_BLIPS.shrink_to_fit();
 	}
-}
+} // end of loop
