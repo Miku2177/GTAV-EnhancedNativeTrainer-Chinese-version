@@ -923,7 +923,7 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 		case 7:
 			process_misc_filters_menu();
 			break;
-		case 16:
+		case 15:
 			process_airbrake_global_menu();
 			break;
 		default:

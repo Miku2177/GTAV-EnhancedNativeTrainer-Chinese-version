@@ -1996,7 +1996,7 @@ void update_world_features()
 				MPMapCounter = 0;
 			}
 		}
-		if (featureMPMapUpdated == false && (GAMEPLAY::GET_MISSION_FLAG() == 1 || DLC2::GET_IS_LOADING_SCREEN_ACTIVE())) featureMPMapUpdated = true;
+		if (featureMPMapUpdated == false && GAMEPLAY::GET_MISSION_FLAG() == 1) featureMPMapUpdated = true; // (GAMEPLAY::GET_MISSION_FLAG() == 1 || DLC2::GET_IS_LOADING_SCREEN_ACTIVE())
 	}
 	if (!featureMPMap && featureMPMapUpdated == false) {
 		DLC2::_LOAD_SP_DLC_MAPS();
