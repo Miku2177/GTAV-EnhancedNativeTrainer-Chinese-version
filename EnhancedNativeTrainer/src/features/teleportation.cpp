@@ -78,7 +78,7 @@ const std::vector<tele_location> LOCATIONS_LANDMARKS = {
 	{ "Calafia Train Bridge", -517.869f, 4425.284f, 89.795f },
 	{ "Cape Catfish Pier", 3866.41f, 4463.61f, 2.72762f },
 	{ "Casino", 926.407f, 46.392f, 80.9041f },
-	{ "Cayo Perico", 5212.405f, -5128.695f, 6.46383f, IPLS_CAYO_PERICO, {}, {}, false },
+	{ "Cayo Perico", 4360.31f, -4561.3f, 5.16383f, IPLS_CAYO_PERICO, {}, {}, false },
 	{ "Chumash Historic Family Pier", -3426.683f, 967.738f, 8.347f },
 	{ "Davis Fire Department", 203.00000000f, -1655.57000000f, 28.80310000f},
 	{ "Del Perro Pier", -1850.127f, -1231.751f, 13.017f },
@@ -1409,6 +1409,13 @@ bool process_teleport_menu(int categoryIndex){
 		markerItem->value = -7;
 		markerItem->isLeaf = false;
 		menuItems.push_back(markerItem);
+
+		togItem = new ToggleMenuItem<int>();
+		togItem->caption = "Load Online Map";
+		togItem->value = 8;
+		togItem->toggleValue = &featureMPMap;
+		togItem->toggleValueUpdated = &featureMPMapUpdated;
+		menuItems.push_back(togItem);
 
 		for (int i = 0; i < MENU_LOCATION_CATEGORIES.size(); i++){
 			if (MENU_LOCATION_CATEGORIES[i].compare(JELLMAN_CAPTION) == 0 && !is_jellman_scenery_enabled()){

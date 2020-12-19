@@ -244,3 +244,6 @@ const std::vector<std::string> NPC_RAGDOLL_CAPTIONS{ "OFF", "Never", "Always" };
 const int NPC_RAGDOLL_VALUES[] = { 0, 1, 2 };
 
 const int MISC_TRAINERCONTROL_VALUES[] = { 0, 1 };
+
+extern bool featureMPMap;
+extern bool featureMPMapUpdated;
