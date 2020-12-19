@@ -4559,7 +4559,8 @@ Vehicle do_spawn_vehicle(DWORD model, std::string modelTitle, bool cleanup){
 			}
 		}
 
-		if (!featureVehSpawnInto && (ENTITY::GET_ENTITY_MODEL(veh) == GAMEPLAY::GET_HASH_KEY("MINITANK") || ENTITY::GET_ENTITY_MODEL(veh) == GAMEPLAY::GET_HASH_KEY("RCBANDITO")) && tracked_being_restored == false) {
+		if (!featureVehSpawnInto && (ENTITY::GET_ENTITY_MODEL(veh) == GAMEPLAY::GET_HASH_KEY("MINITANK") || ENTITY::GET_ENTITY_MODEL(veh) == GAMEPLAY::GET_HASH_KEY("RCBANDITO") || 
+			ENTITY::GET_ENTITY_MODEL(veh) == GAMEPLAY::GET_HASH_KEY("KOSATKA")) && tracked_being_restored == false) {
 			PED::SET_PED_INTO_VEHICLE(PLAYER::PLAYER_PED_ID(), veh, -1);
 			oldVehicleState = false;
 		}
