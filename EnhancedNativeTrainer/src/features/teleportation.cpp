@@ -324,6 +324,8 @@ const std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Biker Warehouse: Money Printer 1", 1009.545f, -3196.597f, -39.99353f, { "bkr_biker_interior_placement_interior_2_biker_dlc_int_ware01_milo_" }, {}, {}, false },
 	{ "Biker Warehouse: Money Printer 2", 1124.734f, -3196.597f, -39.99353f, { "bkr_biker_interior_placement_interior_5_biker_dlc_int_ware04_milo_" }, {}, {}, false },
 	{ "Biker Warehouse: Weed Farm", 1059.028f, -3201.89f, -39.99353f, { "bkr_biker_interior_placement_interior_3_biker_dlc_int_ware02_milo_" }, {}, {}, false },
+	{ "Cayo Perico Mansion", 5010.101f, -5753.549f, 27.8444f, { "h4_islandx_mansion_office" }, {}, {}, false }, // h4_dlc_island_office
+	//{ "Cayo Perico Hangar", 4441.45f, -4463.59f, 5.699768f, { "h4_mph4_airstrip_interior_0_airstrip_hanger" }, {}, {}, false }, // h4_dlc_island_office
 	{ "CEO Garage Modshop", 730.0f, -2990.0f, -40.0f, { "imp_impexp_interior_placement_interior_2_imptexp_mod_int_01_milo_" }, {}, {}, false },//No ceiling, floor, walls textures.
 	{ "Cinema", -1435.8f, -256.866f, 18.7795f, { "hei_hw1_02_interior_v_cinema_milo_" }, {}, {}, false },
 	{ "Del Perro Heights Apt 27", -1468.02100000f, -529.94370000f, 49.72156000f, { "hei_hw1_blimp_interior_27_dlc_apart_high_new_milo_" }, {}, {}, false },
@@ -374,7 +376,7 @@ const std::vector<tele_location> LOCATIONS_ONLINE = {
 	//{ "Stilthouse 8", -667.5856f, 582.3726f, 143.9697f, { "apa_ch2_09c_interior_2_v_mp_stilts_b_milo_" }, {}, {}, false },
 	{ "Studio Flat", 260.3297f, -997.4288f, -100.0f, { "hei_hw1_blimp_interior_v_studio_lo_milo_" }, {}, {}, false },
 	{ "Submarine", 514.266f, 4855.68f, -62.5621f, { "xm_x17dlc_int_placement_interior_8_x17dlc_int_sub_milo_" }, {}, {}, false },
-	{ "Submarine2", 1560.83f, 411.237f, -48.0f, {}, {}, {}, false },
+	{ "Submarine 2", 1560.83f, 411.237f, -48.0f, {}, {}, {}, false },
 	{ "Tinsel Towers Apt 16", -613.54040000f, 63.04870000f, 100.81960000f, { "hw1_blimp_interior_v_apartment_high_milo__16" }, {}, {}, false },
 	{ "Tinsel Towers Apt 17", -587.82590000f, 44.26880000f, 86.41870000f, { "hw1_blimp_interior_v_apartment_high_milo__17" }, {}, {}, false },
 	{ "Tinsel Towers Apt 42", -614.86f, 40.6783f, 97.6f, {}, {}, {}, false },
@@ -1691,6 +1693,14 @@ void update_teleport_features(){
 					STREAMING::REQUEST_IPL(IPLS_CAYO_PERICO[i]);
 				}
 			}
+			int CayointeriorID = INTERIOR::GET_INTERIOR_AT_COORDS(5010.101f, -5753.549f, 27.8444f);
+			INTERIOR::DISABLE_INTERIOR(CayointeriorID, false);
+			INTERIOR::_LOAD_INTERIOR(CayointeriorID);
+			STREAMING::SET_INTERIOR_ACTIVE(CayointeriorID, true);
+			int CayointeriorID2 = INTERIOR::GET_INTERIOR_AT_COORDS(4441.45f, -4463.59f, 5.699768f);
+			INTERIOR::DISABLE_INTERIOR(CayointeriorID2, false);
+			INTERIOR::_LOAD_INTERIOR(CayointeriorID2);
+			STREAMING::SET_INTERIOR_ACTIVE(CayointeriorID2, true);
 			perico_init = true;
 		}
 	}
