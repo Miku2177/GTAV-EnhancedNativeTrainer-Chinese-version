@@ -2128,7 +2128,7 @@ bool onconfirm_player_menu(MenuItem<int> choice){
 }
 
 void process_player_menu(){
-	const int lineCount = 27;
+	const int lineCount = 28;
 
 	const std::string caption = "Player Options";
 
@@ -2158,6 +2158,7 @@ void process_player_menu(){
 		{"Player Can Be Headshot", &featurePlayerCanBeHeadshot, NULL, false},
 		{"Manual Respawn", &featureNoAutoRespawn, NULL },
 		{"Instant Respawn On Death/Arrest", &featureRespawnsWhereDied, NULL, false},
+		{"First Person Death/Arrest Camera", &featureFirstPersonDeathCamera, NULL },
 		{"No Scuba Gear Mask", &featureNoScubaGearMask, NULL, true },
 		{"No Scuba Breathing Sound", &featureNoScubaSound, NULL, true },
 	};
