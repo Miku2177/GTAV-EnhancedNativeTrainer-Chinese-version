@@ -154,7 +154,7 @@ bool WindStrengthChanged = true;
 
 // Waves Intensity
 const std::vector<std::string> WORLD_WAVES_CAPTIONS{ "Default", "No Waves", "0.1x", "5x", "10x", "20x", "30x", "50x" };
-const int WORLD_WAVES_VALUES[] = { -1, -400000, 0, 5, 10, 20, 30, 50 };
+const int WORLD_WAVES_VALUES[] = { -1, -500000, -400000, 5, 10, 20, 30, 50 };
 int WorldWavesIndex = 0;
 bool WorldWavesChanged = true;
 
@@ -684,13 +684,6 @@ void process_world_menu()
 	togItem->toggleValue = &featureNoWaypoint;
 	menuItems.push_back(togItem);
 
-	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Load Online Map";
-	togItem->value = 8;
-	togItem->toggleValue = &featureMPMap;
-	togItem->toggleValueUpdated = &featureMPMapUpdated;
-	menuItems.push_back(togItem);
-
 	listItem = new SelectFromListMenuItem(WORLD_FREEROAM_ACTIVITIES_CAPTIONS, onchange_freeroam_activities_index);
 	listItem->wrap = false;
 	listItem->caption = "No Freeroam Activities";
@@ -1199,15 +1192,15 @@ void update_world_features()
 		if (winter_water_tick > 6999 && winter_water_tick < 7300) GAMEPLAY::_0xC54A08C85AE4D410(0.0f); // 9999 10300
 		if (winter_water_tick > 7299) winter_water_tick = 0; // 10299
 	}
-	if (WORLD_WAVES_VALUES[WorldWavesIndex] != -400000 && !featureSnow) GAMEPLAY::_0xC54A08C85AE4D410(0.0f);
+	if (WORLD_WAVES_VALUES[WorldWavesIndex] != -500000 && !featureSnow) GAMEPLAY::_0xC54A08C85AE4D410(0.0f);
 	if (WORLD_WAVES_VALUES[WorldWavesIndex] == -1 && wavesstrength_toggle == false) {
 		WATER::_RESET_WAVES_INTENSITY();
 		wavesstrength_changed = WORLD_WAVES_VALUES[WorldWavesIndex];
 		wavesstrength_toggle = true; 
 	}
 	if (wavesstrength_changed != WORLD_WAVES_VALUES[WorldWavesIndex]) wavesstrength_toggle = false;
-	if (WORLD_WAVES_VALUES[WorldWavesIndex] != -1 && WORLD_WAVES_VALUES[WorldWavesIndex] != -400000) WATER::_SET_WAVES_INTENSITY(WORLD_WAVES_VALUES[WorldWavesIndex]);
-	if (WORLD_WAVES_VALUES[WorldWavesIndex] != -1 && WORLD_WAVES_VALUES[WorldWavesIndex] == -400000) GAMEPLAY::_0xC54A08C85AE4D410(1.0f);
+	if (WORLD_WAVES_VALUES[WorldWavesIndex] != -1 && WORLD_WAVES_VALUES[WorldWavesIndex] != -500000) WATER::_SET_WAVES_INTENSITY(WORLD_WAVES_VALUES[WorldWavesIndex]);
+	if (WORLD_WAVES_VALUES[WorldWavesIndex] != -1 && WORLD_WAVES_VALUES[WorldWavesIndex] == -500000) GAMEPLAY::_0xC54A08C85AE4D410(1.0f);
 	
 	// Lightning Intensity
 	if (WORLD_LIGHTNING_INTENSITY_VALUES[featureLightIntensityIndex] > -2 && (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3061285535 || GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3373937154)) { // GET_NEXT_WEATHER_TYPE_HASH_NAME
@@ -2003,7 +1996,7 @@ void update_world_features()
 				MPMapCounter = 0;
 			}
 		}
-		if (featureMPMapUpdated == false && GAMEPLAY::GET_MISSION_FLAG() == 1) featureMPMapUpdated = true;
+		if (featureMPMapUpdated == false && GAMEPLAY::GET_MISSION_FLAG() == 1) featureMPMapUpdated = true; // (GAMEPLAY::GET_MISSION_FLAG() == 1 || DLC2::GET_IS_LOADING_SCREEN_ACTIVE())
 	}
 	if (!featureMPMap && featureMPMapUpdated == false) {
 		DLC2::_LOAD_SP_DLC_MAPS();

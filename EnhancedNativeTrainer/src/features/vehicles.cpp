@@ -54,6 +54,8 @@ int curr_c_pos = -1;
 
 int veh_jumped_n = 0;
 
+Camera AvisaCam = NULL;
+
 int Accel_secs_passed, Accel_secs_curr, Accel_seconds = 0;
 
 bool reversing_c = false;
@@ -4138,7 +4140,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		}
 	}
 
-/////////////////////////////////// JUMPY VEHICLE /////////////////////////////////
+	// Jumpy Vehicle
 	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) && (VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(veh)) || VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(veh)) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(veh))) && 
 		VEH_TURN_SIGNALS_ACCELERATION_VALUES[JumpyVehIndex] > 0) {
 		Vehicle myVehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
@@ -4152,7 +4154,34 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		}
 		if (VEHICLE::IS_VEHICLE_ON_ALL_WHEELS(myVehicle)) veh_jumped_n = 0; // (veh_jumped_n > 3 && VEHICLE::IS_VEHICLE_ON_ALL_WHEELS(myVehicle)) || 
 	}
-///////////////////////////////////////////////////////////////////////////////////
+
+	// Kraken Avisa first person mode camera bug fix
+	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0) && ENTITY::GET_ENTITY_MODEL(veh) == GAMEPLAY::GET_HASH_KEY("AVISA") && CAM::_0xEE778F8C7E1142E2(5) == 4) {
+		Vector3 playerPosition = ENTITY::GET_ENTITY_COORDS(playerPed, true);
+		Vector3 curRotation = ENTITY::GET_ENTITY_ROTATION(PED::GET_VEHICLE_PED_IS_USING(playerPed), 2);
+		if (!CAM::DOES_CAM_EXIST(AvisaCam)) {
+			AvisaCam = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_FLY_CAMERA", playerPosition.x, playerPosition.y, playerPosition.z, curRotation.x, curRotation.y, curRotation.z, 50.0, true, 2);
+			CAM::ATTACH_CAM_TO_PED_BONE(AvisaCam, playerPed, 31086, 0, -0.15, 0.05, 1);
+			CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE_BLEND_LEVEL(AvisaCam, 1.0);
+			CAM::_SET_CAM_DOF_MAX_NEAR_IN_FOCUS_DISTANCE(AvisaCam, 1.0);
+			CAM::_SET_CAM_DOF_FOCUS_DISTANCE_BIAS(AvisaCam, 1.0);
+			CAM::RENDER_SCRIPT_CAMS(true, false, 0, true, true);
+			CAM::SET_CAM_FOV(AvisaCam, 75.0f);
+			CAM::SET_CAM_ACTIVE(AvisaCam, true);
+			CAM::SET_CAM_NEAR_CLIP(AvisaCam, .329);
+		}
+		CAM::SET_CAM_ROT(AvisaCam, curRotation.x, curRotation.y, curRotation.z, 2);
+	}
+	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0) || PED::IS_PED_DEAD_OR_DYING(PLAYER::PLAYER_PED_ID(), true) || (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && CONTROLS::IS_CONTROL_JUST_RELEASED(2, 0))) {
+		if (CAM::DOES_CAM_EXIST(AvisaCam)) {
+			ENTITY::SET_ENTITY_COLLISION(PLAYER::PLAYER_PED_ID(), 1, 1);
+			CAM::RENDER_SCRIPT_CAMS(false, false, 0, false, false);
+			CAM::DETACH_CAM(AvisaCam);
+			CAM::SET_CAM_ACTIVE(AvisaCam, false);
+			CAM::DESTROY_CAM(AvisaCam, true);
+			WAIT(100);
+		}
+	}
 
 	// Force Vehicle Lights On
 	if(bPlayerExists) {
@@ -4559,7 +4588,8 @@ Vehicle do_spawn_vehicle(DWORD model, std::string modelTitle, bool cleanup){
 			}
 		}
 
-		if (!featureVehSpawnInto && (ENTITY::GET_ENTITY_MODEL(veh) == GAMEPLAY::GET_HASH_KEY("MINITANK") || ENTITY::GET_ENTITY_MODEL(veh) == GAMEPLAY::GET_HASH_KEY("RCBANDITO")) && tracked_being_restored == false) {
+		if (!featureVehSpawnInto && (ENTITY::GET_ENTITY_MODEL(veh) == GAMEPLAY::GET_HASH_KEY("MINITANK") || ENTITY::GET_ENTITY_MODEL(veh) == GAMEPLAY::GET_HASH_KEY("RCBANDITO") || 
+			ENTITY::GET_ENTITY_MODEL(veh) == GAMEPLAY::GET_HASH_KEY("KOSATKA")) && tracked_being_restored == false) {
 			PED::SET_PED_INTO_VEHICLE(PLAYER::PLAYER_PED_ID(), veh, -1);
 			oldVehicleState = false;
 		}
