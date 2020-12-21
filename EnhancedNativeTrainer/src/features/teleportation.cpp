@@ -1697,10 +1697,6 @@ void update_teleport_features(){
 			INTERIOR::DISABLE_INTERIOR(CayointeriorID, false);
 			INTERIOR::_LOAD_INTERIOR(CayointeriorID);
 			STREAMING::SET_INTERIOR_ACTIVE(CayointeriorID, true);
-			int CayointeriorID2 = INTERIOR::GET_INTERIOR_AT_COORDS(4441.45f, -4463.59f, 5.699768f);
-			INTERIOR::DISABLE_INTERIOR(CayointeriorID2, false);
-			INTERIOR::_LOAD_INTERIOR(CayointeriorID2);
-			STREAMING::SET_INTERIOR_ACTIVE(CayointeriorID2, true);
 			perico_init = true;
 		}
 	}
