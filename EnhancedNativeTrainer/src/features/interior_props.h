@@ -325,8 +325,8 @@ const std::vector<const char*> IPLS_CAYO_PERICO = {
 	"h4_islandairstrip",
 	"h4_islandairstrip_doorsclosed",
 	"h4_islandairstrip_doorsclosed_lod",
-	"h4_islandairstrip_doorsopen",
-	"h4_islandairstrip_doorsopen_lod",
+	//"h4_islandairstrip_doorsopen",
+	//"h4_islandairstrip_doorsopen_lod",
 	"h4_islandairstrip_hangar_props",
 	"h4_islandairstrip_hangar_props_lod",
 	"h4_islandairstrip_hangar_props_slod",
@@ -400,7 +400,7 @@ const std::vector<const char*> IPLS_CAYO_PERICO = {
 	"h4_islandx_mansion_vault_lod",
 	"h4_island_padlock_props",
 	"h4_mansion_gate_broken",
-	"h4_mansion_gate_closed",
+	//"h4_mansion_gate_closed",
 	"h4_mansion_remains_cage",
 	"h4_mph4_airstrip",
 	"h4_mph4_airstrip_interior_0_airstrip_hanger",
@@ -547,16 +547,7 @@ const std::vector<const char*> IPLS_CAYO_PERICO = {
 	"h4_islandx_placement_08",
 	"h4_islandx_placement_09",
 	"h4_islandx_placement_10",
-	"h4_mph4_island_placement",
-	//
-	"prop_mb_crate_01",
-	"prop_cd_folder_pile1",
-	"h4_mph4_air_airstrip_office_int",
-	"h4_mph4_air_airstrip_01",
-	"h4_mph4_air_airstrip_01_detail",
-	"h4_mph4_air_airstrip_00",
-	"v_ret_ta_stool",
-	"h4_prop_h4_chain_lock_01a"
+	"h4_mph4_island_placement"
 };
 
 const std::vector<const char*> IPLS_CARRIER = {
