@@ -13,7 +13,6 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "../../inc/nativeCaller.h"
 #include "prison_break.h"
 
-//int areaeffect_top_level_menu_index = 0;
 int areaeffect_ped_level_menu_index = 0;
 int areaeffect_veh_level_menu_index = 0;
 int areaeffect_ped_advconfig_menu_index = 0;
@@ -105,7 +104,6 @@ bool PedAccuracyChanged = true;
 
 // Selective Angry Peds
 const std::vector<std::string> WORLD_SELECTIVE_PEDS_ANGRY_CAPTIONS{ "OFF", "Only Men Are Angry", "Only Women Are Angry" };
-//const int WORLD_SELECTIVE_PEDS_ANGRY_VALUES[] = { 0, 1, 2 };
 int WorldSelectivePedsIndex = 0;
 bool WorldSelectivePedsChanged = true;
 
@@ -177,7 +175,6 @@ void reset_areaeffect_globals(){
 	WorldSelectivePedsIndex = 0;
 	PedAccuracyIndex = 0;
 	pedWeaponSetIndex = 0;
-	
 	RadarReducedGripSnowingIndex = 0;
 	RadarReducedGripRainingIndex = 0;
 	NoPedsGravityIndex = 0;
@@ -1450,8 +1447,6 @@ void give_all_nearby_peds_a_weapon(bool enabled){
 				Hash Ped_Selective_Weapon = GAMEPLAY::GET_HASH_KEY(currWeapon);
 				if (!featurePedsIncludeDrivers && WEAPON::GET_SELECTED_PED_WEAPON(xped) != Ped_Selective_Weapon && !PED::IS_PED_IN_ANY_VEHICLE(xped, false)) WEAPON::GIVE_WEAPON_TO_PED(xped, Ped_Selective_Weapon, 999, FALSE, TRUE); // !WEAPON::HAS_PED_GOT_WEAPON(xped, Ped_Selective_Weapon, 0)
 				if (featurePedsIncludeDrivers && WEAPON::GET_SELECTED_PED_WEAPON(xped) != Ped_Selective_Weapon) WEAPON::GIVE_WEAPON_TO_PED(xped, Ped_Selective_Weapon, 999, FALSE, TRUE);
-				//if (!featurePedsIncludeDrivers && WEAPON::GET_SELECTED_PED_WEAPON(xped) == Ped_Selective_Weapon && !PED::IS_PED_IN_ANY_VEHICLE(xped, false)) WEAPON::SET_CURRENT_PED_WEAPON(xped, Ped_Selective_Weapon, 0);
-				//if (featurePedsIncludeDrivers && WEAPON::GET_SELECTED_PED_WEAPON(xped) == Ped_Selective_Weapon) WEAPON::SET_CURRENT_PED_WEAPON(xped, Ped_Selective_Weapon, 0);
 				WEAPON::SET_PED_INFINITE_AMMO_CLIP(xped, true);
 				if (featurePedsSwitchWeapons) PED::SET_PED_CAN_SWITCH_WEAPON(xped, true);
 				else PED::SET_PED_CAN_SWITCH_WEAPON(xped, false);

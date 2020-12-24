@@ -10,7 +10,6 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 #include "vehicles.h"
 #include "fuel.h"
-
 #include "..\features\vehmodmenu.h"
 #include "hotkeys.h"
 #include "script.h"
@@ -34,9 +33,7 @@ int Time_tick = 0;
 bool Fuel_Low = false;
 bool show_blips = true;
 bool phone_blips = false;
-
 bool ign_anim_e = false;
-
 bool exiting_v = false;
 bool restart_engine = false;
 

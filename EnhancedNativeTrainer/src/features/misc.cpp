@@ -39,7 +39,6 @@ bool help_showing = true;
 bool frozen_time = false;
 
 // phone bill variables
-//bool featureBlockInputInMenu = false;
 bool featurePhoneBillEnabled = false;
 bool featureGamePause = false;
 bool featureZeroBalance = false;
@@ -48,8 +47,9 @@ bool featureNoPhoneOnHUD = false;
 int secs_passed, secs_curr = -1;
 float temp_seconds, bill_seconds = 0;
 float bill_to_pay = -1;
-//
+
 bool featureDisableRecording = false;
+
 // dynamic health bar variables
 bool featureDynamicHealthBar = false;
 int temp_h, temp_h_d = -1;
@@ -59,20 +59,19 @@ float curr_damaged_health, curr_damaged_armor = -1;
 int healthbar_secs_curr, healthbar_seconds = -1; 
 float health_bar_x = 0.015;
 float health_bar_y = 0.966;
-//
+
 // show fps
 static int frames = 0;
 static double FPStime, FPStime_passed, FPStime_curr, starttime = 0;
 int fps = 0; 
 char fps_to_show_char_modifiable[15];
-//
+
 // use phone while on bike
 Object temp_obj = -1;
 char* anim_dict = "anim@cellphone@in_car@ps";
 char* animation_of_d = "cellphone_text_read_base";
 bool accel = false;
 bool p_exist = false;
-//
 
 bool radio_pressed = false;
 
@@ -112,34 +111,29 @@ bool featurePoliceScanner = false;
 bool featureNoComleteMessage = false;
 bool featurePoliceRadio = false;
 bool police_radio_check = false;
-
 bool featureMiscLockRadio = false;
 bool featureMiscHideHud = false;
 bool featureMiscHideHudUpdated = false;
 bool featurePhoneShowHud = false;
-//bool featureMiscHideENTHud = false;
 bool featureInVehicleNoHud = false;
 bool featureMarkerHud = false;
 bool phone_toggle = false;
 bool phone_toggle_vehicle = false;
 bool phone_toggle_defaultphone = false;
-
 bool featureFirstPersonDeathCamera = false;
 bool featureFirstPersonStuntJumpCamera = false;
 bool featureNoStuntJumps = false;
 bool featureHidePlayerInfo = false;
-
 bool featureShowFPS = false;
 bool featurenowheelblurslow = false;
-
 bool featureShowVehiclePreviews = true;
 bool featureShowStatusMessage = true;
 bool featureNoAutoRespawn = false;
-//bool featureControllerIgnoreInTrainer = false;
-
 bool featureMiscJellmanScenery = false;
-
 bool featureEnableMissingRadioStation = false;
+
+//bool featureBlockInputInMenu = false;
+//bool featureControllerIgnoreInTrainer = false;
 
 const int TRAINERCONFIG_HOTKEY_MENU = 99;
 int radioStationIndex = -1;
@@ -157,6 +151,7 @@ Object xaxis, zaxis = -1;
 const Hash PLAYER_ZERO = 0xD7114C9;
 const Hash PLAYER_ONE = 0x9B22DBAF;
 const Hash PLAYER_TWO = 0x9B810FA2;
+
 // Main characters cash
 const Hash SP0_TOTAL_CASH = 0x324C31D;
 const Hash SP1_TOTAL_CASH = 0x44BD6982;
@@ -184,7 +179,6 @@ bool PhoneDefaultChanged = true;
 
 // Radio Off
 const std::vector<std::string> MISC_RADIO_OFF_CAPTIONS{ "Default", "Always", "For Bikes Only" };
-//const int MISC_RADIO_OFF_VALUES[] = { 0, 1, 2 };
 int RadioOffIndex = 0;
 bool RadioOffChanged = true;
 
@@ -397,7 +391,6 @@ void play_cutscene(std::string curr_c) {
 }
 
 void stop_cutscene() {
-	//if (GAMEPLAY::GET_MISSION_FLAG() == 0) for (int i = 0; i <= 33; i++) CONTROLS::ENABLE_ALL_CONTROL_ACTIONS(i);
 	OBJECT::DELETE_OBJECT(&xaxis);
 	OBJECT::DELETE_OBJECT(&zaxis);
 	if (CAM::DOES_CAM_EXIST(CutCam)) {
@@ -1035,7 +1028,6 @@ void onchange_misc_phone_bike_index(int value, SelectFromListMenuItem* source) {
 void reset_misc_globals(){
 	featureMiscHideHud =
 		featurePhoneShowHud = 
-		//featureMiscHideENTHud =
 		featureInVehicleNoHud =
 		featureMarkerHud =
 		featureDynamicHealthBar =
@@ -1060,15 +1052,14 @@ void reset_misc_globals(){
 	TrainerControlIndex = 0;
 	PhoneFreeSecondsIndex = 0;
 	PhoneBikeAnimationIndex = 0;
-
 	DefMenuTabIndex = 0;
 
+	//featureControllerIgnoreInTrainer = false;
+	//featureBlockInputInMenu = false;
 	featureShowVehiclePreviews = true;
 	featureShowStatusMessage = true;
 	airbrake_enable = true;
 	featureFirstPersonCutscene = false;
-	//featureControllerIgnoreInTrainer = false;
-	//featureBlockInputInMenu = false;
 	mouse_view_control = false;
 	help_showing = true;
 	frozen_time = false;
@@ -1680,11 +1671,9 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	// is a cutscene currently playing?
 	if (cutscene_is_playing == true) {
 		con_disabled = true;
-		//if (manual_cutscene == true && GAMEPLAY::GET_MISSION_FLAG() == 0) CONTROLS::DISABLE_ALL_CONTROL_ACTIONS(0);
 	}
 	else { 
 		if (con_disabled == true && manual_cutscene == true && GAMEPLAY::GET_MISSION_FLAG() == 0) {
-			//for (int i = 0; i <= 33; i++) CONTROLS::ENABLE_ALL_CONTROL_ACTIONS(i);
 			con_disabled = false;
 			manual_cutscene = false;
 		}
@@ -1773,8 +1762,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 
 								CAM::RENDER_SCRIPT_CAMS(false, false, 1, false, false);
 								CAM::DESTROY_CAM(CutCam, true);
-								//CAM::DESTROY_ALL_CAMS(true);
-
+								
 								if (ENTITY::GET_ENTITY_MODEL(us_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_zero") || ENTITY::GET_ENTITY_MODEL(us_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_one") ||
 									ENTITY::GET_ENTITY_MODEL(us_ped[i]) == GAMEPLAY::GET_HASH_KEY((char *)"player_two")) PlayerIndex = PED::GET_PED_BONE_INDEX(curr_cut_ped, 8433);
 								else PlayerIndex = PED::GET_PED_BONE_INDEX(curr_cut_ped, 31086); // 8433
@@ -1814,7 +1802,6 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 						CAM::RENDER_SCRIPT_CAMS(false, false, 1, false, false);
 						CAM::DESTROY_CAM(CutCam, true);
 					}
-					//CAM::DESTROY_ALL_CAMS(true);
 					found_ped_in_cutscene = false;
 					switched_c = -1;
 				}
@@ -1834,7 +1821,6 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		} // end of if (CUTSCENE::IS_CUTSCENE_PLAYING())
 		else if (cutscene_is_playing == false) {
 			if (con_disabled == true && manual_cutscene == true) {
-				//for (int i = 0; i <= 33; i++) CONTROLS::ENABLE_ALL_CONTROL_ACTIONS(i);
 				con_disabled = false;
 				manual_cutscene = false;
 			}
@@ -1843,7 +1829,6 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			if (CAM::DOES_CAM_EXIST(CutCam)) {
 				CAM::RENDER_SCRIPT_CAMS(false, false, 1, false, false);
 				CAM::DESTROY_CAM(CutCam, true);
-				//CAM::DESTROY_ALL_CAMS(true);
 			}
 			found_ped_in_cutscene = false;
 			switched_c = -1;
@@ -1855,7 +1840,6 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		if (CAM::DOES_CAM_EXIST(CutCam)) {
 			CAM::RENDER_SCRIPT_CAMS(false, false, 1, false, false);
 			CAM::DESTROY_CAM(CutCam, true);
-			//CAM::DESTROY_ALL_CAMS(true);
 		}
 		found_ped_in_cutscene = false;
 		switched_c = -1;
@@ -1929,13 +1913,10 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 	results->push_back(FeatureEnabledLocalDefinition{"featureMiscLockRadio", &featureMiscLockRadio});
 	results->push_back(FeatureEnabledLocalDefinition{"featureMiscHideHud", &featureMiscHideHud, &featureMiscHideHudUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePhoneShowHud", &featurePhoneShowHud}); 
-	//results->push_back(FeatureEnabledLocalDefinition{"featureMiscHideENTHud", &featureMiscHideENTHud});
 	results->push_back(FeatureEnabledLocalDefinition{"featureInVehicleNoHud", &featureInVehicleNoHud});
 	results->push_back(FeatureEnabledLocalDefinition{"featureMarkerHud", &featureMarkerHud});
 	results->push_back(FeatureEnabledLocalDefinition{"featureDynamicHealthBar", &featureDynamicHealthBar});
 	results->push_back(FeatureEnabledLocalDefinition{"featureDisableRecording", &featureDisableRecording});
-	//results->push_back(FeatureEnabledLocalDefinition{"featureControllerIgnoreInTrainer", &featureControllerIgnoreInTrainer});
-	//results->push_back(FeatureEnabledLocalDefinition{"featureBlockInputInMenu", &featureBlockInputInMenu});
 	results->push_back(FeatureEnabledLocalDefinition{"mouse_view_control", &mouse_view_control});
 	results->push_back(FeatureEnabledLocalDefinition{"airbrake_enable", &airbrake_enable});
 	results->push_back(FeatureEnabledLocalDefinition{"featureFirstPersonCutscene", &featureFirstPersonCutscene});
@@ -1957,6 +1938,8 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoStuntJumps", &featureNoStuntJumps});
 	results->push_back(FeatureEnabledLocalDefinition{"featureHidePlayerInfo", &featureHidePlayerInfo});
 	results->push_back(FeatureEnabledLocalDefinition{"featureMiscJellmanScenery", &featureMiscJellmanScenery});
+	//results->push_back(FeatureEnabledLocalDefinition{"featureControllerIgnoreInTrainer", &featureControllerIgnoreInTrainer});
+	//results->push_back(FeatureEnabledLocalDefinition{"featureBlockInputInMenu", &featureBlockInputInMenu});
 }
 
 void add_misc_generic_settings(std::vector<StringPairSettingDBRow>* results){

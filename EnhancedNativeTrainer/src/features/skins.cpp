@@ -67,7 +67,6 @@ bool ResetSkinOnDeathChanged = true;
 
 // Auto Apply Last Saved Skin
 const std::vector<std::string> SKINS_AUTO_SKIN_SAVED_CAPTIONS{ "OFF", "Restore Character", "Saved Character Only" };
-//const int SKINS_AUTO_SKIN_SAVED_VALUES[] = { 0, 1, 2 };
 int AutoApplySkinSavedIndex = 0;
 bool AutoApplySkinSavedChanged = true;
 

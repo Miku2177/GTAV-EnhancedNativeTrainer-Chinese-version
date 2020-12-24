@@ -11,7 +11,6 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "vehicles.h"
 #include "road_laws.h"
 #include "fuel.h"
-
 #include "..\features\vehmodmenu.h"
 #include "hotkeys.h"
 #include "script.h"
@@ -53,7 +52,18 @@ float spot_to_stop = -1;
 bool being_arrested = false;
 int r_tick_secs_passed = 0; 
 int Seen_secs_passed, Seen_secs_curr, Seen_seconds = 0;
-bool againsttraffic_check, pavementdriving_check, vehiclecollision_check, vehicledamaged_check, hohelmet_check, mobilephone_check, speedingincity_check, speedingonspeedway_check, runningredlight_check, stolenvehicle_check, nolightsnighttime_check, escapingpolice_check = false;
+bool againsttraffic_check = false;
+bool pavementdriving_check = false;
+bool vehiclecollision_check = false;
+bool vehicledamaged_check = false;
+bool hohelmet_check = false;
+bool mobilephone_check = false;
+bool speedingincity_check = false;
+bool speedingonspeedway_check = false;
+bool runningredlight_check = false;
+bool stolenvehicle_check = false;
+bool nolightsnighttime_check = false;
+bool escapingpolice_check = false;
 int SinceCollision_secs_curr, Collision_seconds = -1; 
 int TargetBlocked_secs_curr, TargetBlocked_seconds = -1; 
 int SinceEscape_secs_curr, Escape_seconds = -1; 
