@@ -21,23 +21,14 @@ const int MAX_HOTKEYS = 9;
 int functionIDs[MAX_HOTKEYS] = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 bool hotkey_held_slow_mo = false;
-
 bool hotkey_boddyguard = false;
-
 bool hotkey_held_half_normal_speed = false;
-
 bool hotkey_held_normal_speed = false;
-
 bool hotkey_toggled_speed = false;
-
 bool hotkey_held_veh_burnout = false;
-
 bool hotkey_held_veh_extrapower = false;
-
 bool hotkey_held_veh_nitrous = false;
-
 bool hotkey_held_veh_radio_skip = false;
-
 bool muffled_toggle = false;
 
 bool is_hotkey_held_slow_mo()

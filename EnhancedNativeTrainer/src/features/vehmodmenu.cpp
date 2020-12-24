@@ -29,31 +29,18 @@ const int WHEEL_CATEGORY_COUNTS[] = { 50, 36, 30, 38, 20, 48, 72, 40, 217, 217 }
 const char* PLATE_NAMES[] = { "Blue on White", "Yellow/Black", "Gold/Blue", "Blue/White SA Caps", "Blue/White SA Exempt", "Blue/White Yankton" };
 
 const static int ENGINE_SOUND_COUNT = 366;
-
 const static int SPECIAL_ID_START = 90;
-
 const static int SPECIAL_ID_FOR_WHEEL_CATEGORY = 91;
-
 const static int SPECIAL_ID_FOR_WHEEL_SELECTION = 92;
-
 const static int SPECIAL_ID_FOR_WINDOW_TINT = 93;
-
 const static int SPECIAL_ID_FOR_LICENSE_PLATES = 94;
-
 const static int SPECIAL_ID_FOR_TOGGLE_VARIATIONS = 95;
-
 const static int SPECIAL_ID_FOR_PLATE_TEXT = 96;
-
 const static int SPECIAL_ID_FOR_NEON_LIGHTS = 97;
-
 const static int SPECIAL_ID_FOR_TIRE_SMOKE = 99;
-
 const static int SPECIAL_ID_FOR_INTERIOR_COLOUR = 100;
-
 const static int SPECIAL_ID_FOR_ENGINE_SOUND = 101;
-
 const static int SPECIAL_ID_FOR_XENON_COLOUR = 102;
-
 const static int SPECIAL_ID_FOR_CUSTOM_MULTIPLIER = 103;
 
 const std::vector<std::string> wheel_names { "Sport", "Muscle", "Lowrider", "SUV", "Offroad", "Tuner", "Bike", "High-End", "Benny's Originals", "Benny's Bespoke", "Formula", "Street" };

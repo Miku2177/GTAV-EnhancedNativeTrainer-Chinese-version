@@ -10,7 +10,6 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 #include "vehicles.h"
 #include "enginedegrade.h"
-
 #include "..\features\vehmodmenu.h"
 #include "hotkeys.h"
 #include "script.h"
@@ -245,7 +244,6 @@ void engine_can_degrade()
 					if (E_HEALTH[0] < 11) ENTITY::SET_ENTITY_MAX_SPEED(E_VEHICLES[0], 18); // 40 MPH
 					if (E_HEALTH[0] > 40) ENTITY::SET_ENTITY_MAX_SPEED(E_VEHICLES[0], 15000.0);
 				}
-				//else if (VEH_SPEEDLIMITER_VALUES[speedLimiterIndex] == 0 && VEH_SPEEDLIMITER_VALUES[speedCityLimiterIndex] == 0 && VEH_SPEEDLIMITER_VALUES[speedCountryLimiterIndex] == 0) ENTITY::SET_ENTITY_MAX_SPEED(veh, 15000.0);
 			}
 		} // end of in vehicle
 		

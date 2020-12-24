@@ -142,7 +142,6 @@ BOOL highbeamsBAutoOn = -1;
 
 // Radar Map Size
 const std::vector<std::string> WORLD_RADAR_MAP_CAPTIONS{ "Normal", "Big", "Full" };
-//const int WORLD_RADAR_MAP_VALUES[] = { 1, 2, 3 };
 int RadarMapIndexN = 0;
 bool RadarMapChanged = true;
 
@@ -181,7 +180,6 @@ int WeatherChangeIndex = 0;
 bool WeatherChangeChanged = true;
 
 const std::vector<std::string> MISC_WEATHER_METHOD_CAPTIONS{ "Random Weather", "Mixed Weather", "Custom Order" };
-//const int MISC_WEATHER_METHOD_VALUES[] = { 1, 2, 3 };
 int WeatherMethodIndexN = 0;
 bool WeatherMethodChanged = true;
 
@@ -804,96 +802,6 @@ void update_world_features()
 		VEHICLE::SET_GARBAGE_TRUCKS(featureWorldGarbageTrucks);
 		featureWorldGarbageTrucksUpdated = false;
 	}
-
-	/*if (featureBlackout)
-	{
-		if (STREAMING::IS_IPL_ACTIVE("DT1_22_bldg2"))
-		{
-			set_status_text("DT1_22_bldg2");
-			STREAMING::REMOVE_IPL("DT1_22_bldg2");
-		}
-
-		GRAPHICS::_0x1600FD8CF72EBC12(0.001);
-		//GRAPHICS::_0x1A8E2C8B9CF4549C("lab_none_dark", "lab_none_dark_OVR");
-		//GRAPHICS::_0x1A8E2C8B9CF4549C("lab_none_exit", "lab_none_exit_OVR");
-		GRAPHICS::ADD_TCMODIFIER_OVERRIDE("lab_none_dark", "lab_none_dark_OVR");
-		GRAPHICS::ADD_TCMODIFIER_OVERRIDE("lab_none_exit", "lab_none_exit_OVR");
-
-		for (int i = 0; i <= 35; i++)
-		{
-			std::ostringstream ss;
-			ss << "distlodlights_medium";
-			ss << std::setfill('0') << std::setw(3) << i;
-			auto scenery = ss.str().c_str();
-			if (STREAMING::IS_IPL_ACTIVE(scenery))
-			{
-				set_status_text(ss.str());
-				STREAMING::REMOVE_IPL(scenery);
-			}
-		}
-		for (int i = 0; i <= 61; i++)
-		{
-			std::ostringstream ss;
-			ss << "distlodlights_small";
-			ss << std::setfill('0') << std::setw(3) << i;
-			auto scenery = ss.str().c_str();
-			if (STREAMING::IS_IPL_ACTIVE(scenery))
-			{
-				set_status_text(ss.str());
-				STREAMING::REMOVE_IPL(scenery);
-			}
-		}
-		for (int i = 0; i <= 35; i++)
-		{
-			std::ostringstream ss;
-			ss << "lodlights_medium";
-			ss << std::setfill('0') << std::setw(3) << i;
-			auto scenery = ss.str().c_str();
-			if (STREAMING::IS_IPL_ACTIVE(scenery))
-			{
-				set_status_text(ss.str());
-				STREAMING::REMOVE_IPL(scenery);
-			}
-		}
-		for (int i = 0; i <= 61; i++)
-		{
-			std::ostringstream ss;
-			ss << "lodlights_small";
-			ss << std::setfill('0') << std::setw(3) << i;
-			auto scenery = ss.str().c_str();
-			if (STREAMING::IS_IPL_ACTIVE(scenery))
-			{
-				set_status_text(ss.str());
-				STREAMING::REMOVE_IPL(scenery);
-			}
-		}
-
-		for (int i = 0; i <= 0; i++)
-		{
-			std::ostringstream ss;
-			ss << "lodlights_large";
-			ss << std::setfill('0') << std::setw(3) << i;
-			auto scenery = ss.str().c_str();
-			if (STREAMING::IS_IPL_ACTIVE(scenery))
-			{
-				set_status_text(ss.str());
-				STREAMING::REMOVE_IPL(scenery);
-			}
-		}
-
-		for (int i = 0; i <= 0; i++)
-		{
-			std::ostringstream ss;
-			ss << "distlodlights_large";
-			ss << std::setfill('0') << std::setw(3) << i;
-			auto scenery = ss.str().c_str();
-			if (STREAMING::IS_IPL_ACTIVE(scenery))
-			{
-				set_status_text(ss.str());
-				STREAMING::REMOVE_IPL(scenery);
-			}
-		}
-	}*/
 
 	if (featureWorldNoPeds)
 	{

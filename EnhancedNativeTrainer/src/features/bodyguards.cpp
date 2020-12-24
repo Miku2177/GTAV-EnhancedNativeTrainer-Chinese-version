@@ -106,7 +106,6 @@ bool featureBodyBlipNumber = false;
 Blip blip_body[1];
 std::vector<Blip> BLIPTABLE_BODYGUARD;
 bool animal_in_group = false;
-//
 
 //first index is which category, second is position in that category
 int skinTypesBodyguardMenuPositionMemory[2] = {0, 0};
@@ -115,28 +114,21 @@ int skinTypesBodyguardMenuPositionMemory[2] = {0, 0};
 int skinTypesBodyguardMenuLastConfirmed[2] = {0, 0};
 
 //Blip Size
-//const std::vector<std::string> BODY_BLIPSIZE_CAPTIONS{ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
-//const double BODY_BLIPSIZE_VALUES[] = { 0.3, 0.5, 0.8, 1.0, 1.2, 1.5, 1.7, 2.0, 2.5, 3.0 };
 int BodyBlipSizeIndex = 2;
 bool BodyBlipSize_Changed = true;
 int BodyDistanceIndex = 7;
 bool BodyDistance_Changed = true;
 
 //Blip Colour
-//const std::vector<std::string> BODY_BLIPCOLOUR_CAPTIONS{ "White", "Red", "Green", "Blue", "Orange", "Purple", "Grey", "Brown", "Pink", "Dark Green", "Dark Purple", "Dark Blue" };
-//const int BODY_BLIPCOLOUR_VALUES[] = { 0, 1, 2, 3, 17, 19, 20, 21, 23, 25, 27, 29 };
 int BodyBlipColourIndex = 0;
 bool BodyBlipColour_Changed = true;
 
 //Blip Symbol
-//const std::vector<std::string> BODY_BLIPSYMBOL_CAPTIONS{ "Standard", "Player", /*"North",*/ "Waypoint", /*"BigCircleOutline",*/ "ArrowUpOutlined", /*"ArrowDownOutlined", "ArrowUp", "ArrowDown",*/ "PoliceHelicopterAnimated"/*, "Jet"*/ };
-//const std::vector<int> BODY_BLIPSYMBOL_VALUES{ 1, 6, /*7,*/ 8, /*10,*/ 11, /*12, 13, 14,*/ 15/*, 16*/ };
 int BodyBlipSymbolIndexN = 0;
 bool BodyBlipSymbol_Changed = true;
 
 //Group Formation
 const std::vector<std::string> BODY_GROUPFORMATION_CAPTIONS{ "Default", "Circle Around Leader", "Line With Leader At Center" };
-//const std::vector<int> BODY_GROUPFORMATION_VALUES{ 0, 1, 3 };
 const int BODY_GROUPFORMATION_VALUES[] = { 0, 1, 3 };
 int BodyGroupFormationIndex = 1;
 bool BodyGroupFormationChanged = true;
@@ -689,9 +681,7 @@ bool applyChosenBodSkin(DWORD model)
 bool spawn_saved_bod_skin(int slot, std::string caption)
 {
 	ENTDatabase* database = get_database();
-
 	std::vector<SavedBodSkinDBRow*> savedBodSkins = database->get_saved_bod_skins(slot);
-
 	SavedBodSkinDBRow* savedBodSkin = savedBodSkins.at(0);
 	database->populate_saved_bod_skin(savedBodSkin);
 
@@ -1380,7 +1370,6 @@ bool process_bodyguard_weapons_category_menu(int category){
 
 	for(auto a : VOV_WEAPON_CAPTIONS[category]){
 		toggleItem = new ToggleMenuItem<int>();
-		//toggleItem->caption = UI::_GET_LABEL_TEXT((char*)a.c_str()); // a;
 		if (UI::DOES_TEXT_LABEL_EXIST((char*)a.c_str())) toggleItem->caption = UI::_GET_LABEL_TEXT((char*)a.c_str());
 		else toggleItem->caption = a;
 		toggleItem->value = index;
@@ -1694,8 +1683,6 @@ void do_spawn_bodyguard(){
 					BLIPTABLE_BODYGUARD.clear();
 					BLIPTABLE_BODYGUARD.shrink_to_fit();
 				}
-				//std::vector<int> emptyVec;
-				//if (!VEH_BLIPSYMBOL_VALUES.empty()) std::vector<int>(VEH_BLIPSYMBOL_VALUES).swap(emptyVec);
 			}
 			
 			if (spawning_a_ped == false) {
