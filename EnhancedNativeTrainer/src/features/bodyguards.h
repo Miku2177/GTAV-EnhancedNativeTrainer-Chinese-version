@@ -14,8 +14,6 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\..\inc\types.h"
 #include "..\..\inc\enums.h"
 #include "..\..\inc\main.h"
-//#include "weapons.h"
-//#include "skins.h"
 #include "..\ent-enums.h"
 #include "..\ui_support\menu_functions.h"
 #include "..\storage\database.h"
