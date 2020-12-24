@@ -54,8 +54,6 @@ const std::vector<int> VALUES_TINT{ 0, 1, 2, 3, 4, 5, 6, 7 };
 
 //Weapon tints for MK2 weapons
 const std::vector<std::string> CAPTIONS_TINT_MK2{ "Classic Black", "Classic Gray", "Classic Two-Tone", "Classic White", "Classic Beige", "Classic Green", "Classic Blue", "Classic Earth", "Classic Brown & Black", "Red Contrast", "Blue Contrast", "Yellow Contrast", "Orange Contrast", "Bold Pink", "Bold Purple & Yellow", "Bold Orange", "Bold Green & Purple", "Bold Red Features", "Bold Green Features", "Bold Cyan Features", "Bold Yellow Features", "Bold Red & White", "Bold Blue & White", "Metallic Gold", "Metallic Platinum", "Metallic Gray & Lilca", "Metallic Purple & Lime", "Metallic Red", "Metallic Green", "Metallic Blue", "Metallic White & Aqua", "Metallic Red & Yellow" };
-//const std::vector<int> VALUES_TINT_MK2{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31 };
-//const int VALUES_TINT_MK2[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31 };
 
 //Pistols
 const std::vector<std::string> CAPTIONS_ATTACH_PISTOL{ "WCT_CLIP1", "WCT_CLIP2", "WCT_FLASH", "WCT_SUPP", "WCT_VAR_GOLD" };
@@ -234,7 +232,6 @@ const std::vector<char*> MK2_WEAPONS_LIVERY_COMP{ "COMPONENT_PISTOL_MK2_CAMO", "
 
 //Weapon damage modifier list
 const std::vector<std::string> WEAP_DMG_CAPTIONS{ "1.0x", "1.5x", "2.0x", "3.0x", "5.0x", "10.0x", "50.0x", "100.0x", "1000.0x" };
-//const std::vector<float> WEAP_DMG_FLOAT{ 1.0, 1.5, 2.0, 3.0, 5.0, 10.0, 50.0, 100.0, 1000.0 };
 const float WEAP_DMG_FLOAT[] = { 1.0, 1.5, 2.0, 3.0, 5.0, 10.0, 50.0, 100.0, 1000.0 };
 
 const int PARACHUTE_ID = 0xFBAB5776;
@@ -249,7 +246,6 @@ extern int activeLineIndexPowerPunchWeapons;
 const std::vector<std::string> WEAPONS_POWERPUNCH_CAPTIONS{ "1", "3", "5", "10", "50", "Manual" };
 const int WEAPONS_POWERPUNCH_VALUES[] = { 1, 3, 5, 10, 50, 55 };
 extern int PowerPunchIndex;
-//extern bool PowerPunchChanged;
 extern bool featurePunchFists;
 extern bool featurePunchMeleeWeapons;
 extern bool featurePunchFireWeapons;
