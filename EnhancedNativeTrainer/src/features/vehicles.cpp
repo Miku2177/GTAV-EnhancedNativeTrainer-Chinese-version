@@ -2799,7 +2799,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		if (!PED::IS_PED_IN_ANY_BOAT(playerPed) && ((NPC_RAGDOLL_VALUES[lightsOffIndex] > 0 && NPC_RAGDOLL_VALUES[lightsOffIndex] < 2 && time > 6 && time < 21) || (NPC_RAGDOLL_VALUES[lightsOffIndex] > 1))) sheshark_light_toogle = 0;
 		if (PED::IS_PED_IN_ANY_BOAT(playerPed)) {
 			Vehicle veh_boat = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
-			if (ENTITY::GET_ENTITY_MODEL(veh_boat) == GAMEPLAY::GET_HASH_KEY("SEASHARK") || ENTITY::GET_ENTITY_MODEL(veh_boat) == GAMEPLAY::GET_HASH_KEY("SEASHARK2")) {
+			if (ENTITY::GET_ENTITY_MODEL(veh_boat) == GAMEPLAY::GET_HASH_KEY("SEASHARK") || ENTITY::GET_ENTITY_MODEL(veh_boat) == GAMEPLAY::GET_HASH_KEY("SEASHARK2") || ENTITY::GET_ENTITY_MODEL(veh_boat) == GAMEPLAY::GET_HASH_KEY("SEASHARK3")) {
 				int bone_boat_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(veh_boat, "windscreen");
 				int bone2_boat_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(veh_boat, "bodyshell");
 				Vector3 bone_boat_coord = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(veh_boat, bone_boat_index);

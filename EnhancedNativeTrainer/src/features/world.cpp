@@ -153,8 +153,6 @@ int WindStrengthIndex = 0;
 bool WindStrengthChanged = true;
 
 // Waves Intensity
-const std::vector<std::string> WORLD_WAVES_CAPTIONS{ "Default", "No Waves", "0.1x", "5x", "10x", "20x", "30x", "50x" };
-const int WORLD_WAVES_VALUES[] = { -1, -500000, -400000, 5, 10, 20, 30, 50 };
 int WorldWavesIndex = 0;
 bool WorldWavesChanged = true;
 
