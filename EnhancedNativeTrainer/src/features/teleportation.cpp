@@ -31,6 +31,7 @@ bool featureShowDebugInfo = false;
 bool featureCayoPerico = false;
 int cayo_tick = 0;
 bool perico_init = false;
+bool auto_waves = false;
 
 struct tele_location{
 	std::string text;
@@ -1698,6 +1699,17 @@ void update_teleport_features(){
 			INTERIOR::_LOAD_INTERIOR(CayointeriorID);
 			STREAMING::SET_INTERIOR_ACTIVE(CayointeriorID, true);
 			perico_init = true;
+		}
+	}
+	if (featureCayoPerico && ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()) && WORLD_WAVES_VALUES[WorldWavesIndex] == -1) {
+		Vector3 my_coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 0);
+		if (my_coords.x > 3532.21 && my_coords.x < 5813.77 && my_coords.y > -6244.41 && my_coords.y < -4021.09) {
+			WATER::_SET_WAVES_INTENSITY(-400000); // GAMEPLAY::_0xC54A08C85AE4D410(1.0f);
+			auto_waves = true;
+		}
+		if ((my_coords.x < 3532.21 || my_coords.x > 5813.77 || my_coords.y < -6244.41 || my_coords.y > -4021.09) && auto_waves == true && WORLD_WAVES_VALUES[WorldWavesIndex] == -1) {
+			WATER::_RESET_WAVES_INTENSITY();
+			auto_waves = false;
 		}
 	}
 	if ((!featureCayoPerico && cayo_tick > 0) || DLC2::GET_IS_LOADING_SCREEN_ACTIVE()) {
