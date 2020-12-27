@@ -303,6 +303,13 @@ const std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Biker Warehouse: Money Printer 1", 1009.545f, -3196.597f, -39.99353f, { "bkr_biker_interior_placement_interior_2_biker_dlc_int_ware01_milo_" }, {}, {}, false },
 	{ "Biker Warehouse: Money Printer 2", 1124.734f, -3196.597f, -39.99353f, { "bkr_biker_interior_placement_interior_5_biker_dlc_int_ware04_milo_" }, {}, {}, false },
 	{ "Biker Warehouse: Weed Farm", 1059.028f, -3201.89f, -39.99353f, { "bkr_biker_interior_placement_interior_3_biker_dlc_int_ware02_milo_" }, {}, {}, false },
+	{ "Casino Back", 2523.36100000f, -270.00000000f, -59.72315000f, { "ch_int_placement_ch_interior_3_dlc_casino_back_milo_" }, {}, {}, false },
+	{ "Casino Heist", 2479.26800000f, -273.87380000f, -59.28285000f, { "ch_int_placement_ch_interior_0_dlc_casino_heist_milo_" }, {}, {}, false },
+	{ "Casino Hotel", 2504.38600000f, -257.21960000f, -40.12296000f, { "ch_int_placement_ch_interior_4_dlc_casino_hotel_milo_" }, {}, {}, false },
+	{ "Casino Loading Bay", 2553.96300000f, -281.38050000f, -65.72305000f, { "ch_int_placement_ch_interior_5_dlc_casino_loading_milo_" }, {}, {}, false },
+	{ "Casino Shaft", 2572.88800000f, -253.43860000f, -65.65990000f, { "ch_int_placement_ch_interior_9_dlc_casino_shaft_milo_" }, {}, {}, false },
+	{ "Casino Utility", 2519.87600000f, -255.30270000f, -25.11497000f, { "ch_int_placement_ch_interior_7_dlc_casino_utility_milo_" }, {}, {}, false },
+	{ "Casino Vault", 2488.34800000f, -267.36370000f, -71.64563000f, { "ch_int_placement_ch_interior_6_dlc_casino_vault_milo_" }, {}, {}, false },
 	{ "Cayo Perico Mansion", 5010.101f, -5753.549f, 27.8444f, { "h4_islandx_mansion_office" }, {}, {}, false }, // h4_dlc_island_office
 	{ "CEO Garage Modshop", 730.0f, -2990.0f, -40.0f, { "imp_impexp_interior_placement_interior_2_imptexp_mod_int_01_milo_" }, {}, {}, false },//No ceiling, floor, walls textures.
 	{ "Cinema", -1435.8f, -256.866f, 18.7795f, { "hei_hw1_02_interior_v_cinema_milo_" }, {}, {}, false },
