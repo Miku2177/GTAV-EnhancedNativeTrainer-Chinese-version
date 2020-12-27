@@ -2753,6 +2753,7 @@ void reset_bodyguards_globals(){
 	FollowInVehicleIndex = 0;
 	BodyWeaponSetIndex = 0;
 	BodyHealthIndex = 6;
+	lastCustomBodyguardSpawn = "";
 }
 
 void onchange_body_blipsize_index(int value, SelectFromListMenuItem* source){
