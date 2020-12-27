@@ -143,8 +143,8 @@ bool FollowInVehicleChanged = true;
 int BodyHealthIndex = 6;
 bool BodyHealthChanged = true;
 
-const std::vector<std::string> SKINS_ANIMALS_CAPTIONS{ "Chop", "German Shepherd", "Husky", "Mountain Lion", "Retriever" };
-const std::vector<std::string> SKINS_ANIMALS_VALUES{ "a_c_chop", "a_c_shepherd", "a_c_husky", "a_c_mtlion", "a_c_retriever" };
+const std::vector<std::string> SKINS_ANIMALS_CAPTIONS{ "Chop", "German Shepherd", "Husky", "Mountain Lion", "Panther", "Retriever" };
+const std::vector<std::string> SKINS_ANIMALS_VALUES{ "a_c_chop", "a_c_shepherd", "a_c_husky", "a_c_mtlion", "a_c_Panther", "a_c_retriever" };
 
 // Modify Skin
 std::string getBodSkinDetailAttribDescription(int i)
