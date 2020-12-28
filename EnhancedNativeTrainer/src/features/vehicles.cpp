@@ -176,7 +176,6 @@ int sheshark_light_toogle = 1;
 
 bool featureDespawnScriptDisabled = false;
 bool featureDespawnScriptDisabledUpdated = false;
-bool featureDespawnScriptDisabledWasLastOn = false; // do not persist this particular var in the DB - it is local only
 
 int activeLineIndexVeh = 0;
 int activeSavedVehicleIndex = -1;
@@ -2189,7 +2188,6 @@ void process_veh_menu(){
 	toggleItem->caption = "Disable Despawn Of DLC Vehicles";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureDespawnScriptDisabled;
-	toggleItem->toggleValueUpdated = &featureDespawnScriptDisabledUpdated;
 	menuItems.push_back(toggleItem);
 
 	listItem = new SelectFromListMenuItem(VEH_MASS_CAPTIONS, onchange_veh_mass_index);
@@ -2525,27 +2523,19 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 
 	// Disable Despawn Of DLC Vehicles
-	if (featureDespawnScriptDisabledUpdated) {
-		featureDespawnScriptDisabledUpdated = false;
-		if (featureDespawnScriptDisabled){
-			set_status_text("~r~Note:~r~ in-game shops will not work until you turn off the 'disable despawn' option");
-		}
+	if (featureDespawnScriptDisabled && featureDespawnScriptDisabledUpdated == false) {
+		set_status_text("~r~Note:~r~ in-game shops will not work until you turn off the 'disable despawn' option.");
+		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("shop_controller");
+		featureDespawnScriptDisabledUpdated = true;
 	}
-	if (featureDespawnScriptDisabled){
-		Vector3 coords_me = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
-		if (INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_me.x, coords_me.y, coords_me.z)) {
-			if (featureDespawnScriptDisabledWasLastOn == false) WAIT(1000);
-			GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("shop_controller");
-			featureDespawnScriptDisabledWasLastOn = true;
-		}
-	}
-	if (featureDespawnScriptDisabledWasLastOn == true) {
-		Vector3 coords_me = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
-		if (!featureDespawnScriptDisabled || !INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_me.x, coords_me.y, coords_me.z)) {
+	if (!featureDespawnScriptDisabled && featureDespawnScriptDisabledUpdated == true) {
+		SCRIPT::REQUEST_SCRIPT("shop_controller");
+		while (!SCRIPT::HAS_SCRIPT_LOADED("shop_controller")) {
 			SCRIPT::REQUEST_SCRIPT("shop_controller");
-			SYSTEM::START_NEW_SCRIPT("shop_controller", 1424);
-			featureDespawnScriptDisabledWasLastOn = false;
+			SYSTEM::WAIT(0);
 		}
+		SYSTEM::START_NEW_SCRIPT("shop_controller", 5000);
+		featureDespawnScriptDisabledUpdated = false;
 	}
 
 	// Toggle Vehicle Alarm Check
@@ -4348,8 +4338,7 @@ void reset_vehicle_globals() {
 		featureVehLightsOnUpdated = true;
 
 	featureDespawnScriptDisabled = false;
-	featureDespawnScriptDisabledUpdated = true;
-	featureDespawnScriptDisabledWasLastOn = false;
+	featureDespawnScriptDisabledUpdated = false;
 	featureVehNoDamage = false;
 	featureVehInvulnIncludesCosmetic = false;
 }
@@ -4593,7 +4582,7 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehSpawnOptic", &featureVehSpawnOptic});
 	results->push_back(FeatureEnabledLocalDefinition{"featureWearHelmetOff", &featureWearHelmetOff, &featureWearHelmetOffUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehInvulnIncludesCosmetic", &featureVehInvulnIncludesCosmetic, &featureVehInvincibleUpdated});
-	results->push_back(FeatureEnabledLocalDefinition{"featureDespawnScriptDisabled", &featureDespawnScriptDisabled, &featureDespawnScriptDisabledUpdated});
+	results->push_back(FeatureEnabledLocalDefinition{"featureDespawnScriptDisabled", &featureDespawnScriptDisabled}); // , &featureDespawnScriptDisabledUpdated
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehLightsOn", &featureVehLightsOn, &featureVehLightsOnUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureEngineDegrade", &featureEngineDegrade});
 	results->push_back(FeatureEnabledLocalDefinition{"featureEngineHealthBar", &featureEngineHealthBar});

@@ -1883,15 +1883,22 @@ void update_world_features()
 		{
 			EnableSnow(featureSnow);
 			EnableTracks(true, true, true, true);
+			// THANKS TO ALTSIERRA117 FOR THE ORIGINAL CODE
+			STREAMING::REQUEST_NAMED_PTFX_ASSET("core_snow");
+			GRAPHICS::_SET_PTFX_ASSET_NEXT_CALL("core_snow");
+			AUDIO::REQUEST_SCRIPT_AUDIO_BANK("ICE_FOOTSTEPS", true);
+			AUDIO::REQUEST_SCRIPT_AUDIO_BANK("SNOW_FOOTSTEPS", true);
 		}
 		else
 		{
 			EnableSnow(featureSnow);
 			EnableTracks(false, false, false, false);
+
+			STREAMING::_REMOVE_NAMED_PTFX_ASSET("core_snow");
 		}
 		featureSnowUpdated = false;
 	}
-
+	
 	if (featureMPMap) {
 		if (featureMPMapUpdated == true && GAMEPLAY::GET_MISSION_FLAG() == 0) {
 			MPMapCounter = MPMapCounter + 1;
