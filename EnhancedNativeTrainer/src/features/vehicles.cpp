@@ -3407,12 +3407,27 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	if (bPlayerExists && NPC_RAGDOLL_VALUES[EngineRunningIndex] == 0 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && CONTROLS::IS_CONTROL_PRESSED(2, 75)) VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), false);
 	
 	// Helicopter's lines
-	if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && current_veh_e != -1 && NPC_RAGDOLL_VALUES[EngineRunningIndex] > 0) {
+	if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && current_veh_e != -1 && NPC_RAGDOLL_VALUES[EngineRunningIndex] > 0 && !featureFuel) {
 		if (NPC_RAGDOLL_VALUES[EngineRunningIndex] == 1) {
 			VEHICLE::SET_HELI_BLADES_SPEED(current_veh_e, 1.0f);
 			VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(current_veh_e, true);
 		}
 		if (NPC_RAGDOLL_VALUES[EngineRunningIndex] == 2 && engine_tick < 3) {
+			VEHICLE::SET_HELI_BLADES_SPEED(current_veh_e, 1.0f);
+			VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(current_veh_e, true);
+		}
+		if (NPC_RAGDOLL_VALUES[EngineRunningIndex] == 2 && engine_tick > 2) current_veh_e = -1;
+	}
+	if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && current_veh_e != -1 && NPC_RAGDOLL_VALUES[EngineRunningIndex] > 0 && featureFuel && !VEHICLES.empty()) {
+		int curr_fuel = -1;
+		for (int ff = 0; ff < VEHICLES.size(); ff++) {
+			if (VEHICLES[ff] == current_veh_e) curr_fuel = ff;
+		}
+		if (NPC_RAGDOLL_VALUES[EngineRunningIndex] == 1 && FUEL[curr_fuel] > 0) {
+			VEHICLE::SET_HELI_BLADES_SPEED(current_veh_e, 1.0f);
+			VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(current_veh_e, true);
+		}
+		if (NPC_RAGDOLL_VALUES[EngineRunningIndex] == 2 && engine_tick < 3 && FUEL[curr_fuel] > 0) {
 			VEHICLE::SET_HELI_BLADES_SPEED(current_veh_e, 1.0f);
 			VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(current_veh_e, true);
 		}

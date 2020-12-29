@@ -404,6 +404,7 @@ void airbrake(bool inVehicle)
 			if (travelSpeed == 0) p_force = forwardPush * 10;
 			if (travelSpeed == 1) p_force = forwardPush * 19;
 			if (travelSpeed == 2) p_force = forwardPush * 24;
+			if (ENTITY::IS_ENTITY_IN_WATER(playerPed) && !PED::IS_PED_SWIMMING_UNDER_WATER(playerPed)) p_force = forwardPush * 124;
 			ENTITY::FREEZE_ENTITY_POSITION(target, false);
 			ENTITY::APPLY_FORCE_TO_ENTITY(target, 1, 0, 0, p_force, 0, 0, 0, true, false, true, true, true, true);
 			curLocation = ENTITY::GET_ENTITY_COORDS(target, 0);
@@ -413,6 +414,7 @@ void airbrake(bool inVehicle)
 			if (travelSpeed == 0) p_force = forwardPush * 10;
 			if (travelSpeed == 1) p_force = forwardPush * 19;
 			if (travelSpeed == 2) p_force = forwardPush * 24;
+			if (ENTITY::IS_ENTITY_IN_WATER(playerPed) && !PED::IS_PED_SWIMMING_UNDER_WATER(playerPed)) p_force = forwardPush * 124;
 			ENTITY::FREEZE_ENTITY_POSITION(target, false);
 			ENTITY::APPLY_FORCE_TO_ENTITY(target, 1, 0, 0, -p_force, 0, 0, 0, true, false, true, true, true, true);
 			curLocation = ENTITY::GET_ENTITY_COORDS(target, 0);
@@ -460,6 +462,7 @@ void airbrake(bool inVehicle)
 			if (travelSpeed == 0) p_force = forwardPush * 10;
 			if (travelSpeed == 1) p_force = forwardPush * 19;
 			if (travelSpeed == 2) p_force = forwardPush * 24;
+			if (ENTITY::IS_ENTITY_IN_WATER(playerPed) && !PED::IS_PED_SWIMMING_UNDER_WATER(playerPed)) p_force = forwardPush * 124;
 			ENTITY::FREEZE_ENTITY_POSITION(target, false);
 			ENTITY::APPLY_FORCE_TO_ENTITY(target, 1, 0, 0, p_force, 0, 0, 0, true, false, true, true, true, true);
 			curLocation = CAM::GET_GAMEPLAY_CAM_COORD();
@@ -469,6 +472,7 @@ void airbrake(bool inVehicle)
 			if (travelSpeed == 0) p_force = forwardPush * 10;
 			if (travelSpeed == 1) p_force = forwardPush * 19;
 			if (travelSpeed == 2) p_force = forwardPush * 24;
+			if (ENTITY::IS_ENTITY_IN_WATER(playerPed) && !PED::IS_PED_SWIMMING_UNDER_WATER(playerPed)) p_force = forwardPush * 124;
 			ENTITY::FREEZE_ENTITY_POSITION(target, false);
 			ENTITY::APPLY_FORCE_TO_ENTITY(target, 1, 0, 0, -p_force, 0, 0, 0, true, false, true, true, true, true);
 			curLocation = CAM::GET_GAMEPLAY_CAM_COORD();
