@@ -822,30 +822,16 @@ void teleport_to_mission_marker(){
 	}
 }
 
-/////////////////////// TELEPORT TO A VEHICLE AS A PASSENGER ///////////////////////////////
+/////////////////////// GO TO NEAREST VEHICLE AS A PASSENGER ///////////////////////////////
 void teleport_to_vehicle_as_passenger() {
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
-	const int numElements = 10;
-	const int arrSize = numElements * 2 + 2;
-	int nearbyPed[arrSize];
-	nearbyPed[0] = numElements;
-	int count = PED::GET_PED_NEARBY_PEDS(PLAYER::PLAYER_PED_ID(), nearbyPed, -1);
+	find_nearest_vehicle();
 
-	if (nearbyPed != NULL) {
-		for (int i = 0; i < count; i++) {
-			int offsettedID = i * 2 + 2;
-			if (nearbyPed[offsettedID] != NULL && ENTITY::DOES_ENTITY_EXIST(nearbyPed[offsettedID]) && PED::IS_PED_IN_ANY_VEHICLE(nearbyPed[offsettedID], 1)) {
-				Vehicle veh2 = PED::GET_VEHICLE_PED_IS_IN(nearbyPed[offsettedID], true);
-				if (ENTITY::DOES_ENTITY_EXIST(veh2)) {
-					PED::SET_PED_INTO_VEHICLE(playerPed, veh2, -2);
-					if (is_this_a_heli_or_plane(veh2)){
-						VEHICLE::SET_HELI_BLADES_FULL_SPEED(PED::GET_VEHICLE_PED_IS_USING(playerPed));
-					}
-					set_old_vehicle_state(false);
-				}
-			}
-		}
+	PED::SET_PED_INTO_VEHICLE(playerPed, temp_vehicle, -2);
+	if (is_this_a_heli_or_plane(temp_vehicle)) {
+		VEHICLE::SET_HELI_BLADES_FULL_SPEED(PED::GET_VEHICLE_PED_IS_USING(playerPed));
 	}
+	set_old_vehicle_state(false);
 }
 
 void teleport_to_last_vehicle(){
