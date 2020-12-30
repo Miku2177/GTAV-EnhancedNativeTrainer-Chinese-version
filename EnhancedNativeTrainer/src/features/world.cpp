@@ -1251,6 +1251,14 @@ void update_world_features()
 				slippery_s = slippery_s + 1;
 				if (slippery_s < slip_index_s && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip_ped.x, coords_slip_ped.y, coords_slip_ped.z)) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], true);
 				if (slippery_s > slip_index_s - 1 && slippery_s < 20) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], false); // slip_index * 2
+				if (VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(bus_veh[i])) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(bus_veh[i]))) {
+					int vehslipspeed = ENTITY::GET_ENTITY_SPEED(bus_veh[i]);
+					if (vehslipspeed > 5 || (vehslipspeed < 6 && CONTROLS::IS_CONTROL_RELEASED(2, 71))) {
+						if ((slippery_s < (slip_index_s / 5) || (slippery_s > (slip_index_s / 4) - 1 && slippery_s < (slip_index_s / 3))) && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip_ped.x, coords_slip_ped.y, coords_slip_ped.z)) // 4 3 2
+							VEHICLE::SET_VEHICLE_GRAVITY(bus_veh[i], false);
+						if ((slippery_s > (slip_index_s / 5) - 1 && slippery_s < (slip_index_s / 4)) || (slippery_s > (slip_index_s / 3) - 1 && slippery_s < 20)) VEHICLE::SET_VEHICLE_GRAVITY(bus_veh[i], true);
+					}
+				}
 				if (slippery_s > 19) slippery_s = 0; 
 				srand(time(0));
 				int time11 = (rand() % 3000 + 0); // UP MARGIN + DOWN MARGIN
@@ -1299,7 +1307,15 @@ void update_world_features()
 					}
 					slippery_r = slippery_r + 1;
 					if (slippery_r < slip_index && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip_r.x, coords_slip_r.y, coords_slip_r.z)) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], true);
-					if (slippery_r > slip_index - 1 && slippery_r < 20) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], false); 
+					if (slippery_r > slip_index - 1 && slippery_r < 20) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], false);
+					if (VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(bus_veh[i])) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(bus_veh[i]))) {
+						int vehslipspeed = ENTITY::GET_ENTITY_SPEED(bus_veh[i]);
+						if (vehslipspeed > 5 || (vehslipspeed < 6 && CONTROLS::IS_CONTROL_RELEASED(2, 71))) {
+							if ((slippery_s < (slip_index / 5) || (slippery_s > (slip_index / 4) - 1 && slippery_s < (slip_index / 3))) && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip_r.x, coords_slip_r.y, coords_slip_r.z)) // 4 3 2
+								VEHICLE::SET_VEHICLE_GRAVITY(bus_veh[i], false);
+							if ((slippery_s > (slip_index / 5) - 1 && slippery_s < (slip_index / 4)) || (slippery_s > (slip_index / 3) - 1 && slippery_s < 20)) VEHICLE::SET_VEHICLE_GRAVITY(bus_veh[i], true);
+						}
+					}
 					if (slippery_r > 19) slippery_r = 0; 
 					// normalize speed
 					Vector3 my_coords_sl = ENTITY::GET_ENTITY_COORDS(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 0), true);
