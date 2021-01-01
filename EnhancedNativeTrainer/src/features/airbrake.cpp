@@ -425,6 +425,7 @@ void airbrake(bool inVehicle)
 	if (mouse_view_control && !frozen_time) {
 		Vector3 CamRot = CAM::GET_GAMEPLAY_CAM_ROT(2);
 		int p_force = forwardPush * 5; // 5;
+		if (ENTITY::IS_ENTITY_IN_WATER(playerPed) && !PED::IS_PED_SWIMMING_UNDER_WATER(playerPed)) p_force = forwardPush * 124;
 		float rad = 2 * 3.14 * (CamRot.z / 360);
 		float v_x = -(sin(rad) * p_force * 10);
 		float v_y = (cos(rad) * p_force * 10);
