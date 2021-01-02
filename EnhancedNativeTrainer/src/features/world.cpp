@@ -1475,36 +1475,6 @@ void update_world_features()
 				UI::SET_TEXT_LEADING(1);
 				UI::END_TEXT_COMMAND_DISPLAY_TEXT(0, 0);
 			}
-			// Reduced Grip If Snowing (Peds)
-			if (NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] > 0 && featureSnow && bus_ped[i] != PLAYER::PLAYER_PED_ID()) {
-				int slippery_randomize2 = (rand() % 1000 + 1);
-				if (((NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] == 1 && slippery_randomize2 > 995) || (NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] == 2 && slippery_randomize2 > 985)) &&
-					(AI::IS_PED_RUNNING(bus_ped[i]) || AI::IS_PED_SPRINTING(bus_ped[i])) && slipped == false && PED::GET_PED_TYPE(bus_ped[i]) != 6) {
-					temp_ped_s = bus_ped[i];
-					slipped = true;
-				}
-				if (slipped == true) {
-					s_tick_secs_passed = clock() / CLOCKS_PER_SEC;
-					if (((clock() / (CLOCKS_PER_SEC / 1000)) - s_tick_secs_curr) != 0) {
-						s_tick_secs = s_tick_secs + 1;
-						s_tick_secs_curr = s_tick_secs_passed;
-					}
-					if (s_tick_secs == 20) {
-						STREAMING::REQUEST_ANIM_DICT("missheist_agency3astumble_getup");
-						while (!STREAMING::HAS_ANIM_DICT_LOADED("missheist_agency3astumble_getup")) WAIT(0);
-						if (!ENTITY::IS_ENTITY_PLAYING_ANIM(temp_ped_s, "missheist_agency3astumble_getup", "stumble_getup", 3)) {
-							AI::TASK_PLAY_ANIM(temp_ped_s, "missheist_agency3astumble_getup", "stumble_getup", 8.0, 0.0, -1, 9, 0, 0, 0, 0);
-							AI::STOP_ANIM_TASK(temp_ped_s, "missheist_agency3astumble_getup", "stumble_getup", 1.0);
-							STREAMING::REMOVE_ANIM_DICT("missheist_agency3astumble_getup");
-						}
-					}
-					if (s_tick_secs == 19400) {
-						AI::CLEAR_PED_TASKS_IMMEDIATELY(temp_ped_s);
-						slipped = false;
-						s_tick_secs = 0;
-					}
-				}
-			}
 			// NPC No Gravity Peds
 			if (NPC_RAGDOLL_VALUES[NoPedsGravityIndex] > 0 && bus_ped[i] != PLAYER::PLAYER_PED_ID() && !PED::IS_PED_IN_ANY_VEHICLE(bus_ped[i], false)) {
 				Vector3 CamRot = CAM::GET_GAMEPLAY_CAM_ROT(2);
