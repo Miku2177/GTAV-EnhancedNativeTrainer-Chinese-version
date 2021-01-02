@@ -329,7 +329,7 @@ void process_weather_menu()
 //////////////////////////////////// CLOUDS MENU /////////////////////////////
 bool onconfirm_clouds_menu(MenuItem<std::string> choice)
 {
-	std::stringstream ss; ss << "Clouds Frozen at: " << lastCloudsName;
+	//std::stringstream ss; ss << "Clouds Frozen at: " << lastCloudsName;
 	switch (choice.currentMenuIndex)
 	{
 	case 0:
@@ -339,15 +339,12 @@ bool onconfirm_clouds_menu(MenuItem<std::string> choice)
 			std::stringstream ss; ss << "Clouds frozen at: " << lastCloudsName;
 			set_status_text(ss.str());
 		}
-		else if (!featureCloudsFreeze)
-		{
-			set_status_text("Clouds unfrozen");
-		}
-		else
+		if (featureCloudsFreeze && lastClouds.empty())
 		{
 			set_status_text("Set a clouds value first");
 			featureCloudsFreeze = false;
 		}
+		if (!featureCloudsFreeze) set_status_text("Clouds unfrozen");
 		break;
 	case 1:
 		// No Clouds
@@ -360,7 +357,7 @@ bool onconfirm_clouds_menu(MenuItem<std::string> choice)
 		lastCloudsName = choice.caption;
 
 		GRAPHICS::_CLEAR_CLOUD_HAT();
-		WAIT(100);
+		WAIT(10);
 		GRAPHICS::_SET_CLOUD_HAT_TRANSITION((char *)lastClouds.c_str(), 0.3);
 				
 		std::ostringstream ss2;
@@ -1880,7 +1877,8 @@ void update_world_features()
 
 	// Freeze Clouds
 	if (featureCloudsFreeze && !lastClouds.empty()) GRAPHICS::_SET_CLOUD_HAT_TRANSITION((char *)lastClouds.c_str(), 0.3);
-	
+	if (featureCloudsFreeze && lastClouds.empty()) GRAPHICS::_CLEAR_CLOUD_HAT();
+
 	// Restricted Zones
 	if (!featureRestrictedZones)
 	{
