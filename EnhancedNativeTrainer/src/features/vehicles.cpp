@@ -5947,6 +5947,9 @@ void fix_vehicle(){
 			VEHICLE::SET_VEHICLE_ENGINE_CAN_DEGRADE(veh, false);
 			VEHICLE::SET_VEHICLE_ENGINE_ON(veh, true, true, false);
 
+			VEHICLE::SET_VEHICLE_INDICATOR_LIGHTS(veh, 1, false); // left signal 
+			VEHICLE::SET_VEHICLE_INDICATOR_LIGHTS(veh, 0, false); // right signal	
+
 			set_status_text("Vehicle repaired");
 		}
 	}
