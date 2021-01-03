@@ -44,8 +44,6 @@ struct tele_location{
 	bool isLoaded;
 };
 
-int interiorID_temp = -1;
-
 std::vector<Blip> MARATHON_BLIPS;
 
 int mainMenuIndex = 0;
@@ -277,7 +275,6 @@ const std::vector<tele_location> LOCATIONS_REQSCEN = {
 	{ "Aircraft Carrier", 3069.330f, -4632.4f, 15.043f, IPLS_CARRIER, {}, {}, false },
 	{ "Caida Libre (no plane)", 2814.7000f, 4758.5000f, 48.000f, { "Plane_crash_trench" }, {}, {}, false },
 	{ "Fort Zancudo UFO", -2052.000f, 3237.000f, 1456.973f, { "ufo", "ufo_lod", "ufo_eye" }, {}, {}, false },
-	{ "Max Renda Refit", -583.1606f, -282.3967f, 35.394f, { "refit_unload" }, { "bh1_16_doors_shut" }, {}, false },
 	{ "Red Carpet", 293.314f, 180.388f, 104.297f, { "redCarpet" }, {}, {}, false },
 	{ "SS Bulker (intact)", -163.749f, -2377.94f, 9.3192f, { "cargoship" }, { "sunkcargoship" }, {}, false },
 	{ "SS Bulker (sunk)", -162.8918f, -2365.769f, 0.0f, { "sunkcargoship" }, { "cargoship" }, {}, false },
@@ -294,17 +291,15 @@ const std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "7302 San Andreas Avenue Apt 6", -460.61330000f, -691.55620000f, 69.87947000f, { "hw1_blimp_interior_v_apartment_high_milo__6" }, {}, {}, false },
 	{ "10 Car Garage Bay", 228.135f, -995.350f, -99.000f, { "hw1_blimp_interior_v_garagel_milo_" }, {}, {}, false },
 	{ "Arcadius Business Center Office: Style 1", -139.53950000f, -629.07570000f, 167.82040000f, { "ex_dt1_02_office_01a" }, {}, {}, false },
-	{ "Avenger Interior", 520.0f, 4750.0f, -70.0f, IPL_PROPS_DOOMSDAY_MAIN_BASE, {}, { "SHELL_TINT" }, false },
 	{ "Benny's Garage", -209.759f, -1319.617f, 30.08367f }, 
 	{ "Biker Club Garage 1", 1005.861f, -3156.162f, -39.90727f, { "bkr_biker_interior_placement_interior_1_biker_dlc_int_02_milo_" }, {}, {}, false },
-	{ "Biker Club Garage 2", 1102.477f, -3156.162f, -37.77361f, { "bkr_biker_interior_placement_interior_0_biker_dlc_int_01_milo_" }, {}, {}, false },
 	{ "Biker Cocaine Factory", 1093.581f, -3196.597f, -39.99353f, { "bkr_biker_interior_placement_interior_4_biker_dlc_int_ware03_milo_" }, {}, {}, false },
 	{ "Biker Warehouse: Forgery 2", 1165.001f, -3196.597f, -39.99353f, { "bkr_biker_interior_placement_interior_6_biker_dlc_int_ware05_milo_" }, {}, {}, false },
 	{ "Biker Warehouse: Money Printer 1", 1009.545f, -3196.597f, -39.99353f, { "bkr_biker_interior_placement_interior_2_biker_dlc_int_ware01_milo_" }, {}, {}, false },
 	{ "Biker Warehouse: Money Printer 2", 1124.734f, -3196.597f, -39.99353f, { "bkr_biker_interior_placement_interior_5_biker_dlc_int_ware04_milo_" }, {}, {}, false },
 	{ "Biker Warehouse: Weed Farm", 1059.028f, -3201.89f, -39.99353f, { "bkr_biker_interior_placement_interior_3_biker_dlc_int_ware02_milo_" }, {}, {}, false },
 	{ "Casino Back", 2523.36100000f, -270.00000000f, -59.72315000f, { "ch_int_placement_ch_interior_3_dlc_casino_back_milo_" }, {}, {}, false },
-	{ "Casino Heist", 2479.26800000f, -273.87380000f, -59.28285000f, { "ch_int_placement_ch_interior_0_dlc_casino_heist_milo_" }, {}, {}, false },
+	{ "Casino Heist", 2479.26800000f, -273.87380000f, -58.28285000f, { "ch_int_placement_ch_interior_0_dlc_casino_heist_milo_" }, {}, {}, false },
 	{ "Casino Hotel", 2504.38600000f, -257.21960000f, -40.12296000f, { "ch_int_placement_ch_interior_4_dlc_casino_hotel_milo_" }, {}, {}, false },
 	{ "Casino Loading Bay", 2553.96300000f, -281.38050000f, -65.72305000f, { "ch_int_placement_ch_interior_5_dlc_casino_loading_milo_" }, {}, {}, false },
 	{ "Casino Shaft", 2572.88800000f, -253.43860000f, -65.65990000f, { "ch_int_placement_ch_interior_9_dlc_casino_shaft_milo_" }, {}, {}, false },
@@ -328,7 +323,6 @@ const std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Executive CEO Office: Style 8", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_03b" }, {}, {}, false },
 	{ "Executive CEO Office: Style 9", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_03c" }, {}, {}, false },
 	{ "Executive CEO Office: Style 2 (Messy)", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_01b" }, {}, { IPL_PROPS_CEO_OFFICE }, false },
-	{ "Executive Warehouse (Medium)", 1060.0f, -3100.0f, -40.0f, { "ex_exec_warehouse_placement_interior_0_int_warehouse_m_dlc_milo_" }, {}, {}, false },
 	{ "Executive Warehouse (Large)", 1010.0f, -3100.0f, -40.0f, { "ex_exec_warehouse_placement_interior_2_int_warehouse_l_dlc_milo_" }, {}, {}, false },
 	{ "Foundry", 1082.32f, -1975.65f, 31.4724f }, 
 	{ "Gunrunning Regular", 938.3077f, -3196.1120f, -98.0000f, { "gr_grdlc_interior_placement_interior_1_grdlc_int_02_milo_" }, {}, {}, false },
@@ -338,6 +332,7 @@ const std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "IAA Underground Facility", 2047.0f, 2942.0f, -62.90245f, { "xm_x17dlc_int_placement_interior_4_x17dlc_int_facility_milo_" }, {}, {}, false },
 	{ "Lombank Office: Style 1", -1573.84900000f, -571.02540000f, 107.52290000f, { "ex_sm_13_office_01a" }, {}, {}, false },
 	{ "Martin Madrazo's House", 1396.58f, 1141.79f, 114.334f }, 
+	{ "Max Renda Refit", -583.1606f, -282.3967f, 35.394f, { "refit_unload" }, {}, {}, false }, // "bh1_16_doors_open" 
 	{ "Maze Bank Del Perro Office: Style 1", -1384.56400000f, -478.26990000f, 71.04205000f, { "ex_sm_15_office_01a" }, {}, {}, false },
 	{ "Mission Row Underground 'Winning' Garage", 400.09610000f, -956.67870000f, -100.00000000f},
 	{ "Music Locker", 1560.3f, 250.239f, -48.0f, {}, {}, {}, false },
@@ -358,7 +353,7 @@ const std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Stilthouse 7", -573.0324f, 643.7613f, 144.4316f, { "apa_ch2_09c_interior_0_v_mp_stilts_a_milo_" }, {}, {}, false },
 	{ "Studio Flat", 260.3297f, -997.4288f, -100.0f, { "hei_hw1_blimp_interior_v_studio_lo_milo_" }, {}, {}, false },
 	{ "Submarine", 514.266f, 4855.68f, -62.5621f, { "xm_x17dlc_int_placement_interior_8_x17dlc_int_sub_milo_" }, {}, {}, false },
-	{ "Submarine 2", 1560.83f, 411.237f, -48.0f, {}, {}, {}, false },
+	{ "Submarine 2", 1560.83f, 411.237f, -47.5f, {}, {}, {}, false },
 	{ "Tinsel Towers Apt 16", -613.54040000f, 63.04870000f, 100.81960000f, { "hw1_blimp_interior_v_apartment_high_milo__16" }, {}, {}, false },
 	{ "Tinsel Towers Apt 17", -587.82590000f, 44.26880000f, 86.41870000f, { "hw1_blimp_interior_v_apartment_high_milo__17" }, {}, {}, false },
 	{ "Tinsel Towers Apt 42", -614.86f, 40.6783f, 97.6f, {}, {}, {}, false },
@@ -723,7 +718,7 @@ const std::vector<tele_location> LOCATIONS_STUNTS = {
 
 const std::string JELLMAN_CAPTION = "Heist Map Updates In SP";
 
-const static std::vector<std::string> MENU_LOCATION_CATEGORIES{ "Safehouses", "Landmarks", "Roof/High Up", "Underwater", "Interiors", "Extra Exterior Scenery", "Online Maps", "Special Actors/Freaks Locations", "Collectibles", "Stunts" };// <-- not sure what went wrong here, but it don't look right.
+const static std::vector<std::string> MENU_LOCATION_CATEGORIES{ "Safehouses", "Landmarks", "Roof/High Up", "Underwater", "Interiors", "Extra Exterior Scenery", "Online Interiors", "Special Actors/Freaks Locations", "Collectibles", "Stunts" };// <-- not sure what went wrong here, but it don't look right.
 
 static std::vector<tele_location> VOV_LOCATIONS[] = { LOCATIONS_SAFE, LOCATIONS_LANDMARKS, LOCATIONS_HIGH, LOCATIONS_UNDERWATER, LOCATIONS_INTERIORS, LOCATIONS_REQSCEN, LOCATIONS_ONLINE, LOCATIONS_ACTORS, LOCATIONS_COLLECTIBLES, LOCATIONS_STUNTS/*, LOCATIONS_BROKEN, LOCATIONS_JELLMAN*/ };
 
@@ -1146,52 +1141,29 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 	coords.z = value->z;
 
 	bool unloadedAnything = false;
-	DWORD time = GetTickCount() + 1000;
+	DWORD time = GetTickCount() + 100;
 
 	for (int x = 0; x < MENU_LOCATION_CATEGORIES.size(); x++) {
-		/*
-		//Added to avoid showing debug toggle menu.
-		if (x == MENU_LOCATION_CATEGORIES.size() - 1)
-		{
-		continue;
-		}
-		*/
-
 		for (int y = 0; y < VOV_LOCATIONS[x].size(); y++) {
-			//don't unload our newly loaded scenery
-			if (x == lastChosenCategory && y == choice.value) {
-				continue;
-			}
-
+			
 			tele_location* loc = &VOV_LOCATIONS[x][y];
-
-			//don't unload something using same loader
-			if (loc->scenery_required == value->scenery_required && loc->scenery_toremove == value->scenery_toremove) {
-				continue;
-			}
-
+			
 			if (loc->isLoaded && loc->scenery_required.size() > 0) {
 				if (!unloadedAnything) {
 					set_status_text("Unloading old scenery...");
-					time = GetTickCount() + 1000;
+					time = GetTickCount() + 100;
 					while (GetTickCount() < time) {
 						make_periodic_feature_call();
 						WAIT(0);
 					}
 				}
 
-				if (ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()))// && STREAMING::IS_IPL_ACTIVE("plg_01") == 1)
+				if (ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()))
 				{
 					for each (const char* scenery in loc->scenery_required) {
 						if (STREAMING::IS_IPL_ACTIVE(scenery))
 						{
 							STREAMING::REMOVE_IPL(scenery);
-						}
-					}
-					for each (const char* scenery in loc->scenery_toremove) {
-						if (!STREAMING::IS_IPL_ACTIVE(scenery))
-						{
-							STREAMING::REQUEST_IPL(scenery);
 						}
 					}
 				}
@@ -1201,27 +1173,11 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 		}
 	}
 
-	if ((value->scenery_required.size() > 0 || value->scenery_toremove.size() > 0) && !value->isLoaded){
+	if ((value->scenery_required.size() > 0) && !value->isLoaded){
 		set_status_text("Loading new scenery...");
 
-		if (ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()))// && STREAMING::IS_IPL_ACTIVE("plg_01") == 0)
+		if (ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()))
 		{
-			//
-			for each (const char* scenery in value->scenery_toremove) STREAMING::REMOVE_IPL(scenery);
-			for each (const char* scenery in value->scenery_required) STREAMING::REMOVE_IPL(scenery);
-			for each (char* prop in value->scenery_props) {
-				INTERIOR::DISABLE_INTERIOR(interiorID_temp, true);
-				STREAMING::SET_INTERIOR_ACTIVE(interiorID_temp, false);
-				INTERIOR::_DISABLE_INTERIOR_PROP(interiorID_temp, prop);
-				INTERIOR::REFRESH_INTERIOR(interiorID_temp);
-			}
-			//
-			for each (const char* scenery in value->scenery_toremove){
-				if (STREAMING::IS_IPL_ACTIVE(scenery))
-				{
-					STREAMING::REMOVE_IPL(scenery);
-				}
-			}
 			for each (const char* scenery in value->scenery_required){
 				if (!STREAMING::IS_IPL_ACTIVE(scenery))
 				{
@@ -1232,26 +1188,18 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 			{
 				for each (char* prop in value->scenery_props){
 					int interiorID = INTERIOR::GET_INTERIOR_AT_COORDS(coords.x, coords.y, coords.z); 
-					//INTERIOR::DISABLE_INTERIOR(interiorID, false);
-					//INTERIOR::_0x2CA429C029CCF247(interiorID); //Mysterious native used to load the Doomsday base. Will remove once we know when it is needed.
-					INTERIOR::_LOAD_INTERIOR(interiorID); //It looks like it does the same as the native above 
+					INTERIOR::_LOAD_INTERIOR(interiorID);
 					STREAMING::SET_INTERIOR_ACTIVE(interiorID, true);
 					INTERIOR::DISABLE_INTERIOR(interiorID, false);
 
-					/*if (INTERIOR::IS_INTERIOR_CAPPED(interiorID_temp))*/ INTERIOR::CAP_INTERIOR(interiorID, 0);
+					INTERIOR::CAP_INTERIOR(interiorID, 0);
 
 					if (!INTERIOR::_IS_INTERIOR_PROP_ENABLED(interiorID, prop))
 					{
 						INTERIOR::_ENABLE_INTERIOR_PROP(interiorID, prop);
 					}
-					else if (interiorID != INTERIOR::GET_INTERIOR_AT_COORDS(coords.x, coords.y, coords.z))
-					{
-						INTERIOR::_DISABLE_INTERIOR_PROP(interiorID, prop);
-					}
-					//_0xC1F1920BAF281317(interiorID, prop, 1);
+					
 					INTERIOR::REFRESH_INTERIOR(interiorID);
-					//STREAMING::SET_INTERIOR_ACTIVE(interiorID, true);
-					interiorID_temp = interiorID;
 				}
 			}
 		}
@@ -1264,11 +1212,8 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 			value->scenery_props.swap(emptyVec);
 			value->scenery_props.shrink_to_fit();
 		}
-
-		//Attempt to prevent the "out of memory" error by shrinking the vector down instead of leaving it ballooned.
-		//value->scenery_props.shrink_to_fit();
-		
-		DWORD time = GetTickCount() + 1000;
+				
+		DWORD time = GetTickCount() + 100;
 		while (GetTickCount() < time){
 			make_periodic_feature_call();
 			WAIT(0);
@@ -1276,33 +1221,14 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 
 		set_status_text("New scenery loaded");
 
-		time = GetTickCount() + 1000;
+		time = GetTickCount() + 100;
 		while (GetTickCount() < time){
 			make_periodic_feature_call();
 			WAIT(0);
 		}
 	}
-	/*
-	coords.x = value->x;
-	coords.y = value->y;
-	coords.z = value->z;*/
+	
 	teleport_to_coords(e, coords);
-
-	if (unloadedAnything){
-		set_status_text("Old scenery unloaded");
-
-		time = GetTickCount() + 1000;
-		while (GetTickCount() < time){
-			make_periodic_feature_call();
-			WAIT(0);
-		}
-	}
-
-	//
-	for each (char* prop in value->scenery_props) {
-		INTERIOR::REFRESH_INTERIOR(interiorID_temp);
-	}
-	//
 
 	return false;
 }
