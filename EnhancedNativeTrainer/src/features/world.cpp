@@ -62,7 +62,7 @@ bool no_grip_snowing_e = false;
 bool no_grip_when_wet_e = false;
 
 // peds chance to slip
-int s_tick_secs, s_tick_secs_passed, s_tick_secs_curr = 0;
+int s_tick_secs_passed, s_tick_secs_curr = 0;
 int l_tick_secs_curr, lightning_seconds = 0;
 bool slipped = false;
 Ped temp_ped_s = -1;
