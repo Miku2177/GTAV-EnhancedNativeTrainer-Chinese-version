@@ -919,45 +919,70 @@ bool onconfirm_jump_category(MenuItem<int> choice)
 {
 	if (choice.value == -6) {
 		keyboard_on_screen_already = true;
-		curr_message = "Enter X, Y, Z coordinates. Use space or comma as a separator"; // jump to coordinates
+		curr_message = "Enter X, Y, Z coordinates. Use space or comma as a separator. Type 'Random' for a random location.";
 		std::string result = show_keyboard("Enter Name Manually", (char*)lastJumpSpawn.c_str());
 		if (!result.empty())
 		{
+			Entity e = PLAYER::PLAYER_PED_ID();
+			if (PED::IS_PED_IN_ANY_VEHICLE(e, 0)) e = PED::GET_VEHICLE_PED_IS_USING(e);
+			
 			result = trim(result);
 			lastJumpSpawn = result;
-						
-			Entity e = PLAYER::PLAYER_PED_ID();
-			std::string a = (char*)result.c_str();
-			std::string tmp_str_x, tmp_str_y, tmp_str_z;
-			int found_separator = 0;
-			bool found_symbol = false;
-			
-			for (int i = 0; i < a.size(); i++) {
-				if (a[i] != *"," && a[i] != *" ") found_symbol = true;
-				if ((a[i] == *"," || a[i] == *" ") && found_symbol == true) {
-					found_separator = found_separator + 1;
-					found_symbol = false;
-				}
-				for (int n = 0; n < 10; n++) {
-					char n_string = n + '0';
-					if (found_separator == 0 && a[i] == n_string) tmp_str_x = tmp_str_x + a[i];
-					if (found_separator == 1 && a[i] == n_string) tmp_str_y = tmp_str_y + a[i];
-					if (found_separator == 2 && a[i] == n_string) tmp_str_z = tmp_str_z + a[i];
-				}
-				if (found_separator == 0 && (a[i] == *"-" || a[i] == *".")) tmp_str_x = tmp_str_x + a[i];
-				if (found_separator == 1 && (a[i] == *"-" || a[i] == *".")) tmp_str_y = tmp_str_y + a[i];
-				if (found_separator == 2 && (a[i] == *"-" || a[i] == *".")) tmp_str_z = tmp_str_z + a[i];
-			}
-			
-			std::string::size_type sz;
-			float x = std::stof(tmp_str_x, &sz);
-			float y = std::stof(tmp_str_y, &sz);
-			float z = std::stof(tmp_str_z, &sz);
+			Hash hash = GAMEPLAY::GET_HASH_KEY((char*)result.c_str());
 
-			if (PED::IS_PED_IN_ANY_VEHICLE(e, 0)) {
-				e = PED::GET_VEHICLE_PED_IS_USING(e);
+			if (lastJumpSpawn != "random" && lastJumpSpawn != "Random" && lastJumpSpawn != "RANDOM")
+			{
+				std::string a = (char*)result.c_str();
+				std::string tmp_str_x, tmp_str_y, tmp_str_z;
+				int found_separator = 0;
+				bool found_symbol = false;
+
+				for (int i = 0; i < a.size(); i++) {
+					if (a[i] != *"," && a[i] != *" ") found_symbol = true;
+					if ((a[i] == *"," || a[i] == *" ") && found_symbol == true) {
+						found_separator = found_separator + 1;
+						found_symbol = false;
+					}
+					for (int n = 0; n < 10; n++) {
+						char n_string = n + '0';
+						if (found_separator == 0 && a[i] == n_string) tmp_str_x = tmp_str_x + a[i];
+						if (found_separator == 1 && a[i] == n_string) tmp_str_y = tmp_str_y + a[i];
+						if (found_separator == 2 && a[i] == n_string) tmp_str_z = tmp_str_z + a[i];
+					}
+					if (found_separator == 0 && (a[i] == *"-" || a[i] == *".")) tmp_str_x = tmp_str_x + a[i];
+					if (found_separator == 1 && (a[i] == *"-" || a[i] == *".")) tmp_str_y = tmp_str_y + a[i];
+					if (found_separator == 2 && (a[i] == *"-" || a[i] == *".")) tmp_str_z = tmp_str_z + a[i];
+				}
+
+				std::string::size_type sz;
+				float x = std::stof(tmp_str_x, &sz);
+				float y = std::stof(tmp_str_y, &sz);
+				float z = std::stof(tmp_str_z, &sz);
+
+				ENTITY::SET_ENTITY_COORDS(e, x, y, z, 1, 0, 0, 1);
 			}
-			ENTITY::SET_ENTITY_COORDS(e, x, y, z, 1, 0, 0, 1);
+
+			if (lastJumpSpawn == "random" || lastJumpSpawn == "Random" || lastJumpSpawn == "RANDOM")
+			{
+				int x_coord = (rand() % 3934 + -3294); // UP MARGIN + DOWN MARGIN
+				int y_coord = (rand() % 6576 + -3330); 
+				Vector3 me_coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 0);
+
+				bool groundFound = false;
+				static float groundCheckHeight[] =
+				{ 100.0, 150.0, 50.0, 0.0, 200.0, 250.0, 300.0, 350.0, 400.0, 450.0, 500.0, 550.0, 600.0, 650.0, 700.0, 750.0, 800.0 };
+				for (int i = 0; i < sizeof(groundCheckHeight) / sizeof(float); i++) {
+					ENTITY::SET_ENTITY_COORDS_NO_OFFSET(e, x_coord, y_coord, groundCheckHeight[i], 0, 0, 1);
+					WAIT(100);
+					if (GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(x_coord, y_coord, groundCheckHeight[i], &me_coords.z)) {
+						groundFound = true;
+						me_coords.z += 3.0;
+						break;
+					}
+				}
+				ENTITY::SET_ENTITY_COORDS(e, x_coord, y_coord, me_coords.z, 1, 0, 0, 1);
+			}
+
 			WAIT(0);
 			set_status_text("Teleported"); 
 		}
