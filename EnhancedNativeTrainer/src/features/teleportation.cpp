@@ -353,7 +353,7 @@ const std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Stilthouse 7", -573.0324f, 643.7613f, 144.4316f, { "apa_ch2_09c_interior_0_v_mp_stilts_a_milo_" }, {}, {}, false },
 	{ "Studio Flat", 260.3297f, -997.4288f, -100.0f, { "hei_hw1_blimp_interior_v_studio_lo_milo_" }, {}, {}, false },
 	{ "Submarine", 514.266f, 4855.68f, -62.5621f, { "xm_x17dlc_int_placement_interior_8_x17dlc_int_sub_milo_" }, {}, {}, false },
-	{ "Submarine 2", 1560.83f, 411.237f, -47.5f, {}, {}, {}, false },
+	{ "Submarine 2", 1560.83f, 411.237f, -47.8f, {}, {}, {}, false },
 	{ "Tinsel Towers Apt 16", -613.54040000f, 63.04870000f, 100.81960000f, { "hw1_blimp_interior_v_apartment_high_milo__16" }, {}, {}, false },
 	{ "Tinsel Towers Apt 17", -587.82590000f, 44.26880000f, 86.41870000f, { "hw1_blimp_interior_v_apartment_high_milo__17" }, {}, {}, false },
 	{ "Tinsel Towers Apt 42", -614.86f, 40.6783f, 97.6f, {}, {}, {}, false },
@@ -1142,6 +1142,11 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 
 	bool unloadedAnything = false;
 	DWORD time = GetTickCount() + 100;
+
+	int interiorID = INTERIOR::GET_INTERIOR_AT_COORDS(coords.x, coords.y, coords.z);
+	INTERIOR::_LOAD_INTERIOR(interiorID);
+	STREAMING::SET_INTERIOR_ACTIVE(interiorID, true);
+	INTERIOR::DISABLE_INTERIOR(interiorID, false);
 
 	for (int x = 0; x < MENU_LOCATION_CATEGORIES.size(); x++) {
 		for (int y = 0; y < VOV_LOCATIONS[x].size(); y++) {
