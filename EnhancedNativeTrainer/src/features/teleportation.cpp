@@ -27,7 +27,7 @@ bool featureTeleportAutomatically = false;
 //For onscreen debug info
 bool featureShowDebugInfo = false;
 
-//Load 'Cayo Perico' Island Automatically
+//Load Cayo Perico Island Automatically
 bool featureCayoPerico = false;
 int cayo_tick = 0;
 bool perico_init = false;
@@ -1308,7 +1308,7 @@ bool process_teleport_menu(int categoryIndex){
 		menuItems.push_back(togItem);
 
 		togItem = new ToggleMenuItem<int>();
-		togItem->caption = "Load 'Cayo Perico' Island Automatically";
+		togItem->caption = "Load Cayo Perico Island Automatically";
 		togItem->value = 8;
 		togItem->toggleValue = &featureCayoPerico;
 		menuItems.push_back(togItem);
@@ -1561,7 +1561,7 @@ void update_teleport_features(){
 		MARATHON_BLIPS.shrink_to_fit();
 	}
 
-	// Load 'Cayo Perico' Island Automatically
+	// Load Cayo Perico Island Automatically
 	if (featureCayoPerico && ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()) && perico_init == false)
 	{
 		cayo_tick = cayo_tick + 1;
@@ -1576,6 +1576,7 @@ void update_teleport_features(){
 			INTERIOR::_LOAD_INTERIOR(CayointeriorID);
 			STREAMING::SET_INTERIOR_ACTIVE(CayointeriorID, true);
 			INTERIOR::DISABLE_INTERIOR(CayointeriorID, false);
+			INTERIOR::CAP_INTERIOR(CayointeriorID, 0);
 			perico_init = true;
 		}
 	}
