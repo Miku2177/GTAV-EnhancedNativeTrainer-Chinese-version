@@ -94,6 +94,7 @@ bool featureNoGameHintCameraLocking = false;
 bool featureNoPoliceBlips = false;
 bool featureFullMap = false;
 bool featurePenitentiaryMap = false;
+bool featureCayoPericoMap = false;
 bool featureZancudoMap = false;
 bool featureZancudoMapUpdated = false;
 bool featureBusLight = false;
@@ -658,6 +659,12 @@ void process_world_menu()
 	togItem->toggleValueUpdated = &featureZancudoMapUpdated;
 	menuItems.push_back(togItem);
 
+	togItem = new ToggleMenuItem<int>();
+	togItem->caption = "Show Cayo Perico Island On Map";
+	togItem->value = 1;
+	togItem->toggleValue = &featureCayoPericoMap;
+	menuItems.push_back(togItem);
+
 	listItem = new SelectFromListMenuItem(WORLD_RADAR_MAP_CAPTIONS, onchange_world_radar_map_index);
 	listItem->wrap = false;
 	listItem->caption = "Radar Map Size";
@@ -732,6 +739,7 @@ void reset_world_globals()
 	featureNoPoliceBlips = false;
 	featureFullMap = false;
 	featurePenitentiaryMap = false;
+	featureCayoPericoMap = false;
 	featureZancudoMap = false;
 	featureBusLight = false;
 	featureAcidWater = false;
@@ -841,11 +849,12 @@ void update_world_features()
 		radar_map_toogle_3 = true;
 	}
 	
-	// Show Bolingbroke Penitentiary On Map
-	if (featurePenitentiaryMap) {
+	// Show Bolingbroke Penitentiary On Map & Show Cayo Perico Island On Map
+	if (featurePenitentiaryMap || featureCayoPericoMap) {
 		Vector3 coords_me = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 		if (INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_me.x, coords_me.y, coords_me.z)) {
-			UI::SET_RADAR_AS_INTERIOR_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("V_FakePrison"), 1700, 2580, 0, 0);
+			if (featurePenitentiaryMap) UI::SET_RADAR_AS_INTERIOR_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("V_FakePrison"), 1700, 2580, 0, 0);
+			if (featureCayoPericoMap) UI::SET_RADAR_AS_INTERIOR_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("h4_fake_islandx"), 4700.0f, -5145.0, 0, 0);
 			UI::SET_RADAR_AS_EXTERIOR_THIS_FRAME();
 		}
 	}
@@ -1925,6 +1934,7 @@ void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* r
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNoPoliceBlips", &featureNoPoliceBlips }); 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureFullMap", &featureFullMap }); 
 	results->push_back(FeatureEnabledLocalDefinition{ "featurePenitentiaryMap", &featurePenitentiaryMap }); 
+	results->push_back(FeatureEnabledLocalDefinition{ "featureCayoPericoMap", &featureCayoPericoMap });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureZancudoMap", &featureZancudoMap, &featureZancudoMapUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureBusLight", &featureBusLight }); 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureAcidWater", &featureAcidWater }); 
