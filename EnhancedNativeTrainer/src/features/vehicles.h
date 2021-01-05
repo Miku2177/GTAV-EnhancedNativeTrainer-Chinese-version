@@ -81,6 +81,10 @@ const std::vector<std::string> VEH_COLOUR_CAPTIONS{ "OFF", "White", "Red", "Gree
 const int VEH_COLOUR_VALUES[] = { -1, 134, 27, 139, 64, 38, 145, 135, 88 };
 extern int VehColourIndex;
 
+// Vehicle Random Colour
+const std::vector<std::string> VEH_RAND_COLOUR_CAPTIONS{ "Both Colours", "Primary Colour Only", "Secondary Colour Only" };
+extern int VehRandomColourIndex;
+
 //Turn Signals Off Acceleration
 const std::vector<std::string> VEH_TURN_SIGNALS_ACCELERATION_CAPTIONS{ "OFF", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
 const int VEH_TURN_SIGNALS_ACCELERATION_VALUES[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
@@ -1204,6 +1208,8 @@ void onchange_veh_hydraulics_index(int value, SelectFromListMenuItem* source);
 void onchange_veh_vislight_index(int value, SelectFromListMenuItem* source);
 
 void onchange_veh_vislight3d_index(int value, SelectFromListMenuItem* source);
+
+void onchange_vehicles_random_colour_index(int value, SelectFromListMenuItem* source);
 
 void set_old_vehicle_state(bool updatedState);
 

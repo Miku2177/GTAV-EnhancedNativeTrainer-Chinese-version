@@ -290,6 +290,10 @@ bool VehBlipColour_Changed = true;
 int VehColourIndex = 0;
 bool VehColour_Changed = true;
 
+//Blip Random Colour
+int VehRandomColourIndex = 0;
+bool VehRandomColour_Changed = true;
+
 //Blip Symbol
 int VehBlipSymbolIndexN = 0;
 bool VehBlipSymbol_Changed = true;
@@ -4250,6 +4254,7 @@ void reset_vehicle_globals() {
 	VehBlipSizeIndex = 2;
 	VehBlipColourIndex = 4;
 	VehColourIndex = 0;
+	VehRandomColourIndex = 0;
 	NPCVehicleDamageOnCollIndex = 0;
 	SpeedingCityIndex = 3;
 	DetectionRangeIndex = 3;
@@ -5200,6 +5205,7 @@ void add_vehicle_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"VehBlipSizeIndex", std::to_string(VehBlipSizeIndex)});
 	results->push_back(StringPairSettingDBRow{"VehBlipColourIndex", std::to_string(VehBlipColourIndex)});
 	results->push_back(StringPairSettingDBRow{"VehColourIndex", std::to_string(VehColourIndex)});
+	results->push_back(StringPairSettingDBRow{"VehRandomColourIndex", std::to_string(VehRandomColourIndex)});
 	results->push_back(StringPairSettingDBRow{"NPCVehicleDamageOnCollIndex", std::to_string(NPCVehicleDamageOnCollIndex)});
 	results->push_back(StringPairSettingDBRow{"SpeedingCityIndex", std::to_string(SpeedingCityIndex)});
 	results->push_back(StringPairSettingDBRow{"DetectionRangeIndex", std::to_string(DetectionRangeIndex)});
@@ -5334,6 +5340,9 @@ void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settin
 		}
 		else if (setting.name.compare("VehColourIndex") == 0) {
 			VehColourIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("VehRandomColourIndex") == 0) {
+			VehRandomColourIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("NPCVehicleDamageOnCollIndex") == 0) {
 			NPCVehicleDamageOnCollIndex = stoi(setting.value);
@@ -5617,6 +5626,11 @@ void onchange_veh_blipcolour_index(int value, SelectFromListMenuItem* source){
 
 void onchange_world_npc_vehicles_colour_index(int value, SelectFromListMenuItem* source) {
 	VehColourIndex = value;
+	PositionChanged = true;
+}
+
+void onchange_vehicles_random_colour_index(int value, SelectFromListMenuItem* source) {
+	VehRandomColourIndex = value;
 	PositionChanged = true;
 }
 
