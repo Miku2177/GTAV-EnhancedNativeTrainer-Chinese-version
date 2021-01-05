@@ -97,6 +97,8 @@ bool featurePenitentiaryMap = false;
 bool featureCayoPericoMap = false;
 bool featureZancudoMap = false;
 bool featureZancudoMapUpdated = false;
+bool featurePenitentiaryMapUpdated = false;
+bool featureCayoPericoMapUpdated = false;
 bool featureBusLight = false;
 bool featureAcidWater = false;
 bool featureAcidRain = false;
@@ -647,12 +649,6 @@ void process_world_menu()
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Show Bolingbroke Penitentiary On Map";
-	togItem->value = 1;
-	togItem->toggleValue = &featurePenitentiaryMap;
-	menuItems.push_back(togItem);
-
-	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "Show Fort Zancudo On Map";
 	togItem->value = 1;
 	togItem->toggleValue = &featureZancudoMap;
@@ -660,9 +656,17 @@ void process_world_menu()
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
+	togItem->caption = "Show Bolingbroke Penitentiary On Map";
+	togItem->value = 1;
+	togItem->toggleValue = &featurePenitentiaryMap;
+	togItem->toggleValueUpdated = &featurePenitentiaryMapUpdated;
+	menuItems.push_back(togItem);
+
+	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "Show Cayo Perico Island On Map";
 	togItem->value = 1;
 	togItem->toggleValue = &featureCayoPericoMap;
+	togItem->toggleValueUpdated = &featureCayoPericoMapUpdated;
 	menuItems.push_back(togItem);
 
 	listItem = new SelectFromListMenuItem(WORLD_RADAR_MAP_CAPTIONS, onchange_world_radar_map_index);
@@ -749,6 +753,8 @@ void reset_world_globals()
 	featureHeadlightsBlackout = false;
 	featureSnow = false;
 	featureMPMap = false;
+	featurePenitentiaryMapUpdated = false;
+	featureCayoPericoMapUpdated = false;
 
 	featureWorldRandomCops =
 	featureWorldRandomTrains =
@@ -857,6 +863,14 @@ void update_world_features()
 			if (featureCayoPericoMap) UI::SET_RADAR_AS_INTERIOR_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("h4_fake_islandx"), 4700.0f, -5145.0, 0, 0);
 			UI::SET_RADAR_AS_EXTERIOR_THIS_FRAME();
 		}
+	}
+	if (featurePenitentiaryMapUpdated) {
+		featureCayoPericoMap = false;
+		featurePenitentiaryMapUpdated = false;
+	}
+	if (featureCayoPericoMapUpdated) {
+		featurePenitentiaryMap = false;
+		featureCayoPericoMapUpdated = false;
 	}
 
 	// Show Fort Zancudo On Map
@@ -1275,14 +1289,14 @@ void update_world_features()
 				if (NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] == 1 && slippery_randomize > 990 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
 					AI::IS_PED_RUNNING(PLAYER::PLAYER_PED_ID()) && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip.x, coords_slip.y, coords_slip.z) && !ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID()))
 					PED::SET_PED_TO_RAGDOLL(PLAYER::PLAYER_PED_ID(), time11, time12, r_Type, true, true, false);
-				if (NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] == 1 && slippery_randomize > 930 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
+				if (NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] == 1 && slippery_randomize > 940 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
 					AI::IS_PED_SPRINTING(PLAYER::PLAYER_PED_ID()) && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip.x, coords_slip.y, coords_slip.z) && !ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID())) 
 					PED::SET_PED_TO_RAGDOLL(PLAYER::PLAYER_PED_ID(), time11, time12, r_Type, true, true, false);
 				// realistic
-				if (NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] == 2 && slippery_randomize > 970 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
+				if (NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] == 2 && slippery_randomize > 980 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
 					AI::IS_PED_RUNNING(PLAYER::PLAYER_PED_ID()) && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip.x, coords_slip.y, coords_slip.z) && !ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID())) 
 					PED::SET_PED_TO_RAGDOLL(PLAYER::PLAYER_PED_ID(), time11, time12, r_Type, true, true, false);
-				if (NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] == 2 && slippery_randomize > 900 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
+				if (NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] == 2 && slippery_randomize > 910 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
 					AI::IS_PED_SPRINTING(PLAYER::PLAYER_PED_ID()) && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip.x, coords_slip.y, coords_slip.z) && !ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID())) 
 					PED::SET_PED_TO_RAGDOLL(PLAYER::PLAYER_PED_ID(), time11, time12, r_Type, true, true, false);
 				// normalize speed
