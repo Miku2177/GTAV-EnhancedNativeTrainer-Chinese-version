@@ -655,8 +655,10 @@ bool onconfirm_randcolour_category_menu(MenuItem<int> choice)
 	if (whichpart == 10) {
 		Vehicle my_veh = PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 1);
 		for (int i = 0; i < 5; i++) {
-			int rand_colour_1 = -1;
-			int rand_colour_2 = -1;
+			int rand_colour_1 = 0;
+			int rand_colour_2 = 0;
+			int colorIndex1 = 0;
+			int colorIndex2 = 0;
 			int rand_category_1 = (rand() % 5 + 0);
 			int rand_category_2 = (rand() % 5 + 0);
 			if (rand_category_1 == 0) rand_colour_1 = (rand() % (PAINTS_CLASSIC.size() - 1) + 0);
@@ -677,17 +679,19 @@ bool onconfirm_randcolour_category_menu(MenuItem<int> choice)
 			int colorPrimary = -1;
 			int colorSecondary = -1;
 			VEHICLE::GET_VEHICLE_COLOURS(my_veh, &colorPrimary, &colorSecondary);
-			if (i == 0 && NPC_RAGDOLL_VALUES[VehRandomColourIndex] == 0) VEHICLE::SET_VEHICLE_COLOURS(my_veh, rand_colour_1, rand_colour_2);
-			if (i == 1 && NPC_RAGDOLL_VALUES[VehRandomColourIndex] == 0) VEHICLE::SET_VEHICLE_EXTRA_COLOURS(my_veh, rand_colour_1, rand_colour_2);
-			if (i == 0 && NPC_RAGDOLL_VALUES[VehRandomColourIndex] == 1) VEHICLE::SET_VEHICLE_COLOURS(my_veh, rand_colour_1, colorSecondary);
-			if (i == 1 && NPC_RAGDOLL_VALUES[VehRandomColourIndex] == 1) VEHICLE::SET_VEHICLE_EXTRA_COLOURS(my_veh, rand_colour_1, colorSecondary);
-			if (i == 0 && NPC_RAGDOLL_VALUES[VehRandomColourIndex] == 2) VEHICLE::SET_VEHICLE_COLOURS(my_veh, colorPrimary, rand_colour_2);
-			if (i == 1 && NPC_RAGDOLL_VALUES[VehRandomColourIndex] == 2) VEHICLE::SET_VEHICLE_EXTRA_COLOURS(my_veh, colorPrimary, rand_colour_2);
+			if (rand_colour_1 < PAINTS_BY_TYPE[rand_category_1].size()) colorIndex1 = PAINTS_BY_TYPE[rand_category_1][rand_colour_1].colorIndex;
+			if (rand_colour_2 < PAINTS_BY_TYPE[rand_category_2].size()) colorIndex2 = PAINTS_BY_TYPE[rand_category_2][rand_colour_2].colorIndex;
+			if (i == 0 && NPC_RAGDOLL_VALUES[VehRandomColourIndex] == 0) VEHICLE::SET_VEHICLE_COLOURS(my_veh, colorIndex1, colorIndex2);
+			if (i == 1 && NPC_RAGDOLL_VALUES[VehRandomColourIndex] == 0) VEHICLE::SET_VEHICLE_EXTRA_COLOURS(my_veh, colorIndex1, colorIndex2);
+			if (i == 0 && NPC_RAGDOLL_VALUES[VehRandomColourIndex] == 1) VEHICLE::SET_VEHICLE_COLOURS(my_veh, colorIndex1, colorSecondary);
+			if (i == 1 && NPC_RAGDOLL_VALUES[VehRandomColourIndex] == 1) VEHICLE::SET_VEHICLE_EXTRA_COLOURS(my_veh, colorIndex1, colorSecondary);
+			if (i == 0 && NPC_RAGDOLL_VALUES[VehRandomColourIndex] == 2) VEHICLE::SET_VEHICLE_COLOURS(my_veh, colorPrimary, colorIndex2);
+			if (i == 1 && NPC_RAGDOLL_VALUES[VehRandomColourIndex] == 2) VEHICLE::SET_VEHICLE_EXTRA_COLOURS(my_veh, colorPrimary, colorIndex2);
 			if (i == 2 && (NPC_RAGDOLL_VALUES[VehRandomColourIndex] == 0 || NPC_RAGDOLL_VALUES[VehRandomColourIndex] == 1)) VEHICLE::SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(my_veh, rand_colour_r, rand_colour_g, rand_colour_b);
 			if (i == 3 && (NPC_RAGDOLL_VALUES[VehRandomColourIndex] == 0 || NPC_RAGDOLL_VALUES[VehRandomColourIndex] == 2)) VEHICLE::SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(my_veh, rand_colour_r, rand_colour_g, rand_colour_b);
 			if (i == 4) {
-				VEHICLE::_SET_VEHICLE_INTERIOR_COLOUR(my_veh, rand_colour_1);
-				VEHICLE::_SET_VEHICLE_DASHBOARD_COLOUR(my_veh, rand_colour_2);
+				VEHICLE::_SET_VEHICLE_INTERIOR_COLOUR(my_veh, colorIndex1);
+				VEHICLE::_SET_VEHICLE_DASHBOARD_COLOUR(my_veh, colorIndex2);
 			}
 		}
 	}

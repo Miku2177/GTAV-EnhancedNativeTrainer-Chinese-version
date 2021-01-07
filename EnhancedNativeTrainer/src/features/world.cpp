@@ -1266,8 +1266,8 @@ void update_world_features()
 				Vector3 coords_slip = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 				Vector3 coords_slip_ped = ENTITY::GET_ENTITY_COORDS(bus_veh[i], true);
 				int slip_index_s = -1;
-				if (NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] == 1) slip_index_s = 11; // arcade
-				if (NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] == 2) slip_index_s = 16; // realistic
+				if (NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] == 1) slip_index_s = 12; // arcade		// 11
+				if (NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] == 2) slip_index_s = 16; // realistic	// 16
 				slippery_s = slippery_s + 1;
 				if (slippery_s < slip_index_s && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip_ped.x, coords_slip_ped.y, coords_slip_ped.z)) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], true);
 				if (slippery_s > slip_index_s - 1 && slippery_s < 20) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], false); // slip_index * 2
