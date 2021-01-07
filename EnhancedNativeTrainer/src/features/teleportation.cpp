@@ -27,10 +27,11 @@ bool featureTeleportAutomatically = false;
 //For onscreen debug info
 bool featureShowDebugInfo = false;
 
-//Load 'Cayo Perico' Island Automatically
+//Load Cayo Perico Island Automatically
 bool featureCayoPerico = false;
 int cayo_tick = 0;
 bool perico_init = false;
+bool auto_waves = false;
 
 struct tele_location{
 	std::string text;
@@ -42,8 +43,6 @@ struct tele_location{
 	std::vector<char*> scenery_props;
 	bool isLoaded;
 };
-
-int interiorID_temp = -1;
 
 std::vector<Blip> MARATHON_BLIPS;
 
@@ -75,7 +74,6 @@ const std::vector<tele_location> LOCATIONS_LANDMARKS = {
 	{ "Abandoned Motel", 1567.35f, 3566.76f, 35.4367f },
 	{ "Aerial Tramway", -740.235f, 5594.81f, 41.6546f },
 	{ "Airplane Graveyard", 2395.096f, 3049.616f, 60.053f },
-	//{ "Airport Field", -1336.0f, -3044.0f, 13.9f },
 	{ "Altruist Cult Camp", -1004.04f, 4856.94f, 280.681f },
 	{ "Arcadius Carpark", -164.38220000f, -619.08840000f, 33.33181000f},
 	{ "Beaver Bush Ranger Station", 389.712f, 791.305f, 190.41f },
@@ -93,26 +91,20 @@ const std::vector<tele_location> LOCATIONS_LANDMARKS = {
 	{ "El Burro Heights", 1384.0f, -2057.1f, 52.0f },
 	{ "Epsilon Building Entrance", -698.472f, 46.3927f, 44.0338f },
 	{ "Far North San Andreas", 24.775f, 7644.102f, 19.055f },
-	//{ "Ferris Wheel", -1670.7f, -1125.0f, 13.0f },
 	{ "FIB Carpark", 141.20440000f, -717.21670000f, 34.76831000f},
 	{ "Galilee Pier", 1299.17f, 4216.22f, 33.9087f },
-	//{ "God's Thumb", -1006.402f, 6272.383f, 1.503f },
 	{ "Golf Club", -1373.22f, 50.4852f, 53.7018f },
 	{ "Grove Street", 117.11f, -1951.27f, 20.7498f },
-	//{ "Hill Valley Church", -333.901f, 2825.13f, 57.9426f, { "lr_cs6_08_grave_closed" }, {}, {}, false },
 	{ "Hippy Camp", 2476.712f, 3789.645f, 41.226f },
 	{ "Hobo Camp", 1476.47f, 6373.92f, 23.5239f },
 	{ "Hut On Island", -2167.28f, 5187.76f, 15.9392f },
 	{ "Jolene Cranley-Evans Ghost", 3059.620f, 5564.246f, 197.091f },
 	{ "Junk Yard/Tank", -445.022f, -1715.71f, 25.0233f },
-	//{ "Kortz Center", -2243.810f, 264.048f, 174.615f },
 	{ "Lombank Carpark", -676.295f, -589.195f, 25.4536f},
 	{ "Los Santos County Fire Department", 1201.39500000f, -1478.45300000f, 33.85941000f},
 	{ "LSDWP", 738.286f, 132.192f, 80.5797f },
 	{ "Marlowe Vineyards", -1868.971f, 2095.674f, 139.115f },
 	{ "Maze Bank Carpark", -84.13106000f, -821.34520000f, 36.71491000f},
-	//{ "Maze Bank Del Perro Carpark", -1387.31300000f, -475.34900000f, 33.85337000f},
-	//{ "McKenzie Airfield", 2121.7f, 4796.3f, 41.1f },
 	{ "Mineshaft", -595.342f, 2086.008f, 131.412f },
 	{ "Mirror Park", 1071.34f, -712.241f, 58.4852f },
 	{ "NOOSE Headquarters", 2535.243f, -383.799f, 92.993f },
@@ -121,14 +113,9 @@ const std::vector<tele_location> LOCATIONS_LANDMARKS = {
 	{ "Paleto Bay Pier", -275.522f, 6635.835f, 7.425f },
 	{ "Paleto Forest Sawmill", -578.305f, 5246.03f, 70.4694f },
 	{ "Playboy Mansion", -1475.234f, 167.088f, 55.841f },
-	//{ "Police Station", 432.002f, -981.748f, 30.7107f },
-	//{ "Quarry", 2954.196f, 2783.410f, 41.004f },
 	{ "Race", 1059.65f, 147.134f, 85.7408f },
 	{ "Raton Canyon Obsevation Desk", -840.581f, 4182.65f, 215.29f },
-	//{ "Rockford Plaza Carpark", -179.31400000f, -180.21540000f, 46.31482000f},
-	//{ "Sandy Shores Airfield", 1747.0f, 3273.7f, 41.1f },
 	{ "Sisyphus Theater Stage", 208.714f, 1167.75f, 227.005f },
-	//{ "Snack-Bar With Pink Dinosaur", 2569.48f, 2580.4f, 37.7605f },
 	{ "Sonar Collections Dock", -1611.26f, 5261.74f, 3.9741f },
 	{ "Stab City", 126.845f, 3714.25f, 48.9273f },
 	{ "Subway Burton", -297.004f, -358.18f, 10.0631f },
@@ -137,19 +124,14 @@ const std::vector<tele_location> LOCATIONS_LANDMARKS = {
 	{ "Subway LSIA Parking", -871.209f, -2291.86f, -11.7328f },
 	{ "Subway LSIA Terminal 4", -1103.9f, -2737.14f, -7.41013f },
 	{ "Subway Portola Drive", -791.0f, -125.857f, 19.9503f },
-	//{ "Trevor's Meth Lab", 1395.32f, 3597.44f, 34.9675f },
 	{ "Two Hoots Falls", -1575.9f, 2104.26f, 67.4264f },
 	{ "Underground Entrance", -66.5357f, -538.862f, 31.7796f },
 	{ "Underground Exit", 1032.85f, -276.936f, 50.1025f },
 	{ "University Of San Andreas", -1644.09f, 218.244f, 60.6411f },
-	//{ "Up-n-Atom Diner/Rocket", 1585.25f, 6447.69f, 25.125f },
 	{ "Ursula's Mother Grave", 3200.96f, 4730.4f, 193.284f },
 	{ "Vinewood Bowl Theatre Stage", 686.245f, 577.950f, 130.461f },
-	//{ "Vinewood Cemetery", -1733.11f, -178.004f, 59.2933f },
-	//{ "Weed Farm", 2208.777f, 5578.235f, 53.735f },
 	{ "Wind Farm Trailer Park", 2353.21f, 2549.4f, 55.7455f },
 	{ "Yellow Jack Inn", 1991.74f, 3058.86f, 47.0568f },
-	//{ "You Tool Hardware Store", 2757.12f, 3469.85f, 55.7208f },
 };
 
 // Extra locations coordinates source: "PulseR_HD" @ http://gtaforums.com/topic/789786-vrelwip-simple-trainer-enhancements-skin-detail-chooser-menu-architecture/?p=1067398379
@@ -182,7 +164,6 @@ const std::vector<tele_location> LOCATIONS_HIGH = {
 	{ "Maze Bank Roof", -75.015f, -818.215f, 326.176f },
 	{ "Merryweather Dock Roof", 526.604f, -3290.37f, 46.3142f },
 	{ "Mile High Club Roof", -168.221f, -974.687f, 275.222f },
-	//{ "Mount Gordo Summit", 2792.49f, 5995.88f, 375.499f },
 	{ "Mt. Chiliad Summit", 450.718f, 5566.614f, 806.183f },
 	{ "North Yankton High-Voltage Tower Top", 3836.8f, -4875.12f, 154.079f, IPLS_NORTH_YANKTON, {}, {}, false },
 	{ "North Yankton Pollock Cinema Roof Top", 3157.23f, -4816.72f, 138.143f, IPLS_NORTH_YANKTON, {}, {}, false },
@@ -245,7 +226,6 @@ const std::vector<tele_location> LOCATIONS_INTERIORS = {
 	{ "Airport Facility Interior 2", -1144.38f, -2803.47f, 34.4773f, {}, {}, {}, false },
 	{ "Airport Facility Interior 3", -1042.93f, -2865.61f, 35.4773f, {}, {}, {}, false },
 	{ "Ammunation Gun Range", 22.153f, -1072.854f, 29.797f },
-	//{ "Ammunation Office", 12.494f, -1110.130f, 29.797f },
 	{ "Bahama Mamas West", -1387.08f, -588.4f, 30.3195f },
 	{ "Bikers 'Lost' Safehouse", 981.211f, -101.864f, 75.8451f, { "bkr_bi_hw1_13_int" }, {}, {}, false },
 	{ "Blaine County Savings Bank", -109.299f, 6464.035f, 31.627f },
@@ -295,7 +275,6 @@ const std::vector<tele_location> LOCATIONS_REQSCEN = {
 	{ "Aircraft Carrier", 3069.330f, -4632.4f, 15.043f, IPLS_CARRIER, {}, {}, false },
 	{ "Caida Libre (no plane)", 2814.7000f, 4758.5000f, 48.000f, { "Plane_crash_trench" }, {}, {}, false },
 	{ "Fort Zancudo UFO", -2052.000f, 3237.000f, 1456.973f, { "ufo", "ufo_lod", "ufo_eye" }, {}, {}, false },
-	{ "Max Renda Refit", -583.1606f, -282.3967f, 35.394f, { "refit_unload" }, { "bh1_16_doors_shut" }, {}, false },
 	{ "Red Carpet", 293.314f, 180.388f, 104.297f, { "redCarpet" }, {}, {}, false },
 	{ "SS Bulker (intact)", -163.749f, -2377.94f, 9.3192f, { "cargoship" }, { "sunkcargoship" }, {}, false },
 	{ "SS Bulker (sunk)", -162.8918f, -2365.769f, 0.0f, { "sunkcargoship" }, { "cargoship" }, {}, false },
@@ -306,26 +285,29 @@ const std::vector<tele_location> LOCATIONS_REQSCEN = {
 /* Name, coords, IPL name, scenary (props) required, scenary to remove, bool isloaded*/
 const std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "2 Car Garage", 173.1176f, -1003.279f, -99.000f, { "hw1_blimp_interior_v_garages_milo_" }, {}, {}, false },
-	//{ "4 Car Garage", 199.9716f, -1018.954f, -99.4041f, { "hei_hw1_blimp_interior_v_garagem_sp_milo_" }, {}, {}, false },
 	{ "4 Integrity Way Apt 10", -32.17249000f, -579.01830000f, 82.90740000f, { "hei_hw1_blimp_interior_10_dlc_apart_high_new_milo_" }, {}, {}, false },
 	{ "4 Integrity Way Apt 28", -14.7964f, -581.709f, 79.4307f, {}, {}, {}, false },
 	{ "6 Car Garage", 199.9716f, -999.6678f, -99.000f, { "hw1_blimp_interior_v_garagem_milo_" }, {}, {}, false },
 	{ "7302 San Andreas Avenue Apt 6", -460.61330000f, -691.55620000f, 69.87947000f, { "hw1_blimp_interior_v_apartment_high_milo__6" }, {}, {}, false },
-	//{ "10 Car Garage Back Room", 223.193f, -967.322f, -99.000f, { "hw1_blimp_interior_v_garagel_milo_" }, {}, {}, false },
 	{ "10 Car Garage Bay", 228.135f, -995.350f, -99.000f, { "hw1_blimp_interior_v_garagel_milo_" }, {}, {}, false },
 	{ "Arcadius Business Center Office: Style 1", -139.53950000f, -629.07570000f, 167.82040000f, { "ex_dt1_02_office_01a" }, {}, {}, false },
-	{ "Avenger Interior", 520.0f, 4750.0f, -70.0f, IPL_PROPS_DOOMSDAY_MAIN_BASE, {}, { "SHELL_TINT" }, false },
 	{ "Benny's Garage", -209.759f, -1319.617f, 30.08367f }, 
 	{ "Biker Club Garage 1", 1005.861f, -3156.162f, -39.90727f, { "bkr_biker_interior_placement_interior_1_biker_dlc_int_02_milo_" }, {}, {}, false },
-	{ "Biker Club Garage 2", 1102.477f, -3156.162f, -37.77361f, { "bkr_biker_interior_placement_interior_0_biker_dlc_int_01_milo_" }, {}, {}, false },
 	{ "Biker Cocaine Factory", 1093.581f, -3196.597f, -39.99353f, { "bkr_biker_interior_placement_interior_4_biker_dlc_int_ware03_milo_" }, {}, {}, false },
-	//{ "Biker Train Tunnel", 975.0f, -3000.0f, -40.0f, IPLS_BIKER_TUNNEL, {}, {}, false }, //No ceiling, floor, walls textures.
 	{ "Biker Warehouse: Forgery 2", 1165.001f, -3196.597f, -39.99353f, { "bkr_biker_interior_placement_interior_6_biker_dlc_int_ware05_milo_" }, {}, {}, false },
 	{ "Biker Warehouse: Money Printer 1", 1009.545f, -3196.597f, -39.99353f, { "bkr_biker_interior_placement_interior_2_biker_dlc_int_ware01_milo_" }, {}, {}, false },
 	{ "Biker Warehouse: Money Printer 2", 1124.734f, -3196.597f, -39.99353f, { "bkr_biker_interior_placement_interior_5_biker_dlc_int_ware04_milo_" }, {}, {}, false },
 	{ "Biker Warehouse: Weed Farm", 1059.028f, -3201.89f, -39.99353f, { "bkr_biker_interior_placement_interior_3_biker_dlc_int_ware02_milo_" }, {}, {}, false },
+	{ "Casino Back", 2523.36100000f, -270.00000000f, -59.72315000f, { "ch_int_placement_ch_interior_3_dlc_casino_back_milo_" }, {}, {}, false },
+	{ "Casino Carpark", 1380.0000, 200.0000, -50.0000f, { "vw_casino_carpark" }, {}, {}, false },
+	//{ "Casino Heist", 2479.26800000f, -273.87380000f, -58.28285000f, { "ch_int_placement_ch_interior_0_dlc_casino_heist_milo_" }, {}, {}, false },
+	{ "Casino Hotel", 2504.38600000f, -257.21960000f, -40.12296000f, { "ch_int_placement_ch_interior_4_dlc_casino_hotel_milo_" }, {}, {}, false },
+	{ "Casino Loading Bay", 2553.96300000f, -281.38050000f, -65.72305000f, { "ch_int_placement_ch_interior_5_dlc_casino_loading_milo_" }, {}, {}, false },
+	{ "Casino Main Hall", 1100.0000f, 220.0000f, -50.0000f, { "vw_casino_main" }, {}, {}, false },
+	{ "Casino Shaft", 2572.88800000f, -253.43860000f, -65.65990000f, { "ch_int_placement_ch_interior_9_dlc_casino_shaft_milo_" }, {}, {}, false },
+	{ "Casino Utility", 2519.87600000f, -255.30270000f, -25.11497000f, { "ch_int_placement_ch_interior_7_dlc_casino_utility_milo_" }, {}, {}, false },
+	{ "Casino Vault", 2488.34800000f, -267.36370000f, -71.64563000f, { "ch_int_placement_ch_interior_6_dlc_casino_vault_milo_" }, {}, {}, false },
 	{ "Cayo Perico Mansion", 5010.101f, -5753.549f, 27.8444f, { "h4_islandx_mansion_office" }, {}, {}, false }, // h4_dlc_island_office
-	//{ "Cayo Perico Hangar", 4441.45f, -4463.59f, 5.699768f, { "h4_mph4_airstrip_interior_0_airstrip_hanger" }, {}, {}, false }, // h4_dlc_island_office
 	{ "CEO Garage Modshop", 730.0f, -2990.0f, -40.0f, { "imp_impexp_interior_placement_interior_2_imptexp_mod_int_01_milo_" }, {}, {}, false },//No ceiling, floor, walls textures.
 	{ "Cinema", -1435.8f, -256.866f, 18.7795f, { "hei_hw1_02_interior_v_cinema_milo_" }, {}, {}, false },
 	{ "Del Perro Heights Apt 27", -1468.02100000f, -529.94370000f, 49.72156000f, { "hei_hw1_blimp_interior_27_dlc_apart_high_new_milo_" }, {}, {}, false },
@@ -343,8 +325,6 @@ const std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Executive CEO Office: Style 8", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_03b" }, {}, {}, false },
 	{ "Executive CEO Office: Style 9", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_03c" }, {}, {}, false },
 	{ "Executive CEO Office: Style 2 (Messy)", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_01b" }, {}, { IPL_PROPS_CEO_OFFICE }, false },
-	//{ "Executive Warehouse (Small)", 1095.0f, -3100.0f, -40.0f, { "ex_exec_warehouse_placement_interior_1_int_warehouse_s_dlc_milo_" }, {}, {}, false },
-	{ "Executive Warehouse (Medium)", 1060.0f, -3100.0f, -40.0f, { "ex_exec_warehouse_placement_interior_0_int_warehouse_m_dlc_milo_" }, {}, {}, false },
 	{ "Executive Warehouse (Large)", 1010.0f, -3100.0f, -40.0f, { "ex_exec_warehouse_placement_interior_2_int_warehouse_l_dlc_milo_" }, {}, {}, false },
 	{ "Foundry", 1082.32f, -1975.65f, 31.4724f }, 
 	{ "Gunrunning Regular", 938.3077f, -3196.1120f, -98.0000f, { "gr_grdlc_interior_placement_interior_1_grdlc_int_02_milo_" }, {}, {}, false },
@@ -352,9 +332,9 @@ const std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Heist Police Station", 445.488f, -983.779f, 30.6896f, { "" }, {}, {}, false },
 	{ "IAA Server Hub", 2168.08900000f, 2920.89000000f, -85.80049000f, { "xm_x17dlc_int_placement_interior_5_x17dlc_int_facility2_milo_" }, {}, {}, false },
 	{ "IAA Underground Facility", 2047.0f, 2942.0f, -62.90245f, { "xm_x17dlc_int_placement_interior_4_x17dlc_int_facility_milo_" }, {}, {}, false },
-	//{ "Jetsam Interior", 795.00000000f, -3000.00000000f, -40.00000000f, { "imp_impexp_interior_placement_interior_0_impexp_int_01_milo_" }, {}, {}, false },
 	{ "Lombank Office: Style 1", -1573.84900000f, -571.02540000f, 107.52290000f, { "ex_sm_13_office_01a" }, {}, {}, false },
 	{ "Martin Madrazo's House", 1396.58f, 1141.79f, 114.334f }, 
+	{ "Max Renda Refit", -583.1606f, -282.3967f, 35.394f, { "refit_unload" }, {}, {}, false }, // "bh1_16_doors_open" 
 	{ "Maze Bank Del Perro Office: Style 1", -1384.56400000f, -478.26990000f, 71.04205000f, { "ex_sm_15_office_01a" }, {}, {}, false },
 	{ "Mission Row Underground 'Winning' Garage", 400.09610000f, -956.67870000f, -100.00000000f},
 	{ "Music Locker", 1560.3f, 250.239f, -48.0f, {}, {}, {}, false },
@@ -373,10 +353,9 @@ const std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Stilthouse 3", 122.5349f, 542.5076f, 182.8967f, { "apa_ch2_05c_interior_1_v_mp_stilts_a_milo_" }, {}, {}, false },
 	{ "Stilthouse 4", -166.4324f, 481.537f, 136.2436f, { "apa_ch2_05e_interior_0_v_mp_stilts_b_milo_" }, {}, {}, false },
 	{ "Stilthouse 7", -573.0324f, 643.7613f, 144.4316f, { "apa_ch2_09c_interior_0_v_mp_stilts_a_milo_" }, {}, {}, false },
-	//{ "Stilthouse 8", -667.5856f, 582.3726f, 143.9697f, { "apa_ch2_09c_interior_2_v_mp_stilts_b_milo_" }, {}, {}, false },
 	{ "Studio Flat", 260.3297f, -997.4288f, -100.0f, { "hei_hw1_blimp_interior_v_studio_lo_milo_" }, {}, {}, false },
 	{ "Submarine", 514.266f, 4855.68f, -62.5621f, { "xm_x17dlc_int_placement_interior_8_x17dlc_int_sub_milo_" }, {}, {}, false },
-	{ "Submarine 2", 1560.83f, 411.237f, -48.0f, {}, {}, {}, false },
+	{ "Submarine 2", 1560.83f, 411.237f, -47.8f, {}, {}, {}, false },
 	{ "Tinsel Towers Apt 16", -613.54040000f, 63.04870000f, 100.81960000f, { "hw1_blimp_interior_v_apartment_high_milo__16" }, {}, {}, false },
 	{ "Tinsel Towers Apt 17", -587.82590000f, 44.26880000f, 86.41870000f, { "hw1_blimp_interior_v_apartment_high_milo__17" }, {}, {}, false },
 	{ "Tinsel Towers Apt 42", -614.86f, 40.6783f, 97.6f, {}, {}, {}, false },
@@ -741,7 +720,7 @@ const std::vector<tele_location> LOCATIONS_STUNTS = {
 
 const std::string JELLMAN_CAPTION = "Heist Map Updates In SP";
 
-const static std::vector<std::string> MENU_LOCATION_CATEGORIES{ "Safehouses", "Landmarks", "Roof/High Up", "Underwater", "Interiors", "Extra Exterior Scenery", "Online Maps", "Special Actors/Freaks Locations", "Collectibles", "Stunts" };// <-- not sure what went wrong here, but it don't look right.
+const static std::vector<std::string> MENU_LOCATION_CATEGORIES{ "Safehouses", "Landmarks", "Roof/High Up", "Underwater", "Interiors", "Extra Exterior Scenery", "Online Interiors", "Special Actors/Freaks Locations", "Collectibles", "Stunts" };// <-- not sure what went wrong here, but it don't look right.
 
 static std::vector<tele_location> VOV_LOCATIONS[] = { LOCATIONS_SAFE, LOCATIONS_LANDMARKS, LOCATIONS_HIGH, LOCATIONS_UNDERWATER, LOCATIONS_INTERIORS, LOCATIONS_REQSCEN, LOCATIONS_ONLINE, LOCATIONS_ACTORS, LOCATIONS_COLLECTIBLES, LOCATIONS_STUNTS/*, LOCATIONS_BROKEN, LOCATIONS_JELLMAN*/ };
 
@@ -751,21 +730,8 @@ const int TEL_3DMARKER_VALUES[] = { 1, 2, 3, 5 }; // 0, 4, 6, , 22 , 21
 int Tel3dmarkerIndexN = 1;
 bool Tel3dmarker_Changed = true;
 
-//3D Marker Max Size
-//const std::vector<std::string> TEL_3DMARKER_MSIZE_CAPTIONS{ "50", "100", "300", "500", "700", "1000" };
-//const int TEL_3DMARKER_MSIZE_VALUES[] = { 50, 100, 300, 500, 700, 1000 };
-//int Tel3dmarker_msize_Index = 5;
-//bool Tel3dmarker_msize_Changed = true;
-
-//Position In The Sky
-//const std::vector<std::string> TEL_3DMARKER_SKYPOS_CAPTIONS{ "1000m", "1500m", "2000m", "2500m" };
-//const int TEL_3DMARKER_SKYPOS_VALUES[] = { 1000, 1500, 2000, 2500 };
-//int Tel3dmarker_skypos_IndexN = 5;
-//bool Tel3dmarker_skypos_Changed = true;
-
 //Marker Type
 const std::vector<std::string> TEL_3DMARKER_MARTYPE_CAPTIONS{ "Symbol", "Column" };
-//const int TEL_3DMARKER_MARTYPE_VALUES[] = { 1, 2 };
 int Tel3dmarker_martype_Index = 0;
 bool Tel3dmarker_martype_Changed = true;
 
@@ -852,34 +818,18 @@ void teleport_to_mission_marker(){
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////
 
-/////////////////////// TELEPORT TO A VEHICLE AS A PASSENGER ///////////////////////////////
+/////////////////////// GO TO NEAREST VEHICLE AS A PASSENGER ///////////////////////////////
 void teleport_to_vehicle_as_passenger() {
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
-	const int numElements = 10;
-	const int arrSize = numElements * 2 + 2;
-	int nearbyPed[arrSize];
-	nearbyPed[0] = numElements;
-	int count = PED::GET_PED_NEARBY_PEDS(PLAYER::PLAYER_PED_ID(), nearbyPed, -1);
+	find_nearest_vehicle();
 
-	if (nearbyPed != NULL) {
-		for (int i = 0; i < count; i++) {
-			int offsettedID = i * 2 + 2;
-			if (nearbyPed[offsettedID] != NULL && ENTITY::DOES_ENTITY_EXIST(nearbyPed[offsettedID]) && PED::IS_PED_IN_ANY_VEHICLE(nearbyPed[offsettedID], 1)) {
-				Vehicle veh2 = PED::GET_VEHICLE_PED_IS_IN(nearbyPed[offsettedID], true);
-				if (ENTITY::DOES_ENTITY_EXIST(veh2)) {
-					PED::SET_PED_INTO_VEHICLE(playerPed, veh2, -2);
-					if (is_this_a_heli_or_plane(veh2)){
-						VEHICLE::SET_HELI_BLADES_FULL_SPEED(PED::GET_VEHICLE_PED_IS_USING(playerPed));
-					}
-					set_old_vehicle_state(false);
-				}
-			}
-		}
+	PED::SET_PED_INTO_VEHICLE(playerPed, temp_vehicle, -2);
+	if (is_this_a_heli_or_plane(temp_vehicle)) {
+		VEHICLE::SET_HELI_BLADES_FULL_SPEED(PED::GET_VEHICLE_PED_IS_USING(playerPed));
 	}
+	set_old_vehicle_state(false);
 }
-////////////////////////////////////////////////////////////////////////////////////
 
 void teleport_to_last_vehicle(){
 	Vehicle veh = PLAYER::GET_PLAYERS_LAST_VEHICLE();
@@ -901,9 +851,7 @@ void add_coords_generic_settings(std::vector<StringPairSettingDBRow>* results)
 	results->push_back(StringPairSettingDBRow{"lastJumpSpawn", lastJumpSpawn});
 	results->push_back(StringPairSettingDBRow{"TelChauffeurIndex", std::to_string(TelChauffeurIndex)});
 	results->push_back(StringPairSettingDBRow{"Tel3dmarkerIndexN", std::to_string(Tel3dmarkerIndexN)});
-	//results->push_back(StringPairSettingDBRow{"Tel3dmarker_msize_Index", std::to_string(Tel3dmarker_msize_Index)});
 	results->push_back(StringPairSettingDBRow{"Tel3dmarker_martype_Index", std::to_string(Tel3dmarker_martype_Index)});
-	//results->push_back(StringPairSettingDBRow{"Tel3dmarker_skypos_IndexN", std::to_string(Tel3dmarker_skypos_IndexN)});
 	results->push_back(StringPairSettingDBRow{"TelChauffeur_speed_IndexN", std::to_string(TelChauffeur_speed_IndexN)});
 	results->push_back(StringPairSettingDBRow{"TelChauffeur_altitude_Index", std::to_string(TelChauffeur_altitude_Index)});
 	results->push_back(StringPairSettingDBRow{"TelChauffeur_drivingstyles_Index", std::to_string(TelChauffeur_drivingstyles_Index)});
@@ -919,20 +867,10 @@ void onchange_tel_3dmarker_index(int value, SelectFromListMenuItem *source){
 	Tel3dmarker_Changed = true;
 }
 
-//void onchange_tel_3dmarker_msize_index(int value, SelectFromListMenuItem *source){
-//	Tel3dmarker_msize_Index = value;
-//	Tel3dmarker_msize_Changed = true;
-//}
-
 void onchange_tel_3dmarker_martype_index(int value, SelectFromListMenuItem *source){
 	Tel3dmarker_martype_Index = value;
 	Tel3dmarker_martype_Changed = true;
 }
-
-//void onchange_tel_3dmarker_skypos_index(int value, SelectFromListMenuItem *source){
-//	Tel3dmarker_skypos_IndexN = value;
-//	Tel3dmarker_skypos_Changed = true;
-//}
 
 void onchange_tel_chauffeur_speed_index(int value, SelectFromListMenuItem *source){
 	TelChauffeur_speed_IndexN = value;
@@ -958,15 +896,9 @@ void handle_generic_settings_teleportation(std::vector<StringPairSettingDBRow>* 
 		else if(setting.name.compare("Tel3dmarkerIndexN") == 0){
 			Tel3dmarkerIndexN = stoi(setting.value);
 		}
-		//else if (setting.name.compare("Tel3dmarker_msize_Index") == 0){
-		//	Tel3dmarker_msize_Index = stoi(setting.value);
-		//}
 		else if (setting.name.compare("Tel3dmarker_martype_Index") == 0){
 			Tel3dmarker_martype_Index = stoi(setting.value);
 		}
-		//else if (setting.name.compare("Tel3dmarker_skypos_IndexN") == 0){
-		//	Tel3dmarker_skypos_IndexN = stoi(setting.value);
-		//}
 		else if (setting.name.compare("TelChauffeur_speed_IndexN") == 0){
 			TelChauffeur_speed_IndexN = stoi(setting.value);
 		}
@@ -984,45 +916,70 @@ bool onconfirm_jump_category(MenuItem<int> choice)
 {
 	if (choice.value == -6) {
 		keyboard_on_screen_already = true;
-		curr_message = "Enter X, Y, Z coordinates. Use space or comma as a separator"; // jump to coordinates
+		curr_message = "Enter X, Y, Z coordinates. Use space or comma as a separator. Type 'Random' for a random location.";
 		std::string result = show_keyboard("Enter Name Manually", (char*)lastJumpSpawn.c_str());
 		if (!result.empty())
 		{
+			Entity e = PLAYER::PLAYER_PED_ID();
+			if (PED::IS_PED_IN_ANY_VEHICLE(e, 0)) e = PED::GET_VEHICLE_PED_IS_USING(e);
+			
 			result = trim(result);
 			lastJumpSpawn = result;
-						
-			Entity e = PLAYER::PLAYER_PED_ID();
-			std::string a = (char*)result.c_str();
-			std::string tmp_str_x, tmp_str_y, tmp_str_z;
-			int found_separator = 0;
-			bool found_symbol = false;
-			
-			for (int i = 0; i < a.size(); i++) {
-				if (a[i] != *"," && a[i] != *" ") found_symbol = true;
-				if ((a[i] == *"," || a[i] == *" ") && found_symbol == true) {
-					found_separator = found_separator + 1;
-					found_symbol = false;
-				}
-				for (int n = 0; n < 10; n++) {
-					char n_string = n + '0';
-					if (found_separator == 0 && a[i] == n_string) tmp_str_x = tmp_str_x + a[i];
-					if (found_separator == 1 && a[i] == n_string) tmp_str_y = tmp_str_y + a[i];
-					if (found_separator == 2 && a[i] == n_string) tmp_str_z = tmp_str_z + a[i];
-				}
-				if (found_separator == 0 && (a[i] == *"-" || a[i] == *".")) tmp_str_x = tmp_str_x + a[i];
-				if (found_separator == 1 && (a[i] == *"-" || a[i] == *".")) tmp_str_y = tmp_str_y + a[i];
-				if (found_separator == 2 && (a[i] == *"-" || a[i] == *".")) tmp_str_z = tmp_str_z + a[i];
-			}
-			
-			std::string::size_type sz;
-			float x = std::stof(tmp_str_x, &sz);
-			float y = std::stof(tmp_str_y, &sz);
-			float z = std::stof(tmp_str_z, &sz);
+			Hash hash = GAMEPLAY::GET_HASH_KEY((char*)result.c_str());
 
-			if (PED::IS_PED_IN_ANY_VEHICLE(e, 0)) {
-				e = PED::GET_VEHICLE_PED_IS_USING(e);
+			if (lastJumpSpawn != "random" && lastJumpSpawn != "Random" && lastJumpSpawn != "RANDOM")
+			{
+				std::string a = (char*)result.c_str();
+				std::string tmp_str_x, tmp_str_y, tmp_str_z;
+				int found_separator = 0;
+				bool found_symbol = false;
+
+				for (int i = 0; i < a.size(); i++) {
+					if (a[i] != *"," && a[i] != *" ") found_symbol = true;
+					if ((a[i] == *"," || a[i] == *" ") && found_symbol == true) {
+						found_separator = found_separator + 1;
+						found_symbol = false;
+					}
+					for (int n = 0; n < 10; n++) {
+						char n_string = n + '0';
+						if (found_separator == 0 && a[i] == n_string) tmp_str_x = tmp_str_x + a[i];
+						if (found_separator == 1 && a[i] == n_string) tmp_str_y = tmp_str_y + a[i];
+						if (found_separator == 2 && a[i] == n_string) tmp_str_z = tmp_str_z + a[i];
+					}
+					if (found_separator == 0 && (a[i] == *"-" || a[i] == *".")) tmp_str_x = tmp_str_x + a[i];
+					if (found_separator == 1 && (a[i] == *"-" || a[i] == *".")) tmp_str_y = tmp_str_y + a[i];
+					if (found_separator == 2 && (a[i] == *"-" || a[i] == *".")) tmp_str_z = tmp_str_z + a[i];
+				}
+
+				std::string::size_type sz;
+				float x = std::stof(tmp_str_x, &sz);
+				float y = std::stof(tmp_str_y, &sz);
+				float z = std::stof(tmp_str_z, &sz);
+
+				ENTITY::SET_ENTITY_COORDS(e, x, y, z, 1, 0, 0, 1);
 			}
-			ENTITY::SET_ENTITY_COORDS(e, x, y, z, 1, 0, 0, 1);
+
+			if (lastJumpSpawn == "random" || lastJumpSpawn == "Random" || lastJumpSpawn == "RANDOM")
+			{
+				int x_coord = (rand() % 3934 + -3294); // UP MARGIN + DOWN MARGIN
+				int y_coord = (rand() % 6576 + -3330); 
+				Vector3 me_coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 0);
+
+				bool groundFound = false;
+				static float groundCheckHeight[] =
+				{ 100.0, 150.0, 50.0, 0.0, 200.0, 250.0, 300.0, 350.0, 400.0, 450.0, 500.0, 550.0, 600.0, 650.0, 700.0, 750.0, 800.0 };
+				for (int i = 0; i < sizeof(groundCheckHeight) / sizeof(float); i++) {
+					ENTITY::SET_ENTITY_COORDS_NO_OFFSET(e, x_coord, y_coord, groundCheckHeight[i], 0, 0, 1);
+					WAIT(100);
+					if (GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(x_coord, y_coord, groundCheckHeight[i], &me_coords.z)) {
+						groundFound = true;
+						me_coords.z += 3.0;
+						break;
+					}
+				}
+				ENTITY::SET_ENTITY_COORDS(e, x_coord, y_coord, me_coords.z, 1, 0, 0, 1);
+			}
+
 			WAIT(0);
 			set_status_text("Teleported"); 
 		}
@@ -1063,18 +1020,6 @@ void set_3d_marker(){
 	listItem->caption = "Marker Symbol";
 	listItem->value = Tel3dmarkerIndexN;
 	menuItems.push_back(listItem);
-
-	//listItem = new SelectFromListMenuItem(TEL_CHAUFFEUR_ALTITUDE_CAPTIONS, onchange_tel_3dmarker_msize_index);
-	//listItem->wrap = false;
-	//listItem->caption = "Marker Symbol Max Size";
-	//listItem->value = Tel3dmarker_msize_Index;
-	//menuItems.push_back(listItem);
-
-	//listItem = new SelectFromListMenuItem(TEL_CHAUFFEUR_ALTITUDE_CAPTIONS, onchange_tel_3dmarker_skypos_index);
-	//listItem->wrap = false;
-	//listItem->caption = "Marker Symbol Altitude";
-	//listItem->value = Tel3dmarker_skypos_IndexN;
-	//menuItems.push_back(listItem);
 
 	draw_generic_menu<int>(menuItems, &activeLineIndex3dmarker, caption, onconfirm_3dmarker_menu, NULL, NULL);
 }
@@ -1198,52 +1143,34 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 	coords.z = value->z;
 
 	bool unloadedAnything = false;
-	DWORD time = GetTickCount() + 1000;
+	DWORD time = GetTickCount() + 100;
+
+	int interiorID = INTERIOR::GET_INTERIOR_AT_COORDS(coords.x, coords.y, coords.z);
+	INTERIOR::_LOAD_INTERIOR(interiorID);
+	STREAMING::SET_INTERIOR_ACTIVE(interiorID, true);
+	INTERIOR::DISABLE_INTERIOR(interiorID, false);
 
 	for (int x = 0; x < MENU_LOCATION_CATEGORIES.size(); x++) {
-		/*
-		//Added to avoid showing debug toggle menu.
-		if (x == MENU_LOCATION_CATEGORIES.size() - 1)
-		{
-		continue;
-		}
-		*/
-
 		for (int y = 0; y < VOV_LOCATIONS[x].size(); y++) {
-			//don't unload our newly loaded scenery
-			if (x == lastChosenCategory && y == choice.value) {
-				continue;
-			}
-
+			
 			tele_location* loc = &VOV_LOCATIONS[x][y];
-
-			//don't unload something using same loader
-			if (loc->scenery_required == value->scenery_required && loc->scenery_toremove == value->scenery_toremove) {
-				continue;
-			}
-
+			
 			if (loc->isLoaded && loc->scenery_required.size() > 0) {
 				if (!unloadedAnything) {
 					set_status_text("Unloading old scenery...");
-					time = GetTickCount() + 1000;
+					time = GetTickCount() + 100;
 					while (GetTickCount() < time) {
 						make_periodic_feature_call();
 						WAIT(0);
 					}
 				}
 
-				if (ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()))// && STREAMING::IS_IPL_ACTIVE("plg_01") == 1)
+				if (ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()))
 				{
 					for each (const char* scenery in loc->scenery_required) {
 						if (STREAMING::IS_IPL_ACTIVE(scenery))
 						{
 							STREAMING::REMOVE_IPL(scenery);
-						}
-					}
-					for each (const char* scenery in loc->scenery_toremove) {
-						if (!STREAMING::IS_IPL_ACTIVE(scenery))
-						{
-							STREAMING::REQUEST_IPL(scenery);
 						}
 					}
 				}
@@ -1253,27 +1180,11 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 		}
 	}
 
-	if ((value->scenery_required.size() > 0 || value->scenery_toremove.size() > 0) && !value->isLoaded){
+	if ((value->scenery_required.size() > 0) && !value->isLoaded){
 		set_status_text("Loading new scenery...");
 
-		if (ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()))// && STREAMING::IS_IPL_ACTIVE("plg_01") == 0)
+		if (ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()))
 		{
-			//
-			for each (const char* scenery in value->scenery_toremove) STREAMING::REMOVE_IPL(scenery);
-			for each (const char* scenery in value->scenery_required) STREAMING::REMOVE_IPL(scenery);
-			for each (char* prop in value->scenery_props) {
-				INTERIOR::DISABLE_INTERIOR(interiorID_temp, true);
-				STREAMING::SET_INTERIOR_ACTIVE(interiorID_temp, false);
-				INTERIOR::_DISABLE_INTERIOR_PROP(interiorID_temp, prop);
-				INTERIOR::REFRESH_INTERIOR(interiorID_temp);
-			}
-			//
-			for each (const char* scenery in value->scenery_toremove){
-				if (STREAMING::IS_IPL_ACTIVE(scenery))
-				{
-					STREAMING::REMOVE_IPL(scenery);
-				}
-			}
 			for each (const char* scenery in value->scenery_required){
 				if (!STREAMING::IS_IPL_ACTIVE(scenery))
 				{
@@ -1284,26 +1195,18 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 			{
 				for each (char* prop in value->scenery_props){
 					int interiorID = INTERIOR::GET_INTERIOR_AT_COORDS(coords.x, coords.y, coords.z); 
-					//INTERIOR::DISABLE_INTERIOR(interiorID, false);
-					//INTERIOR::_0x2CA429C029CCF247(interiorID); //Mysterious native used to load the Doomsday base. Will remove once we know when it is needed.
-					INTERIOR::_LOAD_INTERIOR(interiorID); //It looks like it does the same as the native above 
+					INTERIOR::_LOAD_INTERIOR(interiorID);
 					STREAMING::SET_INTERIOR_ACTIVE(interiorID, true);
 					INTERIOR::DISABLE_INTERIOR(interiorID, false);
 
-					/*if (INTERIOR::IS_INTERIOR_CAPPED(interiorID_temp))*/ INTERIOR::CAP_INTERIOR(interiorID, 0);
+					INTERIOR::CAP_INTERIOR(interiorID, 0);
 
 					if (!INTERIOR::_IS_INTERIOR_PROP_ENABLED(interiorID, prop))
 					{
 						INTERIOR::_ENABLE_INTERIOR_PROP(interiorID, prop);
 					}
-					else if (interiorID != INTERIOR::GET_INTERIOR_AT_COORDS(coords.x, coords.y, coords.z))
-					{
-						INTERIOR::_DISABLE_INTERIOR_PROP(interiorID, prop);
-					}
-					//_0xC1F1920BAF281317(interiorID, prop, 1);
+					
 					INTERIOR::REFRESH_INTERIOR(interiorID);
-					//STREAMING::SET_INTERIOR_ACTIVE(interiorID, true);
-					interiorID_temp = interiorID;
 				}
 			}
 		}
@@ -1316,11 +1219,8 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 			value->scenery_props.swap(emptyVec);
 			value->scenery_props.shrink_to_fit();
 		}
-
-		//Attempt to prevent the "out of memory" error by shrinking the vector down instead of leaving it ballooned.
-		//value->scenery_props.shrink_to_fit();
-		
-		DWORD time = GetTickCount() + 1000;
+				
+		DWORD time = GetTickCount() + 100;
 		while (GetTickCount() < time){
 			make_periodic_feature_call();
 			WAIT(0);
@@ -1328,33 +1228,14 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 
 		set_status_text("New scenery loaded");
 
-		time = GetTickCount() + 1000;
+		time = GetTickCount() + 100;
 		while (GetTickCount() < time){
 			make_periodic_feature_call();
 			WAIT(0);
 		}
 	}
-	/*
-	coords.x = value->x;
-	coords.y = value->y;
-	coords.z = value->z;*/
+	
 	teleport_to_coords(e, coords);
-
-	if (unloadedAnything){
-		set_status_text("Old scenery unloaded");
-
-		time = GetTickCount() + 1000;
-		while (GetTickCount() < time){
-			make_periodic_feature_call();
-			WAIT(0);
-		}
-	}
-
-	//
-	for each (char* prop in value->scenery_props) {
-		INTERIOR::REFRESH_INTERIOR(interiorID_temp);
-	}
-	//
 
 	return false;
 }
@@ -1427,7 +1308,7 @@ bool process_teleport_menu(int categoryIndex){
 		menuItems.push_back(togItem);
 
 		togItem = new ToggleMenuItem<int>();
-		togItem->caption = "Load 'Cayo Perico' Island Automatically";
+		togItem->caption = "Load Cayo Perico Island Automatically";
 		togItem->value = 8;
 		togItem->toggleValue = &featureCayoPerico;
 		menuItems.push_back(togItem);
@@ -1470,15 +1351,13 @@ void reset_teleporter_globals()
 	feature3dmarker = false;
 	featureTeleportAutomatically = false;
 	featureLandAtDestination = true;
-
 	featureShowDebugInfo = false;
 	featureCayoPerico = false;
+
 	lastChosenCategory = 0;
 	TelChauffeurIndex = 3;
 	Tel3dmarkerIndexN = 1;
-	//Tel3dmarker_msize_Index = 5;
 	Tel3dmarker_martype_Index = 0;
-	//Tel3dmarker_skypos_IndexN = 5;
 	TelChauffeur_speed_IndexN = 1;
 	TelChauffeur_altitude_Index = 5;
 	TelChauffeur_drivingstyles_Index = 0;
@@ -1682,11 +1561,11 @@ void update_teleport_features(){
 		MARATHON_BLIPS.shrink_to_fit();
 	}
 
-	// Load 'Cayo Perico' Island Automatically
+	// Load Cayo Perico Island Automatically
 	if (featureCayoPerico && ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()) && perico_init == false)
 	{
 		cayo_tick = cayo_tick + 1;
-		if (cayo_tick > 1000) {
+		if (cayo_tick > 800) { // 1000
 			for (int i = 0; i < IPLS_CAYO_PERICO.size(); i++) {
 				if (!STREAMING::IS_IPL_ACTIVE(IPLS_CAYO_PERICO[i]))
 				{
@@ -1694,10 +1573,22 @@ void update_teleport_features(){
 				}
 			}
 			int CayointeriorID = INTERIOR::GET_INTERIOR_AT_COORDS(5010.101f, -5753.549f, 27.8444f);
-			INTERIOR::DISABLE_INTERIOR(CayointeriorID, false);
 			INTERIOR::_LOAD_INTERIOR(CayointeriorID);
 			STREAMING::SET_INTERIOR_ACTIVE(CayointeriorID, true);
+			INTERIOR::DISABLE_INTERIOR(CayointeriorID, false);
+			INTERIOR::CAP_INTERIOR(CayointeriorID, 0);
 			perico_init = true;
+		}
+	}
+	if (featureCayoPerico && ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()) && WORLD_WAVES_VALUES[WorldWavesIndex] == -1) {
+		Vector3 my_coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 0);
+		if (my_coords.x > 3532.21 && my_coords.x < 5813.77 && my_coords.y > -6244.41 && my_coords.y < -4021.09) {
+			WATER::_SET_WAVES_INTENSITY(-400000); // GAMEPLAY::_0xC54A08C85AE4D410(1.0f);
+			auto_waves = true;
+		}
+		if ((my_coords.x < 3532.21 || my_coords.x > 5813.77 || my_coords.y < -6244.41 || my_coords.y > -4021.09) && auto_waves == true && WORLD_WAVES_VALUES[WorldWavesIndex] == -1) {
+			WATER::_RESET_WAVES_INTENSITY();
+			auto_waves = false;
 		}
 	}
 	if ((!featureCayoPerico && cayo_tick > 0) || DLC2::GET_IS_LOADING_SCREEN_ACTIVE()) {

@@ -11,7 +11,6 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "weapons.h"
 #include "peds_dont_like_weapons.h"
 #include "area_effect.h"
-
 #include "script.h"
 #include "..\ui_support\menu_functions.h"
 #include "..\io\config_io.h"

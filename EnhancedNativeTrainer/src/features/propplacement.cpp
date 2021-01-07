@@ -53,12 +53,7 @@ void begin_prop_placement(SpawnedPropInstance prop)
 	pp_exit_flag = false;
 	currentProp = prop;
 
-	//const float lineWidth = 250.0;
-	//const int lineCount = 1;
-	
 	const std::string caption = "Object Placement";
-
-	//draw_menu_header_line(caption,350.0f,50.0f,15.0f,0.0f,15.0f,false);
 
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
@@ -98,13 +93,10 @@ void begin_prop_placement(SpawnedPropInstance prop)
 
 	//create and configure our object camera
 	propCamera = CAM::CREATE_CAM("DEFAULT_SCRIPTED_CAMERA", 0);
-	//CAM::ATTACH_CAM_TO_ENTITY(propCamera, currentProp.instance, 0.0f, -cameraDistance, 2.0f, 1);
 	Vector3 worldCamCoords = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(currentProp.instance, 0.0f, -cameraDistance, 2.0f);
 	CAM::SET_CAM_COORD(propCamera, worldCamCoords.x, worldCamCoords.y, worldCamCoords.z);
 	CAM::POINT_CAM_AT_ENTITY(propCamera, currentProp.instance, 0.0f, 0.0f, 0.0f, 1);
 	
-	//Vector3 camRot = CAM::GET_CAM_ROT(propCamera, 2);
-	//Vector3 camCoords = CAM::GET_CAM_COORD(propCamera);
 	CAM::SET_GAMEPLAY_CAM_RELATIVE_PITCH(20.0f, 0x3f800000);
 	CAM::SET_CAM_ACTIVE(propCamera, 1);
 	CAM::RENDER_SCRIPT_CAMS(1, 0, 3000, 1, 0);
@@ -130,7 +122,6 @@ void begin_prop_placement(SpawnedPropInstance prop)
 
 		// draw menu
 		draw_menu_header_line(caption, 350.0f, 50.0f, 15.0f, 0.0f, 15.0f, false);
-		//draw_menu_line(caption, lineWidth, 15.0, 18.0, 0.0, 5.0, false, true);
 
 		make_periodic_feature_call();
 

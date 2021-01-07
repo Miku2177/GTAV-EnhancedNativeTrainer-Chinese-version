@@ -649,24 +649,11 @@ bool process_veh_savedcolour_menu()
 }
 // end of save/load veh colours
 
-bool onconfirm_paint_menu(MenuItem<int> choice){
+bool onconfirm_randcolour_category_menu(MenuItem<int> choice)
+{
 	whichpart = choice.value;
-	if(whichpart >= 0 && whichpart < 7){
-		process_paint_menu_type();
-	}
-	else if(whichpart == 7){
-		process_paint_menu_dirt();
-	}
-	else if(whichpart == 8){
-		process_paint_menu_fades();
-	}
-	else if(whichpart == 9){
-		process_paint_menu_liveries();
-	}
-	else if (whichpart == 163) {
-		process_veh_savedcolour_menu();
-	}
-	else if (whichpart == 164) {
+	if (whichpart == 10) {
+		Vehicle my_veh = PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 1);
 		for (int i = 0; i < 5; i++) {
 			int rand_colour_1 = -1;
 			int rand_colour_2 = -1;
@@ -687,15 +674,67 @@ bool onconfirm_paint_menu(MenuItem<int> choice){
 			int rand_colour_r = (rand() % 255 + 0);
 			int rand_colour_g = (rand() % 255 + 0);
 			int rand_colour_b = (rand() % 255 + 0);
-			if (i == 0) VEHICLE::SET_VEHICLE_COLOURS(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 1), rand_colour_1, rand_colour_2);
-			if (i == 1) VEHICLE::SET_VEHICLE_EXTRA_COLOURS(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 1), rand_colour_1, rand_colour_2);
-			if (i == 2) VEHICLE::SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 1), rand_colour_r, rand_colour_g, rand_colour_b);
-			if (i == 3) VEHICLE::SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 1), rand_colour_r, rand_colour_g, rand_colour_b);
+			int colorPrimary = -1;
+			int colorSecondary = -1;
+			VEHICLE::GET_VEHICLE_COLOURS(my_veh, &colorPrimary, &colorSecondary);
+			if (i == 0 && NPC_RAGDOLL_VALUES[VehRandomColourIndex] == 0) VEHICLE::SET_VEHICLE_COLOURS(my_veh, rand_colour_1, rand_colour_2);
+			if (i == 1 && NPC_RAGDOLL_VALUES[VehRandomColourIndex] == 0) VEHICLE::SET_VEHICLE_EXTRA_COLOURS(my_veh, rand_colour_1, rand_colour_2);
+			if (i == 0 && NPC_RAGDOLL_VALUES[VehRandomColourIndex] == 1) VEHICLE::SET_VEHICLE_COLOURS(my_veh, rand_colour_1, colorSecondary);
+			if (i == 1 && NPC_RAGDOLL_VALUES[VehRandomColourIndex] == 1) VEHICLE::SET_VEHICLE_EXTRA_COLOURS(my_veh, rand_colour_1, colorSecondary);
+			if (i == 0 && NPC_RAGDOLL_VALUES[VehRandomColourIndex] == 2) VEHICLE::SET_VEHICLE_COLOURS(my_veh, colorPrimary, rand_colour_2);
+			if (i == 1 && NPC_RAGDOLL_VALUES[VehRandomColourIndex] == 2) VEHICLE::SET_VEHICLE_EXTRA_COLOURS(my_veh, colorPrimary, rand_colour_2);
+			if (i == 2 && (NPC_RAGDOLL_VALUES[VehRandomColourIndex] == 0 || NPC_RAGDOLL_VALUES[VehRandomColourIndex] == 1)) VEHICLE::SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(my_veh, rand_colour_r, rand_colour_g, rand_colour_b);
+			if (i == 3 && (NPC_RAGDOLL_VALUES[VehRandomColourIndex] == 0 || NPC_RAGDOLL_VALUES[VehRandomColourIndex] == 2)) VEHICLE::SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(my_veh, rand_colour_r, rand_colour_g, rand_colour_b);
 			if (i == 4) {
-				VEHICLE::_SET_VEHICLE_INTERIOR_COLOUR(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 1), rand_colour_1);
-				VEHICLE::_SET_VEHICLE_DASHBOARD_COLOUR(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 1), rand_colour_2);
+				VEHICLE::_SET_VEHICLE_INTERIOR_COLOUR(my_veh, rand_colour_1);
+				VEHICLE::_SET_VEHICLE_DASHBOARD_COLOUR(my_veh, rand_colour_2);
 			}
 		}
+	}
+	return false;
+}
+
+bool process_veh_randomcolour_menu() {
+	std::vector<MenuItem<int>*> menuItems;
+	MenuItem<int>* item;
+	SelectFromListMenuItem* listItem;
+
+	item = new MenuItem<int>();
+	item->caption = "Randomize Colours";
+	item->value = 10;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	listItem = new SelectFromListMenuItem(VEH_RAND_COLOUR_CAPTIONS, onchange_vehicles_random_colour_index);
+	listItem->wrap = false;
+	listItem->caption = "Randomize";
+	listItem->value = VehRandomColourIndex;
+	menuItems.push_back(listItem);
+
+	draw_generic_menu<int>(menuItems, NULL, "Random Colour", onconfirm_randcolour_category_menu, NULL, NULL, vehicle_menu_interrupt);
+
+	return false;
+}
+
+bool onconfirm_paint_menu(MenuItem<int> choice){
+	whichpart = choice.value;
+	if(whichpart >= 0 && whichpart < 7){
+		process_paint_menu_type();
+	}
+	else if(whichpart == 7){
+		process_paint_menu_dirt();
+	}
+	else if(whichpart == 8){
+		process_paint_menu_fades();
+	}
+	else if(whichpart == 9){
+		process_paint_menu_liveries();
+	}
+	else if (whichpart == 163) {
+		process_veh_savedcolour_menu();
+	}
+	else if (whichpart == 164) {
+		process_veh_randomcolour_menu();
 	}
 
 	return false;
@@ -720,6 +759,7 @@ bool process_paint_menu(){
 	int livCount = VEHICLE::GET_VEHICLE_LIVERY_COUNT(veh);
 
 	std::vector<MenuItem<int> *> menuItems;
+	SelectFromListMenuItem* listItem;
 	MenuItem<int> *item;
 	int index;
 
