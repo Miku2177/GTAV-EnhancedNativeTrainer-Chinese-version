@@ -160,7 +160,6 @@ bool CopAlarmChanged = true;
 
 // Toggle Vision For Sniper Rifles
 const std::vector<std::string> WEAPONS_SNIPERVISION_CAPTIONS{ "OFF", "Via Hotkey", "Night Vision", "Thermal Vision" };
-//const int WEAPONS_SNIPERVISION_VALUES[] = { 0, 1, 2, 3 };
 int SniperVisionIndex = 0;
 bool SniperVisionChanged = true;
 
@@ -170,19 +169,16 @@ bool PowerPunchChanged = true;
 
 // Fire Mode
 const std::vector<std::string> WEAPONS_FIREMODE_CAPTIONS{ "Default", "Single Fire", "Burst Semi", "Burst Auto" };
-//const int WEAPONS_FIREMODE_VALUES[] = { 0, 1, 2, 3 };
 int WeaponsFireModeIndex = 0;
 bool WeaponsFireModeChanged = true;
 
 // No Reticle
 const std::vector<std::string> WEAPONS_NORETICLE_CAPTIONS{ "OFF", "Always", "For First Person Mode Only" };
-//const int WEAPONS_NORETICLE_VALUES[] = { 0, 1, 2 };
 int WeaponsNoReticle = 0;
 bool WeaponsNoReticleChanged = true;
 
 // Load Saved Weapons Automatically
 const std::vector<std::string> WEAPONS_SAVED_LOAD_CAPTIONS{ "OFF", "Add To Inventory", "Saved Weapons Only" };
-//const int WEAPONS_SAVED_LOAD_VALUES[] = { 0, 1, 2 };
 int WeaponsSavedLoad = 0;
 bool WeaponsSavedLoadChanged = true;
 
@@ -532,8 +528,6 @@ int get_current_revolver_appearance(){
 bool process_individual_weapon_menu(int weaponIndex){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	
-	//int originalWeapon = WEAPON::GET_SELECTED_PED_WEAPON(playerPed);
-
 	lastSelectedWeapon = weaponIndex;
 
 	std::string label = VOV_WEAPON_CAPTIONS[lastSelectedWeaponCategory].at(weaponIndex);
@@ -664,16 +658,6 @@ bool process_individual_weapon_menu(int weaponIndex){
 	}
 
 	draw_generic_menu<int>(menuItems, 0, label_caption, NULL, NULL, NULL, weapon_reequip_interrupt);
-
-	//int unarmed = GAMEPLAY::GET_HASH_KEY("WEAPON_UNARMED");
-	//if(WEAPON::HAS_PED_GOT_WEAPON(playerPed, originalWeapon, 0)){
-	//	if(originalWeapon != unarmed){
-	//		WEAPON::SET_CURRENT_PED_WEAPON(playerPed, originalWeapon, true);
-	//	}
-	//}
-	//else{
-	//	WEAPON::SET_CURRENT_PED_WEAPON(playerPed, unarmed, true);
-	//}
 
 	return false;
 }
@@ -1927,9 +1911,6 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 				case RAGE_JOAAT("WEAPON_MARKSMANRIFLE"):
 				case RAGE_JOAAT("WEAPON_MARKSMANRIFLE_MK2"):
 					sniper_rifle = true;
-				//default:
-				//	sniper_rifle = false;
-				//	UI::HIDE_HUD_COMPONENT_THIS_FRAME(14);
 			}
 		
 			if (sniper_rifle == false) UI::HIDE_HUD_COMPONENT_THIS_FRAME(14);
@@ -2379,7 +2360,6 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		CONTROLS::DISABLE_CONTROL_ACTION(2, 24, 1); // attack
 		CONTROLS::DISABLE_CONTROL_ACTION(2, 257, 1); // attack2
 		CONTROLS::DISABLE_CONTROL_ACTION(2, 69, 1); // vehicle attack
-		//CONTROLS::DISABLE_CONTROL_ACTION(2, 70, 1); // vehicle attack2
 		if (CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, 24)) {
 			if (featureWeaponInfiniteAmmo && PED::IS_PED_SHOOTING(playerPed)) bullet_tick = bullet_tick + 1;
 			if (WORLD_GRAVITY_LEVEL_VALUES[WeaponsFireModeIndex] == 3 && (((bullet_a - WEAPON::GET_AMMO_IN_PED_WEAPON(PLAYER::PLAYER_PED_ID(), WEAPON::GET_SELECTED_PED_WEAPON(playerPed))) > 4) || bullet_tick > 4)) { // burst auto
@@ -2400,7 +2380,6 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 				CONTROLS::ENABLE_CONTROL_ACTION(2, 24, 1); // attack
 				CONTROLS::ENABLE_CONTROL_ACTION(2, 257, 1); // attack2
 				CONTROLS::ENABLE_CONTROL_ACTION(2, 69, 1); // vehicle attack
-				//CONTROLS::ENABLE_CONTROL_ACTION(2, 70, 1); // vehicle attack2
 			}
 		}
 		if (!CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, 24) && !PED::GET_PED_CONFIG_FLAG(PLAYER::PLAYER_PED_ID(), 58, 1)) {

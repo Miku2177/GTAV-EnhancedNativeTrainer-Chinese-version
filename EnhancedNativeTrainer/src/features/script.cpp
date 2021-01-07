@@ -22,6 +22,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "script.h"
 #include "fuel.h"
 #include "misc.h"
+#include "world.h"
 #include "skins.h"
 #include "hotkeys.h"
 #include "propplacement.h"
@@ -82,6 +83,7 @@ bool everInitialised = false;
 
 bool falling_down = false;
 bool looking_behind = false;
+bool enabled_map = false;
 
 bool veh_engine_t = false;
 
@@ -97,8 +99,6 @@ bool def_w = false;
 bool onlineWarningShown = false;
 
 bool injured_drunk = false;
-
-//std::mutex db_mutex;
 
 // features
 bool featurePlayerInvincible = false;
@@ -123,12 +123,9 @@ bool featureWantedLevelFrozenUpdated = false;
 bool featureLevitation = false;
 bool featureNoScubaGearMask = false;
 bool featureNoScubaSound = false;
-
 bool super_jump_no_parachute, super_jump_intheair = false;
-
 bool manual_instant = false;
 bool first_person_rotate = false;
-
 bool featureWantedLevelNoPHeli = false;
 bool featureWantedLevelNoPHeliUpdated = false;
 bool featureWantedNoPRoadB = false;
@@ -137,18 +134,13 @@ bool featureWantedLevelNoPBoats = false;
 bool featureWantedLevelNoPBoatsUpdated = false;
 bool featureWantedLevelNoSWATVehicles = false;
 bool featureWantedLevelNoSWATVehiclesUpdated = false;
-
 bool NoTaxiWhistling = false;
 bool featurePlayerCanBeHeadshot = false;
 bool featureRespawnsWhereDied = false;
-
 bool lev_message = false;
-
 bool engine_running = true;
 bool we_have_troubles, iaminside = false;
-
 bool been_injured = true;
-
 bool p_invisible = false;
 bool featurePlayerLife = false;
 bool featurePlayerLifeUpdated = true;
@@ -186,7 +178,6 @@ const std::vector<std::string> GRAVITY_CAPTIONS{ "Minimum", "0.1x", "0.5x", "0.7
 const float GRAVITY_VALUES[] = { 0.0f, 0.1f, 0.5f, 0.75f, 1.0f };
 
 const std::vector<std::string> REGEN_CAPTIONS{ "No Regeneration", "0.1x", "0.25x", "0.5x", "1x (Normal)", "2x", "5x", "10x", "20x", "50x", "100x", "200x", "500x", "1000x" };
-//const std::vector<float> REGEN_VALUES{ 0.0f, 0.1f, 0.25f, 0.5f, 1.0f, 2.0f, 5.0f, 10.0f, 20.0f, 50.0f, 100.0f, 200.0f, 500.0f, 1000.0f };
 const float REGEN_VALUES[] = { 0.0f, 0.1f, 0.25f, 0.5f, 1.0f, 2.0f, 5.0f, 10.0f, 20.0f, 50.0f, 100.0f, 200.0f, 500.0f, 1000.0f };
 int current_regen_speed = 4;
 bool current_regen_speed_changed = true;
@@ -595,6 +586,25 @@ void update_features(){
 		set_menu_showing(true);
 	}
 
+	if (is_menu_showing() && (IsKeyDown(VK_ESCAPE) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, INPUT_FRONTEND_PAUSE))) {
+		set_menu_showing(false);
+		if (MISC_DEF_MANUTAB_VALUES[DefMenuTabIndex] > -2 && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID()) == 1 && !CUTSCENE::IS_CUTSCENE_PLAYING() && keyboard_on_screen_already == false) {
+			UI::ACTIVATE_FRONTEND_MENU(GAMEPLAY::GET_HASH_KEY("FE_MENU_VERSION_SP_PAUSE"), featureGamePause, MISC_DEF_MANUTAB_VALUES[DefMenuTabIndex]);
+			AUDIO::SET_AUDIO_FLAG("PlayMenuMusic", true);
+		}
+		else AUDIO::SET_AUDIO_FLAG("PlayMenuMusic", false);
+		enabled_map = true;
+	}
+	if (!is_menu_showing() && enabled_map == true && !featurePenitentiaryMap && !featureCayoPericoMap) {
+		WAIT(200);
+		set_menu_showing(true);
+		enabled_map = false;
+	}
+	if (!is_menu_showing() && enabled_map == true && MISC_DEF_MANUTAB_VALUES[DefMenuTabIndex] > -2) {
+		set_menu_showing(true);
+		enabled_map = false;
+	}
+
 	if (CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(2, 0) || CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(2, INPUT_NEXT_CAMERA)) {
 		if (is_in_airbrake_mode() && !airbrake_switch_pressed()) {
 			KeyConfig* key = get_config()->get_key_config()->get_key(KeyConfig::KEY_TOGGLE_AIRBRAKE);
@@ -611,16 +621,6 @@ void update_features(){
 	if (!CONTROLS::IS_DISABLED_CONTROL_PRESSED(26, 0) && !CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, INPUT_LOOK_BEHIND) && looking_behind == true) {
 		set_menu_showing(true);
 		looking_behind = false;
-	}
-
-	if (is_menu_showing() && (IsKeyDown(VK_ESCAPE) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, INPUT_FRONTEND_PAUSE))) {
-		set_menu_showing(false);
-		if (MISC_DEF_MANUTAB_VALUES[DefMenuTabIndex] > -2) {
-			UI::ACTIVATE_FRONTEND_MENU(GAMEPLAY::GET_HASH_KEY("FE_MENU_VERSION_SP_PAUSE"), featureGamePause, MISC_DEF_MANUTAB_VALUES[DefMenuTabIndex]);
-			AUDIO::SET_AUDIO_FLAG("PlayMenuMusic", true);
-		} else AUDIO::SET_AUDIO_FLAG("PlayMenuMusic", false);
-		WAIT(200);
-		set_menu_showing(true);
 	}
 
 	if(is_menu_showing() || is_in_airbrake_mode() || is_in_prop_placement_mode()){

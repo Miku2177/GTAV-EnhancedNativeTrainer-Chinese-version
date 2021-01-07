@@ -369,7 +369,6 @@ void airbrake(bool inVehicle)
 		float v_z = p_force * (CamRot.x * 0.2);
 
 		ENTITY::SET_ENTITY_COLLISION(target, 0, 1);
-		//if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) ENTITY::SET_ENTITY_COLLISION(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), 0, 1);
 		ENTITY::SET_ENTITY_ALPHA(PLAYER::PLAYER_PED_ID(), 120, 0);
 		if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) ENTITY::SET_ENTITY_ALPHA(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), 120, 0);
 
@@ -405,6 +404,7 @@ void airbrake(bool inVehicle)
 			if (travelSpeed == 0) p_force = forwardPush * 10;
 			if (travelSpeed == 1) p_force = forwardPush * 19;
 			if (travelSpeed == 2) p_force = forwardPush * 24;
+			if (ENTITY::IS_ENTITY_IN_WATER(playerPed) && !PED::IS_PED_SWIMMING_UNDER_WATER(playerPed)) p_force = forwardPush * 124;
 			ENTITY::FREEZE_ENTITY_POSITION(target, false);
 			ENTITY::APPLY_FORCE_TO_ENTITY(target, 1, 0, 0, p_force, 0, 0, 0, true, false, true, true, true, true);
 			curLocation = ENTITY::GET_ENTITY_COORDS(target, 0);
@@ -414,6 +414,7 @@ void airbrake(bool inVehicle)
 			if (travelSpeed == 0) p_force = forwardPush * 10;
 			if (travelSpeed == 1) p_force = forwardPush * 19;
 			if (travelSpeed == 2) p_force = forwardPush * 24;
+			if (ENTITY::IS_ENTITY_IN_WATER(playerPed) && !PED::IS_PED_SWIMMING_UNDER_WATER(playerPed)) p_force = forwardPush * 124;
 			ENTITY::FREEZE_ENTITY_POSITION(target, false);
 			ENTITY::APPLY_FORCE_TO_ENTITY(target, 1, 0, 0, -p_force, 0, 0, 0, true, false, true, true, true, true);
 			curLocation = ENTITY::GET_ENTITY_COORDS(target, 0);
@@ -424,13 +425,13 @@ void airbrake(bool inVehicle)
 	if (mouse_view_control && !frozen_time) {
 		Vector3 CamRot = CAM::GET_GAMEPLAY_CAM_ROT(2);
 		int p_force = forwardPush * 5; // 5;
+		if (ENTITY::IS_ENTITY_IN_WATER(playerPed) && !PED::IS_PED_SWIMMING_UNDER_WATER(playerPed)) p_force = forwardPush * 124;
 		float rad = 2 * 3.14 * (CamRot.z / 360);
 		float v_x = -(sin(rad) * p_force * 10);
 		float v_y = (cos(rad) * p_force * 10);
 		float v_z = p_force * (CamRot.x * 0.2);
 		
 		ENTITY::SET_ENTITY_COLLISION(target, 0, 1);
-		//if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) ENTITY::SET_ENTITY_COLLISION(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), 0, 1);
 		ENTITY::SET_ENTITY_ROTATION(target, CamRot.x, CamRot.y, CamRot.z, 1, true);
 		ENTITY::SET_ENTITY_ALPHA(PLAYER::PLAYER_PED_ID(), 120, 0);
 		if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) ENTITY::SET_ENTITY_ALPHA(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), 120, 0);
@@ -462,6 +463,7 @@ void airbrake(bool inVehicle)
 			if (travelSpeed == 0) p_force = forwardPush * 10;
 			if (travelSpeed == 1) p_force = forwardPush * 19;
 			if (travelSpeed == 2) p_force = forwardPush * 24;
+			if (ENTITY::IS_ENTITY_IN_WATER(playerPed) && !PED::IS_PED_SWIMMING_UNDER_WATER(playerPed)) p_force = forwardPush * 124;
 			ENTITY::FREEZE_ENTITY_POSITION(target, false);
 			ENTITY::APPLY_FORCE_TO_ENTITY(target, 1, 0, 0, p_force, 0, 0, 0, true, false, true, true, true, true);
 			curLocation = CAM::GET_GAMEPLAY_CAM_COORD();
@@ -471,6 +473,7 @@ void airbrake(bool inVehicle)
 			if (travelSpeed == 0) p_force = forwardPush * 10;
 			if (travelSpeed == 1) p_force = forwardPush * 19;
 			if (travelSpeed == 2) p_force = forwardPush * 24;
+			if (ENTITY::IS_ENTITY_IN_WATER(playerPed) && !PED::IS_PED_SWIMMING_UNDER_WATER(playerPed)) p_force = forwardPush * 124;
 			ENTITY::FREEZE_ENTITY_POSITION(target, false);
 			ENTITY::APPLY_FORCE_TO_ENTITY(target, 1, 0, 0, -p_force, 0, 0, 0, true, false, true, true, true, true);
 			curLocation = CAM::GET_GAMEPLAY_CAM_COORD();

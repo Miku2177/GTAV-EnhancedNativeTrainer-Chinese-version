@@ -62,7 +62,7 @@ bool no_grip_snowing_e = false;
 bool no_grip_when_wet_e = false;
 
 // peds chance to slip
-int s_tick_secs, s_tick_secs_passed, s_tick_secs_curr = 0;
+int s_tick_secs_passed, s_tick_secs_curr = 0;
 int l_tick_secs_curr, lightning_seconds = 0;
 bool slipped = false;
 Ped temp_ped_s = -1;
@@ -94,8 +94,11 @@ bool featureNoGameHintCameraLocking = false;
 bool featureNoPoliceBlips = false;
 bool featureFullMap = false;
 bool featurePenitentiaryMap = false;
+bool featureCayoPericoMap = false;
 bool featureZancudoMap = false;
 bool featureZancudoMapUpdated = false;
+bool featurePenitentiaryMapUpdated = false;
+bool featureCayoPericoMapUpdated = false;
 bool featureBusLight = false;
 bool featureAcidWater = false;
 bool featureAcidRain = false;
@@ -142,7 +145,6 @@ BOOL highbeamsBAutoOn = -1;
 
 // Radar Map Size
 const std::vector<std::string> WORLD_RADAR_MAP_CAPTIONS{ "Normal", "Big", "Full" };
-//const int WORLD_RADAR_MAP_VALUES[] = { 1, 2, 3 };
 int RadarMapIndexN = 0;
 bool RadarMapChanged = true;
 
@@ -153,8 +155,6 @@ int WindStrengthIndex = 0;
 bool WindStrengthChanged = true;
 
 // Waves Intensity
-const std::vector<std::string> WORLD_WAVES_CAPTIONS{ "Default", "No Waves", "0.1x", "5x", "10x", "20x", "30x", "50x" };
-const int WORLD_WAVES_VALUES[] = { -1, -500000, -400000, 5, 10, 20, 30, 50 };
 int WorldWavesIndex = 0;
 bool WorldWavesChanged = true;
 
@@ -183,7 +183,6 @@ int WeatherChangeIndex = 0;
 bool WeatherChangeChanged = true;
 
 const std::vector<std::string> MISC_WEATHER_METHOD_CAPTIONS{ "Random Weather", "Mixed Weather", "Custom Order" };
-//const int MISC_WEATHER_METHOD_VALUES[] = { 1, 2, 3 };
 int WeatherMethodIndexN = 0;
 bool WeatherMethodChanged = true;
 
@@ -333,7 +332,7 @@ void process_weather_menu()
 //////////////////////////////////// CLOUDS MENU /////////////////////////////
 bool onconfirm_clouds_menu(MenuItem<std::string> choice)
 {
-	std::stringstream ss; ss << "Clouds Frozen at: " << lastCloudsName;
+	//std::stringstream ss; ss << "Clouds Frozen at: " << lastCloudsName;
 	switch (choice.currentMenuIndex)
 	{
 	case 0:
@@ -343,15 +342,12 @@ bool onconfirm_clouds_menu(MenuItem<std::string> choice)
 			std::stringstream ss; ss << "Clouds frozen at: " << lastCloudsName;
 			set_status_text(ss.str());
 		}
-		else if (!featureCloudsFreeze)
-		{
-			set_status_text("Clouds unfrozen");
-		}
-		else
+		if (featureCloudsFreeze && lastClouds.empty())
 		{
 			set_status_text("Set a clouds value first");
 			featureCloudsFreeze = false;
 		}
+		if (!featureCloudsFreeze) set_status_text("Clouds unfrozen");
 		break;
 	case 1:
 		// No Clouds
@@ -364,7 +360,7 @@ bool onconfirm_clouds_menu(MenuItem<std::string> choice)
 		lastCloudsName = choice.caption;
 
 		GRAPHICS::_CLEAR_CLOUD_HAT();
-		WAIT(100);
+		WAIT(10);
 		GRAPHICS::_SET_CLOUD_HAT_TRANSITION((char *)lastClouds.c_str(), 0.3);
 				
 		std::ostringstream ss2;
@@ -653,16 +649,24 @@ void process_world_menu()
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Show Bolingbroke Penitentiary On Map";
-	togItem->value = 1;
-	togItem->toggleValue = &featurePenitentiaryMap;
-	menuItems.push_back(togItem);
-
-	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "Show Fort Zancudo On Map";
 	togItem->value = 1;
 	togItem->toggleValue = &featureZancudoMap;
 	togItem->toggleValueUpdated = &featureZancudoMapUpdated;
+	menuItems.push_back(togItem);
+
+	togItem = new ToggleMenuItem<int>();
+	togItem->caption = "Show Bolingbroke Penitentiary On Map";
+	togItem->value = 1;
+	togItem->toggleValue = &featurePenitentiaryMap;
+	togItem->toggleValueUpdated = &featurePenitentiaryMapUpdated;
+	menuItems.push_back(togItem);
+
+	togItem = new ToggleMenuItem<int>();
+	togItem->caption = "Show Cayo Perico Island On Map";
+	togItem->value = 1;
+	togItem->toggleValue = &featureCayoPericoMap;
+	togItem->toggleValueUpdated = &featureCayoPericoMapUpdated;
 	menuItems.push_back(togItem);
 
 	listItem = new SelectFromListMenuItem(WORLD_RADAR_MAP_CAPTIONS, onchange_world_radar_map_index);
@@ -739,6 +743,7 @@ void reset_world_globals()
 	featureNoPoliceBlips = false;
 	featureFullMap = false;
 	featurePenitentiaryMap = false;
+	featureCayoPericoMap = false;
 	featureZancudoMap = false;
 	featureBusLight = false;
 	featureAcidWater = false;
@@ -748,6 +753,8 @@ void reset_world_globals()
 	featureHeadlightsBlackout = false;
 	featureSnow = false;
 	featureMPMap = false;
+	featurePenitentiaryMapUpdated = false;
+	featureCayoPericoMapUpdated = false;
 
 	featureWorldRandomCops =
 	featureWorldRandomTrains =
@@ -807,96 +814,6 @@ void update_world_features()
 		featureWorldGarbageTrucksUpdated = false;
 	}
 
-	/*if (featureBlackout)
-	{
-		if (STREAMING::IS_IPL_ACTIVE("DT1_22_bldg2"))
-		{
-			set_status_text("DT1_22_bldg2");
-			STREAMING::REMOVE_IPL("DT1_22_bldg2");
-		}
-
-		GRAPHICS::_0x1600FD8CF72EBC12(0.001);
-		//GRAPHICS::_0x1A8E2C8B9CF4549C("lab_none_dark", "lab_none_dark_OVR");
-		//GRAPHICS::_0x1A8E2C8B9CF4549C("lab_none_exit", "lab_none_exit_OVR");
-		GRAPHICS::ADD_TCMODIFIER_OVERRIDE("lab_none_dark", "lab_none_dark_OVR");
-		GRAPHICS::ADD_TCMODIFIER_OVERRIDE("lab_none_exit", "lab_none_exit_OVR");
-
-		for (int i = 0; i <= 35; i++)
-		{
-			std::ostringstream ss;
-			ss << "distlodlights_medium";
-			ss << std::setfill('0') << std::setw(3) << i;
-			auto scenery = ss.str().c_str();
-			if (STREAMING::IS_IPL_ACTIVE(scenery))
-			{
-				set_status_text(ss.str());
-				STREAMING::REMOVE_IPL(scenery);
-			}
-		}
-		for (int i = 0; i <= 61; i++)
-		{
-			std::ostringstream ss;
-			ss << "distlodlights_small";
-			ss << std::setfill('0') << std::setw(3) << i;
-			auto scenery = ss.str().c_str();
-			if (STREAMING::IS_IPL_ACTIVE(scenery))
-			{
-				set_status_text(ss.str());
-				STREAMING::REMOVE_IPL(scenery);
-			}
-		}
-		for (int i = 0; i <= 35; i++)
-		{
-			std::ostringstream ss;
-			ss << "lodlights_medium";
-			ss << std::setfill('0') << std::setw(3) << i;
-			auto scenery = ss.str().c_str();
-			if (STREAMING::IS_IPL_ACTIVE(scenery))
-			{
-				set_status_text(ss.str());
-				STREAMING::REMOVE_IPL(scenery);
-			}
-		}
-		for (int i = 0; i <= 61; i++)
-		{
-			std::ostringstream ss;
-			ss << "lodlights_small";
-			ss << std::setfill('0') << std::setw(3) << i;
-			auto scenery = ss.str().c_str();
-			if (STREAMING::IS_IPL_ACTIVE(scenery))
-			{
-				set_status_text(ss.str());
-				STREAMING::REMOVE_IPL(scenery);
-			}
-		}
-
-		for (int i = 0; i <= 0; i++)
-		{
-			std::ostringstream ss;
-			ss << "lodlights_large";
-			ss << std::setfill('0') << std::setw(3) << i;
-			auto scenery = ss.str().c_str();
-			if (STREAMING::IS_IPL_ACTIVE(scenery))
-			{
-				set_status_text(ss.str());
-				STREAMING::REMOVE_IPL(scenery);
-			}
-		}
-
-		for (int i = 0; i <= 0; i++)
-		{
-			std::ostringstream ss;
-			ss << "distlodlights_large";
-			ss << std::setfill('0') << std::setw(3) << i;
-			auto scenery = ss.str().c_str();
-			if (STREAMING::IS_IPL_ACTIVE(scenery))
-			{
-				set_status_text(ss.str());
-				STREAMING::REMOVE_IPL(scenery);
-			}
-		}
-	}*/
-
 	if (featureWorldNoPeds)
 	{
 		Vector3 v3 = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 1);
@@ -938,13 +855,22 @@ void update_world_features()
 		radar_map_toogle_3 = true;
 	}
 	
-	// Show Bolingbroke Penitentiary On Map
-	if (featurePenitentiaryMap) {
+	// Show Bolingbroke Penitentiary On Map & Show Cayo Perico Island On Map
+	if (featurePenitentiaryMap || featureCayoPericoMap) {
 		Vector3 coords_me = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 		if (INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_me.x, coords_me.y, coords_me.z)) {
-			UI::SET_RADAR_AS_INTERIOR_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("V_FakePrison"), 1700, 2580, 0, 0);
+			if (featurePenitentiaryMap) UI::SET_RADAR_AS_INTERIOR_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("V_FakePrison"), 1700, 2580, 0, 0);
+			if (featureCayoPericoMap) UI::SET_RADAR_AS_INTERIOR_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("h4_fake_islandx"), 4700.0f, -5145.0, 0, 0);
 			UI::SET_RADAR_AS_EXTERIOR_THIS_FRAME();
 		}
+	}
+	if (featurePenitentiaryMapUpdated) {
+		featureCayoPericoMap = false;
+		featurePenitentiaryMapUpdated = false;
+	}
+	if (featureCayoPericoMapUpdated) {
+		featurePenitentiaryMap = false;
+		featureCayoPericoMapUpdated = false;
 	}
 
 	// Show Fort Zancudo On Map
@@ -1345,6 +1271,14 @@ void update_world_features()
 				slippery_s = slippery_s + 1;
 				if (slippery_s < slip_index_s && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip_ped.x, coords_slip_ped.y, coords_slip_ped.z)) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], true);
 				if (slippery_s > slip_index_s - 1 && slippery_s < 20) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], false); // slip_index * 2
+				if (VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(bus_veh[i])) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(bus_veh[i]))) {
+					int vehslipspeed = ENTITY::GET_ENTITY_SPEED(bus_veh[i]);
+					if (vehslipspeed > 5 || (vehslipspeed < 6 && CONTROLS::IS_CONTROL_RELEASED(2, 71))) {
+						if ((slippery_s < (slip_index_s / 5) || (slippery_s > (slip_index_s / 4) - 1 && slippery_s < (slip_index_s / 3))) && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip_ped.x, coords_slip_ped.y, coords_slip_ped.z)) // 4 3 2
+							VEHICLE::SET_VEHICLE_GRAVITY(bus_veh[i], false);
+						if ((slippery_s > (slip_index_s / 5) - 1 && slippery_s < (slip_index_s / 4)) || (slippery_s > (slip_index_s / 3) - 1 && slippery_s < 20)) VEHICLE::SET_VEHICLE_GRAVITY(bus_veh[i], true);
+					}
+				}
 				if (slippery_s > 19) slippery_s = 0; 
 				srand(time(0));
 				int time11 = (rand() % 3000 + 0); // UP MARGIN + DOWN MARGIN
@@ -1355,14 +1289,14 @@ void update_world_features()
 				if (NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] == 1 && slippery_randomize > 990 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
 					AI::IS_PED_RUNNING(PLAYER::PLAYER_PED_ID()) && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip.x, coords_slip.y, coords_slip.z) && !ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID()))
 					PED::SET_PED_TO_RAGDOLL(PLAYER::PLAYER_PED_ID(), time11, time12, r_Type, true, true, false);
-				if (NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] == 1 && slippery_randomize > 920 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
+				if (NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] == 1 && slippery_randomize > 940 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
 					AI::IS_PED_SPRINTING(PLAYER::PLAYER_PED_ID()) && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip.x, coords_slip.y, coords_slip.z) && !ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID())) 
 					PED::SET_PED_TO_RAGDOLL(PLAYER::PLAYER_PED_ID(), time11, time12, r_Type, true, true, false);
 				// realistic
-				if (NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] == 2 && slippery_randomize > 970 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
+				if (NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] == 2 && slippery_randomize > 980 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
 					AI::IS_PED_RUNNING(PLAYER::PLAYER_PED_ID()) && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip.x, coords_slip.y, coords_slip.z) && !ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID())) 
 					PED::SET_PED_TO_RAGDOLL(PLAYER::PLAYER_PED_ID(), time11, time12, r_Type, true, true, false);
-				if (NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] == 2 && slippery_randomize > 880 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
+				if (NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] == 2 && slippery_randomize > 910 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
 					AI::IS_PED_SPRINTING(PLAYER::PLAYER_PED_ID()) && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip.x, coords_slip.y, coords_slip.z) && !ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID())) 
 					PED::SET_PED_TO_RAGDOLL(PLAYER::PLAYER_PED_ID(), time11, time12, r_Type, true, true, false);
 				// normalize speed
@@ -1393,7 +1327,15 @@ void update_world_features()
 					}
 					slippery_r = slippery_r + 1;
 					if (slippery_r < slip_index && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip_r.x, coords_slip_r.y, coords_slip_r.z)) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], true);
-					if (slippery_r > slip_index - 1 && slippery_r < 20) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], false); 
+					if (slippery_r > slip_index - 1 && slippery_r < 20) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], false);
+					if (VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(bus_veh[i])) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(bus_veh[i]))) {
+						int vehslipspeed = ENTITY::GET_ENTITY_SPEED(bus_veh[i]);
+						if (vehslipspeed > 5 || (vehslipspeed < 6 && CONTROLS::IS_CONTROL_RELEASED(2, 71))) {
+							if ((slippery_s < (slip_index / 5) || (slippery_s > (slip_index / 4) - 1 && slippery_s < (slip_index / 3))) && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip_r.x, coords_slip_r.y, coords_slip_r.z)) // 4 3 2
+								VEHICLE::SET_VEHICLE_GRAVITY(bus_veh[i], false);
+							if ((slippery_s > (slip_index / 5) - 1 && slippery_s < (slip_index / 4)) || (slippery_s > (slip_index / 3) - 1 && slippery_s < 20)) VEHICLE::SET_VEHICLE_GRAVITY(bus_veh[i], true);
+						}
+					}
 					if (slippery_r > 19) slippery_r = 0; 
 					// normalize speed
 					Vector3 my_coords_sl = ENTITY::GET_ENTITY_COORDS(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 0), true);
@@ -1555,36 +1497,6 @@ void update_world_features()
 				UI::SET_TEXT_OUTLINE();
 				UI::SET_TEXT_LEADING(1);
 				UI::END_TEXT_COMMAND_DISPLAY_TEXT(0, 0);
-			}
-			// Reduced Grip If Snowing (Peds)
-			if (NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] > 0 && featureSnow && bus_ped[i] != PLAYER::PLAYER_PED_ID()) {
-				int slippery_randomize2 = (rand() % 1000 + 1);
-				if (((NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] == 1 && slippery_randomize2 > 995) || (NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] == 2 && slippery_randomize2 > 985)) &&
-					(AI::IS_PED_RUNNING(bus_ped[i]) || AI::IS_PED_SPRINTING(bus_ped[i])) && slipped == false && PED::GET_PED_TYPE(bus_ped[i]) != 6) {
-					temp_ped_s = bus_ped[i];
-					slipped = true;
-				}
-				if (slipped == true) {
-					s_tick_secs_passed = clock() / CLOCKS_PER_SEC;
-					if (((clock() / (CLOCKS_PER_SEC / 1000)) - s_tick_secs_curr) != 0) {
-						s_tick_secs = s_tick_secs + 1;
-						s_tick_secs_curr = s_tick_secs_passed;
-					}
-					if (s_tick_secs == 20) {
-						STREAMING::REQUEST_ANIM_DICT("missheist_agency3astumble_getup");
-						while (!STREAMING::HAS_ANIM_DICT_LOADED("missheist_agency3astumble_getup")) WAIT(0);
-						if (!ENTITY::IS_ENTITY_PLAYING_ANIM(temp_ped_s, "missheist_agency3astumble_getup", "stumble_getup", 3)) {
-							AI::TASK_PLAY_ANIM(temp_ped_s, "missheist_agency3astumble_getup", "stumble_getup", 8.0, 0.0, -1, 9, 0, 0, 0, 0);
-							AI::STOP_ANIM_TASK(temp_ped_s, "missheist_agency3astumble_getup", "stumble_getup", 1.0);
-							STREAMING::REMOVE_ANIM_DICT("missheist_agency3astumble_getup");
-						}
-					}
-					if (s_tick_secs == 19400) {
-						AI::CLEAR_PED_TASKS_IMMEDIATELY(temp_ped_s);
-						slipped = false;
-						s_tick_secs = 0;
-					}
-				}
 			}
 			// NPC No Gravity Peds
 			if (NPC_RAGDOLL_VALUES[NoPedsGravityIndex] > 0 && bus_ped[i] != PLAYER::PLAYER_PED_ID() && !PED::IS_PED_IN_ANY_VEHICLE(bus_ped[i], false)) {
@@ -1811,7 +1723,7 @@ void update_world_features()
 	}
 
 	// Disable Freeroam Event Camera. THANKS TO LEE R. CAWLEY FOR THE IDEA AND THE CODE
-	if (featureNoGameHintCameraLocking && CAM::IS_GAMEPLAY_HINT_ACTIVE()) CAM::STOP_GAMEPLAY_HINT(true);
+	if (featureNoGameHintCameraLocking && CAM::IS_GAMEPLAY_HINT_ACTIVE() && GAMEPLAY::GET_MISSION_FLAG() == 0) CAM::STOP_GAMEPLAY_HINT(true);
 
 	// Wind Strength
 	if (windstrength_toggle == false) {
@@ -1958,7 +1870,8 @@ void update_world_features()
 
 	// Freeze Clouds
 	if (featureCloudsFreeze && !lastClouds.empty()) GRAPHICS::_SET_CLOUD_HAT_TRANSITION((char *)lastClouds.c_str(), 0.3);
-	
+	if (featureCloudsFreeze && lastClouds.empty()) GRAPHICS::_CLEAR_CLOUD_HAT();
+
 	// Restricted Zones
 	if (!featureRestrictedZones)
 	{
@@ -1977,15 +1890,22 @@ void update_world_features()
 		{
 			EnableSnow(featureSnow);
 			EnableTracks(true, true, true, true);
+			// THANKS TO ALTSIERRA117 FOR THE ORIGINAL CODE
+			STREAMING::REQUEST_NAMED_PTFX_ASSET("core_snow");
+			GRAPHICS::_SET_PTFX_ASSET_NEXT_CALL("core_snow");
+			AUDIO::REQUEST_SCRIPT_AUDIO_BANK("ICE_FOOTSTEPS", true);
+			AUDIO::REQUEST_SCRIPT_AUDIO_BANK("SNOW_FOOTSTEPS", true);
 		}
 		else
 		{
 			EnableSnow(featureSnow);
 			EnableTracks(false, false, false, false);
+
+			STREAMING::_REMOVE_NAMED_PTFX_ASSET("core_snow");
 		}
 		featureSnowUpdated = false;
 	}
-
+	
 	if (featureMPMap) {
 		if (featureMPMapUpdated == true && GAMEPLAY::GET_MISSION_FLAG() == 0) {
 			MPMapCounter = MPMapCounter + 1;
@@ -2028,6 +1948,7 @@ void add_world_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* r
 	results->push_back(FeatureEnabledLocalDefinition{ "featureNoPoliceBlips", &featureNoPoliceBlips }); 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureFullMap", &featureFullMap }); 
 	results->push_back(FeatureEnabledLocalDefinition{ "featurePenitentiaryMap", &featurePenitentiaryMap }); 
+	results->push_back(FeatureEnabledLocalDefinition{ "featureCayoPericoMap", &featureCayoPericoMap });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureZancudoMap", &featureZancudoMap, &featureZancudoMapUpdated });
 	results->push_back(FeatureEnabledLocalDefinition{ "featureBusLight", &featureBusLight }); 
 	results->push_back(FeatureEnabledLocalDefinition{ "featureAcidWater", &featureAcidWater }); 

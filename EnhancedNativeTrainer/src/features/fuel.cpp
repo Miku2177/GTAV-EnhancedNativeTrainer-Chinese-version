@@ -10,7 +10,6 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 #include "vehicles.h"
 #include "fuel.h"
-
 #include "..\features\vehmodmenu.h"
 #include "hotkeys.h"
 #include "script.h"
@@ -34,9 +33,7 @@ int Time_tick = 0;
 bool Fuel_Low = false;
 bool show_blips = true;
 bool phone_blips = false;
-
 bool ign_anim_e = false;
-
 bool exiting_v = false;
 bool restart_engine = false;
 
@@ -689,8 +686,11 @@ void fuel()
 			if (IdleConsume_seconds == (VEH_CARFUEL_VALUES[IdleConsumptionIndex] / 85000)) {
 				for (int i = 0; i < VEHICLES.size(); i++) {
 					Vector3 curr_s = ENTITY::GET_ENTITY_VELOCITY(VEHICLES[i]);
-					if (curr_s.x < 1 && curr_s.y < 1 && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(VEHICLES[i]) && FUEL[i] > 0) FUEL[i] = FUEL[i] - 0.001;
-					if (VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(VEHICLES[i]) && FUEL[i] <= 0) VEHICLE::SET_VEHICLE_ENGINE_ON(VEHICLES[i], false, true, true);
+					if (curr_s.x < 1 && curr_s.y < 1 && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(VEHICLES[i]) && FUEL[i] > 0) FUEL[i] = FUEL[i] - 0.001;  
+					if (VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(VEHICLES[i]) && FUEL[i] <= 0) {
+						VEHICLE::SET_VEHICLE_ENGINE_ON(VEHICLES[i], false, true, true);
+						VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(VEHICLES[i], false);
+					}
 				}
 				IdleConsume_seconds = (VEH_CARFUEL_VALUES[IdleConsumptionIndex] / 85000) + 1;
 			}
