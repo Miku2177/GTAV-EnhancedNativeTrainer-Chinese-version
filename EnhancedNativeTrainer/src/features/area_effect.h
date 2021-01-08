@@ -34,8 +34,6 @@ const std::vector<std::string> WORLD_REDUCEDGRIP_SNOWING_CAPTIONS{ "OFF", "Simpl
 extern bool featureSnow;
 extern int NPCVehicleSpeedIndex;
 extern int PedAccuracyIndex;
-extern int RadarReducedGripSnowingIndex;
-extern int RadarReducedGripRainingIndex;
 extern int NoPedsGravityIndex;
 extern int featureNeverDirty;
 extern bool NeverDirtyChanged;

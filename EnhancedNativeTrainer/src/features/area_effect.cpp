@@ -107,11 +107,7 @@ const std::vector<std::string> WORLD_SELECTIVE_PEDS_ANGRY_CAPTIONS{ "OFF", "Only
 int WorldSelectivePedsIndex = 0;
 bool WorldSelectivePedsChanged = true;
 
-// Reduced Grip If Heavy Snow && Slippery When Wet && No Peds Gravity
-int RadarReducedGripSnowingIndex = 0;
-bool RadarReducedGripSnowingChanged = true;
-int RadarReducedGripRainingIndex = 0;
-bool RadarReducedGripRainingChanged = true;
+// No Peds Gravity & Never Dirty
 int NoPedsGravityIndex = 0;
 bool NoPedsGravityChanged = true;
 int featureNeverDirty = 0;
@@ -175,8 +171,6 @@ void reset_areaeffect_globals(){
 	WorldSelectivePedsIndex = 0;
 	PedAccuracyIndex = 0;
 	pedWeaponSetIndex = 0;
-	RadarReducedGripSnowingIndex = 0;
-	RadarReducedGripRainingIndex = 0;
 	NoPedsGravityIndex = 0;
 	VigilanteBlipIndex = 0;
 	PedsHealthIndex = 0;
@@ -1355,16 +1349,6 @@ void onchange_world_npc_vehicles_speed_index(int value, SelectFromListMenuItem* 
 void onchange_world_selective_peds_angry_index(int value, SelectFromListMenuItem* source) {
 	WorldSelectivePedsIndex = value;
 	WorldSelectivePedsChanged = true;
-}
-
-void onchange_world_reducedgrip_snowing_index(int value, SelectFromListMenuItem* source) {
-	RadarReducedGripSnowingIndex = value;
-	RadarReducedGripSnowingChanged = true;
-}
-
-void onchange_world_reducedgrip_raining_index(int value, SelectFromListMenuItem* source) {
-	RadarReducedGripRainingIndex = value;
-	RadarReducedGripRainingChanged = true;
 }
 
 void onchange_peds_health_index(int value, SelectFromListMenuItem* source) {

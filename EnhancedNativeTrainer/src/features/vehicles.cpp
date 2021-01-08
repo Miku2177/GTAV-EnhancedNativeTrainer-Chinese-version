@@ -4036,52 +4036,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 ///////////////////////////////////////////////////////////////////////////////////
 
-	// 'Reduced Grip If Snowing' and 'Slippery When Wet' code for bikes (mostly)
-	if ((NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] > 0 && featureSnow) || NPC_RAGDOLL_VALUES[RadarReducedGripRainingIndex] > 0) {
-		Vector3 coords_slip = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
-		Vehicle myVehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
-		if (NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] > 0 && featureSnow && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip.x, coords_slip.y, coords_slip.z) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) {
-			if (NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] == 1) { // arcade
-				if (VEHICLE::IS_VEHICLE_ON_ALL_WHEELS(myVehicle) && VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(myVehicle))) {
-					if (WORLD_GRAVITY_LEVEL_VALUES[featureGravityLevelIndex] == 0) ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.15f, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
-					else ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.15f / 4, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
-				}
-			}
-			if (NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] == 2) { // realistic
-				if (VEHICLE::IS_VEHICLE_ON_ALL_WHEELS(myVehicle) && VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(myVehicle))) {
-					if (WORLD_GRAVITY_LEVEL_VALUES[featureGravityLevelIndex] == 0) ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.18f, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
-					else ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.18f / 4, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
-				}
-			}
-		}
-		if (NPC_RAGDOLL_VALUES[RadarReducedGripRainingIndex] > 0 && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip.x, coords_slip.y, coords_slip.z) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) {
-			if (NPC_RAGDOLL_VALUES[RadarReducedGripRainingIndex] == 1) { // arcade
-				if (VEHICLE::IS_VEHICLE_ON_ALL_WHEELS(myVehicle) && VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(myVehicle))) {
-					if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 1420204096) {
-						if (WORLD_GRAVITY_LEVEL_VALUES[featureGravityLevelIndex] == 0) ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.09f, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
-						else ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.09f / 4, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
-					}
-					if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3061285535) {
-						if (WORLD_GRAVITY_LEVEL_VALUES[featureGravityLevelIndex] == 0) ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.10f, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
-						else ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.10f / 4, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
-					}
-				}
-			}
-			if (NPC_RAGDOLL_VALUES[RadarReducedGripRainingIndex] == 2) { // realistic
-				if (VEHICLE::IS_VEHICLE_ON_ALL_WHEELS(myVehicle) && VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(myVehicle))) {
-					if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 1420204096) {
-						if (WORLD_GRAVITY_LEVEL_VALUES[featureGravityLevelIndex] == 0) ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.11f, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
-						else ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.11f / 4, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
-					}
-					if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3061285535) {
-						if (WORLD_GRAVITY_LEVEL_VALUES[featureGravityLevelIndex] == 0) ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.12f, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
-						else ENTITY::APPLY_FORCE_TO_ENTITY(myVehicle, 1, 0.0, 0.0, 0.12f / 4, 0.0, 0.0, 0.0, 1, 1, 1, 1, 0, 1);
-					}
-				}
-			}
-		}
-	}
-
 	// Jumpy Vehicle
 	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) && (VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(veh)) || VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(veh)) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(veh))) && 
 		VEH_TURN_SIGNALS_ACCELERATION_VALUES[JumpyVehIndex] > 0) {
