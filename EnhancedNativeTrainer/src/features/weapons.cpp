@@ -1975,15 +1975,10 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			}
 			// Cannot Pickup Dropped Weapons
 			if (featurePedNoWeaponDrop) {
-				if (ENTITY::GET_ENTITY_HEALTH(a_npcs[i]) > 0) WEAPON::SET_PED_DROPS_WEAPONS_WHEN_DEAD(a_npcs[i], false);
-				
-				if (ENTITY::IS_ENTITY_DEAD(a_npcs[i]) && a_npcs[i] != playerPed) {
-					Hash curr_w = WEAPON::GET_SELECTED_PED_WEAPON(a_npcs[i]);
-					Object temp_w = WEAPON::GET_WEAPON_OBJECT_FROM_PED(a_npcs[i], 1);
-					WEAPON::REMOVE_WEAPON_FROM_PED(a_npcs[i], curr_w);
-					ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&temp_w);
-					OBJECT::DELETE_OBJECT(&temp_w);
-				}
+				if (!PED::IS_PED_DEAD_OR_DYING(a_npcs[i], true) && a_npcs[i] != playerPed) WEAPON::SET_PED_DROPS_WEAPONS_WHEN_DEAD(a_npcs[i], false);
+				//if (PED::IS_PED_DEAD_OR_DYING(a_npcs[i], true) && a_npcs[i] != playerPed) {
+				//	WEAPON::REMOVE_ALL_PED_WEAPONS(a_npcs[i], true);
+				//}
 			}
 		} // end of for
 	}
