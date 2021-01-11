@@ -1963,11 +1963,19 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			if (featureCanDisarmNPC) {
 				if (a_npcs[i] != playerPed) {
 					Vector3 coords_finger_p = PED::GET_PED_BONE_COORDS(a_npcs[i], 64016, 0, 0, 0); // right finger bone
-					if (WEAPON::HAS_ENTITY_BEEN_DAMAGED_BY_WEAPON(a_npcs[i], 0, 2) && GAMEPLAY::HAS_BULLET_IMPACTED_IN_AREA(coords_finger_p.x, coords_finger_p.y, coords_finger_p.z, 0.4, 0, 0) && WEAPON::IS_PED_ARMED(a_npcs[i], 7)) {
+					if (WEAPON::HAS_ENTITY_BEEN_DAMAGED_BY_WEAPON(a_npcs[i], 0, 2) && GAMEPLAY::HAS_BULLET_IMPACTED_IN_AREA(coords_finger_p.x, coords_finger_p.y, coords_finger_p.z, 0.5/*0.4*/, 0, 0) && WEAPON::IS_PED_ARMED(a_npcs[i], 7)) {
 						Hash curr_w = WEAPON::GET_SELECTED_PED_WEAPON(a_npcs[i]);
-						Vector3 p_coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(a_npcs[i], 10.0f, 10.0f, 0.0f);
-						WEAPON::SET_PED_DROPS_INVENTORY_WEAPON(a_npcs[i], curr_w, p_coords.x, p_coords.y, p_coords.z, 1);
-						WEAPON::REMOVE_WEAPON_FROM_PED(a_npcs[i], curr_w);
+						if (!featurePedNoWeaponDrop) {
+							Vector3 p_coords = ENTITY::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(a_npcs[i], 10.0f, 10.0f, 0.0f);
+							WEAPON::SET_PED_DROPS_INVENTORY_WEAPON(a_npcs[i], curr_w, p_coords.x, p_coords.y, p_coords.z, 1);
+							WEAPON::REMOVE_WEAPON_FROM_PED(a_npcs[i], curr_w);
+						}
+						if (featurePedNoWeaponDrop) {
+							Object temp_w = WEAPON::GET_WEAPON_OBJECT_FROM_PED(a_npcs[i], 1);
+							WEAPON::REMOVE_WEAPON_FROM_PED(a_npcs[i], curr_w);
+							ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&temp_w);
+							OBJECT::DELETE_OBJECT(&temp_w);
+						}
 						PED::CLEAR_PED_LAST_DAMAGE_BONE(a_npcs[i]);
 						ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(a_npcs[i]);
 					}
