@@ -1212,7 +1212,7 @@ void update_world_features()
 				}
 			}
 			// Train Speed
-			if (WORLD_TRAIN_SPEED_VALUES[TrainSpeedIndex] != -1.0 && VEHICLE::GET_VEHICLE_CLASS(bus_veh[i]) == 21 && GAMEPLAY::GET_MISSION_FLAG() == 0) { // Train Speed
+			if (WORLD_TRAIN_SPEED_VALUES[TrainSpeedIndex] != -1.0 && VEHICLE::GET_VEHICLE_CLASS(bus_veh[i]) == 21 && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(bus_veh[i]) && GAMEPLAY::GET_MISSION_FLAG() == 0) { // Train Speed
 				VEHICLE::SET_TRAIN_SPEED(bus_veh[i], WORLD_TRAIN_SPEED_VALUES[TrainSpeedIndex]);
 				VEHICLE::SET_TRAIN_CRUISE_SPEED(bus_veh[i], WORLD_TRAIN_SPEED_VALUES[TrainSpeedIndex]);
 			}
