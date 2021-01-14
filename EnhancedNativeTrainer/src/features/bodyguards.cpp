@@ -60,6 +60,7 @@ bool stop_b = false;
 bool c_armed = true;
 bool featureBodyguardInvincible = false;
 bool featureNoBodBlood = false;
+bool featureBAggressivePed = false;
 bool featureBodyguardHelmet = false;
 bool featureBodyguardDespawn = true;
 bool featureDifferentWeapons = false;
@@ -1815,6 +1816,15 @@ void do_spawn_bodyguard(){
 				ENTITY::SET_ENTITY_HEALTH(bodyGuard, PLAYER_HEALTH_VALUES[BodyHealthIndex]);
 			} // end of bodyguard health
 
+			// spawn aggressive ped
+			if (featureBAggressivePed && spawning_a_ped == true) {
+				PED::SET_PED_AS_ENEMY(PLAYER::PLAYER_PED_ID(), true);
+				PED::REGISTER_TARGET(bodyGuard, PLAYER::PLAYER_PED_ID());
+				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 5, true);
+				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 46, true);
+				AI::TASK_COMBAT_PED(bodyGuard, PLAYER::PLAYER_PED_ID(), 0, 16);
+			}
+
 			if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) {
 				Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 
@@ -2482,6 +2492,12 @@ bool process_bodyguard_menu(){
 		toggleItem->toggleValue = &featureNoBodBlood;
 		menuItems.push_back(toggleItem);
 
+		toggleItem = new ToggleMenuItem<int>();
+		toggleItem->caption = "Spawn Aggressive Ped";
+		toggleItem->value = i++;
+		toggleItem->toggleValue = &featureBAggressivePed;
+		menuItems.push_back(toggleItem);
+
 		if(!bodyguardWeaponsToggleInitialized){
 			for(int a = 0; a < MENU_WEAPON_CATEGORIES.size(); a++){
 				for(int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++){
@@ -2634,6 +2650,7 @@ bool onconfirm_bodyguard_menu(MenuItem<int> choice){
 void add_bodyguards_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardInvincible", &featureBodyguardInvincible});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoBodBlood", &featureNoBodBlood});
+	results->push_back(FeatureEnabledLocalDefinition{"featureBAggressivePed", &featureBAggressivePed});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardHelmet", &featureBodyguardHelmet});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardDespawn", &featureBodyguardDespawn});
 	results->push_back(FeatureEnabledLocalDefinition{"featureDifferentWeapons", &featureDifferentWeapons});
@@ -2735,6 +2752,7 @@ void reset_bodyguards_globals(){
 	featureBodyguardOnMap = false;
 	featureBodyguardInvincible = false;
 	featureNoBodBlood = false;
+	featureBAggressivePed = false;
 	featureBodyguardHelmet = false;
 	featureBodyguardDespawn = true;
 	featureBodyguardInfAmmo = false;
