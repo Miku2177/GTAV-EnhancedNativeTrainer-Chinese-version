@@ -1034,7 +1034,6 @@ void set_all_nearby_vehs_to_invincible(bool enabled, bool force){
 
 		if(enabled){
 			ENTITY::SET_ENTITY_ONLY_DAMAGED_BY_PLAYER(veh, 1);
-
 			VEHICLE::SET_VEHICLE_BODY_HEALTH(veh, 10000.0f);
 		}
 	}

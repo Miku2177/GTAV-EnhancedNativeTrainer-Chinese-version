@@ -1065,7 +1065,7 @@ bool onconfirm_paintfade(MenuItem<float> choice);
 
 void onhighlight_paintfade(MenuItem<float> choice);
 
-int get_current_veh_invincibility_mode();
+//int get_current_veh_invincibility_mode();
 
 void onchange_veh_invincibility_mode(int value, SelectFromListMenuItem* source);
 
