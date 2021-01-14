@@ -34,10 +34,14 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 using namespace std;
 
-bool featureVehInvincible = false;
+//vehicle invincibility
+int VehInvincibilityIndex = 0;
+bool VehInvincibilityChanged = true;
+//bool featureVehInvincible = false;
 bool featureVehInvincibleUpdated = false;
-bool featureVehNoDamage = false;
-bool featureVehInvulnIncludesCosmetic = false;
+//bool featureVehNoDamage = false;
+//bool featureVehInvulnIncludesCosmetic = false;
+
 bool feature3rdpersonviewonly = false;
 bool featureDaytimeonly = false;
 bool featureHazards = true;
@@ -1287,9 +1291,9 @@ bool process_veh_seat_menu()
 	return draw_generic_menu<int>(menuItems, &vehSeatIndexMenuIndex, "Seat Options", onconfirm_seat_menu, NULL, NULL);
 }
 
-void on_toggle_invincibility(MenuItem<int> choice){
+/*void on_toggle_invincibility(MenuItem<int> choice){
 	featureVehInvincibleUpdated = true;
-}
+}*/
 
 bool onconfirm_colours_menu(MenuItem<int> choice)
 {
@@ -2130,7 +2134,8 @@ void process_veh_menu(){
 	listItem = new SelectFromListMenuItem(VEH_INVINC_MODE_CAPTIONS, onchange_veh_invincibility_mode);
 	listItem->wrap = false;
 	listItem->caption = "Vehicle Invincibility";
-	listItem->value = get_current_veh_invincibility_mode();
+	//listItem->value = get_current_veh_invincibility_mode();
+	listItem->value = VehInvincibilityIndex;
 	menuItems.push_back(listItem);
 
 	item = new MenuItem<int>();
@@ -2604,22 +2609,24 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 
 	// Invincible Vehicle
-	if (featureVehInvincibleUpdated){
-		if (bPlayerExists && !featureVehInvincible && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
-			ENTITY::SET_ENTITY_INVINCIBLE(veh, FALSE);
-			ENTITY::SET_ENTITY_PROOFS(veh, 0, 0, 0, 0, 0, 0, 0, 0);
-			VEHICLE::SET_VEHICLE_TYRES_CAN_BURST(veh, 1);
-			VEHICLE::SET_VEHICLE_WHEELS_CAN_BREAK(veh, 1);
-			VEHICLE::SET_VEHICLE_CAN_BE_VISIBLY_DAMAGED(veh, 1);
-			for (int i = 0; i < 6; i++){
-				VEHICLE::_SET_VEHICLE_DOOR_BREAKABLE(veh, i, TRUE); //(Vehicle, doorIndex, isBreakable)
-			}
-			featureVehInvincibleUpdated = false;
+	if (bPlayerExists && WORLD_GRAVITY_LEVEL_VALUES[VehInvincibilityIndex] == 0 && featureVehInvincibleUpdated == true && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
+		ENTITY::SET_ENTITY_INVINCIBLE(veh, FALSE);
+		ENTITY::SET_ENTITY_PROOFS(veh, 0, 0, 0, 0, 0, 0, 0, 0);
+		VEHICLE::SET_VEHICLE_TYRES_CAN_BURST(veh, 1);
+		VEHICLE::SET_VEHICLE_WHEELS_CAN_BREAK(veh, 1);
+		VEHICLE::SET_VEHICLE_CAN_BE_VISIBLY_DAMAGED(veh, 1);
+		for (int i = 0; i < 6; i++){
+			VEHICLE::_SET_VEHICLE_DOOR_BREAKABLE(veh, i, TRUE); //(Vehicle, doorIndex, isBreakable)
 		}
+		featureVehInvincibleUpdated = false;
 	}
 		
-	if (featureVehInvincible){
+	if (WORLD_GRAVITY_LEVEL_VALUES[VehInvincibilityIndex] > 0){
 		if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
+			bool featureVehNoDamage = false;
+			if (WORLD_GRAVITY_LEVEL_VALUES[VehInvincibilityIndex] > 1) featureVehNoDamage = true;
+			featureVehInvincibleUpdated = true;
+
 			if (FIRE::IS_ENTITY_ON_FIRE(veh)){
 				FIRE::STOP_ENTITY_FIRE(veh);
 			}
@@ -2646,7 +2653,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				VEHICLE::SET_VEHICLE_BODY_HEALTH(veh, 10000.0f);
 				
 				// This API seems to be a damage check - don't just continually repair the vehicle as it causes glitches.
-				if (VEHICLE::_IS_VEHICLE_DAMAGED(veh) && featureVehNoDamage && featureVehInvulnIncludesCosmetic){
+				if (VEHICLE::_IS_VEHICLE_DAMAGED(veh) && featureVehNoDamage && WORLD_GRAVITY_LEVEL_VALUES[VehInvincibilityIndex] == 3){
 					VEHICLE::SET_VEHICLE_FIXED(veh);
 				}
 			}
@@ -3826,7 +3833,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 				if ((veh_flips_speed * 2.3) > 50 && (ENTITY::GET_ENTITY_ROLL(vehnoflip) > 50 || ENTITY::GET_ENTITY_ROLL(vehnoflip) < -50)) { // (veh_flips_speed * 3.6) > 50
 					VEHICLE::SET_VEHICLE_CEILING_HEIGHT(vehnoflip, 0.0);
-					VEHICLE::SET_VEHICLE_DAMAGE(vehnoflip, veh_flip.x, veh_flip.y, veh_flip.z, 1000, 100, true);
+					VEHICLE::SET_VEHICLE_DAMAGE(vehnoflip, veh_flip.x, veh_flip.y, veh_flip.z, 500, 100, true); // 1000
 				}
 			}
 			if (ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(vehnoflip)) {
@@ -3834,11 +3841,11 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				VEHICLE::SET_VEHICLE_CAN_BREAK(vehnoflip, true);
 				if ((veh_flips_speed * 2.3) > 60) {
 					VEHICLE::SET_VEHICLE_CEILING_HEIGHT(vehnoflip, 0.0);
-					VEHICLE::SET_VEHICLE_DAMAGE(vehnoflip, veh_flip.x - t_coord, veh_flip.y - t_coord, veh_flip.z, 500, 100, true);
+					VEHICLE::SET_VEHICLE_DAMAGE(vehnoflip, veh_flip.x - t_coord, veh_flip.y - t_coord, veh_flip.z, 300, 100, true); // 500
 				}
 				if ((veh_flips_speed * 2.3) > 90) {
 					VEHICLE::SET_VEHICLE_CEILING_HEIGHT(vehnoflip, 0.0);
-					VEHICLE::SET_VEHICLE_DAMAGE(vehnoflip, veh_flip.x - t_coord, veh_flip.y - t_coord, veh_flip.z, 1000, 100, true);
+					VEHICLE::SET_VEHICLE_DAMAGE(vehnoflip, veh_flip.x - t_coord, veh_flip.y - t_coord, veh_flip.z, 500, 100, true); // 1000
 					if (ENTITY::GET_ENTITY_HEALTH(vehnoflip) < 200) {
 						int randomize = rand() % 5 + 1;
 						VEHICLE::SET_VEHICLE_TYRE_BURST(vehnoflip, randomize, true, 1000.0);
@@ -4196,6 +4203,7 @@ void reset_vehicle_globals() {
 	featureNeverDirty = 0;
 	engPowMultIndex = 0;
 	VehMassMultIndex = 0;
+	VehInvincibilityIndex = 0;
 	current_player_forceshieldN = 0;
 	InfiniteBoostIndex = 0;
 	NitrousIndex = 0;
@@ -4255,7 +4263,7 @@ void reset_vehicle_globals() {
 	featureSpeedOnGround =
 	featureSpeedInAir =
 	
-	featureVehInvincible =
+	//featureVehInvincible =
 		featureVehSteerAngle = 
 		featureRollWhenShoot =
 		featureTractionControl =
@@ -4293,7 +4301,7 @@ void reset_vehicle_globals() {
 		featureBlipNumber = true;
 		featureHazards = true;
 		featureWearHelmetOffUpdated = true;
-		featureVehInvincibleUpdated = true;
+		//featureVehInvincibleUpdated = true;
 		featurePoliceVehicleBlip = true;
 		featurePoliceNoFlip = true;
 		featureAltitude = true;
@@ -4313,8 +4321,8 @@ void reset_vehicle_globals() {
 
 	featureDespawnScriptDisabled = false;
 	featureDespawnScriptDisabledUpdated = false;
-	featureVehNoDamage = false;
-	featureVehInvulnIncludesCosmetic = false;
+	//featureVehNoDamage = false;
+	//featureVehInvulnIncludesCosmetic = false;
 }
 
 void keyboard_tip_message(char* curr_message_s) {
@@ -4505,8 +4513,8 @@ Vehicle do_spawn_vehicle(DWORD model, std::string modelTitle, bool cleanup){
 void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoVehFallOff", &featureNoVehFallOff}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehicleDoorInstant", &featureVehicleDoorInstant});
-	results->push_back(FeatureEnabledLocalDefinition{"featureVehInvincible", &featureVehInvincible, &featureVehInvincibleUpdated});
-	results->push_back(FeatureEnabledLocalDefinition{"featureVehNoDamage", &featureVehNoDamage, &featureVehInvincibleUpdated});
+	//results->push_back(FeatureEnabledLocalDefinition{"featureVehInvincible", &featureVehInvincible, &featureVehInvincibleUpdated});
+	//results->push_back(FeatureEnabledLocalDefinition{"featureVehNoDamage", &featureVehNoDamage, &featureVehInvincibleUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehSpawnInto", &featureVehSpawnInto});
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehSteerAngle", &featureVehSteerAngle});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRollWhenShoot", &featureRollWhenShoot});
@@ -4555,7 +4563,7 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehSpawnTuned", &featureVehSpawnTuned});
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehSpawnOptic", &featureVehSpawnOptic});
 	results->push_back(FeatureEnabledLocalDefinition{"featureWearHelmetOff", &featureWearHelmetOff, &featureWearHelmetOffUpdated});
-	results->push_back(FeatureEnabledLocalDefinition{"featureVehInvulnIncludesCosmetic", &featureVehInvulnIncludesCosmetic, &featureVehInvincibleUpdated});
+	//results->push_back(FeatureEnabledLocalDefinition{"featureVehInvulnIncludesCosmetic", &featureVehInvulnIncludesCosmetic, &featureVehInvincibleUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureDespawnScriptDisabled", &featureDespawnScriptDisabled}); // , &featureDespawnScriptDisabledUpdated
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehLightsOn", &featureVehLightsOn, &featureVehLightsOnUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureEngineDegrade", &featureEngineDegrade});
@@ -5135,6 +5143,7 @@ void add_vehicle_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"featureNeverDirty", std::to_string(featureNeverDirty)});
 	results->push_back(StringPairSettingDBRow{"engPowMultIndex", std::to_string(engPowMultIndex)});
 	results->push_back(StringPairSettingDBRow{"VehMassMultIndex", std::to_string(VehMassMultIndex)});
+	results->push_back(StringPairSettingDBRow{"VehInvincibilityIndex", std::to_string(VehInvincibilityIndex)});
 	results->push_back(StringPairSettingDBRow{"current_player_forceshieldN", std::to_string(current_player_forceshieldN)});
 	results->push_back(StringPairSettingDBRow{"InfiniteBoostIndex", std::to_string(InfiniteBoostIndex)});
 	results->push_back(StringPairSettingDBRow{"NitrousIndex", std::to_string(NitrousIndex)});
@@ -5222,6 +5231,9 @@ void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settin
 		}
 		else if (setting.name.compare("VehMassMultIndex") == 0){
 			VehMassMultIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("VehInvincibilityIndex") == 0) {
+			VehInvincibilityIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("current_player_forceshieldN") == 0) {
 			current_player_forceshieldN = stoi(setting.value);
@@ -5424,7 +5436,7 @@ void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settin
 	}
 }
 
-int get_current_veh_invincibility_mode(){
+/*int get_current_veh_invincibility_mode(){
 	if(!featureVehInvincible){
 		return 0;
 	}
@@ -5435,14 +5447,17 @@ int get_current_veh_invincibility_mode(){
 		return 2;
 	}
 	return 3;
-}
+}*/
 
 void onchange_veh_invincibility_mode(int value, SelectFromListMenuItem* source){
-	featureVehInvincible = (value > 0);
-	featureVehNoDamage = (value > 1);
-	featureVehInvulnIncludesCosmetic = (value > 2);
+	//featureVehInvincible = (value > 0);
+	//featureVehNoDamage = (value > 1);
+	//featureVehInvulnIncludesCosmetic = (value > 2);
 
-	featureVehInvincibleUpdated = true;
+	//featureVehInvincibleUpdated = true;
+	
+	VehInvincibilityIndex = value;
+	VehInvincibilityChanged = true;
 }
 
 void onchange_veh_speed_boost_index(int value, SelectFromListMenuItem *source){
