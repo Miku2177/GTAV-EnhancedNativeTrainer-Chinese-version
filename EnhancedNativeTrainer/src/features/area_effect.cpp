@@ -10,6 +10,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 #include "area_effect.h"
 #include "script.h"
+#include "vehicles.h"
 #include "../../inc/nativeCaller.h"
 #include "prison_break.h"
 
@@ -32,7 +33,7 @@ std::deque<ENTTrackedVehicle*> trackedVehicles;
 bool featurePlayerIgnoredByAll = false;
 bool featureNPCShowHealth = false;
 bool featureAreaPedsInvincible = false;
-bool featureAreaVehiclesInvincible = false;
+//bool featureAreaVehiclesInvincible = false;
 bool featureAreaVehiclesBroken = false;
 bool featureAreaPedsRioting = false;
 bool featureAreaVehiclesExploded = false;
@@ -96,6 +97,10 @@ const std::vector<std::string> PED_WEAPONS_SELECTIVE_CAPTIONS{ "\"WEAPON_UNARMED
 int PedWeaponsSelectiveIndex = 0;
 bool PedWeaponsSelective1Changed = true;
 
+//NPC Vehicle Invicible
+int VehPedInvincibilityIndex = 0;
+bool VehPedInvincibilityChanged = true;
+
 // NPC Vehicle Speed
 int NPCVehicleSpeedIndex = 0;
 bool NPCVehicleSpeedChanged = true;
@@ -118,7 +123,7 @@ void add_areaeffect_feature_enablements(std::vector<FeatureEnabledLocalDefinitio
 	results->push_back(FeatureEnabledLocalDefinition{"featureNPCShowHealth", &featureNPCShowHealth});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAreaPedsInvincible", &featureAreaPedsInvincible}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureAreaPedsHeadExplode", &featureAreaPedsHeadExplode});
-	results->push_back(FeatureEnabledLocalDefinition{"featureAreaVehiclesInvincible", &featureAreaVehiclesInvincible}); 
+	//results->push_back(FeatureEnabledLocalDefinition{"featureAreaVehiclesInvincible", &featureAreaVehiclesInvincible}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureAreaVehiclesBroken", &featureAreaVehiclesBroken}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureAreaVehiclesExploded", &featureAreaVehiclesExploded});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAreaPedsRioting", &featureAreaPedsRioting}); 
@@ -168,6 +173,7 @@ void reset_areaeffect_globals(){
 	featurePedsSwitchWeapons = true;
 
 	NPCVehicleSpeedIndex = 0;
+	VehPedInvincibilityIndex = 0;
 	WorldSelectivePedsIndex = 0;
 	PedAccuracyIndex = 0;
 	pedWeaponSetIndex = 0;
@@ -271,13 +277,19 @@ void process_areaeffect_vehicle_menu(){
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
 
-	ToggleMenuItem<int> *togItem = new ToggleMenuItem<int>();
-	togItem->caption = "All Vehicles Invincible";
-	togItem->value = 1;
-	togItem->toggleValue = &featureAreaVehiclesInvincible;
-	menuItems.push_back(togItem);
+	//ToggleMenuItem<int> *togItem = new ToggleMenuItem<int>();
+	//togItem->caption = "All Vehicles Invincible";
+	//togItem->value = 1;
+	//togItem->toggleValue = &featureAreaVehiclesInvincible;
+	//menuItems.push_back(togItem);
 
-	togItem = new ToggleMenuItem<int>();
+	listItem = new SelectFromListMenuItem(VEH_INVINC_MODE_CAPTIONS, onchange_veh_ped_invincibility_mode);
+	listItem->wrap = false;
+	listItem->caption = "All Vehicles Invincible";
+	listItem->value = VehPedInvincibilityIndex;
+	menuItems.push_back(listItem);
+
+	ToggleMenuItem<int>* togItem = new ToggleMenuItem<int>();
 	togItem->caption = "All Vehicles Abandoned";
 	togItem->value = 1;
 	togItem->toggleValue = &featureAreaVehiclesBroken;
@@ -551,8 +563,75 @@ void update_area_effects(Ped playerPed){
 		kill_all_nearby_peds_continuous();
 	}
 
-	if(featureAreaVehiclesInvincible){ 
-		set_all_nearby_vehs_to_invincible(featureAreaVehiclesInvincible, false);
+	if(WORLD_GRAVITY_LEVEL_VALUES[VehPedInvincibilityIndex] > 0){
+		std::set<Vehicle> vehicles = get_nearby_vehicles(PLAYER::PLAYER_PED_ID());
+
+		for each (Vehicle veh_npc in vehicles) {
+			int chanceOfSelection = rand() % 5;
+			if (chanceOfSelection != 1) { //  || force
+				continue;
+			}
+
+			if (PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()) == veh_npc) {
+				continue;
+			}
+
+			bool featureVehPedNoDamage = false;
+			if (WORLD_GRAVITY_LEVEL_VALUES[VehPedInvincibilityIndex] > 1) featureVehPedNoDamage = true;
+			//featureVehInvincibleUpdated = true;
+
+			if (FIRE::IS_ENTITY_ON_FIRE(veh_npc)) {
+				FIRE::STOP_ENTITY_FIRE(veh_npc);
+			}
+
+			ENTITY::SET_ENTITY_HEALTH(veh_npc, 10000.0f);
+			VEHICLE::SET_VEHICLE_ENGINE_HEALTH(veh_npc, 10000.0);
+			VEHICLE::SET_VEHICLE_PETROL_TANK_HEALTH(veh_npc, 10000.0);
+
+			ENTITY::SET_ENTITY_PROOFS(veh_npc, 1, 1, 1, featureVehPedNoDamage, 1, 1, 1, 1);
+			VEHICLE::SET_VEHICLE_TYRES_CAN_BURST(veh_npc, 0);
+			VEHICLE::SET_VEHICLE_WHEELS_CAN_BREAK(veh_npc, 0);
+
+			VEHICLE::SET_VEHICLE_CAN_BREAK(veh_npc, !featureVehPedNoDamage);
+			ENTITY::SET_ENTITY_INVINCIBLE(veh_npc, featureVehPedNoDamage);
+			ENTITY::SET_ENTITY_CAN_BE_DAMAGED(veh_npc, !featureVehPedNoDamage);
+			VEHICLE::SET_VEHICLE_CAN_BE_VISIBLY_DAMAGED(veh_npc, !featureVehPedNoDamage);
+
+			for (int i = 0; i < 6; i++) {
+				VEHICLE::_SET_VEHICLE_DOOR_BREAKABLE(veh_npc, i, !featureVehPedNoDamage); //(Vehicle, doorIndex, isBreakable)
+			}
+
+			if (featureVehPedNoDamage) {
+				ENTITY::SET_ENTITY_ONLY_DAMAGED_BY_PLAYER(veh_npc, 1);
+				VEHICLE::SET_VEHICLE_BODY_HEALTH(veh_npc, 10000.0f);
+
+				// This API seems to be a damage check - don't just continually repair the vehicle as it causes glitches.
+				if (VEHICLE::_IS_VEHICLE_DAMAGED(veh_npc) && featureVehPedNoDamage && WORLD_GRAVITY_LEVEL_VALUES[VehPedInvincibilityIndex] == 3) {
+					VEHICLE::SET_VEHICLE_FIXED(veh_npc);
+				}
+			}
+
+			/*ENTITY::SET_ENTITY_HEALTH(veh, 10000.0f);
+			VEHICLE::SET_VEHICLE_ENGINE_HEALTH(veh, 10000.0);
+			VEHICLE::SET_VEHICLE_PETROL_TANK_HEALTH(veh, 10000.0);
+
+			VEHICLE::SET_VEHICLE_TYRES_CAN_BURST(veh, enabled);
+			VEHICLE::SET_VEHICLE_WHEELS_CAN_BREAK(veh, enabled);
+
+			VEHICLE::SET_VEHICLE_CAN_BREAK(veh, !enabled);
+			ENTITY::SET_ENTITY_INVINCIBLE(veh, enabled);
+			ENTITY::SET_ENTITY_CAN_BE_DAMAGED(veh, !enabled);
+			VEHICLE::SET_VEHICLE_CAN_BE_VISIBLY_DAMAGED(veh, !enabled);
+
+			for(int i = 0; i < 6; i++){
+				VEHICLE::_SET_VEHICLE_DOOR_BREAKABLE(veh, i, !enabled); //(Vehicle, doorIndex, isBreakable)
+			}
+
+			if(enabled){
+				ENTITY::SET_ENTITY_ONLY_DAMAGED_BY_PLAYER(veh, 1);
+				VEHICLE::SET_VEHICLE_BODY_HEALTH(veh, 10000.0f);
+			}*/
+		}
 	}
 
 	if(featureAreaVehiclesBroken){ 
@@ -1003,42 +1082,6 @@ void set_all_nearby_peds_to_angry(bool enabled){
 	}
 }
 
-void set_all_nearby_vehs_to_invincible(bool enabled, bool force){
-	std::set<Vehicle> vehicles = get_nearby_vehicles(PLAYER::PLAYER_PED_ID());
-
-	for each (Vehicle veh in vehicles){
-		int chanceOfSelection = rand() % 5;
-		if(chanceOfSelection != 1 || force){
-			continue;
-		}
-
-		if(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()) == veh){
-			continue;
-		}
-
-		ENTITY::SET_ENTITY_HEALTH(veh, 10000.0f);
-		VEHICLE::SET_VEHICLE_ENGINE_HEALTH(veh, 10000.0);
-		VEHICLE::SET_VEHICLE_PETROL_TANK_HEALTH(veh, 10000.0);
-
-		VEHICLE::SET_VEHICLE_TYRES_CAN_BURST(veh, enabled);
-		VEHICLE::SET_VEHICLE_WHEELS_CAN_BREAK(veh, enabled);
-
-		VEHICLE::SET_VEHICLE_CAN_BREAK(veh, !enabled);
-		ENTITY::SET_ENTITY_INVINCIBLE(veh, enabled);
-		ENTITY::SET_ENTITY_CAN_BE_DAMAGED(veh, !enabled);
-		VEHICLE::SET_VEHICLE_CAN_BE_VISIBLY_DAMAGED(veh, !enabled);
-
-		for(int i = 0; i < 6; i++){
-			VEHICLE::_SET_VEHICLE_DOOR_BREAKABLE(veh, i, !enabled); //(Vehicle, doorIndex, isBreakable)
-		}
-
-		if(enabled){
-			ENTITY::SET_ENTITY_ONLY_DAMAGED_BY_PLAYER(veh, 1);
-			VEHICLE::SET_VEHICLE_BODY_HEALTH(veh, 10000.0f);
-		}
-	}
-}
-
 void set_all_nearby_vehs_to_broken(bool enabled){
 	std::set<Vehicle> vehicles = get_nearby_vehicles(PLAYER::PLAYER_PED_ID());
 
@@ -1250,7 +1293,7 @@ void kill_all_nearby_peds_continuous(){
 void kill_all_nearby_vehicles_now(){
 	std::set<Vehicle> vehicles = get_nearby_vehicles(PLAYER::PLAYER_PED_ID());
 
-	set_all_nearby_vehs_to_invincible(false, true);
+	//set_all_nearby_vehs_to_invincible(false, true);
 
 	for each (Vehicle vehicle in vehicles){
 		ENTITY::SET_ENTITY_AS_MISSION_ENTITY(vehicle, true, true);
@@ -1343,6 +1386,11 @@ void onchange_areaeffect_ped_weapons(int value, SelectFromListMenuItem* source){
 void onchange_world_npc_vehicles_speed_index(int value, SelectFromListMenuItem* source) {
 	NPCVehicleSpeedIndex = value;
 	NPCVehicleSpeedChanged = true;
+}
+
+void onchange_veh_ped_invincibility_mode(int value, SelectFromListMenuItem* source) {
+	VehPedInvincibilityIndex = value;
+	VehPedInvincibilityChanged = true;
 }
 
 void onchange_world_selective_peds_angry_index(int value, SelectFromListMenuItem* source) {
@@ -1440,6 +1488,7 @@ void give_all_nearby_peds_a_weapon(bool enabled){
 
 void add_areaeffect_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"pedWeaponSetIndex", std::to_string(pedWeaponSetIndex)});
+	results->push_back(StringPairSettingDBRow{"VehPedInvincibilityIndex", std::to_string(VehPedInvincibilityIndex)});
 	results->push_back(StringPairSettingDBRow{"VigilanteBlipIndex", std::to_string(VigilanteBlipIndex)});
 	results->push_back(StringPairSettingDBRow{"PedWeaponsSelectiveIndex", std::to_string(PedWeaponsSelectiveIndex)});
 	results->push_back(StringPairSettingDBRow{"WorldSelectivePedsIndex", std::to_string(WorldSelectivePedsIndex)});
@@ -1458,6 +1507,10 @@ void handle_generic_settings_areaeffect(std::vector<StringPairSettingDBRow>* set
 		else if (setting.name.compare("VigilanteBlipIndex") == 0) {
 			VigilanteBlipIndex = stoi(setting.value);
 			VigilanteBlipChanged = true;
+		}
+		else if (setting.name.compare("VehPedInvincibilityIndex") == 0) {
+			VehPedInvincibilityIndex = stoi(setting.value);
+			VehPedInvincibilityChanged = true;
 		}
 		else if (setting.name.compare("WorldSelectivePedsIndex") == 0) {
 			WorldSelectivePedsIndex = stoi(setting.value);

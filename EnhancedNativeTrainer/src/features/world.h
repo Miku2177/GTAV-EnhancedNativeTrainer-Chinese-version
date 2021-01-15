@@ -66,6 +66,8 @@ void onchange_peds_health_index(int value, SelectFromListMenuItem* source);
 
 void onchange_world_npc_vehicles_speed_index(int value, SelectFromListMenuItem* source);
 
+void onchange_veh_ped_invincibility_mode(int value, SelectFromListMenuItem* source);
+
 void onchange_ped_accuracy_index(int value, SelectFromListMenuItem* source);
 
 void onchange_world_wind_strength_index(int value, SelectFromListMenuItem* source);

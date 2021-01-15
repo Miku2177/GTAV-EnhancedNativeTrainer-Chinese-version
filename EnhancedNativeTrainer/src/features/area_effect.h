@@ -194,7 +194,7 @@ void kill_all_nearby_vehicles_continuous();
 
 void kill_all_nearby_vehicles_now();
 
-void set_all_nearby_vehs_to_invincible(bool enabled, bool force);
+//void set_all_nearby_vehs_to_invincible(); // bool enabled, bool force
 
 void set_all_nearby_vehs_to_broken(bool enabled);
 
