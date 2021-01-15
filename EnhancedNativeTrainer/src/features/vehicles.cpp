@@ -204,8 +204,6 @@ Object b_rope = -1;
 Vehicle veh_anchor = -1;
 bool anchor_dropped = false;
 
-const std::vector<std::string> VEH_INVINC_MODE_CAPTIONS{"OFF", "Mech. Only", "Mech. + Visual", "Mech. + Vis. + Cosmetic"};
-
 const std::vector<std::string> VEH_SPEED_BOOST_CAPTIONS{"OFF", "Only When Already Moving", "Nothing Can Stop Me", "Fastest In The World"};
 int speedBoostIndex = 0;
 
