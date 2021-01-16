@@ -38,7 +38,7 @@ using namespace std;
 int VehInvincibilityIndex = 0;
 bool VehInvincibilityChanged = true;
 //bool featureVehInvincible = false;
-bool featureVehInvincibleUpdated = false;
+//bool featureVehInvincibleUpdated = false;
 //bool featureVehNoDamage = false;
 //bool featureVehInvulnIncludesCosmetic = false;
 
@@ -2607,7 +2607,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 
 	// Invincible Vehicle
-	if (bPlayerExists && WORLD_GRAVITY_LEVEL_VALUES[VehInvincibilityIndex] == 0 && featureVehInvincibleUpdated == true && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
+	/*if (bPlayerExists && WORLD_GRAVITY_LEVEL_VALUES[VehInvincibilityIndex] == 0 && featureVehInvincibleUpdated == true && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
 		ENTITY::SET_ENTITY_INVINCIBLE(veh, FALSE);
 		ENTITY::SET_ENTITY_PROOFS(veh, 0, 0, 0, 0, 0, 0, 0, 0);
 		VEHICLE::SET_VEHICLE_TYRES_CAN_BURST(veh, 1);
@@ -2617,13 +2617,13 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			VEHICLE::_SET_VEHICLE_DOOR_BREAKABLE(veh, i, TRUE); //(Vehicle, doorIndex, isBreakable)
 		}
 		featureVehInvincibleUpdated = false;
-	}
+	}*/
 		
 	if (WORLD_GRAVITY_LEVEL_VALUES[VehInvincibilityIndex] > 0){
 		if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
 			bool featureVehNoDamage = false;
 			if (WORLD_GRAVITY_LEVEL_VALUES[VehInvincibilityIndex] > 1) featureVehNoDamage = true;
-			featureVehInvincibleUpdated = true;
+			//featureVehInvincibleUpdated = true;
 
 			if (FIRE::IS_ENTITY_ON_FIRE(veh)){
 				FIRE::STOP_ENTITY_FIRE(veh);
