@@ -42,9 +42,9 @@ void onchange_world_waves_index(int value, SelectFromListMenuItem* source);
 
 void onchange_lightning_intensity_index(int value, SelectFromListMenuItem* source);
 
-void onchange_world_reducedgrip_snowing_index(int value, SelectFromListMenuItem* source);
+void onchange_world_reducedgrip_snowing_c_index(int value, SelectFromListMenuItem* source);
 
-void onchange_world_reducedgrip_raining_index(int value, SelectFromListMenuItem* source);
+void onchange_world_reducedgrip_raining_c_index(int value, SelectFromListMenuItem* source);
 
 void onchange_freeroam_activities_index(int value, SelectFromListMenuItem* source);
 
@@ -65,6 +65,8 @@ void onchange_vigilante_blips_index(int value, SelectFromListMenuItem* source);
 void onchange_peds_health_index(int value, SelectFromListMenuItem* source);
 
 void onchange_world_npc_vehicles_speed_index(int value, SelectFromListMenuItem* source);
+
+void onchange_veh_ped_invincibility_mode(int value, SelectFromListMenuItem* source);
 
 void onchange_ped_accuracy_index(int value, SelectFromListMenuItem* source);
 

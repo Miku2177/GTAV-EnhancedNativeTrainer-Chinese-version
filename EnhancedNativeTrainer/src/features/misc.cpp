@@ -1360,6 +1360,8 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	
 	// Use Phone While On Bike
 	if (featurePhone3DOnBike) {
+		Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
+
 		if (!STREAMING::HAS_ANIM_DICT_LOADED(anim_dict)) {
 			STREAMING::REQUEST_ANIM_DICT(anim_dict);
 			while (!STREAMING::HAS_ANIM_DICT_LOADED(anim_dict)) WAIT(0);
@@ -1386,7 +1388,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			animation_of_d = "cellphone_text_read_base";
 		}
 
-		if (PED::IS_PED_ON_ANY_BIKE(playerPed) && PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed)) {
+		if ((VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(veh)) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(veh))) && PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed)) { // PED::IS_PED_ON_ANY_BIKE(playerPed)
 			if (featureNoPhoneOnHUD && CAM::_0xEE778F8C7E1142E2(2) == 4) MOBILE::SET_MOBILE_PHONE_POSITION(10000, 10000, 10000);
 			
 			Hash temp_Hash = -1;
@@ -1429,8 +1431,8 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			}
 		}
 		
-		if ((PED::IS_PED_ON_ANY_BIKE(playerPed) && !PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed) && STREAMING::HAS_ANIM_DICT_LOADED(anim_dict)) ||
-			(!PED::IS_PED_ON_ANY_BIKE(playerPed) && STREAMING::HAS_ANIM_DICT_LOADED(anim_dict))) {
+		if (((VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(veh)) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(veh))) && !PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed) && STREAMING::HAS_ANIM_DICT_LOADED(anim_dict)) ||
+			(!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) && STREAMING::HAS_ANIM_DICT_LOADED(anim_dict))) {
 			OBJECT::DELETE_OBJECT(&temp_obj);
 			AI::STOP_ANIM_TASK(playerPed, anim_dict, animation_of_d, 1.0);
 			accel = false;

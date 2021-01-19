@@ -148,6 +148,12 @@ const std::vector<std::string> WORLD_RADAR_MAP_CAPTIONS{ "Normal", "Big", "Full"
 int RadarMapIndexN = 0;
 bool RadarMapChanged = true;
 
+// Reduced Grip If Heavy Snow && Slippery When Wet
+int RadarReducedGripSnowingCustomIndex = 0;
+bool RadarReducedGripSnowingChanged = true;
+int RadarReducedGripRainingCustomIndex = 0;
+bool RadarReducedGripRainingChanged = true;
+
 // Wind Strength
 const std::vector<std::string> WORLD_WIND_STRENGTH_CAPTIONS{ "Calm", "Gentle Breeze", "Strong Breeze" };
 const int WORLD_WIND_STRENGTH_VALUES[] = { 0, 3, 999 };
@@ -408,6 +414,16 @@ void process_clouds_menu()
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+void onchange_world_reducedgrip_snowing_c_index(int value, SelectFromListMenuItem* source) {
+	RadarReducedGripSnowingCustomIndex = value;
+	RadarReducedGripSnowingChanged = true;
+}
+
+void onchange_world_reducedgrip_raining_c_index(int value, SelectFromListMenuItem* source) {
+	RadarReducedGripRainingCustomIndex = value;
+	RadarReducedGripRainingChanged = true;
+}
+
 void onchange_world_radar_map_index(int value, SelectFromListMenuItem* source){
 	RadarMapIndexN = value;
 	RadarMapChanged = true;
@@ -630,16 +646,16 @@ void process_world_menu()
 	togItem->toggleValueUpdated = &featureSnowUpdated;
 	menuItems.push_back(togItem);
 
-	listItem = new SelectFromListMenuItem(WORLD_REDUCEDGRIP_SNOWING_CAPTIONS, onchange_world_reducedgrip_snowing_index);
+	listItem = new SelectFromListMenuItem(VEH_TURN_SIGNALS_ACCELERATION_CAPTIONS, onchange_world_reducedgrip_snowing_c_index);
 	listItem->wrap = false;
 	listItem->caption = "Reduced Grip If Snowing";
-	listItem->value = RadarReducedGripSnowingIndex;
+	listItem->value = RadarReducedGripSnowingCustomIndex;
 	menuItems.push_back(listItem);
 
-	listItem = new SelectFromListMenuItem(WORLD_REDUCEDGRIP_SNOWING_CAPTIONS, onchange_world_reducedgrip_raining_index);
+	listItem = new SelectFromListMenuItem(VEH_TURN_SIGNALS_ACCELERATION_CAPTIONS, onchange_world_reducedgrip_raining_c_index);
 	listItem->wrap = false;
 	listItem->caption = "Slippery When Wet";
-	listItem->value = RadarReducedGripRainingIndex;
+	listItem->value = RadarReducedGripRainingCustomIndex;
 	menuItems.push_back(listItem);
 
 	togItem = new ToggleMenuItem<int>();
@@ -712,8 +728,8 @@ void reset_world_globals()
 	WorldWavesIndex = 0;
 	featureLightIntensityIndex = 0;
 	
-	RadarReducedGripSnowingIndex = 0;
-	RadarReducedGripRainingIndex = 0;
+	RadarReducedGripSnowingCustomIndex = 0;
+	RadarReducedGripRainingCustomIndex = 0;
 	NoPedsGravityIndex = 0;
 	featureFreeroamActivitiesIndex = 0;
 	TrainSpeedIndex = 0;
@@ -860,7 +876,7 @@ void update_world_features()
 		Vector3 coords_me = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 		if (INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_me.x, coords_me.y, coords_me.z)) {
 			if (featurePenitentiaryMap) UI::SET_RADAR_AS_INTERIOR_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("V_FakePrison"), 1700, 2580, 0, 0);
-			if (featureCayoPericoMap) UI::SET_RADAR_AS_INTERIOR_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("h4_fake_islandx"), 4700.0f, -5145.0, 0, 0);
+			if (featureCayoPericoMap) UI::SET_RADAR_AS_INTERIOR_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("h4_fake_islandx"), 4700.0f, -5145.0, 0, 0); // THANKS TO SJAAK327 FOR THE CODE
 			UI::SET_RADAR_AS_EXTERIOR_THIS_FRAME();
 		}
 	}
@@ -1144,8 +1160,8 @@ void update_world_features()
 	// Bus Interior Light On At Night && NPC No Lights && NPC Neon Lights && NPC Dirty Vehicles && NPC No Gravity Vehicles && NPC Vehicles Reduced Grip && NPC Vehicle Speed && NPC Use Fullbeam && 
 	// Headlights During Blackout && Boost NPC Radio Volume && Slippery When Wet && Train Speed && NPC Vehicles Colour && Reduced Grip If Snowing && Damage On Collision With You
 	if (featureBusLight || featureNPCNoLights || featureNPCNeonLights || featureDirtyVehicles || featureNPCNoGravityVehicles || featureNPCReducedGripVehicles ||
-		WORLD_NPC_VEHICLESPEED_VALUES[NPCVehicleSpeedIndex] > -1 || NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] > 0 || featureNPCFullBeam || featureHeadlightsBlackout ||
-		featureBoostNPCRadio || NPC_RAGDOLL_VALUES[RadarReducedGripRainingIndex] > 0 || WORLD_TRAIN_SPEED_VALUES[TrainSpeedIndex] != -1.0 || VEH_COLOUR_VALUES[VehColourIndex] > -1 ||
+		WORLD_NPC_VEHICLESPEED_VALUES[NPCVehicleSpeedIndex] > -1 || VEH_TURN_SIGNALS_ACCELERATION_VALUES[RadarReducedGripSnowingCustomIndex] > 0 || featureNPCFullBeam || featureHeadlightsBlackout ||
+		featureBoostNPCRadio || VEH_TURN_SIGNALS_ACCELERATION_VALUES[RadarReducedGripRainingCustomIndex] > 0 || WORLD_TRAIN_SPEED_VALUES[TrainSpeedIndex] != -1.0 || VEH_COLOUR_VALUES[VehColourIndex] > -1 ||
 		NPC_RAGDOLL_VALUES[NPCVehicleDamageOnCollIndex] > 0) {
 		Vehicle veh_mycurrveh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 		const int BUS_ARR_SIZE = 1024;
@@ -1196,7 +1212,7 @@ void update_world_features()
 				}
 			}
 			// Train Speed
-			if (WORLD_TRAIN_SPEED_VALUES[TrainSpeedIndex] != -1.0 && VEHICLE::GET_VEHICLE_CLASS(bus_veh[i]) == 21 && GAMEPLAY::GET_MISSION_FLAG() == 0) { // Train Speed
+			if (WORLD_TRAIN_SPEED_VALUES[TrainSpeedIndex] != -1.0 && VEHICLE::GET_VEHICLE_CLASS(bus_veh[i]) == 21 && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(bus_veh[i]) && GAMEPLAY::GET_MISSION_FLAG() == 0) { // Train Speed
 				VEHICLE::SET_TRAIN_SPEED(bus_veh[i], WORLD_TRAIN_SPEED_VALUES[TrainSpeedIndex]);
 				VEHICLE::SET_TRAIN_CRUISE_SPEED(bus_veh[i], WORLD_TRAIN_SPEED_VALUES[TrainSpeedIndex]);
 			}
@@ -1261,24 +1277,23 @@ void update_world_features()
 				reduced_grip_e = true;
 			}
 			// Reduced Grip If Snowing (Vehicles & Protagonist)
-			if (NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] > 0 && featureSnow) {
+			if (VEH_TURN_SIGNALS_ACCELERATION_VALUES[RadarReducedGripSnowingCustomIndex] > 0 && featureSnow) {
 				float slippery_randomize = -1;
 				Vector3 coords_slip = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 				Vector3 coords_slip_ped = ENTITY::GET_ENTITY_COORDS(bus_veh[i], true);
-				int slip_index_s = -1;
-				if (NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] == 1) slip_index_s = 11; // arcade
-				if (NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] == 2) slip_index_s = 16; // realistic
+				int slip_index_s = VEH_TURN_SIGNALS_ACCELERATION_VALUES[RadarReducedGripSnowingCustomIndex] + 9;
 				slippery_s = slippery_s + 1;
 				if (slippery_s < slip_index_s && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip_ped.x, coords_slip_ped.y, coords_slip_ped.z)) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], true);
 				if (slippery_s > slip_index_s - 1 && slippery_s < 20) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], false); // slip_index * 2
-				if (VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(bus_veh[i])) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(bus_veh[i]))) {
-					int vehslipspeed = ENTITY::GET_ENTITY_SPEED(bus_veh[i]);
-					if (vehslipspeed > 5 || (vehslipspeed < 6 && CONTROLS::IS_CONTROL_RELEASED(2, 71))) {
-						if ((slippery_s < (slip_index_s / 5) || (slippery_s > (slip_index_s / 4) - 1 && slippery_s < (slip_index_s / 3))) && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip_ped.x, coords_slip_ped.y, coords_slip_ped.z)) // 4 3 2
-							VEHICLE::SET_VEHICLE_GRAVITY(bus_veh[i], false);
-						if ((slippery_s > (slip_index_s / 5) - 1 && slippery_s < (slip_index_s / 4)) || (slippery_s > (slip_index_s / 3) - 1 && slippery_s < 20)) VEHICLE::SET_VEHICLE_GRAVITY(bus_veh[i], true);
-					}
-				}
+				// bike
+				//if (VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(bus_veh[i])) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(bus_veh[i]))) {
+				//	int vehslipspeed = ENTITY::GET_ENTITY_SPEED(bus_veh[i]);
+				//	if (vehslipspeed > 5 || (vehslipspeed < 6 && CONTROLS::IS_CONTROL_RELEASED(2, 71))) {
+				//		if ((slippery_s < (slip_index_s / 5) || (slippery_s > (slip_index_s / 4) - 1 && slippery_s < (slip_index_s / 3))) && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip_ped.x, coords_slip_ped.y, coords_slip_ped.z)) // 4 3 2
+				//			VEHICLE::SET_VEHICLE_GRAVITY(bus_veh[i], false);
+				//		if ((slippery_s > (slip_index_s / 5) - 1 && slippery_s < (slip_index_s / 4)) || (slippery_s > (slip_index_s / 3) - 1 && slippery_s < 20)) VEHICLE::SET_VEHICLE_GRAVITY(bus_veh[i], true);
+				//	}
+				//}
 				if (slippery_s > 19) slippery_s = 0; 
 				srand(time(0));
 				int time11 = (rand() % 3000 + 0); // UP MARGIN + DOWN MARGIN
@@ -1286,17 +1301,17 @@ void update_world_features()
 				int r_Type = (rand() % 3 + 2);
 				slippery_randomize = (rand() % 1000 + 1);
 				// arcade
-				if (NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] == 1 && slippery_randomize > 990 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
+				if (VEH_TURN_SIGNALS_ACCELERATION_VALUES[RadarReducedGripSnowingCustomIndex] < 6 && slippery_randomize > 990 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
 					AI::IS_PED_RUNNING(PLAYER::PLAYER_PED_ID()) && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip.x, coords_slip.y, coords_slip.z) && !ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID()))
 					PED::SET_PED_TO_RAGDOLL(PLAYER::PLAYER_PED_ID(), time11, time12, r_Type, true, true, false);
-				if (NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] == 1 && slippery_randomize > 940 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
+				if (VEH_TURN_SIGNALS_ACCELERATION_VALUES[RadarReducedGripSnowingCustomIndex] < 6 && slippery_randomize > 950 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
 					AI::IS_PED_SPRINTING(PLAYER::PLAYER_PED_ID()) && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip.x, coords_slip.y, coords_slip.z) && !ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID())) 
 					PED::SET_PED_TO_RAGDOLL(PLAYER::PLAYER_PED_ID(), time11, time12, r_Type, true, true, false);
 				// realistic
-				if (NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] == 2 && slippery_randomize > 980 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
+				if (VEH_TURN_SIGNALS_ACCELERATION_VALUES[RadarReducedGripSnowingCustomIndex] > 5 && slippery_randomize > 980 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
 					AI::IS_PED_RUNNING(PLAYER::PLAYER_PED_ID()) && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip.x, coords_slip.y, coords_slip.z) && !ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID())) 
 					PED::SET_PED_TO_RAGDOLL(PLAYER::PLAYER_PED_ID(), time11, time12, r_Type, true, true, false);
-				if (NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] == 2 && slippery_randomize > 910 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
+				if (VEH_TURN_SIGNALS_ACCELERATION_VALUES[RadarReducedGripSnowingCustomIndex] > 5 && slippery_randomize > 920 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
 					AI::IS_PED_SPRINTING(PLAYER::PLAYER_PED_ID()) && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip.x, coords_slip.y, coords_slip.z) && !ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID())) 
 					PED::SET_PED_TO_RAGDOLL(PLAYER::PLAYER_PED_ID(), time11, time12, r_Type, true, true, false);
 				// normalize speed
@@ -1308,34 +1323,23 @@ void update_world_features()
 				no_grip_snowing_e = true;
 			}
 			// Slippery When Wet
-			if (NPC_RAGDOLL_VALUES[RadarReducedGripRainingIndex] > 0) {
+			if (VEH_TURN_SIGNALS_ACCELERATION_VALUES[RadarReducedGripRainingCustomIndex] > 0) {
 				if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 1420204096 || GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3061285535 || GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 1840358669 ||
 					GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3373937154) { // GET_NEXT_WEATHER_TYPE_HASH_NAME
 					Vector3 coords_slip_r = ENTITY::GET_ENTITY_COORDS(bus_veh[i], true);
-					int slip_index = -1;
-					if (NPC_RAGDOLL_VALUES[RadarReducedGripRainingIndex] == 1) { // arcade
-						if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 1420204096) slip_index = 3; // rain
-						if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3061285535) slip_index = 4; // stormy
-						if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 1840358669) slip_index = 2; // clearing
-						if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3373937154) slip_index = 4; // halloween
-					}
-					if (NPC_RAGDOLL_VALUES[RadarReducedGripRainingIndex] == 2) { // realistic
-						if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 1420204096) slip_index = 5; // rain
-						if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3061285535) slip_index = 6; // stormy
-						if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 1840358669) slip_index = 4; // clearing
-						if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3373937154) slip_index = 6; // halloween
-					}
+					int slip_index = VEH_TURN_SIGNALS_ACCELERATION_VALUES[RadarReducedGripRainingCustomIndex] + 1;
 					slippery_r = slippery_r + 1;
 					if (slippery_r < slip_index && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip_r.x, coords_slip_r.y, coords_slip_r.z)) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], true);
 					if (slippery_r > slip_index - 1 && slippery_r < 20) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], false);
-					if (VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(bus_veh[i])) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(bus_veh[i]))) {
-						int vehslipspeed = ENTITY::GET_ENTITY_SPEED(bus_veh[i]);
-						if (vehslipspeed > 5 || (vehslipspeed < 6 && CONTROLS::IS_CONTROL_RELEASED(2, 71))) {
-							if ((slippery_s < (slip_index / 5) || (slippery_s > (slip_index / 4) - 1 && slippery_s < (slip_index / 3))) && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip_r.x, coords_slip_r.y, coords_slip_r.z)) // 4 3 2
-								VEHICLE::SET_VEHICLE_GRAVITY(bus_veh[i], false);
-							if ((slippery_s > (slip_index / 5) - 1 && slippery_s < (slip_index / 4)) || (slippery_s > (slip_index / 3) - 1 && slippery_s < 20)) VEHICLE::SET_VEHICLE_GRAVITY(bus_veh[i], true);
-						}
-					}
+					// bike
+					//if (VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(bus_veh[i])) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(bus_veh[i]))) {
+					//	int vehslipspeed = ENTITY::GET_ENTITY_SPEED(bus_veh[i]);
+					//	if (vehslipspeed > 5 || (vehslipspeed < 6 && CONTROLS::IS_CONTROL_RELEASED(2, 71))) {
+					//		if ((slippery_s < (slip_index / 5) || (slippery_s > (slip_index / 4) - 1 && slippery_s < (slip_index / 3))) && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip_r.x, coords_slip_r.y, coords_slip_r.z)) // 4 3 2
+					//			VEHICLE::SET_VEHICLE_GRAVITY(bus_veh[i], false);
+					//		if ((slippery_s > (slip_index / 5) - 1 && slippery_s < (slip_index / 4)) || (slippery_s > (slip_index / 3) - 1 && slippery_s < 20)) VEHICLE::SET_VEHICLE_GRAVITY(bus_veh[i], true);
+					//	}
+					//}
 					if (slippery_r > 19) slippery_r = 0; 
 					// normalize speed
 					Vector3 my_coords_sl = ENTITY::GET_ENTITY_COORDS(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 0), true);
@@ -1347,10 +1351,10 @@ void update_world_features()
 				}
 			}
 			// DISABLED Reduced Grip If Snowing || DISABLED Slippery When Wet || DISABLED NPC Vehicles Reduced Grip
-			if ((NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] > 0 && !featureSnow && no_grip_snowing_e == true) || (NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] == 0 && featureSnow && no_grip_snowing_e == true) ||
-				(NPC_RAGDOLL_VALUES[RadarReducedGripRainingIndex] > 0 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() != 1420204096 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() != 3061285535 &&
+			if ((VEH_TURN_SIGNALS_ACCELERATION_VALUES[RadarReducedGripSnowingCustomIndex] > 0 && !featureSnow && no_grip_snowing_e == true) || (VEH_TURN_SIGNALS_ACCELERATION_VALUES[RadarReducedGripSnowingCustomIndex] == 0 && featureSnow && no_grip_snowing_e == true) ||
+				(VEH_TURN_SIGNALS_ACCELERATION_VALUES[RadarReducedGripRainingCustomIndex] > 0 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() != 1420204096 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() != 3061285535 &&
 				GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() != 1840358669 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() != 3373937154 && no_grip_when_wet_e == true) || 
-				(NPC_RAGDOLL_VALUES[RadarReducedGripRainingIndex] == 0 && no_grip_when_wet_e == true) || (!featureNPCReducedGripVehicles && reduced_grip_e == true)) {
+				(VEH_TURN_SIGNALS_ACCELERATION_VALUES[RadarReducedGripRainingCustomIndex] == 0 && no_grip_when_wet_e == true) || (!featureNPCReducedGripVehicles && reduced_grip_e == true)) {
 				for (int b = 0; b < found; b++) {
 					VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[b], false);
 				}
@@ -1459,7 +1463,7 @@ void update_world_features()
 	}
 
 	// NPC No Gravity Peds && Acid Water && Acid Rain && Peds Health && Peds Accuracy && NPC Show Current Health && Show Police Blips Permanently
-	if (NPC_RAGDOLL_VALUES[NoPedsGravityIndex] > 0 || featureAcidWater || featureAcidRain || (NPC_RAGDOLL_VALUES[RadarReducedGripSnowingIndex] > 0 && featureSnow) || PLAYER_HEALTH_VALUES[PedsHealthIndex] > 0 ||
+	if (NPC_RAGDOLL_VALUES[NoPedsGravityIndex] > 0 || featureAcidWater || featureAcidRain || PLAYER_HEALTH_VALUES[PedsHealthIndex] > 0 ||
 		WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex] > -1 || featureNPCShowHealth || NPC_RAGDOLL_VALUES[CopBlipPermIndex] > 0) {
 		const int BUS_ARR_PED_SIZE = 1024;
 		Ped bus_ped[BUS_ARR_PED_SIZE];
@@ -1975,8 +1979,8 @@ void add_world_feature_enablements2(std::vector<StringPairSettingDBRow>* results
 	results->push_back(StringPairSettingDBRow{ "NPCVehicleSpeedIndex", std::to_string(NPCVehicleSpeedIndex) });
 	results->push_back(StringPairSettingDBRow{ "PedsHealthIndex", std::to_string(PedsHealthIndex) });
 	results->push_back(StringPairSettingDBRow{ "PedAccuracyIndex", std::to_string(PedAccuracyIndex) });
-	results->push_back(StringPairSettingDBRow{ "RadarReducedGripSnowingIndex", std::to_string(RadarReducedGripSnowingIndex) });
-	results->push_back(StringPairSettingDBRow{ "RadarReducedGripRainingIndex", std::to_string(RadarReducedGripRainingIndex) });
+	results->push_back(StringPairSettingDBRow{ "RadarReducedGripSnowingCustomIndex", std::to_string(RadarReducedGripSnowingCustomIndex) });
+	results->push_back(StringPairSettingDBRow{ "RadarReducedGripRainingCustomIndex", std::to_string(RadarReducedGripRainingCustomIndex) });
 	results->push_back(StringPairSettingDBRow{ "NoPedsGravityIndex", std::to_string(NoPedsGravityIndex) });
 	results->push_back(StringPairSettingDBRow{ "featureFreeroamActivitiesIndex", std::to_string(featureFreeroamActivitiesIndex) });
 	results->push_back(StringPairSettingDBRow{ "TrainSpeedIndex", std::to_string(TrainSpeedIndex) });
@@ -2035,13 +2039,13 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 		{
 			PedAccuracyIndex = stoi(setting.value);
 		}
-		else if (setting.name.compare("RadarReducedGripSnowingIndex") == 0) 
+		else if (setting.name.compare("RadarReducedGripSnowingCustomIndex") == 0) 
 		{
-			RadarReducedGripSnowingIndex = stoi(setting.value);
+			RadarReducedGripSnowingCustomIndex = stoi(setting.value);
 		}
-		else if (setting.name.compare("RadarReducedGripRainingIndex") == 0) 
+		else if (setting.name.compare("RadarReducedGripRainingCustomIndex") == 0) 
 		{
-			RadarReducedGripRainingIndex = stoi(setting.value);
+			RadarReducedGripRainingCustomIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("NoPedsGravityIndex") == 0) 
 		{
