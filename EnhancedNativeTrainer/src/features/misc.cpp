@@ -133,7 +133,7 @@ bool featureMiscJellmanScenery = false;
 bool featureEnableMissingRadioStation = false;
 
 //bool featureBlockInputInMenu = false;
-//bool featureControllerIgnoreInTrainer = false;
+bool featureControllerIgnoreInTrainer = false;
 
 const int TRAINERCONFIG_HOTKEY_MENU = 99;
 int radioStationIndex = -1;
@@ -328,14 +328,14 @@ void process_misc_trainerconfig_menu(){
 	//toggleItem->toggleValue = &featureBlockInputInMenu;
 	//menuItems.push_back(toggleItem);
 
-	//toggleItem = new ToggleMenuItem<int>();
-	//toggleItem->caption = "Turn Off All Controller Input In Trainer";
-	//toggleItem->toggleValue = &featureControllerIgnoreInTrainer;
-	//menuItems.push_back(toggleItem);
-
 	ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Show Vehicle Previews";
 	toggleItem->toggleValue = &featureShowVehiclePreviews;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Turn Off All Controller Input In Trainer";
+	toggleItem->toggleValue = &featureControllerIgnoreInTrainer;
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
@@ -1055,7 +1055,7 @@ void reset_misc_globals(){
 	PhoneBikeAnimationIndex = 0;
 	DefMenuTabIndex = 0;
 
-	//featureControllerIgnoreInTrainer = false;
+	featureControllerIgnoreInTrainer = false;
 	//featureBlockInputInMenu = false;
 	featureShowVehiclePreviews = true;
 	featureShowStatusMessage = true;
@@ -1941,7 +1941,7 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoStuntJumps", &featureNoStuntJumps});
 	results->push_back(FeatureEnabledLocalDefinition{"featureHidePlayerInfo", &featureHidePlayerInfo});
 	results->push_back(FeatureEnabledLocalDefinition{"featureMiscJellmanScenery", &featureMiscJellmanScenery});
-	//results->push_back(FeatureEnabledLocalDefinition{"featureControllerIgnoreInTrainer", &featureControllerIgnoreInTrainer});
+	results->push_back(FeatureEnabledLocalDefinition{"featureControllerIgnoreInTrainer", &featureControllerIgnoreInTrainer});
 	//results->push_back(FeatureEnabledLocalDefinition{"featureBlockInputInMenu", &featureBlockInputInMenu});
 }
 
@@ -1998,9 +1998,9 @@ bool is_vehicle_preview_enabled(){
 //	return featureBlockInputInMenu;
 //}
 
-//bool is_controller_ignored_in_trainer(){
-//	return featureControllerIgnoreInTrainer;
-//}
+bool is_controller_ignored_in_trainer(){
+	return featureControllerIgnoreInTrainer;
+}
 
 bool is_hud_hidden(){
 	return featureMiscHideHud;
