@@ -1689,7 +1689,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		Player player = PLAYER::PLAYER_ID();
 		Ped playerPed = PLAYER::PLAYER_PED_ID();
 
-		bool bSelect = IsKeyDown(KeyConfig::KEY_VEH_ROCKETS) || (CONTROLS::IS_CONTROL_PRESSED(2, controller_binds["KEY_VEH_ROCKETS"].first) && CONTROLS::IS_CONTROL_PRESSED(2, controller_binds["KEY_VEH_ROCKETS"].second)) || (CONTROLS::IS_CONTROL_PRESSED(2, 69) && !CONTROLS::IS_CONTROL_PRESSED(2, 70));
+		bool bSelect = IsKeyDown(KeyConfig::KEY_VEH_ROCKETS) || is_controller_button_pressed(controller_binds["KEY_VEH_ROCKETS"].first, controller_binds["KEY_VEH_ROCKETS"].second, is_controller_ignored_in_trainer()) || (CONTROLS::IS_CONTROL_PRESSED(2, 69) && !CONTROLS::IS_CONTROL_PRESSED(2, 70));
 
 		if (bSelect && featureWeaponVehShootLastTime + 150 < GetTickCount() && PLAYER::IS_PLAYER_CONTROL_ON(player)) {
 			Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
