@@ -3693,8 +3693,8 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		}
 		//
 
-		if ((featureRememberVehicles && bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && VEH_VEHREMEMBER_VALUES[VehRememberIndex] != 666) ||
-			(featureRememberVehicles && bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && VEH_VEHREMEMBER_VALUES[VehRememberIndex] == 666 && manual_veh_tr == true)) {
+		if ((featureRememberVehicles/* && bPlayerExists*/ && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && VEH_VEHREMEMBER_VALUES[VehRememberIndex] != 666) ||
+			(featureRememberVehicles/* && bPlayerExists*/ && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && VEH_VEHREMEMBER_VALUES[VehRememberIndex] == 666 && manual_veh_tr == true)) {
 			Vehicle veh_rem = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 			
 			// save in garage
