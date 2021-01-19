@@ -50,6 +50,8 @@ struct XenonColour {
 	int colour;
 };
 
+const std::vector<std::string> VEH_INVINC_MODE_CAPTIONS{ "OFF", "Mech. Only", "Mech. + Visual", "Mech. + Vis. + Cosmetic" };
+
 const std::vector<std::string> VEH_MASS_CAPTIONS{ "OFF", "3x", "5x", "10x", "30x", "50x", "Mayhem" };
 const int VEH_MASS_VALUES[] = { 0, 5, 10, 30, 50, 100, 50000 };
 extern int current_player_forceshieldN;
@@ -1065,7 +1067,7 @@ bool onconfirm_paintfade(MenuItem<float> choice);
 
 void onhighlight_paintfade(MenuItem<float> choice);
 
-int get_current_veh_invincibility_mode();
+//int get_current_veh_invincibility_mode();
 
 void onchange_veh_invincibility_mode(int value, SelectFromListMenuItem* source);
 

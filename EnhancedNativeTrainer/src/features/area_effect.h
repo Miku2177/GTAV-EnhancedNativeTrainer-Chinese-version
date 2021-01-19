@@ -34,8 +34,6 @@ const std::vector<std::string> WORLD_REDUCEDGRIP_SNOWING_CAPTIONS{ "OFF", "Simpl
 extern bool featureSnow;
 extern int NPCVehicleSpeedIndex;
 extern int PedAccuracyIndex;
-extern int RadarReducedGripSnowingIndex;
-extern int RadarReducedGripRainingIndex;
 extern int NoPedsGravityIndex;
 extern int featureNeverDirty;
 extern bool NeverDirtyChanged;
@@ -196,7 +194,7 @@ void kill_all_nearby_vehicles_continuous();
 
 void kill_all_nearby_vehicles_now();
 
-void set_all_nearby_vehs_to_invincible(bool enabled, bool force);
+//void set_all_nearby_vehs_to_invincible(); // bool enabled, bool force
 
 void set_all_nearby_vehs_to_broken(bool enabled);
 

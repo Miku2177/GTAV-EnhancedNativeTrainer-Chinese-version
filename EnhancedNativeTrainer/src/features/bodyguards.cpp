@@ -60,6 +60,7 @@ bool stop_b = false;
 bool c_armed = true;
 bool featureBodyguardInvincible = false;
 bool featureNoBodBlood = false;
+bool featureBAggressivePed = false;
 bool featureBodyguardHelmet = false;
 bool featureBodyguardDespawn = true;
 bool featureDifferentWeapons = false;
@@ -1689,14 +1690,14 @@ void do_spawn_bodyguard(){
 				PED::SET_PED_COMBAT_ABILITY(bodyGuard, 2);
 				PED::SET_PED_COMBAT_RANGE(bodyGuard, 2);
 				PED::SET_PED_COMBAT_MOVEMENT(bodyGuard, 3);
-				//PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 0, true); // BF_CanUseCover 
+				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 0, true); // BF_CanUseCover 
 				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 1, true); // BF_CanUseVehicles 
 				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 2, true); // BF_CanDoDrivebys 
 				//PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 3, true); // BF_CanLeaveVehicle 
 				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 5, true); // BF_CanFightArmedPedsWhenNotArmed
-				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 20, true); // BF_CanTauntInVehicle 
+				//PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 20, true); // BF_CanTauntInVehicle 
 				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 46, true); // BF_AlwaysFight 
-				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 1424, true); // BF_PlayerCanUseFiringWeapons
+				//PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 1424, true); // BF_PlayerCanUseFiringWeapons
 				//PED::SET_PED_ALERTNESS(bodyGuard, 3);
 				//PED::SET_PED_SEEING_RANGE(bodyGuard, 1000);
 				
@@ -1714,13 +1715,13 @@ void do_spawn_bodyguard(){
 					PED::SET_GROUP_FORMATION(myENTGroup, BODY_GROUPFORMATION_VALUES[BodyGroupFormationIndex]); // 1 
 					PED::SET_GROUP_FORMATION_SPACING(myENTGroup, VEH_BLIPSIZE_VALUES[BodyDistanceIndex], VEH_BLIPSIZE_VALUES[BodyDistanceIndex], VEH_BLIPSIZE_VALUES[BodyDistanceIndex]); // 2.0, 2.0, 2.0
 				}
-				PED::SET_CAN_ATTACK_FRIENDLY(bodyGuard, false, false);
+				//PED::SET_CAN_ATTACK_FRIENDLY(bodyGuard, false, false);
 			}
 
-			AI::TASK_COMBAT_HATED_TARGETS_AROUND_PED(bodyGuard, 100.0f, 0);
-			PED::SET_PED_KEEP_TASK(bodyGuard, true);
+			//AI::TASK_COMBAT_HATED_TARGETS_AROUND_PED(bodyGuard, 100.0f, 0);
+			//PED::SET_PED_KEEP_TASK(bodyGuard, true);
 
-			if (bodyguard_animal == false) PED::SET_PED_FIRING_PATTERN(bodyGuard, GAMEPLAY::GET_HASH_KEY("FIRING_PATTERN_FULL_AUTO")); // 0xC6EE6B4C
+			//if (bodyguard_animal == false) PED::SET_PED_FIRING_PATTERN(bodyGuard, GAMEPLAY::GET_HASH_KEY("FIRING_PATTERN_FULL_AUTO")); // 0xC6EE6B4C
 
 			// different weapons
 			if (featureDifferentWeapons && PED_WEAPON_TITLES[BodyWeaponSetIndex] == "Custom Weapon"/* && load_saved_bodyguard == false*/) {
@@ -1814,6 +1815,15 @@ void do_spawn_bodyguard(){
 				PED::SET_PED_MAX_HEALTH(bodyGuard, PLAYER_HEALTH_VALUES[BodyHealthIndex]);
 				ENTITY::SET_ENTITY_HEALTH(bodyGuard, PLAYER_HEALTH_VALUES[BodyHealthIndex]);
 			} // end of bodyguard health
+
+			// spawn aggressive ped
+			if (featureBAggressivePed && spawning_a_ped == true) {
+				PED::SET_PED_AS_ENEMY(PLAYER::PLAYER_PED_ID(), true);
+				PED::REGISTER_TARGET(bodyGuard, PLAYER::PLAYER_PED_ID());
+				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 5, true);
+				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 46, true);
+				AI::TASK_COMBAT_PED(bodyGuard, PLAYER::PLAYER_PED_ID(), 0, 16);
+			}
 
 			if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) {
 				Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
@@ -1992,7 +2002,6 @@ void maintain_bodyguards(){
 					if (c_armed == false) WEAPON::REMOVE_ALL_PED_WEAPONS(spawnedENTBodyguards[i], false);
 				}
 			}
-			
 			// bodyguards swimming ability
 			if (ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID()) == 1 && !is_in_airbrake_mode() && PED::GET_PED_TYPE(spawnedENTBodyguards[i]) != 28 && stop_b == false) {
 				float height = -1.0;
@@ -2483,6 +2492,12 @@ bool process_bodyguard_menu(){
 		toggleItem->toggleValue = &featureNoBodBlood;
 		menuItems.push_back(toggleItem);
 
+		toggleItem = new ToggleMenuItem<int>();
+		toggleItem->caption = "Spawn Aggressive Ped";
+		toggleItem->value = i++;
+		toggleItem->toggleValue = &featureBAggressivePed;
+		menuItems.push_back(toggleItem);
+
 		if(!bodyguardWeaponsToggleInitialized){
 			for(int a = 0; a < MENU_WEAPON_CATEGORIES.size(); a++){
 				for(int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++){
@@ -2635,6 +2650,7 @@ bool onconfirm_bodyguard_menu(MenuItem<int> choice){
 void add_bodyguards_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardInvincible", &featureBodyguardInvincible});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoBodBlood", &featureNoBodBlood});
+	results->push_back(FeatureEnabledLocalDefinition{"featureBAggressivePed", &featureBAggressivePed});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardHelmet", &featureBodyguardHelmet});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardDespawn", &featureBodyguardDespawn});
 	results->push_back(FeatureEnabledLocalDefinition{"featureDifferentWeapons", &featureDifferentWeapons});
@@ -2736,6 +2752,7 @@ void reset_bodyguards_globals(){
 	featureBodyguardOnMap = false;
 	featureBodyguardInvincible = false;
 	featureNoBodBlood = false;
+	featureBAggressivePed = false;
 	featureBodyguardHelmet = false;
 	featureBodyguardDespawn = true;
 	featureBodyguardInfAmmo = false;
