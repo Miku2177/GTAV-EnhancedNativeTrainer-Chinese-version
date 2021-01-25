@@ -1583,7 +1583,7 @@ void update_teleport_features(){
 	if (featureCayoPerico && ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()) && WORLD_WAVES_VALUES[WorldWavesIndex] == -1) {
 		Vector3 my_coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 0);
 		if (my_coords.x > 3532.21 && my_coords.x < 5813.77 && my_coords.y > -6244.41 && my_coords.y < -4021.09) {
-			WATER::_SET_WAVES_INTENSITY(-400000); // GAMEPLAY::_0xC54A08C85AE4D410(1.0f);
+			WATER::_SET_WAVES_INTENSITY(-10000000); // -400000 // GAMEPLAY::_0xC54A08C85AE4D410(1.0f);
 			auto_waves = true;
 		}
 		if ((my_coords.x < 3532.21 || my_coords.x > 5813.77 || my_coords.y < -6244.41 || my_coords.y > -4021.09) && auto_waves == true && WORLD_WAVES_VALUES[WorldWavesIndex] == -1) {
