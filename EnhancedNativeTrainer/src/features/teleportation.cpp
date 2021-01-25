@@ -961,8 +961,8 @@ bool onconfirm_jump_category(MenuItem<int> choice)
 
 			if (lastJumpSpawn == "random" || lastJumpSpawn == "Random" || lastJumpSpawn == "RANDOM")
 			{
-				int x_coord = (rand() % 3934 + -3294); // UP MARGIN + DOWN MARGIN
-				int y_coord = (rand() % 6576 + -3330); 
+				int x_coord = -3294 + rand() % 6868; // (rand() % 3934 + -3294); // UP MARGIN + DOWN MARGIN
+				int y_coord = -3330 + rand() % 11152; // (rand() % 6576 + -3330); 
 				Vector3 me_coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 0);
 
 				bool groundFound = false;
