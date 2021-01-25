@@ -1565,7 +1565,7 @@ void update_teleport_features(){
 	if (featureCayoPerico && ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()) && perico_init == false)
 	{
 		cayo_tick = cayo_tick + 1;
-		if (cayo_tick > 500) { // 1000
+		if (cayo_tick > 400) { // 1000
 			for (int i = 0; i < IPLS_CAYO_PERICO.size(); i++) {
 				if (!STREAMING::IS_IPL_ACTIVE(IPLS_CAYO_PERICO[i]))
 				{
