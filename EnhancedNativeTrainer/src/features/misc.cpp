@@ -210,20 +210,27 @@ bool process_misc_hotkey_menu(){
 		if(!keyAssigned){
 			captions.push_back("Key Not Bound");
 			callback = NULL;
+
+			SelectFromListMenuItem* item = new SelectFromListMenuItem(captions, callback);
+			item->caption = itemCaption.str();
+			item->value = NULL;
+			menuItems.push_back(item);
 		}
 		else{
 			for each (HOTKEY_DEF var in HOTKEY_AVAILABLE_FUNCS){
 				captions.push_back(var.caption);
 			}
 			callback = onchange_hotkey_function;
+
+			SelectFromListMenuItem* item = new SelectFromListMenuItem(captions, callback);
+			item->caption = itemCaption.str();
+			item->wrap = keyAssigned;
+			item->extras.push_back(i);
+			item->value = get_hotkey_function_index(i);
+			menuItems.push_back(item);
 		}
 
-		SelectFromListMenuItem* item = new SelectFromListMenuItem(captions, callback);
-		item->caption = itemCaption.str();
-		item->wrap = keyAssigned;
-		item->extras.push_back(i);
-		item->value = get_hotkey_function_index(i);
-		menuItems.push_back(item);
+		
 	}
 
 	draw_generic_menu<int>(menuItems, &activeLineHotkeyConfig, "Hotkey Config", NULL, NULL, NULL);
