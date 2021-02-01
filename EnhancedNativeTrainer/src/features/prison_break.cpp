@@ -387,7 +387,8 @@ void prison_break()
 					distance_from_guard_y = my_position_in_prison.y - guard_position_in_prison.y;
 					if (distance_from_guard_x < 0) distance_from_guard_x = distance_from_guard_x * -1;
 					if (distance_from_guard_y < 0) distance_from_guard_y = distance_from_guard_y * -1;
-					if (distance_from_guard_x < 25 && distance_from_guard_y < 25 && guards[i] != playerPed) { 
+					if (distance_from_guard_x < 25 && distance_from_guard_y < 25 && guards[i] != playerPed && guards[i] != GAMEPLAY::GET_HASH_KEY("S_M_Y_PrisMuscl_01") && guards[i] != GAMEPLAY::GET_HASH_KEY("S_M_Y_Prisoner_01") && 
+						guards[i] != GAMEPLAY::GET_HASH_KEY("U_M_Y_Prisoner_01")) {
 						PED::SET_PED_AS_ENEMY(playerPed, true);
 						PED::REGISTER_TARGET(guards[i], playerPed);
 						PED::SET_PED_COMBAT_ATTRIBUTES(guards[i], 5, true);
@@ -430,7 +431,8 @@ void prison_break()
 					distance_from_guard_y = my_position_in_prison.y - guard_position_in_prison.y;
 					if (distance_from_guard_x < 0) distance_from_guard_x = distance_from_guard_x * -1;
 					if (distance_from_guard_y < 0) distance_from_guard_y = distance_from_guard_y * -1;
-					if (distance_from_guard_x < 95 && distance_from_guard_y < 95 && guards[i] != playerPed) { 
+					if (distance_from_guard_x < 95 && distance_from_guard_y < 95 && guards[i] != playerPed && guards[i] != GAMEPLAY::GET_HASH_KEY("S_M_Y_PrisMuscl_01") && guards[i] != GAMEPLAY::GET_HASH_KEY("S_M_Y_Prisoner_01") &&
+						guards[i] != GAMEPLAY::GET_HASH_KEY("U_M_Y_Prisoner_01")) {
 						PED::SET_PED_AS_ENEMY(playerPed, true);
 						PED::REGISTER_TARGET(guards[i], playerPed);
 						PED::SET_PED_COMBAT_ATTRIBUTES(guards[i], 5, true);
@@ -470,7 +472,8 @@ void prison_break()
 					distance_from_guard_y = my_position_in_prison.y - guard_position_in_prison.y;
 					if (distance_from_guard_x < 0) distance_from_guard_x = distance_from_guard_x * -1;
 					if (distance_from_guard_y < 0) distance_from_guard_y = distance_from_guard_y * -1;
-					if (distance_from_guard_x < 155 && distance_from_guard_y < 155 && guards[i] != playerPed) { 
+					if (distance_from_guard_x < 155 && distance_from_guard_y < 155 && guards[i] != playerPed && guards[i] != GAMEPLAY::GET_HASH_KEY("S_M_Y_PrisMuscl_01") && guards[i] != GAMEPLAY::GET_HASH_KEY("S_M_Y_Prisoner_01") &&
+						guards[i] != GAMEPLAY::GET_HASH_KEY("U_M_Y_Prisoner_01")) {
 						PED::SET_PED_AS_ENEMY(playerPed, true);
 						PED::REGISTER_TARGET(guards[i], playerPed);
 						PED::SET_PED_COMBAT_ATTRIBUTES(guards[i], 5, true);
