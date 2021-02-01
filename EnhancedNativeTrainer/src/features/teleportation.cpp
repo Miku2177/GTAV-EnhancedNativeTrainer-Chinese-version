@@ -1577,6 +1577,12 @@ void update_teleport_features(){
 			STREAMING::SET_INTERIOR_ACTIVE(CayointeriorID, true);
 			INTERIOR::DISABLE_INTERIOR(CayointeriorID, false);
 			INTERIOR::CAP_INTERIOR(CayointeriorID, 0);
+			//for (int i = 0; i < IPLS_CAYO_PERICO.size(); i++) {
+			//	if (!INTERIOR::_IS_INTERIOR_PROP_ENABLED(CayointeriorID, (char*)IPLS_CAYO_PERICO[i]))
+			//	{
+			//		INTERIOR::_ENABLE_INTERIOR_PROP(CayointeriorID, (char*)IPLS_CAYO_PERICO[i]);
+			//	}
+			//}
 			perico_init = true;
 		}
 	}
