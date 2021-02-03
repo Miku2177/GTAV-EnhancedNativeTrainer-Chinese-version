@@ -1892,12 +1892,22 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	//Enable's 1.44's new radio station. Credit goes to Sjaak for finding this!
 	if (featureEnableMissingRadioStation)
 	{
+		bool iterated_radio_stations = false; //To prevent needless looping over and over when it's not needed.
 		int version = getGameVersion();
-		if (version > 41)
+		if ((version > 41 || version == -1))
 		{
-			UNK3::_0x477D9DB48F889591("RADIO_22_DLC_BATTLE_MIX1_RADIO", 0);
+			if (!iterated_radio_stations)
+			{
+				for (int i = 0; i < 100; i++)
+				{
+					char* radio_station = AUDIO::GET_RADIO_STATION_NAME(i);
+					UNK3::_0x477D9DB48F889591(radio_station, 0);
+				}
+				WAIT(1000);
+				iterated_radio_stations = true;
+			}
 		}
-		else 
+		else
 		{
 			set_status_text("Game version outdated. This requires 1.44 onwards to function!");
 			featureEnableMissingRadioStation = false;
