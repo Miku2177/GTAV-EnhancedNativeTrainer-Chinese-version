@@ -1557,6 +1557,13 @@ void do_spawn_bodyguard(){
 	DWORD bodyGuardModel = -1;
 	float random_category, random_bodyguard = -1;
 
+	if (hotkey_boddyguard == true && hotkey_b == false) {
+		hotkey_b = true;
+		process_bodyguard_menu();
+		WAIT(10);
+		process_main_menu();
+	}
+
 	// random bodyguard
 	if (lastCustomBodyguardSpawn == "random" || lastCustomBodyguardSpawn == "Random" || lastCustomBodyguardSpawn == "RANDOM") {
 		random_category = (rand() % 10 + 0); // UP MARGIN + DOWN MARGIN
@@ -1564,9 +1571,13 @@ void do_spawn_bodyguard(){
 			random_bodyguard = (rand() % SKINS_PLAYER_VALUES.size() + 0);
 			bodyGuardModel = GAMEPLAY::GET_HASH_KEY((char*)SKINS_PLAYER_VALUES[random_bodyguard].c_str());
 		}
-		if (random_category > 0 && random_category < 10) {
+		if (random_category > 0 && random_category < 8) {
 			random_bodyguard = (rand() % SKINS_GENERAL_VALUES.size() + 0);
 			bodyGuardModel = GAMEPLAY::GET_HASH_KEY((char*)SKINS_GENERAL_VALUES[random_bodyguard].c_str());
+		}
+		if (random_category > 7 && random_category < 10) {
+			random_bodyguard = (rand() % SKINS_ONLINE_VALUES.size() + 0);
+			bodyGuardModel = GAMEPLAY::GET_HASH_KEY((char*)SKINS_ONLINE_VALUES[random_bodyguard].c_str());
 		}
 		if (random_category == 10) {
 			random_bodyguard = (rand() % SKINS_ANIMALS_VALUES.size() + 0);
@@ -1574,18 +1585,7 @@ void do_spawn_bodyguard(){
 		}
 	} // end of random bodyguard
 	
-	if (hotkey_boddyguard == false && lastCustomBodyguardSpawn != "random" && lastCustomBodyguardSpawn != "Random" && lastCustomBodyguardSpawn != "RANDOM") bodyGuardModel = get_current_model_hash();
-	if (hotkey_boddyguard == true) {
-		if (hotkey_b == false) {
-			hotkey_b = true;
-			process_bodyguard_menu();
-			process_main_menu();
-		}
-		if (skinTypesBodyguardMenuLastConfirmed[0] == 0) bodyGuardModel = GAMEPLAY::GET_HASH_KEY((char*)SKINS_PLAYER_VALUES[skinTypesBodyguardMenuLastConfirmed[1]].c_str());
-		if (skinTypesBodyguardMenuLastConfirmed[0] == 1) bodyGuardModel = GAMEPLAY::GET_HASH_KEY((char*)SKINS_GENERAL_VALUES[skinTypesBodyguardMenuLastConfirmed[1]].c_str());
-		if (skinTypesBodyguardMenuLastConfirmed[0] == 2) bodyGuardModel = GAMEPLAY::GET_HASH_KEY((char*)SKINS_ANIMALS_VALUES[skinTypesBodyguardMenuLastConfirmed[1]].c_str());
-		hotkey_boddyguard = false;
-	}
+	if (lastCustomBodyguardSpawn != "random" && lastCustomBodyguardSpawn != "Random" && lastCustomBodyguardSpawn != "RANDOM") bodyGuardModel = get_current_model_hash(); // hotkey_boddyguard == false && 
 
 	if (load_saved_bodyguard == true) bodyGuardModel = temp_bodyguard;
 

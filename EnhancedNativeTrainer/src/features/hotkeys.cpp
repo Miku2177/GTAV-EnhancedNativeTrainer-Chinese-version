@@ -20,6 +20,7 @@ const int MAX_HOTKEYS = 9;
 
 int functionIDs[MAX_HOTKEYS] = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
+bool hotkey_held_saved_veh_spawn = false;
 bool hotkey_held_slow_mo = false;
 bool hotkey_boddyguard = false;
 bool hotkey_held_half_normal_speed = false;
@@ -30,6 +31,11 @@ bool hotkey_held_veh_extrapower = false;
 bool hotkey_held_veh_nitrous = false;
 bool hotkey_held_veh_radio_skip = false;
 bool muffled_toggle = false;
+
+bool is_hotkey_held_saved_veh_spawn()
+{
+	return hotkey_held_saved_veh_spawn;
+}
 
 bool is_hotkey_held_slow_mo()
 {
@@ -293,6 +299,9 @@ void trigger_function_for_hotkey_onkeyup(int hotkey)
 		if (c_armed) set_status_text("Armed");
 		else set_status_text("Disarmed");
 		break;
+	case HKEY_SPAWN_SAVED_CAR:
+		hotkey_held_saved_veh_spawn = false;
+		break;
 	default:
 	{
 		std::ostringstream ss;
@@ -330,6 +339,9 @@ void trigger_function_for_hotkey_onkeydown(int hotkey)
 			break;
 		case HKEY_MENU_NEXT_RADIO_TRACK:
 			hotkey_held_veh_radio_skip = true;
+			break;
+		case HKEY_SPAWN_SAVED_CAR:
+			hotkey_held_saved_veh_spawn = true;
 			break;
 		default:
 			break;

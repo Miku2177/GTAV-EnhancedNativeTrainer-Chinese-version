@@ -210,20 +210,25 @@ bool process_misc_hotkey_menu(){
 		if(!keyAssigned){
 			captions.push_back("Key Not Bound");
 			callback = NULL;
+
+			SelectFromListMenuItem* item = new SelectFromListMenuItem(captions, callback);
+			item->caption = itemCaption.str();
+			item->value = NULL;
+			menuItems.push_back(item);
 		}
 		else{
 			for each (HOTKEY_DEF var in HOTKEY_AVAILABLE_FUNCS){
 				captions.push_back(var.caption);
 			}
 			callback = onchange_hotkey_function;
-		}
 
-		SelectFromListMenuItem* item = new SelectFromListMenuItem(captions, callback);
-		item->caption = itemCaption.str();
-		item->wrap = keyAssigned;
-		item->extras.push_back(i);
-		item->value = get_hotkey_function_index(i);
-		menuItems.push_back(item);
+			SelectFromListMenuItem* item = new SelectFromListMenuItem(captions, callback);
+			item->caption = itemCaption.str();
+			item->wrap = keyAssigned;
+			item->extras.push_back(i);
+			item->value = get_hotkey_function_index(i);
+			menuItems.push_back(item);
+		}
 	}
 
 	draw_generic_menu<int>(menuItems, &activeLineHotkeyConfig, "Hotkey Config", NULL, NULL, NULL);
@@ -1389,7 +1394,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		}
 
 		if ((VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(veh)) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(veh))) && PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed)) { // PED::IS_PED_ON_ANY_BIKE(playerPed)
-			if (featureNoPhoneOnHUD && CAM::_0xEE778F8C7E1142E2(2) == 4) MOBILE::SET_MOBILE_PHONE_POSITION(10000, 10000, 10000);
+			if (featureNoPhoneOnHUD && CAM::_0xEE778F8C7E1142E2(2) == 4 && PED::GET_VEHICLE_PED_IS_IN(playerPed, 1) != GAMEPLAY::GET_HASH_KEY("VERUS")) MOBILE::SET_MOBILE_PHONE_POSITION(10000, 10000, 10000);
 			
 			Hash temp_Hash = -1;
 			Vector3 temp_pos = ENTITY::GET_ENTITY_COORDS(playerPed, true);
@@ -1511,7 +1516,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			}
 
 			// armor
-			GRAPHICS::DRAW_RECT(health_bar_x + 0.0880, health_bar_y + 0.01, 0.036, 0.017, 38, 85, 87, 110);
+			GRAPHICS::DRAW_RECT(health_bar_x + 0.0885, health_bar_y + 0.01, 0.034, 0.017, 38, 85, 87, 110); // health_bar_x + 0.0880 // 0.036
 			GRAPHICS::DRAW_RECT(health_bar_x + 0.0885, health_bar_y + 0.01, 0.034, 0.009, 39, 55, 56, 245); // 90
 			if ((playerArmour / 2935) < 0.035) GRAPHICS::DRAW_RECT(health_bar_x + 0.0715 + (playerArmour / 5871), health_bar_y + 0.01, (playerArmour / 2935), 0.009, 62, 129, 164, 255);
 			else GRAPHICS::DRAW_RECT(health_bar_x + 0.0885, health_bar_y + 0.01, 0.034, 0.009, 62, 129, 164, 255);
@@ -1888,12 +1893,22 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	//Enable's 1.44's new radio station. Credit goes to Sjaak for finding this!
 	if (featureEnableMissingRadioStation)
 	{
+		bool iterated_radio_stations = false; //To prevent needless looping over and over when it's not needed.
 		int version = getGameVersion();
-		if (version > 41)
+		if ((version > 41 || version == -1))
 		{
-			UNK3::_0x477D9DB48F889591("RADIO_22_DLC_BATTLE_MIX1_RADIO", 0);
+			if (!iterated_radio_stations)
+			{
+				for (int i = 0; i < 100; i++)
+				{
+					char* radio_station = AUDIO::GET_RADIO_STATION_NAME(i);
+					UNK3::_0x477D9DB48F889591(radio_station, 0);
+				}
+				WAIT(1000);
+				iterated_radio_stations = true;
+			}
 		}
-		else 
+		else
 		{
 			set_status_text("Game version outdated. This requires 1.44 onwards to function!");
 			featureEnableMissingRadioStation = false;
