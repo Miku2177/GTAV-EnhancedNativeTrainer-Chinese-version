@@ -2817,7 +2817,7 @@ namespace WEAPON
 	static BOOL GET_MAX_AMMO(Ped ped, Hash weaponHash, int* ammo) { return invoke<BOOL>(0xDC16122C7A20C933, ped, weaponHash, ammo); } // 0xDC16122C7A20C933 0x0B294796
 	static void SET_PED_AMMO_BY_TYPE(Ped ped, Any ammoType, int ammo) { invoke<Void>(0x5FD1E1F011E76D7E, ped, ammoType, ammo); } // 0x5FD1E1F011E76D7E 0x311C52BB
 	static int GET_PED_AMMO_BY_TYPE(Ped ped, Any ammoType) { return invoke<int>(0x39D22031557946C1, ped, ammoType); } // 0x39D22031557946C1 0x54077C4D
-	static void SET_PED_AMMO_TO_DROP(Any p0, Any p1) { invoke<Void>(0xA4EFEF9440A5B0EF, p0, p1); } // 0xA4EFEF9440A5B0EF 0x2386A307
+	static void SET_PED_AMMO_TO_DROP(Ped ped, int ammo) { invoke<Void>(0xA4EFEF9440A5B0EF, ped, ammo); } // 0xA4EFEF9440A5B0EF 0x2386A307
 	static void _0xE620FD3512A04F18(float p0) { invoke<Void>(0xE620FD3512A04F18, p0); } // 0xE620FD3512A04F18 0xD6460EA2
 	static Hash GET_PED_AMMO_TYPE_FROM_WEAPON(Ped ped, Hash weaponHash) { return invoke<Hash>(0x7FEAD38B326B9F74, ped, weaponHash); } // 0x7FEAD38B326B9F74 0x09337863
 	static BOOL GET_PED_LAST_WEAPON_IMPACT_COORD(Ped ped, Vector3* coords) { return invoke<BOOL>(0x6C4D0409BA1A2BC2, ped, coords); } // 0x6C4D0409BA1A2BC2 0x9B266079
