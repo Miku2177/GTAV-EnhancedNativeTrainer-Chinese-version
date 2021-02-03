@@ -2319,6 +2319,7 @@ namespace AUDIO
 	static void _0xDD6BCF9E94425DF9() { invoke<Void>(0xDD6BCF9E94425DF9); } // 0xDD6BCF9E94425DF9 0xD70ECC80
 	static void SET_RADIO_TO_STATION_NAME(char* stationName) { invoke<Void>(0xC69EDA28699D5107, stationName); } // 0xC69EDA28699D5107 0x7B36E35E
 	static void SET_VEH_RADIO_STATION(Vehicle vehicle, char* radioStation) { invoke<Void>(0x1B9C0099CB942AC6, vehicle, radioStation); } // 0x1B9C0099CB942AC6 0xE391F55F
+	//static void _SET_RADIO_TRACK_MIX(char* radioStationName, char* mixName, int p2) { invoke<Void>(0x1B9C0099CB942AC6, radioStationName, mixName, p2); } // 0x2CB0075110BE1E56
 	static void _0xC1805D05E6D4FE10(Vehicle vehicle) { invoke<Void>(0xC1805D05E6D4FE10, vehicle); } // 0xC1805D05E6D4FE10 0x7ABB89D2
 	static void SET_EMITTER_RADIO_STATION(char* emitterName, char* radioStation) { invoke<Void>(0xACF57305B12AF907, emitterName, radioStation); } // 0xACF57305B12AF907 0x87431585
 	static void SET_STATIC_EMITTER_ENABLED(char* emitterName, BOOL toggle) { invoke<Void>(0x399D2D3B33F1B8EB, emitterName, toggle); } // 0x399D2D3B33F1B8EB 0x91F72E92
@@ -2816,7 +2817,7 @@ namespace WEAPON
 	static BOOL GET_MAX_AMMO(Ped ped, Hash weaponHash, int* ammo) { return invoke<BOOL>(0xDC16122C7A20C933, ped, weaponHash, ammo); } // 0xDC16122C7A20C933 0x0B294796
 	static void SET_PED_AMMO_BY_TYPE(Ped ped, Any ammoType, int ammo) { invoke<Void>(0x5FD1E1F011E76D7E, ped, ammoType, ammo); } // 0x5FD1E1F011E76D7E 0x311C52BB
 	static int GET_PED_AMMO_BY_TYPE(Ped ped, Any ammoType) { return invoke<int>(0x39D22031557946C1, ped, ammoType); } // 0x39D22031557946C1 0x54077C4D
-	static void SET_PED_AMMO_TO_DROP(Any p0, Any p1) { invoke<Void>(0xA4EFEF9440A5B0EF, p0, p1); } // 0xA4EFEF9440A5B0EF 0x2386A307
+	static void SET_PED_AMMO_TO_DROP(Ped ped, int ammo) { invoke<Void>(0xA4EFEF9440A5B0EF, ped, ammo); } // 0xA4EFEF9440A5B0EF 0x2386A307
 	static void _0xE620FD3512A04F18(float p0) { invoke<Void>(0xE620FD3512A04F18, p0); } // 0xE620FD3512A04F18 0xD6460EA2
 	static Hash GET_PED_AMMO_TYPE_FROM_WEAPON(Ped ped, Hash weaponHash) { return invoke<Hash>(0x7FEAD38B326B9F74, ped, weaponHash); } // 0x7FEAD38B326B9F74 0x09337863
 	static BOOL GET_PED_LAST_WEAPON_IMPACT_COORD(Ped ped, Vector3* coords) { return invoke<BOOL>(0x6C4D0409BA1A2BC2, ped, coords); } // 0x6C4D0409BA1A2BC2 0x9B266079

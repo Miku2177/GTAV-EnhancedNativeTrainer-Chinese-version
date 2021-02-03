@@ -228,6 +228,25 @@ void process_world_weathersettings_menu() {
 	listItem->value = WeatherMethodIndexN;
 	menuItems.push_back(listItem);
 
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Heavy Snow";
+	//toggleItem->value = 7;
+	toggleItem->toggleValue = &featureSnow;
+	toggleItem->toggleValueUpdated = &featureSnowUpdated;
+	menuItems.push_back(toggleItem);
+
+	listItem = new SelectFromListMenuItem(VEH_TURN_SIGNALS_ACCELERATION_CAPTIONS, onchange_world_reducedgrip_snowing_c_index);
+	listItem->wrap = false;
+	listItem->caption = "Reduced Grip If Snowing";
+	listItem->value = RadarReducedGripSnowingCustomIndex;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(VEH_TURN_SIGNALS_ACCELERATION_CAPTIONS, onchange_world_reducedgrip_raining_c_index);
+	listItem->wrap = false;
+	listItem->caption = "Slippery When Wet";
+	listItem->value = RadarReducedGripRainingCustomIndex;
+	menuItems.push_back(listItem);
+
 	listItem = new SelectFromListMenuItem(WORLD_LIGHTNING_INTENSITY_CAPTIONS, onchange_lightning_intensity_index);
 	listItem->wrap = false;
 	listItem->caption = "Lightning Intensity";
@@ -638,25 +657,6 @@ void process_world_menu()
 	togItem->value = 6;
 	togItem->toggleValue = &featureHeadlightsBlackout;
 	menuItems.push_back(togItem);
-
-	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Heavy Snow";
-	togItem->value = 7;
-	togItem->toggleValue = &featureSnow;
-	togItem->toggleValueUpdated = &featureSnowUpdated;
-	menuItems.push_back(togItem);
-
-	listItem = new SelectFromListMenuItem(VEH_TURN_SIGNALS_ACCELERATION_CAPTIONS, onchange_world_reducedgrip_snowing_c_index);
-	listItem->wrap = false;
-	listItem->caption = "Reduced Grip If Snowing";
-	listItem->value = RadarReducedGripSnowingCustomIndex;
-	menuItems.push_back(listItem);
-
-	listItem = new SelectFromListMenuItem(VEH_TURN_SIGNALS_ACCELERATION_CAPTIONS, onchange_world_reducedgrip_raining_c_index);
-	listItem->wrap = false;
-	listItem->caption = "Slippery When Wet";
-	listItem->value = RadarReducedGripRainingCustomIndex;
-	menuItems.push_back(listItem);
 
 	togItem = new ToggleMenuItem<int>();
 	togItem->caption = "Show Full Map";
@@ -1134,15 +1134,16 @@ void update_world_features()
 		if (winter_water_tick > 6999 && winter_water_tick < 7300) GAMEPLAY::_0xC54A08C85AE4D410(0.0f); // 9999 10300
 		if (winter_water_tick > 7299) winter_water_tick = 0; // 10299
 	}
-	if (WORLD_WAVES_VALUES[WorldWavesIndex] != -500000 && !featureSnow) GAMEPLAY::_0xC54A08C85AE4D410(0.0f);
-	if (WORLD_WAVES_VALUES[WorldWavesIndex] == -1 && wavesstrength_toggle == false) {
+	if ((WORLD_WAVES_VALUES[WorldWavesIndex] != -2 && !featureSnow && winter_water_tick > 0) || wavesstrength_toggle == false) { // WORLD_WAVES_VALUES[WorldWavesIndex] == -1
+		GAMEPLAY::_0xC54A08C85AE4D410(0.0f);
 		WATER::_RESET_WAVES_INTENSITY();
+		winter_water_tick = 0;
 		wavesstrength_changed = WORLD_WAVES_VALUES[WorldWavesIndex];
 		wavesstrength_toggle = true; 
 	}
 	if (wavesstrength_changed != WORLD_WAVES_VALUES[WorldWavesIndex]) wavesstrength_toggle = false;
-	if (WORLD_WAVES_VALUES[WorldWavesIndex] != -1 && WORLD_WAVES_VALUES[WorldWavesIndex] != -500000) WATER::_SET_WAVES_INTENSITY(WORLD_WAVES_VALUES[WorldWavesIndex]);
-	if (WORLD_WAVES_VALUES[WorldWavesIndex] != -1 && WORLD_WAVES_VALUES[WorldWavesIndex] == -500000) GAMEPLAY::_0xC54A08C85AE4D410(1.0f);
+	if (WORLD_WAVES_VALUES[WorldWavesIndex] != -1 && WORLD_WAVES_VALUES[WorldWavesIndex] != -2) WATER::_SET_WAVES_INTENSITY(WORLD_WAVES_VALUES[WorldWavesIndex]);
+	if (WORLD_WAVES_VALUES[WorldWavesIndex] != -1 && WORLD_WAVES_VALUES[WorldWavesIndex] == -2) GAMEPLAY::_0xC54A08C85AE4D410(1.0f);
 	
 	// Lightning Intensity
 	if (WORLD_LIGHTNING_INTENSITY_VALUES[featureLightIntensityIndex] > -2 && (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3061285535 || GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3373937154)) { // GET_NEXT_WEATHER_TYPE_HASH_NAME
@@ -1304,14 +1305,14 @@ void update_world_features()
 				if (VEH_TURN_SIGNALS_ACCELERATION_VALUES[RadarReducedGripSnowingCustomIndex] < 6 && slippery_randomize > 990 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
 					AI::IS_PED_RUNNING(PLAYER::PLAYER_PED_ID()) && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip.x, coords_slip.y, coords_slip.z) && !ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID()))
 					PED::SET_PED_TO_RAGDOLL(PLAYER::PLAYER_PED_ID(), time11, time12, r_Type, true, true, false);
-				if (VEH_TURN_SIGNALS_ACCELERATION_VALUES[RadarReducedGripSnowingCustomIndex] < 6 && slippery_randomize > 950 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
+				if (VEH_TURN_SIGNALS_ACCELERATION_VALUES[RadarReducedGripSnowingCustomIndex] < 6 && slippery_randomize > 960 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
 					AI::IS_PED_SPRINTING(PLAYER::PLAYER_PED_ID()) && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip.x, coords_slip.y, coords_slip.z) && !ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID())) 
 					PED::SET_PED_TO_RAGDOLL(PLAYER::PLAYER_PED_ID(), time11, time12, r_Type, true, true, false);
 				// realistic
 				if (VEH_TURN_SIGNALS_ACCELERATION_VALUES[RadarReducedGripSnowingCustomIndex] > 5 && slippery_randomize > 980 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
 					AI::IS_PED_RUNNING(PLAYER::PLAYER_PED_ID()) && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip.x, coords_slip.y, coords_slip.z) && !ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID())) 
 					PED::SET_PED_TO_RAGDOLL(PLAYER::PLAYER_PED_ID(), time11, time12, r_Type, true, true, false);
-				if (VEH_TURN_SIGNALS_ACCELERATION_VALUES[RadarReducedGripSnowingCustomIndex] > 5 && slippery_randomize > 920 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
+				if (VEH_TURN_SIGNALS_ACCELERATION_VALUES[RadarReducedGripSnowingCustomIndex] > 5 && slippery_randomize > 930 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
 					AI::IS_PED_SPRINTING(PLAYER::PLAYER_PED_ID()) && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip.x, coords_slip.y, coords_slip.z) && !ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID())) 
 					PED::SET_PED_TO_RAGDOLL(PLAYER::PLAYER_PED_ID(), time11, time12, r_Type, true, true, false);
 				// normalize speed
