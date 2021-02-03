@@ -2319,6 +2319,7 @@ namespace AUDIO
 	static void _0xDD6BCF9E94425DF9() { invoke<Void>(0xDD6BCF9E94425DF9); } // 0xDD6BCF9E94425DF9 0xD70ECC80
 	static void SET_RADIO_TO_STATION_NAME(char* stationName) { invoke<Void>(0xC69EDA28699D5107, stationName); } // 0xC69EDA28699D5107 0x7B36E35E
 	static void SET_VEH_RADIO_STATION(Vehicle vehicle, char* radioStation) { invoke<Void>(0x1B9C0099CB942AC6, vehicle, radioStation); } // 0x1B9C0099CB942AC6 0xE391F55F
+	//static void _SET_RADIO_TRACK_MIX(char* radioStationName, char* mixName, int p2) { invoke<Void>(0x1B9C0099CB942AC6, radioStationName, mixName, p2); } // 0x2CB0075110BE1E56
 	static void _0xC1805D05E6D4FE10(Vehicle vehicle) { invoke<Void>(0xC1805D05E6D4FE10, vehicle); } // 0xC1805D05E6D4FE10 0x7ABB89D2
 	static void SET_EMITTER_RADIO_STATION(char* emitterName, char* radioStation) { invoke<Void>(0xACF57305B12AF907, emitterName, radioStation); } // 0xACF57305B12AF907 0x87431585
 	static void SET_STATIC_EMITTER_ENABLED(char* emitterName, BOOL toggle) { invoke<Void>(0x399D2D3B33F1B8EB, emitterName, toggle); } // 0x399D2D3B33F1B8EB 0x91F72E92

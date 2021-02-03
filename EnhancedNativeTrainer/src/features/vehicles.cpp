@@ -95,6 +95,9 @@ bool alarm_enabled = false;
 
 bool nitro_e = false;
 
+bool entered_sp_v = false;
+std::string  veh_to_spawn = "";
+
 int turn_angle = 0;
 int temp_angle = 0;
 bool turning_started = false;
@@ -4105,6 +4108,77 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 	if ((GAMEPLAY::UPDATE_ONSCREEN_KEYBOARD() == 1 || GAMEPLAY::UPDATE_ONSCREEN_KEYBOARD() == 2) && curr_message != "" && keyboard_on_screen_already == false) curr_message = "";
 	
+	// Spawn Saved Vehicle Hotkey
+	if (is_hotkey_held_saved_veh_spawn() || veh_to_spawn != "") {
+		PED::SET_PED_CAN_SWITCH_WEAPON(playerPed, false);
+		UI::HIDE_HUD_COMPONENT_THIS_FRAME(19);
+		UI::HIDE_HUD_COMPONENT_THIS_FRAME(20);
+	}
+	if (is_hotkey_held_saved_veh_spawn()) {
+		if (GetKeyState('1') & 0x8000 && entered_sp_v == false) {
+			veh_to_spawn = veh_to_spawn + "1";
+			entered_sp_v = true;
+		}
+		if (GetKeyState('2') & 0x8000 && entered_sp_v == false) {
+			veh_to_spawn = veh_to_spawn + "2";
+			entered_sp_v = true;
+		}
+		if (GetKeyState('3') & 0x8000 && entered_sp_v == false) {
+			veh_to_spawn = veh_to_spawn + "3";
+			entered_sp_v = true;
+		}
+		if (GetKeyState('4') & 0x8000 && entered_sp_v == false) {
+			veh_to_spawn = veh_to_spawn + "4";
+			entered_sp_v = true;
+		}
+		if (GetKeyState('5') & 0x8000 && entered_sp_v == false) {
+			veh_to_spawn = veh_to_spawn + "5";
+			entered_sp_v = true;
+		}
+		if (GetKeyState('6') & 0x8000 && entered_sp_v == false) {
+			veh_to_spawn = veh_to_spawn + "6";
+			entered_sp_v = true;
+		}
+		if (GetKeyState('7') & 0x8000 && entered_sp_v == false) {
+			veh_to_spawn = veh_to_spawn + "7";
+			entered_sp_v = true;
+		}
+		if (GetKeyState('8') & 0x8000 && entered_sp_v == false) {
+			veh_to_spawn = veh_to_spawn + "8";
+			entered_sp_v = true;
+		}
+		if (GetKeyState('9') & 0x8000 && entered_sp_v == false) {
+			veh_to_spawn = veh_to_spawn + "9";
+			entered_sp_v = true;
+		}
+		if (GetKeyState('0') & 0x8000 && entered_sp_v == false) {
+			veh_to_spawn = veh_to_spawn + "0";
+			entered_sp_v = true;
+		}
+
+		if (!(GetKeyState('1') & 0x8000) && !(GetKeyState('2') & 0x8000) && !(GetKeyState('3') & 0x8000) && !(GetKeyState('4') & 0x8000) && !(GetKeyState('5') & 0x8000) && !(GetKeyState('6') & 0x8000) && !(GetKeyState('7') & 0x8000) && 
+			!(GetKeyState('8') & 0x8000) && !(GetKeyState('9') & 0x8000) && !(GetKeyState('0') & 0x8000)) entered_sp_v = false;
+
+		std::stringstream ss55;
+		ss55 << "\n N: " << veh_to_spawn;
+		callsPerFrame = 0;
+		set_status_text_centre_screen(ss55.str());
+	}
+	if (!is_hotkey_held_saved_veh_spawn() && veh_to_spawn != "") {
+		std::string::size_type sz;
+		int tmp_n = std::stoi(veh_to_spawn, &sz);
+
+		ENTDatabase* database = get_database();
+		std::vector<SavedVehicleDBRow*> savedVehs = database->get_saved_vehicles(tmp_n);
+		int lastKnownSavedVehicleCount = savedVehs.size();
+
+		if (lastKnownSavedVehicleCount != 0) spawn_saved_car(tmp_n, "");
+		else set_status_text("Wrong number!");
+
+		PED::SET_PED_CAN_SWITCH_WEAPON(playerPed, true);
+		veh_to_spawn = "";
+	}
+
 	// testing code; DO NOT DELETE
 	//if(bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && IsKeyJustUp(KeyConfig::KEY_VEH_STOP)){
 		//std::ofstream ofs("_colors.txt", std::ios::app | std::ios::out);
@@ -4456,7 +4530,7 @@ Vehicle do_spawn_vehicle(DWORD model, std::string modelTitle, bool cleanup){
 	if(STREAMING::IS_MODEL_IN_CDIMAGE(model) && STREAMING::IS_MODEL_A_VEHICLE(model)){
 		STREAMING::REQUEST_MODEL(model);
 		while(!STREAMING::HAS_MODEL_LOADED(model)){
-			make_periodic_feature_call();
+			if (veh_to_spawn == "") make_periodic_feature_call();
 			WAIT(0);
 		}
 
