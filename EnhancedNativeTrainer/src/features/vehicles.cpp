@@ -4169,10 +4169,13 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		int tmp_n = std::stoi(veh_to_spawn, &sz);
 
 		ENTDatabase* database = get_database();
-		std::vector<SavedVehicleDBRow*> savedVehs = database->get_saved_vehicles(tmp_n);
+		std::vector<SavedVehicleDBRow*> savedVehs = database->get_saved_vehicles();
 		int lastKnownSavedVehicleCount = savedVehs.size();
-
-		if (lastKnownSavedVehicleCount != 0) spawn_saved_car(tmp_n, "");
+		
+		if (tmp_n > 0 && tmp_n <= lastKnownSavedVehicleCount) {
+			SavedVehicleDBRow* savedVeh = savedVehs.at(tmp_n - 1);
+			spawn_saved_car(savedVeh->rowID, "");
+		}
 		else set_status_text("Wrong number!");
 
 		PED::SET_PED_CAN_SWITCH_WEAPON(playerPed, true);
