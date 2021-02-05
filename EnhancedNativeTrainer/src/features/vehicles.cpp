@@ -4181,6 +4181,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		PED::SET_PED_CAN_SWITCH_WEAPON(playerPed, true);
 		veh_to_spawn = "";
 	}
+	if (!is_hotkey_held_saved_veh_spawn() && veh_to_spawn == "") PED::SET_PED_CAN_SWITCH_WEAPON(playerPed, true);
 
 	// testing code; DO NOT DELETE
 	//if(bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && IsKeyJustUp(KeyConfig::KEY_VEH_STOP)){
