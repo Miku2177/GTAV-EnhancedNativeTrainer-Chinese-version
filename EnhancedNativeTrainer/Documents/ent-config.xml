@@ -2,7 +2,7 @@
 <ent-config>
   <keys>
     <!--
-    A listing of available key values is available at http://www.garybeene.com/code/gbsnippets_gbs_00292.htm 
+    A listing of available key values is available at http://www.kbdedit.com/manual/low_level_vk_list.html
     Most if not all of those are supported, at least in theory.
     For now, if you want controller input, you need to map it to a key first using some utility.
     If you cock up this file and enter an invalid key, the default will be used instead.
