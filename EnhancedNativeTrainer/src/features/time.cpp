@@ -225,7 +225,7 @@ void all_time_flow_rate() {
 		togItem->toggleValueUpdated = NULL;
 		menuItems.push_back(togItem);
 
-		draw_generic_menu<int>(menuItems, nullptr, "Time Flow Rate Options", onconfirm_time_flowrate_menu, nullptr, nullptr, flowtime_menu_interrupt);
+		draw_generic_menu<int>(menuItems, nullptr, "Time Settings", onconfirm_time_flowrate_menu, nullptr, nullptr, flowtime_menu_interrupt);
 	}
 	while (requireRefreshOfTime);
 }
@@ -383,7 +383,7 @@ void process_time_menu(){
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Time Flow Rate";
+	item->caption = "Time Settings";
 	item->value = index++;
 	item->isLeaf = false;
 	menuItems.insert(menuItems.end(), item);
