@@ -316,7 +316,7 @@ const std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Eclipse Towers Apt 13", -764.81310000f, 319.18510000f, 216.05030000f, { "hw1_blimp_interior_v_apartment_high_milo__13" }, {}, {}, false },
 	{ "Eclipse Towers Apt 40", -773.023f, 341.627f, 211.397f },
 	{ "Executive CEO Office: Style 1", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_01a" }, {}, {}, false }, //ex_dt1_11_office_01a[b, c....]
-	{ "Executive CEO Office: Style 2", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_01b" }, {}, {}, false },
+	//{ "Executive CEO Office: Style 2", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_01b" }, {}, {}, false },
 	{ "Executive CEO Office: Style 3", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_01c" }, {}, {}, false },
 	{ "Executive CEO Office: Style 4", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_02a" }, {}, {}, false },
 	{ "Executive CEO Office: Style 5", -73.79922f, -818.958f, 242.3858f, { "ex_dt1_11_office_02b" }, {}, {}, false },
@@ -1143,7 +1143,7 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 	coords.z = value->z;
 
 	bool unloadedAnything = false;
-	DWORD time = GetTickCount() + 10;
+	DWORD time = GetTickCount() + 5;
 
 	int interiorID = INTERIOR::GET_INTERIOR_AT_COORDS(coords.x, coords.y, coords.z);
 	INTERIOR::_LOAD_INTERIOR(interiorID);
@@ -1158,7 +1158,7 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 			if (loc->isLoaded && loc->scenery_required.size() > 0) {
 				if (!unloadedAnything) {
 					set_status_text("Unloading old scenery...");
-					time = GetTickCount() + 10;
+					time = GetTickCount() + 5;
 					while (GetTickCount() < time) {
 						make_periodic_feature_call();
 						WAIT(0);
@@ -1191,23 +1191,23 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 					STREAMING::REQUEST_IPL(scenery);
 				}
 			}
+			int interiorID = INTERIOR::GET_INTERIOR_AT_COORDS(coords.x, coords.y, coords.z);
+			INTERIOR::_LOAD_INTERIOR(interiorID);
+			STREAMING::SET_INTERIOR_ACTIVE(interiorID, true);
+			INTERIOR::DISABLE_INTERIOR(interiorID, false);
+
+			INTERIOR::CAP_INTERIOR(interiorID, 0);
+
 			if (sizeof(value->scenery_props) > 0)
 			{
 				for each (char* prop in value->scenery_props){
-					int interiorID = INTERIOR::GET_INTERIOR_AT_COORDS(coords.x, coords.y, coords.z); 
-					INTERIOR::_LOAD_INTERIOR(interiorID);
-					STREAMING::SET_INTERIOR_ACTIVE(interiorID, true);
-					INTERIOR::DISABLE_INTERIOR(interiorID, false);
-
-					INTERIOR::CAP_INTERIOR(interiorID, 0);
-
 					if (!INTERIOR::_IS_INTERIOR_PROP_ENABLED(interiorID, prop))
 					{
 						INTERIOR::_ENABLE_INTERIOR_PROP(interiorID, prop);
 					}
-					
-					INTERIOR::REFRESH_INTERIOR(interiorID);
+					//INTERIOR::REFRESH_INTERIOR(interiorID);
 				}
+				INTERIOR::REFRESH_INTERIOR(interiorID);
 			}
 		}
 
@@ -1220,7 +1220,7 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 			value->scenery_props.shrink_to_fit();
 		}
 				
-		DWORD time = GetTickCount() + 10;
+		DWORD time = GetTickCount() + 5;
 		while (GetTickCount() < time){
 			make_periodic_feature_call();
 			WAIT(0);
@@ -1228,7 +1228,7 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 
 		set_status_text("New scenery loaded");
 
-		time = GetTickCount() + 10;
+		time = GetTickCount() + 5;
 		while (GetTickCount() < time){
 			make_periodic_feature_call();
 			WAIT(0);
@@ -1583,6 +1583,7 @@ void update_teleport_features(){
 			//		INTERIOR::_ENABLE_INTERIOR_PROP(CayointeriorID, (char*)IPLS_CAYO_PERICO[i]);
 			//	}
 			//}
+			INTERIOR::REFRESH_INTERIOR(CayointeriorID);
 			perico_init = true;
 		}
 	}
@@ -1603,5 +1604,4 @@ void update_teleport_features(){
 		perico_init = false;
 		cayo_tick = 0;
 	}
-
 } // end of loop
