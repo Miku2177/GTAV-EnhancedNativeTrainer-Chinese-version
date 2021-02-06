@@ -74,7 +74,7 @@ const std::vector<tele_location> LOCATIONS_LANDMARKS = {
 	{ "Abandoned Motel", 1567.35f, 3566.76f, 35.4367f },
 	{ "Aerial Tramway", -740.235f, 5594.81f, 41.6546f },
 	{ "Airplane Graveyard", 2395.096f, 3049.616f, 60.053f },
-	{ "Altruist Cult Camp", -1004.04f, 4856.94f, 280.681f },
+	{ "Altruist Cult Camp", -1006.24f, 4869.75f, 270.681f },
 	{ "Arcadius Carpark", -164.38220000f, -619.08840000f, 33.33181000f},
 	{ "Beaver Bush Ranger Station", 389.712f, 791.305f, 190.41f },
 	{ "Bluff Tower Carpark", -1526.45900000f, -581.92970000f, 25.99675000f},
@@ -1590,6 +1590,8 @@ void update_teleport_features(){
 		Vector3 my_coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 0);
 		if (my_coords.x > 3532.21 && my_coords.x < 5813.77 && my_coords.y > -6244.41 && my_coords.y < -4021.09) {
 			WATER::_SET_WAVES_INTENSITY(-100000000); // -400000 // GAMEPLAY::_0xC54A08C85AE4D410(1.0f);
+			OBJECT::_DOOR_CONTROL(GAMEPLAY::GET_HASH_KEY("h4_prop_h4_gate_l_03a"), 4987.587f, -5718.635f, 20.78103f, 0, 0.0, 50.0, 0);
+			OBJECT::_DOOR_CONTROL(GAMEPLAY::GET_HASH_KEY("h4_prop_h4_gate_r_03a"), 4990.681f, -5715.106f, 20.78103f, 0, 0.0, 50.0, 0);
 			auto_waves = true;
 		}
 		if ((my_coords.x < 3532.21 || my_coords.x > 5813.77 || my_coords.y < -6244.41 || my_coords.y > -4021.09) && auto_waves == true && WORLD_WAVES_VALUES[WorldWavesIndex] == -1) {
