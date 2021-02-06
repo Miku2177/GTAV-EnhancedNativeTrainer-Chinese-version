@@ -37,6 +37,7 @@ int HotkeyFlowRateIndex = DEFAULT_HOTKEY_FLOW_RATE;
 
 bool featureTimeSynced = false;
 bool featureShowtime = false;
+bool featurehotkeytime = false;
 bool featureSpeedAimInVeh = false;
 bool timeFlowRateChanged = true, timeFlowRateLocked = true;
 bool HotkeyFlowRateChanged = true, HotkeyFlowRateLocked = true;
@@ -225,6 +226,13 @@ void all_time_flow_rate() {
 		togItem->toggleValueUpdated = NULL;
 		menuItems.push_back(togItem);
 
+		togItem = new ToggleMenuItem<int>();
+		togItem->caption = "Fast Time Switching [rAlt + 1-8, rAlt + -/+]";
+		togItem->value = 0;
+		togItem->toggleValue = &featurehotkeytime;
+		togItem->toggleValueUpdated = NULL;
+		menuItems.push_back(togItem);
+
 		draw_generic_menu<int>(menuItems, nullptr, "Time Settings", onconfirm_time_flowrate_menu, nullptr, nullptr, flowtime_menu_interrupt);
 	}
 	while (requireRefreshOfTime);
@@ -396,6 +404,7 @@ void reset_time_globals(){
 	timeFlowRateChanged = true;
 	HotkeyFlowRateChanged = true;
 	featureShowtime = false;
+	featurehotkeytime = false;
 	featureSpeedAimInVeh = false;
 
 	timeSpeedIndexWhileAiming = DEFAULT_TIME_SPEED;
@@ -407,6 +416,7 @@ void reset_time_globals(){
 void add_time_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){
 	results->push_back(FeatureEnabledLocalDefinition{"featureTimeSynced", &featureTimeSynced});
 	results->push_back(FeatureEnabledLocalDefinition{"featureShowtime", &featureShowtime});
+	results->push_back(FeatureEnabledLocalDefinition{"featurehotkeytime", &featurehotkeytime});
 	results->push_back(FeatureEnabledLocalDefinition{"featureSpeedAimInVeh", &featureSpeedAimInVeh});
 }
 
@@ -1015,4 +1025,45 @@ void update_time_features(Player player){
 		UI::_ADD_TEXT_COMPONENT_SCALEFORM(year_to_show_char_modifiable);
 		UI::_DRAW_TEXT(0.003, 0.270);
 	} // end of show current time
-}
+
+	if (featurehotkeytime) {
+		if (GetKeyState(VK_RMENU) & 0x8000) {
+			PED::SET_PED_CAN_SWITCH_WEAPON(PLAYER::PLAYER_PED_ID(), false);
+			UI::HIDE_HUD_COMPONENT_THIS_FRAME(19);
+			UI::HIDE_HUD_COMPONENT_THIS_FRAME(20);
+		}
+		else PED::SET_PED_CAN_SWITCH_WEAPON(PLAYER::PLAYER_PED_ID(), true);
+
+		if (GetKeyState(VK_RMENU) & 0x8000 && GetKeyState('1') & 0x8000) {
+			movetime_set(0, 0);
+		}
+		if (GetKeyState(VK_RMENU) & 0x8000 && GetKeyState('2') & 0x8000) {
+			movetime_set(5, 0);
+		}
+		if (GetKeyState(VK_RMENU) & 0x8000 && GetKeyState('3') & 0x8000) {
+			movetime_set(6, 0);
+		}
+		if (GetKeyState(VK_RMENU) & 0x8000 && GetKeyState('4') & 0x8000) {
+			movetime_set(8, 0);
+		}
+		if (GetKeyState(VK_RMENU) & 0x8000 && GetKeyState('5') & 0x8000) {
+			movetime_set(12, 0);
+		}
+		if (GetKeyState(VK_RMENU) & 0x8000 && GetKeyState('6') & 0x8000) {
+			movetime_set(16, 0);
+		}
+		if (GetKeyState(VK_RMENU) & 0x8000 && GetKeyState('7') & 0x8000) {
+			movetime_set(18, 0);
+		}
+		if (GetKeyState(VK_RMENU) & 0x8000 && GetKeyState('8') & 0x8000) {
+			movetime_set(21, 0);
+		}
+		if (GetKeyState(VK_RMENU) & 0x8000 && GetKeyState(VK_OEM_PLUS) & 0x8000) {
+			movetime_fivemin_forward();
+		}
+		if (GetKeyState(VK_RMENU) & 0x8000 && GetKeyState(VK_OEM_MINUS) & 0x8000) {
+			movetime_fivemin_backward();
+		}
+	}
+
+} // end of update_time_features
