@@ -293,7 +293,7 @@ const std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Arcadius Business Center Office: Style 1", -139.53950000f, -629.07570000f, 167.82040000f, { "ex_dt1_02_office_01a" }, {}, {}, false },
 	{ "Benny's Garage", -209.759f, -1319.617f, 30.08367f }, 
 	{ "Biker Club Garage 1", 1005.861f, -3156.162f, -39.90727f, { "bkr_biker_interior_placement_interior_1_biker_dlc_int_02_milo_" }, {}, {}, false },
-	{ "Biker Cocaine Factory", 1093.581f, -3196.597f, -39.99353f, { "bkr_biker_interior_placement_interior_4_biker_dlc_int_ware03_milo_" }, {}, {}, false },
+	//{ "Biker Cocaine Factory", 1093.581f, -3196.597f, -39.99353f, { "bkr_biker_interior_placement_interior_4_biker_dlc_int_ware03_milo_" }, {}, {}, false },
 	{ "Biker Warehouse: Forgery 2", 1165.001f, -3196.597f, -39.99353f, { "bkr_biker_interior_placement_interior_6_biker_dlc_int_ware05_milo_" }, {}, {}, false },
 	{ "Biker Warehouse: Money Printer 1", 1009.545f, -3196.597f, -39.99353f, { "bkr_biker_interior_placement_interior_2_biker_dlc_int_ware01_milo_" }, {}, {}, false },
 	{ "Biker Warehouse: Money Printer 2", 1124.734f, -3196.597f, -39.99353f, { "bkr_biker_interior_placement_interior_5_biker_dlc_int_ware04_milo_" }, {}, {}, false },
@@ -1143,12 +1143,17 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 	coords.z = value->z;
 
 	bool unloadedAnything = false;
-	DWORD time = GetTickCount() + 5;
-
+	DWORD time = GetTickCount() + 3;
+	
 	int interiorID = INTERIOR::GET_INTERIOR_AT_COORDS(coords.x, coords.y, coords.z);
-	INTERIOR::_LOAD_INTERIOR(interiorID);
-	STREAMING::SET_INTERIOR_ACTIVE(interiorID, true);
-	INTERIOR::DISABLE_INTERIOR(interiorID, false);
+	if (INTERIOR::IS_VALID_INTERIOR(interiorID))
+	{
+		INTERIOR::_LOAD_INTERIOR(interiorID);
+		STREAMING::SET_INTERIOR_ACTIVE(interiorID, true);
+		INTERIOR::DISABLE_INTERIOR(interiorID, false);
+
+		INTERIOR::CAP_INTERIOR(interiorID, 0);
+	}
 
 	for (int x = 0; x < MENU_LOCATION_CATEGORIES.size(); x++) {
 		for (int y = 0; y < VOV_LOCATIONS[x].size(); y++) {
@@ -1158,7 +1163,7 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 			if (loc->isLoaded && loc->scenery_required.size() > 0) {
 				if (!unloadedAnything) {
 					set_status_text("Unloading old scenery...");
-					time = GetTickCount() + 5;
+					time = GetTickCount() + 3;
 					while (GetTickCount() < time) {
 						make_periodic_feature_call();
 						WAIT(0);
@@ -1191,21 +1196,30 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 					STREAMING::REQUEST_IPL(scenery);
 				}
 			}
+			
 			int interiorID = INTERIOR::GET_INTERIOR_AT_COORDS(coords.x, coords.y, coords.z);
-			INTERIOR::_LOAD_INTERIOR(interiorID);
-			STREAMING::SET_INTERIOR_ACTIVE(interiorID, true);
-			INTERIOR::DISABLE_INTERIOR(interiorID, false);
-
-			INTERIOR::CAP_INTERIOR(interiorID, 0);
-
-			if (sizeof(value->scenery_props) > 0)
+			if (INTERIOR::IS_VALID_INTERIOR(interiorID))
 			{
-				for each (char* prop in value->scenery_props){
-					if (!INTERIOR::_IS_INTERIOR_PROP_ENABLED(interiorID, prop))
-					{
-						INTERIOR::_ENABLE_INTERIOR_PROP(interiorID, prop);
+				INTERIOR::_LOAD_INTERIOR(interiorID);
+				STREAMING::SET_INTERIOR_ACTIVE(interiorID, true);
+				INTERIOR::DISABLE_INTERIOR(interiorID, false);
+
+				INTERIOR::CAP_INTERIOR(interiorID, 0);
+
+				if (sizeof(value->scenery_props) > 0)
+				{
+					for each (char* prop in value->scenery_props) {
+						if (!INTERIOR::_IS_INTERIOR_PROP_ENABLED(interiorID, prop))
+						{
+							INTERIOR::_ENABLE_INTERIOR_PROP(interiorID, prop);
+							DWORD time = GetTickCount() + 3;
+							while (GetTickCount() < time) {
+								make_periodic_feature_call();
+								WAIT(0);
+							}
+							INTERIOR::_SET_INTERIOR_ENTITY_SET_COLOR(interiorID, prop, 1);
+						}
 					}
-					//INTERIOR::REFRESH_INTERIOR(interiorID);
 				}
 				INTERIOR::REFRESH_INTERIOR(interiorID);
 			}
@@ -1220,7 +1234,7 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 			value->scenery_props.shrink_to_fit();
 		}
 				
-		DWORD time = GetTickCount() + 5;
+		DWORD time = GetTickCount() + 3;
 		while (GetTickCount() < time){
 			make_periodic_feature_call();
 			WAIT(0);
@@ -1228,7 +1242,7 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 
 		set_status_text("New scenery loaded");
 
-		time = GetTickCount() + 5;
+		time = GetTickCount() + 3;
 		while (GetTickCount() < time){
 			make_periodic_feature_call();
 			WAIT(0);
