@@ -2529,6 +2529,7 @@ namespace INTERIOR
 	static int GET_INTERIOR_FROM_ENTITY(Entity entity) { return invoke<int>(0x2107BA504071A6BB, entity); } // 0x2107BA504071A6BB 0x5C644614
 	static void _0x82EBB79E258FA2B7(Entity entity, int interiorID) { invoke<Void>(0x82EBB79E258FA2B7, entity, interiorID); } // 0x82EBB79E258FA2B7 0xE645E162
 	static void _0x920D853F3E17F1DA(int interiorID, Hash roomHashKey) { invoke<Void>(0x920D853F3E17F1DA, interiorID, roomHashKey); } // 0x920D853F3E17F1DA 0xD79803B5
+	static void _SET_INTERIOR_ENTITY_SET_COLOR(int interiorID, char* entitySetName, int color) { invoke<Void>(0xC1F1920BAF281317, interiorID, entitySetName, color); } // 0xC1F1920BAF281317
 	static void _0xAF348AFCB575A441(char* roomName) { invoke<Void>(0xAF348AFCB575A441, roomName); } // 0xAF348AFCB575A441 0x1F6B4B13
 	static void _0x405DC2AEF6AF95B9(Hash roomHashKey) { invoke<Void>(0x405DC2AEF6AF95B9, roomHashKey); } // 0x405DC2AEF6AF95B9 0x0E9529CC
 	static Hash _GET_ROOM_KEY_FROM_GAMEPLAY_CAM() { return invoke<Hash>(0xA6575914D2A0B450); } // 0xA6575914D2A0B450 0x4FF3D3F5
