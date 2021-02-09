@@ -31,7 +31,7 @@ bool featureShowDebugInfo = false;
 bool featureCayoPerico = false;
 int cayo_tick = 0;
 bool perico_init = false;
-bool auto_waves = false;
+bool on_island = false;
 
 struct tele_location{
 	std::string text;
@@ -1621,7 +1621,9 @@ void update_teleport_features(){
 	}
 	if (featureCayoPerico && ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()) && perico_init == true) {
 		Vector3 my_coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 0);
-		if (my_coords.x > 3532.21 && my_coords.x < 5813.77 && my_coords.y > -6244.41 && my_coords.y < -4021.09) {
+		float Cayo_dist_diff = SYSTEM::VDIST(my_coords.x, my_coords.y, my_coords.z, 4840.571, -5174.425, 2.0);
+		//if (my_coords.x > 3532.21 && my_coords.x < 5813.77 && my_coords.y > -6244.41 && my_coords.y < -4021.09) {
+		if (Cayo_dist_diff < 2000) {
 			//WATER::_SET_WAVES_INTENSITY(-100000000); // -400000 // GAMEPLAY::_0xC54A08C85AE4D410(1.0f);
 			OBJECT::_DOOR_CONTROL(GAMEPLAY::GET_HASH_KEY("h4_prop_h4_gate_l_03a"), 4987.587f, -5718.635f, 20.78103f, 0, 0.0, 50.0, 0);
 			OBJECT::_DOOR_CONTROL(GAMEPLAY::GET_HASH_KEY("h4_prop_h4_gate_r_03a"), 4990.681f, -5715.106f, 20.78103f, 0, 0.0, 50.0, 0);
@@ -1631,13 +1633,14 @@ void update_teleport_features(){
 			AUDIO::SET_AMBIENT_ZONE_LIST_STATE_PERSISTENT("AZL_DLC_Hei4_Island_Zones", true, true);
 			AUDIO::SET_AMBIENT_ZONE_LIST_STATE_PERSISTENT("AZL_DLC_Hei4_Island_Disabled_Zones", false, true);
 			if (WORLD_WAVES_VALUES[WorldWavesIndex] == -1) WATER::_SET_WAVES_INTENSITY(0.1); // it doesn't allow waves to clip through the surface
-			auto_waves = true;
+			on_island = true;
 		}
-		if ((my_coords.x < 3532.21 || my_coords.x > 5813.77 || my_coords.y < -6244.41 || my_coords.y > -4021.09) && auto_waves == true && WORLD_WAVES_VALUES[WorldWavesIndex] == -1) {
+		//if ((my_coords.x < 3532.21 || my_coords.x > 5813.77 || my_coords.y < -6244.41 || my_coords.y > -4021.09) && on_island == true) {
+		if (Cayo_dist_diff >= 2000 && on_island == true) {
 			AUDIO::SET_AMBIENT_ZONE_LIST_STATE_PERSISTENT("AZL_DLC_Hei4_Island_Zones", false, false);
 			AUDIO::SET_AMBIENT_ZONE_LIST_STATE_PERSISTENT("AZL_DLC_Hei4_Island_Disabled_Zones", false, false);
 			if (WORLD_WAVES_VALUES[WorldWavesIndex] == -1) WATER::_RESET_WAVES_INTENSITY();
-			auto_waves = false;
+			on_island = false;
 		}
 	}
 	if ((!featureCayoPerico && cayo_tick > 0) || DLC2::GET_IS_LOADING_SCREEN_ACTIVE()) {
