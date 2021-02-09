@@ -8,6 +8,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 (C) Rob Pridham and fellow contributors 2015
 */
 #include "time.h"
+#include "vehicles.h"
 #include "hotkeys.h"
 #include "propplacement.h"
 #include <iomanip>
@@ -1032,7 +1033,7 @@ void update_time_features(Player player){
 			UI::HIDE_HUD_COMPONENT_THIS_FRAME(19);
 			UI::HIDE_HUD_COMPONENT_THIS_FRAME(20);
 		}
-		else PED::SET_PED_CAN_SWITCH_WEAPON(PLAYER::PLAYER_PED_ID(), true);
+		else if (veh_to_spawn == "") PED::SET_PED_CAN_SWITCH_WEAPON(PLAYER::PLAYER_PED_ID(), true);
 
 		if (GetKeyState(VK_RMENU) & 0x8000 && GetKeyState('1') & 0x8000) {
 			movetime_set(0, 0);

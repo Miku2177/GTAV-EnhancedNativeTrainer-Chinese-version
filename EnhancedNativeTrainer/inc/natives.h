@@ -2554,6 +2554,7 @@ namespace INTERIOR
 	static void CAP_INTERIOR(int interiorID, BOOL toggle) { invoke<Void>(0xD9175F941610DB54, interiorID, toggle); } // 0xD9175F941610DB54 0x34E735A6
 	static BOOL IS_INTERIOR_CAPPED(int interiorID) { return invoke<BOOL>(0x92BAC8ACF88CEC26, interiorID); } // 0x92BAC8ACF88CEC26 0x18B17C80
 	static void _0x9E6542F0CE8E70A3(BOOL toggle) { invoke<Void>(0x9E6542F0CE8E70A3, toggle); } // 0x9E6542F0CE8E70A3 0x5EF9C5C2
+	static void SET_ISLAND_HOPPER_ENABLED(char* name, BOOL toggle) { invoke<Void>(0x9A9D1BA639675CF1, name, toggle); } // 0x9A9D1BA639675CF1 // cayo perico island
 }
 
 namespace CAM

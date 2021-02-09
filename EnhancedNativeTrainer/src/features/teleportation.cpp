@@ -1587,47 +1587,56 @@ void update_teleport_features(){
 	{
 		cayo_tick = cayo_tick + 1;
 		if (cayo_tick > 300) { // 1000
+			//INTERIOR::SET_ISLAND_HOPPER_ENABLED("HeistIsland", true);
+
 			for (int i = 0; i < IPLS_CAYO_PERICO.size(); i++) {
 				if (!STREAMING::IS_IPL_ACTIVE(IPLS_CAYO_PERICO[i]))
 				{
 					STREAMING::REQUEST_IPL(IPLS_CAYO_PERICO[i]);
 				}
 			}
-			int CayointeriorID = INTERIOR::GET_INTERIOR_AT_COORDS(5010.101f, -5753.549f, 27.8444f);
-			INTERIOR::_LOAD_INTERIOR(CayointeriorID);
-			STREAMING::SET_INTERIOR_ACTIVE(CayointeriorID, true);
-			INTERIOR::DISABLE_INTERIOR(CayointeriorID, false);
-			INTERIOR::CAP_INTERIOR(CayointeriorID, 0);
-			//for (int i = 0; i < IPLS_CAYO_PERICO.size(); i++) {
-			//	if (!INTERIOR::_IS_INTERIOR_PROP_ENABLED(CayointeriorID, (char*)IPLS_CAYO_PERICO[i]))
-			//	{
-			//		INTERIOR::_ENABLE_INTERIOR_PROP(CayointeriorID, (char*)IPLS_CAYO_PERICO[i]);
-			//	}
-			//}
-			INTERIOR::REFRESH_INTERIOR(CayointeriorID);
+			int CayointeriorID = INTERIOR::GET_INTERIOR_AT_COORDS(4439.82300000f, -4461.71700000f, 4.69976800f); // 5010.101f, -5753.549f, 27.8444f
+			if (INTERIOR::IS_VALID_INTERIOR(CayointeriorID))
+			{
+				INTERIOR::_LOAD_INTERIOR(CayointeriorID);
+				STREAMING::SET_INTERIOR_ACTIVE(CayointeriorID, true);
+				INTERIOR::DISABLE_INTERIOR(CayointeriorID, false);
+				INTERIOR::CAP_INTERIOR(CayointeriorID, 0);
+				//for (int i = 0; i < IPLS_CAYO_PERICO.size(); i++) {
+				//	if (!INTERIOR::_IS_INTERIOR_PROP_ENABLED(CayointeriorID, (char*)IPLS_CAYO_PERICO[i]))
+				//	{
+				//		INTERIOR::_ENABLE_INTERIOR_PROP(CayointeriorID, (char*)IPLS_CAYO_PERICO[i]);
+				//		DWORD time = GetTickCount() + 3;
+				//		while (GetTickCount() < time) {
+				//			make_periodic_feature_call();
+				//			WAIT(0);
+				//		}
+				//		INTERIOR::_SET_INTERIOR_ENTITY_SET_COLOR(CayointeriorID, (char*)IPLS_CAYO_PERICO[i], 1);
+				//	}
+				//}
+				INTERIOR::REFRESH_INTERIOR(CayointeriorID);
+			}
 			perico_init = true;
 		}
 	}
-	if (featureCayoPerico && ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()) && WORLD_WAVES_VALUES[WorldWavesIndex] == -1) {
+	if (featureCayoPerico && ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()) && perico_init == true) {
 		Vector3 my_coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 0);
 		if (my_coords.x > 3532.21 && my_coords.x < 5813.77 && my_coords.y > -6244.41 && my_coords.y < -4021.09) {
 			//WATER::_SET_WAVES_INTENSITY(-100000000); // -400000 // GAMEPLAY::_0xC54A08C85AE4D410(1.0f);
 			OBJECT::_DOOR_CONTROL(GAMEPLAY::GET_HASH_KEY("h4_prop_h4_gate_l_03a"), 4987.587f, -5718.635f, 20.78103f, 0, 0.0, 50.0, 0);
 			OBJECT::_DOOR_CONTROL(GAMEPLAY::GET_HASH_KEY("h4_prop_h4_gate_r_03a"), 4990.681f, -5715.106f, 20.78103f, 0, 0.0, 50.0, 0);
+			OBJECT::_DOOR_CONTROL(GAMEPLAY::GET_HASH_KEY("h4_prop_h4_gate_04a"), 4972.143, -5764.132, 21.08308f, 0, 0.0, 50.0, 0);
+			OBJECT::_DOOR_CONTROL(GAMEPLAY::GET_HASH_KEY("h4_prop_h4_gate_04a"), 4977.377, -5765.718, 21.08308f, 0, 0.0, 50.0, 0);
 			
-			AI::SET_SCENARIO_GROUP_ENABLED("Heist_Island_Peds", true);
-			AUDIO::SET_AUDIO_FLAG("PlayerOnDLCHeist4Island", true);
 			AUDIO::SET_AMBIENT_ZONE_LIST_STATE_PERSISTENT("AZL_DLC_Hei4_Island_Zones", true, true);
 			AUDIO::SET_AMBIENT_ZONE_LIST_STATE_PERSISTENT("AZL_DLC_Hei4_Island_Disabled_Zones", false, true);
-			WATER::_SET_WAVES_INTENSITY(0.1); // it doesn't allow waves to clip through the surface
+			if (WORLD_WAVES_VALUES[WorldWavesIndex] == -1) WATER::_SET_WAVES_INTENSITY(0.1); // it doesn't allow waves to clip through the surface
 			auto_waves = true;
 		}
 		if ((my_coords.x < 3532.21 || my_coords.x > 5813.77 || my_coords.y < -6244.41 || my_coords.y > -4021.09) && auto_waves == true && WORLD_WAVES_VALUES[WorldWavesIndex] == -1) {
-			AI::SET_SCENARIO_GROUP_ENABLED("Heist_Island_Peds", false);
-			AUDIO::SET_AUDIO_FLAG("PlayerOnDLCHeist4Island", false);
 			AUDIO::SET_AMBIENT_ZONE_LIST_STATE_PERSISTENT("AZL_DLC_Hei4_Island_Zones", false, false);
 			AUDIO::SET_AMBIENT_ZONE_LIST_STATE_PERSISTENT("AZL_DLC_Hei4_Island_Disabled_Zones", false, false);
-			WATER::_RESET_WAVES_INTENSITY();
+			if (WORLD_WAVES_VALUES[WorldWavesIndex] == -1) WATER::_RESET_WAVES_INTENSITY();
 			auto_waves = false;
 		}
 	}
