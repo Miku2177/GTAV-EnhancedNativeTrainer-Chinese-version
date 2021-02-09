@@ -1336,3 +1336,5 @@ extern bool featureRememberVehicles;
 extern bool featureRestoreTracked;
 extern bool featureDisableIgnition;
 extern int EngineRunningIndex;
+
+extern std::string  veh_to_spawn;
