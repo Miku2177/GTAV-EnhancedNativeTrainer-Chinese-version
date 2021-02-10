@@ -1595,7 +1595,7 @@ void update_teleport_features(){
 					STREAMING::REQUEST_IPL(IPLS_CAYO_PERICO[i]);
 				}
 			}
-			int CayointeriorID = INTERIOR::GET_INTERIOR_AT_COORDS(4439.82300000f, -4461.71700000f, 4.69976800f); // 5010.101f, -5753.549f, 27.8444f
+			int CayointeriorID = INTERIOR::GET_INTERIOR_AT_COORDS(4439.82300000f, -4461.71700000f, 6.15f); // 5010.101f, -5753.549f, 27.8444f
 			if (INTERIOR::IS_VALID_INTERIOR(CayointeriorID))
 			{
 				INTERIOR::_LOAD_INTERIOR(CayointeriorID);
@@ -1629,7 +1629,11 @@ void update_teleport_features(){
 			OBJECT::_DOOR_CONTROL(GAMEPLAY::GET_HASH_KEY("h4_prop_h4_gate_r_03a"), 4990.681f, -5715.106f, 20.78103f, 0, 0.0, 50.0, 0);
 			OBJECT::_DOOR_CONTROL(GAMEPLAY::GET_HASH_KEY("h4_prop_h4_gate_04a"), 4972.143, -5764.132, 21.08308f, 0, 0.0, 50.0, 0);
 			OBJECT::_DOOR_CONTROL(GAMEPLAY::GET_HASH_KEY("h4_prop_h4_gate_04a"), 4977.377, -5765.718, 21.08308f, 0, 0.0, 50.0, 0);
-			
+			OBJECT::_DOOR_CONTROL(GAMEPLAY::GET_HASH_KEY("h4_prop_h4_door_03a"), 4960.498f, -5785.047f, 21.10873f, 0, 0.0, 50.0, 0);
+			OBJECT::_DOOR_CONTROL(GAMEPLAY::GET_HASH_KEY("h4_prop_h4_door_03a"), 4965.726f, -5787.68f, 21.10873f, 0, 0.0, 50.0, 0);
+			OBJECT::_DOOR_CONTROL(GAMEPLAY::GET_HASH_KEY("h4_prop_h4_door_03a"), 5085.588f, -5733.124f, 15.9526f, 0, 0.0, 50.0, 0);
+			OBJECT::_DOOR_CONTROL(GAMEPLAY::GET_HASH_KEY("h4_prop_h4_door_03a"), 5082.088f, -5737.809f, 15.9526f, 0, 0.0, 50.0, 0);
+
 			AUDIO::SET_AMBIENT_ZONE_LIST_STATE_PERSISTENT("AZL_DLC_Hei4_Island_Zones", true, true);
 			AUDIO::SET_AMBIENT_ZONE_LIST_STATE_PERSISTENT("AZL_DLC_Hei4_Island_Disabled_Zones", false, true);
 			if (WORLD_WAVES_VALUES[WorldWavesIndex] == -1) WATER::_SET_WAVES_INTENSITY(0.1); // it doesn't allow waves to clip through the surface
