@@ -1465,20 +1465,53 @@ void add_teleporter_feature_enablements(std::vector<FeatureEnabledLocalDefinitio
 //	draw_generic_menu<std::string>(menuItems, &toggleIndex, "Test Toggles", NULL, NULL, NULL);
 //}
 
-void show_debug_info_on_screen(bool enabled) {
-	Vector3 coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 0);
-	float me_rot = ENTITY::GET_ENTITY_HEADING(PLAYER::PLAYER_PED_ID());
-	std::ostringstream ss;
-	ss << "\nX: " << coords.x << "\nY: " << coords.y << "\nZ: " << coords.z << "\nRot: " << me_rot;
-	callsPerFrame = 0;
-	set_status_text_centre_screen(ss.str());
-}
-
 void update_teleport_features(){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
+	// Show Coordinates
 	if (featureShowDebugInfo) {
-		show_debug_info_on_screen(featureShowDebugInfo);
+		Vector3 coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 0);
+		float me_rot = ENTITY::GET_ENTITY_HEADING(PLAYER::PLAYER_PED_ID());
+		std::ostringstream ss;
+		
+		//ss << "\nX: " << coords.x << "\nY: " << coords.y << "\nZ: " << coords.z << "\nRot: " << me_rot;
+		//callsPerFrame = 0;
+		//set_status_text_centre_screen(ss.str());
+
+		std::string direction = "";
+		if (me_rot > 337 || me_rot < 22) direction = "NORTH";
+		if (me_rot > 22 && me_rot < 68) direction = "NORTH WEST";
+		if (me_rot > 68 && me_rot < 112) direction = "WEST";
+		if (me_rot > 112 && me_rot < 157) direction = "SOUTH WEST";
+		if (me_rot > 157 && me_rot < 202) direction = "SOUTH";
+		if (me_rot > 202 && me_rot < 247) direction = "SOUTH EAST";
+		if (me_rot > 247 && me_rot < 292) direction = "EAST";
+		if (me_rot > 292 && me_rot < 337) direction = "NORTH EAST";
+
+		std::string CurrCoordsStatusLines[1];
+		ss << std::fixed << std::setprecision(2) << "X: " << coords.x << "   Y: " << coords.y << "   Z: " << coords.z << "   Rot: " << me_rot << "\n" << direction;
+
+		int index = 0;
+		CurrCoordsStatusLines[index++] = ss.str();
+		
+		int numActualLines = 0;
+		for (int i = 0; i < 1; i++) {
+			numActualLines++;
+			UI::BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
+			UI::_ADD_TEXT_COMPONENT_SCALEFORM((char*)CurrCoordsStatusLines[i].c_str());
+			UI::SET_TEXT_FONT(0);
+			UI::SET_TEXT_SCALE(0.5, 0.5);
+			UI::SET_TEXT_WRAP(0.0, 1.0);
+			UI::SET_TEXT_COLOUR(255, 242, 0, 255);
+			UI::SET_TEXT_CENTRE(0);
+			UI::SET_TEXT_DROPSHADOW(20, 20, 20, 20, 20);
+			UI::SET_TEXT_EDGE(100, 100, 100, 100, 205);
+			UI::SET_TEXT_LEADING(1);
+			UI::SET_TEXT_OUTLINE();
+			UI::END_TEXT_COMMAND_DISPLAY_TEXT(0.35, 0.02);
+		}
+
+		GRAPHICS::DRAW_RECT(0.40, 0.075, 0.12, 0.04, 0, 0, 0, 255);
 	}
 
 	/////////////////////////////////////// 3D MARKER /////////////////////////////////////////
@@ -1622,8 +1655,9 @@ void update_teleport_features(){
 	if (featureCayoPerico && ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()) && perico_init == true) {
 		Vector3 my_coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 0);
 		float Cayo_dist_diff = SYSTEM::VDIST(my_coords.x, my_coords.y, my_coords.z, 4840.571, -5174.425, 2.0);
+
 		//if (my_coords.x > 3532.21 && my_coords.x < 5813.77 && my_coords.y > -6244.41 && my_coords.y < -4021.09) {
-		if (Cayo_dist_diff < 2000) {
+		if (Cayo_dist_diff < 1200) { // 2000
 			//WATER::_SET_WAVES_INTENSITY(-100000000); // -400000 // GAMEPLAY::_0xC54A08C85AE4D410(1.0f);
 			OBJECT::_DOOR_CONTROL(GAMEPLAY::GET_HASH_KEY("h4_prop_h4_gate_l_03a"), 4987.587f, -5718.635f, 20.78103f, 0, 0.0, 50.0, 0);
 			OBJECT::_DOOR_CONTROL(GAMEPLAY::GET_HASH_KEY("h4_prop_h4_gate_r_03a"), 4990.681f, -5715.106f, 20.78103f, 0, 0.0, 50.0, 0);
@@ -1640,7 +1674,7 @@ void update_teleport_features(){
 			on_island = true;
 		}
 		//if ((my_coords.x < 3532.21 || my_coords.x > 5813.77 || my_coords.y < -6244.41 || my_coords.y > -4021.09) && on_island == true) {
-		if (Cayo_dist_diff >= 2000 && on_island == true) {
+		if (Cayo_dist_diff >= 1200 && on_island == true) { // 2000
 			AUDIO::SET_AMBIENT_ZONE_LIST_STATE_PERSISTENT("AZL_DLC_Hei4_Island_Zones", false, false);
 			AUDIO::SET_AMBIENT_ZONE_LIST_STATE_PERSISTENT("AZL_DLC_Hei4_Island_Disabled_Zones", false, false);
 			if (WORLD_WAVES_VALUES[WorldWavesIndex] == -1) WATER::_RESET_WAVES_INTENSITY();
