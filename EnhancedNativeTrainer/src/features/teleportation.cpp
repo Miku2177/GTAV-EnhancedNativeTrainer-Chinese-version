@@ -25,7 +25,7 @@ bool feature3dmarker = false;
 bool featureTeleportAutomatically = false;
 
 //For onscreen debug info
-bool featureShowDebugInfo = false;
+bool featureShowCoords = false;
 
 //Load Cayo Perico Island Automatically
 bool featureCayoPerico = false;
@@ -1204,6 +1204,12 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 				}
 			}
 			
+			time = GetTickCount() + 3;
+			while (GetTickCount() < time) {
+				make_periodic_feature_call();
+				WAIT(0);
+			}
+
 			int interiorID = INTERIOR::GET_INTERIOR_AT_COORDS(coords.x, coords.y, coords.z);
 			if (INTERIOR::IS_VALID_INTERIOR(interiorID))
 			{
@@ -1240,13 +1246,7 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 			value->scenery_props.swap(emptyVec);
 			value->scenery_props.shrink_to_fit();
 		}
-				
-		DWORD time = GetTickCount() + 3;
-		while (GetTickCount() < time){
-			make_periodic_feature_call();
-			WAIT(0);
-		}
-
+		
 		set_status_text("New scenery loaded");
 
 		time = GetTickCount() + 3;
@@ -1312,7 +1312,7 @@ bool process_teleport_menu(int categoryIndex){
 		ToggleMenuItem<int>* togItem = new ToggleMenuItem<int>();
 		togItem->caption = "Show Coordinates";
 		togItem->value = 1;
-		togItem->toggleValue = &featureShowDebugInfo;
+		togItem->toggleValue = &featureShowCoords;
 		menuItems.push_back(togItem);
 
 		markerItem = new MenuItem<int>();
@@ -1372,7 +1372,7 @@ void reset_teleporter_globals()
 	feature3dmarker = false;
 	featureTeleportAutomatically = false;
 	featureLandAtDestination = true;
-	featureShowDebugInfo = false;
+	featureShowCoords = false;
 	featureCayoPerico = false;
 
 	lastChosenCategory = 0;
@@ -1469,7 +1469,7 @@ void update_teleport_features(){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	// Show Coordinates
-	if (featureShowDebugInfo) {
+	if (featureShowCoords) {
 		Vector3 coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 0);
 		float me_rot = ENTITY::GET_ENTITY_HEADING(PLAYER::PLAYER_PED_ID());
 		std::ostringstream ss;
@@ -1628,6 +1628,7 @@ void update_teleport_features(){
 					STREAMING::REQUEST_IPL(IPLS_CAYO_PERICO[i]);
 				}
 			}
+
 			int CayointeriorID = INTERIOR::GET_INTERIOR_AT_COORDS(4439.82300000f, -4461.71700000f, 6.15f); // 5010.101f, -5753.549f, 27.8444f
 			if (INTERIOR::IS_VALID_INTERIOR(CayointeriorID))
 			{
