@@ -546,6 +546,7 @@ const std::vector<const char*> IPLS_CAYO_PERICO = {
 	"h4_islandx_placement_09",
 	"h4_islandx_placement_10",
 	"h4_mph4_island_placement",
+	"sum_lost_yacht",
 };
 
 const std::vector<char*> IPLS_MUSIC_LOCKER = {
