@@ -84,6 +84,7 @@ static const int HKEY_VEHICLE_BOMB = 154;
 static const int HKEY_VEHICLE_POLICE = 155;
 static const int HKEY_BODYGUARD_DIS_ARMED = 156;
 static const int HKEY_SPAWN_SAVED_CAR = 157;
+static const int HKEY_SPAWN_VEHICLE_MANUALLY = 158;
 
 const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "No Function", 0 },
@@ -138,6 +139,7 @@ const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "Police Lights", HKEY_VEHICLE_POLICE },
 	{ "Add/Remove Bodyguard Weapons", HKEY_BODYGUARD_DIS_ARMED },
 	{ "Spawn Saved Vehicle", HKEY_SPAWN_SAVED_CAR },
+	{ "Spawn Vehicle Manually", HKEY_SPAWN_VEHICLE_MANUALLY },
 };
 
 void change_hotkey_function(int hotkey, int funcIndex);

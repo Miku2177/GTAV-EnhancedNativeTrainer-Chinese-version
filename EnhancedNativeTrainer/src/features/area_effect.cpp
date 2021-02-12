@@ -760,7 +760,7 @@ void update_area_effects(Ped playerPed){
 				PED::GET_RELATIONSHIP_BETWEEN_PEDS(playerPed, veh_agressive[i]) != 2 && PED::GET_RELATIONSHIP_BETWEEN_PEDS(veh_agressive[i], playerPed) != 2) {
 				
 				// vigilante citizens
-				if (featureLawAbidingCitizens && GAMEPLAY::GET_MISSION_FLAG() == 0 && in_prison == false) {
+				if (featureLawAbidingCitizens && GAMEPLAY::GET_MISSION_FLAG() == 0 && in_prison == false && !featurePowerPunch) {
 					if ((PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed) != 0 && VEHICLE::GET_PED_IN_VEHICLE_SEAT(PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed), -1) != 0 &&
 						!PED::IS_PED_IN_ANY_TAXI(VEHICLE::GET_PED_IN_VEHICLE_SEAT(PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed), -1))) ||
 						(PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed) != 0 && VEHICLE::IS_VEHICLE_ALARM_ACTIVATED(PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed))) || 
