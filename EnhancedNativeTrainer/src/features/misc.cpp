@@ -22,6 +22,8 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 // MISC MENU
 //==================
 
+bool iterated_radio_stations = false; //To prevent needless looping over and over when it's not needed.
+
 int activeLineIndexTrainerConfig = 0;
 int activeLineIndexPhoneBill = 0;
 int activeLineIndexRadioSettings = 0;
@@ -1394,7 +1396,8 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		}
 
 		if ((VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(veh)) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(veh))) && PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed)) { // PED::IS_PED_ON_ANY_BIKE(playerPed)
-			if (featureNoPhoneOnHUD && CAM::_0xEE778F8C7E1142E2(2) == 4 && PED::GET_VEHICLE_PED_IS_IN(playerPed, 1) != GAMEPLAY::GET_HASH_KEY("VERUS")) MOBILE::SET_MOBILE_PHONE_POSITION(10000, 10000, 10000);
+			if (featureNoPhoneOnHUD && CAM::_0xEE778F8C7E1142E2(2) == 4 && PED::GET_VEHICLE_PED_IS_IN(playerPed, 1) != GAMEPLAY::GET_HASH_KEY("VERUS") && PED::GET_VEHICLE_PED_IS_IN(playerPed, 1) != GAMEPLAY::GET_HASH_KEY("SEASHARK") && 
+				PED::GET_VEHICLE_PED_IS_IN(playerPed, 1) != GAMEPLAY::GET_HASH_KEY("SEASHARK2") && PED::GET_VEHICLE_PED_IS_IN(playerPed, 1) != GAMEPLAY::GET_HASH_KEY("SEASHARK3")) MOBILE::SET_MOBILE_PHONE_POSITION(10000, 10000, 10000);
 			
 			Hash temp_Hash = -1;
 			Vector3 temp_pos = ENTITY::GET_ENTITY_COORDS(playerPed, true);
@@ -1893,7 +1896,6 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	//Enable's 1.44's new radio station. Credit goes to Sjaak for finding this!
 	if (featureEnableMissingRadioStation)
 	{
-		bool iterated_radio_stations = false; //To prevent needless looping over and over when it's not needed.
 		int version = getGameVersion();
 		if ((version > 41 || version == -1))
 		{

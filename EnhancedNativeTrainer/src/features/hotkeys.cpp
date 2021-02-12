@@ -302,6 +302,9 @@ void trigger_function_for_hotkey_onkeyup(int hotkey)
 	case HKEY_SPAWN_SAVED_CAR:
 		hotkey_held_saved_veh_spawn = false;
 		break;
+	case HKEY_SPAWN_VEHICLE_MANUALLY:
+		spawn_veh_manually();
+		break;
 	default:
 	{
 		std::ostringstream ss;

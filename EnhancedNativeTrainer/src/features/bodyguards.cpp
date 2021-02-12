@@ -1503,6 +1503,7 @@ void dismiss_bodyguards(){
 		
 	animal_in_group = false;
 	c_armed = true;
+	stop_b = false;
 
 	if(spawnedENTBodyguards.size() == 0){
 		set_status_text("You don't have any bodyguards");
