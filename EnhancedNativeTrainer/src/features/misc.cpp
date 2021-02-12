@@ -22,6 +22,8 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 // MISC MENU
 //==================
 
+bool iterated_radio_stations = false; //To prevent needless looping over and over when it's not needed.
+
 int activeLineIndexTrainerConfig = 0;
 int activeLineIndexPhoneBill = 0;
 int activeLineIndexRadioSettings = 0;
@@ -1893,7 +1895,6 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	//Enable's 1.44's new radio station. Credit goes to Sjaak for finding this!
 	if (featureEnableMissingRadioStation)
 	{
-		bool iterated_radio_stations = false; //To prevent needless looping over and over when it's not needed.
 		int version = getGameVersion();
 		if ((version > 41 || version == -1))
 		{
