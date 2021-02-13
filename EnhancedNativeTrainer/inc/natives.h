@@ -2319,6 +2319,7 @@ namespace AUDIO
 	static void _0xDD6BCF9E94425DF9() { invoke<Void>(0xDD6BCF9E94425DF9); } // 0xDD6BCF9E94425DF9 0xD70ECC80
 	static void SET_RADIO_TO_STATION_NAME(char* stationName) { invoke<Void>(0xC69EDA28699D5107, stationName); } // 0xC69EDA28699D5107 0x7B36E35E
 	static void SET_VEH_RADIO_STATION(Vehicle vehicle, char* radioStation) { invoke<Void>(0x1B9C0099CB942AC6, vehicle, radioStation); } // 0x1B9C0099CB942AC6 0xE391F55F
+	//static void _SET_RADIO_TRACK_MIX(char* radioStationName, char* mixName, int p2) { invoke<Void>(0x1B9C0099CB942AC6, radioStationName, mixName, p2); } // 0x2CB0075110BE1E56
 	static void _0xC1805D05E6D4FE10(Vehicle vehicle) { invoke<Void>(0xC1805D05E6D4FE10, vehicle); } // 0xC1805D05E6D4FE10 0x7ABB89D2
 	static void SET_EMITTER_RADIO_STATION(char* emitterName, char* radioStation) { invoke<Void>(0xACF57305B12AF907, emitterName, radioStation); } // 0xACF57305B12AF907 0x87431585
 	static void SET_STATIC_EMITTER_ENABLED(char* emitterName, BOOL toggle) { invoke<Void>(0x399D2D3B33F1B8EB, emitterName, toggle); } // 0x399D2D3B33F1B8EB 0x91F72E92
@@ -2528,6 +2529,7 @@ namespace INTERIOR
 	static int GET_INTERIOR_FROM_ENTITY(Entity entity) { return invoke<int>(0x2107BA504071A6BB, entity); } // 0x2107BA504071A6BB 0x5C644614
 	static void _0x82EBB79E258FA2B7(Entity entity, int interiorID) { invoke<Void>(0x82EBB79E258FA2B7, entity, interiorID); } // 0x82EBB79E258FA2B7 0xE645E162
 	static void _0x920D853F3E17F1DA(int interiorID, Hash roomHashKey) { invoke<Void>(0x920D853F3E17F1DA, interiorID, roomHashKey); } // 0x920D853F3E17F1DA 0xD79803B5
+	static void _SET_INTERIOR_ENTITY_SET_COLOR(int interiorID, char* entitySetName, int color) { invoke<Void>(0xC1F1920BAF281317, interiorID, entitySetName, color); } // 0xC1F1920BAF281317
 	static void _0xAF348AFCB575A441(char* roomName) { invoke<Void>(0xAF348AFCB575A441, roomName); } // 0xAF348AFCB575A441 0x1F6B4B13
 	static void _0x405DC2AEF6AF95B9(Hash roomHashKey) { invoke<Void>(0x405DC2AEF6AF95B9, roomHashKey); } // 0x405DC2AEF6AF95B9 0x0E9529CC
 	static Hash _GET_ROOM_KEY_FROM_GAMEPLAY_CAM() { return invoke<Hash>(0xA6575914D2A0B450); } // 0xA6575914D2A0B450 0x4FF3D3F5
@@ -2552,6 +2554,7 @@ namespace INTERIOR
 	static void CAP_INTERIOR(int interiorID, BOOL toggle) { invoke<Void>(0xD9175F941610DB54, interiorID, toggle); } // 0xD9175F941610DB54 0x34E735A6
 	static BOOL IS_INTERIOR_CAPPED(int interiorID) { return invoke<BOOL>(0x92BAC8ACF88CEC26, interiorID); } // 0x92BAC8ACF88CEC26 0x18B17C80
 	static void _0x9E6542F0CE8E70A3(BOOL toggle) { invoke<Void>(0x9E6542F0CE8E70A3, toggle); } // 0x9E6542F0CE8E70A3 0x5EF9C5C2
+	static void SET_ISLAND_HOPPER_ENABLED(char* name, BOOL toggle) { invoke<Void>(0x9A9D1BA639675CF1, name, toggle); } // 0x9A9D1BA639675CF1 // cayo perico island
 }
 
 namespace CAM
@@ -2816,7 +2819,7 @@ namespace WEAPON
 	static BOOL GET_MAX_AMMO(Ped ped, Hash weaponHash, int* ammo) { return invoke<BOOL>(0xDC16122C7A20C933, ped, weaponHash, ammo); } // 0xDC16122C7A20C933 0x0B294796
 	static void SET_PED_AMMO_BY_TYPE(Ped ped, Any ammoType, int ammo) { invoke<Void>(0x5FD1E1F011E76D7E, ped, ammoType, ammo); } // 0x5FD1E1F011E76D7E 0x311C52BB
 	static int GET_PED_AMMO_BY_TYPE(Ped ped, Any ammoType) { return invoke<int>(0x39D22031557946C1, ped, ammoType); } // 0x39D22031557946C1 0x54077C4D
-	static void SET_PED_AMMO_TO_DROP(Any p0, Any p1) { invoke<Void>(0xA4EFEF9440A5B0EF, p0, p1); } // 0xA4EFEF9440A5B0EF 0x2386A307
+	static void SET_PED_AMMO_TO_DROP(Ped ped, int ammo) { invoke<Void>(0xA4EFEF9440A5B0EF, ped, ammo); } // 0xA4EFEF9440A5B0EF 0x2386A307
 	static void _0xE620FD3512A04F18(float p0) { invoke<Void>(0xE620FD3512A04F18, p0); } // 0xE620FD3512A04F18 0xD6460EA2
 	static Hash GET_PED_AMMO_TYPE_FROM_WEAPON(Ped ped, Hash weaponHash) { return invoke<Hash>(0x7FEAD38B326B9F74, ped, weaponHash); } // 0x7FEAD38B326B9F74 0x09337863
 	static BOOL GET_PED_LAST_WEAPON_IMPACT_COORD(Ped ped, Vector3* coords) { return invoke<BOOL>(0x6C4D0409BA1A2BC2, ped, coords); } // 0x6C4D0409BA1A2BC2 0x9B266079
