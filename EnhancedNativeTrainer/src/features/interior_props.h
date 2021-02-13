@@ -397,6 +397,11 @@ const std::vector<const char*> IPLS_CAYO_PERICO = {
 	"h4_mansion_remains_cage",
 	"h4_mph4_airstrip",
 	"h4_mph4_airstrip_interior_0_airstrip_hanger",
+	//
+	"h4_airstrip_hanger",
+	"h4_mph4_air_airstrip_02",
+	"h4_int_placement_h4_interior_1_dlc_int_02_h4_milo_",
+	//
 	"h4_mph4_beach",
 	"h4_mph4_dock",
 	"h4_mph4_island_lod",
@@ -540,7 +545,45 @@ const std::vector<const char*> IPLS_CAYO_PERICO = {
 	"h4_islandx_placement_08",
 	"h4_islandx_placement_09",
 	"h4_islandx_placement_10",
-	"h4_mph4_island_placement"
+	"h4_mph4_island_placement",
+	"sum_lost_yacht",
+	"sum_lost_yacht_int",
+};
+
+const std::vector<char*> IPLS_MUSIC_LOCKER = {
+"dj_02_lights_01",
+"dj_02_lights_02",
+"dj_02_lights_03",
+"dj_02_lights_04",
+"int01_ba_bar_content",
+"int01_ba_booze_01",
+"int01_ba_booze_02",
+"int01_ba_booze_03",
+"int01_ba_dj02",
+"int01_ba_dj_moodyman",
+"int01_ba_dry_ice",
+"int01_ba_equipment_setup",
+"int01_ba_equipment_upgrade",
+"int01_ba_lightgrid_01",
+"int01_ba_lights_screen",
+"int01_ba_screen",
+"int01_ba_security_upgrade",
+"int01_ba_style02_podium",
+"light_rigs_off",
+};
+
+const std::vector<char*> IPLS_CASINO_PENTHOUSE = {
+"Set_Pent_Tint_Shell",
+"Set_Pent_Pattern_01",
+"Set_Pent_Spa_Bar_Open",
+"Set_Pent_Media_Bar_Open",
+"Set_Pent_NoDealer",
+"Set_Pent_Arcade_Modern",
+"Set_Pent_Bar_Clutter",
+"Set_Pent_Clutter_01",
+"set_pent_bar_light_0",
+"set_pent_bar_light_01",
+"set_pent_bar_party_0",
 };
 
 const std::vector<const char*> IPLS_CARRIER = {

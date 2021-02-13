@@ -981,6 +981,8 @@ void damage_door();
 
 void enter_damaged_vehicle();
 
+void spawn_veh_manually();
+
 Vehicle find_nearest_vehicle();
 
 Ped find_nearest_ped();
@@ -1336,3 +1338,5 @@ extern bool featureRememberVehicles;
 extern bool featureRestoreTracked;
 extern bool featureDisableIgnition;
 extern int EngineRunningIndex;
+
+extern std::string  veh_to_spawn;
