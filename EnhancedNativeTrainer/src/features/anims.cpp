@@ -3913,7 +3913,7 @@ void replay_last_anim()
 }
 
 void update_anims_features(BOOL bPlayerExists, Ped playerPed) {
-	if (((IsKeyDown(KeyConfig::KEY_MENU_BACK) && !IsKeyDown(VK_ESCAPE)) || (!CONTROLS::IS_CONTROL_JUST_PRESSED(2, INPUT_FRONTEND_PAUSE) && CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(2, controller_binds["KEY_MENU_BACK"].first)) || CONTROLS::IS_CONTROL_PRESSED(2, 32) || CONTROLS::IS_CONTROL_PRESSED(2, 33) || CONTROLS::IS_CONTROL_PRESSED(2, 34) ||
+	if (((IsKeyDown(KeyConfig::KEY_MENU_BACK) && !IsKeyDown(VK_ESCAPE)) || (!CONTROLS::IS_CONTROL_JUST_PRESSED(2, INPUT_FRONTEND_PAUSE) && is_controller_disabled_button_pressed(controller_binds["KEY_MENU_BACK"].first, -1, is_controller_ignored_in_trainer())) || CONTROLS::IS_CONTROL_PRESSED(2, 32) || CONTROLS::IS_CONTROL_PRESSED(2, 33) || CONTROLS::IS_CONTROL_PRESSED(2, 34) ||
 		CONTROLS::IS_CONTROL_PRESSED(2, 35)) && anim_p == true) {
 		AI::STOP_ANIM_TASK(PLAYER::PLAYER_PED_ID(), (char*)lastImmediatePlayDict.c_str(), (char*)lastImmediatePlayAnim.c_str(), 1.0);
 		PED::RESET_PED_MOVEMENT_CLIPSET(playerPed, 1.0f);
@@ -4018,7 +4018,7 @@ bool onconfirm_scenarios_menu_l2(MenuItem<int> choice)
 
 	while (true)
 	{
-		if ((!IsKeyJustUp(VK_ESCAPE) && IsKeyJustUp(KeyConfig::KEY_MENU_BACK)) || (!CONTROLS::IS_DISABLED_CONTROL_JUST_RELEASED(2, controller_binds["KEY_MENU_BACK"].first) && CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, controller_binds["KEY_MENU_BACK"].first)))
+		if ((!IsKeyJustUp(VK_ESCAPE) && IsKeyJustUp(KeyConfig::KEY_MENU_BACK)) || (!is_controller_disabled_button_just_released(controller_binds["KEY_MENU_BACK"].first, -1, is_controller_ignored_in_trainer() && is_controller_disabled_button_pressed(controller_binds["KEY_MENU_BACK"].first, -1, is_controller_ignored_in_trainer()))))
 		{
 			break;
 		}

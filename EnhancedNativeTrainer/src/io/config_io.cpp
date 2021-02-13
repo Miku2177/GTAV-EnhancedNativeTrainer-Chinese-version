@@ -155,27 +155,15 @@ void read_config_file(){
 		}
 
 		// here must be a code to store keybinds somewhere.
-		if (attrib_controller_func != NULL && attrib_button1_v != NULL) {
-			/*std::stringstream ss; ss << "attrib_controller_func: " << attrib_controller_func << " - attrib_button1_v: " << attrib_button1_v << " - attrib_button2_v: " << attrib_button2_v;
-			write_text_to_log_file(ss.str());
-
-			ss.str(std::string());
-			ss << "controller_binds size: " << controller_binds.size();
-			write_text_to_log_file(ss.str());
-
-			std::map<std::string, std::pair<int, int>>::iterator it = controller_binds.find(attrib_controller_func);
-			if (it != controller_binds.end()) {
-				it->second = std::pair(attrib_button1_v, attrib_button2_v);
-				
-				ss.str(std::string());
-				ss << "Found \"" << attrib_controller_func << "\" in the map";
+		if (attrib_controller_func != NULL) {
+ 
+			if (attrib_button1_v == NULL)
+			{
+				std::stringstream ss;
+				ss << "[ERROR] Problem reading " << attrib_controller_func << "'s function. Button1's value was NULL! Skipping and the default value(s) will be used instead.";
 				write_text_to_log_file(ss.str());
+				continue;
 			}
-			else {
-				ss.str(std::string());
-				ss << "Could not find \"" << attrib_controller_func << "\" in the map";
-				write_text_to_log_file(ss.str());
-			}*/
 
 			if (controller_binds.find(attrib_controller_func) != controller_binds.end())
 			{
