@@ -269,14 +269,13 @@ void airbrake(bool inVehicle)
 
 	KeyInputConfig* keyConfig = get_config()->get_key_config();
 
-
-	bool moveUpKey = IsKeyDown(KeyConfig::KEY_AIRBRAKE_UP) || is_controller_button_pressed(controller_binds["KEY_AIRBRAKE_UP"].first, -1, is_controller_ignored_in_trainer()); //CONTROLLER_BTN_TRIGGER_L
-	bool moveDownKey = IsKeyDown(KeyConfig::KEY_AIRBRAKE_DOWN) || is_controller_button_pressed(controller_binds["KEY_AIRBRAKE_DOWN"].first, -1, is_controller_ignored_in_trainer()); //CONTROLLER_BTN_TRIGGER_R
-	bool moveForwardKey = IsKeyDown(KeyConfig::KEY_AIRBRAKE_FORWARD) || is_controller_button_pressed(controller_binds["KEY_AIRBRAKE_FORWARD"].first, -1, is_controller_ignored_in_trainer()); //CONTROLLER_LSTICK_U
-	bool moveBackKey = IsKeyDown(KeyConfig::KEY_AIRBRAKE_BACK) || is_controller_button_pressed(controller_binds["KEY_AIRBRAKE_BACK"].first, -1, is_controller_ignored_in_trainer()); //CONTROLLER_LSTICK_D
-	bool rotateLeftKey = IsKeyDown(KeyConfig::KEY_AIRBRAKE_ROTATE_LEFT) || is_controller_button_pressed(controller_binds["KEY_AIRBRAKE_ROTATE_LEFT"].first, -1, is_controller_ignored_in_trainer()); //CONTROLLER_LSTICK_L
-	bool rotateRightKey = IsKeyDown(KeyConfig::KEY_AIRBRAKE_ROTATE_RIGHT) || is_controller_button_pressed(controller_binds["KEY_AIRBRAKE_ROTATE_RIGHT"].first, -1, is_controller_ignored_in_trainer()); //CONTROLLER_LSTICK_R
-	bool SpaceKey = IsKeyDown(KeyConfig::KEY_AIRBRAKE_SPACE) || is_controller_disabled_button_pressed(controller_binds["KEY_MENU_SELECT"].first, -1, is_controller_ignored_in_trainer()); //CONTROLLER_BTN_A
+	bool moveUpKey = IsKeyDown(KeyConfig::KEY_AIRBRAKE_UP) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, controller_binds["KEY_AIRBRAKE_UP"].first); //CONTROLLER_BTN_TRIGGER_L
+	bool moveDownKey = IsKeyDown(KeyConfig::KEY_AIRBRAKE_DOWN) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, controller_binds["KEY_AIRBRAKE_DOWN"].first); //CONTROLLER_BTN_TRIGGER_R
+	bool moveForwardKey = IsKeyDown(KeyConfig::KEY_AIRBRAKE_FORWARD) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, controller_binds["KEY_AIRBRAKE_FORWARD"].first); //CONTROLLER_LSTICK_U
+	bool moveBackKey = IsKeyDown(KeyConfig::KEY_AIRBRAKE_BACK) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, controller_binds["KEY_AIRBRAKE_BACK"].first); //CONTROLLER_LSTICK_D
+	bool rotateLeftKey = IsKeyDown(KeyConfig::KEY_AIRBRAKE_ROTATE_LEFT) || CONTROLS::IS_CONTROL_PRESSED(2, controller_binds["KEY_AIRBRAKE_ROTATE_LEFT"].first); //CONTROLLER_LSTICK_L
+	bool rotateRightKey = IsKeyDown(KeyConfig::KEY_AIRBRAKE_ROTATE_RIGHT) || CONTROLS::IS_CONTROL_PRESSED(2, controller_binds["KEY_AIRBRAKE_ROTATE_RIGHT"].first); //CONTROLLER_LSTICK_R
+	bool SpaceKey = IsKeyDown(KeyConfig::KEY_AIRBRAKE_SPACE) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, controller_binds["KEY_MENU_SELECT"].first); //CONTROLLER_BTN_A
 
 	//Airbrake controls vehicle if occupied
 	Entity target = playerPed;
@@ -292,7 +291,7 @@ void airbrake(bool inVehicle)
 		AI::TASK_PLAY_ANIM(PLAYER::PLAYER_PED_ID(), AIRBRAKE_ANIM_A, AIRBRAKE_ANIM_B, 8.0f, 0.0f, -1, 9, 0, 0, 0, 0);
 	}
 	
-	if (IsKeyJustUp(KeyConfig::KEY_AIRBRAKE_SPEED) || is_controller_disabled_button_just_pressed(controller_binds["KEY_AIRBRAKE_SPEED"].first, -1, is_controller_ignored_in_trainer())) //CONTROLLER_BTN_A
+	if (IsKeyJustUp(KeyConfig::KEY_AIRBRAKE_SPEED) || CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(2, controller_binds["KEY_AIRBRAKE_SPEED"].first)) //CONTROLLER_BTN_A
 	{
 		travelSpeed++;
 		if (travelSpeed > 2)
@@ -301,7 +300,7 @@ void airbrake(bool inVehicle)
 		}
 	}
 
-	if ((IsKeyJustUp(KeyConfig::KEY_AIRBRAKE_FREEZE_TIME) || is_controller_disabled_button_just_pressed(controller_binds["KEY_AIRBRAKE_FREEZE_TIME"].first, -1, is_controller_ignored_in_trainer())) && !IsKeyDown(VK_ESCAPE) && !is_controller_button_pressed(controller_binds["KEY_AIRBRAKE_FREEZE_TIME"].second, -1, is_controller_ignored_in_trainer())) //CONTROLLER_BTN_B
+	if ((IsKeyJustUp(KeyConfig::KEY_AIRBRAKE_FREEZE_TIME) || CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(2, controller_binds["KEY_AIRBRAKE_FREEZE_TIME"].first)) && !IsKeyDown(VK_ESCAPE) && !CONTROLS::IS_CONTROL_JUST_PRESSED(2, controller_binds["KEY_AIRBRAKE_FREEZE_TIME"].second)) //CONTROLLER_BTN_B
 	{
 		frozen_time = !frozen_time;
 	}

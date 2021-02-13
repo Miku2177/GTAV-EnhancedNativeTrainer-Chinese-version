@@ -1914,7 +1914,7 @@ void maintain_bodyguards(){
 	}
 	
 	// weapons selection
-	if (under_weapon_menu == true && (IsKeyDown(KeyConfig::KEY_MENU_SELECT) || is_controller_disabled_button_pressed(controller_binds["KEY_MENU_SELECT"].first, -1, is_controller_ignored_in_trainer()) || IsKeyDown(KeyConfig::KEY_MENU_BACK) || IsKeyDown(KeyConfig::KEY_TOGGLE_MAIN_MENU))) {
+	if (under_weapon_menu == true && (IsKeyDown(KeyConfig::KEY_MENU_SELECT) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, controller_binds["KEY_MENU_SELECT"].first) || IsKeyDown(KeyConfig::KEY_MENU_BACK) || IsKeyDown(KeyConfig::KEY_TOGGLE_MAIN_MENU))) {
 		selBodyWeapons = "";
 		for (int a = 0; a < MENU_WEAPON_CATEGORIES.size(); a++) {
 			for (int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++) {

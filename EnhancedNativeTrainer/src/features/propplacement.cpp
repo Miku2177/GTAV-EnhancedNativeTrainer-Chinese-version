@@ -391,12 +391,12 @@ void prop_placement()
 
 	KeyInputConfig* keyConfig = get_config()->get_key_config();
 
-	bool moveUpKey = IsKeyDown(KeyConfig::KEY_OBJECTPLACER_UP) || is_controller_button_pressed(controller_binds["KEY_OBJECTPLACER_UP"].first, -1, is_controller_ignored_in_trainer());
-	bool moveDownKey = IsKeyDown(KeyConfig::KEY_OBJECTPLACER_DOWN) || is_controller_button_pressed(controller_binds["KEY_OBJECTPLACER_DOWN"].first, -1, is_controller_ignored_in_trainer());
-	bool moveForwardKey = IsKeyDown(KeyConfig::KEY_OBJECTPLACER_FORWARD) || is_controller_button_pressed(controller_binds["KEY_OBJECTPLACER_FORWARD"].first, -1, is_controller_ignored_in_trainer());
-	bool moveBackKey = IsKeyDown(KeyConfig::KEY_OBJECTPLACER_BACK) || is_controller_button_pressed(controller_binds["KEY_OBJECTPLACER_BACK"].first, -1, is_controller_ignored_in_trainer());
-	bool rotateLeftKey = IsKeyDown(KeyConfig::KEY_OBJECTPLACER_ROTATE_LEFT) || is_controller_button_pressed(controller_binds["KEY_OBJECTPLACER_ROTATE_LEFT"].first, -1, is_controller_ignored_in_trainer());
-	bool rotateRightKey = IsKeyDown(KeyConfig::KEY_OBJECTPLACER_ROTATE_RIGHT) || is_controller_button_pressed(controller_binds["KEY_OBJECTPLACER_ROTATE_RIGHT"].first, -1, is_controller_ignored_in_trainer());
+	bool moveUpKey = IsKeyDown(KeyConfig::KEY_OBJECTPLACER_UP) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, controller_binds["KEY_OBJECTPLACER_UP"].first);
+	bool moveDownKey = IsKeyDown(KeyConfig::KEY_OBJECTPLACER_DOWN) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, controller_binds["KEY_OBJECTPLACER_DOWN"].first);
+	bool moveForwardKey = IsKeyDown(KeyConfig::KEY_OBJECTPLACER_FORWARD) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, controller_binds["KEY_OBJECTPLACER_FORWARD"].first);
+	bool moveBackKey = IsKeyDown(KeyConfig::KEY_OBJECTPLACER_BACK) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, controller_binds["KEY_OBJECTPLACER_BACK"].first);
+	bool rotateLeftKey = IsKeyDown(KeyConfig::KEY_OBJECTPLACER_ROTATE_LEFT) || CONTROLS::IS_CONTROL_PRESSED(2, controller_binds["KEY_OBJECTPLACER_ROTATE_LEFT"].first);
+	bool rotateRightKey = IsKeyDown(KeyConfig::KEY_OBJECTPLACER_ROTATE_RIGHT) || CONTROLS::IS_CONTROL_PRESSED(2, controller_binds["KEY_OBJECTPLACER_ROTATE_RIGHT"].first);
 
 	bool secondaryMove = IsKeyDown(KeyConfig::KEY_OBJECTPLACER_ALT_MOVE);
 
@@ -406,7 +406,7 @@ void prop_placement()
 
 	ENTITY::SET_ENTITY_VELOCITY(currentProp.instance, 0.0f, 0.0f, 0.0f);
 
-	if (is_controller_disabled_button_pressed(controller_binds["KEY_MENU_SELECT"].first, -1, is_controller_ignored_in_trainer()))
+	if (CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(2, controller_binds["KEY_MENU_SELECT"].first))
 	{
 		pp_travel_speed++;
 		if (pp_travel_speed >= MOVE_SPEED_COUNTS)
@@ -430,17 +430,17 @@ void prop_placement()
 		}
 	}
 
-	if (IsKeyJustUp(KeyConfig::KEY_OBJECTPLACER_FREEZE_TIME) || is_controller_disabled_button_just_pressed(controller_binds["KEY_OBJECTPLACER_FREEZE_TIME"].first, -1, is_controller_ignored_in_trainer()))
+	if (IsKeyJustUp(KeyConfig::KEY_OBJECTPLACER_FREEZE_TIME) || CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(2, controller_binds["KEY_OBJECTPLACER_FREEZE_TIME"].first))
 	{
 		pp_frozen_time = !pp_frozen_time;
 	}
 
-	if (IsKeyJustUp(KeyConfig::KEY_OBJECTPLACER_FREEZE_POSITION) || is_controller_button_pressed(controller_binds["KEY_OBJECTPLACER_FREEZE_POSITION"].first, -1, is_controller_ignored_in_trainer()))
+	if (IsKeyJustUp(KeyConfig::KEY_OBJECTPLACER_FREEZE_POSITION) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, controller_binds["KEY_OBJECTPLACER_FREEZE_POSITION"].first))
 	{
 		currentProp.isImmovable = !currentProp.isImmovable;
 	}
 
-	if (IsKeyJustUp(KeyConfig::KEY_OBJECTPLACER_HELP) || is_controller_disabled_button_just_pressed(controller_binds["INPUT_FRONTEND_SELECT"].first, -1, is_controller_ignored_in_trainer()))
+	if (IsKeyJustUp(KeyConfig::KEY_OBJECTPLACER_HELP) || CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(2, INPUT_FRONTEND_SELECT))
 	{
 		pp_help_showing = !pp_help_showing;
 	}

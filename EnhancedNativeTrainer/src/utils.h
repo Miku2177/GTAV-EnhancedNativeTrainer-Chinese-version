@@ -40,13 +40,3 @@ bool CompareMemory(const uint8_t* pData, const uint8_t* bMask, const char* sMask
 int RegisterFile(const std::string& fullPath, const std::string& fileName);
 
 bool bittest(int data, unsigned char index);
-
-bool is_controller_button_pressed(int control_1, int control_2, bool disable_controls);
-
-bool is_controller_disabled_button_pressed(int control_1, int control_2, bool disable_controls);
-
-bool is_controller_disabled_button_just_released(int control_1, int control_2, bool disable_controls);
-
-bool is_controller_disabled_button_just_pressed(int control_1, int control_2, bool disable_controls);
-
-bool is_controller_button_just_pressed(int control_1, int control_2, bool disable_controls);
