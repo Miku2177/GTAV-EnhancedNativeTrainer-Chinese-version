@@ -3785,14 +3785,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			numActualLines++;
 			UI::BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
 			UI::_ADD_TEXT_COMPONENT_SCALEFORM((char *)MileageStatusLines[i].c_str());
-			UI::SET_TEXT_FONT(0);
-			UI::SET_TEXT_SCALE(0.5, 0.5);
-			UI::SET_TEXT_WRAP(0.0, 1.0);
-			UI::SET_TEXT_COLOUR(255, 255, 255, 255); // 255, 128, 64, 255
-			UI::SET_TEXT_CENTRE(0);
-			UI::SET_TEXT_DROPSHADOW(20, 20, 20, 20, 20);
-			UI::SET_TEXT_EDGE(100, 100, 100, 100, 205);
-			UI::SET_TEXT_LEADING(1);
+			text_parameters(0.5, 0.5, 255, 255, 255, 255);
 			UI::END_TEXT_COMMAND_DISPLAY_TEXT(0.7, 0.9);
 		}
 

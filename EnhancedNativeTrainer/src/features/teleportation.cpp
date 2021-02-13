@@ -820,16 +820,31 @@ void teleport_to_mission_marker(){
 	}
 }
 
-/////////////////////// GO TO NEAREST VEHICLE AS A PASSENGER ///////////////////////////////
+/////////////////////// GO TO NEAREST VEHICLE AS PASSENGER ///////////////////////////////
 void teleport_to_vehicle_as_passenger() {
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
-	find_nearest_vehicle();
+	
+	const int numElements = 10;
+	const int arrSize = numElements * 2 + 2;
+	int nearbyPed[arrSize];
+	nearbyPed[0] = numElements;
+	int count = PED::GET_PED_NEARBY_PEDS(playerPed, nearbyPed, -1);
 
-	PED::SET_PED_INTO_VEHICLE(playerPed, temp_vehicle, -2);
-	if (is_this_a_heli_or_plane(temp_vehicle)) {
-		VEHICLE::SET_HELI_BLADES_FULL_SPEED(PED::GET_VEHICLE_PED_IS_USING(playerPed));
+	if (nearbyPed != NULL) {
+		for (int i = 0; i < count; i++) {
+			int offsettedID = i * 2 + 2;
+			if (nearbyPed[offsettedID] != NULL && ENTITY::DOES_ENTITY_EXIST(nearbyPed[offsettedID]) && PED::IS_PED_IN_ANY_VEHICLE(nearbyPed[offsettedID], 1)) {
+				Vehicle veh2 = PED::GET_VEHICLE_PED_IS_IN(nearbyPed[offsettedID], true);
+				if (ENTITY::DOES_ENTITY_EXIST(veh2)) {
+					PED::SET_PED_INTO_VEHICLE(playerPed, veh2, -2);
+					if (is_this_a_heli_or_plane(veh2)) {
+						VEHICLE::SET_HELI_BLADES_FULL_SPEED(PED::GET_VEHICLE_PED_IS_USING(playerPed));
+					}
+					set_old_vehicle_state(false);
+				}
+			}
+		}
 	}
-	set_old_vehicle_state(false);
 }
 
 void teleport_to_last_vehicle(){
@@ -1488,30 +1503,34 @@ void update_teleport_features(){
 		if (me_rot > 247 && me_rot < 292) direction = "EAST";
 		if (me_rot > 292 && me_rot < 337) direction = "NORTH EAST";
 
-		std::string CurrCoordsStatusLines[1];
-		ss << std::fixed << std::setprecision(2) << "X: " << coords.x << "   Y: " << coords.y << "   Z: " << coords.z << "   Rot: " << me_rot << "\n" << direction;
-
+		std::string CurrCoordsLines[1];
+		ss << std::fixed << std::setprecision(2) << "X: " << coords.x << "   Y: " << coords.y << "   Z: " << coords.z << "   Rot: " << me_rot/* << "\n" << direction*/;
 		int index = 0;
-		CurrCoordsStatusLines[index++] = ss.str();
-		
+		CurrCoordsLines[index++] = ss.str();
 		int numActualLines = 0;
 		for (int i = 0; i < 1; i++) {
 			numActualLines++;
 			UI::BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
-			UI::_ADD_TEXT_COMPONENT_SCALEFORM((char*)CurrCoordsStatusLines[i].c_str());
-			UI::SET_TEXT_FONT(0);
-			UI::SET_TEXT_SCALE(0.5, 0.5);
-			UI::SET_TEXT_WRAP(0.0, 1.0);
-			UI::SET_TEXT_COLOUR(255, 242, 0, 255);
-			UI::SET_TEXT_CENTRE(0);
-			UI::SET_TEXT_DROPSHADOW(20, 20, 20, 20, 20);
-			UI::SET_TEXT_EDGE(100, 100, 100, 100, 205);
-			UI::SET_TEXT_LEADING(1);
-			UI::SET_TEXT_OUTLINE();
-			UI::END_TEXT_COMMAND_DISPLAY_TEXT(0.35, 0.02);
+			UI::_ADD_TEXT_COMPONENT_SCALEFORM((char*)CurrCoordsLines[i].c_str());
+			text_parameters(0.4, 0.4, 255, 242, 0, 255);
+			UI::END_TEXT_COMMAND_DISPLAY_TEXT(0.35, 0.01);
 		}
 
-		GRAPHICS::DRAW_RECT(0.40, 0.075, 0.12, 0.04, 0, 0, 0, 255);
+		std::ostringstream ss2;
+		std::string CurrDirectionLines[1];
+		ss2 << direction;
+		int index1 = 0;
+		CurrDirectionLines[index1++] = ss2.str();
+		int numActualLines1 = 0;
+		for (int i = 0; i < 1; i++) {
+			numActualLines1++;
+			UI::BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
+			UI::_ADD_TEXT_COMPONENT_SCALEFORM((char*)CurrDirectionLines[i].c_str());
+			text_parameters(0.4, 0.4, 255, 242, 0, 255);
+			UI::END_TEXT_COMMAND_DISPLAY_TEXT(0.75, 0.01);
+		}
+
+		GRAPHICS::DRAW_RECT(0.79, 0.026, 0.09, 0.03, 0, 0, 0, 255);
 	}
 
 	/////////////////////////////////////// 3D MARKER /////////////////////////////////////////
