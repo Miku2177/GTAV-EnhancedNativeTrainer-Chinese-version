@@ -114,8 +114,6 @@ void set_hud_hidden(bool hidden);
 
 bool is_jellman_scenery_enabled();
 
-bool is_controller_ignored_in_trainer();
-
 extern bool radio_v_checked;
 extern bool featureRealisticRadioVolume;
 
