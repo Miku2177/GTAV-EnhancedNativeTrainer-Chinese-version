@@ -227,7 +227,6 @@ const std::vector<tele_location> LOCATIONS_INTERIORS = {
 	{ "Airport Facility Interior 3", -1042.93f, -2865.61f, 35.4773f, {}, {}, {}, false },
 	{ "Ammunation Gun Range", 22.153f, -1072.854f, 29.797f },
 	{ "Bahama Mamas West", -1387.08f, -588.4f, 30.3195f },
-	{ "Bikers 'Lost' Safehouse", 981.211f, -101.864f, 75.8451f, { "bkr_bi_hw1_13_int" }, {}, {}, false },
 	{ "Blaine County Savings Bank", -109.299f, 6464.035f, 31.627f },
 	{ "Cinema", -1435.8f, -256.866f, 18.7795f, { "hei_hw1_02_interior_v_cinema_milo_" }, {}, {}, false },
 	{ "Clucking Bell Farms Warehouse", -70.0624f, 6263.53f, 31.0909f, { "CS1_02_cf_onmission1", "CS1_02_cf_onmission2", "CS1_02_cf_onmission3", "CS1_02_cf_onmission4" }, { "CS1_02_cf_offmission" }, {}, false },
@@ -299,6 +298,7 @@ const std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Benny's Garage", -209.759f, -1319.617f, 30.08367f }, 
 	{ "Biker Club Garage 1", 1005.861f, -3156.162f, -39.90727f, { "bkr_biker_interior_placement_interior_1_biker_dlc_int_02_milo_" }, {}, {}, false },
 	//{ "Biker Cocaine Factory", 1093.581f, -3196.597f, -39.99353f, { "bkr_biker_interior_placement_interior_4_biker_dlc_int_ware03_milo_" }, {}, {}, false },
+	{ "Bikers 'Lost' Safehouse", 981.211f, -101.864f, 75.8451f, { "bkr_bi_hw1_13_int" }, {}, {}, false },
 	{ "Biker Warehouse: Forgery 2", 1165.001f, -3196.597f, -39.99353f, { "bkr_biker_interior_placement_interior_6_biker_dlc_int_ware05_milo_" }, {}, {}, false },
 	{ "Biker Warehouse: Money Printer 1", 1009.545f, -3196.597f, -39.99353f, { "bkr_biker_interior_placement_interior_2_biker_dlc_int_ware01_milo_" }, {}, {}, false },
 	{ "Biker Warehouse: Money Printer 2", 1124.734f, -3196.597f, -39.99353f, { "bkr_biker_interior_placement_interior_5_biker_dlc_int_ware04_milo_" }, {}, {}, false },
@@ -1168,7 +1168,7 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 		STREAMING::SET_INTERIOR_ACTIVE(interiorID, true);
 		INTERIOR::DISABLE_INTERIOR(interiorID, false);
 
-		INTERIOR::CAP_INTERIOR(interiorID, 0);
+		if (INTERIOR::IS_INTERIOR_CAPPED(interiorID)) INTERIOR::CAP_INTERIOR(interiorID, 0);
 	}
 
 	for (int x = 0; x < MENU_LOCATION_CATEGORIES.size(); x++) {
@@ -1232,7 +1232,7 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 				STREAMING::SET_INTERIOR_ACTIVE(interiorID, true);
 				INTERIOR::DISABLE_INTERIOR(interiorID, false);
 
-				INTERIOR::CAP_INTERIOR(interiorID, 0);
+				if (INTERIOR::IS_INTERIOR_CAPPED(interiorID)) INTERIOR::CAP_INTERIOR(interiorID, 0);
 
 				if (sizeof(value->scenery_props) > 0)
 				{
@@ -1654,18 +1654,17 @@ void update_teleport_features(){
 				INTERIOR::_LOAD_INTERIOR(CayointeriorID);
 				STREAMING::SET_INTERIOR_ACTIVE(CayointeriorID, true);
 				INTERIOR::DISABLE_INTERIOR(CayointeriorID, false);
-				INTERIOR::CAP_INTERIOR(CayointeriorID, 0);
-				//for (int i = 0; i < IPLS_CAYO_PERICO.size(); i++) {
-				//	if (!INTERIOR::_IS_INTERIOR_PROP_ENABLED(CayointeriorID, (char*)IPLS_CAYO_PERICO[i]))
-				//	{
-				//		INTERIOR::_ENABLE_INTERIOR_PROP(CayointeriorID, (char*)IPLS_CAYO_PERICO[i]);
-				//		DWORD time = GetTickCount() + 3;
-				//		while (GetTickCount() < time) {
-				//			make_periodic_feature_call();
-				//			WAIT(0);
-				//		}
-				//		INTERIOR::_SET_INTERIOR_ENTITY_SET_COLOR(CayointeriorID, (char*)IPLS_CAYO_PERICO[i], 1);
-				//	}
+				if (INTERIOR::IS_INTERIOR_CAPPED(CayointeriorID)) INTERIOR::CAP_INTERIOR(CayointeriorID, 0);
+				//for (int i = 0; i < IPLS_CAYO_PERICO_PROPS.size(); i++) {
+					/*if (sizeof(IPLS_CAYO_PERICO_PROPS) > 0)	{
+						for each (char* prop in IPLS_CAYO_PERICO_PROPS) {
+							if (!INTERIOR::_IS_INTERIOR_PROP_ENABLED(CayointeriorID, prop))
+							{
+								INTERIOR::_ENABLE_INTERIOR_PROP(CayointeriorID, prop);
+								INTERIOR::_SET_INTERIOR_ENTITY_SET_COLOR(CayointeriorID, prop, 1);
+							}
+						}
+					}*/
 				//}
 				INTERIOR::REFRESH_INTERIOR(CayointeriorID);
 			}
@@ -1688,6 +1687,14 @@ void update_teleport_features(){
 			OBJECT::_DOOR_CONTROL(GAMEPLAY::GET_HASH_KEY("h4_prop_h4_door_03a"), 5085.588f, -5733.124f, 15.9526f, 0, 0.0, 50.0, 0);
 			OBJECT::_DOOR_CONTROL(GAMEPLAY::GET_HASH_KEY("h4_prop_h4_door_03a"), 5082.088f, -5737.809f, 15.9526f, 0, 0.0, 50.0, 0);
 
+			/*INTERIOR::_0xF74B1FFA4A15FBEA(true);
+			INTERIOR::_0x53797676AD34A9AA(false);
+			INTERIOR::_0XDD3D5F9CA0C715D0(true);
+			AI::SET_SCENARIO_GROUP_ENABLED("Heist_Island_Peds", 1);
+			AI::SET_SCENARIO_GROUP_ENABLED("Heist_Island_Peds_2", 1);*/
+			AUDIO::SET_STATIC_EMITTER_ENABLED("se_dlc_hei4_island_beach_party_music_new_01_left", true);
+			AUDIO::SET_STATIC_EMITTER_ENABLED("se_dlc_hei4_island_beach_party_music_new_02_right", true);
+
 			AUDIO::SET_AMBIENT_ZONE_LIST_STATE_PERSISTENT("AZL_DLC_Hei4_Island_Zones", true, true);
 			AUDIO::SET_AMBIENT_ZONE_LIST_STATE_PERSISTENT("AZL_DLC_Hei4_Island_Disabled_Zones", false, true);
 			if (WORLD_WAVES_VALUES[WorldWavesIndex] == -1) WATER::_SET_WAVES_INTENSITY(0.1); // it doesn't allow waves to clip through the surface
@@ -1697,6 +1704,8 @@ void update_teleport_features(){
 		if (Cayo_dist_diff >= 1200 && on_island == true) { // 2000
 			AUDIO::SET_AMBIENT_ZONE_LIST_STATE_PERSISTENT("AZL_DLC_Hei4_Island_Zones", false, false);
 			AUDIO::SET_AMBIENT_ZONE_LIST_STATE_PERSISTENT("AZL_DLC_Hei4_Island_Disabled_Zones", false, false);
+			AUDIO::SET_STATIC_EMITTER_ENABLED("se_dlc_hei4_island_beach_party_music_new_01_left", false);
+			AUDIO::SET_STATIC_EMITTER_ENABLED("se_dlc_hei4_island_beach_party_music_new_02_right", false);
 			if (WORLD_WAVES_VALUES[WorldWavesIndex] == -1) WATER::_RESET_WAVES_INTENSITY();
 			on_island = false;
 		}

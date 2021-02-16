@@ -777,7 +777,7 @@ namespace PED
 	static Any ADD_SCENARIO_BLOCKING_AREA(float p0, float p1, float p2, float p3, float p4, float p5, BOOL p6, BOOL p7, BOOL p8, BOOL p9) { return invoke<Any>(0x1B5C85C612E5256E, p0, p1, p2, p3, p4, p5, p6, p7, p8, p9); } // 0x1B5C85C612E5256E 0xA38C0234
 	static void REMOVE_SCENARIO_BLOCKING_AREAS() { invoke<Void>(0xD37401D78A929A49); } // 0xD37401D78A929A49 0x4DDF845F
 	static void REMOVE_SCENARIO_BLOCKING_AREA(Any p0, BOOL p1) { invoke<Void>(0x31D16B74C6E29D66, p0, p1); } // 0x31D16B74C6E29D66 0x4483EF06
-	static void SET_SCENARIO_PEDS_SPAWN_IN_SPHERE_AREA(Any p0, Any p1, Any p2, Any p3, Any p4) { invoke<Void>(0x28157D43CF600981, p0, p1, p2, p3, p4); } // 0x28157D43CF600981 0x80EAD297
+	static void SET_SCENARIO_PEDS_SPAWN_IN_SPHERE_AREA(float x, float y, float z, float range, int p4) { invoke<Void>(0x28157D43CF600981, x, y, z, range, p4); } // 0x28157D43CF600981 0x80EAD297
 	static BOOL IS_PED_USING_SCENARIO(Ped ped, char* scenario) { return invoke<BOOL>(0x1BF094736DD62C2E, ped, scenario); } // 0x1BF094736DD62C2E 0x0F65B0D4
 	static BOOL IS_PED_USING_ANY_SCENARIO(Ped ped) { return invoke<BOOL>(0x57AB4A3080F85143, ped); } // 0x57AB4A3080F85143 0x195EF5B7
 	static Any _0xFE07FF6495D52E2A(Any p0, Any p1, Any p2, Any p3) { return invoke<Any>(0xFE07FF6495D52E2A, p0, p1, p2, p3); } // 0xFE07FF6495D52E2A 0x59DE73AC
@@ -1418,7 +1418,7 @@ namespace VEHICLE
 	static void _SET_PLANE_MIN_HEIGHT_ABOVE_GROUND(Vehicle plane, int height) { invoke<Void>(0xB893215D8D4C015B, plane, height); } // 0xB893215D8D4C015B 0x8C4B63E2
 	static void SET_VEHICLE_LOD_MULTIPLIER(Vehicle vehicle, float multiplier) { invoke<Void>(0x93AE6A61BE015BF1, vehicle, multiplier); } // 0x93AE6A61BE015BF1 0x569E5AE3
 	static void _0x428BACCDF5E26EAD(Vehicle vehicle, BOOL p1) { invoke<Void>(0x428BACCDF5E26EAD, vehicle, p1); } // 0x428BACCDF5E26EAD 0x1604C2F5
-	static Any _0x42A4BEB35D372407(Any p0) { return invoke<Any>(0x42A4BEB35D372407, p0); } // 0x42A4BEB35D372407 0x8CDB0C09
+	static int _GET_VEHICLE_NUMBER_OF_BROKEN_OFF_BONES(Vehicle vehicle) { return invoke<Any>(0x42A4BEB35D372407, vehicle); } // 0x42A4BEB35D372407 0x8CDB0C09
 	static Any _0x2C8CBFE1EA5FC631(Any p0) { return invoke<Any>(0x2C8CBFE1EA5FC631, p0); } // 0x2C8CBFE1EA5FC631 0xABC99E21
 	static void _0x4D9D109F63FEE1D4(Any p0, BOOL p1) { invoke<Void>(0x4D9D109F63FEE1D4, p0, p1); } // 0x4D9D109F63FEE1D4 0x900C878C
 	static void _0x279D50DE5652D935(Any p0, BOOL p1) { invoke<Void>(0x279D50DE5652D935, p0, p1); } // 0x279D50DE5652D935 0xB3200F72
@@ -2555,6 +2555,9 @@ namespace INTERIOR
 	static BOOL IS_INTERIOR_CAPPED(int interiorID) { return invoke<BOOL>(0x92BAC8ACF88CEC26, interiorID); } // 0x92BAC8ACF88CEC26 0x18B17C80
 	static void _0x9E6542F0CE8E70A3(BOOL toggle) { invoke<Void>(0x9E6542F0CE8E70A3, toggle); } // 0x9E6542F0CE8E70A3 0x5EF9C5C2
 	static void SET_ISLAND_HOPPER_ENABLED(char* name, BOOL toggle) { invoke<Void>(0x9A9D1BA639675CF1, name, toggle); } // 0x9A9D1BA639675CF1 // cayo perico island
+	static void _0xF74B1FFA4A15FBEA(BOOL toggle) { invoke<Void>(0xF74B1FFA4A15FBEA, toggle); } // 0xF74B1FFA4A15FBEA
+	static void _0x53797676AD34A9AA(BOOL toggle) { invoke<Void>(0x53797676AD34A9AA, toggle); } // 0x53797676AD34A9AA
+	static void _0XDD3D5F9CA0C715D0(BOOL toggle) { invoke<Void>(0XDD3D5F9CA0C715D0, toggle); } // 0XDD3D5F9CA0C715D0
 }
 
 namespace CAM
