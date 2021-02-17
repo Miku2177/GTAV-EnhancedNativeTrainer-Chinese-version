@@ -1692,13 +1692,13 @@ void process_fuel_menu(){
 	listItem->value = JerrycanPriceIndex;
 	menuItems.push_back(listItem);
 
-	listItem = new SelectFromListMenuItem(VEH_FUELRANDOM_CAPTIONS, onchange_random1_index);
+	listItem = new SelectFromListMenuItem(VEH_TURN_SIGNALS_ANGLE_CAPTIONS, onchange_random1_index);
 	listItem->wrap = false;
 	listItem->caption = "Random Vehicle Fuel Min (%)";
 	listItem->value = Random1Index;
 	menuItems.push_back(listItem);
 
-	listItem = new SelectFromListMenuItem(VEH_FUELRANDOM_CAPTIONS, onchange_random2_index);
+	listItem = new SelectFromListMenuItem(VEH_TURN_SIGNALS_ANGLE_CAPTIONS, onchange_random2_index);
 	listItem->wrap = false;
 	listItem->caption = "Random Vehicle Fuel Max (%)";
 	listItem->value = Random2Index;

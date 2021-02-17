@@ -179,7 +179,7 @@ void fuel()
 
 		float fuel_bar_x = -1;
 		float fuel_bar_y = -1;
-		float randomize = -1;
+		float randomize = 0;
 		float fuel_bar_h = -1;
 		float fuel_amount = -1;
 		int underbar_r = -1;
@@ -190,10 +190,14 @@ void fuel()
 		int bar_colour_r = FUEL_COLOURS_R_VALUES[FuelColours_R_IndexN];
 		int bar_colour_g = FUEL_COLOURS_R_VALUES[FuelColours_G_IndexN];
 		int bar_colour_b = FUEL_COLOURS_R_VALUES[FuelColours_B_IndexN];
-
-		if (VEH_FUELRANDOM_VALUES[Random2Index] > 0 && VEH_FUELRANDOM_VALUES[Random2Index] > VEH_FUELRANDOM_VALUES[Random1Index]) randomize = (rand() % VEH_FUELRANDOM_VALUES[Random2Index] + VEH_FUELRANDOM_VALUES[Random1Index]); // UP MARGIN + DOWN MARGIN
-		if (VEH_FUELRANDOM_VALUES[Random2Index] > 0 && VEH_FUELRANDOM_VALUES[Random2Index] < VEH_FUELRANDOM_VALUES[Random1Index]) randomize = (rand() % VEH_FUELRANDOM_VALUES[Random2Index] + 0); // UP MARGIN + DOWN MARGIN
-		if (VEH_FUELRANDOM_VALUES[Random2Index] == VEH_FUELRANDOM_VALUES[Random1Index]) randomize = VEH_FUELRANDOM_VALUES[Random2Index]; // UP MARGIN + DOWN MARGIN
+		
+		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) {
+			if (VEH_FUELRANDOM_VALUES[Random2Index] > 0 && VEH_FUELRANDOM_VALUES[Random2Index] > VEH_FUELRANDOM_VALUES[Random1Index]) randomize = VEH_FUELRANDOM_VALUES[Random1Index] + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (VEH_FUELRANDOM_VALUES[Random2Index] - VEH_FUELRANDOM_VALUES[Random1Index])));
+			if (VEH_FUELRANDOM_VALUES[Random2Index] > 0 && VEH_FUELRANDOM_VALUES[Random2Index] < VEH_FUELRANDOM_VALUES[Random1Index]) randomize = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / VEH_FUELRANDOM_VALUES[Random2Index]));
+			//if (VEH_FUELRANDOM_VALUES[Random2Index] > 0 && VEH_FUELRANDOM_VALUES[Random2Index] > VEH_FUELRANDOM_VALUES[Random1Index]) randomize = (rand() % VEH_FUELRANDOM_VALUES[Random2Index] + VEH_FUELRANDOM_VALUES[Random1Index]); // UP MARGIN + DOWN MARGIN
+			//if (VEH_FUELRANDOM_VALUES[Random2Index] > 0 && VEH_FUELRANDOM_VALUES[Random2Index] < VEH_FUELRANDOM_VALUES[Random1Index]) randomize = (rand() % VEH_FUELRANDOM_VALUES[Random2Index] + 0.0); // UP MARGIN + DOWN MARGIN
+			if (VEH_FUELRANDOM_VALUES[Random2Index] == VEH_FUELRANDOM_VALUES[Random1Index]) randomize = VEH_FUELRANDOM_VALUES[Random2Index]; // UP MARGIN + DOWN MARGIN
+		}
 
 		if (WORLD_GRAVITY_LEVEL_VALUES[BarPositionIndexN] == 0) {
 			fuel_bar_x = 0.015;

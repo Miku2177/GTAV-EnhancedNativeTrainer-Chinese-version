@@ -30,8 +30,7 @@ extern int FuelPriceIndex;
 extern int JerrycanPriceIndex;
 
 //Fuel Random Number
-const std::vector<std::string> VEH_FUELRANDOM_CAPTIONS{ "0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100" };
-const int VEH_FUELRANDOM_VALUES[] = { 0, 1, 2, 4, 5, 7, 8, 9, 11, 12, 14 };
+const float VEH_FUELRANDOM_VALUES[] = { 0.0, 1.5, 3.0, 4.5, 6.0, 7.0, 8.0, 9.5, 11.0, 12.5, 14.0 };
 extern int Random1Index; //min fuel random number
 extern int Random2Index; //max fuel random number
 
