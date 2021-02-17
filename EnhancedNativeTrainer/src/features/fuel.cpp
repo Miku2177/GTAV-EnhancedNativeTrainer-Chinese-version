@@ -78,9 +78,9 @@ int FuelPriceIndex = 7;
 bool FuelPriceChanged = true;
 int JerrycanPriceIndex = 12;
 bool JerrycanChanged = true;
-int Random1Index = 1;
+int Random1Index = 2;
 bool Random1Changed = true;
-int Random2Index = 1;
+int Random2Index = 3;
 bool Random2Changed = true;
 int BarPositionIndexN = 0;
 bool BarPositionChanged = true;
@@ -191,13 +191,9 @@ void fuel()
 		int bar_colour_g = FUEL_COLOURS_R_VALUES[FuelColours_G_IndexN];
 		int bar_colour_b = FUEL_COLOURS_R_VALUES[FuelColours_B_IndexN];
 
-		if (VEH_FUELRANDOM_VALUES[Random2Index] >= VEH_FUELRANDOM_VALUES[Random1Index]) {
-			randomize = (rand() % VEH_FUELRANDOM_VALUES[Random2Index] + VEH_FUELRANDOM_VALUES[Random1Index]); // UP MARGIN + DOWN MARGIN
-		}
-		else {
-			int temp_rand = VEH_FUELRANDOM_VALUES[Random1Index];
-			randomize = (rand() % temp_rand + VEH_FUELRANDOM_VALUES[Random1Index]); // UP MARGIN + DOWN MARGIN
-		}
+		if (VEH_FUELRANDOM_VALUES[Random2Index] > 0 && VEH_FUELRANDOM_VALUES[Random2Index] > VEH_FUELRANDOM_VALUES[Random1Index]) randomize = (rand() % VEH_FUELRANDOM_VALUES[Random2Index] + VEH_FUELRANDOM_VALUES[Random1Index]); // UP MARGIN + DOWN MARGIN
+		if (VEH_FUELRANDOM_VALUES[Random2Index] > 0 && VEH_FUELRANDOM_VALUES[Random2Index] < VEH_FUELRANDOM_VALUES[Random1Index]) randomize = (rand() % VEH_FUELRANDOM_VALUES[Random2Index] + 0); // UP MARGIN + DOWN MARGIN
+		if (VEH_FUELRANDOM_VALUES[Random2Index] == VEH_FUELRANDOM_VALUES[Random1Index]) randomize = VEH_FUELRANDOM_VALUES[Random2Index]; // UP MARGIN + DOWN MARGIN
 
 		if (WORLD_GRAVITY_LEVEL_VALUES[BarPositionIndexN] == 0) {
 			fuel_bar_x = 0.015;
