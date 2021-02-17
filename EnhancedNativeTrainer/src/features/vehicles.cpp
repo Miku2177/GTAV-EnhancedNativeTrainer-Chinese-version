@@ -1692,15 +1692,15 @@ void process_fuel_menu(){
 	listItem->value = JerrycanPriceIndex;
 	menuItems.push_back(listItem);
 
-	listItem = new SelectFromListMenuItem(VEH_FUELRANDOM1_CAPTIONS, onchange_random1_index);
+	listItem = new SelectFromListMenuItem(VEH_FUELRANDOM_CAPTIONS, onchange_random1_index);
 	listItem->wrap = false;
-	listItem->caption = "Random Vehicle Fuel From (%)";
+	listItem->caption = "Random Vehicle Fuel Min (%)";
 	listItem->value = Random1Index;
 	menuItems.push_back(listItem);
 
-	listItem = new SelectFromListMenuItem(VEH_FUELRANDOM2_CAPTIONS, onchange_random2_index);
+	listItem = new SelectFromListMenuItem(VEH_FUELRANDOM_CAPTIONS, onchange_random2_index);
 	listItem->wrap = false;
-	listItem->caption = "Random Vehicle Fuel Up To (%)";
+	listItem->caption = "Random Vehicle Fuel Max (%)";
 	listItem->value = Random2Index;
 	menuItems.push_back(listItem);
 
@@ -4309,8 +4309,8 @@ void reset_vehicle_globals() {
 	RefuelingSpeedIndex = 6;
 	FuelPriceIndex = 7;
 	JerrycanPriceIndex = 12;
-	Random1Index = 1;
-	Random2Index = 1;
+	Random1Index = 2;
+	Random2Index = 3;
 	BarPositionIndexN = 0;
 
 	CarEngineHealthIndexN = 7;
