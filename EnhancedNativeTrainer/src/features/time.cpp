@@ -1059,10 +1059,10 @@ void update_time_features(Player player){
 		if (GetKeyState(VK_RMENU) & 0x8000 && GetKeyState('8') & 0x8000) {
 			movetime_set(21, 0);
 		}
-		if (GetKeyState(VK_RMENU) & 0x8000 && GetKeyState(VK_OEM_PLUS) & 0x8000) {
+		if (GetKeyState(VK_RMENU) & 0x8000 && ((GetKeyState(VK_OEM_PLUS) & 0x8000) || (GetKeyState('9') & 0x8000) || (GetKeyState(VK_ADD) & 0x8000))) {
 			movetime_fivemin_forward();
 		}
-		if (GetKeyState(VK_RMENU) & 0x8000 && GetKeyState(VK_OEM_MINUS) & 0x8000) {
+		if (GetKeyState(VK_RMENU) & 0x8000 && ((GetKeyState(VK_OEM_MINUS) & 0x8000) || (GetKeyState('0') & 0x8000) || (GetKeyState(VK_SUBTRACT) & 0x8000))) {
 			movetime_fivemin_backward();
 		}
 	}
