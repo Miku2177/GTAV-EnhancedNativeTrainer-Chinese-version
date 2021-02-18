@@ -1656,16 +1656,16 @@ void update_teleport_features(){
 				STREAMING::SET_INTERIOR_ACTIVE(CayointeriorID, true);
 				INTERIOR::DISABLE_INTERIOR(CayointeriorID, false);
 				if (INTERIOR::IS_INTERIOR_CAPPED(CayointeriorID)) INTERIOR::CAP_INTERIOR(CayointeriorID, 0);
-				//for (int i = 0; i < IPLS_CAYO_PERICO_PROPS.size(); i++) {
-					/*if (sizeof(IPLS_CAYO_PERICO_PROPS) > 0)	{
-						for each (char* prop in IPLS_CAYO_PERICO_PROPS) {
-							if (!INTERIOR::_IS_INTERIOR_PROP_ENABLED(CayointeriorID, prop))
-							{
-								INTERIOR::_ENABLE_INTERIOR_PROP(CayointeriorID, prop);
-								INTERIOR::_SET_INTERIOR_ENTITY_SET_COLOR(CayointeriorID, prop, 1);
-							}
-						}
-					}*/
+				//for (int j = 0; j < IPLS_CAYO_PERICO_PROPS.size(); j++) {
+					//if (sizeof(IPLS_CAYO_PERICO_PROPS) > 0) {
+					//	for each (char* prop in IPLS_CAYO_PERICO_PROPS) {
+					//		if (!INTERIOR::_IS_INTERIOR_PROP_ENABLED(CayointeriorID, prop))
+					//		{
+				//				INTERIOR::_ENABLE_INTERIOR_PROP(CayointeriorID, IPLS_CAYO_PERICO_PROPS[j]);
+				//				INTERIOR::_SET_INTERIOR_ENTITY_SET_COLOR(CayointeriorID, IPLS_CAYO_PERICO_PROPS[j], 1);
+					//		}
+					//	}
+					//}
 				//}
 				INTERIOR::REFRESH_INTERIOR(CayointeriorID);
 			}
