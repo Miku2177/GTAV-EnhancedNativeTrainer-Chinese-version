@@ -65,6 +65,8 @@ Vehicle current_veh_e = -1;
 Vehicle temp_vehicle, playerVehicle_s = -1;
 Ped temp_ped = -1;
 
+bool repairing_engine = false;
+
 std::vector<Object> SPIKES;
 bool s_message = false;
 
@@ -6004,6 +6006,8 @@ void fix_vehicle(){
 
 			VEHICLE::SET_VEHICLE_INDICATOR_LIGHTS(veh, 1, false); // left signal 
 			VEHICLE::SET_VEHICLE_INDICATOR_LIGHTS(veh, 0, false); // right signal	
+
+			repairing_engine = true;
 
 			set_status_text("Vehicle repaired");
 		}
