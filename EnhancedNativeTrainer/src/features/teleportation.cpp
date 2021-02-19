@@ -1649,7 +1649,7 @@ void update_teleport_features(){
 				}
 			}
 
-			int CayointeriorID = INTERIOR::GET_INTERIOR_AT_COORDS(4439.82300000f, -4461.71700000f, 6.15f); // 5010.101f, -5753.549f, 27.8444f
+			int CayointeriorID = INTERIOR::GET_INTERIOR_AT_COORDS(4439.82300000f, -4461.71700000f, 4.699768f); // 5010.101f, -5753.549f, 27.8444f
 			if (INTERIOR::IS_VALID_INTERIOR(CayointeriorID))
 			{
 				INTERIOR::_LOAD_INTERIOR(CayointeriorID);
