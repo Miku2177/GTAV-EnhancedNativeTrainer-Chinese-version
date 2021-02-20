@@ -56,9 +56,9 @@ const int PLAYER_HEALTH_VALUES[] = { 0, 101, 110, 120, 130, 150, 200, 300, 400, 
 extern int PedsHealthIndex;
 extern bool PedsHealthChanged;
 
-// Waves Intensity
-const std::vector<std::string> WORLD_WAVES_CAPTIONS{ "Default", "No Waves", "0.1x", "5x", "10x", "20x", "30x", "50x" };
-const int WORLD_WAVES_VALUES[] = { -1, -2, -100000000, 5, 10, 20, 30, 50 }; // -400000
+//Waves Intensity
+const std::vector<std::string> WORLD_WAVES_CAPTIONS{ "Default", "No Waves", "5x", "10x", "20x", "30x", "50x", "Freeze Waves" };
+const int WORLD_WAVES_VALUES[] = { -1, -2, 5, 10, 20, 30, 50, -100000000 }; // -400000
 extern int WorldWavesIndex;
 
 extern Vehicle temp_vehicle;
