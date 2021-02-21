@@ -3987,12 +3987,12 @@ void do_play_anim(Ped playerPed, char* dict, char* anim, int mode)
 	if (mode == 4) { // CATEGORY_CLIPSET:
 		PED::SET_PED_MOVEMENT_CLIPSET(playerPed, anim, 1.0f);
 	}
-	if (mode == 91) { // CATEGORY_MOVE_IDLE
-		PED::SET_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 0, dict, anim, 0, true);
-	}
-	if (mode == 92) { // CATEGORY_MOVE_WALK
-		PED::SET_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 1, dict, anim, 0, true);
-	}
+	//if (mode == 91) { // CATEGORY_MOVE_IDLE
+	//	PED::SET_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 0, dict, anim, 0, true);
+	//}
+	//if (mode == 92) { // CATEGORY_MOVE_WALK
+	//	PED::SET_PED_ALTERNATE_MOVEMENT_ANIM(playerPed, 1, dict, anim, 0, true);
+	//}
 }
 
 void cleanup_anims()
