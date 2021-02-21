@@ -220,6 +220,67 @@ const std::vector<const char*> IPLS_NORTH_YANKTON = {
 	"prologuerd_lod"
 };
 
+std::vector<char*> IPL_PROPS_BIKER_CLUBHOUSE = {
+	"mod_booth",
+	"walls_01",
+	"furnishings_01",
+	"decorative_01",
+	"mural_01",
+	"gun_locker",
+	"meth_stash1",
+	"coke_stash1",
+	"weed_stash1",
+	"cash_stash1",
+	"id_stash1",
+	"counterfeit_stash1",
+};
+
+std::vector<char*> IPL_PROPS_BIKER_FORGERY_WAREHOUSE = {
+	"equipment_upgrade",
+	"production",
+	"security_high",
+	"set_up",
+	"clutter",
+	"interior_upgrade",
+	"chair01",
+};
+
+std::vector<char*> IPL_PROPS_BIKER_FAKE_CASH_WAREHOUSE = {
+	"counterfeit_upgrade_equip",
+	"counterfeit_setup",
+	"counterfeit_upgrade_equip_no_prod",
+	"counterfeit_security",
+	"counterfeit_cashpile10a",
+	"counterfeit_cashpile20a",
+	"counterfeit_cashpile100a",
+	"dryera_on",
+	"dryerb_on",
+	"dryerc_on",
+	"dryerd_on",
+	"money_cutter",
+	"special_chairs",
+};
+
+std::vector<char*> IPL_PROPS_BIKER_WEED_WAREHOUSE = {
+	"weed_drying",
+	"weed_upgrade_equip",
+	"weed_growtha_stage3",
+	"weed_growthb_stage3",
+	"weed_growthc_stage3",
+	"weed_growthd_stage3",
+	"weed_growthe_stage3",
+	"weed_growthf_stage3",
+	"weed_growthg_stage3",
+	"weed_growthh_stage3",
+	"weed_growthi_stage3",
+	"weed_security_upgrade",
+	"weed_production",
+	"weed_set_up",
+	"weed_hosea",
+	"light_growtha_stage23_upgrade",
+	"weed_chairs"
+};
+
 const std::vector<const char*> IPLS_CAYO_PERICO = {
 	//"HeistIsland",
 	//"heightmapheistisland",

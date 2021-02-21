@@ -296,13 +296,13 @@ const std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "10 Car Garage Bay", 228.135f, -995.350f, -99.000f, { "hw1_blimp_interior_v_garagel_milo_" }, {}, {}, false },
 	{ "Arcadius Business Center Office: Style 1", -139.53950000f, -629.07570000f, 167.82040000f, { "ex_dt1_02_office_01a" }, {}, {}, false },
 	{ "Benny's Garage", -209.759f, -1319.617f, 30.08367f }, 
-	{ "Biker Club Garage 1", 1005.861f, -3156.162f, -39.90727f, { "bkr_biker_interior_placement_interior_1_biker_dlc_int_02_milo_" }, {}, {}, false },
+	{ "Biker Club Garage 1", 1005.861f, -3156.162f, -39.90727f, { "bkr_biker_interior_placement_interior_1_biker_dlc_int_02_milo_" }, {}, { IPL_PROPS_BIKER_CLUBHOUSE }, false },
 	//{ "Biker Cocaine Factory", 1093.581f, -3196.597f, -39.99353f, { "bkr_biker_interior_placement_interior_4_biker_dlc_int_ware03_milo_" }, {}, {}, false },
 	{ "Bikers 'Lost' Safehouse", 981.211f, -101.864f, 75.8451f, { "bkr_bi_hw1_13_int" }, {}, {}, false },
-	{ "Biker Warehouse: Forgery 2", 1165.001f, -3196.597f, -39.99353f, { "bkr_biker_interior_placement_interior_6_biker_dlc_int_ware05_milo_" }, {}, {}, false },
+	{ "Biker Warehouse: Forgery 2", 1165.001f, -3196.597f, -39.99353f, { "bkr_biker_interior_placement_interior_6_biker_dlc_int_ware05_milo_" }, {}, { IPL_PROPS_BIKER_FORGERY_WAREHOUSE }, false },
 	{ "Biker Warehouse: Money Printer 1", 1009.545f, -3196.597f, -39.99353f, { "bkr_biker_interior_placement_interior_2_biker_dlc_int_ware01_milo_" }, {}, {}, false },
-	{ "Biker Warehouse: Money Printer 2", 1124.734f, -3196.597f, -39.99353f, { "bkr_biker_interior_placement_interior_5_biker_dlc_int_ware04_milo_" }, {}, {}, false },
-	{ "Biker Warehouse: Weed Farm", 1059.028f, -3201.89f, -39.99353f, { "bkr_biker_interior_placement_interior_3_biker_dlc_int_ware02_milo_" }, {}, {}, false },
+	{ "Biker Warehouse: Money Printer 2", 1124.734f, -3196.597f, -39.99353f, { "bkr_biker_interior_placement_interior_5_biker_dlc_int_ware04_milo_" }, {}, { IPL_PROPS_BIKER_FAKE_CASH_WAREHOUSE }, false },
+	{ "Biker Warehouse: Weed Farm", 1059.028f, -3201.89f, -39.99353f, { "bkr_biker_interior_placement_interior_3_biker_dlc_int_ware02_milo_" }, {}, { IPL_PROPS_BIKER_WEED_WAREHOUSE }, false },
 	{ "Casino Back", 2523.36100000f, -270.00000000f, -59.72315000f, { "ch_int_placement_ch_interior_3_dlc_casino_back_milo_" }, {}, {}, false },
 	{ "Casino Carpark", 1380.0000, 200.0000, -50.0000f, { "vw_casino_carpark" }, {}, {}, false },
 	//{ "Casino Heist", 2479.26800000f, -273.87380000f, -58.28285000f, { "ch_int_placement_ch_interior_0_dlc_casino_heist_milo_" }, {}, {}, false },
@@ -1198,6 +1198,12 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 						if (STREAMING::IS_IPL_ACTIVE(scenery))
 						{
 							STREAMING::REMOVE_IPL(scenery);
+						}
+					}
+					for each (const char* scenery in loc->scenery_toremove) {
+						if (!STREAMING::IS_IPL_ACTIVE(scenery))
+						{
+							STREAMING::REQUEST_IPL(scenery);
 						}
 					}
 				}
