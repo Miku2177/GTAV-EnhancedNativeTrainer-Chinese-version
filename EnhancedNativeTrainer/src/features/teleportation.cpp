@@ -232,6 +232,7 @@ const std::vector<tele_location> LOCATIONS_INTERIORS = {
 	{ "Clucking Bell Farms Warehouse", -70.0624f, 6263.53f, 31.0909f, { "CS1_02_cf_onmission1", "CS1_02_cf_onmission2", "CS1_02_cf_onmission3", "CS1_02_cf_onmission4" }, { "CS1_02_cf_offmission" }, {}, false },
 	{ "Devin's Garage", 482.027f, -1317.96f, 29.2021f },
 	{ "Dr. Friedlander's Office", -1902.39f, -572.832f, 19.0972f },
+	{ "Epsilon Storage Room", 243.516f, 364.099f, 105.738f },
 	{ "FIB Building Burnt", 159.553f, -738.851f, 246.152f },
 	{ "FIB Building Floor 47", 134.573f, -766.486f, 234.152f },
 	{ "FIB Building Floor 49", 134.635f, -765.831f, 242.152f },
@@ -246,7 +247,6 @@ const std::vector<tele_location> LOCATIONS_INTERIORS = {
 	{ "Humane Labs Lower Level", 3525.495f, 3705.301f, 20.992f },
 	{ "Humane Labs Upper Level", 3542.94f, 3670.83f, 28.1211f },
 	{ "IAA Office", 116.389f, -632.25f, 206.047f },
-	{ "Ice Planet Jewelery", 243.516f, 364.099f, 105.738f },
 	{ "Janitor's Apartment", -110.721f, -8.22095f, 70.5197f},
 	{ "Lester's House", 1273.898f, -1719.304f, 54.771f },
 	{ "Life Invader Office", -1049.13f, -231.779f, 39.0144f, { "facelobby" }, { "facelobbyfake" }, {}, false },
@@ -261,7 +261,7 @@ const std::vector<tele_location> LOCATIONS_INTERIORS = {
 	{ "Raven Slaughterhouse", 967.357f, -2184.71f, 30.0613f },
 	{ "Rogers Salvage & Scrap", -609.484f, -1611.63f, 27.0105f, { "sp1_03_interior_v_recycle_milo_" }, {}, { IPL_PROPS_SCRAP }, false },
 	{ "Sandy Shores Sheriff", 1853.18f, 3686.63f, 34.2671f },
-	//{ "Simeon's Showroom", -58.1993f, -1096.64f, 26.4224f, { "shr_int" }, { "fakeint" }, {}, false },
+	{ "Simeon's Showroom", -58.1993f, -1096.64f, 26.4224f, { "shr_int" }, { "fakeint" }, {}, false },
 	{ "Solomon's Office", -1002.89f, -478.003f, 50.0271f },
 	{ "Spaceship Interior", 41.64376000f, -779.93910000f, 832.40240000f, { "spaceinterior" }, {}, {}, false },
 	{ "Split Sides West Comedy Club", -453.8519f, 280.5149f, 77.52148f, { "apa_ss1_12_interior_v_comedy_milo_" }, {}, {}, false },
@@ -278,11 +278,12 @@ const std::vector<tele_location> LOCATIONS_INTERIORS = {
 const std::vector<tele_location> LOCATIONS_REQSCEN = {
 	{ "Aircraft Carrier", 3069.330f, -4632.4f, 15.043f, IPLS_CARRIER, {}, {}, false },
 	{ "Caida Libre (no plane)", 2814.7000f, 4758.5000f, 48.000f, { "Plane_crash_trench" }, {}, {}, false },
-	{ "Fort Zancudo UFO", -2052.000f, 3237.000f, 1456.973f, { "ufo", "ufo_lod", "ufo_eye" }, {}, {}, false },
 	{ "Red Carpet", 293.314f, 180.388f, 104.297f, { "redCarpet" }, {}, {}, false },
 	{ "SS Bulker (intact)", -163.749f, -2377.94f, 9.3192f, { "cargoship" }, { "sunkcargoship" }, {}, false },
 	{ "SS Bulker (sunk)", -162.8918f, -2365.769f, 0.0f, { "sunkcargoship" }, { "cargoship" }, {}, false },
 	{ "Train Crash Bridge", -532.1309f, 4526.187f, 88.7955f, { "canyonriver01_traincrash", "railing_end" }, { "railing_start", "canyonriver01" }, {}, false },
+	{ "UFO Desert", 2490.0f, 3774.73f, 2449.0f, {}, {}, {}, false },
+	{ "UFO Fort Zancudo", -2052.000f, 3237.000f, 1456.973f, { /*"ufo", "ufo_lod", "ufo_eye"*/ }, {}, {}, false },
 	{ "Yacht", -2023.661f, -1038.038f, 5.577f, { "smboat", "smboat_lod" }, {}, {}, false },
 };
 
@@ -314,7 +315,7 @@ const std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Casino Utility", 2519.87600000f, -255.30270000f, -25.11497000f, { "ch_int_placement_ch_interior_7_dlc_casino_utility_milo_" }, {}, {}, false },
 	{ "Casino Vault", 2488.34800000f, -267.36370000f, -71.64563000f, { "ch_int_placement_ch_interior_6_dlc_casino_vault_milo_" }, {}, {}, false },
 	{ "Cayo Perico Mansion", 5010.101f, -5753.549f, 27.8444f, { "h4_islandx_mansion_office" }, {}, {}, false }, // h4_dlc_island_office
-	{ "CEO Garage Modshop", 730.0f, -2990.0f, -40.0f, { "imp_impexp_interior_placement_interior_2_imptexp_mod_int_01_milo_" }, {}, {}, false },//No ceiling, floor, walls textures.
+	{ "CEO Garage Modshop", -77.42f, -827.27f, 285.00f, { "imp_dt1_11_modgarage" }, {}, {}, false }, // 730.0f, -2990.0f, -40.0f // imp_impexp_interior_placement_interior_2_imptexp_mod_int_01_milo_
 	{ "Del Perro Heights Apt 27", -1468.02100000f, -529.94370000f, 49.72156000f, { "hei_hw1_blimp_interior_27_dlc_apart_high_new_milo_" }, {}, {}, false },
 	{ "Del Perro Heights Apt 28", -1468.14f, -541.815f, 73.4442f, {}, {}, {}, false },
 	{ "Eclipse Towers Apt 12", -791.29410000f, 338.07100000f, 200.41350000f, { "hw1_blimp_interior_v_apartment_high_milo__12" }, {}, {}, false },
@@ -338,8 +339,8 @@ const std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Lombank Office: Style 1", -1573.84900000f, -571.02540000f, 107.52290000f, { "ex_sm_13_office_01a" }, {}, {}, false },
 	{ "Maze Bank Del Perro Office: Style 1", -1384.56400000f, -478.26990000f, 71.04205000f, { "ex_sm_15_office_01a" }, {}, {}, false },
 	{ "Mission Row Underground Winning Garage", 400.09610000f, -956.67870000f, -100.00000000f},
+	{ "Mug Shot Room", 415.275f, -999.037f, -99.4041f, { "hw1_int_placement_interior_v_mugshot_milo_ " }, {}, {}, false },
 	{ "Music Locker", 1560.3f, 250.239f, -48.0f, { "h4_int_placement_h4_interior_1_dlc_int_02_h4_milo_" }, {}, { IPLS_MUSIC_LOCKER }, false },
-	{ "Online Character Creator Interior", 415.275f, -999.037f, -99.4041f, { "hw1_int_placement_interior_v_mugshot_milo_ " }, {}, {}, false },
 	{ "Penthouse: Style 1", -786.168f, 334.319f, 211.197f, { "apa_v_mp_h_01_a", "apa_v_mp_h_01_b", "apa_v_mp_h_01_c" }, {}, {}, false },
 	{ "Penthouse: Style 2", -787.7805f, 334.9232f, 215.8384f, { "apa_v_mp_h_02_a", "apa_v_mp_h_02_b", "apa_v_mp_h_02_c" }, {}, {}, false },
 	{ "Penthouse: Style 3", -787.7805f, 334.9232f, 215.8384f, { "apa_v_mp_h_03_a", "apa_v_mp_h_03_b", "apa_v_mp_h_03_c" }, {}, {}, false },
@@ -1203,7 +1204,8 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 					for each (const char* scenery in loc->scenery_toremove) {
 						if (!STREAMING::IS_IPL_ACTIVE(scenery))
 						{
-							STREAMING::REQUEST_IPL(scenery);
+							STREAMING::REMOVE_IPL(scenery);
+							//STREAMING::REQUEST_IPL(scenery);
 						}
 					}
 				}
@@ -1495,10 +1497,6 @@ void update_teleport_features(){
 		float me_rot = ENTITY::GET_ENTITY_HEADING(PLAYER::PLAYER_PED_ID());
 		std::ostringstream ss;
 		
-		//ss << "\nX: " << coords.x << "\nY: " << coords.y << "\nZ: " << coords.z << "\nRot: " << me_rot;
-		//callsPerFrame = 0;
-		//set_status_text_centre_screen(ss.str());
-
 		std::string direction = "";
 		if (me_rot > 337 || me_rot < 22) direction = "NORTH";
 		if (me_rot > 22 && me_rot < 68) direction = "NORTH WEST";
