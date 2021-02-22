@@ -261,7 +261,7 @@ const std::vector<tele_location> LOCATIONS_INTERIORS = {
 	{ "Raven Slaughterhouse", 967.357f, -2184.71f, 30.0613f },
 	{ "Rogers Salvage & Scrap", -609.484f, -1611.63f, 27.0105f, { "sp1_03_interior_v_recycle_milo_" }, {}, { IPL_PROPS_SCRAP }, false },
 	{ "Sandy Shores Sheriff", 1853.18f, 3686.63f, 34.2671f },
-	{ "Simeon's Showroom", -58.1993f, -1096.64f, 26.4224f, { "shr_int" }, { "fakeint" }, {}, false },
+	//{ "Simeon's Showroom", -58.1993f, -1096.64f, 26.4224f, { "shr_int" }, { "fakeint" }, {}, false },
 	{ "Solomon's Office", -1002.89f, -478.003f, 50.0271f },
 	{ "Spaceship Interior", 41.64376000f, -779.93910000f, 832.40240000f, { "spaceinterior" }, {}, {}, false },
 	{ "Split Sides West Comedy Club", -453.8519f, 280.5149f, 77.52148f, { "apa_ss1_12_interior_v_comedy_milo_" }, {}, {}, false },
@@ -1533,10 +1533,10 @@ void update_teleport_features(){
 			UI::BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
 			UI::_ADD_TEXT_COMPONENT_SCALEFORM((char*)CurrDirectionLines[i].c_str());
 			text_parameters(0.4, 0.4, 255, 242, 0, 255);
-			UI::END_TEXT_COMMAND_DISPLAY_TEXT(0.65, 0.01);
+			UI::END_TEXT_COMMAND_DISPLAY_TEXT(0.63, 0.01);
 		}
 
-		GRAPHICS::DRAW_RECT(0.69, 0.026, 0.09, 0.03, 0, 0, 0, 100);
+		GRAPHICS::DRAW_RECT(0.67, 0.026, 0.09, 0.03, 0, 0, 0, 30);
 		//GRAPHICS::DRAW_RECT(0.72, 0.026, 0.15, 0.03, 0, 0, 0, 255);
 	}
 
