@@ -243,7 +243,7 @@ const std::vector<tele_location> LOCATIONS_INTERIORS = {
 	{ "Garment Factory (empty)", 718.162f, -974.51f, 25.9142f, { "id2_14_during2" }, {}, {}, false },
 	{ "Heist Police Station", 445.488f, -983.779f, 30.6896f, {}, {}, {}, false },
 	{ "Hospital (Destroyed)", 302.651f, -586.293f, 43.3129f, { "RC12B_Destroyed", "RC12B_HospitalInterior" }, { "RC12B_Default", "RC12B_Fixed" }, {}, false },
-	{ "Howitzer's The Motor Motel Room", 152.2943f, -1004.391f, -100.0f, { "hei_hw1_blimp_interior_v_motel_mp_milo_" }, {}, {}, false },
+	{ "Howitzer's Motor Motel Room", 152.2943f, -1004.391f, -100.0f, { "hei_hw1_blimp_interior_v_motel_mp_milo_" }, {}, {}, false },
 	{ "Humane Labs Lower Level", 3525.495f, 3705.301f, 20.992f },
 	{ "Humane Labs Upper Level", 3542.94f, 3670.83f, 28.1211f },
 	{ "IAA Office", 116.389f, -632.25f, 206.047f },
@@ -1171,7 +1171,11 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 
 		if (INTERIOR::IS_INTERIOR_CAPPED(interiorID)) INTERIOR::CAP_INTERIOR(interiorID, 0);
 	}
-
+	
+	if (value->scenery_toremove.size() > 0) {
+		for each (const char* scenery in value->scenery_toremove) STREAMING::REMOVE_IPL(scenery); // removing fake interior
+	}
+	
 	for (int x = 0; x < MENU_LOCATION_CATEGORIES.size(); x++) {
 		for (int y = 0; y < VOV_LOCATIONS[x].size(); y++) {
 			
@@ -1201,13 +1205,6 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 							STREAMING::REMOVE_IPL(scenery);
 						}
 					}
-					/*for each (const char* scenery in loc->scenery_toremove) {
-						if (!STREAMING::IS_IPL_ACTIVE(scenery))
-						{
-							STREAMING::REMOVE_IPL(scenery);
-							//STREAMING::REQUEST_IPL(scenery);
-						}
-					}*/
 				}
 				unloadedAnything = true;
 				loc->isLoaded = false;
@@ -1248,11 +1245,11 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 						if (!INTERIOR::_IS_INTERIOR_PROP_ENABLED(interiorID, prop))
 						{
 							INTERIOR::_ENABLE_INTERIOR_PROP(interiorID, prop);
-							DWORD time = GetTickCount() + 3;
-							while (GetTickCount() < time) {
-								make_periodic_feature_call();
-								WAIT(0);
-							}
+							//DWORD time = GetTickCount() + 3;
+							//while (GetTickCount() < time) {
+							//	make_periodic_feature_call();
+							//	WAIT(0);
+							//}
 							INTERIOR::_SET_INTERIOR_ENTITY_SET_COLOR(interiorID, prop, 1);
 						}
 					}
