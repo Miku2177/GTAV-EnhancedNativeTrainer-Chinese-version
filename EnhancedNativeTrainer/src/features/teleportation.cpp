@@ -1201,13 +1201,13 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 							STREAMING::REMOVE_IPL(scenery);
 						}
 					}
-					for each (const char* scenery in loc->scenery_toremove) {
+					/*for each (const char* scenery in loc->scenery_toremove) {
 						if (!STREAMING::IS_IPL_ACTIVE(scenery))
 						{
 							STREAMING::REMOVE_IPL(scenery);
 							//STREAMING::REQUEST_IPL(scenery);
 						}
-					}
+					}*/
 				}
 				unloadedAnything = true;
 				loc->isLoaded = false;
@@ -1416,6 +1416,7 @@ void add_teleporter_feature_enablements(std::vector<FeatureEnabledLocalDefinitio
 	results->push_back(FeatureEnabledLocalDefinition{"featureTeleportAutomatically", &featureTeleportAutomatically});
 	results->push_back(FeatureEnabledLocalDefinition{"featureLandAtDestination", &featureLandAtDestination});
 	results->push_back(FeatureEnabledLocalDefinition{"featureCayoPerico", &featureCayoPerico});
+	results->push_back(FeatureEnabledLocalDefinition{"featureShowCoords", &featureShowCoords});
 }
 
 /*const std::vector<std::string> TOGGLE_IPLS
