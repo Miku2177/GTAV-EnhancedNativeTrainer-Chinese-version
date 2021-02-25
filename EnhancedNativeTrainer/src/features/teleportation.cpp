@@ -24,6 +24,8 @@ bool featureEnableMpMaps = false;
 bool feature3dmarker = false;
 bool featureTeleportAutomatically = false;
 
+bool teleported_i = false;
+
 //For onscreen debug info
 bool featureShowCoords = false;
 
@@ -1278,6 +1280,8 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 	
 	teleport_to_coords(e, coords);
 
+	teleported_i = true;
+
 	return false;
 }
 
@@ -1720,4 +1724,29 @@ void update_teleport_features(){
 		cayo_tick = 0;
 	}
 
+	// Hiding GTA Online apartment glitchy exteriors
+	if (teleported_i == true) { 
+		int interiorID = INTERIOR::GET_INTERIOR_AT_COORDS(ENTITY::GET_ENTITY_COORDS(playerPed, true).x, ENTITY::GET_ENTITY_COORDS(playerPed, true).y, ENTITY::GET_ENTITY_COORDS(playerPed, true).z);
+		GRAPHICS::_0x4B5CFC83122DF602();
+		if (interiorID == 232705 || interiorID == 231937 || interiorID == 231169 || interiorID == 230401 || interiorID == 229633 || interiorID == 228865 || interiorID == 228097 || interiorID == 227329 ||
+			interiorID == 146945 || interiorID == 40962 || interiorID == 144129 || interiorID == 143873 || interiorID == 61186) INTERIOR::_HIDE_MAP_OBJECT_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("apa_ss1_11_flats"));
+		if (interiorID == 141313 || interiorID == 147201) INTERIOR::_HIDE_MAP_OBJECT_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("hei_dt1_03_build1x"));
+		if (interiorID == 143361 || interiorID == 61954 || interiorID == 146177) INTERIOR::_HIDE_MAP_OBJECT_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("hei_bh1_08_bld2"));
+		if (interiorID == 143617 || interiorID == 52482 || interiorID == 143105 || interiorID == 111618) INTERIOR::_HIDE_MAP_OBJECT_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("hei_bh1_09_bld_01"));
+		if (interiorID == 240641 || interiorID == 240385 || interiorID == 240129 || interiorID == 239873 || interiorID == 239617 || interiorID == 239361 || interiorID == 239105 || interiorID == 238849 ||
+			interiorID == 238593) INTERIOR::_HIDE_MAP_OBJECT_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("dt1_11_dt1_tower"));
+		if (interiorID == 146689 || interiorID == 145153 || interiorID == 144897 || interiorID == 90882) INTERIOR::_HIDE_MAP_OBJECT_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("apa_ss1_02_building01"));
+		// /* ??? */if (interiorID == 240897) INTERIOR::_HIDE_MAP_OBJECT_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("hei_sm_13_strm_0"));
+		if (interiorID == 243201) INTERIOR::_HIDE_MAP_OBJECT_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("hei_sm_15_bld2")); // hei_sm_15_bld2_exshadowlightproxy
+		if (interiorID == 145921 || interiorID == 145665 || interiorID == 145409) INTERIOR::_HIDE_MAP_OBJECT_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("hei_sm_14_bld2"));
+		if (interiorID == 236289) INTERIOR::_HIDE_MAP_OBJECT_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("hei_dt1_02"));
+		if (interiorID == 142337 || interiorID == 86018) INTERIOR::_HIDE_MAP_OBJECT_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("kt1_09_building1"));
+		if (interiorID == 207873) INTERIOR::_HIDE_MAP_OBJECT_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("apa_ch2_09c"));
+		//if (interiorID == 206593) INTERIOR::_HIDE_MAP_OBJECT_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("apa_ch2_05c_b4"));
+		//if (interiorID == 206081) INTERIOR::_HIDE_MAP_OBJECT_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("apa_ch2_04_house02"));
+		//if (interiorID == 207105) INTERIOR::_HIDE_MAP_OBJECT_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("apa_ch2_05e"));
+		GRAPHICS::_0x3669F1B198DCAA4F();
+	}
+	if (teleported_i == true && INTERIOR::GET_INTERIOR_AT_COORDS(ENTITY::GET_ENTITY_COORDS(playerPed, true).x, ENTITY::GET_ENTITY_COORDS(playerPed, true).y, ENTITY::GET_ENTITY_COORDS(playerPed, true).z) == 0) teleported_i = false;
+	
 } // end of loop
