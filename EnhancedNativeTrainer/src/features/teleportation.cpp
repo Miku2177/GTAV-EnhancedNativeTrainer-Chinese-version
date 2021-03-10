@@ -1499,6 +1499,10 @@ void update_teleport_features(){
 		float me_rot = ENTITY::GET_ENTITY_HEADING(PLAYER::PLAYER_PED_ID());
 		std::ostringstream ss;
 		
+		int screen_w = 0;
+		int screen_h = 0;
+		GetDesktopResolution(screen_w, screen_h);
+
 		std::string direction = "";
 		if (me_rot > 337 || me_rot < 22) direction = "NORTH";
 		if (me_rot > 22 && me_rot < 68) direction = "NORTH WEST";
@@ -1533,7 +1537,8 @@ void update_teleport_features(){
 			UI::BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
 			UI::_ADD_TEXT_COMPONENT_SCALEFORM((char*)CurrDirectionLines[i].c_str());
 			text_parameters(0.4, 0.4, 255, 242, 0, 255);
-			UI::END_TEXT_COMMAND_DISPLAY_TEXT(0.63, 0.01);
+			if (screen_w >= 1280) UI::END_TEXT_COMMAND_DISPLAY_TEXT(0.63, 0.01);
+			else UI::END_TEXT_COMMAND_DISPLAY_TEXT(0.73, 0.01);
 		}
 
 		GRAPHICS::DRAW_RECT(0.67, 0.026, 0.09, 0.03, 0, 0, 0, 30);

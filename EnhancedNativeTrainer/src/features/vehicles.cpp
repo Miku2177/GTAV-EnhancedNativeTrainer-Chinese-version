@@ -38,7 +38,7 @@ using namespace std;
 int VehInvincibilityIndex = 0;
 bool VehInvincibilityChanged = true;
 //bool featureVehInvincible = false;
-//bool featureVehInvincibleUpdated = false;
+bool featureVehInvincibleUpdated = false;
 //bool featureVehNoDamage = false;
 //bool featureVehInvulnIncludesCosmetic = false;
 
@@ -2612,20 +2612,8 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 
 	// Invincible Vehicle
-	/*if (bPlayerExists && WORLD_GRAVITY_LEVEL_VALUES[VehInvincibilityIndex] == 0 && featureVehInvincibleUpdated == true && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
-		ENTITY::SET_ENTITY_INVINCIBLE(veh, FALSE);
-		ENTITY::SET_ENTITY_PROOFS(veh, 0, 0, 0, 0, 0, 0, 0, 0);
-		VEHICLE::SET_VEHICLE_TYRES_CAN_BURST(veh, 1);
-		VEHICLE::SET_VEHICLE_WHEELS_CAN_BREAK(veh, 1);
-		VEHICLE::SET_VEHICLE_CAN_BE_VISIBLY_DAMAGED(veh, 1);
-		for (int i = 0; i < 6; i++){
-			VEHICLE::_SET_VEHICLE_DOOR_BREAKABLE(veh, i, TRUE); //(Vehicle, doorIndex, isBreakable)
-		}
-		featureVehInvincibleUpdated = false;
-	}*/
-		
-	if (WORLD_GRAVITY_LEVEL_VALUES[VehInvincibilityIndex] > 0){
-		if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
+	if (WORLD_GRAVITY_LEVEL_VALUES[VehInvincibilityIndex] > 0) {
+		if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
 			bool featureVehNoDamage = false;
 			if (WORLD_GRAVITY_LEVEL_VALUES[VehInvincibilityIndex] > 1) featureVehNoDamage = true;
 			//featureVehInvincibleUpdated = true;
@@ -2661,6 +2649,18 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				}
 			}
 		}
+		featureVehInvincibleUpdated = true;
+	}
+	if (WORLD_GRAVITY_LEVEL_VALUES[VehInvincibilityIndex] == 0 && featureVehInvincibleUpdated == true && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
+		ENTITY::SET_ENTITY_INVINCIBLE(veh, FALSE);
+		ENTITY::SET_ENTITY_PROOFS(veh, 0, 0, 0, 0, 0, 0, 0, 0);
+		VEHICLE::SET_VEHICLE_TYRES_CAN_BURST(veh, 1);
+		VEHICLE::SET_VEHICLE_WHEELS_CAN_BREAK(veh, 1);
+		VEHICLE::SET_VEHICLE_CAN_BE_VISIBLY_DAMAGED(veh, 1);
+		for (int i = 0; i < 6; i++) {
+			VEHICLE::_SET_VEHICLE_DOOR_BREAKABLE(veh, i, TRUE); //(Vehicle, doorIndex, isBreakable)
+		}
+		featureVehInvincibleUpdated = false;
 	}
 
 	// No Fall Off
