@@ -1703,6 +1703,17 @@ void do_spawn_bodyguard(){
 				//PED::SET_PED_ALERTNESS(bodyGuard, 3);
 				//PED::SET_PED_SEEING_RANGE(bodyGuard, 1000);
 				
+				PED::SET_PED_SHOOT_RATE(bodyGuard, 999);
+				PED::SET_COMBAT_FLOAT(bodyGuard, 0, 1.0);
+				PED::SET_COMBAT_FLOAT(bodyGuard, 1, 1.0);
+				PED::SET_COMBAT_FLOAT(bodyGuard, 3, 1.0);
+				PED::SET_COMBAT_FLOAT(bodyGuard, 4, 1.0);
+				PED::SET_COMBAT_FLOAT(bodyGuard, 5, 1.0);
+				PED::SET_COMBAT_FLOAT(bodyGuard, 8, 1.0);
+				PED::SET_COMBAT_FLOAT(bodyGuard, 11, 1.0);
+				PED::SET_COMBAT_FLOAT(bodyGuard, 12, 1.0);
+				PED::SET_COMBAT_FLOAT(bodyGuard, 16, 1.0);
+
 				// animal
 				if (bodyguard_animal == true) {
 					PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 46, true);
@@ -2068,7 +2079,7 @@ void maintain_bodyguards(){
 				if (PED::IS_PED_FLEEING(spawnedENTBodyguards[i])) AI::TASK_STAND_STILL(spawnedENTBodyguards[i], 10000);
 			}
 			// show numbers above heads
-			if (menu_showing == true && GAMEPLAY::UPDATE_ONSCREEN_KEYBOARD() != 0) {
+			if (menu_showing == true/* && GAMEPLAY::UPDATE_ONSCREEN_KEYBOARD() != 0*/) {
 				Vector3 head_c = PED::GET_PED_BONE_COORDS(spawnedENTBodyguards[i], 31086, 0, 0, 0);
 				std::string curr_i = std::to_string(i);
 				GRAPHICS::SET_DRAW_ORIGIN(head_c.x, head_c.y, head_c.z + 0.5, 0);
@@ -2076,6 +2087,7 @@ void maintain_bodyguards(){
 				UI::_ADD_TEXT_COMPONENT_SCALEFORM((char *)curr_i.c_str());
 				text_parameters(0.5, 0.5, 255, 242, 0, 255);
 				UI::END_TEXT_COMMAND_DISPLAY_TEXT(0, 0);
+				GRAPHICS::CLEAR_DRAW_ORIGIN();
 			}
 			//
 			if (stop_b == false) {
