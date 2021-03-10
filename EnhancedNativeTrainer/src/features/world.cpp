@@ -809,6 +809,7 @@ void update_world_features()
 	{
 		PED::SET_CREATE_RANDOM_COPS(featureWorldRandomCops);
 		PED::SET_CREATE_RANDOM_COPS_ON_SCENARIOS(featureWorldRandomCops);
+		PED::SET_CREATE_RANDOM_COPS_NOT_ON_SCENARIOS(featureWorldRandomCops);
 		featureWorldRandomCopsUpdated = false;
 	}
 
@@ -1494,6 +1495,7 @@ void update_world_features()
 				UI::_ADD_TEXT_COMPONENT_SCALEFORM((char *)curr_h_t.c_str());
 				text_parameters(0.5, 0.5, 255, 242, 0, 255);
 				UI::END_TEXT_COMMAND_DISPLAY_TEXT(0, 0);
+				GRAPHICS::CLEAR_DRAW_ORIGIN();
 			}
 			// NPC No Gravity Peds
 			if (NPC_RAGDOLL_VALUES[NoPedsGravityIndex] > 0 && bus_ped[i] != PLAYER::PLAYER_PED_ID() && !PED::IS_PED_IN_ANY_VEHICLE(bus_ped[i], false)) {
