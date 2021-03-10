@@ -341,6 +341,19 @@ void onchange_player_escapestars_mode(int value, SelectFromListMenuItem* source)
 	current_escape_stars_Changed = true;
 }
 
+// Get the horizontal and vertical screen sizes in pixel
+void GetDesktopResolution(int& horizontal, int& vertical)
+{
+	RECT desktop;
+	const HWND hDesktop = GetDesktopWindow(); // Get a handle to the desktop window
+	GetWindowRect(hDesktop, &desktop); // Get the size of screen to the variable desktop
+	// The top left corner will have coordinates (0,0)
+	// and the bottom right corner will have coordinates
+	// (horizontal, vertical)
+	horizontal = desktop.right;
+	vertical = desktop.bottom;
+}
+
 void check_player_model(){
 	/*
 	std::stringstream ss;

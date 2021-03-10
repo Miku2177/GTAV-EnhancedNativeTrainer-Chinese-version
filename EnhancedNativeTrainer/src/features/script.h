@@ -165,6 +165,8 @@ void onchange_player_escapestars_mode(int value, SelectFromListMenuItem* source)
 
 void text_parameters(float s_x, float s_y, int c_r, int c_g, int c_b, int alpha);
 
+void GetDesktopResolution(int& horizontal, int& vertical);
+
 void process_reset_menu();
 
 void process_main_menu();
