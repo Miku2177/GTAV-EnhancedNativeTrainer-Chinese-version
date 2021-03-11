@@ -682,6 +682,11 @@ bool applyChosenBodSkin(DWORD model)
 
 bool spawn_saved_bod_skin(int slot, std::string caption)
 {
+	if (!spawnedENTBodyguards.empty() && spawnedENTBodyguards.size() >= BODYGUARD_LIMIT) {
+		set_status_text("Cannot spawn any more bodyguards");
+		return false;
+	}
+
 	ENTDatabase* database = get_database();
 	std::vector<SavedBodSkinDBRow*> savedBodSkins = database->get_saved_bod_skins(slot);
 	SavedBodSkinDBRow* savedBodSkin = savedBodSkins.at(0);
@@ -697,6 +702,7 @@ bool spawn_saved_bod_skin(int slot, std::string caption)
 	}
 
 	PED::CLEAR_ALL_PED_PROPS(bodyGuard);
+
 	for each (SavedBodSkinPropDBRow *prop in savedBodSkin->props)
 	{
 		PED::SET_PED_PROP_INDEX(bodyGuard, prop->propID, prop->drawable, prop->texture, 0);
@@ -1041,14 +1047,15 @@ bool onconfirm_bodyguard_skins_menu(MenuItem<int> choice){
 		case 4:
 		{
 			keyboard_on_screen_already = true;
-			curr_message = "Enter bodyguard model name (e.g. cs_amandatownley or random):"; // spawn a bodyguard
+			curr_message = "Enter bodyguard model name (e.g. cs_amandatownley, random, saved_bodyguards):"; // spawn a bodyguard
 			std::string result = show_keyboard("Enter Name Manually", (char*)lastCustomBodyguardSpawn.c_str());
 			if (!result.empty())
 			{
 				result = trim(result);
 				lastCustomBodyguardSpawn = result;
 				Hash hash = GAMEPLAY::GET_HASH_KEY((char*)result.c_str());
-				if (lastCustomBodyguardSpawn != "random" && lastCustomBodyguardSpawn != "Random" && lastCustomBodyguardSpawn != "RANDOM" && (!STREAMING::IS_MODEL_IN_CDIMAGE(hash) || !STREAMING::IS_MODEL_VALID(hash)))
+				if (lastCustomBodyguardSpawn != "random" && lastCustomBodyguardSpawn != "Random" && lastCustomBodyguardSpawn != "RANDOM" && 
+					lastCustomBodyguardSpawn != "saved_bodyguards" && lastCustomBodyguardSpawn != "Saved_bodyguards" && lastCustomBodyguardSpawn != "Saved_Bodyguards" && (!STREAMING::IS_MODEL_IN_CDIMAGE(hash) || !STREAMING::IS_MODEL_VALID(hash)))
 				{
 					std::ostringstream ss;
 					ss << "Couldn't find model '" << result << "'";
@@ -1056,7 +1063,8 @@ bool onconfirm_bodyguard_skins_menu(MenuItem<int> choice){
 					lastCustomBodyguardSpawn = "";
 					return false;
 				}
-				if ((STREAMING::IS_MODEL_IN_CDIMAGE(hash) && STREAMING::IS_MODEL_VALID(hash)) || lastCustomBodyguardSpawn == "random" || lastCustomBodyguardSpawn == "Random" || lastCustomBodyguardSpawn == "RANDOM")
+				if ((STREAMING::IS_MODEL_IN_CDIMAGE(hash) && STREAMING::IS_MODEL_VALID(hash)) || lastCustomBodyguardSpawn == "random" || lastCustomBodyguardSpawn == "Random" || lastCustomBodyguardSpawn == "RANDOM" ||
+					lastCustomBodyguardSpawn == "saved_bodyguards" || lastCustomBodyguardSpawn == "Saved_bodyguards" || lastCustomBodyguardSpawn == "Saved_Bodyguards")
 				{
 					get_current_model_name();
 					requireRefreshOfBodyguardMainMenu = true;
@@ -1588,7 +1596,7 @@ void do_spawn_bodyguard(){
 	} // end of random bodyguard
 	
 	if (lastCustomBodyguardSpawn != "random" && lastCustomBodyguardSpawn != "Random" && lastCustomBodyguardSpawn != "RANDOM") bodyGuardModel = get_current_model_hash(); // hotkey_boddyguard == false && 
-
+	
 	if (load_saved_bodyguard == true) bodyGuardModel = temp_bodyguard;
 
 	if (spawning_a_ped == false && spawnedENTBodyguards.size() >= BODYGUARD_LIMIT) {
@@ -2570,7 +2578,14 @@ bool onconfirm_bodyguard_menu(MenuItem<int> choice){
 
 	switch (activeLineIndexBodyguards) {
 		case 0:
-			do_spawn_bodyguard();
+			if (lastCustomBodyguardSpawn != "saved_bodyguards" && lastCustomBodyguardSpawn != "Saved_bodyguards" && lastCustomBodyguardSpawn != "Saved_Bodyguards") do_spawn_bodyguard();
+			if (lastCustomBodyguardSpawn == "saved_bodyguards" || lastCustomBodyguardSpawn == "Saved_bodyguards" || lastCustomBodyguardSpawn == "Saved_Bodyguards") {
+				ENTDatabase* database = get_database();
+				std::vector<SavedBodSkinDBRow*> savedBodSkins = database->get_saved_bod_skins();
+				for each (SavedBodSkinDBRow * sv in savedBodSkins) {
+					spawn_saved_bod_skin(sv->rowID, "");
+				}
+			}
 			break;
 		case 1:
 			do_add_near_bodyguard();
