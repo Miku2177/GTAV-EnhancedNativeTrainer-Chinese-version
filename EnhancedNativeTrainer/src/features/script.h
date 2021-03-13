@@ -249,3 +249,5 @@ const int MISC_TRAINERCONTROL_VALUES[] = { 0, 1 };
 
 extern bool featureMPMap;
 extern bool featureMPMapUpdated;
+
+extern int ped_prop_idx;
