@@ -61,6 +61,7 @@ bool c_armed = true;
 bool featureBodyguardInvincible = false;
 bool featureNoBodBlood = false;
 bool featureBAggressivePed = false;
+bool featureBCannotBeHeadshot = false;
 bool featureBodyguardHelmet = false;
 bool featureBodyguardDespawn = true;
 bool featureDifferentWeapons = false;
@@ -681,6 +682,11 @@ bool applyChosenBodSkin(DWORD model)
 
 bool spawn_saved_bod_skin(int slot, std::string caption)
 {
+	if (!spawnedENTBodyguards.empty() && spawnedENTBodyguards.size() >= BODYGUARD_LIMIT) {
+		set_status_text("Cannot spawn any more bodyguards");
+		return false;
+	}
+
 	ENTDatabase* database = get_database();
 	std::vector<SavedBodSkinDBRow*> savedBodSkins = database->get_saved_bod_skins(slot);
 	SavedBodSkinDBRow* savedBodSkin = savedBodSkins.at(0);
@@ -696,6 +702,7 @@ bool spawn_saved_bod_skin(int slot, std::string caption)
 	}
 
 	PED::CLEAR_ALL_PED_PROPS(bodyGuard);
+
 	for each (SavedBodSkinPropDBRow *prop in savedBodSkin->props)
 	{
 		PED::SET_PED_PROP_INDEX(bodyGuard, prop->propID, prop->drawable, prop->texture, 0);
@@ -1040,14 +1047,15 @@ bool onconfirm_bodyguard_skins_menu(MenuItem<int> choice){
 		case 4:
 		{
 			keyboard_on_screen_already = true;
-			curr_message = "Enter bodyguard model name (e.g. cs_amandatownley or random):"; // spawn a bodyguard
+			curr_message = "Enter bodyguard model name (e.g. cs_amandatownley, random, saved_bodyguards):"; // spawn a bodyguard
 			std::string result = show_keyboard("Enter Name Manually", (char*)lastCustomBodyguardSpawn.c_str());
 			if (!result.empty())
 			{
 				result = trim(result);
 				lastCustomBodyguardSpawn = result;
 				Hash hash = GAMEPLAY::GET_HASH_KEY((char*)result.c_str());
-				if (lastCustomBodyguardSpawn != "random" && lastCustomBodyguardSpawn != "Random" && lastCustomBodyguardSpawn != "RANDOM" && (!STREAMING::IS_MODEL_IN_CDIMAGE(hash) || !STREAMING::IS_MODEL_VALID(hash)))
+				if (lastCustomBodyguardSpawn != "random" && lastCustomBodyguardSpawn != "Random" && lastCustomBodyguardSpawn != "RANDOM" && 
+					lastCustomBodyguardSpawn != "saved_bodyguards" && lastCustomBodyguardSpawn != "Saved_bodyguards" && lastCustomBodyguardSpawn != "Saved_Bodyguards" && (!STREAMING::IS_MODEL_IN_CDIMAGE(hash) || !STREAMING::IS_MODEL_VALID(hash)))
 				{
 					std::ostringstream ss;
 					ss << "Couldn't find model '" << result << "'";
@@ -1055,7 +1063,8 @@ bool onconfirm_bodyguard_skins_menu(MenuItem<int> choice){
 					lastCustomBodyguardSpawn = "";
 					return false;
 				}
-				if ((STREAMING::IS_MODEL_IN_CDIMAGE(hash) && STREAMING::IS_MODEL_VALID(hash)) || lastCustomBodyguardSpawn == "random" || lastCustomBodyguardSpawn == "Random" || lastCustomBodyguardSpawn == "RANDOM")
+				if ((STREAMING::IS_MODEL_IN_CDIMAGE(hash) && STREAMING::IS_MODEL_VALID(hash)) || lastCustomBodyguardSpawn == "random" || lastCustomBodyguardSpawn == "Random" || lastCustomBodyguardSpawn == "RANDOM" ||
+					lastCustomBodyguardSpawn == "saved_bodyguards" || lastCustomBodyguardSpawn == "Saved_bodyguards" || lastCustomBodyguardSpawn == "Saved_Bodyguards")
 				{
 					get_current_model_name();
 					requireRefreshOfBodyguardMainMenu = true;
@@ -1587,7 +1596,7 @@ void do_spawn_bodyguard(){
 	} // end of random bodyguard
 	
 	if (lastCustomBodyguardSpawn != "random" && lastCustomBodyguardSpawn != "Random" && lastCustomBodyguardSpawn != "RANDOM") bodyGuardModel = get_current_model_hash(); // hotkey_boddyguard == false && 
-
+	
 	if (load_saved_bodyguard == true) bodyGuardModel = temp_bodyguard;
 
 	if (spawning_a_ped == false && spawnedENTBodyguards.size() >= BODYGUARD_LIMIT) {
@@ -1691,17 +1700,28 @@ void do_spawn_bodyguard(){
 				PED::SET_PED_COMBAT_ABILITY(bodyGuard, 2);
 				PED::SET_PED_COMBAT_RANGE(bodyGuard, 2);
 				PED::SET_PED_COMBAT_MOVEMENT(bodyGuard, 3);
-				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 0, true); // BF_CanUseCover 
+				//PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 0, true); // BF_CanUseCover 
 				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 1, true); // BF_CanUseVehicles 
 				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 2, true); // BF_CanDoDrivebys 
 				//PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 3, true); // BF_CanLeaveVehicle 
 				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 5, true); // BF_CanFightArmedPedsWhenNotArmed
-				//PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 20, true); // BF_CanTauntInVehicle 
+				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 20, true); // BF_CanTauntInVehicle 
 				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 46, true); // BF_AlwaysFight 
-				//PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 1424, true); // BF_PlayerCanUseFiringWeapons
+				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 1424, true); // BF_PlayerCanUseFiringWeapons
 				//PED::SET_PED_ALERTNESS(bodyGuard, 3);
 				//PED::SET_PED_SEEING_RANGE(bodyGuard, 1000);
 				
+				PED::SET_PED_SHOOT_RATE(bodyGuard, 999);
+				PED::SET_COMBAT_FLOAT(bodyGuard, 0, 1.0);
+				PED::SET_COMBAT_FLOAT(bodyGuard, 1, 1.0);
+				PED::SET_COMBAT_FLOAT(bodyGuard, 3, 1.0);
+				PED::SET_COMBAT_FLOAT(bodyGuard, 4, 1.0);
+				PED::SET_COMBAT_FLOAT(bodyGuard, 5, 1.0);
+				PED::SET_COMBAT_FLOAT(bodyGuard, 8, 1.0);
+				PED::SET_COMBAT_FLOAT(bodyGuard, 11, 1.0);
+				PED::SET_COMBAT_FLOAT(bodyGuard, 12, 1.0);
+				PED::SET_COMBAT_FLOAT(bodyGuard, 16, 1.0);
+
 				// animal
 				if (bodyguard_animal == true) {
 					PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 46, true);
@@ -1716,13 +1736,13 @@ void do_spawn_bodyguard(){
 					PED::SET_GROUP_FORMATION(myENTGroup, BODY_GROUPFORMATION_VALUES[BodyGroupFormationIndex]); // 1 
 					PED::SET_GROUP_FORMATION_SPACING(myENTGroup, VEH_BLIPSIZE_VALUES[BodyDistanceIndex], VEH_BLIPSIZE_VALUES[BodyDistanceIndex], VEH_BLIPSIZE_VALUES[BodyDistanceIndex]); // 2.0, 2.0, 2.0
 				}
-				//PED::SET_CAN_ATTACK_FRIENDLY(bodyGuard, false, false);
+				PED::SET_CAN_ATTACK_FRIENDLY(bodyGuard, false, false);
 			}
 
 			//AI::TASK_COMBAT_HATED_TARGETS_AROUND_PED(bodyGuard, 100.0f, 0);
-			//PED::SET_PED_KEEP_TASK(bodyGuard, true);
+			PED::SET_PED_KEEP_TASK(bodyGuard, true);
 
-			//if (bodyguard_animal == false) PED::SET_PED_FIRING_PATTERN(bodyGuard, GAMEPLAY::GET_HASH_KEY("FIRING_PATTERN_FULL_AUTO")); // 0xC6EE6B4C
+			if (bodyguard_animal == false) PED::SET_PED_FIRING_PATTERN(bodyGuard, GAMEPLAY::GET_HASH_KEY("FIRING_PATTERN_FULL_AUTO")); // 0xC6EE6B4C
 
 			// different weapons
 			if (featureDifferentWeapons && PED_WEAPON_TITLES[BodyWeaponSetIndex] == "Custom Weapon"/* && load_saved_bodyguard == false*/) {
@@ -1965,6 +1985,9 @@ void maintain_bodyguards(){
 			// bodyguards invincible
 			if (featureBodyguardInvincible) ENTITY::SET_ENTITY_INVINCIBLE(spawnedENTBodyguards[i], true);
 			else ENTITY::SET_ENTITY_INVINCIBLE(spawnedENTBodyguards[i], false);
+			// cannot be headshot
+			if (featureBCannotBeHeadshot) PED::SET_PED_SUFFERS_CRITICAL_HITS(spawnedENTBodyguards[i], false); // no headshots
+			else PED::SET_PED_SUFFERS_CRITICAL_HITS(spawnedENTBodyguards[i], true);
 			// no blood and no bullet holes
 			if (featureNoBodBlood) PED::CLEAR_PED_BLOOD_DAMAGE(spawnedENTBodyguards[i]);
 			// share weapon with bodyguards
@@ -2064,7 +2087,7 @@ void maintain_bodyguards(){
 				if (PED::IS_PED_FLEEING(spawnedENTBodyguards[i])) AI::TASK_STAND_STILL(spawnedENTBodyguards[i], 10000);
 			}
 			// show numbers above heads
-			if (menu_showing == true && GAMEPLAY::UPDATE_ONSCREEN_KEYBOARD() != 0) {
+			if (menu_showing == true/* && GAMEPLAY::UPDATE_ONSCREEN_KEYBOARD() != 0*/) {
 				Vector3 head_c = PED::GET_PED_BONE_COORDS(spawnedENTBodyguards[i], 31086, 0, 0, 0);
 				std::string curr_i = std::to_string(i);
 				GRAPHICS::SET_DRAW_ORIGIN(head_c.x, head_c.y, head_c.z + 0.5, 0);
@@ -2072,6 +2095,7 @@ void maintain_bodyguards(){
 				UI::_ADD_TEXT_COMPONENT_SCALEFORM((char *)curr_i.c_str());
 				text_parameters(0.5, 0.5, 255, 242, 0, 255);
 				UI::END_TEXT_COMMAND_DISPLAY_TEXT(0, 0);
+				GRAPHICS::CLEAR_DRAW_ORIGIN();
 			}
 			//
 			if (stop_b == false) {
@@ -2491,6 +2515,12 @@ bool process_bodyguard_menu(){
 		toggleItem->toggleValue = &featureBAggressivePed;
 		menuItems.push_back(toggleItem);
 
+		toggleItem = new ToggleMenuItem<int>();
+		toggleItem->caption = "Cannot Be Headshot";
+		toggleItem->value = i++;
+		toggleItem->toggleValue = &featureBCannotBeHeadshot;
+		menuItems.push_back(toggleItem);
+
 		if(!bodyguardWeaponsToggleInitialized){
 			for(int a = 0; a < MENU_WEAPON_CATEGORIES.size(); a++){
 				for(int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++){
@@ -2548,7 +2578,14 @@ bool onconfirm_bodyguard_menu(MenuItem<int> choice){
 
 	switch (activeLineIndexBodyguards) {
 		case 0:
-			do_spawn_bodyguard();
+			if (lastCustomBodyguardSpawn != "saved_bodyguards" && lastCustomBodyguardSpawn != "Saved_bodyguards" && lastCustomBodyguardSpawn != "Saved_Bodyguards") do_spawn_bodyguard();
+			if (lastCustomBodyguardSpawn == "saved_bodyguards" || lastCustomBodyguardSpawn == "Saved_bodyguards" || lastCustomBodyguardSpawn == "Saved_Bodyguards") {
+				ENTDatabase* database = get_database();
+				std::vector<SavedBodSkinDBRow*> savedBodSkins = database->get_saved_bod_skins();
+				for each (SavedBodSkinDBRow * sv in savedBodSkins) {
+					spawn_saved_bod_skin(sv->rowID, "");
+				}
+			}
 			break;
 		case 1:
 			do_add_near_bodyguard();
@@ -2644,6 +2681,7 @@ void add_bodyguards_feature_enablements(std::vector<FeatureEnabledLocalDefinitio
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardInvincible", &featureBodyguardInvincible});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoBodBlood", &featureNoBodBlood});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBAggressivePed", &featureBAggressivePed});
+	results->push_back(FeatureEnabledLocalDefinition{"featureBCannotBeHeadshot", &featureBCannotBeHeadshot});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardHelmet", &featureBodyguardHelmet});
 	results->push_back(FeatureEnabledLocalDefinition{"featureBodyguardDespawn", &featureBodyguardDespawn});
 	results->push_back(FeatureEnabledLocalDefinition{"featureDifferentWeapons", &featureDifferentWeapons});
@@ -2746,6 +2784,7 @@ void reset_bodyguards_globals(){
 	featureBodyguardInvincible = false;
 	featureNoBodBlood = false;
 	featureBAggressivePed = false;
+	featureBCannotBeHeadshot = false;
 	featureBodyguardHelmet = false;
 	featureBodyguardDespawn = true;
 	featureBodyguardInfAmmo = false;

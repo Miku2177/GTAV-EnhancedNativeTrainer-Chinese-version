@@ -24,6 +24,8 @@ bool featureEnableMpMaps = false;
 bool feature3dmarker = false;
 bool featureTeleportAutomatically = false;
 
+bool teleported_i = false;
+
 //For onscreen debug info
 bool featureShowCoords = false;
 
@@ -227,12 +229,12 @@ const std::vector<tele_location> LOCATIONS_INTERIORS = {
 	{ "Airport Facility Interior 3", -1042.93f, -2865.61f, 35.4773f, {}, {}, {}, false },
 	{ "Ammunation Gun Range", 22.153f, -1072.854f, 29.797f },
 	{ "Bahama Mamas West", -1387.08f, -588.4f, 30.3195f },
-	{ "Bikers 'Lost' Safehouse", 981.211f, -101.864f, 75.8451f, { "bkr_bi_hw1_13_int" }, {}, {}, false },
 	{ "Blaine County Savings Bank", -109.299f, 6464.035f, 31.627f },
 	{ "Cinema", -1435.8f, -256.866f, 18.7795f, { "hei_hw1_02_interior_v_cinema_milo_" }, {}, {}, false },
 	{ "Clucking Bell Farms Warehouse", -70.0624f, 6263.53f, 31.0909f, { "CS1_02_cf_onmission1", "CS1_02_cf_onmission2", "CS1_02_cf_onmission3", "CS1_02_cf_onmission4" }, { "CS1_02_cf_offmission" }, {}, false },
 	{ "Devin's Garage", 482.027f, -1317.96f, 29.2021f },
 	{ "Dr. Friedlander's Office", -1902.39f, -572.832f, 19.0972f },
+	{ "Epsilon Storage Room", 243.516f, 364.099f, 105.738f },
 	{ "FIB Building Burnt", 159.553f, -738.851f, 246.152f },
 	{ "FIB Building Floor 47", 134.573f, -766.486f, 234.152f },
 	{ "FIB Building Floor 49", 134.635f, -765.831f, 242.152f },
@@ -243,11 +245,10 @@ const std::vector<tele_location> LOCATIONS_INTERIORS = {
 	{ "Garment Factory (empty)", 718.162f, -974.51f, 25.9142f, { "id2_14_during2" }, {}, {}, false },
 	{ "Heist Police Station", 445.488f, -983.779f, 30.6896f, {}, {}, {}, false },
 	{ "Hospital (Destroyed)", 302.651f, -586.293f, 43.3129f, { "RC12B_Destroyed", "RC12B_HospitalInterior" }, { "RC12B_Default", "RC12B_Fixed" }, {}, false },
-	{ "Howitzer's The Motor Motel Room", 152.2943f, -1004.391f, -100.0f, { "hei_hw1_blimp_interior_v_motel_mp_milo_" }, {}, {}, false },
+	{ "Howitzer's Motor Motel Room", 152.2943f, -1004.391f, -100.0f, { "hei_hw1_blimp_interior_v_motel_mp_milo_" }, {}, {}, false },
 	{ "Humane Labs Lower Level", 3525.495f, 3705.301f, 20.992f },
 	{ "Humane Labs Upper Level", 3542.94f, 3670.83f, 28.1211f },
 	{ "IAA Office", 116.389f, -632.25f, 206.047f },
-	{ "Ice Planet Jewelery", 243.516f, 364.099f, 105.738f },
 	{ "Janitor's Apartment", -110.721f, -8.22095f, 70.5197f},
 	{ "Lester's House", 1273.898f, -1719.304f, 54.771f },
 	{ "Life Invader Office", -1049.13f, -231.779f, 39.0144f, { "facelobby" }, { "facelobbyfake" }, {}, false },
@@ -279,11 +280,12 @@ const std::vector<tele_location> LOCATIONS_INTERIORS = {
 const std::vector<tele_location> LOCATIONS_REQSCEN = {
 	{ "Aircraft Carrier", 3069.330f, -4632.4f, 15.043f, IPLS_CARRIER, {}, {}, false },
 	{ "Caida Libre (no plane)", 2814.7000f, 4758.5000f, 48.000f, { "Plane_crash_trench" }, {}, {}, false },
-	{ "Fort Zancudo UFO", -2052.000f, 3237.000f, 1456.973f, { "ufo", "ufo_lod", "ufo_eye" }, {}, {}, false },
 	{ "Red Carpet", 293.314f, 180.388f, 104.297f, { "redCarpet" }, {}, {}, false },
 	{ "SS Bulker (intact)", -163.749f, -2377.94f, 9.3192f, { "cargoship" }, { "sunkcargoship" }, {}, false },
 	{ "SS Bulker (sunk)", -162.8918f, -2365.769f, 0.0f, { "sunkcargoship" }, { "cargoship" }, {}, false },
 	{ "Train Crash Bridge", -532.1309f, 4526.187f, 88.7955f, { "canyonriver01_traincrash", "railing_end" }, { "railing_start", "canyonriver01" }, {}, false },
+	{ "UFO Desert", 2490.0f, 3774.73f, 2449.0f, {}, {}, {}, false },
+	{ "UFO Fort Zancudo", -2052.000f, 3237.000f, 1456.973f, { /*"ufo", "ufo_lod", "ufo_eye"*/ }, {}, {}, false },
 	{ "Yacht", -2023.661f, -1038.038f, 5.577f, { "smboat", "smboat_lod" }, {}, {}, false },
 };
 
@@ -297,12 +299,13 @@ const std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "10 Car Garage Bay", 228.135f, -995.350f, -99.000f, { "hw1_blimp_interior_v_garagel_milo_" }, {}, {}, false },
 	{ "Arcadius Business Center Office: Style 1", -139.53950000f, -629.07570000f, 167.82040000f, { "ex_dt1_02_office_01a" }, {}, {}, false },
 	{ "Benny's Garage", -209.759f, -1319.617f, 30.08367f }, 
-	{ "Biker Club Garage 1", 1005.861f, -3156.162f, -39.90727f, { "bkr_biker_interior_placement_interior_1_biker_dlc_int_02_milo_" }, {}, {}, false },
+	{ "Biker Club Garage 1", 1005.861f, -3156.162f, -39.90727f, { "bkr_biker_interior_placement_interior_1_biker_dlc_int_02_milo_" }, {}, { IPL_PROPS_BIKER_CLUBHOUSE }, false },
 	//{ "Biker Cocaine Factory", 1093.581f, -3196.597f, -39.99353f, { "bkr_biker_interior_placement_interior_4_biker_dlc_int_ware03_milo_" }, {}, {}, false },
-	{ "Biker Warehouse: Forgery 2", 1165.001f, -3196.597f, -39.99353f, { "bkr_biker_interior_placement_interior_6_biker_dlc_int_ware05_milo_" }, {}, {}, false },
+	{ "Bikers 'Lost' Safehouse", 981.211f, -101.864f, 75.8451f, { "bkr_bi_hw1_13_int" }, {}, {}, false },
+	{ "Biker Warehouse: Forgery 2", 1165.001f, -3196.597f, -39.99353f, { "bkr_biker_interior_placement_interior_6_biker_dlc_int_ware05_milo_" }, {}, { IPL_PROPS_BIKER_FORGERY_WAREHOUSE }, false },
 	{ "Biker Warehouse: Money Printer 1", 1009.545f, -3196.597f, -39.99353f, { "bkr_biker_interior_placement_interior_2_biker_dlc_int_ware01_milo_" }, {}, {}, false },
-	{ "Biker Warehouse: Money Printer 2", 1124.734f, -3196.597f, -39.99353f, { "bkr_biker_interior_placement_interior_5_biker_dlc_int_ware04_milo_" }, {}, {}, false },
-	{ "Biker Warehouse: Weed Farm", 1059.028f, -3201.89f, -39.99353f, { "bkr_biker_interior_placement_interior_3_biker_dlc_int_ware02_milo_" }, {}, {}, false },
+	{ "Biker Warehouse: Money Printer 2", 1124.734f, -3196.597f, -39.99353f, { "bkr_biker_interior_placement_interior_5_biker_dlc_int_ware04_milo_" }, {}, { IPL_PROPS_BIKER_FAKE_CASH_WAREHOUSE }, false },
+	{ "Biker Warehouse: Weed Farm", 1059.028f, -3201.89f, -39.99353f, { "bkr_biker_interior_placement_interior_3_biker_dlc_int_ware02_milo_" }, {}, { IPL_PROPS_BIKER_WEED_WAREHOUSE }, false },
 	{ "Casino Back", 2523.36100000f, -270.00000000f, -59.72315000f, { "ch_int_placement_ch_interior_3_dlc_casino_back_milo_" }, {}, {}, false },
 	{ "Casino Carpark", 1380.0000, 200.0000, -50.0000f, { "vw_casino_carpark" }, {}, {}, false },
 	//{ "Casino Heist", 2479.26800000f, -273.87380000f, -58.28285000f, { "ch_int_placement_ch_interior_0_dlc_casino_heist_milo_" }, {}, {}, false },
@@ -314,7 +317,7 @@ const std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Casino Utility", 2519.87600000f, -255.30270000f, -25.11497000f, { "ch_int_placement_ch_interior_7_dlc_casino_utility_milo_" }, {}, {}, false },
 	{ "Casino Vault", 2488.34800000f, -267.36370000f, -71.64563000f, { "ch_int_placement_ch_interior_6_dlc_casino_vault_milo_" }, {}, {}, false },
 	{ "Cayo Perico Mansion", 5010.101f, -5753.549f, 27.8444f, { "h4_islandx_mansion_office" }, {}, {}, false }, // h4_dlc_island_office
-	{ "CEO Garage Modshop", 730.0f, -2990.0f, -40.0f, { "imp_impexp_interior_placement_interior_2_imptexp_mod_int_01_milo_" }, {}, {}, false },//No ceiling, floor, walls textures.
+	{ "CEO Garage Modshop", -77.42f, -827.27f, 285.00f, { "imp_dt1_11_modgarage" }, {}, {}, false }, // 730.0f, -2990.0f, -40.0f // imp_impexp_interior_placement_interior_2_imptexp_mod_int_01_milo_
 	{ "Del Perro Heights Apt 27", -1468.02100000f, -529.94370000f, 49.72156000f, { "hei_hw1_blimp_interior_27_dlc_apart_high_new_milo_" }, {}, {}, false },
 	{ "Del Perro Heights Apt 28", -1468.14f, -541.815f, 73.4442f, {}, {}, {}, false },
 	{ "Eclipse Towers Apt 12", -791.29410000f, 338.07100000f, 200.41350000f, { "hw1_blimp_interior_v_apartment_high_milo__12" }, {}, {}, false },
@@ -338,8 +341,8 @@ const std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Lombank Office: Style 1", -1573.84900000f, -571.02540000f, 107.52290000f, { "ex_sm_13_office_01a" }, {}, {}, false },
 	{ "Maze Bank Del Perro Office: Style 1", -1384.56400000f, -478.26990000f, 71.04205000f, { "ex_sm_15_office_01a" }, {}, {}, false },
 	{ "Mission Row Underground Winning Garage", 400.09610000f, -956.67870000f, -100.00000000f},
+	{ "Mug Shot Room", 415.275f, -999.037f, -99.4041f, { "hw1_int_placement_interior_v_mugshot_milo_ " }, {}, {}, false },
 	{ "Music Locker", 1560.3f, 250.239f, -48.0f, { "h4_int_placement_h4_interior_1_dlc_int_02_h4_milo_" }, {}, { IPLS_MUSIC_LOCKER }, false },
-	{ "Online Character Creator Interior", 415.275f, -999.037f, -99.4041f, { "hw1_int_placement_interior_v_mugshot_milo_ " }, {}, {}, false },
 	{ "Penthouse: Style 1", -786.168f, 334.319f, 211.197f, { "apa_v_mp_h_01_a", "apa_v_mp_h_01_b", "apa_v_mp_h_01_c" }, {}, {}, false },
 	{ "Penthouse: Style 2", -787.7805f, 334.9232f, 215.8384f, { "apa_v_mp_h_02_a", "apa_v_mp_h_02_b", "apa_v_mp_h_02_c" }, {}, {}, false },
 	{ "Penthouse: Style 3", -787.7805f, 334.9232f, 215.8384f, { "apa_v_mp_h_03_a", "apa_v_mp_h_03_b", "apa_v_mp_h_03_c" }, {}, {}, false },
@@ -977,8 +980,8 @@ bool onconfirm_jump_category(MenuItem<int> choice)
 
 			if (lastJumpSpawn == "random" || lastJumpSpawn == "Random" || lastJumpSpawn == "RANDOM")
 			{
-				int x_coord = -3294 + rand() % 6868; // (rand() % 3934 + -3294); // UP MARGIN + DOWN MARGIN
-				int y_coord = -3330 + rand() % 11152; // (rand() % 6576 + -3330); 
+				int x_coord = -3168 + rand() % 6934; // (rand() % 3934 + -3294); // UP MARGIN + DOWN MARGIN
+				int y_coord = -3330 + rand() % 10391; // (rand() % 6576 + -3330); 
 				Vector3 me_coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 0);
 
 				bool groundFound = false;
@@ -1168,9 +1171,13 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 		STREAMING::SET_INTERIOR_ACTIVE(interiorID, true);
 		INTERIOR::DISABLE_INTERIOR(interiorID, false);
 
-		INTERIOR::CAP_INTERIOR(interiorID, 0);
+		if (INTERIOR::IS_INTERIOR_CAPPED(interiorID)) INTERIOR::CAP_INTERIOR(interiorID, 0);
 	}
-
+	
+	if (value->scenery_toremove.size() > 0) {
+		for each (const char* scenery in value->scenery_toremove) STREAMING::REMOVE_IPL(scenery); // removing fake interior
+	}
+	
 	for (int x = 0; x < MENU_LOCATION_CATEGORIES.size(); x++) {
 		for (int y = 0; y < VOV_LOCATIONS[x].size(); y++) {
 			
@@ -1232,7 +1239,7 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 				STREAMING::SET_INTERIOR_ACTIVE(interiorID, true);
 				INTERIOR::DISABLE_INTERIOR(interiorID, false);
 
-				INTERIOR::CAP_INTERIOR(interiorID, 0);
+				if (INTERIOR::IS_INTERIOR_CAPPED(interiorID)) INTERIOR::CAP_INTERIOR(interiorID, 0);
 
 				if (sizeof(value->scenery_props) > 0)
 				{
@@ -1240,11 +1247,11 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 						if (!INTERIOR::_IS_INTERIOR_PROP_ENABLED(interiorID, prop))
 						{
 							INTERIOR::_ENABLE_INTERIOR_PROP(interiorID, prop);
-							DWORD time = GetTickCount() + 3;
-							while (GetTickCount() < time) {
-								make_periodic_feature_call();
-								WAIT(0);
-							}
+							//DWORD time = GetTickCount() + 3;
+							//while (GetTickCount() < time) {
+							//	make_periodic_feature_call();
+							//	WAIT(0);
+							//}
 							INTERIOR::_SET_INTERIOR_ENTITY_SET_COLOR(interiorID, prop, 1);
 						}
 					}
@@ -1272,6 +1279,8 @@ bool onconfirm_teleport_location(MenuItem<int> choice){
 	}
 	
 	teleport_to_coords(e, coords);
+
+	teleported_i = true;
 
 	return false;
 }
@@ -1408,6 +1417,7 @@ void add_teleporter_feature_enablements(std::vector<FeatureEnabledLocalDefinitio
 	results->push_back(FeatureEnabledLocalDefinition{"featureTeleportAutomatically", &featureTeleportAutomatically});
 	results->push_back(FeatureEnabledLocalDefinition{"featureLandAtDestination", &featureLandAtDestination});
 	results->push_back(FeatureEnabledLocalDefinition{"featureCayoPerico", &featureCayoPerico});
+	results->push_back(FeatureEnabledLocalDefinition{"featureShowCoords", &featureShowCoords});
 }
 
 /*const std::vector<std::string> TOGGLE_IPLS
@@ -1489,9 +1499,9 @@ void update_teleport_features(){
 		float me_rot = ENTITY::GET_ENTITY_HEADING(PLAYER::PLAYER_PED_ID());
 		std::ostringstream ss;
 		
-		//ss << "\nX: " << coords.x << "\nY: " << coords.y << "\nZ: " << coords.z << "\nRot: " << me_rot;
-		//callsPerFrame = 0;
-		//set_status_text_centre_screen(ss.str());
+		int screen_w = 0;
+		int screen_h = 0;
+		GetDesktopResolution(screen_w, screen_h);
 
 		std::string direction = "";
 		if (me_rot > 337 || me_rot < 22) direction = "NORTH";
@@ -1504,7 +1514,7 @@ void update_teleport_features(){
 		if (me_rot > 292 && me_rot < 337) direction = "NORTH EAST";
 
 		std::string CurrCoordsLines[1];
-		ss << std::fixed << std::setprecision(2) << "X: " << coords.x << "   Y: " << coords.y << "   Z: " << coords.z << "   Rot: " << me_rot/* << "\n" << direction*/;
+		ss << std::fixed << std::setprecision(2) << "X: " << coords.x << "   Y: " << coords.y << "   Z: " << coords.z << "   R: " << me_rot/* << "\n" << direction*/;
 		int index = 0;
 		CurrCoordsLines[index++] = ss.str();
 		int numActualLines = 0;
@@ -1518,7 +1528,7 @@ void update_teleport_features(){
 
 		std::ostringstream ss2;
 		std::string CurrDirectionLines[1];
-		ss2 << direction;
+		ss2 << std::fixed << std::setprecision(2) << direction/* << "   (" << me_rot << ")"*/;
 		int index1 = 0;
 		CurrDirectionLines[index1++] = ss2.str();
 		int numActualLines1 = 0;
@@ -1527,10 +1537,12 @@ void update_teleport_features(){
 			UI::BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
 			UI::_ADD_TEXT_COMPONENT_SCALEFORM((char*)CurrDirectionLines[i].c_str());
 			text_parameters(0.4, 0.4, 255, 242, 0, 255);
-			UI::END_TEXT_COMMAND_DISPLAY_TEXT(0.75, 0.01);
+			if (screen_w >= 1280) UI::END_TEXT_COMMAND_DISPLAY_TEXT(0.63, 0.01);
+			else UI::END_TEXT_COMMAND_DISPLAY_TEXT(0.73, 0.01);
 		}
 
-		GRAPHICS::DRAW_RECT(0.79, 0.026, 0.09, 0.03, 0, 0, 0, 255);
+		GRAPHICS::DRAW_RECT(0.67, 0.026, 0.09, 0.03, 0, 0, 0, 30);
+		//GRAPHICS::DRAW_RECT(0.72, 0.026, 0.15, 0.03, 0, 0, 0, 255);
 	}
 
 	/////////////////////////////////////// 3D MARKER /////////////////////////////////////////
@@ -1648,24 +1660,23 @@ void update_teleport_features(){
 				}
 			}
 
-			int CayointeriorID = INTERIOR::GET_INTERIOR_AT_COORDS(4439.82300000f, -4461.71700000f, 6.15f); // 5010.101f, -5753.549f, 27.8444f
+			int CayointeriorID = INTERIOR::GET_INTERIOR_AT_COORDS(4439.82300000f, -4461.71700000f, 4.699768f); // 5010.101f, -5753.549f, 27.8444f
 			if (INTERIOR::IS_VALID_INTERIOR(CayointeriorID))
 			{
 				INTERIOR::_LOAD_INTERIOR(CayointeriorID);
 				STREAMING::SET_INTERIOR_ACTIVE(CayointeriorID, true);
 				INTERIOR::DISABLE_INTERIOR(CayointeriorID, false);
-				INTERIOR::CAP_INTERIOR(CayointeriorID, 0);
-				//for (int i = 0; i < IPLS_CAYO_PERICO.size(); i++) {
-				//	if (!INTERIOR::_IS_INTERIOR_PROP_ENABLED(CayointeriorID, (char*)IPLS_CAYO_PERICO[i]))
-				//	{
-				//		INTERIOR::_ENABLE_INTERIOR_PROP(CayointeriorID, (char*)IPLS_CAYO_PERICO[i]);
-				//		DWORD time = GetTickCount() + 3;
-				//		while (GetTickCount() < time) {
-				//			make_periodic_feature_call();
-				//			WAIT(0);
-				//		}
-				//		INTERIOR::_SET_INTERIOR_ENTITY_SET_COLOR(CayointeriorID, (char*)IPLS_CAYO_PERICO[i], 1);
-				//	}
+				if (INTERIOR::IS_INTERIOR_CAPPED(CayointeriorID)) INTERIOR::CAP_INTERIOR(CayointeriorID, 0);
+				//for (int j = 0; j < IPLS_CAYO_PERICO_PROPS.size(); j++) {
+					//if (sizeof(IPLS_CAYO_PERICO_PROPS) > 0) {
+					//	for each (char* prop in IPLS_CAYO_PERICO_PROPS) {
+					//		if (!INTERIOR::_IS_INTERIOR_PROP_ENABLED(CayointeriorID, prop))
+					//		{
+				//				INTERIOR::_ENABLE_INTERIOR_PROP(CayointeriorID, IPLS_CAYO_PERICO_PROPS[j]);
+				//				INTERIOR::_SET_INTERIOR_ENTITY_SET_COLOR(CayointeriorID, IPLS_CAYO_PERICO_PROPS[j], 1);
+					//		}
+					//	}
+					//}
 				//}
 				INTERIOR::REFRESH_INTERIOR(CayointeriorID);
 			}
@@ -1681,12 +1692,22 @@ void update_teleport_features(){
 			//WATER::_SET_WAVES_INTENSITY(-100000000); // -400000 // GAMEPLAY::_0xC54A08C85AE4D410(1.0f);
 			OBJECT::_DOOR_CONTROL(GAMEPLAY::GET_HASH_KEY("h4_prop_h4_gate_l_03a"), 4987.587f, -5718.635f, 20.78103f, 0, 0.0, 50.0, 0);
 			OBJECT::_DOOR_CONTROL(GAMEPLAY::GET_HASH_KEY("h4_prop_h4_gate_r_03a"), 4990.681f, -5715.106f, 20.78103f, 0, 0.0, 50.0, 0);
+			OBJECT::_DOOR_CONTROL(GAMEPLAY::GET_HASH_KEY("h4_prop_h4_gate_l_03a"), 4984.134f, -5709.249f, 20.78103f, 0, 0.0, 50.0, 0);
+			OBJECT::_DOOR_CONTROL(GAMEPLAY::GET_HASH_KEY("h4_prop_h4_gate_r_03a"), 4981.012f, -5712.747f, 20.78103f, 0, 0.0, 50.0, 0);
 			OBJECT::_DOOR_CONTROL(GAMEPLAY::GET_HASH_KEY("h4_prop_h4_gate_04a"), 4972.143, -5764.132, 21.08308f, 0, 0.0, 50.0, 0);
 			OBJECT::_DOOR_CONTROL(GAMEPLAY::GET_HASH_KEY("h4_prop_h4_gate_04a"), 4977.377, -5765.718, 21.08308f, 0, 0.0, 50.0, 0);
 			OBJECT::_DOOR_CONTROL(GAMEPLAY::GET_HASH_KEY("h4_prop_h4_door_03a"), 4960.498f, -5785.047f, 21.10873f, 0, 0.0, 50.0, 0);
 			OBJECT::_DOOR_CONTROL(GAMEPLAY::GET_HASH_KEY("h4_prop_h4_door_03a"), 4965.726f, -5787.68f, 21.10873f, 0, 0.0, 50.0, 0);
 			OBJECT::_DOOR_CONTROL(GAMEPLAY::GET_HASH_KEY("h4_prop_h4_door_03a"), 5085.588f, -5733.124f, 15.9526f, 0, 0.0, 50.0, 0);
 			OBJECT::_DOOR_CONTROL(GAMEPLAY::GET_HASH_KEY("h4_prop_h4_door_03a"), 5082.088f, -5737.809f, 15.9526f, 0, 0.0, 50.0, 0);
+
+			/*INTERIOR::_0xF74B1FFA4A15FBEA(true);
+			INTERIOR::_0x53797676AD34A9AA(false);
+			INTERIOR::_0XDD3D5F9CA0C715D0(true);
+			AI::SET_SCENARIO_GROUP_ENABLED("Heist_Island_Peds", 1);
+			AI::SET_SCENARIO_GROUP_ENABLED("Heist_Island_Peds_2", 1);*/
+			AUDIO::SET_STATIC_EMITTER_ENABLED("se_dlc_hei4_island_beach_party_music_new_01_left", true);
+			AUDIO::SET_STATIC_EMITTER_ENABLED("se_dlc_hei4_island_beach_party_music_new_02_right", true);
 
 			AUDIO::SET_AMBIENT_ZONE_LIST_STATE_PERSISTENT("AZL_DLC_Hei4_Island_Zones", true, true);
 			AUDIO::SET_AMBIENT_ZONE_LIST_STATE_PERSISTENT("AZL_DLC_Hei4_Island_Disabled_Zones", false, true);
@@ -1697,6 +1718,8 @@ void update_teleport_features(){
 		if (Cayo_dist_diff >= 1200 && on_island == true) { // 2000
 			AUDIO::SET_AMBIENT_ZONE_LIST_STATE_PERSISTENT("AZL_DLC_Hei4_Island_Zones", false, false);
 			AUDIO::SET_AMBIENT_ZONE_LIST_STATE_PERSISTENT("AZL_DLC_Hei4_Island_Disabled_Zones", false, false);
+			AUDIO::SET_STATIC_EMITTER_ENABLED("se_dlc_hei4_island_beach_party_music_new_01_left", false);
+			AUDIO::SET_STATIC_EMITTER_ENABLED("se_dlc_hei4_island_beach_party_music_new_02_right", false);
 			if (WORLD_WAVES_VALUES[WorldWavesIndex] == -1) WATER::_RESET_WAVES_INTENSITY();
 			on_island = false;
 		}
@@ -1706,4 +1729,29 @@ void update_teleport_features(){
 		cayo_tick = 0;
 	}
 
+	// Hiding GTA Online apartment glitchy exteriors
+	if (teleported_i == true) { 
+		int interiorID = INTERIOR::GET_INTERIOR_AT_COORDS(ENTITY::GET_ENTITY_COORDS(playerPed, true).x, ENTITY::GET_ENTITY_COORDS(playerPed, true).y, ENTITY::GET_ENTITY_COORDS(playerPed, true).z);
+		GRAPHICS::_0x4B5CFC83122DF602();
+		if (interiorID == 232705 || interiorID == 231937 || interiorID == 231169 || interiorID == 230401 || interiorID == 229633 || interiorID == 228865 || interiorID == 228097 || interiorID == 227329 ||
+			interiorID == 146945 || interiorID == 40962 || interiorID == 144129 || interiorID == 143873 || interiorID == 61186) INTERIOR::_HIDE_MAP_OBJECT_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("apa_ss1_11_flats"));
+		if (interiorID == 141313 || interiorID == 147201) INTERIOR::_HIDE_MAP_OBJECT_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("hei_dt1_03_build1x"));
+		if (interiorID == 143361 || interiorID == 61954 || interiorID == 146177) INTERIOR::_HIDE_MAP_OBJECT_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("hei_bh1_08_bld2"));
+		if (interiorID == 143617 || interiorID == 52482 || interiorID == 143105 || interiorID == 111618) INTERIOR::_HIDE_MAP_OBJECT_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("hei_bh1_09_bld_01"));
+		if (interiorID == 240641 || interiorID == 240385 || interiorID == 240129 || interiorID == 239873 || interiorID == 239617 || interiorID == 239361 || interiorID == 239105 || interiorID == 238849 ||
+			interiorID == 238593) INTERIOR::_HIDE_MAP_OBJECT_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("dt1_11_dt1_tower"));
+		if (interiorID == 146689 || interiorID == 145153 || interiorID == 144897 || interiorID == 90882) INTERIOR::_HIDE_MAP_OBJECT_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("apa_ss1_02_building01"));
+		// /* ??? */if (interiorID == 240897) INTERIOR::_HIDE_MAP_OBJECT_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("hei_sm_13_strm_0"));
+		if (interiorID == 243201) INTERIOR::_HIDE_MAP_OBJECT_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("hei_sm_15_bld2")); // hei_sm_15_bld2_exshadowlightproxy
+		if (interiorID == 145921 || interiorID == 145665 || interiorID == 145409) INTERIOR::_HIDE_MAP_OBJECT_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("hei_sm_14_bld2"));
+		if (interiorID == 236289) INTERIOR::_HIDE_MAP_OBJECT_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("hei_dt1_02"));
+		if (interiorID == 142337 || interiorID == 86018) INTERIOR::_HIDE_MAP_OBJECT_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("kt1_09_building1"));
+		if (interiorID == 207873) INTERIOR::_HIDE_MAP_OBJECT_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("apa_ch2_09c"));
+		//if (interiorID == 206593) INTERIOR::_HIDE_MAP_OBJECT_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("apa_ch2_05c_b4"));
+		//if (interiorID == 206081) INTERIOR::_HIDE_MAP_OBJECT_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("apa_ch2_04_house02"));
+		//if (interiorID == 207105) INTERIOR::_HIDE_MAP_OBJECT_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("apa_ch2_05e"));
+		GRAPHICS::_0x3669F1B198DCAA4F();
+	}
+	if (teleported_i == true && INTERIOR::GET_INTERIOR_AT_COORDS(ENTITY::GET_ENTITY_COORDS(playerPed, true).x, ENTITY::GET_ENTITY_COORDS(playerPed, true).y, ENTITY::GET_ENTITY_COORDS(playerPed, true).z) == 0) teleported_i = false;
+	
 } // end of loop

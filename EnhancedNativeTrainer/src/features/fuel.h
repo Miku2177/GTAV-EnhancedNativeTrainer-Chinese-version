@@ -29,14 +29,10 @@ const double VEH_FUELPRICE_VALUES[] = { 0, 0.1, 0.5, 1, 2, 3, 4, 5, 10, 20, 30, 
 extern int FuelPriceIndex;
 extern int JerrycanPriceIndex;
 
-//Min Fuel Random Number
-const std::vector<std::string> VEH_FUELRANDOM1_CAPTIONS{ "10", "20", "30", "40", "50", "60", "70" };
-const int VEH_FUELRANDOM_VALUES[] = { 1, 2, 3, 4, 5, 6, 7 };
-extern int Random1Index;
-
-//Max Fuel Random Number 2
-const std::vector<std::string> VEH_FUELRANDOM2_CAPTIONS{ "20", "30", "40", "50", "60", "70", "80" };
-extern int Random2Index;
+//Fuel Random Number
+const float VEH_FUELRANDOM_VALUES[] = { 0.0, 1.5, 3.0, 4.5, 6.0, 7.0, 8.0, 9.5, 11.0, 12.5, 14.0 };
+extern int Random1Index; //min fuel random number
+extern int Random2Index; //max fuel random number
 
 //Fuel Bar Position
 const std::vector<std::string> VEH_FUELBARPOSITION_CAPTIONS{ "Below Radar", "Above Radar", "On The Left Of Radar", "On The Right Of Radar" };
