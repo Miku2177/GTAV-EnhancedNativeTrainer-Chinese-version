@@ -51,6 +51,7 @@ float temp_seconds, bill_seconds = 0;
 float bill_to_pay = -1;
 
 bool featureDisableRecording = false;
+bool featureNoNotifications = false;
 
 // dynamic health bar variables
 bool featureDynamicHealthBar = false;
@@ -892,6 +893,11 @@ void process_hud_settings_menu() {
 	toggleItem->toggleValue = &featureDisableRecording;
 	menuItems.push_back(toggleItem);
 
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "No Notifications";
+	toggleItem->toggleValue = &featureNoNotifications;
+	menuItems.push_back(toggleItem);
+
 	draw_generic_menu<int>(menuItems, &activeLineIndexHudSettings, caption, onconfirm_hudsettings_menu, NULL, NULL);
 }
 
@@ -1039,6 +1045,7 @@ void reset_misc_globals(){
 		featureMarkerHud =
 		featureDynamicHealthBar =
 		featureDisableRecording =
+		featureNoNotifications =
 		featurePlayerRadio =
 		featureDisablePhone =
 		featureDisablePhoneMenu =
@@ -1351,6 +1358,9 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		CONTROLS::DISABLE_CONTROL_ACTION(2, 289, 1); // ReplayStartStopRecordingSecondary
 		CONTROLS::DISABLE_CONTROL_ACTION(2, 302, 1); // ReplayRecord
 	}
+
+	// No Notifications
+	if (featureNoNotifications) UI::THEFEED_HIDE_THIS_FRAME();
 
 	// Default Phone
 	if (MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] > -1) {
@@ -1938,6 +1948,7 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 	results->push_back(FeatureEnabledLocalDefinition{"featureMarkerHud", &featureMarkerHud});
 	results->push_back(FeatureEnabledLocalDefinition{"featureDynamicHealthBar", &featureDynamicHealthBar});
 	results->push_back(FeatureEnabledLocalDefinition{"featureDisableRecording", &featureDisableRecording});
+	results->push_back(FeatureEnabledLocalDefinition{"featureNoNotifications", &featureNoNotifications});
 	results->push_back(FeatureEnabledLocalDefinition{"mouse_view_control", &mouse_view_control});
 	results->push_back(FeatureEnabledLocalDefinition{"airbrake_enable", &airbrake_enable});
 	results->push_back(FeatureEnabledLocalDefinition{"featureFirstPersonCutscene", &featureFirstPersonCutscene});
