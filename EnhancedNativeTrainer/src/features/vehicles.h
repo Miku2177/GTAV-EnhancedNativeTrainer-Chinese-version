@@ -1340,3 +1340,4 @@ extern bool featureDisableIgnition;
 extern int EngineRunningIndex;
 
 extern std::string  veh_to_spawn;
+extern bool repairing_engine;

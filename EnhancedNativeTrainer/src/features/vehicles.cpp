@@ -38,7 +38,7 @@ using namespace std;
 int VehInvincibilityIndex = 0;
 bool VehInvincibilityChanged = true;
 //bool featureVehInvincible = false;
-//bool featureVehInvincibleUpdated = false;
+bool featureVehInvincibleUpdated = false;
 //bool featureVehNoDamage = false;
 //bool featureVehInvulnIncludesCosmetic = false;
 
@@ -64,6 +64,8 @@ bool accelerating_c = false;
 Vehicle current_veh_e = -1;
 Vehicle temp_vehicle, playerVehicle_s = -1;
 Ped temp_ped = -1;
+
+bool repairing_engine = false;
 
 std::vector<Object> SPIKES;
 bool s_message = false;
@@ -1692,15 +1694,15 @@ void process_fuel_menu(){
 	listItem->value = JerrycanPriceIndex;
 	menuItems.push_back(listItem);
 
-	listItem = new SelectFromListMenuItem(VEH_FUELRANDOM1_CAPTIONS, onchange_random1_index);
+	listItem = new SelectFromListMenuItem(VEH_TURN_SIGNALS_ANGLE_CAPTIONS, onchange_random1_index);
 	listItem->wrap = false;
-	listItem->caption = "Random Vehicle Fuel From (%)";
+	listItem->caption = "Random Vehicle Fuel Min (%)";
 	listItem->value = Random1Index;
 	menuItems.push_back(listItem);
 
-	listItem = new SelectFromListMenuItem(VEH_FUELRANDOM2_CAPTIONS, onchange_random2_index);
+	listItem = new SelectFromListMenuItem(VEH_TURN_SIGNALS_ANGLE_CAPTIONS, onchange_random2_index);
 	listItem->wrap = false;
-	listItem->caption = "Random Vehicle Fuel Up To (%)";
+	listItem->caption = "Random Vehicle Fuel Max (%)";
 	listItem->value = Random2Index;
 	menuItems.push_back(listItem);
 
@@ -2610,20 +2612,8 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 
 	// Invincible Vehicle
-	/*if (bPlayerExists && WORLD_GRAVITY_LEVEL_VALUES[VehInvincibilityIndex] == 0 && featureVehInvincibleUpdated == true && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
-		ENTITY::SET_ENTITY_INVINCIBLE(veh, FALSE);
-		ENTITY::SET_ENTITY_PROOFS(veh, 0, 0, 0, 0, 0, 0, 0, 0);
-		VEHICLE::SET_VEHICLE_TYRES_CAN_BURST(veh, 1);
-		VEHICLE::SET_VEHICLE_WHEELS_CAN_BREAK(veh, 1);
-		VEHICLE::SET_VEHICLE_CAN_BE_VISIBLY_DAMAGED(veh, 1);
-		for (int i = 0; i < 6; i++){
-			VEHICLE::_SET_VEHICLE_DOOR_BREAKABLE(veh, i, TRUE); //(Vehicle, doorIndex, isBreakable)
-		}
-		featureVehInvincibleUpdated = false;
-	}*/
-		
-	if (WORLD_GRAVITY_LEVEL_VALUES[VehInvincibilityIndex] > 0){
-		if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
+	if (WORLD_GRAVITY_LEVEL_VALUES[VehInvincibilityIndex] > 0) {
+		if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
 			bool featureVehNoDamage = false;
 			if (WORLD_GRAVITY_LEVEL_VALUES[VehInvincibilityIndex] > 1) featureVehNoDamage = true;
 			//featureVehInvincibleUpdated = true;
@@ -2659,6 +2649,18 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				}
 			}
 		}
+		featureVehInvincibleUpdated = true;
+	}
+	if (WORLD_GRAVITY_LEVEL_VALUES[VehInvincibilityIndex] == 0 && featureVehInvincibleUpdated == true && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
+		ENTITY::SET_ENTITY_INVINCIBLE(veh, FALSE);
+		ENTITY::SET_ENTITY_PROOFS(veh, 0, 0, 0, 0, 0, 0, 0, 0);
+		VEHICLE::SET_VEHICLE_TYRES_CAN_BURST(veh, 1);
+		VEHICLE::SET_VEHICLE_WHEELS_CAN_BREAK(veh, 1);
+		VEHICLE::SET_VEHICLE_CAN_BE_VISIBLY_DAMAGED(veh, 1);
+		for (int i = 0; i < 6; i++) {
+			VEHICLE::_SET_VEHICLE_DOOR_BREAKABLE(veh, i, TRUE); //(Vehicle, doorIndex, isBreakable)
+		}
+		featureVehInvincibleUpdated = false;
 	}
 
 	// No Fall Off
@@ -3695,7 +3697,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			}
 		}
 		//
-
+		// main body
 		if ((featureRememberVehicles/* && bPlayerExists*/ && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && VEH_VEHREMEMBER_VALUES[VehRememberIndex] != 666) ||
 			(featureRememberVehicles/* && bPlayerExists*/ && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && VEH_VEHREMEMBER_VALUES[VehRememberIndex] == 666 && manual_veh_tr == true)) {
 			Vehicle veh_rem = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
@@ -4309,8 +4311,8 @@ void reset_vehicle_globals() {
 	RefuelingSpeedIndex = 6;
 	FuelPriceIndex = 7;
 	JerrycanPriceIndex = 12;
-	Random1Index = 1;
-	Random2Index = 1;
+	Random1Index = 2;
+	Random2Index = 3;
 	BarPositionIndexN = 0;
 
 	CarEngineHealthIndexN = 7;
@@ -6004,6 +6006,8 @@ void fix_vehicle(){
 
 			VEHICLE::SET_VEHICLE_INDICATOR_LIGHTS(veh, 1, false); // left signal 
 			VEHICLE::SET_VEHICLE_INDICATOR_LIGHTS(veh, 0, false); // right signal	
+
+			repairing_engine = true;
 
 			set_status_text("Vehicle repaired");
 		}
