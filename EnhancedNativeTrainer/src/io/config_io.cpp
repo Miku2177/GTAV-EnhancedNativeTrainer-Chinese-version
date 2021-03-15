@@ -172,6 +172,20 @@ void read_config_file(){
 				write_text_to_log_file(ss.str());
 				controller_binds.at(attrib_controller_func) = std::pair(attrib_button1_v, attrib_button2_v);
 			}
+			else 
+			{
+				std::stringstream ss;
+				ss << "[ERROR] Could not find controller function " << attrib_controller_func << " in controller bind map. Skipping.";
+				write_text_to_log_file(ss.str());
+				continue;
+			}
+		}
+		else
+		{
+			std::stringstream ss;
+			ss << "[ERROR] Controller function with button IDs " << attrib_button1_v << " and " << attrib_button2_v << " was NULL! Skipping.";
+			write_text_to_log_file(ss.str());
+			continue;
 		}
 
 		delete attrib_controller_func;
