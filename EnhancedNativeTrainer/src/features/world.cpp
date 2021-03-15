@@ -1131,12 +1131,12 @@ void update_world_features()
 	// Waves Intensity
 	if (featureSnow) {
 		winter_water_tick = winter_water_tick + 1;
-		if (winter_water_tick < 7000) GAMEPLAY::_0xC54A08C85AE4D410(3.0f); // 10000
-		if (winter_water_tick > 6999 && winter_water_tick < 7300) GAMEPLAY::_0xC54A08C85AE4D410(0.0f); // 9999 10300
+		if (winter_water_tick < 7000) GAMEPLAY::WATER_OVERRIDE_SET_STRENGTH(3.0f); // 10000
+		if (winter_water_tick > 6999 && winter_water_tick < 7300) GAMEPLAY::WATER_OVERRIDE_SET_STRENGTH(0.0f); // 9999 10300
 		if (winter_water_tick > 7299) winter_water_tick = 0; // 10299
 	}
 	if ((WORLD_WAVES_VALUES[WorldWavesIndex] != -2 && !featureSnow && winter_water_tick > 0) || wavesstrength_toggle == false) { // WORLD_WAVES_VALUES[WorldWavesIndex] == -1
-		GAMEPLAY::_0xC54A08C85AE4D410(0.0f);
+		GAMEPLAY::WATER_OVERRIDE_SET_STRENGTH(0.0f);
 		WATER::_RESET_WAVES_INTENSITY();
 		winter_water_tick = 0;
 		wavesstrength_changed = WORLD_WAVES_VALUES[WorldWavesIndex];
@@ -1144,7 +1144,7 @@ void update_world_features()
 	}
 	if (wavesstrength_changed != WORLD_WAVES_VALUES[WorldWavesIndex]) wavesstrength_toggle = false;
 	if (WORLD_WAVES_VALUES[WorldWavesIndex] != -1 && WORLD_WAVES_VALUES[WorldWavesIndex] != -2) WATER::_SET_WAVES_INTENSITY(WORLD_WAVES_VALUES[WorldWavesIndex]);
-	if (WORLD_WAVES_VALUES[WorldWavesIndex] != -1 && WORLD_WAVES_VALUES[WorldWavesIndex] == -2) GAMEPLAY::_0xC54A08C85AE4D410(1.0f);
+	if (WORLD_WAVES_VALUES[WorldWavesIndex] != -1 && WORLD_WAVES_VALUES[WorldWavesIndex] == -2) GAMEPLAY::WATER_OVERRIDE_SET_STRENGTH(1.0f);
 	
 	// Lightning Intensity
 	if (WORLD_LIGHTNING_INTENSITY_VALUES[featureLightIntensityIndex] > -2 && (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3061285535 || GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3373937154)) { // GET_NEXT_WEATHER_TYPE_HASH_NAME
