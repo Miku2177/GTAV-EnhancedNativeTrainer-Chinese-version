@@ -1915,7 +1915,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 				for (int i = 0; i < 100; i++)
 				{
 					char* radio_station = AUDIO::GET_RADIO_STATION_NAME(i);
-					UNK3::_0x477D9DB48F889591(radio_station, 0);
+					UNK3::_LOCK_RADIO_STATION(radio_station, 0);
 				}
 				WAIT(1000);
 				iterated_radio_stations = true;
