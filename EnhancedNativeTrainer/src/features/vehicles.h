@@ -1171,6 +1171,8 @@ void onchange_plane_enginedegrade_index(int value, SelectFromListMenuItem* sourc
 
 void onchange_heli_enginedegrade_index(int value, SelectFromListMenuItem* source);
 
+void onchange_skill_index(int value, SelectFromListMenuItem* source);
+
 void onchange_restoration_speed_index(int value, SelectFromListMenuItem* source);
 
 void onchange_fuel_colours_r_index(int value, SelectFromListMenuItem* source);
