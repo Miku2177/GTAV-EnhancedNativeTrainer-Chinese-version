@@ -100,6 +100,11 @@ bool nitro_e = false;
 bool entered_sp_v = false;
 std::string  veh_to_spawn = "";
 
+// routine of ranger vars
+bool featureRoutineOfRinger = false;
+std::vector<Vehicle> VEHICLES_AVAILABLE;
+int activeLineIndexRoutineofringer = 0;
+
 int turn_angle = 0;
 int temp_angle = 0;
 bool turning_started = false;
@@ -1601,6 +1606,29 @@ void process_engine_degrade_menu() {
 	draw_generic_menu<int>(menuItems, &activeLineIndexEngineDegrade, caption, onconfirm_enginedegrade_menu, NULL, NULL);
 }
 
+bool onconfirm_routineofringer_menu(MenuItem<int> choice)
+{
+	return false;
+}
+
+void process_routine_of_ringer_menu() {
+	const std::string caption = "Routine Of Ranger Options";
+
+	std::vector<MenuItem<int>*> menuItems;
+	SelectFromListMenuItem* listItem;
+	ToggleMenuItem<int>* toggleItem;
+
+	int i = 0;
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Enable";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureRoutineOfRinger;
+	menuItems.push_back(toggleItem);
+	
+	draw_generic_menu<int>(menuItems, &activeLineIndexRoutineofringer, caption, onconfirm_routineofringer_menu, NULL, NULL);
+}
+
 bool onconfirm_fuel_menu(MenuItem<int> choice)
 {
 	switch (activeLineIndexFuel){
@@ -2094,6 +2122,9 @@ bool onconfirm_veh_menu(MenuItem<int> choice){
 			else set_status_text("~r~Error: ~w~ Bomb doors require Cuban 800");
 		}
 			break;
+		case 51: // routine of ringer
+			process_routine_of_ringer_menu();
+			break;
 		default:
 			break;
 	}
@@ -2424,6 +2455,12 @@ void process_veh_menu(){
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureDisableIgnition;
 	menuItems.push_back(toggleItem);
+
+	item = new MenuItem<int>();
+	item->caption = "Routine Of Ringer";
+	item->value = i++;
+	item->isLeaf = false;
+	menuItems.push_back(item);
 
 	draw_generic_menu<int>(menuItems, &activeLineIndexVeh, caption, onconfirm_veh_menu, NULL, NULL);
 }
@@ -4178,6 +4215,41 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 	if (!is_hotkey_held_saved_veh_spawn() && veh_to_spawn == "") PED::SET_PED_CAN_SWITCH_WEAPON(playerPed, true);
 
+///////////////////////////////////	ROUTINE OF RINGER ///////////////////////////////////
+	const int arrSize_sp = 1024;
+	Vehicle surr_vehs[arrSize_sp];
+	int count_surr_veh = worldGetAllVehicles(surr_vehs, arrSize_sp);
+
+	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
+		Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
+		if (VEHICLES_AVAILABLE.empty()) VEHICLES_AVAILABLE.push_back(veh);
+		if (!VEHICLES_AVAILABLE.empty()) {
+			bool exists_already = false;
+			for (int vh = 0; vh < VEHICLES_AVAILABLE.size(); vh++) {
+				if (VEHICLES_AVAILABLE[vh] == veh) exists_already = true;
+			}
+			if (exists_already == false) VEHICLES_AVAILABLE.push_back(veh);
+		}
+	}
+
+	if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
+		for (int i = 0; i < count_surr_veh; i++) {
+			bool me_own_already = false;
+			//find_nearest_vehicle();
+			if (!VEHICLES_AVAILABLE.empty()) {
+				for (int vh = 0; vh < VEHICLES_AVAILABLE.size(); vh++) {
+					//if (VEHICLES_AVAILABLE[vh] == temp_vehicle) me_own_already = true;
+					if (VEHICLES_AVAILABLE[vh] == PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed)) me_own_already = true;
+				}
+			}
+			if (!ENTITY::IS_ENTITY_A_MISSION_ENTITY(surr_vehs[i]) && VEHICLE::GET_PED_IN_VEHICLE_SEAT(surr_vehs[i], -1) == 0 && !VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(surr_vehs[i]) && !VEHICLE::IS_VEHICLE_DOOR_DAMAGED(surr_vehs[i], 0) &&
+				!VEHICLE::IS_VEHICLE_DOOR_DAMAGED(surr_vehs[i], 1) && me_own_already == false) {
+				VEHICLE::SET_VEHICLE_IS_CONSIDERED_BY_PLAYER(surr_vehs[i], false);
+			}
+		}
+	}
+///////////////////////////////////
+
 	// testing code; DO NOT DELETE
 	//if(bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && IsKeyJustUp(KeyConfig::KEY_VEH_STOP)){
 		//std::ofstream ofs("_colors.txt", std::ios::app | std::ios::out);
@@ -4366,6 +4438,7 @@ void reset_vehicle_globals() {
 		featureAutoalarm =
 		featureFuelGauge =
 		featureRestoreTracked =
+		featureRoutineOfRinger =
 		featureVehLightsOn = false;
 
 	featureLockVehicleDoorsUpdated = false;
@@ -4643,6 +4716,7 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureEngineDegrade", &featureEngineDegrade});
 	results->push_back(FeatureEnabledLocalDefinition{"featureEngineHealthBar", &featureEngineHealthBar});
 	results->push_back(FeatureEnabledLocalDefinition{"featureLimpMode", &featureLimpMode});
+	results->push_back(FeatureEnabledLocalDefinition{"featureRoutineOfRinger", &featureRoutineOfRinger});
 }
 
 bool spawn_tracked_car(int slot, std::string caption) {
@@ -4778,6 +4852,8 @@ bool spawn_tracked_car(int slot, std::string caption) {
 		VEHICLES_REMEMBER.push_back(veh);
 	}
 
+	if (featureRoutineOfRinger) VEHICLES_AVAILABLE.push_back(veh);
+
 	for (std::vector<TrackedVehicleDBRow*>::iterator it = savedTVehs.begin(); it != savedTVehs.end(); ++it) {
 		delete (*it);
 	}
@@ -4907,6 +4983,8 @@ bool spawn_saved_car(int slot, std::string caption){
 
 		ENTITY::SET_VEHICLE_AS_NO_LONGER_NEEDED(&veh);
 	}
+
+	if (featureRoutineOfRinger) VEHICLES_AVAILABLE.push_back(veh);
 
 	for(std::vector<SavedVehicleDBRow*>::iterator it = savedVehs.begin(); it != savedVehs.end(); ++it){
 		delete (*it);
