@@ -4287,7 +4287,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 					}
 					if (VEHICLES_AVAILABLE.empty()) breaking_secs_tick = 1;
 				}
-				else set_status_text("No vehicle nearby");
+				//else set_status_text("No vehicle nearby");
 			}
 			if (MISC_TRAINERCONTROL_VALUES[RingerSkillIndex] == 0 && CONTROLS::IS_CONTROL_PRESSED(2, 23) && breaking_secs_tick > 0) {
 				breaking_secs_tick = breaking_secs_tick + 1;
@@ -4922,9 +4922,9 @@ bool spawn_tracked_car(int slot, std::string caption) {
 		add_blip(veh);
 		BLIPTABLE_VEH.push_back(blip_veh);
 		VEHICLES_REMEMBER.push_back(veh);
-	}
 
-	if (featureRoutineOfRinger) VEHICLES_AVAILABLE.push_back(veh);
+		if (featureRoutineOfRinger) VEHICLES_AVAILABLE.push_back(veh);
+	}
 
 	for (std::vector<TrackedVehicleDBRow*>::iterator it = savedTVehs.begin(); it != savedTVehs.end(); ++it) {
 		delete (*it);
@@ -5053,10 +5053,10 @@ bool spawn_saved_car(int slot, std::string caption){
 			C_ENGINE_VEHICLE.push_back(veh);
 		}
 
+		if (featureRoutineOfRinger) VEHICLES_AVAILABLE.push_back(veh);
+
 		ENTITY::SET_VEHICLE_AS_NO_LONGER_NEEDED(&veh);
 	}
-
-	if (featureRoutineOfRinger) VEHICLES_AVAILABLE.push_back(veh);
 
 	for(std::vector<SavedVehicleDBRow*>::iterator it = savedVehs.begin(); it != savedVehs.end(); ++it){
 		delete (*it);
