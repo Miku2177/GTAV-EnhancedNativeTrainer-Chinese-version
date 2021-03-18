@@ -282,10 +282,7 @@ std::vector<char*> IPL_PROPS_BIKER_WEED_WAREHOUSE = {
 };
 
 const std::vector<const char*> IPLS_CAYO_PERICO = {
-	//"HeistIsland",
-	//"heightmapheistisland",
 	"island_lodlights",
-	//
 	"h4_mph4_terrain_01_grass_0",
 	"h4_mph4_terrain_01_grass_1",
 	"h4_mph4_terrain_02_grass_0",
