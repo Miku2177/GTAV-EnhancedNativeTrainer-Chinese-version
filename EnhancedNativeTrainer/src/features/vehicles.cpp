@@ -4216,35 +4216,37 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	if (!is_hotkey_held_saved_veh_spawn() && veh_to_spawn == "") PED::SET_PED_CAN_SWITCH_WEAPON(playerPed, true);
 
 ///////////////////////////////////	ROUTINE OF RINGER ///////////////////////////////////
-	const int arrSize_sp = 1024;
-	Vehicle surr_vehs[arrSize_sp];
-	int count_surr_veh = worldGetAllVehicles(surr_vehs, arrSize_sp);
+	if (featureRoutineOfRinger) {
+		const int arrSize_sp = 1024;
+		Vehicle surr_vehs[arrSize_sp];
+		int count_surr_veh = worldGetAllVehicles(surr_vehs, arrSize_sp);
 
-	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
-		Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
-		if (VEHICLES_AVAILABLE.empty()) VEHICLES_AVAILABLE.push_back(veh);
-		if (!VEHICLES_AVAILABLE.empty()) {
-			bool exists_already = false;
-			for (int vh = 0; vh < VEHICLES_AVAILABLE.size(); vh++) {
-				if (VEHICLES_AVAILABLE[vh] == veh) exists_already = true;
-			}
-			if (exists_already == false) VEHICLES_AVAILABLE.push_back(veh);
-		}
-	}
-
-	if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
-		for (int i = 0; i < count_surr_veh; i++) {
-			bool me_own_already = false;
-			//find_nearest_vehicle();
+		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
+			Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
+			if (VEHICLES_AVAILABLE.empty()) VEHICLES_AVAILABLE.push_back(veh);
 			if (!VEHICLES_AVAILABLE.empty()) {
+				bool exists_already = false;
 				for (int vh = 0; vh < VEHICLES_AVAILABLE.size(); vh++) {
-					//if (VEHICLES_AVAILABLE[vh] == temp_vehicle) me_own_already = true;
-					if (VEHICLES_AVAILABLE[vh] == PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed)) me_own_already = true;
+					if (VEHICLES_AVAILABLE[vh] == veh) exists_already = true;
 				}
+				if (exists_already == false) VEHICLES_AVAILABLE.push_back(veh);
 			}
-			if (!ENTITY::IS_ENTITY_A_MISSION_ENTITY(surr_vehs[i]) && VEHICLE::GET_PED_IN_VEHICLE_SEAT(surr_vehs[i], -1) == 0 && !VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(surr_vehs[i]) && !VEHICLE::IS_VEHICLE_DOOR_DAMAGED(surr_vehs[i], 0) &&
-				!VEHICLE::IS_VEHICLE_DOOR_DAMAGED(surr_vehs[i], 1) && me_own_already == false) {
-				VEHICLE::SET_VEHICLE_IS_CONSIDERED_BY_PLAYER(surr_vehs[i], false);
+		}
+
+		if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
+			for (int i = 0; i < count_surr_veh; i++) {
+				bool me_own_already = false;
+				//find_nearest_vehicle();
+				if (!VEHICLES_AVAILABLE.empty()) {
+					for (int vh = 0; vh < VEHICLES_AVAILABLE.size(); vh++) {
+						//if (VEHICLES_AVAILABLE[vh] == temp_vehicle) me_own_already = true;
+						if (VEHICLES_AVAILABLE[vh] == PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed)) me_own_already = true;
+					}
+				}
+				if (!ENTITY::IS_ENTITY_A_MISSION_ENTITY(surr_vehs[i]) && VEHICLE::GET_PED_IN_VEHICLE_SEAT(surr_vehs[i], -1) == 0 && !VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(surr_vehs[i]) && !VEHICLE::IS_VEHICLE_DOOR_DAMAGED(surr_vehs[i], 0) &&
+					!VEHICLE::IS_VEHICLE_DOOR_DAMAGED(surr_vehs[i], 1) && me_own_already == false) {
+					VEHICLE::SET_VEHICLE_IS_CONSIDERED_BY_PLAYER(surr_vehs[i], false);
+				}
 			}
 		}
 	}
