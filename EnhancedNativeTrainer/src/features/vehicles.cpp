@@ -103,9 +103,11 @@ std::string  veh_to_spawn = "";
 // routine of ranger vars
 bool featureRoutineOfRinger = false;
 std::vector<Vehicle> VEHICLES_AVAILABLE;
+std::vector<Ped> PEDS_WATCHFUL;
 int activeLineIndexRoutineofringer = 0;
 int breaking_secs_passed, breaking_secs_curr, breaking_secs_tick = 0;
-//bool time_to_call_the_police = false;
+int tick_pedcallingpolice, tick_pedcallingpolice_secs_passed, tick_pedcallingpolice_secs_curr = 0;
+bool time_to_call_the_police = false;
 bool featureShowPedCons = false;
 bool hijacked_vehicle_ror = false;
 Vehicle hijacking_veh_ror;
@@ -349,17 +351,17 @@ int HydraulicsIndex = 0;
 int NitrousIndex = 0;
 //bool NitrousChanged = true;
 
-//Ringer skills
+//Routine Of Ringer 
 const std::vector<std::string> VEH_RINGER_SKILL_CAPTIONS{ "Experienced", "Greenhorn" };
 int RingerSkillIndex = 0;
 
-//Seconds to break
 const std::vector<std::string> VEH_RINGER_SECONDS_BREAK_CAPTIONS{ "5", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100" };
 const int VEH_RINGER_SECONDS_BREAK_VALUES[] = { 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
 int RingerBreakSecIndex = 1;
 int RingerBreakAttemptIndex = 2;
 int RingerDragOutIndex = 2;
 int RingerPedAlertnessIndex = 1;
+int RingerCallCopSecIndex = 1;
 
 // player in vehicle state... assume true initially since our quicksave might have us in a vehicle already, in which case we can't check if we just got into one
 bool oldVehicleState = true;
@@ -989,11 +991,13 @@ void watchful_peds_around() {
 						AUDIO::_PLAY_AMBIENT_SPEECH1(vigilante_ped[vp], "GENERIC_FRIGHTENED_HIGH", "SPEECH_PARAMS_FORCE_SHOUTED");
 						AI::TASK_SMART_FLEE_PED(vigilante_ped[vp], playerPed, 1000, -1, true, true);
 						AI::TASK_USE_MOBILE_PHONE_TIMED(vigilante_ped[vp], 10000);
+						PEDS_WATCHFUL.push_back(vigilante_ped[vp]);
+						time_to_call_the_police = true;
 					}
-					PLAYER::SET_MAX_WANTED_LEVEL(5);
-					if (hijacked_vehicle_ror == false && PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < VEH_STARSPUNISH_VALUES[RingerBreakAttemptIndex]) PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), VEH_STARSPUNISH_VALUES[RingerBreakAttemptIndex], 0);
-					if (hijacked_vehicle_ror == true && PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < VEH_STARSPUNISH_VALUES[RingerDragOutIndex]) PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), VEH_STARSPUNISH_VALUES[RingerDragOutIndex], 0);
-					PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
+					if (PED::GET_PED_TYPE(vigilante_ped[vp]) == 6 || PED::GET_PED_TYPE(vigilante_ped[vp]) == 27 || PED::GET_PED_TYPE(vigilante_ped[vp]) == 29) {
+						time_to_call_the_police = true;
+						tick_pedcallingpolice = 200;
+					}
 				}
 			}
 		}
@@ -1709,6 +1713,12 @@ void process_routine_of_ringer_menu() {
 	listItem->wrap = false;
 	listItem->caption = "Peds Alertness Distance";
 	listItem->value = RingerPedAlertnessIndex;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(VEH_RINGER_SECONDS_BREAK_CAPTIONS, onchange_call_cop_index);
+	listItem->wrap = false;
+	listItem->caption = "Time For Calling Police (sec)";
+	listItem->value = RingerCallCopSecIndex;
 	menuItems.push_back(listItem);
 
 	toggleItem = new ToggleMenuItem<int>();
@@ -4330,10 +4340,45 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 		//std::stringstream ss55;
 		//ss55 << "\n secs: " << breaking_secs_tick;
-		//ss55 << "\n val: " << VEH_RINGER_SECONDS_BREAK_VALUES[RingerBreakSecIndex];
-		//ss55 << "\n hijacked_vehicle_ror: " << hijacked_vehicle_ror;
+		//ss55 << "\n tick_p: " << tick_pedcallingpolice;
+		//ss55 << "\n t_to_c_p: " << time_to_call_the_police;
+		//if (!PEDS_WATCHFUL.empty()) ss55 << "\n size: " << PEDS_WATCHFUL.size();
 		//callsPerFrame = 0;
 		//set_status_text_centre_screen(ss55.str());
+
+		if (time_to_call_the_police == true && !featureWantedLevelFrozen) {
+			tick_pedcallingpolice_secs_passed = clock() / CLOCKS_PER_SEC;
+			if (((clock() / CLOCKS_PER_SEC) - tick_pedcallingpolice_secs_curr) != 0) {
+				tick_pedcallingpolice = tick_pedcallingpolice + 1;
+				tick_pedcallingpolice_secs_curr = tick_pedcallingpolice_secs_passed;
+			}
+			if (tick_pedcallingpolice > VEH_RINGER_SECONDS_BREAK_VALUES[RingerCallCopSecIndex]) {
+				PLAYER::SET_MAX_WANTED_LEVEL(5);
+				if (hijacked_vehicle_ror == false && PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < VEH_STARSPUNISH_VALUES[RingerBreakAttemptIndex]) PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), VEH_STARSPUNISH_VALUES[RingerBreakAttemptIndex], 0);
+				if (hijacked_vehicle_ror == true && PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < VEH_STARSPUNISH_VALUES[RingerDragOutIndex]) PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), VEH_STARSPUNISH_VALUES[RingerDragOutIndex], 0);
+				PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
+				time_to_call_the_police = false;
+				tick_pedcallingpolice = 0;
+				if (!PEDS_WATCHFUL.empty()) {
+					PEDS_WATCHFUL.clear();
+					PEDS_WATCHFUL.shrink_to_fit();
+				}
+			}
+			if (!PEDS_WATCHFUL.empty()) {
+				bool still_alive = false;
+				for (int sa = 0; sa < PEDS_WATCHFUL.size(); sa++) {
+					if (!PED::IS_PED_DEAD_OR_DYING(PEDS_WATCHFUL[sa], true)) still_alive = true;
+				}
+				if (still_alive == false) {
+					tick_pedcallingpolice = 0;
+					time_to_call_the_police = false;
+					if (!PEDS_WATCHFUL.empty()) {
+						PEDS_WATCHFUL.clear();
+						PEDS_WATCHFUL.shrink_to_fit();
+					}
+				}
+			}
+		}
 
 		if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
 			if (PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed) != hijacking_veh_ror) hijacked_vehicle_ror = false;
@@ -4351,7 +4396,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			if (MISC_TRAINERCONTROL_VALUES[RingerSkillIndex] == 0 && CONTROLS::IS_CONTROL_JUST_PRESSED(2, 23) && breaking_secs_tick == 0) {
 				find_nearest_vehicle();
 				Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(playerPed, true);
-				//Vector3 coordsveh = ENTITY::GET_ENTITY_COORDS(temp_vehicle, true);
 				Vector3 coordsveh_l = ENTITY::_GET_ENTITY_BONE_COORDS(temp_vehicle, ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(temp_vehicle, "door_dside_f"));
 				Vector3 coordsveh_r = ENTITY::_GET_ENTITY_BONE_COORDS(temp_vehicle, ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(temp_vehicle, "door_pside_f"));
 				float dist_diff_l = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsveh_l.x, coordsveh_l.y, coordsveh_l.z);
@@ -4366,7 +4410,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 					}
 					if (VEHICLES_AVAILABLE.empty()) breaking_secs_tick = 1;
 				}
-				//else set_status_text("No vehicle nearby");
 			}
 			if (MISC_TRAINERCONTROL_VALUES[RingerSkillIndex] == 0 && CONTROLS::IS_CONTROL_PRESSED(2, 23) && breaking_secs_tick > 0) {
 				breaking_secs_passed = clock() / CLOCKS_PER_SEC;
@@ -4548,6 +4591,7 @@ void reset_vehicle_globals() {
 	RingerBreakAttemptIndex = 2;
 	RingerDragOutIndex = 2;
 	RingerPedAlertnessIndex = 1;
+	RingerCallCopSecIndex = 1;
 	HydraulicsIndex = 0;
 	VisLightIndex = 0;
 	VisLight3dIndex = 0;
@@ -5516,6 +5560,7 @@ void add_vehicle_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"RingerBreakAttemptIndex", std::to_string(RingerBreakAttemptIndex)});
 	results->push_back(StringPairSettingDBRow{"RingerDragOutIndex", std::to_string(RingerDragOutIndex)});
 	results->push_back(StringPairSettingDBRow{"RingerPedAlertnessIndex", std::to_string(RingerPedAlertnessIndex)});
+	results->push_back(StringPairSettingDBRow{"RingerCallCopSecIndex", std::to_string(RingerCallCopSecIndex)});
 	results->push_back(StringPairSettingDBRow{"HydraulicsIndex", std::to_string(HydraulicsIndex)});
 	results->push_back(StringPairSettingDBRow{"VisLightIndex", std::to_string(VisLightIndex)});
 	results->push_back(StringPairSettingDBRow{"VisLight3dIndex", std::to_string(VisLight3dIndex)});
@@ -5685,6 +5730,9 @@ void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settin
 		}
 		else if (setting.name.compare("RingerPedAlertnessIndex") == 0) {
 		RingerPedAlertnessIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("RingerCallCopSecIndex") == 0) {
+		RingerCallCopSecIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("HydraulicsIndex") == 0) {
 			HydraulicsIndex = stoi(setting.value);
@@ -6033,6 +6081,11 @@ void onchange_drag_out_index(int value, SelectFromListMenuItem* source) {
 
 void onchange_ped_alertness_index(int value, SelectFromListMenuItem* source) {
 	RingerPedAlertnessIndex = value;
+	PositionChanged = true;
+}
+
+void onchange_call_cop_index(int value, SelectFromListMenuItem* source) {
+	RingerCallCopSecIndex = value;
 	PositionChanged = true;
 }
 
