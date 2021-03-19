@@ -39,8 +39,8 @@ const int VEH_PIRSUITRANGE_VALUES[] = { 300, 400, 500, 600, 700, 800/*, 900, 100
 extern int PirsuitRangeIndexN;
 
 //Stars If Try To Escape
-const std::vector<std::string> VEH_STARSPUNISH_CAPTIONS{ "2 Stars", "3 Stars", "4 Stars", "5 Stars" };
-const int VEH_STARSPUNISH_VALUES[] = { 2, 3, 4, 5 };
+const std::vector<std::string> VEH_STARSPUNISH_CAPTIONS{ "1 Star", "2 Stars", "3 Stars", "4 Stars", "5 Stars" };
+const int VEH_STARSPUNISH_VALUES[] = { 1, 2, 3, 4, 5 };
 extern int StarsPunishIndex;
 
 //Most Wanted
