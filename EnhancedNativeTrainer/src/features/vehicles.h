@@ -1177,6 +1177,8 @@ void onchange_breaking_into_index(int value, SelectFromListMenuItem* source);
 
 void onchange_breaking_attempt_index(int value, SelectFromListMenuItem* source);
 
+void onchange_drag_out_index(int value, SelectFromListMenuItem* source);
+
 void onchange_ped_alertness_index(int value, SelectFromListMenuItem* source);
 
 void onchange_restoration_speed_index(int value, SelectFromListMenuItem* source);
