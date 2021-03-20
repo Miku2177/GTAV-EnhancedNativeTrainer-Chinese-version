@@ -100,7 +100,7 @@ bool nitro_e = false;
 bool entered_sp_v = false;
 std::string  veh_to_spawn = "";
 
-// routine of ranger vars
+// repo man vars
 bool featureRoutineOfRinger = false;
 std::vector<Vehicle> VEHICLES_AVAILABLE;
 std::vector<Ped> PEDS_WATCHFUL;
@@ -111,6 +111,8 @@ bool time_to_call_the_police = false;
 bool featureShowPedCons = false;
 bool hijacked_vehicle_ror = false;
 Vehicle hijacking_veh_ror;
+std::vector<Blip> BLIPTABLE_ALPEDS;
+Blip blip_al_peds = -1;
 
 int turn_angle = 0;
 int temp_angle = 0;
@@ -351,9 +353,9 @@ int HydraulicsIndex = 0;
 int NitrousIndex = 0;
 //bool NitrousChanged = true;
 
-//Routine Of Ringer 
-const std::vector<std::string> VEH_RINGER_SKILL_CAPTIONS{ "Experienced", "Greenhorn" };
-int RingerSkillIndex = 0;
+// Repo Man
+const std::vector<std::string> VEH_RINGER_SKILL_CAPTIONS{ "Street Kid", "Professional" };
+int RingerSkillIndex = 1;
 
 const std::vector<std::string> VEH_RINGER_SECONDS_BREAK_CAPTIONS{ "5", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100" };
 const int VEH_RINGER_SECONDS_BREAK_VALUES[] = { 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
@@ -981,22 +983,28 @@ void watchful_peds_around() {
 				PED::GET_RELATIONSHIP_BETWEEN_PEDS(playerPed, vigilante_ped[vp]) != 1 && PED::GET_RELATIONSHIP_BETWEEN_PEDS(vigilante_ped[vp], playerPed) != 1 &&
 				PED::GET_RELATIONSHIP_BETWEEN_PEDS(playerPed, vigilante_ped[vp]) != 2 && PED::GET_RELATIONSHIP_BETWEEN_PEDS(vigilante_ped[vp], playerPed) != 2 &&
 				!PED::IS_PED_GROUP_MEMBER(vigilante_ped[vp], myENTGroup) && !VEHICLE::GET_PED_IN_VEHICLE_SEAT(hijacking_veh_ror, -1)) {
-				if (featureShowPedCons && hijacked_vehicle_ror == false) {
-					UI::SET_PED_HAS_AI_BLIP(vigilante_ped[vp], 1);
-					UI::SET_PED_AI_BLIP_FORCED_ON(vigilante_ped[vp], true);
-				}
-				if (dist_diff < VEH_RINGER_SECONDS_BREAK_VALUES[RingerPedAlertnessIndex] && PED::IS_PED_FACING_PED(vigilante_ped[vp], playerPed, 100) && ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(vigilante_ped[vp], playerPed, 17)) {
-					if (PED::IS_PED_IN_ANY_VEHICLE(vigilante_ped[vp], false)) AI::CLEAR_PED_TASKS(vigilante_ped[vp]);
-					if (PED::GET_PED_TYPE(vigilante_ped[vp]) != 6 && PED::GET_PED_TYPE(vigilante_ped[vp]) != 27 && PED::GET_PED_TYPE(vigilante_ped[vp]) != 28 && PED::GET_PED_TYPE(vigilante_ped[vp]) != 29) {
-						AUDIO::_PLAY_AMBIENT_SPEECH1(vigilante_ped[vp], "GENERIC_FRIGHTENED_HIGH", "SPEECH_PARAMS_FORCE_SHOUTED");
-						AI::TASK_SMART_FLEE_PED(vigilante_ped[vp], playerPed, 1000, -1, true, true);
-						AI::TASK_USE_MOBILE_PHONE_TIMED(vigilante_ped[vp], 10000);
-						PEDS_WATCHFUL.push_back(vigilante_ped[vp]);
-						time_to_call_the_police = true;
+				if (dist_diff < VEH_RINGER_SECONDS_BREAK_VALUES[RingerPedAlertnessIndex]) {
+					if (featureShowPedCons && hijacked_vehicle_ror == false) {
+						blip_al_peds = UI::ADD_BLIP_FOR_ENTITY(vigilante_ped[vp]);
+						UI::SET_BLIP_SPRITE(blip_al_peds, 1); // 42
+						UI::SET_BLIP_SCALE(blip_al_peds, 0.5);
+						UI::SET_BLIP_COLOUR(blip_al_peds, 1);
+						UI::SET_BLIP_AS_SHORT_RANGE(blip_al_peds, false);
+						BLIPTABLE_ALPEDS.push_back(blip_al_peds);
 					}
-					if (PED::GET_PED_TYPE(vigilante_ped[vp]) == 6 || PED::GET_PED_TYPE(vigilante_ped[vp]) == 27 || PED::GET_PED_TYPE(vigilante_ped[vp]) == 29) {
-						time_to_call_the_police = true;
-						tick_pedcallingpolice = 200;
+					if (PED::IS_PED_FACING_PED(vigilante_ped[vp], playerPed, 100) && ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(vigilante_ped[vp], playerPed, 17)) {
+						if (PED::IS_PED_IN_ANY_VEHICLE(vigilante_ped[vp], false)) AI::CLEAR_PED_TASKS(vigilante_ped[vp]);
+						if (PED::GET_PED_TYPE(vigilante_ped[vp]) != 6 && PED::GET_PED_TYPE(vigilante_ped[vp]) != 27 && PED::GET_PED_TYPE(vigilante_ped[vp]) != 28 && PED::GET_PED_TYPE(vigilante_ped[vp]) != 29) {
+							AUDIO::_PLAY_AMBIENT_SPEECH1(vigilante_ped[vp], "GENERIC_FRIGHTENED_HIGH", "SPEECH_PARAMS_FORCE_SHOUTED");
+							AI::TASK_SMART_FLEE_PED(vigilante_ped[vp], playerPed, 1000, -1, true, true);
+							AI::TASK_USE_MOBILE_PHONE_TIMED(vigilante_ped[vp], 10000);
+							PEDS_WATCHFUL.push_back(vigilante_ped[vp]);
+							time_to_call_the_police = true;
+						}
+						if (PED::GET_PED_TYPE(vigilante_ped[vp]) == 6 || PED::GET_PED_TYPE(vigilante_ped[vp]) == 27 || PED::GET_PED_TYPE(vigilante_ped[vp]) == 29) {
+							time_to_call_the_police = true;
+							tick_pedcallingpolice = 200;
+						}
 					}
 				}
 			}
@@ -1671,7 +1679,7 @@ bool onconfirm_routineofringer_menu(MenuItem<int> choice)
 }
 
 void process_routine_of_ringer_menu() {
-	const std::string caption = "Routine Of Ringer Options";
+	const std::string caption = "Repo Man Options";
 
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem* listItem;
@@ -1687,42 +1695,42 @@ void process_routine_of_ringer_menu() {
 	
 	listItem = new SelectFromListMenuItem(VEH_RINGER_SKILL_CAPTIONS, onchange_skill_index);
 	listItem->wrap = false;
-	listItem->caption = "Ringer Skills";
+	listItem->caption = "Thief Skills";
 	listItem->value = RingerSkillIndex;
 	menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(VEH_RINGER_SECONDS_BREAK_CAPTIONS, onchange_breaking_into_index);
 	listItem->wrap = false;
-	listItem->caption = "Breaking Into Time (sec)";
+	listItem->caption = "Break In Timer (sec)";
 	listItem->value = RingerBreakSecIndex;
 	menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(VEH_STARSPUNISH_CAPTIONS, onchange_breaking_attempt_index);
 	listItem->wrap = false;
-	listItem->caption = "Wanted Stars For Breaking Attempt";
+	listItem->caption = "Stars For Commiting Breaking In Attempt";
 	listItem->value = RingerBreakAttemptIndex;
 	menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(VEH_STARSPUNISH_CAPTIONS, onchange_drag_out_index);
 	listItem->wrap = false;
-	listItem->caption = "Wanted Stars For Dragging Out";
+	listItem->caption = "Stars For Dragging Driver Out";
 	listItem->value = RingerDragOutIndex;
 	menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(VEH_RINGER_SECONDS_BREAK_CAPTIONS, onchange_ped_alertness_index);
 	listItem->wrap = false;
-	listItem->caption = "Peds Alertness Distance";
+	listItem->caption = "Ped Suspicion Distance (m)";
 	listItem->value = RingerPedAlertnessIndex;
 	menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(VEH_RINGER_SECONDS_BREAK_CAPTIONS, onchange_call_cop_index);
 	listItem->wrap = false;
-	listItem->caption = "Time For Calling Police (sec)";
+	listItem->caption = "Crime Reporting Delay (sec)";
 	listItem->value = RingerCallCopSecIndex;
 	menuItems.push_back(listItem);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Show Ped View Cones";
+	toggleItem->caption = "Show NPCs In Range";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureShowPedCons;
 	menuItems.push_back(toggleItem);
@@ -2223,7 +2231,7 @@ bool onconfirm_veh_menu(MenuItem<int> choice){
 			else set_status_text("~r~Error: ~w~ Bomb doors require Cuban 800");
 		}
 			break;
-		case 51: // routine of ringer
+		case 51: // repo man
 			process_routine_of_ringer_menu();
 			break;
 		default:
@@ -2558,7 +2566,7 @@ void process_veh_menu(){
 	menuItems.push_back(toggleItem);
 
 	item = new MenuItem<int>();
-	item->caption = "Routine Of Ringer";
+	item->caption = "Repo Man";
 	item->value = i++;
 	item->isLeaf = false;
 	menuItems.push_back(item);
@@ -4323,8 +4331,8 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 	if (!is_hotkey_held_saved_veh_spawn() && veh_to_spawn == "") PED::SET_PED_CAN_SWITCH_WEAPON(playerPed, true);
 
-///////////////////////////////////	ROUTINE OF RINGER ///////////////////////////////////
-	if (featureRoutineOfRinger) {
+///////////////////////////////////	REPO MAN ///////////////////////////////////
+	if (featureRoutineOfRinger && GAMEPLAY::GET_MISSION_FLAG() == 0) {
 		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
 			Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 			if (VEHICLES_AVAILABLE.empty()) VEHICLES_AVAILABLE.push_back(veh);
@@ -4338,13 +4346,19 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			hijacked_vehicle_ror = false;
 		}
 
-		//std::stringstream ss55;
-		//ss55 << "\n secs: " << breaking_secs_tick;
-		//ss55 << "\n tick_p: " << tick_pedcallingpolice;
+		std::stringstream ss55;
+		ss55 << "\n secs: " << breaking_secs_tick;
+		//if (!BLIPTABLE_ALPEDS.empty()) ss55 << "\n blip: " << BLIPTABLE_ALPEDS.size();
 		//ss55 << "\n t_to_c_p: " << time_to_call_the_police;
 		//if (!PEDS_WATCHFUL.empty()) ss55 << "\n size: " << PEDS_WATCHFUL.size();
-		//callsPerFrame = 0;
-		//set_status_text_centre_screen(ss55.str());
+		callsPerFrame = 0;
+		set_status_text_centre_screen(ss55.str());
+
+		if (!VEHICLES_AVAILABLE.empty()) {
+			for (int vh = 0; vh < VEHICLES_AVAILABLE.size(); vh++) {
+				if (!ENTITY::IS_ENTITY_A_MISSION_ENTITY(VEHICLES_AVAILABLE[vh]) && !VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(VEHICLES_AVAILABLE[vh])) VEHICLE::SET_VEHICLE_NEEDS_TO_BE_HOTWIRED(VEHICLES_AVAILABLE[vh], true);
+			}
+		}
 
 		if (time_to_call_the_police == true && !featureWantedLevelFrozen) {
 			tick_pedcallingpolice_secs_passed = clock() / CLOCKS_PER_SEC;
@@ -4393,14 +4407,14 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			Vehicle surr_vehs_r[arrSize_sp_r];
 			int count_surr_veh_r = worldGetAllVehicles(surr_vehs_r, arrSize_sp_r);
 
-			if (MISC_TRAINERCONTROL_VALUES[RingerSkillIndex] == 0 && CONTROLS::IS_CONTROL_JUST_PRESSED(2, 23) && breaking_secs_tick == 0) {
+			if (MISC_TRAINERCONTROL_VALUES[RingerSkillIndex] == 1 && CONTROLS::IS_CONTROL_JUST_PRESSED(2, 23) && breaking_secs_tick == 0) {
 				find_nearest_vehicle();
 				Vector3 coordsme = ENTITY::GET_ENTITY_COORDS(playerPed, true);
 				Vector3 coordsveh_l = ENTITY::_GET_ENTITY_BONE_COORDS(temp_vehicle, ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(temp_vehicle, "door_dside_f"));
 				Vector3 coordsveh_r = ENTITY::_GET_ENTITY_BONE_COORDS(temp_vehicle, ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(temp_vehicle, "door_pside_f"));
 				float dist_diff_l = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsveh_l.x, coordsveh_l.y, coordsveh_l.z);
 				float dist_diff_r = SYSTEM::VDIST(coordsme.x, coordsme.y, coordsme.z, coordsveh_r.x, coordsveh_r.y, coordsveh_r.z);
-				if (dist_diff_l < 2 || dist_diff_r < 2) {
+				if (dist_diff_l < 3 || dist_diff_r < 3) {
 					if (!VEHICLES_AVAILABLE.empty()) {
 						bool exists_already = false;
 						for (int vh = 0; vh < VEHICLES_AVAILABLE.size(); vh++) {
@@ -4411,23 +4425,25 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 					if (VEHICLES_AVAILABLE.empty()) breaking_secs_tick = 1;
 				}
 			}
-			if (MISC_TRAINERCONTROL_VALUES[RingerSkillIndex] == 0 && CONTROLS::IS_CONTROL_PRESSED(2, 23) && breaking_secs_tick > 0) {
+			if (MISC_TRAINERCONTROL_VALUES[RingerSkillIndex] == 1 && CONTROLS::IS_CONTROL_PRESSED(2, 23) && breaking_secs_tick > 0) {
 				breaking_secs_passed = clock() / CLOCKS_PER_SEC;
 				if (((clock() / CLOCKS_PER_SEC) - breaking_secs_curr) != 0) {
 					breaking_secs_tick = breaking_secs_tick + 1;
 					breaking_secs_curr = breaking_secs_passed;
 				}
+				//AI::TASK_STAND_STILL(playerPed, -1);
 				if (breaking_secs_tick > VEH_RINGER_SECONDS_BREAK_VALUES[RingerBreakSecIndex]) {
 					VEHICLES_AVAILABLE.push_back(temp_vehicle);
 					VEHICLE::SET_VEHICLE_IS_CONSIDERED_BY_PLAYER(temp_vehicle, true);
 					VEHICLE::SET_VEHICLE_DOORS_LOCKED(temp_vehicle, 0);
 					breaking_secs_tick = 0;
-					const int ARR_PED_SIZE = 1024;
-					Ped vigilante_ped[ARR_PED_SIZE];
-					int ped_looking_you = worldGetAllPeds(vigilante_ped, ARR_PED_SIZE);
-					for (int vp = 0; vp < ped_looking_you; vp++) {
-						UI::SET_PED_HAS_AI_BLIP(vigilante_ped[vp], 0);
-						UI::SET_PED_AI_BLIP_FORCED_ON(vigilante_ped[vp], false);
+					//AI::CLEAR_PED_TASKS(playerPed);
+					if (!BLIPTABLE_ALPEDS.empty()) {
+						for (int j = 0; j < BLIPTABLE_ALPEDS.size(); j++) {
+							if (UI::DOES_BLIP_EXIST(BLIPTABLE_ALPEDS[j])) UI::REMOVE_BLIP(&BLIPTABLE_ALPEDS[j]);
+						}
+						BLIPTABLE_ALPEDS.clear();
+						BLIPTABLE_ALPEDS.shrink_to_fit();
 					}
 				}
 			}
@@ -4436,33 +4452,34 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				watchful_peds_around();
 			}
 
-			if (MISC_TRAINERCONTROL_VALUES[RingerSkillIndex] == 0 && CONTROLS::IS_CONTROL_RELEASED(2, 23) && breaking_secs_tick > 0) {
+			if (MISC_TRAINERCONTROL_VALUES[RingerSkillIndex] == 1 && CONTROLS::IS_CONTROL_RELEASED(2, 23) && breaking_secs_tick > 0) {
 				breaking_secs_tick = 0;
-				if (featureShowPedCons) {
-					const int ARR_PED_SIZE = 1024;
-					Ped vigilante_ped[ARR_PED_SIZE];
-					int ped_looking_you = worldGetAllPeds(vigilante_ped, ARR_PED_SIZE);
-					for (int vp = 0; vp < ped_looking_you; vp++) {
-						UI::SET_PED_HAS_AI_BLIP(vigilante_ped[vp], 0);
-						UI::SET_PED_AI_BLIP_FORCED_ON(vigilante_ped[vp], false);
+				//AI::CLEAR_PED_TASKS(playerPed);
+				if (!BLIPTABLE_ALPEDS.empty()) {
+					for (int j = 0; j < BLIPTABLE_ALPEDS.size(); j++) {
+						if (UI::DOES_BLIP_EXIST(BLIPTABLE_ALPEDS[j])) UI::REMOVE_BLIP(&BLIPTABLE_ALPEDS[j]);
 					}
+					BLIPTABLE_ALPEDS.clear();
+					BLIPTABLE_ALPEDS.shrink_to_fit();
 				}
 			}
 
 			for (int ror = 0; ror < count_surr_veh_r; ror++) {
-				bool me_own_already = false;
-				if (!VEHICLES_AVAILABLE.empty()) {
-					for (int vh = 0; vh < VEHICLES_AVAILABLE.size(); vh++) {
-						if (VEHICLES_AVAILABLE[vh] == surr_vehs_r[ror]) me_own_already = true;
+				if (VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror])) || VEHICLE::IS_THIS_MODEL_A_PLANE(ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror])) || VEHICLE::IS_THIS_MODEL_A_HELI(ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]))) {
+					bool me_own_already = false;
+					if (!VEHICLES_AVAILABLE.empty()) {
+						for (int vh = 0; vh < VEHICLES_AVAILABLE.size(); vh++) {
+							if (VEHICLES_AVAILABLE[vh] == surr_vehs_r[ror]) me_own_already = true;
+						}
 					}
-				}
-				if (!ENTITY::IS_ENTITY_A_MISSION_ENTITY(surr_vehs_r[ror]) && !VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(surr_vehs_r[ror]) && !VEHICLE::IS_VEHICLE_DOOR_DAMAGED(surr_vehs_r[ror], 0) &&
-					!VEHICLE::IS_VEHICLE_DOOR_DAMAGED(surr_vehs_r[ror], 1) && me_own_already == false && breaking_secs_tick < VEH_RINGER_SECONDS_BREAK_VALUES[RingerBreakSecIndex] + 1) {
-					VEHICLE::SET_VEHICLE_IS_CONSIDERED_BY_PLAYER(surr_vehs_r[ror], false);
-				}
-				if (ENTITY::IS_ENTITY_A_MISSION_ENTITY(surr_vehs_r[ror]) || VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(surr_vehs_r[ror]) || VEHICLE::IS_VEHICLE_DOOR_DAMAGED(surr_vehs_r[ror], 0) ||
-					VEHICLE::IS_VEHICLE_DOOR_DAMAGED(surr_vehs_r[ror], 1) || me_own_already == true || breaking_secs_tick > VEH_RINGER_SECONDS_BREAK_VALUES[RingerBreakSecIndex]) {
-					VEHICLE::SET_VEHICLE_IS_CONSIDERED_BY_PLAYER(surr_vehs_r[ror], true);
+					if (!ENTITY::IS_ENTITY_A_MISSION_ENTITY(surr_vehs_r[ror]) && !VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(surr_vehs_r[ror]) && !VEHICLE::IS_VEHICLE_DOOR_DAMAGED(surr_vehs_r[ror], 0) &&
+						!VEHICLE::IS_VEHICLE_DOOR_DAMAGED(surr_vehs_r[ror], 1) && me_own_already == false && breaking_secs_tick < VEH_RINGER_SECONDS_BREAK_VALUES[RingerBreakSecIndex] + 1) {
+						VEHICLE::SET_VEHICLE_IS_CONSIDERED_BY_PLAYER(surr_vehs_r[ror], false);
+					}
+					if (ENTITY::IS_ENTITY_A_MISSION_ENTITY(surr_vehs_r[ror]) || VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(surr_vehs_r[ror]) || VEHICLE::IS_VEHICLE_DOOR_DAMAGED(surr_vehs_r[ror], 0) ||
+						VEHICLE::IS_VEHICLE_DOOR_DAMAGED(surr_vehs_r[ror], 1) || me_own_already == true || breaking_secs_tick > VEH_RINGER_SECONDS_BREAK_VALUES[RingerBreakSecIndex]) {
+						VEHICLE::SET_VEHICLE_IS_CONSIDERED_BY_PLAYER(surr_vehs_r[ror], true);
+					}
 				}
 			}
 		}
@@ -4586,7 +4603,7 @@ void reset_vehicle_globals() {
 	StarsPunishIndex = 1;
 	EngineRunningIndex = 0;
 	AutoShutEngineIndex = 0;
-	RingerSkillIndex = 0;
+	RingerSkillIndex = 1;
 	RingerBreakSecIndex = 1;
 	RingerBreakAttemptIndex = 2;
 	RingerDragOutIndex = 2;
@@ -4869,6 +4886,8 @@ Vehicle do_spawn_vehicle(DWORD model, std::string modelTitle, bool cleanup){
 		}
 
 		VEHICLE::SET_VEHICLE_DIRT_LEVEL(veh, 0.0f);
+
+		if (featureRoutineOfRinger) VEHICLES_AVAILABLE.push_back(veh);
 
 		WAIT(0);
 		STREAMING::SET_MODEL_AS_NO_LONGER_NEEDED(model);
