@@ -4342,6 +4342,9 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 ///////////////////////////////////	CAR THIEF ///////////////////////////////////
 	if (featureRoutineOfRinger && GAMEPLAY::GET_MISSION_FLAG() == 0) {
+		//char* h_anim_dict = "veh@boat@predator@ds@base";
+		//char* animation_of_h = "hotwire";
+
 		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
 			Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 			if (VEHICLES_AVAILABLE.empty()) VEHICLES_AVAILABLE.push_back(veh);
@@ -4354,7 +4357,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			}
 			hijacked_vehicle_ror = false;
 			
-			/*if (!VEHICLES_AVAILABLE.empty()) {
+			if (!VEHICLES_AVAILABLE.empty()) {
 				for (int vh = 0; vh < VEHICLES_AVAILABLE.size(); vh++) {
 					//if (!ENTITY::IS_ENTITY_A_MISSION_ENTITY(VEHICLES_AVAILABLE[vh]) && !VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(VEHICLES_AVAILABLE[vh])) VEHICLE::SET_VEHICLE_NEEDS_TO_BE_HOTWIRED(VEHICLES_AVAILABLE[vh], true);
 					bool have_ignited_already = false;
@@ -4363,7 +4366,8 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 							if (VEHICLES_IGNITED[vi] == veh) have_ignited_already = true;
 						}
 					}
-					if (VEHICLES_IGNITED.empty() || have_ignited_already == false) {
+					if ((VEHICLES_IGNITED.empty() || have_ignited_already == false) && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(veh)) VEHICLES_IGNITED.push_back(veh);
+					if ((VEHICLES_IGNITED.empty() || have_ignited_already == false) && !VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(veh)) {
 						VEHICLE::SET_VEHICLE_ENGINE_ON(veh, false, true, true);
 						if (CONTROLS::IS_CONTROL_PRESSED(2, 71)) {
 							breaking_secs_passed = clock() / CLOCKS_PER_SEC;
@@ -4371,7 +4375,10 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 								breaking_secs_tick = breaking_secs_tick + 1;
 								breaking_secs_curr = breaking_secs_passed;
 							}
-							if (breaking_secs_tick > VEH_RINGER_SECONDS_BREAK_VALUES[RingerHotwireSecIndex]) {
+							float tmp_numerator = breaking_secs_tick;
+							float tmp_denominator = VEH_RINGER_SECONDS_BREAK_VALUES[RingerHotwireSecIndex];
+							GRAPHICS::DRAW_RECT(0.5, 0.7, 0.33 - ((tmp_numerator / tmp_denominator) / 3), 0.009, 255, 0, 0, 255);
+							if (breaking_secs_tick >= VEH_RINGER_SECONDS_BREAK_VALUES[RingerHotwireSecIndex]) {
 								VEHICLES_IGNITED.push_back(veh);
 								VEHICLE::SET_VEHICLE_NEEDS_TO_BE_HOTWIRED(veh, true);
 								WAIT(1000);
@@ -4382,13 +4389,8 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 						if (CONTROLS::IS_CONTROL_RELEASED(2, 71)) breaking_secs_tick = 0;
 					}
 				}
-			}*/
+			}
 		}
-
-		//std::stringstream ss55;
-		//ss55 << "\n tick: " << breaking_secs_tick;
-		//callsPerFrame = 0;
-		//set_status_text_centre_screen(ss55.str());
 
 		if (time_to_call_the_police == true && !featureWantedLevelFrozen) {
 			tick_pedcallingpolice_secs_passed = clock() / CLOCKS_PER_SEC;
@@ -4484,6 +4486,12 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				GRAPHICS::DRAW_RECT(0.5, 0.7, 0.33 - ((tmp_numerator / tmp_denominator) / 3), 0.009, 255, 255, 255, 255);
 
 				AI::TASK_STAND_STILL(playerPed, 1);
+				/*if (!STREAMING::HAS_ANIM_DICT_LOADED(h_anim_dict)) {
+					STREAMING::REQUEST_ANIM_DICT(h_anim_dict);
+					while (!STREAMING::HAS_ANIM_DICT_LOADED(h_anim_dict)) WAIT(0);
+				}
+				if (STREAMING::HAS_ANIM_DICT_LOADED(h_anim_dict) && !ENTITY::IS_ENTITY_PLAYING_ANIM(playerPed, h_anim_dict, animation_of_h, 3)) AI::TASK_PLAY_ANIM(PLAYER::PLAYER_PED_ID(), h_anim_dict, animation_of_h, 8.0, 8.0, -1, 1, 0, 0, 0, 0);*/
+				
 				if (breaking_secs_tick >= VEH_RINGER_SECONDS_BREAK_VALUES[RingerBreakSecIndex]) {
 					VEHICLES_AVAILABLE.push_back(temp_vehicle);
 					VEHICLE::SET_VEHICLE_IS_CONSIDERED_BY_PLAYER(temp_vehicle, true);
@@ -4492,6 +4500,8 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 					AI::CLEAR_PED_TASKS(playerPed);
 				}
 			}
+
+			//if (breaking_secs_tick == 0 && ENTITY::IS_ENTITY_PLAYING_ANIM(playerPed, h_anim_dict, animation_of_h, 3)) AI::STOP_ANIM_TASK(PLAYER::PLAYER_PED_ID(), h_anim_dict, animation_of_h, 1.0);
 
 			if (breaking_secs_tick > 0 || hijacked_vehicle_ror == true) {
 				watchful_peds_around();
