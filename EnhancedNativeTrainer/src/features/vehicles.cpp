@@ -100,7 +100,7 @@ bool nitro_e = false;
 bool entered_sp_v = false;
 std::string  veh_to_spawn = "";
 
-// repo man vars
+// car thief vars
 bool featureRoutineOfRinger = false;
 std::vector<Vehicle> VEHICLES_AVAILABLE;
 std::vector<Ped> PEDS_WATCHFUL;
@@ -353,17 +353,17 @@ int HydraulicsIndex = 0;
 int NitrousIndex = 0;
 //bool NitrousChanged = true;
 
-// Repo Man
+// Car Thief
 const std::vector<std::string> VEH_RINGER_SKILL_CAPTIONS{ "Street Kid", "Professional" };
 int RingerSkillIndex = 1;
 
-const std::vector<std::string> VEH_RINGER_SECONDS_BREAK_CAPTIONS{ "5", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100" };
-const int VEH_RINGER_SECONDS_BREAK_VALUES[] = { 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
-int RingerBreakSecIndex = 1;
+const std::vector<std::string> VEH_RINGER_SECONDS_BREAK_CAPTIONS{ "1", "3", "5", "10", "15", "20", "25", "30", "40", "50", "60", "70", "80", "90", "100" };
+const int VEH_RINGER_SECONDS_BREAK_VALUES[] = { 1, 3, 5, 10, 15, 20, 25, 30, 40, 50, 60, 70, 80, 90, 100 };
+int RingerBreakSecIndex = 3;
 int RingerBreakAttemptIndex = 2;
 int RingerDragOutIndex = 2;
-int RingerPedAlertnessIndex = 1;
-int RingerCallCopSecIndex = 1;
+int RingerPedAlertnessIndex = 3;
+int RingerCallCopSecIndex = 3;
 
 // player in vehicle state... assume true initially since our quicksave might have us in a vehicle already, in which case we can't check if we just got into one
 bool oldVehicleState = true;
@@ -1680,7 +1680,7 @@ bool onconfirm_routineofringer_menu(MenuItem<int> choice)
 }
 
 void process_routine_of_ringer_menu() {
-	const std::string caption = "Repo Man Options";
+	const std::string caption = "Car Thief Options";
 
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem* listItem;
@@ -1726,13 +1726,13 @@ void process_routine_of_ringer_menu() {
 
 	listItem = new SelectFromListMenuItem(VEH_STARSPUNISH_CAPTIONS, onchange_breaking_attempt_index);
 	listItem->wrap = false;
-	listItem->caption = "Stars For Commiting Breaking In Attempt";
+	listItem->caption = "Police Response To Break In";
 	listItem->value = RingerBreakAttemptIndex;
 	menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(VEH_STARSPUNISH_CAPTIONS, onchange_drag_out_index);
 	listItem->wrap = false;
-	listItem->caption = "Stars For Dragging Driver Out";
+	listItem->caption = "Police Response For GTA";
 	listItem->value = RingerDragOutIndex;
 	menuItems.push_back(listItem);
 
@@ -2232,7 +2232,7 @@ bool onconfirm_veh_menu(MenuItem<int> choice){
 			else set_status_text("~r~Error: ~w~ Bomb doors require Cuban 800");
 		}
 			break;
-		case 51: // repo man
+		case 51: // car thief
 			process_routine_of_ringer_menu();
 			break;
 		default:
@@ -2567,7 +2567,7 @@ void process_veh_menu(){
 	menuItems.push_back(toggleItem);
 
 	item = new MenuItem<int>();
-	item->caption = "Repo Man";
+	item->caption = "Car Thief";
 	item->value = i++;
 	item->isLeaf = false;
 	menuItems.push_back(item);
@@ -4332,7 +4332,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 	}
 	if (!is_hotkey_held_saved_veh_spawn() && veh_to_spawn == "") PED::SET_PED_CAN_SWITCH_WEAPON(playerPed, true);
 
-///////////////////////////////////	REPO MAN ///////////////////////////////////
+///////////////////////////////////	CAR THIEF ///////////////////////////////////
 	if (featureRoutineOfRinger && GAMEPLAY::GET_MISSION_FLAG() == 0) {
 		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
 			Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
@@ -4466,7 +4466,8 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			}
 
 			for (int ror = 0; ror < count_surr_veh_r; ror++) {
-				if (VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror])) || VEHICLE::IS_THIS_MODEL_A_PLANE(ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror])) || VEHICLE::IS_THIS_MODEL_A_HELI(ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]))) {
+				if (MISC_TRAINERCONTROL_VALUES[RingerSkillIndex] == 0 || (MISC_TRAINERCONTROL_VALUES[RingerSkillIndex] == 1 && (VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror])) ||
+					VEHICLE::IS_THIS_MODEL_A_PLANE(ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror])) || VEHICLE::IS_THIS_MODEL_A_HELI(ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]))))) {
 					bool me_own_already = false;
 					if (!VEHICLES_AVAILABLE.empty()) {
 						for (int vh = 0; vh < VEHICLES_AVAILABLE.size(); vh++) {
@@ -4607,11 +4608,11 @@ void reset_vehicle_globals() {
 	EngineRunningIndex = 0;
 	AutoShutEngineIndex = 0;
 	RingerSkillIndex = 1;
-	RingerBreakSecIndex = 1;
+	RingerBreakSecIndex = 3;
 	RingerBreakAttemptIndex = 2;
 	RingerDragOutIndex = 2;
-	RingerPedAlertnessIndex = 1;
-	RingerCallCopSecIndex = 1;
+	RingerPedAlertnessIndex = 3;
+	RingerCallCopSecIndex = 3;
 	HydraulicsIndex = 0;
 	VisLightIndex = 0;
 	VisLight3dIndex = 0;
