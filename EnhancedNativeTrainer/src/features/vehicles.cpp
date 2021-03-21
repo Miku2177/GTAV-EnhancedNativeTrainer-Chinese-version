@@ -103,6 +103,7 @@ std::string  veh_to_spawn = "";
 // car thief vars
 bool featureRoutineOfRinger = false;
 std::vector<Vehicle> VEHICLES_AVAILABLE;
+std::vector<Vehicle> VEHICLES_IGNITED;
 std::vector<Ped> PEDS_WATCHFUL;
 int activeLineIndexRoutineofringer = 0;
 int breaking_secs_passed, breaking_secs_curr, breaking_secs_tick = 0;
@@ -360,6 +361,7 @@ int RingerSkillIndex = 1;
 const std::vector<std::string> VEH_RINGER_SECONDS_BREAK_CAPTIONS{ "1", "3", "5", "10", "15", "20", "25", "30", "40", "50", "60", "70", "80", "90", "100" };
 const int VEH_RINGER_SECONDS_BREAK_VALUES[] = { 1, 3, 5, 10, 15, 20, 25, 30, 40, 50, 60, 70, 80, 90, 100 };
 int RingerBreakSecIndex = 3;
+int RingerHotwireSecIndex = 2;
 int RingerBreakAttemptIndex = 2;
 int RingerDragOutIndex = 2;
 int RingerPedAlertnessIndex = 3;
@@ -1704,6 +1706,12 @@ void process_routine_of_ringer_menu() {
 	listItem->wrap = false;
 	listItem->caption = "Break In Timer (sec)";
 	listItem->value = RingerBreakSecIndex;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(VEH_RINGER_SECONDS_BREAK_CAPTIONS, onchange_hotwire_index);
+	listItem->wrap = false;
+	listItem->caption = "Hotwire Timer (sec)";
+	listItem->value = RingerHotwireSecIndex;
 	menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(VEH_RINGER_SECONDS_BREAK_CAPTIONS, onchange_ped_alertness_index);
@@ -4345,13 +4353,42 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				if (exists_already == false) VEHICLES_AVAILABLE.push_back(veh);
 			}
 			hijacked_vehicle_ror = false;
+			
+			/*if (!VEHICLES_AVAILABLE.empty()) {
+				for (int vh = 0; vh < VEHICLES_AVAILABLE.size(); vh++) {
+					//if (!ENTITY::IS_ENTITY_A_MISSION_ENTITY(VEHICLES_AVAILABLE[vh]) && !VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(VEHICLES_AVAILABLE[vh])) VEHICLE::SET_VEHICLE_NEEDS_TO_BE_HOTWIRED(VEHICLES_AVAILABLE[vh], true);
+					bool have_ignited_already = false;
+					if (!VEHICLES_IGNITED.empty()) {
+						for (int vi = 0; vi < VEHICLES_IGNITED.size(); vi++) {
+							if (VEHICLES_IGNITED[vi] == veh) have_ignited_already = true;
+						}
+					}
+					if (VEHICLES_IGNITED.empty() || have_ignited_already == false) {
+						VEHICLE::SET_VEHICLE_ENGINE_ON(veh, false, true, true);
+						if (CONTROLS::IS_CONTROL_PRESSED(2, 71)) {
+							breaking_secs_passed = clock() / CLOCKS_PER_SEC;
+							if (((clock() / CLOCKS_PER_SEC) - breaking_secs_curr) != 0) {
+								breaking_secs_tick = breaking_secs_tick + 1;
+								breaking_secs_curr = breaking_secs_passed;
+							}
+							if (breaking_secs_tick > VEH_RINGER_SECONDS_BREAK_VALUES[RingerHotwireSecIndex]) {
+								VEHICLES_IGNITED.push_back(veh);
+								VEHICLE::SET_VEHICLE_NEEDS_TO_BE_HOTWIRED(veh, true);
+								WAIT(1000);
+								VEHICLE::SET_VEHICLE_ENGINE_ON(veh, true, false, false);
+								breaking_secs_tick = 0;
+							}
+						}
+						if (CONTROLS::IS_CONTROL_RELEASED(2, 71)) breaking_secs_tick = 0;
+					}
+				}
+			}*/
 		}
 
-		if (!VEHICLES_AVAILABLE.empty()) {
-			for (int vh = 0; vh < VEHICLES_AVAILABLE.size(); vh++) {
-				if (!ENTITY::IS_ENTITY_A_MISSION_ENTITY(VEHICLES_AVAILABLE[vh]) && !VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(VEHICLES_AVAILABLE[vh])) VEHICLE::SET_VEHICLE_NEEDS_TO_BE_HOTWIRED(VEHICLES_AVAILABLE[vh], true);
-			}
-		}
+		//std::stringstream ss55;
+		//ss55 << "\n tick: " << breaking_secs_tick;
+		//callsPerFrame = 0;
+		//set_status_text_centre_screen(ss55.str());
 
 		if (time_to_call_the_police == true && !featureWantedLevelFrozen) {
 			tick_pedcallingpolice_secs_passed = clock() / CLOCKS_PER_SEC;
@@ -4609,6 +4646,7 @@ void reset_vehicle_globals() {
 	AutoShutEngineIndex = 0;
 	RingerSkillIndex = 1;
 	RingerBreakSecIndex = 3;
+	RingerHotwireSecIndex = 2;
 	RingerBreakAttemptIndex = 2;
 	RingerDragOutIndex = 2;
 	RingerPedAlertnessIndex = 3;
@@ -4891,7 +4929,10 @@ Vehicle do_spawn_vehicle(DWORD model, std::string modelTitle, bool cleanup){
 
 		VEHICLE::SET_VEHICLE_DIRT_LEVEL(veh, 0.0f);
 
-		if (featureRoutineOfRinger) VEHICLES_AVAILABLE.push_back(veh);
+		if (featureRoutineOfRinger) {
+			VEHICLES_AVAILABLE.push_back(veh);
+			VEHICLES_IGNITED.push_back(veh);
+		}
 
 		WAIT(0);
 		STREAMING::SET_MODEL_AS_NO_LONGER_NEEDED(model);
@@ -5101,7 +5142,10 @@ bool spawn_tracked_car(int slot, std::string caption) {
 		BLIPTABLE_VEH.push_back(blip_veh);
 		VEHICLES_REMEMBER.push_back(veh);
 
-		if (featureRoutineOfRinger) VEHICLES_AVAILABLE.push_back(veh);
+		if (featureRoutineOfRinger) {
+			VEHICLES_AVAILABLE.push_back(veh);
+			VEHICLES_IGNITED.push_back(veh);
+		}
 	}
 
 	for (std::vector<TrackedVehicleDBRow*>::iterator it = savedTVehs.begin(); it != savedTVehs.end(); ++it) {
@@ -5231,7 +5275,10 @@ bool spawn_saved_car(int slot, std::string caption){
 			C_ENGINE_VEHICLE.push_back(veh);
 		}
 
-		if (featureRoutineOfRinger) VEHICLES_AVAILABLE.push_back(veh);
+		if (featureRoutineOfRinger) {
+			VEHICLES_AVAILABLE.push_back(veh);
+			VEHICLES_IGNITED.push_back(veh);
+		}
 
 		ENTITY::SET_VEHICLE_AS_NO_LONGER_NEEDED(&veh);
 	}
@@ -5580,6 +5627,7 @@ void add_vehicle_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"AutoShutEngineIndex", std::to_string(AutoShutEngineIndex)});
 	results->push_back(StringPairSettingDBRow{"RingerSkillIndex", std::to_string(RingerSkillIndex)});
 	results->push_back(StringPairSettingDBRow{"RingerBreakSecIndex", std::to_string(RingerBreakSecIndex)});
+	results->push_back(StringPairSettingDBRow{"RingerHotwireSecIndex", std::to_string(RingerHotwireSecIndex)});
 	results->push_back(StringPairSettingDBRow{"RingerBreakAttemptIndex", std::to_string(RingerBreakAttemptIndex)});
 	results->push_back(StringPairSettingDBRow{"RingerDragOutIndex", std::to_string(RingerDragOutIndex)});
 	results->push_back(StringPairSettingDBRow{"RingerPedAlertnessIndex", std::to_string(RingerPedAlertnessIndex)});
@@ -5744,6 +5792,9 @@ void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settin
 		}
 		else if (setting.name.compare("RingerBreakSecIndex") == 0) {
 		RingerBreakSecIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("RingerHotwireSecIndex") == 0) {
+		RingerHotwireSecIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("RingerBreakAttemptIndex") == 0) {
 		RingerBreakAttemptIndex = stoi(setting.value);
@@ -6089,6 +6140,11 @@ void onchange_skill_index(int value, SelectFromListMenuItem* source) {
 
 void onchange_breaking_into_index(int value, SelectFromListMenuItem* source) {
 	RingerBreakSecIndex = value;
+	PositionChanged = true;
+}
+
+void onchange_hotwire_index(int value, SelectFromListMenuItem* source) {
+	RingerHotwireSecIndex = value;
 	PositionChanged = true;
 }
 
