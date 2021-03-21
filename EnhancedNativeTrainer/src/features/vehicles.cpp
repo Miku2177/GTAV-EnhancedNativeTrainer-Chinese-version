@@ -1710,7 +1710,7 @@ void process_routine_of_ringer_menu() {
 
 	listItem = new SelectFromListMenuItem(VEH_RINGER_SECONDS_BREAK_CAPTIONS, onchange_hotwire_index);
 	listItem->wrap = false;
-	listItem->caption = "Hotwire Timer (sec)";
+	listItem->caption = "Hotwire Duration (sec)";
 	listItem->value = RingerHotwireSecIndex;
 	menuItems.push_back(listItem);
 
@@ -4342,8 +4342,9 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 ///////////////////////////////////	CAR THIEF ///////////////////////////////////
 	if (featureRoutineOfRinger && GAMEPLAY::GET_MISSION_FLAG() == 0) {
-		//char* h_anim_dict = "veh@boat@predator@ds@base";
-		//char* animation_of_h = "hotwire";
+		char* h_anim_dict = "veh@boat@predator@ds@base";
+		char* hw_anim_dict = "anim@veh@std@panto@ds@base";
+		char* animation_of_h = "hotwire";
 
 		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
 			Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
@@ -4378,6 +4379,13 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 							float tmp_numerator = breaking_secs_tick;
 							float tmp_denominator = VEH_RINGER_SECONDS_BREAK_VALUES[RingerHotwireSecIndex];
 							GRAPHICS::DRAW_RECT(0.5, 0.7, 0.33 - ((tmp_numerator / tmp_denominator) / 3), 0.009, 255, 0, 0, 255);
+
+							if (!STREAMING::HAS_ANIM_DICT_LOADED(hw_anim_dict)) {
+								STREAMING::REQUEST_ANIM_DICT(hw_anim_dict);
+								while (!STREAMING::HAS_ANIM_DICT_LOADED(hw_anim_dict)) WAIT(0);
+							}
+							if (STREAMING::HAS_ANIM_DICT_LOADED(hw_anim_dict) && !ENTITY::IS_ENTITY_PLAYING_ANIM(PLAYER::PLAYER_PED_ID(), hw_anim_dict, animation_of_h, 3)) AI::TASK_PLAY_ANIM(PLAYER::PLAYER_PED_ID(), hw_anim_dict, animation_of_h, 8.0, 8.0, -1, 32, 0, 0, 0, 0);
+
 							if (breaking_secs_tick >= VEH_RINGER_SECONDS_BREAK_VALUES[RingerHotwireSecIndex]) {
 								VEHICLES_IGNITED.push_back(veh);
 								VEHICLE::SET_VEHICLE_NEEDS_TO_BE_HOTWIRED(veh, true);
@@ -4387,6 +4395,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 							}
 						}
 						if (CONTROLS::IS_CONTROL_RELEASED(2, 71)) breaking_secs_tick = 0;
+						if (breaking_secs_tick == 0 && ENTITY::IS_ENTITY_PLAYING_ANIM(playerPed, hw_anim_dict, animation_of_h, 3)) AI::STOP_ANIM_TASK(PLAYER::PLAYER_PED_ID(), hw_anim_dict, animation_of_h, 1.0);
 					}
 				}
 			}
@@ -4486,11 +4495,11 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				GRAPHICS::DRAW_RECT(0.5, 0.7, 0.33 - ((tmp_numerator / tmp_denominator) / 3), 0.009, 255, 255, 255, 255);
 
 				AI::TASK_STAND_STILL(playerPed, 1);
-				/*if (!STREAMING::HAS_ANIM_DICT_LOADED(h_anim_dict)) {
+				if (!STREAMING::HAS_ANIM_DICT_LOADED(h_anim_dict)) {
 					STREAMING::REQUEST_ANIM_DICT(h_anim_dict);
 					while (!STREAMING::HAS_ANIM_DICT_LOADED(h_anim_dict)) WAIT(0);
 				}
-				if (STREAMING::HAS_ANIM_DICT_LOADED(h_anim_dict) && !ENTITY::IS_ENTITY_PLAYING_ANIM(playerPed, h_anim_dict, animation_of_h, 3)) AI::TASK_PLAY_ANIM(PLAYER::PLAYER_PED_ID(), h_anim_dict, animation_of_h, 8.0, 8.0, -1, 1, 0, 0, 0, 0);*/
+				if (STREAMING::HAS_ANIM_DICT_LOADED(h_anim_dict) && !ENTITY::IS_ENTITY_PLAYING_ANIM(PLAYER::PLAYER_PED_ID(), h_anim_dict, animation_of_h, 3)) AI::TASK_PLAY_ANIM(PLAYER::PLAYER_PED_ID(), h_anim_dict, animation_of_h, 8.0, 8.0, -1, 32, 0, 0, 0, 0);
 				
 				if (breaking_secs_tick >= VEH_RINGER_SECONDS_BREAK_VALUES[RingerBreakSecIndex]) {
 					VEHICLES_AVAILABLE.push_back(temp_vehicle);
@@ -4501,7 +4510,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				}
 			}
 
-			//if (breaking_secs_tick == 0 && ENTITY::IS_ENTITY_PLAYING_ANIM(playerPed, h_anim_dict, animation_of_h, 3)) AI::STOP_ANIM_TASK(PLAYER::PLAYER_PED_ID(), h_anim_dict, animation_of_h, 1.0);
+			if (breaking_secs_tick == 0 && ENTITY::IS_ENTITY_PLAYING_ANIM(playerPed, h_anim_dict, animation_of_h, 3)) AI::STOP_ANIM_TASK(PLAYER::PLAYER_PED_ID(), h_anim_dict, animation_of_h, 1.0);
 
 			if (breaking_secs_tick > 0 || hijacked_vehicle_ror == true) {
 				watchful_peds_around();
@@ -4514,7 +4523,15 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 			for (int ror = 0; ror < count_surr_veh_r; ror++) {
 				if (MISC_TRAINERCONTROL_VALUES[RingerSkillIndex] == 0 || (MISC_TRAINERCONTROL_VALUES[RingerSkillIndex] == 1 && (VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror])) ||
-					VEHICLE::IS_THIS_MODEL_A_PLANE(ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror])) || VEHICLE::IS_THIS_MODEL_A_HELI(ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]))))) {
+					VEHICLE::IS_THIS_MODEL_A_PLANE(ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror])) || VEHICLE::IS_THIS_MODEL_A_HELI(ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]))) 
+					&& ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("HANDLER") &&
+					ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("VOLATOL") && ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("MICROLIGHT") && ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("DUSTER") &&
+					ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("DUMP") && ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("WINKY") && ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("DUNE2") &&
+					ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("DUNE4") && ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("DUNE5") && ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("VAGRANT") &&
+					ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("DUNE3") && ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("DUNE") && ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("BIFTA") &&
+					ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("LOCUST") && ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("RUSTON") && ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("RAPTOR") &&
+					ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("PEYOTE") && ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("ZION2") && ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("FELON2") &&
+					ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("WINDSOR2") && ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("COGCABRIO"))) {
 					bool me_own_already = false;
 					if (!VEHICLES_AVAILABLE.empty()) {
 						for (int vh = 0; vh < VEHICLES_AVAILABLE.size(); vh++) {
