@@ -58,7 +58,7 @@ extern bool PedsHealthChanged;
 
 //Waves Intensity
 const std::vector<std::string> WORLD_WAVES_CAPTIONS{ "Default", "No Waves", "5x", "10x", "20x", "30x", "50x", "Freeze Waves" };
-const int WORLD_WAVES_VALUES[] = { -1, -2, 5, 10, 20, 30, 50, -100000000 }; // -400000
+const int WORLD_WAVES_VALUES[] = { -1, -2, 7, 10, 20, 30, 50, -100000000 }; // -400000
 extern int WorldWavesIndex;
 
 extern Vehicle temp_vehicle;
