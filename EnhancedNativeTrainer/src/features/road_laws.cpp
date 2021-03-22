@@ -104,7 +104,7 @@ int DetectionRangeIndex = 3;
 bool DetectionRange_Changed = true;
 int PirsuitRangeIndexN = 4;
 bool PirsuitRange_Changed = true;
-int StarsPunishIndex = 0;
+int StarsPunishIndex = 1;
 bool StarsPunish_Changed = true;
 bool cop_close_stop = false;
 
@@ -116,9 +116,9 @@ std::vector<Vehicle> VEH_CRIME;
 std::vector<int> CLOTHES_BODY_CRIME;
 bool featurePlayerMostWanted = false;
 bool featurePlayerNoSwitch = true;
-int current_player_mostwanted = 0;
+int current_player_mostwanted = 1;
 bool current_player_mostwanted_Changed;
-int mostwanted_level_enable = 0;
+int mostwanted_level_enable = 1;
 bool mostwanted_level_enable_Changed;
 Player temp = -1;
 //

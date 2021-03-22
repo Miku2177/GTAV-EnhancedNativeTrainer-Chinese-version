@@ -412,8 +412,8 @@ void fuel()
 					set_vehicle_fuel_level(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), fuelLevelOffset, curr_fuel_a);
 				}
 
-				if (curr_fuel_perc < total_tank_vol / 8) { // 10.0
-					curr_fuel_perc = total_tank_vol / 8; // 10.0
+				if (curr_fuel_perc < total_tank_vol / 7) { // 8
+					curr_fuel_perc = total_tank_vol / 7; // 8
 					f_seconds = 6;
 				}
 
@@ -565,7 +565,8 @@ void fuel()
 							(VEHICLE::IS_THIS_MODEL_A_BOAT(ENTITY::GET_ENTITY_MODEL(cur_v)) && CAM::_0xEE778F8C7E1142E2(3) != 4) || 
 							(VEHICLE::IS_THIS_MODEL_A_PLANE(ENTITY::GET_ENTITY_MODEL(cur_v)) && CAM::_0xEE778F8C7E1142E2(4) != 4) || 
 							(ENTITY::GET_ENTITY_MODEL(cur_v) == GAMEPLAY::GET_HASH_KEY("SUBMERSIBLE") || ENTITY::GET_ENTITY_MODEL(cur_v) == GAMEPLAY::GET_HASH_KEY("SUBMERSIBLE2")) && CAM::_0xEE778F8C7E1142E2(5) != 4) ||
-							(VEHICLE::IS_THIS_MODEL_A_HELI(ENTITY::GET_ENTITY_MODEL(cur_v)) && CAM::_0xEE778F8C7E1142E2(6) != 4)))) {
+							(VEHICLE::IS_THIS_MODEL_A_HELI(ENTITY::GET_ENTITY_MODEL(cur_v)) && CAM::_0xEE778F8C7E1142E2(6) != 4) || 
+							((VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(cur_v)) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(cur_v))) && CAM::_0xEE778F8C7E1142E2(2) != 4)))) {
 						if (!FUEL.empty() && WORLD_GRAVITY_LEVEL_VALUES[BarPositionIndexN] < 2) {
 							GRAPHICS::DRAW_RECT(fuel_bar_x + 0.07, fuel_bar_y, fuel_amount, fuel_bar_h + 0.01, 0, 0, 0, fuelbar_edge_opacity);
 							GRAPHICS::DRAW_RECT(fuel_bar_x + 0.07, fuel_bar_y, fuel_amount, fuel_bar_h, underbar_r, underbar_g, underbar_b, FUEL_COLOURS_R_VALUES[FuelBackground_Opacity_IndexN]);
@@ -688,7 +689,7 @@ void fuel()
 					Vector3 curr_s = ENTITY::GET_ENTITY_VELOCITY(VEHICLES[i]);
 					if (curr_s.x < 1 && curr_s.y < 1 && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(VEHICLES[i]) && FUEL[i] > 0) FUEL[i] = FUEL[i] - 0.001;  
 					if (VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(VEHICLES[i]) && FUEL[i] <= 0) {
-						VEHICLE::SET_VEHICLE_ENGINE_ON(VEHICLES[i], false, true, true);
+						VEHICLE::SET_VEHICLE_ENGINE_ON(VEHICLES[i], false, true, false);
 						VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(VEHICLES[i], false);
 					}
 				}
