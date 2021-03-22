@@ -102,6 +102,7 @@ std::string  veh_to_spawn = "";
 
 // car thief vars
 bool featureRoutineOfRinger = false;
+bool featureRoutineAnimations = true;
 std::vector<Vehicle> VEHICLES_AVAILABLE;
 std::vector<Vehicle> VEHICLES_IGNITED;
 std::vector<Ped> PEDS_WATCHFUL;
@@ -1743,6 +1744,12 @@ void process_routine_of_ringer_menu() {
 	listItem->caption = "Police Response For GTA";
 	listItem->value = RingerDragOutIndex;
 	menuItems.push_back(listItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Enable Animation";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureRoutineAnimations;
+	menuItems.push_back(toggleItem);
 
 	draw_generic_menu<int>(menuItems, &activeLineIndexRoutineofringer, caption, onconfirm_routineofringer_menu, NULL, NULL);
 }
@@ -4378,13 +4385,15 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 							}
 							float tmp_numerator = breaking_secs_tick;
 							float tmp_denominator = VEH_RINGER_SECONDS_BREAK_VALUES[RingerHotwireSecIndex];
-							GRAPHICS::DRAW_RECT(0.5, 0.7, 0.33 - ((tmp_numerator / tmp_denominator) / 3), 0.009, 255, 0, 0, 255);
+							GRAPHICS::DRAW_RECT(0.5, 0.9, 0.33 - ((tmp_numerator / tmp_denominator) / 3), 0.009, 255, 0, 0, 255);
 
-							if (!STREAMING::HAS_ANIM_DICT_LOADED(hw_anim_dict)) {
-								STREAMING::REQUEST_ANIM_DICT(hw_anim_dict);
-								while (!STREAMING::HAS_ANIM_DICT_LOADED(hw_anim_dict)) WAIT(0);
+							if (featureRoutineAnimations) {
+								if (!STREAMING::HAS_ANIM_DICT_LOADED(hw_anim_dict)) {
+									STREAMING::REQUEST_ANIM_DICT(hw_anim_dict);
+									while (!STREAMING::HAS_ANIM_DICT_LOADED(hw_anim_dict)) WAIT(0);
+								}
+								if (STREAMING::HAS_ANIM_DICT_LOADED(hw_anim_dict) && !ENTITY::IS_ENTITY_PLAYING_ANIM(PLAYER::PLAYER_PED_ID(), hw_anim_dict, animation_of_h, 3)) AI::TASK_PLAY_ANIM(PLAYER::PLAYER_PED_ID(), hw_anim_dict, animation_of_h, 8.0, 8.0, -1, 32, 0, 0, 0, 0);
 							}
-							if (STREAMING::HAS_ANIM_DICT_LOADED(hw_anim_dict) && !ENTITY::IS_ENTITY_PLAYING_ANIM(PLAYER::PLAYER_PED_ID(), hw_anim_dict, animation_of_h, 3)) AI::TASK_PLAY_ANIM(PLAYER::PLAYER_PED_ID(), hw_anim_dict, animation_of_h, 8.0, 8.0, -1, 32, 0, 0, 0, 0);
 
 							if (breaking_secs_tick >= VEH_RINGER_SECONDS_BREAK_VALUES[RingerHotwireSecIndex]) {
 								VEHICLES_IGNITED.push_back(veh);
@@ -4492,15 +4501,18 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 				float tmp_numerator = breaking_secs_tick; 
 				float tmp_denominator = VEH_RINGER_SECONDS_BREAK_VALUES[RingerBreakSecIndex];
-				GRAPHICS::DRAW_RECT(0.5, 0.7, 0.33 - ((tmp_numerator / tmp_denominator) / 3), 0.009, 255, 255, 255, 255);
+				GRAPHICS::DRAW_RECT(0.5, 0.9, 0.33 - ((tmp_numerator / tmp_denominator) / 3), 0.009, 255, 255, 255, 255);
 
 				AI::TASK_STAND_STILL(playerPed, 1);
-				if (!STREAMING::HAS_ANIM_DICT_LOADED(h_anim_dict)) {
-					STREAMING::REQUEST_ANIM_DICT(h_anim_dict);
-					while (!STREAMING::HAS_ANIM_DICT_LOADED(h_anim_dict)) WAIT(0);
+
+				if (featureRoutineAnimations) {
+					if (!STREAMING::HAS_ANIM_DICT_LOADED(h_anim_dict)) {
+						STREAMING::REQUEST_ANIM_DICT(h_anim_dict);
+						while (!STREAMING::HAS_ANIM_DICT_LOADED(h_anim_dict)) WAIT(0);
+					}
+					if (STREAMING::HAS_ANIM_DICT_LOADED(h_anim_dict) && !ENTITY::IS_ENTITY_PLAYING_ANIM(PLAYER::PLAYER_PED_ID(), h_anim_dict, animation_of_h, 3)) AI::TASK_PLAY_ANIM(PLAYER::PLAYER_PED_ID(), h_anim_dict, animation_of_h, 8.0, 8.0, -1, 32, 0, 0, 0, 0);
 				}
-				if (STREAMING::HAS_ANIM_DICT_LOADED(h_anim_dict) && !ENTITY::IS_ENTITY_PLAYING_ANIM(PLAYER::PLAYER_PED_ID(), h_anim_dict, animation_of_h, 3)) AI::TASK_PLAY_ANIM(PLAYER::PLAYER_PED_ID(), h_anim_dict, animation_of_h, 8.0, 8.0, -1, 32, 0, 0, 0, 0);
-				
+
 				if (breaking_secs_tick >= VEH_RINGER_SECONDS_BREAK_VALUES[RingerBreakSecIndex]) {
 					VEHICLES_AVAILABLE.push_back(temp_vehicle);
 					VEHICLE::SET_VEHICLE_IS_CONSIDERED_BY_PLAYER(temp_vehicle, true);
@@ -4531,7 +4543,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 					ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("DUNE3") && ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("DUNE") && ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("BIFTA") &&
 					ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("LOCUST") && ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("RUSTON") && ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("RAPTOR") &&
 					ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("PEYOTE") && ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("ZION2") && ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("FELON2") &&
-					ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("WINDSOR2") && ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("COGCABRIO"))) {
+					ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("WINDSOR2") && ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("COGCABRIO") && ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("MAMBA"))) {
 					bool me_own_already = false;
 					if (!VEHICLES_AVAILABLE.empty()) {
 						for (int vh = 0; vh < VEHICLES_AVAILABLE.size(); vh++) {
@@ -4754,6 +4766,7 @@ void reset_vehicle_globals() {
 		featureVehLightsOn = false;
 
 	featureLockVehicleDoorsUpdated = false;
+	featureRoutineAnimations = true;
 		featureBlipNumber = true;
 		featureHazards = true;
 		featureWearHelmetOffUpdated = true;
@@ -5034,6 +5047,7 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureEngineHealthBar", &featureEngineHealthBar});
 	results->push_back(FeatureEnabledLocalDefinition{"featureLimpMode", &featureLimpMode});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRoutineOfRinger", &featureRoutineOfRinger});
+	results->push_back(FeatureEnabledLocalDefinition{"featureRoutineAnimations", &featureRoutineAnimations});
 	results->push_back(FeatureEnabledLocalDefinition{"featureShowPedCons", &featureShowPedCons});
 }
 
