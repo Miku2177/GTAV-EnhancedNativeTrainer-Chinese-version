@@ -689,7 +689,7 @@ void fuel()
 					Vector3 curr_s = ENTITY::GET_ENTITY_VELOCITY(VEHICLES[i]);
 					if (curr_s.x < 1 && curr_s.y < 1 && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(VEHICLES[i]) && FUEL[i] > 0) FUEL[i] = FUEL[i] - 0.001;  
 					if (VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(VEHICLES[i]) && FUEL[i] <= 0) {
-						VEHICLE::SET_VEHICLE_ENGINE_ON(VEHICLES[i], false, true, true);
+						VEHICLE::SET_VEHICLE_ENGINE_ON(VEHICLES[i], false, true, false);
 						VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(VEHICLES[i], false);
 					}
 				}
