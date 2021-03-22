@@ -1732,7 +1732,7 @@ void update_teleport_features(){
 	// Hiding GTA Online apartment glitchy exteriors
 	if (teleported_i == true) { 
 		int interiorID = INTERIOR::GET_INTERIOR_AT_COORDS(ENTITY::GET_ENTITY_COORDS(playerPed, true).x, ENTITY::GET_ENTITY_COORDS(playerPed, true).y, ENTITY::GET_ENTITY_COORDS(playerPed, true).z);
-		GRAPHICS::_0x4B5CFC83122DF602();
+		GRAPHICS::SET_DISABLE_DECAL_RENDERING_THIS_FRAME();
 		if (interiorID == 232705 || interiorID == 231937 || interiorID == 231169 || interiorID == 230401 || interiorID == 229633 || interiorID == 228865 || interiorID == 228097 || interiorID == 227329 ||
 			interiorID == 146945 || interiorID == 40962 || interiorID == 144129 || interiorID == 143873 || interiorID == 61186) INTERIOR::_HIDE_MAP_OBJECT_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("apa_ss1_11_flats"));
 		if (interiorID == 141313 || interiorID == 147201) INTERIOR::_HIDE_MAP_OBJECT_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("hei_dt1_03_build1x"));
@@ -1750,7 +1750,7 @@ void update_teleport_features(){
 		//if (interiorID == 206593) INTERIOR::_HIDE_MAP_OBJECT_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("apa_ch2_05c_b4"));
 		//if (interiorID == 206081) INTERIOR::_HIDE_MAP_OBJECT_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("apa_ch2_04_house02"));
 		//if (interiorID == 207105) INTERIOR::_HIDE_MAP_OBJECT_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("apa_ch2_05e"));
-		GRAPHICS::_0x3669F1B198DCAA4F();
+		GRAPHICS::DISABLE_OCCLUSION_THIS_FRAME();
 	}
 	if (teleported_i == true && INTERIOR::GET_INTERIOR_AT_COORDS(ENTITY::GET_ENTITY_COORDS(playerPed, true).x, ENTITY::GET_ENTITY_COORDS(playerPed, true).y, ENTITY::GET_ENTITY_COORDS(playerPed, true).z) == 0) teleported_i = false;
 	

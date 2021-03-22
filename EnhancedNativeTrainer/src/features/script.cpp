@@ -190,7 +190,7 @@ int PedsHealthIndex = 0;
 bool PedsHealthChanged = true;
 
 // Max Wanted Level
-int wanted_maxpossible_level = 3;
+int wanted_maxpossible_level = 4;
 bool wanted_maxpossible_level_Changed = true;
 
 // Player Armor
@@ -2406,13 +2406,13 @@ void reset_globals(){
 	current_player_movement = 0;
 	current_player_jumpfly = 0;
 	current_player_superjump = 0;
-	current_player_mostwanted = 0;
-	mostwanted_level_enable = 0;
-	wanted_maxpossible_level = 3;
+	current_player_mostwanted = 1;
+	mostwanted_level_enable = 1;
+	wanted_maxpossible_level = 4;
 	current_player_prison = 0;
 	current_player_escapemoney = 4;
 	current_player_discharge = 3;
-	current_escape_stars = 3;
+	current_escape_stars = 4;
 
 	featurePlayerDrunk =
 		featurePlayerInvincible =
