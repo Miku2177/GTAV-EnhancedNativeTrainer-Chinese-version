@@ -4361,7 +4361,9 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		char* animation_of_h = "hotwire";
 
 		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
-			Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
+			//Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
+			Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+
 			if (VEHICLES_AVAILABLE.empty()) VEHICLES_AVAILABLE.push_back(veh);
 			if (!VEHICLES_AVAILABLE.empty()) {
 				bool exists_already = false;
@@ -4381,7 +4383,9 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 			if ((VEHICLES_IGNITED.empty() || have_ignited_already == false) && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(veh)) VEHICLES_IGNITED.push_back(veh);
 			if ((VEHICLES_IGNITED.empty() || have_ignited_already == false) && !VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(veh)) {
+				ENTITY::SET_ENTITY_AS_MISSION_ENTITY(veh, true, true);
 				VEHICLE::SET_VEHICLE_ENGINE_ON(veh, false, true, true);
+
 				if (CONTROLS::IS_CONTROL_PRESSED(2, 71)) {
 					breaking_secs_passed = clock() / CLOCKS_PER_SEC;
 					if (((clock() / CLOCKS_PER_SEC) - breaking_secs_curr) != 0) {
@@ -4391,7 +4395,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 					float tmp_numerator = breaking_secs_tick;
 					float tmp_denominator = VEH_RINGER_SECONDS_BREAK_VALUES[RingerHotwireSecIndex];
 					GRAPHICS::DRAW_RECT(0.5, 0.9, 0.33 - ((tmp_numerator / tmp_denominator) / 3), 0.009, 255, 0, 0, 255);
-
+									
 					if (featureRoutineAnimations) {
 						if (!STREAMING::HAS_ANIM_DICT_LOADED(hw_anim_dict)) {
 							STREAMING::REQUEST_ANIM_DICT(hw_anim_dict);
@@ -4405,13 +4409,14 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 						VEHICLE::SET_VEHICLE_NEEDS_TO_BE_HOTWIRED(veh, true);
 						WAIT(1000);
 						VEHICLE::SET_VEHICLE_ENGINE_ON(veh, true, false, false);
+						ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&veh);
 						breaking_secs_tick = 0;
 					}
 				}
 				if (CONTROLS::IS_CONTROL_RELEASED(2, 71)) breaking_secs_tick = 0;
 				if (breaking_secs_tick == 0 && ENTITY::IS_ENTITY_PLAYING_ANIM(playerPed, hw_anim_dict, animation_of_h, 3)) AI::STOP_ANIM_TASK(PLAYER::PLAYER_PED_ID(), hw_anim_dict, animation_of_h, 1.0);
 			}
-		}
+		} // end of in vehicle
 
 		if (time_to_call_the_police == true && !featureWantedLevelFrozen) {
 			tick_pedcallingpolice_secs_passed = clock() / CLOCKS_PER_SEC;
@@ -4537,7 +4542,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			}
 
 			for (int ror = 0; ror < count_surr_veh_r; ror++) {
-				if (ENTITY::IS_ENTITY_A_MISSION_ENTITY(surr_vehs_r[ror])/* || ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) == GAMEPLAY::GET_HASH_KEY("BAGGER")*/) {
+				if (ENTITY::IS_ENTITY_A_MISSION_ENTITY(surr_vehs_r[ror])) { // || ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) == GAMEPLAY::GET_HASH_KEY("BAGGER")
 					bool own_veh = false;
 					if (VEHICLES_IGNITED.empty()) VEHICLES_IGNITED.push_back(surr_vehs_r[ror]);
 					if (!VEHICLES_IGNITED.empty()) {
@@ -4557,7 +4562,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 					ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("BIFTA") && ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("LOCUST") && ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("RUSTON") && 
 					ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("RAPTOR") && ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("PEYOTE") && ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("ZION2") && 
 					ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("FELON2") && ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("WINDSOR2") && ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("COGCABRIO") && 
-					ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("MAMBA"))) {
+					ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("MAMBA") && ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("SCRAMJET"))) {
 					bool me_own_already = false;
 					if (!VEHICLES_AVAILABLE.empty()) {
 						for (int vh = 0; vh < VEHICLES_AVAILABLE.size(); vh++) {
@@ -4577,7 +4582,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 					}
 				}
 			}
-		}
+		} // end of not in vehicle
 	}
 ///////////////////////////////////
 
