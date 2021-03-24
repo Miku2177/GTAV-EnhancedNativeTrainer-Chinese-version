@@ -4545,7 +4545,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			}
 
 			for (int ror = 0; ror < count_surr_veh_r; ror++) {
-				if (ENTITY::IS_ENTITY_A_MISSION_ENTITY(surr_vehs_r[ror])) { // || ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) == GAMEPLAY::GET_HASH_KEY("BAGGER")
+				if (ENTITY::IS_ENTITY_A_MISSION_ENTITY(surr_vehs_r[ror]) && !VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(surr_vehs_r[ror]) && ENTITY::DOES_ENTITY_BELONG_TO_THIS_SCRIPT(surr_vehs_r[ror], 1) == 0) { // || ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) == GAMEPLAY::GET_HASH_KEY("BAGGER")
 					bool own_veh = false;
 					if (VEHICLES_IGNITED.empty()) VEHICLES_IGNITED.push_back(surr_vehs_r[ror]);
 					if (!VEHICLES_IGNITED.empty()) {
