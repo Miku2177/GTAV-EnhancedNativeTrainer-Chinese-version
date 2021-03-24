@@ -944,7 +944,7 @@ void update_features(){
 		if (NPC_RAGDOLL_VALUES[EngineRunningIndex] == 0) VEHICLE::SET_VEHICLE_ENGINE_ON(veh_engine, false, true, false);
 		veh_engine_t = false;
 	}
-	if (featureDisableIgnition) {
+	if (featureDisableIgnition && breaking_secs_tick == 0) {
 		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && veh_engine_t == false) {
 			veh_engine = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 			if (!VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(veh_engine)) {
