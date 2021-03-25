@@ -1047,7 +1047,7 @@ bool onconfirm_bodyguard_skins_menu(MenuItem<int> choice){
 		case 4:
 		{
 			keyboard_on_screen_already = true;
-			curr_message = "Enter bodyguard model name (e.g. cs_amandatownley, random, saved_bodyguards):"; // spawn a bodyguard
+			curr_message = "Enter bodyguard model name (e.g. random, saved_bodyguards, random_story):"; // spawn a bodyguard
 			std::string result = show_keyboard("Enter Name Manually", (char*)lastCustomBodyguardSpawn.c_str());
 			if (!result.empty())
 			{
@@ -1055,7 +1055,9 @@ bool onconfirm_bodyguard_skins_menu(MenuItem<int> choice){
 				lastCustomBodyguardSpawn = result;
 				Hash hash = GAMEPLAY::GET_HASH_KEY((char*)result.c_str());
 				if (lastCustomBodyguardSpawn != "random" && lastCustomBodyguardSpawn != "Random" && lastCustomBodyguardSpawn != "RANDOM" && 
-					lastCustomBodyguardSpawn != "saved_bodyguards" && lastCustomBodyguardSpawn != "Saved_bodyguards" && lastCustomBodyguardSpawn != "Saved_Bodyguards" && (!STREAMING::IS_MODEL_IN_CDIMAGE(hash) || !STREAMING::IS_MODEL_VALID(hash)))
+					lastCustomBodyguardSpawn != "saved_bodyguards" && lastCustomBodyguardSpawn != "Saved_bodyguards" && lastCustomBodyguardSpawn != "Saved_Bodyguards" && 
+					lastCustomBodyguardSpawn != "random_story" && lastCustomBodyguardSpawn != "Random_story" && lastCustomBodyguardSpawn != "Random_Story" &&
+					(!STREAMING::IS_MODEL_IN_CDIMAGE(hash) || !STREAMING::IS_MODEL_VALID(hash)))
 				{
 					std::ostringstream ss;
 					ss << "Couldn't find model '" << result << "'";
@@ -1064,7 +1066,8 @@ bool onconfirm_bodyguard_skins_menu(MenuItem<int> choice){
 					return false;
 				}
 				if ((STREAMING::IS_MODEL_IN_CDIMAGE(hash) && STREAMING::IS_MODEL_VALID(hash)) || lastCustomBodyguardSpawn == "random" || lastCustomBodyguardSpawn == "Random" || lastCustomBodyguardSpawn == "RANDOM" ||
-					lastCustomBodyguardSpawn == "saved_bodyguards" || lastCustomBodyguardSpawn == "Saved_bodyguards" || lastCustomBodyguardSpawn == "Saved_Bodyguards")
+					lastCustomBodyguardSpawn == "saved_bodyguards" || lastCustomBodyguardSpawn == "Saved_bodyguards" || lastCustomBodyguardSpawn == "Saved_Bodyguards" ||
+					lastCustomBodyguardSpawn == "random_story" || lastCustomBodyguardSpawn == "Random_story" || lastCustomBodyguardSpawn == "Random_Story")
 				{
 					get_current_model_name();
 					requireRefreshOfBodyguardMainMenu = true;
@@ -2578,13 +2581,47 @@ bool onconfirm_bodyguard_menu(MenuItem<int> choice){
 
 	switch (activeLineIndexBodyguards) {
 		case 0:
-			if (lastCustomBodyguardSpawn != "saved_bodyguards" && lastCustomBodyguardSpawn != "Saved_bodyguards" && lastCustomBodyguardSpawn != "Saved_Bodyguards") do_spawn_bodyguard();
+			if (lastCustomBodyguardSpawn != "saved_bodyguards" && lastCustomBodyguardSpawn != "Saved_bodyguards" && lastCustomBodyguardSpawn != "Saved_Bodyguards" && 
+				lastCustomBodyguardSpawn != "random_story" && lastCustomBodyguardSpawn != "Random_story" && lastCustomBodyguardSpawn != "Random_Story") do_spawn_bodyguard();
 			if (lastCustomBodyguardSpawn == "saved_bodyguards" || lastCustomBodyguardSpawn == "Saved_bodyguards" || lastCustomBodyguardSpawn == "Saved_Bodyguards") {
 				ENTDatabase* database = get_database();
 				std::vector<SavedBodSkinDBRow*> savedBodSkins = database->get_saved_bod_skins();
 				for each (SavedBodSkinDBRow * sv in savedBodSkins) {
 					spawn_saved_bod_skin(sv->rowID, "");
 				}
+			}
+			if (lastCustomBodyguardSpawn == "random_story" || lastCustomBodyguardSpawn == "Random_story" || lastCustomBodyguardSpawn == "Random_Story") {
+				std::string lastCustomBodyguardSpawn_tmp = lastCustomBodyguardSpawn;
+				for (int i = 0; i < 7; i++) {
+					int random_story_bodyguard = (rand() % 24 + 0);
+					if (random_story_bodyguard == 0) lastCustomBodyguardSpawn = "player_zero";
+					if (random_story_bodyguard == 1) lastCustomBodyguardSpawn = "player_one";
+					if (random_story_bodyguard == 2) lastCustomBodyguardSpawn = "player_two";
+					if (random_story_bodyguard == 3) lastCustomBodyguardSpawn = "ig_amandatownley";
+					if (random_story_bodyguard == 4) lastCustomBodyguardSpawn = "ig_davenorton";
+					if (random_story_bodyguard == 5) lastCustomBodyguardSpawn = "ig_devin";
+					if (random_story_bodyguard == 6) lastCustomBodyguardSpawn = "ig_jimmydisanto";
+					if (random_story_bodyguard == 7) lastCustomBodyguardSpawn = "ig_lamardavis";
+					if (random_story_bodyguard == 8) lastCustomBodyguardSpawn = "ig_lestercrest";
+					if (random_story_bodyguard == 9) lastCustomBodyguardSpawn = "ig_nervousron";
+					if (random_story_bodyguard == 10) lastCustomBodyguardSpawn = "ig_stevehains";
+					if (random_story_bodyguard == 11) lastCustomBodyguardSpawn = "ig_stretch";
+					if (random_story_bodyguard == 12) lastCustomBodyguardSpawn = "ig_tracydisanto";
+					if (random_story_bodyguard == 13) lastCustomBodyguardSpawn = "ig_wade";
+					if (random_story_bodyguard == 14) lastCustomBodyguardSpawn = "ig_chengsr";
+					if (random_story_bodyguard == 15) lastCustomBodyguardSpawn = "ig_andreas";
+					if (random_story_bodyguard == 16) lastCustomBodyguardSpawn = "ig_brad";
+					if (random_story_bodyguard == 17) lastCustomBodyguardSpawn = "ig_drfriedlander";
+					if (random_story_bodyguard == 18) lastCustomBodyguardSpawn = "ig_floyd";
+					if (random_story_bodyguard == 19) lastCustomBodyguardSpawn = "cs_martinmadrazo";
+					if (random_story_bodyguard == 20) lastCustomBodyguardSpawn = "ig_molly";
+					if (random_story_bodyguard == 21) lastCustomBodyguardSpawn = "ig_patricia";
+					if (random_story_bodyguard == 22) lastCustomBodyguardSpawn = "ig_siemonyetarian";
+					if (random_story_bodyguard == 23) lastCustomBodyguardSpawn = "ig_solomon";
+					if (random_story_bodyguard == 24) lastCustomBodyguardSpawn = "ig_taocheng";
+					do_spawn_bodyguard();
+				}
+				lastCustomBodyguardSpawn = lastCustomBodyguardSpawn_tmp;
 			}
 			break;
 		case 1:
