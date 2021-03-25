@@ -656,7 +656,7 @@ bool applyChosenBodSkin(DWORD model)
 		STREAMING::REQUEST_MODEL(model);
 		while (!STREAMING::HAS_MODEL_LOADED(model))
 		{
-			make_periodic_feature_call();
+			//make_periodic_feature_call();
 			WAIT(0);
 		}
 

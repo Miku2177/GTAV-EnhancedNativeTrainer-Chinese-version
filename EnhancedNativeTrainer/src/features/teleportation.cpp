@@ -1499,10 +1499,6 @@ void update_teleport_features(){
 		float me_rot = ENTITY::GET_ENTITY_HEADING(PLAYER::PLAYER_PED_ID());
 		std::ostringstream ss;
 		
-		int screen_w = 0;
-		int screen_h = 0;
-		GetDesktopResolution(screen_w, screen_h);
-
 		std::string direction = "";
 		if (me_rot > 337 || me_rot < 22) direction = "NORTH";
 		if (me_rot > 22 && me_rot < 68) direction = "NORTH WEST";
@@ -1514,7 +1510,7 @@ void update_teleport_features(){
 		if (me_rot > 292 && me_rot < 337) direction = "NORTH EAST";
 
 		std::string CurrCoordsLines[1];
-		ss << std::fixed << std::setprecision(2) << "X: " << coords.x << "   Y: " << coords.y << "   Z: " << coords.z << "   R: " << me_rot/* << "\n" << direction*/;
+		ss << std::fixed << std::setprecision(0) << "X: " << coords.x << "   Y: " << coords.y << "   Z: " << coords.z << "   R: " << me_rot << "    " << direction;
 		int index = 0;
 		CurrCoordsLines[index++] = ss.str();
 		int numActualLines = 0;
@@ -1525,24 +1521,6 @@ void update_teleport_features(){
 			text_parameters(0.4, 0.4, 255, 242, 0, 255);
 			UI::END_TEXT_COMMAND_DISPLAY_TEXT(0.35, 0.01);
 		}
-
-		std::ostringstream ss2;
-		std::string CurrDirectionLines[1];
-		ss2 << std::fixed << std::setprecision(2) << direction/* << "   (" << me_rot << ")"*/;
-		int index1 = 0;
-		CurrDirectionLines[index1++] = ss2.str();
-		int numActualLines1 = 0;
-		for (int i = 0; i < 1; i++) {
-			numActualLines1++;
-			UI::BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
-			UI::_ADD_TEXT_COMPONENT_SCALEFORM((char*)CurrDirectionLines[i].c_str());
-			text_parameters(0.4, 0.4, 255, 242, 0, 255);
-			if (screen_w >= 1280) UI::END_TEXT_COMMAND_DISPLAY_TEXT(0.63, 0.01);
-			else UI::END_TEXT_COMMAND_DISPLAY_TEXT(0.73, 0.01);
-		}
-
-		GRAPHICS::DRAW_RECT(0.67, 0.026, 0.09, 0.03, 0, 0, 0, 30);
-		//GRAPHICS::DRAW_RECT(0.72, 0.026, 0.15, 0.03, 0, 0, 0, 255);
 	}
 
 	/////////////////////////////////////// 3D MARKER /////////////////////////////////////////
