@@ -1525,6 +1525,7 @@ void dismiss_bodyguards(){
 	}
 
 	for(int i = 0; i < spawnedENTBodyguards.size(); i++){
+		if (PED::IS_PED_IN_ANY_VEHICLE(spawnedENTBodyguards[i], 0)) AI::TASK_SMART_FLEE_PED(spawnedENTBodyguards[i], PLAYER::PLAYER_PED_ID(), 1000, -1, true, true);
 		ENTITY::SET_ENTITY_INVINCIBLE(spawnedENTBodyguards[i], false);
 		PED::SET_PED_NEVER_LEAVES_GROUP(spawnedENTBodyguards[i], false);
 		PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(spawnedENTBodyguards[i], false);
@@ -2648,6 +2649,7 @@ bool onconfirm_bodyguard_menu(MenuItem<int> choice){
 					is_it_n = false;
 				}
 				if (!spawnedENTBodyguards.empty() && b_curr_num > -1 && b_curr_num < spawnedENTBodyguards.size()) {
+					if (PED::IS_PED_IN_ANY_VEHICLE(spawnedENTBodyguards[b_curr_num], 0)) AI::TASK_SMART_FLEE_PED(spawnedENTBodyguards[b_curr_num], PLAYER::PLAYER_PED_ID(), 1000, -1, true, true);
 					ENTITY::SET_ENTITY_INVINCIBLE(spawnedENTBodyguards[b_curr_num], false);
 					PED::SET_PED_NEVER_LEAVES_GROUP(spawnedENTBodyguards[b_curr_num], false);
 					PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(spawnedENTBodyguards[b_curr_num], false);
