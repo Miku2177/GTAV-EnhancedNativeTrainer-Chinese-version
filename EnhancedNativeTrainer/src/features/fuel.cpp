@@ -440,7 +440,7 @@ void fuel()
 
 					// FUEL CONSUMPTION
 					// CAR
-					if (VEH_CARFUEL_VALUES[CarConsumptionIndex] > 0) {
+					if (VEH_CARFUEL_VALUES[CarConsumptionIndex] > 0 && (CONTROLS::IS_CONTROL_PRESSED(2, 71) || CONTROLS::IS_CONTROL_PRESSED(2, 72))) {
 						if ((GAMEPLAY::GET_GAME_TIMER() - Time_tick) > 200 && VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(veh))) {
 							if (FUEL[0] > 0 && VEHICLES[0] == veh) {
 								FUEL[0] = (FUEL[0] - (vehspeed / VEH_CARFUEL_VALUES[CarConsumptionIndex]));
@@ -452,7 +452,7 @@ void fuel()
 						}
 					}
 					// BIKE & ATV
-					if (VEH_CARFUEL_VALUES[BikeConsumptionIndex] > 0) {
+					if (VEH_CARFUEL_VALUES[BikeConsumptionIndex] > 0 && (CONTROLS::IS_CONTROL_PRESSED(2, 71) || CONTROLS::IS_CONTROL_PRESSED(2, 72))) {
 						if ((GAMEPLAY::GET_GAME_TIMER() - Time_tick) > 200 && (VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(veh)) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(veh)))) {
 							if (FUEL[0] > 0 && VEHICLES[0] == veh) {
 								FUEL[0] = FUEL[0] - (vehspeed / VEH_CARFUEL_VALUES[BikeConsumptionIndex]);
@@ -464,7 +464,7 @@ void fuel()
 						}
 					}
 					// PLANE
-					if (VEH_CARFUEL_VALUES[PlaneConsumptionIndex] > 0) {
+					if (VEH_CARFUEL_VALUES[PlaneConsumptionIndex] > 0 && (CONTROLS::IS_CONTROL_PRESSED(2, 71) || CONTROLS::IS_CONTROL_PRESSED(2, 72))) {
 						if ((GAMEPLAY::GET_GAME_TIMER() - Time_tick) > 200 && VEHICLE::IS_THIS_MODEL_A_PLANE(ENTITY::GET_ENTITY_MODEL(veh))) {
 							if (FUEL[0] > 0 && VEHICLES[0] == veh) {
 								FUEL[0] = FUEL[0] - (vehspeed / VEH_CARFUEL_VALUES[PlaneConsumptionIndex]);
@@ -476,7 +476,7 @@ void fuel()
 						}
 					}
 					// BOAT
-					if (VEH_CARFUEL_VALUES[BoatConsumptionIndex] > 0) {
+					if (VEH_CARFUEL_VALUES[BoatConsumptionIndex] > 0 && (CONTROLS::IS_CONTROL_PRESSED(2, 71) || CONTROLS::IS_CONTROL_PRESSED(2, 72))) {
 						if ((GAMEPLAY::GET_GAME_TIMER() - Time_tick) > 200 && (VEHICLE::IS_THIS_MODEL_A_BOAT(ENTITY::GET_ENTITY_MODEL(veh)) || ENTITY::GET_ENTITY_MODEL(veh) == GAMEPLAY::GET_HASH_KEY("SUBMERSIBLE") || 
 							ENTITY::GET_ENTITY_MODEL(veh) == GAMEPLAY::GET_HASH_KEY("SUBMERSIBLE2"))) {
 							if (FUEL[0] > 0 && VEHICLES[0] == veh) {
@@ -489,7 +489,7 @@ void fuel()
 						}
 					}
 					// HELICOPTER
-					if (VEH_CARFUEL_VALUES[HeliConsumptionIndex] > 0) {
+					if (VEH_CARFUEL_VALUES[HeliConsumptionIndex] > 0 && (CONTROLS::IS_CONTROL_PRESSED(2, 71) || CONTROLS::IS_CONTROL_PRESSED(2, 72))) {
 						if ((GAMEPLAY::GET_GAME_TIMER() - Time_tick) > 200 && VEHICLE::IS_THIS_MODEL_A_HELI(ENTITY::GET_ENTITY_MODEL(veh))) {
 							if (FUEL[0] > 0 && VEHICLES[0] == veh) {
 								FUEL[0] = FUEL[0] - (vehspeed / VEH_CARFUEL_VALUES[HeliConsumptionIndex]);
@@ -548,7 +548,7 @@ void fuel()
 						}
 					}
 				}
-			}
+			} // end of fuel level handling
 		} // enf of entered vehicle
 
 		// BARS
@@ -686,8 +686,10 @@ void fuel()
 
 			if (IdleConsume_seconds == (VEH_CARFUEL_VALUES[IdleConsumptionIndex] / 85000)) {
 				for (int i = 0; i < VEHICLES.size(); i++) {
-					Vector3 curr_s = ENTITY::GET_ENTITY_VELOCITY(VEHICLES[i]);
-					if (curr_s.x < 1 && curr_s.y < 1 && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(VEHICLES[i]) && FUEL[i] > 0) FUEL[i] = FUEL[i] - 0.001;  
+					//Vector3 curr_s = ENTITY::GET_ENTITY_VELOCITY(VEHICLES[i]);
+					bool stepped_on_pedal = false;
+					if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && (CONTROLS::IS_CONTROL_PRESSED(2, 71) || CONTROLS::IS_CONTROL_PRESSED(2, 72))) stepped_on_pedal = true;
+					if (stepped_on_pedal == false && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(VEHICLES[i]) && FUEL[i] > 0) FUEL[i] = FUEL[i] - 0.001; // curr_s.x < 1 && curr_s.y < 1
 					if (VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(VEHICLES[i]) && FUEL[i] <= 0) {
 						VEHICLE::SET_VEHICLE_ENGINE_ON(VEHICLES[i], false, true, false);
 						VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(VEHICLES[i], false);

@@ -91,7 +91,7 @@ int VigilanteBlipIndex = 0;
 bool VigilanteBlipChanged = true;
 bool b_not_equal = false;
 
-// spooky drivers
+// spooked drivers
 bool has_collided = false;
 std::vector<Ped> spooky_p;
 Vehicle veh_dist = -1;
@@ -274,7 +274,7 @@ void process_areaeffect_peds_menu(){
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Spooky Drivers";
+	togItem->caption = "Spooked Drivers";
 	togItem->value = 1;
 	togItem->toggleValue = &featureSpookyDrivers;
 	togItem->toggleValueUpdated = &featureSpookyDriversUpdated;
@@ -1001,7 +1001,7 @@ void update_area_effects(Ped playerPed){
 		}
 	} // end of aggressive drivers && vigilante citizens
 
-	// Spooky Drivers
+	// Spooked Drivers
 	if (featureSpookyDrivers && PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && GAMEPLAY::GET_MISSION_FLAG() == 0) {
 		Vehicle veh_me = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		Vector3 veh_me_coords = ENTITY::GET_ENTITY_COORDS(veh_me, true);
@@ -1110,7 +1110,7 @@ void update_area_effects(Ped playerPed){
 			}
 		}
 		
-		if (!spooky_p.empty() && spooky_p.size() > 1) {
+		if (!spooky_p.empty() && spooky_p.size() > 1) { // 1
 			ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&spooky_p[0]);
 			Vehicle tmp_v = PED::GET_VEHICLE_PED_IS_IN(spooky_p[0], false);
 			ENTITY::SET_VEHICLE_AS_NO_LONGER_NEEDED(&tmp_v);
@@ -1125,7 +1125,7 @@ void update_area_effects(Ped playerPed){
 	if (featureSpookyDriversUpdated) {
 		featureAggressiveDrivers = false;
 		featureSpookyDriversUpdated = false;
-	} // end of spooky drivers
+	} // end of spooked drivers
 	
 }
 
