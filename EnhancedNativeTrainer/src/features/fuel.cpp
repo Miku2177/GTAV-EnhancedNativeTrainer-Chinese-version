@@ -636,6 +636,10 @@ void fuel()
 					}
 				}
 			}
+			if (outValue_station < 1 && Car_Refuel == true) {
+				Car_Refuel = false;
+				if (!VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(veh_being_refueled)) VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, false, true, false);
+			}
 		}
 		if (PED::IS_PED_ON_FOOT(playerPed)) {
 			exiting_v = false;
