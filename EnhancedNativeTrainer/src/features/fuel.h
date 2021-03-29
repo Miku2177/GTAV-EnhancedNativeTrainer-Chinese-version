@@ -19,8 +19,8 @@ extern int HeliConsumptionIndex;
 extern int IdleConsumptionIndex;
 
 //Refueling Speed
-const std::vector<std::string> VEH_REFUELSPEED_CAPTIONS{ "0.1", "0.5", "0.9", "1.0", "1.5", "1.9", "2.1", "2.2", "2.3", "2.5", "3.0", "5.0", "10.0" };
-const double VEH_REFUELSPEED_VALUES[] = { 0.000001, 0.000005, 0.000009, 0.00001, 0.00005, 0.00009, 0.0001, 0.0002, 0.0003, 0.0005, 0.001, 0.005, 0.01 };
+const std::vector<std::string> VEH_REFUELSPEED_CAPTIONS{ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14" };
+const int VEH_REFUELSPEED_VALUES[] = { 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192 };
 extern int RefuelingSpeedIndex;
 
 //Fuel Price
