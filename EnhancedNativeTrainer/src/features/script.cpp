@@ -133,6 +133,7 @@ bool featureWantedNoPRoadB = false;
 bool featureWantedNoPRoadBUpdated = false;
 bool featureWantedLevelNoPBoats = false;
 bool featureWantedLevelNoPBoatsUpdated = false;
+bool featureWantedLevelNoPRam = false;
 bool featureWantedLevelNoSWATVehicles = false;
 bool featureWantedLevelNoSWATVehiclesUpdated = false;
 bool NoTaxiWhistling = false;
@@ -1020,6 +1021,28 @@ void update_features(){
 		featureWantedLevelNoSWATVehiclesUpdated = false;
 	}
 
+	// Less Aggressive Police Pursuit
+	if (featureWantedLevelNoPRam && PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) > 0) {
+		Vector3 my_cor = ENTITY::GET_ENTITY_COORDS(playerPed, true);
+		float my_speed = ENTITY::GET_ENTITY_SPEED(PED::GET_VEHICLE_PED_IS_USING(playerPed));
+		const int arrSize4 = 1024;
+		Ped copram[arrSize4];
+		int count_cop_ram = worldGetAllPeds(copram, arrSize4);
+		for (int i = 0; i < count_cop_ram; i++) {
+			if ((PED::GET_PED_TYPE(copram[i]) == 6 || PED::GET_PED_TYPE(copram[i]) == 27 || PED::GET_PED_TYPE(copram[i]) == 29) && copram[i] != playerPed) {
+				Vector3 cop_cor = ENTITY::GET_ENTITY_COORDS(copram[i], true);
+				//float cop_speed = ENTITY::GET_ENTITY_SPEED(PED::GET_VEHICLE_PED_IS_USING(copram[i]));
+				float dist_diff_c_m = SYSTEM::VDIST(my_cor.x, my_cor.y, my_cor.z, cop_cor.x, cop_cor.y, cop_cor.z);
+				if (dist_diff_c_m < 30) { // 50 //  && cop_speed > my_speed
+					//AI::TASK_VEHICLE_TEMP_ACTION(copram[i], PED::GET_VEHICLE_PED_IS_USING(copram[i]), 27, 1); // 100
+					AI::SET_DRIVE_TASK_CRUISE_SPEED(copram[i], my_speed);
+					AI::SET_TASK_VEHICLE_CHASE_IDEAL_PURSUIT_DISTANCE(copram[i], 10.0f);
+					PED::SET_DRIVER_AGGRESSIVENESS(copram[i], 0.0f);
+				}
+			}
+		}
+	}
+
 	// No Whistling For Taxi
 	if (NoTaxiWhistling && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID()) && !UI::IS_HELP_MESSAGE_BEING_DISPLAYED() && GAMEPLAY::GET_MISSION_FLAG() == 0) CONTROLS::DISABLE_CONTROL_ACTION(2, 51, 1);
 		
@@ -1894,6 +1917,12 @@ bool maxwantedlevel_menu() {
 	toggleItem->toggleValue = &featureWantedLevelNoSWATVehicles;
 	menuItems.push_back(toggleItem);
 
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Less Aggressive Police Pursuit";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureWantedLevelNoPRam;
+	menuItems.push_back(toggleItem);
+
 	return draw_generic_menu<int>(menuItems, &PlayerWantedMaxPossibleLevelMenuIndex, caption, onconfirm_PlayerWantedMaxPossibleLevel_menu, NULL, NULL);
 }
 
@@ -2436,6 +2465,7 @@ void reset_globals(){
 		featureWantedLevelNoPHeli =
 		featureWantedNoPRoadB =
 		featureWantedLevelNoPBoats =
+		featureWantedLevelNoPRam =
 		featureWantedLevelNoSWATVehicles =
 		NoTaxiWhistling =
 		featurePlayerCanBeHeadshot =
@@ -2684,6 +2714,7 @@ void add_player_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featureWantedLevelNoPHeli", &featureWantedLevelNoPHeli});
 	results->push_back(FeatureEnabledLocalDefinition{"featureWantedNoPRoadB", &featureWantedNoPRoadB});
 	results->push_back(FeatureEnabledLocalDefinition{"featureWantedLevelNoPBoats", &featureWantedLevelNoPBoats});
+	results->push_back(FeatureEnabledLocalDefinition{"featureWantedLevelNoPRam", &featureWantedLevelNoPRam});
 	results->push_back(FeatureEnabledLocalDefinition{"featureWantedLevelNoSWATVehicles", &featureWantedLevelNoSWATVehicles});
 	results->push_back(FeatureEnabledLocalDefinition{"NoTaxiWhistling", &NoTaxiWhistling});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoScubaGearMask", &featureNoScubaGearMask});
