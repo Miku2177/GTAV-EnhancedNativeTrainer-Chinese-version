@@ -1036,7 +1036,7 @@ void update_features(){
 				if (dist_diff_c_m < 30) { // 50 //  && cop_speed > my_speed
 					//AI::TASK_VEHICLE_TEMP_ACTION(copram[i], PED::GET_VEHICLE_PED_IS_USING(copram[i]), 27, 1); // 100
 					AI::SET_DRIVE_TASK_CRUISE_SPEED(copram[i], my_speed);
-					AI::SET_TASK_VEHICLE_CHASE_IDEAL_PURSUIT_DISTANCE(copram[i], 10.0f);
+					AI::SET_TASK_VEHICLE_CHASE_IDEAL_PURSUIT_DISTANCE(copram[i], 10.0f); // 30
 					PED::SET_DRIVER_AGGRESSIVENESS(copram[i], 0.0f);
 				}
 			}

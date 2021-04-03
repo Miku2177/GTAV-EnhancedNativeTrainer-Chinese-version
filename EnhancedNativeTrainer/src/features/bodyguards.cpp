@@ -1579,7 +1579,7 @@ void do_spawn_bodyguard(){
 	}
 
 	// random bodyguard
-	if (lastCustomBodyguardSpawn == "random" || lastCustomBodyguardSpawn == "Random" || lastCustomBodyguardSpawn == "RANDOM") {
+	if ((lastCustomBodyguardSpawn == "random" || lastCustomBodyguardSpawn == "Random" || lastCustomBodyguardSpawn == "RANDOM") && added_nearest_b == false) {
 		random_category = (rand() % 10 + 0); // UP MARGIN + DOWN MARGIN
 		if (random_category == 0) {
 			random_bodyguard = (rand() % SKINS_PLAYER_VALUES.size() + 0);
@@ -1599,14 +1599,17 @@ void do_spawn_bodyguard(){
 		}
 	} // end of random bodyguard
 	
-	if (lastCustomBodyguardSpawn != "random" && lastCustomBodyguardSpawn != "Random" && lastCustomBodyguardSpawn != "RANDOM") bodyGuardModel = get_current_model_hash(); // hotkey_boddyguard == false && 
+	if (lastCustomBodyguardSpawn != "random" && lastCustomBodyguardSpawn != "Random" && lastCustomBodyguardSpawn != "RANDOM" && lastCustomBodyguardSpawn != "saved_bodyguards" && lastCustomBodyguardSpawn != "Saved_bodyguards" && lastCustomBodyguardSpawn != "Saved_Bodyguards" &&
+		lastCustomBodyguardSpawn != "random_story" && lastCustomBodyguardSpawn != "Random_story" && lastCustomBodyguardSpawn != "Random_Story" && added_nearest_b == false) bodyGuardModel = get_current_model_hash(); // hotkey_boddyguard == false && 
 	
-	if (load_saved_bodyguard == true) bodyGuardModel = temp_bodyguard;
+	if (load_saved_bodyguard == true && added_nearest_b == false) bodyGuardModel = temp_bodyguard;
 
 	if (spawning_a_ped == false && spawnedENTBodyguards.size() >= BODYGUARD_LIMIT) {
 		set_status_text("Cannot spawn any more bodyguards");
 		return;
 	}
+
+	if (added_nearest_b == true) bodyGuardModel = GAMEPLAY::GET_HASH_KEY("player_one");
 
 	if((STREAMING::IS_MODEL_IN_CDIMAGE(bodyGuardModel) && STREAMING::IS_MODEL_VALID(bodyGuardModel)) || added_nearest_b == true){
 		STREAMING::REQUEST_MODEL(bodyGuardModel);
