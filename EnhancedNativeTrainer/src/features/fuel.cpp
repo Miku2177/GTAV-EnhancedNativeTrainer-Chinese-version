@@ -649,7 +649,7 @@ void fuel()
 					}
 				}
 			}
-			if (outValue_station < 1 && Car_Refuel == true) {
+			if (outValue_station < 1 && Car_Refuel == true && VEH_FUELPRICE_VALUES[FuelPriceIndex] > 0) {
 				Car_Refuel = false;
 				if (!VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(veh_being_refueled)) VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, false, true, false);
 				ref_seconds = 0;
