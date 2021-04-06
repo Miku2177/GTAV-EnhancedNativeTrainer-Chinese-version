@@ -14,6 +14,8 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 int lastSelectedModValue = 0;
 
+std::string result = "";
+
 int wheelpart = 0;
 
 std::string current_picked_engine_sound = "";
@@ -1246,11 +1248,34 @@ bool process_vehmod_menu(){
 void set_plate_text(MenuItem<int> choice){
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 	keyboard_on_screen_already = true;
-	curr_message = "Enter plate text:"; // set plate text
-	char* existingText = VEHICLE::GET_VEHICLE_NUMBER_PLATE_TEXT(veh);
-	std::string result = show_keyboard("Enter Name Manually", existingText); // CMOD_MOD_18_D
+	char* existingText = "";
+	curr_message = "Enter plate text (type 'random' for random text):"; // set plate text
+	if (result != "random" && result != "Random" && result != "RANDOM") existingText = VEHICLE::GET_VEHICLE_NUMBER_PLATE_TEXT(veh);
+	if (result == "random" || result == "Random" || result == "RANDOM") existingText = (char*)result.c_str();
+	result = show_keyboard("Enter Name Manually", existingText); // CMOD_MOD_18_D
 	if (!result.empty()){
-		VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT(veh, (char*)result.c_str());
+		//
+		if (result == "random" || result == "Random" || result == "RANDOM") {
+			std::string random_t = "AAAAAAAA";
+			for (int aa = 0; aa < 9; aa++) {
+				VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT(veh, (char*)random_t.c_str());
+				WAIT(100);
+				int n_or_l = rand() % 2 + 0;
+				if (n_or_l == 0) {
+					char letters[] = "abcdefghijklmnopqrstuvwxyz";
+					char let_t = letters[rand() % 26];
+					random_t[aa] = let_t;
+				}
+				if (n_or_l == 1 || n_or_l == 2) {
+					int num_t = rand() % 9 + 0;
+					std::string tmp_c = std::to_string(num_t);
+					char const* t_char = tmp_c.c_str();
+					random_t[aa] = t_char[0];
+				}
+			}
+		}
+		//
+		if (result != "random" && result != "Random" && result != "RANDOM") VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT(veh, (char*)result.c_str());
 	}
 }
 
