@@ -623,7 +623,7 @@ void fuel()
 					}
 					VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, false, false, true);
 				}
-				else VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, false, true, true);
+				else VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, false, true, false);
 				
 				if (stoprefillKey && !IsKeyDown(VK_ESCAPE) && CONTROLS::IS_CONTROL_RELEASED(2, INPUT_FRONTEND_PAUSE) && exiting_v == false) {
 					if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
