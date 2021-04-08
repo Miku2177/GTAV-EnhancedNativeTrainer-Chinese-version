@@ -96,7 +96,8 @@ void update_speed_text(int speed, Vector3 player_coords)
 		textY += 0.025f;
 	}
 
-	if (size < 4) { // draw background
+	//if (size < 4) { // draw background
+	if (SpeedSizeIndex < 1) { // draw background
 		if (NPC_RAGDOLL_VALUES[SpeedPositionIndexN] == 0) { //Bottom Right
 			rectXScaled = 1 - ((300 / (float)screen_w) / 4);
 			rectYScaled = 0.95 - (((0 + (1 * 18)) / (float)screen_h) * 5);
