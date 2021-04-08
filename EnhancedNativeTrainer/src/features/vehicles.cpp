@@ -2395,7 +2395,7 @@ void process_veh_menu(){
 	menuItems.push_back(listItem);
 
 	item = new MenuItem<int>();
-	item->caption = "Show Speed / Altitude";
+	item->caption = "Speed / Altitude";
 	item->value = i++;
 	item->isLeaf = false;
 	menuItems.push_back(item);
