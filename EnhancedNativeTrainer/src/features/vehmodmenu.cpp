@@ -603,10 +603,16 @@ bool onconfirm_vehmod_category_menu(MenuItem<int> choice){
 		set_status_text("Changed window tint");
 	}
 	else if (lastSelectedModValue == SPECIAL_ID_FOR_LICENSE_PLATES){
-		int plateCount = VEHICLE::GET_NUMBER_OF_VEHICLE_NUMBER_PLATES();
-		VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
-		VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT_INDEX(veh, choice.value);
-		set_status_text("Changed license plate");
+		if (choice.value != 666) {
+			//int plateCount = VEHICLE::GET_NUMBER_OF_VEHICLE_NUMBER_PLATES();
+			VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
+			VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT_INDEX(veh, choice.value);
+			DefaultPlateIndex = -1;
+			set_status_text("Changed license plate");
+		}
+		if (choice.value == 666) {
+			DefaultPlateIndex = VEHICLE::GET_VEHICLE_NUMBER_PLATE_TEXT_INDEX(veh);
+		}
 	}
 	else if (lastSelectedModValue == SPECIAL_ID_FOR_ENGINE_SOUND && featureEngineSound) { // pick engine sound through the menu/list
 		char *currSound = new char[ENGINE_SOUND[choice.value].length() + 1];
@@ -689,8 +695,16 @@ bool process_vehmod_category_special_menu(int category){
 		item->value = values.at(i);
 		item->isLeaf = true;
 		menuItems.push_back(item);
-	}
 
+		if (category == SPECIAL_ID_FOR_LICENSE_PLATES && i == (values.size() - 1)) {
+			item = new MenuItem<int>();
+			item->caption = "Set Current Vehicle Plate As Default";
+			item->value = 666;
+			item->isLeaf = true;
+			menuItems.push_back(item);
+		}
+	}
+	
 	//Find menu index to return to
 	int modChoiceMenuIndex = find_menu_index_to_restore(category, category, veh);
 
@@ -1247,6 +1261,7 @@ bool process_vehmod_menu(){
 
 void set_plate_text(MenuItem<int> choice){
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
+	VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
 	keyboard_on_screen_already = true;
 	char* existingText = "";
 	curr_message = "Enter plate text (type 'random' for random text):"; // set plate text
@@ -1256,8 +1271,9 @@ void set_plate_text(MenuItem<int> choice){
 	if (!result.empty()){
 		//
 		if (result == "random" || result == "Random" || result == "RANDOM") {
+			set_status_text("Press jump to cancel");
 			std::string random_t = "AAAAAAAA";
-			while (CONTROLS::IS_CONTROL_RELEASED(2, 22)) { // jump
+			while (CONTROLS::IS_CONTROL_RELEASED(2, 22)/* && !IsKeyDown(KeyConfig::KEY_MENU_BACK) && !IsKeyDown(VK_ESCAPE) && !CONTROLS::IS_CONTROL_JUST_PRESSED(2, INPUT_FRONTEND_PAUSE) && CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(2, INPUT_FRONTEND_CANCEL)*/) { // jump
 				for (int aa = 0; aa < 9; aa++) {
 					VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT(veh, (char*)random_t.c_str());
 					//WAIT(100);

@@ -46,6 +46,8 @@ bool feature3rdpersonviewonly = false;
 bool featureDaytimeonly = false;
 bool featureHazards = true;
 
+int DefaultPlateIndex = -1;
+
 bool window_up = true;
 bool high_speed = false;
 
@@ -4746,6 +4748,8 @@ void reset_vehicle_globals() {
 	HeliEngineDegradeIndex = 5;
 	BoatEngineDegradeIndex = 5;
 
+	DefaultPlateIndex = -1;
+
 	featureSpeedOnFoot =
 	featureKMH =
 	feature3rdpersonviewonly = 
@@ -4992,6 +4996,12 @@ Vehicle do_spawn_vehicle(DWORD model, std::string modelTitle, bool cleanup){
 		}
 
 		VEHICLE::SET_VEHICLE_DIRT_LEVEL(veh, 0.0f);
+
+		if (DefaultPlateIndex != -1 && DefaultPlateIndex < VEHICLE::GET_NUMBER_OF_VEHICLE_NUMBER_PLATES()) {
+			VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
+			VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT_INDEX(veh, DefaultPlateIndex);
+		}
+		if (DefaultPlateIndex != -1 && DefaultPlateIndex >= VEHICLE::GET_NUMBER_OF_VEHICLE_NUMBER_PLATES()) DefaultPlateIndex = -1;
 
 		if (featureRoutineOfRinger) {
 			VEHICLES_AVAILABLE.push_back(veh);
@@ -5730,6 +5740,7 @@ void add_vehicle_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"FuelColours_R_IndexN", std::to_string(FuelColours_R_IndexN)});
 	results->push_back(StringPairSettingDBRow{"FuelColours_G_IndexN", std::to_string(FuelColours_G_IndexN)});
 	results->push_back(StringPairSettingDBRow{"FuelColours_B_IndexN", std::to_string(FuelColours_B_IndexN)});
+	results->push_back(StringPairSettingDBRow{"DefaultPlateIndex", std::to_string(DefaultPlateIndex)});
 }
 
 void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settings){
@@ -5776,6 +5787,9 @@ void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settin
 		}
 		else if (setting.name.compare("DoorAutolockIndex") == 0) {
 			DoorAutolockIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("DefaultPlateIndex") == 0) {
+			DefaultPlateIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("turnSignalsAccelerationIndex") == 0) {
 			turnSignalsAccelerationIndex = stoi(setting.value);
