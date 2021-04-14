@@ -603,15 +603,18 @@ bool onconfirm_vehmod_category_menu(MenuItem<int> choice){
 		set_status_text("Changed window tint");
 	}
 	else if (lastSelectedModValue == SPECIAL_ID_FOR_LICENSE_PLATES){
-		if (choice.value != 666) {
+		if (choice.value == -2) {
+			set_plate_text();
+		}
+		if (choice.value == -1) {
+			DefaultPlateIndex = VEHICLE::GET_VEHICLE_NUMBER_PLATE_TEXT_INDEX(veh);
+		}
+		if (choice.value != -2 && choice.value != -1) {
 			//int plateCount = VEHICLE::GET_NUMBER_OF_VEHICLE_NUMBER_PLATES();
 			VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
 			VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT_INDEX(veh, choice.value);
 			DefaultPlateIndex = -1;
 			set_status_text("Changed license plate");
-		}
-		if (choice.value == 666) {
-			DefaultPlateIndex = VEHICLE::GET_VEHICLE_NUMBER_PLATE_TEXT_INDEX(veh);
 		}
 	}
 	else if (lastSelectedModValue == SPECIAL_ID_FOR_ENGINE_SOUND && featureEngineSound) { // pick engine sound through the menu/list
@@ -641,6 +644,9 @@ bool process_vehmod_category_special_menu(int category){
 	std::string caption = getLocalisedModCategory(category);;
 
 	std::vector<int> values;
+
+	BOOL isAircraft = is_this_a_heli_or_plane(veh);
+	BOOL isWeird = is_this_a_bicycle(veh) || is_this_a_boat_or_sub(veh) || is_this_a_train(veh);
 
 	switch (category){
 	case SPECIAL_ID_FOR_LICENSE_PLATES:
@@ -678,6 +684,25 @@ bool process_vehmod_category_special_menu(int category){
 	}
 
 	std::vector<MenuItem<int>*> menuItems;
+
+	if (category == SPECIAL_ID_FOR_LICENSE_PLATES/* && i == (values.size() - 1)*/ && !isWeird && !isAircraft) {
+		MenuItem<int>* item = new MenuItem<int>();
+		item = new MenuItem<int>();
+		item->caption = "Customize License Plate";
+		item->value = -2; // 667
+		item->isLeaf = true;
+		menuItems.push_back(item);
+	}
+
+	if (category == SPECIAL_ID_FOR_LICENSE_PLATES/* && i == (values.size() - 1)*/) {
+		MenuItem<int>* item = new MenuItem<int>();
+		item = new MenuItem<int>();
+		item->caption = "Set Current Plate As Default";
+		item->value = -1; // 666
+		item->isLeaf = true;
+		menuItems.push_back(item);
+	}
+
 	for (int i = 0; i < values.size(); i++){
 		MenuItem<int> *item = new MenuItem<int>();
 		std::string specialName = geSpecialItemTitle(category, i);
@@ -695,14 +720,6 @@ bool process_vehmod_category_special_menu(int category){
 		item->value = values.at(i);
 		item->isLeaf = true;
 		menuItems.push_back(item);
-
-		if (category == SPECIAL_ID_FOR_LICENSE_PLATES && i == (values.size() - 1)) {
-			item = new MenuItem<int>();
-			item->caption = "Set Current Plate As Default";
-			item->value = 666;
-			item->isLeaf = true;
-			menuItems.push_back(item);
-		}
 	}
 	
 	//Find menu index to return to
@@ -1240,16 +1257,7 @@ bool process_vehmod_menu(){
 		menuItems.push_back(toggleItem);
 		ss.str(""), ss.clear();
 	}
-
-	if (!isWeird && !isAircraft){
-		MenuItem<int>* item = new MenuItem<int>();
-		item->caption = UI::_GET_LABEL_TEXT("CMOD_MOD_18_D");
-		item->isLeaf = true;
-		item->onConfirmFunction = set_plate_text;
-		item->value = SPECIAL_ID_FOR_PLATE_TEXT;
-		menuItems.push_back(item);
-	}
-
+	
 	if (menuItems.size() == 0){
 		set_status_text("No relevant mods for this vehicle");
 		return false;
@@ -1259,7 +1267,7 @@ bool process_vehmod_menu(){
 	return false;
 }
 
-void set_plate_text(MenuItem<int> choice){
+void set_plate_text(){ // MenuItem<int> choice
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 	VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
 	keyboard_on_screen_already = true;
