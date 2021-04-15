@@ -697,7 +697,7 @@ bool process_vehmod_category_special_menu(int category){
 	if (category == SPECIAL_ID_FOR_LICENSE_PLATES/* && i == (values.size() - 1)*/) {
 		MenuItem<int>* item = new MenuItem<int>();
 		item = new MenuItem<int>();
-		item->caption = "Set Current Plate As Default";
+		item->caption = "Set Plate Type As Default";
 		item->value = -1; // 666
 		item->isLeaf = true;
 		menuItems.push_back(item);
