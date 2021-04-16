@@ -14,6 +14,8 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 int lastSelectedModValue = 0;
 
+std::string result = "";
+
 int wheelpart = 0;
 
 std::string current_picked_engine_sound = "";
@@ -601,10 +603,19 @@ bool onconfirm_vehmod_category_menu(MenuItem<int> choice){
 		set_status_text("Changed window tint");
 	}
 	else if (lastSelectedModValue == SPECIAL_ID_FOR_LICENSE_PLATES){
-		int plateCount = VEHICLE::GET_NUMBER_OF_VEHICLE_NUMBER_PLATES();
-		VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
-		VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT_INDEX(veh, choice.value);
-		set_status_text("Changed license plate");
+		if (choice.value == -2) {
+			set_plate_text();
+		}
+		if (choice.value == -1) {
+			DefaultPlateIndex = VEHICLE::GET_VEHICLE_NUMBER_PLATE_TEXT_INDEX(veh);
+		}
+		if (choice.value != -2 && choice.value != -1) {
+			//int plateCount = VEHICLE::GET_NUMBER_OF_VEHICLE_NUMBER_PLATES();
+			VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
+			VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT_INDEX(veh, choice.value);
+			DefaultPlateIndex = -1;
+			set_status_text("Changed license plate");
+		}
 	}
 	else if (lastSelectedModValue == SPECIAL_ID_FOR_ENGINE_SOUND && featureEngineSound) { // pick engine sound through the menu/list
 		char *currSound = new char[ENGINE_SOUND[choice.value].length() + 1];
@@ -633,6 +644,9 @@ bool process_vehmod_category_special_menu(int category){
 	std::string caption = getLocalisedModCategory(category);;
 
 	std::vector<int> values;
+
+	BOOL isAircraft = is_this_a_heli_or_plane(veh);
+	BOOL isWeird = is_this_a_bicycle(veh) || is_this_a_boat_or_sub(veh) || is_this_a_train(veh);
 
 	switch (category){
 	case SPECIAL_ID_FOR_LICENSE_PLATES:
@@ -670,6 +684,25 @@ bool process_vehmod_category_special_menu(int category){
 	}
 
 	std::vector<MenuItem<int>*> menuItems;
+
+	if (category == SPECIAL_ID_FOR_LICENSE_PLATES/* && i == (values.size() - 1)*/ && !isWeird && !isAircraft) {
+		MenuItem<int>* item = new MenuItem<int>();
+		item = new MenuItem<int>();
+		item->caption = "Customize License Plate";
+		item->value = -2; // 667
+		item->isLeaf = true;
+		menuItems.push_back(item);
+	}
+
+	if (category == SPECIAL_ID_FOR_LICENSE_PLATES/* && i == (values.size() - 1)*/) {
+		MenuItem<int>* item = new MenuItem<int>();
+		item = new MenuItem<int>();
+		item->caption = "Set Plate Type As Default";
+		item->value = -1; // 666
+		item->isLeaf = true;
+		menuItems.push_back(item);
+	}
+
 	for (int i = 0; i < values.size(); i++){
 		MenuItem<int> *item = new MenuItem<int>();
 		std::string specialName = geSpecialItemTitle(category, i);
@@ -688,7 +721,7 @@ bool process_vehmod_category_special_menu(int category){
 		item->isLeaf = true;
 		menuItems.push_back(item);
 	}
-
+	
 	//Find menu index to return to
 	int modChoiceMenuIndex = find_menu_index_to_restore(category, category, veh);
 
@@ -1224,16 +1257,7 @@ bool process_vehmod_menu(){
 		menuItems.push_back(toggleItem);
 		ss.str(""), ss.clear();
 	}
-
-	if (!isWeird && !isAircraft){
-		MenuItem<int>* item = new MenuItem<int>();
-		item->caption = UI::_GET_LABEL_TEXT("CMOD_MOD_18_D");
-		item->isLeaf = true;
-		item->onConfirmFunction = set_plate_text;
-		item->value = SPECIAL_ID_FOR_PLATE_TEXT;
-		menuItems.push_back(item);
-	}
-
+	
 	if (menuItems.size() == 0){
 		set_status_text("No relevant mods for this vehicle");
 		return false;
@@ -1243,14 +1267,42 @@ bool process_vehmod_menu(){
 	return false;
 }
 
-void set_plate_text(MenuItem<int> choice){
+void set_plate_text(){ // MenuItem<int> choice
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
+	VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
 	keyboard_on_screen_already = true;
-	curr_message = "Enter plate text:"; // set plate text
-	char* existingText = VEHICLE::GET_VEHICLE_NUMBER_PLATE_TEXT(veh);
-	std::string result = show_keyboard("Enter Name Manually", existingText); // CMOD_MOD_18_D
+	char* existingText = "";
+	curr_message = "Enter plate text (type 'random' for random text):"; // set plate text
+	if (result != "random" && result != "Random" && result != "RANDOM") existingText = VEHICLE::GET_VEHICLE_NUMBER_PLATE_TEXT(veh);
+	if (result == "random" || result == "Random" || result == "RANDOM") existingText = (char*)result.c_str();
+	result = show_keyboard("Enter Name Manually", existingText); // CMOD_MOD_18_D
 	if (!result.empty()){
-		VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT(veh, (char*)result.c_str());
+		//
+		if (result == "random" || result == "Random" || result == "RANDOM") {
+			set_status_text("Press jump to cancel");
+			std::string random_t = "AAAAAAAA";
+			while (CONTROLS::IS_CONTROL_RELEASED(2, 22)/* && !IsKeyDown(KeyConfig::KEY_MENU_BACK) && !IsKeyDown(VK_ESCAPE) && !CONTROLS::IS_CONTROL_JUST_PRESSED(2, INPUT_FRONTEND_PAUSE) && CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(2, INPUT_FRONTEND_CANCEL)*/) { // jump
+				for (int aa = 0; aa < 9; aa++) {
+					VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT(veh, (char*)random_t.c_str());
+					//WAIT(100);
+					int n_or_l = rand() % 2 + 0;
+					if (n_or_l == 0) {
+						char letters[] = "abcdefghijklmnopqrstuvwxyz";
+						char let_t = letters[rand() % 26];
+						random_t[aa] = let_t;
+					}
+					if (n_or_l == 1 || n_or_l == 2) {
+						int num_t = rand() % 9 + 0;
+						std::string tmp_c = std::to_string(num_t);
+						char const* t_char = tmp_c.c_str();
+						random_t[aa] = t_char[0];
+					}
+				}
+				WAIT(0);
+			}
+		}
+		//
+		if (result != "random" && result != "Random" && result != "RANDOM") VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT(veh, (char*)result.c_str());
 	}
 }
 

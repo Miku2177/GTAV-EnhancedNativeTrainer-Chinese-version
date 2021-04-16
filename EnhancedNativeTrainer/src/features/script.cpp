@@ -133,6 +133,7 @@ bool featureWantedNoPRoadB = false;
 bool featureWantedNoPRoadBUpdated = false;
 bool featureWantedLevelNoPBoats = false;
 bool featureWantedLevelNoPBoatsUpdated = false;
+bool featureWantedLevelNoPRam = false;
 bool featureWantedLevelNoSWATVehicles = false;
 bool featureWantedLevelNoSWATVehiclesUpdated = false;
 bool NoTaxiWhistling = false;
@@ -901,9 +902,9 @@ void update_features(){
 	if(featurePlayerInvincible && bPlayerExists){
 		if (getGameVersion() < VER_1_0_678_1_STEAM || getGameVersion() < VER_1_0_678_1_NOSTEAM) PLAYER::SET_PLAYER_INVINCIBLE(player, TRUE);
 		if (getGameVersion() >= VER_1_0_678_1_STEAM || getGameVersion() >= VER_1_0_678_1_NOSTEAM) PLAYER::_0x733A643B5B0C53C1(player, TRUE);
-		Vector3 my_coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 0);
-		FIRE::STOP_FIRE_IN_RANGE(my_coords.x, my_coords.y, my_coords.z, 2);
-		if (FIRE::IS_ENTITY_ON_FIRE(PLAYER::PLAYER_PED_ID())) FIRE::STOP_ENTITY_FIRE(PLAYER::PLAYER_PED_ID());
+		//Vector3 my_coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 0);
+		//FIRE::STOP_FIRE_IN_RANGE(my_coords.x, my_coords.y, my_coords.z, 2);
+		//if (FIRE::IS_ENTITY_ON_FIRE(PLAYER::PLAYER_PED_ID())) FIRE::STOP_ENTITY_FIRE(PLAYER::PLAYER_PED_ID());
 	}
 	
 	// Fire Proof
@@ -944,7 +945,7 @@ void update_features(){
 		if (NPC_RAGDOLL_VALUES[EngineRunningIndex] == 0) VEHICLE::SET_VEHICLE_ENGINE_ON(veh_engine, false, true, false);
 		veh_engine_t = false;
 	}
-	if (featureDisableIgnition) {
+	if (featureDisableIgnition && breaking_secs_tick == 0) {
 		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && veh_engine_t == false) {
 			veh_engine = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 			if (!VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(veh_engine)) {
@@ -1018,6 +1019,28 @@ void update_features(){
 	else if (featureWantedLevelNoSWATVehiclesUpdated == true) {
 		GAMEPLAY::ENABLE_DISPATCH_SERVICE(4, true);
 		featureWantedLevelNoSWATVehiclesUpdated = false;
+	}
+
+	// Less Aggressive Police Pursuit
+	if (featureWantedLevelNoPRam && PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) > 0) {
+		Vector3 my_cor = ENTITY::GET_ENTITY_COORDS(playerPed, true);
+		float my_speed = ENTITY::GET_ENTITY_SPEED(PED::GET_VEHICLE_PED_IS_USING(playerPed));
+		const int arrSize4 = 1024;
+		Ped copram[arrSize4];
+		int count_cop_ram = worldGetAllPeds(copram, arrSize4);
+		for (int i = 0; i < count_cop_ram; i++) {
+			if ((PED::GET_PED_TYPE(copram[i]) == 6 || PED::GET_PED_TYPE(copram[i]) == 27 || PED::GET_PED_TYPE(copram[i]) == 29) && copram[i] != playerPed) {
+				Vector3 cop_cor = ENTITY::GET_ENTITY_COORDS(copram[i], true);
+				//float cop_speed = ENTITY::GET_ENTITY_SPEED(PED::GET_VEHICLE_PED_IS_USING(copram[i]));
+				float dist_diff_c_m = SYSTEM::VDIST(my_cor.x, my_cor.y, my_cor.z, cop_cor.x, cop_cor.y, cop_cor.z);
+				if (dist_diff_c_m < 30) { // 50 //  && cop_speed > my_speed
+					//AI::TASK_VEHICLE_TEMP_ACTION(copram[i], PED::GET_VEHICLE_PED_IS_USING(copram[i]), 27, 1); // 100
+					AI::SET_DRIVE_TASK_CRUISE_SPEED(copram[i], my_speed);
+					AI::SET_TASK_VEHICLE_CHASE_IDEAL_PURSUIT_DISTANCE(copram[i], 10.0f); // 30
+					PED::SET_DRIVER_AGGRESSIVENESS(copram[i], 0.0f);
+				}
+			}
+		}
 	}
 
 	// No Whistling For Taxi
@@ -1894,6 +1917,12 @@ bool maxwantedlevel_menu() {
 	toggleItem->toggleValue = &featureWantedLevelNoSWATVehicles;
 	menuItems.push_back(toggleItem);
 
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Less Aggressive Police Pursuit";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureWantedLevelNoPRam;
+	menuItems.push_back(toggleItem);
+
 	return draw_generic_menu<int>(menuItems, &PlayerWantedMaxPossibleLevelMenuIndex, caption, onconfirm_PlayerWantedMaxPossibleLevel_menu, NULL, NULL);
 }
 
@@ -2436,6 +2465,7 @@ void reset_globals(){
 		featureWantedLevelNoPHeli =
 		featureWantedNoPRoadB =
 		featureWantedLevelNoPBoats =
+		featureWantedLevelNoPRam =
 		featureWantedLevelNoSWATVehicles =
 		NoTaxiWhistling =
 		featurePlayerCanBeHeadshot =
@@ -2684,6 +2714,7 @@ void add_player_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featureWantedLevelNoPHeli", &featureWantedLevelNoPHeli});
 	results->push_back(FeatureEnabledLocalDefinition{"featureWantedNoPRoadB", &featureWantedNoPRoadB});
 	results->push_back(FeatureEnabledLocalDefinition{"featureWantedLevelNoPBoats", &featureWantedLevelNoPBoats});
+	results->push_back(FeatureEnabledLocalDefinition{"featureWantedLevelNoPRam", &featureWantedLevelNoPRam});
 	results->push_back(FeatureEnabledLocalDefinition{"featureWantedLevelNoSWATVehicles", &featureWantedLevelNoSWATVehicles});
 	results->push_back(FeatureEnabledLocalDefinition{"NoTaxiWhistling", &NoTaxiWhistling});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoScubaGearMask", &featureNoScubaGearMask});
