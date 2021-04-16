@@ -1039,7 +1039,7 @@ bool is_extra_enabled(std::vector<int> extras);
 
 void set_extra_enabled(bool applied, std::vector<int> extras);
 
-void set_plate_text(MenuItem<int> choice);
+void set_plate_text(); // MenuItem<int> choice
 
 bool is_convertible_roofdown(std::vector<int> extras);
 
@@ -1355,3 +1355,6 @@ extern int EngineRunningIndex;
 
 extern std::string  veh_to_spawn;
 extern bool repairing_engine;
+extern int breaking_secs_tick;
+
+extern int DefaultPlateIndex;

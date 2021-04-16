@@ -46,6 +46,8 @@ bool feature3rdpersonviewonly = false;
 bool featureDaytimeonly = false;
 bool featureHazards = true;
 
+int DefaultPlateIndex = -1;
+
 bool window_up = true;
 bool high_speed = false;
 
@@ -2395,7 +2397,7 @@ void process_veh_menu(){
 	menuItems.push_back(listItem);
 
 	item = new MenuItem<int>();
-	item->caption = "Show Speed / Altitude";
+	item->caption = "Speed / Altitude";
 	item->value = i++;
 	item->isLeaf = false;
 	menuItems.push_back(item);
@@ -4413,7 +4415,10 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 						breaking_secs_tick = 0;
 					}
 				}
-				if (CONTROLS::IS_CONTROL_RELEASED(2, 71)) breaking_secs_tick = 0;
+				if (CONTROLS::IS_CONTROL_RELEASED(2, 71) && breaking_secs_tick > 0) {
+					ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&veh);
+					breaking_secs_tick = 0;
+				}
 				if (breaking_secs_tick == 0 && ENTITY::IS_ENTITY_PLAYING_ANIM(playerPed, hw_anim_dict, animation_of_h, 3)) AI::STOP_ANIM_TASK(PLAYER::PLAYER_PED_ID(), hw_anim_dict, animation_of_h, 1.0);
 			}
 		} // end of in vehicle
@@ -4542,7 +4547,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			}
 
 			for (int ror = 0; ror < count_surr_veh_r; ror++) {
-				if (ENTITY::IS_ENTITY_A_MISSION_ENTITY(surr_vehs_r[ror])) { // || ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) == GAMEPLAY::GET_HASH_KEY("BAGGER")
+				if (ENTITY::IS_ENTITY_A_MISSION_ENTITY(surr_vehs_r[ror]) && !VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(surr_vehs_r[ror]) && ENTITY::DOES_ENTITY_BELONG_TO_THIS_SCRIPT(surr_vehs_r[ror], 1) == 0) { // || ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) == GAMEPLAY::GET_HASH_KEY("BAGGER")
 					bool own_veh = false;
 					if (VEHICLES_IGNITED.empty()) VEHICLES_IGNITED.push_back(surr_vehs_r[ror]);
 					if (!VEHICLES_IGNITED.empty()) {
@@ -4552,7 +4557,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 						if (own_veh == false) VEHICLES_IGNITED.push_back(surr_vehs_r[ror]);
 					}
 				}
-
+				
 				if (MISC_TRAINERCONTROL_VALUES[RingerSkillIndex] == 0 || (MISC_TRAINERCONTROL_VALUES[RingerSkillIndex] == 1 && (VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror])) ||
 					VEHICLE::IS_THIS_MODEL_A_PLANE(ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror])) || VEHICLE::IS_THIS_MODEL_A_HELI(ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]))) && 
 					ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("HANDLER") && ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("VOLATOL") && ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("MICROLIGHT") && 
@@ -4562,7 +4567,8 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 					ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("BIFTA") && ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("LOCUST") && ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("RUSTON") && 
 					ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("RAPTOR") && ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("PEYOTE") && ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("ZION2") && 
 					ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("FELON2") && ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("WINDSOR2") && ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("COGCABRIO") && 
-					ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("MAMBA") && ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("SCRAMJET"))) {
+					ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("MAMBA") && ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("SCRAMJET") && ENTITY::GET_ENTITY_MODEL(surr_vehs_r[ror]) != GAMEPLAY::GET_HASH_KEY("COQUETTE2") && 
+					VEHICLE::GET_CONVERTIBLE_ROOF_STATE(surr_vehs_r[ror]) == 0)) {
 					bool me_own_already = false;
 					if (!VEHICLES_AVAILABLE.empty()) {
 						for (int vh = 0; vh < VEHICLES_AVAILABLE.size(); vh++) {
@@ -4741,6 +4747,8 @@ void reset_vehicle_globals() {
 	PlaneEngineDegradeIndex = 5;
 	HeliEngineDegradeIndex = 5;
 	BoatEngineDegradeIndex = 5;
+
+	DefaultPlateIndex = -1;
 
 	featureSpeedOnFoot =
 	featureKMH =
@@ -4988,6 +4996,12 @@ Vehicle do_spawn_vehicle(DWORD model, std::string modelTitle, bool cleanup){
 		}
 
 		VEHICLE::SET_VEHICLE_DIRT_LEVEL(veh, 0.0f);
+
+		if (DefaultPlateIndex != -1 && DefaultPlateIndex < VEHICLE::GET_NUMBER_OF_VEHICLE_NUMBER_PLATES()) {
+			VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
+			VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT_INDEX(veh, DefaultPlateIndex);
+		}
+		if (DefaultPlateIndex != -1 && DefaultPlateIndex >= VEHICLE::GET_NUMBER_OF_VEHICLE_NUMBER_PLATES()) DefaultPlateIndex = -1;
 
 		if (featureRoutineOfRinger) {
 			VEHICLES_AVAILABLE.push_back(veh);
@@ -5726,6 +5740,7 @@ void add_vehicle_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"FuelColours_R_IndexN", std::to_string(FuelColours_R_IndexN)});
 	results->push_back(StringPairSettingDBRow{"FuelColours_G_IndexN", std::to_string(FuelColours_G_IndexN)});
 	results->push_back(StringPairSettingDBRow{"FuelColours_B_IndexN", std::to_string(FuelColours_B_IndexN)});
+	results->push_back(StringPairSettingDBRow{"DefaultPlateIndex", std::to_string(DefaultPlateIndex)});
 }
 
 void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settings){
@@ -5772,6 +5787,9 @@ void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settin
 		}
 		else if (setting.name.compare("DoorAutolockIndex") == 0) {
 			DoorAutolockIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("DefaultPlateIndex") == 0) {
+			DefaultPlateIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("turnSignalsAccelerationIndex") == 0) {
 			turnSignalsAccelerationIndex = stoi(setting.value);

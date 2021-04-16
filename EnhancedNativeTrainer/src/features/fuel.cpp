@@ -54,6 +54,7 @@ bool gauge_ini = false;
 
 int IdleConsume_secs_passed, IdleConsume_secs_curr, IdleConsume_seconds = -1;
 int f_secs_passed, f_secs_curr, f_seconds = -1;
+int ref_secs_passed, ref_secs_curr, ref_seconds = 0;
 
 float curr_fuel_perc = -1.0f;
 float curr_fuel_a = -1.0f;
@@ -440,7 +441,7 @@ void fuel()
 
 					// FUEL CONSUMPTION
 					// CAR
-					if (VEH_CARFUEL_VALUES[CarConsumptionIndex] > 0) {
+					if (VEH_CARFUEL_VALUES[CarConsumptionIndex] > 0 && (CONTROLS::IS_CONTROL_PRESSED(2, 71) || CONTROLS::IS_CONTROL_PRESSED(2, 72))) {
 						if ((GAMEPLAY::GET_GAME_TIMER() - Time_tick) > 200 && VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(veh))) {
 							if (FUEL[0] > 0 && VEHICLES[0] == veh) {
 								FUEL[0] = (FUEL[0] - (vehspeed / VEH_CARFUEL_VALUES[CarConsumptionIndex]));
@@ -452,7 +453,7 @@ void fuel()
 						}
 					}
 					// BIKE & ATV
-					if (VEH_CARFUEL_VALUES[BikeConsumptionIndex] > 0) {
+					if (VEH_CARFUEL_VALUES[BikeConsumptionIndex] > 0 && (CONTROLS::IS_CONTROL_PRESSED(2, 71) || CONTROLS::IS_CONTROL_PRESSED(2, 72))) {
 						if ((GAMEPLAY::GET_GAME_TIMER() - Time_tick) > 200 && (VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(veh)) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(veh)))) {
 							if (FUEL[0] > 0 && VEHICLES[0] == veh) {
 								FUEL[0] = FUEL[0] - (vehspeed / VEH_CARFUEL_VALUES[BikeConsumptionIndex]);
@@ -464,7 +465,7 @@ void fuel()
 						}
 					}
 					// PLANE
-					if (VEH_CARFUEL_VALUES[PlaneConsumptionIndex] > 0) {
+					if (VEH_CARFUEL_VALUES[PlaneConsumptionIndex] > 0 && (CONTROLS::IS_CONTROL_PRESSED(2, 71) || CONTROLS::IS_CONTROL_PRESSED(2, 72))) {
 						if ((GAMEPLAY::GET_GAME_TIMER() - Time_tick) > 200 && VEHICLE::IS_THIS_MODEL_A_PLANE(ENTITY::GET_ENTITY_MODEL(veh))) {
 							if (FUEL[0] > 0 && VEHICLES[0] == veh) {
 								FUEL[0] = FUEL[0] - (vehspeed / VEH_CARFUEL_VALUES[PlaneConsumptionIndex]);
@@ -476,7 +477,7 @@ void fuel()
 						}
 					}
 					// BOAT
-					if (VEH_CARFUEL_VALUES[BoatConsumptionIndex] > 0) {
+					if (VEH_CARFUEL_VALUES[BoatConsumptionIndex] > 0 && (CONTROLS::IS_CONTROL_PRESSED(2, 71) || CONTROLS::IS_CONTROL_PRESSED(2, 72))) {
 						if ((GAMEPLAY::GET_GAME_TIMER() - Time_tick) > 200 && (VEHICLE::IS_THIS_MODEL_A_BOAT(ENTITY::GET_ENTITY_MODEL(veh)) || ENTITY::GET_ENTITY_MODEL(veh) == GAMEPLAY::GET_HASH_KEY("SUBMERSIBLE") || 
 							ENTITY::GET_ENTITY_MODEL(veh) == GAMEPLAY::GET_HASH_KEY("SUBMERSIBLE2"))) {
 							if (FUEL[0] > 0 && VEHICLES[0] == veh) {
@@ -489,7 +490,7 @@ void fuel()
 						}
 					}
 					// HELICOPTER
-					if (VEH_CARFUEL_VALUES[HeliConsumptionIndex] > 0) {
+					if (VEH_CARFUEL_VALUES[HeliConsumptionIndex] > 0 && (CONTROLS::IS_CONTROL_PRESSED(2, 71) || CONTROLS::IS_CONTROL_PRESSED(2, 72))) {
 						if ((GAMEPLAY::GET_GAME_TIMER() - Time_tick) > 200 && VEHICLE::IS_THIS_MODEL_A_HELI(ENTITY::GET_ENTITY_MODEL(veh))) {
 							if (FUEL[0] > 0 && VEHICLES[0] == veh) {
 								FUEL[0] = FUEL[0] - (vehspeed / VEH_CARFUEL_VALUES[HeliConsumptionIndex]);
@@ -548,7 +549,7 @@ void fuel()
 						}
 					}
 				}
-			}
+			} // end of fuel level handling
 		} // enf of entered vehicle
 
 		// BARS
@@ -602,7 +603,18 @@ void fuel()
 		if (!FUEL.empty() && Car_Refuel == true) {
 			if (CONTROLS::IS_CONTROL_JUST_PRESSED(2, 75) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) exiting_v = true;
 			if (FUEL[0] < fuel_amount && (outValue_station > 0 || VEH_FUELPRICE_VALUES[FuelPriceIndex] == 0)) {
-				FUEL[0] = FUEL[0] + VEH_REFUELSPEED_VALUES[RefuelingSpeedIndex];
+				ref_secs_passed = clock() / CLOCKS_PER_SEC;
+				if (((clock() / (CLOCKS_PER_SEC / 1000)) - ref_secs_curr) != 0) {
+					ref_seconds = ref_seconds + VEH_REFUELSPEED_VALUES[RefuelingSpeedIndex];
+					ref_secs_curr = ref_secs_passed;
+				}
+				if (ref_seconds > 1000) {
+					FUEL[0] = FUEL[0] + 0.001;
+					STATS::STAT_SET_INT(statHash_station, outValue_station - VEH_FUELPRICE_VALUES[FuelPriceIndex], true);
+					ref_seconds = 0;
+				}
+
+				UI::DISPLAY_CASH(true);
 
 				if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
 					if (ign_anim_e == false) {
@@ -611,9 +623,8 @@ void fuel()
 					}
 					VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, false, false, true);
 				}
-				else VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, false, true, true);
-				UI::DISPLAY_CASH(true);
-				STATS::STAT_SET_INT(statHash_station, outValue_station - VEH_FUELPRICE_VALUES[FuelPriceIndex], true);
+				else VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, false, true, false);
+				
 				if (stoprefillKey && !IsKeyDown(VK_ESCAPE) && CONTROLS::IS_CONTROL_RELEASED(2, INPUT_FRONTEND_PAUSE) && exiting_v == false) {
 					if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
 						if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) ingnition_anim();
@@ -622,6 +633,7 @@ void fuel()
 						engine_running = true;
 						Car_Refuel = false;
 						f_secs_curr = -1;
+						ref_seconds = 0;
 					}
 				}
 				if (!stoprefillKey) {
@@ -633,8 +645,14 @@ void fuel()
 						engine_running = true;
 						Car_Refuel = false;
 						f_secs_curr = -1;
+						ref_seconds = 0;
 					}
 				}
+			}
+			if (outValue_station < 1 && Car_Refuel == true && VEH_FUELPRICE_VALUES[FuelPriceIndex] > 0) {
+				Car_Refuel = false;
+				if (!VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(veh_being_refueled)) VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, false, true, false);
+				ref_seconds = 0;
 			}
 		}
 		if (PED::IS_PED_ON_FOOT(playerPed)) {
@@ -664,10 +682,19 @@ void fuel()
 						UI::_DRAW_TEXT(0.015, 0.015);
 
 						if (refill_button && ammo > 0 && (outValue_jerrycan > 0 || VEH_FUELPRICE_VALUES[JerrycanPriceIndex] == 0)) {
-							FUEL[i] = FUEL[i] + VEH_REFUELSPEED_VALUES[RefuelingSpeedIndex];
-							WEAPON::SET_PED_AMMO(playerPed, WEAPON::GET_SELECTED_PED_WEAPON(playerPed), ammo - 10);
+							ref_secs_passed = clock() / CLOCKS_PER_SEC;
+							if (((clock() / (CLOCKS_PER_SEC / 1000)) - ref_secs_curr) != 0) {
+								ref_seconds = ref_seconds + VEH_REFUELSPEED_VALUES[RefuelingSpeedIndex];
+								ref_secs_curr = ref_secs_passed;
+							}
+							if (ref_seconds > 1000) {
+								FUEL[i] = FUEL[i] + 0.001;
+								WEAPON::SET_PED_AMMO(playerPed, WEAPON::GET_SELECTED_PED_WEAPON(playerPed), ammo - 10);
+								STATS::STAT_SET_INT(statHash_jerrycan, outValue_jerrycan - VEH_FUELPRICE_VALUES[JerrycanPriceIndex], true);
+								ref_seconds = 0;
+							}
+
 							UI::DISPLAY_CASH(true);
-							STATS::STAT_SET_INT(statHash_jerrycan, outValue_jerrycan - VEH_FUELPRICE_VALUES[JerrycanPriceIndex], true);
 						}
 					}
 				}
@@ -686,8 +713,10 @@ void fuel()
 
 			if (IdleConsume_seconds == (VEH_CARFUEL_VALUES[IdleConsumptionIndex] / 85000)) {
 				for (int i = 0; i < VEHICLES.size(); i++) {
-					Vector3 curr_s = ENTITY::GET_ENTITY_VELOCITY(VEHICLES[i]);
-					if (curr_s.x < 1 && curr_s.y < 1 && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(VEHICLES[i]) && FUEL[i] > 0) FUEL[i] = FUEL[i] - 0.001;  
+					//Vector3 curr_s = ENTITY::GET_ENTITY_VELOCITY(VEHICLES[i]);
+					bool stepped_on_pedal = false;
+					if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && (CONTROLS::IS_CONTROL_PRESSED(2, 71) || CONTROLS::IS_CONTROL_PRESSED(2, 72))) stepped_on_pedal = true;
+					if (stepped_on_pedal == false && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(VEHICLES[i]) && FUEL[i] > 0) FUEL[i] = FUEL[i] - 0.001; // curr_s.x < 1 && curr_s.y < 1
 					if (VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(VEHICLES[i]) && FUEL[i] <= 0) {
 						VEHICLE::SET_VEHICLE_ENGINE_ON(VEHICLES[i], false, true, false);
 						VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(VEHICLES[i], false);

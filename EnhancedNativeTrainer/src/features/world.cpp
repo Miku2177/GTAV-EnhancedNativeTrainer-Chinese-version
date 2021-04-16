@@ -285,10 +285,10 @@ bool onconfirm_weather_menu(MenuItem<std::string> choice)
 	std::stringstream ss; ss << "Weather Frozen at: " << lastWeatherName;
 	switch (choice.currentMenuIndex)
 	{
-	case 0:
-		process_world_weathersettings_menu();
-		break;
-	case 1: 
+	//case 0:
+	//	process_world_weathersettings_menu();
+	//	break;
+	case 0: 
 		// reset weather
 		GAMEPLAY::CLEAR_OVERRIDE_WEATHER();
 		GAMEPLAY::CLEAR_WEATHER_TYPE_PERSIST();
@@ -327,12 +327,12 @@ bool onconfirm_weather_menu(MenuItem<std::string> choice)
 
 void process_weather_menu()
 {
-	const int lineCount = 17;
+	const int lineCount = 16;
 
 	const std::string caption = "Weather Options";
 	
 	StringStandardOrToggleMenuDef lines[lineCount] = {
-		{ "Weather Settings", "FREEZEWEATHER", NULL, NULL, false },
+		//{ "Weather Settings", "FREEZEWEATHER", NULL, NULL, false },
 		{ "Reset Weather", "RESETWEATHER", NULL, NULL, true },
 		{ "Extra Sunny", "EXTRASUNNY", NULL, NULL, true },
 		{ "Clear", "CLEAR", NULL, NULL, true },
@@ -507,6 +507,9 @@ bool onconfirm_world_menu(MenuItem<int> choice)
 		process_weather_menu();
 		break;
 	case -4:
+		process_world_weathersettings_menu();
+		break;
+	case -5:
 		process_clouds_menu();
 		break;
 	case 2:
@@ -518,7 +521,7 @@ bool onconfirm_world_menu(MenuItem<int> choice)
 
 void process_world_menu()
 {
-	const int lineCount = 8; // Amount of cases +1
+	//const int lineCount = 8; // Amount of cases +1
 
 	const std::string caption = "World Options";
 
@@ -526,29 +529,35 @@ void process_world_menu()
 	SelectFromListMenuItem *listItem;
 	ToggleMenuItem<int>* togItem;
 
-	MenuItem<int> *areaItem = new MenuItem<int>();
-	areaItem->isLeaf = false;
-	areaItem->caption = "People";
-	areaItem->value = -1;
-	menuItems.push_back(areaItem);
+	MenuItem<int> *item = new MenuItem<int>();
+	item->isLeaf = false;
+	item->caption = "People";
+	item->value = -1;
+	menuItems.push_back(item);
 
-	areaItem = new MenuItem<int>();
-	areaItem->isLeaf = false;
-	areaItem->caption = "Vehicles";
-	areaItem->value = -2;
-	menuItems.push_back(areaItem);
+	item = new MenuItem<int>();
+	item->isLeaf = false;
+	item->caption = "Vehicles";
+	item->value = -2;
+	menuItems.push_back(item);
 
-	MenuItem<int> *weatherItem = new MenuItem<int>();
-	weatherItem->isLeaf = false;
-	weatherItem->caption = "Weather";
-	weatherItem->value = -3;
-	menuItems.push_back(weatherItem);
+	item = new MenuItem<int>();
+	item->isLeaf = false;
+	item->caption = "Weather";
+	item->value = -3;
+	menuItems.push_back(item);
 
-	MenuItem<int> *cloudsItem = new MenuItem<int>();
-	cloudsItem->isLeaf = false;
-	cloudsItem->caption = "Clouds";
-	cloudsItem->value = -4;
-	menuItems.push_back(cloudsItem);
+	item = new MenuItem<int>();
+	item->isLeaf = false;
+	item->caption = "Weather Settings";
+	item->value = -4;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->isLeaf = false;
+	item->caption = "Clouds";
+	item->value = -5;
+	menuItems.push_back(item);
 	
 	listItem = new SelectFromListMenuItem(WORLD_GRAVITY_LEVEL_CAPTIONS, onchange_gravity_level_index);
 	listItem->wrap = false;
