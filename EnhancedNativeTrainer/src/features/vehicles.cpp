@@ -49,7 +49,7 @@ bool featureHazards = true;
 int DefaultPlateIndex = -1;
 
 bool window_up = true;
-bool high_speed = false;
+//bool high_speed = false;
 
 int tmp_menuindex = -1;
 int curr_c_pos = -1;
@@ -2984,17 +2984,13 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			}
 		}
 	} 
-
+		
 	// Traction Control 
 	if (featureTractionControl && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
 		Vector3 vehspeed = ENTITY::GET_ENTITY_VELOCITY(PED::GET_VEHICLE_PED_IS_IN(playerPed, false));
 		if (vehspeed.x < 0) vehspeed.x = (vehspeed.x * -1);
 		if (vehspeed.y < 0) vehspeed.y = (vehspeed.y * -1);
-		if (vehspeed.x < 5 && vehspeed.y < 5 && high_speed == false) {
-			traction_tick = 0;
-			high_speed = true;
-		}
-		if (vehspeed.x > 4 || vehspeed.y > 4 || vehspeed.x < 0.1 || vehspeed.y < 0.1) high_speed = false;
+		if (!CONTROLS::IS_CONTROL_PRESSED(2, 71) && !CONTROLS::IS_CONTROL_PRESSED(2, 62) && !CONTROLS::IS_CONTROL_PRESSED(2, 72) && vehspeed.x < 3 && vehspeed.y < 3) traction_tick = 0;
 		if (CONTROLS::IS_CONTROL_PRESSED(2, 71) || CONTROLS::IS_CONTROL_PRESSED(2, 62) || CONTROLS::IS_CONTROL_PRESSED(2, 72)) {
 			engine_secs_passed = clock() / CLOCKS_PER_SEC;
 			if (((clock() / (CLOCKS_PER_SEC / 1000)) - engine_secs_curr) != 0) {
@@ -3003,18 +2999,15 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			}
 		}
 		if (traction_tick < 100) {
-			if (traction_tick > 1 && traction_tick < 100 && CONTROLS::IS_CONTROL_PRESSED(2, 71)) VEHICLE::SET_VEHICLE_BRAKE_LIGHTS(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), false);
-			if (traction_tick > 1 && traction_tick < 50) {
-				if (CONTROLS::IS_CONTROL_PRESSED(2, 71)) CONTROLS::_SET_CONTROL_NORMAL(0, 72, 0.5f);
-				if (CONTROLS::IS_CONTROL_PRESSED(2, 72) || CONTROLS::IS_CONTROL_PRESSED(2, 62)) CONTROLS::_SET_CONTROL_NORMAL(0, 71, 0.5f);
-			}
-			if (traction_tick > 49 && traction_tick < 100) {
-				if (CONTROLS::IS_CONTROL_PRESSED(2, 71)) CONTROLS::_SET_CONTROL_NORMAL(0, 72, 0.2f);
-				if (CONTROLS::IS_CONTROL_PRESSED(2, 72) || CONTROLS::IS_CONTROL_PRESSED(2, 62)) CONTROLS::_SET_CONTROL_NORMAL(0, 71, 0.2f);
-			}
+			if (traction_tick < 50) VEHICLE::_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 0.2);
+			if (traction_tick > 49 && traction_tick < 100) VEHICLE::_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 0.6);
+		}
+		else
+		if (traction_tick > 99 && traction_tick < 109) {
+			VEHICLE::_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), 1.0);
 		}
 	}
-	
+
 	// Vehicle Invisibility
 	if (FUEL_COLOURS_R_VALUES[VehInvisIndexN] > 0 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
 		ENTITY::SET_ENTITY_ALPHA(PED::GET_VEHICLE_PED_IS_IN(playerPed, false), FUEL_COLOURS_R_VALUES[VehInvisIndexN] - 10, 0);
