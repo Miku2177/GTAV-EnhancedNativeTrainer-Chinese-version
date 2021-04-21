@@ -37,10 +37,7 @@ using namespace std;
 //vehicle invincibility
 int VehInvincibilityIndex = 0;
 bool VehInvincibilityChanged = true;
-//bool featureVehInvincible = false;
 bool featureVehInvincibleUpdated = false;
-//bool featureVehNoDamage = false;
-//bool featureVehInvulnIncludesCosmetic = false;
 
 bool feature3rdpersonviewonly = false;
 bool featureDaytimeonly = false;
@@ -49,7 +46,6 @@ bool featureHazards = true;
 int DefaultPlateIndex = -1;
 
 bool window_up = true;
-//bool high_speed = false;
 
 int tmp_menuindex = -1;
 int curr_c_pos = -1;
@@ -232,121 +228,92 @@ int speedBoostIndex = 0;
 
 // engine power stuff
 int engPowMultIndex = 0;
-//bool powChanged = true;
 
 bool burnoutApplied = false;
 bool engPowMultApplied = false;
 
 //vehicle mass stuff
 int VehMassMultIndex = 0;
-//bool massChanged = true;
 int current_player_forceshieldN = 0;
-//bool player_massChanged = true;
 
 //Turn Signals
 const std::vector<std::string> VEH_TURN_SIGNALS_CAPTIONS{ "OFF", "Manual Only", "< 10 (MPH)", "< 20 (MPH)", "< 30 (MPH)", "< 40 (MPH)", "< 60 (MPH)", "< 80 (MPH)", "< 100 (MPH)", "< 120 (MPH)", "< 140 (MPH)", "< 160 (MPH)", "< 180 (MPH)", "< 200 (MPH)" };
 const int VEH_TURN_SIGNALS_VALUES[] = { 0, 1, 5, 10, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
 int turnSignalsIndex = 0;
-//bool turnSignalsChanged = true;
 
 //Turn Signals Angle
 const std::vector<std::string> VEH_TURN_SIGNALS_ANGLE_CAPTIONS{ "0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100" };
 const int VEH_TURN_SIGNALS_ANGLE_VALUES[] = { 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
 int turnSignalsAngleIndex = 3;
-//bool turnSignalsAngleChanged = true;
 int NitrousPowerIndex = 1;
-//bool NitrousPowerChanged = true;
 
 //Turn Signals Off Acceleration
 int turnSignalsAccelerationIndex = 3;
-//bool turnSignalsAccelerationChanged = true;
 int JumpyVehIndex = 0;
-//bool JumpyVehChanged = true;
 int HeavyVehIndex = 0;
-//bool HeavyVehChanged = true;
 
 //Custom Engine Power Multiplier
 int engCustomPowMultIndex = 0;
-//bool engCustomPowMultChanged = true;
 int old_c_engine_index = 0;
 
 //Vehicle Invisibility
 int VehInvisIndexN = 0;
-//bool VehInvisChanged = true;
 bool is_invisible = false;
 
 //Visualize Vehicle Indicators (Sprite)
 const std::vector<std::string> VEH_VISLIGHT_CAPTIONS{ "OFF", "1x", "3x", "5x", "7x", "10x", "12x" };
 const double VEH_VISLIGHT_VALUES[] = { 0, 0.01, 0.03, 0.05, 0.07, 0.1, 0.2 };
 int VisLightIndex = 0;
-//bool VisLight_Changed = true;
 
 //Visualize Vehicle Indicators (Vector)
 int VisLight3dIndex = 0;
-//bool VisLight3d_Changed = true;
 
 //Speed Limiter
 int speedLimiterIndex = 0;
-//bool speedLimiterChanged = true;
 int DoorAutolockIndex = 0;
-//bool DoorAutolockChanged = true;
 int speedCityLimiterIndex = 0;
-//bool speedCityLimiterChanged = true;
 int speedCountryLimiterIndex = 0;
-//bool speedCountryLimiterChanged = true;
 
 //Lights OFF
 const std::vector<std::string> VEH_LIGHTSOFF_CAPTIONS{ "Never", "Daytime Only", "Always" };
 int lightsOffIndex = 0;
-//bool lightsOffChanged = true;
 
 //Number Of Vehicles To Remember
 const std::vector<std::string> VEH_VEHREMEMBER_CAPTIONS{ "3", "5", "7", "10", "15", "20", "30", "40", "50", "Manually" };
 const int VEH_VEHREMEMBER_VALUES[] = { 3, 5, 7, 10, 15, 20, 30, 40, 50, 666 };
 int VehRememberIndex = 3;
-//bool VehRemember_Changed = true;
 
 //Blip Size
 int VehBlipSizeIndex = 2;
-//bool VehBlipSize_Changed = true;
 
 //Blip Colour
 int VehBlipColourIndex = 4;
-//bool VehBlipColour_Changed = true;
 int VehColourIndex = 0;
-//bool VehColour_Changed = true;
 
 //Blip Random Colour
 int VehRandomColourIndex = 0;
-//bool VehRandomColour_Changed = true;
 
 //Blip Symbol
 int VehBlipSymbolIndexN = 0;
-//bool VehBlipSymbol_Changed = true;
 
 //Blip Flashing
 int VehBlipFlashIndex = 0;
-//bool VehBlipFlash_Changed = true;
 
 //Restore Tracked Vehicles On Game Restart
 int VehTrackedAutoSaveIndex = 0;
-//bool VehTrackedAutoSaveChanged = true;
 
 //Keep The Engine Running
 const std::vector<std::string> VEH_ENGINERUNNING_CAPTIONS{ "Never", "Always", "Hold Exit To Kill Engine" };
 int EngineRunningIndex = 0;
-//bool EngineRunning_Changed = true;
 
 //Infinite Rocket Boost
 const std::vector<std::string> VEH_INFINITEBOOST_CAPTIONS{ "OFF", "Hold", "Always" };
 int InfiniteBoostIndex = 0;
-//bool InfiniteBoost_Changed = true;
 
 //Auto-shut engine after
 const std::vector<std::string> VEH_AUTO_SHUT_ENGINE_CAPTIONS{ "OFF", "5", "10", "20", "30" };
 const int VEH_AUTO_SHUT_ENGINE_VALUES[] = { 0, 5, 10, 20, 30 };
 int AutoShutEngineIndex = 0;
-//bool AutoShutEngineChanged = true;
 
 // Hydraulics
 const std::vector<std::string> VEH_HYDRAULICS_CAPTIONS{ "OFF", "-0.20", "-0.10", "0.10", "0.20" };
@@ -355,7 +322,6 @@ int HydraulicsIndex = 0;
 
 // Nitrous
 int NitrousIndex = 0;
-//bool NitrousChanged = true;
 
 // Car Thief
 const std::vector<std::string> VEH_RINGER_SKILL_CAPTIONS{ "Street Kid", "Professional" };
@@ -1372,10 +1338,6 @@ bool process_veh_seat_menu()
 	return draw_generic_menu<int>(menuItems, &vehSeatIndexMenuIndex, "Seat Options", onconfirm_seat_menu, NULL, NULL);
 }
 
-/*void on_toggle_invincibility(MenuItem<int> choice){
-	featureVehInvincibleUpdated = true;
-}*/
-
 bool onconfirm_colours_menu(MenuItem<int> choice)
 {
 	return false;
@@ -2295,7 +2257,6 @@ void process_veh_menu(){
 	listItem = new SelectFromListMenuItem(VEH_INVINC_MODE_CAPTIONS, onchange_veh_invincibility_mode);
 	listItem->wrap = false;
 	listItem->caption = "Vehicle Invincibility";
-	//listItem->value = get_current_veh_invincibility_mode();
 	listItem->value = VehInvincibilityIndex;
 	menuItems.push_back(listItem);
 
@@ -2787,8 +2748,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
 			bool featureVehNoDamage = false;
 			if (WORLD_GRAVITY_LEVEL_VALUES[VehInvincibilityIndex] > 1) featureVehNoDamage = true;
-			//featureVehInvincibleUpdated = true;
-
+			
 			if (FIRE::IS_ENTITY_ON_FIRE(veh)){
 				FIRE::STOP_ENTITY_FIRE(veh);
 			}
@@ -4356,7 +4316,6 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		char* animation_of_h = "hotwire";
 
 		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
-			//Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 			Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 
 			if (VEHICLES_AVAILABLE.empty()) VEHICLES_AVAILABLE.push_back(veh);
@@ -4750,7 +4709,6 @@ void reset_vehicle_globals() {
 	featureSpeedOnGround =
 	featureSpeedInAir =
 	
-	//featureVehInvincible =
 		featureVehSteerAngle = 
 		featureRollWhenShoot =
 		featureTractionControl =
@@ -4791,7 +4749,6 @@ void reset_vehicle_globals() {
 		featureBlipNumber = true;
 		featureHazards = true;
 		featureWearHelmetOffUpdated = true;
-		//featureVehInvincibleUpdated = true;
 		featurePoliceVehicleBlip = true;
 		featurePoliceNoFlip = true;
 		featureAltitude = true;
@@ -4811,8 +4768,6 @@ void reset_vehicle_globals() {
 
 	featureDespawnScriptDisabled = false;
 	featureDespawnScriptDisabledUpdated = false;
-	//featureVehNoDamage = false;
-	//featureVehInvulnIncludesCosmetic = false;
 }
 
 void keyboard_tip_message(char* curr_message_s) {
@@ -5017,8 +4972,6 @@ Vehicle do_spawn_vehicle(DWORD model, std::string modelTitle, bool cleanup){
 void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoVehFallOff", &featureNoVehFallOff}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehicleDoorInstant", &featureVehicleDoorInstant});
-	//results->push_back(FeatureEnabledLocalDefinition{"featureVehInvincible", &featureVehInvincible, &featureVehInvincibleUpdated});
-	//results->push_back(FeatureEnabledLocalDefinition{"featureVehNoDamage", &featureVehNoDamage, &featureVehInvincibleUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehSpawnInto", &featureVehSpawnInto});
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehSteerAngle", &featureVehSteerAngle});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRollWhenShoot", &featureRollWhenShoot});
@@ -5067,7 +5020,6 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehSpawnTuned", &featureVehSpawnTuned});
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehSpawnOptic", &featureVehSpawnOptic});
 	results->push_back(FeatureEnabledLocalDefinition{"featureWearHelmetOff", &featureWearHelmetOff, &featureWearHelmetOffUpdated});
-	//results->push_back(FeatureEnabledLocalDefinition{"featureVehInvulnIncludesCosmetic", &featureVehInvulnIncludesCosmetic, &featureVehInvincibleUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureDespawnScriptDisabled", &featureDespawnScriptDisabled}); // , &featureDespawnScriptDisabledUpdated
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehLightsOn", &featureVehLightsOn, &featureVehLightsOnUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureEngineDegrade", &featureEngineDegrade});
@@ -5985,26 +5937,7 @@ void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settin
 	}
 }
 
-/*int get_current_veh_invincibility_mode(){
-	if(!featureVehInvincible){
-		return 0;
-	}
-	else if(!featureVehNoDamage){
-		return 1;
-	}
-	else if(!featureVehInvulnIncludesCosmetic){
-		return 2;
-	}
-	return 3;
-}*/
-
 void onchange_veh_invincibility_mode(int value, SelectFromListMenuItem* source){
-	//featureVehInvincible = (value > 0);
-	//featureVehNoDamage = (value > 1);
-	//featureVehInvulnIncludesCosmetic = (value > 2);
-
-	//featureVehInvincibleUpdated = true;
-	
 	VehInvincibilityIndex = value;
 	VehInvincibilityChanged = true;
 }
@@ -6019,7 +5952,6 @@ int get_current_veh_eng_pow_index(){
 
 void onchange_veh_eng_pow_index(int value, SelectFromListMenuItem* source){
 	engPowMultIndex = value;
-	//powChanged = true;
 	PositionChanged = true;
 }
 
@@ -6030,97 +5962,81 @@ void onchange_veh_never_dirty(int value, SelectFromListMenuItem* source) {
 
 void onchange_veh_mass_index(int value, SelectFromListMenuItem* source){
 	VehMassMultIndex = value;
-	//massChanged = true;
 	PositionChanged = true;
 }
 
 void onchange_player_forceshield_mode(int value, SelectFromListMenuItem* source) {
 	current_player_forceshieldN = value;
-	//player_massChanged = true;
 	PositionChanged = true;
 }
 
 void onchange_veh_infiniteboost_index(int value, SelectFromListMenuItem* source) {
 	InfiniteBoostIndex = value;
-	//InfiniteBoost_Changed = true;
 	PositionChanged = true;
 }
 
 void onchange_veh_nitrous_index(int value, SelectFromListMenuItem* source) {
 	NitrousIndex = value;
-	//NitrousChanged = true;
 	PositionChanged = true;
 }
 
 void onchange_veh_turn_signals_index(int value, SelectFromListMenuItem* source){
 	turnSignalsIndex = value;
-	//turnSignalsChanged = true;
 	PositionChanged = true;
 }
 
 void onchange_veh_turn_signals_angle_index(int value, SelectFromListMenuItem* source) {
 	turnSignalsAngleIndex = value;
-	//turnSignalsAngleChanged = true;
 	PositionChanged = true;
 }
 
 void onchange_veh_nitrous_power_index(int value, SelectFromListMenuItem* source) {
 	NitrousPowerIndex = value;
-	//NitrousPowerChanged = true;
 	PositionChanged = true;
 }
 
 void onchange_veh_turn_signals_acceleration_index(int value, SelectFromListMenuItem* source) {
 	turnSignalsAccelerationIndex = value;
-	//turnSignalsAccelerationChanged = true;
 	PositionChanged = true;
 }
 
 void onchange_veh_jumpy_index(int value, SelectFromListMenuItem* source) {
 	JumpyVehIndex = value;
-	//JumpyVehChanged = true;
 	PositionChanged = true;
 }
 
 void onchange_heavy_veh_index(int value, SelectFromListMenuItem* source) {
 	HeavyVehIndex = value;
-	//HeavyVehChanged = true;
 	PositionChanged = true;
 }
 
 void onchange_custom_eng_pow_index(int value, SelectFromListMenuItem* source) {
 	engCustomPowMultIndex = value;
-	//engCustomPowMultChanged = true;
 	PositionChanged = true;
 }
 
 void onchange_veh_invisibility_index(int value, SelectFromListMenuItem* source) {
 	VehInvisIndexN = value;
-	//VehInvisChanged = true;
 	PositionChanged = true;
 }
 
 void onchange_veh_lightsOff_index(int value, SelectFromListMenuItem* source){
 	lightsOffIndex = value;
-	//lightsOffChanged = true;
 	PositionChanged = true;
 }
 
 void onchange_veh_speedlimiter_index(int value, SelectFromListMenuItem* source){
 	speedLimiterIndex = value;
-	//speedLimiterChanged = true;
 	PositionChanged = true;
 }
 
 void onchange_veh_cityspeedlimiter_index(int value, SelectFromListMenuItem* source) {
 	speedCityLimiterIndex = value;
-	//speedCityLimiterChanged = true;
 	PositionChanged = true;
 }
 
 void onchange_veh_countryspeedlimiter_index(int value, SelectFromListMenuItem* source) {
 	speedCountryLimiterIndex = value;
-	//speedCountryLimiterChanged = true;
 	PositionChanged = true;
 }
 
@@ -6136,7 +6052,6 @@ void onchange_speed_position_index(int value, SelectFromListMenuItem* source){
 
 void onchange_door_autolock_index(int value, SelectFromListMenuItem* source) {
 	DoorAutolockIndex = value;
-	//DoorAutolockChanged = true;
 	PositionChanged = true;
 }
 
@@ -6277,7 +6192,6 @@ void onchange_veh_blipflash_index(int value, SelectFromListMenuItem* source){
 
 void onchange_veh_trackedautosave_index(int value, SelectFromListMenuItem* source) {
 	VehTrackedAutoSaveIndex = value;
-	//VehTrackedAutoSaveChanged = true;
 	PositionChanged = true;
 }
 

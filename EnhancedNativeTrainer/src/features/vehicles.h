@@ -95,8 +95,8 @@ const int VEH_TURN_SIGNALS_ACCELERATION_VALUES[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 
 const std::vector<std::string> VEH_BLIPSIZE_CAPTIONS{ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
 const double VEH_BLIPSIZE_VALUES[] = { 0.3, 0.5, 0.8, 1.0, 1.2, 1.5, 1.7, 2.0, 2.5, 3.0 };
 
-const std::vector<std::string> VEH_BLIPSYMBOL_CAPTIONS{ "Standard", "Player", /*"North",*/ "Waypoint", /*"BigCircleOutline",*/ "ArrowUpOutlined", /*"ArrowDownOutlined", "ArrowUp", "ArrowDown", "PoliceHelicopterAnimated", "Jet"*/ };
-const std::vector<int> VEH_BLIPSYMBOL_VALUES{ 1, 6, /*7,*/ 8, /*10,*/ 11, /*12, 13, 14, 15, 16*/ };
+const std::vector<std::string> VEH_BLIPSYMBOL_CAPTIONS{ "Standard", "Player", "Waypoint", "ArrowUpOutlined" };
+const std::vector<int> VEH_BLIPSYMBOL_VALUES{ 1, 6, 8, 11 };
 
 extern int NPCVehicleDamageOnCollIndex;
 
@@ -1068,8 +1068,6 @@ void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settin
 bool onconfirm_paintfade(MenuItem<float> choice);
 
 void onhighlight_paintfade(MenuItem<float> choice);
-
-//int get_current_veh_invincibility_mode();
 
 void onchange_veh_invincibility_mode(int value, SelectFromListMenuItem* source);
 
