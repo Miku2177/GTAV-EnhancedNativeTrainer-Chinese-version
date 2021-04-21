@@ -195,8 +195,6 @@ void fuel()
 		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) {
 			if (VEH_FUELRANDOM_VALUES[Random2Index] > 0 && VEH_FUELRANDOM_VALUES[Random2Index] > VEH_FUELRANDOM_VALUES[Random1Index]) randomize = VEH_FUELRANDOM_VALUES[Random1Index] + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (VEH_FUELRANDOM_VALUES[Random2Index] - VEH_FUELRANDOM_VALUES[Random1Index])));
 			if (VEH_FUELRANDOM_VALUES[Random2Index] > 0 && VEH_FUELRANDOM_VALUES[Random2Index] < VEH_FUELRANDOM_VALUES[Random1Index]) randomize = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / VEH_FUELRANDOM_VALUES[Random2Index]));
-			//if (VEH_FUELRANDOM_VALUES[Random2Index] > 0 && VEH_FUELRANDOM_VALUES[Random2Index] > VEH_FUELRANDOM_VALUES[Random1Index]) randomize = (rand() % VEH_FUELRANDOM_VALUES[Random2Index] + VEH_FUELRANDOM_VALUES[Random1Index]); // UP MARGIN + DOWN MARGIN
-			//if (VEH_FUELRANDOM_VALUES[Random2Index] > 0 && VEH_FUELRANDOM_VALUES[Random2Index] < VEH_FUELRANDOM_VALUES[Random1Index]) randomize = (rand() % VEH_FUELRANDOM_VALUES[Random2Index] + 0.0); // UP MARGIN + DOWN MARGIN
 			if (VEH_FUELRANDOM_VALUES[Random2Index] == VEH_FUELRANDOM_VALUES[Random1Index]) randomize = VEH_FUELRANDOM_VALUES[Random2Index]; // UP MARGIN + DOWN MARGIN
 		}
 
@@ -713,10 +711,9 @@ void fuel()
 
 			if (IdleConsume_seconds == (VEH_CARFUEL_VALUES[IdleConsumptionIndex] / 85000)) {
 				for (int i = 0; i < VEHICLES.size(); i++) {
-					//Vector3 curr_s = ENTITY::GET_ENTITY_VELOCITY(VEHICLES[i]);
 					bool stepped_on_pedal = false;
 					if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && (CONTROLS::IS_CONTROL_PRESSED(2, 71) || CONTROLS::IS_CONTROL_PRESSED(2, 72))) stepped_on_pedal = true;
-					if (stepped_on_pedal == false && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(VEHICLES[i]) && FUEL[i] > 0) FUEL[i] = FUEL[i] - 0.001; // curr_s.x < 1 && curr_s.y < 1
+					if (stepped_on_pedal == false && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(VEHICLES[i]) && FUEL[i] > 0) FUEL[i] = FUEL[i] - 0.001; 
 					if (VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(VEHICLES[i]) && FUEL[i] <= 0) {
 						VEHICLE::SET_VEHICLE_ENGINE_ON(VEHICLES[i], false, true, false);
 						VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(VEHICLES[i], false);

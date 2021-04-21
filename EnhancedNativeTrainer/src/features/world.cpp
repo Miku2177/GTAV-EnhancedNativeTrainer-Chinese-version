@@ -8,7 +8,6 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 (C) Rob Pridham and fellow contributors 2015
 */
 
-
 #include "world.h"
 #include "area_effect.h"
 #include "script.h"
@@ -230,7 +229,6 @@ void process_world_weathersettings_menu() {
 
 	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "Heavy Snow";
-	//toggleItem->value = 7;
 	toggleItem->toggleValue = &featureSnow;
 	toggleItem->toggleValueUpdated = &featureSnowUpdated;
 	menuItems.push_back(toggleItem);
@@ -285,9 +283,6 @@ bool onconfirm_weather_menu(MenuItem<std::string> choice)
 	std::stringstream ss; ss << "Weather Frozen at: " << lastWeatherName;
 	switch (choice.currentMenuIndex)
 	{
-	//case 0:
-	//	process_world_weathersettings_menu();
-	//	break;
 	case 0: 
 		// reset weather
 		GAMEPLAY::CLEAR_OVERRIDE_WEATHER();
@@ -332,7 +327,6 @@ void process_weather_menu()
 	const std::string caption = "Weather Options";
 	
 	StringStandardOrToggleMenuDef lines[lineCount] = {
-		//{ "Weather Settings", "FREEZEWEATHER", NULL, NULL, false },
 		{ "Reset Weather", "RESETWEATHER", NULL, NULL, true },
 		{ "Extra Sunny", "EXTRASUNNY", NULL, NULL, true },
 		{ "Clear", "CLEAR", NULL, NULL, true },
@@ -521,8 +515,6 @@ bool onconfirm_world_menu(MenuItem<int> choice)
 
 void process_world_menu()
 {
-	//const int lineCount = 8; // Amount of cases +1
-
 	const std::string caption = "World Options";
 
 	std::vector<MenuItem<int>*> menuItems;
@@ -1296,15 +1288,6 @@ void update_world_features()
 				slippery_s = slippery_s + 1;
 				if (slippery_s < slip_index_s && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip_ped.x, coords_slip_ped.y, coords_slip_ped.z)) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], true);
 				if (slippery_s > slip_index_s - 1 && slippery_s < 20) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], false); // slip_index * 2
-				// bike
-				//if (VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(bus_veh[i])) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(bus_veh[i]))) {
-				//	int vehslipspeed = ENTITY::GET_ENTITY_SPEED(bus_veh[i]);
-				//	if (vehslipspeed > 5 || (vehslipspeed < 6 && CONTROLS::IS_CONTROL_RELEASED(2, 71))) {
-				//		if ((slippery_s < (slip_index_s / 5) || (slippery_s > (slip_index_s / 4) - 1 && slippery_s < (slip_index_s / 3))) && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip_ped.x, coords_slip_ped.y, coords_slip_ped.z)) // 4 3 2
-				//			VEHICLE::SET_VEHICLE_GRAVITY(bus_veh[i], false);
-				//		if ((slippery_s > (slip_index_s / 5) - 1 && slippery_s < (slip_index_s / 4)) || (slippery_s > (slip_index_s / 3) - 1 && slippery_s < 20)) VEHICLE::SET_VEHICLE_GRAVITY(bus_veh[i], true);
-				//	}
-				//}
 				if (slippery_s > 19) slippery_s = 0; 
 				srand(time(0));
 				int time11 = (rand() % 3000 + 0); // UP MARGIN + DOWN MARGIN
@@ -1342,15 +1325,6 @@ void update_world_features()
 					slippery_r = slippery_r + 1;
 					if (slippery_r < slip_index && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip_r.x, coords_slip_r.y, coords_slip_r.z)) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], true);
 					if (slippery_r > slip_index - 1 && slippery_r < 20) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], false);
-					// bike
-					//if (VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(bus_veh[i])) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(bus_veh[i]))) {
-					//	int vehslipspeed = ENTITY::GET_ENTITY_SPEED(bus_veh[i]);
-					//	if (vehslipspeed > 5 || (vehslipspeed < 6 && CONTROLS::IS_CONTROL_RELEASED(2, 71))) {
-					//		if ((slippery_s < (slip_index / 5) || (slippery_s > (slip_index / 4) - 1 && slippery_s < (slip_index / 3))) && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip_r.x, coords_slip_r.y, coords_slip_r.z)) // 4 3 2
-					//			VEHICLE::SET_VEHICLE_GRAVITY(bus_veh[i], false);
-					//		if ((slippery_s > (slip_index / 5) - 1 && slippery_s < (slip_index / 4)) || (slippery_s > (slip_index / 3) - 1 && slippery_s < 20)) VEHICLE::SET_VEHICLE_GRAVITY(bus_veh[i], true);
-					//	}
-					//}
 					if (slippery_r > 19) slippery_r = 0; 
 					// normalize speed
 					Vector3 my_coords_sl = ENTITY::GET_ENTITY_COORDS(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 0), true);
