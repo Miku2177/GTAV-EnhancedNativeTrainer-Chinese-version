@@ -25,6 +25,7 @@ bool hotkey_held_slow_mo = false;
 bool hotkey_boddyguard = false;
 bool hotkey_held_half_normal_speed = false;
 bool hotkey_held_normal_speed = false;
+bool hotkey_held_drop_mine = false;
 bool hotkey_toggled_speed = false;
 bool hotkey_held_veh_burnout = false;
 bool hotkey_held_veh_extrapower = false;
@@ -50,6 +51,11 @@ bool is_hotkey_held_half_normal_speed()
 bool is_hotkey_held_normal_speed()
 {
 	return hotkey_held_normal_speed;
+}
+
+bool is_hotkey_held_drop_mine()
+{
+	return hotkey_held_drop_mine;
 }
 
 bool is_hotkey_toggled_speed()
@@ -305,6 +311,9 @@ void trigger_function_for_hotkey_onkeyup(int hotkey)
 	case HKEY_SPAWN_VEHICLE_MANUALLY:
 		spawn_veh_manually();
 		break;
+	case HKEY_DROP_MINE:
+		hotkey_held_drop_mine = false;
+		break;
 	default:
 	{
 		std::ostringstream ss;
@@ -345,6 +354,9 @@ void trigger_function_for_hotkey_onkeydown(int hotkey)
 			break;
 		case HKEY_SPAWN_SAVED_CAR:
 			hotkey_held_saved_veh_spawn = true;
+			break;
+		case HKEY_DROP_MINE:
+			hotkey_held_drop_mine = true;
 			break;
 		default:
 			break;

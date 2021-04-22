@@ -902,9 +902,6 @@ void update_features(){
 	if(featurePlayerInvincible && bPlayerExists){
 		if (getGameVersion() < VER_1_0_678_1_STEAM || getGameVersion() < VER_1_0_678_1_NOSTEAM) PLAYER::SET_PLAYER_INVINCIBLE(player, TRUE);
 		if (getGameVersion() >= VER_1_0_678_1_STEAM || getGameVersion() >= VER_1_0_678_1_NOSTEAM) PLAYER::_0x733A643B5B0C53C1(player, TRUE);
-		//Vector3 my_coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 0);
-		//FIRE::STOP_FIRE_IN_RANGE(my_coords.x, my_coords.y, my_coords.z, 2);
-		//if (FIRE::IS_ENTITY_ON_FIRE(PLAYER::PLAYER_PED_ID())) FIRE::STOP_ENTITY_FIRE(PLAYER::PLAYER_PED_ID());
 	}
 	
 	// Fire Proof
@@ -1567,7 +1564,6 @@ void update_features(){
 			if (VEH_TURN_SIGNALS_ACCELERATION_VALUES[feature_shake_ragdoll] > 0) {
 				Vector3 coords_me = ENTITY::GET_ENTITY_COORDS(playerPed, true);
 				float tmp_v = VEH_TURN_SIGNALS_ACCELERATION_VALUES[feature_shake_ragdoll];
-				//FIRE::ADD_OWNED_EXPLOSION(playerPed, coords_me.x, coords_me.y, coords_me.z, 29, 0.0f, false, true, VEH_TURN_SIGNALS_ACCELERATION_VALUES[feature_shake_ragdoll]);
 				CAM::SHAKE_GAMEPLAY_CAM("SMALL_EXPLOSION_SHAKE", tmp_v / 5); // JOLT_SHAKE
 				been_damaged_by_weapon = false;
 				ragdoll_task = false;
