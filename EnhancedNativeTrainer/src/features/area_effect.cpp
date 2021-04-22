@@ -33,7 +33,6 @@ std::deque<ENTTrackedVehicle*> trackedVehicles;
 bool featurePlayerIgnoredByAll = false;
 bool featureNPCShowHealth = false;
 bool featureAreaPedsInvincible = false;
-//bool featureAreaVehiclesInvincible = false;
 bool featureAreaVehiclesBroken = false;
 bool featureAreaPedsRioting = false;
 bool featureAreaVehiclesExploded = false;
@@ -133,7 +132,6 @@ void add_areaeffect_feature_enablements(std::vector<FeatureEnabledLocalDefinitio
 	results->push_back(FeatureEnabledLocalDefinition{"featureNPCShowHealth", &featureNPCShowHealth});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAreaPedsInvincible", &featureAreaPedsInvincible}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureAreaPedsHeadExplode", &featureAreaPedsHeadExplode});
-	//results->push_back(FeatureEnabledLocalDefinition{"featureAreaVehiclesInvincible", &featureAreaVehiclesInvincible}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureAreaVehiclesBroken", &featureAreaVehiclesBroken}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureAreaVehiclesExploded", &featureAreaVehiclesExploded});
 	results->push_back(FeatureEnabledLocalDefinition{"featureAreaPedsRioting", &featureAreaPedsRioting}); 
@@ -298,12 +296,6 @@ void process_areaeffect_peds_menu(){
 void process_areaeffect_vehicle_menu(){
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
-
-	//ToggleMenuItem<int> *togItem = new ToggleMenuItem<int>();
-	//togItem->caption = "All Vehicles Invincible";
-	//togItem->value = 1;
-	//togItem->toggleValue = &featureAreaVehiclesInvincible;
-	//menuItems.push_back(togItem);
 
 	listItem = new SelectFromListMenuItem(VEH_INVINC_MODE_CAPTIONS, onchange_veh_ped_invincibility_mode);
 	listItem->wrap = false;
@@ -600,8 +592,7 @@ void update_area_effects(Ped playerPed){
 
 			bool featureVehPedNoDamage = false;
 			if (WORLD_GRAVITY_LEVEL_VALUES[VehPedInvincibilityIndex] > 1) featureVehPedNoDamage = true;
-			//featureVehInvincibleUpdated = true;
-
+			
 			if (FIRE::IS_ENTITY_ON_FIRE(veh_npc)) {
 				FIRE::STOP_ENTITY_FIRE(veh_npc);
 			}
@@ -632,27 +623,6 @@ void update_area_effects(Ped playerPed){
 					VEHICLE::SET_VEHICLE_FIXED(veh_npc);
 				}
 			}
-
-			/*ENTITY::SET_ENTITY_HEALTH(veh, 10000.0f);
-			VEHICLE::SET_VEHICLE_ENGINE_HEALTH(veh, 10000.0);
-			VEHICLE::SET_VEHICLE_PETROL_TANK_HEALTH(veh, 10000.0);
-
-			VEHICLE::SET_VEHICLE_TYRES_CAN_BURST(veh, enabled);
-			VEHICLE::SET_VEHICLE_WHEELS_CAN_BREAK(veh, enabled);
-
-			VEHICLE::SET_VEHICLE_CAN_BREAK(veh, !enabled);
-			ENTITY::SET_ENTITY_INVINCIBLE(veh, enabled);
-			ENTITY::SET_ENTITY_CAN_BE_DAMAGED(veh, !enabled);
-			VEHICLE::SET_VEHICLE_CAN_BE_VISIBLY_DAMAGED(veh, !enabled);
-
-			for(int i = 0; i < 6; i++){
-				VEHICLE::_SET_VEHICLE_DOOR_BREAKABLE(veh, i, !enabled); //(Vehicle, doorIndex, isBreakable)
-			}
-
-			if(enabled){
-				ENTITY::SET_ENTITY_ONLY_DAMAGED_BY_PLAYER(veh, 1);
-				VEHICLE::SET_VEHICLE_BODY_HEALTH(veh, 10000.0f);
-			}*/
 		}
 	}
 
@@ -1441,8 +1411,6 @@ void kill_all_nearby_peds_continuous(){
 
 void kill_all_nearby_vehicles_now(){
 	std::set<Vehicle> vehicles = get_nearby_vehicles(PLAYER::PLAYER_PED_ID());
-
-	//set_all_nearby_vehs_to_invincible(false, true);
 
 	for each (Vehicle vehicle in vehicles){
 		ENTITY::SET_ENTITY_AS_MISSION_ENTITY(vehicle, true, true);
