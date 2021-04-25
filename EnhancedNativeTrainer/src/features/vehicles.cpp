@@ -1028,9 +1028,9 @@ bool onconfirm_vehdoor_menu(MenuItem<int> choice){
 				VEHICLE::SET_VEHICLE_DOOR_SHUT(veh, value, featureVehicleDoorInstant);
 			}
 		}
-		else{
-			set_status_text("Player isn't in a vehicle");
-		}
+		//else{
+		//	set_status_text("Player isn't in a vehicle");
+		//}
 	}
 	else if (choice.value == -5)//driver window roll
 	{
@@ -3118,6 +3118,30 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		if ((coords_b_m.z < height) && ((height - coords_b_m.z) > 2)) ENTITY::SET_ENTITY_COORDS(veh_anchor, coords_b.x, coords_b.y, coords_b.z, 1, 0, 0, 1);
 	}
 
+	if (is_hotkey_held_openclose_door()) {
+		PED::SET_PED_CAN_SWITCH_WEAPON(PLAYER::PLAYER_PED_ID(), false);
+		UI::HIDE_HUD_COMPONENT_THIS_FRAME(19);
+		UI::HIDE_HUD_COMPONENT_THIS_FRAME(20);
+
+		int picked_door = -1;
+		if (GetKeyState('1') & 0x8000) picked_door = 0;
+		if (GetKeyState('2') & 0x8000) picked_door = 1;
+		if (GetKeyState('3') & 0x8000) picked_door = 2;
+		if (GetKeyState('4') & 0x8000) picked_door = 3;
+		if (GetKeyState('5') & 0x8000) picked_door = 4;
+		if (GetKeyState('6') & 0x8000) picked_door = 5;
+
+		Vehicle veh = -1;
+		if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
+		if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
+			find_nearest_vehicle();
+			veh = temp_vehicle;
+		}
+		float doorAngle = VEHICLE::GET_VEHICLE_DOOR_ANGLE_RATIO(veh, picked_door); //Best way I could figure out to detect if the part is animated.
+		if (doorAngle < 0.01) VEHICLE::SET_VEHICLE_DOOR_OPEN(veh, picked_door, false, 0);
+		else VEHICLE::SET_VEHICLE_DOOR_SHUT(veh, picked_door, 0);
+	} //else PED::SET_PED_CAN_SWITCH_WEAPON(PLAYER::PLAYER_PED_ID(), true);
+
 	//////////////////////////////////////////////////// PLAYER/VEHICLE FORCE SHIELD ////////////////////////////////////////////////////////
 	if ((VEH_MASS_VALUES[VehMassMultIndex] > 0 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && !PED::IS_PED_IN_ANY_PLANE(playerPed) && !PED::IS_PED_IN_ANY_HELI(playerPed)) || 
 		(VEH_MASS_VALUES[current_player_forceshieldN] > 0 && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0))) {
@@ -4956,6 +4980,8 @@ Vehicle do_spawn_vehicle(DWORD model, std::string modelTitle, bool cleanup){
 			VEHICLES_IGNITED.push_back(veh);
 		}
 
+		ENTITY::RESET_ENTITY_ALPHA(veh);
+
 		WAIT(0);
 		STREAMING::SET_MODEL_AS_NO_LONGER_NEEDED(model);
 		if(cleanup){
@@ -5166,6 +5192,8 @@ bool spawn_tracked_car(int slot, std::string caption) {
 			VEHICLES_AVAILABLE.push_back(veh);
 			VEHICLES_IGNITED.push_back(veh);
 		}
+
+		ENTITY::RESET_ENTITY_ALPHA(veh);
 	}
 
 	for (std::vector<TrackedVehicleDBRow*>::iterator it = savedTVehs.begin(); it != savedTVehs.end(); ++it) {
@@ -5300,8 +5328,10 @@ bool spawn_saved_car(int slot, std::string caption){
 			VEHICLES_IGNITED.push_back(veh);
 		}
 
+		ENTITY::RESET_ENTITY_ALPHA(veh);
+
 		ENTITY::SET_VEHICLE_AS_NO_LONGER_NEEDED(&veh);
-	}
+	} // end of else
 
 	for(std::vector<SavedVehicleDBRow*>::iterator it = savedVehs.begin(); it != savedVehs.end(); ++it){
 		delete (*it);
