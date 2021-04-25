@@ -65,6 +65,8 @@ Ped temp_ped = -1;
 
 bool repairing_engine = false;
 
+DWORD featureVehDoorOpenCloseTime = 0;
+
 std::vector<Object> SPIKES;
 bool s_message = false;
 
@@ -3137,9 +3139,12 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 			find_nearest_vehicle();
 			veh = temp_vehicle;
 		}
-		float doorAngle = VEHICLE::GET_VEHICLE_DOOR_ANGLE_RATIO(veh, picked_door); //Best way I could figure out to detect if the part is animated.
-		if (doorAngle < 0.01) VEHICLE::SET_VEHICLE_DOOR_OPEN(veh, picked_door, false, 0);
-		else VEHICLE::SET_VEHICLE_DOOR_SHUT(veh, picked_door, 0);
+		if (featureVehDoorOpenCloseTime + 100 < GetTickCount()) { // 150
+			float doorAngle = VEHICLE::GET_VEHICLE_DOOR_ANGLE_RATIO(veh, picked_door); //Best way I could figure out to detect if the part is animated.
+			if (doorAngle < 0.01) VEHICLE::SET_VEHICLE_DOOR_OPEN(veh, picked_door, false, 0);
+			else VEHICLE::SET_VEHICLE_DOOR_SHUT(veh, picked_door, 0);
+			featureVehDoorOpenCloseTime = GetTickCount();
+		}
 	} //else PED::SET_PED_CAN_SWITCH_WEAPON(PLAYER::PLAYER_PED_ID(), true);
 
 	//////////////////////////////////////////////////// PLAYER/VEHICLE FORCE SHIELD ////////////////////////////////////////////////////////
@@ -4331,7 +4336,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		PED::SET_PED_CAN_SWITCH_WEAPON(playerPed, true);
 		veh_to_spawn = "";
 	}
-	if (!is_hotkey_held_saved_veh_spawn() && veh_to_spawn == "") PED::SET_PED_CAN_SWITCH_WEAPON(playerPed, true);
+	if (!is_hotkey_held_saved_veh_spawn() && veh_to_spawn == "" && !is_hotkey_held_openclose_door()) PED::SET_PED_CAN_SWITCH_WEAPON(playerPed, true);
 
 ///////////////////////////////////	CAR THIEF ///////////////////////////////////
 	if (featureRoutineOfRinger && GAMEPLAY::GET_MISSION_FLAG() == 0) {
@@ -5229,11 +5234,11 @@ bool spawn_saved_car(int slot, std::string caption){
 		VEHICLE::SET_VEHICLE_WINDOW_TINT(veh, savedVeh->windowTint); 
 
 		VEHICLE::SET_VEHICLE_WHEEL_TYPE(veh, savedVeh->wheelType);
-		
+		//
 		for each (SavedVehicleExtraDBRow *extra in savedVeh->extras){
 			VEHICLE::SET_VEHICLE_EXTRA(veh, extra->extraID, (extra->extraState == 1) ? 0 : -1);
 		}
-
+		//
 		for each (SavedVehicleModDBRow *mod in savedVeh->mods){
 			if(mod->isToggle){
 				VEHICLE::TOGGLE_VEHICLE_MOD(veh, mod->modID, mod->modState);
@@ -5246,7 +5251,7 @@ bool spawn_saved_car(int slot, std::string caption){
 		int currmod = VEHICLE::GET_VEHICLE_MOD(veh, 23);
 		VEHICLE::SET_VEHICLE_MOD(veh, 23, currmod, savedVeh->customTyres);
 		VEHICLE::SET_VEHICLE_MOD(veh, 24, currmod, savedVeh->customTyres);
-
+		
 		if(savedVeh->livery != -1){
 			VEHICLE::SET_VEHICLE_LIVERY(veh, savedVeh->livery);
 		}
