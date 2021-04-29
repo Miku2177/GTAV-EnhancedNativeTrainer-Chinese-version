@@ -25,6 +25,8 @@ bool is_hotkey_held_normal_speed();
 
 bool is_hotkey_held_drop_mine();
 
+bool is_hotkey_held_openclose_door();
+
 bool is_hotkey_toggled_speed();
 
 bool is_hotkey_held_veh_burnout();
@@ -88,6 +90,7 @@ static const int HKEY_BODYGUARD_DIS_ARMED = 156;
 static const int HKEY_SPAWN_SAVED_CAR = 157;
 static const int HKEY_SPAWN_VEHICLE_MANUALLY = 158;
 static const int HKEY_DROP_MINE = 159;
+static const int HKEY_DOORS_OPENCLOSE_TOGGLE = 160;
 
 const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "No Function", 0 },
@@ -143,7 +146,8 @@ const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "Add/Remove Bodyguard Weapons", HKEY_BODYGUARD_DIS_ARMED },
 	{ "Spawn Saved Vehicle", HKEY_SPAWN_SAVED_CAR },
 	{ "Spawn Vehicle Manually", HKEY_SPAWN_VEHICLE_MANUALLY },
-	{ "Drop Mine [Hotkey + 1-6]", HKEY_DROP_MINE },
+	{ "Drop Mine [HK + 1-6]", HKEY_DROP_MINE },
+	{ "Open/Close Vehicle Door [HK + 1-6]", HKEY_DOORS_OPENCLOSE_TOGGLE },
 };
 
 void change_hotkey_function(int hotkey, int funcIndex);
