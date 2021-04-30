@@ -1136,42 +1136,25 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 
 	// Portable Radio
 	if (featurePlayerRadio || featurePlayerRadioUpdated) {
-		if (featurePlayerRadio) {
-			AUDIO::SET_MOBILE_RADIO_ENABLED_DURING_GAMEPLAY(true);
-		}
-		else {
-			AUDIO::SET_MOBILE_RADIO_ENABLED_DURING_GAMEPLAY(false);
-		}
+		if (featurePlayerRadio) AUDIO::SET_MOBILE_RADIO_ENABLED_DURING_GAMEPLAY(true);
+		else AUDIO::SET_MOBILE_RADIO_ENABLED_DURING_GAMEPLAY(false);
 	}
 
 	// No Wanted Music
-	if (featureWantedMusic) {
-		AUDIO::SET_AUDIO_FLAG("WantedMusicDisabled", true);
-	}
-	else {
-		AUDIO::SET_AUDIO_FLAG("WantedMusicDisabled", false);
-	}
-
+	if (featureWantedMusic) AUDIO::SET_AUDIO_FLAG("WantedMusicDisabled", true);
+	else AUDIO::SET_AUDIO_FLAG("WantedMusicDisabled", false);
+	
 	// No Flying Music
-	if (featureFlyingMusic) {
-		AUDIO::SET_AUDIO_FLAG("DisableFlightMusic", true);
-	}
-	else {
-		AUDIO::SET_AUDIO_FLAG("DisableFlightMusic", false);
-	}
-
+	if (featureFlyingMusic) AUDIO::SET_AUDIO_FLAG("DisableFlightMusic", true);
+	else AUDIO::SET_AUDIO_FLAG("DisableFlightMusic", false);
+	
 	// No Police Scanner
-	if (featurePoliceScanner) {
-		AUDIO::SET_AUDIO_FLAG("PoliceScannerDisabled", true);
-	}
-	else {
-		AUDIO::SET_AUDIO_FLAG("PoliceScannerDisabled", false);
-	}
-
+	if (featurePoliceScanner) AUDIO::SET_AUDIO_FLAG("PoliceScannerDisabled", true);
+	else AUDIO::SET_AUDIO_FLAG("PoliceScannerDisabled", false);
+	
 	// No 'Mission Passed' Message
 	if (featureNoComleteMessage) {
-		if (!SCRIPT::HAS_SCRIPT_LOADED("family3") && !SCRIPT::HAS_SCRIPT_LOADED("jewelry_heist") && !SCRIPT::HAS_SCRIPT_LOADED("family5") && !SCRIPT::HAS_SCRIPT_LOADED("wardrobe_sp") &&
-			!SCRIPT::HAS_SCRIPT_LOADED("family6"))
+		if (!SCRIPT::HAS_SCRIPT_LOADED("family3") && !SCRIPT::HAS_SCRIPT_LOADED("jewelry_heist") && !SCRIPT::HAS_SCRIPT_LOADED("family5") && !SCRIPT::HAS_SCRIPT_LOADED("wardrobe_sp") && !SCRIPT::HAS_SCRIPT_LOADED("family6"))
 			GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("mission_stat_watcher");
 	}
 
