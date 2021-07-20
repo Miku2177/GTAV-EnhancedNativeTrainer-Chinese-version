@@ -909,6 +909,24 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("ITALIRSX"), "lgm_dlc_heist4", "italirsx" },
 	{ RAGE_JOAAT("LONGFIN"), "dock_dlc_heist4", "longfin" },
 	{ RAGE_JOAAT("SEASPARROW2"), "elt_dlc_assault", "sparrow" },
+	//Tuners
+	{ RAGE_JOAAT("COMET6"), "lgm_dlc_tuner", "comet6" },
+	{ RAGE_JOAAT("CYPHER"), "lgm_dlc_tuner", "cypher" },
+	{ RAGE_JOAAT("EUROS"), "lgm_dlc_tuner", "euros" },
+	{ RAGE_JOAAT("GROWLER"), "lgm_dlc_tuner", "growler" },
+	{ RAGE_JOAAT("JESTER4"), "lgm_dlc_tuner", "jester4" },
+	{ RAGE_JOAAT("TAILGATER2"), "lgm_dlc_tuner", "tailgater2" },
+	{ RAGE_JOAAT("VECTRE"), "lgm_dlc_tuner", "vectre" },
+	{ RAGE_JOAAT("ZR350"), "lgm_dlc_tuner", "zr350" },
+	{ RAGE_JOAAT("CALICO"), "sssa_dlc_tuner", "calico" },
+	{ RAGE_JOAAT("DOMINATOR7"), "sssa_dlc_tuner", "dominator7" },
+	{ RAGE_JOAAT("DOMINATOR8"), "sssa_dlc_tuner", "dominator8" },
+	{ RAGE_JOAAT("FUTO2"), "sssa_dlc_tuner", "futo2" },
+	{ RAGE_JOAAT("PREVION"), "sssa_dlc_tuner", "previon" },
+	{ RAGE_JOAAT("REMUS"), "sssa_dlc_tuner", "remus" },
+	{ RAGE_JOAAT("SULTAN3"), "sssa_dlc_tuner", "sultan3" },
+	{ RAGE_JOAAT("WARRENER2"), "sssa_dlc_tuner", "warrener2" },
+	{ RAGE_JOAAT("FREIGHTCAR2"), "ENT_vehicle_previews", "VP_FREIGHTCAR" }
 };
 
 /***
