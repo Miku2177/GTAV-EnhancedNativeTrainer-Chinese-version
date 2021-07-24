@@ -1053,6 +1053,10 @@ bool is_xenon_headlights(std::vector<int> extras);
 
 void set_xenon_headlights(bool applied, std::vector<int> extras);
 
+bool is_low_grip_tyres(std::vector<int> extras);
+
+void set_low_grip_tyres(bool applied, std::vector<int> extras);
+
 bool is_extra_enabled(std::vector<int> extras);
 
 void set_extra_enabled(bool applied, std::vector<int> extras);

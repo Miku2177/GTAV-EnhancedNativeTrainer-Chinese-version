@@ -969,6 +969,9 @@ namespace PED
 
 namespace VEHICLE
 {
+	static BOOL _GET_VEHICLE_HAS_LOW_GRIP_TYRES(Vehicle vehicle) { return invoke<BOOL>(0x2F5A72430E78C8D3, vehicle); } //0x2F5A72430E78C8D3
+	static void _SET_VEHICLE_HAS_LOW_GRIP_TYRES(Vehicle vehicle, BOOL enable) { invoke<Void>(0x5AC79C98C5C17F05, vehicle, enable); } //0x5AC79C98C5C17F05
+	static void _SET_VEHICLE_LOWERED_STANCE(Vehicle vehicle, BOOL enable) { invoke<Void>(0x3A375167F5782A65, vehicle, enable); }
 	static Any GET_VEHICLE_XENON_COLOUR(Any p0) { return invoke<Any>(0x3DFF319A831E0CDB, p0); } // EE21293DAD47C9513D53892    
 	static void SET_VEHICLE_XENON_COLOUR(Any p0, int p1) { invoke<Void>(0xE41033B25D003A07, p0, p1); }
 	static void _SET_VEHICLE_DOOR_CAN_BREAK(Vehicle vehicle, int doorIndex, BOOL isBreakable) { invoke<Void>(0x2FA133A4A9D37ED8, vehicle, doorIndex, isBreakable); } // 0x2FA133A4A9D37ED8 0x065B92B3

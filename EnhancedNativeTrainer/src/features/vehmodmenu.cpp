@@ -45,7 +45,7 @@ const static int SPECIAL_ID_FOR_ENGINE_SOUND = 101;
 const static int SPECIAL_ID_FOR_XENON_COLOUR = 102;
 const static int SPECIAL_ID_FOR_CUSTOM_MULTIPLIER = 103;
 
-const std::vector<std::string> wheel_names { "Sport", "Muscle", "Lowrider", "SUV", "Offroad", "Tuner", "Bike", "High-End", "Benny's Originals", "Benny's Bespoke", "Formula", "Street" };
+const std::vector<std::string> wheel_names { "Sport", "Muscle", "Lowrider", "SUV", "Offroad", "Tuner", "Bike", "High-End", "Benny's Originals", "Benny's Bespoke", "Formula", "Street", "Track"};
 
 std::map<int, std::string> mod_slots;
 
@@ -1239,6 +1239,13 @@ bool process_vehmod_menu(){
 			toggleItem->setter_call = set_custom_tyres;
 			toggleItem->value = SPECIAL_ID_FOR_TOGGLE_VARIATIONS;
 			menuItems.push_back(toggleItem);
+
+			toggleItem = new FunctionDrivenToggleMenuItem<int>();
+			toggleItem->caption = "Low Grip Tyres";
+			toggleItem->getter_call = is_low_grip_tyres;
+			toggleItem->setter_call = set_low_grip_tyres;
+			toggleItem->value = SPECIAL_ID_FOR_TOGGLE_VARIATIONS;
+			menuItems.push_back(toggleItem);
 		}
 	}
 
@@ -1361,6 +1368,16 @@ bool is_xenon_headlights(std::vector<int> extras){
 void set_xenon_headlights(bool applied, std::vector<int> extras){
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 	VEHICLE::TOGGLE_VEHICLE_MOD(veh, 22, applied); //Headlights
+}
+
+bool is_low_grip_tyres(std::vector<int> extras) {
+	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
+	return VEHICLE::_GET_VEHICLE_HAS_LOW_GRIP_TYRES(veh) ? true : false;
+}
+
+void set_low_grip_tyres (bool applied, std::vector<int> extras) {
+	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
+	VEHICLE::_SET_VEHICLE_HAS_LOW_GRIP_TYRES(veh, applied); //Slicks
 }
 
 bool vehicle_menu_interrupt(){

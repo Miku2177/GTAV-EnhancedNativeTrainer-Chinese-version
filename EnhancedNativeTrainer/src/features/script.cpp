@@ -34,13 +34,14 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "../version.h"
 #include "../utils.h"
 #include "../ui_support/file_dialog.h"
-#include "..\ui_support\menu_functions.h"
+#include "../ui_support/menu_functions.h"
 #include <set>
 #include <iostream>
 #include <vector>
 #include <psapi.h>
 #include <ctime>
 #include "../io/controller.h"
+#include "../rage_thread/rage_thread.h"
 
 #pragma warning(disable : 4244 4305) // double <-> float conversions
 
@@ -2651,6 +2652,15 @@ void ScriptMain(){
 		else
 			write_text_to_log_file("Failed to Register texture file: " + fullPath + " as it does not exist!");
 		
+		write_text_to_log_file("Finding shop_controller script");
+
+		if (findShopController)
+		{
+			write_text_to_log_file("shop_controller script found; attempting to enable MP cars");
+			enableCarsGlobal();
+			write_text_to_log_file("MP cars enabled");
+		}
+
 		main();
 
 		write_text_to_log_file("ScriptMain ended");
