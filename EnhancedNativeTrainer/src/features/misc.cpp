@@ -141,9 +141,6 @@ bool featureEnableMissingRadioStation = false;
 const int TRAINERCONFIG_HOTKEY_MENU = 99;
 int radioStationIndex = -1;
 
-ScriptTable* scriptTable;
-GlobalTable globalTable;
-
 Camera StuntCam = NULL;
 
 // First Person Cutscene Camera Variables
