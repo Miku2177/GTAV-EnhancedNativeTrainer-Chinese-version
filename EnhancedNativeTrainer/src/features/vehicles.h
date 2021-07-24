@@ -887,7 +887,7 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("TIGON"), "lgm_dlc_summer2020", "tigon" },
 	{ RAGE_JOAAT("GAUNTLET5"), "lsc_dlc_summer2020", "gauntlet3_b" },
 	{ RAGE_JOAAT("YOSEMITE3"), "lsc_dlc_summer2020", "yosemite_b" },
-	//Cayo Perio Heist
+	//Cayo Perico Heist
 	{ RAGE_JOAAT("ALKONOST"), "candc_heist4", "alkonost" },
 	{ RAGE_JOAAT("ANNIHILATOR2"), "candc_heist4", "annihlator2" },
 	{ RAGE_JOAAT("AVISA"), "candc_heist4", "avisa" },
