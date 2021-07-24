@@ -2654,7 +2654,7 @@ void ScriptMain(){
 		
 		write_text_to_log_file("Finding shop_controller script");
 
-		if (findShopController)
+		if (findShopController())
 		{
 			write_text_to_log_file("shop_controller script found; attempting to enable MP cars");
 			enableCarsGlobal();
