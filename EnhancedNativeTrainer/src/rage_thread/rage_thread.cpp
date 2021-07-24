@@ -81,7 +81,6 @@ ScriptTable* scriptTable;
 ScriptHeader* shopController;
 
 bool findShopController() {
-    // FindPatterns
     __int64 patternAddr = FindPattern("\x4C\x8D\x05\x00\x00\x00\x00\x4D\x8B\x08\x4D\x85\xC9\x74\x11", "xxx????xxxxxxxx");
     if (!patternAddr) {
         return false;

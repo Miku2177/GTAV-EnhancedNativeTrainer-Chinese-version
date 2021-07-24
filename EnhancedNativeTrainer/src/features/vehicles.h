@@ -926,6 +926,7 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("REMUS"), "sssa_dlc_tuner", "remus" },
 	{ RAGE_JOAAT("SULTAN3"), "sssa_dlc_tuner", "sultan3" },
 	{ RAGE_JOAAT("WARRENER2"), "sssa_dlc_tuner", "warrener2" },
+	{ RAGE_JOAAT("RT3000"), "sssa_dlc_tuner", "rt3000" },
 	{ RAGE_JOAAT("FREIGHTCAR2"), "ENT_vehicle_previews", "VP_FREIGHTCAR" }
 };
 
