@@ -2,6 +2,7 @@
 #include "rage_thread.h"
 #include <stdio.h>
 #include <wtypes.h>
+#include <cstdint>
 #include "../utils.h"
 #include "../../inc/main.h"
 #include <sstream>
@@ -13,25 +14,24 @@ struct GlobalTable {
 };
 
 struct ScriptHeader {
-    char padding1[16];                    //0x0
+    char padding1[16];                   //0x0
     unsigned char** codeBlocksOffset;    //0x10
     char padding2[4];                    //0x18
-    int codeLength;                        //0x1C
+    int codeLength;                      //0x1C
     char padding3[4];                    //0x20
-    int localCount;                        //0x24
+    int localCount;                      //0x24
     char padding4[4];                    //0x28
-    int nativeCount;                    //0x2C
-    __int64* localOffset;                //0x30
+    int nativeCount;                     //0x2C
+    int64_t* localOffset;                //0x30
     char padding5[8];                    //0x38
-    __int64* nativeOffset;                //0x40
-    char padding6[16];                    //0x48
+    int64_t* nativeOffset;               //0x40
+    char padding6[16];                   //0x48
     int nameHash;                        //0x58
     char padding7[4];                    //0x5C
-    char* name;                            //0x60
+    char* name;                          //0x60
     char** stringsOffset;                //0x68
-    int stringSize;                        //0x70
-    char padding8[12];                    //0x74
-                                        //END_OF_HEADER
+    int stringSize;                      //0x70
+    char padding8[12];                   //0x74
 
     bool IsValid() const { return codeLength > 0; }
     int CodePageCount() const { return (codeLength + 0x3FFF) >> 14; }
@@ -87,9 +87,9 @@ bool findShopController() {
     }
     globalTable.GlobalBasePtr = (__int64**)(patternAddr + *(int*)(patternAddr + 3) + 7);
 
-
     patternAddr = FindPattern("\x48\x03\x15\x00\x00\x00\x00\x4C\x23\xC2\x49\x8B\x08", "xxx????xxxxxx");
     if (!patternAddr) {
+        write_text_to_log_file("[ERROR] Pattern 2 could NOT be found!");
         return false;
     }
     scriptTable = (ScriptTable*)(patternAddr + *(int*)(patternAddr + 3) + 7);
@@ -97,7 +97,6 @@ bool findShopController() {
     DWORD startTime = GetTickCount();
     DWORD timeout = 10000; // in millis
 
-    // FindScriptAddresses
     while (!globalTable.IsInitialised()) {
         scriptWait(100); //Wait for GlobalInitialisation before continuing
         if (GetTickCount() > startTime + timeout) {
@@ -106,6 +105,8 @@ bool findShopController() {
     }
 
     ScriptTableItem* Item = scriptTable->FindScript(0x39DA738B);
+    if(Item == NULL) { write_text_to_log_file("[ERROR] ScriptTable pointer is NULL."); }
+
     if (Item == NULL) {
         return false;
     }
