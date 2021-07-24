@@ -6375,7 +6375,6 @@ MenuItemImage* vehicle_image_preview_finder(MenuItem<int> choice){
 		return NULL;
 	}
 
-	//TODO: Change modelName to a hash (i.e RAGE_JOAAT()) so it compares 2 hashes and not a string -> hash
 	for each (VehicleImage vimg in ALL_VEH_IMAGES){
 		if(vimg.modelName == choice.value){
 			MenuItemImage* image = new MenuItemImage();
