@@ -1379,3 +1379,5 @@ extern bool repairing_engine;
 extern int breaking_secs_tick;
 
 extern int DefaultPlateIndex;
+
+extern bool featureShowIgnAnim;

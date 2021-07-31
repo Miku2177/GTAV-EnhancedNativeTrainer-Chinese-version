@@ -219,6 +219,8 @@ bool vehSaveSlotMenuInterrupt = false;
 bool requireRefreshOfVehSaveSlots = false;
 bool requireRefreshOfVehSlotMenu = false;
 
+bool featureShowIgnAnim = true;
+
 // Drop Anchor Variables
 Vector3 coords_b;
 Object b_rope = -1;
@@ -1853,6 +1855,12 @@ void process_fuel_menu(){
 	toggleItem->caption = "Hide Fuel Bar In First Person Mode";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureHideFuelBar;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Show Ignition Animation";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureShowIgnAnim;
 	menuItems.push_back(toggleItem);
 
 	draw_generic_menu<int>(menuItems, &activeLineIndexFuel, caption, onconfirm_fuel_menu, NULL, NULL);
@@ -4799,6 +4807,7 @@ void reset_vehicle_globals() {
 		featureNoLightsNightTime = true;
 		featureEscapingPolice = true;
 		featureVehLightsOnUpdated = true;
+		featureShowIgnAnim = true;
 
 	featureDespawnScriptDisabled = false;
 	featureDespawnScriptDisabledUpdated = false;
@@ -5044,6 +5053,7 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureFuel", &featureFuel});
 	results->push_back(FeatureEnabledLocalDefinition{"featureFuelGauge", &featureFuelGauge});
 	results->push_back(FeatureEnabledLocalDefinition{"featureHideFuelBar", &featureHideFuelBar});
+	results->push_back(FeatureEnabledLocalDefinition{"featureShowIgnAnim", &featureShowIgnAnim});
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehMassMult", &featureVehMassMult});
 	results->push_back(FeatureEnabledLocalDefinition{"featureSpeedOnFoot", &featureSpeedOnFoot});
 	results->push_back(FeatureEnabledLocalDefinition{"featureKMH", &featureKMH});
