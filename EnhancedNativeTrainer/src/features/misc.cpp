@@ -39,6 +39,7 @@ bool airbrake_enable = true;
 bool mouse_view_control = false;
 bool help_showing = true;
 bool frozen_time = false;
+bool show_transparency = true;
 
 // phone bill variables
 bool featurePhoneBillEnabled = false;
@@ -612,6 +613,11 @@ void process_airbrake_global_menu() {
 	toggleItem->toggleValue = &frozen_time;
 	menuItems.push_back(toggleItem);
 
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Transparency";
+	toggleItem->toggleValue = &show_transparency;
+	menuItems.push_back(toggleItem);
+
 	draw_generic_menu<int>(menuItems, &activeLineIndexAirbrake, caption, onconfirm_airbrake_menu, NULL, NULL);
 }
 
@@ -1070,6 +1076,7 @@ void reset_misc_globals(){
 	featureShowVehiclePreviews = true;
 	featureShowStatusMessage = true;
 	airbrake_enable = true;
+	show_transparency = true;
 	featureFirstPersonCutscene = false;
 	mouse_view_control = false;
 	help_showing = true;
@@ -1934,6 +1941,7 @@ void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* re
 	results->push_back(FeatureEnabledLocalDefinition{"featureFirstPersonCutscene", &featureFirstPersonCutscene});
 	results->push_back(FeatureEnabledLocalDefinition{"help_showing", &help_showing});
 	results->push_back(FeatureEnabledLocalDefinition{"frozen_time", &frozen_time});
+	results->push_back(FeatureEnabledLocalDefinition{"show_transparency", &show_transparency});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePhoneBillEnabled", &featurePhoneBillEnabled});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoGamePause", &featureGamePause});
 	results->push_back(FeatureEnabledLocalDefinition{"featureZeroBalance", &featureZeroBalance});
