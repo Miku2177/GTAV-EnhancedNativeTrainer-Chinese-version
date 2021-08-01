@@ -957,7 +957,7 @@ void watchful_peds_around() {
 				PED::GET_RELATIONSHIP_BETWEEN_PEDS(playerPed, vigilante_ped[vp]) != 0 && PED::GET_RELATIONSHIP_BETWEEN_PEDS(vigilante_ped[vp], playerPed) != 0 &&
 				PED::GET_RELATIONSHIP_BETWEEN_PEDS(playerPed, vigilante_ped[vp]) != 1 && PED::GET_RELATIONSHIP_BETWEEN_PEDS(vigilante_ped[vp], playerPed) != 1 &&
 				PED::GET_RELATIONSHIP_BETWEEN_PEDS(playerPed, vigilante_ped[vp]) != 2 && PED::GET_RELATIONSHIP_BETWEEN_PEDS(vigilante_ped[vp], playerPed) != 2 &&
-				!PED::IS_PED_GROUP_MEMBER(vigilante_ped[vp], myENTGroup) && !VEHICLE::GET_PED_IN_VEHICLE_SEAT(hijacking_veh_ror, -1)/* && !PED::IS_PED_IN_COMBAT(vigilante_ped[vp], playerPed)*/) {
+				!PED::IS_PED_GROUP_MEMBER(vigilante_ped[vp], myENTGroup)/* && !VEHICLE::GET_PED_IN_VEHICLE_SEAT(hijacking_veh_ror, -1)/* && !PED::IS_PED_IN_COMBAT(vigilante_ped[vp], playerPed)*/) {
 				if (dist_diff < VEH_RINGER_SECONDS_BREAK_VALUES[RingerPedAlertnessIndex]) {
 					if (PED::IS_PED_FACING_PED(vigilante_ped[vp], playerPed, 100) && ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(vigilante_ped[vp], playerPed, 17)) {
 						if (PED::IS_PED_IN_ANY_VEHICLE(vigilante_ped[vp], false)) AI::CLEAR_PED_TASKS(vigilante_ped[vp]);
@@ -4408,6 +4408,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 						ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&veh);
 						breaking_secs_tick = 0;
 					}
+					watchful_peds_around();
 				}
 				if (CONTROLS::IS_CONTROL_RELEASED(2, 71) && breaking_secs_tick > 0) {
 					ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&veh);
