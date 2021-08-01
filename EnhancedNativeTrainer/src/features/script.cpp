@@ -1286,7 +1286,7 @@ void update_features(){
 					PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
 				}
 
-				if (PED::IS_PED_SHOOTING(playerPed)) we_have_troubles = true;
+				//if (PED::IS_PED_SHOOTING(playerPed)) we_have_troubles = true;
 
 				if (we_have_troubles == false) {
 					GAMEPLAY::CLEAR_AREA_OF_COPS(ENTITY::GET_ENTITY_COORDS(playerPed, true).x, ENTITY::GET_ENTITY_COORDS(playerPed, true).y, ENTITY::GET_ENTITY_COORDS(playerPed, true).z, 20, 0);
