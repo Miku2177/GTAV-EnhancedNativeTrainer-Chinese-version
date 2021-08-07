@@ -135,6 +135,11 @@ const int BODY_GROUPFORMATION_VALUES[] = { 0, 1, 3 };
 int BodyGroupFormationIndex = 1;
 bool BodyGroupFormationChanged = true;
 
+//Show Numbers
+const std::vector<std::string> BODY_SHOWNUMBERS_CAPTIONS{ "When Menu Is Open", "Always", "Never" };
+int BodyShowNumbersIndex = 0;
+bool BodyShowNumbersChanged = true;
+
 //Blip Flashing
 int BodyBlipFlashIndex = 0;
 bool BodyBlipFlash_Changed = true;
@@ -2094,7 +2099,7 @@ void maintain_bodyguards(){
 				if (PED::IS_PED_FLEEING(spawnedENTBodyguards[i])) AI::TASK_STAND_STILL(spawnedENTBodyguards[i], 10000);
 			}
 			// show numbers above heads
-			if (menu_showing == true/* && GAMEPLAY::UPDATE_ONSCREEN_KEYBOARD() != 0*/) {
+			if ((NPC_RAGDOLL_VALUES[BodyShowNumbersIndex] == 0 && menu_showing == true) || NPC_RAGDOLL_VALUES[BodyShowNumbersIndex] == 1/* && GAMEPLAY::UPDATE_ONSCREEN_KEYBOARD() != 0*/) {
 				Vector3 head_c = PED::GET_PED_BONE_COORDS(spawnedENTBodyguards[i], 31086, 0, 0, 0);
 				std::string curr_i = std::to_string(i);
 				GRAPHICS::SET_DRAW_ORIGIN(head_c.x, head_c.y, head_c.z + 0.5, 0);
@@ -2528,6 +2533,12 @@ bool process_bodyguard_menu(){
 		toggleItem->toggleValue = &featureBCannotBeHeadshot;
 		menuItems.push_back(toggleItem);
 
+		listItem = new SelectFromListMenuItem(BODY_SHOWNUMBERS_CAPTIONS, onchange_body_shownumber_index);
+		listItem->wrap = false;
+		listItem->caption = "Show Bodyguard Number";
+		listItem->value = BodyShowNumbersIndex;
+		menuItems.push_back(listItem);
+
 		if(!bodyguardWeaponsToggleInitialized){
 			for(int a = 0; a < MENU_WEAPON_CATEGORIES.size(); a++){
 				for(int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++){
@@ -2747,6 +2758,7 @@ void add_bodyguards_feature_enablements2(std::vector<StringPairSettingDBRow>* re
 	results->push_back(StringPairSettingDBRow{ "FollowInVehicleIndex", std::to_string(FollowInVehicleIndex) });
 	results->push_back(StringPairSettingDBRow{ "BodyWeaponSetIndex", std::to_string(BodyWeaponSetIndex) });
 	results->push_back(StringPairSettingDBRow{ "BodyHealthIndex", std::to_string(BodyHealthIndex) });
+	results->push_back(StringPairSettingDBRow{ "BodyShowNumbersIndex", std::to_string(BodyShowNumbersIndex) });
 }
 
 void add_bodyguards_generic_settings(std::vector<StringPairSettingDBRow>* results){
@@ -2803,6 +2815,9 @@ void handle_generic_settings_bodyguards(std::vector<StringPairSettingDBRow>* set
 		else if (setting.name.compare("BodyHealthIndex") == 0) {
 			BodyHealthIndex = stoi(setting.value);
 		}
+		else if (setting.name.compare("BodyShowNumbersIndex") == 0) {
+			BodyShowNumbersIndex = stoi(setting.value);
+		}
 		else if (setting.name.compare("lastCustomBodyguardSpawn") == 0) {
 			lastCustomBodyguardSpawn = setting.value;
 		}
@@ -2844,6 +2859,7 @@ void reset_bodyguards_globals(){
 	FollowInVehicleIndex = 0;
 	BodyWeaponSetIndex = 0;
 	BodyHealthIndex = 6;
+	BodyShowNumbersIndex = 0;
 	skinTypesBodyguardMenuLastConfirmed[0] = 0;
 	skinTypesBodyguardMenuLastConfirmed[1] = 0;
 }
@@ -2875,6 +2891,11 @@ void onchange_bodyguards_body_weapons(int value, SelectFromListMenuItem* source)
 void onchange_body_health_index(int value, SelectFromListMenuItem* source) {
 	BodyHealthIndex = value;
 	BodyHealthChanged = true;
+}
+
+void onchange_body_shownumber_index(int value, SelectFromListMenuItem* source) {
+	BodyShowNumbersIndex = value;
+	BodyShowNumbersChanged = true;
 }
 
 void onchange_body_blipcolour_index(int value, SelectFromListMenuItem* source){
