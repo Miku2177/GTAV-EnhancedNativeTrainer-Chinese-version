@@ -91,6 +91,7 @@ static const int HKEY_SPAWN_SAVED_CAR = 157;
 static const int HKEY_SPAWN_VEHICLE_MANUALLY = 158;
 static const int HKEY_DROP_MINE = 159;
 static const int HKEY_DOORS_OPENCLOSE_TOGGLE = 160;
+static const int HKEY_TIME_FREEZEUNFREEZE_TOGGLE = 161;
 
 const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "No Function", 0 },
@@ -148,6 +149,7 @@ const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "Spawn Vehicle Manually", HKEY_SPAWN_VEHICLE_MANUALLY },
 	{ "Drop Mine [HK + 1-6]", HKEY_DROP_MINE },
 	{ "Open/Close Vehicle Door [HK + 1-6]", HKEY_DOORS_OPENCLOSE_TOGGLE },
+	{ "Freeze/Unfreeze Time", HKEY_TIME_FREEZEUNFREEZE_TOGGLE },
 };
 
 void change_hotkey_function(int hotkey, int funcIndex);

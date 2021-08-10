@@ -323,6 +323,9 @@ void trigger_function_for_hotkey_onkeyup(int hotkey)
 	case HKEY_DOORS_OPENCLOSE_TOGGLE:
 		hotkey_held_openclose_door = false;
 		break;
+	case HKEY_TIME_FREEZEUNFREEZE_TOGGLE:
+		onchange_hotkey_freeze_unfreeze_time();
+		break;
 	default:
 	{
 		std::ostringstream ss;
