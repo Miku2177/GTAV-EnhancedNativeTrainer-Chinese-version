@@ -4349,7 +4349,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		PED::SET_PED_CAN_SWITCH_WEAPON(playerPed, true);
 		veh_to_spawn = "";
 	}
-	if (!is_hotkey_held_saved_veh_spawn() && veh_to_spawn == "" && !is_hotkey_held_openclose_door()) PED::SET_PED_CAN_SWITCH_WEAPON(playerPed, true);
+	if (!is_hotkey_held_saved_veh_spawn() && veh_to_spawn == "" && !is_hotkey_held_openclose_door() && !is_hotkey_held_wanted_level()) PED::SET_PED_CAN_SWITCH_WEAPON(playerPed, true);
 
 ///////////////////////////////////	CAR THIEF ///////////////////////////////////
 	if (featureRoutineOfRinger && GAMEPLAY::GET_MISSION_FLAG() == 0) {

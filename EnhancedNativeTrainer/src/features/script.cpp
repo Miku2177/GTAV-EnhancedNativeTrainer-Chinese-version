@@ -1680,6 +1680,38 @@ void update_features(){
 	if(ENTITY::IS_ENTITY_DEAD(playerPed)){
 		exit_airbrake_menu_if_showing();
 	}
+
+	if (is_hotkey_held_wanted_level() && PLAYER::IS_PLAYER_CONTROL_ON(player)) {
+		PED::SET_PED_CAN_SWITCH_WEAPON(PLAYER::PLAYER_PED_ID(), false);
+		UI::HIDE_HUD_COMPONENT_THIS_FRAME(19);
+		UI::HIDE_HUD_COMPONENT_THIS_FRAME(20);
+
+		PLAYER::SET_MAX_WANTED_LEVEL(5);
+		if (GetKeyState('0') & 0x8000) {
+			PLAYER::SET_PLAYER_WANTED_LEVEL(player, 0, 0);
+			PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(player, 0);
+		}
+		if (GetKeyState('1') & 0x8000) {
+			PLAYER::SET_PLAYER_WANTED_LEVEL(player, 1, 0);
+			PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(player, 0);
+		}
+		if (GetKeyState('2') & 0x8000) {
+			PLAYER::SET_PLAYER_WANTED_LEVEL(player, 2, 0);
+			PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(player, 0);
+		}
+		if (GetKeyState('3') & 0x8000) {
+			PLAYER::SET_PLAYER_WANTED_LEVEL(player, 3, 0);
+			PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(player, 0);
+		}
+		if (GetKeyState('4') & 0x8000) {
+			PLAYER::SET_PLAYER_WANTED_LEVEL(player, 4, 0);
+			PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(player, 0);
+		}
+		if (GetKeyState('5') & 0x8000) {
+			PLAYER::SET_PLAYER_WANTED_LEVEL(player, 5, 0);
+			PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(player, 0);
+		}
+	}
 }
 
 int activeLineIndexWantedFreeze = 0;
