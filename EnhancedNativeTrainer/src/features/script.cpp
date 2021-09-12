@@ -906,7 +906,7 @@ void update_features(){
 	}
 	
 	// Fire Proof
-	if (featureFireProof && !featurePlayerInvincible) {
+	if (featureFireProof/* && !featurePlayerInvincible*/) {
 		Vector3 my_coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 0);
 		FIRE::STOP_FIRE_IN_RANGE(my_coords.x, my_coords.y, my_coords.z, 2);
 		if (FIRE::IS_ENTITY_ON_FIRE(PLAYER::PLAYER_PED_ID())) FIRE::STOP_ENTITY_FIRE(PLAYER::PLAYER_PED_ID());
@@ -1687,27 +1687,27 @@ void update_features(){
 		UI::HIDE_HUD_COMPONENT_THIS_FRAME(20);
 
 		PLAYER::SET_MAX_WANTED_LEVEL(5);
-		if (GetKeyState('0') & 0x8000) {
+		if ((GetKeyState('0') & 0x8000) || (GetKeyState(VK_NUMPAD0) & 0x8000)) {
 			PLAYER::SET_PLAYER_WANTED_LEVEL(player, 0, 0);
 			PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(player, 0);
 		}
-		if (GetKeyState('1') & 0x8000) {
+		if ((GetKeyState('1') & 0x8000) || (GetKeyState(VK_NUMPAD1) & 0x8000)) {
 			PLAYER::SET_PLAYER_WANTED_LEVEL(player, 1, 0);
 			PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(player, 0);
 		}
-		if (GetKeyState('2') & 0x8000) {
+		if ((GetKeyState('2') & 0x8000) || (GetKeyState(VK_NUMPAD2) & 0x8000)) {
 			PLAYER::SET_PLAYER_WANTED_LEVEL(player, 2, 0);
 			PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(player, 0);
 		}
-		if (GetKeyState('3') & 0x8000) {
+		if ((GetKeyState('3') & 0x8000) || (GetKeyState(VK_NUMPAD3) & 0x8000)) {
 			PLAYER::SET_PLAYER_WANTED_LEVEL(player, 3, 0);
 			PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(player, 0);
 		}
-		if (GetKeyState('4') & 0x8000) {
+		if ((GetKeyState('4') & 0x8000) || (GetKeyState(VK_NUMPAD4) & 0x8000)) {
 			PLAYER::SET_PLAYER_WANTED_LEVEL(player, 4, 0);
 			PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(player, 0);
 		}
-		if (GetKeyState('5') & 0x8000) {
+		if ((GetKeyState('5') & 0x8000) || (GetKeyState(VK_NUMPAD5) & 0x8000)) {
 			PLAYER::SET_PLAYER_WANTED_LEVEL(player, 5, 0);
 			PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(player, 0);
 		}
