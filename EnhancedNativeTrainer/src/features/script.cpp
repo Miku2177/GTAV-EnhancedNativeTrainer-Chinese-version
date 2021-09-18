@@ -1711,6 +1711,10 @@ void update_features(){
 			PLAYER::SET_PLAYER_WANTED_LEVEL(player, 5, 0);
 			PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(player, 0);
 		}
+		if ((GetKeyState('6') & 0x8000) || (GetKeyState(VK_NUMPAD6) & 0x8000)) {
+			PLAYER::SET_PLAYER_WANTED_LEVEL(player, 0, 0);
+			PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(player, 0);
+		}
 	}
 }
 

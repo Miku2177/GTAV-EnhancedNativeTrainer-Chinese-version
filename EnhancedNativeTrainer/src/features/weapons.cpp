@@ -2351,13 +2351,14 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 
 	// Rapid Fire
 	if (featureRapidFire) {
-		if ((CONTROLS::IS_CONTROL_PRESSED(2, 24) || (CONTROLS::IS_CONTROL_PRESSED(2, 24) && CONTROLS::IS_CONTROL_PRESSED(2, 25))) && ENTITY::DOES_ENTITY_EXIST(playerPed) && !ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) &&
-			!PED::IS_PED_RELOADING(playerPed)) {
+		if ((CONTROLS::IS_CONTROL_PRESSED(2, 24) || (CONTROLS::IS_CONTROL_PRESSED(2, 24) && CONTROLS::IS_CONTROL_PRESSED(2, 25)))
+			&& ENTITY::DOES_ENTITY_EXIST(playerPed) && !ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_RELOADING(playerPed)) {
 			Entity curr_w = WEAPON::GET_CURRENT_PED_WEAPON_ENTITY_INDEX(playerPed);
 			Vector3 myCoords = ENTITY::GET_ENTITY_COORDS(curr_w, 1);
 			float Coord[3];
 			Vector3 moveToPos = add(&myCoords, &DirectionOffsetFromCam(5.5f));
 			VectorToFloat(moveToPos, Coord);
+			if (WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_FIREWORK") || WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_RPG")) WEAPON::SET_PED_INFINITE_AMMO_CLIP(playerPed, true);
 			GAMEPLAY::SHOOT_SINGLE_BULLET_BETWEEN_COORDS(myCoords.x, myCoords.y, myCoords.z, Coord[0], Coord[1], Coord[2]/* + 0.5*/, 250, 1, WEAPON::GET_SELECTED_PED_WEAPON(playerPed), playerPed, 1, 0, -1.0);
 			GAMEPLAY::SHOOT_SINGLE_BULLET_BETWEEN_COORDS(myCoords.x, myCoords.y, myCoords.z, Coord[0], Coord[1], Coord[2]/* + 0.5*/, 250, 1, WEAPON::GET_SELECTED_PED_WEAPON(playerPed), playerPed, 1, 0, -1.0);
 		}
