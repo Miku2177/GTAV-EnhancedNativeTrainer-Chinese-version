@@ -115,6 +115,7 @@ bool hijacked_vehicle_ror = false;
 Vehicle hijacking_veh_ror;
 std::vector<Blip> BLIPTABLE_ALPEDS;
 Blip blip_al_peds = -1;
+bool featureRoutineBars = true;
 
 int turn_angle = 0;
 int temp_angle = 0;
@@ -1717,6 +1718,12 @@ void process_routine_of_ringer_menu() {
 	toggleItem->caption = "Enable Animations";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureRoutineAnimations;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Show Progress Bar";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureRoutineBars;
 	menuItems.push_back(toggleItem);
 
 	draw_generic_menu<int>(menuItems, &activeLineIndexRoutineofringer, caption, onconfirm_routineofringer_menu, NULL, NULL);
@@ -4390,7 +4397,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 					}
 					float tmp_numerator = breaking_secs_tick;
 					float tmp_denominator = VEH_RINGER_SECONDS_BREAK_VALUES[RingerHotwireSecIndex];
-					GRAPHICS::DRAW_RECT(0.5, 0.9, 0.33 - ((tmp_numerator / tmp_denominator) / 3), 0.009, 255, 0, 0, 255);
+					if (featureRoutineBars) GRAPHICS::DRAW_RECT(0.5, 0.9, 0.33 - ((tmp_numerator / tmp_denominator) / 3), 0.009, 255, 0, 0, 255);
 									
 					if (featureRoutineAnimations) {
 						if (!STREAMING::HAS_ANIM_DICT_LOADED(hw_anim_dict)) {
@@ -4509,7 +4516,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 				float tmp_numerator = breaking_secs_tick; 
 				float tmp_denominator = VEH_RINGER_SECONDS_BREAK_VALUES[RingerBreakSecIndex];
-				GRAPHICS::DRAW_RECT(0.5, 0.9, 0.33 - ((tmp_numerator / tmp_denominator) / 3), 0.009, 255, 255, 255, 255);
+				if (featureRoutineBars) GRAPHICS::DRAW_RECT(0.5, 0.9, 0.33 - ((tmp_numerator / tmp_denominator) / 3), 0.009, 255, 255, 255, 255);
 
 				AI::TASK_STAND_STILL(playerPed, 1);
 
@@ -4790,6 +4797,7 @@ void reset_vehicle_globals() {
 	featureLockVehicleDoorsUpdated = false;
 	featureRoutineAnimations = true;
 		featureBlipNumber = true;
+		featureRoutineBars = true;
 		featureHazards = true;
 		featureWearHelmetOffUpdated = true;
 		featurePoliceVehicleBlip = true;
@@ -5073,6 +5081,7 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureEngineHealthBar", &featureEngineHealthBar});
 	results->push_back(FeatureEnabledLocalDefinition{"featureLimpMode", &featureLimpMode});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRoutineOfRinger", &featureRoutineOfRinger});
+	results->push_back(FeatureEnabledLocalDefinition{"featureRoutineBars", &featureRoutineBars});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRoutineAnimations", &featureRoutineAnimations});
 	results->push_back(FeatureEnabledLocalDefinition{"featureShowPedCons", &featureShowPedCons});
 }
