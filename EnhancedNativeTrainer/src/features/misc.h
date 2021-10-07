@@ -208,3 +208,5 @@ void SKIP_RADIO_FORWARD_CUSTOM();
 bool CompareMemoryJACCO(const uint8_t* pData, const uint8_t* bMask, const char* sMask);
 intptr_t FindPatternJACCO(const char* bMask, const char* sMask);
 void SInit();
+
+extern bool show_transparency;

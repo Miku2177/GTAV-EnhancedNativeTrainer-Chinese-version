@@ -969,6 +969,9 @@ namespace PED
 
 namespace VEHICLE
 {
+	static BOOL _GET_VEHICLE_HAS_LOW_GRIP_TYRES(Vehicle vehicle) { return invoke<BOOL>(0x2F5A72430E78C8D3, vehicle); } //0x2F5A72430E78C8D3
+	static void _SET_VEHICLE_HAS_LOW_GRIP_TYRES(Vehicle vehicle, BOOL enable) { invoke<Void>(0x5AC79C98C5C17F05, vehicle, enable); } //0x5AC79C98C5C17F05
+	static void _SET_VEHICLE_LOWERED_STANCE(Vehicle vehicle, BOOL enable) { invoke<Void>(0x3A375167F5782A65, vehicle, enable); }
 	static Any GET_VEHICLE_XENON_COLOUR(Any p0) { return invoke<Any>(0x3DFF319A831E0CDB, p0); } // EE21293DAD47C9513D53892    
 	static void SET_VEHICLE_XENON_COLOUR(Any p0, int p1) { invoke<Void>(0xE41033B25D003A07, p0, p1); }
 	static void _SET_VEHICLE_DOOR_CAN_BREAK(Vehicle vehicle, int doorIndex, BOOL isBreakable) { invoke<Void>(0x2FA133A4A9D37ED8, vehicle, doorIndex, isBreakable); } // 0x2FA133A4A9D37ED8 0x065B92B3
@@ -5117,6 +5120,7 @@ namespace NETWORKCASH
 	static void NETWORK_EARN_FROM_DAILY_OBJECTIVES(int p0, char* p1, int p2) { invoke<Void>(0x6EA318C91C1A8786, p0, p1, p2); } // 0x6EA318C91C1A8786
 	static void NETWORK_EARN_FROM_AMBIENT_JOB(int p0, char* p1, Any* p2) { invoke<Void>(0xFB6DB092FBAE29E6, p0, p1, p2); } // 0xFB6DB092FBAE29E6
 	static void NETWORK_EARN_FROM_JOB_BONUS(Any p0, Any* p1, Any* p2) { invoke<Void>(0x6816FB4416760775, p0, p1, p2); } // 0x6816FB4416760775
+	static void _NETWORK_EARN_FROM_BUSINESS_PRODUCT(int amount, Any p1, Any p2, Any p3) { invoke<Void>(0x8586789730B10CAF, amount, p1, p2, p3); } // 0x8586789730B10CAF
 	static BOOL NETWORK_CAN_SPEND_MONEY(Any p0, BOOL p1, BOOL p2, BOOL p3, Any p4) { return invoke<BOOL>(0xAB3CAA6B422164DA, p0, p1, p2, p3, p4); } // 0xAB3CAA6B422164DA 0x5AA379D9
 	static BOOL _NETWORK_CAN_SPEND_MONEY_2(Any p0, BOOL p1, BOOL p2, BOOL p3, Any* p4, Any p5) { return invoke<BOOL>(0x7303E27CC6532080, p0, p1, p2, p3, p4, p5); } // 0x7303E27CC6532080
 	static void NETWORK_BUY_ITEM(Ped player, Hash item, Any p2, Any p3, BOOL p4, char* item_name, Any p6, Any p7, Any p8, BOOL p9) { invoke<Void>(0xF0077C797F66A355, player, item, p2, p3, p4, item_name, p6, p7, p8, p9); } // 0xF0077C797F66A355 0xA07B6368

@@ -136,6 +136,29 @@ void onchange_hotkey_flow_rate_callback(int value, SelectFromListMenuItem *sourc
 	HotkeyFlowRateIndex = value, HotkeyFlowRateChanged = true, HotkeyFlowRateLocked = false;
 }
 
+void onchange_hotkey_freeze_unfreeze_time() {
+	if (timeFlowRateIndex != 0) {
+		frozentimestate = timeFlowRateIndex;
+		timeFlowRateIndex = 0;
+		timeFlowRateChanged = true;
+		set_status_text("Time is frozen");
+		requireRefreshOfTime = true;
+	}
+	else
+	{
+		if (frozentimestate != -1) {
+			timeFlowRateIndex = frozentimestate;
+			timeFlowRateChanged = true;
+		}
+		else {
+			timeFlowRateIndex = DEFAULT_TIME_FLOW_RATE;
+			timeFlowRateChanged = true;
+		}
+		set_status_text("Time is unfrozen");
+		requireRefreshOfTime = true;
+	}
+}
+
 bool onconfirm_time_flowrate_menu(MenuItem<int> choice) {
 	if (choice.value == 0) {
 		if (featureTimeSynced) {
@@ -143,26 +166,7 @@ bool onconfirm_time_flowrate_menu(MenuItem<int> choice) {
 		}
 	}
 	else if (choice.value == 666) {
-		if (timeFlowRateIndex != 0) {
-			frozentimestate = timeFlowRateIndex;
-			timeFlowRateIndex = 0;
-			timeFlowRateChanged = true;
-			set_status_text("Time is frozen");
-			requireRefreshOfTime = true;
-		}
-		else
-		{
-			if (frozentimestate != -1) {
-				timeFlowRateIndex = frozentimestate;
-				timeFlowRateChanged = true;
-			}
-			else {
-				timeFlowRateIndex = DEFAULT_TIME_FLOW_RATE;
-				timeFlowRateChanged = true;
-			}
-			set_status_text("Time is unfrozen");
-			requireRefreshOfTime = true;
-		}
+		onchange_hotkey_freeze_unfreeze_time();
 	}
 	return false;
 }

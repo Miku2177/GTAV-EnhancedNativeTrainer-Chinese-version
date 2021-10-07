@@ -115,6 +115,7 @@ bool hijacked_vehicle_ror = false;
 Vehicle hijacking_veh_ror;
 std::vector<Blip> BLIPTABLE_ALPEDS;
 Blip blip_al_peds = -1;
+bool featureRoutineBars = true;
 
 int turn_angle = 0;
 int temp_angle = 0;
@@ -218,6 +219,8 @@ bool vehSaveMenuInterrupt = false;
 bool vehSaveSlotMenuInterrupt = false;
 bool requireRefreshOfVehSaveSlots = false;
 bool requireRefreshOfVehSlotMenu = false;
+
+bool featureShowIgnAnim = true;
 
 // Drop Anchor Variables
 Vector3 coords_b;
@@ -955,7 +958,7 @@ void watchful_peds_around() {
 				PED::GET_RELATIONSHIP_BETWEEN_PEDS(playerPed, vigilante_ped[vp]) != 0 && PED::GET_RELATIONSHIP_BETWEEN_PEDS(vigilante_ped[vp], playerPed) != 0 &&
 				PED::GET_RELATIONSHIP_BETWEEN_PEDS(playerPed, vigilante_ped[vp]) != 1 && PED::GET_RELATIONSHIP_BETWEEN_PEDS(vigilante_ped[vp], playerPed) != 1 &&
 				PED::GET_RELATIONSHIP_BETWEEN_PEDS(playerPed, vigilante_ped[vp]) != 2 && PED::GET_RELATIONSHIP_BETWEEN_PEDS(vigilante_ped[vp], playerPed) != 2 &&
-				!PED::IS_PED_GROUP_MEMBER(vigilante_ped[vp], myENTGroup) && !VEHICLE::GET_PED_IN_VEHICLE_SEAT(hijacking_veh_ror, -1)/* && !PED::IS_PED_IN_COMBAT(vigilante_ped[vp], playerPed)*/) {
+				!PED::IS_PED_GROUP_MEMBER(vigilante_ped[vp], myENTGroup)/* && !VEHICLE::GET_PED_IN_VEHICLE_SEAT(hijacking_veh_ror, -1)/* && !PED::IS_PED_IN_COMBAT(vigilante_ped[vp], playerPed)*/) {
 				if (dist_diff < VEH_RINGER_SECONDS_BREAK_VALUES[RingerPedAlertnessIndex]) {
 					if (PED::IS_PED_FACING_PED(vigilante_ped[vp], playerPed, 100) && ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(vigilante_ped[vp], playerPed, 17)) {
 						if (PED::IS_PED_IN_ANY_VEHICLE(vigilante_ped[vp], false)) AI::CLEAR_PED_TASKS(vigilante_ped[vp]);
@@ -1717,6 +1720,12 @@ void process_routine_of_ringer_menu() {
 	toggleItem->toggleValue = &featureRoutineAnimations;
 	menuItems.push_back(toggleItem);
 
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Show Progress Bar";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureRoutineBars;
+	menuItems.push_back(toggleItem);
+
 	draw_generic_menu<int>(menuItems, &activeLineIndexRoutineofringer, caption, onconfirm_routineofringer_menu, NULL, NULL);
 }
 
@@ -1853,6 +1862,12 @@ void process_fuel_menu(){
 	toggleItem->caption = "Hide Fuel Bar In First Person Mode";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureHideFuelBar;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Show Ignition Animation";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureShowIgnAnim;
 	menuItems.push_back(toggleItem);
 
 	draw_generic_menu<int>(menuItems, &activeLineIndexFuel, caption, onconfirm_fuel_menu, NULL, NULL);
@@ -4024,7 +4039,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 ///////////////////////////// REMEMBER STEERING ANGLE //////////////////////////// ORIGINAL CODE BY MRGTAMODSGERMAN 
 	if (featureVehSteerAngle && !STREAMING::HAS_MODEL_LOADED(GAMEPLAY::GET_HASH_KEY("BMX"))) STREAMING::REQUEST_MODEL(GAMEPLAY::GET_HASH_KEY("BMX"));
 
-	if (featureVehSteerAngle && PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) && CONTROLS::IS_CONTROL_PRESSED(2, 75)) { //  && !PED::IS_PED_ON_ANY_BIKE(playerPed)
+	if (featureVehSteerAngle && PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) && CONTROLS::IS_CONTROL_PRESSED(2, 75)) { // && !PED::IS_PED_ON_ANY_BIKE(playerPed)
 		Vehicle myVehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 
 		Vector3 myvehicle_coords = ENTITY::GET_ENTITY_COORDS(myVehicle, true);
@@ -4341,7 +4356,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		PED::SET_PED_CAN_SWITCH_WEAPON(playerPed, true);
 		veh_to_spawn = "";
 	}
-	if (!is_hotkey_held_saved_veh_spawn() && veh_to_spawn == "" && !is_hotkey_held_openclose_door()) PED::SET_PED_CAN_SWITCH_WEAPON(playerPed, true);
+	if (!is_hotkey_held_saved_veh_spawn() && veh_to_spawn == "" && !is_hotkey_held_openclose_door() && !is_hotkey_held_wanted_level()) PED::SET_PED_CAN_SWITCH_WEAPON(playerPed, true);
 
 ///////////////////////////////////	CAR THIEF ///////////////////////////////////
 	if (featureRoutineOfRinger && GAMEPLAY::GET_MISSION_FLAG() == 0) {
@@ -4382,7 +4397,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 					}
 					float tmp_numerator = breaking_secs_tick;
 					float tmp_denominator = VEH_RINGER_SECONDS_BREAK_VALUES[RingerHotwireSecIndex];
-					GRAPHICS::DRAW_RECT(0.5, 0.9, 0.33 - ((tmp_numerator / tmp_denominator) / 3), 0.009, 255, 0, 0, 255);
+					if (featureRoutineBars) GRAPHICS::DRAW_RECT(0.5, 0.9, 0.33 - ((tmp_numerator / tmp_denominator) / 3), 0.009, 255, 0, 0, 255);
 									
 					if (featureRoutineAnimations) {
 						if (!STREAMING::HAS_ANIM_DICT_LOADED(hw_anim_dict)) {
@@ -4400,6 +4415,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 						ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&veh);
 						breaking_secs_tick = 0;
 					}
+					watchful_peds_around();
 				}
 				if (CONTROLS::IS_CONTROL_RELEASED(2, 71) && breaking_secs_tick > 0) {
 					ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&veh);
@@ -4500,7 +4516,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 
 				float tmp_numerator = breaking_secs_tick; 
 				float tmp_denominator = VEH_RINGER_SECONDS_BREAK_VALUES[RingerBreakSecIndex];
-				GRAPHICS::DRAW_RECT(0.5, 0.9, 0.33 - ((tmp_numerator / tmp_denominator) / 3), 0.009, 255, 255, 255, 255);
+				if (featureRoutineBars) GRAPHICS::DRAW_RECT(0.5, 0.9, 0.33 - ((tmp_numerator / tmp_denominator) / 3), 0.009, 255, 255, 255, 255);
 
 				AI::TASK_STAND_STILL(playerPed, 1);
 
@@ -4781,6 +4797,7 @@ void reset_vehicle_globals() {
 	featureLockVehicleDoorsUpdated = false;
 	featureRoutineAnimations = true;
 		featureBlipNumber = true;
+		featureRoutineBars = true;
 		featureHazards = true;
 		featureWearHelmetOffUpdated = true;
 		featurePoliceVehicleBlip = true;
@@ -4799,6 +4816,7 @@ void reset_vehicle_globals() {
 		featureNoLightsNightTime = true;
 		featureEscapingPolice = true;
 		featureVehLightsOnUpdated = true;
+		featureShowIgnAnim = true;
 
 	featureDespawnScriptDisabled = false;
 	featureDespawnScriptDisabledUpdated = false;
@@ -5044,6 +5062,7 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureFuel", &featureFuel});
 	results->push_back(FeatureEnabledLocalDefinition{"featureFuelGauge", &featureFuelGauge});
 	results->push_back(FeatureEnabledLocalDefinition{"featureHideFuelBar", &featureHideFuelBar});
+	results->push_back(FeatureEnabledLocalDefinition{"featureShowIgnAnim", &featureShowIgnAnim});
 	results->push_back(FeatureEnabledLocalDefinition{"featureVehMassMult", &featureVehMassMult});
 	results->push_back(FeatureEnabledLocalDefinition{"featureSpeedOnFoot", &featureSpeedOnFoot});
 	results->push_back(FeatureEnabledLocalDefinition{"featureKMH", &featureKMH});
@@ -5062,6 +5081,7 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureEngineHealthBar", &featureEngineHealthBar});
 	results->push_back(FeatureEnabledLocalDefinition{"featureLimpMode", &featureLimpMode});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRoutineOfRinger", &featureRoutineOfRinger});
+	results->push_back(FeatureEnabledLocalDefinition{"featureRoutineBars", &featureRoutineBars});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRoutineAnimations", &featureRoutineAnimations});
 	results->push_back(FeatureEnabledLocalDefinition{"featureShowPedCons", &featureShowPedCons});
 }
@@ -6375,7 +6395,6 @@ MenuItemImage* vehicle_image_preview_finder(MenuItem<int> choice){
 		return NULL;
 	}
 
-	//TODO: Change modelName to a hash (i.e RAGE_JOAAT()) so it compares 2 hashes and not a string -> hash
 	for each (VehicleImage vimg in ALL_VEH_IMAGES){
 		if(vimg.modelName == choice.value){
 			MenuItemImage* image = new MenuItemImage();

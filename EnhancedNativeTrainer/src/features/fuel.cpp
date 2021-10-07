@@ -616,7 +616,7 @@ void fuel()
 
 				if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
 					if (ign_anim_e == false) {
-						if (VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(PED::GET_VEHICLE_PED_IS_IN(playerPed, false))) ingnition_anim();
+						if (featureShowIgnAnim && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(PED::GET_VEHICLE_PED_IS_IN(playerPed, false))) ingnition_anim();
 						ign_anim_e = true;
 					}
 					VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, false, false, true);
@@ -625,7 +625,7 @@ void fuel()
 				
 				if (stoprefillKey && !IsKeyDown(VK_ESCAPE) && CONTROLS::IS_CONTROL_RELEASED(2, INPUT_FRONTEND_PAUSE) && exiting_v == false) {
 					if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
-						if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) ingnition_anim();
+						if (featureShowIgnAnim && PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) ingnition_anim();
 						ign_anim_e = false;
 						VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, true, false, false);
 						engine_running = true;
@@ -637,7 +637,7 @@ void fuel()
 				if (!stoprefillKey) {
 					if ((outValue_station > 0 || VEH_FUELPRICE_VALUES[FuelPriceIndex] == 0) && FUEL[0] > (fuel_amount - 0.001)) {
 						FUEL[0] = fuel_amount;
-						if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) ingnition_anim();
+						if (featureShowIgnAnim && PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) ingnition_anim();
 						ign_anim_e = false;
 						VEHICLE::SET_VEHICLE_ENGINE_ON(veh_being_refueled, true, false, false);
 						engine_running = true;
