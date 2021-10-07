@@ -887,7 +887,7 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("TIGON"), "lgm_dlc_summer2020", "tigon" },
 	{ RAGE_JOAAT("GAUNTLET5"), "lsc_dlc_summer2020", "gauntlet3_b" },
 	{ RAGE_JOAAT("YOSEMITE3"), "lsc_dlc_summer2020", "yosemite_b" },
-	//Cayo Perio Heist
+	//Cayo Perico Heist
 	{ RAGE_JOAAT("ALKONOST"), "candc_heist4", "alkonost" },
 	{ RAGE_JOAAT("ANNIHILATOR2"), "candc_heist4", "annihlator2" },
 	{ RAGE_JOAAT("AVISA"), "candc_heist4", "avisa" },
@@ -926,6 +926,7 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("REMUS"), "sssa_dlc_tuner", "remus" },
 	{ RAGE_JOAAT("SULTAN3"), "sssa_dlc_tuner", "sultan3" },
 	{ RAGE_JOAAT("WARRENER2"), "sssa_dlc_tuner", "warrener2" },
+	{ RAGE_JOAAT("RT3000"), "sssa_dlc_tuner", "rt3000" },
 	{ RAGE_JOAAT("FREIGHTCAR2"), "ENT_vehicle_previews", "VP_FREIGHTCAR" }
 };
 
@@ -1052,6 +1053,10 @@ void set_bulletproof_tyres(bool applied, std::vector<int> extras);
 bool is_xenon_headlights(std::vector<int> extras);
 
 void set_xenon_headlights(bool applied, std::vector<int> extras);
+
+bool is_low_grip_tyres(std::vector<int> extras);
+
+void set_low_grip_tyres(bool applied, std::vector<int> extras);
 
 bool is_extra_enabled(std::vector<int> extras);
 
@@ -1374,3 +1379,5 @@ extern bool repairing_engine;
 extern int breaking_secs_tick;
 
 extern int DefaultPlateIndex;
+
+extern bool featureShowIgnAnim;

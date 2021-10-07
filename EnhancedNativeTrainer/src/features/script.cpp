@@ -34,13 +34,14 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "../version.h"
 #include "../utils.h"
 #include "../ui_support/file_dialog.h"
-#include "..\ui_support\menu_functions.h"
+#include "../ui_support/menu_functions.h"
 #include <set>
 #include <iostream>
 #include <vector>
 #include <psapi.h>
 #include <ctime>
 #include "../io/controller.h"
+#include "../rage_thread/rage_thread.h"
 
 #pragma warning(disable : 4244 4305) // double <-> float conversions
 
@@ -905,7 +906,7 @@ void update_features(){
 	}
 	
 	// Fire Proof
-	if (featureFireProof && !featurePlayerInvincible) {
+	if (featureFireProof/* && !featurePlayerInvincible*/) {
 		Vector3 my_coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 0);
 		FIRE::STOP_FIRE_IN_RANGE(my_coords.x, my_coords.y, my_coords.z, 2);
 		if (FIRE::IS_ENTITY_ON_FIRE(PLAYER::PLAYER_PED_ID())) FIRE::STOP_ENTITY_FIRE(PLAYER::PLAYER_PED_ID());
@@ -1285,7 +1286,7 @@ void update_features(){
 					PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
 				}
 
-				if (PED::IS_PED_SHOOTING(playerPed)) we_have_troubles = true;
+				//if (PED::IS_PED_SHOOTING(playerPed)) we_have_troubles = true;
 
 				if (we_have_troubles == false) {
 					GAMEPLAY::CLEAR_AREA_OF_COPS(ENTITY::GET_ENTITY_COORDS(playerPed, true).x, ENTITY::GET_ENTITY_COORDS(playerPed, true).y, ENTITY::GET_ENTITY_COORDS(playerPed, true).z, 20, 0);
@@ -1678,6 +1679,42 @@ void update_features(){
 	// Disable airbrake on death
 	if(ENTITY::IS_ENTITY_DEAD(playerPed)){
 		exit_airbrake_menu_if_showing();
+	}
+
+	if (is_hotkey_held_wanted_level() && PLAYER::IS_PLAYER_CONTROL_ON(player)) {
+		PED::SET_PED_CAN_SWITCH_WEAPON(PLAYER::PLAYER_PED_ID(), false);
+		UI::HIDE_HUD_COMPONENT_THIS_FRAME(19);
+		UI::HIDE_HUD_COMPONENT_THIS_FRAME(20);
+
+		PLAYER::SET_MAX_WANTED_LEVEL(5);
+		if ((GetKeyState('0') & 0x8000) || (GetKeyState(VK_NUMPAD0) & 0x8000)) {
+			PLAYER::SET_PLAYER_WANTED_LEVEL(player, 0, 0);
+			PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(player, 0);
+		}
+		if ((GetKeyState('1') & 0x8000) || (GetKeyState(VK_NUMPAD1) & 0x8000)) {
+			PLAYER::SET_PLAYER_WANTED_LEVEL(player, 1, 0);
+			PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(player, 0);
+		}
+		if ((GetKeyState('2') & 0x8000) || (GetKeyState(VK_NUMPAD2) & 0x8000)) {
+			PLAYER::SET_PLAYER_WANTED_LEVEL(player, 2, 0);
+			PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(player, 0);
+		}
+		if ((GetKeyState('3') & 0x8000) || (GetKeyState(VK_NUMPAD3) & 0x8000)) {
+			PLAYER::SET_PLAYER_WANTED_LEVEL(player, 3, 0);
+			PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(player, 0);
+		}
+		if ((GetKeyState('4') & 0x8000) || (GetKeyState(VK_NUMPAD4) & 0x8000)) {
+			PLAYER::SET_PLAYER_WANTED_LEVEL(player, 4, 0);
+			PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(player, 0);
+		}
+		if ((GetKeyState('5') & 0x8000) || (GetKeyState(VK_NUMPAD5) & 0x8000)) {
+			PLAYER::SET_PLAYER_WANTED_LEVEL(player, 5, 0);
+			PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(player, 0);
+		}
+		if ((GetKeyState('6') & 0x8000) || (GetKeyState(VK_NUMPAD6) & 0x8000)) {
+			PLAYER::SET_PLAYER_WANTED_LEVEL(player, 0, 0);
+			PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(player, 0);
+		}
 	}
 }
 
@@ -2651,6 +2688,15 @@ void ScriptMain(){
 		else
 			write_text_to_log_file("Failed to Register texture file: " + fullPath + " as it does not exist!");
 		
+		write_text_to_log_file("Finding shop_controller script");
+
+		if (findShopController())
+		{
+			write_text_to_log_file("shop_controller script found; attempting to enable MP cars");
+			enableCarsGlobal();
+			write_text_to_log_file("MP cars enabled");
+		}
+
 		main();
 
 		write_text_to_log_file("ScriptMain ended");

@@ -9,8 +9,10 @@ extern bool featureFuelGauge;
 extern bool featureHideFuelBar;
 
 //Car Fuel
-const std::vector<std::string> VEH_CARFUEL_CAPTIONS{ "NO", "0.1", "0.5", "1.0", "1.4", "1.8", "2.2", "2.6", "2.8", "3.0", "3.3", "3.6", "5.0", "6.0", "8.0", "10.0" }; // , "13.0", "15.0", "18.0", "20.0", "23.0", "25.0"
-const int VEH_CARFUEL_VALUES[] = { 0, 20000000, 10000000, 5000000, 3500000, 3000000, 2600000, 2200000, 1800000, 1700000, 1600000, 1400000, 1300000, 1000000, 400000, 100000 }; // , 50000, 10000, 5000, 1000, 500, 100
+const std::vector<std::string> VEH_CARFUEL_CAPTIONS{ "NO", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15" };
+const int VEH_CARFUEL_VALUES[] = { 0, 20000000, 10000000, 5000000, 3000000, 2000000, 1500000, 1000000, 800000, 700000, 650000, 600000, 400000, 350000, 220000, 100000 };
+//const std::vector<std::string> VEH_CARFUEL_CAPTIONS{ "NO", "0.1", "0.5", "1.0", "1.4", "1.8", "2.2", "2.6", "2.8", "3.0", "3.3", "3.6", "5.0", "6.0", "8.0", "10.0" };
+//const int VEH_CARFUEL_VALUES[] = { 0, 20000000, 10000000, 5000000, 3500000, 3000000, 2600000, 2200000, 1800000, 1700000, 1600000, 1400000, 1300000, 1000000, 400000, 100000 };
 extern int CarConsumptionIndex;
 extern int BikeConsumptionIndex;
 extern int PlaneConsumptionIndex;
