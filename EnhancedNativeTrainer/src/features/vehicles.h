@@ -1196,6 +1196,8 @@ void onchange_skill_index(int value, SelectFromListMenuItem* source);
 
 void onchange_breaking_into_index(int value, SelectFromListMenuItem* source);
 
+void onchange_breaking_into_min_index(int value, SelectFromListMenuItem* source);
+
 void onchange_hotwire_index(int value, SelectFromListMenuItem* source);
 
 void onchange_breaking_attempt_index(int value, SelectFromListMenuItem* source);
