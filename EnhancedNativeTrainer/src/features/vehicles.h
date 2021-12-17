@@ -927,7 +927,23 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("SULTAN3"), "sssa_dlc_tuner", "sultan3" },
 	{ RAGE_JOAAT("WARRENER2"), "sssa_dlc_tuner", "warrener2" },
 	{ RAGE_JOAAT("RT3000"), "sssa_dlc_tuner", "rt3000" },
-	{ RAGE_JOAAT("FREIGHTCAR2"), "ENT_vehicle_previews", "VP_FREIGHTCAR" }
+	{ RAGE_JOAAT("FREIGHTCAR2"), "ENT_vehicle_previews", "VP_FREIGHTCAR" },
+	//The Contract
+	{ RAGE_JOAAT("ASTRON"), "lgm_dlc_security", "astron" },
+	{ RAGE_JOAAT("BALLER7"), "lgm_dlc_security", "baller7" },
+	{ RAGE_JOAAT("CHAMPION"), "lgm_dlc_security", "champion" },
+	{ RAGE_JOAAT("CINQUEMILA"), "lgm_dlc_security", "cinquemila" },
+	{ RAGE_JOAAT("COMET7"), "lgm_dlc_security", "comet7" },
+	{ RAGE_JOAAT("DEITY"), "lgm_dlc_security", "deity" },
+	{ RAGE_JOAAT("IGNUS"), "lgm_dlc_security", "ignus" },
+	{ RAGE_JOAAT("JUBILEE"), "lgm_dlc_security", "jubilee" },
+	{ RAGE_JOAAT("REEVER"), "lgm_dlc_security", "reever" },
+	{ RAGE_JOAAT("SHINOBI"), "sssa_dlc_security", "shinobi" },
+	{ RAGE_JOAAT("ZENO"), "sssa_dlc_security", "zeno" },
+	{ RAGE_JOAAT("BUFFALO4"), "sssa_dlc_security", "buffalo4" },
+	{ RAGE_JOAAT("GRANGER2"), "sssa_dlc_security", "granger2" },
+	{ RAGE_JOAAT("IWAGEN"), "sssa_dlc_security", "iwagen" },
+	{ RAGE_JOAAT("PATRIOT3"), "sssa_dlc_security", "patriot3" }
 };
 
 /***
