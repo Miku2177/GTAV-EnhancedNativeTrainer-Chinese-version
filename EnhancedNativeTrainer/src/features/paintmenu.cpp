@@ -763,7 +763,7 @@ bool process_paint_menu(){
 	int livCount = VEHICLE::GET_VEHICLE_LIVERY_COUNT(veh);
 
 	std::vector<MenuItem<int> *> menuItems;
-	SelectFromListMenuItem* listItem;
+	SelectFromListMenuItem* listItem = nullptr;
 	MenuItem<int> *item;
 	int index;
 
