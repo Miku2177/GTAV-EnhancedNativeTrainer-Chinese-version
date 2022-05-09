@@ -95,6 +95,8 @@ static const int HKEY_DROP_MINE = 159;
 static const int HKEY_DOORS_OPENCLOSE_TOGGLE = 160;
 static const int HKEY_TIME_FREEZEUNFREEZE_TOGGLE = 161;
 static const int HKEY_DOORS_WANTEDLEVEL_TOGGLE = 162;
+static const int HKEY_WANTEDLEVEL_FROZEN_TOGGLE = 163;
+static const int HKEY_HUD_TOGGLE = 164;
 
 const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "No Function", 0 },
@@ -154,6 +156,8 @@ const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "Open/Close Vehicle Door [HK + 1-6]", HKEY_DOORS_OPENCLOSE_TOGGLE },
 	{ "Freeze/Unfreeze Time", HKEY_TIME_FREEZEUNFREEZE_TOGGLE },
 	{ "Wanted Level [HK + 0-5]", HKEY_DOORS_WANTEDLEVEL_TOGGLE },
+	{ "Freeze/Unfreeze Wanted Level", HKEY_WANTEDLEVEL_FROZEN_TOGGLE },
+	{ "Hide/Show HUD", HKEY_HUD_TOGGLE },
 };
 
 void change_hotkey_function(int hotkey, int funcIndex);

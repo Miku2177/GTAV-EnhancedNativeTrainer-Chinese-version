@@ -1041,6 +1041,13 @@ void onchange_misc_phone_bike_index(int value, SelectFromListMenuItem* source) {
 	PhoneBikeAnimationChanged = true;
 }
 
+void HUD_switching() {
+	featureMiscHideHud = !featureMiscHideHud;
+	//if (featureMiscHideHud) set_status_text("HUD OFF");
+	//else set_status_text("HUD ON");
+	WAIT(100);
+}
+
 void reset_misc_globals(){
 	featureMiscHideHud =
 		featurePhoneShowHud = 
