@@ -335,6 +335,12 @@ void trigger_function_for_hotkey_onkeyup(int hotkey)
 	case HKEY_DOORS_WANTEDLEVEL_TOGGLE:
 		hotkey_held_wantedlevel = false;
 		break;
+	case HKEY_WANTEDLEVEL_FROZEN_TOGGLE:
+		wantedlevel_switching();
+		break;
+	case HKEY_HUD_TOGGLE:
+		HUD_switching();
+		break;
 	default:
 	{
 		std::ostringstream ss;
