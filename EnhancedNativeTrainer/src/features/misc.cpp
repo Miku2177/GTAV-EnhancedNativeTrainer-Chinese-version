@@ -136,6 +136,9 @@ bool featureNoAutoRespawn = false;
 bool featureMiscJellmanScenery = false;
 bool featureEnableMissingRadioStation = false;
 
+std::string screenfltr;
+bool sfilter_enabled = false;
+
 //bool featureBlockInputInMenu = false;
 //bool featureControllerIgnoreInTrainer = false;
 
@@ -492,6 +495,7 @@ bool onconfirm_misc_filters_menu(MenuItem<int> choice) {
 
 	GRAPHICS::SET_TIMECYCLE_MODIFIER(cstr);
 	GRAPHICS::SET_TIMECYCLE_MODIFIER_STRENGTH(1.0f);
+	screenfltr = cstr;
 	return false;
 }
 
@@ -1921,6 +1925,14 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			featureEnableMissingRadioStation = false;
 		}
 	}
+
+	if (sfilter_enabled == false && screenfltr != "DEFAULT" && screenfltr != "") {
+		GRAPHICS::SET_TIMECYCLE_MODIFIER((char*)screenfltr.c_str());
+		GRAPHICS::SET_TIMECYCLE_MODIFIER_STRENGTH(1.0f);
+		sfilter_enabled = true;
+	}
+	if (DLC2::GET_IS_LOADING_SCREEN_ACTIVE()) sfilter_enabled = false;
+	
 }
 
 void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){
@@ -1979,6 +1991,7 @@ void add_misc_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"PhoneFreeSecondsIndex", std::to_string(PhoneFreeSecondsIndex)});
 	results->push_back(StringPairSettingDBRow{"PhoneBikeAnimationIndex", std::to_string(PhoneBikeAnimationIndex)});
 	results->push_back(StringPairSettingDBRow{"DefMenuTabIndex", std::to_string(DefMenuTabIndex)});
+	results->push_back(StringPairSettingDBRow{"screenfltr", screenfltr});
 }
 
 void handle_generic_settings_misc(std::vector<StringPairSettingDBRow>* settings){
@@ -2010,6 +2023,9 @@ void handle_generic_settings_misc(std::vector<StringPairSettingDBRow>* settings)
 		}
 		else if (setting.name.compare("DefMenuTabIndex") == 0) {
 			DefMenuTabIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("screenfltr") == 0) {
+			screenfltr = setting.value;
 		}
 	}
 }
