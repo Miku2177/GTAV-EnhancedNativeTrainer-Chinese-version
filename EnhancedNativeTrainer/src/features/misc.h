@@ -118,6 +118,7 @@ bool is_jellman_scenery_enabled();
 
 extern bool radio_v_checked;
 extern bool featureRealisticRadioVolume;
+extern std::string screenfltr;
 
 extern bool dynamic_loading;
 
