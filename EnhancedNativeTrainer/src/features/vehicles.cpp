@@ -555,6 +555,7 @@ void PopulateVehicleModelsArray()
 		{ VehicleClass::Boat, &g_vehHashes_BOAT }, { VehicleClass::Openwheel, &g_vehHashes_OPENWHEEL }
 	};
 
+	//std::array<unsigned int, 5> placeholderVehicles = { -1491268273, 1549009676, 1133471123, 386089410, 956849991 };
 	
 	//Go through the giant list of model hashes and sort them into their respective categories
 	for (int d = 0x0; d < 0x20; d++)
@@ -563,8 +564,12 @@ void PopulateVehicleModelsArray()
 		{
 			if (std::find(g_vehHashes.begin(), g_vehHashes.end(), Hash(dd)) == g_vehHashes.end())
 			{
+				//Vehicles which crash the game when spawned due to being in-complete.
+				if (dd == -1491268273 || dd == 1549009676 || dd == 1133471123 || dd == 386089410 || dd == 956849991)
+					continue;
+
 				auto dit = vDestMap.find(VehicleClass(d));
-				if (dit != vDestMap.end())
+				if (dit != vDestMap.end()) 
 					dit->second->push_back(dd);
 				else g_vehHashes_OTHER.push_back(dd);
 				g_vehHashes.push_back(dd);
@@ -4984,6 +4989,10 @@ bool onconfirm_spawn_menu_cars(MenuItem<int> choice){
 
 bool do_spawn_vehicle_hash(int modelName, std::string modelTitle) {
 	DWORD model = modelName;
+
+	std::stringstream ss;  ss << "Attempting to spawn " << modelTitle << " with hash: " << modelName;
+	write_text_to_log_file(ss.str());
+
 	Vehicle veh = do_spawn_vehicle(model, modelTitle, true);
 	return false;
 }
@@ -5049,9 +5058,8 @@ Vehicle do_spawn_vehicle(DWORD model, std::string modelTitle, bool cleanup){
 		if(cleanup){
 			ENTITY::SET_VEHICLE_AS_NO_LONGER_NEEDED(&veh);
 		}
-
 		set_status_text(get_vehicle_make_and_model(model) + " spawned!");
-
+	
 		return veh;
 	}
 	return -1;
