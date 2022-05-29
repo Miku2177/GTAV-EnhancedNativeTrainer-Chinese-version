@@ -469,6 +469,8 @@ void load_saved_weapons() {
 
 	if (NPC_RAGDOLL_VALUES[WeaponsSavedLoad] == 2) WEAPON::REMOVE_ALL_PED_WEAPONS(playerPed, false);
 
+	WAIT(200);
+
 	for each (SavedWeaponDBRow * sv in savedWeapon)
 	{
 		int clipMax = WEAPON::GET_MAX_AMMO_IN_CLIP(playerPed, sv->weapon, true); clipMax = min(clipMax, 250);
@@ -2282,8 +2284,8 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 				ss_tick_secs_curr = w_tick_secs_passed;
 			}
 		}
-		if (tick_s_allw > 50 && PlayerUpdated_s && !ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) {
-			WAIT(200);
+		if (tick_s_allw > 60 && PlayerUpdated_s && !ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID())) {
+			WAIT(300); //WAIT(200);
 			load_saved_weapons();
 			for (int a = 0; a < sizeof(VOV_WEAPON_VALUES) / sizeof(VOV_WEAPON_VALUES[0]); a++) { // give all equipped ammo
 				for (int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++) {

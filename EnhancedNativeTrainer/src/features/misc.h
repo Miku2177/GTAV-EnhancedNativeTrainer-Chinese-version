@@ -112,10 +112,13 @@ bool is_hud_hidden();
 
 void set_hud_hidden(bool hidden);
 
+void HUD_switching();
+
 bool is_jellman_scenery_enabled();
 
 extern bool radio_v_checked;
 extern bool featureRealisticRadioVolume;
+extern std::string screenfltr;
 
 extern bool dynamic_loading;
 
