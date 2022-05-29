@@ -114,7 +114,7 @@ bool featureFlyingMusic = false;
 bool featurePoliceScanner = false;
 bool featureNoComleteMessage = false;
 bool featurePoliceRadio = false;
-bool police_radio_check = false;
+//bool police_radio_check = false;
 bool featureMiscLockRadio = false;
 bool featureMiscHideHud = false;
 bool featureMiscHideHudUpdated = false;
@@ -135,6 +135,9 @@ bool featureShowStatusMessage = true;
 bool featureNoAutoRespawn = false;
 bool featureMiscJellmanScenery = false;
 bool featureEnableMissingRadioStation = false;
+
+std::string screenfltr;
+bool sfilter_enabled = false;
 
 //bool featureBlockInputInMenu = false;
 //bool featureControllerIgnoreInTrainer = false;
@@ -493,6 +496,7 @@ bool onconfirm_misc_filters_menu(MenuItem<int> choice) {
 
 	GRAPHICS::SET_TIMECYCLE_MODIFIER(cstr);
 	GRAPHICS::SET_TIMECYCLE_MODIFIER_STRENGTH(1.0f);
+	screenfltr = cstr;
 	return false;
 }
 
@@ -1042,6 +1046,13 @@ void onchange_misc_phone_bike_index(int value, SelectFromListMenuItem* source) {
 	PhoneBikeAnimationChanged = true;
 }
 
+void HUD_switching() {
+	featureMiscHideHud = !featureMiscHideHud;
+	//if (featureMiscHideHud) set_status_text("HUD OFF");
+	//else set_status_text("HUD ON");
+	WAIT(100);
+}
+
 void reset_misc_globals(){
 	featureMiscHideHud =
 		featurePhoneShowHud = 
@@ -1217,19 +1228,19 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 
 	// Radio In Police Vehicles
 	if (featurePoliceRadio) {
-		Vehicle playerVeh = PED::GET_VEHICLE_PED_IS_IN(playerPed, 1);
-		Vector3 coords_radio = ENTITY::GET_ENTITY_COORDS(playerVeh, 1);
-		Vector3 coords_radio_2 = ENTITY::GET_ENTITY_COORDS(playerPed, 1);
-		if ((PED::IS_PED_IN_ANY_POLICE_VEHICLE(playerPed) || (GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(coords_radio.x, coords_radio.y, coords_radio.z, coords_radio_2.x, coords_radio_2.y, coords_radio_2.z, false) < 15 && police_radio_check)) 
+		//Vehicle playerVeh = PED::GET_VEHICLE_PED_IS_IN(playerPed, 1);
+		//Vector3 coords_radio = ENTITY::GET_ENTITY_COORDS(playerVeh, 1);
+		//Vector3 coords_radio_2 = ENTITY::GET_ENTITY_COORDS(playerPed, 1);
+		if (/*(*/PED::IS_PED_IN_ANY_POLICE_VEHICLE(playerPed)/* || (GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(coords_radio.x, coords_radio.y, coords_radio.z, coords_radio_2.x, coords_radio_2.y, coords_radio_2.z, false) < 15 && police_radio_check))*/ 
 			&& VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(playerVeh)) {
-			police_radio_check = true;
+			//police_radio_check = true;
 			AUDIO::SET_VEHICLE_RADIO_ENABLED(playerVeh, true);
 			AUDIO::SET_MOBILE_PHONE_RADIO_STATE(true);
 			AUDIO::SET_MOBILE_RADIO_ENABLED_DURING_GAMEPLAY(true);
 			AUDIO::SET_RADIO_AUTO_UNFREEZE(true);
 			AUDIO::SET_USER_RADIO_CONTROL_ENABLED(true);
 		}
-		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1)) if (!PED::IS_PED_IN_ANY_POLICE_VEHICLE(playerPed)) police_radio_check = false;
+		//if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1)) if (!PED::IS_PED_IN_ANY_POLICE_VEHICLE(playerPed)) police_radio_check = false;
 	}
 	
 	// Freeze Radio To Station
@@ -1915,6 +1926,14 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			featureEnableMissingRadioStation = false;
 		}
 	}
+
+	if (sfilter_enabled == false && screenfltr != "DEFAULT" && screenfltr != "") {
+		GRAPHICS::SET_TIMECYCLE_MODIFIER((char*)screenfltr.c_str());
+		GRAPHICS::SET_TIMECYCLE_MODIFIER_STRENGTH(1.0f);
+		sfilter_enabled = true;
+	}
+	if (DLC2::GET_IS_LOADING_SCREEN_ACTIVE()) sfilter_enabled = false;
+	
 }
 
 void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){
@@ -1973,6 +1992,7 @@ void add_misc_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"PhoneFreeSecondsIndex", std::to_string(PhoneFreeSecondsIndex)});
 	results->push_back(StringPairSettingDBRow{"PhoneBikeAnimationIndex", std::to_string(PhoneBikeAnimationIndex)});
 	results->push_back(StringPairSettingDBRow{"DefMenuTabIndex", std::to_string(DefMenuTabIndex)});
+	results->push_back(StringPairSettingDBRow{"screenfltr", screenfltr});
 }
 
 void handle_generic_settings_misc(std::vector<StringPairSettingDBRow>* settings){
@@ -2004,6 +2024,9 @@ void handle_generic_settings_misc(std::vector<StringPairSettingDBRow>* settings)
 		}
 		else if (setting.name.compare("DefMenuTabIndex") == 0) {
 			DefMenuTabIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("screenfltr") == 0) {
+			screenfltr = setting.value;
 		}
 	}
 }

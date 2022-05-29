@@ -380,7 +380,6 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("SPEEDER2"), "ENT_vehicle_previews", "VP_SPEEDER" },
 	{ RAGE_JOAAT("TROPIC2"), "ENT_vehicle_previews", "VP_TROPIC" },
 	{ RAGE_JOAAT("SEASHARK3"), "ENT_vehicle_previews", "VP_SEASHARK" },
-	//
 	{ RAGE_JOAAT("AMBULANCE"), "ENT_vehicle_previews", "VP_AMBULANCE" },
 	{ RAGE_JOAAT("ARMYTANKER"), "ENT_vehicle_previews", "VP_ARMYTANKER" },
 	{ RAGE_JOAAT("ARMYTRAILER"), "ENT_vehicle_previews", "VP_ARMYTANKER" },
@@ -938,12 +937,16 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("IGNUS"), "lgm_dlc_security", "ignus" },
 	{ RAGE_JOAAT("JUBILEE"), "lgm_dlc_security", "jubilee" },
 	{ RAGE_JOAAT("REEVER"), "lgm_dlc_security", "reever" },
-	{ RAGE_JOAAT("SHINOBI"), "sssa_dlc_security", "shinobi" },
-	{ RAGE_JOAAT("ZENO"), "sssa_dlc_security", "zeno" },
+	{ RAGE_JOAAT("SHINOBI"), "lgm_dlc_security", "shinobi" },
+	{ RAGE_JOAAT("ZENO"), "lgm_dlc_security", "zeno" },
+	//{ RAGE_JOAAT("YOUGA4"), "lgm_dlc_security", "youga4" },
+	//{ RAGE_JOAAT("MULE5"), "lgm_dlc_security", "mule5" },
 	{ RAGE_JOAAT("BUFFALO4"), "sssa_dlc_security", "buffalo4" },
 	{ RAGE_JOAAT("GRANGER2"), "sssa_dlc_security", "granger2" },
 	{ RAGE_JOAAT("IWAGEN"), "sssa_dlc_security", "iwagen" },
-	{ RAGE_JOAAT("PATRIOT3"), "sssa_dlc_security", "patriot3" }
+	{ RAGE_JOAAT("PATRIOT3"), "sssa_dlc_security", "patriot3" },
+	{ RAGE_JOAAT("YOUGA4"), "ENT_vehicle_previews", "VP_YOUGA4" },
+	{ RAGE_JOAAT("MULE5"), "ENT_vehicle_previews", "VP_MULE5" }
 };
 
 /***

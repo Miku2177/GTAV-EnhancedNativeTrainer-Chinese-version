@@ -469,6 +469,13 @@ void invincibility_switching(){
 	WAIT(100);
 }
 
+void wantedlevel_switching() {
+	featureWantedLevelFrozen = !featureWantedLevelFrozen;
+	if (featureWantedLevelFrozen) set_status_text("Wanted Level Frozen");
+	else set_status_text("Wanted Level Unfrozen");
+	WAIT(100);
+}
+
 void ingnition_anim() {
 	i_anim_dict = "oddjobs@towing";
 	animation_of_i = "start_engine";
@@ -971,9 +978,10 @@ void update_features(){
 		PLAYER::SET_PLAYER_WANTED_LEVEL(player, frozenWantedLevel, 0);
 		PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(player, 0);
 	}
-	if (featureWantedLevelFrozenUpdated && !featureWantedLevelFrozen){
+	if (featureWantedLevelFrozenUpdated == false && !featureWantedLevelFrozen){
 		PLAYER::SET_MAX_WANTED_LEVEL(5);
-		featureWantedLevelFrozenUpdated = false;
+		//featureWantedLevelFrozenUpdated = false;
+		featureWantedLevelFrozenUpdated = true;
 	}
 	
 	// No Police Helicopters
@@ -2751,7 +2759,7 @@ void add_player_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerInvincible", &featurePlayerInvincible, &featurePlayerInvincibleUpdated});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNoFallDamage", &featureNoFallDamage});
 	results->push_back(FeatureEnabledLocalDefinition{"featureFireProof", &featureFireProof});
-	results->push_back(FeatureEnabledLocalDefinition{"featureWantedLevelFrozen", &featureWantedLevelFrozen, &featureWantedLevelFrozenUpdated});
+	results->push_back(FeatureEnabledLocalDefinition{"featureWantedLevelFrozen", &featureWantedLevelFrozen/*, &featureWantedLevelFrozenUpdated*/});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePlayerIgnoredByPolice", &featurePlayerIgnoredByPolice}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureWantedLevelNoPHeli", &featureWantedLevelNoPHeli});
 	results->push_back(FeatureEnabledLocalDefinition{"featureWantedNoPRoadB", &featureWantedNoPRoadB});

@@ -223,6 +223,8 @@ void toggle_night_vision();
 
 void cleanup_script();
 
+void wantedlevel_switching();
+
 void onchange_hotkey_freeze_unfreeze_time();
 
 bool is_player_ignored_by_police();
