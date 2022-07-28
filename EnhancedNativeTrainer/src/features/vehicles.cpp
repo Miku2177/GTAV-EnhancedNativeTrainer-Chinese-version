@@ -1937,7 +1937,7 @@ bool onconfirm_vehicle_remember_menu(MenuItem<int> choice)
 	switch (activeLineIndexRemember){
 	case 2:
 		if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) set_status_text("~r~Error: ~w~ Player not in vehicle");
-		if (VEH_VEHREMEMBER_VALUES[VehRememberIndex] != 666) set_status_text("The 'manual' mode must be enabled");
+		if (VEH_VEHREMEMBER_VALUES[VehRememberIndex] != 666) set_status_text("Set the 'Number Of Vehicles To Track' option to 'Manually'");
 		if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0) && VEH_VEHREMEMBER_VALUES[VehRememberIndex] == 666) manual_veh_tr = true;
 		break;
 	case 8:
