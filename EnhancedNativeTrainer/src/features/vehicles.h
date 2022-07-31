@@ -949,9 +949,13 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("MULE5"), "ENT_vehicle_previews", "VP_MULE5" },
 	//Agency DLC
 	{ RAGE_JOAAT("BRIOSO2"), "lsc_dlc_sum2", "brioso2" },
+	{ RAGE_JOAAT("BRIOSO3"), "lsc_dlc_sum2", "brioso2" },
 	{ RAGE_JOAAT("SENTINEL3"), "lsc_dlc_sum2", "sentinel3" },
+	{ RAGE_JOAAT("SENTINEL4"), "lsc_dlc_sum2", "sentinel3" },
 	{ RAGE_JOAAT("TENF"), "lsc_dlc_sum2", "tenf" },
+	{ RAGE_JOAAT("TENF2"), "lsc_dlc_sum2", "tenf" },
 	{ RAGE_JOAAT("WEEVIL"), "lsc_dlc_sum2", "weevil" },
+	{ RAGE_JOAAT("WEEVIL2"), "lsc_dlc_sum2", "weevil" },
 	{ RAGE_JOAAT("CONADA"), "lgm_dlc_sum2", "conada" },
 	{ RAGE_JOAAT("CORSITA"), "lgm_dlc_sum2", "corsita" },
 	{ RAGE_JOAAT("LM87"), "lgm_dlc_sum2", "lm87" },
