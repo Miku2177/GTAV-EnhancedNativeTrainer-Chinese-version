@@ -317,6 +317,8 @@ const std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Casino Vault", 2488.34800000f, -267.36370000f, -71.64563000f, { "ch_int_placement_ch_interior_6_dlc_casino_vault_milo_" }, {}, {}, false },
 	{ "Cayo Perico Mansion", 5010.101f, -5753.549f, 27.8444f, { "h4_islandx_mansion_office" }, {}, {}, false }, // h4_dlc_island_office
 	{ "CEO Garage Modshop", -77.42f, -827.27f, 285.00f, { "imp_dt1_11_modgarage" }, {}, {}, false }, // 730.0f, -2990.0f, -40.0f // imp_impexp_interior_placement_interior_2_imptexp_mod_int_01_milo_
+	{ "CEO Warehouse", 800.00000000f, -3000.00000000f, -65.00000000f, { "reh_int_placement_sum2_interior_0_dlc_int_03_sum2_milo_" }, {}, { IPL_PROPS_BIKER_UNDERCOVER1 }, false },
+	{ "CEO Warehouse Basement", 850.00000000f, -3000.00000000f, -45.00000000f, { "reh_int_placement_sum2_interior_1_dlc_int_04_sum2_milo_" }, {}, { IPL_PROPS_BIKER_UNDERCOVER1 }, false },
 	{ "Del Perro Heights Apt 27", -1468.02100000f, -529.94370000f, 49.72156000f, { "hei_hw1_blimp_interior_27_dlc_apart_high_new_milo_" }, {}, {}, false },
 	{ "Del Perro Heights Apt 28", -1468.14f, -541.815f, 73.4442f, {}, {}, {}, false },
 	{ "Eclipse Towers Apt 12", -791.29410000f, 338.07100000f, 200.41350000f, { "hw1_blimp_interior_v_apartment_high_milo__12" }, {}, {}, false },
