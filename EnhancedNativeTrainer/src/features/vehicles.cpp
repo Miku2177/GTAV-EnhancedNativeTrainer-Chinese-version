@@ -565,7 +565,7 @@ void PopulateVehicleModelsArray()
 			if (std::find(g_vehHashes.begin(), g_vehHashes.end(), Hash(dd)) == g_vehHashes.end())
 			{
 				//Vehicles which crash the game when spawned due to being in-complete.
-				if (dd == -1491268273 || dd == 1549009676 || dd == 1133471123 || dd == 386089410 || dd == 956849991)
+				if (dd == -1491268273 || dd == 1549009676 || dd == 1133471123 || dd == 386089410 || dd == 956849991 || dd == -1491268273 || dd == 1549009676 || dd == 1133471123 || dd == 386089410 || dd == 956849991)
 					continue;
 
 				auto dit = vDestMap.find(VehicleClass(d));
