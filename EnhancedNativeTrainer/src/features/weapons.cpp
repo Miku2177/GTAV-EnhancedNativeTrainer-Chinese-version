@@ -535,6 +535,8 @@ bool process_individual_weapon_menu(int weaponIndex){
 	std::string label = VOV_WEAPON_CAPTIONS[lastSelectedWeaponCategory].at(weaponIndex);
 	std::string label_caption = UI::_GET_LABEL_TEXT(&label[0]);
 
+	if (label_caption.empty()) label_caption = label;
+
 	if(label_caption.compare("Pistol .50") == 0){
 		label_caption = "Pistol 50"; //menu title can't handle symbols
 	}
