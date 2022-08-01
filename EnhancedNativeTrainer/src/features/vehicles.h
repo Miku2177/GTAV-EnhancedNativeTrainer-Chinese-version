@@ -946,9 +946,7 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("IWAGEN"), "sssa_dlc_security", "iwagen" },
 	{ RAGE_JOAAT("PATRIOT3"), "sssa_dlc_security", "patriot3" },
 	{ RAGE_JOAAT("YOUGA4"), "ENT_vehicle_previews", "VP_YOUGA4" },
-<<<<<<< Updated upstream
 	{ RAGE_JOAAT("MULE5"), "ENT_vehicle_previews", "VP_MULE5" }
-=======
 	{ RAGE_JOAAT("MULE5"), "ENT_vehicle_previews", "VP_MULE5" },
 	//Agency DLC
 	{ RAGE_JOAAT("BRIOSO2"), "lsc_dlc_sum2", "brioso2" },
@@ -976,7 +974,6 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("RHINEHART"), "sssa_dlc_sum2", "rhinehart" },
 	{ RAGE_JOAAT("RUINER4"), "sssa_dlc_sum2", "ruiner4" },
 	{ RAGE_JOAAT("VIGERO2"), "sssa_dlc_sum2", "vigero2" }
->>>>>>> Stashed changes
 };
 
 /***

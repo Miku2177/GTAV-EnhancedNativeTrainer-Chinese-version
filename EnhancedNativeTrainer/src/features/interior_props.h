@@ -864,9 +864,6 @@ const std::vector<char*> IPL_PROPS_FACILITY = {
 	"set_int_02_crewemblem",
 	"set_int_02_forcedentry_complete",
 	"Set_Int_02_outfit_sub_finale",
-<<<<<<< Updated upstream
-};
-=======
 };
 
 std::vector<char*> IPL_PROPS_BIKER_UNDERCOVER1 = {
@@ -948,4 +945,3 @@ std::vector<char*> IPL_PROPS_BIKER_UNDERCOVER1 = {
 	"reh_prop_reh_drone_brk_02a",
 	"reh_prop_reh_para_sp_s_01a",
 };
->>>>>>> Stashed changes
