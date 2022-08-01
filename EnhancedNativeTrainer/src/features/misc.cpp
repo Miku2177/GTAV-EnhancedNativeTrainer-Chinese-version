@@ -305,6 +305,7 @@ void process_misc_trainermenucolors_menu(){
 
 bool onconfirm_trainerconfig_menu(MenuItem<int> choice){
 	if(choice.value == TRAINERCONFIG_HOTKEY_MENU){
+		//write_text_to_log_file("onconfirm_trainerconfig");
 		process_misc_hotkey_menu();
 	}
 	else if(choice.value == 63){

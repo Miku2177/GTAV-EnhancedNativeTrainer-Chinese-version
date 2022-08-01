@@ -535,6 +535,8 @@ bool process_individual_weapon_menu(int weaponIndex){
 	std::string label = VOV_WEAPON_CAPTIONS[lastSelectedWeaponCategory].at(weaponIndex);
 	std::string label_caption = UI::_GET_LABEL_TEXT(&label[0]);
 
+	if (label_caption.empty()) label_caption = label;
+
 	if(label_caption.compare("Pistol .50") == 0){
 		label_caption = "Pistol 50"; //menu title can't handle symbols
 	}
@@ -1691,7 +1693,7 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 		Player player = PLAYER::PLAYER_ID();
 		Ped playerPed = PLAYER::PLAYER_PED_ID();
 
-		bool bSelect = IsKeyDown(KeyConfig::KEY_VEH_ROCKETS) || (CONTROLS::IS_CONTROL_PRESSED(2, INPUT_FRONTEND_LB) && CONTROLS::IS_CONTROL_PRESSED(2, INPUT_FRONTEND_RB)) || (CONTROLS::IS_CONTROL_PRESSED(2, 69) && !CONTROLS::IS_CONTROL_PRESSED(2, 70));
+		bool bSelect = IsKeyDown(KeyConfig::KEY_VEH_ROCKETS) || (CONTROLS::IS_CONTROL_PRESSED(2, controller_binds["KEY_VEH_ROCKETS"].first) && CONTROLS::IS_CONTROL_PRESSED(2, controller_binds["KEY_VEH_ROCKETS"].second)) || (CONTROLS::IS_CONTROL_PRESSED(2, 69) && !CONTROLS::IS_CONTROL_PRESSED(2, 70));
 
 		if (bSelect && featureWeaponVehShootLastTime + 150 < GetTickCount() && PLAYER::IS_PLAYER_CONTROL_ON(player)) { // 150
 			Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
