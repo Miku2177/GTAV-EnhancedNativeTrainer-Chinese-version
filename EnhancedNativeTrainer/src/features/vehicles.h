@@ -946,7 +946,37 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("IWAGEN"), "sssa_dlc_security", "iwagen" },
 	{ RAGE_JOAAT("PATRIOT3"), "sssa_dlc_security", "patriot3" },
 	{ RAGE_JOAAT("YOUGA4"), "ENT_vehicle_previews", "VP_YOUGA4" },
+<<<<<<< Updated upstream
 	{ RAGE_JOAAT("MULE5"), "ENT_vehicle_previews", "VP_MULE5" }
+=======
+	{ RAGE_JOAAT("MULE5"), "ENT_vehicle_previews", "VP_MULE5" },
+	//Agency DLC
+	{ RAGE_JOAAT("BRIOSO2"), "lsc_dlc_sum2", "brioso2" },
+	//{ RAGE_JOAAT("BRIOSO3"), "lsc_dlc_sum2", "brioso2" },
+	{ RAGE_JOAAT("BRIOSO3"), "ENT_vehicle_previews", "VP_BRIOSO3" },
+	{ RAGE_JOAAT("SENTINEL3"), "lsc_dlc_sum2", "sentinel3" },
+	//{ RAGE_JOAAT("SENTINEL4"), "lsc_dlc_sum2", "sentinel3" },
+	{ RAGE_JOAAT("SENTINEL4"), "ENT_vehicle_previews", "VP_SENTINEL4" },
+	{ RAGE_JOAAT("TENF"), "lsc_dlc_sum2", "tenf" },
+	//{ RAGE_JOAAT("TENF2"), "lsc_dlc_sum2", "tenf" },
+	{ RAGE_JOAAT("TENF2"), "ENT_vehicle_previews", "VP_TENF2" },
+	{ RAGE_JOAAT("WEEVIL"), "lsc_dlc_sum2", "weevil" },
+	//{ RAGE_JOAAT("WEEVIL2"), "lsc_dlc_sum2", "weevil" },
+	{ RAGE_JOAAT("WEEVIL2"), "ENT_vehicle_previews", "VP_WEEVIL2" },
+	{ RAGE_JOAAT("CONADA"), "lgm_dlc_sum2", "conada" },
+	{ RAGE_JOAAT("CORSITA"), "lgm_dlc_sum2", "corsita" },
+	{ RAGE_JOAAT("LM87"), "lgm_dlc_sum2", "lm87" },
+	{ RAGE_JOAAT("OMNISEGT"), "lgm_dlc_sum2", "omnisegt" },
+	{ RAGE_JOAAT("SM722"), "lgm_dlc_sum2", "sm722" },
+	{ RAGE_JOAAT("TORERO2"), "lgm_dlc_sum2", "torero2" },
+	{ RAGE_JOAAT("DRAUGUR"), "sssa_dlc_sum2", "draugur" },
+	{ RAGE_JOAAT("GREENWOOD"), "sssa_dlc_sum2", "greenwood" },
+	{ RAGE_JOAAT("KANJOSJ"), "sssa_dlc_sum2", "kanjosj" },
+	{ RAGE_JOAAT("POSTLUDE"), "sssa_dlc_sum2", "postlude" },
+	{ RAGE_JOAAT("RHINEHART"), "sssa_dlc_sum2", "rhinehart" },
+	{ RAGE_JOAAT("RUINER4"), "sssa_dlc_sum2", "ruiner4" },
+	{ RAGE_JOAAT("VIGERO2"), "sssa_dlc_sum2", "vigero2" }
+>>>>>>> Stashed changes
 };
 
 /***
