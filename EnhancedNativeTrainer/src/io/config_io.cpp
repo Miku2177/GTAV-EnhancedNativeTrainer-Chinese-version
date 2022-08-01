@@ -124,8 +124,8 @@ void read_config_file(){
 		attribs->get_length(&length_attribs);
 
 		char* attrib_controller_func = NULL;
-		char* attrib_button1_v = NULL;
-		char* attrib_button2_v = NULL;
+		int attrib_button1_v = NULL;
+		int attrib_button2_v = NULL;
 
 		for (long j = 0; j < length_attribs; j++) {
 			IXMLDOMNode* attribNode;
@@ -141,13 +141,13 @@ void read_config_file(){
 				VARIANT var;
 				VariantInit(&var);
 				attribNode->get_nodeValue(&var);
-				attrib_button1_v = _com_util::ConvertBSTRToString(V_BSTR(&var));
+				attrib_button1_v = std::stoi(_com_util::ConvertBSTRToString(V_BSTR(&var)));
 			}
 			else if (wcscmp(keyconf_bstr, L"button2") == 0) {
 				VARIANT var;
 				VariantInit(&var);
 				attribNode->get_nodeValue(&var);
-				attrib_button2_v = _com_util::ConvertBSTRToString(V_BSTR(&var));
+				attrib_button2_v = std::stoi(_com_util::ConvertBSTRToString(V_BSTR(&var)));
 			}
 
 			SysFreeString(keyconf_bstr);
@@ -155,11 +155,41 @@ void read_config_file(){
 		}
 
 		// here must be a code to store keybinds somewhere.
+		if (attrib_controller_func != NULL) {
+ 
+			if (attrib_button1_v == NULL)
+			{
+				std::stringstream ss;
+				ss << "[ERROR] Problem reading " << attrib_controller_func << "'s function. Button1's value was NULL! Skipping and the default value(s) will be used instead.";
+				write_text_to_log_file(ss.str());
+				continue;
+			}
+
+			if (controller_binds.find(attrib_controller_func) != controller_binds.end())
+			{
+				std::stringstream ss;
+				ss << "Controller function " << attrib_controller_func << " given value: " << attrib_button1_v << " and " << attrib_button2_v;
+				write_text_to_log_file(ss.str());
+				controller_binds.at(attrib_controller_func) = std::pair(attrib_button1_v, attrib_button2_v);
+			}
+			else 
+			{
+				std::stringstream ss;
+				ss << "[ERROR] Could not find controller function " << attrib_controller_func << " in controller bind map. Skipping.";
+				write_text_to_log_file(ss.str());
+				continue;
+			}
+		}
+		else
+		{
+			std::stringstream ss;
+			ss << "[ERROR] Controller function with button IDs " << attrib_button1_v << " and " << attrib_button2_v << " was NULL! Skipping.";
+			write_text_to_log_file(ss.str());
+			continue;
+		}
 
 		delete attrib_controller_func;
-		delete attrib_button1_v;
-		delete attrib_button2_v;
-
+	
 		attribs->Release();
 		node->Release();
 	}
@@ -381,6 +411,7 @@ void KeyInputConfig::set_key(char* function, char* keyName, bool modCtrl, bool m
 };
 
 bool KeyInputConfig::is_hotkey_assigned(int i){
+
 	std::string target;
 	switch(i){
 		case 1:
@@ -552,3 +583,48 @@ const std::string KeyConfig::KEY_HOT_6 = std::string("hotkey_6");
 const std::string KeyConfig::KEY_HOT_7 = std::string("hotkey_7");
 const std::string KeyConfig::KEY_HOT_8 = std::string("hotkey_8");
 const std::string KeyConfig::KEY_HOT_9 = std::string("hotkey_9");
+
+//Bind name -> button ID 1 and button ID 2. For keys with only 1 button ID - use -1 as a "no bind" value.
+std::map<std::string, std::pair<int, int>> controller_binds =
+{
+	{ "KEY_TOGGLE_MAIN_MENU", {206, 192} },
+	{ "KEY_TOGGLE_AIRBRAKE", {201, 206} },
+	{ "KEY_MENU_UP", {188, -1} },
+	{ "KEY_MENU_DOWN", {187, -1} },
+	{ "KEY_MENU_LEFT", {189, -1} },
+	{ "KEY_MENU_RIGHT", {190, -1} },
+	{ "KEY_MENU_SELECT", {201, 1} },
+	{ "KEY_MENU_BACK", {202, -1} },
+	{ "KEY_VEH_BOOST", {206, 24} },
+	{ "KEY_VEH_STOP", {205, 25} },
+	{ "KEY_VEH_ROCKETS", {205, 206} },
+	{ "KEY_VEH_LEFTBLINK", {25, -1} },
+	{ "KEY_VEH_RIGHTBLINK", {24, -1} },
+	{ "KEY_VEH_EMERGENCYBLINK", {202, -1} },
+	{ "KEY_VEH_STARTREFUELING", {201, -1} },
+	{ "KEY_VEH_STOPREFUELING", {202, -1} },
+	{ "KEY_AIRBRAKE_UP", {25, -1} },
+	{ "KEY_AIRBRAKE_DOWN", {24, -1} },
+	{ "KEY_AIRBRAKE_FORWARD", {32, -1} },
+	{ "KEY_AIRBRAKE_BACK", {33, -1} },
+	{ "KEY_AIRBRAKE_ROTATE_LEFT", {205, -1} },
+	{ "KEY_AIRBRAKE_ROTATE_RIGHT", {206, -1} },
+	{ "KEY_AIRBRAKE_SPEED", {201, -1} },
+	{ "KEY_AIRBRAKE_FREEZE_TIME", {202, -1} },
+	{ "KEY_AIRBRAKE_HELP", {-1, -1} }, //No bind in the XML?
+	{ "KEY_AIRBRAKE_SPACE", {-1, -1} }, //No bind in the XML?
+	{ "KEY_AIRBRAKE_MOUSE_CONTROL", {-1, -1} }, //No bind in the XML?
+	{ "KEY_OBJECTPLACER_UP", {25, -1} },
+	{ "KEY_OBJECTPLACER_DOWN", {24, -1} },
+	{ "KEY_OBJECTPLACER_FORWARD", {32, -1} },
+	{ "KEY_OBJECTPLACER_BACK", {33, -1} },
+	{ "KEY_OBJECTPLACER_ROTATE_LEFT", {205, -1} },
+	{ "KEY_OBJECTPLACER_ROTATE_RIGHT", {206, -1} },
+	{ "KEY_OBJECTPLACER_SPEED_CYCLE", {201, -1} },
+	{ "KEY_OBJECTPLACER_SPEED_UP", {-1, -1} },  //No bind in the XML?
+	{ "KEY_OBJECTPLACER_SPEED_DOWN", {-1, -1} }, //No bind in the XML?
+	{ "KEY_OBJECTPLACER_FREEZE_TIME", {202, -1} },
+	{ "KEY_OBJECTPLACER_FREEZE_POSITION", {192, -1} },
+	{ "KEY_OBJECTPLACER_HELP", {-1, -1} },  //No bind in the XML?
+	{ "KEY_OBJECTPLACER_ALT_MOVE", {-1, -1} }, //No bind in the XML?
+};

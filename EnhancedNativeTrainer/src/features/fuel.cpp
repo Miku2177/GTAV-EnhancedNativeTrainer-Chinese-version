@@ -175,8 +175,8 @@ void fuel()
 		Ped playerPed = PLAYER::PLAYER_PED_ID();
 		
 		bool refill_button = IsKeyDown(VK_LBUTTON); // REFUEL KEY FOR JERRY CAN
-		bool startrefillKey = IsKeyDown(KeyConfig::KEY_VEH_STARTREFUELING) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, INPUT_FRONTEND_ACCEPT); // REFUEL KEY GAS STATION 
-		bool stoprefillKey = IsKeyDown(KeyConfig::KEY_VEH_STOPREFUELING) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, INPUT_FRONTEND_CANCEL); // STOP REFUELING GAS STATION
+		bool startrefillKey = IsKeyDown(KeyConfig::KEY_VEH_STARTREFUELING) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, controller_binds["KEY_MENU_SELECT"].first); // REFUEL KEY GAS STATION 
+		bool stoprefillKey = IsKeyDown(KeyConfig::KEY_VEH_STOPREFUELING) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, controller_binds["KEY_MENU_BACK"].first); // STOP REFUELING GAS STATION
 
 		float fuel_bar_x = -1;
 		float fuel_bar_y = -1;
@@ -228,7 +228,7 @@ void fuel()
 
 		if (FUEL_COLOURS_R_VALUES[FuelBackground_Opacity_IndexN] < 2) fuelbar_edge_opacity = 0;
 
-		if (IsKeyDown(KeyConfig::KEY_MENU_LEFT) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, INPUT_FRONTEND_LEFT) || IsKeyDown(KeyConfig::KEY_MENU_RIGHT) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, INPUT_FRONTEND_RIGHT)) {
+		if (IsKeyDown(KeyConfig::KEY_MENU_LEFT) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, controller_binds["KEY_MENU_LEFT"].first) || IsKeyDown(KeyConfig::KEY_MENU_RIGHT) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, controller_binds["KEY_MENU_RIGHT"].first)) {
 			if (!BLIPTABLE.empty()) {
 				for (int i = 0; i < BLIPTABLE.size(); i++) {
 					if (UI::DOES_BLIP_EXIST(BLIPTABLE[i])) {
