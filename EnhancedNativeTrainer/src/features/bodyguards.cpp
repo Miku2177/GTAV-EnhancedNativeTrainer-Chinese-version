@@ -716,10 +716,10 @@ bool spawn_saved_bod_skin(int slot, std::string caption)
 	if (!featureDifferentWeapons) {
 		int clipMax = WEAPON::GET_MAX_AMMO_IN_CLIP(bodyGuard, savedBodSkin->weapon, true); clipMax = min(clipMax, 250);
 		if (WEAPON::HAS_PED_GOT_WEAPON(bodyGuard, savedBodSkin->weapon, 0)) {
-			WEAPON::REMOVE_WEAPON_FROM_PED(bodyGuard, savedBodSkin->weapon);
-			WEAPON::GIVE_WEAPON_TO_PED(bodyGuard, savedBodSkin->weapon, clipMax * 2, false, true);
+			//WEAPON::REMOVE_WEAPON_FROM_PED(bodyGuard, savedBodSkin->weapon);
+			//WEAPON::GIVE_WEAPON_TO_PED(bodyGuard, savedBodSkin->weapon, clipMax * 2, false, true);
 		}
-		else WEAPON::GIVE_WEAPON_TO_PED(bodyGuard, savedBodSkin->weapon, clipMax * 2, false, true);
+		//else WEAPON::GIVE_WEAPON_TO_PED(bodyGuard, savedBodSkin->weapon, clipMax * 2, false, true);
 
 		if (savedBodSkin->bcomp0 != -1) WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(bodyGuard, savedBodSkin->weapon, savedBodSkin->bcomp0);
 		if (savedBodSkin->bcomp1 != -1) WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(bodyGuard, savedBodSkin->weapon, savedBodSkin->bcomp1);
@@ -1757,7 +1757,7 @@ void do_spawn_bodyguard(){
 			if (bodyguard_animal == false) PED::SET_PED_FIRING_PATTERN(bodyGuard, GAMEPLAY::GET_HASH_KEY("FIRING_PATTERN_FULL_AUTO")); // 0xC6EE6B4C
 
 			// different weapons
-			if (featureDifferentWeapons && PED_WEAPON_TITLES[BodyWeaponSetIndex] == "Custom Weapon"/* && load_saved_bodyguard == false*/) {
+			if (featureDifferentWeapons && PED_WEAPON_TITLES[BodyWeaponSetIndex] == "Custom Weapon") {
 				if (WEAPONS.empty()) {
 					for (int a = 0; a < MENU_WEAPON_CATEGORIES.size(); a++) {
 						for (int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++) {
@@ -1770,11 +1770,11 @@ void do_spawn_bodyguard(){
 				}
 				pop = pop + 1;
 				if (bodyguard_animal == false) {
-					WEAPON::GIVE_WEAPON_TO_PED(bodyGuard, WEAPONS[pop], 1000, false, true);
+					//WEAPON::GIVE_WEAPON_TO_PED(bodyGuard, WEAPONS[pop], 1000, false, true);
 					spawnedBodyguardsSecWeap.push_back(WEAPONS[pop]);
 				}
 				if (added_nearest_b == true && !WEAPON::IS_PED_ARMED(bodyGuard, 7)) {
-					WEAPON::GIVE_WEAPON_TO_PED(bodyGuard, WEAPONS[pop], 999, false, true);
+					//WEAPON::GIVE_WEAPON_TO_PED(bodyGuard, WEAPONS[pop], 999, false, true);
 					WEAPON::SET_CURRENT_PED_WEAPON(bodyGuard, WEAPONS[pop], 1);
 					WEAPON::SET_PED_CURRENT_WEAPON_VISIBLE(bodyGuard, true, false, 1, 1);
 					spawnedBodyguardsSecWeap.push_back(WEAPONS[pop]);
@@ -1788,11 +1788,11 @@ void do_spawn_bodyguard(){
 				Hash weapBHash = GAMEPLAY::GET_HASH_KEY((char *)weaponB.c_str());
 
 				if (bodyguard_animal == false) {
-					WEAPON::GIVE_WEAPON_TO_PED(bodyGuard, weapBHash, 1000, false, true);
+					//WEAPON::GIVE_WEAPON_TO_PED(bodyGuard, weapBHash, 1000, false, true);
 					spawnedBodyguardsSecWeap.push_back(weapBHash);
 				}
 				if (added_nearest_b == true && !WEAPON::IS_PED_ARMED(bodyGuard, 7)) {
-					WEAPON::GIVE_WEAPON_TO_PED(bodyGuard, weapBHash, 999, false, true);
+					//WEAPON::GIVE_WEAPON_TO_PED(bodyGuard, weapBHash, 999, false, true);
 					WEAPON::SET_CURRENT_PED_WEAPON(bodyGuard, weapBHash, 1);
 					WEAPON::SET_PED_CURRENT_WEAPON_VISIBLE(bodyGuard, true, false, 1, 1);
 					spawnedBodyguardsSecWeap.push_back(weapBHash);
@@ -1807,7 +1807,7 @@ void do_spawn_bodyguard(){
 								if (*bodyguardWeaponsToggle[a].at(b)) {
 									tmp_w = GAMEPLAY::GET_HASH_KEY((char *)VOV_WEAPON_VALUES[a].at(b).c_str());
 									if (!WEAPON::HAS_PED_GOT_WEAPON(bodyGuard, tmp_w, false)) {
-										WEAPON::GIVE_WEAPON_TO_PED(bodyGuard, tmp_w, 1000, false, true);
+										//WEAPON::GIVE_WEAPON_TO_PED(bodyGuard, tmp_w, 1000, false, true);
 									}
 								}
 							}
@@ -1818,7 +1818,7 @@ void do_spawn_bodyguard(){
 						for (int a = 0; a < MENU_WEAPON_CATEGORIES.size(); a++) {
 							for (int b = 0; b < VOV_WEAPON_VALUES[a].size(); b++) {
 								tmp_w = GAMEPLAY::GET_HASH_KEY((char *)VOV_WEAPON_VALUES[a].at(b).c_str());
-								WEAPON::GIVE_WEAPON_TO_PED(bodyGuard, tmp_w, 999, false, true);
+								//WEAPON::GIVE_WEAPON_TO_PED(bodyGuard, tmp_w, 999, false, true);
 								WEAPON::SET_CURRENT_PED_WEAPON(bodyGuard, tmp_w, 1);
 								WEAPON::SET_PED_CURRENT_WEAPON_VISIBLE(bodyGuard, true, false, 1, 1);
 							}
@@ -2004,8 +2004,8 @@ void maintain_bodyguards(){
 			if (featureNoBodBlood) PED::CLEAR_PED_BLOOD_DAMAGE(spawnedENTBodyguards[i]);
 			// share weapon with bodyguards
 			if (featureBodyguardYourWeapon && WEAPON::GET_SELECTED_PED_WEAPON(spawnedENTBodyguards[i]) != WEAPON::GET_SELECTED_PED_WEAPON(PLAYER::PLAYER_PED_ID())) {
-				if (WEAPON::IS_PED_ARMED(PLAYER::PLAYER_PED_ID(), 7)) WEAPON::REMOVE_ALL_PED_WEAPONS(spawnedENTBodyguards[i], false);
-				WEAPON::GIVE_WEAPON_TO_PED(spawnedENTBodyguards[i], WEAPON::GET_SELECTED_PED_WEAPON(PLAYER::PLAYER_PED_ID()), 999, false, true);
+				//if (WEAPON::IS_PED_ARMED(PLAYER::PLAYER_PED_ID(), 7) && !spawnedENTBodyguards.empty()) WEAPON::REMOVE_ALL_PED_WEAPONS(spawnedENTBodyguards[i], false);
+				//if (!spawnedENTBodyguards.empty()) WEAPON::GIVE_WEAPON_TO_PED(spawnedENTBodyguards[i], WEAPON::GET_SELECTED_PED_WEAPON(PLAYER::PLAYER_PED_ID()), 999, false, true);
 				if (featureBodyguardInfAmmo) WEAPON::SET_PED_INFINITE_AMMO_CLIP(spawnedENTBodyguards[i], true);
 				for (int a = 0; a < WEAPONTYPES_MOD.size(); a++) {
 					for (int b = 0; b < VOV_WEAPONMOD_VALUES[a].size(); b++) {
@@ -2019,23 +2019,23 @@ void maintain_bodyguards(){
 						}
 					}
 				}
-				if (featureBodyguardWeaponAttach) add_all_weapons_attachments(spawnedENTBodyguards[i]);
+				if (featureBodyguardWeaponAttach && !spawnedENTBodyguards.empty()) add_all_weapons_attachments(spawnedENTBodyguards[i]);
 			}
 			// add/remove weapons
-			if (!spawnedBodyguardsSecWeap.empty()) {
+			if (!spawnedBodyguardsSecWeap.empty() && !spawnedENTBodyguards.empty()) {
 				if (featureAddRemoveWeapon) {
 					if (c_armed == true) {
 						if (PED::IS_PED_IN_ANY_VEHICLE(spawnedENTBodyguards[i], 1) && WEAPON::GET_SELECTED_PED_WEAPON(spawnedENTBodyguards[i]) != GAMEPLAY::GET_HASH_KEY("WEAPON_MICROSMG")) {
-							WEAPON::REMOVE_ALL_PED_WEAPONS(spawnedENTBodyguards[i], false);
-							WEAPON::GIVE_WEAPON_TO_PED(spawnedENTBodyguards[i], GAMEPLAY::GET_HASH_KEY("WEAPON_MICROSMG"), 999, false, true);
+							//WEAPON::REMOVE_ALL_PED_WEAPONS(spawnedENTBodyguards[i], false);
+							//WEAPON::GIVE_WEAPON_TO_PED(spawnedENTBodyguards[i], GAMEPLAY::GET_HASH_KEY("WEAPON_MICROSMG"), 999, false, true);
 						}
 						if (!featureBodyguardYourWeapon && !PED::IS_PED_IN_ANY_VEHICLE(spawnedENTBodyguards[i], 1) && WEAPON::GET_SELECTED_PED_WEAPON(spawnedENTBodyguards[i]) != spawnedBodyguardsSecWeap[i]) {
-							WEAPON::REMOVE_ALL_PED_WEAPONS(spawnedENTBodyguards[i], false);
-							WEAPON::GIVE_WEAPON_TO_PED(spawnedENTBodyguards[i], spawnedBodyguardsSecWeap[i], 999, false, true);
+							//WEAPON::REMOVE_ALL_PED_WEAPONS(spawnedENTBodyguards[i], false);
+							//WEAPON::GIVE_WEAPON_TO_PED(spawnedENTBodyguards[i], spawnedBodyguardsSecWeap[i], 999, false, true);
 							if (featureBodyguardWeaponAttach) add_all_weapons_attachments(spawnedENTBodyguards[i]);
 						}
 					}
-					if (c_armed == false) WEAPON::REMOVE_ALL_PED_WEAPONS(spawnedENTBodyguards[i], false);
+					//if (c_armed == false) WEAPON::REMOVE_ALL_PED_WEAPONS(spawnedENTBodyguards[i], false);
 				}
 			}
 			// bodyguards swimming ability
