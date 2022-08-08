@@ -83,13 +83,14 @@ ScriptHeader* shopController;
 bool findShopController() {
     __int64 patternAddr = FindPattern("\x4C\x8D\x05\x00\x00\x00\x00\x4D\x8B\x08\x4D\x85\xC9\x74\x11", "xxx????xxxxxxxx");
     if (!patternAddr) {
+        write_text_to_log_file("[ERROR] shop_controller pattern 1 could NOT be found!");
         return false;
     }
     globalTable.GlobalBasePtr = (__int64**)(patternAddr + *(int*)(patternAddr + 3) + 7);
 
     patternAddr = FindPattern("\x48\x03\x15\x00\x00\x00\x00\x4C\x23\xC2\x49\x8B\x08", "xxx????xxxxxx");
     if (!patternAddr) {
-        write_text_to_log_file("[ERROR] Pattern 2 could NOT be found!");
+        write_text_to_log_file("[ERROR] shop_controller pattern 2 could NOT be found!");
         return false;
     }
     scriptTable = (ScriptTable*)(patternAddr + *(int*)(patternAddr + 3) + 7);

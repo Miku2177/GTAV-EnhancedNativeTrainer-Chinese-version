@@ -134,7 +134,6 @@ void update_bombs()
 	}
 }
 
-
 void play_explosion(Entity ent)
 {
 	// https://github.com/CamxxCore/CarpetBomber/blob/master/GTAV_CarpetBomber/CarpetBomb.cs#L167
