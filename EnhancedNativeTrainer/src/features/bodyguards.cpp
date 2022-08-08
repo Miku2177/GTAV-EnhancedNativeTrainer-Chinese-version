@@ -1719,7 +1719,7 @@ void do_spawn_bodyguard(){
 				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 5, true); // BF_CanFightArmedPedsWhenNotArmed
 				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 20, true); // BF_CanTauntInVehicle 
 				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 46, true); // BF_AlwaysFight 
-				PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 1424, true); // BF_PlayerCanUseFiringWeapons
+				//PED::SET_PED_COMBAT_ATTRIBUTES(bodyGuard, 1424, true); // BF_PlayerCanUseFiringWeapons - crashes when equipping a weapon with a bodyguard nearby
 				//PED::SET_PED_ALERTNESS(bodyGuard, 3);
 				//PED::SET_PED_SEEING_RANGE(bodyGuard, 1000);
 				
