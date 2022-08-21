@@ -226,7 +226,7 @@ bool enable_camera_injured = false;
 int curr_cam = -1;
 int curr_hlth = -1;
 
-// Player Movement Speed && Hancock Mode
+// Player Running Speed && Hancock Mode
 const std::vector<std::string> PLAYER_MOVEMENT_CAPTIONS{ "Normal", "0.5x", "1x", "2x", "3x", "4x", "5x", "6x", "7x", "8x", "9x", "10x" };
 const double PLAYER_MOVEMENT_VALUES[] = { 0.00, 0.60, 1.00, 2.00, 3.00, 4.00, 5.00, 6.00, 7.00, 8.00, 9.00, 10.00 };
 int current_player_movement = 0;
@@ -1465,7 +1465,7 @@ void update_features(){
 		else PLAYER::SET_RUN_SPRINT_MULTIPLIER_FOR_PLAYER(player, 1.0);
 	}
 
-	// Player Movement Speed
+	// Player Running Speed
 	if (PLAYER_MOVEMENT_VALUES[current_player_movement] > 0.00) {
 		if (AI::IS_PED_SPRINTING(PLAYER::PLAYER_PED_ID())) PED::SET_PED_MOVE_RATE_OVERRIDE(playerPed, PLAYER_MOVEMENT_VALUES[current_player_movement]);
 		else PED::SET_PED_MOVE_RATE_OVERRIDE(playerPed, 1.00);
@@ -2038,7 +2038,7 @@ bool player_movement_speed() {
 
 	listItem = new SelectFromListMenuItem(PLAYER_MOVEMENT_CAPTIONS, onchange_player_movement_mode);
 	listItem->wrap = false;
-	listItem->caption = "Movement Speed:";
+	listItem->caption = "Running Speed:";
 	listItem->value = current_player_movement; 
 	menuItems.push_back(listItem);
 
