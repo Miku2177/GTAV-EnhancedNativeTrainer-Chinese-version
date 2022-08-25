@@ -23,6 +23,7 @@ extern bool featureNPCNoLights;
 extern bool featureNPCNeonLights;
 extern bool featureNPCFullBeam;
 extern bool featureDirtyVehicles;
+extern bool featureCleanVehicles;
 extern bool featureNPCNoGravityVehicles;
 extern bool featureNPCReducedGripVehicles;
 extern bool featureBoostNPCRadio;
