@@ -1162,7 +1162,7 @@ void update_world_features()
 
 	// Bus Interior Light On At Night && NPC No Lights && NPC Neon Lights && NPC Dirty Vehicles && NPC No Gravity Vehicles && NPC Vehicles Reduced Grip && NPC Vehicle Speed && NPC Use Fullbeam && 
 	// Headlights During Blackout && Boost NPC Radio Volume && Slippery When Wet && Train Speed && NPC Vehicles Colour && Reduced Grip If Snowing && Damage On Collision With You
-	if (featureBusLight || featureNPCNoLights || featureNPCNeonLights || featureDirtyVehicles || featureNPCNoGravityVehicles || featureNPCReducedGripVehicles ||
+	if (featureBusLight || featureNPCNoLights || featureNPCNeonLights || featureDirtyVehicles || featureCleanVehicles ||featureNPCNoGravityVehicles || featureNPCReducedGripVehicles ||
 		WORLD_NPC_VEHICLESPEED_VALUES[NPCVehicleSpeedIndex] > -1 || VEH_TURN_SIGNALS_ACCELERATION_VALUES[RadarReducedGripSnowingCustomIndex] > 0 || featureNPCFullBeam || featureHeadlightsBlackout ||
 		featureBoostNPCRadio || VEH_TURN_SIGNALS_ACCELERATION_VALUES[RadarReducedGripRainingCustomIndex] > 0 || WORLD_TRAIN_SPEED_VALUES[TrainSpeedIndex] != -1.0 || VEH_COLOUR_VALUES[VehColourIndex] > -1 ||
 		NPC_RAGDOLL_VALUES[NPCVehicleDamageOnCollIndex] > 0) {
@@ -1258,6 +1258,10 @@ void update_world_features()
 			if (featureDirtyVehicles) {
 				int temp_dirty = rand() % 15 + 0;
 				if (VEHICLE::GET_VEHICLE_DIRT_LEVEL(bus_veh[i]) == 0 && bus_veh[i] != veh_mycurrveh) VEHICLE::SET_VEHICLE_DIRT_LEVEL(bus_veh[i], temp_dirty);
+			}
+			// NPC Clean Vehicles
+			if (featureCleanVehicles) {
+				if (VEHICLE::GET_VEHICLE_DIRT_LEVEL(bus_veh[i]) != 0 && bus_veh[i] != veh_mycurrveh) VEHICLE::SET_VEHICLE_DIRT_LEVEL(bus_veh[i], 0);
 			}
 			// NPC No Gravity Vehicles
 			if (featureNPCNoGravityVehicles) {

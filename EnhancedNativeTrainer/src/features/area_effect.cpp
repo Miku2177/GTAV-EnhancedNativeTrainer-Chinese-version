@@ -52,6 +52,7 @@ bool featureNPCNoLights = false;
 bool featureNPCNeonLights = false;
 bool featureNPCFullBeam = false;
 bool featureDirtyVehicles = false;
+bool featureCleanVehicles = false;
 bool featureNPCNoGravityVehicles = false;
 bool featureNPCReducedGripVehicles = false;
 bool featureBoostNPCRadio = false;
@@ -151,6 +152,7 @@ void add_areaeffect_feature_enablements(std::vector<FeatureEnabledLocalDefinitio
 	results->push_back(FeatureEnabledLocalDefinition{"featureNPCNeonLights", &featureNPCNeonLights}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureNPCFullBeam", &featureNPCFullBeam});
 	results->push_back(FeatureEnabledLocalDefinition{"featureDirtyVehicles", &featureDirtyVehicles}); 
+	results->push_back(FeatureEnabledLocalDefinition{"featureCleanVehicles", &featureCleanVehicles});
 	results->push_back(FeatureEnabledLocalDefinition{"featureNPCNoGravityVehicles", &featureNPCNoGravityVehicles}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureNPCReducedGripVehicles", &featureNPCReducedGripVehicles}); 
 	results->push_back(FeatureEnabledLocalDefinition{"featureBoostNPCRadio", &featureBoostNPCRadio});
@@ -179,6 +181,7 @@ void reset_areaeffect_globals(){
 	featureNPCNeonLights = false;
 	featureNPCFullBeam = false;
 	featureDirtyVehicles = false;
+	featureCleanVehicles = false;
 	featureNPCNoGravityVehicles = false;
 	featureNPCReducedGripVehicles = false;
 	featureBoostNPCRadio = false;
@@ -337,6 +340,12 @@ void process_areaeffect_vehicle_menu(){
 	togItem->caption = "NPC Dirty Vehicles";
 	togItem->value = 1;
 	togItem->toggleValue = &featureDirtyVehicles;
+	menuItems.push_back(togItem);
+
+	togItem = new ToggleMenuItem<int>();
+	togItem->caption = "NPC Clean Vehicles";
+	togItem->value = 1;
+	togItem->toggleValue = &featureCleanVehicles;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
