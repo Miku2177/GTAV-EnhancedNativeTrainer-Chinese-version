@@ -370,9 +370,14 @@ bool onconfirm_clouds_menu(MenuItem<std::string> choice)
 		break;
 	case 1:
 		// No Clouds
-		GRAPHICS::_CLEAR_CLOUD_HAT();
+		lastClouds = "altostratus";
+		GRAPHICS::_SET_CLOUD_HAT_TRANSITION((char*)lastClouds.c_str(), 0.3);
+		WAIT(10);
 		lastClouds = "";
 		lastCloudsName = "";
+		GRAPHICS::_CLEAR_CLOUD_HAT();
+		WAIT(10);
+		GRAPHICS::_SET_CLOUD_HAT_TRANSITION((char*)lastClouds.c_str(), 0.3);
 		break;
 	default:
 		lastClouds = choice.value.c_str();
@@ -397,29 +402,29 @@ void process_clouds_menu()
 	const std::string caption = "Clouds Options";
 
 	StringStandardOrToggleMenuDef lines[lineCount] = {
-		{ "Freeze Clouds", "FREEZECLOUDS", &featureCloudsFreeze, NULL },
-		{ "No Clouds", "NOCLOUDS", NULL, NULL },
+		{ "Freeze Clouds", "FREEZECLOUDS", &featureCloudsFreeze, NULL, true },
+		{ "No Clouds", "NOCLOUDS", NULL, NULL, true },
 		//
-		{ "Altostratus", "altostratus", NULL, NULL },
-		{ "Cirrocumulus", "cirrocumulus", NULL, NULL },
-		{ "Cirrus", "Cirrus", NULL, NULL },
-		{ "Clear 01", "Clear 01", NULL, NULL },
-		{ "Cloudy 01", "Cloudy 01", NULL, NULL },
-		{ "Contrails", "Contrails", NULL, NULL },
-		{ "Horizon", "Horizon", NULL, NULL },
-		{ "Horizonband 1", "horizonband1", NULL, NULL },
-		{ "Horizonband 2", "horizonband2", NULL, NULL },
-		{ "Horizonband 3", "horizonband3", NULL, NULL },
-		{ "Horsey", "horsey", NULL, NULL },
-		{ "Nimbus", "Nimbus", NULL, NULL },
-		{ "Puffs", "Puffs", NULL, NULL },
-		{ "Rain", "RAIN", NULL, NULL },
-		{ "Shower", "shower", NULL, NULL },
-		{ "Snowy 01", "Snowy 01", NULL, NULL },
-		{ "Stormy 01", "Stormy 01", NULL, NULL },
-		{ "Stratoscumulus", "stratoscumulus", NULL, NULL },
-		{ "Stripey", "Stripey", NULL, NULL },
-		{ "Wispy", "Wispy", NULL, NULL },
+		{ "Altostratus", "altostratus", NULL, NULL, true },
+		{ "Cirrocumulus", "cirrocumulus", NULL, NULL, true },
+		{ "Cirrus", "Cirrus", NULL, NULL, true },
+		{ "Clear 01", "Clear 01", NULL, NULL, true },
+		{ "Cloudy 01", "Cloudy 01", NULL, NULL, true },
+		{ "Contrails", "Contrails", NULL, NULL, true },
+		{ "Horizon", "Horizon", NULL, NULL, true },
+		{ "Horizonband 1", "horizonband1", NULL, NULL, true },
+		{ "Horizonband 2", "horizonband2", NULL, NULL, true },
+		{ "Horizonband 3", "horizonband3", NULL, NULL, true },
+		{ "Horsey", "horsey", NULL, NULL, true },
+		{ "Nimbus", "Nimbus", NULL, NULL, true },
+		{ "Puffs", "Puffs", NULL, NULL, true },
+		{ "Rain", "RAIN", NULL, NULL, true },
+		{ "Shower", "shower", NULL, NULL, true },
+		{ "Snowy 01", "Snowy 01", NULL, NULL, true },
+		{ "Stormy 01", "Stormy 01", NULL, NULL, true },
+		{ "Stratoscumulus", "stratoscumulus", NULL, NULL, true },
+		{ "Stripey", "Stripey", NULL, NULL, true },
+		{ "Wispy", "Wispy", NULL, NULL, true },
 		//
 	};
 
