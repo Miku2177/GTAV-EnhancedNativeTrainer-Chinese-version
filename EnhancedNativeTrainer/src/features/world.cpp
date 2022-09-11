@@ -370,7 +370,7 @@ bool onconfirm_clouds_menu(MenuItem<std::string> choice)
 		break;
 	case 1:
 		// No Clouds
-		lastClouds = "altostratus";
+		lastClouds = "Snowy 01";
 		GRAPHICS::_SET_CLOUD_HAT_TRANSITION((char*)lastClouds.c_str(), 0.3);
 		WAIT(10);
 		lastClouds = "";
