@@ -571,7 +571,9 @@ void fuel()
 							GRAPHICS::DRAW_RECT(fuel_bar_x + 0.07, fuel_bar_y, fuel_amount, fuel_bar_h, underbar_r, underbar_g, underbar_b, FUEL_COLOURS_R_VALUES[FuelBackground_Opacity_IndexN]);
 
 							if (FUEL[0] < 0.015) {
-								GRAPHICS::DRAW_RECT(fuel_bar_x + (FUEL[0] / 2), fuel_bar_y, FUEL[0], fuel_bar_h, 220, 20, 20, 255);
+								if (FUEL[0] > 0 && FUEL[0] >= 0.001) GRAPHICS::DRAW_RECT(fuel_bar_x + (FUEL[0] / 2), fuel_bar_y, FUEL[0], fuel_bar_h, 220, 20, 20, 255);
+								if (FUEL[0] > 0 && FUEL[0] < 0.001) GRAPHICS::DRAW_RECT(fuel_bar_x + (FUEL[0] / 2), fuel_bar_y, 0.001, fuel_bar_h, 220, 20, 20, 255);
+								if (FUEL[0] <= 0) GRAPHICS::DRAW_RECT(fuel_bar_x + (FUEL[0] / 2), fuel_bar_y, 0, fuel_bar_h, 220, 20, 20, 255);
 								Fuel_Low = true;
 							}
 							else {
@@ -584,7 +586,9 @@ void fuel()
 							GRAPHICS::DRAW_RECT(fuel_bar_x, fuel_bar_y + 0.07, 0.0055, fuel_amount, underbar_r, underbar_g, underbar_b, FUEL_COLOURS_R_VALUES[FuelBackground_Opacity_IndexN]);
 
 							if (FUEL[0] < 0.015) {
-								GRAPHICS::DRAW_RECT(fuel_bar_x, (fuel_bar_y + fuel_amount - 0.01) - (FUEL[0] / 2), fuel_bar_h, FUEL[0], 220, 20, 20, 255);
+								if (FUEL[0] > 0) GRAPHICS::DRAW_RECT(fuel_bar_x, (fuel_bar_y + fuel_amount - 0.01) - (FUEL[0] / 2), fuel_bar_h, FUEL[0], 220, 20, 20, 255);
+								if (FUEL[0] > 0 && FUEL[0] < 0.001) GRAPHICS::DRAW_RECT(fuel_bar_x, (fuel_bar_y + fuel_amount - 0.01) - (FUEL[0] / 2), fuel_bar_h, 0.001, 220, 20, 20, 255);
+								if (FUEL[0] <= 0) GRAPHICS::DRAW_RECT(fuel_bar_x, (fuel_bar_y + fuel_amount - 0.01) - (FUEL[0] / 2), fuel_bar_h, 0, 220, 20, 20, 255);
 								Fuel_Low = true;
 							}
 							else {
