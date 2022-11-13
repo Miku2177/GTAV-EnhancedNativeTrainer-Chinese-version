@@ -279,6 +279,8 @@ void onchange_power_punch_index(int value, SelectFromListMenuItem* source);
 
 void onchange_weapons_firemode_modifier(int value, SelectFromListMenuItem* source);
 
+void onchange_weapons_rapidfire_modifier(int value, SelectFromListMenuItem* source);
+
 void onchange_weap_strobe_index(int value, SelectFromListMenuItem* source);
 
 void onchange_weap_flashdist_index(int value, SelectFromListMenuItem* source);
