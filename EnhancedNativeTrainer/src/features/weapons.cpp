@@ -133,6 +133,8 @@ bool saved_parachute = false;
 int saved_parachute_tint = 0;
 int saved_armour = 0;
 
+int tick_rap_allw, w_tick_rap_secs_passed, ss_tick_rap_secs_curr = 0;
+
 //bool do_give_weapon(std::string modelName);
 
 bool redrawWeaponMenuAfterEquipChange = false;
@@ -158,6 +160,12 @@ const std::vector<std::string> WEAPONS_COPALARM_CAPTIONS{ "One Star", "Two Stars
 const int WEAPONS_COPALARM_VALUES[] = { 1, 2, 3, 4, 5, 6 };
 int CopAlarmIndex = 1;
 bool CopAlarmChanged = true;
+
+// Rapid Fire Speed
+const std::vector<std::string> WEAPONS_RAPIDFIRE_CAPTIONS{ "-8", "-7", "-6", "-5", "-4", "-3", "-2", "-1", "Default" };
+const int WEAPONS_RAPIDFIRE_VALUES[] = { 40, 35, 30, 25, 20, 15, 10, 5, -1 };
+int RapidFireIndex = 8;
+bool RapidFireChanged = true;
 
 // Toggle Vision For Sniper Rifles
 const std::vector<std::string> WEAPONS_SNIPERVISION_CAPTIONS{ "OFF", "Via Hotkey", "Night Vision", "Thermal Vision" };
@@ -832,6 +840,11 @@ void onchange_power_punch_index(int value, SelectFromListMenuItem* source) {
 void onchange_weapons_firemode_modifier(int value, SelectFromListMenuItem* source) {
 	WeaponsFireModeIndex = value;
 	WeaponsFireModeChanged = true;
+}
+
+void onchange_weapons_rapidfire_modifier(int value, SelectFromListMenuItem* source) {
+	RapidFireIndex = value;
+	RapidFireChanged = true;
 }
 
 void onchange_weap_strobe_index(int value, SelectFromListMenuItem* source) {
@@ -1579,6 +1592,12 @@ bool process_weapon_menu(){
 	toggleItem->toggleValue = &featureRapidFire;
 	menuItems.push_back(toggleItem);
 
+	listItem = new SelectFromListMenuItem(WEAPONS_RAPIDFIRE_CAPTIONS, onchange_weapons_rapidfire_modifier);
+	listItem->wrap = false;
+	listItem->caption = "Rapid Fire Speed";
+	listItem->value = RapidFireIndex;
+	menuItems.push_back(listItem);
+
 	listItem = new SelectFromListMenuItem(WEAPONS_FIREMODE_CAPTIONS, onchange_weapons_firemode_modifier);
 	listItem->wrap = false;
 	listItem->caption = "Fire Mode";
@@ -1631,6 +1650,7 @@ void reset_weapon_globals(){
 	SniperVisionIndex = 0;
 	PowerPunchIndex = 2;
 	WeaponsFireModeIndex = 0;
+	RapidFireIndex = 8;
 	WeapStrobeIndexN = 0;
 	WeapFlashDistIndex = 0;
 
@@ -2357,14 +2377,24 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 	if (featureRapidFire) {
 		if ((CONTROLS::IS_CONTROL_PRESSED(2, 24) || (CONTROLS::IS_CONTROL_PRESSED(2, 24) && CONTROLS::IS_CONTROL_PRESSED(2, 25)))
 			&& ENTITY::DOES_ENTITY_EXIST(playerPed) && !ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_RELOADING(playerPed)) {
-			Entity curr_w = WEAPON::GET_CURRENT_PED_WEAPON_ENTITY_INDEX(playerPed);
-			Vector3 myCoords = ENTITY::GET_ENTITY_COORDS(curr_w, 1);
-			float Coord[3];
-			Vector3 moveToPos = add(&myCoords, &DirectionOffsetFromCam(5.5f));
-			VectorToFloat(moveToPos, Coord);
-			if (WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_FIREWORK") || WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_RPG")) WEAPON::SET_PED_INFINITE_AMMO_CLIP(playerPed, true);
-			GAMEPLAY::SHOOT_SINGLE_BULLET_BETWEEN_COORDS(myCoords.x, myCoords.y, myCoords.z, Coord[0], Coord[1], Coord[2]/* + 0.5*/, 250, 1, WEAPON::GET_SELECTED_PED_WEAPON(playerPed), playerPed, 1, 0, -1.0);
-			GAMEPLAY::SHOOT_SINGLE_BULLET_BETWEEN_COORDS(myCoords.x, myCoords.y, myCoords.z, Coord[0], Coord[1], Coord[2]/* + 0.5*/, 250, 1, WEAPON::GET_SELECTED_PED_WEAPON(playerPed), playerPed, 1, 0, -1.0);
+			if (WEAPONS_RAPIDFIRE_VALUES[RapidFireIndex] != -1 && tick_rap_allw < WEAPONS_RAPIDFIRE_VALUES[RapidFireIndex]) {
+				w_tick_rap_secs_passed = clock() / CLOCKS_PER_SEC;
+				if (((clock() / (CLOCKS_PER_SEC / 10)) - ss_tick_rap_secs_curr) != 0) {
+					tick_rap_allw = tick_rap_allw + 1;
+					ss_tick_rap_secs_curr = w_tick_rap_secs_passed;
+				}
+			}
+			if (WEAPONS_RAPIDFIRE_VALUES[RapidFireIndex] == -1 || tick_rap_allw >= WEAPONS_RAPIDFIRE_VALUES[RapidFireIndex]) {
+				Entity curr_w = WEAPON::GET_CURRENT_PED_WEAPON_ENTITY_INDEX(playerPed);
+				Vector3 myCoords = ENTITY::GET_ENTITY_COORDS(curr_w, 1);
+				float Coord[3];
+				Vector3 moveToPos = add(&myCoords, &DirectionOffsetFromCam(5.5f));
+				VectorToFloat(moveToPos, Coord);
+				if (WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_FIREWORK") || WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_RPG")) WEAPON::SET_PED_INFINITE_AMMO_CLIP(playerPed, true);
+				GAMEPLAY::SHOOT_SINGLE_BULLET_BETWEEN_COORDS(myCoords.x, myCoords.y, myCoords.z, Coord[0], Coord[1], Coord[2]/* + 0.5*/, 250, 1, WEAPON::GET_SELECTED_PED_WEAPON(playerPed), playerPed, 1, 0, -1.0);
+				GAMEPLAY::SHOOT_SINGLE_BULLET_BETWEEN_COORDS(myCoords.x, myCoords.y, myCoords.z, Coord[0], Coord[1], Coord[2]/* + 0.5*/, 250, 1, WEAPON::GET_SELECTED_PED_WEAPON(playerPed), playerPed, 1, 0, -1.0);
+				tick_rap_allw = 0;
+			}
 		}
 	}
 
@@ -2406,7 +2436,8 @@ void update_weapon_features(BOOL bPlayerExists, Player player){
 			float dirVector_lr_x = Coord2[0] - Coord1[0];
 			float dirVector_lr_y = Coord2[1] - Coord1[1];
 			float dirVector_lr_z = Coord2[2] - Coord1[2];
-			GRAPHICS::_DRAW_SPOT_LIGHT_WITH_SHADOW(Coord1[0], Coord1[1], Coord1[2], dirVector_lr_x, dirVector_lr_y, dirVector_lr_z, 255, 255, 255, WEAP_DMG_FLOAT[WeapFlashDistIndex] * 40.0, 1, 50, 19, 2.7, 10); // 21
+			if (WEAP_DMG_FLOAT[WeapFlashDistIndex] < 1000.0) GRAPHICS::_DRAW_SPOT_LIGHT_WITH_SHADOW(Coord1[0], Coord1[1], Coord1[2], dirVector_lr_x, dirVector_lr_y, dirVector_lr_z, 255, 255, 255, WEAP_DMG_FLOAT[WeapFlashDistIndex] * 40.0, 1, 50, 19, 2.7, 10); // 21
+			if (WEAP_DMG_FLOAT[WeapFlashDistIndex] == 1000.0) GRAPHICS::_DRAW_SPOT_LIGHT_WITH_SHADOW(Coord1[0], Coord1[1], Coord1[2], dirVector_lr_x, dirVector_lr_y, dirVector_lr_z, 255, 255, 255, 300 * 40.0, 1, 50, 19, 2.7, 10); // 21
 		}
 	}
 
@@ -2890,6 +2921,7 @@ void add_weapon_feature_enablements2(std::vector<StringPairSettingDBRow>* result
 	results->push_back(StringPairSettingDBRow{ "SniperVisionIndex", std::to_string(SniperVisionIndex) });
 	results->push_back(StringPairSettingDBRow{ "PowerPunchIndex", std::to_string(PowerPunchIndex) });
 	results->push_back(StringPairSettingDBRow{ "WeaponsFireModeIndex", std::to_string(WeaponsFireModeIndex) });
+	results->push_back(StringPairSettingDBRow{ "RapidFireIndex", std::to_string(RapidFireIndex) });
 	results->push_back(StringPairSettingDBRow{ "WeapStrobeIndexN", std::to_string(WeapStrobeIndexN) });
 	results->push_back(StringPairSettingDBRow{ "WeapFlashDistIndex", std::to_string(WeapFlashDistIndex) });
 }
@@ -2939,6 +2971,9 @@ void handle_generic_settings_weapons(std::vector<StringPairSettingDBRow>* settin
 		}
 		else if (setting.name.compare("WeaponsFireModeIndex") == 0) {
 			WeaponsFireModeIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("RapidFireIndex") == 0) {
+			RapidFireIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("WeapStrobeIndexN") == 0) {
 			WeapStrobeIndexN = stoi(setting.value);
