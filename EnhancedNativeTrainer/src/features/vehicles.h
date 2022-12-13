@@ -968,7 +968,25 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("POSTLUDE"), "sssa_dlc_sum2", "postlude" },
 	{ RAGE_JOAAT("RHINEHART"), "sssa_dlc_sum2", "rhinehart" },
 	{ RAGE_JOAAT("RUINER4"), "sssa_dlc_sum2", "ruiner4" },
-	{ RAGE_JOAAT("VIGERO2"), "sssa_dlc_sum2", "vigero2" }
+	{ RAGE_JOAAT("VIGERO2"), "sssa_dlc_sum2", "vigero2" },
+	//Xmas 2022
+	{ RAGE_JOAAT("BOOR"), "sssa_dlc_xmas2022", "boor" },
+	{ RAGE_JOAAT("BRICKADE2"), "candc_xmas2022", "brickade2" },
+	{ RAGE_JOAAT("BROADWAY"), "lgm_dlc_xmas2022", "broadway" },
+	{ RAGE_JOAAT("CARGOPLANE2"), "sssa_dlc_xmas2022", "cargoplane2" },
+	{ RAGE_JOAAT("ENTITY3"), "lgm_dlc_xmas2022", "entity3" },
+	{ RAGE_JOAAT("EUDORA"), "sssa_dlc_xmas2022", "eudora" },
+	{ RAGE_JOAAT("EVERON2"), "sssa_dlc_xmas2022", "everon2" },
+	{ RAGE_JOAAT("ISSI8"), "sssa_dlc_xmas2022", "issi8" },
+	{ RAGE_JOAAT("JOURNEY2"), "sssa_dlc_xmas2022", "journey2" },
+	{ RAGE_JOAAT("MANCHEZ3"), "sssa_dlc_xmas2022", "manchez3" },
+	{ RAGE_JOAAT("PANTHERE"), "lgm_dlc_xmas2022", "panthere" },
+	{ RAGE_JOAAT("POWERSURGE"), "lgm_dlc_xmas2022", "powersurge" },
+	{ RAGE_JOAAT("R300"), "lgm_dlc_xmas2022", "r300" },
+	{ RAGE_JOAAT("SURFER3"), "sssa_dlc_xmas2022", "surfer3" },
+	{ RAGE_JOAAT("TAHOMA"), "sssa_dlc_xmas2022", "tahoma" },
+	{ RAGE_JOAAT("TULIP2"), "sssa_dlc_xmas2022", "tulip2" },
+	{ RAGE_JOAAT("VIRTUE"), "lgm_dlc_xmas2022", "virtue" }
 };
 
 /***
