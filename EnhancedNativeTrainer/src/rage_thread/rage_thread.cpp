@@ -139,6 +139,14 @@ void enableCarsGlobal() {
         offset = offset1064_0;
     }
 
+    //Temp fix until the above pattern is fixed due to the Drug Wars update changing the scripts around
+    if (getGameVersion() > 88)
+    {
+        *getGlobalPtr(4540726);
+        return;
+    }
+        
+
     for (int i = 0; i < shopController->CodePageCount(); i++)
     {
         int size = shopController->GetCodePageSize(i);
