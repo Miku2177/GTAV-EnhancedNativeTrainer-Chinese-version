@@ -2709,6 +2709,12 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		//case VER_1_0_2189_0_NOSTEAM:
 		//case VER_1_0_2189_0_EGS:
 		//	*getGlobalPtr(4269479) = 1;
+
+		//Temp fix until the above pattern is fixed due to the Drug Wars update changing the scripts around
+		case VER_1_0_2802_0_STEAM:
+		case VER_1_0_2802_0_NOSTEAM:	  
+		case VER_1_0_2802_0_EGS:		  
+			*getGlobalPtr(4540726) = 1;
 	}
 
 	// Disable Despawn Of DLC Vehicles
