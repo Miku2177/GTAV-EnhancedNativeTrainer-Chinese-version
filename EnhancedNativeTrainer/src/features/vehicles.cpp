@@ -2711,9 +2711,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		//	*getGlobalPtr(4269479) = 1;
 
 		//Temp fix until the above pattern is fixed due to the Drug Wars update changing the scripts around
-		case VER_1_0_2802_0_STEAM:
-		case VER_1_0_2802_0_NOSTEAM:	  
-		case VER_1_0_2802_0_EGS:		  
+		default:
 			*getGlobalPtr(4540726) = 1;
 	}
 

@@ -223,7 +223,7 @@ enum eGameVersion: int{
 	VER_1_0_2372_0_NOSTEAM,	  //72
 	VER_1_0_2372_0_EGS,		  //73
 
-	VER_1_0_2802_0_STEAM = 88,//71
+	VER_1_0_2802_0_STEAM = 87,//71
 	VER_1_0_2802_0_NOSTEAM,	  //72
 	VER_1_0_2802_0_EGS,		  //73
 
