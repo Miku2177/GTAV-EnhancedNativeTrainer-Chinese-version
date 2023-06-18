@@ -230,8 +230,8 @@ const int VEH_TURN_SIGNALS_VALUES[] = { 0, 1, 5, 10, 15, 20, 30, 40, 50, 60, 70,
 int turnSignalsIndex = 0;
 
 //Turn Signals Angle
-const std::vector<std::string> VEH_TURN_SIGNALS_ANGLE_CAPTIONS{ "0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100" };
-const int VEH_TURN_SIGNALS_ANGLE_VALUES[] = { 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
+//const std::vector<std::string> VEH_TURN_SIGNALS_ANGLE_CAPTIONS{ "0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100" };
+//const int VEH_TURN_SIGNALS_ANGLE_VALUES[] = { 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
 int turnSignalsAngleIndex = 3;
 int NitrousPowerIndex = 1;
 
@@ -289,6 +289,9 @@ int VehBlipFlashIndex = 0;
 
 //Restore Tracked Vehicles On Game Restart
 int VehTrackedAutoSaveIndex = 0;
+
+//Levitation
+int LevitationIndex = 0;
 
 //Keep The Engine Running
 const std::vector<std::string> VEH_ENGINERUNNING_CAPTIONS{ "Never", "Always", "Hold Exit To Kill Engine" };
@@ -4742,6 +4745,7 @@ void reset_vehicle_globals() {
 	FuelBackground_Opacity_IndexN = 3;
 	VehRememberIndex = 3;
 	VehBlipSizeIndex = 2;
+	LevitationIndex = 0;
 	VehBlipColourIndex = 4;
 	VehColourIndex = 0;
 	VehRandomColourIndex = 0;
@@ -5741,6 +5745,7 @@ void add_vehicle_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"FuelBackground_Opacity_IndexN", std::to_string(FuelBackground_Opacity_IndexN)});
 	results->push_back(StringPairSettingDBRow{"VehRememberIndex", std::to_string(VehRememberIndex)});
 	results->push_back(StringPairSettingDBRow{"VehBlipSizeIndex", std::to_string(VehBlipSizeIndex)});
+	results->push_back(StringPairSettingDBRow{"LevitationIndex", std::to_string(LevitationIndex)});
 	results->push_back(StringPairSettingDBRow{"VehBlipColourIndex", std::to_string(VehBlipColourIndex)});
 	results->push_back(StringPairSettingDBRow{"VehColourIndex", std::to_string(VehColourIndex)});
 	results->push_back(StringPairSettingDBRow{"VehRandomColourIndex", std::to_string(VehRandomColourIndex)});
@@ -5888,6 +5893,9 @@ void handle_generic_settings_vehicle(std::vector<StringPairSettingDBRow>* settin
 		}
 		else if (setting.name.compare("VehBlipSizeIndex") == 0){
 			VehBlipSizeIndex = stoi(setting.value);
+		}
+		else if (setting.name.compare("LevitationIndex") == 0) {
+			LevitationIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("VehBlipColourIndex") == 0){
 			VehBlipColourIndex = stoi(setting.value);
@@ -6181,6 +6189,11 @@ void onchange_veh_remember_index(int value, SelectFromListMenuItem* source){
 
 void onchange_veh_blipsize_index(int value, SelectFromListMenuItem* source){
 	VehBlipSizeIndex = value;
+	PositionChanged = true;
+}
+
+void onchange_levitation_index(int value, SelectFromListMenuItem* source) {
+	LevitationIndex = value;
 	PositionChanged = true;
 }
 
