@@ -98,6 +98,10 @@ const double VEH_BLIPSIZE_VALUES[] = { 0.3, 0.5, 0.8, 1.0, 1.2, 1.5, 1.7, 2.0, 2
 const std::vector<std::string> VEH_BLIPSYMBOL_CAPTIONS{ "Standard", "Player", "Waypoint", "ArrowUpOutlined" };
 const std::vector<int> VEH_BLIPSYMBOL_VALUES{ 1, 6, 8, 11 };
 
+//Turn Signals Angle
+const std::vector<std::string> VEH_TURN_SIGNALS_ANGLE_CAPTIONS{ "0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100" };
+const int VEH_TURN_SIGNALS_ANGLE_VALUES[] = { 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
+
 extern int NPCVehicleDamageOnCollIndex;
 
 struct VehicleImage {
@@ -1209,6 +1213,8 @@ void onchange_veh_remember_index(int value, SelectFromListMenuItem* source);
 
 void onchange_veh_blipsize_index(int value, SelectFromListMenuItem* source);
 
+void onchange_levitation_index(int value, SelectFromListMenuItem* source);
+
 void onchange_veh_blipcolour_index(int value, SelectFromListMenuItem* source);
 
 void onchange_world_npc_vehicles_colour_index(int value, SelectFromListMenuItem* source);
@@ -1460,6 +1466,7 @@ extern bool featureRememberVehicles;
 extern bool featureRestoreTracked;
 extern bool featureDisableIgnition;
 extern int EngineRunningIndex;
+extern int LevitationIndex;
 
 extern std::string  veh_to_spawn;
 extern bool repairing_engine;

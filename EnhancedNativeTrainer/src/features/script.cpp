@@ -122,7 +122,7 @@ bool featureThermalVision = false;
 bool featureThermalVisionUpdated = false;
 bool featureWantedLevelFrozen = false;
 bool featureWantedLevelFrozenUpdated = false;
-bool featureLevitation = false;
+//bool featureLevitation = false;
 bool featureNoScubaGearMask = false;
 bool featureNoScubaSound = false;
 bool super_jump_no_parachute, super_jump_intheair = false;
@@ -1053,8 +1053,8 @@ void update_features(){
 	if (NoTaxiWhistling && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID()) && !UI::IS_HELP_MESSAGE_BEING_DISPLAYED() && GAMEPLAY::GET_MISSION_FLAG() == 0) CONTROLS::DISABLE_CONTROL_ACTION(2, 51, 1);
 		
 	// Levitation
-	if (!featureLevitation) lev_message = false;
-	if (featureLevitation) {
+	if (VEH_TURN_SIGNALS_ANGLE_VALUES[LevitationIndex] < 1) lev_message = false;
+	if (VEH_TURN_SIGNALS_ANGLE_VALUES[LevitationIndex] > 0/*featureLevitation*/) {
 		if (lev_message == false) {
 			set_status_text("Hold 'Jump' to use your force.");
 			lev_message = true;
@@ -1073,7 +1073,7 @@ void update_features(){
 			if (tempgot_z < 0) tempgot_z = (tempgot_z * -1);
 			ROPE::ACTIVATE_PHYSICS(surr_p_peds[i]);
 			if (surr_p_peds[i] != playerPed && !PED::IS_PED_IN_ANY_VEHICLE(surr_p_peds[i], 0)) { 
-				if (CONTROLS::IS_CONTROL_PRESSED(2, 22) && tempgot_x < 20 && tempgot_y < 20) {
+				if (CONTROLS::IS_CONTROL_PRESSED(2, 22) && tempgot_x < VEH_TURN_SIGNALS_ANGLE_VALUES[LevitationIndex] && tempgot_y < VEH_TURN_SIGNALS_ANGLE_VALUES[LevitationIndex]) {
 					PED::SET_PED_CAN_RAGDOLL(surr_p_peds[i], true);
 					PED::SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(surr_p_peds[i], true);
 					PED::SET_PED_RAGDOLL_FORCE_FALL(surr_p_peds[i]);
@@ -1083,13 +1083,13 @@ void update_features(){
 						AI::TASK_PLAY_ANIM(surr_p_peds[i], "dead@fall", "dead_fall_down", 8.0, 0.0, -1, 9, 0, 0, 0, 0);
 						PED::SET_PED_TO_RAGDOLL(surr_p_peds[i], 1, 1, 1, 1, 1, 1);
 					}
-					if (tempgot_z < 20) ENTITY::APPLY_FORCE_TO_ENTITY(surr_p_peds[i], 1, 0, 0, 0.6, 0, 0, 0, true, false, true, true, true, true); // 20
+					if (tempgot_z < VEH_TURN_SIGNALS_ANGLE_VALUES[LevitationIndex]) ENTITY::APPLY_FORCE_TO_ENTITY(surr_p_peds[i], 1, 0, 0, 0.6, 0, 0, 0, true, false, true, true, true, true); // 20
 				}
-				if (CONTROLS::IS_CONTROL_PRESSED(2, 22) && (tempgot_x > 19 || tempgot_y > 19) && tempgot_z > 5) {
+				if (CONTROLS::IS_CONTROL_PRESSED(2, 22) && (tempgot_x > (VEH_TURN_SIGNALS_ANGLE_VALUES[LevitationIndex] - 1) || tempgot_y > (VEH_TURN_SIGNALS_ANGLE_VALUES[LevitationIndex] - 1)) && tempgot_z > 5) {
 					Vector3 curPLocation = ENTITY::GET_ENTITY_COORDS(surr_p_peds[i], 0);
 					ENTITY::SET_ENTITY_COORDS_NO_OFFSET(surr_p_peds[i], curPLocation.x, curPLocation.y, curPLocation.z - 1, 1, 1, 1);
 				}
-				if (CONTROLS::IS_CONTROL_RELEASED(2, 22) || tempgot_x > 19 || tempgot_y > 19) {
+				if (CONTROLS::IS_CONTROL_RELEASED(2, 22) || tempgot_x > (VEH_TURN_SIGNALS_ANGLE_VALUES[LevitationIndex] - 1) || tempgot_y > (VEH_TURN_SIGNALS_ANGLE_VALUES[LevitationIndex] - 1)) {
 					if (ENTITY::IS_ENTITY_PLAYING_ANIM(surr_p_peds[i], "dead@fall", "dead_fall_down", 3)) {
 						Vector3 curPLocation = ENTITY::GET_ENTITY_COORDS(surr_p_peds[i], 0);
 						ENTITY::SET_ENTITY_COORDS_NO_OFFSET(surr_p_peds[i], curPLocation.x, curPLocation.y, curPLocation.z, 1, 1, 1);
@@ -1109,7 +1109,8 @@ void update_features(){
 				if (tempgot_x < 0) tempgot_x = (tempgot_x * -1);
 				if (tempgot_y < 0) tempgot_y = (tempgot_y * -1);
 				if (tempgot_z < 0) tempgot_z = (tempgot_z * -1);
-				if (tempgot_x < 20 && tempgot_y < 20 && tempgot_z < 20) ENTITY::APPLY_FORCE_TO_ENTITY(surr_objects[i], 1, 0, 0, 0.6, 0, 0, 0, true, false, true, true, true, true);
+				if (tempgot_x < VEH_TURN_SIGNALS_ANGLE_VALUES[LevitationIndex] && tempgot_y < VEH_TURN_SIGNALS_ANGLE_VALUES[LevitationIndex] && tempgot_z < VEH_TURN_SIGNALS_ANGLE_VALUES[LevitationIndex]) 
+					ENTITY::APPLY_FORCE_TO_ENTITY(surr_objects[i], 1, 0, 0, 0.6, 0, 0, 0, true, false, true, true, true, true);
 			} // end of int (objects)
 			Vehicle surr_vehicles[arrSize_punch];
 			int count_surr_v = worldGetAllVehicles(surr_vehicles, arrSize_punch);
@@ -1121,7 +1122,8 @@ void update_features(){
 				if (tempgot_x < 0) tempgot_x = (tempgot_x * -1);
 				if (tempgot_y < 0) tempgot_y = (tempgot_y * -1);
 				if (tempgot_z < 0) tempgot_z = (tempgot_z * -1);
-				if (tempgot_x < 20 && tempgot_y < 20 && tempgot_z < 20) ENTITY::APPLY_FORCE_TO_ENTITY(surr_vehicles[i], 1, 0, 0, 0.6, 0, 0, 0, true, false, true, true, true, true);
+				if (tempgot_x < VEH_TURN_SIGNALS_ANGLE_VALUES[LevitationIndex] && tempgot_y < VEH_TURN_SIGNALS_ANGLE_VALUES[LevitationIndex] && tempgot_z < VEH_TURN_SIGNALS_ANGLE_VALUES[LevitationIndex]) 
+					ENTITY::APPLY_FORCE_TO_ENTITY(surr_vehicles[i], 1, 0, 0, 0.6, 0, 0, 0, true, false, true, true, true, true);
 			} // end of int (vehicles)
 		}
 	}
@@ -2182,11 +2184,17 @@ bool process_player_forceshield_menu() {
 	listItem->value = current_player_forceshieldN;
 	menuItems.push_back(listItem);
 
-	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Levitation";
-	toggleItem->value = i++;
-	toggleItem->toggleValue = &featureLevitation;
-	menuItems.push_back(toggleItem);
+	listItem = new SelectFromListMenuItem(VEH_TURN_SIGNALS_ANGLE_CAPTIONS, onchange_levitation_index);
+	listItem->wrap = false;
+	listItem->caption = "Levitation";
+	listItem->value = LevitationIndex;
+	menuItems.push_back(listItem);
+
+	//toggleItem = new ToggleMenuItem<int>();
+	//toggleItem->caption = "Levitation";
+	//toggleItem->value = i++;
+	//toggleItem->toggleValue = &featureLevitation;
+	//menuItems.push_back(toggleItem);
 
 	return draw_generic_menu<int>(menuItems, &playerForceshieldMenuIndex, caption, onconfirm_playerForceshield_menu, NULL, NULL);
 }
@@ -2502,7 +2510,7 @@ void reset_globals(){
 		featurePlayerLife =
 		featurePrison_Hardcore =
 		featureRagdollIfInjured =
-		featureLevitation =
+		//featureLevitation =
 		featureWantedLevelNoPHeli =
 		featureWantedNoPRoadB =
 		featureWantedLevelNoPBoats =
@@ -2789,7 +2797,7 @@ void add_player_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* 
 	results->push_back(FeatureEnabledLocalDefinition{"featurePrison_Robe", &featurePrison_Robe});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePedPrison_Robe", &featurePedPrison_Robe});
 	results->push_back(FeatureEnabledLocalDefinition{"featurePrison_Yard", &featurePrison_Yard});
-	results->push_back(FeatureEnabledLocalDefinition{"featureLevitation", &featureLevitation});
+	//results->push_back(FeatureEnabledLocalDefinition{"featureLevitation", &featureLevitation});
 }
 
 void add_world_feature_enablements3(std::vector<StringPairSettingDBRow>* results)
