@@ -330,6 +330,8 @@ Vehicle hijacking_veh_ror;
 std::vector<Blip> BLIPTABLE_ALPEDS;
 Blip blip_al_peds = -1;
 bool featureRoutineBars = true;
+bool featureDoorLocked = true;
+bool featureIgnition = true;
 float tmp_denominator = 1;
 float tmp_i_denominator = 1;
 Vehicle veh_rnd = -1;
@@ -1749,6 +1751,18 @@ void process_routine_of_ringer_menu() {
 	toggleItem->caption = "Show Progress Bar";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureRoutineBars;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Doors Locked";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureDoorLocked;
+	menuItems.push_back(toggleItem);
+
+	toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "Hot Wire";
+	toggleItem->value = i++;
+	toggleItem->toggleValue = &featureIgnition;
 	menuItems.push_back(toggleItem);
 
 	draw_generic_menu<int>(menuItems, &activeLineIndexRoutineofringer, caption, onconfirm_routineofringer_menu, NULL, NULL);
@@ -4413,8 +4427,8 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 				}
 			}
 
-			if ((VEHICLES_IGNITED.empty() || have_ignited_already == false) && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(veh)) VEHICLES_IGNITED.push_back(veh);
-			if ((VEHICLES_IGNITED.empty() || have_ignited_already == false) && !VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(veh)) {
+			if ((VEHICLES_IGNITED.empty() || have_ignited_already == false) && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(veh) && featureIgnition) VEHICLES_IGNITED.push_back(veh);
+			if ((VEHICLES_IGNITED.empty() || have_ignited_already == false) && !VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(veh) && featureIgnition) {
 				ENTITY::SET_ENTITY_AS_MISSION_ENTITY(veh, true, true);
 				VEHICLE::SET_VEHICLE_ENGINE_ON(veh, false, true, true);
 
@@ -4551,7 +4565,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 					}
 				}
 			}
-			if (MISC_TRAINERCONTROL_VALUES[RingerSkillIndex] == 1 && CONTROLS::IS_CONTROL_PRESSED(2, 23) && breaking_secs_tick > 0) {
+			if (MISC_TRAINERCONTROL_VALUES[RingerSkillIndex] == 1 && CONTROLS::IS_CONTROL_PRESSED(2, 23) && breaking_secs_tick > 0 && featureDoorLocked) {
 				breaking_secs_passed = clock() / CLOCKS_PER_SEC;
 				if (((clock() / CLOCKS_PER_SEC) - breaking_secs_curr) != 0) {
 					breaking_secs_tick = breaking_secs_tick + 1;
@@ -4580,7 +4594,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 					AI::CLEAR_PED_TASKS(playerPed);
 				}
 			}
-
+			
 			if (breaking_secs_tick == 0 && ENTITY::IS_ENTITY_PLAYING_ANIM(playerPed, h_anim_dict, animation_of_h, 3)) AI::STOP_ANIM_TASK(PLAYER::PLAYER_PED_ID(), h_anim_dict, animation_of_h, 1.0);
 
 			if (breaking_secs_tick > 0 || hijacked_vehicle_ror == true) {
@@ -4623,12 +4637,12 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 					}
 
 					if (!ENTITY::IS_ENTITY_A_MISSION_ENTITY(surr_vehs_r[ror]) && !VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(surr_vehs_r[ror]) && !VEHICLE::IS_VEHICLE_DOOR_DAMAGED(surr_vehs_r[ror], 0) &&
-						!VEHICLE::IS_VEHICLE_DOOR_DAMAGED(surr_vehs_r[ror], 1) && me_own_already == false && breaking_secs_tick < tmp_denominator + 1) {
+						!VEHICLE::IS_VEHICLE_DOOR_DAMAGED(surr_vehs_r[ror], 1) && me_own_already == false && breaking_secs_tick < tmp_denominator + 1 && featureDoorLocked) {
 						VEHICLE::SET_VEHICLE_IS_CONSIDERED_BY_PLAYER(surr_vehs_r[ror], false);
 						VEHICLE::SET_VEHICLE_DOORS_LOCKED(surr_vehs_r[ror], 2);
 					}
 					if (ENTITY::IS_ENTITY_A_MISSION_ENTITY(surr_vehs_r[ror]) || VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(surr_vehs_r[ror]) || VEHICLE::IS_VEHICLE_DOOR_DAMAGED(surr_vehs_r[ror], 0) ||
-						VEHICLE::IS_VEHICLE_DOOR_DAMAGED(surr_vehs_r[ror], 1) || me_own_already == true || breaking_secs_tick > tmp_denominator) {
+						VEHICLE::IS_VEHICLE_DOOR_DAMAGED(surr_vehs_r[ror], 1) || me_own_already == true || breaking_secs_tick > tmp_denominator || !featureDoorLocked) {
 						VEHICLE::SET_VEHICLE_IS_CONSIDERED_BY_PLAYER(surr_vehs_r[ror], true);
 						VEHICLE::SET_VEHICLE_DOORS_LOCKED(surr_vehs_r[ror], 0);
 					}
@@ -4845,6 +4859,8 @@ void reset_vehicle_globals() {
 	featureRoutineAnimations = true;
 		featureBlipNumber = true;
 		featureRoutineBars = true;
+		featureDoorLocked = true;
+		featureIgnition = true;
 		featureHazards = true;
 		featureWearHelmetOffUpdated = true;
 		featurePoliceVehicleBlip = true;
@@ -5132,6 +5148,8 @@ void add_vehicle_feature_enablements(std::vector<FeatureEnabledLocalDefinition>*
 	results->push_back(FeatureEnabledLocalDefinition{"featureLimpMode", &featureLimpMode});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRoutineOfRinger", &featureRoutineOfRinger});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRoutineBars", &featureRoutineBars});
+	results->push_back(FeatureEnabledLocalDefinition{"featureDoorLocked", &featureDoorLocked});
+	results->push_back(FeatureEnabledLocalDefinition{"featureIgnition", &featureIgnition});
 	results->push_back(FeatureEnabledLocalDefinition{"featureRoutineAnimations", &featureRoutineAnimations});
 	results->push_back(FeatureEnabledLocalDefinition{"featureShowPedCons", &featureShowPedCons});
 }
