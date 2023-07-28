@@ -320,15 +320,15 @@ void prison_break()
 				if (guards[i] != playerPed && distance_guard_from_center_x < 190 && distance_guard_from_center_y < 200 && npc_skin == true) { // time_before_get_to_prison > 6000
 					if (((ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(guards[i], playerPed, 1) && ENTITY::GET_ENTITY_HEALTH(guards[i]) > 100) || (my_position_in_prison.z - prison_z) > 8) && alert_level < 2 && time_in_prison_tick > 0) alert_level = 1;
 					if (WEAPON::IS_PED_ARMED(playerPed, 7) || (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(guards[i], playerPed, 1) && (PED::GET_PED_TYPE(guards[i]) == 27 || PED::GET_PED_TYPE(guards[i]) == 6))) alert_level = 2;
-					if (PED::IS_PED_DEAD_OR_DYING(guards[i], 1)) {
+					if ((!ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_DEAD_OR_DYING(PLAYER::PLAYER_PED_ID(), 1)) && PED::IS_PED_DEAD_OR_DYING(guards[i], 1)) {
 						if (playerPed == PED::GET_PED_SOURCE_OF_DEATH(guards[i])) {
 							alert_level = 2;
-							ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&guards[i]);
+							//ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&guards[i]);
 						}
 					}
 				}
 			}
-
+			
 			if ((distance_from_center_x > 110 || distance_from_center_y > 130 || PED::IS_PED_SHOOTING(playerPed)) && alert_level < 3 && time_in_prison_tick > 0) alert_level = 2;
 
 			if ((my_position_in_prison.z - prison_z) > 55 || distance_from_center_x > 190 || distance_from_center_y > 200 || PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) alert_level = 3;
@@ -778,6 +778,15 @@ void prison_break()
 			time_since_d > 6000) will_pay_money_for_escape = true;
 		
 		if (detained == false && alert_level == 0) will_pay_money_for_escape = false;
+		
+		if (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) || PED::IS_PED_DEAD_OR_DYING(PLAYER::PLAYER_PED_ID(), 1)) {
+			for (int i = 0; i < count_prison_guards; i++) {
+				if (PED::IS_PED_DEAD_OR_DYING(guards[i], 1)) PED::DELETE_PED(&guards[i]);
+				//ENTITY::DELETE_ENTITY(&guards[i]);
+			}
+			alert_level = 0;
+		}
+		
 	}
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////
