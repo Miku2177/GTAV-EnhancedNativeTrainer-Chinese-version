@@ -1014,7 +1014,28 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("CONADA2"), "candc_2023_01", "conada2" },
 	{ RAGE_JOAAT("GAUNTLET6"), "sssa_dlc_2023_01", "gauntlet6" },
 	{ RAGE_JOAAT("INDUCTOR"), "pandm_dlc_2023_01", "inductor" },
-	{ RAGE_JOAAT("INDUCTOR2"), "pandm_dlc_2023_01", "inductor2" }
+	{ RAGE_JOAAT("INDUCTOR2"), "pandm_dlc_2023_01", "inductor2" },
+	//Xmas 2023 - Chop Shop DLC
+	{ RAGE_JOAAT("BENSON2"), "candc_2023_2", "benson2" },
+	{ RAGE_JOAAT("BOXVILLE6"), "candc_2023_2", "boxville6" },
+	{ RAGE_JOAAT("POLYGAUNTLET"), "candc_2023_2", "polgauntlet" },
+	{ RAGE_JOAAT("POLICE4"), "candc_2023_2", "police4" },
+	{ RAGE_JOAAT("POLICE5"), "candc_2023_2", "police5" },
+	{ RAGE_JOAAT("PRANGER"), "candc_2023_2", "pranger" },
+	{ RAGE_JOAAT("RIOT"), "candc_2023_2", "riot" },
+	{ RAGE_JOAAT("ALEUTIAN"), "lgm_dlc_2023_2", "aleutian" },
+	{ RAGE_JOAAT("BALLER8"), "lgm_dlc_2023_2", "baller8" },
+	{ RAGE_JOAAT("TURISMO3"), "lgm_dlc_2023_2", "turismo3" },
+	{ RAGE_JOAAT("ASTEROPE2"), "sssa_dlc_2023_2", "asterope2" },
+	{ RAGE_JOAAT("CAVALCADE3"), "sssa_dlc_2023_2", "cavalcade3" },
+	{ RAGE_JOAAT("DOMINATOR9"), "sssa_dlc_2023_2", "dominator9" },
+	{ RAGE_JOAAT("DORADO"), "sssa_dlc_2023_2", "dorado" },
+	{ RAGE_JOAAT("FR36"), "sssa_dlc_2023_2", "fr36" },
+	{ RAGE_JOAAT("IMPALER5"), "sssa_dlc_2023_2", "impaler5" },
+	{ RAGE_JOAAT("IMPALER6"), "sssa_dlc_2023_2", "impaler6" },
+	{ RAGE_JOAAT("TERMINUS"), "sssa_dlc_2023_2", "terminus" },
+	{ RAGE_JOAAT("VIGERO3"), "sssa_dlc_2023_2", "vigero3" },
+	{ RAGE_JOAAT("VIVANITE"), "sssa_dlc_2023_2", "vivanite" }
 };
 
 /***
