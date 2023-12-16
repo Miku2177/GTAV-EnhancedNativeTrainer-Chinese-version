@@ -85,6 +85,7 @@ const std::vector<tele_location> LOCATIONS_LANDMARKS = {
 	{ "Cape Catfish Pier", 3866.41f, 4463.61f, 2.72762f },
 	{ "Casino", 926.407f, 46.392f, 80.9041f },
 	{ "Cayo Perico", 4046.79f, -4673.69f, 5.16383f, IPLS_CAYO_PERICO, {}, {}, false }, // 4360.31f, -4561.3f, 5.16383f
+	{ "Chop Shop Cargoship", -399.00000000f, -4115.00000000f, 31.00000000f, { "m23_2_cargoship" }, {}, {}, false },
 	{ "Chumash Historic Family Pier", -3426.683f, 967.738f, 8.347f },
 	{ "Davis Fire Department", 203.00000000f, -1655.57000000f, 28.80310000f},
 	{ "Del Perro Pier", -1850.127f, -1231.751f, 13.017f },
@@ -310,7 +311,8 @@ const std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Casino Carpark", 1380.0000, 200.0000, -50.0000f, { "vw_casino_carpark" }, {}, {}, false },
 	{ "Casino Garage", 1295.0000, 230.0000, -50.0000f, { "vw_casino_garage" }, {}, {}, false },
 	{ "Casino Hotel", 2504.38600000f, -257.21960000f, -40.12296000f, { "ch_int_placement_ch_interior_4_dlc_casino_hotel_milo_" }, {}, {}, false },
-	{ "Casino Loading Bay", 2553.96300000f, -281.38050000f, -65.72305000f, { "ch_int_placement_ch_interior_5_dlc_casino_loading_milo_" }, {}, {}, false },
+	//{ "Casino Loading Bay", 2553.96300000f, -281.38050000f, -65.72305000f, { "ch_int_placement_ch_interior_5_dlc_casino_loading_milo_" }, {}, {}, false },
+	{ "Casino Loading Bay", 858.00000000f, -2275.00000000f, -49.00000000f, { "m23_2_int_placement_m23_2_interior_0_dlc_int_casinobase_milo_ " }, {}, {}, false },
 	{ "Casino Main Hall", 1100.0000f, 220.0000f, -50.0000f, { "vw_casino_main" }, {}, {}, false },
 	{ "Casino Penthouse", 976.6364f, 70.29476f, 115.1641f, { "vw_casino_penthouse" }, {}, { IPLS_CASINO_PENTHOUSE }, false },
 	{ "Casino Shaft", 2572.88800000f, -253.43860000f, -65.65990000f, { "ch_int_placement_ch_interior_9_dlc_casino_shaft_milo_" }, {}, {}, false },
@@ -319,7 +321,11 @@ const std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Cayo Perico Mansion", 5010.101f, -5753.549f, 27.8444f, { "h4_islandx_mansion_office" }, {}, {}, false }, // h4_dlc_island_office
 	{ "CEO Garage Modshop", -77.42f, -827.27f, 285.00f, { "imp_dt1_11_modgarage" }, {}, {}, false }, // 730.0f, -2990.0f, -40.0f // imp_impexp_interior_placement_interior_2_imptexp_mod_int_01_milo_
 	{ "CEO Warehouse", 800.00000000f, -3000.00000000f, -65.00000000f, { "reh_int_placement_sum2_interior_0_dlc_int_03_sum2_milo_" }, {}, { IPL_PROPS_BIKER_UNDERCOVER1 }, false },
-	{ "CEO Warehouse Basement", 850.00000000f, -3000.00000000f, -45.00000000f, { "reh_int_placement_sum2_interior_1_dlc_int_04_sum2_milo_" }, {}, { IPL_PROPS_BIKER_UNDERCOVER1 }, false },
+	{ "CEO Warehouse Basement", 850.00000000f, -3000.00000000f, -48.00000000f, { "reh_int_placement_sum2_interior_1_dlc_int_04_sum2_milo_" }, {}, { IPL_PROPS_BIKER_UNDERCOVER1 }, false },
+	{ "Chop Shop Cargoship Bridge", -397.00000000f, -4121.00000000f, 28.00000000f, { "m23_2_cargoship_bridge" }, {}, {}, false },
+	{ "Chop Shop Warehouse 1", 930.00000000f, -2270.00000000f, -50.00000000f, { "m23_2_int_placement_m23_2_interior_1_int_counterfeit_milo_" }, {}, {}, false },
+	{ "Chop Shop Warehouse 2", 1220.00000000f, -2280.00000000f, -50.00000000f, { "m23_2_int_placement_m23_2_interior_3_int_warehouse_milo_" }, {}, {}, false },
+	{ "Chop Shop Warehouse 3", 1000.00000000f, -2200.00000000f, -50.00000000f, { "m23_2_int_placement_m23_2_interior_7_dlc_int_warehouse2_milo_" }, {}, {}, false },
 	{ "Del Perro Heights Apt 27", -1468.02100000f, -529.94370000f, 49.72156000f, { "hei_hw1_blimp_interior_27_dlc_apart_high_new_milo_" }, {}, {}, false },
 	{ "Del Perro Heights Apt 28", -1468.14f, -541.815f, 73.4442f, {}, {}, {}, false },
 	{ "Eclipse Blvd Garage", 520.0f, -2625.0f, -49.0f, { "xm3_int_placement_xm3_interior_1_dlc_int_02_xm3_milo_" }, {}, {}, false },
@@ -356,6 +362,7 @@ const std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "Penthouse: Style 6", -787.7805f, 334.9232f, 215.8384f, { "apa_v_mp_h_06_a", "apa_v_mp_h_06_b", "apa_v_mp_h_06_c" }, {}, {}, false },
 	{ "Penthouse: Style 7", -787.7805f, 334.9232f, 215.8384f, { "apa_v_mp_h_07_a", "apa_v_mp_h_07_b", "apa_v_mp_h_07_c" }, {}, {}, false },
 	{ "Penthouse: Style 8", -787.7805f, 334.9232f, 215.8384f, { "apa_v_mp_h_08_a", "apa_v_mp_h_08_b", "apa_v_mp_h_08_c" }, {}, {}, false },
+	{ "Red's Autoparts", 1088.00000000f, -2275.00000000f, -50.00000000f, { "m23_2_int_placement_m23_2_interior_2_dlc_int_salvage_milo_" }, {}, {}, false },
 	{ "Richards Majestic Apt 2", -915.811f, -379.432f, 113.675f, {}, {}, {}, false },
 	{ "Richards Majestic Apt 10", -925.54970000f, -374.22030000f, 102.23290000f, { "hw1_blimp_interior_v_apartment_high_milo__10" }, {}, {}, false },
 	{ "Stilthouse 1", 328.5579f, 425.9027f, 147.9707f, { "apa_ch2_04_interior_0_v_mp_stilts_b_milo_" }, {}, {}, false },
