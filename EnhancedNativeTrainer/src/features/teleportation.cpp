@@ -33,6 +33,9 @@ bool featureShowCoords = false;
 bool featureCayoPerico = false;
 int cayo_tick = 0;
 bool perico_init = false;
+bool featureChoshopCargoship = false;
+int chopshop_tick = 0;
+bool chopshop_init = false;
 bool on_island = false;
 
 struct tele_location{
@@ -1370,6 +1373,12 @@ bool process_teleport_menu(int categoryIndex){
 		togItem->toggleValue = &featureCayoPerico;
 		menuItems.push_back(togItem);
 
+		togItem = new ToggleMenuItem<int>();
+		togItem->caption = "Load Chop Shop Cargoship Automatically";
+		togItem->value = 8;
+		togItem->toggleValue = &featureChoshopCargoship;
+		menuItems.push_back(togItem);
+
 		for (int i = 0; i < MENU_LOCATION_CATEGORIES.size(); i++){
 			if (MENU_LOCATION_CATEGORIES[i].compare(JELLMAN_CAPTION) == 0 && !is_jellman_scenery_enabled()){
 				continue;
@@ -1410,6 +1419,7 @@ void reset_teleporter_globals()
 	featureLandAtDestination = true;
 	featureShowCoords = false;
 	featureCayoPerico = false;
+	featureChoshopCargoship = false;
 
 	lastChosenCategory = 0;
 	TelChauffeurIndex = 3;
@@ -1429,6 +1439,7 @@ void add_teleporter_feature_enablements(std::vector<FeatureEnabledLocalDefinitio
 	results->push_back(FeatureEnabledLocalDefinition{"featureTeleportAutomatically", &featureTeleportAutomatically});
 	results->push_back(FeatureEnabledLocalDefinition{"featureLandAtDestination", &featureLandAtDestination});
 	results->push_back(FeatureEnabledLocalDefinition{"featureCayoPerico", &featureCayoPerico});
+	results->push_back(FeatureEnabledLocalDefinition{"featureChoshopCargoship", &featureChoshopCargoship});
 	results->push_back(FeatureEnabledLocalDefinition{"featureShowCoords", &featureShowCoords});
 }
 
@@ -1717,6 +1728,35 @@ void update_teleport_features(){
 	if ((!featureCayoPerico && cayo_tick > 0) || DLC2::GET_IS_LOADING_SCREEN_ACTIVE()) {
 		perico_init = false;
 		cayo_tick = 0;
+	}
+
+	// Load Chop Shop Cargoship Automatically
+	if (featureChoshopCargoship && ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()) && chopshop_init == false)
+	{
+		chopshop_tick = chopshop_tick + 1;
+		if (chopshop_tick > 500) { // 1000
+			for (int i = 0; i < IPLS_CHOPSHOP_CARGOSHIP.size(); i++) {
+				if (!STREAMING::IS_IPL_ACTIVE(IPLS_CHOPSHOP_CARGOSHIP[i]))
+				{
+					STREAMING::REQUEST_IPL(IPLS_CHOPSHOP_CARGOSHIP[i]);
+				}
+			}
+
+			int ChopshopCargointeriorID = INTERIOR::GET_INTERIOR_AT_COORDS(-397.00000000f, -4121.00000000f, 28.00000000f);
+			if (INTERIOR::IS_VALID_INTERIOR(ChopshopCargointeriorID))
+			{
+				INTERIOR::_LOAD_INTERIOR(ChopshopCargointeriorID);
+				STREAMING::SET_INTERIOR_ACTIVE(ChopshopCargointeriorID, true);
+				INTERIOR::DISABLE_INTERIOR(ChopshopCargointeriorID, false);
+				if (INTERIOR::IS_INTERIOR_CAPPED(ChopshopCargointeriorID)) INTERIOR::CAP_INTERIOR(ChopshopCargointeriorID, 0);
+				INTERIOR::REFRESH_INTERIOR(ChopshopCargointeriorID);
+			}
+			chopshop_init = true;
+		}
+	}
+	if ((!featureChoshopCargoship && chopshop_tick > 0) || DLC2::GET_IS_LOADING_SCREEN_ACTIVE()) {
+		chopshop_init = false;
+		chopshop_tick = 0;
 	}
 
 	// Hiding GTA Online apartment glitchy exteriors

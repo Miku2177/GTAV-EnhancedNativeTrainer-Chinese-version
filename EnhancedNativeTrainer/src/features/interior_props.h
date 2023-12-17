@@ -611,6 +611,11 @@ const std::vector<const char*> IPLS_CAYO_PERICO = {
 	"sum_lost_yacht_int",
 };
 
+const std::vector<const char*> IPLS_CHOPSHOP_CARGOSHIP = {
+	"m23_2_cargoship",
+	"m23_2_cargoship_bridge"
+};
+
 const std::vector<char*> IPLS_MUSIC_LOCKER = {
 "dj_02_lights_01",
 "dj_02_lights_02",
