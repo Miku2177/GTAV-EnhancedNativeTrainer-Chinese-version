@@ -392,17 +392,26 @@ void airbrake(bool inVehicle)
 			curHeading = ENTITY::GET_ENTITY_HEADING(target);
 		}
 		
-		if (rotateLeftKey && !(moveUpKey)) { // MoveLeftOnly
+		if (rotateLeftKey && !(moveUpKey) && !(SpaceKey)) { // MoveLeftOnly
 			curHeading = ENTITY::GET_ENTITY_HEADING(target);
 			curHeading = curHeading + 3;
 			ENTITY::SET_ENTITY_HEADING(target, curHeading);
 		}
-		if (rotateRightKey) { // MoveRightOnly
+		if (rotateRightKey && !(SpaceKey)) { // MoveRightOnly
 			curHeading = ENTITY::GET_ENTITY_HEADING(target);
 			curHeading = curHeading - 3;
 			ENTITY::SET_ENTITY_HEADING(target, curHeading);
 		}
-		
+		if (rotateLeftKey && !(moveUpKey) && (SpaceKey)) {
+			curLocation.x += (forwardPush * sin(degToRad(CamRot.z + 90)) * -1.0f);
+			curLocation.y += (forwardPush * cos(degToRad(CamRot.z + 90)));
+			ENTITY::SET_ENTITY_COORDS_NO_OFFSET(target, curLocation.x, curLocation.y, curLocation.z - 0.6, 1, 1, 1);
+		}
+		if (rotateRightKey && (SpaceKey)) {
+			curLocation.x += (forwardPush * sin(degToRad(CamRot.z - 90)) * -1.0f);
+			curLocation.y += (forwardPush * cos(degToRad(CamRot.z - 90)));
+			ENTITY::SET_ENTITY_COORDS_NO_OFFSET(target, curLocation.x, curLocation.y, curLocation.z - 0.6, 1, 1, 1);
+		}
 		if (!moveForwardKey && !moveBackKey && !rotateLeftKey && !rotateRightKey && !moveUpKey && !moveDownKey) ENTITY::FREEZE_ENTITY_POSITION(target, true);
 		if (moveUpKey) { // Q
 			if (travelSpeed == 0) p_force = forwardPush * 10;
