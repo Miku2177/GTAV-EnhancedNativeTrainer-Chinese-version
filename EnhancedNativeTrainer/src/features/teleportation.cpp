@@ -1374,7 +1374,7 @@ bool process_teleport_menu(int categoryIndex){
 		menuItems.push_back(togItem);
 
 		togItem = new ToggleMenuItem<int>();
-		togItem->caption = "Load Chop Shop Cargoship Automatically";
+		togItem->caption = "Load Extra Map Stuff Automatically";
 		togItem->value = 8;
 		togItem->toggleValue = &featureChoshopCargoship;
 		menuItems.push_back(togItem);
@@ -1661,26 +1661,15 @@ void update_teleport_features(){
 				}
 			}
 
-			int CayointeriorID = INTERIOR::GET_INTERIOR_AT_COORDS(4439.82300000f, -4461.71700000f, 4.699768f); // 5010.101f, -5753.549f, 27.8444f
-			if (INTERIOR::IS_VALID_INTERIOR(CayointeriorID))
-			{
-				INTERIOR::_LOAD_INTERIOR(CayointeriorID);
-				STREAMING::SET_INTERIOR_ACTIVE(CayointeriorID, true);
-				INTERIOR::DISABLE_INTERIOR(CayointeriorID, false);
-				if (INTERIOR::IS_INTERIOR_CAPPED(CayointeriorID)) INTERIOR::CAP_INTERIOR(CayointeriorID, 0);
-				//for (int j = 0; j < IPLS_CAYO_PERICO_PROPS.size(); j++) {
-					//if (sizeof(IPLS_CAYO_PERICO_PROPS) > 0) {
-					//	for each (char* prop in IPLS_CAYO_PERICO_PROPS) {
-					//		if (!INTERIOR::_IS_INTERIOR_PROP_ENABLED(CayointeriorID, prop))
-					//		{
-				//				INTERIOR::_ENABLE_INTERIOR_PROP(CayointeriorID, IPLS_CAYO_PERICO_PROPS[j]);
-				//				INTERIOR::_SET_INTERIOR_ENTITY_SET_COLOR(CayointeriorID, IPLS_CAYO_PERICO_PROPS[j], 1);
-					//		}
-					//	}
-					//}
-				//}
-				INTERIOR::REFRESH_INTERIOR(CayointeriorID);
-			}
+			//int CayointeriorID = INTERIOR::GET_INTERIOR_AT_COORDS(4439.82300000f, -4461.71700000f, 4.69976800f); // 5010.101f, -5753.549f, 27.8444f
+			//if (INTERIOR::IS_VALID_INTERIOR(CayointeriorID))
+			//{
+			//	INTERIOR::_LOAD_INTERIOR(CayointeriorID);
+			//	STREAMING::SET_INTERIOR_ACTIVE(CayointeriorID, true);
+			//	INTERIOR::DISABLE_INTERIOR(CayointeriorID, false);
+			//	if (INTERIOR::IS_INTERIOR_CAPPED(CayointeriorID)) INTERIOR::CAP_INTERIOR(CayointeriorID, 0);
+			//	INTERIOR::REFRESH_INTERIOR(CayointeriorID);
+			//}
 			perico_init = true;
 		}
 	}
@@ -1688,9 +1677,7 @@ void update_teleport_features(){
 		Vector3 my_coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 0);
 		float Cayo_dist_diff = SYSTEM::VDIST(my_coords.x, my_coords.y, my_coords.z, 4840.571, -5174.425, 2.0);
 
-		//if (my_coords.x > 3532.21 && my_coords.x < 5813.77 && my_coords.y > -6244.41 && my_coords.y < -4021.09) {
 		if (Cayo_dist_diff < 1200) { // 2000
-			//WATER::_SET_WAVES_INTENSITY(-100000000); // -400000 // GAMEPLAY::_0xC54A08C85AE4D410(1.0f);
 			OBJECT::_DOOR_CONTROL(GAMEPLAY::GET_HASH_KEY("h4_prop_h4_gate_l_03a"), 4987.587f, -5718.635f, 20.78103f, 0, 0.0, 50.0, 0);
 			OBJECT::_DOOR_CONTROL(GAMEPLAY::GET_HASH_KEY("h4_prop_h4_gate_r_03a"), 4990.681f, -5715.106f, 20.78103f, 0, 0.0, 50.0, 0);
 			OBJECT::_DOOR_CONTROL(GAMEPLAY::GET_HASH_KEY("h4_prop_h4_gate_l_03a"), 4984.134f, -5709.249f, 20.78103f, 0, 0.0, 50.0, 0);
@@ -1702,20 +1689,13 @@ void update_teleport_features(){
 			OBJECT::_DOOR_CONTROL(GAMEPLAY::GET_HASH_KEY("h4_prop_h4_door_03a"), 5085.588f, -5733.124f, 15.9526f, 0, 0.0, 50.0, 0);
 			OBJECT::_DOOR_CONTROL(GAMEPLAY::GET_HASH_KEY("h4_prop_h4_door_03a"), 5082.088f, -5737.809f, 15.9526f, 0, 0.0, 50.0, 0);
 
-			/*INTERIOR::_0xF74B1FFA4A15FBEA(true);
-			INTERIOR::_0x53797676AD34A9AA(false);
-			INTERIOR::_0XDD3D5F9CA0C715D0(true);
-			AI::SET_SCENARIO_GROUP_ENABLED("Heist_Island_Peds", 1);
-			AI::SET_SCENARIO_GROUP_ENABLED("Heist_Island_Peds_2", 1);*/
 			AUDIO::SET_STATIC_EMITTER_ENABLED("se_dlc_hei4_island_beach_party_music_new_01_left", true);
 			AUDIO::SET_STATIC_EMITTER_ENABLED("se_dlc_hei4_island_beach_party_music_new_02_right", true);
-
 			AUDIO::SET_AMBIENT_ZONE_LIST_STATE_PERSISTENT("AZL_DLC_Hei4_Island_Zones", true, true);
 			AUDIO::SET_AMBIENT_ZONE_LIST_STATE_PERSISTENT("AZL_DLC_Hei4_Island_Disabled_Zones", false, true);
 			if (WORLD_WAVES_VALUES[WorldWavesIndex] == -1) WATER::_SET_WAVES_INTENSITY(0.1); // it doesn't allow waves to clip through the surface
 			on_island = true;
 		}
-		//if ((my_coords.x < 3532.21 || my_coords.x > 5813.77 || my_coords.y < -6244.41 || my_coords.y > -4021.09) && on_island == true) {
 		if (Cayo_dist_diff >= 1200 && on_island == true) { // 2000
 			AUDIO::SET_AMBIENT_ZONE_LIST_STATE_PERSISTENT("AZL_DLC_Hei4_Island_Zones", false, false);
 			AUDIO::SET_AMBIENT_ZONE_LIST_STATE_PERSISTENT("AZL_DLC_Hei4_Island_Disabled_Zones", false, false);
@@ -1730,35 +1710,54 @@ void update_teleport_features(){
 		cayo_tick = 0;
 	}
 
-	// Load Chop Shop Cargoship Automatically
+	// Load Extra Map Stuff Automatically
 	if (featureChoshopCargoship && ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()) && chopshop_init == false)
 	{
 		chopshop_tick = chopshop_tick + 1;
 		if (chopshop_tick > 500) { // 1000
-			for (int i = 0; i < IPLS_CHOPSHOP_CARGOSHIP.size(); i++) {
-				if (!STREAMING::IS_IPL_ACTIVE(IPLS_CHOPSHOP_CARGOSHIP[i]))
-				{
-					STREAMING::REQUEST_IPL(IPLS_CHOPSHOP_CARGOSHIP[i]);
+			std::string tmp_s_row;
+			int tmp_s_counter = 0;
+			for (int k = 0; k < MAP_STUFF.size(); k++) {
+				if (MAP_STUFF[k] != *" ") {
+					tmp_s_row = tmp_s_row + MAP_STUFF[k];
 				}
-			}
+				if (MAP_STUFF[k] == *" " || (k == (MAP_STUFF.size() - 1))) {
+					tmp_s_counter = tmp_s_counter + 1;
 
-			int ChopshopCargointeriorID = INTERIOR::GET_INTERIOR_AT_COORDS(-397.00000000f, -4121.00000000f, 28.00000000f);
-			if (INTERIOR::IS_VALID_INTERIOR(ChopshopCargointeriorID))
-			{
-				INTERIOR::_LOAD_INTERIOR(ChopshopCargointeriorID);
-				STREAMING::SET_INTERIOR_ACTIVE(ChopshopCargointeriorID, true);
-				INTERIOR::DISABLE_INTERIOR(ChopshopCargointeriorID, false);
-				if (INTERIOR::IS_INTERIOR_CAPPED(ChopshopCargointeriorID)) INTERIOR::CAP_INTERIOR(ChopshopCargointeriorID, 0);
-				INTERIOR::REFRESH_INTERIOR(ChopshopCargointeriorID);
+					std::string tmp_str = tmp_s_row;
+					const char* tmp_s = tmp_str.c_str();
+					if (!STREAMING::IS_IPL_ACTIVE(tmp_s))
+					{
+						STREAMING::REQUEST_IPL(tmp_s);
+					}
+					
+					tmp_s_row = "";
+				}
 			}
 			chopshop_init = true;
 		}
 	}
 	//if (featureChoshopCargoship && ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()) && chopshop_init == true) {
 	//	Vector3 my_coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 0);
-	//	float ChopCargo_dist_diff = SYSTEM::VDIST(my_coords.x, my_coords.y, my_coords.z, -400.0109f, -4124.138f, 24.34268f);
-	//	if (ChopCargo_dist_diff < 100) { // 2000
-	//	
+	//	//	float ChopCargo_dist_diff = SYSTEM::VDIST(my_coords.x, my_coords.y, my_coords.z, -400.0109f, -4124.138f, 24.34268f);
+	//	//	if (ChopCargo_dist_diff < 10) { // 2000
+	//	float MichaelBalcony_dist_diff = SYSTEM::VDIST(my_coords.x, my_coords.y, my_coords.z, -816.8055f, 177.0992f, 77.14575f);
+	//	if (MichaelBalcony_dist_diff < 10) { // 2000
+	//		OBJECT::_DOOR_CONTROL(GAMEPLAY::GET_HASH_KEY("prop_door_balcony_right"), -8.074844f, 5.368828f, 5.982437f, 0, 0.0, 50.0, 0);
+	//		OBJECT::_DOOR_CONTROL(GAMEPLAY::GET_HASH_KEY("prop_door_balcony_right"), -807.343f, 174.9807f, 71.0f, 0, 0.0, 50.0, 0);
+	//		OBJECT::_DOOR_CONTROL(GAMEPLAY::GET_HASH_KEY("prop_door_balcony_right"), -816.8055f, 177.0992f, 77.14575f, 0, 0.0, 50.0, 0);
+	//		
+	//		OBJECT::_DOOR_CONTROL(GAMEPLAY::GET_HASH_KEY("prop_door_balcony_left"), -8.074419f, 7.334337f, 5.98529f, 0, 0.0, 50.0, 0);
+	//		OBJECT::_DOOR_CONTROL(GAMEPLAY::GET_HASH_KEY("prop_door_balcony_left"), -807.343f, 174.9807f, 71.0f, 0, 0.0, 50.0, 0);
+	//		OBJECT::_DOOR_CONTROL(GAMEPLAY::GET_HASH_KEY("prop_door_balcony_left"), -817.5095f, 178.9343f, 77.14861f, 0, 0.0, 50.0, 0);
+	//
+	//		std::stringstream ss55;
+	//		ss55 << "\n MichaelBalcony_dist_diff: " << MichaelBalcony_dist_diff;
+	//		//ss55 << "\n temp_bodyguard: " << temp_bodyguard;
+	//		//ss55 << "\n dist_diff: " << dist_diff;
+	//		//ss55 << "\n temp_dist: " << temp_dist;
+	//		callsPerFrame = 0;
+	//		set_status_text_centre_screen(ss55.str());
 	//	}
 	//}
 	if ((!featureChoshopCargoship && chopshop_tick > 0) || DLC2::GET_IS_LOADING_SCREEN_ACTIVE()) {

@@ -49,6 +49,9 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 std::string C_WEATHER_C;
 
+// Load Map Stuff Automatically
+std::string MAP_STUFF;
+
 bool player_died = false;
 bool npc_player_died = false;
 

@@ -76,6 +76,9 @@ extern int myENTGroup;
 
 extern std::string C_WEATHER_C;
 
+// Load Map Stuff Automatically
+extern std::string MAP_STUFF;
+
 const std::vector<std::string> LIMP_IF_INJURED_CAPTIONS{ "OFF", "Mode 1", "Mode 2" }; //Limp If Injured
 
 //Ensures numbers are formatted with commas, not the locale option
