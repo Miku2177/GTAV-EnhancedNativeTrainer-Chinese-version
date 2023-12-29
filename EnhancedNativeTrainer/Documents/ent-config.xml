@@ -165,4 +165,47 @@
     <station x_coord="-67" y_coord="-2532" z_coord="6"/>
 </gas_stations>
 
+<!--Map Stuff List-->
+ <map_stuff_list>
+    <stuff sname="m23_2_cargoship"/>
+    <stuff sname="m23_2_cargoship_bridge"/>
+	<stuff sname="sf_yacht_02"/>
+	<disabled_stuff sname="sf_yacht_02_int"/>
+	<stuff sname="sum_lost_yacht"/>
+	<disabled_stuff sname="sum_lost_yacht_int"/>
+	<disabled_stuff sname="hei_yacht_heist"/>
+	<disabled_stuff sname="hei_gta_milo_enginrm"/>
+	<disabled_stuff sname="hei_gta_milo_bedrm"/>
+	<disabled_stuff sname="hei_gta_milo_bar"/>
+	<disabled_stuff sname="hei_gta_milo_bridge"/>
+	<stuff sname="apa_yacht_grp04_3"/>
+	<disabled_stuff sname="apa_yacht_grp04_3_int"/>
+	<disabled_stuff sname="hei_carrier"/>
+	<disabled_stuff sname="hei_int_mph_carrierhang3"/>
+	<disabled_stuff sname="hei_int_mph_carrierhang2"/>
+	<disabled_stuff sname="hei_int_mph_carrierupper"/>
+	<disabled_stuff sname="hei_int_mph_carriercontrol1"/>
+	<disabled_stuff sname="hei_int_mph_carriercontrol2"/>
+	<disabled_stuff sname="apa_yacht_grp04_1"/>
+	<disabled_stuff sname="apa_yacht_grp04_1_int"/>
+	<disabled_stuff sname="sf_yacht_01"/>
+	<disabled_stuff sname="sf_yacht_01_int"/>
+	<disabled_stuff sname="apa_yacht_grp04_2"/>
+	<disabled_stuff sname="apa_yacht_grp04_2_int"/>
+	<disabled_stuff sname="apa_yacht_grp05_3"/>
+	<disabled_stuff sname="apa_yacht_grp05_3_int"/>
+	<disabled_stuff sname="apa_yacht_grp05_1"/>
+	<disabled_stuff sname="apa_yacht_grp05_1_int"/>
+	<disabled_stuff sname="apa_yacht_grp05_2"/>
+	<disabled_stuff sname="apa_yacht_grp05_2_int"/>
+	<disabled_stuff sname="h4_islandx_yacht_01"/>
+	<disabled_stuff sname="h4_islandx_yacht_01_int"/>
+	<disabled_stuff sname="apa_yacht_grp06_1"/>
+	<disabled_stuff sname="apa_yacht_grp06_1_int"/>
+	<disabled_stuff sname="apa_yacht_grp06_3"/>
+	<disabled_stuff sname="apa_yacht_grp06_3_int"/>
+	<disabled_stuff sname="apa_yacht_grp06_2"/>
+	<disabled_stuff sname="apa_yacht_grp06_2_int"/>
+ </map_stuff_list>
+
 </ent-config>

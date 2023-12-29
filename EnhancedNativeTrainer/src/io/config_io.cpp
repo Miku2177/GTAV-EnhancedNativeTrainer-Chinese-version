@@ -194,6 +194,41 @@ void read_config_file(){
 		node->Release();
 	}
 
+	// extra map stuff list
+	nodes = spXMLDoc->selectNodes(L"//ent-config/map_stuff_list/stuff");
+	nodes->get_length(&length);
+	for (int i = 0; i < length; i++) {
+		IXMLDOMNode* node;
+		nodes->get_item(i, &node);
+		IXMLDOMNamedNodeMap* attribs;
+		node->get_attributes(&attribs);
+
+		long length_attribs;
+		attribs->get_length(&length_attribs);
+
+		char* map_stuff = NULL;
+		
+		for (long j = 0; j < length_attribs; j++) {
+			IXMLDOMNode* attribNode;
+			attribs->get_item(j, &attribNode);
+			attribNode->get_nodeName(&keyconf_bstr);
+			if (wcscmp(keyconf_bstr, L"sname") == 0) {
+				VARIANT var;
+				VariantInit(&var);
+				attribNode->get_nodeValue(&var);
+				map_stuff = _com_util::ConvertBSTRToString(V_BSTR(&var));
+				MAP_STUFF = MAP_STUFF + map_stuff + " ";
+			}
+			SysFreeString(keyconf_bstr);
+			attribNode->Release();
+		}
+
+		delete map_stuff;
+		
+		attribs->Release();
+		node->Release();
+	}
+
 	// weather list
 	nodes = spXMLDoc->selectNodes(L"//ent-config/weather_list/weather");
 	nodes->get_length(&length);

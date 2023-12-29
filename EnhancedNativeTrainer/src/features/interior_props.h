@@ -458,7 +458,7 @@ const std::vector<const char*> IPLS_CAYO_PERICO = {
 	"h4_islandairstrip_props_slod",
 	"h4_islandairstrip_slod",
 	"h4_mph4_airstrip",
-	"h4_mph4_airstrip_interior_0_airstrip_hanger",
+	//"h4_mph4_airstrip_interior_0_airstrip_hanger",
 	//
 	"h4_airstrip_hanger",
 	"h4_mph4_air_airstrip_02",
@@ -607,8 +607,8 @@ const std::vector<const char*> IPLS_CAYO_PERICO = {
 	"h4_islandx_placement_09",
 	"h4_islandx_placement_10",
 	"h4_mph4_island_placement",
-	"sum_lost_yacht",
-	"sum_lost_yacht_int",
+	//"sum_lost_yacht",
+	//"sum_lost_yacht_int",
 };
 
 const std::vector<const char*> IPLS_CHOPSHOP_CARGOSHIP = {
