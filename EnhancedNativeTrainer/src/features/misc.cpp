@@ -171,6 +171,8 @@ bool PhoneFreeSecondsChanged = true;
 int PhoneBikeAnimationIndex = 0;
 bool PhoneBikeAnimationChanged = true;
 
+int missing_station = 0;
+
 // Default Menu Tab
 int DefMenuTabIndex = 0;
 bool DefMenuTabChanged = true;
@@ -1906,25 +1908,34 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	//Enable's 1.44's new radio station. Credit goes to Sjaak for finding this!
 	if (featureEnableMissingRadioStation)
 	{
-		int version = getGameVersion();
-		if ((version > 41 || version == -1))
-		{
-			if (!iterated_radio_stations)
+		if (!iterated_radio_stations) missing_station = missing_station + 1;
+		if (missing_station > 300) { // 1000
+			int version = getGameVersion();
+			if ((version > 41 || version == -1))
 			{
-				for (int i = 0; i < 100; i++)
+				//if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) && !iterated_radio_stations)
+				if (!iterated_radio_stations)
 				{
-					char* radio_station = AUDIO::GET_RADIO_STATION_NAME(i);
-					UNK3::_LOCK_RADIO_STATION(radio_station, 0);
+					for (int i = 0; i < 100; i++)
+					{
+						char* radio_station = AUDIO::GET_RADIO_STATION_NAME(i);
+						UNK3::_LOCK_RADIO_STATION(radio_station, 0);
+					}
+					WAIT(1000);
+					iterated_radio_stations = true;
 				}
-				WAIT(1000);
-				iterated_radio_stations = true;
+			}
+			else
+			{
+				set_status_text("Game version outdated. This requires 1.44 onwards to function!");
+				featureEnableMissingRadioStation = false;
 			}
 		}
-		else
-		{
-			set_status_text("Game version outdated. This requires 1.44 onwards to function!");
-			featureEnableMissingRadioStation = false;
-		}
+	}
+	if (!featureEnableMissingRadioStation)
+	{
+		iterated_radio_stations = false;
+		missing_station = 0;
 	}
 
 	if (sfilter_enabled == false && screenfltr != "DEFAULT" && screenfltr != "") {
