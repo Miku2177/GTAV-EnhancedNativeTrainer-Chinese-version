@@ -14,6 +14,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\ui_support\menu_functions.h"
 #include <Psapi.h>
 #include <Windows.h>
+#include "misc.h"
 
 /* Begin Snow related globals */
 bool VehicleTracks;
@@ -2065,48 +2066,14 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 	}
 }
 
-	/* Snow related code -Will be moved into utils*/
+	/* Snow related code */
 	/* Thanks to Sjaak for the help/code */
 
 	//Copyright (C) GTA:Multiplayer Team (https://wiki.gta-mp.net/index.php/Team)
 
-	void writeJmp(BYTE * pFrom, BYTE * pTo)
-	{
-		DWORD protect;
-		VirtualProtect(pFrom, 16, PAGE_EXECUTE_READWRITE, &protect);
-		pFrom[0] = 0x48;  // mov rax, func
-		pFrom[1] = 0xB8;
-		*reinterpret_cast<BYTE **>(&pFrom[2]) = pTo;
-		pFrom[10] = 0x50; // push rax
-		pFrom[11] = 0xC3; // ret
-		VirtualProtect(pFrom, 16, protect, &protect);
-	}
-
-	
-	intptr_t FindSnowPattern(const char* bMask, const char* sMask)
-	{
-		// Game Base & Size
-		static intptr_t pGameBase = (intptr_t)GetModuleHandle(nullptr);
-		static uint32_t pGameSize = 0;
-		if (!pGameSize)
-		{
-			MODULEINFO info;
-			GetModuleInformation(GetCurrentProcess(), (HMODULE)pGameBase, &info, sizeof(MODULEINFO));
-			pGameSize = info.SizeOfImage;
-		}
-
-		// Scan
-		for (uint32_t i = 0; i < pGameSize; i++)
-			if (CompareMemory((uint8_t*)(pGameBase + i), (uint8_t*)bMask, sMask))
-				return pGameBase + i;
-
-		return 0;
-	}
-
-
 	void EnableTracks(bool tracksVehicle = false, bool tracksPeds = false, bool deepTracksVehicle = false, bool deepTracksPed = false)
 	{
-		static auto VAR_FeetSnowTracks_call = FindSnowPattern("\x80\x3D\x00\x00\x00\x00\x00\x48\x8B\xD9\x74\x37", "xx?????xxxxx");
+		static auto VAR_FeetSnowTracks_call = FindPatternJACCO("\x80\x3D\x00\x00\x00\x00\x00\x48\x8B\xD9\x74\x37", "xx?????xxxxx");
 
 		if (!VAR_FeetSnowTracks_call)
 		{
@@ -2114,7 +2081,7 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 		}
 		static auto VAR_FeetSnowTracks = VAR_FeetSnowTracks_call + (*(int32_t *)(VAR_FeetSnowTracks_call + 2)) + 7;
 		
-		static auto VAR_VehicleSnowTracks_call = FindSnowPattern("\x40\x38\x3D\x00\x00\x00\x00\x48\x8B\x42\x20", "xxx????xxxx");
+		static auto VAR_VehicleSnowTracks_call = FindPatternJACCO("\x40\x38\x3D\x00\x00\x00\x00\x48\x8B\x42\x20", "xxx????xxxx");
 
 		if (!VAR_VehicleSnowTracks_call)
 		{
@@ -2130,7 +2097,7 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 		*(uint8_t *)VAR_VehicleSnowTracks = tracksPeds;
 
 		// Switch for big/small tracks
-		static auto vehicleTrackTypes = FindSnowPattern("\xB9\x00\x00\x00\x00\x84\xC0\x44\x0F\x44\xF1", "x????xxxxxx");
+		static auto vehicleTrackTypes = FindPatternJACCO("\xB9\x00\x00\x00\x00\x84\xC0\x44\x0F\x44\xF1", "x????xxxxxx");
 		if (!vehicleTrackTypes)
 		{
 			return;
@@ -2139,7 +2106,7 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 		VirtualProtect((void*)vehicleTrackTypes, 1, PAGE_EXECUTE_READWRITE, nullptr);
 		*(uint8_t *)(vehicleTrackTypes + 1) = deepTracksVehicle ? 0x13 : 0x14;
 
-		static auto pedTrackTypes = FindSnowPattern("\xB9\x00\x00\x00\x00\x84\xC0\x0F\x44\xD9\x48\x8B\x4F\x30", "x????xxxxxxxxx");
+		static auto pedTrackTypes = FindPatternJACCO("\xB9\x00\x00\x00\x00\x84\xC0\x0F\x44\xD9\x48\x8B\x4F\x30", "x????xxxxxxxxx");
 		if (!pedTrackTypes)
 		{
 			return;
@@ -2150,119 +2117,19 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 
 	// Snow
 	void EnableSnow(bool featureSnow) {
-		
-		if (featureSnow)
-			EnableTracks(VehicleTracks, PedTracks, VehicleTrackDepth, PedTrackDepth);
-		else
-			EnableTracks();
-
-		// Addresses
-		static auto addr1 = FindSnowPattern("\x80\x3D\x00\x00\x00\x00\x00\x74\x27\x84\xC0", "xx?????xxxx");
-		static auto addr2 = FindSnowPattern("\x44\x38\x3D\x00\x00\x00\x00\x74\x0F", "xxx????xx");
-
-		// Outdated
-		// In future the patterns might change
-		static bool bUseAddr4 = false;
-		if (!addr1)
+				
+		if (featureSnow) 
 		{
-			static auto addr3 = FindSnowPattern("\x40\x38\x35\x00\x00\x00\x00\x74\x18\x84\xdb\x74\x14", "xxx????xxxxxx");
-			if (!addr3)
-			{
-				static auto addr4 = FindSnowPattern("\x80\x3D\x00\x00\x00\x00\x00\x74\x25\xB9\x40\x00\x00\x00", "xx????xxxxxxxx");
-				if (!addr4)
-				{
-					set_status_text("~r~ Error (1): Cannot enable Snow on this version of GTA V");
-					IsSnow = false;
-					return;
-				}
-				else
-				{
-					addr1 = addr4;
-					bUseAddr4 = true;
-				}
-			}
-			else
-			{
-				addr1 = addr3;
-			}
-		}
-		static bool bUseAddr5 = false;
-		if (!addr2)
-		{
-			static auto addr5 = FindSnowPattern("\x44\x38\x3D\x00\x00\x00\x00\x74\x1D\xB9\x40\x00\x00\x00", "xxx????xxxxxxx");
-			if (!addr5)
-			{
-				set_status_text("~r~ Error (2): Cannot enable Snow on this version of GTA V");
-				IsSnow = false;
-				return;
-			}
-			else
-			{
-				addr2 = addr5;
-				bUseAddr5 = true;
-			}
-		}
-
-		// Original Memory
-		static uint8_t original1[14] = { 0 };
-		static uint8_t original2[15] = { 0 };
-
-		// Initialize
-		static bool bInitialized = false;
-		if (!bInitialized)
-		{
-			bInitialized = true;
-
-			// Unprotect Memory
-			VirtualProtect((void*)addr1, 13, PAGE_EXECUTE_READWRITE, nullptr);
-			VirtualProtect((void*)addr2, 14, PAGE_EXECUTE_READWRITE, nullptr);
-
-			// Copy original Memory
-			memcpy(&original1, (void*)addr1, 13);
-			memcpy(&original2, (void*)addr2, 14);
-		}
-		if (featureSnow)
-		{
-			snow_e = true;
-
-			// Weather
-			GAMEPLAY::SET_WEATHER_TYPE_NOW_PERSIST("XMAS");
-
-			// NOP checks
-			if (!bUseAddr4)
-			{
-				memset((void*)addr1, 0x90, 13);
-			}
-			else
-			{
-				writeJmp((BYTE *)addr1, (BYTE *)addr1 + 0x1B);	// takes 12 bytes
-			}
-
-			if (!bUseAddr5)
-			{
-				memset((void*)addr2, 0x90, 14);
-			}
-			else
-			{
-				writeJmp((BYTE *)addr2, (BYTE *)addr2 + 0x1C);
-			}
-
-			// Notification
+			GRAPHICS::_FORCE_GROUND_SNOW_PASS(TRUE);
+			EnableTracks(TRUE, TRUE, TRUE, TRUE);
 			set_status_text("Snow Enabled");
 		}
 		else
 		{
-			// Copy original memory
-			memcpy((void*)addr1, &original1, 13);
-			memcpy((void*)addr2, &original2, 14);
-
-			// Weather
-			if (snow_e == true) {
-				GAMEPLAY::CLEAR_WEATHER_TYPE_PERSIST();
-				GAMEPLAY::SET_WEATHER_TYPE_NOW("CLEAR");
-				// Notification
-				set_status_text("Snow Disabled");
-				snow_e = false;
-			}
+			GRAPHICS::_FORCE_GROUND_SNOW_PASS(FALSE);
+			EnableTracks();
+			GAMEPLAY::CLEAR_WEATHER_TYPE_PERSIST();
+			GAMEPLAY::SET_WEATHER_TYPE_NOW("CLEAR");
+			set_status_text("Snow Disabled");
 		}
 	}

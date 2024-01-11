@@ -2170,7 +2170,6 @@ bool process_player_forceshield_menu() {
 
 	std::vector<MenuItem<int> *> menuItems;
 	SelectFromListMenuItem *listItem;
-	ToggleMenuItem<int>* toggleItem;
 	MenuItem<int> *item;
 
 	int i = 0;
