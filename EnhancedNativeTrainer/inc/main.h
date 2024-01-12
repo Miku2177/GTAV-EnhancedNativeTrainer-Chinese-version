@@ -113,7 +113,9 @@ IMPORT int worldGetAllPickups(int *arr, int arrSize);
 // make sure that you check game version before accessing object fields because
 // offsets may differ between patches
 IMPORT BYTE *getScriptHandleBaseAddress(int handle);
+#
 
+//https://github.com/pnwparksfan/gameconfig/blob/master/versions/2802/gameconfig.xml
 enum eGameVersion: int{
 	VER_1_0_335_2_STEAM,      // 00
 	VER_1_0_335_2_NOSTEAM,    // 01
@@ -223,9 +225,17 @@ enum eGameVersion: int{
 	VER_1_0_2372_0_NOSTEAM,	  //72
 	VER_1_0_2372_0_EGS,		  //73
 
-	VER_1_0_2802_0_STEAM = 87,//71
-	VER_1_0_2802_0_NOSTEAM,	  //72
-	VER_1_0_2802_0_EGS,		  //73
+	VER_1_0_2802_0_STEAM = 87,
+	VER_1_0_2802_0_NOSTEAM,	  
+	VER_1_0_2802_0_EGS,		 
+
+	VER_1_0_2944_0_STEAM,
+	VER_1_0_2944_0_NOSTEAM,	  
+	VER_1_0_2944_0_EGS,	
+
+	VER_1_0_3095_0_STEAM,
+	VER_1_0_3095_0_NOSTEAM,
+	VER_1_0_3095_0_EGS,
 
 	VER_SIZE,
 	VER_UNK = 255
