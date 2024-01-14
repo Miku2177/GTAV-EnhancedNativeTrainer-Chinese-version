@@ -1055,6 +1055,12 @@ void HUD_switching() {
 	WAIT(100);
 }
 
+void Traffic_switching() {
+	featureWorldNoTraffic = !featureWorldNoTraffic;
+	featureWorldNoTrafficUpdated = !featureWorldNoTrafficUpdated;
+	WAIT(100);
+}
+
 void reset_misc_globals(){
 	featureMiscHideHud =
 		featurePhoneShowHud = 

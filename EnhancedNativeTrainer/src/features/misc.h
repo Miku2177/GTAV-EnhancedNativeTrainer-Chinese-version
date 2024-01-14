@@ -114,6 +114,8 @@ void set_hud_hidden(bool hidden);
 
 void HUD_switching();
 
+void Traffic_switching();
+
 bool is_jellman_scenery_enabled();
 
 extern bool radio_v_checked;
