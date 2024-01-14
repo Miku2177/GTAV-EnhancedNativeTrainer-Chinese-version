@@ -97,6 +97,7 @@ static const int HKEY_TIME_FREEZEUNFREEZE_TOGGLE = 161;
 static const int HKEY_DOORS_WANTEDLEVEL_TOGGLE = 162;
 static const int HKEY_WANTEDLEVEL_FROZEN_TOGGLE = 163;
 static const int HKEY_HUD_TOGGLE = 164;
+static const int HKEY_TRAFFIC_TOGGLE = 165;
 
 const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "No Function", 0 },
@@ -158,6 +159,7 @@ const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "Wanted Level [HK + 0-5]", HKEY_DOORS_WANTEDLEVEL_TOGGLE },
 	{ "Freeze/Unfreeze Wanted Level", HKEY_WANTEDLEVEL_FROZEN_TOGGLE },
 	{ "Hide/Show HUD", HKEY_HUD_TOGGLE },
+	{ "Traffic On/Off", HKEY_TRAFFIC_TOGGLE },
 };
 
 void change_hotkey_function(int hotkey, int funcIndex);

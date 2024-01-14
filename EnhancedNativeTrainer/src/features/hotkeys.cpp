@@ -341,6 +341,9 @@ void trigger_function_for_hotkey_onkeyup(int hotkey)
 	case HKEY_HUD_TOGGLE:
 		HUD_switching();
 		break;
+	case HKEY_TRAFFIC_TOGGLE:
+		Traffic_switching();
+		break;
 	default:
 	{
 		std::ostringstream ss;

@@ -102,3 +102,6 @@ const int WORLD_GRAVITY_LEVEL_VALUES[] = { 0, 1, 2, 3 };
 
 extern bool featurePenitentiaryMap;
 extern bool featureCayoPericoMap;
+
+extern bool featureWorldNoTraffic;
+extern bool featureWorldNoTrafficUpdated;
