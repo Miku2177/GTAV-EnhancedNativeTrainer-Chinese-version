@@ -451,24 +451,24 @@ void airbrake(bool inVehicle)
 			if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) ENTITY::SET_ENTITY_ALPHA(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), 120, 0);
 		}
 
-		if (moveForwardKey) {
+		if (moveForwardKey && !(rotateLeftKey) && !(rotateRightKey)) {
 			ENTITY::FREEZE_ENTITY_POSITION(target, false);
 			ENTITY::APPLY_FORCE_TO_ENTITY(target, 1, v_x, v_y, v_z, 0, 0, 0, true, false, true, true, true, true);
 			curLocation = CAM::GET_GAMEPLAY_CAM_COORD();
 			curHeading = CAM::GET_GAMEPLAY_CAM_RELATIVE_HEADING();
 		}
-		if (moveBackKey) {
+		if (moveBackKey && !(rotateLeftKey) && !(rotateRightKey)) {
 			ENTITY::FREEZE_ENTITY_POSITION(target, false);
 			ENTITY::APPLY_FORCE_TO_ENTITY(target, 1, -v_x, -v_y, -v_z, 0, 0, 0, true, false, true, true, true, true);
 			curLocation = CAM::GET_GAMEPLAY_CAM_COORD();
 			curHeading = CAM::GET_GAMEPLAY_CAM_RELATIVE_HEADING();
 		}
-		if (rotateLeftKey && !(moveUpKey)) {
+		if (rotateLeftKey && !(moveUpKey) && !(moveForwardKey) && !(moveBackKey)) {
 			curLocation.x += (forwardPush * sin(degToRad(CamRot.z + 90)) * -1.0f);
 			curLocation.y += (forwardPush * cos(degToRad(CamRot.z + 90)));
 			ENTITY::SET_ENTITY_COORDS_NO_OFFSET(target, curLocation.x, curLocation.y, curLocation.z - 0.6, 1, 1, 1);
 		}
-		if (rotateRightKey) {
+		if (rotateRightKey && !(moveUpKey) && !(moveForwardKey) && !(moveBackKey)) {
 			curLocation.x += (forwardPush * sin(degToRad(CamRot.z - 90)) * -1.0f);
 			curLocation.y += (forwardPush * cos(degToRad(CamRot.z - 90)));
 			ENTITY::SET_ENTITY_COORDS_NO_OFFSET(target, curLocation.x, curLocation.y, curLocation.z - 0.6, 1, 1, 1);
