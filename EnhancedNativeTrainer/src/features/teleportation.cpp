@@ -1713,27 +1713,38 @@ void update_teleport_features(){
 	// Load Extra Map Stuff Automatically
 	if (featureChoshopCargoship && ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()) && chopshop_init == false)
 	{
-		chopshop_tick = chopshop_tick + 1;
-		if (chopshop_tick > 500) { // 1000
-			std::string tmp_s_row;
-			int tmp_s_counter = 0;
-			for (int k = 0; k < MAP_STUFF.size(); k++) {
-				if (MAP_STUFF[k] != *" ") {
-					tmp_s_row = tmp_s_row + MAP_STUFF[k];
-				}
-				if (MAP_STUFF[k] == *" " || (k == (MAP_STUFF.size() - 1))) {
-					tmp_s_counter = tmp_s_counter + 1;
-
-					std::string tmp_str = tmp_s_row;
-					const char* tmp_s = tmp_str.c_str();
-					if (!STREAMING::IS_IPL_ACTIVE(tmp_s))
-					{
-						STREAMING::REQUEST_IPL(tmp_s);
+		eGameVersion version = getGameVersion();
+		
+		//VER_1_0_3095_0_ 
+		if (version >= 85)
+		{
+			chopshop_tick = chopshop_tick + 1;
+			if (chopshop_tick > 500) { // 1000
+				std::string tmp_s_row;
+				int tmp_s_counter = 0;
+				for (int k = 0; k < MAP_STUFF.size(); k++) {
+					if (MAP_STUFF[k] != *" ") {
+						tmp_s_row = tmp_s_row + MAP_STUFF[k];
 					}
-					
-					tmp_s_row = "";
+					if (MAP_STUFF[k] == *" " || (k == (MAP_STUFF.size() - 1))) {
+						tmp_s_counter = tmp_s_counter + 1;
+
+						std::string tmp_str = tmp_s_row;
+						const char* tmp_s = tmp_str.c_str();
+						if (!STREAMING::IS_IPL_ACTIVE(tmp_s))
+						{
+							STREAMING::REQUEST_IPL(tmp_s);
+						}
+
+						tmp_s_row = "";
+					}
 				}
+				chopshop_init = true;
 			}
+		}
+		else
+		{
+			set_status_text("The game version is not supported");
 			chopshop_init = true;
 		}
 	}
