@@ -446,6 +446,9 @@ void airbrake(bool inVehicle)
 		
 		ENTITY::SET_ENTITY_COLLISION(target, 0, 1);
 		ENTITY::SET_ENTITY_ROTATION(target, CamRot.x, CamRot.y, CamRot.z, 1, true);
+
+		if (!moveForwardKey && !moveBackKey && !rotateLeftKey && !rotateRightKey && !moveUpKey && !moveDownKey) ENTITY::FREEZE_ENTITY_POSITION(target, true);
+
 		if (show_transparency) {
 			ENTITY::SET_ENTITY_ALPHA(PLAYER::PLAYER_PED_ID(), 120, 0);
 			if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) ENTITY::SET_ENTITY_ALPHA(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), 120, 0);
@@ -473,7 +476,6 @@ void airbrake(bool inVehicle)
 			curLocation.y += (forwardPush * cos(degToRad(CamRot.z - 90)));
 			ENTITY::SET_ENTITY_COORDS_NO_OFFSET(target, curLocation.x, curLocation.y, curLocation.z - 0.6, 1, 1, 1);
 		}
-		if (!moveForwardKey && !moveBackKey && !rotateLeftKey && !rotateRightKey && !moveUpKey && !moveDownKey) ENTITY::FREEZE_ENTITY_POSITION(target, true);
 		if (moveUpKey) { // Q
 			if (travelSpeed == 0) p_force = forwardPush * 10;
 			if (travelSpeed == 1) p_force = forwardPush * 19;
