@@ -1748,6 +1748,11 @@ void update_teleport_features(){
 			chopshop_init = true;
 		}
 	}
+	if (featureChoshopCargoship && ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()) && chopshop_init == true && DLC2::GET_IS_LOADING_SCREEN_ACTIVE()) {
+		chopshop_init = false;
+		chopshop_tick = 0;
+	}
+	
 	//if (featureChoshopCargoship && ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()) && chopshop_init == true) {
 	//	Vector3 my_coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 0);
 	//	//	float ChopCargo_dist_diff = SYSTEM::VDIST(my_coords.x, my_coords.y, my_coords.z, -400.0109f, -4124.138f, 24.34268f);
