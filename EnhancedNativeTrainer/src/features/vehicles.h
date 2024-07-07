@@ -1052,6 +1052,35 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("TVTRAILER2"), "ENT_vehicle_previews", "VP_TRAILERPANIC" },//
 	{ RAGE_JOAAT("BOATTRAILER2"), "ENT_vehicle_previews", "VP_BOATTRAILER3" },//
 	{ RAGE_JOAAT("BOATTRAILER3"), "ENT_vehicle_previews", "VP_BOATTRAILER2" },//
+	//Summer 2024 - Bounty DLC
+	{ RAGE_JOAAT("DRAFTER"), "lgm_dlc_vinewood", "drafter" },
+	{ RAGE_JOAAT("EMERUS"), "lgm_dlc_vinewood", "emerus" },
+	{ RAGE_JOAAT("JUGULAR"), "lgm_dlc_vinewood", "jugular" },
+	{ RAGE_JOAAT("KRIEGER"), "lgm_dlc_vinewood", "krieger" },
+	{ RAGE_JOAAT("LOCUST"), "lgm_dlc_vinewood", "locust" },
+	{ RAGE_JOAAT("NEO"), "lgm_dlc_vinewood", "neo" },
+	{ RAGE_JOAAT("NOVAK"), "lgm_dlc_vinewood", "novak" },
+	{ RAGE_JOAAT("PARAGON"), "lgm_dlc_vinewood", "paragon" },
+	{ RAGE_JOAAT("RROCKET"), "lgm_dlc_vinewood", "rrocket" },
+	{ RAGE_JOAAT("S80"), "lgm_dlc_vinewood", "s80" },
+	{ RAGE_JOAAT("THRAX"), "lgm_dlc_vinewood", "thrax" },
+	{ RAGE_JOAAT("ZORRUSSO"), "lgm_dlc_vinewood", "zorrusso" },
+	{ RAGE_JOAAT("COQUETTE5"), "lgm_dlc_2024_1", "coquette5" },
+	{ RAGE_JOAAT("ENVISAGE"), "lgm_dlc_2024_1", "envisage" },
+	{ RAGE_JOAAT("EUROSX32"), "lgm_dlc_2024_1", "eurosx32" },
+	{ RAGE_JOAAT("NIOBE"), "lgm_dlc_2024_1", "niobe" },
+	{ RAGE_JOAAT("PARAGON3"), "lgm_dlc_2024_1", "paragon3" },
+	{ RAGE_JOAAT("PIPISTRELLO"), "lgm_dlc_2024_1", "pipistrello" },
+	{ RAGE_JOAAT("CASTIGATOR"), "sssa_dlc_2024_1", "castigator" },
+	{ RAGE_JOAAT("DOMINATOR10"), "sssa_dlc_2024_1", "dominator10" },
+	{ RAGE_JOAAT("PIZZABOY"), "sssa_dlc_2024_1", "pizzaboy" },
+	{ RAGE_JOAAT("VORSCHLAG"), "sssa_dlc_2024_1", "vorschlag" },
+	{ RAGE_JOAAT("YOSEMITE4"), "sssa_dlc_2024_1", "yosemite4" },
+	{ RAGE_JOAAT("POLDOM10"), "candc_dlc_2024_1", "poldom10" },
+	{ RAGE_JOAAT("POLDORADO"), "candc_dlc_2024_1", "poldorado" },
+	{ RAGE_JOAAT("POLGREENW"), "candc_dlc_2024_1", "polgreenw" },
+	{ RAGE_JOAAT("POLIMPALER5"), "candc_dlc_2024_1", "polimpaler5" },
+	{ RAGE_JOAAT("POLIMPALER6"), "candc_dlc_2024_1", "polimpaler6" }
 };
 
 /***
