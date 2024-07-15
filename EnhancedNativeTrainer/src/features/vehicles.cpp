@@ -3446,7 +3446,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		viz_veh_ind_right = false;
 	}
 
-	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] > 0 || featureHazards) {
+	if (bPlayerExists && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1) && (VEH_TURN_SIGNALS_VALUES[turnSignalsIndex] > 0 || featureHazards)) {
 		Vehicle vehturn = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		int vehturnspeed = ENTITY::GET_ENTITY_SPEED(vehturn);
 		int steer_turn = CONTROLS::GET_CONTROL_VALUE(0, 9);
