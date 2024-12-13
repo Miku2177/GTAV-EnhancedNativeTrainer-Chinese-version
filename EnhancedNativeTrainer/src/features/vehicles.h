@@ -1087,7 +1087,23 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("DRIFTCYPHER"), "ENT_vehicle_previews", "VP_CYPHER" }, //
 	{ RAGE_JOAAT("DRIFTSENTINEL"), "ENT_vehicle_previews", "VP_SENTINELWIDE" }, //
 	{ RAGE_JOAAT("POLICET3"), "ENT_vehicle_previews", "VP_BURRITOBAIL" },
-	{ RAGE_JOAAT("POLDOMINATOR10"), "ENT_vehicle_previews", "VP_DOMINATORFX" } //
+	{ RAGE_JOAAT("POLDOMINATOR10"), "ENT_vehicle_previews", "VP_DOMINATORFX" }, //
+	//Xmas 2024 - FIB DLC
+	{ RAGE_JOAAT("CHAVOSV6"), "sssa_dlc_2024_2", "chavosv6" },
+	{ RAGE_JOAAT("FIREBOLT"), "sssa_dlc_2024_2", "firebolt" },
+	{ RAGE_JOAAT("URANUS"), "sssa_dlc_2024_2", "uranus" },
+	{ RAGE_JOAAT("CARGOBOB5"), "candc_dlc_2024_2", "cargobob5" },
+	{ RAGE_JOAAT("POLCARACAR"), "candc_dlc_2024_2", "polcaracar" },
+	{ RAGE_JOAAT("POLCOQUTT4"), "candc_dlc_2024_2", "polcoqutt4" },
+	{ RAGE_JOAAT("POLFCTION2"), "candc_dlc_2024_2", "polfction2" },
+	{ RAGE_JOAAT("POLTERMINU"), "candc_dlc_2024_2", "polterminu" },
+	{ RAGE_JOAAT("PREDATOR"), "candc_dlc_2024_2", "predator" }, //
+	//{ RAGE_JOAAT("TACO"), "candc_dlc_2024_2", "taco" }, // Custom one exists in ENT Previews.
+	{ RAGE_JOAAT("TITAN2"), "candc_dlc_2024_2", "titan2" }, //
+	{ RAGE_JOAAT("BANSHEE3"), "lgm_dlc_2024_2", "banshee3" }, //
+	{ RAGE_JOAAT("COQUETTE6"), "lgm_dlc_2024_2", "coquette6" }, //
+	{ RAGE_JOAAT("JESTER5"), "lgm_dlc_2024_2", "jester5" },
+	{ RAGE_JOAAT("DUSTER2"), "elt_dlc_2024_2", "duster2" } //
 };
 
 /***
