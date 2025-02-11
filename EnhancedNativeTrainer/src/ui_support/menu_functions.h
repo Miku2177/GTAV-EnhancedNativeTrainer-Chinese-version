@@ -544,12 +544,13 @@ void draw_rect(float A_0, float A_1, float A_2, float A_3, int A_4, int A_5, int
 
 void draw_ingame_sprite(MenuItemImage *image, float x, float y, int w, int h);
 
+/* Sanitise the header by removing the character if it's not alpha-numeric ASCII, empty or invalid UTF-8 (check the high bit is set on the character) else return the full caption */
 inline std::string sanitise_menu_header_text(std::string input){
 	std::string caption(input);
 	std::replace(caption.begin(), caption.end(), '-', ' ');
 	std::replace(caption.begin(), caption.end(), '_', ' ');
-	caption.erase(remove_if(caption.begin(), caption.end(), [](char c){
-		return !isalnum(c) && c != ' ';
+	caption.erase(remove_if(caption.begin(), caption.end(), [](unsigned char c){
+		return !(std::isalnum(c) || c == ' ' || (c & 0x80));
 	}), caption.end());
 	return caption;
 }
