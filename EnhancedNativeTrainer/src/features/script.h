@@ -1,11 +1,11 @@
 /*
-Some of this code began its life as a part of GTA V SCRIPT HOOK SDK.
+这段代码的部分内容最初是作为 GTA V SCRIPT HOOK SDK 的一部分开始的。
 http://dev-c.com
 (C) Alexander Blade 2015
 
-It is now part of the Enhanced Native Trainer project.
+现在它是增强原生训练器项目的一部分。
 https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
-(C) Rob Pridham and fellow contributors 2015
+(C) Rob Pridham 和其他贡献者 2015
 */
 
 #pragma once
@@ -50,14 +50,14 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include <iomanip>
 #include <fstream>
 
-//Player Health
-const std::vector<std::string> PLAYER_HEALTH_CAPTIONS{ "OFF", "1", "10", "20", "30", "50", "100", "200", "300", "500", "1000", "5000", "10000", "20000", "30000" };
+//玩家生命值
+const std::vector<std::string> PLAYER_HEALTH_CAPTIONS{ "关", "1", "10", "20", "30", "50", "100", "200", "300", "500", "1000", "5000", "10000", "20000", "30000" };
 const int PLAYER_HEALTH_VALUES[] = { 0, 101, 110, 120, 130, 150, 200, 300, 400, 600, 1100, 5100, 10100, 20100, 30100 };
 extern int PedsHealthIndex;
 extern bool PedsHealthChanged;
 
-//Waves Intensity
-const std::vector<std::string> WORLD_WAVES_CAPTIONS{ "Default", "No Waves", "5x", "10x", "20x", "30x", "50x", "Freeze Waves" };
+//波浪强度
+const std::vector<std::string> WORLD_WAVES_CAPTIONS{ "默认", "无波浪", "5x", "10x", "20x", "30x", "50x", "冻结波浪" };
 const int WORLD_WAVES_VALUES[] = { -1, -2, 7, 10, 20, 30, 50, -100000000 }; // -400000
 extern int WorldWavesIndex;
 
@@ -76,12 +76,12 @@ extern int myENTGroup;
 
 extern std::string C_WEATHER_C;
 
-// Load Map Stuff Automatically
+// 自动加载地图内容
 extern std::string MAP_STUFF;
 
-const std::vector<std::string> LIMP_IF_INJURED_CAPTIONS{ "OFF", "Mode 1", "Mode 2" }; //Limp If Injured
+const std::vector<std::string> LIMP_IF_INJURED_CAPTIONS{ "关", "模式 1", "模式 2" }; //受伤时跛行
 
-//Ensures numbers are formatted with commas, not the locale option
+//确保数字以逗号格式化，而不是使用区域设置选项。
 class comma_numpunct: public std::numpunct<char>{
 	protected:
 	virtual char do_thousands_sep() const{
@@ -93,19 +93,19 @@ class comma_numpunct: public std::numpunct<char>{
 	}
 };
 
-// trim from start
+// 从开始处修剪
 static inline std::string &ltrim(std::string &s){
 	s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](int c) { return !std::isspace(c); }));
 	return s;
 }
 
-// trim from end
+// 从结尾处修剪
 static inline std::string &rtrim(std::string &s){
 	s.erase(std::find_if(s.rbegin(), s.rend(), [](int ch) {	return !std::isspace(ch);}).base(), s.end());
 	return s;
 }
 
-// trim from both ends
+// 从两端修剪
 static inline std::string &trim(std::string &s){
 	return ltrim(rtrim(s));
 }
@@ -176,7 +176,7 @@ void process_main_menu();
 
 void process_powerpunch_menu();
 
-//DB persistent stuff
+//DB 数据库持久化内容
 
 std::vector<FeatureEnabledLocalDefinition> get_feature_enablements();
 
@@ -232,7 +232,7 @@ void onchange_hotkey_freeze_unfreeze_time();
 
 bool is_player_ignored_by_police();
 
-// THE ORIGINAL CODE IS BY IKT
+// 原始代码由 IKT 编写
 static int get_fuel_level_offset();
 static int get_fuel_tank_offset();
 //
@@ -248,8 +248,8 @@ extern bool apply_pressed;
 extern int time_since_d;
 extern int time_since_a;
 
-// NPC Ragdoll If Shot
-const std::vector<std::string> NPC_RAGDOLL_CAPTIONS{ "OFF", "Never", "Always" };
+// NPC 被击中时的倒地效果
+const std::vector<std::string> NPC_RAGDOLL_CAPTIONS{ "关", "暂不倒地", "立即倒地" };
 const int NPC_RAGDOLL_VALUES[] = { 0, 1, 2 };
 
 const int MISC_TRAINERCONTROL_VALUES[] = { 0, 1 };
