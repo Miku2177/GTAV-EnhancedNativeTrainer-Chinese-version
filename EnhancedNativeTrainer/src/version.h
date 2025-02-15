@@ -1,13 +1,13 @@
 /*
-Part of the Enhanced Native Trainer project.
+增强型原生训练器项目的一部分
 https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
-(C) Rob Pridham and fellow contributors 2015
+(C) Rob Pridham 和其他贡献者 2015
 */
 
 #pragma once
 
 #include <string>
 
-//Version string should now be: major version number . minor version number
+//当前的修改器版本应该是：主版本号，次版本号
 const std::string VERSION_STRING = "55." + std::to_string(0);
 
