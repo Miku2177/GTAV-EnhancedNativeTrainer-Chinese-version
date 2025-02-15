@@ -1,11 +1,11 @@
 /*
-Some of this code began its life as a part of GTA V SCRIPT HOOK SDK.
+这段代码的部分内容最初是作为 GTA V SCRIPT HOOK SDK 的一部分开始的。
 http://dev-c.com
 (C) Alexander Blade 2015
 
-It is now part of the Enhanced Native Trainer project.
+现在它是增强原生训练器项目的一部分。
 https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
-(C) Rob Pridham and fellow contributors 2015
+(C) Rob Pridham 和其他贡献者 2015
 */
 
 #include "script.h"
@@ -24,7 +24,7 @@ DWORD model_to_restore = -1;
 bool featurenoblood = false;
 bool featurepersprops = false;
 
-// auto skin variables
+// 自动皮肤变量
 bool auto_skin = false;
 bool reset_skin = false;
 int skin_tick, skin_tick_secs_passed, skin_tick_secs_curr = 0;
@@ -53,7 +53,7 @@ bool requireRefreshOfSkinSlotMenu = false;
 
 std::string lastCustomSkinSpawn;
 
-int skinTypesMenuPositionMemory[4] = { 0, 0, 0, 0 }; //player, animals, general, test
+int skinTypesMenuPositionMemory[4] = { 0, 0, 0, 0 }; //玩家，动物，一般，测试
 
 int ped_prop_idx_0 = -1;
 int ped_prop_idx_1 = -1;
@@ -61,17 +61,17 @@ int choicevalue = -2;
 int skinPropsCategoryValueC = -2;
 int clear_props_m = -2;
 
-// Reset Player Model On Death
+// 在角色死亡时重置玩家模型
 int ResetSkinOnDeathIdx = 0;
 bool ResetSkinOnDeathChanged = true;
 
-// Auto Apply Last Saved Skin
-const std::vector<std::string> SKINS_AUTO_SKIN_SAVED_CAPTIONS{ "OFF", "Restore Character", "Saved Character Only" };
+// 自动应用最后保存的皮肤
+const std::vector<std::string> SKINS_AUTO_SKIN_SAVED_CAPTIONS{ "关", "恢复角色", "仅限已保存角色" };
 int AutoApplySkinSavedIndex = 0;
 bool AutoApplySkinSavedChanged = true;
 
 /***
-* METHODS
+* 方法
 */
 
 void onchange_skins_reset_skin_ondeath_index(int value, SelectFromListMenuItem* source) {
@@ -95,7 +95,7 @@ void reset_skin_globals()
 
 /*
 * ===============
-* WORKER METHODS
+* 工作方法
 * =================
 */
 
@@ -135,7 +135,7 @@ bool applyChosenSkin(DWORD model)
 
 		restore_player_weapons(PLAYER::PLAYER_PED_ID());
 
-		//reset the skin detail choice
+		// 重置皮肤细节选项
 		skinDetailMenuIndex = 0;
 		skinDetailMenuValue = 0;
 
@@ -152,27 +152,27 @@ std::string getSkinDetailAttribDescription(int i)
 	switch (i)
 	{
 	case 0:
-		return "Head/Face";
+		return "头部/面部";
 	case 1:
-		return "Beard/Mask";
+		return "胡须/面具";
 	case 2:
-		return "Hair/Hat";
+		return "头发/帽子";
 	case 3:
-		return "Top";
+		return "上衣";
 	case 4:
-		return "Legs";
+		return "裤子";
 	case 5:
-		return "Accessory/Gloves";
+		return "配饰/手套";
 	case 6:
-		return "Accessory/Shoes";
+		return "配饰/鞋子";
 	case 7:
 	case 8:
 	case 9:
-		return "Accessory";
+		return "物品";
 	case 10:
-		return "Badges";
+		return "徽章";
 	case 11:
-		return "Shirt/Jacket";
+		return "衬衫/夹克";
 	default:
 		return std::to_string(i);
 	}
@@ -183,11 +183,11 @@ std::string getPropDetailAttribDescription(int i)
 	switch (i)
 	{
 	case 0:
-		return "Hats/Masks/Helmets";
+		return "帽子/面具/头盔";
 	case 1:
-		return "Glasses";
+		return "眼镜";
 	case 2:
-		return "Earrings";
+		return "耳环";
 	case 3:
 		return "??? 3";
 	case 4:
@@ -213,7 +213,7 @@ std::string getPropDetailAttribDescription(int i)
 
 /*
 * ===============
-* TEXTURE MENU
+* 纹理菜单
 * =================
 */
 
@@ -237,7 +237,7 @@ bool onconfirm_skinchanger_texture_menu(MenuItem<int> choice)
 void onexit_skinchanger_texture_menu(bool returnValue)
 {
 	/*
-	//restore the applied selection
+	//恢复已应用的选择
 	int texture;
 	if (skinTextureMenuValue == -1)
 	{
@@ -256,10 +256,10 @@ void onexit_skinchanger_texture_menu(bool returnValue)
 }
 
 void update_skin_features() {
-	// No Blood And No Bullet Holes
+	// 没有血迹，没有弹孔
 	if (featurenoblood) PED::CLEAR_PED_BLOOD_DAMAGE(PLAYER::PLAYER_PED_ID()); 
 
-	// Persistent Props
+	// 持久化道具
 	if (featurepersprops && ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID()) == 0/* && (PED::GET_PED_PROP_INDEX(PLAYER::PLAYER_PED_ID(), 0) > -1 || PED::GET_PED_PROP_INDEX(PLAYER::PLAYER_PED_ID(), 1) > -1)*/) {
 		if ((ped_prop_idx_0 > -1 && PED::GET_PED_PROP_INDEX(PLAYER::PLAYER_PED_ID(), 0) == -1) || (ped_prop_idx_1 > -1 && PED::GET_PED_PROP_INDEX(PLAYER::PLAYER_PED_ID(), 1) == -1)) {
 			Vector3 me_c = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
@@ -287,7 +287,7 @@ void update_skin_features() {
 		}
 	}
 
-	// Auto Apply Last Saved Skin
+	// 自动应用最后保存的皮肤
 	if (NPC_RAGDOLL_VALUES[AutoApplySkinSavedIndex] > 0) {
 		if (auto_skin == false) {
 			skin_tick_secs_passed = clock() / CLOCKS_PER_SEC;
@@ -339,15 +339,15 @@ void update_skin_features() {
 							reset_skin = false;
 						}
 					}
-				} // end of !empty
-			} // end of skin_tick
-		} // end of auto_skin
+				} // 结束! empty
+			} // 结束! skin_tick
+		} // 结束! auto_skin
 
 		if (PLAYER::PLAYER_PED_ID() != oldplayerSkin) auto_skin = false;
 		if ((time_since_d > -1 && time_since_d < 2000) || (player_died == true && !featureNoAutoRespawn)) auto_skin = false;
 		if (DLC2::GET_IS_LOADING_SCREEN_ACTIVE()) auto_skin = false;
 
-	} // end of featureautoskin
+	} // 自动皮肤功能结束
 }
 
 bool process_skinchanger_texture_menu(std::string caption)
@@ -373,7 +373,7 @@ bool process_skinchanger_texture_menu(std::string caption)
 		for (int i = 0; i < textures; i++)
 		{
 			std::ostringstream ss;
-			ss << "Texture #" << i;
+			ss << "款式项 #" << i;
 			MenuItem<int> *item = new MenuItem<int>();
 			item->caption = ss.str();
 			item->value = i;
@@ -384,7 +384,7 @@ bool process_skinchanger_texture_menu(std::string caption)
 	}
 
 	std::ostringstream ss;
-	ss << "Available Textures";
+	ss << "可用款式项";
 
 	int currentTexture = PED::GET_PED_TEXTURE_VARIATION(PLAYER::PLAYER_PED_ID(), skinDetailMenuValue);
 	draw_generic_menu<int>(menuItems, &currentTexture, ss.str(), onconfirm_skinchanger_texture_menu, onhighlight_skinchanger_texture_menu, onexit_skinchanger_texture_menu);
@@ -393,7 +393,7 @@ bool process_skinchanger_texture_menu(std::string caption)
 
 /*
 * ===============
-* SKIN DRAWABLES MENU
+* 皮肤可绘制项菜单
 * =================
 */
 
@@ -443,7 +443,7 @@ bool process_skinchanger_drawable_menu(std::string caption, int component)
 		{
 			int textures = PED::GET_NUMBER_OF_PED_TEXTURE_VARIATIONS(PLAYER::PLAYER_PED_ID(), component, i);
 			std::ostringstream ss;
-			ss << "Drawable #" << i << " ~HUD_COLOUR_GREYLIGHT~(" << textures << ")";
+			ss << "皮肤项 #" << i << " ~HUD_COLOUR_GREYLIGHT~(" << textures << ")";
 
 			MenuItem<int> *item = new MenuItem<int>();
 			item->caption = ss.str();
@@ -456,7 +456,7 @@ bool process_skinchanger_drawable_menu(std::string caption, int component)
 	}
 
 	std::ostringstream ss;
-	ss << "Available Drawables";
+	ss << "可用皮肤项";
 
 	int currentDrawable = PED::GET_PED_DRAWABLE_VARIATION(PLAYER::PLAYER_PED_ID(), component);
 	draw_generic_menu<int>(menuItems, &currentDrawable, ss.str(), onconfirm_skinchanger_drawable_menu, onhighlight_skinchanger_drawable_menu, onexit_skinchanger_drawable_menu);
@@ -465,13 +465,13 @@ bool process_skinchanger_drawable_menu(std::string caption, int component)
 
 /*
 * ===============
-* SKIN DETAIL MENU
+* 皮肤细节菜单
 * =================
 */
 
 void onhighlight_skinchanger_detail_menu(MenuItem<int> choice)
 {
-	//do nothing
+	// 什么都不做
 }
 
 int lastTriedComponentIndex = 0;
@@ -523,7 +523,7 @@ bool process_skinchanger_detail_menu()
 			{
 				std::ostringstream ss;
 				std::string itemText = getSkinDetailAttribDescription(compIndex);
-				ss << "Slot " << (compIndex + 1) << ": " << itemText << " ~HUD_COLOUR_GREYLIGHT~(" << drawables << ")";
+				ss << "槽 " << (compIndex + 1) << ": " << itemText << " ~HUD_COLOUR_GREYLIGHT~(" << drawables << ")";
 
 				MenuItem<int> *item = new MenuItem<int>();
 				item->caption = ss.str();
@@ -536,12 +536,12 @@ bool process_skinchanger_detail_menu()
 		STREAMING::SET_MODEL_AS_NO_LONGER_NEEDED(model);
 	}
 
-	return draw_generic_menu<int>(menuItems, &skinDetailMenuIndex, "Skin Details", onconfirm_skinchanger_detail_menu, onhighlight_skinchanger_detail_menu, NULL);
+	return draw_generic_menu<int>(menuItems, &skinDetailMenuIndex, "皮肤类型", onconfirm_skinchanger_detail_menu, onhighlight_skinchanger_detail_menu, NULL);
 }
 
 /*
 * ===============
-* SKIN PLAYER CHOICES
+* 玩家皮肤选择
 * =================
 */
 
@@ -565,12 +565,12 @@ bool process_skinchanger_choices_players()
 		menuItems.push_back(item);
 	}
 
-	return draw_generic_menu<std::string>(menuItems, &skinTypesMenuPositionMemory[0], "Player Appearance", onconfirm_skinchanger_choices_players, NULL, NULL);
+	return draw_generic_menu<std::string>(menuItems, &skinTypesMenuPositionMemory[0], "主角模型", onconfirm_skinchanger_choices_players, NULL, NULL);
 }
 
 /*
 * ===============
-* SKIN ONLINE PLAYER CHOICES
+* 在线玩家皮肤选择
 * =================
 */
 
@@ -594,13 +594,13 @@ bool process_skinchanger_choices_online_npc()
 		menuItems.push_back(item);
 	}
 
-	return draw_generic_menu<std::string>(menuItems, &skinTypesMenuPositionMemory[0], "Online NPC Skins", onconfirm_skinchanger_choices_online_npc, NULL, NULL);
+	return draw_generic_menu<std::string>(menuItems, &skinTypesMenuPositionMemory[0], "在线 NPC 角色", onconfirm_skinchanger_choices_online_npc, NULL, NULL);
 }
 
 
 /*
 * ===============
-* SKIN ANIMAL CHOICES
+* 动物皮肤选择
 * =================
 */
 
@@ -638,12 +638,12 @@ bool process_skinchanger_choices_animals()
 		menuItems.push_back(item);
 	}
 
-	return draw_generic_menu<std::string>(menuItems, &skinTypesMenuPositionMemory[1], "Animal Skins", onconfirm_skinchanger_choices_animals, NULL, NULL);
+	return draw_generic_menu<std::string>(menuItems, &skinTypesMenuPositionMemory[1], "动物模型", onconfirm_skinchanger_choices_animals, NULL, NULL);
 }
 
 /*
 * ===============
-* SKIN GENERAL CHOICES
+* 普通皮肤选择
 * =================
 */
 
@@ -667,7 +667,7 @@ bool process_skinchanger_choices_misc()
 		menuItems.push_back(item);
 	}
 
-	return draw_generic_menu<std::string>(menuItems, &skinTypesMenuPositionMemory[2], "General Skins", onconfirm_skinchanger_choices_misc, NULL, NULL);
+	return draw_generic_menu<std::string>(menuItems, &skinTypesMenuPositionMemory[2], "普通 NPC 角色", onconfirm_skinchanger_choices_misc, NULL, NULL);
 }
 
 bool onconfirm_skinchanger_choices_test(MenuItem<std::string> choice)
@@ -695,30 +695,30 @@ bool onconfirm_skinchanger_choices_test(MenuItem<std::string> choice)
 
 /*
 * ===============
-* SKIN MAIN MENU
+* 皮肤主菜单
 * =================
 */
 
 bool onconfirm_skinchanger_category_menu(MenuItem<int> choice)
 {
 	switch (choice.value) {
-		case 0: //Players
+		case 0: //玩家
 			process_skinchanger_choices_players();
 			break;
-		case 1: //Animals
+		case 1: //动物
 			process_skinchanger_choices_animals();
 			break;
-		case 2: //Misc
+		case 2: //杂项
 			process_skinchanger_choices_misc();
 			break;
-		case 3: //Online NPCs
+		case 3: //在线 NPC
 			process_skinchanger_choices_online_npc();
 			break;
-		case 4: //Custom entry
+		case 4: //自定义条目
 		{
 			keyboard_on_screen_already = true;
-			curr_message = "Enter model skin name (e.g. csb_agent):"; // change your skin
-			std::string result = show_keyboard("Enter Name Manually", (char*)lastCustomSkinSpawn.c_str());
+			curr_message = "输入人物名称代码: (例如: ig_hao)"; // 改变你的皮肤
+			std::string result = show_keyboard("手动输入名称", (char*)lastCustomSkinSpawn.c_str());
 			if (!result.empty())
 			{
 				result = trim(result);
@@ -727,7 +727,7 @@ bool onconfirm_skinchanger_category_menu(MenuItem<int> choice)
 				if (!STREAMING::IS_MODEL_IN_CDIMAGE(hash) || !STREAMING::IS_MODEL_VALID(hash))
 				{
 					std::ostringstream ss;
-					ss << "Couldn't find model '" << result << "'";
+					ss << "~r~错误！~s~找不到此模型 '" << result << "'";
 					set_status_text(ss.str());
 					return false;
 				}
@@ -748,22 +748,22 @@ bool onconfirm_skinchanger_menu(MenuItem<int> choice)
 	std::ostringstream ss;
 	int index = PED::GET_PED_PROP_INDEX(playerPed, 0);
 
-	switch (activeLineIndexSkinChanger) { // choice.value
+	switch (activeLineIndexSkinChanger) { // 选项值
 		case 0:
 			process_savedskin_menu();
 			break;
-		case 1: //Change skin
+		case 1: //更换皮肤
 			process_skinchanger_category_menu();
 			break;
-		case 2: //Detail
+		case 2: //细节
 			process_skinchanger_detail_menu();
 			break;
 		case 3:
 			process_prop_menu();
 			break;
-		case 4: //Reset
+		case 4: //重置
 			PED::SET_PED_DEFAULT_COMPONENT_VARIATION(playerPed);
-			set_status_text("Using default model skin");
+			set_status_text("已重置为默认皮肤！");
 			break;
 		case 5:
 			PED::CLEAR_ALL_PED_PROPS(playerPed);
@@ -805,36 +805,36 @@ bool process_skinchanger_category_menu()
 	int i = 0;
 
 	item = new MenuItem<int>();
-	item->caption = "Players";
+	item->caption = "主角";
 	item->value = i++;
 	item->isLeaf = false;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Animals";
+	item->caption = "动物";
 	item->value = i++;
 	item->isLeaf = false;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "NPCs";
+	item->caption = "普通 NPC";
 	item->value = i++;
 	item->isLeaf = false;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Online NPCs";
+	item->caption = "在线 NPC";
 	item->value = i++;
 	item->isLeaf = false;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Enter Name Manually";
+	item->caption = "手动输入名称";
 	item->value = i++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
-	return draw_generic_menu<int>(menuItems, &skinCategoryPosition, "Skin Categories", onconfirm_skinchanger_category_menu, NULL, NULL);
+	return draw_generic_menu<int>(menuItems, &skinCategoryPosition, "角色模型分类", onconfirm_skinchanger_category_menu, NULL, NULL);
 }
 
 bool process_skinchanger_menu()
@@ -847,88 +847,89 @@ bool process_skinchanger_menu()
 	int i = 0;
 
 	item = new MenuItem<int>();
-	item->caption = "Saved Appearances";
+	item->caption = "保存的皮肤";
 	item->value = i++;
 	item->isLeaf = false;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Change Skin";
+	item->caption = "更改角色模型";
 	item->value = i++;
 	item->isLeaf = false;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Modify Current Skin";
+	item->caption = "修改当前皮肤";
 	item->value = i++;
 	item->isLeaf = false;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Modify Props";
+	item->caption = "修改饰品";
 	item->value = i++;
 	item->isLeaf = false;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Reset Current Skin";
+	item->caption = "重置当前皮肤";
 	item->value = i++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Clear Props";
+	item->caption = "删除饰品";
 	item->value = i++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 	
 	item = new MenuItem<int>();
-	item->caption = "Randomize Appearance";
+	item->caption = "随机外观皮肤";
 	item->value = i++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Randomize Head Accessories";
+	item->caption = "随机头部饰品";
 	item->value = i++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Give Helmet";
+	item->caption = "佩戴头盔";
 	item->value = i++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Persistent Props";
+	toggleItem->caption = "饰品永久化 (保留)";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featurepersprops;
 	menuItems.push_back(toggleItem);
 
 	listItem = new SelectFromListMenuItem(SKINS_RESET_SKIN_ONDEATH_CAPTIONS, onchange_skins_reset_skin_ondeath_index);
 	listItem->wrap = false;
-	listItem->caption = "Player Model";
+	listItem->caption = "玩家模型";
 	listItem->value = ResetSkinOnDeathIdx;
 	menuItems.push_back(listItem);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "No Blood And Bullet Holes";
+	toggleItem->caption = "没有血迹和弹孔";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featurenoblood;
 	menuItems.push_back(toggleItem);
 
 	listItem = new SelectFromListMenuItem(SKINS_AUTO_SKIN_SAVED_CAPTIONS, onchange_auto_apply_skin_saved_index);
 	listItem->wrap = false;
-	listItem->caption = "Auto Apply Last Saved Skin";
+	listItem->caption = "自动应用上次保存的皮肤";
 	listItem->value = AutoApplySkinSavedIndex;
 	menuItems.push_back(listItem);
 
-	return draw_generic_menu<int>(menuItems, &activeLineIndexSkinChanger, "Player Skin Options", onconfirm_skinchanger_menu, NULL, NULL); // skinMainMenuPosition
+  // 皮肤主菜单位置
+	return draw_generic_menu<int>(menuItems, &activeLineIndexSkinChanger, "玩家外观选项", onconfirm_skinchanger_menu, NULL, NULL); 
 }
 
 /**
-* PROPS STUFF
+* 道具相关内容
 */
 
 bool onconfirm_props_texture_menu(MenuItem<int> choice)
@@ -960,7 +961,7 @@ bool process_prop_texture_menu()
 		MenuItem<int> *item = new MenuItem<int>();
 
 		std::ostringstream ss;
-		ss << "Texture #" << (i + 1);
+		ss << "款式项 #" << (i + 1);
 		item->caption = ss.str();
 
 		item->value = i;
@@ -970,7 +971,7 @@ bool process_prop_texture_menu()
 
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	int lastTexturePosition = PED::GET_PED_PROP_TEXTURE_INDEX(playerPed, skinPropsCategoryValue);
-	return draw_generic_menu<int>(menuItems, &lastTexturePosition, "Available Textures", onconfirm_props_texture_menu, onhighlight_props_texture_menu, NULL);
+	return draw_generic_menu<int>(menuItems, &lastTexturePosition, "可用款式项", onconfirm_props_texture_menu, onhighlight_props_texture_menu, NULL);
 }
 
 bool onconfirm_props_drawable_menu(MenuItem<int> choice)
@@ -993,7 +994,7 @@ void onhighlight_props_drawable_menu(MenuItem<int> choice)
 
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	int currentProp = PED::GET_PED_PROP_INDEX(playerPed, skinPropsCategoryValue);
-	if (currentProp != choice.value) //if the selected drawable is not what we have now
+	if (currentProp != choice.value) // 如果选定的可绘制对象与当前的不一致
 	{
 		PED::CLEAR_PED_PROP(playerPed, skinPropsCategoryValue);
 		if (choice.value != -1)
@@ -1024,18 +1025,19 @@ bool process_prop_drawable_menu()
 
 		int textures = 0;
 		//if (drawables > 1 || textures != 0)
+		//示例（可绘制项 > 1 或 纹理 != 0）
 		{
 			MenuItem<int> *item = new MenuItem<int>();
 
 			if (i == -1)
 			{
-				item->caption = "Nothing";
+				item->caption = "没有";
 				item->isLeaf = true;
 			}
 			else
 			{
 				std::ostringstream ss;
-				ss << "Prop Item #" << (i + 1);
+				ss << "饰品项 #" << (i + 1);
 				item->caption = ss.str();
 				int textures = PED::GET_NUMBER_OF_PED_PROP_TEXTURE_VARIATIONS(PLAYER::PLAYER_PED_ID(), skinPropsCategoryValue, i);
 				item->isLeaf = (textures <= 1);
@@ -1046,7 +1048,7 @@ bool process_prop_drawable_menu()
 		}
 	}
 
-	return draw_generic_menu<int>(menuItems, &skinPropsDrawablePosition[skinPropsCategoryValue], "Available Props", onconfirm_props_drawable_menu, onhighlight_props_drawable_menu, NULL);
+	return draw_generic_menu<int>(menuItems, &skinPropsDrawablePosition[skinPropsCategoryValue], "可用饰品项", onconfirm_props_drawable_menu, onhighlight_props_drawable_menu, NULL);
 }
 
 bool onconfirm_props_menu(MenuItem<int> choice)
@@ -1081,7 +1083,7 @@ bool process_prop_menu()
 			std::ostringstream ss;
 			
 				std::string itemText = getPropDetailAttribDescription(compIndex);
-				ss << "Slot " << (compIndex + 1) << ": " << itemText << " ~HUD_COLOUR_GREYLIGHT~(" << drawables << ")";
+				ss << "槽 " << (compIndex + 1) << ": " << itemText << " ~HUD_COLOUR_GREYLIGHT~(" << drawables << ")";
 				item->caption = ss.str();
 
 			item->value = compIndex;
@@ -1093,11 +1095,11 @@ bool process_prop_menu()
 
 	if (count == 0)
 	{
-		set_status_text("Nothing available for this model");
+		set_status_text("该模型没有可用的内容");
 		return false;
 	}
 
-	return draw_generic_menu<int>(menuItems, &skinPropsMenuPosition, "Prop Categories", onconfirm_props_menu, NULL, NULL);
+	return draw_generic_menu<int>(menuItems, &skinPropsMenuPosition, "饰品类型", onconfirm_props_menu, NULL, NULL);
 }
 
 bool skin_save_menu_interrupt()
@@ -1139,10 +1141,10 @@ bool onconfirm_savedskin_slot_menu(MenuItem<int> choice)
 {
 	switch (choice.value)
 	{
-	case 1: //spawn
+	case 1: //生成
 		spawn_saved_skin(activeSavedSkinIndex, activeSavedSkinSlotName);
 		break;
-	case 2: //overwrite
+	case 2: //重写
 	{
 		save_current_skin(activeSavedSkinIndex);
 		requireRefreshOfSkinSaveSlots = true;
@@ -1151,11 +1153,11 @@ bool onconfirm_savedskin_slot_menu(MenuItem<int> choice)
 		skinSaveMenuInterrupt = true;
 	}
 	break;
-	case 3: //rename
+	case 3: //重命名
 	{
 		keyboard_on_screen_already = true;
-		curr_message = "Enter a new name:"; // rename a saved skin
-		std::string result = show_keyboard("Enter Name Manually", (char*)activeSavedSkinSlotName.c_str());
+		curr_message = "输入新的名称："; // 重命名已保存的皮肤
+		std::string result = show_keyboard("手动输入名称", (char*)activeSavedSkinSlotName.c_str());
 		if (!result.empty())
 		{
 			ENTDatabase* database = get_database();
@@ -1168,7 +1170,7 @@ bool onconfirm_savedskin_slot_menu(MenuItem<int> choice)
 		skinSaveMenuInterrupt = true;
 	}
 	break;
-	case 4: //delete
+	case 4: //删除
 	{
 		ENTDatabase* database = get_database();
 		database->delete_saved_skin(activeSavedSkinIndex);
@@ -1200,7 +1202,7 @@ bool process_savedskin_menu()
 		MenuItem<int> *item = new MenuItem<int>();
 		item->isLeaf = true;
 		item->value = -1;
-		item->caption = "Create New Skin Save";
+		item->caption = "创建新的皮肤存档";
 		menuItems.push_back(item);
 
 		for each (SavedSkinDBRow *sv in savedSkins)
@@ -1212,7 +1214,7 @@ bool process_savedskin_menu()
 			menuItems.push_back(item);
 		}
 
-		draw_generic_menu<int>(menuItems, 0, "Saved Skins", onconfirm_savedskin_menu, NULL, NULL, skin_save_menu_interrupt);
+		draw_generic_menu<int>(menuItems, 0, "保存的皮肤", onconfirm_savedskin_menu, NULL, NULL, skin_save_menu_interrupt);
 
 		for (std::vector<SavedSkinDBRow*>::iterator it = savedSkins.begin(); it != savedSkins.end(); ++it)
 		{
@@ -1236,25 +1238,25 @@ bool process_savedskin_slot_menu(int slot)
 		MenuItem<int> *item = new MenuItem<int>();
 		item->isLeaf = true;
 		item->value = 1;
-		item->caption = "Apply To Player";
+		item->caption = "应用此皮肤";
 		menuItems.push_back(item);
 
 		item = new MenuItem<int>();
 		item->isLeaf = true;
 		item->value = 2;
-		item->caption = "Overwrite With Current";
+		item->caption = "用当前内容覆盖";
 		menuItems.push_back(item);
 
 		item = new MenuItem<int>();
 		item->isLeaf = true;
 		item->value = 3;
-		item->caption = "Rename";
+		item->caption = "重命名";
 		menuItems.push_back(item);
 
 		item = new MenuItem<int>();
 		item->isLeaf = true;
 		item->value = 4;
-		item->caption = "Delete";
+		item->caption = "删除";
 		menuItems.push_back(item);
 
 		draw_generic_menu<int>(menuItems, 0, activeSavedSkinSlotName, onconfirm_savedskin_slot_menu, NULL, NULL, skin_save_slot_menu_interrupt);
@@ -1309,13 +1311,13 @@ void save_current_skin(int slot)
 		}
 		else
 		{
-			ss << "Saved Skin " << (lastKnownSavedSkinCount + 1);
+			ss << "新建皮肤存档 " << (lastKnownSavedSkinCount + 1);
 		}
 
 		keyboard_on_screen_already = true;
-		curr_message = "Enter a save name:"; // save a skin
+		curr_message = "输入保存名称:"; // save a skin
 		auto existingText = ss.str();
-		std::string result = show_keyboard("Enter Name Manually", (char*)existingText.c_str());
+		std::string result = show_keyboard("手动输入名称", (char*)existingText.c_str());
 		if (!result.empty())
 		{
 			ENTDatabase* database = get_database();
@@ -1323,11 +1325,11 @@ void save_current_skin(int slot)
 			if (database->save_skin(playerPed, result, slot))
 			{
 				activeSavedSkinSlotName = result;
-				set_status_text("Saved skin");
+				set_status_text("皮肤已保存！");
 			}
 			else
 			{
-				set_status_text("Save error");
+				set_status_text("保存错误！");
 			}
 		}
 	}
