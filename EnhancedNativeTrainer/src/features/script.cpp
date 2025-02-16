@@ -2371,7 +2371,7 @@ bool onconfirm_main_menu(MenuItem<int> choice){
 
 void process_main_menu(){
 	std::ostringstream captionSS;
-	captionSS << "~HUD_COLOUR_MENU_YELLOW~     Enhanced ~HUD_COLOUR_WHITE~Native Trainer ~HUD_COLOUR_GREY~Update ";
+	captionSS << "~HUD_COLOUR_MENU_YELLOW~增强型  ~HUD_COLOUR_WHITE~原生修改器   ~HUD_COLOUR_GREY~版本 ";
 	captionSS << VERSION_STRING;
 
 	std::vector<MenuItem<int>*> menuItems;
