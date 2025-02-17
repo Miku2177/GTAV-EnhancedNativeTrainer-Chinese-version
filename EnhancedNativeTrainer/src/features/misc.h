@@ -1,11 +1,11 @@
 /*
-Some of this code began its life as a part of GTA V SCRIPT HOOK SDK.
+这段代码的部分最初来源于 GTA V SCRIPT HOOK SDK。
 http://dev-c.com
 (C) Alexander Blade 2015
 
-It is now part of the Enhanced Native Trainer project.
+它现在已成为 Enhanced Native Trainer 项目的一部分。
 https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
-(C) Rob Pridham and fellow contributors 2015
+(C) Rob Pridham 及其他贡献者 2015
 */
 
 #pragma once
@@ -19,7 +19,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\ui_support\menu_functions.h"
 #include "..\debug\debuglog.h"
 #include "..\storage\database.h"
-/* From Zorg93's "EnableMPCars" code */
+/* 来源于 Zorg93 的 "EnableMPCars" 代码 */
 #include <cstddef>
 
 const std::vector<std::string> MISC_MUSICEVENT_VALUES{ "AH3A_FIB_DOCS_RT", "AH3A_RUBBLE_RT", "AH3B_BURNTOUT_TWO_RT", "AH3B_DOWNLOADING_RT", "AH3B_GET_TO_VAN_RT", "ARM3_RESTART_4", /*"BG_SIGHTSEER_START_ATTACK",*/ "EPS6_START", "EXTREME1_BIKE", "FAM3_CHASE_RESTART", 
@@ -48,18 +48,18 @@ const std::vector<std::string> MISC_CUTSCENE_VALUES{ "abigail_mcs_1_concat", "ab
 "sol_1_mcs_2", "sol_1_mcs_3",  "sol_2_ext_concat", "sol_2_int_alt1", "sol_3_int", "sol_5_mcs_1", "sol_5_mcs_2", "sol_5_mcs_2_p5", "tmom_1_rcm", "tmom_2_rcm", "tonya_mcs_1", "tonya_mcs_2", "tonya_mcs_3", "trevor_1_int", "trevor_2_int", "trevor_drive_int", 
 "trv2_mcs_8", "trvram_1", "trvram_2_concat", "trvram_3", "trvram_4", "trvram_5_con", "trv_1_mcs_1_p1", "trv_1_mcs_3_concat", "trv_1_mcs_4", "trv_2_mcs_4_concat", "trv_2_mcs_6", "trv_5_ext", "trv_5_int", "trv_dri_ext", "trv_dri_mcs_concat" };
 
-const std::vector<std::string> MISC_FILTERS_VALUES{ "DEFAULT", "AmbientPUSH", "BeastIntro01", "CAMERA_secuirity_FUZZ", "DeadlineNeon01", "glasses_black", "glasses_Darkblue", "glasses_green", "glasses_orange", "glasses_pink", "glasses_purple", "glasses_yellow", 
+const std::vector<std::string> MISC_FILTERS_VALUES{ "默认", "AmbientPUSH", "BeastIntro01", "CAMERA_secuirity_FUZZ", "DeadlineNeon01", "glasses_black", "glasses_Darkblue", "glasses_green", "glasses_orange", "glasses_pink", "glasses_purple", "glasses_yellow", 
 "graveyard_shootout", "hud_def_desatcrunch", "hud_def_flash", "lab_none_dark_OVR", "LostTimeDark", "LostTimeFlash", "METRO_Tunnels", "michealspliff", "mp_bkr_int01_garage", "MP_corona_heist_DOF", "mp_gr_int01_black", "MP_heli_cam", "mugShot_lineup", "New_sewers", 
 "NEW_station_unfinished", "NG_filmic04", "NG_filmic11", "NG_filmic12", "NG_filmic16", "NG_filmic17", "NG_filmic18", "NG_filmic19", "plane_inside_mode", "prologue_ending_fog", "prologue_shootout", "rply_brightness_neg", "rply_contrast_neg", "rply_saturation", 
 "SALTONSEA", "secret_camera", "shades_pink", "StuntFastDark", "switch_cam_2", "ufo", "ufo_deathray", "underwater_deep", "v_bahama", "V_FIB_stairs", "WATER_cove", "WATER_hills", "WATER_lab", "WATER_militaryPOOP", "WATER_muddy", "WATER_port", "WATER_resevoir", 
-"WATER_shore", "WATER_silverlake", "WhiteOut" };
+"WATER_shore", "WATER_silverlake", "WhiteOut" };//屏幕滤镜效果
 
-// Trainer Controls
-const std::vector<std::string> MISC_TRAINERCONTROL_CAPTIONS{ "On Release", "On Press" };
+// 修改器控制
+const std::vector<std::string> MISC_TRAINERCONTROL_CAPTIONS{ "松开时", "按下时" };
 extern int TrainerControlIndex;
 
-const std::vector<std::string> MISC_PHONE_BILL_CAPTIONS{ "10$", "50$", "100$", "500$", "1000$", "5000$", "10000$", "50000$", "100000$", "500000$", "1000000$" };
-const float MISC_PHONE_BILL_VALUES[] = { 10.0, 50.0, 100.0, 500.0, 1000.0, 5000.0, 10000.0, 50000.0, 100000.0, 500000.0, 1000000.0 };
+const std::vector<std::string> MISC_PHONE_BILL_CAPTIONS{ "10 美元", "50 美元", "100 美元", "500 美元", "1000 美元", "5000 美元", "1万 美元", "5万 美元", "10万 美元", "50万 美元", "100万 美元", "500万 美元", "1000万 美元", "5000万 美元", "1亿 美元" };
+const float MISC_PHONE_BILL_VALUES[] = { 10.0, 50.0, 100.0, 500.0, 1000.0, 5000.0, 10000.0, 50000.0, 100000.0, 500000.0, 1000000.0, 5000000.0, 10000000.0, 50000000.0, 100000000.0 };//越狱罚款额
 
 extern const Hash PLAYER_ZERO;
 extern const Hash PLAYER_ONE;
@@ -69,7 +69,7 @@ extern const Hash SP0_TOTAL_CASH;
 extern const Hash SP1_TOTAL_CASH;
 extern const Hash SP2_TOTAL_CASH;
 
-const std::vector<std::string> MISC_DEF_MENUTAB_CAPTIONS{ "OFF", "Map", "Brief", "Friends", "Gallery", "Game", "Settings", "Stats", "Store", "Online" };
+const std::vector<std::string> MISC_DEF_MENUTAB_CAPTIONS{ "关", "地图", "简讯", "好友", "相册", "游戏", "设置", "统计", "商店", "在线" };
 const int MISC_DEF_MANUTAB_VALUES[] = { -2, -1, 1, 2, 3, 5, 6, 10, 18, 42 };
 extern int DefMenuTabIndex;
 
@@ -185,7 +185,7 @@ struct ScriptTable
 	{
 		if (TablePtr == NULL)
 		{
-			return NULL; //table initialisation hasnt happened yet
+			return NULL; //表格初始化尚未发生
 		}
 		for (int i = 0; i<count; i++)
 		{
@@ -205,7 +205,7 @@ struct GlobalTable
 	bool IsInitialised()const { return *GlobalBasePtr != NULL; }
 };
 
-//Radio track skipping.
+//电台曲目切换
 void SkipRadioFwd1(uint32_t a1);
 static void SkipRadioFwd2Internal(uintptr_t a1, uint32_t a2);
 void SkipRadioFwd2(uint32_t a1);
