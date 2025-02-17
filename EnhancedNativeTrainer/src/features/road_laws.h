@@ -19,31 +19,31 @@ extern bool featureEscapingPolice;
 extern bool featurePlayerMostWanted;
 extern bool featurePlayerNoSwitch;
 
-//Speeding In A City
-const std::vector<std::string> VEH_SPEEDINGCITY_CAPTIONS{ "OFF", "45 MPH", "60 MPH", "80 MPH", "100 MPH", "120 MPH", "150 MPH", "180 MPH" };
-const int VEH_SPEEDINGCITY_VALUES[] = { 0, 45, 60, 80, 100, 120, 150, 180 };
+//在城市中(市区)超速
+const std::vector<std::string> VEH_SPEEDINGCITY_CAPTIONS{ "关", "40 KM/H", "60 KM/H", "80 KM/H", "100 KM/H", "120 KM/H", "150 KM/H", "180 KM/H", "200 KM/H" };
+const int VEH_SPEEDINGCITY_VALUES[] = { 0, 25, 37, 50, 62, 74, 93, 112, 124 }; //单位为 MPH，整数
 extern int SpeedingCityIndex;
 
-extern int SpeedingSpeedwayIndex; //Speeding On Speedway
+extern int SpeedingSpeedwayIndex; //在高速公路上超速行驶
 
-extern int FineSizeIndex; //Fine Size
+extern int FineSizeIndex; //罚款金额
 
-//Detection Range
-const std::vector<std::string> VEH_DETECTIONRANGE_CAPTIONS{ "3m", "5m", "10m", "20m", "30m", "50m", "100m", "200m", "500m" };
-const int VEH_DETECTIONRANGE_VALUES[] = { 3, 5, 10, 20, 30, 50, 100, 200, 500 };
+//侦测范围
+const std::vector<std::string> VEH_DETECTIONRANGE_CAPTIONS{ "3 米", "5 米", "10 米", "20 米", "30 米", "50 米", "100 米", "200 米", "500 米", "1000 米" };
+const int VEH_DETECTIONRANGE_VALUES[] = { 3, 5, 10, 20, 30, 50, 100, 200, 500, 1000 };
 extern int DetectionRangeIndex;
 
-//Pirsuit Range
-const std::vector<std::string> VEH_PIRSUITRANGE_CAPTIONS{ "300m", "400m", "500m", "600m", "700m", "800m" };
-const int VEH_PIRSUITRANGE_VALUES[] = { 300, 400, 500, 600, 700, 800 };
+//追捕范围
+const std::vector<std::string> VEH_PIRSUITRANGE_CAPTIONS{ "100 米", "200 米", "300 米", "400 米", "500 米", "600 米", "700 米", "800 米", "900 米", "1000 米" };
+const int VEH_PIRSUITRANGE_VALUES[] = { 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000 };
 extern int PirsuitRangeIndexN;
 
-//Stars If Try To Escape
-const std::vector<std::string> VEH_STARSPUNISH_CAPTIONS{ "1 Star", "2 Stars", "3 Stars", "4 Stars", "5 Stars" };
+//如果试图逃脱时的星级
+const std::vector<std::string> VEH_STARSPUNISH_CAPTIONS{ "1 星", "2 星", "3 星", "4 星", "5 星" };
 const int VEH_STARSPUNISH_VALUES[] = { 1, 2, 3, 4, 5 };
 extern int StarsPunishIndex;
 
-//Most Wanted
+//头号通缉犯
 extern int current_player_mostwanted;
 extern bool current_player_mostwanted_Changed;
 extern int mostwanted_level_enable;
