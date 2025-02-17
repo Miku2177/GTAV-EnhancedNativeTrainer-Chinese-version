@@ -1,11 +1,11 @@
 /*
-Some of this code began its life as a part of GTA V SCRIPT HOOK SDK.
+这段代码的部分最初来源于 GTA V SCRIPT HOOK SDK。
 http://dev-c.com
 (C) Alexander Blade 2015
 
-It is now part of the Enhanced Native Trainer project.
+它现在已成为 Enhanced Native Trainer 项目的一部分。
 https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
-(C) Rob Pridham and fellow contributors 2015
+(C) Rob Pridham 及其他贡献者 2015
 */
 
 #include "menu_functions.h"
@@ -48,11 +48,11 @@ bool is_menu_showing(){
 }
 
 void draw_menu_line(std::string caption, float lineWidth, float lineHeight, float lineTop, float lineLeft, float textLeft, bool active, bool title, bool rescaleText){
-	float text_scale = 0.35;
-	bool outline = false;
-	bool dropShadow = false;
+	float text_scale = 0.35;//用于控制文本的缩放比例或大小
+	bool outline = false;//用于控制文本是否有轮廓
+	bool dropShadow = false;//用于控制文本是否带有阴影效果
 
-	// correcting values for active line
+	// 校正活动行的值
 	if(active){
 		if(rescaleText){
 			text_scale = 0.40;
@@ -72,18 +72,18 @@ void draw_menu_line(std::string caption, float lineWidth, float lineHeight, floa
 
 	textLeft += lineLeft;
 
-	float lineWidthScaled = lineWidth / (float) screen_w; // line width
-	float lineTopScaled = lineTop / (float) screen_h; // line top offset
-	float textLeftScaled = textLeft / (float) screen_w; // text left offset
-	float lineHeightScaled = lineHeight / (float) screen_h; // line height
+	float lineWidthScaled = lineWidth / (float) screen_w; // 行宽
+	float lineTopScaled = lineTop / (float) screen_h; // 行顶部偏移
+	float textLeftScaled = textLeft / (float) screen_w; // 文本左偏移
+	float lineHeightScaled = lineHeight / (float) screen_h; // 行高
 
 	float lineLeftScaled = lineLeft / (float) screen_w;
 
 	float textHeightScaled = (title ? TEXT_HEIGHT_TITLE : TEXT_HEIGHT_NORMAL) / (float) screen_h;
 
-	// this is how it's done in original scripts
+	// 这就是原始脚本中的做法
 
-	// text upper part
+	// 文本上半部分
 	if(title){
 		UI::SET_TEXT_FONT(fontHeader);
 	}
@@ -116,7 +116,7 @@ void draw_menu_line(std::string caption, float lineWidth, float lineHeight, floa
 
 	UI::_DRAW_TEXT(textLeftScaled, lineTopScaled + (0.5f * (lineHeightScaled - textHeightScaled)));
 
-	// rect
+	// 矩形 (菜单)
 	if(active){
 		draw_rect(lineLeftScaled, lineTopScaled, lineWidthScaled, lineHeightScaled,
 				  ENTColor::colsMenu[5].rgba[0], ENTColor::colsMenu[5].rgba[1], ENTColor::colsMenu[5].rgba[2], ENTColor::colsMenu[5].rgba[3]);
@@ -132,7 +132,7 @@ void draw_menu_line(std::string caption, float lineWidth, float lineHeight, floa
 }
 
 void draw_rect(float A_0, float A_1, float A_2, float A_3, int A_4, int A_5, int A_6, int A_7){
-	//this craziness is required - X and Y are strange
+	//这个疯狂的做法是必须的 - X 和 Y 很奇怪
 	GRAPHICS::DRAW_RECT((A_0 + (A_2 * 0.5f)), (A_1 + (A_3 * 0.5f)), A_2, A_3, A_4, A_5, A_6, A_7);
 }
 
@@ -275,10 +275,10 @@ std::string show_keyboard(char* title_id, char* prepopulated_text){
 
 template<class T>
 bool ToggleMenuItem<T>::onConfirm(){
-	//call super
+	//调用父级菜单
 	MenuItem::onConfirm();
 
-	//toggle the value if there is none
+	//如果没有值，则切换该值
 	if(toggleValue != NULL){
 		*toggleValue = !*toggleValue;
 
@@ -358,7 +358,7 @@ bool CashItem<T>::onConfirm(){
 	}
 	STATS::STAT_SET_INT(hash, newAmount, 1);
 	
-	cash >= 0 ? set_status_text("Cash added") : set_status_text("Cash removed");
+	cash >= 0 ? set_status_text("现金增加了！") : set_status_text("现金减少了！");
 
 	return true;
 }
@@ -396,8 +396,8 @@ void CashItem<T>::handleRightPress(){
 }
 
 bool SelectFromListMenuItem::onConfirm(){
-	// toggle whether we're "locked in" to the setting
-	// change menu item color to signify it's locked in
+	// 切换是否“锁定”设置
+	// 改变菜单项颜色以表示已锁定
 	locked = !locked;
 
 	MenuItem::onConfirm();
