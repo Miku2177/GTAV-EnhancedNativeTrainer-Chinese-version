@@ -1,7 +1,7 @@
 /*
-Part of the Enhanced Native Trainer project.
+增强版原生训练器项目的一部分。
 https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
-(C) Rob Pridham and fellow contributors 2015
+(C) Rob Pridham 及其他贡献者 2015
 */
 
 #include "anims.h"
@@ -3614,8 +3614,8 @@ TreeNode* build_anim_tree_with_prefix_filter(std::string filter)
 DWORD WINAPI build_anim_tree_thread(LPVOID lpParameter)
 {
 	rootNode = build_anim_tree(ALL_ANIMS);
-	facialsNode = build_anim_tree_with_suffix_filter("facial");
-	movementNode = build_anim_tree_with_prefix_filter("move");
+	facialsNode = build_anim_tree_with_suffix_filter("facial");//不能翻译 "面部"
+	movementNode = build_anim_tree_with_prefix_filter("move");//不能反映 "动作"
 	loaded = true;
 	return 0;
 }
@@ -3659,7 +3659,7 @@ TreeNode* build_anim_tree(std::vector<std::string> input, bool includeAnim)
 			std::string token = tokens.at(i);
 			if (i == tokens.size() - 1)
 			{
-				//if the last node ends in @, add it
+				//如果最后一个节点以 @ 结尾，则添加它
 				if (StringEndsWith(dict, "@"))
 				{
 					token = token.append("@");
@@ -3743,7 +3743,7 @@ bool onconfirm_anim_menu(MenuItem<int> choice)
 			}
 			else
 			{
-				set_status_text("Can't find this animation");
+				set_status_text("~r~错误！~s~无法找到此场景动画！");
 				return false;
 			}
 		}
@@ -3762,7 +3762,7 @@ bool onconfirm_anim_menu(MenuItem<int> choice)
 		
 		do_play_anim(playerPed, dict, anim, currentAnimMenuMode);
 
-		set_status_text("Animation applied");
+		set_status_text("场景动画已执行！");
 
 		return false;
 	}
@@ -3782,14 +3782,14 @@ bool process_anims_menu()
 {
 	if (!loaded)
 	{
-		set_status_text("Anims not loaded yet, try again later");
+		set_status_text("场景动画尚未加载，请稍后再试！");
 		return false;
 	}
 
 	if (currentAnimMenuDepth == 0)
 	{
 		switch (currentAnimMenuMode)
-		{//facial immediate
+		{//面部表情 立即执行
 		case CATEGORY_FACIAL_NOW:
 			currentMenuNode = facialsNode;
 			break;
@@ -3809,7 +3809,7 @@ bool process_anims_menu()
 	{
 		switch (currentAnimMenuMode)
 		{
-		case 0: //placeholder to supress warning. To be removed!
+		case 0: //占位符，用于抑制警告，待删除！
 		//case CATEGORY_MOVE_IDLE:
 		//case CATEGORY_MOVE_WALK:
 			break;
@@ -3820,7 +3820,7 @@ bool process_anims_menu()
 	{
 		MenuItem<int> *item = new MenuItem<int>();
 		item->isLeaf = true;
-		item->caption = "Clear/Reset To Default";
+		item->caption = "清除并重置为默认";
 		item->value = -1;
 		menuItems.push_back(item);
 	}
@@ -3845,11 +3845,11 @@ bool process_anims_menu()
 	char* caption;
 	switch (currentAnimMenuMode)
 	{
-	case CATEGORY_FACIAL_NOW://facial immediate
-		caption = "Facial Anims";
+	case CATEGORY_FACIAL_NOW://面部动作立即执行
+		caption = "面部场景动画";
 		break;
 	case CATEGORY_GENERAL_NOW:
-		caption = "Player Anims";
+		caption = "玩家场景动画";
 		break;
 	//case CATEGORY_MOVE_IDLE:
 	//	caption = "Idle Anims";
@@ -3860,7 +3860,7 @@ bool process_anims_menu()
 	}
 
 	std::stringstream caption_ss;
-	caption_ss << caption << " Level " << (currentAnimMenuDepth + 1);
+	caption_ss << caption << "  层级 " << (currentAnimMenuDepth + 1);
 	auto caption_str = caption_ss.str();
 
 	bool result = draw_generic_menu<int>(menuItems, 0, caption_str, onconfirm_anim_menu, NULL, NULL, NULL);
@@ -3895,25 +3895,25 @@ bool process_anims_menu_top()
 
 	MenuItem<int> *item = new MenuItem<int>();
 	item->isLeaf = false;
-	item->caption = "Scenarios";
+	item->caption = "场景动画";
 	item->value = CATEGORY_SCENARIOS;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
 	item->isLeaf = false;
-	item->caption = "Movement Clipsets";
+	item->caption = "移动场景动画集";
 	item->value = CATEGORY_MOVE_CLIPSET;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
 	item->isLeaf = false;
-	item->caption = "Facial Anims: Immediate Play";
+	item->caption = "面部场景动画: 立即执行";
 	item->value = CATEGORY_FACIAL_NOW;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
 	item->isLeaf = false;
-	item->caption = "All Anims: Immediate Play";
+	item->caption = "玩家场景动画: 立即执行";
 	item->value = CATEGORY_GENERAL_NOW;
 	menuItems.push_back(item);
 
@@ -3929,14 +3929,14 @@ bool process_anims_menu_top()
 	//item->value = CATEGORY_MOVE_WALK;
 	//menuItems.push_back(item);
 
-	draw_generic_menu<int>(menuItems, 0, "Animation Types", onconfirm_anim_top_menu, NULL, NULL, NULL);
+	draw_generic_menu<int>(menuItems, 0, "场景动画类型", onconfirm_anim_top_menu, NULL, NULL, NULL);
 
 	return false;
 }
 
 void replay_last_anim()
 {
-	if (lastImmediatePlayAnim.empty() || lastImmediatePlayDict.empty()) set_status_text("No animation to play");
+	if (lastImmediatePlayAnim.empty() || lastImmediatePlayDict.empty()) set_status_text("没有任何场景动画可以执行! ");
 	
 	if (!lastImmediatePlayAnim.empty() && !lastImmediatePlayDict.empty())
 	{
@@ -3980,7 +3980,7 @@ void do_play_anim(Ped playerPed, char* dict, char* anim, int mode)
 		std::string sentence = lastImmediatePlayAnim;
 		std::string wordToFind = "_SEAT_"; // std::string wordToFind = "Sitting:";
 		size_t word = sentence.find(wordToFind);
-		if (word != std::string::npos) sitting_scenario = true; //If we don't reach end of the sentence - we found it!
+		if (word != std::string::npos) sitting_scenario = true; //如果我们没有到达句子的结尾 - 我们找到了！
 		if (sitting_scenario == false) AI::TASK_START_SCENARIO_IN_PLACE(playerPed, anim, 0, true);
 		else AI::TASK_START_SCENARIO_AT_POSITION(playerPed, anim, ENTITY::GET_ENTITY_COORDS(playerPed, true).x, ENTITY::GET_ENTITY_COORDS(playerPed, true).y, ENTITY::GET_ENTITY_COORDS(playerPed, true).z - 1, ENTITY::GET_ENTITY_HEADING(playerPed), 0, 0, 1);
 	}
@@ -4046,11 +4046,11 @@ bool onconfirm_scenarios_menu_l2(MenuItem<int> choice)
 	std::string sentence = caption;
 	std::string wordToFind = "_SEAT_"; // std::string wordToFind = "Sitting:";
 	size_t word = sentence.find(wordToFind);
-	if (word != std::string::npos) sitting_scenario = true; //If we don't reach end of the sentence - we found it!
+	if (word != std::string::npos) sitting_scenario = true; //如果我们没有到达句子的结尾 - 我们找到了！
 
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	AI::CLEAR_PED_TASKS(playerPed);
-	set_status_text("Press Menu Back to stop this scenario");
+	set_status_text("按 (退格键) 返回并停止此场景动画！");
 	if (sitting_scenario == false) AI::TASK_START_SCENARIO_IN_PLACE(playerPed, (char*)value.c_str(), 0, true);
 	else AI::TASK_START_SCENARIO_AT_POSITION(playerPed, (char*)value.c_str(), ENTITY::GET_ENTITY_COORDS(playerPed, true).x, ENTITY::GET_ENTITY_COORDS(playerPed, true).y, ENTITY::GET_ENTITY_COORDS(playerPed, true).z - 1, ENTITY::GET_ENTITY_HEADING(playerPed), 0, 0, 1);
 
@@ -4076,12 +4076,12 @@ bool process_scenarios_menu_l2(int set)
 	std::string menuCaption;
 	if (set == 0)
 	{
-		menuCaption = "Human Scenarios";
+		menuCaption = "人类场景动画";
 		captions = SCENARIOS_NORMAL_VALUES;
 	}
 	else
 	{
-		menuCaption = "Animal Scenarios";
+		menuCaption = "动物场景动画";
 		captions = SCENARIOS_ANIMAL_VALUES;
 	}
 
@@ -4114,16 +4114,16 @@ bool process_scenarios_menu_l1()
 	int i = 0;
 
 	MenuItem<int> *item = new MenuItem<int>();
-	item->caption = "Human Scenarios";
+	item->caption = "人类场景动画";
 	item->value = 0;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Animal Scenarios";
+	item->caption = "动物场景动画";
 	item->value = 1;
 	menuItems.push_back(item);
 
-	bool result = draw_generic_menu<int>(menuItems, &activeScenarioLineIndex[0], "Scenarios", onconfirm_scenarios_menu_l1, NULL, NULL, NULL);
+	bool result = draw_generic_menu<int>(menuItems, &activeScenarioLineIndex[0], "场景动画类型", onconfirm_scenarios_menu_l1, NULL, NULL, NULL);
 	return false;
 }
 
@@ -4147,7 +4147,7 @@ bool onconfirm_clipset_menu(MenuItem<int> choice)
 	if (!STREAMING::HAS_ANIM_SET_LOADED((char*)value.c_str()))
 	{
 		std::stringstream ss;
-		ss << "Loading clipset " << (char*)value.c_str() << " failed";
+		ss << "加载场景动画集 " << (char*)value.c_str() << " 失败了";
 		set_status_text(ss.str());
 		return false;
 	}
@@ -4169,7 +4169,7 @@ bool process_clipset_menu()
 	std::vector<std::string> captions;
 	std::string menuCaption;
 	
-	menuCaption = "Movement Clipsets";
+	menuCaption = "移动场景动画集";
 	captions = CLIPSETS_NORMAL_VALUES;
 
 	int i = 0;
