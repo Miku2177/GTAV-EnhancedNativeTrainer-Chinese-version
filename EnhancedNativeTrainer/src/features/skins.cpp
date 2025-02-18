@@ -865,7 +865,7 @@ bool process_skinchanger_menu()
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "修改饰品";
+	item->caption = "修改当前饰品";
 	item->value = i++;
 	item->isLeaf = false;
 	menuItems.push_back(item);
@@ -877,7 +877,7 @@ bool process_skinchanger_menu()
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "删除饰品";
+	item->caption = "删除当前饰品";
 	item->value = i++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
@@ -895,7 +895,7 @@ bool process_skinchanger_menu()
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "佩戴头盔";
+	item->caption = "玩家佩戴头盔";
 	item->value = i++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
