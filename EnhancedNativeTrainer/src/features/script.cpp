@@ -2088,7 +2088,7 @@ bool process_ragdoll_menu() {
 
 	listItem = new SelectFromListMenuItem(NPC_RAGDOLL_CAPTIONS, onchange_NPC_ragdoll_mode);
 	listItem->wrap = false;
-	listItem->caption = "NPC 被射击时布娃娃效果";
+	listItem->caption = "NPC被射击时布娃娃效果";
 	listItem->value = current_npc_ragdoll;
 	menuItems.push_back(listItem);
 	
@@ -2269,7 +2269,7 @@ void process_player_menu(){
 		{"在车辆内隐身", &featurePlayerInvisibleInVehicle, NULL, true }, 
 		{"开启夜视", &featureNightVision, &featureNightVisionUpdated, true},
 		{"开启热成像", &featureThermalVision, &featureThermalVisionUpdated, true},
-		{"场景动作", NULL, NULL, false},
+		{"场景动画", NULL, NULL, false},
 		{"玩家数据", NULL, NULL, false},
 		{"监狱逃脱", NULL, NULL, false},
 		{"超能力", NULL, NULL, false},
