@@ -3615,7 +3615,7 @@ DWORD WINAPI build_anim_tree_thread(LPVOID lpParameter)
 {
 	rootNode = build_anim_tree(ALL_ANIMS);
 	facialsNode = build_anim_tree_with_suffix_filter("facial");//不能翻译 "面部"
-	movementNode = build_anim_tree_with_prefix_filter("move");//不能反映 "动作"
+	movementNode = build_anim_tree_with_prefix_filter("move");//不能翻译 "动作"
 	loaded = true;
 	return 0;
 }
