@@ -13,12 +13,12 @@ class ENTColor{
 	static const std::string colsCaptions[12], colsCompCaptions[4];
 	static const int colsVarsNum;
 
-	ENTColor(int r, int g, int b, int a){
-		rgba[0] = r, rgba[1] = g, rgba[2] = b, rgba[3] = a;
+	ENTColor(int r, int g, int b, int a){ // 构造函数，用于初始化颜色值
+		rgba[0] = r, rgba[1] = g, rgba[2] = b, rgba[3] = a; // 将传入的 RGBA 值分别赋值给 rgba 数组
 	}
 
 	virtual ~ENTColor(){
-		// leave empty
+		// 保持为空
 	}
 
 	static void reset_colors();
