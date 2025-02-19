@@ -1,11 +1,11 @@
 /*
-Some of this code began its life as a part of GTA V SCRIPT HOOK SDK.
+这段代码的部分最初来源于 GTA V SCRIPT HOOK SDK。
 http://dev-c.com
 (C) Alexander Blade 2015
 
-It is now part of the Enhanced Native Trainer project.
+它现在已成为 Enhanced Native Trainer 项目的一部分。
 https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
-(C) Rob Pridham and fellow contributors 2015
+(C) Rob Pridham 及其他贡献者 2015
 */
 
 #include "utils.h"
@@ -19,7 +19,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "debug\debuglog.h"
 #include "features/misc.h"
 
-extern "C" IMAGE_DOS_HEADER __ImageBase; // MSVC specific, with other compilers use HMODULE from DllMain
+extern "C" IMAGE_DOS_HEADER __ImageBase; // MSVC 专用，其他编译器请使用 DllMain 中的 HMODULE
 
 std::string cachedModulePath;
 
@@ -27,7 +27,7 @@ std::string GetCurrentModulePath()
 {
 	if (cachedModulePath.empty())
 	{
-		// get module path
+		// 获取模块路径
 		char modPath[MAX_PATH];
 		memset(modPath, 0, sizeof(modPath));
 		GetModuleFileNameA((HMODULE)&__ImageBase, modPath, sizeof(modPath));
@@ -87,13 +87,13 @@ std::wstring ConvertFromUtf8ToUtf16(const std::string& str)
 	return convertedString;
 }
 
-//Converts Radians to Degrees
+//将弧度转换为角度
 float degToRad(float degs)
 {
 	return degs*(float)3.141592653589793 / (float)180.0;
 }
 
-//Converts Degrees to Radians
+//将角度转换为弧度
 float radToDeg(float rads)
 {
 	return rads * ((float)180.0 / (float)3.141592653589793);
@@ -152,7 +152,7 @@ int RegisterFile(const std::string& fullPath, const std::string& fileName)
 		return textureID;
 	}
 
-	write_text_to_log_file("Failed to register " + path);
+	write_text_to_log_file("注册失败 " + path);
 	return 0;
 }
 

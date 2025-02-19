@@ -1,5 +1,5 @@
 /*
-THIS FILE IS A PART OF GTA V SCRIPT HOOK SDK
+本文件是 GTA V SCRIPT HOOK SDK 的一部分。
 http://dev-c.com
 (C) Alexander Blade 2015
 */
@@ -74,7 +74,7 @@ const std::vector<int> OrderedExplosions =
 	EXPLOSION_FIREBALL_LARGE_4 //8
 };
 
-//VEHICLE VALUES
+//车辆参数
 enum SeatPositions{
 	SEAT_DRIVER = -1,
 	SEAT_PASSENGER = 0,
@@ -298,13 +298,13 @@ enum BikeWheels{
 };
 
 enum VehicleModTypes{
-	/*<-- New Enums from XBLToothPik -->*/
+	/*<-- 来自 XBLToothPik 的新枚举 -->*/
 	MOD_SPOILER,
 	MOD_FRONTBUMPER,
 	MOD_REARBUMPER,
 	MOD_SIDESKIRT,
 	MOD_EXHAUST,
-	MOD_CHASSIS, //Or roll cage
+	MOD_CHASSIS, //或防滚架
 	MOD_GRILLE,
 	MOD_HOOD,
 	MOD_FENDER,
@@ -323,8 +323,8 @@ enum VehicleModTypes{
 	MOD_UNKNOWN_21,
 	MOD_XENONLIGHTS,
 	MOD_FRONTWHEELS,
-	MOD_REARWHEELS, //Bikes only
-	// Benny's
+	MOD_REARWHEELS, //仅适用于自行车
+	// 本尼改装店
 	MOD_PLATEHOLDER,
 	MOD_VANITYPLATE,
 	MOD_TRIMDESIGN,
@@ -401,7 +401,7 @@ enum VehicleModHorns{
 
 enum VehicleAddonLevel{
 	MOD_INDEX_OFF = -1,
-	MOD_INDEX_ONE, //To determine mod index, look at the mod menu in LSC, the first item is MOD_INDEX_ONE. Count down to the item you want. Stock counts as OFF.
+	MOD_INDEX_ONE, //要确定改装索引，请查看洛圣都改车王（LSC）的改装菜单，第一项是 MOD_INDEX_ONE。向下数到你想要的项。原厂状态视为 OFF。
 	MOD_INDEX_TWO,
 	MOD_INDEX_THREE,
 	MOD_INDEX_FOUR,
@@ -543,7 +543,7 @@ enum PlateTextIndexs{
 	PLATE_YANKTON
 };
 
-enum WindowTints //m8 do you even int tint?
+enum WindowTints //兄弟，你懂车窗色调吗？
 {
 	WINDOWTINT_NONE,
 	WINDOWTINT_BLACK,
@@ -2021,7 +2021,7 @@ inline bool GetVehicleInfoForClanLogo(Hash vehicleModel, Vector3& x, Vector3& y,
 	}
 }
 
-//WEAPON VALUES
+//武器参数
 enum WeaponHashes{
 	WEAPON_ADVANCEDRIFLE = 0xAF113F99,
 	WEAPON_AIRSTRIKE_ROCKET = 0x13579279,
@@ -2236,7 +2236,7 @@ enum WeaponTypeGroup{
 	WEAPON_TYPE_GROUP_FIREEXTINGUISHER = 0xFDBF656C,
 	WEAPON_TYPE_GROUP_SPECIAL = 0xA27A4F9F,
 	WEAPON_TYPE_GROUP_SNIPER = 0xB7BBD827,
-	WEAPON_TYPE_GROUP_SPILLABLE = 0x5F1BE07C, //Petrol can
+	WEAPON_TYPE_GROUP_SPILLABLE = 0x5F1BE07C,//汽油罐
 	WEAPON_TYPE_GROUP_STUN = 0x29268262,
 };
 
