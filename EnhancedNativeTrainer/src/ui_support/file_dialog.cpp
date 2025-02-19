@@ -1,11 +1,11 @@
 /*
-Some of this code began its life as a part of GTA V SCRIPT HOOK SDK.
+这段代码的部分最初来源于 GTA V SCRIPT HOOK SDK。
 http://dev-c.com
 (C) Alexander Blade 2015
 
-It is now part of the Enhanced Native Trainer project.
+它现在已成为 Enhanced Native Trainer 项目的一部分。
 https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
-(C) Rob Pridham and fellow contributors 2015
+(C) Rob Pridham 及其他贡献者 2015
 */
 
 #include "file_dialog.h"
@@ -76,21 +76,21 @@ void show_file_open_dialog(std::string title, LoadFileDialogCallback* callback)
 		find_parent_window();
 	}
 
-	OPENFILENAME ofn;       // common dialog box structure
-	char szFile[MAX_PATH];       // buffer for file name
-	HANDLE hf;              // file handle
+	OPENFILENAME ofn;       // 通用对话框结构
+	char szFile[MAX_PATH];  // 用于存储文件名的缓冲区
+	HANDLE hf;              // 文件句柄
 
 	DWORD procID = GetCurrentProcessId();
 
 	EnumWindows(EnumWindowsProc, NULL);
 
-	// Initialize OPENFILENAME
+	// 初始化 OPENFILENAME
 	ZeroMemory(&ofn, sizeof(ofn));
 	ofn.lStructSize = sizeof(ofn);
 	ofn.hwndOwner = parentWindow;
 	ofn.lpstrFile = szFile;
-	// Set lpstrFile[0] to '\0' so that GetOpenFileName does not 
-	// use the contents of szFile to initialize itself.
+	// 将 lpstrFile[0] 设置为 '\0'，以便 GetOpenFileName 不会
+	// 使用 szFile 的内容来初始化自身。
 	ofn.lpstrFile[0] = '\0';
 	ofn.nMaxFile = sizeof(szFile);
 	ofn.lpstrFilter = "ENT XML Files\0*.XML\0\0";
@@ -101,7 +101,7 @@ void show_file_open_dialog(std::string title, LoadFileDialogCallback* callback)
 	ofn.lpstrInitialDir = NULL;
 	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
 
-	// Display the Open dialog box. 
+	// 显示“打开”对话框。
 
 	if (GetOpenFileName(&ofn) == TRUE)
 	{
@@ -115,9 +115,9 @@ void show_file_open_dialog(std::string title, LoadFileDialogCallback* callback)
 
 		if (hf == INVALID_HANDLE_VALUE)
 		{
-			write_text_to_log_file("CreateFile returned invalid handle");
+			write_text_to_log_file("CreateFile 返回了无效句柄");
 			std::ostringstream ss;
-			ss << "Selected file was: " << ofn.lpstrFile << " and error " << GetLastError();
+			ss << "选择的文件是: " << ofn.lpstrFile << " 以及错误 " << GetLastError();
 			write_text_to_log_file(ss.str());
 			callback->success = false;
 		}
@@ -130,7 +130,7 @@ void show_file_open_dialog(std::string title, LoadFileDialogCallback* callback)
 	}
 	else
 	{
-		write_text_to_log_file("GetOpenFileName returned false");
+		write_text_to_log_file("GetOpenFileName 返回 false");
 		callback->success = false;
 	}
 
@@ -144,21 +144,21 @@ void show_file_save_dialog(std::string title, SaveFileDialogCallback* callback)
 		find_parent_window();
 	}
 
-	OPENFILENAME sfn;       // common dialog box structure
-	char szFile[MAX_PATH];       // buffer for file name
-	HANDLE hf;              // file handle
+	OPENFILENAME sfn;       // 通用对话框结构
+	char szFile[MAX_PATH];  // 用于存储文件名的缓冲区
+	HANDLE hf;              // 文件句柄
 
 	DWORD procID = GetCurrentProcessId();
 
 	EnumWindows(EnumWindowsProc, NULL);
 
-	// Initialize OPENFILENAME
+	// 初始化 OPENFILENAME
 	ZeroMemory(&sfn, sizeof(sfn));
 	sfn.lStructSize = sizeof(sfn);
 	sfn.hwndOwner = parentWindow;
 	sfn.lpstrFile = szFile;
-	// Set lpstrFile[0] to '\0' so that GetOpenFileName does not 
-	// use the contents of szFile to initialize itself.
+	// 将 lpstrFile[0] 设置为 '\0'，以便 GetOpenFileName 不会
+	// 使用 szFile 的内容来初始化自身。
 	sfn.lpstrFile[0] = '\0';
 	sfn.nMaxFile = sizeof(szFile);
 	sfn.lpstrFilter = "ENT XML Files\0*.XML\0\0";
@@ -169,7 +169,7 @@ void show_file_save_dialog(std::string title, SaveFileDialogCallback* callback)
 	sfn.lpstrInitialDir = NULL;
 	sfn.Flags = OFN_OVERWRITEPROMPT | OFN_NOCHANGEDIR;
 
-	// Display the Open dialog box. 
+	// 显示“打开”对话框。
 
 	if (GetSaveFileName(&sfn) == TRUE)
 	{
@@ -214,7 +214,7 @@ BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam)
 			GetWindowText(hwnd, title, sizeof(title));
 
 			std::ostringstream ss;
-			ss << "Window title: " << title << " and class: " << class_name;
+			ss << "窗口标题: " << title << " 以及类结构: " << class_name;
 			write_text_to_log_file(ss.str());
 
 			if (strcmp(class_name, "DIEmWin") == 0)
