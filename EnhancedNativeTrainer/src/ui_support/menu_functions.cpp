@@ -53,18 +53,18 @@ void draw_menu_line(std::string caption, float lineWidth, float lineHeight, floa
 	bool dropShadow = false;//用于控制文本是否带有阴影效果
 
 	// 校正活动行的值
-	if(active){
-		if(rescaleText){
-			text_scale = 0.40;
+	if (active) { // 如果当前项是活动的（被选中或高亮）
+		if (rescaleText) { // 如果需要重新缩放文本
+			text_scale = 0.40; // 设置文本缩放比例为 0.40
 		}
 	}
-	else if(title){
-		if(rescaleText){
-			text_scale = 0.60;
+	else if (title) { // 如果当前项是标题
+		if (rescaleText) { // 如果需要重新缩放文本
+			text_scale = 0.60; // 设置文本缩放比例为 0.60
 		}
 	}
-	else{
-		outline = true;
+	else { // 如果上述条件均不满足
+		outline = true; // 启用轮廓（outline）
 	}
 
 	int screen_w, screen_h;
