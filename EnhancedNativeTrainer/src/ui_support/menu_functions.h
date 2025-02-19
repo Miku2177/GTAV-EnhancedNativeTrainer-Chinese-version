@@ -1,11 +1,11 @@
 /*
-Some of this code began its life as a part of GTA V SCRIPT HOOK SDK.
+这段代码的部分最初来源于 GTA V SCRIPT HOOK SDK。
 http://dev-c.com
 (C) Alexander Blade 2015
 
-It is now part of the Enhanced Native Trainer project.
+它现在已成为 Enhanced Native Trainer 项目的一部分。
 https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
-(C) Rob Pridham and fellow contributors 2015
+(C) Rob Pridham 及其他贡献者 2015
 */
 
 #pragma once
@@ -32,7 +32,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 #pragma warning(disable : 4244 4305 4267) // double <-> float conversions <-> size_t conversions
 
-const int fontHeader = 4, fontItem = 0, fontWanted = 7;
+const int fontHeader = 4, fontItem = 0, fontWanted = 7;// 修改字体类型：分别用于标题字体、项目字体、目标字体
 
 extern void(*periodic_feature_call)(void);
 
@@ -53,18 +53,18 @@ class MenuItem{
 	virtual ~MenuItem(){
 	}
 
-	std::string caption;
-	T value;
-	int currentMenuIndex = 0;
-	bool isLeaf = true;
-	void(*onConfirmFunction)(const MenuItem<T> choice) = NULL;
-	int sortval = 0;
+	std::string caption; // 菜单项的标题或显示文本
+	T value; // 菜单项的值，类型为模板参数 T
+	int currentMenuIndex = 0; // 当前菜单项的索引，默认值为 0
+	bool isLeaf = true; // 是否为叶子节点（即没有子菜单），默认值为 true
+	void(*onConfirmFunction)(const MenuItem<T> choice) = NULL; // 确认时的回调函数，默认值为 NULL
+	int sortval = 0; // 排序值，用于菜单项的排序，默认值为 0
 
 	/**
-	Handle the on-item confirmation press.
-	Returns whether the confirmation has been absorbed; if not, it will be
-	passed up to the parent menu.
+	处理菜单项确认按下事件。
+	返回确认是否已被处理；如果未被处理，事件将传递给父菜单。
 	*/
+
 	virtual inline bool onConfirm(){
 		//set_status_text("Parent confirm");
 		if(onConfirmFunction != NULL){
@@ -172,9 +172,9 @@ class SelectFromListMenuItem: public MenuItem <int>{
 
 	void(*onValueChangeCallback)(int index, SelectFromListMenuItem* source);
 
-	bool wrap = true;
+	bool wrap = true; // 控制文本是否自动换行，默认值为 true（自动换行）
 
-	bool locked = false;
+	bool locked = false; // 控制项是否被锁定，默认值为 false（未锁定）
 
 	std::vector<int> extras;
 };
@@ -184,7 +184,7 @@ class CashItem: public MenuItem <T>{
 	virtual ~CashItem(){
 	}
 
-	int cash = 100000, multiplier = 10, min = -1000000000, max = 1000000000;
+	int cash = 100000, multiplier = 10, min = -1000000000, max = 1000000000; // 增加或减少现金的金额
 
 	virtual bool onConfirm();
 	virtual bool isAbsorbingLeftAndRightEvents(){
@@ -205,7 +205,7 @@ class ColorItem: public MenuItem<T>{
 	int colorval, part, component, increment = 15, min = 0, max = 255;
 
 	virtual ~ColorItem(){
-		// Supposed to be empty
+		// 应该是空的
 	}
 
 	virtual bool isAbsorbingLeftAndRightEvents(){
@@ -227,7 +227,7 @@ public:
 	int colorval, part, component, increment = 1, min = 0, max = 255;
 
 	virtual ~PaintColorItem(){
-		// Supposed to be empty
+		// 应该是空的
 	}
 
 	virtual bool onConfirm() {
@@ -292,7 +292,7 @@ public:
 	int colorindex, part, increment = 1, min = 0, max = 160;
 
 	virtual ~PaintIndexItem(){
-		// Supposed to be empty
+		// 应该是空的
 	}
 
 	virtual bool onConfirm() {
@@ -395,30 +395,30 @@ enum LifeItemType{
 template<class T>
 class LifeItem: public MenuItem<T>{
 	public:
-	int life, minimum = 0, maximum = 34464;
+	int life, minimum = 0, maximum = 34464;// 生命值的最小值，默认值为 0，生命值的最大值，默认值为 34464
 	LifeItemType lifeType;
 
 	virtual ~LifeItem(){
-		// Supposed to be empty
+		// 应该是空的
 	}
 
 	virtual bool onConfirm(){
 		switch(lifeType){
 			case HEALTH:
 				ENTITY::SET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID(), life);
-				set_status_text("Current health modified");
+				set_status_text("当前生命值已修改");
 				break;
 			case MAXHEALTH:
 				PED::SET_PED_MAX_HEALTH(PLAYER::PLAYER_PED_ID(), life);
-				set_status_text("Maximum health modified");
+				set_status_text("最大生命值已修改");
 				break;
 			case ARMOR:
 				PED::SET_PED_ARMOUR(PLAYER::PLAYER_PED_ID(), life);
-				set_status_text("Current armor modified");
+				set_status_text("当前护甲值已修改");
 				break;
 			case MAXARMOR:
 				PLAYER::SET_PLAYER_MAX_ARMOUR(PLAYER::PLAYER_ID(), life);
-				set_status_text("Maximum armor modified");
+				set_status_text("最大护甲值已修改");
 				break;
 			default:
 				break;
@@ -488,7 +488,7 @@ class MenuParameters{
 
 	std::vector<MenuItem<T>*> items;
 	std::string headerText;
-	bool sanitiseHeaderText = true;
+	bool sanitiseHeaderText = false;// 是否对标题文本进行清理（例如去除非法字符或格式化）true 清理，false 不清理
 	int *menuSelectionPtr = 0;
 	bool(*onConfirmation)(MenuItem<T> value) = NULL;
 	void(*onHighlight)(MenuItem<T> value) = NULL;
@@ -509,18 +509,19 @@ class MenuParameters{
 	}
 };
 
-static const float TEXT_HEIGHT_NORMAL = 17.0f;
+// 定义了静态常量浮点数用于设置文本高度，以下是各变量的说明：
+static const float TEXT_HEIGHT_NORMAL = 17.0f; // 普通文本的高度（单位：像素）
 
-static const float TEXT_HEIGHT_TITLE = 24.0f;
+static const float TEXT_HEIGHT_TITLE = 24.0f; // 标题文本的高度（单位：像素）
 
-static const float TEXT_HEIGHT_NONLEAF = 24.0f;
+static const float TEXT_HEIGHT_NONLEAF = 24.0f; // 非叶子节点（例如菜单项或子菜单）文本的高度（单位：像素）
 
-static const float TEXT_HEIGHT_WSTARS = 24.0f;
+static const float TEXT_HEIGHT_WSTARS = 24.0f; // 带星号（例如通缉等级）文本的高度（单位：像素）
 
-/**Set the method that is used to periodically update the entire UI and apply repeat settings. The script core does this once.*/
+/**设置用于定期更新整个UI界面，并应用重复设置的方法。脚本核心会执行一次*/
 void set_periodic_feature_call(void method(void));
 
-/**Make the periodic feature call. For example it updates the status text etc. - look at existing menus to see where this is done.*/
+/**执行周期性功能调用！例如，它会更新状态文本等 - 查看现有菜单以了解此操作的实现位置*/
 void make_periodic_feature_call();
 
 void set_menu_per_frame_call(void method(void));
@@ -531,20 +532,20 @@ void set_menu_showing(bool showing);
 
 bool is_menu_showing();
 
-/**Draw a solid rectangle.
-* I think parameters are:
-* - A_0: X
-* - A_1: Y
-* - A_2: W
-* - A_3: H
-* - A_4 - 7: R,G,B,A
-* but you'll have to look at uses to be sure, and to understand scaling.
+/** 绘制一个实心矩形。
+* 我认为参数是：
+* - A_0: X 坐标
+* - A_1: Y 坐标
+* - A_2: W 宽度
+* - A_3: H 高度
+* - A_4 - 7: R,G,B,A (红色、绿色、蓝色、透明度)
+* 但需要查看实际用法以确定，并理解缩放比例的处理。
 */
 void draw_rect(float A_0, float A_1, float A_2, float A_3, int A_4, int A_5, int A_6, int A_7);
 
 void draw_ingame_sprite(MenuItemImage *image, float x, float y, int w, int h);
 
-/* Sanitise the header by removing the character if it's not alpha-numeric ASCII, empty or invalid UTF-8 (check the high bit is set on the character) else return the full caption */
+/* 清理标题：如果字符不是字母数字 ASCII、空或无效的 UTF-8（检查字符的高位是否设置），则移除该字符，否则返回完整标题 */
 inline std::string sanitise_menu_header_text(std::string input){
 	std::string caption(input);
 	std::replace(caption.begin(), caption.end(), '-', ' ');
@@ -556,25 +557,25 @@ inline std::string sanitise_menu_header_text(std::string input){
 }
 
 inline void draw_menu_header_line(std::string caption, float lineWidth, float lineHeight, float lineTop, float lineLeft, float textLeft, bool active, bool rescaleText = true, int curPage = 1, int pageCount = 1){
-	float text_scale = rescaleText ? 0.60 : 0.35;
-	bool outline = false;
-	bool dropShadow = false;
+	float text_scale = rescaleText ? 0.60 : 0.35;// 设置文本的缩放比例：如果 rescaleText 为 true，则使用 0.60，否则使用 0.35
+	bool outline = false;// 是否绘制文本轮廓（默认为 false）
+	bool dropShadow = false;// 是否绘制文本阴影（默认为 false）
 
 	int screen_w, screen_h;
 	GRAPHICS::GET_SCREEN_RESOLUTION(&screen_w, &screen_h);
 
-	float lineWidthScaled = lineWidth / (float) screen_w; // line width
-	float lineTopScaled = lineTop / (float) screen_h; // line top offset
-	float textLeftScaled = textLeft / (float) screen_w; // text left offset
-	float lineHeightScaled = lineHeight / (float) screen_h; // line height
+	float lineWidthScaled = lineWidth / (float) screen_w; // 行宽度
+	float lineTopScaled = lineTop / (float) screen_h; // 行顶部偏移量
+	float textLeftScaled = textLeft / (float) screen_w; // 文本左侧偏移量
+	float lineHeightScaled = lineHeight / (float) screen_h; // 行高度
 
 	float lineLeftScaled = lineLeft / (float) screen_w;
 
 	float textHeightScaled = TEXT_HEIGHT_TITLE / (float) screen_h;
 
-	// this is how it's done in original scripts
+	// 这是原始脚本中的实现方式
 
-	// text upper part
+	// 文本的上半部分
 	UI::SET_TEXT_FONT(fontHeader);
 	UI::SET_TEXT_SCALE(0.0, text_scale);
 	UI::SET_TEXT_COLOUR(ENTColor::colsMenu[0].rgba[0], ENTColor::colsMenu[0].rgba[1], ENTColor::colsMenu[0].rgba[2], ENTColor::colsMenu[0].rgba[3]);
@@ -597,18 +598,19 @@ inline void draw_menu_header_line(std::string caption, float lineWidth, float li
 
 	UI::_DRAW_TEXT(textLeftScaled, textY);
 
-	// rect
+	// 绘制一个矩形
 	draw_rect(lineLeftScaled, lineTopScaled, lineWidthScaled, lineHeightScaled,
 			  ENTColor::colsMenu[1].rgba[0], ENTColor::colsMenu[1].rgba[1], ENTColor::colsMenu[1].rgba[2], ENTColor::colsMenu[1].rgba[3]);
 
-	// draw page count in different colour
+	// 用不同颜色绘制页码
 	if(pageCount > 1){
 		std::ostringstream ss;
-		ss << " ~HUD_COLOUR_MENU_YELLOW~" << curPage << "~HUD_COLOUR_GREYLIGHT~ of ~HUD_COLOUR_MENU_YELLOW~" << pageCount;
+		ss << " ~HUD_COLOUR_MENU_YELLOW~" << curPage << "~HUD_COLOUR_GREYLIGHT~ 至 ~HUD_COLOUR_MENU_YELLOW~" << pageCount;
 
 		UI::SET_TEXT_FONT(fontHeader);
 		UI::SET_TEXT_SCALE(0.0, text_scale);
-		//UI::SET_TEXT_COLOUR(ENTColor::colsMenu[2].rgba[0], ENTColor::colsMenu[2].rgba[1], ENTColor::colsMenu[2].rgba[2], ENTColor::colsMenu[2].rgba[3]); just in case this is ever made to be customizable, I'll leave this here
+		//UI::SET_TEXT_COLOUR(ENTColor::colsMenu[2].rgba[0], ENTColor::colsMenu[2].rgba[1], ENTColor::colsMenu[2].rgba[2], ENTColor::colsMenu[2].rgba[3]);
+		// 以防万一这个功能将来被设置为可自定义的，我会把这段代码留在这里
 		UI::SET_TEXT_RIGHT_JUSTIFY(1);
 
 		if(outline){
@@ -632,18 +634,18 @@ inline void draw_menu_header_line(std::string caption, float lineWidth, float li
 
 template<typename T>
 void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, float lineTop, float lineLeft, float textLeft, bool active, bool rescaleText){
-	float text_scale = 0.35;
-	bool outline = false;
-	bool dropShadow = false;
+	float text_scale = 0.35;// 设置文本的缩放比例为 0.35
+	bool outline = false;// 是否绘制文本轮廓（默认为 false）
+	bool dropShadow = false;// 是否绘制文本阴影（默认为 false）
 
-	// correcting values for active line
+	// 如果是激活行，则调整相关值
 	if(active){
 		if(rescaleText){
-			text_scale = 0.40;
+			text_scale = 0.40;// 如果启用了文本缩放，则将缩放比例设置为 0.40
 		}
 	}
 	else{
-		outline = true;
+		outline = true;// 如果不是激活行，则启用文本轮廓（默认为 true）
 	}
 
 	int screen_w, screen_h;
@@ -651,20 +653,20 @@ void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, f
 
 	textLeft += lineLeft;
 
-	float lineWidthScaled = lineWidth / (float) screen_w; // line width
-	float lineTopScaled = lineTop / (float) screen_h; // line top offset
-	float textLeftScaled = textLeft / (float) screen_w; // text left offset
-	float lineHeightScaled = lineHeight / (float) screen_h; // line height
+	float lineWidthScaled = lineWidth / (float) screen_w; // 行宽度
+	float lineTopScaled = lineTop / (float) screen_h; // 行顶部偏移量
+	float textLeftScaled = textLeft / (float) screen_w; // 文本左侧偏移量
+	float lineHeightScaled = lineHeight / (float) screen_h; // 行高度
 
-	float lineLeftScaled = lineLeft / (float) screen_w;
-	float leftMarginScaled = textLeftScaled - lineLeftScaled;
+	float lineLeftScaled = lineLeft / (float) screen_w; // 将行的左侧位置（lineLeft）转换为归一化坐标
+	float leftMarginScaled = textLeftScaled - lineLeftScaled; // 计算左侧边距的归一化值
 
-	float textHeightScaled = TEXT_HEIGHT_NORMAL / (float) screen_h;
-	float rightMarginScaled = 30.0f / (float) screen_w;
+	float textHeightScaled = TEXT_HEIGHT_NORMAL / (float) screen_h; // 将文本高度（TEXT_HEIGHT_NORMAL）转换为归一化坐标
+	float rightMarginScaled = 30.0f / (float) screen_w; // 将右侧边距（30.0f）转换为归一化坐标
 
-	// this is how it's done in original scripts
+	// 这是原始脚本中的实现方式
 
-	// text upper part
+	// 文本的上半部分
 	UI::SET_TEXT_FONT(fontItem);
 	UI::SET_TEXT_SCALE(0.0, text_scale);
 	if(active){
@@ -687,11 +689,11 @@ void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, f
 	UI::_SET_TEXT_ENTRY("STRING");
 	UI::_ADD_TEXT_COMPONENT_STRING((LPSTR) item->caption.c_str());
 
-	float textY = lineTopScaled + (0.5f * (lineHeightScaled - textHeightScaled));
+	float textY = lineTopScaled + (0.5f * (lineHeightScaled - textHeightScaled)); // 计算文本的垂直位置（Y 坐标）
 
 	UI::_DRAW_TEXT(textLeftScaled, textY);
 
-	// rect
+	// 绘制一个矩形
 	if(active){
 		draw_rect(lineLeftScaled, lineTopScaled, lineWidthScaled, lineHeightScaled,
 				  ENTColor::colsMenu[5].rgba[0], ENTColor::colsMenu[5].rgba[1], ENTColor::colsMenu[5].rgba[2], ENTColor::colsMenu[5].rgba[3]);
@@ -725,14 +727,14 @@ void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, f
 		UI::SET_TEXT_WRAP(0, lineLeftScaled + lineWidthScaled - leftMarginScaled);
 		UI::_SET_TEXT_ENTRY("STRING");
 
-		if(!GRAPHICS::HAS_STREAMED_TEXTURE_DICT_LOADED("cellphone_badger"))// mpleaderboard
+		if(!GRAPHICS::HAS_STREAMED_TEXTURE_DICT_LOADED("cellphone_badger"))// 多人排行榜
 		{
 			GRAPHICS::REQUEST_STREAMED_TEXTURE_DICT("cellphone_badger", true);
 		}
 
 		if(toggleItem->get_toggle_value() == true){
-			//leaderboard_votetick_icon
-			//(char* textureDict, char* textureName, float screenX, float screenY, float scaleX, float scaleY, float heading, int colorR, int colorG, int colorB, int colorA) 
+			// 排行榜投票图标
+			// (参数：纹理字典名称, 纹理名称, 屏幕X坐标, 屏幕Y坐标, X轴缩放, Y轴缩放, 旋转角度, 颜色R, 颜色G, 颜色B, 颜色A)
 			GRAPHICS::DRAW_SPRITE("cellphone_badger", "t", lineLeftScaled + lineWidthScaled - rightMarginScaled, textY + 0.01f, 0.026, 0.034, 0, 255, 255, 255, 255);
 		}
 		else{
@@ -865,7 +867,7 @@ void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, f
 		UI::SET_TEXT_FONT(fontItem);
 		UI::SET_TEXT_SCALE(0.0, text_scale);
 
-		//disable any items that aren't active
+		//禁用所有未激活的项
 		if(!active && selectFromListItem->locked){
 			selectFromListItem->locked = false;
 		}
@@ -918,9 +920,9 @@ void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, f
 
 		textY = lineTopScaled + (0.5f * (lineHeightScaled - (TEXT_HEIGHT_NONLEAF / (float) screen_h)));
 	}
-	else if(WantedSymbolItem* wantedItem = dynamic_cast<WantedSymbolItem*>(item)){
-		rightMarginScaled = 10.0f / (float) screen_w;
-		float starTextScale = 0.6f;
+	else if(WantedSymbolItem* wantedItem = dynamic_cast<WantedSymbolItem*>(item)){ // 如果当前项是 WantedSymbolItem 类型
+		rightMarginScaled = 10.0f / (float) screen_w; // 计算右侧边距的缩放值
+		float starTextScale = 0.6f; // 设置星号文本的缩放比例
 
 		UI::SET_TEXT_FONT(fontWanted);
 		UI::SET_TEXT_SCALE(0.0, starTextScale);
@@ -933,14 +935,14 @@ void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, f
 
 		UI::SET_TEXT_EDGE(0, 0, 0, 0, 0);
 
-		float starWidth = 19.5f / (float) screen_w;
-		textY = lineTopScaled + (0.5f * (lineHeightScaled - (TEXT_HEIGHT_WSTARS / (float) screen_h)));
+		float starWidth = 19.5f / (float) screen_w; // 计算星号符号的宽度（归一化坐标）
+		textY = lineTopScaled + (0.5f * (lineHeightScaled - (TEXT_HEIGHT_WSTARS / (float) screen_h))); // 计算文本的垂直位置（Y 坐标）
 
-		std::ostringstream wantedStars;
-		int wantedLevel = wantedItem->get_wanted_value();
-		int i = 0;
-		for(; i < wantedLevel; i++){
-			wantedStars << "*"; //Draws whatever char in here
+		std::ostringstream wantedStars; // 创建一个字符串流对象，用于构建星号字符串
+		int wantedLevel = wantedItem->get_wanted_value(); // 获取当前通缉等级
+		int i = 0; // 初始化循环变量 i
+		for(; i < wantedLevel; i++){ // 循环生成星号字符串
+			wantedStars << "*"; //绘制此处包含的任何字符
 		}
 
 		UI::SET_TEXT_WRAP(0, lineLeftScaled + lineWidthScaled - rightMarginScaled - (starWidth*(5 - i)));
@@ -1026,18 +1028,19 @@ void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, f
 		UI::SET_TEXT_WRAP(0.0f, lineLeftScaled + lineWidthScaled - leftMarginScaled);
 		UI::_SET_TEXT_ENTRY("STRING");
 
+		// 这段代码用于格式化并显示一个数值（lifeItem->life），将其转换为带有千位分隔符的字符串，并在屏幕上绘制
 		std::string commaLife = std::to_string(lifeItem->life);
-		int insertPosition = commaLife.length() - 3;
-		while(insertPosition > 0){
-			commaLife.insert(insertPosition, ",");
-			insertPosition -= 3;
+		int insertPosition = commaLife.length() - 3; // 计算插入逗号的位置（从字符串末尾向前每 3 位插入一个逗号）
+		while(insertPosition > 0){ // 循环插入逗号
+			commaLife.insert(insertPosition, ","); // 在指定位置插入逗号
+			insertPosition -= 3; // 向前移动 3 位
 		}
 
-		std::stringstream ss;
-		ss << "<< " << commaLife << " >>";
-		auto ssStr = ss.str();
-		UI::_ADD_TEXT_COMPONENT_STRING((char *) ssStr.c_str());
-		UI::_DRAW_TEXT(0, textY);
+		std::stringstream ss; // 使用字符串流构建最终显示的文本
+		ss << "<< " << commaLife << " >>"; // 将格式化后的数值包裹在 << >> 中
+		auto ssStr = ss.str(); // 获取字符串流的内容
+		UI::_ADD_TEXT_COMPONENT_STRING((char *) ssStr.c_str()); // 将文本添加到 UI 组件
+		UI::_DRAW_TEXT(0, textY); // 在指定位置绘制文本
 	}
 	else if(!item->isLeaf){
 		UI::SET_TEXT_FONT(fontItem);
@@ -1056,24 +1059,24 @@ void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, f
 	}
 }
 
-/**This is in the header rather than the CPP because of the use of templates. There's probably a better way.
+/** 由于使用了模板，这段代码放在头文件中，而非CPP文件。可能有更好的方式。
 *
-* This draws a generic menu that supports key navigation and pagination. It's here so you don't have to replicate it in every usage,
-* and so we can change the UI in one place. Obviously please think about all of the uses of it before you change it.
+* 这个方法绘制一个通用的菜单，支持键盘导航和分页。之所以把它放在这里，是为了避免在每次使用时都复制粘贴，
+* 也方便我们在一个地方修改UI。显然，在修改之前请仔细考虑它的所有用法。
 *
-* Parameters are:
-
-* - captions: a list of all the items' captions, which will be shown in the UI
-* - values: a list of all the items' values. The selected one gets sent to the event methods. It should match the size and order of the captions, i.e. captions[4] should be for values[4] etc
-* - currentSelectionIndex: where in the sets to navigate to
-* - headerText: the caption at the top of the menu. This may have a page number added to it by this method.
-
-* The remaining parameters are your event callbacks:
-
-* - onConfirmation: a method that is sent the chosen entry when a choice is made. This should return true if the menu should close now, else false.
-* - onHighlight: an optional method that is sent the highlighted entry when menu navigation occurs. Supply NULL if you don't care.
-* - onExit: an optional method that allows you to insert behaviour on closing a menu, i.e. pressing back, in case you want to save positions etc. Supply NULL if you don't care.
-* - interruptCheck: an optional method that will be called to see if the menu should be aborted
+* 参数说明：
+*
+* - captions: 所有项目的标题列表，将显示在UI中
+* - values: 所有项目的值列表。选中的项会传递给事件方法。它应该与captions大小和顺序匹配，即captions[4]对应values[4]等。
+* - currentSelectionIndex: 当前导航到的位置索引
+* - headerText: 菜单顶部的标题文本。该文本可能会通过此方法添加页码。
+*
+* 剩余参数是你的事件回调：
+*
+* - onConfirmation: 当做出选择时，传入所选项的方法。如果选择后菜单应关闭，返回true，否则返回false。
+* - onHighlight: 可选的方法，当菜单导航发生变化时，会传入当前高亮项。如果不需要，请传入NULL。
+* - onExit: 可选的方法，允许你在菜单关闭时插入行为，比如按返回键时保存位置等。如果不需要，请传入NULL。
+* - interruptCheck: 可选的方法，它将被调用，以检查菜单是否应中止。
 */
 template<typename T>
 bool draw_generic_menu(std::vector<MenuItem<T>*> items, int *menuSelectionPtr, std::string headerText,
@@ -1094,7 +1097,7 @@ bool draw_generic_menu(std::vector<MenuItem<T>*> items, int *menuSelectionPtr, s
 template<typename T>
 bool draw_generic_menu(MenuParameters<T> params){
 	if(params.items.size() == 0){
-		set_status_text("Whoops, nothing to see here");
+		set_status_text("这个选项什么都没有！");
 		return false;
 	}
 
@@ -1102,10 +1105,10 @@ bool draw_generic_menu(MenuParameters<T> params){
 		return false;
 	}
 
-	bool result = false;
-	DWORD waitTime = 150;
+	bool result = false; // 初始化结果为 false
+	DWORD waitTime = 150;// 设置等待时间为 150 毫秒
 	const int totalItems = (int) params.items.size();
-	const int itemsPerLine = 10;
+	const int itemsPerLine = 10;// 设置菜单显示的项目数
 	const int lineCount = (int) (ceil((double) totalItems / (double) itemsPerLine));
 
 	int currentSelectionIndex;
@@ -1131,7 +1134,7 @@ bool draw_generic_menu(MenuParameters<T> params){
 		image = params.lineImageProvider(*params.items[currentSelectionIndex]);
 	}
 
-	//populate the menu items' indices
+	// 填充菜单项的索引
 	for(int i = 0; i < totalItems; i++){
 		params.items[i]->currentMenuIndex = i;
 	}
@@ -1175,44 +1178,45 @@ bool draw_generic_menu(MenuParameters<T> params){
 		int lineStartPosition = currentSelectionIndex - positionOnThisLine;
 		int itemsOnThisLine = (lineStartPosition + itemsPerLine > totalItems) ? (totalItems - lineStartPosition) : itemsPerLine;
 
-		// timed menu draw, used for pause after active line switch
+		// 定时菜单绘制，用于在切换活动行后暂停
 		DWORD maxTickCount = GetTickCount() + waitTime;
 		do{
 			std::string sanit_header = params.sanitiseHeaderText ? sanitise_menu_header_text(params.headerText) : params.headerText;
 
-			draw_menu_header_line(sanit_header,
-								  350.0f,//line W
-								  50.0f,//line H
-								  15.0f,//line T
-								  35.0f,//line L
-								  45.0f,//text X offset
-								  false,
-								  true,
-								  (currentLine + 1),
+			// 更改标题和菜单等，在这里！！！
+			draw_menu_header_line(sanit_header,// 菜单标题文本
+								  350.0f, // 标题的宽度
+								  50.0f, // 标题的高度
+								  15.0f, // 标题的 顶部 偏移量（Y 坐标）
+								  35.0f, // 标题的 左侧 偏移量（X 坐标）
+								  45.0f, // 标题文本的 左侧 偏移量
+								  false, // 是否显示背景（false 表示不显示）
+								  true, // 是否显示边框（true 表示显示）
+								  (currentLine + 1),// 当前行号（从 1 开始）
 								  lineCount
 			);
 
-			float activeLineY = 0;
+			float activeLineY = 0; // 用于存储当前选中菜单项的（ Y 坐标）
 
-			for(int i = 0; i < itemsOnThisLine; i++){
-				float lineSpacingY = 8.0f;
+			for(int i = 0; i < itemsOnThisLine; i++){ // 初始化循环变量 i，表示当前菜单项的索引，从 0 开始。
+				float lineSpacingY = 8.0f; // 菜单项之间的垂直间距
 
-				float lineWidth = 350.0f;
-				float lineHeight = 31.0f;
+				float lineWidth = 350.0f; // 菜单项的宽度
+				float lineHeight = 31.0f; // 菜单项的高度
 
-				float lineTop = 75.0 + (i * (lineHeight + lineSpacingY));
-				float lineLeft = 35.0f;
-				float textOffset = 10.0f;
+				float lineTop = 75.0 + (i * (lineHeight + lineSpacingY)); // 计算当前菜单项的顶部位置（Y 坐标）
+				float lineLeft = 35.0f; // 菜单项的左侧位置（X 坐标）
+				float textOffset = 10.0f; // 菜单项文本的 左侧 偏移量
 
 				draw_menu_item_line(params.items[lineStartPosition + i], lineWidth, lineHeight, lineTop, lineLeft, textOffset, i == positionOnThisLine, false);
 
-				if(i == positionOnThisLine){
-					activeLineY = lineTop;
+				if(i == positionOnThisLine){ // 如果当前菜单项是选中的项
+					activeLineY = lineTop; // 记录当前菜单项的顶部位置（Y 坐标）
 				}
 			}
 
 			if(image != NULL){
-				int screen_w, screen_h;
+				int screen_w, screen_h; // 这段代码用于计算游戏内精灵（sprite）的坐标，并调用函数绘制精灵
 				GRAPHICS::GET_SCREEN_RESOLUTION(&screen_w, &screen_h);
 
 				float lineXPx = 35.0f + 350.0f + 8.0f;
@@ -1226,58 +1230,58 @@ bool draw_generic_menu(MenuParameters<T> params){
 				periodic_feature_call();
 			}
 
-			WAIT(0);
+			WAIT(0); // 等待 0 毫秒（让出 CPU 时间片，避免忙等待）
 		}
-		while(GetTickCount() < maxTickCount);
-		waitTime = 0;
+		while(GetTickCount() < maxTickCount); // 检查是否达到等待结束时间
+		waitTime = 0; // 重置等待时间为 0
 
 		bool bSelect, bBack, bUp, bDown, bLeft, bRight;
 		get_button_state(&bSelect, &bBack, &bUp, &bDown, &bLeft, &bRight);
 
 		choice = params.items[currentSelectionIndex];
 
-		if(bSelect){
-			menu_beep();
+		if(bSelect){ // 如果用户按下确认键
+			menu_beep(); // 播放菜单提示音（例如“滴”声）
 
-			waitTime = 200;
+			waitTime = 200; // 设置等待时间为 200 毫秒，用于防止重复触发
 
 			bool confHandled = choice->onConfirm();
 
-			//fire the main handler
+			// 触发主处理函数
 			if(!confHandled && params.onConfirmation != NULL){
 				result = params.onConfirmation(*choice);
 			}
 
 			if(result){
-				//result = false; //to avoid cascading upwards
+				//result = false; // 设置为 false，以避免向上级传递（防止级联触发）
 				break;
 			}
 		}
-		else{
-			if(bBack){
-				menu_beep();
-				waitTime = 200;
-				result = false;
-				break;
+		else{ // 如果用户没有按下确认键
+			if(bBack){// 如果用户按下返回键
+				menu_beep(); // 播放菜单提示音（例如“滴”声）
+				waitTime = 200; // 设置等待时间为 200 毫秒，用于防止重复触发
+				result = false; // 将结果设置为 false，表示返回操作
+				break; // 跳出当前循环或逻辑块
 			}
 			else{
-				if(bDown){
+				if(bDown){// 如果用户按下向下键
 					menu_beep();
 					currentSelectionIndex++;
 					if(currentSelectionIndex >= totalItems || (currentSelectionIndex >= lineStartPosition + itemsOnThisLine)){
 						currentSelectionIndex = lineStartPosition;
 					}
-					waitTime = 150;
+					waitTime = 150; // 设置等待时间为 150 毫秒，用于防止重复触发
 				}
-				else if(bUp){
+				else if(bUp){// 如果用户按下向上键
 					menu_beep();
 					currentSelectionIndex--;
 					if(currentSelectionIndex < 0 || (currentSelectionIndex < lineStartPosition)){
 						currentSelectionIndex = lineStartPosition + itemsOnThisLine - 1;
 					}
-					waitTime = 150;
+					waitTime = 150; // 设置等待时间为 150 毫秒，用于防止重复触发
 				}
-				else if(bLeft){
+				else if(bLeft){ // 如果用户按下向左键
 					menu_beep();
 
 					if(choice->isAbsorbingLeftAndRightEvents()){
@@ -1293,7 +1297,7 @@ bool draw_generic_menu(MenuParameters<T> params){
 							}
 						}
 					}
-					waitTime = 200;
+					waitTime = 200; // 设置等待时间为 200 毫秒，用于防止重复触发
 				}
 				else if(bRight){
 					menu_beep();
@@ -1302,7 +1306,7 @@ bool draw_generic_menu(MenuParameters<T> params){
 						choice->handleRightPress();
 					}
 					else if(lineCount > 1){
-						//if we're already at the end, restart
+						// 如果已经到达末尾，则重新开始
 						if(currentLine == lineCount - 1){
 							currentSelectionIndex = currentSelectionIndex % itemsPerLine;
 							if(currentSelectionIndex >= totalItems){
@@ -1317,7 +1321,7 @@ bool draw_generic_menu(MenuParameters<T> params){
 						}
 					}
 
-					waitTime = 200;
+					waitTime = 200; // 设置等待时间为 200 毫秒，用于防止重复触发
 				}
 
 				if(params.onHighlight != NULL && originalIndex != currentSelectionIndex){
@@ -1339,25 +1343,25 @@ bool draw_generic_menu(MenuParameters<T> params){
 		params.onExit(result);
 	}
 
-	//unlock any current item
+	// 解锁当前选中的项
 	if(choice != NULL){
 		if(SelectFromListMenuItem* selectFromListItem = dynamic_cast<SelectFromListMenuItem*>(choice)){
 			selectFromListItem->locked = false;
 		}
 	}
 
-	// wait before exit
-	if(waitTime > 0){
-		DWORD maxTickCount = GetTickCount() + waitTime;
+	// 退出前等待
+	if(waitTime > 0){ // 如果等待时间大于 0
+		DWORD maxTickCount = GetTickCount() + waitTime; // 计算等待结束的时间点
 		do{
-			make_periodic_feature_call();
-			WAIT(0);
+			make_periodic_feature_call(); // 周期性地调用某个功能
+			WAIT(0); // 等待 0 毫秒（让出 CPU 时间片，避免忙等待）
 		}
-		while(GetTickCount() < maxTickCount);
-		waitTime = 0;
+		while(GetTickCount() < maxTickCount); // 检查是否达到等待结束时间
+		waitTime = 0; // 重置等待时间为 0
 	}
 
-	//clean up the items memory
+	// 清理项的内存
 	for(int i = 0; i < params.items.size(); i++){
 		delete (params.items[i]);
 	}
@@ -1371,8 +1375,10 @@ bool draw_generic_menu(MenuParameters<T> params){
 }
 
 void set_status_text(std::string str, bool isGxtEntry = false);
+// 要显示的文本内容，是否为 GXT 条目（默认值为 false）
 
 void set_status_text_centre_screen(std::string str, DWORD time = 2500, bool isGxtEntry = false);
+// 要显示的文本内容，文本显示的持续时间（默认值为 2500 毫秒）是否为 GXT 条目（默认值为 false）
 
 void update_centre_screen_status_text();
 
