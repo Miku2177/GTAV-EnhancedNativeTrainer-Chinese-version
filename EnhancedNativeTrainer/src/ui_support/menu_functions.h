@@ -375,13 +375,13 @@ private:
 			VEHICLE::GET_VEHICLE_EXTRA_COLOURS(veh, &pearl, &wheel);
 			VEHICLE::SET_VEHICLE_EXTRA_COLOURS(veh, pearl, colorindex);
 			break;
-        case 5:
-            VEHICLE::_SET_VEHICLE_INTERIOR_COLOUR(veh, colorindex);
-            break;
-        case 6:
-            VEHICLE::_SET_VEHICLE_DASHBOARD_COLOUR(veh, colorindex);
-            break;
-        }
+		case 5:
+			VEHICLE::_SET_VEHICLE_INTERIOR_COLOUR(veh, colorindex);
+			break;
+		case 6:
+			VEHICLE::_SET_VEHICLE_DASHBOARD_COLOUR(veh, colorindex);
+			break;
+		}
 	}
 };
 
@@ -764,21 +764,43 @@ void draw_menu_item_line(MenuItem<T> *item, float lineWidth, float lineHeight, f
 		UI::SET_TEXT_WRAP(0.0f, lineLeftScaled + lineWidthScaled - leftMarginScaled);
 		UI::_SET_TEXT_ENTRY("STRING");
 
-		std::string commaCash = std::to_string(cashItem->GetCash() > 0 ? cashItem->GetCash() : -cashItem->GetCash());
-		int insertPosition = commaCash.length() - 3;
-		while(insertPosition > 0){
-			commaCash.insert(insertPosition, ",");
-			insertPosition -= 3;
+		// 获取现金并格式化为字符串，加入单位（万或亿）
+		int cashAmount = cashItem->GetCash();
+		std::string formattedAmount;
+		std::string unit;
+		std::string dollarSign = " 美元";  // 美元符号，默认加在金额后
+
+		// 如果是负数，先去掉负号来避免单位与负号冲突
+		bool isNegative = cashAmount < 0;
+		if (isNegative) {
+			cashAmount = -cashAmount;  // 临时将现金金额转换为正数，方便格式化
 		}
 
+		// 根据现金数值添加单位（万或亿），无论正负数都加单位
+		if (cashAmount >= 100000000) {  // 大于等于1亿
+			formattedAmount = std::to_string(cashAmount / 100000000) + " 亿";
+		} else if (cashAmount >= 10000) {  // 大于等于1万
+			formattedAmount = std::to_string(cashAmount / 10000) + " 万";
+		} else {
+			formattedAmount = std::to_string(cashAmount);  // 小于1万直接显示
+			dollarSign = " 美元";  // 小于1万时，美元符号加在金额后
+		}
+
+		// 格式化金额前加上 "+" 或 "-" 符号
 		std::stringstream ss;
 		ss << "<< ";
-		if(cashItem->GetCash() < 0){
-			ss << "-";
+		if (isNegative) {
+			ss << "减 ";  // 负数前加 "-" 符号
+		} else if (cashAmount > 0) {
+			ss << "加 ";  // 正数前加 "+" 符号
 		}
-		ss << "$" << commaCash << " >>";
-		auto ssStr = ss.str();
-		UI::_ADD_TEXT_COMPONENT_STRING((char *) ssStr.c_str());
+
+		// 加上金额和单位
+		ss << formattedAmount << dollarSign << " >>";
+		std::string ssStr = ss.str();
+
+		// 显示文本到UI
+		UI::_ADD_TEXT_COMPONENT_STRING(const_cast<char*>(ssStr.c_str())); // 确保类型匹配
 		UI::_DRAW_TEXT(0, textY);
 	}
 	else if (PaintColorItem<T>* colorItem = dynamic_cast<PaintColorItem<T> *>(item)){
