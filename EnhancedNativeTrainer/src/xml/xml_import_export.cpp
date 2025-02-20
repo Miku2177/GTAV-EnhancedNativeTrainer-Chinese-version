@@ -1,7 +1,7 @@
 /*
-Part of the Enhanced Native Trainer project.
+增强版原生训练器项目的一部分。
 https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
-(C) Rob Pridham and fellow contributors 2015
+(C) Rob Pridham 及其他贡献者 2015
 */
 
 #include "xml_import_export.h"
@@ -10,26 +10,26 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 #include "..\debug\debuglog.h"
 
-// A global Windows "basic string". Actual memory is allocated by the
-// COM methods used by MSXML which take &keyconf_bstr. We must use SysFreeString() 
-// to free this memory before subsequent uses, to prevent a leak.
+// 一个全局的 Windows "基本字符串"。实际内存是由 MSXML 使用的 COM 方法分配的，
+// 这些方法接收 &keyconf_bstr。我们必须在后续使用之前调用 SysFreeString() 
+// 来释放这块内存，以防止内存泄漏。
 BSTR xmlParser_bstr;
 
 bool generate_xml_for_propset(SavedPropSet* props, std::string outputFile)
 {
-	//Create the XML
+	// 创建 XML
 	IXMLDOMDocumentPtr pXMLDoc;
 	HRESULT hr = pXMLDoc.CreateInstance(__uuidof(MSXML2::DOMDocument60));
 	if (FAILED(hr))
 	{
-		write_text_to_log_file("Failed to create the XML class instance");
+		write_text_to_log_file("创建 XML 类的实例失败！");
 		return false;
 	}
 
 	VARIANT_BOOL bIsSuccessful;
 	if (FAILED(pXMLDoc->loadXML(L"<object-set></object-set>", &bIsSuccessful)))
 	{
-		write_text_to_log_file("Root creation failed");
+		write_text_to_log_file("根节点创建失败！");
 		handle_error(pXMLDoc);
 		return false;
 	}
@@ -37,7 +37,7 @@ bool generate_xml_for_propset(SavedPropSet* props, std::string outputFile)
 	IXMLDOMProcessingInstructionPtr pXMLProcessingNode;
 	pXMLDoc->createProcessingInstruction(L"xml", L" version=\"1.0\" encoding=\"UTF-8\"", &pXMLProcessingNode);
 
-	//Get the root element just created    
+	//获取刚刚创建的根元素    
 	IXMLDOMElementPtr pXMLRootElem;
 	pXMLDoc->get_documentElement(&pXMLRootElem);
 
@@ -47,13 +47,13 @@ bool generate_xml_for_propset(SavedPropSet* props, std::string outputFile)
 	vtObject.pdispVal->AddRef();
 	pXMLDoc->insertBefore(pXMLProcessingNode, vtObject, 0);
 
-	//Add an attribute
+	//添加一个属性
 	pXMLRootElem->setAttribute(L"set-name", _variant_t(props->saveName.c_str()));
 	pXMLRootElem->setAttribute(L"ent-version", _variant_t(VERSION_STRING.c_str()));
 
 	for each (SavedPropDBRow* row in props->items)
 	{
-		//Create child element
+		//创建子元素
 		IXMLDOMElementPtr objectNode;
 		pXMLDoc->createElement(L"object", &objectNode);
 
@@ -86,21 +86,21 @@ bool generate_xml_for_propset(SavedPropSet* props, std::string outputFile)
 	bool result = true;
 	if (FAILED(FileStream::OpenFile(bs, &output, true)))
 	{
-		write_text_to_log_file("Opening output failed");
+		write_text_to_log_file("打开输出失败了！");
 		result = false;
 	}
 	else
 	{
 		if (!format_dom_document(pXMLDoc, output))
 		{
-			write_text_to_log_file("Save failed");
+			write_text_to_log_file("保存失败！");
 			write_text_to_log_file(outputFile);
 			handle_error(pXMLDoc);
 			result = false;
 		}
 		else
 		{
-			write_text_to_log_file("Save complete");
+			write_text_to_log_file("保存完成！");
 			write_text_to_log_file(outputFile);
 			result = true;
 		}
@@ -113,11 +113,11 @@ bool generate_xml_for_propset(SavedPropSet* props, std::string outputFile)
 
 		if (count == 0)
 		{
-			write_text_to_log_file("File closed, zero count");
+			write_text_to_log_file("文件已关闭，计数为零。");
 		}
 		else
 		{
-			write_text_to_log_file("File closed, non-zero count");
+			write_text_to_log_file("文件已关闭，计数为非零。");
 		}
 	}
 	return result;
@@ -127,12 +127,12 @@ bool parse_xml_for_propset(std::string inputFile, SavedPropSet* set)
 {
 	CoInitialize(NULL);
 
-	//read XML
+	//读取 XML
 	MSXML2::IXMLDOMDocumentPtr spXMLDoc;
 	spXMLDoc.CreateInstance(__uuidof(MSXML2::DOMDocument60));
 	if (!spXMLDoc->load(inputFile.c_str()))
 	{
-		write_text_to_log_file("No XML file found");
+		write_text_to_log_file("未能找到 XML 文件！");
 		return false;
 	}
 
@@ -299,7 +299,7 @@ bool parse_xml_for_propset(std::string inputFile, SavedPropSet* set)
 
 	set->dbSize = set->items.size();
 
-	//nodes->Release(); //don't do this, it crashes on exit
+	//nodes->Release(); //不要执行此操作，它会在退出时崩溃
 	spXMLDoc.Release();
 	CoUninitialize();
 
@@ -310,7 +310,7 @@ void handle_error(IXMLDOMDocumentPtr doc)
 {
 	std::ostringstream ss;
 	IXMLDOMParseError* pError;
-	ss << "XML error: ";
+	ss << "XML 错误: ";
 	doc->get_parseError(&pError);
 	if (pError)
 	{
@@ -320,14 +320,14 @@ void handle_error(IXMLDOMDocumentPtr doc)
 	}
 	else
 	{
-		ss << "Unknown";
+		ss << "未知";
 	}
 	write_text_to_log_file(ss.str());
 }
 
 bool format_dom_document(IXMLDOMDocument *pDoc, IStream *pStream)
 {
-	// Create the writer
+	// 创建写入器
 	MSXML2::IMXWriterPtr pMXWriter;
 	
 	if (FAILED(pMXWriter.CreateInstance(__uuidof(MSXML2::MXXMLWriter60))))
@@ -358,7 +358,7 @@ bool format_dom_document(IXMLDOMDocument *pDoc, IStream *pStream)
 		return false;
 	}
 
-	// Create the SAX reader
+	// 创建 SAX 读取器
 	MSXML2::ISAXXMLReaderPtr pSAXReader;
 	if (FAILED(pSAXReader.CreateInstance(__uuidof (MSXML2::SAXXMLReader60))))
 	{
@@ -377,7 +377,7 @@ bool format_dom_document(IXMLDOMDocument *pDoc, IStream *pStream)
 		return false;
 	}
 
-	// Perform the write
+	// 执行写入
 	bool success1 = SUCCEEDED(pMXWriter->put_output(_variant_t(pStream)));
 	bool success2 = SUCCEEDED(pSAXReader->parse(pDoc));
 
