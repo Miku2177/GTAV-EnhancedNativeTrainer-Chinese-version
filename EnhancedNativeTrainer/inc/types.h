@@ -1,7 +1,7 @@
 /*
-	THIS FILE IS A PART OF GTA V SCRIPT HOOK SDK
+	本文件是 GTA V Script Hook SDK 的一部分
 				http://dev-c.com
-			(C) Alexander Blade 2015
+		 (C) Alexander Blade 2015-2016
 */
 
 #pragma once

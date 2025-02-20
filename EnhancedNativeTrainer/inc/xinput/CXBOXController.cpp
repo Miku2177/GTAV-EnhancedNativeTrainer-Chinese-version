@@ -2,16 +2,16 @@
 
 CXBOXController::CXBOXController(int playerNumber)
 {
-	// Set the Controller Number
+	// 设置控制器编号
 	_controllerNum = playerNumber - 1;
 }
 
 XINPUT_STATE CXBOXController::GetState()
 {
-	// Zeroise the state
+	// 将状态清零
 	ZeroMemory(&_controllerState, sizeof(XINPUT_STATE));
 
-	// Get the state
+	// 获取状态
 	XInputGetState(_controllerNum, &_controllerState);
 
 	return _controllerState;
@@ -19,10 +19,10 @@ XINPUT_STATE CXBOXController::GetState()
 
 bool CXBOXController::IsConnected()
 {
-	// Zeroise the state
+	// 将状态清零
 	ZeroMemory(&_controllerState, sizeof(XINPUT_STATE));
 
-	// Get the state
+	// 获取状态
 	DWORD Result = XInputGetState(_controllerNum, &_controllerState);
 
 	if(Result == ERROR_SUCCESS)
@@ -37,16 +37,16 @@ bool CXBOXController::IsConnected()
 
 void CXBOXController::Vibrate(int leftVal, int rightVal)
 {
-	// Create a Vibraton State
+	// 创建振动状态
 	XINPUT_VIBRATION Vibration;
 
-	// Zeroise the Vibration
+	// 将振动清零
 	ZeroMemory(&Vibration, sizeof(XINPUT_VIBRATION));
 
-	// Set the Vibration Values
+	// 设置振动值
 	Vibration.wLeftMotorSpeed = leftVal;
 	Vibration.wRightMotorSpeed = rightVal;
 
-	// Vibrate the controller
+    // 震动控制器
 	XInputSetState(_controllerNum, &Vibration);
 }

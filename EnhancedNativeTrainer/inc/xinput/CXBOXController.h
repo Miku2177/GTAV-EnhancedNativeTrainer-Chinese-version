@@ -1,15 +1,15 @@
 #ifndef _XBOX_CONTROLLER_H_
 #define _XBOX_CONTROLLER_H_
 
-// We need the Windows Header and the XInput Header
+// 需要Windows头文件和XInput头文件
 #include <windows.h>
 #include <Xinput.h>
 
-// Now, the XInput Library
-// NOTE: COMMENT THIS OUT IF YOU ARE NOT USING A COMPILER THAT SUPPORTS THIS METHOD OF LINKING LIBRARIES
+// 现在，是XInput库
+// 注意：如果你使用的编译器不支持这种链接库的方法，请注释掉这一行
 #pragma comment(lib, "XInput9_1_0.lib")
 
-// XBOX Controller Class Definition
+// XBOX 控制器类定义
 class CXBOXController
 {
 private:

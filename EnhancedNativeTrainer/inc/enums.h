@@ -1,5 +1,5 @@
 /*
-	THIS FILE IS A PART OF GTA V SCRIPT HOOK SDK
+	本文件是 GTA V Script Hook SDK 的一部分
 				http://dev-c.com
 		(C) Alexander Blade 2015-2016
 */
@@ -297,7 +297,7 @@ enum eCameraShake
 	CameraShakeDeathFail
 };
 
-/* char shake types:
+/* 角色抖动类型：
  
 DEATH_FAIL_IN_EFFECT_SHAKE
 DRUNK_SHAKE
@@ -1068,7 +1068,7 @@ enum eVehicleMod
 	VehicleModSuspension = 15,
 	VehicleModArmor = 16,
 	VehicleModFrontWheels = 23,
-	VehicleModBackWheels = 24 // only for motocycles
+	VehicleModBackWheels = 24 // 仅适用于摩托车
 };
 
 enum eVehicleNeonLight
@@ -1229,7 +1229,7 @@ enum eIntersectFlags
 	IntersectFlagsEverything = -1,
 	IntersectFlagsMap = 1,
 	IntersectFlagsMissionEntities = 2,
-	IntersectFlagsPeds1 = 12, // 4 and 8 both seem to be peds
+	IntersectFlagsPeds1 = 12, // 4 和 8 似乎都是行人
 	IntersectFlagsObjects = 16,
 	IntersectFlagsUnk1 = 32,
 	IntersectFlagsUnk2 = 64,
@@ -1279,7 +1279,7 @@ enum eRelationship
 	RelationshipLike = 2,
 	RelationshipRespect = 1,
 	RelationshipCompanion = 0,
-	RelationshipPedestrians = 255 // or neutral
+	RelationshipPedestrians = 255 // 或中立
 };
 
 enum eRopeType
@@ -1895,9 +1895,9 @@ enum eButton
 	INPUT_FRONTEND_PAUSE = 199,
 	INPUT_FRONTEND_PAUSE_ALTERNATE = 200,
 	INPUT_FRONTEND_ACCEPT = 201, // X		 (PS)
-	INPUT_FRONTEND_CANCEL = 202, // Circle   (PS)
-	INPUT_FRONTEND_X = 203,		 // Square	 (PS)
-	INPUT_FRONTEND_Y = 204,		 // Triangle (PS)
+	INPUT_FRONTEND_CANCEL = 202, // 圆形   (PS)
+	INPUT_FRONTEND_X = 203,		 // 正方形	 (PS)
+	INPUT_FRONTEND_Y = 204,		 // 三角形 (PS)
 	INPUT_FRONTEND_LB = 205,
 	INPUT_FRONTEND_RB = 206,
 	INPUT_FRONTEND_LT = 207,
