@@ -1,7 +1,7 @@
 /*
-Part of the Enhanced Native Trainer project.
+增强版原生训练器项目的一部分。
 https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
-(C) Rob Pridham and fellow contributors 2015
+(C) Rob Pridham 及其他贡献者 2015
 */
 
 #include <string>
@@ -15,9 +15,8 @@ const bool DEBUG_LOG_ENABLED = true;
 const bool DEBUG_LOG_ENABLED = false;
 #endif
 
-/**Append a line of text to the log file. Does nothing unless the debug
-constant is set.*/
+/**向日志文件追加一行文本。除非调试常量已设置，否则不执行任何操作*/
 void write_text_to_log_file(const std::string &text);
 
-/**Wipe the debug log file. Called every time the trainer starts.*/
+/**清空调试日志文件。每次训练器启动时调用*/
 void clear_log_file();
