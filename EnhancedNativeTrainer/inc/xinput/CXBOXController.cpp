@@ -37,13 +37,13 @@ bool CXBOXController::IsConnected()
 
 void CXBOXController::Vibrate(int leftVal, int rightVal)
 {
-	// 创建振动状态
+	// 创建震动状态
 	XINPUT_VIBRATION Vibration;
 
-	// 将振动清零
+	// 将震动清零
 	ZeroMemory(&Vibration, sizeof(XINPUT_VIBRATION));
 
-	// 设置振动值
+	// 设置震动值
 	Vibration.wLeftMotorSpeed = leftVal;
 	Vibration.wRightMotorSpeed = rightVal;
 
