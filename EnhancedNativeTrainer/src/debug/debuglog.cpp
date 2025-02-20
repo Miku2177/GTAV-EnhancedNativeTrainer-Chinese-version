@@ -1,7 +1,7 @@
 /*
-Part of the Enhanced Native Trainer project.
+增强版原生训练器项目的一部分。
 https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
-(C) Rob Pridham and fellow contributors 2015
+(C) Rob Pridham 及其他贡献者 2015
 */
 
 #include <fstream>
@@ -27,7 +27,7 @@ static char *getDtTm(char *buff){
 
 void write_text_to_log_file(const std::string &text){
 	//if(!DEBUG_LOG_ENABLED){
-	//	return;
+	//	返回;
 	//}
 
 	char tbuff[DTTMSZ];
