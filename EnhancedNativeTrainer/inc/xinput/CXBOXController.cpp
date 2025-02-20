@@ -47,6 +47,6 @@ void CXBOXController::Vibrate(int leftVal, int rightVal)
 	Vibration.wLeftMotorSpeed = leftVal;
 	Vibration.wRightMotorSpeed = rightVal;
 
-    // 震动控制器
+	// 震动控制器
 	XInputSetState(_controllerNum, &Vibration);
 }
