@@ -1,7 +1,7 @@
 /*
-Part of the Enhanced Native Trainer project.
+增强版原生训练器项目的一部分。
 https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
-(C) Rob Pridham and fellow contributors 2015
+(C) Rob Pridham 及其他贡献者 2015
 */
 
 #include "database.h"
@@ -15,10 +15,10 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 #pragma warning(disable : 4267) // size_t conversion
 
-/**This value should be increased whenever you change the schema and a release is made.
-However you must also put in code to upgrade from older versions, in ENTDatabase::handle_version,
-as they will be deployed in the wild already.*/
-const int DATABASE_VERSION = 17;
+/**每当更改架构并发布新版本时，应增加此值。
+然而，你还必须在 ENTDatabase::handle_version 中添加代码以支持从旧版本升级，
+因为这些旧版本已经在实际环境中部署*/
+const int DATABASE_VERSION = 17;// 数据库版本号
 
 static int singleIntResultCallback(void *data, int count, char **rows, char **azColName)
 {
@@ -73,39 +73,39 @@ void ENTDatabase::handle_version(int oldVersion)
 {
 	if (oldVersion == -1)
 	{
-		write_text_to_log_file("Feature enablement table not found, so creating it");
+		write_text_to_log_file("未找到功能启用表，正在创建它");
 		char* CREATE_VERSION_TABLE_QUERY = "create table ENT_FEATURE_ENABLEMENT (FEATURE_NAME TEXT PRIMARY KEY NOT NULL, FEATURE_ENABLED INT NOT NULL)";
 		int rcFeat = sqlite3_exec(db, CREATE_VERSION_TABLE_QUERY, NULL, 0, &zErrMsg);
 		if (rcFeat != SQLITE_OK)
 		{
-			write_text_to_log_file("Enablement table creation problem");
+			write_text_to_log_file("功能启用表创建问题");
 			sqlite3_free(zErrMsg);
 		}
 		else
 		{
-			write_text_to_log_file("Enablement table created");
+			write_text_to_log_file("功能启用表已创建");
 		}
 	}
 
 	if (oldVersion < 2)
 	{
-		write_text_to_log_file("Generic setting pairs table not found, so creating it");
+		write_text_to_log_file("未找到通用设置对表，正在创建它");
 		char* CREATE_VERSION_TABLE_QUERY = "create table ENT_SETTING_PAIRS (SETTING_NAME TEXT PRIMARY KEY NOT NULL, SETTING_VALUE TEXT NOT NULL)";
 		int rcGen = sqlite3_exec(db, CREATE_VERSION_TABLE_QUERY, NULL, 0, &zErrMsg);
 		if (rcGen != SQLITE_OK)
 		{
-			write_text_to_log_file("Generic setting pairs table creation problem");
+			write_text_to_log_file("通用设置对表创建问题");
 			sqlite3_free(zErrMsg);
 		}
 		else
 		{
-			write_text_to_log_file("Generic setting pairs table created");
+			write_text_to_log_file("通用设置对表已创建");
 		}
 	}
 
 	if (oldVersion < 3)
 	{
-		write_text_to_log_file("Main vehicle table not found, so creating it");
+		write_text_to_log_file("未找到主车辆表，正在创建它");
 		char* CREATE_VEHICLE_TABLE_QUERY = "CREATE TABLE ENT_SAVED_VEHICLES ( \
 			id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, \
 			saveName TEXT NOT NULL, \
@@ -154,15 +154,15 @@ void ENTDatabase::handle_version(int oldVersion)
 		int rcVeh1 = sqlite3_exec(db, CREATE_VEHICLE_TABLE_QUERY, NULL, 0, &zErrMsg);
 		if (rcVeh1 != SQLITE_OK)
 		{
-			write_text_to_log_file("Main vehicle table creation problem");
+			write_text_to_log_file("主车辆表创建问题");
 			sqlite3_free(zErrMsg);
 		}
 		else
 		{
-			write_text_to_log_file("Main vehicle table created");
+			write_text_to_log_file("主车辆表已创建");
 		}
 
-		write_text_to_log_file("Vehicle extras table not found, so creating it");
+		write_text_to_log_file("未找到车辆附加信息表，正在创建它");
 		char* CREATE_VEHEXTRAS_TABLE_QUERY = "CREATE TABLE ENT_VEHICLE_EXTRAS ( \
 			id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, \
 			parentId INTEGER NOT NULL, \
@@ -174,15 +174,15 @@ void ENTDatabase::handle_version(int oldVersion)
 		int rcVeh2 = sqlite3_exec(db, CREATE_VEHEXTRAS_TABLE_QUERY, NULL, 0, &zErrMsg);
 		if (rcVeh2 != SQLITE_OK)
 		{
-			write_text_to_log_file("Vehicle extras table creation problem");
+			write_text_to_log_file("车辆附加信息表创建问题");
 			sqlite3_free(zErrMsg);
 		}
 		else
 		{
-			write_text_to_log_file("Vehicle extras table created");
+			write_text_to_log_file("车辆附加信息表已创建");
 		}
 
-		write_text_to_log_file("Vehicle mods table not found, so creating it");
+		write_text_to_log_file("未找到车辆改装表，正在创建它");
 		char* CREATE_VEHMODS_TABLE_QUERY = "CREATE TABLE ENT_VEHICLE_MODS ( \
 			id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, \
 			parentId INTEGER NOT NULL, \
@@ -196,18 +196,18 @@ void ENTDatabase::handle_version(int oldVersion)
 		int rcVeh3 = sqlite3_exec(db, CREATE_VEHMODS_TABLE_QUERY, NULL, 0, &zErrMsg);
 		if (rcVeh3 != SQLITE_OK)
 		{
-			write_text_to_log_file("Vehicle mods table creation problem");
+			write_text_to_log_file("车辆改装表创建问题");
 			sqlite3_free(zErrMsg);
 		}
 		else
 		{
-			write_text_to_log_file("Vehicle mods table created");
+			write_text_to_log_file("车辆改装表已创建");
 		}
 	}
 
 	if (oldVersion < 4)
 	{
-		write_text_to_log_file("Main skin table not found, so creating it");
+		write_text_to_log_file("未找到主皮肤表，正在创建它");
 
 		char* CREATE_SKIN_TABLE_QUERY = "CREATE TABLE ENT_SAVED_SKINS ( \
 			id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, \
@@ -218,15 +218,15 @@ void ENTDatabase::handle_version(int oldVersion)
 		int rcSkin1 = sqlite3_exec(db, CREATE_SKIN_TABLE_QUERY, NULL, 0, &zErrMsg);
 		if (rcSkin1 != SQLITE_OK)
 		{
-			write_text_to_log_file("Main skin table creation problem");
+			write_text_to_log_file("主皮肤表创建问题");
 			sqlite3_free(zErrMsg);
 		}
 		else
 		{
-			write_text_to_log_file("Main skin table created");
+			write_text_to_log_file("主皮肤表已创建");
 		}
 
-		write_text_to_log_file("Skin components table not found, so creating it");
+		write_text_to_log_file("未找到皮肤组件表，正在创建它");
 		char* CREATE_SKIN_COMPS_TABLE_QUERY = "CREATE TABLE ENT_SKIN_COMPONENTS ( \
 			id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, \
 			parentId INTEGER NOT NULL, \
@@ -240,15 +240,15 @@ void ENTDatabase::handle_version(int oldVersion)
 		int rcSkin2 = sqlite3_exec(db, CREATE_SKIN_COMPS_TABLE_QUERY, NULL, 0, &zErrMsg);
 		if (rcSkin2 != SQLITE_OK)
 		{
-			write_text_to_log_file("Skin components table creation problem");
+			write_text_to_log_file("皮肤组件表创建问题");
 			sqlite3_free(zErrMsg);
 		}
 		else
 		{
-			write_text_to_log_file("Skin components table created");
+			write_text_to_log_file("皮肤组件表已创建");
 		}
 
-		write_text_to_log_file("Skin props table not found, so creating it");
+		write_text_to_log_file("未找到皮肤道具表，正在创建它");
 		char* CREATE_SKIN_PROPS_TABLE_QUERY = "CREATE TABLE ENT_SKIN_PROPS ( \
 			id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, \
 			parentId INTEGER NOT NULL, \
@@ -262,12 +262,12 @@ void ENTDatabase::handle_version(int oldVersion)
 		int rcSkin3 = sqlite3_exec(db, CREATE_SKIN_PROPS_TABLE_QUERY, NULL, 0, &zErrMsg);
 		if (rcSkin3 != SQLITE_OK)
 		{
-			write_text_to_log_file("Skin props table creation problem");
+			write_text_to_log_file("皮肤道具表创建问题");
 			sqlite3_free(zErrMsg);
 		}
 		else
 		{
-			write_text_to_log_file("Skin props table created");
+			write_text_to_log_file("皮肤道具表已创建");
 		}
 	}
 
@@ -278,7 +278,7 @@ void ENTDatabase::handle_version(int oldVersion)
 		int custTyresAddition = sqlite3_exec(db, ADD_TYRES_COL, NULL, 0, &zErrMsg);
 		if (custTyresAddition != SQLITE_OK)
 		{
-			write_text_to_log_file("Couldn't add custom tyres column");
+			write_text_to_log_file("无法添加自定义轮胎列");
 			sqlite3_free(zErrMsg);
 		}
 	}
@@ -307,7 +307,7 @@ void ENTDatabase::handle_version(int oldVersion)
 			int extraColsAddition = sqlite3_exec(db, q, NULL, 0, &zErrMsg);
 			if (extraColsAddition != SQLITE_OK)
 			{
-				write_text_to_log_file("Couldn't add v6 vehicle column");
+				write_text_to_log_file("无法添加 v6 车辆列");
 				sqlite3_free(zErrMsg);
 			}
 		}
@@ -320,7 +320,7 @@ void ENTDatabase::handle_version(int oldVersion)
 			int dropTable = sqlite3_exec(db, "DROP TABLE ENT_PROP_INSTANCES;", NULL, 0, &zErrMsg);
 			if (dropTable != SQLITE_OK)
 			{
-				write_text_to_log_file("Couldn't alter props table");
+				write_text_to_log_file("无法修改道具表");
 				sqlite3_free(zErrMsg);
 			}
 		}
@@ -328,7 +328,7 @@ void ENTDatabase::handle_version(int oldVersion)
 			int dropTable = sqlite3_exec(db, "DROP TABLE ENT_PROP_SETS;", NULL, 0, &zErrMsg);
 			if (dropTable != SQLITE_OK)
 			{
-				write_text_to_log_file("Couldn't alter props table");
+				write_text_to_log_file("无法修改道具表");
 				sqlite3_free(zErrMsg);
 			}
 		}
@@ -336,7 +336,7 @@ void ENTDatabase::handle_version(int oldVersion)
 
 	if (oldVersion < 8)
 	{
-		write_text_to_log_file("Props sets table not found, so creating it");
+		write_text_to_log_file("未找到道具集表，正在创建它");
 		char* CREATE_PROP_SETS_TABLE_QUERY = "CREATE TABLE ENT_PROP_SETS ( \
 			id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, \
 			name TEXT NOT NULL)";
@@ -344,15 +344,15 @@ void ENTDatabase::handle_version(int oldVersion)
 		int propSetRC = sqlite3_exec(db, CREATE_PROP_SETS_TABLE_QUERY, NULL, 0, &zErrMsg);
 		if (propSetRC != SQLITE_OK)
 		{
-			write_text_to_log_file("Prop set table creation problem");
+			write_text_to_log_file("道具集表创建问题");
 			sqlite3_free(zErrMsg);
 		}
 		else
 		{
-			write_text_to_log_file("Prop set table creation problem");
+			write_text_to_log_file("道具集表创建问题");
 		}
 
-		write_text_to_log_file("Props instances table not found, so creating it");
+		write_text_to_log_file("未找到道具实例表，正在创建它");
 		char* CREATE_PROP_INSTANCES_TABLE_QUERY = "CREATE TABLE ENT_PROP_INSTANCES ( \
 			id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, \
 			parentId INTEGER NOT NULL, \
@@ -374,12 +374,12 @@ void ENTDatabase::handle_version(int oldVersion)
 		int propInstanceRC = sqlite3_exec(db, CREATE_PROP_INSTANCES_TABLE_QUERY, NULL, 0, &zErrMsg);
 		if (propInstanceRC != SQLITE_OK)
 		{
-			write_text_to_log_file("Prop instance table creation problem");
+			write_text_to_log_file("道具实例表创建问题");
 			sqlite3_free(zErrMsg);
 		}
 		else
 		{
-			write_text_to_log_file("Prop instance table creation problem");
+			write_text_to_log_file("道具实例表创建问题");
 		}
 	}
 
@@ -396,7 +396,7 @@ void ENTDatabase::handle_version(int oldVersion)
 			int extraColsAddition = sqlite3_exec(db, q, NULL, 0, &zErrMsg);
 			if (extraColsAddition != SQLITE_OK)
 			{
-				write_text_to_log_file("Couldn't add v9 vehicle column");
+				write_text_to_log_file("无法添加 v9 车辆列");
 				sqlite3_free(zErrMsg);
 			}
 		}
@@ -409,7 +409,7 @@ void ENTDatabase::handle_version(int oldVersion)
 		int custTyresAddition = sqlite3_exec(db, ADD_ENGINESOUND_COL, NULL, 0, &zErrMsg);
 		if (custTyresAddition != SQLITE_OK)
 		{
-			write_text_to_log_file("Couldn't add engine sound column");
+			write_text_to_log_file("无法添加引擎声音列");
 			sqlite3_free(zErrMsg);
 		}
 	}
@@ -421,14 +421,14 @@ void ENTDatabase::handle_version(int oldVersion)
 		int custTyresAddition = sqlite3_exec(db, ADD_XENONCOLOUR_COL, NULL, 0, &zErrMsg);
 		if (custTyresAddition != SQLITE_OK)
 		{
-			write_text_to_log_file("Couldn't add xenon colour column");
+			write_text_to_log_file("无法添加氙气灯颜色列");
 			sqlite3_free(zErrMsg);
 		}
 	}
 
 	if (oldVersion < 12)
 	{
-		write_text_to_log_file("Main skin table not found, so creating it");
+		write_text_to_log_file("未找到主皮肤表，正在创建它");
 
 		char* CREATE_BOD_SKIN_TABLE_QUERY = "CREATE TABLE ENT_SAVED_BOD_SKINS ( \
 			id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, \
@@ -448,15 +448,15 @@ void ENTDatabase::handle_version(int oldVersion)
 		int rcSkin1 = sqlite3_exec(db, CREATE_BOD_SKIN_TABLE_QUERY, NULL, 0, &zErrMsg);
 		if (rcSkin1 != SQLITE_OK)
 		{
-			write_text_to_log_file("Main skin table creation problem");
+			write_text_to_log_file("主皮肤表创建问题");
 			sqlite3_free(zErrMsg);
 		}
 		else
 		{
-			write_text_to_log_file("Main skin table created");
+			write_text_to_log_file("主皮肤表已创建");
 		}
 
-		write_text_to_log_file("Skin components table not found, so creating it");
+		write_text_to_log_file("未找到皮肤组件表，正在创建它");
 		char* CREATE_BOD_SKIN_COMPS_TABLE_QUERY = "CREATE TABLE ENT_BOD_SKIN_COMPONENTS ( \
 			id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, \
 			parentId INTEGER NOT NULL, \
@@ -470,15 +470,15 @@ void ENTDatabase::handle_version(int oldVersion)
 		int rcSkin2 = sqlite3_exec(db, CREATE_BOD_SKIN_COMPS_TABLE_QUERY, NULL, 0, &zErrMsg);
 		if (rcSkin2 != SQLITE_OK)
 		{
-			write_text_to_log_file("Skin components table creation problem");
+			write_text_to_log_file("皮肤组件表创建问题");
 			sqlite3_free(zErrMsg);
 		}
 		else
 		{
-			write_text_to_log_file("Skin components table created");
+			write_text_to_log_file("皮肤组件表已创建");
 		}
 
-		write_text_to_log_file("Skin props table not found, so creating it");
+		write_text_to_log_file("未找到皮肤道具表，正在创建它");
 		char* CREATE_BOD_SKIN_PROPS_TABLE_QUERY = "CREATE TABLE ENT_BOD_SKIN_PROPS ( \
 			id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, \
 			parentId INTEGER NOT NULL, \
@@ -492,18 +492,18 @@ void ENTDatabase::handle_version(int oldVersion)
 		int rcSkin3 = sqlite3_exec(db, CREATE_BOD_SKIN_PROPS_TABLE_QUERY, NULL, 0, &zErrMsg);
 		if (rcSkin3 != SQLITE_OK)
 		{
-			write_text_to_log_file("Skin props table creation problem");
+			write_text_to_log_file("皮肤道具表创建问题");
 			sqlite3_free(zErrMsg);
 		}
 		else
 		{
-			write_text_to_log_file("Skin props table created");
+			write_text_to_log_file("皮肤道具表已创建");
 		}
 	}
 
 	if (oldVersion < 13)
 	{
-		write_text_to_log_file("Main veh colour table not found, so creating it");
+		write_text_to_log_file("未找到主车辆颜色表，正在创建它");
 
 		char* CREATE_VEH_COLOUR_TABLE_QUERY = "CREATE TABLE ENT_SAVED_VEH_COLOURS ( \
 			id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, \
@@ -523,18 +523,18 @@ void ENTDatabase::handle_version(int oldVersion)
 		int rcSkin1 = sqlite3_exec(db, CREATE_VEH_COLOUR_TABLE_QUERY, NULL, 0, &zErrMsg);
 		if (rcSkin1 != SQLITE_OK)
 		{
-			write_text_to_log_file("Main colour table creation problem");
+			write_text_to_log_file("主颜色表创建问题");
 			sqlite3_free(zErrMsg);
 		}
 		else
 		{
-			write_text_to_log_file("Main colour table created");
+			write_text_to_log_file("主颜色表已创建");
 		}
 	}
 
 	if (oldVersion < 14)
 	{
-		write_text_to_log_file("Main weapon table not found, so creating it");
+		write_text_to_log_file("未找到主武器表，正在创建它");
 
 		char* CREATE_VEH_COLOUR_TABLE_QUERY = "CREATE TABLE ENT_SAVED_WEAPON ( \
 			id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, \
@@ -553,18 +553,18 @@ void ENTDatabase::handle_version(int oldVersion)
 		int rcSkin1 = sqlite3_exec(db, CREATE_VEH_COLOUR_TABLE_QUERY, NULL, 0, &zErrMsg);
 		if (rcSkin1 != SQLITE_OK)
 		{
-			write_text_to_log_file("Main weapon table creation problem");
+			write_text_to_log_file("主武器表创建问题");
 			sqlite3_free(zErrMsg);
 		}
 		else
 		{
-			write_text_to_log_file("Main weapon table created");
+			write_text_to_log_file("主武器表已创建");
 		}
 	}
 
 	if (oldVersion < 15)
 	{
-		write_text_to_log_file("Main vehicle table not found, so creating it");
+		write_text_to_log_file("未找到主车辆表，正在创建它");
 		char* CREATE_VEHICLE_TABLE_QUERY = "CREATE TABLE ENT_TRACKED_VEHICLES ( \
 			id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, \
 			saveName TEXT NOT NULL, \
@@ -617,15 +617,15 @@ void ENTDatabase::handle_version(int oldVersion)
 		int rcVeh1 = sqlite3_exec(db, CREATE_VEHICLE_TABLE_QUERY, NULL, 0, &zErrMsg);
 		if (rcVeh1 != SQLITE_OK)
 		{
-			write_text_to_log_file("Main vehicle table creation problem");
+			write_text_to_log_file("主车辆表创建问题");
 			sqlite3_free(zErrMsg);
 		}
 		else
 		{
-			write_text_to_log_file("Main vehicle table created");
+			write_text_to_log_file("主车辆表已创建");
 		}
 
-		write_text_to_log_file("Vehicle extras table not found, so creating it");
+		write_text_to_log_file("未找到车辆附加项表，正在创建它");
 		char* CREATE_VEHEXTRAS_TABLE_QUERY = "CREATE TABLE ENT_TRACKED_EXTRAS ( \
 			id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, \
 			parentId INTEGER NOT NULL, \
@@ -637,15 +637,15 @@ void ENTDatabase::handle_version(int oldVersion)
 		int rcVeh2 = sqlite3_exec(db, CREATE_VEHEXTRAS_TABLE_QUERY, NULL, 0, &zErrMsg);
 		if (rcVeh2 != SQLITE_OK)
 		{
-			write_text_to_log_file("Vehicle extras table creation problem");
+			write_text_to_log_file("车辆附加项表创建问题");
 			sqlite3_free(zErrMsg);
 		}
 		else
 		{
-			write_text_to_log_file("Vehicle extras table created");
+			write_text_to_log_file("车辆附加项表已创建");
 		}
 
-		write_text_to_log_file("Vehicle mods table not found, so creating it");
+		write_text_to_log_file("未找到车辆改装表，正在创建它");
 		char* CREATE_VEHMODS_TABLE_QUERY = "CREATE TABLE ENT_TRACKED_MODS ( \
 			id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, \
 			parentId INTEGER NOT NULL, \
@@ -659,12 +659,12 @@ void ENTDatabase::handle_version(int oldVersion)
 		int rcVeh3 = sqlite3_exec(db, CREATE_VEHMODS_TABLE_QUERY, NULL, 0, &zErrMsg);
 		if (rcVeh3 != SQLITE_OK)
 		{
-			write_text_to_log_file("Vehicle mods table creation problem");
+			write_text_to_log_file("车辆改装表创建问题");
 			sqlite3_free(zErrMsg);
 		}
 		else
 		{
-			write_text_to_log_file("Vehicle mods table created");
+			write_text_to_log_file("车辆改装表已创建");
 		}
 	}
 
@@ -687,7 +687,7 @@ void ENTDatabase::handle_version(int oldVersion)
 			int extraColsAddition = sqlite3_exec(db, q, NULL, 0, &zErrMsg);
 			if (extraColsAddition != SQLITE_OK)
 			{
-				write_text_to_log_file("Couldn't add bodyguard skins columns");
+				write_text_to_log_file("无法添加保镖皮肤列");
 				sqlite3_free(zErrMsg);
 			}
 		}
@@ -700,7 +700,7 @@ void ENTDatabase::handle_version(int oldVersion)
 		int custEnginePow = sqlite3_exec(db, ADD_POWERMULTIPLIER_COL, NULL, 0, &zErrMsg);
 		if (custEnginePow != SQLITE_OK)
 		{
-			write_text_to_log_file("Couldn't add engine power multiplier column");
+			write_text_to_log_file("无法添加引擎功率倍数列");
 			sqlite3_free(zErrMsg);
 		}
 
@@ -709,7 +709,7 @@ void ENTDatabase::handle_version(int oldVersion)
 		int custTrEnginePow = sqlite3_exec(db, ADD_TRACKEDPOWERMULTIPLIER_COL, NULL, 0, &zErrMsg);
 		if (custTrEnginePow != SQLITE_OK)
 		{
-			write_text_to_log_file("Couldn't add engine power multiplier column");
+			write_text_to_log_file("无法添加引擎功率倍数列");
 			sqlite3_free(zErrMsg);
 		}
 	}
@@ -719,13 +719,13 @@ bool ENTDatabase::open()
 {
 	std::stringstream ss;
 
-	write_text_to_log_file("Initialising DB engine");
+	write_text_to_log_file("正在初始化 DB 数据库引擎");
 
 	sqlite3_initialize();
 
 	db_mutex = sqlite3_mutex_alloc(SQLITE_MUTEX_RECURSIVE);
 
-	write_text_to_log_file("Opening DB file");
+	write_text_to_log_file("正在打开 DB 数据库文件");
 
 	WCHAR* db_path = get_storage_dir_path("ent.db");
 
@@ -739,13 +739,13 @@ bool ENTDatabase::open()
 	delete db_path;
 	if (rc == SQLITE_OK)
 	{
-		write_text_to_log_file("DB opened");
+		write_text_to_log_file("DB 数据库已打开");
 	}
 	else
 	{
-		write_text_to_log_file("DB couldn't be opened or created");
+		write_text_to_log_file("DB 数据库无法打开或创建");
 		ss.str(""); ss.clear();
-		ss << "DB error code was: " << rc;
+		ss << "DB 数据库错误代码为: " << rc;
 		write_text_to_log_file(ss.str());
 		close();
 		mutex_unlock();
@@ -756,7 +756,7 @@ bool ENTDatabase::open()
 	int rcPragma = sqlite3_exec(db, PRAGMA_FKEY_QUERY, NULL, 0, &zErrMsg);
 	if (rcPragma != SQLITE_OK)
 	{
-		write_text_to_log_file("Couldn't exec pragma statement");
+		write_text_to_log_file("无法执行 PRAGMA 语句");
 		sqlite3_free(zErrMsg);
 	}
 
@@ -765,25 +765,25 @@ bool ENTDatabase::open()
 	rc = sqlite3_exec(db, VERSION_TABLE_EXISTS_QUERY, singleIntResultCallback, &count, &zErrMsg);
 	if (rc != SQLITE_OK)
 	{
-		write_text_to_log_file("Couldn't query sqlite_master");
+		write_text_to_log_file("无法查询 sqlite_master 表");
 		sqlite3_free(zErrMsg);
 	}
 
 	if (count == 0 )
 	{
-		write_text_to_log_file("Manifest table not found, so creating it");
+		write_text_to_log_file("未找到 Manifest 表，正在创建它");
 		char* CREATE_VERSION_TABLE_QUERY = "create table ENT_DB_MANIFEST (MANIFEST_KEY TEXT PRIMARY KEY NOT NULL, MANIFEST_VALUE TEXT NOT NULL)";
 		rc = sqlite3_exec(db, CREATE_VERSION_TABLE_QUERY, NULL, 0, &zErrMsg);
 		if (rc != SQLITE_OK)
 		{
-			write_text_to_log_file("Manifest table creation problem");
+			write_text_to_log_file("Manifest 表创建问题");
 			sqlite3_free(zErrMsg);
 			mutex_unlock();
 			return false;
 		}
 		else
 		{
-			write_text_to_log_file("Manifest table created");
+			write_text_to_log_file("Manifest 表已创建");
 		}
 	}
 
@@ -792,13 +792,13 @@ bool ENTDatabase::open()
 	rc = sqlite3_exec(db, FIND_VERSION_TABLE_QUERY, singleIntResultCallback, &dbversion, &zErrMsg);
 	if (rc != SQLITE_OK)
 	{
-		write_text_to_log_file("Version not found");
+		write_text_to_log_file("未找到版本");
 		sqlite3_free(zErrMsg);
 	}
 	else
 	{
 		ss.str(""); ss.clear();
-		ss << "Version found: " << dbversion;
+		ss << "未找到版本: " << dbversion;
 		write_text_to_log_file(ss.str());
 		handle_version(dbversion);
 	}
@@ -811,14 +811,14 @@ bool ENTDatabase::open()
 		rc = sqlite3_exec(db, ssStr.c_str(), emptyCallback, NULL, &zErrMsg);
 		if (rc != SQLITE_OK)
 		{
-			write_text_to_log_file("Couldn't update version");
+			write_text_to_log_file("无法更新版本");
 			write_text_to_log_file(ss.str());
 			write_text_to_log_file(zErrMsg);
 			sqlite3_free(zErrMsg);
 		}
 		else
 		{
-			write_text_to_log_file("Updated version");
+			write_text_to_log_file("版本已更新");
 		}
 	}
 
@@ -828,22 +828,22 @@ bool ENTDatabase::open()
 
 void ENTDatabase::close()
 {
-	write_text_to_log_file("DB closing");
+	write_text_to_log_file("正在关闭 DB 数据库");
 	if (db != NULL)
 	{
 		int rc = sqlite3_close_v2(db);
 		if (rc != SQLITE_OK)
 		{
-			write_text_to_log_file("DB not closed properly!");
+			write_text_to_log_file("DB 数据库未正确关闭！");
 		}
 		db = NULL;
 	}
 
 	sqlite3_mutex_free(db_mutex);
 
-	write_text_to_log_file("DB closed");
+	write_text_to_log_file("DB 数据库已关闭");
 	sqlite3_shutdown();
-	write_text_to_log_file("DB shutdown");
+	write_text_to_log_file("DB 数据库已停止");
 }
 
 void ENTDatabase::store_feature_enabled_pairs(std::vector<FeatureEnabledLocalDefinition> values)
@@ -872,7 +872,7 @@ void ENTDatabase::store_feature_enabled_pairs(std::vector<FeatureEnabledLocalDef
 	mutex_lock();
 	begin_transaction();
 
-	write_text_to_log_file("Asked to store feature pairs");
+	write_text_to_log_file("请求存储特征对");
 	for (int i = 0; i < values.size(); i++)
 	{
 		FeatureEnabledLocalDefinition def = values.at(i);
@@ -882,7 +882,7 @@ void ENTDatabase::store_feature_enabled_pairs(std::vector<FeatureEnabledLocalDef
 		int rc = sqlite3_exec(db, ssStr.c_str(), emptyCallback, NULL, &zErrMsg);
 		if (rc != SQLITE_OK)
 		{
-			write_text_to_log_file("Failed to insert feature enablement row");
+			write_text_to_log_file("未能插入功能启用行");
 			write_text_to_log_file(ss.str());
 			write_text_to_log_file(zErrMsg);
 			sqlite3_free(zErrMsg);
@@ -906,7 +906,7 @@ void ENTDatabase::store_feature_enabled_pairs(std::vector<FeatureEnabledLocalDef
 	end_transaction();
 	mutex_unlock();
 
-	write_text_to_log_file("Done storing feature pairs");
+	write_text_to_log_file("特征对存储完成");
 }
 
 void ENTDatabase::load_feature_enabled_pairs(std::vector<FeatureEnabledLocalDefinition> values)
@@ -915,7 +915,7 @@ void ENTDatabase::load_feature_enabled_pairs(std::vector<FeatureEnabledLocalDefi
 
 	{
 		std::stringstream ss;
-		ss << "Asked to load " << values.size() << " feature pairs";
+		ss << "请求加载 " << values.size() << " 特征对";
 		write_text_to_log_file(ss.str());
 	}
 	std::vector<FeatureEnabledDBRow> dbPairs;
@@ -923,13 +923,13 @@ void ENTDatabase::load_feature_enabled_pairs(std::vector<FeatureEnabledLocalDefi
 	int rc = sqlite3_exec(db, QUERY, featureEnablementFetchCallback, &values, &zErrMsg);
 	if (rc != SQLITE_OK)
 	{
-		write_text_to_log_file("Pairs not loaded");
+		write_text_to_log_file("特征对加载失败");
 		write_text_to_log_file(zErrMsg);
 		sqlite3_free(zErrMsg);
 	}
 	else
 	{
-		write_text_to_log_file("Done loading feature pairs");
+		write_text_to_log_file("特征对加载完成");
 	}
 
 	for each (FeatureEnabledLocalDefinition def in values)
@@ -976,11 +976,11 @@ void ENTDatabase::store_setting_pairs(std::vector<StringPairSettingDBRow> values
 
 	{
 		std::stringstream ss;
-		ss << "Asked to store " << values.size() << " generic pairs";
+		ss << "请求存储 " << values.size() << " 通用对";
 		write_text_to_log_file(ss.str());
 	}
 
-	write_text_to_log_file("Asked to store generic pairs");
+	write_text_to_log_file("请求存储通用对");
 	for (int i = 0; i < values.size(); i++)
 	{
 		StringPairSettingDBRow setting = values.at(i);
@@ -996,21 +996,21 @@ void ENTDatabase::store_setting_pairs(std::vector<StringPairSettingDBRow> values
 		{
 			{
 				std::stringstream ss;
-				ss << "Storing generic pair " << setting.name << " with value " << setting.value;
+				ss << "正在存储通用对 " << setting.name << " 值为 " << setting.value;
 				write_text_to_log_file(ss.str());
 			}
 
-			// bind the value
+			// 绑定值
 			sqlite3_bind_text(stmt, 1, setting.name.c_str(), setting.name.length(), 0);
 			sqlite3_bind_text(stmt, 2, setting.value.c_str(), setting.value.length(), 0);
 
-			// commit
+			// 提交
 			sqlite3_step(stmt);
 			sqlite3_finalize(stmt);
 		}
 		else
 		{
-			write_text_to_log_file("Failed to prepare setting row");
+			write_text_to_log_file("未能准备设置行");
 			write_text_to_log_file(ss.str());
 			write_text_to_log_file(sqlite3_errmsg(db));
 			break;
@@ -1033,20 +1033,20 @@ void ENTDatabase::store_setting_pairs(std::vector<StringPairSettingDBRow> values
 	end_transaction();
 	mutex_unlock();
 
-	write_text_to_log_file("Done storing generic pairs");
+	write_text_to_log_file("通用对存储完成");
 }
 
 std::vector<StringPairSettingDBRow> ENTDatabase::load_setting_pairs()
 {
 	mutex_lock();
 
-	write_text_to_log_file("Asked to load generic pairs");
+	write_text_to_log_file("请求加载通用对");
 	std::vector<StringPairSettingDBRow> dbPairs;
 	char* QUERY = "select SETTING_NAME, SETTING_VALUE from ENT_SETTING_PAIRS";
 	int rc = sqlite3_exec(db, QUERY, genericSettingPairsFetchCallback, &dbPairs, &zErrMsg);
 	if (rc != SQLITE_OK)
 	{
-		write_text_to_log_file("Pairs not loaded");
+		write_text_to_log_file("特征对加载失败");
 		write_text_to_log_file(zErrMsg);
 		sqlite3_free(zErrMsg);
 	}
@@ -1066,7 +1066,7 @@ std::vector<StringPairSettingDBRow> ENTDatabase::load_setting_pairs()
 
 	mutex_unlock();
 
-	write_text_to_log_file("Done loading generic pairs");
+	write_text_to_log_file("通用对加载完成");
 	return dbPairs;
 }
 
@@ -1093,7 +1093,7 @@ void ENTDatabase::save_vehicle_extras(Vehicle veh, sqlite3_int64 rowID)
 
 		if (rc != SQLITE_OK)
 		{
-			write_text_to_log_file("Vehicle extras save failed");
+			write_text_to_log_file("车辆附加信息保存失败");
 			write_text_to_log_file(sqlite3_errmsg(db));
 		}
 		else
@@ -1104,7 +1104,7 @@ void ENTDatabase::save_vehicle_extras(Vehicle veh, sqlite3_int64 rowID)
 			sqlite3_bind_int(stmt, index++, i);
 			sqlite3_bind_int(stmt, index++, VEHICLE::IS_VEHICLE_EXTRA_TURNED_ON(veh, i) ? 1 : 0);
 
-			// commit
+			// 提交
 			sqlite3_step(stmt);
 			sqlite3_finalize(stmt);
 		}
@@ -1120,7 +1120,7 @@ void ENTDatabase::save_vehicle_mods(Vehicle veh, sqlite3_int64 rowID)
 
 	begin_transaction();
 
-	for (int i = 0; i < 50; i++) //50 mods total (that is including Bennys mods) 
+	for (int i = 0; i < 50; i++) //总共 50 个改装项目（包括 Benny 的改装）
 	{
 		std::stringstream ss;
 		ss << "INSERT OR REPLACE INTO ENT_VEHICLE_MODS VALUES (?, ?, ?, ?, ?)";
@@ -1132,7 +1132,7 @@ void ENTDatabase::save_vehicle_mods(Vehicle veh, sqlite3_int64 rowID)
 
 		if (rc != SQLITE_OK)
 		{
-			write_text_to_log_file("Vehicle mods save failed");
+			write_text_to_log_file("车辆改装信息保存失败");
 			write_text_to_log_file(sqlite3_errmsg(db));
 		}
 		else
@@ -1153,7 +1153,7 @@ void ENTDatabase::save_vehicle_mods(Vehicle veh, sqlite3_int64 rowID)
 				sqlite3_bind_int(stmt, index++, VEHICLE::GET_VEHICLE_MOD(veh, i));
 			}
 			sqlite3_bind_int(stmt, index++, isToggleable ? 1 : 0);
-			// commit
+			// 提交
 			sqlite3_step(stmt);
 			sqlite3_finalize(stmt);
 		}
@@ -1210,7 +1210,7 @@ bool ENTDatabase::save_vehicle(Vehicle veh, std::string saveName, sqlite3_int64 
 
 	if (rc != SQLITE_OK)
 	{
-		write_text_to_log_file("Vehicle save failed");
+		write_text_to_log_file("车辆信息保存失败");
 		write_text_to_log_file(sqlite3_errmsg(db));
 		result = false;
 	}
@@ -1225,8 +1225,8 @@ bool ENTDatabase::save_vehicle(Vehicle veh, std::string saveName, sqlite3_int64 
 		{
 			sqlite3_bind_int64(stmt, index++, slot);
 		}
-		sqlite3_bind_text(stmt, index++, saveName.c_str(), saveName.length(), 0); //save name
-		sqlite3_bind_int(stmt, index++, ENTITY::GET_ENTITY_MODEL(veh)); //model
+		sqlite3_bind_text(stmt, index++, saveName.c_str(), saveName.length(), 0); //保存名称
+		sqlite3_bind_int(stmt, index++, ENTITY::GET_ENTITY_MODEL(veh)); //模型
 
 		int primaryCol, secondaryCol;
 		VEHICLE::GET_VEHICLE_COLOURS(veh, &primaryCol, &secondaryCol);
@@ -1335,8 +1335,8 @@ bool ENTDatabase::save_vehicle(Vehicle veh, std::string saveName, sqlite3_int64 
 
 		sqlite3_bind_int(stmt, index++, VEHICLE::IS_VEHICLE_A_CONVERTIBLE(veh, 0) && VEHICLE::GET_CONVERTIBLE_ROOF_STATE(veh));
 
-		//dashColour INTEGER,
-		//interiorColour INTEGER
+		//仪表盘颜色 整数类型
+		//内饰颜色 整数类型
 		int dashCol, interiorCol;
 		VEHICLE::_GET_VEHICLE_DASHBOARD_COLOUR(veh, &dashCol);
 		VEHICLE::_GET_VEHICLE_INTERIOR_COLOUR(veh, &interiorCol);
@@ -1359,13 +1359,13 @@ bool ENTDatabase::save_vehicle(Vehicle veh, std::string saveName, sqlite3_int64 
 		}
 		sqlite3_bind_int(stmt, index++, powerMultiplier);
 
-		// commit
+		// 提交
 		sqlite3_step(stmt);
 		sqlite3_finalize(stmt);
 
 		sqlite3_int64 newRowID = sqlite3_last_insert_rowid(db);
 
-		//if we're updating, delete any pre-existing children
+		// 如果正在更新，则删除所有已存在的子项
 		if (slot != -1)
 		{
 			delete_saved_vehicle_children(slot);
@@ -1401,7 +1401,7 @@ void ENTDatabase::save_skin_components(Ped ped, sqlite3_int64 rowID)
 
 		if (rc != SQLITE_OK)
 		{
-			write_text_to_log_file("Skin components save failed");
+			write_text_to_log_file("皮肤组件保存失败");
 			write_text_to_log_file(sqlite3_errmsg(db));
 		}
 		else
@@ -1409,9 +1409,9 @@ void ENTDatabase::save_skin_components(Ped ped, sqlite3_int64 rowID)
 			int index = 1;
 			sqlite3_bind_null(stmt, index++);
 			sqlite3_bind_int64(stmt, index++, rowID);
-			sqlite3_bind_int(stmt, index++, i); //slot id
-			sqlite3_bind_int(stmt, index++, drawable); //drawable id
-			sqlite3_bind_int(stmt, index++, texture); //texture id
+			sqlite3_bind_int(stmt, index++, i); //插槽 ID
+			sqlite3_bind_int(stmt, index++, drawable); //可绘制资源 ID
+			sqlite3_bind_int(stmt, index++, texture); //纹理 ID
 
 			sqlite3_step(stmt);
 			sqlite3_finalize(stmt);
@@ -1444,7 +1444,7 @@ void ENTDatabase::save_skin_props(Ped ped, sqlite3_int64 rowID)
 
 		if (rc != SQLITE_OK)
 		{
-			write_text_to_log_file("Skin props save failed");
+			write_text_to_log_file("皮肤道具保存失败");
 			write_text_to_log_file(sqlite3_errmsg(db));
 		}
 		else
@@ -1452,9 +1452,9 @@ void ENTDatabase::save_skin_props(Ped ped, sqlite3_int64 rowID)
 			int index = 1;
 			sqlite3_bind_null(stmt, index++);
 			sqlite3_bind_int64(stmt, index++, rowID);
-			sqlite3_bind_int(stmt, index++, i); //slot id
-			sqlite3_bind_int(stmt, index++, drawable); //drawable id
-			sqlite3_bind_int(stmt, index++, texture); //texture id
+			sqlite3_bind_int(stmt, index++, i); //插槽 ID
+			sqlite3_bind_int(stmt, index++, drawable); //可绘制资源 ID
+			sqlite3_bind_int(stmt, index++, texture); //纹理 ID
 
 			sqlite3_step(stmt);
 			sqlite3_finalize(stmt);
@@ -1481,7 +1481,7 @@ bool ENTDatabase::save_skin(Ped ped, std::string saveName, sqlite3_int64 slot)
 
 	if (rc != SQLITE_OK)
 	{
-		write_text_to_log_file("Vehicle save failed");
+		write_text_to_log_file("车辆信息保存失败");
 		write_text_to_log_file(sqlite3_errmsg(db));
 		result = false;
 	}
@@ -1495,16 +1495,16 @@ bool ENTDatabase::save_skin(Ped ped, std::string saveName, sqlite3_int64 slot)
 	{
 		sqlite3_bind_int64(stmt, index++, slot);
 	}
-	sqlite3_bind_text(stmt, index++, saveName.c_str(), saveName.length(), 0); //save name
-	sqlite3_bind_int(stmt, index++, ENTITY::GET_ENTITY_MODEL(ped)); //model
+	sqlite3_bind_text(stmt, index++, saveName.c_str(), saveName.length(), 0); //保存名称
+	sqlite3_bind_int(stmt, index++, ENTITY::GET_ENTITY_MODEL(ped)); //模型
 
-	// commit
+	// 提交
 	sqlite3_step(stmt);
 	sqlite3_finalize(stmt);
 
 	sqlite3_int64 newRowID = sqlite3_last_insert_rowid(db);
 
-	//if we're updating, delete any pre-existing children
+	//如果正在更新，则删除所有已存在的子项
 	if (slot != -1)
 	{
 		delete_saved_skin_children(slot);
@@ -1518,7 +1518,7 @@ bool ENTDatabase::save_skin(Ped ped, std::string saveName, sqlite3_int64 slot)
 	return result;
 }
 
-// save/load bodyguard
+// 保存，加载，保镖
 void ENTDatabase::populate_saved_bod_skin(SavedBodSkinDBRow *entry)
 {
 	mutex_lock();
@@ -1530,15 +1530,15 @@ void ENTDatabase::populate_saved_bod_skin(SavedBodSkinDBRow *entry)
 
 	if (rc == SQLITE_OK)
 	{
-		// bind the value
+		// 绑定值
 		sqlite3_bind_int(stmt, 1, entry->rowID);
 
-		// commit
+		// 提交
 		int r = sqlite3_step(stmt);
 		while (r == SQLITE_ROW)
 		{
 			SavedBodSkinComponentDBRow *comp = new SavedBodSkinComponentDBRow();
-			//0 and 1 are IDs
+			//0 和 1 是 ID
 			comp->slotID = sqlite3_column_int(stmt, 2);
 			comp->drawable = sqlite3_column_int(stmt, 3);
 			comp->texture = sqlite3_column_int(stmt, 4);
@@ -1550,7 +1550,7 @@ void ENTDatabase::populate_saved_bod_skin(SavedBodSkinDBRow *entry)
 	}
 	else
 	{
-		write_text_to_log_file("Failed to fetch saved skin components");
+		write_text_to_log_file("未能获取保存的皮肤组件");
 		write_text_to_log_file(sqlite3_errmsg(db));
 	}
 
@@ -1561,15 +1561,15 @@ void ENTDatabase::populate_saved_bod_skin(SavedBodSkinDBRow *entry)
 
 	if (rc2 == SQLITE_OK)
 	{
-		// bind the value
+		// 绑定值
 		sqlite3_bind_int(stmt2, 1, entry->rowID);
 
-		// commit
+		// 提交
 		int r = sqlite3_step(stmt2);
 		while (r == SQLITE_ROW)
 		{
 			SavedBodSkinPropDBRow *prop = new SavedBodSkinPropDBRow();
-			//0 and 1 are IDs
+			//0 和 1 是 ID
 			prop->propID = sqlite3_column_int(stmt2, 2);
 			prop->drawable = sqlite3_column_int(stmt2, 3);
 			prop->texture = sqlite3_column_int(stmt2, 4);
@@ -1581,13 +1581,13 @@ void ENTDatabase::populate_saved_bod_skin(SavedBodSkinDBRow *entry)
 	}
 	else
 	{
-		write_text_to_log_file("Failed to fetch saved skin props");
+		write_text_to_log_file("未能获取保存的皮肤道具");
 		write_text_to_log_file(sqlite3_errmsg(db));
 	}
 
 	mutex_unlock();
 
-	write_text_to_log_file("Done loading saved skins");
+	write_text_to_log_file("已加载保存的皮肤");
 	return;
 }
 
@@ -1612,7 +1612,7 @@ void ENTDatabase::save_bod_skin_components(Ped ped, sqlite3_int64 rowID)
 
 		if (rc != SQLITE_OK)
 		{
-			write_text_to_log_file("Skin components save failed");
+			write_text_to_log_file("皮肤组件保存失败");
 			write_text_to_log_file(sqlite3_errmsg(db));
 		}
 		else
@@ -1620,9 +1620,9 @@ void ENTDatabase::save_bod_skin_components(Ped ped, sqlite3_int64 rowID)
 			int index = 1;
 			sqlite3_bind_null(stmt, index++);
 			sqlite3_bind_int64(stmt, index++, rowID);
-			sqlite3_bind_int(stmt, index++, i); //slot id
-			sqlite3_bind_int(stmt, index++, drawable); //drawable id
-			sqlite3_bind_int(stmt, index++, texture); //texture id
+			sqlite3_bind_int(stmt, index++, i); //插槽 ID
+			sqlite3_bind_int(stmt, index++, drawable); //可绘制资源 ID
+			sqlite3_bind_int(stmt, index++, texture); //纹理 ID
 
 			sqlite3_step(stmt);
 			sqlite3_finalize(stmt);
@@ -1655,7 +1655,7 @@ void ENTDatabase::save_bod_skin_props(Ped ped, sqlite3_int64 rowID)
 
 		if (rc != SQLITE_OK)
 		{
-			write_text_to_log_file("Skin props save failed");
+			write_text_to_log_file("皮肤道具保存失败");
 			write_text_to_log_file(sqlite3_errmsg(db));
 		}
 		else
@@ -1663,9 +1663,9 @@ void ENTDatabase::save_bod_skin_props(Ped ped, sqlite3_int64 rowID)
 			int index = 1;
 			sqlite3_bind_null(stmt, index++);
 			sqlite3_bind_int64(stmt, index++, rowID);
-			sqlite3_bind_int(stmt, index++, i); //slot id
-			sqlite3_bind_int(stmt, index++, drawable); //drawable id
-			sqlite3_bind_int(stmt, index++, texture); //texture id
+			sqlite3_bind_int(stmt, index++, i); //插槽 ID
+			sqlite3_bind_int(stmt, index++, drawable); //可绘制资源 ID
+			sqlite3_bind_int(stmt, index++, texture); //纹理 ID
 
 			sqlite3_step(stmt);
 			sqlite3_finalize(stmt);
@@ -1688,16 +1688,16 @@ void ENTDatabase::delete_saved_bod_skin_children(sqlite3_int64 slot)
 
 	if (rc == SQLITE_OK)
 	{
-		// bind the value
+		// 绑定值
 		sqlite3_bind_int64(stmt, 1, slot);
 
-		// commit
+		// 提交
 		sqlite3_step(stmt);
 		sqlite3_finalize(stmt);
 	}
 	else
 	{
-		write_text_to_log_file("Failed to delete saved bodyguard components");
+		write_text_to_log_file("未能删除保存的保镖组件");
 		write_text_to_log_file(sqlite3_errmsg(db));
 	}
 
@@ -1708,16 +1708,16 @@ void ENTDatabase::delete_saved_bod_skin_children(sqlite3_int64 slot)
 
 	if (rc2 == SQLITE_OK)
 	{
-		// bind the value
+		// 绑定值
 		sqlite3_bind_int64(stmt2, 1, slot);
 
-		// commit
+		// 提交
 		sqlite3_step(stmt2);
 		sqlite3_finalize(stmt2);
 	}
 	else
 	{
-		write_text_to_log_file("Failed to delete saved bodyguard props");
+		write_text_to_log_file("未能删除保存的保镖道具");
 		write_text_to_log_file(sqlite3_errmsg(db));
 	}
 
@@ -1749,7 +1749,7 @@ bool ENTDatabase::save_bod_skin(Ped ped, std::string saveName, sqlite3_int64 slo
 
 	if (rc != SQLITE_OK)
 	{
-		write_text_to_log_file("Bodyguard save failed");
+		write_text_to_log_file("保镖信息保存失败");
 		write_text_to_log_file(sqlite3_errmsg(db));
 		result = false;
 	}
@@ -1784,25 +1784,25 @@ bool ENTDatabase::save_bod_skin(Ped ped, std::string saveName, sqlite3_int64 slo
 	{
 		sqlite3_bind_int64(stmt, index++, slot);
 	}
-	sqlite3_bind_text(stmt, index++, saveName.c_str(), saveName.length(), 0); //save name
-	sqlite3_bind_int(stmt, index++, ENTITY::GET_ENTITY_MODEL(ped)); //model
-	sqlite3_bind_int(stmt, index++, WEAPON::GET_SELECTED_PED_WEAPON(ped)); // weapon
-	sqlite3_bind_int(stmt, index++, bcomp0); // weapon component
-	sqlite3_bind_int(stmt, index++, bcomp1); // weapon component
-	sqlite3_bind_int(stmt, index++, bcomp2); // weapon component
-	sqlite3_bind_int(stmt, index++, bcomp3); // weapon component
-	sqlite3_bind_int(stmt, index++, bcomp4); // weapon component
-	sqlite3_bind_int(stmt, index++, bcomp5); // weapon component
-	sqlite3_bind_int(stmt, index++, bcomp6); // weapon component
-	sqlite3_bind_int(stmt, index++, bw_tint); // weapon tint
+	sqlite3_bind_text(stmt, index++, saveName.c_str(), saveName.length(), 0); //保存名称
+	sqlite3_bind_int(stmt, index++, ENTITY::GET_ENTITY_MODEL(ped)); //模型
+	sqlite3_bind_int(stmt, index++, WEAPON::GET_SELECTED_PED_WEAPON(ped)); // 武器
+	sqlite3_bind_int(stmt, index++, bcomp0); // 武器组件
+	sqlite3_bind_int(stmt, index++, bcomp1); // 武器组件
+	sqlite3_bind_int(stmt, index++, bcomp2); // 武器组件
+	sqlite3_bind_int(stmt, index++, bcomp3); // 武器组件
+	sqlite3_bind_int(stmt, index++, bcomp4); // 武器组件
+	sqlite3_bind_int(stmt, index++, bcomp5); // 武器组件
+	sqlite3_bind_int(stmt, index++, bcomp6); // 武器组件
+	sqlite3_bind_int(stmt, index++, bw_tint); // 武器颜色
 
-	// commit
+	// 提交
 	sqlite3_step(stmt);
 	sqlite3_finalize(stmt);
 
 	sqlite3_int64 newRowID = sqlite3_last_insert_rowid(db);
 
-	//if we're updating, delete any pre-existing children
+	//如果正在更新，则删除所有已存在的子项
 	if (slot != -1)
 	{
 		delete_saved_bod_skin_children(slot);
@@ -1827,17 +1827,17 @@ void ENTDatabase::rename_saved_bod_skin(std::string name, sqlite3_int64 slot)
 
 	if (rc == SQLITE_OK)
 	{
-		// bind the value
+		// 绑定值
 		sqlite3_bind_text(stmt, 1, name.c_str(), name.length(), 0);
 		sqlite3_bind_int64(stmt, 2, slot);
 
-		// commit
+		// 提交
 		sqlite3_step(stmt);
 		sqlite3_finalize(stmt);
 	}
 	else
 	{
-		write_text_to_log_file("Failed to rename saved bodyguard");
+		write_text_to_log_file("未能重命名保存的保镖");
 		write_text_to_log_file(sqlite3_errmsg(db));
 	}
 
@@ -1855,16 +1855,16 @@ void ENTDatabase::delete_saved_bod_skin(sqlite3_int64 slot)
 
 	if (rc == SQLITE_OK)
 	{
-		// bind the value
+		// 绑定值
 		sqlite3_bind_int64(stmt, 1, slot);
 
-		// commit
+		// 提交
 		sqlite3_step(stmt);
 		sqlite3_finalize(stmt);
 	}
 	else
 	{
-		write_text_to_log_file("Failed to delete saved bodyguard");
+		write_text_to_log_file("未能删除保存的保镖");
 		write_text_to_log_file(sqlite3_errmsg(db));
 	}
 
@@ -1873,7 +1873,7 @@ void ENTDatabase::delete_saved_bod_skin(sqlite3_int64 slot)
 
 std::vector<SavedBodSkinDBRow*> ENTDatabase::get_saved_bod_skins(int index)
 {
-	write_text_to_log_file("Asked to load saved bodyguards");
+	write_text_to_log_file("请求加载已保存的保镖");
 
 	mutex_lock();
 
@@ -1893,7 +1893,7 @@ std::vector<SavedBodSkinDBRow*> ENTDatabase::get_saved_bod_skins(int index)
 
 	if (rc == SQLITE_OK)
 	{
-		// bind the value
+		// 绑定值
 		if (index != -1)
 		{
 			sqlite3_bind_int(stmt, 1, index);
@@ -1902,7 +1902,7 @@ std::vector<SavedBodSkinDBRow*> ENTDatabase::get_saved_bod_skins(int index)
 		int r = sqlite3_step(stmt);
 		while (r == SQLITE_ROW)
 		{
-			write_text_to_log_file("Skin row found");
+			write_text_to_log_file("找到皮肤行");
 
 			SavedBodSkinDBRow *skin = new SavedBodSkinDBRow();
 
@@ -1928,7 +1928,7 @@ std::vector<SavedBodSkinDBRow*> ENTDatabase::get_saved_bod_skins(int index)
 	}
 	else
 	{
-		write_text_to_log_file("Failed to fetch saved skins");
+		write_text_to_log_file("未能获取保存的皮肤");
 		write_text_to_log_file(sqlite3_errmsg(db));
 	}
 
@@ -1936,9 +1936,9 @@ std::vector<SavedBodSkinDBRow*> ENTDatabase::get_saved_bod_skins(int index)
 
 	return results;
 }
-// end of save/load bodyguard
+// 保存/加载保镖结束
 
-// saved weapons
+// 已保存的武器
 bool ENTDatabase::save_weapon(Ped ped, std::string saveName, sqlite3_int64 slot)
 {
 	mutex_lock();
@@ -1964,7 +1964,7 @@ bool ENTDatabase::save_weapon(Ped ped, std::string saveName, sqlite3_int64 slot)
 
 	if (rc != SQLITE_OK)
 	{
-		write_text_to_log_file("Weapon save failed");
+		write_text_to_log_file("武器保存失败");
 		write_text_to_log_file(sqlite3_errmsg(db));
 		result = false;
 	}
@@ -1999,18 +1999,18 @@ bool ENTDatabase::save_weapon(Ped ped, std::string saveName, sqlite3_int64 slot)
 	{
 		sqlite3_bind_int64(stmt, index++, slot);
 	}
-	sqlite3_bind_text(stmt, index++, saveName.c_str(), saveName.length(), 0); // save name
-	sqlite3_bind_int(stmt, index++, WEAPON::GET_SELECTED_PED_WEAPON(ped)); // weapon
-	sqlite3_bind_int(stmt, index++, comp0); // weapon component
-	sqlite3_bind_int(stmt, index++, comp1); // weapon component
-	sqlite3_bind_int(stmt, index++, comp2); // weapon component
-	sqlite3_bind_int(stmt, index++, comp3); // weapon component
-	sqlite3_bind_int(stmt, index++, comp4); // weapon component
-	sqlite3_bind_int(stmt, index++, comp5); // weapon component
-	sqlite3_bind_int(stmt, index++, comp6); // weapon component
-	sqlite3_bind_int(stmt, index++, w_tint); // weapon tint
+	sqlite3_bind_text(stmt, index++, saveName.c_str(), saveName.length(), 0); //保存名称
+	sqlite3_bind_int(stmt, index++, WEAPON::GET_SELECTED_PED_WEAPON(ped)); // 武器
+	sqlite3_bind_int(stmt, index++, comp0); // 武器组件
+	sqlite3_bind_int(stmt, index++, comp1); // 武器组件
+	sqlite3_bind_int(stmt, index++, comp2); // 武器组件
+	sqlite3_bind_int(stmt, index++, comp3); // 武器组件
+	sqlite3_bind_int(stmt, index++, comp4); // 武器组件
+	sqlite3_bind_int(stmt, index++, comp5); // 武器组件
+	sqlite3_bind_int(stmt, index++, comp6); // 武器组件
+	sqlite3_bind_int(stmt, index++, w_tint); // 武器颜色
 	
-	// commit
+	// 提交
 	sqlite3_step(stmt);
 	sqlite3_finalize(stmt);
 
@@ -2032,17 +2032,17 @@ void ENTDatabase::rename_saved_weapon(std::string name, sqlite3_int64 slot)
 
 	if (rc == SQLITE_OK)
 	{
-		// bind the value
+		// 绑定值
 		sqlite3_bind_text(stmt, 1, name.c_str(), name.length(), 0);
 		sqlite3_bind_int64(stmt, 2, slot);
 
-		// commit
+		// 提交
 		sqlite3_step(stmt);
 		sqlite3_finalize(stmt);
 	}
 	else
 	{
-		write_text_to_log_file("Failed to rename saved weapon");
+		write_text_to_log_file("未能重命名保存的武器");
 		write_text_to_log_file(sqlite3_errmsg(db));
 	}
 
@@ -2060,16 +2060,16 @@ void ENTDatabase::delete_saved_weapon(sqlite3_int64 slot)
 
 	if (rc == SQLITE_OK)
 	{
-		// bind the value
+		// 绑定值
 		sqlite3_bind_int64(stmt, 1, slot);
 
-		// commit
+		// 提交
 		sqlite3_step(stmt);
 		sqlite3_finalize(stmt);
 	}
 	else
 	{
-		write_text_to_log_file("Failed to delete saved weapon");
+		write_text_to_log_file("未能删除保存的武器");
 		write_text_to_log_file(sqlite3_errmsg(db));
 	}
 
@@ -2078,7 +2078,7 @@ void ENTDatabase::delete_saved_weapon(sqlite3_int64 slot)
 
 std::vector<SavedWeaponDBRow*> ENTDatabase::get_saved_weapon(int index)
 {
-	write_text_to_log_file("Asked to load saved weapon");
+	write_text_to_log_file("请求加载已保存的武器");
 
 	mutex_lock();
 
@@ -2098,7 +2098,7 @@ std::vector<SavedWeaponDBRow*> ENTDatabase::get_saved_weapon(int index)
 
 	if (rc == SQLITE_OK)
 	{
-		// bind the value
+		// 绑定值
 		if (index != -1)
 		{
 			sqlite3_bind_int(stmt, 1, index);
@@ -2107,7 +2107,7 @@ std::vector<SavedWeaponDBRow*> ENTDatabase::get_saved_weapon(int index)
 		int r = sqlite3_step(stmt);
 		while (r == SQLITE_ROW)
 		{
-			write_text_to_log_file("Weapon row found");
+			write_text_to_log_file("找到武器行");
 
 			SavedWeaponDBRow* skin = new SavedWeaponDBRow();
 
@@ -2132,7 +2132,7 @@ std::vector<SavedWeaponDBRow*> ENTDatabase::get_saved_weapon(int index)
 	}
 	else
 	{
-		write_text_to_log_file("Failed to fetch saved weapon");
+		write_text_to_log_file("未能获取保存的武器");
 		write_text_to_log_file(sqlite3_errmsg(db));
 	}
 
@@ -2140,9 +2140,9 @@ std::vector<SavedWeaponDBRow*> ENTDatabase::get_saved_weapon(int index)
 
 	return results;
 }
-// end of saved weapons
+// 已保存的武器结束
 
-// save/load veh colours
+// 保存/加载车辆颜色
 void ENTDatabase::rename_saved_veh_colour(std::string name, sqlite3_int64 slot)
 {
 	mutex_lock();
@@ -2154,17 +2154,17 @@ void ENTDatabase::rename_saved_veh_colour(std::string name, sqlite3_int64 slot)
 
 	if (rc == SQLITE_OK)
 	{
-		// bind the value
+		// 绑定值
 		sqlite3_bind_text(stmt, 1, name.c_str(), name.length(), 0);
 		sqlite3_bind_int64(stmt, 2, slot);
 
-		// commit
+		// 提交
 		sqlite3_step(stmt);
 		sqlite3_finalize(stmt);
 	}
 	else
 	{
-		write_text_to_log_file("Failed to rename saved colours");
+		write_text_to_log_file("未能重命名保存的颜色");
 		write_text_to_log_file(sqlite3_errmsg(db));
 	}
 
@@ -2182,16 +2182,16 @@ void ENTDatabase::delete_saved_veh_colour(sqlite3_int64 slot)
 
 	if (rc == SQLITE_OK)
 	{
-		// bind the value
+		// 绑定值
 		sqlite3_bind_int64(stmt, 1, slot);
 
-		// commit
+		// 提交
 		sqlite3_step(stmt);
 		sqlite3_finalize(stmt);
 	}
 	else
 	{
-		write_text_to_log_file("Failed to delete saved colours");
+		write_text_to_log_file("未能删除保存的颜色");
 		write_text_to_log_file(sqlite3_errmsg(db));
 	}
 
@@ -2200,7 +2200,7 @@ void ENTDatabase::delete_saved_veh_colour(sqlite3_int64 slot)
 
 std::vector<SavedVehColourDBRow*> ENTDatabase::get_saved_veh_colours(int index)
 {
-	write_text_to_log_file("Asked to load saved colours");
+	write_text_to_log_file("请求加载已保存的颜色");
 
 	mutex_lock();
 
@@ -2220,7 +2220,7 @@ std::vector<SavedVehColourDBRow*> ENTDatabase::get_saved_veh_colours(int index)
 
 	if (rc == SQLITE_OK)
 	{
-		// bind the value
+		// 绑定值
 		if (index != -1)
 		{
 			sqlite3_bind_int(stmt, 1, index);
@@ -2229,7 +2229,7 @@ std::vector<SavedVehColourDBRow*> ENTDatabase::get_saved_veh_colours(int index)
 		int r = sqlite3_step(stmt);
 		while (r == SQLITE_ROW)
 		{
-			write_text_to_log_file("Skin row found");
+			write_text_to_log_file("找到皮肤行");
 
 			SavedVehColourDBRow *skin = new SavedVehColourDBRow();
 
@@ -2255,7 +2255,7 @@ std::vector<SavedVehColourDBRow*> ENTDatabase::get_saved_veh_colours(int index)
 	}
 	else
 	{
-		write_text_to_log_file("Failed to fetch saved colours");
+		write_text_to_log_file("未能获取保存的颜色");
 		write_text_to_log_file(sqlite3_errmsg(db));
 	}
 
@@ -2279,7 +2279,7 @@ bool ENTDatabase::save_veh_colour(Ped ped, std::string saveName, sqlite3_int64 s
 
 	if (rc != SQLITE_OK)
 	{
-		write_text_to_log_file("Colour save failed");
+		write_text_to_log_file("颜色保存失败");
 		write_text_to_log_file(sqlite3_errmsg(db));
 		result = false;
 	}
@@ -2299,25 +2299,25 @@ bool ENTDatabase::save_veh_colour(Ped ped, std::string saveName, sqlite3_int64 s
 	VEHICLE::GET_VEHICLE_EXTRA_COLOURS(veh, &pearl, &wheel);
 	VEHICLE::GET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, &pcustomr, &pcustomg, &pcustomb);
 	VEHICLE::GET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, &scustomr, &scustomg, &scustomb);
-	sqlite3_bind_text(stmt, index++, saveName.c_str(), saveName.length(), 0); //save name
-	sqlite3_bind_int(stmt, index++, primary); //primary colour
-	sqlite3_bind_int(stmt, index++, secondary); //secondary colour
-	sqlite3_bind_int(stmt, index++, pearl); //pearlescent colour
-	sqlite3_bind_int(stmt, index++, wheel); //wheel colour
-	sqlite3_bind_int(stmt, index++, pcustomr); //primary R colour
-	sqlite3_bind_int(stmt, index++, pcustomg); //primary G colour
-	sqlite3_bind_int(stmt, index++, pcustomb); //primary B colour
-	sqlite3_bind_int(stmt, index++, scustomr); //secondary R colour
-	sqlite3_bind_int(stmt, index++, scustomg); //secondary G colour
-	sqlite3_bind_int(stmt, index++, scustomb); //secondary B colour
+	sqlite3_bind_text(stmt, index++, saveName.c_str(), saveName.length(), 0); //保存名称
+	sqlite3_bind_int(stmt, index++, primary); // 主色调
+	sqlite3_bind_int(stmt, index++, secondary); // 次色调
+	sqlite3_bind_int(stmt, index++, pearl); // 珠光色
+	sqlite3_bind_int(stmt, index++, wheel); // 轮毂颜色
+	sqlite3_bind_int(stmt, index++, pcustomr); // 主色调 R 值
+	sqlite3_bind_int(stmt, index++, pcustomg); // 主色调 G 值
+	sqlite3_bind_int(stmt, index++, pcustomb); // 主色调 B 值
+	sqlite3_bind_int(stmt, index++, scustomr); // 次色调 R 值
+	sqlite3_bind_int(stmt, index++, scustomg); // 次色调 G 值
+	sqlite3_bind_int(stmt, index++, scustomb); // 次色调 B 值
 
-	// commit
+	// 提交
 	sqlite3_step(stmt);
 	sqlite3_finalize(stmt);
 
 	sqlite3_int64 newRowID = sqlite3_last_insert_rowid(db);
 
-	//if we're updating, delete any pre-existing children
+	// 如果正在更新，则删除所有已存在的子项
 	//if (slot != -1)
 	//{
 	//	delete_saved_veh_colour_children(slot);
@@ -2330,11 +2330,11 @@ bool ENTDatabase::save_veh_colour(Ped ped, std::string saveName, sqlite3_int64 s
 
 	return result;
 }
-// end of save/load veh colours
+// 保存/加载车辆颜色结束
 
 std::vector<SavedSkinDBRow*> ENTDatabase::get_saved_skins(int index)
 {
-	write_text_to_log_file("Asked to load saved skins");
+	write_text_to_log_file("请求加载已保存的皮肤");
 
 	mutex_lock();
 
@@ -2354,7 +2354,7 @@ std::vector<SavedSkinDBRow*> ENTDatabase::get_saved_skins(int index)
 
 	if (rc == SQLITE_OK)
 	{
-		// bind the value
+		// 绑定值
 		if (index != -1)
 		{
 			sqlite3_bind_int(stmt, 1, index);
@@ -2363,7 +2363,7 @@ std::vector<SavedSkinDBRow*> ENTDatabase::get_saved_skins(int index)
 		int r = sqlite3_step(stmt);
 		while (r == SQLITE_ROW)
 		{
-			write_text_to_log_file("Skin row found");
+			write_text_to_log_file("找到皮肤行");
 
 			SavedSkinDBRow *skin = new SavedSkinDBRow();
 
@@ -2380,7 +2380,7 @@ std::vector<SavedSkinDBRow*> ENTDatabase::get_saved_skins(int index)
 	}
 	else
 	{
-		write_text_to_log_file("Failed to fetch saved skins");
+		write_text_to_log_file("未能获取保存的皮肤");
 		write_text_to_log_file(sqlite3_errmsg(db));
 	}
 
@@ -2391,7 +2391,7 @@ std::vector<SavedSkinDBRow*> ENTDatabase::get_saved_skins(int index)
 
 std::vector<SavedVehicleDBRow*> ENTDatabase::get_saved_vehicles(int index)
 {
-	write_text_to_log_file("Asked to load saved vehicles");
+	write_text_to_log_file("请求加载已保存的车辆");
 
 	mutex_lock();
 
@@ -2411,7 +2411,7 @@ std::vector<SavedVehicleDBRow*> ENTDatabase::get_saved_vehicles(int index)
 
 	if (rc == SQLITE_OK)
 	{
-		// bind the value
+		// 绑定值
 		if (index != -1)
 		{
 			sqlite3_bind_int(stmt, 1, index);
@@ -2420,7 +2420,7 @@ std::vector<SavedVehicleDBRow*> ENTDatabase::get_saved_vehicles(int index)
 		int r = sqlite3_step(stmt);
 		while (r == SQLITE_ROW)
 		{
-			write_text_to_log_file("Vehicle row found");
+			write_text_to_log_file("找到车辆行");
 
 			SavedVehicleDBRow *veh = new SavedVehicleDBRow();
 
@@ -2487,7 +2487,7 @@ std::vector<SavedVehicleDBRow*> ENTDatabase::get_saved_vehicles(int index)
 	}
 	else
 	{
-		write_text_to_log_file("Failed to fetch saved vehicles");
+		write_text_to_log_file("未能获取保存的车辆");
 		write_text_to_log_file(sqlite3_errmsg(db));
 	}
 
@@ -2507,15 +2507,15 @@ void ENTDatabase::populate_saved_skin(SavedSkinDBRow *entry)
 
 	if (rc == SQLITE_OK)
 	{
-		// bind the value
+		// 绑定值
 		sqlite3_bind_int(stmt, 1, entry->rowID);
 
-		// commit
+		// 提交
 		int r = sqlite3_step(stmt);
 		while (r == SQLITE_ROW)
 		{
 			SavedSkinComponentDBRow *comp = new SavedSkinComponentDBRow();
-			//0 and 1 are IDs
+			//0 和 1 是 ID
 			comp->slotID = sqlite3_column_int(stmt, 2);
 			comp->drawable = sqlite3_column_int(stmt, 3);
 			comp->texture = sqlite3_column_int(stmt, 4);
@@ -2527,7 +2527,7 @@ void ENTDatabase::populate_saved_skin(SavedSkinDBRow *entry)
 	}
 	else
 	{
-		write_text_to_log_file("Failed to fetch saved skin components");
+		write_text_to_log_file("未能获取保存的皮肤组件");
 		write_text_to_log_file(sqlite3_errmsg(db));
 	}
 
@@ -2538,15 +2538,15 @@ void ENTDatabase::populate_saved_skin(SavedSkinDBRow *entry)
 
 	if (rc2 == SQLITE_OK)
 	{
-		// bind the value
+		// 绑定值
 		sqlite3_bind_int(stmt2, 1, entry->rowID);
 
-		// commit
+		// 提交
 		int r = sqlite3_step(stmt2);
 		while (r == SQLITE_ROW)
 		{
 			SavedSkinPropDBRow *prop = new SavedSkinPropDBRow();
-			//0 and 1 are IDs
+			//0 和 1 是 ID
 			prop->propID = sqlite3_column_int(stmt2, 2);
 			prop->drawable = sqlite3_column_int(stmt2, 3);
 			prop->texture = sqlite3_column_int(stmt2, 4);
@@ -2558,13 +2558,13 @@ void ENTDatabase::populate_saved_skin(SavedSkinDBRow *entry)
 	}
 	else
 	{
-		write_text_to_log_file("Failed to fetch saved skin props");
+		write_text_to_log_file("未能获取保存的皮肤道具");
 		write_text_to_log_file(sqlite3_errmsg(db));
 	}
 
 	mutex_unlock();
 
-	write_text_to_log_file("Done loading saved skins");
+	write_text_to_log_file("已加载保存的皮肤完成");
 	return;
 }
 
@@ -2579,15 +2579,15 @@ void ENTDatabase::populate_saved_vehicle(SavedVehicleDBRow *entry)
 
 	if (rc == SQLITE_OK)
 	{
-		// bind the value
+		// 绑定值
 		sqlite3_bind_int(stmt, 1, entry->rowID);
 
-		// commit
+		// 提交
 		int r = sqlite3_step(stmt);
 		while (r == SQLITE_ROW)
 		{
 			SavedVehicleExtraDBRow *extra = new SavedVehicleExtraDBRow();
-			//0 and 1 are IDs
+			//0 和 1 是 ID
 			extra->extraID = sqlite3_column_int(stmt, 2);
 			extra->extraState = sqlite3_column_int(stmt, 3);
 			entry->extras.push_back(extra);
@@ -2598,7 +2598,7 @@ void ENTDatabase::populate_saved_vehicle(SavedVehicleDBRow *entry)
 	}
 	else
 	{
-		write_text_to_log_file("Failed to fetch saved vehicle extras");
+		write_text_to_log_file("未能获取保存的车辆附加组件");
 		write_text_to_log_file(sqlite3_errmsg(db));
 	}
 
@@ -2609,15 +2609,15 @@ void ENTDatabase::populate_saved_vehicle(SavedVehicleDBRow *entry)
 
 	if (rc2 == SQLITE_OK)
 	{
-		// bind the value
+		// 绑定值
 		sqlite3_bind_int(stmt2, 1, entry->rowID);
 
-		// commit
+		// 提交
 		int r = sqlite3_step(stmt2);
 		while (r == SQLITE_ROW)
 		{
 			SavedVehicleModDBRow *mod = new SavedVehicleModDBRow();
-			//0 and 1 are IDs
+			//0 和 1 是 ID
 			mod->modID = sqlite3_column_int(stmt2, 2);
 			mod->modState = sqlite3_column_int(stmt2, 3);
 			mod->isToggle = (sqlite3_column_int(stmt2, 4) == 1) ? true : false;
@@ -2629,13 +2629,13 @@ void ENTDatabase::populate_saved_vehicle(SavedVehicleDBRow *entry)
 	}
 	else
 	{
-		write_text_to_log_file("Failed to fetch saved vehicle mods");
+		write_text_to_log_file("未能获取保存的车辆改装件");
 		write_text_to_log_file(sqlite3_errmsg(db));
 	}
 
 	mutex_unlock();
 
-	write_text_to_log_file("Done loading saved vehicles");
+	write_text_to_log_file("保存的车辆已加载完成");
 	return;
 }
 
@@ -2650,16 +2650,16 @@ void ENTDatabase::delete_saved_vehicle(sqlite3_int64 slot)
 
 	if (rc == SQLITE_OK)
 	{
-		// bind the value
+		// 绑定值
 		sqlite3_bind_int64(stmt, 1, slot);
 
-		// commit
+		// 提交
 		sqlite3_step(stmt);
 		sqlite3_finalize(stmt);
 	}
 	else
 	{
-		write_text_to_log_file("Failed to delete saved vehicle");
+		write_text_to_log_file("未能删除保存的车辆");
 		write_text_to_log_file(sqlite3_errmsg(db));
 	}
 
@@ -2677,16 +2677,16 @@ void ENTDatabase::delete_saved_skin(sqlite3_int64 slot)
 
 	if (rc == SQLITE_OK)
 	{
-		// bind the value
+		// 绑定值
 		sqlite3_bind_int64(stmt, 1, slot);
 
-		// commit
+		// 提交
 		sqlite3_step(stmt);
 		sqlite3_finalize(stmt);
 	}
 	else
 	{
-		write_text_to_log_file("Failed to delete saved skin");
+		write_text_to_log_file("未能删除保存的皮肤");
 		write_text_to_log_file(sqlite3_errmsg(db));
 	}
 
@@ -2704,17 +2704,17 @@ void ENTDatabase::rename_saved_vehicle(std::string name, sqlite3_int64 slot)
 
 	if (rc == SQLITE_OK)
 	{
-		// bind the value
+		// 绑定值
 		sqlite3_bind_text(stmt, 1, name.c_str(), name.length(), 0);
 		sqlite3_bind_int64(stmt, 2, slot);
 
-		// commit
+		// 提交
 		sqlite3_step(stmt);
 		sqlite3_finalize(stmt);
 	}
 	else
 	{
-		write_text_to_log_file("Failed to rename saved vehicle");
+		write_text_to_log_file("未能重命名保存的车辆");
 		write_text_to_log_file(sqlite3_errmsg(db));
 	}
 
@@ -2732,17 +2732,17 @@ void ENTDatabase::rename_saved_propset(std::string name, sqlite3_int64 slot)
 
 	if (rc == SQLITE_OK)
 	{
-		// bind the value
+		// 绑定值
 		sqlite3_bind_text(stmt, 1, name.c_str(), name.length(), 0);
 		sqlite3_bind_int64(stmt, 2, slot);
 
-		// commit
+		// 提交
 		sqlite3_step(stmt);
 		sqlite3_finalize(stmt);
 	}
 	else
 	{
-		write_text_to_log_file("Failed to rename saved vehicle");
+		write_text_to_log_file("未能重命名保存的车辆");
 		write_text_to_log_file(sqlite3_errmsg(db));
 	}
 
@@ -2760,17 +2760,17 @@ void ENTDatabase::rename_saved_skin(std::string name, sqlite3_int64 slot)
 
 	if (rc == SQLITE_OK)
 	{
-		// bind the value
+		// 绑定值
 		sqlite3_bind_text(stmt, 1, name.c_str(), name.length(), 0);
 		sqlite3_bind_int64(stmt, 2, slot);
 
-		// commit
+		// 提交
 		sqlite3_step(stmt);
 		sqlite3_finalize(stmt);
 	}
 	else
 	{
-		write_text_to_log_file("Failed to rename saved skin");
+		write_text_to_log_file("未能重命名保存的皮肤");
 		write_text_to_log_file(sqlite3_errmsg(db));
 	}
 
@@ -2788,16 +2788,16 @@ void ENTDatabase::delete_saved_vehicle_children(sqlite3_int64 slot)
 
 	if (rc == SQLITE_OK)
 	{
-		// bind the value
+		// 绑定值
 		sqlite3_bind_int64(stmt, 1, slot);
 
-		// commit
+		// 提交
 		sqlite3_step(stmt);
 		sqlite3_finalize(stmt);
 	}
 	else
 	{
-		write_text_to_log_file("Failed to delete saved vehicle extras");
+		write_text_to_log_file("未能删除保存的车辆附加组件");
 		write_text_to_log_file(sqlite3_errmsg(db));
 	}
 
@@ -2808,16 +2808,16 @@ void ENTDatabase::delete_saved_vehicle_children(sqlite3_int64 slot)
 
 	if (rc2 == SQLITE_OK)
 	{
-		// bind the value
+		// 绑定值
 		sqlite3_bind_int64(stmt2, 1, slot);
 
-		// commit
+		// 提交
 		sqlite3_step(stmt2);
 		sqlite3_finalize(stmt2);
 	}
 	else
 	{
-		write_text_to_log_file("Failed to delete saved vehicle mods");
+		write_text_to_log_file("未能删除保存的车辆改装件");
 		write_text_to_log_file(sqlite3_errmsg(db));
 	}
 
@@ -2835,16 +2835,16 @@ void ENTDatabase::delete_saved_skin_children(sqlite3_int64 slot)
 
 	if (rc == SQLITE_OK)
 	{
-		// bind the value
+		// 绑定值
 		sqlite3_bind_int64(stmt, 1, slot);
 
-		// commit
+		// 提交
 		sqlite3_step(stmt);
 		sqlite3_finalize(stmt);
 	}
 	else
 	{
-		write_text_to_log_file("Failed to delete saved skin components");
+		write_text_to_log_file("未能删除保存的皮肤组件");
 		write_text_to_log_file(sqlite3_errmsg(db));
 	}
 
@@ -2855,16 +2855,16 @@ void ENTDatabase::delete_saved_skin_children(sqlite3_int64 slot)
 
 	if (rc2 == SQLITE_OK)
 	{
-		// bind the value
+		// 绑定值
 		sqlite3_bind_int64(stmt2, 1, slot);
 
-		// commit
+		// 提交
 		sqlite3_step(stmt2);
 		sqlite3_finalize(stmt2);
 	}
 	else
 	{
-		write_text_to_log_file("Failed to delete saved skin props");
+		write_text_to_log_file("未能删除保存的皮肤道具");
 		write_text_to_log_file(sqlite3_errmsg(db));
 	}
 
@@ -2909,16 +2909,16 @@ void ENTDatabase::delete_saved_propset(sqlite3_int64 slot)
 
 	if (rc == SQLITE_OK)
 	{
-		// bind the value
+		// 绑定值
 		sqlite3_bind_int64(stmt, 1, slot);
 
-		// commit
+		// 提交
 		sqlite3_step(stmt);
 		sqlite3_finalize(stmt);
 	}
 	else
 	{
-		write_text_to_log_file("Failed to delete saved propset");
+		write_text_to_log_file("未能删除保存的道具集");
 		write_text_to_log_file(sqlite3_errmsg(db));
 	}
 
@@ -2936,16 +2936,16 @@ void ENTDatabase::delete_saved_propset_children(sqlite3_int64 slot)
 
 	if (rc == SQLITE_OK)
 	{
-		// bind the value
+		// 绑定值
 		sqlite3_bind_int64(stmt, 1, slot);
 
-		// commit
+		// 提交
 		sqlite3_step(stmt);
 		sqlite3_finalize(stmt);
 	}
 	else
 	{
-		write_text_to_log_file("Failed to delete saved prop instances");
+		write_text_to_log_file("未能删除保存的道具实例");
 		write_text_to_log_file(sqlite3_errmsg(db));
 	}
 
@@ -2954,7 +2954,7 @@ void ENTDatabase::delete_saved_propset_children(sqlite3_int64 slot)
 
 std::vector<SavedPropDBRow*> ENTDatabase::get_saved_prop_instances(int parentId)
 {
-	write_text_to_log_file("Asked to load saved prop instances");
+	write_text_to_log_file("请求加载保存的道具实例");
 
 	mutex_lock();
 
@@ -2974,7 +2974,7 @@ std::vector<SavedPropDBRow*> ENTDatabase::get_saved_prop_instances(int parentId)
 
 	if (rc == SQLITE_OK)
 	{
-		// bind the value
+		// 绑定值
 		if (parentId != -1)
 		{
 			sqlite3_bind_int(stmt, 1, parentId);
@@ -2983,7 +2983,7 @@ std::vector<SavedPropDBRow*> ENTDatabase::get_saved_prop_instances(int parentId)
 		int r = sqlite3_step(stmt);
 		while (r == SQLITE_ROW)
 		{
-			write_text_to_log_file("Prop row found");
+			write_text_to_log_file("找到道具行");
 
 			SavedPropDBRow *prop = new SavedPropDBRow();
 
@@ -3015,7 +3015,7 @@ std::vector<SavedPropDBRow*> ENTDatabase::get_saved_prop_instances(int parentId)
 	}
 	else
 	{
-		write_text_to_log_file("Failed to fetch saved props");
+		write_text_to_log_file("未能获取保存的道具");
 		write_text_to_log_file(sqlite3_errmsg(db));
 	}
 
@@ -3026,7 +3026,7 @@ std::vector<SavedPropDBRow*> ENTDatabase::get_saved_prop_instances(int parentId)
 
 std::vector<SavedPropSet*> ENTDatabase::get_saved_prop_sets(int index)
 {
-	write_text_to_log_file("Asked to load saved prop sets");
+	write_text_to_log_file("请求加载保存的道具集");
 
 	mutex_lock();
 
@@ -3048,7 +3048,7 @@ std::vector<SavedPropSet*> ENTDatabase::get_saved_prop_sets(int index)
 
 	if (rc == SQLITE_OK)
 	{
-		// bind the value
+		// 绑定值
 		if (index != -1)
 		{
 			sqlite3_bind_int(stmt, 1, index);
@@ -3057,7 +3057,7 @@ std::vector<SavedPropSet*> ENTDatabase::get_saved_prop_sets(int index)
 		int r = sqlite3_step(stmt);
 		while (r == SQLITE_ROW)
 		{
-			write_text_to_log_file("Prop set found");
+			write_text_to_log_file("找到道具集");
 
 			SavedPropSet *set = new SavedPropSet();
 
@@ -3074,7 +3074,7 @@ std::vector<SavedPropSet*> ENTDatabase::get_saved_prop_sets(int index)
 	}
 	else
 	{
-		write_text_to_log_file("Failed to fetch saved prop sets");
+		write_text_to_log_file("未能获取保存的道具集");
 		write_text_to_log_file(sqlite3_errmsg(db));
 	}
 
@@ -3106,7 +3106,7 @@ bool ENTDatabase::save_props(std::vector<SavedPropDBRow*> props, std::string sav
 
 	if (set_rc != SQLITE_OK)
 	{
-		write_text_to_log_file("Prop set save failed");
+		write_text_to_log_file("道具集保存失败");
 		write_text_to_log_file(sqlite3_errmsg(db));
 		result = false;
 	}
@@ -3122,22 +3122,22 @@ bool ENTDatabase::save_props(std::vector<SavedPropDBRow*> props, std::string sav
 			sqlite3_bind_int64(set_stmt, index++, slot);
 		}
 
-		sqlite3_bind_text(set_stmt, index++, saveName.c_str(), saveName.length(), 0); //save name
+		sqlite3_bind_text(set_stmt, index++, saveName.c_str(), saveName.length(), 0); //保存名称
 		
-		// commit
+		// 提交
 		sqlite3_step(set_stmt);
 		sqlite3_finalize(set_stmt);
 
 		newRowID = sqlite3_last_insert_rowid(db);
 
-		//if we're updating, delete any pre-existing children
+		//如果正在更新，则删除所有已存在的子项
 		if (slot != -1)
 		{
 			delete_saved_propset_children(slot);;
 		}
 		else
 		{
-			slot = newRowID; //get new ID to use for parent of children
+			slot = newRowID; //获取新的ID，用于作为子项的父级
 		}
 	}
 
@@ -3164,7 +3164,7 @@ bool ENTDatabase::save_props(std::vector<SavedPropDBRow*> props, std::string sav
 
 			if (inst_rc != SQLITE_OK)
 			{
-				write_text_to_log_file("Prop instance save failed");
+				write_text_to_log_file("道具实例保存失败");
 				write_text_to_log_file(sqlite3_errmsg(db));
 				result = false;
 			}
@@ -3173,7 +3173,7 @@ bool ENTDatabase::save_props(std::vector<SavedPropDBRow*> props, std::string sav
 				int index = 1;
 
 				sqlite3_bind_null(inst_stmt, index++);
-				sqlite3_bind_int64(inst_stmt, index++, slot); //parent id
+				sqlite3_bind_int64(inst_stmt, index++, slot); //父级 ID
 				sqlite3_bind_int(inst_stmt, index++, prop->model);
 				auto propTitle = prop->title;
 				sqlite3_bind_text(inst_stmt, index++, (char*)propTitle.c_str(), propTitle.length(), 0);
@@ -3194,12 +3194,12 @@ bool ENTDatabase::save_props(std::vector<SavedPropDBRow*> props, std::string sav
 				int finalOK = sqlite3_finalize(inst_stmt);
 				if (finalOK != SQLITE_OK)
 				{
-					write_text_to_log_file("Prop instance save failed (finalise)");
+					write_text_to_log_file("道具实例保存失败（最终化）");
 					write_text_to_log_file(sqlite3_errmsg(db));
 					result = false;
 				}
 
-				write_text_to_log_file("Prop instance save OK");
+				write_text_to_log_file("道具实例保存成功");
 			}
 		}	
 	}
@@ -3236,7 +3236,7 @@ void ENTDatabase::save_tracked_extras(Vehicle veh, sqlite3_int64 rowID)
 
 		if (rc != SQLITE_OK)
 		{
-			write_text_to_log_file("Vehicle extras save failed");
+			write_text_to_log_file("车辆附加组件保存失败");
 			write_text_to_log_file(sqlite3_errmsg(db));
 		}
 		else
@@ -3247,7 +3247,7 @@ void ENTDatabase::save_tracked_extras(Vehicle veh, sqlite3_int64 rowID)
 			sqlite3_bind_int(stmt, index++, i);
 			sqlite3_bind_int(stmt, index++, VEHICLE::IS_VEHICLE_EXTRA_TURNED_ON(veh, i) ? 1 : 0);
 
-			// commit
+			// 提交
 			sqlite3_step(stmt);
 			sqlite3_finalize(stmt);
 		}
@@ -3263,7 +3263,7 @@ void ENTDatabase::save_tracked_mods(Vehicle veh, sqlite3_int64 rowID)
 
 	begin_transaction();
 
-	for (int i = 0; i < 50; i++) //50 mods total (that is including Bennys mods) 
+	for (int i = 0; i < 50; i++) //总共50个改装件（包括 Benny 的改装件）
 	{
 		std::stringstream ss;
 		ss << "INSERT OR REPLACE INTO ENT_TRACKED_MODS VALUES (?, ?, ?, ?, ?)";
@@ -3275,7 +3275,7 @@ void ENTDatabase::save_tracked_mods(Vehicle veh, sqlite3_int64 rowID)
 
 		if (rc != SQLITE_OK)
 		{
-			write_text_to_log_file("Vehicle mods save failed");
+			write_text_to_log_file("车辆改装件保存失败");
 			write_text_to_log_file(sqlite3_errmsg(db));
 		}
 		else
@@ -3296,7 +3296,7 @@ void ENTDatabase::save_tracked_mods(Vehicle veh, sqlite3_int64 rowID)
 				sqlite3_bind_int(stmt, index++, VEHICLE::GET_VEHICLE_MOD(veh, i));
 			}
 			sqlite3_bind_int(stmt, index++, isToggleable ? 1 : 0);
-			// commit
+			// 提交
 			sqlite3_step(stmt);
 			sqlite3_finalize(stmt);
 		}
@@ -3318,16 +3318,16 @@ void ENTDatabase::delete_tracked_vehicle_children(sqlite3_int64 slot)
 
 	if (rc == SQLITE_OK)
 	{
-		// bind the value
+		// 绑定值
 		sqlite3_bind_int64(stmt, 1, slot);
 
-		// commit
+		// 提交
 		sqlite3_step(stmt);
 		sqlite3_finalize(stmt);
 	}
 	else
 	{
-		write_text_to_log_file("Failed to delete tracked vehicle extras");
+		write_text_to_log_file("未能删除跟踪的车辆附加组件");
 		write_text_to_log_file(sqlite3_errmsg(db));
 	}
 
@@ -3338,16 +3338,16 @@ void ENTDatabase::delete_tracked_vehicle_children(sqlite3_int64 slot)
 
 	if (rc2 == SQLITE_OK)
 	{
-		// bind the value
+		// 绑定值
 		sqlite3_bind_int64(stmt2, 1, slot);
 
-		// commit
+		// 提交
 		sqlite3_step(stmt2);
 		sqlite3_finalize(stmt2);
 	}
 	else
 	{
-		write_text_to_log_file("Failed to delete tracked vehicle mods");
+		write_text_to_log_file("未能删除跟踪的车辆改装件");
 		write_text_to_log_file(sqlite3_errmsg(db));
 	}
 
@@ -3365,16 +3365,16 @@ void ENTDatabase::delete_tracked_vehicle(sqlite3_int64 slot)
 
 	if (rc == SQLITE_OK)
 	{
-		// bind the value
+		// 绑定值
 		sqlite3_bind_int64(stmt, 1, slot);
 
-		// commit
+		// 提交
 		sqlite3_step(stmt);
 		sqlite3_finalize(stmt);
 	}
 	else
 	{
-		write_text_to_log_file("Failed to delete tracked vehicle");
+		write_text_to_log_file("未能删除跟踪的车辆");
 		write_text_to_log_file(sqlite3_errmsg(db));
 	}
 
@@ -3392,15 +3392,15 @@ void ENTDatabase::populate_tracked_vehicle(TrackedVehicleDBRow* entry)
 
 	if (rc == SQLITE_OK)
 	{
-		// bind the value
+		// 绑定值
 		sqlite3_bind_int(stmt, 1, entry->rowID);
 
-		// commit
+		// 提交
 		int r = sqlite3_step(stmt);
 		while (r == SQLITE_ROW)
 		{
 			TrackedVehicleExtraDBRow* extra = new TrackedVehicleExtraDBRow();
-			//0 and 1 are IDs
+			//0 和 1 是 ID
 			extra->extraID = sqlite3_column_int(stmt, 2);
 			extra->extraState = sqlite3_column_int(stmt, 3);
 			entry->extras.push_back(extra);
@@ -3411,7 +3411,7 @@ void ENTDatabase::populate_tracked_vehicle(TrackedVehicleDBRow* entry)
 	}
 	else
 	{
-		write_text_to_log_file("Failed to fetch tracked vehicle extras");
+		write_text_to_log_file("未能获取跟踪的车辆附加组件");
 		write_text_to_log_file(sqlite3_errmsg(db));
 	}
 
@@ -3422,15 +3422,15 @@ void ENTDatabase::populate_tracked_vehicle(TrackedVehicleDBRow* entry)
 
 	if (rc2 == SQLITE_OK)
 	{
-		// bind the value
+		// 绑定值
 		sqlite3_bind_int(stmt2, 1, entry->rowID);
 
-		// commit
+		// 提交
 		int r = sqlite3_step(stmt2);
 		while (r == SQLITE_ROW)
 		{
 			TrackedVehicleModDBRow* mod = new TrackedVehicleModDBRow();
-			//0 and 1 are IDs
+			//0 和 1 是 ID
 			mod->modID = sqlite3_column_int(stmt2, 2);
 			mod->modState = sqlite3_column_int(stmt2, 3);
 			mod->isToggle = (sqlite3_column_int(stmt2, 4) == 1) ? true : false;
@@ -3442,19 +3442,19 @@ void ENTDatabase::populate_tracked_vehicle(TrackedVehicleDBRow* entry)
 	}
 	else
 	{
-		write_text_to_log_file("Failed to fetch tracked vehicle mods");
+		write_text_to_log_file("未能获取跟踪的车辆改装件");
 		write_text_to_log_file(sqlite3_errmsg(db));
 	}
 
 	mutex_unlock();
 
-	write_text_to_log_file("Done loading tracked vehicles");
+	write_text_to_log_file("已完成加载跟踪的车辆");
 	return;
 }
 
 std::vector<TrackedVehicleDBRow*> ENTDatabase::get_tracked_vehicles(int index)
 {
-	write_text_to_log_file("Asked to load tracked vehicles");
+	write_text_to_log_file("请求加载跟踪的车辆");
 
 	mutex_lock();
 
@@ -3474,7 +3474,7 @@ std::vector<TrackedVehicleDBRow*> ENTDatabase::get_tracked_vehicles(int index)
 
 	if (rc == SQLITE_OK)
 	{
-		// bind the value
+		// 绑定值
 		if (index != -1)
 		{
 			sqlite3_bind_int(stmt, 1, index);
@@ -3483,7 +3483,7 @@ std::vector<TrackedVehicleDBRow*> ENTDatabase::get_tracked_vehicles(int index)
 		int r = sqlite3_step(stmt);
 		while (r == SQLITE_ROW)
 		{
-			write_text_to_log_file("Vehicle row found");
+			write_text_to_log_file("找到车辆行");
 
 			TrackedVehicleDBRow* veh = new TrackedVehicleDBRow();
 
@@ -3558,7 +3558,7 @@ std::vector<TrackedVehicleDBRow*> ENTDatabase::get_tracked_vehicles(int index)
 	}
 	else
 	{
-		write_text_to_log_file("Failed to fetch tracked vehicles");
+		write_text_to_log_file("未能获取跟踪的车辆");
 		write_text_to_log_file(sqlite3_errmsg(db));
 	}
 
@@ -3584,24 +3584,24 @@ bool ENTDatabase::save_tracked_vehicle(Vehicle veh, std::string saveName, sqlite
 	ss << ");";
 
 	/*
-	id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, \ 1
-			saveName TEXT NOT NULL, \ 2
-			model INTEGER NOT NULL, \ 3
-			colourPrimary INTEGER, \ 4
-			colourSecondary INTEGER, \ 5
-			colourExtraPearl INTEGER, \ 6
-			colourExtraWheel INTEGER, \ 7
-			colourMod1Type INTEGER, \ 8
-			colourMod1Colour INTEGER, \ 9
-			colourMod1P3 INTEGER, \ 10
-			colourMod2Type INTEGER, \ 11
-			colourMod2Colour INTEGER, \ 12
-			colourCustom1R INTEGER, \ 13
-			colourCustom1G INTEGER, \ 14
-			colourCustom1B INTEGER, \ 15
-			colourCustom2R INTEGER, \ 16
-			colourCustom2G INTEGER, \ 17
-			colourCustom2B INTEGER, \ 18
+	id 整数型 主键 自增 非空, \ 1
+			saveName 文本型 非空, \ 2
+			model 整数型 非空, \ 3
+			colourPrimary 整数型, \ 4
+			colourSecondary 整数型, \ 5
+			colourExtraPearl 整数型, \ 6
+			colourExtraWheel 整数型, \ 7
+			colourMod1Type 整数型, \ 8
+			colourMod1Colour 整数型, \ 9
+			colourMod1P3 整数型, \ 10
+			colourMod2Type 整数型, \ 11
+			colourMod2Colour 整数型, \ 12
+			colourCustom1R 整数型, \ 13
+			colourCustom1G 整数型, \ 14
+			colourCustom1B 整数型, \ 15
+			colourCustom2R 整数型, \ 16
+			colourCustom2G 整数型, \ 17
+			colourCustom2B 整数型, \ 18
 
 	*/
 
@@ -3613,7 +3613,7 @@ bool ENTDatabase::save_tracked_vehicle(Vehicle veh, std::string saveName, sqlite
 
 	if (rc != SQLITE_OK)
 	{
-		write_text_to_log_file("Vehicle save failed");
+		write_text_to_log_file("车辆保存失败");
 		write_text_to_log_file(sqlite3_errmsg(db));
 		result = false;
 	}
@@ -3628,8 +3628,8 @@ bool ENTDatabase::save_tracked_vehicle(Vehicle veh, std::string saveName, sqlite
 		{
 			sqlite3_bind_int64(stmt, index++, slot);
 		}
-		sqlite3_bind_text(stmt, index++, saveName.c_str(), saveName.length(), 0); //save name
-		sqlite3_bind_int(stmt, index++, ENTITY::GET_ENTITY_MODEL(veh)); //model
+		sqlite3_bind_text(stmt, index++, saveName.c_str(), saveName.length(), 0); //保存名称
+		sqlite3_bind_int(stmt, index++, ENTITY::GET_ENTITY_MODEL(veh)); //模型
 
 		int primaryCol, secondaryCol;
 		VEHICLE::GET_VEHICLE_COLOURS(veh, &primaryCol, &secondaryCol);
@@ -3683,14 +3683,14 @@ bool ENTDatabase::save_tracked_vehicle(Vehicle veh, std::string saveName, sqlite
 		}
 
 		/*
-		livery INTEGER, \ 19
-		plateText TEXT, \ 20
-		plateType INTEGER, \ 21
-		wheelType INTEGER, \ 22
-		windowTint INTEGER, \ 23
-		burstableTyres INTEGER \ 24
-		engineSound STRING, \ 25
-		xenonColour INTEGER, \ 26
+		livery 整数型, \ 19
+		plateText 文本型, \ 20
+		plateType 整数型, \ 21
+		wheelType 整数型, \ 22
+		windowTint 整数型, \ 23
+		burstableTyres 整数型 \ 24
+		engineSound 字符串型, \ 25
+		xenonColour 整数型, \ 26
 		*/
 
 		sqlite3_bind_int(stmt, index++, VEHICLE::GET_VEHICLE_LIVERY(veh));
@@ -3704,17 +3704,17 @@ bool ENTDatabase::save_tracked_vehicle(Vehicle veh, std::string saveName, sqlite
 		sqlite3_bind_int(stmt, index++, VEHICLE::GET_VEHICLE_TYRES_CAN_BURST(veh) ? 1 : 0);
 		sqlite3_bind_int(stmt, index++, VEHICLE::GET_VEHICLE_MOD_VARIATION(veh, 23) ? 1 : 0);
 
-		//sqlite3_bind_text(stmt, index++, CURRSOUNDENGINE[0], strlen(plateText), 0);
-		/*
-		dirtLevel REAL DEFAULT 0, \ 25
-			fadeLevel REAL DEFAULT 0, \ 26
-			neonR INTEGER DEFAULT - 1, \ 27
-			neonG INTEGER DEFAULT - 1, \ 28
-			neonB INTEGER DEFAULT - 1, \ 29
-			neon0Enabled INTEGER DEFAULT 0, \ 30
-			neon1Enabled INTEGER DEFAULT 0, \ 21
-			neon2Enabled INTEGER DEFAULT 0, \ 32
-			neon3Enabled INTEGER DEFAULT 0 \*/
+	//sqlite3_bind_text(stmt, index++, CURRSOUNDENGINE, strlen(plateText), 0);
+	/*
+	dirtLevel 实数型 默认值 0, \ 25
+		fadeLevel 实数型 默认值 0, \ 26
+		neonR 整数型 默认值 -1, \ 27
+		neonG 整数型 默认值 -1, \ 28
+		neonB 整数型 默认值 -1, \ 29
+		neon0Enabled 整数型 默认值 0, \ 30
+		neon1Enabled 整数型 默认值 0, \ 21
+		neon2Enabled 整数型 默认值 0, \ 32
+		neon3Enabled 整数型 默认值 0 \*/
 
 		sqlite3_bind_double(stmt, index++, VEHICLE::GET_VEHICLE_DIRT_LEVEL(veh));
 		sqlite3_bind_double(stmt, index++, VEHICLE::GET_VEHICLE_ENVEFF_SCALE(veh));
@@ -3738,8 +3738,8 @@ bool ENTDatabase::save_tracked_vehicle(Vehicle veh, std::string saveName, sqlite
 
 		sqlite3_bind_int(stmt, index++, VEHICLE::IS_VEHICLE_A_CONVERTIBLE(veh, 0) && VEHICLE::GET_CONVERTIBLE_ROOF_STATE(veh));
 
-		/*dashColour INTEGER,
-		interiorColour INTEGER*/
+		/*仪表板颜色 整数型
+		内饰颜色 整数型*/
 		int dashCol, interiorCol;
 		VEHICLE::_GET_VEHICLE_DASHBOARD_COLOUR(veh, &dashCol);
 		VEHICLE::_GET_VEHICLE_INTERIOR_COLOUR(veh, &interiorCol);
@@ -3790,13 +3790,13 @@ bool ENTDatabase::save_tracked_vehicle(Vehicle veh, std::string saveName, sqlite
 		}
 		sqlite3_bind_int(stmt, index++, powerMultiplier);
 
-		// commit
+		// 提交
 		sqlite3_step(stmt);
 		sqlite3_finalize(stmt);
 
 		sqlite3_int64 newRowID = sqlite3_last_insert_rowid(db);
 
-		//if we're updating, delete any pre-existing children
+		//如果正在更新，则删除所有已存在的子项
 		if (slot != -1)
 		{
 			delete_tracked_vehicle_children(slot);
