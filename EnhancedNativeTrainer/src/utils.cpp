@@ -87,13 +87,13 @@ std::wstring ConvertFromUtf8ToUtf16(const std::string& str)
 	return convertedString;
 }
 
-//将弧度转换为角度
+// 将弧度转换为角度
 float degToRad(float degs)
 {
 	return degs*(float)3.141592653589793 / (float)180.0;
 }
 
-//将角度转换为弧度
+// 将角度转换为弧度
 float radToDeg(float rads)
 {
 	return rads * ((float)180.0 / (float)3.141592653589793);
