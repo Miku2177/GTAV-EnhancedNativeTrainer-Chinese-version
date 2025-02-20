@@ -1,7 +1,7 @@
 #ifndef _XBOX_CONTROLLER_H_
 #define _XBOX_CONTROLLER_H_
 
-// 需要Windows头文件和XInput头文件
+// 需要 Windows 头文件和 XInput 头文件
 #include <windows.h>
 #include <Xinput.h>
 
