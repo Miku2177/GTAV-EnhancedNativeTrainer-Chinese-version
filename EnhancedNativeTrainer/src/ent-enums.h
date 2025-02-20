@@ -74,7 +74,7 @@ const std::vector<int> OrderedExplosions =
 	EXPLOSION_FIREBALL_LARGE_4 //8
 };
 
-//车辆参数
+// 车辆参数
 enum SeatPositions{
 	SEAT_DRIVER = -1,
 	SEAT_PASSENGER = 0,
