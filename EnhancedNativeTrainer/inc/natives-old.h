@@ -1,6 +1,6 @@
 #pragma once
 
-// 生成于 2016 年 1 月 19 日
+// 此文件，生成于 2016 年 1 月 19 日
 
 #include "types.h"
 #include "nativeCaller.h"
