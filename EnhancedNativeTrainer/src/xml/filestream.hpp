@@ -1,11 +1,11 @@
 /*
-Part of the Enhanced Native Trainer project.
-https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
-(C) Rob Pridham and fellow contributors 2015
+该项目是“增强版原生训练器”的一部分。
+项目地址：https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
+(C) Rob Pridham 及其他贡献者 2015
 */
 #include <Windows.h>
 
-//implement filestream that derives from IStream
+//实现一个从 IStream 派生的 FileStream
 class FileStream : public IStream
 {
 	FileStream(HANDLE hFile)
@@ -70,7 +70,7 @@ public:
 		return res;
 	}
 
-	// ISequentialStream Interface
+	// ISequentialStream 接口
 public:
 	virtual HRESULT STDMETHODCALLTYPE Read(void* pv, ULONG cb, ULONG* pcbRead)
 	{
@@ -84,7 +84,7 @@ public:
 		return rc ? S_OK : HRESULT_FROM_WIN32(GetLastError());
 	}
 
-	// IStream Interface
+	// IStream 接口
 public:
 	virtual HRESULT STDMETHODCALLTYPE SetSize(ULARGE_INTEGER)
 	{
