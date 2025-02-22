@@ -2285,45 +2285,79 @@ void process_player_menu(){
 	draw_menu_from_struct_def(lines, lineCount, &activeLineIndexPlayer, caption, onconfirm_player_menu);
 }
 
-// 重置所有选项设置
-bool onconfirm_reset_menu(MenuItem<int> choice){
-	switch (activeLineIndexReset){
-	case 0:
-		menu_beep();
-		set_menu_showing(true);
-		WAIT(200);
-		process_main_menu();
-		activeLineIndexReset = 0;
-		set_menu_showing(false);
+// 子菜单选项索引变量
+int activeLineIndexLocalization = 0;
+
+// 汉化说明菜单回调函数
+bool onconfirm_localization_menu(MenuItem<int> choice) {
+	// 汉化说明菜单项不可交互，直接返回 false，表示不执行任何操作
+	return false;
+}
+
+// 汉化说明子菜单
+void process_localization_menu() {
+	// 菜单项数量（不包含标题选项）
+	const int lineCount = 7;
+	const std::string caption = "汉化说明选项"; // 菜单标题
+
+	// 定义菜单项
+	StandardOrToggleMenuDef lines[lineCount] = {
+		{ "修改器版本：55.00",        NULL, NULL, true},    // 修改器版本
+		{ "汉化作者：随梦&而飞",   NULL, NULL, true},      // 汉化作者
+		{ "感谢帮助我的朋友们！",     NULL, NULL, true},    // 感谢帮助的朋友们
+		{ "感谢：烈火神君", NULL, NULL, true},             // 感谢烈火神君
+		{ "感谢：羽一大魔王", NULL, NULL, true},          // 感谢羽一大魔王
+		{ "感谢：开发和维护者们", NULL, NULL, true},      // 感谢开发和维护者们
+		{ "禁止线上使用, 使用前, 请先关闭 BE ", NULL, NULL, true}, // 禁止线上使用，必须关闭 BE
+	};
+
+	// 绘制菜单
+	draw_menu_from_struct_def(lines, lineCount, &activeLineIndexLocalization, caption, onconfirm_localization_menu);
+}
+
+// 重置菜单和汉化菜单 回调函数
+bool onconfirm_reset_menu(MenuItem<int> choice) {
+	switch (activeLineIndexReset) {
+	case 0: // 取消重置操作（第 0 项）
+		menu_beep(); // 按钮提示音
+		set_menu_showing(true); // 显示菜单
+		WAIT(200); // 等待 200 毫秒
+		process_main_menu(); // 返回主菜单
+		activeLineIndexReset = 0; // 重置菜单索引
+		set_menu_showing(false); // 隐藏菜单
 		break;
-	case 1:
-		reset_globals();
-		process_main_menu();
-		activeLineIndexReset = 0;
-		set_menu_showing(false);
+	case 1: // 确认重置操作（第 1 项）
+		reset_globals(); // 重置所有设置
+		process_main_menu(); // 返回主菜单
+		activeLineIndexReset = 0; // 重置菜单索引
+		set_menu_showing(false); // 隐藏菜单
+		break;
+	case 2: // 进入汉化说明（第 2 项）
+		menu_beep(); // 按钮提示音
+		set_menu_showing(true); // 显示菜单
+		activeLineIndexLocalization = 0; // 重置子菜单索引
+		process_localization_menu(); // 显示汉化说明菜单
 		break;
 	default:
 		break;
 	}
-
 	return false;
 }
 
-void process_reset_menu(){
-	const int lineCount = 7;
-	
-	const std::string caption = "重置所有选项";
-	
+// 重置菜单选项
+void process_reset_menu() {
+	// 菜单项数量（不包含标题选项）
+	const int lineCount = 3;
+	const std::string caption = "重置所有选项"; // 菜单标题
+
+	// 定义菜单项
 	StandardOrToggleMenuDef lines[lineCount] = {
-		{ "取消", NULL, NULL, true},
-		{ "确认", NULL, NULL, true},
-		{ "汉化：随梦&而飞", NULL, NULL, false},
-		{ "感谢帮助我的朋友们！", NULL, NULL, false},
-		{ "感谢：烈火神君", NULL, NULL, false},
-		{ "感谢：羽一大魔王", NULL, NULL, false},
-		{ "感谢：开发和维护者们", NULL, NULL, false},
+		{ "取消",     NULL, NULL, true},  // 取消操作
+		{ "确认",     NULL, NULL, true},  // 确认重置
+		{ "汉化说明", NULL, NULL, false}  // 进入汉化说明
 	};
-	
+
+	// 绘制菜单
 	draw_menu_from_struct_def(lines, lineCount, &activeLineIndexReset, caption, onconfirm_reset_menu);
 }
 
