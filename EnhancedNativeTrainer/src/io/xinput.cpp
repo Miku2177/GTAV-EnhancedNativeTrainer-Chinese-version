@@ -1,5 +1,5 @@
 /*
-		THIS FILE IS A PART OF GTA V SCRIPT HOOK SDK
+		此文件是 GTA V SCRIPT HOOK SDK 的一部分
 		http://dev-c.com
 		(C) Alexander Blade 2015
 		*/
@@ -30,7 +30,7 @@ bool IsControllerButtonDown(std::string btnName)
 {
 	//if (is_controller_ignored_in_trainer())
 	//{
-	//	return false;
+	//	返回 false;
 	//}
 
 	ControllerButtonConfig* buttonConf = get_config()->get_key_config()->get_controller_button(btnName);
@@ -79,7 +79,7 @@ bool IsControllerButtonJustUp(std::string btnName)
 {
 	//if (is_controller_ignored_in_trainer())
 	//{
-	//	return false;
+	//	返回 false;
 	//}
 
 	ControllerButtonConfig* buttonConf = get_config()->get_key_config()->get_controller_button(btnName);
