@@ -1,5 +1,5 @@
 /*
-		THIS FILE IS A PART OF GTA V SCRIPT HOOK SDK
+		此文件是 GTA V SCRIPT HOOK SDK 的一部分
 					http://dev-c.com
 				(C) Alexander Blade 2015
 */
@@ -47,7 +47,7 @@
 #define VK_KEY_Y	0x59                //('Y')	Y
 #define VK_KEY_Z	0x5A                //('Z')	Z
 
-// parameters are the same as with aru's ScriptHook for IV
+// 参数与 aru 的《侠盗猎车手 IV》（GTA IV）ScriptHook 相同
 void OnKeyboardMessage(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL isWithAlt, BOOL wasDownBefore, BOOL isUpNow);
 
 bool IsKeyDown(DWORD key);
