@@ -1178,15 +1178,15 @@ bool draw_generic_menu(MenuParameters<T> params){
 		int lineStartPosition = currentSelectionIndex - positionOnThisLine;
 		int itemsOnThisLine = (lineStartPosition + itemsPerLine > totalItems) ? (totalItems - lineStartPosition) : itemsPerLine;
 
-		// 定时菜单绘制，用于在切换活动行后暂停
-		DWORD maxTickCount = GetTickCount() + waitTime;
+		// 用于菜单绘制
+		DWORD maxTickCount = GetTickCount() + waitTime;//用于在切换项目行后,暂停
 		do{
 			std::string sanit_header = params.sanitiseHeaderText ? sanitise_menu_header_text(params.headerText) : params.headerText;
 
 			// 更改标题和菜单等，在这里！！！
 			draw_menu_header_line(sanit_header,// 菜单标题文本
 								  350.0f, // 标题的宽度
-								  50.0f, // 标题的高度
+								  55.0f, // 标题的高度
 								  15.0f, // 标题的 顶部 偏移量（Y 坐标）
 								  35.0f, // 标题的 左侧 偏移量（X 坐标）
 								  45.0f, // 标题文本的 左侧 偏移量
@@ -1202,9 +1202,9 @@ bool draw_generic_menu(MenuParameters<T> params){
 				float lineSpacingY = 8.0f; // 菜单项之间的垂直间距
 
 				float lineWidth = 350.0f; // 菜单项的宽度
-				float lineHeight = 31.0f; // 菜单项的高度
+				float lineHeight = 32.0f; // 菜单项的高度
 
-				float lineTop = 75.0 + (i * (lineHeight + lineSpacingY)); // 计算当前菜单项的顶部位置（Y 坐标）
+				float lineTop = 80.0 + (i * (lineHeight + lineSpacingY)); // 计算当前菜单项的顶部位置（Y 坐标）
 				float lineLeft = 35.0f; // 菜单项的左侧位置（X 坐标）
 				float textOffset = 10.0f; // 菜单项文本的 左侧 偏移量
 
@@ -1216,10 +1216,10 @@ bool draw_generic_menu(MenuParameters<T> params){
 			}
 
 			if(image != NULL){
-				int screen_w, screen_h; // 这段代码用于计算游戏内精灵（sprite）的坐标，并调用函数绘制精灵
+				int screen_w, screen_h; // 这段代码用于计算游戏内，车辆预览图的坐标。
 				GRAPHICS::GET_SCREEN_RESOLUTION(&screen_w, &screen_h);
 
-				float lineXPx = 35.0f + 350.0f + 8.0f;
+				float lineXPx = 35.0f + 350.0f + 8.0f;//修改了，菜单大小或位置，需要更改这里的值，否则预览图和菜单会显示冲突。
 				float lineXGame = lineXPx / (float) screen_w;
 				float lineYGame = activeLineY / (float) screen_h;
 
@@ -1240,10 +1240,10 @@ bool draw_generic_menu(MenuParameters<T> params){
 
 		choice = params.items[currentSelectionIndex];
 
-		if(bSelect){ // 如果用户按下确认键
+		if(bSelect){ // 如果用户按下，确认键
 			menu_beep(); // 播放菜单提示音（例如“滴”声）
 
-			waitTime = 200; // 设置等待时间为 200 毫秒，用于防止重复触发
+			waitTime = 150; // 设置等待时间，默认为 200 毫秒，用于防止重复触发
 
 			bool confHandled = choice->onConfirm();
 
@@ -1257,71 +1257,99 @@ bool draw_generic_menu(MenuParameters<T> params){
 				break;
 			}
 		}
-		else{ // 如果用户没有按下确认键
-			if(bBack){// 如果用户按下返回键
+		else{ 
+			if(bBack){// 如果用户按下，返回键
 				menu_beep(); // 播放菜单提示音（例如“滴”声）
-				waitTime = 200; // 设置等待时间为 200 毫秒，用于防止重复触发
+				waitTime = 150; // 设置等待时间，默认为 200 毫秒，用于防止重复触发
 				result = false; // 将结果设置为 false，表示返回操作
 				break; // 跳出当前循环或逻辑块
 			}
 			else{
-				if(bDown){// 如果用户按下向下键
+				if(bDown){// 如果用户按下，向下键
 					menu_beep();
-					currentSelectionIndex++;
-					if(currentSelectionIndex >= totalItems || (currentSelectionIndex >= lineStartPosition + itemsOnThisLine)){
-						currentSelectionIndex = lineStartPosition;
+					if(currentSelectionIndex < lineStartPosition + itemsOnThisLine - 1 && currentSelectionIndex < totalItems - 1){
+						currentSelectionIndex++; // 未到达底部，正常向下移动
+					} else {
+						int currentPage = lineStartPosition / itemsPerLine; // 计算当前页面
+						int maxPages = (totalItems + itemsPerLine - 1) / itemsPerLine; // 总页数
+						if(currentPage < maxPages - 1){ // 如果有下一页
+							currentPage++;
+							lineStartPosition = currentPage * itemsPerLine; // 更新页面起始索引
+							itemsOnThisLine = min(itemsPerLine, totalItems - lineStartPosition); // 更新当前页项数
+							currentSelectionIndex = lineStartPosition; // 移到新页顶部
+						} else {
+							// 到达最后一页底部，循环到第一页顶部
+							currentPage = 0;
+							lineStartPosition = 0;
+							itemsOnThisLine = min(itemsPerLine, totalItems); // 第一页项数
+							currentSelectionIndex = 0; // 移到第一页顶部（第一项）
+						}
 					}
-					waitTime = 150; // 设置等待时间为 150 毫秒，用于防止重复触发
+					waitTime = 100; // 设置等待时间，默认为 150 毫秒，用于防止重复触发
 				}
-				else if(bUp){// 如果用户按下向上键
+				else if(bUp){// 如果用户按下，向上键
 					menu_beep();
-					currentSelectionIndex--;
-					if(currentSelectionIndex < 0 || (currentSelectionIndex < lineStartPosition)){
-						currentSelectionIndex = lineStartPosition + itemsOnThisLine - 1;
+					if(currentSelectionIndex > lineStartPosition){
+						currentSelectionIndex--; // 未到达顶部，正常向上移动
+					} else {
+						int currentPage = lineStartPosition / itemsPerLine; // 计算当前页面
+						int maxPages = (totalItems + itemsPerLine - 1) / itemsPerLine; // 总页数
+						if(currentPage > 0){ // 如果有上一页
+							currentPage--;
+							lineStartPosition = currentPage * itemsPerLine; // 更新页面起始索引
+							itemsOnThisLine = min(itemsPerLine, totalItems - lineStartPosition); // 更新当前页项数
+							currentSelectionIndex = lineStartPosition + itemsOnThisLine - 1; // 移到新页底部
+						} else {
+							// 到达第一页顶部，循环到最后一项
+							currentSelectionIndex = totalItems - 1; // 直接定位到最后一项
+							currentPage = maxPages - 1; // 设置为最后一页
+							lineStartPosition = currentPage * itemsPerLine; // 更新页面起始索引，确保最后一项可见
+							itemsOnThisLine = min(itemsPerLine, totalItems - lineStartPosition); // 更新当前页项数
+						}
 					}
-					waitTime = 150; // 设置等待时间为 150 毫秒，用于防止重复触发
+					waitTime = 100; // 设置等待时间默认，为 150 毫秒，用于防止重复触发
 				}
-				else if(bLeft){ // 如果用户按下向左键
-					menu_beep();
+				else if(bLeft){ // 如果用户按下，向左键
+					menu_beep();// 播放菜单提示音
 
 					if(choice->isAbsorbingLeftAndRightEvents()){
 						choice->handleLeftPress();
 					}
-					else if(lineCount > 1){
-						int mod = currentSelectionIndex % itemsPerLine;
-						currentSelectionIndex -= itemsPerLine;
-						if(currentSelectionIndex < 0){
-							currentSelectionIndex = mod + ((lineCount - 1) * itemsPerLine);
-							if(currentSelectionIndex >= totalItems){
-								currentSelectionIndex = totalItems - 1;
+					else if(lineCount > 1){// 如果菜单有多行
+						int mod = currentSelectionIndex % itemsPerLine;// 计算当前选中项在当前行的位置
+						currentSelectionIndex -= itemsPerLine;// 将选中项向上移动一行
+						if(currentSelectionIndex < 0){// 如果移动到第一行之前
+							currentSelectionIndex = mod + ((lineCount - 1) * itemsPerLine);// 跳转到最后一行，并保持在同一列位置
+							if(currentSelectionIndex >= totalItems){// 如果超出总项数
+								currentSelectionIndex = totalItems - 1;// 设置为最后一项
 							}
 						}
 					}
-					waitTime = 200; // 设置等待时间为 200 毫秒，用于防止重复触发
+					waitTime = 150; // 设置等待时间，默认为 200 毫秒，用于防止重复触发
 				}
-				else if(bRight){
-					menu_beep();
+				else if(bRight){// 如果用户按下，向右键
+					menu_beep();// 播放菜单提示音
 
 					if(choice->isAbsorbingLeftAndRightEvents()){
 						choice->handleRightPress();
 					}
 					else if(lineCount > 1){
 						// 如果已经到达末尾，则重新开始
-						if(currentLine == lineCount - 1){
-							currentSelectionIndex = currentSelectionIndex % itemsPerLine;
-							if(currentSelectionIndex >= totalItems){
-								currentSelectionIndex = totalItems - 1;
+						if(currentLine == lineCount - 1){// 如果当前是最后一行
+							currentSelectionIndex = currentSelectionIndex % itemsPerLine;// 跳转到第一行，并保持在同一列位置
+							if(currentSelectionIndex >= totalItems){// 如果超出总项数
+								currentSelectionIndex = totalItems - 1;// 设置为最后一项
 							}
 						}
-						else{
-							currentSelectionIndex += itemsPerLine;
-							if(currentSelectionIndex >= totalItems){
-								currentSelectionIndex = totalItems - 1;
+						else{// 如果不是最后一行
+							currentSelectionIndex += itemsPerLine;// 将选中项向下移动一行
+							if(currentSelectionIndex >= totalItems){// 如果超出总项数
+								currentSelectionIndex = totalItems - 1;// 设置为最后一项
 							}
 						}
 					}
 
-					waitTime = 200; // 设置等待时间为 200 毫秒，用于防止重复触发
+					waitTime = 150; // 设置等待时间，默认为 200 毫秒，用于防止重复触发
 				}
 
 				if(params.onHighlight != NULL && originalIndex != currentSelectionIndex){
@@ -1333,7 +1361,7 @@ bool draw_generic_menu(MenuParameters<T> params){
 				}
 
 				if(params.has_menu_selection_ptr()){
-					params.set_menu_selection_index(currentSelectionIndex);
+					params.set_menu_selection_index(currentSelectionIndex);// 更新当前选中项的索引
 				}
 			}
 		}
