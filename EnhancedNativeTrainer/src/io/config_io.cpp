@@ -1,7 +1,7 @@
 /*
-Part of the Enhanced Native Trainer project.
+增强版原生训练器项目的一部分。
 https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
-(C) Rob Pridham and fellow contributors 2015
+(C) Rob Pridham 及其他贡献者 2015
 */
 
 #include "config_io.h"
@@ -12,28 +12,28 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\features\script.h"
 #include "..\features\fuel.h"
 
-// A global Windows "basic string". Actual memory is allocated by the
-// COM methods used by MSXML which take &keyconf_bstr. We must use SysFreeString() 
-// to free this memory before subsequent uses, to prevent a leak.
+// 一个全局的 Windows "基本字符串"。实际内存由 MSXML 使用的 COM 方法分配，
+// 这些方法会使用 &keyconf_bstr。我们必须使用 SysFreeString() 
+// 在后续使用前释放此内存，以防止内存泄漏。
 BSTR keyconf_bstr;
 
 TrainerConfig *config = NULL;
 
-/**Read the XML config file. Currently contains keyboard choices.*/
+/**读取 XML 配置文件。当前文件包含键盘按键选择。*/
 void read_config_file(){
 	TrainerConfig *result = new TrainerConfig();
 
 	CoInitialize(NULL);
 
-	//read XML
+	//读取 XML
 	MSXML2::IXMLDOMDocumentPtr spXMLDoc;
 	spXMLDoc.CreateInstance(__uuidof(MSXML2::DOMDocument60));
 	if(!spXMLDoc->load("Enhanced Native Trainer/ent-config.xml")){
-		write_text_to_log_file("No config found, using defaults");
-		config = result; //the default config
+		write_text_to_log_file("未能找到配置文件，将使用默认配置。");
+		config = result; // 默认配置
 	}
 
-	// keyboard binds
+	// 键盘绑定
 	IXMLDOMNodeListPtr nodes = spXMLDoc->selectNodes(L"//ent-config/keys/key");
 	long length;
 	nodes->get_length(&length);
@@ -111,7 +111,7 @@ void read_config_file(){
 		node->Release();
 	}
 
-	// controller binds
+	// 控制器绑定
 	nodes = spXMLDoc->selectNodes(L"//ent-config/controller_keys/controller");
 	nodes->get_length(&length);
 	for (int i = 0; i < length; i++) {
@@ -154,13 +154,13 @@ void read_config_file(){
 			attribNode->Release();
 		}
 
-		// here must be a code to store keybinds somewhere.
+		// 必须有一段代码用于将按键绑定存储到某个地方。
 		if (attrib_controller_func != NULL) {
  
 			if (attrib_button1_v == NULL)
 			{
 				std::stringstream ss;
-				ss << "[ERROR] Problem reading " << attrib_controller_func << "'s function. Button1's value was NULL! Skipping and the default value(s) will be used instead.";
+				ss << "[错误] 读取时出现问题 " << attrib_controller_func << "的函数，Button1 的值为空 (NULL) 已跳过，将使用默认值替代。";
 				write_text_to_log_file(ss.str());
 				continue;
 			}
@@ -168,14 +168,14 @@ void read_config_file(){
 			if (controller_binds.find(attrib_controller_func) != controller_binds.end())
 			{
 				std::stringstream ss;
-				ss << "Controller function " << attrib_controller_func << " given value: " << attrib_button1_v << " and " << attrib_button2_v;
+				ss << "控制器函数 " << attrib_controller_func << " 指定值: " << attrib_button1_v << " 以及 " << attrib_button2_v;
 				write_text_to_log_file(ss.str());
 				controller_binds.at(attrib_controller_func) = std::pair(attrib_button1_v, attrib_button2_v);
 			}
 			else 
 			{
 				std::stringstream ss;
-				ss << "[ERROR] Could not find controller function " << attrib_controller_func << " in controller bind map. Skipping.";
+				ss << "[错误] 未找到控制器函数 " << attrib_controller_func << " 在控制器绑定映射中，跳过。";
 				write_text_to_log_file(ss.str());
 				continue;
 			}
@@ -183,7 +183,7 @@ void read_config_file(){
 		else
 		{
 			std::stringstream ss;
-			ss << "[ERROR] Controller function with button IDs " << attrib_button1_v << " and " << attrib_button2_v << " was NULL! Skipping.";
+			ss << "[错误] 控制器函数与按钮 ID " << attrib_button1_v << " 以及 " << attrib_button2_v << " 值为  NULL  跳过。";
 			write_text_to_log_file(ss.str());
 			continue;
 		}
@@ -194,7 +194,7 @@ void read_config_file(){
 		node->Release();
 	}
 
-	// extra map stuff list
+	// 额外的映射相关功能列表
 	nodes = spXMLDoc->selectNodes(L"//ent-config/map_stuff_list/stuff");
 	nodes->get_length(&length);
 	for (int i = 0; i < length; i++) {
@@ -229,7 +229,7 @@ void read_config_file(){
 		node->Release();
 	}
 
-	// weather list
+	// 天气列表
 	nodes = spXMLDoc->selectNodes(L"//ent-config/weather_list/weather");
 	nodes->get_length(&length);
 	for (int i = 0; i < length; i++) {
@@ -279,7 +279,7 @@ void read_config_file(){
 		node->Release();
 	}
 
-	// gas stations
+	// 加油站
 	nodes = spXMLDoc->selectNodes(L"//ent-config/gas_stations/station");
 	nodes->get_length(&length);
 	for (int i = 0; i < length; i++) {
@@ -333,7 +333,7 @@ void read_config_file(){
 		node->Release();
 	}
 
-	//nodes->Release(); //don't do this, it crashes on exit
+	// nodes->Release(); // 不要调用此方法，它会在退出时导致崩溃
 	spXMLDoc.Release();
 	CoUninitialize();
 
@@ -342,14 +342,14 @@ void read_config_file(){
 
 void read_config_ini_file(){
 	int tmpv[12][4];
-	const char *sectionMenuColor = "MenuColor", *file = "Enhanced Native Trainer/ent_customization.ini";
+	const char *sectionMenuColor = "菜单颜色", *file = "Enhanced Native Trainer/ent_customization.ini";
 	const std::string tmpk[] = {"r", "g", "b", "a"};
 	std::ifstream tmp(file);
 	bool notexist = !((bool) tmp);
 	tmp.close();
 
 	if(notexist){
-		write_text_to_log_file("INI file does not exist.\nUsing default settings.\nINI file will be created upon saving in-game.");
+		write_text_to_log_file("颜色配置 INI 文件不存在！\n正在使用默认配置 !\n在游戏内保存时将创建 INI 配置文件 !  ");
 		return;
 	}
 
@@ -366,7 +366,7 @@ void read_config_ini_file(){
 }
 
 void write_config_ini_file(){
-	const char *sectionMenuColor = "MenuColor", *file = "Enhanced Native Trainer/ent_customization.ini";
+	const char *sectionMenuColor = "菜单颜色", *file = "Enhanced Native Trainer/ent_customization.ini";
 	const std::string tmpk[] = {"r", "g", "b", "a"};
 	std::ofstream ini;
 	std::ifstream tmp(file);
@@ -388,9 +388,9 @@ void write_config_ini_file(){
 			}
 			tmp.close();
 
-			result.push_back(std::string(";;;; Enhanced Native Trainer: Configuration INI File (Begin) ;;;;\n\n;;; (Delete this file to revert to defaults) ;;;\n"));
+			result.push_back(std::string(";;;; 增强型 原生修改器：配置 INI 文件（开始） ;;;;\n\n;;; （删除此文件以恢复默认颜色配置） ;;;\n"));
 
-			result.push_back(std::string(";; Menu Colors (Begin) ;;\n;\tFollows the RGBA color system, 0 ~ 255 for each component of a color;"));
+			result.push_back(std::string(";; 菜单颜色（开始） ;;\n;\t请遵循 RGBA 颜色系统，每个颜色组件的值范围为 0 ~ 255 ;"));
 			for(auto a : lines){
 				for(int b = 0; b < ENTColor::colsVarsNum; b++){
 					if(a.compare(0, ENTColor::colsVarsReverse.at(b).length() + 1, (ENTColor::colsVarsReverse.at(b) + tmpk[0])) == 0){
@@ -400,9 +400,9 @@ void write_config_ini_file(){
 				}
 				result.push_back(a);
 			}
-			result.push_back(std::string(";; Menu Colors (End) ;;"));
+			result.push_back(std::string(";; 菜单颜色（结束） ;;"));
 
-			result.push_back(std::string("\n;;;; Enhanced Native Trainer: Configuration INI File (End) ;;;;"));
+			result.push_back(std::string("\n;;;; 增强型 原生修改器：配置 INI 文件（结束） ;;;;"));
 
 			ini.open(file, std::ofstream::out | std::ofstream::trunc);
 			if(ini.is_open()){
@@ -418,13 +418,13 @@ void write_config_ini_file(){
 
 void KeyInputConfig::set_key(char* function, char* keyName, bool modCtrl, bool modAlt, bool modShift){
 	std::ostringstream ss;
-	ss << "Key function " << function << " being given " << keyName;
+	ss << "按键功能 " << function << " 被给予 " << keyName;
 	write_text_to_log_file(ss.str());
 
 	int vkID = keyNameToVal(keyName);
 	if(vkID == -1){
 		ss.str(""); ss.clear();
-		ss << "Key function " << keyName << " didn't correspond to a value";
+		ss << "按键功能 " << keyName << " 没有对应到一个值！";
 		write_text_to_log_file(ss.str());
 		return;
 	}
@@ -440,7 +440,7 @@ void KeyInputConfig::set_key(char* function, char* keyName, bool modCtrl, bool m
 	}
 	else{
 		ss.str(""); ss.clear();
-		ss << "Key function " << function << " didn't correspond to a known function";
+		ss << "按键功能 " << function << " 没有对应到已知函数！";
 		write_text_to_log_file(ss.str());
 	}
 };
@@ -619,7 +619,7 @@ const std::string KeyConfig::KEY_HOT_7 = std::string("hotkey_7");
 const std::string KeyConfig::KEY_HOT_8 = std::string("hotkey_8");
 const std::string KeyConfig::KEY_HOT_9 = std::string("hotkey_9");
 
-//Bind name -> button ID 1 and button ID 2. For keys with only 1 button ID - use -1 as a "no bind" value.
+// 绑定名称 -> 按钮 ID 1 和按钮 ID 2。对于只有一个按钮 ID 的键 - 使用 -1 作为“无绑定”值。
 std::map<std::string, std::pair<int, int>> controller_binds =
 {
 	{ "KEY_TOGGLE_MAIN_MENU", {206, 192} },
@@ -646,9 +646,9 @@ std::map<std::string, std::pair<int, int>> controller_binds =
 	{ "KEY_AIRBRAKE_ROTATE_RIGHT", {206, -1} },
 	{ "KEY_AIRBRAKE_SPEED", {201, -1} },
 	{ "KEY_AIRBRAKE_FREEZE_TIME", {202, -1} },
-	{ "KEY_AIRBRAKE_HELP", {-1, -1} }, //No bind in the XML?
-	{ "KEY_AIRBRAKE_SPACE", {-1, -1} }, //No bind in the XML?
-	{ "KEY_AIRBRAKE_MOUSE_CONTROL", {-1, -1} }, //No bind in the XML?
+	{ "KEY_AIRBRAKE_HELP", {-1, -1} }, // XML 中没有绑定吗？
+	{ "KEY_AIRBRAKE_SPACE", {-1, -1} }, // XML 中没有绑定吗？
+	{ "KEY_AIRBRAKE_MOUSE_CONTROL", {-1, -1} }, // XML 中没有绑定吗？
 	{ "KEY_OBJECTPLACER_UP", {25, -1} },
 	{ "KEY_OBJECTPLACER_DOWN", {24, -1} },
 	{ "KEY_OBJECTPLACER_FORWARD", {32, -1} },
@@ -656,10 +656,10 @@ std::map<std::string, std::pair<int, int>> controller_binds =
 	{ "KEY_OBJECTPLACER_ROTATE_LEFT", {205, -1} },
 	{ "KEY_OBJECTPLACER_ROTATE_RIGHT", {206, -1} },
 	{ "KEY_OBJECTPLACER_SPEED_CYCLE", {201, -1} },
-	{ "KEY_OBJECTPLACER_SPEED_UP", {-1, -1} },  //No bind in the XML?
-	{ "KEY_OBJECTPLACER_SPEED_DOWN", {-1, -1} }, //No bind in the XML?
+	{ "KEY_OBJECTPLACER_SPEED_UP", {-1, -1} },  // XML 中没有绑定吗？
+	{ "KEY_OBJECTPLACER_SPEED_DOWN", {-1, -1} }, // XML 中没有绑定吗？
 	{ "KEY_OBJECTPLACER_FREEZE_TIME", {202, -1} },
 	{ "KEY_OBJECTPLACER_FREEZE_POSITION", {192, -1} },
-	{ "KEY_OBJECTPLACER_HELP", {-1, -1} },  //No bind in the XML?
-	{ "KEY_OBJECTPLACER_ALT_MOVE", {-1, -1} }, //No bind in the XML?
+	{ "KEY_OBJECTPLACER_HELP", {-1, -1} },  // XML 中没有绑定吗？
+	{ "KEY_OBJECTPLACER_ALT_MOVE", {-1, -1} }, // XML 中没有绑定吗？
 };
