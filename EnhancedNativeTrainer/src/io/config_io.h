@@ -1,7 +1,7 @@
 /*
-Part of the Enhanced Native Trainer project.
+增强版原生训练器项目的一部分。
 https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
-(C) Rob Pridham and fellow contributors 2015
+(C) Rob Pridham 及其他贡献者 2015
 */
 
 #pragma once
@@ -10,7 +10,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include <tchar.h>
 #include <windows.h>
 
-#import <msxml6.dll> //read the GitHub project readme regarding what you need to make this work
+#import <msxml6.dll> //请阅读 GitHub 项目的 README 文件，了解使此功能正常运行所需的内容
 
 #include <map>
 #include <vector>
@@ -86,7 +86,7 @@ class KeyConfig{
 	bool modShift = false;
 };
 
-/**A class to hold the current key bindings.*/
+/**一个用于保存当前按键绑定的类。*/
 class KeyInputConfig{
 	public:
 	KeyInputConfig();
@@ -97,13 +97,13 @@ class KeyInputConfig{
 
 	KeyConfig* get_key(std::string function);
 
-	/**Change the key binding using a function string and key string.*/
+	/**使用功能字符串和按键字符串更改按键绑定。*/
 	void set_key(char* function, char* keyName, bool modCtrl = false, bool modAlt = false, bool modShift = false);
 
 	bool is_hotkey_assigned(int i);
 };
 
-/**A class to hold all the user settings.*/
+/**一个用于保存所有用户设置的类。*/
 class TrainerConfig{
 	public:
 	TrainerConfig();
@@ -115,23 +115,23 @@ class TrainerConfig{
 	KeyInputConfig* keyConfig;
 };
 
-/**The current user config.*/
+/**当前用户配置。*/
 extern TrainerConfig* config;
 
-/**Read the user config in from an XML file.*/
+/**从 XML 文件中读取用户配置。*/
 void read_config_file();
 
 /**
-Read the user config in from an INI file.
+从 INI 文件中读取用户配置。
  */
 void read_config_ini_file();
 
 /**
-Write the user config out to an INI file.
- */
+将用户配置写入 INI 文件。
+*/
 void write_config_ini_file();
 
-/**Get the current config object.*/
+/**获取当前配置对象。*/
 inline TrainerConfig* get_config(){
 	return config;
 }
