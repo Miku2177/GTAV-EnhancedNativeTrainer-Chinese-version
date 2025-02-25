@@ -1,11 +1,11 @@
 /*
-Some of this code began its life as a part of GTA V SCRIPT HOOK SDK.
+这段代码的部分最初来源于 GTA V SCRIPT HOOK SDK。
 http://dev-c.com
 (C) Alexander Blade 2015
 
-It is now part of the Enhanced Native Trainer project.
+它现在已成为 Enhanced Native Trainer 项目的一部分。
 https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
-(C) Rob Pridham and fellow contributors 2015
+(C) Rob Pridham 及其他贡献者 2015
 */
 
 #include "teleportation.h"
@@ -20,7 +20,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include <iostream>   // std::cout
 #include <string>     // std::string, std::stof
 
-// Drive to marker
+// 驾驶到标记点
 float planecurrspeed = 0;
 float curr_roll = -1;
 float curr_pitch = -1;
@@ -50,13 +50,13 @@ bool TelChauffeur_altitude_Changed = true;
 int TelChauffeur_drivingstyles_Index = 0;
 bool TelChauffeur_drivingstyles_Changed = true;
 
-////////////////////////////////// DRIVE TO MARKER ////////////////////////////////////
+////////////////////////////////// 驾驶到标记点 ////////////////////////////////////
 Vector3 get_blip_marker() {
 	static Vector3 zero;
 	Vector3 coords;
 
 	blipFound = false;
-	// search for marker blip
+	// 搜索标记点
 	int blipIterator = UI::_GET_BLIP_INFO_ID_ITERATOR();
 	for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) {
 		if (UI::GET_BLIP_INFO_ID_TYPE(i) == 4) {
@@ -69,7 +69,7 @@ Vector3 get_blip_marker() {
 		return coords;
 	}
 
-	set_status_text("Map marker isn't set");
+	set_status_text("地图标记，未设置！");
 	return zero;
 }
 
