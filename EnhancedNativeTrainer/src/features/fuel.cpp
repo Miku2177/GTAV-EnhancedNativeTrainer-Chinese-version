@@ -1,11 +1,11 @@
 /*
-Some of this code began its life as a part of GTA V SCRIPT HOOK SDK.
+这段代码的部分最初来源于 GTA V SCRIPT HOOK SDK。
 http://dev-c.com
 (C) Alexander Blade 2015
 
-It is now part of the Enhanced Native Trainer project.
+它现在已成为 Enhanced Native Trainer 项目的一部分。
 https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
-(C) Rob Pridham and fellow contributors 2015
+(C) Rob Pridham 及其他贡献者 2015
 */
 
 #include "vehicles.h"
@@ -27,7 +27,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include <vector>
 #include <cstdlib>
 
-// Fuel Option Variables
+// 燃料选项变量
 bool Car_Refuel = false;
 int Time_tick = 0;
 bool Fuel_Low = false;
@@ -98,7 +98,7 @@ bool IdleConsumptionChanged = true;
 int FuelBackground_Opacity_IndexN = 3;
 bool FuelBackgound_Opacity_Changed = true;
 
-// THE ORIGINAL CODE IS BY IKT
+// 原始代码由 IKT 提供
 typedef uintptr_t(*getEntityAddress_t)(std::int32_t Entity);
 getEntityAddress_t getEntityAddress = (getEntityAddress_t)FindPatternJACCO("\x83\xF9\xFF\x74\x31\x4C\x8B\x0D\x00\x00\x00\x00\x44\x8B\xC1\x49\x8B\x41\x08", "xxxxxxxx????xxxxxxx");
 
@@ -139,7 +139,7 @@ int get_fuel_level_offset()
 	auto fuelLevelOffset = addr == 0 ? 0 : *(int*)(addr + 8);
 
 	if (fuelLevelOffset == 0) {
-		write_text_to_log_file("Fuel offset not found");
+		write_text_to_log_file("燃料偏移量未找到！");
 		return 0;
 	}
 	return fuelLevelOffset;
@@ -151,18 +151,18 @@ int get_fuel_tank_offset()
 	auto fuelTankOffset = addr == 0 ? 0 : *(int*)(addr + 0x16);
 
 	if (fuelTankOffset == 0) {
-		write_text_to_log_file("Tank offset not found");
+		write_text_to_log_file("油箱偏移量未找到！");
 		return 0;
 	}
 	return fuelTankOffset;
 }
 //
 
-//////////////////////////////////////////////// FUEL OPTION /////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////// 燃料选项 /////////////////////////////////////////////////////////////////
 void fuel()
 {
 	if (featureFuelGauge && (getGameVersion() < VER_1_0_2060_0_STEAM || getGameVersion() < VER_1_0_2060_0_NOSTEAM || getGameVersion() < VER_1_0_2060_0_EGS)) {
-		set_status_text("Version 2060.0 or higher is required");
+		set_status_text("需要版本 2060.0 或更高的版本！");
 		featureFuelGauge = false;
 	}
 	if (featureFuel && !CUTSCENE::IS_CUTSCENE_PLAYING()) {
@@ -174,9 +174,9 @@ void fuel()
 
 		Ped playerPed = PLAYER::PLAYER_PED_ID();
 		
-		bool refill_button = IsKeyDown(VK_LBUTTON); // REFUEL KEY FOR JERRY CAN
-		bool startrefillKey = IsKeyDown(KeyConfig::KEY_VEH_STARTREFUELING) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, controller_binds["KEY_MENU_SELECT"].first); // REFUEL KEY GAS STATION 
-		bool stoprefillKey = IsKeyDown(KeyConfig::KEY_VEH_STOPREFUELING) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, controller_binds["KEY_MENU_BACK"].first); // STOP REFUELING GAS STATION
+		bool refill_button = IsKeyDown(VK_LBUTTON); // 油桶加油按键
+		bool startrefillKey = IsKeyDown(KeyConfig::KEY_VEH_STARTREFUELING) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, controller_binds["KEY_MENU_SELECT"].first); // 加油站加油按键
+		bool stoprefillKey = IsKeyDown(KeyConfig::KEY_VEH_STOPREFUELING) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, controller_binds["KEY_MENU_BACK"].first); // 停止加油站加油
 
 		float fuel_bar_x = -1;
 		float fuel_bar_y = -1;
@@ -195,7 +195,7 @@ void fuel()
 		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) {
 			if (VEH_FUELRANDOM_VALUES[Random2Index] > 0 && VEH_FUELRANDOM_VALUES[Random2Index] > VEH_FUELRANDOM_VALUES[Random1Index]) randomize = VEH_FUELRANDOM_VALUES[Random1Index] + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (VEH_FUELRANDOM_VALUES[Random2Index] - VEH_FUELRANDOM_VALUES[Random1Index])));
 			if (VEH_FUELRANDOM_VALUES[Random2Index] > 0 && VEH_FUELRANDOM_VALUES[Random2Index] < VEH_FUELRANDOM_VALUES[Random1Index]) randomize = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / VEH_FUELRANDOM_VALUES[Random2Index]));
-			if (VEH_FUELRANDOM_VALUES[Random2Index] == VEH_FUELRANDOM_VALUES[Random1Index]) randomize = VEH_FUELRANDOM_VALUES[Random2Index]; // UP MARGIN + DOWN MARGIN
+			if (VEH_FUELRANDOM_VALUES[Random2Index] == VEH_FUELRANDOM_VALUES[Random1Index]) randomize = VEH_FUELRANDOM_VALUES[Random2Index]; // 上边距 + 下边距
 		}
 
 		if (WORLD_GRAVITY_LEVEL_VALUES[BarPositionIndexN] == 0) {
@@ -239,9 +239,9 @@ void fuel()
 			show_blips = true;
 		}
 
-		// BLIPS EVERYWHERE
+		// 到处都是标记点
 		if (WORLD_GRAVITY_LEVEL_VALUES[FuelBlipsIndex] > 0 && WORLD_GRAVITY_LEVEL_VALUES[FuelBlipsIndex] < 2 && show_blips) {
-			// show blips
+			// 显示标记点
 			for (int i = 0; i < GAS_X.size(); i++) {
 				blip[i] = UI::ADD_BLIP_FOR_COORD(GAS_X[i], GAS_Y[i], GAS_Z[i]);
 				UI::SET_BLIP_SPRITE(blip[i], 361);
@@ -252,9 +252,9 @@ void fuel()
 			show_blips = false;
 		}
 
-		// BLIPS ON RADAR ONLY
+		// 仅在小地图上显示标记点
 		if (WORLD_GRAVITY_LEVEL_VALUES[FuelBlipsIndex] > 1 && WORLD_GRAVITY_LEVEL_VALUES[FuelBlipsIndex] < 3 && show_blips) {
-			// show blips
+			// 显示标记点
 			for (int i = 0; i < GAS_X.size(); i++) {
 				blip[i] = UI::ADD_BLIP_FOR_COORD(GAS_X[i], GAS_Y[i], GAS_Z[i]);
 				UI::SET_BLIP_SPRITE(blip[i], 361);
@@ -275,9 +275,9 @@ void fuel()
 			}
 		}
 
-		// BLIPS IF PHONE IN HAND ONLY
+		// 仅当手持手机时显示标记点
 		if (WORLD_GRAVITY_LEVEL_VALUES[FuelBlipsIndex] > 2) {
-			// show blips
+			// 显示标记点
 			show_blips = true;
 			if (PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed) && phone_blips == false) {
 				for (int i = 0; i < GAS_X.size(); i++) {
@@ -289,7 +289,7 @@ void fuel()
 				}
 				phone_blips = true;
 			}
-			// hide blips
+			// 隐藏标记点
 			if (!PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed) && phone_blips == true && !BLIPTABLE.empty()) {
 				for (int i = 0; i < BLIPTABLE.size(); i++) {
 					if (UI::DOES_BLIP_EXIST(BLIPTABLE[i])) {
@@ -300,9 +300,9 @@ void fuel()
 			}
 		}
 
-		// BLIPS OFF
+		// 标记点关闭
 		if (WORLD_GRAVITY_LEVEL_VALUES[FuelBlipsIndex] < 1 && show_blips == true) {
-			// hide blips
+			// 隐藏标记点
 			if (!BLIPTABLE.empty()) {
 				for (int i = 0; i < BLIPTABLE.size(); i++) {
 					if (UI::DOES_BLIP_EXIST(BLIPTABLE[i])) {
@@ -313,14 +313,14 @@ void fuel()
 			show_blips = false;
 		}
 
-		// CHECK IF ARRAY IS EMPTY
+		// 检查数组是否为空
 		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && VEHICLES.empty()) {
 			Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 			VEHICLES.push_back(veh);
 			FUEL.push_back(randomize / 100);
 		}
 
-		// HOW MUCH MONEY HAVE YOU GOT? (gas station refueling)
+		// 你有多少钱？（加油站加油）
 		int outValue_station = -1;
 		int statHash_station = -1;
 
@@ -346,7 +346,7 @@ void fuel()
 			underbar_b = 86;
 		}
 
-		// HOW MUCH MONEY HAVE YOU GOT? (jerry can refueling)
+		// 你有多少钱？（油桶加油）
 		int outValue_jerrycan = -1;
 		int statHash_jerrycan = -1;
 
@@ -375,7 +375,7 @@ void fuel()
 
 		if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) f_secs_curr = -1;
 
-		// ENTERED VEHICLE
+		// 已进入载具
 		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
 			if (PED::GET_VEHICLE_PED_IS_IN(playerPed, false) != veh) Car_Refuel = false;
 			veh = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
@@ -401,7 +401,7 @@ void fuel()
 				}
 			}
 
-			// fuel gauge
+			// 燃油表
 			if (featureFuelGauge && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()))) {
 				curr_fuel_perc = ((FUEL[0] * 1000) / 140) * 100;
 				
@@ -432,13 +432,13 @@ void fuel()
 			}
 
 			if (!VEHICLE::IS_THIS_MODEL_A_BICYCLE(ENTITY::GET_ENTITY_MODEL(veh))) {
-				// types of vehicles using fuel
+				// 使用燃料的载具类型
 				if (VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(veh)) || VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(veh)) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(veh)) ||
 					VEHICLE::IS_THIS_MODEL_A_PLANE(ENTITY::GET_ENTITY_MODEL(veh)) || VEHICLE::IS_THIS_MODEL_A_BOAT(ENTITY::GET_ENTITY_MODEL(veh)) || VEHICLE::IS_THIS_MODEL_A_HELI(ENTITY::GET_ENTITY_MODEL(veh)) ||
 					ENTITY::GET_ENTITY_MODEL(veh) == GAMEPLAY::GET_HASH_KEY("SUBMERSIBLE") || ENTITY::GET_ENTITY_MODEL(veh) == GAMEPLAY::GET_HASH_KEY("SUBMERSIBLE2")) {
 
-					// FUEL CONSUMPTION
-					// CAR
+					// 燃油消耗
+					// 汽车
 					if (VEH_CARFUEL_VALUES[CarConsumptionIndex] > 0 && (CONTROLS::IS_CONTROL_PRESSED(2, 71) || CONTROLS::IS_CONTROL_PRESSED(2, 72))) {
 						if ((GAMEPLAY::GET_GAME_TIMER() - Time_tick) > 200 && VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(veh))) {
 							if (FUEL[0] > 0 && VEHICLES[0] == veh) {
@@ -450,7 +450,7 @@ void fuel()
 							}
 						}
 					}
-					// BIKE & ATV
+					// 摩托车与全地形车
 					if (VEH_CARFUEL_VALUES[BikeConsumptionIndex] > 0 && (CONTROLS::IS_CONTROL_PRESSED(2, 71) || CONTROLS::IS_CONTROL_PRESSED(2, 72))) {
 						if ((GAMEPLAY::GET_GAME_TIMER() - Time_tick) > 200 && (VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(veh)) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(veh)))) {
 							if (FUEL[0] > 0 && VEHICLES[0] == veh) {
@@ -462,7 +462,7 @@ void fuel()
 							}
 						}
 					}
-					// PLANE
+					// 飞机
 					if (VEH_CARFUEL_VALUES[PlaneConsumptionIndex] > 0 && (CONTROLS::IS_CONTROL_PRESSED(2, 71) || CONTROLS::IS_CONTROL_PRESSED(2, 72))) {
 						if ((GAMEPLAY::GET_GAME_TIMER() - Time_tick) > 200 && VEHICLE::IS_THIS_MODEL_A_PLANE(ENTITY::GET_ENTITY_MODEL(veh))) {
 							if (FUEL[0] > 0 && VEHICLES[0] == veh) {
@@ -474,7 +474,7 @@ void fuel()
 							}
 						}
 					}
-					// BOAT
+					// 船只
 					if (VEH_CARFUEL_VALUES[BoatConsumptionIndex] > 0 && (CONTROLS::IS_CONTROL_PRESSED(2, 71) || CONTROLS::IS_CONTROL_PRESSED(2, 72))) {
 						if ((GAMEPLAY::GET_GAME_TIMER() - Time_tick) > 200 && (VEHICLE::IS_THIS_MODEL_A_BOAT(ENTITY::GET_ENTITY_MODEL(veh)) || ENTITY::GET_ENTITY_MODEL(veh) == GAMEPLAY::GET_HASH_KEY("SUBMERSIBLE") || 
 							ENTITY::GET_ENTITY_MODEL(veh) == GAMEPLAY::GET_HASH_KEY("SUBMERSIBLE2"))) {
@@ -487,7 +487,7 @@ void fuel()
 							}
 						}
 					}
-					// HELICOPTER
+					// 直升机
 					if (VEH_CARFUEL_VALUES[HeliConsumptionIndex] > 0 && (CONTROLS::IS_CONTROL_PRESSED(2, 71) || CONTROLS::IS_CONTROL_PRESSED(2, 72))) {
 						if ((GAMEPLAY::GET_GAME_TIMER() - Time_tick) > 200 && VEHICLE::IS_THIS_MODEL_A_HELI(ENTITY::GET_ENTITY_MODEL(veh))) {
 							if (FUEL[0] > 0 && VEHICLES[0] == veh) {
@@ -501,7 +501,7 @@ void fuel()
 					}
 				}
 
-				// OUT OF GAS
+				// 燃油耗尽
 				if (FUEL[0] <= 0) {
 					//if (featureFuelGauge) set_vehicle_fuel_level(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), fuelLevelOffset, 0.0);
 					VEHICLE::SET_VEHICLE_ENGINE_ON(veh, false, true, true);
@@ -512,7 +512,7 @@ void fuel()
 					restart_engine = false;
 				}
 
-				// GAS STATION MESSAGE
+				// 加油站消息
 				if (vehspeed < 1 && Car_Refuel == false) {
 					Vector3 coords = ENTITY::GET_ENTITY_COORDS(playerPed, 1);
 					for (int i = 0; i < GAS_X.size(); i++) {
@@ -526,7 +526,7 @@ void fuel()
 							UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 255);
 							UI::SET_TEXT_OUTLINE();
 							UI::_SET_TEXT_ENTRY("STRING");
-							UI::_ADD_TEXT_COMPONENT_SCALEFORM("PRESS 'E' TO REFUEL");
+							UI::_ADD_TEXT_COMPONENT_SCALEFORM("按 [ E 键 ] 加油！");
 							UI::_DRAW_TEXT(0.015, 0.015);
 
 							UI::SET_TEXT_FONT(4);
@@ -537,7 +537,7 @@ void fuel()
 							UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 255);
 							UI::SET_TEXT_OUTLINE();
 							UI::_SET_TEXT_ENTRY("STRING");
-							UI::_ADD_TEXT_COMPONENT_SCALEFORM("PRESS 'S' TO STOP REFUELING");
+							UI::_ADD_TEXT_COMPONENT_SCALEFORM("按 [ S 键 ] 停止加油！");
 							UI::_DRAW_TEXT(0.015, 0.040);
 
 							if (FUEL[0] < fuel_amount) {
@@ -547,10 +547,10 @@ void fuel()
 						}
 					}
 				}
-			} // end of fuel level handling
-		} // enf of entered vehicle
+			} // 燃油等级处理结束
+		} // 进入载具逻辑结束
 
-		// BARS
+		  // 条状显示
 		if (!VEHICLES.empty() && (Car_Refuel == true || PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) || 
 			(WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_PETROLCAN"))) && !VEHICLE::IS_THIS_MODEL_A_BICYCLE(ENTITY::GET_ENTITY_MODEL(VEHICLES[0]))) {
 			for (int i = 0; i < VEHICLES.size(); i++) {
@@ -601,7 +601,7 @@ void fuel()
 			}
 		}
 
-		// GAS STATION REFUELING
+		// 加油站加油
 		if (!FUEL.empty() && Car_Refuel == true) {
 			if (CONTROLS::IS_CONTROL_JUST_PRESSED(2, 75) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) exiting_v = true;
 			if (FUEL[0] < fuel_amount && (outValue_station > 0 || VEH_FUELPRICE_VALUES[FuelPriceIndex] == 0)) {
@@ -662,7 +662,7 @@ void fuel()
 			ign_anim_e = false;
 		}
 
-		// REFUEL USING JERRY CAN
+		// 使用油桶加油
 		if (!VEHICLES.empty() && WEAPON::GET_SELECTED_PED_WEAPON(playerPed) == GAMEPLAY::GET_HASH_KEY("WEAPON_PETROLCAN") && !VEHICLE::IS_THIS_MODEL_A_BICYCLE(ENTITY::GET_ENTITY_MODEL(VEHICLES[0]))) {
 			for (int i = 0; i < VEHICLES.size(); i++) {
 				if (ENTITY::DOES_ENTITY_EXIST(VEHICLES[i]) && FUEL[i] < fuel_amount) {
@@ -680,7 +680,7 @@ void fuel()
 						UI::SET_TEXT_EDGE(1, 0, 0, 0, 255);
 						UI::SET_TEXT_DROPSHADOW(0, 0, 0, 0, 255);
 						UI::_SET_TEXT_ENTRY("STRING");
-						UI::_ADD_TEXT_COMPONENT_SCALEFORM("HOLD LEFT MOUSE BUTTON TO REFUEL");
+						UI::_ADD_TEXT_COMPONENT_SCALEFORM("长按 [ 鼠标左键 ] 加油！");
 						UI::_DRAW_TEXT(0.015, 0.015);
 
 						if (refill_button && ammo > 0 && (outValue_jerrycan > 0 || VEH_FUELPRICE_VALUES[JerrycanPriceIndex] == 0)) {
@@ -701,9 +701,9 @@ void fuel()
 					}
 				}
 			}
-		} // refuel jerry can
+		} // 油桶加油
 
-		// IDLE CONSUMPTION
+		  // 怠速消耗
 		if (VEH_CARFUEL_VALUES[IdleConsumptionIndex] > 0 && !VEHICLES.empty()) {
 			IdleConsume_secs_passed = clock() / CLOCKS_PER_SEC;
 			if (((clock() / CLOCKS_PER_SEC) - IdleConsume_secs_curr) != 0) {
@@ -727,12 +727,12 @@ void fuel()
 			}
 		}
 
-		// maximum array size
+		// 数组最大容量
 		//if (!featureRememberVehicles && !VEHICLES.empty() && VEHICLES.size() > 60) {
 		//	VEHICLE::DELETE_VEHICLE(&VEHICLES[0]);
 		//	VEHICLES.erase(VEHICLES.end()); // begin
 		//}
 
-	} // featureFuel
+	} // 燃油特性
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
