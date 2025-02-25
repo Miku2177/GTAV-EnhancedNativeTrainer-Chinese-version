@@ -1,7 +1,7 @@
 /*
-Part of the Enhanced Native Trainer project.
+增强版原生训练器项目的一部分。
 https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
-(C) Rob Pridham and fellow contributors 2015
+(C) Rob Pridham 及其他贡献者 2015
 */
 
 #include "hotkeys.h"
@@ -193,7 +193,7 @@ void trigger_function_for_hotkey_onkeyup(int hotkey)
 	case HKEY_FILL_AMMO:
 		fill_weapon_ammo_hotkey();
 		break;
-	case HKEY_MENU_NEXT_RADIO_TRACK: // next radio track
+	case HKEY_MENU_NEXT_RADIO_TRACK: // 下一首电台曲目
 		if (getGameVersion() > 41) SKIP_RADIO_FORWARD_CUSTOM();
 		else AUDIO::SKIP_RADIO_FORWARD();
 		hotkey_held_veh_radio_skip = false;
@@ -314,8 +314,8 @@ void trigger_function_for_hotkey_onkeyup(int hotkey)
 		break;
 	case HKEY_BODYGUARD_DIS_ARMED:
 		c_armed = !c_armed;
-		if (c_armed) set_status_text("Armed");
-		else set_status_text("Disarmed");
+		if (c_armed) set_status_text("武器已装备！");
+		else set_status_text("武器已移除！");
 		break;
 	case HKEY_SPAWN_SAVED_CAR:
 		hotkey_held_saved_veh_spawn = false;
@@ -347,7 +347,7 @@ void trigger_function_for_hotkey_onkeyup(int hotkey)
 	default:
 	{
 		std::ostringstream ss;
-		ss << "Hotkey " << (hotkey + 1) << " has unrecognised function";
+		ss << "快捷键 " << (hotkey + 1) << " 存在无法识别的函数！";
 		set_status_text(ss.str());
 		break;
 	}
