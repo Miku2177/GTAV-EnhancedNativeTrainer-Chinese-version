@@ -1,7 +1,7 @@
 /*
-Part of the Enhanced Native Trainer project.
+增强版原生训练器项目的一部分。
 https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
-(C) Zenamez and fellow contributors 2017
+(C) Zenamez 及其他贡献者 2017
 */
 
 #pragma once
