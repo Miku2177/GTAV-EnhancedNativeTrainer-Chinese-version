@@ -1,11 +1,11 @@
 /*
-Some of this code began its life as a part of GTA V SCRIPT HOOK SDK.
+这段代码的部分最初来源于 GTA V SCRIPT HOOK SDK。
 http://dev-c.com
 (C) Alexander Blade 2015
 
-It is now part of the Enhanced Native Trainer project.
+它现在已成为 Enhanced Native Trainer 项目的一部分。
 https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
-(C) Rob Pridham and fellow contributors 2015
+(C) Rob Pridham 及其他贡献者 2015
 */
 
 #include "misc.h"
@@ -19,10 +19,10 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\ui_support\menu_functions.h"
 
 //==================
-// MISC MENU
+// 其他菜单选项
 //==================
 
-bool iterated_radio_stations = false; //To prevent needless looping over and over when it's not needed.
+bool iterated_radio_stations = false; //为了防止不必要的循环而反复执行。
 
 int activeLineIndexTrainerConfig = 0;
 int activeLineIndexPhoneBill = 0;
@@ -34,14 +34,14 @@ int activeLineIndexPhoneOnBike = 0;
 int activeLineIndexAirbrake = 0;
 int activeLineHotkeyConfig = 0;
 
-// airbrake mode variables
-bool airbrake_enable = true;
-bool mouse_view_control = false;
-bool help_showing = true;
-bool frozen_time = false;
-bool show_transparency = true;
+// 自由移动模式变量
+bool airbrake_enable = true; // 启用自由移动
+bool mouse_view_control = false; // 禁用鼠标视角控制
+bool help_showing = true; // 显示帮助信息
+bool frozen_time = false; // 时间冻结功能关闭
+bool show_transparency = true; // 显示透明度
 
-// phone bill variables
+// 电话账单变量
 bool featurePhoneBillEnabled = false;
 bool featureGamePause = false;
 bool featureZeroBalance = false;
@@ -54,7 +54,7 @@ float bill_to_pay = -1;
 bool featureDisableRecording = false;
 bool featureNoNotifications = false;
 
-// dynamic health bar variables
+// 动态健康条变量
 bool featureDynamicHealthBar = false;
 int temp_h, temp_h_d = -1;
 bool dynamic_loading = true;
@@ -64,13 +64,13 @@ int healthbar_secs_curr, healthbar_seconds = -1;
 float health_bar_x = 0.015;
 float health_bar_y = 0.966;
 
-// show fps
+// 显示帧率
 static int frames = 0;
 static double FPStime, FPStime_passed, FPStime_curr, starttime = 0;
 int fps = 0; 
 char fps_to_show_char_modifiable[15];
 
-// use phone while on bike
+// 骑车时使用手机
 Object temp_obj = -1;
 char* anim_dict = "anim@cellphone@in_car@ps";
 char* animation_of_d = "cellphone_text_read_base";
@@ -88,14 +88,14 @@ bool no_phone, bill_no_phone = false;
 
 Vehicle playerVeh = -1;
 
-//Skip track
+//跳过曲目
 static uintptr_t* g_radioStationList;
 static int* g_radioStationCount;
 static void(*CRadioStation__Advance)(uintptr_t This, uint32_t a2);
 static uintptr_t* g_unkRadioStationData;
 bool skip_track_pressed = false;
 
-// Cutscene Viewer & First Person Cutscene Camera
+// 过场动画查看器，第一人称过场动画摄像机
 bool cutscene_is_playing, cutscene_being_watched, found_ped_in_cutscene = false;
 bool con_disabled = false;
 bool manual_cutscene = false;
@@ -147,25 +147,25 @@ int radioStationIndex = -1;
 
 Camera StuntCam = NULL;
 
-// First Person Cutscene Camera Variables
+// 第一人称过场动画摄像机变量
 Cam CutCam = NULL;
 Object xaxis, zaxis = -1;
 
-// Main characters
+// 主要角色
 const Hash PLAYER_ZERO = 0xD7114C9;
 const Hash PLAYER_ONE = 0x9B22DBAF;
 const Hash PLAYER_TWO = 0x9B810FA2;
 
-// Main characters cash
+// 主要角色现金
 const Hash SP0_TOTAL_CASH = 0x324C31D;
 const Hash SP1_TOTAL_CASH = 0x44BD6982;
 const Hash SP2_TOTAL_CASH = 0x8D75047D;
 
-// Phone Bill Amount
+// 电话账单金额
 int PhoneBillIndex = 2;
 bool PhoneBillChanged = true;
 
-// Phone Bill Free Seconds
+// 电话账单免费时长
 int PhoneFreeSecondsIndex = 0;
 bool PhoneFreeSecondsChanged = true;
 int PhoneBikeAnimationIndex = 0;
@@ -173,28 +173,28 @@ bool PhoneBikeAnimationChanged = true;
 
 int missing_station = 0;
 
-// Default Menu Tab
+// 默认菜单标签
 int DefMenuTabIndex = 0;
 bool DefMenuTabChanged = true;
 
-// Default Phone
-const std::vector<std::string> MISC_PHONE_DEFAULT_CAPTIONS{ "OFF", "Michael's", "Trevor's", "Franklin's", "Military", "Prologue" };
+// 默认手机
+const std::vector<std::string> MISC_PHONE_DEFAULT_CAPTIONS{ "关", "迈克尔", "崔佛", "富兰克", "军用", "序章" };
 const int MISC_PHONE_DEFAULT_VALUES[] = { -1, 0, 1, 2, 3, 4 };
 int PhoneDefaultIndex = 0;
 bool PhoneDefaultChanged = true;
 
-// Radio Off
-const std::vector<std::string> MISC_RADIO_OFF_CAPTIONS{ "Default", "Always", "For Bikes Only" };
+// 收音机关闭
+const std::vector<std::string> MISC_RADIO_OFF_CAPTIONS{ "默认", "始终", "仅限摩托车" };
 int RadioOffIndex = 0;
 bool RadioOffChanged = true;
 
-// Radio Station Shuffle
-const std::vector<std::string> MISC_RADIO_SWITCHING_CAPTIONS{ "OFF", "Via 'Next Radio Track'", "Every 3 Min", "Every 5 Min", "Every 7 Min", "Every 10 Min", "Every 15 Min", "Every 30 Min" };
+// 收音机关台切换
+const std::vector<std::string> MISC_RADIO_SWITCHING_CAPTIONS{ "关", "下一首电台歌曲", "每 3 分钟", "每 5 分钟", "每 7 分钟", "每 10 分钟", "每 15 分钟", "每 30 分钟" };
 const int MISC_RADIO_SWITCHING_VALUES[] = { 0, 1, 180, 300, 420, 600, 900, 1800 };
 int RadioSwitchingIndex = 0;
 bool RadioSwitchingChanged = true;
 
-// Trainer Controls
+// 训练器控制
 int TrainerControlIndex = 0;
 bool TrainerControlChanged = true;
 
@@ -210,11 +210,11 @@ bool process_misc_hotkey_menu(){
 		std::vector<std::string> captions;
 		void(*callback)(int, SelectFromListMenuItem*);
 
-		itemCaption << "Hotkey " << i;
+		itemCaption << "快捷键 " << i;
 
 		bool keyAssigned = get_config()->get_key_config()->is_hotkey_assigned(i);
 		if(!keyAssigned){
-			captions.push_back("Key Not Bound");
+			captions.push_back("未绑定按键");
 			callback = NULL;
 
 			SelectFromListMenuItem* item = new SelectFromListMenuItem(captions, callback);
@@ -237,7 +237,7 @@ bool process_misc_hotkey_menu(){
 		}
 	}
 
-	draw_generic_menu<int>(menuItems, &activeLineHotkeyConfig, "Hotkey Config", NULL, NULL, NULL);
+	draw_generic_menu<int>(menuItems, &activeLineHotkeyConfig, "快捷键设置", NULL, NULL, NULL);
 
 	return false;
 }
@@ -266,12 +266,12 @@ bool onconfirm_trainermenucolors_menu(MenuItem<int> choice){
 	}
 	else if(choice.value == ENTColor::colsVarsNum){
 		write_config_ini_file();
-		set_status_text("Saved to INI file");
-		write_text_to_log_file("INI config file written or updated");
+		set_status_text("颜色配置，已保存到 INI 文件！");
+		write_text_to_log_file("INI 配置文件，已写入或更新！");
 	}
 	else if(choice.value == ENTColor::colsVarsNum + 1){
 		ENTColor::reset_colors();
-		set_status_text("ENT menu colors reset");
+		set_status_text("ENT 菜单颜色已重置为默认！");
 	}
 
 	return false;
@@ -291,18 +291,18 @@ void process_misc_trainermenucolors_menu(){
 	}
 
 	item = new MenuItem<int>();
-	item->caption = "Save Menu Color Config";
+	item->caption = "保存菜单颜色配置";
 	item->value = index++;
 	item->isLeaf = true;
 	menuItems.insert(menuItems.begin(), item);
 
 	item = new MenuItem<int>();
-	item->caption = "Reset Menu Colors";
+	item->caption = "重置菜单颜色";
 	item->value = index++;
 	item->isLeaf = true;
 	menuItems.insert(menuItems.begin(), item);
 
-	draw_generic_menu<int>(menuItems, nullptr, "Trainer Menu Colors", onconfirm_trainermenucolors_menu, nullptr, nullptr, nullptr);
+	draw_generic_menu<int>(menuItems, nullptr, "修改器菜单颜色", onconfirm_trainermenucolors_menu, nullptr, nullptr, nullptr);
 }
 
 bool onconfirm_trainerconfig_menu(MenuItem<int> choice){
@@ -317,20 +317,20 @@ bool onconfirm_trainerconfig_menu(MenuItem<int> choice){
 }
 
 void process_misc_trainerconfig_menu(){
-	const std::string caption = "Trainer Options";
+	const std::string caption = "修改器设置选项";
 
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
 
 	MenuItem<int>* stdItem = new MenuItem<int>();
-	stdItem->caption = "Hotkey Setup";
+	stdItem->caption = "快捷键设置";
 	stdItem->value = TRAINERCONFIG_HOTKEY_MENU;
 	stdItem->isLeaf = false;
 	menuItems.push_back(stdItem);
 
 	listItem = new SelectFromListMenuItem(MISC_TRAINERCONTROL_CAPTIONS, onchange_misc_trainercontrol_index);
 	listItem->wrap = false;
-	listItem->caption = "Control Navigation";
+	listItem->caption = "菜单控制方式";
 	listItem->value = TrainerControlIndex;
 	menuItems.push_back(listItem);
 
@@ -345,22 +345,22 @@ void process_misc_trainerconfig_menu(){
 	//menuItems.push_back(toggleItem);
 
 	ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Show Vehicle Previews";
+	toggleItem->caption = "显示车辆预览图";
 	toggleItem->toggleValue = &featureShowVehiclePreviews;
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Show Status Message On Startup";
+	toggleItem->caption = "启动时显示状态消息";
 	toggleItem->toggleValue = &featureShowStatusMessage;
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Include Nkjellman's Extra Scenery";
+	toggleItem->caption = "包含 Nkjellman 的额外场景";
 	toggleItem->toggleValue = &featureMiscJellmanScenery;
 	menuItems.push_back(toggleItem);
 
 	stdItem = new MenuItem<int>();
-	stdItem->caption = "Menu Colors";
+	stdItem->caption = "修改器菜单颜色";
 	stdItem->value = 63;
 	stdItem->isLeaf = false;
 	menuItems.push_back(stdItem);
@@ -371,11 +371,11 @@ void process_misc_trainerconfig_menu(){
 bool onconfirm_misc_freezeradio_menu(MenuItem<int> choice){
 	if(choice.value == -1){
 		featureRadioFreeze = false;
-		set_status_text("Radio is no longer frozen to a station");
+		set_status_text("固定已解除, 您可以自由切换电台了！");
 	}
 	else{
 		featureRadioFreeze = true;
-		set_status_text(std::string("Radio is frozen to station ") + std::string(AUDIO::GET_RADIO_STATION_NAME(choice.value)));
+		set_status_text(std::string("已冻结电台, 并固定为: ") + std::string(AUDIO::GET_RADIO_STATION_NAME(choice.value)));
 	}
 	featureRadioFreezeUpdated = true;
 	radioStationIndex = choice.value;
@@ -433,8 +433,8 @@ bool onconfirm_misc_cutscene_menu(MenuItem<int> choice) {
 	}
 	else if (choice.value == -3) {
 		keyboard_on_screen_already = true;
-		curr_message = "Enter cutscene name (e.g. mph_nar_fin_ext or bmad_intro):";
-		std::string result = show_keyboard("Enter Name Manually", NULL);
+		curr_message = "输入过场动画名称 ( 例如: mph_nar_fin_ext 或 bmad_intro )";
+		std::string result = show_keyboard("手动输入名称", NULL);
 		if (!result.empty()) {
 			result = trim(result);
 			play_cutscene(result);
@@ -457,25 +457,25 @@ void process_misc_cutplayer_menu() {
 	int i = -1;
 
 	MenuItem<int> *item = new MenuItem<int>();
-	item->caption = "Stop [Press Jump To Stop]";
+	item->caption = "按 [空格键] 停止播放";
 	item->value = -1;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "First Person Cutscene Camera";
+	toggleItem->caption = "第一人称视角过场动画";
 	toggleItem->value = i++;
 	toggleItem->toggleValue = &featureFirstPersonCutscene;
 	menuItems.push_back(toggleItem);
 
 	item = new MenuItem<int>();
-	item->caption = "Switch Camera";
+	item->caption = "切换观看视角";
 	item->value = -2;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Enter Name Manually";
+	item->caption = "手动输入名称";
 	item->value = -3;
 	item->isLeaf = true;
 	menuItems.push_back(item);
@@ -488,7 +488,7 @@ void process_misc_cutplayer_menu() {
 		menuItems.push_back(item);
 	}
 
-	draw_generic_menu<int>(menuItems, nullptr, "View Cutscene", onconfirm_misc_cutscene_menu, nullptr, nullptr, nullptr);
+	draw_generic_menu<int>(menuItems, nullptr, "播放过场动画", onconfirm_misc_cutscene_menu, nullptr, nullptr, nullptr);
 }
 
 bool onconfirm_misc_filters_menu(MenuItem<int> choice) {
@@ -518,7 +518,7 @@ void process_misc_filters_menu() {
 		menuItems.push_back(item);
 	}
 
-	draw_generic_menu<int>(menuItems, nullptr, "Screen Filters", onconfirm_misc_filters_menu, nullptr, nullptr, nullptr);
+	draw_generic_menu<int>(menuItems, nullptr, "屏幕滤镜", onconfirm_misc_filters_menu, nullptr, nullptr, nullptr);
 }
 
 bool onconfirm_misc_musicevent_menu(MenuItem<int> choice) {
@@ -542,7 +542,7 @@ void process_misc_musicevent_menu() {
 	captions = MISC_MUSICEVENT_VALUES;
 	
 	MenuItem<int> *item = new MenuItem<int>();
-	item->caption = "None";
+	item->caption = "无";
 	item->value = -1;
 	item->isLeaf = true;
 	menuItems.push_back(item);
@@ -556,7 +556,7 @@ void process_misc_musicevent_menu() {
 		menuItems.push_back(item);
 	}
 
-	draw_generic_menu<int>(menuItems, nullptr, "Play Scripted Music", onconfirm_misc_musicevent_menu, nullptr, nullptr, nullptr);
+	draw_generic_menu<int>(menuItems, nullptr, "播放场景音乐", onconfirm_misc_musicevent_menu, nullptr, nullptr, nullptr);
 }
 
 void process_misc_freezeradio_menu(){ 
@@ -564,7 +564,7 @@ void process_misc_freezeradio_menu(){
 	int const stations = AUDIO::_MAX_RADIO_STATION_INDEX();
 
 	MenuItem<int> *item = new MenuItem<int>();
-	item->caption = "None";
+	item->caption = "无";
 	item->value = -1;
 	item->isLeaf = true;
 	menuItems.push_back(item);
@@ -577,7 +577,7 @@ void process_misc_freezeradio_menu(){
 		menuItems.push_back(item);
 	}
 
-	draw_generic_menu<int>(menuItems, nullptr, "Freeze Radio to Station", onconfirm_misc_freezeradio_menu, nullptr, nullptr, nullptr);
+	draw_generic_menu<int>(menuItems, nullptr, "冻结并固定电台", onconfirm_misc_freezeradio_menu, nullptr, nullptr, nullptr);
 }
 
 bool onconfirm_airbrake_menu(MenuItem<int> choice) {
@@ -589,39 +589,39 @@ bool onconfirm_airbrake_menu(MenuItem<int> choice) {
 }
  
 void process_airbrake_global_menu() {
-	const std::string caption = "Airbrake Menu Options";
+	const std::string caption = "自由移动模式";
 
 	std::vector<MenuItem<int>*> menuItems;
 	MenuItem<int> *item;
 
 	ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Enable";
+	toggleItem->caption = "启用";
 	toggleItem->toggleValue = &airbrake_enable;
 	menuItems.push_back(toggleItem);
 
 	item = new MenuItem<int>();
-	item->caption = "Toggle Airbrake Mode [F6 to open/close]";
+	item->caption = "自由移动模式 [默认 F6 开/关 ]";
 	item->value = -1;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Mouse Mode";
+	toggleItem->caption = "鼠标模式";
 	toggleItem->toggleValue = &mouse_view_control;
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Show Help & Controls";
+	toggleItem->caption = "显示帮助控制说明";
 	toggleItem->toggleValue = &help_showing;
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Frozen Time";
+	toggleItem->caption = "冻结时间";
 	toggleItem->toggleValue = &frozen_time;
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Transparency";
+	toggleItem->caption = "透 明 度";
 	toggleItem->toggleValue = &show_transparency;
 	menuItems.push_back(toggleItem);
 
@@ -634,24 +634,24 @@ bool onconfirm_defmenutab_menu(MenuItem<int> choice) {
 }
 
 void process_def_menutab_menu() {
-	const std::string caption = "Pause Menu Settings Options";
+	const std::string caption = "暂停菜单设置";
 
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
 	
 	listItem = new SelectFromListMenuItem(MISC_DEF_MENUTAB_CAPTIONS, onchange_misc_def_menutab_index);
 	listItem->wrap = false;
-	listItem->caption = "Default Pause Menu Tab";
+	listItem->caption = "默认的暂停菜单页";
 	listItem->value = DefMenuTabIndex;
 	menuItems.push_back(listItem);
 
 	ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Pause Game When Menu Open";
+	toggleItem->caption = "暂停菜单打开时, 暂停游戏";
 	toggleItem->toggleValue = &featureGamePause;
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Hide Player Info In Pause Menu";
+	toggleItem->caption = "暂停菜单页, 隐藏角色信息";
 	toggleItem->toggleValue = &featureHidePlayerInfo;
 	menuItems.push_back(toggleItem);
 
@@ -664,30 +664,30 @@ bool onconfirm_billsettings_menu(MenuItem<int> choice) {
 }
 
 void process_billsettings_menu() {
-	const std::string caption = "Phone Bill Options";
+	const std::string caption = "手机电话费";
 
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
 
 	ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Enable Phone Bill";
+	toggleItem->caption = "启用电话费";
 	toggleItem->toggleValue = &featurePhoneBillEnabled;
 	menuItems.push_back(toggleItem);
 
 	listItem = new SelectFromListMenuItem(MISC_PHONE_BILL_CAPTIONS, onchange_misc_phone_bill_index);
 	listItem->wrap = false;
-	listItem->caption = "Amount Per Minute";
+	listItem->caption = "每分钟话费金额";
 	listItem->value = PhoneBillIndex;
 	menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(MISC_PHONE_FREESECONDS_CAPTIONS, onchange_misc_phone_freeseconds_index);
 	listItem->wrap = false;
-	listItem->caption = "First Free Seconds";
+	listItem->caption = "前几秒免费";
 	listItem->value = PhoneFreeSecondsIndex;
 	menuItems.push_back(listItem);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Can't Use Phone If Zero Balance";
+	toggleItem->caption = "余额为零时禁止使用手机";
 	toggleItem->toggleValue = &featureZeroBalance;
 	menuItems.push_back(toggleItem);
 
@@ -700,24 +700,24 @@ bool onconfirm_phoneonbike_menu(MenuItem<int> choice) {
 }
 
 void process_phoneonbike_menu() {
-	const std::string caption = "Use Phone While On Bike Options";
+	const std::string caption = "骑车时使用手机";
 
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
 
 	ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Enable";
+	toggleItem->caption = "启用";
 	toggleItem->toggleValue = &featurePhone3DOnBike;
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "No Phone On HUD While In First Person";
+	toggleItem->caption = "第一人称视角时, 屏幕上不显示手机";
 	toggleItem->toggleValue = &featureNoPhoneOnHUD;
 	menuItems.push_back(toggleItem);
 
 	listItem = new SelectFromListMenuItem(MISC_PHONE_FREESECONDS_CAPTIONS, onchange_misc_phone_bike_index);
 	listItem->wrap = false;
-	listItem->caption = "Animation Type";
+	listItem->caption = "动作动画类型";
 	listItem->value = PhoneBikeAnimationIndex;
 	menuItems.push_back(listItem);
 
@@ -739,7 +739,7 @@ bool onconfirm_phonebill_menu(MenuItem<int> choice){
 }
 
 void process_phone_bill_menu(){
-	const std::string caption = "Phone Settings Options";
+	const std::string caption = "手机设置选项";
 
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
@@ -749,29 +749,29 @@ void process_phone_bill_menu(){
 
 	listItem = new SelectFromListMenuItem(MISC_PHONE_DEFAULT_CAPTIONS, onchange_misc_phone_default_index);
 	listItem->wrap = false;
-	listItem->caption = "Default Phone Model";
+	listItem->caption = "默认的手机型号";
 	listItem->value = PhoneDefaultIndex;
 	menuItems.push_back(listItem);
 
 	item = new MenuItem<int>();
-	item->caption = "Phone Bill";
+	item->caption = "手机电话费";
 	item->value = i++;
 	item->isLeaf = false;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Use Phone While On Bike";
+	item->caption = "骑车时使用手机";
 	item->value = i++;
 	item->isLeaf = false;
 	menuItems.push_back(item);
 
 	ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "No Phone";
+	toggleItem->caption = "禁用手机";
 	toggleItem->toggleValue = &featureDisablePhone;
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Disable Phone If Menu Open";
+	toggleItem->caption = "菜单打开时禁用手机";
 	toggleItem->toggleValue = &featureDisablePhoneMenu;
 	menuItems.push_back(toggleItem);
 
@@ -781,7 +781,7 @@ void process_phone_bill_menu(){
 bool onconfirm_radiosettings_menu(MenuItem<int> choice) {
 	switch (activeLineIndexRadioSettings) {
 	case 2:
-		// next radio track
+		// 下一曲收音机曲目
 		if (getGameVersion() > 41) SKIP_RADIO_FORWARD_CUSTOM();
 		else AUDIO::SKIP_RADIO_FORWARD();
 		skip_track_pressed = true;
@@ -796,7 +796,7 @@ bool onconfirm_radiosettings_menu(MenuItem<int> choice) {
 }
 
 void process_radio_settings_menu() {
-	const std::string caption = "Radio Settings Options";
+	const std::string caption = "电台设置选项";
 
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
@@ -806,50 +806,50 @@ void process_radio_settings_menu() {
 
 	listItem = new SelectFromListMenuItem(MISC_RADIO_OFF_CAPTIONS, onchange_misc_radio_off_index);
 	listItem->wrap = false;
-	listItem->caption = "Radio Off";
+	listItem->caption = "关闭电台";
 	listItem->value = RadioOffIndex;
 	menuItems.push_back(listItem);
 
 	ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Portable Radio";
+	toggleItem->caption = "随身电台";
 	toggleItem->toggleValue = &featurePlayerRadio;
 	menuItems.push_back(toggleItem);
 
 	item = new MenuItem<int>();
-	item->caption = "Next Radio Track";
+	item->caption = "下一首电台曲目";
 	item->value = i++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	listItem = new SelectFromListMenuItem(MISC_RADIO_SWITCHING_CAPTIONS, onchange_misc_radio_switching_index);
 	listItem->wrap = false;
-	listItem->caption = "Radio Station Shuffle";
+	listItem->caption = "电台随机切换";
 	listItem->value = RadioSwitchingIndex;
 	menuItems.push_back(listItem);
 
 	item = new MenuItem<int>();
-	item->caption = "Freeze Radio To Station";
+	item->caption = "冻结并固定电台";
 	item->value = i++;
 	item->isLeaf = false;
 	menuItems.push_back(item);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Boost Radio Volume";
+	toggleItem->caption = "提高电台的音量";
 	toggleItem->toggleValue = &featureBoostRadio;
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Consistent Radio Volume";
+	toggleItem->caption = "统一的电台音量";
 	toggleItem->toggleValue = &featureRealisticRadioVolume;
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Restore Missing Radio Station";
+	toggleItem->caption = "恢复 缺失/隐藏的 电台";
 	toggleItem->toggleValue = &featureEnableMissingRadioStation;
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Radio In Police Vehicle";
+	toggleItem->caption = "启用警车的电台";
 	toggleItem->toggleValue = &featurePoliceRadio;
 	menuItems.push_back(toggleItem);
 
@@ -861,50 +861,50 @@ bool onconfirm_hudsettings_menu(MenuItem<int> choice) {
 }
 
 void process_hud_settings_menu() {
-	const std::string caption = "HUD Settings Options";
+	const std::string caption = "小地图设置";
 
 	std::vector<MenuItem<int>*> menuItems;
 
 	int i = 0;
 	
 	ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Hide HUD";
+	toggleItem->caption = "隐藏/显示 小地图";
 	toggleItem->toggleValue = &featureMiscHideHud;
 	toggleItem->toggleValueUpdated = &featureMiscHideHudUpdated;
 	menuItems.push_back(toggleItem);
 	
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Show HUD If Phone In Hand Only";
+	toggleItem->caption = "仅在打开电话时显示 小地图";
 	toggleItem->toggleValue = &featurePhoneShowHud;
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Show HUD In Vehicle Only";
+	toggleItem->caption = "仅在车辆中显示 小地图";
 	toggleItem->toggleValue = &featureInVehicleNoHud;
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Show HUD If Map Marker Set Only";
+	toggleItem->caption = "仅在设置导航点后显示 小地图";
 	toggleItem->toggleValue = &featureMarkerHud;
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Dynamic Health Bar";
+	toggleItem->caption = "显示实时动态生命值条";
 	toggleItem->toggleValue = &featureDynamicHealthBar;
 	menuItems.push_back(toggleItem);
 	
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "No Scripted Blur & Slowdown";
+	toggleItem->caption = "禁用动态模糊和减速效果";
 	toggleItem->toggleValue = &featurenowheelblurslow;
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Disable Recording";
+	toggleItem->caption = "禁用屏幕录像";
 	toggleItem->toggleValue = &featureDisableRecording;
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "No Notifications";
+	toggleItem->caption = "禁用任何游戏通知";
 	toggleItem->toggleValue = &featureNoNotifications;
 	menuItems.push_back(toggleItem);
 
@@ -943,7 +943,7 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 			process_airbrake_global_menu();
 			break;
 		default:
-			// switchable features
+			// 可切换功能
 			break;
 	}
 	return false;
@@ -952,33 +952,33 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 void process_misc_menu(){
 	const int lineCount = 16;
 
-	const std::string caption = "Miscellaneous Options";
+	const std::string caption = "其他选项";
 
 	StandardOrToggleMenuDef lines[lineCount] = {
-		{"Trainer Options", NULL, NULL, false},
-		{"Radio Settings", NULL, NULL, false},
-		{"HUD Settings", NULL, NULL, false},
-		{"Phone Settings", NULL, NULL, false},
-		{"Pause Menu Settings", NULL, NULL, false},
-		{"Scripted Music", nullptr, nullptr, false},
-		{"Cutscene Viewer", nullptr, nullptr, false},
-		{"Screen Filters", nullptr, nullptr, false},
-		{"No Wanted Music", &featureWantedMusic, NULL, true}, 
-		{"No Flight Music", &featureFlyingMusic, NULL, true}, 
-		{"No Police Scanner", &featurePoliceScanner, NULL, true }, 
-		{"No 'Mission Passed' Message", &featureNoComleteMessage, NULL, true },
-		{"First Person Stunt Jump Camera", &featureFirstPersonStuntJumpCamera, NULL },
-		{"No Stunt Jumps", &featureNoStuntJumps, NULL },
-		{"FPS Counter", &featureShowFPS, NULL }, 
-		{"Airbrake Menu", NULL, NULL, false},
+		{"修改器设置", NULL, NULL, false},
+		{"电台设置", NULL, NULL, false},
+		{"小地图设置", NULL, NULL, false},
+		{"手机设置", NULL, NULL, false},
+		{"暂停菜单设置", NULL, NULL, false},
+		{"播放场景音乐", nullptr, nullptr, false},
+		{"播放过场动画", nullptr, nullptr, false},
+		{"屏幕滤镜", nullptr, nullptr, false},
+		{"无通缉音乐", &featureWantedMusic, NULL, true}, 
+		{"无飞行音乐", &featureFlyingMusic, NULL, true}, 
+		{"无警察电台广播", &featurePoliceScanner, NULL, true }, 
+		{"无任务完成消息", &featureNoComleteMessage, NULL, true },
+		{"第一人称特技跳跃视角", &featureFirstPersonStuntJumpCamera, NULL },
+		{"无特技跳跃", &featureNoStuntJumps, NULL },
+		{"FPS 帧率显示 ", &featureShowFPS, NULL }, 
+		{"自由移动模式", NULL, NULL, false},
 	};
 	
 	draw_menu_from_struct_def(lines, lineCount, &activeLineIndexMisc, caption, onconfirm_misc_menu);
 }
 
 // THE ORIGINAL CODE IS BY CAMXXCORE
-#define XOR_32_64 0x31 // logical exclsuive or
-#define RET 0xC3 // return
+#define XOR_32_64 0x31 // 逻辑异或
+#define RET 0xC3 // 返回
 
 bool setupPatches() {
 	auto result = FindPatternJACCO("\x38\x51\x64\x74\x19", "xxxxx");
@@ -991,9 +991,9 @@ bool setupPatches() {
 	auto vigNetCallPtr = result + 8;
 	auto timescalePtr = result + 34;
 	
-	unsigned char vigNetPatch[] = { RET, 0x90, 0x90, 0x90, 0x90 }; // remove vignetting
-	unsigned char vigNetCall[] = { 0x90, 0x90, 0x90, 0x90, 0x90 }; // vignetting call patch (NOP)
-	unsigned char timeScaleOverride[] = { XOR_32_64, 0xD2 }; // timescale override patch
+	unsigned char vigNetPatch[] = { RET, 0x90, 0x90, 0x90, 0x90 }; // 移除晕影
+	unsigned char vigNetCall[] = { 0x90, 0x90, 0x90, 0x90, 0x90 }; // 晕影调用补丁（NOP）
+	unsigned char timeScaleOverride[] = { XOR_32_64, 0xD2 }; // 时间缩放覆盖补丁
 
 	memcpy((void*)address, vigNetPatch, sizeof(vigNetPatch) / sizeof(vigNetPatch[0]));
 	memcpy((void*)vigNetCallPtr, vigNetCall, sizeof(vigNetCall) / sizeof(vigNetCall[0]));
@@ -1123,7 +1123,7 @@ void reset_misc_globals(){
 }
 
 void update_misc_features(BOOL playerExists, Ped playerPed){
-	// Radio Off
+	// 收音机关闭
 	if (NPC_RAGDOLL_VALUES[RadioOffIndex] > 0 && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) radio_pressed = false;
 	if (NPC_RAGDOLL_VALUES[RadioOffIndex] > 0 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && CONTROLS::IS_CONTROL_PRESSED(2, 85)) {
 		radio_pressed = true;
@@ -1158,38 +1158,38 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		radio_pressed = false;
 	}
 
-	// Portable Radio
+	// 便携式收音机
 	if (featurePlayerRadio || featurePlayerRadioUpdated) {
 		if (featurePlayerRadio) AUDIO::SET_MOBILE_RADIO_ENABLED_DURING_GAMEPLAY(true);
 		else AUDIO::SET_MOBILE_RADIO_ENABLED_DURING_GAMEPLAY(false);
 	}
 
-	// No Wanted Music
+	// 无通缉音乐
 	if (featureWantedMusic) AUDIO::SET_AUDIO_FLAG("WantedMusicDisabled", true);
 	else AUDIO::SET_AUDIO_FLAG("WantedMusicDisabled", false);
 	
-	// No Flying Music
+	// 无飞行音乐
 	if (featureFlyingMusic) AUDIO::SET_AUDIO_FLAG("DisableFlightMusic", true);
 	else AUDIO::SET_AUDIO_FLAG("DisableFlightMusic", false);
 	
-	// No Police Scanner
+	// 无警察扫描器
 	if (featurePoliceScanner) AUDIO::SET_AUDIO_FLAG("PoliceScannerDisabled", true);
 	else AUDIO::SET_AUDIO_FLAG("PoliceScannerDisabled", false);
 	
-	// No 'Mission Passed' Message
+	// 无“任务完成”消息
 	if (featureNoComleteMessage) {
 		if (!SCRIPT::HAS_SCRIPT_LOADED("family3") && !SCRIPT::HAS_SCRIPT_LOADED("jewelry_heist") && !SCRIPT::HAS_SCRIPT_LOADED("family5") && !SCRIPT::HAS_SCRIPT_LOADED("wardrobe_sp") && !SCRIPT::HAS_SCRIPT_LOADED("family6"))
 			GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("mission_stat_watcher");
 	}
 
-	// Radio Boost
+	// 收音机增强
 	if (featureBoostRadio) {
 		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) playerVeh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 		AUDIO::SET_VEHICLE_RADIO_LOUD(playerVeh, 1);
 	}
 	if (!featureBoostRadio) AUDIO::SET_VEHICLE_RADIO_LOUD(PED::GET_VEHICLE_PED_IS_USING(playerPed), 0);
 	
-	// Consistent Radio Volume
+	// 一致的收音机音量
 	if (featureRealisticRadioVolume && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && radio_v_checked == false) {
 		Vehicle cur_v = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 		if (VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(cur_v)) && CAM::_0xEE778F8C7E1142E2(1) != 4) AUDIO::SET_FRONTEND_RADIO_ACTIVE(false);
@@ -1215,7 +1215,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		radio_v_checked = false;
 	}
 	
-	// Radio Station Shuffle
+	// 收音机关台切换
 	if (MISC_RADIO_SWITCHING_VALUES[RadioSwitchingIndex] > 0 && (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) || featurePlayerRadio || featurePlayerRadioUpdated)) {
 		if (MISC_RADIO_SWITCHING_VALUES[RadioSwitchingIndex] > 1) {
 			r_secs_passed = clock() / CLOCKS_PER_SEC;
@@ -1234,7 +1234,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		}
 	}
 
-	// Radio In Police Vehicles
+	// 警车中的收音机
 	if (featurePoliceRadio) {
 		//Vehicle playerVeh = PED::GET_VEHICLE_PED_IS_IN(playerPed, 1);
 		//Vector3 coords_radio = ENTITY::GET_ENTITY_COORDS(playerVeh, 1);
@@ -1251,28 +1251,28 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		//if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1)) if (!PED::IS_PED_IN_ANY_POLICE_VEHICLE(playerPed)) police_radio_check = false;
 	}
 	
-	// Freeze Radio To Station
+	// 冻结收音机频道
 	if (featureRadioFreeze) {
 		if (AUDIO::GET_PLAYER_RADIO_STATION_INDEX() != radioStationIndex && AUDIO::GET_PLAYER_RADIO_STATION_INDEX() != 255) {
 			AUDIO::SET_RADIO_TO_STATION_INDEX(radioStationIndex);
 		}
 	}
 	else if (featureRadioFreezeUpdated) {
-		// Leave it empty for now.
+		// 暂时留空。
 	}
 
-	// Hide Hud
+	// 隐藏 HUD
 	if (featureMiscHideHud/* || (featureMiscHideENTHud && menu_showing == true)*/) {
 		for (int i = 0; i < 21; i++) {
-			//at least in theory...
-			switch (i){
-			case 5: //mp message
-			case 10: //help text
-			case 11: //floating help 1
-			case 12: //floating help 2
-			case 14: //reticle
-			case 16: //radio wheel
-			case 19: //weapon wheel
+			//至少在理论上...
+			switch (i) {
+			case 5:  //多人游戏消息
+			case 10: //帮助文本
+			case 11: //浮动帮助 1
+			case 12: //浮动帮助 2
+			case 14: //准星
+			case 16: //无线电轮
+			case 19: //武器轮
 				continue;
 			}
 			UI::HIDE_HUD_COMPONENT_THIS_FRAME(i);
@@ -1286,7 +1286,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		featureMiscHideHudUpdated = false;
 	}
 	
-	// Show Hud If Phone In Hand
+	// 如果手持电话，则显示 HUD
 	if (featurePhoneShowHud) {
 		if (!phone_toggle) {
 			UI::DISPLAY_RADAR(false);
@@ -1308,7 +1308,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		phone_toggle = false;
 	}
 	
-	// Show Hud In Vehicle Only
+	// 仅在车辆内显示 HUD
 	if (featureInVehicleNoHud) {
 		if (!phone_toggle_vehicle && !featurePhoneShowHud) {
 			UI::DISPLAY_RADAR(false);
@@ -1330,14 +1330,14 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		phone_toggle_vehicle = false;
 	}
 	
-	// Show Hud If Marker Set Only
+	// 仅在设置了标记时显示 HUD
 	if (featureMarkerHud) {
 		if (!phone_toggle_vehicle && !featurePhoneShowHud && !featureInVehicleNoHud) {
 			UI::DISPLAY_RADAR(false);
 			featureMiscHideHudUpdated = false;
 		}
 		bool blipFound = false;
-		int blipIterator = UI::_GET_BLIP_INFO_ID_ITERATOR(); // search for marker blip
+		int blipIterator = UI::_GET_BLIP_INFO_ID_ITERATOR(); // 查找标记图标
 		for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator)) {
 			if (UI::GET_BLIP_INFO_ID_TYPE(i) == 4) {
 				blipFound = true;
@@ -1358,18 +1358,18 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		phone_toggle_vehicle = false;
 	}
 
-	// Disable Recording
+	// 禁用录制
 	if (featureDisableRecording) {
-		CONTROLS::DISABLE_CONTROL_ACTION(2, 170, 1); // SaveReplayClip
-		CONTROLS::DISABLE_CONTROL_ACTION(2, 288, 1); // ReplayStartStopRecording
-		CONTROLS::DISABLE_CONTROL_ACTION(2, 289, 1); // ReplayStartStopRecordingSecondary
-		CONTROLS::DISABLE_CONTROL_ACTION(2, 302, 1); // ReplayRecord
+		CONTROLS::DISABLE_CONTROL_ACTION(2, 170, 1); // 保存回放片段
+		CONTROLS::DISABLE_CONTROL_ACTION(2, 288, 1); // 开始/停止回放录制
+		CONTROLS::DISABLE_CONTROL_ACTION(2, 289, 1); // 开始/停止回放录制（次要）
+		CONTROLS::DISABLE_CONTROL_ACTION(2, 302, 1); // 回放录制
 	}
 
-	// No Notifications
+	// 无通知
 	if (featureNoNotifications) UI::THEFEED_HIDE_THIS_FRAME();
 
-	// Default Phone
+	// 默认手机
 	if (MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] > -1) {
 		if (PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed) && phone_toggle_defaultphone == false) {
 			MOBILE::CREATE_MOBILE_PHONE(MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex]);
@@ -1381,7 +1381,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		}
 	}
 	
-	// Use Phone While On Bike
+	// 骑车时使用手机
 	if (featurePhone3DOnBike) {
 		Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 
@@ -1418,14 +1418,14 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			Hash temp_Hash = -1;
 			Vector3 temp_pos = ENTITY::GET_ENTITY_COORDS(playerPed, true);
 			
-			if (STREAMING::HAS_ANIM_DICT_LOADED(anim_dict) && p_exist == false && CONTROLS::GET_CONTROL_VALUE(0, 9) == 127) { // 127 means wheel's not turned
+			if (STREAMING::HAS_ANIM_DICT_LOADED(anim_dict) && p_exist == false && CONTROLS::GET_CONTROL_VALUE(0, 9) == 127) { // 127 表示轮子没有转动
 				WAIT(0);
 				AI::TASK_PLAY_ANIM(playerPed, anim_dict, animation_of_d, 8.0, 0.0, -1, 9, 0, 0, 0, 0);
 				if (!ENTITY::DOES_ENTITY_EXIST(temp_obj)) {
-					if (PED::GET_PED_TYPE(playerPed) == 0 && (MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == -1 || MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == 3)) temp_Hash = GAMEPLAY::GET_HASH_KEY("prop_phone_ing"); // michael
-						if (PED::GET_PED_TYPE(playerPed) == 1 && (MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == -1 || MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == 3)) temp_Hash = GAMEPLAY::GET_HASH_KEY("prop_phone_ing_03"); // franklin
+					if (PED::GET_PED_TYPE(playerPed) == 0 && (MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == -1 || MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == 3)) temp_Hash = GAMEPLAY::GET_HASH_KEY("prop_phone_ing"); // 迈克尔
+						if (PED::GET_PED_TYPE(playerPed) == 1 && (MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == -1 || MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == 3)) temp_Hash = GAMEPLAY::GET_HASH_KEY("prop_phone_ing_03"); // 富兰克林
 						if ((PED::GET_PED_TYPE(playerPed) == 2 || PED::GET_PED_TYPE(playerPed) == 3) && (MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == -1 || MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == 3))
-							temp_Hash = GAMEPLAY::GET_HASH_KEY("prop_phone_ing_02"); // trevor
+							temp_Hash = GAMEPLAY::GET_HASH_KEY("prop_phone_ing_02"); // 崔佛
 						if (PED::GET_PED_TYPE(playerPed) != 0 && PED::GET_PED_TYPE(playerPed) != 1 && PED::GET_PED_TYPE(playerPed) != 2 && PED::GET_PED_TYPE(playerPed) != 3 &&
 							(MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == -1 || MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == 3)) temp_Hash = GAMEPLAY::GET_HASH_KEY("prop_prologue_phone");
 						if (MISC_PHONE_DEFAULT_VALUES[PhoneDefaultIndex] == 0) temp_Hash = GAMEPLAY::GET_HASH_KEY("prop_phone_ing");
@@ -1439,7 +1439,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 				p_exist = true;
 			}
 
-			if (CONTROLS::IS_CONTROL_RELEASED(2, 71) && CONTROLS::IS_CONTROL_RELEASED(2, 72) && accel == true) { // accelerate/brake
+			if (CONTROLS::IS_CONTROL_RELEASED(2, 71) && CONTROLS::IS_CONTROL_RELEASED(2, 72) && accel == true) { // 加速/刹车
 				AI::STOP_ANIM_TASK(playerPed, anim_dict, animation_of_d, 1.0);
 				CONTROLS::DISABLE_CONTROL_ACTION(2, 71, 1);
 				CONTROLS::DISABLE_CONTROL_ACTION(2, 72, 1);
@@ -1448,7 +1448,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			}
 			if (CONTROLS::IS_CONTROL_RELEASED(2, 63) && CONTROLS::IS_CONTROL_RELEASED(2, 64)) VEHICLE::_SET_BIKE_LEAN_ANGLE(PED::GET_VEHICLE_PED_IS_USING(playerPed), 0, 0); //  && CONTROLS::IS_CONTROL_PRESSED(2, 71)
 			if (CONTROLS::IS_CONTROL_JUST_PRESSED(2, 75) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, 72) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, 63) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, 64) ||
-				(CONTROLS::IS_CONTROL_JUST_PRESSED(2, 71) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, 62) && veh_s.x < 2 && veh_s.y < 2)) { // exit/brake/left/right/accelerate/down
+				(CONTROLS::IS_CONTROL_JUST_PRESSED(2, 71) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, 62) && veh_s.x < 2 && veh_s.y < 2)) { // 离开/刹车/左/右/加速/下
 				AI::STOP_ANIM_TASK(playerPed, anim_dict, animation_of_d, 1.0);
 				accel = true;
 				p_exist = false;
@@ -1464,7 +1464,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		} 
 	}
 	
-	// Lock player vehicle doors
+	// 锁定玩家车辆车门
 	if (featureLockVehicleDoors) {
 		if (featureLockVehicleDoorsUpdated == false) {
 			if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_l = PED::GET_VEHICLE_PED_IS_USING(playerPed);
@@ -1484,7 +1484,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		featureLockVehicleDoorsUpdated = false;
 	}
 
-	// Dynamic Health Bar
+	// 动态健康条
 	if (featureDynamicHealthBar && ENTITY::DOES_ENTITY_EXIST(playerPed) && !ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID()) && !DLC2::GET_IS_LOADING_SCREEN_ACTIVE() && !STREAMING::IS_PLAYER_SWITCH_IN_PROGRESS() && dynamic_loading == true && apply_pressed == false) {
 		temp_h = ENTITY::GET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID()) - 100;
 		temp_h_d = floor(ENTITY::GET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID()) / 100);
@@ -1492,7 +1492,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		dynamic_loading = false;
 	}
 	if (featureDynamicHealthBar && !CUTSCENE::IS_CUTSCENE_PLAYING() && ENTITY::DOES_ENTITY_EXIST(playerPed) && !DLC2::GET_IS_LOADING_SCREEN_ACTIVE() && !STREAMING::IS_PLAYER_SWITCH_IN_PROGRESS()) {
-		if (!featureMiscHideHud && !featurePhoneShowHud && !featureInVehicleNoHud && !featureMarkerHud/* && !featureMiscHideENTHud*/) UI::DISPLAY_RADAR(false); // There is no need to hide HUD if it's already hidden
+		if (!featureMiscHideHud && !featurePhoneShowHud && !featureInVehicleNoHud && !featureMarkerHud/* && !featureMiscHideENTHud*/) UI::DISPLAY_RADAR(false); // 如果 HUD 已经隐藏，就没有必要再次隐藏
 		//auto addr = getScriptHandleBaseAddress(playerPed);
 		//float health = (*(float *)(addr + 0x280)) - 100;
 		float health = ENTITY::GET_ENTITY_HEALTH(playerPed) - 100;
@@ -1519,7 +1519,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 				been_damaged = false;
 				healthbar_seconds = -1;
 			}
-			// health
+			// 生命值
 			if (health < (temp_h / 5)) {
 				GRAPHICS::DRAW_RECT(health_bar_x + 0.035, health_bar_y + 0.01, 0.070, 0.017, 41, 86, 40, 110);
 				GRAPHICS::DRAW_RECT(health_bar_x + 0.035, health_bar_y + 0.01, 0.070, 0.009, 41, 56, 40, 245); // 220, 20, 20, 245 // 55
@@ -1534,9 +1534,9 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 				else GRAPHICS::DRAW_RECT(health_bar_x + 0.035, health_bar_y + 0.01, 0.070, 0.009, 78, 150, 77, 255);
 			}
 
-			GRAPHICS::DRAW_RECT(health_bar_x + 0.071, health_bar_y + 0.01, 0.001, 0.009, 255, 170, 110, 255); // vertical bar // 0.017
+			GRAPHICS::DRAW_RECT(health_bar_x + 0.071, health_bar_y + 0.01, 0.001, 0.009, 255, 170, 110, 255); // 垂直条 // 0.017
 
-			// armor
+			// 装甲
 			GRAPHICS::DRAW_RECT(health_bar_x + 0.0885, health_bar_y + 0.01, 0.034, 0.017, 38, 85, 87, 110); // health_bar_x + 0.0880 // 0.036
 			GRAPHICS::DRAW_RECT(health_bar_x + 0.0885, health_bar_y + 0.01, 0.034, 0.009, 39, 55, 56, 245); // 90
 			if ((playerArmour / 2935) < 0.035) GRAPHICS::DRAW_RECT(health_bar_x + 0.0715 + (playerArmour / 5871), health_bar_y + 0.01, (playerArmour / 2935), 0.009, 62, 129, 164, 255);
@@ -1544,7 +1544,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		}
 	}
 
-	// Default Menu Tab
+	// 默认菜单标签
 	if (MISC_DEF_MANUTAB_VALUES[DefMenuTabIndex] > -2 && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID()) == 1 && !CUTSCENE::IS_CUTSCENE_PLAYING() && keyboard_on_screen_already == false) {
 		int GetHash = GAMEPLAY::GET_HASH_KEY("FE_MENU_VERSION_SP_PAUSE");
 		if (IsKeyDown(VK_ESCAPE) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, INPUT_FRONTEND_PAUSE)/* || CONTROLS::IS_CONTROL_JUST_PRESSED(2, 199) || CONTROLS::IS_CONTROL_JUST_PRESSED(2, 200)*/) {
@@ -1553,9 +1553,9 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		} else AUDIO::SET_AUDIO_FLAG("PlayMenuMusic", false);
 	} 
 	
-	// No Scripted Blur & Slowdown
+	// 没有脚本化模糊和慢动作
 	if (!featurenowheelblurslow) no_blur_initialized = false;
-	if (featurenowheelblurslow && (CONTROLS::IS_CONTROL_PRESSED(2, 37) || CONTROLS::IS_CONTROL_PRESSED(2, 85) || CONTROLS::IS_CONTROL_PRESSED(2, 19))) { // Weapon/Radio/Character Wheels
+	if (featurenowheelblurslow && (CONTROLS::IS_CONTROL_PRESSED(2, 37) || CONTROLS::IS_CONTROL_PRESSED(2, 85) || CONTROLS::IS_CONTROL_PRESSED(2, 19))) { // 武器/收音机/角色轮盘
 		if (no_blur_initialized == false) {
 			initialize();
 			no_blur_initialized = true;
@@ -1564,7 +1564,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		GRAPHICS::_STOP_ALL_SCREEN_EFFECTS();
 	}
 
-	// No Phone && Disable Phone If Menu Open
+	// 无电话 && 如果菜单打开则禁用电话
 	if (featureDisablePhone || (featureDisablePhoneMenu && menu_showing == true)) {
 		if (PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed)) CONTROLS::_SET_CONTROL_NORMAL(0, 177, 1);
 		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("cellphone_controller");
@@ -1576,7 +1576,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		no_phone = false;
 	}
 
-	// Phone Bill
+	// 电话账单
 	if (featurePhoneBillEnabled) {
 		float mins = -1;
 		if (PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed) && AUDIO::IS_MOBILE_PHONE_CALL_ONGOING()) {
@@ -1668,7 +1668,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		}
 	}
 	
-	// First Person Stunt Jump Camera
+	// 第一人称特技跳跃镜头
 	if (featureFirstPersonStuntJumpCamera) {
 		if (GAMEPLAY::IS_STUNT_JUMP_IN_PROGRESS()) {
 			Vector3 playerPosition = ENTITY::GET_ENTITY_COORDS(playerPed, true);
@@ -1697,7 +1697,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		}
 	}
 		
-	// is a cutscene currently playing?
+	// 当前是否正在播放过场动画？
 	if (cutscene_is_playing == true) {
 		con_disabled = true;
 	}
@@ -1733,7 +1733,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	if (CUTSCENE::IS_CUTSCENE_PLAYING()) cutscene_is_playing = true;
 	if (CUTSCENE::IS_CUTSCENE_PLAYING() && manual_cutscene == true && CONTROLS::IS_CONTROL_JUST_PRESSED(2, 22)) stop_cutscene();
 
-	// First Person Cutscene Camera 
+	// 第一人称过场动画镜头
 	if (featureFirstPersonCutscene) {
 		if (CUTSCENE::IS_CUTSCENE_PLAYING()) {
 			Vector3 Pedrotation = ENTITY::GET_ENTITY_ROTATION(curr_cut_ped, 2);
@@ -1847,7 +1847,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 					CAM::SET_CAM_ROT(CutCam, Ped1rotation.x, Pedrotation.y, Ped2rotation.z, 2);
 				}
 			}
-		} // end of if (CUTSCENE::IS_CUTSCENE_PLAYING())
+		} // if 语句的结束 (CUTSCENE::IS_CUTSCENE_PLAYING())
 		else if (cutscene_is_playing == false) {
 			if (con_disabled == true && manual_cutscene == true) {
 				con_disabled = false;
@@ -1862,7 +1862,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			found_ped_in_cutscene = false;
 			switched_c = -1;
 		}
-	} // end of if (featureFirstPersonCutscene)
+	} // if 语句的结束 (featureFirstPersonCutscene)
 	else {
 		OBJECT::DELETE_OBJECT(&xaxis);
 		OBJECT::DELETE_OBJECT(&zaxis);
@@ -1874,10 +1874,10 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		switched_c = -1;
 	}
 
-	// No Stunt Jumps
+	// 无特技跳跃
 	if (featureNoStuntJumps && GAMEPLAY::IS_STUNT_JUMP_IN_PROGRESS()) GAMEPLAY::CANCEL_STUNT_JUMP();
 
-	// FPS Counter
+	// FPS 计数器
 	if (featureShowFPS)	{
 		FPStime_passed = clock() / CLOCKS_PER_SEC;
 		if (((clock() / CLOCKS_PER_SEC) - FPStime_curr) != 0) {
@@ -1907,11 +1907,11 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		GRAPHICS::DRAW_RECT(0.0, 0.15, 0.05, 0.03, 10, 10, 10, 100);
 	}
 	
-	// Hide Player Info In Pause Menu
+	// 在暂停菜单中隐藏玩家信息
 	if (featureHidePlayerInfo) UI::_SET_DIRECTOR_MODE(true);
 	else UI::_SET_DIRECTOR_MODE(false);
 		
-	//Enable's 1.44's new radio station. Credit goes to Sjaak for finding this!
+	// 启用1.44版本的新电台。感谢Sjaak发现了这一点！
 	if (featureEnableMissingRadioStation)
 	{
 		if (!iterated_radio_stations) missing_station = missing_station + 1;
@@ -1933,7 +1933,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			}
 			else
 			{
-				set_status_text("Game version outdated. This requires 1.44 onwards to function!");
+				set_status_text("游戏版本过旧，此功能需要 1.44 或更高版本才能运行！");
 				featureEnableMissingRadioStation = false;
 			}
 		}
@@ -1944,7 +1944,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		missing_station = 0;
 	}
 
-	if (sfilter_enabled == false && screenfltr != "DEFAULT" && screenfltr != "") {
+	if (sfilter_enabled == false && screenfltr != "默认" && screenfltr != "") {
 		GRAPHICS::SET_TIMECYCLE_MODIFIER((char*)screenfltr.c_str());
 		GRAPHICS::SET_TIMECYCLE_MODIFIER_STRENGTH(1.0f);
 		sfilter_enabled = true;
@@ -2052,12 +2052,12 @@ bool is_vehicle_preview_enabled(){
 	return featureShowVehiclePreviews;
 }
 
-//bool is_input_blocked_in_menu(){
-//	return featureBlockInputInMenu;
+//bool 菜单中是否阻止输入(){
+//	return 菜单中阻止输入功能;
 //}
 
-//bool is_controller_ignored_in_trainer(){
-//	return featureControllerIgnoreInTrainer;
+//bool 修改器中是否忽略控制器(){
+//	return 修改器中忽略控制器功能;
 //}
 
 bool is_hud_hidden(){
@@ -2092,7 +2092,7 @@ void SkipRadioFwd1(uint32_t a1)
 
 static void SkipRadioFwd2Internal(uintptr_t a1, uint32_t a2)
 {
-	uint64_t v2; // rax
+	uint64_t v2; // rax 寄存器
 
 	if (*(uint32_t*)(a1 + 0x2BC) == 2)
 	{
@@ -2110,9 +2110,9 @@ static void SkipRadioFwd2Internal(uintptr_t a1, uint32_t a2)
 
 void SkipRadioFwd2(uint32_t a1)
 {
-	uint32_t v1; // esi
-	uintptr_t* v2; // rbx
-	size_t v3; // rdi
+	uint32_t v1; // esi 寄存器
+	uintptr_t* v2; // rbx 寄存器
+	size_t v3; // rdi 寄存器
 
 	v1 = a1;
 	v2 = g_unkRadioStationData;
@@ -2131,7 +2131,7 @@ void SKIP_RADIO_FORWARD_CUSTOM()
 		SkipRadioFwd2(300000);
 	}
 
-//Will need to condense this as there's already a scanner for Tuneable snow as well
+// 需要对此进行压缩，因为已经有一个用于可调雪地的扫描器
 bool CompareMemoryJACCO(const uint8_t* pData, const uint8_t* bMask, const char* sMask)
 {
 	for (; *sMask; ++sMask, ++pData, ++bMask)
@@ -2143,7 +2143,7 @@ bool CompareMemoryJACCO(const uint8_t* pData, const uint8_t* bMask, const char* 
 
 intptr_t FindPatternJACCO(const char* bMask, const char* sMask)
 {
-	// Game Base & Size
+	// 游戏基址与大小
 	static intptr_t pGameBase = (intptr_t)GetModuleHandle(nullptr);
 	static uint32_t pGameSize = 0;
 	if (!pGameSize)
@@ -2153,7 +2153,7 @@ intptr_t FindPatternJACCO(const char* bMask, const char* sMask)
 		pGameSize = info.SizeOfImage;
 	}
 
-	// Scan
+	// 扫描
 	for (uint32_t i = 0; i < pGameSize; i++)
 		if (CompareMemoryJACCO((uint8_t*)(pGameBase + i), (uint8_t*)bMask, sMask))
 			return pGameBase + i;
