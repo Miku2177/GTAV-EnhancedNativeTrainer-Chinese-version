@@ -120,8 +120,9 @@ void begin_prop_placement(SpawnedPropInstance prop)
 	{
 		in_placement_mode = true;
 
-		//绘制菜单
-		draw_menu_header_line(caption, 350.0f, 50.0f, 15.0f, 0.0f, 15.0f, false);
+		// 绘制物体摆放，菜单标题
+		// 标题文本参数说明：宽度，高度，X偏移(水平方向)，Y偏移(垂直方向)，字体大小 。
+		draw_menu_header_line(caption, 320.0f, 50.0f, 15.0f, 0.0f, 15.0f, false);//是否居中 (默认为false)
 
 		make_periodic_feature_call();
 
@@ -277,17 +278,17 @@ void update_prop_placement_text()
 
 		int screen_w, screen_h;
 		GRAPHICS::GET_SCREEN_RESOLUTION(&screen_w, &screen_h);
-		float rectWidthScaled = 350 / (float)screen_w;
-		float rectHeightScaled = (20 + (numActualLines * 18)) / (float)screen_h;
-		float rectXScaled = 0 / (float)screen_h;
-		float rectYScaled = 65 / (float)screen_h;
+		float rectWidthScaled = 320 / (float)screen_w;// 计算矩形菜单的宽度
+		float rectHeightScaled = (20 + (numActualLines * 18)) / (float)screen_h;// 计算矩形菜单的长度
+		float rectXScaled = 0 / (float)screen_h;// 计算矩形菜单的 X 轴位置 （水平方向）
+		float rectYScaled = 65 / (float)screen_h;// 计算矩形菜单的 Y 轴位置 （垂直方向）
 
+		// 物体摆放菜单，颜色数组（RGBA 格式：红、绿、蓝、透明度）
 		int rect_col[4] = { 128, 128, 128, 75 };
 
-		// 矩形
-		draw_rect(rectXScaled, rectYScaled,
-			rectWidthScaled, rectHeightScaled,
-			rect_col[0], rect_col[1], rect_col[2], rect_col[3]);
+		// 绘制矩形菜单
+		// 参数依次为：X 轴位置、Y 轴位置、宽度、高度、红色值、绿色值、蓝色值、透明度
+		draw_rect(rectXScaled, rectYScaled, rectWidthScaled, rectHeightScaled, rect_col[0], rect_col[1], rect_col[2], rect_col[3]);
 	}
 }
 
