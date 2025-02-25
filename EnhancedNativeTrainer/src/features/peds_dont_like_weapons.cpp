@@ -1,11 +1,11 @@
 /*
-Some of this code began its life as a part of GTA V SCRIPT HOOK SDK.
+这段代码的部分最初来源于 GTA V SCRIPT HOOK SDK。
 http://dev-c.com
 (C) Alexander Blade 2015
 
-It is now part of the Enhanced Native Trainer project.
+它现在已成为 Enhanced Native Trainer 项目的一部分。
 https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
-(C) Rob Pridham and fellow contributors 2015
+(C) Rob Pridham 及其他贡献者 2015
 */
 
 #include "weapons.h"
@@ -16,7 +16,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\io\config_io.h"
 #include <ctime>
 
-// peds don't like Weapons variables
+// 行人讨厌武器的变量
 int tick_pedagainstweapons = 0;
 int pw_tick_secs_passed, pw_tick_secs_curr = 0;
 bool featurePedAgainstWeapons = false;
@@ -31,7 +31,7 @@ bool ChancePoliceCallingChanged = true;
 int ChanceAttackingYouIndex = 1;
 bool ChanceAttackingYouChanged = true;
 
-/////////////////////////////////// PEDS DON'T LIKE WEAPONS /////////////////////////////////////////////
+/////////////////////////////////// 行人讨厌武器 /////////////////////////////////////////////
 void peds_dont_like_weapons() {
 	if (featurePedAgainstWeapons && !featurePlayerInvisible && !featurePlayerIgnoredByAll && GAMEPLAY::GET_MISSION_FLAG() == 0) {
 		Ped playerPed = PLAYER::PLAYER_PED_ID();
@@ -59,7 +59,7 @@ void peds_dont_like_weapons() {
 				srand(time(0));
 				callpolice_randomize = (rand() % 100 + 1);
 				
-				// Peds Against
+				// 行人对抗
 				if (featurePedAgainst && !PED::IS_PED_IN_ANY_VEHICLE(weaponhaters[i], false) && PED::GET_PED_TYPE(weaponhaters[i]) != 6 && PED::GET_PED_TYPE(weaponhaters[i]) != 27 && PED::GET_PED_TYPE(weaponhaters[i]) != 28 &&
 					PED::GET_PED_TYPE(weaponhaters[i]) != 29 && PED::GET_PED_TYPE(weaponhaters[i]) != 0 && PED::GET_PED_TYPE(weaponhaters[i]) != 1 && PED::GET_PED_TYPE(weaponhaters[i]) != 2 &&
 					PED::GET_PED_TYPE(weaponhaters[i]) != 3 && !PED::IS_PED_GROUP_MEMBER(weaponhaters[i], myENTGroup)/* && !ENTITY::IS_ENTITY_A_MISSION_ENTITY(weaponhaters[i])*/) {
@@ -126,7 +126,7 @@ void peds_dont_like_weapons() {
 						}
 					}
 				}
-				// Drivers Against						
+				// 对抗司机						
 				if (featureDriverAgainst && PED::IS_PED_IN_ANY_VEHICLE(weaponhaters[i], false) && PED::GET_PED_TYPE(weaponhaters[i]) != 6 && PED::GET_PED_TYPE(weaponhaters[i]) != 27 && PED::GET_PED_TYPE(weaponhaters[i]) != 28 &&
 					PED::GET_PED_TYPE(weaponhaters[i]) != 29 && PED::GET_PED_TYPE(weaponhaters[i]) != 0 && PED::GET_PED_TYPE(weaponhaters[i]) != 1 && PED::GET_PED_TYPE(weaponhaters[i]) != 2 &&
 					PED::GET_PED_TYPE(weaponhaters[i]) != 3 && !PED::IS_PED_GROUP_MEMBER(weaponhaters[i], myENTGroup)/* && !ENTITY::IS_ENTITY_A_MISSION_ENTITY(weaponhaters[i])*/) {
@@ -185,7 +185,7 @@ void peds_dont_like_weapons() {
 						}
 					}
 				}
-				// Police Against
+				// 警方对抗
 				if (featurePoliceAgainst && (PED::GET_PED_TYPE(weaponhaters[i]) == 6 || PED::GET_PED_TYPE(weaponhaters[i]) == 27 || PED::GET_PED_TYPE(weaponhaters[i]) == 29) &&
 					weaponhaters[i] != playerPed && !ENTITY::IS_ENTITY_A_MISSION_ENTITY(weaponhaters[i])) {
 					if (ped_distance_x < 11 && ped_distance_y < 11 && ped_distance_z < 3 && PED::IS_PED_FACING_PED(weaponhaters[i], playerPed, 100) && ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(weaponhaters[i], playerPed, 17))
@@ -216,8 +216,8 @@ void peds_dont_like_weapons() {
 						}
 					}
 				}
-			} // end of for
-		} // end of if armed
+			} // for 循环结束
+		} // if armed 语句结束
 		
 		if (call_the_police == true && !featureWantedLevelFrozen) {
 			pw_tick_secs_passed = clock() / CLOCKS_PER_SEC;
