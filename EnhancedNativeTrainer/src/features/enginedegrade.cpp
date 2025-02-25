@@ -1,11 +1,11 @@
 /*
-Some of this code began its life as a part of GTA V SCRIPT HOOK SDK.
+这段代码的部分最初来源于 GTA V SCRIPT HOOK SDK。
 http://dev-c.com
 (C) Alexander Blade 2015
 
-It is now part of the Enhanced Native Trainer project.
+它现在已成为 Enhanced Native Trainer 项目的一部分。
 https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
-(C) Rob Pridham and fellow contributors 2015
+(C) Rob Pridham 及其他贡献者 2015
 */
 
 #include "vehicles.h"
@@ -27,7 +27,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include <vector>
 #include <cstdlib>
 
-// Engine Damage Variables
+// 发动机损坏变量
 std::vector<Vehicle> E_VEHICLES;
 std::vector<float> E_HEALTH;
 
@@ -65,17 +65,17 @@ bool HeliEngineDegradeChanged = true;
 int BoatEngineDegradeIndex = 5;
 bool BoatEngineDegradeChanged = true;
 
-//////////////////////////////////////////////// ENGINE DAMAGE /////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////// 发动机损坏 /////////////////////////////////////////////////////////////////
 void engine_can_degrade()
 {
 	if (featureEngineDegrade && GAMEPLAY::GET_MISSION_FLAG() == 0) {
 		Ped playerPed = PLAYER::PLAYER_PED_ID();
 		
-		// CHECK IF ARRAY IS NOT EMPTY
+		// 检查数组是否非空
 		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && E_VEHICLES.empty()) {
 			Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 
-			if (!VEHICLE::IS_THIS_MODEL_A_BICYCLE(ENTITY::GET_ENTITY_MODEL(veh)) && !PED::IS_PED_IN_ANY_TRAIN(playerPed)) { // Bikes do not have engine
+			if (!VEHICLE::IS_THIS_MODEL_A_BICYCLE(ENTITY::GET_ENTITY_MODEL(veh)) && !PED::IS_PED_IN_ANY_TRAIN(playerPed)) { // 自行车没有发动机
 				E_VEHICLES.push_back(veh);
 				
 				if (VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(veh)) && VEH_ENGINEHEALTH_VALUES[CarEngineHealthIndexN] < 100) e_randomize = (rand() % 95 + VEH_ENGINEHEALTH_VALUES[CarEngineHealthIndexN]);
@@ -100,12 +100,12 @@ void engine_can_degrade()
 			e_randomize = -1;
 		}
 
-		// ENTERED VEHICLE
+		// 进入载具
 		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) {
 			Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 			float vehspeed = ENTITY::GET_ENTITY_SPEED(veh);
 
-			if (!VEHICLE::IS_THIS_MODEL_A_BICYCLE(ENTITY::GET_ENTITY_MODEL(veh)) && !PED::IS_PED_IN_ANY_TRAIN(playerPed)) { // Bikes do not have engine
+			if (!VEHICLE::IS_THIS_MODEL_A_BICYCLE(ENTITY::GET_ENTITY_MODEL(veh)) && !PED::IS_PED_IN_ANY_TRAIN(playerPed)) { // 自行车没有发动机
 
 				if (E_VEHICLES[0] != veh) {
 					bool been_used_before = false;
@@ -138,15 +138,15 @@ void engine_can_degrade()
 					}
 				}
 
-				// CALCULATING MILEAGE
+				// 计算里程
 				if ((GAMEPLAY::GET_GAME_TIMER() - E_Time_tick_mileage) > 200) {
 					e_mileage = e_mileage + floor(((vehspeed * (1.60934 * 0.02)) * 6.6) * 1) / 1;
 					E_Time_tick_mileage = GAMEPLAY::GET_GAME_TIMER();
 					if (e_mileage > 31) e_mileage = 0;
 				}
 
-				// ENGINE HEALTH DEGRADATION
-				// CAR
+				// 发动机健康度下降
+				// 汽车
 				if (VEH_ENGINEHEALTH_VALUES[CarEngineHealthIndexN] > 0 && vehspeed > 0) {
 					VEHICLE::SET_VEHICLE_ENGINE_CAN_DEGRADE(E_VEHICLES[0], true);
 					if ((GAMEPLAY::GET_GAME_TIMER() - E_Time_tick) > 200 && VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(veh))) {
@@ -162,7 +162,7 @@ void engine_can_degrade()
 						}
 					}
 				}
-				// BIKE
+				// 摩托车
 				if (VEH_ENGINEHEALTH_VALUES[BikeEngineHealthIndexN] > 0 && vehspeed > 0) {
 					VEHICLE::SET_VEHICLE_ENGINE_CAN_DEGRADE(E_VEHICLES[0], true);
 					if ((GAMEPLAY::GET_GAME_TIMER() - E_Time_tick) > 200 && (VEHICLE::IS_THIS_MODEL_A_BIKE(ENTITY::GET_ENTITY_MODEL(veh)) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(ENTITY::GET_ENTITY_MODEL(veh)))) {
@@ -178,7 +178,7 @@ void engine_can_degrade()
 						}
 					}
 				}
-				// BOAT
+				// 船
 				if (VEH_ENGINEHEALTH_VALUES[BoatEngineHealthIndexN] > 0 && vehspeed > 0) {
 					VEHICLE::SET_VEHICLE_ENGINE_CAN_DEGRADE(E_VEHICLES[0], true);
 					if ((GAMEPLAY::GET_GAME_TIMER() - E_Time_tick) > 200 && VEHICLE::IS_THIS_MODEL_A_BOAT(ENTITY::GET_ENTITY_MODEL(veh))) {
@@ -194,7 +194,7 @@ void engine_can_degrade()
 						}
 					}
 				}
-				// PLANE
+				// 飞机
 				if (VEH_ENGINEHEALTH_VALUES[PlaneEngineHealthIndexN] > 0 && vehspeed > 0) {
 					VEHICLE::SET_VEHICLE_ENGINE_CAN_DEGRADE(E_VEHICLES[0], true);
 					if ((GAMEPLAY::GET_GAME_TIMER() - E_Time_tick) > 200 && VEHICLE::IS_THIS_MODEL_A_PLANE(ENTITY::GET_ENTITY_MODEL(veh))) {
@@ -210,7 +210,7 @@ void engine_can_degrade()
 						}
 					}
 				}
-				// HELI
+				// 直升机 
 				if (VEH_ENGINEHEALTH_VALUES[HeliEngineHealthIndexN] > 0 && vehspeed > 0) {
 					VEHICLE::SET_VEHICLE_ENGINE_CAN_DEGRADE(E_VEHICLES[0], true);
 					if ((GAMEPLAY::GET_GAME_TIMER() - E_Time_tick) > 200 && VEHICLE::IS_THIS_MODEL_A_HELI(ENTITY::GET_ENTITY_MODEL(veh))) {
@@ -227,18 +227,18 @@ void engine_can_degrade()
 					}
 				}
 
-				// ENGINE HEALTH BAR
+				// 发动机健康度条
 				if (featureEngineHealthBar) {
 					if (E_HEALTH[0] > 40) GRAPHICS::DRAW_RECT(0.0, 1.0, E_HEALTH[0] / 50, 0.005, 100, 225, 137, 110);
 					if (E_HEALTH[0] < 41 && E_HEALTH[0] > 10) GRAPHICS::DRAW_RECT(0.00, 1.0, E_HEALTH[0] / 50, 0.005, 255, 255, 0, 110);
 					if (E_HEALTH[0] < 11) GRAPHICS::DRAW_RECT(0.00, 1.0, E_HEALTH[0] / 50, 0.005, 255, 0, 0, 110);
 				}
 
-				// ENGINE HEALTH LEVEL
+				// 发动机健康度等级
 				VEHICLE::SET_VEHICLE_ENGINE_HEALTH(E_VEHICLES[0], E_HEALTH[0] * 10);
 				if (E_HEALTH[0] == 0) VEHICLE::SET_VEHICLE_ENGINE_ON(E_VEHICLES[0], false, true, false);
 
-				// LIMP MODE
+				// 故障模式
 				if (featureLimpMode && VEH_SPEEDLIMITER_VALUES[speedLimiterIndex] == 0 && VEH_SPEEDLIMITER_VALUES[speedCityLimiterIndex] == 0 && VEH_SPEEDLIMITER_VALUES[speedCountryLimiterIndex] == 0) {
 					if (vehspeed < 30 && E_HEALTH[0] > 10 && E_HEALTH[0] < 41) ENTITY::SET_ENTITY_MAX_SPEED(E_VEHICLES[0], 27); // 60 MPH
 					if (E_HEALTH[0] < 11) ENTITY::SET_ENTITY_MAX_SPEED(E_VEHICLES[0], 18); // 40 MPH
@@ -246,12 +246,12 @@ void engine_can_degrade()
 				}
 
 				if (repairing_engine == true) E_HEALTH[0] = 100;
-			} // not bicycle
-		} // end of in vehicle
+			} // 不是自行车
+		} // 在载具中的结束
 		
 		repairing_engine = false;
 
-		// ENGINE RECOVERY
+		// 发动机恢复
 		if (VEH_ENGINEHEALTH_VALUES[RestorationSpeedIndexN] > 0 && !E_VEHICLES.empty()) {
 			EngineCooling_secs_passed = clock() / CLOCKS_PER_SEC;
 			if (((clock() / CLOCKS_PER_SEC) - EngineCooling_secs_curr) != 0) {
