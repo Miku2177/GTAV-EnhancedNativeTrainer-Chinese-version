@@ -38,7 +38,7 @@ const static std::string ENGINE_SOUND[] = { "\"ADDER\"", "\"AIRTUG\"", "\"AKUMA\
 "\"ZTYPE\"" };
 
 /***
-* METHODS
+* 方法
 */
 
 void reset_vehmodmenu_globals();
