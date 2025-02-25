@@ -1,7 +1,7 @@
 /*
-Part of the Enhanced Native Trainer project.
+增强版原生训练器项目的一部分。
 https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
-(C) Sondai Smith and fellow contributors 2015
+(C) Sondai Smith 及其他贡献者 2015
 */
 
 #pragma once
@@ -28,10 +28,10 @@ extern bool featureNPCNoGravityVehicles;
 extern bool featureNPCReducedGripVehicles;
 extern bool featureBoostNPCRadio;
 
-const std::vector<std::string> WORLD_NPC_VEHICLESPEED_CAPTIONS{ "OFF", "1", "5", "10", "15", "30", "50", "70", "100" };
+const std::vector<std::string> WORLD_NPC_VEHICLESPEED_CAPTIONS{ "关", "1", "5", "10", "15", "30", "50", "70", "100" };
 const int WORLD_NPC_VEHICLESPEED_VALUES[] = { -1, 1, 5, 10, 15, 30, 50, 70, 100 };
 
-const std::vector<std::string> WORLD_REDUCEDGRIP_SNOWING_CAPTIONS{ "OFF", "Simple", "Advanced" };
+const std::vector<std::string> WORLD_REDUCEDGRIP_SNOWING_CAPTIONS{ "关", "简单模式", "高级模式" };
 extern bool featureSnow;
 extern int NPCVehicleSpeedIndex;
 extern int PedAccuracyIndex;
@@ -147,7 +147,7 @@ const std::vector<std::string> PED_WEAPONS_RANDOM_NO_SUPERDEADLY{ "WEAPON_KNIFE"
 
 const std::vector<std::vector<std::string>> VOV_PED_WEAPONS{ {}, PED_WEAPONS_MELEE, PED_WEAPONS_SMALL, PED_WEAPONS_RIFLES, PED_WEAPONS_HEAVY, PED_WEAPONS_EXPLOSIVES, PED_WEAPONS_GANGSTA, PED_WEAPONS_COUNTRYSIDE, PED_WEAPONS_RANDOM, PED_WEAPONS_RANDOM_NO_SUPERDEADLY };
 
-const std::vector<std::string> PED_WEAPON_TITLES{ "Custom Weapon", "Melee", "Small Arms", "Rifles", "Heavy", "Explosives", "Gangsta", "Countryside", "Random (all weapons)", "Random (w/o instant kill weapons)" };
+const std::vector<std::string> PED_WEAPON_TITLES{ "自定义武器", "近战武器", "轻型武器", "步枪武器", "重型武器", "爆炸物", "帮派风格武器", "乡村风格武器", "随机 - 所有武器", "随机 - 排除致命武器" };// NPC武器分类标题
 
 bool onconfirm_areaeffect_ped_menu(MenuItem<int> choice);
 
