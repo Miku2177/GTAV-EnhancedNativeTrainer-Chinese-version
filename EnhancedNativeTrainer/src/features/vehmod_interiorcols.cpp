@@ -3,167 +3,167 @@
 #include "..\io\config_io.h"
 
 const std::vector<PaintColor> PAINTS_ALL{
-	{0, "Black"},
-	{1, "Graphite"},
-	{2, "Black Steel"},
-	{3, "Dark Steel"},
-	{4, "Silver"},
-	{5, "Bluish Silver"},
-	{6, "Rolled Steel"},
-	{7, "Shadow Silver"},
-	{8, "Stone Silver"},
-	{9, "Midnight Silver"},
-	{10, "Cast Iron Silver"},
-	{11, "Anthracite Black"},
-	{27, "Red"},
-	{28, "Torino Red"},
-	{29, "Formula Red"},
-	{30, "Blaze Red"},
-	{31, "Grace Red"},
-	{32, "Garnet Red"},
-	{33, "Sunset Red"},
-	{34, "Cabernet Red"},
-	{35, "Candy Red"},
-	{36, "Sunrise Orange"},
-	{37, "Gold"},
-	{38, "Orange"},
-	{49, "Dark Green"},
-	{50, "Racing Green"},
-	{51, "Sea Green"},
-	{52, "Olive Green"},
-	{53, "Bright Green"},
-	{54, "Gasoline Green"},
-	{61, "Galaxy Blue"},
-	{62, "Dark Blue"},
-	{63, "Saxon Blue"},
-	{64, "Blue"},
-	{65, "Mariner Blue"},
-	{66, "Harbor Blue"},
-	{67, "Diamond Blue"},
-	{68, "Surf Blue"},
-	{69, "Nautical Blue"},
-	{70, "Ultra Blue"},
-	{71, "Schafter Purple"},
-	{72, "Spinnaker Purple"},
-	{73, "Racing Blue"},
-	{74, "Light Blue"},
-	{88, "Yellow"},
-	{89, "Race Yellow"},
-	{90, "Bronze"},
-	{91, "Dew Yellow"},
-	{92, "Lime Green"},
-	{93, "Champagne"},
-	{94, "Feltzer Brown"},
-	{95, "Creek Brown"},
-	{96, "Chocolate Brown"},
-	{97, "Maple Brown"},
-	{98, "Saddle Brown"},
-	{99, "Straw Brown"},
-	{100, "Moss Brown"},
-	{101, "Bison Brown"},
-	{102, "Woodbeech Brown"},
-	{103, "Beechwood Brown"},
-	{104, "Sienna Brown"},
-	{105, "Sandy Brown"},
-	{106, "Bleached Brown"},
-	{107, "Cream"},
-	{111, "Ice White"},
-	{112, "Frost White"},
-	{125, "Securicor Green"},
-	{127, "Police Car Blue"},
-	{134, "Pure White"},
-	{135, "Hot Pink"},
-	{136, "Salmon Pink"},
-	{137, "Pfister Pink"},
-	{138, "Bright Orange"},
-	{139, "Green"},
-	{140, "Fluorescent Blue"},
-	{141, "Midnight Blue"},
-	{142, "Black Purple"},
-	{143, "Wine Red"},
-	{144, "Hunter Green"},
-	{145, "Bright Purple"},
-	{146, "Midnight Purple"},
-	{147, "Carbon Black"},
-	{150, "Lava Red"},
-	{156, "Alloy"},
-	{157, "Epsilon Blue"},
-	{12, "Matte Black"},
-	{13, "Matte Gray"},
-	{14, "Matte Light Gray"},
-	{39, "Matte Red"},
-	{40, "Matte Dark Red"},
-	{41, "Matte Orange"},
-	{42, "Matte Yellow"},
-	{55, "Matte Lime Green"},
-	{82, "Matte Dark Blue"},
-	{83, "Matte Blue"},
-	{84, "Matte Midnight Blue"},
-	{128, "Matte Green"},
-	{129, "Matte Brown"},
-	{131, "Matte Ice White"},
-	{148, "Matte Schafter Purple"},
-	{149, "Matte Midnight Purple"},
-	{151, "Matte Forest Green"},
-	{152, "Matte Olive Drab"},
-	{153, "Matte Dark Earth"},
-	{154, "Matte Desert Tan"},
-	{155, "Matte Foliage Green"},
-	{117, "Brushed Steel"},
-	{118, "Brushed Black Steel"},
-	{119, "Brushed Aluminium"},
-	{158, "Pure Gold"},
-	{159, "Brushed Gold"},
-	{160, "Polished Gold"},
-	{15, "Util Black"},
-	{16, "Util Black Poly"},
-	{17, "Util Dark Silver"},
-	{18, "Util Silver"},
-	{19, "Util Gun Metal"},
-	{20, "Util Shadow Silver"},
-	{43, "Util Red"},
-	{44, "Util Bright Red"},
-	{45, "Util Garnet Red"},
-	{56, "Util Dark Green"},
-	{57, "Util Green"},
-	{75, "Util Dark Blue"},
-	{76, "Util Midnight Blue"},
-	{77, "Util Blue"},
-	{78, "Util Sea Foam Blue"},
-	{79, "Util Lightning Blue"},
-	{80, "Util Maui Blue Poly"},
-	{81, "Util Bright Blue"},
-	{108, "Util Brown"},
-	{109, "Util Medium Brown"},
-	{110, "Util Light Brown"},
-	{122, "Util Off-White"},
-	{21, "Worn Black"},
-	{22, "Worn Graphite"},
-	{23, "Worn Silver Gray"},
-	{24, "Worn Silver"},
-	{25, "Worn Blue Silver"},
-	{26, "Worn Shadow Silver"},
-	{46, "Worn Red"},
-	{47, "Worn Golden Red"},
-	{48, "Worn Dark Red"},
-	{58, "Worn Dark Green"},
-	{59, "Worn Green"},
-	{60, "Worn Sea Wash"},
-	{85, "Worn Dark Blue"},
-	{86, "Worn Blue"},
-	{87, "Worn Light Blue"},
-	{113, "Worn Honey Beige"},
-	{114, "Worn Brown"},
-	{115, "Worn Dark Brown"},
-	{116, "Worn Straw Beige"},
-	{121, "Worn Off-White"},
-	{123, "Worn Orange"},
-	{124, "Worn Light Orange"},
-	{126, "Worn Taxi Yellow"},
-	{130, "Worn Pale Orange"},
-	{132, "Worn White"},
-	{133, "Worn Olive Army Green"},
-	{120, "Chrome"}
+	{0, "黑色"},
+	{1, "石墨色"},
+	{2, "黑钢色"},
+	{3, "暗钢色"},
+	{4, "银色"},
+	{5, "蓝银色"},
+	{6, "轧钢色"},
+	{7, "暗影银色"},
+	{8, "石银色"},
+	{9, "午夜银色"},
+	{10, "铸铁银色"},
+	{11, "炭黑灰色"},
+	{27, "红色"},
+	{28, "都灵红色"},
+	{29, "方程式红色"},
+	{30, "烈焰红色"},
+	{31, "优雅红色"},
+	{32, "石榴红色"},
+	{33, "日落红色"},
+	{34, "赤霞红色"},
+	{35, "糖果红色"},
+	{36, "日出橙色"},
+	{37, "金色"},
+	{38, "橙色"},
+	{49, "深绿色"},
+	{50, "赛车绿色"},
+	{51, "海绿色"},
+	{52, "橄榄绿色"},
+	{53, "亮绿色"},
+	{54, "汽油绿色"},
+	{61, "银河蓝色"},
+	{62, "深蓝色"},
+	{63, "撒克逊蓝色"},
+	{64, "蓝色"},
+	{65, "水手蓝色"},
+	{66, "港口蓝色"},
+	{67, "钻石蓝色"},
+	{68, "浪花蓝色"},
+	{69, "航海蓝色"},
+	{70, "超炫蓝色"},
+	{71, "莎夫特紫色"},
+	{72, "帆船紫色"},
+	{73, "赛车蓝色"},
+	{74, "浅蓝色"},
+	{88, "黄色"},
+	{89, "竞速黄色"},
+	{90, "青铜色"},
+	{91, "露珠黄色"},
+	{92, "柠檬绿色"},
+	{93, "香槟色"},
+	{94, "费尔泽棕色"},
+	{95, "溪棕色"},
+	{96, "巧克力棕色"},
+	{97, "枫棕色"},
+	{98, "鞍棕色"},
+	{99, "稻草棕色"},
+	{100, "苔藓棕色"},
+	{101, "野牛棕色"},
+	{102, "山毛榉木棕色"},
+	{103, "榉木棕色"},
+	{104, "赭石棕色"},
+	{105, "沙棕色"},
+	{106, "漂白棕色"},
+	{107, "奶油色"},
+	{111, "冰白色"},
+	{112, "霜白色"},
+	{125, "保安绿色"},
+	{127, "警车蓝色"},
+	{134, "纯白色"},
+	{135, "热粉色"},
+	{136, "鲑鱼粉色"},
+	{137, "菲斯特粉色"},
+	{138, "亮橙色"},
+	{139, "绿色"},
+	{140, "荧光蓝色"},
+	{141, "午夜蓝色"},
+	{142, "黑紫色"},
+	{143, "酒红色"},
+	{144, "猎人绿色"},
+	{145, "亮紫色"},
+	{146, "午夜紫色"},
+	{147, "碳黑色"},
+	{150, "熔岩红色"},
+	{156, "合金色"},
+	{157, "伊普西隆蓝色"},
+	{12, "哑光黑色"},
+	{13, "哑光灰色"},
+	{14, "哑光浅灰色"},
+	{39, "哑光红色"},
+	{40, "哑光深红色"},
+	{41, "哑光橙色"},
+	{42, "哑光黄色"},
+	{55, "哑光柠檬绿色"},
+	{82, "哑光深蓝色"},
+	{83, "哑光蓝色"},
+	{84, "哑光午夜蓝色"},
+	{128, "哑光绿色"},
+	{129, "哑光棕色"},
+	{131, "哑光冰白色"},
+	{148, "哑光莎夫特紫色"},
+	{149, "哑光午夜紫色"},
+	{151, "哑光森林绿色"},
+	{152, "哑光橄榄绿色"},
+	{153, "哑光暗土色"},
+	{154, "哑光沙漠棕色"},
+	{155, "哑光叶绿色"},
+	{117, "拉丝钢色"},
+	{118, "拉丝黑钢色"},
+	{119, "拉丝铝色"},
+	{158, "纯金色"},
+	{159, "拉丝金色"},
+	{160, "抛光金色"},
+	{15, "实用黑色"},
+	{16, "实用黑聚色"},
+	{17, "实用深银色"},
+	{18, "实用银色"},
+	{19, "实用枪金属色"},
+	{20, "实用暗影银色"},
+	{43, "实用红色"},
+	{44, "实用亮红色"},
+	{45, "实用石榴红色"},
+	{56, "实用深绿色"},
+	{57, "实用绿色"},
+	{75, "实用深蓝色"},
+	{76, "实用午夜蓝色"},
+	{77, "实用蓝色"},
+	{78, "实用海沫蓝色"},
+	{79, "实用闪电蓝色"},
+	{80, "实用毛伊蓝色"},
+	{81, "实用亮蓝色"},
+	{108, "实用棕色"},
+	{109, "实用中棕色"},
+	{110, "实用浅棕色"},
+	{122, "实用米白色"},
+	{21, "磨损黑色"},
+	{22, "磨损石墨色"},
+	{23, "磨损银灰色"},
+	{24, "磨损银色"},
+	{25, "磨损蓝银色"},
+	{26, "磨损暗影银色"},
+	{46, "磨损红色"},
+	{47, "磨损金红色"},
+	{48, "磨损深红色"},
+	{58, "磨损深绿色"},
+	{59, "磨损绿色"},
+	{60, "磨损海浪色"},
+	{85, "磨损深蓝色"},
+	{86, "磨损蓝色"},
+	{87, "磨损浅蓝色"},
+	{113, "磨损蜜棕色"},
+	{114, "磨损棕色"},
+	{115, "磨损深棕色"},
+	{116, "磨损稻草棕色"},
+	{121, "磨损米白色"},
+	{123, "磨损橙色"},
+	{124, "磨损浅橙色"},
+	{126, "磨损士黄色"},
+	{130, "磨损淡橙色"},
+	{132, "磨损白色"},
+	{133, "磨损橄榄军绿色"},
+	{120, "镀铬色"}
 };
 
 void apply_dash_colors(int colorIndex){
@@ -178,7 +178,7 @@ void onhighlight_dash_colour_selection(MenuItem<int> choice){
 	}
 
 	if(!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
-		set_status_text("Player isn't in a vehicle");
+		set_status_text("玩家未进入车辆中！");
 		return;
 	}
 
@@ -209,7 +209,7 @@ bool process_dash_colour_menu(){
 		menuItems.push_back(item);
 	}
 
-	return draw_generic_menu<int>(menuItems, &colIndex, "Choose Dash Color", onconfirm_dash_colour_selection, onhighlight_dash_colour_selection, NULL, vehicle_menu_interrupt);
+	return draw_generic_menu<int>(menuItems, &colIndex, "仪表板颜色选项", onconfirm_dash_colour_selection, onhighlight_dash_colour_selection, NULL, vehicle_menu_interrupt);
 }
 
 void apply_trim_colors(int colorIndex){
@@ -224,7 +224,7 @@ void onhighlight_trim_colour_selection(MenuItem<int> choice){
 	}
 
 	if(!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
-		set_status_text("Player isn't in a vehicle");
+		set_status_text("玩家不在车辆内！");
 		return;
 	}
 
@@ -255,7 +255,7 @@ bool process_trim_colour_menu(){
 		menuItems.push_back(item);
 	}
 
-	return draw_generic_menu<int>(menuItems, &colIndex, "Choose Trim Color", onconfirm_trim_colour_selection, onhighlight_trim_colour_selection, NULL, vehicle_menu_interrupt);
+	return draw_generic_menu<int>(menuItems, &colIndex, "内饰颜色选项", onconfirm_trim_colour_selection, onhighlight_trim_colour_selection, NULL, vehicle_menu_interrupt);
 }
 
 bool onconfirm_trim_colour_menu(MenuItem<int> choice){
@@ -280,28 +280,28 @@ bool process_interior_colour_menu(){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if(!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
-		set_status_text("Player isn't in a vehicle");
+		set_status_text("玩家不在车辆中！");
 		return false;
 	}
 
 	if(!is_this_a_car(PED::GET_VEHICLE_PED_IS_USING(playerPed))){
-		set_status_text("This vehicle is not supported");
+		set_status_text("不支持该车辆！");
 		return false;
 	}
 
 	std::vector<MenuItem<int>*> menuItems;
 
 	MenuItem<int> *chooseDashColor = new MenuItem<int>();
-	chooseDashColor->caption = "Dash Color ~HUD_COLOUR_GREYLIGHT~(161)";
+	chooseDashColor->caption = "仪表板颜色 ~HUD_COLOUR_GREYLIGHT~(161)";
 	chooseDashColor->value = -1;
 	chooseDashColor->isLeaf = false;
 	menuItems.push_back(chooseDashColor);
 
 	MenuItem<int> *chooseTrimColor = new MenuItem<int>();
-	chooseTrimColor->caption = "Trim Color ~HUD_COLOUR_GREYLIGHT~(161)";
+	chooseTrimColor->caption = "内饰颜色 ~HUD_COLOUR_GREYLIGHT~(161)";
 	chooseTrimColor->value = -2;
 	chooseTrimColor->isLeaf = false;
 	menuItems.push_back(chooseTrimColor);
 
-	return draw_generic_menu<int>(menuItems, 0, "Interior Colors", onconfirm_trim_colour_menu, NULL, NULL, vehicle_menu_interrupt);
+	return draw_generic_menu<int>(menuItems, 0, "内饰颜色", onconfirm_trim_colour_menu, NULL, NULL, vehicle_menu_interrupt);
 }
