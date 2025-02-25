@@ -1,11 +1,11 @@
 /*
-Some of this code began its life as a part of GTA V SCRIPT HOOK SDK.
+这段代码的部分最初来源于 GTA V SCRIPT HOOK SDK。
 http://dev-c.com
 (C) Alexander Blade 2015
 
-It is now part of the Enhanced Native Trainer project.
+它现在已成为 Enhanced Native Trainer 项目的一部分。
 https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
-(C) Rob Pridham and fellow contributors 2015
+(C) Rob Pridham 及其他贡献者 2015
 */
 
 #pragma once
@@ -80,7 +80,7 @@ void add_world_generic_settings(std::vector<StringPairSettingDBRow>* results);
 
 void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings);
 
-//Snow related 
+// 雪相关
 //void writeJmp(BYTE* pFrom, BYTE* pTo);
 
 bool CompareMemory(const uint8_t* pData, const uint8_t* bMask, const char* sMask);
@@ -95,9 +95,9 @@ void EnableSnow(bool featureSnow);
 
 extern bool featureBusLight;
 
-// Gravity Level
+// 重力等级
 extern int featureGravityLevelIndex;
-const std::vector<std::string> WORLD_GRAVITY_LEVEL_CAPTIONS{ "Earth", "Moon", "Pluto", "Near Zero" };
+const std::vector<std::string> WORLD_GRAVITY_LEVEL_CAPTIONS{ "地球", "月球", "冥王星", "接近零" };
 const int WORLD_GRAVITY_LEVEL_VALUES[] = { 0, 1, 2, 3 };
 
 extern bool featurePenitentiaryMap;
