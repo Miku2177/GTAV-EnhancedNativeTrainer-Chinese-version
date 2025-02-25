@@ -1,11 +1,11 @@
 /*
-Some of this code began its life as a part of GTA V SCRIPT HOOK SDK.
+这段代码的部分最初来源于 GTA V SCRIPT HOOK SDK。
 http://dev-c.com
 (C) Alexander Blade 2015
 
-It is now part of the Enhanced Native Trainer project.
+它现在已成为 Enhanced Native Trainer 项目的一部分。
 https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
-(C) Rob Pridham and fellow contributors 2015
+(C) Rob Pridham 及其他贡献者 2015
 */
 
 #include "vehicles.h"
@@ -15,7 +15,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 int menuIndex = 0;
 
 void apply_neon_colors(int colorIndex){
-	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()); // Get current vehicle
+	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()); // 获取当前载具
 	NeonLightsColor whichcolor = NEON_COLORS[colorIndex];
 	VEHICLE::_SET_VEHICLE_NEON_LIGHTS_COLOUR(veh, whichcolor.rVal, whichcolor.gVal, whichcolor.bVal);
 }
@@ -25,7 +25,7 @@ void onhighlight_neon_lights_selection(MenuItem<int> choice){
 }
 
 bool onconfirm_neon_lights_selection(MenuItem<int> choice){
-	// common variables
+	// 通用变量
 	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
 
 	if(!bPlayerExists){
@@ -35,7 +35,7 @@ bool onconfirm_neon_lights_selection(MenuItem<int> choice){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if(!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
-		set_status_text("~r~Error:~r~ Player isn't in a vehicle");
+		set_status_text("~r~错误：~r~玩家不在车辆内！");
 		return true;
 	}
 
@@ -49,7 +49,7 @@ bool is_neonLights(std::vector<int> extras){
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 
 	if(VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(veh, loc)){
-		return true; // return as soon as we detect at least a single neon light enabled
+		return true; // 一旦检测到至少一个霓虹灯开启，立即返回
 	}
 
 	return false;
@@ -62,11 +62,11 @@ void set_neonLights(bool applied, std::vector<int> extras){
 	bool lightFound = false;
 
 	if(!is_this_a_car(veh) && !is_this_a_motorcycle(veh)){
-		set_status_text("~r~Error:~r~ Can't add neon lights to this vehicle");
+		set_status_text("~r~错误：~r~无法为，此辆车添加霓虹灯！");
 		return;
 	}
 
-	if(applied) // Turn on the neon lights
+	if(applied) // 开启霓虹灯
 	{
 		VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(veh, loc, true);
 		VEHICLE::_GET_VEHICLE_NEON_LIGHTS_COLOUR(veh, &rCol, &gCol, &bCol);
@@ -76,7 +76,7 @@ void set_neonLights(bool applied, std::vector<int> extras){
 		}
 	}
 	else{
-		// Turn off the lights
+		// 关闭灯光
 		VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(veh, loc, false);
 	}
 }
@@ -84,15 +84,15 @@ void set_neonLights(bool applied, std::vector<int> extras){
 std::string getNeonPositionLabel(int i){
 	switch(i){
 		case NEON_LEFT:
-			return "Left";
+			return "左侧";
 		case NEON_RIGHT:
-			return "Right";
+			return "右侧";
 		case NEON_FRONT:
-			return "Front";
+			return "前面";
 		case NEON_BACK:
-			return "Back";
+			return "后面";
 		default:
-			return "Unknown";
+			return "未知？";
 	}
 }
 
@@ -108,7 +108,7 @@ bool process_neon_colour_menu(){
 	for(int i = 0; i < NEON_COLORS.size(); i++){
 		NeonLightsColor thisCol = NEON_COLORS[i];
 
-		//try and match the current col to a value, in order to set the menu index
+		//尝试将当前颜色匹配到一个值，以便设置菜单索引
 		if(colIndex == -1 && r == thisCol.rVal && g == thisCol.gVal && b == thisCol.bVal){
 			colIndex = i;
 		}
@@ -124,13 +124,13 @@ bool process_neon_colour_menu(){
 		colIndex = 0;
 	}
 
-	return draw_generic_menu<int>(menuItems, &colIndex, "Choose Neon Lights Color", onconfirm_neon_lights_selection, onhighlight_neon_lights_selection, NULL, vehicle_menu_interrupt);
+	return draw_generic_menu<int>(menuItems, &colIndex, "霓虹灯颜色选项", onconfirm_neon_lights_selection, onhighlight_neon_lights_selection, NULL, vehicle_menu_interrupt);
 }
 
 bool onconfirm_neon_menu(MenuItem<int> choice){
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 
-	if(choice.value == -1) //toggle all
+	if(choice.value == -1) //切换所有
 	{
 		bool anyEnabled = false;
 		int r = 0, g = 0, b = 0;
@@ -148,7 +148,7 @@ bool onconfirm_neon_menu(MenuItem<int> choice){
 			VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(veh, loc, !anyEnabled);
 		}
 
-		//if they have no colour, set the default
+		// 如果没有颜色，则设置为默认值
 		if(!anyEnabled && r == 0 && g == 0 && b == 0){
 			NeonLightsColor col = NEON_COLORS.at(0);
 			VEHICLE::_SET_VEHICLE_NEON_LIGHTS_COLOUR(veh, col.rVal, col.gVal, col.bVal);
@@ -162,7 +162,7 @@ bool onconfirm_neon_menu(MenuItem<int> choice){
 
 
 bool process_neon_lights_menu(){
-	// common variables
+	// 通用变量
 	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
 
 	if(!bPlayerExists){
@@ -172,21 +172,21 @@ bool process_neon_lights_menu(){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if(!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
-		set_status_text("Player isn't in a vehicle");
+		set_status_text("玩家不在车辆中！");
 		return false;
 	}
 
-	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()); // Get current vehicle
+	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()); // 获取当前载具
 
 	if(!is_this_a_car(veh) && !is_this_a_motorcycle(veh)){
-		set_status_text("Can't add neon lights to this vehicle");
+		set_status_text("无法给此车辆添加霓虹灯！ ");
 		return false;
 	}
 
 	std::vector<MenuItem<int>*> menuItems;
 
 	MenuItem<int> *allLightsToggle = new MenuItem<int>();
-	allLightsToggle->caption = "Toggle All Neon Lights";
+	allLightsToggle->caption = "开关所有霓虹灯";
 	allLightsToggle->value = -1;
 	allLightsToggle->isLeaf = true;
 	menuItems.push_back(allLightsToggle);
@@ -194,7 +194,7 @@ bool process_neon_lights_menu(){
 	for(int loc = 0; loc <= 3; loc++){
 		FunctionDrivenToggleMenuItem<int> *neonLightsToggle = new FunctionDrivenToggleMenuItem<int>();
 		std::ostringstream ss;
-		ss << "Enable Neons: " << getNeonPositionLabel(loc);
+		ss << "开启霓虹灯: " << getNeonPositionLabel(loc);
 		neonLightsToggle->caption = ss.str();
 		neonLightsToggle->getter_call = is_neonLights;
 		neonLightsToggle->setter_call = set_neonLights;
@@ -209,5 +209,5 @@ bool process_neon_lights_menu(){
 	chooseColourAll->isLeaf = false;
 	menuItems.push_back(chooseColourAll);
 
-	return draw_generic_menu<int>(menuItems, &menuIndex, "Neon Lights", onconfirm_neon_menu, NULL, NULL, vehicle_menu_interrupt);
+	return draw_generic_menu<int>(menuItems, &menuIndex, "霓虹灯", onconfirm_neon_menu, NULL, NULL, vehicle_menu_interrupt);
 }
