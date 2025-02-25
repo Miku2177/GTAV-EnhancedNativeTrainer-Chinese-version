@@ -1,7 +1,7 @@
 /*
-Part of the Enhanced Native Trainer project.
+增强版原生训练器项目的一部分。
 https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
-(C) Rob Pridham and fellow contributors 2015
+(C) Rob Pridham 及其他贡献者 2015
 */
 
 #include "..\ui_support\menu_functions.h"
@@ -53,7 +53,7 @@ void begin_prop_placement(SpawnedPropInstance prop)
 	pp_exit_flag = false;
 	currentProp = prop;
 
-	const std::string caption = "Object Placement";
+	const std::string caption = "物体摆放模式";
 
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
@@ -66,7 +66,7 @@ void begin_prop_placement(SpawnedPropInstance prop)
 	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(playerPed);
 	BOOL propExists = ENTITY::DOES_ENTITY_EXIST(currentProp.instance);
 
-	//Disable on object death
+	//对象死亡时禁用
 	if (ENTITY::IS_ENTITY_DEAD(playerPed) || !bPlayerExists || !propExists)
 	{
 		return;
@@ -78,12 +78,12 @@ void begin_prop_placement(SpawnedPropInstance prop)
 	pp_cur_rotation = ENTITY::GET_ENTITY_ROTATION(prop.instance, 0);
 	pp_cur_heading = ENTITY::GET_ENTITY_HEADING(prop.instance);
 
-	//normalise the gameplay camera
+	//调整游戏摄像机至正常状态
 	float tempFloat = CAM::GET_GAMEPLAY_CAM_RELATIVE_PITCH();
 	CAM::SET_GAMEPLAY_CAM_RELATIVE_HEADING(0.0f);
 	CAM::SET_GAMEPLAY_CAM_RELATIVE_PITCH(tempFloat, 0.0f);
 	
-	//work out a view distance
+	//计算视距
 	ENTITY::SET_ENTITY_ROTATION(currentProp.instance, 0, 0, 0, 0, false);
 	Hash modelHash = ENTITY::GET_ENTITY_MODEL(currentProp.instance);
 	Vector3 minDimens;
@@ -91,7 +91,7 @@ void begin_prop_placement(SpawnedPropInstance prop)
 	GAMEPLAY::GET_MODEL_DIMENSIONS(modelHash, &minDimens, &maxDimens);
 	float cameraDistance = max(4.0f, 1.3f * max(maxDimens.x - minDimens.x, maxDimens.y - minDimens.y));
 
-	//create and configure our object camera
+	//创建并配置对象摄像机
 	propCamera = CAM::CREATE_CAM("DEFAULT_SCRIPTED_CAMERA", 0);
 	Vector3 worldCamCoords = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(currentProp.instance, 0.0f, -cameraDistance, 2.0f);
 	CAM::SET_CAM_COORD(propCamera, worldCamCoords.x, worldCamCoords.y, worldCamCoords.z);
@@ -106,21 +106,21 @@ void begin_prop_placement(SpawnedPropInstance prop)
 		CAM::SET_FOLLOW_PED_CAM_VIEW_MODE(0);
 	}
 
-	//check it worked
+	//检查是否生效
 	if (!CAM::DOES_CAM_EXIST(propCamera))
 	{
-		set_status_text("Camera failure");
+		set_status_text("相机故障了！");
 		return;
 	}
 
 	ENTITY::SET_ENTITY_QUATERNION(currentProp.instance, 0.0f, 0.0f, 0.0f, 0.0f);
 
-	//begin the loop
+	//开始循环
 	while (true && !pp_exit_flag)
 	{
 		in_placement_mode = true;
 
-		// draw menu
+		//绘制菜单
 		draw_menu_header_line(caption, 350.0f, 50.0f, 15.0f, 0.0f, 15.0f, false);
 
 		make_periodic_feature_call();
@@ -135,7 +135,7 @@ void begin_prop_placement(SpawnedPropInstance prop)
 		propExists = ENTITY::DOES_ENTITY_EXIST(currentProp.instance);
 		BOOL camExists = CAM::DOES_CAM_EXIST(propCamera);
 
-		//Disable on object death
+		//对象死亡时禁用
 		if (ENTITY::IS_ENTITY_DEAD(playerPed) || !bPlayerExists || !propExists || !camExists)
 		{
 			pp_exit_flag = true;
@@ -284,7 +284,7 @@ void update_prop_placement_text()
 
 		int rect_col[4] = { 128, 128, 128, 75 };
 
-		// rect
+		// 矩形
 		draw_rect(rectXScaled, rectYScaled,
 			rectWidthScaled, rectHeightScaled,
 			rect_col[0], rect_col[1], rect_col[2], rect_col[3]);
@@ -293,7 +293,7 @@ void update_prop_placement_text()
 
 void create_prop_placement_help_text()
 {
-	//Debug
+	//调试
 	std::stringstream ss;
 
 	/*ss << "Heading: " << pp_cur_heading << " Rotation: " << pp_cur_rotation.z
@@ -303,51 +303,51 @@ void create_prop_placement_help_text()
 	switch (pp_travel_speed)
 	{
 	case 0:
-		pp_travel_speedStr = "Very Slow";
+		pp_travel_speedStr = "非常慢";
 		break;
 	case 1:
-		pp_travel_speedStr = "Slow";
+		pp_travel_speedStr = "  慢  ";
 		break;
 	case 2:
-		pp_travel_speedStr = "Normal";
+		pp_travel_speedStr = "正常";
 		break;
 	case 3:
-		pp_travel_speedStr = "Fast";
+		pp_travel_speedStr = "  快  ";
 		break;
 	case 4:
-		pp_travel_speedStr = "Very Fast";
+		pp_travel_speedStr = "非常快";
 		break;
 	}
 
 	propPlacerStatusLines.clear();
 
-	propPlacerStatusLines.push_back("Default Object Placement Keys (change in XML):");
-	propPlacerStatusLines.push_back("Q/Z - Move Up/Down");
-	propPlacerStatusLines.push_back("A/D - Rotate Left/Right (Alt: Roll)");
-	propPlacerStatusLines.push_back("W/S - Move Forward/Back (Alt: Pitch)");
-	propPlacerStatusLines.push_back("Alt - Alternate Movement");
-	propPlacerStatusLines.push_back("[ and ] - Decrease/Increase Move Speed");
-	propPlacerStatusLines.push_back("T - Toggle Frozen Time");
-	propPlacerStatusLines.push_back("G - Toggle Object Frozen On Exit");
-	propPlacerStatusLines.push_back("H - Toggle This Help");
+	propPlacerStatusLines.push_back("物体摆放 默认按键（在 ent-config.xml 中更改）");
+	propPlacerStatusLines.push_back("Q/Z - 上/下  移动");
+	propPlacerStatusLines.push_back("A/D - 左/右  旋转（按 Alt + AD 翻滚）");
+	propPlacerStatusLines.push_back("W/S - 前/后  移动（按 Alt + WS 俯仰）");
+	propPlacerStatusLines.push_back("(   ]  加速    [  减速  )");
+	propPlacerStatusLines.push_back("[ Enter ] 减少/增加  移动速度");
+	propPlacerStatusLines.push_back("T - 切换  时间冻结");
+	propPlacerStatusLines.push_back("G - 切换  物体退出时 冻结状态");
+	propPlacerStatusLines.push_back("H - 隐藏/显示  此帮助界面");
 
 	propPlacerStatusLines.push_back(" ");
-	propPlacerStatusLines.push_back("Default Controller Input:");
-	propPlacerStatusLines.push_back("Triggers - Move Up/Down");
-	propPlacerStatusLines.push_back("Left/Right Bumper - Rotate");
-	propPlacerStatusLines.push_back("A - Cycle Move Speeds");
-	propPlacerStatusLines.push_back("B - Toggle Frozen Time");
-	propPlacerStatusLines.push_back("Y - Toggle Object Frozen On Exit");
+	propPlacerStatusLines.push_back("默认手柄按键输入：");
+	propPlacerStatusLines.push_back("扳机键 - 上/下  移动");
+	propPlacerStatusLines.push_back("左/右  肩键 - 旋转操作");
+	propPlacerStatusLines.push_back("A键 - 切换  移动速度");
+	propPlacerStatusLines.push_back("B键 - 切换  时间冻结");
+	propPlacerStatusLines.push_back("Y键 - 切换  物体退出时 冻结状态");
 	propPlacerStatusLines.push_back(" ");
 
-	propPlacerStatusLines.push_back("Press 'Menu Back' to save and exit this mode");
+	propPlacerStatusLines.push_back("按下（ 菜单返回键 ）保存并退出此模式！");
 	propPlacerStatusLines.push_back(" ");
 
-	ss << "Current Travel Speed: ~HUD_COLOUR_WHITE~" << pp_travel_speedStr;
+	ss << "当前的移动速度：~HUD_COLOUR_WHITE~" << pp_travel_speedStr;
 	propPlacerStatusLines.push_back(ss.str());
 	ss.str(""); ss.clear();
 
-	ss << "Object Frozen On Exit: ~HUD_COLOUR_WHITE~" << (currentProp.isImmovable ? "Yes": "No");
+	ss << "退出时冻结物体：~HUD_COLOUR_WHITE~" << (currentProp.isImmovable ? "是": "否");
 	propPlacerStatusLines.push_back(ss.str());
 	ss.str(""); ss.clear();
 
@@ -357,7 +357,7 @@ void create_prop_placement_help_text()
 
 void prop_placement()
 {
-	// common variables
+	// 通用变量
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	//float tmpHeading = pp_cur_heading += ;
