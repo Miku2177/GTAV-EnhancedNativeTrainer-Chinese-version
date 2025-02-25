@@ -81,9 +81,10 @@ void process_airbrake_menu()
 	{
 		in_airbrake_mode = true;
 
-		// 绘制菜单
-		if (help_showing) draw_menu_header_line(caption, 270.0f, 50.0f, 15.0f, 0.0f, 15.0f, false);
-
+		// 绘制自由移动，菜单标题
+		// 标题文本参数说明：宽度，高度，X偏移(水平方向)，Y偏移(垂直方向)，字体大小 。
+		if (help_showing) draw_menu_header_line(caption, 320.0f, 50.0f, 15.0f, 0.0f, 15.0f, false);//是否居中 (默认为false)
+	
 		make_periodic_feature_call();
 
 		// 死亡时禁用 自由移动
@@ -179,14 +180,16 @@ void update_airbrake_text()
 
 		int screen_w, screen_h;
 		GRAPHICS::GET_SCREEN_RESOLUTION(&screen_w, &screen_h);
-		float rectWidthScaled = 270 / (float)screen_w;
-		float rectHeightScaled = (20 + (numActualLines * 18)) / (float)screen_h;
-		float rectXScaled = 0 / (float)screen_h;
-		float rectYScaled = 65 / (float)screen_h;
+		float rectWidthScaled = 320 / (float)screen_w;// 计算矩形菜单的宽度
+		float rectHeightScaled = (20 + (numActualLines * 18)) / (float)screen_h;// 计算矩形菜单的长度
+		float rectXScaled = 0 / (float)screen_h;// 计算矩形菜单的 X 轴位置 （水平方向）
+		float rectYScaled = 65 / (float)screen_h;// 计算矩形菜单的 Y 轴位置 （垂直方向）
 
+		// 自由移动菜单，颜色数组（RGBA 格式：红、绿、蓝、透明度）
 		int rect_col[4] = { 128, 128, 128, 75 };
 
-		// 矩形
+		// 绘制矩形菜单
+		// 参数依次为：X 轴位置、Y 轴位置、宽度、高度、红色值、绿色值、蓝色值、透明度
 		draw_rect(rectXScaled, rectYScaled,	rectWidthScaled, rectHeightScaled, rect_col[0], rect_col[1], rect_col[2], rect_col[3]);
 	}
 }
@@ -231,7 +234,7 @@ void create_airbrake_help_text()
 	airbrakeStatusLines[index++] = "A键 - 切换  移动速度";
 	airbrakeStatusLines[index++] = "B键 - 切换  时间冻结";
 	airbrakeStatusLines[index++] = " ";
-	airbrakeStatusLines[index++] = "鼠标/相机  视角控制（在 XML 中修改）：";
+	airbrakeStatusLines[index++] = "鼠标 - 相机视角控制（在 XML 中修改）";
 	airbrakeStatusLines[index++] = "M - 切换  鼠标控制飞行";
 	airbrakeStatusLines[index++] = " "; // 按住空格键以启用 ‘跟随镜头移动’ 模式
 	airbrakeStatusLines[index++] = " ";
