@@ -1,7 +1,7 @@
 /*
-Part of the Enhanced Native Trainer project.
+增强版原生训练器项目的一部分。
 https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
-(C) Sondai Smith and fellow contributors 2015
+(C) Sondai Smith 及其他贡献者 2015
 */
 
 #include "..\ui_support\menu_functions.h"
@@ -51,14 +51,14 @@ void exit_airbrake_menu_if_showing()
 	exitFlag = true;
 }
 
-//Test for airbrake command.
+// 测试自由移动指令
 void process_airbrake_menu()
 {
 	exitFlag = false;
 
 	bool loadedAnims = false;
 		
-	const std::string caption = "Airbrake Mode";
+	const std::string caption = "自由移动模式";
 
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	bool inVehicle = PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) ? true : false;
@@ -81,12 +81,12 @@ void process_airbrake_menu()
 	{
 		in_airbrake_mode = true;
 
-		// draw menu
+		// 绘制菜单
 		if (help_showing) draw_menu_header_line(caption, 270.0f, 50.0f, 15.0f, 0.0f, 15.0f, false);
 
 		make_periodic_feature_call();
 
-		//Disable airbrake on death
+		// 死亡时禁用 自由移动
 		if (ENTITY::IS_ENTITY_DEAD(playerPed))
 		{
 			exitFlag = true;
@@ -186,54 +186,54 @@ void update_airbrake_text()
 
 		int rect_col[4] = { 128, 128, 128, 75 };
 
-		// rect
+		// 矩形
 		draw_rect(rectXScaled, rectYScaled,	rectWidthScaled, rectHeightScaled, rect_col[0], rect_col[1], rect_col[2], rect_col[3]);
 	}
 }
 
 void create_airbrake_help_text()
 {
-	//Debug
+	// 调试
 	std::stringstream ss;
 		
-	/*ss << "Heading: " << curHeading << " Rotation: " << curRotation.z
-	<< "\n xVect: " << xVect << "yVect: " << yVect;*/
+	/*ss << "航向: " << curHeading << " 旋转: " << curRotation.z
+	<< "\n X向量: " << xVect << " Y向量: " << yVect;*/
 
 	std::string travelSpeedStr;
 	switch (travelSpeed)
 	{
 	case 0:
-		travelSpeedStr = "Slow";
+		travelSpeedStr = "  慢  ";
 		break;
 	case 1:
-		travelSpeedStr = "Fast";
+		travelSpeedStr = "  快  ";
 		break;
 	case 2:
-		travelSpeedStr = "Very Fast";
+		travelSpeedStr = "非常快";
 		break;
-	}
+	} // 移动速度档位
 
-	ss << "Current Travel Speed: ~HUD_COLOUR_WHITE~" << travelSpeedStr;
+	ss << "当前的移动速度：~HUD_COLOUR_WHITE~" << travelSpeedStr;
 	
 	int index = 0;
-	airbrakeStatusLines[index++] = "Default Airbrake Keys (change in XML):";
-	airbrakeStatusLines[index++] = "Q/Z - Move Up/Down";
-	airbrakeStatusLines[index++] = "A/D - Rotate Left/Right";
-	airbrakeStatusLines[index++] = "W/S - Move Forward/Back";
-	airbrakeStatusLines[index++] = "Space + A/D - Move Left/Right";
-	airbrakeStatusLines[index++] = "Shift - Toggle Move Speed";
-	airbrakeStatusLines[index++] = "T - Toggle Frozen Time";
-	airbrakeStatusLines[index++] = "H - Toggle This Help";
+	airbrakeStatusLines[index++] = "自由移动 默认按键（在 ent-config.xml 中更改）";
+	airbrakeStatusLines[index++] = "Q/Z - 上/下  移动";
+	airbrakeStatusLines[index++] = "A/D - 左/右  旋转";
+	airbrakeStatusLines[index++] = "W/S - 前/后  移动";
+	airbrakeStatusLines[index++] = "空格 + A/D - 左/右  移动";
+	airbrakeStatusLines[index++] = "Shift - 切换  移动速度";
+	airbrakeStatusLines[index++] = "T - 切换  时间冻结";
+	airbrakeStatusLines[index++] = "H - 隐藏/显示  此帮助界面";
 	airbrakeStatusLines[index++] = " ";
-	airbrakeStatusLines[index++] = "Default Controller Input:";
-	airbrakeStatusLines[index++] = "Triggers - Move Up/Down";
-	airbrakeStatusLines[index++] = "Left/Right Bumper - Rotate";
-	airbrakeStatusLines[index++] = "A - Toggle Move Speed";
-	airbrakeStatusLines[index++] = "B - Toggle Frozen Time";
+	airbrakeStatusLines[index++] = "默认手柄按键输入：";
+	airbrakeStatusLines[index++] = "扳机键 - 上/下  移动";
+	airbrakeStatusLines[index++] = "左/右  肩键 - 旋转操作";
+	airbrakeStatusLines[index++] = "A键 - 切换  移动速度";
+	airbrakeStatusLines[index++] = "B键 - 切换  时间冻结";
 	airbrakeStatusLines[index++] = " ";
-	airbrakeStatusLines[index++] = "Mouse / Camera Controls (change in XML):";
-	airbrakeStatusLines[index++] = "M - Toggle Mouse Control ON/OFF";
-	airbrakeStatusLines[index++] = " "; // Hold Space To Enable 'Move By Camera' Mode
+	airbrakeStatusLines[index++] = "鼠标/相机  视角控制（在 XML 中修改）：";
+	airbrakeStatusLines[index++] = "M - 切换  鼠标控制飞行";
+	airbrakeStatusLines[index++] = " "; // 按住空格键以启用 ‘跟随镜头移动’ 模式
 	airbrakeStatusLines[index++] = " ";
 	airbrakeStatusLines[index++] = ss.str();
 
@@ -245,7 +245,7 @@ bool lshiftWasDown = false;
 
 void airbrake(bool inVehicle)
 {
-	// common variables
+	// 通用变量
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	
 	switch (travelSpeed)
@@ -277,7 +277,7 @@ void airbrake(bool inVehicle)
 	bool rotateRightKey = IsKeyDown(KeyConfig::KEY_AIRBRAKE_ROTATE_RIGHT) || CONTROLS::IS_CONTROL_PRESSED(2, controller_binds["KEY_AIRBRAKE_ROTATE_RIGHT"].first); //CONTROLLER_LSTICK_R
 	bool SpaceKey = IsKeyDown(KeyConfig::KEY_AIRBRAKE_SPACE) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, controller_binds["KEY_MENU_SELECT"].first); //CONTROLLER_BTN_A
 
-	//Airbrake controls vehicle if occupied
+	// 如果载具被占用，自由移动，将控制载具
 	Entity target = playerPed;
 	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0))
 	{
@@ -379,25 +379,25 @@ void airbrake(bool inVehicle)
 		ENTITY::SET_ENTITY_HEADING(target, curHeading);
 		ENTITY::SET_ENTITY_ROTATION(target, 0, 0, CamRot.z, 1, true);
 
-		if (moveForwardKey) { // MoveUpOnly
+		if (moveForwardKey) { // 仅向上移动
 			ENTITY::FREEZE_ENTITY_POSITION(target, false);
 			ENTITY::APPLY_FORCE_TO_ENTITY(target, 1, v_x, v_y, 0, 0, 0, 0, true, false, true, true, true, true);
 			curLocation = ENTITY::GET_ENTITY_COORDS(target, 0);
 			curHeading = ENTITY::GET_ENTITY_HEADING(target);
 		}
-		if (moveBackKey) { // MoveDownOnly
+		if (moveBackKey) { // 仅向下移动
 			ENTITY::FREEZE_ENTITY_POSITION(target, false);
 			ENTITY::APPLY_FORCE_TO_ENTITY(target, 1, -v_x, -v_y, 0, 0, 0, 0, true, false, true, true, true, true);
 			curLocation = ENTITY::GET_ENTITY_COORDS(target, 0);
 			curHeading = ENTITY::GET_ENTITY_HEADING(target);
 		}
 		
-		if (rotateLeftKey && !(moveUpKey) && !(SpaceKey)) { // MoveLeftOnly
+		if (rotateLeftKey && !(moveUpKey) && !(SpaceKey)) { // 仅向左移动
 			curHeading = ENTITY::GET_ENTITY_HEADING(target);
 			curHeading = curHeading + 3;
 			ENTITY::SET_ENTITY_HEADING(target, curHeading);
 		}
-		if (rotateRightKey && !(SpaceKey)) { // MoveRightOnly
+		if (rotateRightKey && !(SpaceKey)) { // 仅向右移动
 			curHeading = ENTITY::GET_ENTITY_HEADING(target);
 			curHeading = curHeading - 3;
 			ENTITY::SET_ENTITY_HEADING(target, curHeading);
