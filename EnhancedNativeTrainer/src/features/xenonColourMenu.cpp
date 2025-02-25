@@ -3,7 +3,7 @@
 #include "..\io\config_io.h"
 
 void apply_xenon_colors(int colorIndex) {
-	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()); // Get current vehicle
+	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()); // 获取当前载具
 	XenonColour whichcolor = XENON_COLOURS[colorIndex];
 	VEHICLE::SET_VEHICLE_XENON_COLOUR(veh, whichcolor.colour);
 	VEHICLE::TOGGLE_VEHICLE_MOD(veh, 22, 1);
@@ -14,7 +14,7 @@ void onhighlight_xenon_selection(MenuItem<int> choice) {
 }
 
 bool onconfirm_xenon_selection(MenuItem<int> choice) {
-	// common variables
+	// 公共变量
 	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
@@ -22,7 +22,7 @@ bool onconfirm_xenon_selection(MenuItem<int> choice) {
 		return true;
 
 	if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
-		set_status_text("Player isn't in a vehicle");
+		set_status_text("玩家不在车辆中！");
 		return true;
 	}
 
@@ -45,5 +45,5 @@ bool process_xenon_colour_menu() {
 		item->value = i;
 		menuItems.push_back(item);
 	}
-	return draw_generic_menu<int>(menuItems, 0, "Choose Xenon Color", onconfirm_xenon_selection, onhighlight_xenon_selection, NULL, vehicle_menu_interrupt);
+	return draw_generic_menu<int>(menuItems, 0, "氙气灯颜色", onconfirm_xenon_selection, onhighlight_xenon_selection, NULL, vehicle_menu_interrupt);
 }
