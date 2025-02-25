@@ -12,7 +12,7 @@
 // Grab worldGetAllPeds from the library, we use this to grab all the peds around us for ESP and aiming
 IMPORT int worldGetAllPeds(int *arr, int arrSize);
 
-//Aimbot 
+//自动瞄准 
 const std::vector<std::string> AIMBOT_TARGETS{ "OFF", "NPCs"};
 const std::vector<std::string> AIMBOT_TARGET_METHOD{ "IsFreeAiming", "Nearest Crosshair" };
 
