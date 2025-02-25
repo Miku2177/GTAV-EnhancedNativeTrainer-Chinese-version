@@ -1,5 +1,5 @@
 #pragma once
-
+//室内道具或物品
 const std::vector<char*> IPL_PROPS_SCRAP = {
 	"v_int_13",
 	"v_recycle",
