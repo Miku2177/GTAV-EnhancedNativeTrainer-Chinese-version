@@ -5,7 +5,7 @@
 #include "../features/vehicle_weapons.h"
 #include "../../inc/natives.h"
 
-//warning C4129 : 'D' : unrecognized character escape sequence - Attempting to properly "escape" the string breaks the sound library
+//警告 C4129: 'D': 无法识别的字符转义序列 - 尝试正确"转义"字符串反而破坏了音频库功能
 #pragma warning( disable : 4129 )
 
 Camera bombCam = NULL;
@@ -93,8 +93,8 @@ void toggle_bomb_bay_doors()
 void start_bombing_run()	
 {
 	Hash currVehModel = ENTITY::GET_ENTITY_MODEL(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()));
-	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) set_status_text("Player isn't in a vehicle");
-	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0) && GAMEPLAY::GET_HASH_KEY("CUBAN800") == currVehModel && bombDoorOpen == false) set_status_text("Bomb-Door is closed");
+	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) set_status_text("玩家不在载具中！");
+	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0) && GAMEPLAY::GET_HASH_KEY("CUBAN800") == currVehModel && bombDoorOpen == false) set_status_text("炸弹舱门, 已关闭！");
 		
 	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0) && GAMEPLAY::GET_HASH_KEY("CUBAN800") == currVehModel && bombDoorOpen == true) {
 		veh_b = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
@@ -161,13 +161,13 @@ bool onconfirm_veh_weapons_menu(MenuItem<int> choice){
 	}
 		
 	if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
-		set_status_text("Player isn't in a vehicle");
+		set_status_text("玩家不在载具中！");
 		return true;
 	}
 
 	if (choice.value == -1) {
 		if (bombDoorOpen == true) start_bombing_run();
-		else set_status_text("Bomb door closed");
+		else set_status_text("炸弹舱门, 已关闭！");
 	}
 	else if (choice.value == -2) {
 		toggle_bomb_bay_doors();
@@ -182,28 +182,28 @@ bool process_veh_weapons_menu()
 	int i = 0;
 
 	item = new MenuItem<int>();
-	item->caption = "Drop Bomb";
+	item->caption = "投掷炸弹";
 	item->value = -1;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Open/Close Bomb Bay";
+	item->caption = "打开/关闭 炸弹舱门";
 	item->value = -2;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Enable Bomb-Door Camera";
+	toggleItem->caption = "启用 炸弹舱门视角";
 	toggleItem->toggleValue = &featureBombDoorCamera;
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Auto-Level In Air";
+	toggleItem->caption = "空中自动平衡";
 	toggleItem->toggleValue = &featureAutoalignInAir;
 	menuItems.push_back(toggleItem);
 
-	return draw_generic_menu<int>(menuItems, 0, "Plane Bomb Options", onconfirm_veh_weapons_menu, NULL, NULL, vehicle_menu_interrupt);
+	return draw_generic_menu<int>(menuItems, 0, "飞机炸弹选项", onconfirm_veh_weapons_menu, NULL, NULL, vehicle_menu_interrupt);
 }
 
 void reset_veh_weapons_globals()
@@ -219,7 +219,7 @@ void update_veh_weapons_features()
 	if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0) && GAMEPLAY::GET_HASH_KEY("CUBAN800") == ENTITY::GET_ENTITY_MODEL(veh_b)) {
 		update_bombs();
 
-		// auto level in the air
+		// 空中自动平衡
 		if (featureAutoalignInAir) {
 			Vector3 veh_coords = ENTITY::GET_ENTITY_COORDS(veh_b, true);
 			Vector3 ground_rot = ENTITY::GET_ENTITY_ROTATION(veh_b, 2);
