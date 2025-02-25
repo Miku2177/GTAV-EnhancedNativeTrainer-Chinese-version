@@ -2297,7 +2297,7 @@ bool onconfirm_localization_menu(MenuItem<int> choice) {
 // 汉化说明子菜单
 void process_localization_menu() {
 	// 菜单项数量（不包含标题选项）
-	const int lineCount = 7;
+	const int lineCount = 8;
 	const std::string caption = "汉化说明选项"; // 菜单标题
 
 	// 定义菜单项
@@ -2308,7 +2308,8 @@ void process_localization_menu() {
 		{ "感谢：烈火神君", NULL, NULL, true},             // 感谢烈火神君
 		{ "感谢：羽一大魔王", NULL, NULL, true},          // 感谢羽一大魔王
 		{ "感谢：开发和维护者们", NULL, NULL, true},      // 感谢开发和维护者们
-		{ "禁止线上使用, 使用前, 请先关闭 BE ", NULL, NULL, true}, // 禁止线上使用，必须关闭 BE
+		{ "汉化不易，转载须注明！", NULL, NULL, true}, // 汉化不易，转载须注明！
+		{ "使用前，请先关闭 BE！", NULL, NULL, true}, // 使用前，请先关闭 BE！
 	};
 
 	// 绘制菜单
