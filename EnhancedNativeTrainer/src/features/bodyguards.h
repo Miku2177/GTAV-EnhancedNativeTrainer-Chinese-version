@@ -1,11 +1,11 @@
 /*
-Some of this code began its life as a part of GTA V SCRIPT HOOK SDK.
+这部分代码最初是作为 GTA V SCRIPT HOOK SDK 的一部分。
 http://dev-c.com
 (C) Alexander Blade 2015
 
-It is now part of the Enhanced Native Trainer project.
+它现在是增强版原生训练器项目的一部分。
 https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
-(C) Sondai SMith and fellow contributors 2015
+(C) Sondai Smith 及其他贡献者 2015
 */
 
 #pragma once
