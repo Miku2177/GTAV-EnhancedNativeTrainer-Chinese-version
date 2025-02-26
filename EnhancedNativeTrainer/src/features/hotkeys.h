@@ -161,7 +161,7 @@ const std::vector<HOTKEY_DEF> HOTKEY_AVAILABLE_FUNCS{
 	{ "隐藏/显示 小地图", HKEY_HUD_TOGGLE },
 	{ "城市交通 (开关)", HKEY_TRAFFIC_TOGGLE },
 	{ "HK 是指字母上方的数字键", 0 },
-	{ "按住绑定的快捷键键 + HK 1-6", 0 },
+	{ "按住绑定的快捷键 + HK 1-6", 0 },
 	{ "就能使用对应的功能了", 0 },
 };
 
