@@ -1,11 +1,11 @@
 /*
-Some of this code began its life as a part of GTA V SCRIPT HOOK SDK.
+这段代码的部分最初来源于 GTA V SCRIPT HOOK SDK。
 http://dev-c.com
 (C) Alexander Blade 2015
 
-It is now part of the Enhanced Native Trainer project.
+它现在已成为 Enhanced Native Trainer 项目的一部分。
 https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
-(C) Rob Pridham and fellow contributors 2015
+(C) Rob Pridham 及其他贡献者 2015
 */
 
 #include "vehicles.h"
@@ -28,7 +28,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include <vector>
 #include <cstdlib>
 
-// Road Laws variables
+// 道路法规变量
 bool featureRoadLaws = false;
 bool featurePoliceVehicleBlip = true;
 bool featurePoliceNoFlip = true;
@@ -111,7 +111,7 @@ bool cop_close_stop = false;
 int tempfined_x = -1;
 int tempfined_y = -1;
 //
-// Wanted Fugitive variables
+// 通缉逃犯变量
 std::vector<Vehicle> VEH_CRIME;
 std::vector<int> CLOTHES_BODY_CRIME;
 bool featurePlayerMostWanted = false;
@@ -123,7 +123,7 @@ bool mostwanted_level_enable_Changed;
 Player temp = -1;
 //
 
-//////////////////////////////////////////////////////// ROAD LAWS //////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////// 道路法规 //////////////////////////////////////////////////////////
 void road_laws()
 {
 	if (featureRoadLaws && !VEHICLE::IS_THIS_MODEL_A_BICYCLE(ENTITY::GET_ENTITY_MODEL(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false))) &&
@@ -142,7 +142,7 @@ void road_laws()
 		int vehcollidedwith_distance_x = 100;
 		int vehcollidedwith_distance_y = 100;
 
-		// Stolen Vehicle 
+		// 被盗车辆
 		if (featureStolenVehicle) {
 			if (hijacked_vehicle == false) {
 				hijacking_veh = PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed);
@@ -186,7 +186,7 @@ void road_laws()
 			Vehicle veh_collided_with = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 			Vector3 veh_collided_with_coords = ENTITY::GET_ENTITY_COORDS(veh_collided_with, true);
 			
-			// Driving Against Traffic
+			// 逆向行驶
 			if (featureDrivingAgainstTraffic && PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) {
 				int temp_against_traffic = PLAYER::GET_TIME_SINCE_PLAYER_DROVE_AGAINST_TRAFFIC(PLAYER::PLAYER_ID());
 				if (temp_against_traffic == 0)
@@ -204,24 +204,24 @@ void road_laws()
 				}
 			}
 
-			// Pavement Driving
+			// 人行道行驶
 			if (featurePavementDriving && PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) && temp_pavement_driving == 0) pavementdriving_check = true;
 			else if (been_seen_by_a_cop == false) pavementdriving_check = false;
 
-			// No Helmet 
+			// 未戴头盔
 			if (featureNoHelmetOnBike && PED::IS_PED_ON_ANY_BIKE(playerPed) && !PED::IS_PED_WEARING_HELMET(playerPed) && vehroadlaws_speed > 5) hohelmet_check = true;
 			else if (been_seen_by_a_cop == false) hohelmet_check = false;
 
-			// Using A Mobile Phone
+			// 使用手机
 			if (featureUsingMobilePhone && PED::IS_PED_RUNNING_MOBILE_PHONE_TASK(playerPed) && vehroadlaws_speed > 1) mobilephone_check = true;
 			else if (been_seen_by_a_cop == false) mobilephone_check = false;
 
-			// Heavily Damaged
+			// 严重损坏
 			if (featureVehicleHeavilyDamaged && vehroadlaws_speed > 1 && (VEHICLE::GET_IS_LEFT_VEHICLE_HEADLIGHT_DAMAGED(vehroadlaws) || VEHICLE::GET_IS_RIGHT_VEHICLE_HEADLIGHT_DAMAGED(vehroadlaws)) &&
 				(VEHICLE::IS_VEHICLE_DOOR_DAMAGED(vehroadlaws, 0) || VEHICLE::IS_VEHICLE_DOOR_DAMAGED(vehroadlaws, 1) || VEHICLE::IS_VEHICLE_DOOR_DAMAGED(vehroadlaws, 2) || VEHICLE::IS_VEHICLE_DOOR_DAMAGED(vehroadlaws, 3))) vehicledamaged_check = true;
 			else if (been_seen_by_a_cop == false) vehicledamaged_check = false;
 
-			// Speeding In A City
+			// 城市超速
 			char* temp_zone_name = ZONE::GET_NAME_OF_ZONE(vehroadlaws_coords.x, vehroadlaws_coords.y, vehroadlaws_coords.z);
 			if (VEH_SPEEDINGCITY_VALUES[SpeedingCityIndex] > 0 && ((vehroadlaws_speed * 2.3) > VEH_SPEEDINGCITY_VALUES[SpeedingCityIndex]) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) {
 				if (strcmp(temp_zone_name, "PALETO") == 0 || strcmp(temp_zone_name, "PALFOR") == 0 || strcmp(temp_zone_name, "GRAPES") == 0 || strcmp(temp_zone_name, "SANDY") == 0 || strcmp(temp_zone_name, "RICHM") == 0 ||
@@ -238,7 +238,7 @@ void road_laws()
 			}
 			else if (been_seen_by_a_cop == false) speedingincity_check = false;
 
-			// Speeding On A Motorway
+			// 高速公路超速
 			if (VEH_SPEEDINGCITY_VALUES[SpeedingSpeedwayIndex] > 0 && vehroadlaws_speed * 2.3 > VEH_SPEEDINGCITY_VALUES[SpeedingSpeedwayIndex] && PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) {
 				if (strcmp(temp_zone_name, "PALHIGH") == 0 || strcmp(temp_zone_name, "TATAMO") == 0 || strcmp(temp_zone_name, "CHIL") == 0 || strcmp(temp_zone_name, "WINDF") == 0 || strcmp(temp_zone_name, "SANCHIA") == 0 ||
 					strcmp(temp_zone_name, "MTGORDO") == 0 || strcmp(temp_zone_name, "BRADP") == 0 || strcmp(temp_zone_name, "MTCHIL") == 0 || strcmp(temp_zone_name, "CMSW") == 0 || strcmp(temp_zone_name, "NCHU") == 0 ||
@@ -250,7 +250,7 @@ void road_laws()
 			}
 			else if (been_seen_by_a_cop == false) speedingonspeedway_check = false;
 
-			// Neutral territories where nobody cares about speeding
+			// 中立区域（超速无人关注）
 			char* temp_zone_name3 = ZONE::GET_NAME_OF_ZONE(vehroadlaws_coords.x, vehroadlaws_coords.y, vehroadlaws_coords.z);
 			if (been_seen_by_a_cop == false) {
 				if (strcmp(temp_zone_name3, "AIRP") == 0 || strcmp(temp_zone_name3, "ALAMO") == 0 || strcmp(temp_zone_name3, "ARMYB") == 0 || strcmp(temp_zone_name3, "BRADT") == 0 || strcmp(temp_zone_name3, "CALAFB") == 0 ||
@@ -265,7 +265,7 @@ void road_laws()
 				}
 			}
 
-			// No Lights In The Night Time
+			// 夜间未开灯
 			if (featureNoLightsNightTime && PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) {
 				int time_road_laws = TIME::GET_CLOCK_HOURS();
 				VEHICLE::GET_VEHICLE_LIGHTS_STATE(vehroadlaws, &lightsOn, &highbeamsOn);
@@ -277,7 +277,7 @@ void road_laws()
 			}
 			else if (been_seen_by_a_cop == false) nolightsnighttime_check = false;
 
-			// Escaping The Police
+			// 逃避警方追捕
 			if (featureEscapingPolice && PED::IS_PED_IN_ANY_VEHICLE(playerPed, true) && been_seen_by_a_cop == true) {
 				r_tick_secs_passed = clock() / CLOCKS_PER_SEC;
 				if (((clock() / CLOCKS_PER_SEC) - SinceEscape_secs_curr) != 0) {
@@ -291,7 +291,7 @@ void road_laws()
 				Escape_seconds = 0;
 			}
 
-			// Running Red Light
+			// 闯红灯
 			if (featureRunningRedLight) {
 				float dist_difference = -1.0;
 				float temp_distance = 20.0;
@@ -342,10 +342,10 @@ void road_laws()
 				}
 			}
 
-			// FIND ALL THE PEDS AROUND
+			// 查找周围所有行人
 			for (int i = 0; i < count_laws; i++) {
 				if (vehicles_laws[i] != playerPed) {
-					// Vehicle Collided
+					// 车辆碰撞
 					if (featureCarCollision) {
 						if (vehicles_laws[i] != playerPed) {
 							veh_collided_with = PED::GET_VEHICLE_PED_IS_IN(vehicles_laws[i], false);
@@ -373,7 +373,7 @@ void road_laws()
 						}
 					}
 
-					// CHECK IF COPS AROUND
+					// 检查周围是否有警察
 					if ((PED::GET_PED_TYPE(vehicles_laws[i]) == 6 || PED::GET_PED_TYPE(vehicles_laws[i]) == 27) && PED::IS_PED_IN_ANY_POLICE_VEHICLE(vehicles_laws[i]) && !PED::IS_PED_IN_ANY_HELI(vehicles_laws[i]) &&
 						PED::IS_PED_FACING_PED(vehicles_laws[i], playerPed, 100) && ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(vehicles_laws[i], playerPed, 17) && been_seen_by_a_cop == false &&
 						!VEHICLE::IS_VEHICLE_SEAT_FREE(PED::GET_VEHICLE_PED_IS_IN(vehicles_laws[i], 1), -1) && PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 1)
@@ -390,7 +390,7 @@ void road_laws()
 							if (tempgotcha_x < 0) tempgotcha_x = (tempgotcha_x * -1);
 							if (tempgotcha_y < 0) tempgotcha_y = (tempgotcha_y * -1);
 
-							// Gotcha
+							// 抓到你了
 							if (tempgotcha_x < VEH_DETECTIONRANGE_VALUES[DetectionRangeIndex] && tempgotcha_y < VEH_DETECTIONRANGE_VALUES[DetectionRangeIndex]) {
 								if (blip_check == false) {
 									cop_that_fines_you = vehicles_laws[i];
@@ -428,7 +428,7 @@ void road_laws()
 						}
 					}
 
-					// If cops use radio and another cop sees you - he is your pursuer now
+					// 如果警察使用无线电，且另一名警察看到你——他现在是你的追捕者
 					if (featureCopsUseRadio && been_seen_by_a_cop == true && blip_check == true && (PED::GET_PED_TYPE(vehicles_laws[i]) == 6 || PED::GET_PED_TYPE(vehicles_laws[i]) == 27) && PED::IS_PED_IN_ANY_POLICE_VEHICLE(vehicles_laws[i]) &&
 						!PED::IS_PED_IN_ANY_HELI(vehicles_laws[i]) && PED::IS_PED_FACING_PED(vehicles_laws[i], playerPed, 100) && ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(vehicles_laws[i], playerPed, 17))
 					{
@@ -491,8 +491,8 @@ void road_laws()
 						}
 					}
 				} // end of if (vehicles_laws[i] != playerPed)
-			} // end of ped loop
-		} // end of in vehicle
+			} // 行人循环结束
+		} // 车辆内逻辑结束
 
 		if (been_seen_by_a_cop == true) {
 			if (p_blinks == false) {
@@ -534,7 +534,7 @@ void road_laws()
 				cop_close_stop = true;
 			}
 
-			// i shout when i'm seen
+			// 我被发现时会喊叫
 			if (idontlikeiwasseen == true) {
 				Seen_secs_passed = clock() / CLOCKS_PER_SEC;
 				if (((clock() / CLOCKS_PER_SEC) - Seen_secs_curr) != 0) {
@@ -548,11 +548,11 @@ void road_laws()
 				}
 			}
 
-			// Escaping the police check 
+			// 逃避警方检查
 			if (Escape_seconds < 16 && vehroadlaws_speed < 11) escapingpolice_check = false;
 			if (Escape_seconds > 15 && vehroadlaws_speed > 10 && vehcoplaws_speed > 10) escapingpolice_check = true;
 
-			// Do not stuck
+			// 防止卡住
 			if ((vehcoplaws_speed < 1 && cop_walking == false && (tempgotcha_x > 99 || tempgotcha_y > 99)) || (cop_walking == true && AI::IS_PED_STILL(cop_that_fines_you))) {
 				r_tick_secs_passed = clock() / CLOCKS_PER_SEC;
 				if (((clock() / CLOCKS_PER_SEC) - Stuck_secs_curr) != 0) {
@@ -576,9 +576,9 @@ void road_laws()
 				stuck_completely = 0;
 			}
 			if (vehcoplaws_speed > 1) p_blinks = false;
-		} // end of been_seen_by_a_cop
+		} // 被警察发现的逻辑结束
 
-		// You'll be fined if you don't move
+		  // 如果不移动，你将被罚款
 		if ((vehroadlaws_speed < 1 && vehcoplaws_speed < 1 && tempgotcha_x < 100 && tempgotcha_y < 100 && been_seen_by_a_cop == true) || (been_seen_by_a_cop == true && !PED::IS_PED_IN_VEHICLE(cop_that_fines_you, fine_cop_car, true)))
 		{
 			if (p_blinks == false) {
@@ -592,7 +592,7 @@ void road_laws()
 				SinceStop_secs_curr = r_tick_secs_passed;
 			}
 
-			// You agree to be fined
+			// 你同意接受罚款
 			if (been_seen_by_a_cop == true && Stop_seconds == 5 && cop_walking == false) {
 				if (PED::IS_PED_IN_VEHICLE(playerPed, vehroadlaws, true)) {
 					int bone_mycar_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(playerPed, "BONETAG_L_FINGER0"); // IK_Head
@@ -600,12 +600,12 @@ void road_laws()
 					AI::TASK_LEAVE_VEHICLE(cop_that_fines_you, fine_cop_car, 0);
 					if ((ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) >= 135 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) <= 225) ||
 						ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) >= 315 || ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) <= 45) {
-						spot_to_stop = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerPed, -1.5, 0.7, 0.0).x; // south && north
+						spot_to_stop = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerPed, -1.5, 0.7, 0.0).x; // 南 && 北
 						AI::TASK_GO_TO_COORD_ANY_MEANS(cop_that_fines_you, spot_to_stop, temp_fine_me.y, temp_fine_me.z, 1.5, 0, 0, 786603, 0xbf800000);
 					}
 					if ((ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) >= 46 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) <= 134) ||
 						(ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) >= 226 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) <= 314)) {
-						spot_to_stop = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerPed, -1.5, 0.7, 0.0).y; // west && east
+						spot_to_stop = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerPed, -1.5, 0.7, 0.0).y; // 西 && 东
 						AI::TASK_GO_TO_COORD_ANY_MEANS(cop_that_fines_you, temp_fine_me.x, spot_to_stop, temp_fine_me.z, 1.5, 0, 0, 786603, 0xbf800000);
 					}
 					cop_walking = true;
@@ -621,12 +621,12 @@ void road_laws()
 			AI::TASK_LEAVE_VEHICLE(cop_that_fines_you, fine_cop_car, 0);
 			if ((ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) >= 135 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) <= 225) ||
 				ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) >= 315 || ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) <= 45) {
-				spot_to_stop = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerPed, -1.5, 0.7, 0.0).x; // south && north
+				spot_to_stop = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerPed, -1.5, 0.7, 0.0).x; // 南 && 北
 				AI::TASK_GO_TO_COORD_ANY_MEANS(cop_that_fines_you, spot_to_stop, temp_fine_me.y, temp_fine_me.z, 1.5, 0, 0, 786603, 0xbf800000);
 			}
 			if ((ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) >= 46 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) <= 134) ||
 				(ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) >= 226 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) <= 314)) {
-				spot_to_stop = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerPed, -1.5, 0.7, 0.0).y; // west && east
+				spot_to_stop = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerPed, -1.5, 0.7, 0.0).y; // 西 && 东
 				AI::TASK_GO_TO_COORD_ANY_MEANS(cop_that_fines_you, temp_fine_me.x, spot_to_stop, temp_fine_me.z, 1.5, 0, 0, 786603, 0xbf800000);
 			}
 		}
@@ -636,14 +636,14 @@ void road_laws()
 			cop_close_stop = false;
 		}
 
-		// Distance between you and the cop that's chasing after you
+		// 你与追捕你的警察之间的距离
 		temp_fine_cop = ENTITY::GET_ENTITY_COORDS(cop_that_fines_you, true);
 		int tempfined_x = (temp_fine_cop.x - vehroadlaws_coords.x);
 		int tempfined_y = (temp_fine_cop.y - vehroadlaws_coords.y);
 		if (tempfined_x < 0) tempfined_x = (tempfined_x * -1);
 		if (tempfined_y < 0) tempfined_y = (tempfined_y * -1);
 
-		// You won't get wanted stars if cop pursuer hits you
+		// 如果追捕你的警察撞到你，你不会获得通缉星级
 		if (been_seen_by_a_cop == true && PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 1 && ENTITY::HAS_ENTITY_COLLIDED_WITH_ANYTHING(fine_cop_car) &&
 			tempfined_x < 5 && tempfined_y < 5) {
 			PLAYER::SET_MAX_WANTED_LEVEL(0);
@@ -671,26 +671,26 @@ void road_laws()
 			}
 		}
 
-		// Cop Must Go To The Driver
+		// 警察必须走向驾驶员
 		if (been_seen_by_a_cop == true && !PED::IS_PED_IN_VEHICLE(cop_that_fines_you, fine_cop_car, true) && cop_walking == true && Still_seconds > 2 && (tempfined_x > 4 || tempfined_y > 4)) {
 			int bone_mycar_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(playerPed, "BONETAG_L_FINGER0"); // IK_Head
 			Vector3 temp_fine_me = ENTITY::GET_WORLD_POSITION_OF_ENTITY_BONE(playerPed, bone_mycar_index);
 			if ((ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) >= 135 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) <= 225) ||
 				ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) >= 315 || ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) <= 45) {
-				spot_to_stop = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerPed, -1.5, 0.7, 0.0).x; // south && north
+				spot_to_stop = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerPed, -1.5, 0.7, 0.0).x; // 南 && 北
 				if (tempfined_x > 5 || tempfined_y > 5) AI::TASK_GO_TO_COORD_ANY_MEANS(cop_that_fines_you, spot_to_stop, temp_fine_me.y, temp_fine_me.z, 1.5, 0, 0, 786603, 0xbf800000); // 5
 				if (tempfined_x < 6 && tempfined_y < 6) AI::TASK_GO_TO_COORD_ANY_MEANS(cop_that_fines_you, spot_to_stop, temp_fine_me.y, temp_fine_me.z, 1.0, 0, 0, 786603, 0xbf800000); // 6
 			}
 			if ((ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) >= 46 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) <= 134) ||
 				(ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) >= 226 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) <= 314)) {
-				spot_to_stop = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerPed, -1.5, 0.7, 0.0).y; // west && east
+				spot_to_stop = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerPed, -1.5, 0.7, 0.0).y; // 西 && 东
 				if (tempfined_x > 5 || tempfined_y > 5) AI::TASK_GO_TO_COORD_ANY_MEANS(cop_that_fines_you, temp_fine_me.x, spot_to_stop, temp_fine_me.z, 1.5, 0, 0, 786603, 0xbf800000); // 5
 				if (tempfined_x < 6 && tempfined_y < 6) AI::TASK_GO_TO_COORD_ANY_MEANS(cop_that_fines_you, temp_fine_me.x, spot_to_stop, temp_fine_me.z, 1.0, 0, 0, 786603, 0xbf800000); // 6
 			}
 			Still_seconds = 0;
 		}
 
-		// Keep On Walking
+		// 继续行走
 		if (been_seen_by_a_cop == true && cop_walking == true && Stop_seconds_final < 17) {
 			Vector3 temp_walking_cop = ENTITY::GET_ENTITY_COORDS(cop_that_fines_you, true);
 			int bone_mycar_index = ENTITY::GET_ENTITY_BONE_INDEX_BY_NAME(playerPed, "BONETAG_L_FINGER0"); // IK_Head
@@ -701,13 +701,13 @@ void road_laws()
 					(ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) >= 226 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) <= 314)) && temp_walking_cop.y != spot_to_stop))) {
 				if ((ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) >= 135 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) <= 225) ||
 					ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) >= 315 || ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) <= 45) {
-					spot_to_stop = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerPed, -1.5, 0.7, 0.0).x; // south && north
+					spot_to_stop = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerPed, -1.5, 0.7, 0.0).x; // 南 && 北
 					if (tempfined_x > 5 || tempfined_y > 5) AI::TASK_GO_TO_COORD_ANY_MEANS(cop_that_fines_you, spot_to_stop, temp_fine_me.y, temp_fine_me.z, 1.5, 0, 0, 786603, 0xbf800000); // 5 
 					if (tempfined_x < 6 && tempfined_y < 6) AI::TASK_GO_TO_COORD_ANY_MEANS(cop_that_fines_you, spot_to_stop, temp_fine_me.y, temp_fine_me.z, 1.0, 0, 0, 786603, 0xbf800000); // 6
 				}
 				if ((ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) >= 46 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) <= 134) ||
 					(ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) >= 226 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) <= 314)) {
-					spot_to_stop = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerPed, -1.5, 0.7, 0.0).y; // west && east
+					spot_to_stop = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerPed, -1.5, 0.7, 0.0).y; // 西 && 东
 					if (tempfined_x > 5 || tempfined_y > 5) AI::TASK_GO_TO_COORD_ANY_MEANS(cop_that_fines_you, temp_fine_me.x, spot_to_stop, temp_fine_me.z, 1.5, 0, 0, 786603, 0xbf800000); // 5
 					if (tempfined_x < 6 && tempfined_y < 6) AI::TASK_GO_TO_COORD_ANY_MEANS(cop_that_fines_you, temp_fine_me.x, spot_to_stop, temp_fine_me.z, 1.0, 0, 0, 786603, 0xbf800000); // 6
 				}
@@ -723,12 +723,12 @@ void road_laws()
 						(ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) >= 226 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) <= 314)) && temp_walking_cop.y != spot_to_stop)) {
 					if ((ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) >= 135 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) <= 225) ||
 						ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) >= 315 || ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) <= 45) {
-						spot_to_stop = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerPed, -1.5, 0.7, 0.0).x; // south && north
+						spot_to_stop = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerPed, -1.5, 0.7, 0.0).x; // 南 && 北
 						AI::TASK_GO_TO_COORD_ANY_MEANS(cop_that_fines_you, spot_to_stop, temp_fine_me.y, temp_fine_me.z, 1.0, 0, 0, 786603, 0xbf800000);
 					}
 					if ((ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) >= 46 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) <= 134) ||
 						(ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) >= 226 && ENTITY::_GET_ENTITY_PHYSICS_HEADING(vehroadlaws) <= 314)) {
-						spot_to_stop = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerPed, -1.5, 0.7, 0.0).y; // west && east
+						spot_to_stop = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerPed, -1.5, 0.7, 0.0).y; // 西 && 东
 						AI::TASK_GO_TO_COORD_ANY_MEANS(cop_that_fines_you, temp_fine_me.x, spot_to_stop, temp_fine_me.z, 1.0, 0, 0, 786603, 0xbf800000);
 					}
 				}
@@ -738,7 +738,7 @@ void road_laws()
 		}
 		if (!AI::IS_PED_STILL(cop_that_fines_you)) keeponwalking = false;
 
-		// Find The Other Place If Not Possible To Approach Driver
+		// 如果无法接近驾驶员，则寻找其他位置
 		if (keeponwalking == true) {
 			r_tick_secs_passed = clock() / CLOCKS_PER_SEC;
 			if (((clock() / CLOCKS_PER_SEC) - TargetBlocked_secs_curr) != 0) {
@@ -752,11 +752,11 @@ void road_laws()
 		}
 
 		if (been_seen_by_a_cop == true) {
-			Vector3 head_coords = PED::GET_PED_BONE_COORDS(playerPed, 31086, 0, 0, 0); // head bone
+			Vector3 head_coords = PED::GET_PED_BONE_COORDS(playerPed, 31086, 0, 0, 0); // 头部骨骼
 			AI::TASK_LOOK_AT_COORD(cop_that_fines_you, head_coords.x, head_coords.y, head_coords.z + 0.1, 10000, 0, 2); // p5 = 0, p6 = 2
 		}
 
-		// You're being fined
+		// 你正在被罚款
 		if (tempfined_x < 5 && tempfined_y < 5 && Stop_seconds > 4 && PED::IS_PED_IN_VEHICLE(playerPed, vehroadlaws, true) && AI::IS_PED_STILL(cop_that_fines_you) && been_seen_by_a_cop == true) {
 			PED::SET_PED_NEVER_LEAVES_GROUP(cop_that_fines_you, false);
 			PED::REMOVE_PED_FROM_GROUP(cop_that_fines_you);
@@ -766,7 +766,7 @@ void road_laws()
 				if (Stop_seconds_final < 20 && been_seen_by_a_cop == true) Stop_seconds_final = Stop_seconds_final + 1;
 				SinceStop_secs_curr_final = r_tick_secs_passed;
 			}
-			Vector3 head_coords = PED::GET_PED_BONE_COORDS(playerPed, 31086, 0, 0, 0); // head bone
+			Vector3 head_coords = PED::GET_PED_BONE_COORDS(playerPed, 31086, 0, 0, 0); // 头部骨骼
 			if (!PED::IS_PED_FACING_PED(cop_that_fines_you, playerPed, 50) && AI::IS_PED_STILL(cop_that_fines_you) && Stop_seconds_final < 17) AI::TASK_TURN_PED_TO_FACE_COORD(cop_that_fines_you, head_coords.x, head_coords.y, head_coords.z, 10000);
 			if (Stop_seconds_final == 7) AI::TASK_TURN_PED_TO_FACE_COORD(cop_that_fines_you, head_coords.x, head_coords.y, head_coords.z, 10000);
 			if (Stop_seconds_final == 8) AI::TASK_TURN_PED_TO_FACE_COORD(cop_that_fines_you, head_coords.x, head_coords.y, head_coords.z, 10000);
@@ -790,9 +790,9 @@ void road_laws()
 			}
 		}
 
-		// An escape attempt after you stopped already? Why did you stop then?!
+		// 在你已经停下后尝试逃跑？那你为什么要停下来呢？！
 		if ((been_seen_by_a_cop == true && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, false)) || (been_seen_by_a_cop == true && vehroadlaws_speed > 10 &&
-			PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && cop_walking == true && tempfined_x < 100 && tempfined_y < 100)) // are you trying to leave?!
+			PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && cop_walking == true && tempfined_x < 100 && tempfined_y < 100)) // 你是想离开吗？！
 		{
 			PLAYER::SET_MAX_WANTED_LEVEL(5);
 			if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) <= VEH_STARSPUNISH_VALUES[StarsPunishIndex]) PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), VEH_STARSPUNISH_VALUES[StarsPunishIndex], 0);
@@ -800,7 +800,7 @@ void road_laws()
 			wanted_level_on = true;
 		}
 
-		// Been fined or escaped
+		// 已被罚款或已逃脱
 		if (Stop_seconds_final > 19 || tempgotcha_x > VEH_PIRSUITRANGE_VALUES[PirsuitRangeIndexN] || tempgotcha_y > VEH_PIRSUITRANGE_VALUES[PirsuitRangeIndexN] ||
 			(PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) > 1 && !featureCopsUseRadio) || (vehroadlaws_speed > 20 && Stop_seconds > -1 && wanted_level_on == true && !featureCopsUseRadio) || stuck_completely > 6 ||
 			PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) > 0)
@@ -808,7 +808,7 @@ void road_laws()
 			if (STREAMING::DOES_ANIM_DICT_EXIST("ah_3a_ext-17") && !ENTITY::HAS_ENTITY_ANIM_FINISHED(cop_that_fines_you, "ah_3a_ext-17", "player_zero_dual-17", 3))
 				AI::STOP_ANIM_TASK(cop_that_fines_you, "ah_3a_ext-17", "player_zero_dual-17", 1.0);
 
-			// Thank you for your contribution, sir
+			// 先生，感谢您的贡献
 			if (Stop_seconds_final > 19) {
 				int outValue_beingfined = -1;
 				int statHash_beingfined = -1;
@@ -847,18 +847,18 @@ void road_laws()
 					}
 				}
 
-				if (againsttraffic_check == true) set_status_text("FINED FOR DRIVING AGAINST TRAFFIC");
-				if (pavementdriving_check == true) set_status_text("FINED FOR DRIVING ON THE PAVEMENT");
-				if (vehicledamaged_check == true) set_status_text("FINED FOR USING A DAMAGED VEHICLE");
-				if (hohelmet_check == true) set_status_text("FINED FOR NOT WEARING A HELMET WHILE DRIVING");
-				if (mobilephone_check == true) set_status_text("FINED FOR USING A MOBILE PHONE WHILE DRIVING");
-				if (vehiclecollision_check == true) set_status_text("FINED FOR A VEHICLE ACCIDENT");
-				if (speedingincity_check == true) set_status_text("FINED FOR SPEEDING IN THE CITY");
-				if (speedingonspeedway_check == true) set_status_text("FINED FOR SPEEDING ON A FREEWAY");
-				if (runningredlight_check == true) set_status_text("FINED FOR RUNNING A REDLIGHT");
-				if (stolenvehicle_check == true) set_status_text("FINED FOR USING A STOLEN VEHICLE");
-				if (nolightsnighttime_check == true) set_status_text("FINED FOR DRIVING WITHOUT HEADLIGHTS");
-				if (escapingpolice_check == true) set_status_text("FINED FOR EVADING THE POLICE");
+				if (againsttraffic_check == true) set_status_text("您因逆向行驶被罚款了！");
+				if (pavementdriving_check == true) set_status_text("您因在人行道上行驶被罚款了！");
+				if (vehicledamaged_check == true) set_status_text("您因驾驶损坏的车辆被罚款了！");
+				if (hohelmet_check == true) set_status_text("您因驾驶时不戴头盔被罚款了！");
+				if (mobilephone_check == true) set_status_text("您因驾驶时使用手机被罚款了！");
+				if (vehiclecollision_check == true) set_status_text("您因发生车辆碰撞事故被罚款了！");
+				if (speedingincity_check == true) set_status_text("您因在市区超速被罚款了！");
+				if (speedingonspeedway_check == true) set_status_text("您因在高速公路超速被罚款了！");
+				if (runningredlight_check == true) set_status_text("您因闯红灯被罚款了！");
+				if (stolenvehicle_check == true) set_status_text("您因驾驶被盗窃的车辆被罚款了！");
+				if (nolightsnighttime_check == true) set_status_text("您因夜间未开启车灯行驶被罚款了！");
+				if (escapingpolice_check == true) set_status_text("您因逃避警察追捕被罚款了！");
 			}
 
 			againsttraffic_check = false;
@@ -901,7 +901,7 @@ void road_laws()
 			no_agressive = false;
 			enough_running = false;
 			PLAYER::SET_MAX_WANTED_LEVEL(5);
-		} // end of been fined or escaped
+		} // 被罚款或逃脱逻辑结束
 
 		if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 1) wanted_level_on = false;
 
@@ -936,7 +936,7 @@ void road_laws()
 
 		if (being_arrested == true) {
 			AI::TASK_ARREST_PED(cop_that_fines_you, PLAYER::PLAYER_PED_ID());
-			set_status_text("You're being arrested because you have no money to pay the fine");
+			set_status_text("您因为没钱支付罚款而被逮捕了！");
 			being_arrested = false;
 		}
 
@@ -962,7 +962,7 @@ void road_laws()
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-////////////////////////////////////////////////// WANTED FUGITIVE ////////////////////////////////////////////////////
+////////////////////////////////////////////////// // 通缉逃犯 ////////////////////////////////////////////////////
 void most_wanted() 
 {
 	if (featurePlayerMostWanted) {
@@ -970,7 +970,7 @@ void most_wanted()
 		Vehicle Crime_veh = PED::GET_VEHICLE_PED_IS_IN(Bad_ass, true);
 		Vector3 my_position = ENTITY::GET_ENTITY_COORDS(Bad_ass, true);
 		bool added_already = false;
-		// wanted level
+		// 通缉等级
 		if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) >= VEH_STARSPUNISH_VALUES[mostwanted_level_enable]) {
 			temp = PLAYER::PLAYER_PED_ID();
 			if (PED::IS_PED_IN_ANY_VEHICLE(Bad_ass, 1) && !PED::IS_PED_ON_ANY_BIKE(Bad_ass)) {
@@ -992,7 +992,7 @@ void most_wanted()
 				if (CLOTHES_BODY_CRIME.empty()) CLOTHES_BODY_CRIME.push_back(PED::GET_PED_DRAWABLE_VARIATION(Bad_ass, 3));
 			}
 		}
-		// no wanted level
+		// 无通缉等级
 		if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < VEH_STARSPUNISH_VALUES[mostwanted_level_enable] && (!VEH_CRIME.empty() || !CLOTHES_BODY_CRIME.empty())) {
 			const int arrSize36 = 1024;
 			Ped cops_nearby[arrSize36];
@@ -1027,17 +1027,18 @@ void most_wanted()
 			
 			if (featurePlayerNoSwitch && PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < VEH_STARSPUNISH_VALUES[mostwanted_level_enable] && added_already == true) CONTROLS::DISABLE_CONTROL_ACTION(2, 19, true);
 			if (added_already == true && !CUTSCENE::IS_CUTSCENE_PLAYING()) {
-				UI::SET_TEXT_FONT(4);
-				UI::SET_TEXT_SCALE(0.0, 0.45);
-				UI::SET_TEXT_PROPORTIONAL(1);
-				UI::SET_TEXT_COLOUR(255, 255, 255, 255);
-				UI::SET_TEXT_EDGE(3, 0, 0, 0, 255);
-				UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 255);
-				UI::SET_TEXT_OUTLINE();
-				UI::_SET_TEXT_ENTRY("STRING");
-				UI::_ADD_TEXT_COMPONENT_SCALEFORM("WANTED");
-				UI::_DRAW_TEXT(0.008, 0.70);
-				GRAPHICS::DRAW_RECT(0.0, 0.714, 0.1, 0.05, 0, 0, 0, 255);
+				UI::SET_TEXT_FONT(4); // 设置文本字体为 4
+				UI::SET_TEXT_SCALE(0.0, 0.45); // 设置文本缩放比例为 0.0（宽度）和 0.45（高度）
+				UI::SET_TEXT_PROPORTIONAL(1); // 启用文本比例调整，确保文本显示比例正常
+				UI::SET_TEXT_COLOUR(255, 255, 255, 255); // 设置文本颜色为纯白色（RGB: 255, 255, 255)，不透明度为255（完全不透明）
+				UI::SET_TEXT_EDGE(3, 0, 0, 0, 255); // 设置文本边缘样式为类型3，颜色为黑色（RGB: 0, 0, 0)，不透明度为255
+				UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 255); // 设置文本阴影效果，偏移量为10，颜色为黑色（RGB: 10, 10, 10)，不透明度为255
+				UI::SET_TEXT_OUTLINE(); // 启用文本描边效果
+				UI::_SET_TEXT_ENTRY("STRING"); // 设置文本条目类型为字符串
+				UI::_ADD_TEXT_COMPONENT_SCALEFORM("被通缉中"); // 添加文本内容为 “被通缉中”
+				UI::_DRAW_TEXT(0.028, 0.658); // 在屏幕坐标 默认为（0.008, 0.70）处绘制文本
+				GRAPHICS::DRAW_RECT(0.0, 0.672, 0.19, 0.05, 0, 0, 0, 150); 
+				// 在屏幕坐标 默认为（0.0, 0.714）处绘制一个矩形，宽度为0.1，高度为0.05，颜色为黑色（RGB: 0, 0, 0），不透明度为255
 			}
 		}
 
