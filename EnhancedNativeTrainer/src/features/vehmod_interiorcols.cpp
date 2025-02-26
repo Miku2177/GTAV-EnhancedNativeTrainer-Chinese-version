@@ -116,7 +116,7 @@ const std::vector<PaintColor> PAINTS_ALL{
 	{159, "拉丝金色"},
 	{160, "抛光金色"},
 	{15, "工业黑色"},
-	{16, "工业黑聚色"},
+	{16, "工业黑聚酯"},
 	{17, "工业深银色"},
 	{18, "工业银色"},
 	{19, "工业枪金属色"},
@@ -163,7 +163,7 @@ const std::vector<PaintColor> PAINTS_ALL{
 	{130, "磨损淡橙色"},
 	{132, "磨损白色"},
 	{133, "磨损橄榄军绿色"},
-	{120, "镀铬色"}
+	{120, "铬合金"}
 };
 
 void apply_dash_colors(int colorIndex){
