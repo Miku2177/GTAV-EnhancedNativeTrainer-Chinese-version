@@ -1,11 +1,11 @@
 /*
-Some of this code began its life as a part of GTA V SCRIPT HOOK SDK.
+这段代码的部分最初来源于 GTA V SCRIPT HOOK SDK。
 http://dev-c.com
 (C) Alexander Blade 2015
 
-It is now part of the Enhanced Native Trainer project.
+它现在已成为 Enhanced Native Trainer 项目的一部分。
 https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
-(C) Rob Pridham and fellow contributors 2015
+(C) Rob Pridham 及其他贡献者 2015
 */
 
 #include "vehicles.h"
@@ -17,7 +17,7 @@ int whichpart = 0;
 int whichtype = 0;
 PaintIndexItem<int> *parentIndexItem = NULL;
 
-// save/load veh colours
+// 保存/加载车辆颜色
 int activeSavedVehColourIndex = -1;
 std::string activeSavedVehColourSlotName;
 int lastKnownSavedVehColourCount = 0;
@@ -26,191 +26,191 @@ bool vehcolourSaveSlotMenuInterrupt = false;
 bool requireRefreshOfVehColourSaveSlots = false;
 bool requireRefreshOfVehColourSlotMenu = false;
 
-//Parts
-const std::vector<std::string> MENU_PAINT_WHAT{ "Primary", "Secondary", "Primary & Secondary", "Pearlescent", "Wheels", "Interior", "Dash" };
+// 零件
+const std::vector<std::string> MENU_PAINT_WHAT{ "主色调", "副色调", "主色调/副色调", "珠光色", "轮毂颜色", "内饰颜色", "仪表盘颜色" };
 
-//Paint Names
-const std::vector<std::string> MENU_PAINT_TYPE{ "Classic", "Metallic", "Matte", "Metals", "Util", "Worn", "Chrome" };
-const std::string MENU_PAINT_INDEX_TYPE( "Index" );
-const std::string MENU_CUSTOM_PAINT_TYPE( "Custom" );
+// 油漆名称
+const std::vector<std::string> MENU_PAINT_TYPE{ "经典", "金属", "哑光", "金属质感", "工业", "磨损", "铬合金" };
+const std::string MENU_PAINT_INDEX_TYPE( "颜色索引" );
+const std::string MENU_CUSTOM_PAINT_TYPE( "自定义颜色" );
 
 const std::vector<PaintColor> PAINTS_CLASSIC{
-	{0, "Black"},
-	{1, "Graphite"},
-	{2, "Black Steel"},
-	{3, "Dark Steel"},
-	{4, "Silver"},
-	{5, "Bluish Silver"},
-	{6, "Rolled Steel"},
-	{7, "Shadow Silver"},
-	{8, "Stone Silver"},
-	{9, "Midnight Silver"},
-	{10, "Cast Iron Silver"},
-	{11, "Anthracite Black"},
-	{27, "Red"},
-	{28, "Torino Red"},
-	{29, "Formula Red"},
-	{30, "Blaze Red"},
-	{31, "Grace Red"},
-	{32, "Garnet Red"},
-	{33, "Sunset Red"},
-	{34, "Cabernet Red"},
-	{35, "Candy Red"},
-	{36, "Sunrise Orange"},
-	{37, "Gold"},
-	{38, "Orange"},
-	{49, "Dark Green"},
-	{50, "Racing Green"},
-	{51, "Sea Green"},
-	{52, "Olive Green"},
-	{53, "Bright Green"},
-	{54, "Gasoline Green"},
-	{61, "Galaxy Blue"},
-	{62, "Dark Blue"},
-	{63, "Saxon Blue"},
-	{64, "Blue"},
-	{65, "Mariner Blue"},
-	{66, "Harbor Blue"},
-	{67, "Diamond Blue"},
-	{68, "Surf Blue"},
-	{69, "Nautical Blue"},
-	{70, "Ultra Blue"},
-	{71, "Schafter Purple"},
-	{72, "Spinnaker Purple"},
-	{73, "Racing Blue"},
-	{74, "Light Blue"},
-	{88, "Yellow"},
-	{89, "Race Yellow"},
-	{90, "Bronze"},
-	{91, "Dew Yellow"},
-	{92, "Lime Green"},
-	{93, "Champagne"},
-	{94, "Feltzer Brown"},
-	{95, "Creek Brown"},
-	{96, "Chocolate Brown"},
-	{97, "Maple Brown"},
-	{98, "Saddle Brown"},
-	{99, "Straw Brown"},
-	{100, "Moss Brown"},
-	{101, "Bison Brown"},
-	{102, "Woodbeech Brown"},
-	{103, "Beechwood Brown"},
-	{104, "Sienna Brown"},
-	{105, "Sandy Brown"},
-	{106, "Bleached Brown"},
-	{107, "Cream"},
-	{111, "Ice White"},
-	{112, "Frost White"},
-	{125, "Securicor Green"},
-	{127, "Police Car Blue"},
-	{134, "Pure White"},
-	{135, "Hot Pink"},
-	{136, "Salmon Pink"},
-	{137, "Pfister Pink"},
-	{138, "Bright Orange"},
-	{139, "Green"},
-	{140, "Fluorescent Blue"},
-	{141, "Midnight Blue"},
-	{142, "Black Purple"},
-	{143, "Wine Red"},
-	{144, "Hunter Green"},
-	{145, "Bright Purple"},
-	{146, "Midnight Purple"},
-	{147, "Carbon Black"},
-	{150, "Lava Red"},
-	{156, "Alloy"},
-	{157, "Epsilon Blue"}
+	{0, "黑色"},
+	{1, "石墨色"},
+	{2, "黑钢色"},
+	{3, "暗钢色"},
+	{4, "银色"},
+	{5, "蓝银色"},
+	{6, "轧钢色"},
+	{7, "暗影银色"},
+	{8, "石银色"},
+	{9, "午夜银色"},
+	{10, "铸铁银色"},
+	{11, "炭黑灰色"},
+	{27, "红色"},
+	{28, "都灵红色"},
+	{29, "方程式红色"},
+	{30, "烈焰红色"},
+	{31, "优雅红色"},
+	{32, "石榴红色"},
+	{33, "日落红色"},
+	{34, "赤霞红色"},
+	{35, "糖果红色"},
+	{36, "日出橙色"},
+	{37, "金色"},
+	{38, "橙色"},
+	{49, "深绿色"},
+	{50, "赛车绿色"},
+	{51, "海绿色"},
+	{52, "橄榄绿色"},
+	{53, "亮绿色"},
+	{54, "汽油绿色"},
+	{61, "银河蓝色"},
+	{62, "深蓝色"},
+	{63, "撒克逊蓝色"},
+	{64, "蓝色"},
+	{65, "水手蓝色"},
+	{66, "港口蓝色"},
+	{67, "钻石蓝色"},
+	{68, "浪花蓝色"},
+	{69, "航海蓝色"},
+	{70, "超炫蓝色"},
+	{71, "莎夫特紫色"},
+	{72, "帆船紫色"},
+	{73, "赛车蓝色"},
+	{74, "浅蓝色"},
+	{88, "黄色"},
+	{89, "竞速黄色"},
+	{90, "青铜色"},
+	{91, "露珠黄色"},
+	{92, "柠檬绿色"},
+	{93, "香槟色"},
+	{94, "费尔泽棕色"},
+	{95, "溪棕色"},
+	{96, "巧克力棕色"},
+	{97, "枫棕色"},
+	{98, "鞍棕色"},
+	{99, "稻草棕色"},
+	{100, "苔藓棕色"},
+	{101, "野牛棕色"},
+	{102, "山毛榉木棕色"},
+	{103, "榉木棕色"},
+	{104, "赭石棕色"},
+	{105, "沙棕色"},
+	{106, "漂白棕色"},
+	{107, "奶油色"},
+	{111, "冰白色"},
+	{112, "霜白色"},
+	{125, "保安绿色"},
+	{127, "警车蓝色"},
+	{134, "纯白色"},
+	{135, "热粉色"},
+	{136, "鲑鱼粉色"},
+	{137, "菲斯特粉色"},
+	{138, "亮橙色"},
+	{139, "绿色"},
+	{140, "荧光蓝色"},
+	{141, "午夜蓝色"},
+	{142, "黑紫色"},
+	{143, "酒红色"},
+	{144, "猎人绿色"},
+	{145, "亮紫色"},
+	{146, "午夜紫色"},
+	{147, "碳黑色"},
+	{150, "熔岩红色"},
+	{156, "合金色"},
+	{157, "伊普西隆蓝色"},
 };
 
 const std::vector<PaintColor> PAINTS_MATTE{
-	{12, "Matte Black"},
-	{13, "Matte Gray"},
-	{14, "Matte Light Gray"},
-	{39, "Matte Red"},
-	{40, "Matte Dark Red"},
-	{41, "Matte Orange"},
-	{42, "Matte Yellow"},
-	{55, "Matte Lime Green"},
-	{82, "Matte Dark Blue"},
-	{83, "Matte Blue"},
-	{84, "Matte Midnight Blue"},
-	{128, "Matte Green"},
-	{129, "Matte Brown"},
-	{131, "Matte Ice White"},
-	{148, "Matte Schafter Purple"},
-	{149, "Matte Midnight Purple"},
-	{151, "Matte Forest Green"},
-	{152, "Matte Olive Drab"},
-	{153, "Matte Dark Earth"},
-	{154, "Matte Desert Tan"},
-	{155, "Matte Foliage Green"}
+	{12, "哑光黑色"},
+	{13, "哑光灰色"},
+	{14, "哑光浅灰色"},
+	{39, "哑光红色"},
+	{40, "哑光深红色"},
+	{41, "哑光橙色"},
+	{42, "哑光黄色"},
+	{55, "哑光柠檬绿色"},
+	{82, "哑光深蓝色"},
+	{83, "哑光蓝色"},
+	{84, "哑光午夜蓝色"},
+	{128, "哑光绿色"},
+	{129, "哑光棕色"},
+	{131, "哑光冰白色"},
+	{148, "哑光莎夫特紫色"},
+	{149, "哑光午夜紫色"},
+	{151, "哑光森林绿色"},
+	{152, "哑光橄榄绿色"},
+	{153, "哑光暗土色"},
+	{154, "哑光沙漠棕色"},
+	{155, "哑光叶绿色"},
 };
 
 const std::vector<PaintColor> PAINTS_METALS{
-	{117, "Brushed Steel"},
-	{118, "Brushed Black Steel"},
-	{119, "Brushed Aluminium"},
-	{158, "Pure Gold"},
-	{159, "Brushed Gold"},
-	{160, "Polished Gold"}
+	{117, "拉丝钢色"},
+	{118, "拉丝黑钢色"},
+	{119, "拉丝铝色"},
+	{158, "纯金色"},
+	{159, "拉丝金色"},
+	{160, "抛光金色"},
 };
 
 const std::vector<PaintColor> PAINTS_UTIL{
-	{15, "Util Black"},
-	{16, "Util Black Poly"},
-	{17, "Util Dark Silver"},
-	{18, "Util Silver"},
-	{19, "Util Gun Metal"},
-	{20, "Util Shadow Silver"},
-	{43, "Util Red"},
-	{44, "Util Bright Red"},
-	{45, "Util Garnet Red"},
-	{56, "Util Dark Green"},
-	{57, "Util Green"},
-	{75, "Util Dark Blue"},
-	{76, "Util Midnight Blue"},
-	{77, "Util Blue"},
-	{78, "Util Sea Foam Blue"},
-	{79, "Util Lightning Blue"},
-	{80, "Util Maui Blue Poly"},
-	{81, "Util Bright Blue"},
-	{108, "Util Brown"},
-	{109, "Util Medium Brown"},
-	{110, "Util Light Brown"},
-	{122, "Util Off-White"}
+	{15, "工业黑色"},
+	{16, "工业黑聚酯"},
+	{17, "工业深银色"},
+	{18, "工业银色"},
+	{19, "工业枪金属色"},
+	{20, "工业暗影银色"},
+	{43, "工业红色"},
+	{44, "工业亮红色"},
+	{45, "工业石榴红色"},
+	{56, "工业深绿色"},
+	{57, "工业绿色"},
+	{75, "工业深蓝色"},
+	{76, "工业午夜蓝色"},
+	{77, "工业蓝色"},
+	{78, "工业海沫蓝色"},
+	{79, "工业闪电蓝色"},
+	{80, "工业毛伊蓝色"},
+	{81, "工业亮蓝色"},
+	{108, "工业棕色"},
+	{109, "工业中棕色"},
+	{110, "工业浅棕色"},
+	{122, "工业米白色"},
 };
 
 const std::vector<PaintColor> PAINTS_WORN{
-	{21, "Worn Black"},
-	{22, "Worn Graphite"},
-	{23, "Worn Silver Gray"},
-	{24, "Worn Silver"},
-	{25, "Worn Blue Silver"},
-	{26, "Worn Shadow Silver"},
-	{46, "Worn Red"},
-	{47, "Worn Golden Red"},
-	{48, "Worn Dark Red"},
-	{58, "Worn Dark Green"},
-	{59, "Worn Green"},
-	{60, "Worn Sea Wash"},
-	{85, "Worn Dark Blue"},
-	{86, "Worn Blue"},
-	{87, "Worn Light Blue"},
-	{113, "Worn Honey Beige"},
-	{114, "Worn Brown"},
-	{115, "Worn Dark Brown"},
-	{116, "Worn Straw Beige"},
-	{121, "Worn Off-White"},
-	{123, "Worn Orange"},
-	{124, "Worn Light Orange"},
-	{126, "Worn Taxi Yellow"},
-	{130, "Worn Pale Orange"},
-	{132, "Worn White"},
-	{133, "Worn Olive Army Green"}
+	{21, "磨损黑色"},
+	{22, "磨损石墨色"},
+	{23, "磨损银灰色"},
+	{24, "磨损银色"},
+	{25, "磨损蓝银色"},
+	{26, "磨损暗影银色"},
+	{46, "磨损红色"},
+	{47, "磨损金红色"},
+	{48, "磨损深红色"},
+	{58, "磨损深绿色"},
+	{59, "磨损绿色"},
+	{60, "磨损海浪色"},
+	{85, "磨损深蓝色"},
+	{86, "磨损蓝色"},
+	{87, "磨损浅蓝色"},
+	{113, "磨损蜜棕色"},
+	{114, "磨损棕色"},
+	{115, "磨损深棕色"},
+	{116, "磨损稻草棕色"},
+	{121, "磨损米白色"},
+	{123, "磨损橙色"},
+	{124, "磨损浅橙色"},
+	{126, "磨损士黄色"},
+	{130, "磨损淡橙色"},
+	{132, "磨损白色"},
+	{133, "磨损橄榄军绿色"},
 };
 
 const std::vector<PaintColor> PAINTS_CHROME{
-	{120, "Chrome"}
+	{120, "铬合金"}
 };
 
 const std::vector<PaintColor> PAINTS_BY_TYPE[7]{
@@ -228,7 +228,7 @@ bool onconfirm_paintdirt(MenuItem<float> choice){
 }
 
 void onhighlight_paintdirt(MenuItem<float> choice){
-	// common variables
+	// 公共变量
 	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
 
 	if(!bPlayerExists){
@@ -238,7 +238,7 @@ void onhighlight_paintdirt(MenuItem<float> choice){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if(!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
-		set_status_text("Player isn't in a vehicle");
+		set_status_text("玩家不在车辆中！");
 		return;
 	}
 
@@ -251,7 +251,7 @@ bool onconfirm_paintfade(MenuItem<float> choice){
 }
 
 void onhighlight_paintfade(MenuItem<float> choice){
-	// common variables
+	// 公共变量
 	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
 
 	if(!bPlayerExists){
@@ -261,7 +261,7 @@ void onhighlight_paintfade(MenuItem<float> choice){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if(!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
-		set_status_text("Player isn't in a vehicle");
+		set_status_text("玩家不在车辆中！");
 		return;
 	}
 
@@ -273,16 +273,16 @@ bool process_paint_menu_fades(){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if(!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
-		set_status_text("Player isn't in a vehicle");
+		set_status_text("玩家不在车辆中！");
 		return false;
 	}
 
-	set_status_text("Paint fade is only applicable to certain vehicles");
+	set_status_text("漆面褪色效果，仅适用于特定类型的车辆！");
 
 	std::vector<MenuItem<float>*> menuItems;
 
 	MenuItem<float> *item = new MenuItem<float>();
-	item->caption = "Fresh Paint";
+	item->caption = "全新漆面";
 	item->value = 0.0f;
 	item->isLeaf = true;
 	menuItems.push_back(item);
@@ -290,7 +290,7 @@ bool process_paint_menu_fades(){
 	for(int i = 20; i < 100; i += 20){
 		MenuItem<float> *item = new MenuItem<float>();
 		std::ostringstream ss;
-		ss << i << "% Faded";
+		ss << i << "% 褪色";
 		item->caption = ss.str();
 		item->value = (float) i / 100;
 		item->isLeaf = true;
@@ -298,26 +298,26 @@ bool process_paint_menu_fades(){
 	}
 
 	item = new MenuItem<float>();
-	item->caption = "Fully Faded";
+	item->caption = "完全褪色";
 	item->value = 1.0f;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
-	return draw_generic_menu<float>(menuItems, 0, "Paint Fade", onconfirm_paintfade, onhighlight_paintfade, NULL, vehicle_menu_interrupt);
+	return draw_generic_menu<float>(menuItems, 0, "漆面褪色", onconfirm_paintfade, onhighlight_paintfade, NULL, vehicle_menu_interrupt);
 }
 
 bool process_paint_menu_dirt(){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if(!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
-		set_status_text("Player isn't in a vehicle");
+		set_status_text("玩家不在车辆中！");
 		return false;
 	}
 
 	std::vector<MenuItem<float>*> menuItems;
 
 	MenuItem<float> *item = new MenuItem<float>();
-	item->caption = "Clean";
+	item->caption = "清洁车辆";
 	item->value = 0.0f;
 	item->isLeaf = true;
 	menuItems.push_back(item);
@@ -325,7 +325,7 @@ bool process_paint_menu_dirt(){
 	for(int i = 20; i < 100; i += 20){
 		MenuItem<float> *item = new MenuItem<float>();
 		std::ostringstream ss;
-		ss << i << "% Dirty";
+		ss << i << "% 肮脏";
 		item->caption = ss.str();
 		item->value = ((float) i / 100) * 15.0f;
 		item->isLeaf = true;
@@ -333,16 +333,16 @@ bool process_paint_menu_dirt(){
 	}
 
 	item = new MenuItem<float>();
-	item->caption = "Fully Dirty";
+	item->caption = "完全肮脏";
 	item->value = 14.89999f;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
-	return draw_generic_menu<float>(menuItems, 0, "Dirt Level", onconfirm_paintdirt, onhighlight_paintdirt, NULL, vehicle_menu_interrupt);
+	return draw_generic_menu<float>(menuItems, 0, "污垢等级", onconfirm_paintdirt, onhighlight_paintdirt, NULL, vehicle_menu_interrupt);
 }
 
 void onhighlight_livery(MenuItem<int> choice){
-	// common variables
+	// 公共变量
 	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
 
 	if(!bPlayerExists){
@@ -352,7 +352,7 @@ void onhighlight_livery(MenuItem<int> choice){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if(!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
-		set_status_text("Player isn't in a vehicle");
+		set_status_text("玩家不在车辆中！");
 		return;
 	}
 
@@ -367,7 +367,7 @@ bool onconfirm_livery(MenuItem<int> choice){
 }
 
 bool process_paint_menu_liveries(){
-	// common variables
+	// 公共变量
 	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
 
 	if(!bPlayerExists){
@@ -377,7 +377,7 @@ bool process_paint_menu_liveries(){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if(!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
-		set_status_text("Player isn't in a vehicle");
+		set_status_text("玩家不在车辆中！");
 		return false;
 	}
 
@@ -393,14 +393,14 @@ bool process_paint_menu_liveries(){
 
 	std::vector<MenuItem<int>*> menuItems;
 
-	for(int i = 0; i < count; i++) //livcount
+	for(int i = 0; i < count; i++) // 存活计数
 	{
 		std::string modItemNameStr;
 
 		char* modItemNameChr = VEHICLE::GET_LIVERY_NAME(veh, i);
 		if(modItemNameChr == NULL){
 			std::ostringstream ss;
-			ss << "Livery #" << (i + 1);
+			ss << "编号 #" << (i + 1);
 			modItemNameStr = ss.str();
 		}
 		else{
@@ -410,7 +410,7 @@ bool process_paint_menu_liveries(){
 			}
 			else{
 				std::ostringstream ss;
-				ss << "Livery #" << (i + 1);
+				ss << "编号 #" << (i + 1);
 				modItemNameStr = ss.str();
 			}
 		}
@@ -424,10 +424,10 @@ bool process_paint_menu_liveries(){
 
 	int currentSelection = VEHICLE::GET_VEHICLE_LIVERY(veh);
 	//int currentSelection = VEHICLE::GET_VEHICLE_MOD(veh, 48);
-	return draw_generic_menu<int>(menuItems, &currentSelection, "Liveries", onconfirm_livery, onhighlight_livery, NULL, vehicle_menu_interrupt);
+	return draw_generic_menu<int>(menuItems, &currentSelection, "涂装", onconfirm_livery, onhighlight_livery, NULL, vehicle_menu_interrupt);
 }
 
-// save/load veh colours
+// 保存/加载车辆颜色
 bool veh_colour_menu_interrupt() {
 	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) return true;
 	
@@ -483,13 +483,13 @@ void save_current_veh_colour(int slot)
 	}
 	else
 	{
-		ss << "Saved Colour " << (lastKnownSavedVehColourCount + 1);
+		ss << "新建颜色存档 " << (lastKnownSavedVehColourCount + 1);
 	}
 
 	keyboard_on_screen_already = true;
-	curr_message = "Enter vehicle colours save name:"; // save vehicle colours
+	curr_message = "输入保存的颜色名称"; // 保存车辆颜色
 	auto existingText = ss.str();
-	std::string result = show_keyboard("Enter Name Manually", (char*)existingText.c_str());
+	std::string result = show_keyboard("手动输入名称", (char*)existingText.c_str());
 	if (!result.empty())
 	{
 		ENTDatabase* database = get_database();
@@ -497,11 +497,11 @@ void save_current_veh_colour(int slot)
 		if (database->save_veh_colour(PLAYER::PLAYER_PED_ID(), result, slot))
 		{
 			activeSavedVehColourSlotName = result;
-			set_status_text("Saved colour");
+			set_status_text("颜色保存成功了！");
 		}
 		else
 		{
-			set_status_text("Save error");
+			set_status_text("颜色保存失败了！");
 		}
 	}
 }
@@ -510,10 +510,10 @@ bool onconfirm_veh_savedcolour_slot_menu(MenuItem<int> choice)
 {
 	switch (choice.value)
 	{
-	case 1: //spawn
+	case 1: //生成
 		spawn_saved_veh_colour(activeSavedVehColourIndex, activeSavedVehColourSlotName);
 		break;
-	case 2: //overwrite
+	case 2: //覆盖
 	{
 		save_current_veh_colour(activeSavedVehColourIndex);
 		requireRefreshOfVehColourSaveSlots = true;
@@ -522,11 +522,11 @@ bool onconfirm_veh_savedcolour_slot_menu(MenuItem<int> choice)
 		vehcolourSaveMenuInterrupt = true;
 	}
 	break;
-	case 3: //rename
+	case 3: //重命名
 	{
 		keyboard_on_screen_already = true;
-		curr_message = "Enter a new name:"; // rename saved vehicle colours
-		std::string result = show_keyboard("Enter Name Manually", (char*)activeSavedVehColourSlotName.c_str());
+		curr_message = "输入新的名称："; // 重命名已保存的车辆颜色
+		std::string result = show_keyboard("手动输入名称", (char*)activeSavedVehColourSlotName.c_str());
 		if (!result.empty())
 		{
 			ENTDatabase* database = get_database();
@@ -539,7 +539,7 @@ bool onconfirm_veh_savedcolour_slot_menu(MenuItem<int> choice)
 		vehcolourSaveMenuInterrupt = true;
 	}
 	break;
-	case 4: //delete
+	case 4: //删除
 	{
 		ENTDatabase* database = get_database();
 		database->delete_saved_veh_colour(activeSavedVehColourIndex);
@@ -565,25 +565,25 @@ bool process_veh_savedcolour_slot_menu(int slot)
 		MenuItem<int> *item = new MenuItem<int>();
 		item->isLeaf = true;
 		item->value = 1;
-		item->caption = "Apply";
+		item->caption = "应用";
 		menuItems.push_back(item);
 
 		item = new MenuItem<int>();
 		item->isLeaf = true;
 		item->value = 2;
-		item->caption = "Overwrite With Current";
+		item->caption = "用当前内容覆盖";
 		menuItems.push_back(item);
 
 		item = new MenuItem<int>();
 		item->isLeaf = true;
 		item->value = 3;
-		item->caption = "Rename";
+		item->caption = "重命名";
 		menuItems.push_back(item);
 
 		item = new MenuItem<int>();
 		item->isLeaf = true;
 		item->value = 4;
-		item->caption = "Delete";
+		item->caption = "删除";
 		menuItems.push_back(item);
 
 		draw_generic_menu<int>(menuItems, 0, activeSavedVehColourSlotName, onconfirm_veh_savedcolour_slot_menu, NULL, NULL, veh_colour_save_slot_menu_interrupt);
@@ -624,7 +624,7 @@ bool process_veh_savedcolour_menu()
 		MenuItem<int> *item = new MenuItem<int>();
 		item->isLeaf = true;
 		item->value = -1;
-		item->caption = "Create New Colour Set";
+		item->caption = "创建新的颜色存档";
 		menuItems.push_back(item);
 
 		for each (SavedVehColourDBRow *sv in savedVehColours)
@@ -636,7 +636,7 @@ bool process_veh_savedcolour_menu()
 			menuItems.push_back(item);
 		}
 
-		draw_generic_menu<int>(menuItems, 0, "Saved Colour Sets", onconfirm_veh_savedcolor_menu, NULL, NULL, veh_colour_menu_interrupt);
+		draw_generic_menu<int>(menuItems, 0, "保存的颜色", onconfirm_veh_savedcolor_menu, NULL, NULL, veh_colour_menu_interrupt);
 
 		for (std::vector<SavedVehColourDBRow*>::iterator it = savedVehColours.begin(); it != savedVehColours.end(); ++it)
 		{
@@ -647,7 +647,7 @@ bool process_veh_savedcolour_menu()
 
 	return false;
 }
-// end of save/load veh colours
+// 保存/加载车辆颜色逻辑结束
 
 bool onconfirm_randcolour_category_menu(MenuItem<int> choice)
 {
@@ -704,18 +704,18 @@ bool process_veh_randomcolour_menu() {
 	SelectFromListMenuItem* listItem;
 
 	item = new MenuItem<int>();
-	item->caption = "Randomize Colours";
+	item->caption = "启用随机颜色";
 	item->value = 10;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	listItem = new SelectFromListMenuItem(VEH_RAND_COLOUR_CAPTIONS, onchange_vehicles_random_colour_index);
 	listItem->wrap = false;
-	listItem->caption = "Randomize";
+	listItem->caption = "随机方式";
 	listItem->value = VehRandomColourIndex;
 	menuItems.push_back(listItem);
 
-	draw_generic_menu<int>(menuItems, NULL, "Random Colour", onconfirm_randcolour_category_menu, NULL, NULL, vehicle_menu_interrupt);
+	draw_generic_menu<int>(menuItems, NULL, " 车辆随机颜色", onconfirm_randcolour_category_menu, NULL, NULL, vehicle_menu_interrupt);
 
 	return false;
 }
@@ -745,7 +745,7 @@ bool onconfirm_paint_menu(MenuItem<int> choice){
 }
 
 bool process_paint_menu(){
-	// common variables
+	// 公共变量
 	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
 
 	if(!bPlayerExists){
@@ -755,7 +755,7 @@ bool process_paint_menu(){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if(!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
-		set_status_text("Player isn't in a vehicle");
+		set_status_text("玩家不在车辆中！");
 		return false;
 	}
 
@@ -776,20 +776,20 @@ bool process_paint_menu(){
 	}
 
 	item = new MenuItem<int>();
-	item->caption = "Dirt Level";
+	item->caption = "污垢等级";
 	item->value = index++;
 	item->isLeaf = false;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Paint Fade";
+	item->caption = "漆面褪色";
 	item->value = index++;
 	item->isLeaf = false;
 	menuItems.push_back(item);
 
 	if(livCount > 1){
 		std::ostringstream ss;
-		ss << "Liveries (" << livCount << ")";
+		ss << "涂装 (" << livCount << ")";
 		item = new MenuItem<int>();
 		item->caption = ss.str();
 		item->value = index++;
@@ -798,18 +798,18 @@ bool process_paint_menu(){
 	}
 
 	item = new MenuItem<int>();
-	item->caption = "Saved Colours";
+	item->caption = "保存的颜色";
 	item->value = 163;
 	item->isLeaf = false;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Randomize Colours";
+	item->caption = "车辆随机颜色";
 	item->value = 164;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
-	return draw_generic_menu<int>(menuItems, 0, "Choose Which Part To Paint", onconfirm_paint_menu, NULL, NULL, vehicle_menu_interrupt);
+	return draw_generic_menu<int>(menuItems, 0, "选择喷涂部位", onconfirm_paint_menu, NULL, NULL, vehicle_menu_interrupt);//22
 }
 
 bool onconfirm_paint_menu_type(MenuItem<int> choice){
@@ -982,7 +982,7 @@ bool process_paint_menu_type(){
 		menuItems.push_back(item);
 	}
 
-	rval = draw_generic_menu<int>(menuItems, NULL, "Choose Paint Type", onconfirm_paint_menu_type, NULL, NULL, vehicle_menu_interrupt);
+	rval = draw_generic_menu<int>(menuItems, NULL, "选择颜色类型", onconfirm_paint_menu_type, NULL, NULL, vehicle_menu_interrupt);//11
 	parentIndexItem = NULL;
 
 	return rval;
@@ -1064,7 +1064,7 @@ void apply_paint(PaintColor whichpaint){
 			}
 		}
 		else{
-			set_status_text("Player isn't in a vehicle");
+			set_status_text("玩家不在车辆中！");
 		}
 	}
 }
