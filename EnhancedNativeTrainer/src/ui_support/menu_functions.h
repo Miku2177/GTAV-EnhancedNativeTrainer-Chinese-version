@@ -1186,7 +1186,7 @@ bool draw_generic_menu(MenuParameters<T> params){
 			// 更改标题和菜单等，在这里！！！
 			draw_menu_header_line(sanit_header,// 菜单标题文本
 								  350.0f, // 标题的宽度
-								  55.0f, // 标题的高度
+								  50.0f, // 标题的高度
 								  15.0f, // 标题的 顶部 偏移量（Y 坐标）
 								  35.0f, // 标题的 左侧 偏移量（X 坐标）
 								  45.0f, // 标题文本的 左侧 偏移量
@@ -1202,9 +1202,9 @@ bool draw_generic_menu(MenuParameters<T> params){
 				float lineSpacingY = 8.0f; // 菜单项之间的垂直间距
 
 				float lineWidth = 350.0f; // 菜单项的宽度
-				float lineHeight = 32.0f; // 菜单项的高度
+				float lineHeight = 30.0f; // 菜单项的高度
 
-				float lineTop = 80.0 + (i * (lineHeight + lineSpacingY)); // 计算当前菜单项的顶部位置（Y 坐标）
+				float lineTop = 75.0 + (i * (lineHeight + lineSpacingY)); // 计算当前菜单项的顶部位置（Y 坐标）
 				float lineLeft = 35.0f; // 菜单项的左侧位置（X 坐标）
 				float textOffset = 10.0f; // 菜单项文本的 左侧 偏移量
 
