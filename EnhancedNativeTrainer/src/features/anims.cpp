@@ -3782,7 +3782,7 @@ bool process_anims_menu()
 {
 	if (!loaded)
 	{
-		set_status_text("场景动画尚未加载，请稍后再试！");
+		set_status_text("场景动画尚未加载，\n请您稍后再重新尝试！");
 		return false;
 	}
 
@@ -4050,7 +4050,7 @@ bool onconfirm_scenarios_menu_l2(MenuItem<int> choice)
 
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	AI::CLEAR_PED_TASKS(playerPed);
-	set_status_text("按 (退格键) 返回并停止此场景动画！");
+	set_status_text("按 (退格键) 返回！\n并停止此场景动画！");
 	if (sitting_scenario == false) AI::TASK_START_SCENARIO_IN_PLACE(playerPed, (char*)value.c_str(), 0, true);
 	else AI::TASK_START_SCENARIO_AT_POSITION(playerPed, (char*)value.c_str(), ENTITY::GET_ENTITY_COORDS(playerPed, true).x, ENTITY::GET_ENTITY_COORDS(playerPed, true).y, ENTITY::GET_ENTITY_COORDS(playerPed, true).z - 1, ENTITY::GET_ENTITY_HEADING(playerPed), 0, 0, 1);
 

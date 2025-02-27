@@ -371,7 +371,7 @@ void process_misc_trainerconfig_menu(){
 bool onconfirm_misc_freezeradio_menu(MenuItem<int> choice){
 	if(choice.value == -1){
 		featureRadioFreeze = false;
-		set_status_text("固定已解除, 您可以自由切换电台了！");
+		set_status_text("电台固定已成功解除！\n您可以自由切换电台了！");
 	}
 	else{
 		featureRadioFreeze = true;
@@ -1933,7 +1933,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			}
 			else
 			{
-				set_status_text("游戏版本过旧，此功能需要 1.44 或更高版本才能运行！");
+				set_status_text("您的版本过旧，此功能需要:\n1.44 或更高版本才能运行！");
 				featureEnableMissingRadioStation = false;
 			}
 		}

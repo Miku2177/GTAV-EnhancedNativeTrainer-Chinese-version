@@ -277,7 +277,7 @@ bool process_paint_menu_fades(){
 		return false;
 	}
 
-	set_status_text("漆面褪色效果，仅适用于特定类型的车辆！");
+	set_status_text("漆面褪色效果！\n仅适用于特定类型的车辆！");
 
 	std::vector<MenuItem<float>*> menuItems;
 

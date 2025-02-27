@@ -469,15 +469,15 @@ void check_player_model(){
 void invincibility_switching(){
 	featurePlayerInvincible = !featurePlayerInvincible;
 	featurePlayerInvincibleUpdated = true;
-	if (featurePlayerInvincible) set_status_text("无敌-已开启");
-	else set_status_text("无敌-已关闭");
+	if (featurePlayerInvincible) set_status_text("无敌 - 已开启！");
+	else set_status_text("无敌 - 已关闭！");
 	WAIT(100);
 }
 
 void wantedlevel_switching() {
 	featureWantedLevelFrozen = !featureWantedLevelFrozen;
-	if (featureWantedLevelFrozen) set_status_text("通缉等级-已冻结");
-	else set_status_text("通缉等级-已解冻");
+	if (featureWantedLevelFrozen) set_status_text("通缉等级 - 已冻结！");
+	else set_status_text("通缉等级 - 已解冻！");
 	WAIT(100);
 }
 
@@ -546,13 +546,13 @@ void engine_kill(){
 	VEHICLE::SET_VEHICLE_ENGINE_ON(veh_killed, false, true, true);
 	VEHICLE::SET_VEHICLE_ENGINE_HEALTH(veh_killed, -4000);
 
-	set_status_text("你因为某种原因，损坏了这辆车的发动机 !");
+	set_status_text("您因为某种原因！\n损坏了这辆车的发动机！");
 }
 
 void text_parameters(float s_x, float s_y, int c_r, int c_g, int c_b, int alpha) {
 	UI::SET_TEXT_FONT(0);
 	UI::SET_TEXT_SCALE(s_x, s_y);
-	UI::SET_TEXT_WRAP(0.0, 1.0);
+	UI::SET_TEXT_WRAP(0.0, 2.0);
 	UI::SET_TEXT_COLOUR(c_r, c_g, c_b, alpha);
 	UI::SET_TEXT_CENTRE(0);
 	UI::SET_TEXT_DROPSHADOW(20, 20, 20, 20, 20);
@@ -1233,8 +1233,8 @@ void update_features() {
 		float curr_set_h = PLAYER_HEALTH_VALUES[current_player_health] - 100;
 		if (NPC_RAGDOLL_VALUES[current_limp_if_injured] > 0 && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) {
 			if (injured_m != current_limp_if_injured) {
-				if (current_limp_if_injured == 1) set_status_text("轻度瘸腿走路");
-					if (current_limp_if_injured == 2) set_status_text("重度瘸腿走路");
+				if (current_limp_if_injured == 1) set_status_text("轻度瘸腿走路！");
+					if (current_limp_if_injured == 2) set_status_text("重度瘸腿走路！");
 					injured_m = current_limp_if_injured;
 					enable_camera_injured = false;
 			}
@@ -1797,7 +1797,7 @@ bool onconfirm_powerpunch_menu(MenuItem<int> choice)
 	{
 		if (WEAPONS_POWERPUNCH_VALUES[PowerPunchIndex] != 55) {
 			std::ostringstream ss;
-			ss << "~r~ 警告! 启用手动才能使用!";
+			ss << "~r~ 警告! 启用手动才能使用！";
 			set_status_text(ss.str());
 		}
 		keyboard_on_screen_already = true;
@@ -2712,7 +2712,7 @@ void ScriptMain(){
 		database = new ENTDatabase();
 		if(!database->open()){
 			write_text_to_log_file("无法打开数据库");
-			set_status_text("ENT 无法打开数据库 - 正在退出");
+			set_status_text("ENT 无法打开数据库！\nENT 正在退出！");
 			database = NULL;
 			return;
 		}
@@ -3187,22 +3187,22 @@ void heal_player(){
 		}
 	}
 
-	set_status_text("生命值已恢复");
+	set_status_text("生命值已恢复！");
 }
 
 void toggle_invisibility(){
 	featurePlayerInvisible = !featurePlayerInvisible;
 	if(featurePlayerInvisible){
-		set_status_text("玩家隐身了");
+		set_status_text("玩家隐身了！");
 	}
 	else{
-		set_status_text("玩家不再隐身了");
+		set_status_text("玩家不再隐身了！");
 	}
 }
 
 void reset_wanted_level(){
 	PLAYER::CLEAR_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID());
-	set_status_text("通缉等级已清除");
+	set_status_text("通缉等级已清除！");
 }
 
 int get_frame_number(){
