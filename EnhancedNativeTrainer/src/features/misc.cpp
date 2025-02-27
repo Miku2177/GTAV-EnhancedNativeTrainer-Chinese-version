@@ -1944,7 +1944,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		missing_station = 0;
 	}
 
-	if (sfilter_enabled == false && screenfltr != "默认" && screenfltr != "") {
+	if (sfilter_enabled == false && screenfltr != "DEFAULT" && screenfltr != "") {
 		GRAPHICS::SET_TIMECYCLE_MODIFIER((char*)screenfltr.c_str());
 		GRAPHICS::SET_TIMECYCLE_MODIFIER_STRENGTH(1.0f);
 		sfilter_enabled = true;
