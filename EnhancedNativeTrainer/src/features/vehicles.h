@@ -1,11 +1,11 @@
 /*
-Some of this code began its life as a part of GTA V SCRIPT HOOK SDK.
+这段代码的部分最初来源于 GTA V SCRIPT HOOK SDK。
 http://dev-c.com
 (C) Alexander Blade 2015
 
-It is now part of the Enhanced Native Trainer project.
+它现在已成为 Enhanced Native Trainer 项目的一部分。
 https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
-(C) Rob Pridham and fellow contributors 2015
+(C) Rob Pridham 及其他贡献者 2015
 */
 
 #pragma once
@@ -50,14 +50,14 @@ struct XenonColour {
 	int colour;
 };
 
-const std::vector<std::string> VEH_INVINC_MODE_CAPTIONS{ "OFF", "Mech. Only", "Mech. + Visual", "Mech. + Vis. + Cosmetic" };
+const std::vector<std::string> VEH_INVINC_MODE_CAPTIONS{ "关", "仅引擎", "引擎+车身", "引擎+车身+车漆" };
 
-const std::vector<std::string> VEH_MASS_CAPTIONS{ "OFF", "3x", "5x", "10x", "30x", "50x", "Mayhem" };
+const std::vector<std::string> VEH_MASS_CAPTIONS{ "关", "3x", "5x", "10x", "30x", "50x", "混乱" };
 const int VEH_MASS_VALUES[] = { 0, 5, 10, 30, 50, 100, 50000 };
 extern int current_player_forceshieldN;
 
-const std::vector<std::string> VEH_SPEEDLIMITER_CAPTIONS{ "OFF", "5 (MPH)", "10 (MPH)", "15 (MPH)", "20 (MPH)", "25 (MPH)", "30 (MPH)", "35 (MPH)", "40 (MPH)", "45 (MPH)", "50 (MPH)", "55 (MPH)", "60 (MPH)", "65 (MPH)", "70 (MPH)", "75 (MPH)", "80 (MPH)", "85 (MPH)", "90 (MPH)", "95 (MPH)", "100 (MPH)", "105 (MPH)", "110 (MPH)", "115 (MPH)", "120 (MPH)", "125 (MPH)", "130 (MPH)", "135 (MPH)", "140 (MPH)", "145 (MPH)", "150 (MPH)", "160 (MPH)", "170 (MPH)", "180 (MPH)", "190 (MPH)", "200 (MPH)" };
-const int VEH_SPEEDLIMITER_VALUES[] = { 0, 2, 4, 7, 9, 11, 13, 16, 18, 20, 22, 24, 27, 29, 31, 33, 36, 38, 40, 42, 44, 46, 48, 51, 53, 55, 57, 59, 61, 63, 66, 70, 75, 80, 85, 89 };
+const std::vector<std::string> VEH_SPEEDLIMITER_CAPTIONS{ "关闭", "5 (KM/H)", "10 (KM/H)", "15 (KM/H)", "20 (KM/H)", "25 (KM/H)", "30 (KM/H)", "35 (KM/H)", "40 (KM/H)", "45 (KM/H)", "50 (KM/H)", "55 (KM/H)", "60 (KM/H)", "65 (KM/H)", "70 (KM/H)", "75 (KM/H)", "80 (KM/H)", "85 (KM/H)", "90 (KM/H)", "95 (KM/H)", "100 (KM/H)", "105 (KM/H)", "110 (KM/H)", "115 (KM/H)", "120 (KM/H)", "125 (KM/H)", "130 (KM/H)", "135 (KM/H)", "140 (KM/H)", "145 (KM/H)", "150 (KM/H)", "160 (KM/H)", "170 (KM/H)", "180 (KM/H)", "190 (KM/H)", "200 (KM/H)" };
+const int VEH_SPEEDLIMITER_VALUES[] = { 0, 1, 2, 4, 5, 7, 8, 10, 12, 13, 15, 16, 18, 19, 21, 21, 23, 24, 25, 27, 28, 29, 30, 32, 33, 35, 36, 38, 39, 41, 42, 46, 48, 50, 53, 55 };
 extern int speedLimiterIndex;
 extern int speedCityLimiterIndex;
 extern int speedCountryLimiterIndex;
@@ -65,8 +65,8 @@ extern Vehicle veh_l;
 extern bool featureLockVehicleDoors;
 extern bool featureLockVehicleDoorsUpdated;
 
-// engine power stuff
-const std::vector<std::string> VEH_ENG_POW_CAPTIONS{ "OFF", "1x", "5x", "10x", "25x", "50x", "75x", "100x", "125x", "150x", "175x", "200x", "225x", "250x", "275x", "300x", "325x", "350x", "375x", "400x" };
+// 引擎动力相关
+const std::vector<std::string> VEH_ENG_POW_CAPTIONS{ "关", "1x", "5x", "10x", "25x", "50x", "75x", "100x", "125x", "150x", "175x", "200x", "225x", "250x", "275x", "300x", "325x", "350x", "375x", "400x" };
 const int VEH_ENG_POW_VALUES[] = { -1, 0, 5, 10, 25, 50, 75, 100, 125, 150, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400 };
 extern int engPowMultIndex;
 
@@ -74,31 +74,31 @@ extern int engCustomPowMultIndex;
 extern std::vector<int> C_ENGINE_M;
 extern std::vector<Vehicle> C_ENGINE_VEHICLE;
 
-//Blip Colour
-const std::vector<std::string> VEH_BLIPCOLOUR_CAPTIONS{ "White", "Red", "Green", "Blue", "Orange", "Purple", "Grey", "Brown", "Pink", "Dark Green", "Dark Purple", "Dark Blue" };
+// 标记颜色
+const std::vector<std::string> VEH_BLIPCOLOUR_CAPTIONS{ "白色", "红色", "绿色", "蓝色", "橙色", "紫色", "灰色", "棕色", "粉色", "深绿色", "深紫色", "深蓝色" };
 const int VEH_BLIPCOLOUR_VALUES[] = { 0, 1, 2, 3, 17, 19, 20, 21, 23, 25, 27, 29 };
 
-// Vehicle Colour
-const std::vector<std::string> VEH_COLOUR_CAPTIONS{ "OFF", "White", "Red", "Green", "Blue", "Orange", "Purple", "Pink", "Yellow" };
+// 载具颜色
+const std::vector<std::string> VEH_COLOUR_CAPTIONS{ "关", "白色", "红色", "绿色", "蓝色", "橙色", "紫色", "粉色", "黄色" };
 const int VEH_COLOUR_VALUES[] = { -1, 134, 27, 139, 64, 38, 145, 135, 88 };
 extern int VehColourIndex;
 
-// Vehicle Random Colour
-const std::vector<std::string> VEH_RAND_COLOUR_CAPTIONS{ "Both Colours", "Primary Colour Only", "Secondary Colour Only" };
+// 载具随机颜色
+const std::vector<std::string> VEH_RAND_COLOUR_CAPTIONS{ "两种颜色", "仅限主要颜色", "仅限次要颜色" };
 extern int VehRandomColourIndex;
 
-//Turn Signals Off Acceleration
-const std::vector<std::string> VEH_TURN_SIGNALS_ACCELERATION_CAPTIONS{ "OFF", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
+// 加速时关闭转向灯
+const std::vector<std::string> VEH_TURN_SIGNALS_ACCELERATION_CAPTIONS{ "关", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
 const int VEH_TURN_SIGNALS_ACCELERATION_VALUES[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
 
-//Blip Size
+// 标记大小
 const std::vector<std::string> VEH_BLIPSIZE_CAPTIONS{ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
 const double VEH_BLIPSIZE_VALUES[] = { 0.3, 0.5, 0.8, 1.0, 1.2, 1.5, 1.7, 2.0, 2.5, 3.0 };
 
-const std::vector<std::string> VEH_BLIPSYMBOL_CAPTIONS{ "Standard", "Player", "Waypoint", "ArrowUpOutlined" };
+const std::vector<std::string> VEH_BLIPSYMBOL_CAPTIONS{ "标准", "玩家", "导航标记点", "上箭头轮廓" };
 const std::vector<int> VEH_BLIPSYMBOL_VALUES{ 1, 6, 8, 11 };
 
-//Turn Signals Angle
+// 转向灯角度
 const std::vector<std::string> VEH_TURN_SIGNALS_ANGLE_CAPTIONS{ "0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100" };
 const int VEH_TURN_SIGNALS_ANGLE_VALUES[] = { 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
 
@@ -114,36 +114,36 @@ struct VehicleImage {
 static std::vector<VehicleImage> ALL_VEH_IMAGES;
 
 const std::vector<XenonColour> XENON_COLOURS = {
-	{ "White", 0 },
-	{ "Blue", 1 },
-	{ "Electric Blue", 2 },
-	{ "Mint Green", 3 },
-	{ "Lime Green", 4 },
-	{ "Yellow", 5 },
-	{ "Golden Shower", 6 },
-	{ "Orange", 7 },
-	{ "Red", 8 },
-	{ "Pony Pink", 9 },
-	{ "Hot Pink", 10 },
-	{ "Purple", 11 },
-	{ "Blacklight", 12 },
-	{ "Stock", 255 }
+	{ "白色", 0 },
+	{ "蓝色", 1 },
+	{ "电光蓝色", 2 },
+	{ "薄荷绿色", 3 },
+	{ "酸橙绿色", 4 },
+	{ "黄色", 5 },
+	{ "金黄色", 6 },
+	{ "橙色", 7 },
+	{ "红色", 8 },
+	{ "小马粉色", 9 },
+	{ "亮粉色", 10 },
+	{ "紫色", 11 },
+	{ "黑色光", 12 },
+	{ "原厂", 255 }
 };
 
 const std::vector<NeonLightsColor> NEON_COLORS = { 
-	{ "Bright White", NEON_COLOR_WHITE }, 
-	{ "Dim White", NEON_COLOR_BLACK }, 
-	{ "Electric Blue", NEON_COLOR_ELECTRICBLUE }, 
-	{ "Mint Green", NEON_COLOR_MINTGREEN }, 
-	{ "Lime Green", NEON_COLOR_LIMEGREEN },
-	{ "Yellow", NEON_COLOR_YELLOW }, 
-	{ "Gold", NEON_COLOR_GOLDENSHOWER }, 
-	{ "Orange", NEON_COLOR_ORANGE }, 
-	{ "Red", NEON_COLOR_RED }, 
-	{ "Pink", NEON_COLOR_PONYPINK }, 
-	{ "Hot Pink", NEON_COLOR_HOTPINK },
-	{ "Purple", NEON_COLOR_PURPLE }, 
-	{ "Black Light", NEON_COLOR_BLACKLIGHT } };
+	{ "亮白色", NEON_COLOR_WHITE }, 
+	{ "暗白色", NEON_COLOR_BLACK }, 
+	{ "电光蓝色", NEON_COLOR_ELECTRICBLUE }, 
+	{ "薄荷绿色", NEON_COLOR_MINTGREEN }, 
+	{ "酸橙绿色", NEON_COLOR_LIMEGREEN },
+	{ "黄色", NEON_COLOR_YELLOW }, 
+	{ "金色", NEON_COLOR_GOLDENSHOWER }, 
+	{ "橙色", NEON_COLOR_ORANGE }, 
+	{ "红色", NEON_COLOR_RED }, 
+	{ "粉色", NEON_COLOR_PONYPINK }, 
+	{ "亮粉色", NEON_COLOR_HOTPINK },
+	{ "紫色", NEON_COLOR_PURPLE }, 
+	{ "黑色光", NEON_COLOR_BLACKLIGHT } };
 
 const std::vector<TireSmokeColor> SMOKE_COLORS = {
 	{ "CMOD_SMOKE_3", TIRESMOKE_COLOR_WHITE },
@@ -159,7 +159,7 @@ const std::vector<TireSmokeColor> SMOKE_COLORS = {
 	{ "CMOD_SMOKE_PAT", TIRESMOKE_COLOR_PATRIOT }
 };
 
-//car name, DLC name for texture (scaleform_web.rpf > the name of the ytd file), name of car in file - no need for extracting files!
+// 车辆名称, DLC 名称（用于纹理，scaleform_web.rpf > ytd 文件名）, 文件中的车辆名称 - 无需提取文件！
 const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 {
 	{ RAGE_JOAAT("AIRBUS"), "candc_default", "airbus" },
@@ -371,7 +371,7 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("VINDICATOR"), "lgm_dlc_luxe", "vindicator" },
 	{ RAGE_JOAAT("BRAWLER"), "lgm_dlc_luxe", "brawler" },
 	{ RAGE_JOAAT("TORO"), "dock_default", "toro" },
-	//Missing preview images
+	// 缺少预览图像
 	{ RAGE_JOAAT("AIRTUG"), "ENT_vehicle_previews", "VP_AIRTUG" },
 	{ RAGE_JOAAT("AVENGER2"), "ENT_vehicle_previews", "VP_AVENGER" },
 	{ RAGE_JOAAT("BARRACKS3"), "ENT_vehicle_previews", "VP_BARRACKS" },
@@ -582,13 +582,13 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("SLAMVAN4"), "ENT_vehicle_previews", "VP_SLAMVAN4" },
 	{ RAGE_JOAAT("SLAMVAN5"), "ENT_vehicle_previews", "VP_SLAMVAN5" },
 	{ RAGE_JOAAT("SLAMVAN6"), "ENT_vehicle_previews", "VP_SLAMVAN6" },
-	//Update 29 new entries
+	// 更新 29 个新条目
 	{ RAGE_JOAAT("BUCCANEER2"), "lsc_default", "buccaneer2_a" },
 	{ RAGE_JOAAT("CHINO2"), "lsc_default", "chino2_a" },
 	{ RAGE_JOAAT("FACTION2"), "lsc_default", "faction2_a" },
 	{ RAGE_JOAAT("MOONBEAM2"), "lsc_default", "moonbeam2_a" },
 	{ RAGE_JOAAT("PRIMO2"), "lsc_default", "primo2_a" },
-	{ RAGE_JOAAT("VOODOO"), "lsc_default", "voodoo_0" }, //voodoo = shiny
+	{ RAGE_JOAAT("VOODOO"), "lsc_default", "voodoo_0" }, // 巫毒 = 闪亮
 	{ RAGE_JOAAT("BALLER3"), "lgm_dlc_apartments", "baller3" },
 	{ RAGE_JOAAT("BALLER4"), "sssa_default", "baller2" },
 	{ RAGE_JOAAT("MAMBA"), "lgm_dlc_apartments", "mamba" },
@@ -605,14 +605,14 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("COG55"), "lgm_dlc_apartments", "cog55" },
 	{ RAGE_JOAAT("COGNOSCENTI"), "lgm_dlc_apartments", "cognosc" },
 	{ RAGE_JOAAT("LIMO2"), "candc_apartments", "limo2" },
-	// Lowrider 2 update
+	// 低底盘车 2 更新
 	{ RAGE_JOAAT("FACTION3"), "lsc_lowrider2", "faction3_a" },
 	{ RAGE_JOAAT("MINIVAN2"), "lsc_lowrider2", "minivan2_a" },
 	{ RAGE_JOAAT("SABREGT2"), "lsc_lowrider2", "sabregt2_a" },
 	{ RAGE_JOAAT("SLAMVAN3"), "lsc_lowrider2", "slamvan3_a" },
 	{ RAGE_JOAAT("TORNADO5"), "lsc_lowrider2", "tornado5_a" },
 	{ RAGE_JOAAT("VIRGO2"), "lsc_lowrider2", "virgo2_a" },
-	// Further Adventures in Finance and Felony
+	// 金融与重罪的进一步冒险
 	{ RAGE_JOAAT("XLS"), "lgm_dlc_executive1", "xls" },
 	{ RAGE_JOAAT("XLS2"), "lgm_dlc_executive1", "xls" },
 	{ RAGE_JOAAT("RUMPO3"), "sssa_dlc_executive_1", "rumpo3" },
@@ -627,7 +627,7 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("PFISTER811"), "lgm_dlc_executive1", "pfister811" },
 	{ RAGE_JOAAT("TUG"), "dock_dlc_executive1", "tug" },
 	{ RAGE_JOAAT("FMJ"), "lgm_dlc_executive1", "fmj" },
-	//Cunning Stunts
+	// 狡诈特技
 	{ RAGE_JOAAT("BF400"), "sssa_dlc_stunt", "bf400" },
 	{ RAGE_JOAAT("BRIOSO"),	"sssa_dlc_stunt", "brioso" },
 	{ RAGE_JOAAT("CLIFFHANGER"), "sssa_dlc_stunt",	"cliffhanger" },
@@ -643,7 +643,7 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("TROPHYTRUCK2"), "sssa_dlc_stunt", "trophy2" },
 	{ RAGE_JOAAT("TROPOS"), "sssa_dlc_stunt", "tropos" },
 	{ RAGE_JOAAT("TYRUS"), "lgm_dlc_stunt", "tyrus" },
-	//Bikers 
+	// 摩托帮
 	{ RAGE_JOAAT("AVARUS"), "sssa_dlc_biker", "avarus" },
 	{ RAGE_JOAAT("BAGGER"), "sssa_dlc_biker", "bagger" },
 	{ RAGE_JOAAT("BLAZER4"), "sssa_dlc_biker", "blazer4" },
@@ -666,7 +666,7 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("HAKUCHOU2"), "lgm_dlc_biker", "hakuchou2" },
 	{ RAGE_JOAAT("RAPTOR"), "lgm_dlc_biker", "raptor" },
 	{ RAGE_JOAAT("SHOTARO"), "lgm_dlc_biker", "shotaro" },
-	// Import-Export 
+	// 进出口
 	{ RAGE_JOAAT("VOLTIC2"), "candc_importexport", "voltic2" },
 	{ RAGE_JOAAT("RUINER2"), "candc_importexport", "ruiner2" },
 	{ RAGE_JOAAT("DUNE4"), "candc_importexport", "dune5" },
@@ -674,7 +674,7 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("PHANTOM2"), "candc_importexport", "phantom2" },
 	{ RAGE_JOAAT("TECHNICAL2"), "candc_importexport", "technical2" },
 	{ RAGE_JOAAT("BOXVILLE5"), "candc_importexport", "boxville5" },
-	{ RAGE_JOAAT("WASTELANDER"), "candc_importexport", "wastlndr" }, //could be: "wastelander", but wastlndr image name
+	{ RAGE_JOAAT("WASTELANDER"), "candc_importexport", "wastlndr" }, // 可能是："废土行者"，但图像文件名为 wastlndr
 	{ RAGE_JOAAT("BLAZER5"), "candc_importexport", "blazer5" },
 	{ RAGE_JOAAT("COMET3"), "lsc_dlc_import_export", "comet3_a" },
 	{ RAGE_JOAAT("DIABLOUS"), "lsc_dlc_import_export", "diablous2_a" },
@@ -690,12 +690,12 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("SPECTER"), "lsc_dlc_import_export", "specter2_a" },
 	{ RAGE_JOAAT("SPECTER2"), "lsc_dlc_import_export", "specter2_b" },
 	{ RAGE_JOAAT("TEMPESTA"), "lgm_dlc_importexport", "tempesta" },
-	//Special Races
+	// 特殊比赛
 	{ RAGE_JOAAT("GP1"), "lgm_dlc_specialraces", "gp1" },
 	{ RAGE_JOAAT("INFERNUS2"), "lgm_dlc_specialraces", "infernus2" },
 	{ RAGE_JOAAT("RUSTON"), "lgm_dlc_specialraces", "ruston" },
 	{ RAGE_JOAAT("TURISMO2"), "lgm_dlc_specialraces", "turismo2" },
-	//Gun Running
+	// 军火走私
 	{ RAGE_JOAAT("APC"), "candc_gunrunning", "apc" },
 	{ RAGE_JOAAT("ARDENT"), "candc_gunrunning", "ardent" },
 	{ RAGE_JOAAT("CADDY3"), "foreclosures_bunker", "transportation_1" },
@@ -710,7 +710,7 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("TRAILERSMALL2"), "candc_gunrunning", "trsmall2" },
 	{ RAGE_JOAAT("VAGNER"), "lgm_dlc_gunrunning", "vagner" },
 	{ RAGE_JOAAT("XA21"), "lgm_dlc_gunrunning", "xa21" },
-	//Smugglers Run DLC
+	// 走私者奔袭 DLC
 	{ RAGE_JOAAT("BOMBUSHKA"), "candc_smuggler", "bombushka" },
 	{ RAGE_JOAAT("HUNTER"), "candc_smuggler", "hunter" },
 	{ RAGE_JOAAT("LAZER"), "candc_smuggler",  "lazer" },
@@ -731,7 +731,7 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("HOWARD"), "elt_dlc_smuggler", "howard" },
 	{ RAGE_JOAAT("MICROLIGHT"), "elt_dlc_smuggler", "microlight" },
 	{ RAGE_JOAAT("SEABREEZE"), "elt_dlc_smuggler", "seabreeze" },
-	//Doomsday Heist
+	// 末日豪劫
 	{ RAGE_JOAAT("AKULA"), "candc_xmas2017", "akula" },
 	{ RAGE_JOAAT("BARRAGE"), "candc_xmas2017", "barrage" },
 	{ RAGE_JOAAT("CHERNOBOG"), "candc_xmas2017", "chernobog" },
@@ -745,7 +745,7 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("KAMACHO"), "sssa_dlc_xmas2017", "kamacho" },
 	{ RAGE_JOAAT("RIATA"), "sssa_dlc_xmas2017", "riata" },
 	{ RAGE_JOAAT("SENTINEL3"), "sssa_dlc_xmas2017", "sentinel3" },
-	{ RAGE_JOAAT("STREITER"), "sssa_dlc_xmas2017", "streiter" }, //Also in lgm_dlc_xmas2017
+	{ RAGE_JOAAT("STREITER"), "sssa_dlc_xmas2017", "streiter" }, // 也存在于 lgm_dlc_xmas2017
 	{ RAGE_JOAAT("YOSEMITE"), "sssa_dlc_xmas2017", "yosemite" },
 	{ RAGE_JOAAT("AUTARCH"), "lgm_dlc_xmas2017", "autarch" },
 	{ RAGE_JOAAT("AVENGER"), "candc_chopper", "banner_0" },
@@ -761,7 +761,7 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("SC1"), "lgm_dlc_xmas2017", "sc1" },
 	{ RAGE_JOAAT("VISERIS"), "lgm_dlc_xmas2017", "viseris" },
 	{ RAGE_JOAAT("Z190"), "lgm_dlc_xmas2017", "z190" },
-	//San-Andreas Super Sport
+	// 圣安地列斯超级运动
 	{ RAGE_JOAAT("CHEBUREK"), "sssa_dlc_assault", "cheburek" },
 	{ RAGE_JOAAT("DOMINATOR3"), "sssa_dlc_assault", "dominator3" },
 	{ RAGE_JOAAT("ELLIE"), "sssa_dlc_assault", "ellie" },
@@ -778,7 +778,7 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("TAIPAN"), "lgm_dlc_assault", "taipan" },
 	{ RAGE_JOAAT("TEZERACT"), "lgm_dlc_assault", "tezeract" },
 	{ RAGE_JOAAT("TYRANT"), "lgm_dlc_assault", "tyrant" },
-	//After Hours
+	// 夜生活
 	{ RAGE_JOAAT("PBUS2"), "sssa_dlc_battle", "pbus2" },
 	{ RAGE_JOAAT("PATRIOT"), "sssa_dlc_battle", "patriot" },
 	{ RAGE_JOAAT("PATRIOT2"), "sssa_dlc_battle", "patriot2" },
@@ -794,7 +794,7 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("FREECRAWLER"), "lgm_dlc_battle", "freecrawler" },
 	{ RAGE_JOAAT("BLIMP3"), "elt_dlc_battle", "blimp3" },
 	{ RAGE_JOAAT("JESTER3"), "sssa_dlc_christmas_2", "jester2" },
-	//Arena War
+	// 竞技场之战
 	{ RAGE_JOAAT("BLISTA3"), "sssa_dlc_arena", "blista3" },
 	{ RAGE_JOAAT("BRUTUS"), "mba_vehicles", "brutus1" },
 	{ RAGE_JOAAT("BRUTUS2"), "mba_vehicles", "brutus2" },
@@ -821,7 +821,7 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("ZR380"), "mba_vehicles", "zr3801" },
 	{ RAGE_JOAAT("ZR3802"), "mba_vehicles", "zr3802" },
 	{ RAGE_JOAAT("ZR3803"), "mba_vehicles", "zr3803" },
-	//Diamond Casino
+	// 钻石赌场
 	{ RAGE_JOAAT("CARACARA2"), "sssa_dlc_vinewood", "caracara2" },
 	{ RAGE_JOAAT("DRAFTER"), "lgm_dlc_vinewood", "drafter" },
 	{ RAGE_JOAAT("DYNASTY"), "sssa_dlc_vinewood", "dynasty" },
@@ -844,7 +844,7 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("THRAX"), "lgm_dlc_vinewood", "thrax" },
 	{ RAGE_JOAAT("ZION3"), "sssa_dlc_vinewood", "zion3" },
 	{ RAGE_JOAAT("ZORRUSSO"), "lgm_dlc_vinewood", "zorrusso" },
-	//Diamond Casino Heist
+	// 钻石赌场抢劫
 	{ RAGE_JOAAT("FORMULA"), "lgm_dlc_casinoheist", "formula" },
 	{ RAGE_JOAAT("FORMULA2"), "lgm_dlc_casinoheist", "formula2" },
 	{ RAGE_JOAAT("FURIA"), "lgm_dlc_casinoheist", "furia" },
@@ -871,7 +871,7 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("MINITANK"), "candc_casinoheist", "minitank" },
 	{ RAGE_JOAAT("ZHABA"), "candc_casinoheist", "zhaba" },
 	{ RAGE_JOAAT("STOCKADE"), "candc_casinoheist", "stockade" },
-	//Summer 2020 update
+	// 2020 夏季更新
 	{ RAGE_JOAAT("GAUNTLET3"), "lsc_dlc_summer2020", "gauntlet3" },
 	{ RAGE_JOAAT("PEYOTE3"), "sssa_dlc_vinewood", "peyote2" },
 	{ RAGE_JOAAT("GLENDALE2"), "lsc_dlc_summer2020", "glendale_b" },
@@ -890,7 +890,7 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("TIGON"), "lgm_dlc_summer2020", "tigon" },
 	{ RAGE_JOAAT("GAUNTLET5"), "lsc_dlc_summer2020", "gauntlet3_b" },
 	{ RAGE_JOAAT("YOSEMITE3"), "lsc_dlc_summer2020", "yosemite_b" },
-	//Cayo Perico Heist
+	// 佩里科岛抢劫
 	{ RAGE_JOAAT("ALKONOST"), "candc_heist4", "alkonost" },
 	{ RAGE_JOAAT("ANNIHILATOR2"), "candc_heist4", "annihlator2" },
 	{ RAGE_JOAAT("AVISA"), "candc_heist4", "avisa" },
@@ -913,7 +913,7 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("ITALIRSX"), "lgm_dlc_heist4", "italirsx" },
 	{ RAGE_JOAAT("LONGFIN"), "dock_dlc_heist4", "longfin" },
 	{ RAGE_JOAAT("SEASPARROW2"), "elt_dlc_assault", "sparrow" },
-	//Tuners
+	// 改装师
 	{ RAGE_JOAAT("COMET6"), "lgm_dlc_tuner", "comet6" },
 	{ RAGE_JOAAT("CYPHER"), "lgm_dlc_tuner", "cypher" },
 	{ RAGE_JOAAT("EUROS"), "lgm_dlc_tuner", "euros" },
@@ -932,7 +932,7 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("WARRENER2"), "sssa_dlc_tuner", "warrener2" },
 	{ RAGE_JOAAT("RT3000"), "sssa_dlc_tuner", "rt3000" },
 	{ RAGE_JOAAT("FREIGHTCAR2"), "ENT_vehicle_previews", "VP_FREIGHTCAR" },
-	//The Contract
+	// 合约
 	{ RAGE_JOAAT("ASTRON"), "lgm_dlc_security", "astron" },
 	{ RAGE_JOAAT("BALLER7"), "lgm_dlc_security", "baller7" },
 	{ RAGE_JOAAT("CHAMPION"), "lgm_dlc_security", "champion" },
@@ -952,7 +952,7 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("PATRIOT3"), "sssa_dlc_security", "patriot3" },
 	{ RAGE_JOAAT("YOUGA4"), "ENT_vehicle_previews", "VP_YOUGA4" },
 	{ RAGE_JOAAT("MULE5"), "ENT_vehicle_previews", "VP_MULE5" },
-	//Agency DLC
+	// 事务所 DLC
 	{ RAGE_JOAAT("BRIOSO2"), "lsc_dlc_sum2", "brioso2" },
 	{ RAGE_JOAAT("BRIOSO3"), "ENT_vehicle_previews", "VP_BRIOSO3" },
 	{ RAGE_JOAAT("SENTINEL3"), "lsc_dlc_sum2", "sentinel3" },
@@ -974,7 +974,7 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("RHINEHART"), "sssa_dlc_sum2", "rhinehart" },
 	{ RAGE_JOAAT("RUINER4"), "sssa_dlc_sum2", "ruiner4" },
 	{ RAGE_JOAAT("VIGERO2"), "sssa_dlc_sum2", "vigero2" },
-	//Xmas 2022
+	// 2022 圣诞节
 	{ RAGE_JOAAT("BOOR"), "sssa_dlc_xmas2022", "boor" },
 	{ RAGE_JOAAT("BRICKADE2"), "candc_xmas2022", "brickade2" },
 	{ RAGE_JOAAT("BROADWAY"), "lgm_dlc_xmas2022", "broadway" },
@@ -994,7 +994,7 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("TAHOMA"), "sssa_dlc_xmas2022", "tahoma" },
 	{ RAGE_JOAAT("TULIP2"), "sssa_dlc_xmas2022", "tulip2" },
 	{ RAGE_JOAAT("VIRTUE"), "lgm_dlc_xmas2022", "virtue" },
-	//San Andreas Mercenaries
+	// 圣安地列斯雇佣兵
 	{ RAGE_JOAAT("STINGERTT"), "lgm_dlc_2023_01", "stingertt" },
 	{ RAGE_JOAAT("MONSTROCITI"), "sssa_dlc_2023_01", "monstrociti" },
 	{ RAGE_JOAAT("CLIQUE2"), "sssa_dlc_2023_01", "clique2" },
@@ -1015,7 +1015,7 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("GAUNTLET6"), "sssa_dlc_2023_01", "gauntlet6" },
 	{ RAGE_JOAAT("INDUCTOR"), "pandm_dlc_2023_01", "inductor" },
 	{ RAGE_JOAAT("INDUCTOR2"), "pandm_dlc_2023_01", "inductor2" },
-	//Xmas 2023 - Chop Shop DLC
+	// 2023 圣诞节 - 拆车厂 DLC
 	{ RAGE_JOAAT("BENSON2"), "candc_2023_2", "benson2" },
 	{ RAGE_JOAAT("BOXVILLE6"), "candc_2023_2", "boxville6" },
 	{ RAGE_JOAAT("POLGAUNTLET"), "ENT_vehicle_previews", "VP_POLGAUNTLET" },//
@@ -1052,7 +1052,7 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("TVTRAILER2"), "ENT_vehicle_previews", "VP_TRAILERPANIC" },//
 	{ RAGE_JOAAT("BOATTRAILER2"), "ENT_vehicle_previews", "VP_BOATTRAILER3" },//
 	{ RAGE_JOAAT("BOATTRAILER3"), "ENT_vehicle_previews", "VP_BOATTRAILER2" },//
-	//Summer 2024 - Bounty DLC
+	// 2024 夏季 - 赏金 DLC
 	{ RAGE_JOAAT("DRAFTER"), "lgm_dlc_vinewood", "drafter" },
 	{ RAGE_JOAAT("EMERUS"), "lgm_dlc_vinewood", "emerus" },
 	{ RAGE_JOAAT("JUGULAR"), "lgm_dlc_vinewood", "jugular" },
@@ -1088,7 +1088,7 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("DRIFTSENTINEL"), "ENT_vehicle_previews", "VP_SENTINELWIDE" }, //
 	{ RAGE_JOAAT("POLICET3"), "ENT_vehicle_previews", "VP_BURRITOBAIL" },
 	{ RAGE_JOAAT("POLDOMINATOR10"), "ENT_vehicle_previews", "VP_DOMINATORFX" }, //
-	//Xmas 2024 - FIB DLC
+	// 2024 圣诞节 - 联邦调查局 DLC
 	{ RAGE_JOAAT("CHAVOSV6"), "sssa_dlc_2024_2", "chavosv6" },
 	{ RAGE_JOAAT("FIREBOLT"), "sssa_dlc_2024_2", "firebolt" },
 	{ RAGE_JOAAT("URANUS"), "sssa_dlc_2024_2", "uranus" },
@@ -1098,7 +1098,7 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("POLFCTION2"), "candc_dlc_2024_2", "polfction2" },
 	{ RAGE_JOAAT("POLTERMINU"), "candc_dlc_2024_2", "polterminu" },
 	{ RAGE_JOAAT("PREDATOR"), "candc_dlc_2024_2", "predator" }, //
-	//{ RAGE_JOAAT("TACO"), "candc_dlc_2024_2", "taco" }, // Custom one exists in ENT Previews.
+	//{ RAGE_JOAAT("TACO"), "candc_dlc_2024_2", "taco" }, // 自定义预览存在于 ENT 预览中。
 	{ RAGE_JOAAT("TITAN2"), "candc_dlc_2024_2", "titan2" }, //
 	{ RAGE_JOAAT("BANSHEE3"), "lgm_dlc_2024_2", "banshee3" }, //
 	{ RAGE_JOAAT("COQUETTE6"), "lgm_dlc_2024_2", "coquette6" }, //
@@ -1107,7 +1107,7 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 };
 
 /***
-* METHODS
+* 方法
 */
 
 std::string get_vehicle_make_and_model(int modelHash);
@@ -1198,7 +1198,7 @@ bool process_vehmod_wheel_selection_menu();
 
 bool process_vehmod_wheel_selection();
 
-//Paint menus
+// 喷漆菜单
 
 bool process_paint_menu();
 
@@ -1212,7 +1212,7 @@ void onhighlight_color_menu_selection(MenuItem<int> choice);
 
 void apply_paint(PaintColor whichpaint);
 
-//Vehicle mod getters and setters
+// 载具改装获取器和设置器
 
 bool is_custom_tyres(std::vector<int> extras);
 
@@ -1238,7 +1238,7 @@ bool is_extra_enabled(std::vector<int> extras);
 
 void set_extra_enabled(bool applied, std::vector<int> extras);
 
-void set_plate_text(); // MenuItem<int> choice
+void set_plate_text(); // 菜单项<int> 选择
 
 bool is_convertible_roofdown(std::vector<int> extras);
 
@@ -1454,7 +1454,7 @@ void set_neonLights(bool applied, std::vector<int> extras);
 
 bool process_neon_lights_menu();
 
-//Smoke related code
+// 烟雾相关代码
 
 void apply_smoke_colors(int colorIndex);
 
@@ -1466,9 +1466,9 @@ void set_smoke(bool applied, std::vector<int> extras);
 
 bool process_smoke_colour_menu();
 
-//End of smoke related code
+// 烟雾相关代码结束
 
-// Vehicle Interior Colours
+// 载具内饰颜色
 
 void apply_trim_colors(int colorIndex);
 
@@ -1488,7 +1488,7 @@ bool process_dash_colour_menu();
 
 bool process_interior_colour_menu();
 
-//Xenon colours
+// 氙气灯颜色
 
 void apply_xenon_colors(int colorIndex);
 
@@ -1499,7 +1499,7 @@ bool onconfirm_xenon_selection(MenuItem<int> choice);
 bool process_xenon_colour_menu();
 
 bool inline is_this_a_car(Vehicle veh){
-	// Return true if the current vehicle is a car, e.g. as certain vehicles don't support neon lights
+	// 如果当前载具是汽车则返回 true，例如某些载具不支持霓虹灯
 	Entity et = ENTITY::GET_ENTITY_MODEL(veh);
 	return VEHICLE::IS_THIS_MODEL_A_CAR(et) || VEHICLE::IS_THIS_MODEL_A_QUADBIKE(et);
 }
