@@ -1,11 +1,11 @@
 /*
-Some of this code began its life as a part of GTA V SCRIPT HOOK SDK.
+这部分代码最初是 GTA V SCRIPT HOOK SDK 的一部分。
 http://dev-c.com
 (C) Alexander Blade 2015
 
-It is now part of the Enhanced Native Trainer project.
+现已成为 Enhanced Native Trainer 项目的一部分。
 https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
-(C) Rob Pridham and fellow contributors 2015
+(C) Rob Pridham 及其他贡献者 2015
 */
 
 #include "area_effect.h"
@@ -29,7 +29,7 @@ Entity aimedAt = 0;
 std::deque<ENTTrackedPedestrian*> trackedPeds;
 std::deque<ENTTrackedVehicle*> trackedVehicles;
 
-//features
+// 功能
 bool featurePlayerIgnoredByAll = false;
 bool featureNPCShowHealth = false;
 bool featureAreaPedsInvincible = false;
@@ -76,7 +76,7 @@ bool allWorldVehiclesThisFrameFilled = false;
 std::set<Ped> releasedPeds;
 std::set<Vehicle> releasedVehicles;
 
-// aggressive drivers/vigilante citizens
+// 激进司机/义警市民
 bool v_collision_check = false;
 bool time_to_chase = false;
 bool time_to_attack = true;
@@ -84,14 +84,14 @@ std::vector<Ped> pursuer;
 std::vector<Vehicle> v_collided;
 int s_secs_passed, s_secs_curr, s_seconds = 0;
 
-// vigilante blips
+// 义警位置标记点
 Blip blip_vigilante = -1;
 std::vector<Blip> BLIPTABLE_VIGILANTE;
 int VigilanteBlipIndex = 0;
 bool VigilanteBlipChanged = true;
 bool b_not_equal = false;
 
-// spooked drivers
+// 受惊的司机
 bool has_collided = false;
 std::vector<Ped> spooky_p;
 Vehicle veh_dist = -1;
@@ -107,22 +107,22 @@ const std::vector<std::string> PED_WEAPONS_SELECTIVE_CAPTIONS{ "\"WEAPON_UNARMED
 int PedWeaponsSelectiveIndex = 0;
 bool PedWeaponsSelective1Changed = true;
 
-//NPC Vehicle Invicible
+// NPC 车辆无敌
 int VehPedInvincibilityIndex = 0;
 bool VehPedInvincibilityChanged = true;
 
-// NPC Vehicle Speed
+// NPC 车辆速度
 int NPCVehicleSpeedIndex = 0;
 bool NPCVehicleSpeedChanged = true;
 int PedAccuracyIndex = 0;
 bool PedAccuracyChanged = true;
 
-// Selective Angry Peds
-const std::vector<std::string> WORLD_SELECTIVE_PEDS_ANGRY_CAPTIONS{ "OFF", "Only Men Are Angry", "Only Women Are Angry" };
+// 选择性愤怒的行人
+const std::vector<std::string> WORLD_SELECTIVE_PEDS_ANGRY_CAPTIONS{ "关", "仅男性愤怒", "仅女性愤怒" };
 int WorldSelectivePedsIndex = 0;
 bool WorldSelectivePedsChanged = true;
 
-// No Peds Gravity & Never Dirty
+// 行人无重力 & 永不脏污
 int NoPedsGravityIndex = 0;
 bool NoPedsGravityChanged = true;
 int featureNeverDirty = 0;
@@ -202,98 +202,98 @@ void process_areaeffect_peds_menu(){
 	SelectFromListMenuItem *listItem;
 
 	MenuItem<int> *item = new MenuItem<int>();
-	item->caption = "Peds Angry";
+	item->caption = "行人愤怒选项";
 	item->value = -1;
 	item->isLeaf = false;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Peds Weapons";
+	item->caption = "行人携带武器";
 	item->value = -2;
 	item->isLeaf = false;
 	menuItems.push_back(item);
 
 	listItem = new SelectFromListMenuItem(PLAYER_HEALTH_CAPTIONS, onchange_peds_health_index);
 	listItem->wrap = false;
-	listItem->caption = "Peds Health";
+	listItem->caption = "行人血量设置";
 	listItem->value = PedsHealthIndex;
 	menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(WORLD_NPC_VEHICLESPEED_CAPTIONS, onchange_ped_accuracy_index);
 	listItem->wrap = false;
-	listItem->caption = "Peds Accuracy";
+	listItem->caption = "行人射击的准确度";
 	listItem->value = PedAccuracyIndex;
 	menuItems.push_back(listItem);
 
 	ToggleMenuItem<int> *togItem = new ToggleMenuItem<int>();
-	togItem->caption = "NPC Show Current Health";
+	togItem->caption = "显示行人当前的血量";
 	togItem->value = 1;
 	togItem->toggleValue = &featureNPCShowHealth;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Everyone Permanently Calm";
+	togItem->caption = "所有行人永久保持冷静";
 	togItem->value = 1;
 	togItem->toggleValue = &featurePlayerIgnoredByAll;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Everyone Invincible";
+	togItem->caption = "所有行人都无敌";
 	togItem->value = 1;
 	togItem->toggleValue = &featureAreaPedsInvincible;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Everyone Dies";
+	togItem->caption = "所有行人都死亡";
 	togItem->value = 1;
 	togItem->toggleValue = &featureAreaPedsHeadExplode;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Effects Include Drivers";
+	togItem->caption = "效果包括驾驶员";
 	togItem->value = 1;
 	togItem->toggleValue = &featurePedsIncludeDrivers;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Effects Include Pilots";
+	togItem->caption = "效果包括飞行员";
 	togItem->value = 1;
 	togItem->toggleValue = &featurePedsIncludePilots;
 	menuItems.push_back(togItem);
 
 	listItem = new SelectFromListMenuItem(WORLD_REDUCEDGRIP_SNOWING_CAPTIONS, onchange_world_no_peds_gravity_index);
 	listItem->wrap = false;
-	listItem->caption = "NPC No Gravity Peds";
+	listItem->caption = "所有行人都无重力";
 	listItem->value = NoPedsGravityIndex;
 	menuItems.push_back(listItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Aggressive Drivers";
+	togItem->caption = "危险的驾驶员";
 	togItem->value = 1;
 	togItem->toggleValue = &featureAggressiveDrivers;
 	togItem->toggleValueUpdated = &featureAggressiveDriversUpdated;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Spooked Drivers";
+	togItem->caption = "受惊的驾驶员";
 	togItem->value = 1;
 	togItem->toggleValue = &featureSpookyDrivers;
 	togItem->toggleValueUpdated = &featureSpookyDriversUpdated;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Vigilante Citizens";
+	togItem->caption = "义务警员好市民";
 	togItem->value = 1;
 	togItem->toggleValue = &featureLawAbidingCitizens;
 	menuItems.push_back(togItem);
 
 	listItem = new SelectFromListMenuItem(LIMP_IF_INJURED_CAPTIONS, onchange_vigilante_blips_index);
 	listItem->wrap = false;
-	listItem->caption = "Show Vigilante Blips";
+	listItem->caption = "显示义务警员位置图标";
 	listItem->value = VigilanteBlipIndex;
 	menuItems.push_back(listItem);
 
-	draw_generic_menu<int>(menuItems, &areaeffect_ped_level_menu_index, "People Effects", onconfirm_areaeffect_ped_menu, NULL, NULL);
+	draw_generic_menu<int>(menuItems, &areaeffect_ped_level_menu_index, "行人 状态/效果", onconfirm_areaeffect_ped_menu, NULL, NULL);
 }
 
 void process_areaeffect_vehicle_menu(){
@@ -302,95 +302,95 @@ void process_areaeffect_vehicle_menu(){
 
 	listItem = new SelectFromListMenuItem(VEH_INVINC_MODE_CAPTIONS, onchange_veh_ped_invincibility_mode);
 	listItem->wrap = false;
-	listItem->caption = "All Vehicles Invincible";
+	listItem->caption = "所有车辆都无敌";
 	listItem->value = VehPedInvincibilityIndex;
 	menuItems.push_back(listItem);
 
 	ToggleMenuItem<int>* togItem = new ToggleMenuItem<int>();
-	togItem->caption = "All Vehicles Abandoned";
+	togItem->caption = "所有车辆被遗弃 ";
 	togItem->value = 1;
 	togItem->toggleValue = &featureAreaVehiclesBroken;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "All Vehicles Exploded";
+	togItem->caption = "所有车辆都爆炸";
 	togItem->value = 1;
 	togItem->toggleValue = &featureAreaVehiclesExploded;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "NPC Vehicles No Lights";
+	togItem->caption = "NPC 车辆禁止开启灯光";
 	togItem->value = 1;
 	togItem->toggleValue = &featureNPCNoLights;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "NPC Vehicles Have Neon/Xenon Lights";
+	togItem->caption = "NPC 车辆有霓虹灯/氙气灯";
 	togItem->value = 1;
 	togItem->toggleValue = &featureNPCNeonLights;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "NPC Vehicles Use Full Beam";
+	togItem->caption = "NPC 车辆可以使用远光灯";
 	togItem->value = 1;
 	togItem->toggleValue = &featureNPCFullBeam;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "NPC Dirty Vehicles";
+	togItem->caption = "NPC 车辆外观肮脏";
 	togItem->value = 1;
 	togItem->toggleValue = &featureDirtyVehicles;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "NPC Clean Vehicles";
+	togItem->caption = "NPC 车辆外观干净";
 	togItem->value = 1;
 	togItem->toggleValue = &featureCleanVehicles;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "NPC No Gravity Vehicles";
+	togItem->caption = "NPC 车辆没有重力";
 	togItem->value = 1;
 	togItem->toggleValue = &featureNPCNoGravityVehicles;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "NPC Vehicles Reduced Grip";
+	togItem->caption = "NPC 车辆抓地力降低";
 	togItem->value = 1;
 	togItem->toggleValue = &featureNPCReducedGripVehicles;
 	menuItems.push_back(togItem);
 
 	listItem = new SelectFromListMenuItem(WORLD_NPC_VEHICLESPEED_CAPTIONS, onchange_world_npc_vehicles_speed_index);
 	listItem->wrap = false;
-	listItem->caption = "NPC Vehicles Forced Speed";
+	listItem->caption = "NPC 车辆强制速度";
 	listItem->value = NPCVehicleSpeedIndex;
 	menuItems.push_back(listItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Boost NPC Radio Volume";
+	togItem->caption = "NPC 车辆广播音量提高";
 	togItem->value = 1;
 	togItem->toggleValue = &featureBoostNPCRadio;
 	menuItems.push_back(togItem);
 
 	listItem = new SelectFromListMenuItem(VEH_COLOUR_CAPTIONS, onchange_world_npc_vehicles_colour_index);
 	listItem->wrap = false;
-	listItem->caption = "NPC Vehicles Colour";
+	listItem->caption = "NPC 车辆的颜色配置";
 	listItem->value = VehColourIndex;
 	menuItems.push_back(listItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Bus Interior Light On At Night";
+	togItem->caption = "夜间公交车/车内灯光开启";
 	togItem->value = 1;
 	togItem->toggleValue = &featureBusLight;
 	menuItems.push_back(togItem);
 
 	listItem = new SelectFromListMenuItem(LIMP_IF_INJURED_CAPTIONS, onchange_world_npc_veh_damageoncoll_index);
 	listItem->wrap = false;
-	listItem->caption = "Destroy Car On Collision";
+	listItem->caption = "碰撞时破坏对方车辆";
 	listItem->value = NPCVehicleDamageOnCollIndex;
 	menuItems.push_back(listItem);
 
-	draw_generic_menu<int>(menuItems, &areaeffect_veh_level_menu_index, "Vehicle Effects", NULL, NULL, NULL);
+	draw_generic_menu<int>(menuItems, &areaeffect_veh_level_menu_index, "车辆 状态/效果", NULL, NULL, NULL);
 }
 
 void process_areaeffect_advanced_ped_menu(){
@@ -398,78 +398,78 @@ void process_areaeffect_advanced_ped_menu(){
 	SelectFromListMenuItem* listItem;
 	
 	ToggleMenuItem<int> *togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Peds Angry";
+	togItem->caption = "启用行人愤怒";
 	togItem->value = 1;
 	togItem->toggleValue = &featureAreaPedsRioting;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Angry Peds Use Cover";
+	togItem->caption = "愤怒的行人会使用掩体";
 	togItem->value = 1;
 	togItem->toggleValue = &featureAngryPedsUseCover;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Angry Peds Also Target You";
+	togItem->caption = "愤怒的行人会攻击玩家";
 	togItem->value = 1;
 	togItem->toggleValue = &featureAngryPedsTargetYou;
 	menuItems.push_back(togItem);
 
 	listItem = new SelectFromListMenuItem(WORLD_SELECTIVE_PEDS_ANGRY_CAPTIONS, onchange_world_selective_peds_angry_index);
 	listItem->wrap = false;
-	listItem->caption = "Ped Type";
+	listItem->caption = "选择性别：";
 	listItem->value = WorldSelectivePedsIndex;
 	menuItems.push_back(listItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Targeted Angry Peds";
+	togItem->caption = "仅目标行人愤怒";
 	togItem->value = 1;
 	togItem->toggleValue = &featureAngryMenManually;
 	menuItems.push_back(togItem);
 
-	draw_generic_menu<int>(menuItems, &areaeffect_ped_advconfig_menu_index, "Peds Angry Options", NULL, NULL, NULL);
+	draw_generic_menu<int>(menuItems, &areaeffect_ped_advconfig_menu_index, "行人愤怒选项", NULL, NULL, NULL);
 }
 
 void process_areaeffect_peds_weapons_menu() {
 	std::vector<MenuItem<int>*> menuItems;
 
 	ToggleMenuItem<int> *togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Enabled";
+	togItem->caption = "启用";
 	togItem->value = 1;
 	togItem->toggleValue = &featurePedsWeapons;
 	menuItems.push_back(togItem);
 
 	SelectFromListMenuItem* listItem = new SelectFromListMenuItem(PED_WEAPON_TITLES, onchange_areaeffect_ped_weapons);
 	listItem->wrap = false;
-	listItem->caption = "Peds Armed With...";
+	listItem->caption = "行人携带武器：";
 	listItem->value = pedWeaponSetIndex;
 	menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(PED_WEAPONS_SELECTIVE_CAPTIONS, onchange_ped_weapons_selective_index);
 	listItem->wrap = false;
-	listItem->caption = "Custom Weapon";
+	listItem->caption = "自定义武器";
 	listItem->value = PedWeaponsSelectiveIndex;
 	menuItems.push_back(listItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Peds Can Switch Weapons";
+	togItem->caption = "行人会自主切换武器";
 	togItem->value = 1;
 	togItem->toggleValue = &featurePedsSwitchWeapons;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Explosive Melee";
+	togItem->caption = "爆炸近战";
 	togItem->value = 1;
 	togItem->toggleValue = &featurePedsExplosiveMelee;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Explosive Ammo";
+	togItem->caption = "爆炸弹药";
 	togItem->value = 1;
 	togItem->toggleValue = &featurePedsExplosiveAmmo;
 	menuItems.push_back(togItem);
 
-	draw_generic_menu<int>(menuItems, &areaeffect_peds_weapons_menu_index, "Peds Weapons Options", NULL, NULL, NULL);
+	draw_generic_menu<int>(menuItems, &areaeffect_peds_weapons_menu_index, "行人携带武器", NULL, NULL, NULL);
 }
 
 bool onconfirm_areaeffect_ped_menu(MenuItem<int> choice){
@@ -488,7 +488,7 @@ bool onconfirm_areaeffect_ped_menu(MenuItem<int> choice){
 
 void do_maintenance_on_tracked_entities(){
 	for each (ENTTrackedPedestrian* tped in trackedPeds){
-		//only apply this on average every 20 frames to save effort
+		// 为了节省资源，平均每 20 帧应用一次
 		int randNum = rand() % 20;
 		if(tped->angryApplied && randNum == 1){
 			findRandomTargetForPed(tped);
@@ -502,9 +502,9 @@ void findRandomTargetForPed(ENTTrackedPedestrian* tped){
 	if(tped->lastTarget == 0 || !ENTITY::DOES_ENTITY_EXIST(tped->lastTarget) || ENTITY::IS_ENTITY_DEAD(tped->lastTarget)){
 		tped->lastTarget = 0;
 		while(tped->lastTarget == 0){
-			int randIndex = rand() % (trackedPeds.size() + 1); //add one to the random range
+			int randIndex = rand() % (trackedPeds.size() + 1); // 将随机范围加一
 			randIndex--;
-			if(randIndex < 0 || featureAngryPedsTargetYou) //chance of fighting the player
+			if(randIndex < 0 || featureAngryPedsTargetYou) // 与玩家战斗的几率
 			{
 				otherPed = PLAYER::PLAYER_PED_ID();
 			}
@@ -512,7 +512,7 @@ void findRandomTargetForPed(ENTTrackedPedestrian* tped){
 				otherPed = trackedPeds.at(randIndex)->ped;
 			}
 
-			//if we've found ourselves
+			// 如果我们处于某种情况
 			if(otherPed == tped->ped){
 				continue;
 			}
@@ -553,7 +553,7 @@ void update_area_effects(Ped playerPed){
 
 	do_maintenance_on_tracked_entities();
 
-	// Everyone Permanently Calm
+	// 所有人永久保持冷静
 	if(featurePlayerIgnoredByAll || featurePlayerInvisible || (featurePlayerInvisibleInVehicle && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1))) {
 		if(bPlayerExists){
 			PLAYER::SET_POLICE_IGNORE_PLAYER(player, true);
@@ -591,7 +591,7 @@ void update_area_effects(Ped playerPed){
 
 		for each (Vehicle veh_npc in vehicles) {
 			int chanceOfSelection = rand() % 5;
-			if (chanceOfSelection != 1) { //  || force
+			if (chanceOfSelection != 1) { //  || 强制
 				continue;
 			}
 
@@ -620,14 +620,14 @@ void update_area_effects(Ped playerPed){
 			VEHICLE::SET_VEHICLE_CAN_BE_VISIBLY_DAMAGED(veh_npc, !featureVehPedNoDamage);
 
 			for (int i = 0; i < 6; i++) {
-				VEHICLE::_SET_VEHICLE_DOOR_BREAKABLE(veh_npc, i, !featureVehPedNoDamage); //(Vehicle, doorIndex, isBreakable)
+				VEHICLE::_SET_VEHICLE_DOOR_BREAKABLE(veh_npc, i, !featureVehPedNoDamage); //(车辆, 车门索引, 是否可破坏)
 			}
 
 			if (featureVehPedNoDamage) {
 				ENTITY::SET_ENTITY_ONLY_DAMAGED_BY_PLAYER(veh_npc, 1);
 				VEHICLE::SET_VEHICLE_BODY_HEALTH(veh_npc, 10000.0f);
 
-				// This API seems to be a damage check - don't just continually repair the vehicle as it causes glitches.
+				// 此API似乎用于检查损坏 - 不要不断修复车辆，因为这会导致故障。
 				if (VEHICLE::_IS_VEHICLE_DAMAGED(veh_npc) && featureVehPedNoDamage && WORLD_GRAVITY_LEVEL_VALUES[VehPedInvincibilityIndex] == 3) {
 					VEHICLE::SET_VEHICLE_FIXED(veh_npc);
 				}
@@ -671,7 +671,7 @@ void update_area_effects(Ped playerPed){
 			}
 			if ((featurePedsExplosiveMelee && WEAPON::HAS_ENTITY_BEEN_DAMAGED_BY_WEAPON(surr_weapon_peds[i], 0, 1) && PED::IS_PED_IN_MELEE_COMBAT(PED::GET_MELEE_TARGET_FOR_PED(surr_weapon_peds[i]))) ||
 				(featurePedsExplosiveAmmo && WEAPON::HAS_ENTITY_BEEN_DAMAGED_BY_WEAPON(surr_weapon_peds[i], 0, 2) && !WEAPON::HAS_ENTITY_BEEN_DAMAGED_BY_WEAPON(surr_weapon_peds[i], 0, 1))) {
-				Vector3 coords_explosive_p = PED::GET_PED_BONE_COORDS(surr_weapon_peds[i], 64016, 0, 0, 0); // right finger bone
+				Vector3 coords_explosive_p = PED::GET_PED_BONE_COORDS(surr_weapon_peds[i], 64016, 0, 0, 0); // 右手手指骨骼
 				GRAPHICS::START_PARTICLE_FX_NON_LOOPED_AT_COORD("scr_agency3b_heli_expl", coords_explosive_p.x, coords_explosive_p.y, coords_explosive_p.z + 1.8, 0.0f, 0.0f, 0.0f, 0.3f, false, false, false); // 8.0f 6.0f
 				FIRE::ADD_OWNED_EXPLOSION(surr_weapon_peds[i], coords_explosive_p.x, coords_explosive_p.y, coords_explosive_p.z + 1.8, 1, 1.0f, true, false, 0.5f); // 29
 				PED::CLEAR_PED_LAST_DAMAGE_BONE(surr_weapon_peds[i]);
@@ -679,14 +679,14 @@ void update_area_effects(Ped playerPed){
 				PED::CLEAR_PED_LAST_DAMAGE_BONE(PED::GET_MELEE_TARGET_FOR_PED(surr_weapon_peds[i]));
 				ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(PED::GET_MELEE_TARGET_FOR_PED(surr_weapon_peds[i]));
 			}
-		} // end of int (peds)
+		} // int 类型的结束（行人相关）
 	}
 
-	// Targeted Angry Peds
+	// 目标愤怒的行人
 	if (!featureAngryMenManually) sa_message = false;
 	if (featureAngryMenManually && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) {
 		if (sa_message == false) {
-		set_status_text("Equip the Stungun. Aim at a ped and at another ped to start a fight.");
+		set_status_text("使用电击枪先瞄准一个 NPC\n然后再瞄准另一个 NPC\n即可挑起他们之间的打斗!");
 		sa_message = true;
 		}
 		Hash tempWeap;
@@ -697,7 +697,7 @@ void update_area_effects(Ped playerPed){
 			Ped targetPed = ENTITY::GET_PED_INDEX_FROM_ENTITY_INDEX(aimedAt);
 			bool inSameCar = ENTITY::IS_ENTITY_ATTACHED_TO_ANY_VEHICLE(aimedAt) && (ENTITY::GET_ENTITY_ATTACHED_TO(playerPed) == ENTITY::GET_ENTITY_ATTACHED_TO(aimedAt));
 
-			// Make sure we're aiming at a ped that's NOT a vehicle, that's ALIVE, and is NOT friendly to the player
+			// 确保我们瞄准的行人不是车辆、处于存活状态，且对玩家不友好
 			if (!inSameCar && !PED::IS_PED_DEAD_OR_DYING(aimedAt, true) && PED::IS_PED_HUMAN(aimedAt) && (PED::GET_RELATIONSHIP_BETWEEN_PEDS(playerPed, aimedAt) >= 3) && !PED::IS_PED_GROUP_MEMBER(aimedAt, myENTGroup)) {
 				PLAYER::SET_EVERYONE_IGNORE_PLAYER(player, true);
 				PLAYER::SET_IGNORE_LOW_PRIORITY_SHOCKING_EVENTS(aimedAt, true);
@@ -705,7 +705,7 @@ void update_area_effects(Ped playerPed){
 
 				draw_box(aimedAt, 237, 28, 36, 255);
 			}
-		} // end of aiming
+		} // 瞄准结束
 		
 		if (CONTROLS::IS_CONTROL_JUST_RELEASED(2, 25) && aimedAt != 0) aim_p_n = aim_p_n + 1;
 		
@@ -721,15 +721,15 @@ void update_area_effects(Ped playerPed){
 				AI::CLEAR_PED_TASKS_IMMEDIATELY(s_ped1);
 				AI::CLEAR_PED_TASKS_IMMEDIATELY(s_ped2);
 				
-				PED::SET_PED_COMBAT_ATTRIBUTES(s_ped1, 46, 1); //always fight
-				PED::SET_PED_COMBAT_ATTRIBUTES(s_ped1, 5, 1); //fight armed peds when unarmed
+				PED::SET_PED_COMBAT_ATTRIBUTES(s_ped1, 46, 1); // 持续进行战斗
+				PED::SET_PED_COMBAT_ATTRIBUTES(s_ped1, 5, 1); // 未持武器时与持武器行人战斗
 				PED::SET_PED_FLEE_ATTRIBUTES(s_ped1, 0, 0);
 				PED::REGISTER_TARGET(s_ped1, s_ped2);
 				AI::TASK_COMBAT_PED(s_ped1, s_ped2, 0, 16);
 				AUDIO::_PLAY_AMBIENT_SPEECH1(s_ped1, "PROVOKE_GENERIC", "SPEECH_PARAMS_FORCE_SHOUTED");
 				
-				PED::SET_PED_COMBAT_ATTRIBUTES(s_ped2, 46, 1); //always fight
-				PED::SET_PED_COMBAT_ATTRIBUTES(s_ped2, 5, 1); //fight armed peds when unarmed
+				PED::SET_PED_COMBAT_ATTRIBUTES(s_ped2, 46, 1); // 持续进行战斗
+				PED::SET_PED_COMBAT_ATTRIBUTES(s_ped2, 5, 1); // 未持武器时与持武器行人战斗
 				PED::SET_PED_FLEE_ATTRIBUTES(s_ped2, 0, 0);
 				PED::REGISTER_TARGET(s_ped2, s_ped1);
 				AI::TASK_COMBAT_PED(s_ped2, s_ped1, 0, 16);
@@ -741,10 +741,10 @@ void update_area_effects(Ped playerPed){
 				s_ped2 = -1;
 				aim_p_n = 0;
 			}
-		} // end of not aiming
+		} // 非瞄准状态结束
 	}
 
-	// Aggressive Drivers && Vigilante Citizens
+	// 激进司机 && 义警市民
 	if ((featureAggressiveDrivers || featureLawAbidingCitizens) && !featurePlayerIgnoredByAll && !featurePlayerInvisible && GAMEPLAY::GET_MISSION_FLAG() == 0) { // !SCRIPT::HAS_SCRIPT_LOADED("wardrobe_sp")
 		Vehicle veh_me = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		Vector3 veh_me_coords = ENTITY::GET_ENTITY_COORDS(veh_me, true);
@@ -760,7 +760,7 @@ void update_area_effects(Ped playerPed){
 				PED::GET_RELATIONSHIP_BETWEEN_PEDS(playerPed, veh_agressive[i]) != 1 && PED::GET_RELATIONSHIP_BETWEEN_PEDS(veh_agressive[i], playerPed) != 1 &&
 				PED::GET_RELATIONSHIP_BETWEEN_PEDS(playerPed, veh_agressive[i]) != 2 && PED::GET_RELATIONSHIP_BETWEEN_PEDS(veh_agressive[i], playerPed) != 2) {
 				
-				// vigilante citizens
+				// 义警市民
 				if (featureLawAbidingCitizens && GAMEPLAY::GET_MISSION_FLAG() == 0 && in_prison == false && !featurePowerPunch) {
 					if ((PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed) != 0 && VEHICLE::GET_PED_IN_VEHICLE_SEAT(PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed), -1) != 0 &&
 						!PED::IS_PED_IN_ANY_TAXI(VEHICLE::GET_PED_IN_VEHICLE_SEAT(PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed), -1))) ||
@@ -786,9 +786,9 @@ void update_area_effects(Ped playerPed){
 						ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(temp_vehicle);
 					}
 					if (!PED::IS_PED_ON_VEHICLE(PLAYER::PLAYER_PED_ID())) on_feet = true;
-				} // end of vigilante citizens
+				} // 义警市民部分结束
 				
-				// aggressive drivers
+				  // 激进司机
 				if (featureAggressiveDrivers && !SCRIPT::HAS_SCRIPT_LOADED("fbi4_prep3amb")) {
 					Vehicle veh_coll_with = PED::GET_VEHICLE_PED_IS_IN(veh_agressive[i], false);
 					Vector3 veh_coll_with_coords = ENTITY::GET_ENTITY_COORDS(veh_coll_with, true);
@@ -818,9 +818,9 @@ void update_area_effects(Ped playerPed){
 						}
 						s_seconds = 0;
 					} 
-				} // end of aggressive drivers
-			} // end of if
-		} // end of for
+				} // 激进司机部分结束
+			} // if 语句结束
+		} // for 循环结束
 
 		if (time_to_chase == true && PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(playerPed) == 0 && GAMEPLAY::GET_MISSION_FLAG() == 0) {
 			for (int vc = 0; vc < count_veh; vc++) {
@@ -870,7 +870,7 @@ void update_area_effects(Ped playerPed){
 			}
 			time_to_attack = false;
 			time_to_chase = false;
-		} //end of time to chase
+		} // 追逐时间结束
 
 		if (v_collision_check == true && !pursuer.empty()) {
 			AI::SET_DRIVE_TASK_CRUISE_SPEED(pursuer.back(), 300.0);
@@ -921,7 +921,7 @@ void update_area_effects(Ped playerPed){
 			v_collided.clear();
 			v_collided.shrink_to_fit();
 		}
-		// vigilante blips
+		// 用于显示义警位置的标记点
 		if (NPC_RAGDOLL_VALUES[VigilanteBlipIndex] > 0) {
 			if (pursuer.empty() && !BLIPTABLE_VIGILANTE.empty()) {
 				for (int j = 0; j < BLIPTABLE_VIGILANTE.size(); j++) UI::REMOVE_BLIP(&BLIPTABLE_VIGILANTE[j]);
@@ -978,9 +978,9 @@ void update_area_effects(Ped playerPed){
 				BLIPTABLE_VIGILANTE.erase(BLIPTABLE_VIGILANTE.begin());
 			}
 		}
-	} // end of aggressive drivers && vigilante citizens
+	} // 激进司机 && 义警市民部分结束
 
-	// Spooked Drivers
+	  // 受惊的司机
 	if (featureSpookyDrivers && PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && GAMEPLAY::GET_MISSION_FLAG() == 0) {
 		Vehicle veh_me = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 		Vector3 veh_me_coords = ENTITY::GET_ENTITY_COORDS(veh_me, true);
@@ -1104,7 +1104,7 @@ void update_area_effects(Ped playerPed){
 	if (featureSpookyDriversUpdated) {
 		featureAggressiveDrivers = false;
 		featureSpookyDriversUpdated = false;
-	} // end of spooked drivers
+	} // 受惊的司机部分结束
 	
 }
 
@@ -1114,7 +1114,7 @@ void draw_box(Ped ped, int red, int green, int blue, int alpha) {
 	int screenResX, screenResY;
 	float screenX, screenY;
 
-	GRAPHICS::_GET_SCREEN_ACTIVE_RESOLUTION(&screenResX, &screenResY); // use this to correct for screen ratio
+	GRAPHICS::_GET_SCREEN_ACTIVE_RESOLUTION(&screenResX, &screenResY); // 使用此方法校正屏幕比例
 
 	if (GRAPHICS::_WORLD3D_TO_SCREEN2D(pedPosition.x, pedPosition.y, pedPosition.z, &screenX, &screenY) == TRUE) {
 		GRAPHICS::DRAW_RECT(screenX, screenY, 5.0f / (float)screenResX, 5.0f / (float)screenResY, red, green, blue, alpha);
@@ -1139,7 +1139,8 @@ void set_all_nearby_peds_to_calm(){
 	std::set<Ped> peds = get_nearby_peds(PLAYER::PLAYER_PED_ID());
 	for each (Ped xped in peds) {
 		if (xped != PLAYER::PLAYER_PED_ID()) {
-			if (!PED::IS_PED_GROUP_MEMBER(xped, PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID()))) { // Only calm down peds if they're NOT in our group (keeps our bodyguards from chilling out and being lazy)
+			if (!PED::IS_PED_GROUP_MEMBER(xped, PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID()))) { 
+				// 仅当行人不在我们的队伍中时使其冷静（防止我们的保镖变得懒散）
 				PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(xped, true);
 				PED::SET_PED_FLEE_ATTRIBUTES(xped, 0, 0);
 			}
@@ -1150,7 +1151,7 @@ void set_all_nearby_peds_to_calm(){
 void set_all_nearby_peds_to_invincible(bool enabled){
 	std::set<Ped> peds = get_nearby_peds(PLAYER::PLAYER_PED_ID());
 	for each (Ped xped in peds){
-		// Only apply to non-bodyguards
+		// 仅对非保镖角色生效
 		if(!PED::IS_PED_GROUP_MEMBER(xped, PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID()))){
 			ENTTrackedPedestrian* trackedPed = findOrCreateTrackedPed(xped);
 			if((enabled && !trackedPed->madeInvincible) || (!enabled && trackedPed->madeInvincible)){
@@ -1173,17 +1174,17 @@ void set_all_nearby_peds_to_angry(bool enabled){
 	std::set<Ped> peds = get_nearby_peds(PLAYER::PLAYER_PED_ID());
 
 	for each (Ped xped in peds){
-		// Only apply to non-bodyguards
+		// 仅适用于非保镖
 		if(!PED::IS_PED_GROUP_MEMBER(xped, PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID())) && PED::GET_PED_TYPE(xped) != 6 && PED::GET_PED_TYPE(xped) != 27 && PED::GET_PED_TYPE(xped) != 29){
 			ENTTrackedPedestrian* trackedPed = findOrCreateTrackedPed(xped);
 
 			if(enabled && !trackedPed->angryApplied){
-				PED::SET_PED_COMBAT_ATTRIBUTES(xped, 0, featureAngryPedsUseCover ? 1 : 0); //use cover
+				PED::SET_PED_COMBAT_ATTRIBUTES(xped, 0, featureAngryPedsUseCover ? 1 : 0); // 使用掩体
 
-				PED::SET_PED_COMBAT_ATTRIBUTES(xped, 46, 1); //always fight
-				PED::SET_PED_COMBAT_ATTRIBUTES(xped, 5, 1); //fight armed peds when unarmed
-				PED::SET_PED_COMBAT_ATTRIBUTES(xped, 3, featurePedsIncludeDrivers ? 1 : 0); //can leave vehicle
-				PED::SET_PED_COMBAT_ATTRIBUTES(xped, 2, featurePedsIncludeDrivers ? 1 : 0); //can do driveby
+				PED::SET_PED_COMBAT_ATTRIBUTES(xped, 46, 1); // 始终保持战斗状态
+				PED::SET_PED_COMBAT_ATTRIBUTES(xped, 5, 1); // 未持武器时与持武器行人战斗
+				PED::SET_PED_COMBAT_ATTRIBUTES(xped, 3, featurePedsIncludeDrivers ? 1 : 0); // 允许离开载具
+				PED::SET_PED_COMBAT_ATTRIBUTES(xped, 2, featurePedsIncludeDrivers ? 1 : 0); // 允许进行车载射击
 				PED::SET_PED_FLEE_ATTRIBUTES(xped, 0, 0);
 
 				findRandomTargetForPed(trackedPed);
@@ -1192,12 +1193,12 @@ void set_all_nearby_peds_to_angry(bool enabled){
 				trackedPed->missionise();
 			}
 			else if(!enabled && trackedPed->angryApplied){
-				//stop them being angry
-				PED::SET_PED_COMBAT_ATTRIBUTES(xped, 0, 0); //use cover
-				PED::SET_PED_COMBAT_ATTRIBUTES(xped, 46, 0); //always fight
-				PED::SET_PED_COMBAT_ATTRIBUTES(xped, 5, 0); //fight armed peds when unarmed 
-				PED::SET_PED_COMBAT_ATTRIBUTES(xped, 3, 0); //can leave vehicle
-				PED::SET_PED_COMBAT_ATTRIBUTES(xped, 2, 0); //can do driveby
+				// 阻止行人保持愤怒状态
+				PED::SET_PED_COMBAT_ATTRIBUTES(xped, 0, 0); // 不使用掩体
+				PED::SET_PED_COMBAT_ATTRIBUTES(xped, 46, 0); // 不始终保持战斗状态
+				PED::SET_PED_COMBAT_ATTRIBUTES(xped, 5, 0); // 未持武器时不与持武器行人战斗
+				PED::SET_PED_COMBAT_ATTRIBUTES(xped, 3, 0); // 不允许离开载具
+				PED::SET_PED_COMBAT_ATTRIBUTES(xped, 2, 0); // 不允许进行车载射击
 
 				PED::SET_PED_AS_ENEMY(xped, enabled);
 				PED::SET_PED_FLEE_ATTRIBUTES(xped, 0, 0);
@@ -1289,14 +1290,14 @@ std::set<Ped>get_nearby_peds(Ped playerPed){
 		if(ENTITY::IS_ENTITY_A_MISSION_ENTITY(item) && !ENTITY::DOES_ENTITY_BELONG_TO_THIS_SCRIPT(item, true)){
 			continue;
 		}
-		if (NPC_RAGDOLL_VALUES[WorldSelectivePedsIndex] == 2 && PED::GET_PED_TYPE(item) == 4) { // men
+		if (NPC_RAGDOLL_VALUES[WorldSelectivePedsIndex] == 2 && PED::GET_PED_TYPE(item) == 4) { // 男性
 			continue;
 		}
-		if (NPC_RAGDOLL_VALUES[WorldSelectivePedsIndex] == 1 && PED::GET_PED_TYPE(item) == 5) { // women
+		if (NPC_RAGDOLL_VALUES[WorldSelectivePedsIndex] == 1 && PED::GET_PED_TYPE(item) == 5) { // 女性
 			continue;
 		}
 		
-		//filter out drivers/pilots if necessary
+		// 如有必要，过滤掉司机/飞行员
 		if((!featurePedsIncludePilots || !featurePedsIncludeDrivers) && PED::IS_PED_IN_ANY_VEHICLE(item, false)){
 			Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(item, false);
 
@@ -1337,15 +1338,15 @@ std::set<Vehicle> get_nearby_vehicles(Ped playerPed){
 			continue;
 		}
 
-		//don't return dead items
+		// 不要返回已失效的项
 		if(ENTITY::IS_ENTITY_DEAD(item)){
 			continue;
 		}
-		//don't return the vehicle we're using
+		// 不要返回我们正在使用的载具
 		else if(playerInVehicle && playerVehicle == item){
 			continue;
 		}
-		//don't do stuff to mission entities
+		// 不要对任务实体进行操作
 		else if(ENTITY::IS_ENTITY_A_MISSION_ENTITY(item) && !ENTITY::DOES_ENTITY_BELONG_TO_THIS_SCRIPT(item, true)){
 			continue;
 		}
@@ -1378,7 +1379,7 @@ void kill_all_nearby_peds_now(){
 			ENTTrackedPedestrian* trackedPed = findOrCreateTrackedPed(xped);
 			trackedPed->missionise();
 
-			//remove invincibility
+			// 移除无敌状态
 			PED::SET_PED_DIES_WHEN_INJURED(xped, true);
 			PED::SET_PED_MAX_HEALTH(xped, 1);
 			ENTITY::SET_ENTITY_HEALTH(xped, 1);
@@ -1405,7 +1406,7 @@ void kill_all_nearby_peds_continuous(){
 			ENTTrackedPedestrian* trackedPed = findOrCreateTrackedPed(xped);
 			trackedPed->missionise();
 
-			//remove invincibility
+			// 移除无敌状态
 			PED::SET_PED_DIES_WHEN_INJURED(xped, true);
 			PED::SET_PED_MAX_HEALTH(xped, 1);
 			ENTITY::SET_ENTITY_HEALTH(xped, 1);
@@ -1481,7 +1482,7 @@ void clear_up_missionised_entitities(){
 		if(!ENTITY::DOES_ENTITY_EXIST(*rpIt)){
 			rpIt = releasedPeds.erase(rpIt);
 		}
-		else if(!is_entity_to_be_disposed(playerPed, *rpIt)) //no longer for deletion after all
+		else if(!is_entity_to_be_disposed(playerPed, *rpIt)) // 最终不再标记为删除
 		{
 			rpIt = releasedPeds.erase(rpIt);
 		}
@@ -1495,7 +1496,7 @@ void clear_up_missionised_entitities(){
 		if(!ENTITY::DOES_ENTITY_EXIST(*rvIt)){
 			rvIt = releasedVehicles.erase(rvIt);
 		}
-		else if(!is_entity_to_be_disposed(playerPed, *rvIt)) //no longer for deletion after all
+		else if(!is_entity_to_be_disposed(playerPed, *rvIt)) // 最终不再标记为删除
 		{
 			rvIt = releasedVehicles.erase(rvIt);
 		}
@@ -1557,7 +1558,7 @@ void give_all_nearby_peds_a_weapon(bool enabled){
 		if(chanceOfGettingWeapon != 1){
 			continue;
 		}
-		if (PED_WEAPON_TITLES[pedWeaponSetIndex] != "Custom Weapon")
+		if (PED_WEAPON_TITLES[pedWeaponSetIndex] != "自定义武器")
 		{
 			if (!PED::IS_PED_GROUP_MEMBER(xped, PLAYER::GET_PLAYER_GROUP(PLAYER::PLAYER_PED_ID())) && PED::GET_PED_TYPE(xped) != 6 && PED::GET_PED_TYPE(xped) != 27 && PED::GET_PED_TYPE(xped) != 29){
 				ENTTrackedPedestrian* trackedPed = findOrCreateTrackedPed(xped);
@@ -1590,7 +1591,7 @@ void give_all_nearby_peds_a_weapon(bool enabled){
 					trackedPed->weaponSetApplied = pedWeaponSetIndex;
 				}
 				else if (!enabled && trackedPed->weaponSetApplied != 0){
-					//TODO: take all their weapons from that set away?
+					// 待办：移除他们从该套装中获得的所有武器？
 
 					trackedPed->weaponSetApplied = 0;
 				}
@@ -1654,7 +1655,7 @@ ENTTrackedPedestrian* findOrCreateTrackedPed(Ped searchPed){
 			return *pit;
 		}
 	}
-	//if nowt found
+	// 如果未找到任何内容
 	ENTTrackedPedestrian* result = new ENTTrackedPedestrian(searchPed);
 	trackedPeds.push_back(result);
 
@@ -1669,7 +1670,7 @@ ENTTrackedVehicle* findOrCreateTrackedVehicle(Vehicle searchVeh){
 			return *vit;
 		}
 	}
-	//if nowt found
+	// 如果未找到任何内容
 	ENTTrackedVehicle* result = new ENTTrackedVehicle(searchVeh);
 	trackedVehicles.push_back(result);
 	return result;
