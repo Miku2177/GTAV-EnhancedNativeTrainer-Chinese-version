@@ -1,11 +1,11 @@
 /*
-Some of this code began its life as a part of GTA V SCRIPT HOOK SDK.
+这段代码的部分最初来源于 GTA V SCRIPT HOOK SDK。
 http://dev-c.com
 (C) Alexander Blade 2015
 
-It is now part of the Enhanced Native Trainer project.
+它现在已成为 Enhanced Native Trainer 项目的一部分。
 https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
-(C) Rob Pridham and fellow contributors 2015
+(C) Rob Pridham 及其他贡献者 2015
 */
 
 #pragma comment(lib, "Shlwapi.lib")
@@ -21,9 +21,9 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include <psapi.h>
 #include <ctime>
 
-#pragma warning(disable : 4244 4305) // double <-> float conversions
+#pragma warning(disable : 4244 4305)// 双精度 <-> 单精度浮点数转换
 
-// prison break variables
+// 越狱相关变量
 bool riot_attempt = false;
 int tick_callpoliceaboutfugitive = 0;
 bool detained, in_prison = false;
@@ -61,7 +61,7 @@ bool current_player_discharge_Changed = true;
 int current_escape_stars = 4;
 bool current_escape_stars_Changed = true;
 
-////////////////////////////////////////// PRISON BREAK //////////////////////////////////////////
+////////////////////////////////////////// 越狱 //////////////////////////////////////////
 void prison_break()
 {
 	if (PLAYER_PRISON_VALUES[current_player_prison] > 0 && GAMEPLAY::GET_MISSION_FLAG() == 0) {
@@ -76,21 +76,21 @@ void prison_break()
 		float distance_from_guard_x, distance_from_guard_y = -1;
 		float distance_guard_from_center_x, distance_guard_from_center_y = -1;
 
-		// Prison center coords
+		// 监狱中心坐标
 		float prison_x = 1689.69;
 		float prison_y = 2589.49;
 		float prison_z = 46;
 		
-		// Got wanted level? You'd better not die
+		// 有通缉等级？你最好别死
 		if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) > PLAYER_PRISON_VALUES[current_player_prison] && !in_prison) detained = true;
 			
-		// You won't be detained if you escape the police
+		// 如果你逃脱警察，就不会被拘留
 		if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) > -1 && current_player_prison < 4 && PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < PLAYER_PRISON_VALUES[current_player_prison + 1] &&
 			(time_since_d > 6000 || time_since_d == -1) && ((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) != 12) ||
 			(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) != 1) ||
 				(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) != 5))) detained = false;
 
-		// TRANSFERING YOU TO PRISON
+		// 正在将你转移到监狱
 		if ((detained && time_since_d > 0 && time_since_d < 6000 && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID())) || (detained && player_died == true && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID())) ||
 			(alert_level > 0 && ((time_since_d > 0 && time_since_d < 6000) || player_died == true) && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID())))
 		{
@@ -99,7 +99,7 @@ void prison_break()
 			PLAYER::SET_MAX_WANTED_LEVEL(0);
 			PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 0, 0);
 			PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
-			// Disarm you including armor
+			// 解除你的武装，包括护甲
 			WEAPON::REMOVE_ALL_PED_WEAPONS(playerPed, false);
 			PED::SET_PED_ARMOUR(PLAYER::PLAYER_ID(), 0);
 
@@ -118,18 +118,18 @@ void prison_break()
 				npc_skin = true;
 			}
 
-			// Character Prison Clothes
-			// Michael
+			// 角色监狱服装
+			// 迈克尔
 			if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO) {
 				PED::SET_PED_COMPONENT_VARIATION(playerPed, 4, 11, 4, 1);
 				PED::SET_PED_COMPONENT_VARIATION(playerPed, 3, 12, 4, 1);
 			}
-			// Franklin
+			// 富兰克
 			if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE) {
 				PED::SET_PED_COMPONENT_VARIATION(playerPed, 4, 1, 5, 1);
 				PED::SET_PED_COMPONENT_VARIATION(playerPed, 3, 1, 5, 1);
 			}
-			// Trevor
+			// 崔佛
 			if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO) {
 				PED::SET_PED_COMPONENT_VARIATION(playerPed, 4, 5, 2, 1);
 				PED::SET_PED_COMPONENT_VARIATION(playerPed, 3, 5, 2, 1);
@@ -143,24 +143,24 @@ void prison_break()
 				ADDITIONAL_PRISONERS.shrink_to_fit();
 			}
 
-			// Money for escape attempt
+			// 逃脱尝试所需的金钱
 			if (will_pay_money_for_escape == true && time_since_d > 0 && time_since_d < 6000) {
-				// How much money have you got?
+				// 你有多少钱？
 				int outValue_your_current_amount = -1;
 				int statHash_your_purse = -1;
-				// Michael
+				// 迈克
 				if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO) {
 					STATS::STAT_GET_INT(SP0_TOTAL_CASH, &outValue_your_current_amount, -1);
 					statHash_your_purse = SP0_TOTAL_CASH;
 					if (MISC_PHONE_BILL_VALUES[current_player_escapemoney] > 0) STATS::STAT_SET_INT(statHash_your_purse, outValue_your_current_amount - MISC_PHONE_BILL_VALUES[current_player_escapemoney], true);
 				}
-				// Franklin
+				// 富兰克
 				if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE) {
 					STATS::STAT_GET_INT(SP1_TOTAL_CASH, &outValue_your_current_amount, -1);
 					statHash_your_purse = SP1_TOTAL_CASH;
 					if (MISC_PHONE_BILL_VALUES[current_player_escapemoney] > 0) STATS::STAT_SET_INT(statHash_your_purse, outValue_your_current_amount - MISC_PHONE_BILL_VALUES[current_player_escapemoney], true);
 				}
-				// Trevor
+				// 崔佛
 				if (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO) {
 					STATS::STAT_GET_INT(SP2_TOTAL_CASH, &outValue_your_current_amount, -1);
 					statHash_your_purse = SP2_TOTAL_CASH;
@@ -170,7 +170,7 @@ void prison_break()
 			}
 		}
 
-		// IMPRISONED
+		// 被监禁
 		if (in_prison) {
 			Hash JailGuard_Weapon1 = GAMEPLAY::GET_HASH_KEY("WEAPON_PISTOL");
 			if (!featurePrison_Hardcore) JailGuard_Weapon2 = GAMEPLAY::GET_HASH_KEY("WEAPON_ASSAULTRIFLE");
@@ -184,7 +184,7 @@ void prison_break()
 				will_pay_money_for_escape = false;
 			}
 
-			// Populate the prison
+			// 填充监狱
 			if (featurePrison_Yard) {
 				TIME::SET_CLOCK_TIME(12, 0, 0);
 				if (populate_tick < 10) {
@@ -218,7 +218,7 @@ void prison_break()
 				}
 			}
 
-			// Either main gates are closed or you're a sissy!
+			// 要么大门关了，要么你是个胆小鬼！
 			if (featurePrison_Hardcore) {
 				Hash prisonDoor = GAMEPLAY::GET_HASH_KEY("prop_gate_prison_01");
 				OBJECT::_DOOR_CONTROL(prisonDoor, 1845.0, 2605.0, 45.0, 1, 0.0, 50.0, 0);
@@ -227,15 +227,15 @@ void prison_break()
 				OBJECT::_DOOR_CONTROL(GAMEPLAY::GET_HASH_KEY("prop_gate_prison_01"), 1845.0, 2605.0, 45.0, 0, 0.0, 50.0, 0);
 			}
 
-			// No way you will call or switch your character
-			CONTROLS::DISABLE_CONTROL_ACTION(2, 19, true); // character wheel
+			// 你无法打电话或切换角色
+			CONTROLS::DISABLE_CONTROL_ACTION(2, 19, true); // 角色轮盘
 			MOBILE::DESTROY_MOBILE_PHONE();
-			CONTROLS::DISABLE_CONTROL_ACTION(2, 27, 1); // phone
+			CONTROLS::DISABLE_CONTROL_ACTION(2, 27, 1); // 电话
 
-			// You don't need a parachute in prison
+			// 你在监狱里不需要降落伞
 			if (WEAPON::HAS_PED_GOT_WEAPON(playerPed, PARACHUTE_ID, FALSE))	WEAPON::REMOVE_WEAPON_FROM_PED(playerPed, PARACHUTE_ID);
 			
-			// How much time before discharge
+			// 距离释放还有多少时间？
 			if (PLAYER_DISCHARGE_VALUES[current_player_discharge] > 0) {
 				secs_difference = clock() / CLOCKS_PER_SEC;
 				if (time_in_prison_tick > 0 && (((clock() / CLOCKS_PER_SEC) - secs) != 0)) {
@@ -307,7 +307,7 @@ void prison_break()
 				UI::_DRAW_TEXT(0.025, 0.65);
 			}
 
-			// Let's change a level of alertness
+			// 让我们改变警戒等级
 			distance_from_center_x = my_position_in_prison.x - prison_x;
 			distance_from_center_y = my_position_in_prison.y - prison_y;
 			if (distance_from_center_x < 0) distance_from_center_x = distance_from_center_x * -1;
@@ -333,8 +333,8 @@ void prison_break()
 
 			if ((my_position_in_prison.z - prison_z) > 55 || distance_from_center_x > 190 || distance_from_center_y > 200 || PED::IS_PED_IN_ANY_VEHICLE(playerPed, true)) alert_level = 3;
 
-			// Alertness levels
-			if (alert_level == 0) { // Behave yourself
+			// 警戒等级
+			if (alert_level == 0) { // 规矩点
 				for (int i = 0; i < count_prison_guards; i++)
 				{
 					randomize_jail = (1 + rand() % 10);
@@ -377,7 +377,7 @@ void prison_break()
 				UI::HIDE_HUD_COMPONENT_THIS_FRAME(1);
 			}
 
-			if (alert_level == 1) { // Hit someone in the face / Withdraw a weapon / Got lost?!
+			if (alert_level == 1) { // 打了别人的脸 / 拔出武器 / 迷路了？！
 				for (int i = 0; i < count_prison_guards; i++) {
 					randomize_jail = (1 + rand() % 10);
 					if (randomize_jail < 6) JailGuard_Weapon3 = GAMEPLAY::GET_HASH_KEY("WEAPON_STUNGUN");
@@ -424,7 +424,7 @@ void prison_break()
 				UI::SHOW_HUD_COMPONENT_THIS_FRAME(1);
 			}
 
-			if (alert_level == 2) { // Trying to leave the courtyard. Being uppish?
+			if (alert_level == 2) { // 试图离开院子。太嚣张了？
 				for (int i = 0; i < count_prison_guards; i++) {
 					guard_position_in_prison = ENTITY::GET_ENTITY_COORDS(guards[i], true);
 					distance_from_guard_x = my_position_in_prison.x - guard_position_in_prison.x;
@@ -465,7 +465,7 @@ void prison_break()
 				UI::SHOW_HUD_COMPONENT_THIS_FRAME(1);
 			}
 
-			if (alert_level == 3) { // Escaping the prison. A death wish?
+			if (alert_level == 3) { // 试图越狱。找死吗？
 				for (int i = 0; i < count_prison_guards; i++) {
 					guard_position_in_prison = ENTITY::GET_ENTITY_COORDS(guards[i], true);
 					distance_from_guard_x = my_position_in_prison.x - guard_position_in_prison.x;
@@ -517,7 +517,7 @@ void prison_break()
 				}
 			}
 
-			// You served your time. Get lost. Let's hope we won't see you again
+			// 你已经服完刑了。滚吧。希望我们不会再见到你。
 			if (time_in_prison_tick < 1) {
 				ENTITY::SET_ENTITY_COORDS_NO_OFFSET(playerPed, 1990.48, 3047.6, 47.2151, 0, 0, 1);
 				PLAYER::SET_MAX_WANTED_LEVEL(5);
@@ -543,22 +543,22 @@ void prison_break()
 					ADDITIONAL_PRISONERS.clear();
 					ADDITIONAL_PRISONERS.shrink_to_fit();
 				}
-				// Let's give back civilian clothes. We'll see if you're lucky
+				// 让我们换回便服。看看你运气如何。
 				PED::SET_PED_RANDOM_COMPONENT_VARIATION(playerPed, true);
 			}
-		} // END OF IMPRISONED
+		} // 监禁结束
 		
-		// You still wear prison clothes. If you die you'll get back to prison unless you disabled corresponding options.
+		  // 你还穿着囚服。如果你死了，除非你禁用了相关选项，否则你会回到监狱。
 		if (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) == 0 && in_prison == false && ((time_since_d > 5999 && npc_skin == true) || npc_skin == true) && PLAYER::IS_PLAYER_CONTROL_ON(PLAYER::PLAYER_ID())) {
 			alert_level = 0;
 			npc_skin = false;
-			if (!featurePrison_Robe && !featurePedPrison_Robe) detained = false; // !featurePrison_Hardcore && 
+			if (!featurePrison_Robe && !featurePedPrison_Robe) detained = false; // !featurePrison_硬核模式 && 
 			if ((featurePrison_Robe || featurePedPrison_Robe || featurePrison_Hardcore) && ((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) != 12) ||
 				(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) != 1) ||
 				(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) != 5))) detained = false;
 		}
 
-		if ((featurePrison_Robe || featurePedPrison_Robe) && in_prison == false && ((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 12) || //  || featurePrison_Hardcore
+		if ((featurePrison_Robe || featurePedPrison_Robe) && in_prison == false && ((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 12) || //  || featurePrison_硬核模式
 			(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 1) ||
 			(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 5))) detained = true;
 
@@ -566,7 +566,7 @@ void prison_break()
 			PLAYER::CLEAR_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID());
 		}
 
-		// You're found drunk in a bar 
+		// 你在酒吧里被发现喝醉了
 		if (ExPrisonerDrunk && ExPrisonerDrunk_tick == 0) {
 			STREAMING::REQUEST_ANIM_SET("move_m@drunk@verydrunk");
 			while (!STREAMING::HAS_ANIM_SET_LOADED("move_m@drunk@verydrunk")) {
@@ -595,7 +595,7 @@ void prison_break()
 			clear_wanted_level = false;
 		}
 
-		// You escaped but still can't use your phone, switch, etc. Cancel your wanted level.
+		// 你逃脱了，但仍然不能使用电话、切换角色等。取消你的通缉等级。
 		if (((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 12) ||
 			(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 1) ||
 			(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 5)))
@@ -612,7 +612,7 @@ void prison_break()
 			(ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ONE && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 1) || (ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_TWO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 5))) {
 			for (int i = 0; i < count_prison_guards; i++) {
 				
-				if (featurePrison_Robe) { // YOU'D BETTER CHANGE AS SOON AS POSSIBLE. POLICE WILL NOTICE YOUR INTERESTING CLOTHES
+				if (featurePrison_Robe) { // 你最好尽快换衣服。警察会注意到你有趣的穿着。
 					Vector3 police_position = ENTITY::GET_ENTITY_COORDS(guards[i], true);
 					int distance_from_police_x = my_position_in_prison.x - police_position.x;
 					int distance_from_police_y = my_position_in_prison.y - police_position.y;
@@ -621,14 +621,14 @@ void prison_break()
 					if (distance_from_police_y < 0) distance_from_police_y = distance_from_police_y * -1;
 					if (distance_from_police_z < 0) distance_from_police_z = distance_from_police_z * -1;
 
-					// Your escape is not over yet so you still can't use mobile or switch character unless you change your clothes. And you don't need a parachute either
+					// 你的逃脱还未结束，因此除非你换衣服，否则仍然不能使用手机或切换角色。你也不需要降落伞。
 					if (guards[i] == playerPed) {
 						CONTROLS::DISABLE_CONTROL_ACTION(2, 19, true);
 						MOBILE::DESTROY_MOBILE_PHONE();
 						CONTROLS::DISABLE_CONTROL_ACTION(2, 27, 1);
 						if (WEAPON::HAS_PED_GOT_WEAPON(playerPed, PARACHUTE_ID, FALSE)) WEAPON::REMOVE_WEAPON_FROM_PED(playerPed, PARACHUTE_ID);
 					}
-					// Met a cop at a distance
+					// 在远处遇到了警察
 					if (distance_from_police_x < 100 && distance_from_police_y < 100 && distance_from_police_z < 10 && PED::IS_PED_FACING_PED(guards[i], playerPed, 100) &&
 						(PED::GET_PED_TYPE(guards[i]) == 6 || PED::GET_PED_TYPE(guards[i]) == 27) && ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(guards[i], playerPed, 17))
 					{
@@ -643,7 +643,7 @@ void prison_break()
 								PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
 								alert_level = 1;
 							}
-							// Met a cop right in front of you
+							// 在正前方遇到了警察
 							if (distance_from_police_x < 10 && distance_from_police_y < 10 && distance_from_police_z < 1 && (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 4)) {
 								PLAYER::SET_MAX_WANTED_LEVEL(5);
 								PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 3, 0);
@@ -652,7 +652,7 @@ void prison_break()
 							}
 						}
 					}
-					// Prisoner driver met a cop
+					// 囚犯司机遇到了警察
 					if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && !PED::IS_PED_ON_ANY_BIKE(playerPed))
 					{
 						if (((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 12) ||
@@ -669,9 +669,9 @@ void prison_break()
 							}
 						}
 					}
-				} // end of prison robe
+				} // 囚服结束
 
-				if (featurePedPrison_Robe) { // YOU'D BETTER CHANGE AS SOON AS POSSIBLE. PEDS WILL NOTICE YOUR INTERESTING CLOTHES
+				if (featurePedPrison_Robe) { // 你最好尽快换衣服。路人会注意到你有趣的穿着。
 					Vector3 ped_position = ENTITY::GET_ENTITY_COORDS(guards[i], true);
 					int distance_from_ped_x = my_position_in_prison.x - ped_position.x;
 					int distance_from_ped_y = my_position_in_prison.y - ped_position.y;
@@ -680,14 +680,14 @@ void prison_break()
 					if (distance_from_ped_y < 0) distance_from_ped_y = distance_from_ped_y * -1;
 					if (distance_from_ped_z < 0) distance_from_ped_z = distance_from_ped_z * -1;
 
-					// Your escape is not over yet so you still can't use mobile or switch character unless you change your clothes. And you don't need a parachute either
+					// 你的逃脱还未结束，因此除非你换衣服，否则仍然不能使用手机或切换角色。你也不需要降落伞。
 					if (guards[i] == playerPed) {
 						CONTROLS::DISABLE_CONTROL_ACTION(2, 19, true);
 						MOBILE::DESTROY_MOBILE_PHONE();
 						CONTROLS::DISABLE_CONTROL_ACTION(2, 27, 1);
 						if (WEAPON::HAS_PED_GOT_WEAPON(playerPed, PARACHUTE_ID, FALSE)) WEAPON::REMOVE_WEAPON_FROM_PED(playerPed, PARACHUTE_ID);
 					}
-					// You've been seen.
+					// 你被发现了。
 					if (alert_police_about_fugitive_close == true || alert_police_about_fugitive_distant == true) {
 						if (tick_callpoliceaboutfugitive < 1000) {
 							pb_tick_secs_passed = clock() / CLOCKS_PER_SEC;
@@ -716,7 +716,7 @@ void prison_break()
 							alert_police_about_fugitive_close = false;
 						}
 					}
-					// Met a ped at a distance
+					// 在远处遇到了路人
 					if (distance_from_ped_x < 20 && distance_from_ped_y < 20 && distance_from_ped_z < 10 && PED::IS_PED_FACING_PED(guards[i], playerPed, 100) &&
 						(PED::GET_PED_TYPE(guards[i]) == 4 || PED::GET_PED_TYPE(guards[i]) == 5) && PED::GET_PED_TYPE(guards[i]) != 6 && PED::GET_PED_TYPE(guards[i]) != 27 &&
 						ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(guards[i], playerPed, 17))
@@ -733,7 +733,7 @@ void prison_break()
 								AI::TASK_USE_MOBILE_PHONE_TIMED(guards[i], 10000);
 								alert_police_about_fugitive_distant = true;
 							}
-							// Met a ped right in front of you
+							// 在正前方遇到了路人
 							if (distance_from_ped_x < 7 && distance_from_ped_y < 7 && distance_from_ped_z < 1 && (PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < 4) &&
 								!PED::IS_PED_FLEEING(guards[i]) && !AI::IS_PED_RUNNING(guards[i]) && !PED::IS_PED_IN_COMBAT(guards[i], playerPed))
 							{
@@ -744,7 +744,7 @@ void prison_break()
 							}
 						}
 					}
-					// Prisoner driver met a ped
+					// 囚犯司机遇到了路人
 					if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && !PED::IS_PED_ON_ANY_BIKE(playerPed))
 					{
 						if (((ENTITY::GET_ENTITY_MODEL(PLAYER::PLAYER_PED_ID()) == PLAYER_ZERO && PED::GET_PED_DRAWABLE_VARIATION(playerPed, 3) == 12) ||
@@ -761,9 +761,9 @@ void prison_break()
 							}
 						}
 					}
-				} // end of ped prison robe
-			} // end of for
-		} // end of both 'prison robe' and 'ped prison robe'
+				} // 结束路人囚服逻辑
+			} // 结束循环
+		} // 结束‘囚服’和‘路人囚服’逻辑
 
 		if (alert_level > 0 && riot_attempt == false && detained == false) {
 			will_pay_money_for_escape = true;
