@@ -1,7 +1,7 @@
 /*
-Part of the Enhanced Native Trainer project.
+增强版原生训练器项目的一部分。
 https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
-(C) Rob Pridham and fellow contributors 2015
+(C) Rob Pridham 及其他贡献者 2015
 */
 
 #include "props.h"
@@ -36,8 +36,8 @@ int explosionID = 0;
 
 SpawnedPropInstance lastHighlightedProp;
 
-const std::vector<std::string> ALPHA_LABELS = { "Normal", "80%", "60%", "40%", "20%" };
-const int ALPHA_VALUES[] = { 255, 204, 153, 102, 51 };
+const std::vector<std::string> ALPHA_LABELS = { "正常", "90%", "80%", "70%", "60%", "50%", "40%", "30%", "20%", "10%" };
+const int ALPHA_VALUES[] = { 255, 229, 204, 178, 153, 127, 102, 76, 51, 25 };
 
 bool creationParam1 = true;
 bool creationParam2 = true;
@@ -87,10 +87,9 @@ void manage_prop_set()
 }
 
 /**
-* Many props don't play nicely with PLACE_OBJECT_ON_GROUND_PROPERLY.
-* Therefore we use one that is known to work properly to determine
-* the height of the ground, and therefore the position for the other 
-* prop, by spawning one and then deleting it.
+* 许多道具无法与 PLACE_OBJECT_ON_GROUND_PROPERLY 正确配合使用。
+* 因此，我们使用已知能正常工作的道具来确定地面高度，
+* 从而为其他道具确定位置——具体方式为生成一个临时道具后删除它。
 */
 bool get_ground_height_at_position(Vector3 coords, float* result)
 {
@@ -112,7 +111,7 @@ void do_spawn_model_by_player(Hash propHash, char* model, std::string title, boo
 	if (!STREAMING::HAS_MODEL_LOADED(propHash))
 	{
 		std::ostringstream ss2;
-		ss2 << "TIMEOUT: " << model << " w hash " << propHash;
+		ss2 << "超时: " << model << " 哈希值 " << propHash;
 		write_text_to_log_file(ss2.str());
 		return;
 	}
@@ -162,7 +161,7 @@ void do_spawn_model(Hash propHash, char* model, std::string title, SimpleVector3
 	if (propsWeCreated.size() >= PROP_LIMIT)
 	{
 		std::ostringstream ss;
-		ss << "Object limit (" << PROP_LIMIT << ") reached - please remove some first";
+		ss << "物体最高上限 (" << PROP_LIMIT << ") 已达到！\n请先移除一些，再生成吧！";
 		set_status_text(ss.str());
 	}
 
@@ -179,7 +178,7 @@ void do_spawn_model(Hash propHash, char* model, std::string title, SimpleVector3
 	if (!STREAMING::HAS_MODEL_LOADED(propHash))
 	{
 		std::ostringstream ss2;
-		ss2 << "TIMEOUT: " << model;
+		ss2 << "超时: " << model;
 		write_text_to_log_file(ss2.str());
 		return;
 	}
@@ -199,7 +198,7 @@ void do_spawn_model(Hash propHash, char* model, std::string title, SimpleVector3
 
 		if (!immovable)
 		{
-			//this unfreezes it
+			// 这将解冻它
 			ENTITY::APPLY_FORCE_TO_ENTITY(obj, 3, 0, 0, 0.1, 0, 0, 0, 0, 1, 1, 0, 0, 1);
 			OBJECT::SET_ACTIVATE_OBJECT_PHYSICS_AS_SOON_AS_IT_IS_UNFROZEN(obj, TRUE);
 		}
@@ -231,12 +230,12 @@ void do_spawn_model(Hash propHash, char* model, std::string title, SimpleVector3
 		if (!silent)
 		{
 			std::ostringstream ss;
-			ss << "Failed to create " << title;
+			ss << "创建失败: " << title;
 			set_status_text(ss.str());
 		}
 
 		std::ostringstream ss2;
-		ss2 << "INVALID-PROP: " << model;
+		ss2 << "无效属性: " << model;
 		write_text_to_log_file(ss2.str());
 		return;
 	}
@@ -244,7 +243,7 @@ void do_spawn_model(Hash propHash, char* model, std::string title, SimpleVector3
 	if (!silent)
 	{
 		std::ostringstream ss;
-		ss << "Spawned " << title;
+		ss << "已生成: " << title;
 		set_status_text(ss.str());
 	}
 
@@ -261,12 +260,12 @@ void do_spawn_model_by_player(PropInfo prop, bool silent)
 		if (!silent)
 		{
 			std::ostringstream ss;
-			ss << "Model " << prop.model << " is not valid";
+			ss << "模型: " << prop.model << " 数据无效！";
 			set_status_text(ss.str());
 		}
 
 		std::ostringstream ss2;
-		ss2 << "INVALID-MODEL: " << prop.model;
+		ss2 << "无效属性: " << prop.model;
 		write_text_to_log_file(ss2.str());
 		return;
 	}
@@ -287,13 +286,13 @@ bool onconfirm_prop_selection(MenuItem<int> choice)
 		}
 	}
 
-	if (choice.value == -1) //spawn all in category
+	if (choice.value == -1) // 生成该分类下的所有对象
 	{
 		int i = 0;
 		for each (PropInfo prop  in filtered)
 		{
 			std::ostringstream ss;
-			ss << "Done " << i++ << " of " << filtered.size();
+			ss << "已完成 " << i++ << " 项，\n总数 " << filtered.size() << " 项！";
 			set_status_text_centre_screen(ss.str());
 			WAIT(0);
 
@@ -365,8 +364,8 @@ bool onconfirm_prop_category(MenuItem<int> choice)
 	if (choice.value == -1)
 	{
 		keyboard_on_screen_already = true;
-		curr_message = "Enter prop name (e.g. prop_fruit_basket):"; // spawn a prop
-		std::string result = show_keyboard("Enter Name Manually", (char*)lastCustomPropSpawn.c_str());
+		curr_message = "请输入物体名称（例如：prop_fruit_basket）"; // 生成物体
+		std::string result = show_keyboard("手动输入名称", (char*)lastCustomPropSpawn.c_str());
 		if (!result.empty())
 		{
 			result = trim(result);
@@ -375,7 +374,7 @@ bool onconfirm_prop_category(MenuItem<int> choice)
 			if (!STREAMING::IS_MODEL_IN_CDIMAGE(hash) || !STREAMING::IS_MODEL_VALID(hash))
 			{
 				std::ostringstream ss;
-				ss << "Couldn't find model '" << result << "'";
+				ss << "找不到此模型: '" << result << "'";
 				set_status_text(ss.str());
 				return false;
 			}
@@ -438,7 +437,7 @@ void process_props_spawn_menu()
 
 	MenuItem<int>* item = new MenuItem<int>();
 	item->value = -1;
-	item->caption = "Enter Name Manually";
+	item->caption = "手动输入名称";
 	item->isLeaf = true;
 	menuItems.push_back(item);
 	i++;
@@ -469,7 +468,7 @@ void process_props_spawn_menu()
 	menuItems.push_back(toggleItem);
 	*/
 
-	draw_generic_menu<int>(menuItems, &propCategorySelection, "Object Categories", onconfirm_prop_category, NULL, NULL, NULL);
+	draw_generic_menu<int>(menuItems, &propCategorySelection, "物体分类", onconfirm_prop_category, NULL, NULL, NULL);
 }
 
 void onchange_spawn_alpha(int value, SelectFromListMenuItem* source)
@@ -506,19 +505,19 @@ bool prop_spawn_options_menu()
 
 	ToggleMenuItem<int>* item = new ToggleMenuItem<int>();
 	item->toggleValue = &propCreationIsInvincible;
-	item->caption = "Invincible?";
+	item->caption = "开启无敌";
 	menuItems.push_back(item);
 	i++;
 
 	item = new ToggleMenuItem<int>();
 	item->toggleValue = &propCreationIsImmovable;
-	item->caption = "Immovable?";
+	item->caption = "禁止移动";
 	menuItems.push_back(item);
 	i++;
 
 	item = new ToggleMenuItem<int>();
 	item->toggleValue = &propCreationHasGravity;
-	item->caption = "Has Gravity?";
+	item->caption = "有无重力";
 	menuItems.push_back(item);
 	i++;
 
@@ -532,12 +531,12 @@ bool prop_spawn_options_menu()
 
 	SelectFromListMenuItem* alphaItem = new SelectFromListMenuItem(ALPHA_LABELS, onchange_spawn_alpha);
 	alphaItem->value = propCreationAlphaIndex;
-	alphaItem->caption = "Alpha (Opacity)";
+	alphaItem->caption = "透明度 (不透明度)";
 	alphaItem->wrap = false;
 	menuItems.push_back(alphaItem);
 	i++;
 
-	draw_generic_menu<int>(menuItems, &prop_spawnopt_selection, "New Object Options", NULL, NULL, NULL, NULL);
+	draw_generic_menu<int>(menuItems, &prop_spawnopt_selection, "物体生成设置", NULL, NULL, NULL, NULL);
 	return false;
 }
 
@@ -561,7 +560,7 @@ bool onconfirm_prop_menu(MenuItem<int> choice)
 		}
 		manage_prop_set();
 		std::ostringstream ss;
-		ss << count << " object" << (count != 1 ? "s" : "") << " removed";
+		ss << count << " 个物体，已成功删除！";
 		set_status_text(ss.str());
 		return false;
 	}
@@ -575,7 +574,7 @@ bool onconfirm_prop_menu(MenuItem<int> choice)
 
 		if (propsWeCreated.size() == 0)
 		{
-			set_status_text("No spawned objects - create some first");
+			set_status_text("您还没有生成任何物体！\n请您先创建一些物体吧！");
 		}
 		else
 		{
@@ -591,7 +590,7 @@ bool onconfirm_prop_menu(MenuItem<int> choice)
 		manage_prop_set();
 		std::ostringstream ss;
 		int size = propsWeCreated.size();
-		ss << size << " out of a possible " << PROP_LIMIT << " objects created";
+		ss << "当前已生成物体 " << size << " 个！\n最高物体上限 " << PROP_LIMIT << " 个。";
 		set_status_text(ss.str());
 	}
 	return false;
@@ -607,47 +606,47 @@ void process_props_menu()
 
 	MenuItem<int>* item = new MenuItem<int>();
 	item->value = 0;
-	item->caption = "Object Spawner";
+	item->caption = "生成物体";
 	item->isLeaf = false;
 	menuItems.push_back(item);
 	i++;
 
 	item = new MenuItem<int>();
 	item->value = 4;
-	item->caption = "Saved Object Sets";
+	item->caption = "保存的物体";
 	item->isLeaf = false;
 	menuItems.push_back(item);
 	i++;
 
 	item = new MenuItem<int>();
 	item->value = 2;
-	item->caption = "Spawn Options";
+	item->caption = "物体生成设置";
 	item->isLeaf = false;
 	menuItems.push_back(item);
 	i++;
 
 	item = new MenuItem<int>();
 	item->value = 3;
-	item->caption = "Edit Spawned Objects";
+	item->caption = "编辑已生成的物体";
 	item->isLeaf = false;
 	menuItems.push_back(item);
 	i++;
 
 	item = new MenuItem<int>();
 	item->value = 1;
-	item->caption = "Remove All Spawned Objects";
+	item->caption = "删除所有生成的物体";
 	item->isLeaf = true;
 	menuItems.push_back(item);
 	i++;
 
 	item = new MenuItem<int>();
 	item->value = 5;
-	item->caption = "Check Object Limit";
+	item->caption = "检查物体的数量上限";
 	item->isLeaf = true;
 	menuItems.push_back(item);
 	i++;
 	
-	draw_generic_menu<int>(menuItems, &prop_menu_selection, "Objects", onconfirm_prop_menu, NULL, NULL, NULL);
+	draw_generic_menu<int>(menuItems, &prop_menu_selection, "物体选项", onconfirm_prop_menu, NULL, NULL, NULL);
 }
 
 void add_props_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results)
@@ -738,7 +737,7 @@ bool prop_spawned_instances_menu()
 
 		set_menu_per_frame_call(flash_prop_callback);
 
-		draw_generic_menu<int>(menuItems, &menu_spawned_instance_index, "Spawned Instances", onconfirm_prop_instance_menu, onhighlight_prop_instance_menu, NULL, prop_instance_menu_interrupt);
+		draw_generic_menu<int>(menuItems, &menu_spawned_instance_index, "已生成的物体", onconfirm_prop_instance_menu, onhighlight_prop_instance_menu, NULL, prop_instance_menu_interrupt);
 
 		clear_menu_per_frame_call();
 		if (!lastHighlightedProp.isEmpty() && ENTITY::DOES_ENTITY_EXIST(lastHighlightedProp.instance))
@@ -763,7 +762,7 @@ void onhighlight_prop_instance_menu(MenuItem<int> choice)
 	SpawnedPropInstance prop = get_prop_at_index(choice.value);
 	if (prop.isEmpty())
 	{
-		set_status_text_centre_screen("Null prop - label J");
+		set_status_text_centre_screen("无效的 - 标签 J");
 		return;
 	}
 	lastHighlightedProp = prop;
@@ -807,7 +806,7 @@ bool is_prop_invincible(std::vector<int> extras)
 	SpawnedPropInstance prop = get_prop_at_index(extras.at(0));
 	if (prop.isEmpty())
 	{
-		set_status_text_centre_screen("Null prop - label A");
+		set_status_text_centre_screen("无效的 - 标签 A");
 		return false;
 	}
 	return prop.isInvincible;
@@ -818,7 +817,7 @@ void set_prop_invincible(bool applied, std::vector<int> extras)
 	SpawnedPropInstance prop = get_prop_at_index(extras.at(0));
 	if (prop.isEmpty())
 	{
-		set_status_text_centre_screen("Null prop - label B");
+		set_status_text_centre_screen("无效的 - 标签 B");
 		return;
 	}
 
@@ -834,7 +833,7 @@ bool is_prop_immovable(std::vector<int> extras)
 	SpawnedPropInstance prop = get_prop_at_index(extras.at(0));
 	if (prop.isEmpty())
 	{
-		set_status_text_centre_screen("Null prop - label C");
+		set_status_text_centre_screen("无效的 - 标签 C");
 		return false;
 	}
 	return prop.isImmovable;
@@ -845,7 +844,7 @@ void set_prop_immovable(bool applied, std::vector<int> extras)
 	SpawnedPropInstance prop = get_prop_at_index(extras.at(0));
 	if (prop.isEmpty())
 	{
-		set_status_text_centre_screen("Null prop - label D");
+		set_status_text_centre_screen("无效的 - 标签 D");
 		return;
 	}
 
@@ -853,7 +852,7 @@ void set_prop_immovable(bool applied, std::vector<int> extras)
 	ENTITY::FREEZE_ENTITY_POSITION(prop.instance, applied);
 	if (!applied)
 	{
-		//this unfreezes it
+		// 这会解冻它
 		ENTITY::SET_ENTITY_CAN_BE_DAMAGED(prop.instance, FALSE);
 		ENTITY::APPLY_FORCE_TO_ENTITY(prop.instance, 3, 0, 0, 0.1, 0, 0, 0, 0, 1, 1, 0, 0, 1);
 		ENTITY::SET_ENTITY_CAN_BE_DAMAGED(prop.instance, !prop.isInvincible);
@@ -866,7 +865,7 @@ bool is_prop_on_fire(std::vector<int> extras)
 	SpawnedPropInstance prop = get_prop_at_index(extras.at(0));
 	if (prop.isEmpty())
 	{
-		set_status_text_centre_screen("Null prop - label E");
+		set_status_text_centre_screen("无效的 - 标签 E");
 		return false;
 	}
 	return FIRE::IS_ENTITY_ON_FIRE(prop.instance) == 1;
@@ -877,7 +876,7 @@ void set_prop_on_fire(bool applied, std::vector<int> extras)
 	SpawnedPropInstance prop = get_prop_at_index(extras.at(0));
 	if (prop.isEmpty())
 	{
-		set_status_text_centre_screen("Null prop - label F");
+		set_status_text_centre_screen("无效的 - 标签 F");
 		return;
 	}
 	if (applied)
@@ -885,7 +884,7 @@ void set_prop_on_fire(bool applied, std::vector<int> extras)
 		bool isInvinc = prop.isInvincible;
 		//ENTITY::SET_ENTITY_PROOFS(prop.instance, isInvinc, false, isInvinc, isInvinc, isInvinc, isInvinc, isInvinc, isInvinc);
 		Vector3 curLocation = ENTITY::GET_ENTITY_COORDS(prop.instance, 0);
-		FIRE::ADD_EXPLOSION(curLocation.x, curLocation.y, curLocation.z, 14, 3.0f, true, false, 0); //starts gas fire
+		FIRE::ADD_EXPLOSION(curLocation.x, curLocation.y, curLocation.z, 14, 3.0f, true, false, 0); // 引发气体火灾
 	}
 	else
 	{
@@ -900,7 +899,7 @@ bool is_prop_gravity_enabled(std::vector<int> extras)
 	SpawnedPropInstance prop = get_prop_at_index(extras.at(0));
 	if (prop.isEmpty())
 	{
-		set_status_text_centre_screen("Null prop - label G");
+		set_status_text_centre_screen("无效的 - 标签 G");
 		return false;
 	}
 	return prop.hasGravity;
@@ -911,7 +910,7 @@ void set_prop_gravity_enabled(bool applied, std::vector<int> extras)
 	SpawnedPropInstance prop = get_prop_at_index(extras.at(0));
 	if (prop.isEmpty())
 	{
-		set_status_text_centre_screen("Null prop - label H");
+		set_status_text_centre_screen("无效的 - 标签 H");
 		return;
 	}
 	ENTITY::SET_ENTITY_HAS_GRAVITY(prop.instance, applied);
@@ -923,61 +922,61 @@ std::string get_explosion_name(int id)
 	switch (id)
 	{
 	case EXPLOSION_DEFAULT:
-		return "Default";
+		return "默认";
 	case EXPLOSION_MOLOTOV:
-		return "Molotov";
-	case EXPLOSION_WATER_SPRAY_SHORT:
-		return "Water Jet (Short)";
-	case EXPLOSION_GAS_JET_BRIEF:
-		return "Gas Jet (Brief)";
+		return "燃烧物体";
 	case EXPLOSION_WATER_SPRAY_TALL:
-		return "Water Jet (Tall)";
-	case EXPLOSION_GAS_JET_PROLONGED:
-		return "Gas Jet (Prolonged)";
-	case EXPLOSION_GRENADE:
-		return "Grenade";
-	case EXPLOSION_SMOKE:
-		return "Smoke Bomb";
-	case EXPLOSION_CS_GAS_1:
-		return "CS Gas 1";
-	case EXPLOSION_CS_GAS_2:
-		return "CS Gas 2";
-	case EXPLOSION_FLARE:
-		return "Flare";
-	case EXPLOSION_MINE:
-		return "Mine";
+		return "水喷射 (高)";
+	case EXPLOSION_WATER_SPRAY_SHORT:
+		return "水喷射 (矮)";
 	case EXPLOSION_WATER_SPRAY_BRIEF:
-		return "Water Jet (Brief)";
+		return "水喷射 (短暂)";
+	case EXPLOSION_GAS_JET_BRIEF:
+		return "短火焰 喷射";
+	case EXPLOSION_GAS_JET_PROLONGED:
+		return "长火焰 喷射";
+	case EXPLOSION_GRENADE:
+		return "手榴弹";
+	case EXPLOSION_SMOKE:
+		return "烟雾弹";
+	case EXPLOSION_CS_GAS_1:
+		return "毒气弹 1";
+	case EXPLOSION_CS_GAS_2:
+		return "毒气弹 2";
+	case EXPLOSION_FLARE:
+		return "信号弹";
+	case EXPLOSION_MINE:
+		return "地雷";
 	case EXPLOSION_BLIMP:
-		return "Blimp Explosion";
+		return "飞艇爆炸";
 	case EXPLOSION_MINI:
-		return "Mini Detonation";
+		return "迷你爆炸";
 	case EXPLOSION_FIREBALL_SMALL_W_RING:
-		return "Small Fireball With Radius";
+		return "小型火球爆炸 带冲击波";
 	case EXPLOSION_FIREBALL_SMALL_1:
-		return "Small Fireball #1";
+		return "小型火球爆炸 #1";
 	case EXPLOSION_FIREBALL_SMALL_2:
-		return "Small Fireball #2";
+		return "小型火球爆炸 #2";
 	case EXPLOSION_FIREBALL_SMALL_3:
-		return "Small Fireball #3";
+		return "小型火球爆炸 #3";
 	case EXPLOSION_FIREBALL_MEDIUM_1:
-		return "Medium Fireball #1";
+		return "中型火球爆炸 #1";
 	case EXPLOSION_FIREBALL_MEDIUM_2:
-		return "Medium Fireball #2";
+		return "中型火球爆炸 #2";
 	case EXPLOSION_FIREBALL_MEDIUM_3:
-		return "Medium Fireball #3";
+		return "中型火球爆炸 #3";
 	case EXPLOSION_FIREBALL_LARGE_1:
-		return "Large Fireball #1";
+		return "大型火球爆炸 #1";
 	case EXPLOSION_FIREBALL_LARGE_2:
-		return "Large Fireball #2";
+		return "大型火球爆炸 #2";
 	case EXPLOSION_FIREBALL_LARGE_3:
-		return "Large Fireball #3";
+		return "大型火球爆炸 #3";
 	case EXPLOSION_FIREBALL_LARGE_4:
-		return "Large Fireball #4";
+		return "大型火球爆炸 #4";
 	default:
 		{
 		std::ostringstream ss;
-		ss << "Unknown Explosion ID " << id;
+		ss << "未知的爆炸 ID" << id;
 		auto result = ss.str();
 		return result;
 		}
@@ -1013,7 +1012,7 @@ void teleport_to_last_prop()
 	ENTITY::SET_ENTITY_COORDS_NO_OFFSET(playerPed, coords.x, coords.y, coords.z, 0, 0, 1);
 	ENTITY::SET_ENTITY_HEADING(playerPed, 0.0f);
 	WAIT(0);
-	set_status_text("Teleported");
+	set_status_text("已传送至此物体旁边！");
 }
 
 void explode_last_prop(int explosionID)
@@ -1021,7 +1020,7 @@ void explode_last_prop(int explosionID)
 	SpawnedPropInstance prop = get_prop_at_index(lastSelectedPropIndex);
 	if (explosionID == -1)
 	{
-		explosionID = 0; //default
+		explosionID = 0; //默认
 	}
 	Vector3 position = ENTITY::GET_ENTITY_COORDS(prop.instance, TRUE);
 	FIRE::ADD_EXPLOSION(position.x, position.y, position.z, explosionID, 3.0f, true, false, 0);
@@ -1032,32 +1031,32 @@ bool onconfirm_prop_single_instance_menu(MenuItem<int> choice)
 	SpawnedPropInstance prop = get_prop_at_index(lastSelectedPropIndex);
 	if (prop.isEmpty())
 	{
-		set_status_text_centre_screen("Null prop - label K");
+		set_status_text_centre_screen("无效的 - 标签K");
 		return true;
 	}
 
-	if (choice.value == 1) //delete item
+	if (choice.value == 1) // 删除物品
 	{
 		OBJECT::DELETE_OBJECT(&prop.instance);
 		manage_prop_set();
 		propInstanceMenuInterruptFlag = true;
 		requireRefreshOfPropInstanceMenu = true;
-		set_status_text("Object deleted");
+		set_status_text("物体成功删除了！");
 		return true;
 	}
 	else if (choice.value == 2)
 	{
 		begin_prop_placement(prop);
 	}
-	else if (choice.value == 3) //default explode
+	else if (choice.value == 3) // 默认爆炸
 	{
 		explode_last_prop(-1);
 	}
-	else if (choice.value == 4) //custom explode
+	else if (choice.value == 4) // 自定义爆炸
 	{
 		process_prop_explosion_choices();
 	}
-	else if (choice.value == 5) //teleport there
+	else if (choice.value == 5) // 传送到该位置
 	{
 		teleport_to_last_prop();
 	}
@@ -1090,19 +1089,19 @@ bool prop_spawned_single_instance_menu(int index)
 
 	MenuItem<int>* item = new MenuItem<int>();
 	item->value = 1;
-	item->caption = "Delete This Object";
+	item->caption = "删除此物体";
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
 	item->value = 2;
-	item->caption = "Move This Object";
+	item->caption = "移动此物体";
 	item->isLeaf = false;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
 	item->value = 5;
-	item->caption = "Teleport To Object";
+	item->caption = "传送到此物体";
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
@@ -1110,50 +1109,50 @@ bool prop_spawned_single_instance_menu(int index)
 	togItem->getter_call = is_prop_invincible;
 	togItem->setter_call = set_prop_invincible;
 	togItem->extra_arguments.push_back(index);
-	togItem->caption = "Invincible?";
+	togItem->caption = "开启无敌";
 	menuItems.push_back(togItem);
 
 	togItem = new FunctionDrivenToggleMenuItem<int>();
 	togItem->getter_call = is_prop_immovable;
 	togItem->setter_call = set_prop_immovable;
 	togItem->extra_arguments.push_back(index);
-	togItem->caption = "Immovable?";
+	togItem->caption = "禁止移动";
 	menuItems.push_back(togItem);
 
 	togItem = new FunctionDrivenToggleMenuItem<int>();
 	togItem->getter_call = is_prop_gravity_enabled;
 	togItem->setter_call = set_prop_gravity_enabled;
 	togItem->extra_arguments.push_back(index);
-	togItem->caption = "Has Gravity?";
+	togItem->caption = "有无重力";
 	menuItems.push_back(togItem);
 
 	togItem = new FunctionDrivenToggleMenuItem<int>();
 	togItem->getter_call = is_prop_on_fire;
 	togItem->setter_call = set_prop_on_fire;
 	togItem->extra_arguments.push_back(index);
-	togItem->caption = "On Fire?";
+	togItem->caption = "燃烧物体";
 	menuItems.push_back(togItem);
 
 	SelectFromListMenuItem* alphaItem = new SelectFromListMenuItem(ALPHA_LABELS, onchange_spawn_alpha);
 	alphaItem->value = propCreationAlphaIndex;
-	alphaItem->caption = "Alpha (Opacity)";
+	alphaItem->caption = "透明度 (不透明度)";
 	alphaItem->wrap = false;
 	alphaItem->extras.push_back(index);
 	menuItems.push_back(alphaItem);
 
 	item = new MenuItem<int>();
 	item->value = 3;
-	item->caption = "Explode This Object (Default)";
+	item->caption = "爆炸此物体  (默认)";
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
 	item->value = 4;
-	item->caption = "Custom Explosions";
+	item->caption = "自定义爆炸";
 	item->isLeaf = false;
 	menuItems.push_back(item);
 	
-	draw_generic_menu<int>(menuItems, &singleInstanceMenuIndex, "Object Options", onconfirm_prop_single_instance_menu, NULL, NULL, NULL);
+	draw_generic_menu<int>(menuItems, &singleInstanceMenuIndex, "编辑物体选项", onconfirm_prop_single_instance_menu, NULL, NULL, NULL);
 
 	return false;
 }
@@ -1180,7 +1179,7 @@ void process_prop_explosion_choices()
 		menuItems.push_back(item);
 	}
 
-	draw_generic_menu<int>(menuItems, &explosionSelection, "Explosions", onconfirm_prop_explosion, NULL, NULL, NULL);
+	draw_generic_menu<int>(menuItems, &explosionSelection, "爆炸选项", onconfirm_prop_explosion, NULL, NULL, NULL);
 }
 
 //Save menus
@@ -1201,7 +1200,7 @@ void spawn_individual_object(SavedPropDBRow* row)
 bool spawn_saved_props(int slot, std::string caption)
 {
 	std::ostringstream ss;
-	ss << "Trying to spawn all objects in set...";
+	ss << "正在努力尝试生成！\n此保存集的所有物体...";
 	set_status_text(ss.str());
 
 	ENTDatabase* database = get_database();
@@ -1227,7 +1226,7 @@ bool spawn_saved_props(int slot, std::string caption)
 	delete savedSet;
 
 	std::ostringstream ss2;
-	ss2 << "Spawn of object set completed";
+	ss2 << "此物体集，生成已完成！";
 	set_status_text(ss2.str());
 
 	return false;
@@ -1246,13 +1245,13 @@ void save_current_props(int slot)
 		}
 		else
 		{
-			ss << "Saved Object Set " << (lastKnownSavedPropSetCount + 1);
+			ss << "新建物体集 " << (lastKnownSavedPropSetCount + 1);
 		}
 
 		keyboard_on_screen_already = true;
-		curr_message = "Enter a save name:"; // save a prop
+		curr_message = "输入保存名称："; // 保存物体
 		auto existingText = ss.str();
-		std::string result = show_keyboard("Enter Name Manually", (char*)existingText.c_str());
+		std::string result = show_keyboard("手动输入名称", (char*)existingText.c_str());
 		if (!result.empty())
 		{
 			std::vector<SavedPropDBRow*> dbProps;
@@ -1260,7 +1259,7 @@ void save_current_props(int slot)
 			manage_prop_set();
 
 			std::ostringstream ss;
-			ss << "Saving " << propsWeCreated.size() << " object" << ((propsWeCreated.size() == 1) ? "" : "s") << "...";
+			ss << "已成功保存 " << propsWeCreated.size() << " 个物体！";
 			set_status_text(ss.str());
 
 			for each (SpawnedPropInstance prop in propsWeCreated)
@@ -1294,12 +1293,12 @@ void save_current_props(int slot)
 			ENTDatabase* database = get_database();
 			if (database->save_props(dbProps, result, slot))
 			{
-				set_status_text("Saved objects successfully");
+				set_status_text("物体已成功保存了！");
 				activeSavedPropSlotName = result;
 			}
 			else
 			{
-				set_status_text("Error saving objects");
+				set_status_text("保存物体时出错了！");
 			}
 
 			for (std::vector<SavedPropDBRow*>::iterator it = dbProps.begin(); it != dbProps.end();)
@@ -1316,23 +1315,23 @@ bool onconfirm_savedprops_slot_menu(MenuItem<int> choice)
 {
 	switch (choice.value)
 	{
-	case 1: //spawn
+	case 1: //生成
 	{
 		spawn_saved_props(activeSavedPropSetIndex, activeSavedPropSlotName);
 		break;
 	}
-	case 2: //overwrite
+	case 2: //覆盖
 	{
 		save_current_props(activeSavedPropSetIndex);
 		requireRefreshOfPropsSaveSlots = true;
 		requireRefreshOfPropsSlotMenu = true;
 		break;
 	}
-	case 3: //rename
+	case 3: //重命名
 	{
 		keyboard_on_screen_already = true;
-		curr_message = "Enter a new name:"; // rename a saved prop
-		std::string result = show_keyboard("Enter Name Manually", (char*)activeSavedPropSlotName.c_str());
+		curr_message = "输入新的名称："; // 重命名已保存的物体
+		std::string result = show_keyboard("手动输入名称", (char*)activeSavedPropSlotName.c_str());
 		if (!result.empty())
 		{
 			ENTDatabase* database = get_database();
@@ -1344,7 +1343,7 @@ bool onconfirm_savedprops_slot_menu(MenuItem<int> choice)
 		requireRefreshOfPropsSlotMenu = true;
 		break;
 	}
-	case 4: //delete
+	case 4: //删除
 	{
 		ENTDatabase* database = get_database();
 		database->delete_saved_propset(activeSavedPropSetIndex);
@@ -1357,7 +1356,7 @@ bool onconfirm_savedprops_slot_menu(MenuItem<int> choice)
 	case 5:
 	{
 		std::ostringstream ss;
-		ss << "Save Object Set \"" << activeSavedPropSlotName << "\"";
+		ss << "保存的物体集 \"" << activeSavedPropSlotName << "\"";
 		auto title = ss.str();
 
 		SaveFileDialogCallback* cb = new SaveFileDialogCallback();
@@ -1369,7 +1368,7 @@ bool onconfirm_savedprops_slot_menu(MenuItem<int> choice)
 		database->populate_saved_prop_set(set);
 		cb->data = set;
 
-		set_status_text("A save dialog should appear shortly...");
+		set_status_text("保存对话框应该很快会出现！");
 
 		show_save_dialog_in_thread(title, cb);
 		break;
@@ -1389,33 +1388,33 @@ bool process_savedprops_slot_menu(int slot)
 		std::vector<MenuItem<int>*> menuItems;
 
 		MenuItem<int> *item = new MenuItem<int>();
-		item->isLeaf = false;
+		item->isLeaf = true;
 		item->value = 1;
-		item->caption = "Spawn Objects";
+		item->caption = "生成物体";
 		menuItems.push_back(item);
 
 		item = new MenuItem<int>();
 		item->isLeaf = true;
 		item->value = 2;
-		item->caption = "Overwrite With Current";
+		item->caption = "用当前内容覆盖";
 		menuItems.push_back(item);
 
 		item = new MenuItem<int>();
 		item->isLeaf = true;
 		item->value = 3;
-		item->caption = "Rename";
+		item->caption = "重命名";
 		menuItems.push_back(item);
 
 		item = new MenuItem<int>();
 		item->isLeaf = true;
 		item->value = 4;
-		item->caption = "Delete";
+		item->caption = "删除";
 		menuItems.push_back(item);
 
 		item = new MenuItem<int>();
 		item->isLeaf = true;
 		item->value = 5;
-		item->caption = "Save To XML";
+		item->caption = "保存为 XML 文件";
 		menuItems.push_back(item);
 
 		draw_generic_menu<int>(menuItems, 0, activeSavedPropSlotName, onconfirm_savedprops_slot_menu, NULL, NULL, props_individual_slot_menu_interrupt);
@@ -1430,7 +1429,7 @@ bool onconfirm_savedprops_menu(MenuItem<int> choice)
 		manage_prop_set();
 		if (propsWeCreated.size() == 0)
 		{
-			set_status_text("No spawned objects - create some first");
+			set_status_text("您还没有生成任何物体！\n请您先创建一些物体吧！");
 		}
 		else
 		{
@@ -1442,13 +1441,13 @@ bool onconfirm_savedprops_menu(MenuItem<int> choice)
 	else if (choice.value == -2)
 	{
 		std::ostringstream ss;
-		ss << "Load Object Set From XML";
+		ss << "从 XML 文件加载物体集";
 		auto title = ss.str();
 
 		LoadFileDialogCallback* cb = new LoadFileDialogCallback();
 		activeLoadFileCallbacks.insert(cb);
 
-		set_status_text("A load dialog should appear shortly...");
+		set_status_text("加载对话框应该很快会出现...");
 
 		show_load_dialog_in_thread(title, cb);
 		return false;
@@ -1479,13 +1478,13 @@ bool process_savedprops_menu()
 		MenuItem<int> *item = new MenuItem<int>();
 		item->isLeaf = false;
 		item->value = -1;
-		item->caption = "Create New Saved Object Set";
+		item->caption = "创建新的物体集存档";
 		menuItems.push_back(item);
 
 		item = new MenuItem<int>();
 		item->isLeaf = false;
 		item->value = -2;
-		item->caption = "Import Object Set From XML";
+		item->caption = "从 XML 文件导入物体集";
 		menuItems.push_back(item);
 
 		for each (SavedPropSet *sv in savedSets)
@@ -1499,7 +1498,7 @@ bool process_savedprops_menu()
 			menuItems.push_back(item);
 		}
 
-		draw_generic_menu<int>(menuItems, 0, "Saved Object Sets", onconfirm_savedprops_menu, NULL, NULL, props_save_slots_menu_interrupt);
+		draw_generic_menu<int>(menuItems, 0, "保存的物体集", onconfirm_savedprops_menu, NULL, NULL, props_save_slots_menu_interrupt);
 
 		for (std::vector<SavedPropSet*>::iterator it = savedSets.begin(); it != savedSets.end(); ++it)
 		{
@@ -1539,21 +1538,21 @@ void update_props_pending_dialogs()
 		{
 			if (saveCB->success)
 			{
-				set_status_text("Saving objects...");
+				set_status_text("正在保存物体中....");
 				SavedPropSet* set = static_cast<SavedPropSet*>(saveCB->data);
 				bool success = generate_xml_for_propset(set, saveCB->filePath);
 				if (success)
 				{
-					set_status_text("Saved to XML successfully");
+					set_status_text("成功保存到 XML 文件！");
 				}
 				else
 				{
-					set_status_text("Saving to XML failed");
+					set_status_text("保存到 XML 文件失败了！");
 				}
 			}
 			else
 			{
-				set_status_text("Save cancelled");
+				set_status_text("保存取消了！");
 			}
 			it = activeSaveFileCallbacks.erase(it);
 			delete saveCB->data;
@@ -1574,7 +1573,7 @@ void update_props_pending_dialogs()
 			loadCB->processed = true;
 			if (loadCB->success)
 			{
-				set_status_text("Object file found - parsing content...");
+				set_status_text("物体文件已成功找到！\n正在解析内容，请稍等...");
 				SavedPropSet* set = new SavedPropSet();
 				bool success = parse_xml_for_propset(loadCB->filePath, set);
 				if (success)
@@ -1582,37 +1581,37 @@ void update_props_pending_dialogs()
 					std::ostringstream ss;
 					ss << set->saveName;
 					keyboard_on_screen_already = true;
-					curr_message = "Enter a name:"; // import objects
+					curr_message = "输入名称："; // 导入对象
 					auto existingText = ss.str();
-					std::string result = show_keyboard("Enter Name Manually", (char*)existingText.c_str());
+					std::string result = show_keyboard("手动输入名称", (char*)existingText.c_str());
 					if (!result.empty())
 					{
 						ENTDatabase* database = get_database();
 						bool dbLoaded = database->save_props(set->items, result, -1);
 						if (dbLoaded)
 						{
-							set_status_text("Objects imported successfully");
+							set_status_text("物体导入成功！");
 							requireRefreshOfPropsSaveSlots = true;
 						}
 						else
 						{
-							set_status_text("Object import into database failed");
+							set_status_text("物体导入数据库失败！");
 						}
 					}
 					else
 					{
-						write_text_to_log_file("Keyboard returned empty");
-						set_status_text("Object load cancelled");
+						write_text_to_log_file("键盘没有返回任何值！");
+						set_status_text("物体加载失败！");
 					}
 				}
 				else
 				{
-					set_status_text("Object load failed");
+					set_status_text("物体加载取消！");
 				}
 			}
 			else
 			{
-				set_status_text("Object load cancelled/failed");
+				set_status_text("物体加载，已取消或失败！");
 			}
 			it2 = activeLoadFileCallbacks.erase(it2);
 			delete loadCB;
