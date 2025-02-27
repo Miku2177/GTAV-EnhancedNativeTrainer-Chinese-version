@@ -3782,7 +3782,7 @@ bool process_anims_menu()
 {
 	if (!loaded)
 	{
-		set_status_text("场景动画尚未加载，\n请您稍后再重新尝试！");
+		set_status_text("场景动画未能成功加载！\n请您稍后再重新尝试！");
 		return false;
 	}
 

@@ -552,7 +552,7 @@ void engine_kill(){
 void text_parameters(float s_x, float s_y, int c_r, int c_g, int c_b, int alpha) {
 	UI::SET_TEXT_FONT(0);
 	UI::SET_TEXT_SCALE(s_x, s_y);
-	UI::SET_TEXT_WRAP(0.0, 2.0);
+	UI::SET_TEXT_WRAP(0.0, 1.0);
 	UI::SET_TEXT_COLOUR(c_r, c_g, c_b, alpha);
 	UI::SET_TEXT_CENTRE(0);
 	UI::SET_TEXT_DROPSHADOW(20, 20, 20, 20, 20);

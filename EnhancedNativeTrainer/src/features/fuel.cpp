@@ -162,7 +162,7 @@ int get_fuel_tank_offset()
 void fuel()
 {
 	if (featureFuelGauge && (getGameVersion() < VER_1_0_2060_0_STEAM || getGameVersion() < VER_1_0_2060_0_NOSTEAM || getGameVersion() < VER_1_0_2060_0_EGS)) {
-		set_status_text("需要游戏版本 2060.0  ！\n或更高的游戏版本！");
+		set_status_text("需要游戏版本 2060.0 \n或更高的游戏版本！");
 		featureFuelGauge = false;
 	}
 	if (featureFuel && !CUTSCENE::IS_CUTSCENE_PLAYING()) {

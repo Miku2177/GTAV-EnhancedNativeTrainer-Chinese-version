@@ -1933,7 +1933,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			}
 			else
 			{
-				set_status_text("您的版本过旧，此功能需要:\n1.44 或更高版本才能运行！");
+				set_status_text("您的游戏版本过旧, 此功能\n需1.44或更高版本才能运行!");
 				featureEnableMissingRadioStation = false;
 			}
 		}
