@@ -1,11 +1,11 @@
 /*
-Some of this code began its life as a part of GTA V SCRIPT HOOK SDK.
+这段代码的部分最初来源于 GTA V SCRIPT HOOK SDK。
 http://dev-c.com
 (C) Alexander Blade 2015
 
-It is now part of the Enhanced Native Trainer project.
+它现在已成为 Enhanced Native Trainer 项目的一部分。
 https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
-(C) Rob Pridham and fellow contributors 2015
+(C) Rob Pridham 及其他贡献者 2015
 */
 
 #include "world.h"
@@ -21,7 +21,7 @@ int activeLineIndexWeather = 0;
 int activeLineIndexClouds = 0;
 int activeLineIndexWeatherConfig = 0;
 
-// change weather
+// 改变天气
 std::string mixed_w1 = "EXTRASUNNY";
 std::string mixed_w2 = "CLEAR";
 float t_counter = 0.0;
@@ -53,7 +53,7 @@ bool reduced_grip_e = false;
 bool no_grip_snowing_e = false;
 bool no_grip_when_wet_e = false;
 
-// peds chance to slip
+// 路人滑倒的几率
 int s_tick_secs_passed, s_tick_secs_curr = 0;
 int l_tick_secs_curr, lightning_seconds = 0;
 bool slipped = false;
@@ -135,56 +135,56 @@ std::string lastCloudsName;
 BOOL lightsBAutoOn = -1;
 BOOL highbeamsBAutoOn = -1;
 
-// Radar Map Size
-const std::vector<std::string> WORLD_RADAR_MAP_CAPTIONS{ "Normal", "Big", "Full" };
+// 雷达地图大小
+const std::vector<std::string> WORLD_RADAR_MAP_CAPTIONS{ "正常", "大地图", "完整图" };
 int RadarMapIndexN = 0;
 bool RadarMapChanged = true;
 
-// Reduced Grip If Heavy Snow && Slippery When Wet
+// 大雪时抓地力降低 && 湿滑时更易打滑
 int RadarReducedGripSnowingCustomIndex = 0;
 bool RadarReducedGripSnowingChanged = true;
 int RadarReducedGripRainingCustomIndex = 0;
 bool RadarReducedGripRainingChanged = true;
 
-// Wind Strength
-const std::vector<std::string> WORLD_WIND_STRENGTH_CAPTIONS{ "Calm", "Gentle Breeze", "Strong Breeze" };
+// 风力强度
+const std::vector<std::string> WORLD_WIND_STRENGTH_CAPTIONS{ "平静", "微风", "强风" };
 const int WORLD_WIND_STRENGTH_VALUES[] = { 0, 3, 999 };
 int WindStrengthIndex = 0;
 bool WindStrengthChanged = true;
 
-// Waves Intensity
+// 波浪强度
 int WorldWavesIndex = 0;
 bool WorldWavesChanged = true;
 
-// Lightning Intensity
-const std::vector<std::string> WORLD_LIGHTNING_INTENSITY_CAPTIONS{ "OFF", "Often", "Very Often" };
+// 闪电强度
+const std::vector<std::string> WORLD_LIGHTNING_INTENSITY_CAPTIONS{ "关", "经常", "非常频繁" };
 const int WORLD_LIGHTNING_INTENSITY_VALUES[] = { -2, 3, -1 };
 int featureLightIntensityIndex = 0;
 bool featureLightIntensityChanged = true;
 
-// Train Speed
-const std::vector<std::string> WORLD_TRAIN_SPEED_CAPTIONS{ "OFF", "0.0", "5.0", "15.0", "30.0", "60.0", "80.0", "130.0", "200.0", "300.0" };
+// 火车速度
+const std::vector<std::string> WORLD_TRAIN_SPEED_CAPTIONS{ "关", "0.0", "5.0", "15.0", "30.0", "60.0", "80.0", "130.0", "200.0", "300.0" };
 const float WORLD_TRAIN_SPEED_VALUES[] = { -1.0, 0.0, 5.0, 15.0, 30.0, 60.0, 80.0, 130.0, 200.0, 300.0 };
 int TrainSpeedIndex = 0;
 bool TrainSpeedChanged = true;
 
-// No Freeroam Activities
-const std::vector<std::string> WORLD_FREEROAM_ACTIVITIES_CAPTIONS{ "OFF", "Base Jumps", "Races", "Darts", "Golf", "Hunting", "Pilot School", "Shooting Range", "Tennis", "Triathlon", "Yoga", "ALL" };
+// 无自由模式活动
+const std::vector<std::string> WORLD_FREEROAM_ACTIVITIES_CAPTIONS{ "关", "跳伞", "竞速", "飞镖", "高尔夫", "狩猎", "飞行学校", "射击场", "网球", "铁人三项", "瑜伽", "全部" };
 const int WORLD_FREEROAM_ACTIVITIES_VALUES[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
 int featureFreeroamActivitiesIndex = 0;
 bool featureFreeroamActivitiesChanged = true;
 
-// Change Weather
-const std::vector<std::string> MISC_WEATHER_CHANGE_CAPTIONS{ "Default", "Every 1 Min", "Every 3 Min", "Every 5 Min", "Every 7 Min", "Every 10 Min", "Every 15 Min", "Every 30 Min" };
-const int MISC_WEATHER_CHANGE_VALUES[] = { 0, 60, 180, 300, 420, 600, 900, 1800 };
+// 改变天气
+const std::vector<std::string> MISC_WEATHER_CHANGE_CAPTIONS{ "默认", "每 1 分钟", "每 3 分钟", "每 5 分钟", "每 7 分钟", "每 10 分钟", "每 15 分钟", "每 20 分钟", "每 30 分钟" };
+const int MISC_WEATHER_CHANGE_VALUES[] = { 0, 60, 180, 300, 420, 600, 900, 1200, 1800 };
 int WeatherChangeIndex = 0;
 bool WeatherChangeChanged = true;
 
-const std::vector<std::string> MISC_WEATHER_METHOD_CAPTIONS{ "Random Weather", "Mixed Weather", "Custom Order" };
+const std::vector<std::string> MISC_WEATHER_METHOD_CAPTIONS{ "随机天气", "混合天气", "自定义顺序" };
 int WeatherMethodIndexN = 0;
 bool WeatherMethodChanged = true;
 
-// Gravity Level
+// 重力等级
 int featureGravityLevelIndex = 0;
 bool featureGravityLevelChanged = true;
 
@@ -198,72 +198,72 @@ bool onconfirm_weathersettings_menu(MenuItem<int> choice) {
 }
 
 void process_world_weathersettings_menu() {
-	const std::string caption = "Weather Settings";
+	const std::string caption = "天气设置";
 
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
 	
 	ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Freeze Weather";
+	toggleItem->caption = "冻结天气";
 	toggleItem->toggleValue = &featureWeatherFreeze;
 	menuItems.push_back(toggleItem);
 
 	listItem = new SelectFromListMenuItem(MISC_WEATHER_CHANGE_CAPTIONS, onchange_weather_change_index);
 	listItem->wrap = false;
-	listItem->caption = "Change Weather";
+	listItem->caption = "天气变化";
 	listItem->value = WeatherChangeIndex;
 	menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(MISC_WEATHER_METHOD_CAPTIONS, onchange_weather_method_index);
 	listItem->wrap = false;
-	listItem->caption = "Method";
+	listItem->caption = "模式";
 	listItem->value = WeatherMethodIndexN;
 	menuItems.push_back(listItem);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Heavy Snow";
+	toggleItem->caption = "满地雪";
 	toggleItem->toggleValue = &featureSnow;
 	toggleItem->toggleValueUpdated = &featureSnowUpdated;
 	menuItems.push_back(toggleItem);
 
 	listItem = new SelectFromListMenuItem(VEH_TURN_SIGNALS_ACCELERATION_CAPTIONS, onchange_world_reducedgrip_snowing_c_index);
 	listItem->wrap = false;
-	listItem->caption = "Reduced Grip If Snowing";
+	listItem->caption = "下雪降低抓地力";
 	listItem->value = RadarReducedGripSnowingCustomIndex;
 	menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(VEH_TURN_SIGNALS_ACCELERATION_CAPTIONS, onchange_world_reducedgrip_raining_c_index);
 	listItem->wrap = false;
-	listItem->caption = "Slippery When Wet";
+	listItem->caption = "雨天湿滑抓地力";
 	listItem->value = RadarReducedGripRainingCustomIndex;
 	menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(WORLD_LIGHTNING_INTENSITY_CAPTIONS, onchange_lightning_intensity_index);
 	listItem->wrap = false;
-	listItem->caption = "Lightning Intensity";
+	listItem->caption = "闪电强度";
 	listItem->value = featureLightIntensityIndex;
 	menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(WORLD_WIND_STRENGTH_CAPTIONS, onchange_world_wind_strength_index);
 	listItem->wrap = false;
-	listItem->caption = "Wind Strength";
+	listItem->caption = "风力强度";
 	listItem->value = WindStrengthIndex;
 	menuItems.push_back(listItem);
 
 	listItem = new SelectFromListMenuItem(WORLD_WAVES_CAPTIONS, onchange_world_waves_index);
 	listItem->wrap = false;
-	listItem->caption = "Waves Intensity";
+	listItem->caption = "波浪强度";
 	listItem->value = WorldWavesIndex;
 	menuItems.push_back(listItem);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Deadly Water";
+	toggleItem->caption = "致命水域";
 	toggleItem->value = 1;
 	toggleItem->toggleValue = &featureAcidWater;
 	menuItems.push_back(toggleItem);
 
 	toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Deadly Rain";
+	toggleItem->caption = "致命雨水";
 	toggleItem->value = 1;
 	toggleItem->toggleValue = &featureAcidRain;
 	menuItems.push_back(toggleItem);
@@ -273,11 +273,11 @@ void process_world_weathersettings_menu() {
 
 bool onconfirm_weather_menu(MenuItem<std::string> choice)
 {
-	std::stringstream ss; ss << "Weather Frozen at: " << lastWeatherName;
+	std::stringstream ss; ss << "天气冻结为: " << lastWeatherName;
 	switch (choice.currentMenuIndex)
 	{
 	case 0: 
-		// reset weather
+		// 重置天气
 		GAMEPLAY::CLEAR_OVERRIDE_WEATHER();
 		GAMEPLAY::CLEAR_WEATHER_TYPE_PERSIST();
 		if (screenfltr == "DEFAULT" || screenfltr == "") GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
@@ -306,7 +306,7 @@ bool onconfirm_weather_menu(MenuItem<std::string> choice)
 		}
 
 		std::ostringstream ss2;
-		ss2 << "Weather: " << choice.caption;
+		ss2 << "当前天气：" << choice.caption;
 		set_status_text(ss2.str());
 	}
 
@@ -315,56 +315,56 @@ bool onconfirm_weather_menu(MenuItem<std::string> choice)
 
 void process_weather_menu()
 {
-	const int lineCount = 19;
+	const int lineCount = 18;
 
-	const std::string caption = "Weather Options";
+	const std::string caption = "天气选项";
 	
 	StringStandardOrToggleMenuDef lines[lineCount] = {
-		{ "Reset Weather", "RESETWEATHER", NULL, NULL, true },
-		{ "Extra Sunny", "EXTRASUNNY", NULL, NULL, true },
-		{ "Clear", "CLEAR", NULL, NULL, true },
-		{ "Cloudy", "CLOUDS", NULL, NULL, true },
-		{ "Smog", "SMOG", NULL, NULL, true },
-		{ "Foggy", "FOGGY", NULL, NULL, true },
-		{ "Overcast", "OVERCAST", NULL, NULL, true },
-		{ "Rain", "RAIN", NULL, NULL, true },
-		{ "Stormy", "THUNDER", NULL, NULL, true },
-		{ "Clearing", "CLEARING", NULL, NULL, true },
-		{ "Neutral", "NEUTRAL", NULL, NULL, true },
-		{ "Snow", "SNOW", NULL, NULL, true },
-		{ "Blizzard", "BLIZZARD", NULL, NULL, true },
-		{ "Light Snow", "SNOWLIGHT", NULL, NULL, true },
-		{ "Christmas", "XMAS", NULL, NULL, true },
-		{ "Halloween", "HALLOWEEN", NULL, NULL, true },
-		{ "Rain Halloween", "RAIN_HALLOWEEN", NULL, NULL, true },
-		{ "Snow Halloween", "SNOW_HALLOWEEN", NULL, NULL, true }
+		{ "重置天气", "RESETWEATHER", NULL, NULL, true },
+		{ "特别晴朗", "EXTRASUNNY", NULL, NULL, true },
+		{ "晴朗", "CLEAR", NULL, NULL, true },
+		{ "多云", "CLOUDS", NULL, NULL, true },
+		{ "雾霾", "SMOG", NULL, NULL, true },
+		{ "有雾", "FOGGY", NULL, NULL, true },
+		{ "阴天", "OVERCAST", NULL, NULL, true },
+		{ "雨天", "RAIN", NULL, NULL, true },
+		{ "暴风雨", "THUNDER", NULL, NULL, true },
+		{ "转晴", "CLEARING", NULL, NULL, true },
+		{ "酸雨", "NEUTRAL", NULL, NULL, true },
+		{ "雪天", "SNOW", NULL, NULL, true },
+		{ "暴风雪", "BLIZZARD", NULL, NULL, true },
+		{ "小雪", "SNOWLIGHT", NULL, NULL, true },
+		{ "圣诞节 天气", "XMAS", NULL, NULL, true },
+		{ "万圣节 天气", "HALLOWEEN", NULL, NULL, true },
+		{ "万圣节 雨天", "RAIN_HALLOWEEN", NULL, NULL, true },
+		{ "万圣节 雪天", "SNOW_HALLOWEEN", NULL, NULL, true }
 	};
 
 	draw_menu_from_struct_def(lines, lineCount, &activeLineIndexWeather, caption, onconfirm_weather_menu);
 }
 
-//////////////////////////////////// CLOUDS MENU /////////////////////////////
+//////////////////////////////////// // 云彩菜单 /////////////////////////////
 bool onconfirm_clouds_menu(MenuItem<std::string> choice)
 {
 	//std::stringstream ss; ss << "Clouds Frozen at: " << lastCloudsName;
 	switch (choice.currentMenuIndex)
 	{
 	case 0:
-		// Set Weather
+		// 设置天气
 		if (featureCloudsFreeze && !lastClouds.empty())
 		{
-			std::stringstream ss; ss << "Clouds frozen at: " << lastCloudsName;
+			std::stringstream ss; ss << "云层冻结为: " << lastCloudsName;
 			set_status_text(ss.str());
 		}
 		if (featureCloudsFreeze && lastClouds.empty())
 		{
-			set_status_text("Set a clouds value first");
+			set_status_text("请先设置云层的值！");
 			featureCloudsFreeze = false;
 		}
-		if (!featureCloudsFreeze) set_status_text("Clouds unfrozen");
+		if (!featureCloudsFreeze) set_status_text("云层已解冻！");
 		break;
 	case 1:
-		// No Clouds
+		// 无云
 		lastClouds = "Snowy 01";
 		GRAPHICS::_SET_CLOUD_HAT_TRANSITION((char*)lastClouds.c_str(), 0.3);
 		WAIT(10);
@@ -383,7 +383,7 @@ bool onconfirm_clouds_menu(MenuItem<std::string> choice)
 		GRAPHICS::_SET_CLOUD_HAT_TRANSITION((char *)lastClouds.c_str(), 0.3);
 				
 		std::ostringstream ss2;
-		ss2 << "Clouds: " << choice.caption;
+		ss2 << "当前云层：" << choice.caption;
 		set_status_text(ss2.str());
 	}
 
@@ -394,33 +394,31 @@ void process_clouds_menu()
 {
 	const int lineCount = 22; // 22
 
-	const std::string caption = "Clouds Options";
+	const std::string caption = "云层选项";
 
 	StringStandardOrToggleMenuDef lines[lineCount] = {
-		{ "Freeze Clouds", "FREEZECLOUDS", &featureCloudsFreeze, NULL, true },
-		{ "No Clouds", "NOCLOUDS", NULL, NULL, true },
-		//
-		{ "Altostratus", "altostratus", NULL, NULL, true },
-		{ "Cirrocumulus", "cirrocumulus", NULL, NULL, true },
-		{ "Cirrus", "Cirrus", NULL, NULL, true },
-		{ "Clear 01", "Clear 01", NULL, NULL, true },
-		{ "Cloudy 01", "Cloudy 01", NULL, NULL, true },
-		{ "Contrails", "Contrails", NULL, NULL, true },
-		{ "Horizon", "Horizon", NULL, NULL, true },
-		{ "Horizonband 1", "horizonband1", NULL, NULL, true },
-		{ "Horizonband 2", "horizonband2", NULL, NULL, true },
-		{ "Horizonband 3", "horizonband3", NULL, NULL, true },
-		{ "Horsey", "horsey", NULL, NULL, true },
-		{ "Nimbus", "Nimbus", NULL, NULL, true },
-		{ "Puffs", "Puffs", NULL, NULL, true },
-		{ "Rain", "RAIN", NULL, NULL, true },
-		{ "Shower", "shower", NULL, NULL, true },
-		{ "Snowy 01", "Snowy 01", NULL, NULL, true },
-		{ "Stormy 01", "Stormy 01", NULL, NULL, true },
-		{ "Stratoscumulus", "stratoscumulus", NULL, NULL, true },
-		{ "Stripey", "Stripey", NULL, NULL, true },
-		{ "Wispy", "Wispy", NULL, NULL, true },
-		//
+		{ "冻结云层", "FREEZECLOUDS", &featureCloudsFreeze, NULL, true },
+		{ "没有云层", "NOCLOUDS", NULL, NULL, true },
+		{ "高层云", "altostratus", NULL, NULL, true },
+		{ "卷积云", "cirrocumulus", NULL, NULL, true },
+		{ "卷云", "Cirrus", NULL, NULL, true },
+		{ "晴朗", "Clear 01", NULL, NULL, true },
+		{ "多云", "Cloudy 01", NULL, NULL, true },
+		{ "飞机航迹云", "Contrails", NULL, NULL, true },
+		{ "地平线云", "Horizon", NULL, NULL, true },
+		{ "地平线带 1", "horizonband1", NULL, NULL, true },
+		{ "地平线带 2", "horizonband2", NULL, NULL, true },
+		{ "地平线带 3", "horizonband3", NULL, NULL, true },
+		{ "马状云", "horsey", NULL, NULL, true },
+		{ "雨云", "Nimbus", NULL, NULL, true },
+		{ "絮状云", "Puffs", NULL, NULL, true },
+		{ "雨云", "RAIN", NULL, NULL, true },
+		{ "阵雨云", "shower", NULL, NULL, true },
+		{ "雪天云", "Snowy 01", NULL, NULL, true },
+		{ "暴风雨云", "Stormy 01", NULL, NULL, true },
+		{ "层积云", "stratoscumulus", NULL, NULL, true },
+		{ "条纹云", "Stripey", NULL, NULL, true },
+		{ "纤缕云", "Wispy", NULL, NULL, true },
 	};
 
 	draw_menu_from_struct_def(lines, lineCount, &activeLineIndexClouds, caption, onconfirm_clouds_menu);
@@ -507,7 +505,7 @@ bool onconfirm_world_menu(MenuItem<int> choice)
 		process_clouds_menu();
 		break;
 	case 2:
-		// featureWorldRandomCops being set in update_features
+		// 在 update_features 中设置 featureWorldRandomCops
 		break;
 	}
 	return false;
@@ -515,7 +513,7 @@ bool onconfirm_world_menu(MenuItem<int> choice)
 
 void process_world_menu()
 {
-	const std::string caption = "World Options";
+	const std::string caption = "世界选项";
 
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
@@ -523,98 +521,98 @@ void process_world_menu()
 
 	MenuItem<int> *item = new MenuItem<int>();
 	item->isLeaf = false;
-	item->caption = "People";
+	item->caption = "行人";
 	item->value = -1;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
 	item->isLeaf = false;
-	item->caption = "Vehicles";
+	item->caption = "车辆";
 	item->value = -2;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
 	item->isLeaf = false;
-	item->caption = "Weather";
+	item->caption = "天气";
 	item->value = -3;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
 	item->isLeaf = false;
-	item->caption = "Weather Settings";
+	item->caption = "天气设置";
 	item->value = -4;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
 	item->isLeaf = false;
-	item->caption = "Clouds";
+	item->caption = "云层";
 	item->value = -5;
 	menuItems.push_back(item);
 	
 	listItem = new SelectFromListMenuItem(WORLD_GRAVITY_LEVEL_CAPTIONS, onchange_gravity_level_index);
 	listItem->wrap = false;
-	listItem->caption = "Gravity Level";
+	listItem->caption = "重力等级";
 	listItem->value = featureGravityLevelIndex;
 	menuItems.push_back(listItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "No Pedestrians";
+	togItem->caption = "没有行人";
 	togItem->value = 1;
 	togItem->toggleValue = &featureWorldNoPeds;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "No Traffic";
+	togItem->caption = "没有交通";
 	togItem->value = 1;
 	togItem->toggleValue = &featureWorldNoTraffic;
 	togItem->toggleValueUpdated = &featureWorldNoTrafficUpdated;
 	menuItems.push_back(togItem);
 	
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "No Planes/Helicopters";
+	togItem->caption = "没有飞机直升机";
 	togItem->value = 1;
 	togItem->toggleValue = &featureNoPlanesHelis;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "No Animals";
+	togItem->caption = "没有动物";
 	togItem->value = 1;
 	togItem->toggleValue = &featureNoAnimals;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "No Fire Department Dispatch";
+	togItem->caption = "禁止派遣消防部门";
 	togItem->value = 1;
 	togItem->toggleValue = &featureWorldNoFireTruck;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "No Ambulance Department Dispatch";
+	togItem->caption = "禁止派遣救护部门";
 	togItem->value = 1;
 	togItem->toggleValue = &featureWorldNoAmbulance;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "No Police Blips";
+	togItem->caption = "地图没有警察标记";
 	togItem->value = 1;
 	togItem->toggleValue = &featureNoPoliceBlips;
 	menuItems.push_back(togItem);
 
 	listItem = new SelectFromListMenuItem(LIMP_IF_INJURED_CAPTIONS, onchange_cop_blips_perm_index);
 	listItem->wrap = false;
-	listItem->caption = "Show Police Blips Permanently";
+	listItem->caption = "地图永久显示警察标记";
 	listItem->value = CopBlipPermIndex;
 	menuItems.push_back(listItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Random Cops";
+	togItem->caption = "随机警察";
 	togItem->value = 2;
 	togItem->toggleValue = &featureWorldRandomCops;
 	togItem->toggleValueUpdated = &featureWorldRandomCopsUpdated;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Random Trains";
+	togItem->caption = "随机列车";
 	togItem->value = 3;
 	togItem->toggleValue = &featureWorldRandomTrains;
 	togItem->toggleValueUpdated = &featureWorldRandomTrainsUpdated;
@@ -622,65 +620,65 @@ void process_world_menu()
 
 	listItem = new SelectFromListMenuItem(WORLD_TRAIN_SPEED_CAPTIONS, onchange_world_train_speed_index);
 	listItem->wrap = false;
-	listItem->caption = "Train Speed";
+	listItem->caption = "列车速度";
 	listItem->value = TrainSpeedIndex;
 	menuItems.push_back(listItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Random Boats";
+	togItem->caption = "随机船只";
 	togItem->value = 4;
 	togItem->toggleValue = &featureWorldRandomBoats;
 	togItem->toggleValueUpdated = &featureWorldRandomBoatsUpdated;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Garbage Trucks";
+	togItem->caption = "随机垃圾车";
 	togItem->value = 5;
 	togItem->toggleValue = &featureWorldGarbageTrucks;
 	togItem->toggleValueUpdated = &featureWorldGarbageTrucksUpdated;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Restricted Zones";
+	togItem->caption = "解除限制区域";
 	togItem->value = 6;
 	togItem->toggleValue = &featureRestrictedZones;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Blackout";
+	togItem->caption = "全城停电";
 	togItem->value = 6;
 	togItem->toggleValue = &featureBlackout;
 	togItem->toggleValueUpdated = &featureBlackoutUpdated;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Headlights During Blackout";
+	togItem->caption = "停电时, NPC 开启车灯";
 	togItem->value = 6;
 	togItem->toggleValue = &featureHeadlightsBlackout;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Show Full Map";
+	togItem->caption = "解锁迷雾显示完整地图";
 	togItem->value = 1;
 	togItem->toggleValue = &featureFullMap;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Show Fort Zancudo On Map";
+	togItem->caption = "地图显示桑库多堡垒军事基地";
 	togItem->value = 1;
 	togItem->toggleValue = &featureZancudoMap;
 	togItem->toggleValueUpdated = &featureZancudoMapUpdated;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Show Bolingbroke Penitentiary On Map";
+	togItem->caption = "地图显示博林布鲁克监狱";
 	togItem->value = 1;
 	togItem->toggleValue = &featurePenitentiaryMap;
 	togItem->toggleValueUpdated = &featurePenitentiaryMapUpdated;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Show Cayo Perico Island On Map";
+	togItem->caption = "地图显示卡约佩里科岛";
 	togItem->value = 1;
 	togItem->toggleValue = &featureCayoPericoMap;
 	togItem->toggleValueUpdated = &featureCayoPericoMapUpdated;
@@ -688,31 +686,31 @@ void process_world_menu()
 
 	listItem = new SelectFromListMenuItem(WORLD_RADAR_MAP_CAPTIONS, onchange_world_radar_map_index);
 	listItem->wrap = false;
-	listItem->caption = "Radar Map Size";
+	listItem->caption = "小地图尺寸";
 	listItem->value = RadarMapIndexN;
 	menuItems.push_back(listItem); 
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "No Minimap Rotation";
+	togItem->caption = "禁用小地图旋转";
 	togItem->value = 1;
 	togItem->toggleValue = &featureNoMinimapRot;
 	togItem->toggleValueUpdated = &featureNoMinimapRotUpdated;
 	menuItems.push_back(togItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "No Waypoint GPS Line";
+	togItem->caption = "没有导航路径线";
 	togItem->value = 1;
 	togItem->toggleValue = &featureNoWaypoint;
 	menuItems.push_back(togItem);
 
 	listItem = new SelectFromListMenuItem(WORLD_FREEROAM_ACTIVITIES_CAPTIONS, onchange_freeroam_activities_index);
 	listItem->wrap = false;
-	listItem->caption = "No Freeroam Activities";
+	listItem->caption = "禁用自由探索活动";
 	listItem->value = featureFreeroamActivitiesIndex;
 	menuItems.push_back(listItem);
 
 	togItem = new ToggleMenuItem<int>();
-	togItem->caption = "Disable Freeroam Event Camera";
+	togItem->caption = "禁用自由探索活动视角";
 	togItem->value = 8;
 	togItem->toggleValue = &featureNoGameHintCameraLocking;
 	menuItems.push_back(togItem);
@@ -843,15 +841,15 @@ void update_world_features()
 		STREAMING::SET_PED_POPULATION_BUDGET(3);
 	}
 
-	// No Police Blips
+	// 无警察标记
 	if (featureNoPoliceBlips) PLAYER::SET_POLICE_RADAR_BLIPS(false);
 	if (!featureNoPoliceBlips) PLAYER::SET_POLICE_RADAR_BLIPS(true);
 	
-	// Show Full Map
+	// 显示完整地图
 	if (featureFullMap) UI::_SET_MINIMAP_REVEALED(true); 
 	if (!featureFullMap) UI::_SET_MINIMAP_REVEALED(false);
 	
-	// Radar Map Size
+	// 雷达地图大小
 	if (NPC_RAGDOLL_VALUES[RadarMapIndexN] == 0 && radar_map_toogle_1 == false) {
 		UI::_SET_RADAR_BIGMAP_ENABLED(false, false);
 		radar_map_toogle_1 = true;
@@ -873,12 +871,12 @@ void update_world_features()
 		radar_map_toogle_3 = true;
 	}
 	
-	// Show Bolingbroke Penitentiary On Map & Show Cayo Perico Island On Map
+	// 在地图上显示博林布鲁克监狱 & 在地图上显示卡约佩里科岛
 	if (featurePenitentiaryMap || featureCayoPericoMap) {
 		Vector3 coords_me = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 		if (INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_me.x, coords_me.y, coords_me.z)) {
 			if (featurePenitentiaryMap) UI::SET_RADAR_AS_INTERIOR_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("V_FakePrison"), 1700, 2580, 0, 0);
-			if (featureCayoPericoMap) UI::SET_RADAR_AS_INTERIOR_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("h4_fake_islandx"), 4700.0f, -5145.0, 0, 0); // THANKS TO SJAAK327 FOR THE CODE
+			if (featureCayoPericoMap) UI::SET_RADAR_AS_INTERIOR_THIS_FRAME(GAMEPLAY::GET_HASH_KEY("h4_fake_islandx"), 4700.0f, -5145.0, 0, 0); // 感谢 SJAAK327 提供的代码
 			UI::SET_RADAR_AS_EXTERIOR_THIS_FRAME();
 		}
 	}
@@ -891,7 +889,7 @@ void update_world_features()
 		featureCayoPericoMapUpdated = false;
 	}
 
-	// Show Fort Zancudo On Map
+	// 在地图上显示桑库多堡垒
 	if (featureZancudoMap && featureZancudoMapUpdated == true) {
 		UI::SET_MINIMAP_COMPONENT(15, true, -1);
 		featureZancudoMapUpdated = false;
@@ -901,7 +899,7 @@ void update_world_features()
 		featureZancudoMapUpdated = true;
 	}
 	
-	// Change Weather
+	// 改变天气
 	if (MISC_WEATHER_CHANGE_VALUES[WeatherChangeIndex] == 0 && change_w_e == true) {
 		GAMEPLAY::CLEAR_OVERRIDE_WEATHER();
 		GAMEPLAY::CLEAR_WEATHER_TYPE_PERSIST();
@@ -1129,7 +1127,7 @@ void update_world_features()
 		}
 	}
 
-	// Waves Intensity
+	// 波浪强度
 	if (featureSnow) {
 		winter_water_tick = winter_water_tick + 1;
 		if (winter_water_tick < 7000) GAMEPLAY::WATER_OVERRIDE_SET_STRENGTH(3.0f); // 10000
@@ -1147,7 +1145,7 @@ void update_world_features()
 	if (WORLD_WAVES_VALUES[WorldWavesIndex] != -1 && WORLD_WAVES_VALUES[WorldWavesIndex] != -2) WATER::_SET_WAVES_INTENSITY(WORLD_WAVES_VALUES[WorldWavesIndex]);
 	if (WORLD_WAVES_VALUES[WorldWavesIndex] != -1 && WORLD_WAVES_VALUES[WorldWavesIndex] == -2) GAMEPLAY::WATER_OVERRIDE_SET_STRENGTH(1.0f);
 	
-	// Lightning Intensity
+	// 闪电强度
 	if (WORLD_LIGHTNING_INTENSITY_VALUES[featureLightIntensityIndex] > -2 && (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3061285535 || GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3373937154)) { // GET_NEXT_WEATHER_TYPE_HASH_NAME
 		s_tick_secs_passed = clock() / CLOCKS_PER_SEC;
 		if (((clock() / CLOCKS_PER_SEC) - l_tick_secs_curr) != 0) {
@@ -1160,8 +1158,8 @@ void update_world_features()
 		}
 	}
 
-	// Bus Interior Light On At Night && NPC No Lights && NPC Neon Lights && NPC Dirty Vehicles && NPC No Gravity Vehicles && NPC Vehicles Reduced Grip && NPC Vehicle Speed && NPC Use Fullbeam && 
-	// Headlights During Blackout && Boost NPC Radio Volume && Slippery When Wet && Train Speed && NPC Vehicles Colour && Reduced Grip If Snowing && Damage On Collision With You
+	// 夜间巴士内部灯光开启 && NPC无车灯 && NPC霓虹灯 && NPC脏车 && NPC无重力车辆 && NPC车辆抓地力降低 && NPC车辆速度 && NPC使用远光灯 && 
+	// 停电时开启车灯 && 提高NPC收音机音量 && 湿滑路面 && 火车速度 && NPC车辆颜色 && 下雪时抓地力降低 && 与玩家碰撞时受损
 	if (featureBusLight || featureNPCNoLights || featureNPCNeonLights || featureDirtyVehicles || featureCleanVehicles ||featureNPCNoGravityVehicles || featureNPCReducedGripVehicles ||
 		WORLD_NPC_VEHICLESPEED_VALUES[NPCVehicleSpeedIndex] > -1 || VEH_TURN_SIGNALS_ACCELERATION_VALUES[RadarReducedGripSnowingCustomIndex] > 0 || featureNPCFullBeam || featureHeadlightsBlackout ||
 		featureBoostNPCRadio || VEH_TURN_SIGNALS_ACCELERATION_VALUES[RadarReducedGripRainingCustomIndex] > 0 || WORLD_TRAIN_SPEED_VALUES[TrainSpeedIndex] != -1.0 || VEH_COLOUR_VALUES[VehColourIndex] > -1 ||
@@ -1172,9 +1170,9 @@ void update_world_features()
 		int found = worldGetAllVehicles(bus_veh, BUS_ARR_SIZE);
 			
 		for (int i = 0; i < found; i++) {
-			// NPC Vehicles Colour
+			// NPC车辆颜色
 			if (VEH_COLOUR_VALUES[VehColourIndex] > -1 /*&& bus_veh[i] != veh_mycurrveh*/) VEHICLE::SET_VEHICLE_COLOURS(bus_veh[i], VEH_COLOUR_VALUES[VehColourIndex], VEH_COLOUR_VALUES[VehColourIndex]);
-			// Bus Interior Light On At Night
+			// 夜间巴士内部灯光开启
 			if (featureBusLight && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(bus_veh[i])) {
 				Hash currVehModel = ENTITY::GET_ENTITY_MODEL(bus_veh[i]);
 				Vector3 coords_vehicle = ENTITY::GET_ENTITY_COORDS(bus_veh[i], true);
@@ -1214,12 +1212,12 @@ void update_world_features()
 					}
 				}
 			}
-			// Train Speed
-			if (WORLD_TRAIN_SPEED_VALUES[TrainSpeedIndex] != -1.0 && VEHICLE::GET_VEHICLE_CLASS(bus_veh[i]) == 21 && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(bus_veh[i]) && GAMEPLAY::GET_MISSION_FLAG() == 0) { // Train Speed
+			// 火车速度
+			if (WORLD_TRAIN_SPEED_VALUES[TrainSpeedIndex] != -1.0 && VEHICLE::GET_VEHICLE_CLASS(bus_veh[i]) == 21 && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(bus_veh[i]) && GAMEPLAY::GET_MISSION_FLAG() == 0) { // 火车速度
 				VEHICLE::SET_TRAIN_SPEED(bus_veh[i], WORLD_TRAIN_SPEED_VALUES[TrainSpeedIndex]);
 				VEHICLE::SET_TRAIN_CRUISE_SPEED(bus_veh[i], WORLD_TRAIN_SPEED_VALUES[TrainSpeedIndex]);
 			}
-			// NPC No Lights
+			// NPC无车灯
 			if (featureNPCNoLights && bus_veh[i] != veh_mycurrveh) {
 				BOOL lightsOn = -1;
 				BOOL highbeamsOn = -1;
@@ -1229,10 +1227,10 @@ void update_world_features()
 				VEHICLE::SET_VEHICLE_INDICATOR_LIGHTS(bus_veh[i], 1, false);
 				VEHICLE::SET_VEHICLE_INDICATOR_LIGHTS(bus_veh[i], 0, false);
 				if (lightsOn || highbeamsOn) VEHICLE::SET_VEHICLE_LIGHTS(bus_veh[i], 1);
-			} // else GRAPHICS::DISABLE_VEHICLE_DISTANTLIGHTS(false);
-			// Boost NPC Radio Volume
+			} // 否则 GRAPHICS::DISABLE_VEHICLE_DISTANTLIGHTS(false);
+			// 提高NPC收音机音量
 			if (featureBoostNPCRadio) AUDIO::SET_VEHICLE_RADIO_LOUD(bus_veh[i], 1);
-			// NPC Neon Lights
+			// NPC霓虹灯
 			if (featureNPCNeonLights) {
 				if (ENTITY::DOES_ENTITY_EXIST(bus_veh[i]) && bus_veh[i] != veh_mycurrveh && !VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 0) && !VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 1) && !VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 2) &&
 					!VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(bus_veh[i], 3)) {
@@ -1254,16 +1252,16 @@ void update_world_features()
 					}
 				}
 			}
-			// NPC Dirty Vehicles
+			// NPC脏车
 			if (featureDirtyVehicles) {
 				int temp_dirty = rand() % 15 + 0;
 				if (VEHICLE::GET_VEHICLE_DIRT_LEVEL(bus_veh[i]) == 0 && bus_veh[i] != veh_mycurrveh) VEHICLE::SET_VEHICLE_DIRT_LEVEL(bus_veh[i], temp_dirty);
 			}
-			// NPC Clean Vehicles
+			// NPC干净车辆
 			if (featureCleanVehicles) {
 				if (VEHICLE::GET_VEHICLE_DIRT_LEVEL(bus_veh[i]) != 0 && bus_veh[i] != veh_mycurrveh) VEHICLE::SET_VEHICLE_DIRT_LEVEL(bus_veh[i], 0);
 			}
-			// NPC No Gravity Vehicles
+			// NPC无重力车辆
 			if (featureNPCNoGravityVehicles) {
 				if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) veh_i_last_used = veh_mycurrveh;
 				if (bus_veh[i] != veh_mycurrveh && bus_veh[i] != veh_i_last_used) {
@@ -1274,7 +1272,7 @@ void update_world_features()
 					if ((veh_no_gr.z - height_n_g) < 2.0 && ENTITY::GET_ENTITY_ROLL(bus_veh[i]) < 90 && ENTITY::GET_ENTITY_ROLL(bus_veh[i]) > -90) ENTITY::APPLY_FORCE_TO_ENTITY(bus_veh[i], 1, 0, 0, 40, 0, 0, 0, 1, true, true, false, true, true); // 50 // 30 /* && (ENTITY::GET_ENTITY_SPEED(bus_veh[i]) * 3.6) < 20*/
 				}
 			}
-			// NPC Vehicles Reduced Grip
+			// NPC车辆抓地力降低
 			if (featureNPCReducedGripVehicles) {
 				if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
 					veh_i_last_used = veh_mycurrveh;
@@ -1283,7 +1281,7 @@ void update_world_features()
 				if (bus_veh[i] != veh_mycurrveh && bus_veh[i] != veh_i_last_used) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], true);
 				reduced_grip_e = true;
 			}
-			// Reduced Grip If Snowing (Vehicles & Protagonist)
+			// 下雪时抓地力降低（车辆与主角）
 			if (VEH_TURN_SIGNALS_ACCELERATION_VALUES[RadarReducedGripSnowingCustomIndex] > 0 && featureSnow) {
 				float slippery_randomize = -1;
 				Vector3 coords_slip = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
@@ -1294,25 +1292,25 @@ void update_world_features()
 				if (slippery_s > slip_index_s - 1 && slippery_s < 20) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], false); // slip_index * 2
 				if (slippery_s > 19) slippery_s = 0; 
 				srand(time(0));
-				int time11 = (rand() % 3000 + 0); // UP MARGIN + DOWN MARGIN
+				int time11 = (rand() % 3000 + 0); // 上边距 + 下边距
 				int time12 = (rand() % 3000 + 0);
 				int r_Type = (rand() % 3 + 2);
 				slippery_randomize = (rand() % 1000 + 1);
-				// arcade
+				// 街机游戏
 				if (VEH_TURN_SIGNALS_ACCELERATION_VALUES[RadarReducedGripSnowingCustomIndex] < 6 && slippery_randomize > 990 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
 					AI::IS_PED_RUNNING(PLAYER::PLAYER_PED_ID()) && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip.x, coords_slip.y, coords_slip.z) && !ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID()))
 					PED::SET_PED_TO_RAGDOLL(PLAYER::PLAYER_PED_ID(), time11, time12, r_Type, true, true, false);
 				if (VEH_TURN_SIGNALS_ACCELERATION_VALUES[RadarReducedGripSnowingCustomIndex] < 6 && slippery_randomize > 960 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
 					AI::IS_PED_SPRINTING(PLAYER::PLAYER_PED_ID()) && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip.x, coords_slip.y, coords_slip.z) && !ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID())) 
 					PED::SET_PED_TO_RAGDOLL(PLAYER::PLAYER_PED_ID(), time11, time12, r_Type, true, true, false);
-				// realistic
+				// 写实风格
 				if (VEH_TURN_SIGNALS_ACCELERATION_VALUES[RadarReducedGripSnowingCustomIndex] > 5 && slippery_randomize > 980 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
 					AI::IS_PED_RUNNING(PLAYER::PLAYER_PED_ID()) && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip.x, coords_slip.y, coords_slip.z) && !ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID())) 
 					PED::SET_PED_TO_RAGDOLL(PLAYER::PLAYER_PED_ID(), time11, time12, r_Type, true, true, false);
 				if (VEH_TURN_SIGNALS_ACCELERATION_VALUES[RadarReducedGripSnowingCustomIndex] > 5 && slippery_randomize > 930 && !AI::IS_PED_STILL(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) &&
 					AI::IS_PED_SPRINTING(PLAYER::PLAYER_PED_ID()) && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip.x, coords_slip.y, coords_slip.z) && !ENTITY::IS_ENTITY_IN_WATER(PLAYER::PLAYER_PED_ID())) 
 					PED::SET_PED_TO_RAGDOLL(PLAYER::PLAYER_PED_ID(), time11, time12, r_Type, true, true, false);
-				// normalize speed
+				// 标准化速度
 				Vector3 my_coords_s = ENTITY::GET_ENTITY_COORDS(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 0), true);
 				if (VEH_ENG_POW_VALUES[engPowMultIndex] < 0 && VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 0))) && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(my_coords_s.x, my_coords_s.y, my_coords_s.z) &&
 					CONTROLS::IS_CONTROL_RELEASED(2, 61)) VEHICLE::_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 0), 0.3f);
@@ -1320,7 +1318,7 @@ void update_world_features()
 					CONTROLS::IS_CONTROL_RELEASED(2, 61)) VEHICLE::_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 0), 1.0f);
 				no_grip_snowing_e = true;
 			}
-			// Slippery When Wet
+			// 湿滑路面
 			if (VEH_TURN_SIGNALS_ACCELERATION_VALUES[RadarReducedGripRainingCustomIndex] > 0) {
 				if (GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 1420204096 || GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3061285535 || GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 1840358669 ||
 					GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() == 3373937154) { // GET_NEXT_WEATHER_TYPE_HASH_NAME
@@ -1330,7 +1328,7 @@ void update_world_features()
 					if (slippery_r < slip_index && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(coords_slip_r.x, coords_slip_r.y, coords_slip_r.z)) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], true);
 					if (slippery_r > slip_index - 1 && slippery_r < 20) VEHICLE::SET_VEHICLE_REDUCE_GRIP(bus_veh[i], false);
 					if (slippery_r > 19) slippery_r = 0; 
-					// normalize speed
+					// 标准化速度
 					Vector3 my_coords_sl = ENTITY::GET_ENTITY_COORDS(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 0), true);
 					if (VEH_ENG_POW_VALUES[engPowMultIndex] < 0 && VEHICLE::IS_THIS_MODEL_A_CAR(ENTITY::GET_ENTITY_MODEL(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 0))) && INTERIOR::_ARE_COORDS_COLLIDING_WITH_EXTERIOR(my_coords_sl.x, my_coords_sl.y, my_coords_sl.z) &&
 						CONTROLS::IS_CONTROL_RELEASED(2, 61)) VEHICLE::_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 0), 0.2f);
@@ -1339,7 +1337,7 @@ void update_world_features()
 					no_grip_when_wet_e = true;
 				}
 			}
-			// DISABLED Reduced Grip If Snowing || DISABLED Slippery When Wet || DISABLED NPC Vehicles Reduced Grip
+			// 已禁用 下雪时抓地力降低 || 已禁用 湿滑路面 || 已禁用 NPC车辆抓地力降低
 			if ((VEH_TURN_SIGNALS_ACCELERATION_VALUES[RadarReducedGripSnowingCustomIndex] > 0 && !featureSnow && no_grip_snowing_e == true) || (VEH_TURN_SIGNALS_ACCELERATION_VALUES[RadarReducedGripSnowingCustomIndex] == 0 && featureSnow && no_grip_snowing_e == true) ||
 				(VEH_TURN_SIGNALS_ACCELERATION_VALUES[RadarReducedGripRainingCustomIndex] > 0 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() != 1420204096 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() != 3061285535 &&
 				GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() != 1840358669 && GAMEPLAY::GET_PREV_WEATHER_TYPE_HASH_NAME() != 3373937154 && no_grip_when_wet_e == true) || 
@@ -1352,18 +1350,18 @@ void update_world_features()
 				no_grip_when_wet_e = false;
 				reduced_grip_e = false;
 			}
-			// NPC Vehicle Speed
+			// NPC车辆速度
 			if (WORLD_NPC_VEHICLESPEED_VALUES[NPCVehicleSpeedIndex] > -1 && bus_veh[i] != veh_mycurrveh) {
 				VEHICLE::SET_VEHICLE_FORWARD_SPEED(bus_veh[i], WORLD_NPC_VEHICLESPEED_VALUES[NPCVehicleSpeedIndex]); 
 			}
-			// NPC Use Fullbeam
+			// NPC使用远光灯
 			if (featureNPCFullBeam) {
 				BOOL lightsAutoOn = -1;
 				BOOL highbeamsAutoOn = -1;
 				bool npclights_state = VEHICLE::GET_VEHICLE_LIGHTS_STATE(bus_veh[i], &lightsAutoOn, &highbeamsAutoOn);
 				if (lightsAutoOn && !highbeamsAutoOn && bus_veh[i] != veh_mycurrveh) VEHICLE::SET_VEHICLE_FULLBEAM(bus_veh[i], 1);
 			}
-			// Headlights During Blackout
+			// 停电时开启车灯
 			if (featureHeadlightsBlackout && featureBlackout && VEHICLE::GET_IS_VEHICLE_ENGINE_RUNNING(bus_veh[i])) {
 				Vehicle vehpolicelights = bus_veh[i];
 				bool autolights_state = VEHICLE::GET_VEHICLE_LIGHTS_STATE(vehpolicelights, &lightsBAutoOn, &highbeamsBAutoOn);
@@ -1388,20 +1386,20 @@ void update_world_features()
 					r = 31;	g = 44; b = 54;
 					if (getGameVersion() > 45) {
 						int curColour = VEHICLE::GET_VEHICLE_XENON_COLOUR(bus_veh[i]);
-						if (curColour == 0) { r = 61; g = 60; b = 60; } // White
-						if (curColour == 1) { r = 12; g = 16; b = 32; } // Blue
-						if (curColour == 2) { r = 17; g = 30; b = 40; } // Electric Blue
-						if (curColour == 3) { r = 31; g = 71; b = 51; } // Mint Green
-						if (curColour == 4) { r = 43; g = 56; b = 25; } // Lime Green
-						if (curColour == 5) { r = 255; g = 255;	b = 0; } // Yellow
-						if (curColour == 6) { r = 34; g = 27; b = 14; } // Golden Shower
-						if (curColour == 7) { r = 51; g = 30; b = 17; } // Orange
-						if (curColour == 8) { r = 255; g = 0; b = 0; } // Red
-						if (curColour == 9) { r = 67; g = 38; b = 44; } // Pony Pink
-						if (curColour == 10) { r = 236;	g = 5; b = 142; } // Hot Pink
-						if (curColour == 11) { r = 25;	g = 15;	b = 43; } // Purple
-						if (curColour == 12) { r = 17;	g = 14; b = 36; } // Blacklight
-						if (curColour == 13) { r = 31;	g = 44; b = 54; } // Stock
+						if (curColour == 0) { r = 61; g = 60; b = 60; } // 白色
+						if (curColour == 1) { r = 12; g = 16; b = 32; } // 蓝色
+						if (curColour == 2) { r = 17; g = 30; b = 40; } // 电光蓝
+						if (curColour == 3) { r = 31; g = 71; b = 51; } // 薄荷绿
+						if (curColour == 4) { r = 43; g = 56; b = 25; } // 酸橙绿
+						if (curColour == 5) { r = 255; g = 255;	b = 0; } // 黄色
+						if (curColour == 6) { r = 34; g = 27; b = 14; } // 金色
+						if (curColour == 7) { r = 51; g = 30; b = 17; } // 橙色
+						if (curColour == 8) { r = 255; g = 0; b = 0; } // 红色
+						if (curColour == 9) { r = 67; g = 38; b = 44; } // 小马粉
+						if (curColour == 10) { r = 236;	g = 5; b = 142; } // 热粉
+						if (curColour == 11) { r = 25;	g = 15;	b = 43; } // 紫色
+						if (curColour == 12) { r = 17;	g = 14; b = 36; } // 黑光
+						if (curColour == 13) { r = 31;	g = 44; b = 54; } // 原厂
 					}
 				}
 				//VEHICLE::SET_VEHICLE_CAN_BREAK(vehpolicelights, false);
@@ -1425,7 +1423,7 @@ void update_world_features()
 					GRAPHICS::DRAW_LIGHT_WITH_RANGE(bone4_cruiser_coord.x, bone4_cruiser_coord.y, bone4_cruiser_coord.z, 255, 0, 0, 0.7, 15);
 				}
 			}
-			// Damage On Collision With You
+			// 与玩家碰撞时受损
 			if (NPC_RAGDOLL_VALUES[NPCVehicleDamageOnCollIndex] > 0 && PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) {
 				Vector3 veh_me_crds = ENTITY::GET_ENTITY_COORDS(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false), true);
 				Vector3 veh_coll_with_crds = ENTITY::GET_ENTITY_COORDS(bus_veh[i], true);
@@ -1448,31 +1446,31 @@ void update_world_features()
 					ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(bus_veh[i]);
 				}
 			}
-		} // end of for vehicles
+		} // 车辆循环结束
 	}
 
-	// NPC No Gravity Peds && Acid Water && Acid Rain && Peds Health && Peds Accuracy && NPC Show Current Health && Show Police Blips Permanently
+	// NPC无重力行人 && 酸性水体 && 酸雨 && 行人生命值 && 行人射击精度 && NPC显示当前生命值 && 永久显示警察标记
 	if (NPC_RAGDOLL_VALUES[NoPedsGravityIndex] > 0 || featureAcidWater || featureAcidRain || PLAYER_HEALTH_VALUES[PedsHealthIndex] > 0 ||
 		WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex] > -1 || featureNPCShowHealth || NPC_RAGDOLL_VALUES[CopBlipPermIndex] > 0) {
 		const int BUS_ARR_PED_SIZE = 1024;
 		Ped bus_ped[BUS_ARR_PED_SIZE];
 		int found_ped = worldGetAllPeds(bus_ped, BUS_ARR_PED_SIZE);
 		for (int i = 0; i < found_ped; i++) {
-			// Peds Accuracy
+			// 行人射击精度
 			if (WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex] > -1) PED::SET_PED_ACCURACY(bus_ped[i], WORLD_NPC_VEHICLESPEED_VALUES[PedAccuracyIndex]);
-			// Peds Health
+			// 行人生命值
 			if (PLAYER_HEALTH_VALUES[PedsHealthIndex] > 0) { 
 				if (ENTITY::GET_ENTITY_HEALTH(bus_ped[i]) == ENTITY::GET_ENTITY_MAX_HEALTH(bus_ped[i])) {
 					if (bus_ped[i] != PLAYER::PLAYER_PED_ID() && !PED::IS_PED_GROUP_MEMBER(bus_ped[i], myENTGroup)) {
 						PED::SET_PED_MAX_HEALTH(bus_ped[i], PLAYER_HEALTH_VALUES[PedsHealthIndex]);
 						ENTITY::SET_ENTITY_HEALTH(bus_ped[i], PLAYER_HEALTH_VALUES[PedsHealthIndex]);
-						PED::SET_PED_SUFFERS_CRITICAL_HITS(bus_ped[i], false); // no headshots
-						PED::SET_PED_CONFIG_FLAG(bus_ped[i], 281, true); // no writhe
-						//PED::SET_PED_CONFIG_FLAG(bus_ped[i], 33, false); // dies by ragdoll
+						PED::SET_PED_SUFFERS_CRITICAL_HITS(bus_ped[i], false); // 无爆头
+						PED::SET_PED_CONFIG_FLAG(bus_ped[i], 281, true); // 无挣扎
+						//PED::SET_PED_CONFIG_FLAG(bus_ped[i], 33, false); // 死亡时变为布娃娃效果
 					}
 				}
 			}
-			// NPC Show Current Health
+			// NPC显示当前生命值
 			if (featureNPCShowHealth && ENTITY::DOES_ENTITY_EXIST(bus_ped[i]) && !ENTITY::IS_ENTITY_DEAD(bus_ped[i]) && ENTITY::GET_ENTITY_HEALTH(bus_ped[i]) != ENTITY::GET_ENTITY_MAX_HEALTH(bus_ped[i]) &&
 				ENTITY::GET_ENTITY_HEALTH(bus_ped[i]) != PLAYER_HEALTH_VALUES[PedsHealthIndex] && bus_ped[i] != PLAYER::PLAYER_PED_ID()) {
 				Vector3 head_c = PED::GET_PED_BONE_COORDS(bus_ped[i], 31086, 0, 0, 0);
@@ -1484,7 +1482,7 @@ void update_world_features()
 				UI::END_TEXT_COMMAND_DISPLAY_TEXT(0, 0);
 				GRAPHICS::CLEAR_DRAW_ORIGIN();
 			}
-			// NPC No Gravity Peds
+			// NPC无重力行人
 			if (NPC_RAGDOLL_VALUES[NoPedsGravityIndex] > 0 && bus_ped[i] != PLAYER::PLAYER_PED_ID() && !PED::IS_PED_IN_ANY_VEHICLE(bus_ped[i], false)) {
 				Vector3 CamRot = CAM::GET_GAMEPLAY_CAM_ROT(2);
 				int p_force = 5;
@@ -1515,7 +1513,7 @@ void update_world_features()
 				}
 				ENTITY::SET_ENTITY_HAS_GRAVITY(bus_ped[i], false);
 			}
-			// Acid Water
+			// 酸性水体
 			if (featureAcidWater && (ENTITY::IS_ENTITY_IN_WATER(bus_ped[i]) || PED::IS_PED_SWIMMING_UNDER_WATER(bus_ped[i]))) {
 				if (bus_ped[i] != PLAYER::PLAYER_PED_ID()) acid_counter = acid_counter + 1; 
 				if (bus_ped[i] == PLAYER::PLAYER_PED_ID()) { 
@@ -1549,7 +1547,7 @@ void update_world_features()
 					}
 				}
 			}
-			// Acid Rain
+			// 酸雨
 			if (featureAcidRain) {
 				Vector3 coords_ped = ENTITY::GET_ENTITY_COORDS(bus_ped[i], true);  
 				Vehicle veh_currveh = PED::GET_VEHICLE_PED_IS_USING(bus_ped[i]);
@@ -1600,7 +1598,7 @@ void update_world_features()
 					}
 				}
 			}
-			// Show Police Blips Permanently
+			// 永久显示警察标记
 			if (NPC_RAGDOLL_VALUES[CopBlipPermIndex] > 0 && (PED::GET_PED_TYPE(bus_ped[i]) == 6 || PED::GET_PED_TYPE(bus_ped[i]) == 27)) { // ENTITY::DOES_ENTITY_EXIST(bus_ped[i])
 				if (!COP_VECTOR.empty()) {
 					bool exists_already = false;
@@ -1630,20 +1628,20 @@ void update_world_features()
 					COP_VECTOR.push_back(bus_ped[i]);
 				}
 			}
-		} // end of for peds
+		} // 行人循环结束
 	}
 	
-	// show police blips permanently status message
+	// 永久显示警察标记状态信息
 	if (cop_blip_perm == -2) cop_blip_perm = CopBlipPermIndex;
 	if (CopBlipPermIndex == 0 && cop_blip_perm != 0) cop_blip_perm = CopBlipPermIndex;
 
 	if (cop_blip_perm != CopBlipPermIndex) {
-		if (CopBlipPermIndex == 1) set_status_text("Short Range");
-		if (CopBlipPermIndex == 2) set_status_text("No Range Limit");
+		if (CopBlipPermIndex == 1) set_status_text("近距离的");
+		if (CopBlipPermIndex == 2) set_status_text("无限距离");
 		cop_blip_perm = CopBlipPermIndex;
 	}
 
-	// No Freeroam Activities
+	// 无自由模式活动
 	if (WORLD_FREEROAM_ACTIVITIES_VALUES[featureFreeroamActivitiesIndex] > 0) {
 		int blipIterator = -1;
 		GAMEPLAY::SET_THIS_SCRIPT_CAN_REMOVE_BLIPS_CREATED_BY_ANY_SCRIPT(true);
@@ -1708,10 +1706,10 @@ void update_world_features()
 		}
 	}
 
-	// Disable Freeroam Event Camera. THANKS TO LEE R. CAWLEY FOR THE IDEA AND THE CODE
+	// 禁用自由模式事件镜头。感谢 Lee R. Cawley 的创意和代码。
 	if (featureNoGameHintCameraLocking && CAM::IS_GAMEPLAY_HINT_ACTIVE() && GAMEPLAY::GET_MISSION_FLAG() == 0) CAM::STOP_GAMEPLAY_HINT(true);
 
-	// Wind Strength
+	// 风力强度
 	if (windstrength_toggle == false) {
 		GAMEPLAY::SET_WIND(WORLD_WIND_STRENGTH_VALUES[WindStrengthIndex]);
 		if (WORLD_WIND_STRENGTH_VALUES[WindStrengthIndex] != 0) GAMEPLAY::SET_WIND_DIRECTION(ENTITY::GET_ENTITY_HEADING(PLAYER::PLAYER_PED_ID()));
@@ -1721,7 +1719,7 @@ void update_world_features()
 	}
 	if (windstrength_changed != WORLD_WIND_STRENGTH_VALUES[WindStrengthIndex]) windstrength_toggle = false;
 
-	// No Minimap Rotation
+	// 无小地图旋转
 	if (featureNoMinimapRot) {
 		UI::LOCK_MINIMAP_ANGLE(0);
 		featureNoMinimapRotUpdated = true;
@@ -1731,7 +1729,7 @@ void update_world_features()
 		featureNoMinimapRotUpdated = false;
 	}
 
-	// No Fire Department Dispatch
+	// 无消防部门派遣
 	if (featureWorldNoFireTruck) {
 		GAMEPLAY::ENABLE_DISPATCH_SERVICE(3, false);
 		featureWorldNoFireTruckUpdated = true;
@@ -1741,7 +1739,7 @@ void update_world_features()
 		featureWorldNoFireTruckUpdated = false;
 	}
 
-	// No Ambulance Department Dispatch
+	// 无救护车部门派遣
 	if (featureWorldNoAmbulance) {
 		GAMEPLAY::ENABLE_DISPATCH_SERVICE(5, false);
 		featureWorldNoAmbulanceUpdated = true;
@@ -1751,10 +1749,10 @@ void update_world_features()
 		featureWorldNoAmbulanceUpdated = false;
 	}
 
-	// No Waypoint
+	// 无路径点
 	if (featureNoWaypoint) UI::CLEAR_GPS_PLAYER_WAYPOINT();
 
-	// No Traffic
+	// 无交通
 	if (featureWorldNoTrafficUpdated)
 	{
 		VEHICLE::_DISPLAY_DISTANT_VEHICLES(!featureWorldNoTraffic);
@@ -1788,7 +1786,7 @@ void update_world_features()
 		VEHICLE::_DISPLAY_DISTANT_VEHICLES(false);
 	}
 
-	// No Planes / Helicopters
+	// 无飞机 / 直升机
 	if (featureNoPlanesHelis) {
 		AI::SET_SCENARIO_GROUP_ENABLED("ALAMO_PLANES", 0);
 		AI::SET_SCENARIO_GROUP_ENABLED("ARMY_HELI", 0);
@@ -1804,7 +1802,7 @@ void update_world_features()
 		}
 	}
 	
-	// No Animals
+	// 无动物
 	if (featureNoAnimals) {
 		AI::SET_SCENARIO_TYPE_ENABLED("WORLD_MOUNTAIN_LION_REST", 0);
 		AI::SET_SCENARIO_TYPE_ENABLED("WORLD_MOUNTAIN_LION_WANDER", 0);
@@ -1821,10 +1819,10 @@ void update_world_features()
 		no_animals = false;
 	}
 
-	// Random Trains
+	// 随机生成火车
 	if (!featureWorldRandomTrains) VEHICLE::DELETE_ALL_TRAINS();
 	
-	// Freeze Weather
+	// 冻结天气
 	if (featureWeatherFreeze && featureWeatherFreezeUpdated == false) {
 		freeze_counter = freeze_counter + 0.05;
 		GAMEPLAY::CLEAR_OVERRIDE_WEATHER();
@@ -1854,11 +1852,11 @@ void update_world_features()
 		freeze_counter = 0.0;
 	}
 
-	// Freeze Clouds
+	// 冻结云层
 	if (featureCloudsFreeze && !lastClouds.empty()) GRAPHICS::_SET_CLOUD_HAT_TRANSITION((char *)lastClouds.c_str(), 0.3);
 	if (featureCloudsFreeze && lastClouds.empty()) GRAPHICS::_CLEAR_CLOUD_HAT();
 
-	// Restricted Zones
+	// 限制区域
 	if (!featureRestrictedZones)
 	{
 		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("am_armybase");
@@ -1869,14 +1867,14 @@ void update_world_features()
 		GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("re_prisonvanbreak");
 	}
 
-	// Heavy Snow
+	// 大雪
 	if (featureSnowUpdated)
 	{
 		if (featureSnow)
 		{
 			EnableSnow(featureSnow);
 			EnableTracks(true, true, true, true);
-			// THANKS TO ALTSIERRA117 FOR THE ORIGINAL CODE
+			// 感谢 Altsierra117 的原始代码
 			STREAMING::REQUEST_NAMED_PTFX_ASSET("core_snow");
 			GRAPHICS::_SET_PTFX_ASSET_NEXT_CALL("core_snow");
 			AUDIO::REQUEST_SCRIPT_AUDIO_BANK("ICE_FOOTSTEPS", true);
@@ -1897,7 +1895,7 @@ void update_world_features()
 			MPMapCounter = MPMapCounter + 1;
 			if (MPMapCounter > 200) {
 				DLC2::_LOAD_MP_DLC_MAPS();
-				set_status_text("MP Maps enabled");
+				set_status_text("在线地图加载完成！");
 				featureMPMapUpdated = false;
 				MPMapCounter = 0;
 			}
@@ -2060,20 +2058,20 @@ void handle_generic_settings_world(std::vector<StringPairSettingDBRow>* settings
 	}
 }
 
-	/* Snow related code */
-	/* Thanks to Sjaak for the help/code */
+	/* 雪相关代码 */
+	/* 感谢 Sjaak 的帮助/代码  */
 
-	//Copyright (C) GTA:Multiplayer Team (https://wiki.gta-mp.net/index.php/Team)
+	//版权所有 (C) GTA:Multiplayer 团队 (https://wiki.gta-mp.net/index.php/Team)
 
 void writeJmp(BYTE* pFrom, BYTE* pTo)
 {
 	DWORD protect;
 	VirtualProtect(pFrom, 16, PAGE_EXECUTE_READWRITE, &protect);
-	pFrom[0] = 0x48;  // mov rax, func
+	pFrom[0] = 0x48;  // 将 func 移动到 rax
 	pFrom[1] = 0xB8;
 	*reinterpret_cast<BYTE**>(&pFrom[2]) = pTo;
-	pFrom[10] = 0x50; // push rax
-	pFrom[11] = 0xC3; // ret
+	pFrom[10] = 0x50; // 将 rax 压入栈
+	pFrom[11] = 0xC3; // 返回
 	VirtualProtect(pFrom, 16, protect, &protect);
 }
 
@@ -2098,11 +2096,11 @@ void EnableTracks(bool tracksVehicle = false, bool tracksPeds = false, bool deep
 	VirtualProtect((void*)VAR_FeetSnowTracks, 1, PAGE_EXECUTE_READWRITE, nullptr);
 	VirtualProtect((void*)VAR_VehicleSnowTracks, 1, PAGE_EXECUTE_READWRITE, nullptr);
 
-	// Enable/Disable Vehicle/Foot Snow tracks
+	// 启用/禁用车辆/足迹雪地轨迹
 	*(uint8_t *)VAR_FeetSnowTracks = tracksVehicle;
 	*(uint8_t *)VAR_VehicleSnowTracks = tracksPeds;
 
-	// Switch for big/small tracks
+	// 切换大/小轨迹
 	static auto vehicleTrackTypes = FindPatternJACCO("\xB9\x00\x00\x00\x00\x84\xC0\x44\x0F\x44\xF1", "x????xxxxxx");
 	if (!vehicleTrackTypes)
 	{
@@ -2143,7 +2141,7 @@ void EnableSnow(bool featureSnow) {
 			addr1 = FindPatternJACCO("\x80\x3D\x00\x00\x00\x00\x00\x74\x27\x84\xC0", "xx?????xxxx");
 			addr2 = FindPatternJACCO("\x44\x38\x3D\x00\x00\x00\x00\x74\x0F", "xxx????xx");
 
-			// Patterns changed slightly in 3095. Going forward the native is used instead. This is for legacy purposes.
+			// 3095 版本中模式略有变化。未来将使用原生函数。此处保留以兼容旧版。
 			static bool bUseAddr4 = false;
 			if (!addr1)
 			{
@@ -2153,7 +2151,7 @@ void EnableSnow(bool featureSnow) {
 					static auto addr4 = FindPatternJACCO("\x80\x3D\x00\x00\x00\x00\x00\x74\x25\xB9\x40\x00\x00\x00", "xx????xxxxxxxx");
 					if (!addr4)
 					{
-						set_status_text("~r~ Error (1): Cannot enable Snow on this version of GTA V");
+						set_status_text("~r~ 错误 (1): 无法在此版本 GTA5 中启用雪地模式！");
 						featureSnow = false;
 						return;
 					}
@@ -2174,7 +2172,7 @@ void EnableSnow(bool featureSnow) {
 				static auto addr5 = FindPatternJACCO("\x44\x38\x3D\x00\x00\x00\x00\x74\x1D\xB9\x40\x00\x00\x00", "xxx????xxxxxxx");
 				if (!addr5)
 				{
-					set_status_text("~r~ Error (2): Cannot enable Snow on this version of GTA V");
+					set_status_text("~r~ 错误 (2): 无法在此版本 GTA5 中启用雪地模式！");
 					featureSnow = false;
 					return;
 				}
@@ -2185,17 +2183,17 @@ void EnableSnow(bool featureSnow) {
 				}
 			}
 
-			// Initialize
+			// 初始化
 			static bool bInitialized = false;
 			if (!bInitialized)
 			{
 				bInitialized = true;
 
-				// Unprotect Memory
+				// 取消内存保护
 				VirtualProtect((void*)addr1, 13, PAGE_EXECUTE_READWRITE, nullptr);
 				VirtualProtect((void*)addr2, 14, PAGE_EXECUTE_READWRITE, nullptr);
 
-				// Copy original Memory
+				// 复制原始内存
 				memcpy(&original1, (void*)addr1, 13);
 				memcpy(&original2, (void*)addr2, 14);
 			}
@@ -2204,11 +2202,11 @@ void EnableSnow(bool featureSnow) {
 
 			EnableTracks(TRUE, TRUE, TRUE, TRUE);
 
-			// NOP checks
+			// 空操作检查
 			if (!bUseAddr4)
 				memset((void*)addr1, 0x90, 13);
 			else
-				writeJmp((BYTE*)addr1, (BYTE*)addr1 + 0x1B);	// takes 12 bytes
+				writeJmp((BYTE*)addr1, (BYTE*)addr1 + 0x1B);	// 占用 12 字节
 
 			if (!bUseAddr5)
 				memset((void*)addr2, 0x90, 14);
@@ -2216,18 +2214,18 @@ void EnableSnow(bool featureSnow) {
 				writeJmp((BYTE*)addr2, (BYTE*)addr2 + 0x1C);
 
 		}
-		set_status_text("Snow Enabled");
+		set_status_text("雪已启用！");
 	}				
 	else
 	{
-		// Older game versions will use the byte patch - so restore
+		// 旧版本游戏将使用字节补丁 - 因此恢复
 		if (version < 85)
 		{
-			// Restore original memory
+			// 恢复原始内存
 			memcpy((void*)addr1, &original1, 13);
 			memcpy((void*)addr2, &original2, 14);
 		}
-		else //Newer game versions using the native
+		else // 新版本游戏使用原生函数
 		{
 			GRAPHICS::_FORCE_GROUND_SNOW_PASS(FALSE);
 		}
@@ -2235,6 +2233,6 @@ void EnableSnow(bool featureSnow) {
 		EnableTracks();
 		GAMEPLAY::CLEAR_WEATHER_TYPE_PERSIST();
 		GAMEPLAY::SET_WEATHER_TYPE_NOW("CLEAR");
-		set_status_text("Snow Disabled");
+		set_status_text("雪已禁用！");
 	}
 }
