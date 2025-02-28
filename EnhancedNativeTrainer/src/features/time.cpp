@@ -1,11 +1,11 @@
 /*
-Some of this code began its life as a part of GTA V SCRIPT HOOK SDK.
+这段代码最初是作为 GTA V SCRIPT HOOK SDK 的一部分而创建的。
 http://dev-c.com
 (C) Alexander Blade 2015
 
-It is now part of the Enhanced Native Trainer project.
+现在它已成为 Enhanced Native Trainer 项目的一部分。
 https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
-(C) Rob Pridham and fellow contributors 2015
+(C) Rob Pridham 及其他贡献者 2015
 */
 #include "time.h"
 #include "vehicles.h"
@@ -15,12 +15,12 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\ui_support\menu_functions.h"
 #include "script.h"
 
-const std::vector<std::string> TIME_SPEED_CAPTIONS{ "Minimum", "0.1x", "0.2x", "0.3x", "0.4x", "0.5x", "0.6x", "0.7x", "0.8x", "0.9x", "1x (Normal)" };
+const std::vector<std::string> TIME_SPEED_CAPTIONS{ "最低", "0.1x", "0.2x", "0.3x", "0.4x", "0.5x", "0.6x", "0.7x", "0.8x", "0.9x", "1x (正常)" };
 const std::vector<float> TIME_SPEED_VALUES{ 0.0f, 0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f, 1.0f };
 const int DEFAULT_TIME_SPEED = 10;
 
-const std::vector<std::string> TIME_FLOW_RATE_CAPTIONS{ "Frozen Time (0s/s)", "Half a Second per Second", "Real Time (1s/s)", "2 Seconds per Second", "3 Seconds per Second", "5 Seconds per Second", "6 Seconds per Second", "10 Seconds per Second", "12 Seconds per Second", "15 Seconds per Second", "Normal Time (30s/s)", "1 Minute per Second", "2 Minutes per Second", "3 Minutes per Second", "5 Minutes per Second", "6 Minutes per Second", "10 Minutes per Second", "12 Minutes per Second", "15 Minutes per Second", "30 Minutes per Second", "1 Hour per Second", "3 Hours per Second", "6 Hours per Second", "12 Hours per Second", "1 Day per Second" }; // 25
-const std::vector<float> TIME_FLOW_RATE_VALUES{ 0.0f, 0.5f, 1.0f, 2.0f, 3.0f, 5.0f, 6.0f, 10.0f, 12.0f, 15.0f, 30.0f, 60.0f, 120.0f, 180.0f, 300.0f, 360.0f, 600.0f, 720.0f, 900.0f, 1800.0f, 3600.0f, 10800.0f, 21600.0f, 43200.0f, 86400.0f };
+const std::vector<std::string> TIME_FLOW_RATE_CAPTIONS{ "冻结时间 (0秒/秒)", "每秒半秒 (0.5秒/秒)", "现实时间 (1秒/秒)", "每秒 2 秒", "每秒 3 秒", "每秒 4 秒", "每秒 5 秒", "每秒 6 秒", "每秒 7 秒", "每秒 8 秒", "每秒 9 秒", "每秒 10 秒", "每秒 12 秒", "每秒 15 秒", "正常时间流速 (30秒/秒)", "每秒 1 分钟", "每秒 2 分钟", "每秒 3 分钟", "每秒 4 分钟", "每秒 5 分钟", "每秒 6 分钟", "每秒 7 分钟", "每秒 8 分钟", "每秒 9 分钟", "每秒 10 分钟", "每秒 12 分钟", "每秒 15 分钟", "每秒 30 分钟", "每秒 1 小时", "每秒 2 小时", "每秒 3 小时", "每秒 4 小时", "每秒 5 小时", "每秒 6 小时", "每秒 12 小时", "每秒 1 天" };
+const std::vector<float> TIME_FLOW_RATE_VALUES{ 0.0f, 0.5f, 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f, 10.0f, 12.0f, 15.0f, 30.0f, 60.0f, 120.0f, 180.0f, 240.0f, 300.0f, 360.0f, 420.0f, 480.0f, 540.0f, 600.0f, 720.0f, 900.0f, 1800.0f, 3600.0f, 7200.0f, 10800.0f, 14400.0f, 18000.0f, 21600.0f, 43200.0f, 86400.0f };
 const int DEFAULT_TIME_FLOW_RATE = 10;
 
 const int DEFAULT_HOTKEY_FLOW_RATE = 10;
@@ -58,7 +58,7 @@ int timeSinceAimingBegan = 0;
 bool weHaveChangedTimeScale;
 
 float quadratic_time_transition(float start, float end, float progress){
-	//The quadratic stuff
+	//二次方程相关内容
 	float t = 1 - progress;
 	t = 1 - (t * t);
 
@@ -68,39 +68,47 @@ float quadratic_time_transition(float start, float end, float progress){
 }
 
 bool onconfirm_time_set_menu(MenuItem<int> choice){
-	switch(choice.value){
-		case 0:
-			// 0000
-			movetime_set(0, 0);
-			break;
-		case 1:
-			// 0500
-			movetime_set(5, 0);
-			break;
-		case 2:
-			// 0600
-			movetime_set(6, 0);
-			break;
-		case 3:
-			// 0800
-			movetime_set(8, 0);
-			break;
-		case 4:
-			// 1200
-			movetime_set(12, 0);
-			break;
-		case 5:
-			// 1600
-			movetime_set(16, 0);
-			break;
-		case 6:
-			// 1830
-			movetime_set(18, 30);
-			break;
-		case 7:
-			// 2100
-			movetime_set(21, 0);
-			break;
+	switch(choice.value){//预设的时间点
+	case 0:
+		// 半夜 00:00
+		movetime_set(0, 0);
+		break;
+	case 1:
+		// 早晨 06:00
+		movetime_set(6, 0);
+		break;
+	case 2:
+		// 上午 08:00
+		movetime_set(8, 0);
+		break;
+	case 3:
+		// 上午 10:00
+		movetime_set(10, 0);
+		break;
+	case 4:
+		// 中午 12:00
+		movetime_set(12, 0);
+		break;
+	case 5:
+		// 下午 14:00
+		movetime_set(14, 0);
+		break;
+	case 6:
+		// 下午 16:00
+		movetime_set(16, 0);
+		break;
+	case 7:
+		// 傍晚 18:00
+		movetime_set(18, 0);
+		break;
+	case 8:
+		// 晚上 20:00
+		movetime_set(20, 0);
+		break;
+	case 9:
+		// 晚上 22:00
+		movetime_set(22, 0);
+		break;
 	}
 
 	return false;
@@ -109,7 +117,7 @@ bool onconfirm_time_set_menu(MenuItem<int> choice){
 void onconfirm_time_flow_rate(MenuItem<int> choice) {
 	if (timeFlowRateLocked = !timeFlowRateLocked) {
 		std::ostringstream ss;
-		ss << "Time flow rate: " << TIME_FLOW_RATE_CAPTIONS.at(choice.value);
+		ss << "时间流速: " << TIME_FLOW_RATE_CAPTIONS.at(choice.value);
 		set_status_text(ss.str());
 	}
 }
@@ -117,14 +125,14 @@ void onconfirm_time_flow_rate(MenuItem<int> choice) {
 void onchange_game_speed_callback(int value, SelectFromListMenuItem* source) {
 	timeSpeedIndex = value;
 	std::ostringstream ss;
-	ss << "Game speed: " << TIME_SPEED_CAPTIONS.at(value);
+	ss << "游戏速度: " << TIME_SPEED_CAPTIONS.at(value);
 	set_status_text(ss.str());
 }
 
 void onchange_aiming_speed_callback(int value, SelectFromListMenuItem* source) {
 	timeSpeedIndexWhileAiming = value;
 	std::ostringstream ss;
-	ss << "Aiming speed: " << TIME_SPEED_CAPTIONS.at(value);
+	ss << "瞄准速度: " << TIME_SPEED_CAPTIONS.at(value);
 	set_status_text(ss.str());
 }
 
@@ -141,7 +149,7 @@ void onchange_hotkey_freeze_unfreeze_time() {
 		frozentimestate = timeFlowRateIndex;
 		timeFlowRateIndex = 0;
 		timeFlowRateChanged = true;
-		set_status_text("Time is frozen");
+		set_status_text("时间已冻结！");
 		requireRefreshOfTime = true;
 	}
 	else
@@ -154,7 +162,7 @@ void onchange_hotkey_freeze_unfreeze_time() {
 			timeFlowRateIndex = DEFAULT_TIME_FLOW_RATE;
 			timeFlowRateChanged = true;
 		}
-		set_status_text("Time is unfrozen");
+		set_status_text("时间已解冻！");
 		requireRefreshOfTime = true;
 	}
 }
@@ -162,7 +170,7 @@ void onchange_hotkey_freeze_unfreeze_time() {
 bool onconfirm_time_flowrate_menu(MenuItem<int> choice) {
 	if (choice.value == 0) {
 		if (featureTimeSynced) {
-			set_status_text("Time synced with system");
+			set_status_text("时间已与电脑系统同步！");
 		}
 	}
 	else if (choice.value == 666) {
@@ -186,7 +194,7 @@ void all_time_flow_rate() {
 		int index = 0;
 
 		ToggleMenuItem<int> *togItem = new ToggleMenuItem<int>();
-		togItem->caption = "Sync With System";
+		togItem->caption = "时间与电脑系统同步";
 		togItem->value = 0;
 		togItem->toggleValue = &featureTimeSynced;
 		togItem->toggleValueUpdated = NULL;
@@ -194,51 +202,51 @@ void all_time_flow_rate() {
 
 		SelectFromListMenuItem *listItem = new SelectFromListMenuItem(TIME_SPEED_CAPTIONS, onchange_hotkey_flow_rate_callback);
 		listItem->wrap = false;
-		listItem->caption = "Global Game Speed";
+		listItem->caption = "全局游戏速度";
 		listItem->value = HotkeyFlowRateIndex;
 		menuItems.push_back(listItem);
 
 		listItem = new SelectFromListMenuItem(TIME_SPEED_CAPTIONS, onchange_aiming_speed_callback);
 		listItem->wrap = false;
-		listItem->caption = "Game Speed While Aiming";
+		listItem->caption = "瞄准时的游戏速度";
 		listItem->value = timeSpeedIndexWhileAiming;
 		menuItems.push_back(listItem);
 
 		togItem = new ToggleMenuItem<int>();
-		togItem->caption = "Game Speed While Aiming In Vehicle Only";
+		togItem->caption = "仅在车辆内瞄准时的游戏速度";
 		togItem->value = 0;
 		togItem->toggleValue = &featureSpeedAimInVeh;
 		togItem->toggleValueUpdated = NULL;
 		menuItems.push_back(togItem);
 
 		listItem = new SelectFromListMenuItem(TIME_FLOW_RATE_CAPTIONS, onchange_time_flow_rate_callback);
-		listItem->caption = "Time Flow Rate";
+		listItem->caption = "时间流速";
 		listItem->value = timeFlowRateIndex;
 		listItem->wrap = false;
 		listItem->onConfirmFunction = onconfirm_time_flow_rate;
 		menuItems.push_back(listItem);
 
 		item = new MenuItem<int>();
-		item->caption = "Toggle Frozen Time On/Off";
+		item->caption = "冻结时间 [开/关]";
 		item->value = 666;
 		item->isLeaf = true;
 		menuItems.push_back(item);
 
 		togItem = new ToggleMenuItem<int>();
-		togItem->caption = "Show Current In-Game Time";
+		togItem->caption = "显示当前游戏内时间";
 		togItem->value = 0;
 		togItem->toggleValue = &featureShowtime;
 		togItem->toggleValueUpdated = NULL;
 		menuItems.push_back(togItem);
 
 		togItem = new ToggleMenuItem<int>();
-		togItem->caption = "Fast Time Switching [rAlt + 1-8, rAlt + Npad-/+]";
+		togItem->caption = "快速时间切换 [右Alt + 1-8, 右Alt + 小键盘 -/+]";
 		togItem->value = 0;
 		togItem->toggleValue = &featurehotkeytime;
 		togItem->toggleValueUpdated = NULL;
 		menuItems.push_back(togItem);
 
-		draw_generic_menu<int>(menuItems, nullptr, "Time Settings", onconfirm_time_flowrate_menu, nullptr, nullptr, flowtime_menu_interrupt);
+		draw_generic_menu<int>(menuItems, nullptr, "时间设置", onconfirm_time_flowrate_menu, nullptr, nullptr, flowtime_menu_interrupt);
 	}
 	while (requireRefreshOfTime);
 }
@@ -248,54 +256,66 @@ void process_time_set_menu(){
 	int index = 0;
 
 	MenuItem<int> *item = new MenuItem<int>();
-	item->caption = "Midnight";
+	item->caption = "半夜 12:00 点";
 	item->value = index++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Pre-Dawn";
+	item->caption = "早晨 6:00 点";
 	item->value = index++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Dawn";
+	item->caption = "上午 8:00 点";
 	item->value = index++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Morning";
+	item->caption = "上午 10:00 点";
 	item->value = index++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Midday";
+	item->caption = "中午 12:00 点";
 	item->value = index++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Afternoon";
+	item->caption = "下午 2:00 点";
 	item->value = index++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Sunset";
+	item->caption = "下午 4:00 点";
 	item->value = index++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Dusk";
+	item->caption = "傍晚 6:00 点";
 	item->value = index++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
-	draw_generic_menu<int>(menuItems, nullptr, "Set Time To ", onconfirm_time_set_menu, nullptr, nullptr, nullptr);
+	item = new MenuItem<int>();
+	item->caption = "晚上 8:00 点";
+	item->value = index++;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>();
+	item->caption = "晚上 10:00 点";
+	item->value = index++;
+	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	draw_generic_menu<int>(menuItems, nullptr, "预设的时间点", onconfirm_time_set_menu, nullptr, nullptr, nullptr);
 }
 
 bool onconfirm_time_menu(MenuItem<int> choice){
@@ -335,68 +355,68 @@ bool onconfirm_time_menu(MenuItem<int> choice){
 }
 
 void process_time_menu(){
-	const std::string caption = "Time Options";
+	const std::string caption = "时间选项";
 
 	std::vector<MenuItem<int>*> menuItems;
 
 	int index = 0;
 
 	MenuItem<int> *item = new MenuItem<int>();
-	item->caption = "Set Time to Preset";
+	item->caption = "预设的时间点";
 	item->value = -1;
 	item->isLeaf = false;
 	menuItems.insert(menuItems.begin(), item);
 
 	item = new MenuItem<int>();
-	item->caption = "1 Hour Forward";
+	item->caption = "前进 1 小时";// 前进
 	item->value = index++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "1 Hour Backward";
+	item->caption = "后退 1 小时";
 	item->value = index++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "5 Mins Forward";
+	item->caption = "前进 5 分钟";// 前进
 	item->value = index++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "5 Mins Backward";
+	item->caption = "后退 5 分钟";
 	item->value = index++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Day Forward";
+	item->caption = "前进 1 天";// 前进
 	item->value = index++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Day Backward";
+	item->caption = "后退 1 天";
 	item->value = index++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 	
 	item = new MenuItem<int>();
-	item->caption = "Set Date (DD/MM/YYYY)";
+	item->caption = "设置日期 (年/月/日)";
 	item->value = index++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Set Time (HH:MM)";
+	item->caption = "设置时间 (时:分)";
 	item->value = index++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Time Settings";
+	item->caption = "时间设置";
 	item->value = index++;
 	item->isLeaf = false;
 	menuItems.insert(menuItems.end(), item);
@@ -475,13 +495,15 @@ void movetime_day_forward(){
 	TIME::SET_CLOCK_TIME(gameHour, gameMins, 0);
 
 	std::ostringstream ss;
-	ss << "Date is now: " << get_day_of_game_week() << " ";
-	ss << std::setfill('0') << std::setw(2) << TIME::GET_CLOCK_DAY_OF_MONTH();
-	ss << ".";
-	ss << std::setfill('0') << std::setw(2) << TIME::GET_CLOCK_MONTH();
-	ss << ".";
-	ss << TIME::GET_CLOCK_YEAR();
-	set_status_text(ss.str());
+	ss << "当前日期: "; // 左下角 日期提示
+	ss << std::setfill('0') << std::setw(4) << TIME::GET_CLOCK_YEAR(); // 年，格式化为4位数（不足补零）
+	ss << "."; // 分隔符
+	ss << std::setfill('0') << std::setw(2) << TIME::GET_CLOCK_MONTH(); // 月，格式化为两位数（不足补零）
+	ss << "."; // 分隔符
+	ss << std::setfill('0') << std::setw(2) << TIME::GET_CLOCK_DAY_OF_MONTH(); // 日，格式化为两位数（不足补零）
+	ss << "  "; // 分隔符
+	ss << get_day_of_game_week(); // 星期
+	set_status_text(ss.str()); // 将格式化后的字符串设置为状态文本
 
 	//TIME::PAUSE_CLOCK(timeWasPaused);
 }
@@ -529,98 +551,184 @@ void movetime_day_backward(){
 	TIME::SET_CLOCK_TIME(gameHour, gameMins, 0);
 
 	std::ostringstream ss;
-	ss << "Date is now " << get_day_of_game_week() << " ";
-	ss << std::setfill('0') << std::setw(2) << calDay;
-	ss << ".";
-	ss << std::setfill('0') << std::setw(2) << calMon;
-	ss << ".";
-	ss << calYear;
-	set_status_text(ss.str());
+	ss << "当前日期: "; // 左下角 日期提示
+	ss << std::setfill('0') << std::setw(4) << calYear; // 年，格式化为4位数（不足补零）
+	ss << "."; // 分隔符
+	ss << std::setfill('0') << std::setw(2) << calMon; // 月，格式化为两位数（不足补零）
+	ss << "."; // 分隔符
+	ss << std::setfill('0') << std::setw(2) << calDay; // 日，格式化为两位数（不足补零）
+	ss << "  "; // 分隔符
+	ss << get_day_of_game_week(); // 星期
+	set_status_text(ss.str()); // 将格式化后的字符串设置为状态文本
 }
 
 void set_date() {
 	keyboard_on_screen_already = true;
-	curr_message = "Enter new date (DD/MM/YYYY):"; // set date
+	curr_message = "输入新日期 (年/月/日):"; // 提示用户输入格式
 	std::string lastDateSpawn;
-	std::string tmp_Day, tmp_Mon, tmp_Year;
-	std::string result = show_keyboard("Enter Name Manually", (char*)lastDateSpawn.c_str());
-	if (!result.empty())
-	{
-		result = trim(result);
+	std::string tmp_Year, tmp_Mon, tmp_Day;   // 年、月、日字段
+
+	std::string result = show_keyboard("手动输入名称", (char*)lastDateSpawn.c_str());
+	if (!result.empty()) {
+		result = trim(result); // 去除首尾空白
 		lastDateSpawn = result;
 
-		std::string a = (char*)result.c_str();
-		int found_separator = 0;
-		bool found_symbol = false;
+		std::string a = result;
+		int found_separator = 0; // 记录分隔符数量
+		bool found_symbol = false; // 标记是否遇到数字
 
+		// 支持的分隔符：/、空格、.
+		std::string separators = "/ .";
+
+		// 解析输入字符串
 		for (int i = 0; i < a.size(); i++) {
-			if (a[i] != *"/" && a[i] != *" " && a[i] != *".") found_symbol = true;
-			if ((a[i] == *"/" || a[i] == *" " || a[i] == *".") && found_symbol == true) {
-				found_separator = found_separator + 1;
+			bool is_separator = (separators.find(a[i]) != std::string::npos);
+			bool is_digit = (a[i] >= '0' && a[i] <= '9');
+
+			// 如果遇到非数字、非分隔符的字符，返回默认日期
+			if (!is_separator && !is_digit) {
+				TIME::SET_CLOCK_DATE(1, 1, 2010);
+				return;
+			}
+
+			if (!is_separator) {
+				found_symbol = true; // 标记已找到数字
+			}
+			if (is_separator && found_symbol) {
+				found_separator++; // 遇到分隔符且之前有数字，计数加1
 				found_symbol = false;
 			}
-			for (int n = 0; n < 10; n++) {
-				char n_string = n + '0';
-				if (found_separator == 0 && a[i] == n_string) tmp_Day = tmp_Day + a[i];
-				if (found_separator == 1 && a[i] == n_string) tmp_Mon = tmp_Mon + a[i];
-				if (found_separator == 2 && a[i] == n_string) tmp_Year = tmp_Year + a[i];
+
+			if (is_digit) {
+				if (found_separator == 0) tmp_Year += a[i]; // 年
+				else if (found_separator == 1) tmp_Mon += a[i]; // 月
+				else if (found_separator == 2) tmp_Day += a[i]; // 日
 			}
 		}
-		std::string::size_type sz;
-		if (strlen(tmp_Day.c_str()) > 2) tmp_Day.resize(2);
-		if (std::stoi(tmp_Day, &sz) > 31) tmp_Day = "31";
-		if (strlen(tmp_Mon.c_str()) > 2) tmp_Mon.resize(2);
-		if (std::stoi(tmp_Mon, &sz) > 12) tmp_Mon = "12";
-		if (strlen(tmp_Year.c_str()) > 4) tmp_Year.resize(4);
-		if (std::stoi(tmp_Year, &sz) > 9999) tmp_Year = "9999";
 
-		TIME::SET_CLOCK_DATE(std::stoi(tmp_Day, &sz), std::stoi(tmp_Mon, &sz), std::stoi(tmp_Year, &sz));
+		// 验证输入完整性：必须有2个分隔符且字段非空
+		if (found_separator != 2 || tmp_Year.empty() || tmp_Mon.empty() || tmp_Day.empty()) {
+			TIME::SET_CLOCK_DATE(1, 1, 2010); // 格式不正确，返回默认日期
+			return;
+		}
+
+		// 限制长度和范围，并处理异常
+		int year = 2010, month = 1, day = 1; // 默认值
+		std::string::size_type sz;
+
+		try {
+			// 年份处理
+			if (tmp_Year.length() > 4) tmp_Year.resize(4);
+			year = std::stoi(tmp_Year, &sz);
+			if (year < 0) year = 0; // 年份最小值
+
+			// 月份处理
+			if (tmp_Mon.length() > 2) tmp_Mon.resize(2);
+			month = std::stoi(tmp_Mon, &sz);
+			if (month < 1) month = 1;
+			else if (month > 12) month = 12;
+
+			// 日期处理
+			if (tmp_Day.length() > 2) tmp_Day.resize(2);
+			day = std::stoi(tmp_Day, &sz);
+			if (day < 1) day = 1;
+			else if (day > 31) day = 31; // 简单限制，实际可根据月份进一步校验
+		} catch (const std::exception& e) {
+			// 解析失败，返回默认日期
+			TIME::SET_CLOCK_DATE(1, 1, 2010);
+			return;
+		}
+
+		// 设置日期
+		TIME::SET_CLOCK_DATE(day, month, year);
+	} else {
+		// 输入为空，返回默认日期
+		TIME::SET_CLOCK_DATE(1, 1, 2010);
 	}
 
 	std::ostringstream ss;
-	ss << "Date is now " << get_day_of_game_week() << " ";
-	ss << std::setfill('0') << std::setw(2) << tmp_Day;
-	ss << ".";
-	ss << std::setfill('0') << std::setw(2) << tmp_Mon;
-	ss << ".";
-	ss << tmp_Year;
-	set_status_text(ss.str());
+	ss << "当前日期: "; // 左下角 日期提示
+	ss << std::setfill('0') << std::setw(4) << tmp_Year; // 年，格式化为4位数（不足补零）
+	ss << "."; // 分隔符
+	ss << std::setfill('0') << std::setw(2) << tmp_Mon; // 月，格式化为两位数（不足补零）
+	ss << "."; // 分隔符
+	ss << std::setfill('0') << std::setw(2) << tmp_Day; // 日，格式化为两位数（不足补零）
+	ss << "  "; // 分隔符
+	ss << get_day_of_game_week(); // 星期
+	set_status_text(ss.str()); // 将格式化后的字符串设置为状态文本
 }
 
 void set_time() {
 	keyboard_on_screen_already = true;
-	curr_message = "Enter new time (HH:MM):"; // set time
+	curr_message = "输入新时间 (时:分)"; // 设置时间提示
 	std::string lastTimeSpawn;
 	std::string tmp_Hour, tmp_Min;
-	std::string result = show_keyboard("Enter Name Manually", (char*)lastTimeSpawn.c_str());
-	if (!result.empty())
-	{
+	std::string result = show_keyboard("手动输入名称", (char*)lastTimeSpawn.c_str());
+
+	if (!result.empty()) {
 		result = trim(result);
 		lastTimeSpawn = result;
 
-		std::string a = (char*)result.c_str();
+		std::string a = result;
 		int found_separator = 0;
 		bool found_symbol = false;
 
+		// 支持的分隔符：:、空格、.
+		std::string separators = ": .";
+
 		for (int i = 0; i < a.size(); i++) {
-			if (a[i] != *":" && a[i] != *" ") found_symbol = true;
-			if ((a[i] == *":" || a[i] == *" ") && found_symbol == true) {
-				found_separator = found_separator + 1;
+			bool is_separator = (separators.find(a[i]) != std::string::npos);
+			bool is_digit = (a[i] >= '0' && a[i] <= '9');
+
+			if (!is_separator && !is_digit) {
+				// 遇到非数字、非分隔符的字符，返回默认时间（例如 12:00）
+				movetime_set(12, 0);
+				return;
+			}
+
+			if (!is_separator) {
+				found_symbol = true;
+			}
+			if (is_separator && found_symbol) {
+				found_separator++;
 				found_symbol = false;
 			}
-			for (int n = 0; n < 10; n++) {
-				char n_string = n + '0';
-				if (found_separator == 0 && a[i] == n_string) tmp_Hour = tmp_Hour + a[i];
-				if (found_separator == 1 && a[i] == n_string) tmp_Min = tmp_Min + a[i];
+
+			if (is_digit) {
+				if (found_separator == 0) tmp_Hour += a[i];
+				else if (found_separator == 1) tmp_Min += a[i];
 			}
 		}
-		std::string::size_type sz;
-		if (strlen(tmp_Hour.c_str()) > 2) tmp_Hour.resize(2);
-		if (std::stoi(tmp_Hour, &sz) > 24) tmp_Hour = "24";
-		if (strlen(tmp_Min.c_str()) > 2) tmp_Min.resize(2);
-		if (std::stoi(tmp_Min, &sz) > 60) tmp_Min = "60";
 
-		movetime_set(std::stoi(tmp_Hour, &sz), std::stoi(tmp_Min, &sz));
+		// 验证输入完整性
+		if (found_separator != 1 || tmp_Hour.empty() || tmp_Min.empty()) {
+			// 格式不正确，返回默认时间（例如 12:00）
+			movetime_set(12, 0);
+			return;
+		}
+
+		// 限制长度和范围，并处理可能的异常
+		std::string::size_type sz;
+		int hour = 12, min = 0; // 默认值
+		try {
+			if (tmp_Hour.length() > 2) tmp_Hour.resize(2);
+			hour = std::stoi(tmp_Hour, &sz);
+			if (hour > 23) hour = 23; // 24小时制，最大23
+
+			if (tmp_Min.length() > 2) tmp_Min.resize(2);
+			min = std::stoi(tmp_Min, &sz);
+			if (min > 59) min = 59; // 分钟最大59
+		} catch (const std::exception& e) {
+			// 解析失败，返回默认时间
+			movetime_set(12, 0);
+			return;
+		}
+
+		// 设置时间
+		movetime_set(hour, min);
+	} else {
+		// 输入为空，返回默认时间（例如 12:00）
+		movetime_set(12, 0);
 	}
 }
 
@@ -634,7 +742,7 @@ void movetime_hour_forward(){
 	}
 	TIME::SET_CLOCK_TIME(gameHour, gameMins, 00);
 	char text[32];
-	sprintf_s(text, "Time is now %02d:%02d", gameHour, gameMins);
+	sprintf_s(text, "当前时间:  %02d : %02d", gameHour, gameMins);
 	set_status_text(text);
 }
 
@@ -648,7 +756,7 @@ void movetime_hour_backward(){
 	}
 	TIME::SET_CLOCK_TIME(gameHour, gameMins, 00);
 	char text[32];
-	sprintf_s(text, "Time is now %02d:%02d", gameHour, gameMins);
+	sprintf_s(text, "当前时间:  %02d : %02d", gameHour, gameMins);
 	set_status_text(text);
 }
 
@@ -671,7 +779,7 @@ void movetime_fivemin_forward(){
 
 	TIME::SET_CLOCK_TIME(gameHour, gameMins, 00);
 	char text[32];
-	sprintf_s(text, "Time is now %02d:%02d", gameHour, gameMins);
+	sprintf_s(text, "当前时间:  %02d : %02d", gameHour, gameMins);
 	set_status_text(text);
 }
 
@@ -694,14 +802,14 @@ void movetime_fivemin_backward(){
 
 	TIME::SET_CLOCK_TIME(gameHour, gameMins, 00);
 	char text[32];
-	sprintf_s(text, "Time is now %02d:%02d", gameHour, gameMins);
+	sprintf_s(text, "当前时间:  %02d : %02d", gameHour, gameMins);
 	set_status_text(text);
 }
 
 void movetime_set(int hour, int minute){
 	TIME::SET_CLOCK_TIME(hour, minute, 0);
 	char text[32];
-	sprintf_s(text, "Time is now %02d:%02d", TIME::GET_CLOCK_HOURS(), TIME::GET_CLOCK_MINUTES());
+	sprintf_s(text, "当前时间:  %02d : %02d", TIME::GET_CLOCK_HOURS(), TIME::GET_CLOCK_MINUTES());
 	set_status_text(text);
 }
 
@@ -715,19 +823,19 @@ std::string get_day_of_game_week(){
 	int day = TIME::GET_CLOCK_DAY_OF_WEEK();
 	switch(day){
 		case 0:
-			return "Sun";
+			return "周日";
 		case 1:
-			return "Mon";
+			return "周一";
 		case 2:
-			return "Tue";
+			return "周二";
 		case 3:
-			return "Wed";
+			return "周三";
 		case 4:
-			return "Thu";
+			return "周四";
 		case 5:
-			return "Fri";
+			return "周五";
 		case 6:
-			return "Sat";
+			return "周六";
 	}
 	return std::string();
 }
@@ -754,7 +862,7 @@ void add_time_generic_settings(std::vector<StringPairSettingDBRow>* results){
 }
 
 void update_time_features(Player player){
-	// time sync
+	// 时间同步
 	if(featureTimeSynced){
 		if(timeFlowRateIndex != DEFAULT_TIME_FLOW_RATE){
 			timeFlowRateIndex = DEFAULT_TIME_FLOW_RATE, timeFlowRateChanged = true;
@@ -770,7 +878,7 @@ void update_time_features(Player player){
 	if ((PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0) && featureSpeedAimInVeh) || !featureSpeedAimInVeh) slow_aim = true;
 	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0) && featureSpeedAimInVeh) slow_aim = false;
 
-	// time flow rate
+	// 时间流逝速率
 	if(timeFlowRateChanged){
 		timeFlowRateChanged = false;
 
@@ -799,7 +907,7 @@ void update_time_features(Player player){
 		weHaveChangedTimeScale = true;
 	}
 	else if(CONTROLS::IS_CONTROL_PRESSED(0, 19) || PLAYER::IS_PLAYER_DEAD(PLAYER::PLAYER_ID())){
-		//do nothing so the game chooses the speed for us
+		// 什么也不做，让游戏为我们选择速度
 	}
 	else if(is_hotkey_held_normal_speed()){
 		GAMEPLAY::SET_TIME_SCALE(1.0f);
@@ -813,14 +921,14 @@ void update_time_features(Player player){
 		GAMEPLAY::SET_TIME_SCALE(0.4f);
 		weHaveChangedTimeScale = true;
 	}
-	else if (!HotkeyFlowRateLocked && HotkeyFlowRateIndex != DEFAULT_HOTKEY_FLOW_RATE && PLAYER::IS_PLAYER_CONTROL_ON(player) && !PLAYER::IS_PLAYER_DEAD(PLAYER::PLAYER_ID())) { // toggle game speed via hotkey
+	else if (!HotkeyFlowRateLocked && HotkeyFlowRateIndex != DEFAULT_HOTKEY_FLOW_RATE && PLAYER::IS_PLAYER_CONTROL_ON(player) && !PLAYER::IS_PLAYER_DEAD(PLAYER::PLAYER_ID())) { // 通过快捷键切换游戏速度
 		GAMEPLAY::SET_TIME_SCALE(TIME_SPEED_VALUES.at(HotkeyFlowRateIndex));
 		weHaveChangedTimeScale = true;
 	}
 	else if(PLAYER::IS_PLAYER_FREE_AIMING(player) && PLAYER::IS_PLAYER_CONTROL_ON(player) && slow_aim == true){
 		if(timeSinceAimingBegan == 0){
 			timeSinceAimingBegan = GetTickCount();
-		} else{ // this must fix a bug when the game stayed slow even when not aiming
+		} else{ // 这必须修复一个bug：即使未瞄准时游戏仍然卡顿
 			GAMEPLAY::SET_TIME_SCALE(1.0f);
 			weHaveChangedTimeScale = true;
 		}
@@ -849,15 +957,15 @@ void update_time_features(Player player){
 		timeSinceAimingBegan = 0;
 	}
 
-	// Show Current Time
+	// 显示当前时间
 	if (featureShowtime && menu_showing == false) {
-		int currHours = TIME::GET_CLOCK_HOURS();
-		int currMins = TIME::GET_CLOCK_MINUTES();
-		int currSecs = TIME::GET_CLOCK_SECONDS();
-		int calDay = TIME::GET_CLOCK_DAY_OF_MONTH();
-		int calMon = TIME::GET_CLOCK_MONTH();
-		int calYear = TIME::GET_CLOCK_YEAR();
-		int day = TIME::GET_CLOCK_DAY_OF_WEEK();
+		int currHours = TIME::GET_CLOCK_HOURS(); // 获取当前小时（0-23）
+		int currMins = TIME::GET_CLOCK_MINUTES(); // 获取当前分钟（0-59）
+		int currSecs = TIME::GET_CLOCK_SECONDS(); // 获取当前秒数（0-59）
+		int calDay = TIME::GET_CLOCK_DAY_OF_MONTH(); // 获取当前日期（1-31）
+		int calMon = TIME::GET_CLOCK_MONTH(); // 获取当前月份（1-12）
+		int calYear = TIME::GET_CLOCK_YEAR(); // 获取当前年份（例如 2023）
+		int day = TIME::GET_CLOCK_DAY_OF_WEEK(); // 获取当前星期（0-6，0表示星期日）
 
 		char hours_to_show_char_modifiable[3];
 		char mins_to_show_char_modifiable[3];
@@ -898,11 +1006,11 @@ void update_time_features(Player player){
 		if (currSecs == 7) seconds_to_show_char = "07";
 		if (currSecs == 8) seconds_to_show_char = "08";
 		if (currSecs == 9) seconds_to_show_char = "09";
-		// hours
+		// 小时
 		UI::SET_TEXT_FONT(4);
 		UI::SET_TEXT_SCALE(0.0, 0.45);
 		UI::SET_TEXT_PROPORTIONAL(1);
-		UI::SET_TEXT_COLOUR(255, 242, 0, 255);
+		UI::SET_TEXT_COLOUR(255, 242, 0, 255);//透明度
 		UI::SET_TEXT_EDGE(3, 0, 0, 0, 255);
 		UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 255);
 		UI::SET_TEXT_OUTLINE();
@@ -914,18 +1022,18 @@ void update_time_features(Player player){
 		UI::SET_TEXT_FONT(4);
 		UI::SET_TEXT_SCALE(0.0, 0.45);
 		UI::SET_TEXT_PROPORTIONAL(1);
-		UI::SET_TEXT_COLOUR(255, 242, 0, 255);
+		UI::SET_TEXT_COLOUR(255, 242, 0, 255);//透明度
 		UI::SET_TEXT_EDGE(3, 0, 0, 0, 255);
 		UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 255);
 		UI::SET_TEXT_OUTLINE();
 		UI::_SET_TEXT_ENTRY("STRING");
 		UI::_ADD_TEXT_COMPONENT_SCALEFORM(":");
 		UI::_DRAW_TEXT(0.013, 0.185);
-		// mins
+		// 分钟
 		UI::SET_TEXT_FONT(4);
 		UI::SET_TEXT_SCALE(0.0, 0.45);
 		UI::SET_TEXT_PROPORTIONAL(1);
-		UI::SET_TEXT_COLOUR(255, 242, 0, 255);
+		UI::SET_TEXT_COLOUR(255, 242, 0, 255);//透明度
 		UI::SET_TEXT_EDGE(3, 0, 0, 0, 255);
 		UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 255);
 		UI::SET_TEXT_OUTLINE();
@@ -937,18 +1045,18 @@ void update_time_features(Player player){
 		UI::SET_TEXT_FONT(4);
 		UI::SET_TEXT_SCALE(0.0, 0.45);
 		UI::SET_TEXT_PROPORTIONAL(1);
-		UI::SET_TEXT_COLOUR(255, 242, 0, 255);
+		UI::SET_TEXT_COLOUR(255, 242, 0, 255);//透明度
 		UI::SET_TEXT_EDGE(3, 0, 0, 0, 255);
 		UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 255);
 		UI::SET_TEXT_OUTLINE();
 		UI::_SET_TEXT_ENTRY("STRING");
 		UI::_ADD_TEXT_COMPONENT_SCALEFORM(":");
 		UI::_DRAW_TEXT(0.027, 0.185);
-		// secs
+		// 秒
 		UI::SET_TEXT_FONT(4);
 		UI::SET_TEXT_SCALE(0.0, 0.45);
 		UI::SET_TEXT_PROPORTIONAL(1);
-		UI::SET_TEXT_COLOUR(255, 242, 0, 255);
+		UI::SET_TEXT_COLOUR(255, 242, 0, 255);//透明度
 		UI::SET_TEXT_EDGE(3, 0, 0, 0, 255);
 		UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 255);
 		UI::SET_TEXT_OUTLINE();
@@ -963,43 +1071,43 @@ void update_time_features(Player player){
 		sprintf(day_to_show_char_modifiable, "%d", calDay);
 		sprintf(year_to_show_char_modifiable, "%d", calYear);
 		char* month_to_show_char = "0";
-		if (calMon == 1) month_to_show_char = "January";
-		if (calMon == 2) month_to_show_char = "February";
-		if (calMon == 3) month_to_show_char = "March";
-		if (calMon == 4) month_to_show_char = "April";
-		if (calMon == 5) month_to_show_char = "May";
-		if (calMon == 6) month_to_show_char = "June";
-		if (calMon == 7) month_to_show_char = "July";
-		if (calMon == 8) month_to_show_char = "August";
-		if (calMon == 9) month_to_show_char = "September";
-		if (calMon == 10) month_to_show_char = "October";
-		if (calMon == 11) month_to_show_char = "November";
-		if (calMon == 12) month_to_show_char = "December";
+		if (calMon == 1) month_to_show_char = "1 月";
+		if (calMon == 2) month_to_show_char = "2 月";
+		if (calMon == 3) month_to_show_char = "3 月";
+		if (calMon == 4) month_to_show_char = "4 月";
+		if (calMon == 5) month_to_show_char = "5 月";
+		if (calMon == 6) month_to_show_char = "6 月";
+		if (calMon == 7) month_to_show_char = "7 月";
+		if (calMon == 8) month_to_show_char = "8 月";
+		if (calMon == 9) month_to_show_char = "9 月";
+		if (calMon == 10) month_to_show_char = "10 月";
+		if (calMon == 11) month_to_show_char = "11 月";
+		if (calMon == 12) month_to_show_char = "12 月";
 		char* week_to_show_char = "0";
-		if (day == 0) week_to_show_char = "Sunday";
-		if (day == 1) week_to_show_char = "Monday";
-		if (day == 2) week_to_show_char = "Tuesday";
-		if (day == 3) week_to_show_char = "Wednesday";
-		if (day == 4) week_to_show_char = "Thursday";
-		if (day == 5) week_to_show_char = "Friday";
-		if (day == 6) week_to_show_char = "Saturday";
+		if (day == 0) week_to_show_char = "星期日";
+		if (day == 1) week_to_show_char = "星期一";
+		if (day == 2) week_to_show_char = "星期二";
+		if (day == 3) week_to_show_char = "星期三";
+		if (day == 4) week_to_show_char = "星期四";
+		if (day == 5) week_to_show_char = "星期五";
+		if (day == 6) week_to_show_char = "星期六";
 
-		// day of the week
+		// 一周中的星期
 		UI::SET_TEXT_FONT(4);
 		UI::SET_TEXT_SCALE(0.0, 0.45);
 		UI::SET_TEXT_PROPORTIONAL(1);
-		UI::SET_TEXT_COLOUR(255, 242, 0, 100);
+		UI::SET_TEXT_COLOUR(255, 242, 0, 200);//透明度
 		UI::SET_TEXT_EDGE(3, 0, 0, 0, 255);
 		UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 100);
 		UI::SET_TEXT_OUTLINE();
 		UI::_SET_TEXT_ENTRY("STRING");
 		UI::_ADD_TEXT_COMPONENT_SCALEFORM(week_to_show_char);
 		UI::_DRAW_TEXT(0.003, 0.210);
-		// day of the month
+		// 一个月中的日期
 		UI::SET_TEXT_FONT(4);
 		UI::SET_TEXT_SCALE(0.0, 0.45);
 		UI::SET_TEXT_PROPORTIONAL(1);
-		UI::SET_TEXT_COLOUR(255, 242, 0, 100);
+		UI::SET_TEXT_COLOUR(255, 242, 0, 200);//透明度
 		UI::SET_TEXT_EDGE(3, 0, 0, 0, 255);
 		UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 100);
 		UI::SET_TEXT_OUTLINE();
@@ -1007,29 +1115,29 @@ void update_time_features(Player player){
 		if (calDay > 9 && calDay < 32) UI::_ADD_TEXT_COMPONENT_SCALEFORM(day_to_show_char_modifiable);
 		else UI::_ADD_TEXT_COMPONENT_SCALEFORM(hours_to_show_char);
 		UI::_DRAW_TEXT(0.003, 0.230);
-		// month of the year
+		// 一年中的月份
 		UI::SET_TEXT_FONT(4);
 		UI::SET_TEXT_SCALE(0.0, 0.45);
 		UI::SET_TEXT_PROPORTIONAL(1);
-		UI::SET_TEXT_COLOUR(255, 242, 0, 100);
+		UI::SET_TEXT_COLOUR(255, 242, 0, 200);//透明度
 		UI::SET_TEXT_EDGE(3, 0, 0, 0, 255);
 		UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 100);
 		UI::SET_TEXT_OUTLINE();
 		UI::_SET_TEXT_ENTRY("STRING");
 		UI::_ADD_TEXT_COMPONENT_SCALEFORM(month_to_show_char);
 		UI::_DRAW_TEXT(0.003, 0.250);
-		// year of the century
+		// 当前世纪中的年份
 		UI::SET_TEXT_FONT(4);
 		UI::SET_TEXT_SCALE(0.0, 0.45);
 		UI::SET_TEXT_PROPORTIONAL(1);
-		UI::SET_TEXT_COLOUR(255, 242, 0, 100);
+		UI::SET_TEXT_COLOUR(255, 242, 0, 200);//透明度
 		UI::SET_TEXT_EDGE(3, 0, 0, 0, 255);
 		UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 100);
 		UI::SET_TEXT_OUTLINE();
 		UI::_SET_TEXT_ENTRY("STRING");
 		UI::_ADD_TEXT_COMPONENT_SCALEFORM(year_to_show_char_modifiable);
 		UI::_DRAW_TEXT(0.003, 0.270);
-	} // end of show current time
+	} // 显示当前时间结束
 
 	if (featurehotkeytime) {
 		if (GetKeyState(VK_RMENU) & 0x8000) {
@@ -1071,4 +1179,4 @@ void update_time_features(Player player){
 		}
 	}
 
-} // end of update_time_features
+} // 更新时间功能结束
