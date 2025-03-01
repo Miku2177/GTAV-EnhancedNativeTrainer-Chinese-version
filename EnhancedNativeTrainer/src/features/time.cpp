@@ -696,13 +696,12 @@ void set_date() {
 			original_day != std::to_string(day)) {
 			// 有非法值，显示警告信息
 			ss << "~r~警告: ~s~输入日期 " << original_year << "." << original_month << "." << original_day;
-			ss << "\n超出最大范围, 已调整为:\n默认日期: ";
+			ss << " 超出范围, 已调整为: ";
 			ss << std::setfill('0') << std::setw(4) << year; // 年
 			ss << ".";
 			ss << std::setfill('0') << std::setw(2) << month; // 月
 			ss << ".";
 			ss << std::setfill('0') << std::setw(2) << day; // 日
-			ss << "  " << get_day_of_game_week(); // 星期
 		}
 		else {
 			// 合法值，显示正常信息
