@@ -57,7 +57,7 @@ int timeSinceAimingBegan = 0;
 
 bool weHaveChangedTimeScale;
 
-float quadratic_time_transition(float start, float end, float progress){
+float quadratic_time_transition(float start, float end, float progress) {
 	//二次方程相关内容
 	float t = 1 - progress;
 	t = 1 - (t * t);
@@ -67,8 +67,8 @@ float quadratic_time_transition(float start, float end, float progress){
 	return (start + (difference * t));
 }
 
-bool onconfirm_time_set_menu(MenuItem<int> choice){
-	switch(choice.value){//预设的时间点
+bool onconfirm_time_set_menu(MenuItem<int> choice) {
+	switch (choice.value) {//预设的时间点
 	case 0:
 		// 半夜 00:00
 		movetime_set(0, 0);
@@ -136,11 +136,11 @@ void onchange_aiming_speed_callback(int value, SelectFromListMenuItem* source) {
 	set_status_text(ss.str());
 }
 
-void onchange_time_flow_rate_callback(int value, SelectFromListMenuItem *source) {
+void onchange_time_flow_rate_callback(int value, SelectFromListMenuItem* source) {
 	timeFlowRateIndex = value, timeFlowRateChanged = true, timeFlowRateLocked = false;
 }
 
-void onchange_hotkey_flow_rate_callback(int value, SelectFromListMenuItem *source) {
+void onchange_hotkey_flow_rate_callback(int value, SelectFromListMenuItem* source) {
 	HotkeyFlowRateIndex = value, HotkeyFlowRateChanged = true, HotkeyFlowRateLocked = false;
 }
 
@@ -189,18 +189,18 @@ bool flowtime_menu_interrupt() {
 void all_time_flow_rate() {
 	do {
 		requireRefreshOfTime = false;
-		std::vector<MenuItem<int> *> menuItems;
-		MenuItem<int> *item;
+		std::vector<MenuItem<int>*> menuItems;
+		MenuItem<int>* item;
 		int index = 0;
 
-		ToggleMenuItem<int> *togItem = new ToggleMenuItem<int>();
+		ToggleMenuItem<int>* togItem = new ToggleMenuItem<int>();
 		togItem->caption = "时间与电脑系统同步";
 		togItem->value = 0;
 		togItem->toggleValue = &featureTimeSynced;
 		togItem->toggleValueUpdated = NULL;
 		menuItems.push_back(togItem);
 
-		SelectFromListMenuItem *listItem = new SelectFromListMenuItem(TIME_SPEED_CAPTIONS, onchange_hotkey_flow_rate_callback);
+		SelectFromListMenuItem* listItem = new SelectFromListMenuItem(TIME_SPEED_CAPTIONS, onchange_hotkey_flow_rate_callback);
 		listItem->wrap = false;
 		listItem->caption = "全局游戏速度";
 		listItem->value = HotkeyFlowRateIndex;
@@ -247,15 +247,14 @@ void all_time_flow_rate() {
 		menuItems.push_back(togItem);
 
 		draw_generic_menu<int>(menuItems, nullptr, "时间设置", onconfirm_time_flowrate_menu, nullptr, nullptr, flowtime_menu_interrupt);
-	}
-	while (requireRefreshOfTime);
+	} while (requireRefreshOfTime);
 }
 
-void process_time_set_menu(){
-	std::vector<MenuItem<int> *> menuItems;
+void process_time_set_menu() {
+	std::vector<MenuItem<int>*> menuItems;
 	int index = 0;
 
-	MenuItem<int> *item = new MenuItem<int>();
+	MenuItem<int>* item = new MenuItem<int>();
 	item->caption = "半夜 12:00 点";
 	item->value = index++;
 	item->isLeaf = true;
@@ -318,50 +317,50 @@ void process_time_set_menu(){
 	draw_generic_menu<int>(menuItems, nullptr, "预设的时间点", onconfirm_time_set_menu, nullptr, nullptr, nullptr);
 }
 
-bool onconfirm_time_menu(MenuItem<int> choice){
-	switch(activeLineIndexTime){
-		case 0:
-			process_time_set_menu();
-			break;
-		case 1:
-			movetime_hour_forward();
-			break;
-		case 2:
-			movetime_hour_backward();
-			break;
-		case 3:
-			movetime_fivemin_forward();
-			break;
-		case 4:
-			movetime_fivemin_backward();
-			break;
-		case 5:
-			movetime_day_forward();
-			break;
-		case 6:
-			movetime_day_backward();
-			break;
-		case 7:
-			set_date();
-			break;
-		case 8:
-			set_time();
-			break;
-		case 9:
-			all_time_flow_rate();
-			break;
+bool onconfirm_time_menu(MenuItem<int> choice) {
+	switch (activeLineIndexTime) {
+	case 0:
+		process_time_set_menu();
+		break;
+	case 1:
+		movetime_hour_forward();
+		break;
+	case 2:
+		movetime_hour_backward();
+		break;
+	case 3:
+		movetime_fivemin_forward();
+		break;
+	case 4:
+		movetime_fivemin_backward();
+		break;
+	case 5:
+		movetime_day_forward();
+		break;
+	case 6:
+		movetime_day_backward();
+		break;
+	case 7:
+		set_date();
+		break;
+	case 8:
+		set_time();
+		break;
+	case 9:
+		all_time_flow_rate();
+		break;
 	}
 	return false;
 }
 
-void process_time_menu(){
+void process_time_menu() {
 	const std::string caption = "时间选项";
 
 	std::vector<MenuItem<int>*> menuItems;
 
 	int index = 0;
 
-	MenuItem<int> *item = new MenuItem<int>();
+	MenuItem<int>* item = new MenuItem<int>();
 	item->caption = "预设的时间点";
 	item->value = -1;
 	item->isLeaf = false;
@@ -402,7 +401,7 @@ void process_time_menu(){
 	item->value = index++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
-	
+
 	item = new MenuItem<int>();
 	item->caption = "设置日期 (年/月/日)";
 	item->value = index++;
@@ -410,7 +409,7 @@ void process_time_menu(){
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "设置时间 (时:分)";
+	item->caption = "设置时间 (时/分)";
 	item->value = index++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
@@ -424,7 +423,7 @@ void process_time_menu(){
 	draw_generic_menu<int>(menuItems, &activeLineIndexTime, caption, onconfirm_time_menu, nullptr, nullptr, nullptr);
 }
 
-void reset_time_globals(){
+void reset_time_globals() {
 	featureTimeSynced = false;
 	timeFlowRateChanged = true;
 	HotkeyFlowRateChanged = true;
@@ -434,18 +433,18 @@ void reset_time_globals(){
 
 	timeSpeedIndexWhileAiming = DEFAULT_TIME_SPEED;
 	timeSpeedIndex = DEFAULT_TIME_SPEED;
-	timeFlowRateIndex = DEFAULT_TIME_FLOW_RATE; 
+	timeFlowRateIndex = DEFAULT_TIME_FLOW_RATE;
 	HotkeyFlowRateIndex = DEFAULT_HOTKEY_FLOW_RATE;
 }
 
-void add_time_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){
-	results->push_back(FeatureEnabledLocalDefinition{"featureTimeSynced", &featureTimeSynced});
-	results->push_back(FeatureEnabledLocalDefinition{"featureShowtime", &featureShowtime});
-	results->push_back(FeatureEnabledLocalDefinition{"featurehotkeytime", &featurehotkeytime});
-	results->push_back(FeatureEnabledLocalDefinition{"featureSpeedAimInVeh", &featureSpeedAimInVeh});
+void add_time_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results) {
+	results->push_back(FeatureEnabledLocalDefinition{ "featureTimeSynced", &featureTimeSynced });
+	results->push_back(FeatureEnabledLocalDefinition{ "featureShowtime", &featureShowtime });
+	results->push_back(FeatureEnabledLocalDefinition{ "featurehotkeytime", &featurehotkeytime });
+	results->push_back(FeatureEnabledLocalDefinition{ "featureSpeedAimInVeh", &featureSpeedAimInVeh });
 }
 
-void movetime_day_forward(){
+void movetime_day_forward() {
 	/*
 	bool timeWasPaused = featureTimePaused;
 	TIME::PAUSE_CLOCK(true);
@@ -459,7 +458,7 @@ void movetime_day_forward(){
 	int gameMins = TIME::GET_CLOCK_MINUTES();
 
 	bool leapYear = false;
-	if(calYear % 4 == 0){
+	if (calYear % 4 == 0) {
 		leapYear = true;
 	}
 
@@ -474,20 +473,20 @@ void movetime_day_forward(){
 	set_status_text(ss2.str());
 	*/
 
-	if((calDay == 27 && calMon == 2 && !leapYear) ||
+	if ((calDay == 27 && calMon == 2 && !leapYear) ||
 		(calDay == 28 && calMon == 2 && leapYear) ||
-	   (calDay == 30 && (calMon == 4 || calMon == 6 || calMon == 9 || calMon == 11)) ||
-	   (calDay == 31)){
+		(calDay == 30 && (calMon == 4 || calMon == 6 || calMon == 9 || calMon == 11)) ||
+		(calDay == 31)) {
 		calDay = 1;
-		if(calMon == 12){
+		if (calMon == 12) {
 			calMon = 1;
 			calYear++;
 		}
-		else{
+		else {
 			calMon++;
 		}
 	}
-	else{
+	else {
 		calDay++;
 	}
 
@@ -508,7 +507,7 @@ void movetime_day_forward(){
 	//TIME::PAUSE_CLOCK(timeWasPaused);
 }
 
-void movetime_day_backward(){
+void movetime_day_backward() {
 	int calDay = TIME::GET_CLOCK_DAY_OF_MONTH();
 	int calMon = TIME::GET_CLOCK_MONTH();
 	int calYear = TIME::GET_CLOCK_YEAR();
@@ -517,31 +516,31 @@ void movetime_day_backward(){
 	int gameMins = TIME::GET_CLOCK_MINUTES();
 
 	bool leapYear = false;
-	if(calYear % 4 == 0){
+	if (calYear % 4 == 0) {
 		leapYear = true;
 	}
 
-	if(calDay != 1){
+	if (calDay != 1) {
 		calDay--;
 	}
-	else if(calMon == 1){
+	else if (calMon == 1) {
 		calDay = 31;
 		calMon = 12;
 		calYear--;
 	}
-	else{
-		if(calMon == 5 || calMon == 7 || calMon == 10 || calMon == 12){
+	else {
+		if (calMon == 5 || calMon == 7 || calMon == 10 || calMon == 12) {
 			calDay = 30;
 		}
-		if(calMon == 3){
-			if(leapYear){
+		if (calMon == 3) {
+			if (leapYear) {
 				calDay = 29;
 			}
-			else{
+			else {
 				calDay = 28;
 			}
 		}
-		else{
+		else {
 			calDay = 31;
 		}
 		calMon--;
@@ -568,7 +567,7 @@ void set_date() {
 	std::string lastDateSpawn;
 	std::string tmp_Year, tmp_Mon, tmp_Day;   // 年、月、日字段
 
-	std::string result = show_keyboard("手动输入名称", (char*)lastDateSpawn.c_str());
+	std::string result = show_keyboard("手动输入日期", (char*)lastDateSpawn.c_str());
 	if (!result.empty()) {
 		result = trim(result); // 去除首尾空白
 		lastDateSpawn = result;
@@ -587,7 +586,8 @@ void set_date() {
 
 			// 如果遇到非数字、非分隔符的字符，返回默认日期
 			if (!is_separator && !is_digit) {
-				TIME::SET_CLOCK_DATE(1, 1, 2010);
+				TIME::SET_CLOCK_DATE(1, 1, 2025);
+				set_status_text("~r~错误: ~s~日期格式设置不正确！\n已恢复默认日期: 2025.01.01");
 				return;
 			}
 
@@ -608,208 +608,319 @@ void set_date() {
 
 		// 验证输入完整性：必须有2个分隔符且字段非空
 		if (found_separator != 2 || tmp_Year.empty() || tmp_Mon.empty() || tmp_Day.empty()) {
-			TIME::SET_CLOCK_DATE(1, 1, 2010); // 格式不正确，返回默认日期
+			TIME::SET_CLOCK_DATE(1, 1, 2025);
+			set_status_text("~r~错误: ~s~日期格式设置不正确！\n已恢复默认日期: 2025.01.01");
 			return;
 		}
 
+		// 保存原始输入值，用于检测是否有非法输入
+		std::string original_year = tmp_Year;
+		std::string original_month = tmp_Mon;
+		std::string original_day = tmp_Day;
+
 		// 限制长度和范围，并处理异常
-		int year = 2010, month = 1, day = 1; // 默认值
+		int year = 2025, month = 1, day = 1; // 默认值
 		std::string::size_type sz;
+		bool date_modified = false; // 标记日期是否被修改过
 
 		try {
-			// 年份处理
-			if (tmp_Year.length() > 4) tmp_Year.resize(4);
-			year = std::stoi(tmp_Year, &sz);
-			if (year < 0) year = 0; // 年份最小值
+			// 年份处理 - 添加更严格的限制
+			if (tmp_Year.length() > 4) {
+				year = 2025; // 长度大于4位，使用默认年份
+				date_modified = true;
+			}
+			else {
+				year = std::stoi(tmp_Year, &sz);
+				// 年份范围限制在合理区间，例如1945-2099
+				if (year < 1945 || year > 2099) {
+					date_modified = true;
+					year = (year < 1945) ? 1945 : 2099;
+				}
+			}
 
 			// 月份处理
-			if (tmp_Mon.length() > 2) tmp_Mon.resize(2);
-			month = std::stoi(tmp_Mon, &sz);
-			if (month < 1) month = 1;
-			else if (month > 12) month = 12;
+			if (tmp_Mon.length() > 2) {
+				month = 1; // 长度大于2位，使用默认月份
+				date_modified = true;
+			}
+			else {
+				month = std::stoi(tmp_Mon, &sz);
+				if (month < 1 || month > 12) {
+					date_modified = true;
+					month = (month < 1) ? 1 : 12;
+				}
+			}
 
-			// 日期处理
-			if (tmp_Day.length() > 2) tmp_Day.resize(2);
-			day = std::stoi(tmp_Day, &sz);
-			if (day < 1) day = 1;
-			else if (day > 31) day = 31; // 简单限制，实际可根据月份进一步校验
-		} catch (const std::exception& e) {
+			// 日期处理 - 根据月份确定最大天数
+			int max_days = 31; // 默认最大天数
+			if (month == 4 || month == 6 || month == 9 || month == 11) {
+				max_days = 30;
+			}
+			else if (month == 2) {
+				// 简单闰年判断
+				if ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)) {
+					max_days = 29;
+				}
+				else {
+					max_days = 28;
+				}
+			}
+
+			if (tmp_Day.length() > 2) {
+				day = 1; // 长度大于2位，使用默认天数
+				date_modified = true;
+			}
+			else {
+				day = std::stoi(tmp_Day, &sz);
+				if (day < 1 || day > max_days) {
+					date_modified = true;
+					day = (day < 1) ? 1 : max_days;
+				}
+			}
+		}
+		catch (const std::exception& e) {
 			// 解析失败，返回默认日期
-			TIME::SET_CLOCK_DATE(1, 1, 2010);
+			TIME::SET_CLOCK_DATE(1, 1, 2025);
+			set_status_text("~r~错误: ~s~日期解析失败！\n已恢复默认日期: 2025.01.01");
 			return;
 		}
 
 		// 设置日期
 		TIME::SET_CLOCK_DATE(day, month, year);
-	} else {
-		// 输入为空，返回默认日期
-		TIME::SET_CLOCK_DATE(1, 1, 2010);
-	}
 
-	std::ostringstream ss;
-	ss << "当前日期: "; // 左下角 日期提示
-	ss << std::setfill('0') << std::setw(4) << tmp_Year; // 年，格式化为4位数（不足补零）
-	ss << "."; // 分隔符
-	ss << std::setfill('0') << std::setw(2) << tmp_Mon; // 月，格式化为两位数（不足补零）
-	ss << "."; // 分隔符
-	ss << std::setfill('0') << std::setw(2) << tmp_Day; // 日，格式化为两位数（不足补零）
-	ss << "  "; // 分隔符
-	ss << get_day_of_game_week(); // 星期
-	set_status_text(ss.str()); // 将格式化后的字符串设置为状态文本
+		// 根据是否修改了日期来显示不同的状态信息
+		std::ostringstream ss;
+		if (date_modified ||
+			original_year != std::to_string(year) ||
+			original_month != std::to_string(month) ||
+			original_day != std::to_string(day)) {
+			// 有非法值，显示警告信息
+			ss << "~r~警告: ~s~输入日期 " << original_year << "." << original_month << "." << original_day;
+			ss << "\n超出最大范围, 已调整为:\n默认日期: ";
+			ss << std::setfill('0') << std::setw(4) << year; // 年
+			ss << ".";
+			ss << std::setfill('0') << std::setw(2) << month; // 月
+			ss << ".";
+			ss << std::setfill('0') << std::setw(2) << day; // 日
+			ss << "  " << get_day_of_game_week(); // 星期
+		}
+		else {
+			// 合法值，显示正常信息
+			ss << "当前日期: ";
+			ss << std::setfill('0') << std::setw(4) << year; // 年
+			ss << ".";
+			ss << std::setfill('0') << std::setw(2) << month; // 月
+			ss << ".";
+			ss << std::setfill('0') << std::setw(2) << day; // 日
+			ss << "  " << get_day_of_game_week(); // 星期
+		}
+		set_status_text(ss.str());
+	}
+	else {
+		// 输入为空，返回默认日期
+		TIME::SET_CLOCK_DATE(1, 1, 2025);
+		set_status_text("用户已经取消输入！\n恢复默认日期: 2025.01.01");
+	}
 }
 
 void set_time() {
-	keyboard_on_screen_already = true;
-	curr_message = "输入新时间 (时:分)"; // 设置时间提示
-	std::string lastTimeSpawn;
-	std::string tmp_Hour, tmp_Min;
-	std::string result = show_keyboard("手动输入名称", (char*)lastTimeSpawn.c_str());
+	keyboard_on_screen_already = true;  // 标记键盘已在屏幕上
+	curr_message = "输入新时间 (时/分):";  // 设置提示信息
+	std::string lastTimeSpawn;  // 用于存储上一次输入的时间
+	std::string result = show_keyboard("手动输入时间", (char*)lastTimeSpawn.c_str());  // 显示键盘并获取用户输入
 
-	if (!result.empty()) {
-		result = trim(result);
-		lastTimeSpawn = result;
+	if (!result.empty()) {  // 用户输入非空
+		result = trim(result);  // 去除首尾空白
+		lastTimeSpawn = result;  // 保存用户输入
 
-		std::string a = result;
-		int found_separator = 0;
-		bool found_symbol = false;
+		std::string a = result;  // 临时存储输入字符串
+		int found_separator = 0;  // 记录分隔符数量
+		bool found_symbol = false;  // 标记是否遇到有效字符
+		std::string separators = ": .";  // 支持的分隔符：冒号、空格、点
 
-		// 支持的分隔符：:、空格、.
-		std::string separators = ": .";
+		std::string tmp_Hour, tmp_Min;  // 存储小时和分钟的字符串
 
+		// 解析输入字符串
 		for (int i = 0; i < a.size(); i++) {
-			bool is_separator = (separators.find(a[i]) != std::string::npos);
-			bool is_digit = (a[i] >= '0' && a[i] <= '9');
+			bool is_separator = (separators.find(a[i]) != std::string::npos);  // 检查是否为分隔符
+			bool is_digit = (a[i] >= '0' && a[i] <= '9');  // 检查是否为数字
 
-			if (!is_separator && !is_digit) {
-				// 遇到非数字、非分隔符的字符，返回默认时间（例如 12:00）
-				movetime_set(12, 0);
+			if (!is_separator && !is_digit) {  // 遇到非法字符
+				movetime_set(12, 0);  // 设置默认时间
+				set_status_text("~r~错误: ~s~时间格式设置不正确！\n已恢复默认时间: 12:00");
 				return;
 			}
 
-			if (!is_separator) {
+			if (!is_separator) {  // 非分隔符字符
 				found_symbol = true;
 			}
-			if (is_separator && found_symbol) {
+			if (is_separator && found_symbol) {  // 遇到分隔符且之前有数字
 				found_separator++;
 				found_symbol = false;
 			}
 
-			if (is_digit) {
-				if (found_separator == 0) tmp_Hour += a[i];
-				else if (found_separator == 1) tmp_Min += a[i];
+			if (is_digit) {  // 处理数字字符
+				if (found_separator == 0) tmp_Hour += a[i];  // 小时部分
+				else if (found_separator == 1) tmp_Min += a[i];  // 分钟部分
 			}
 		}
 
 		// 验证输入完整性
-		if (found_separator != 1 || tmp_Hour.empty() || tmp_Min.empty()) {
-			// 格式不正确，返回默认时间（例如 12:00）
+		if (found_separator != 1 || tmp_Hour.empty() || tmp_Min.empty()) {  // 格式错误
 			movetime_set(12, 0);
+			set_status_text("~r~错误: ~s~时间格式设置不正确！\n已恢复默认时间: 12:00");
 			return;
 		}
 
-		// 限制长度和范围，并处理可能的异常
-		std::string::size_type sz;
-		int hour = 12, min = 0; // 默认值
+		// 保存原始输入值，用于后续比较
+		std::string original_hour = tmp_Hour;
+		std::string original_min = tmp_Min;
+
+		// 处理时间值并捕获异常
+		int hour = 12, min = 0;  // 默认时间
+		bool time_modified = false;  // 标记时间是否被调整
+
 		try {
-			if (tmp_Hour.length() > 2) tmp_Hour.resize(2);
-			hour = std::stoi(tmp_Hour, &sz);
-			if (hour > 23) hour = 23; // 24小时制，最大23
+			// 处理小时
+			if (tmp_Hour.length() > 2) {  // 长度超限，截断
+				tmp_Hour.resize(2);
+				time_modified = true;
+			}
+			hour = std::stoi(tmp_Hour);  // 转换为整数
+			if (hour > 23) {  // 超出范围，调整
+				hour = 23;
+				time_modified = true;
+			}
+			else if (hour < 0) {
+				hour = 0;
+				time_modified = true;
+			}
 
-			if (tmp_Min.length() > 2) tmp_Min.resize(2);
-			min = std::stoi(tmp_Min, &sz);
-			if (min > 59) min = 59; // 分钟最大59
-		} catch (const std::exception& e) {
-			// 解析失败，返回默认时间
+			// 处理分钟
+			if (tmp_Min.length() > 2) {  // 长度超限，截断
+				tmp_Min.resize(2);
+				time_modified = true;
+			}
+			min = std::stoi(tmp_Min);  // 转换为整数
+			if (min > 59) {  // 超出范围，调整
+				min = 59;
+				time_modified = true;
+			}
+			else if (min < 0) {
+				min = 0;
+				time_modified = true;
+			}
+		}
+		catch (const std::exception& e) {  // 解析异常
 			movetime_set(12, 0);
+			set_status_text("~r~错误: ~s~时间解析失败！\n已恢复默认时间: 12:00");
 			return;
 		}
 
-		// 设置时间
+		// 设置游戏时间
 		movetime_set(hour, min);
-	} else {
-		// 输入为空，返回默认时间（例如 12:00）
+
+		// 显示状态信息
+		std::ostringstream ss;  // 用于构建提示信息
+		if (time_modified || original_hour != std::to_string(hour) || original_min != std::to_string(min)) {
+			// 时间被调整，显示警告
+			ss << "~r~警告: ~s~输入时间 " << original_hour << ":" << original_min;
+			ss << "\n超出范围, 已调整为: ";
+			ss << std::setfill('0') << std::setw(2) << hour << ":";
+			ss << std::setfill('0') << std::setw(2) << min;
+		}
+		else {
+			// 正常设置，显示当前时间
+			ss << "当前时间: ";
+			ss << std::setfill('0') << std::setw(2) << hour << ":";
+			ss << std::setfill('0') << std::setw(2) << min;
+		}
+		set_status_text(ss.str());  // 显示提示信息
+	}
+	else {  // 用户取消输入
 		movetime_set(12, 0);
+		set_status_text("用户已经取消输入！\n恢复默认时间: 12:00");
 	}
 }
 
-void movetime_hour_forward(){
+void movetime_hour_forward() {
 	int gameHour = TIME::GET_CLOCK_HOURS();
 	int gameMins = TIME::GET_CLOCK_MINUTES();
 	gameHour++;
-	if(gameHour == 24){
+	if (gameHour == 24) {
 		movetime_day_forward();
 		gameHour = 00;
 	}
 	TIME::SET_CLOCK_TIME(gameHour, gameMins, 00);
 	char text[32];
-	sprintf_s(text, "当前时间:  %02d : %02d", gameHour, gameMins);
+	sprintf_s(text, "当前时间:  %02d:%02d", gameHour, gameMins);
 	set_status_text(text);
 }
 
-void movetime_hour_backward(){
+void movetime_hour_backward() {
 	int gameHour = TIME::GET_CLOCK_HOURS();
 	int gameMins = TIME::GET_CLOCK_MINUTES();
 	gameHour--;
-	if(gameHour == -1){
+	if (gameHour == -1) {
 		movetime_day_backward();
 		gameHour = 23;
 	}
 	TIME::SET_CLOCK_TIME(gameHour, gameMins, 00);
 	char text[32];
-	sprintf_s(text, "当前时间:  %02d : %02d", gameHour, gameMins);
+	sprintf_s(text, "当前时间:  %02d:%02d", gameHour, gameMins);
 	set_status_text(text);
 }
 
-void movetime_fivemin_forward(){
+void movetime_fivemin_forward() {
 	int gameHour = TIME::GET_CLOCK_HOURS();
 	int gameMins = TIME::GET_CLOCK_MINUTES();
 
-	if(gameHour == 23 && gameMins > 54){
+	if (gameHour == 23 && gameMins > 54) {
 		movetime_day_forward();
 		gameHour = 0;
 		gameMins = (gameMins + (-55));
 	}
-	else if(gameMins > 54){
+	else if (gameMins > 54) {
 		gameHour++;
 		gameMins = gameMins + (-55);
 	}
-	else{
+	else {
 		gameMins = gameMins + 5;
 	}
 
 	TIME::SET_CLOCK_TIME(gameHour, gameMins, 00);
 	char text[32];
-	sprintf_s(text, "当前时间:  %02d : %02d", gameHour, gameMins);
+	sprintf_s(text, "当前时间:  %02d:%02d", gameHour, gameMins);
 	set_status_text(text);
 }
 
-void movetime_fivemin_backward(){
+void movetime_fivemin_backward() {
 	int gameHour = TIME::GET_CLOCK_HOURS();
 	int gameMins = TIME::GET_CLOCK_MINUTES();
 
-	if(gameHour == 0 && gameMins < 5){
+	if (gameHour == 0 && gameMins < 5) {
 		movetime_day_backward();
 		gameHour = 23;
 		gameMins = gameMins + 55;
 	}
-	else if(gameMins < 5){
+	else if (gameMins < 5) {
 		gameHour--;
 		gameMins = gameMins + 55;
 	}
-	else{
+	else {
 		gameMins = gameMins - 5;
 	}
 
 	TIME::SET_CLOCK_TIME(gameHour, gameMins, 00);
 	char text[32];
-	sprintf_s(text, "当前时间:  %02d : %02d", gameHour, gameMins);
+	sprintf_s(text, "当前时间:  %02d:%02d", gameHour, gameMins);
 	set_status_text(text);
 }
 
-void movetime_set(int hour, int minute){
+void movetime_set(int hour, int minute) {
 	TIME::SET_CLOCK_TIME(hour, minute, 0);
 	char text[32];
-	sprintf_s(text, "当前时间:  %02d : %02d", TIME::GET_CLOCK_HOURS(), TIME::GET_CLOCK_MINUTES());
+	sprintf_s(text, "当前时间:  %02d:%02d", TIME::GET_CLOCK_HOURS(), TIME::GET_CLOCK_MINUTES());
 	set_status_text(text);
 }
 
@@ -819,34 +930,34 @@ void toggle_game_speed()
 	WAIT(100);
 }
 
-std::string get_day_of_game_week(){
+std::string get_day_of_game_week() {
 	int day = TIME::GET_CLOCK_DAY_OF_WEEK();
-	switch(day){
-		case 0:
-			return "周日";
-		case 1:
-			return "周一";
-		case 2:
-			return "周二";
-		case 3:
-			return "周三";
-		case 4:
-			return "周四";
-		case 5:
-			return "周五";
-		case 6:
-			return "周六";
+	switch (day) {
+	case 0:
+		return "周日";
+	case 1:
+		return "周一";
+	case 2:
+		return "周二";
+	case 3:
+		return "周三";
+	case 4:
+		return "周四";
+	case 5:
+		return "周五";
+	case 6:
+		return "周六";
 	}
 	return std::string();
 }
 
-void handle_generic_settings_time(std::vector<StringPairSettingDBRow>* settings){
-	for(int i = 0; i < settings->size(); i++){
+void handle_generic_settings_time(std::vector<StringPairSettingDBRow>* settings) {
+	for (int i = 0; i < settings->size(); i++) {
 		StringPairSettingDBRow setting = settings->at(i);
-		if(setting.name.compare("timeSpeedIndexWhileAiming") == 0){
+		if (setting.name.compare("timeSpeedIndexWhileAiming") == 0) {
 			timeSpeedIndexWhileAiming = stoi(setting.value);
 		}
-		else if(setting.name.compare("timeFlowRateIndex") == 0){
+		else if (setting.name.compare("timeFlowRateIndex") == 0) {
 			timeFlowRateIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("HotkeyFlowRateIndex") == 0) {
@@ -855,16 +966,16 @@ void handle_generic_settings_time(std::vector<StringPairSettingDBRow>* settings)
 	}
 }
 
-void add_time_generic_settings(std::vector<StringPairSettingDBRow>* results){
-	results->push_back(StringPairSettingDBRow{"timeSpeedIndexWhileAiming", std::to_string(timeSpeedIndexWhileAiming)});
-	results->push_back(StringPairSettingDBRow{"timeFlowRateIndex", std::to_string(timeFlowRateIndex)});
-	results->push_back(StringPairSettingDBRow{"HotkeyFlowRateIndex", std::to_string(HotkeyFlowRateIndex)});
+void add_time_generic_settings(std::vector<StringPairSettingDBRow>* results) {
+	results->push_back(StringPairSettingDBRow{ "timeSpeedIndexWhileAiming", std::to_string(timeSpeedIndexWhileAiming) });
+	results->push_back(StringPairSettingDBRow{ "timeFlowRateIndex", std::to_string(timeFlowRateIndex) });
+	results->push_back(StringPairSettingDBRow{ "HotkeyFlowRateIndex", std::to_string(HotkeyFlowRateIndex) });
 }
 
-void update_time_features(Player player){
+void update_time_features(Player player) {
 	// 时间同步
-	if(featureTimeSynced){
-		if(timeFlowRateIndex != DEFAULT_TIME_FLOW_RATE){
+	if (featureTimeSynced) {
+		if (timeFlowRateIndex != DEFAULT_TIME_FLOW_RATE) {
 			timeFlowRateIndex = DEFAULT_TIME_FLOW_RATE, timeFlowRateChanged = true;
 
 		}
@@ -874,26 +985,26 @@ void update_time_features(Player player){
 		localtime_s(&t, &now);
 		TIME::SET_CLOCK_TIME(t.tm_hour, t.tm_min, t.tm_sec);
 	}
-	
+
 	if ((PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0) && featureSpeedAimInVeh) || !featureSpeedAimInVeh) slow_aim = true;
 	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0) && featureSpeedAimInVeh) slow_aim = false;
 
 	// 时间流逝速率
-	if(timeFlowRateChanged){
+	if (timeFlowRateChanged) {
 		timeFlowRateChanged = false;
 
-		if(timeFlowRateIndex == DEFAULT_TIME_FLOW_RATE){
+		if (timeFlowRateIndex == DEFAULT_TIME_FLOW_RATE) {
 			TIME::PAUSE_CLOCK(false);
 		}
-		else{
+		else {
 			TIME::PAUSE_CLOCK(true);
 		}
 		timeFactor = timeFlowRateIndex == 0 ? -1.0f : 1000.0f / TIME_FLOW_RATE_VALUES.at(timeFlowRateIndex);
 		SYSTEM::SETTIMERA(0);
 	}
-	if(timeFlowRateIndex != DEFAULT_TIME_FLOW_RATE){
+	if (timeFlowRateIndex != DEFAULT_TIME_FLOW_RATE) {
 		TIME::PAUSE_CLOCK(true);
-		if(timeFlowRateIndex > 0){
+		if (timeFlowRateIndex > 0) {
 			int hours, minutes, seconds = static_cast<int>(static_cast<float>(SYSTEM::TIMERA()) / timeFactor);
 			hours = seconds / 3600, seconds %= 3600;
 			minutes = seconds / 60, seconds %= 60;
@@ -902,22 +1013,22 @@ void update_time_features(Player player){
 		}
 	}
 
-	if((is_in_airbrake_mode() && is_airbrake_frozen_time()) || (is_in_prop_placement_mode() && is_prop_placement_frozen_time())){
+	if ((is_in_airbrake_mode() && is_airbrake_frozen_time()) || (is_in_prop_placement_mode() && is_prop_placement_frozen_time())) {
 		GAMEPLAY::SET_TIME_SCALE(0.0f);
 		weHaveChangedTimeScale = true;
 	}
-	else if(CONTROLS::IS_CONTROL_PRESSED(0, 19) || PLAYER::IS_PLAYER_DEAD(PLAYER::PLAYER_ID())){
+	else if (CONTROLS::IS_CONTROL_PRESSED(0, 19) || PLAYER::IS_PLAYER_DEAD(PLAYER::PLAYER_ID())) {
 		// 什么也不做，让游戏为我们选择速度
 	}
-	else if(is_hotkey_held_normal_speed()){
+	else if (is_hotkey_held_normal_speed()) {
 		GAMEPLAY::SET_TIME_SCALE(1.0f);
 		weHaveChangedTimeScale = true;
 	}
-	else if(is_hotkey_held_slow_mo()){
+	else if (is_hotkey_held_slow_mo()) {
 		GAMEPLAY::SET_TIME_SCALE(0.0f);
 		weHaveChangedTimeScale = true;
 	}
-	else if (is_hotkey_held_half_normal_speed()){
+	else if (is_hotkey_held_half_normal_speed()) {
 		GAMEPLAY::SET_TIME_SCALE(0.4f);
 		weHaveChangedTimeScale = true;
 	}
@@ -925,35 +1036,36 @@ void update_time_features(Player player){
 		GAMEPLAY::SET_TIME_SCALE(TIME_SPEED_VALUES.at(HotkeyFlowRateIndex));
 		weHaveChangedTimeScale = true;
 	}
-	else if(PLAYER::IS_PLAYER_FREE_AIMING(player) && PLAYER::IS_PLAYER_CONTROL_ON(player) && slow_aim == true){
-		if(timeSinceAimingBegan == 0){
+	else if (PLAYER::IS_PLAYER_FREE_AIMING(player) && PLAYER::IS_PLAYER_CONTROL_ON(player) && slow_aim == true) {
+		if (timeSinceAimingBegan == 0) {
 			timeSinceAimingBegan = GetTickCount();
-		} else{ // 这必须修复一个bug：即使未瞄准时游戏仍然卡顿
+		}
+		else { // 这必须修复一个bug：即使未瞄准时游戏仍然卡顿
 			GAMEPLAY::SET_TIME_SCALE(1.0f);
 			weHaveChangedTimeScale = true;
 		}
 
-		if((GetTickCount() - timeSinceAimingBegan) < TIME_TO_SLOW_AIM){
+		if ((GetTickCount() - timeSinceAimingBegan) < TIME_TO_SLOW_AIM) {
 			float fullSpeedTime = weHaveChangedTimeScale ? TIME_SPEED_VALUES.at(timeSpeedIndex) : 1.0f;
 			float targetTime = TIME_SPEED_VALUES.at(timeSpeedIndexWhileAiming);
 
-			float progress = ((float) (GetTickCount() - timeSinceAimingBegan) / TIME_TO_SLOW_AIM);
+			float progress = ((float)(GetTickCount() - timeSinceAimingBegan) / TIME_TO_SLOW_AIM);
 
 			float rate = quadratic_time_transition(fullSpeedTime, targetTime, progress);
 
 			GAMEPLAY::SET_TIME_SCALE(rate);
 		}
-		else{
+		else {
 			GAMEPLAY::SET_TIME_SCALE(TIME_SPEED_VALUES.at(timeSpeedIndexWhileAiming));
 			weHaveChangedTimeScale = true;
 		}
 	}
-	else if(weHaveChangedTimeScale){
+	else if (weHaveChangedTimeScale) {
 		GAMEPLAY::SET_TIME_SCALE(1.0f);
 		weHaveChangedTimeScale = false;
 	}
 
-	if(timeSinceAimingBegan > 0 && !(PLAYER::IS_PLAYER_FREE_AIMING(player) && PLAYER::IS_PLAYER_CONTROL_ON(player))){
+	if (timeSinceAimingBegan > 0 && !(PLAYER::IS_PLAYER_FREE_AIMING(player) && PLAYER::IS_PLAYER_CONTROL_ON(player))) {
 		timeSinceAimingBegan = 0;
 	}
 
@@ -1065,7 +1177,7 @@ void update_time_features(Player player){
 		else UI::_ADD_TEXT_COMPONENT_SCALEFORM(seconds_to_show_char);
 		UI::_DRAW_TEXT(0.031, 0.185);
 		GRAPHICS::DRAW_RECT(0.0, 0.20, 0.10, 0.03, 10, 10, 10, 100);
-				
+
 		char day_to_show_char_modifiable[10];
 		char year_to_show_char_modifiable[10];
 		sprintf(day_to_show_char_modifiable, "%d", calDay);
