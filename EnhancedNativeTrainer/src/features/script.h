@@ -93,20 +93,29 @@ class comma_numpunct: public std::numpunct<char>{
 	}
 };
 
+// 自定义ASCII空白检查函数
+static inline bool is_ascii_space(char c) {
+	return c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '\v' || c == '\f';
+}
+
 // 从开始处修剪
-static inline std::string &ltrim(std::string &s){
-	s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](int c) { return !std::isspace(c); }));
+static inline std::string &ltrim(std::string &s) {
+	s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](char c) {
+		return !is_ascii_space(c);
+		}));
 	return s;
 }
 
 // 从结尾处修剪
-static inline std::string &rtrim(std::string &s){
-	s.erase(std::find_if(s.rbegin(), s.rend(), [](int ch) {	return !std::isspace(ch);}).base(), s.end());
+static inline std::string &rtrim(std::string &s) {
+	s.erase(std::find_if(s.rbegin(), s.rend(), [](char c) {
+		return !is_ascii_space(c);
+		}).base(), s.end());
 	return s;
 }
 
 // 从两端修剪
-static inline std::string &trim(std::string &s){
+static inline std::string &trim(std::string &s) {
 	return ltrim(rtrim(s));
 }
 
