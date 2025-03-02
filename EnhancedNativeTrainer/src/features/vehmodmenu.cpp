@@ -1,11 +1,11 @@
 /*
-Some of this code began its life as a part of GTA V SCRIPT HOOK SDK.
+这段代码的部分最初来源于 GTA V SCRIPT HOOK SDK。
 http://dev-c.com
 (C) Alexander Blade 2015
 
-It is now part of the Enhanced Native Trainer project.
+它现在已成为 Enhanced Native Trainer 项目的一部分。
 https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
-(C) Rob Pridham and fellow contributors 2015
+(C) Rob Pridham 及其他贡献者 2015
 */
 
 #include "vehicles.h"
@@ -28,7 +28,7 @@ const static int WHEEL_CATEGORY_COUNT = 10;
 
 const int WHEEL_CATEGORY_COUNTS[] = { 50, 36, 30, 38, 20, 48, 72, 40, 217, 217 };
 
-const char* PLATE_NAMES[] = { "Blue on White", "Yellow/Black", "Gold/Blue", "Blue/White SA Caps", "Blue/White SA Exempt", "Blue/White Yankton" };
+const char* PLATE_NAMES[] = { "白底蓝字", "黑底黄字", "蓝底金字", "白底蓝字/英文 1", "白底蓝字/英文 2", "白底蓝字/英文 3" };
 
 const static int ENGINE_SOUND_COUNT = 366;
 const static int SPECIAL_ID_START = 90;
@@ -45,7 +45,7 @@ const static int SPECIAL_ID_FOR_ENGINE_SOUND = 101;
 const static int SPECIAL_ID_FOR_XENON_COLOUR = 102;
 const static int SPECIAL_ID_FOR_CUSTOM_MULTIPLIER = 103;
 
-const std::vector<std::string> wheel_names { "Sport", "Muscle", "Lowrider", "SUV", "Offroad", "Tuner", "Bike", "High-End", "Benny's Originals", "Benny's Bespoke", "Formula", "Street", "Track"};
+const std::vector<std::string> wheel_names { "运动", "肌肉", "低底盘", "SUV", "越野", "改装", "摩托", "高端", "本尼的原创", "本尼的定制", "方程式", "街道", "赛道" };
 
 std::map<int, std::string> mod_slots;
 
@@ -80,13 +80,13 @@ const char* getLocalisedModCategory(int modType)
 			return UI::_GET_LABEL_TEXT("CMOD_WHE0_0");
 	case MOD_REARWHEELS:
 		return UI::_GET_LABEL_TEXT("CMOD_WHE0_1");
-		//Bennys
+		//本尼改车王
 	case MOD_PLATEHOLDER:
 		return UI::_GET_LABEL_TEXT("CMM_MOD_S0");
 	case MOD_VANITYPLATE:
 		return UI::_GET_LABEL_TEXT("CMM_MOD_S1");
 	case MOD_TRIMDESIGN:
-		if (model == 0xEE6024BC) //Sultan RS
+		if (model == 0xEE6024BC) //王者 RS
 			return UI::_GET_LABEL_TEXT("CMM_MOD_S2b");
 		else
 			return UI::_GET_LABEL_TEXT("CMM_MOD_S2");
@@ -115,57 +115,57 @@ const char* getLocalisedModCategory(int modType)
 	case MOD_ENGINECOVER:
 		return UI::_GET_LABEL_TEXT("CMM_MOD_S14");
 	case MOD_ENGINEFILTER:
-		if (model == 0xEE6024BC) //Sultan RS
+		if (model == 0xEE6024BC) //苏丹 RS
 			return UI::_GET_LABEL_TEXT("CMM_MOD_S15b");
 		else
 			return UI::_GET_LABEL_TEXT("CMM_MOD_S15");
 	case MOD_STRUTS:
-		if (model == 0xEE6024BC /*Sultan RS*/ || model == 0x25C5AF13) /*Banshee 2*/
+		if (model == 0xEE6024BC /*苏丹 RS*/ || model == 0x25C5AF13) /*女妖 2*/
 			return UI::_GET_LABEL_TEXT("CMM_MOD_S16b");
 		else
 			return UI::_GET_LABEL_TEXT("CMM_MOD_S16");
 	case MOD_ARCHCOVER:
-		if (model == 0xEE6024BC) //Sultan RS
+		if (model == 0xEE6024BC) //苏丹 RS
 			return UI::_GET_LABEL_TEXT("CMM_MOD_S17b");
 		else
 			return UI::_GET_LABEL_TEXT("CMM_MOD_S17");
 	case MOD_AERIAL:
-		if (model == 0xEE6024BC) //Sultan RS
+		if (model == 0xEE6024BC) //苏丹 RS
 			return UI::_GET_LABEL_TEXT("CMM_MOD_S18b");
-		else if (model == 0xDC19D101) //Btye 3
+		else if (model == 0xDC19D101) //字节 3
 			return UI::_GET_LABEL_TEXT("CMM_MOD_S18c");
 		else
 			return UI::_GET_LABEL_TEXT("CMM_MOD_S18");
 	case MOD_TRIM:
-		if (model == 0xEE6024BC) //Sultan RS
+		if (model == 0xEE6024BC) //苏丹 RS
 			return UI::_GET_LABEL_TEXT("CMM_MOD_S19b");
-		else if (model == 0xDC19D101) //Byte 3
+		else if (model == 0xDC19D101) //字节 3
 			return UI::_GET_LABEL_TEXT("CMM_MOD_S19c");
-		else if (model == 0xCA62927A) //Virgo 2
+		else if (model == 0xCA62927A) //处女座 2
 			return UI::_GET_LABEL_TEXT("CMM_MOD_S19d");
 		else
 			return UI::_GET_LABEL_TEXT("CMM_MOD_S19");
 	case MOD_TANK:
-		if (model == 0x42BC5E19) //Slamvan 3
+		if (model == 0x42BC5E19) //斯兰万 3
 			return UI::_GET_LABEL_TEXT("CMM_MOD_S27");
 		else
 			return UI::_GET_LABEL_TEXT("CMM_MOD_S20");
 	case MOD_DOORSEXTRA:
-		if (model == 0xDC19D101) //Byte 3
+		if (model == 0xDC19D101) //字节 3
 			return UI::_GET_LABEL_TEXT("CMM_MOD_S21b");
 		else
 			return UI::_GET_LABEL_TEXT("CMM_MOD_S21");
 	case MOD_UNKNOWN_47:
-		if (model == 0x42BC5E19) //Slamvan 3
+		if (model == 0x42BC5E19) //斯兰万 3
 			return UI::_GET_LABEL_TEXT("SLVAN3_RDOOR");
 		else
 			return UI::_GET_LABEL_TEXT("CMM_MOD_S22");
 	case MOD_LIVERY:
 		return UI::_GET_LABEL_TEXT("CMM_MOD_S23");
 	case SPECIAL_ID_FOR_WHEEL_CATEGORY:
-		return "Wheel Category";
+		return "轮毂类型";
 	case SPECIAL_ID_FOR_WHEEL_SELECTION:
-		return "Wheel Choice";
+		return "轮毂选择";
 	case SPECIAL_ID_FOR_WINDOW_TINT:
 		return UI::_GET_LABEL_TEXT("CMOD_GLD2_2");
 	case SPECIAL_ID_FOR_LICENSE_PLATES:
@@ -174,10 +174,10 @@ const char* getLocalisedModCategory(int modType)
 	{
 		//std::string label = std::string(UI::_GET_LABEL_TEXT("CMM_MOD_G3")) + " " + std::string(UI::_GET_LABEL_TEXT("VEUI_AUD_TIT"));
 		//return &label[0];
-		return "Engine Sound";
+		return "引擎声音";
 	}
 	case SPECIAL_ID_FOR_XENON_COLOUR:
-		return "Xenon Lights Colour";
+		return "氙气灯颜色";
 	default: 
 		auto name = VEHICLE::GET_MOD_SLOT_NAME(veh, modType);
 		if (name == nullptr)
@@ -192,7 +192,7 @@ std::string geSpecialItemTitle(int category, int index){
 	switch (category){
 	case SPECIAL_ID_FOR_LICENSE_PLATES:
 		if (index <= 5) return PLATE_NAMES[index];
-		else return ("Modded Plate " + std::to_string(index - 5));
+		else return ("改装车牌 " + std::to_string(index - 5));
 
 	case SPECIAL_ID_FOR_ENGINE_SOUND:
 		return ENGINE_SOUND[index];
@@ -243,35 +243,35 @@ std::string getHornTitle(int index){
 	case 29: v_3 = "HORN_INDI_2"; break;
 	case 30: v_3 = "HORN_INDI_3"; break;
 	case 31: v_3 = "HORN_INDI_4"; break;
-	case 32: v_3 = "HORN_LUXE2"; break; //Classical Horn Loop 1
-	case 33: v_3 = "HORN_LUXE1"; break; //Classical Horn 8
-	case 34: v_3 = "HORN_LUXE3"; break; //Classical Horn Loop 2
-	case 35: return "Classical Horn Loop 1 Preview"; break;
-	case 36: return "Classical Horn 8 Preview"; break;
-	case 37: return "Classical Horn Loop 2 Preview"; break;
-	case 38: v_3 = "HORN_HWEEN1"; break; //Halloween Loop 1
-	case 39: return "Halloween Loop 1 Preview"; break;
-	case 40: v_3 = "HORN_HWEEN2"; break; //Halloween Loop 2
-	case 41: return "Halloween Loop 2 Preview"; break;
-	case 42: v_3 = "HORN_LOWRDER1"; break; //San Andreas Loop
-	case 43: return "San Andreas Loop Preview"; break;
-	case 44: v_3 = "HORN_LOWRDER2"; break; //Liberty City Loop
-	case 45: return "Liberty City Loop Preview"; break;
-	case 46: v_3 = "HORN_XM15_1"; break; //Festive Loop 1
-	case 47: return "Festive Bells 1"; break;
-	case 48: v_3 = "HORN_XM15_2"; break; //Festive Loop 2
-	case 49: return "Festive Bells 2"; break;
-	case 50: v_3 = "HORN_XM15_3"; break; //Festive Loop 3
-	case 51: return "Festive Bells 3"; break;
+	case 32: v_3 = "HORN_LUXE2"; break; //经典喇叭循环音 1
+	case 33: v_3 = "HORN_LUXE1"; break; //经典喇叭音 8
+	case 34: v_3 = "HORN_LUXE3"; break; //经典喇叭循环音 2
+	case 35: return "经典喇叭循环音效 1 预览"; break;
+	case 36: return "经典喇叭音效 8 预览"; break;
+	case 37: return "经典喇叭循环音效 2 预览"; break;
+	case 38: v_3 = "HORN_HWEEN1"; break; //万圣节循环音效 1
+	case 39: return "万圣节循环音效 1 预览"; break;
+	case 40: v_3 = "HORN_HWEEN2"; break; //万圣节循环音效 2
+	case 41: return "万圣节循环音效 2 预览"; break;
+	case 42: v_3 = "HORN_LOWRDER1"; break; //圣安地列斯循环音效
+	case 43: return "圣安地列斯循环音效 预览"; break;
+	case 44: v_3 = "HORN_LOWRDER2"; break; //自由城循环音效
+	case 45: return "自由城循环音效 预览"; break;
+	case 46: v_3 = "HORN_XM15_1"; break; //节日循环音效 1
+	case 47: return "节日铃声 1"; break;
+	case 48: v_3 = "HORN_XM15_2"; break; //节日循环音效 2
+	case 49: return "节日铃声 2"; break;
+	case 50: v_3 = "HORN_XM15_3"; break; //节日循环音效 3
+	case 51: return "节日铃声 3"; break;
 	}
 
 	if (v_3 == NULL){
-		return "Unknown Horn";
+		return "未知喇叭音";
 	}
 	else{
 		char* label = UI::_GET_LABEL_TEXT(v_3);
 		if (label == NULL){
-			return "Unknown Horn";
+			return "未知喇叭音";
 		}
 		return std::string(label);
 	}
@@ -322,36 +322,36 @@ int getHornDuration(int index){
 }
 
 std::string getNormalItemTitle(Vehicle veh, int category, int index){
-	//Engine stuff is EMS Upgrade, Level 1-4
-	//Brakes/trans are stock, street, sports, race
-	//Susp is stock,lowered,street,sport,competition
-	//Armor is none, 20, 40, 60, 80, 100%
+	//引擎相关配置为EMS升级，等级1-4
+	//刹车/变速箱为原厂级、街道级、运动级、竞赛级
+	//悬挂系统为原厂、降低型、街道级、运动型、竞技型
+	//护甲等级为无、20%、40%、60%、80%、100%
 
 	std::string modItemNameStr;
 
 	if (index == -1){
 		if (category == 16){
 			std::string armour_label = UI::_GET_LABEL_TEXT("CMOD_GLD2_0");
-			modItemNameStr ="No " + armour_label;
+			modItemNameStr ="无 " + armour_label;
 		}
 		else {
 			std::ostringstream ss;
-			ss << "Stock " << mod_slots[lastSelectedModValue];
+			ss << "原厂 " << mod_slots[lastSelectedModValue];
 			modItemNameStr = ss.str();
 		}
 	}
-	else if (category == 11) //Engine
+	else if (category == 11) //引擎
 	{
-		//Index is 0, but the label starts at 1 so we've got to bump it up 1 to counter that.
+		//索引为0，但标签从1开始，因此我们需要将其加1以抵消这种差异。
 		int index_modified = index + 1;
 		std::string engine_label = "CMOD_ENG_" + std::to_string(index_modified + 1);
 		modItemNameStr = UI::_GET_LABEL_TEXT(&engine_label[0]);
 	}
-	else if (category == 12 || category == 13 || category == 52) //brakes, trans or aircraft handling
+	else if (category == 12 || category == 13 || category == 52) //刹车、变速箱或飞机操控
 	{
 		std::ostringstream ss;
 		if (category == 12){
-			//Index is 0, but the label starts at 1 so we've got to bump it up 1 to counter that.
+			//索引从0开始，但标签从1开始，因此需要加1以抵消这种差异。
 			int index_modified = index + 1;
 			std::string brakes_label = "CMOD_BRA_" + std::to_string(index_modified + 1);
 			modItemNameStr = UI::_GET_LABEL_TEXT(&brakes_label[0]);
@@ -361,25 +361,25 @@ std::string getNormalItemTitle(Vehicle veh, int category, int index){
 			modItemNameStr = UI::_GET_LABEL_TEXT("CMOD_MOD_HAN");
 		}
 		else{
-			//Index is 0, but the label starts at 1 so we've got to bump it up 1 to counter that.
+			//索引从0开始，但标签从1开始，因此需要加1以抵消这种差异。
 			int index_modified = index + 1;
 			std::string transmission_label = "CMOD_GBX_" + std::to_string(index_modified + 1);
 			modItemNameStr = UI::_GET_LABEL_TEXT(&transmission_label[0]);
 		}
 		//modItemNameStr = ss.str();
 	}
-	else if (category == 14) //horns
+	else if (category == 14) //喇叭
 	{
 		modItemNameStr = getHornTitle(index);
 	}
-	else if (category == 15) //suspension
+	else if (category == 15) //悬挂
 	{
-		//Index is 0, but the label starts at 1 so we've got to bump it up 1 to counter that.
+		//索引从0开始，但标签从1开始，因此需要加1以抵消这种差异。
 		int index_modified = index + 1;
 		std::string suspension_label = "CMOD_SUS_" + std::to_string(index_modified + 1);
 		modItemNameStr = UI::_GET_LABEL_TEXT(&suspension_label[0]);
 	}
-	else if (category == 16) //Armor
+	else if (category == 16) //护甲
 	{
 		std::ostringstream ss;
 		ss << ((index + 1) * 20) << "% " << UI::_GET_LABEL_TEXT("CMOD_GLD2_0");
@@ -399,9 +399,9 @@ std::string getNormalItemTitle(Vehicle veh, int category, int index){
 		if (!foundName){
 			std::ostringstream ss;
 			if(category <= 50 || mod_slots[lastSelectedModValue] != "")
-				ss << mod_slots[lastSelectedModValue] << " Item " << (index + 1);
+				ss << mod_slots[lastSelectedModValue] << " 项目 " << (index + 1);
 			else
-				ss <<getLocalisedModCategory(category) << " Item " << (index + 1);
+				ss <<getLocalisedModCategory(category) << " 项目 " << (index + 1);
 			modItemNameStr = ss.str();
 		}
 	}
@@ -435,15 +435,15 @@ bool onconfirm_vehmod_wheel_selection(MenuItem<int> choice){
 	case 0:
 		VEHICLE::SET_VEHICLE_MOD(veh, 23, choice.value, VEHICLE::GET_VEHICLE_MOD_VARIATION(veh, 23));
 		VEHICLE::SET_VEHICLE_MOD(veh, 24, choice.value, VEHICLE::GET_VEHICLE_MOD_VARIATION(veh, 24));
-		set_status_text("Changed all wheels");
+		set_status_text("更换全部轮胎完成！");
 		break;
 	case 1:
 		VEHICLE::SET_VEHICLE_MOD(veh, 23, choice.value, VEHICLE::GET_VEHICLE_MOD_VARIATION(veh, 23));
-		set_status_text("Changed front wheel");
+		set_status_text("更换前轮完成！");
 		break;
 	case 2:
 		VEHICLE::SET_VEHICLE_MOD(veh, 24, choice.value, VEHICLE::GET_VEHICLE_MOD_VARIATION(veh, 24));
-		set_status_text("Changed rear wheel");
+		set_status_text("更换后轮完成！");
 		break;
 	}
 
@@ -497,12 +497,12 @@ bool process_vehmod_wheel_selection(){
 	//	}
 	//}
 
-	std::string caption = "All Wheels";
+	std::string caption = "全部 轮胎/轮毂";
 	if (wheelpart == 1){
-		caption = "Front Wheels";
+		caption = "前轮";
 	}
 	else if (wheelpart == 2){
-		caption = "Rear Wheels";
+		caption = "后轮";
 	}
 
 	return draw_generic_menu<int>(menuItems, &modChoiceMenuIndex, caption, onconfirm_vehmod_wheel_selection, nullptr, nullptr, nullptr);
@@ -530,7 +530,7 @@ bool process_vehmod_wheel_selection_menu(){
 
 	if (is_this_a_motorcycle(veh)){
 		item = new MenuItem<int>();
-		ss << "All ~HUD_COLOUR_GREYLIGHT~(" << count << ")";
+		ss << "全部 ~HUD_COLOUR_GREYLIGHT~(" << count << ")";
 		item->caption = ss.str();
 		item->value = 0;
 		item->isLeaf = false;
@@ -539,7 +539,7 @@ bool process_vehmod_wheel_selection_menu(){
 		ss.str(""), ss.clear();
 
 		item = new MenuItem<int>();
-		ss << "Front ~HUD_COLOUR_GREYLIGHT~(" << count << ")";
+		ss << "前部 ~HUD_COLOUR_GREYLIGHT~(" << count << ")";
 		item->caption = ss.str();
 		item->value = 1;
 		item->isLeaf = false;
@@ -548,7 +548,7 @@ bool process_vehmod_wheel_selection_menu(){
 		ss.str(""), ss.clear();
 
 		item = new MenuItem<int>();
-		ss << "Rear ~HUD_COLOUR_GREYLIGHT~(" << count << ")";
+		ss << "后部 ~HUD_COLOUR_GREYLIGHT~(" << count << ")";
 		item->caption = ss.str();
 		item->value = 2;
 		item->isLeaf = false;
@@ -558,7 +558,7 @@ bool process_vehmod_wheel_selection_menu(){
 	}
 	else{
 		item = new MenuItem<int>();
-		ss << "All ~HUD_COLOUR_GREYLIGHT~(" << count << ")";
+		ss << "全部 ~HUD_COLOUR_GREYLIGHT~(" << count << ")";
 		item->caption = ss.str();
 		item->value = 0;
 		item->isLeaf = false;
@@ -571,7 +571,7 @@ bool process_vehmod_wheel_selection_menu(){
 }
 
 bool onconfirm_vehmod_category_menu(MenuItem<int> choice){
-	// common variables
+	// 通用变量
 	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
 
 	if (!bPlayerExists){
@@ -581,7 +581,7 @@ bool onconfirm_vehmod_category_menu(MenuItem<int> choice){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
-		set_status_text("~r~Player isn't in a vehicle");
+		set_status_text("~r~玩家不在车辆中！");
 		return false;
 	}
 
@@ -594,13 +594,13 @@ bool onconfirm_vehmod_category_menu(MenuItem<int> choice){
 
 		VEHICLE::SET_VEHICLE_MOD(veh, lastSelectedModValue, choice.value, 1);
 		std::ostringstream ss;
-		ss << modItemNameStr << " Applied";
+		ss << modItemNameStr << " 启用";
 		set_status_text(ss.str());
 	}
 	else if (lastSelectedModValue == SPECIAL_ID_FOR_WINDOW_TINT){
 		VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
 		VEHICLE::SET_VEHICLE_WINDOW_TINT(veh, choice.value);
-		set_status_text("Changed window tint");
+		set_status_text("车窗颜色已更改！");
 	}
 	else if (lastSelectedModValue == SPECIAL_ID_FOR_LICENSE_PLATES){
 		if (choice.value == -2) {
@@ -614,17 +614,17 @@ bool onconfirm_vehmod_category_menu(MenuItem<int> choice){
 			VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
 			VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT_INDEX(veh, choice.value);
 			DefaultPlateIndex = -1;
-			set_status_text("Changed license plate");
+			set_status_text("所有车牌已更改！");
 		}
 	}
-	else if (lastSelectedModValue == SPECIAL_ID_FOR_ENGINE_SOUND && featureEngineSound) { // pick engine sound through the menu/list
+	else if (lastSelectedModValue == SPECIAL_ID_FOR_ENGINE_SOUND && featureEngineSound) { // 通过菜单/列表选择引擎声音
 		char *currSound = new char[ENGINE_SOUND[choice.value].length() + 1];
 		strcpy(currSound, ENGINE_SOUND[choice.value].c_str());
 		current_picked_engine_sound = ENGINE_SOUND[choice.value];
 		VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
 		AUDIO::_SET_VEHICLE_AUDIO(veh, currSound);
 		if (featureRememberVehicles && featureRestoreTracked) add_engine_sound(veh);
-		set_status_text("Changed engine sound");
+		set_status_text("引擎声音已更改！");
 		delete currSound;
 	}
 	else if (lastSelectedModValue == SPECIAL_ID_FOR_WHEEL_CATEGORY){
@@ -632,7 +632,7 @@ bool onconfirm_vehmod_category_menu(MenuItem<int> choice){
 		VEHICLE::SET_VEHICLE_WHEEL_TYPE(veh, choice.value);
 		VEHICLE::SET_VEHICLE_MOD(veh, 23, -1, VEHICLE::GET_VEHICLE_MOD_VARIATION(veh, 23));
 		VEHICLE::SET_VEHICLE_MOD(veh, 24, -1, VEHICLE::GET_VEHICLE_MOD_VARIATION(veh, 24));
-		set_status_text("Changed wheel category");
+		set_status_text("轮胎类型已更改！");
 	}
 
 	return false;
@@ -688,7 +688,7 @@ bool process_vehmod_category_special_menu(int category){
 	if (category == SPECIAL_ID_FOR_LICENSE_PLATES/* && i == (values.size() - 1)*/ && !isWeird && !isAircraft) {
 		MenuItem<int>* item = new MenuItem<int>();
 		item = new MenuItem<int>();
-		item->caption = "Customize License Plate";
+		item->caption = "自定义车牌";
 		item->value = -2; // 667
 		item->isLeaf = true;
 		menuItems.push_back(item);
@@ -697,7 +697,7 @@ bool process_vehmod_category_special_menu(int category){
 	if (category == SPECIAL_ID_FOR_LICENSE_PLATES/* && i == (values.size() - 1)*/) {
 		MenuItem<int>* item = new MenuItem<int>();
 		item = new MenuItem<int>();
-		item->caption = "Set Plate Type As Default";
+		item->caption = "车牌类型设为默认";
 		item->value = -1; // 666
 		item->isLeaf = true;
 		menuItems.push_back(item);
@@ -710,11 +710,11 @@ bool process_vehmod_category_special_menu(int category){
 			item->caption = specialName;
 		}
 		else if (i == 0 && values.at(i) == -1){
-			item->caption = "Default";
+			item->caption = "默认";
 		}
 		else{
 			std::ostringstream ss;
-			ss << getLocalisedModCategory(category) << " Item " << i;
+			ss << getLocalisedModCategory(category) << " 项目 " << i;
 			item->caption = ss.str();
 		}
 		item->value = values.at(i);
@@ -722,7 +722,7 @@ bool process_vehmod_category_special_menu(int category){
 		menuItems.push_back(item);
 	}
 	
-	//Find menu index to return to
+	// 查找要返回的菜单索引
 	int modChoiceMenuIndex = find_menu_index_to_restore(category, category, veh);
 
 	draw_generic_menu<int>(menuItems, &modChoiceMenuIndex, caption, onconfirm_vehmod_category_menu, NULL, NULL, vehicle_menu_interrupt);
@@ -753,11 +753,11 @@ bool process_vehmod_engine_sound() {
 			item->caption = specialName;
 		}
 		else if (i == 0 && values.at(i) == -1) {
-			item->caption = "Default";
+			item->caption = "默认";
 		}
 		else {
 			std::ostringstream ss;
-			ss << getLocalisedModCategory(SPECIAL_ID_FOR_ENGINE_SOUND) << " Item " << i;
+			ss << getLocalisedModCategory(SPECIAL_ID_FOR_ENGINE_SOUND) << " 项目 " << i;
 			item->caption = ss.str();
 		}
 		item->value = values.at(i);
@@ -765,7 +765,7 @@ bool process_vehmod_engine_sound() {
 		menuItems.push_back(item);
 	}
 
-	draw_generic_menu<int>(menuItems, &modChoiceMenuIndex, "Engine Sounds List", onconfirm_vehmod_category_menu, NULL, NULL, vehicle_menu_interrupt);
+	draw_generic_menu<int>(menuItems, &modChoiceMenuIndex, "引擎声音列表", onconfirm_vehmod_category_menu, NULL, NULL, vehicle_menu_interrupt);
 
 	return false;
 }
@@ -776,16 +776,16 @@ bool process_custom_engine_multiplier() {
 
 	listItem = new SelectFromListMenuItem(VEH_ENG_POW_CAPTIONS, onchange_custom_eng_pow_index);
 	listItem->wrap = false;
-	listItem->caption = "Custom Engine Power Multiplier";
+	listItem->caption = "自定义引擎功率倍增器";
 	listItem->value = engCustomPowMultIndex;
 	menuItems.push_back(listItem);
 
-	draw_generic_menu<int>(menuItems, NULL, "Custom Engine Power Multiplier", onconfirm_vehmod_category_menu, NULL, NULL, vehicle_menu_interrupt);
+	draw_generic_menu<int>(menuItems, NULL, "自定义引擎功率倍增器", onconfirm_vehmod_category_menu, NULL, NULL, vehicle_menu_interrupt);
 
 	return false;
 }
 
-void set_engine_sound(MenuItem<int> choice) { // pick engine sound via message box
+void set_engine_sound(MenuItem<int> choice) { // 通过消息框选择引擎声音
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if (ENTITY::DOES_ENTITY_EXIST(playerPed) && PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && featureEngineSound)
@@ -793,25 +793,25 @@ void set_engine_sound(MenuItem<int> choice) { // pick engine sound via message b
 		Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
 
 		keyboard_on_screen_already = true;
-		curr_message = "Enter engine sound name (e.g. adder or random):"; // set an engine sound
-		std::string result = show_keyboard("Enter Name Manually", (char*)lastEngineSound.c_str());
+		curr_message = "输入引擎声音名称 (例如：adder 或 输入 random 随机)"; // 设置引擎声音
+		std::string result = show_keyboard("手动输入名称", (char*)lastEngineSound.c_str());
 		lastEngineSound = result;
-		if (lastEngineSound == "random" || lastEngineSound == "Random" || lastEngineSound == "RANDOM") {
-			int rand_sound = (rand() % (ENGINE_SOUND_COUNT - 1) + 0); // UP MARGIN + DOWN MARGIN
+		if (lastEngineSound == "random" || lastEngineSound == "Random" || lastEngineSound == "RANDOM" || lastEngineSound == "随机" || lastEngineSound == "SJ" || lastEngineSound == "sj") {
+			int rand_sound = (rand() % (ENGINE_SOUND_COUNT - 1) + 0); // 上边距 + 下边距
 			current_picked_engine_sound = ENGINE_SOUND[rand_sound];
 			char *keyboardInput = (char*)current_picked_engine_sound.c_str();
 			VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
 			AUDIO::_SET_VEHICLE_AUDIO(veh, keyboardInput);
 			if (featureRememberVehicles && featureRestoreTracked) add_engine_sound(veh);
-			set_status_text("Changed engine sound");
+			set_status_text("引擎声音已更改！");
 		}
-		if (lastEngineSound != "random" && lastEngineSound != "Random" && lastEngineSound != "RANDOM") {
+		if (lastEngineSound != "random" && lastEngineSound != "Random" && lastEngineSound != "RANDOM" && lastEngineSound != "随机" && lastEngineSound != "SJ" && lastEngineSound != "sj") {
 			current_picked_engine_sound = result;
 			char* keyboardInput = (char*)result.c_str();
 			VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
 			AUDIO::_SET_VEHICLE_AUDIO(veh, keyboardInput);
 			if (featureRememberVehicles && featureRestoreTracked) add_engine_sound(veh);
-			set_status_text("Changed engine sound");
+			set_status_text("引擎声音已更改！");
 		}
 	}
 }
@@ -842,20 +842,20 @@ bool process_vehmod_engine_sound_menu() {
 	std::ostringstream ss;
 
 	ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "Enable";
+	toggleItem->caption = "启用";
 	toggleItem->value = -1;
 	toggleItem->toggleValue = &featureEngineSound;
 	menuItems.push_back(toggleItem);
 
 	item = new MenuItem<int>();
-	ss << "All ~HUD_COLOUR_GREYLIGHT~(" << ENGINE_SOUND_COUNT << ")";
+	ss << "全部 ~HUD_COLOUR_GREYLIGHT~(" << ENGINE_SOUND_COUNT << ")";
 	item->caption = ss.str();
 	item->value = 0;
 	item->isLeaf = false;
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "Enter Name Manually";
+	item->caption = "手动输入名称";
 	item->value = 1;
 	item->isLeaf = true;
 	menuItems.push_back(item);
@@ -878,7 +878,7 @@ bool process_vehmod_category_menu(int category){
 		return process_vehmod_category_special_menu(category);
 	}
 
-	// common variables
+	// 通用变量
 	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
 
 	if (!bPlayerExists){
@@ -888,7 +888,7 @@ bool process_vehmod_category_menu(int category){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
-		set_status_text("~r~Player isn't in a vehicle");
+		set_status_text("~r~玩家不在车辆中！");
 		return false;
 	}
 
@@ -912,7 +912,7 @@ bool process_vehmod_category_menu(int category){
 		}
 	}
 
-	//Find menu index to return to
+	// 查找要返回的菜单索引
 	int modChoiceMenuIndex = find_menu_index_to_restore(category, actualCategory, veh);
 
 	std::string caption = getLocalisedModCategory(lastSelectedModValue);
@@ -958,7 +958,7 @@ int find_menu_index_to_restore(int category, int actualCategory, Vehicle veh){
 		*/
 	}
 	else{
-		modChoiceMenuIndex = VEHICLE::GET_VEHICLE_MOD(veh, actualCategory) + 1; // + 1 for stock item
+		modChoiceMenuIndex = VEHICLE::GET_VEHICLE_MOD(veh, actualCategory) + 1; // +1 用于原厂部件
 	}
 
 	return modChoiceMenuIndex;
@@ -966,9 +966,9 @@ int find_menu_index_to_restore(int category, int actualCategory, Vehicle veh){
 
 bool onconfirm_vehmod_menu(MenuItem<int> choice){
 	lastSelectedModValue = choice.value;
-	mod_slots.clear(); //Empty the label map otherwise the user has to exit + re-enter the submenu for it to be populated.
+	mod_slots.clear(); // 清空标签映射，否则用户必须退出并重新进入子菜单以使其重新填充。
 
-	// common variables
+	// 通用变量
 	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID());
 
 	if (!bPlayerExists){
@@ -978,39 +978,39 @@ bool onconfirm_vehmod_menu(MenuItem<int> choice){
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 
 	if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)){
-		set_status_text("~r~Player isn't in a vehicle");
+		set_status_text("~r~玩家不在车辆中！");
 		return false;
 	}
 
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 
 	switch (choice.value){
-	case -1: //Upgrade Performance
+	case -1: // 升级性能
 		fully_tune_vehicle(veh, false);
-		set_status_text("Added all performance upgrades");
+		set_status_text("已添加, 所有性能升级！");
 		break;
-	case -2: //Upgrade Armor and Tires
+	case -2: // 升级护甲和轮胎
 		VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
-		VEHICLE::SET_VEHICLE_MOD(veh, MOD_ARMOR, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_ARMOR) - 1, 1); //Armor
-		VEHICLE::SET_VEHICLE_TYRES_CAN_BURST(veh, 0); //Bulletproof Tires
-		set_status_text("Added all armor upgrades and bulletproof tires");
+		VEHICLE::SET_VEHICLE_MOD(veh, MOD_ARMOR, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_ARMOR) - 1, 1); //护甲
+		VEHICLE::SET_VEHICLE_TYRES_CAN_BURST(veh, 0); // 防弹轮胎
+		set_status_text("已添加, 所有护甲升级和防弹轮胎！");
 		break;
-	case -3: //Add All Mods Pimp My Ride
+	case -3: // 添加所有改装
 		fully_tune_vehicle(veh);
-		set_status_text("Added all available upgrades");
+		set_status_text("已添加, 所有可用升级！");
 		break;
-	case -4: //Remove All Mods
+	case -4: // 移除所有改装
 		reset_vehicle(veh);
-		set_status_text("Removed all upgrades");
+		set_status_text("已移除, 所有升级！");
 		break;
-	case -5: //Randomize Vehicle Upgrades
+	case -5: // 随机化车辆升级
 		randomize_vehicle_upgrades(veh);
 		break;
-	case -6: // Vehicle interior colors
+	case -6: // 车辆内饰颜色
 		process_interior_colour_menu();
 		break;
 	case SPECIAL_ID_FOR_TOGGLE_VARIATIONS:
-		//these are toggles, do nothing
+		// 这些是开关，无需操作
 		break;
 	case SPECIAL_ID_FOR_NEON_LIGHTS:
 		process_neon_lights_menu();
@@ -1021,8 +1021,8 @@ bool onconfirm_vehmod_menu(MenuItem<int> choice){
 	case SPECIAL_ID_FOR_XENON_COLOUR:
 		if (VEHICLE::IS_TOGGLE_MOD_ON(veh, 22) && getGameVersion() > 45) process_xenon_colour_menu();
 		else {
-			if (!VEHICLE::IS_TOGGLE_MOD_ON(veh, 22)) set_status_text("~r~Xenon lights are not enabled");
-			if (getGameVersion() < 46) set_status_text("~r~Your game version does not support Xenon colours");
+			if (!VEHICLE::IS_TOGGLE_MOD_ON(veh, 22)) set_status_text("~r~错误: ~s~氙气灯未启用！");
+			if (getGameVersion() < 46) set_status_text("~r~您的游戏版本不支持~p~氙气灯~q~颜色！");
 		}
 		break;
 	case SPECIAL_ID_FOR_CUSTOM_MULTIPLIER:
@@ -1038,7 +1038,7 @@ bool onconfirm_vehmod_menu(MenuItem<int> choice){
 
 bool process_vehmod_menu(){
 	if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)){
-		set_status_text("~r~Player isn't in a vehicle");
+		set_status_text("~r~玩家不在车辆中！");
 		mod_slots.clear();
 		return false;
 	}
@@ -1058,7 +1058,7 @@ bool process_vehmod_menu(){
 	BOOL isAircraft = is_this_a_heli_or_plane(veh);
 	BOOL isWeird = is_this_a_bicycle(veh) || is_this_a_boat_or_sub(veh) || is_this_a_train(veh);
 
-	const std::string caption = "Vehicle Mod Options";
+	const std::string caption = "车辆改装选项";
 
 	std::ostringstream ss;
 
@@ -1066,31 +1066,31 @@ bool process_vehmod_menu(){
 	
 	if (!isWeird) { //!isWeird && !isAircraft
 		MenuItem<int> *item1 = new MenuItem<int>();
-		item1->caption = "Add All Performance Upgrades";
+		item1->caption = "添加所有性能升级";
 		item1->value = -1;
 		item1->isLeaf = true;
 		menuItems.push_back(item1);
 
 		MenuItem<int> *item2 = new MenuItem<int>();
-		item2->caption = "Add All Armor Upgrades";
+		item2->caption = "添加所有护甲升级";
 		item2->value = -2;
 		item2->isLeaf = true;
 		menuItems.push_back(item2);
 
 		MenuItem<int> *item3 = new MenuItem<int>();
-		item3->caption = "Add All Available Upgrades";
+		item3->caption = "添加所有可用升级";
 		item3->value = -3;
 		item3->isLeaf = true;
 		menuItems.push_back(item3);
 
 		MenuItem<int> *item4 = new MenuItem<int>();
-		item4->caption = "Remove All Upgrades";
+		item4->caption = "移除所有升级";
 		item4->value = -4;
 		item4->isLeaf = true;
 		menuItems.push_back(item4);
 
 		MenuItem<int> *item5 = new MenuItem<int>();
-		item5->caption = "Randomize Upgrades";
+		item5->caption = "随机升级";
 		item5->value = -5;
 		item5->isLeaf = true;
 		menuItems.push_back(item5);
@@ -1105,7 +1105,7 @@ bool process_vehmod_menu(){
 
 		if (mod_slots.empty())
 		{
-			//Number of vehicle mods
+			// 车辆改装数量
 			for (int i = 0; i < 50; i++) {
 				mod_slots.insert(std::pair<int, const char*>(i, getLocalisedModCategory(i)));
 
@@ -1190,20 +1190,20 @@ bool process_vehmod_menu(){
 		menuItems.push_back(item);
 
 		item = new MenuItem<int>();
-		item->caption = "Tire Smoke Menu";
+		item->caption = "轮胎烟雾";
 		item->value = SPECIAL_ID_FOR_TIRE_SMOKE;
 		item->isLeaf = false;
 		menuItems.push_back(item);
 	}
 
 	MenuItem<int> * item = new MenuItem<int>();
-	item->caption = "Xenon Colour Menu";
+	item->caption = "氙气灯颜色";
 	item->value = SPECIAL_ID_FOR_XENON_COLOUR;
 	item->isLeaf = false;
 	menuItems.push_back(item);
 	
 	item = new MenuItem<int>();
-	item->caption = "Custom Engine Power Multiplier";
+	item->caption = "自定义引擎功率倍增器";
 	item->value = SPECIAL_ID_FOR_CUSTOM_MULTIPLIER;
 	item->isLeaf = false;
 	menuItems.push_back(item);
@@ -1241,7 +1241,7 @@ bool process_vehmod_menu(){
 			menuItems.push_back(toggleItem);
 
 			toggleItem = new FunctionDrivenToggleMenuItem<int>();
-			toggleItem->caption = "Low Grip Tyres";
+			toggleItem->caption = "低抓地力轮胎";
 			toggleItem->getter_call = is_low_grip_tyres;
 			toggleItem->setter_call = set_low_grip_tyres;
 			toggleItem->value = SPECIAL_ID_FOR_TOGGLE_VARIATIONS;
@@ -1254,7 +1254,7 @@ bool process_vehmod_menu(){
 			continue;
 		}
 
-		ss << "Toggle Extra #" << a;
+		ss << "额外选项 #" << a;
 		toggleItem = new FunctionDrivenToggleMenuItem<int>();
 		toggleItem->caption = ss.str();
 		toggleItem->getter_call = is_extra_enabled;
@@ -1266,11 +1266,11 @@ bool process_vehmod_menu(){
 	}
 	
 	if (menuItems.size() == 0){
-		set_status_text("No relevant mods for this vehicle");
+		set_status_text("没有适用于此车辆的改装配件！");
 		return false;
 	}
 
-	draw_generic_menu<int>(menuItems, 0, "Vehicle Mods", onconfirm_vehmod_menu, NULL, NULL, vehicle_menu_interrupt);
+	draw_generic_menu<int>(menuItems, 0, "车辆改装选项", onconfirm_vehmod_menu, NULL, NULL, vehicle_menu_interrupt);
 	return false;
 }
 
@@ -1279,14 +1279,14 @@ void set_plate_text(){ // MenuItem<int> choice
 	VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
 	keyboard_on_screen_already = true;
 	char* existingText = "";
-	curr_message = "Enter plate text (type 'random' for random text):"; // set plate text
-	if (result != "random" && result != "Random" && result != "RANDOM") existingText = VEHICLE::GET_VEHICLE_NUMBER_PLATE_TEXT(veh);
-	if (result == "random" || result == "Random" || result == "RANDOM") existingText = (char*)result.c_str();
-	result = show_keyboard("Enter Name Manually", existingText); // CMOD_MOD_18_D
+	curr_message = "输入车牌文字 (例如: random 随机  最长限 8 位数)"; // 设置车牌文本
+	if (result != "random" && result != "Random" && result != "RANDOM" && result != "随机" && result != "SJ" && result != "sj") existingText = VEHICLE::GET_VEHICLE_NUMBER_PLATE_TEXT(veh);
+	if (result == "random" || result == "Random" || result == "RANDOM" || result == "随机" || result == "SJ" || result == "sj") existingText = (char*)result.c_str();
+	result = show_keyboard("手动输入名称", existingText); // CMOD_MOD_18_D
 	if (!result.empty()){
 		//
-		if (result == "random" || result == "Random" || result == "RANDOM") {
-			set_status_text("Press jump to cancel");
+		if (result == "random" || result == "Random" || result == "RANDOM" || result == "随机" || result == "SJ" || result == "sj") {
+			set_status_text("按空格键停止, 车牌滚动！");
 			std::string random_t = "AAAAAAAA";
 			while (CONTROLS::IS_CONTROL_RELEASED(2, 22)/* && !IsKeyDown(KeyConfig::KEY_MENU_BACK) && !IsKeyDown(VK_ESCAPE) && !CONTROLS::IS_CONTROL_JUST_PRESSED(2, INPUT_FRONTEND_PAUSE) && CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(2, INPUT_FRONTEND_CANCEL)*/) { // jump
 				for (int aa = 0; aa < 9; aa++) {
@@ -1309,7 +1309,7 @@ void set_plate_text(){ // MenuItem<int> choice
 			}
 		}
 		//
-		if (result != "random" && result != "Random" && result != "RANDOM") VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT(veh, (char*)result.c_str());
+		if (result != "random" && result != "Random" && result != "RANDOM" && result != "随机" && result != "SJ" && result != "sj") VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT(veh, (char*)result.c_str());
 	}
 }
 
@@ -1324,8 +1324,8 @@ void set_custom_tyres(bool applied, std::vector<int> extras){
 	int currmod = VEHICLE::GET_VEHICLE_MOD(veh, 23);
 
 	VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
-	VEHICLE::SET_VEHICLE_MOD(veh, 23, currmod, applied); //Add Custom Tires
-	VEHICLE::SET_VEHICLE_MOD(veh, 24, currmod, applied); //Add Custom Tires (For bike rear wheels if they exist)
+	VEHICLE::SET_VEHICLE_MOD(veh, 23, currmod, applied); // 添加自定义轮胎
+	VEHICLE::SET_VEHICLE_MOD(veh, 24, currmod, applied); // 添加自定义轮胎（用于摩托车后轮，如果存在）
 }
 
 bool is_turbocharged(std::vector<int> extras){
@@ -1335,7 +1335,7 @@ bool is_turbocharged(std::vector<int> extras){
 
 void set_turbocharged(bool applied, std::vector<int> extras){
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
-	VEHICLE::TOGGLE_VEHICLE_MOD(veh, 18, applied); //Turbo Tuning
+	VEHICLE::TOGGLE_VEHICLE_MOD(veh, 18, applied); // 涡轮增压调校
 }
 
 bool is_bulletproof_tyres(std::vector<int> extras){
@@ -1345,7 +1345,7 @@ bool is_bulletproof_tyres(std::vector<int> extras){
 
 void set_bulletproof_tyres(bool applied, std::vector<int> extras){
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
-	VEHICLE::SET_VEHICLE_TYRES_CAN_BURST(veh, !applied); //Bulletproof Tires
+	VEHICLE::SET_VEHICLE_TYRES_CAN_BURST(veh, !applied); // 防弹轮胎
 }
 
 bool is_extra_enabled(std::vector<int> extras){
@@ -1367,7 +1367,7 @@ bool is_xenon_headlights(std::vector<int> extras){
 
 void set_xenon_headlights(bool applied, std::vector<int> extras){
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
-	VEHICLE::TOGGLE_VEHICLE_MOD(veh, 22, applied); //Headlights
+	VEHICLE::TOGGLE_VEHICLE_MOD(veh, 22, applied); //车头灯
 }
 
 bool is_low_grip_tyres(std::vector<int> extras) {
@@ -1377,7 +1377,7 @@ bool is_low_grip_tyres(std::vector<int> extras) {
 
 void set_low_grip_tyres (bool applied, std::vector<int> extras) {
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
-	VEHICLE::_SET_VEHICLE_HAS_LOW_GRIP_TYRES(veh, applied); //Slicks
+	VEHICLE::_SET_VEHICLE_HAS_LOW_GRIP_TYRES(veh, applied); //光头胎
 }
 
 bool vehicle_menu_interrupt(){
@@ -1449,7 +1449,7 @@ void randomize_vehicle_upgrades(Vehicle veh) {
 		VEHICLE::SET_VEHICLE_XENON_COLOUR(veh, whichcolor.colour);
 		VEHICLE::TOGGLE_VEHICLE_MOD(veh, 22, true); // rand_toggle
 	}
-	VEHICLE::SET_VEHICLE_TYRES_CAN_BURST(veh, rand_toggle); //Bulletproof Tires
+	VEHICLE::SET_VEHICLE_TYRES_CAN_BURST(veh, rand_toggle); //防弹轮胎
 	
 	int rand_snoke = (rand() % 10 + 0);
 	TireSmokeColor whichcolor = SMOKE_COLORS[rand_snoke];
@@ -1513,14 +1513,14 @@ void fully_tune_vehicle(Vehicle veh, bool optics){
 		VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT(veh, "ENTIFIED");
 	}
 	else{
-		VEHICLE::SET_VEHICLE_MOD(veh, MOD_SPOILER, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_SPOILER) - 1, 1); //Spoilers
-		VEHICLE::SET_VEHICLE_MOD(veh, MOD_ENGINE, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_ENGINE) - 1, 1); //Engine
-		VEHICLE::SET_VEHICLE_MOD(veh, MOD_BRAKES, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_BRAKES) - 1, 1); //Brakes
-		VEHICLE::SET_VEHICLE_MOD(veh, MOD_TRANSMISSION, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_TRANSMISSION) - 1, 1); //Transmission
-		VEHICLE::SET_VEHICLE_MOD(veh, MOD_SUSPENSION, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_SUSPENSION) - 1, 1); //Suspension
-		VEHICLE::SET_VEHICLE_MOD(veh, MOD_ARMOR, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_ARMOR) - 1, 1); //Armor
+		VEHICLE::SET_VEHICLE_MOD(veh, MOD_SPOILER, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_SPOILER) - 1, 1); //尾翼
+		VEHICLE::SET_VEHICLE_MOD(veh, MOD_ENGINE, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_ENGINE) - 1, 1); //引擎
+		VEHICLE::SET_VEHICLE_MOD(veh, MOD_BRAKES, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_BRAKES) - 1, 1); //刹车
+		VEHICLE::SET_VEHICLE_MOD(veh, MOD_TRANSMISSION, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_TRANSMISSION) - 1, 1); //变速箱
+		VEHICLE::SET_VEHICLE_MOD(veh, MOD_SUSPENSION, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_SUSPENSION) - 1, 1); //悬挂
+		VEHICLE::SET_VEHICLE_MOD(veh, MOD_ARMOR, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_ARMOR) - 1, 1); //护甲
 
-		VEHICLE::TOGGLE_VEHICLE_MOD(veh, MOD_TURBO, 1); //Turbo Tuning
+		VEHICLE::TOGGLE_VEHICLE_MOD(veh, MOD_TURBO, 1); //涡轮增压调校
 	}
 
 	VEHICLE::SET_VEHICLE_TYRES_CAN_BURST(veh, false);
@@ -1579,7 +1579,7 @@ void reset_vehicle(Vehicle veh){
 	plateText = rcn() + rcn() + rcc() + rcc() + rcc() + rcn() + rcn() + rcn();
 	VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT_INDEX(veh, PLATE_BLUEONWHITE1);
 	VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT(veh, const_cast<char *>(plateText.c_str()));
-	write_text_to_log_file("reset_vehicle(): number plate complete");
+	write_text_to_log_file("reset_vehicle(): 车牌重置完成");
 
 	VEHICLE::SET_VEHICLE_TYRES_CAN_BURST(veh, true);
 	//write_text_to_log_file("reset_vehicle(): tires can burst complete");
