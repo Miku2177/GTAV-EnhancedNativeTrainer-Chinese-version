@@ -168,7 +168,7 @@ std::string getSkinDetailAttribDescription(int i)
 	case 7:
 	case 8:
 	case 9:
-		return "物品";
+		return "饰品";
 	case 10:
 		return "徽章";
 	case 11:
@@ -1095,7 +1095,7 @@ bool process_prop_menu()
 
 	if (count == 0)
 	{
-		set_status_text("该模型没有可用的内容");
+		set_status_text("该模型没有可用的内容！");
 		return false;
 	}
 

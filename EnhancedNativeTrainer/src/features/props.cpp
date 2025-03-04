@@ -473,13 +473,13 @@ void process_props_spawn_menu()
 
 void onchange_spawn_alpha(int value, SelectFromListMenuItem* source)
 {
-	//if we've been supplied with an extra, we're applying this to an instance
+	//如果提供了额外的参数，我们将把它应用到一个实例上
 	if (source->extras.size() > 0)
 	{
 		SpawnedPropInstance prop = get_prop_at_index(source->extras.at(0));
 		ENTITY::SET_ENTITY_ALPHA(prop.instance, ALPHA_VALUES[value], false);
 	}
-	//otherwise we're changing the new spawn option
+	//否则我们将更改新的生成选项
 	else
 	{
 		propCreationAlphaIndex = value;
@@ -546,7 +546,7 @@ bool onconfirm_prop_menu(MenuItem<int> choice)
 	{
 		process_props_spawn_menu();
 	}
-	else if (choice.value == 1) //remove all
+	else if (choice.value == 1) //移除全部
 	{
 		int count = 0;
 		for each (SpawnedPropInstance prop in propsWeCreated)
@@ -1182,7 +1182,7 @@ void process_prop_explosion_choices()
 	draw_generic_menu<int>(menuItems, &explosionSelection, "爆炸选项", onconfirm_prop_explosion, NULL, NULL, NULL);
 }
 
-//Save menus
+//保存菜单
 
 int activeSavedPropSetIndex = 0;
 std::string activeSavedPropSlotName;
