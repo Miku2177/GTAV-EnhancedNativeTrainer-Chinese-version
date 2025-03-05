@@ -1052,16 +1052,21 @@ bool onconfirm_bodyguard_skins_menu(MenuItem<int> choice){
 		case 4:
 		{
 			keyboard_on_screen_already = true;
-			curr_message = "输入保镖模型名称: ( random 随机 random_story 随机多个 Saved_bodyguards 已保存的 )"; // 生成一个保镖
+			curr_message = "输入保镖模型名称: ( random 随机 random_story 随机多个 saved_bodyguards 已保存的 )"; // 生成一个保镖
 			std::string result = show_keyboard("手动输入名称", (char*)lastCustomBodyguardSpawn.c_str());
 			if (!result.empty())
 			{
 				result = trim(result);
 				lastCustomBodyguardSpawn = result;
 				Hash hash = GAMEPLAY::GET_HASH_KEY((char*)result.c_str());
+				// 添加对中文指令的判断支持
 				if (lastCustomBodyguardSpawn != "random" && lastCustomBodyguardSpawn != "Random" && lastCustomBodyguardSpawn != "RANDOM" && 
 					lastCustomBodyguardSpawn != "saved_bodyguards" && lastCustomBodyguardSpawn != "Saved_bodyguards" && lastCustomBodyguardSpawn != "Saved_Bodyguards" && 
 					lastCustomBodyguardSpawn != "random_story" && lastCustomBodyguardSpawn != "Random_story" && lastCustomBodyguardSpawn != "Random_Story" &&
+					// 增加中文指令支持
+					lastCustomBodyguardSpawn != "随机" && lastCustomBodyguardSpawn != "SJ" && lastCustomBodyguardSpawn != "sj" &&
+					lastCustomBodyguardSpawn != "随机多个" && lastCustomBodyguardSpawn != "SJDG" && lastCustomBodyguardSpawn != "sjdg" &&
+					lastCustomBodyguardSpawn != "已保存的" && lastCustomBodyguardSpawn != "YBCD" && lastCustomBodyguardSpawn != "ybcd" &&
 					(!STREAMING::IS_MODEL_IN_CDIMAGE(hash) || !STREAMING::IS_MODEL_VALID(hash)))
 				{
 					std::ostringstream ss;
@@ -1070,9 +1075,15 @@ bool onconfirm_bodyguard_skins_menu(MenuItem<int> choice){
 					lastCustomBodyguardSpawn = "";
 					return false;
 				}
-				if ((STREAMING::IS_MODEL_IN_CDIMAGE(hash) && STREAMING::IS_MODEL_VALID(hash)) || lastCustomBodyguardSpawn == "random" || lastCustomBodyguardSpawn == "Random" || lastCustomBodyguardSpawn == "RANDOM" ||
+				// 同样增加对中文指令的支持
+				if ((STREAMING::IS_MODEL_IN_CDIMAGE(hash) && STREAMING::IS_MODEL_VALID(hash)) || 
+					lastCustomBodyguardSpawn == "random" || lastCustomBodyguardSpawn == "Random" || lastCustomBodyguardSpawn == "RANDOM" ||
 					lastCustomBodyguardSpawn == "saved_bodyguards" || lastCustomBodyguardSpawn == "Saved_bodyguards" || lastCustomBodyguardSpawn == "Saved_Bodyguards" ||
-					lastCustomBodyguardSpawn == "random_story" || lastCustomBodyguardSpawn == "Random_story" || lastCustomBodyguardSpawn == "Random_Story")
+					lastCustomBodyguardSpawn == "random_story" || lastCustomBodyguardSpawn == "Random_story" || lastCustomBodyguardSpawn == "Random_Story" ||
+					// 增加中文指令支持
+					lastCustomBodyguardSpawn == "随机" || lastCustomBodyguardSpawn == "SJ" || lastCustomBodyguardSpawn == "sj" ||
+					lastCustomBodyguardSpawn == "随机多个" || lastCustomBodyguardSpawn == "SJDG" || lastCustomBodyguardSpawn == "sjdg" ||
+					lastCustomBodyguardSpawn == "已保存的" || lastCustomBodyguardSpawn == "YBCD" || lastCustomBodyguardSpawn == "ybcd")
 				{
 					get_current_model_name();
 					requireRefreshOfBodyguardMainMenu = true;
@@ -1583,8 +1594,9 @@ void do_spawn_bodyguard(){
 		process_main_menu();
 	}
 
-	// 随机生成保镖
-	if ((lastCustomBodyguardSpawn == "random" || lastCustomBodyguardSpawn == "Random" || lastCustomBodyguardSpawn == "RANDOM") && added_nearest_b == false) {
+	// 随机保镖生成 - 添加中文支持
+	if ((lastCustomBodyguardSpawn == "random" || lastCustomBodyguardSpawn == "Random" || lastCustomBodyguardSpawn == "RANDOM" ||
+		lastCustomBodyguardSpawn == "随机" || lastCustomBodyguardSpawn == "SJ" || lastCustomBodyguardSpawn == "sj") && added_nearest_b == false) {
 		random_category = (rand() % 10 + 0); // 上边距 + 下边距
 		if (random_category == 0) {
 			random_bodyguard = (rand() % SKINS_PLAYER_VALUES.size() + 0);
@@ -1602,12 +1614,31 @@ void do_spawn_bodyguard(){
 			random_bodyguard = (rand() % SKINS_ANIMALS_VALUES.size() + 0);
 			bodyGuardModel = GAMEPLAY::GET_HASH_KEY((char*)SKINS_ANIMALS_VALUES[random_bodyguard].c_str());
 		}
-	} // 随机生成保镖结束
+		// 添加随机保镖生成成功提示
+		set_status_text("随机保镖或路人生成完成！");
+	} // 随机保镖生成结束
 	
-	if (lastCustomBodyguardSpawn != "random" && lastCustomBodyguardSpawn != "Random" && lastCustomBodyguardSpawn != "RANDOM" && lastCustomBodyguardSpawn != "saved_bodyguards" && lastCustomBodyguardSpawn != "Saved_bodyguards" && lastCustomBodyguardSpawn != "Saved_Bodyguards" &&
-		lastCustomBodyguardSpawn != "random_story" && lastCustomBodyguardSpawn != "Random_story" && lastCustomBodyguardSpawn != "Random_Story" && added_nearest_b == false) bodyGuardModel = get_current_model_hash(); // hotkey_boddyguard == false && 
-	
-	if (load_saved_bodyguard == true && added_nearest_b == false) bodyGuardModel = temp_bodyguard;
+	  // 修改判断条件，增加中文支持
+	if (lastCustomBodyguardSpawn != "random" && lastCustomBodyguardSpawn != "Random" && lastCustomBodyguardSpawn != "RANDOM" && 
+		lastCustomBodyguardSpawn != "saved_bodyguards" && lastCustomBodyguardSpawn != "Saved_bodyguards" && lastCustomBodyguardSpawn != "Saved_Bodyguards" &&
+		lastCustomBodyguardSpawn != "random_story" && lastCustomBodyguardSpawn != "Random_story" && lastCustomBodyguardSpawn != "Random_Story" && 
+		// 添加中文支持
+		lastCustomBodyguardSpawn != "随机" && lastCustomBodyguardSpawn != "SJ" && lastCustomBodyguardSpawn != "sj" &&
+		lastCustomBodyguardSpawn != "随机多个" && lastCustomBodyguardSpawn != "SJDG" && lastCustomBodyguardSpawn != "sjdg" &&
+		lastCustomBodyguardSpawn != "已保存的" && lastCustomBodyguardSpawn != "YBCD" && lastCustomBodyguardSpawn != "ybcd" &&
+		added_nearest_b == false) 
+	{
+		bodyGuardModel = get_current_model_hash(); // hotkey_boddyguard == false && 
+	}
+
+	if (load_saved_bodyguard == true && added_nearest_b == false) {
+		bodyGuardModel = temp_bodyguard;
+		// 添加已保存保镖加载成功提示
+		if (lastCustomBodyguardSpawn == "saved_bodyguards" || lastCustomBodyguardSpawn == "Saved_bodyguards" || lastCustomBodyguardSpawn == "Saved_Bodyguards" ||
+			lastCustomBodyguardSpawn == "已保存的" || lastCustomBodyguardSpawn == "YBCD" || lastCustomBodyguardSpawn == "ybcd") {
+			set_status_text("已保存的保镖加载完成！");
+		}
+	}
 
 	if (spawning_a_ped == false && spawnedENTBodyguards.size() >= BODYGUARD_LIMIT) {
 		set_status_text("无法再生成更多保镖了！");
@@ -2595,49 +2626,68 @@ bool onconfirm_bodyguard_menu(MenuItem<int> choice){
 	under_weapon_menu = false;
 
 	switch (activeLineIndexBodyguards) {
-		case 0:
-			if (lastCustomBodyguardSpawn != "saved_bodyguards" && lastCustomBodyguardSpawn != "Saved_bodyguards" && lastCustomBodyguardSpawn != "Saved_Bodyguards" && 
-				lastCustomBodyguardSpawn != "random_story" && lastCustomBodyguardSpawn != "Random_story" && lastCustomBodyguardSpawn != "Random_Story") do_spawn_bodyguard();
-			if (lastCustomBodyguardSpawn == "saved_bodyguards" || lastCustomBodyguardSpawn == "Saved_bodyguards" || lastCustomBodyguardSpawn == "Saved_Bodyguards") {
-				ENTDatabase* database = get_database();
-				std::vector<SavedBodSkinDBRow*> savedBodSkins = database->get_saved_bod_skins();
-				for each (SavedBodSkinDBRow * sv in savedBodSkins) {
-					spawn_saved_bod_skin(sv->rowID, "");
-				}
+	case 0:
+		// 添加中文支持逻辑
+		// 检查是否不是已保存的保镖或随机多个保镖
+		if (lastCustomBodyguardSpawn != "saved_bodyguards" && lastCustomBodyguardSpawn != "Saved_bodyguards" && lastCustomBodyguardSpawn != "Saved_Bodyguards" && 
+			lastCustomBodyguardSpawn != "random_story" && lastCustomBodyguardSpawn != "Random_story" && lastCustomBodyguardSpawn != "Random_Story" &&
+			lastCustomBodyguardSpawn != "已保存的" && lastCustomBodyguardSpawn != "YBCD" && lastCustomBodyguardSpawn != "ybcd" &&
+			lastCustomBodyguardSpawn != "随机多个" && lastCustomBodyguardSpawn != "SJDG" && lastCustomBodyguardSpawn != "sjdg") 
+		{
+			do_spawn_bodyguard();
+		}
+
+		// 处理已保存的保镖逻辑
+		if (lastCustomBodyguardSpawn == "saved_bodyguards" || lastCustomBodyguardSpawn == "Saved_bodyguards" || lastCustomBodyguardSpawn == "Saved_Bodyguards" ||
+			lastCustomBodyguardSpawn == "已保存的" || lastCustomBodyguardSpawn == "YBCD" || lastCustomBodyguardSpawn == "ybcd") 
+		{
+			ENTDatabase* database = get_database();
+			std::vector<SavedBodSkinDBRow*> savedBodSkins = database->get_saved_bod_skins();
+			for each (SavedBodSkinDBRow * sv in savedBodSkins) {
+				spawn_saved_bod_skin(sv->rowID, "");
 			}
-			if (lastCustomBodyguardSpawn == "random_story" || lastCustomBodyguardSpawn == "Random_story" || lastCustomBodyguardSpawn == "Random_Story") {
-				std::string lastCustomBodyguardSpawn_tmp = lastCustomBodyguardSpawn;
-				for (int i = 0; i < 7; i++) {// 默认循环7次（可能是保镖数量上限或某种操作次数）
-					int random_story_bodyguard = (rand() % 24 + 0);
-					if (random_story_bodyguard == 0) lastCustomBodyguardSpawn = "player_zero";
-					if (random_story_bodyguard == 1) lastCustomBodyguardSpawn = "player_one";
-					if (random_story_bodyguard == 2) lastCustomBodyguardSpawn = "player_two";
-					if (random_story_bodyguard == 3) lastCustomBodyguardSpawn = "ig_amandatownley";
-					if (random_story_bodyguard == 4) lastCustomBodyguardSpawn = "ig_davenorton";
-					if (random_story_bodyguard == 5) lastCustomBodyguardSpawn = "ig_devin";
-					if (random_story_bodyguard == 6) lastCustomBodyguardSpawn = "ig_jimmydisanto";
-					if (random_story_bodyguard == 7) lastCustomBodyguardSpawn = "ig_lamardavis";
-					if (random_story_bodyguard == 8) lastCustomBodyguardSpawn = "ig_lestercrest";
-					if (random_story_bodyguard == 9) lastCustomBodyguardSpawn = "ig_nervousron";
-					if (random_story_bodyguard == 10) lastCustomBodyguardSpawn = "ig_stevehains";
-					if (random_story_bodyguard == 11) lastCustomBodyguardSpawn = "ig_stretch";
-					if (random_story_bodyguard == 12) lastCustomBodyguardSpawn = "ig_tracydisanto";
-					if (random_story_bodyguard == 13) lastCustomBodyguardSpawn = "ig_wade";
-					if (random_story_bodyguard == 14) lastCustomBodyguardSpawn = "ig_chengsr";
-					if (random_story_bodyguard == 15) lastCustomBodyguardSpawn = "ig_andreas";
-					if (random_story_bodyguard == 16) lastCustomBodyguardSpawn = "ig_brad";
-					if (random_story_bodyguard == 17) lastCustomBodyguardSpawn = "ig_drfriedlander";
-					if (random_story_bodyguard == 18) lastCustomBodyguardSpawn = "ig_floyd";
-					if (random_story_bodyguard == 19) lastCustomBodyguardSpawn = "cs_martinmadrazo";
-					if (random_story_bodyguard == 20) lastCustomBodyguardSpawn = "ig_molly";
-					if (random_story_bodyguard == 21) lastCustomBodyguardSpawn = "ig_patricia";
-					if (random_story_bodyguard == 22) lastCustomBodyguardSpawn = "ig_siemonyetarian";
-					if (random_story_bodyguard == 23) lastCustomBodyguardSpawn = "ig_solomon";
-					if (random_story_bodyguard == 24) lastCustomBodyguardSpawn = "ig_taocheng";
-					do_spawn_bodyguard();
-				}
-				lastCustomBodyguardSpawn = lastCustomBodyguardSpawn_tmp;
+			// 添加生成完成提示
+			set_status_text("已保存的保镖生成完成！");
+		}
+
+		// 处理随机多个保镖逻辑
+		if (lastCustomBodyguardSpawn == "random_story" || lastCustomBodyguardSpawn == "Random_story" || lastCustomBodyguardSpawn == "Random_Story" ||
+			lastCustomBodyguardSpawn == "随机多个" || lastCustomBodyguardSpawn == "SJDG" || lastCustomBodyguardSpawn == "sjdg") 
+		{
+			std::string lastCustomBodyguardSpawn_tmp = lastCustomBodyguardSpawn;
+			for (int i = 0; i < 7; i++) {// 默认循环7次（可能是保镖数量上限或某种操作次数）
+				int random_story_bodyguard = (rand() % 24 + 0);
+				if (random_story_bodyguard == 0) lastCustomBodyguardSpawn = "player_zero";
+				if (random_story_bodyguard == 1) lastCustomBodyguardSpawn = "player_one";
+				if (random_story_bodyguard == 2) lastCustomBodyguardSpawn = "player_two";
+				if (random_story_bodyguard == 3) lastCustomBodyguardSpawn = "ig_amandatownley";
+				if (random_story_bodyguard == 4) lastCustomBodyguardSpawn = "ig_davenorton";
+				if (random_story_bodyguard == 5) lastCustomBodyguardSpawn = "ig_devin";
+				if (random_story_bodyguard == 6) lastCustomBodyguardSpawn = "ig_jimmydisanto";
+				if (random_story_bodyguard == 7) lastCustomBodyguardSpawn = "ig_lamardavis";
+				if (random_story_bodyguard == 8) lastCustomBodyguardSpawn = "ig_lestercrest";
+				if (random_story_bodyguard == 9) lastCustomBodyguardSpawn = "ig_nervousron";
+				if (random_story_bodyguard == 10) lastCustomBodyguardSpawn = "ig_stevehains";
+				if (random_story_bodyguard == 11) lastCustomBodyguardSpawn = "ig_stretch";
+				if (random_story_bodyguard == 12) lastCustomBodyguardSpawn = "ig_tracydisanto";
+				if (random_story_bodyguard == 13) lastCustomBodyguardSpawn = "ig_wade";
+				if (random_story_bodyguard == 14) lastCustomBodyguardSpawn = "ig_chengsr";
+				if (random_story_bodyguard == 15) lastCustomBodyguardSpawn = "ig_andreas";
+				if (random_story_bodyguard == 16) lastCustomBodyguardSpawn = "ig_brad";
+				if (random_story_bodyguard == 17) lastCustomBodyguardSpawn = "ig_drfriedlander";
+				if (random_story_bodyguard == 18) lastCustomBodyguardSpawn = "ig_floyd";
+				if (random_story_bodyguard == 19) lastCustomBodyguardSpawn = "cs_martinmadrazo";
+				if (random_story_bodyguard == 20) lastCustomBodyguardSpawn = "ig_molly";
+				if (random_story_bodyguard == 21) lastCustomBodyguardSpawn = "ig_patricia";
+				if (random_story_bodyguard == 22) lastCustomBodyguardSpawn = "ig_siemonyetarian";
+				if (random_story_bodyguard == 23) lastCustomBodyguardSpawn = "ig_solomon";
+				if (random_story_bodyguard == 24) lastCustomBodyguardSpawn = "ig_taocheng";
+				do_spawn_bodyguard();
 			}
+			lastCustomBodyguardSpawn = lastCustomBodyguardSpawn_tmp;
+			// 添加随机多个保镖生成完成提示
+			set_status_text("随机多个保镖生成完成！");
+		}
 			break;
 		case 1:
 			do_add_near_bodyguard();
