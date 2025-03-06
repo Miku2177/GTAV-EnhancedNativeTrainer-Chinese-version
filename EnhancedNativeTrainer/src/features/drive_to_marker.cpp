@@ -69,7 +69,7 @@ Vector3 get_blip_marker() {
 		return coords;
 	}
 
-	set_status_text("地图标记，未设置！");
+	set_status_text("您还没有设置导航点！");
 	return zero;
 }
 
