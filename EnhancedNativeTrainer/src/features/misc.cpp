@@ -198,7 +198,7 @@ bool RadioSwitchingChanged = true;
 int TrainerControlIndex = 0;
 bool TrainerControlChanged = true;
 
-// Trainer Scrolling Controls
+// 菜单 (活动条) 滚动方式
 int TrainerControlScrollingIndex = 0;
 bool TrainerControlScrollingChanged = true;
 
@@ -340,7 +340,7 @@ void process_misc_trainerconfig_menu(){
 
 	listItem = new SelectFromListMenuItem(MISC_TRAINERCONTROLSCROLLING_CAPTIONS, onchange_misc_trainercontrolscrolling_index);
 	listItem->wrap = false;
-	listItem->caption = "Menu Scrolling";
+	listItem->caption = "菜单滚动方式";
 	listItem->value = TrainerControlScrollingIndex;
 	menuItems.push_back(listItem);
 
