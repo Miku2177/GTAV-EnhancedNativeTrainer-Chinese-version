@@ -20,6 +20,8 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\io\io.h"
 #include "..\features\airbrake.h"
 #include "..\utils.h"
+//#include "..\features\misc.h"
+//#include "..\features\script.h"
 
 #include "entcolor.h"
 
@@ -43,6 +45,10 @@ extern bool mouse_view_control;
 extern bool help_showing;
 extern bool frozen_time;
 extern bool been_damaged;
+
+// Trainer Scrolling Controls
+const std::vector<std::string> MISC_TRAINERCONTROLSCROLLING_CAPTIONS{ "Page Scrolling", "Fast Scroll" };
+extern int TrainerControlScrollingIndex;
 
 static const char* LOCAL_TEXTURE_DICT = "LOCALTEXTURES";
 
@@ -1265,49 +1271,68 @@ bool draw_generic_menu(MenuParameters<T> params){
 				break; // 跳出当前循环或逻辑块
 			}
 			else{
-				if(bDown){// 如果用户按下，向下键
+				if(bDown){// If the user presses the Down key
 					menu_beep();
-					if(currentSelectionIndex < lineStartPosition + itemsOnThisLine - 1 && currentSelectionIndex < totalItems - 1){
-						currentSelectionIndex++; // 未到达底部，正常向下移动
-					} else {
-						int currentPage = lineStartPosition / itemsPerLine; // 计算当前页面
-						int maxPages = (totalItems + itemsPerLine - 1) / itemsPerLine; // 总页数
-						if(currentPage < maxPages - 1){ // 如果有下一页
+					if (TrainerControlScrollingIndex == 0)
+					{
+						currentSelectionIndex++;
+						if (currentSelectionIndex >= totalItems || (currentSelectionIndex >= lineStartPosition + itemsOnThisLine)) {
+							currentSelectionIndex = lineStartPosition;
+						}
+					}
+					else
+					if(TrainerControlScrollingIndex == 1 && currentSelectionIndex < lineStartPosition + itemsOnThisLine - 1 && currentSelectionIndex < totalItems - 1) 
+					{
+						currentSelectionIndex++; // Not at bottom, move down normally
+					} 
+					else {
+						int currentPage = lineStartPosition / itemsPerLine; // Calculate current page
+						int maxPages = (totalItems + itemsPerLine - 1) / itemsPerLine; // Total pages
+						if(currentPage < maxPages - 1){ // If next page exists
 							currentPage++;
-							lineStartPosition = currentPage * itemsPerLine; // 更新页面起始索引
-							itemsOnThisLine = min(itemsPerLine, totalItems - lineStartPosition); // 更新当前页项数
-							currentSelectionIndex = lineStartPosition; // 移到新页顶部
+							lineStartPosition = currentPage * itemsPerLine; // Update page start index
+							itemsOnThisLine = min(itemsPerLine, totalItems - lineStartPosition); // Update items on current page
+							currentSelectionIndex = lineStartPosition; // Jump to new page top
 						} else {
-							// 到达最后一页底部，循环到第一页顶部
+							// Reached bottom of last page, wrap to first page top
 							currentPage = 0;
 							lineStartPosition = 0;
-							itemsOnThisLine = min(itemsPerLine, totalItems); // 第一页项数
-							currentSelectionIndex = 0; // 移到第一页顶部（第一项）
+							itemsOnThisLine = min(itemsPerLine, totalItems); // First page items
+							currentSelectionIndex = 0; // Move to first page top (first item)
 						}
 					}
-					waitTime = 150; // 设置等待时间，默认为 150 毫秒，用于防止重复触发
+					waitTime = 150; // Set wait time to 150ms to prevent repeated triggers
 				}
-				else if(bUp){// 如果用户按下，向上键
+				else if(bUp){// If the user presses the Up key
 					menu_beep();
-					if(currentSelectionIndex > lineStartPosition){
-						currentSelectionIndex--; // 未到达顶部，正常向上移动
-					} else {
-						int currentPage = lineStartPosition / itemsPerLine; // 计算当前页面
-						int maxPages = (totalItems + itemsPerLine - 1) / itemsPerLine; // 总页数
-						if(currentPage > 0){ // 如果有上一页
-							currentPage--;
-							lineStartPosition = currentPage * itemsPerLine; // 更新页面起始索引
-							itemsOnThisLine = min(itemsPerLine, totalItems - lineStartPosition); // 更新当前页项数
-							currentSelectionIndex = lineStartPosition + itemsOnThisLine - 1; // 移到新页底部
-						} else {
-							// 到达第一页顶部，循环到最后一项
-							currentSelectionIndex = totalItems - 1; // 直接定位到最后一项
-							currentPage = maxPages - 1; // 设置为最后一页
-							lineStartPosition = currentPage * itemsPerLine; // 更新页面起始索引，确保最后一项可见
-							itemsOnThisLine = min(itemsPerLine, totalItems - lineStartPosition); // 更新当前页项数
+					if (TrainerControlScrollingIndex == 0)
+					{
+						currentSelectionIndex--;
+						if (currentSelectionIndex < 0 || (currentSelectionIndex < lineStartPosition)) {
+							currentSelectionIndex = lineStartPosition + itemsOnThisLine - 1;
 						}
 					}
-					waitTime = 150; // 设置等待时间默认，为 150 毫秒，用于防止重复触发
+					else
+					if (TrainerControlScrollingIndex == 1 && currentSelectionIndex > lineStartPosition)
+					{
+						currentSelectionIndex--; // Not at top, move up normally
+					} else {
+						int currentPage = lineStartPosition / itemsPerLine; // Calculate current page
+						int maxPages = (totalItems + itemsPerLine - 1) / itemsPerLine; // Total pages
+						if(currentPage > 0){ // If previous page exists
+							currentPage--;
+							lineStartPosition = currentPage * itemsPerLine; // Update page start index
+							itemsOnThisLine = min(itemsPerLine, totalItems - lineStartPosition); // Update items on current page
+							currentSelectionIndex = lineStartPosition + itemsOnThisLine - 1; // Jump to new page bottom
+						} else {
+							// Reached first page top, wrap to last item
+							currentSelectionIndex = totalItems - 1; // Directly target last item
+							currentPage = maxPages - 1; // Set to last page
+							lineStartPosition = currentPage * itemsPerLine; // Update page start to ensure visibility
+							itemsOnThisLine = min(itemsPerLine, totalItems - lineStartPosition); // Update items on current page
+						}
+					}
+					waitTime = 150; // Set wait time to 150ms to prevent repeated triggers
 				}
 				else if(bLeft){ // 如果用户按下，向左键
 					menu_beep();// 播放菜单提示音

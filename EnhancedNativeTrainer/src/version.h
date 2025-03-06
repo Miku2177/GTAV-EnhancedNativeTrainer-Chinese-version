@@ -9,5 +9,5 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include <string>
 
 //当前的修改器版本应该是：主版本号，次版本号
-const std::string VERSION_STRING = "55." + std::to_string(0);
+const std::string VERSION_STRING = "55." + std::to_string(1);
 
