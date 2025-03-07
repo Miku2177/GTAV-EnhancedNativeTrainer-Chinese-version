@@ -49,11 +49,11 @@ const std::vector<std::string> VOV_WEAPON_CAPTIONS[] = {CAPTIONS_MELEE, CAPTIONS
 const std::vector<std::string> VOV_WEAPON_VALUES[] = {VALUES_MELEE, VALUES_HANDGUN, VALUES_SUBMACHINE, VALUES_ASSAULT, VALUES_SHOTGUN, VALUES_SNIPER, VALUES_HEAVY, VALUES_THROWN};
 
 // 武器涂装
-const std::vector<std::string> CAPTIONS_TINT{ "Normal", "Green", "Gold", "Pink", "Army", "LSPD", "Orange", "Platinum" };
+const std::vector<std::string> CAPTIONS_TINT{ "正常", "绿色", "金色", "粉色", "军绿色", "洛圣都警察局", "橙色", "铂金色" };
 const std::vector<int> VALUES_TINT{ 0, 1, 2, 3, 4, 5, 6, 7 };
 
 // MK2 武器涂装
-const std::vector<std::string> CAPTIONS_TINT_MK2{ "Classic Black", "Classic Gray", "Classic Two-Tone", "Classic White", "Classic Beige", "Classic Green", "Classic Blue", "Classic Earth", "Classic Brown & Black", "Red Contrast", "Blue Contrast", "Yellow Contrast", "Orange Contrast", "Bold Pink", "Bold Purple & Yellow", "Bold Orange", "Bold Green & Purple", "Bold Red Features", "Bold Green Features", "Bold Cyan Features", "Bold Yellow Features", "Bold Red & White", "Bold Blue & White", "Metallic Gold", "Metallic Platinum", "Metallic Gray & Lilca", "Metallic Purple & Lime", "Metallic Red", "Metallic Green", "Metallic Blue", "Metallic White & Aqua", "Metallic Red & Yellow" };
+const std::vector<std::string> CAPTIONS_TINT_MK2{ "经典黑色", "经典灰色", "经典双色调", "经典白色", "经典米色", "经典绿色", "经典蓝色", "经典土棕色", "经典棕黑双色", "红色对比", "蓝色对比", "黄色对比", "橙色对比", "鲜艳粉红色", "鲜艳紫黄双色", "鲜艳橙色", "鲜艳绿紫双色", "鲜艳红色元素", "鲜艳绿色元素", "鲜艳青色元素", "鲜艳黄色元素", "鲜艳红白双色", "鲜艳蓝白双色", "金属质感金色", "金属质感铂金色", "金属质感灰紫双色", "金属质感紫绿双色", "金属质感红色", "金属质感绿色", "金属质感蓝色", "金属质感白青双色", "金属质感红黄双色" };
 
 // 手枪
 const std::vector<std::string> CAPTIONS_ATTACH_PISTOL{ "WCT_CLIP1", "WCT_CLIP2", "WCT_FLASH", "WCT_SUPP", "WCT_VAR_GOLD" };
