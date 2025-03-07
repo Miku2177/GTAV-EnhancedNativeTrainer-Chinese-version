@@ -409,7 +409,7 @@ void process_time_menu() {
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "设置时间 (时/分)";
+	item->caption = "设置时间 (时:分)";
 	item->value = index++;
 	item->isLeaf = true;
 	menuItems.push_back(item);
@@ -563,7 +563,7 @@ void movetime_day_backward() {
 
 void set_date() {
 	keyboard_on_screen_already = true;
-	curr_message = "输入新日期 (年/月/日):"; // 提示用户输入格式
+	curr_message = "输入新日期 (示例: 2025/2/1 示例: 2025.2.1)"; // 提示用户输入格式
 	std::string lastDateSpawn;
 	std::string tmp_Year, tmp_Mon, tmp_Day;   // 年、月、日字段
 
@@ -724,7 +724,7 @@ void set_date() {
 
 void set_time() {
 	keyboard_on_screen_already = true;  // 标记键盘已在屏幕上
-	curr_message = "输入新时间 (时/分):";  // 设置提示信息
+	curr_message = "输入新时间 (示例: 8:30 示例: 8.30)";  // 设置提示信息
 	std::string lastTimeSpawn;  // 用于存储上一次输入的时间
 	std::string result = show_keyboard("手动输入时间", (char*)lastTimeSpawn.c_str());  // 显示键盘并获取用户输入
 
