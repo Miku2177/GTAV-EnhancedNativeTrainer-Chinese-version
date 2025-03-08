@@ -86,5 +86,5 @@ bool process_smoke_colour_menu(){
 		colIndex = 0;
 	}
 
-	return draw_generic_menu<int>(menuItems, &colIndex, "轮胎烟雾颜色选项", onconfirm_smoke_selection, onhighlight_smoke_selection, NULL, vehicle_menu_interrupt);
+	return draw_generic_menu<int>(menuItems, &colIndex, "轮胎烟雾选项", onconfirm_smoke_selection, onhighlight_smoke_selection, NULL, vehicle_menu_interrupt);
 }

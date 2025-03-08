@@ -419,9 +419,9 @@ std::string getNormalItemTitle(Vehicle veh, int category, int index){
 		if (!foundName){
 			std::ostringstream ss;
 			if(category <= 50 || mod_slots[lastSelectedModValue] != "")
-				ss << mod_slots[lastSelectedModValue] << " 项目 " << (index + 1);
+				ss << mod_slots[lastSelectedModValue] << "项目 " << (index + 1);
 			else
-				ss <<getLocalisedModCategory(category) << " 项目 " << (index + 1);
+				ss <<getLocalisedModCategory(category) << "项目 " << (index + 1);
 			modItemNameStr = ss.str();
 		}
 	}
@@ -734,7 +734,7 @@ bool process_vehmod_category_special_menu(int category){
 		}
 		else{
 			std::ostringstream ss;
-			ss << getLocalisedModCategory(category) << " 项目 " << i;
+			ss << getLocalisedModCategory(category) << "项目 " << i;
 			item->caption = ss.str();
 		}
 		item->value = values.at(i);
@@ -777,7 +777,7 @@ bool process_vehmod_engine_sound() {
 		}
 		else {
 			std::ostringstream ss;
-			ss << getLocalisedModCategory(SPECIAL_ID_FOR_ENGINE_SOUND) << " 项目 " << i;
+			ss << getLocalisedModCategory(SPECIAL_ID_FOR_ENGINE_SOUND) << "项目 " << i;
 			item->caption = ss.str();
 		}
 		item->value = values.at(i);
@@ -1013,7 +1013,8 @@ bool onconfirm_vehmod_menu(MenuItem<int> choice){
 		VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
 		VEHICLE::SET_VEHICLE_MOD(veh, MOD_ARMOR, VEHICLE::GET_NUM_VEHICLE_MODS(veh, MOD_ARMOR) - 1, 1); //护甲
 		VEHICLE::SET_VEHICLE_TYRES_CAN_BURST(veh, 0); // 防弹轮胎
-		set_status_text("已添加, 所有护甲升级和防弹轮胎！");
+		set_status_text("已添加, 所有护甲升级！");
+		set_status_text("已添加, 所有防弹轮胎！");
 		break;
 	case -3: // 添加所有改装
 		fully_tune_vehicle(veh);

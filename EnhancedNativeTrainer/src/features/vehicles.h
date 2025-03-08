@@ -88,8 +88,8 @@ const std::vector<std::string> VEH_RAND_COLOUR_CAPTIONS{ "两种颜色", "仅限
 extern int VehRandomColourIndex;
 
 // 加速时关闭转向灯
-const std::vector<std::string> VEH_TURN_SIGNALS_ACCELERATION_CAPTIONS{ "关", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
-const int VEH_TURN_SIGNALS_ACCELERATION_VALUES[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+const std::vector<std::string> VEH_TURN_SIGNALS_ACCELERATION_CAPTIONS{ "关闭", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "15", "20", "25", "30", "50", "70", "100", "200", "300", "500", "600" };
+const int VEH_TURN_SIGNALS_ACCELERATION_VALUES[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30, 50, 70, 100, 200, 300, 500, 600 };
 
 // 标记大小
 const std::vector<std::string> VEH_BLIPSIZE_CAPTIONS{ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
