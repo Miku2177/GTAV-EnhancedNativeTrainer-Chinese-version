@@ -59,6 +59,26 @@ const char* getLocalisedModCategory(int modType)
 	
 	switch (modType)
 	{
+	case MOD_SPOILER:
+		return "尾翼"; //尾翼
+	case MOD_FRONTBUMPER:
+		return "前保险杠"; //前保险杠
+	case MOD_REARBUMPER:
+		return "后保险杠"; //后保险杠
+	case MOD_SIDESKIRT:
+		return "侧裙"; //侧裙
+	case MOD_EXHAUST:
+		return "排气管"; //排气管
+	case MOD_CHASSIS:
+		return "车架/防滚架"; //车架/防滚架
+	case MOD_GRILLE:
+		return "进气格栅"; //进气格栅
+	case MOD_FENDER:
+		return "挡泥板" ; //挡泥板
+	case MOD_RIGHTFENDER:
+		return "翼子板"; //翼子板
+	case MOD_ROOF:
+		return "车顶"; //车顶
 	case MOD_HOOD:
 		return UI::_GET_LABEL_TEXT("CMOD_MOD_HOD");
 	case MOD_ARMOR:
