@@ -4018,7 +4018,7 @@ void update_vehicle_features(BOOL bPlayerExists, Ped playerPed){
 		float rectYScaled = 1 - (((6 + (1 * 1)) / (float)screen_h) * 5);
 		float rectWidthScaled = (360 / (float)screen_w) / 2; // 460
 		float rectHeightScaled = (25 + (1 * 18)) / (float)screen_h; // 30
-		int rect_col[4] = { 0, 0, 0, 255 }; // 128, 128, 128, 75
+		int rect_col[4] = { 0, 0, 0, 180 }; // 128, 128, 128, 75   里程显示 背景透明度
 		GRAPHICS::DRAW_RECT(rectXScaled, rectYScaled, rectWidthScaled, rectHeightScaled, rect_col[0], rect_col[1], rect_col[2], rect_col[3]);
 	}
 	else mileage = 0;

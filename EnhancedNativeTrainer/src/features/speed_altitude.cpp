@@ -50,20 +50,25 @@ void update_speed_text(int speed, Vector3 player_coords)
 	int col2_G = ENTColor::colsMenu[5].rgba[1];
 	int col2_B = ENTColor::colsMenu[5].rgba[2];
 
+	// 速度高度字体颜色：将字体颜色改为白色（原为深橙色）
+	//col2_R = 255;
+	//col2_G = 255;
+	//col2_B = 255;
+
 	int numLines = sizeof(speedometerStatusLines) / sizeof(speedometerStatusLines[0]);
 
 	if (featureKMH) {
-		ss << "千米/时:   " << round((speed * 1.609344) * 2.3);
+		ss << "千米/时:    " << round((speed * 1.609344) * 2.3);
 
 		if (featureAltitude) {
-			ss << "\n高度:     " << floor(player_coords.z * 1) / 1;
+			ss << "\n海拔高度:  " << floor(player_coords.z * 1) / 1;
 		}
 	}
 	else {
-		ss << "英里/时:   " << round(speed * 2.3);
+		ss << "英里/时:    " << round(speed * 2.3);
 
 		if (featureAltitude) {
-			ss << "\n高度:     " << floor(player_coords.z * 1) / 1;
+			ss << "\n海拔高度:  " << floor(player_coords.z * 1) / 1;
 		}
 	}
 
@@ -112,7 +117,7 @@ void update_speed_text(int speed, Vector3 player_coords)
 		}
 		float rectWidthScaled = (230 / (float)screen_w) / 2;
 		float rectHeightScaled = (0 + (1 * 18)) / (float)screen_h;
-		int rect_col[4] = { 0, 0, 0, 255 }; // 128, 128, 128, 75
+		int rect_col[4] = { 0, 0, 0, 180 }; // 128, 128, 128, 75   速度显示 背景透明度
 		GRAPHICS::DRAW_RECT(rectXScaled, rectYScaled, rectWidthScaled, rectHeightScaled, rect_col[0], rect_col[1], rect_col[2], rect_col[3]);
 
 		if (featureAltitude) {
@@ -130,7 +135,7 @@ void update_speed_text(int speed, Vector3 player_coords)
 			}
 			float rectWidthScaled = (230 / (float)screen_w) / 2;
 			float rectHeightScaled = (0 + (1 * 18)) / (float)screen_h;
-			int rect_col[4] = { 0, 0, 0, 255 }; // 128, 128, 128, 75
+			int rect_col[4] = { 0, 0, 0, 180 }; // 128, 128, 128, 75   高度显示 背景透明度
 			GRAPHICS::DRAW_RECT(rectXScaled, rectYScaled, rectWidthScaled, rectHeightScaled, rect_col[0], rect_col[1], rect_col[2], rect_col[3]);
 		}
 	}
