@@ -1283,7 +1283,7 @@ bool process_veh_door_menu(){
 	menuItems.push_back(item);
 
 	item = new MenuItem<int>();
-	item->caption = "抛船锚";
+	item->caption = "抛船锚/收船锚";
 	item->value = -21;
 	item->isLeaf = true;
 	menuItems.push_back(item);
@@ -4934,7 +4934,7 @@ bool process_carspawn_menu() {
 	return draw_generic_menu<int>(menuItems, &activeLineIndexCarSpawnMenu, "载具类型", onconfirm_spawn_menu_cars, nullptr, nullptr, nullptr);
 }
 
-//Gets the user's selection and requests it to be spawned
+//获取用户的选择并请求生成车辆
 bool onconfirm_vehlist_menu(MenuItem<int> choice) {
 	do_spawn_vehicle_hash(choice.value, choice.caption);
 	return false;
@@ -4949,24 +4949,31 @@ void spawn_veh_manually() {
 		result = trim(result);
 		lastCustomVehicleSpawn = result;
 		Hash hash = GAMEPLAY::GET_HASH_KEY((char*)result.c_str());
-		if (lastCustomVehicleSpawn != "random" && lastCustomVehicleSpawn != "Random" && lastCustomVehicleSpawn != "RANDOM" && (!STREAMING::IS_MODEL_IN_CDIMAGE(hash) || !STREAMING::IS_MODEL_A_VEHICLE(hash))) {
+		if (lastCustomVehicleSpawn != "random" && lastCustomVehicleSpawn != "Random" && lastCustomVehicleSpawn != "RANDOM" && 
+			lastCustomVehicleSpawn != "随机" && lastCustomVehicleSpawn != "SJ" && lastCustomVehicleSpawn != "sj" && 
+			(!STREAMING::IS_MODEL_IN_CDIMAGE(hash) || !STREAMING::IS_MODEL_A_VEHICLE(hash))) {
 			std::ostringstream ss;
-			ss << "~r~错误: 找不到此模型！" << result;
+			ss << "~r~错误: ~s~找不到此模型 [~y~ " << result << " ~s~]";
 			set_status_text(ss.str());
 		}
-		if (lastCustomVehicleSpawn == "random" || lastCustomVehicleSpawn == "Random" || lastCustomVehicleSpawn == "RANDOM" || (STREAMING::IS_MODEL_IN_CDIMAGE(hash) && STREAMING::IS_MODEL_A_VEHICLE(hash))) {
-			// 随机车辆
-			int random_category = -1;
-			int	random_veh = -1;
-			std::vector<Hash> tmp_amount;
-			if (lastCustomVehicleSpawn == "random" || lastCustomVehicleSpawn == "Random" || lastCustomVehicleSpawn == "RANDOM") {
-				random_category = (rand() % (vHashLists.size() - 2) + 1); // 上边距 + 下边距
-				tmp_amount = get_vehicles_from_category(random_category);
-				random_veh = (rand() % tmp_amount.size() + 0);
+		if (lastCustomVehicleSpawn == "random" || lastCustomVehicleSpawn == "Random" || lastCustomVehicleSpawn == "RANDOM" || 
+			lastCustomVehicleSpawn == "随机" || lastCustomVehicleSpawn == "SJ" || lastCustomVehicleSpawn == "sj") {
+			if (vHashLists.size() <= 2) {
+				set_status_text("~r~错误: 没有足够的车辆类别！");
+			} else {
+				int random_category = (rand() % (vHashLists.size() - 2) + 1);
+				std::vector<Hash> tmp_amount = get_vehicles_from_category(random_category);
+				if (tmp_amount.empty()) {
+					set_status_text("~r~错误: 选定类别中没有车辆！");
+				} else {
+					int random_veh = rand() % tmp_amount.size();
+					do_spawn_vehicle_hash(tmp_amount[random_veh], get_vehicle_make_and_model(tmp_amount[random_veh]));
+					set_status_text("随机车辆生成完成！");
+				}
 			}
-			//
-			if (lastCustomVehicleSpawn == "random" || lastCustomVehicleSpawn == "Random" || lastCustomVehicleSpawn == "RANDOM") do_spawn_vehicle_hash(tmp_amount[random_veh], get_vehicle_make_and_model(tmp_amount[random_veh]));
-			if (STREAMING::IS_MODEL_IN_CDIMAGE(hash) && STREAMING::IS_MODEL_A_VEHICLE(hash)) do_spawn_vehicle_hash(GAMEPLAY::GET_HASH_KEY((char*)result.c_str()), result);
+		} else if (STREAMING::IS_MODEL_IN_CDIMAGE(hash) && STREAMING::IS_MODEL_A_VEHICLE(hash)) {
+			do_spawn_vehicle_hash(hash, result);
+			set_status_text("载具 [~y~ " + result + " ~s~] 生成完成！");
 		}
 	}
 }
