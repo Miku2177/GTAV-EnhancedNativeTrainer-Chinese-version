@@ -1914,18 +1914,19 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 			frames = 0;
 		}
 			
-		sprintf(fps_to_show_char_modifiable, "%d", fps);
-		UI::SET_TEXT_FONT(4);
-		UI::SET_TEXT_SCALE(0.0, 0.45);
-		UI::SET_TEXT_PROPORTIONAL(1);
-		UI::SET_TEXT_COLOUR(255, 242, 0, 255);
-		UI::SET_TEXT_EDGE(3, 0, 0, 0, 255);
-		UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 255);
-		UI::SET_TEXT_OUTLINE();
-		UI::_SET_TEXT_ENTRY("STRING");
-		UI::_ADD_TEXT_COMPONENT_SCALEFORM(fps_to_show_char_modifiable);
-		UI::_DRAW_TEXT(0.003, 0.135);
-		GRAPHICS::DRAW_RECT(0.0, 0.15, 0.05, 0.03, 10, 10, 10, 100);
+		sprintf(fps_to_show_char_modifiable, "%d", fps); // 将 fps 值格式化为字符串并存储到 fps_to_show_char_modifiable 中  
+		UI::SET_TEXT_FONT(4); // 设置文本字体类型 4
+		UI::SET_TEXT_SCALE(0.0, 0.45); // 设置文本的缩放比例，宽度为 0.0，高度为 0.45  
+		UI::SET_TEXT_PROPORTIONAL(1); // 启用文本的比例缩放，保持文本比例不变  
+		UI::SET_TEXT_COLOUR(255, 242, 0, 255); // 设置文本颜色为黄色（RGB: 255, 242, 0），透明度为255（不透明）  
+		UI::SET_TEXT_EDGE(3, 0, 0, 0, 255); // 设置文本边缘效果，类型为 3，颜色为黑色（RGB: 0, 0, 0），透明度为255  
+		UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 255); // 设置文本阴影效果，偏移量为 10，颜色为黑色（RGB: 10, 10, 10），透明度为255  
+		UI::SET_TEXT_OUTLINE(); // 启用文本描边效果  
+		UI::_SET_TEXT_ENTRY("STRING"); // 设置文本条目类型为字符串  
+		UI::_ADD_TEXT_COMPONENT_SCALEFORM(fps_to_show_char_modifiable); // 将 fps_to_show_char_modifiable 中的文本添加到文本组件中  
+		UI::_DRAW_TEXT(0.005, 0.135); // 在屏幕坐标 ( x=0.005, y=0.135 ) 处绘制文本  
+		GRAPHICS::DRAW_RECT(0.0, 0.15, 0.05, 0.03, 10, 10, 10, 150); 
+		// 在屏幕坐标 ( x=0.0, y=0.15 ) 处绘制一个矩形，宽度为 0.05，高度为 0.03，颜色为深灰色（RGB: 10, 10, 10），透明度为 150  
 	}
 	
 	// 在暂停菜单中隐藏玩家信息
