@@ -14,6 +14,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include <iomanip>
 #include "..\ui_support\menu_functions.h"
 #include "script.h"
+#include <stdio.h>
 
 const std::vector<std::string> TIME_SPEED_CAPTIONS{ "最低", "0.1x", "0.2x", "0.3x", "0.4x", "0.5x", "0.6x", "0.7x", "0.8x", "0.9x", "1x (正常)" };
 const std::vector<float> TIME_SPEED_VALUES{ 0.0f, 0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f, 1.0f };
@@ -1075,179 +1076,154 @@ void update_time_features(Player player) {
 		int currSecs = TIME::GET_CLOCK_SECONDS(); // 获取当前秒数（0-59）
 		int calDay = TIME::GET_CLOCK_DAY_OF_MONTH(); // 获取当前日期（1-31）
 		int calMon = TIME::GET_CLOCK_MONTH(); // 获取当前月份（1-12）
-		int calYear = TIME::GET_CLOCK_YEAR(); // 获取当前年份（例如 2023）
+		int calYear = TIME::GET_CLOCK_YEAR(); // 获取当前年份（例如 2025）
 		int day = TIME::GET_CLOCK_DAY_OF_WEEK(); // 获取当前星期（0-6，0表示星期日）
 
-		char hours_to_show_char_modifiable[3];
-		char mins_to_show_char_modifiable[3];
-		char secs_to_show_char_modifiable[3];
-		sprintf(hours_to_show_char_modifiable, "%d", currHours);
-		sprintf(mins_to_show_char_modifiable, "%d", currMins);
-		sprintf(secs_to_show_char_modifiable, "%d", currSecs);
-		char* hours_to_show_char = "60";
-		char* minutes_to_show_char = "60";
-		char* seconds_to_show_char = "60";
-		if (currHours == 0 || currHours == 60 || calDay == 0) hours_to_show_char = "00";
-		if (currHours == 1 || calDay == 1) hours_to_show_char = "01";
-		if (currHours == 2 || calDay == 2) hours_to_show_char = "02";
-		if (currHours == 3 || calDay == 3) hours_to_show_char = "03";
-		if (currHours == 4 || calDay == 4) hours_to_show_char = "04";
-		if (currHours == 5 || calDay == 5) hours_to_show_char = "05";
-		if (currHours == 6 || calDay == 6) hours_to_show_char = "06";
-		if (currHours == 7 || calDay == 7) hours_to_show_char = "07";
-		if (currHours == 8 || calDay == 8) hours_to_show_char = "08";
-		if (currHours == 9 || calDay == 9) hours_to_show_char = "09";
-		if (currMins == 0 || currMins == 60) minutes_to_show_char = "00";
-		if (currMins == 1) minutes_to_show_char = "01";
-		if (currMins == 2) minutes_to_show_char = "02";
-		if (currMins == 3) minutes_to_show_char = "03";
-		if (currMins == 4) minutes_to_show_char = "04";
-		if (currMins == 5) minutes_to_show_char = "05";
-		if (currMins == 6) minutes_to_show_char = "06";
-		if (currMins == 7) minutes_to_show_char = "07";
-		if (currMins == 8) minutes_to_show_char = "08";
-		if (currMins == 9) minutes_to_show_char = "09";
-		if (currSecs == 0 || currSecs == 60) seconds_to_show_char = "00";
-		if (currSecs == 1) seconds_to_show_char = "01";
-		if (currSecs == 2) seconds_to_show_char = "02";
-		if (currSecs == 3) seconds_to_show_char = "03";
-		if (currSecs == 4) seconds_to_show_char = "04";
-		if (currSecs == 5) seconds_to_show_char = "05";
-		if (currSecs == 6) seconds_to_show_char = "06";
-		if (currSecs == 7) seconds_to_show_char = "07";
-		if (currSecs == 8) seconds_to_show_char = "08";
-		if (currSecs == 9) seconds_to_show_char = "09";
+		// 时间格式化（小时、分钟、秒）
+		char hours_to_show_char_modifiable[4]; // 小时，增加到4字节
+		char mins_to_show_char_modifiable[4]; // 分钟，增加到4字节
+		char secs_to_show_char_modifiable[4]; // 秒，增加到4字节
+		snprintf(hours_to_show_char_modifiable, sizeof(hours_to_show_char_modifiable), "%02d", currHours); // 格式化小时（0-23 → "00" 到 "23"）
+		snprintf(mins_to_show_char_modifiable, sizeof(mins_to_show_char_modifiable), "%02d", currMins); // 格式化分钟（0-59 → "00" 到 "59"）
+		snprintf(secs_to_show_char_modifiable, sizeof(secs_to_show_char_modifiable), "%02d", currSecs); // 格式化秒（0-59 → "00" 到 "59"）
+
+		// 绘制背景矩形（用于衬托时间文本，增强可读性）
+		GRAPHICS::DRAW_RECT(
+			0.0,     // X 坐标：矩形中心水平位置（0.0 = 屏幕左边缘，1.0 = 右边缘）
+			0.20,    // Y 坐标：矩形中心垂直位置（0.20 = 距离屏幕顶部20%的位置）
+			0.12,    // 宽度：占屏幕总宽度的12%
+			0.03,    // 高度：占屏幕总高度的3%
+			10,      // 红色分量（R=10，深灰色）
+			10,      // 绿色分量（G=10，深灰色）
+			10,      // 蓝色分量（B=10，深灰色）
+			150      // 透明度（Alpha=150，0为完全透明，255为完全不透明，此处约59%不透明）
+		);
+
 		// 小时
-		UI::SET_TEXT_FONT(4);
-		UI::SET_TEXT_SCALE(0.0, 0.45);
+		UI::SET_TEXT_FONT(4); // 设置文本字体类型为 4
+		UI::SET_TEXT_SCALE(0.0, 0.45); // 设置文本的缩放比例，宽度为 0.0，高度为 0.45
 		UI::SET_TEXT_PROPORTIONAL(1);
-		UI::SET_TEXT_COLOUR(255, 242, 0, 255);//透明度
+		UI::SET_TEXT_COLOUR(255, 242, 0, 255); // 设置文本颜色为黄色（RGB值为 255, 242, 0），透明度为 255
 		UI::SET_TEXT_EDGE(3, 0, 0, 0, 255);
 		UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 255);
 		UI::SET_TEXT_OUTLINE();
 		UI::_SET_TEXT_ENTRY("STRING");
-		if (currHours > 9 && currHours < 60) UI::_ADD_TEXT_COMPONENT_SCALEFORM(hours_to_show_char_modifiable);
-		else UI::_ADD_TEXT_COMPONENT_SCALEFORM(hours_to_show_char);
-		UI::_DRAW_TEXT(0.003, 0.185);
-		// :
-		UI::SET_TEXT_FONT(4);
-		UI::SET_TEXT_SCALE(0.0, 0.45);
+		UI::_ADD_TEXT_COMPONENT_SCALEFORM(hours_to_show_char_modifiable); // 直接使用格式化后的小时
+		UI::_DRAW_TEXT(0.005, 0.185); // 绘制文本，指定文本的屏幕位置（x = 水平，y = 垂直）
+
+		// 分隔符 ":"
+		UI::SET_TEXT_FONT(4); // 设置文本字体类型为 4
+		UI::SET_TEXT_SCALE(0.0, 0.45); // 设置文本的缩放比例，宽度为 0.0，高度为 0.45
 		UI::SET_TEXT_PROPORTIONAL(1);
-		UI::SET_TEXT_COLOUR(255, 242, 0, 255);//透明度
+		UI::SET_TEXT_COLOUR(255, 242, 0, 255); // 设置文本颜色为黄色（RGB值为 255, 242, 0），透明度为 255
 		UI::SET_TEXT_EDGE(3, 0, 0, 0, 255);
 		UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 255);
 		UI::SET_TEXT_OUTLINE();
 		UI::_SET_TEXT_ENTRY("STRING");
 		UI::_ADD_TEXT_COMPONENT_SCALEFORM(":");
-		UI::_DRAW_TEXT(0.013, 0.185);
+		UI::_DRAW_TEXT(0.015, 0.185); // 绘制文本，指定文本的屏幕位置（x = 水平，y = 垂直）
+
 		// 分钟
-		UI::SET_TEXT_FONT(4);
-		UI::SET_TEXT_SCALE(0.0, 0.45);
+		UI::SET_TEXT_FONT(4); // 设置文本字体类型为 4
+		UI::SET_TEXT_SCALE(0.0, 0.45); // 设置文本的缩放比例，宽度为 0.0，高度为 0.45
 		UI::SET_TEXT_PROPORTIONAL(1);
-		UI::SET_TEXT_COLOUR(255, 242, 0, 255);//透明度
+		UI::SET_TEXT_COLOUR(255, 242, 0, 255); // 设置文本颜色为黄色（RGB值为 255, 242, 0），透明度为 255
 		UI::SET_TEXT_EDGE(3, 0, 0, 0, 255);
 		UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 255);
 		UI::SET_TEXT_OUTLINE();
 		UI::_SET_TEXT_ENTRY("STRING");
-		if (currMins > 9 && currMins < 60) UI::_ADD_TEXT_COMPONENT_SCALEFORM(mins_to_show_char_modifiable);
-		else UI::_ADD_TEXT_COMPONENT_SCALEFORM(minutes_to_show_char);
-		UI::_DRAW_TEXT(0.017, 0.185);
-		// :
-		UI::SET_TEXT_FONT(4);
-		UI::SET_TEXT_SCALE(0.0, 0.45);
+		UI::_ADD_TEXT_COMPONENT_SCALEFORM(mins_to_show_char_modifiable); // 直接使用格式化后的分钟
+		UI::_DRAW_TEXT(0.019, 0.185); // 绘制文本，指定文本的屏幕位置（x = 水平，y = 垂直）
+
+		// 分隔符 ":"
+		UI::SET_TEXT_FONT(4); // 设置文本字体类型为 4
+		UI::SET_TEXT_SCALE(0.0, 0.45); // 设置文本的缩放比例，宽度为 0.0，高度为 0.45
 		UI::SET_TEXT_PROPORTIONAL(1);
-		UI::SET_TEXT_COLOUR(255, 242, 0, 255);//透明度
+		UI::SET_TEXT_COLOUR(255, 242, 0, 255); // 设置文本颜色为黄色（RGB值为 255, 242, 0），透明度为 255
 		UI::SET_TEXT_EDGE(3, 0, 0, 0, 255);
 		UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 255);
 		UI::SET_TEXT_OUTLINE();
 		UI::_SET_TEXT_ENTRY("STRING");
 		UI::_ADD_TEXT_COMPONENT_SCALEFORM(":");
-		UI::_DRAW_TEXT(0.027, 0.185);
+		UI::_DRAW_TEXT(0.029, 0.185); // 绘制文本，指定文本的屏幕位置（x = 水平，y = 垂直）
+
 		// 秒
-		UI::SET_TEXT_FONT(4);
-		UI::SET_TEXT_SCALE(0.0, 0.45);
+		UI::SET_TEXT_FONT(4); // 设置文本字体类型为 4
+		UI::SET_TEXT_SCALE(0.0, 0.45); // 设置文本的缩放比例，宽度为 0.0，高度为 0.45
 		UI::SET_TEXT_PROPORTIONAL(1);
-		UI::SET_TEXT_COLOUR(255, 242, 0, 255);//透明度
+		UI::SET_TEXT_COLOUR(255, 242, 0, 255); // 设置文本颜色为黄色（RGB值为 255, 242, 0），透明度为 255
 		UI::SET_TEXT_EDGE(3, 0, 0, 0, 255);
 		UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 255);
 		UI::SET_TEXT_OUTLINE();
 		UI::_SET_TEXT_ENTRY("STRING");
-		if (currSecs > 9 && currSecs < 60) UI::_ADD_TEXT_COMPONENT_SCALEFORM(secs_to_show_char_modifiable);
-		else UI::_ADD_TEXT_COMPONENT_SCALEFORM(seconds_to_show_char);
-		UI::_DRAW_TEXT(0.031, 0.185);
-		GRAPHICS::DRAW_RECT(0.0, 0.20, 0.10, 0.03, 10, 10, 10, 100);
+		UI::_ADD_TEXT_COMPONENT_SCALEFORM(secs_to_show_char_modifiable); // 直接使用格式化后的秒
+		UI::_DRAW_TEXT(0.033, 0.185); // 绘制文本，指定文本的屏幕位置（x = 水平，y = 垂直）
 
-		char day_to_show_char_modifiable[10];
-		char year_to_show_char_modifiable[10];
-		sprintf(day_to_show_char_modifiable, "%d", calDay);
-		sprintf(year_to_show_char_modifiable, "%d", calYear);
-		char* month_to_show_char = "0";
-		if (calMon == 1) month_to_show_char = "1 月";
-		if (calMon == 2) month_to_show_char = "2 月";
-		if (calMon == 3) month_to_show_char = "3 月";
-		if (calMon == 4) month_to_show_char = "4 月";
-		if (calMon == 5) month_to_show_char = "5 月";
-		if (calMon == 6) month_to_show_char = "6 月";
-		if (calMon == 7) month_to_show_char = "7 月";
-		if (calMon == 8) month_to_show_char = "8 月";
-		if (calMon == 9) month_to_show_char = "9 月";
-		if (calMon == 10) month_to_show_char = "10 月";
-		if (calMon == 11) month_to_show_char = "11 月";
-		if (calMon == 12) month_to_show_char = "12 月";
-		char* week_to_show_char = "0";
+		// 日期格式化
+		char year_to_show_char_modifiable[12]; // 年，增加到12字节
+		char month_to_show_char_modifiable[12]; // 月，增加到12字节
+		char day_to_show_char_modifiable[12]; // 日，增加到12字节
+		snprintf(year_to_show_char_modifiable, sizeof(year_to_show_char_modifiable), "%04d 年", calYear); // 将年份格式化为四位数 + " 年"
+		snprintf(month_to_show_char_modifiable, sizeof(month_to_show_char_modifiable), "%02d 月", calMon); // 将月份格式化为两位数 + " 月"
+		snprintf(day_to_show_char_modifiable, sizeof(day_to_show_char_modifiable), "%02d 日", calDay); // 将日期格式化为两位数 + " 日"
+
+		// 星期处理
+		char* week_to_show_char = "未知星期"; // 默认值
 		if (day == 0) week_to_show_char = "星期日";
-		if (day == 1) week_to_show_char = "星期一";
-		if (day == 2) week_to_show_char = "星期二";
-		if (day == 3) week_to_show_char = "星期三";
-		if (day == 4) week_to_show_char = "星期四";
-		if (day == 5) week_to_show_char = "星期五";
-		if (day == 6) week_to_show_char = "星期六";
+		else if (day == 1) week_to_show_char = "星期一";
+		else if (day == 2) week_to_show_char = "星期二";
+		else if (day == 3) week_to_show_char = "星期三";
+		else if (day == 4) week_to_show_char = "星期四";
+		else if (day == 5) week_to_show_char = "星期五";
+		else if (day == 6) week_to_show_char = "星期六";
 
-		// 一周中的星期
-		UI::SET_TEXT_FONT(4);
-		UI::SET_TEXT_SCALE(0.0, 0.45);
+		// 年份
+		UI::SET_TEXT_FONT(4); // 设置文本字体类型为 4
+		UI::SET_TEXT_SCALE(0.0, 0.45); // 设置文本的缩放比例，宽度为 0.0，高度为 0.45
 		UI::SET_TEXT_PROPORTIONAL(1);
-		UI::SET_TEXT_COLOUR(255, 242, 0, 200);//透明度
+		UI::SET_TEXT_COLOUR(255, 242, 0, 200); // 设置文本颜色为黄色（RGB值为 255, 242, 0），透明度为 200
 		UI::SET_TEXT_EDGE(3, 0, 0, 0, 255);
 		UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 100);
 		UI::SET_TEXT_OUTLINE();
 		UI::_SET_TEXT_ENTRY("STRING");
-		UI::_ADD_TEXT_COMPONENT_SCALEFORM(week_to_show_char);
-		UI::_DRAW_TEXT(0.003, 0.210);
-		// 一个月中的日期
-		UI::SET_TEXT_FONT(4);
-		UI::SET_TEXT_SCALE(0.0, 0.45);
+		UI::_ADD_TEXT_COMPONENT_SCALEFORM(year_to_show_char_modifiable); // 当前世纪中的年份
+		UI::_DRAW_TEXT(0.005, 0.220); // 绘制文本，指定文本的屏幕位置（x = 水平，y = 垂直）
+
+		// 月份
+		UI::SET_TEXT_FONT(4); // 设置文本字体类型为 4
+		UI::SET_TEXT_SCALE(0.0, 0.45); // 设置文本的缩放比例，宽度为 0.0，高度为 0.45
 		UI::SET_TEXT_PROPORTIONAL(1);
-		UI::SET_TEXT_COLOUR(255, 242, 0, 200);//透明度
+		UI::SET_TEXT_COLOUR(255, 242, 0, 200); // 设置文本颜色为黄色（RGB值为 255, 242, 0），透明度为 200
 		UI::SET_TEXT_EDGE(3, 0, 0, 0, 255);
 		UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 100);
 		UI::SET_TEXT_OUTLINE();
 		UI::_SET_TEXT_ENTRY("STRING");
-		if (calDay > 9 && calDay < 32) UI::_ADD_TEXT_COMPONENT_SCALEFORM(day_to_show_char_modifiable);
-		else UI::_ADD_TEXT_COMPONENT_SCALEFORM(hours_to_show_char);
-		UI::_DRAW_TEXT(0.003, 0.230);
-		// 一年中的月份
-		UI::SET_TEXT_FONT(4);
-		UI::SET_TEXT_SCALE(0.0, 0.45);
+		UI::_ADD_TEXT_COMPONENT_SCALEFORM(month_to_show_char_modifiable); // 一年中的月份
+		UI::_DRAW_TEXT(0.005, 0.250); // 绘制文本，指定文本的屏幕位置（x = 水平，y = 垂直）
+
+		// 日期
+		UI::SET_TEXT_FONT(4); // 设置文本字体类型为 4
+		UI::SET_TEXT_SCALE(0.0, 0.45); // 设置文本的缩放比例，宽度为 0.0，高度为 0.45
 		UI::SET_TEXT_PROPORTIONAL(1);
-		UI::SET_TEXT_COLOUR(255, 242, 0, 200);//透明度
+		UI::SET_TEXT_COLOUR(255, 242, 0, 200); // 设置文本颜色为黄色（RGB值为 255, 242, 0），透明度为 200
 		UI::SET_TEXT_EDGE(3, 0, 0, 0, 255);
 		UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 100);
 		UI::SET_TEXT_OUTLINE();
 		UI::_SET_TEXT_ENTRY("STRING");
-		UI::_ADD_TEXT_COMPONENT_SCALEFORM(month_to_show_char);
-		UI::_DRAW_TEXT(0.003, 0.250);
-		// 当前世纪中的年份
-		UI::SET_TEXT_FONT(4);
-		UI::SET_TEXT_SCALE(0.0, 0.45);
+		UI::_ADD_TEXT_COMPONENT_SCALEFORM(day_to_show_char_modifiable); // 一个月中的日期
+		UI::_DRAW_TEXT(0.005, 0.280); // 绘制文本，指定文本的屏幕位置（x = 水平，y = 垂直）
+
+		// 星期
+		UI::SET_TEXT_FONT(4); // 设置文本字体类型为 4
+		UI::SET_TEXT_SCALE(0.0, 0.45); // 设置文本的缩放比例，宽度为 0.0，高度为 0.45
 		UI::SET_TEXT_PROPORTIONAL(1);
-		UI::SET_TEXT_COLOUR(255, 242, 0, 200);//透明度
+		UI::SET_TEXT_COLOUR(255, 242, 0, 200); // 设置文本颜色为黄色（RGB值为 255, 242, 0），透明度为 200
 		UI::SET_TEXT_EDGE(3, 0, 0, 0, 255);
 		UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 100);
 		UI::SET_TEXT_OUTLINE();
 		UI::_SET_TEXT_ENTRY("STRING");
-		UI::_ADD_TEXT_COMPONENT_SCALEFORM(year_to_show_char_modifiable);
-		UI::_DRAW_TEXT(0.003, 0.270);
+		UI::_ADD_TEXT_COMPONENT_SCALEFORM(week_to_show_char); // 一周中的星期
+		UI::_DRAW_TEXT(0.005, 0.310); // 绘制文本，指定文本的屏幕位置（x = 水平，y = 垂直）
 	} // 显示当前时间结束
 
 	if (featurehotkeytime) {
