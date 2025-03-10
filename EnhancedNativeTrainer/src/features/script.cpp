@@ -2302,7 +2302,7 @@ void process_localization_menu() {
 
 	// 定义菜单项
 	StandardOrToggleMenuDef lines[lineCount] = {
-		{ "修改器版本：55.00",        NULL, NULL, true},    // 修改器版本
+		{ "修改器版本：55.10",        NULL, NULL, true},    // 修改器版本
 		{ "汉化作者：随梦&而飞",   NULL, NULL, true},      // 汉化作者
 		{ "感谢帮助我的朋友们！",     NULL, NULL, true},    // 感谢帮助的朋友们
 		{ "感谢：烈火神君", NULL, NULL, true},             // 感谢烈火神君
