@@ -208,7 +208,8 @@ class CashItem: public MenuItem <T>{
 template<class T>
 class ColorItem: public MenuItem<T>{
 	public:
-	int colorval, part, component, increment = 15, min = 0, max = 255;
+	int colorval, part, component, increment = 5, min = 0, max = 255;
+	// 颜色值的增量，默认每次增减 15 ！颜色值的最小值，默认值为 0 ！ 颜色值的最大值，默认值为 255 ！
 
 	virtual ~ColorItem(){
 		// 应该是空的
