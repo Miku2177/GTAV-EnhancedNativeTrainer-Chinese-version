@@ -794,12 +794,12 @@ void teleport_to_marker(){
 	float height = -1.0;
 	WATER::GET_WATER_HEIGHT(coords.x, coords.y, coords.z, &height);
 	if (coords.z < height) coords.z = height;
-	// 如果未找到地面，则将 Z 坐标设置为空中并给予玩家一个降落伞
-	if (!groundFound){
-		coords.z = 1000.0;
-		WEAPON::GIVE_DELAYED_WEAPON_TO_PED(PLAYER::PLAYER_PED_ID(), 0xFBAB5776, 1, 0);
-	}
-	// 执行吧
+	// if ground not found then set Z in air and give player a parachute
+	//if (!groundFound){
+	//	coords.z = 1000.0;
+	//	WEAPON::GIVE_DELAYED_WEAPON_TO_PED(PLAYER::PLAYER_PED_ID(), 0xFBAB5776, 1, 0);
+	//}
+	// do it
 	teleport_to_coords(e, coords);
 }
 

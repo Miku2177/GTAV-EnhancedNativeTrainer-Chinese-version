@@ -1476,11 +1476,14 @@ void update_features() {
 	if (PLAYER_MOVEMENT_VALUES[current_player_movement] > 0.00) {
 		if (AI::IS_PED_SPRINTING(PLAYER::PLAYER_PED_ID())) PED::SET_PED_MOVE_RATE_OVERRIDE(playerPed, PLAYER_MOVEMENT_VALUES[current_player_movement]);
 		else PED::SET_PED_MOVE_RATE_OVERRIDE(playerPed, 1.00);
+		//if (CONTROLS::IS_CONTROL_PRESSED(2, 21) && PED::IS_PED_ON_FOOT(playerPed)) PED::SET_PED_MOVE_RATE_OVERRIDE(playerPed, PLAYER_MOVEMENT_VALUES[current_player_movement]);
+		//if (CONTROLS::IS_CONTROL_RELEASED(2, 21) && PED::IS_PED_ON_FOOT(playerPed)) PED::SET_PED_MOVE_RATE_OVERRIDE(playerPed, 1.00);
 	}
 
 	// 玩家超级跳跃
 	if(PLAYER_MOVEMENT_VALUES[current_player_superjump] > 0.00) {
-		if(bPlayerExists){
+		float my_player_speed = ENTITY::GET_ENTITY_SPEED(playerPed);
+		if(bPlayerExists && my_player_speed > 1.0 && !PED::IS_PED_RAGDOLL(playerPed) && PED::IS_PED_ON_FOOT(playerPed)){
 			float CamRot = ENTITY::_GET_ENTITY_PHYSICS_HEADING(playerPed);
 			int p_force = PLAYER_MOVEMENT_VALUES[current_player_superjump] / 3; // 2
 			float rad = 2 * 3.14 * (CamRot / 360);
