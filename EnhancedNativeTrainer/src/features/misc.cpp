@@ -202,6 +202,12 @@ bool TrainerControlChanged = true;
 int TrainerControlScrollingIndex = 0;
 bool TrainerControlScrollingChanged = true;
 
+// 字体设置变量
+int FontHeaderIndex = 0;
+bool FontHeaderChanged = true;
+
+int activeLineIndexFontSettings = 0;
+
 void onchange_hotkey_function(int value, SelectFromListMenuItem* source){
 	change_hotkey_function(source->extras.at(0), value);
 }
@@ -342,6 +348,13 @@ void process_misc_trainerconfig_menu(){
 	listItem->wrap = false;
 	listItem->caption = "菜单滚动方式";
 	listItem->value = TrainerControlScrollingIndex;
+	menuItems.push_back(listItem);
+
+	// 将字体设置直接添加到菜单项中
+	listItem = new SelectFromListMenuItem(MISC_FONT_HEADER_CAPTIONS, onchange_misc_font_header_index);
+	listItem->wrap = false;
+	listItem->caption = "标题字体类型";
+	listItem->value = FontHeaderIndex;
 	menuItems.push_back(listItem);
 
 	//ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
@@ -960,7 +973,7 @@ bool onconfirm_misc_menu(MenuItem<int> choice){
 }
 
 void process_misc_menu(){
-	const int lineCount = 16;
+	const int lineCount = 16; 
 
 	const std::string caption = "其他选项";
 
@@ -1063,6 +1076,12 @@ void onchange_misc_phone_bike_index(int value, SelectFromListMenuItem* source) {
 	PhoneBikeAnimationChanged = true;
 }
 
+void onchange_misc_font_header_index(int value, SelectFromListMenuItem* source) {
+    FontHeaderIndex = value;
+    fontHeader = MISC_FONT_HEADER_VALUES[value]; // 更新全局字体变量
+    FontHeaderChanged = true;
+}
+
 void HUD_switching() {
 	featureMiscHideHud = !featureMiscHideHud;
 	//if (featureMiscHideHud) set_status_text("HUD OFF");
@@ -1106,6 +1125,8 @@ void reset_misc_globals(){
 	PhoneFreeSecondsIndex = 0;
 	PhoneBikeAnimationIndex = 0;
 	DefMenuTabIndex = 0;
+	FontHeaderIndex = 0;
+	fontHeader = MISC_FONT_HEADER_VALUES[0]; // 重置为默认字体
 
 	//featureControllerIgnoreInTrainer = false;
 	//featureBlockInputInMenu = false;
@@ -2032,6 +2053,7 @@ void add_misc_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"PhoneFreeSecondsIndex", std::to_string(PhoneFreeSecondsIndex)});
 	results->push_back(StringPairSettingDBRow{"PhoneBikeAnimationIndex", std::to_string(PhoneBikeAnimationIndex)});
 	results->push_back(StringPairSettingDBRow{"DefMenuTabIndex", std::to_string(DefMenuTabIndex)});
+	results->push_back(StringPairSettingDBRow{"FontHeaderIndex", std::to_string(FontHeaderIndex)});
 	results->push_back(StringPairSettingDBRow{"screenfltr", screenfltr});
 }
 
@@ -2068,6 +2090,10 @@ void handle_generic_settings_misc(std::vector<StringPairSettingDBRow>* settings)
 		else if (setting.name.compare("DefMenuTabIndex") == 0) {
 			DefMenuTabIndex = stoi(setting.value);
 		}
+		else if (setting.name.compare("FontHeaderIndex") == 0) {
+            FontHeaderIndex = stoi(setting.value);
+            fontHeader = MISC_FONT_HEADER_VALUES[FontHeaderIndex];
+        }
 		else if (setting.name.compare("screenfltr") == 0) {
 			screenfltr = setting.value;
 		}

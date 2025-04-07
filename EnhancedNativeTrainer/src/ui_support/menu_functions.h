@@ -34,7 +34,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 #pragma warning(disable : 4244 4305 4267) // double <-> float conversions <-> size_t conversions
 
-const int fontHeader = 4, fontItem = 0, fontWanted = 7;// 修改字体类型：分别用于标题字体、项目字体、目标字体
+extern int fontHeader, fontItem, fontWanted;// 修改字体类型：分别用于标题字体、项目字体、目标字体
 
 extern void(*periodic_feature_call)(void);
 

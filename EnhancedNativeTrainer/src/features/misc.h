@@ -78,6 +78,12 @@ const int MISC_PHONE_FREESECONDS_VALUES[] = { 0, 3, 5, 10, 15 };
 
 extern bool featureGamePause;
 
+// 字体选项
+const std::vector<std::string> MISC_FONT_HEADER_CAPTIONS{ "默认", "普通" };
+const int MISC_FONT_HEADER_VALUES[] = { 4, 0 };
+extern int FontHeaderIndex;
+extern bool FontHeaderChanged;
+
 void process_misc_menu();
 
 void reset_misc_globals();
@@ -107,6 +113,8 @@ void onchange_misc_def_menutab_index(int value, SelectFromListMenuItem* source);
 void onchange_misc_phone_freeseconds_index(int value, SelectFromListMenuItem* source);
 
 void onchange_misc_phone_bike_index(int value, SelectFromListMenuItem* source);
+
+void onchange_misc_font_header_index(int value, SelectFromListMenuItem* source);
 
 bool is_vehicle_preview_enabled();
 
