@@ -348,20 +348,42 @@ void read_config_ini_file(){
 	bool notexist = !((bool) tmp);
 	tmp.close();
 
+	bool formatError = false;
+
 	if(notexist){
-		write_text_to_log_file("颜色配置 INI 文件不存在！\n正在使用默认配置 !\n在游戏内保存时将创建 INI 配置文件 !  ");
+		write_text_to_log_file("颜色配置 INI 文件不存在！正在创建默认配置文件...");
+		// 不存在时直接创建新文件
+		write_config_ini_file();
 		return;
 	}
 
+	// 读取配置并检查格式是否正确
 	for(int a = 0; a < ENTColor::colsVarsNum; a++){
 		for(int b = 0; b < 4; b++){
 			tmpv[a][b] = GetPrivateProfileInt(sectionMenuColor, (ENTColor::colsVarsReverse.at(a) + tmpk[b]).c_str(), -1, file);
+			// 检查值是否在有效范围内
+			if(tmpv[a][b] < 0 || tmpv[a][b] > 255){
+				formatError = true;
+				break;
+			}
 		}
+		if(formatError) break;
+		
+		// 配置格式正确，更新颜色值
 		if(!(tmpv[a][0] < 0 || tmpv[a][1] < 0 || tmpv[a][2] < 0 || tmpv[a][3] < 0) || !(tmpv[a][0] > 255 || tmpv[a][1] > 255 || tmpv[a][2] > 255 || tmpv[a][3] > 255)){
 			for(int b = 0; b < 4; b++){
 				ENTColor::colsMenu[a].rgba[b] = tmpv[a][b];
 			}
 		}
+	}
+
+	// 如果检测到格式错误，重新创建配置文件
+	if(formatError){
+		write_text_to_log_file("颜色配置 INI 文件格式错误！正在创建新的默认配置文件...");
+		// 删除旧文件
+		std::remove(file);
+		// 创建新的配置文件
+		write_config_ini_file();
 	}
 }
 
@@ -373,12 +395,17 @@ void write_config_ini_file(){
 	bool notexist = !((bool) tmp);
 	tmp.close();
 
+	// 确保目录存在
+	CreateDirectory("Enhanced Native Trainer", NULL);
+
+	// 写入颜色配置
 	for(int a = 0; a < ENTColor::colsVarsNum; a++){
 		for(int b = 0; b < 4; b++){
 			WritePrivateProfileString(sectionMenuColor, (ENTColor::colsVarsReverse.at(a) + tmpk[b]).c_str(), std::to_string(ENTColor::colsMenu[a].rgba[b]).c_str(), file);
 		}
 	}
 
+	// 如果文件不存在，添加注释和格式化文件内容
 	if(notexist){
 		tmp.open(file);
 		if(tmp.is_open()){
