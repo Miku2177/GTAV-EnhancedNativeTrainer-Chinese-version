@@ -2303,10 +2303,13 @@ void process_localization_menu() {
 	const int lineCount = 8;
 	const std::string caption = "汉化说明选项"; // 菜单标题
 
+	// 构造版本号显示字符串
+	std::string versionDisplay = "修改器版本：" + VERSION_STRING;
+
 	// 定义菜单项
 	StandardOrToggleMenuDef lines[lineCount] = {
-		{ "修改器版本：55.10",        NULL, NULL, true},    // 修改器版本
-		{ "汉化作者：随梦&而飞",   NULL, NULL, true},      // 汉化作者
+		{ versionDisplay.c_str(),      NULL, NULL, true},    // 动态显示版本号
+		{ "汉化作者：随梦&而飞",       NULL, NULL, true},    // 汉化作者 
 		{ "感谢帮助我的朋友们！",     NULL, NULL, true},    // 感谢帮助的朋友们
 		{ "感谢：烈火神君", NULL, NULL, true},             // 感谢烈火神君
 		{ "感谢：羽一大魔王", NULL, NULL, true},          // 感谢羽一大魔王
