@@ -174,9 +174,10 @@ void fuel()
 
 		Ped playerPed = PLAYER::PLAYER_PED_ID();
 		
-		bool refill_button = IsKeyDown(VK_LBUTTON); // 油桶加油按键
-		bool startrefillKey = IsKeyDown(KeyConfig::KEY_VEH_STARTREFUELING) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, controller_binds["KEY_MENU_SELECT"].first); // 加油站加油按键
-		bool stoprefillKey = IsKeyDown(KeyConfig::KEY_VEH_STOPREFUELING) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, controller_binds["KEY_MENU_BACK"].first); // 停止加油站加油
+		//bool refill_button = IsKeyDown(VK_LBUTTON); // REFUEL KEY FOR JERRY CAN
+		bool startrefillKey = IsKeyDown(KeyConfig::KEY_VEH_STARTREFUELING) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, controller_binds["KEY_VEH_STARTREFUELING"].first); // REFUEL KEY GAS STATION 
+		bool stoprefillKey = IsKeyDown(KeyConfig::KEY_VEH_STOPREFUELING) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, controller_binds["KEY_VEH_STOPREFUELING"].first); // STOP REFUELING GAS STATION
+		bool canrefillKey = IsKeyDown(KeyConfig::KEY_VEH_CANREFUELING) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, controller_binds["KEY_VEH_CANREFUELING"].first); // FUEL CAN REFUEL
 
 		float fuel_bar_x = -1;
 		float fuel_bar_y = -1;
@@ -683,7 +684,7 @@ void fuel()
 						UI::_ADD_TEXT_COMPONENT_SCALEFORM("长按 [ 鼠标左键 ] 加油！");
 						UI::_DRAW_TEXT(0.015, 0.015);
 
-						if (refill_button && ammo > 0 && (outValue_jerrycan > 0 || VEH_FUELPRICE_VALUES[JerrycanPriceIndex] == 0)) {
+						if (canrefillKey && ammo > 0 && (outValue_jerrycan > 0 || VEH_FUELPRICE_VALUES[JerrycanPriceIndex] == 0)) {
 							ref_secs_passed = clock() / CLOCKS_PER_SEC;
 							if (((clock() / (CLOCKS_PER_SEC / 1000)) - ref_secs_curr) != 0) {
 								ref_seconds = ref_seconds + VEH_REFUELSPEED_VALUES[RefuelingSpeedIndex];
@@ -701,7 +702,7 @@ void fuel()
 					}
 				}
 			}
-		} // 油桶加油
+		} // refuel jerrycan
 
 		  // 怠速消耗
 		if (VEH_CARFUEL_VALUES[IdleConsumptionIndex] > 0 && !VEHICLES.empty()) {

@@ -28,6 +28,7 @@
     <key function="veh_emergencyblink" value="VK_DECIMAL"/>
     <key function="veh_startrefueling" value="VK_KEY_E"/>
     <key function="veh_stoprefueling" value="VK_KEY_S"/>
+    <key function="veh_canrefueling" value="VK_LBUTTON"/>
 		
     <!--The following are for the feature that lets you move around beyond normal limits, e.g. noclip-->
     
@@ -88,6 +89,7 @@
 	<controller function="KEY_VEH_EMERGENCYBLINK" button1="202" button2="-1"/>
 	<controller function="KEY_VEH_STARTREFUELING" button1="201" button2="-1"/>
 	<controller function="KEY_VEH_STOPREFUELING" button1="202" button2="-1"/>
+  <controller function="KEY_VEH_CANREFUELING" button1="203" button2="-1"/>
 	
 	<controller function="KEY_TOGGLE_AIRBRAKE" button1="201" button2="206"/>
 	<controller function="KEY_AIRBRAKE_UP" button1="25" button2="-1"/>

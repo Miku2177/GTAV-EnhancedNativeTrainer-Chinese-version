@@ -536,6 +536,7 @@ KeyInputConfig::KeyInputConfig(){
 	this->keyConfigs[KeyConfig::KEY_VEH_EMERGENCYBLINK] = new KeyConfig(VK_DECIMAL);
 	this->keyConfigs[KeyConfig::KEY_VEH_STARTREFUELING] = new KeyConfig(VK_KEY_E);
 	this->keyConfigs[KeyConfig::KEY_VEH_STOPREFUELING] = new KeyConfig(VK_KEY_S);
+	this->keyConfigs[KeyConfig::KEY_VEH_CANREFUELING] = new KeyConfig(VK_LBUTTON);
 	
 	this->keyConfigs[KeyConfig::KEY_TOGGLE_AIRBRAKE] = new KeyConfig(VK_F6);
 
@@ -609,6 +610,7 @@ const std::string KeyConfig::KEY_VEH_RIGHTBLINK = std::string("veh_rightblink");
 const std::string KeyConfig::KEY_VEH_EMERGENCYBLINK = std::string("veh_emergencyblink");
 const std::string KeyConfig::KEY_VEH_STARTREFUELING = std::string("veh_startrefueling");
 const std::string KeyConfig::KEY_VEH_STOPREFUELING = std::string("veh_stoprefueling");
+const std::string KeyConfig::KEY_VEH_CANREFUELING = std::string("veh_canrefueling");
 
 const std::string KeyConfig::KEY_AIRBRAKE_UP = std::string("airbrake_up");
 const std::string KeyConfig::KEY_AIRBRAKE_DOWN = std::string("airbrake_down");
@@ -665,6 +667,7 @@ std::map<std::string, std::pair<int, int>> controller_binds =
 	{ "KEY_VEH_EMERGENCYBLINK", {202, -1} },
 	{ "KEY_VEH_STARTREFUELING", {201, -1} },
 	{ "KEY_VEH_STOPREFUELING", {202, -1} },
+	{ "KEY_VEH_CANREFUELING", {203, -1} },
 	{ "KEY_AIRBRAKE_UP", {25, -1} },
 	{ "KEY_AIRBRAKE_DOWN", {24, -1} },
 	{ "KEY_AIRBRAKE_FORWARD", {32, -1} },

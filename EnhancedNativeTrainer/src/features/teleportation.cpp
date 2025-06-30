@@ -388,6 +388,9 @@ const std::vector<tele_location> LOCATIONS_ONLINE = {
 	{ "葡萄籽大道俱乐部车库", 649.73970000f, -2688.76200000f, -50.00000000f, { "m24_1_int_placement_m24_1_interior_dlc_int_bounty_milo_" }, {}, {}, false },
 	{ "威兹尔广场公寓 9号", -909.10170000f, -438.19030000f, 114.39970000f, { "hw1_blimp_interior_v_apartment_high_milo__9" }, {}, {}, false },
 	{ "威兹尔广场公寓 11号", -889.30300000f, -451.77510000f, 119.32700000f, { "hw1_blimp_interior_v_apartment_high_milo__11" }, {}, {}, false },
+	//
+	//{ "大亨工作室", -24.58899000f, -73.79967000f, -75.00000000f, { "m25_1_int_placement_interior_int_tycoon_studio_lo_milo_" }, {}, {}, false },
+	//{ "大亨工坊", 60.36966000f, -80.91821000f, -75.00000000f, { "m25_1_int_placement_interior_int_tycoon_studio_mid_milo_" }, {}, {}, false },
 }; 
 
 const std::vector<tele_location> LOCATIONS_ACTORS = {

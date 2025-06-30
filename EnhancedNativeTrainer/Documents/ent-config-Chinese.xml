@@ -47,7 +47,9 @@
 	<!-- 开始加油，按键为 E 键 -->
 	<key function="veh_stoprefueling" value="VK_KEY_S"/>
 	<!-- 停止加油，按键为 S 键 -->
-
+	
+	<key function="veh_canrefueling" value="VK_LBUTTON"/>
+	<!-- 车辆加油功能，按键为 鼠标左键 -->
 
 	<key function="toggle_airbrake" value="VK_F6"/>
 	<!-- 开启/关闭，自由移动功能，按键为 F6 -->
@@ -136,6 +138,7 @@
 	<controller function="KEY_VEH_EMERGENCYBLINK" button1="202" button2="-1"/>
 	<controller function="KEY_VEH_STARTREFUELING" button1="201" button2="-1"/>
 	<controller function="KEY_VEH_STOPREFUELING" button1="202" button2="-1"/>
+	<controller function="KEY_VEH_CANREFUELING" button1="203" button2="-1"/>
 
 	<controller function="KEY_TOGGLE_AIRBRAKE" button1="201" button2="206"/>
 	<controller function="KEY_AIRBRAKE_UP" button1="25" button2="-1"/>
