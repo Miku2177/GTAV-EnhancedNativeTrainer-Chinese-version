@@ -1067,14 +1067,59 @@ void set_3d_marker(){
 	draw_generic_menu<int>(menuItems, &activeLineIndex3dmarker, caption, onconfirm_3dmarker_menu, NULL, NULL);
 }
 
+void getTelChauffeurIndex();
+
 bool onconfirm_chauffeur_menu(MenuItem<int> choice)
 {
-	switch (activeLineIndexChauffeur){
-	case 0:
-		drive_to_marker();
+	bool isInVehicle = PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false);
+
+	switch (activeLineIndexChauffeur) {
+	case 0: // 开始代驾到导航点
+		if (!isInVehicle) {
+			set_status_text("请先进入一辆载具中！");
+			return false; // 保持菜单打开
+		}
+		else if (!UI::IS_WAYPOINT_ACTIVE()) {
+			set_status_text("请先设置一个导航点！");
+			return false; // 保持菜单打开
+		}
+		else if (marker_been_set) {
+			set_status_text("~y~代驾已开始，请勿重复操作！");
+			return false; // 保持菜单打开
+		}
+		else {
+			set_status_text("~g~开始代驾到导航点！");
+			set_status_text("~r~代驾过程中切换司机模型，\n会导致 ENT 修改器崩溃！");
+			drive_to_marker();
+			marker_been_set = true; // 开始代驾时设置为 true
+			return false; // 保持菜单打开
+		}
+		break;
+	case 1: // 结束当前代驾 
+		if (!marker_been_set) {
+			set_status_text("当前没有进行中的代驾！");
+			return false; // 保持菜单打开
+		}
+		else if (ENTITY::DOES_ENTITY_EXIST(driver_to_marker_pilot) && ENTITY::DOES_ENTITY_EXIST(curr_veh)) {
+			AI::CLEAR_PED_TASKS(driver_to_marker_pilot);
+			VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(curr_veh, false);
+			AI::TASK_LEAVE_VEHICLE(driver_to_marker_pilot, curr_veh, 4160);
+			marker_been_set = false; // 结束代驾时设置为 false
+			blipDriveFound = false;
+			landing = false;
+			altitude_reached = false;
+			planecurrspeed = 0;
+			AI::TASK_SMART_FLEE_PED(driver_to_marker_pilot, PLAYER::PLAYER_PED_ID(), 1000, -1, true, true);
+			set_status_text("~q~结束代驾到导航点！");
+			return false; // 保持菜单打开
+		}
+		else {
+			set_status_text("当前没有进行中的代驾！");
+			return false; // 保持菜单打开
+		}
 		break;
 	default:
-		break;
+		return false; // 其他选项保持菜单打开
 	}
 	return false;
 }
@@ -1088,11 +1133,17 @@ void getTelChauffeurIndex(){
 	ToggleMenuItem<int>* toggleItem;
 
 	int i = 0;
- 
+
 	item = new MenuItem<int>();
-	item->caption = "开始代驾到导航点";
+	item->caption = "开始代驾";
 	item->value = i++;
 	item->isLeaf = true;
+	menuItems.push_back(item);
+
+	item = new MenuItem<int>(); // 添加结束代驾按钮
+	item->caption = "结束代驾";
+	item->value = i++;
+	item->isLeaf = true; 
 	menuItems.push_back(item);
 
 	toggleItem = new ToggleMenuItem<int>();
@@ -1119,12 +1170,12 @@ void getTelChauffeurIndex(){
 	listItem->value = TelChauffeur_drivingstyles_Index;
 	menuItems.push_back(listItem);
 
-	listItem = new SelectFromListMenuItem(SKINS_GENERAL_VALUES, onchange_tel_chauffeur_index);
+	listItem = new SelectFromListMenuItem(SKINS_GENERAL_CAPTIONS, onchange_tel_chauffeur_index);
 	listItem->wrap = false;
 	listItem->caption = "代驾司机模型";
 	listItem->value = TelChauffeurIndex;
 	menuItems.push_back(listItem);
-	
+
 	draw_generic_menu<int>(menuItems, &activeLineIndexChauffeur, caption, onconfirm_chauffeur_menu, NULL, NULL);
 }
 
