@@ -79,8 +79,8 @@ const int MISC_PHONE_FREESECONDS_VALUES[] = { 0, 3, 5, 10, 15 };
 extern bool featureGamePause;
 
 // 字体选项
-const std::vector<std::string> MISC_FONT_HEADER_CAPTIONS{ "默认", "普通" };
-const int MISC_FONT_HEADER_VALUES[] = { 4, 0 };
+const std::vector<std::string> MISC_FONT_HEADER_CAPTIONS{ "默认", "标准", "花体", "加粗", "特殊" };
+const int MISC_FONT_HEADER_VALUES[] = { 4, 0, 1, 7, 8 };
 extern int FontHeaderIndex;
 extern bool FontHeaderChanged;
 

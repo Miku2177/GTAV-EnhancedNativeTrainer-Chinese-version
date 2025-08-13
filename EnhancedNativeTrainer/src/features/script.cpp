@@ -2300,7 +2300,7 @@ bool onconfirm_localization_menu(MenuItem<int> choice) {
 // 汉化说明子菜单
 void process_localization_menu() {
 	// 菜单项数量（不包含标题选项）
-	const int lineCount = 8;
+	const int lineCount = 7;
 	const std::string caption = "汉化说明选项"; // 菜单标题
 
 	// 构造版本号显示字符串
@@ -2308,14 +2308,13 @@ void process_localization_menu() {
 
 	// 定义菜单项
 	StandardOrToggleMenuDef lines[lineCount] = {
-		{ versionDisplay.c_str(),      NULL, NULL, true},    // 动态显示版本号
-		{ "汉化作者：随梦&而飞",       NULL, NULL, true},    // 汉化作者 
-		{ "感谢帮助我的朋友们！",     NULL, NULL, true},    // 感谢帮助的朋友们
-		{ "感谢：烈火神君", NULL, NULL, true},             // 感谢烈火神君
-		{ "感谢：羽一大魔王", NULL, NULL, true},          // 感谢羽一大魔王
-		{ "感谢：开发和维护者们", NULL, NULL, true},      // 感谢开发和维护者们
-		{ "汉化不易，转载须注明！", NULL, NULL, true}, // 汉化不易，转载须注明！
-		{ "使用前，请先关闭 BE！", NULL, NULL, true}, // 使用前，请先关闭 BE！
+		{ versionDisplay.c_str(), NULL, NULL, true},    // 动态显示版本号
+		{ "原作者：Flying-Scotsmar,  Slash_Alex", NULL, NULL, true},
+		{ "基于 Alexander Blade 的 ScripthookV 构建", NULL, NULL, true},
+		{ "感谢所有原开发者们", NULL, NULL, true},
+		{ "感谢帮助我的朋友们", NULL, NULL, true},
+		{ "汉化：随梦&而飞", NULL, NULL, true},
+		{ "感谢：烈火神君,  羽一大魔王", NULL, NULL, true},
 	};
 
 	// 绘制菜单
@@ -2412,7 +2411,7 @@ bool onconfirm_main_menu(MenuItem<int> choice){
 
 void process_main_menu(){
 	std::ostringstream captionSS;
-	captionSS << "~HUD_COLOUR_MENU_YELLOW~增强型  ~HUD_COLOUR_WHITE~原生修改器   ~HUD_COLOUR_GREY~版本 ";
+	captionSS << "~HUD_COLOUR_MENU_YELLOW~增强型 ~HUD_COLOUR_WHITE~修改器 ~HUD_COLOUR_GREY~版本 ";
 	captionSS << VERSION_STRING;
 
 	std::vector<MenuItem<int>*> menuItems;
