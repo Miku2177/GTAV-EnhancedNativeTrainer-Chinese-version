@@ -31,7 +31,7 @@ void write_text_to_log_file(const std::string &text){
 	//}
 
 	char tbuff[DTTMSZ];
-	std::ofstream log_file("Enhanced Native Trainer/ent - log.txt", std::ios_base::out | std::ios_base::app);
+	std::ofstream log_file("Enhanced Native Trainer/Logs/ent - log.txt", std::ios_base::out | std::ios_base::app);
 	log_file << getDtTm(tbuff) << text << std::endl;
 	log_file.close();
 }

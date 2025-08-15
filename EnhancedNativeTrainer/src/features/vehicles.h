@@ -113,6 +113,10 @@ struct VehicleImage {
 
 static std::vector<VehicleImage> ALL_VEH_IMAGES;
 
+// 自定义车辆预览图（外置 XML）缓存
+static std::map<Hash, std::pair<std::string, std::string>> g_CustomVehicleImages; // 模型哈希 -> (字典名, 图片名)
+static FILETIME g_LastPreviewXmlModifyTime = {0}; // 预览图XML文件最后修改时间
+
 const std::vector<XenonColour> XENON_COLOURS = {
 	{ "白色", 0 },
 	{ "蓝色", 1 },
@@ -1142,6 +1146,15 @@ bool process_savedveh_slot_menu(int slot);
 bool process_vehmod_menu();
 
 bool process_carspawn_menu();
+
+// 生成新增车辆（外置 XML）
+bool process_custom_carspawn_menu();
+bool onconfirm_custom_spawn_menu_cars(MenuItem<int> choice);
+bool onconfirm_custom_vehlist_menu(MenuItem<int> choice);
+bool create_sample_vehicles_xml(const char* xmlPath);
+bool create_sample_vehicle_previews_xml(const char* xmlPath);
+bool load_custom_vehicle_previews_from_xml(const char* xmlPath);
+bool ensure_custom_vehicle_previews_loaded();
 
 void update_vehicle_features(BOOL playerExists, Ped playerPed);
 

@@ -9,6 +9,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 */
 
 #include "vehicles.h"
+#include <Windows.h>
 #include "fuel.h"
 #include "enginedegrade.h"
 #include "road_laws.h"
@@ -21,6 +22,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\debug\debuglog.h"
 #include "area_effect.h"
 #include <fstream>
+#include <sstream>
 #include "vehicle_weapons.h"
 #include <string>
 #include <iterator>
@@ -30,7 +32,10 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include <vector>
 #include <cstdlib>
 #include <unordered_map>
+#include <map>
 #include "../utils.h"
+#include <comdef.h>
+#import <msxml6.dll>
 
 using namespace std;
 
@@ -195,9 +200,467 @@ int activeLineIndexFuel = 0;
 int activeLineIndexEngineDegrade = 0;
 int activeLineIndexRemember = 0;
 int activeLineIndexCarSpawnMenu = 0;
+int activeLineIndexCustomCarSpawnMenu = 0;
 int activeLineIndexRoadLaws = 0;
 std::string activeSavedVehicleSlotName;
 int lastKnownSavedVehicleCount = 0;
+
+// 自定义车辆（外置 XML）缓存
+static std::map<std::string, std::vector<std::pair<std::string, std::string>>> g_CustomVehicles; // 分类 -> [(model, title)]
+static std::vector<std::string> g_CustomVehicleCategories; // 分类顺序
+static FILETIME g_LastXmlModifyTime = {0}; // XML文件最后修改时间
+
+static std::string BstrToUtf8(BSTR b)
+{
+    if (b == nullptr) return std::string("");
+    int len = SysStringLen(b);
+    if (len <= 0) return std::string("");
+    int size = WideCharToMultiByte(CP_UTF8, 0, b, len, nullptr, 0, nullptr, nullptr);
+    std::string out;
+    out.resize(size);
+    WideCharToMultiByte(CP_UTF8, 0, b, len, &out[0], size, nullptr, nullptr);
+    return out;
+}
+
+static bool is_preview_xml_modified(const char* xmlPath)
+{
+	WIN32_FIND_DATAA findData;
+	HANDLE hFind = FindFirstFileA(xmlPath, &findData);
+	if (hFind == INVALID_HANDLE_VALUE) {
+		return false;
+	}
+	FindClose(hFind);
+
+	if (CompareFileTime(&findData.ftLastWriteTime, &g_LastPreviewXmlModifyTime) > 0) {
+		g_LastPreviewXmlModifyTime = findData.ftLastWriteTime;
+		return true;
+	}
+	return false;
+}
+
+// 检查XML文件是否已修改
+static bool is_xml_file_modified(const char* xmlPath)
+{
+    WIN32_FIND_DATAA findData;
+    HANDLE hFind = FindFirstFileA(xmlPath, &findData);
+    if (hFind == INVALID_HANDLE_VALUE) {
+        return false; // 文件不存在
+    }
+    FindClose(hFind);
+    
+    // 比较文件修改时间
+    if (CompareFileTime(&findData.ftLastWriteTime, &g_LastXmlModifyTime) > 0) {
+        g_LastXmlModifyTime = findData.ftLastWriteTime;
+        return true; // 文件已修改
+    }
+    return false; // 文件未修改
+}
+
+bool create_sample_vehicles_xml(const char* xmlPath)
+{
+	// 创建目录（如果不存在）
+	std::string pathStr(xmlPath);
+	size_t lastSlash = pathStr.find_last_of("/\\");
+	if (lastSlash != std::string::npos) {
+		std::string dirPath = pathStr.substr(0, lastSlash);
+		CreateDirectoryA(dirPath.c_str(), NULL);
+	}
+
+	// 创建示例XML文件
+	std::ofstream file(xmlPath, std::ios::out | std::ios::trunc);
+	if (!file.is_open()) {
+		return false;
+	}
+
+	file << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+	file << "<vehicles>\n";
+	file << "  <!-- 示例分类：超级跑车 -->\n";
+	file << "  <category name=\"超级跑车\">\n";
+	file << "    <vehicle model=\"ADDER\" title=\"特卢菲 灵蛇\" />\n";
+	file << "    <vehicle model=\"VOLTIC\" title=\"旋风 狂雷\" />\n";
+	file << "    <vehicle model=\"CHEETAH\" title=\"古罗帝 猎豹\" />\n";
+	file << "  </category>\n";
+	file << "  \n";
+	file << "  <!-- 示例分类：跑车 -->\n";
+	file << "  <category name=\"跑车\">\n";
+	file << "    <vehicle model=\"FELTZER2\" title=\"贝飞特 飞特者\" />\n";
+	file << "    <vehicle model=\"SURANO\" title=\"贝飞特 速雷\" />\n";
+	file << "    <vehicle model=\"BLISTA2\" title=\"丁卡 小型旅行家\" />\n";
+	file << "  </category>\n";
+	file << "  \n";
+	file << "  <!-- 示例分类：经典跑车 -->\n";
+	file << "  <category name=\"经典跑车\">\n";
+	file << "    <vehicle model=\"MANANA\" title=\"亚班尼 明日之星\" />\n";
+	file << "    <vehicle model=\"TORNADO2\" title=\"绝致 旋风 敞篷\" />\n";
+	file << "    <vehicle model=\"PEYOTE\" title=\"威皮 佩优特\" />\n";
+	file << "  </category>\n";
+	file << "  \n";
+	file << "  <!-- 示例分类：轿跑车 -->\n";
+	file << "  <category name=\"轿跑车\">\n";
+	file << "    <vehicle model=\"EXEMPLAR\" title=\"浪子 典范\" />\n";
+	file << "    <vehicle model=\"COGCABRIO\" title=\"埃努斯 至尊慧眼\" />\n";
+	file << "    <vehicle model=\"FELON\" title=\"兰帕达提 恶龙\" />\n";
+	file << "  </category>\n";
+	file << "  \n";
+	file << "  <!-- 示例分类：轿车 -->\n";
+	file << "  <category name=\"轿车\">\n";
+	file << "    <vehicle model=\"EMPEROR\" title=\"亚班尼 皇霸天\" />\n";
+	file << "    <vehicle model=\"FUGITIVE\" title=\"雪佛 流星\" />\n";
+	file << "    <vehicle model=\"INTRUDER\" title=\"卡林 入侵者\" />\n";
+	file << "  </category>\n";
+	file << "</vehicles>\n";
+
+	file.close();
+	write_text_to_log_file("已创建示例 ent-vehicles.xml 文件: " + std::string(xmlPath));
+	return true;
+}
+
+static bool load_custom_vehicles_from_xml(const char* xmlPath)
+{
+	g_CustomVehicles.clear();
+	g_CustomVehicleCategories.clear();
+
+	// 安全的 COM 初始化
+	HRESULT hr = CoInitialize(NULL);
+	// 仅在 S_OK / S_FALSE 时需要 CoUninitialize
+	const bool needUninit = (hr == S_OK || hr == S_FALSE);
+	if (FAILED(hr) && hr != RPC_E_CHANGED_MODE) {
+		write_text_to_log_file("COM 初始化失败，错误码: " + std::to_string(hr));
+		return false;
+	}
+
+	MSXML2::IXMLDOMDocumentPtr spXMLDoc;
+	spXMLDoc.CreateInstance(__uuidof(MSXML2::DOMDocument60));
+	// 关键小改：使用 _variant_t 传入路径
+	if (!spXMLDoc->load(_variant_t(xmlPath)))
+	{
+		write_text_to_log_file("未找到自定义车辆 XML，路径: " + std::string(xmlPath));
+		spXMLDoc.Release();
+		if (needUninit) CoUninitialize();
+		return false;
+	}
+
+	IXMLDOMNodeListPtr categories = spXMLDoc->selectNodes(L"//vehicles/category");
+	long length = 0;
+	categories->get_length(&length);
+	for (long i = 0; i < length; i++)
+	{
+		IXMLDOMNode* catNode = nullptr;
+		categories->get_item(i, &catNode);
+		if (!catNode) continue;
+
+		IXMLDOMNamedNodeMap* attribs = nullptr;
+		catNode->get_attributes(&attribs);
+
+		std::string categoryName;
+		if (attribs)
+		{
+			long length_attribs = 0;
+			attribs->get_length(&length_attribs);
+			for (long j = 0; j < length_attribs; j++)
+			{
+				IXMLDOMNode* attribNode = nullptr;
+				attribs->get_item(j, &attribNode);
+				if (!attribNode) continue;
+
+				BSTR nameBstr = nullptr;
+				attribNode->get_nodeName(&nameBstr);
+				if (nameBstr && wcscmp(nameBstr, L"name") == 0)
+				{
+					VARIANT var; VariantInit(&var);
+					attribNode->get_nodeValue(&var);
+					categoryName = BstrToUtf8(V_BSTR(&var));
+					VariantClear(&var); // 小改：释放 VARIANT
+				}
+				if (nameBstr) SysFreeString(nameBstr);
+				attribNode->Release();
+			}
+			attribs->Release();
+		}
+
+		if (!categoryName.empty())
+		{
+			if (g_CustomVehicles.find(categoryName) == g_CustomVehicles.end())
+			{
+				g_CustomVehicles[categoryName] = {};
+				g_CustomVehicleCategories.push_back(categoryName);
+			}
+
+			// 读取此分类中的车辆
+			IXMLDOMNodeList* vehNodes = nullptr;
+			catNode->selectNodes(L"./vehicle", &vehNodes);
+			if (vehNodes)
+			{
+				long vlen = 0;
+				vehNodes->get_length(&vlen);
+				for (long vi = 0; vi < vlen; ++vi)
+				{
+					IXMLDOMNode* vNode = nullptr;
+					vehNodes->get_item(vi, &vNode);
+					if (!vNode) continue;
+
+					IXMLDOMNamedNodeMap* vAttribs = nullptr;
+					vNode->get_attributes(&vAttribs);
+
+					std::string modelName;
+					std::string titleName;
+
+					if (vAttribs)
+					{
+						long v_attr_len = 0;
+						vAttribs->get_length(&v_attr_len);
+						for (long k = 0; k < v_attr_len; ++k)
+						{
+							IXMLDOMNode* aNode = nullptr;
+							vAttribs->get_item(k, &aNode);
+							if (!aNode) continue;
+
+							BSTR aname = nullptr;
+							aNode->get_nodeName(&aname);
+							if (aname && wcscmp(aname, L"model") == 0)
+							{
+								VARIANT var; VariantInit(&var);
+								aNode->get_nodeValue(&var);
+								modelName = BstrToUtf8(V_BSTR(&var));
+								VariantClear(&var); // 小改
+							}
+							else if (aname && wcscmp(aname, L"title") == 0)
+							{
+								VARIANT var; VariantInit(&var);
+								aNode->get_nodeValue(&var);
+								titleName = BstrToUtf8(V_BSTR(&var));
+								VariantClear(&var); // 小改
+							}
+							if (aname) SysFreeString(aname);
+							aNode->Release();
+						}
+						vAttribs->Release();
+					}
+
+					if (!modelName.empty())
+					{
+						g_CustomVehicles[categoryName].push_back(std::make_pair(modelName, titleName));
+					}
+
+					vNode->Release();
+				}
+
+				vehNodes->Release();
+			}
+		}
+
+		catNode->Release();
+	}
+
+	spXMLDoc.Release();
+	if (needUninit) CoUninitialize();
+
+	return !g_CustomVehicleCategories.empty();
+}
+
+static bool ensure_custom_vehicles_loaded()
+{
+	const char* xmlPath = "Enhanced Native Trainer/Vehicle/ent-vehicles.xml";
+
+	// 只检测一次，避免重复调用导致时间戳被提前更新的歧义
+	bool modified = is_xml_file_modified(xmlPath);
+
+	// 已有缓存且文件未修改：直接复用
+	if (!g_CustomVehicleCategories.empty() && !modified) {
+		return true;
+	}
+
+	// 已有缓存且文件修改：提示热重载
+	if (modified && !g_CustomVehicleCategories.empty()) {
+		write_text_to_log_file("检测到 ent-vehicles.xml 文件已修改，正在重新加载...");
+	}
+
+	// 加载/重载
+	if (load_custom_vehicles_from_xml(xmlPath)) {
+		return true;
+	}
+
+	// 文件不存在或无效：创建示例文件并重试
+	if (!create_sample_vehicles_xml(xmlPath)) {
+		write_text_to_log_file("无法创建示例 ent-vehicles.xml 文件");
+		return false;
+	}
+
+	if (load_custom_vehicles_from_xml(xmlPath)) {
+		return true;
+	}
+
+	write_text_to_log_file("创建示例文件后仍无法加载 ent-vehicles.xml");
+	return false;
+}
+
+bool create_sample_vehicle_previews_xml(const char* xmlPath)
+{
+	// 创建目录（如果不存在）
+	std::string pathStr(xmlPath);
+	size_t lastSlash = pathStr.find_last_of("/\\");
+	if (lastSlash != std::string::npos) {
+		std::string dirPath = pathStr.substr(0, lastSlash);
+		CreateDirectoryA(dirPath.c_str(), NULL);
+	}
+
+	// 创建示例XML文件
+	std::ofstream file(xmlPath, std::ios::out | std::ios::trunc);
+	if (!file.is_open()) {
+		return false;
+	}
+
+	file << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+	file << "<vehicle_previews>\n";
+	file << "  <!-- 示例车辆预览图配置 -->\n";
+	file << "  <!-- model: 车辆模型名称（大写或小写都行） -->\n";
+	file << "  <!-- dict: 预览图存放位置，默认 ENT_vehicle_previews.ytd 里-->\n";
+	file << "  <!-- dict: 这项不能修改，默认 ENT_vehicle_previews -->\n";
+	file << "  <!-- image: 图片名称 （随你喜欢修改）-->\n";
+	file << "  <!-- 原先存在的预览图，你可以在这里再次添加，会自动覆盖游戏内置的预览图 -->\n";
+	file << "  <vehicle model=\"模型名称\" dict=\"ENT_vehicle_previews\" image=\"图片名称\" />\n";
+	file << "  <vehicle model=\"模型名称\" dict=\"ENT_vehicle_previews\" image=\"图片名称\" />\n";
+	file << "  <vehicle model=\"模型名称\" dict=\"ENT_vehicle_previews\" image=\"图片名称\" />\n";
+	file << "  <vehicle model=\"模型名称\" dict=\"ENT_vehicle_previews\" image=\"图片名称\" />\n";
+	file << "  <vehicle model=\"模型名称\" dict=\"ENT_vehicle_previews\" image=\"图片名称\" />\n";
+	file << "  <vehicle model=\"模型名称\" dict=\"ENT_vehicle_previews\" image=\"图片名称\" />\n";
+	file << "</vehicle_previews>\n";
+
+	file.close();
+	write_text_to_log_file("已创建示例 ent-vehicle-previews.xml 文件: " + std::string(xmlPath));
+	return true;
+}
+
+bool load_custom_vehicle_previews_from_xml(const char* xmlPath)
+{
+	g_CustomVehicleImages.clear();
+
+	// 安全的 COM 初始化
+	HRESULT hr = CoInitialize(NULL);
+	// 仅在 S_OK / S_FALSE 时需要 CoUninitialize
+	const bool needUninit = (hr == S_OK || hr == S_FALSE);
+	if (FAILED(hr) && hr != RPC_E_CHANGED_MODE) {
+		write_text_to_log_file("COM 初始化失败，错误码: " + std::to_string(hr));
+		return false;
+	}
+
+	MSXML2::IXMLDOMDocumentPtr spXMLDoc;
+	spXMLDoc.CreateInstance(__uuidof(MSXML2::DOMDocument60));
+	// 使用 _variant_t 传入路径
+	if (!spXMLDoc->load(_variant_t(xmlPath)))
+	{
+		write_text_to_log_file("未找到车辆预览图 XML，路径: " + std::string(xmlPath));
+		spXMLDoc.Release();
+		if (needUninit) CoUninitialize();
+		return false;
+	}
+
+	IXMLDOMNodeListPtr vehicles = spXMLDoc->selectNodes(L"//vehicle_previews/vehicle");
+	long length = 0;
+	vehicles->get_length(&length);
+	for (long i = 0; i < length; i++)
+	{
+		IXMLDOMNode* vehNode = nullptr;
+		vehicles->get_item(i, &vehNode);
+		if (!vehNode) continue;
+
+		IXMLDOMNamedNodeMap* attribs = nullptr;
+		vehNode->get_attributes(&attribs);
+
+		std::string modelName;
+		std::string dictName;
+		std::string imageName;
+
+		if (attribs)
+		{
+			long length_attribs = 0;
+			attribs->get_length(&length_attribs);
+			for (long j = 0; j < length_attribs; j++)
+			{
+				IXMLDOMNode* attribNode = nullptr;
+				attribs->get_item(j, &attribNode);
+				if (!attribNode) continue;
+
+				BSTR nameBstr = nullptr;
+				attribNode->get_nodeName(&nameBstr);
+				if (nameBstr && wcscmp(nameBstr, L"model") == 0)
+				{
+					VARIANT var; VariantInit(&var);
+					attribNode->get_nodeValue(&var);
+					modelName = BstrToUtf8(V_BSTR(&var));
+					VariantClear(&var);
+				}
+				else if (nameBstr && wcscmp(nameBstr, L"dict") == 0)
+				{
+					VARIANT var; VariantInit(&var);
+					attribNode->get_nodeValue(&var);
+					dictName = BstrToUtf8(V_BSTR(&var));
+					VariantClear(&var);
+				}
+				else if (nameBstr && wcscmp(nameBstr, L"image") == 0)
+				{
+					VARIANT var; VariantInit(&var);
+					attribNode->get_nodeValue(&var);
+					imageName = BstrToUtf8(V_BSTR(&var));
+					VariantClear(&var);
+				}
+				if (nameBstr) SysFreeString(nameBstr);
+				attribNode->Release();
+			}
+			attribs->Release();
+		}
+
+		if (!modelName.empty() && !dictName.empty() && !imageName.empty())
+		{
+			// 将模型名称转换为哈希值
+			Hash modelHash = rage::joaat(modelName.c_str());
+			g_CustomVehicleImages[modelHash] = std::make_pair(dictName, imageName);
+		}
+
+		vehNode->Release();
+	}
+
+	spXMLDoc.Release();
+	if (needUninit) CoUninitialize();
+
+	return !g_CustomVehicleImages.empty();
+}
+
+bool ensure_custom_vehicle_previews_loaded()
+{
+	const char* xmlPath = "Enhanced Native Trainer/Vehicle/ent-vehicle-previews.xml";
+
+	// 若已有缓存，直接返回，不再进行热重载
+	if (!g_CustomVehicleImages.empty()) {
+		return true;
+	}
+
+	// 检查文件是否存在
+	WIN32_FIND_DATAA findData;
+	HANDLE hFind = FindFirstFileA(xmlPath, &findData);
+	if (hFind != INVALID_HANDLE_VALUE) {
+		FindClose(hFind);
+		g_LastPreviewXmlModifyTime = findData.ftLastWriteTime;
+
+		// 加载
+		if (load_custom_vehicle_previews_from_xml(xmlPath)) {
+			return true;
+		}
+	} else {
+		// 文件不存在：尝试创建示例后加载
+		if (!create_sample_vehicle_previews_xml(xmlPath)) {
+			write_text_to_log_file("无法创建示例 ent-vehicle-previews.xml 文件");
+			return false;
+		}
+		if (load_custom_vehicle_previews_from_xml(xmlPath)) {
+			return true;
+		}
+		write_text_to_log_file("创建示例文件后仍无法加载 ent-vehicle-previews.xml");
+	}
+
+	return false;
+}
+
 bool vehSaveMenuInterrupt = false;
 bool vehSaveSlotMenuInterrupt = false;
 bool requireRefreshOfVehSaveSlots = false;
@@ -670,19 +1133,35 @@ std::vector<Hash> get_vehicles_from_category(int category)
 
 std::string get_vehicle_make_and_model(int modelHash)
 {
-	std::stringstream ss;
-	std::string make = std::string(UI::_GET_LABEL_TEXT(GetVehicleMakeName(modelHash)));
-	std::string model = std::string(UI::_GET_LABEL_TEXT(GetVehicleModelName(modelHash)));
-	//write_text_to_log_file("[DEBUG] Combined name: " + make + " " + model);
+	// 原始模型标签（兜底）
+	const char* modelNameC = VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(modelHash);
+	std::string modelNameStr = modelNameC ? modelNameC : "";
 
-	if (make == "NULL")
-		return model;
-	else
-	{
-		ss << make << " " << model;
-		return ss.str();
+	// 1) 先查外置 XML
+	for (const auto& cat : g_CustomVehicleCategories) {
+		auto it = g_CustomVehicles.find(cat);
+		if (it == g_CustomVehicles.end()) continue;
+		for (const auto& entry : it->second) {
+			if (GAMEPLAY::GET_HASH_KEY((char*)entry.first.c_str()) == modelHash && !entry.second.empty()) {
+				return entry.second; // XML 命名优先
+			}
+		}
 	}
-	return model;
+
+	// 2) 再查游戏内置 make / model
+	std::string make  = std::string(UI::_GET_LABEL_TEXT(GetVehicleMakeName(modelHash)));
+	std::string model = std::string(UI::_GET_LABEL_TEXT(GetVehicleModelName(modelHash)));
+
+	auto is_valid = [](const std::string& s){
+		return !s.empty() && s != "NULL";
+		};
+
+	if (is_valid(make) && is_valid(model)) return make + " " + model;
+	if (is_valid(model))                 return model;
+	if (is_valid(make))                  return make;
+
+	// 3) 兜底：返回模型标签
+	return modelNameStr;
 }
 
 void process_window_roll() {
@@ -2212,49 +2691,52 @@ bool onconfirm_veh_menu(MenuItem<int> choice){
 			if(process_carspawn_menu()) return false;
 			break;
 		case 1:
+			if(process_custom_carspawn_menu()) return false;
+			break;
+		case 2:
 			if(process_savedveh_menu()) return false;
 			break;
-		case 2: // 修复
+		case 3: // 修复
 			fix_vehicle();
 			break;
-		case 4: // 清除
+		case 5: // 清除
 			clean_vehicle();
 			break;
-		case 6: // 油漆
+		case 7: // 油漆
 			if(process_paint_menu()) return false;
 			break;
-		case 7: // 模组
+		case 8: // 模组
 			if(process_vehmod_menu()) return false;
 			break;
-		case 20: // 速度和高度菜单
+		case 21: // 速度和高度菜单
 			process_speed_menu();
 			break;
-		case 21: // 速度限制
+		case 22: // 速度限制
 			process_speedlimit_menu();
 			break;
-		case 22: // 车门菜单
+		case 23: // 车门菜单
 			if(process_veh_door_menu()) return false;
 			break;
-		case 23: // 座位菜单
+		case 24: // 座位菜单
 			if (PED::IS_PED_SITTING_IN_ANY_VEHICLE(playerPed))
 				if(process_veh_seat_menu()) return false;
 			break;
-		case 24: // 车辆转向灯菜单
+		case 25: // 车辆转向灯菜单
 			process_visualize_menu();
 			break;
-		case 27: // 燃油菜单
+		case 28: // 燃油菜单
 			process_fuel_menu();
 			break;
-		case 28: // 保存车辆菜单
+		case 29: // 保存车辆菜单
 			process_remember_vehicles_menu();
 			break;
-		case 29: // 交通法规菜单
+		case 30: // 交通法规菜单
 			process_road_laws_menu();
 			break;
-		case 30: // 引擎可能会损耗
+		case 31: // 引擎可能会损耗
 			process_engine_degrade_menu();
 			break;
-		case 47: // 飞机炸弹
+		case 48: // 飞机炸弹
 		{
 			if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
 				set_status_text("~r~玩家不在载具中！");
@@ -2267,7 +2749,7 @@ bool onconfirm_veh_menu(MenuItem<int> choice){
 			else set_status_text("~r~错误: 开启弹仓投弹, 需要古邦800飞机！");
 		}
 			break;
-		case 51: // 车辆盗窃
+		case 52: // 车辆盗窃
 			process_routine_of_ringer_menu();
 			break;
 		default:
@@ -2292,11 +2774,18 @@ void process_veh_menu(){
 		WAIT(0);
 	}
 
-	item = new MenuItem<int>();
-	item->caption = "生成车辆";
-	item->value = i++;
-	item->isLeaf = false;
-	menuItems.push_back(item);
+    item = new MenuItem<int>();
+    item->caption = "生成车辆";
+    item->value = i++;
+    item->isLeaf = false;
+    menuItems.push_back(item);
+
+    // 插入“生成新增车辆”项（外置 XML）
+    item = new MenuItem<int>();
+    item->caption = "生成新增车辆";
+    item->value = i++;
+    item->isLeaf = false;
+    menuItems.push_back(item);
 
 	item = new MenuItem<int>();
 	item->caption = "保存的车辆";
@@ -4902,6 +5391,9 @@ void keyboard_tip_message(char* curr_message_s) {
 
 //创建分类子菜单，并移交到与该分类相关的子子菜单
 bool process_carspawn_menu() {
+	// 刷新读取外置XML文件（与process_custom_carspawn_menu保持一致）
+	ensure_custom_vehicles_loaded();
+	
 	std::vector<MenuItem<int>*> menuItems;
 
 	for (int i = 0; i < vHashLists.size(); i++)
@@ -4979,7 +5471,7 @@ void spawn_veh_manually() {
 }
 
 bool onconfirm_spawn_menu_cars(MenuItem<int> choice){
-	std::string caption = get_class_label(choice.value);
+    std::string caption = get_class_label(choice.value);
 	std::vector<MenuItem<int>*> menuItems;
 	std::vector<Hash> selectedCat = get_vehicles_from_category(choice.value);
 	int itemIndex = 0;
@@ -5018,6 +5510,92 @@ bool onconfirm_spawn_menu_cars(MenuItem<int> choice){
 	return draw_generic_menu<int>(params);
 }
 
+// 自定义外置 XML 分类菜单
+bool process_custom_carspawn_menu()
+{
+    if (!ensure_custom_vehicles_loaded())
+    {
+        set_status_text("~r~错误: 未找到 ent-vehicles.xml 或格式无效！");
+        return false;
+    }
+
+    if (g_CustomVehicleCategories.empty())
+    {
+        set_status_text("~r~错误: ent-vehicles.xml 中没有找到有效的车辆分类！");
+        return false;
+    }
+
+    std::vector<MenuItem<int>*> menuItems;
+    int cidx = 0;
+    for (const auto& cat : g_CustomVehicleCategories)
+    {
+        MenuItem<int>* item = new MenuItem<int>();
+        item->caption = cat;
+        item->value = cidx++;
+        menuItems.push_back(item);
+    }
+
+    return draw_generic_menu<int>(menuItems, &activeLineIndexCustomCarSpawnMenu, "新增车辆 - 类型", onconfirm_custom_spawn_menu_cars, nullptr, nullptr, nullptr);
+}
+
+// 自定义外置 XML 车型菜单与生成
+bool onconfirm_custom_spawn_menu_cars(MenuItem<int> choice)
+{
+    if (choice.value < 0 || choice.value >= (int)g_CustomVehicleCategories.size()) return false;
+    const std::string& cat = g_CustomVehicleCategories[choice.value];
+    const auto it = g_CustomVehicles.find(cat);
+    if (it == g_CustomVehicles.end()) return false;
+
+    std::vector<MenuItem<int>*> menuItems;
+    for (const auto& entry : it->second)
+    {
+        const std::string& model = entry.first;
+        const std::string& title = entry.second;
+        Hash hash = GAMEPLAY::GET_HASH_KEY((char*)model.c_str());
+
+        MenuItem<int>* item = new MenuItem<int>();
+        // 菜单系统采用 UTF-8 文本，直接传入 UTF-8 字符串
+        item->caption = title.empty() ? model : title;
+        item->value = hash;
+        menuItems.push_back(item);
+    }
+
+    if (menuItems.empty())
+    {
+        set_status_text("~r~错误: 此分类中没有车辆！");
+        return false;
+    }
+
+    MenuParameters<int> params(menuItems, cat);
+    params.menuSelectionPtr = 0;
+    params.onConfirmation = onconfirm_custom_vehlist_menu;
+    params.lineImageProvider = vehicle_image_preview_finder;
+    return draw_generic_menu<int>(params);
+}
+
+// 自定义车辆确认菜单处理函数
+bool onconfirm_custom_vehlist_menu(MenuItem<int> choice)
+{
+    DWORD model = choice.value;
+    std::string modelTitle = choice.caption;
+    
+    // 在用户选择车辆时进行模型验证
+    if (!STREAMING::IS_MODEL_IN_CDIMAGE(model))
+    {
+        set_status_text("~r~错误: 车辆模型不存在！\n~y~名称: " + modelTitle);
+        return false;
+    }
+    
+    if (!STREAMING::IS_MODEL_A_VEHICLE(model))
+    {
+        set_status_text("~r~错误: 指定的模型不是车辆！\n~y~名称: " + modelTitle);
+        return false;
+    }
+    
+    // 模型验证通过，生成车辆
+    return do_spawn_vehicle_hash(model, modelTitle);
+}
+
 bool do_spawn_vehicle_hash(int modelName, std::string modelTitle) {
 	DWORD model = modelName;
 
@@ -5028,43 +5606,43 @@ bool do_spawn_vehicle_hash(int modelName, std::string modelTitle) {
 	return false;
 }
 
-Vehicle do_spawn_vehicle(DWORD model, std::string modelTitle, bool cleanup){
-	if(STREAMING::IS_MODEL_IN_CDIMAGE(model) && STREAMING::IS_MODEL_A_VEHICLE(model)){
+Vehicle do_spawn_vehicle(DWORD model, std::string modelTitle, bool cleanup) {
+	if (STREAMING::IS_MODEL_IN_CDIMAGE(model) && STREAMING::IS_MODEL_A_VEHICLE(model)) {
 		STREAMING::REQUEST_MODEL(model);
-		while(!STREAMING::HAS_MODEL_LOADED(model)){
-			if (veh_to_spawn == "") make_periodic_feature_call();
+		while (!STREAMING::HAS_MODEL_LOADED(model)) {
+			if (veh_to_spawn.empty()) make_periodic_feature_call();
 			WAIT(0);
 		}
 
-		Vector3 minDimens;
-		Vector3 maxDimens;
+		Vector3 minDimens, maxDimens;
 		GAMEPLAY::GET_MODEL_DIMENSIONS(model, &minDimens, &maxDimens);
 		float spawnOffY = max(5.0f, 2.0f + 0.5f * (maxDimens.y - minDimens.y));
 
-		FLOAT lookDir = ENTITY::GET_ENTITY_HEADING(PLAYER::PLAYER_PED_ID());
+		float lookDir = ENTITY::GET_ENTITY_HEADING(PLAYER::PLAYER_PED_ID());
 		Vector3 coords = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(PLAYER::PLAYER_PED_ID(), 0.0, spawnOffY, 0.0);
-		Vehicle veh = VEHICLE::CREATE_VEHICLE(model, coords.x, coords.y, coords.z, lookDir, 1, 0);
+		Vehicle veh = VEHICLE::CREATE_VEHICLE(model, coords.x, coords.y, coords.z, lookDir, true, false);
 
-		//如果我们在半空中，不要将其放到地面上
-		if(!ENTITY::IS_ENTITY_IN_AIR(PLAYER::PLAYER_PED_ID())){
+		if (!ENTITY::IS_ENTITY_IN_AIR(PLAYER::PLAYER_PED_ID())) {
 			VEHICLE::SET_VEHICLE_ON_GROUND_PROPERLY(veh);
 		}
 
-		if(featureVehSpawnTuned && tracked_being_restored == false){
+		if (featureVehSpawnTuned && !tracked_being_restored) {
 			fully_tune_vehicle(veh, featureVehSpawnOptic);
 		}
 
-		if(featureVehSpawnInto && tracked_being_restored == false){
+		if (featureVehSpawnInto && !tracked_being_restored) {
 			PED::SET_PED_INTO_VEHICLE(PLAYER::PLAYER_PED_ID(), veh, -1);
-			oldVehicleState = false; // 将旧车辆状态设置为 false，因为我们换了车但并未真正退出上一辆车
-
-			if(is_this_a_heli_or_plane(veh)){
+			oldVehicleState = false;
+			if (is_this_a_heli_or_plane(veh)) {
 				VEHICLE::SET_HELI_BLADES_FULL_SPEED(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()));
 			}
 		}
 
-		if (!featureVehSpawnInto && (ENTITY::GET_ENTITY_MODEL(veh) == GAMEPLAY::GET_HASH_KEY("MINITANK") || ENTITY::GET_ENTITY_MODEL(veh) == GAMEPLAY::GET_HASH_KEY("RCBANDITO") || 
-			ENTITY::GET_ENTITY_MODEL(veh) == GAMEPLAY::GET_HASH_KEY("KOSATKA")) && tracked_being_restored == false) {
+		if (!featureVehSpawnInto &&
+			(ENTITY::GET_ENTITY_MODEL(veh) == GAMEPLAY::GET_HASH_KEY("MINITANK") ||
+				ENTITY::GET_ENTITY_MODEL(veh) == GAMEPLAY::GET_HASH_KEY("RCBANDITO") ||
+				ENTITY::GET_ENTITY_MODEL(veh) == GAMEPLAY::GET_HASH_KEY("KOSATKA")) &&
+			!tracked_being_restored) {
 			PED::SET_PED_INTO_VEHICLE(PLAYER::PLAYER_PED_ID(), veh, -1);
 			oldVehicleState = false;
 		}
@@ -5075,7 +5653,9 @@ Vehicle do_spawn_vehicle(DWORD model, std::string modelTitle, bool cleanup){
 			VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
 			VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT_INDEX(veh, DefaultPlateIndex);
 		}
-		if (DefaultPlateIndex != -1 && DefaultPlateIndex >= VEHICLE::GET_NUMBER_OF_VEHICLE_NUMBER_PLATES()) DefaultPlateIndex = -1;
+		if (DefaultPlateIndex != -1 && DefaultPlateIndex >= VEHICLE::GET_NUMBER_OF_VEHICLE_NUMBER_PLATES()) {
+			DefaultPlateIndex = -1;
+		}
 
 		if (featureRoutineOfRinger) {
 			VEHICLES_AVAILABLE.push_back(veh);
@@ -5086,11 +5666,22 @@ Vehicle do_spawn_vehicle(DWORD model, std::string modelTitle, bool cleanup){
 
 		WAIT(0);
 		STREAMING::SET_MODEL_AS_NO_LONGER_NEEDED(model);
-		if(cleanup){
+		if (cleanup) {
 			ENTITY::SET_VEHICLE_AS_NO_LONGER_NEEDED(&veh);
 		}
-		set_status_text(get_vehicle_make_and_model(model) + " 生成完成！");
-	
+
+		// 优化生成车辆提示
+		std::string displayName = modelTitle;
+		if (displayName.empty() || displayName == "NULL") {
+			displayName = get_vehicle_make_and_model(model);
+			if (displayName.empty() || displayName == "NULL") {
+				const char* name = VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(model);
+				if (name && *name) displayName = name;
+				else displayName = "Unknown Vehicle";
+			}
+		}
+		set_status_text(displayName + " 生成完成！");
+
 		return veh;
 	}
 	return -1;
@@ -5583,14 +6174,42 @@ void save_current_vehicle(int slot){
 
 			std::ostringstream ss;
 			
-			Hash currVehModelS = ENTITY::GET_ENTITY_MODEL(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()));
+			Hash currVehModelS = ENTITY::GET_ENTITY_MODEL(veh);
 			if (slot == -1 && STREAMING::IS_MODEL_IN_CDIMAGE(currVehModelS) && STREAMING::IS_MODEL_A_VEHICLE(currVehModelS) && STREAMING::IS_MODEL_VALID(currVehModelS)) {
+				// 获取车辆名称 - 优先级：XML名称 > 游戏内置名称 > 模型名称
+				std::string displayName;
 				
-				char *name = VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(currVehModelS);
-				std::string displayName = UI::_GET_LABEL_TEXT(name);
+				// 1. 尝试从XML获取名称
+				char* modelName = VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(currVehModelS);
+				std::string modelNameStr = modelName;
+				
+				// 检查此车辆是否来自外置XML
+				for (const auto& cat : g_CustomVehicleCategories) {
+					const auto it = g_CustomVehicles.find(cat);
+					if (it != g_CustomVehicles.end()) {
+						for (const auto& entry : it->second) {
+							if (GAMEPLAY::GET_HASH_KEY((char*)entry.first.c_str()) == currVehModelS && !entry.second.empty()) {
+								displayName = entry.second;
+								break;
+							}
+						}
+					}
+					if (!displayName.empty()) break;
+				}
+				
+				// 2. 如果XML中没有，尝试获取游戏内置名称
+				if (displayName.empty()) {
+					displayName = UI::_GET_LABEL_TEXT(modelName);
+				}
+				
+				// 3. 如果仍然没有，使用模型名称
+				if (displayName.empty() || displayName == "NULL") {
+					displayName = modelNameStr;
+				}
+				
 				ss << displayName;
 			}
-			if (slot == -1 && !STREAMING::IS_MODEL_IN_CDIMAGE(currVehModelS)) { // && !STREAMING::IS_MODEL_A_VEHICLE(currVehModelS) && !STREAMING::IS_MODEL_VALID(currVehModelS)
+			else if (slot == -1) {
 				ss << "已保存车辆 " << (lastKnownSavedVehicleCount + 1);
 			}
 			if(slot != -1){
@@ -6497,25 +7116,38 @@ MenuItemImage* vehicle_image_preview_finder(MenuItem<int> choice){
 		return NULL;
 	}
 
-	for each (VehicleImage vimg in ALL_VEH_IMAGES){
-		if(vimg.modelName == choice.value){
+	// 首先检查自定义预览图（从XML加载）
+	auto it = g_CustomVehicleImages.find(choice.value);
+	if (it != g_CustomVehicleImages.end()) {
+		MenuItemImage* image = new MenuItemImage();
+		image->dict = const_cast<char*>(it->second.first.c_str());
+		image->name = const_cast<char*>(it->second.second.c_str());
+		return image;
+	}
+
+	// 然后检查内置预览图
+	for (const VehicleImage& vimg : ALL_VEH_IMAGES) {
+		if (vimg.modelName == choice.value) {
 			MenuItemImage* image = new MenuItemImage();
 			image->dict = vimg.dict;
-			if(image->is_local()){
+			if (image->is_local()) {
 				image->localID = vimg.localID;
-			}
-			else{
+			} else {
 				image->name = vimg.imgName;
 			}
 			return image;
 		}
 	}
 
+	// 获取模型原始名称（不本地化）
+	const char* modelName = VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(choice.value);
+
 	std::ostringstream ss;
-	ss << "找不到预览图 " << choice.value;
+	ss << "找不到车辆预览图, 模型名： " << modelName;
 	write_text_to_log_file(ss.str());
 	return NULL;
 }
+
 /* //Legacy code. Replaced with streaming the texture in from a custom texture file
 void unpack_veh_preview(char* model, int resRef, std::string bitmapName){
 	WAIT(0);
@@ -6585,6 +7217,9 @@ void unpack_veh_preview(char* model, int resRef, std::string bitmapName){
 void init_vehicle_feature(){
 	//复制所有游戏内图像
 	ALL_VEH_IMAGES.insert(ALL_VEH_IMAGES.end(), INGAME_VEH_IMAGES.begin(), INGAME_VEH_IMAGES.end());
+	
+	// 加载自定义车辆预览图
+	ensure_custom_vehicle_previews_loaded();
 }
 
 void fix_vehicle(){

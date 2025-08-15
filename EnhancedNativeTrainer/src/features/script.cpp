@@ -2740,7 +2740,7 @@ void ScriptMain(){
 		SInit();
 
 		const std::string name = "ENT_vehicle_previews.ytd"; 
-		std::string fullPath = GetCurrentModulePath() + "Enhanced Native Trainer\\" + name;
+		std::string fullPath = GetCurrentModulePath() + "Enhanced Native Trainer\\Vehicle\\" + name;
 		int textureID = 0;
 
 		if (does_file_exist(fullPath.c_str()))
