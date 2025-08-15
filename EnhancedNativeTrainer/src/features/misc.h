@@ -78,11 +78,29 @@ const int MISC_PHONE_FREESECONDS_VALUES[] = { 0, 3, 5, 10, 15 };
 
 extern bool featureGamePause;
 
-// 字体选项
+// 标题字体选项
 const std::vector<std::string> MISC_FONT_HEADER_CAPTIONS{ "默认", "标准", "花体", "加粗", "特殊" };
 const int MISC_FONT_HEADER_VALUES[] = { 4, 0, 1, 7, 8 };
 extern int FontHeaderIndex;
 extern bool FontHeaderChanged;
+
+// 项目字体选项
+const std::vector<std::string> MISC_FONT_ITEM_CAPTIONS{ "默认", "标准", "花体", "加粗", "特殊" };
+const int MISC_FONT_ITEM_VALUES[] = { 0, 4, 1, 7, 8 };
+extern int FontItemIndex;
+extern bool FontItemChanged;
+
+// 通缉字体选项
+const std::vector<std::string> MISC_FONT_WANTED_CAPTIONS{ "默认", "标准", "花体", "加粗", "特殊" };
+const int MISC_FONT_WANTED_VALUES[] = { 7, 0, 1, 4, 8 };
+extern int FontWantedIndex;
+extern bool FontWantedChanged;
+
+// 状态显示字体选项 (用于FPS、时间、燃料等状态信息)
+const std::vector<std::string> MISC_FONT_STATUS_CAPTIONS{ "默认", "标准", "花体", "加粗", "特殊" };
+const int MISC_FONT_STATUS_VALUES[] = { 4, 0, 1, 7, 8 };
+extern int FontStatusIndex;
+extern bool FontStatusChanged;
 
 void process_misc_menu();
 
@@ -115,6 +133,14 @@ void onchange_misc_phone_freeseconds_index(int value, SelectFromListMenuItem* so
 void onchange_misc_phone_bike_index(int value, SelectFromListMenuItem* source);
 
 void onchange_misc_font_header_index(int value, SelectFromListMenuItem* source);
+
+void onchange_misc_font_item_index(int value, SelectFromListMenuItem* source);
+
+void onchange_misc_font_wanted_index(int value, SelectFromListMenuItem* source);
+
+void onchange_misc_font_status_index(int value, SelectFromListMenuItem* source);
+
+void process_misc_font_settings_menu();
 
 bool is_vehicle_preview_enabled();
 

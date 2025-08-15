@@ -248,7 +248,7 @@ void update_prop_placement_text()
 
 			numActualLines++;
 
-			UI::SET_TEXT_FONT(0);
+			UI::SET_TEXT_FONT(fontStatus);//物体移动，默认0
 			UI::SET_TEXT_SCALE(0.3, 0.3);
 			if (i == 0 || i == 10 || i >= 17)
 			{

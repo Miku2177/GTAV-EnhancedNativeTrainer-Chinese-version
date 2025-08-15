@@ -269,10 +269,10 @@ void prison_break()
 					if (mins == 9) minutes_to_show_char = "09";
 				}
 
-				UI::SET_TEXT_FONT(4);
+				UI::SET_TEXT_FONT(4);//坐牢时间 分
 				UI::SET_TEXT_SCALE(0.0, 0.45);
 				UI::SET_TEXT_PROPORTIONAL(1);
-				UI::SET_TEXT_COLOUR(255, 255, 255, 255);
+				UI::SET_TEXT_COLOUR(255, 242, 0, 255);
 				UI::SET_TEXT_EDGE(3, 0, 0, 0, 255);
 				UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 255);
 				UI::SET_TEXT_OUTLINE();
@@ -282,10 +282,10 @@ void prison_break()
 				UI::_DRAW_TEXT(0.008, 0.65);
 				GRAPHICS::DRAW_RECT(0.0, 0.665, 0.1, 0.05, 10, 10, 10, 25);
 
-				UI::SET_TEXT_FONT(4);
+				UI::SET_TEXT_FONT(4);//坐牢时间 分隔符
 				UI::SET_TEXT_SCALE(0.0, 0.45);
 				UI::SET_TEXT_PROPORTIONAL(1);
-				UI::SET_TEXT_COLOUR(255, 255, 255, 255);
+				UI::SET_TEXT_COLOUR(255, 242, 0, 255);
 				UI::SET_TEXT_EDGE(3, 0, 0, 0, 255);
 				UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 255);
 				UI::SET_TEXT_OUTLINE();
@@ -294,10 +294,10 @@ void prison_break()
 				UI::_DRAW_TEXT(0.020, 0.65);
 				GRAPHICS::DRAW_RECT(0.0, 0.665, 0.1, 0.05, 10, 10, 10, 25);
 
-				UI::SET_TEXT_FONT(4);
+				UI::SET_TEXT_FONT(4);//坐牢时间 秒
 				UI::SET_TEXT_SCALE(0.0, 0.45);
 				UI::SET_TEXT_PROPORTIONAL(1);
-				UI::SET_TEXT_COLOUR(255, 255, 255, 255);
+				UI::SET_TEXT_COLOUR(255, 242, 0, 255);
 				UI::SET_TEXT_EDGE(3, 0, 0, 0, 255);
 				UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 255);
 				UI::SET_TEXT_OUTLINE();

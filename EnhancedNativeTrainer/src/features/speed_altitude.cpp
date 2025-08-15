@@ -51,9 +51,9 @@ void update_speed_text(int speed, Vector3 player_coords)
 	int col2_B = ENTColor::colsMenu[5].rgba[2];
 
 	// 速度高度字体颜色：将字体颜色改为白色（原为深橙色）
-	//col2_R = 255;
-	//col2_G = 255;
-	//col2_B = 255;
+	col2_R = 255;
+	col2_G = 242;
+	col2_B = 0;
 
 	int numLines = sizeof(speedometerStatusLines) / sizeof(speedometerStatusLines[0]);
 

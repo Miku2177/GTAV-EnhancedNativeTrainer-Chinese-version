@@ -206,6 +206,15 @@ bool TrainerControlScrollingChanged = true;
 int FontHeaderIndex = 0;
 bool FontHeaderChanged = true;
 
+int FontItemIndex = 0;
+bool FontItemChanged = true;
+
+int FontWantedIndex = 0;
+bool FontWantedChanged = true;
+
+int FontStatusIndex = 0;
+bool FontStatusChanged = true;
+
 int activeLineIndexFontSettings = 0;
 
 void onchange_hotkey_function(int value, SelectFromListMenuItem* source){
@@ -323,6 +332,9 @@ bool onconfirm_trainerconfig_menu(MenuItem<int> choice){
 	else if(choice.value == 63){
 		process_misc_trainermenucolors_menu();
 	}
+	else if(choice.value == 64){
+		process_misc_font_settings_menu();
+	}
 	return false;
 }
 
@@ -350,12 +362,12 @@ void process_misc_trainerconfig_menu(){
 	listItem->value = TrainerControlScrollingIndex;
 	menuItems.push_back(listItem);
 
-	// 将字体设置直接添加到菜单项中
-	listItem = new SelectFromListMenuItem(MISC_FONT_HEADER_CAPTIONS, onchange_misc_font_header_index);
-	listItem->wrap = false;
-	listItem->caption = "标题字体类型";
-	listItem->value = FontHeaderIndex;
-	menuItems.push_back(listItem);
+	// 添加字体设置菜单项
+	MenuItem<int>* fontSettingsItem = new MenuItem<int>();
+	fontSettingsItem->caption = "字体类型设置";
+	fontSettingsItem->value = 64;
+	fontSettingsItem->isLeaf = false;
+	menuItems.push_back(fontSettingsItem);
 
 	//ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
 	//toggleItem->caption = "Lock Controls While In Menu";
@@ -1082,6 +1094,57 @@ void onchange_misc_font_header_index(int value, SelectFromListMenuItem* source) 
     FontHeaderChanged = true;
 }
 
+void onchange_misc_font_item_index(int value, SelectFromListMenuItem* source) {
+    FontItemIndex = value;
+    fontItem = MISC_FONT_ITEM_VALUES[value]; // 更新全局字体变量
+    FontItemChanged = true;
+}
+
+void onchange_misc_font_wanted_index(int value, SelectFromListMenuItem* source) {
+    FontWantedIndex = value;
+    fontWanted = MISC_FONT_WANTED_VALUES[value]; // 更新全局字体变量
+    FontWantedChanged = true;
+}
+
+void onchange_misc_font_status_index(int value, SelectFromListMenuItem* source) {
+    FontStatusIndex = value;
+    fontStatus = MISC_FONT_STATUS_VALUES[value]; // 更新全局字体变量
+    FontStatusChanged = true;
+}
+
+void process_misc_font_settings_menu() {
+    const std::string caption = "字体类型设置";
+
+    std::vector<MenuItem<int>*> menuItems;
+    SelectFromListMenuItem *listItem;
+
+    listItem = new SelectFromListMenuItem(MISC_FONT_HEADER_CAPTIONS, onchange_misc_font_header_index);
+    listItem->wrap = false;
+    listItem->caption = "标题选项字体类型";
+    listItem->value = FontHeaderIndex;
+    menuItems.push_back(listItem);
+
+    listItem = new SelectFromListMenuItem(MISC_FONT_ITEM_CAPTIONS, onchange_misc_font_item_index);
+    listItem->wrap = false;
+    listItem->caption = "项目选项字体类型";
+    listItem->value = FontItemIndex;
+    menuItems.push_back(listItem);
+
+    listItem = new SelectFromListMenuItem(MISC_FONT_WANTED_CAPTIONS, onchange_misc_font_wanted_index);
+    listItem->wrap = false;
+    listItem->caption = "通缉等级星星类型";
+    listItem->value = FontWantedIndex;
+    menuItems.push_back(listItem);
+
+    listItem = new SelectFromListMenuItem(MISC_FONT_STATUS_CAPTIONS, onchange_misc_font_status_index);
+    listItem->wrap = false;
+    listItem->caption = "状态显示字体类型";
+    listItem->value = FontStatusIndex;
+    menuItems.push_back(listItem);
+
+    draw_generic_menu<int>(menuItems, &activeLineIndexFontSettings, caption, NULL, NULL, NULL);
+}
+
 void HUD_switching() {
 	featureMiscHideHud = !featureMiscHideHud;
 	//if (featureMiscHideHud) set_status_text("HUD OFF");
@@ -1126,7 +1189,13 @@ void reset_misc_globals(){
 	PhoneBikeAnimationIndex = 0;
 	DefMenuTabIndex = 0;
 	FontHeaderIndex = 0;
-	fontHeader = MISC_FONT_HEADER_VALUES[0]; // 重置为默认字体
+	fontHeader = MISC_FONT_HEADER_VALUES[0]; // 重置为默认标题字体
+	FontItemIndex = 0;
+	fontItem = MISC_FONT_ITEM_VALUES[0]; // 重置为默认项目字体
+	FontWantedIndex = 0;
+	fontWanted = MISC_FONT_WANTED_VALUES[0]; // 重置为默认通缉字体
+	FontStatusIndex = 0;
+	fontStatus = MISC_FONT_STATUS_VALUES[0]; // 重置为默认状态字体
 
 	//featureControllerIgnoreInTrainer = false;
 	//featureBlockInputInMenu = false;
@@ -1936,7 +2005,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		}
 			
 		sprintf(fps_to_show_char_modifiable, "%d", fps); // 将 fps 值格式化为字符串并存储到 fps_to_show_char_modifiable 中  
-		UI::SET_TEXT_FONT(4); // 设置文本字体类型 4
+		UI::SET_TEXT_FONT(fontStatus); // 设置 FPS 字体类型 4
 		UI::SET_TEXT_SCALE(0.0, 0.45); // 设置文本的缩放比例，宽度为 0.0，高度为 0.45  
 		UI::SET_TEXT_PROPORTIONAL(1); // 启用文本的比例缩放，保持文本比例不变  
 		UI::SET_TEXT_COLOUR(255, 242, 0, 255); // 设置文本颜色为黄色（RGB: 255, 242, 0），透明度为255（不透明）  
@@ -1946,7 +2015,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		UI::_SET_TEXT_ENTRY("STRING"); // 设置文本条目类型为字符串  
 		UI::_ADD_TEXT_COMPONENT_SCALEFORM(fps_to_show_char_modifiable); // 将 fps_to_show_char_modifiable 中的文本添加到文本组件中  
 		UI::_DRAW_TEXT(0.005, 0.135); // 在屏幕坐标 ( x=0.005, y=0.135 ) 处绘制文本  
-		GRAPHICS::DRAW_RECT(0.0, 0.15, 0.05, 0.03, 10, 10, 10, 150); 
+		GRAPHICS::DRAW_RECT(0.0, 0.15, 0.05, 0.03, 10, 10, 10, 180); 
 		// 在屏幕坐标 ( x=0.0, y=0.15 ) 处绘制一个矩形，宽度为 0.05，高度为 0.03，颜色为深灰色（RGB: 10, 10, 10），透明度为 150  
 	}
 	
@@ -2054,6 +2123,8 @@ void add_misc_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"PhoneBikeAnimationIndex", std::to_string(PhoneBikeAnimationIndex)});
 	results->push_back(StringPairSettingDBRow{"DefMenuTabIndex", std::to_string(DefMenuTabIndex)});
 	results->push_back(StringPairSettingDBRow{"FontHeaderIndex", std::to_string(FontHeaderIndex)});
+	results->push_back(StringPairSettingDBRow{"FontItemIndex", std::to_string(FontItemIndex)});
+	results->push_back(StringPairSettingDBRow{"FontWantedIndex", std::to_string(FontWantedIndex)});
 	results->push_back(StringPairSettingDBRow{"screenfltr", screenfltr});
 }
 
@@ -2093,6 +2164,14 @@ void handle_generic_settings_misc(std::vector<StringPairSettingDBRow>* settings)
 		else if (setting.name.compare("FontHeaderIndex") == 0) {
             FontHeaderIndex = stoi(setting.value);
             fontHeader = MISC_FONT_HEADER_VALUES[FontHeaderIndex];
+        }
+		else if (setting.name.compare("FontItemIndex") == 0) {
+            FontItemIndex = stoi(setting.value);
+            fontItem = MISC_FONT_ITEM_VALUES[FontItemIndex];
+        }
+		else if (setting.name.compare("FontWantedIndex") == 0) {
+            FontWantedIndex = stoi(setting.value);
+            fontWanted = MISC_FONT_WANTED_VALUES[FontWantedIndex];
         }
 		else if (setting.name.compare("screenfltr") == 0) {
 			screenfltr = setting.value;

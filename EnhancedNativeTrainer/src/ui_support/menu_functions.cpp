@@ -11,7 +11,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "menu_functions.h"
 #include "..\features\script.h"
 
-int fontHeader = 4, fontItem = 0, fontWanted = 7;// 初始化字体变量，分别用于标题字体、项目字体、目标字体
+int fontHeader = 4, fontItem = 0, fontWanted = 7, fontStatus = 4;// 初始化字体变量，分别用于标题字体、项目字体、通缉字体、状态显示字体
 
 std::string centreScreenStatusText;
 DWORD centreScreenStatusTextDrawTicksMax;

@@ -1027,7 +1027,7 @@ void most_wanted()
 			
 			if (featurePlayerNoSwitch && PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID()) < VEH_STARSPUNISH_VALUES[mostwanted_level_enable] && added_already == true) CONTROLS::DISABLE_CONTROL_ACTION(2, 19, true);
 			if (added_already == true && !CUTSCENE::IS_CUTSCENE_PLAYING()) {
-				UI::SET_TEXT_FONT(4); // 设置文本字体为 4
+				UI::SET_TEXT_FONT(fontStatus); // 设置（被通缉中）字体类型 4
 				UI::SET_TEXT_SCALE(0.0, 0.45); // 设置文本缩放比例为 0.0（宽度）和 0.45（高度）
 				UI::SET_TEXT_PROPORTIONAL(1); // 启用文本比例调整，确保文本显示比例正常
 				UI::SET_TEXT_COLOUR(255, 255, 255, 255); // 设置文本颜色为纯白色（RGB: 255, 255, 255)，不透明度为255（完全不透明）

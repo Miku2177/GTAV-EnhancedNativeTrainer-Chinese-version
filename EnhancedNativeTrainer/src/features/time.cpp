@@ -1091,16 +1091,16 @@ void update_time_features(Player player) {
 		GRAPHICS::DRAW_RECT(
 			0.0,     // X 坐标：矩形中心水平位置（0.0 = 屏幕左边缘，1.0 = 右边缘）
 			0.20,    // Y 坐标：矩形中心垂直位置（0.20 = 距离屏幕顶部20%的位置）
-			0.12,    // 宽度：占屏幕总宽度的12%
+			0.17,    // 宽度：占屏幕总宽度的12%
 			0.03,    // 高度：占屏幕总高度的3%
 			10,      // 红色分量（R=10，深灰色）
 			10,      // 绿色分量（G=10，深灰色）
 			10,      // 蓝色分量（B=10，深灰色）
-			150      // 透明度（Alpha=150，0为完全透明，255为完全不透明，此处约59%不透明）
+			180      // 透明度（Alpha=150，0为完全透明，255为完全不透明，此处约59%不透明）
 		);
 
 		// 小时
-		UI::SET_TEXT_FONT(4); // 设置文本字体类型为 4
+		UI::SET_TEXT_FONT(fontStatus); // 设置文本字体类型，时 4
 		UI::SET_TEXT_SCALE(0.0, 0.45); // 设置文本的缩放比例，宽度为 0.0，高度为 0.45
 		UI::SET_TEXT_PROPORTIONAL(1);
 		UI::SET_TEXT_COLOUR(255, 242, 0, 255); // 设置文本颜色为黄色（RGB值为 255, 242, 0），透明度为 255
@@ -1112,7 +1112,7 @@ void update_time_features(Player player) {
 		UI::_DRAW_TEXT(0.005, 0.185); // 绘制文本，指定文本的屏幕位置（x = 水平，y = 垂直）
 
 		// 分隔符 ":"
-		UI::SET_TEXT_FONT(4); // 设置文本字体类型为 4
+		UI::SET_TEXT_FONT(fontStatus); // 设置文本字体类型，分隔符 4
 		UI::SET_TEXT_SCALE(0.0, 0.45); // 设置文本的缩放比例，宽度为 0.0，高度为 0.45
 		UI::SET_TEXT_PROPORTIONAL(1);
 		UI::SET_TEXT_COLOUR(255, 242, 0, 255); // 设置文本颜色为黄色（RGB值为 255, 242, 0），透明度为 255
@@ -1121,10 +1121,10 @@ void update_time_features(Player player) {
 		UI::SET_TEXT_OUTLINE();
 		UI::_SET_TEXT_ENTRY("STRING");
 		UI::_ADD_TEXT_COMPONENT_SCALEFORM(":");
-		UI::_DRAW_TEXT(0.015, 0.185); // 绘制文本，指定文本的屏幕位置（x = 水平，y = 垂直）
+		UI::_DRAW_TEXT(0.025, 0.185); // 绘制文本，指定文本的屏幕位置（x = 水平，y = 垂直）
 
 		// 分钟
-		UI::SET_TEXT_FONT(4); // 设置文本字体类型为 4
+		UI::SET_TEXT_FONT(fontStatus); // 设置文本字体类型，分钟 4
 		UI::SET_TEXT_SCALE(0.0, 0.45); // 设置文本的缩放比例，宽度为 0.0，高度为 0.45
 		UI::SET_TEXT_PROPORTIONAL(1);
 		UI::SET_TEXT_COLOUR(255, 242, 0, 255); // 设置文本颜色为黄色（RGB值为 255, 242, 0），透明度为 255
@@ -1133,10 +1133,10 @@ void update_time_features(Player player) {
 		UI::SET_TEXT_OUTLINE();
 		UI::_SET_TEXT_ENTRY("STRING");
 		UI::_ADD_TEXT_COMPONENT_SCALEFORM(mins_to_show_char_modifiable); // 直接使用格式化后的分钟
-		UI::_DRAW_TEXT(0.019, 0.185); // 绘制文本，指定文本的屏幕位置（x = 水平，y = 垂直）
+		UI::_DRAW_TEXT(0.035, 0.185); // 绘制文本，指定文本的屏幕位置（x = 水平，y = 垂直）
 
 		// 分隔符 ":"
-		UI::SET_TEXT_FONT(4); // 设置文本字体类型为 4
+		UI::SET_TEXT_FONT(fontStatus); // 设置文本字体类型，分隔符 4
 		UI::SET_TEXT_SCALE(0.0, 0.45); // 设置文本的缩放比例，宽度为 0.0，高度为 0.45
 		UI::SET_TEXT_PROPORTIONAL(1);
 		UI::SET_TEXT_COLOUR(255, 242, 0, 255); // 设置文本颜色为黄色（RGB值为 255, 242, 0），透明度为 255
@@ -1145,10 +1145,10 @@ void update_time_features(Player player) {
 		UI::SET_TEXT_OUTLINE();
 		UI::_SET_TEXT_ENTRY("STRING");
 		UI::_ADD_TEXT_COMPONENT_SCALEFORM(":");
-		UI::_DRAW_TEXT(0.029, 0.185); // 绘制文本，指定文本的屏幕位置（x = 水平，y = 垂直）
+		UI::_DRAW_TEXT(0.055, 0.185); // 绘制文本，指定文本的屏幕位置（x = 水平，y = 垂直）
 
 		// 秒
-		UI::SET_TEXT_FONT(4); // 设置文本字体类型为 4
+		UI::SET_TEXT_FONT(fontStatus); // 设置文本字体类型，秒 4
 		UI::SET_TEXT_SCALE(0.0, 0.45); // 设置文本的缩放比例，宽度为 0.0，高度为 0.45
 		UI::SET_TEXT_PROPORTIONAL(1);
 		UI::SET_TEXT_COLOUR(255, 242, 0, 255); // 设置文本颜色为黄色（RGB值为 255, 242, 0），透明度为 255
@@ -1157,7 +1157,7 @@ void update_time_features(Player player) {
 		UI::SET_TEXT_OUTLINE();
 		UI::_SET_TEXT_ENTRY("STRING");
 		UI::_ADD_TEXT_COMPONENT_SCALEFORM(secs_to_show_char_modifiable); // 直接使用格式化后的秒
-		UI::_DRAW_TEXT(0.033, 0.185); // 绘制文本，指定文本的屏幕位置（x = 水平，y = 垂直）
+		UI::_DRAW_TEXT(0.065, 0.185); // 绘制文本，指定文本的屏幕位置（x = 水平，y = 垂直）
 
 		// 日期格式化
 		char year_to_show_char_modifiable[12]; // 年，增加到12字节
@@ -1178,7 +1178,7 @@ void update_time_features(Player player) {
 		else if (day == 6) week_to_show_char = "星期六";
 
 		// 年份
-		UI::SET_TEXT_FONT(4); // 设置文本字体类型为 4
+		UI::SET_TEXT_FONT(fontStatus); // 设置文本字体类型，年 4
 		UI::SET_TEXT_SCALE(0.0, 0.45); // 设置文本的缩放比例，宽度为 0.0，高度为 0.45
 		UI::SET_TEXT_PROPORTIONAL(1);
 		UI::SET_TEXT_COLOUR(255, 242, 0, 200); // 设置文本颜色为黄色（RGB值为 255, 242, 0），透明度为 200
@@ -1190,7 +1190,7 @@ void update_time_features(Player player) {
 		UI::_DRAW_TEXT(0.005, 0.220); // 绘制文本，指定文本的屏幕位置（x = 水平，y = 垂直）
 
 		// 月份
-		UI::SET_TEXT_FONT(4); // 设置文本字体类型为 4
+		UI::SET_TEXT_FONT(fontStatus); // 设置文本字体类型，月 4
 		UI::SET_TEXT_SCALE(0.0, 0.45); // 设置文本的缩放比例，宽度为 0.0，高度为 0.45
 		UI::SET_TEXT_PROPORTIONAL(1);
 		UI::SET_TEXT_COLOUR(255, 242, 0, 200); // 设置文本颜色为黄色（RGB值为 255, 242, 0），透明度为 200
@@ -1199,10 +1199,10 @@ void update_time_features(Player player) {
 		UI::SET_TEXT_OUTLINE();
 		UI::_SET_TEXT_ENTRY("STRING");
 		UI::_ADD_TEXT_COMPONENT_SCALEFORM(month_to_show_char_modifiable); // 一年中的月份
-		UI::_DRAW_TEXT(0.005, 0.250); // 绘制文本，指定文本的屏幕位置（x = 水平，y = 垂直）
+		UI::_DRAW_TEXT(0.005, 0.260); // 绘制文本，指定文本的屏幕位置（x = 水平，y = 垂直）
 
 		// 日期
-		UI::SET_TEXT_FONT(4); // 设置文本字体类型为 4
+		UI::SET_TEXT_FONT(fontStatus); // 设置文本字体类型，日 4
 		UI::SET_TEXT_SCALE(0.0, 0.45); // 设置文本的缩放比例，宽度为 0.0，高度为 0.45
 		UI::SET_TEXT_PROPORTIONAL(1);
 		UI::SET_TEXT_COLOUR(255, 242, 0, 200); // 设置文本颜色为黄色（RGB值为 255, 242, 0），透明度为 200
@@ -1211,10 +1211,10 @@ void update_time_features(Player player) {
 		UI::SET_TEXT_OUTLINE();
 		UI::_SET_TEXT_ENTRY("STRING");
 		UI::_ADD_TEXT_COMPONENT_SCALEFORM(day_to_show_char_modifiable); // 一个月中的日期
-		UI::_DRAW_TEXT(0.005, 0.280); // 绘制文本，指定文本的屏幕位置（x = 水平，y = 垂直）
+		UI::_DRAW_TEXT(0.005, 0.300); // 绘制文本，指定文本的屏幕位置（x = 水平，y = 垂直）
 
 		// 星期
-		UI::SET_TEXT_FONT(4); // 设置文本字体类型为 4
+		UI::SET_TEXT_FONT(fontStatus); // 设置文本字体类型，星期 4
 		UI::SET_TEXT_SCALE(0.0, 0.45); // 设置文本的缩放比例，宽度为 0.0，高度为 0.45
 		UI::SET_TEXT_PROPORTIONAL(1);
 		UI::SET_TEXT_COLOUR(255, 242, 0, 200); // 设置文本颜色为黄色（RGB值为 255, 242, 0），透明度为 200
@@ -1223,7 +1223,7 @@ void update_time_features(Player player) {
 		UI::SET_TEXT_OUTLINE();
 		UI::_SET_TEXT_ENTRY("STRING");
 		UI::_ADD_TEXT_COMPONENT_SCALEFORM(week_to_show_char); // 一周中的星期
-		UI::_DRAW_TEXT(0.005, 0.310); // 绘制文本，指定文本的屏幕位置（x = 水平，y = 垂直）
+		UI::_DRAW_TEXT(0.005, 0.340); // 绘制文本，指定文本的屏幕位置（x = 水平，y = 垂直）
 	} // 显示当前时间结束
 
 	if (featurehotkeytime) {

@@ -519,10 +519,10 @@ void fuel()
 					for (int i = 0; i < GAS_X.size(); i++) {
 						if (GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(coords.x, coords.y, coords.z, GAS_X[i], GAS_Y[i], coords.z, false) < 12) {
 
-							UI::SET_TEXT_FONT(4);
+							UI::SET_TEXT_FONT(fontStatus);//加油站消息，默认4
 							UI::SET_TEXT_SCALE(0.0, 0.45);
 							UI::SET_TEXT_PROPORTIONAL(1);
-							UI::SET_TEXT_COLOUR(246, 255, 102, 255);
+							UI::SET_TEXT_COLOUR(255, 242, 0, 255);
 							UI::SET_TEXT_EDGE(3, 0, 0, 0, 255);
 							UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 255);
 							UI::SET_TEXT_OUTLINE();
@@ -530,10 +530,10 @@ void fuel()
 							UI::_ADD_TEXT_COMPONENT_SCALEFORM("按 [ E 键 ] 加油！");
 							UI::_DRAW_TEXT(0.015, 0.015);
 
-							UI::SET_TEXT_FONT(4);
+							UI::SET_TEXT_FONT(fontStatus);//加油站消息，默认4
 							UI::SET_TEXT_SCALE(0.0, 0.45);
 							UI::SET_TEXT_PROPORTIONAL(1);
-							UI::SET_TEXT_COLOUR(246, 255, 102, 255);
+							UI::SET_TEXT_COLOUR(255, 242, 0, 255);
 							UI::SET_TEXT_EDGE(3, 0, 0, 0, 255);
 							UI::SET_TEXT_DROPSHADOW(10, 10, 10, 10, 255);
 							UI::SET_TEXT_OUTLINE();
@@ -673,8 +673,8 @@ void fuel()
 					if (GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(coords.x, coords.y, coords.z, coords2.x, coords2.y, coords2.z, false) < 3) {
 						int ammo = WEAPON::GET_AMMO_IN_PED_WEAPON(playerPed, WEAPON::GET_SELECTED_PED_WEAPON(playerPed));
 
-						UI::SET_TEXT_FONT(4);
-						UI::SET_TEXT_COLOUR(246, 255, 102, 255);
+						UI::SET_TEXT_FONT(fontStatus);//加油站消息，默认4
+						UI::SET_TEXT_COLOUR(255, 242, 0, 255);
 						UI::SET_TEXT_PROPORTIONAL(1);
 						UI::SET_TEXT_OUTLINE();
 						UI::SET_TEXT_SCALE(0.0, 0.45);

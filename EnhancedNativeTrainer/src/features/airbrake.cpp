@@ -150,7 +150,7 @@ void update_airbrake_text()
 
 			numActualLines++;
 
-			UI::SET_TEXT_FONT(0);
+			UI::SET_TEXT_FONT(fontStatus);//自由移动，默认0
 			UI::SET_TEXT_SCALE(0.3, 0.3);
 			if (i == 0 || i == 9 || i == 15 || i == 19)
 			{
