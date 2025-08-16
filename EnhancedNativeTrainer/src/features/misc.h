@@ -102,6 +102,12 @@ const int MISC_FONT_STATUS_VALUES[] = { 4, 0, 1, 7, 8 };
 extern int FontStatusIndex;
 extern bool FontStatusChanged;
 
+// 菜单显示项目数选项
+const std::vector<std::string> MISC_MENU_ITEMS_COUNT_CAPTIONS{ "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35" };
+const int MISC_MENU_ITEMS_COUNT_VALUES[] = { 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, };
+extern int MenuItemsCountIndex;
+extern bool MenuItemsCountChanged;
+
 void process_misc_menu();
 
 void reset_misc_globals();
@@ -139,6 +145,7 @@ void onchange_misc_font_item_index(int value, SelectFromListMenuItem* source);
 void onchange_misc_font_wanted_index(int value, SelectFromListMenuItem* source);
 
 void onchange_misc_font_status_index(int value, SelectFromListMenuItem* source);
+void onchange_misc_menu_items_count_index(int value, SelectFromListMenuItem* source);
 
 void process_misc_font_settings_menu();
 

@@ -36,6 +36,8 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 
 extern int fontHeader, fontItem, fontWanted, fontStatus;// 修改字体类型：分别用于标题字体、项目字体、通缉字体、状态显示字体
 
+extern int itemsPerLine;// 设置菜单显示的项目数
+
 extern void(*periodic_feature_call)(void);
 
 extern void(*menu_per_frame_call)(void);
@@ -1108,14 +1110,14 @@ bool draw_generic_menu(MenuParameters<T> params){
 		return false;
 	}
 
-	if(NETWORK::NETWORK_IS_GAME_IN_PROGRESS()){
+	// 注释掉阻止进入线上模式的代码
+	/*if(NETWORK::NETWORK_IS_GAME_IN_PROGRESS()){
 		return false;
-	}
+	}*/
 
 	bool result = false; // 初始化结果为 false
 	DWORD waitTime = 150;// 设置等待时间为 150 毫秒
 	const int totalItems = (int) params.items.size();
-	const int itemsPerLine = 10;// 设置菜单显示的项目数
 	const int lineCount = (int) (ceil((double) totalItems / (double) itemsPerLine));
 
 	int currentSelectionIndex;

@@ -215,6 +215,9 @@ bool FontWantedChanged = true;
 int FontStatusIndex = 0;
 bool FontStatusChanged = true;
 
+int MenuItemsCountIndex = 0;
+bool MenuItemsCountChanged = true;
+
 int activeLineIndexFontSettings = 0;
 
 void onchange_hotkey_function(int value, SelectFromListMenuItem* source){
@@ -368,6 +371,13 @@ void process_misc_trainerconfig_menu(){
 	fontSettingsItem->value = 64;
 	fontSettingsItem->isLeaf = false;
 	menuItems.push_back(fontSettingsItem);
+
+	// 添加菜单显示项目数设置
+	SelectFromListMenuItem *menuItemsCountItem = new SelectFromListMenuItem(MISC_MENU_ITEMS_COUNT_CAPTIONS, onchange_misc_menu_items_count_index);
+	menuItemsCountItem->wrap = false;
+	menuItemsCountItem->caption = "菜单显示项目数";
+	menuItemsCountItem->value = MenuItemsCountIndex;
+	menuItems.push_back(menuItemsCountItem);
 
 	//ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
 	//toggleItem->caption = "Lock Controls While In Menu";
@@ -1112,6 +1122,12 @@ void onchange_misc_font_status_index(int value, SelectFromListMenuItem* source) 
     FontStatusChanged = true;
 }
 
+void onchange_misc_menu_items_count_index(int value, SelectFromListMenuItem* source) {
+    MenuItemsCountIndex = value;
+    itemsPerLine = MISC_MENU_ITEMS_COUNT_VALUES[value]; // 更新全局菜单显示项目数变量
+    MenuItemsCountChanged = true;
+}
+
 void process_misc_font_settings_menu() {
     const std::string caption = "字体类型设置";
 
@@ -1194,6 +1210,8 @@ void reset_misc_globals(){
 	fontItem = MISC_FONT_ITEM_VALUES[0]; // 重置为默认项目字体
 	FontWantedIndex = 0;
 	fontWanted = MISC_FONT_WANTED_VALUES[0]; // 重置为默认通缉字体
+	MenuItemsCountIndex = 0;
+	itemsPerLine = MISC_MENU_ITEMS_COUNT_VALUES[0]; // 重置为默认菜单显示项目数
 	FontStatusIndex = 0;
 	fontStatus = MISC_FONT_STATUS_VALUES[0]; // 重置为默认状态字体
 
@@ -2125,6 +2143,8 @@ void add_misc_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"FontHeaderIndex", std::to_string(FontHeaderIndex)});
 	results->push_back(StringPairSettingDBRow{"FontItemIndex", std::to_string(FontItemIndex)});
 	results->push_back(StringPairSettingDBRow{"FontWantedIndex", std::to_string(FontWantedIndex)});
+	results->push_back(StringPairSettingDBRow{"FontStatusIndex", std::to_string(FontStatusIndex)});
+	results->push_back(StringPairSettingDBRow{"MenuItemsCountIndex", std::to_string(MenuItemsCountIndex)});
 	results->push_back(StringPairSettingDBRow{"screenfltr", screenfltr});
 }
 
@@ -2172,6 +2192,15 @@ void handle_generic_settings_misc(std::vector<StringPairSettingDBRow>* settings)
 		else if (setting.name.compare("FontWantedIndex") == 0) {
             FontWantedIndex = stoi(setting.value);
             fontWanted = MISC_FONT_WANTED_VALUES[FontWantedIndex];
+        }
+		else if (setting.name.compare("FontStatusIndex") == 0) {
+            FontStatusIndex = stoi(setting.value);
+            fontStatus = MISC_FONT_STATUS_VALUES[FontStatusIndex];
+        }
+		else if (setting.name.compare("MenuItemsCountIndex") == 0) {
+            MenuItemsCountIndex = stoi(setting.value);
+            itemsPerLine = MISC_MENU_ITEMS_COUNT_VALUES[MenuItemsCountIndex];
+            MenuItemsCountChanged = true;
         }
 		else if (setting.name.compare("screenfltr") == 0) {
 			screenfltr = setting.value;

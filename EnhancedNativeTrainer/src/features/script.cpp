@@ -568,7 +568,8 @@ void update_features() {
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
 	BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(playerPed);
 
-	if (NETWORK::NETWORK_IS_GAME_IN_PROGRESS()) {
+	// 注释掉阻止进入线上模式的代码
+	/*if (NETWORK::NETWORK_IS_GAME_IN_PROGRESS()) {
 		if (!onlineWarningShown) {
 			set_status_text("~HUD_COLOUR_MENU_YELLOW~ENT ~HUD_COLOUR_WHITE~禁止在线使用！");
 			onlineWarningShown = true;
@@ -578,7 +579,7 @@ void update_features() {
 	}
 	else {
 		onlineWarningShown = false;
-	}
+	}*/
 	/*
 	GAMEPLAY::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("shop_controller");
 

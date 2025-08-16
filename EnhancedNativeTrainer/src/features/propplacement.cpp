@@ -151,10 +151,11 @@ void begin_prop_placement(SpawnedPropInstance prop)
 			break;
 		}
 
-		if (NETWORK::NETWORK_IS_GAME_IN_PROGRESS())
+		// 注释掉阻止进入线上模式的代码
+		/*if (NETWORK::NETWORK_IS_GAME_IN_PROGRESS())
 		{
 			break;
-		}
+		}*/
 
 		/*
 		std::ostringstream ss;
