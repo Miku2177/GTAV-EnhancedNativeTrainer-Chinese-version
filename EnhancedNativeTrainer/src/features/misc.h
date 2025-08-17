@@ -103,10 +103,73 @@ extern int FontStatusIndex;
 extern bool FontStatusChanged;
 
 // 菜单显示项目数选项
-const std::vector<std::string> MISC_MENU_ITEMS_COUNT_CAPTIONS{ "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35" };
-const int MISC_MENU_ITEMS_COUNT_VALUES[] = { 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, };
+const std::vector<std::string> MISC_MENU_ITEMS_COUNT_CAPTIONS{ "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50" };
+const int MISC_MENU_ITEMS_COUNT_VALUES[] = { 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50 };
 extern int MenuItemsCountIndex;
 extern bool MenuItemsCountChanged;
+
+// 标题栏和菜单项宽度 - 默认 350.0f
+const std::vector<std::string> MISC_MENU_WIDTH_CAPTIONS{ "默认", "200", "250", "260", "270", "280", "290", "300", "310", "320", "330", "340", "360", "370", "380", "390", "400", "500", "600", "700", "800", "900", "1000", "1100", "1200" };
+const float MISC_MENU_WIDTH_VALUES[] = { 350.0f, 200.0f, 250.0f, 260.0f, 270.0f, 280.0f, 290.0f, 300.0f, 310.0f, 320.0f, 330.0f, 340.0f, 360.0f, 370.0f, 380.0f, 390.0f, 400.0f, 500.0f, 600.0f, 700.0f, 800.0f, 900.0f, 1000.0f, 1100.0f, 1200.0f };
+const int MENU_WIDTH_DEFAULT_INDEX = 0;
+extern int MenuWidthIndex;
+extern bool MenuWidthChanged;
+
+// 标题栏高度 - 默认50.0f
+const std::vector<std::string> MISC_MENU_HEIGHT_CAPTIONS{ "默认", "10", "15", "20", "25", "30", "35", "40", "45", "55", "60", "65", "70", "75", "80", "85", "90", "95", "100", "110", "120", "130", "140", "150" };
+const float MISC_MENU_HEIGHT_VALUES[] = { 50.0f, 10.0f, 15.0f, 20.0f, 25.0f, 30.0f, 35.0f, 40.0f, 45.0f, 55.0f, 60.0f, 65.0f, 70.0f, 75.0f, 80.0f, 85.0f, 90.0f, 95.0f, 100.0f, 110.0f, 120.0f, 130.0f, 140.0f, 150.0f };
+const int MENU_HEIGHT_DEFAULT_INDEX = 0;
+extern int MenuHeightIndex;
+extern bool MenuHeightChanged;
+
+// 标题栏顶部偏移量 - 默认 15.0f
+const std::vector<std::string> MISC_MENU_TOP_OFFSET_CAPTIONS{ "默认", "0", "5", "10", "20", "25", "30", "35", "40", "45", "50", "55", "60", "65","70", "75", "80", "85", "90", "95", "100", "110", "120", "130", "140", "150" };
+const float MISC_MENU_TOP_OFFSET_VALUES[] = { 15.0f, 0.0f, 5.0f, 10.0f, 20.0f, 25.0f, 30.0f, 35.0f, 40.0f, 45.0f, 50.0f, 55.0f, 60.0f, 65.0f, 70.0f, 75.0f, 80.0f, 85.0f, 90.0f, 95.0f, 100.0f, 110.0f, 120.0f, 130.0f, 140.0f, 150.0f };
+const int MENU_TOP_OFFSET_DEFAULT_INDEX = 0;
+extern int MenuTopOffsetIndex;
+extern bool MenuTopOffsetChanged;
+
+// 标题栏和菜单项左侧偏移量 - 默认 35.0f
+const std::vector<std::string> MISC_MENU_LEFT_OFFSET_CAPTIONS{ "默认", "0", "5", "10", "15", "20", "25", "30", "40", "45", "50", "100", "200", "300", "400", "450", "500", "550", "600", "650", "700", "750", "800", "820", "840", "860", "880",  "900", "910", "920", "930", "940", "950", "960", "970", "980", "990", "1000", "1100", "1200" };
+const float MISC_MENU_LEFT_OFFSET_VALUES[] = { 35.0f, 0.0f, 5.0f, 10.0f, 15.0f, 20.0f, 25.0f, 30.0f, 40.0f, 45.0f, 50.0f, 100.0f, 200.0f, 300.0f, 400.0f, 450.0f, 500.0f, 550.0f, 600.0f, 650.0f, 700.0f, 750.0f, 800.0f, 820.0f, 840.0f, 860.0f, 880.0f, 900.0f, 910.0f, 920.0f, 930.0f, 940.0f, 950.0f, 960.0f, 970.0f, 980.0f, 990.0f, 1000.0f, 1100.0f, 1200.0f };
+const int MENU_LEFT_OFFSET_DEFAULT_INDEX = 0;
+extern int MenuLeftOffsetIndex;
+extern bool MenuLeftOffsetChanged;
+
+// 标题文本左侧偏移量 - 默认 45.0f
+const std::vector<std::string> MISC_MENU_TEXT_LEFT_OFFSET_CAPTIONS{ "默认", "0", "5",  "10", "15", "20", "25", "30", "35", "40", "50", "55", "60", "110", "210", "310", "410", "460", "510", "560", "610", "660", "710", "760", "810", "830", "850", "870", "890", "910", "920", "930", "940", "950", "960", "970", "980", "990", "1000", "1010", "1110" };
+const float MISC_MENU_TEXT_LEFT_OFFSET_VALUES[] = { 45.0f, 0.0f, 5.0f, 10.0f, 15.0f, 20.0f, 25.0f, 30.0f, 35.0f, 40.0f, 50.0f, 55.0f, 60.0f, 110.0f, 210.0f, 310.0f, 410.0f, 460.0f, 510.0f, 560.0f, 610.0f, 660.0f, 710.0f, 760.0f, 810.0f, 830.0f, 850.0f, 870.0f, 890.0f, 910.0f, 920.0f, 930.0f, 940.0f, 950.0f, 960.0f, 970.0f, 980.0f, 990.0f, 1000.0f, 1010.0f, 1110.0f };
+const int MENU_TEXT_LEFT_OFFSET_DEFAULT_INDEX = 0;
+extern int MenuTextLeftOffsetIndex;
+extern bool MenuTextLeftOffsetChanged;
+
+// 菜单项高度 - 默认 30.0f
+const std::vector<std::string> MISC_MENU_ITEM_HEIGHT_CAPTIONS{ "默认", "10", "15", "20", "25", "35", "40", "45", "50", "55", "60" };
+const float MISC_MENU_ITEM_HEIGHT_VALUES[] = { 30.0f, 10.0f, 15.0f, 20.0f, 25.0f, 35.0f, 40.0f, 45.0f, 50.0f, 55.0f, 60.0f };
+const int MENU_ITEM_HEIGHT_DEFAULT_INDEX = 0;
+extern int MenuItemHeightIndex;
+extern bool MenuItemHeightChanged;
+
+// 菜单项间距 - 默认 8.0f
+const std::vector<std::string> MISC_MENU_ITEM_SPACING_CAPTIONS{ "默认", "0", "1", "2", "3", "4", "5", "6", "7", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "50" };
+const float MISC_MENU_ITEM_SPACING_VALUES[] = { 8.0f, 0.0f, 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 9.0f, 10.0f, 11.0f, 12.0f, 13.0f, 14.0f, 15.0f, 16.0f, 17.0f, 18.0f, 19.0f, 20.0f, 21.0f, 22.0f, 23.0f, 24.0f, 25.0f, 26.0f, 27.0f, 28.0f, 29.0f, 30.0f, 31.0f, 32.0f, 33.0f, 34.0f, 35.0f, 36.0f, 37.0f, 38.0f, 39.0f, 40.0f, 41.0f, 42.0f, 43.0f, 44.0f, 45.0f, 50.0f };
+const int MENU_ITEM_SPACING_DEFAULT_INDEX = 0;
+extern int MenuItemSpacingIndex;
+extern bool MenuItemSpacingChanged;
+
+// 菜单项文本偏移量 - 默认 10.0f
+const std::vector<std::string> MISC_MENU_ITEM_TEXT_OFFSET_CAPTIONS{ "默认", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "25", "30", "35", "40", "45", "50", "55", "60", "65", "70", "75", "80", "85", "90", "95", "100" };
+const float MISC_MENU_ITEM_TEXT_OFFSET_VALUES[] = { 10.0f, 0.0f, 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f, 11.0f, 12.0f, 13.0f, 14.0f, 15.0f, 16.0f, 17.0f, 18.0f, 19.0f, 20.0f, 25.0f, 30.0f, 35.0f, 40.0f, 45.0f, 50.0f, 55.0f, 60.0f, 65.0f, 70.0f, 75.0f, 80.0f, 85.0f, 90.0f, 95.0f, 100.0f };
+const int MENU_ITEM_TEXT_OFFSET_DEFAULT_INDEX = 0;
+extern int MenuItemTextOffsetIndex;
+extern bool MenuItemTextOffsetChanged;
+
+// 菜单项与标题距离 - 默认 75.0f
+const std::vector<std::string> MISC_MENU_ITEM_TOP_OFFSET_CAPTIONS{ "默认", "10", "20", "25", "30", "35", "40", "45", "50", "55", "60", "65", "70", "80", "85", "90", "95", "100", "105", "110", "115", "120", "125", "130", "135", "140", "145" };
+const float MISC_MENU_ITEM_TOP_OFFSET_VALUES[] = { 75.0f, 20.0f, 25.0f, 30.0f, 35.0f, 40.0f, 45.0f, 50.0f, 55.0f, 60.0f, 65.0f, 70.0f, 80.0f, 85.0f, 90.0f, 95.0f, 100.0f, 105.0f, 110.0f, 115.0f, 120.0f, 125.0f, 130.0f, 135.0f, 140.0f, 145.0f };
+const int MENU_ITEM_TOP_OFFSET_DEFAULT_INDEX = 0;
+extern int MenuItemTopOffsetIndex;
+extern bool MenuItemTopOffsetChanged;
 
 void process_misc_menu();
 
@@ -142,12 +205,16 @@ void onchange_misc_font_header_index(int value, SelectFromListMenuItem* source);
 
 void onchange_misc_font_item_index(int value, SelectFromListMenuItem* source);
 
+void onchange_misc_menu_item_top_offset_index(int value, SelectFromListMenuItem* source);
+
 void onchange_misc_font_wanted_index(int value, SelectFromListMenuItem* source);
 
 void onchange_misc_font_status_index(int value, SelectFromListMenuItem* source);
 void onchange_misc_menu_items_count_index(int value, SelectFromListMenuItem* source);
 
 void process_misc_font_settings_menu();
+
+void process_misc_menu_layout_settings_menu();
 
 bool is_vehicle_preview_enabled();
 
@@ -160,6 +227,10 @@ void HUD_switching();
 void Traffic_switching();
 
 bool is_jellman_scenery_enabled();
+
+void reset_menu_layout_to_defaults();// 新增：菜单布局默认重置的统一函数声明（供重置/全局重置调用）
+
+extern bool g_MenuLayoutNeedsRefresh;// 新增：菜单布局设置界面刷新标志（用于在重置后强制重建菜单项显示）
 
 extern bool radio_v_checked;
 extern bool featureRealisticRadioVolume;

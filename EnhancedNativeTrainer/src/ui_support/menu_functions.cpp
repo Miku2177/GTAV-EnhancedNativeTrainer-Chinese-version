@@ -15,6 +15,17 @@ int fontHeader = 4, fontItem = 0, fontWanted = 7, fontStatus = 4;// 初始化字
 
 int itemsPerLine = 10;// 初始化菜单显示的项目数
 
+// 菜单布局设置全局变量初始化
+float menuWidth = 350.0f;        // 标题栏和菜单项宽度
+float menuHeight = 50.0f;        // 标题栏高度
+float menuTopOffset = 15.0f;     // 标题栏顶部偏移量
+float menuLeftOffset = 35.0f;    // 标题栏和菜单项左侧偏移量
+float menuTextLeftOffset = 45.0f; // 标题文本左侧偏移量
+float menuItemHeight = 30.0f;    // 菜单项高度
+float menuItemTopOffset = 75.0f; // 菜单项与标题距离
+float menuItemSpacing = 8.0f;    // 菜单项间距
+float menuItemTextOffset = 10.0f; // 菜单项文本偏移量
+
 std::string centreScreenStatusText;
 DWORD centreScreenStatusTextDrawTicksMax;
 bool centreScreenStatusTextGxtEntry;

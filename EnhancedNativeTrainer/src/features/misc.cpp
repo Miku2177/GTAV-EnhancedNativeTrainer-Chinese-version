@@ -22,6 +22,8 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 // 其他菜单选项
 //==================
 
+bool g_MenuLayoutNeedsRefresh = false;//添加刷新标志定义
+
 bool iterated_radio_stations = false; //为了防止不必要的循环而反复执行。
 
 int activeLineIndexTrainerConfig = 0;
@@ -338,6 +340,9 @@ bool onconfirm_trainerconfig_menu(MenuItem<int> choice){
 	else if(choice.value == 64){
 		process_misc_font_settings_menu();
 	}
+	else if(choice.value == 65){
+		process_misc_menu_layout_settings_menu();
+	}
 	return false;
 }
 
@@ -371,6 +376,13 @@ void process_misc_trainerconfig_menu(){
 	fontSettingsItem->value = 64;
 	fontSettingsItem->isLeaf = false;
 	menuItems.push_back(fontSettingsItem);
+
+	// 添加菜单布局设置菜单项
+	MenuItem<int>* menuLayoutSettingsItem = new MenuItem<int>();
+	menuLayoutSettingsItem->caption = "菜单布局设置";
+	menuLayoutSettingsItem->value = 65;
+	menuLayoutSettingsItem->isLeaf = false;
+	menuItems.push_back(menuLayoutSettingsItem);
 
 	// 添加菜单显示项目数设置
 	SelectFromListMenuItem *menuItemsCountItem = new SelectFromListMenuItem(MISC_MENU_ITEMS_COUNT_CAPTIONS, onchange_misc_menu_items_count_index);
@@ -1214,6 +1226,9 @@ void reset_misc_globals(){
 	itemsPerLine = MISC_MENU_ITEMS_COUNT_VALUES[0]; // 重置为默认菜单显示项目数
 	FontStatusIndex = 0;
 	fontStatus = MISC_FONT_STATUS_VALUES[0]; // 重置为默认状态字体
+
+	// 重置菜单布局设置
+	reset_menu_layout_to_defaults();
 
 	//featureControllerIgnoreInTrainer = false;
 	//featureBlockInputInMenu = false;
@@ -2080,7 +2095,7 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 		sfilter_enabled = true;
 	}
 	if (DLC2::GET_IS_LOADING_SCREEN_ACTIVE()) sfilter_enabled = false;
-	
+
 }
 
 void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){
@@ -2145,6 +2160,16 @@ void add_misc_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"FontWantedIndex", std::to_string(FontWantedIndex)});
 	results->push_back(StringPairSettingDBRow{"FontStatusIndex", std::to_string(FontStatusIndex)});
 	results->push_back(StringPairSettingDBRow{"MenuItemsCountIndex", std::to_string(MenuItemsCountIndex)});
+	// 添加菜单布局设置
+	results->push_back(StringPairSettingDBRow{"MenuWidthIndex", std::to_string(MenuWidthIndex)});
+	results->push_back(StringPairSettingDBRow{"MenuHeightIndex", std::to_string(MenuHeightIndex)});
+	results->push_back(StringPairSettingDBRow{"MenuTopOffsetIndex", std::to_string(MenuTopOffsetIndex)});
+	results->push_back(StringPairSettingDBRow{"MenuLeftOffsetIndex", std::to_string(MenuLeftOffsetIndex)});
+	results->push_back(StringPairSettingDBRow{"MenuTextLeftOffsetIndex", std::to_string(MenuTextLeftOffsetIndex)});
+	results->push_back(StringPairSettingDBRow{"MenuItemHeightIndex", std::to_string(MenuItemHeightIndex)});
+	results->push_back(StringPairSettingDBRow{"MenuItemSpacingIndex", std::to_string(MenuItemSpacingIndex)});
+	results->push_back(StringPairSettingDBRow{"MenuItemTextOffsetIndex", std::to_string(MenuItemTextOffsetIndex)});
+	results->push_back(StringPairSettingDBRow{"MenuItemTopOffsetIndex", std::to_string(MenuItemTopOffsetIndex)});
 	results->push_back(StringPairSettingDBRow{"screenfltr", screenfltr});
 }
 
@@ -2202,6 +2227,70 @@ void handle_generic_settings_misc(std::vector<StringPairSettingDBRow>* settings)
             itemsPerLine = MISC_MENU_ITEMS_COUNT_VALUES[MenuItemsCountIndex];
             MenuItemsCountChanged = true;
         }
+		// 添加菜单布局设置的加载
+		else if (setting.name.compare("MenuWidthIndex") == 0) {
+			MenuWidthIndex = stoi(setting.value);
+			if (MenuWidthIndex < 0) MenuWidthIndex = 0;
+			if (MenuWidthIndex >= (int)MISC_MENU_WIDTH_CAPTIONS.size()) MenuWidthIndex = (int)MISC_MENU_WIDTH_CAPTIONS.size() - 1;
+			menuWidth = MISC_MENU_WIDTH_VALUES[MenuWidthIndex];
+			MenuWidthChanged = true;
+		}
+		else if (setting.name.compare("MenuHeightIndex") == 0) {
+			MenuHeightIndex = stoi(setting.value);
+			if (MenuHeightIndex < 0) MenuHeightIndex = 0;
+			if (MenuHeightIndex >= (int)MISC_MENU_HEIGHT_CAPTIONS.size()) MenuHeightIndex = (int)MISC_MENU_HEIGHT_CAPTIONS.size() - 1;
+			menuHeight = MISC_MENU_HEIGHT_VALUES[MenuHeightIndex];
+			MenuHeightChanged = true;
+		}
+		else if (setting.name.compare("MenuTopOffsetIndex") == 0) {
+			MenuTopOffsetIndex = stoi(setting.value);
+			if (MenuTopOffsetIndex < 0) MenuTopOffsetIndex = 0;
+			if (MenuTopOffsetIndex >= (int)MISC_MENU_TOP_OFFSET_CAPTIONS.size()) MenuTopOffsetIndex = (int)MISC_MENU_TOP_OFFSET_CAPTIONS.size() - 1;
+			menuTopOffset = MISC_MENU_TOP_OFFSET_VALUES[MenuTopOffsetIndex];
+			MenuTopOffsetChanged = true;
+		}
+		else if (setting.name.compare("MenuLeftOffsetIndex") == 0) {
+			MenuLeftOffsetIndex = stoi(setting.value);
+			if (MenuLeftOffsetIndex < 0) MenuLeftOffsetIndex = 0;
+			if (MenuLeftOffsetIndex >= (int)MISC_MENU_LEFT_OFFSET_CAPTIONS.size()) MenuLeftOffsetIndex = (int)MISC_MENU_LEFT_OFFSET_CAPTIONS.size() - 1;
+			menuLeftOffset = MISC_MENU_LEFT_OFFSET_VALUES[MenuLeftOffsetIndex];
+			MenuLeftOffsetChanged = true;
+		}
+		else if (setting.name.compare("MenuTextLeftOffsetIndex") == 0) {
+			MenuTextLeftOffsetIndex = stoi(setting.value);
+			if (MenuTextLeftOffsetIndex < 0) MenuTextLeftOffsetIndex = 0;
+			if (MenuTextLeftOffsetIndex >= (int)MISC_MENU_TEXT_LEFT_OFFSET_CAPTIONS.size()) MenuTextLeftOffsetIndex = (int)MISC_MENU_TEXT_LEFT_OFFSET_CAPTIONS.size() - 1;
+			menuTextLeftOffset = MISC_MENU_TEXT_LEFT_OFFSET_VALUES[MenuTextLeftOffsetIndex];
+			MenuTextLeftOffsetChanged = true;
+		}
+		else if (setting.name.compare("MenuItemHeightIndex") == 0) {
+			MenuItemHeightIndex = stoi(setting.value);
+			if (MenuItemHeightIndex < 0) MenuItemHeightIndex = 0;
+			if (MenuItemHeightIndex >= (int)MISC_MENU_ITEM_HEIGHT_CAPTIONS.size()) MenuItemHeightIndex = (int)MISC_MENU_ITEM_HEIGHT_CAPTIONS.size() - 1;
+			menuItemHeight = MISC_MENU_ITEM_HEIGHT_VALUES[MenuItemHeightIndex];
+			MenuItemHeightChanged = true;
+		}
+		else if (setting.name.compare("MenuItemSpacingIndex") == 0) {
+			MenuItemSpacingIndex = stoi(setting.value);
+			if (MenuItemSpacingIndex < 0) MenuItemSpacingIndex = 0;
+			if (MenuItemSpacingIndex >= (int)MISC_MENU_ITEM_SPACING_CAPTIONS.size()) MenuItemSpacingIndex = (int)MISC_MENU_ITEM_SPACING_CAPTIONS.size() - 1;
+			menuItemSpacing = MISC_MENU_ITEM_SPACING_VALUES[MenuItemSpacingIndex];
+			MenuItemSpacingChanged = true;
+		}
+		else if (setting.name.compare("MenuItemTextOffsetIndex") == 0) {
+			MenuItemTextOffsetIndex = stoi(setting.value);
+			if (MenuItemTextOffsetIndex < 0) MenuItemTextOffsetIndex = 0;
+			if (MenuItemTextOffsetIndex >= (int)MISC_MENU_ITEM_TEXT_OFFSET_CAPTIONS.size()) MenuItemTextOffsetIndex = (int)MISC_MENU_ITEM_TEXT_OFFSET_CAPTIONS.size() - 1;
+			menuItemTextOffset = MISC_MENU_ITEM_TEXT_OFFSET_VALUES[MenuItemTextOffsetIndex];
+			MenuItemTextOffsetChanged = true;
+		}
+		else if (setting.name.compare("MenuItemTopOffsetIndex") == 0) {
+			MenuItemTopOffsetIndex = stoi(setting.value);
+			if (MenuItemTopOffsetIndex < 0) MenuItemTopOffsetIndex = 0;
+			if (MenuItemTopOffsetIndex >= (int)MISC_MENU_ITEM_TOP_OFFSET_CAPTIONS.size()) MenuItemTopOffsetIndex = (int)MISC_MENU_ITEM_TOP_OFFSET_CAPTIONS.size() - 1;
+			menuItemTopOffset = MISC_MENU_ITEM_TOP_OFFSET_VALUES[MenuItemTopOffsetIndex];
+			MenuItemTopOffsetChanged = true;
+		}
 		else if (setting.name.compare("screenfltr") == 0) {
 			screenfltr = setting.value;
 		}
@@ -2333,4 +2422,236 @@ void SInit()
 
 	address = FindPatternJACCO("\x48\x8D\x1D\x00\x00\x00\x00\xBF\x00\x00\x00\x00\x48\x83\x3B\x00", "xxx????x????xxxx");
 	g_unkRadioStationData = (uintptr_t*)(address + *(int*)(address + 3) + 7);
+}
+
+// 菜单布局设置变量定义
+int MenuWidthIndex = MENU_WIDTH_DEFAULT_INDEX; // 使用默认索引常量
+bool MenuWidthChanged = false;
+
+int MenuHeightIndex = MENU_HEIGHT_DEFAULT_INDEX; // 使用默认索引常量
+bool MenuHeightChanged = false;
+
+int MenuTopOffsetIndex = MENU_TOP_OFFSET_DEFAULT_INDEX; // 使用默认索引常量
+bool MenuTopOffsetChanged = false;
+
+int MenuLeftOffsetIndex = MENU_LEFT_OFFSET_DEFAULT_INDEX; // 使用默认索引常量
+bool MenuLeftOffsetChanged = false;
+
+int MenuTextLeftOffsetIndex = MENU_TEXT_LEFT_OFFSET_DEFAULT_INDEX; // 使用默认索引常量
+bool MenuTextLeftOffsetChanged = false;
+
+// 菜单项设置变量定义
+int MenuItemHeightIndex = MENU_ITEM_HEIGHT_DEFAULT_INDEX; // 使用默认索引常量
+bool MenuItemHeightChanged = false;
+
+int MenuItemSpacingIndex = MENU_ITEM_SPACING_DEFAULT_INDEX; // 使用默认索引常量
+bool MenuItemSpacingChanged = false;
+
+int MenuItemTextOffsetIndex = MENU_ITEM_TEXT_OFFSET_DEFAULT_INDEX; // 使用默认索引常量
+bool MenuItemTextOffsetChanged = false;
+
+int MenuItemTopOffsetIndex = MENU_ITEM_TOP_OFFSET_DEFAULT_INDEX; // 使用默认索引常量
+bool MenuItemTopOffsetChanged = false;
+
+// 菜单布局设置相关函数实现
+void onchange_misc_menu_width_index(int value, SelectFromListMenuItem* source) {
+    MenuWidthIndex = value;
+    menuWidth = MISC_MENU_WIDTH_VALUES[value]; // 更新全局菜单宽度变量
+    MenuWidthChanged = true;
+}
+
+void onchange_misc_menu_height_index(int value, SelectFromListMenuItem* source) {
+    MenuHeightIndex = value;
+    menuHeight = MISC_MENU_HEIGHT_VALUES[value]; // 更新全局菜单高度变量
+    MenuHeightChanged = true;
+}
+
+void onchange_misc_menu_top_offset_index(int value, SelectFromListMenuItem* source) {
+    MenuTopOffsetIndex = value;
+    menuTopOffset = MISC_MENU_TOP_OFFSET_VALUES[value]; // 更新全局菜单顶部偏移量变量
+    MenuTopOffsetChanged = true;
+}
+
+void onchange_misc_menu_left_offset_index(int value, SelectFromListMenuItem* source) {
+    MenuLeftOffsetIndex = value;
+    menuLeftOffset = MISC_MENU_LEFT_OFFSET_VALUES[value]; // 更新全局菜单左侧偏移量变量
+    MenuLeftOffsetChanged = true;
+}
+
+void onchange_misc_menu_text_left_offset_index(int value, SelectFromListMenuItem* source) {
+    MenuTextLeftOffsetIndex = value;
+    menuTextLeftOffset = MISC_MENU_TEXT_LEFT_OFFSET_VALUES[value]; // 更新全局菜单文本左侧偏移量变量
+    MenuTextLeftOffsetChanged = true;
+}
+
+// 菜单项设置相关函数实现
+void onchange_misc_menu_item_height_index(int value, SelectFromListMenuItem* source) {
+    MenuItemHeightIndex = value;
+    menuItemHeight = MISC_MENU_ITEM_HEIGHT_VALUES[value]; // 更新全局菜单项高度变量
+    MenuItemHeightChanged = true;
+}
+
+void onchange_misc_menu_item_spacing_index(int value, SelectFromListMenuItem* source) {
+    MenuItemSpacingIndex = value;
+    menuItemSpacing = MISC_MENU_ITEM_SPACING_VALUES[value]; // 更新全局菜单项间距变量
+    MenuItemSpacingChanged = true;
+}
+
+void onchange_misc_menu_item_text_offset_index(int value, SelectFromListMenuItem* source) {
+    MenuItemTextOffsetIndex = value;
+    menuItemTextOffset = MISC_MENU_ITEM_TEXT_OFFSET_VALUES[value]; // 更新全局菜单项文本偏移量变量
+    MenuItemTextOffsetChanged = true;
+}
+
+// 菜单项宽度和左侧偏移已合并到标题设置中，不再需要单独的onchange函数
+
+void onchange_misc_menu_item_top_offset_index(int value, SelectFromListMenuItem* source) {
+    MenuItemTopOffsetIndex = value;
+    menuItemTopOffset = MISC_MENU_ITEM_TOP_OFFSET_VALUES[value]; // 更新全局菜单项顶部偏移量变量
+    MenuItemTopOffsetChanged = true;
+}
+
+// 菜单布局设置菜单实现
+int activeLineIndexMenuLayout = 0;
+
+void reset_menu_layout_to_defaults() {
+    // 使用默认索引常量，避免与用户选择索引0混淆
+    MenuWidthIndex = MENU_WIDTH_DEFAULT_INDEX;
+    menuWidth = MISC_MENU_WIDTH_VALUES[MenuWidthIndex];
+    MenuWidthChanged = true;
+
+    MenuHeightIndex = MENU_HEIGHT_DEFAULT_INDEX;
+    menuHeight = MISC_MENU_HEIGHT_VALUES[MenuHeightIndex];
+    MenuHeightChanged = true;
+
+    MenuTopOffsetIndex = MENU_TOP_OFFSET_DEFAULT_INDEX;
+    menuTopOffset = MISC_MENU_TOP_OFFSET_VALUES[MenuTopOffsetIndex];
+    MenuTopOffsetChanged = true;
+
+    MenuLeftOffsetIndex = MENU_LEFT_OFFSET_DEFAULT_INDEX;
+    menuLeftOffset = MISC_MENU_LEFT_OFFSET_VALUES[MenuLeftOffsetIndex];
+    MenuLeftOffsetChanged = true;
+
+    MenuTextLeftOffsetIndex = MENU_TEXT_LEFT_OFFSET_DEFAULT_INDEX;
+    menuTextLeftOffset = MISC_MENU_TEXT_LEFT_OFFSET_VALUES[MenuTextLeftOffsetIndex];
+    MenuTextLeftOffsetChanged = true;
+
+    MenuItemHeightIndex = MENU_ITEM_HEIGHT_DEFAULT_INDEX;
+    menuItemHeight = MISC_MENU_ITEM_HEIGHT_VALUES[MenuItemHeightIndex];
+    MenuItemHeightChanged = true;
+
+    MenuItemSpacingIndex = MENU_ITEM_SPACING_DEFAULT_INDEX;
+    menuItemSpacing = MISC_MENU_ITEM_SPACING_VALUES[MenuItemSpacingIndex];
+    MenuItemSpacingChanged = true;
+
+    MenuItemTextOffsetIndex = MENU_ITEM_TEXT_OFFSET_DEFAULT_INDEX;
+    menuItemTextOffset = MISC_MENU_ITEM_TEXT_OFFSET_VALUES[MenuItemTextOffsetIndex];
+    MenuItemTextOffsetChanged = true;
+
+    MenuItemTopOffsetIndex = MENU_ITEM_TOP_OFFSET_DEFAULT_INDEX;
+    menuItemTopOffset = MISC_MENU_ITEM_TOP_OFFSET_VALUES[MenuItemTopOffsetIndex];
+    MenuItemTopOffsetChanged = true;
+}
+
+bool onconfirm_menu_layout_reset(MenuItem<int> choice) {
+	if (choice.value == -0xA1B2C3) {// 检查特殊值-0xA1B2C3，避免与下拉菜单的索引冲突
+		reset_menu_layout_to_defaults();
+		set_status_text("菜单布局已重置为默认！");
+
+		// 异步线程只设置刷新标志
+		DWORD myThreadID;
+		HANDLE myHandle = CreateThread(0, 0, [](LPVOID) -> DWORD {
+			g_MenuLayoutNeedsRefresh = true; // 标志位交给主线程去刷新
+			return 0;
+			}, 0, 0, &myThreadID);
+		CloseHandle(myHandle);
+
+		return true; // 返回 true 退出当前菜单
+	}
+	return false;
+}
+
+void process_misc_menu_layout_settings_menu() {
+    const std::string caption = "菜单布局设置";
+
+    // 如果上次操作触发了重置，强制刷新当前菜单项显示的 value
+    if (g_MenuLayoutNeedsRefresh) {
+        g_MenuLayoutNeedsRefresh = false;
+        // 直接继续构建菜单即可，下面使用的 Index 都是最新的 0
+    }
+
+    std::vector<MenuItem<int>*> menuItems;
+    SelectFromListMenuItem *listItem;
+
+    // 添加重置按钮
+    MenuItem<int>* resetItem = new MenuItem<int>();
+    resetItem->caption = "重置默认布局";
+    resetItem->value = -0xA1B2C3; // 使用一个特殊值，避免与下拉菜单的索引冲突
+    resetItem->isLeaf = true;
+    menuItems.push_back(resetItem);
+
+    // 添加菜单宽度设置
+    listItem = new SelectFromListMenuItem(MISC_MENU_WIDTH_CAPTIONS, onchange_misc_menu_width_index);
+    listItem->wrap = false;
+    listItem->caption = "菜单 宽度";
+    listItem->value = MenuWidthIndex;
+    menuItems.push_back(listItem);
+
+    // 添加菜单左侧偏移量设置
+    listItem = new SelectFromListMenuItem(MISC_MENU_LEFT_OFFSET_CAPTIONS, onchange_misc_menu_left_offset_index);
+    listItem->wrap = false;
+    listItem->caption = "菜单 左右位置";
+    listItem->value = MenuLeftOffsetIndex;
+    menuItems.push_back(listItem);
+
+    // 添加菜单项顶部偏移量设置
+    listItem = new SelectFromListMenuItem(MISC_MENU_ITEM_TOP_OFFSET_CAPTIONS, onchange_misc_menu_item_top_offset_index);
+    listItem->wrap = false;
+    listItem->caption = "菜单项 上下位置";
+    listItem->value = MenuItemTopOffsetIndex;
+    menuItems.push_back(listItem);
+
+    // 添加菜单顶部偏移量设置
+    listItem = new SelectFromListMenuItem(MISC_MENU_TOP_OFFSET_CAPTIONS, onchange_misc_menu_top_offset_index);
+    listItem->wrap = false;
+    listItem->caption = "标题栏 上下位置";
+    listItem->value = MenuTopOffsetIndex;
+    menuItems.push_back(listItem);
+
+    // 添加菜单高度设置
+    listItem = new SelectFromListMenuItem(MISC_MENU_HEIGHT_CAPTIONS, onchange_misc_menu_height_index);
+    listItem->wrap = false;
+    listItem->caption = "标题栏 厚度";
+    listItem->value = MenuHeightIndex;
+    menuItems.push_back(listItem);
+
+    // 添加菜单项高度设置
+    listItem = new SelectFromListMenuItem(MISC_MENU_ITEM_HEIGHT_CAPTIONS, onchange_misc_menu_item_height_index);
+    listItem->wrap = false;
+    listItem->caption = "菜单项 厚度";
+    listItem->value = MenuItemHeightIndex;
+    menuItems.push_back(listItem);
+
+    // 添加菜单文本左侧偏移量设置
+    listItem = new SelectFromListMenuItem(MISC_MENU_TEXT_LEFT_OFFSET_CAPTIONS, onchange_misc_menu_text_left_offset_index);
+    listItem->wrap = false;
+    listItem->caption = "标题文本 左右位置";
+    listItem->value = MenuTextLeftOffsetIndex;
+    menuItems.push_back(listItem);
+
+    // 添加菜单项文本偏移量设置
+    listItem = new SelectFromListMenuItem(MISC_MENU_ITEM_TEXT_OFFSET_CAPTIONS, onchange_misc_menu_item_text_offset_index);
+    listItem->wrap = false;
+    listItem->caption = "菜单文本 左右位置";
+    listItem->value = MenuItemTextOffsetIndex;
+    menuItems.push_back(listItem);
+
+    // 添加菜单项间距设置
+    listItem = new SelectFromListMenuItem(MISC_MENU_ITEM_SPACING_CAPTIONS, onchange_misc_menu_item_spacing_index);
+    listItem->wrap = false;
+    listItem->caption = "菜单项 间距";
+    listItem->value = MenuItemSpacingIndex;
+    menuItems.push_back(listItem);
+
+    draw_generic_menu<int>(menuItems, &activeLineIndexMenuLayout, caption, onconfirm_menu_layout_reset, NULL, NULL);
 }

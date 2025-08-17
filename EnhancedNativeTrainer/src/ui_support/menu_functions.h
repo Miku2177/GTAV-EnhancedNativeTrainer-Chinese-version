@@ -38,6 +38,17 @@ extern int fontHeader, fontItem, fontWanted, fontStatus;// 修改字体类型：
 
 extern int itemsPerLine;// 设置菜单显示的项目数
 
+// 菜单布局设置全局变量
+extern float menuWidth;        // 标题栏和菜单项宽度
+extern float menuHeight;       // 标题栏高度
+extern float menuTopOffset;    // 标题栏顶部偏移量
+extern float menuLeftOffset;   // 标题栏和菜单项左侧偏移量
+extern float menuTextLeftOffset; // 标题文本左侧偏移量
+extern float menuItemHeight;   // 菜单项高度
+extern float menuItemTopOffset; // 菜单项与标题距离
+extern float menuItemSpacing;  // 菜单项间距
+extern float menuItemTextOffset; // 菜单项文本偏移量
+
 extern void(*periodic_feature_call)(void);
 
 extern void(*menu_per_frame_call)(void);
@@ -1194,11 +1205,11 @@ bool draw_generic_menu(MenuParameters<T> params){
 
 			// 更改标题和菜单等，在这里！！！
 			draw_menu_header_line(sanit_header,// 菜单标题文本
-								  350.0f, // 标题的宽度
-								  50.0f, // 标题的高度
-								  15.0f, // 标题的 顶部 偏移量（Y 坐标）
-								  35.0f, // 标题的 左侧 偏移量（X 坐标）
-								  45.0f, // 标题文本的 左侧 偏移量
+								  menuWidth, // 标题的宽度
+								  menuHeight, // 标题的高度
+								  menuTopOffset, // 标题的 顶部 偏移量（Y 坐标）
+								  menuLeftOffset, // 标题的 左侧 偏移量（X 坐标）
+								  menuTextLeftOffset, // 标题文本的 左侧 偏移量
 								  false, // 是否显示背景（false 表示不显示）
 								  true, // 是否显示边框（true 表示显示）
 								  (currentLine + 1),// 当前行号（从 1 开始）
@@ -1208,14 +1219,14 @@ bool draw_generic_menu(MenuParameters<T> params){
 			float activeLineY = 0; // 用于存储当前选中菜单项的（ Y 坐标）
 
 			for(int i = 0; i < itemsOnThisLine; i++){ // 初始化循环变量 i，表示当前菜单项的索引，从 0 开始。
-				float lineSpacingY = 8.0f; // 菜单项之间的垂直间距
+				float lineSpacingY = menuItemSpacing; // 菜单项之间的垂直间距
 
-				float lineWidth = 350.0f; // 菜单项的宽度
-				float lineHeight = 30.0f; // 菜单项的高度
+				float lineWidth = menuWidth; // 菜单项的宽度
+				float lineHeight = menuItemHeight; // 菜单项的高度
 
-				float lineTop = 75.0 + (i * (lineHeight + lineSpacingY)); // 计算当前菜单项的顶部位置（Y 坐标）
-				float lineLeft = 35.0f; // 菜单项的左侧位置（X 坐标）
-				float textOffset = 10.0f; // 菜单项文本的 左侧 偏移量
+				float lineTop = menuItemTopOffset + (i * (lineHeight + lineSpacingY)); // 计算当前菜单项的顶部位置（Y 坐标）
+				float lineLeft = menuLeftOffset; // 菜单项的左侧位置（X 坐标）
+				float textOffset = menuItemTextOffset; // 菜单项文本的 左侧 偏移量
 
 				draw_menu_item_line(params.items[lineStartPosition + i], lineWidth, lineHeight, lineTop, lineLeft, textOffset, i == positionOnThisLine, false);
 
