@@ -343,7 +343,49 @@ bool onconfirm_trainerconfig_menu(MenuItem<int> choice){
 	else if(choice.value == 65){
 		process_misc_menu_layout_settings_menu();
 	}
+	else if(choice.value == 66){
+		process_misc_vehicle_preview_settings_menu();
+	}
 	return false;
+}
+
+// 车辆预览图设置菜单实现
+int activeLineIndexVehiclePreview = 0;
+
+void process_misc_vehicle_preview_settings_menu() {
+	const std::string caption = "车辆预览图设置";
+
+	std::vector<MenuItem<int>*> menuItems;
+	SelectFromListMenuItem *listItem;
+
+	// 添加预览图左右判断依据设置
+	listItem = new SelectFromListMenuItem(MISC_PREVIEW_POSITION_THRESHOLD_CAPTIONS, onchange_misc_preview_position_threshold_index);
+	listItem->wrap = false;
+	listItem->caption = "预览图右侧显示切换";
+	listItem->value = PreviewPositionThresholdIndex;
+	menuItems.push_back(listItem);
+
+	// 添加预览图分辨率适配值设置
+	listItem = new SelectFromListMenuItem(MISC_PREVIEW_RESOLUTION_SCALE_CAPTIONS, onchange_misc_preview_resolution_scale_index);
+	listItem->wrap = false;
+	listItem->caption = "预览图分辨率适配";
+	listItem->value = PreviewResolutionScaleIndex;
+	menuItems.push_back(listItem);
+
+	// 添加预览图间距设置
+	listItem = new SelectFromListMenuItem(MISC_PREVIEW_SPACING_CAPTIONS, onchange_misc_preview_spacing_index);
+	listItem->wrap = false;
+	listItem->caption = "车辆预览图间距";
+	listItem->value = PreviewSpacingIndex;
+	menuItems.push_back(listItem);
+
+	// 添加显示车辆预览图选项
+	ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
+	toggleItem->caption = "显示车辆预览图";
+	toggleItem->toggleValue = &featureShowVehiclePreviews;
+	menuItems.push_back(toggleItem);
+
+	draw_generic_menu<int>(menuItems, &activeLineIndexVehiclePreview, caption, NULL, NULL, NULL);
 }
 
 void process_misc_trainerconfig_menu(){
@@ -383,6 +425,13 @@ void process_misc_trainerconfig_menu(){
 	menuLayoutSettingsItem->value = 65;
 	menuLayoutSettingsItem->isLeaf = false;
 	menuItems.push_back(menuLayoutSettingsItem);
+	
+	// 添加车辆预览图设置菜单项
+	MenuItem<int>* vehiclePreviewSettingsItem = new MenuItem<int>();
+	vehiclePreviewSettingsItem->caption = "车辆预览图设置";
+	vehiclePreviewSettingsItem->value = 66;
+	vehiclePreviewSettingsItem->isLeaf = false;
+	menuItems.push_back(vehiclePreviewSettingsItem);
 
 	// 添加菜单显示项目数设置
 	SelectFromListMenuItem *menuItemsCountItem = new SelectFromListMenuItem(MISC_MENU_ITEMS_COUNT_CAPTIONS, onchange_misc_menu_items_count_index);
@@ -402,11 +451,6 @@ void process_misc_trainerconfig_menu(){
 	//menuItems.push_back(toggleItem);
 
 	ToggleMenuItem<int>* toggleItem = new ToggleMenuItem<int>();
-	toggleItem->caption = "显示车辆预览图";
-	toggleItem->toggleValue = &featureShowVehiclePreviews;
-	menuItems.push_back(toggleItem);
-
-	toggleItem = new ToggleMenuItem<int>();
 	toggleItem->caption = "启动时显示状态消息";
 	toggleItem->toggleValue = &featureShowStatusMessage;
 	menuItems.push_back(toggleItem);
@@ -417,7 +461,7 @@ void process_misc_trainerconfig_menu(){
 	menuItems.push_back(toggleItem);
 
 	stdItem = new MenuItem<int>();
-	stdItem->caption = "修改器菜单颜色";
+	stdItem->caption = "修改器菜单颜色设置";
 	stdItem->value = 63;
 	stdItem->isLeaf = false;
 	menuItems.push_back(stdItem);
@@ -2170,6 +2214,10 @@ void add_misc_generic_settings(std::vector<StringPairSettingDBRow>* results){
 	results->push_back(StringPairSettingDBRow{"MenuItemSpacingIndex", std::to_string(MenuItemSpacingIndex)});
 	results->push_back(StringPairSettingDBRow{"MenuItemTextOffsetIndex", std::to_string(MenuItemTextOffsetIndex)});
 	results->push_back(StringPairSettingDBRow{"MenuItemTopOffsetIndex", std::to_string(MenuItemTopOffsetIndex)});
+	// 添加预览图设置
+	results->push_back(StringPairSettingDBRow{"PreviewPositionThresholdIndex", std::to_string(PreviewPositionThresholdIndex)});
+	results->push_back(StringPairSettingDBRow{"PreviewResolutionScaleIndex", std::to_string(PreviewResolutionScaleIndex)});
+	results->push_back(StringPairSettingDBRow{"PreviewSpacingIndex", std::to_string(PreviewSpacingIndex)});
 	results->push_back(StringPairSettingDBRow{"screenfltr", screenfltr});
 }
 
@@ -2290,6 +2338,28 @@ void handle_generic_settings_misc(std::vector<StringPairSettingDBRow>* settings)
 			if (MenuItemTopOffsetIndex >= (int)MISC_MENU_ITEM_TOP_OFFSET_CAPTIONS.size()) MenuItemTopOffsetIndex = (int)MISC_MENU_ITEM_TOP_OFFSET_CAPTIONS.size() - 1;
 			menuItemTopOffset = MISC_MENU_ITEM_TOP_OFFSET_VALUES[MenuItemTopOffsetIndex];
 			MenuItemTopOffsetChanged = true;
+		}
+		// 添加预览图设置的加载
+		else if (setting.name.compare("PreviewPositionThresholdIndex") == 0) {
+			PreviewPositionThresholdIndex = stoi(setting.value);
+			if (PreviewPositionThresholdIndex < 0) PreviewPositionThresholdIndex = 0;
+			if (PreviewPositionThresholdIndex >= (int)MISC_PREVIEW_POSITION_THRESHOLD_CAPTIONS.size()) PreviewPositionThresholdIndex = (int)MISC_PREVIEW_POSITION_THRESHOLD_CAPTIONS.size() - 1;
+			previewPositionThreshold = MISC_PREVIEW_POSITION_THRESHOLD_VALUES[PreviewPositionThresholdIndex];
+			PreviewPositionThresholdChanged = true;
+		}
+		else if (setting.name.compare("PreviewResolutionScaleIndex") == 0) {
+			PreviewResolutionScaleIndex = stoi(setting.value);
+			if (PreviewResolutionScaleIndex < 0) PreviewResolutionScaleIndex = 0;
+			if (PreviewResolutionScaleIndex >= (int)MISC_PREVIEW_RESOLUTION_SCALE_CAPTIONS.size()) PreviewResolutionScaleIndex = (int)MISC_PREVIEW_RESOLUTION_SCALE_CAPTIONS.size() - 1;
+			previewResolutionScale = MISC_PREVIEW_RESOLUTION_SCALE_VALUES[PreviewResolutionScaleIndex];
+			PreviewResolutionScaleChanged = true;
+		}
+		else if (setting.name.compare("PreviewSpacingIndex") == 0) {
+			PreviewSpacingIndex = stoi(setting.value);
+			if (PreviewSpacingIndex < 0) PreviewSpacingIndex = 0;
+			if (PreviewSpacingIndex >= (int)MISC_PREVIEW_SPACING_CAPTIONS.size()) PreviewSpacingIndex = (int)MISC_PREVIEW_SPACING_CAPTIONS.size() - 1;
+			previewSpacing = MISC_PREVIEW_SPACING_VALUES[PreviewSpacingIndex];
+			PreviewSpacingChanged = true;
 		}
 		else if (setting.name.compare("screenfltr") == 0) {
 			screenfltr = setting.value;
@@ -2453,6 +2523,16 @@ bool MenuItemTextOffsetChanged = false;
 int MenuItemTopOffsetIndex = MENU_ITEM_TOP_OFFSET_DEFAULT_INDEX; // 使用默认索引常量
 bool MenuItemTopOffsetChanged = false;
 
+// 预览图设置变量定义
+int PreviewPositionThresholdIndex = PREVIEW_POSITION_THRESHOLD_DEFAULT_INDEX; // 预览图左右判断依据
+bool PreviewPositionThresholdChanged = false;
+
+int PreviewResolutionScaleIndex = PREVIEW_RESOLUTION_SCALE_DEFAULT_INDEX; // 预览图分辨率适配值
+bool PreviewResolutionScaleChanged = false;
+
+int PreviewSpacingIndex = PREVIEW_SPACING_DEFAULT_INDEX; // 预览图间距
+bool PreviewSpacingChanged = false;
+
 // 菜单布局设置相关函数实现
 void onchange_misc_menu_width_index(int value, SelectFromListMenuItem* source) {
     MenuWidthIndex = value;
@@ -2503,6 +2583,25 @@ void onchange_misc_menu_item_text_offset_index(int value, SelectFromListMenuItem
     MenuItemTextOffsetChanged = true;
 }
 
+// 预览图设置相关函数实现
+void onchange_misc_preview_position_threshold_index(int value, SelectFromListMenuItem* source) {
+	PreviewPositionThresholdIndex = value;
+	previewPositionThreshold = MISC_PREVIEW_POSITION_THRESHOLD_VALUES[value];
+	PreviewPositionThresholdChanged = true;
+}
+
+void onchange_misc_preview_resolution_scale_index(int value, SelectFromListMenuItem* source) {
+	PreviewResolutionScaleIndex = value;
+	previewResolutionScale = MISC_PREVIEW_RESOLUTION_SCALE_VALUES[value];
+	PreviewResolutionScaleChanged = true;
+}
+
+void onchange_misc_preview_spacing_index(int value, SelectFromListMenuItem* source) {
+	PreviewSpacingIndex = value;
+	previewSpacing = MISC_PREVIEW_SPACING_VALUES[value];
+	PreviewSpacingChanged = true;
+}
+
 // 菜单项宽度和左侧偏移已合并到标题设置中，不再需要单独的onchange函数
 
 void onchange_misc_menu_item_top_offset_index(int value, SelectFromListMenuItem* source) {
@@ -2551,6 +2650,19 @@ void reset_menu_layout_to_defaults() {
     MenuItemTopOffsetIndex = MENU_ITEM_TOP_OFFSET_DEFAULT_INDEX;
     menuItemTopOffset = MISC_MENU_ITEM_TOP_OFFSET_VALUES[MenuItemTopOffsetIndex];
     MenuItemTopOffsetChanged = true;
+
+    // 重置预览图设置
+    PreviewPositionThresholdIndex = PREVIEW_POSITION_THRESHOLD_DEFAULT_INDEX;
+    previewPositionThreshold = MISC_PREVIEW_POSITION_THRESHOLD_VALUES[PreviewPositionThresholdIndex];
+    PreviewPositionThresholdChanged = true;
+
+    PreviewResolutionScaleIndex = PREVIEW_RESOLUTION_SCALE_DEFAULT_INDEX;
+    previewResolutionScale = MISC_PREVIEW_RESOLUTION_SCALE_VALUES[PreviewResolutionScaleIndex];
+    PreviewResolutionScaleChanged = true;
+
+    PreviewSpacingIndex = PREVIEW_SPACING_DEFAULT_INDEX;
+    previewSpacing = MISC_PREVIEW_SPACING_VALUES[PreviewSpacingIndex];
+    PreviewSpacingChanged = true;
 }
 
 bool onconfirm_menu_layout_reset(MenuItem<int> choice) {

@@ -26,6 +26,11 @@ float menuItemTopOffset = 75.0f; // 菜单项与标题距离
 float menuItemSpacing = 8.0f;    // 菜单项间距
 float menuItemTextOffset = 10.0f; // 菜单项文本偏移量
 
+// 预览图设置全局变量初始化
+float previewPositionThreshold = 500.0f; // 预览图左右判断依据
+float previewResolutionScale = 1920.0f; // 预览图分辨率适配值
+float previewSpacing = 8.0f;           // 预览图间距
+
 std::string centreScreenStatusText;
 DWORD centreScreenStatusTextDrawTicksMax;
 bool centreScreenStatusTextGxtEntry;

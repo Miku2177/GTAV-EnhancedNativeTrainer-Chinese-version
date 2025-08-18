@@ -49,6 +49,11 @@ extern float menuItemTopOffset; // 菜单项与标题距离
 extern float menuItemSpacing;  // 菜单项间距
 extern float menuItemTextOffset; // 菜单项文本偏移量
 
+// 预览图设置全局变量
+extern float previewPositionThreshold; // 预览图左右判断依据
+extern float previewResolutionScale; // 预览图分辨率适配值
+extern float previewSpacing;        // 预览图间距
+
 extern void(*periodic_feature_call)(void);
 
 extern void(*menu_per_frame_call)(void);
@@ -1239,7 +1244,15 @@ bool draw_generic_menu(MenuParameters<T> params){
 				int screen_w, screen_h; // 这段代码用于计算游戏内，车辆预览图的坐标。
 				GRAPHICS::GET_SCREEN_RESOLUTION(&screen_w, &screen_h);
 
-				float lineXPx = 35.0f + 350.0f + 8.0f;//修改了，菜单大小或位置，需要更改这里的值，否则预览图和菜单会显示冲突。
+				float lineXPx;
+				// 判断菜单左侧偏移是否大于预览图左右判断依据，自动切换预览图显示位置
+				if(menuLeftOffset > previewPositionThreshold) {
+					// 菜单在右侧，预览图显示在左侧
+					lineXPx = menuLeftOffset - (256.0f * screen_w / previewResolutionScale) - previewSpacing;
+				} else {
+					// 菜单在左侧，预览图显示在右侧
+					lineXPx = menuLeftOffset + menuWidth + previewSpacing;
+				}
 				float lineXGame = lineXPx / (float) screen_w;
 				float lineYGame = activeLineY / (float) screen_h;
 
