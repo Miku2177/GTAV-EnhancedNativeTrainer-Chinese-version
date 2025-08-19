@@ -11,6 +11,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "file_dialog.h"
 #include <Windows.h>
 #include <commdlg.h>
+#include <vector>
 
 #include "..\utils.h"
 #include "..\debug\debuglog.h"
@@ -76,36 +77,59 @@ void show_file_open_dialog(std::string title, LoadFileDialogCallback* callback)
 		find_parent_window();
 	}
 
-	OPENFILENAME ofn;       // 通用对话框结构
-	char szFile[MAX_PATH];  // 用于存储文件名的缓冲区
+	OPENFILENAMEW ofn;       // 通用对话框结构（使用宽字符版本）
+	wchar_t szFile[MAX_PATH];  // 用于存储文件名的缓冲区（宽字符）
 	HANDLE hf;              // 文件句柄
 
 	DWORD procID = GetCurrentProcessId();
 
 	EnumWindows(EnumWindowsProc, NULL);
 
-	// 初始化 OPENFILENAME
+	// 将UTF-8标题转换为UTF-16
+	std::wstring wTitle = ConvertFromUtf8ToUtf16(title);
+
+	// 获取游戏目录下的Object文件夹路径
+	std::string modulePath = GetCurrentModulePath();
+	std::string entPath = modulePath + "Enhanced Native Trainer";
+	std::string objectPath = entPath + "\\Object";
+	
+	// 确保目录存在
+	CreateDirectory(entPath.c_str(), NULL);
+	CreateDirectory(objectPath.c_str(), NULL);
+	
+	std::wstring wObjectPath = ConvertFromUtf8ToUtf16(objectPath);
+
+	// 初始化 OPENFILENAMEW
 	ZeroMemory(&ofn, sizeof(ofn));
 	ofn.lStructSize = sizeof(ofn);
 	ofn.hwndOwner = parentWindow;
 	ofn.lpstrFile = szFile;
 	// 将 lpstrFile[0] 设置为 '\0'，以便 GetOpenFileName 不会
 	// 使用 szFile 的内容来初始化自身。
-	ofn.lpstrFile[0] = '\0';
-	ofn.nMaxFile = sizeof(szFile);
-	ofn.lpstrFilter = "ENT XML Files\0*.XML\0\0";
+	ofn.lpstrFile[0] = L'\0';
+	ofn.nMaxFile = sizeof(szFile) / sizeof(wchar_t);
+	ofn.lpstrFilter = L"ENT XML Files\0*.XML\0\0";
 	ofn.nFilterIndex = 1;
 	ofn.lpstrFileTitle = NULL;
-	ofn.lpstrTitle = title.c_str();
+	ofn.lpstrTitle = wTitle.c_str();
 	ofn.nMaxFileTitle = 0;
-	ofn.lpstrInitialDir = NULL;
+	ofn.lpstrInitialDir = wObjectPath.c_str();
 	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
 
-	// 显示“打开”对话框。
+	// 显示"打开"对话框。
 
-	if (GetOpenFileName(&ofn) == TRUE)
+	if (GetOpenFileNameW(&ofn) == TRUE)
 	{
-		hf = CreateFile(ofn.lpstrFile,
+		// 将宽字符路径转换回UTF-8
+		int utf8Size = WideCharToMultiByte(CP_UTF8, 0, szFile, -1, NULL, 0, NULL, NULL);
+		if (utf8Size > 0)
+		{
+			std::vector<char> utf8Path(utf8Size);
+			WideCharToMultiByte(CP_UTF8, 0, szFile, -1, &utf8Path[0], utf8Size, NULL, NULL);
+			callback->filePath = std::string(&utf8Path[0]);
+		}
+
+		hf = CreateFileW(szFile,
 			GENERIC_READ,
 			0,
 			(LPSECURITY_ATTRIBUTES)NULL,
@@ -117,14 +141,13 @@ void show_file_open_dialog(std::string title, LoadFileDialogCallback* callback)
 		{
 			write_text_to_log_file("CreateFile 返回了无效句柄");
 			std::ostringstream ss;
-			ss << "选择的文件是: " << ofn.lpstrFile << " 以及错误 " << GetLastError();
+			ss << "选择的文件是: " << callback->filePath << " 以及错误 " << GetLastError();
 			write_text_to_log_file(ss.str());
 			callback->success = false;
 		}
 		else
 		{
 			CloseHandle(hf);
-			callback->filePath = ofn.lpstrFile;
 			callback->success = true;
 		}
 	}
@@ -144,36 +167,59 @@ void show_file_save_dialog(std::string title, SaveFileDialogCallback* callback)
 		find_parent_window();
 	}
 
-	OPENFILENAME sfn;       // 通用对话框结构
-	char szFile[MAX_PATH];  // 用于存储文件名的缓冲区
+	OPENFILENAMEW sfn;       // 通用对话框结构（使用宽字符版本）
+	wchar_t szFile[MAX_PATH];  // 用于存储文件名的缓冲区（宽字符）
 	HANDLE hf;              // 文件句柄
 
 	DWORD procID = GetCurrentProcessId();
 
 	EnumWindows(EnumWindowsProc, NULL);
 
-	// 初始化 OPENFILENAME
+	// 将UTF-8标题转换为UTF-16
+	std::wstring wTitle = ConvertFromUtf8ToUtf16(title);
+
+	// 获取游戏目录下的Object文件夹路径
+	std::string modulePath = GetCurrentModulePath();
+	std::string entPath = modulePath + "Enhanced Native Trainer";
+	std::string objectPath = entPath + "\\Object";
+	
+	// 确保目录存在
+	CreateDirectory(entPath.c_str(), NULL);
+	CreateDirectory(objectPath.c_str(), NULL);
+	
+	std::wstring wObjectPath = ConvertFromUtf8ToUtf16(objectPath);
+
+	// 初始化 OPENFILENAMEW
 	ZeroMemory(&sfn, sizeof(sfn));
 	sfn.lStructSize = sizeof(sfn);
 	sfn.hwndOwner = parentWindow;
 	sfn.lpstrFile = szFile;
 	// 将 lpstrFile[0] 设置为 '\0'，以便 GetOpenFileName 不会
 	// 使用 szFile 的内容来初始化自身。
-	sfn.lpstrFile[0] = '\0';
-	sfn.nMaxFile = sizeof(szFile);
-	sfn.lpstrFilter = "ENT XML Files\0*.XML\0\0";
+	sfn.lpstrFile[0] = L'\0';
+	sfn.nMaxFile = sizeof(szFile) / sizeof(wchar_t);
+	sfn.lpstrFilter = L"ENT XML Files\0*.XML\0\0";
 	sfn.nFilterIndex = 1;
 	sfn.lpstrFileTitle = NULL;
-	sfn.lpstrTitle = title.c_str();
+	sfn.lpstrTitle = wTitle.c_str();
 	sfn.nMaxFileTitle = 0;
-	sfn.lpstrInitialDir = NULL;
+	sfn.lpstrInitialDir = wObjectPath.c_str();
 	sfn.Flags = OFN_OVERWRITEPROMPT | OFN_NOCHANGEDIR;
 
-	// 显示“打开”对话框。
+	// 显示"保存"对话框。
 
-	if (GetSaveFileName(&sfn) == TRUE)
+	if (GetSaveFileNameW(&sfn) == TRUE)
 	{
-		hf = CreateFile(sfn.lpstrFile,
+		// 将宽字符路径转换回UTF-8
+		int utf8Size = WideCharToMultiByte(CP_UTF8, 0, szFile, -1, NULL, 0, NULL, NULL);
+		if (utf8Size > 0)
+		{
+			std::vector<char> utf8Path(utf8Size);
+			WideCharToMultiByte(CP_UTF8, 0, szFile, -1, &utf8Path[0], utf8Size, NULL, NULL);
+			callback->filePath = std::string(&utf8Path[0]);
+		}
+
+		hf = CreateFileW(szFile,
 			GENERIC_WRITE,
 			0,
 			(LPSECURITY_ATTRIBUTES)NULL,
@@ -188,7 +234,6 @@ void show_file_save_dialog(std::string title, SaveFileDialogCallback* callback)
 		else
 		{
 			CloseHandle(hf);
-			callback->filePath = sfn.lpstrFile;
 			callback->success = true;
 		}
 	}

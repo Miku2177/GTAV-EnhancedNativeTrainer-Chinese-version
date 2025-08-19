@@ -48,8 +48,10 @@ bool generate_xml_for_propset(SavedPropSet* props, std::string outputFile)
 	pXMLDoc->insertBefore(pXMLProcessingNode, vtObject, 0);
 
 	//添加一个属性
-	pXMLRootElem->setAttribute(L"set-name", _variant_t(props->saveName.c_str()));
-	pXMLRootElem->setAttribute(L"ent-version", _variant_t(VERSION_STRING.c_str()));
+	std::wstring wSaveName = ConvertFromUtf8ToUtf16(props->saveName);
+	std::wstring wVersionString = ConvertFromUtf8ToUtf16(VERSION_STRING);
+	pXMLRootElem->setAttribute(L"set-name", _variant_t(wSaveName.c_str()));
+	pXMLRootElem->setAttribute(L"ent-version", _variant_t(wVersionString.c_str()));
 
 	for each (SavedPropDBRow* row in props->items)
 	{
@@ -57,7 +59,8 @@ bool generate_xml_for_propset(SavedPropSet* props, std::string outputFile)
 		IXMLDOMElementPtr objectNode;
 		pXMLDoc->createElement(L"object", &objectNode);
 
-		objectNode->setAttribute(L"title", _variant_t(row->title.c_str()));
+		std::wstring wTitle = ConvertFromUtf8ToUtf16(row->title);
+		objectNode->setAttribute(L"title", _variant_t(wTitle.c_str()));
 		objectNode->setAttribute(L"model", _variant_t((long)(row->model)));
 
 		objectNode->setAttribute(L"posX", _variant_t(row->posX));
@@ -79,9 +82,10 @@ bool generate_xml_for_propset(SavedPropSet* props, std::string outputFile)
 	}
 
 	FileStream* output;
-	std::wstring ws;
-	ws.assign(outputFile.begin(), outputFile.end());
-	BSTR bs = SysAllocStringLen(ws.data(), ws.size());
+	// 将UTF-8文件路径转换为UTF-16
+	std::wstring ws = ConvertFromUtf8ToUtf16(outputFile);
+	// 确保正确分配BSTR
+	BSTR bs = SysAllocString(ws.c_str());
 
 	bool result = true;
 	if (FAILED(FileStream::OpenFile(bs, &output, true)))
@@ -130,7 +134,11 @@ bool parse_xml_for_propset(std::string inputFile, SavedPropSet* set)
 	//读取 XML
 	MSXML2::IXMLDOMDocumentPtr spXMLDoc;
 	spXMLDoc.CreateInstance(__uuidof(MSXML2::DOMDocument60));
-	if (!spXMLDoc->load(inputFile.c_str()))
+	
+	// 将UTF-8文件路径转换为UTF-16
+	std::wstring wInputFile = ConvertFromUtf8ToUtf16(inputFile);
+	
+	if (!spXMLDoc->load(wInputFile.c_str()))
 	{
 		write_text_to_log_file("未能找到 XML 文件！");
 		return false;
@@ -156,7 +164,21 @@ bool parse_xml_for_propset(std::string inputFile, SavedPropSet* set)
 				VARIANT var;
 				VariantInit(&var);
 				attribNode->get_nodeValue(&var);
-				set->saveName = _com_util::ConvertBSTRToString(V_BSTR(&var));
+				// 使用Windows API正确处理UTF-16到UTF-8的转换
+				BSTR bstr = V_BSTR(&var);
+				int utf8Size = WideCharToMultiByte(CP_UTF8, 0, bstr, -1, NULL, 0, NULL, NULL);
+				if (utf8Size > 0)
+				{
+					std::vector<char> utf8Str(utf8Size);
+					WideCharToMultiByte(CP_UTF8, 0, bstr, -1, &utf8Str[0], utf8Size, NULL, NULL);
+					set->saveName = std::string(&utf8Str[0]);
+				}
+				else
+				{
+					// 回退到原始方法
+					std::string utf8SaveName = _com_util::ConvertBSTRToString(bstr);
+					set->saveName = utf8SaveName;
+				}
 			}
 
 			SysFreeString(xmlParser_bstr);
@@ -195,7 +217,21 @@ bool parse_xml_for_propset(std::string inputFile, SavedPropSet* set)
 				VARIANT var;
 				VariantInit(&var);
 				attribNode->get_nodeValue(&var);
-				row->title = _com_util::ConvertBSTRToString(V_BSTR(&var));
+				// 使用Windows API正确处理UTF-16到UTF-8的转换
+				BSTR bstr = V_BSTR(&var);
+				int utf8Size = WideCharToMultiByte(CP_UTF8, 0, bstr, -1, NULL, 0, NULL, NULL);
+				if (utf8Size > 0)
+				{
+					std::vector<char> utf8Str(utf8Size);
+					WideCharToMultiByte(CP_UTF8, 0, bstr, -1, &utf8Str[0], utf8Size, NULL, NULL);
+					row->title = std::string(&utf8Str[0]);
+				}
+				else
+				{
+					// 回退到原始方法
+					std::string utf8Title = _com_util::ConvertBSTRToString(bstr);
+					row->title = utf8Title;
+				}
 			}
 			else if (wcscmp(xmlParser_bstr, L"model") == 0)
 			{
