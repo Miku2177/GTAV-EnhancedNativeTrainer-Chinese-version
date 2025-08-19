@@ -80,6 +80,12 @@ void drive_to_marker()
 	speed = ENTITY::GET_ENTITY_VELOCITY(curr_veh);
 	driving_reverse = ENTITY::GET_ENTITY_SPEED_VECTOR(curr_veh, true);
 
+	// 检查是否在飞机中，如果是则禁用代驾功能
+	if (PED::IS_PED_IN_ANY_PLANE(playerPed)) {
+		set_status_text_centre_screen("~r~飞机代驾功能已禁用！\n~w~请使用其他载具进行代驾。");
+		return;
+	}
+
 	if (speed.x < 0) speed.x = speed.x * -1;
 	if (speed.y < 0) speed.y = speed.y * -1;
 
@@ -188,6 +194,8 @@ void drive_to_marker()
 			AI::TASK_HELI_MISSION(driver_to_marker_pilot, curr_veh, 0, 0, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, 4, TEL_CHAUFFEUR_SPEED_VALUES[TelChauffeur_speed_IndexN], -1.0, -1.0, 0,
 				TEL_CHAUFFEUR_ALTITUDE_VALUES[TelChauffeur_altitude_Index], -1.0, 32);
 
+		// 飞机代驾功能已禁用 - 以下代码已注释
+		/*
 		if (PED::IS_PED_IN_ANY_PLANE(playerPed)) {
 			planecurrspeed = ENTITY::GET_ENTITY_SPEED(curr_veh);
 			curr_roll = ENTITY::GET_ENTITY_ROLL(curr_veh);
@@ -225,6 +233,8 @@ void drive_to_marker()
 				AI::TASK_PLANE_MISSION(driver_to_marker_pilot, curr_veh, 0, 0, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, 4, TEL_CHAUFFEUR_SPEED_VALUES[TelChauffeur_speed_IndexN], 0, 90, 0,
 					TEL_CHAUFFEUR_ALTITUDE_VALUES[TelChauffeur_altitude_Index]);
 		}
+		*/
+
 
 		if (featureLandAtDestination) {
 			if (PED::IS_PED_IN_ANY_HELI(playerPed) && tempdistance_x < 20 && tempdistance_y < 20) {
@@ -238,6 +248,8 @@ void drive_to_marker()
 				}
 			}
 
+			// 飞机着陆代码已注释，因为飞机代驾功能已禁用
+			/*
 			if (PED::IS_PED_IN_ANY_PLANE(playerPed) && dist_to_land_diff < temp_dist && altitude_reached == true) {
 				if (dist_to_land_diff > 399 && dist_to_land_diff < temp_dist) {
 					AI::TASK_PLANE_MISSION(driver_to_marker_pilot, curr_veh, 0, 0, coords_marker_to_drive_to.x, coords_marker_to_drive_to.y, coords_marker_to_drive_to.z, 4, 30, 0, 90, 0, 200);
@@ -265,6 +277,7 @@ void drive_to_marker()
 					marker_been_set = false;
 				}
 			}
+			*/
 		}
 
 		marker_been_set = true;

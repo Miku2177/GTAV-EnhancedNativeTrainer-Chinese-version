@@ -901,6 +901,11 @@ void add_coords_generic_settings(std::vector<StringPairSettingDBRow>* results)
 }
 
 void onchange_tel_chauffeur_index(int value, SelectFromListMenuItem *source){
+	// 检查是否正在进行代驾，如果是则禁止切换司机模型
+	if (marker_been_set) {
+		set_status_text_centre_screen("~r~代驾进行中，无法切换司机模型！\n~w~请先结束当前代驾再进行切换！");
+		return;
+	}
 	TelChauffeurIndex = value;
 	TelChauffeur_Changed = true;
 }
@@ -1077,6 +1082,10 @@ bool onconfirm_chauffeur_menu(MenuItem<int> choice)
 	case 0: // 开始代驾到导航点
 		if (!isInVehicle) {
 			set_status_text("请先进入一辆载具中！");
+			return false; // 保持菜单打开
+		}
+		else if (PED::IS_PED_IN_ANY_PLANE(PLAYER::PLAYER_PED_ID())) {
+			set_status_text_centre_screen("~r~飞机代驾功能已禁用！\n~w~请使用其他载具进行代驾。");
 			return false; // 保持菜单打开
 		}
 		else if (!UI::IS_WAYPOINT_ACTIVE()) {
