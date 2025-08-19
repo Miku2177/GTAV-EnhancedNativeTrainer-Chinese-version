@@ -290,14 +290,17 @@ bool onconfirm_trainermenucolors_menu(MenuItem<int> choice){
 	}
 	else if(choice.value == ENTColor::colsVarsNum){
 		write_config_ini_file();
-		set_status_text("颜色配置，已保存到 INI 文件！");
+		set_status_text_centre_screen("菜单颜色 ~g~已保存至 ~s~配置文件！"); // 屏幕中间提示，带闪烁
+		set_status_text("菜单颜色，已保存到 INI 文件！");
 		write_text_to_log_file("INI 配置文件，已写入或更新！");
+		return true; // 返回 true 退出当前菜单，自动返回上一级菜单
 	}
 	else if(choice.value == ENTColor::colsVarsNum + 1){
 		ENTColor::reset_colors();
 		set_status_text("ENT 菜单颜色已重置为默认！");
+		set_status_text_centre_screen("菜单颜色 ~g~已重置 ~s~为默认！"); // 屏幕中间提示，带闪烁
+		return true; // 返回 true 退出当前菜单，自动返回上一级菜单
 	}
-
 	return false;
 }
 
@@ -315,7 +318,7 @@ void process_misc_trainermenucolors_menu(){
 	}
 
 	item = new MenuItem<int>();
-	item->caption = "保存菜单颜色配置";
+	item->caption = "保存菜单颜色";
 	item->value = index++;
 	item->isLeaf = true;
 	menuItems.insert(menuItems.begin(), item);
@@ -2668,6 +2671,7 @@ void reset_menu_layout_to_defaults() {
 bool onconfirm_menu_layout_reset(MenuItem<int> choice) {
 	if (choice.value == -0xA1B2C3) {// 检查特殊值-0xA1B2C3，避免与下拉菜单的索引冲突
 		reset_menu_layout_to_defaults();
+		set_status_text_centre_screen("菜单布局 ~g~已重置 ~s~为默认！"); // 屏幕中间提示，带闪烁
 		set_status_text("菜单布局已重置为默认！");
 
 		// 异步线程只设置刷新标志

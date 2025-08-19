@@ -1276,7 +1276,7 @@ bool draw_generic_menu(MenuParameters<T> params){
 		if(bSelect){ // 如果用户按下，确认键
 			menu_beep(); // 播放菜单提示音（例如“滴”声）
 
-			waitTime = 200; // 设置等待时间，默认为 200 毫秒，用于防止重复触发
+			waitTime = 150; // 设置等待时间，默认为 200 毫秒，用于防止重复触发
 
 			bool confHandled = choice->onConfirm();
 
@@ -1293,7 +1293,7 @@ bool draw_generic_menu(MenuParameters<T> params){
 		else{ 
 			if(bBack){// 如果用户按下，返回键
 				menu_beep(); // 播放菜单提示音（例如“滴”声）
-				waitTime = 200; // 设置等待时间，默认为 200 毫秒，用于防止重复触发
+				waitTime = 150; // 设置等待时间，默认为 200 毫秒，用于防止重复触发
 				result = false; // 将结果设置为 false，表示返回操作
 				break; // 跳出当前循环或逻辑块
 			}
@@ -1377,7 +1377,7 @@ bool draw_generic_menu(MenuParameters<T> params){
 							}
 						}
 					}
-					waitTime = 200; // 设置等待时间，默认为 200 毫秒，用于防止重复触发
+					waitTime = 150; // 设置等待时间，默认为 200 毫秒，用于防止重复触发
 				}
 				else if(bRight){// 如果用户按下，向右键
 					menu_beep();// 播放菜单提示音
@@ -1401,7 +1401,7 @@ bool draw_generic_menu(MenuParameters<T> params){
 						}
 					}
 
-					waitTime = 200; // 设置等待时间，默认为 200 毫秒，用于防止重复触发
+					waitTime = 150; // 设置等待时间，默认为 200 毫秒，用于防止重复触发
 				}
 
 				if(params.onHighlight != NULL && originalIndex != currentSelectionIndex){

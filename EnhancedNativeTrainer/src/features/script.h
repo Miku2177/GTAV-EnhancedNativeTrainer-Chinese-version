@@ -181,6 +181,8 @@ void GetDesktopResolution(int& horizontal, int& vertical);
 
 void process_reset_menu();
 
+void process_reset_all_menu();
+
 void process_main_menu();
 
 void process_powerpunch_menu();

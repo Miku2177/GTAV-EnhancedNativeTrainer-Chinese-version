@@ -41,6 +41,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include <psapi.h>
 #include <ctime>
 #include "../io/controller.h"
+#include "../io/config_io.h"
 #include "../rage_thread/rage_thread.h"
 
 #pragma warning(disable : 4244 4305) // double <-> float conversions
@@ -2301,8 +2302,8 @@ bool onconfirm_localization_menu(MenuItem<int> choice) {
 // 汉化说明子菜单
 void process_localization_menu() {
 	// 菜单项数量（不包含标题选项）
-	const int lineCount = 7;
-	const std::string caption = "汉化说明选项"; // 菜单标题
+	const int lineCount = 10;
+	const std::string caption = "关于此修改器"; // 菜单标题
 
 	// 构造版本号显示字符串
 	std::string versionDisplay = "修改器版本：" + VERSION_STRING;
@@ -2312,60 +2313,101 @@ void process_localization_menu() {
 		{ versionDisplay.c_str(), NULL, NULL, true},    // 动态显示版本号
 		{ "原作者：Flying-Scotsmar,  Slash_Alex", NULL, NULL, true},
 		{ "基于 Alexander Blade 的 ScripthookV 构建", NULL, NULL, true},
-		{ "感谢所有原开发者们", NULL, NULL, true},
-		{ "感谢帮助我的朋友们", NULL, NULL, true},
+		{ "感谢所有原开发者们，感谢帮助我的朋友们", NULL, NULL, true},
 		{ "汉化：随梦&而飞", NULL, NULL, true},
 		{ "感谢：烈火神君,  羽一大魔王", NULL, NULL, true},
+		{ "此版本和原英文版有较大区别", NULL, NULL, true},
+		{ "某些配置文件并不互相通用", NULL, NULL, true},
+		{ "使用此汉化版，必须删除以前的 DB 文件", NULL, NULL, true},
+		{ "标题添加 CN 就是为了区分其他版本", NULL, NULL, true},
 	};
 
 	// 绘制菜单
 	draw_menu_from_struct_def(lines, lineCount, &activeLineIndexLocalization, caption, onconfirm_localization_menu);
 }
 
-// 重置菜单和汉化菜单 回调函数
-bool onconfirm_reset_menu(MenuItem<int> choice) {
-	switch (activeLineIndexReset) {
-	case 0: // 取消重置操作（第 0 项）
-		menu_beep(); // 按钮提示音
-		set_menu_showing(true); // 显示菜单
-		WAIT(200); // 等待 200 毫秒
-		process_main_menu(); // 返回主菜单
-		activeLineIndexReset = 0; // 重置菜单索引
-		set_menu_showing(false); // 隐藏菜单
-		break;
-	case 1: // 确认重置操作（第 1 项）
-		reset_globals(); // 重置所有设置
-		process_main_menu(); // 返回主菜单
-		activeLineIndexReset = 0; // 重置菜单索引
-		set_menu_showing(false); // 隐藏菜单
-		break;
-	case 2: // 进入汉化说明（第 2 项）
-		menu_beep(); // 按钮提示音
-		set_menu_showing(true); // 显示菜单
-		activeLineIndexLocalization = 0; // 重置子菜单索引
-		process_localization_menu(); // 显示汉化说明菜单
-		break;
-	default:
-		break;
-	}
-	return false;
+bool onconfirm_reset_all_menu(MenuItem<int> choice) {
+    switch (activeLineIndexReset) {
+    case 0: // 取消重置操作（第 0 项）
+        menu_beep(); // 按钮提示音
+        set_status_text_centre_screen("您已 ~r~取消 ~s~重置！"); // 屏幕中间提示，带闪烁
+        return true; // 返回 true 退出当前菜单，自动返回上一级菜单
+    case 1: // 确认重置操作（第 1 项）
+        reset_globals(); // 重置所有设置
+        set_status_text_centre_screen("您已 ~g~确认 ~s~重置！"); // 屏幕中间提示，带闪烁
+        return true; // 返回 true 退出当前菜单，自动返回上一级菜单
+    default:
+        break;
+    }
+    return false;
 }
 
-// 重置菜单选项
-void process_reset_menu() {
+bool onconfirm_reset_menu(MenuItem<int> choice) {
+    switch (activeLineIndexReset) {
+    case 0: // 重置所有选项（第 0 项）
+        menu_beep(); // 按钮提示音
+        activeLineIndexReset = 0; // 重置子菜单索引
+        process_reset_all_menu(); // 显示重置所有选项菜单
+        break;
+    case 1: // 进入汉化说明（第 1 项）
+        menu_beep(); // 按钮提示音
+        activeLineIndexLocalization = 0; // 重置子菜单索引
+        process_localization_menu(); // 显示汉化说明菜单
+        break;
+    case 2: // 重新载入配置文件（第 2 项）
+        menu_beep(); // 按钮提示音
+        read_config_file(); // 重新读取 ent-config.xml
+        read_config_ini_file(); // 重新读取 ent_customization.ini
+        set_status_text("文件: ent-config.xml\n文件: ent_customization.ini\n全部重新载入完成！"); // 右下角提示
+        set_status_text_centre_screen("配置文件 ~g~重新载入 ~s~完成！"); // 屏幕中间提示，带闪烁
+        return true; // 返回 true 退出当前菜单，自动返回上一级菜单
+    default:
+        break;
+    }
+    return false;
+}
+
+// 重置所有选项菜单
+void process_reset_all_menu() {
 	// 菜单项数量（不包含标题选项）
-	const int lineCount = 3;
+	const int lineCount = 2;
 	const std::string caption = "重置所有选项"; // 菜单标题
 
 	// 定义菜单项
 	StandardOrToggleMenuDef lines[lineCount] = {
-		{ "取消",     NULL, NULL, true},  // 取消操作
-		{ "确认",     NULL, NULL, true},  // 确认重置
-		{ "汉化说明", NULL, NULL, false}  // 进入汉化说明
+		{ "取消",         NULL, NULL, true},  // 取消操作
+		{ "确认",         NULL, NULL, true},  // 确认重置
 	};
 
 	// 绘制菜单
-	draw_menu_from_struct_def(lines, lineCount, &activeLineIndexReset, caption, onconfirm_reset_menu);
+	draw_menu_from_struct_def(lines, lineCount, &activeLineIndexReset, caption, onconfirm_reset_all_menu);
+}
+
+// 重置选项菜单
+void process_reset_menu() {
+	std::vector<MenuItem<int> *> menuItems;
+	int index = 0;
+	MenuItem<int> *item;
+
+	item = new MenuItem<int>();
+	item->caption = "重置所有选项";
+	item->value = index++;
+	item->isLeaf = false;
+	menuItems.insert(menuItems.end(), item);
+
+	item = new MenuItem<int>();
+	item->caption = "关于此修改器";
+	item->value = index++;
+	item->isLeaf = false;
+	menuItems.insert(menuItems.end(), item);
+
+	item = new MenuItem<int>();
+	item->caption = "重新载入配置文件";
+	item->value = index++;
+	item->isLeaf = true;
+	menuItems.insert(menuItems.end(), item);
+
+	draw_generic_menu<int>(menuItems, &activeLineIndexReset, "重置选项", onconfirm_reset_menu, nullptr, nullptr, nullptr);
 }
 
 //==================
