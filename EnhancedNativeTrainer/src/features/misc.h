@@ -55,7 +55,7 @@ const std::vector<std::string> MISC_FILTERS_VALUES{ "默认", "AmbientPUSH", "Be
 "WATER_shore", "WATER_silverlake", "WhiteOut" };//屏幕滤镜效果
 
 // 修改器控制
-const std::vector<std::string> MISC_TRAINERCONTROL_CAPTIONS{ "松开时", "按下时" };
+const std::vector<std::string> MISC_TRAINERCONTROL_CAPTIONS{ "按下时", "松开时" };
 extern int TrainerControlIndex;
 
 const std::vector<std::string> MISC_PHONE_BILL_CAPTIONS{ "10 美元", "50 美元", "100 美元", "500 美元", "1000 美元", "5000 美元", "1万 美元", "5万 美元", "10万 美元", "50万 美元", "100万 美元", "500万 美元", "1000万 美元", "5000万 美元", "1亿 美元" };

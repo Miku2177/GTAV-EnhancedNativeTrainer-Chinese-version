@@ -46,13 +46,13 @@ void get_button_state(bool *a, bool *b, bool *up, bool *down, bool *l, bool *r)
 	if (a) *a = IsKeyJustUp(KeyConfig::KEY_MENU_SELECT) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, INPUT_FRONTEND_ACCEPT); //A //IS_DISABLED_CONTROL_PRESSED
 	if (b) *b = (is_menu_showing() && !IsKeyJustUp(VK_ESCAPE) && IsKeyJustUp(KeyConfig::KEY_MENU_BACK)) || (is_menu_showing() && (CONTROLS::IS_DISABLED_CONTROL_JUST_RELEASED(2, INPUT_FRONTEND_CANCEL) || CONTROLS::IS_DISABLED_CONTROL_JUST_RELEASED(2, INPUT_FRONTEND_PAUSE))); //B
 
-	if (MISC_TRAINERCONTROL_VALUES[TrainerControlIndex] == 1) { // 按压
+	if (MISC_TRAINERCONTROL_VALUES[TrainerControlIndex] == 0) { // 按压
 		if (up) *up = IsKeyDown(KeyConfig::KEY_MENU_UP) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, INPUT_FRONTEND_UP); //Dpad up
 		if (down) *down = IsKeyDown(KeyConfig::KEY_MENU_DOWN) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, INPUT_FRONTEND_DOWN); //Dpad down
 		if (r) *r = IsKeyDown(KeyConfig::KEY_MENU_RIGHT) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, INPUT_FRONTEND_RIGHT); //Dpad right
 		if (l) *l = IsKeyDown(KeyConfig::KEY_MENU_LEFT) || CONTROLS::IS_DISABLED_CONTROL_PRESSED(2, INPUT_FRONTEND_LEFT); //Dpad left
 	}
-	if (MISC_TRAINERCONTROL_VALUES[TrainerControlIndex] == 0) { // 松开
+	if (MISC_TRAINERCONTROL_VALUES[TrainerControlIndex] == 1) { // 松开
 		if (up) *up = IsKeyJustUp(KeyConfig::KEY_MENU_UP) || CONTROLS::IS_DISABLED_CONTROL_JUST_RELEASED(2, INPUT_FRONTEND_UP);
 		if (down) *down = IsKeyJustUp(KeyConfig::KEY_MENU_DOWN) || CONTROLS::IS_DISABLED_CONTROL_JUST_RELEASED(2, INPUT_FRONTEND_DOWN);
 		if (r) *r = IsKeyJustUp(KeyConfig::KEY_MENU_RIGHT) || CONTROLS::IS_DISABLED_CONTROL_JUST_RELEASED(2, INPUT_FRONTEND_RIGHT);
