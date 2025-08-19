@@ -908,7 +908,7 @@ bool process_skinchanger_menu()
 
 	listItem = new SelectFromListMenuItem(SKINS_RESET_SKIN_ONDEATH_CAPTIONS, onchange_skins_reset_skin_ondeath_index);
 	listItem->wrap = false;
-	listItem->caption = "玩家模型";
+	listItem->caption = "死亡重置玩家模型";
 	listItem->value = ResetSkinOnDeathIdx;
 	menuItems.push_back(listItem);
 
