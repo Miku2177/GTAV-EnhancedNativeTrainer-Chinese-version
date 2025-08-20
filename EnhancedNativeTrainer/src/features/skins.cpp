@@ -474,6 +474,15 @@ bool process_custom_peds_menu(){
     return draw_generic_menu<std::string>(items, &selCat, "新增角色模型分类", onconfirm, NULL, NULL);
 }
 
+// Export functions for bodyguards module
+std::map<std::string, std::vector<std::pair<std::string, std::string>>> get_custom_peds_map() {
+    return g_CustomPeds;
+}
+
+std::vector<std::string> get_custom_ped_categories() {
+    return g_CustomPedCategories;
+}
+
 /***
 * 方法
 */
