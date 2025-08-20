@@ -78,3 +78,7 @@ void add_player_skin_feature_enablements(std::vector<FeatureEnabledLocalDefiniti
 void onchange_skins_reset_skin_ondeath_index(int value, SelectFromListMenuItem* source);
 
 void onchange_auto_apply_skin_saved_index(int value, SelectFromListMenuItem* source);
+
+// 自定义角色模型 (外置 XML) 菜单/加载函数声明
+bool process_custom_peds_menu();
+bool ensure_custom_peds_loaded();
