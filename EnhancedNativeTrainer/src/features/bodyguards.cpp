@@ -1248,7 +1248,11 @@ std::string get_current_model_name(){
 			value = SKINS_ANIMALS_CAPTIONS[skinTypesBodyguardMenuLastConfirmed[1]];
 			break;
 		case 4:
-			value = lastCustomBodyguardPedName;
+			if (!lastCustomBodyguardPedName.empty()) {
+				value = lastCustomBodyguardPedName;
+			} else {
+				value = lastCustomBodyguardSpawn;
+			}
 			break;
 		default:
 			value = SKINS_GENERAL_CAPTIONS[0];
@@ -2928,6 +2932,7 @@ void reset_bodyguards_globals(){
 	BodyShowNumbersIndex = 0;
 	skinTypesBodyguardMenuLastConfirmed[0] = 0;
 	skinTypesBodyguardMenuLastConfirmed[1] = 0;
+	lastCustomBodyguardPedName = "";
 }
 
 void onchange_body_blipsize_index(int value, SelectFromListMenuItem* source){
@@ -2982,7 +2987,6 @@ void onchange_body_blipflash_index(int value, SelectFromListMenuItem* source){
 // Custom peds functions for bodyguards
 bool onconfirm_bodyguards_custom_peds_category(MenuItem<std::string> choice) {
 	// Copy logic from skins.cpp for custom peds category selection
-	extern std::map<std::string, std::vector<std::pair<std::string, std::string>>> get_custom_peds_map();
 	auto customPeds = get_custom_peds_map();
 	auto it = customPeds.find(choice.value);
 	if (it == customPeds.end()) return false;
@@ -3012,9 +3016,6 @@ bool onconfirm_bodyguards_custom_peds_category(MenuItem<std::string> choice) {
 
 bool process_custom_peds_bodyguard_menu() {
 	// Copy logic from skins.cpp process_custom_peds_menu but adapt for bodyguards
-	extern bool ensure_custom_peds_loaded();
-	extern std::vector<std::string> get_custom_ped_categories();
-	
 	if (!ensure_custom_peds_loaded()) {
 		set_status_text("自定义角色模型 XML 读取失败!");
 		return false;
