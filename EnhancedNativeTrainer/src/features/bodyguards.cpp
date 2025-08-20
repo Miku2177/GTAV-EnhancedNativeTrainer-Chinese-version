@@ -2837,6 +2837,7 @@ void add_bodyguards_generic_settings(std::vector<StringPairSettingDBRow>* result
 	results->push_back(StringPairSettingDBRow{"skinTypesBodyguardMenuLastConfirmed0", std::to_string(skinTypesBodyguardMenuLastConfirmed[0])});
 	results->push_back(StringPairSettingDBRow{"skinTypesBodyguardMenuLastConfirmed1", std::to_string(skinTypesBodyguardMenuLastConfirmed[1])});
 	results->push_back(StringPairSettingDBRow{"lastCustomBodyguardSpawn", lastCustomBodyguardSpawn});
+	results->push_back(StringPairSettingDBRow{"lastCustomBodyguardPedName", lastCustomBodyguardPedName});
 	results->push_back(StringPairSettingDBRow{"selBodyWeapons", selBodyWeapons});
 }
 
@@ -2890,6 +2891,9 @@ void handle_generic_settings_bodyguards(std::vector<StringPairSettingDBRow>* set
 		}
 		else if (setting.name.compare("lastCustomBodyguardSpawn") == 0) {
 			lastCustomBodyguardSpawn = setting.value;
+		}
+		else if (setting.name.compare("lastCustomBodyguardPedName") == 0) {
+			lastCustomBodyguardPedName = setting.value;
 		}
 		else if (setting.name.compare("selBodyWeapons") == 0) {
 			selBodyWeapons = setting.value;
