@@ -17,6 +17,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "../utils.h"
 #include <iterator>
 #include "..\ui_support\menu_functions.h"
+#include "..\io\keyboard.h"
 
 //==================
 // 其他菜单选项
@@ -35,6 +36,7 @@ int activeLineIndexBillSettings = 0;
 int activeLineIndexPhoneOnBike = 0;
 int activeLineIndexAirbrake = 0;
 int activeLineHotkeyConfig = 0;
+int activeLineMainKeySettings = 0;
 
 // 自由移动模式变量
 bool airbrake_enable = true; // 启用自由移动
@@ -145,6 +147,7 @@ bool sfilter_enabled = false;
 //bool featureControllerIgnoreInTrainer = false;
 
 const int TRAINERCONFIG_HOTKEY_MENU = 99;
+const int TRAINERCONFIG_MAIN_KEY_SETTINGS_MENU = 100;
 int radioStationIndex = -1;
 
 Camera StuntCam = NULL;
@@ -266,6 +269,131 @@ bool process_misc_hotkey_menu(){
 	return false;
 }
 
+std::string get_key_display_name(int keyCode) {
+	if (keyCode == 0) {
+		return "未绑定";
+	}
+	
+	// Convert to user-friendly Chinese names for common keys
+	switch (keyCode) {
+		case VK_F4: return "F4";
+		case VK_F6: return "F6";
+		case VK_NUMPAD8: return "数字键盘 8";
+		case VK_NUMPAD2: return "数字键盘 2";
+		case VK_NUMPAD4: return "数字键盘 4";
+		case VK_NUMPAD6: return "数字键盘 6";
+		case VK_NUMPAD5: return "数字键盘 5";
+		case VK_NUMPAD0: return "数字键盘 0";
+		default:
+			// Find the key name from the lookup table
+			for (int i = 0; i < (sizeof(ALL_KEYS) / sizeof(ALL_KEYS[0])); i++) {
+				if (ALL_KEYS[i].keyCode == keyCode) {
+					std::string keyName = ALL_KEYS[i].name;
+					// Remove VK_ prefix for cleaner display
+					if (keyName.find("VK_") == 0) {
+						keyName = keyName.substr(3);
+					}
+					return keyName;
+				}
+			}
+			return "未知按键";
+	}
+}
+
+void process_misc_main_key_settings_menu() {
+	const std::string caption = "主要按键设置";
+	std::vector<MenuItem<int>*> menuItems;
+
+	// Get current key config
+	KeyInputConfig* keyConfig = get_config()->get_key_config();
+
+	// Main menu toggle key
+	MenuItem<int>* mainMenuToggleItem = new MenuItem<int>();
+	KeyConfig* mainMenuKey = keyConfig->get_key(KeyConfig::KEY_TOGGLE_MAIN_MENU);
+	mainMenuToggleItem->caption = "开/关主菜单: " + get_key_display_name(mainMenuKey ? mainMenuKey->keyCode : VK_F4);
+	mainMenuToggleItem->value = 1;
+	mainMenuToggleItem->isLeaf = true;
+	menuItems.push_back(mainMenuToggleItem);
+
+	// Menu navigation keys
+	MenuItem<int>* menuUpItem = new MenuItem<int>();
+	KeyConfig* menuUpKey = keyConfig->get_key(KeyConfig::KEY_MENU_UP);
+	menuUpItem->caption = "向上移动菜单: " + get_key_display_name(menuUpKey ? menuUpKey->keyCode : VK_NUMPAD8);
+	menuUpItem->value = 2;
+	menuUpItem->isLeaf = true;
+	menuItems.push_back(menuUpItem);
+
+	MenuItem<int>* menuDownItem = new MenuItem<int>();
+	KeyConfig* menuDownKey = keyConfig->get_key(KeyConfig::KEY_MENU_DOWN);
+	menuDownItem->caption = "向下移动菜单: " + get_key_display_name(menuDownKey ? menuDownKey->keyCode : VK_NUMPAD2);
+	menuDownItem->value = 3;
+	menuDownItem->isLeaf = true;
+	menuItems.push_back(menuDownItem);
+
+	MenuItem<int>* menuLeftItem = new MenuItem<int>();
+	KeyConfig* menuLeftKey = keyConfig->get_key(KeyConfig::KEY_MENU_LEFT);
+	menuLeftItem->caption = "向左移动菜单: " + get_key_display_name(menuLeftKey ? menuLeftKey->keyCode : VK_NUMPAD4);
+	menuLeftItem->value = 4;
+	menuLeftItem->isLeaf = true;
+	menuItems.push_back(menuLeftItem);
+
+	MenuItem<int>* menuRightItem = new MenuItem<int>();
+	KeyConfig* menuRightKey = keyConfig->get_key(KeyConfig::KEY_MENU_RIGHT);
+	menuRightItem->caption = "向右移动菜单: " + get_key_display_name(menuRightKey ? menuRightKey->keyCode : VK_NUMPAD6);
+	menuRightItem->value = 5;
+	menuRightItem->isLeaf = true;
+	menuItems.push_back(menuRightItem);
+
+	MenuItem<int>* menuSelectItem = new MenuItem<int>();
+	KeyConfig* menuSelectKey = keyConfig->get_key(KeyConfig::KEY_MENU_SELECT);
+	menuSelectItem->caption = "选择菜单选项: " + get_key_display_name(menuSelectKey ? menuSelectKey->keyCode : VK_NUMPAD5);
+	menuSelectItem->value = 6;
+	menuSelectItem->isLeaf = true;
+	menuItems.push_back(menuSelectItem);
+
+	MenuItem<int>* menuBackItem = new MenuItem<int>();
+	KeyConfig* menuBackKey = keyConfig->get_key(KeyConfig::KEY_MENU_BACK);
+	menuBackItem->caption = "返回上级菜单: " + get_key_display_name(menuBackKey ? menuBackKey->keyCode : VK_NUMPAD0);
+	menuBackItem->value = 7;
+	menuBackItem->isLeaf = true;
+	menuItems.push_back(menuBackItem);
+
+	// Airbrake toggle key
+	MenuItem<int>* airbrakeToggleItem = new MenuItem<int>();
+	KeyConfig* airbrakeKey = keyConfig->get_key(KeyConfig::KEY_TOGGLE_AIRBRAKE);
+	airbrakeToggleItem->caption = "开启/关闭自由移动: " + get_key_display_name(airbrakeKey ? airbrakeKey->keyCode : VK_F6);
+	airbrakeToggleItem->value = 8;
+	airbrakeToggleItem->isLeaf = true;
+	menuItems.push_back(airbrakeToggleItem);
+
+	// Add 9 hotkeys
+	for (int i = 1; i <= 9; i++) {
+		MenuItem<int>* hotkeyItem = new MenuItem<int>();
+		std::string hotkeyName = "KEY_HOT_" + std::to_string(i);
+		
+		// Get the key based on hotkey number
+		KeyConfig* hotkeyKey = nullptr;
+		switch (i) {
+			case 1: hotkeyKey = keyConfig->get_key(KeyConfig::KEY_HOT_1); break;
+			case 2: hotkeyKey = keyConfig->get_key(KeyConfig::KEY_HOT_2); break;
+			case 3: hotkeyKey = keyConfig->get_key(KeyConfig::KEY_HOT_3); break;
+			case 4: hotkeyKey = keyConfig->get_key(KeyConfig::KEY_HOT_4); break;
+			case 5: hotkeyKey = keyConfig->get_key(KeyConfig::KEY_HOT_5); break;
+			case 6: hotkeyKey = keyConfig->get_key(KeyConfig::KEY_HOT_6); break;
+			case 7: hotkeyKey = keyConfig->get_key(KeyConfig::KEY_HOT_7); break;
+			case 8: hotkeyKey = keyConfig->get_key(KeyConfig::KEY_HOT_8); break;
+			case 9: hotkeyKey = keyConfig->get_key(KeyConfig::KEY_HOT_9); break;
+		}
+		
+		hotkeyItem->caption = "快捷键 " + std::to_string(i) + ": " + get_key_display_name(hotkeyKey ? hotkeyKey->keyCode : 0);
+		hotkeyItem->value = 8 + i; // Values 9-17 for hotkeys 1-9
+		hotkeyItem->isLeaf = true;
+		menuItems.push_back(hotkeyItem);
+	}
+
+	draw_generic_menu<int>(menuItems, &activeLineMainKeySettings, caption, NULL, NULL, NULL);
+}
+
 void process_misc_trainermenucoloring_menu(int part){
 	std::vector<MenuItem<int> *> menuItems;
 	int index = 0;
@@ -337,6 +465,9 @@ bool onconfirm_trainerconfig_menu(MenuItem<int> choice){
 		//write_text_to_log_file("onconfirm_trainerconfig");
 		process_misc_hotkey_menu();
 	}
+	else if(choice.value == TRAINERCONFIG_MAIN_KEY_SETTINGS_MENU){
+		process_misc_main_key_settings_menu();
+	}
 	else if(choice.value == 63){
 		process_misc_trainermenucolors_menu();
 	}
@@ -402,6 +533,12 @@ void process_misc_trainerconfig_menu(){
 	stdItem->value = TRAINERCONFIG_HOTKEY_MENU;
 	stdItem->isLeaf = false;
 	menuItems.push_back(stdItem);
+
+	MenuItem<int>* mainKeyItem = new MenuItem<int>();
+	mainKeyItem->caption = "主要按键设置";
+	mainKeyItem->value = TRAINERCONFIG_MAIN_KEY_SETTINGS_MENU;
+	mainKeyItem->isLeaf = false;
+	menuItems.push_back(mainKeyItem);
 
 	listItem = new SelectFromListMenuItem(MISC_TRAINERCONTROL_CAPTIONS, onchange_misc_trainercontrol_index);
 	listItem->wrap = false;

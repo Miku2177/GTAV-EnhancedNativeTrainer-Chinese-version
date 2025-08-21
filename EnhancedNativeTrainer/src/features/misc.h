@@ -239,6 +239,8 @@ void onchange_misc_preview_spacing_index(int value, SelectFromListMenuItem* sour
 
 void process_misc_font_settings_menu();
 
+void process_misc_main_key_settings_menu();
+
 void process_misc_menu_layout_settings_menu();
 
 void process_misc_vehicle_preview_settings_menu();
