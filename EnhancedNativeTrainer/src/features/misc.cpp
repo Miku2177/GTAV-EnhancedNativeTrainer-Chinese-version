@@ -304,6 +304,9 @@ void process_misc_main_key_settings_menu() {
 	const std::string caption = "主要按键设置";
 	std::vector<MenuItem<int>*> menuItems;
 
+	// Show helpful status message
+	set_status_text("使用左右箭头键选择按键绑定，支持热修改！");
+
 	// Get current key config
 	KeyInputConfig* keyConfig = get_config()->get_key_config();
 
@@ -412,9 +415,21 @@ void process_misc_main_key_settings_menu() {
 // Helper function to update key configuration
 void update_key_config(const std::string& keyFunction, int newKeyCode) {
 	KeyInputConfig* keyConfig = get_config()->get_key_config();
-	KeyConfig* key = keyConfig->get_key(keyFunction);
-	if (key) {
-		key->keyCode = newKeyCode;
+	
+	// Convert key code to key name
+	char* keyName = nullptr;
+	for (int i = 0; i < (sizeof(ALL_KEYS) / sizeof(ALL_KEYS[0])); i++) {
+		if (ALL_KEYS[i].keyCode == newKeyCode) {
+			keyName = ALL_KEYS[i].name;
+			break;
+		}
+	}
+	
+	if (keyName != nullptr) {
+		keyConfig->set_key((char*)keyFunction.c_str(), keyName);
+	} else if (newKeyCode == 0) {
+		// Handle "未绑定" case - set to VK_NOTHING
+		keyConfig->set_key((char*)keyFunction.c_str(), (char*)"VK_NOTHING");
 	}
 }
 
