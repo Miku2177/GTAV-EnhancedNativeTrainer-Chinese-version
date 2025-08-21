@@ -265,7 +265,20 @@ bool process_misc_hotkey_menu(){
 		}
 	}
 
-	draw_generic_menu<int>(menuItems, &activeLineHotkeyConfig, "快捷键设置", NULL, NULL, NULL);
+	// 添加重置和保存选项到快捷键菜单
+	MenuItem<int>* resetHotkeyItem = new MenuItem<int>();
+	resetHotkeyItem->caption = "重置所有快捷键为默认";
+	resetHotkeyItem->value = 200; // 特殊值表示重置快捷键
+	resetHotkeyItem->isLeaf = true;
+	menuItems.push_back(resetHotkeyItem);
+
+	MenuItem<int>* saveHotkeyItem = new MenuItem<int>();
+	saveHotkeyItem->caption = "保存快捷键设置";
+	saveHotkeyItem->value = 201; // 特殊值表示保存快捷键
+	saveHotkeyItem->isLeaf = true;
+	menuItems.push_back(saveHotkeyItem);
+
+	draw_generic_menu<int>(menuItems, &activeLineHotkeyConfig, "快捷键设置", onconfirm_hotkey_menu, NULL, NULL);
 
 	return false;
 }
@@ -295,6 +308,14 @@ int detectAnyKeyPress() {
 void updateKeyBindingState() {
 	if (!keyBindingState.waitingForKey) {
 		return;
+	}
+
+	// 显示等待状态提示
+	static DWORD lastUpdateTime = 0;
+	DWORD currentTime = GetTickCount();
+	if (currentTime - lastUpdateTime > 1000) { // 每秒更新一次提示
+		set_status_text("正在等待按键输入... (ESC取消)");
+		lastUpdateTime = currentTime;
 	}
 
 	// 检查ESC键取消绑定
@@ -350,6 +371,39 @@ std::string getHotkeyKeyName(int hotkeyIndex) {
 		keyDisplayName = keyDisplayName.substr(3);
 	}
 	return keyDisplayName;
+}
+
+bool onconfirm_hotkey_menu(MenuItem<int> choice){
+	// 重置快捷键
+	if(choice.value == 200) {
+		// 重置快捷键1为F5，其他为未设置
+		get_config()->get_key_config()->set_key((char*)KeyConfig::KEY_HOT_1.c_str(), "VK_F5");
+		for(int i = 2; i <= 9; i++) {
+			std::string targetKey;
+			switch(i) {
+				case 2: targetKey = KeyConfig::KEY_HOT_2; break;
+				case 3: targetKey = KeyConfig::KEY_HOT_3; break;
+				case 4: targetKey = KeyConfig::KEY_HOT_4; break;
+				case 5: targetKey = KeyConfig::KEY_HOT_5; break;
+				case 6: targetKey = KeyConfig::KEY_HOT_6; break;
+				case 7: targetKey = KeyConfig::KEY_HOT_7; break;
+				case 8: targetKey = KeyConfig::KEY_HOT_8; break;
+				case 9: targetKey = KeyConfig::KEY_HOT_9; break;
+			}
+			get_config()->get_key_config()->set_key((char*)targetKey.c_str(), "VK_NOTHING");
+		}
+		set_status_text("所有快捷键已重置为默认设置");
+		return true; // 退出菜单刷新显示
+	}
+	
+	// 保存快捷键设置
+	if(choice.value == 201) {
+		write_config_ini_file();
+		set_status_text("快捷键设置已保存到配置文件");
+		return false;
+	}
+	
+	return false;
 }
 
 bool onconfirm_main_keys_menu(MenuItem<int> choice){

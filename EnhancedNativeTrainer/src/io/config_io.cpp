@@ -932,7 +932,7 @@ KeyInputConfig::KeyInputConfig(){
 	this->keyConfigs[KeyConfig::KEY_OBJECTPLACER_FREEZE_POSITION] = new KeyConfig(VK_KEY_G);
 	this->keyConfigs[KeyConfig::KEY_OBJECTPLACER_ALT_MOVE] = new KeyConfig(VK_MENU);
 
-	this->keyConfigs[KeyConfig::KEY_HOT_1] = new KeyConfig(0);
+	this->keyConfigs[KeyConfig::KEY_HOT_1] = new KeyConfig(VK_F5);
 	this->keyConfigs[KeyConfig::KEY_HOT_2] = new KeyConfig(0);
 	this->keyConfigs[KeyConfig::KEY_HOT_3] = new KeyConfig(0);
 	this->keyConfigs[KeyConfig::KEY_HOT_4] = new KeyConfig(0);
