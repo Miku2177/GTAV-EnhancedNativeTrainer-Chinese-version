@@ -1063,11 +1063,21 @@ bool onconfirm_bodyguard_skins_menu(MenuItem<int> choice){
 		{
 			keyboard_on_screen_already = true;
 			curr_message = "输入保镖模型名称: ( random 随机 random_story 随机多个 saved_bodyguards 已保存的 )"; // 生成一个保镖
-			std::string result = show_keyboard("手动输入名称", (char*)lastCustomBodyguardSpawn.c_str());
+			
+			// Don't pre-fill with custom ped model name to avoid confusion
+			std::string defaultInput = "";
+			if (skinTypesBodyguardMenuLastConfirmed[0] != 4) {
+				// Only pre-fill if not coming from custom peds
+				defaultInput = lastCustomBodyguardSpawn;
+			}
+			
+			std::string result = show_keyboard("手动输入名称", (char*)defaultInput.c_str());
 			if (!result.empty())
 			{
 				result = trim(result);
 				lastCustomBodyguardSpawn = result;
+				// Clear custom ped name since we're using manual input
+				lastCustomBodyguardPedName = "";
 				Hash hash = GAMEPLAY::GET_HASH_KEY((char*)result.c_str());
 				// 添加对中文指令的判断支持
 				if (lastCustomBodyguardSpawn != "random" && lastCustomBodyguardSpawn != "Random" && lastCustomBodyguardSpawn != "RANDOM" && 
@@ -1095,6 +1105,9 @@ bool onconfirm_bodyguard_skins_menu(MenuItem<int> choice){
 					lastCustomBodyguardSpawn == "随机多个" || lastCustomBodyguardSpawn == "SJDG" || lastCustomBodyguardSpawn == "sjdg" ||
 					lastCustomBodyguardSpawn == "已保存的" || lastCustomBodyguardSpawn == "YBCD" || lastCustomBodyguardSpawn == "ybcd")
 				{
+					// Set to manual input mode (not custom peds)
+					skinTypesBodyguardMenuPositionMemory[0] = 5;
+					skinTypesBodyguardMenuLastConfirmed[0] = 5;
 					get_current_model_name();
 					requireRefreshOfBodyguardMainMenu = true;
 				}
@@ -1248,10 +1261,21 @@ std::string get_current_model_name(){
 			value = SKINS_ANIMALS_CAPTIONS[skinTypesBodyguardMenuLastConfirmed[1]];
 			break;
 		case 4:
+			// For custom peds, always show the title if available, fallback to model name
 			if (!lastCustomBodyguardPedName.empty()) {
 				value = lastCustomBodyguardPedName;
-			} else {
+			} else if (!lastCustomBodyguardSpawn.empty()) {
 				value = lastCustomBodyguardSpawn;
+			} else {
+				value = "未选择";
+			}
+			break;
+		case 5:
+			// Manual input mode
+			if (!lastCustomBodyguardSpawn.empty()) {
+				value = lastCustomBodyguardSpawn;
+			} else {
+				value = "未输入";
 			}
 			break;
 		default:
@@ -1259,7 +1283,16 @@ std::string get_current_model_name(){
 			break;
 		}
 	}
-	else value = lastCustomBodyguardSpawn;
+	else {
+		// For manual input or when lastCustomBodyguardSpawn is set
+		if (skinTypesBodyguardMenuLastConfirmed[0] == 4 && !lastCustomBodyguardPedName.empty()) {
+			// Custom ped mode - show title
+			value = lastCustomBodyguardPedName;
+		} else {
+			// Manual input or other modes - show model name/input
+			value = lastCustomBodyguardSpawn;
+		}
+	}
 	return value;
 }
 
@@ -1295,6 +1328,8 @@ bool onconfirm_bodyguards_skins_players(MenuItem<std::string> choice){
 	skinTypesBodyguardMenuPositionMemory[1] = choice.currentMenuIndex;
 	skinTypesBodyguardMenuLastConfirmed[0] = 0;
 	skinTypesBodyguardMenuLastConfirmed[1] = choice.currentMenuIndex;
+	lastCustomBodyguardSpawn = "";  // Clear manual input when switching categories
+	lastCustomBodyguardPedName = "";  // Clear custom ped name when switching categories
 	requireRefreshOfBodyguardMainMenu = true;
 
 	return true;
@@ -1305,6 +1340,8 @@ bool onconfirm_bodyguards_skins_npcs(MenuItem<std::string> choice){
 	skinTypesBodyguardMenuPositionMemory[1] = choice.currentMenuIndex;
 	skinTypesBodyguardMenuLastConfirmed[0] = 1;
 	skinTypesBodyguardMenuLastConfirmed[1] = choice.currentMenuIndex;
+	lastCustomBodyguardSpawn = "";  // Clear manual input when switching categories
+	lastCustomBodyguardPedName = "";  // Clear custom ped name when switching categories
 	requireRefreshOfBodyguardMainMenu = true;
 
 	return true;
@@ -1315,6 +1352,8 @@ bool onconfirm_bodyguards_skins_online(MenuItem<std::string> choice) {
 	skinTypesBodyguardMenuPositionMemory[1] = choice.currentMenuIndex;
 	skinTypesBodyguardMenuLastConfirmed[0] = 2;
 	skinTypesBodyguardMenuLastConfirmed[1] = choice.currentMenuIndex;
+	lastCustomBodyguardSpawn = "";  // Clear manual input when switching categories
+	lastCustomBodyguardPedName = "";  // Clear custom ped name when switching categories
 	requireRefreshOfBodyguardMainMenu = true;
 
 	return true;
@@ -1325,6 +1364,8 @@ bool onconfirm_bodyguards_skins_animals(MenuItem<std::string> choice){
 	skinTypesBodyguardMenuPositionMemory[1] = choice.currentMenuIndex;
 	skinTypesBodyguardMenuLastConfirmed[0] = 3;
 	skinTypesBodyguardMenuLastConfirmed[1] = choice.currentMenuIndex;
+	lastCustomBodyguardSpawn = "";  // Clear manual input when switching categories
+	lastCustomBodyguardPedName = "";  // Clear custom ped name when switching categories
 	requireRefreshOfBodyguardMainMenu = true;
 
 	return true;
@@ -1333,6 +1374,7 @@ bool onconfirm_bodyguards_skins_animals(MenuItem<std::string> choice){
 bool process_player_skins_menu(){
 	std::vector<MenuItem<std::string>*> menuItems;
 	lastCustomBodyguardSpawn = "";
+	lastCustomBodyguardPedName = "";  // Clear custom ped name when switching to other categories
 	for(int i = 0; i < SKINS_PLAYER_CAPTIONS.size(); i++){
 		MenuItem<std::string> *item = new MenuItem<std::string>();
 		item->caption = SKINS_PLAYER_CAPTIONS[i];
@@ -1347,6 +1389,7 @@ bool process_player_skins_menu(){
 bool process_npc_skins_menu(){
 	std::vector<MenuItem<std::string>*> menuItems;
 	lastCustomBodyguardSpawn = "";
+	lastCustomBodyguardPedName = "";  // Clear custom ped name when switching to other categories
 	for(int i = 0; i < SKINS_GENERAL_CAPTIONS.size(); i++){
 		MenuItem<std::string> *item = new MenuItem<std::string>();
 		item->caption = SKINS_GENERAL_CAPTIONS[i];
@@ -1361,6 +1404,7 @@ bool process_npc_skins_menu(){
 bool process_online_skins_menu() {
 	std::vector<MenuItem<std::string>*> menuItems;
 	lastCustomBodyguardSpawn = "";
+	lastCustomBodyguardPedName = "";  // Clear custom ped name when switching to other categories
 	for (int i = 0; i < SKINS_ONLINE_CAPTIONS.size(); i++) {
 		MenuItem<std::string>* item = new MenuItem<std::string>();
 		item->caption = SKINS_ONLINE_CAPTIONS[i];
@@ -1375,6 +1419,7 @@ bool process_online_skins_menu() {
 bool process_animal_skins_menu(){
 	std::vector<MenuItem<std::string>*> menuItems;
 	lastCustomBodyguardSpawn = "";
+	lastCustomBodyguardPedName = "";  // Clear custom ped name when switching to other categories
 	for (int i = 0; i < SKINS_ANIMALS_CAPTIONS.size(); i++){
 		MenuItem<std::string> *item = new MenuItem<std::string>();
 		item->caption = SKINS_ANIMALS_CAPTIONS[i];
