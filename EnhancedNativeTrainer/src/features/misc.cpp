@@ -307,69 +307,84 @@ void process_misc_main_key_settings_menu() {
 	// Get current key config
 	KeyInputConfig* keyConfig = get_config()->get_key_config();
 
+	// Helper function to get current key index
+	auto getCurrentKeyIndex = [](int keyCode) -> int {
+		for (int i = 0; i < (sizeof(MISC_KEY_BINDING_VALUES) / sizeof(MISC_KEY_BINDING_VALUES[0])); i++) {
+			if (MISC_KEY_BINDING_VALUES[i] == keyCode) {
+				return i;
+			}
+		}
+		return 0; // Default to "未绑定"
+	};
+
 	// Main menu toggle key
-	MenuItem<int>* mainMenuToggleItem = new MenuItem<int>();
+	SelectFromListMenuItem* mainMenuToggleItem = new SelectFromListMenuItem(MISC_KEY_BINDING_CAPTIONS, onchange_main_menu_toggle_key);
 	KeyConfig* mainMenuKey = keyConfig->get_key(KeyConfig::KEY_TOGGLE_MAIN_MENU);
-	mainMenuToggleItem->caption = "开/关主菜单: " + get_key_display_name(mainMenuKey ? mainMenuKey->keyCode : VK_F4);
-	mainMenuToggleItem->value = 1;
-	mainMenuToggleItem->isLeaf = true;
+	mainMenuToggleItem->caption = "开/关主菜单";
+	mainMenuToggleItem->value = getCurrentKeyIndex(mainMenuKey ? mainMenuKey->keyCode : VK_F4);
+	mainMenuToggleItem->wrap = false;
 	menuItems.push_back(mainMenuToggleItem);
 
 	// Menu navigation keys
-	MenuItem<int>* menuUpItem = new MenuItem<int>();
+	SelectFromListMenuItem* menuUpItem = new SelectFromListMenuItem(MISC_KEY_BINDING_CAPTIONS, onchange_menu_up_key);
 	KeyConfig* menuUpKey = keyConfig->get_key(KeyConfig::KEY_MENU_UP);
-	menuUpItem->caption = "向上移动菜单: " + get_key_display_name(menuUpKey ? menuUpKey->keyCode : VK_NUMPAD8);
-	menuUpItem->value = 2;
-	menuUpItem->isLeaf = true;
+	menuUpItem->caption = "向上移动菜单";
+	menuUpItem->value = getCurrentKeyIndex(menuUpKey ? menuUpKey->keyCode : VK_NUMPAD8);
+	menuUpItem->wrap = false;
 	menuItems.push_back(menuUpItem);
 
-	MenuItem<int>* menuDownItem = new MenuItem<int>();
+	SelectFromListMenuItem* menuDownItem = new SelectFromListMenuItem(MISC_KEY_BINDING_CAPTIONS, onchange_menu_down_key);
 	KeyConfig* menuDownKey = keyConfig->get_key(KeyConfig::KEY_MENU_DOWN);
-	menuDownItem->caption = "向下移动菜单: " + get_key_display_name(menuDownKey ? menuDownKey->keyCode : VK_NUMPAD2);
-	menuDownItem->value = 3;
-	menuDownItem->isLeaf = true;
+	menuDownItem->caption = "向下移动菜单";
+	menuDownItem->value = getCurrentKeyIndex(menuDownKey ? menuDownKey->keyCode : VK_NUMPAD2);
+	menuDownItem->wrap = false;
 	menuItems.push_back(menuDownItem);
 
-	MenuItem<int>* menuLeftItem = new MenuItem<int>();
+	SelectFromListMenuItem* menuLeftItem = new SelectFromListMenuItem(MISC_KEY_BINDING_CAPTIONS, onchange_menu_left_key);
 	KeyConfig* menuLeftKey = keyConfig->get_key(KeyConfig::KEY_MENU_LEFT);
-	menuLeftItem->caption = "向左移动菜单: " + get_key_display_name(menuLeftKey ? menuLeftKey->keyCode : VK_NUMPAD4);
-	menuLeftItem->value = 4;
-	menuLeftItem->isLeaf = true;
+	menuLeftItem->caption = "向左移动菜单";
+	menuLeftItem->value = getCurrentKeyIndex(menuLeftKey ? menuLeftKey->keyCode : VK_NUMPAD4);
+	menuLeftItem->wrap = false;
 	menuItems.push_back(menuLeftItem);
 
-	MenuItem<int>* menuRightItem = new MenuItem<int>();
+	SelectFromListMenuItem* menuRightItem = new SelectFromListMenuItem(MISC_KEY_BINDING_CAPTIONS, onchange_menu_right_key);
 	KeyConfig* menuRightKey = keyConfig->get_key(KeyConfig::KEY_MENU_RIGHT);
-	menuRightItem->caption = "向右移动菜单: " + get_key_display_name(menuRightKey ? menuRightKey->keyCode : VK_NUMPAD6);
-	menuRightItem->value = 5;
-	menuRightItem->isLeaf = true;
+	menuRightItem->caption = "向右移动菜单";
+	menuRightItem->value = getCurrentKeyIndex(menuRightKey ? menuRightKey->keyCode : VK_NUMPAD6);
+	menuRightItem->wrap = false;
 	menuItems.push_back(menuRightItem);
 
-	MenuItem<int>* menuSelectItem = new MenuItem<int>();
+	SelectFromListMenuItem* menuSelectItem = new SelectFromListMenuItem(MISC_KEY_BINDING_CAPTIONS, onchange_menu_select_key);
 	KeyConfig* menuSelectKey = keyConfig->get_key(KeyConfig::KEY_MENU_SELECT);
-	menuSelectItem->caption = "选择菜单选项: " + get_key_display_name(menuSelectKey ? menuSelectKey->keyCode : VK_NUMPAD5);
-	menuSelectItem->value = 6;
-	menuSelectItem->isLeaf = true;
+	menuSelectItem->caption = "选择菜单选项";
+	menuSelectItem->value = getCurrentKeyIndex(menuSelectKey ? menuSelectKey->keyCode : VK_NUMPAD5);
+	menuSelectItem->wrap = false;
 	menuItems.push_back(menuSelectItem);
 
-	MenuItem<int>* menuBackItem = new MenuItem<int>();
+	SelectFromListMenuItem* menuBackItem = new SelectFromListMenuItem(MISC_KEY_BINDING_CAPTIONS, onchange_menu_back_key);
 	KeyConfig* menuBackKey = keyConfig->get_key(KeyConfig::KEY_MENU_BACK);
-	menuBackItem->caption = "返回上级菜单: " + get_key_display_name(menuBackKey ? menuBackKey->keyCode : VK_NUMPAD0);
-	menuBackItem->value = 7;
-	menuBackItem->isLeaf = true;
+	menuBackItem->caption = "返回上级菜单";
+	menuBackItem->value = getCurrentKeyIndex(menuBackKey ? menuBackKey->keyCode : VK_NUMPAD0);
+	menuBackItem->wrap = false;
 	menuItems.push_back(menuBackItem);
 
 	// Airbrake toggle key
-	MenuItem<int>* airbrakeToggleItem = new MenuItem<int>();
+	SelectFromListMenuItem* airbrakeToggleItem = new SelectFromListMenuItem(MISC_KEY_BINDING_CAPTIONS, onchange_airbrake_toggle_key);
 	KeyConfig* airbrakeKey = keyConfig->get_key(KeyConfig::KEY_TOGGLE_AIRBRAKE);
-	airbrakeToggleItem->caption = "开启/关闭自由移动: " + get_key_display_name(airbrakeKey ? airbrakeKey->keyCode : VK_F6);
-	airbrakeToggleItem->value = 8;
-	airbrakeToggleItem->isLeaf = true;
+	airbrakeToggleItem->caption = "开启/关闭自由移动";
+	airbrakeToggleItem->value = getCurrentKeyIndex(airbrakeKey ? airbrakeKey->keyCode : VK_F6);
+	airbrakeToggleItem->wrap = false;
 	menuItems.push_back(airbrakeToggleItem);
 
 	// Add 9 hotkeys
+	void(*hotkeyCallbacks[])(int, SelectFromListMenuItem*) = {
+		onchange_hotkey_1_key, onchange_hotkey_2_key, onchange_hotkey_3_key,
+		onchange_hotkey_4_key, onchange_hotkey_5_key, onchange_hotkey_6_key,
+		onchange_hotkey_7_key, onchange_hotkey_8_key, onchange_hotkey_9_key
+	};
+
 	for (int i = 1; i <= 9; i++) {
-		MenuItem<int>* hotkeyItem = new MenuItem<int>();
-		std::string hotkeyName = "KEY_HOT_" + std::to_string(i);
+		SelectFromListMenuItem* hotkeyItem = new SelectFromListMenuItem(MISC_KEY_BINDING_CAPTIONS, hotkeyCallbacks[i-1]);
 		
 		// Get the key based on hotkey number
 		KeyConfig* hotkeyKey = nullptr;
@@ -385,13 +400,142 @@ void process_misc_main_key_settings_menu() {
 			case 9: hotkeyKey = keyConfig->get_key(KeyConfig::KEY_HOT_9); break;
 		}
 		
-		hotkeyItem->caption = "快捷键 " + std::to_string(i) + ": " + get_key_display_name(hotkeyKey ? hotkeyKey->keyCode : 0);
-		hotkeyItem->value = 8 + i; // Values 9-17 for hotkeys 1-9
-		hotkeyItem->isLeaf = true;
+		hotkeyItem->caption = "快捷键 " + std::to_string(i);
+		hotkeyItem->value = getCurrentKeyIndex(hotkeyKey ? hotkeyKey->keyCode : 0);
+		hotkeyItem->wrap = false;
 		menuItems.push_back(hotkeyItem);
 	}
 
 	draw_generic_menu<int>(menuItems, &activeLineMainKeySettings, caption, NULL, NULL, NULL);
+}
+
+// Helper function to update key configuration
+void update_key_config(const std::string& keyFunction, int newKeyCode) {
+	KeyInputConfig* keyConfig = get_config()->get_key_config();
+	KeyConfig* key = keyConfig->get_key(keyFunction);
+	if (key) {
+		key->keyCode = newKeyCode;
+	}
+}
+
+// Key binding callback functions
+void onchange_main_menu_toggle_key(int value, SelectFromListMenuItem* source) {
+	if (value >= 0 && value < (sizeof(MISC_KEY_BINDING_VALUES) / sizeof(MISC_KEY_BINDING_VALUES[0]))) {
+		update_key_config(KeyConfig::KEY_TOGGLE_MAIN_MENU, MISC_KEY_BINDING_VALUES[value]);
+		set_status_text("主菜单切换键已更新为: " + MISC_KEY_BINDING_CAPTIONS[value]);
+	}
+}
+
+void onchange_menu_up_key(int value, SelectFromListMenuItem* source) {
+	if (value >= 0 && value < (sizeof(MISC_KEY_BINDING_VALUES) / sizeof(MISC_KEY_BINDING_VALUES[0]))) {
+		update_key_config(KeyConfig::KEY_MENU_UP, MISC_KEY_BINDING_VALUES[value]);
+		set_status_text("菜单向上键已更新为: " + MISC_KEY_BINDING_CAPTIONS[value]);
+	}
+}
+
+void onchange_menu_down_key(int value, SelectFromListMenuItem* source) {
+	if (value >= 0 && value < (sizeof(MISC_KEY_BINDING_VALUES) / sizeof(MISC_KEY_BINDING_VALUES[0]))) {
+		update_key_config(KeyConfig::KEY_MENU_DOWN, MISC_KEY_BINDING_VALUES[value]);
+		set_status_text("菜单向下键已更新为: " + MISC_KEY_BINDING_CAPTIONS[value]);
+	}
+}
+
+void onchange_menu_left_key(int value, SelectFromListMenuItem* source) {
+	if (value >= 0 && value < (sizeof(MISC_KEY_BINDING_VALUES) / sizeof(MISC_KEY_BINDING_VALUES[0]))) {
+		update_key_config(KeyConfig::KEY_MENU_LEFT, MISC_KEY_BINDING_VALUES[value]);
+		set_status_text("菜单向左键已更新为: " + MISC_KEY_BINDING_CAPTIONS[value]);
+	}
+}
+
+void onchange_menu_right_key(int value, SelectFromListMenuItem* source) {
+	if (value >= 0 && value < (sizeof(MISC_KEY_BINDING_VALUES) / sizeof(MISC_KEY_BINDING_VALUES[0]))) {
+		update_key_config(KeyConfig::KEY_MENU_RIGHT, MISC_KEY_BINDING_VALUES[value]);
+		set_status_text("菜单向右键已更新为: " + MISC_KEY_BINDING_CAPTIONS[value]);
+	}
+}
+
+void onchange_menu_select_key(int value, SelectFromListMenuItem* source) {
+	if (value >= 0 && value < (sizeof(MISC_KEY_BINDING_VALUES) / sizeof(MISC_KEY_BINDING_VALUES[0]))) {
+		update_key_config(KeyConfig::KEY_MENU_SELECT, MISC_KEY_BINDING_VALUES[value]);
+		set_status_text("菜单选择键已更新为: " + MISC_KEY_BINDING_CAPTIONS[value]);
+	}
+}
+
+void onchange_menu_back_key(int value, SelectFromListMenuItem* source) {
+	if (value >= 0 && value < (sizeof(MISC_KEY_BINDING_VALUES) / sizeof(MISC_KEY_BINDING_VALUES[0]))) {
+		update_key_config(KeyConfig::KEY_MENU_BACK, MISC_KEY_BINDING_VALUES[value]);
+		set_status_text("菜单返回键已更新为: " + MISC_KEY_BINDING_CAPTIONS[value]);
+	}
+}
+
+void onchange_airbrake_toggle_key(int value, SelectFromListMenuItem* source) {
+	if (value >= 0 && value < (sizeof(MISC_KEY_BINDING_VALUES) / sizeof(MISC_KEY_BINDING_VALUES[0]))) {
+		update_key_config(KeyConfig::KEY_TOGGLE_AIRBRAKE, MISC_KEY_BINDING_VALUES[value]);
+		set_status_text("自由移动切换键已更新为: " + MISC_KEY_BINDING_CAPTIONS[value]);
+	}
+}
+
+void onchange_hotkey_1_key(int value, SelectFromListMenuItem* source) {
+	if (value >= 0 && value < (sizeof(MISC_KEY_BINDING_VALUES) / sizeof(MISC_KEY_BINDING_VALUES[0]))) {
+		update_key_config(KeyConfig::KEY_HOT_1, MISC_KEY_BINDING_VALUES[value]);
+		set_status_text("快捷键 1 已更新为: " + MISC_KEY_BINDING_CAPTIONS[value]);
+	}
+}
+
+void onchange_hotkey_2_key(int value, SelectFromListMenuItem* source) {
+	if (value >= 0 && value < (sizeof(MISC_KEY_BINDING_VALUES) / sizeof(MISC_KEY_BINDING_VALUES[0]))) {
+		update_key_config(KeyConfig::KEY_HOT_2, MISC_KEY_BINDING_VALUES[value]);
+		set_status_text("快捷键 2 已更新为: " + MISC_KEY_BINDING_CAPTIONS[value]);
+	}
+}
+
+void onchange_hotkey_3_key(int value, SelectFromListMenuItem* source) {
+	if (value >= 0 && value < (sizeof(MISC_KEY_BINDING_VALUES) / sizeof(MISC_KEY_BINDING_VALUES[0]))) {
+		update_key_config(KeyConfig::KEY_HOT_3, MISC_KEY_BINDING_VALUES[value]);
+		set_status_text("快捷键 3 已更新为: " + MISC_KEY_BINDING_CAPTIONS[value]);
+	}
+}
+
+void onchange_hotkey_4_key(int value, SelectFromListMenuItem* source) {
+	if (value >= 0 && value < (sizeof(MISC_KEY_BINDING_VALUES) / sizeof(MISC_KEY_BINDING_VALUES[0]))) {
+		update_key_config(KeyConfig::KEY_HOT_4, MISC_KEY_BINDING_VALUES[value]);
+		set_status_text("快捷键 4 已更新为: " + MISC_KEY_BINDING_CAPTIONS[value]);
+	}
+}
+
+void onchange_hotkey_5_key(int value, SelectFromListMenuItem* source) {
+	if (value >= 0 && value < (sizeof(MISC_KEY_BINDING_VALUES) / sizeof(MISC_KEY_BINDING_VALUES[0]))) {
+		update_key_config(KeyConfig::KEY_HOT_5, MISC_KEY_BINDING_VALUES[value]);
+		set_status_text("快捷键 5 已更新为: " + MISC_KEY_BINDING_CAPTIONS[value]);
+	}
+}
+
+void onchange_hotkey_6_key(int value, SelectFromListMenuItem* source) {
+	if (value >= 0 && value < (sizeof(MISC_KEY_BINDING_VALUES) / sizeof(MISC_KEY_BINDING_VALUES[0]))) {
+		update_key_config(KeyConfig::KEY_HOT_6, MISC_KEY_BINDING_VALUES[value]);
+		set_status_text("快捷键 6 已更新为: " + MISC_KEY_BINDING_CAPTIONS[value]);
+	}
+}
+
+void onchange_hotkey_7_key(int value, SelectFromListMenuItem* source) {
+	if (value >= 0 && value < (sizeof(MISC_KEY_BINDING_VALUES) / sizeof(MISC_KEY_BINDING_VALUES[0]))) {
+		update_key_config(KeyConfig::KEY_HOT_7, MISC_KEY_BINDING_VALUES[value]);
+		set_status_text("快捷键 7 已更新为: " + MISC_KEY_BINDING_CAPTIONS[value]);
+	}
+}
+
+void onchange_hotkey_8_key(int value, SelectFromListMenuItem* source) {
+	if (value >= 0 && value < (sizeof(MISC_KEY_BINDING_VALUES) / sizeof(MISC_KEY_BINDING_VALUES[0]))) {
+		update_key_config(KeyConfig::KEY_HOT_8, MISC_KEY_BINDING_VALUES[value]);
+		set_status_text("快捷键 8 已更新为: " + MISC_KEY_BINDING_CAPTIONS[value]);
+	}
+}
+
+void onchange_hotkey_9_key(int value, SelectFromListMenuItem* source) {
+	if (value >= 0 && value < (sizeof(MISC_KEY_BINDING_VALUES) / sizeof(MISC_KEY_BINDING_VALUES[0]))) {
+		update_key_config(KeyConfig::KEY_HOT_9, MISC_KEY_BINDING_VALUES[value]);
+		set_status_text("快捷键 9 已更新为: " + MISC_KEY_BINDING_CAPTIONS[value]);
+	}
 }
 
 void process_misc_trainermenucoloring_menu(int part){
