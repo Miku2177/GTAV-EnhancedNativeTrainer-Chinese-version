@@ -16,6 +16,8 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\..\inc\main.h"
 #include "..\ui_support\menu_functions.h"
 #include <string>
+#include <map>
+#include <vector>
 
 const std::vector<std::string> SKINS_PLAYER_CAPTIONS{ "迈克尔·德圣塔", "富兰克林·克林顿", "崔佛·菲利普", "线上女主角", "线上男主角" }; // 数量5个
 const std::vector<std::string> SKINS_PLAYER_VALUES{ "player_zero", "player_one", "player_two", "mp_f_freemode_01", "mp_m_freemode_01" };
@@ -82,3 +84,5 @@ void onchange_auto_apply_skin_saved_index(int value, SelectFromListMenuItem* sou
 // 自定义角色模型 (外置 XML) 菜单/加载函数声明
 bool process_custom_peds_menu();
 bool ensure_custom_peds_loaded();
+std::map<std::string, std::vector<std::pair<std::string, std::string>>> get_custom_peds_map();
+std::vector<std::string> get_custom_ped_categories();
