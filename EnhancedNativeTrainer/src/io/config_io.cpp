@@ -810,6 +810,12 @@ void write_config_ini_file(){
 	}
 }
 
+void write_config_file(){
+	// 简单的存根实现 - 仅写入日志
+	// TODO: 实现完整的XML配置保存功能
+	write_text_to_log_file("按键配置保存请求已记录 - XML保存功能待实现");
+}
+
 void KeyInputConfig::set_key(char* function, char* keyName, bool modCtrl, bool modAlt, bool modShift){
 	std::ostringstream ss;
 	ss << "按键功能 " << function << " 被给予 " << keyName;

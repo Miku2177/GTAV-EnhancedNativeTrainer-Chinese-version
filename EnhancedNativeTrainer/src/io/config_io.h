@@ -132,6 +132,11 @@ void read_config_ini_file();
 */
 void write_config_ini_file();
 
+/**
+将用户配置写入 XML 文件。
+*/
+void write_config_file();
+
 /**获取当前配置对象。*/
 inline TrainerConfig* get_config(){
 	return config;

@@ -120,3 +120,15 @@ int keyNameToVal(char * input)
 	}
 	return -1;
 }
+
+const char* keyValToName(int keyCode)
+{
+	for (int i = 0; i < (sizeof ALL_KEYS / sizeof ALL_KEYS[0]); i++)
+	{
+		if (ALL_KEYS[i].keyCode == keyCode)
+		{
+			return ALL_KEYS[i].name;
+		}
+	}
+	return "VK_NOTHING";
+}

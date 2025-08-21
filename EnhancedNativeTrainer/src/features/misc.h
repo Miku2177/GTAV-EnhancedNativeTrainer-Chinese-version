@@ -243,6 +243,18 @@ void process_misc_menu_layout_settings_menu();
 
 void process_misc_vehicle_preview_settings_menu();
 
+// 新增的主要按键设置函数声明
+void process_misc_main_key_menu();
+bool onconfirm_main_key_menu(MenuItem<int> choice);
+void process_misc_navigation_key_menu();
+bool onconfirm_navigation_key_menu(MenuItem<int> choice);
+bool onconfirm_hotkey_menu(MenuItem<int> choice);
+std::string get_key_display_name(std::string keyFunction);
+void reset_navigation_keys_to_default();
+void reset_hotkeys_to_default();
+void start_key_input_mode(std::string keyFunction);
+void handle_key_input_mode();
+
 bool is_vehicle_preview_enabled();
 
 bool is_hud_hidden();

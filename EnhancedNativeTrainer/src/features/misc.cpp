@@ -35,6 +35,8 @@ int activeLineIndexBillSettings = 0;
 int activeLineIndexPhoneOnBike = 0;
 int activeLineIndexAirbrake = 0;
 int activeLineHotkeyConfig = 0;
+int activeLineMainKeyConfig = 0;
+int activeLineNavKeyConfig = 0;
 
 // 自由移动模式变量
 bool airbrake_enable = true; // 启用自由移动
@@ -145,6 +147,9 @@ bool sfilter_enabled = false;
 //bool featureControllerIgnoreInTrainer = false;
 
 const int TRAINERCONFIG_HOTKEY_MENU = 99;
+const int TRAINERCONFIG_MAIN_KEY_MENU = 100;
+const int MAINKEY_HOTKEY_FUNCTIONS = 101;
+const int MAINKEY_NAVIGATION_KEYS = 102;
 int radioStationIndex = -1;
 
 Camera StuntCam = NULL;
@@ -226,15 +231,254 @@ void onchange_hotkey_function(int value, SelectFromListMenuItem* source){
 	change_hotkey_function(source->extras.at(0), value);
 }
 
+std::string get_key_display_name(std::string keyFunction){
+	KeyConfig* keyConfig = get_config()->get_key_config()->get_key(keyFunction);
+	if(keyConfig == NULL || keyConfig->keyCode == 0){
+		return "未绑定";
+	}
+	return std::string(keyValToName(keyConfig->keyCode));
+}
+
+void process_misc_main_key_menu(){
+	const std::string caption = "主要按键设置";
+
+	std::vector<MenuItem<int>*> menuItems;
+
+	MenuItem<int>* stdItem = new MenuItem<int>();
+	stdItem->caption = "快捷键功能";
+	stdItem->value = MAINKEY_HOTKEY_FUNCTIONS;
+	stdItem->isLeaf = false;
+	menuItems.push_back(stdItem);
+
+	stdItem = new MenuItem<int>();
+	stdItem->caption = "菜单导航按键";
+	stdItem->value = MAINKEY_NAVIGATION_KEYS;
+	stdItem->isLeaf = false;
+	menuItems.push_back(stdItem);
+
+	draw_generic_menu<int>(menuItems, &activeLineMainKeyConfig, caption, onconfirm_main_key_menu, NULL, NULL);
+}
+
+bool onconfirm_main_key_menu(MenuItem<int> choice){
+	if(choice.value == MAINKEY_HOTKEY_FUNCTIONS){
+		process_misc_hotkey_menu();
+	}
+	else if(choice.value == MAINKEY_NAVIGATION_KEYS){
+		process_misc_navigation_key_menu();
+	}
+	return false;
+}
+
+void process_misc_navigation_key_menu(){
+	const std::string caption = "菜单导航按键";
+
+	std::vector<MenuItem<int>*> menuItems;
+
+	// 主菜单开关键
+	MenuItem<int>* keyItem = new MenuItem<int>();
+	keyItem->caption = "开/关 主菜单: " + get_key_display_name(KeyConfig::KEY_TOGGLE_MAIN_MENU);
+	keyItem->value = 1;
+	keyItem->isLeaf = true;
+	menuItems.push_back(keyItem);
+
+	// 菜单导航键
+	keyItem = new MenuItem<int>();
+	keyItem->caption = "向上移动菜单: " + get_key_display_name(KeyConfig::KEY_MENU_UP);
+	keyItem->value = 2;
+	keyItem->isLeaf = true;
+	menuItems.push_back(keyItem);
+
+	keyItem = new MenuItem<int>();
+	keyItem->caption = "向下移动菜单: " + get_key_display_name(KeyConfig::KEY_MENU_DOWN);
+	keyItem->value = 3;
+	keyItem->isLeaf = true;
+	menuItems.push_back(keyItem);
+
+	keyItem = new MenuItem<int>();
+	keyItem->caption = "向左移动菜单: " + get_key_display_name(KeyConfig::KEY_MENU_LEFT);
+	keyItem->value = 4;
+	keyItem->isLeaf = true;
+	menuItems.push_back(keyItem);
+
+	keyItem = new MenuItem<int>();
+	keyItem->caption = "向右移动菜单: " + get_key_display_name(KeyConfig::KEY_MENU_RIGHT);
+	keyItem->value = 5;
+	keyItem->isLeaf = true;
+	menuItems.push_back(keyItem);
+
+	keyItem = new MenuItem<int>();
+	keyItem->caption = "选择菜单选项: " + get_key_display_name(KeyConfig::KEY_MENU_SELECT);
+	keyItem->value = 6;
+	keyItem->isLeaf = true;
+	menuItems.push_back(keyItem);
+
+	keyItem = new MenuItem<int>();
+	keyItem->caption = "返回上级菜单: " + get_key_display_name(KeyConfig::KEY_MENU_BACK);
+	keyItem->value = 7;
+	keyItem->isLeaf = true;
+	menuItems.push_back(keyItem);
+
+	// 自由移动功能键
+	keyItem = new MenuItem<int>();
+	keyItem->caption = "开启/关闭自由移动功能: " + get_key_display_name(KeyConfig::KEY_TOGGLE_AIRBRAKE);
+	keyItem->value = 8;
+	keyItem->isLeaf = true;
+	menuItems.push_back(keyItem);
+
+	// 添加重置和保存选项
+	MenuItem<int>* stdItem = new MenuItem<int>();
+	stdItem->caption = "重置所有按键为默认值";
+	stdItem->value = 1001;
+	stdItem->isLeaf = true;
+	menuItems.push_back(stdItem);
+
+	stdItem = new MenuItem<int>();
+	stdItem->caption = "保存按键配置到XML";
+	stdItem->value = 1002;
+	stdItem->isLeaf = true;
+	menuItems.push_back(stdItem);
+
+	draw_generic_menu<int>(menuItems, &activeLineNavKeyConfig, caption, onconfirm_navigation_key_menu, NULL, NULL);
+}
+
+bool onconfirm_navigation_key_menu(MenuItem<int> choice){
+	std::string keyFunction;
+	switch(choice.value){
+		case 1: keyFunction = KeyConfig::KEY_TOGGLE_MAIN_MENU; break;
+		case 2: keyFunction = KeyConfig::KEY_MENU_UP; break;
+		case 3: keyFunction = KeyConfig::KEY_MENU_DOWN; break;
+		case 4: keyFunction = KeyConfig::KEY_MENU_LEFT; break;
+		case 5: keyFunction = KeyConfig::KEY_MENU_RIGHT; break;
+		case 6: keyFunction = KeyConfig::KEY_MENU_SELECT; break;
+		case 7: keyFunction = KeyConfig::KEY_MENU_BACK; break;
+		case 8: keyFunction = KeyConfig::KEY_TOGGLE_AIRBRAKE; break;
+		case 1001: // 重置所有按键为默认值
+			reset_navigation_keys_to_default();
+			set_status_text("导航按键已重置为默认值!");
+			return false;
+		case 1002: // 保存按键配置到XML
+			write_config_file();
+			set_status_text("按键配置已保存到XML!");
+			return false;
+		default:
+			return false;
+	}
+	
+	// 启动按键输入模式
+	start_key_input_mode(keyFunction);
+	return false;
+}
+
+void reset_navigation_keys_to_default(){
+	// 重置导航键为默认值
+	KeyInputConfig* keyConfig = get_config()->get_key_config();
+	
+	// 删除旧的配置并设置默认值
+	delete keyConfig->keyConfigs[KeyConfig::KEY_TOGGLE_MAIN_MENU];
+	keyConfig->keyConfigs[KeyConfig::KEY_TOGGLE_MAIN_MENU] = new KeyConfig(VK_F4);
+	
+	delete keyConfig->keyConfigs[KeyConfig::KEY_MENU_UP];
+	keyConfig->keyConfigs[KeyConfig::KEY_MENU_UP] = new KeyConfig(VK_NUMPAD8);
+	
+	delete keyConfig->keyConfigs[KeyConfig::KEY_MENU_DOWN];
+	keyConfig->keyConfigs[KeyConfig::KEY_MENU_DOWN] = new KeyConfig(VK_NUMPAD2);
+	
+	delete keyConfig->keyConfigs[KeyConfig::KEY_MENU_LEFT];
+	keyConfig->keyConfigs[KeyConfig::KEY_MENU_LEFT] = new KeyConfig(VK_NUMPAD4);
+	
+	delete keyConfig->keyConfigs[KeyConfig::KEY_MENU_RIGHT];
+	keyConfig->keyConfigs[KeyConfig::KEY_MENU_RIGHT] = new KeyConfig(VK_NUMPAD6);
+	
+	delete keyConfig->keyConfigs[KeyConfig::KEY_MENU_SELECT];
+	keyConfig->keyConfigs[KeyConfig::KEY_MENU_SELECT] = new KeyConfig(VK_NUMPAD5);
+	
+	delete keyConfig->keyConfigs[KeyConfig::KEY_MENU_BACK];
+	keyConfig->keyConfigs[KeyConfig::KEY_MENU_BACK] = new KeyConfig(VK_NUMPAD0);
+	
+	delete keyConfig->keyConfigs[KeyConfig::KEY_TOGGLE_AIRBRAKE];
+	keyConfig->keyConfigs[KeyConfig::KEY_TOGGLE_AIRBRAKE] = new KeyConfig(VK_F6);
+}
+
+// 按键输入模式变量
+std::string current_key_function = "";
+bool key_input_mode = false;
+
+void start_key_input_mode(std::string keyFunction){
+	current_key_function = keyFunction;
+	key_input_mode = true;
+	set_status_text("请按下要绑定的按键 (ESC 取消)");
+}
+
+void handle_key_input_mode(){
+	if(!key_input_mode) return;
+	
+	// 检查ESC键取消
+	if(IsKeyJustUp(VK_ESCAPE, true)){
+		key_input_mode = false;
+		current_key_function = "";
+		set_status_text("按键绑定已取消");
+		return;
+	}
+	
+	// 检查其他按键
+	for(int i = 0; i < (sizeof ALL_KEYS / sizeof ALL_KEYS[0]); i++){
+		if(ALL_KEYS[i].keyCode != VK_ESCAPE && IsKeyJustUp(ALL_KEYS[i].keyCode, true)){
+			// 找到按键，进行绑定
+			KeyInputConfig* keyConfig = get_config()->get_key_config();
+			delete keyConfig->keyConfigs[current_key_function];
+			keyConfig->keyConfigs[current_key_function] = new KeyConfig(ALL_KEYS[i].keyCode);
+			
+			set_status_text("按键 " + std::string(ALL_KEYS[i].name) + " 已绑定到 " + current_key_function);
+			key_input_mode = false;
+			current_key_function = "";
+			return;
+		}
+	}
+}
+
 bool process_misc_hotkey_menu(){
 	std::vector<MenuItem<int>*> menuItems;
 
+	// 添加9个快捷键的键位绑定菜单
+	for(int i = 1; i < 10; i++){
+		std::ostringstream itemCaption;
+		std::string keyFunction;
+		
+		switch(i){
+			case 1: keyFunction = KeyConfig::KEY_HOT_1; break;
+			case 2: keyFunction = KeyConfig::KEY_HOT_2; break;
+			case 3: keyFunction = KeyConfig::KEY_HOT_3; break;
+			case 4: keyFunction = KeyConfig::KEY_HOT_4; break;
+			case 5: keyFunction = KeyConfig::KEY_HOT_5; break;
+			case 6: keyFunction = KeyConfig::KEY_HOT_6; break;
+			case 7: keyFunction = KeyConfig::KEY_HOT_7; break;
+			case 8: keyFunction = KeyConfig::KEY_HOT_8; break;
+			case 9: keyFunction = KeyConfig::KEY_HOT_9; break;
+		}
+		
+		itemCaption << "快捷键 " << i << " 按键: " << get_key_display_name(keyFunction);
+		
+		MenuItem<int>* keyItem = new MenuItem<int>();
+		keyItem->caption = itemCaption.str();
+		keyItem->value = i + 2000; // 偏移值以区分按键绑定和功能绑定
+		keyItem->isLeaf = true;
+		menuItems.push_back(keyItem);
+	}
+
+	// 分隔线
+	MenuItem<int>* separatorItem = new MenuItem<int>();
+	separatorItem->caption = "==================";
+	separatorItem->value = -1;
+	separatorItem->isLeaf = true;
+	menuItems.push_back(separatorItem);
+
+	// 原有的功能绑定菜单
 	for(int i = 1; i < 10; i++){
 		std::ostringstream itemCaption;
 		std::vector<std::string> captions;
 		void(*callback)(int, SelectFromListMenuItem*);
 
-		itemCaption << "快捷键 " << i;
+		itemCaption << "快捷键 " << i << " 功能";
 
 		bool keyAssigned = get_config()->get_key_config()->is_hotkey_assigned(i);
 		if(!keyAssigned){
@@ -261,9 +505,87 @@ bool process_misc_hotkey_menu(){
 		}
 	}
 
-	draw_generic_menu<int>(menuItems, &activeLineHotkeyConfig, "快捷键设置", NULL, NULL, NULL);
+	// 添加重置和保存选项
+	MenuItem<int>* stdItem = new MenuItem<int>();
+	stdItem->caption = "重置所有快捷键为默认值";
+	stdItem->value = 3001;
+	stdItem->isLeaf = true;
+	menuItems.push_back(stdItem);
+
+	stdItem = new MenuItem<int>();
+	stdItem->caption = "保存快捷键配置到XML";
+	stdItem->value = 3002;
+	stdItem->isLeaf = true;
+	menuItems.push_back(stdItem);
+
+	draw_generic_menu<int>(menuItems, &activeLineHotkeyConfig, "快捷键功能", onconfirm_hotkey_menu, NULL, NULL);
 
 	return false;
+}
+
+bool onconfirm_hotkey_menu(MenuItem<int> choice){
+	if(choice.value >= 2001 && choice.value <= 2009){
+		// 快捷键按键绑定
+		int hotkeyIndex = choice.value - 2000;
+		std::string keyFunction;
+		
+		switch(hotkeyIndex){
+			case 1: keyFunction = KeyConfig::KEY_HOT_1; break;
+			case 2: keyFunction = KeyConfig::KEY_HOT_2; break;
+			case 3: keyFunction = KeyConfig::KEY_HOT_3; break;
+			case 4: keyFunction = KeyConfig::KEY_HOT_4; break;
+			case 5: keyFunction = KeyConfig::KEY_HOT_5; break;
+			case 6: keyFunction = KeyConfig::KEY_HOT_6; break;
+			case 7: keyFunction = KeyConfig::KEY_HOT_7; break;
+			case 8: keyFunction = KeyConfig::KEY_HOT_8; break;
+			case 9: keyFunction = KeyConfig::KEY_HOT_9; break;
+		}
+		
+		start_key_input_mode(keyFunction);
+	}
+	else if(choice.value == 3001){
+		// 重置所有快捷键为默认值
+		reset_hotkeys_to_default();
+		set_status_text("快捷键已重置为默认值!");
+	}
+	else if(choice.value == 3002){
+		// 保存快捷键配置到XML
+		write_config_file();
+		set_status_text("快捷键配置已保存到XML!");
+	}
+	return false;
+}
+
+void reset_hotkeys_to_default(){
+	// 重置9个快捷键为默认值（空绑定）
+	KeyInputConfig* keyConfig = get_config()->get_key_config();
+	
+	delete keyConfig->keyConfigs[KeyConfig::KEY_HOT_1];
+	keyConfig->keyConfigs[KeyConfig::KEY_HOT_1] = new KeyConfig(0);
+	
+	delete keyConfig->keyConfigs[KeyConfig::KEY_HOT_2];
+	keyConfig->keyConfigs[KeyConfig::KEY_HOT_2] = new KeyConfig(0);
+	
+	delete keyConfig->keyConfigs[KeyConfig::KEY_HOT_3];
+	keyConfig->keyConfigs[KeyConfig::KEY_HOT_3] = new KeyConfig(0);
+	
+	delete keyConfig->keyConfigs[KeyConfig::KEY_HOT_4];
+	keyConfig->keyConfigs[KeyConfig::KEY_HOT_4] = new KeyConfig(0);
+	
+	delete keyConfig->keyConfigs[KeyConfig::KEY_HOT_5];
+	keyConfig->keyConfigs[KeyConfig::KEY_HOT_5] = new KeyConfig(0);
+	
+	delete keyConfig->keyConfigs[KeyConfig::KEY_HOT_6];
+	keyConfig->keyConfigs[KeyConfig::KEY_HOT_6] = new KeyConfig(0);
+	
+	delete keyConfig->keyConfigs[KeyConfig::KEY_HOT_7];
+	keyConfig->keyConfigs[KeyConfig::KEY_HOT_7] = new KeyConfig(0);
+	
+	delete keyConfig->keyConfigs[KeyConfig::KEY_HOT_8];
+	keyConfig->keyConfigs[KeyConfig::KEY_HOT_8] = new KeyConfig(0);
+	
+	delete keyConfig->keyConfigs[KeyConfig::KEY_HOT_9];
+	keyConfig->keyConfigs[KeyConfig::KEY_HOT_9] = new KeyConfig(0);
 }
 
 void process_misc_trainermenucoloring_menu(int part){
@@ -337,6 +659,9 @@ bool onconfirm_trainerconfig_menu(MenuItem<int> choice){
 		//write_text_to_log_file("onconfirm_trainerconfig");
 		process_misc_hotkey_menu();
 	}
+	else if(choice.value == TRAINERCONFIG_MAIN_KEY_MENU){
+		process_misc_main_key_menu();
+	}
 	else if(choice.value == 63){
 		process_misc_trainermenucolors_menu();
 	}
@@ -398,8 +723,8 @@ void process_misc_trainerconfig_menu(){
 	SelectFromListMenuItem *listItem;
 
 	MenuItem<int>* stdItem = new MenuItem<int>();
-	stdItem->caption = "快捷键设置";
-	stdItem->value = TRAINERCONFIG_HOTKEY_MENU;
+	stdItem->caption = "主要按键设置";
+	stdItem->value = TRAINERCONFIG_MAIN_KEY_MENU;
 	stdItem->isLeaf = false;
 	menuItems.push_back(stdItem);
 
@@ -2143,6 +2468,8 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	}
 	if (DLC2::GET_IS_LOADING_SCREEN_ACTIVE()) sfilter_enabled = false;
 
+	// 处理按键输入模式
+	handle_key_input_mode();
 }
 
 void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){

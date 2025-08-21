@@ -262,3 +262,4 @@ static const VirtualKeysWithNames ALL_KEYS[] =
 };
 
 int keyNameToVal(char * input);
+const char* keyValToName(int keyCode);
