@@ -355,4 +355,6 @@ bool CompareMemoryJACCO(const uint8_t* pData, const uint8_t* bMask, const char* 
 intptr_t FindPatternJACCO(const char* bMask, const char* sMask);
 void SInit();
 
+void process_misc_main_keys_menu();
+
 extern bool show_transparency;

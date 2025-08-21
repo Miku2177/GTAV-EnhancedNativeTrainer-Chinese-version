@@ -17,6 +17,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "../utils.h"
 #include <iterator>
 #include "..\ui_support\menu_functions.h"
+#include "..\io\keyboard.h"
 
 //==================
 // 其他菜单选项
@@ -145,6 +146,7 @@ bool sfilter_enabled = false;
 //bool featureControllerIgnoreInTrainer = false;
 
 const int TRAINERCONFIG_HOTKEY_MENU = 99;
+const int TRAINERCONFIG_MAIN_KEYS_MENU = 67;
 int radioStationIndex = -1;
 
 Camera StuntCam = NULL;
@@ -234,7 +236,9 @@ bool process_misc_hotkey_menu(){
 		std::vector<std::string> captions;
 		void(*callback)(int, SelectFromListMenuItem*);
 
-		itemCaption << "快捷键 " << i;
+		// 获取绑定的按键名称
+		std::string keyName = getHotkeyKeyName(i);
+		itemCaption << "快捷键 " << i << " [" << keyName << "]";
 
 		bool keyAssigned = get_config()->get_key_config()->is_hotkey_assigned(i);
 		if(!keyAssigned){
@@ -264,6 +268,97 @@ bool process_misc_hotkey_menu(){
 	draw_generic_menu<int>(menuItems, &activeLineHotkeyConfig, "快捷键设置", NULL, NULL, NULL);
 
 	return false;
+}
+
+// 主要按键设置菜单的活动行索引
+int activeLineMainKeysConfig = 0;
+
+// 获取快捷键的按键名称
+std::string getHotkeyKeyName(int hotkeyIndex) {
+	std::string target;
+	switch(hotkeyIndex){
+		case 1: target = KeyConfig::KEY_HOT_1; break;
+		case 2: target = KeyConfig::KEY_HOT_2; break;
+		case 3: target = KeyConfig::KEY_HOT_3; break;
+		case 4: target = KeyConfig::KEY_HOT_4; break;
+		case 5: target = KeyConfig::KEY_HOT_5; break;
+		case 6: target = KeyConfig::KEY_HOT_6; break;
+		case 7: target = KeyConfig::KEY_HOT_7; break;
+		case 8: target = KeyConfig::KEY_HOT_8; break;
+		case 9: target = KeyConfig::KEY_HOT_9; break;
+		default: return "未设置";
+	}
+
+	KeyConfig* keyConfig = get_config()->get_key_config()->get_key(target);
+	if(keyConfig == NULL || keyConfig->keyCode == 0){
+		return "未设置";
+	}
+
+	std::string keyDisplayName = keyValToName(keyConfig->keyCode);
+	// 简化显示名称，去掉VK_前缀
+	if(keyDisplayName.substr(0, 3) == "VK_"){
+		keyDisplayName = keyDisplayName.substr(3);
+	}
+	return keyDisplayName;
+}
+
+bool onconfirm_main_keys_menu(MenuItem<int> choice){
+	if(choice.value == TRAINERCONFIG_HOTKEY_MENU){
+		process_misc_hotkey_menu();
+	}
+	// 对于按键设置，这里暂时不处理确认事件，将来可以添加按键重新绑定功能
+	return false;
+}
+
+void process_misc_main_keys_menu(){
+	std::vector<MenuItem<int>*> menuItems;
+	
+	// 添加快捷键设置子菜单
+	MenuItem<int>* hotkeyItem = new MenuItem<int>();
+	hotkeyItem->caption = "快捷键设置";
+	hotkeyItem->value = TRAINERCONFIG_HOTKEY_MENU;
+	hotkeyItem->isLeaf = false;
+	menuItems.push_back(hotkeyItem);
+
+	// 创建主要按键设置项
+	struct MainKeyDef {
+		std::string keyName;
+		std::string description;
+	};
+
+	std::vector<MainKeyDef> mainKeys = {
+		{KeyConfig::KEY_TOGGLE_MAIN_MENU, "开启关闭主菜单"},
+		{KeyConfig::KEY_MENU_UP, "向上移动菜单"},
+		{KeyConfig::KEY_MENU_DOWN, "向下移动菜单"},
+		{KeyConfig::KEY_MENU_LEFT, "向左移动菜单"},
+		{KeyConfig::KEY_MENU_RIGHT, "向右移动菜单"},
+		{KeyConfig::KEY_MENU_SELECT, "选择菜单选项"},
+		{KeyConfig::KEY_MENU_BACK, "返回上一级菜单"},
+		{KeyConfig::KEY_TOGGLE_AIRBRAKE, "开启/关闭自由移动功能"}
+	};
+
+	// 为每个主要按键创建菜单项
+	for(const auto& keyDef : mainKeys){
+		MenuItem<int>* item = new MenuItem<int>();
+		
+		KeyConfig* keyConfig = get_config()->get_key_config()->get_key(keyDef.keyName);
+		std::string keyDisplayName = "未设置";
+		
+		if(keyConfig != NULL && keyConfig->keyCode != 0){
+			keyDisplayName = keyValToName(keyConfig->keyCode);
+			// 简化显示名称，去掉VK_前缀
+			if(keyDisplayName.substr(0, 3) == "VK_"){
+				keyDisplayName = keyDisplayName.substr(3);
+			}
+		}
+		
+		item->caption = keyDef.description + " [" + keyDisplayName + "]";
+		item->value = -1; // 暂时设置为-1，将来可以用于识别按键
+		item->isLeaf = true;
+		menuItems.push_back(item);
+	}
+
+	draw_generic_menu<int>(menuItems, &activeLineMainKeysConfig, "主要按键设置", onconfirm_main_keys_menu, NULL, NULL);
 }
 
 void process_misc_trainermenucoloring_menu(int part){
@@ -333,7 +428,10 @@ void process_misc_trainermenucolors_menu(){
 }
 
 bool onconfirm_trainerconfig_menu(MenuItem<int> choice){
-	if(choice.value == TRAINERCONFIG_HOTKEY_MENU){
+	if(choice.value == TRAINERCONFIG_MAIN_KEYS_MENU){
+		process_misc_main_keys_menu();
+	}
+	else if(choice.value == TRAINERCONFIG_HOTKEY_MENU){
 		//write_text_to_log_file("onconfirm_trainerconfig");
 		process_misc_hotkey_menu();
 	}
@@ -397,11 +495,12 @@ void process_misc_trainerconfig_menu(){
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
 
-	MenuItem<int>* stdItem = new MenuItem<int>();
-	stdItem->caption = "快捷键设置";
-	stdItem->value = TRAINERCONFIG_HOTKEY_MENU;
-	stdItem->isLeaf = false;
-	menuItems.push_back(stdItem);
+	// 添加主要按键设置菜单
+	MenuItem<int>* mainKeysItem = new MenuItem<int>();
+	mainKeysItem->caption = "主要按键设置";
+	mainKeysItem->value = TRAINERCONFIG_MAIN_KEYS_MENU;
+	mainKeysItem->isLeaf = false;
+	menuItems.push_back(mainKeysItem);
 
 	listItem = new SelectFromListMenuItem(MISC_TRAINERCONTROL_CAPTIONS, onchange_misc_trainercontrol_index);
 	listItem->wrap = false;
