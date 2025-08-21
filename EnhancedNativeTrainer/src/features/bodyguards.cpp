@@ -1090,7 +1090,7 @@ bool onconfirm_bodyguard_skins_menu(MenuItem<int> choice){
 					(!STREAMING::IS_MODEL_IN_CDIMAGE(hash) || !STREAMING::IS_MODEL_VALID(hash)))
 				{
 					std::ostringstream ss;
-					ss << "找不到此模型 [" << result << "]";
+					ss << "~r~错误！~s~找不到此模型：\n[~y~" << result << "~s~]";
 					set_status_text(ss.str());
 					lastCustomBodyguardSpawn = "";
 					return false;

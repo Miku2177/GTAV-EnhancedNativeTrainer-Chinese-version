@@ -372,8 +372,15 @@ static bool load_custom_peds_from_xml(const char* xmlPath){
     
     // 添加状态信息
     std::stringstream infoMsg;
+    
+    // 计算所有分类中的模型总数
+    int totalModels = 0;
+    for (const auto& category : g_CustomPeds) {
+        totalModels += category.second.size();
+    }
+    
     infoMsg << "已加载 " << g_CustomPedCategories.size() << " 个分类, " 
-            << (g_CustomPeds.size() > 0 ? g_CustomPeds.begin()->second.size() : 0) << " 个模型";
+            << totalModels << " 个模型";
     set_status_text(infoMsg.str().c_str());
     
     return true;
@@ -1140,7 +1147,7 @@ bool onconfirm_skinchanger_category_menu(MenuItem<int> choice)
 				if (!STREAMING::IS_MODEL_IN_CDIMAGE(hash) || !STREAMING::IS_MODEL_VALID(hash))
 				{
 					std::ostringstream ss;
-					ss << "~r~错误！~s~找不到此模型 '" << result << "'";
+					ss << "~r~错误！~s~找不到此模型：\n[~y~" << result << "~s~]";
 					set_status_text(ss.str());
 					return false;
 				}
