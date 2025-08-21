@@ -566,9 +566,8 @@ void resetNavigationKeysToDefault() {
 }
 
 void saveKeysToXML() {
-	// TODO: Implement actual XML writing functionality for keys
-	// For now, just save to INI file which is supported
-	write_config_ini_file();
+	// Use the new XML writing functionality
+	write_current_config_xml_file();
 	set_status_text("按键设置已保存到配置文件", false);
 }
 

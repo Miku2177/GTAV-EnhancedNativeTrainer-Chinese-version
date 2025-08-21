@@ -374,6 +374,97 @@ void write_default_config_xml_file() {
     }
 }
 
+void write_current_config_xml_file() {
+    write_text_to_log_file("正在保存当前配置到 ent-config.xml 文件...");
+    
+    // 确保目录存在
+    CreateDirectory("Enhanced Native Trainer", NULL);
+    
+    std::ofstream xmlFile("Enhanced Native Trainer/ent-config.xml");
+    if (xmlFile.is_open()) {
+        // 写入配置文件头部
+        xmlFile << "<?xml version=\"1.0\" encoding=\"utf-8\"?>" << std::endl;
+        xmlFile << "<!--" << std::endl;
+        xmlFile << "    可用按键值的列表请参阅 https://blog.csdn.net/mystonelxj/article/details/88184829（改成国内网站了，不会打不开）" << std::endl;
+        xmlFile << "    理论上支持大部分或所有按键值。" << std::endl;
+        xmlFile << "    目前，如果你想要控制器(手柄)输入，需要首先使用一些工具将其映射到某个按键。" << std::endl;
+        xmlFile << "    如果你搞砸了这个文件并输入了无效的按键，将使用默认值。" << std::endl;
+        xmlFile << "    如果你设法将同一个按键分配给多个功能，谁知道会发生什么？" << std::endl;
+        xmlFile << "    " << std::endl;
+        xmlFile << "    使用 VK_NOTHING (键值)表示没有分配。" << std::endl;
+        xmlFile << "    " << std::endl;
+        xmlFile << "    -->" << std::endl;
+        xmlFile << "<ent-config>" << std::endl;
+        xmlFile << "	<!-- 主要按键(快捷键)设置 -->" << std::endl;
+        xmlFile << "	<keys>" << std::endl;
+        
+        // 写入当前的按键配置
+        KeyInputConfig* keyConfig = get_config()->get_key_config();
+        
+        // 主要导航按键
+        for (const auto& keyPair : keyConfig->keyConfigs) {
+            const std::string& function = keyPair.first;
+            KeyConfig* config = keyPair.second;
+            
+            if (config != nullptr) {
+                xmlFile << "	<key function=\"" << function << "\" value=\"" << valToKeyName(config->keyCode) << "\"";
+                
+                // For hotkeys, always include modifier attributes
+                if (function.find("hotkey_") == 0) {
+                    xmlFile << " modCtrl=\"" << (config->modCtrl ? "true" : "false") << "\"";
+                    xmlFile << " modAlt=\"" << (config->modAlt ? "true" : "false") << "\"";
+                    xmlFile << " modShift=\"" << (config->modShift ? "true" : "false") << "\"";
+                }
+                // For other keys, only include modifier attributes if they are true
+                else if (config->modCtrl || config->modAlt || config->modShift) {
+                    if (config->modCtrl) xmlFile << " modCtrl=\"true\"";
+                    if (config->modAlt) xmlFile << " modAlt=\"true\"";
+                    if (config->modShift) xmlFile << " modShift=\"true\"";
+                }
+                
+                xmlFile << "/>" << std::endl;
+                
+                // 添加中文注释
+                if (function == "toggle_main_menu") xmlFile << "	<!-- 开启/关闭主菜单，默认按键为 F4 -->" << std::endl;
+                else if (function == "menu_up") xmlFile << "	<!-- 向上移动菜单，按键为数字键盘的 8 -->" << std::endl;
+                else if (function == "menu_down") xmlFile << "	<!-- 向下移动菜单，按键为数字键盘的 2 -->" << std::endl;
+                else if (function == "menu_left") xmlFile << "	<!-- 向左移动菜单，按键为数字键盘的 4 -->" << std::endl;
+                else if (function == "menu_right") xmlFile << "	<!-- 向右移动菜单，按键为数字键盘的 6 -->" << std::endl;
+                else if (function == "menu_select") xmlFile << "	<!-- 选择菜单选项，按键为数字键盘的 5 -->" << std::endl;
+                else if (function == "menu_back") xmlFile << "	<!-- 返回上级菜单，按键为数字键盘的 0 -->" << std::endl;
+                else if (function == "toggle_airbrake") xmlFile << "	<!-- 开启/关闭，自由移动功能，按键为 F6 -->" << std::endl;
+                else if (function.find("hotkey_") == 0) {
+                    int num = std::stoi(function.substr(7));
+                    xmlFile << "	<!-- 快捷键 " << num << " -->" << std::endl;
+                }
+            }
+        }
+        
+        xmlFile << "	</keys>" << std::endl;
+        
+        // Add minimal controller keys section to maintain compatibility
+        xmlFile << std::endl;
+        xmlFile << "	<!-- 控制器(手柄)按键 -->" << std::endl;
+        xmlFile << "	<controller_keys>" << std::endl;
+        xmlFile << "	<controller function=\"KEY_TOGGLE_MAIN_MENU\" button1=\"206\" button2=\"192\"/>" << std::endl;
+        xmlFile << "	<controller function=\"KEY_MENU_UP\" button1=\"188\" button2=\"-1\"/>" << std::endl;
+        xmlFile << "	<controller function=\"KEY_MENU_DOWN\" button1=\"187\" button2=\"-1\"/>" << std::endl;
+        xmlFile << "	<controller function=\"KEY_MENU_LEFT\" button1=\"189\" button2=\"-1\"/>" << std::endl;
+        xmlFile << "	<controller function=\"KEY_MENU_RIGHT\" button1=\"190\" button2=\"-1\"/>" << std::endl;
+        xmlFile << "	<controller function=\"KEY_MENU_SELECT\" button1=\"201\" button2=\"-1\"/>" << std::endl;
+        xmlFile << "	<controller function=\"KEY_MENU_BACK\" button1=\"202\" button2=\"-1\"/>" << std::endl;
+        xmlFile << "	</controller_keys>" << std::endl;
+        
+        xmlFile << std::endl;
+        xmlFile << "</ent-config>" << std::endl;
+        
+        xmlFile.close();
+        write_text_to_log_file("成功保存当前配置到 ent-config.xml 文件");
+    } else {
+        write_text_to_log_file("保存 ent-config.xml 配置文件失败！");
+    }
+}
+
 /**读取 XML 配置文件。当前文件包含键盘按键选择。*/
 void read_config_file(){
     // 检查配置文件是否存在
