@@ -1112,6 +1112,14 @@ bool onconfirm_bodyguard_skins_menu(MenuItem<int> choice){
 					requireRefreshOfBodyguardMainMenu = true;
 				}
 			}
+			else {
+				// User cancelled input, stay on manual input mode but don't change anything
+				if (skinTypesBodyguardMenuLastConfirmed[0] != 4) {
+					// Only set manual input mode if not coming from custom peds
+					skinTypesBodyguardMenuPositionMemory[0] = 5;
+					skinTypesBodyguardMenuLastConfirmed[0] = 5;
+				}
+			}
 			return false;
 		}
 		case 6:
