@@ -273,6 +273,56 @@ bool process_misc_hotkey_menu(){
 // 主要按键设置菜单的活动行索引
 int activeLineMainKeysConfig = 0;
 
+// 按键绑定状态
+struct KeyBindingState {
+	bool waitingForKey;
+	std::string targetKeyName;
+	std::string description;
+};
+KeyBindingState keyBindingState = { false, "", "" };
+
+// 检测是否有按键被按下（用于按键绑定）
+int detectAnyKeyPress() {
+	for (int i = 0; i < (sizeof ALL_KEYS / sizeof ALL_KEYS[0]); i++) {
+		if (ALL_KEYS[i].keyCode != VK_NOTHING && IsKeyJustUp(ALL_KEYS[i].keyCode, false)) {
+			return ALL_KEYS[i].keyCode;
+		}
+	}
+	return 0;
+}
+
+// 更新按键绑定状态
+void updateKeyBindingState() {
+	if (!keyBindingState.waitingForKey) {
+		return;
+	}
+
+	// 检查ESC键取消绑定
+	if (IsKeyJustUp(VK_ESCAPE, false)) {
+		set_status_text("按键绑定已取消");
+		keyBindingState.waitingForKey = false;
+		keyBindingState.targetKeyName = "";
+		keyBindingState.description = "";
+		return;
+	}
+
+	int keyPressed = detectAnyKeyPress();
+	if (keyPressed != 0 && keyPressed != VK_ESCAPE) {
+		// 绑定新按键
+		const char* keyName = keyValToName(keyPressed);
+		get_config()->get_key_config()->set_key((char*)keyBindingState.targetKeyName.c_str(), (char*)keyName);
+		
+		std::ostringstream ss;
+		ss << keyBindingState.description << " 绑定到 " << keyName;
+		set_status_text(ss.str());
+
+		// 重置状态
+		keyBindingState.waitingForKey = false;
+		keyBindingState.targetKeyName = "";
+		keyBindingState.description = "";
+	}
+}
+
 // 获取快捷键的按键名称
 std::string getHotkeyKeyName(int hotkeyIndex) {
 	std::string target;
@@ -305,8 +355,65 @@ std::string getHotkeyKeyName(int hotkeyIndex) {
 bool onconfirm_main_keys_menu(MenuItem<int> choice){
 	if(choice.value == TRAINERCONFIG_HOTKEY_MENU){
 		process_misc_hotkey_menu();
+		return false;
 	}
-	// 对于按键设置，这里暂时不处理确认事件，将来可以添加按键重新绑定功能
+	
+	// 重置按键
+	if(choice.value == 100) {
+		// 重置主要按键为默认值
+		get_config()->get_key_config()->set_key((char*)KeyConfig::KEY_TOGGLE_MAIN_MENU.c_str(), "VK_F4");
+		get_config()->get_key_config()->set_key((char*)KeyConfig::KEY_MENU_UP.c_str(), "VK_NUMPAD8");
+		get_config()->get_key_config()->set_key((char*)KeyConfig::KEY_MENU_DOWN.c_str(), "VK_NUMPAD2");
+		get_config()->get_key_config()->set_key((char*)KeyConfig::KEY_MENU_LEFT.c_str(), "VK_NUMPAD4");
+		get_config()->get_key_config()->set_key((char*)KeyConfig::KEY_MENU_RIGHT.c_str(), "VK_NUMPAD6");
+		get_config()->get_key_config()->set_key((char*)KeyConfig::KEY_MENU_SELECT.c_str(), "VK_NUMPAD5");
+		get_config()->get_key_config()->set_key((char*)KeyConfig::KEY_MENU_BACK.c_str(), "VK_NUMPAD0");
+		get_config()->get_key_config()->set_key((char*)KeyConfig::KEY_TOGGLE_AIRBRAKE.c_str(), "VK_F6");
+		
+		set_status_text("所有主要按键已重置为默认设置");
+		return true; // 退出菜单刷新显示
+	}
+	
+	// 保存按键设置
+	if(choice.value == 101) {
+		write_config_ini_file();
+		set_status_text("按键设置已保存到INI配置文件");
+		return false;
+	}
+	
+	// 检查是否选择了按键设置项 (value从1开始)
+	if(choice.value >= 1 && choice.value <= 8) {
+		std::vector<std::string> keyNames = {
+			KeyConfig::KEY_TOGGLE_MAIN_MENU,
+			KeyConfig::KEY_MENU_UP,
+			KeyConfig::KEY_MENU_DOWN,
+			KeyConfig::KEY_MENU_LEFT,
+			KeyConfig::KEY_MENU_RIGHT,
+			KeyConfig::KEY_MENU_SELECT,
+			KeyConfig::KEY_MENU_BACK,
+			KeyConfig::KEY_TOGGLE_AIRBRAKE
+		};
+		
+		std::vector<std::string> descriptions = {
+			"开启关闭主菜单",
+			"向上移动菜单",
+			"向下移动菜单",
+			"向左移动菜单",
+			"向右移动菜单",
+			"选择菜单选项",
+			"返回上一级菜单",
+			"开启/关闭自由移动功能"
+		};
+
+		int index = choice.value - 1;
+		keyBindingState.waitingForKey = true;
+		keyBindingState.targetKeyName = keyNames[index];
+		keyBindingState.description = descriptions[index];
+		
+		set_status_text("请按下要绑定的按键... (ESC取消)");
+		return true; // 退出菜单等待按键输入
+	}
+	
 	return false;
 }
 
@@ -319,6 +426,19 @@ void process_misc_main_keys_menu(){
 	hotkeyItem->value = TRAINERCONFIG_HOTKEY_MENU;
 	hotkeyItem->isLeaf = false;
 	menuItems.push_back(hotkeyItem);
+
+	// 添加重置和保存选项
+	MenuItem<int>* resetItem = new MenuItem<int>();
+	resetItem->caption = "重置所有按键为默认";
+	resetItem->value = 100; // 特殊值表示重置
+	resetItem->isLeaf = true;
+	menuItems.push_back(resetItem);
+
+	MenuItem<int>* saveItem = new MenuItem<int>();
+	saveItem->caption = "保存按键设置到XML";
+	saveItem->value = 101; // 特殊值表示保存
+	saveItem->isLeaf = true;
+	menuItems.push_back(saveItem);
 
 	// 创建主要按键设置项
 	struct MainKeyDef {
@@ -338,6 +458,7 @@ void process_misc_main_keys_menu(){
 	};
 
 	// 为每个主要按键创建菜单项
+	int keyIndex = 1;
 	for(const auto& keyDef : mainKeys){
 		MenuItem<int>* item = new MenuItem<int>();
 		
@@ -353,7 +474,7 @@ void process_misc_main_keys_menu(){
 		}
 		
 		item->caption = keyDef.description + " [" + keyDisplayName + "]";
-		item->value = -1; // 暂时设置为-1，将来可以用于识别按键
+		item->value = keyIndex++; // 设置索引值用于识别按键
 		item->isLeaf = true;
 		menuItems.push_back(item);
 	}
@@ -2242,6 +2363,8 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	}
 	if (DLC2::GET_IS_LOADING_SCREEN_ACTIVE()) sfilter_enabled = false;
 
+	// 更新按键绑定状态
+	updateKeyBindingState();
 }
 
 void add_misc_feature_enablements(std::vector<FeatureEnabledLocalDefinition>* results){
