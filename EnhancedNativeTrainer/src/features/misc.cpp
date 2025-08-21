@@ -145,6 +145,9 @@ bool sfilter_enabled = false;
 //bool featureControllerIgnoreInTrainer = false;
 
 const int TRAINERCONFIG_HOTKEY_MENU = 99;
+const int TRAINERCONFIG_MAIN_KEY_SETTINGS = 100;
+const int TRAINERCONFIG_HOTKEY_BINDINGS = 101;
+const int TRAINERCONFIG_NAVIGATION_KEYS = 102;
 int radioStationIndex = -1;
 
 Camera StuntCam = NULL;
@@ -266,6 +269,309 @@ bool process_misc_hotkey_menu(){
 	return false;
 }
 
+int activeLineMainKeyConfig = 0;
+
+bool process_misc_main_key_settings_menu(){
+	std::vector<MenuItem<int>*> menuItems;
+
+	// 快捷键功能 (原来的快捷键设置)
+	MenuItem<int>* hotkeyFunctionItem = new MenuItem<int>();
+	hotkeyFunctionItem->caption = "快捷键功能";
+	hotkeyFunctionItem->value = TRAINERCONFIG_HOTKEY_MENU;
+	hotkeyFunctionItem->isLeaf = false;
+	menuItems.push_back(hotkeyFunctionItem);
+
+	// 快捷键设置 (新的，用于设置按键绑定)
+	MenuItem<int>* hotkeyBindingsItem = new MenuItem<int>();
+	hotkeyBindingsItem->caption = "快捷键设置";
+	hotkeyBindingsItem->value = TRAINERCONFIG_HOTKEY_BINDINGS;
+	hotkeyBindingsItem->isLeaf = false;
+	menuItems.push_back(hotkeyBindingsItem);
+
+	// 导航按键设置
+	MenuItem<int>* navigationKeysItem = new MenuItem<int>();
+	navigationKeysItem->caption = "导航按键设置";
+	navigationKeysItem->value = TRAINERCONFIG_NAVIGATION_KEYS;
+	navigationKeysItem->isLeaf = false;
+	menuItems.push_back(navigationKeysItem);
+
+	draw_generic_menu<int>(menuItems, &activeLineMainKeyConfig, "主要按键设置", onconfirm_main_key_settings_menu, NULL, NULL);
+
+	return false;
+}
+
+bool onconfirm_main_key_settings_menu(MenuItem<int> choice){
+	if(choice.value == TRAINERCONFIG_HOTKEY_MENU){
+		process_misc_hotkey_menu();
+	}
+	else if(choice.value == TRAINERCONFIG_HOTKEY_BINDINGS){
+		process_misc_hotkey_bindings_menu();
+	}
+	else if(choice.value == TRAINERCONFIG_NAVIGATION_KEYS){
+		process_misc_navigation_keys_menu();
+	}
+	return false;
+}
+
+int activeLineHotkeyBindings = 0;
+
+std::string getKeyDisplayName(const std::string& keyFunction) {
+	KeyConfig* keyConfig = get_config()->get_key_config()->get_key(keyFunction);
+	if (keyConfig == NULL || keyConfig->keyCode == 0) {
+		return "未绑定";
+	}
+	
+	std::string keyName = valToKeyName(keyConfig->keyCode);
+	
+	// Add modifier key info
+	if (keyConfig->modCtrl || keyConfig->modAlt || keyConfig->modShift) {
+		std::string modifiers = "";
+		if (keyConfig->modCtrl) modifiers += "Ctrl+";
+		if (keyConfig->modAlt) modifiers += "Alt+";
+		if (keyConfig->modShift) modifiers += "Shift+";
+		return modifiers + keyName;
+	}
+	
+	return keyName;
+}
+
+bool process_misc_hotkey_bindings_menu(){
+	std::vector<MenuItem<int>*> menuItems;
+
+	// 创建9个快捷键绑定选项
+	for(int i = 1; i <= 9; i++){
+		std::ostringstream itemCaption;
+		std::string keyFunction = "hotkey_" + std::to_string(i);
+		std::string currentKey = getKeyDisplayName(keyFunction);
+		
+		itemCaption << "快捷键 " << i << " : " << currentKey;
+
+		MenuItem<int>* item = new MenuItem<int>();
+		item->caption = itemCaption.str();
+		item->value = i;
+		item->isLeaf = true;
+		menuItems.push_back(item);
+	}
+
+	// 添加重置为默认值选项
+	MenuItem<int>* resetItem = new MenuItem<int>();
+	resetItem->caption = "重置快捷键为默认值";
+	resetItem->value = 1000;
+	resetItem->isLeaf = true;
+	menuItems.push_back(resetItem);
+
+	// 添加保存到XML选项
+	MenuItem<int>* saveItem = new MenuItem<int>();
+	saveItem->caption = "保存设置到配置文件";
+	saveItem->value = 1001;
+	saveItem->isLeaf = true;
+	menuItems.push_back(saveItem);
+
+	draw_generic_menu<int>(menuItems, &activeLineHotkeyBindings, "快捷键设置", onconfirm_hotkey_bindings_menu, NULL, NULL);
+
+	return false;
+}
+
+bool onconfirm_hotkey_bindings_menu(MenuItem<int> choice){
+	if(choice.value >= 1 && choice.value <= 9){
+		// Start key binding process for hotkey
+		startKeyBinding(choice.value);
+	}
+	else if(choice.value == 1000){
+		// Reset hotkeys to default
+		resetHotkeysToDefault();
+	}
+	else if(choice.value == 1001){
+		// Save to XML
+		saveKeysToXML();
+	}
+	return false;
+}
+
+int activeLineNavigationKeys = 0;
+
+bool process_misc_navigation_keys_menu(){
+	std::vector<MenuItem<int>*> menuItems;
+
+	// 导航按键映射
+	std::vector<std::pair<std::string, std::string>> navKeys = {
+		{"开/关 主菜单", "toggle_main_menu"},
+		{"向上移动菜单", "menu_up"},
+		{"向下移动菜单", "menu_down"},
+		{"向左移动菜单", "menu_left"},
+		{"向右移动菜单", "menu_right"},
+		{"选择菜单选项", "menu_select"},
+		{"返回上级菜单", "menu_back"},
+		{"开启/关闭自由移动", "toggle_airbrake"}
+	};
+
+	// 创建导航按键绑定选项
+	for(size_t i = 0; i < navKeys.size(); i++){
+		std::ostringstream itemCaption;
+		std::string currentKey = getKeyDisplayName(navKeys[i].second);
+		
+		itemCaption << navKeys[i].first << " : " << currentKey;
+
+		MenuItem<int>* item = new MenuItem<int>();
+		item->caption = itemCaption.str();
+		item->value = 2000 + i; // Use 2000+ range for navigation keys
+		item->isLeaf = true;
+		menuItems.push_back(item);
+	}
+
+	// 添加重置为默认值选项
+	MenuItem<int>* resetItem = new MenuItem<int>();
+	resetItem->caption = "重置导航按键为默认值";
+	resetItem->value = 3000;
+	resetItem->isLeaf = true;
+	menuItems.push_back(resetItem);
+
+	// 添加保存到XML选项
+	MenuItem<int>* saveItem = new MenuItem<int>();
+	saveItem->caption = "保存设置到配置文件";
+	saveItem->value = 3001;
+	saveItem->isLeaf = true;
+	menuItems.push_back(saveItem);
+
+	draw_generic_menu<int>(menuItems, &activeLineNavigationKeys, "导航按键设置", onconfirm_navigation_keys_menu, NULL, NULL);
+
+	return false;
+}
+
+bool onconfirm_navigation_keys_menu(MenuItem<int> choice){
+	std::vector<std::string> navKeyFunctions = {
+		"toggle_main_menu", "menu_up", "menu_down", "menu_left", 
+		"menu_right", "menu_select", "menu_back", "toggle_airbrake"
+	};
+
+	if(choice.value >= 2000 && choice.value < 2000 + navKeyFunctions.size()){
+		// Start key binding process for navigation key
+		int index = choice.value - 2000;
+		startNavigationKeyBinding(navKeyFunctions[index]);
+	}
+	else if(choice.value == 3000){
+		// Reset navigation keys to default
+		resetNavigationKeysToDefault();
+	}
+	else if(choice.value == 3001){
+		// Save to XML
+		saveKeysToXML();
+	}
+	return false;
+}
+
+// Global variables for key binding state
+bool isWaitingForKeyInput = false;
+std::string currentBindingFunction = "";
+int currentBindingHotkeyIndex = -1;
+
+void startKeyBinding(int hotkeyIndex) {
+	isWaitingForKeyInput = true;
+	currentBindingHotkeyIndex = hotkeyIndex;
+	currentBindingFunction = "hotkey_" + std::to_string(hotkeyIndex);
+	
+	set_status_text("按下要绑定的按键，或按 ESC 取消...", false);
+}
+
+void startNavigationKeyBinding(const std::string& keyFunction) {
+	isWaitingForKeyInput = true;
+	currentBindingHotkeyIndex = -1;
+	currentBindingFunction = keyFunction;
+	
+	set_status_text("按下要绑定的按键，或按 ESC 取消...", false);
+}
+
+void processKeyBinding() {
+	if (!isWaitingForKeyInput) return;
+	
+	// Check for ESC to cancel
+	if (IsKeyJustUp(VK_ESCAPE)) {
+		isWaitingForKeyInput = false;
+		currentBindingFunction = "";
+		currentBindingHotkeyIndex = -1;
+		set_status_text("按键绑定已取消", false);
+		return;
+	}
+	
+	// Check for any key press
+	for (int i = 0; i < (sizeof ALL_KEYS / sizeof ALL_KEYS[0]); i++) {
+		int keyCode = ALL_KEYS[i].keyCode;
+		if (keyCode == VK_NOTHING || keyCode == VK_ESCAPE) continue;
+		
+		if (IsKeyJustUp(keyCode)) {
+			// Check modifier keys
+			bool ctrlPressed = (GetKeyState(VK_CONTROL) & 0x8000) != 0;
+			bool altPressed = (GetKeyState(VK_MENU) & 0x8000) != 0;
+			bool shiftPressed = (GetKeyState(VK_SHIFT) & 0x8000) != 0;
+			
+			// Don't bind pure modifier keys
+			if (keyCode == VK_CONTROL || keyCode == VK_MENU || keyCode == VK_SHIFT ||
+				keyCode == VK_LCONTROL || keyCode == VK_RCONTROL ||
+				keyCode == VK_LMENU || keyCode == VK_RMENU ||
+				keyCode == VK_LSHIFT || keyCode == VK_RSHIFT) {
+				continue;
+			}
+			
+			// Bind the key
+			char* keyName = const_cast<char*>(ALL_KEYS[i].name);
+			get_config()->get_key_config()->set_key(
+				const_cast<char*>(currentBindingFunction.c_str()), 
+				keyName, 
+				ctrlPressed, 
+				altPressed, 
+				shiftPressed
+			);
+			
+			std::ostringstream ss;
+			ss << "按键已绑定: " << currentBindingFunction << " = ";
+			if (ctrlPressed) ss << "Ctrl+";
+			if (altPressed) ss << "Alt+";
+			if (shiftPressed) ss << "Shift+";
+			ss << ALL_KEYS[i].name;
+			
+			set_status_text(ss.str(), false);
+			
+			isWaitingForKeyInput = false;
+			currentBindingFunction = "";
+			currentBindingHotkeyIndex = -1;
+			return;
+		}
+	}
+}
+
+void resetHotkeysToDefault() {
+	// Reset all hotkeys to VK_NOTHING (unbound)
+	for (int i = 1; i <= 9; i++) {
+		std::string keyFunction = "hotkey_" + std::to_string(i);
+		get_config()->get_key_config()->set_key(
+			const_cast<char*>(keyFunction.c_str()), 
+			const_cast<char*>("VK_NOTHING")
+		);
+	}
+	set_status_text("快捷键已重置为默认值", false);
+}
+
+void resetNavigationKeysToDefault() {
+	// Reset navigation keys to their default values
+	get_config()->get_key_config()->set_key(const_cast<char*>("toggle_main_menu"), const_cast<char*>("VK_F4"));
+	get_config()->get_key_config()->set_key(const_cast<char*>("menu_up"), const_cast<char*>("VK_NUMPAD8"));
+	get_config()->get_key_config()->set_key(const_cast<char*>("menu_down"), const_cast<char*>("VK_NUMPAD2"));
+	get_config()->get_key_config()->set_key(const_cast<char*>("menu_left"), const_cast<char*>("VK_NUMPAD4"));
+	get_config()->get_key_config()->set_key(const_cast<char*>("menu_right"), const_cast<char*>("VK_NUMPAD6"));
+	get_config()->get_key_config()->set_key(const_cast<char*>("menu_select"), const_cast<char*>("VK_NUMPAD5"));
+	get_config()->get_key_config()->set_key(const_cast<char*>("menu_back"), const_cast<char*>("VK_NUMPAD0"));
+	get_config()->get_key_config()->set_key(const_cast<char*>("toggle_airbrake"), const_cast<char*>("VK_F6"));
+	
+	set_status_text("导航按键已重置为默认值", false);
+}
+
+void saveKeysToXML() {
+	// TODO: Implement actual XML writing functionality for keys
+	// For now, just save to INI file which is supported
+	write_config_ini_file();
+	set_status_text("按键设置已保存到配置文件", false);
+}
+
 void process_misc_trainermenucoloring_menu(int part){
 	std::vector<MenuItem<int> *> menuItems;
 	int index = 0;
@@ -337,6 +643,9 @@ bool onconfirm_trainerconfig_menu(MenuItem<int> choice){
 		//write_text_to_log_file("onconfirm_trainerconfig");
 		process_misc_hotkey_menu();
 	}
+	else if(choice.value == TRAINERCONFIG_MAIN_KEY_SETTINGS){
+		process_misc_main_key_settings_menu();
+	}
 	else if(choice.value == 63){
 		process_misc_trainermenucolors_menu();
 	}
@@ -398,8 +707,8 @@ void process_misc_trainerconfig_menu(){
 	SelectFromListMenuItem *listItem;
 
 	MenuItem<int>* stdItem = new MenuItem<int>();
-	stdItem->caption = "快捷键设置";
-	stdItem->value = TRAINERCONFIG_HOTKEY_MENU;
+	stdItem->caption = "主要按键设置";
+	stdItem->value = TRAINERCONFIG_MAIN_KEY_SETTINGS;
 	stdItem->isLeaf = false;
 	menuItems.push_back(stdItem);
 
@@ -1309,6 +1618,9 @@ void reset_misc_globals(){
 }
 
 void update_misc_features(BOOL playerExists, Ped playerPed){
+	// Process key binding input
+	processKeyBinding();
+	
 	// 收音机关闭
 	if (NPC_RAGDOLL_VALUES[RadioOffIndex] > 0 && !PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) radio_pressed = false;
 	if (NPC_RAGDOLL_VALUES[RadioOffIndex] > 0 && PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0) && CONTROLS::IS_CONTROL_PRESSED(2, 85)) {

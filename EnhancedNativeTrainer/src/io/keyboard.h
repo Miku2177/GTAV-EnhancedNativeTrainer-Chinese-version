@@ -58,6 +58,10 @@ bool IsKeyJustUp(std::string keyName, bool exclusive = true);
 
 void ResetKeyState(DWORD key);
 
+const char* valToKeyName(int keyCode);
+
+const char* valToKeyName(int keyCode);
+
 struct VirtualKeysWithNames
 {
 	int keyCode;
