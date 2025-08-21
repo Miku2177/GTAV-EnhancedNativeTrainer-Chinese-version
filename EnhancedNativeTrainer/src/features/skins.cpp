@@ -447,7 +447,12 @@ static bool process_custom_peds_category_menu(const std::string& category){
     }
     static int selectedPed = 0;
     auto onconfirm = [](MenuItem<std::string> choice)->bool{
-        applyChosenSkin(choice.value);
+        bool result = applyChosenSkin(choice.value);
+        if (!result) {
+            std::stringstream ss;
+            ss << "~r~错误！~s~找不到此模型：\n[~y~" << choice.value << "~s~]";
+            set_status_text(ss.str());
+        }
         return false;
     };
     return draw_generic_menu<std::string>(items, &selectedPed, category, onconfirm, NULL, NULL);
@@ -1039,7 +1044,14 @@ bool onconfirm_skinchanger_choices_animals(MenuItem<std::string> choice)
 	}
 	else {
 		WATER::GET_WATER_HEIGHT(coords_me.x, coords_me.y, coords_me.z, &height);
-		if ((coords_me.z < height) && ((height - coords_me.z) > 1)) applyChosenSkin(choice.value);
+		if ((coords_me.z < height) && ((height - coords_me.z) > 1)) {
+			applyChosenSkin(choice.value);
+		} else {
+			// 鱼类模型需要在水中才能生成
+			std::ostringstream ss;
+			ss << "~r~错误！~s~鱼类需要在水中生成：\n[~y~" << choice.value << "~s~]";
+			set_status_text(ss.str());
+		}
 	}
 	
 	return false;

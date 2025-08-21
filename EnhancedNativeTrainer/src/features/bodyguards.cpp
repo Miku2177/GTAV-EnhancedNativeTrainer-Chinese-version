@@ -1977,6 +1977,12 @@ void do_spawn_bodyguard(){
 		WAIT(50);
 		STREAMING::SET_MODEL_AS_NO_LONGER_NEEDED(bodyGuardModel);
 	}
+	else {
+		// 显示模型无效的错误提示
+		if (!lastCustomBodyguardSpawn.empty()) {
+			set_status_text("~r~错误！~s~生成保镖行人失败：\n[~y~" + lastCustomBodyguardSpawn + "~s~]");
+		}
+	}
 	added_nearest_b = false;
 	spawning_a_ped = false;
 	return;
@@ -3059,7 +3065,14 @@ bool onconfirm_bodyguards_custom_peds_category(MenuItem<std::string> choice) {
 	
 	static int selectedPed = 0;
 	auto onconfirm = [](MenuItem<std::string> choice) -> bool {
-		// Set the custom bodyguard model
+		// 检查模型有效性并显示警告，但仍然允许选择
+		Hash hash = GAMEPLAY::GET_HASH_KEY((char*)choice.value.c_str());
+		if (!STREAMING::IS_MODEL_IN_CDIMAGE(hash) || !STREAMING::IS_MODEL_VALID(hash)) {
+			std::ostringstream ss;
+			ss << "~r~警告！~s~此模型可能无效：\n[~y~" << choice.value << "~s~]";
+			set_status_text(ss.str());
+		}
+		// 设置自定义保镖模型
 		lastCustomBodyguardSpawn = choice.value;
 		lastCustomBodyguardPedName = choice.caption;
 		skinTypesBodyguardMenuPositionMemory[0] = 4;
