@@ -155,6 +155,11 @@ bool BodyHealthChanged = true;
 const std::vector<std::string> SKINS_ANIMALS_CAPTIONS{ "罗威纳犬", "德国牧羊犬", "哈士奇", "美洲狮", "黑豹", "猎犬" };
 const std::vector<std::string> SKINS_ANIMALS_VALUES{ "a_c_chop", "a_c_shepherd", "a_c_husky", "a_c_mtlion", "a_c_Panther", "a_c_retriever" };
 
+// 随机保镖池配置
+const std::vector<std::string> RANDOM_BODYGUARD_POOL_CAPTIONS{ "经典角色 (25 个)", "故事角色 (545 个)", "在线角色 (180 个)" };
+int RandomBodyguardPoolIndex = 0; // 默认使用经典模式
+bool RandomBodyguardPoolChanged = true;
+
 // 修改皮肤
 std::string getBodSkinDetailAttribDescription(int i)
 {
@@ -2524,6 +2529,12 @@ bool process_bodyguard_menu(){
 		item->isLeaf = false;
 		menuItems.push_back(item);
 
+		listItem = new SelectFromListMenuItem(RANDOM_BODYGUARD_POOL_CAPTIONS, onchange_random_bodyguard_pool_index);
+		listItem->wrap = false;
+		listItem->caption = "随机保镖模式";
+		listItem->value = RandomBodyguardPoolIndex;
+		menuItems.push_back(listItem);
+
 		toggleItem = new ToggleMenuItem<int>();
 		toggleItem->caption = "保镖不同的武器";
 		toggleItem->value = i++;
@@ -2735,32 +2746,26 @@ bool onconfirm_bodyguard_menu(MenuItem<int> choice){
 		{
 			std::string lastCustomBodyguardSpawn_tmp = lastCustomBodyguardSpawn;
 			for (int i = 0; i < 7; i++) {// 默认循环7次（可能是保镖数量上限或某种操作次数）
-				int random_story_bodyguard = (rand() % 24 + 0);
-				if (random_story_bodyguard == 0) lastCustomBodyguardSpawn = "player_zero";
-				if (random_story_bodyguard == 1) lastCustomBodyguardSpawn = "player_one";
-				if (random_story_bodyguard == 2) lastCustomBodyguardSpawn = "player_two";
-				if (random_story_bodyguard == 3) lastCustomBodyguardSpawn = "ig_amandatownley";
-				if (random_story_bodyguard == 4) lastCustomBodyguardSpawn = "ig_davenorton";
-				if (random_story_bodyguard == 5) lastCustomBodyguardSpawn = "ig_devin";
-				if (random_story_bodyguard == 6) lastCustomBodyguardSpawn = "ig_jimmydisanto";
-				if (random_story_bodyguard == 7) lastCustomBodyguardSpawn = "ig_lamardavis";
-				if (random_story_bodyguard == 8) lastCustomBodyguardSpawn = "ig_lestercrest";
-				if (random_story_bodyguard == 9) lastCustomBodyguardSpawn = "ig_nervousron";
-				if (random_story_bodyguard == 10) lastCustomBodyguardSpawn = "ig_stevehains";
-				if (random_story_bodyguard == 11) lastCustomBodyguardSpawn = "ig_stretch";
-				if (random_story_bodyguard == 12) lastCustomBodyguardSpawn = "ig_tracydisanto";
-				if (random_story_bodyguard == 13) lastCustomBodyguardSpawn = "ig_wade";
-				if (random_story_bodyguard == 14) lastCustomBodyguardSpawn = "ig_chengsr";
-				if (random_story_bodyguard == 15) lastCustomBodyguardSpawn = "ig_andreas";
-				if (random_story_bodyguard == 16) lastCustomBodyguardSpawn = "ig_brad";
-				if (random_story_bodyguard == 17) lastCustomBodyguardSpawn = "ig_drfriedlander";
-				if (random_story_bodyguard == 18) lastCustomBodyguardSpawn = "ig_floyd";
-				if (random_story_bodyguard == 19) lastCustomBodyguardSpawn = "cs_martinmadrazo";
-				if (random_story_bodyguard == 20) lastCustomBodyguardSpawn = "ig_molly";
-				if (random_story_bodyguard == 21) lastCustomBodyguardSpawn = "ig_patricia";
-				if (random_story_bodyguard == 22) lastCustomBodyguardSpawn = "ig_siemonyetarian";
-				if (random_story_bodyguard == 23) lastCustomBodyguardSpawn = "ig_solomon";
-				if (random_story_bodyguard == 24) lastCustomBodyguardSpawn = "ig_taocheng";
+				if (RandomBodyguardPoolIndex == 0) {
+					// 经典模式：使用原始的25个故事角色
+					static const std::vector<std::string> classic_bodyguards = {
+						"player_zero", "player_one", "player_two", "ig_amandatownley", "ig_davenorton",
+						"ig_devin", "ig_jimmydisanto", "ig_lamardavis", "ig_lestercrest", "ig_nervousron",
+						"ig_stevehains", "ig_stretch", "ig_tracydisanto", "ig_wade", "ig_chengsr",
+						"ig_andreas", "ig_brad", "ig_drfriedlander", "ig_floyd", "cs_martinmadrazo",
+						"ig_molly", "ig_patricia", "ig_siemonyetarian", "ig_solomon", "ig_hao"
+					};
+					int random_bodyguard_index = rand() % classic_bodyguards.size();
+					lastCustomBodyguardSpawn = classic_bodyguards[random_bodyguard_index];
+				} else if (RandomBodyguardPoolIndex == 1) {
+					// 普通模式：从SKINS_GENERAL_VALUES数组中随机选择保镖模型
+					int random_bodyguard_index = rand() % SKINS_GENERAL_VALUES.size();
+					lastCustomBodyguardSpawn = SKINS_GENERAL_VALUES[random_bodyguard_index];
+				} else {
+					// 在线模式：从SKINS_ONLINE_VALUES数组中随机选择保镖模型
+					int random_bodyguard_index = rand() % SKINS_ONLINE_VALUES.size();
+					lastCustomBodyguardSpawn = SKINS_ONLINE_VALUES[random_bodyguard_index];
+				}
 				do_spawn_bodyguard();
 			}
 			lastCustomBodyguardSpawn = lastCustomBodyguardSpawn_tmp;
@@ -2895,6 +2900,7 @@ void add_bodyguards_generic_settings(std::vector<StringPairSettingDBRow>* result
 	results->push_back(StringPairSettingDBRow{"skinTypesBodyguardMenuPositionMemory1", std::to_string(skinTypesBodyguardMenuPositionMemory[1])});
 	results->push_back(StringPairSettingDBRow{"skinTypesBodyguardMenuLastConfirmed0", std::to_string(skinTypesBodyguardMenuLastConfirmed[0])});
 	results->push_back(StringPairSettingDBRow{"skinTypesBodyguardMenuLastConfirmed1", std::to_string(skinTypesBodyguardMenuLastConfirmed[1])});
+	results->push_back(StringPairSettingDBRow{"RandomBodyguardPoolIndex", std::to_string(RandomBodyguardPoolIndex)});
 	results->push_back(StringPairSettingDBRow{"lastCustomBodyguardSpawn", lastCustomBodyguardSpawn});
 	results->push_back(StringPairSettingDBRow{"lastCustomBodyguardPedName", lastCustomBodyguardPedName});
 	results->push_back(StringPairSettingDBRow{"selBodyWeapons", selBodyWeapons});
@@ -2914,6 +2920,9 @@ void handle_generic_settings_bodyguards(std::vector<StringPairSettingDBRow>* set
 		}
 		else if(setting.name.compare("skinTypesBodyguardMenuLastConfirmed1") == 0){
 			skinTypesBodyguardMenuLastConfirmed[1] = stoi(setting.value);
+		}
+		else if (setting.name.compare("RandomBodyguardPoolIndex") == 0) {
+			RandomBodyguardPoolIndex = stoi(setting.value);
 		}
 		else if (setting.name.compare("BodyBlipSizeIndex") == 0){
 			BodyBlipSizeIndex = stoi(setting.value);
@@ -2993,6 +3002,7 @@ void reset_bodyguards_globals(){
 	BodyWeaponSetIndex = 0;
 	BodyHealthIndex = 6;
 	BodyShowNumbersIndex = 0;
+	RandomBodyguardPoolIndex = 0; // 重置为默认的经典模式
 	skinTypesBodyguardMenuLastConfirmed[0] = 0;
 	skinTypesBodyguardMenuLastConfirmed[1] = 0;
 	lastCustomBodyguardPedName = "";
@@ -3045,6 +3055,11 @@ void onchange_body_blipsymbol_index(int value, SelectFromListMenuItem* source){
 void onchange_body_blipflash_index(int value, SelectFromListMenuItem* source){
 	BodyBlipFlashIndex = value;
 	BodyBlipFlash_Changed = true;
+}
+
+void onchange_random_bodyguard_pool_index(int value, SelectFromListMenuItem* source) {
+	RandomBodyguardPoolIndex = value;
+	RandomBodyguardPoolChanged = true;
 }
 
 // Custom peds functions for bodyguards

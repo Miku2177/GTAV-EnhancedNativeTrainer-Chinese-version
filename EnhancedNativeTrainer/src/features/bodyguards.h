@@ -88,6 +88,8 @@ void onchange_body_blipsymbol_index(int value, SelectFromListMenuItem* source);
 
 void onchange_body_blipflash_index(int value, SelectFromListMenuItem* source);
 
+void onchange_random_bodyguard_pool_index(int value, SelectFromListMenuItem* source);
+
 bool process_bod_individual_weapon_menu();
 
 extern std::string get_current_model_name();
