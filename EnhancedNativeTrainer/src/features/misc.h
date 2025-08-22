@@ -243,6 +243,10 @@ void process_misc_menu_layout_settings_menu();
 
 void process_misc_vehicle_preview_settings_menu();
 
+void process_misc_menu_key_settings_menu();
+
+void process_misc_hotkey_key_settings_menu();
+
 bool is_vehicle_preview_enabled();
 
 bool is_hud_hidden();

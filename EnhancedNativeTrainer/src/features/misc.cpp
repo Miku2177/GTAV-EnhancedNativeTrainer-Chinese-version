@@ -35,6 +35,8 @@ int activeLineIndexBillSettings = 0;
 int activeLineIndexPhoneOnBike = 0;
 int activeLineIndexAirbrake = 0;
 int activeLineHotkeyConfig = 0;
+int activeLineIndexMenuKeySettings = 0;
+int activeLineIndexHotkeyKeySettings = 0;
 
 // 自由移动模式变量
 bool airbrake_enable = true; // 启用自由移动
@@ -145,6 +147,8 @@ bool sfilter_enabled = false;
 //bool featureControllerIgnoreInTrainer = false;
 
 const int TRAINERCONFIG_HOTKEY_MENU = 99;
+const int TRAINERCONFIG_MENU_KEY_SETTINGS = 100;
+const int TRAINERCONFIG_HOTKEY_KEY_SETTINGS = 101;
 int radioStationIndex = -1;
 
 Camera StuntCam = NULL;
@@ -337,6 +341,12 @@ bool onconfirm_trainerconfig_menu(MenuItem<int> choice){
 		//write_text_to_log_file("onconfirm_trainerconfig");
 		process_misc_hotkey_menu();
 	}
+	else if(choice.value == TRAINERCONFIG_MENU_KEY_SETTINGS){
+		process_misc_menu_key_settings_menu();
+	}
+	else if(choice.value == TRAINERCONFIG_HOTKEY_KEY_SETTINGS){
+		process_misc_hotkey_key_settings_menu();
+	}
 	else if(choice.value == 63){
 		process_misc_trainermenucolors_menu();
 	}
@@ -397,11 +407,12 @@ void process_misc_trainerconfig_menu(){
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
 
-	MenuItem<int>* stdItem = new MenuItem<int>();
-	stdItem->caption = "快捷键设置";
-	stdItem->value = TRAINERCONFIG_HOTKEY_MENU;
-	stdItem->isLeaf = false;
-	menuItems.push_back(stdItem);
+	// 首先添加菜单按键设置作为第一个项目
+	MenuItem<int>* menuKeySettingsItem = new MenuItem<int>();
+	menuKeySettingsItem->caption = "菜单按键设置";
+	menuKeySettingsItem->value = TRAINERCONFIG_MENU_KEY_SETTINGS;
+	menuKeySettingsItem->isLeaf = false;
+	menuItems.push_back(menuKeySettingsItem);
 
 	listItem = new SelectFromListMenuItem(MISC_TRAINERCONTROL_CAPTIONS, onchange_misc_trainercontrol_index);
 	listItem->wrap = false;
@@ -2770,4 +2781,58 @@ void process_misc_menu_layout_settings_menu() {
     menuItems.push_back(listItem);
 
     draw_generic_menu<int>(menuItems, &activeLineIndexMenuLayout, caption, onconfirm_menu_layout_reset, NULL, NULL);
+}
+
+// 菜单按键设置菜单
+void process_misc_menu_key_settings_menu() {
+    const std::string caption = "菜单按键设置";
+
+    std::vector<MenuItem<int>*> menuItems;
+
+    // 添加快捷键功能设置（原来的快捷键设置）
+    MenuItem<int>* hotkeyFunctionItem = new MenuItem<int>();
+    hotkeyFunctionItem->caption = "快捷键功能设置";
+    hotkeyFunctionItem->value = TRAINERCONFIG_HOTKEY_MENU;
+    hotkeyFunctionItem->isLeaf = false;
+    menuItems.push_back(hotkeyFunctionItem);
+
+    // 添加快捷键按键设置
+    MenuItem<int>* hotkeyKeyItem = new MenuItem<int>();
+    hotkeyKeyItem->caption = "快捷键按键设置";
+    hotkeyKeyItem->value = TRAINERCONFIG_HOTKEY_KEY_SETTINGS;
+    hotkeyKeyItem->isLeaf = false;
+    menuItems.push_back(hotkeyKeyItem);
+
+    // TODO: 添加8个菜单控制按键设置
+    // 开关/菜单 - F4
+    // 向上/移动 - 数字键盘8  
+    // 向下/移动 - 数字键盘2
+    // 向左/移动 - 数字键盘4
+    // 向右/移动 - 数字键盘6
+    // 确认/选择 - 数字键盘5
+    // 返回/取消 - 数字键盘0
+    // 开/关 自由移动 - F6
+
+    draw_generic_menu<int>(menuItems, &activeLineIndexMenuKeySettings, caption, NULL, NULL, NULL);
+}
+
+// 快捷键按键设置菜单
+void process_misc_hotkey_key_settings_menu() {
+    const std::string caption = "快捷键按键设置";
+
+    std::vector<MenuItem<int>*> menuItems;
+
+    // TODO: 添加9个快捷键按键设置
+    // 这些需要支持ctrl和alt修饰键
+    for (int i = 1; i <= 9; i++) {
+        MenuItem<int>* item = new MenuItem<int>();
+        std::ostringstream ss;
+        ss << "快捷键 " << i << " 按键设置";
+        item->caption = ss.str();
+        item->value = i;
+        item->isLeaf = true;
+        menuItems.push_back(item);
+    }
+
+    draw_generic_menu<int>(menuItems, &activeLineIndexHotkeyKeySettings, caption, NULL, NULL, NULL);
 }
