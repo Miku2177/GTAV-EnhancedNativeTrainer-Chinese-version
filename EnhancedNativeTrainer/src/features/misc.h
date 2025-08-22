@@ -253,6 +253,8 @@ bool onconfirm_hotkey_key_settings(MenuItem<int> choice);
 
 void handle_key_input_for_function(std::string functionName, std::string defaultKey, bool supportsModifiers);
 
+void write_key_to_xml_config(std::string functionName, std::string keyValue, bool modCtrl, bool modAlt, bool modShift);
+
 bool is_vehicle_preview_enabled();
 
 bool is_hud_hidden();

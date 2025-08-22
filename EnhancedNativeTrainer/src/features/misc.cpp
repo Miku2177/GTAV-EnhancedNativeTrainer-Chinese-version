@@ -21,6 +21,8 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\ui_support\menu_functions.h"
 #include "..\io\keyboard.h"
 
+#import <msxml6.dll>
+
 //==================
 // 其他菜单选项
 //==================
@@ -3068,7 +3070,77 @@ void handle_key_input_for_function(std::string functionName, std::string default
         
         get_config()->get_key_config()->set_key(funcName, keyName, modCtrl, modAlt, modShift);
         
-        // 写入配置文件
+        // 写入配置文件到XML
+        write_key_to_xml_config(functionName, translatedKey, modCtrl, modAlt, modShift);
+        
+        // 也写入INI作为备份
         write_config_ini_file();
+    }
+}
+
+// 写入按键配置到XML文件
+void write_key_to_xml_config(std::string functionName, std::string keyValue, bool modCtrl, bool modAlt, bool modShift) {
+    try {
+        // 创建XML文档实例
+        MSXML2::IXMLDOMDocumentPtr spXMLDoc;
+        spXMLDoc.CreateInstance(__uuidof(MSXML2::DOMDocument60));
+        
+        // 加载现有的XML文件
+        if (!spXMLDoc->load("Enhanced Native Trainer/ent-config.xml")) {
+            write_text_to_log_file("无法加载 ent-config.xml 进行按键更新");
+            return;
+        }
+        
+        // 查找对应的按键节点
+        std::string xpath = "//ent-config/keys/key[@function='" + functionName + "']";
+        std::wstring wXpath(xpath.begin(), xpath.end());
+        
+        IXMLDOMNodePtr keyNode = spXMLDoc->selectSingleNode(wXpath.c_str());
+        
+        if (keyNode != nullptr) {
+            // 更新现有节点的属性
+            IXMLDOMNamedNodeMapPtr attributes = keyNode->GetAttributes();
+            
+            // 更新value属性
+            IXMLDOMNodePtr valueAttr = attributes->getNamedItem(L"value");
+            if (valueAttr != nullptr) {
+                std::wstring wKeyValue(keyValue.begin(), keyValue.end());
+                valueAttr->nodeValue = wKeyValue.c_str();
+            }
+            
+            // 更新modCtrl属性
+            IXMLDOMNodePtr ctrlAttr = attributes->getNamedItem(L"modCtrl");
+            if (ctrlAttr != nullptr) {
+                ctrlAttr->nodeValue = modCtrl ? L"true" : L"false";
+            }
+            
+            // 更新modAlt属性
+            IXMLDOMNodePtr altAttr = attributes->getNamedItem(L"modAlt");
+            if (altAttr != nullptr) {
+                altAttr->nodeValue = modAlt ? L"true" : L"false";
+            }
+            
+            // 更新modShift属性
+            IXMLDOMNodePtr shiftAttr = attributes->getNamedItem(L"modShift");
+            if (shiftAttr != nullptr) {
+                shiftAttr->nodeValue = modShift ? L"true" : L"false";
+            }
+            
+            // 保存文件
+            spXMLDoc->save("Enhanced Native Trainer/ent-config.xml");
+            
+            std::ostringstream ss;
+            ss << "已更新按键 " << functionName << " 到 " << keyValue;
+            if (modCtrl) ss << " +Ctrl";
+            if (modAlt) ss << " +Alt";
+            if (modShift) ss << " +Shift";
+            write_text_to_log_file(ss.str());
+        }
+        else {
+            write_text_to_log_file("未找到按键节点: " + functionName);
+        }
+    }
+    catch (...) {
+        write_text_to_log_file("更新XML按键配置时发生错误: " + functionName);
     }
 }
