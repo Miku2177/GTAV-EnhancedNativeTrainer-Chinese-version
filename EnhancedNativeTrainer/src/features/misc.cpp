@@ -428,7 +428,7 @@ bool onconfirm_hotkey_key_settings(MenuItem<int> choice) {
         // 处理快捷键按键设置
         int hotkeyIndex = choice.value - 2000;  // 1-9
         std::string functionName = "hotkey_" + std::to_string(hotkeyIndex);
-        std::string defaultKey = "VK_NOTHING";
+        std::string defaultKey = (hotkeyIndex == 1) ? "VK_F5" : "VK_NOTHING";  // hotkey_1 默认为 F5
         
         handle_key_input_for_function(functionName, defaultKey, true); // 快捷键支持修饰键
     }
@@ -2876,61 +2876,83 @@ void process_misc_menu_key_settings_menu() {
     hotkeyKeyItem->isLeaf = false;
     menuItems.push_back(hotkeyKeyItem);
 
-    // 添加8个菜单控制按键设置
+    // 添加8个菜单控制按键设置，显示当前绑定的键位名称
     MenuItem<int>* menuKeyItem;
+    
+    // 辅助函数：获取按键名称用于显示
+    auto getKeyDisplayName = [](const std::string& functionName, const std::string& defaultKey) -> std::string {
+        KeyConfig* currentKey = get_config()->get_key_config()->get_key(functionName);
+        if (currentKey != NULL && currentKey->keyCode != 0) {
+            // 找到当前按键的名称
+            for (int i = 0; i < (sizeof ALL_KEYS / sizeof ALL_KEYS[0]); i++) {
+                if (ALL_KEYS[i].keyCode == currentKey->keyCode) {
+                    return ALL_KEYS[i].name;
+                }
+            }
+        }
+        return defaultKey;
+    };
     
     // 开关/菜单 - F4
     menuKeyItem = new MenuItem<int>();
-    menuKeyItem->caption = "开关/菜单";
+    std::string toggleKeyName = getKeyDisplayName("toggle_main_menu", "VK_F4");
+    menuKeyItem->caption = "开关/菜单 [" + toggleKeyName + "]";
     menuKeyItem->value = 1001;  // toggle_main_menu
     menuKeyItem->isLeaf = true;
     menuItems.push_back(menuKeyItem);
     
     // 向上/移动 - 数字键盘8  
     menuKeyItem = new MenuItem<int>();
-    menuKeyItem->caption = "向上/移动";
+    std::string upKeyName = getKeyDisplayName("menu_up", "VK_NUMPAD8");
+    menuKeyItem->caption = "向上/移动 [" + upKeyName + "]";
     menuKeyItem->value = 1002;  // menu_up
     menuKeyItem->isLeaf = true;
     menuItems.push_back(menuKeyItem);
     
     // 向下/移动 - 数字键盘2
     menuKeyItem = new MenuItem<int>();
-    menuKeyItem->caption = "向下/移动";
+    std::string downKeyName = getKeyDisplayName("menu_down", "VK_NUMPAD2");
+    menuKeyItem->caption = "向下/移动 [" + downKeyName + "]";
     menuKeyItem->value = 1003;  // menu_down
     menuKeyItem->isLeaf = true;
     menuItems.push_back(menuKeyItem);
     
     // 向左/移动 - 数字键盘4
     menuKeyItem = new MenuItem<int>();
-    menuKeyItem->caption = "向左/移动";
+    std::string leftKeyName = getKeyDisplayName("menu_left", "VK_NUMPAD4");
+    menuKeyItem->caption = "向左/移动 [" + leftKeyName + "]";
     menuKeyItem->value = 1004;  // menu_left
     menuKeyItem->isLeaf = true;
     menuItems.push_back(menuKeyItem);
     
     // 向右/移动 - 数字键盘6
     menuKeyItem = new MenuItem<int>();
-    menuKeyItem->caption = "向右/移动";
+    std::string rightKeyName = getKeyDisplayName("menu_right", "VK_NUMPAD6");
+    menuKeyItem->caption = "向右/移动 [" + rightKeyName + "]";
     menuKeyItem->value = 1005;  // menu_right
     menuKeyItem->isLeaf = true;
     menuItems.push_back(menuKeyItem);
     
     // 确认/选择 - 数字键盘5
     menuKeyItem = new MenuItem<int>();
-    menuKeyItem->caption = "确认/选择";
+    std::string selectKeyName = getKeyDisplayName("menu_select", "VK_NUMPAD5");
+    menuKeyItem->caption = "确认/选择 [" + selectKeyName + "]";
     menuKeyItem->value = 1006;  // menu_select
     menuKeyItem->isLeaf = true;
     menuItems.push_back(menuKeyItem);
     
     // 返回/取消 - 数字键盘0
     menuKeyItem = new MenuItem<int>();
-    menuKeyItem->caption = "返回/取消";
+    std::string backKeyName = getKeyDisplayName("menu_back", "VK_NUMPAD0");
+    menuKeyItem->caption = "返回/取消 [" + backKeyName + "]";
     menuKeyItem->value = 1007;  // menu_back
     menuKeyItem->isLeaf = true;
     menuItems.push_back(menuKeyItem);
     
     // 开/关 自由移动 - F6
     menuKeyItem = new MenuItem<int>();
-    menuKeyItem->caption = "开/关 自由移动";
+    std::string airbrakeKeyName = getKeyDisplayName("toggle_airbrake", "VK_F6");
+    menuKeyItem->caption = "开/关 自由移动 [" + airbrakeKeyName + "]";
     menuKeyItem->value = 1008;  // toggle_airbrake
     menuKeyItem->isLeaf = true;
     menuItems.push_back(menuKeyItem);
@@ -2944,12 +2966,48 @@ void process_misc_hotkey_key_settings_menu() {
 
     std::vector<MenuItem<int>*> menuItems;
 
-    // 添加9个快捷键按键设置
+    // 添加9个快捷键按键设置，显示当前绑定的键位名称
     // 这些需要支持ctrl和alt修饰键
     for (int i = 1; i <= 9; i++) {
         MenuItem<int>* item = new MenuItem<int>();
         std::ostringstream ss;
-        ss << "快捷键 " << i << " 按键设置";
+        
+        // 获取当前按键配置
+        std::string functionName = "hotkey_" + std::to_string(i);
+        KeyConfig* currentKey = get_config()->get_key_config()->get_key(functionName);
+        std::string keyDisplayName = "未绑定";
+        
+        if (currentKey != NULL && currentKey->keyCode != 0) {
+            // 找到当前按键的名称
+            for (int j = 0; j < (sizeof ALL_KEYS / sizeof ALL_KEYS[0]); j++) {
+                if (ALL_KEYS[j].keyCode == currentKey->keyCode) {
+                    keyDisplayName = ALL_KEYS[j].name;
+                    
+                    // 添加修饰键显示
+                    if (currentKey->modCtrl || currentKey->modAlt || currentKey->modShift) {
+                        keyDisplayName += " (";
+                        bool needsPlus = false;
+                        if (currentKey->modCtrl) {
+                            keyDisplayName += "Ctrl";
+                            needsPlus = true;
+                        }
+                        if (currentKey->modAlt) {
+                            if (needsPlus) keyDisplayName += "+";
+                            keyDisplayName += "Alt";
+                            needsPlus = true;
+                        }
+                        if (currentKey->modShift) {
+                            if (needsPlus) keyDisplayName += "+";
+                            keyDisplayName += "Shift";
+                        }
+                        keyDisplayName += ")";
+                    }
+                    break;
+                }
+            }
+        }
+        
+        ss << "快捷键 " << i << " [" << keyDisplayName << "]";
         item->caption = ss.str();
         item->value = 2000 + i;  // 2001-2009 for hotkey key settings
         item->isLeaf = true;
