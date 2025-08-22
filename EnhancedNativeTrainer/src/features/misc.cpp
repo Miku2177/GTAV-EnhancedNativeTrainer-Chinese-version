@@ -329,7 +329,7 @@ void process_misc_trainermenucolors_menu(){
 	item->isLeaf = true;
 	menuItems.insert(menuItems.begin(), item);
 
-	draw_generic_menu<int>(menuItems, nullptr, "修改器菜单颜色", onconfirm_trainermenucolors_menu, nullptr, nullptr, nullptr);
+	draw_generic_menu<int>(menuItems, nullptr, "菜单颜色设置", onconfirm_trainermenucolors_menu, nullptr, nullptr, nullptr);
 }
 
 bool onconfirm_trainerconfig_menu(MenuItem<int> choice){
@@ -403,17 +403,12 @@ void process_misc_trainerconfig_menu(){
 	stdItem->isLeaf = false;
 	menuItems.push_back(stdItem);
 
-	listItem = new SelectFromListMenuItem(MISC_TRAINERCONTROL_CAPTIONS, onchange_misc_trainercontrol_index);
-	listItem->wrap = false;
-	listItem->caption = "菜单控制方式";
-	listItem->value = TrainerControlIndex;
-	menuItems.push_back(listItem);
-
-	listItem = new SelectFromListMenuItem(MISC_TRAINERCONTROLSCROLLING_CAPTIONS, onchange_misc_trainercontrolscrolling_index);
-	listItem->wrap = false;
-	listItem->caption = "菜单滚动方式";
-	listItem->value = TrainerControlScrollingIndex;
-	menuItems.push_back(listItem);
+	// 添加修改器菜单颜色设置
+	stdItem = new MenuItem<int>();
+	stdItem->caption = "菜单颜色设置";
+	stdItem->value = 63;
+	stdItem->isLeaf = false;
+	menuItems.push_back(stdItem);
 
 	// 添加字体设置菜单项
 	MenuItem<int>* fontSettingsItem = new MenuItem<int>();
@@ -428,13 +423,25 @@ void process_misc_trainerconfig_menu(){
 	menuLayoutSettingsItem->value = 65;
 	menuLayoutSettingsItem->isLeaf = false;
 	menuItems.push_back(menuLayoutSettingsItem);
-	
+
 	// 添加车辆预览图设置菜单项
 	MenuItem<int>* vehiclePreviewSettingsItem = new MenuItem<int>();
 	vehiclePreviewSettingsItem->caption = "车辆预览图设置";
 	vehiclePreviewSettingsItem->value = 66;
 	vehiclePreviewSettingsItem->isLeaf = false;
 	menuItems.push_back(vehiclePreviewSettingsItem);
+
+	listItem = new SelectFromListMenuItem(MISC_TRAINERCONTROL_CAPTIONS, onchange_misc_trainercontrol_index);
+	listItem->wrap = false;
+	listItem->caption = "菜单控制方式";
+	listItem->value = TrainerControlIndex;
+	menuItems.push_back(listItem);
+
+	listItem = new SelectFromListMenuItem(MISC_TRAINERCONTROLSCROLLING_CAPTIONS, onchange_misc_trainercontrolscrolling_index);
+	listItem->wrap = false;
+	listItem->caption = "菜单滚动方式";
+	listItem->value = TrainerControlScrollingIndex;
+	menuItems.push_back(listItem);
 
 	// 添加菜单显示项目数设置
 	SelectFromListMenuItem *menuItemsCountItem = new SelectFromListMenuItem(MISC_MENU_ITEMS_COUNT_CAPTIONS, onchange_misc_menu_items_count_index);
@@ -462,12 +469,6 @@ void process_misc_trainerconfig_menu(){
 	toggleItem->caption = "包含 Nkjellman 的额外场景";
 	toggleItem->toggleValue = &featureMiscJellmanScenery;
 	menuItems.push_back(toggleItem);
-
-	stdItem = new MenuItem<int>();
-	stdItem->caption = "修改器菜单颜色设置";
-	stdItem->value = 63;
-	stdItem->isLeaf = false;
-	menuItems.push_back(stdItem);
 
 	draw_generic_menu<int>(menuItems, &activeLineIndexTrainerConfig, caption, onconfirm_trainerconfig_menu, NULL, NULL);
 }
