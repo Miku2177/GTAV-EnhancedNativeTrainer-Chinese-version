@@ -247,6 +247,12 @@ void process_misc_menu_key_settings_menu();
 
 void process_misc_hotkey_key_settings_menu();
 
+bool onconfirm_menu_key_settings(MenuItem<int> choice);
+
+bool onconfirm_hotkey_key_settings(MenuItem<int> choice);
+
+void handle_key_input_for_function(std::string functionName, std::string defaultKey, bool supportsModifiers);
+
 bool is_vehicle_preview_enabled();
 
 bool is_hud_hidden();

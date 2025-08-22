@@ -16,7 +16,10 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include <Psapi.h>
 #include "../utils.h"
 #include <iterator>
+#include <algorithm>
+#include <cctype>
 #include "..\ui_support\menu_functions.h"
+#include "..\io\keyboard.h"
 
 //==================
 // 其他菜单选项
@@ -360,6 +363,74 @@ bool onconfirm_trainerconfig_menu(MenuItem<int> choice){
 		process_misc_vehicle_preview_settings_menu();
 	}
 	return false;
+}
+
+// 菜单按键设置回调函数
+bool onconfirm_menu_key_settings(MenuItem<int> choice) {
+    if (choice.value >= 1001 && choice.value <= 1008) {
+        // 处理菜单控制按键设置
+        std::string functionName = "";
+        std::string defaultKey = "";
+        
+        switch (choice.value) {
+            case 1001:  // toggle_main_menu
+                functionName = "toggle_main_menu";
+                defaultKey = "VK_F4";
+                break;
+            case 1002:  // menu_up  
+                functionName = "menu_up";
+                defaultKey = "VK_NUMPAD8";
+                break;
+            case 1003:  // menu_down
+                functionName = "menu_down";
+                defaultKey = "VK_NUMPAD2";
+                break;
+            case 1004:  // menu_left
+                functionName = "menu_left";
+                defaultKey = "VK_NUMPAD4";
+                break;
+            case 1005:  // menu_right
+                functionName = "menu_right";
+                defaultKey = "VK_NUMPAD6";
+                break;
+            case 1006:  // menu_select
+                functionName = "menu_select";
+                defaultKey = "VK_NUMPAD5";
+                break;
+            case 1007:  // menu_back
+                functionName = "menu_back";
+                defaultKey = "VK_NUMPAD0";
+                break;
+            case 1008:  // toggle_airbrake
+                functionName = "toggle_airbrake";
+                defaultKey = "VK_F6";
+                break;
+        }
+        
+        if (!functionName.empty()) {
+            handle_key_input_for_function(functionName, defaultKey, false); // 菜单键不需要修饰键
+        }
+    }
+    else if (choice.value == TRAINERCONFIG_HOTKEY_MENU) {
+        process_misc_hotkey_menu();
+    }
+    else if (choice.value == TRAINERCONFIG_HOTKEY_KEY_SETTINGS) {
+        process_misc_hotkey_key_settings_menu();
+    }
+    return false;
+}
+
+// 快捷键按键设置回调函数
+bool onconfirm_hotkey_key_settings(MenuItem<int> choice) {
+    if (choice.value >= 2001 && choice.value <= 2009) {
+        // 处理快捷键按键设置
+        int hotkeyIndex = choice.value - 2000;  // 1-9
+        std::string functionName = "hotkey_" + std::to_string(hotkeyIndex);
+        std::string defaultKey = "VK_NOTHING";
+        
+        handle_key_input_for_function(functionName, defaultKey, true); // 快捷键支持修饰键
+    }
+    return false;
 }
 
 // 车辆预览图设置菜单实现
@@ -2803,17 +2874,66 @@ void process_misc_menu_key_settings_menu() {
     hotkeyKeyItem->isLeaf = false;
     menuItems.push_back(hotkeyKeyItem);
 
-    // TODO: 添加8个菜单控制按键设置
+    // 添加8个菜单控制按键设置
+    MenuItem<int>* menuKeyItem;
+    
     // 开关/菜单 - F4
+    menuKeyItem = new MenuItem<int>();
+    menuKeyItem->caption = "开关/菜单";
+    menuKeyItem->value = 1001;  // toggle_main_menu
+    menuKeyItem->isLeaf = true;
+    menuItems.push_back(menuKeyItem);
+    
     // 向上/移动 - 数字键盘8  
+    menuKeyItem = new MenuItem<int>();
+    menuKeyItem->caption = "向上/移动";
+    menuKeyItem->value = 1002;  // menu_up
+    menuKeyItem->isLeaf = true;
+    menuItems.push_back(menuKeyItem);
+    
     // 向下/移动 - 数字键盘2
+    menuKeyItem = new MenuItem<int>();
+    menuKeyItem->caption = "向下/移动";
+    menuKeyItem->value = 1003;  // menu_down
+    menuKeyItem->isLeaf = true;
+    menuItems.push_back(menuKeyItem);
+    
     // 向左/移动 - 数字键盘4
+    menuKeyItem = new MenuItem<int>();
+    menuKeyItem->caption = "向左/移动";
+    menuKeyItem->value = 1004;  // menu_left
+    menuKeyItem->isLeaf = true;
+    menuItems.push_back(menuKeyItem);
+    
     // 向右/移动 - 数字键盘6
+    menuKeyItem = new MenuItem<int>();
+    menuKeyItem->caption = "向右/移动";
+    menuKeyItem->value = 1005;  // menu_right
+    menuKeyItem->isLeaf = true;
+    menuItems.push_back(menuKeyItem);
+    
     // 确认/选择 - 数字键盘5
+    menuKeyItem = new MenuItem<int>();
+    menuKeyItem->caption = "确认/选择";
+    menuKeyItem->value = 1006;  // menu_select
+    menuKeyItem->isLeaf = true;
+    menuItems.push_back(menuKeyItem);
+    
     // 返回/取消 - 数字键盘0
+    menuKeyItem = new MenuItem<int>();
+    menuKeyItem->caption = "返回/取消";
+    menuKeyItem->value = 1007;  // menu_back
+    menuKeyItem->isLeaf = true;
+    menuItems.push_back(menuKeyItem);
+    
     // 开/关 自由移动 - F6
+    menuKeyItem = new MenuItem<int>();
+    menuKeyItem->caption = "开/关 自由移动";
+    menuKeyItem->value = 1008;  // toggle_airbrake
+    menuKeyItem->isLeaf = true;
+    menuItems.push_back(menuKeyItem);
 
-    draw_generic_menu<int>(menuItems, &activeLineIndexMenuKeySettings, caption, NULL, NULL, NULL);
+    draw_generic_menu<int>(menuItems, &activeLineIndexMenuKeySettings, caption, onconfirm_menu_key_settings, NULL, NULL);
 }
 
 // 快捷键按键设置菜单
@@ -2822,17 +2942,133 @@ void process_misc_hotkey_key_settings_menu() {
 
     std::vector<MenuItem<int>*> menuItems;
 
-    // TODO: 添加9个快捷键按键设置
+    // 添加9个快捷键按键设置
     // 这些需要支持ctrl和alt修饰键
     for (int i = 1; i <= 9; i++) {
         MenuItem<int>* item = new MenuItem<int>();
         std::ostringstream ss;
         ss << "快捷键 " << i << " 按键设置";
         item->caption = ss.str();
-        item->value = i;
+        item->value = 2000 + i;  // 2001-2009 for hotkey key settings
         item->isLeaf = true;
         menuItems.push_back(item);
     }
 
-    draw_generic_menu<int>(menuItems, &activeLineIndexHotkeyKeySettings, caption, NULL, NULL, NULL);
+    draw_generic_menu<int>(menuItems, &activeLineIndexHotkeyKeySettings, caption, onconfirm_hotkey_key_settings, NULL, NULL);
+}
+
+// 中文按键名称映射到VK名称
+std::string translate_chinese_key_name(std::string chineseName) {
+    // 转换为小写以便比较
+    std::string lower = chineseName;
+    std::transform(lower.begin(), lower.end(), lower.begin(), ::tolower);
+    
+    // 数字键映射
+    if (lower == "小键盘 0" || lower == "小键盘0" || lower == "numpad0") return "VK_NUMPAD0";
+    if (lower == "小键盘 1" || lower == "小键盘1" || lower == "numpad1") return "VK_NUMPAD1";
+    if (lower == "小键盘 2" || lower == "小键盘2" || lower == "numpad2") return "VK_NUMPAD2";
+    if (lower == "小键盘 3" || lower == "小键盘3" || lower == "numpad3") return "VK_NUMPAD3";
+    if (lower == "小键盘 4" || lower == "小键盘4" || lower == "numpad4") return "VK_NUMPAD4";
+    if (lower == "小键盘 5" || lower == "小键盘5" || lower == "numpad5") return "VK_NUMPAD5";
+    if (lower == "小键盘 6" || lower == "小键盘6" || lower == "numpad6") return "VK_NUMPAD6";
+    if (lower == "小键盘 7" || lower == "小键盘7" || lower == "numpad7") return "VK_NUMPAD7";
+    if (lower == "小键盘 8" || lower == "小键盘8" || lower == "numpad8") return "VK_NUMPAD8";
+    if (lower == "小键盘 9" || lower == "小键盘9" || lower == "numpad9") return "VK_NUMPAD9";
+    
+    // 功能键映射
+    if (lower == "f1") return "VK_F1";
+    if (lower == "f2") return "VK_F2";
+    if (lower == "f3") return "VK_F3";
+    if (lower == "f4") return "VK_F4";
+    if (lower == "f5") return "VK_F5";
+    if (lower == "f6") return "VK_F6";
+    if (lower == "f7") return "VK_F7";
+    if (lower == "f8") return "VK_F8";
+    if (lower == "f9") return "VK_F9";
+    if (lower == "f10") return "VK_F10";
+    if (lower == "f11") return "VK_F11";
+    if (lower == "f12") return "VK_F12";
+    
+    // 字母键映射
+    if (lower.length() == 1 && lower[0] >= 'a' && lower[0] <= 'z') {
+        return "VK_KEY_" + std::string(1, toupper(lower[0]));
+    }
+    
+    // 数字键映射
+    if (lower.length() == 1 && lower[0] >= '0' && lower[0] <= '9') {
+        return "VK_KEY_" + lower;
+    }
+    
+    // 其他常用键映射
+    if (lower == "空格" || lower == "space") return "VK_SPACE";
+    if (lower == "回车" || lower == "enter") return "VK_RETURN";
+    if (lower == "退格" || lower == "backspace") return "VK_BACK";
+    if (lower == "制表符" || lower == "tab") return "VK_TAB";
+    if (lower == "左shift" || lower == "lshift") return "VK_LSHIFT";
+    if (lower == "右shift" || lower == "rshift") return "VK_RSHIFT";
+    if (lower == "左ctrl" || lower == "lctrl") return "VK_LCONTROL";
+    if (lower == "右ctrl" || lower == "rctrl") return "VK_RCONTROL";
+    if (lower == "左alt" || lower == "lalt") return "VK_LMENU";
+    if (lower == "右alt" || lower == "ralt") return "VK_RMENU";
+    
+    // 如果已经是VK格式，直接返回
+    if (lower.substr(0, 3) == "vk_") {
+        return chineseName;
+    }
+    
+    // 如果没有匹配，返回原始输入
+    return chineseName;
+}
+
+// 处理按键输入的主函数
+void handle_key_input_for_function(std::string functionName, std::string defaultKey, bool supportsModifiers) {
+    // 获取当前配置的按键
+    KeyConfig* currentKey = get_config()->get_key_config()->get_key(functionName);
+    std::string currentKeyName = defaultKey;
+    if (currentKey != NULL && currentKey->keyCode != 0) {
+        // 找到当前按键的名称
+        for (int i = 0; i < (sizeof ALL_KEYS / sizeof ALL_KEYS[0]); i++) {
+            if (ALL_KEYS[i].keyCode == currentKey->keyCode) {
+                currentKeyName = ALL_KEYS[i].name;
+                break;
+            }
+        }
+    }
+    
+    // 显示键盘输入对话框
+    std::string inputPrompt = "输入按键名称 (例如: F12, NUMPAD0, 小键盘 0)\n当前: " + currentKeyName;
+    std::string result = show_keyboard("按键设置", const_cast<char*>(currentKeyName.c_str()));
+    
+    if (!result.empty()) {
+        // 转换中文按键名称
+        std::string translatedKey = translate_chinese_key_name(result);
+        
+        bool modCtrl = false;
+        bool modAlt = false;
+        bool modShift = false;
+        
+        // 如果支持修饰键，询问修饰键设置
+        if (supportsModifiers) {
+            std::string modifierPrompt = "是否使用 Ctrl 修饰键? (y/n)";
+            std::string ctrlResult = show_keyboard("Ctrl 修饰键", "n");
+            if (!ctrlResult.empty() && (ctrlResult[0] == 'y' || ctrlResult[0] == 'Y')) {
+                modCtrl = true;
+            }
+            
+            modifierPrompt = "是否使用 Alt 修饰键? (y/n)";
+            std::string altResult = show_keyboard("Alt 修饰键", "n");
+            if (!altResult.empty() && (altResult[0] == 'y' || altResult[0] == 'Y')) {
+                modAlt = true;
+            }
+        }
+        
+        // 设置按键配置
+        char* funcName = const_cast<char*>(functionName.c_str());
+        char* keyName = const_cast<char*>(translatedKey.c_str());
+        
+        get_config()->get_key_config()->set_key(funcName, keyName, modCtrl, modAlt, modShift);
+        
+        // 写入配置文件
+        write_config_ini_file();
+    }
 }
