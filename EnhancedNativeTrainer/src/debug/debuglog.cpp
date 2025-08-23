@@ -8,6 +8,8 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include <sstream>
 #include <time.h>
 #include <iostream>
+#include <direct.h>
+#include <sys/stat.h>
 
 #include "debuglog.h"
 
@@ -29,6 +31,15 @@ void write_text_to_log_file(const std::string &text){
 	//if(!DEBUG_LOG_ENABLED){
 	//	返回;
 	//}
+
+	// 确保目录存在
+	struct stat info;
+	if (stat("Enhanced Native Trainer", &info) != 0) {
+		_mkdir("Enhanced Native Trainer");
+	}
+	if (stat("Enhanced Native Trainer/Logs", &info) != 0) {
+		_mkdir("Enhanced Native Trainer/Logs");
+	}
 
 	char tbuff[DTTMSZ];
 	std::ofstream log_file("Enhanced Native Trainer/Logs/ent - log.txt", std::ios_base::out | std::ios_base::app);

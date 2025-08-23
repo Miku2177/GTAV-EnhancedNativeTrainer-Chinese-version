@@ -12,6 +12,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include <Windows.h>
 #include <commdlg.h>
 #include <vector>
+#include <algorithm>
 
 #include "..\utils.h"
 #include "..\debug\debuglog.h"
@@ -210,6 +211,24 @@ void show_file_save_dialog(std::string title, SaveFileDialogCallback* callback)
 
 	if (GetSaveFileNameW(&sfn) == TRUE)
 	{
+		// 检查并添加 .xml 扩展名（如果缺少）
+		std::wstring filePath(szFile);
+		std::wstring extension = L".xml";
+		
+		// 检查文件路径是否以 .xml 结尾（不区分大小写）
+		if (filePath.length() >= extension.length()) {
+			std::wstring fileExt = filePath.substr(filePath.length() - extension.length());
+			// 转换为小写进行比较
+			std::transform(fileExt.begin(), fileExt.end(), fileExt.begin(), ::towlower);
+			if (fileExt != extension) {
+				filePath += extension;
+				wcscpy_s(szFile, MAX_PATH, filePath.c_str());
+			}
+		} else {
+			filePath += extension;
+			wcscpy_s(szFile, MAX_PATH, filePath.c_str());
+		}
+		
 		// 将宽字符路径转换回UTF-8
 		int utf8Size = WideCharToMultiByte(CP_UTF8, 0, szFile, -1, NULL, 0, NULL, NULL);
 		if (utf8Size > 0)

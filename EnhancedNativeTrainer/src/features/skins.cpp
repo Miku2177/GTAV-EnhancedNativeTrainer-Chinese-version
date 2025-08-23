@@ -237,7 +237,7 @@ static bool create_sample_peds_xml(const char* xmlPath) {
         return false;
     }
     
-    // 使用用户提供的模板
+    // 使用用户提供的模板，确保使用正确的 CR+LF 换行符
     const char* sample = 
 R"(<?xml version="1.0" encoding="UTF-8"?>
 <peds>
@@ -277,7 +277,18 @@ R"(<?xml version="1.0" encoding="UTF-8"?>
 </peds>
 )";
     
-    file.write(sample, strlen(sample));
+    // 将 LF 转换为 CR+LF
+    std::string content(sample);
+    std::string crlf_content;
+    for (size_t i = 0; i < content.length(); ++i) {
+        if (content[i] == '\n' && (i == 0 || content[i-1] != '\r')) {
+            crlf_content += "\r\n";
+        } else {
+            crlf_content += content[i];
+        }
+    }
+    
+    file.write(crlf_content.c_str(), crlf_content.length());
     file.close();
     set_status_text("已创建示例配置文件");
     return true;
