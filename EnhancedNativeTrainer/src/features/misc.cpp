@@ -17,6 +17,8 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "../utils.h"
 #include <iterator>
 #include "..\ui_support\menu_functions.h"
+#include <comutil.h>
+#include <msxml6.h>
 
 //==================
 // 其他菜单选项
@@ -35,6 +37,7 @@ int activeLineIndexBillSettings = 0;
 int activeLineIndexPhoneOnBike = 0;
 int activeLineIndexAirbrake = 0;
 int activeLineHotkeyConfig = 0;
+int activeLineIndexMenuKeySettings = 0; // 菜单按键设置
 
 // 自由移动模式变量
 bool airbrake_enable = true; // 启用自由移动
@@ -145,6 +148,9 @@ bool sfilter_enabled = false;
 //bool featureControllerIgnoreInTrainer = false;
 
 const int TRAINERCONFIG_HOTKEY_MENU = 99;
+const int TRAINERCONFIG_MENU_KEY_SETTINGS = 67; // 菜单按键设置
+const int TRAINERCONFIG_HOTKEY_FUNCTION_SETTINGS = 68; // 快捷键功能设置
+const int TRAINERCONFIG_HOTKEY_KEY_SETTINGS = 69; // 快捷键按键设置
 int radioStationIndex = -1;
 
 Camera StuntCam = NULL;
@@ -222,11 +228,193 @@ bool MenuItemsCountChanged = true;
 
 int activeLineIndexFontSettings = 0;
 
+// 快捷键设置索引变量
+int HotkeyIndex[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+bool HotkeyChanged[9] = {false, false, false, false, false, false, false, false, false};
+bool HotkeyCtrl[9] = {false, false, false, false, false, false, false, false, false};
+bool HotkeyAlt[9] = {false, false, false, false, false, false, false, false, false};
+bool HotkeyShift[9] = {false, false, false, false, false, false, false, false, false};
+int activeLineIndexHotkeyKeySettings = 0;
+
 void onchange_hotkey_function(int value, SelectFromListMenuItem* source){
 	change_hotkey_function(source->extras.at(0), value);
 }
 
+// 生成显示当前绑定快捷键的标题（用于按键设置菜单，显示临时设置）
+std::string get_hotkey_display_caption(int hotkeyIndex) {
+	std::ostringstream caption;
+	caption << "快捷键 " << (hotkeyIndex + 1);
+	
+	// 如果有绑定按键，显示按键信息
+	if (HotkeyIndex[hotkeyIndex] > 0 && HotkeyIndex[hotkeyIndex] < MISC_HOTKEY_CAPTIONS.size()) {
+		caption << "  [";
+		
+		// 添加修饰键
+		if (HotkeyCtrl[hotkeyIndex]) caption << "Ctrl+";
+		if (HotkeyAlt[hotkeyIndex]) caption << "Alt+";
+		if (HotkeyShift[hotkeyIndex]) caption << "Shift+";
+		
+		// 添加主按键
+		caption << MISC_HOTKEY_CAPTIONS[HotkeyIndex[hotkeyIndex]];
+		caption << "]";
+	}
+	else {
+		caption << " [未绑定]";
+	}
+	
+	return caption.str();
+}
+
+// 生成显示实际保存的快捷键标题（用于功能设置菜单，显示已保存的键位）
+std::string get_saved_hotkey_display_caption(int hotkeyIndex) {
+	std::ostringstream caption;
+	caption << "快捷键 " << (hotkeyIndex + 1);
+	
+	// 获取实际保存的键位配置
+	KeyInputConfig* keyConfig = get_config()->get_key_config();
+	std::string keyName;
+	switch(hotkeyIndex){
+		case 0: keyName = KeyConfig::KEY_HOT_1; break;
+		case 1: keyName = KeyConfig::KEY_HOT_2; break;
+		case 2: keyName = KeyConfig::KEY_HOT_3; break;
+		case 3: keyName = KeyConfig::KEY_HOT_4; break;
+		case 4: keyName = KeyConfig::KEY_HOT_5; break;
+		case 5: keyName = KeyConfig::KEY_HOT_6; break;
+		case 6: keyName = KeyConfig::KEY_HOT_7; break;
+		case 7: keyName = KeyConfig::KEY_HOT_8; break;
+		case 8: keyName = KeyConfig::KEY_HOT_9; break;
+		default: return caption.str() + " [未绑定]";
+	}
+	
+	KeyConfig* key = keyConfig->get_key(keyName);
+	if(key != NULL && key->keyCode != 0){
+		// 查找对应的按键名称
+		int keyIndex = 0;
+		for(int j = 0; j < sizeof(MISC_HOTKEY_VALUES)/sizeof(int); j++){
+			if(MISC_HOTKEY_VALUES[j] == key->keyCode){
+				keyIndex = j;
+				break;
+			}
+		}
+		
+		if(keyIndex > 0 && keyIndex < MISC_HOTKEY_CAPTIONS.size()){
+			caption << "  [";
+			
+			// 添加修饰键
+			if (key->modCtrl) caption << "Ctrl+";
+			if (key->modAlt) caption << "Alt+";
+			if (key->modShift) caption << "Shift+";
+			
+			// 添加主按键
+			caption << MISC_HOTKEY_CAPTIONS[keyIndex];
+			caption << "]";
+		}
+		else {
+			caption << " [未绑定]";
+		}
+	}
+	else {
+		caption << " [未绑定]";
+	}
+	
+	return caption.str();
+}
+
+// 检查快捷键是否重复
+bool is_hotkey_duplicate(int hotkeyNum, int keyIndex, bool ctrl, bool alt, bool shift) {
+	// 如果是未绑定，不检查重复
+	if (keyIndex == 0) {
+		return false;
+	}
+	
+	// 检查其他快捷键是否有相同的组合
+	for (int i = 0; i < 9; i++) {
+		if (i == hotkeyNum) continue; // 跳过自己
+		
+		// 检查是否有相同的按键组合
+		if (HotkeyIndex[i] == keyIndex && 
+			HotkeyCtrl[i] == ctrl && 
+			HotkeyAlt[i] == alt && 
+			HotkeyShift[i] == shift) {
+			return true;
+		}
+	}
+	return false;
+}
+
+// 快捷键按键设置回调函数
+void onchange_hotkey_key(int value, SelectFromListMenuItem* source){
+	int hotkeyNum = source->extras.at(0); // 快捷键编号 (0-8)
+	
+	// 检查快捷键重复
+	if (is_hotkey_duplicate(hotkeyNum, value, HotkeyCtrl[hotkeyNum], HotkeyAlt[hotkeyNum], HotkeyShift[hotkeyNum])) {
+		set_status_text("快捷键重复！\n请选择其他按键组合。");
+		set_status_text_centre_screen("快捷键 ~r~重复！~s~请选择其他按键组合。");
+		return; // 阻止设置重复的快捷键
+	}
+	
+	HotkeyIndex[hotkeyNum] = value;
+	HotkeyChanged[hotkeyNum] = true;
+	
+	// 当主按键为未绑定时，自动清除所有修饰键
+	if (value == 0) {
+		HotkeyCtrl[hotkeyNum] = false;
+		HotkeyAlt[hotkeyNum] = false;
+		HotkeyShift[hotkeyNum] = false;
+	}
+}
+
+void onchange_hotkey_ctrl(int value, SelectFromListMenuItem* source){
+	int hotkeyNum = source->extras.at(0); // 快捷键编号 (0-8)
+	bool newCtrl = (value == 1);
+	
+	// 检查快捷键重复
+	if (is_hotkey_duplicate(hotkeyNum, HotkeyIndex[hotkeyNum], newCtrl, HotkeyAlt[hotkeyNum], HotkeyShift[hotkeyNum])) {
+		set_status_text("快捷键重复！\n请选择其他按键组合。");
+		set_status_text_centre_screen("快捷键 ~r~重复！~s~请选择其他按键组合。");
+		return; // 阻止设置重复的快捷键
+	}
+	
+	HotkeyCtrl[hotkeyNum] = newCtrl;
+	HotkeyChanged[hotkeyNum] = true;
+}
+
+void onchange_hotkey_alt(int value, SelectFromListMenuItem* source){
+	int hotkeyNum = source->extras.at(0); // 快捷键编号 (0-8)
+	bool newAlt = (value == 1);
+	
+	// 检查快捷键重复
+	if (is_hotkey_duplicate(hotkeyNum, HotkeyIndex[hotkeyNum], HotkeyCtrl[hotkeyNum], newAlt, HotkeyShift[hotkeyNum])) {
+		set_status_text("快捷键重复！\n请选择其他按键组合。");
+		set_status_text_centre_screen("快捷键 ~r~重复！~s~请选择其他按键组合。");
+		return; // 阻止设置重复的快捷键
+	}
+	
+	HotkeyAlt[hotkeyNum] = newAlt;
+	HotkeyChanged[hotkeyNum] = true;
+}
+
+void onchange_hotkey_shift(int value, SelectFromListMenuItem* source){
+	int hotkeyNum = source->extras.at(0); // 快捷键编号 (0-8)
+	bool newShift = (value == 1);
+	
+	// 检查快捷键重复
+	if (is_hotkey_duplicate(hotkeyNum, HotkeyIndex[hotkeyNum], HotkeyCtrl[hotkeyNum], HotkeyAlt[hotkeyNum], newShift)) {
+		set_status_text("快捷键重复！\n请选择其他按键组合。");
+		set_status_text_centre_screen("快捷键 ~r~重复！~s~请选择其他按键组合。");
+		return; // 阻止设置重复的快捷键
+	}
+	
+	HotkeyShift[hotkeyNum] = newShift;
+	HotkeyChanged[hotkeyNum] = true;
+}
+
 bool process_misc_hotkey_menu(){
+	// 如果快捷键设置被重置，清除刷新标志
+	if (g_HotkeyFunctionMenuNeedsRefresh) {
+		g_HotkeyFunctionMenuNeedsRefresh = false;
+	}
+
 	std::vector<MenuItem<int>*> menuItems;
 
 	for(int i = 1; i < 10; i++){
@@ -234,7 +422,8 @@ bool process_misc_hotkey_menu(){
 		std::vector<std::string> captions;
 		void(*callback)(int, SelectFromListMenuItem*);
 
-		itemCaption << "快捷键 " << i;
+		// 使用实际保存的键位信息显示标题
+		itemCaption << get_saved_hotkey_display_caption(i - 1); // i-1因为数组索引从0开始
 
 		bool keyAssigned = get_config()->get_key_config()->is_hotkey_assigned(i);
 		if(!keyAssigned){
@@ -244,10 +433,11 @@ bool process_misc_hotkey_menu(){
 			SelectFromListMenuItem* item = new SelectFromListMenuItem(captions, callback);
 			item->caption = itemCaption.str();
 			item->value = NULL;
+			item->locked = true; // 未绑定时锁定不能操作
 			menuItems.push_back(item);
 		}
 		else{
-			for each (HOTKEY_DEF var in HOTKEY_AVAILABLE_FUNCS){
+			for (const auto& var : HOTKEY_AVAILABLE_FUNCS){
 				captions.push_back(var.caption);
 			}
 			callback = onchange_hotkey_function;
@@ -261,7 +451,7 @@ bool process_misc_hotkey_menu(){
 		}
 	}
 
-	draw_generic_menu<int>(menuItems, &activeLineHotkeyConfig, "快捷键设置", NULL, NULL, NULL);
+	draw_generic_menu<int>(menuItems, &activeLineHotkeyConfig, "快捷键功能设置", NULL, NULL, NULL);
 
 	return false;
 }
@@ -333,7 +523,10 @@ void process_misc_trainermenucolors_menu(){
 }
 
 bool onconfirm_trainerconfig_menu(MenuItem<int> choice){
-	if(choice.value == TRAINERCONFIG_HOTKEY_MENU){
+	if(choice.value == TRAINERCONFIG_MENU_KEY_SETTINGS){
+		process_misc_menu_key_settings_menu();
+	}
+	else if(choice.value == TRAINERCONFIG_HOTKEY_MENU){
 		//write_text_to_log_file("onconfirm_trainerconfig");
 		process_misc_hotkey_menu();
 	}
@@ -391,24 +584,166 @@ void process_misc_vehicle_preview_settings_menu() {
 	draw_generic_menu<int>(menuItems, &activeLineIndexVehiclePreview, caption, NULL, NULL, NULL);
 }
 
+// 菜单按键设置确认处理函数
+bool onconfirm_menu_key_settings_menu(MenuItem<int> choice){
+	if(choice.value == TRAINERCONFIG_HOTKEY_FUNCTION_SETTINGS){
+		process_misc_hotkey_menu();
+	}
+	else if(choice.value == TRAINERCONFIG_HOTKEY_KEY_SETTINGS){
+		process_misc_hotkey_key_settings_menu();
+	}
+	else if(choice.value == -1){ // 保存设置
+		save_hotkey_settings_to_xml();
+		set_status_text("快捷键设置已保存至 XML");
+		activeLineIndexMenuKeySettings = 0; // 重置页面状态
+		return true; // 返回上一页
+	}
+	else if(choice.value == -2){ // 恢复默认设置
+		reset_hotkey_settings_to_defaults();
+		set_status_text("快捷键设置已恢复为默认");
+		// 设置刷新标志，通知快捷键功能设置菜单需要更新locked状态
+		g_HotkeyFunctionMenuNeedsRefresh = true;
+		activeLineIndexMenuKeySettings = 0; // 重置页面状态
+		return true; // 返回上一页
+	}
+	return false;
+}
+
+// 快捷键按键设置菜单实现
+// 每个快捷键的独立菜单活动行索引
+int activeLineIndexHotkeySettings[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+// 单个快捷键设置菜单
+bool process_single_hotkey_settings_menu(int hotkeyIndex){
+	std::string caption = get_hotkey_display_caption(hotkeyIndex);
+	std::vector<MenuItem<int>*> menuItems;
+	SelectFromListMenuItem *listItem;
+
+	// 主按键选择
+	listItem = new SelectFromListMenuItem(MISC_HOTKEY_CAPTIONS, onchange_hotkey_key);
+	listItem->wrap = false;
+	listItem->caption = "主按键";
+	listItem->value = HotkeyIndex[hotkeyIndex];
+	listItem->extras.push_back(hotkeyIndex);
+	menuItems.push_back(listItem);
+
+	// Ctrl修饰键
+	std::vector<std::string> modifierCaptions = {"否", "是"};
+	listItem = new SelectFromListMenuItem(modifierCaptions, onchange_hotkey_ctrl);
+	listItem->wrap = false;
+	listItem->caption = "Ctrl";
+	listItem->value = HotkeyCtrl[hotkeyIndex] ? 1 : 0;
+	listItem->extras.push_back(hotkeyIndex);
+	menuItems.push_back(listItem);
+
+	// Alt修饰键
+	listItem = new SelectFromListMenuItem(modifierCaptions, onchange_hotkey_alt);
+	listItem->wrap = false;
+	listItem->caption = "Alt";
+	listItem->value = HotkeyAlt[hotkeyIndex] ? 1 : 0;
+	listItem->extras.push_back(hotkeyIndex);
+	menuItems.push_back(listItem);
+
+	// Shift修饰键
+	listItem = new SelectFromListMenuItem(modifierCaptions, onchange_hotkey_shift);
+	listItem->wrap = false;
+	listItem->caption = "Shift";
+	listItem->value = HotkeyShift[hotkeyIndex] ? 1 : 0;
+	listItem->extras.push_back(hotkeyIndex);
+	menuItems.push_back(listItem);
+
+	draw_generic_menu<int>(menuItems, &activeLineIndexHotkeySettings[hotkeyIndex], caption, NULL, NULL, NULL);
+	return false;
+}
+
+// 快捷键按键设置主菜单
+bool process_misc_hotkey_key_settings_menu(){
+	const std::string caption = "快捷键按键设置";
+	std::vector<MenuItem<int>*> menuItems;
+
+	// 为每个快捷键创建子菜单项
+	for(int i = 0; i < 9; i++){
+		MenuItem<int>* item = new MenuItem<int>();
+		item->caption = get_hotkey_display_caption(i);
+		item->value = i;
+		item->isLeaf = false;
+		menuItems.push_back(item);
+	}
+
+	draw_generic_menu<int>(menuItems, &activeLineIndexHotkeyKeySettings, caption, onconfirm_hotkey_key_settings_menu, NULL, NULL);
+	return false;
+}
+
+// 快捷键功能菜单刷新标志
+bool g_HotkeyFunctionMenuNeedsRefresh = false;
+
+// 快捷键按键设置确认处理函数
+bool onconfirm_hotkey_key_settings_menu(MenuItem<int> choice){
+	if(choice.value >= 0 && choice.value < 9){
+		// 进入单个快捷键设置菜单
+		process_single_hotkey_settings_menu(choice.value);
+	}
+	return false;
+}
+
+// 菜单按键设置菜单实现
+void process_misc_menu_key_settings_menu() {
+	const std::string caption = "菜单按键设置";
+
+	std::vector<MenuItem<int>*> menuItems;
+
+	// 添加快捷键功能设置菜单项（原快捷键设置，重命名）
+	MenuItem<int>* hotkeyFunctionItem = new MenuItem<int>();
+	hotkeyFunctionItem->caption = "快捷键功能设置";
+	hotkeyFunctionItem->value = TRAINERCONFIG_HOTKEY_FUNCTION_SETTINGS;
+	hotkeyFunctionItem->isLeaf = false;
+	menuItems.push_back(hotkeyFunctionItem);
+
+	// 添加快捷键按键设置菜单项（留空备用）
+	MenuItem<int>* hotkeyKeyItem = new MenuItem<int>();
+	hotkeyKeyItem->caption = "快捷键按键设置";
+	hotkeyKeyItem->value = TRAINERCONFIG_HOTKEY_KEY_SETTINGS;
+	hotkeyKeyItem->isLeaf = false;
+	menuItems.push_back(hotkeyKeyItem);
+
+
+
+	// 添加保存设置按钮
+	MenuItem<int>* saveItem = new MenuItem<int>();
+	saveItem->caption = "保存并重载配置文件";
+	saveItem->value = -1;
+	saveItem->isLeaf = true;
+	menuItems.push_back(saveItem);
+
+	// 添加恢复默认设置按钮
+	MenuItem<int>* resetItem = new MenuItem<int>();
+	resetItem->caption = "重置并恢复默认配置";
+	resetItem->value = -2;
+	resetItem->isLeaf = true;
+	menuItems.push_back(resetItem);
+
+	draw_generic_menu<int>(menuItems, &activeLineIndexMenuKeySettings, caption, onconfirm_menu_key_settings_menu, NULL, NULL);
+}
+
 void process_misc_trainerconfig_menu(){
 	const std::string caption = "修改器设置选项";
 
 	std::vector<MenuItem<int>*> menuItems;
 	SelectFromListMenuItem *listItem;
 
-	MenuItem<int>* stdItem = new MenuItem<int>();
-	stdItem->caption = "快捷键设置";
-	stdItem->value = TRAINERCONFIG_HOTKEY_MENU;
-	stdItem->isLeaf = false;
-	menuItems.push_back(stdItem);
+	// 添加菜单按键设置菜单项（首项位置）
+	MenuItem<int>* menuKeySettingsItem = new MenuItem<int>();
+	menuKeySettingsItem->caption = "菜单按键设置";
+	menuKeySettingsItem->value = TRAINERCONFIG_MENU_KEY_SETTINGS;
+	menuKeySettingsItem->isLeaf = false;
+	menuItems.push_back(menuKeySettingsItem);
 
 	// 添加修改器菜单颜色设置
-	stdItem = new MenuItem<int>();
-	stdItem->caption = "菜单颜色设置";
-	stdItem->value = 63;
-	stdItem->isLeaf = false;
-	menuItems.push_back(stdItem);
+	MenuItem<int>* colorSettingsItem = new MenuItem<int>();
+	colorSettingsItem->caption = "菜单颜色设置";
+	colorSettingsItem->value = 63;
+	colorSettingsItem->isLeaf = false;
+	menuItems.push_back(colorSettingsItem);
 
 	// 添加字体设置菜单项
 	MenuItem<int>* fontSettingsItem = new MenuItem<int>();
@@ -1111,6 +1446,8 @@ void initialize() {
 		return;
 	}
 	setupPatches();
+	// 初始化快捷键设置
+	load_hotkey_settings_from_xml();
 }
 
 void onchange_misc_phone_bill_index(int value, SelectFromListMenuItem* source){
@@ -2686,6 +3023,239 @@ bool onconfirm_menu_layout_reset(MenuItem<int> choice) {
 		return true; // 返回 true 退出当前菜单
 	}
 	return false;
+}
+
+// 将按键值转换为按键名称
+char* keyValToName(int keyValue) {
+	for (int i = 0; i < (sizeof ALL_KEYS / sizeof ALL_KEYS[0]); i++) {
+		if (ALL_KEYS[i].keyCode == keyValue) {
+			return ALL_KEYS[i].name;
+		}
+	}
+	return "VK_NOTHING";
+}
+
+// 恢复快捷键默认设置
+void reset_hotkey_settings_to_defaults(){
+	// 清空游戏内快捷键数组
+	for(int i = 0; i < 9; i++){
+		HotkeyIndex[i] = 0; // 默认为"未绑定"
+		HotkeyCtrl[i] = false;
+		HotkeyAlt[i] = false;
+		HotkeyShift[i] = false;
+		HotkeyChanged[i] = true;
+	}
+	
+	// 重置快捷键功能设置为未绑定状态
+	for(int i = 0; i < 9; i++){
+		change_hotkey_function(i + 1, 0); // 设置为"无功能"
+	}
+	
+	// 清空XML配置文件中的快捷键设置
+	KeyInputConfig* keyConfig = get_config()->get_key_config();
+	if(keyConfig != NULL){
+		std::string keyNames[] = {
+			KeyConfig::KEY_HOT_1, KeyConfig::KEY_HOT_2, KeyConfig::KEY_HOT_3,
+			KeyConfig::KEY_HOT_4, KeyConfig::KEY_HOT_5, KeyConfig::KEY_HOT_6,
+			KeyConfig::KEY_HOT_7, KeyConfig::KEY_HOT_8, KeyConfig::KEY_HOT_9
+		};
+		
+		// 将所有快捷键重置为未绑定状态
+		for(int i = 0; i < 9; i++){
+			keyConfig->set_key((char*)keyNames[i].c_str(), "VK_NOTHING", false, false, false);
+		}
+		
+		// 保存到XML文件
+		write_xml_config_file();
+	}
+}
+
+// 写入XML配置文件
+void write_xml_config_file(){
+	CoInitialize(NULL);
+	
+	// 创建XML文档
+	MSXML2::IXMLDOMDocumentPtr spXMLDoc;
+	spXMLDoc.CreateInstance(__uuidof(MSXML2::DOMDocument60));
+	
+	// 加载现有的XML文件
+	if(!spXMLDoc->load("Enhanced Native Trainer/ent-config.xml")){
+		write_text_to_log_file("无法加载XML 配置文件进行更新");
+		return;
+	}
+	
+	// 获取所有按键节点
+	IXMLDOMNodeListPtr nodes = spXMLDoc->selectNodes(L"//ent-config/keys/key");
+	long length;
+	nodes->get_length(&length);
+	
+	// 更新快捷键配置
+	KeyInputConfig* keyConfig = get_config()->get_key_config();
+	
+	for(int i = 0; i < length; i++){
+		IXMLDOMNode *node;
+		nodes->get_item(i, &node);
+		IXMLDOMNamedNodeMap *attribs;
+		node->get_attributes(&attribs);
+		
+		// 获取function属性
+		IXMLDOMNode *funcNode;
+		attribs->getNamedItem(L"function", &funcNode);
+		if(funcNode != NULL){
+			VARIANT var;
+			VariantInit(&var);
+			funcNode->get_nodeValue(&var);
+			std::string functionName = _com_util::ConvertBSTRToString(V_BSTR(&var));
+			
+			// 检查是否是快捷键
+			if(functionName.find("hotkey_") == 0){
+				int hotkeyNum = std::stoi(functionName.substr(7)) - 1; // 转换为0-8索引
+				if(hotkeyNum >= 0 && hotkeyNum < 9){
+					// 获取当前按键配置
+					KeyConfig* key = keyConfig->get_key(functionName);
+					if(key != NULL){
+						// 更新value属性
+						IXMLDOMNode *valueNode;
+						attribs->getNamedItem(L"value", &valueNode);
+						if(valueNode != NULL){
+							std::string keyValueName = keyValToName(key->keyCode);
+							BSTR valueBstr = _com_util::ConvertStringToBSTR(keyValueName.c_str());
+							VARIANT valueVar;
+							VariantInit(&valueVar);
+							V_VT(&valueVar) = VT_BSTR;
+							V_BSTR(&valueVar) = valueBstr;
+							valueNode->put_nodeValue(valueVar);
+							SysFreeString(valueBstr);
+						}
+						
+						// 更新modCtrl属性
+						IXMLDOMNode *ctrlNode;
+						attribs->getNamedItem(L"modCtrl", &ctrlNode);
+						if(ctrlNode != NULL){
+							std::string ctrlValue = key->modCtrl ? "true" : "false";
+							BSTR ctrlBstr = _com_util::ConvertStringToBSTR(ctrlValue.c_str());
+							VARIANT ctrlVar;
+							VariantInit(&ctrlVar);
+							V_VT(&ctrlVar) = VT_BSTR;
+							V_BSTR(&ctrlVar) = ctrlBstr;
+							ctrlNode->put_nodeValue(ctrlVar);
+							SysFreeString(ctrlBstr);
+						}
+						
+						// 更新modAlt属性
+						IXMLDOMNode *altNode;
+						attribs->getNamedItem(L"modAlt", &altNode);
+						if(altNode != NULL){
+							std::string altValue = key->modAlt ? "true" : "false";
+							BSTR altBstr = _com_util::ConvertStringToBSTR(altValue.c_str());
+							VARIANT altVar;
+							VariantInit(&altVar);
+							V_VT(&altVar) = VT_BSTR;
+							V_BSTR(&altVar) = altBstr;
+							altNode->put_nodeValue(altVar);
+							SysFreeString(altBstr);
+						}
+						
+						// 更新modShift属性
+						IXMLDOMNode *shiftNode;
+						attribs->getNamedItem(L"modShift", &shiftNode);
+						if(shiftNode != NULL){
+							std::string shiftValue = key->modShift ? "true" : "false";
+							BSTR shiftBstr = _com_util::ConvertStringToBSTR(shiftValue.c_str());
+							VARIANT shiftVar;
+							VariantInit(&shiftVar);
+							V_VT(&shiftVar) = VT_BSTR;
+							V_BSTR(&shiftVar) = shiftBstr;
+							shiftNode->put_nodeValue(shiftVar);
+							SysFreeString(shiftBstr);
+						}
+					}
+				}
+			}
+			
+			funcNode->Release();
+		}
+		
+		attribs->Release();
+		node->Release();
+	}
+	
+	// 保存XML文件
+	spXMLDoc->save("Enhanced Native Trainer/ent-config.xml");
+	write_text_to_log_file("XML 配置文件已更新");
+}
+
+// 保存快捷键设置到XML文件
+void save_hotkey_settings_to_xml(){
+	// 获取配置对象
+	KeyInputConfig* keyConfig = get_config()->get_key_config();
+	
+	// 为每个快捷键保存设置
+	for(int i = 0; i < 9; i++){
+		if(HotkeyChanged[i]){
+			std::string keyName;
+			switch(i){
+				case 0: keyName = KeyConfig::KEY_HOT_1; break;
+				case 1: keyName = KeyConfig::KEY_HOT_2; break;
+				case 2: keyName = KeyConfig::KEY_HOT_3; break;
+				case 3: keyName = KeyConfig::KEY_HOT_4; break;
+				case 4: keyName = KeyConfig::KEY_HOT_5; break;
+				case 5: keyName = KeyConfig::KEY_HOT_6; break;
+				case 6: keyName = KeyConfig::KEY_HOT_7; break;
+				case 7: keyName = KeyConfig::KEY_HOT_8; break;
+				case 8: keyName = KeyConfig::KEY_HOT_9; break;
+			}
+			
+			// 获取按键值
+			int keyValue = MISC_HOTKEY_VALUES[HotkeyIndex[i]];
+			
+			// 获取按键名称
+			char* keyValueName = keyValToName(keyValue);
+			
+			// 设置按键配置
+			keyConfig->set_key((char*)keyName.c_str(), keyValueName, 
+							   HotkeyCtrl[i], HotkeyAlt[i], HotkeyShift[i]);
+			
+			HotkeyChanged[i] = false;
+		}
+	}
+	
+	// 写入XML配置文件
+	write_xml_config_file();
+}
+
+// 从XML文件加载快捷键设置
+void load_hotkey_settings_from_xml(){
+	KeyInputConfig* keyConfig = get_config()->get_key_config();
+	
+	for(int i = 0; i < 9; i++){
+		std::string keyName;
+		switch(i){
+			case 0: keyName = KeyConfig::KEY_HOT_1; break;
+			case 1: keyName = KeyConfig::KEY_HOT_2; break;
+			case 2: keyName = KeyConfig::KEY_HOT_3; break;
+			case 3: keyName = KeyConfig::KEY_HOT_4; break;
+			case 4: keyName = KeyConfig::KEY_HOT_5; break;
+			case 5: keyName = KeyConfig::KEY_HOT_6; break;
+			case 6: keyName = KeyConfig::KEY_HOT_7; break;
+			case 7: keyName = KeyConfig::KEY_HOT_8; break;
+			case 8: keyName = KeyConfig::KEY_HOT_9; break;
+		}
+		
+		KeyConfig* key = keyConfig->get_key(keyName);
+		if(key != NULL){
+			// 查找对应的索引
+			for(int j = 0; j < sizeof(MISC_HOTKEY_VALUES)/sizeof(int); j++){
+				if(MISC_HOTKEY_VALUES[j] == key->keyCode){
+					HotkeyIndex[i] = j;
+					break;
+				}
+			}
+			HotkeyCtrl[i] = key->modCtrl;
+			HotkeyAlt[i] = key->modAlt;
+			HotkeyShift[i] = key->modShift;
+		}
+	}
 }
 
 void process_misc_menu_layout_settings_menu() {

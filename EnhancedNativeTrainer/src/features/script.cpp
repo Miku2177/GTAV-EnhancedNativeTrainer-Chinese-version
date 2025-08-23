@@ -2358,6 +2358,7 @@ bool onconfirm_reset_menu(MenuItem<int> choice) {
         menu_beep(); // 按钮提示音
         read_config_file(); // 重新读取 ent-config.xml
         read_config_ini_file(); // 重新读取 ent_customization.ini
+        load_hotkey_settings_from_xml(); // 重新加载快捷键设置到内存变量
         set_status_text("文件: ent-config.xml\n文件: ent_customization.ini\n全部重新载入完成！"); // 右下角提示
         set_status_text_centre_screen("配置文件 ~g~重新载入 ~s~完成！"); // 屏幕中间提示，带闪烁
         return true; // 返回 true 退出当前菜单，自动返回上一级菜单
@@ -2558,6 +2559,9 @@ void reset_globals(){
 	reset_prop_globals();
 
 	reset_areaeffect_globals();
+	
+	// 重置快捷键设置并写入XML文件
+	//reset_hotkey_settings_to_defaults();
 
 	activeLineIndexMain =
 	activeLineIndexPlayer =
@@ -2776,6 +2780,11 @@ void ScriptMain(){
 		write_text_to_log_file("正在读取 INI 配置...");
 		read_config_ini_file();
 		write_text_to_log_file("INI 配置读取完成");
+
+		// 加载快捷键设置到内存变量
+		write_text_to_log_file("正在加载快捷键设置...");
+		load_hotkey_settings_from_xml();
+		write_text_to_log_file("快捷键设置加载完成");
 
 		//UnlockAllObjects();
 
