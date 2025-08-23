@@ -19,6 +19,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "..\ui_support\menu_functions.h"
 #include <comutil.h>
 #include <msxml6.h>
+#include <fstream>
 
 //==================
 // 其他菜单选项
@@ -3078,6 +3079,9 @@ void write_xml_config_file(){
 	MSXML2::IXMLDOMDocumentPtr spXMLDoc;
 	spXMLDoc.CreateInstance(__uuidof(MSXML2::DOMDocument60));
 	
+	// 设置preserveWhiteSpace为true以保留空行和格式
+	spXMLDoc->put_preserveWhiteSpace(VARIANT_TRUE);
+	
 	// 加载现有的XML文件
 	if(!spXMLDoc->load("Enhanced Native Trainer/ent-config.xml")){
 		write_text_to_log_file("无法加载XML 配置文件进行更新");
@@ -3180,8 +3184,58 @@ void write_xml_config_file(){
 		node->Release();
 	}
 	
-	// 保存XML文件
-	spXMLDoc->save("Enhanced Native Trainer/ent-config.xml");
+	// 保存XML文件到临时文件
+	std::string tempFileName = "Enhanced Native Trainer/ent-config.xml.tmp";
+	spXMLDoc->save(tempFileName.c_str());
+	
+	// 读取临时文件内容
+	std::ifstream inFile(tempFileName, std::ios::binary);
+	std::string content((std::istreambuf_iterator<char>(inFile)), std::istreambuf_iterator<char>());
+	inFile.close();
+	
+	// 删除临时文件
+	DeleteFileA(tempFileName.c_str());
+	
+	// 手动添加换行符以保持格式（统一使用Windows CRLF格式）
+	// 确保<?xml version="1.0" encoding="utf-8"?>后面有换行符
+	size_t xmlDeclPos = content.find("?>");
+	if(xmlDeclPos != std::string::npos){
+		xmlDeclPos += 2; // 移动到?>后面
+		// 检查后面是否有换行符
+		if(xmlDeclPos < content.length() && content[xmlDeclPos] != '\n' && content[xmlDeclPos] != '\r'){
+			// 添加换行符（使用Windows CRLF格式）
+			content.insert(xmlDeclPos, "\r\n");
+		}
+	}
+	
+	// 确保<ent-config>前面有换行符
+	size_t entConfigPos = content.find("<ent-config>");
+	if(entConfigPos != std::string::npos && entConfigPos > 0){
+		// 检查前面是否有换行符
+		if(content[entConfigPos-1] != '\n' && content[entConfigPos-1] != '\r'){
+			// 添加换行符（使用Windows CRLF格式）
+			content.insert(entConfigPos, "\r\n");
+		}
+	}
+	
+	// 将所有LF转换为CRLF（方案一：强制二进制模式写入并手动转换换行符）
+	std::string result;
+	result.reserve(content.length() * 2); // 预分配足够空间
+	for(size_t i = 0; i < content.length(); i++){
+		if(content[i] == '\n' && (i == 0 || content[i-1] != '\r')){
+			// 发现单独的LF，转换为CRLF
+			result += "\r\n";
+		} else {
+			// 保持原字符
+			result += content[i];
+		}
+	}
+	
+	// 以二进制模式写入最终文件，确保CRLF格式
+	std::ofstream outFile("Enhanced Native Trainer/ent-config.xml", std::ios::binary);
+	outFile.write(result.c_str(), result.length());
+	outFile.close();
+	
 	write_text_to_log_file("XML 配置文件已更新");
 }
 

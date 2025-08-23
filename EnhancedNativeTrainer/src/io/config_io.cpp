@@ -26,7 +26,8 @@ void write_default_config_xml_file() {
     // 确保目录存在
     CreateDirectory("Enhanced Native Trainer", NULL);
     
-    std::ofstream xmlFile("Enhanced Native Trainer/ent-config.xml");
+    // 先写入到临时文件
+    std::ofstream xmlFile("Enhanced Native Trainer/ent-config-temp.xml");
     if (xmlFile.is_open()) {
 
         // 写入配置文件 ent-config.xml 开始
@@ -365,10 +366,40 @@ void write_default_config_xml_file() {
 		xmlFile << "" << std::endl;
 		xmlFile << "</ent-config>" << std::endl;
 
-		// 配置文件 ent-config.xml 写入完毕
-
         xmlFile.close();
-        write_text_to_log_file("成功创建默认的 ent-config.xml 配置文件");
+        
+        // 读取临时文件内容并转换换行符为CRLF
+        std::ifstream tempFile("Enhanced Native Trainer/ent-config-temp.xml", std::ios::binary);
+        if (tempFile.is_open()) {
+            std::string content((std::istreambuf_iterator<char>(tempFile)), std::istreambuf_iterator<char>());
+            tempFile.close();
+            
+            // 删除临时文件
+            std::remove("Enhanced Native Trainer/ent-config-temp.xml");
+            
+            // 将所有LF转换为CRLF（避免重复转换已有的CRLF）
+            std::string result;
+            result.reserve(content.size() * 1.2); // 预留空间
+            for (size_t i = 0; i < content.size(); ++i) {
+                if (content[i] == '\n' && (i == 0 || content[i-1] != '\r')) {
+                    result += "\r\n";
+                } else {
+                    result += content[i];
+                }
+            }
+            
+            // 以二进制模式写入最终文件
+            std::ofstream finalFile("Enhanced Native Trainer/ent-config.xml", std::ios::binary);
+            if (finalFile.is_open()) {
+                finalFile.write(result.c_str(), result.size());
+                finalFile.close();
+                write_text_to_log_file("成功创建默认的 ent-config.xml 配置文件");
+            } else {
+                write_text_to_log_file("创建 ent-config.xml 配置文件失败！");
+            }
+        } else {
+            write_text_to_log_file("创建 ent-config.xml 配置文件失败！");
+        }
     } else {
         write_text_to_log_file("创建 ent-config.xml 配置文件失败！");
     }
