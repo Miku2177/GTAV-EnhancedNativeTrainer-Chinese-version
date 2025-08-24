@@ -237,6 +237,28 @@ bool HotkeyAlt[9] = {false, false, false, false, false, false, false, false, fal
 bool HotkeyShift[9] = {false, false, false, false, false, false, false, false, false};
 int activeLineIndexHotkeyKeySettings = 0;
 
+// 常用按键设置变量
+int CommonKeyToggleMenuIndex = 4;      // 开关/菜单，默认 F4
+int CommonKeyMoveUpIndex = 57;         // 向上/移动，默认小键盘 8
+int CommonKeyMoveDownIndex = 51;       // 向下/移动，默认小键盘 2
+int CommonKeyMoveLeftIndex = 53;       // 向左/移动，默认小键盘 4
+int CommonKeyMoveRightIndex = 55;      // 向右/移动，默认小键盘 6
+int CommonKeyConfirmSelectIndex = 54;        // 确认/选择，默认小键盘 5
+int CommonKeyBackCancelIndex = 49;           // 返回/取消，默认小键盘 0
+bool CommonKeyChanged[7] = {false, false, false, false, false, false, false};
+int activeLineIndexCommonKeys = 0;
+
+// 其他按键设置变量
+int OtherKeyToggleFreeMoveIndex = 6;   // 开/关自由移动，默认 F6
+int OtherKeyVehicleBoostIndex = 58;    // 车辆加速，默认小键盘 9
+int OtherKeyVehicleStopIndex = 52;     // 停止车辆，默认小键盘 3
+int OtherKeyVehicleRocketsIndex = 59;  // 车辆发射火箭，默认小键盘 +
+int OtherKeyLeftBlinkIndex = 72;       // 左转向灯，默认左箭头
+int OtherKeyRightBlinkIndex = 73;      // 右转向灯，默认右箭头
+int OtherKeyEmergencyBlinkIndex = 63;  // 打开双闪，默认小键盘 .
+bool OtherKeyChanged[7] = {false, false, false, false, false, false, false};
+int activeLineIndexOtherKeys = 0;
+
 void onchange_hotkey_function(int value, SelectFromListMenuItem* source){
 	change_hotkey_function(source->extras.at(0), value);
 }
@@ -343,6 +365,92 @@ bool is_hotkey_duplicate(int hotkeyNum, int keyIndex, bool ctrl, bool alt, bool 
 	return false;
 }
 
+// 检查常用按键是否重复
+bool is_common_key_duplicate(int commonKeyNum, int keyIndex) {
+	// 如果是未绑定，不检查重复
+	if (keyIndex == 0) {
+		return false;
+	}
+	
+	// 获取当前常用按键数组
+	int commonKeys[7] = {
+		CommonKeyToggleMenuIndex, CommonKeyMoveUpIndex, CommonKeyMoveDownIndex,
+		CommonKeyMoveLeftIndex, CommonKeyMoveRightIndex, CommonKeyConfirmSelectIndex, CommonKeyBackCancelIndex
+	};
+	
+	// 检查其他常用按键是否有相同的按键
+	for (int i = 0; i < 7; i++) {
+		if (i == commonKeyNum) continue; // 跳过自己
+		if (commonKeys[i] == keyIndex) {
+			return true;
+		}
+	}
+	
+	// 检查其他按键是否有相同的按键
+	int otherKeys[7] = {
+		OtherKeyToggleFreeMoveIndex, OtherKeyVehicleBoostIndex, OtherKeyVehicleStopIndex,
+		OtherKeyVehicleRocketsIndex, OtherKeyLeftBlinkIndex, OtherKeyRightBlinkIndex, OtherKeyEmergencyBlinkIndex
+	};
+	
+	for (int i = 0; i < 7; i++) {
+		if (otherKeys[i] == keyIndex) {
+			return true;
+		}
+	}
+	
+	// 检查快捷键是否有相同的按键（不考虑修饰键，因为常用按键和其他按键不支持修饰键）
+	for (int i = 0; i < 9; i++) {
+		if (HotkeyIndex[i] == keyIndex) {
+			return true;
+		}
+	}
+	
+	return false;
+}
+
+// 检查其他按键是否重复
+bool is_other_key_duplicate(int otherKeyNum, int keyIndex) {
+	// 如果是未绑定，不检查重复
+	if (keyIndex == 0) {
+		return false;
+	}
+	
+	// 获取当前其他按键数组
+	int otherKeys[7] = {
+		OtherKeyToggleFreeMoveIndex, OtherKeyVehicleBoostIndex, OtherKeyVehicleStopIndex,
+		OtherKeyVehicleRocketsIndex, OtherKeyLeftBlinkIndex, OtherKeyRightBlinkIndex, OtherKeyEmergencyBlinkIndex
+	};
+	
+	// 检查其他按键是否有相同的按键
+	for (int i = 0; i < 7; i++) {
+		if (i == otherKeyNum) continue; // 跳过自己
+		if (otherKeys[i] == keyIndex) {
+			return true;
+		}
+	}
+	
+	// 检查常用按键是否有相同的按键
+	int commonKeys[7] = {
+		CommonKeyToggleMenuIndex, CommonKeyMoveUpIndex, CommonKeyMoveDownIndex,
+		CommonKeyMoveLeftIndex, CommonKeyMoveRightIndex, CommonKeyConfirmSelectIndex, CommonKeyBackCancelIndex
+	};
+	
+	for (int i = 0; i < 7; i++) {
+		if (commonKeys[i] == keyIndex) {
+			return true;
+		}
+	}
+	
+	// 检查快捷键是否有相同的按键（不考虑修饰键，因为常用按键和其他按键不支持修饰键）
+	for (int i = 0; i < 9; i++) {
+		if (HotkeyIndex[i] == keyIndex) {
+			return true;
+		}
+	}
+	
+	return false;
+}
+
 // 快捷键按键设置回调函数
 void onchange_hotkey_key(int value, SelectFromListMenuItem* source){
 	int hotkeyNum = source->extras.at(0); // 快捷键编号 (0-8)
@@ -363,6 +471,31 @@ void onchange_hotkey_key(int value, SelectFromListMenuItem* source){
 		HotkeyAlt[hotkeyNum] = false;
 		HotkeyShift[hotkeyNum] = false;
 	}
+	
+	// 立即更新KeyInputConfig以使更改生效
+	KeyInputConfig* keyConfig = get_config()->get_key_config();
+	if (keyConfig != NULL) {
+		std::string keyName;
+		switch(hotkeyNum){
+			case 0: keyName = KeyConfig::KEY_HOT_1; break;
+			case 1: keyName = KeyConfig::KEY_HOT_2; break;
+			case 2: keyName = KeyConfig::KEY_HOT_3; break;
+			case 3: keyName = KeyConfig::KEY_HOT_4; break;
+			case 4: keyName = KeyConfig::KEY_HOT_5; break;
+			case 5: keyName = KeyConfig::KEY_HOT_6; break;
+			case 6: keyName = KeyConfig::KEY_HOT_7; break;
+			case 7: keyName = KeyConfig::KEY_HOT_8; break;
+			case 8: keyName = KeyConfig::KEY_HOT_9; break;
+		}
+		
+		// 获取按键值和名称
+		int keyValue = MISC_HOTKEY_VALUES[value];
+		char* keyValueName = keyValToName(keyValue);
+		
+		// 立即设置按键配置
+		keyConfig->set_key((char*)keyName.c_str(), keyValueName, 
+						   HotkeyCtrl[hotkeyNum], HotkeyAlt[hotkeyNum], HotkeyShift[hotkeyNum]);
+	}
 }
 
 void onchange_hotkey_ctrl(int value, SelectFromListMenuItem* source){
@@ -378,6 +511,31 @@ void onchange_hotkey_ctrl(int value, SelectFromListMenuItem* source){
 	
 	HotkeyCtrl[hotkeyNum] = newCtrl;
 	HotkeyChanged[hotkeyNum] = true;
+	
+	// 立即更新KeyInputConfig以使更改生效
+	KeyInputConfig* keyConfig = get_config()->get_key_config();
+	if (keyConfig != NULL) {
+		std::string keyName;
+		switch(hotkeyNum){
+			case 0: keyName = KeyConfig::KEY_HOT_1; break;
+			case 1: keyName = KeyConfig::KEY_HOT_2; break;
+			case 2: keyName = KeyConfig::KEY_HOT_3; break;
+			case 3: keyName = KeyConfig::KEY_HOT_4; break;
+			case 4: keyName = KeyConfig::KEY_HOT_5; break;
+			case 5: keyName = KeyConfig::KEY_HOT_6; break;
+			case 6: keyName = KeyConfig::KEY_HOT_7; break;
+			case 7: keyName = KeyConfig::KEY_HOT_8; break;
+			case 8: keyName = KeyConfig::KEY_HOT_9; break;
+		}
+		
+		// 获取按键值和名称
+		int keyValue = MISC_HOTKEY_VALUES[HotkeyIndex[hotkeyNum]];
+		char* keyValueName = keyValToName(keyValue);
+		
+		// 立即设置按键配置
+		keyConfig->set_key((char*)keyName.c_str(), keyValueName, 
+						   HotkeyCtrl[hotkeyNum], HotkeyAlt[hotkeyNum], HotkeyShift[hotkeyNum]);
+	}
 }
 
 void onchange_hotkey_alt(int value, SelectFromListMenuItem* source){
@@ -393,6 +551,31 @@ void onchange_hotkey_alt(int value, SelectFromListMenuItem* source){
 	
 	HotkeyAlt[hotkeyNum] = newAlt;
 	HotkeyChanged[hotkeyNum] = true;
+	
+	// 立即更新KeyInputConfig以使更改生效
+	KeyInputConfig* keyConfig = get_config()->get_key_config();
+	if (keyConfig != NULL) {
+		std::string keyName;
+		switch(hotkeyNum){
+			case 0: keyName = KeyConfig::KEY_HOT_1; break;
+			case 1: keyName = KeyConfig::KEY_HOT_2; break;
+			case 2: keyName = KeyConfig::KEY_HOT_3; break;
+			case 3: keyName = KeyConfig::KEY_HOT_4; break;
+			case 4: keyName = KeyConfig::KEY_HOT_5; break;
+			case 5: keyName = KeyConfig::KEY_HOT_6; break;
+			case 6: keyName = KeyConfig::KEY_HOT_7; break;
+			case 7: keyName = KeyConfig::KEY_HOT_8; break;
+			case 8: keyName = KeyConfig::KEY_HOT_9; break;
+		}
+		
+		// 获取按键值和名称
+		int keyValue = MISC_HOTKEY_VALUES[HotkeyIndex[hotkeyNum]];
+		char* keyValueName = keyValToName(keyValue);
+		
+		// 立即设置按键配置
+		keyConfig->set_key((char*)keyName.c_str(), keyValueName, 
+						   HotkeyCtrl[hotkeyNum], HotkeyAlt[hotkeyNum], HotkeyShift[hotkeyNum]);
+	}
 }
 
 void onchange_hotkey_shift(int value, SelectFromListMenuItem* source){
@@ -408,6 +591,31 @@ void onchange_hotkey_shift(int value, SelectFromListMenuItem* source){
 	
 	HotkeyShift[hotkeyNum] = newShift;
 	HotkeyChanged[hotkeyNum] = true;
+	
+	// 立即更新KeyInputConfig以使更改生效
+	KeyInputConfig* keyConfig = get_config()->get_key_config();
+	if (keyConfig != NULL) {
+		std::string keyName;
+		switch(hotkeyNum){
+			case 0: keyName = KeyConfig::KEY_HOT_1; break;
+			case 1: keyName = KeyConfig::KEY_HOT_2; break;
+			case 2: keyName = KeyConfig::KEY_HOT_3; break;
+			case 3: keyName = KeyConfig::KEY_HOT_4; break;
+			case 4: keyName = KeyConfig::KEY_HOT_5; break;
+			case 5: keyName = KeyConfig::KEY_HOT_6; break;
+			case 6: keyName = KeyConfig::KEY_HOT_7; break;
+			case 7: keyName = KeyConfig::KEY_HOT_8; break;
+			case 8: keyName = KeyConfig::KEY_HOT_9; break;
+		}
+		
+		// 获取按键值和名称
+		int keyValue = MISC_HOTKEY_VALUES[HotkeyIndex[hotkeyNum]];
+		char* keyValueName = keyValToName(keyValue);
+		
+		// 立即设置按键配置
+		keyConfig->set_key((char*)keyName.c_str(), keyValueName, 
+						   HotkeyCtrl[hotkeyNum], HotkeyAlt[hotkeyNum], HotkeyShift[hotkeyNum]);
+	}
 }
 
 bool process_misc_hotkey_menu(){
@@ -593,15 +801,23 @@ bool onconfirm_menu_key_settings_menu(MenuItem<int> choice){
 	else if(choice.value == TRAINERCONFIG_HOTKEY_KEY_SETTINGS){
 		process_misc_hotkey_key_settings_menu();
 	}
+	else if(choice.value == TRAINERCONFIG_COMMON_KEYS){
+		process_misc_common_keys_menu();
+	}
+	else if(choice.value == TRAINERCONFIG_OTHER_KEYS){
+		process_misc_other_keys_menu();
+	}
 	else if(choice.value == -1){ // 保存设置
 		save_hotkey_settings_to_xml();
-		set_status_text("快捷键设置已保存至 XML");
+		save_common_other_keys_to_xml();
+		set_status_text("按键设置已保存至 XML");
 		activeLineIndexMenuKeySettings = 0; // 重置页面状态
 		return true; // 返回上一页
 	}
 	else if(choice.value == -2){ // 恢复默认设置
 		reset_hotkey_settings_to_defaults();
-		set_status_text("快捷键设置已恢复为默认");
+		reset_common_other_keys_to_defaults();
+		set_status_text("按键设置已恢复为默认");
 		// 设置刷新标志，通知快捷键功能设置菜单需要更新locked状态
 		g_HotkeyFunctionMenuNeedsRefresh = true;
 		activeLineIndexMenuKeySettings = 0; // 重置页面状态
@@ -707,18 +923,30 @@ void process_misc_menu_key_settings_menu() {
 	hotkeyKeyItem->isLeaf = false;
 	menuItems.push_back(hotkeyKeyItem);
 
+	// 添加常用按键设置菜单项
+	MenuItem<int>* commonKeysItem = new MenuItem<int>();
+	commonKeysItem->caption = "常用按键设置";
+	commonKeysItem->value = TRAINERCONFIG_COMMON_KEYS;
+	commonKeysItem->isLeaf = false;
+	menuItems.push_back(commonKeysItem);
 
+	// 添加其他按键设置菜单项
+	MenuItem<int>* otherKeysItem = new MenuItem<int>();
+	otherKeysItem->caption = "其他按键设置";
+	otherKeysItem->value = TRAINERCONFIG_OTHER_KEYS;
+	otherKeysItem->isLeaf = false;
+	menuItems.push_back(otherKeysItem);
 
 	// 添加保存设置按钮
 	MenuItem<int>* saveItem = new MenuItem<int>();
-	saveItem->caption = "保存并重载配置文件";
+	saveItem->caption = "保存并写入配置文件";
 	saveItem->value = -1;
 	saveItem->isLeaf = true;
 	menuItems.push_back(saveItem);
 
 	// 添加恢复默认设置按钮
 	MenuItem<int>* resetItem = new MenuItem<int>();
-	resetItem->caption = "重置并恢复默认配置";
+	resetItem->caption = "重置并恢复配置文件";
 	resetItem->value = -2;
 	resetItem->isLeaf = true;
 	menuItems.push_back(resetItem);
@@ -1449,6 +1677,8 @@ void initialize() {
 	setupPatches();
 	// 初始化快捷键设置
 	load_hotkey_settings_from_xml();
+	// 初始化常用按键和其他按键设置
+	load_common_other_keys_from_xml();
 }
 
 void onchange_misc_phone_bill_index(int value, SelectFromListMenuItem* source){
@@ -3073,7 +3303,7 @@ void reset_hotkey_settings_to_defaults(){
 
 // 写入XML配置文件
 void write_xml_config_file(){
-	CoInitialize(NULL);
+	HRESULT hr = CoInitialize(NULL);
 	
 	// 创建XML文档
 	MSXML2::IXMLDOMDocumentPtr spXMLDoc;
@@ -3085,6 +3315,7 @@ void write_xml_config_file(){
 	// 加载现有的XML文件
 	if(!spXMLDoc->load("Enhanced Native Trainer/ent-config.xml")){
 		write_text_to_log_file("无法加载XML 配置文件进行更新");
+		if(SUCCEEDED(hr)) CoUninitialize();
 		return;
 	}
 	
@@ -3097,83 +3328,88 @@ void write_xml_config_file(){
 	KeyInputConfig* keyConfig = get_config()->get_key_config();
 	
 	for(int i = 0; i < length; i++){
-		IXMLDOMNode *node;
+		IXMLDOMNode *node = nullptr;
 		nodes->get_item(i, &node);
-		IXMLDOMNamedNodeMap *attribs;
+		if(!node) continue;
+
+		IXMLDOMNamedNodeMap *attribs = nullptr;
 		node->get_attributes(&attribs);
+		if(!attribs){
+			node->Release();
+			continue;
+		}
 		
 		// 获取function属性
-		IXMLDOMNode *funcNode;
+		IXMLDOMNode *funcNode = nullptr;
 		attribs->getNamedItem(L"function", &funcNode);
 		if(funcNode != NULL){
 			VARIANT var;
 			VariantInit(&var);
 			funcNode->get_nodeValue(&var);
 			std::string functionName = _com_util::ConvertBSTRToString(V_BSTR(&var));
-			
-			// 检查是否是快捷键
-			if(functionName.find("hotkey_") == 0){
-				int hotkeyNum = std::stoi(functionName.substr(7)) - 1; // 转换为0-8索引
-				if(hotkeyNum >= 0 && hotkeyNum < 9){
-					// 获取当前按键配置
-					KeyConfig* key = keyConfig->get_key(functionName);
-					if(key != NULL){
-						// 更新value属性
-						IXMLDOMNode *valueNode;
-						attribs->getNamedItem(L"value", &valueNode);
-						if(valueNode != NULL){
-							std::string keyValueName = keyValToName(key->keyCode);
-							BSTR valueBstr = _com_util::ConvertStringToBSTR(keyValueName.c_str());
-							VARIANT valueVar;
-							VariantInit(&valueVar);
-							V_VT(&valueVar) = VT_BSTR;
-							V_BSTR(&valueVar) = valueBstr;
-							valueNode->put_nodeValue(valueVar);
-							SysFreeString(valueBstr);
-						}
-						
-						// 更新modCtrl属性
-						IXMLDOMNode *ctrlNode;
-						attribs->getNamedItem(L"modCtrl", &ctrlNode);
-						if(ctrlNode != NULL){
-							std::string ctrlValue = key->modCtrl ? "true" : "false";
-							BSTR ctrlBstr = _com_util::ConvertStringToBSTR(ctrlValue.c_str());
-							VARIANT ctrlVar;
-							VariantInit(&ctrlVar);
-							V_VT(&ctrlVar) = VT_BSTR;
-							V_BSTR(&ctrlVar) = ctrlBstr;
-							ctrlNode->put_nodeValue(ctrlVar);
-							SysFreeString(ctrlBstr);
-						}
-						
-						// 更新modAlt属性
-						IXMLDOMNode *altNode;
-						attribs->getNamedItem(L"modAlt", &altNode);
-						if(altNode != NULL){
-							std::string altValue = key->modAlt ? "true" : "false";
-							BSTR altBstr = _com_util::ConvertStringToBSTR(altValue.c_str());
-							VARIANT altVar;
-							VariantInit(&altVar);
-							V_VT(&altVar) = VT_BSTR;
-							V_BSTR(&altVar) = altBstr;
-							altNode->put_nodeValue(altVar);
-							SysFreeString(altBstr);
-						}
-						
-						// 更新modShift属性
-						IXMLDOMNode *shiftNode;
-						attribs->getNamedItem(L"modShift", &shiftNode);
-						if(shiftNode != NULL){
-							std::string shiftValue = key->modShift ? "true" : "false";
-							BSTR shiftBstr = _com_util::ConvertStringToBSTR(shiftValue.c_str());
-							VARIANT shiftVar;
-							VariantInit(&shiftVar);
-							V_VT(&shiftVar) = VT_BSTR;
-							V_BSTR(&shiftVar) = shiftBstr;
-							shiftNode->put_nodeValue(shiftVar);
-							SysFreeString(shiftBstr);
-						}
-					}
+			VariantClear(&var);
+
+			// 获取当前按键配置
+			KeyConfig* key = keyConfig->get_key(functionName);
+			if(key != NULL){
+				// 更新value属性
+				IXMLDOMNode *valueNode = nullptr;
+				attribs->getNamedItem(L"value", &valueNode);
+				if(valueNode != NULL){
+					std::string keyValueName = keyValToName(key->keyCode);
+					BSTR valueBstr = _com_util::ConvertStringToBSTR(keyValueName.c_str());
+					VARIANT valueVar;
+					VariantInit(&valueVar);
+					V_VT(&valueVar) = VT_BSTR;
+					V_BSTR(&valueVar) = valueBstr;
+					valueNode->put_nodeValue(valueVar);
+					VariantClear(&valueVar);
+					valueNode->Release();
+				}
+				
+				// 更新modCtrl属性
+				IXMLDOMNode *ctrlNode = nullptr;
+				attribs->getNamedItem(L"modCtrl", &ctrlNode);
+				if(ctrlNode != NULL){
+					std::string ctrlValue = key->modCtrl ? "true" : "false";
+					BSTR ctrlBstr = _com_util::ConvertStringToBSTR(ctrlValue.c_str());
+					VARIANT ctrlVar;
+					VariantInit(&ctrlVar);
+					V_VT(&ctrlVar) = VT_BSTR;
+					V_BSTR(&ctrlVar) = ctrlBstr;
+					ctrlNode->put_nodeValue(ctrlVar);
+					VariantClear(&ctrlVar);
+					ctrlNode->Release();
+				}
+				
+				// 更新modAlt属性
+				IXMLDOMNode *altNode = nullptr;
+				attribs->getNamedItem(L"modAlt", &altNode);
+				if(altNode != NULL){
+					std::string altValue = key->modAlt ? "true" : "false";
+					BSTR altBstr = _com_util::ConvertStringToBSTR(altValue.c_str());
+					VARIANT altVar;
+					VariantInit(&altVar);
+					V_VT(&altVar) = VT_BSTR;
+					V_BSTR(&altVar) = altBstr;
+					altNode->put_nodeValue(altVar);
+					VariantClear(&altVar);
+					altNode->Release();
+				}
+				
+				// 更新modShift属性
+				IXMLDOMNode *shiftNode = nullptr;
+				attribs->getNamedItem(L"modShift", &shiftNode);
+				if(shiftNode != NULL){
+					std::string shiftValue = key->modShift ? "true" : "false";
+					BSTR shiftBstr = _com_util::ConvertStringToBSTR(shiftValue.c_str());
+					VARIANT shiftVar;
+					VariantInit(&shiftVar);
+					V_VT(&shiftVar) = VT_BSTR;
+					V_BSTR(&shiftVar) = shiftBstr;
+					shiftNode->put_nodeValue(shiftVar);
+					VariantClear(&shiftVar);
+					shiftNode->Release();
 				}
 			}
 			
@@ -3237,6 +3473,8 @@ void write_xml_config_file(){
 	outFile.close();
 	
 	write_text_to_log_file("XML 配置文件已更新");
+
+	if(SUCCEEDED(hr)) CoUninitialize();
 }
 
 // 保存快捷键设置到XML文件
@@ -3308,6 +3546,542 @@ void load_hotkey_settings_from_xml(){
 			HotkeyCtrl[i] = key->modCtrl;
 			HotkeyAlt[i] = key->modAlt;
 			HotkeyShift[i] = key->modShift;
+		}
+	}
+}
+
+// 常用按键显示标题函数
+std::string get_common_key_display_caption(int keyIndex) {
+	std::ostringstream caption;
+	const char* keyNames[] = {
+		"开关/菜单",
+		"向上/移动", 
+		"向下/移动",
+		"向左/移动",
+		"向右/移动",
+		"确认/选择",
+		"返回/取消"
+	};
+	
+	if (keyIndex >= 0 && keyIndex < 7) {
+		caption << keyNames[keyIndex];
+		
+		// 获取对应的按键索引
+		int* keyIndexPtr = nullptr;
+		switch(keyIndex) {
+			case 0: keyIndexPtr = &CommonKeyToggleMenuIndex; break;
+			case 1: keyIndexPtr = &CommonKeyMoveUpIndex; break;
+			case 2: keyIndexPtr = &CommonKeyMoveDownIndex; break;
+			case 3: keyIndexPtr = &CommonKeyMoveLeftIndex; break;
+			case 4: keyIndexPtr = &CommonKeyMoveRightIndex; break;
+			case 5: keyIndexPtr = &CommonKeyConfirmSelectIndex; break;
+		case 6: keyIndexPtr = &CommonKeyBackCancelIndex; break;
+		}
+		
+		if (keyIndexPtr && *keyIndexPtr > 0 && *keyIndexPtr < MISC_HOTKEY_CAPTIONS.size()) {
+			caption << "  [" << MISC_HOTKEY_CAPTIONS[*keyIndexPtr] << "]";
+		} else {
+			caption << " [未绑定]";
+		}
+	}
+	
+	return caption.str();
+}
+
+// 其他按键显示标题函数
+std::string get_other_key_display_caption(int keyIndex) {
+	std::ostringstream caption;
+	const char* keyNames[] = {
+		"自由移动",
+		"车辆加速", 
+		"车辆停止",
+		"载具武器",
+		"左转向灯",
+		"右转向灯",
+		"打开双闪"
+	};
+	
+	if (keyIndex >= 0 && keyIndex < 7) {
+		caption << keyNames[keyIndex];
+		
+		// 获取对应的按键索引
+		int* keyIndexPtr = nullptr;
+		switch(keyIndex) {
+			case 0: keyIndexPtr = &OtherKeyToggleFreeMoveIndex; break;
+			case 1: keyIndexPtr = &OtherKeyVehicleBoostIndex; break;
+			case 2: keyIndexPtr = &OtherKeyVehicleStopIndex; break;
+			case 3: keyIndexPtr = &OtherKeyVehicleRocketsIndex; break;
+			case 4: keyIndexPtr = &OtherKeyLeftBlinkIndex; break;
+			case 5: keyIndexPtr = &OtherKeyRightBlinkIndex; break;
+			case 6: keyIndexPtr = &OtherKeyEmergencyBlinkIndex; break;
+		}
+		
+		if (keyIndexPtr && *keyIndexPtr > 0 && *keyIndexPtr < MISC_HOTKEY_CAPTIONS.size()) {
+			caption << "  [" << MISC_HOTKEY_CAPTIONS[*keyIndexPtr] << "]";
+		} else {
+			caption << " [未绑定]";
+		}
+	}
+	
+	return caption.str();
+}
+
+// 常用按键设置回调函数
+void onchange_common_key(int value, SelectFromListMenuItem* source) {
+	int keyIndex = source->extras.at(0);
+	
+	if (keyIndex >= 0 && keyIndex < 7) {
+		// 检查按键重复
+		if (is_common_key_duplicate(keyIndex, value)) {
+			set_status_text("按键重复！\n已恢复默认绑定键位。");
+			set_status_text_centre_screen("按键 ~r~重复！~s~已恢复默认绑定键位。");
+			
+			// 恢复默认绑定键位
+			switch(keyIndex) {
+				case 0: CommonKeyToggleMenuIndex = 4; break;      // F4
+				case 1: CommonKeyMoveUpIndex = 57; break;         // 小键盘 8
+				case 2: CommonKeyMoveDownIndex = 51; break;       // 小键盘 2
+				case 3: CommonKeyMoveLeftIndex = 53; break;       // 小键盘 4
+				case 4: CommonKeyMoveRightIndex = 55; break;      // 小键盘 6
+				case 5: CommonKeyConfirmSelectIndex = 54; break;  // 小键盘 5
+				case 6: CommonKeyBackCancelIndex = 49; break;     // 小键盘 0
+			}
+			CommonKeyChanged[keyIndex] = true;
+			
+			// 立即更新KeyInputConfig以使更改生效
+			KeyInputConfig* keyConfig = get_config()->get_key_config();
+			if (keyConfig != NULL) {
+				std::string keyName;
+				int keyValue;
+				
+				switch(keyIndex) {
+					case 0: keyName = KeyConfig::KEY_TOGGLE_MAIN_MENU; keyValue = CommonKeyToggleMenuIndex; break;
+					case 1: keyName = KeyConfig::KEY_MENU_UP; keyValue = CommonKeyMoveUpIndex; break;
+					case 2: keyName = KeyConfig::KEY_MENU_DOWN; keyValue = CommonKeyMoveDownIndex; break;
+					case 3: keyName = KeyConfig::KEY_MENU_LEFT; keyValue = CommonKeyMoveLeftIndex; break;
+					case 4: keyName = KeyConfig::KEY_MENU_RIGHT; keyValue = CommonKeyMoveRightIndex; break;
+					case 5: keyName = KeyConfig::KEY_MENU_SELECT; keyValue = CommonKeyConfirmSelectIndex; break;
+					case 6: keyName = KeyConfig::KEY_MENU_BACK; keyValue = CommonKeyBackCancelIndex; break;
+				}
+				
+				if (keyValue >= 0 && keyValue < sizeof(MISC_HOTKEY_VALUES)/sizeof(int)) {
+					int actualKeyValue = MISC_HOTKEY_VALUES[keyValue];
+					char* keyValueName = keyValToName(actualKeyValue);
+					keyConfig->set_key((char*)keyName.c_str(), keyValueName, false, false, false);
+				}
+			}
+			return; // 阻止设置重复的按键，已恢复默认值
+		}
+		
+		switch(keyIndex) {
+			case 0: CommonKeyToggleMenuIndex = value; break;
+			case 1: CommonKeyMoveUpIndex = value; break;
+			case 2: CommonKeyMoveDownIndex = value; break;
+			case 3: CommonKeyMoveLeftIndex = value; break;
+			case 4: CommonKeyMoveRightIndex = value; break;
+			case 5: CommonKeyConfirmSelectIndex = value; break;
+			case 6: CommonKeyBackCancelIndex = value; break;
+		}
+		CommonKeyChanged[keyIndex] = true;
+		
+		// 立即更新KeyInputConfig以使更改生效
+		KeyInputConfig* keyConfig = get_config()->get_key_config();
+		if (keyConfig != NULL) {
+			std::string keyName;
+			int keyValue;
+			
+			switch(keyIndex) {
+				case 0: keyName = KeyConfig::KEY_TOGGLE_MAIN_MENU; keyValue = CommonKeyToggleMenuIndex; break;
+				case 1: keyName = KeyConfig::KEY_MENU_UP; keyValue = CommonKeyMoveUpIndex; break;
+				case 2: keyName = KeyConfig::KEY_MENU_DOWN; keyValue = CommonKeyMoveDownIndex; break;
+				case 3: keyName = KeyConfig::KEY_MENU_LEFT; keyValue = CommonKeyMoveLeftIndex; break;
+				case 4: keyName = KeyConfig::KEY_MENU_RIGHT; keyValue = CommonKeyMoveRightIndex; break;
+				case 5: keyName = KeyConfig::KEY_MENU_SELECT; keyValue = CommonKeyConfirmSelectIndex; break;
+				case 6: keyName = KeyConfig::KEY_MENU_BACK; keyValue = CommonKeyBackCancelIndex; break;
+			}
+			
+			if (keyValue >= 0 && keyValue < sizeof(MISC_HOTKEY_VALUES)/sizeof(int)) {
+				int actualKeyValue = MISC_HOTKEY_VALUES[keyValue];
+				char* keyValueName = keyValToName(actualKeyValue);
+				keyConfig->set_key((char*)keyName.c_str(), keyValueName, false, false, false);
+			}
+		}
+	}
+}
+
+// 其他按键设置回调函数
+void onchange_other_key(int value, SelectFromListMenuItem* source) {
+	int keyIndex = source->extras.at(0);
+	
+	if (keyIndex >= 0 && keyIndex < 7) {
+		// 检查按键重复
+		if (is_other_key_duplicate(keyIndex, value)) {
+			set_status_text("按键重复！\n已恢复默认绑定键位。");
+			set_status_text_centre_screen("按键 ~r~重复！~s~已恢复默认绑定键位。");
+			
+			// 恢复默认绑定键位
+			switch(keyIndex) {
+				case 0: OtherKeyToggleFreeMoveIndex = 6; break;   // F6
+				case 1: OtherKeyVehicleBoostIndex = 58; break;    // 小键盘 9
+				case 2: OtherKeyVehicleStopIndex = 52; break;     // 小键盘 3
+				case 3: OtherKeyVehicleRocketsIndex = 59; break;  // 小键盘 +
+				case 4: OtherKeyLeftBlinkIndex = 72; break;       // 左箭头
+				case 5: OtherKeyRightBlinkIndex = 73; break;      // 右箭头
+				case 6: OtherKeyEmergencyBlinkIndex = 63; break;  // 小键盘 .
+			}
+			OtherKeyChanged[keyIndex] = true;
+			
+			// 立即更新KeyInputConfig以使更改生效
+			KeyInputConfig* keyConfig = get_config()->get_key_config();
+			if (keyConfig != NULL) {
+				std::string keyName;
+				int keyValue;
+				
+				switch(keyIndex) {
+					case 0: keyName = KeyConfig::KEY_TOGGLE_AIRBRAKE; keyValue = OtherKeyToggleFreeMoveIndex; break;
+					case 1: keyName = KeyConfig::KEY_VEH_BOOST; keyValue = OtherKeyVehicleBoostIndex; break;
+					case 2: keyName = KeyConfig::KEY_VEH_STOP; keyValue = OtherKeyVehicleStopIndex; break;
+					case 3: keyName = KeyConfig::KEY_VEH_ROCKETS; keyValue = OtherKeyVehicleRocketsIndex; break;
+					case 4: keyName = KeyConfig::KEY_VEH_LEFTBLINK; keyValue = OtherKeyLeftBlinkIndex; break;
+					case 5: keyName = KeyConfig::KEY_VEH_RIGHTBLINK; keyValue = OtherKeyRightBlinkIndex; break;
+					case 6: keyName = KeyConfig::KEY_VEH_EMERGENCYBLINK; keyValue = OtherKeyEmergencyBlinkIndex; break;
+				}
+				
+				if (keyValue >= 0 && keyValue < sizeof(MISC_HOTKEY_VALUES)/sizeof(int)) {
+					int actualKeyValue = MISC_HOTKEY_VALUES[keyValue];
+					char* keyValueName = keyValToName(actualKeyValue);
+					keyConfig->set_key((char*)keyName.c_str(), keyValueName, false, false, false);
+				}
+			}
+			return; // 阻止设置重复的按键，已恢复默认值
+		}
+		
+		switch(keyIndex) {
+			case 0: OtherKeyToggleFreeMoveIndex = value; break;
+			case 1: OtherKeyVehicleBoostIndex = value; break;
+			case 2: OtherKeyVehicleStopIndex = value; break;
+			case 3: OtherKeyVehicleRocketsIndex = value; break;
+			case 4: OtherKeyLeftBlinkIndex = value; break;
+			case 5: OtherKeyRightBlinkIndex = value; break;
+			case 6: OtherKeyEmergencyBlinkIndex = value; break;
+		}
+		OtherKeyChanged[keyIndex] = true;
+		
+		// 立即更新KeyInputConfig以使更改生效
+		KeyInputConfig* keyConfig = get_config()->get_key_config();
+		if (keyConfig != NULL) {
+			std::string keyName;
+			int keyValue;
+			
+			switch(keyIndex) {
+				case 0: keyName = KeyConfig::KEY_TOGGLE_AIRBRAKE; keyValue = OtherKeyToggleFreeMoveIndex; break;
+				case 1: keyName = KeyConfig::KEY_VEH_BOOST; keyValue = OtherKeyVehicleBoostIndex; break;
+				case 2: keyName = KeyConfig::KEY_VEH_STOP; keyValue = OtherKeyVehicleStopIndex; break;
+				case 3: keyName = KeyConfig::KEY_VEH_ROCKETS; keyValue = OtherKeyVehicleRocketsIndex; break;
+				case 4: keyName = KeyConfig::KEY_VEH_LEFTBLINK; keyValue = OtherKeyLeftBlinkIndex; break;
+				case 5: keyName = KeyConfig::KEY_VEH_RIGHTBLINK; keyValue = OtherKeyRightBlinkIndex; break;
+				case 6: keyName = KeyConfig::KEY_VEH_EMERGENCYBLINK; keyValue = OtherKeyEmergencyBlinkIndex; break;
+			}
+			
+			if (keyValue >= 0 && keyValue < sizeof(MISC_HOTKEY_VALUES)/sizeof(int)) {
+				int actualKeyValue = MISC_HOTKEY_VALUES[keyValue];
+				char* keyValueName = keyValToName(actualKeyValue);
+				keyConfig->set_key((char*)keyName.c_str(), keyValueName, false, false, false);
+			}
+		}
+	}
+}
+
+// 常用按键设置菜单
+void process_misc_common_keys_menu() {
+	const std::string caption = "常用按键设置";
+	std::vector<MenuItem<int>*> menuItems;
+	
+	// 添加7个常用按键设置项
+	for (int i = 0; i < 7; i++) {
+		SelectFromListMenuItem* listItem = new SelectFromListMenuItem(MISC_HOTKEY_CAPTIONS, onchange_common_key);
+		listItem->wrap = false;
+		listItem->caption = get_common_key_display_caption(i);
+		listItem->extras.push_back(i);
+		
+		// 设置当前值
+		switch(i) {
+			case 0: listItem->value = CommonKeyToggleMenuIndex; break;
+			case 1: listItem->value = CommonKeyMoveUpIndex; break;
+			case 2: listItem->value = CommonKeyMoveDownIndex; break;
+			case 3: listItem->value = CommonKeyMoveLeftIndex; break;
+			case 4: listItem->value = CommonKeyMoveRightIndex; break;
+			case 5: listItem->value = CommonKeyConfirmSelectIndex; break;
+		case 6: listItem->value = CommonKeyBackCancelIndex; break;
+		}
+		
+		menuItems.push_back(listItem);
+	}
+	
+	draw_generic_menu<int>(menuItems, &activeLineIndexCommonKeys, caption, NULL, NULL, NULL, NULL);
+}
+
+// 其他按键设置菜单
+void process_misc_other_keys_menu() {
+	const std::string caption = "其他按键设置";
+	std::vector<MenuItem<int>*> menuItems;
+	
+	// 添加7个其他按键设置项
+	for (int i = 0; i < 7; i++) {
+		SelectFromListMenuItem* listItem = new SelectFromListMenuItem(MISC_HOTKEY_CAPTIONS, onchange_other_key);
+		listItem->wrap = false;
+		listItem->caption = get_other_key_display_caption(i);
+		listItem->extras.push_back(i);
+		
+		// 设置当前值
+		switch(i) {
+			case 0: listItem->value = OtherKeyToggleFreeMoveIndex; break;
+			case 1: listItem->value = OtherKeyVehicleBoostIndex; break;
+			case 2: listItem->value = OtherKeyVehicleStopIndex; break;
+			case 3: listItem->value = OtherKeyVehicleRocketsIndex; break;
+			case 4: listItem->value = OtherKeyLeftBlinkIndex; break;
+			case 5: listItem->value = OtherKeyRightBlinkIndex; break;
+			case 6: listItem->value = OtherKeyEmergencyBlinkIndex; break;
+		}
+		
+		menuItems.push_back(listItem);
+	}
+	
+	draw_generic_menu<int>(menuItems, &activeLineIndexOtherKeys, caption, NULL, NULL, NULL, NULL);
+}
+
+// 保存常用按键和其他按键设置到XML文件
+void save_common_other_keys_to_xml(){
+	// 获取配置对象
+	KeyInputConfig* keyConfig = get_config()->get_key_config();
+	
+	// 保存常用按键设置
+	for(int i = 0; i < 7; i++){
+		if(CommonKeyChanged[i]){
+			std::string keyName;
+			int keyValue = 0;
+			
+			switch(i){
+				case 0: 
+					keyName = KeyConfig::KEY_TOGGLE_MAIN_MENU;
+					keyValue = MISC_HOTKEY_VALUES[CommonKeyToggleMenuIndex];
+					break;
+				case 1: 
+					keyName = KeyConfig::KEY_MENU_UP;
+					keyValue = MISC_HOTKEY_VALUES[CommonKeyMoveUpIndex];
+					break;
+				case 2: 
+					keyName = KeyConfig::KEY_MENU_DOWN;
+					keyValue = MISC_HOTKEY_VALUES[CommonKeyMoveDownIndex];
+					break;
+				case 3: 
+					keyName = KeyConfig::KEY_MENU_LEFT;
+					keyValue = MISC_HOTKEY_VALUES[CommonKeyMoveLeftIndex];
+					break;
+				case 4: 
+					keyName = KeyConfig::KEY_MENU_RIGHT;
+					keyValue = MISC_HOTKEY_VALUES[CommonKeyMoveRightIndex];
+					break;
+				case 5: 
+					keyName = KeyConfig::KEY_MENU_SELECT;
+					keyValue = MISC_HOTKEY_VALUES[CommonKeyConfirmSelectIndex];
+					break;
+				case 6: 
+					keyName = KeyConfig::KEY_MENU_BACK;
+					keyValue = MISC_HOTKEY_VALUES[CommonKeyBackCancelIndex];
+					break;
+			}
+			
+			// 获取按键名称
+			char* keyValueName = keyValToName(keyValue);
+			
+			// 设置按键配置
+			keyConfig->set_key((char*)keyName.c_str(), keyValueName, false, false, false);
+			
+			CommonKeyChanged[i] = false;
+		}
+	}
+	
+	// 保存其他按键设置
+	for(int i = 0; i < 7; i++){
+		if(OtherKeyChanged[i]){
+			std::string keyName;
+			int keyValue = 0;
+			
+			switch(i){
+				case 0: 
+					keyName = KeyConfig::KEY_TOGGLE_AIRBRAKE; // 自由移动功能
+					keyValue = MISC_HOTKEY_VALUES[OtherKeyToggleFreeMoveIndex];
+					break;
+				case 1: 
+					keyName = KeyConfig::KEY_VEH_BOOST;
+					keyValue = MISC_HOTKEY_VALUES[OtherKeyVehicleBoostIndex];
+					break;
+				case 2: 
+					keyName = KeyConfig::KEY_VEH_STOP;
+					keyValue = MISC_HOTKEY_VALUES[OtherKeyVehicleStopIndex];
+					break;
+				case 3: 
+					keyName = KeyConfig::KEY_VEH_ROCKETS;
+					keyValue = MISC_HOTKEY_VALUES[OtherKeyVehicleRocketsIndex];
+					break;
+				case 4: 
+					keyName = KeyConfig::KEY_VEH_LEFTBLINK;
+					keyValue = MISC_HOTKEY_VALUES[OtherKeyLeftBlinkIndex];
+					break;
+				case 5: 
+					keyName = KeyConfig::KEY_VEH_RIGHTBLINK;
+					keyValue = MISC_HOTKEY_VALUES[OtherKeyRightBlinkIndex];
+					break;
+				case 6: 
+					keyName = KeyConfig::KEY_VEH_EMERGENCYBLINK;
+					keyValue = MISC_HOTKEY_VALUES[OtherKeyEmergencyBlinkIndex];
+					break;
+			}
+			
+			// 获取按键名称
+			char* keyValueName = keyValToName(keyValue);
+			
+			// 设置按键配置
+			keyConfig->set_key((char*)keyName.c_str(), keyValueName, false, false, false);
+			
+			OtherKeyChanged[i] = false;
+		}
+	}
+	
+	// 写入XML配置文件
+	write_xml_config_file();
+}
+
+// 重置常用按键和其他按键设置为默认值
+void reset_common_other_keys_to_defaults(){
+	// 重置常用按键为默认值
+	CommonKeyToggleMenuIndex = 4;      // 默认 F4
+	CommonKeyMoveUpIndex = 57;         // 默认小键盘 8
+	CommonKeyMoveDownIndex = 51;       // 默认小键盘 2
+	CommonKeyMoveLeftIndex = 53;       // 默认小键盘 4
+	CommonKeyMoveRightIndex = 55;      // 默认小键盘 6
+	CommonKeyConfirmSelectIndex = 54;        // 默认小键盘 5
+	CommonKeyBackCancelIndex = 49;           // 默认小键盘 0
+	
+	for(int i = 0; i < 7; i++){
+		CommonKeyChanged[i] = true;
+	}
+	
+	// 重置其他按键为默认值
+	OtherKeyToggleFreeMoveIndex = 6;   // 默认 F6
+	OtherKeyVehicleBoostIndex = 58;    // 默认小键盘 9
+	OtherKeyVehicleStopIndex = 52;     // 默认小键盘 3
+	OtherKeyVehicleRocketsIndex = 59;  // 默认小键盘 +
+	OtherKeyLeftBlinkIndex = 72;       // 默认左箭头
+	OtherKeyRightBlinkIndex = 73;      // 默认右箭头
+	OtherKeyEmergencyBlinkIndex = 63;  // 默认小键盘 .
+	
+	for(int i = 0; i < 7; i++){
+		OtherKeyChanged[i] = true;
+	}
+	
+	// 设置XML配置文件中的默认按键设置
+	KeyInputConfig* keyConfig = get_config()->get_key_config();
+	if(keyConfig != NULL){
+		// 重置常用按键为默认值
+		keyConfig->set_key((char*)KeyConfig::KEY_TOGGLE_MAIN_MENU.c_str(), "VK_F4", false, false, false);
+		keyConfig->set_key((char*)KeyConfig::KEY_MENU_UP.c_str(), "VK_NUMPAD8", false, false, false);
+		keyConfig->set_key((char*)KeyConfig::KEY_MENU_DOWN.c_str(), "VK_NUMPAD2", false, false, false);
+		keyConfig->set_key((char*)KeyConfig::KEY_MENU_LEFT.c_str(), "VK_NUMPAD4", false, false, false);
+		keyConfig->set_key((char*)KeyConfig::KEY_MENU_RIGHT.c_str(), "VK_NUMPAD6", false, false, false);
+		keyConfig->set_key((char*)KeyConfig::KEY_MENU_SELECT.c_str(), "VK_NUMPAD5", false, false, false);
+		keyConfig->set_key((char*)KeyConfig::KEY_MENU_BACK.c_str(), "VK_NUMPAD0", false, false, false);
+		
+		// 重置其他按键为默认值
+		keyConfig->set_key((char*)KeyConfig::KEY_TOGGLE_AIRBRAKE.c_str(), "VK_F6", false, false, false);
+		keyConfig->set_key((char*)KeyConfig::KEY_VEH_BOOST.c_str(), "VK_NUMPAD9", false, false, false);
+		keyConfig->set_key((char*)KeyConfig::KEY_VEH_STOP.c_str(), "VK_NUMPAD3", false, false, false);
+		keyConfig->set_key((char*)KeyConfig::KEY_VEH_ROCKETS.c_str(), "VK_ADD", false, false, false);
+		keyConfig->set_key((char*)KeyConfig::KEY_VEH_LEFTBLINK.c_str(), "VK_LEFT", false, false, false);
+		keyConfig->set_key((char*)KeyConfig::KEY_VEH_RIGHTBLINK.c_str(), "VK_RIGHT", false, false, false);
+		keyConfig->set_key((char*)KeyConfig::KEY_VEH_EMERGENCYBLINK.c_str(), "VK_DECIMAL", false, false, false);
+		
+		// 保存到XML文件
+		write_xml_config_file();
+	}
+}
+
+// 从XML文件加载常用按键和其他按键设置
+void load_common_other_keys_from_xml(){
+	KeyInputConfig* keyConfig = get_config()->get_key_config();
+	
+	// 默认值数组
+	int commonKeyDefaults[] = {4, 57, 51, 53, 55, 54, 49}; // F4, 小键盘8, 小键盘2, 小键盘4, 小键盘6, 小键盘5, 小键盘0
+	int otherKeyDefaults[] = {5, 58, 52, 59, 72, 73, 63}; // F6, 小键盘9, 小键盘3, 小键盘+, 左箭头, 右箭头, 小键盘.
+	
+	// 加载常用按键设置
+	std::string commonKeyNames[] = {
+		KeyConfig::KEY_TOGGLE_MAIN_MENU, KeyConfig::KEY_MENU_UP, KeyConfig::KEY_MENU_DOWN,
+		KeyConfig::KEY_MENU_LEFT, KeyConfig::KEY_MENU_RIGHT, KeyConfig::KEY_MENU_SELECT,
+		KeyConfig::KEY_MENU_BACK
+	};
+	
+	int* commonKeyIndices[] = {
+		&CommonKeyToggleMenuIndex, &CommonKeyMoveUpIndex, &CommonKeyMoveDownIndex,
+		&CommonKeyMoveLeftIndex, &CommonKeyMoveRightIndex, &CommonKeyConfirmSelectIndex,
+		&CommonKeyBackCancelIndex
+	};
+	
+	for(int i = 0; i < 7; i++){
+		KeyConfig* key = keyConfig->get_key(commonKeyNames[i]);
+		if(key != NULL && key->keyCode != VK_NOTHING){
+			// 查找对应的索引
+			bool found = false;
+			for(int j = 0; j < sizeof(MISC_HOTKEY_VALUES)/sizeof(int); j++){
+				if(MISC_HOTKEY_VALUES[j] == key->keyCode){
+					*commonKeyIndices[i] = j;
+					found = true;
+					break;
+				}
+			}
+			// 如果没找到对应的按键值，使用默认值
+			if(!found){
+				*commonKeyIndices[i] = commonKeyDefaults[i];
+			}
+		} else {
+			// 如果没有配置或配置为VK_NOTHING，使用默认值
+			*commonKeyIndices[i] = commonKeyDefaults[i];
+		}
+	}
+	
+	// 加载其他按键设置
+	std::string otherKeyNames[] = {
+		KeyConfig::KEY_TOGGLE_AIRBRAKE, KeyConfig::KEY_VEH_BOOST, KeyConfig::KEY_VEH_STOP,
+		KeyConfig::KEY_VEH_ROCKETS, KeyConfig::KEY_VEH_LEFTBLINK, KeyConfig::KEY_VEH_RIGHTBLINK,
+		KeyConfig::KEY_VEH_EMERGENCYBLINK
+	};
+	
+	int* otherKeyIndices[] = {
+		&OtherKeyToggleFreeMoveIndex, &OtherKeyVehicleBoostIndex, &OtherKeyVehicleStopIndex,
+		&OtherKeyVehicleRocketsIndex, &OtherKeyLeftBlinkIndex, &OtherKeyRightBlinkIndex,
+		&OtherKeyEmergencyBlinkIndex
+	};
+	
+	for(int i = 0; i < 7; i++){
+		KeyConfig* key = keyConfig->get_key(otherKeyNames[i]);
+		if(key != NULL && key->keyCode != VK_NOTHING){
+			// 查找对应的索引
+			bool found = false;
+			for(int j = 0; j < sizeof(MISC_HOTKEY_VALUES)/sizeof(int); j++){
+				if(MISC_HOTKEY_VALUES[j] == key->keyCode){
+					*otherKeyIndices[i] = j;
+					found = true;
+					break;
+				}
+			}
+			// 如果没找到对应的按键值，使用默认值
+			if(!found){
+				*otherKeyIndices[i] = otherKeyDefaults[i];
+			}
+		} else {
+			// 如果没有配置或配置为VK_NOTHING，使用默认值
+			*otherKeyIndices[i] = otherKeyDefaults[i];
 		}
 	}
 }

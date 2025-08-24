@@ -360,9 +360,9 @@ void SInit();
 extern bool show_transparency;
 
 // 快捷键按键设置相关常量和变量
-const std::vector<std::string> MISC_HOTKEY_CAPTIONS{ "未绑定", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "小键盘 0", "小键盘 1", "小键盘 2", "小键盘 3", "小键盘 4", "小键盘 5", "小键盘 6", "小键盘 7", "小键盘 8", "小键盘 9", "小键盘 +", "小键盘 -", "小键盘 *", "小键盘 /", "小键盘 .", "Home", "End", "Page Up", "Page Down", "Insert", "Delete", "上箭头", "下箭头", "左箭头", "右箭头", "Backspace 退格键", "Enter 回车键", "小键盘 Enter", "~ 波浪键", "Tab 制表符键" };
+const std::vector<std::string> MISC_HOTKEY_CAPTIONS{ "未绑定", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "小键盘 0", "小键盘 1", "小键盘 2", "小键盘 3", "小键盘 4", "小键盘 5", "小键盘 6", "小键盘 7", "小键盘 8", "小键盘 9", "小键盘 +", "小键盘 -", "小键盘 *", "小键盘 /", "小键盘 .", "Home", "End", "Page Up", "Page Down", "Insert", "Delete", "上箭头", "下箭头", "左箭头", "右箭头", "波浪键", "Tab 制表符键" }; // 76 个
 
-const int MISC_HOTKEY_VALUES[] = { VK_NOTHING, VK_F1, VK_F2, VK_F3, VK_F4, VK_F5, VK_F6, VK_F7, VK_F8, VK_F9, VK_F10, VK_F11, VK_F12, VK_KEY_0, VK_KEY_1, VK_KEY_2, VK_KEY_3, VK_KEY_4, VK_KEY_5, VK_KEY_6, VK_KEY_7, VK_KEY_8, VK_KEY_9, VK_KEY_A, VK_KEY_B, VK_KEY_C, VK_KEY_D, VK_KEY_E, VK_KEY_F, VK_KEY_G, VK_KEY_H, VK_KEY_I, VK_KEY_J, VK_KEY_K, VK_KEY_L, VK_KEY_M, VK_KEY_N, VK_KEY_O, VK_KEY_P, VK_KEY_Q, VK_KEY_R, VK_KEY_S, VK_KEY_T, VK_KEY_U, VK_KEY_V, VK_KEY_W, VK_KEY_X, VK_KEY_Y, VK_KEY_Z, VK_NUMPAD0, VK_NUMPAD1, VK_NUMPAD2, VK_NUMPAD3, VK_NUMPAD4, VK_NUMPAD5, VK_NUMPAD6, VK_NUMPAD7, VK_NUMPAD8, VK_NUMPAD9, VK_ADD, VK_SUBTRACT, VK_MULTIPLY, VK_DIVIDE, VK_DECIMAL, VK_HOME, VK_END, VK_PRIOR, VK_NEXT, VK_INSERT, VK_DELETE, VK_UP, VK_DOWN, VK_LEFT, VK_RIGHT, VK_BACK, VK_RETURN, VK_SEPARATOR, VK_OEM_3, VK_TAB };
+const int MISC_HOTKEY_VALUES[] = { VK_NOTHING, VK_F1, VK_F2, VK_F3, VK_F4, VK_F5, VK_F6, VK_F7, VK_F8, VK_F9, VK_F10, VK_F11, VK_F12, VK_KEY_0, VK_KEY_1, VK_KEY_2, VK_KEY_3, VK_KEY_4, VK_KEY_5, VK_KEY_6, VK_KEY_7, VK_KEY_8, VK_KEY_9, VK_KEY_A, VK_KEY_B, VK_KEY_C, VK_KEY_D, VK_KEY_E, VK_KEY_F, VK_KEY_G, VK_KEY_H, VK_KEY_I, VK_KEY_J, VK_KEY_K, VK_KEY_L, VK_KEY_M, VK_KEY_N, VK_KEY_O, VK_KEY_P, VK_KEY_Q, VK_KEY_R, VK_KEY_S, VK_KEY_T, VK_KEY_U, VK_KEY_V, VK_KEY_W, VK_KEY_X, VK_KEY_Y, VK_KEY_Z, VK_NUMPAD0, VK_NUMPAD1, VK_NUMPAD2, VK_NUMPAD3, VK_NUMPAD4, VK_NUMPAD5, VK_NUMPAD6, VK_NUMPAD7, VK_NUMPAD8, VK_NUMPAD9, VK_ADD, VK_SUBTRACT, VK_MULTIPLY, VK_DIVIDE, VK_DECIMAL, VK_HOME, VK_END, VK_PRIOR, VK_NEXT, VK_INSERT, VK_DELETE, VK_UP, VK_DOWN, VK_LEFT, VK_RIGHT, VK_OEM_3, VK_TAB }; // 76 个
 
 // 快捷键设置索引变量
 extern int HotkeyIndex[9];
@@ -374,6 +374,30 @@ extern bool HotkeyShift[9];
 // 快捷键功能菜单刷新标志
 extern bool g_HotkeyFunctionMenuNeedsRefresh;
 
+// 常用按键设置变量 (7个功能)
+extern int CommonKeyToggleMenuIndex;        // 开关/菜单 - 默认 F4
+extern int CommonKeyMoveUpIndex;            // 向上/移动 - 默认小键盘 8
+extern int CommonKeyMoveDownIndex;          // 向下/移动 - 默认小键盘 2
+extern int CommonKeyMoveLeftIndex;          // 向左/移动 - 默认小键盘 4
+extern int CommonKeyMoveRightIndex;         // 向右/移动 - 默认小键盘 6
+extern int CommonKeyConfirmSelectIndex;     // 确认/选择 - 默认小键盘 5
+extern int CommonKeyBackCancelIndex;       // 返回/取消 - 默认小键盘 0
+extern bool CommonKeyChanged[7];
+
+// 其他按键设置变量 (7个功能)
+extern int OtherKeyToggleFreeMoveIndex;     // 开/关自由移动 - 默认 F6
+extern int OtherKeyVehicleBoostIndex;       // 车辆加速 - 默认小键盘 9
+extern int OtherKeyVehicleStopIndex;        // 停止车辆 - 默认小键盘 3
+extern int OtherKeyVehicleRocketsIndex;     // 车辆发射火箭 - 默认小键盘 +
+extern int OtherKeyLeftBlinkIndex;          // 左转向灯 - 默认左箭头
+extern int OtherKeyRightBlinkIndex;         // 右转向灯 - 默认右箭头
+extern int OtherKeyEmergencyBlinkIndex;     // 打开双闪 - 默认小键盘 .
+extern bool OtherKeyChanged[7];
+
+// 常用按键和其他按键菜单常量
+const int TRAINERCONFIG_COMMON_KEYS = 70;   // 常用按键菜单
+const int TRAINERCONFIG_OTHER_KEYS = 71;    // 其他按键菜单
+
 // 快捷键按键设置菜单处理函数
 std::string get_hotkey_display_caption(int hotkeyIndex);
 std::string get_saved_hotkey_display_caption(int hotkeyIndex);
@@ -383,3 +407,17 @@ void save_hotkey_settings_to_xml();
 void write_xml_config_file();
 void reset_hotkey_settings_to_defaults();
 void load_hotkey_settings_from_xml();
+char* keyValToName(int keyValue);
+
+// 常用按键和其他按键菜单处理函数
+void process_misc_common_keys_menu();
+void process_misc_other_keys_menu();
+void onchange_common_key(int value, SelectFromListMenuItem* source);
+void onchange_other_key(int value, SelectFromListMenuItem* source);
+void save_common_other_keys_to_xml();
+void reset_common_other_keys_to_defaults();
+void load_common_other_keys_from_xml();
+std::string get_common_key_display_caption(int keyIndex);
+std::string get_other_key_display_caption(int keyIndex);
+bool is_common_key_duplicate(int commonKeyNum, int keyIndex);
+bool is_other_key_duplicate(int otherKeyNum, int keyIndex);
