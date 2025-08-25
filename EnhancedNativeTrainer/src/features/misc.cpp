@@ -457,9 +457,9 @@ void onchange_hotkey_key(int value, SelectFromListMenuItem* source){
 	
 	// 检查快捷键重复
 	if (is_hotkey_duplicate(hotkeyNum, value, HotkeyCtrl[hotkeyNum], HotkeyAlt[hotkeyNum], HotkeyShift[hotkeyNum])) {
-		set_status_text("快捷键重复！\n请选择其他按键组合。");
-		set_status_text_centre_screen("快捷键 ~r~重复！~s~请选择其他按键组合。");
-		return; // 阻止设置重复的快捷键
+		set_status_text("快捷键重复！\n已恢复为未绑定状态。");
+		set_status_text_centre_screen("快捷键 ~r~重复！~s~已恢复为未绑定状态。");
+		value = 0; // 恢复为未绑定状态
 	}
 	
 	HotkeyIndex[hotkeyNum] = value;
@@ -504,9 +504,15 @@ void onchange_hotkey_ctrl(int value, SelectFromListMenuItem* source){
 	
 	// 检查快捷键重复
 	if (is_hotkey_duplicate(hotkeyNum, HotkeyIndex[hotkeyNum], newCtrl, HotkeyAlt[hotkeyNum], HotkeyShift[hotkeyNum])) {
-		set_status_text("快捷键重复！\n请选择其他按键组合。");
-		set_status_text_centre_screen("快捷键 ~r~重复！~s~请选择其他按键组合。");
-		return; // 阻止设置重复的快捷键
+		set_status_text("快捷键重复！\n已恢复为未绑定状态。");
+		set_status_text_centre_screen("快捷键 ~r~重复！~s~已恢复为未绑定状态。");
+		// 恢复为未绑定状态
+		HotkeyIndex[hotkeyNum] = 0;
+		HotkeyCtrl[hotkeyNum] = false;
+		HotkeyAlt[hotkeyNum] = false;
+		HotkeyShift[hotkeyNum] = false;
+		HotkeyChanged[hotkeyNum] = true;
+		return;
 	}
 	
 	HotkeyCtrl[hotkeyNum] = newCtrl;
@@ -544,9 +550,15 @@ void onchange_hotkey_alt(int value, SelectFromListMenuItem* source){
 	
 	// 检查快捷键重复
 	if (is_hotkey_duplicate(hotkeyNum, HotkeyIndex[hotkeyNum], HotkeyCtrl[hotkeyNum], newAlt, HotkeyShift[hotkeyNum])) {
-		set_status_text("快捷键重复！\n请选择其他按键组合。");
-		set_status_text_centre_screen("快捷键 ~r~重复！~s~请选择其他按键组合。");
-		return; // 阻止设置重复的快捷键
+		set_status_text("快捷键重复！\n已恢复为未绑定状态。");
+		set_status_text_centre_screen("快捷键 ~r~重复！~s~已恢复为未绑定状态。");
+		// 恢复为未绑定状态
+		HotkeyIndex[hotkeyNum] = 0;
+		HotkeyCtrl[hotkeyNum] = false;
+		HotkeyAlt[hotkeyNum] = false;
+		HotkeyShift[hotkeyNum] = false;
+		HotkeyChanged[hotkeyNum] = true;
+		return;
 	}
 	
 	HotkeyAlt[hotkeyNum] = newAlt;
@@ -584,9 +596,15 @@ void onchange_hotkey_shift(int value, SelectFromListMenuItem* source){
 	
 	// 检查快捷键重复
 	if (is_hotkey_duplicate(hotkeyNum, HotkeyIndex[hotkeyNum], HotkeyCtrl[hotkeyNum], HotkeyAlt[hotkeyNum], newShift)) {
-		set_status_text("快捷键重复！\n请选择其他按键组合。");
-		set_status_text_centre_screen("快捷键 ~r~重复！~s~请选择其他按键组合。");
-		return; // 阻止设置重复的快捷键
+		set_status_text("快捷键重复！\n已恢复为未绑定状态。");
+		set_status_text_centre_screen("快捷键 ~r~重复！~s~已恢复为未绑定状态。");
+		// 恢复为未绑定状态
+		HotkeyIndex[hotkeyNum] = 0;
+		HotkeyCtrl[hotkeyNum] = false;
+		HotkeyAlt[hotkeyNum] = false;
+		HotkeyShift[hotkeyNum] = false;
+		HotkeyChanged[hotkeyNum] = true;
+		return;
 	}
 	
 	HotkeyShift[hotkeyNum] = newShift;
