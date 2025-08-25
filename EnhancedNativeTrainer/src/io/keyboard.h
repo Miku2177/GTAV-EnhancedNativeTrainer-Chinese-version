@@ -67,6 +67,9 @@ struct VirtualKeysWithNames
 static const VirtualKeysWithNames ALL_KEYS[] =
 {
 	{ VK_NOTHING, "VK_NOTHING" },
+	{ VK_LBUTTON, "VK_LBUTTON" },
+	{ VK_RBUTTON, "VK_RBUTTON" },
+	{ VK_MBUTTON, "VK_MBUTTON" },
 	{ VK_KEY_0, "VK_KEY_0" },
 	{ VK_KEY_1, "VK_KEY_1" },
 	{ VK_KEY_2, "VK_KEY_2" },
