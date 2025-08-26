@@ -13,6 +13,8 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "hotkeys.h"
 #include "world.h"
 #include "vehicles.h"
+#include "airbrake.h"
+#include "propplacement.h"
 #include <Psapi.h>
 #include "../utils.h"
 #include <iterator>
@@ -2656,7 +2658,13 @@ void update_misc_features(BOOL playerExists, Ped playerPed){
 	if (featureNoStuntJumps && GAMEPLAY::IS_STUNT_JUMP_IN_PROGRESS()) GAMEPLAY::CANCEL_STUNT_JUMP();
 
 	// FPS 计数器
-	if (featureShowFPS)	{
+	// 修改FPS显示逻辑：当菜单左侧偏移量>=35时不隐藏FPS，但自由移动和物体摆放模式时仍隐藏
+	bool shouldShowFPS = featureShowFPS && 
+		(menu_showing == false || 
+		 (menu_showing == true && menuLeftOffset >= 35.0f)) &&
+		!(is_in_airbrake_mode() || is_in_prop_placement_mode());
+	
+	if (shouldShowFPS) {
 		FPStime_passed = clock() / CLOCKS_PER_SEC;
 		if (((clock() / CLOCKS_PER_SEC) - FPStime_curr) != 0) {
 			FPStime = FPStime + 1;

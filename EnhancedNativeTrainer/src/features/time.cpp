@@ -11,6 +11,7 @@ https://github.com/gtav-ent/GTAV-EnhancedNativeTrainer
 #include "vehicles.h"
 #include "hotkeys.h"
 #include "propplacement.h"
+#include "airbrake.h"
 #include <iomanip>
 #include "..\ui_support\menu_functions.h"
 #include "script.h"
@@ -1070,7 +1071,13 @@ void update_time_features(Player player) {
 	}
 
 	// 显示当前时间
-	if (featureShowtime && menu_showing == false) {
+	// 修改时间显示逻辑：当菜单左侧偏移量>=150时不隐藏时间，但自由移动和物体摆放模式时仍隐藏
+	bool shouldShowTime = featureShowtime && 
+		(menu_showing == false || 
+		 (menu_showing == true && menuLeftOffset >= 120.0f)) &&
+		!(is_in_airbrake_mode() || is_in_prop_placement_mode());
+	
+	if (shouldShowTime) {
 		int currHours = TIME::GET_CLOCK_HOURS(); // 获取当前小时（0-23）
 		int currMins = TIME::GET_CLOCK_MINUTES(); // 获取当前分钟（0-59）
 		int currSecs = TIME::GET_CLOCK_SECONDS(); // 获取当前秒数（0-59）
