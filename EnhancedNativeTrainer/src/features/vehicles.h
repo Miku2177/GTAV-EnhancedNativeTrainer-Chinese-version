@@ -1071,7 +1071,7 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("PIZZABOY"), "sssa_dlc_2024_1", "pizzaboy" },
 	{ RAGE_JOAAT("VORSCHLAG"), "sssa_dlc_2024_1", "vorschlag" },
 	{ RAGE_JOAAT("YOSEMITE1500"), "ENT_vehicle_previews", "VP_YOSEMITE4" },
-	{ RAGE_JOAAT("POLDOM10"), "candc_dlc_2024_1", "poldom10" },
+	//{ RAGE_JOAAT("POLDOM10"), "candc_dlc_2024_1", "poldom10" },// Incorrect model name! The actual model name is POLDOMINATOR10
 	{ RAGE_JOAAT("POLDORADO"), "candc_dlc_2024_1", "poldorado" },
 	{ RAGE_JOAAT("POLGREENWOOD"), "ENT_vehicle_previews", "VP_POLGREENW" },
 	{ RAGE_JOAAT("POLIMPALER5"), "candc_dlc_2024_1", "polimpaler5" },
@@ -1082,7 +1082,7 @@ const std::vector<VehicleImage> INGAME_VEH_IMAGES =
 	{ RAGE_JOAAT("DRIFTCYPHER"), "ENT_vehicle_previews", "VP_CYPHER" }, //
 	{ RAGE_JOAAT("DRIFTSENTINEL"), "ENT_vehicle_previews", "VP_SENTINELWIDE" }, //
 	{ RAGE_JOAAT("POLICET3"), "ENT_vehicle_previews", "VP_BURRITOBAIL" },
-	//{ RAGE_JOAAT("POLDOMINATOR10"), "ENT_vehicle_previews", "VP_DOMINATORFX" }, //
+	{ RAGE_JOAAT("POLDOMINATOR10"), "candc_dlc_2024_1", "poldom10" }, // The actual preview image for POLDOMINATOR10 is poldom10
 	//Xmas 2024 - FIB DLC
 	{ RAGE_JOAAT("CHAVOSV6"), "sssa_dlc_2024_2", "chavosv6" },
 	{ RAGE_JOAAT("DRIFTCHAVOSV6"), "sssa_dlc_2024_2", "chavosv6" },
